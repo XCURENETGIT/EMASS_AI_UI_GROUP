@@ -53,6 +53,8 @@ public class AuditServiceImpl extends XcnAbstractDAO implements AuditService {
 		param.put("limit", limit);
 		param.put("product", PRODUCT);
 		return selectList("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".audit.getAuditList", param);
+
+
 	}
 
 	@Override
