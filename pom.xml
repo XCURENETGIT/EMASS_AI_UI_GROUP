@@ -31,7 +31,8 @@
 
 		<copy-dir>/users/${project.artifactId}</copy-dir>
 		<binary-dir>/users/xcurenet/ui_build</binary-dir>
-		<rpm-name>${project.artifactId}-${project.version}-${release.version}-${date}.el7.${arch}.rpm</rpm-name>
+		<!--suppress UnresolvedMavenProperty -->
+		<rpm-name>${project.artifactId}-${project.version}-${release.version}-${date}.el8.${arch}.rpm</rpm-name>
 		
 		<webcontent.dir>${project.basedir}\src\main\webapp\WEB-INF\lib</webcontent.dir>
 	</properties>
