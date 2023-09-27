@@ -89,18 +89,13 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		EmsBodyVO bodyVo = new EmsBodyVO();
 
 		if (Common.isEquals(Config.getString("body.samsung.tables"), "Y")) {
-
 			if (Integer.valueOf(msgId.substring(4, 6)) > 6) bodyVo = selectOne("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".emass.getEmassBodySm", msgId);
 			else bodyVo = selectOne("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".emass.getEmassBody", msgId);
-
 		} else bodyVo = selectOne("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".emass.getEmassBody", msgId);
 
 		if (bodyVo == null) {
-
 			EmsMessageVO emsMessage = getEmassMessage(msgId, firstAdminYn, adminType);
-
 			bodyVo = new EmsBodyVO();
-
 			bodyVo.setMsgId(emsMessage.getMsgId());
 			bodyVo.setBodySize(emsMessage.getBodySize());
 			bodyVo.setSubject(emsMessage.getSubject());
