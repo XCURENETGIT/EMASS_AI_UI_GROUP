@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 30초마다 설정 파일의 변경을 확인한다. 파일이 변경되면 다시 로딩한다 -->
-<configuration scan="true" scanPeriod="2 seconds">
+<configuration scan="true" scanPeriod="30 seconds">
 
 	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
 		<filter class="com.xcurenet.common.filter.LogbackFilter" />
@@ -10,7 +10,85 @@
 			</pattern>
 		</encoder>
 	</appender>
-	
+
+	<appender name="snmp_schedule" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>/users/apache/logs/snmp_schedule.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>/users/apache/logs/snmp_schedule.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>10</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>
+				EMASS [%d{yyyy-MM-dd HH:mm:ss.SSS}] %-5level %20.-20logger{0}.%-4line %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="sql_log" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>/users/apache/logs/sql_edc3.0.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>/users/apache/logs/emass_sql.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>10</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>
+				EMASS [%d{yyyy-MM-dd HH:mm:ss.SSS}] %-5level %20.-20logger{0}.%-4line%n\t\t%msg%n\n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="analysis_scheduler" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>/users/apache/logs/analysis_schedule.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>/users/apache/logs/analysis_schedule.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>10</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>
+				EMASS [%d{yyyy-MM-dd HH:mm:ss.SSS}] %-5level %20.-20logger{0}.%-5line %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<!-- SNMP SCHEDULE LOG -->
+	<logger name="com.xcurenet.common.snmp.schedule" additivity="false">
+		<level value="info"/>
+		<appender-ref ref="snmp_schedule" />
+	</logger>
+
+	<!-- ANALYSIS SCHEDULE LOG -->
+	<logger name="com.xcurenet.emass.analysis.service" additivity="false">
+		<level value="info"/>
+		<appender-ref ref="analysis_scheduler" />
+	</logger>
+
+	<!-- Query Loggers -->
+	<logger name="jdbc.resultsettable" additivity="false">
+		<level value="warn"/>
+		<appender-ref ref="sql_log" />
+	</logger>
+	<logger name="jdbc.audit">
+		<level value="warn"/>
+		<appender-ref ref="sql_log" />
+	</logger>
+	<logger name="jdbc.resultset" additivity="false">
+		<level value="warn"/>
+		<appender-ref ref="sql_log" />
+	</logger>
+
+	<logger name="jdbc.sqltiming" additivity="false">
+		<level value="warn"/>
+		<appender-ref ref="sql_log" />
+	</logger>
+	<logger name="jdbc.sqlonly" additivity="false">
+		<level value="info" />
+		<appender-ref ref="sql_log" />
+	</logger>
+	<logger name="jdbc.connection" additivity="false">
+		<level value="warn" />
+		<appender-ref ref="sql_log" />
+	</logger>
+
 	<root level="INFO">
 		<appender-ref ref="console" />
 	</root>
