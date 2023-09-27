@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "../../dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xcurenet.sqlmap.mappers.mysql.snmpTrap">
+
+
+	<!-- SNMP TRAP 목록 조회 -->
+	<select id="getSnmpTrapList" resultType="snmpTrapVO" parameterType="hashMap">
+		SELECT  DATE_FORMAT(A.EVENT_DT, '%Y-%m-%d %T' ) AS eventDt,
+				B.DEVICE_NM AS deviceNm,
+				A.DEVICE_IP AS deviceIp,
+				A.MASTER_IP AS masterIp,
+				A.DEVISION AS devision,
+				A.EVENT_LEVEL AS eventLevel,
+				A.TITLE AS title,
+				A.CONTENT AS content
+		FROM	UI_SNMP_TRAP A
+				LEFT JOIN UI_DEVICE B ON A.DEVICE_IP = B.DEVICE_IP
+		WHERE	1=1
+		<if test='startDt!=""'>
+		AND		A.EVENT_DT BETWEEN STR_TO_DATE( CONCAT( #{startDt}, '000000' ), '%Y%m%d%H%i%s') AND STR_TO_DATE( CONCAT( #{endDt}, '235959' ), '%Y%m%d%H%i%s')
+		</if>
+		<if test='deviceIp!=null and deviceIp!=""'>
+		AND		A.DEVICE_IP = #{deviceIp}
+		</if>
+		<if test='devision!=null and devision!=""'>
+		AND		A.DEVISION = #{devision}
+		</if>
+		<if test='eventLevel!=null and eventLevel!=""'>
+		AND		A.EVENT_LEVEL = #{eventLevel}
+		</if>
+		ORDER	BY A.EVENT_DT DESC
+		<if test='offset!=null and limit > 0'>
+		LIMIT	${offset}, ${limit}
+		</if>
+	</select>
+
+	<!-- SNMP TRAP 등록 -->
+	<insert id="insertSnmpTrap" parameterType="snmpTrapVO">
+		INSERT INTO UI_SNMP_TRAP (EVENT_DT, DEVICE_IP, DEVISION, SEQ, MASTER_IP, EVENT_LEVEL, TITLE, CONTENT)
+		VALUES (NOW(), #{deviceIp}, #{devision}, #{seq}, #{masterIp}, #{eventLevel}, #{title}, #{content})
+	</insert>
+	
+</mapper>

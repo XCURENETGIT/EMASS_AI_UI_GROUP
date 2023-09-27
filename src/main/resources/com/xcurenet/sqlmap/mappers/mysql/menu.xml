@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "../../dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xcurenet.sqlmap.mappers.mysql.menu">
+
+	
+	<select id="getMenuList" resultType="menuVO" parameterType="hashmap">
+		SELECT	defaultName, menuId, pId, tId, menuLink, pkgType, menuAuth, menuIcon, menuUseyn, lv1_odr, lv2_odr, lv3_odr
+		FROM	(
+				SELECT  A.MENU_DEFAULT_NAME AS defaultName, A.MENU_ID AS menuId, A.P_MENU_ID AS pId, 
+						IFNULL(IFNULL(B.P_MENU_ID, A.P_MENU_ID), A.MENU_ID) AS tId, A.MENU_LINK AS menuLink,
+						A.PKG_TYPE AS pkgType, A.MENU_AUTH AS menuAuth, A.MENU_ICON AS menuIcon, A.MENU_USEYN AS menuUseyn,
+						CASE	WHEN A.P_MENU_ID IS NULL THEN A.MENU_ORDER
+								WHEN B.P_MENU_ID IS NULL THEN B.MENU_ORDER
+								WHEN C.P_MENU_ID IS NULL THEN C.MENU_ORDER
+						END lv1_odr,
+						CASE	WHEN A.P_MENU_ID IS NOT NULL AND  B.P_MENU_ID IS NULL THEN A.MENU_ORDER
+								WHEN C.P_MENU_ID IS NULL THEN B.MENU_ORDER
+						END lv2_odr,
+						CASE	WHEN B.P_MENU_ID IS NOT NULL AND C.P_MENU_ID IS NULL THEN A.MENU_ORDER
+						END lv3_odr
+				FROM	UI_MENU A
+						LEFT JOIN UI_MENU B ON A.P_MENU_ID = B.MENU_ID
+						LEFT JOIN UI_MENU C ON B.P_MENU_ID = C.MENU_ID
+				) AS R
+		<!-- WHERE   T_ID = 'DATA_MONITOR' AND P_ID IS NOT NULL -->
+		<if test='adminAuth!=null and adminAuth!="S"'>
+		WHERE menuAuth = #{adminAuth}
+		</if>
+		ORDER   BY lv1_odr, lv2_odr, lv3_odr
+	</select>
+	
+	<select id="checkMonitoring" resultType="int">
+		SELECT 1 FROM Information_schema.SCHEMATA WHERE SCHEMA_NAME = 'MONITOR';
+	</select>
+	
+</mapper>

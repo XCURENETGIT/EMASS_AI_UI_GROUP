@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "../../dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xcurenet.sqlmap.mappers.mysql.interestUser">
+
+	<select id="getInterestCount" resultType="int" parameterType="string">
+		SELECT	COUNT(*)
+		FROM	UI_INTEREST_USERS A
+		WHERE	A.ADMIN_ID = #{adminId}
+	</select>
+
+	<select id="getInterestSimpleUserList" resultType="interestSimpleUserVO" parameterType="string">
+		SELECT	A.USER_SEQ AS userSeq,
+				A.ADMIN_ID AS adminId,
+				A.USER_TYPE AS userType,
+				CONCAT(A.USER_NM,'(',A.USER_ID,')') AS userNm,
+				A.USER_ID AS userId,
+				A.COMMENT AS comment,
+				GROUP_CONCAT( DISTINCT B.USER_EMAIL ORDER BY B.USER_EMAIL SEPARATOR ',') AS userEmail,
+				GROUP_CONCAT( DISTINCT C.USER_IP ORDER BY C.USER_IP SEPARATOR ',') AS userIp
+		FROM	UI_INTEREST_USERS A
+				LEFT JOIN UI_INTEREST_USER_EMAIL B ON A.USER_SEQ = B.USER_SEQ
+				LEFT JOIN UI_INTEREST_USER_IP C ON  A.USER_SEQ = C.USER_SEQ
+		WHERE	A.ADMIN_ID = #{adminId}
+		GROUP	BY A.USER_SEQ, A.ADMIN_ID, A.USER_TYPE, A.USER_NM, A.USER_ID, A.COMMENT
+		ORDER	BY USER_NM
+	</select>
+	
+	<select id="getInterestList" resultType="interestSimpleUserVO" parameterType="string">
+		SELECT	A.USER_SEQ AS userSeq,
+				A.ADMIN_ID AS adminId,
+				A.USER_TYPE AS userType,
+				A.USER_NM AS userNm,
+				A.USER_ID AS userId,
+				A.COMMENT AS comment,
+				GROUP_CONCAT( DISTINCT B.USER_EMAIL ORDER BY B.USER_EMAIL SEPARATOR ',') AS userEmail,
+				GROUP_CONCAT( DISTINCT C.USER_IP ORDER BY C.USER_IP SEPARATOR ',') AS userIp
+		FROM	UI_INTEREST_USERS A
+				LEFT JOIN UI_INTEREST_USER_EMAIL B ON A.USER_SEQ = B.USER_SEQ
+				LEFT JOIN UI_INTEREST_USER_IP C ON  A.USER_SEQ = C.USER_SEQ
+		WHERE	A.ADMIN_ID = #{adminId}
+		<if test='userType!=null and userType!=""'>
+		AND		A.USER_TYPE = #{userType}
+		</if>
+		<if test='searchType!=null and searchType!="" and searchStr!=null and searchStr!=""'>
+			<if test='searchType=="userId"'>
+			AND		A.USER_ID LIKE CONCAT('%', #{searchStr}, '%')
+			</if>
+			<if test='searchType=="userNm"'>
+			AND		A.USER_NM LIKE CONCAT('%', #{searchStr}, '%')
+			</if>
+			<if test='searchType=="all"'>
+			AND		(
+					A.USER_ID LIKE CONCAT('%', #{searchStr}, '%') OR A.USER_NM LIKE CONCAT('%', #{searchStr}, '%')
+					)
+			</if>
+		</if>
+		GROUP	BY A.USER_SEQ, A.ADMIN_ID, A.USER_TYPE, A.USER_NM, A.USER_ID, A.COMMENT
+		ORDER	BY USER_NM
+	</select>
+	
+	
+	<select id="isInterestUserIdExist" parameterType="interestSimpleUserVO" resultType="int">
+		SELECT  COUNT(*) AS CNT
+		FROM	UI_INTEREST_USERS
+		WHERE	ADMIN_ID = #{adminId}
+		<if test='userSeq!=null and userSeq!=""'>
+		AND		USER_SEQ != #{userSeq}
+		</if>
+		AND		USER_ID = #{userId}
+	</select>
+	
+	<select id="getInterestSimpleUser" resultType="interestSimpleUserVO" parameterType="string">
+		SELECT  A.USER_SEQ AS userSeq,
+				A.ADMIN_ID AS adminId,
+				A.USER_TYPE AS userType,
+				A.USER_NM AS userNm,
+				A.USER_ID AS userId,
+				A.COMMENT AS comment,
+				GROUP_CONCAT( DISTINCT B.USER_EMAIL ORDER BY B.USER_EMAIL SEPARATOR ' ') AS userEmail,
+				GROUP_CONCAT( DISTINCT C.USER_IP ORDER BY C.USER_IP SEPARATOR ' ') AS userIp
+		FROM	UI_INTEREST_USERS A
+				LEFT JOIN UI_INTEREST_USER_EMAIL B ON A.USER_SEQ = B.USER_SEQ
+				LEFT JOIN UI_INTEREST_USER_IP C ON  A.USER_SEQ = C.USER_SEQ
+		WHERE	A.USER_SEQ = #{userSeq}
+		GROUP	BY A.USER_SEQ, A.ADMIN_ID, A.USER_TYPE, A.USER_NM, A.USER_ID, A.COMMENT
+		LIMIT	1
+	</select>
+	
+	<select id="getAllInterestSimpleUser" resultType="interestSimpleUserVO" parameterType="string">
+		SELECT  A.USER_SEQ AS userSeq,
+				A.ADMIN_ID AS adminId,
+				A.USER_TYPE AS userType,
+				A.USER_NM AS userNm,
+				A.USER_ID AS userId,
+				A.COMMENT AS comment,
+				GROUP_CONCAT( DISTINCT B.USER_EMAIL ORDER BY B.USER_EMAIL SEPARATOR ' ') AS userEmail,
+				GROUP_CONCAT( DISTINCT C.USER_IP ORDER BY C.USER_IP SEPARATOR ' ') AS userIp
+		FROM	UI_INTEREST_USERS A
+				LEFT JOIN UI_INTEREST_USER_EMAIL B ON A.USER_SEQ = B.USER_SEQ
+				LEFT JOIN UI_INTEREST_USER_IP C ON  A.USER_SEQ = C.USER_SEQ
+		WHERE	A.ADMIN_ID = #{adminId}
+		GROUP	BY A.USER_SEQ, A.ADMIN_ID, A.USER_TYPE, A.USER_NM, A.USER_ID, A.COMMENT
+	</select>
+	
+	<!-- 관심 사용자 IP 중복체크 -->
+	<select id="getInterestIpExist" resultType="interestSimpleUserVO" parameterType="interestSimpleUserVO">
+		SELECT	IFNULL(SUM(CNT),0) AS cnt, GROUP_CONCAT( DISTINCT USER_IP ORDER BY USER_IP SEPARATOR ',') AS userIp
+		FROM	(
+				SELECT COUNT(*) AS CNT, B.USER_IP
+        		FROM UI_INTEREST_USERS A LEFT JOIN UI_INTEREST_USER_IP B ON A.USER_SEQ = B.USER_SEQ
+				WHERE	FIND_IN_SET(USER_IP, #{userIp})
+				AND		A.ADMIN_ID = #{adminId}
+        		<if test='userSeq!=null and userSeq!=""'>
+				AND		A.USER_SEQ != #{userSeq}
+				</if>
+				GROUP BY USER_IP
+				) AS RS
+	</select>
+	
+	<!-- 관심 사용자 EMAIL 중복체크 -->
+	<select id="getInterestEmailExist" resultType="interestSimpleUserVO" parameterType="interestSimpleUserVO">
+	SELECT	IFNULL(SUM(CNT),0) AS cnt, GROUP_CONCAT( DISTINCT USER_EMAIL ORDER BY USER_EMAIL SEPARATOR ',') AS userEmail
+		FROM	(
+				SELECT COUNT(*) AS CNT, B.USER_EMAIL
+        		FROM UI_INTEREST_USERS A LEFT JOIN UI_INTEREST_USER_EMAIL B ON A.USER_SEQ = B.USER_SEQ
+				WHERE	FIND_IN_SET(USER_EMAIL, #{userEmail})
+				AND		A.ADMIN_ID = #{adminId}
+        		<if test='userSeq!=null and userSeq!=""'>
+				AND		A.USER_SEQ != #{userSeq}
+				</if>
+				GROUP BY USER_EMAIL
+				) AS RS
+	</select>
+	<!-- 관심 사용자 등록 -->
+	<insert id="insertInterestUser" parameterType="interestSimpleUserVO">
+		INSERT	INTO UI_INTEREST_USERS (USER_SEQ, ADMIN_ID, USER_TYPE, USER_NM, USER_ID, COMMENT)
+		VALUES	(#{userSeq}, #{adminId}, #{userType}, #{userNm}, #{userId}, #{comment})
+	</insert>
+	
+	<!-- 관심 사용자 삭제 -->
+	<delete id="deleteInterestUser" parameterType="interestSimpleUserVO">
+		DELETE	FROM UI_INTEREST_USERS WHERE FIND_IN_SET(USER_SEQ, #{userSeq})
+	</delete>
+	
+	<!-- 관심 사용자 수정 -->
+	<update id="updateInterestUser" parameterType="interestSimpleUserVO">
+		UPDATE	UI_INTEREST_USERS
+		SET		USER_TYPE = #{userType},
+				USER_ID = #{userId},
+				USER_NM = #{userNm},
+				COMMENT = #{comment}
+		WHERE	USER_SEQ = #{userSeq} AND ADMIN_ID = #{adminId}
+	</update>
+	
+	<!-- 대시보드 관심 사용자 CONF 수정 -->
+	<update id="updateInterestUserConf" parameterType="interestSimpleUserVO">
+		UPDATE	UI_CONF_ADMIN
+		SET		VAL = ''
+		WHERE	CONF_ID = 'interestUser.user'
+		AND		FIND_IN_SET(VAL, #{userSeq})
+	</update>
+	
+	<!-- 관심 사용자 IP 수정 -->
+	<update id="updateInterestUserIp" parameterType="interestSimpleUserVO">
+		UPDATE	UI_INTEREST_USER_IP
+		SET		USER_IP = #{userIp}
+		WHERE	USER_SEQ = #{userSeq}
+	</update>
+	
+	<!-- 관심 사용자 EMAIL 수정 -->
+	<update id="updateInterestUserEmail" parameterType="interestSimpleUserVO">
+		UPDATE	UI_INTEREST_USER_EMAIL
+		SET		USER_EMAIL = #{userEmail}
+		WHERE	USER_SEQ = #{userSeq}
+	</update>
+	
+	<!-- 관심 사용자 IP 등록 -->
+	<insert id="insertInterestUserIp" parameterType="interestSimpleUserVO">
+		REPLACE INTO UI_INTEREST_USER_IP (USER_SEQ, USER_IP )
+		VALUES ( #{userSeq}, #{userIp} )
+	</insert>
+
+	<!-- 관심 사용자 EMAIL 등록 -->
+	<insert id="insertInterestUserEmail" parameterType="interestSimpleUserVO">
+		REPLACE INTO UI_INTEREST_USER_EMAIL (USER_SEQ, USER_EMAIL )
+		VALUES ( #{userSeq}, #{userEmail} )
+	</insert>
+	
+	<!-- 관심 사용자 IP 삭제 -->
+	<delete id="deleteInterestUserIp" parameterType="interestSimpleUserVO">
+		DELETE FROM UI_INTEREST_USER_IP WHERE USER_SEQ = #{userSeq}
+	</delete>
+	
+	<!-- 관심 사용자 EMAIL 삭제 -->
+	<delete id="deleteInterestUserEmail" parameterType="interestSimpleUserVO">
+		DELETE FROM UI_INTEREST_USER_EMAIL WHERE USER_SEQ = #{userSeq}
+	</delete>
+	
+	<select id="getMaxUserSeq" resultType="string">
+		SELECT IFNULL(MAX(CAST(USER_SEQ AS UNSIGNED)),0)+1 AS userSeq FROM UI_INTEREST_USERS
+	</select>
+	
+	<!-- 관심 사용자 그룹 목록 -->
+	<select id="getInterUserGroupList" parameterType="hashmap" resultType="adminUserGroupVO">
+		SELECT	GROUP_SEQ AS groupSeq
+				, GROUP_NAME AS groupName
+		FROM	UI_ADMIN_USER_GROUP
+		WHERE	1 = 1
+		<if test='searchStr!=null and searchStr!=""'>
+		AND		GROUP_NAME LIKE CONCAT('%', #{searchStr}, '%')
+		</if>	
+		ORDER	BY GROUP_SEQ
+	</select>
+	
+	<!-- 사용자 그룹 아이템 목록 -->
+	<select id="getInterUserGroupUserList" parameterType="hashmap" resultType="adminUserGroupVO">
+		SELECT 	A.USER_ID AS userId, 
+				GROUP_CONCAT( DISTINCT 
+				<if test='encryptUseYN == "Y"'>
+				CAST(if(B.USER_EMAIL is null, null, xcndec(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, B.USER_EMAIL)) AS CHAR)
+				</if>
+				<if test='encryptUseYN != "Y"'>
+				B.USER_EMAIL
+				</if>
+				ORDER BY B.USER_EMAIL SEPARATOR ', ') AS userEmail,
+				GROUP_CONCAT( DISTINCT (C.USER_IP) ORDER BY INET6_ATON(C.USER_IP) SEPARATOR ', ') AS userIp
+		FROM 	UI_ADMIN_USER_GROUP_LIST A 
+				LEFT OUTER JOIN UI_USER_EMAIL B ON A.USER_ID = B.USER_ID
+				LEFT OUTER JOIN UI_USER_IP C ON A.USER_ID = C.USER_ID
+		WHERE	FIND_IN_SET(A.GROUP_SEQ, #{groupCodes})
+		GROUP BY A.USER_ID
+	</select>
+	
+	<!-- 관심 사용자 정보 목록(메시지 정보 리스트 팝업) -->
+	<select id="getInterestUserInfo" parameterType="string" resultType="adminUserGroupVO">
+		SELECT	A.GROUP_SEQ AS groupSeq, GROUP_NAME AS groupName, C.USER_ID AS userId, C.USER_NM AS userNm, B.GROUP_COLOR AS groupColor
+		FROM	UI_ADMIN_USER_GROUP_LIST A, UI_ADMIN_USER_GROUP B, UI_USERS C
+		WHERE	A.GROUP_SEQ = B.GROUP_SEQ
+		AND		A.USER_ID = C.USER_ID
+		AND		A.USER_ID = #{userId}
+	</select>
+
+</mapper>

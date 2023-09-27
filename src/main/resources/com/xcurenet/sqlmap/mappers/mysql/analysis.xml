@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "../../dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xcurenet.sqlmap.mappers.mysql.analysis">
+
+	<select id="plusHour" resultType="hashmap" parameterType="hashmap">
+		SELECT DATE_FORMAT(DATE_ADD(STR_TO_DATE(#{targetDate}, '%Y%m%d%H'), interval ${start} hour), '%Y%m%d%H') AS startDate,
+        	   DATE_FORMAT(DATE_ADD(STR_TO_DATE(#{targetDate}, '%Y%m%d%H'), interval ${end} hour), '%Y%m%d%H') AS endDate
+	</select>
+
+	<select id="getLastTime" resultType="string">
+		SELECT CTIME 
+		  FROM UI_USAGE_COMPARE
+		 ORDER BY CTIME DESC
+		 LIMIT 1
+	</select>
+
+	<select id="getTimeAverage" resultType="usageChartSchedulerVO" parameterType="analysisSearchVO">
+	<![CDATA[
+		SELECT CTIME AS ctime, DATE_TIME AS dateTime, DATE_DAY_OF_WEEK AS dateDayOfWeek, AVG(CASE WHEN b.DATE IS NULL THEN IN_MAIL ELSE 0 END) AS inMail, AVG(CASE WHEN b.DATE IS NULL THEN OUT_MAIL ELSE 0 END) AS outMail, AVG(CASE WHEN b.DATE IS NULL THEN FILE_SIZE ELSE 0 END) AS fileSize, AVG(CASE WHEN b.DATE IS NULL THEN FTP ELSE 0 END) AS ftp, AVG(CASE WHEN b.DATE IS NULL THEN TOTAL_SIZE ELSE 0 END) AS totalSize
+		  FROM UI_USAGE_COMPARE a
+	           LEFT OUTER JOIN UI_HOLIDAY b
+	             ON CONCAT(a.DATE_MONTH, a.DATE_DAY) = b.DATE
+	            AND a.DATE_DAY_OF_WEEK IN (2, 3, 4, 5, 6)
+		 WHERE CTIME >= #{startDate} 
+		   AND CTIME <= #{endDate}
+		 GROUP BY CTIME, DATE_TIME, DATE_DAY_OF_WEEK
+		 ORDER BY CTIME, DATE_TIME
+	]]>
+	</select>
+
+	<select id="getDayAverage" resultType="usageChartSchedulerVO" parameterType="analysisSearchVO">
+	<![CDATA[
+		SELECT MAX(CTIME) AS ctime, DATE_MONTH AS dateMonth, DATE_DAY AS dateDay, DATE_DAY_OF_WEEK AS dateDayOfWeek, SUM(CASE WHEN b.DATE IS NULL THEN IN_MAIL ELSE 0 END) AS inMail, SUM(CASE WHEN b.DATE IS NULL THEN OUT_MAIL ELSE 0 END) AS outMail, SUM(CASE WHEN b.DATE IS NULL THEN FILE_SIZE ELSE 0 END) AS fileSize, SUM(CASE WHEN b.DATE IS NULL THEN FTP ELSE 0 END) AS ftp, SUM(CASE WHEN b.DATE IS NULL THEN TOTAL_SIZE ELSE 0 END) AS totalSize
+		  FROM UI_USAGE_COMPARE a
+	           LEFT OUTER JOIN UI_HOLIDAY b
+	             ON CONCAT(a.DATE_MONTH, a.DATE_DAY) = b.DATE
+	            AND a.DATE_DAY_OF_WEEK IN (2, 3, 4, 5, 6)
+		 WHERE CTIME >= #{startDate}
+		   AND CTIME <= #{endDate} 
+		 GROUP BY DATE_MONTH, DATE_DAY, DATE_DAY_OF_WEEK
+		 ORDER BY DATE_MONTH, DATE_DAY
+	]]>
+	</select>
+
+	<select id="getMonthAverage" resultType="usageChartSchedulerVO" parameterType="analysisSearchVO">
+	<![CDATA[
+		SELECT MAX(CTIME) AS ctime, DATE_MONTH AS dateMonth, SUM(CASE WHEN b.DATE IS NULL THEN IN_MAIL ELSE 0 END) AS inMail, SUM(CASE WHEN b.DATE IS NULL THEN OUT_MAIL ELSE 0 END) AS outMail, SUM(CASE WHEN b.DATE IS NULL THEN FILE_SIZE ELSE 0 END) AS fileSize, SUM(CASE WHEN b.DATE IS NULL THEN FTP ELSE 0 END) AS ftp, SUM(CASE WHEN b.DATE IS NULL THEN TOTAL_SIZE ELSE 0 END) AS totalSize
+		  FROM UI_USAGE_COMPARE a
+	           LEFT OUTER JOIN UI_HOLIDAY b
+	             ON CONCAT(a.DATE_MONTH, a.DATE_DAY) = b.DATE
+	            AND a.DATE_DAY_OF_WEEK IN (2, 3, 4, 5, 6)
+		 WHERE CTIME >= #{startDate}
+		   AND CTIME <= #{endDate}
+		 GROUP BY DATE_MONTH
+		 ORDER BY DATE_MONTH
+	]]>
+	</select>
+
+	<select id="getWeekAverage" resultType="usageChartSchedulerVO" parameterType="analysisSearchVO">
+	<![CDATA[
+		SELECT MAX(CTIME) AS ctime, DATE_MONTH AS dateMonth, DATE_WEEK_OF_MONTH AS dateWeekOfMonth, SUM(CASE WHEN b.DATE IS NULL THEN IN_MAIL ELSE 0 END) AS inMail, SUM(CASE WHEN b.DATE IS NULL THEN OUT_MAIL ELSE 0 END) AS outMail, SUM(CASE WHEN b.DATE IS NULL THEN FILE_SIZE ELSE 0 END) AS fileSize, SUM(CASE WHEN b.DATE IS NULL THEN FTP ELSE 0 END) AS ftp, SUM(CASE WHEN b.DATE IS NULL THEN TOTAL_SIZE ELSE 0 END) AS totalSize
+		  FROM UI_USAGE_COMPARE a
+	           LEFT OUTER JOIN UI_HOLIDAY b
+	             ON CONCAT(DATE_MONTH, DATE_DAY) = b.DATE
+	            AND a.DATE_DAY_OF_WEEK IN (2, 3, 4, 5, 6)
+		 WHERE CTIME >= #{startDate}
+		   AND CTIME <= #{endDate}
+		 GROUP BY DATE_MONTH, DATE_WEEK_OF_MONTH
+		 ORDER BY DATE_MONTH, DATE_WEEK_OF_MONTH
+	]]>
+	</select>
+
+	<select id="getTime" resultType="usageChartSchedulerVO" parameterType="analysisSearchVO">
+	<![CDATA[
+		SELECT CTIME AS ctime, DATE_MONTH AS dateMonth, DATE_DAY AS dateDay, DATE_TIME AS dateTime, IN_MAIL AS inMail, OUT_MAIL AS outMail, FILE_SIZE AS fileSize, FTP AS ftp, TOTAL_SIZE AS totalSize
+		  FROM UI_USAGE_COMPARE
+		 WHERE CTIME >= #{startDate} 
+		   AND CTIME <= #{endDate}
+		 ORDER BY CTIME
+	]]>
+	</select>
+
+	<select id="getDay" resultType="usageChartSchedulerVO" parameterType="analysisSearchVO">
+	<![CDATA[
+		SELECT MAX(CTIME) AS ctime, DATE_MONTH AS dateMonth, DATE_DAY AS dateDay, SUM(IN_MAIL) AS inMail, SUM(OUT_MAIL) AS outMail, SUM(FILE_SIZE) AS fileSize, SUM(FTP) AS ftp, SUM(TOTAL_SIZE) AS totalSize
+		  FROM UI_USAGE_COMPARE
+		 WHERE CTIME >= #{startDate}
+		   AND CTIME <= #{endDate} 
+		 GROUP BY DATE_MONTH, DATE_DAY
+		 ORDER BY DATE_MONTH, DATE_DAY
+	]]>
+	</select>
+
+	<select id="getMonth" resultType="usageChartSchedulerVO" parameterType="analysisSearchVO">
+	<![CDATA[
+		SELECT MAX(CTIME) AS ctime, DATE_MONTH AS dateMonth, SUM(IN_MAIL) AS inMail, SUM(OUT_MAIL) AS outMail, SUM(FILE_SIZE) AS fileSize, SUM(FTP) AS ftp, SUM(TOTAL_SIZE) AS totalSize
+		  FROM UI_USAGE_COMPARE
+		 WHERE CTIME >= #{startDate}
+		   AND CTIME <= #{endDate}
+		 GROUP BY DATE_MONTH
+		 ORDER BY DATE_MONTH
+	]]>
+	</select>
+
+	<select id="getWeek" resultType="usageChartSchedulerVO" parameterType="analysisSearchVO">
+	<![CDATA[
+		SELECT MAX(CTIME) AS ctime, DATE_MONTH AS dateMonth, DATE_WEEK_OF_MONTH AS dateWeekOfMonth, MAX(CTIME) AS ctime, SUM(IN_MAIL) AS inMail, SUM(OUT_MAIL) AS outMail, SUM(FILE_SIZE) AS fileSize, SUM(FTP) AS ftp, SUM(TOTAL_SIZE) AS totalSize
+		  FROM UI_USAGE_COMPARE
+		 WHERE CTIME >= #{startDate}
+		   AND CTIME <= #{endDate}
+		 GROUP BY DATE_MONTH, DATE_WEEK_OF_MONTH
+		 ORDER BY DATE_MONTH, DATE_WEEK_OF_MONTH
+	]]>
+	</select>
+
+	<insert id="insertUsageCompare" parameterType="usageChartSchedulerVO">
+		REPLACE INTO UI_USAGE_COMPARE (CTIME, DATE_MONTH, DATE_DAY, DATE_TIME, DATE_WEEK_OF_MONTH, DATE_DAY_OF_WEEK, IN_MAIL, OUT_MAIL, FILE_SIZE, FTP, TOTAL_SIZE)
+		VALUES
+		
+		<foreach collection="list" item="item" separator=" , ">
+			(#{item.ctime}, #{item.dateMonth}, #{item.dateDay}, #{item.dateTime}, #{item.dateWeekOfMonth}, #{item.dateDayOfWeek}, #{item.inMail}, #{item.outMail}, #{item.fileSize}, #{item.ftp}, #{item.totalSize})
+		</foreach> 
+	</insert>
+</mapper>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="cacheEnabled" value="true" />
+		<setting name="useGeneratedKeys" value="false" />
+		<setting name="useColumnLabel" value="true" />
+		<setting name="defaultExecutorType" value="SIMPLE" />
+		<setting name="defaultFetchSize" value="500" />
+	</settings>
+
+	<typeAliases>
+		<typeAlias alias="userVO" type="com.xcurenet.user.service.UserVO" />
+		<typeAlias alias="keywordGroupVO" type="com.xcurenet.emass.keyword.service.KeywordGroupVO" />
+		<typeAlias alias="keywordVO" type="com.xcurenet.emass.keyword.service.KeywordVO" />
+		<typeAlias alias="attachTypeVO" type="com.xcurenet.code.service.AttachTypeVO" />
+		<typeAlias alias="busiVO" type="com.xcurenet.code.service.BusiVO" />
+		<typeAlias alias="coVO" type="com.xcurenet.code.service.CoVO" />
+		<typeAlias alias="deptVO" type="com.xcurenet.code.service.DeptVO" />
+		<typeAlias alias="generalVO" type="com.xcurenet.code.service.GeneralVO" />
+		<typeAlias alias="jikgubVO" type="com.xcurenet.code.service.JikgubVO" />
+		<typeAlias alias="jikinVO" type="com.xcurenet.code.service.JikinVO" />
+
+		<typeAlias alias="serviceGroupVO" type="com.xcurenet.emass.service.service.ServiceGroupVO" />
+		<typeAlias alias="serviceTypeVO" type="com.xcurenet.emass.service.service.ServiceTypeVO" />
+
+		<typeAlias alias="domainFilterVO" type="com.xcurenet.emass.filter.service.DomainFilterVO" />
+		<typeAlias alias="ipFilterDeviceVO" type="com.xcurenet.emass.filter.service.IpFilterDeviceVO" />
+		<typeAlias alias="idFilterVO" type="com.xcurenet.emass.filter.service.IdFilterVO" />
+		<typeAlias alias="ipFilterVO" type="com.xcurenet.emass.filter.service.IpFilterVO" />
+		<typeAlias alias="sizeFilterVO" type="com.xcurenet.emass.filter.service.SizeFilterVO" />
+		<typeAlias alias="subjectFilterVO" type="com.xcurenet.emass.filter.service.SubjectFilterVO" />
+		<typeAlias alias="urlFilterVO" type="com.xcurenet.emass.filter.service.UrlFilterVO" />
+		<typeAlias alias="attachFilterVO" type="com.xcurenet.emass.filter.service.AttachFilterVO" />
+
+		<typeAlias alias="deviceVO" type="com.xcurenet.device.service.DeviceVO" />
+		<typeAlias alias="auditVO" type="com.xcurenet.audit.service.AuditVO" />
+		<typeAlias alias="adminVO" type="com.xcurenet.admin.service.AdminVO" />
+		<typeAlias alias="adminGridVO" type="com.xcurenet.admin.service.AdminGridVO" />
+		<typeAlias alias="authorityVO" type="com.xcurenet.admin.service.AuthorityVO" />
+		<typeAlias alias="configVO" type="com.xcurenet.config.service.ConfigVO" />
+		<typeAlias alias="configAdminVO" type="com.xcurenet.config.service.ConfigAdminVO" />
+		
+		<typeAlias alias="ipRangeVO" type="com.xcurenet.emass.iprange.service.IpRangeVO" />
+
+		<typeAlias alias="dashboardVO" type="com.xcurenet.emass.dashboard.service.DashboardVO" />
+		<typeAlias alias="deviceStatusVO" type="com.xcurenet.emass.dashboard.service.DeviceStatusVO" />
+		<typeAlias alias="serviceDataLoggingVO" type="com.xcurenet.emass.dashboard.service.ServiceDataLoggingVO" />
+		
+		<typeAlias alias="hdfsVO" type="com.xcurenet.emass.customDashboard.service.HdfsVO" />
+		<typeAlias alias="customDashboardVO" type="com.xcurenet.emass.customDashboard.service.CustomDashboardVO" />
+		<typeAlias alias="customDashboardMenuVO" type="com.xcurenet.emass.customDashboard.service.CustomDashboardMenuVO" />
+		
+		<typeAlias alias="alarmVO" type="com.xcurenet.emass.reservationAlarm.service.AlarmVO" />
+		<typeAlias alias="alarmLogVO" type="com.xcurenet.emass.reservationAlarm.service.AlarmLogVO" />
+		
+		<typeAlias alias="consentVO" type="com.xcurenet.emass.consent.service.ConsentVO" />
+		<typeAlias alias="consentSeqVO" type="com.xcurenet.emass.consent.service.ConsentSeqVO" />
+		
+		
+		<typeAlias alias="workdayVO" type="com.xcurenet.emass.workday.service.WorkdayVO" />
+		<typeAlias alias="holidayVO" type="com.xcurenet.emass.holiday.service.HolidayVO" />
+		
+		<typeAlias alias="adminFilterVO" type="com.xcurenet.emass.adminFilter.service.AdminFilterVO" />
+		<typeAlias alias="adminFolderVO" type="com.xcurenet.emass.adminFolder.service.AdminFolderVO" />
+		<typeAlias alias="adminFolderMessageVO" type="com.xcurenet.emass.adminFolder.service.AdminFolderMessageVO" />
+		
+		<typeAlias alias="snmpTrapVO" type="com.xcurenet.common.snmp.service.SnmpTrapVO" />
+		<typeAlias alias="versionVO" type="com.xcurenet.common.makeInfo.VersionVO" />
+		
+		<typeAlias alias="codeVO" type="com.xcurenet.code.service.CodeVO" />
+		<typeAlias alias="xcnLogVO" type="com.xcurenet.xcnlog.service.XcnLogVO" />
+		
+		<typeAlias alias="deviceTrafficStatVO" type="com.xcurenet.device.service.DeviceTrafficStatVO" />
+
+		<typeAlias alias="emsBodyVO" type="com.xcurenet.emass.message.service.EmsBodyVO" />
+		<typeAlias alias="emsKeywordVO" type="com.xcurenet.emass.message.service.EmsKeywordVO" />
+		<typeAlias alias="emsHeaderVO" type="com.xcurenet.emass.message.service.EmsHeaderVO" />
+		<typeAlias alias="emsMessageVO" type="com.xcurenet.emass.message.service.EmsMessageVO" />
+		<typeAlias alias="emsRecvVO" type="com.xcurenet.emass.message.service.EmsRecvVO" />
+		<typeAlias alias="emsAttachVO" type="com.xcurenet.emass.message.service.EmsAttachVO" />
+		<typeAlias alias="emsAttachTextVO" type="com.xcurenet.emass.message.service.EmsAttachTextVO" />
+		<typeAlias alias="emsPiVO" type="com.xcurenet.emass.message.service.EmsPiVO" />
+		<typeAlias alias="emsPiDetailVO" type="com.xcurenet.emass.message.service.EmsPiDetailVO" />
+		<typeAlias alias="emsMessengerAdminXrootMtrVO" type="com.xcurenet.emass.message.service.EmsMessengerAdminXrootMtrVO" />
+		
+		<typeAlias alias="analysisSearchVO" type="com.xcurenet.emass.analysis.service.SearchVO" />
+		<typeAlias alias="usageChartSchedulerVO" type="com.xcurenet.emass.analysis.service.UsageChartSchedulerVO" />
+		
+		<typeAlias alias="interestSimpleUserVO" type="com.xcurenet.interestUser.service.InterestSimpleUserVO" />
+		
+		<typeAlias alias="searchLogVO" type="com.xcurenet.emass.searchLog.service.SearchLogVO" />
+		
+		<typeAlias alias="userGroupVO" type="com.xcurenet.user.service.UserGroupVO" />
+		
+		<typeAlias alias="adminUserGroupVO" type="com.xcurenet.interestUser.service.AdminUserGroupVO" />
+		
+		<typeAlias alias="downloadBatchVO" type="com.xcurenet.emass.message.service.DownloadBatchVO" />
+		
+		<typeAlias alias="menuVO" type="com.xcurenet.menu.service.MenuVO" />
+		
+		<typeAlias alias="emsSearchKeywordVO" type="com.xcurenet.emass.message.service.EmsSearchKeywordVO" />
+		
+		<typeAlias alias="patternVO" type="com.xcurenet.emass.message.service.PatternVO" />
+		
+		<typeAlias alias="fileDataVO" type="com.xcurenet.emass.customDashboard.service.FileDataVO" />
+		
+	</typeAliases>
+
+	<mappers>
+	</mappers>
+</configuration>

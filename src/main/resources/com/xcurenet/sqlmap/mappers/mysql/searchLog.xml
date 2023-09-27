@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "../../dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xcurenet.sqlmap.mappers.mysql.searchLog">
+	<insert id="insertSearchLog" parameterType="searchLogVO">
+		INSERT INTO UI_MSG_SEARCH_LOG (SEARCH_DT, SEARCH_TYPE, SEARCH_ID, SEARCH_NAME, P_FILTER_SEQ, FILTER_SEQ, FILTER_NM, CONSENT_NO, CONSENT_USER_ID, CONSENT_NAME, CONDITIONS)
+		VALUES (NOW(), #{searchType}, #{searchId}, #{searchName}, CASE WHEN  #{pFilterSeq} = -1 THEN NULL ELSE #{pFilterSeq} END, CASE WHEN  #{filterSeq} = -1 THEN NULL ELSE #{filterSeq} END, #{filterNm}, #{consentNo}, #{consentUserId}, #{consentName}, #{conditions})
+	</insert>
+	
+	<select id="getSearchLogList" resultType="searchLogVO" parameterType="hashmap">
+		SELECT	SEARCH_SEQ AS searchSeq
+				, DATE_FORMAT(SEARCH_DT, '%Y-%m-%d %T' ) AS searchDt
+				, SEARCH_TYPE AS searchType
+				, SEARCH_ID AS searchId
+				, SEARCH_NAME AS searchName
+				, P_FILTER_SEQ AS pFilterSeq
+				, FILTER_SEQ AS filterSeq
+				, FILTER_NM AS filterNm
+				, CONSENT_NO AS consentNo
+				, CONSENT_USER_ID AS consentUserId
+				, CONSENT_NAME AS consentName
+				, CONDITIONS AS conditions
+		FROM 	UI_MSG_SEARCH_LOG
+		WHERE	1 = 1
+		<if test='startDt != null and startDt != ""'>
+		AND		SEARCH_DT BETWEEN STR_TO_DATE( CONCAT(#{startDt}, '000000'), '%Y%m%d%H%i%s') AND STR_TO_DATE( CONCAT(#{endDt}, '235959'), '%Y%m%d%H%i%s')
+		</if> 
+		<if test='adminId != null and adminId != ""'>
+		AND		SEARCH_ID = #{adminId}
+		</if>
+		<if test='searchType != null and searchType != ""'>
+		AND		SEARCH_TYPE = #{searchType}
+		</if>
+		ORDER	BY SEARCH_DT DESC
+	</select>
+</mapper>

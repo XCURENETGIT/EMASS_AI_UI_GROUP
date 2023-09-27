@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "../../dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xcurenet.sqlmap.mappers.mysql.customDashboard">
+
+	<select id="getDashBoardMenuList" resultType="customDashboardMenuVO" parameterType="customDashboardMenuVO">
+		SELECT	MENU_KEY AS menuKey, MENU_NAME AS menuName, MENU_ICON AS menuIcon, ADMIN_ID AS adminId, USEYN AS useYn,
+				DEFAULT_MENU AS defaultMenu, DATE_FORMAT(UPDATE_DT, '%Y-%m-%d %T' ) AS updateDt
+		FROM	UI_CUSTOM_DASHBOARD_MENU
+		WHERE	ADMIN_ID = #{adminId}
+		<if test='useYn!=null and useYn!=""'>
+		AND		USEYN = #{useYn}
+		</if>
+		<if test='defaultMenu!=null and defaultMenu!=""'>
+		AND		DEFAULT_MENU = #{defaultMenu}
+		</if>
+		<if test='menuKey!=null and menuKey!=""'>
+		AND		MENU_KEY = #{menuKey}
+		</if>
+		ORDER BY UPDATE_DT DESC
+	</select>
+	
+	<select id="getDashBoardMenuMaxMenuKey" resultType="int">
+		SELECT 	IFNULL(MAX(MENU_KEY)+1, 0) AS menuKey 
+		FROM 	UI_CUSTOM_DASHBOARD_MENU
+	</select>
+	
+	<insert id="saveDashBoardMenu" parameterType="customDashboardMenuVO">
+		REPLACE INTO UI_CUSTOM_DASHBOARD_MENU (MENU_KEY, MENU_NAME, MENU_ICON, ADMIN_ID, USEYN, DEFAULT_MENU, UPDATE_DT) 
+		VALUES (${menuKey}, #{menuName}, #{menuIcon}, #{adminId}, #{useYn}, #{defaultMenu}, NOW())
+	</insert>
+	
+	<update id="changeDashBoardDefaultMenu" parameterType="customDashboardMenuVO">
+		UPDATE 	UI_CUSTOM_DASHBOARD_MENU SET DEFAULT_MENU = #{defaultMenu}
+		WHERE 	ADMIN_ID = #{adminId}
+		<if test='menuKey!=null and menuKey!=""'>
+		AND		MENU_KEY = ${menuKey}
+		</if>
+	</update>
+
+	<delete id="deleteDashBoardMenu" parameterType="customDashboardMenuVO">
+		DELETE FROM UI_CUSTOM_DASHBOARD_MENU WHERE MENU_KEY = #{menuKey}
+	</delete>
+	
+	<delete id="deleteDashBoardPosition" parameterType="customDashboardVO">
+		DELETE FROM UI_CUSTOM_DASHBOARD_POSITION WHERE DASH_KEY = ${dashKey}
+	</delete>
+	<delete id="deleteDashBoardPositionMenu" parameterType="customDashboardMenuVO">
+		DELETE FROM UI_CUSTOM_DASHBOARD_POSITION WHERE MENU_KEY = #{menuKey}
+	</delete>
+	
+	<select id="getDashBoardContentList" resultType="customDashboardVO" parameterType="customDashboardVO">
+		SELECT 	CD.DASH_KEY AS dashKey, CD.DASH_NAME AS dashName, CD.DASH_TYPE AS dashType, CD.DASH_MULTI_X AS dashMultiLeft, CD.DASH_MULTI_Y AS dashMultiRight, 
+				CD.DASH_CHART AS dashChart, CD.DASH_CHART_X AS dashChartX, CD.DASH_CHART_Y AS dashChartY,
+				CD.DASH_ICON AS dashIcon, CD.DASH_COLOR AS dashColor, CD.DASH_HTML AS html, CD.DASH_CONDITION AS dashCondition, CD.DASH_COMMENT AS dashComment, 
+				CD.ADMIN_ID AS adminId, CD.USEYN AS useYn, adminIds
+		FROM 	UI_CUSTOM_DASHBOARD CD
+			LEFT JOIN (SELECT P_DASH_KEY, GROUP_CONCAT(ADMIN_ID) as adminIds FROM UI_CUSTOM_DASHBOARD_SHARE GROUP BY P_DASH_KEY) CDS ON CD.DASH_KEY = CDS.P_DASH_KEY
+		WHERE	CD.ADMIN_ID = #{adminId}
+		<if test='searchStr!=null and searchStr!=""'>
+		AND		( CD.DASH_NAME	LIKE CONCAT('%', #{searchStr}, '%') OR	CD.DASH_COMMENT LIKE CONCAT('%', #{searchStr}, '%') )
+		</if>
+		<if test='dashKey!=null and dashKey!=""'>
+		AND		CD.DASH_KEY = ${dashKey}
+		</if>
+		<if test='useYn!=null and useYn!=""'>
+		AND		CD.USEYN = #{useYn}
+		</if>
+		ORDER BY CD.DASH_KEY
+	</select>
+	
+	<select id="getDefaultDashBoardContentList" resultType="customDashboardVO" parameterType="customDashboardVO">
+		SELECT 	DASH_KEY AS dashKey, DASH_NAME AS dashName, DASH_TYPE AS dashType, DASH_MULTI_X AS dashMultiLeft, DASH_MULTI_Y AS dashMultiRight, 
+				DASH_CHART AS dashChart, DASH_CHART_X AS dashChartX, DASH_CHART_Y AS dashChartY,
+				DASH_ICON AS dashIcon, DASH_COLOR AS dashColor, DASH_HTML AS html, DASH_CONDITION AS dashCondition, DASH_COMMENT AS dashComment, 
+				USEYN AS useYn
+		FROM 	UI_CUSTOM_DASHBOARD_DEFAULT
+	</select>
+	
+	<insert id="saveDashBoardPositionDefault" parameterType="adminVO">
+		INSERT	INTO UI_CUSTOM_DASHBOARD_POSITION(MENU_KEY, DASH_KEY, DASH_ID, DASH_X, DASH_Y, DASH_WIDTH, DASH_HEIGHT, DASH_MIN_WIDTH, DASH_MIN_HEIGHT, DASH_MAX_WIDTH, DASH_MAX_HEIGHT)
+		SELECT (SELECT MENU_KEY FROM UI_CUSTOM_DASHBOARD_MENU WHERE ADMIN_ID = #{adminId} AND DEFAULT_MENU = 'Y'), 
+				@r := @r + 1, CONCAT((SELECT MENU_KEY FROM UI_CUSTOM_DASHBOARD_MENU WHERE ADMIN_ID = #{adminId} AND DEFAULT_MENU = 'Y'),'_', @r), 
+				DASH_X, DASH_Y, DASH_WIDTH, DASH_HEIGHT, DASH_MIN_WIDTH, DASH_MIN_HEIGHT, DASH_MAX_WIDTH, DASH_MAX_HEIGHT
+		FROM	UI_CUSTOM_DASHBOARD_POSITION_DEFAULT a, (SELECT @r := IFNULL(MIN(DASH_KEY), 0)-1 FROM UI_CUSTOM_DASHBOARD WHERE ADMIN_ID = #{adminId}) r
+    	ORDER	BY POSITION_SEQ
+	</insert>
+	
+	<insert id="saveDashBoardContentDefault" parameterType="adminVO">
+		INSERT	INTO UI_CUSTOM_DASHBOARD(DASH_KEY, DASH_NAME, DASH_TYPE, DASH_MULTI_X, DASH_MULTI_Y, DASH_CHART, DASH_CHART_X, DASH_CHART_Y, DASH_ICON, DASH_COLOR, DASH_HTML, DASH_CONDITION, DASH_COMMENT, ADMIN_ID, USEYN)
+		SELECT	@r := @r + 1, DASH_NAME, DASH_TYPE, DASH_MULTI_X, DASH_MULTI_Y, DASH_CHART, DASH_CHART_X, DASH_CHART_Y, DASH_ICON, DASH_COLOR, DASH_HTML, DASH_CONDITION, DASH_COMMENT, #{adminId}, USEYN
+		FROM	UI_CUSTOM_DASHBOARD_DEFAULT a, (SELECT @r := IFNULL(MAX(DASH_KEY), 0) FROM UI_CUSTOM_DASHBOARD) r
+	</insert>
+	
+	<select id="saveDashBoardContentMaxDashKey" resultType="int">
+		SELECT 	IFNULL(MAX(DASH_KEY)+1, 0) AS dashKey 
+		FROM 	UI_CUSTOM_DASHBOARD
+	</select>
+	
+	<insert id="saveDashBoardContent" parameterType="customDashboardVO">
+		REPLACE INTO UI_CUSTOM_DASHBOARD (DASH_KEY, DASH_NAME, DASH_TYPE, DASH_MULTI_X, DASH_MULTI_Y, DASH_CHART, DASH_CHART_X, DASH_CHART_Y,
+				DASH_ICON, DASH_COLOR, DASH_HTML, DASH_CONDITION, DASH_COMMENT, ADMIN_ID, USEYN) 
+		VALUES ( ${dashKey}, #{dashName}, #{dashType}, #{dashMultiLeft}, #{dashMultiRight}, #{dashChart}, #{dashChartX}, #{dashChartY}, 
+				#{dashIcon}, #{dashColor}, #{html}, #{dashCondition}, #{dashComment}, #{adminId}, #{useYn})
+	</insert>
+	
+	<select id="getShareAdmin" resultType="adminVO" parameterType="hashMap">
+		SELECT	AD.ADMIN_ID as adminID,
+				AD.ADMIN_NAME AS adminName,
+				<if test='encryptUseYN == "Y"'>
+				if(AD.ADMIN_EMAIL is null, null, xcndec(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, AD.ADMIN_EMAIL)) AS adminEmail,
+				</if>
+				<if test='encryptUseYN != "Y"'>
+				AD.ADMIN_EMAIL AS adminEmail,
+				</if>
+				AD.ADMIN_HP AS adminHp,
+				AD.STATUS AS status,
+				AD.WORK_STATUS AS workStatus,
+				AD.ADMIN_TYPE AS adminType,
+				AD.USE_YN AS useYn
+		FROM	UI_CUSTOM_DASHBOARD_SHARE CDS
+			LEFT JOIN UI_ADMIN AD ON AD.ADMIN_ID = CDS.ADMIN_ID
+		GROUP BY CDS.ADMIN_ID
+			HAVING count(DISTINCT CASE WHEN CDS.P_DASH_KEY IN
+		<foreach collection="pdashKey" index="index" item="item" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+				THEN CDS.P_DASH_KEY END) = #{total};
+	</select>
+	
+	<select id="isShareExist" resultType="int" parameterType="hashMap">
+		SELECT	COUNT(*)
+		FROM	UI_CUSTOM_DASHBOARD_SHARE
+		WHERE	ADMIN_ID = #{adminId}
+		<if test='pdashKey!=null and pdashKey!=""'>
+		AND		P_DASH_KEY = #{pdashKey}
+		</if>
+		<if test='dashKey!=null and dashKey!=""'>
+		AND		DASH_KEY = #{dashKey}
+		</if>
+	</select>
+	
+	<select id="getShareDashKey" resultType="string" parameterType="customDashboardMenuVO">
+		SELECT	DASH_KEY
+		FROM	UI_CUSTOM_DASHBOARD_SHARE
+		WHERE	P_DASH_KEY = ${dashKey}
+		AND		ADMIN_ID = #{adminId}
+	</select>
+	
+	<delete id="deleteAdminShare" parameterType="hashMap">
+		DELETE FROM UI_CUSTOM_DASHBOARD_SHARE WHERE P_DASH_KEY = #{pdashKey}
+	</delete>
+	
+	<delete id="deleteDashboardShare" parameterType="customDashboardMenuVO">
+		DELETE FROM UI_CUSTOM_DASHBOARD_SHARE 
+		WHERE	ADMIN_ID = #{adminId}
+		<if test='dashKey!=null and dashKey!=""'>
+		AND		DASH_KEY = #{dashKey}
+		</if>
+	</delete>
+	
+	<delete id="deleteDashBoardaAdminShare" parameterType="hashMap">
+		DELETE FROM UI_CUSTOM_DASHBOARD_SHARE 
+		WHERE	ADMIN_ID = #{adminId}
+		AND		P_DASH_KEY = #{pdashKey}
+	</delete>
+	
+	<insert id="insertDashboardShare" parameterType="hashMap">
+		REPLACE INTO UI_CUSTOM_DASHBOARD_SHARE (DASH_KEY, ADMIN_ID, P_DASH_KEY) 
+		VALUES ( ${dashKey}, #{adminId}, #{pdashKey})
+	</insert>
+	
+	<delete id="deleteDashBoardContent" parameterType="customDashboardVO">
+		DELETE FROM UI_CUSTOM_DASHBOARD WHERE DASH_KEY = #{dashKey}
+	</delete>
+	
+	<select id="getDashBoardList" resultType="customDashboardVO" parameterType="customDashboardVO">
+		SELECT 	A.MENU_KEY AS menuKey, A.DASH_ID AS id, A.DASH_X AS x, A.DASH_Y AS y, A.DASH_WIDTH AS width, A.DASH_HEIGHT AS height, A.DASH_MIN_WIDTH AS minWidth, 
+				A.DASH_MIN_HEIGHT AS minHeight, A.DASH_MAX_WIDTH AS maxWidth, A.DASH_MAX_HEIGHT AS maxHeight, 
+				B.DASH_KEY AS dashKey, B.DASH_NAME AS dashName, B.DASH_TYPE AS dashType, B.DASH_MULTI_X AS dashMultiLeft, 
+				B.DASH_MULTI_Y AS dashMultiRight, B.DASH_CHART AS dashChart, B.DASH_CHART_X AS dashChartX, B.DASH_CHART_Y AS dashChartY, 
+				B.DASH_ICON AS dashIcon, B.DASH_COLOR AS dashColor, B.DASH_HTML AS html, B.DASH_CONDITION AS dashCondition, 
+				B.DASH_COMMENT AS dashComment, B.ADMIN_ID AS adminId, B.USEYN AS useYn
+		FROM 	UI_CUSTOM_DASHBOARD_POSITION A LEFT JOIN UI_CUSTOM_DASHBOARD B ON A.DASH_KEY = B.DASH_KEY
+		WHERE	A.MENU_KEY = #{menuKey}
+		AND		B.ADMIN_ID = #{adminId}
+	</select>
+	
+	<insert id="saveDashBoard" parameterType="customDashboardVO">
+		REPLACE INTO UI_CUSTOM_DASHBOARD_POSITION (MENU_KEY, DASH_KEY, DASH_ID, DASH_X, DASH_Y, DASH_WIDTH, DASH_HEIGHT, 
+				DASH_MIN_WIDTH, DASH_MIN_HEIGHT, DASH_MAX_WIDTH, DASH_MAX_HEIGHT) 
+		VALUES ( ${menuKey}, ${dashKey}, #{id}, ${x}, ${y}, ${width}, ${height}, ${minWidth}, ${minHeight}, ${maxWidth}, ${maxHeight})
+	</insert>
+	
+	<delete id="deleteDashBoard" parameterType="customDashboardVO">
+		DELETE FROM UI_CUSTOM_DASHBOARD_POSITION WHERE MENU_KEY = #{menuKey}
+	</delete>
+	
+	<select id="getHdfsData" resultType="hdfsVO" parameterType="hashmap">
+		SELECT	DT AS date,
+				IFNULL(REMAINING, 0) AS remaining, 
+				IFNULL(USED, 0) AS used, 
+				IFNULL(TOTAL, 0) AS total, 
+				IFNULL(USED_PERCENT, 0) AS usedP
+		FROM	(
+				SELECT	DATE_FORMAT(DT, '%Y-%m-%d' ) AS DT
+				FROM	(
+						SELECT DATE_ADD(NOW(),INTERVAL -1 DAY) AS DT UNION SELECT DATE_ADD(NOW(),INTERVAL -2 DAY) UNION SELECT DATE_ADD(NOW(),INTERVAL -3 DAY) UNION
+						SELECT	DATE_ADD(NOW(),INTERVAL -4 DAY) UNION SELECT DATE_ADD(NOW(),INTERVAL -5 DAY) UNION SELECT DATE_ADD(NOW(),INTERVAL -6 DAY) UNION SELECT DATE_ADD(NOW(),INTERVAL -7 DAY)
+						) AS X
+				) AS A LEFT JOIN UI_HDFS_SIZE B ON (A.DT = DATE_FORMAT(B.`DATE`, '%Y-%m-%d' ))
+		ORDER	BY DT
+	</select>
+	
+	<insert id="insertHDFSInfo" parameterType="hashmap">
+		REPLACE INTO UI_HDFS_SIZE (DATE, REMAINING, USED, TOTAL, USED_PERCENT) 
+		VALUES ( DATE_FORMAT(NOW(), '%Y-%m-%d' ), #{dfsRemain}, #{dfsUsed}, #{preCap}, #{dfsUsedP})
+	</insert>
+	
+	<insert id="insertHDFSDirSize" parameterType="hashmap">
+		REPLACE INTO UI_HDFS_DIR_SIZE (DATE, TOTAL) 
+		VALUES ( DATE_FORMAT(#{date}, '%Y-%m-%d' ), #{dirSize})
+	</insert>
+	
+	<select id="getHdfsDirSize" resultType="hdfsVO" parameterType="hashmap">
+		SELECT	DATE_FORMAT(DATE, '%Y%m%d' ) AS date, TOTAL AS total
+		FROM	UI_HDFS_DIR_SIZE
+		WHERE	DATE BETWEEN #{startDate} AND #{endDate}
+	</select>
+	
+	<insert id="saveLoggingData" parameterType="hashmap">
+		REPLACE INTO UI_CONF_ADMIN (CONF_ID, ADMIN_ID, VAL, DEFAULT_VAL, UPDATE_DT) 
+		VALUES ( 'dashboard.logging.use', #{adminId}, #{useYn}, null, NOW())
+	</insert>
+	
+	<select id="getLoggingDataSetting" resultType="string" parameterType="hashmap">
+		SELECT	VAL AS val
+		FROM	UI_CONF_ADMIN
+		WHERE	ADMIN_ID = #{adminId}
+		AND		CONF_ID = 'dashboard.logging.use'
+	</select>
+
+	<select id="getFileSizeData" resultType="fileDataVO" parameterType="string" >	
+		SELECT  INET_NTOA(conv(SRCIP , 16 , 10)) AS srcip, 
+			    INET_NTOA(conv(DSTIP , 16 , 10)) AS dstip, 
+			    STAT_CNT AS statCnt,
+			    SIZE AS size,
+			    SEQ AS seq,
+			    HOST AS host
+	 	FROM	MONITOR.MSG_MONITOR	 	
+	 	WHERE 	INSERT_DT LIKE  CONCAT(#{date}, '%')
+		ORDER BY CAST(SIZE AS UNSIGNED) DESC
+		LIMIT 10
+	</select>
+
+	<select id="getFileCount" resultType="fileDataVO" parameterType="string">		
+		SELECT  INET_NTOA(conv(SRCIP , 16 , 10)) AS srcip, 
+			    INET_NTOA(conv(DSTIP , 16 , 10)) AS dstip, 
+			    STAT_CNT AS statCnt,
+			    SIZE AS size,
+			    SEQ AS seq,
+			    HOST AS host  
+		FROM	MONITOR.MSG_MONITOR
+		WHERE 	INSERT_DT LIKE  CONCAT(#{date}, '%')
+		ORDER BY CAST(STAT_CNT AS UNSIGNED) DESC
+		LIMIT 10
+	</select>	
+</mapper>

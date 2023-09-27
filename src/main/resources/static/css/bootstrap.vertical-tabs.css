@@ -1,0 +1,94 @@
+/*!
+ * bootstrap-vertical-tabs - v1.2.1
+ * https://dbtek.github.io/bootstrap-vertical-tabs
+ * 2014-11-07
+ * Copyright (c) 2014 İsmail Demirbilek
+ * License: MIT
+ */
+.tabs-left{
+  border-bottom: none;
+  padding-top: 2px;
+  padding-left:-10px;
+}
+.tabs-left {
+  border-right: 1px solid #ddd;
+}
+.tabs-left>li {
+  float: none;
+  margin-bottom: 2px;
+}
+.tabs-left>li {
+  margin-right: -1px;
+}
+.tabs-left>li.active>a,
+.tabs-left>li.active>a:hover,
+.tabs-left>li.active>a:focus {
+  border-bottom-color: #ddd;
+  border-right-color: transparent;
+}
+
+.tabs-left>li>a {
+  border-radius: 4px 0 0 4px;
+  margin-right: 0;
+  display:block;
+}
+.sideways {
+  border: none;
+  position: relative;
+}
+.sideways>li {
+  height: 40px;
+  width: 150px;
+  margin-bottom: 110px;
+  left:-23px;
+  top: 52px;
+}
+.sideways>li>a {
+  border-right: 1px solid #ddd;
+  text-align: center;
+  border-radius: 4px 4px 4px 4px;
+}
+.sideways>li.active>a,
+.sideways>li.active>a:hover,
+.sideways>li.active>a:focus {
+  border-bottom-color: #ddd;
+  border-right-color: transparent;
+  border-left-color: #ddd;
+  background-color:#337ab7;
+  color:#fff;
+}
+.sideways.tabs-left {
+	width: 40px;
+}
+.sideways.tabs-left>li {
+  -webkit-transform: rotate(-90deg);
+  -moz-transform: rotate(-90deg);
+  -ms-transform: rotate(-90deg);
+  -o-transform: rotate(-90deg);
+  transform: rotate(-90deg);
+}
+.sideways.tabs-left>li>a {
+	right:-25px;
+	padding-left:10px;
+	border:1px solid #ddd;
+}
+
+.rotate {
+-webkit-transform: rotate(90deg);
+-moz-transform: rotate(90deg);
+-ms-transform: rotate(90deg);
+-o-transform: rotate(90deg);
+filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+width:38px;
+top:-55px;
+height:150px;
+text-align: center;
+vertical-align: middle;
+}
+.rotate>i{
+	left:3px;
+	top:-3px !important;
+}
+.rotate>span{
+	top:5px;
+}

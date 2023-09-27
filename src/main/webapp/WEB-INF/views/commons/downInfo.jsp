@@ -1,0 +1,340 @@
+<%@page import="net.sf.json.JSONObject"%>
+<%@page import="com.xcurenet.common.util.Common"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
+
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<title>EMASS LTH - <s:message code="common.msg.download"/> <s:message code="mail.view.list"/></title>
+<%@ include file="../base.jsp"%>
+<script type="text/javascript" src="<c:url value="/js/InnoFD.js"/>"></script>
+<style type="text/css">
+html,body{height: 100%; padding: 0px; margin: 0px;overflow: auto;min-width: 650px;}
+.attachExt{
+	cursor:pointer;
+}
+.deleteText{
+	text-decoration:line-through;
+}
+</style>
+<script type="text/JavaScript">
+var searchFlag=false;
+$(document).ready(function(){
+	$('#searchBtn').click(function(){ getData(); });
+	$('#noSelectBtn').click(function(){ self.close();  });
+	
+	$('#autoRefresh').click(function(){
+		if($('input[name="autoRefresh"]').is(":checked")) {
+			getData();
+		}
+	});
+	
+	$('#removeBtn').click(function() {
+		var deleteData = grid.getSelectedRows();
+		var ingData = deleteData.find(function(v) { return v.statusStr == "I" ||  v.statusStr == "S"});
+		if(ingData) {
+			alert('<s:message code="download.msg.delete.exception1" />');
+			return;
+		}
+		
+		removeDownInfoData(deleteData);
+	})
+
+	getData( );
+});
+
+function getData(lastRow) {
+	if(searchFlag) return;
+	grid.pageSize = 500;
+	if ( lastRow == undefined ) {
+		grid.data.length = 0;
+		grid.rtnNextPageFunc = getData;
+		grid.loadingPage = 0;
+	} else {
+		grid.loadingPage++;
+	}
+	var exportTypeSel = $('#exportTypeSel option:selected').val();
+	var fileExtSel = $('#fileExtSel option:selected').val();
+	var statusSel = $('#statusSel option:selected').val();
+	searchFlag=true;
+	ui.get({
+		url 		: 'getDownBatchList.xcn',
+		exportTypeSel	: exportTypeSel,
+		fileExtSel	: fileExtSel,
+		statusSel	: statusSel,
+		offset 		: grid.data.length,
+		limit 		: grid.pageSize,
+		success 	: function(data, total) {
+			grid.appendData(data);
+			if($('input[name="autoRefresh"]').is(":checked")) {
+				window.setTimeout(function(){
+					getData();
+				}, 5000);
+			}
+		},
+		error 		: function(status, message) {
+			ui.alertMsg(message);
+		},
+		complete 	: function() {
+			searchFlag=false;
+			grid.off();
+		}
+	});
+}
+
+function downFile(downPath,downFileSize) {
+	var href = '<c:url value="/downloadMessageFile.do"/>?downFilePath='+encodeURI(downPath)+'&downFileSize='+downFileSize;
+	$.fileDownload(href, {
+		successCallback: function (url) {
+		},
+		failCallback: function (responseHtml, url) {
+			ui.alertMsg('<s:message code="consent.error.file"/>');
+		}
+	});
+}
+
+function cancelDownFile(downSeq) {
+	ui.get({
+		url 		: 'cancelDownFile.xcn',
+		statusSel	: 'C',
+		downSeq		: downSeq,
+		success 	: function(data, total) {
+			
+		},
+		error 		: function(status, message) {
+			ui.alertMsg(message);
+		},
+		complete 	: function() {
+			getData();
+		}
+	});
+}
+
+function removeDownInfoData(data) {
+	if(data.length == 0) {
+		alert('<s:message code="download.msg.delete.noexist" />');
+		return;
+	}
+	ui.confirmMsg('<s:message code="download.msg.delete.confirm" />','','',function(rs) {
+		ui.get({
+			url			: 'removeDownInfoData.xcn',
+			data 		: JSON.stringify(data),
+			success		: function(data, total) {
+				alert('<s:message code="common.msg.deleted" />');
+			},
+			error		: function(status, message) {
+				
+			},
+			complete 	: function() {
+				getData();
+			}
+		})
+	});
+}
+</script>
+</head>
+<body class="mini-navbar">
+
+	<div class="modal fade" id="downValPop" tabindex="-1" role="dialog" aria-labelledby="downValPop">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h3 class="modal-title"><s:message code="common.msg.download"/> <s:message code="analysis.freedom.ui.condition"/></h3>
+					</div>
+					<div class="modal-body">
+						<div class="form-inline" id="modal_body_area" style="min-height: 200px;max-height: 400px;overflow: auto;">
+						</div>
+					</div>
+				<div class="modal-footer">
+					<button type="button" accesskey="C" class="btn btn-default" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<header class="header">
+		<div class="naviBack">
+			<img src="<c:url value="/img/title/home_icon.png"/>">
+			<span class="navi"><span id="code_title"></span><s:message code="mail.view.list"/></span>
+		</div>
+	</header>
+	<div class="xcn_container" style="min-width: 650px;">
+		<div class="boxArea">
+			<div class="content_body">
+				<div class="row">
+					<div class="col-xs-10">
+						<div class="form-inline not-dashed">
+							<div class="form-group">
+								<select class="form-control input-sm" id="exportTypeSel" style="max-width: 200px;">
+									<option value="" selected>- <s:message code="common.msg.type"/> <s:message code="common.msg.select"/> -</option>
+									<option value="L"><s:message code="selectCodeAll.list"/></option>
+									<option value="B"><s:message code="condition.body"/></option>
+									<option value="A"><s:message code="consent.attach"/></option>
+									<option value="LB"><s:message code="selectCodeAll.list"/>+<s:message code="condition.body"/></option>
+									<option value="LBA"><s:message code="selectCodeAll.list"/>+<s:message code="condition.body"/>+<s:message code="consent.attach"/></option>
+								</select>
+							</div>
+							<div class="form-group">
+								<select class="form-control input-sm" id="fileExtSel" style="max-width: 200px;">
+									<option value="" selected>- <s:message code="codeInfo.filetype"/> <s:message code="common.msg.select"/> -</option>
+									<option value="xlsx"><s:message code="common.msg.excel"/>(xlsx)</option>
+									<option value="cell"><s:message code="common.msg.hancel"/>(cell)</option>
+									<option value="csv"><s:message code="common.msg.text"/>(csv)</option>
+									<option value="pdf"><s:message code="selectCodeAll.list"/>(PDF)</option>
+								</select>
+							</div>
+							<div class="form-group">
+								<select class="form-control input-sm" id="statusSel" style="max-width: 200px;">
+									<option value="" selected>- <s:message code="common.msg.download"/> <s:message code="deviceInfo.status"/> <s:message code="common.msg.select"/> -</option>
+									<option value="S"><s:message code="common.msg.start"/></option>
+									<option value="I"><s:message code="download.msg.progressing"/></option>
+									<option value="Y"><s:message code="message.msg.file"/> <s:message code="download.msg.create"/> <s:message code="mail.complete"/></option>
+									<option value="X"><s:message code="download.msg.expired"/></option>
+									<option value="E"><s:message code="common.msg.noresult"/></option>
+									<option value="C"><s:message code="common.msg.cancel"/></option>
+								</select>
+							</div>
+							<div class="btn-group">
+								<button type="button" class="btn btn-success btn-sm" accesskey="Q" id="searchBtn"><span title="refresh" class="glyphicon glyphicon-repeat"></span> REFRESH</button>
+								<button type="button" class="btn btn-warning btn-sm" accesskey="R" id="removeBtn" style="margin-left:5px;"><span title="remove" class="glyphicon glyphicon-trash"></span> 삭제</button>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-2 text-right">
+						<label><input type="checkbox" id="autoRefresh" name="autoRefresh" checked="checked"> Auto Refresh</label>
+					</div>
+				</div>
+				<div class="row xcn_full top_space">
+					<div class="col-xs-12" style="height: 100%;">
+						<div id="downInfoGrid" class="slickGrid gridArea"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+			var grid = new Xgrid('downInfoGrid', contextRoot);
+			grid.onCheckBox();
+			grid.autoNumber();
+			/* grid.colAdd('downSeq', '일련번호', 0, 'center', true, 'nomal'); */
+			grid.colAdd('reqDt', '<s:message code="download.msg.request.date"/>', 160, 'center', false, 'nomal', function ( row, cell, value, columnDef, dataContext ) {
+				var statStr = grid.getValue(row, 'statusStr');
+				if( statStr == 'X' ) return '<span class="deleteText">' + value + '</span>';
+				else return value;
+			});
+			grid.colAdd('exportType', '<s:message code="common.msg.type"/>', 120, 'center', false, 'nomal', function ( row, cell, value, columnDef, dataContext ) {
+				var statStr = grid.getValue(row, 'statusStr');
+				var rtnVal = "";
+				
+				if(value == 'L') rtnVal = '<s:message code="selectCodeAll.list"/>';
+				else if(value == 'B') rtnVal = '<s:message code="condition.body"/>';
+				else if(value == 'A') rtnVal = '<s:message code="consent.attach"/>';
+				else if(value == 'LB') rtnVal = '<s:message code="selectCodeAll.list"/>+<s:message code="condition.body"/>';
+				else if(value == 'LBA') rtnVal = '<s:message code="selectCodeAll.list"/>+<s:message code="condition.body"/>+<s:message code="consent.attach"/>';
+				
+				if( statStr == 'X' ) return '<span class="deleteText">' + rtnVal + '</span>';
+				else return rtnVal;
+			});
+			grid.colAdd('exportFileExt', '<s:message code="codeInfo.filetype"/>', 100, 'center', false, 'nomal', function ( row, cell, value, columnDef, dataContext ) {
+				var statStr = grid.getValue(row, 'statusStr');
+				var rtnVal = "";
+				
+				if(value == 'xlsx') rtnVal = '<s:message code="common.msg.excel"/>(xlsx)';
+				else if(value == 'cell') rtnVal = '<s:message code="common.msg.hancel"/>(cell)';
+				else if(value == 'csv') rtnVal = '<s:message code="common.msg.text"/>(csv)';
+				else if(value == 'pdf') rtnVal = '<s:message code="selectCodeAll.list"/>(PDF)';
+				
+				if( statStr == 'X' ) return '<span class="deleteText">' + rtnVal + '</span>';
+				else return rtnVal;
+			});
+			grid.colAdd('downVal', '<s:message code="common.msg.download"/> <s:message code="analysis.freedom.ui.condition"/>', 300, 'left', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
+				var statStr = grid.getValue(row, 'statusStr');
+				if( statStr == 'X' ) return '<span class="deleteText">' + value.replaceAll('┌', '<br>') + '</span>';
+				else return value.replaceAll('┌', '<br>');
+			});
+			grid.colAdd('downStatus', '<s:message code="download.msg.progress"/> <s:message code="deviceInfo.status"/>', 150, 'center', false, 'nomal', function ( row, cell, value, columnDef, dataContext ) {
+				var progClass = "";
+				var statStr = grid.getValue(row, 'statusStr');
+				var ingRows = grid.getValue(row, 'ingRows').comma();
+				var totalRows = grid.getValue(row, 'totalRows').comma();
+				if(statStr == 'X' || statStr == 'C' || statStr == 'H' || statStr == 'M') progClass = "progress-bar-danger";
+				else if(statStr == 'E') progClass = "progress-bar-warning";
+				else if(statStr == 'Y') progClass = "progress-bar-success";
+				if(value >= 0 && value <= 100) {
+					var rtnVal = '<div class="progress-bar progress-bar-striped '+ progClass +'" role="progressbar" aria-valuenow="'+ value +'" aria-valuemin="0" aria-valuemax="100" style="width:'+value+'%">'+value+'%</div>';
+					return rtnVal;
+				} else {
+					return value;
+				}
+			});
+			grid.colAdd('downRows', '<s:message code="download.msg.progress"/> <s:message code="common.msg.count"/>', 150, 'center', false, 'nomal', function ( row, cell, value, columnDef, dataContext ) {
+				var downStatus = grid.getValue(row, 'downStatus');
+				var ingRows = grid.getValue(row, 'ingRows').comma();
+				var totalRows = grid.getValue(row, 'totalRows').comma();
+				if(downStatus >= 0 && downStatus <= 100) {
+					return ingRows + '/' + totalRows;
+				}
+				return '';
+			});
+			grid.colAdd('endDt', '<s:message code="consent.expiration.date"/>', 100, 'center', false, 'nomal', function ( row, cell, value, columnDef, dataContext ) {
+				var statStr = grid.getValue(row, 'statusStr');
+				if( statStr == 'X' ) return '<span class="deleteText">' + value + '</span>';
+				else return value;
+			});
+			grid.colAdd('statusStr', '<s:message code="common.msg.download"/>', 80, 'center', false, 'nomal', function ( row, cell, value, columnDef, dataContext ) {
+				if(value=='S') return '<s:message code="common.msg.start"/>';
+				else if(value=='I') return '<s:message code="download.msg.progressing"/>';
+				else if(value=='Y') {
+					var downPath = grid.getValue(row, 'downFilePath');
+					var rtnVal = '<button type="button" class="btn btn-sm btn-primary"><s:message code="common.msg.download"/></button>';
+					return rtnVal;
+				}
+				else if(value=='X') return '<span class="deleteText"><s:message code="download.msg.expired"/></span>';
+				else if(value=='E') return '<s:message code="common.msg.noresult"/>';
+				else if(value=='C') return '<s:message code="common.msg.cancel"/>';
+				else if(value=='H') return '<s:message code="download.msg.shutdown"/>';
+				else if(value=='M') return '<s:message code="download.msg.monitor"/>';
+				return '';
+			});
+			grid.colAdd('downFileSize', '<s:message code="message.msg.attach_size"/>', 100, 'center', false, 'nomal', function ( row, cell, value, columnDef, dataContext ) {
+				var statStr = grid.getValue(row, 'statusStr');
+				if( statStr == 'X' ) return '<span class="deleteText">' + convertFileSize(value) + '</span>';
+				else return convertFileSize(value);
+			});
+			grid.colAdd('skipCnt', '<s:message code="download.msg.skip" />', 80, 'center', false, 'nomal', function ( row, cell, value, columnDef, dataContext ) {
+				return value.comma();
+			});
+			grid.colAdd('cancel', '<s:message code="common.msg.cancel"/>', 80, 'center', false, 'nomal', function ( row, cell, value, columnDef, dataContext ) {
+				var statStr = grid.getValue(row, 'statusStr');
+				if( statStr != 'X' && statStr != 'C' && statStr != 'Y' && statStr != 'M' && statStr != 'H') return '<button type="button" class="btn btn-sm btn-warning"><s:message code="common.msg.cancel"/></button>';
+				else return '';
+			});
+			grid.loadHeader(false);
+			grid.initData('<s:message code="common.msg.search.click"/>');
+			grid.onClick = function() {
+				if (grid.Col == grid.ColIndex('downVal')) {
+					$("#downValPop").modal('show');
+					
+					var downValStr = grid.getValue(grid.Row, 'downVal').replaceAll('┌', '<br>');
+					$('#modal_body_area').html(downValStr);
+				}
+				if (grid.Col == grid.ColIndex('statusStr')) {
+					if(grid.getValue(grid.Row, 'statusStr') == 'Y') {
+						downFile(grid.getValue(grid.Row, 'downFilePath'), grid.getValue(grid.Row, 'downFileSize'));
+					}
+				}
+				if (grid.Col == grid.ColIndex('cancel')) {
+					var statusStr = grid.getValue(grid.Row, 'statusStr');
+					if(statusStr != 'X' && statusStr != 'C' && statusStr != 'M' && statusStr != 'H') {
+						cancelDownFile(grid.getValue(grid.Row, 'downSeq'));
+					}
+				}
+			};
+		</script>
+</body>
+</html>

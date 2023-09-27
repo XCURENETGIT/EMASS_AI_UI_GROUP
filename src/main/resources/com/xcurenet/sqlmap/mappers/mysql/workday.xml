@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "../../dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xcurenet.sqlmap.mappers.mysql.workday">
+
+	<!-- 사업장 업무일/업무시간 조회 -->
+	<select id="getWorkday" resultType="workdayVO" parameterType="hashmap">
+		SELECT	BUSICD AS busiCd,
+				WDAY AS workDay,
+				WHOUR AS workHour,
+				CREATE_DT AS createDt
+		FROM	UI_WORKDAY
+		WHERE	BUSICD = #{busiCd}
+		LIMIT	1
+	</select>
+	
+	<!-- 사업장 업무일/업무시간 저장 -->
+	<update id="saveWorkday" parameterType="workdayVO">
+		REPLACE	INTO UI_WORKDAY
+		SET		BUSICD 		= #{busiCd},
+				WDAY 		= #{workDay},
+				WHOUR 		= #{workHour},
+				CREATE_DT 	= NOW()
+	</update>
+
+</mapper>

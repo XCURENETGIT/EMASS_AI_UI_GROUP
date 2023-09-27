@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "../../dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xcurenet.sqlmap.mappers.mysql.consent">
+
+	<!-- 동의서 조회 -->
+	<select id="getConsentList" resultType="consentVO" parameterType="hashmap">
+		SELECT	A.NO AS no,
+				TYPE AS type,
+				NAME AS name,
+				A.USER_ID AS userId,
+				DEPTCD AS deptCd,
+				DEPTNM AS deptNm,
+				DATE_FORMAT(EXPIRATION_DT, '%Y-%m-%d' ) AS edate,
+				ATTACHED_YN AS attachedYn,
+				SEARCH_YN AS searchYn,
+				DATE_FORMAT(CREATE_DT, '%Y-%m-%d' ) AS createDt,
+				CREATE_ID AS createId,
+				CREATE_NAME AS createNm,
+				PURPOSE AS purpose,
+				FILE_PATH AS filePath,
+				APPCD AS appCd,
+				FILE_NAME AS fileName,
+				ALARM_YN AS alarmYn,
+				REGISTRANT_YN AS registrantYn,
+				ALARM_MAIL_YN AS alarmMailYn,
+				ALARM_SMS_YN AS alarmSmsYn,
+				ALARM_MONITOR_YN AS alarmMonitorYn,
+				GROUP_CONCAT(DISTINCT B.IP ORDER BY B.IP SEPARATOR ',') AS userIp,
+				GROUP_CONCAT(DISTINCT 
+				<if test='encryptUseYN == "Y"'>
+				CAST(if(C.USER_EMAIL is null, null, xcndec(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, C.USER_EMAIL)) AS CHAR)
+				</if>
+				<if test='encryptUseYN != "Y"'>
+				C.USER_EMAIL 
+				</if>
+				ORDER BY C.USER_EMAIL SEPARATOR ',') AS userEmail
+		FROM	UI_CONSENT A
+				LEFT OUTER JOIN	UI_CONSENT_IP B ON A.NO = B.NO
+				LEFT OUTER JOIN UI_USER_EMAIL C ON A.USER_ID = C.USER_ID
+		WHERE	DATE_FORMAT(CREATE_DT, '%Y-%m-%d' ) BETWEEN DATE_FORMAT(#{startDate}, '%Y-%m-%d' ) AND DATE_FORMAT(#{endDate}, '%Y-%m-%d' )
+		<if test='type!=null and type!=""'>
+		AND		TYPE = #{type}
+		</if>
+		<if test='consentStatus!="all"'>
+		AND		APPCD = #{consentStatus}
+		</if>
+		<if test='createNm!=null and createNm!=""'>
+		AND		CREATE_NAME LIKE CONCAT('%', #{createNm}, '%')
+		</if>
+		<if test='searchStr!=null and searchStr!=""'>
+		AND		NAME LIKE CONCAT('%', #{searchStr}, '%')
+		</if>
+		GROUP	BY A.NO,
+				TYPE,
+				NAME,
+				A.USER_ID,
+				DEPTCD,
+				DEPTNM,
+				DATE_FORMAT(EXPIRATION_DT, '%Y-%m-%d' ),
+				ATTACHED_YN,
+				SEARCH_YN,
+				DATE_FORMAT(CREATE_DT, '%Y-%m-%d %T' ),
+				CREATE_ID,
+				CREATE_NAME,
+				PURPOSE,
+				FILE_PATH,
+				APPCD,
+				FILE_NAME,
+				ALARM_YN,
+				REGISTRANT_YN,
+				ALARM_MAIL_YN,
+				ALARM_SMS_YN,
+				ALARM_MONITOR_YN
+		ORDER	BY NO DESC
+		<if test='offset!=null and limit > 0'>
+		LIMIT	${offset}, ${limit}
+		</if>
+	</select>
+	
+	<select id="getConsentSearchList" resultType="consentVO" parameterType="hashmap">
+		SELECT  A.NO AS no, 
+				TYPE AS type,
+				A.NAME AS name, 
+				A.USER_ID AS userId, 
+				A.DEPTCD AS deptCd, 
+				A.DEPTNM AS deptNm, 
+				DATE_FORMAT( EXPIRATION_DT, '%Y-%m-%d') AS edate, 
+				A.ATTACHED_YN AS attachedYn,
+				A.SEARCH_YN AS searchYn,
+				DATE_FORMAT( CREATE_DT, '%Y-%m-%d') AS createDt,
+				A.CREATE_ID AS createId, 
+				A.CREATE_NAME AS createNm, 
+				A.PURPOSE AS purpose,
+				A.FILE_PATH AS filePath,
+				A.ALARM_YN AS alarmYn,
+				A.REGISTRANT_YN AS registrantYn,
+				A.ALARM_MAIL_YN AS alarmMailYn,
+				A.ALARM_SMS_YN AS alarmSmsYn,
+				A.ALARM_MONITOR_YN AS alarmMonitorYn,
+				GROUP_CONCAT(DISTINCT B.IP ORDER BY B.IP SEPARATOR ',') AS userIp,
+				GROUP_CONCAT(DISTINCT 
+				<if test='encryptUseYN == "Y"'>
+				CAST(if(C.USER_EMAIL is null, null, xcndec(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, C.USER_EMAIL)) AS CHAR) 
+				</if>
+				<if test='encryptUseYN != "Y"'>
+				C.USER_EMAIL 
+				</if>
+				ORDER BY C.USER_EMAIL SEPARATOR ',') AS userEmail
+		FROM	UI_CONSENT A
+				LEFT OUTER JOIN UI_CONSENT_IP B ON A.NO = B.NO
+				LEFT OUTER JOIN UI_USER_EMAIL C ON A.USER_ID = C.USER_ID
+		WHERE   1=1
+		AND		DATE_FORMAT( EXPIRATION_DT, '%Y%m%d' ) >= DATE_FORMAT( SYSDATE(), '%Y%m%d' )
+		<if test='type!=null and type!=""'>
+		AND		TYPE = #{type}
+		</if>
+		<if test='searchStr!=null and searchStr!=""'>
+		AND		NAME LIKE CONCAT('%', #{searchStr}, '%')
+		</if>
+		AND		APPCD = 'A'
+		GROUP	BY A.NO,
+				TYPE,
+				NAME,
+				A.USER_ID,
+				DEPTCD,
+				DEPTNM,
+				DATE_FORMAT(EXPIRATION_DT, '%Y-%m-%d' ),
+				ATTACHED_YN,
+				SEARCH_YN,
+				DATE_FORMAT(CREATE_DT, '%Y-%m-%d %T' ),
+				CREATE_ID,
+				CREATE_NAME,
+				PURPOSE,
+				FILE_PATH,
+				APPCD,
+				FILE_NAME,
+				ALARM_YN,
+				REGISTRANT_YN,
+				ALARM_MAIL_YN,
+				ALARM_SMS_YN,
+				ALARM_MONITOR_YN
+		ORDER   BY A.NO DESC
+	</select>
+	
+	<select id="getConsentFileInfo" parameterType="consentVO" resultType="consentVO">
+		SELECT  FILE_PATH AS filePath, FILE_NAME AS fileName, ATTACHED_YN AS attachedYn, APPCD AS appCd
+		FROM	UI_CONSENT
+		WHERE	NO = #{no}
+	</select>
+
+	<!-- IP 중복체크 -->
+	<select id="isConsentExist" resultType="int" parameterType="consentVO">
+		SELECT	SUM(CNT) AS CNT
+		FROM	(
+				SELECT COUNT(*) AS CNT FROM UI_BUSI_IPRANGE WHERE	INET6_ATON( #{startIp} ) BETWEEN INET6_ATON(START_IP)		AND INET6_ATON(END_IP) UNION ALL
+				SELECT COUNT(*) AS CNT FROM UI_BUSI_IPRANGE WHERE	INET6_ATON( #{endIp} )	BETWEEN INET6_ATON(START_IP)		AND INET6_ATON(END_IP) UNION ALL
+				SELECT COUNT(*) AS CNT FROM UI_BUSI_IPRANGE WHERE	INET6_ATON(START_IP)		BETWEEN INET6_ATON( #{startIp} ) AND INET6_ATON( #{endIp} ) UNION ALL
+				SELECT COUNT(*) AS CNT FROM UI_BUSI_IPRANGE WHERE	INET6_ATON(END_IP)		BETWEEN INET6_ATON( #{startIp} ) AND INET6_ATON( #{endIp} )
+				) AS RS
+	</select>
+
+	<insert id="insertConsent" parameterType="consentVO">
+		INSERT INTO UI_CONSENT (NO, TYPE, NAME, USER_ID, DEPTNM, EXPIRATION_DT, ATTACHED_YN, CREATE_DT, CREATE_ID, CREATE_NAME, PURPOSE, FILE_PATH, APPCD, FILE_NAME,
+								ALARM_YN, REGISTRANT_YN, ALARM_MAIL_YN, ALARM_SMS_YN, ALARM_MONITOR_YN) 
+		VALUES (#{no}, #{type}, #{name}, #{userId}, #{deptNm}, DATE_FORMAT(#{edate},'%Y%m%d'), #{attachedYn}, now(), #{createId}, #{createNm}, #{purpose}, #{filePath}, '', #{fileName},
+				#{alarmYn,}, #{registrantYn}, #{alarmMailYn}, #{alarmSmsYn}, #{alarmMonitorYn})
+	</insert>
+	
+	<update id="updateConsent" parameterType="consentVO">
+		UPDATE	UI_CONSENT
+		SET		TYPE = #{type},
+				NAME = #{name},
+				USER_ID = #{userId},
+				DEPTNM = #{deptNm},
+				EXPIRATION_DT = DATE_FORMAT(#{edate},'%Y%m%d'),
+				ATTACHED_YN = #{attachedYn},
+				CREATE_ID = #{createId},
+				CREATE_NAME = #{createNm},
+				PURPOSE = #{purpose},
+				FILE_PATH = #{filePath},
+				FILE_NAME = #{fileName},
+				ALARM_YN =#{alarmYn},
+				REGISTRANT_YN = #{registrantYn},
+				ALARM_MAIL_YN = #{alarmMailYn},
+				ALARM_SMS_YN = #{alarmSmsYn},
+				ALARM_MONITOR_YN = #{alarmMonitorYn}
+		WHERE	NO = #{no}	
+	</update>
+	
+	<delete id="deleteConsent" parameterType="consentVO">
+		DELETE	FROM	UI_BUSI_IPRANGE 
+		WHERE	BUSICD 		= #{busiCd}
+		AND		START_IP 	= #{startIp}
+		AND		END_IP 		= #{endIp}
+	</delete>
+	
+	<select id="getConsentSeq" resultType="consentSeqVO">
+		SELECT	CONCAT( DATE_FORMAT(SYSDATE(),'%Y%m%d'), '_', LPAD( IFNULL(MAX(NO),0)+1, 7, 0) ) AS newSeq,
+				DATE_FORMAT(SYSDATE(),'%Y%m%d') AS currentDt,
+				IFNULL( MAX(NO), 0)+1 AS no
+		FROM	UI_CONSENT_SEQ
+		WHERE	DATE_FORMAT(CURRENT_DT,'%Y%m%d') = DATE_FORMAT(SYSDATE(),'%Y%m%d')
+	</select>
+	
+	<insert id="insertConsentSeq" parameterType="consentSeqVO">
+		INSERT INTO UI_CONSENT_SEQ (NO, CURRENT_DT)
+		VALUES (#{no}, #{currentDt})
+	</insert>
+	
+	<delete id="deleteConsentSeq" parameterType="hashmap">
+		DELETE FROM UI_CONSENT_SEQ WHERE NO = #{no} AND DATE_FORMAT(CURRENT_DT,'%Y%m%d') = DATE_FORMAT(#{date},'%Y%m%d')
+	</delete>
+	
+	<insert id="insertUserIp" parameterType="consentVO">
+		INSERT INTO UI_CONSENT_IP (NO, IP) 
+		VALUES (#{no}, #{userIp})
+	</insert>
+	
+	<delete id="deleteUserIp" parameterType="consentVO">
+		DELETE FROM UI_CONSENT_IP WHERE NO = #{no}
+	</delete>
+	
+	<update id="updateApproval" parameterType="consentVO">
+		UPDATE	UI_CONSENT
+		SET		APPCD = #{appCd}
+		WHERE	NO = #{no}
+	</update>
+	
+	<select id="getApprobator" resultType="string" parameterType="string">
+		SELECT	APPROBATOR
+		FROM	UI_ADMIN
+		WHERE	ADMIN_ID = #{adminId}
+	</select>
+	
+</mapper>

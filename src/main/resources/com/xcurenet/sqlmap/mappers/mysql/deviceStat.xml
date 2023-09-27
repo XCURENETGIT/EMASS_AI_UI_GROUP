@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "../../dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xcurenet.sqlmap.mappers.mysql.deviceStat">
+
+	
+	<!-- 장비 트래픽 통계 조회 -->
+	<select id="getTrafficStatList" resultType="hashmap" parameterType="hashMap">
+		SELECT	${query1}
+				DEVICE_SEQ as deviceSeq, DEVICE_NM as deviceNm
+		FROM	(
+				SELECT	${query2}
+						A.DEVICE_SEQ, A.DEVICE_NM
+				FROM	UI_DEVICE A, UI_DEVICE_TRAFFIC_STAT B
+				WHERE	A.DEVICE_SEQ = B.DEVICE_SEQ
+				AND		DATE_FORMAT(B.INSERT_DT,'%Y%m%d') BETWEEN	#{startDt}	AND	#{endDt}
+				AND		A.DEVICE_TYPE = 'C'
+				GROUP	BY A.DEVICE_SEQ, A.DEVICE_NM
+				ORDER	BY A.CREATE_DT DESC
+				) RS
+	</select>
+	
+	<!-- 장비 트래픽 통계 반영 -->
+	<update id="updateDeviceTraffic" parameterType="deviceTrafficStatVO">
+		REPLACE	INTO UI_DEVICE_TRAFFIC_STAT ( DEVICE_SEQ, INSERT_DT, PORT, DIRECTION, HOUR_SIZE, HOUR_CNT, UPDATE_DT )
+		SELECT	#{deviceSeq}, IFNULL(MIN(INSERT_DT),NOW()), #{port}, #{direction}, IFNULL(MAX(HOUR_SIZE),0) + #{hourSize}, IFNULL(MAX(HOUR_CNT),0) + #{hourCnt}, NOW()
+		FROM	UI_DEVICE_TRAFFIC_STAT
+		WHERE	DEVICE_SEQ = #{deviceSeq}
+		AND		DATE_FORMAT(UPDATE_DT, '%Y-%m-%d %H') = #{updateDt}
+		AND		PORT = #{port}
+		AND		DIRECTION = #{direction}
+	</update>
+
+</mapper>

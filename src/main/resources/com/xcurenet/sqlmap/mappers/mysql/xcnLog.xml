@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "../../dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xcurenet.sqlmap.mappers.mysql.xcnLog">
+
+	<!-- 시스템 로그 조회 -->
+	<select id="getXcnLogList" resultType="xcnLogVO" parameterType="xcnLogVO">
+		SELECT	SEQ AS seq, IFNULL(INET6_NTOA(IP), INET_NTOA(IP)) AS ip, DATE_FORMAT(CTIME, '%Y-%m-%d %T' ) AS ctime, MODULE as module, SERVICE AS service, TYPE AS type, INFO AS info
+		FROM	XCNLOG
+		WHERE	1=1
+		<if test='startDt != null and startDt != ""'>
+		AND		CTIME BETWEEN STR_TO_DATE( CONCAT( #{startDt}, '000000'), '%Y%m%d%H%i%s') AND STR_TO_DATE( CONCAT(#{endDt},'235959'), '%Y%m%d%H%i%s')
+		</if>
+		<if test='ip !=null and ip !=""'>
+		AND		IP LIKE CONCAT( '%', #{ip}, '%' )
+		</if>
+		<if test='service !=null and service !=""'>
+		AND		SERVICE = #{service}
+		</if>
+		<if test='type !=null and type!=""'>
+		AND		TYPE = #{type}
+		</if>
+		ORDER	BY SEQ DESC
+		<if test='offset!=null and limit > 0'>
+		LIMIT	${offset}, ${limit}
+		</if>
+	</select>
+
+</mapper>

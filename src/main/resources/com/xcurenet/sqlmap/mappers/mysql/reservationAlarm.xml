@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "../../dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xcurenet.sqlmap.mappers.mysql.reservationAlarm">
+
+	<!-- 예약 알람 1개 조회 -->
+	<select id="getAlarm" resultType="alarmVO" parameterType="hashmap">
+		SELECT	A.ALARM_SEQ AS alarmSeq,
+				A.ALARM_NAME AS alarmName,
+				A.ALARM_TYPE AS alarmType,
+				A.ALARM_MAIL_YN AS alarmMailYn,
+				A.ALARM_SMS_YN AS alarmSmsYn,
+				A.ALARM_MONITOR_YN AS alarmMonitorYn,
+				A.ALARM_CYCLE AS alarmCycle,
+				A.ALARM_CYCLE_VAL AS alarmCycleVal,
+				A.ALARM_WEEK AS alarmWeek,
+				A.ALARM_TIME AS alarmTime,
+				<if test='encryptUseYN == "Y"'>
+				if(A.ALARM_TO is null, null, xcndec(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, A.ALARM_TO)) AS alarmTo,
+				if(A.ALARM_CC is null, null, xcndec(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, A.ALARM_CC)) AS alarmCC,
+				</if>
+				<if test='encryptUseYN != "Y"'>
+				A.ALARM_TO AS alarmTo,
+				A.ALARM_CC AS alarmCC,
+				</if>
+				A.ALARM_FORM_SEQ AS alarmFormSeq,
+				A.ALARM_VAL AS alarmVal,
+				DATE_FORMAT(A.CTIME,'%Y-%m-%d %T') AS createDt,
+				A.USER_ID AS userId,
+				A.USER_NM AS userNm,
+				A.USER_HP AS userHp,
+				A.USE_YN AS useYn,
+				A.CSV_YN AS csvYn,
+				A.EXCEL_MAX_CNT AS excelMaxCnt,
+				B.FORM_SEQ AS formSeq,
+				B.FORM_SUBJECT AS formSubject,
+				B.FORM_CONTENT AS formContent,
+				B.FORM_COMMENT AS formComment
+		FROM	UI_ALARM A
+					LEFT JOIN UI_ALARM_FORM B ON A.ALARM_FORM_SEQ = B.FORM_SEQ
+		WHERE	ALARM_SEQ = BINARY(#{alarmSeq})
+	</select>
+	
+	<!-- 예약 알람 리스트 조회 -->
+	<select id="getAlarmList" resultType="alarmVO" parameterType="hashmap">
+		SELECT	ALARM_SEQ AS alarmSeq,
+				ALARM_NAME AS alarmName,
+				ALARM_TYPE AS alarmType,
+				ALARM_MAIL_YN AS alarmMailYn,
+				ALARM_SMS_YN AS alarmSmsYn,
+				ALARM_MONITOR_YN AS alarmMonitorYn,
+				ALARM_CYCLE AS alarmCycle,
+				ALARM_CYCLE_VAL AS alarmCycleVal,
+				ALARM_TIME AS alarmTime,
+				ALARM_WEEK AS alarmWeek,
+				<if test='encryptUseYN == "Y"'>
+				if(ALARM_TO is null, null, xcndec(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, ALARM_TO)) AS alarmTo,
+				if(ALARM_CC is null, null, xcndec(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, ALARM_CC)) AS alarmCC,
+				</if>
+				<if test='encryptUseYN != "Y"'>
+				ALARM_TO AS alarmTo,
+				ALARM_CC AS alarmCC,
+				</if>
+				ALARM_FORM_SEQ AS alarmFormSeq,
+				ALARM_VAL AS alarmVal,
+				DATE_FORMAT(CTIME,'%Y-%m-%d %T') AS createDt,
+				USER_ID AS userId,
+				USER_NM AS userNm,
+				USER_HP AS userHp,
+				USE_YN AS useYn,
+				CSV_YN AS csvYn,
+				EXCEL_MAX_CNT AS excelMaxCnt
+		FROM	UI_ALARM
+		WHERE	1=1
+		<if test='searchStr!=null and searchStr!=""'>
+		AND		ALARM_NAME	LIKE CONCAT('%', #{searchStr}, '%')
+		<!-- AND		( ADMIN_ID	LIKE CONCAT('%', #{searchStr}, '%') OR	ADMIN_NAME	LIKE CONCAT('%', #{searchStr}, '%') ) -->
+		</if>
+		ORDER	BY 	CTIME
+	</select>
+	
+	<!-- 운용자 메일 리스트 조회 -->
+	<select id="getAdminEmailList" resultType="adminVO" parameterType="hashmap">
+		SELECT	ADMIN_ID AS adminId,
+				ADMIN_NAME AS adminName,
+				<if test='encryptUseYN == "Y"'>
+				if(ADMIN_EMAIL is null, null, xcndec(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, ADMIN_EMAIL)) AS adminEmail,
+				</if>
+				<if test='encryptUseYN != "Y"'>
+				ADMIN_EMAIL AS adminEmail,
+				</if>
+				MAX(CONM) AS coNm,
+				MAX(BUSINM) AS busiNm
+		FROM	(
+				SELECT	X.ADMIN_ID, X.ADMIN_NAME, X.ADMIN_EMAIL, Y.CONM, Z.BUSINM
+				FROM	UI_ADMIN X
+						LEFT JOIN (
+							SELECT	B.ADMIN_ID, A.COCD, A.CONM 
+							FROM	UI_CO A JOIN UI_ADMIN_CO B ON A.COCD = B.COCD
+							)Y ON X.ADMIN_ID = Y.ADMIN_ID
+						LEFT JOIN (
+							SELECT	B.ADMIN_ID, A.BUSICD, A.BUSINM
+							FROM	UI_BUSI A JOIN UI_ADMIN_BUSI B ON A.BUSICD = B.BUSICD
+							)Z ON X.ADMIN_ID = Z.ADMIN_ID
+				WHERE	IFNULL(X.ADMIN_EMAIL, '') != '' 
+				) AS RS
+		WHERE	1=1
+		<if test='searchStr!=null and searchStr!=""'>
+		AND		( RS.ADMIN_ID	LIKE CONCAT('%', #{searchStr}, '%') OR	RS.ADMIN_NAME	LIKE CONCAT('%', #{searchStr}, '%') OR	
+				<if test='encryptUseYN == "Y"'>
+				if(RS.ADMIN_EMAIL is null, null, xcndec(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, RS.ADMIN_EMAIL)) 
+				</if>
+				<if test='encryptUseYN != "Y"'>
+				RS.ADMIN_EMAIL 
+				</if>
+				LIKE CONCAT('%', #{searchStr}, '%') )
+		</if>
+		GROUP  BY ADMIN_ID, ADMIN_NAME, ADMIN_EMAIL
+		ORDER  BY ADMIN_NAME, ADMIN_EMAIL
+	</select>
+	
+	<!-- 다음 예약 알람 SEQ 조회 -->
+	<select id="getNextAlarmSeq" resultType="alarmVO">
+		SELECT  IFNULL(MAX(ALARM_SEQ),0)+1 AS alarmSeq FROM UI_ALARM
+	</select>
+	
+	<!-- 예약 알람 등록 -->
+	<insert id="insertAlarm" parameterType="alarmVO">
+		INSERT INTO UI_ALARM
+		(ALARM_SEQ, ALARM_NAME, ALARM_TYPE, ALARM_MAIL_YN, ALARM_SMS_YN, ALARM_MONITOR_YN, ALARM_CYCLE, ALARM_CYCLE_VAL, ALARM_WEEK, ALARM_TIME, ALARM_TO, ALARM_CC, ALARM_FORM_SEQ, ALARM_VAL, CTIME, USER_ID, USER_NM, USER_HP, USE_YN, CSV_YN, EXCEL_MAX_CNT)
+		VALUES ((SELECT IFNULL(MAX(CAST(A.ALARM_SEQ AS UNSIGNED)),1000)+1 FROM UI_ALARM A), #{alarmName}, #{alarmType}, #{alarmMailYn}, #{alarmSmsYn}, #{alarmMonitorYn}, #{alarmCycle}, #{alarmCycleVal}, #{alarmWeek}, #{alarmTime}, 
+				<if test='encryptUseYN == "Y"'>
+				if(#{alarmTo} is null, null, xcnenc(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, #{alarmTo})),
+				if(#{alarmCC} is null, null, xcnenc(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, #{alarmCC})),
+				</if>
+				<if test='encryptUseYN != "Y"'>
+				#{alarmTo}, 
+				#{alarmCC},
+				</if>
+				#{alarmFormSeq}, #{alarmVal}, NOW(), #{userId}, #{userNm}, #{userHp}, #{useYn}, #{csvYn}, #{excelMaxCnt} )
+	</insert>
+	
+	<!-- 예약 알람 수정 -->
+	<update id="updateAlarm" parameterType="alarmVO">
+		UPDATE	UI_ALARM
+		SET		ALARM_NAME	= #{alarmName},
+				ALARM_TYPE	= #{alarmType},
+				ALARM_MAIL_YN = #{alarmMailYn},
+				ALARM_SMS_YN = #{alarmSmsYn},
+				ALARM_MONITOR_YN = #{alarmMonitorYn},
+				ALARM_CYCLE	= #{alarmCycle},
+				ALARM_CYCLE_VAL	= #{alarmCycleVal},
+				ALARM_WEEK = #{alarmWeek},
+				ALARM_TIME	= #{alarmTime},
+				<if test='encryptUseYN == "Y"'>
+				ALARM_TO	= if(#{alarmTo} is null, null, xcnenc(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, #{alarmTo})),
+				ALARM_CC	= if(#{alarmCC} is null, null, xcnenc(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, #{alarmCC})),
+				</if>
+				<if test='encryptUseYN != "Y"'>
+				ALARM_TO	= #{alarmTo},
+				ALARM_CC	= #{alarmCC},
+				</if>
+				ALARM_FORM_SEQ	= #{alarmFormSeq},
+				ALARM_VAL	= #{alarmVal},
+				USE_YN = #{useYn},
+				CSV_YN = #{csvYn},
+				EXCEL_MAX_CNT = #{excelMaxCnt}
+		WHERE	ALARM_SEQ	= #{alarmSeq} 
+		<if test='adminId!="sysadmin" and adminId!=""'>
+		AND USER_ID = #{adminId}
+		</if>
+	</update>
+	
+	<!-- 예약 알람 삭제 -->
+	<delete id="deleteAlarm" parameterType="alarmVO">
+		DELETE FROM UI_ALARM WHERE ALARM_SEQ IN (#{alarmSeq})
+	</delete>
+		
+		
+	<!-- 예약 알람 메일 서식 리스트 조회 -->
+	<select id="getMailFormList" resultType="alarmVO" parameterType="hashmap">
+		SELECT	FORM_SEQ AS formSeq,
+				FORM_SUBJECT AS formSubject,
+				FORM_CONTENT AS formContent,
+				FORM_COMMENT AS formComment
+		FROM	UI_ALARM_FORM
+		WHERE	1=1
+		<if test='searchStr!=null and searchStr!=""'>
+		AND		FORM_SUBJECT	LIKE CONCAT('%', #{searchStr}, '%')
+		</if>
+		ORDER	BY 	FORM_SEQ
+	</select>
+		
+		
+	<!-- 예약 알람 메일 서식 등록 -->
+	<insert id="insertMailForm" parameterType="alarmVO">
+		INSERT INTO UI_ALARM_FORM
+		(FORM_SEQ, FORM_SUBJECT, FORM_CONTENT, FORM_COMMENT)
+		VALUES ((SELECT IFNULL(MAX(A.FORM_SEQ)+1, 1003) FROM UI_ALARM_FORM A), #{formSubject}, #{formContent}, #{formComment})
+	</insert>
+	
+	
+	<!-- 예약 알람 메일 서식 수정 -->
+	<update id="updateMailForm" parameterType="alarmVO">
+		UPDATE	UI_ALARM_FORM
+		SET		FORM_SUBJECT	= #{formSubject},
+				FORM_CONTENT	= #{formContent},
+				FORM_COMMENT	= #{formComment}
+		WHERE	FORM_SEQ	= #{formSeq} 
+	</update>
+	
+	<!-- 예약 알람 메일 서식 삭제 -->
+	<delete id="deleteMailForm" parameterType="alarmVO">
+		DELETE FROM UI_ALARM_FORM WHERE FORM_SEQ IN (#{formSeq})
+	</delete>
+	
+	
+	<!-- 예약 알람 실행 리스트 조회 -->
+	<select id="getNowExecuteList" resultType="alarmVO" parameterType="hashmap">
+		SELECT	DISTINCT
+				A.ALARM_SEQ AS alarmSeq,
+				A.ALARM_NAME AS alarmName,
+				A.ALARM_TYPE AS alarmType,
+				A.ALARM_CYCLE AS alarmCycle,
+				A.ALARM_CYCLE_VAL AS alarmCycleVal,
+				A.ALARM_WEEK AS alarmWeek,
+				A.ALARM_TIME AS alarmTime,
+				<if test='encryptUseYN == "Y"'>
+				if(A.ALARM_TO is null, null, xcndec(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, A.ALARM_TO)) AS alarmTo,
+				if(A.ALARM_CC is null, null, xcndec(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, A.ALARM_CC)) AS alarmCC,
+				</if>
+				<if test='encryptUseYN != "Y"'>
+				A.ALARM_TO AS alarmTo,
+				A.ALARM_CC AS alarmCC,
+				</if>
+				A.ALARM_FORM_SEQ AS alarmFormSeq,
+				A.ALARM_VAL AS alarmVal,
+				A.ALARM_MAIL_YN AS alarmMailYn,
+				A.ALARM_SMS_YN AS alarmSmsYn,
+				A.ALARM_MONITOR_YN AS alarmMonitorYn,
+				D.ADMIN_HP AS userHp,
+				A.CSV_YN AS csvYn,
+				A.EXCEL_MAX_CNT AS excelMaxCnt,
+				CTIME AS createDt,
+				USER_ID AS userId,
+				USER_NM AS userNm,
+				C.FORM_SUBJECT AS formSubject,
+				C.FORM_CONTENT AS formContent
+		FROM	UI_ALARM A
+				LEFT JOIN UI_ALARM_LOG B ON A.ALARM_SEQ = B.ALARM_SEQ
+				LEFT JOIN UI_ALARM_FORM C ON A.ALARM_FORM_SEQ = C.FORM_SEQ
+				LEFT JOIN UI_ADMIN D ON A.USER_ID = D.ADMIN_ID
+		WHERE	A.USE_YN = 'Y'
+		AND		(
+					(	( 
+						B.ETIME IS NULL OR ( DATE_FORMAT(B.ETIME,'%Y%m%d') != DATE_FORMAT(NOW(),'%Y%m%d') ) 
+						)
+						AND A.ALARM_TIME = DATE_FORMAT( NOW(),'%H')
+						AND A.ALARM_CYCLE = 'D'
+					)
+          		OR	( A.ALARM_CYCLE = 'H' )
+          		OR	( 	(
+          				B.ETIME IS NULL OR (DATE_FORMAT(B.ETIME,'%Y%m%d') != DATE_FORMAT(NOW(),'%Y%m%d') )
+          				) 
+          				AND A.ALARM_WEEK = DAYOFWEEK(NOW())
+          				AND A.ALARM_TIME = DATE_FORMAT( NOW(),'%H') 
+          			)
+        		)
+	</select>
+	
+	
+	<!-- 예약 알람 발송 후 로그 등록 -->
+	<insert id="insertAlarmLog" parameterType="hashmap">
+		INSERT INTO UI_ALARM_LOG
+		(ALARM_LOG_SEQ, ALARM_SEQ, ETIME, RMSG, RCNT)
+		VALUES ((SELECT IFNULL(MAX(A.ALARM_LOG_SEQ)+1,1001) FROM UI_ALARM_LOG A), #{alarmSeq}, NOW(), #{query}, #{totalCnt})
+	</insert>
+	
+	<!-- 예약 알람 1개 조회 -->
+	<select id="getAlarmLogList" resultType="alarmLogVO" parameterType="string">
+		SELECT	ALARM_LOG_SEQ AS alarmLogSeq,
+				DATE_FORMAT(ETIME,'%Y-%m-%d %T') AS executeDt,
+				RMSG AS rMsg,
+				RCNT AS rCnt
+		FROM	UI_ALARM_LOG
+		WHERE	ALARM_SEQ = BINARY(#{alarmSeq})
+				AND RCNT IS NOT NULL
+		ORDER	BY ETIME DESC
+	</select>
+	
+	<!-- 예약 알람 실행 결과 로그SEQ 조회 -->
+	<select id="getAlarmLogQuery" resultType="alarmLogVO" parameterType="string">
+		SELECT	ALARM_LOG_SEQ AS alarmLogSeq,
+				DATE_FORMAT(ETIME,'%Y%m%d%H%i%s') AS executeDt,
+				RMSG AS rMsg,
+				RCNT AS rCnt
+		FROM	UI_ALARM_LOG
+		WHERE	ALARM_LOG_SEQ = #{alarmLogSeq}
+	</select>
+	
+	<!-- 예약 알람  로그 삭제 -->
+	<delete id="deleteAlarmLog" parameterType="alarmLogVO">
+		DELETE FROM UI_ALARM_LOG WHERE ALARM_SEQ IN (#{alarmSeq})
+	</delete>
+
+</mapper>

@@ -1,0 +1,94 @@
+/* latin-ext */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Lato Light'), local('Lato-Light'), url('../fonts/latin-ext.Lato_Light.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Lato Light'), local('Lato-Light'), url('../fonts/latin.Lato_Light.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url('../fonts/latin-ext.Lato_Regular.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url('../fonts/latin.Lato_Regular.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Lato Bold'), local('Lato-Bold'), url('../fonts/latin-ext.Lato_Bold.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Lato Bold'), local('Lato-Bold'), url('../fonts/latin.Lato_Bold.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+}
+
+/* Container styles */
+body {
+    background-color: #fff;
+    color: #333;
+    font-family: 'Lato', sans-serif;
+}
+
+.outer {
+    fill: transparent;
+    stroke: #333;
+    stroke-width: 19.8;
+    stroke-dasharray: 534;
+    transition: stroke-dashoffset 1s;
+    -webkit-animation-play-state: running;
+    /* firefox bug fix - won't rotate at 90deg angles */
+    -moz-transform: rotate(-89deg) translateX(-190px);
+}
+
+/* full circle 25 empty 534 */
+.inner {
+    fill: transparent;
+    stroke: orange;
+    stroke-width: 20;
+    stroke-dasharray: 534;
+    transition: stroke-dashoffset 1s;
+    -webkit-animation-play-state: running;
+    /* firefox bug fix - won't rotate at 90deg angles */
+    -moz-transform: rotate(-89deg) translateX(-190px);
+    stroke-dashoffset: 0;
+}
+
+.circliful {
+    overflow: visible !important;
+
+}
+
+.svg-container {
+    width: 100%;
+    margin: 0 auto;
+    overflow: visible;
+}
+
+svg .icon {
+    font-family: FontAwesome;
+}

@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "../../dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xcurenet.sqlmap.mappers.mysql.device">
+
+	<select id="getCollectionDevice" resultType="deviceVO">
+		SELECT  DEVICE_SEQ AS deviceSeq,
+				DEVICE_IP AS deviceIp,
+				DEVICE_NM AS deviceNm,
+				SSH_ID AS sshId,
+				AES_DECRYPT(SSH_PW, UNHEX(SHA2('xcurenet',512)) ) AS sshPw,
+				COMMENTS AS comment,
+				DEVICE_TYPE AS deviceType,
+				DEVICE_STATUS AS deviceStatus,
+				IP_NOLOG_APPLY_VERSION AS ipNoLogApplyVersion,
+				IP_NOLOG_APPLY_DATE AS ipNoLogApplyDate,
+				UACS_RU_TIME AS uacsRuTime,
+				UACS_RT_TIME AS uacsRtTime,
+				UACS_R_STATUS AS uacsRStatus,
+				UACS_MU_TIME AS uacsMuTime,
+				UACS_MT_TIME AS uacsMtTime,
+				UACS_M_STATUS AS uacsMStatus,
+				UFDB_MADE_TIME AS ufdbMadeTime,
+				ADVANCE_WARN_RATE AS advanceWarnRate,
+				SERIOUS_WARN_RATE AS seriousWarnRate,
+				DELETE_WARN_RATE AS deleteWarnRate,
+				DEVICE_HOSTKEY AS deviceHostKey,
+				RULE_VERSION AS ruleVersion,
+				DATE_FORMAT(RULE_DATE, '%Y-%m-%d %T' ) AS ruleDate,
+				USE_YN AS useYn,
+				DATE_FORMAT(CREATE_DT, '%Y-%m-%d %T' ) AS createDt
+		FROM	UI_DEVICE
+		WHERE	DEVICE_TYPE IN ('A', 'C')
+		<if test='searchStr!=null and searchStr!=""'>
+		AND		( DEVICE_NM  LIKE CONCAT( '%', #{searchStr} ,'%') OR  DEVICE_IP LIKE CONCAT( '%', #{searchStr}, '%' )  )
+		</if>
+		ORDER   BY CREATE_DT DESC
+		<if test='offset!=null and limit > 0'>
+		LIMIT	${offset}, ${limit}
+		</if>
+	</select>
+	
+	
+	<!-- 장비 목록 조회 -->
+	<select id="getDeviceList" resultType="deviceVO" parameterType="hashMap">
+		SELECT  DEVICE_SEQ AS deviceSeq,
+				DEVICE_IP AS deviceIp,
+				DEVICE_NM AS deviceNm,
+				SSH_ID AS sshId,
+				AES_DECRYPT(SSH_PW, UNHEX(SHA2('xcurenet',512)) ) AS sshPw,
+				COMMENTS AS comment,
+				DEVICE_TYPE AS deviceType,
+				DEVICE_STATUS AS deviceStatus,
+				IP_NOLOG_APPLY_VERSION AS ipNoLogApplyVersion,
+				IP_NOLOG_APPLY_DATE AS ipNoLogApplyDate,
+<!-- 				UACS_RU_TIME AS uacsRuTime,
+				UACS_RT_TIME AS uacsRtTime,
+				UACS_R_STATUS AS uacsRStatus,
+				UACS_MU_TIME AS uacsMuTime,
+				UACS_MT_TIME AS uacsMtTime,
+				UACS_M_STATUS AS uacsMStatus,
+				UFDB_MADE_TIME AS ufdbMadeTime, -->
+				ADVANCE_WARN_RATE AS advanceWarnRate,
+				SERIOUS_WARN_RATE AS seriousWarnRate,
+				DELETE_WARN_RATE AS deleteWarnRate,
+				<!-- DEVICE_HOSTKEY AS deviceHostKey, -->
+				RULE_VERSION AS ruleVersion,
+				DATE_FORMAT(RULE_DATE, '%Y-%m-%d %T' ) AS ruleDate,
+				USE_YN AS useYn,
+				DATE_FORMAT(CREATE_DT, '%Y-%m-%d %T' ) AS createDt
+		FROM	UI_DEVICE
+		WHERE	1=1
+		<if test='searchStr!=null and searchStr!=""'>
+		AND		( DEVICE_NM  LIKE CONCAT( '%', #{searchStr} ,'%') OR  DEVICE_IP LIKE CONCAT( '%', #{searchStr}, '%' )  )
+		</if>
+		ORDER   BY CREATE_DT DESC
+		<if test='offset!=null and limit > 0'>
+		LIMIT	${offset}, ${limit}
+		</if>
+	</select>
+	
+	<!-- 특정 장비 조회 -->
+	<select id="getDeviceInfo" resultType="deviceVO" parameterType="string">
+		SELECT  DEVICE_SEQ AS deviceSeq,
+				DEVICE_IP AS deviceIp,
+				DEVICE_NM AS deviceNm,
+				SSH_ID AS sshId,
+				AES_DECRYPT(SSH_PW, UNHEX(SHA2('xcurenet',512)) ) AS sshPw,
+				COMMENTS AS comment,
+				DEVICE_TYPE AS deviceType,
+				DATE_FORMAT(CREATE_DT, '%Y-%m-%d %T' ) AS createDt
+		FROM	UI_DEVICE
+		WHERE	DEVICE_SEQ = CAST(#{deviceSeq} AS UNSIGNED)
+	</select>
+
+	<!-- 장비 이름 조회 -->
+	<select id="getDeviceByIp" resultType="deviceVO" parameterType="string">
+		SELECT  DEVICE_SEQ AS deviceSeq,
+				DEVICE_IP AS deviceIp,
+				DEVICE_NM AS deviceNm,
+				SSH_ID AS sshId,
+				AES_DECRYPT(SSH_PW, UNHEX(SHA2('xcurenet',512)) ) AS sshPw,
+				COMMENTS AS comment,
+				DEVICE_TYPE AS deviceType,
+				DATE_FORMAT(CREATE_DT, '%Y-%m-%d %T' ) AS createDt
+		FROM	UI_DEVICE
+		WHERE	DEVICE_IP = #{deviceIp}
+		LIMIT	1
+	</select>
+	
+	<!-- 장비 목록 조회 -->
+	<select id="getDeviceListTotal" resultType="deviceVO" parameterType="hashMap">
+		SELECT  COUNT(*) AS TOTAL
+		FROM	UI_DEVICE
+		WHERE	1=1
+		<if test='searchStr!=null and searchStr!=""'>
+		AND		( DEVICE_NAME  LIKE CONCAT( '%', #{searchStr} ,'%') OR  DEVICE_IP LIKE CONCAT( '%', #{searchStr}, '%' )  )
+		</if>
+	</select>
+	
+	<!-- 장비 IP가 있는지 여부 -->
+	<select id="isDeviceIpExist" resultType="int" parameterType="deviceVO">
+		SELECT  COUNT(*) AS TOTAL
+		FROM	UI_DEVICE
+		WHERE	DEVICE_IP = #{deviceIp}
+		<if test='deviceSeq!=null and deviceSeq!=""'>
+		AND		DEVICE_SEQ != #{deviceSeq}
+		</if>
+	</select>
+	
+	
+	<!-- 장비 수정 -->
+	<update id="updateDeviceHostKey" parameterType="deviceVO">
+		UPDATE	UI_DEVICE 
+		SET		DEVICE_HOSTKEY 			= #{deviceHostKey}
+		WHERE	DEVICE_IP				= #{deviceIp}
+	</update>
+	
+	<!-- 장비 수정 -->
+	<update id="updateDevice" parameterType="deviceVO">
+		UPDATE	UI_DEVICE 
+		SET		<if test='deviceIp!=null and deviceIp!=""'>
+				DEVICE_IP 				= #{deviceIp},
+				</if>
+				<if test='deviceNm!=null and deviceNm!=""'>
+				DEVICE_NM 				= #{deviceNm},
+				</if>
+				<if test='sshId!=null and sshId!=""'>
+				SSH_ID	 				= #{sshId},
+				</if>
+				<if test='sshPw!=null and sshPw!=""'>
+				SSH_PW	 				= AES_ENCRYPT(#{sshPw}, UNHEX(SHA2('xcurenet',512))),
+				</if>
+				<if test='deviceType!=null and deviceType!=""'>
+				DEVICE_TYPE 			= #{deviceType},
+				</if>
+				<if test='deviceStatus!=null and deviceStatus!=""'>
+				DEVICE_STATUS 			= #{deviceStatus},
+				</if>
+				<if test='ipNoLogApplyVersion!=null and ipNoLogApplyVersion!=""'>
+				IP_NOLOG_APPLY_VERSION 	= #{ipNoLogApplyVersion},
+				</if>
+				<if test='ipNoLogApplyDate!=null and ipNoLogApplyDate!=""'>
+				IP_NOLOG_APPLY_DATE 	= #{ipNoLogApplyDate},
+				</if>
+				<if test='uacsRuTime!=null and uacsRuTime!=""'>
+				UACS_RU_TIME 			= #{uacsRuTime},
+				</if>
+				<if test='uacsRtTime!=null and uacsRtTime!=""'>
+				UACS_RT_TIME 			= #{uacsRtTime},
+				</if>
+				<if test='uacsRStatus!=null and uacsRStatus!=""'>
+				UACS_R_STATUS 			= #{uacsRStatus},
+				</if>
+				<if test='uacsMuTime!=null and uacsMuTime!=""'>
+				UACS_MU_TIME 			= #{uacsMuTime},
+				</if>
+				<if test='uacsMtTime!=null and uacsMtTime!=""'>
+				UACS_MT_TIME 			= #{uacsMtTime},
+				</if>
+				<if test='uacsMStatus!=null and uacsMStatus!=""'>
+				UACS_M_STATUS 			= #{uacsMStatus},
+				</if>
+				<if test='ufdbMadeTime!=null and ufdbMadeTime!=""'>
+				UFDB_MADE_TIME 			= #{ufdbMadeTime},
+				</if>
+				<if test='advanceWarnRate!=null and advanceWarnRate!=""'>
+				ADVANCE_WARN_RATE 		= #{advanceWarnRate},
+				</if>
+				<if test='seriousWarnRate!=null and seriousWarnRate!=""'>
+				SERIOUS_WARN_RATE 		= #{seriousWarnRate},
+				</if>
+				<if test='deleteWarnRate!=null and deleteWarnRate!=""'>
+				DELETE_WARN_RATE 		= #{deleteWarnRate},
+				</if>
+				<if test='deviceHostKey!=null and deviceHostKey!=""'>
+				DEVICE_HOSTKEY 			= #{deviceHostKey},
+				</if>
+				<if test='useYn!=null and useYn!=""'>
+				USE_YN 					= #{useYn},
+				</if>
+				COMMENTS 				= #{comment}
+		WHERE	DEVICE_SEQ				= #{deviceSeq}
+	</update>
+
+	<!-- 장비 등록 -->
+	<insert id="insertDevice" parameterType="deviceVO">
+		INSERT INTO UI_DEVICE (
+				DEVICE_SEQ,
+				DEVICE_IP,
+				DEVICE_NM,
+				SSH_ID,
+				SSH_PW,
+				COMMENTS,
+				DEVICE_TYPE,
+				DEVICE_STATUS,
+				ADVANCE_WARN_RATE,
+				SERIOUS_WARN_RATE,
+				DELETE_WARN_RATE,
+				DEVICE_HOSTKEY,
+				CREATE_DT,
+				USE_YN
+		)
+		SELECT	IFNULL(MAX(DEVICE_SEQ),0)+1,
+				#{deviceIp},
+				#{deviceNm},
+				#{sshId},
+				AES_ENCRYPT(#{sshPw}, UNHEX(SHA2('xcurenet',512))),
+				#{comment},
+				#{deviceType},
+				#{deviceStatus},
+				#{advanceWarnRate},
+				#{seriousWarnRate},
+				#{deleteWarnRate},
+				#{deviceHostKey},
+				NOW(),
+				'Y'
+		FROM	UI_DEVICE
+	</insert>
+
+	<!-- 장비 삭제 -->
+	<delete id="deleteDevice" parameterType="deviceVO">
+		DELETE FROM UI_DEVICE WHERE DEVICE_SEQ = #{deviceSeq}
+	</delete>
+	
+	
+	<!-- 장비 UACS 룰 최근 갱신 일자 -->
+	<update id="updateDeviceRuTime" parameterType="deviceVO">
+		UPDATE	UI_DEVICE
+		SET		UACS_RU_TIME	= NOW()
+		WHERE	DEVICE_SEQ		= #{deviceSeq}
+	</update>
+	
+	<!-- 장비 UACS 룰 최근 갱신 일자 -->
+	<update id="updateDeviceRtTime" parameterType="deviceVO">
+		UPDATE	UI_DEVICE
+		SET		UACS_RT_TIME	= NOW()
+		WHERE	DEVICE_SEQ		= #{deviceSeq}
+	</update>
+	
+	<!-- 장비 UACS 최종 갱신 유무 -->
+	<update id="updateDeviceRStatus" parameterType="deviceVO">
+		UPDATE	UI_DEVICE
+		SET		UACS_R_STATUS	= #{uacsRStatus}
+		WHERE	DEVICE_SEQ		= #{deviceSeq}
+	</update>
+
+
+	<!-- 장비 UACS 차단 메시지 최근 갱신 일자 -->
+	<update id="updateDeviceMuTime" parameterType="deviceVO">
+		UPDATE	UI_DEVICE
+		SET		UACS_MU_TIME	= NOW()
+		WHERE	DEVICE_SEQ		= #{deviceSeq}
+	</update>
+	
+	<!-- 장비 UACS 차단 메시지 갱신 시도 일자 -->
+	<update id="updateDeviceMtTime" parameterType="deviceVO">
+		UPDATE	UI_DEVICE
+		SET		UACS_MT_TIME	= NOW()
+		WHERE	DEVICE_SEQ		= #{deviceSeq}
+	</update>
+	
+	<!-- 장비 UACS  차단 메시지 최종 갱신 유무 -->
+	<update id="updateDeviceMStatus" parameterType="deviceVO">
+		UPDATE	UI_DEVICE
+		SET		UACS_M_STATUS	= #{uacsMStatus}
+		WHERE	DEVICE_SEQ		= #{deviceSeq}
+	</update>
+</mapper>

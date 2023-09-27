@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "../../dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xcurenet.sqlmap.mappers.mysql.config">
+
+	<select id="getConfigList" resultType="configVO">
+		SELECT  CONF_ID AS confId,
+				VAL AS val,
+				DEFAULT_VAL AS defaultVal,
+				DATE_FORMAT(UPDATE_DT, '%Y-%m-%d %T' ) AS updateDt
+		FROM	UI_CONF
+		ORDER	BY CONF_ID
+	</select>
+	
+	<select id="getConf" resultType="configVO" parameterType="string">
+		SELECT  CONF_ID AS confId,
+				VAL AS val,
+				DEFAULT_VAL AS defaultVal,
+				DATE_FORMAT(UPDATE_DT, '%Y-%m-%d %T' ) AS updateDt
+		FROM	UI_CONF
+		WHERE	CONF_ID = #{confId}
+	</select>
+	
+	<select id="isConfIdIdExist" resultType="int" parameterType="configVO">
+		SELECT  COUNT(*) AS CNT
+		FROM	UI_CONF
+		WHERE	CONF_ID = #{confId}
+	</select>
+	
+	<update id="updateConfig" parameterType="configVO">
+		UPDATE 	UI_CONF 
+		SET		VAL		= #{val},
+				UPDATE_DT = NOW()
+		WHERE	CONF_ID = #{confId}
+	</update>
+
+	<insert id="insertConfig" parameterType="configVO">
+		INSERT INTO UI_CONF (CONF_ID, VAL, UPDATE_DT ) VALUES ( #{confId}, #{val}, NOW() )
+	</insert>
+	
+	<select id="getConfigAdminList" resultType="configAdminVO" parameterType="string">
+		SELECT  CONF_ID AS confId,
+				ADMIN_ID AS adminId
+				VAL AS val,
+				DEFAULT_VAL AS defaultVal,
+				DATE_FORMAT(UPDATE_DT, '%Y-%m-%d %T' ) AS updateDt
+		FROM	UI_CONF_ADMIN
+		WHERE	ADMIN_ID = #{adminId}
+		ORDER	BY CONF_ID
+	</select>
+	
+	<select id="getConfAdmin" resultType="configAdminVO" parameterType="hashmap">
+		SELECT  CONF_ID AS confId,
+				VAL AS val,
+				DEFAULT_VAL AS defaultVal,
+				DATE_FORMAT(UPDATE_DT, '%Y-%m-%d %T' ) AS updateDt
+		FROM	UI_CONF_ADMIN
+		WHERE	CONF_ID = #{confId}
+		AND		ADMIN_ID = #{adminId}
+	</select>
+	
+	<select id="getConfAdminOption" resultType="configAdminVO" parameterType="hashmap">
+		SELECT  CONF_ID AS confId,
+				VAL AS val,
+				DEFAULT_VAL AS defaultVal,
+				DATE_FORMAT(UPDATE_DT, '%Y-%m-%d %T' ) AS updateDt
+		FROM	UI_CONF_ADMIN
+		WHERE	CONF_ID IN ('body.snippet.sum.use','toccbcc.sum.use','message.overlap.use','message.keyword.highlight','host.query.use')
+		AND		ADMIN_ID = #{adminId}
+	</select>
+	
+	<select id="isConfAdminIdIdExist" resultType="int" parameterType="configAdminVO">
+		SELECT  COUNT(*) AS CNT
+		FROM	UI_CONF_ADMIN
+		WHERE	CONF_ID = #{confId}
+		AND		ADMIN_ID = #{adminId}
+	</select>
+	
+	<update id="updateConfigAdmin" parameterType="configAdminVO">
+		UPDATE 	UI_CONF_ADMIN 
+		SET		VAL		= #{val},
+				UPDATE_DT = NOW()
+		WHERE	CONF_ID = #{confId}
+		AND		ADMIN_ID = #{adminId}
+	</update>
+	
+	<insert id="insertConfigAdmin" parameterType="configAdminVO">
+		INSERT INTO UI_CONF_ADMIN (CONF_ID, ADMIN_ID, VAL, UPDATE_DT ) VALUES ( #{confId}, #{adminId}, #{val}, NOW() )
+	</insert>
+	
+	<insert id="insertConfigAdminOption" parameterType="configAdminVO">
+		REPLACE INTO UI_CONF_ADMIN (CONF_ID, ADMIN_ID, VAL, UPDATE_DT ) VALUES ( #{confId}, #{adminId}, #{val}, NOW() )
+	</insert>
+
+</mapper>

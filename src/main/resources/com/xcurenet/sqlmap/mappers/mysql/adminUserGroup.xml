@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "../../dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xcurenet.sqlmap.mappers.mysql.adminUserGroup">
+
+	<select id="getAdminUserGroupList" parameterType="hashmap" resultType="adminUserGroupVO">
+		SELECT	GROUP_SEQ AS groupSeq, GROUP_NAME AS groupName, GROUP_COLOR AS groupColor
+		FROM	UI_ADMIN_USER_GROUP
+		WHERE	USE_YN = 'Y'
+		AND		ADMIN_ID = #{adminId}
+		<if test='searchStr!=null and searchStr!=""'>
+		AND		GROUP_NAME LIKE CONCAT('%', #{searchStr}, '%')
+		</if>
+		ORDER	BY GROUP_NAME
+	</select>
+	
+	<!-- 사용자 그룹이 이미 등록 되어있는지 조회 -->
+	<select id="isAdminUserGroupExist" resultType="int" parameterType="adminUserGroupVO">
+		SELECT	COUNT(*) AS CNT
+		FROM	UI_ADMIN_USER_GROUP
+		WHERE	ADMIN_ID = #{adminId}
+		AND		GROUP_NAME = #{groupName}
+	</select>
+	
+	<!-- 사용자 그룹 아이템 저장 -->
+	<insert id="insertAdminUserGroup" parameterType="adminUserGroupVO">
+		INSERT	INTO UI_ADMIN_USER_GROUP (ADMIN_ID, GROUP_NAME, GROUP_COLOR, USE_YN)
+		VALUES	(#{adminId}, #{groupName}, #{groupColor}, 'Y')
+	</insert>
+	
+	<!-- 사용자 그룹 수정 -->
+	<update id="updateAdminUserGroup" parameterType="adminUserGroupVO">
+		UPDATE	UI_ADMIN_USER_GROUP
+		SET		GROUP_NAME = #{groupName},
+				GROUP_COLOR = #{groupColor}
+		WHERE	GROUP_SEQ = #{groupSeq}
+	</update>
+	
+	
+	<!-- 사용자 그룹 삭제 -->
+	<delete id="deleteAdminUserGroup"  parameterType="adminUserGroupVO">
+		DELETE
+		FROM	UI_ADMIN_USER_GROUP
+		WHERE	GROUP_SEQ = #{groupSeq}
+	</delete>
+	
+	
+	
+	
+	
+	<!-- 사용자 그룹 아이템 목록 -->
+	<select id="getAdminUserGroupItemList" parameterType="hashmap" resultType="adminUserGroupVO">
+		SELECT	X.GROUP_SEQ AS groupSeq
+				, A.USER_ID AS userId
+				, A.USER_NM AS userNm
+				, A.COCD AS coCd
+				, B.CONM AS coNm
+				, A.GENERALCD AS generalCd
+				, C.GENERALNM AS generalNm
+				, A.BUSICD AS busiCd
+				, D.BUSINM AS busiNm
+				, A.DEPTCD AS deptCd
+				, E.DEPTNM AS deptNm
+				, A.JIKINCD AS jikinCd
+				, F.JIKINNM AS jikinNm
+				, A.JIKGUBCD AS jikgubCd
+				, G.JIKGUBNM AS jikgubNm
+				, CASE WHEN IFNULL(J.USER_ID,'N') != 'N' THEN 'Y' ELSE 'N' END AS ceo
+				, GROUP_CONCAT( DISTINCT 
+				<if test='encryptUseYN == "Y"'>
+				CAST(if(H.USER_EMAIL is null, null, xcndec(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, H.USER_EMAIL)) AS CHAR)
+				</if>
+				<if test='encryptUseYN != "Y"'>
+				H.USER_EMAIL 
+				</if>
+				ORDER BY H.USER_EMAIL SEPARATOR ', ') AS userEmail
+				, GROUP_CONCAT( DISTINCT (I.USER_IP) ORDER BY INET6_ATON(I.USER_IP) SEPARATOR ', ') AS userIp
+		FROM	UI_ADMIN_USER_GROUP_LIST X, UI_USERS A
+				LEFT OUTER JOIN UI_CEO J ON A.USER_ID = J.USER_ID
+				LEFT OUTER JOIN UI_CO B ON A.COCD = B.COCD
+				LEFT OUTER JOIN UI_GENERAL C ON A.GENERALCD = C.GENERALCD
+				LEFT OUTER JOIN UI_BUSI D ON A.BUSICD = D.BUSICD
+				LEFT OUTER JOIN UI_DEPT E ON A.DEPTCD = E.DEPTCD
+				LEFT OUTER JOIN UI_JIKIN F ON A.JIKINCD = F.JIKINCD
+				LEFT OUTER JOIN UI_JIKGUB G ON A.JIKGUBCD = G.JIKGUBCD
+				LEFT OUTER JOIN UI_USER_EMAIL H ON A.USER_ID = H.USER_ID
+				LEFT OUTER JOIN UI_USER_IP I ON A.USER_ID = I.USER_ID
+		WHERE	X.GROUP_SEQ = #{groupSeq}
+		<if test='searchStr!=null and searchStr!=""'>
+			AND		(
+							A.USER_ID LIKE CONCAT('%', #{searchStr}, '%')
+						OR	A.USER_NM LIKE CONCAT('%', #{searchStr}, '%')
+						OR	H.USER_EMAIL LIKE CONCAT('%', #{searchStr}, '%')
+						OR	I.USER_IP LIKE CONCAT('%', #{searchStr}, '%')
+					)
+		</if>
+		AND		X.USER_ID = A.USER_ID
+		GROUP	BY X.GROUP_SEQ, A.USER_ID, A.USER_NM, A.COCD, B.CONM, A.GENERALCD, C.GENERALNM, A.BUSICD, D.BUSINM, A.DEPTCD, E.DEPTNM, A.JIKINCD, F.JIKINNM, A.JIKGUBCD, G.JIKGUBNM, ceo
+    	ORDER BY A.USER_NM
+	</select>
+	
+	<select id="getAdminUserGroupSimpleList" parameterType="hashmap" resultType="adminUserGroupVO">
+		SELECT	X.GROUP_SEQ AS groupSeq, X.USER_ID AS userId
+		FROM	UI_ADMIN_USER_GROUP_LIST X, UI_USERS Z
+		WHERE	X.GROUP_SEQ = #{groupSeq}
+		AND		X.USER_ID = Z.USER_ID
+	</select>
+	
+	<select id="getAdminUserGroupSimpleAdminList" parameterType="hashmap" resultType="adminUserGroupVO">
+		SELECT  B.USER_ID AS userId,
+		        GROUP_CONCAT( DISTINCT A.GROUP_COLOR SEPARATOR ',') AS groupColor
+		FROM    UI_ADMIN_USER_GROUP A, UI_ADMIN_USER_GROUP_LIST B, UI_USERS C
+		WHERE   A.ADMIN_ID = #{adminId}
+		AND     A.GROUP_SEQ = B.GROUP_SEQ
+		AND     B.USER_ID = C.USER_ID
+		GROUP   BY B.USER_ID
+	</select>
+	
+	
+	<!-- 룰 구성 요소 사용자 그룹 등록 여부 확인 -->
+	<select id="isAdminUserGroupItemExist" resultType="int" parameterType="adminUserGroupVO">
+		SELECT	COUNT(*) AS CNT
+		FROM	UI_ADMIN_USER_GROUP_LIST 
+		WHERE	GROUP_SEQ = #{groupSeq}
+		<if test='userId!=null and userId!=""'>
+		AND		USER_ID = #{userId}
+		</if>
+	</select>
+	
+	<!-- 관심사용자 Text upload 전 실제 등록되어 있는 사용자인지 확인 -->
+	<select id="isAdminUserGroupItemReal" resultType="int" parameterType="adminUserGroupVO">
+		SELECT	COUNT(*) AS CNT
+		FROM	UI_USERS 
+		WHERE	USER_ID = #{userId}
+	</select>
+	
+	<!-- 사용자 그룹 아이템 저장 -->
+	<insert id="insertAdminUserGroupItem" parameterType="adminUserGroupVO">
+		INSERT	INTO UI_ADMIN_USER_GROUP_LIST (GROUP_SEQ, USER_ID)
+		VALUES( #{groupSeq}, #{userId} )
+	</insert>
+	
+	<update id="replaceAdminUserGroupItem" parameterType="adminUserGroupVO">
+		REPLACE INTO UI_ADMIN_USER_GROUP_LIST	SET USER_ID = #{userId}, GROUP_SEQ = #{groupSeq}
+	</update>
+	
+	
+	<!-- 사용자 그룹 아이템 삭제 -->
+	<delete id="deleteAdminUserGroupItem" parameterType="adminUserGroupVO">
+		DELETE	
+		FROM	UI_ADMIN_USER_GROUP_LIST
+		WHERE	GROUP_SEQ = #{groupSeq}
+		<if test='userId!=null and userId!=""'>
+		AND		USER_ID = #{userId}
+		</if>
+		
+	</delete>
+	
+	
+	<select id="getImportAuthUsers" resultType="adminUserGroupVO" parameterType="hashmap">
+		SELECT  USER_ID AS userId
+		FROM	UI_USERS A
+		WHERE	1=1
+		<if test='authCocd != null and authCocd != 0'>
+			AND		A.COCD IN (SELECT COCD FROM UI_ADMIN_CO WHERE ADMIN_ID = #{adminId})
+		</if>
+		<if test='authBusi != null and authBusi != 0'>
+			AND		A.BUSICD IN (SELECT BUSICD FROM UI_ADMIN_BUSI WHERE ADMIN_ID = #{adminId})
+		</if>
+		<if test='authDept != null and authDept != 0'>
+			AND		A.DEPTCD IN (SELECT DEPTCD FROM UI_ADMIN_DEPT WHERE ADMIN_ID = #{adminId})
+		</if>
+		AND		USER_ID IN (
+				<foreach item="item" index="index" collection="dbList" separator="UNION">
+					<if test='item!=null and item!=""'>
+						SELECT #{item}
+					</if>
+				</foreach>
+				)
+	</select>
+	
+	<select id="getConAdminUserGroupList" parameterType="hashmap" resultType="adminUserGroupVO">
+		SELECT	DISTINCT B.GROUP_SEQ AS groupSeq, B.GROUP_NAME AS groupName
+		FROM	UI_ADMIN_USER_GROUP_LIST A
+      		LEFT JOIN UI_ADMIN_USER_GROUP B ON A.GROUP_SEQ = B.GROUP_SEQ
+		WHERE	USE_YN = 'Y'
+		AND		ADMIN_ID = #{adminId}
+		<if test='itemList != null and itemList != ""'>
+			AND		FIND_IN_SET (A.USER_ID, #{itemList})
+		</if>
+		ORDER	BY B.GROUP_NAME
+	</select>
+
+
+
+
+
+
+
+
+
+
+
+
+</mapper>

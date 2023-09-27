@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "../../dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xcurenet.sqlmap.mappers.mysql.makeInfo">
+
+	<!-- 현재 테이블의 사용중인 버전  -->
+	<select id="getTableCurrentVersion" resultType="versionVO" parameterType="string">
+		SELECT	MAX(VERSION) VERSION
+		FROM	INFO_VERSION
+		WHERE	TABLENAME = #{tableName}
+	</select>
+
+	<insert id="addVersion" parameterType="hashmap">
+		INSERT INTO INFO_VERSION ( TABLENAME, VERSION, DATE, ID, COMMENTS ) VALUES( #{TABLENAME}, #{VERSION}, NOW(), #{ID}, #{COMMENTS} )
+	</insert>
+
+	<!-- 사용자 정보 등록 -->
+	<insert id="addInfoUser" parameterType="Long">
+		INSERT INTO INFO_USER (VERSION, USERID, NAME, COCD, CONM, SUBORGCD, SUBORGNM, BUSICD, BUSINM, DEPTCD, DEPTNM, JIKGUBCD, JIKGUBNM, CEO)
+		SELECT	#{VERSION},
+				A.USER_ID,
+				A.USER_NM,
+				A.COCD,
+				B.CONM,
+				A.GENERALCD,
+				C.GENERALNM,
+				A.BUSICD,
+				D.BUSINM,
+				A.DEPTCD,
+				E.DEPTNM,
+				A.JIKGUBCD,
+				G.JIKGUBNM,
+				A.CEO
+		FROM	(
+				SELECT	*
+				FROM	(
+    					SELECT	H.USER_ID, H.USER_NM, H.COCD, H.GENERALCD, H.BUSICD, H.DEPTCD, H.JIKINCD, H.JIKGUBCD, 
+    							CASE WHEN IFNULL(I.USER_ID,'N') != 'N' THEN 'Y' ELSE 'N' END AS CEO
+						FROM	UI_USERS H
+						LEFT	JOIN UI_CEO I
+						ON		H.USER_ID = I.USER_ID
+						) AS RS
+				) A
+				LEFT OUTER JOIN UI_CO B ON A.COCD = B.COCD
+				LEFT OUTER JOIN UI_GENERAL C ON A.GENERALCD = C.GENERALCD
+				LEFT OUTER JOIN UI_BUSI D ON A.BUSICD = D.BUSICD
+				LEFT OUTER JOIN UI_DEPT E ON A.DEPTCD = E.DEPTCD
+				LEFT OUTER JOIN UI_JIKIN F ON A.JIKINCD = F.JIKINCD
+				LEFT OUTER JOIN UI_JIKGUB G ON A.JIKGUBCD = G.JIKGUBCD
+	</insert>
+
+	<!-- 사용자 IP -->
+	<insert id="addInfoIp" parameterType="Long">
+		INSERT INTO INFO_IP ( VERSION, USERID, IP )
+		SELECT  #{VERSION}, A.USER_ID, B.USER_IP
+		FROM	UI_USERS A, UI_USER_IP B
+		WHERE	A.USER_ID = B.USER_ID
+	</insert>
+	
+	<!-- 사용자 EMAIL -->
+	<insert id="addInfoEmail" parameterType="hashmap">
+		INSERT INTO INFO_EMAILADDR ( VERSION, USERID, EMAILADDR )
+		SELECT  #{VERSION}, A.USER_ID, 
+				<if test='encryptUseYN == "Y"'>
+				CAST(if(B.USER_EMAIL is null, null, xcndec(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, B.USER_EMAIL)) AS CHAR) AS userEmail
+				</if>
+				<if test='encryptUseYN != "Y"'>
+				B.USER_EMAIL
+				</if>
+		FROM	UI_USERS A, UI_USER_EMAIL B
+		WHERE	A.USER_ID = B.USER_ID
+	</insert>
+	
+	<!-- 장비 -->
+	<insert id="addInfoDevice" parameterType="Long">
+		INSERT INTO INFO_DEVICE (VERSION, EID, NAME, IP)
+		SELECT  #{VERSION}, DEVICE_SEQ, DEVICE_NM, DEVICE_IP
+		FROM	UI_DEVICE
+		WHERE	USE_YN = 'Y'
+	</insert>
+	
+	
+	<!-- 휴일정보 -->
+	<insert id="addInfoHoliday" parameterType="Long">
+		INSERT INTO INFO_HOLIDAY( VERSION, COCD, BUSICD, `DATE`, COMMENTS )
+		SELECT  #{VERSION}, B.COCD, C.BUSICD, A.`DATE`, A.COMMENT
+		FROM	UI_HOLIDAY A, UI_CO B, UI_BUSI C
+		WHERE	A.BUSICD = C.BUSICD
+		AND		B.COCD = C.COCD
+		UNION
+		SELECT  #{VERSION}, '00000', BUSICD, `DATE`, COMMENT
+		FROM	UI_HOLIDAY
+		WHERE	BUSICD = '00000'
+	</insert>
+	
+	<!-- 업무일 정보 -->
+	<insert id="addInfoWorkDay" parameterType="Long">
+		INSERT INTO INFO_WORKDAY( VERSION, COCD, BUSICD, WDAY, WHOUR )
+		SELECT  #{VERSION}, B.COCD, C.BUSICD, A.WDAY, A.WHOUR
+		FROM	UI_WORKDAY A, UI_CO B, UI_BUSI C
+		WHERE	A.BUSICD = C.BUSICD
+		AND		B.COCD = C.COCD
+	</insert>
+	
+	
+	<!-- 사업장 IP RANGE 정보 -->
+	<insert id="addInfoIpRange" parameterType="Long">
+		INSERT INTO INFO_IPRANGE (VERSION, SIP, EIP, BUSICD, BUSINM, COCD, CONM, INSIDE)
+		SELECT  #{VERSION}, A.START_IP, A.END_IP, A.BUSICD, B.BUSINM, C.COCD, C.CONM, 'I' AS INSIDE
+		FROM	UI_BUSI_IPRANGE A, UI_BUSI B, UI_CO C
+		WHERE	A.BUSICD = B.BUSICD
+		AND		B.COCD = C.COCD
+	</insert>
+	
+	<!-- 예약어 정보 -->
+	<insert id="addInfoKeyword" parameterType="Long">
+		INSERT INTO INFO_KEYWORD (VERSION, KEYWORD)
+		SELECT  DISTINCT #{VERSION}, KEYWORD_NAME
+		FROM	UI_KEYWORD
+	</insert>
+	
+	
+	<!-- 패턴 정보 -->
+	<insert id="addInfoRegExp" parameterType="Long">
+		INSERT INTO INFO_PRIVATE (VERSION, CODE,`REGEXP`)
+		SELECT  #{VERSION}, CODE, REGEX
+		FROM	UI_REGEXP
+	</insert>
+	
+	
+	<!-- 미로깅 URL -->
+	<insert id="addInfoNoLogUrl" parameterType="Long">
+		INSERT INTO INFO_NOLOG_URL (VERSION, URL)
+		SELECT  DISTINCT #{VERSION}, URL
+		FROM	UI_URL_NOLOG
+		WHERE	USE_YN = 'Y'
+	</insert>
+	
+	<!-- 미로깅 URL -->
+	<select id="getInfoNoLogUrl" resultType="hashmap">
+		SELECT  URL
+		FROM	UI_URL_NOLOG
+		WHERE	USE_YN = 'Y'
+	</select>
+	
+	<!-- 미로깅 SUBJECT -->
+	<insert id="addInfoNoLogSubject" parameterType="Long">
+		INSERT INTO INFO_NOLOG_SUBJECT (VERSION, SERVICECD, SUBJECT)
+		SELECT  #{VERSION}, B.SERVICECD, A.SUBJECT
+		FROM	UI_SUBJECT_NOLOG A, UI_SERVICE B
+		WHERE	A.SERVICECD = LEFT(B.SERVICECD, 3)
+		AND		A.USE_YN = 'Y'
+	</insert>
+	
+	<!-- 로깅 SIZE -->
+	<insert id="addInfoNoLogSize" parameterType="Long">
+		INSERT INTO INFO_NOLOG_SIZE (VERSION, SERVICECD, LOWSIZE, HIGHSIZE, SIZE_CONDITION)
+		SELECT  #{VERSION}, B.SERVICECD, A.LOWSIZE, A.HIGHSIZE, A.SIZE_CONDITION
+		FROM	UI_SIZE_LOG A, UI_SERVICE B
+		WHERE	A.SERVICECD = LEFT(B.SERVICECD, 3)
+		AND		A.USE_YN = 'Y'
+	</insert>
+	
+	<!-- 미로깅 ID -->
+	<insert id="addInfoNoLogUserId" parameterType="Long">
+		INSERT INTO INFO_NOLOG_ID (VERSION, SERVICECD, USERID)
+		SELECT  #{VERSION}, B.SERVICECD, A.USER_ID
+		FROM	UI_ID_NOLOG A, UI_SERVICE B
+		WHERE	A.SERVICECD = LEFT(B.SERVICECD, 3)
+		AND		A.USE_YN = 'Y'
+	</insert>
+	
+	
+	<!-- 미로깅 Domain -->
+	<insert id="addInfoNoLogDomain" parameterType="Long">
+		INSERT INTO INFO_NOLOG_DOMAIN (VERSION, SERVICECD, DOMAIN)
+		SELECT  #{VERSION}, B.SERVICECD, A.DOMAIN
+		FROM	UI_DOMAIN_NOLOG A, UI_SERVICE B
+		WHERE	A.SERVICECD = LEFT(B.SERVICECD, 3)
+		AND		A.USE_YN = 'Y'
+	</insert>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- 사용자 정보 -->
+	<select id="getInfoUser" resultType="hashmap" parameterType="hashmap">
+		SELECT	A.USER_ID AS USERID, A.USER_NM AS NAME, A.COCD, B.CONM, A.GENERALCD AS SUBORGCD, C.GENERALNM AS SUBORGNM, A.BUSICD, D.BUSINM, A.DEPTCD, E.DEPTNM, A.JIKGUBCD, G.JIKGUBNM, A.CEO
+		FROM	(
+				SELECT	*
+				FROM	(
+    					SELECT	H.USER_ID, H.USER_NM, H.COCD, H.GENERALCD, H.BUSICD, H.DEPTCD, H.JIKINCD, H.JIKGUBCD, 
+    							CASE WHEN IFNULL(I.USER_ID,'N') != 'N' THEN 'Y' ELSE 'N' END AS CEO
+						FROM	UI_USERS H
+						LEFT	JOIN UI_CEO I
+						ON		H.USER_ID = I.USER_ID
+						) AS RS
+				) A
+				LEFT OUTER JOIN UI_CO B ON A.COCD = B.COCD
+				LEFT OUTER JOIN UI_GENERAL C ON A.GENERALCD = C.GENERALCD
+				LEFT OUTER JOIN UI_BUSI D ON A.BUSICD = D.BUSICD
+				LEFT OUTER JOIN UI_DEPT E ON A.DEPTCD = E.DEPTCD
+				LEFT OUTER JOIN UI_JIKIN F ON A.JIKINCD = F.JIKINCD
+				LEFT OUTER JOIN UI_JIKGUB G ON A.JIKGUBCD = G.JIKGUBCD
+		LIMIT	${offset}, ${pageSize}
+	</select>
+	
+	<!-- 사용자 IP -->
+	<select id="getInfoIp" resultType="hashmap" parameterType="hashmap">
+		SELECT  USER_ID AS USERID, USER_IP AS IP
+		FROM	UI_USER_IP
+		ORDER	BY USER_ID
+		LIMIT	${offset}, ${pageSize}
+	</select>
+	
+	<!-- 사용자 EMAIL -->
+	<select id="getInfoEmailAddr" resultType="hashmap" parameterType="hashmap">
+		SELECT	USER_ID AS USERID, 
+				<if test='encryptUseYN == "Y"'>
+				CAST(if(USER_EMAIL is null, null, xcndec(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, USER_EMAIL)) AS CHAR) AS EMAILADDR
+				</if>
+				<if test='encryptUseYN != "Y"'>
+				USER_EMAIL AS EMAILADDR
+				</if>
+		FROM	UI_USER_EMAIL
+		ORDER	BY USER_ID
+		LIMIT	${offset}, ${pageSize}
+	</select>
+	
+	<!-- 개인정보? -->
+	<select id="getInfoRegExp" resultType="hashmap" parameterType="hashmap">
+		SELECT CODE, NAME, REGEX FROM UI_REGEXP
+	</select>
+	
+	<!-- 장비 정보 -->
+	<select id="getInfoDevice" resultType="hashmap" parameterType="hashmap">
+		SELECT	CAST(DEVICE_SEQ AS CHAR) AS EID, DEVICE_NM AS NAME, DEVICE_IP AS IP
+		FROM	UI_DEVICE
+		WHERE	USE_YN = 'Y'
+	</select>
+	
+	<!-- 휴일 정보 -->
+	<select id="getInfoHoliDay" resultType="hashmap" parameterType="hashmap">
+		SELECT  B.COCD, C.BUSICD, DATE_FORMAT(A.`DATE`, '%Y-%m-%d' ) AS `DATE`, A.COMMENT COMMENTS
+		FROM	UI_HOLIDAY A, UI_CO B, UI_BUSI C
+		WHERE	A.BUSICD = C.BUSICD
+		AND		B.COCD = C.COCD
+		UNION
+		SELECT  '00000', BUSICD, DATE_FORMAT(`DATE`, '%Y-%m-%d' ) AS `DATE`, COMMENT
+		FROM	UI_HOLIDAY
+		WHERE	BUSICD = '00000'
+	</select>
+	
+	<!-- 근무 요일/시간 정보 -->
+	<select id="getInfoWorkDay" resultType="hashmap" parameterType="hashmap">
+		SELECT  B.COCD, C.BUSICD, A.WDAY, A.WHOUR
+		FROM	UI_WORKDAY A, UI_CO B, UI_BUSI C
+		WHERE	A.BUSICD = C.BUSICD
+		AND		B.COCD = C.COCD
+	</select>
+	
+	<!-- 사업장 내부 IP 정보 -->
+	<select id="getInfoIpRange" resultType="hashmap" parameterType="hashmap">
+		SELECT  A.START_IP AS SIP, A.END_IP AS EIP, A.BUSICD, B.BUSINM, C.COCD, C.CONM, 'I' AS INSIDE
+		FROM	UI_BUSI_IPRANGE A, UI_BUSI B, UI_CO C
+		WHERE	A.BUSICD = B.BUSICD
+		AND		B.COCD = C.COCD
+	</select>
+	
+	<!-- 부서 내부 IP 정보 -->
+	<select id="getInfoIpRangeDept" resultType="hashmap" parameterType="hashmap">
+		SELECT  A.START_IP AS SIP, A.END_IP AS EIP, A.DEPTCD, B.DEPTNM, C.COCD, C.CONM, 'I' AS INSIDE
+		FROM	UI_DEPT_IPRANGE A, UI_DEPT B, UI_CO C
+		WHERE	A.DEPTCD = B.DEPTCD
+		AND		B.COCD = C.COCD
+	</select>
+	
+	<!-- 키워드 Mysql  -->
+	<select id="getInfoKeyword" resultType="hashmap" parameterType="hashmap">
+		SELECT	KEYWORD_NAME AS KEYWORD
+		FROM	UI_KEYWORD JOIN UI_KEYWORD_GROUP ON UI_KEYWORD.GROUP_SEQ = UI_KEYWORD_GROUP.GROUP_SEQ
+		WHERE	UI_KEYWORD_GROUP.USE_YN = 'Y'
+		ORDER	BY KEYWORD_NAME
+		LIMIT	${offset}, ${pageSize}
+	</select>
+	
+	<!-- 필터링 정책  SUBJECT -->
+	<select id="getInfoNoLogSubject" resultType="hashmap" parameterType="hashmap">
+		SELECT  B.SERVICECD, A.SUBJECT
+		FROM	UI_SUBJECT_NOLOG A, UI_SERVICE B
+		WHERE	A.SERVICECD = LEFT(B.SERVICECD, 3)
+		AND		A.USE_YN = 'Y'
+	</select>
+	
+	<!-- 필터링 정책  SIZE -->
+	<select id="getInfoNoLogSize" resultType="hashmap" parameterType="hashmap">
+		SELECT  B.SERVICECD, A.LOWSIZE, A.HIGHSIZE, A.SIZE_CONDITION
+		FROM	UI_SIZE_LOG A, UI_SERVICE B
+		WHERE	A.SERVICECD = LEFT(B.SERVICECD, 3)
+		AND		A.USE_YN = 'Y'
+	</select>
+	
+	<!-- 미로깅 ID -->
+	<select id="getInfoNoLogId" resultType="hashmap" parameterType="hashmap">
+		SELECT  B.SERVICECD, A.USER_ID AS USERID
+		FROM	UI_ID_NOLOG A, UI_SERVICE B
+		WHERE	A.SERVICECD = LEFT(B.SERVICECD, 3)
+		AND		A.USE_YN = 'Y'
+	</select>
+	
+	<!-- 필터링 정책  DOMAIN -->
+	<select id="getInfoNoLogDomain" resultType="hashmap" parameterType="hashmap">
+		SELECT  B.SERVICECD, A.DOMAIN
+		FROM	UI_DOMAIN_NOLOG A, UI_SERVICE B
+		WHERE	A.SERVICECD = LEFT(B.SERVICECD, 3)
+		AND		A.USE_YN = 'Y'
+	</select>
+	
+</mapper>
+

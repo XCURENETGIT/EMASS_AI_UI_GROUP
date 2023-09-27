@@ -1,0 +1,424 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>#emass_body_view#</title>
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta name="viewport" content="width=1280">
+<meta name="apple-mobile-web-app-title" content="XCURENET" />
+
+<style type="text/css">
+*, ::after, ::before {
+    box-sizing: border-box;
+}
+[class*=-wraps] {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+body {
+	margin:0px;
+	overflow: auto;
+	font-family: Dotum, "Apple SD Gothic Neo", Helvetica, sans-serif !important;
+	line-height: 1.42857143;
+	background-color: #fff;
+	font-size: 13px;
+    padding: 0px 24px 20px;
+   	width: auto;
+}
+table {
+    caption-side: bottom;
+    border-collapse: collapse;
+    width: 100%;
+}
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+    vertical-align: top;
+}
+.boxArea {
+	height: 100% !important;
+	min-height: 0px !important;
+}
+.message-detail-wraps{justify-content:flex-end;}
+.message-detail-wraps>*{margin-left:10px;}
+.message-detail-wraps>.input{width:auto;padding:0;border:0;}
+.message-detail-wraps>.input>input{font-size:12px;background:#fff;}
+.message-detail-wraps>.badge{margin-left:0;color:#fff;background-color:#a5b3c2;border-radius:3px;}
+.message-detail-wraps>.badge,
+.message-detail-wraps>button{padding:5px 17px;font-size:12px;}
+.message-detail-wraps>.select{width:100px;}
+.message-detail-wraps>.select>select{padding:5px 17px;font-size:12px;font-weight:600;color:#424242;}
+.message-detail.small .classify-list,
+.wrap.message-detail .classify-list{justify-content:flex-end;margin-top:10px;}
+.message-detail.small .title-wraps,
+.wrap.message-detail .title-wraps{margin:5px 0 10px;}
+.message-detail.small .title-wraps .tool-btn,
+.wrap.message-detail .title-wraps .tool-btn{width:100px;padding:5px 17px;font-size:12px;}
+.message-title-wraps{width:40%;}
+.message-title-wraps .title-box{max-width:100%;border:0;margin:0 10px;}
+.message-title-wraps .btn{padding:0;}
+.message-title-wraps .btn>i{font-size:20px;}
+
+#infoTable tr>td .condition-badge{display:block;padding:10px;font-weight:700;}
+#infoTable tr>td .condition-badge.bc-green{color:#039900;background-color:#cdebcc;}
+#infoTable tr>td .condition-badge.bc-blue{color:#1a7eb2;background-color:#d1e5f0;}
+#infoTable tr>td .condition-badge.bc-orange{color: #b2831a;background-color: #f0e4d1;}
+#infoTable .td-wraps>.btn{border-radius:0;}
+#infoTable.code .td-wraps>.btn{border-radius:3px;}
+#infoTable .td-wraps>span.column-info{width:calc(100% - 32px);}
+#infoTable .td-wraps>div.question-mark{width:32px;cursor:pointer;position:relative;}
+#infoTable .td-wraps>div.question-mark i{font-size:16px;color:#8996a3;}
+#infoTable .td-wraps>div.question-mark:hover>.water-ballon{display:flex;}
+#infoTable .td-wraps .water-ballon *{color:#fff;}
+#infoTable.code tr:nth-child(1)>th{padding-top:18px;padding-bottom:18px;}
+#infoTable.code tr>th,
+#infoTable.code tr>td{text-align:center;}
+#infoTable.code .input,
+#infoTable.code .select{width:290px;}
+#infoTable.code tr>td:nth-child(2){padding-left:35px; vertical-align: middle;}
+#infoTable.code tr>td:nth-child(2)>.td-wraps{justify-content:flex-start;}
+#infoTable.code tr>td:nth-child(2)>.td-wraps>.btn{padding:5px 18px;margin-left:12px;}
+#infoTable.code td label{font-weight:500; color:#8996a3;}
+#infoTable.code .td-wraps.size>div{width:95px;}
+#infoTable.code .td-wraps.size>div+div{margin-left:9px;}
+#infoTable.code .check-wraps{margin-bottom:12px;}
+#infoTable.code .btn.calculate{padding:40px 18px;}
+#infoTable.code .search-code .input{width:calc(100% - 80px);}
+#infoTable.code .search-code .td-wraps{align-items:flex-start;}
+
+#infoTable.code .search-code .input{width:calc(100% - 80px);}
+#infoTable.code .search-code .td-wraps{align-items:flex-start;}
+
+table.mdtable{border:1px solid #bec9d4;}
+table.mdtable .td-wraps{justify-content:center;position:relative;}
+table.mdtable .td-wraps>.select{width:310px;}
+table.mdtable .th-wraps>.btn{padding:0;background:none;}
+table.mdtable .th-wraps>.btn.hide{padding:5px 17px;}
+table.mdtable+table.mdtable{margin-top:16px;}
+table.mdtable *{font-size:12px;}
+table.mdtable tr>td *{font-weight:500;}
+table.mdtable tr>td i{font-weight:700;}
+table.mdtable td{padding:16px 8px}
+table.mdtable td a{display:flex;align-items:center;}
+table.mdtable td a{display:flex;align-items:center;position:relative;}
+table.mdtable td a> .thumbnail{display:none;flex-direction:column;justify-content:center;align-items:center;width:120px;position:absolute;top: 100%;left:10px;background-color:#fff;box-shadow:0 4px 4px rgba(0, 0, 0, 0.25);border-radius:0 0 3px 3px;}
+table.mdtable td a:hover > .thumbnail{display:flex;}
+table.mdtable td a> .thumbnail>div{width:100%;height:70%;margin-bottom:5px;background-color:#dbdbdb;}
+table.mdtable td a> .thumbnail>div>img{width:100%;}
+table.mdtable td>.input{width:100%;}
+table.mdtable tr>td input{color:#292929;background-color:#fff;}
+table.mdtable td textarea{border:0;}
+table.mdtable th{padding:5px 5px;font-weight:600;background-color:#e9eff5;border-right:1px solid #bec9d4;text-align:left;vertical-align: middle;}
+table.mdtable th>.btn{padding:0;margin:0;background:none;}
+table.mdtable tr{border-bottom:1px solid #bec9d4;}
+table.mdtable tr>th:nth-child(3){border-left:1px solid #bec9d4;}
+table.mdtable tr>td{text-align:left;}
+table.mdtable tr>td.sum{font-weight:700;}
+table.mdtable .th-wraps{font-weight:600;}
+table.mdtable tr>th button{margin-left:6px;}
+table.mdtable tr>th button>img{width:18px;}
+
+table.mdtable.file i{color:#2C3238;}
+table.mdtable.file tr>th,
+table.mdtable.file tr>td{text-align:center;}
+table.mdtable.file tr>td+td{border-left:1px solid #bec9d4;}
+table.mdtable.file .td-box{display:flex;justify-content:center;align-items: center;}
+table.mdtable.file .btn-wraps{justify-content:center;padding:0;}
+table.mdtable.file .btn-wraps>button{display:flex;justify-content:center;align-items:center;padding:0;}
+table.mdtable.file .btn-wraps>button+button{margin-left:5px;}
+table.mdtable tr.message-id{display: none;}
+table.mdtable tr.message-id.on{display:table-row;}
+
+.message-head>*{display:flex;}
+.message-head>.right{align-items:stretch;margin:0 0 5px 0;}
+.message-head>.right .select-wraps{margin-right:10px;}
+.message-head>.right .select-wraps.mr-0{margin-right:0;}
+.message-head>.right label{min-width:50px;font-size:12px;}
+.message-head>.right .select{width:100px;height:30px;border-color:#dbdbdb;}
+.message-head>.right .select>select{padding-top:4px;padding-bottom:4px;font-size:12px;color:#292929;}
+.message-head>.left>.btn-wraps{margin:0 0 0 10px;padding-bottom:0;}
+.message-head>.left>.btn-wraps>button+button{margin-left:3px;}
+.message-head>.left>.btn-wraps>button>img{width:18px;}
+.message-body{padding:5px 5px;border:1px solid #dbdbdb;border-radius:0 0 3px 3px;}
+.message-main-content-box{padding:5px;border:1px solid #dbdbdb;border-radius:3px;}
+.reservation-word-box{display:flex;align-items:center;}
+.reservation-word-box>p{margin-right:10px;font-weight:700;}
+.main-context-box{text-align:left;margin-top:22px;}
+
+.profile-head{display:flex;align-items:center;padding:5px 10px;background-color:#e9eff5;}
+.profile-image-box{display:flex;justify-content:center;align-items:center;width:32px;height:32px;margin-right:16px; background-color:#bec9d4;border-radius:50px;}
+.profile-image-box i{font-size:16px;color:#18405a;margin-right:0;}
+.profile-head>.text-box>p.name{font-size:14px;font-weight:700;color:#18405a;}
+.profile-head>.text-box>p.email{margin-top:2px;font-size:10px;font-weight:700;color:#8996a3;}
+.profile-body{padding:10px 18px;}
+.profile-list>li{padding:6px 0 8px 10px;}
+.profile-list>li:first-child{padding-top:0;}
+.profile-list>li+li{border-top:1px solid #bec9d4;}
+.profile-list>li>span{display:block;color:#292929;}
+.profile-list>li>span.title{margin-bottom:4px;font-size:12px;font-weight:700;color:#8996a3;}
+
+.badge-wraps>.badge{min-width:70px;padding:4px 20px;color:#42a5df;font-weight:600;background-color:#fff;border:1px solid #42a5df;border-radius:3px;}
+.badge-wraps>.badge+.badge{margin-left:10px;}
+
+.message-content-wrap{margin-top:5px;}
+.message-head{display:flex;justify-content:space-between;align-items:center;}
+.message-head p.title{display:flex;justify-content:center;align-items:center;height:40px;position:relative;padding:5px 25px;font-weight:600;border-bottom:1px solid transparent;border-radius:3px 3px 0 0;border-top:1px solid #dbdbdb;border-right:1px solid #dbdbdb;border-left:1px solid #dbdbdb;margin-bottom: 0;margin-top: 0;}
+.message-head p.title::after{content:'';width:100%;height:0px;background-color:#fff;position:absolute;bottom:-3px;left:0;}
+.message-content-wrap .btn-wraps{padding:0;}
+.message-content-wrap .btn.lined-small{padding:5px 17px;}
+</style>
+<script type="text/javascript">
+function init( ) {
+	var printBtn = document.getElementById('printBtn');
+	if(printBtn!=null){
+		window.print();
+	}
+}
+
+</script>
+</head>
+<body class="mini-navbar msgBody" onload="init();">
+	<div class="container">
+		<div class="contents">
+			<div style="height:23px;" id="print_area">
+				<span style="font-size: 15px;position: relative;top:7px;"> </span>
+				<div class="form-group form-inline" style="float:right;padding:3px 15px 0 0;" id="button_area">
+					<button type="button" class="btn btn-sm btn-default" id="printBtn" onclick="window.print();">Print</button>
+				</div>
+			</div>
+			<div class="title-wraps" style="margin: 5px 0 5px; justify-content: space-between;">
+	            <div class="message-title-wraps">
+	                <div class="title-box line-skip" id="subject">
+	                #emass_subject#
+	                </div>
+	            </div>
+	            <div class="message-title-wraps" style="justify-content: end;">
+	            	<ul class="classify-list svcnmSpan" style="font-weight: 700;margin-top: 1rem;">#emass_svcnm#</ul>
+	            </div>
+	        </div>
+	        <p class="user-id">
+	            <span id="msgInfoFeedback">ID : #ml_confd_userid#</span>
+	        </p>
+	        <table class="table table-bordered mdtable" id="infoTable">
+	            <colgroup>
+	                <col style="width: 150px;">
+					<col>
+					<col style="width: 110px;">
+					<col style="width: 160px;">
+	            </colgroup>
+	            <tr id="msgSrcIp">
+	                <th>
+	                    <div class="th-wraps">
+	                        #emass_title_srcip#
+	                    </div>
+	                </th>
+	                <td>#emass_src_ip#</td>
+	                <th>#emass_title_date#</th>
+	                <td>#emass_ctime#</td>
+	            </tr>
+	            <tr id="msgDstIp">
+	                <th>#emass_title_dstip#</th>
+	                <td>#emass_dst_ip#</td>
+	                <th>
+	                    <div class="th-wraps">
+	                        #emass_title_size#
+	                    </div>
+	                </th>
+	                <td>#emass_size#</td>
+	            </tr>
+	            <tr id="msgUserAccount" class="fold_clickTr">
+	                <th class="fold_clickTh"><span class="trTitle">#emass_title_user#</span></th>
+	                <td  class="profile fold_clickTd" id="testx">
+	                	<div id="userDiv" class="fold">
+	                		#emass_recvs#
+	                    </div>
+	                </td>
+	                <th>#emass_title_account#</th>
+	                <td>#emass_usrid#</td>
+	            </tr>
+	            <tr id="msgFrom" class="fold_clickTr">
+	                <th class="fold_clickTh">
+	                    <div class="th-wraps">
+                        	<span class="trTitle">#emass_title_from#</span>
+	                    </div>
+	                </th>
+	                <td class="fold_clickTd" colspan="3">
+	                	<div id="sendUserDiv" class="fold">
+	                		#emass_senders#
+						</div>
+	                </td>
+	            </tr>
+	            <tr id="msgTo" class="fold_clickTr">
+					<th class="fold_clickTh"><span class="trTitle">#emass_title_to#</span></th>
+					<td class="fold_clickTd" colspan="3">
+						<div id="receiveUserDiv" class="fold">
+							#emass_to#
+						</div>
+					</td>
+				</tr>
+				<tr id="msgCc" class="fold_clickTr">
+					<th class="fold_clickTh"><span class="trTitle">#emass_title_cc#</span></th>
+					<td class="fold_clickTd" colspan="3">
+						<div id="ccUserDiv" class="fold">
+							#emass_cc#
+						</div>
+					</td>
+				</tr>
+				<tr id="msgBcc" class="fold_clickTr">
+					<th class="fold_clickTh"><span class="trTitle">#emass_title_bcc#</span></th>
+					<td class="fold_clickTd" colspan="3">
+						<div id="bccUserDiv" class="fold">
+							#emass_bcc#
+						</div>
+					</td>
+				</tr>
+	            <tr id="msgIpBusiNm">
+	                <th>#emass_title_ipBusiNm#</th>
+	                <td>#emass_ipBusiNm#</td>
+	            </tr>
+	            <tr id="msgHost">
+	                <th>
+	                    <div class="th-wraps">
+	                        HOST / Path
+	                    </div>
+	                </th>
+	                <td colspan="3">
+	                    <div>#emass_host#</div>
+	                </td>
+	            </tr>
+				<tr id="msgEpmsgType" style="display:none;">
+					<th>#emass_title_epmsg_type#</th>
+					<td colspan="3">
+						<div>
+							#emass_epmsg_type#
+						</div>
+					</td>
+				</tr>
+				<tr id="msgParticipant" style="display:none;">
+					<th>#emass_title_participant#</th>
+					<td colspan="3">
+						<div>
+							#emass_participant#
+						</div>
+					</td>
+				</tr>
+				<tr id="msgXrootMtr" style="display:none;">
+					<th>#emass_title_xrootmtr#</th>
+					<td colspan="3">
+						<div>
+							#emass_xrootmtr#
+						</div>
+					</td>
+				</tr>
+	            <tr class="all-column" id="subjectKwd">
+	                <th>#emass_subject_keyword#</th>
+	                <td colspan="3">
+	                    <div class="badge-wraps" id="subjectStr">#emass_subject_kwd#</div>
+	                </td>
+	            </tr>
+	        </table>
+			<div class="boxArea" id="msgDiv">
+				<div class="content_body" style="transform: translateZ(0);">
+					<div class="message-content-wrap">
+			            <div class="message-content-box">
+			                <div class="message-head">
+			                    <div class="left">
+			                        <p class="title"><i class="fa fa-envelope-open-o fa-fw"></i>&nbsp;#emass_title_bodycontent#</p>
+			                    </div>
+			                </div>
+			                <div class="message-body">
+			                    <div class="message-main-content-box">
+			                        <div class="reservation-word-box" id="bodyKwd">
+			                            <p class="title" style="margin-bottom:0;">#emass_body_keyword# : </p>
+			                            <div class="badge-wraps" id="bodyStr">#emass_body_kwd#</div>
+			                        </div>
+			                        <div class="main-context-box" id="bodyArea">#emass_body#</div>
+			                    </div>
+			                </div>
+			            </div>
+			        </div>
+					<div class="message-content-wrap" id="msgFiles">
+			            <div class="message-content-box" id="attachDiv">
+			                <div class="message-head">
+			                    <p class="title body_toggle fileFold"><i class="fa fa-file-code-o fa-fw"></i>&nbsp;#emass_title_fileinfo#<span id="fileCntArea"></span></p>
+			                </div>
+			                #emass_file#
+			            </div>
+			        </div>
+					<div class="message-content-wrap" id="msgPattern">
+			            <div class="message-content-box" id="patternDiv">
+			                <div class="message-head">
+			                    <p class="title body_toggle patternFold"><i class="fa fa-superpowers fa-fw"></i>&nbsp;#emass_title_pattern#<span id="patternCntArea"></span></p>
+			                </div>
+			                #emass_pattern#
+			            </div>
+			        </div>
+				</div>
+			</div>
+		</div>
+<!-- 		<div class="content"> -->
+<!-- 			<div style="height:23px;" id="print_area"> -->
+<!-- 				<span style="font-size: 15px;position: relative;top:7px;"> </span> -->
+<!-- 				<div class="form-group form-inline" style="float:right;padding:3px 15px 0 0;" id="button_area"> -->
+<!-- 					<button type="button" class="btn btn-sm btn-default" id="printBtn" onclick="window.print();">Print</button> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
+<!-- 			<div class="boxArea"> -->
+<!-- 				<div class="well content_box"> -->
+<!-- 					<div class="row" id="msgFiles"> -->
+<!-- 						<div class="col-lg-12"> -->
+<!-- 							<div class="panel panel-default" id=""> -->
+<!-- 								<div class="panel-heading"> -->
+<!-- 									<i class="fa fa-bar-chart-o fa-fw"></i> #emass_title_fileinfo# -->
+<!-- 									<div class="pull-right" style="position: relative;top:-6px;"> -->
+<!-- 									</div> -->
+<!-- 								</div> -->
+<!-- 								<div class="panel-body css-body"> -->
+<!-- 									<div id="attachDiv"> -->
+<!-- 										#emass_file# -->
+<!-- 									</div> -->
+<!-- 								</div> -->
+<!-- 							</div> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
+<!-- 					<div class="row" id="msgPattern"> -->
+<!-- 						<div class="col-lg-12"> -->
+<!-- 							<div class="panel panel-default" id=""> -->
+<!-- 								<div class="panel-heading"> -->
+<!-- 									<i class="fa fa-bar-chart-o fa-fw"></i> #emass_title_pattern# -->
+<!-- 									<div class="pull-right"> -->
+<!-- 										<span></span> -->
+<!-- 									</div> -->
+<!-- 								</div> -->
+<!-- 								<div class="panel-body css-body"> -->
+<!-- 									<div id="patternDiv"> -->
+<!-- 										#emass_pattern# -->
+<!-- 									</div> -->
+<!-- 								</div> -->
+<!-- 							</div> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
+<!-- 					<div class="row" id="ocrFiles"> -->
+<!-- 						<div class="col-lg-12"> -->
+<!-- 							<div class="panel panel-default" id=""> -->
+<!-- 								<div class="panel-heading"> -->
+<!-- 									<i class="fa fa-bar-chart-o fa-fw"></i> #emass_title_ocr# -->
+<!-- 									<div class="pull-right"> -->
+<!-- 										<span></span> -->
+<!-- 									</div> -->
+<!-- 								</div> -->
+<!-- 								<div class="panel-body css-body"> -->
+<!-- 									<div id="ocrDiv"> -->
+<!-- 										#emass_ocr# -->
+<!-- 									</div> -->
+<!-- 								</div> -->
+<!-- 							</div> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
+<!-- 		</div> -->
+	</div>
+</body>
+</html>

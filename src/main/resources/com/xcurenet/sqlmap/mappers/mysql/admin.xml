@@ -1,0 +1,546 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "../../dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xcurenet.sqlmap.mappers.mysql.admin">
+
+	<select id="getAdminAuthority" resultType="authorityVO" parameterType="hashmap">
+		<if test='queryType=="A" or queryType=="" or queryType==null'>
+			SELECT  'COCD' AS type, 
+					CASE WHEN B IS NULL THEN  CONCAT( '+(cocd:(', A, ') ip_cocd:(', A, ') ) ')
+						WHEN A IS NULL THEN CONCAT('+', B) 
+					ELSE CONCAT( '+(cocd:(', A, ') ip_cocd:(', A, ') ', B, ')') END  query, C AS cnt
+			FROM    (
+					SELECT  ( SELECT  GROUP_CONCAT( DISTINCT COCD SEPARATOR ' ' ) FROM UI_ADMIN_CO WHERE COCD != 'C00-00' AND ADMIN_ID = #{adminId} ) AS A,
+							( SELECT  '(+cocd:(C00-00) +ip_cocd:(C00-00))' FROM UI_ADMIN_CO WHERE COCD = 'C00-00' AND ADMIN_ID = #{adminId} ) AS B,
+							( SELECT COUNT(COCD) FROM UI_ADMIN_CO WHERE ADMIN_ID = #{adminId} ) AS C
+					) AS R
+			UNION	ALL
+			SELECT  'BUSICD' AS type, 
+					CASE WHEN B IS NULL THEN  CONCAT( '+(busicd:(', A, ') ip_busicd:(', A, ') ) ')
+						WHEN A IS NULL THEN CONCAT('+', B) 
+					ELSE CONCAT( '+(busicd:(', A, ') ip_busicd:(', A, ') ', B, ')') END  query, C AS cnt
+			FROM    (
+					SELECT  ( SELECT  GROUP_CONCAT( DISTINCT BUSICD SEPARATOR ' ' ) FROM UI_ADMIN_BUSI WHERE BUSICD != 'C00-00' AND ADMIN_ID = #{adminId} ) AS A,
+							( SELECT  '(+busicd:(C00-00) +ip_busicd:(C00-00))' FROM UI_ADMIN_BUSI WHERE BUSICD = 'C00-00' AND ADMIN_ID = #{adminId} ) AS B,
+							( SELECT COUNT(BUSICD) FROM UI_ADMIN_BUSI WHERE ADMIN_ID = #{adminId} ) AS C
+					) AS R
+			UNION	ALL
+		</if>
+		<if test='queryType=="B"'>
+			SELECT  'COCD' AS type, CONCAT( '+cocd:(', GROUP_CONCAT( DISTINCT COCD SEPARATOR ' ' ), ')') AS query, COUNT(COCD) AS cnt FROM UI_ADMIN_CO				WHERE ADMIN_ID = #{adminId}
+			UNION	ALL
+			SELECT  'BUSICD' AS type, CONCAT( '+busicd:(', GROUP_CONCAT( DISTINCT BUSICD SEPARATOR ' ' ), ')') AS query, COUNT(BUSICD) AS cnt FROM UI_ADMIN_BUSI	WHERE ADMIN_ID = #{adminId}
+			UNION	ALL
+		</if>
+		<if test='queryType=="C"'>
+			SELECT  'COCD' AS type, CONCAT( '+ip_cocd:(', GROUP_CONCAT( DISTINCT COCD SEPARATOR ' ' ), ')') AS query, COUNT(COCD) AS cnt FROM UI_ADMIN_CO				WHERE ADMIN_ID = #{adminId}
+			UNION	ALL
+			SELECT  'BUSICD' AS type, CONCAT( '+ip_busicd:(', GROUP_CONCAT( DISTINCT BUSICD SEPARATOR ' ' ), ')') AS query, COUNT(BUSICD) AS cnt FROM UI_ADMIN_BUSI	WHERE ADMIN_ID = #{adminId}
+			UNION	ALL
+		</if>
+		SELECT  'SERVICE' AS type, CONCAT( '+svc12:(', GROUP_CONCAT( DISTINCT SERVICECD SEPARATOR ' ' ), ')') AS query, COUNT(SERVICECD) AS cnt FROM UI_ADMIN_SERVICE	WHERE ADMIN_ID = #{adminId} 
+		UNION	ALL
+		SELECT  'SERVICE' AS type, CONCAT( '-svc:(', GROUP_CONCAT( DISTINCT SERVICECD SEPARATOR ' ' ), ')') AS query, COUNT(SERVICECD) AS cnt FROM UI_SERVICE	WHERE USE_YN = 'N'
+		UNION	ALL
+		SELECT  'REGEXP' AS type, CONCAT( '+pi:(', GROUP_CONCAT( DISTINCT CODE SEPARATOR ' ' ), ')') AS query, COUNT(CODE) AS cnt FROM UI_ADMIN_REGEXP			WHERE ADMIN_ID = #{adminId}
+		UNION	ALL
+		SELECT  'USERID' AS type, CONCAT('+userid:(', GROUP_CONCAT( DISTINCT B.USER_ID SEPARATOR ' '),')') AS query, COUNT(B.GROUP_CODE) AS cnt FROM UI_ADMIN_CEO_GROUP A LEFT JOIN UI_USER_GROUP_LIST B ON A.GROUP_CODE=B.GROUP_CODE WHERE ADMIN_ID = #{adminId}
+	</select>
+	
+	
+
+	
+	
+	<!-- SMS 발신 운용자 검색 -->
+	<select id="getAdminHpByConfId" resultType="hashmap" parameterType="string">
+		SELECT  A.ADMIN_HP
+		FROM	UI_ADMIN A, UI_CONF_ADMIN B
+		WHERE	A.ADMIN_ID = B.ADMIN_ID
+		AND		B.CONF_ID = #{confId}
+		AND		B.VAL = 'Y'
+		AND		A.ADMIN_TYPE = 'S'
+		AND		A.USE_YN = 'Y'
+		AND		IFNULL(A.ADMIN_HP,'') != ''
+	</select>
+	
+	<!-- SMS 발신 운용자 검색 -->
+	<select id="getAdminNotifyByConfId" resultType="hashmap" parameterType="string">
+		SELECT  A.ADMIN_ID, A.ADMIN_NAME
+		FROM	UI_ADMIN A, UI_CONF_ADMIN B
+		WHERE	A.ADMIN_ID = B.ADMIN_ID
+		AND		B.CONF_ID = #{confId}
+		AND		B.VAL = 'Y'
+		AND		A.ADMIN_TYPE = 'S'
+		AND		A.USE_YN = 'Y'
+	</select>
+	
+	<!-- 로그인 처리 용 -->
+	<select id="getAdmin" resultType="adminVO" parameterType="adminVO">
+		SELECT	ADMIN_ID AS adminId,
+				ADMIN_NAME AS adminName,
+				ADMIN_PW AS adminPw,
+				<if test='encryptUseYN == "Y"'>
+				if(ADMIN_EMAIL is null, null, xcndec(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, ADMIN_EMAIL)) AS adminEmail,
+				</if>
+				<if test='encryptUseYN != "Y"'>
+				ADMIN_EMAIL AS adminEmail,
+				</if>
+				ADMIN_HP AS adminHp,
+				PW_CHG_DT AS pwchgDt,
+				DATE_FORMAT(LAST_LOGIN_DT, '%Y-%m-%d %T' ) AS lastLoginDt,
+				LAST_LOGIN_IP AS lastLoginIp,
+				STATUS AS status,
+				FIRSTADMIN_YN AS firstAdminYn,
+				INFO_FEEDBACK AS infoFeedbackYn,
+				ADMIN_TYPE AS adminType,
+				USE_YN AS useYn,
+				ACCESS_FAIL_CNT AS accessFailCnt,
+				DATE_FORMAT(ACCESS_FAIL_DT, '%Y-%m-%d %T' ) AS accessFailDt,
+				APPROBATOR AS approbator,
+				COMMENT AS comment,
+				DATE_FORMAT(CREATE_DT, '%Y-%m-%d %T' ) AS createDt,
+				TO_DAYS(NOW())-TO_DAYS(LAST_LOGIN_DT) AS longTermUnuseDay,
+				TO_DAYS(NOW())-TO_DAYS(PW_CHG_DT) AS passwordChangeDay,
+				(
+					SELECT  GROUP_CONCAT( DISTINCT B.ACCESS_IP SEPARATOR ',' )
+					FROM	UI_ADMIN_ACCESS_IP B
+					WHERE	A.ADMIN_ID = B.ADMIN_ID
+					GROUP	BY B.ADMIN_ID
+				) AS accessIp,
+				LOGIN_TYPE AS loginType
+		FROM	UI_ADMIN A
+		WHERE	ADMIN_ID = BINARY(#{adminId})
+	</select>
+	
+	<select id="getAdminGenerate" resultType="string" parameterType="adminVO">
+		SELECT	ADMIN_GENERATE
+		FROM	UI_ADMIN_GENERATE
+		WHERE	ADMIN_ID = #{adminID}
+	</select>
+	
+	<insert id="insertAdminGenerate" parameterType="hashmap">
+		INSERT INTO UI_ADMIN_GENERATE (ADMIN_ID, ADMIN_GENERATE)
+		VALUES (#{adminId}, #{adminGenerate})
+	</insert>
+	
+	<delete id="deleteAdminGenerate" parameterType="hashmap">
+		DELETE FROM UI_ADMIN_GENERATE where ADMIN_ID = #{adminId}
+	</delete>
+	
+	<select id="getAdminList" resultType="adminVO" parameterType="adminVO">
+		SELECT	ADMIN_ID AS adminId,
+				ADMIN_NAME AS adminName,
+				ADMIN_PW AS adminPw,
+				<if test='encryptUseYN == "Y"'>
+				if(ADMIN_EMAIL is null, null, xcndec(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, ADMIN_EMAIL)) AS adminEmail,
+				</if>
+				<if test='encryptUseYN != "Y"'>
+				ADMIN_EMAIL AS adminEmail,
+				</if>
+				ADMIN_HP AS adminHp,
+				PW_CHG_DT AS pwchgDt,
+				DATE_FORMAT(LAST_LOGIN_DT, '%Y-%m-%d %T' ) AS lastLoginDt,
+				LAST_LOGIN_IP AS lastLoginIp,
+				STATUS AS status,
+				WORK_STATUS AS workStatus,
+				FIRSTADMIN_YN AS firstAdminYn,
+				INFO_FEEDBACK AS infoFeedbackYn,
+				ADMIN_TYPE AS adminType,
+				USE_YN AS useYn,
+				ACCESS_FAIL_CNT AS accessFailCnt,
+				DATE_FORMAT(ACCESS_FAIL_DT, '%Y-%m-%d %T' ) AS accessFailDt,
+				APPROBATOR AS approbator,
+				COMMENT AS comment,
+				DATE_FORMAT(CREATE_DT, '%Y-%m-%d %T' ) AS createDt,
+				TO_DAYS(NOW())-TO_DAYS(LAST_LOGIN_DT) AS longTermUnuseDay,
+				TO_DAYS(NOW())-TO_DAYS(PW_CHG_DT) AS passwordChangeDay,
+				(
+					SELECT  GROUP_CONCAT( DISTINCT B.ACCESS_IP SEPARATOR ',' )
+					FROM	UI_ADMIN_ACCESS_IP B
+					WHERE	A.ADMIN_ID = B.ADMIN_ID
+					GROUP	BY B.ADMIN_ID
+				) AS accessIp,
+				LOGIN_TYPE AS loginType
+		FROM	UI_ADMIN A
+		WHERE	1=1
+		<if test='firstAdminYn=="N" and adminType=="S"'>
+		AND		(
+					ADMIN_ID = #{adminId}
+					OR 
+					ADMIN_TYPE = 'M'
+				)
+		</if>
+		<if test='searchStr!=null and searchStr!=""'>
+		AND		( ADMIN_ID	LIKE CONCAT('%', #{searchStr}, '%') OR	ADMIN_NAME	LIKE CONCAT('%', #{searchStr}, '%') )
+		</if>
+		<if test='searchUseYn!=null and searchUseYn!=""'>
+		AND		USE_YN	LIKE CONCAT('%', #{searchUseYn}, '%')
+		</if>
+		ORDER	BY 	USE_YN DESC, ADMIN_TYPE DESC, ADMIN_NAME
+	</select>
+	
+	<!--  운용자 등록 -->
+	<insert id="insertAdmin" parameterType="adminVO">
+		INSERT INTO UI_ADMIN
+		(ADMIN_ID, ADMIN_NAME, ADMIN_PW, ADMIN_EMAIL, ADMIN_HP, PW_CHG_DT, LAST_LOGIN_DT, LAST_LOGIN_IP, STATUS, WORK_STATUS, FIRSTADMIN_YN, ADMIN_TYPE, USE_YN, ACCESS_FAIL_CNT, ACCESS_FAIL_DT, APPROBATOR, INFO_FEEDBACK, COMMENT, CREATE_DT, LOGIN_TYPE) 
+		VALUES (#{adminId}, #{adminName}, #{adminPw}, 
+		<if test='encryptUseYN == "Y"'>
+		if(#{adminEmail} is null, null, xcnenc(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, #{adminEmail})),
+		</if>
+		<if test='encryptUseYN != "Y"'>
+		#{adminEmail}, 
+		</if>
+		#{adminHp}, NULL, NULL, NULL, 'S', #{workStatus}, 'N', #{adminType}, #{useYn}, 0, NULL, #{approbator}, #{infoFeedbackYn}, #{comment}, NOW(), #{loginType} )
+	</insert>
+	
+	<select id="getAdminDashBoardConfCnt" resultType="int" parameterType="adminVO">
+		SELECT	COUNT(*) AS CNT
+		FROM	UI_DASHBOARD_ADMIN
+		WHERE	ADMIN_ID	= #{adminId}
+	</select>
+	
+	<insert id="insertAdminDashBoardConf" parameterType="adminVO">
+		INSERT INTO UI_DASHBOARD_ADMIN( ADMIN_ID, DASH_KEY, DASH_VAL, ORDER_ROW, ORDER_COL, DASH_CLASS, DASH_ICON )
+		SELECT	#{adminId}, DASH_KEY, DASH_VAL, ORDER_ROW, ORDER_COL, DASH_CLASS, DASH_ICON
+		FROM	UI_DASHBOARD
+	</insert>
+	
+	<delete id="deleteAdminDashBoardConf" parameterType="adminVO">
+		DELETE FROM UI_DASHBOARD_ADMIN WHERE FIND_IN_SET(ADMIN_ID ,#{adminId})
+	</delete>
+	<delete id="deleteAdminAccessIp" parameterType="adminVO">
+		DELETE FROM UI_ADMIN_ACCESS_IP WHERE ADMIN_ID = #{adminId}
+	</delete>
+	
+	<insert id="insertAdminAccessIp" parameterType="adminVO">
+		INSERT INTO UI_ADMIN_ACCESS_IP (ADMIN_ID, ACCESS_IP ) VALUES( #{adminId}, #{accessIp})
+	</insert>
+	
+	<insert id="insertSystemIpMac" parameterType="string">
+		INSERT INTO UI_SYSTEM_IPMAC (ACCESS_IP, ACCESS_MAC ) VALUES( #{accessIp}, '00-00-00-00-00-00')
+	</insert>
+	
+	<select id="getAllIpMacList" resultType="adminVO">
+		SELECT	ACCESS_IP AS accessIp
+		FROM	UI_SYSTEM_IPMAC
+	</select>
+	
+	<delete id="deleteAllIpMac" >
+		DELETE FROM UI_SYSTEM_IPMAC
+	</delete>
+	
+	<!-- 부서 조회권한 
+	<select id="getAdminAuthCoBusiDept" parameterType="hashmap" resultType="adminVO">
+		SELECT	(SELECT COUNT(COCD) FROM UI_ADMIN_CO WHERE ADMIN_ID = #{adminId}) AS authCocd,
+				(SELECT COUNT(BUSICD) FROM UI_ADMIN_BUSI WHERE ADMIN_ID = #{adminId}) AS authBusi,
+				(SELECT COUNT(DEPTCD) FROM UI_ADMIN_DEPT WHERE ADMIN_ID = #{adminId}) AS authDept
+	</select> -->
+	<select id="getAdminAuthCoBusi" parameterType="hashmap" resultType="adminVO">
+		SELECT	(SELECT COUNT(COCD) FROM UI_ADMIN_CO WHERE ADMIN_ID = #{adminId}) AS authCocd,
+				(SELECT COUNT(BUSICD) FROM UI_ADMIN_BUSI WHERE ADMIN_ID = #{adminId}) AS authBusi
+	</select>
+	
+	<!-- 운용자 회사 권한 등록 -->
+	<insert id="insertAdminCo" parameterType="adminVO">
+		INSERT INTO UI_ADMIN_CO (ADMIN_ID, COCD )
+		SELECT  #{adminId}, COCD
+		FROM	UI_CO
+		WHERE	FIND_IN_SET(COCD, REPLACE(#{coCd}, '|', ','))
+	</insert>
+	
+	<!-- 운용자 사업장 권한 등록 -->
+	<insert id="insertAdminBusi" parameterType="adminVO">
+		INSERT INTO UI_ADMIN_BUSI (ADMIN_ID, BUSICD, SORT)
+		SELECT  #{adminId}, B.BUSICD, 0
+		FROM	UI_CO A, UI_BUSI B
+		WHERE	A.COCD = B.COCD
+		AND		FIND_IN_SET(B.BUSICD, REPLACE(#{busiCd}, '|', ','))
+	</insert>
+	
+	<!-- 운용자 부서 권한 등록 -->
+	<insert id="insertAdminDept" parameterType="adminVO">
+		INSERT INTO UI_ADMIN_DEPT (ADMIN_ID, DEPTCD, SORT)
+		SELECT  #{adminId}, B.DEPTCD, 0
+		FROM	UI_CO A, UI_DEPT B
+		WHERE	A.COCD = B.COCD
+		AND		FIND_IN_SET(B.DEPTCD, REPLACE(#{deptCd}, '|', ','))
+	</insert>
+	
+	<!-- 운용자 서비스타입 권한 등록 -->
+	<insert id="insertAdminSvc" parameterType="adminVO">
+		INSERT INTO UI_ADMIN_SERVICE (ADMIN_ID, SERVICECD)
+		SELECT  #{adminId}, SERVICECD
+		FROM	(
+				SELECT  LEFT(SERVICECD, 3) AS SERVICECD
+				FROM	UI_SERVICE
+				GROUP	BY LEFT(SERVICECD, 3)
+				UNION
+        		SELECT	LEFT(SERVICECD, 4) AS SERVICECD
+				FROM	UI_SERVICE
+        		WHERE	SERVICECD = 'EMMA'
+        		UNION
+        		SELECT	LEFT(SERVICECD, 5) AS SERVICECD
+				FROM	UI_SERVICE
+				WHERE SERVICECD = 'EMMAX'
+				) AS RS
+		WHERE	FIND_IN_SET(SERVICECD, REPLACE(#{service}, '|', ','))
+	</insert>
+	
+	<!-- 운용자 CEO 사용자 조회 권한 등록 -->
+	<insert id="insertAdminCeoAuth" parameterType="adminVO">
+		INSERT INTO UI_ADMIN_CEO_GROUP (ADMIN_ID, GROUP_CODE)
+		SELECT #{adminId}, GROUP_CODE
+		FROM UI_USER_GROUP
+		WHERE FIND_IN_SET(GROUP_CODE, REPLACE(#{readAuth}, '|', ','))
+	</insert>
+	
+	<!-- 운용자 개인정보 권한 등록 -->
+	<insert id="insertAdminPattern" parameterType="adminVO">
+		INSERT INTO UI_ADMIN_REGEXP (ADMIN_ID, CODE)
+		SELECT  #{adminId}, CODE
+		FROM	UI_REGEXP
+		WHERE	FIND_IN_SET(CODE, REPLACE(#{regexp}, '|', ','))
+	</insert>
+	
+	<!-- 운용자 메뉴 권한 등록 -->
+	<insert id="insertAdminMenu" parameterType="adminVO">
+		INSERT INTO UI_ADMIN_MENU (ADMIN_ID, AUTH_ID) VALUES( #{adminId}, #{menu})
+	</insert>
+
+
+	<!--  운용자 비밀번호 수정 -->
+	<update id="updateAdminPassword" parameterType="adminVO">
+		UPDATE	UI_ADMIN
+		SET		ADMIN_PW	= #{adminPw},
+				PW_CHG_DT	= NOW()
+		WHERE	ADMIN_ID	= #{adminId}
+	</update>
+	<!--  최초 접속 시 운용자  -->
+	<update id="updateAdminInfo" parameterType="adminVO">
+		UPDATE	UI_ADMIN
+		SET		ADMIN_PW	= #{adminPw},
+				ADMIN_ID	= #{adminId},
+				PW_CHG_DT	= NOW()
+		WHERE	ADMIN_ID	= #{oldId}
+	</update>
+	<!--  새로고침 -->
+	<update id="flushPrivileges" parameterType="adminVO">
+		FLUSH PRIVILEGES
+	</update>
+	<!--  최초 데이터베이스 설정 -->
+	<update id="updateDatabaseInfo" parameterType="adminVO">
+		UPDATE mysql.user SET USER = #{mysqlUser}, authentication_string = PASSWORD(#{mysqlPw})  WHERE USER = #{mysqlOldUser}
+	</update> 
+	
+	<update id="grantDatabaseInfo" parameterType="adminVO">
+		GRANT ALL PRIVILEGES ON *.*TO #{mysqlUser}@'%' IDENTIFIED BY #{mysqlPw} with GRANT OPTION;
+	</update> 
+	
+	<!--  운용자 수정 -->
+	<update id="updateAdmin" parameterType="adminVO">
+		UPDATE	UI_ADMIN
+		SET		ADMIN_NAME 	= #{adminName},
+				<if test='adminPw!=null and adminPw!=""'>
+				ADMIN_PW	= #{adminPw},
+				PW_CHG_DT	= NOW(),
+				</if>
+				<if test='loginType!=null and loginType!=""'>
+				LOGIN_TYPE	= #{loginType},
+				</if>
+				<if test='encryptUseYN == "Y"'>
+				ADMIN_EMAIL	= if(#{adminEmail} is null, null, xcnenc(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, #{adminEmail})),
+				</if>
+				<if test='encryptUseYN != "Y"'>
+				ADMIN_EMAIL	= #{adminEmail},
+				</if>
+				ADMIN_HP	= #{adminHp},
+				<if test='firstAdminYn == "Y"'>
+				ADMIN_TYPE	= #{adminType},
+				</if>
+				USE_YN		= #{useYn},
+				WORK_STATUS	= #{workStatus},
+				ACCESS_FAIL_CNT	= 0,
+				ACCESS_FAIL_DT = NULL,
+				APPROBATOR	= #{approbator},
+				INFO_FEEDBACK	= #{infoFeedbackYn},
+				COMMENT		= #{comment}
+		WHERE	ADMIN_ID	= #{adminId}
+	</update>
+	
+	<!-- 운용자 회사 권한 삭제 -->
+	<delete id="deleteAdminCo" parameterType="adminVO">
+		DELETE FROM UI_ADMIN_CO WHERE ADMIN_ID = #{adminId}
+	</delete>
+	
+	<!-- 운용자 사업장 권한 삭제 -->
+	<delete id="deleteAdminBusi" parameterType="adminVO">
+		DELETE FROM UI_ADMIN_BUSI  WHERE ADMIN_ID = #{adminId}
+	</delete>
+	
+	<!-- 운용자 사업장 권한 삭제 -->
+	<delete id="deleteAdminDept" parameterType="adminVO">
+		DELETE FROM UI_ADMIN_DEPT  WHERE ADMIN_ID = #{adminId}
+	</delete>
+	
+	<!-- 운용자 서비스타입 권한 삭제 -->
+	<delete id="deleteAdminSvc" parameterType="adminVO">
+		DELETE FROM UI_ADMIN_SERVICE  WHERE ADMIN_ID = #{adminId}
+	</delete>
+
+	<!-- 운용자 개인정보 권한 삭제 -->
+	<delete id="deleteAdminPattern" parameterType="adminVO">
+		DELETE FROM UI_ADMIN_REGEXP  WHERE ADMIN_ID = #{adminId}
+	</delete>
+
+	<!-- 운용자 메뉴 권한 삭제 -->
+	<delete id="deleteAdminMenu" parameterType="adminVO">
+		DELETE FROM UI_ADMIN_MENU  WHERE ADMIN_ID = #{adminId}
+	</delete>
+	
+	<!-- 운용자 CEO 조회 권한 삭제 -->
+	<delete id="deleteAdminCeoAuth" parameterType="adminVO">
+		DELETE FROM UI_ADMIN_CEO_GROUP  WHERE ADMIN_ID = #{adminId}
+	</delete>
+
+	<!-- 동의서 승인권자 리스트 조회 -->
+	<select id="getApprobatorList" resultType="adminVO" parameterType="hashmap">
+		SELECT	ADMIN_ID AS adminId,
+				ADMIN_NAME AS adminName,
+				ADMIN_PW AS adminPw,
+				<if test='encryptUseYN == "Y"'>
+				if(ADMIN_EMAIL is null, null, xcndec(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, ADMIN_EMAIL)) AS adminEmail,
+				</if>
+				<if test='encryptUseYN != "Y"'>
+				ADMIN_EMAIL AS adminEmail,
+				</if>
+				ADMIN_HP AS adminHp,
+				PW_CHG_DT AS pwchgDt,
+				DATE_FORMAT(LAST_LOGIN_DT, '%Y-%m-%d %T' ) AS lastLoginDt,
+				LAST_LOGIN_IP AS lastLoginIp,
+				STATUS AS status,
+				FIRSTADMIN_YN AS firstAdminYn,
+				INFO_FEEDBACK AS infoFeedbackYn,
+				ADMIN_TYPE AS adminType,
+				USE_YN AS useYn,
+				ACCESS_FAIL_CNT AS accessFailCnt,
+				DATE_FORMAT(ACCESS_FAIL_DT, '%Y-%m-%d %T' ) AS accessFailDt,
+				APPROBATOR AS approbator,
+				COMMENT AS comment,
+				DATE_FORMAT(CREATE_DT, '%Y-%m-%d %T' ) AS createDt,
+				TO_DAYS(NOW())-TO_DAYS(LAST_LOGIN_DT) AS longTermUnuseDay,
+				TO_DAYS(NOW())-TO_DAYS(PW_CHG_DT) AS passwordChangeDay,
+				(
+					SELECT  GROUP_CONCAT( DISTINCT B.ACCESS_IP SEPARATOR ',' )
+					FROM	UI_ADMIN_ACCESS_IP B
+					WHERE	A.ADMIN_ID = B.ADMIN_ID
+					GROUP	BY B.ADMIN_ID
+				) AS accessIp,
+				LOGIN_TYPE AS loginType
+		FROM	UI_ADMIN A
+		WHERE	1=1
+		<if test='searchStr!=null and searchStr!=""'>
+		AND		( ADMIN_ID	LIKE CONCAT('%', #{searchStr}, '%') OR	ADMIN_NAME	LIKE CONCAT('%', #{searchStr}, '%') )
+		</if>
+		<if test='approbator!=null and approbator!=""'>
+		OR		APPROBATOR = #{approbator}
+		</if>
+		ORDER	BY 	ADMIN_TYPE DESC, ADMIN_NAME
+	</select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<!-- 운용자 로그인 가능하도록 상태 업데이트 -->
+	<update id="updateAdminStatusOK" parameterType="string">
+		UPDATE	UI_ADMIN
+		SET		STATUS  	=	'Y'
+		WHERE	ADMIN_ID	= #{adminId}
+	</update>
+
+
+
+	<!-- 운용자가 장기간 미사용 인 경우 처리 -->
+	<update id="updateAdminStatus" parameterType="string">
+		UPDATE	UI_ADMIN
+		SET		STATUS	=	CASE WHEN TO_DAYS( NOW( ) ) - TO_DAYS(IFNULL(LAST_LOGIN_DT, CREATE_DT)) <![CDATA[ > ]]> #{long.term.unused}
+									THEN	'L'
+									ELSE	CASE WHEN STATUS = 'L' THEN 'S' ELSE STATUS END
+							END
+	</update>
+
+
+
+
+
+
+
+	
+
+	<update id="updateUserPasswordWrongCount" parameterType="adminVO">
+		UPDATE	UI_ADMIN
+		SET		ACCESS_FAIL_CNT = #{accessFailCnt},
+				ACCESS_FAIL_DT  = NOW()
+		WHERE	ADMIN_ID = #{adminId}
+	</update>
+	
+	<update id="updateAllUserPasswordWrongCount">
+		UPDATE	UI_ADMIN
+		SET		ACCESS_FAIL_CNT = 0,
+				ACCESS_FAIL_DT  = NOW()
+	</update>
+	
+	<update id="updateUserLoginOK" parameterType="adminVO">
+		UPDATE	UI_ADMIN
+		SET		LAST_LOGIN_DT 	= NOW(),
+				LAST_LOGIN_IP 	= #{lastLoginIp},
+				ACCESS_FAIL_CNT = 0,
+				ACCESS_FAIL_DT  = NULL
+		WHERE	ADMIN_ID = #{adminId}
+	</update>
+	
+	
+	<select id="getGridHeader" resultType="adminGridVO" parameterType="adminGridVO">
+		SELECT  HEADER AS header
+		FROM	UI_ADMIN_GRID
+		WHERE	ADMIN_ID 	= #{adminId}
+		AND		GRID_ID 	= #{gridId}
+	</select>
+	
+	<update id="updateGridHeader" parameterType="adminGridVO">
+		REPLACE INTO UI_ADMIN_GRID	SET HEADER = #{header}, ADMIN_ID = #{adminId}, GRID_ID = #{gridId}
+	</update>
+
+	<!-- 관리자 아이디가 이미 등록 되어있는지 조회 -->
+	<select id="isAdminIdExist" resultType="int" parameterType="adminVO">
+		SELECT	COUNT(*) AS CNT
+		FROM	UI_ADMIN
+		WHERE	ADMIN_ID	= #{adminId}
+	</select>
+
+	<!-- 관리자 아이디로 메뉴 권한 조회 -->
+	<select id="getAdminMenuById" resultType="string" parameterType="adminVO">
+		SELECT	GROUP_CONCAT(AUTH_ID) as menu
+		FROM	UI_ADMIN_MENU
+		WHERE	ADMIN_ID	= #{adminId}
+	</select>
+</mapper>

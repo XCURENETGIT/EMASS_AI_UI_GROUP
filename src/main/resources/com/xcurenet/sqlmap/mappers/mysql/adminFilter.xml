@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "../../dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xcurenet.sqlmap.mappers.mysql.adminFilter">
+
+
+	<select id="getAdminFilterList" resultType="adminFilterVO" parameterType="hashmap">
+		SELECT 	FILTER_SEQ AS id, '' AS adminId, P_FILTER_SEQ AS pId, FILTER_NM AS name, FILTER_TYPE AS filterType, FILTER_ORDER AS filterOrder, 
+				USER_DT_CD AS userDtCd, START_DT AS startDt, END_DT AS endDt, CONDITIONS AS conditions, 'true' AS open, 'false' AS drag, null AS dashboard,
+				CASE FILTER_TYPE 
+				WHEN 'R' THEN CONCAT(#{contextPath}, '/resources/img/ztree/8.png')
+				WHEN 'U' THEN CONCAT(#{contextPath}, '/resources/img/ztree/mouse_right.png')
+				WHEN 'D' THEN CONCAT(#{contextPath}, '/resources/img/ztree/filter.png')
+				WHEN 'Q' THEN CONCAT(#{contextPath}, '/resources/img/ztree/query.png')
+				END AS icon
+		FROM 	UI_FILTER
+		UNION ALL
+		SELECT 	FILTER_SEQ AS id, A.ADMIN_ID AS adminId, P_FILTER_SEQ AS pId, FILTER_NM AS name, FILTER_TYPE AS filterType, FILTER_ORDER AS filterOrder, 
+				USER_DT_CD AS userDtCd, START_DT AS startDt, END_DT AS endDt, CONDITIONS AS conditions, IFNULL(FILTER_OPEN, 'false') AS open, 'true' AS drag, B.DASH_KEY AS dashboard,
+				CASE FILTER_TYPE
+				WHEN 'D' THEN CONCAT(#{contextPath}, '/resources/img/ztree/filter.png')
+				WHEN 'Q' THEN CONCAT(#{contextPath}, '/resources/img/ztree/query.png')
+				WHEN 'F' THEN ''
+				END AS icon
+		FROM 	UI_FILTER_ADMIN A LEFT JOIN UI_DASHBOARD_ADMIN B ON A.FILTER_SEQ = B.DASH_VAL
+		WHERE	A.ADMIN_ID = #{adminId}
+		<if test='searchStr!=null and searchStr!=""'>
+		AND		A.FILTER_NM	LIKE CONCAT('%', #{searchStr}, '%') AND FILTER_TYPE !='F'
+		</if>
+		ORDER 	BY pId ASC, filterOrder ASC
+	</select>
+	
+	<select id="getAdminFilterListForExport" resultType="adminFilterVO" parameterType="hashmap">
+		SELECT 	FILTER_SEQ AS id, P_FILTER_SEQ AS pId, FILTER_NM AS name, FILTER_TYPE AS filterType, FILTER_ORDER AS filterOrder, 
+				'false' AS open, USER_DT_CD AS userDtCd, START_DT AS startDt, END_DT AS endDt, CONDITIONS AS conditions
+		FROM 	UI_FILTER_ADMIN A 
+		WHERE	A.ADMIN_ID = #{adminId}
+		<if test='filter_ids!=null and filter_ids!=""'>
+		AND		FIND_IN_SET(FILTER_SEQ, REPLACE(#{filter_ids}, '|', ','))
+		</if>
+		ORDER 	BY pId ASC, filterOrder ASC
+	</select>
+	
+	<select id="getAdminFilter" resultType="adminFilterVO" parameterType="Long">
+		SELECT  FILTER_SEQ AS id, ADMIN_ID AS adminId, FILTER_NM AS name, FILTER_TYPE AS filterType,
+				FILTER_ORDER AS filterOrder, USER_DT_CD AS userDtCd,
+				START_DT AS startDt, END_DT AS endDt, CONDITIONS AS conditions
+		FROM	UI_FILTER_ADMIN
+		WHERE	FILTER_SEQ = #{filterSeq}
+	</select>
+
+	<select id="getNextAdminFilterId" resultType="Long">
+		SELECT IFNULL(MAX(A.FILTER_SEQ)+1, 1001) FROM UI_FILTER_ADMIN A for update;
+	</select>
+
+	<insert id="insertAdminFilter" parameterType="adminFilterVO">
+		INSERT INTO UI_FILTER_ADMIN (FILTER_SEQ,ADMIN_ID,P_FILTER_SEQ,FILTER_NM,FILTER_TYPE,FILTER_ORDER,FILTER_OPEN,USER_DT_CD,START_DT,END_DT,CONDITIONS) 
+		VALUES (#{id},#{adminId},#{pId},#{name},#{filterType}, (SELECT IFNULL(MAX(B.FILTER_ORDER)+1, 0) FROM UI_FILTER_ADMIN B WHERE P_FILTER_SEQ = #{pId}),'true', #{userDtCd},#{startDt},#{endDt},#{conditions})
+	</insert>
+	
+	<update id="updateAdminFilter" parameterType="adminFilterVO">
+		UPDATE UI_FILTER_ADMIN SET 
+		<if test='conditions!=null and conditions!=""'>
+			CONDITIONS = #{conditions},
+		</if>
+		<if test='userDtCd!=null and userDtCd!=""'>
+			USER_DT_CD = #{userDtCd},
+		</if>
+		<if test='startDt!=null and startDt!=""'>
+			START_DT = #{startDt},
+		</if>
+		<if test='endDt!=null and endDt!=""'>
+			END_DT = #{endDt},
+		</if>
+		FILTER_TYPE = #{filterType} ,
+		FILTER_NM = #{name} 
+		WHERE FILTER_SEQ = #{id} AND ADMIN_ID = #{adminId}
+	</update>
+	
+	<update id="updateFilterStatus" parameterType="adminFilterVO">
+		UPDATE UI_FILTER_ADMIN SET FILTER_OPEN = #{open}
+		<if test='pId!=null and pId!=""'>
+			, P_FILTER_SEQ = #{pId}
+		</if> 
+		WHERE FILTER_SEQ = #{id} AND ADMIN_ID = #{adminId}
+	</update>
+	
+	<update id="updateFilterOrder" parameterType="adminFilterVO">
+		UPDATE	UI_FILTER_ADMIN
+		SET		FILTER_ORDER = #{filterOrder},
+				P_FILTER_SEQ = #{pId}
+				WHERE	FILTER_SEQ = #{id}
+		AND		ADMIN_ID = #{adminId}
+	</update>
+	
+	<delete id="deleteFilterStatus" parameterType="adminFilterVO">
+		DELETE FROM UI_FILTER_ADMIN WHERE FILTER_SEQ = #{id}
+	</delete>
+	
+	
+</mapper>

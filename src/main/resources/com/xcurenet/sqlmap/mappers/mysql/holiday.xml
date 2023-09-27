@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "../../dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xcurenet.sqlmap.mappers.mysql.holiday">
+
+	<!-- 사업장 휴일 목록 조회 -->
+	<select id="getHolidayList" resultType="holidayVO" parameterType="hashmap">
+		SELECT  BUSICD AS busiCd,
+		        DATE_FORMAT(`DATE`, '%Y-%m-%d' ) AS date,
+		        COMMENT AS comment,
+		        DATE_FORMAT(CREATE_DT, '%Y-%m-%d %T' ) AS createDt
+		FROM    UI_HOLIDAY
+		WHERE	DATE_FORMAT(DATE,'%Y') = #{year}
+		AND		BUSICD = #{busiCd}
+		ORDER   BY `DATE`
+	</select>
+
+	<select id="isHolidayExist" parameterType="holidayVO" resultType="int">
+		SELECT	COUNT(*) AS CNT
+		FROM	UI_HOLIDAY
+		WHERE	DATE_FORMAT(DATE,'%Y-%m-%d') = DATE_FORMAT(#{date},'%Y-%m-%d')
+		AND		BUSICD = #{busiCd}
+	</select>
+
+	<insert id="insertHoliday" parameterType="holidayVO">
+		INSERT INTO UI_HOLIDAY(`DATE`, BUSICD, COMMENT, CREATE_DT)
+		VALUES (#{date}, #{busiCd}, #{comment}, NOW() )
+	</insert>
+
+	<update id="updateHoliday" parameterType="holidayVO">
+		UPDATE 	UI_HOLIDAY
+		SET 	COMMENT = #{comment}
+		WHERE 	`DATE` = DATE_FORMAT(#{date},'%Y%m%d')
+		AND		BUSICD = #{busiCd}
+	</update>
+
+	<delete id="deleteHoliday" parameterType="holidayVO">
+		DELETE	FROM UI_HOLIDAY
+		WHERE	`DATE` = DATE_FORMAT(#{date},'%Y%m%d')
+		AND		BUSICD = #{busiCd}
+	</delete>
+
+</mapper>

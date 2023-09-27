@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "../../dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xcurenet.sqlmap.mappers.mysql.dashboard">
+
+	<select id="getDashBoardConfigs" resultType="dashboardVO" parameterType="string">
+		SELECT	DASH_KEY AS dashKey,
+				DASH_VAL AS dashVal,
+				ORDER_ROW AS orderRow,
+				ORDER_COL AS orderCol,
+				DASH_CLASS AS dashClass,
+				DASH_ICON AS dashIcon
+		FROM	UI_DASHBOARD_ADMIN
+		WHERE	ADMIN_ID = #{adminId}
+	</select>
+	
+	<select id="getDashBoardConfig" resultType="dashboardVO" parameterType="hashmap">
+		SELECT	DASH_KEY AS dashKey,
+				DASH_VAL AS dashVal,
+				ORDER_ROW AS orderRow,
+				ORDER_COL AS orderCol,
+				DASH_CLASS AS dashClass,
+				DASH_ICON AS dashIcon
+		FROM	UI_DASHBOARD_ADMIN
+		WHERE	ADMIN_ID = #{adminId}
+		AND		DASH_KEY = #{dashKey}
+	</select>
+	
+	<update id="initDashBoardConfig" parameterType="hashmap">
+		UPDATE	UI_DASHBOARD_ADMIN
+		SET		DASH_VAL = null
+		WHERE	ADMIN_ID = #{adminId}
+		AND		DASH_VAL = #{dashVal}
+	</update>
+	
+	<update id="saveDashBoardConfig" parameterType="hashmap">
+		UPDATE	UI_DASHBOARD_ADMIN
+		SET		DASH_VAL = #{dashVal}
+		WHERE	ADMIN_ID = #{adminId}
+		AND		DASH_KEY = #{dashKey}
+	</update>
+	
+	<select id="getDeviceStatus" resultType="deviceStatusVO" parameterType="string">
+		SELECT	DEVICE_SEQ AS deviceSeq,
+				DEVICE_IP AS deviceIP,
+				DEVICE_NM AS deviceName,
+				DEVICE_TYPE AS deviceType,
+				DEVICE_STATUS AS deviceStatus
+		FROM	UI_DEVICE
+		WHERE	DEVICE_SEQ = #{deviceSeq}
+	</select>
+	
+	<select id="getDeviceStatusList" resultType="deviceStatusVO" parameterType="hashmap">
+		SELECT	DEVICE_SEQ AS deviceSeq,
+				DEVICE_IP AS deviceIP,
+				DEVICE_NM AS deviceName,
+				DEVICE_TYPE AS deviceType,
+				DEVICE_STATUS AS deviceStatus
+		FROM	UI_DEVICE
+	</select>
+	
+</mapper>

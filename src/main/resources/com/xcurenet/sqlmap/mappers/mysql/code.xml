@@ -1,0 +1,844 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "../../dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xcurenet.sqlmap.mappers.mysql.code">
+
+
+	<!-- 회사 목록 조회 -->
+	<select id="getCoList" resultType="coVO" parameterType="hashMap">
+		SELECT  COCD AS coCd, CONM AS coNm
+		FROM	UI_CO
+		WHERE	1=1
+		<if test='searchStr!=null and searchStr!=""'>
+		AND		( COCD LIKE CONCAT('%', #{searchStr}, '%') OR CONM LIKE CONCAT('%', #{searchStr}, '%') )
+		</if>
+		ORDER	BY COCD
+		<if test='offset!=null and limit > 0'>
+		LIMIT	${offset}, ${limit}
+		</if>
+	</select>
+	
+	<select id="getCoListTotal" resultType="int" parameterType="hashMap">
+		SELECT  COUNT(*) AS CNT
+		FROM	UI_CO
+		WHERE	1=1
+		<if test='searchStr!=null and searchStr!=""'>
+		AND		( COCD LIKE CONCAT('%', #{searchStr}, '%') OR CONM LIKE CONCAT('%', #{searchStr}, '%') )
+		</if>
+		ORDER	BY COCD
+	</select>
+	
+	<!-- 회사 이름이 이미 등록 되어있는지 조회 -->
+	<select id="isCoNmExist" resultType="int" parameterType="coVO">
+		SELECT	COUNT(*) AS CNT
+		FROM	UI_CO
+		WHERE	CONM	= #{coNm}
+		<if test='coCd!=null and coCd!=""'>
+		AND		COCD != #{coCd}
+		</if>
+	</select>
+
+	<!-- 회사 코드가 이미 등록 되어있는지 조회 -->
+	<select id="isCoCdExist" resultType="int" parameterType="coVO">
+		SELECT	COUNT(*) AS CNT
+		FROM	UI_CO
+		WHERE	COCD	= #{coCd}
+	</select>
+
+	<!-- 회사 등록 -->
+	<insert id="insertCo" parameterType="coVO">
+		INSERT IGNORE INTO UI_CO (COCD, CONM) 
+		VALUES (#{coCd}, #{coNm})
+	</insert>
+
+	<!-- 회사 수정 -->
+	<update id="updateCo" parameterType="coVO">
+		UPDATE	UI_CO 
+		SET		CONM = #{coNm}
+		WHERE	COCD = #{coCd}
+	</update>
+	
+	<!-- 회사 삭제 -->
+	<update id="deleteCo" parameterType="coVO">
+		DELETE	FROM UI_CO WHERE	FIND_IN_SET(COCD, #{coCd})
+	</update>
+	
+	<!-- 사업장 목록 조회 -->
+	<select id="getBusiList" resultType="busiVO" parameterType="hashMap">
+		SELECT  A.COCD AS coCd, A.CONM AS coNm, B.BUSICD AS busiCd, B.BUSINM AS busiNm
+		FROM	UI_CO A, UI_BUSI B
+		WHERE	A.COCD = B.COCD
+		<if test='searchStr!=null and searchStr!=""'>
+		AND		( B.BUSICD LIKE CONCAT('%', #{searchStr}, '%') OR B.BUSINM LIKE CONCAT('%', #{searchStr}, '%') )
+		</if>
+		ORDER	BY A.COCD, B.BUSICD
+		<if test='offset!=null and limit > 0'>
+		LIMIT	${offset}, ${limit}
+		</if>
+	</select>
+	
+	<!-- 사업장 목록 조회 -->
+	<select id="getBusiListByCo" resultType="busiVO" parameterType="hashMap">
+		SELECT  A.COCD AS coCd, A.CONM AS coNm, B.BUSICD AS busiCd, B.BUSINM AS busiNm
+		FROM	UI_CO A, UI_BUSI B
+		WHERE	A.COCD = B.COCD
+		<if test='coCd!=null and coCd!=""'>
+		AND		A.COCD = #{coCd}
+		</if>
+		ORDER	BY A.COCD, B.BUSICD
+	</select>
+
+	<!-- 사업장 이름이 이미 등록 되어있는지 조회 -->
+	<select id="isBusiNmExist" resultType="int" parameterType="busiVO">
+		SELECT	COUNT(*) AS CNT
+		FROM	UI_BUSI
+		WHERE	BUSINM	= #{busiNm}
+		<if test='busiCd!=null and busiCd!=""'>
+		AND		BUSICD != #{busiCd}
+		</if>
+	</select>
+
+	<!-- 사업장 코드가 이미 등록 되어있는지 조회 -->
+	<select id="isBusiCdExist" resultType="int" parameterType="busiVO">
+		SELECT	COUNT(*) AS CNT
+		FROM	UI_BUSI
+		WHERE	BUSICD	= #{busiCd}
+	</select>
+
+	<!-- 사업장 등록 -->
+	<insert id="insertBusi" parameterType="busiVO">
+		INSERT IGNORE INTO UI_BUSI (BUSICD, BUSINM, COCD) 
+		VALUES (#{busiCd}, #{busiNm}, #{coCd})
+	</insert>
+
+	<!-- 사업장 수정 -->
+	<update id="updateBusi" parameterType="busiVO">
+		UPDATE	UI_BUSI 
+		SET		BUSINM 	= #{busiNm},
+				COCD	= #{coCd}
+		WHERE	BUSICD 	= #{busiCd}
+	</update>
+
+	<!-- 사업장 삭제 -->
+	<update id="deleteBusi" parameterType="busiVO">
+		DELETE	FROM UI_BUSI WHERE	FIND_IN_SET(BUSICD, #{busiCd})
+	</update>
+	
+	<!-- 사업장 삭제  --> 
+	<update id="deleteBusiCo" parameterType="coVO">
+		DELETE	FROM UI_BUSI WHERE	FIND_IN_SET(COCD, #{coCd})
+	</update>
+
+
+
+	<!-- 총괄 목록 조회 -->
+	<select id="getGeneralList" resultType="generalVO" parameterType="hashMap">
+		SELECT  A.COCD AS coCd, A.CONM AS coNm, B.GENERALCD AS generalCd, B.GENERALNM AS generalNm
+		FROM	UI_CO A, UI_GENERAL B
+		WHERE	A.COCD = B.COCD
+		<if test='searchStr!=null and searchStr!=""'>
+		AND		( B.GENERALCD LIKE CONCAT('%', #{searchStr}, '%') OR B.GENERALNM LIKE CONCAT('%', #{searchStr}, '%') )
+		</if>
+		ORDER	BY A.COCD, B.GENERALCD
+		<if test='offset!=null and limit > 0'>
+		LIMIT	${offset}, ${limit}
+		</if>
+	</select>
+	
+	<!-- 총괄 목록 조회 -->
+	<select id="getGeneralListByCo" resultType="generalVO" parameterType="hashMap">
+		SELECT  A.COCD AS coCd, A.CONM AS coNm, B.GENERALCD AS generalCd, B.GENERALNM AS generalNm
+		FROM	UI_CO A, UI_GENERAL B
+		WHERE	A.COCD = B.COCD
+		<if test='coCd!=null and coCd!=""'>
+		AND		A.COCD = #{coCd}
+		</if>
+		ORDER	BY A.COCD, B.GENERALCD
+	</select>
+
+	<!-- 총괄 이름이 이미 등록 되어있는지 조회 -->
+	<select id="isGeneralNmExist" resultType="int" parameterType="generalVO">
+		SELECT	COUNT(*) AS CNT
+		FROM	UI_GENERAL
+		WHERE	GENERALNM	= #{generalNm}
+		<if test='generalCd!=null and generalCd!=""'>
+		AND		GENERALCD != #{generalCd}
+		</if>
+	</select>
+
+	<!-- 총괄 코드가 이미 등록 되어있는지 조회 -->
+	<select id="isGeneralCdExist" resultType="int" parameterType="generalVO">
+		SELECT	COUNT(*) AS CNT
+		FROM	UI_GENERAL
+		WHERE	GENERALCD	= #{generalCd}
+	</select>
+
+	<!-- 총괄 등록 -->
+	<insert id="insertGeneral" parameterType="generalVO">
+		INSERT IGNORE INTO UI_GENERAL (GENERALCD, GENERALNM, COCD) 
+		VALUES (#{generalCd}, #{generalNm}, #{coCd})
+	</insert>
+
+	<!-- 총괄 수정 -->
+	<update id="updateGeneral" parameterType="generalVO">
+		UPDATE	UI_GENERAL 
+		SET		GENERALNM 	= #{generalNm},
+				COCD		= #{coCd}
+		WHERE	GENERALCD 	= #{generalCd}
+	</update>
+
+	<!-- 총괄 삭제 -->
+	<update id="deleteGeneral" parameterType="generalVO">
+		DELETE	FROM UI_GENERAL WHERE	FIND_IN_SET(GENERALCD,  #{generalCd})
+	</update>
+	
+	<update id="deleteGeneralCo" parameterType="coVO">
+		DELETE	FROM UI_GENERAL WHERE	FIND_IN_SET(COCD, #{coCd})
+	</update>
+
+
+
+	<!-- 부서 목록 조회 -->
+	<select id="getDeptList" resultType="deptVO" parameterType="hashMap">
+		SELECT  A.COCD AS coCd, A.CONM AS coNm, B.DEPTCD AS deptCd, B.DEPTNM AS deptNm, B.PDEPTCD AS pDeptCd, C.DEPTNM AS pDeptNm
+		FROM	UI_CO A, UI_DEPT B
+				LEFT OUTER JOIN UI_DEPT C ON B.PDEPTCD = C.DEPTCD
+		WHERE	A.COCD = B.COCD
+		<if test='searchStr!=null and searchStr!=""'>
+		AND		( B.DEPTCD LIKE CONCAT('%', #{searchStr}, '%') OR B.DEPTNM LIKE CONCAT('%', #{searchStr}, '%') )
+		</if>
+		ORDER	BY A.COCD, B.DEPTCD
+		<if test='offset!=null and limit > 0'>
+		LIMIT	${offset}, ${limit}
+		</if>
+	</select>
+	
+	<!-- 부서 목록 조회 -->
+	<select id="getDeptListByCo" resultType="deptVO" parameterType="hashMap">
+		SELECT  A.COCD AS coCd, A.CONM AS coNm, B.DEPTCD AS deptCd, B.DEPTNM AS deptNm, B.PDEPTCD AS pDeptCd, C.DEPTNM AS pDeptNm
+		FROM	UI_CO A, UI_DEPT B
+				LEFT OUTER JOIN UI_DEPT C ON B.PDEPTCD = C.DEPTCD
+		WHERE	A.COCD = B.COCD
+		<if test='coCd!=null and coCd!=""'>
+		AND		A.COCD = #{coCd}
+		</if>
+		ORDER	BY A.COCD, B.DEPTCD
+	</select>
+
+	<!-- 부서 이름이 이미 등록 되어있는지 조회 -->
+	<select id="isDeptNmExist" resultType="int" parameterType="deptVO">
+		SELECT	COUNT(*) AS CNT
+		FROM	UI_DEPT
+		WHERE	DEPTNM	= #{deptNm}
+		<if test='deptCd!=null and deptCd!=""'>
+		AND		DEPTCD != #{deptCd}
+		</if>
+	</select>
+
+	<!-- 부서 코드가 이미 등록 되어있는지 조회 -->
+	<select id="isDeptCdExist" resultType="int" parameterType="deptVO">
+		SELECT	COUNT(*) AS CNT
+		FROM	UI_DEPT
+		WHERE	DEPTCD	= #{deptCd}
+	</select>
+
+	<!-- 부서 등록 -->
+	<insert id="insertDept" parameterType="deptVO">
+		INSERT IGNORE INTO UI_DEPT (DEPTCD, DEPTNM, PDEPTCD, COCD) 
+		VALUES (#{deptCd}, #{deptNm}, #{pDeptCd}, #{coCd})
+	</insert>
+
+	<!-- 부서 수정 -->
+	<update id="updateDept" parameterType="deptVO">
+		UPDATE	UI_DEPT 
+		SET		DEPTNM 		= #{deptNm},
+				PDEPTCD		= #{pDeptCd},
+				COCD		= #{coCd}
+		WHERE	DEPTCD 		= #{deptCd}
+	</update>
+
+	<!-- 부서 삭제 -->
+	<update id="deleteDept" parameterType="deptVO">
+		DELETE	FROM UI_DEPT WHERE	FIND_IN_SET(DEPTCD,  #{deptCd})
+	</update>
+	
+	<update id="deleteDeptCo" parameterType="coVO">
+		DELETE	FROM UI_DEPT WHERE	FIND_IN_SET(COCD, #{coCd})
+	</update>
+	
+	
+	
+	<!-- 직급 목록 조회 -->
+	<select id="getJikgubList" resultType="jikgubVO" parameterType="hashMap">
+		SELECT  JIKGUBCD AS jikgubCd, JIKGUBNM AS jikgubNm
+		FROM	UI_JIKGUB
+		WHERE	1=1
+		<if test='searchStr!=null and searchStr!=""'>
+		AND		( JIKGUBCD LIKE CONCAT('%', #{searchStr}, '%') OR JIKGUBNM LIKE CONCAT('%', #{searchStr}, '%') )
+		</if>
+		ORDER	BY JIKGUBCD
+		<if test='offset!=null and limit > 0'>
+		LIMIT	${offset}, ${limit}
+		</if>
+	</select>
+	
+	<!-- 직급 이름이 이미 등록 되어있는지 조회 -->
+	<select id="isJikgubNmExist" resultType="int" parameterType="jikgubVO">
+		SELECT	COUNT(*) AS CNT
+		FROM	UI_JIKGUB
+		WHERE	JIKGUBNM	= #{jikgubNm}
+		<if test='jikgubCd!=null and jikgubCd!=""'>
+		AND		JIKGUBCD != #{jikgubCd}
+		</if>
+	</select>
+
+	<!-- 직급 코드가 이미 등록 되어있는지 조회 -->
+	<select id="isJikgubCdExist" resultType="int" parameterType="jikgubVO">
+		SELECT	COUNT(*) AS CNT
+		FROM	UI_JIKGUB
+		WHERE	JIKGUBCD	= #{jikgubCd}
+	</select>
+
+	<!-- 직급 등록 -->
+	<insert id="insertJikgub" parameterType="jikgubVO">
+		INSERT IGNORE INTO UI_JIKGUB (JIKGUBCD, JIKGUBNM) 
+		VALUES (#{jikgubCd}, #{jikgubNm})
+	</insert>
+
+	<!-- 직급 수정 -->
+	<update id="updateJikgub" parameterType="jikgubVO">
+		UPDATE	UI_JIKGUB 
+		SET		JIKGUBNM = #{jikgubNm}
+		WHERE	JIKGUBCD = #{jikgubCd}
+	</update>
+	
+	<!-- 직급 삭제 -->
+	<update id="deleteJikgub" parameterType="jikgubVO">
+		DELETE	FROM UI_JIKGUB WHERE	FIND_IN_SET(JIKGUBCD, #{jikgubCd})
+	</update>
+	
+	
+	
+	
+	
+	<!-- 재직 목록 조회 -->
+	<select id="getJikinList" resultType="jikinVO" parameterType="hashMap">
+		SELECT  JIKINCD AS jikinCd, JIKINNM AS jikinNm
+		FROM	UI_JIKIN
+		WHERE	1=1
+		<if test='searchStr!=null and searchStr!=""'>
+		AND		( JIKINCD LIKE CONCAT('%', #{searchStr}, '%') OR JIKINNM LIKE CONCAT('%', #{searchStr}, '%') )
+		</if>
+		ORDER	BY JIKINCD
+		<if test='offset!=null and limit > 0'>
+		LIMIT	${offset}, ${limit}
+		</if>
+	</select>
+	
+	<!-- 재직 이름이 이미 등록 되어있는지 조회 -->
+	<select id="isJikinNmExist" resultType="int" parameterType="jikinVO">
+		SELECT	COUNT(*) AS CNT
+		FROM	UI_JIKIN
+		WHERE	JIKINNM	= #{jikinNm}
+		<if test='jikinCd!=null and jikinCd!=""'>
+		AND		JIKINCD != #{jikinCd}
+		</if>
+	</select>
+
+	<!-- 재직 코드가 이미 등록 되어있는지 조회 -->
+	<select id="isJikinCdExist" resultType="int" parameterType="jikinVO">
+		SELECT	COUNT(*) AS CNT
+		FROM	UI_JIKIN
+		WHERE	JIKINCD	= #{jikinCd}
+	</select>
+
+	<!-- 재직 등록 -->
+	<insert id="insertJikin" parameterType="jikinVO">
+		INSERT IGNORE INTO UI_JIKIN (JIKINCD, JIKINNM) 
+		VALUES (#{jikinCd}, #{jikinNm})
+	</insert>
+
+	<!-- 재직 수정 -->
+	<update id="updateJikin" parameterType="jikinVO">
+		UPDATE	UI_JIKIN 
+		SET		JIKINNM = #{jikinNm}
+		WHERE	JIKINCD = #{jikinCd}
+	</update>
+	
+	<!-- 재직 삭제 -->
+	<update id="deleteJikin" parameterType="jikinVO">
+		DELETE	FROM UI_JIKIN WHERE	FIND_IN_SET(JIKINCD, #{jikinCd})
+	</update>
+	
+	
+	
+	<!-- 파일 타입 목록 조회 -->
+	<select id="getAttachType" resultType="attachTypeVO" parameterType="hashMap">
+		SELECT	DISTINCT ATTACH_NAME AS attachName
+		FROM	UI_ATTACH
+		ORDER	BY ATTACH_NAME
+	</select>
+	
+	<!-- 파일 타입 목록 조회 -->
+	<select id="getAttachTypeList" resultType="attachTypeVO" parameterType="hashMap">
+		SELECT  ATTACH_TYPE AS attachType, ATTACH_NAME AS attachName, ATTACH_DESC AS attachDesc
+		FROM	UI_ATTACH
+		WHERE	1=1
+		<if test='searchStr!=null and searchStr!=""'>
+		AND		( ATTACH_TYPE LIKE CONCAT('%', #{searchStr}, '%') OR ATTACH_NAME LIKE CONCAT('%', #{searchStr}, '%') )
+		</if>
+		ORDER	BY ATTACH_TYPE
+	</select>
+	<!-- 파일 타입 목록 수 조회 -->
+	<select id="getAttachTypeListTotal" resultType="int" parameterType="hashMap">
+		SELECT  COUNT(*) AS TOTAL
+		FROM	UI_ATTACH
+		WHERE	1=1
+		<if test='searchStr!=null and searchStr!=""'>
+		AND		( ATTACH_TYPE LIKE CONCAT('%', #{searchStr}, '%') OR ATTACH_NAME LIKE CONCAT('%', #{searchStr}, '%') )
+		</if>
+	</select>
+	
+	<!-- 파일 타입 이름이 이미 등록 되어있는지 조회 -->
+	<select id="isAttachTypeExist" resultType="int" parameterType="attachTypeVO">
+		SELECT	COUNT(*) AS CNT
+		FROM	UI_ATTACH
+		WHERE	ATTACH_TYPE	= #{attachType}
+	</select>
+
+
+	<!-- 파일 타입 등록 -->
+	<insert id="insertAttachType" parameterType="attachTypeVO">
+		INSERT INTO UI_ATTACH (ATTACH_TYPE, ATTACH_NAME, ATTACH_DESC) 
+		VALUES (#{attachType}, #{attachName}, #{attachDesc})
+	</insert>
+
+	<!-- 파일 타입 수정 -->
+	<update id="updateAttachType" parameterType="attachTypeVO">
+		UPDATE	UI_ATTACH 
+		SET		ATTACH_NAME = #{attachName},
+				ATTACH_DESC	= #{attachDesc}
+		WHERE	ATTACH_TYPE = #{attachType}
+	</update>
+	
+	<!-- 파일 타입 삭제 -->
+	<update id="deleteAttachType" parameterType="attachTypeVO">
+		DELETE	FROM UI_ATTACH WHERE	ATTACH_TYPE = #{attachType}
+	</update>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!--  공통 코드 조회 영역  -->
+	
+	
+	<!-- 회사 -->
+	<select id="getCodeCoList" resultType="codeVO" parameterType="codeVO">
+		SELECT  code, codeName
+		FROM	(
+				SELECT  A.COCD AS code, A.CONM AS codeName
+				FROM	UI_CO A, UI_ADMIN_CO B
+				WHERE	A.COCD = B.COCD
+				AND		B.ADMIN_ID = #{adminId}
+				UNION
+				SELECT  COCD, CONM
+				FROM	UI_CO
+				WHERE	0 = ( SELECT  COUNT(*) AS CNT FROM UI_ADMIN_CO WHERE ADMIN_ID = #{adminId} )
+				) AS RS
+		WHERE	1=1
+		<if test='searchStr!=null and searchStr!=""'>
+		AND		( code LIKE CONCAT('%', #{searchStr}, '%') OR codeName LIKE CONCAT('%', #{searchStr}, '%') )
+		</if>
+		ORDER	BY codeName
+	</select>
+	
+	<!-- 전체 회사 -->
+	<select id="getCodeCoListAll" resultType="codeVO" parameterType="codeVO">
+		SELECT  COCD AS code, CONM AS codeName
+		FROM	UI_CO
+		WHERE 1=1
+		<if test='searchStr!=null and searchStr!=""'>
+		AND	( COCD LIKE CONCAT('%', #{searchStr}, '%') OR CONM LIKE CONCAT('%', #{searchStr}, '%') )
+		</if>
+		<if test='codeName!=null and codeName!=""'>
+		AND	CONM = #{codeName}
+		</if>
+		ORDER	BY codeName
+	</select>
+	
+	<!-- 운용자 회사 -->
+	<select id="getAdminCodeCoList" resultType="codeVO" parameterType="codeVO">
+		SELECT  A.COCD AS code, A.CONM AS codeName
+		FROM	UI_CO A, UI_ADMIN_CO B
+		WHERE	A.COCD = B.COCD
+		AND		B.ADMIN_ID = #{adminId}
+		ORDER	BY codeName
+	</select>
+
+	<!-- 총괄 -->
+	<select id="getCodeGeneralList" resultType="codeVO" parameterType="codeVO">
+		SELECT  code, codeName
+		FROM	(
+				SELECT  A.GENERALCD AS code, A.GENERALNM AS codeName
+				FROM	UI_GENERAL A,
+						(
+						SELECT  A.COCD, A.CONM
+						FROM	UI_CO A, UI_ADMIN_CO B
+						WHERE	A.COCD = B.COCD
+						AND		B.ADMIN_ID = #{adminId}
+						UNION
+						SELECT  COCD, CONM FROM	UI_CO WHERE	0 = ( SELECT  COUNT(*) AS CNT FROM UI_ADMIN_CO WHERE ADMIN_ID = #{adminId} )
+						) AS B
+				WHERE	A.COCD = B.COCD
+				<if test='coCd!=null and coCd!=""'>
+				AND		FIND_IN_SET(A.COCD, REPLACE(#{coCd}, '|', ','))
+				</if>
+				) AS RS
+		WHERE	1=1
+		<if test='searchStr!=null and searchStr!=""'>
+		AND		( code LIKE CONCAT('%', #{searchStr}, '%') OR codeName LIKE CONCAT('%', #{searchStr}, '%') )
+		</if>
+		ORDER	BY codeName
+	</select>
+	
+	<!-- 사업장 -->
+	<select id="getCodeBusiList" resultType="codeVO" parameterType="codeVO">
+		SELECT  A.code, A.codeName
+		FROM	(
+					SELECT  A.COCD, A.BUSICD AS code, A.BUSINM AS codeName
+					FROM	UI_BUSI A, UI_ADMIN_BUSI B
+					WHERE	A.BUSICD 	= B.BUSICD
+					AND		B.ADMIN_ID 	= #{adminId}
+					UNION
+					SELECT  COCD, BUSICD, BUSINM
+					FROM	UI_BUSI
+					WHERE	0 = ( SELECT  COUNT(*) AS CNT FROM UI_ADMIN_BUSI WHERE ADMIN_ID = #{adminId} )
+				) AS A,
+				(
+					SELECT  A.COCD, A.CONM
+					FROM	UI_CO A, UI_ADMIN_CO B
+					WHERE	A.COCD = B.COCD
+					AND		B.ADMIN_ID = #{adminId}
+					UNION
+					SELECT  COCD, CONM FROM	UI_CO WHERE	0 = ( SELECT  COUNT(*) AS CNT FROM UI_ADMIN_CO WHERE ADMIN_ID = #{adminId} )
+				) AS B
+		WHERE	A.COCD = B.COCD
+		<if test='coCd!=null and coCd!=""'>
+		AND		FIND_IN_SET(A.COCD, REPLACE(#{coCd}, '|', ','))
+		</if>
+		<if test='searchStr!=null and searchStr!=""'>
+		AND		( A.code LIKE CONCAT('%', #{searchStr}, '%') OR A.codeName LIKE CONCAT('%', #{searchStr}, '%') )
+		</if>
+		ORDER	BY A.codeName
+	</select>
+	<!-- 전체 사업장 -->
+	<select id="getCodeBusiListAll" resultType="codeVO" parameterType="codeVO">
+		SELECT  BUSICD AS code, BUSINM AS codeName
+		FROM	UI_BUSI
+		WHERE 	1=1
+		<if test='searchStr!=null and searchStr!=""'>
+		AND 	( BUSICD LIKE CONCAT('%', #{searchStr}, '%') OR BUSINM LIKE CONCAT('%', #{searchStr}, '%') )
+		</if>
+		<if test='coCd!=null and coCd!=""'>
+		AND		FIND_IN_SET(COCD, REPLACE(#{coCd}, '|', ','))
+		</if>
+		<if test='codeName!=null and codeName!=""'>
+		AND		BUSINM = #{codeName}
+		</if>
+		ORDER	BY codeName
+	</select>
+	
+	<!-- 운용자 사업장 -->
+	<select id="getAdminCodeBusiList" resultType="codeVO" parameterType="codeVO">
+		SELECT  A.BUSICD AS code, A.BUSINM AS codeName
+		FROM	UI_BUSI A, UI_ADMIN_BUSI B
+		WHERE	A.BUSICD = B.BUSICD
+		AND		B.ADMIN_ID = #{adminId}
+		ORDER	BY codeName
+	</select>
+
+	<!-- 서비스 타입 -->
+	<select id="getCodeSvcList" resultType="codeVO" parameterType="codeVO">
+		SELECT  code, codeName
+		FROM	(
+				SELECT  A.SERVICECD AS code, A.SERVICENM AS codeName, SORT
+				FROM	(SELECT  LEFT(A.SERVICECD, 3) AS SERVICECD, CONCAT(SERVICENM_LV1, ' > ', SERVICENM_LV2) AS SERVICENM, A.SORT FROM UI_SERVICE A GROUP BY LEFT(A.SERVICECD, 3), SERVICENM, A.SORT) A,
+						UI_ADMIN_SERVICE B
+				WHERE	A.SERVICECD = B.SERVICECD
+				AND		B.ADMIN_ID 	= #{adminId}
+				UNION
+				SELECT  SERVICECD, SERVICENM, SORT
+				FROM	(    SELECT  LEFT(A.SERVICECD, 3) AS SERVICECD, CONCAT(SERVICENM_LV1, ' > ', SERVICENM_LV2) AS SERVICENM, A.SORT FROM UI_SERVICE A GROUP BY LEFT(A.SERVICECD, 3), SERVICENM, A.SORT) AS R
+				WHERE	0 = ( SELECT  COUNT(*) AS CNT FROM UI_ADMIN_SERVICE WHERE ADMIN_ID = #{adminId} )
+				) AS RS
+		WHERE	1=1
+		<if test='searchStr!=null and searchStr!=""'>
+		AND		( code LIKE CONCAT('%', #{searchStr}, '%') OR codeName LIKE CONCAT('%', #{searchStr}, '%') )
+		</if>
+		GROUP	BY code, codeName
+		ORDER	BY MAX(SORT)
+	</select>
+	<!-- 서비스 타입 -->
+	<select id="getCodeSvcListAll" resultType="codeVO" parameterType="codeVO">
+		SELECT  code, codeName, useYn
+		FROM	(
+				SELECT  LEFT(A.SERVICECD, 3) AS code, CONCAT(SERVICENM_LV1, ' > ', SERVICENM_LV2) AS codeName, A.SORT, MAX(A.USE_YN) AS useYn 
+        		FROM UI_SERVICE A GROUP BY LEFT(A.SERVICECD, 3), codeName, A.SORT
+        		UNION
+        		SELECT  LEFT(A.SERVICECD, 4) AS code, CONCAT(SERVICENM_LV1, ' > ', SERVICENM_LV2, ' > ', SERVICENM_LV3) AS codeName, A.SORT, MAX(A.USE_YN) AS useYn 
+        		FROM UI_SERVICE A WHERE A.SERVICECD = 'EMMA' GROUP BY LEFT(A.SERVICECD, 4), codeName, A.SORT
+        		UNION
+        		SELECT  CONCAT(LEFT(A.SERVICECD, 4),'X') AS code, CONCAT(SERVICENM_LV1, ' > ', SERVICENM_LV2, ' > ', SERVICENM_LV3, CASE WHEN (SELECT COUNT(*) AS CNT FROM UI_SERVICE WHERE SERVICECD = 'EMMA' AND SERVICENM_LV3 REGEXP '[가-힣]') > 0 THEN ' 제외' ELSE ' except' END) AS codeName, A.SORT, MAX(A.USE_YN) AS useYn 
+        		FROM UI_SERVICE A WHERE A.SERVICECD = 'EMMA' GROUP BY LEFT(A.SERVICECD, 5), codeName, A.SORT
+				) AS RS
+		<if test='searchStr!=null and searchStr!=""'>
+		WHERE	( code LIKE CONCAT('%', #{searchStr}, '%') OR codeName LIKE CONCAT('%', #{searchStr}, '%') )
+		</if>
+		GROUP	BY code, codeName, useYn
+		ORDER	BY MAX(SORT)
+	</select>
+
+	<!-- 운용자 서비스 타입 -->
+	<select id="getAdminCodeSvcList" resultType="codeVO" parameterType="codeVO">
+		SELECT  LEFT(A.SERVICECD, 3) AS code, CONCAT(A.SERVICENM_LV1, ' > ', A.SERVICENM_LV2) AS codeName
+		FROM	UI_SERVICE A, UI_ADMIN_SERVICE B
+		WHERE	LEFT(A.SERVICECD, 3) = B.SERVICECD
+		AND		B.ADMIN_ID = #{adminId}
+	    UNION
+	    SELECT  LEFT(C.SERVICECD, 4) AS code, CONCAT(C.SERVICENM_LV1, ' > ', C.SERVICENM_LV2, ' > ', C.SERVICENM_LV3) AS codeName
+		FROM	UI_SERVICE C, UI_ADMIN_SERVICE D
+	    WHERE	LEFT(C.SERVICECD, 4) = D.SERVICECD
+		AND		C.SERVICECD = 'EMMA'
+		AND		D.ADMIN_ID = #{adminId}
+	    UNION
+	    SELECT  LEFT(E.SERVICECD, 5) AS code, CONCAT(E.SERVICENM_LV1, ' > ', E.SERVICENM_LV2, ' > ', E.SERVICENM_LV3) AS codeName
+		FROM	UI_SERVICE E, UI_ADMIN_SERVICE F
+	    WHERE	LEFT(E.SERVICECD, 5) = F.SERVICECD
+		AND		E.SERVICECD = 'EMMAX'    
+		AND		F.ADMIN_ID = #{adminId}
+	</select>
+
+	<!-- 패턴 -->
+	<select id="getCodePatternList" resultType="codeVO" parameterType="codeVO">
+		SELECT  code, codeName
+		FROM	(
+				SELECT  A.CODE AS code, A.NAME AS codeName
+				FROM	UI_REGEXP A, UI_ADMIN_REGEXP B
+				WHERE	A.CODE 	= B.CODE
+				AND		B.ADMIN_ID 	= #{adminId}
+				UNION
+				SELECT  CODE, NAME
+				FROM	UI_REGEXP
+				WHERE	0 = ( SELECT  COUNT(*) AS CNT FROM UI_ADMIN_REGEXP WHERE ADMIN_ID = #{adminId} )
+				) AS RS
+		WHERE	1=1
+		<if test='searchStr!=null and searchStr!=""'>
+		AND		( code LIKE CONCAT('%', #{searchStr}, '%') OR codeName LIKE CONCAT('%', #{searchStr}, '%') )
+		</if>
+		ORDER	BY codeName
+	</select>
+	<!-- 전체 패턴 -->
+	<select id="getCodePatternListAll" resultType="codeVO" parameterType="codeVO">
+		SELECT  CODE AS code, NAME AS codeName
+		FROM	UI_REGEXP
+		<if test='searchStr!=null and searchStr!=""'>
+		WHERE	( CODE LIKE CONCAT('%', #{searchStr}, '%') OR NAME LIKE CONCAT('%', #{searchStr}, '%') )
+		</if>
+		ORDER	BY codeName
+	</select>
+	
+	<!-- 장비 선택 -->
+	<select id="getCodeDeviceListAll" resultType="codeVO" parameterType="codeVO">
+		SELECT  DEVICE_SEQ AS deviceSeq, DEVICE_IP AS code, DEVICE_NM AS codeName
+		FROM	UI_DEVICE
+		WHERE	DEVICE_TYPE IN ('A', 'C')
+		<if test='searchStr!=null and searchStr!=""'>
+				AND	( DEVICE_IP LIKE CONCAT('%', #{searchStr}, '%') OR DEVICE_NM LIKE CONCAT('%', #{searchStr}, '%') )
+		</if>
+		
+		ORDER	BY codeName
+	</select>
+	
+	<!-- 운용자 패턴 -->
+	<select id="getAdminCodePatternList" resultType="codeVO" parameterType="codeVO">
+		SELECT  A.CODE AS code, A.NAME AS codeName
+		FROM	UI_REGEXP A, UI_ADMIN_REGEXP B
+		WHERE	A.CODE = B.CODE
+		AND		B.ADMIN_ID = #{adminId}
+		ORDER	BY codeName
+	</select>
+
+	<!-- 사용자 그룹 목록 -->
+	<select id="getUserCodeGroupListAll" parameterType="hashmap" resultType="codeVO">
+		SELECT  A.GROUP_CODE AS code
+			  , A.GROUP_NAME AS codeName
+		FROM	UI_USER_GROUP A 
+    	LEFT  JOIN UI_ADMIN_CEO_GROUP B 
+    	ON A.GROUP_CODE = B.GROUP_CODE
+		WHERE	1 = 1
+		<if test='searchStr!=null and searchStr!=""'>
+		AND		(A.GROUP_CODE LIKE CONCAT('%', #{searchStr}, '%')
+					OR A.GROUP_NAME LIKE CONCAT('%', #{searchStr}, '%'))
+		</if>	
+		<if test='ceoReadAuth!=null and ceoReadAuth!=""'>
+		 AND B.ADMIN_ID = #{ceoReadAuth}
+		 </if>
+		  GROUP BY A.GROUP_CODE, A.GROUP_NAME
+		ORDER	BY codeName
+	</select>
+
+	<!-- 부서 -->
+	<select id="getCodeDeptList" resultType="codeVO" parameterType="codeVO">
+		SELECT  code, codeName
+		FROM	(
+				SELECT  A.DEPTCD AS code, A.DEPTNM AS codeName
+				FROM	UI_DEPT A, (
+						SELECT  A.COCD, A.CONM
+						FROM	UI_CO A, UI_ADMIN_CO B
+						WHERE	A.COCD = B.COCD
+						AND		B.ADMIN_ID = #{adminId}
+						UNION
+						SELECT  COCD, CONM FROM	UI_CO WHERE	0 = ( SELECT  COUNT(*) AS CNT FROM UI_ADMIN_CO WHERE ADMIN_ID = #{adminId} )
+						) AS B
+				WHERE	A.COCD = B.COCD
+				<if test='coCd!=null and coCd!=""'>
+				AND		FIND_IN_SET(A.COCD, REPLACE(#{coCd}, '|', ','))
+				</if>
+				) AS RS
+		WHERE	1=1
+		<if test='searchStr!=null and searchStr!=""'>
+		AND		( code LIKE CONCAT('%', #{searchStr}, '%') OR codeName LIKE CONCAT('%', #{searchStr}, '%') )
+		</if>
+		ORDER	BY codeName
+	</select>
+	
+	<!-- 운용자 사업장 -->
+	<select id="getAdminCodeDeptList" resultType="codeVO" parameterType="codeVO">
+		SELECT  A.DEPTCD AS code, A.DEPTNM AS codeName
+		FROM	UI_DEPT A, UI_ADMIN_DEPT B
+		WHERE	A.DEPTCD = B.DEPTCD
+		AND		B.ADMIN_ID = #{adminId}
+		ORDER	BY codeName
+	</select>
+	
+	<!-- 전체 부서 -->
+	<select id="getCodeDeptListAll" resultType="codeVO" parameterType="codeVO">
+		SELECT  DEPTCD AS code, DEPTNM AS codeName
+		FROM	UI_DEPT
+		WHERE 	1=1
+		<if test='searchStr!=null and searchStr!=""'>
+		AND 	( DEPTCD LIKE CONCAT('%', #{searchStr}, '%') OR DEPTNM LIKE CONCAT('%', #{searchStr}, '%') )
+		</if>
+		<if test='coCd!=null and coCd!=""'>
+		AND		FIND_IN_SET(COCD, REPLACE(#{coCd}, '|', ','))
+		</if>
+		<if test='codeName!=null and codeName!=""'>
+		AND DEPTNM = #{codeName}
+		</if>
+		ORDER	BY codeName
+	</select>
+	
+	<!-- 첨부 -->
+	<select id="getCodeAttachList" resultType="codeVO" parameterType="codeVO">
+		SELECT  code, codeName
+		FROM	(
+				SELECT  ATTACH_TYPE AS code, ATTACH_NAME AS codeName
+				FROM	UI_ATTACH
+				) AS RS
+		WHERE	1=1
+		<if test='searchStr!=null and searchStr!=""'>
+		AND		( code LIKE CONCAT('%', #{searchStr}, '%') OR codeName LIKE CONCAT('%', #{searchStr}, '%') )
+		</if>
+		ORDER	BY codeName
+	</select>
+	
+	
+	<!-- 예약어 -->
+	<select id="getCodeKwdList" resultType="codeVO" parameterType="codeVO">
+		SELECT  KEYWORD_SEQ AS code, KEYWORD_NAME AS codeName, B.GROUP_SEQ AS tempCode1, B.GROUP_NAME AS tempNm1
+		FROM    UI_KEYWORD A, UI_KEYWORD_GROUP B
+		WHERE   A.GROUP_SEQ = B.GROUP_SEQ
+		<if test='searchStr!=null and searchStr!=""'>
+		AND		(KEYWORD_NAME LIKE CONCAT('%', #{searchStr}, '%') OR GROUP_NAME LIKE CONCAT('%', #{searchStr}, '%'))
+		</if>
+		<if test='tempCode1!=null and tempCode1!=""'>
+		AND		B.GROUP_SEQ = #{tempCode1}
+		</if>
+		ORDER	BY KEYWORD_NAME
+	</select>
+	
+	<!-- 직급 -->
+	<select id="getCodeJikgubList" resultType="codeVO" parameterType="codeVO">
+		SELECT  code, codeName
+		FROM	(
+				SELECT  JIKGUBCD AS code, JIKGUBNM AS codeName
+				FROM	UI_JIKGUB
+				) AS RS
+		WHERE	1=1
+		<if test='searchStr!=null and searchStr!=""'>
+		AND		( code LIKE CONCAT('%', #{searchStr}, '%') OR codeName LIKE CONCAT('%', #{searchStr}, '%') )
+		</if>
+		ORDER	BY codeName
+	</select>
+	
+	<!-- 재직 -->
+	<select id="getCodeJikinList" resultType="codeVO" parameterType="codeVO">
+		SELECT  code, codeName
+		FROM	(
+				SELECT  JIKINCD AS code, JIKINNM AS codeName
+				FROM	UI_JIKIN
+				) AS RS
+		WHERE	1=1
+		<if test='searchStr!=null and searchStr!=""'>
+		AND		( code LIKE CONCAT('%', #{searchStr}, '%') OR codeName LIKE CONCAT('%', #{searchStr}, '%') )
+		</if>
+		ORDER	BY codeName
+	</select>
+	
+	<!-- 사용자 -->
+	<select id="getCodeUserList" resultType="codeVO" parameterType="codeVO">
+		SELECT  code, codeName, tempCode1, tempNm1, tempCode2, tempNm2
+		FROM	(
+				SELECT  USER_ID AS code, USER_NM AS codeName, A.DEPTCD AS tempCode1, B.DEPTNM AS tempNm1, A.JIKGUBCD AS tempCode2, C.JIKGUBNM AS tempNm2, CEO
+				FROM UI_USERS A
+				LEFT JOIN UI_DEPT B ON A.DEPTCD = B.DEPTCD
+				LEFT JOIN UI_JIKGUB C ON A.JIKGUBCD = C.JIKGUBCD
+				) AS RS
+		WHERE	1=1
+		<if test='searchStr!=null and searchStr!=""'>
+		AND		( 
+					code LIKE CONCAT('%', #{searchStr}, '%') 
+				OR 	codeName LIKE CONCAT('%', #{searchStr}, '%') 
+				OR 	tempNm1 LIKE CONCAT('%', #{searchStr}, '%')
+				OR 	tempNm2 LIKE CONCAT('%', #{searchStr}, '%')
+				)
+		</if>
+		ORDER	BY codeName
+	</select>
+	
+	<!-- 메신저 목록 -->
+	<select id="getMessengerList" resultType="codeVO" parameterType="codeVO">
+		SELECT	SUBSTRING(SERVICECD,1,3) AS code, SERVICENM_LV2 AS codeName 
+		FROM	UI_SERVICE
+		WHERE	MSGGRPCD = 'MSG'
+		GROUP	BY SUBSTRING(SERVICECD,1,3), SERVICENM_LV2;
+	</select>
+	
+	<!-- 운용자 메뉴 -->
+	<select id="getAdminCodeMenuList" resultType="codeVO" parameterType="codeVO">
+		SELECT	AUTH_ID AS code
+		FROM	UI_ADMIN_MENU
+		WHERE	ADMIN_ID = #{adminId}
+	</select>
+</mapper>
