@@ -1,55 +1,32 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@page import="java.util.Map"%>
-<%@page import="com.xcurenet.common.util.config.Config"%>
-<%@page import="com.xcurenet.audit.service.Operation"%>
-<%@page import="com.xcurenet.common.util.SpringContextUtil"%>
-<%@page import="com.xcurenet.config.service.ConfigAdminService"%>
-<%@page import="com.xcurenet.config.service.ConfigAdminVO"%>
-<%@page import="com.xcurenet.emass.message.service.EmsMessageService"%>
+<%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
+<script type="text/javascript" src="<c:url value="/js/contentBodyNew.js"/>"></script>
 <%
-ConfigAdminService configAdminService = SpringContextUtil.getBean(ConfigAdminService.class);
-Map<String, Object> param = Common.getParamMap(request);
-String msgid = Common.nvl(param.get("msgid"));
-String searchKey = Common.nvl(param.get("searchKey"));
-String bodySize = Common.nvl(param.get("bodySize"));
-boolean mailUseFlag = Config.getBoolean("mail.forward.flag");
-String op_attach_save = Operation.ATTACH_SAVE.getOperation();
-String op_body_save = Operation.BODY_SAVE.getOperation();
-String op_body_print = Operation.BODY_PRINT.getOperation();
-String infoFeedbackYn = Common.getInfoFeedbackYn(session);
-boolean infoFeedbackConf = Config.getBoolean("info.feedback.used"); 
-boolean infoHynixConf = Config.getBoolean("info.hynix.used");
-String adminId = Common.getAdminId(session);
-ConfigAdminVO configAdminVo = configAdminService.getConfAdmin("message.keyword.highlight", adminId);
-boolean keywordHighlight = true;
-if(Common.isNotEmpty(configAdminVo)) keywordHighlight = Common.isEquals(Common.nvl(configAdminVo.getVal()), "Y") ? true : false;
-boolean hostQuery = false;
-ConfigAdminVO hostQueryVO = configAdminService.getConfAdmin("host.query.use", adminId);
-if(Common.isNotEmpty(hostQueryVO)) hostQuery = Common.isEquals(Common.nvl(hostQueryVO.getVal()), "Y") ? true : false;
+	ConfigAdminService configAdminService = SpringContextUtil.getBean(ConfigAdminService.class);
+	Map<String, Object> param = Common.getParamMap(request);
+	String msgid = Common.nvl(param.get("msgid"));
+	String searchKey = Common.nvl(param.get("searchKey"));
+	String bodySize = Common.nvl(param.get("bodySize"));
+	boolean mailUseFlag = Config.getBoolean("mail.forward.flag");
+	String op_attach_save = Operation.ATTACH_SAVE.getOperation();
+	String op_body_save = Operation.BODY_SAVE.getOperation();
+	String op_body_print = Operation.BODY_PRINT.getOperation();
+	String infoFeedbackYn = Common.getInfoFeedbackYn(session);
+	boolean infoFeedbackConf = Config.getBoolean("info.feedback.used");
+	boolean infoHynixConf = Config.getBoolean("info.hynix.used");
+	String adminId = Common.getAdminId(session);
+	ConfigAdminVO configAdminVo = configAdminService.getConfAdmin("message.keyword.highlight", adminId);
+	boolean keywordHighlight = true;
+	if(Common.isNotEmpty(configAdminVo)) keywordHighlight = Common.isEquals(Common.nvl(configAdminVo.getVal()), "Y") ? true : false;
+	boolean hostQuery = false;
+	ConfigAdminVO hostQueryVO = configAdminService.getConfAdmin("host.query.use", adminId);
+	if(Common.isNotEmpty(hostQueryVO)) hostQuery = Common.isEquals(Common.nvl(hostQueryVO.getVal()), "Y") ? true : false;
 %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
 <title>EMASS LTH - <s:message code="OPERATION_MGMT.BODY_VIEW"/></title>
-<%@ include file="../../base.jsp"%>
-<link rel="stylesheet" href="<c:url value="/css/bootstrap-datetimepicker.min.css"/>"/>
-<link rel="stylesheet" href="<c:url value="/css/bootstrap-select.min.css"/>"/>
-<link rel="stylesheet" href="<c:url value="/css/message.css"/>"/>
-<link rel="stylesheet" href="<c:url value="/css/contentBody.css"/>"/>
-
-<script type="text/javascript" src="<c:url value="/js/moment.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/Date.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/ko.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/transition.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/bootstrap-datetimepicker.min.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/bootstrap-select.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/InnoFD.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/referrer-killer.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/contentBodyNew.js"/>"></script>
-
 <style type="text/css">
 html, body{
 	min-width:600px !important;}

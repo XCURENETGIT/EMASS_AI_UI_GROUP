@@ -1,13 +1,5 @@
-<%@page import="com.xcurenet.audit.service.Operation"%>
-<%@page import="net.sf.json.JSONObject"%>
-<%@page import="com.xcurenet.common.util.SpringContextUtil"%>
-<%@page import="com.xcurenet.common.util.Common"%>
-<%@page import="com.xcurenet.config.service.ConfigAdminService"%>
-<%@page import="com.xcurenet.config.service.ConfigAdminVO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
 <%
 	ConfigAdminService configAdminService = SpringContextUtil.getBean(ConfigAdminService.class);
 
@@ -34,13 +26,6 @@
 <html lang="ko">
 <head>
 <title>EMASS LTH - <s:message code="DATA_MONITOR.MESSAGE_INFO"/></title>
-<%@ include file="../../base.jsp"%>
-
-<link rel="stylesheet" href="<c:url value="/css/scrolltabs.css"/>"/>
-<link rel="stylesheet" href="<c:url value="/css/message.css"/>"/>
-
-<script type="text/javascript" src="<c:url value="/js/jquery.scrolltabs.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/jquery.mousewheel.js"/>"></script>
 <style type="text/css">
 html, body {
 	min-width: 100px !important;

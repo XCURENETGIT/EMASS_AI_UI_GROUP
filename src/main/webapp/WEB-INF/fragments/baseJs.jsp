@@ -1,40 +1,19 @@
-<%@ page import="com.xcurenet.common.util.Common" %>
-<%@ page import="java.util.Locale" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="org.springframework.web.servlet.i18n.SessionLocaleResolver" %>
+<%@ page import="com.xcurenet.common.util.config.Config"%>
+<%@ page import="org.springframework.web.servlet.i18n.SessionLocaleResolver"%>
+<%@ page import="com.xcurenet.common.util.Common"%>
+<%@ page import="com.xcurenet.common.util.config.Config" %>
+<%@ page import="java.util.Locale" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
-
-
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-
-
-<%-- popup css --%>
-<link rel="stylesheet" href="<c:url value="/css/jquery.nouislider.min.css"/>"/>
-<link rel="stylesheet" href="<c:url value="/css/bootstrap-datetimepicker.min.css"/>"/>
-<link rel="stylesheet" href="<c:url value="/css/bootstrap-select.min.css"/>"/>
-<link rel="stylesheet" href="<c:url value="/css/codemirror.css"/>"/>
-<link rel="stylesheet" href="<c:url value="/css/show-hint.css"/>"/>
-
-<link rel="stylesheet" href="<c:url value="/css/odometer-theme-default.css"/>" />
-<link rel="stylesheet" href="<c:url value="/css/gridstack.css"/>" />
-<link rel="stylesheet" href="<c:url value="/css/dashboard.css"/>"/>
-
-
-
-<% if( Common.isEquals(Common.nvl(Locale.getDefault(), "ko"), "ko")){%>
-<script type="text/javascript" src="<c:url value="/js/xcnui_ko.js"/>"></script>
-<%}else{%>
-<script type="text/javascript" src="<c:url value="/js/xcnui_en.js"/>"></script>
-<%}%>
-
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <script type="text/javascript" src="<c:url value="/js/jquery.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/jquery.ui.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/jquery.form.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/jquery.fileDownload.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/jquery.event.drag-2.2.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/jquery.event.drop-2.2.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/jquery.bootstrap-growl.min.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/bootstrap.min.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/bootstrap-dialog.js"/>"></script>
@@ -49,14 +28,20 @@
 <script type="text/javascript" src="<c:url value="/js/slickgrid-print-plugin.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/slick.rowmovemanager.js"/>"></script>
 
+
+
+<% if( Common.isEquals(Common.nvl(Locale.getDefault(), "ko"), "ko")){%>
+<script type="text/javascript" src="<c:url value="/js/xcnui_ko.js"/>"></script>
+<%}else{%>
+<script type="text/javascript" src="<c:url value="/js/xcnui_en.js"/>"></script>
+<%}%>
+
 <script type="text/javascript" src="<c:url value="/js/xcnui_2.0.js"/>"></script>
 
 <script type="text/javascript" src="<c:url value="/js/odometer.min.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/lodash.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/gridstack.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/gridstack.jQueryUI.js"/>"></script>
-
-
 
 
 <%-- analysisScript js --%>
@@ -68,7 +53,6 @@
 
 <%-- popup js --%>
 <script type="text/javascript" src="<c:url value="/js/Date.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/transition.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/bootstrap-datetimepicker.min.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/bootstrap-select.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/codemirror.js"/>"></script>
@@ -77,6 +61,32 @@
 <script type="text/javascript" src="<c:url value="/js/sql-hint.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/QueryConditionNew.js"/>"></script>
 
+<script type="text/javascript" src="<c:url value="/js/common/common.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/highcharts.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/highcharts-3d.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/exporting.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/sockjs-0.3.4.min.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/stomp.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/sha256.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/password.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/Date.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/hotkey.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/ipaddr.min.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/ipv6Check.js"/>"></script>
 
 
 
+<script type="text/javascript" src="<c:url value="/js/dropdowns-enhancement.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/jquery.scrollbar.min.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/jquery.ztree.all-3.5.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/referrer-killer.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/conditionNew.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/ztreeRMenu.js"/>"></script>
+
+<script type="text/javascript" src="<c:url value="/js/ztree.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/filter.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/folder.js"/>"></script>
+
+<script type="text/javascript" src="<c:url value="/js/jquery.scrolltabs.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/jquery.mousewheel.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/jquery.layout.js"/>"></script>

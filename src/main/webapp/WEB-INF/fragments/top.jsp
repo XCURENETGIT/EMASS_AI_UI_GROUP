@@ -8,6 +8,8 @@
 <%@page import="com.xcurenet.common.util.Common"%>
 <%@page import="com.xcurenet.common.ntp.NtpScheduler"%>
 <%@page import="net.sf.json.JSONObject"%>
+<%@ page import="java.util.Locale" %>
+<%@ page import="org.springframework.web.servlet.i18n.SessionLocaleResolver" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
@@ -35,8 +37,8 @@
     String infoFeedbackYn = Common.getInfoFeedbackYn(session);
     JSONObject ntpInfo =  NtpScheduler.ntpStatus;
 
-
 %>
+
 <a href="#0" class="back-to-top cd-top" style="z-index: 99999999"><span class="[ fa fa-chevron-up ]"></span> <span class="[ ]">Back to the Top</span></a>
 <iframe id="ExcelDown" name="ExcelDown" src="about:blank;" style="display: none;" height="0" width="0" ></iframe>
 <div id="replace_html" style="display: none;"></div>

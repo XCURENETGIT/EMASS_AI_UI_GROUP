@@ -6,11 +6,10 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <tiles:insertAttribute name="baseCss" />
-    <tiles:insertAttribute name="base" />
+    <tiles:insertAttribute name="baseJs" />
 </head>
 <body>
     <tiles:insertAttribute name="body" />
-    <tiles:insertAttribute name="customJs" />
 </body>
 
 </html>

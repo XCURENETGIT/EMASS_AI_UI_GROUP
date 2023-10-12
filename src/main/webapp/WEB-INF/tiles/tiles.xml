@@ -7,9 +7,8 @@
     <!-- common -->
     <!-- default layout-->
     <definition name="defaultLayout" template="/WEB-INF/layout/defaultLayout.jsp">
-        <put-attribute name="base" value="/WEB-INF/fragments/base.jsp" />
         <put-attribute name="baseCss" value="/WEB-INF/fragments/baseCss.jsp" />
-        <put-attribute name="customJs" value="/WEB-INF/fragments/customJs.jsp" />
+        <put-attribute name="baseJs" value="/WEB-INF/fragments/baseJs.jsp" />
         <put-attribute name="top" value="/WEB-INF/fragments/top.jsp" />
         <put-attribute name="body" value="" />
         <put-attribute name="footer" value="/WEB-INF/fragments/footer.jsp" />
@@ -17,17 +16,15 @@
 
     <!-- no layout-->
     <definition name="noLayout" template="/WEB-INF/layout/noLayout.jsp">
-        <put-attribute name="base" value="/WEB-INF/fragments/base.jsp" />
         <put-attribute name="baseCss" value="/WEB-INF/fragments/baseCss.jsp" />
-        <put-attribute name="customJs" value="/WEB-INF/fragments/customJs.jsp" />
+        <put-attribute name="baseJs" value="/WEB-INF/fragments/baseJs.jsp" />
         <put-attribute name="body" value="" />
     </definition>
 
     <!-- popup layout-->
     <definition name="popupLayout" template="/WEB-INF/layout/popupLayout.jsp">
-        <put-attribute name="base" value="/WEB-INF/fragments/base.jsp" />
         <put-attribute name="baseCss" value="/WEB-INF/fragments/baseCss.jsp" />
-        <put-attribute name="customJs" value="/WEB-INF/fragments/customJs.jsp" />
+        <put-attribute name="baseJs" value="/WEB-INF/fragments/baseJs.jsp" />
         <put-attribute name="body" value="" />
     </definition>
 
@@ -48,7 +45,21 @@
         <put-attribute name="body"  value="/WEB-INF/views/error/{1}.jsp" />
     </definition>
 
+    <!-- emass message content -->
+    <definition name="/emass/message/contentList" extends="noLayout">
+        <put-attribute name="body"  value="/WEB-INF/views/emass/message/contentList.jsp" />
+    </definition>
+    <definition name="/emass/message/contentBodyNew" extends="noLayout">
+        <put-attribute name="body"  value="/WEB-INF/views/emass/message/contentBodyNew.jsp" />
+    </definition>
 
+    <!-- emass message -->
+    <definition name="/emass/message/*" extends="defaultLayout">
+        <put-attribute name="body" value="/WEB-INF/views/emass/message/{1}.jsp" />
+    </definition>
+
+
+    <!--  asterisk 검색은 최하단 위치 -->
     <!-- emass -->
     <definition name="/emass/*" extends="defaultLayout">
         <put-attribute name="body" value="/WEB-INF/views/emass/{1}.jsp" />
@@ -56,7 +67,6 @@
     <definition name="/emass/*/*" extends="defaultLayout">
         <put-attribute name="body" value="/WEB-INF/views/emass/{1}/{2}.jsp" />
     </definition>
-
 
     <definition name="/*.popup" extends="popupLayout">
         <put-attribute name="body" value="/WEB-INF/views/{1}.jsp" />
