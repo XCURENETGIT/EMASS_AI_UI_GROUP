@@ -24,10 +24,9 @@
     String recvsJikgub = Config.getString("recvs.jikgub.use");
 %>
 
-
 <script>
-var contextRoot = '<%=contentPath%>';
-var consent = <%=consent%>;
-var isIPv6 = <%=isIPv6%>;
-var isOCR = <%=isOCR%>;
+    let contextRoot = '<%=contentPath%>';
+    let consent = '<%=consent%>';
+    let isIPv6 = '<%=isIPv6%>';
+    let isOCR = '<%=isOCR%>';
 </script>

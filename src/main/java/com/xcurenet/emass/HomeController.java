@@ -752,7 +752,7 @@ public class HomeController {
 	@RequestMapping(value = "/commons/selectCodeAll.do")
 	@Description("코드 선택 페이지")
 	public String selectCodeAll(Locale locale, Model model) {
-		return "/commons/selectCodeAll";
+		return "/commons/selectCodeAll.popup"; //
 	}
 	@RequestMapping(value = "/commons/selectAdmin.do")
 	@Description("Admin 선택 페이지")
@@ -823,6 +823,7 @@ public class HomeController {
 	@RequestMapping(value = "/ems/messageNewN.do")
 	@Description("EDC 메시지 검색 페이지(전체) - 신규")
 	public String messageNewN(Locale locale, Model model) {
+		model.addAttribute("headerYn","Y");
 		return "/emass/message/messageNewN";
 	}
 

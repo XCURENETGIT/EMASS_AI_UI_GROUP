@@ -30,6 +30,9 @@
 <link rel="stylesheet" href="<c:url value="/css/jquery.layout.css"/>"/>
 <link rel="stylesheet" href="<c:url value="/css/scrolltabs.css"/>"/>
 
+<link rel="stylesheet" href="<c:url value="/css/vis.min.css"/>"/>
+<link rel="stylesheet" href="<c:url value="/css/processmap.css"/>"/>
+
 <style>
     <!--
     .menu-content a {

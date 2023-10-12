@@ -1,18 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
+<%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
 <title></title>
-<%@ include file="../base.jsp"%>
 <link rel="stylesheet" href="<c:url value="/css/panelsTab.css"/>"/>
-<link rel="stylesheet" href="<c:url value="/css/bootstrap-datetimepicker.min.css"/>"/>
-<script type="text/javascript" src="<c:url value="/js/moment.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/transition.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/collapse.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/ko.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/bootstrap-datetimepicker.min.js"/>"></script>
 <style>
 .checkbox-inline + .checkbox-inline, .radio-inline + .radio-inline { margin-left: 0px;}
 .checkbox-inline, .radio-inline {line-height: 30px; font-size: 13px;}
@@ -479,8 +471,7 @@ function getBusiList() {
 		</div>
 	</div>
 
-	<jsp:include page="../top.jsp"/>
-	<div class="container"> 
+	<div class="container">
 		<div class="boxArea">
 			<div class="content_body" style="padding-top: 0px;">
 				<div class="row" style="height: 100%;">
@@ -673,6 +664,5 @@ function getBusiList() {
 		grid.initData('<s:message code="ipRange.msg.select.busi"/>')
 		writeExportMenu('export_menu', 'holidayListGrid', '<s:message code="holidayBusiness.list.busiholiday"/>');
 	</script>
-	<jsp:include page="../footer.jsp"/>
 </body>
 </html>

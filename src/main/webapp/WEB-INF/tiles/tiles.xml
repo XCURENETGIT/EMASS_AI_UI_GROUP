@@ -45,6 +45,17 @@
         <put-attribute name="body"  value="/WEB-INF/views/error/{1}.jsp" />
     </definition>
 
+    <!-- 팝업 관련 -->
+    <definition name="/*.popup" extends="popupLayout">
+        <put-attribute name="body" value="/WEB-INF/views/{1}.jsp" />
+    </definition>
+    <definition name="/*/*.popup" extends="popupLayout">
+        <put-attribute name="body" value="/WEB-INF/views/{1}/{2}.jsp" />
+    </definition>
+
+
+
+
     <!-- emass message content -->
     <definition name="/emass/message/contentList" extends="noLayout">
         <put-attribute name="body"  value="/WEB-INF/views/emass/message/contentList.jsp" />
@@ -59,7 +70,9 @@
     </definition>
 
 
-    <!--  asterisk 검색은 최하단 위치 -->
+
+
+    <!--  폴더별 맵핑 분류 (asterisk 검색은 소스 최하단 위치해야함 (우선순위가 최우선이라서 )) -->
     <!-- emass -->
     <definition name="/emass/*" extends="defaultLayout">
         <put-attribute name="body" value="/WEB-INF/views/emass/{1}.jsp" />
@@ -68,13 +81,30 @@
         <put-attribute name="body" value="/WEB-INF/views/emass/{1}/{2}.jsp" />
     </definition>
 
-    <definition name="/*.popup" extends="popupLayout">
-        <put-attribute name="body" value="/WEB-INF/views/{1}.jsp" />
+    <!-- analysis -->
+    <definition name="/analysis/*" extends="defaultLayout">
+        <put-attribute name="body" value="/WEB-INF/views/analysis/{1}.jsp" />
+    </definition>
+    <definition name="/analysis/*/*" extends="defaultLayout">
+        <put-attribute name="body" value="/WEB-INF/views/analysis/{1}/{2}.jsp" />
     </definition>
 
-    <definition name="/*/*.popup" extends="popupLayout">
-        <put-attribute name="body" value="/WEB-INF/views/{1}/{2}.jsp" />
+    <!-- commons -->
+    <definition name="/commons/*" extends="defaultLayout">
+        <put-attribute name="body" value="/WEB-INF/views/commons/{1}.jsp" />
     </definition>
+    <definition name="/commons/*/*" extends="defaultLayout">
+        <put-attribute name="body" value="/WEB-INF/views/commons/{1}/{2}.jsp" />
+    </definition>
+
+    <!-- uacs -->
+    <definition name="/uacs/*" extends="defaultLayout">
+        <put-attribute name="body" value="/WEB-INF/views/uacs/{1}.jsp" />
+    </definition>
+    <definition name="/uacs/*/*" extends="defaultLayout">
+        <put-attribute name="body" value="/WEB-INF/views/uacs/{1}/{2}.jsp" />
+    </definition>
+
 
 
 </tiles-definitions>

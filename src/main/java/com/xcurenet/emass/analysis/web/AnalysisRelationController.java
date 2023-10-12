@@ -1,23 +1,5 @@
 package com.xcurenet.emass.analysis.web;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
-
-import javax.servlet.http.HttpSession;
-
-import org.apache.solr.client.solrj.SolrServerException;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Description;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.google.gson.Gson;
 import com.xcurenet.annotations.AuditMenu;
 import com.xcurenet.annotations.AuditOperation;
@@ -28,16 +10,26 @@ import com.xcurenet.audit.service.ParentMenu;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
-import com.xcurenet.emass.analysis.service.AnalysisRelationListVO;
-import com.xcurenet.emass.analysis.service.AnalysisRelationService;
-import com.xcurenet.emass.analysis.service.BihiSankeyVO;
-import com.xcurenet.emass.analysis.service.ProcessmapVO;
-import com.xcurenet.emass.analysis.service.SearchVO;
+import com.xcurenet.emass.analysis.service.*;
 import com.xcurenet.emass.message.service.SolrEdcMessageVO;
 import com.xcurenet.emass.message.service.SolrEdcVO;
-
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.solr.client.solrj.SolrServerException;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Description;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 @Controller
 @RequestMapping("/analysis")
@@ -51,7 +43,8 @@ public class AnalysisRelationController {
 	@RequestMapping("/dataRelation.do")
 	@Description("분석 - 데이터관계분석 Main")
 	public String dataRelation(Locale locale, Model model) {
-		return "analysis/dataRelation";
+		model.addAttribute("headerCloseYn","Y");
+		return "/analysis/dataRelation";
 	}
 
 	@RequestMapping("/dataRelationList.xcn")

@@ -90,3 +90,14 @@
 <script type="text/javascript" src="<c:url value="/js/jquery.scrolltabs.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/jquery.mousewheel.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/jquery.layout.js"/>"></script>
+
+<script type="text/javascript" src="<c:url value="/js/jquery.browser.min.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/d3.v3.min.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/bootstrap-datetimepicker.min.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/vis.min.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/timeline.js"/>"></script>
+<!-- process mapp -->
+
+<script type="text/javascript" src="<c:url value="/js/colorbrewer.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/geometry.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/processmap.js"/>"></script>

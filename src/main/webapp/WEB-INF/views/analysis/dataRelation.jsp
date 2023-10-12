@@ -1,10 +1,5 @@
-<%@page import="com.xcurenet.common.util.config.Config"%>
-<%@	page import="com.xcurenet.common.util.Common"%>
-<%@ page import="com.xcurenet.emass.service.service.ServiceGroupVO"%>
-<%@ page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
+<%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -25,10 +20,6 @@
 		else groupName += ",'" + groups.get(i).getGroupNm() + "'";
 	};
 %>
-<%@ include file="../base.jsp"%>
-<link rel="stylesheet" href="<c:url value="/css/bootstrap-datetimepicker.min.css"/>"/>
-<link rel="stylesheet" href="<c:url value="/css/vis.min.css"/>"/>
-<link rel="stylesheet" href="<c:url value="/css/processmap.css"/>"/>
 <style type="text/css">
 .btn-popover {
 	position: absolute;
@@ -71,25 +62,7 @@
  */
 
 </style>
-
 <s:message code="common.datescript" var="ko"/>
-<script type="text/javascript" src="<c:url value="/js/jquery.browser.min.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/d3.v3.min.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/moment.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/transition.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/collapse.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/${ko}"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/bootstrap-datetimepicker.min.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/Date.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/vis.min.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/timeline.js"/>"></script>
-<!-- process mapp -->
-<script type="text/javascript" src="<c:url value="/js/colorbrewer.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/geometry.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/processmap.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/messageGrid.js"/>"></script>
-
-<%@ include file="./analysisBase.jsp"%>
 <script>
 var searchFlag = false;
 var resultTotal = 0;
@@ -168,9 +141,6 @@ function eventEnterSearch(event) {
 </script>
 </head>
 <body class="mini-navbar">
-	<jsp:include page="../top.jsp">
-		<jsp:param name="headerCloseYn" value="Y"/>
-	</jsp:include>
 	<div class="container"> 
 		<div class="boxArea">
 			<div class="content_body">
@@ -654,6 +624,5 @@ function eventEnterSearch(event) {
 		}
 
 	</script>
-	<jsp:include page="../footer.jsp"/>
 </body>
 </html>
