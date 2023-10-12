@@ -1,20 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
+<%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
 <title></title>
-<%@ include file="../base.jsp"%>
-<link rel="stylesheet" href="<c:url value="/css/odometer-theme-default.css"/>" />
-<link rel="stylesheet" href="<c:url value="/css/gridstack.css"/>" />
-<link rel="stylesheet" href="<c:url value="/css/dashboard.css"/>"/>
-
-<script type="text/javascript" src="<c:url value="/js/odometer.min.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/lodash.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/gridstack.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/gridstack.jQueryUI.js"/>"></script>
-
 <style type="text/css">
 .radio-inline {
 	padding-left: 0px;
@@ -290,9 +279,7 @@ function getDashBoardMenu(flag){
 			</div>
 		</div>
 	</div>
-	
-	<jsp:include page="../top.jsp"/>
-	<div class="container"> 
+	<div class="container">
 		<div class="boxArea">
 			<div class="content_body">
 				<div class="row" style="line-height: 0px; height:100%;">
@@ -352,6 +339,5 @@ function getDashBoardMenu(flag){
 			}
 		};
 	</script>
-	<jsp:include page="../footer.jsp"/>
 </body>
 </html>

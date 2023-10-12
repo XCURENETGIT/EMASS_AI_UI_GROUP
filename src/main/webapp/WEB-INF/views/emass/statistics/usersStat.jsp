@@ -1,19 +1,7 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
-<!DOCTYPE html>
+<%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
 <html lang="ko">
 <head>
 <title>EMASS LTH - <s:message code="DATA_MONITOR.STAT_LABEL"/></title>
-<%@ include file="../../base.jsp"%>
-<link rel="stylesheet" href="<c:url value="/css/bootstrap-datetimepicker.min.css"/>"/>
-<script type="text/javascript" src="<c:url value="/js/moment.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/transition.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/collapse.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/ko.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/bootstrap-datetimepicker.min.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/messageGrid.js"/>"></script>
-<%@ include file="../../analysis/analysisBase.jsp"%>
 <style type="text/css">
 .panel-heading .dropdown-menu {
 	right: 31px;
@@ -387,9 +375,9 @@ function getSearchQuery() {
 </script>
 </head>
 <body class="mini-navbar">
-	<jsp:include page="../../top.jsp">
-		<jsp:param name="headerYn" value="N"/>
-	</jsp:include>
+<%--	<jsp:include page="../../top.jsp">--%>
+<%--		<jsp:param name="headerYn" value="N"/>--%>
+<%--	</jsp:include>--%>
 	<div class="container"> 
 		<div class="boxArea">
 			<div class="content_body">
@@ -570,7 +558,7 @@ function getSearchQuery() {
 			var sDate = $('#startdate').val().replaceAll("-","");
 			var eDate = $('#enddate').val().replaceAll("-","");
 			if(sDate > eDate) ui.alertMsg('<s:message code="consent.msg.timecheck"/>');
-			
+
 			searchFlag = true;
 			grid1.on();
 			ui.get({
@@ -693,6 +681,5 @@ function getSearchQuery() {
 			})
 		}
 	</script>
-	<jsp:include page="../../footer.jsp"/>
 </body>
 </html>

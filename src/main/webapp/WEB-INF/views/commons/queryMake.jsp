@@ -1,42 +1,9 @@
-<%@page import="net.sf.json.JSONObject"%>
-<%@page import="com.xcurenet.common.util.Common"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%
-	String firstAdminYn = Common.getFirstAdminYn(session);
-	String adminType    = Common.getAdminType(session);
-	String statType = Common.nvl(request.getParameter("statType"));
-	String infoFeedbackYn = Common.getInfoFeedbackYn(session);
-	String epmsgType = Config.getString("message.epmsg.val");
-	boolean infoFeedbackConf = Config.getBoolean("info.feedback.used");
-	boolean infoHynixConf = Config.getBoolean("info.hynix.used");
-	String recvsJikgub = Config.getString("recvs.jikgub.use");
-%>
+<%@ include file="/WEB-INF/fragments/popupScript.jsp"%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
 <title>EMASS LTH - <s:message code="query.make.title"/></title>
-<%@ include file="../base.jsp"%>
-<link rel="stylesheet" href="<c:url value="/css/jquery.nouislider.min.css"/>"/>
-<link rel="stylesheet" href="<c:url value="/css/bootstrap-datetimepicker.min.css"/>"/>
-<link rel="stylesheet" href="<c:url value="/css/bootstrap-select.min.css"/>"/>
-<link rel="stylesheet" href="<c:url value="/css/codemirror.css"/>"/>
-<link rel="stylesheet" href="<c:url value="/css/show-hint.css"/>"/>
-
-<script type="text/javascript" src="<c:url value="/js/moment.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/Date.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/ko.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/transition.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/bootstrap-datetimepicker.min.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/bootstrap-select.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/codemirror.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/sql.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/show-hint.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/sql-hint.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/QueryConditionNew.js"/>"></script>
-
-
 <style type="text/css">
 html, body, .row{
 	height:100%;
@@ -2092,7 +2059,7 @@ function initEpmsg(){
     	lineWrapping:true
     });
     editor.setSize("100%", "75px");
-    
-    
-  	</script>
+
+</script>
+
 </html>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+        "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+        "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+
+    <!-- common -->
+    <!-- default layout-->
+    <definition name="defaultLayout" template="/WEB-INF/layout/defaultLayout.jsp">
+        <put-attribute name="base" value="/WEB-INF/fragments/base.jsp" />
+        <put-attribute name="baseCss" value="/WEB-INF/fragments/baseCss.jsp" />
+        <put-attribute name="customJs" value="/WEB-INF/fragments/customJs.jsp" />
+        <put-attribute name="top" value="/WEB-INF/fragments/top.jsp" />
+        <put-attribute name="body" value="" />
+        <put-attribute name="footer" value="/WEB-INF/fragments/footer.jsp" />
+    </definition>
+
+    <!-- no layout-->
+    <definition name="noLayout" template="/WEB-INF/layout/noLayout.jsp">
+        <put-attribute name="base" value="/WEB-INF/fragments/base.jsp" />
+        <put-attribute name="baseCss" value="/WEB-INF/fragments/baseCss.jsp" />
+        <put-attribute name="customJs" value="/WEB-INF/fragments/customJs.jsp" />
+        <put-attribute name="body" value="" />
+    </definition>
+
+    <!-- popup layout-->
+    <definition name="popupLayout" template="/WEB-INF/layout/popupLayout.jsp">
+        <put-attribute name="base" value="/WEB-INF/fragments/base.jsp" />
+        <put-attribute name="baseCss" value="/WEB-INF/fragments/baseCss.jsp" />
+        <put-attribute name="customJs" value="/WEB-INF/fragments/customJs.jsp" />
+        <put-attribute name="body" value="" />
+    </definition>
+
+
+    <!-- 로그인 관련 layout 적용 제외-->
+    <definition name="/login" extends="noLayout">
+        <put-attribute name="body"  value="/WEB-INF/views/login.jsp" />
+    </definition>
+    <definition name="/loginSSO" extends="noLayout">
+        <put-attribute name="body"  value="/WEB-INF/views/loginSSO.jsp" />
+    </definition>
+    <definition name="/loginAuth" extends="noLayout">
+        <put-attribute name="body"  value="/WEB-INF/views/loginAuth.jsp" />
+    </definition>
+
+    <!-- error 관련 layout 적용 제외 -->
+    <definition name="/error/*" extends="noLayout">
+        <put-attribute name="body"  value="/WEB-INF/views/error/{1}.jsp" />
+    </definition>
+
+
+    <!-- emass -->
+    <definition name="/emass/*" extends="defaultLayout">
+        <put-attribute name="body" value="/WEB-INF/views/emass/{1}.jsp" />
+    </definition>
+    <definition name="/emass/*/*" extends="defaultLayout">
+        <put-attribute name="body" value="/WEB-INF/views/emass/{1}/{2}.jsp" />
+    </definition>
+
+
+    <definition name="/*.popup" extends="popupLayout">
+        <put-attribute name="body" value="/WEB-INF/views/{1}.jsp" />
+    </definition>
+
+    <definition name="/*/*.popup" extends="popupLayout">
+        <put-attribute name="body" value="/WEB-INF/views/{1}/{2}.jsp" />
+    </definition>
+
+
+</tiles-definitions>

@@ -1,12 +1,12 @@
 package com.xcurenet.emass;
 
-import java.util.Locale;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
+import com.xcurenet.admin.service.AdminService;
+import com.xcurenet.admin.service.AdminVO;
+import com.xcurenet.audit.service.AuditService;
+import com.xcurenet.common.util.Common;
+import com.xcurenet.config.service.ConfigAdminService;
+import com.xcurenet.config.service.ConfigAdminVO;
+import com.xcurenet.onelogin.saml2.SamlSSOAuth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
@@ -16,13 +16,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
-import com.xcurenet.admin.service.AdminService;
-import com.xcurenet.admin.service.AdminVO;
-import com.xcurenet.audit.service.AuditService;
-import com.xcurenet.common.util.Common;
-import com.xcurenet.config.service.ConfigAdminService;
-import com.xcurenet.config.service.ConfigAdminVO;
-import com.xcurenet.onelogin.saml2.SamlSSOAuth;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.util.Locale;
 
 /**
  * Handles requests for the application home page.
@@ -467,6 +465,7 @@ public class HomeController {
 	@RequestMapping(value = "/ems/usersStat.do", method = RequestMethod.GET)
 	@Description("사용자 통계 페이지")
 	public String usersStat(Locale locale, Model model) {
+		model.addAttribute("headerYn","N");
 		return "/emass/statistics/usersStat";
 	}
 
@@ -745,23 +744,23 @@ public class HomeController {
 		}
 	}
 
-	@RequestMapping(value = "/commons/selectCode")
+	@RequestMapping(value = "/commons/selectCode.do")
 	@Description("코드 선택 페이지")
 	public String selectCode(Locale locale, Model model) {
 		return "/commons/selectCode";
 	}
-	@RequestMapping(value = "/commons/selectCodeAll")
+	@RequestMapping(value = "/commons/selectCodeAll.do")
 	@Description("코드 선택 페이지")
 	public String selectCodeAll(Locale locale, Model model) {
 		return "/commons/selectCodeAll";
 	}
-	@RequestMapping(value = "/commons/selectAdmin")
+	@RequestMapping(value = "/commons/selectAdmin.do")
 	@Description("Admin 선택 페이지")
 	public String selectAdmin(Locale locale, Model model) {
 		return "/commons/selectAdmin";
 	}
 
-	@RequestMapping(value = "/commons/xcnLog", method = RequestMethod.GET)
+	@RequestMapping(value = "/commons/xcnLog.do", method = RequestMethod.GET)
 	@Description("CC인증 관련 시스템 로그")
 	public String xcnLog(Locale locale, Model model) {
 		if (Common.isEquals(Common.getAdminType(httpSession), "S")) {
@@ -812,7 +811,7 @@ public class HomeController {
 	@RequestMapping(value = "/commons/queryMake.do", method = RequestMethod.GET)
 	@Description("MAKE QUERY")
 	public String queryMake(Locale locale, Model model) {
-		return "/commons/queryMake";
+		return "/commons/queryMake.popup";
 	}
 
 	@RequestMapping(value = "/ems/messageNew.do")
