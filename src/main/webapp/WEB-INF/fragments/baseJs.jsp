@@ -27,6 +27,7 @@
 <script type="text/javascript" src="<c:url value="/js/slick.columnpicker.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/slickgrid-print-plugin.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/slick.rowmovemanager.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/jquery.bootstrap.wizard.js"/>"></script>
 
 
 

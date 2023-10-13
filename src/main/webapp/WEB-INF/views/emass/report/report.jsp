@@ -1,18 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
+<%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
 <title></title>
-<%@ include file="../../base.jsp"%>
-<link rel="stylesheet" href="<c:url value="/css/bootstrap-datetimepicker.min.css"/>"/>
-<link rel="stylesheet" href="<c:url value="/css/font-awesome.min.css"/>"/>
-<script type="text/javascript" src="<c:url value="/js/moment.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/transition.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/collapse.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/ko.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/bootstrap-datetimepicker.min.js"/>"></script>
 <style>
 .table-striped > tbody > tr:nth-of-type(2n+1){background-color: #fff;}
 </style>
@@ -376,9 +367,7 @@ function getData( facetfield, repTitle ) {
 </head>
 <body class="mini-navbar">
 	
-	<jsp:include page="../../top.jsp"/>
-
-	<div class="container"> 
+	<div class="container">
 		<div class="boxArea">
 			<div class="content_body">
 				<div class="row">
@@ -497,6 +486,5 @@ function getData( facetfield, repTitle ) {
 			</div>
 		</div>
 	</div>
-	<jsp:include page="../../footer.jsp"/>
 </body>
 </html>

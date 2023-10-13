@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
+<%@ include file="/WEB-INF/fragments/popupScript.jsp"%>
 <%
 	String type = Common.nvl(request.getParameter("type"));
 %>
@@ -12,13 +11,6 @@
 <%} else if(type.equals("cc")){ %>
 <title>EMASS LTH - <s:message code="mail.select.recv.cc"/></title>
 <%} %>
-<%@ include file="../../base.jsp"%>
-<link rel="stylesheet" href="<c:url value="/css/panelsTab.css"/>"/>
-<script type="text/javascript" src="<c:url value="/js/moment.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/transition.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/collapse.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/ko.js"/>"></script>
-
 <style type="text/css">
 html,body{height: 100%; padding: 0px; margin: 0px;overflow: auto;min-width: 650px;min-height: 500px;}
 </style>

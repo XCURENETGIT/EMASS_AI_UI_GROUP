@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
+<%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
 <%
 	String infoFeedbackYn = Common.getInfoFeedbackYn(session);
 	boolean infoFeedbackConf = Config.getBoolean("info.feedback.used");
@@ -9,17 +8,6 @@
 <html lang="ko">
 <head>
 <title></title>
-<%@ include file="../../base.jsp"%>
-<link rel="stylesheet" href="<c:url value="/css/bootstrap-datetimepicker.min.css"/>"/>
-<link rel="stylesheet" href="<c:url value="/css/wizard.prettify.css"/>"/>
-
-<script type="text/javascript" src="<c:url value="/js/moment.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/transition.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/collapse.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/ko.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/bootstrap-datetimepicker.min.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/jquery.bootstrap.wizard.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/wizard.prettify.js"/>"></script>
 <style type="text/css">
 .radio-inline {
 	padding-left: 0px;
@@ -730,8 +718,7 @@ function getDayOfWeekText(val){
 		</div>
 	</div>
 	
-	<jsp:include page="../../top.jsp"/>
-	<div class="container"> 
+	<div class="container">
 		<div class="boxArea">
 			<div class="content_body">
 				<div class="row">
@@ -899,6 +886,5 @@ function getDayOfWeekText(val){
 		}
 	};
 	</script>
-	<jsp:include page="../../footer.jsp"/>
 </body>
 </html>

@@ -53,6 +53,10 @@
         <put-attribute name="body" value="/WEB-INF/views/{1}/{2}.jsp" />
     </definition>
 
+    <definition name="/*/*/*.popup" extends="popupLayout">
+        <put-attribute name="body" value="/WEB-INF/views/{1}/{2}/{3}.jsp" />
+    </definition>
+
 
 
 

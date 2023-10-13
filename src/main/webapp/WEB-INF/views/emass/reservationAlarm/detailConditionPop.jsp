@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
+<%@ include file="/WEB-INF/fragments/popupScript.jsp"%>
 <%
 	String infoFeedbackYn = Common.getInfoFeedbackYn(session);
 	String epmsgType = Config.getString("message.epmsg.val");
@@ -11,7 +10,6 @@
 <html lang="ko">
 <head>
 <title>EMASS LTH - <s:message code="condition.select.condition"/></title>
-<%@ include file="../../base.jsp"%>
 <link rel="stylesheet" href="<c:url value="/css/jquery.nouislider.min.css"/>"/>
 <link rel="stylesheet" href="<c:url value="/css/bootstrap-datetimepicker.min.css"/>"/>
 <link rel="stylesheet" href="<c:url value="/css/bootstrap-select.min.css"/>"/>

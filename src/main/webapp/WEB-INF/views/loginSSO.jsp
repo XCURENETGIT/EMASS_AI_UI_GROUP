@@ -1,9 +1,7 @@
-<%@page import="com.xcurenet.common.util.config.Config"%>
-<%@page import="com.xcurenet.common.util.Common"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
 <%@page import="com.xcurenet.onelogin.saml2.SamlSSOAuth"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 <!DOCTYPE html>
 <html>
 <head>

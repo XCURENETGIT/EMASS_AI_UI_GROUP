@@ -637,7 +637,7 @@ public class HomeController {
 	@RequestMapping(value = "/ems/mailSearchPop.do", method = RequestMethod.GET)
 	@Description("예약 알람 - 메일 수신자 팝업 페이지")
 	public String mailSearchPop(Locale locale, Model model) {
-		return "/emass/reservationAlarm/mailSearchPop";
+		return "/emass/reservationAlarm/mailSearchPop.popup";
 	}
 
 	/**
@@ -646,7 +646,8 @@ public class HomeController {
 	@RequestMapping(value = "/ems/mailForm.do", method = RequestMethod.GET)
 	@Description("예약 알람 - 메일 서식 관리 페이지")
 	public String mailForm(Locale locale, Model model) {
-		return "/emass/reservationAlarm/mailForm";
+		model.addAttribute("headerYn","N");
+		return "/emass/reservationAlarm/mailForm.popup";
 	}
 
 	/**
@@ -655,7 +656,7 @@ public class HomeController {
 	@RequestMapping(value = "/ems/mailFormSelectPop.do", method = RequestMethod.GET)
 	@Description("예약 알람 - 메일 서식 선택 페이지")
 	public String mailFormSelectPop(Locale locale, Model model) {
-		return "/emass/reservationAlarm/mailFormSelectPop";
+		return "/emass/reservationAlarm/mailFormSelectPop.popup";
 	}
 
 	/**
@@ -664,7 +665,7 @@ public class HomeController {
 	@RequestMapping(value = "/ems/detailConditionPop.do", method = RequestMethod.GET)
 	@Description("예약 알람 - 조건 선택 페이지")
 	public String detailConditionPop(Locale locale, Model model) {
-		return "/emass/reservationAlarm/detailConditionPop";
+		return "/emass/reservationAlarm/detailConditionPop.popup";
 	}
 
 	@RequestMapping(value = "/ems/keywordInfo.do", method = RequestMethod.GET)
