@@ -72,8 +72,9 @@
     <definition name="/emass/message/*" extends="defaultLayout">
         <put-attribute name="body" value="/WEB-INF/views/emass/message/{1}.jsp" />
     </definition>
-
-
+    <definition name="/emass/message/*/*" extends="defaultLayout">
+        <put-attribute name="body" value="/WEB-INF/views/emass/message/{1}/{2}.jsp" />
+    </definition>
 
 
     <!--  폴더별 맵핑 분류 (asterisk 검색은 소스 최하단 위치해야함 (우선순위가 최우선이라서 )) -->
