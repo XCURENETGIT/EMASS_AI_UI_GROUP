@@ -1,8 +1,10 @@
 package com.xcurenet.audit.service;
 
 import lombok.Data;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
+@Document(collation = "info_audit")
 public class AuditVO {
 
 	private String date;

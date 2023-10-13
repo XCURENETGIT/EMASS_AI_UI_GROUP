@@ -7,6 +7,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.xcurenet.common.util.MongoUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import com.xcurenet.admin.service.AdminVO;
@@ -21,6 +24,9 @@ import com.xcurenet.common.util.config.Config;
 public class AuditServiceImpl extends XcnAbstractDAO implements AuditService {
 
 	private static final AtomicInteger SEQ = new AtomicInteger();
+
+	@Autowired
+	MongoUtil mongoUtil;
 
 	public static List<AuditRequestVO> auditRequests;
 	public static final String PRODUCT = "EMASSLTH";
@@ -70,7 +76,11 @@ public class AuditServiceImpl extends XcnAbstractDAO implements AuditService {
 		audit.setSeq(getNextSeq());
 		audit.setProduct(PRODUCT);
 		audit.setDate(currentDate);
-		return insert("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".audit.insertAudit", audit);
+
+		mongoUtil.insert(audit,"info_audit");
+
+		return 1;
+		//return insert("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".audit.insertAudit", audit);
 	}
 
 	@Override

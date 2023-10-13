@@ -24,7 +24,9 @@ public class WebConfig implements WebMvcConfigurer {
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(authorityInterceptor).addPathPatterns("/**").excludePathPatterns("/login.do", "/login/*", "/getRSAKey.xcn", "/loginProcess.xcn", "/error.do", "/blank.do", "/admin/updateAdminPassword.vns", "/passwordChange", "/process/**", "/css/**", "/img/**", "/js/**", "/lib/**", "/favicon.ico");
+		registry.addInterceptor(authorityInterceptor).addPathPatterns("/**").excludePathPatterns("/login.do", "/loginSSO.do", "/loginAuth.do", "/error.do", "/blank.do", "/loginSSOProcess.do",
+				"/logoutSSOProcess.do", "/getUacsRule.xcn", "/loginProcess.xcn", "/getRSAKey.xcn",
+				"/updateAdminPassword.xcn", "/secretKeySave.xcn", "/reloadGoogleOTP.xcn", "/makeInfo", "/getRSAKey.xcn", "/loginProcess.xcn", "/admin/updateAdminPassword.vns", "/passwordChange", "/process/**", "/css/**", "/img/**", "/js/**", "/lib/**", "/favicon.ico");
 		registry.addInterceptor(loggerInterceptor).addPathPatterns("/**").excludePathPatterns("/css/**", "/img/**", "/js/**", "/lib/**", "/favicon.ico", "/error");
 		registry.addInterceptor(localeChangeInterceptor());
 	}
