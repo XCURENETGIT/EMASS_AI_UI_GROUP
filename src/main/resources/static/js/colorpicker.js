@@ -5,9 +5,9 @@
 		if(typeof(colors) === "undefined" || colors === null) {
 			return false;
 		}
-		
+
 		$('.color-picker [type="radio"]').on('click', function(){
-			
+
 			var color = $(this).val();
 			var colorText = getContrastYIQ(color);// $(this).data('colortext');
 			var colorName = $(this).data('colorname');
@@ -115,7 +115,7 @@
 	
 	var noHexInput = settings.allowHexInput ? '' : 'no-hex-input';
 	
-	picker.innerHTML = Templates.picker
+	$picker.innerHTML = Templates.picker
 		.replace(/{{pickerID}}/g, pickerID)
 		.replace(/{{currentColor}}/g, settings.defaultColor)
 		.replace(/{{currentColorName}}/g, settings.defaultColorName)

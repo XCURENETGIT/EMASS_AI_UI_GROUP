@@ -9,6 +9,8 @@
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
+
+
 <script type="text/javascript" src="<c:url value="/js/jquery.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/jquery.ui.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/jquery.form.js"/>"></script>
@@ -19,6 +21,8 @@
 <script type="text/javascript" src="<c:url value="/js/bootstrap-dialog.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/bootstrap-notify.min.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/slick.core.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/jquery.numberedtextarea.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/jquery.bootstrap.wizard.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/slick.grid.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/slick.groupitemmetadataprovider.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/slick.dataview.js"/>"></script>
@@ -27,9 +31,8 @@
 <script type="text/javascript" src="<c:url value="/js/slick.columnpicker.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/slickgrid-print-plugin.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/slick.rowmovemanager.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/jquery.bootstrap.wizard.js"/>"></script>
 
-
+<%@ include file="/WEB-INF/fragments/common.jsp"%>
 
 <% if( Common.isEquals(Common.nvl(Locale.getDefault(), "ko"), "ko")){%>
 <script type="text/javascript" src="<c:url value="/js/xcnui_ko.js"/>"></script>
@@ -62,7 +65,7 @@
 <script type="text/javascript" src="<c:url value="/js/sql-hint.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/QueryConditionNew.js"/>"></script>
 
-<script type="text/javascript" src="<c:url value="/js/common/common.js"/>"></script>
+
 <script type="text/javascript" src="<c:url value="/js/highcharts.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/highcharts-3d.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/exporting.js"/>"></script>
@@ -74,9 +77,12 @@
 <script type="text/javascript" src="<c:url value="/js/hotkey.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/ipaddr.min.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/ipv6Check.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/nouislider.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/jquery.circliful.min.js"/>"></script>
 
 
-
+<script type="text/javascript" src="<c:url value="/js/InnoFD.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/messenger.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/dropdowns-enhancement.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/jquery.scrollbar.min.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/jquery.ztree.all-3.5.js"/>"></script>
@@ -102,3 +108,6 @@
 <script type="text/javascript" src="<c:url value="/js/colorbrewer.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/geometry.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/processmap.js"/>"></script>
+
+<script  type="text/javascript" src="<c:url value="/js/colorpicker-colors.js"/>"></script>
+<script  type="text/javascript" src="<c:url value="/js/colorpicker.js"/>"></script>

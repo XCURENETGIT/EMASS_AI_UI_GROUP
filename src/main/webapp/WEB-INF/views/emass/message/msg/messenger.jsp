@@ -3,13 +3,13 @@
 <%
 	String adminType = Common.getAdminType(session);
 	String firstAdminYn = Common.getFirstAdminYn(session);
+
 %>
 <!DOCTYPE html>
 <html lang="ko">
 <script type="text/javascript" src="<c:url value="/js/messenger.js"/>"></script>
 <head>
 <title>EMASS LT - <s:message code="DATA_MONITOR.MESSAGE_SERVICE"/></title>
-
 <style>
 .clusterize-scroll{
 	overflow: auto;
