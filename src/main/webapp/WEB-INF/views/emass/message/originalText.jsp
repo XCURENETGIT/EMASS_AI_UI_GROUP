@@ -2,14 +2,11 @@
 <%@page import="com.xcurenet.common.util.locale.Prop"%>
 <%@page import="com.xcurenet.emass.message.service.EmsHeaderVO"%>
 <%@page import="com.xcurenet.common.detect.DetectCharset"%>
-<%@page import="com.xcurenet.emass.message.service.EmsMessageService"%>
 <%@page import="net.sf.json.JSONObject"%>
-<%@page import="com.xcurenet.common.util.Common"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="org.springframework.web.context.WebApplicationContext"%>
 <%@page import="com.xcurenet.emass.message.service.EmsBodyVO"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
+<%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
@@ -55,7 +52,6 @@
 <html lang="ko">
 <head>
 <title>EMASS LTH - <%=title %> <s:message code="message.msg"/> Viewer</title>
-<%@ include file="../../base.jsp"%>
 <style type="text/css">
 html,body{height: 100%; padding: 0px; margin: 0px;overflow: auto;min-width: 650px;}
 xmp {

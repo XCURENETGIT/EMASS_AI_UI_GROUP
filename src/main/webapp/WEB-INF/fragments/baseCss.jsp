@@ -23,6 +23,7 @@
 <link rel="stylesheet" href="<c:url value="/css/odometer-theme-default.css"/>" />
 <link rel="stylesheet" href="<c:url value="/css/gridstack.css"/>" />
 <link rel="stylesheet" href="<c:url value="/css/sb-admin-2.css"/>" />
+<link rel="stylesheet" href="<c:url value="/css/panelsTab.css"/>"/>
 
 
 

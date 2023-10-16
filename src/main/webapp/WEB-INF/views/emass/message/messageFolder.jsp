@@ -1,10 +1,6 @@
-<%@page import="com.xcurenet.audit.service.Operation"%>
-<%@page import="net.sf.json.JSONObject"%>
-<%@page import="com.xcurenet.common.util.Common"%>
+
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
 <%
 	String folderSeq = Common.nvl(request.getParameter("paramFolderSeq"));
 	String folderName = Common.nvl(request.getParameter("paramFolderName"));
@@ -15,16 +11,6 @@
 <html lang="ko">
 <head>
 <title>EMASS LTH - <s:message code="filterInfo.messageFolder"/></title>
-<%@ include file="../../base.jsp"%>
-<link rel="stylesheet" href="<c:url value="/css/dropdowns-enhancement.css"/>"/>
-<link rel="stylesheet" href="<c:url value="/css/panelsTab.css"/>"/>
-<link rel="stylesheet" href="<c:url value="/css/zTreeStyle.css"/>"/>
-
-<script type="text/javascript" src="<c:url value="/js/jquery.ztree.all-3.5.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/ztreeRMenu.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/folder.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/InnoFD.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/ztree.js"/>"></script>
 <style type="text/css">
 html,body{height: 100%; padding: 0px; margin: 0px;overflow: auto;min-width: 650px;}
 .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {

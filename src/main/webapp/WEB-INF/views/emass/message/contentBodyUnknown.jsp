@@ -1,9 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@page import="java.util.Map"%>
+<%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
 <%@page import="com.xcurenet.common.util.config.Config"%>
-<%@page import="com.xcurenet.audit.service.Operation"%>
 <%
 Map<String, Object> param = Common.getParamMap(request);
 String msgid = Common.nvl(param.get("msgid"));
@@ -18,20 +15,8 @@ String op_body_print = Operation.BODY_PRINT.getOperation();
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
 <title>EMASS LTH - <s:message code="OPERATION_MGMT.BODY_VIEW"/></title>
-<%@ include file="../../base.jsp"%>
-<link rel="stylesheet" href="<c:url value="/css/bootstrap-select.min.css"/>"/>
-<link rel="stylesheet" href="<c:url value="/css/message.css"/>"/>
-<link rel="stylesheet" href="<c:url value="/css/contentBody.css"/>"/>
 
-<script type="text/javascript" src="<c:url value="/js/moment.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/Date.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/ko.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/transition.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/bootstrap-datetimepicker.min.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/bootstrap-select.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/InnoFD.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/referrer-killer.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/contentBodyNew.js"/>"></script>
+
 
 <style type="text/css">
 html, body{

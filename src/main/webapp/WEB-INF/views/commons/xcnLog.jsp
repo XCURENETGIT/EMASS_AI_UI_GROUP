@@ -1,17 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
+<%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
 <title>EMASS LTH - 시스템 로그</title>
-<%@ include file="../base.jsp"%>
-<link rel="stylesheet" href="<c:url value="/css/bootstrap-datetimepicker.min.css"/>"/>
-<script type="text/javascript" src="<c:url value="/js/moment.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/transition.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/collapse.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/ko.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/bootstrap-datetimepicker.min.js"/>"></script>
 <style type="text/css">
 </style>
 <script type="text/javascript">
@@ -74,7 +66,6 @@ function getData(lastRow) {
 </script>
 </head>
 <body class="mini-navbar">
-	<%@ include file="../top.jsp"%>
 	<div class="container" style="position: absolute; top: 50px; left: 0px; right: 0px; bottom:0px; min-width: 1000px;min-height:520px;">
 		<div class="content mainBodyArea">
 			<div class="naviBack">

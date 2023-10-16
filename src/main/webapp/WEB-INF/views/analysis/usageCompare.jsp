@@ -1,14 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
 <title></title>
-<%@ include file="../base.jsp"%>
-<link rel="stylesheet" href="<c:url value="/css/bootstrap-datetimepicker.min.css"/>"/>
-<link rel="stylesheet" href="<c:url value="/css/vis.min.css"/>"/>
 <style>
 
 .btn-popover {
@@ -33,17 +28,7 @@
  */
 </style>
 <s:message code="common.datescript" var="ko"/>
-<script type="text/javascript" src="<c:url value="/js/jquery.browser.min.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/d3.v3.min.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/moment.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/transition.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/collapse.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/${ko}"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/bootstrap-datetimepicker.min.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/Date.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/messageGrid.js"/>"></script>
 
-<%@ include file="./analysisBase.jsp"%>
 <script>
 var searchFlag = false;
 var searchFlagGrid2 = false;
@@ -179,9 +164,7 @@ function eventEnterSearch(event) {
 </script>
 </head>
 <body class="mini-navbar">
-	<jsp:include page="../top.jsp">
-		<jsp:param name="headerCloseYn" value="Y"/>
-	</jsp:include>
+
 	<div class="container"> 
 		<div class="boxArea">
 			<div class="content_body">

@@ -35,13 +35,14 @@ public class SearchLogController {
 	@RequestMapping(value = "/commons/searchLog.do", method = RequestMethod.GET)
 	@Description("조회 이력")
 	public String searchLog(Locale locale, Model model) {
+		model.addAttribute("headerYn","Y");
 		return "/commons/searchLog";
 	}
 	
 	@RequestMapping(value = "/commons/searchLogConditionPop.do", method = RequestMethod.GET)
 	@Description("조회 이력")
 	public String searchLogCondtion(Locale locale, Model model) {
-		return "/commons/searchLogConditionPop";
+		return "/commons/searchLogConditionPop.popup";
 	}
 	
 	

@@ -1,7 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
-<%@page import="com.xcurenet.common.util.Common"%>
+<%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
 <%
 	String deviceSeq = Common.nvl(request.getParameter("deviceSeq"));
 %>
@@ -9,14 +7,6 @@
 <html lang="ko">
 <head>
 <title><s:message code="deviceInfo.title"/></title>
-<%@ include file="../base.jsp"%>
-<link rel="stylesheet" href="<c:url value="/css/slider.css"/>" />
-<link rel="stylesheet" href="<c:url value="/css/jquery.circliful.css"/>">
-<link rel="stylesheet" href="<c:url value="/css/bootstrap-select.min.css"/>"/>
-
-<script type="text/javascript" src="<c:url value="/js/bootstrap-slider.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/jquery.circliful.min.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/bootstrap-select.js"/>"></script>
 
 <!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -1000,7 +990,7 @@ function off(id) {
 		</div>
 	</div>
 	
-	<%@ include file="../top.jsp"%>
+
 	<div class="container" style="position: absolute; top: 50px; left: 0px; right: 0px; bottom:0px; min-width: 1000px;">
 		<div class="content mainBodyArea">
 			<div style="background-image: url('<c:url value="/img/title/n_bg.gif"/>');" class="naviBack">

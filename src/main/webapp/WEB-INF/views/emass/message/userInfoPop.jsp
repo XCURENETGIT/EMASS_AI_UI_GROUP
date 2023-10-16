@@ -1,7 +1,5 @@
 <%@page import="net.sf.json.JSONObject"%>
-<%@page import="com.xcurenet.common.util.Common"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
+<%@ include file="/WEB-INF/fragments/popupScript.jsp"%>
 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
@@ -14,8 +12,6 @@
 <html lang="ko">
 <head>
 <title>EMASS LTH - <s:message code="common.msg.userinfo"/></title>
-<%@ include file="../../base.jsp"%>
-<script type="text/javascript" src="<c:url value="/js/InnoFD.js"/>"></script>
 <style type="text/css">
 html,body{height: 100%; padding: 0px; margin: 0px;overflow: auto;min-width: 650px;}
 .attachExt{
