@@ -90,6 +90,7 @@ public class HomeController {
 	@RequestMapping(value = "/index.do")
 	@Description("DashBoard 페이지")
 	public String index(Locale locale, Model model) {
+		model.addAttribute("headerYn","N");
 		return "/emass/dashboard";
 	}
 
@@ -108,6 +109,7 @@ public class HomeController {
 	@RequestMapping(value = "/ems/dashboardSetup.do", method = RequestMethod.GET)
 	@Description("dashboard Setup 페이지")
 	public String dashboardSetup(Locale locale, Model model) {
+		model.addAttribute("headerYn","Y");
 		return "/emass/dashboardSetup";
 	}
 
@@ -172,6 +174,7 @@ public class HomeController {
 	@Description("장비 정보 페이지")
 	public String deviceInfo(Locale locale, Model model) {
 		if (Common.isOrEquals(Common.getAdminType(httpSession), "S", "M", "C")) {
+			model.addAttribute("headerYn","Y");
 			return "/commons/deviceInfoMysql";
 		} else {
 			return "/emass/dashboard";
@@ -182,6 +185,7 @@ public class HomeController {
 	@Description("장비 정보 상세보기 페이지")
 	public String hadoopDeviceInfo(Locale locale, Model model) {
 		if (Common.isOrEquals(Common.getAdminType(httpSession), "S", "M", "C")) {
+			model.addAttribute("headerYn","N");
 			return "/commons/deviceInfoDetailMysql";
 		} else {
 			return "/emass/dashboard";
@@ -192,6 +196,7 @@ public class HomeController {
 	@Description("장비 정보(Hadoop) 상세보기 페이지")
 	public String hadoopDeviceInfoHadoop(Locale locale, Model model) {
 		if (Common.isOrEquals(Common.getAdminType(httpSession), "S", "M", "C")) {
+			model.addAttribute("headerYn","N");
 			return "/commons/deviceInfoDetailHadoop";
 		} else {
 			return "/emass/dashboard";
@@ -304,6 +309,7 @@ public class HomeController {
 	@Description("SNMP TRAP 로그 페이지")
 	public String eventLog(Locale locale, Model model) {
 		if (Common.isOrEquals(Common.getAdminType(httpSession), "S", "M", "C")) {
+			model.addAttribute("headerYn","Y");
 			return "/commons/eventLog";
 		} else {
 			return "/emass/dashboard";
@@ -361,6 +367,7 @@ public class HomeController {
 	@RequestMapping(value = "/ems/msg/messenger.do", method = RequestMethod.GET)
 	@Description("메시징")
 	public String messenger(Locale locale, Model model) {
+		model.addAttribute("headerYn","N");
 		return "/emass/message/msg/messenger";
 	}
 
@@ -426,7 +433,7 @@ public class HomeController {
 	@RequestMapping(value = "/ems/interestUserInfoPop.do", method = RequestMethod.GET)
 	@Description("관심 사용자 정보 보기 페이지")
 	public String interestUserInfoPop(Locale locale, Model model) {
-		return "/emass/message/interestUserInfoPop";
+		return "/emass/message/interestUserInfoPop.popup";
 	}
 
 	@RequestMapping(value = "/ems/userInfoPop.do", method = RequestMethod.GET)
@@ -484,6 +491,8 @@ public class HomeController {
 	@RequestMapping(value = "/ems/attachNameStat.do", method = RequestMethod.GET)
 	@Description("첨부파일명 통계 페이지")
 	public String attachNameStat(Locale locale, Model model) {
+
+		model.addAttribute("headerYn","N");
 		return "/emass/statistics/attachNameStat";
 	}
 
@@ -493,6 +502,8 @@ public class HomeController {
 	@RequestMapping(value = "/ems/attachTypeStat.do", method = RequestMethod.GET)
 	@Description("첨부파일 타입 통계 페이지")
 	public String attachTypeStat(Locale locale, Model model) {
+
+		model.addAttribute("headerYn","N");
 		return "/emass/statistics/attachTypeStat";
 	}
 
@@ -529,6 +540,7 @@ public class HomeController {
 	@RequestMapping(value = "/ems/serviceStat.do", method = RequestMethod.GET)
 	@Description("서비스타입 통계 페이지")
 	public String serviceStat(Locale locale, Model model) {
+		model.addAttribute("headerYn","N");
 		return "/emass/statistics/serviceStat";
 	}
 
@@ -538,6 +550,8 @@ public class HomeController {
 	@RequestMapping(value = "/ems/adminReadStat.do", method = RequestMethod.GET)
 	@Description("관리자 열람 통계 페이지")
 	public String adminReadStat(Locale locale, Model model) {
+
+		model.addAttribute("headerYn","N");
 		return "/emass/statistics/adminReadStat";
 	}
 
@@ -556,6 +570,7 @@ public class HomeController {
 	@RequestMapping(value = "/ems/trafficStat.do", method = RequestMethod.GET)
 	@Description("장비 트래픽 통계 페이지")
 	public String trafficStat(Locale locale, Model model) {
+		model.addAttribute("headerYn","N");
 		return "/emass/statistics/trafficStat";
 	}
 
@@ -583,6 +598,8 @@ public class HomeController {
 	@RequestMapping(value = "/ems/interestUser.do", method = RequestMethod.GET)
 	@Description("관심 사용자 관리 페이지")
 	public String interestUser(Locale locale, Model model) {
+
+		model.addAttribute("headerYn","Y");
 		return "/emass/interestUser/interestUser";
 	}
 
@@ -592,6 +609,8 @@ public class HomeController {
 	@RequestMapping(value = "/ems/interestUserProfile.do", method = RequestMethod.GET)
 	@Description("관심 사용자 관리 페이지")
 	public String interestUserProfile(Locale locale, Model model) {
+
+		model.addAttribute("headerYn","Y");
 		return "/emass/interestUser/interestUserProfile";
 	}
 
@@ -774,6 +793,7 @@ public class HomeController {
 	@RequestMapping(value = "/ems/consent.do", method = RequestMethod.GET)
 	@Description("동의서 관리")
 	public String consent(Locale locale, Model model) {
+		model.addAttribute("headerYn","Y");
 		return "/emass/consent/consent";
 	}
 
