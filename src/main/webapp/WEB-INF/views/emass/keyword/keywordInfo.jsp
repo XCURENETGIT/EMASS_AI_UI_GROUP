@@ -1,11 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
+<%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
 <title></title>
-<%@ include file="../../base.jsp"%>
 <style type="text/css">
 
 </style>
@@ -475,8 +474,7 @@ function fileExtCheck(obj) {
 		</div>
 	</div>
 	
-	<jsp:include page="../../top.jsp"/>
-	<div class="container"> 
+	<div class="container">
 		<div class="boxArea">
 			<div class="content_body">
 				<div class="row" style="line-height: 0px; height:100%;">
@@ -592,7 +590,7 @@ function fileExtCheck(obj) {
 		gridKeyword.loadHeader(false);
 		gridKeyword.initData('<s:message code="keyword.message.part_select"/>');
 	</script>
-	<jsp:include page="../../footer.jsp"/>
+
 </body>
 
 </html>

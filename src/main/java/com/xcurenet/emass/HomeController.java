@@ -482,6 +482,9 @@ public class HomeController {
 	@RequestMapping(value = "/ems/interestUserStat.do", method = RequestMethod.GET)
 	@Description("관심 사용자 통계 페이지")
 	public String interestUserStat(Locale locale, Model model) {
+
+		model.addAttribute("headerYn","N");
+
 		return "/emass/statistics/interestUserStat";
 	}
 
@@ -513,6 +516,7 @@ public class HomeController {
 	@RequestMapping(value = "/ems/hostStat.do", method = RequestMethod.GET)
 	@Description("URL 통계 페이지")
 	public String hostStat(Locale locale, Model model) {
+		model.addAttribute("headerYn","N");
 		return "/emass/statistics/hostStat";
 	}
 
@@ -522,6 +526,7 @@ public class HomeController {
 	@RequestMapping(value = "/ems/keywordStat.do", method = RequestMethod.GET)
 	@Description("예약어 통계 페이지")
 	public String keywordStat(Locale locale, Model model) {
+		model.addAttribute("headerYn","N");
 		return "/emass/statistics/keywordStat";
 	}
 
@@ -531,6 +536,7 @@ public class HomeController {
 	@RequestMapping(value = "/ems/senderStat.do", method = RequestMethod.GET)
 	@Description("발신자 통계 페이지")
 	public String senderStat(Locale locale, Model model) {
+		model.addAttribute("headerYn","N");
 		return "/emass/statistics/senderStat";
 	}
 
