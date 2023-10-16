@@ -1,0 +1,2050 @@
+XCN-MONI DEFINITIONS ::= BEGIN
+
+IMPORTS
+	OBJECT-TYPE 	FROM SNMPv2-SMI
+	xcnMgmt 		FROM XCN-XCURENET;
+
+xcnMonitor MODULE-IDENTITY
+   LAST-UPDATED "201604040000Z"
+   ORGANIZATION "www.xcurenet.com"
+   CONTACT-INFO "Postal    : XCURENET Co., Ltd.
+                             9F DMC R&D Center, E3-2, DMC
+                             Sangam-Dong Mapo-Gu
+                             Seoul, 127-270, Korea
+                 Telephone : 82-2-567-0961
+                 FAX       : 82-2-567-0963
+                 e-mail    : choish@xcurenet.com"
+   DESCRIPTION  "For system monitoring private MIBs."
+   REVISION     "201207170000Z"
+   DESCRIPTION  "First create by jpark"
+   ::= { xcnMgmt 1 }
+
+---
+--- Module Version information
+---
+versionTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF VersionEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "table of each module version."
+    ::= { xcnMonitor 1 }
+
+versionEntry OBJECT-TYPE
+    SYNTAX      VersionEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION " version informatin entry."
+    INDEX       { verIndex }
+    ::= { versionTable 1 }
+
+VersionEntry ::= SEQUENCE {
+	verIndex	INTEGER,
+	verTellus	OCTET STRING,
+	verEmass	OCTET STRING,
+	verSynwayDM	OCTET STRING,
+	verSnmpa	OCTET STRING,
+	verSneak	OCTET STRING
+}
+
+verIndex OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  not-accessible
+	STATUS      current
+    DESCRIPTION "version table index."
+    ::= { versionEntry 1 }
+
+verTellus OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "display TELLUS package version."
+    ::= { versionEntry 2 }
+
+verEmass OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "display EMASS package version."
+    ::= { versionEntry 3 }
+
+verSynwayDM OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "display Synway Driver Module version."
+    ::= { versionEntry 4 }
+
+verSnmpa OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "display SNMP Agent package version."
+    ::= { versionEntry 5 }
+
+verSneak OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "display SNEAK package version."
+    ::= { versionEntry 6 }
+
+---
+--- system information
+---
+sysInfoTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF SysInfoEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "table of system information."
+    ::= { xcnMonitor 2 }
+
+sysInfoEntry OBJECT-TYPE
+    SYNTAX      SysInfoEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION " system informatin entry."
+    INDEX       { sysInfoIndex }
+    ::= { sysInfoTable 1 }
+
+SysInfoEntry ::= SEQUENCE {
+	sysInfoIndex	INTEGER,
+	sysInfoUserId	INTEGER,
+	sysInfoIpAddr	OCTET STRING,
+	sysInfoAgentX	INTEGER,
+	sysInfoContact	OCTET STRING,
+	sysInfoUptime	OCTET STRING,
+	sysInfoDate		OCTET STRING,
+	sysInfoConfigInitCount	INTEGER,
+	sysInfoStatusNotiForD2	INTEGER,
+	sysInfoStatusWarnForD2	INTEGER,
+	sysInfoStatusAlarmForD2	INTEGER,
+	sysInfoStatusForD2	INTEGER,
+	sysInfoStatusNotiHdd	OCTET STRING,
+	sysInfoStatusWarnHdd	OCTET STRING,
+	sysInfoStatusAlarmHdd	OCTET STRING,
+	sysInfoStatusAlarmLink	OCTET STRING,
+	sysInfoStatusAlarmProc	OCTET STRING,
+	sysInfoStatusNotiIif	OCTET STRING,
+	sysInfoStatusWarnIif	OCTET STRING,
+	sysInfoStatusAlarmIif	OCTET STRING,
+	sysInfoStatusNotiTrans	OCTET STRING,
+	sysInfoStatusWarnTrans	OCTET STRING,
+	sysInfoStatusAlarmTrans	OCTET STRING,
+	sysInfoStatusRedun	INTEGER,
+	sysInfoHostname		OCTET STRING
+}
+
+sysInfoIndex OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  not-accessible
+	STATUS      current
+    DESCRIPTION "system information table index."
+    ::= { sysInfoEntry 1 }
+
+sysInfoUserId OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "userID information."
+    ::= { sysInfoEntry 2 }
+
+sysInfoIpAddr OBJECT-TYPE
+    SYNTAX      OCTET STRING  (SIZE(0..15))
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "system IP address"
+    ::= { sysInfoEntry 3 }
+
+sysInfoAgentX OBJECT-TYPE
+    SYNTAX      INTEGER { off(0), on(1) }
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "master agent used"
+    ::= { sysInfoEntry 4 }
+
+sysInfoContact OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "system contact."
+    ::= { sysInfoEntry 5 }
+
+sysInfoUptime OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "system uptime information."
+    ::= { sysInfoEntry 6 }
+
+sysInfoDate OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION "system date information."
+    ::= { sysInfoEntry 7 }
+
+sysInfoConfigInitCount OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION "System Configuration Initialization Count"
+    ::= { sysInfoEntry 8 }
+
+sysInfoStatusNotiForD2 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "System Status Notify : concerning level"
+    ::= { sysInfoEntry 9 }
+
+sysInfoStatusWarnForD2 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "System Status Warn : warning level"
+    ::= { sysInfoEntry 10 }
+
+sysInfoStatusAlarmForD2 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "System Status Alarm : risky level"
+    ::= { sysInfoEntry 11 }
+
+sysInfoStatusForD2 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "System Status : 0(Normal), 1(Notify), 2(Warn), 3(Alarm)"
+    ::= { sysInfoEntry 12 }
+
+sysInfoStatusNotiHdd OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "List of HDD notify status."
+    ::= { sysInfoEntry 13 }
+
+sysInfoStatusWarnHdd OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "List of HDD warning status."
+    ::= { sysInfoEntry 14 }
+
+sysInfoStatusAlarmHdd OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "List of HDD alarm status."
+    ::= { sysInfoEntry 15 }
+
+sysInfoStatusAlarmLink OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "List of Link down status."
+    ::= { sysInfoEntry 16 }
+
+sysInfoStatusAlarmProc OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "List of proc down status."
+    ::= { sysInfoEntry 17 }
+
+sysInfoStatusNotiIif OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "List of iif noti status."
+    ::= { sysInfoEntry 18 }
+
+sysInfoStatusWarnIif OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "List of iif warn status."
+    ::= { sysInfoEntry 19 }
+
+sysInfoStatusAlarmIif OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "List of iif alarm status."
+    ::= { sysInfoEntry 20 }
+
+sysInfoStatusNotiTrans OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "List of transmit noti status."
+    ::= { sysInfoEntry 21 }
+
+sysInfoStatusWarnTrans OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "List of transmit warn status."
+    ::= { sysInfoEntry 22 }
+
+sysInfoStatusAlarmTrans OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "List of transmit alarm status."
+    ::= { sysInfoEntry 23 }
+
+sysInfoStatusRedun OBJECT-TYPE
+    SYNTAX      INTEGER { Standby(0), Active(1) }
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION "System Redundancy Status"
+    ::= { sysInfoEntry 24 }
+
+sysInfoHostname OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "system hostname."
+    ::= { sysInfoEntry 25 }
+
+---
+--- CPU information
+---
+cpuInfoTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF CpuInfoEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "table of CPU information."
+    ::= { xcnMonitor 3 }
+
+cpuInfoEntry OBJECT-TYPE
+    SYNTAX      CpuInfoEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "CPU informatin entry."
+    INDEX       { cpuInfoIndex }
+    ::= { cpuInfoTable 1 }
+
+CpuInfoEntry ::= SEQUENCE {
+	cpuInfoIndex		INTEGER,
+	cpuInfoVendor		OCTET STRING,
+	cpuInfoModel		OCTET STRING,
+	cpuInfoSpeed		INTEGER,
+	cpuInfoCoreNumber	INTEGER,
+	cpuInfoClockSource	INTEGER
+}
+
+cpuInfoIndex OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  not-accessible
+	STATUS      current
+    DESCRIPTION "CPU information table index."
+    ::= { cpuInfoEntry 1 }
+
+cpuInfoVendor OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "CPU vendor information."
+    ::= { cpuInfoEntry 2 }
+
+cpuInfoModel OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "CPU model information."
+    ::= { cpuInfoEntry 3 }
+
+cpuInfoSpeed OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "CPU speed(Mhz) information."
+    ::= { cpuInfoEntry 4 }
+
+cpuInfoCoreNumber OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "CPU core number."
+    ::= { cpuInfoEntry 5 }
+
+cpuInfoClockSource OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "system clock source."
+    ::= { cpuInfoEntry 6 }
+
+---
+--- CPU load
+---
+cpuLoadTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF CpuLoadEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "table of CPU load information."
+    ::= { xcnMonitor 4 }
+
+cpuLoadEntry OBJECT-TYPE
+    SYNTAX      CpuLoadEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "CPU load entry."
+    INDEX       { cpuLoadIndex }
+    ::= { cpuLoadTable 1 }
+
+CpuLoadEntry ::= SEQUENCE {
+	cpuLoadIndex	INTEGER,
+	cpuLoadCpuName	OCTET STRING,
+	cpuLoadUser		INTEGER,
+	cpuLoadSystem	INTEGER,
+	cpuLoadNice		INTEGER,
+	cpuLoadIdle		INTEGER,
+	cpuLoadWait		INTEGER,
+	cpuLoadHi		INTEGER,
+	cpuLoadSi		INTEGER,
+	cpuLoadUsage	INTEGER,
+	cpuLoadLimit	INTEGER
+}
+
+cpuLoadIndex OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "CPU load entry index."
+    ::= { cpuLoadEntry 1 }
+
+cpuLoadCpuName OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "CPU name."
+    ::= { cpuLoadEntry 2 }
+
+cpuLoadUser OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "CPU usage in user level"
+    ::= { cpuLoadEntry 3 }
+
+cpuLoadSystem OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "CPU usage in system level"
+    ::= { cpuLoadEntry 4 }
+
+cpuLoadNice OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "CPU usage in nice level"
+    ::= { cpuLoadEntry 5 }
+
+cpuLoadIdle OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "CPU usage in idle state"
+    ::= { cpuLoadEntry 6 }
+
+cpuLoadWait OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "CPU I/O wait"
+    ::= { cpuLoadEntry 7 }
+
+cpuLoadHi OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "H/W interrupt request"
+    ::= { cpuLoadEntry 8 }
+
+cpuLoadSi OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "S/W interrupt request"
+    ::= { cpuLoadEntry 9 }
+
+cpuLoadUsage OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "CPU usage"
+    ::= { cpuLoadEntry 10 }
+
+cpuLoadLimit OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION "CPU usage limit threshold"
+    ::= { cpuLoadEntry 11 }
+
+---
+--- memory information
+---
+memInfoTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF MemInfoEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "system memory information."
+    ::= { xcnMonitor 5 }
+
+memInfoEntry OBJECT-TYPE
+    SYNTAX      MemInfoEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "system memory entry."
+    INDEX       { memInfoIndex }
+    ::= { memInfoTable 1 }
+
+MemInfoEntry ::= SEQUENCE {
+	memInfoIndex	INTEGER,
+	memInfoTotal	INTEGER,
+	memInfoUsed	INTEGER,
+	memInfoFree	INTEGER,
+	memInfoShared	INTEGER,
+	memInfoBuff	INTEGER,
+	memInfoCach	INTEGER,
+	memInfoUsage	INTEGER,
+	memInfoLimit	INTEGER,
+	memInfoSlab	INTEGER
+}
+
+memInfoIndex OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "memory information entry index."
+    ::= { memInfoEntry 1 }
+
+memInfoTotal OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "memory total size"
+    ::= { memInfoEntry 2 }
+
+memInfoUsed OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "memory total amount"
+    ::= { memInfoEntry 3 }
+
+memInfoFree OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "memory free amount"
+    ::= { memInfoEntry 4 }
+
+memInfoShared OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "memory shared range"
+    ::= { memInfoEntry 5 }
+
+memInfoBuff OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "memory buffers range"
+    ::= { memInfoEntry 6 }
+
+memInfoCach OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "memory cached range"
+    ::= { memInfoEntry 7 }
+
+memInfoUsage OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "memory usage"
+    ::= { memInfoEntry 8 }
+
+memInfoLimit OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION "memory usage limit threshold"
+    ::= { memInfoEntry 9 }
+
+memInfoSlab OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "memory slab range"
+    ::= { memInfoEntry 10 }
+
+---
+--- Hard Disk Driver
+---
+hddInfoTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF HddInfoEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "hard disk driver information table."
+    ::= { xcnMonitor 6 }
+
+hddInfoEntry OBJECT-TYPE
+    SYNTAX      HddInfoEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "hard disk driver information entry"
+    INDEX       { hddInfoIndex }
+    ::= { hddInfoTable 1 }
+
+HddInfoEntry ::= SEQUENCE {
+	hddInfoIndex		INTEGER,
+	hddInfoDevName		OCTET STRING,
+	hddInfoMountDir		OCTET STRING,
+	hddInfoBlocks		INTEGER,
+	hddInfoAvail		INTEGER,
+	hddInfoUsed			INTEGER,
+	hddInfoUsage		INTEGER,
+	hddNotifyLimit		INTEGER,
+	hddDeleteLimit		INTEGER,
+	hddSetLimit		    INTEGER,
+	hddWarnLimit        INTEGER,
+	hddAlarmLimit       INTEGER
+}
+
+hddInfoIndex OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "hard disk driver entry index."
+    ::= { hddInfoEntry 1 }
+
+hddInfoDevName OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "hard disk driver's device name"
+    ::= { hddInfoEntry 2 }
+
+hddInfoMountDir OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "hard disk driver's mount directory"
+    ::= { hddInfoEntry 3 }
+
+hddInfoBlocks OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "hard disk driver's block size (MB)"
+    ::= { hddInfoEntry 4 }
+
+hddInfoAvail OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "hard disk driver's avail size (MB)"
+    ::= { hddInfoEntry 5 }
+
+hddInfoUsed OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "hard disk driver's use of size (MB)"
+    ::= { hddInfoEntry 6 }
+
+hddInfoUsage OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "hard disk driver's usage"
+    ::= { hddInfoEntry 7 }
+
+hddNotifyLimit OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION "hard disk driver's usage notify limit threshold"
+    ::= { hddInfoEntry 8 }
+
+hddDeleteLimit OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION "hard disk driver's usage delete limit threshold"
+    ::= { hddInfoEntry 9 }
+
+hddSetLimit OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION "hard disk driver's usage clear limit threshold"
+    ::= { hddInfoEntry 10 }
+
+hddWarnLimit OBJECT-TYPE
+	SYNTAX      INTEGER
+	MAX-ACCESS  read-write
+	STATUS      current
+	DESCRIPTION "hard disk driver's usage warning limit threshold"
+	::= { hddInfoEntry 11 }
+
+hddAlarmLimit OBJECT-TYPE
+	SYNTAX      INTEGER
+	MAX-ACCESS  read-write
+	STATUS      current
+	DESCRIPTION "hard disk driver's usage alarm limit threshold"
+	::= { hddInfoEntry 12 }
+---
+---
+--- network information table
+---
+netConfTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF NetConfEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "A list of network interface entries."
+    ::= { xcnMonitor 7 }
+
+netConfEntry OBJECT-TYPE
+    SYNTAX      NetConfEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "An entry containing management information applicable to a
+            particular network interface."
+    INDEX   { netConfIndex }
+    ::= { netConfTable 1 }
+
+NetConfEntry ::= SEQUENCE {
+	netConfIndex 		INTEGER,
+	netConfType         OCTET STRING,
+	netConfDevice       OCTET STRING,
+	netConfMacAddr      OCTET STRING,
+	netConfIpAddr       OCTET STRING,
+	netConfBcast        OCTET STRING,
+	netConfMask         OCTET STRING,
+	netConfMtu          OCTET STRING,
+	netConfRxByte       OCTET STRING,
+	netConfTxByte       OCTET STRING,
+	netConfState        INTEGER,
+	netConfGatewayIP    OCTET STRING,
+	netConfDefaultGW    INTEGER,
+	netConfRxCount		OCTET STRING,
+	netConfTxCount		OCTET STRING
+
+}
+
+netConfIndex OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "network interface index."
+    ::= { netConfEntry 1 }
+
+netConfType OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "The type of interface."
+    ::= { netConfEntry 2 }
+
+netConfDevice OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "ethernet card device information."
+    ::= { netConfEntry 3 }
+
+netConfMacAddr OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "ethernet card MAC address."
+    ::= { netConfEntry 4 }
+
+netConfIpAddr OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (7..15))
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION "ethernet card IP address."
+    ::= { netConfEntry 5 }
+
+netConfBcast OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (7..15))
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION "ethernet card broadcast IP address."
+    ::= { netConfEntry 6 }
+
+netConfMask OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (7..15))
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION "ethernet card netmask."
+    ::= { netConfEntry 7 }
+
+netConfMtu OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Maximum Transfer Unit"
+    ::= { netConfEntry 8 }
+
+netConfRxByte OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Receive packets."
+    ::= { netConfEntry 9 }
+
+netConfTxByte OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Transfer packets."
+    ::= { netConfEntry 10 }
+
+netConfState OBJECT-TYPE
+    SYNTAX      INTEGER { down(0), up(1) }
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION "Interface state."
+    ::= { netConfEntry 11 }
+
+netConfGatewayIP OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (7..15))
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION "Gateway IP address."
+    ::= { netConfEntry 12 }
+
+netConfDefaultGW OBJECT-TYPE
+    SYNTAX      INTEGER { none(0), default(1) }
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION "Indicate default Gateway or not."
+    ::= { netConfEntry 13 }
+
+netConfRxCount OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Receive packet counts"
+    ::= { netConfEntry 14 }
+
+netConfTxCount OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Transfer packet counts."
+    ::= { netConfEntry 15 }
+
+---
+--- Process information list
+---
+procListTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF ProcListEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Processor list table."
+    ::= { xcnMonitor 8 }
+
+procListEntry OBJECT-TYPE
+    SYNTAX      ProcListEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Processor list  entry"
+    INDEX       { procListIndex }
+    ::= { procListTable 1 }
+
+ProcListEntry ::= SEQUENCE {
+	procListIndex		INTEGER,
+	procListName		OCTET STRING,
+	procListMemShare	INTEGER,
+	procListCpuShare	INTEGER,
+	procListCnt			INTEGER,
+	procListKillCmd		INTEGER
+}
+
+procListIndex OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Processor list entry index."
+    ::= { procListEntry 1 }
+
+procListName OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Processor name"
+    ::= { procListEntry 2 }
+
+procListMemShare OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Processor memory share"
+    ::= { procListEntry 3 }
+
+procListCpuShare OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Processor cpu share"
+    ::= { procListEntry 4 }
+
+procListCnt OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Processor count"
+    ::= { procListEntry 5 }
+
+procListKillCmd OBJECT-TYPE
+    SYNTAX      INTEGER 
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION "processor kill command"
+    ::= { procListEntry 6 }
+
+--- 
+--- Routing Table
+--- 
+routeTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF RouteEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Route information table."
+    ::= { xcnMonitor 9 }
+    
+routeEntry OBJECT-TYPE
+    SYNTAX      RouteEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Route information entry."
+    INDEX       { routeIndex }
+    ::= { routeTable 1 }
+    
+RouteEntry ::= SEQUENCE {
+    routeIndex        INTEGER,
+    routeDestination  OCTET STRING,
+    routeGateway      OCTET STRING,
+    routeGenMask      OCTET STRING,
+    routeFlags        OCTET STRING,
+    routeMetric       INTEGER,
+    routeUse          INTEGER,
+    routeInterface    OCTET STRING
+}   
+    
+routeIndex OBJECT-TYPE
+    SYNTAX      INTEGER 
+    MAX-ACCESS  not-accessible
+    STATUS      current 
+    DESCRIPTION "Route table entry index."
+    ::= { routeEntry 1 }
+
+routeDestination OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (7..15))
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION "The value against which the destination IP address is matched."
+    ::= { routeEntry 2 }
+
+routeGateway OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (7..15))
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION "The router to use to reach the specified destination."
+    ::= { routeEntry 3 }
+
+routeGenMask OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (7..15))
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION "The address mask used to match an IP address to the value shown in the Destination field."
+    ::= { routeEntry 4 }
+
+routeFlags OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Certain characteristics of this route."
+    ::= { routeEntry 5 }
+
+routeMetric OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION "The cost of the route. The metric is used to sort duplicate routes if any appear in the table."
+    ::= { routeEntry 6 }
+
+routeUse OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "The number of times this route was looked up by IP."
+    ::= { routeEntry 7 }
+
+routeInterface OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION "Interface Name."
+    ::= { routeEntry 8 }
+
+---
+--- iif traffic
+---
+iifTrafficTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF IifTrafficEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "table of Iif Traffic."
+    ::= { xcnMonitor 10 } 
+
+iifTrafficEntry OBJECT-TYPE
+    SYNTAX      IifTrafficEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "Iif Traffic entry."
+    INDEX       { iifTrafficIndex }
+    ::= { iifTrafficTable 1 } 
+
+IifTrafficEntry ::= SEQUENCE {
+    iifTrafficIndex   	   	INTEGER,
+    iifTrafficPort			OCTET STRING,
+    iifTrafficDirection     INTEGER,
+    iifTrafficState      	INTEGER,
+    iifTrafficTotalCnt      OCTET STRING,
+    iifTrafficTotalSize     OCTET STRING,
+    iifTrafficDailyCnt      OCTET STRING,
+    iifTrafficDailySize     OCTET STRING,
+	iifTraffic10MinCnt	OCTET STRING,
+	iifTraffic10MinSize    	OCTET STRING,
+	iifTrafficSecCnt     	OCTET STRING,
+	iifTrafficSecSize      	OCTET STRING,
+	iifTraffic10MinRxCnt	OCTET STRING,
+	iifTraffic10MinRxSize  	OCTET STRING,
+	iifTraffic10MinTxCnt	OCTET STRING,
+	iifTraffic10MinTxSize  	OCTET STRING
+}
+
+iifTrafficIndex OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "iif traffic table entry index."
+    ::= { iifTrafficEntry 1 } 
+
+iifTrafficPort OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "iif mirroring port name."
+    ::= { iifTrafficEntry 2 } 
+
+iifTrafficDirection OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "iif mirroring traffic direction : 0(inbound or Rx), 1(outbound or Tx)."
+    ::= { iifTrafficEntry 3 }
+
+iifTrafficState OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "iif mirroring port state : 0(down), 1(up)"
+    ::= { iifTrafficEntry 4 }
+
+iifTrafficTotalCnt OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "iif mirroring port accumulated packet counts"
+    ::= { iifTrafficEntry 5 }
+
+iifTrafficTotalSize OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "iif mirroring port accumulated packet size (MB)"
+    ::= { iifTrafficEntry 6 }
+
+iifTrafficDailyCnt OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "iif mirroring port daily packet counts"
+    ::= { iifTrafficEntry 7 }
+
+iifTrafficDailySize OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "iif mirroring port daily packet size (MB)"
+    ::= { iifTrafficEntry 8 }
+
+iifTraffic10MinCnt OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "iif mirroring port packet count for prior 10 minute"
+    ::= { iifTrafficEntry 9 }
+
+iifTraffic10MinSize OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "iif mirroring port packet size for prior 10 minute"
+    ::= { iifTrafficEntry 10 }
+
+iifTrafficSecCnt OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "iif mirroring port packet counts for prior 1 seconds"
+    ::= { iifTrafficEntry 11 }
+
+iifTrafficSecSize OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "iif mirroring port packet size for prior 1 seconds"
+    ::= { iifTrafficEntry 12 }
+
+iifTraffic10MinRxCnt OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "iif mirroring port Rx packet count for prior 10 minute"
+    ::= { iifTrafficEntry 13 }
+
+iifTraffic10MinRxSize OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "iif mirroring port Rx packet size for prior 10 minute"
+    ::= { iifTrafficEntry 14 }
+
+iifTraffic10MinTxCnt OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "iif mirroring port Tx packet count for prior 10 minute"
+    ::= { iifTrafficEntry 15 }
+
+iifTraffic10MinTxSize OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "iif mirroring port Tx packet size for prior 10 minute"
+    ::= { iifTrafficEntry 16 }
+
+---
+--- system configuration
+---
+sysConfigTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF SysConfigEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "table of system configuration."
+    ::= { xcnMonitor 11 } 
+
+sysConfigEntry OBJECT-TYPE
+    SYNTAX      SysConfigEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION " system configuration entry."
+    INDEX       { sysConfigIndex }
+    ::= { sysConfigTable 1 } 
+
+SysConfigEntry ::= SEQUENCE {
+    sysConfigIndex      INTEGER,
+    sysConfigOS         OCTET STRING,
+    sysConfigKernel     OCTET STRING,
+    sysConfigBootTime   OCTET STRING,
+    sysConfigUptime     OCTET STRING,
+    sysConfigBoardModel OCTET STRING,
+    sysConfigBoardBIOS  OCTET STRING,
+    sysConfigTDMModel   OCTET STRING
+}
+
+sysConfigIndex OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "system configuration entry index."
+    ::= { sysConfigEntry 1 } 
+
+sysConfigOS OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "system OS version."
+    ::= { sysConfigEntry 2 } 
+
+sysConfigKernel OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "system Kernel version."
+    ::= { sysConfigEntry 3 } 
+
+sysConfigBootTime OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "system boot time."
+    ::= { sysConfigEntry 4 } 
+
+sysConfigUptime OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "system uptime."
+    ::= { sysConfigEntry 5 }
+
+sysConfigBoardModel OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "system main board model."
+    ::= { sysConfigEntry 6 }
+
+sysConfigBoardBIOS OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "system main board BIOS version."
+    ::= { sysConfigEntry 7 }
+
+sysConfigTDMModel OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "TDM board mode."
+    ::= { sysConfigEntry 8 }
+
+---
+--- statistics Voice 
+---
+statVoiceTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF StatVoiceEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "table of stat Voice"
+    ::= { xcnMonitor 12 } 
+
+statVoiceEntry OBJECT-TYPE
+    SYNTAX      StatVoiceEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "stat Voice entry."
+    INDEX       { statVoiceIndex }
+    ::= { statVoiceTable 1 } 
+
+StatVoiceEntry ::= SEQUENCE {
+    statVoiceIndex			INTEGER,
+	statVoiceVoIPDaily		INTEGER,
+	statVoiceVoIP10Min		INTEGER,
+	statVoiceTDMDaily		INTEGER,
+	statVoiceTDM10Min		INTEGER,
+	statVoiceSendDaily		INTEGER,
+	statVoiceSend10Min		INTEGER,
+	statVoiceSendFailDaily	INTEGER,
+	statVoiceSendFail10Min	INTEGER
+
+}
+
+statVoiceIndex OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "voice call logging statistics table entry index."
+    ::= { statVoiceEntry 1 } 
+
+statVoiceVoIPDaily OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "VoIP call daily logging count"
+    ::= { statVoiceEntry 2 } 
+
+statVoiceVoIP10Min OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "VoIP call logging count for 10 minute."
+    ::= { statVoiceEntry 3 } 
+
+statVoiceTDMDaily OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "TDM call daily logging count"
+    ::= { statVoiceEntry 4 } 
+
+statVoiceTDM10Min OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "VoIP call logging count for 10 minute."
+    ::= { statVoiceEntry 5 } 
+
+statVoiceSendDaily OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "daily sending voice logging file count to the DB server"
+    ::= { statVoiceEntry 6 } 
+
+statVoiceSend10Min OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "sending voice logging file count to the DB server in 10 minute"
+    ::= { statVoiceEntry 7 } 
+
+statVoiceSendFailDaily OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "daily sending fail count for voice logging file to the DB server."
+    ::= { statVoiceEntry 8 } 
+
+statVoiceSendFail10Min OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "sending fail count for voice logging file to the DB server in 10 minute"
+    ::= { statVoiceEntry 9 } 
+
+---
+--- service group 
+---
+svcGroupTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF SvcGroupEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "table of service group."
+    ::= { xcnMonitor 13 } 
+
+svcGroupEntry OBJECT-TYPE
+    SYNTAX      SvcGroupEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "service group entry."
+    INDEX       { svcGroupIndex }
+    ::= { svcGroupTable 1 } 
+
+SvcGroupEntry ::= SEQUENCE {
+    svcGroupIndex		INTEGER,
+	svcGroupNodeType	INTEGER,
+	svcGroupName		OCTET STRING,
+	svcGroupProcName	OCTET STRING,
+	svcGroupProcStime	OCTET STRING,
+	svcGroupProcCnt		INTEGER,
+	svcGroupProcRun		INTEGER,
+	svcGroupStatus		INTEGER,
+	svcGroupCommand		INTEGER
+
+}
+
+svcGroupIndex OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "service group list entry index."
+    ::= { svcGroupEntry 1 } 
+
+svcGroupNodeType OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "node type : 0(old Tellus 수집), 1(예하부 DB서버), 10(pgms Tellus 수집), 11(사령부 DB서버)"
+    ::= { svcGroupEntry 2 } 
+
+svcGroupName OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "service group name"
+    ::= { svcGroupEntry 3 } 
+
+svcGroupProcName OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "representative process name of service group"
+    ::= { svcGroupEntry 4 } 
+
+svcGroupProcStime OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "loading time of representative process"
+    ::= { svcGroupEntry 5 } 
+
+svcGroupProcCnt OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "number of representative process to be loaded"
+    ::= { svcGroupEntry 6 } 
+
+svcGroupProcRun OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "number of representative process currently running"
+    ::= { svcGroupEntry 7 } 
+
+svcGroupStatus OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "service group status based on representative process status : 0(Normal), 1(Abnormal - loss of process), 2(Abnormal process)"
+    ::= { svcGroupEntry 8 } 
+
+svcGroupCommand OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION "stop or start service group : 0(default : non-action), 1(stop), 2(restart)"
+    ::= { svcGroupEntry 9 } 
+
+
+
+---
+--- statistics Transmit 
+---
+statTransmitTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF StatTransmitEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "table of stat Transmit"
+    ::= { xcnMonitor 14 } 
+
+statTransmitEntry OBJECT-TYPE
+    SYNTAX      StatTransmitEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "stat Transmit entry."
+    INDEX       { statTransmitIndex }
+    ::= { statTransmitTable 1 } 
+
+StatTransmitEntry ::= SEQUENCE {
+    statTransmitIndex			INTEGER,
+	statTransmitDailyIn			INTEGER,
+	statTransmit10MinIn			INTEGER,
+	statTransmitDailySend		INTEGER,
+	statTransmit10MinSend		INTEGER,
+	statTransmitDailyFilter		INTEGER,
+	statTransmit10MinFilter		INTEGER,
+	statTransmitDailyTraffic	OCTET STRING,
+	statTransmit10MinTraffic	OCTET STRING,
+	statMfYesterTotal			INTEGER,
+	statMfYesterNread			INTEGER,
+	statMfTodayTotal			INTEGER,
+	statMfTodayNread			INTEGER,
+	statMfTodayTraffic          INTEGER,
+	statMf10MinTotal			INTEGER,
+	statMf10MinTraffic			INTEGER
+
+}
+
+statTransmitIndex OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "transmit processing statistics table entry index."
+    ::= { statTransmitEntry 1 } 
+
+statTransmitDailyIn OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "daily input file count into Transmit"
+    ::= { statTransmitEntry 2 } 
+
+statTransmit10MinIn OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "input file count into Transmit for 10 minute"
+    ::= { statTransmitEntry 3 } 
+
+statTransmitDailySend OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "daily sending file count from Transmit"
+    ::= { statTransmitEntry 4 } 
+
+statTransmit10MinSend OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "sending file count from Transmit for 10 minute"
+    ::= { statTransmitEntry 5 } 
+
+statTransmitDailyFilter OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "daily filtering file count in Transmit"
+    ::= { statTransmitEntry 6 } 
+
+statTransmit10MinFilter OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "filtering file count in Transmit for 10 minute"
+    ::= { statTransmitEntry 7 } 
+
+statTransmitDailyTraffic OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "daily traffic in Transmit"
+    ::= { statTransmitEntry 8 } 
+
+statTransmit10MinTraffic OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "traffic in Transmit for 10 minute"
+    ::= { statTransmitEntry 9 } 
+
+statMfYesterTotal OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "yesterday total read mf count."
+    ::= { statTransmitEntry 10 } 
+
+statMfYesterNread OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "yesterday no read mf count."
+    ::= { statTransmitEntry 11 } 
+
+statMfTodayTotal OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "today total read mf count."
+    ::= { statTransmitEntry 12 } 
+
+statMfTodayNread OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "today no read mf count."
+    ::= { statTransmitEntry 13 } 
+
+statMfTodayTraffic OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "today traffic mf count."
+    ::= { statTransmitEntry 14 } 
+
+statMf10MinTotal OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "10 minute total mf count."
+    ::= { statTransmitEntry 15 } 
+
+statMf10MinTraffic OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "10 minute traffic mf count."
+    ::= { statTransmitEntry 16 } 
+
+---
+--- statistics Decoder 
+---
+statDecoderTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF StatDecoderEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "table of stat Decoder"
+    ::= { xcnMonitor 15 } 
+
+statDecoderEntry OBJECT-TYPE
+    SYNTAX      StatDecoderEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "stat Decoder entry."
+    INDEX       { statDecoderIndex }
+    ::= { statDecoderTable 1 } 
+
+StatDecoderEntry ::= SEQUENCE {
+    statDecoderIndex		INTEGER,
+	statDecoderDailyIn		INTEGER,
+	statDecoder10MinIn		INTEGER,
+	statDecoderDailySplit	INTEGER,
+	statDecoder10MinSplit	INTEGER,
+	statDecoderDailyFilter	INTEGER,
+	statDecoder10MinFilter	INTEGER,
+	statDecoderDailyFail	INTEGER,
+	statDecoder10MinFail	INTEGER,
+	statDecoderDailyPass	INTEGER,
+	statDecoder10MinPass	INTEGER,
+	statDecoderDailyMerge	INTEGER,
+	statDecoder10MinMerge	INTEGER
+
+
+}
+
+statDecoderIndex OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "decoder processing statistics table entry index."
+    ::= { statDecoderEntry 1 } 
+
+statDecoderDailyIn OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "daily input file count into Decoder"
+    ::= { statDecoderEntry 2 } 
+
+statDecoder10MinIn OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "input file count into Decoder for 10 minute"
+    ::= { statDecoderEntry 3 } 
+
+statDecoderDailySplit OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "daily splitting count int Decoder"
+    ::= { statDecoderEntry 4 } 
+
+statDecoder10MinSplit OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "splitting count in Decoder for 10 minute"
+    ::= { statDecoderEntry 5 } 
+
+statDecoderDailyFilter OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "daily filtering file count in Decoder"
+    ::= { statDecoderEntry 6 } 
+
+statDecoder10MinFilter OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "filtering file count in Decoder for 10 minute"
+    ::= { statDecoderEntry 7 } 
+
+statDecoderDailyFail OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "daily processing fail count in Decoder"
+    ::= { statDecoderEntry 8 } 
+
+statDecoder10MinFail OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "processing fail count in Decoder for 10 minute"
+    ::= { statDecoderEntry 9 } 
+
+statDecoderDailyPass OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "daily pass file count in Decoder"
+    ::= { statDecoderEntry 10 } 
+
+statDecoder10MinPass OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "pass file count in Decoder for 10 minute"
+    ::= { statDecoderEntry 11 } 
+
+statDecoderDailyMerge OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "daily merging file count in Decoder"
+    ::= { statDecoderEntry 12 } 
+
+statDecoder10MinMerge OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "merging file count in Decoder for 10 minute"
+    ::= { statDecoderEntry 13 } 
+
+
+---
+--- statistics EDC
+---
+statEDCTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF StatEDCEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "table of stat EDC"
+    ::= { xcnMonitor 16 } 
+
+statEDCEntry OBJECT-TYPE
+    SYNTAX      StatEDCEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "stat EDC entry."
+    INDEX       { statEDCIndex }
+    ::= { statEDCTable 1 } 
+
+StatEDCEntry ::= SEQUENCE {
+    statEDCIndex		INTEGER,
+	statEDCDailyIn		INTEGER,
+	statEDC10MinIn		INTEGER,
+	statEDCDailySuccess	INTEGER,
+	statEDC10MinSuccess	INTEGER,
+	statEDCDailyFilter	INTEGER,
+	statEDC10MinFilter	INTEGER,
+	statEDCDailyFail	INTEGER,
+	statEDC10MinFail	INTEGER,
+	statAbsliDailySuccess	INTEGER,
+	statAbsli10MinSuccess	INTEGER
+}
+
+statEDCIndex OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "EDC processing statistics table entry index."
+    ::= { statEDCEntry 1 } 
+
+statEDCDailyIn OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "daily input file count into EDC"
+    ::= { statEDCEntry 2 } 
+
+statEDC10MinIn OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "input file count into EDC for 10 minute"
+    ::= { statEDCEntry 3 } 
+
+statEDCDailySuccess OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "daily processing file count in EDC"
+    ::= { statEDCEntry 4 } 
+
+statEDC10MinSuccess OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "processing file count in EDC for 10 minute"
+    ::= { statEDCEntry 5 } 
+
+statEDCDailyFilter OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "daily filtering file count in EDC"
+    ::= { statEDCEntry 6 } 
+
+statEDC10MinFilter OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "filtering file count in EDC for 10 minute"
+    ::= { statEDCEntry 7 } 
+
+statEDCDailyFail OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "daily processing fail file count in EDC"
+    ::= { statEDCEntry 8 } 
+
+statEDC10MinFail OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "processing fail file count in EDC for 10 minute"
+    ::= { statEDCEntry 9 } 
+
+statAbsliDailySuccess OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "daily processing file count in EDC absli."
+    ::= { statEDCEntry 10 } 
+
+statAbsli10MinSuccess OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "processing file count in absli for 10 minute."
+    ::= { statEDCEntry 11 } 
+	
+	
+---
+--- new emass proc
+---
+procEmassTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF ProcEmassEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "table of new emass process."
+    ::= { xcnMonitor 17 } 
+
+procEmassEntry OBJECT-TYPE
+    SYNTAX      ProcEmassEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "new emass process entry."
+    INDEX       { procEmassIndex }
+    ::= { procEmassTable 1 } 
+
+ProcEmassEntry ::= SEQUENCE {
+    procEmassIndex			INTEGER,
+	procEmassGroupName		OCTET STRING,
+	procEmassProcName		OCTET STRING,
+	procEmassProcStime		OCTET STRING,
+	procEmassProcCnt		INTEGER,
+	procEmassProcRun		INTEGER,
+	procEmasspStatus		INTEGER,
+	procEmassCommand		INTEGER,
+	procEmassVersion		OCTET STRING
+
+}
+
+procEmassIndex OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "process list entry index."
+    ::= { procEmassEntry 1 } 
+	
+procEmassGroupName OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "process group name"
+    ::= { procEmassEntry 2 } 
+
+procEmassProcName OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "process name of group"
+    ::= { procEmassEntry 3 } 
+
+procEmassProcStime OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "loading time of process"
+    ::= { procEmassEntry 4 } 
+
+procEmassProcCnt OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "number of process to be loaded"
+    ::= { procEmassEntry 5 } 
+
+procEmassProcRun OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "number of process currently running"
+    ::= { procEmassEntry 6 } 
+
+procEmassStatus OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "process status : 0(Normal), 1(Abnormal), 2(unused)"
+    ::= { procEmassEntry 7 } 
+
+procEmassCommand OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION "stop or start process : 0(default : non-action), 1(stop), 2(restart)"
+    ::= { procEmassEntry 8 } 
+
+procEmassVersion OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "process version"
+    ::= { procEmassEntry 9 } 
+
+---
+--- integrity proc
+---
+integrityTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF IntegrityEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "table of new emass process."
+    ::= { xcnMonitor 18 } 
+
+integrityEntry OBJECT-TYPE
+    SYNTAX      IntegrityEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "integrity check entry."
+    INDEX       { integrityIndex }
+    ::= { integrityTable 1 } 
+
+IntegrityEntry ::= SEQUENCE {
+    	integrityIndex		INTEGER,
+	integrityCF		INTEGER,
+	integrityEmassLT	INTEGER
+}
+
+integrityIndex OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "integrity entry index."
+    ::= { integrityEntry 1 } 
+	
+integrityCF OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION "integrity CF check : 0(default : non-action), 1(start)"
+    ::= { integrityEntry 2 } 
+
+integrityEmassLT OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION "integrity EmassLT check : 0(default : non-action), 1(start)"
+    ::= { integrityEntry 3 } 
+
+---
+--- cf proc
+---
+procCfTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF ProcCfEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "table of new cf process."
+    ::= { xcnMonitor 19 } 
+
+procCfEntry OBJECT-TYPE
+    SYNTAX      ProcCfEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "new cf process entry."
+    INDEX       { procCfIndex }
+    ::= { procCfTable 1 } 
+
+ProcCfEntry ::= SEQUENCE {
+    	procCfIndex			INTEGER,
+	procCfGroupName		OCTET STRING,
+	procCfProcName		OCTET STRING,
+	procCfProcStime		OCTET STRING,
+	procCfProcCnt		INTEGER,
+	procCfProcRun		INTEGER,
+	procCfStatus		INTEGER,
+	procCfCommand		INTEGER,
+	procCfVersion		OCTET STRING
+
+}
+
+procCfIndex OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "process list entry index."
+    ::= { procCfEntry 1 } 
+	
+procCfGroupName OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "process group name"
+    ::= { procCfEntry 2 } 
+
+procCfProcName OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "process name of group"
+    ::= { procCfEntry 3 } 
+
+procCfProcStime OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "loading time of process"
+    ::= { procCfEntry 4 } 
+
+procCfProcCnt OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "number of process to be loaded"
+    ::= { procCfEntry 5 } 
+
+procCfProcRun OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "number of process currently running"
+    ::= { procCfEntry 6 } 
+
+procCfStatus OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "process status : 0(Normal), 1(Abnormal), 2(unused)"
+    ::= { procCfEntry 7 } 
+
+procCfCommand OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION "stop or start process : 0(default : non-action), 1(stop), 2(restart)"
+    ::= { procCfEntry 8 } 
+
+procCfVersion OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "process version"
+    ::= { procCfEntry 9 } 
+
+END

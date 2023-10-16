@@ -1,0 +1,12 @@
+XCN-TRAP DEFINITIONS ::= BEGIN
+
+IMPORTS
+	OBJECT-TYPE,
+    NOTIFICATION-TYPE   FROM SNMPv2-SMI
+	xcnTrap             FROM XCN-XCURENET;
+
+xcnNotifyTrap NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION "this MIB is trap for notification in xcurenet."
+    ::= { xcnTrap 1 }
+END

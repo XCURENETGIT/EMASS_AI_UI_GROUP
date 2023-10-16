@@ -1,0 +1,379 @@
+XCN-EMASSDC DEFINITIONS ::= BEGIN
+
+IMPORTS
+	OBJECT-TYPE 	FROM SNMPv2-SMI
+	xcnProduct 		FROM XCN-XCURENET;
+
+xcnEmassDc MODULE-IDENTITY
+   LAST-UPDATED "201303260000Z"
+   ORGANIZATION "www.xcurenet.com"
+   CONTACT-INFO "Postal    : XCURENET Co., Ltd.
+                             9F DMC R&D Center, E3-2, DMC
+                             Sangam-Dong Mapo-Gu
+                             Seoul, 127-270, Korea
+                 Telephone : 82-2-567-0961
+                 FAX       : 82-2-567-0963
+                 e-mail    : jhpark@xcurenet.com"
+   DESCRIPTION  "This MIB is used by EMASS-DC product."
+   REVISION     "201303260000Z"
+   DESCRIPTION  "First create by jpark"
+   ::= { xcnProduct 2 }
+
+---
+--- IP filtering rule information
+---
+emdcIpfInfoTable	OBJECT-TYPE
+	SYNTAX	SEQUENCE OF EmdcIpfInfoEntry
+	MAX-ACCESS	not-accessible
+	STATUS	current
+	DESCRIPTION	"EMASS-DC IP filtering information table"
+	::= { xcnEmassDc 1 }
+
+emdcIpfInfoEntry	OBJECT-TYPE
+	SYNTAX	    EmdcIpfInfoEntry
+	MAX-ACCESS	not-accessible
+	STATUS      current
+	DESCRIPTION	"information entry of IIF process IP filtering rule"
+    INDEX       { emdcIpfInfoIndex }
+	::= { emdcIpfInfoTable 1 }
+
+EmdcIpfInfoEntry ::= SEQUENCE {
+	emdcIpfInfoIndex 		INTEGER,
+	emdcIpfInfoRuleCnt 		INTEGER,
+	emdcIpfInfoRuleDef 		INTEGER,
+	emdcIpfInfoSetResult 	INTEGER,
+	emdcIpfInfoFileCtrl 	INTEGER
+}
+
+emdcIpfInfoIndex	OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS	not-accessible
+	STATUS	current
+	DESCRIPTION	"IP filtering information entry index"
+	::= { emdcIpfInfoEntry 1 }
+
+emdcIpfInfoRuleCnt	OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION	"ipf rule count"
+	::= { emdcIpfInfoEntry 2 }
+
+emdcIpfInfoRuleDef	OBJECT-TYPE
+	SYNTAX	INTEGER {empty(0), logging(1), nologging(2)}
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION	"Default ipf rule format"
+	::= { emdcIpfInfoEntry 3 }
+
+emdcIpfInfoSetResult	OBJECT-TYPE
+	SYNTAX	INTEGER {standby(0), success(1), failed(2)}
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"ipf rule setting result (standby:0, success:1, failed:2)"
+	::= { emdcIpfInfoEntry 4 }
+
+emdcIpfInfoFileCtrl	OBJECT-TYPE
+	SYNTAX	INTEGER { standby(0), overwrite(1), deleteAll(3) }
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"control IP filtering rule file(standby:0, write:1, delete all:3)"
+	::= { emdcIpfInfoEntry 5 }
+
+---
+--- IP filtering rule setting table
+---
+emdcIpfRuleTable	OBJECT-TYPE
+	SYNTAX	SEQUENCE OF EmdcIpfRuleEntry
+	MAX-ACCESS	not-accessible
+	STATUS	current
+	DESCRIPTION	"EMASS-DC IP filtering rule information table"
+	::= { xcnEmassDc 2 }
+
+emdcIpfRuleEntry	OBJECT-TYPE
+	SYNTAX	    EmdcIpfRuleEntry
+	MAX-ACCESS	not-accessible
+	STATUS 	    current
+	DESCRIPTION	"information entry of IP filtering rule"
+    INDEX       { emdcIpfRuleIndex }
+	::= { emdcIpfRuleTable 1 }
+
+EmdcIpfRuleEntry ::= SEQUENCE {
+	emdcIpfRuleIndex 		INTEGER,
+	emdcIpfRuleVersion 		INTEGER,
+	emdcIpfRuleSipFrom 		OCTET STRING,
+	emdcIpfRuleSipTo 		OCTET STRING,
+	emdcIpfRuleSportFrom 	INTEGER,
+	emdcIpfRuleSportTo 		INTEGER,
+	emdcIpfRuleDipFrom 		OCTET STRING,
+	emdcIpfRuleDipTo 		OCTET STRING,
+	emdcIpfRuleDportFrom 	INTEGER,
+	emdcIpfRuleDportTo 		INTEGER,
+	emdcIpfRuleProtocol 	INTEGER,
+	emdcIpfRuleAction 		INTEGER
+}
+
+emdcIpfRuleIndex	OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS	not-accessible
+	STATUS	current
+	DESCRIPTION	"IP filtering rule entry index"
+	::= { emdcIpfRuleEntry 1 }
+
+emdcIpfRuleVersion	OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"rule version"
+	::= { emdcIpfRuleEntry 2 }
+
+emdcIpfRuleSipFrom	OBJECT-TYPE
+	SYNTAX	OCTET STRING
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"start source IP address"
+	::= { emdcIpfRuleEntry 3 }
+
+emdcIpfRuleSipTo 	OBJECT-TYPE
+	SYNTAX	OCTET STRING
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"end source IP address"
+	::= { emdcIpfRuleEntry 4 }
+
+emdcIpfRuleSportFrom	OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"start source port number"
+	::= { emdcIpfRuleEntry 5 }
+
+emdcIpfRuleSportTo 	OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"end source port number"
+	::= { emdcIpfRuleEntry 6 }
+
+emdcIpfRuleDipFrom	OBJECT-TYPE
+	SYNTAX	OCTET STRING
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"start destination IP address"
+	::= { emdcIpfRuleEntry 7 }
+
+emdcIpfRuleDipTo 	OBJECT-TYPE
+	SYNTAX	OCTET STRING
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"end destination IP address"
+	::= { emdcIpfRuleEntry 8 }
+
+emdcIpfRuleDportFrom	OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"start destination port number"
+	::= { emdcIpfRuleEntry 9 }
+
+emdcIpfRuleDportTo 	OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"end destination port number"
+	::= { emdcIpfRuleEntry 10 }
+
+emdcIpfRuleProtocol 	OBJECT-TYPE
+	SYNTAX	INTEGER { TCP(6), UDP(17) }
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"protocol type setting (TCP:6, UDP:17)"
+	::= { emdcIpfRuleEntry 11 }
+
+emdcIpfRuleAction 	OBJECT-TYPE
+	SYNTAX	INTEGER { log(1), nolog(2) }
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"logging action setting (logging:1, no logging:2)"
+	::= { emdcIpfRuleEntry 12 }
+
+
+---
+--- IP filtering rule information(IPv6)
+---
+emdcIpfV6InfoTable	OBJECT-TYPE
+	SYNTAX	SEQUENCE OF EmdcIpfV6InfoEntry
+	MAX-ACCESS	not-accessible
+	STATUS	current
+	DESCRIPTION	"EMASS-DC IP filtering information table(IPv6)"
+	::= { xcnEmassDc 3 }
+
+emdcIpfV6InfoEntry	OBJECT-TYPE
+	SYNTAX	    EmdcIpfV6InfoEntry
+	MAX-ACCESS	not-accessible
+	STATUS      current
+	DESCRIPTION	"information entry of IIF process IP filtering rule(IPv6)"
+    INDEX       { emdcIpfV6InfoIndex }
+	::= { emdcIpfV6InfoTable 1 }
+
+EmdcIpfV6InfoEntry ::= SEQUENCE {
+	emdcIpfV6InfoIndex 		INTEGER,
+	emdcIpfV6InfoRuleCnt 		INTEGER,
+	emdcIpfV6InfoRuleDef 		INTEGER,
+	emdcIpfV6InfoSetResult 		INTEGER,
+	emdcIpfV6InfoFileCtrl 		INTEGER
+}
+
+emdcIpfV6InfoIndex	OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS	not-accessible
+	STATUS	current
+	DESCRIPTION	"IP filtering information entry index"
+	::= { emdcIpfV6InfoEntry 1 }
+
+emdcIpfV6InfoRuleCnt	OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION	"ipf rule count"
+	::= { emdcIpfV6InfoEntry 2 }
+
+emdcIpfV6InfoRuleDef	OBJECT-TYPE
+	SYNTAX	INTEGER {empty(0), logging(1), nologging(2)}
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION	"Default ipf rule format"
+	::= { emdcIpfV6InfoEntry 3 }
+
+emdcIpfV6InfoSetResult	OBJECT-TYPE
+	SYNTAX	INTEGER {standby(0), success(1), failed(2)}
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"ipf rule setting result (standby:0, success:1, failed:2)"
+	::= { emdcIpfV6InfoEntry 4 }
+
+emdcIpfV6InfoFileCtrl	OBJECT-TYPE
+	SYNTAX	INTEGER { standby(0), overwrite(1), deleteAll(3) }
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"control IP filtering rule file(standby:0, write:1, delete all:3)"
+	::= { emdcIpfV6InfoEntry 5 }
+
+---
+--- IP filtering rule setting table(IPv6)
+---
+emdcIpfV6RuleTable	OBJECT-TYPE
+	SYNTAX	SEQUENCE OF EmdcIpfV6RuleEntry
+	MAX-ACCESS	not-accessible
+	STATUS	current
+	DESCRIPTION	"EMASS-DC IP filtering rule information table(IPv6)"
+	::= { xcnEmassDc 4 }
+
+emdcIpfV6RuleEntry	OBJECT-TYPE
+	SYNTAX	    EmdcIpfV6RuleEntry
+	MAX-ACCESS	not-accessible
+	STATUS 	    current
+	DESCRIPTION	"information entry of IP filtering rule(IPv6)"
+    INDEX       { emdcIpfV6RuleIndex }
+	::= { emdcIpfV6RuleTable 1 }
+
+EmdcIpfV6RuleEntry ::= SEQUENCE {
+	emdcIpfV6RuleIndex 		INTEGER,
+	emdcIpfV6RuleVersion 		INTEGER,
+	emdcIpfV6RuleSipFrom 		OCTET STRING,
+	emdcIpfV6RuleSipTo 		OCTET STRING,
+	emdcIpfV6RuleSportFrom 		INTEGER,
+	emdcIpfV6RuleSportTo 		INTEGER,
+	emdcIpfV6RuleDipFrom 		OCTET STRING,
+	emdcIpfV6RuleDipTo 		OCTET STRING,
+	emdcIpfV6RuleDportFrom 		INTEGER,
+	emdcIpfV6RuleDportTo 		INTEGER,
+	emdcIpfV6RuleProtocol 		INTEGER,
+	emdcIpfV6RuleAction 		INTEGER
+}
+
+emdcIpfV6RuleIndex	OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS	not-accessible
+	STATUS	current
+	DESCRIPTION	"IP filtering rule entry index"
+	::= { emdcIpfV6RuleEntry 1 }
+
+emdcIpfV6RuleVersion	OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"rule version"
+	::= { emdcIpfV6RuleEntry 2 }
+
+emdcIpfV6RuleSipFrom	OBJECT-TYPE
+	SYNTAX	OCTET STRING
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"start source IP address"
+	::= { emdcIpfV6RuleEntry 3 }
+
+emdcIpfV6RuleSipTo 	OBJECT-TYPE
+	SYNTAX	OCTET STRING
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"end source IP address"
+	::= { emdcIpfV6RuleEntry 4 }
+
+emdcIpfV6RuleSportFrom	OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"start source port number"
+	::= { emdcIpfV6RuleEntry 5 }
+
+emdcIpfV6RuleSportTo 	OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"end source port number"
+	::= { emdcIpfV6RuleEntry 6 }
+
+emdcIpfV6RuleDipFrom	OBJECT-TYPE
+	SYNTAX	OCTET STRING
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"start destination IP address"
+	::= { emdcIpfV6RuleEntry 7 }
+
+emdcIpfV6RuleDipTo 	OBJECT-TYPE
+	SYNTAX	OCTET STRING
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"end destination IP address"
+	::= { emdcIpfV6RuleEntry 8 }
+
+emdcIpfV6RuleDportFrom	OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"start destination port number"
+	::= { emdcIpfV6RuleEntry 9 }
+
+emdcIpfV6RuleDportTo 	OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"end destination port number"
+	::= { emdcIpfV6RuleEntry 10 }
+
+emdcIpfV6RuleProtocol 	OBJECT-TYPE
+	SYNTAX	INTEGER { TCP(6), UDP(17) }
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"protocol type setting (TCP:6, UDP:17)"
+	::= { emdcIpfV6RuleEntry 11 }
+
+emdcIpfV6RuleAction 	OBJECT-TYPE
+	SYNTAX	INTEGER { log(1), nolog(2) }
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"logging action setting (logging:1, no logging:2)"
+	::= { emdcIpfV6RuleEntry 12 }
+
+END

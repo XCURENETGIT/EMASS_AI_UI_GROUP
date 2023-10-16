@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 30초마다 설정 파일의 변경을 확인한다. 파일이 변경되면 다시 로딩한다 -->
+<configuration scan="true" scanPeriod="30 seconds">
+
+	<property name="time" value="[%date{yyyy-MM-dd HH:mm:ss.SSS, Asia/Seoul}]"/>
+	<property name="log_dir" value="/users/emasspro/logs/"/>
+	<property name="pattern" value="${time} %-5level %20.-20logger{0}.%-4line [%-25.-25X{adminIp}- %-12X{adminId}] %msg%n"/>
+
+	<appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${log_dir}emasspro.log</file>
+		<append>true</append>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${log_dir}lthui.%d{yyyy-MM-dd}.log%i.gz</fileNamePattern>
+			<maxHistory>30</maxHistory>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>2GB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<charset>UTF-8</charset>
+			<pattern>
+				${pattern}
+			</pattern>
+		</encoder>
+	</appender>
+
+
+	<appender name="snmp_schedule" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${log_dir}snmp_schedule.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${log_dir}snmp_schedule.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>10</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>
+				[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-5level %20.-20logger{0}.%-4line %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="sql_log" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${log_dir}sql_edc3.0.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${log_dir}emass_sql.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>10</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>
+				[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-5level %20.-20logger{0}.%-4line%n\t\t%msg%n\n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="analysis_scheduler" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${log_dir}analysis_schedule.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${log_dir}analysis_schedule.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>10</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>
+				[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-5level %20.-20logger{0}.%-5line %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<!-- SNMP SCHEDULE LOG -->
+	<logger name="com.xcurenet.common.snmp.schedule" additivity="false">
+		<level value="info"/>
+		<appender-ref ref="snmp_schedule" />
+	</logger>
+
+	<!-- ANALYSIS SCHEDULE LOG -->
+	<logger name="com.xcurenet.emass.analysis.service" additivity="false">
+		<level value="info"/>
+		<appender-ref ref="analysis_scheduler" />
+	</logger>
+
+	<!-- Query Loggers -->
+	<logger name="jdbc.resultsettable" additivity="false">
+		<level value="warn"/>
+		<appender-ref ref="sql_log" />
+	</logger>
+	<logger name="jdbc.audit">
+		<level value="warn"/>
+		<appender-ref ref="sql_log" />
+	</logger>
+	<logger name="jdbc.resultset" additivity="false">
+		<level value="warn"/>
+		<appender-ref ref="sql_log" />
+	</logger>
+
+	<logger name="jdbc.sqltiming" additivity="false">
+		<level value="warn"/>
+		<appender-ref ref="sql_log" />
+	</logger>
+	<logger name="jdbc.sqlonly" additivity="false">
+		<level value="info" />
+		<appender-ref ref="sql_log" />
+	</logger>
+	<logger name="jdbc.connection" additivity="false">
+		<level value="warn" />
+		<appender-ref ref="sql_log" />
+	</logger>
+
+	<root level="INFO">
+		<appender-ref ref="file" />
+	</root>
+
+</configuration>

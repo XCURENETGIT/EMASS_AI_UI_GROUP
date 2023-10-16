@@ -1,0 +1,12 @@
+XCN-XCURENET DEFINITIONS ::= BEGIN
+
+IMPORTS
+	MODULE-IDENTITY,
+	enterprises 		FROM SNMPv2-SMI;
+
+--- XCURENET enterprise-specific management objects
+xcurenet 		OBJECT IDENTIFIER ::= { enterprises 25387 }
+xcnProduct 		OBJECT IDENTIFIER ::= { xcurenet 1 }
+xcnMgmt 		OBJECT IDENTIFIER ::= { xcurenet 2 }
+xcnTrap         OBJECT IDENTIFIER ::= { xcurenet 10 }
+END

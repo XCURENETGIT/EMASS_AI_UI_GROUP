@@ -1,0 +1,1072 @@
+XCN-CONFIG DEFINITIONS ::= BEGIN
+
+IMPORTS
+	OBJECT-TYPE 	FROM SNMPv2-SMI
+	xcnMgmt 		FROM XCN-XCURENET;
+
+xcnConfig MODULE-IDENTITY
+   LAST-UPDATED "201305140000Z"
+   ORGANIZATION "www.xcurenet.com"
+   CONTACT-INFO "Postal    : XCURENET Co., Ltd.
+                             9F DMC R&D Center, E3-2, DMC
+                             Sangam-Dong Mapo-Gu
+                             Seoul, 127-270, Korea
+                 Telephone : 82-2-567-0961
+                 FAX       : 82-2-567-0963
+                 e-mail    : jhpark@xcurenet.com"
+   DESCRIPTION  "Used by configuration information of XCURENET system."
+   REVISION     "201305140000Z"
+   DESCRIPTION  "First create by jpark"
+   ::= { xcnMgmt 2 }
+
+---
+--- pgms configuration file information
+---
+pgmsConfig OBJECT IDENTIFIER ::= { xcnConfig 1 }
+
+pgmsConfTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF PgmsConfEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "table of PGMS configuration file."
+    ::= { pgmsConfig 1 }
+
+pgmsConfEntry OBJECT-TYPE
+    SYNTAX      PgmsConfEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "pgms configuration entry."
+    INDEX       { pgmsConfIndex }
+    ::= { pgmsConfTable 1 }
+
+PgmsConfEntry ::= SEQUENCE {
+	pgmsConfIndex 		INTEGER,
+	pgmsConfEid			INTEGER,
+	pgmsConfDbIp 		OCTET STRING,
+	pgmsConfType 		INTEGER,
+	pgmsConfTdmUsed		INTEGER,
+	pgmsConfVoipUsed 	INTEGER,
+	pgmsConfDataUsed 	INTEGER,
+	pgmsConfSneakUsed 	INTEGER,
+	pgmsConfDtdbUsed 	INTEGER
+}
+
+pgmsConfIndex OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  not-accessible
+	STATUS      current
+    DESCRIPTION "pgms configuration table index."
+    ::= { pgmsConfEntry 1 }
+
+pgmsConfEid OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+	STATUS      current
+    DESCRIPTION "pgms equipment ID."
+    ::= { pgmsConfEntry 2 }
+
+pgmsConfDbIp OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-write
+	STATUS      current
+    DESCRIPTION "DB IP address"
+    ::= { pgmsConfEntry 3 }
+
+pgmsConfType OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+	STATUS      current
+    DESCRIPTION "pgms equipment type."
+    ::= { pgmsConfEntry 4 }
+
+pgmsConfTdmUsed OBJECT-TYPE
+    SYNTAX      INTEGER { off(0), on(1) }
+    MAX-ACCESS  read-write
+	STATUS      current
+    DESCRIPTION "TDM features used."
+    ::= { pgmsConfEntry 5 }
+
+pgmsConfVoipUsed OBJECT-TYPE
+    SYNTAX      INTEGER { off(0), on(1) }
+    MAX-ACCESS  read-write
+	STATUS      current
+    DESCRIPTION "VoIP features used."
+    ::= { pgmsConfEntry 6 }
+
+pgmsConfDataUsed OBJECT-TYPE
+    SYNTAX      INTEGER { off(0), on(1) }
+    MAX-ACCESS  read-write
+	STATUS      current
+    DESCRIPTION "EMASS module used."
+    ::= { pgmsConfEntry 7 }
+
+pgmsConfSneakUsed OBJECT-TYPE
+    SYNTAX      INTEGER { off(0), on(1) }
+    MAX-ACCESS  read-write
+	STATUS      current
+    DESCRIPTION "SNEAK module used."
+    ::= { pgmsConfEntry 8 }
+
+pgmsConfDtdbUsed OBJECT-TYPE
+    SYNTAX      INTEGER { off(0), on(1) }
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "Distributed DB used."
+    ::= { pgmsConfEntry 9 }
+
+tellusConfTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF TellusConfEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "table of TELLUS configuration file."
+    ::= { pgmsConfig 2 }
+
+tellusConfEntry OBJECT-TYPE
+    SYNTAX      TellusConfEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "tellus configuration entry."
+    INDEX       { tellusConfIndex }
+    ::= { tellusConfTable 1 }
+
+TellusConfEntry ::= SEQUENCE {
+	tellusConfIndex 	INTEGER,
+	tellusConfDomain	INTEGER,
+	tellusConfCardNo	INTEGER,
+	tellusConfCpuNo		INTEGER
+}
+
+tellusConfIndex OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  not-accessible
+	STATUS      current
+    DESCRIPTION "tellus configuration table index."
+    ::= { tellusConfEntry 1 }
+
+tellusConfDomain OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "tellus domain number"
+    ::= { tellusConfEntry 2 }
+
+tellusConfCardNo OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "tellus card number"
+    ::= { tellusConfEntry 3 }
+
+tellusConfCpuNo OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "tellus CPU number"
+    ::= { tellusConfEntry 4 }
+
+---
+--- TDM board configuration file information
+---
+tdmConfig OBJECT IDENTIFIER ::= { xcnConfig 2 }
+
+tdmBdConfTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF TdmBdConfEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "table of TDM board configuration file."
+    ::= { tdmConfig 1 }
+
+tdmBdConfEntry OBJECT-TYPE
+    SYNTAX      TdmBdConfEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "TDM board configuration entry."
+    INDEX       { tdmBdConfIndex }
+    ::= { tdmBdConfTable 1 }
+
+TdmBdConfEntry ::= SEQUENCE {
+	tdmBdConfIndex 		INTEGER,
+	tdmBdConfTotalBd	INTEGER,
+	tdmBdConfTotalCh	INTEGER,
+	tdmBdConfEvtIfType 	INTEGER,
+	tdmBdConfApiLog		INTEGER
+}
+
+tdmBdConfIndex OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  not-accessible
+	STATUS      current
+    DESCRIPTION "TDM board configuration table index."
+    ::= { tdmBdConfEntry 1 }
+
+tdmBdConfTotalBd OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "total number of TDM board."
+    ::= { tdmBdConfEntry 2 }
+
+tdmBdConfTotalCh OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "total number of channel."
+    ::= { tdmBdConfEntry 3 }
+
+tdmBdConfEvtIfType OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "TDM board's event interface type"
+    ::= { tdmBdConfEntry 4 }
+
+tdmBdConfApiLog OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "TDM board's API log enable"
+    ::= { tdmBdConfEntry 5 }
+
+---
+--- One of TDM board attribute
+---
+tdmBdAttrTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF TdmBdAttrEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "one of TDM board attribute table."
+    ::= { tdmConfig 2 }
+
+tdmBdAttrEntry OBJECT-TYPE
+    SYNTAX      TdmBdAttrEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "TDM board attribute entry."
+    INDEX       { tdmBdAttrIndex }
+    ::= { tdmBdAttrTable 1 }
+
+TdmBdAttrEntry ::= SEQUENCE {
+	tdmBdAttrIndex 		INTEGER,
+	tdmBdAttrBdNo		INTEGER,
+	tdmBdAttrChannel	INTEGER,
+	tdmBdAttrStartCh	INTEGER,
+	tdmBdAttrEndCh		INTEGER,
+	tdmBdAttrModel		OCTET STRING,
+	tdmBdAttrSerial 	OCTET STRING,
+	tdmBdAttrPbx	 	OCTET STRING,
+	tdmBdAttrDefVform	INTEGER
+}
+
+tdmBdAttrIndex OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  not-accessible
+	STATUS      current
+    DESCRIPTION "TDM board attribute table index."
+    ::= { tdmBdAttrEntry 1 }
+
+tdmBdAttrBdNo OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "board index number."
+    ::= { tdmBdAttrEntry 2 }
+
+tdmBdAttrChannel OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "total number of one board."
+    ::= { tdmBdAttrEntry 3 }
+
+tdmBdAttrStartCh OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "start channel of board."
+    ::= { tdmBdAttrEntry 4 }
+
+tdmBdAttrEndCh OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "end channel of board."
+    ::= { tdmBdAttrEntry 5 }
+
+tdmBdAttrModel OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "TDM board's model."
+    ::= { tdmBdAttrEntry 6 }
+
+tdmBdAttrSerial OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "TDM board's serial number."
+    ::= { tdmBdAttrEntry 7 }
+
+tdmBdAttrPbx OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "TDM board's PBX type."
+    ::= { tdmBdAttrEntry 8 }
+
+tdmBdAttrDefVform OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "TDM board's default voice format."
+    ::= { tdmBdAttrEntry 9 }
+
+---
+--- TDM Channel information
+---
+tdmChInfoTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF TdmChInfoEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "TDM channel information table."
+    ::= { tdmConfig 3 }
+
+tdmChInfoEntry OBJECT-TYPE
+    SYNTAX      TdmChInfoEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "TDM channel information entry."
+    INDEX       { tdmChInfoIndex }
+    ::= { tdmChInfoTable 1 }
+
+TdmChInfoEntry ::= SEQUENCE {
+	tdmChInfoIndex 		INTEGER,
+	tdmChInfoBdNo		INTEGER,
+	tdmChInfoPhyscNo	INTEGER,
+	tdmChInfoLogicNo	INTEGER,
+	tdmChInfoType		OCTET STRING,
+	tdmChInfoRegist		INTEGER,
+	tdmChInfoRecVol		INTEGER,
+	tdmChInfoMode		OCTET STRING,
+	tdmChInfoEcho		INTEGER,
+	tdmChInfoAgc		INTEGER,
+	tdmChInfoLvt		INTEGER,
+	tdmChInfoVolRef		OCTET STRING,
+	tdmChInfoIgnoreLvt 	INTEGER,
+	tdmChInfoBargeSens 	INTEGER
+}
+
+tdmChInfoIndex OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  not-accessible
+	STATUS      current
+    DESCRIPTION "TDM channel index."
+    ::= { tdmChInfoEntry 1 }
+
+tdmChInfoBdNo OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "board index number."
+    ::= { tdmChInfoEntry 2 }
+
+tdmChInfoPhyscNo OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "Physical channel number."
+    ::= { tdmChInfoEntry 3 }
+
+tdmChInfoLogicNo OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "Logical channel number."
+    ::= { tdmChInfoEntry 4 }
+
+tdmChInfoType OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "channel type"
+    ::= { tdmChInfoEntry 5 }
+
+tdmChInfoRegist OBJECT-TYPE
+    SYNTAX      INTEGER { unregister(0), register(1) }
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "channel's register information."
+    ::= { tdmChInfoEntry 6 }
+
+tdmChInfoRecVol OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "record volume"
+    ::= { tdmChInfoEntry 7 }
+
+tdmChInfoMode OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "recording mode"
+    ::= { tdmChInfoEntry 8 }
+
+tdmChInfoEcho OBJECT-TYPE
+    SYNTAX      INTEGER { off(0), on(1) }
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "echocanceler used."
+    ::= { tdmChInfoEntry 9 }
+
+tdmChInfoAgc OBJECT-TYPE
+    SYNTAX      INTEGER { off(0), on(1) }
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "automatic gain control used"
+    ::= { tdmChInfoEntry 10 }
+
+tdmChInfoLvt OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "line voltage threshold value"
+    ::= { tdmChInfoEntry 11 }
+
+tdmChInfoVolRef OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "channel's voltageReference value"
+    ::= { tdmChInfoEntry 12 }
+
+tdmChInfoIgnoreLvt OBJECT-TYPE
+    SYNTAX      INTEGER { off(0), on(1) }
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "Ignore Line voltage used"
+    ::= { tdmChInfoEntry 13 }
+
+tdmChInfoBargeSens OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "BargedIn sensetive value"
+    ::= { tdmChInfoEntry 14 }
+
+---
+--- VoIP target information
+---
+voipConfig OBJECT IDENTIFIER ::= { xcnConfig 3 }
+
+voipConfTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF VoipConfEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "VoIP configuration table."
+    ::= { voipConfig 1 }
+
+voipConfEntry OBJECT-TYPE
+    SYNTAX      VoipConfEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "VoIP configuration entry."
+    INDEX       { voipConfIndex }
+    ::= { voipConfTable 1 }
+
+VoipConfEntry ::= SEQUENCE {
+	voipConfIndex 		INTEGER,
+	voipConfSsIp 		OCTET STRING,
+	voipConfSsPort 		OCTET STRING,
+	voipConfSsVendor 	OCTET STRING,
+	voipConfSsProtocol 	OCTET STRING,
+	voipConfSipPorts 	OCTET STRING
+}
+
+voipConfIndex OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  not-accessible
+	STATUS      current
+    DESCRIPTION "VoIP config entry index."
+    ::= { voipConfEntry 1 }
+
+voipConfSsIp OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "VoIP switch IP address."
+    ::= { voipConfEntry 2 }
+
+voipConfSsPort OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "VoIP switch port number."
+    ::= { voipConfEntry 3 }
+
+voipConfSsVendor OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "VoIP switch vendor."
+    ::= { voipConfEntry 4 }
+
+voipConfSsProtocol OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "VoIP switch protocol type."
+    ::= { voipConfEntry 5 }
+
+voipConfSipPorts OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "VoIP SIP port number."
+    ::= { voipConfEntry 6 }
+
+voipTgInfoTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF VoipTgInfoEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "VoIP target information table."
+    ::= { voipConfig 2 }
+
+voipTgInfoEntry OBJECT-TYPE
+    SYNTAX      VoipTgInfoEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "VoIP target information entry."
+    INDEX       { voipTgInfoIndex }
+    ::= { voipTgInfoTable 1 }
+
+VoipTgInfoEntry ::= SEQUENCE {
+	voipTgInfoIndex 	INTEGER,
+	voipTgInfoType 		OCTET STRING,
+	voipTgInfoNumber 	OCTET STRING,
+	voipTgInfoIpaddr 	OCTET STRING
+}
+
+voipTgInfoIndex OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  not-accessible
+	STATUS      current
+    DESCRIPTION "VoIP target entry index."
+    ::= { voipTgInfoEntry 1 }
+
+voipTgInfoType OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "VoIP target type."
+    ::= { voipTgInfoEntry 2 }
+
+voipTgInfoNumber OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "VoIP target number."
+    ::= { voipTgInfoEntry 3 }
+
+voipTgInfoIpaddr OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "VoIP target IP address."
+    ::= { voipTgInfoEntry 4 }
+
+---
+--- EMASS configuration information
+---
+emassConfig OBJECT IDENTIFIER ::= { xcnConfig 4 }
+
+emassConfTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF EmassConfEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "EMASS configuration information table."
+    ::= { emassConfig 1 }
+
+emassConfEntry OBJECT-TYPE
+    SYNTAX      EmassConfEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "EMASS configuration information entry."
+    INDEX       { emassConfIndex }
+    ::= { emassConfTable 1 }
+
+EmassConfEntry ::= SEQUENCE {
+	emassConfIndex 	INTEGER,
+	emassConfTlsIp 	OCTET STRING,
+	emassConfWrtIp 	OCTET STRING,
+	emassConfAppIp 	OCTET STRING
+}
+
+emassConfIndex OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  not-accessible
+	STATUS      current
+    DESCRIPTION "EMASS configuration entry index."
+    ::= { emassConfEntry 1 }
+
+emassConfTlsIp OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "TELLUS connection IP address."
+    ::= { emassConfEntry 2 }
+
+emassConfWrtIp OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "Writer server IP address."
+    ::= { emassConfEntry 3 }
+
+emassConfAppIp OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "Application server IP address."
+    ::= { emassConfEntry 4 }
+
+---
+--- EMASS writer information
+---
+emassWrtTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF EmassWrtEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "EMASS writer information table."
+    ::= { emassConfig 2 }
+
+emassWrtEntry OBJECT-TYPE
+    SYNTAX      EmassWrtEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "EMASS writer information entry."
+    INDEX       { emassWrtIndex }
+    ::= { emassWrtTable 1 }
+
+EmassWrtEntry ::= SEQUENCE {
+	emassWrtIndex 	INTEGER,
+	emassWrtName 	OCTET STRING,
+	emassWrtPort 	OCTET STRING,
+	emassWrtCnt 	INTEGER,
+	emassWrtWait 	INTEGER,
+	emassWrtOpt 	OCTET STRING
+}
+
+emassWrtIndex OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  not-accessible
+	STATUS      current
+    DESCRIPTION "EMASS writer entry index."
+    ::= { emassWrtEntry 1 }
+
+emassWrtName OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "writer process name."
+    ::= { emassWrtEntry 2 }
+
+emassWrtPort OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "writer's logging port."
+    ::= { emassWrtEntry 3 }
+
+emassWrtCnt OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "writer's count."
+    ::= { emassWrtEntry 4 }
+
+emassWrtWait OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "writer's waitting time."
+    ::= { emassWrtEntry 5 }
+
+emassWrtOpt OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "writer's process start option."
+    ::= { emassWrtEntry 6 }
+
+---
+--- SNEAK configuration information
+---
+sneakConfig OBJECT IDENTIFIER ::= { xcnConfig 5 }
+
+sneakConfTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF SneakConfEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "SNEAK configuration information table."
+    ::= { sneakConfig 1 }
+
+sneakConfEntry OBJECT-TYPE
+    SYNTAX      SneakConfEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "SNEAK configuration information entry."
+    INDEX       { sneakConfIndex }
+    ::= { sneakConfTable 1 }
+
+SneakConfEntry ::= SEQUENCE {
+	sneakConfIndex 		INTEGER,
+	sneakConfTrans 		INTEGER,
+	sneakConfGroup 		INTEGER,
+	sneakConfRele 		INTEGER,
+	sneakConfDpdPort 	OCTET STRING,
+	sneakConfHttpPort 	OCTET STRING
+}
+
+sneakConfIndex OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  not-accessible
+	STATUS      current
+    DESCRIPTION "SNEAK configuration entry index."
+    ::= { sneakConfEntry 1 }
+
+sneakConfTrans OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "transaction release time"
+    ::= { sneakConfEntry 2 }
+
+sneakConfGroup OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "grouping release time"
+    ::= { sneakConfEntry 3 }
+
+sneakConfRele OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "connection check time"
+    ::= { sneakConfEntry 4 }
+
+sneakConfDpdPort OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "DPD connection port"
+    ::= { sneakConfEntry 5 }
+
+sneakConfHttpPort OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "available http port"
+    ::= { sneakConfEntry 6 }
+
+---
+--- IIF configuration information
+---
+iifConfig OBJECT IDENTIFIER ::= { xcnConfig 6 }
+
+iifConfTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF IifConfEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "IIF configuration information table."
+    ::= { iifConfig 1 }
+
+iifConfEntry OBJECT-TYPE
+    SYNTAX      IifConfEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "IIF configuration information entry."
+    INDEX       { iifConfIndex }
+    ::= { iifConfTable 1 }
+
+IifConfEntry ::= SEQUENCE {
+	iifConfIndex 		INTEGER,
+	iifConfAdminIp 		OCTET STRING,
+	iifConfAdminPort 	OCTET STRING,
+	iifConfIpfRule 		OCTET STRING,
+	iifConfInbndPort1 	OCTET STRING,
+	iifConfOutbndPort1 	OCTET STRING,
+	iifConfInbndPort2 	OCTET STRING,
+	iifConfOutbndPort2 	OCTET STRING,
+	iifConfDhcpRule 	OCTET STRING,
+	iifConfPoolSize 	OCTET STRING
+}
+
+iifConfIndex OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  not-accessible
+	STATUS      current
+    DESCRIPTION "IIF configuration entry index."
+    ::= { iifConfEntry 1 }
+
+iifConfAdminIp OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "administrator IP address"
+    ::= { iifConfEntry 2 }
+
+iifConfAdminPort OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "administrator port number"
+    ::= { iifConfEntry 3 }
+
+iifConfIpfRule OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "ip filtering rule file path"
+    ::= { iifConfEntry 4 }
+
+iifConfInbndPort1 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-write
+	STATUS      current
+    DESCRIPTION "1st inbound port"
+    ::= { iifConfEntry 5 }
+
+iifConfOutbndPort1 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-write
+	STATUS      current
+    DESCRIPTION "1st outbound port"
+    ::= { iifConfEntry 6 }
+
+iifConfInbndPort2 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-write
+	STATUS      current
+    DESCRIPTION "2nd inbound port"
+    ::= { iifConfEntry 7 }
+
+iifConfOutbndPort2 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-write
+	STATUS      current
+    DESCRIPTION "2nd outbound port"
+    ::= { iifConfEntry 8 }
+
+iifConfDhcpRule OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "DHCP rule file path"
+    ::= { iifConfEntry 9 }
+
+iifConfPoolSize OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "IIF packet pool size"
+    ::= { iifConfEntry 10 }
+
+ipfRuleTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF IpfRuleEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "IP filtering rule information table."
+    ::= { iifConfig 2 }
+
+ipfRuleEntry OBJECT-TYPE
+    SYNTAX      IpfRuleEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "IP filtering rule information entry."
+    INDEX       { ipfRuleIndex }
+    ::= { ipfRuleTable 1 }
+
+IpfRuleEntry ::= SEQUENCE {
+	ipfRuleIndex 		INTEGER,
+    ipfRuleVersion      INTEGER,
+    ipfRuleSipFrom      OCTET STRING,
+    ipfRuleSipTo        OCTET STRING,
+    ipfRuleSportFrom    INTEGER,
+    ipfRuleSportTo      INTEGER,
+    ipfRuleDipFrom      OCTET STRING,
+    ipfRuleDipTo        OCTET STRING,
+    ipfRuleDportFrom    INTEGER,
+    ipfRuleDportTo      INTEGER,
+    ipfRuleProtocol     INTEGER,
+    ipfRuleAction       INTEGER
+}
+
+ipfRuleIndex OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  not-accessible
+	STATUS      current
+    DESCRIPTION "IP filtering rule entry index."
+    ::= { ipfRuleEntry 1 }
+
+ipfRuleVersion  OBJECT-TYPE
+    SYNTAX  INTEGER
+    MAX-ACCESS  read-write
+    STATUS  current
+    DESCRIPTION "rule version"
+    ::= { ipfRuleEntry 2 }
+
+ipfRuleSipFrom  OBJECT-TYPE
+    SYNTAX  OCTET STRING
+    MAX-ACCESS  read-write
+    STATUS  current
+    DESCRIPTION "start source IP address"
+    ::= { ipfRuleEntry 3 }
+
+ipfRuleSipTo    OBJECT-TYPE
+    SYNTAX  OCTET STRING
+    MAX-ACCESS  read-write
+    STATUS  current
+    DESCRIPTION "end source IP address"
+    ::= { ipfRuleEntry 4 }
+
+ipfRuleSportFrom    OBJECT-TYPE
+    SYNTAX  INTEGER
+    MAX-ACCESS  read-write
+    STATUS  current
+    DESCRIPTION "start source port number"
+    ::= { ipfRuleEntry 5 }
+
+ipfRuleSportTo  OBJECT-TYPE
+    SYNTAX  INTEGER
+    MAX-ACCESS  read-write
+    STATUS  current
+    DESCRIPTION "end source port number"
+    ::= { ipfRuleEntry 6 }
+ipfRuleDipFrom  OBJECT-TYPE
+    SYNTAX  OCTET STRING
+    MAX-ACCESS  read-write
+    STATUS  current
+    DESCRIPTION "start destination IP address"
+    ::= { ipfRuleEntry 7 }
+
+ipfRuleDipTo    OBJECT-TYPE
+    SYNTAX  OCTET STRING
+    MAX-ACCESS  read-write
+    STATUS  current
+    DESCRIPTION "end destination IP address"
+    ::= { ipfRuleEntry 8 }
+
+ipfRuleDportFrom    OBJECT-TYPE
+    SYNTAX  INTEGER
+    MAX-ACCESS  read-write
+    STATUS  current
+    DESCRIPTION "start destination port number"
+    ::= { ipfRuleEntry 9 }
+
+ipfRuleDportTo  OBJECT-TYPE
+    SYNTAX  INTEGER
+    MAX-ACCESS  read-write
+    STATUS  current
+    DESCRIPTION "end destination port number"
+    ::= { ipfRuleEntry 10 }
+
+ipfRuleProtocol     OBJECT-TYPE
+    SYNTAX  INTEGER { TCP(6), UDP(17) }
+    MAX-ACCESS  read-write
+    STATUS  current
+    DESCRIPTION "protocol type setting (TCP:6, UDP:17)"
+    ::= { ipfRuleEntry 11 }
+
+ipfRuleAction   OBJECT-TYPE
+    SYNTAX  INTEGER { log(1), nolog(2) }
+    MAX-ACCESS  read-write
+    STATUS  current
+    DESCRIPTION "logging action setting (logging:1, no logging:2)"
+    ::= { ipfRuleEntry 12 }
+
+dhcpRuleTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF DhcpRuleEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "DHCP rule information table."
+    ::= { iifConfig 3 }
+
+dhcpRuleEntry OBJECT-TYPE
+    SYNTAX      DhcpRuleEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "DHCP rule information entry."
+    INDEX       { dhcpRuleIndex }
+    ::= { dhcpRuleTable 1 }
+
+DhcpRuleEntry ::= SEQUENCE {
+	dhcpRuleIndex 	INTEGER,
+    dhcpRuleVer 	INTEGER,
+    dhcpRuleMac 	OCTET STRING,
+    dhcpRuleIp 		OCTET STRING
+}
+
+dhcpRuleIndex OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  not-accessible
+	STATUS      current
+    DESCRIPTION "DHCP rule entry index."
+    ::= { dhcpRuleEntry 1 }
+
+dhcpRuleVer  OBJECT-TYPE
+    SYNTAX 		INTEGER
+    MAX-ACCESS  read-write
+    STATUS  current
+    DESCRIPTION "DHCP rule version."
+    ::= { dhcpRuleEntry 2 }
+
+dhcpRuleMac  OBJECT-TYPE
+    SYNTAX 		OCTET STRING
+    MAX-ACCESS  read-write
+    STATUS  current
+    DESCRIPTION "DHCP MAC address."
+    ::= { dhcpRuleEntry 3 }
+
+dhcpRuleIp  OBJECT-TYPE
+    SYNTAX 		OCTET STRING
+    MAX-ACCESS  read-write
+    STATUS  current
+    DESCRIPTION "DHCP ip address."
+    ::= { dhcpRuleEntry 4 }
+
+QoSRuleTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF QoSRuleEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "QoS rule information table."
+    ::= { iifConfig 4 }
+
+qosRuleEntry OBJECT-TYPE
+    SYNTAX      QoSRuleEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "QoS rule information entry."
+    INDEX       { qosRuleIndex }
+    ::= { QoSRuleTable 1 }
+
+QoSRuleEntry ::= SEQUENCE {
+	qosRuleIndex 	INTEGER,
+    qosSpeed 		INTEGER
+}
+
+qosRuleIndex OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  not-accessible
+	STATUS      current
+    DESCRIPTION "QoS rule entry index."
+    ::= { qosRuleEntry 1 }
+
+qosRuleSpeed OBJECT-TYPE
+    SYNTAX 		INTEGER
+    MAX-ACCESS  read-write
+    STATUS  current
+    DESCRIPTION "Tx Speed Limit."
+    ::= { qosRuleEntry 2 }
+
+END

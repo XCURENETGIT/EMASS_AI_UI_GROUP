@@ -1,0 +1,212 @@
+#!/usr/bin/env bash
+
+export LANG=en_US.UTF-8
+
+PROGRAM_NAME="Xcurenet_EMASS_PRO_v2"
+PROGRAM_SCRIPT="$0"
+PROGRAM_HOME=`dirname "$PROGRAM_SCRIPT"`/..
+PROGRAM_HOME=`cd "$PROGRAM_HOME"; pwd`
+PROGRAM_LOG_CONF="$PROGRAM_HOME/conf/logback-spring.xml"
+PROGRAM_CLASSPATHS="$PROGRAM_HOME/lib/*.war"
+
+JAVA_OPTS="-server -Xms2g -Xmx4g -XX:MetaspaceSize=512M -XX:MaxMetaspaceSize=512M -XX:NewRatio=3 -XX:SurvivorRatio=4 -XX:TargetSurvivorRatio=90 -XX:MaxTenuringThreshold=8 -XX:+UseG1GC -XX:ConcGCThreads=4 -XX:ParallelGCThreads=4 -XX:+CMSScavengeBeforeRemark -XX:PretenureSizeThreshold=64m -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=50 -XX:CMSMaxAbortablePrecleanTime=6000 -XX:+CMSParallelRemarkEnabled -XX:+ParallelRefProcEnabled -Djava.net.preferIPv4Stack=true -XX:OnOutOfMemoryError=$PROGRAM_HOME/bin/oom_proc -Dlogging.config=$PROGRAM_LOG_CONF -Dprogram.name=$PROGRAM_NAME -Dspring.cloud.bootstrap.location=$PROGRAM_HOME/conf/bootstrap.properties"
+PROGRAM_OPTS="--spring.config.location=file:$PROGRAM_HOME/conf/application.properties"
+
+if [ -n "$JAVA_HOME" ]; then
+  for java in "$JAVA_HOME"/bin/amd64/java "$JAVA_HOME"/bin/java; do
+    if [ -x "$java" ]; then
+      JAVA="$java"
+      break
+    fi
+  done
+  if [ -z "$JAVA" ]; then
+    echo >&2 "The currently defined JAVA_HOME ($JAVA_HOME) refers"
+    echo >&2 "to a location where Java could not be found.  Aborting."
+    echo >&2 "Either fix the JAVA_HOME variable or remove it from the"
+    echo >&2 "environment so that the system PATH will be searched."
+    exit 1
+  fi
+else
+  JAVA=`which java`
+  if [ -z "$JAVA" ]; then
+    JAVA="/usr/lib/jvm/java-11-openjdk-11.0.16.0.8-1.el8_6.x86_64/jre/"
+  fi
+fi
+
+function get_pid() {
+  STR=$1
+  echo `ps auxww | grep "$STR" | grep -v grep | awk '{print $2}'`
+} # end get_pid
+
+function print_usage() {
+  CMD="$1"
+  ERROR_MSG="$2"
+
+  if [ "$ERROR_MSG" != "" ]; then
+    echo -e "\nERROR: $ERROR_MSG\n"
+  fi
+
+  if [ -z "$CMD" ]; then
+    echo ""
+    echo "Usage: $PROGRAM_NAME COMMAND OPTIONS"
+    echo "       where COMMAND is one of: start, stop, restart, status"
+    echo ""
+  elif [ "$CMD" == "start" || "$CMD" == "restart" ]; then
+    print_usage ""
+  fi
+} # end print_usage
+
+# used to show the script is still alive when waiting on work to complete
+function spinner() {
+  local pid=$1
+  local delay=0.5
+  local spinstr='|/-\'
+  while [ "$(ps aux | awk '{print $2}' | grep -w $pid)" ]; do
+      local temp=${spinstr#?}
+      printf " [%c]  " "$spinstr"
+      local spinstr=$temp${spinstr%"$temp"}
+      sleep $delay
+      printf "\b\b\b\b\b\b"
+  done
+  printf "    \b\b\b\b"
+}
+
+function stop_pid_force() {
+  PID="$1"
+  TIME="$2"
+
+  sleep $TIME
+  echo ""
+  echo -e "$PROGRAM_NAME process $PID is still running; forcefully killing it now."
+  kill -9 $PID
+  echo "Killed process $PID"
+
+} # end stop_pid_force
+
+function stop_pid() {
+  PID="$1"
+  TIME="$2"
+
+  FORCE_PID=""
+  if [ "$TIME" != "" ]; then
+    stop_pid_force "$PID" "$TIME" &
+    FORCE_PID=$!
+  fi
+
+  kill $PID
+  spinner $PID
+ 
+  if [ "$FORCE_PID" != "" ]; then 
+    kill $FORCE_PID 2>/dev/null
+  fi
+} # end stop_pid
+
+if [ $# -eq 1 ]; then
+  case $1 in
+    -help|-usage|-h|--help)
+        print_usage ""
+        exit
+    ;;
+  esac
+fi
+
+
+if [ $# -gt 0 ]; then
+  # if first arg starts with a dash (and it's not -help or -info), 
+  # then assume they are starting $PROGRAM_NAME
+  if [ $1 == -* ]; then
+    SCRIPT_CMD="start"
+  else
+    SCRIPT_CMD="$1"
+    shift
+  fi
+else
+  # no args - just show usage and exit
+  print_usage ""
+  exit
+fi
+
+# verify the command given is supported
+if [ "$SCRIPT_CMD" != "stop" ] && [ "$SCRIPT_CMD" != "start" ] && [ "$SCRIPT_CMD" != "restart" ] && [ "$SCRIPT_CMD" != "status" ]; then
+  print_usage "" "$SCRIPT_CMD is not a valid command!"
+  exit 1
+fi
+
+if [ "$SCRIPT_CMD" == "status" ]; then
+  PID=`get_pid "$PROGRAM_NAME"`
+  if [ "$PID" != "" ]; then
+    echo -e "$PROGRAM_NAME (pid $PID) is running..."
+  else
+    echo -e "$PROGRAM_NAME is stopped."
+  fi
+  exit
+fi
+
+if [ $# -gt 0 ]; then
+  while true; do
+    case "$1" in
+        -help|-usage)
+            print_usage "$SCRIPT_CMD"
+            exit 0
+        ;;
+        --)
+            shift
+            break
+        ;;
+        *)
+            if [ "${1:0:2}" == "-D" ]; then
+              # pass thru any opts that begin with -D (java system props)
+              JAVA_OPTS="$JAVA_OPTS $1"
+              shift
+            else
+              if [ "$1" != "" ]; then
+                print_usage "$SCRIPT_CMD" "$1 is not supported by this script"
+                exit 1
+              else
+                break # out-of-args, stop looping
+              fi
+            fi
+        ;;
+    esac
+  done
+fi
+
+############# start/stop logic below here ################
+
+if $verbose ; then
+  echo "Using $PROGRAM_NAME home directory: $PROGRAM_HOME"
+  echo "Using Java: $JAVA"
+  "$JAVA" -version
+  echo ""
+fi
+
+if [ "$SCRIPT_CMD" == "stop" ] || [ "$SCRIPT_CMD" == "restart" ]; then
+  get_pid "$PROGRAM_NAME" | while read PID; do
+    if [ "$PID" != "" ]; then
+      echo -n -e "Waiting 60 seconds to allow $PROGRAM_NAME (pid $PID) to stop gracefully."
+      stop_pid "$PID" 5
+      echo ""
+    fi
+  done
+  
+  if [ "$SCRIPT_CMD" == "stop" ]; then
+    exit
+  fi
+fi
+
+if [ "$SCRIPT_CMD" == "start" ]; then
+  PID=`get_pid "$PROGRAM_NAME"`
+  if [ "$PID" != "" ]; then
+    echo -e "Already running $PROGRAM_NAME (pid $PID)."
+    exit
+  fi
+fi
+
+# start
+ulimit -n 102400
+ulimit -c unlimited
+
+
+`$JAVA $JAVA_OPTS -jar $PROGRAM_CLASSPATHS $PROGRAM_OPTS >/dev/null 2>&1 &`
+
+echo -e "Starting $PROGRAM_NAME."

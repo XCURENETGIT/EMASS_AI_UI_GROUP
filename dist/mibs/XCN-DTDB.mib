@@ -1,0 +1,464 @@
+XCN-DTDB DEFINITIONS ::= BEGIN
+
+IMPORTS
+	OBJECT-TYPE 	FROM SNMPv2-SMI
+	xcnProduct		FROM XCN-XCURENET;
+
+xcnDtibutedDB MODULE-IDENTITY
+   LAST-UPDATED "201311210000Z"
+   ORGANIZATION "www.xcurenet.com"
+   CONTACT-INFO "Postal    : XCURENET Co., Ltd.
+                             9F DMC R&D Center, E3-2, DMC
+                             Sangam-Dong Mapo-Gu
+                             Seoul, 127-270, Korea
+                 Telephone : 82-2-567-0961
+                 FAX       : 82-2-567-0963
+                 e-mail    : jhpark@xcurenet.com"
+   DESCRIPTION  "This MIB is used by dtibuted databases."
+   REVISION     "201305100000Z"
+   DESCRIPTION  "First create by jpark"
+   ::= { xcnProduct 3 }
+
+---
+--- Module Dtibuted Databases process status
+---
+dtDbProcStTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF DtDbProcStEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "table of dtibuted databases process status."
+    ::= { xcnDtibutedDB 1 }
+
+dtDbProcStEntry OBJECT-TYPE
+    SYNTAX 		DtDbProcStEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "dtibuted databases process status entry."
+    INDEX       { dtDbProcStIndex }
+    ::= { dtDbProcStTable 1 }
+
+DtDbProcStEntry ::= SEQUENCE {
+	dtDbProcStIndex 	INTEGER,
+	dtDbProcStNameNode 	INTEGER,
+	dtDbProcStDataNode 	INTEGER,
+	dtDbProcStSecNameNd 	INTEGER,
+	dtDbProcStJTracker 	INTEGER,
+	dtDbProcStTTracker 	INTEGER,
+	dtDbProcStZooKeeper 	INTEGER,
+	dtDbProcStHBaseMst 	INTEGER,
+	dtDbProcStHBaseReg 	INTEGER,
+	dtDbProcStHBWrite 	INTEGER,
+	dtDbProcStSolrSvr 	INTEGER,
+	dtDbProcStIndexerA 	INTEGER,
+	dtDbProcStIndexerB 	INTEGER,
+	dtDbProcStIndexerC 	INTEGER,
+	dtDbProcStIndexerD 	INTEGER,
+	dtDbProcStIndexerE 	INTEGER
+}
+
+dtDbProcStIndex OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  not-accessible
+	STATUS      current
+    DESCRIPTION "dtibuted databases process status table index."
+    ::= { dtDbProcStEntry 1 }
+
+dtDbProcStNameNode OBJECT-TYPE
+    SYNTAX      INTEGER { off(0), on(1), none(2) }
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "dtibuted databases name node used."
+    ::= { dtDbProcStEntry 2 }
+
+dtDbProcStDataNode OBJECT-TYPE
+    SYNTAX      INTEGER { off(0), on(1), none(2) }
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "dtibuted databases data node used."
+    ::= { dtDbProcStEntry 3 }
+
+dtDbProcStSecNameNd OBJECT-TYPE
+    SYNTAX      INTEGER { off(0), on(1), none(2) }
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "dtibuted databases secondary name node used."
+    ::= { dtDbProcStEntry 4 }
+
+dtDbProcStJTracker OBJECT-TYPE
+    SYNTAX      INTEGER { off(0), on(1), none(2) }
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "dtibuted databases job tracker used."
+    ::= { dtDbProcStEntry 5 }
+
+dtDbProcStTTracker OBJECT-TYPE
+    SYNTAX      INTEGER { off(0), on(1), none(2) }
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "dtibuted databases task tracker used."
+    ::= { dtDbProcStEntry 6 }
+
+dtDbProcStZooKeeper OBJECT-TYPE
+    SYNTAX      INTEGER { off(0), on(1), none(2) }
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "dtibuted databases zookeeper used."
+    ::= { dtDbProcStEntry 7 }
+
+dtDbProcStHBaseMst OBJECT-TYPE
+    SYNTAX      INTEGER { off(0), on(1), none(2) }
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "dtibuted databasesdistr H-Base master  used."
+    ::= { dtDbProcStEntry 8 }
+
+dtDbProcStHBaseReg OBJECT-TYPE
+    SYNTAX      INTEGER { off(0), on(1), none(2) }
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "dtibuted databases H-Base region server used."
+    ::= { dtDbProcStEntry 9 }
+
+dtDbProcStHBWrite OBJECT-TYPE
+    SYNTAX      INTEGER { off(0), on(1), none(2) }
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "dtibuted databases H-Base write used."
+    ::= { dtDbProcStEntry 10 }
+
+dtDbProcStSolrSvr OBJECT-TYPE
+    SYNTAX      INTEGER { off(0), on(1), none(2) }
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "dtibuted databases solr server used."
+    ::= { dtDbProcStEntry 11 }
+
+dtDbProcStIndexerA OBJECT-TYPE
+    SYNTAX      INTEGER { off(0), on(1), none(2) }
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "dtibuted databases indexerA used."
+    ::= { dtDbProcStEntry 12 }
+
+dtDbProcStIndexerB OBJECT-TYPE
+    SYNTAX      INTEGER { off(0), on(1), none(2) }
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "dtibuted databases indexerB used."
+    ::= { dtDbProcStEntry 13 }
+
+dtDbProcStIndexerC OBJECT-TYPE
+    SYNTAX      INTEGER { off(0), on(1), none(2) }
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "dtibuted databases indexerC used."
+    ::= { dtDbProcStEntry 14 }
+
+dtDbProcStIndexerD OBJECT-TYPE
+    SYNTAX      INTEGER { off(0), on(1), none(2) }
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "dtibuted databases indexerD used."
+    ::= { dtDbProcStEntry 15 }
+
+dtDbProcStIndexerE OBJECT-TYPE
+    SYNTAX      INTEGER { off(0), on(1), none(2) }
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "dtibuted databases indexerE used."
+    ::= { dtDbProcStEntry 16 }
+
+---
+--- Module Dtibuted Databases HDFS status
+---
+dtDbHdfsStTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF DtDbHdfsStEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "table of dtibuted databases HDFS status."
+    ::= { xcnDtibutedDB 2 }
+
+dtDbHdfsStEntry OBJECT-TYPE
+    SYNTAX 		DtDbHdfsStEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "dtibuted databases HDFS status entry."
+    INDEX       { dtDbHdfsStIndex }
+    ::= { dtDbHdfsStTable 1 }
+
+DtDbHdfsStEntry ::= SEQUENCE {
+	dtDbHdfsStIndex 	INTEGER,
+	dtDbHdFsStTotal 	OCTET STRING,
+	dtDbHdfsStCapacity 	OCTET STRING,
+	dtDbHdfsStRemining 	OCTET STRING,
+	dtDbHdfsStUsed 		OCTET STRING,
+	dtDbHdfsStUsage 	INTEGER,
+	dtDbHdfsStUndRepl 	INTEGER,
+	dtDbHdfsStCorrupt 	INTEGER,
+	dtDbHdfsStMissing 	INTEGER,
+	dtDbHdfsNotifyLimit	INTEGER,
+	dtDbHdfsDeleteLimit	INTEGER,
+	dtDbHdfsSetLimit	INTEGER,
+	dtDbHdfsWarnLimit	INTEGER,
+	dtDbHdfsAlarmLimit	INTEGER
+}
+
+dtDbHdfsStIndex OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  not-accessible
+	STATUS      current
+    DESCRIPTION "dtibuted databases HDFS status table index."
+    ::= { dtDbHdfsStEntry 1 }
+
+dtDbHdFsStTotal OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "dtibuted databases total storage size."
+    ::= { dtDbHdfsStEntry 2 }
+
+dtDbHdfsStCapacity OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "dtibuted databases Present Capacity."
+    ::= { dtDbHdfsStEntry 3 }
+
+dtDbHdfsStRemining OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "dtibuted databases HDFS Remaining."
+    ::= { dtDbHdfsStEntry 4 }
+
+dtDbHdfsStUsed OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "dtibuted databases HDFS Used."
+    ::= { dtDbHdfsStEntry 5 }
+
+dtDbHdfsStUsage OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "dtibuted databases HDFS usage(00.00%)."
+    ::= { dtDbHdfsStEntry 6 }
+
+dtDbHdfsStUndRepl OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "dtibuted databases Under replicated blocks."
+    ::= { dtDbHdfsStEntry 7 }
+
+dtDbHdfsStCorrupt OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "dtibuted databases's blocks with corrupt replicas."
+    ::= { dtDbHdfsStEntry 8 }
+
+dtDbHdfsStMissing OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "dtibuted databases missing block."
+    ::= { dtDbHdfsStEntry 9 }
+
+dtDbHdfsNotifyLimit OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+	STATUS      current
+    DESCRIPTION "dtibuted databases notification limit vale."
+    ::= { dtDbHdfsStEntry 10 }
+
+dtDbHdfsDeleteLimit OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+	STATUS      current
+    DESCRIPTION "dtibuted databases clear limit vale."
+    ::= { dtDbHdfsStEntry 11 }
+
+dtDbHdfsSetLimit OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+	STATUS      current
+    DESCRIPTION "dtibuted databases clear limit setting vale."
+    ::= { dtDbHdfsStEntry 12 }
+
+dtDbHdfsWarnLimit OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+	STATUS      current
+    DESCRIPTION "dtibuted databases warning limit vale."
+    ::= { dtDbHdfsStEntry 13 }
+
+dtDbHdfsAlarmLimit OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+	STATUS      current
+    DESCRIPTION "dtibuted databases alarm limit vale."
+    ::= { dtDbHdfsStEntry 14 }
+
+---
+--- Module Dtibuted Databases data processing statistics
+---
+dtDbDataSttTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF DtDbDataSttEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "table of dtibuted databases data processing statistic."
+    ::= { xcnDtibutedDB 3 }
+
+dtDbDataSttEntry OBJECT-TYPE
+    SYNTAX 		DtDbDataSttEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "dtibuted databases data processing statistic entry."
+    INDEX       { dtDbDataSttIndex }
+    ::= { dtDbDataSttTable 1 }
+
+DtDbDataSttEntry ::= SEQUENCE {
+	dtDbDataSttIndex 	INTEGER,
+	dtDbDataSttDate 	OCTET STRING,
+	dtDbDataSttContents OCTET STRING,
+	dtDbDataSttValue 	INTEGER
+}
+
+dtDbDataSttIndex OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  not-accessible
+	STATUS      current
+    DESCRIPTION "dtibuted databases data processing statistic table index."
+    ::= { dtDbDataSttEntry 1 }
+
+dtDbDataSttDate OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "dtibuted databases data processing statistic date."
+    ::= { dtDbDataSttEntry 2 }
+
+dtDbDataSttContents OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "dtibuted databases data processing statistic contents."
+    ::= { dtDbDataSttEntry 3 }
+
+dtDbDataSttValue OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "dtibuted databases data processing statistic value."
+    ::= { dtDbDataSttEntry 4 }
+
+---
+--- Module Hadoop(Dtibuted Databases) cluster status
+---
+clusterStaTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF ClusterStaEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "table of dtibuted databases cluster status."
+    ::= { xcnDtibutedDB 4 }
+
+clusterStaEntry OBJECT-TYPE
+    SYNTAX      ClusterStaEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "dtibuted databases cluster status entry."
+    INDEX       { clusterStaIndex }
+    ::= { clusterStaTable 1 }
+    
+ClusterStaEntry ::= SEQUENCE {
+    clusterStaIndex     INTEGER,
+    clusterStaKey       OCTET STRING,
+    clusterStaValue     OCTET STRING,
+    clusterStaLen       INTEGER
+}
+
+clusterStaIndex OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "hadoop cluster status table index."
+    ::= { clusterStaEntry 1 }
+
+clusterStaKey OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "hadoop cluster status key field."
+    ::= { clusterStaEntry 2 }
+    
+clusterStaValue OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "hadoop cluster status value field."
+    ::= { clusterStaEntry 3 }
+    
+clusterStaLen OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "hadoop cluster status value length."
+    ::= { clusterStaEntry 4 }
+
+---
+---
+--- Module Hadoop(Dtibuted Databases) storm status
+---
+stormStaTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF StormStaEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "table of hadoop storm status."
+    ::= { xcnDtibutedDB 5 }
+
+stormStaEntry OBJECT-TYPE
+    SYNTAX      StormStaEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "hadoop storm status entry."
+    INDEX       { stormStaIndex }
+    ::= { stormStaTable 1 }
+    
+StormStaEntry ::= SEQUENCE {
+    stormStaIndex   INTEGER,
+    stormStaKey     OCTET STRING,
+    stormStaValue   OCTET STRING,
+    stormStaLen     INTEGER
+}
+
+stormStaIndex OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION "STORM table index."
+    ::= { stormStaEntry 1 }
+    
+stormStaKey OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "STORM status key field."
+    ::= { stormStaEntry 2 }
+    
+stormStaValue OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "STORM status value field."
+    ::= { stormStaEntry 3 }
+    
+stormStaLen OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+	STATUS      current
+    DESCRIPTION "storm status value length."
+    ::= { stormStaEntry 4 }
+
+END

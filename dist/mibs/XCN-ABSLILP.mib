@@ -1,0 +1,640 @@
+XCN-ABSLILP DEFINITIONS ::= BEGIN
+
+IMPORTS
+	OBJECT-TYPE 	FROM SNMPv2-SMI
+	xcnProduct 		FROM XCN-XCURENET;
+
+xcnAbsliLp MODULE-IDENTITY
+   LAST-UPDATED "201212140000Z"
+   ORGANIZATION "www.xcurenet.com"
+   CONTACT-INFO "Postal    : XCURENET Co., Ltd.
+                             9F DMC R&D Center, E3-2, DMC
+                             Sangam-Dong Mapo-Gu
+                             Seoul, 127-270, Korea
+                 Telephone : 82-2-567-0961
+                 FAX       : 82-2-567-0963
+                 e-mail    : jhpark@xcurenet.com"
+   DESCRIPTION  "This MIB is used by Abs-LI product of LP site."
+   REVISION     "201207170000Z"
+   DESCRIPTION  "First create by jpark"
+	::= { xcnProduct 1 }
+---
+--- system information
+---
+lpSysInfoTable	OBJECT-TYPE
+	SYNTAX 		SEQUENCE OF LpSysInfoEntry
+	MAX-ACCESS	not-accessible
+	STATUS		current
+	DESCRIPTION	"table of absli system information"
+	::= { xcnAbsliLp 1 }
+
+lpSysInfoEntry	OBJECT-TYPE
+	SYNTAX		LpSysInfoEntry
+	MAX-ACCESS	not-accessible
+	STATUS		current
+	DESCRIPTION	"entry of absli system information"
+    INDEX       { lpSysInfoIndex }
+	::= { lpSysInfoTable 1 }
+
+LpSysInfoEntry ::= SEQUENCE {
+	lpSysInfoIndex 		INTEGER,
+	lpSysInfoEid  		INTEGER,
+	lpSysInfoTdmUsed 	INTEGER,
+	lpSysInfoVoipUsed 	INTEGER,
+	lpSysInfoDataUsed 	INTEGER,
+	lpSysInfoFscandUsed INTEGER,
+	lpSysInfoSneakUsed 	INTEGER,
+	lpSysInfoSneakPort 	INTEGER,
+	lpSysInfoSsIp 		OCTET STRING,
+	lpSysInfoSsPort 	INTEGER,
+	lpSysInfoSsVendor 	INTEGER,
+	lpSysInfoSsProto 	INTEGER,
+	lpSysInfoSipPort 	OCTET STRING
+}
+
+lpSysInfoIndex	OBJECT-TYPE
+	SYNTAX		INTEGER
+	MAX-ACCESS	not-accessible
+	STATUS		current
+	DESCRIPTION	"index of absli system information"
+	::= { lpSysInfoEntry 1 }
+
+lpSysInfoEid	OBJECT-TYPE
+	SYNTAX		INTEGER
+	MAX-ACCESS	read-write
+	STATUS		current
+	DESCRIPTION	"Abs-LI EID"
+	::= { lpSysInfoEntry 2 }
+
+lpSysInfoTdmUsed	OBJECT-TYPE
+	SYNTAX		INTEGER { off(0), on(1) }
+	MAX-ACCESS	read-write
+	STATUS		current
+	DESCRIPTION	"TDM used switch (on/off)"
+	::= { lpSysInfoEntry 3 }
+
+lpSysInfoVoipUsed	OBJECT-TYPE
+	SYNTAX		INTEGER { off(0), on(1) }
+	MAX-ACCESS	read-write
+	STATUS		current
+	DESCRIPTION	"VoIP used switch (on/off)"
+	::= { lpSysInfoEntry 4 }
+
+lpSysInfoDataUsed	OBJECT-TYPE
+	SYNTAX		INTEGER { off(0), on(1) }
+	MAX-ACCESS	read-write
+	STATUS		current
+	DESCRIPTION	"Internet Data used switch (on/off)"
+	::= { lpSysInfoEntry 5 }
+
+lpSysInfoFscandUsed	OBJECT-TYPE
+	SYNTAX		INTEGER { off(0), on(1) }
+	MAX-ACCESS	read-write
+	STATUS		current
+	DESCRIPTION	"fscand process used switch (on/off)"
+	::= { lpSysInfoEntry 6 }
+
+lpSysInfoSneakUsed	OBJECT-TYPE
+	SYNTAX		INTEGER { off(0), on(1) }
+	MAX-ACCESS	read-write
+	STATUS		current
+	DESCRIPTION	"Sneak used switch (on/off)"
+	::= { lpSysInfoEntry 7 }
+
+lpSysInfoSneakPort	OBJECT-TYPE
+	SYNTAX		INTEGER
+	MAX-ACCESS	read-write
+	STATUS		current
+	DESCRIPTION	"sneak processor's port number"
+	::= { lpSysInfoEntry 8 }
+
+lpSysInfoSsIp	OBJECT-TYPE
+	SYNTAX		OCTET STRING (SIZE(0..15))
+	MAX-ACCESS	read-write
+	STATUS		current
+	DESCRIPTION	"SS IP Address"
+	::= { lpSysInfoEntry 9 }
+
+lpSysInfoSsPort	OBJECT-TYPE
+	SYNTAX		INTEGER
+	MAX-ACCESS	read-write
+	STATUS		current
+	DESCRIPTION	"SS Port number"
+	::= { lpSysInfoEntry 10 }
+
+lpSysInfoSsVendor	OBJECT-TYPE
+	SYNTAX		INTEGER { NONE(0), SAMSUNG(1), LG(2), Etc(3) }
+	MAX-ACCESS	read-write
+	STATUS		current
+	DESCRIPTION	"SS Vendor"
+	::= { lpSysInfoEntry 11 }
+
+lpSysInfoSsProto	OBJECT-TYPE
+	SYNTAX		INTEGER { NONE(0), COMMON(1), SIPPU(2), OSPP(4), MGCP(8), H323(16), SIPSW(32), UNKNOWN(48) }
+	MAX-ACCESS	read-write
+	STATUS		current
+	DESCRIPTION	"SS protocol type"
+	::= { lpSysInfoEntry 12 }
+
+lpSysInfoSipPort	OBJECT-TYPE
+	SYNTAX		OCTET STRING (SIZE(0..32))
+	MAX-ACCESS	read-write
+	STATUS		current
+	DESCRIPTION	"SIP protocol valid port rule information."
+	::= { lpSysInfoEntry 13 }
+
+---
+--- TDM board information
+---
+lpTdmBdInfoTable	OBJECT-TYPE
+	SYNTAX	SEQUENCE OF LpTdmBdInfoEntry
+	MAX-ACCESS	not-accessible
+	STATUS	current
+	DESCRIPTION	"table of TDM board information"
+	::= { xcnAbsliLp 2 }
+
+lpTdmBdInfoEntry	OBJECT-TYPE
+	SYNTAX	LpTdmBdInfoEntry
+	MAX-ACCESS	not-accessible
+	STATUS	current
+	DESCRIPTION	"entry of TDM board information"
+    INDEX       { lpTdmBdInfoIndex }
+	::= { lpTdmBdInfoTable 1 }
+
+LpTdmBdInfoEntry ::= SEQUENCE {
+	lpTdmBdInfoIndex  	INTEGER,
+	lpTdmBdInfoTotalbd 	INTEGER,
+	lpTdmBdInfoTotalch  INTEGER
+}
+
+lpTdmBdInfoIndex	OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS	not-accessible
+	STATUS	current
+	DESCRIPTION	"TDM board information index"
+	::= { lpTdmBdInfoEntry 1 }
+
+lpTdmBdInfoTotalbd	OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION	"Total board"
+	::= { lpTdmBdInfoEntry 2 }
+
+lpTdmBdInfoTotalch	OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION	"Total channel"
+	::= { lpTdmBdInfoEntry 3 }
+
+lpTdmChInfoTable	OBJECT-TYPE
+	SYNTAX	SEQUENCE OF LpTdmChInfoEntry
+	MAX-ACCESS	not-accessible
+	STATUS	current
+	DESCRIPTION	"table of TDM channel information"
+	::= { xcnAbsliLp 3 }
+
+lpTdmChInfoEntry	OBJECT-TYPE
+	SYNTAX	LpTdmChInfoEntry
+	MAX-ACCESS	not-accessible
+	STATUS	current
+	DESCRIPTION	"entry of TDM channel information"
+    INDEX       { lpTdmChInfoIndex }
+	::= { lpTdmChInfoTable 1 }
+
+LpTdmChInfoEntry ::= SEQUENCE {
+	lpTdmChInfoIndex 	INTEGER,
+	lpTdmChInfoNumber 	INTEGER,
+	lpTdmChInfoUsed 	INTEGER,
+	lpTdmChInfoState 	INTEGER,
+	lpTdmChInfoCallDir 	INTEGER,
+	lpTdmChInfoOtherNum OCTET STRING,
+	lpTdmChInfoLv1Used 	INTEGER,
+	lpTdmChInfoLv1Ip 	OCTET STRING,
+	lpTdmChInfoLv1Port 	INTEGER,
+	lpTdmChInfoLv2Used 	INTEGER,
+	lpTdmChInfoLv2Ip 	OCTET STRING,
+	lpTdmChInfoLv2Port 	INTEGER,
+	lpTdmChInfoLv3Used 	INTEGER,
+	lpTdmChInfoLv3Ip 	OCTET STRING,
+	lpTdmChInfoLv3Port 	INTEGER
+}
+
+lpTdmChInfoIndex	OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS	not-accessible
+	STATUS	current
+	DESCRIPTION	"TDM channel information index"
+	::= { lpTdmChInfoEntry 1 }
+
+lpTdmChInfoNumber	OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"TDM channel number"
+	::= { lpTdmChInfoEntry 2 }
+
+lpTdmChInfoUsed	OBJECT-TYPE
+	SYNTAX	INTEGER { off(0), on(1) }
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"this channel usage switch(on/off)"
+	::= { lpTdmChInfoEntry 3 }
+
+lpTdmChInfoState	OBJECT-TYPE
+	SYNTAX	INTEGER { Offline(0), Idle(1), Ringing(2), Pickup(3) }
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION	"channel status (off-line/Idle/Ringing/Pickup)"
+	::= { lpTdmChInfoEntry 4 }
+
+lpTdmChInfoCallDir	OBJECT-TYPE
+	SYNTAX	INTEGER { Outgoing(0), Incoming(1) }
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION	"call direction (outgoing call / incoming call)"
+	::= { lpTdmChInfoEntry 5 }
+
+lpTdmChInfoOtherNum	OBJECT-TYPE
+	SYNTAX	OCTET STRING
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION	"call number (DTMF or Call ID)"
+	::= { lpTdmChInfoEntry 6 }
+
+lpTdmChInfoLv1Used	OBJECT-TYPE
+	SYNTAX	INTEGER { Disable(0), Enable(1) }
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"1st live monitoring used (Disable/Enable)"
+	::= { lpTdmChInfoEntry 7 }
+
+lpTdmChInfoLv1Ip	OBJECT-TYPE
+	SYNTAX	OCTET STRING
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"1st live monitoring's IP address"
+	::= { lpTdmChInfoEntry 8 }
+
+lpTdmChInfoLv1Port	OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"1st live monitoring's port number"
+	::= { lpTdmChInfoEntry 9 }
+
+lpTdmChInfoLv2Used	OBJECT-TYPE
+	SYNTAX	INTEGER { Disable(0), Enable(1) }
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"2nd live monitoring used (Disable/Enable)"
+	::= { lpTdmChInfoEntry 10 }
+
+lpTdmChInfoLv2Ip	OBJECT-TYPE
+	SYNTAX	OCTET STRING
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"2nd live monitoring's IP address"
+	::= { lpTdmChInfoEntry 11 }
+
+lpTdmChInfoLv2Port	OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"2nd live monitoring's port number"
+	::= { lpTdmChInfoEntry 12 }
+
+lpTdmChInfoLv3Used	OBJECT-TYPE
+	SYNTAX	INTEGER { Disable(0), Enable(1) }
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"3rd live monitoring used (Disable/Enable)"
+	::= { lpTdmChInfoEntry 13 }
+
+lpTdmChInfoLv3Ip	OBJECT-TYPE
+	SYNTAX	OCTET STRING
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"3rd live monitoring's IP address"
+	::= { lpTdmChInfoEntry 14 }
+
+lpTdmChInfoLv3Port	OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"3rd live monitoring's port number"
+	::= { lpTdmChInfoEntry 15 }
+
+---
+--- VoIP information
+lpVoipInfoTable	OBJECT-TYPE
+	SYNTAX	SEQUENCE OF LpVoipInfoEntry
+	MAX-ACCESS	not-accessible
+	STATUS	current
+	DESCRIPTION	"table of VoIP information"
+	::= { xcnAbsliLp 4 }
+
+lpVoipInfoEntry	OBJECT-TYPE
+	SYNTAX	LpVoipInfoEntry
+	MAX-ACCESS	not-accessible
+	STATUS	current
+	DESCRIPTION	"entry of VoIP information"
+    INDEX       { lpVoipInfoIndex }
+	::= { lpVoipInfoTable 1 }
+
+LpVoipInfoEntry ::= SEQUENCE {
+	lpVoipInfoIndex 	INTEGER,
+	lpVoipInfoUsed 		INTEGER,
+	lpVoipInfoTgNum 	OCTET STRING,
+	lpVoipInfoState 	INTEGER,
+	lpVoipInfoCallDir 	INTEGER,
+	lpVoipInfoOtherNum 	OCTET STRING,
+	lpVoipInfoIp 		OCTET STRING,
+	lpVoipInfoLv1Used 	INTEGER,
+	lpVoipInfoLv1Ip 	OCTET STRING,
+	lpVoipInfoLv1Port 	INTEGER,
+	lpVoipInfoLv2Used 	INTEGER,
+	lpVoipInfoLv2Ip 	OCTET STRING,
+	lpVoipInfoLv2Port 	INTEGER,
+	lpVoipInfoLv3Used 	INTEGER,
+	lpVoipInfoLv3Ip 	OCTET STRING,
+	lpVoipInfoLv3Port 	INTEGER,
+	lpVoipInfoProtocol 	INTEGER
+}
+
+lpVoipInfoIndex	OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS	not-accessible
+	STATUS	current
+	DESCRIPTION	"VoIP information index"
+	::= { lpVoipInfoEntry 1 }
+
+lpVoipInfoUsed	OBJECT-TYPE
+	SYNTAX	INTEGER { off(0), on(1) }
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"VoIP usage switch(on/off)"
+	::= { lpVoipInfoEntry 2 }
+
+lpVoipInfoTgNum	OBJECT-TYPE
+	SYNTAX	OCTET STRING
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"target number of VoIP"
+	::= { lpVoipInfoEntry 3 }
+
+lpVoipInfoState	OBJECT-TYPE
+	SYNTAX	INTEGER { Idle(1), Ringing(2), Pickup(3) }
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION	"VoIP session's status (Idle/Ringing/Pickup)"
+	::= { lpVoipInfoEntry 4 }
+
+lpVoipInfoCallDir	OBJECT-TYPE
+	SYNTAX	INTEGER { Outgoing(0), Incoming(1) }
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION	"VoIP call direction"
+	::= { lpVoipInfoEntry 5 }
+
+lpVoipInfoOtherNum	OBJECT-TYPE
+	SYNTAX	OCTET STRING
+	MAX-ACCESS	read-only
+	STATUS	current
+	DESCRIPTION	"VoIP's other number (Digit key press info / Caller ID)"
+	::= { lpVoipInfoEntry 6 }
+
+lpVoipInfoIp	OBJECT-TYPE
+	SYNTAX	OCTET STRING
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"VoIP tapping IP address (UDP)"
+	::= { lpVoipInfoEntry 7 }
+
+lpVoipInfoLv1Used	OBJECT-TYPE
+	SYNTAX	INTEGER { Disable(0), Enable(1) }
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"1st live monitoring used (Disable/Enable)"
+	::= { lpVoipInfoEntry 8 }
+
+lpVoipInfoLv1Ip	OBJECT-TYPE
+	SYNTAX	OCTET STRING
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"1st live monitoring's IP address"
+	::= { lpVoipInfoEntry 9 }
+
+lpVoipInfoLv1Port	OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"1st live monitoring's port number"
+	::= { lpVoipInfoEntry 10 }
+
+lpVoipInfoLv2Used	OBJECT-TYPE
+	SYNTAX	INTEGER { Disable(0), Enable(1) }
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"2nd live monitoring used (Disable/Enable)"
+	::= { lpVoipInfoEntry 11 }
+
+lpVoipInfoLv2Ip	OBJECT-TYPE
+	SYNTAX	OCTET STRING
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"2nd live monitoring's IP address"
+	::= { lpVoipInfoEntry 12 }
+
+lpVoipInfoLv2Port	OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"2nd live monitoring's port number"
+	::= { lpVoipInfoEntry 13 }
+
+lpVoipInfoLv3Used	OBJECT-TYPE
+	SYNTAX	INTEGER { Disable(0), Enable(1) }
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"3rd live monitoring used (Disable/Enable)"
+	::= { lpVoipInfoEntry 14 }
+
+lpVoipInfoLv3Ip	OBJECT-TYPE
+	SYNTAX	OCTET STRING
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"3rd live monitoring's IP address"
+	::= { lpVoipInfoEntry 15 }
+
+lpVoipInfoLv3Port	OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"3rd live monitoring¡¯s port number"
+	::= { lpVoipInfoEntry 16 }
+
+lpVoipInfoProtocol	OBJECT-TYPE
+	SYNTAX	INTEGER { None(0), SIP(1), OSPP(2), MGCP(3), UNISTIM(4) }
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"VoIP target's protocol type"
+	::= { lpVoipInfoEntry 17 }
+
+
+---
+--- internet data information
+---
+lpDataInfoTable	OBJECT-TYPE
+	SYNTAX	SEQUENCE OF LpDataInfoEntry
+	MAX-ACCESS	not-accessible
+	STATUS	current
+	DESCRIPTION	"information table of internet data function"
+	::= { xcnAbsliLp 5 }
+
+lpDataInfoEntry	OBJECT-TYPE
+	SYNTAX	LpDataInfoEntry
+	MAX-ACCESS	not-accessible
+	STATUS 	current
+	DESCRIPTION	"information entry of internet data function"
+    INDEX       { lpDataInfoIndex }
+	::= { lpDataInfoTable 1 }
+
+LpDataInfoEntry ::= SEQUENCE {
+	lpDataInfoIndex 	INTEGER,
+	lpDataInfoUsed 		INTEGER,
+	lpDataInfoStartIP 	OCTET STRING,
+	lpDataInfoEndIP 	OCTET STRING,
+	lpDataInfoMac 		OCTET STRING,
+	lpDataInfoChgIp 	INTEGER,
+	lpDataInfoNewIp 	OCTET STRING
+}
+
+lpDataInfoIndex	OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS	not-accessible
+	STATUS	current
+	DESCRIPTION	"internet data function's entry index"
+	::= { lpDataInfoEntry 1 }
+
+lpDataInfoUsed	OBJECT-TYPE
+	SYNTAX	INTEGER { Off(0), On(1) }
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"Internet Data function used (on/off)"
+	::= { lpDataInfoEntry 2 }
+
+lpDataInfoStartIp	OBJECT-TYPE
+	SYNTAX	OCTET STRING
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"start IP address"
+	::= { lpDataInfoEntry 3 }
+
+lpDataInfoEndIp	OBJECT-TYPE
+	SYNTAX	OCTET STRING
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"end IP address"
+	::= { lpDataInfoEntry 4 }
+
+lpDataInfoMac	OBJECT-TYPE
+	SYNTAX	OCTET STRING
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"MAC Address"
+	::= { lpDataInfoEntry 5 }
+
+lpDataInfoChgIp	OBJECT-TYPE
+	SYNTAX	INTEGER { unchanged(0), changed(1) }
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"change IP adress (change/unchange)"
+	::= { lpDataInfoEntry 6 }
+
+lpDataInfoNewIp	OBJECT-TYPE
+	SYNTAX	OCTET STRING
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"new IP address"
+	::= { lpDataInfoEntry 7 }
+
+---
+--- internet data information(IPv6)
+---
+lpDataV6InfoTable	OBJECT-TYPE
+	SYNTAX	SEQUENCE OF LpDataV6InfoEntry
+	MAX-ACCESS	not-accessible
+	STATUS	current
+	DESCRIPTION	"information table of internet data function(IPv6)"
+	::= { xcnAbsliLp 6 }
+
+lpDataV6InfoEntry	OBJECT-TYPE
+	SYNTAX	LpDataV6InfoEntry
+	MAX-ACCESS	not-accessible
+	STATUS 	current
+	DESCRIPTION	"information entry of internet data function(IPv6)"
+    INDEX       { lpDataV6InfoIndex }
+	::= { lpDataV6InfoTable 1 }
+
+LpDataV6InfoEntry ::= SEQUENCE {
+	lpDataV6InfoIndex 	INTEGER,
+	lpDataV6InfoUsed 		INTEGER,
+	lpDataV6InfoStartIP 	OCTET STRING,
+	lpDataV6InfoEndIP 	OCTET STRING,
+	lpDataV6InfoMac 		OCTET STRING,
+	lpDataV6InfoChgIp 	INTEGER,
+	lpDataV6InfoNewIp 	OCTET STRING
+}
+
+lpDataV6InfoIndex	OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS	not-accessible
+	STATUS	current
+	DESCRIPTION	"internet data function's entry index"
+	::= { lpDataV6InfoEntry 1 }
+
+lpDataV6InfoUsed	OBJECT-TYPE
+	SYNTAX	INTEGER { Off(0), On(1) }
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"Internet Data function used (on/off)"
+	::= { lpDataV6InfoEntry 2 }
+
+lpDataV6InfoStartIp	OBJECT-TYPE
+	SYNTAX	OCTET STRING
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"start IP address"
+	::= { lpDataV6InfoEntry 3 }
+
+lpDataV6InfoEndIp	OBJECT-TYPE
+	SYNTAX	OCTET STRING
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"end IP address"
+	::= { lpDataV6InfoEntry 4 }
+
+lpDataV6InfoMac	OBJECT-TYPE
+	SYNTAX	OCTET STRING
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"MAC Address"
+	::= { lpDataV6InfoEntry 5 }
+
+lpDataV6InfoChgIp	OBJECT-TYPE
+	SYNTAX	INTEGER { unchanged(0), changed(1) }
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"change IP adress (change/unchange)"
+	::= { lpDataV6InfoEntry 6 }
+
+lpDataV6InfoNewIp	OBJECT-TYPE
+	SYNTAX	OCTET STRING
+	MAX-ACCESS	read-write
+	STATUS	current
+	DESCRIPTION	"new IP address"
+	::= { lpDataV6InfoEntry 7 }
+
+END
