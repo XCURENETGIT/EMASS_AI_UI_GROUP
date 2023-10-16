@@ -13,7 +13,7 @@
 
 	<groupId>com.xcurenet</groupId>
 	<artifactId>emasspro</artifactId>
-	<version>2.0.0</version>
+	<version>1.0.0</version>
 	<name>emasspro</name>
 	<description>EMASS PRO</description>
 
@@ -528,10 +528,9 @@
 								<echo message=""/>
 								<echo message="Step 1. Delete old files"/>
 								<delete file="${project.basedir}\target\dist\" />
-								
-								
+
 								<echo message=""/>
-								<echo message="Step 2. Copy resource files"></echo>
+								<echo message="Step 2. Copy resource files"/>
 								<mkdir dir="${project.basedir}\target\dist\"/>
 								<mkdir dir="${project.basedir}\target\dist\init"/>
 								<mkdir dir="${project.basedir}\target\dist\logs"/>
@@ -539,7 +538,7 @@
 								<mkdir dir="${project.basedir}\target\dist\mibs"/>
 
 								<copydir src="${project.basedir}\dist\" dest="${project.basedir}\target\dist\"/>
-								
+
 								<copy file="${project.basedir}\target\${project.artifactId}-${project.version}.war" tofile="${project.basedir}\target\dist\lib\${project.artifactId}-${project.version}.war" />
 								<copy file="${project.basedir}\src\main\resources\application.properties" tofile="${project.basedir}\target\dist\conf\application.properties" />
 								
@@ -587,12 +586,12 @@
 								<scp file="${buildUser}:${buildPassword}@${buildHost}:${binary-dir}/RPMS/${arch}/${rpm-name}.md5" todir="./target/RPMS/" trust="yes" verbose="false"/>
 								
 								<!-- 개발 테스트 용 ( 테스트 장비의 war 교체 ) -->
-								<echo message="Step 8. WAR file move"></echo>
+<!--								<echo message="Step 8. WAR file move"></echo>
 								<scp todir="${buildUser}:${buildPassword}@${buildHost}:${copy-dir}/lib/" trust="yes" verbose="false">
 									<fileset dir="${project.basedir}\target\dist\lib\"/>
 								</scp>
 								<sshexec host="${buildHost}" username="${buildUser}" password="${buildPassword}" command="service ${project.artifactId} stop" trust="yes" verbose="false"/>
-								<sshexec host="${buildHost}" username="${buildUser}" password="${buildPassword}" command="service ${project.artifactId} start" trust="yes" verbose="false"/>
+								<sshexec host="${buildHost}" username="${buildUser}" password="${buildPassword}" command="service ${project.artifactId} start" trust="yes" verbose="false"/>-->
 								
 								<echo message=""/>
 								<echo message="Success Build"/>

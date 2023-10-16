@@ -1,0 +1,29 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          EMASS PRO v2 UI
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Description:       Controls EMASS PRO UI as a Service
+### END INIT INFO
+
+INSTALL_DIR="/users/emasspro"
+
+if [ ! -d "$INSTALL_DIR" ]; then
+  echo "$INSTALL_DIR not found! Please check the INSTALL_DIR setting in your $0 script."
+  exit 1
+fi
+
+case "$1" in
+  start|stop|restart|status)
+    SOLR_CMD="$1"
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart|status}"
+    exit
+esac
+
+"$INSTALL_DIR/bin/emasspro" "$SOLR_CMD"
+
