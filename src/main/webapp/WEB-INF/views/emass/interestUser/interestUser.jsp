@@ -1,16 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
+<%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
 <% String adminType = Common.getAdminType(session); %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
 <title></title>
-<%@ include file="../../base.jsp"%>
-<link rel="stylesheet" href="<c:url value="/css/jquery.numberedtextarea.css"/>" />
-<link rel="stylesheet" href="<c:url value="/css/colorpicker.css"/>"/>
-
-<script type="text/javascript" src="<c:url value="/js/jquery.numberedtextarea.js"/>"></script>
 <style type="text/css">
 #header-color, #picker-custom {height: 24px; line-height: 24px;}
 #header-color {padding-left: 25px;}
@@ -649,8 +643,7 @@ function deleteUserGroupItem (){
 		</div>
 	</div>
 	
-	<jsp:include page="../../top.jsp"/>
-	<div class="container"> 
+	<div class="container">
 		<div class="boxArea">
 			<div class="content_body">
 				<div class="row" style="height: 100%;">
@@ -702,7 +695,7 @@ function deleteUserGroupItem (){
 			</div>
 		</div>
 	</div>
-	
+
 	<script type="text/javascript">
 		var gridGroup = new Xgrid('userGroupListGrid', contextRoot);
 		gridGroup.onCheckBox();
@@ -712,12 +705,12 @@ function deleteUserGroupItem (){
 			return "<input type='button' value='' class='btn' style='line-height: 0px; background-color: " + value + "; height: 20px; vertical-align: 1px;'/>";
 		});
 		gridGroup.colAdd('open', '<s:message code="common.msg.modify"/>', 80, 'center', false, 'nomal',function(row, cell, value, columnDef, dataContext ) {
-			return "<input type='button' value='<s:message code="common.msg.modify"/>' class='btn' style='line-height: 0px; background-color: #337ab7;height: 20px; color:white; vertical-align: 1px; font-weight:bold'/>"; 
+			return "<input type='button' value='<s:message code="common.msg.modify"/>' class='btn' style='line-height: 0px; background-color: #337ab7;height: 20px; color:white; vertical-align: 1px; font-weight:bold'/>";
 		});
 		gridGroup.loadExportMenu('<s:message code="userGroup.navi.title2"/>');
 		gridGroup.loadHeader(false);
 		gridGroup.initData('<s:message code="common.msg.search.click"/>');
-		
+
 		gridGroup.onClick = function() {
 			if (gridGroup.Col == gridGroup.ColIndex('open')) {
 				var data = gridGroup.getRowData(gridGroup.Row);
@@ -733,9 +726,9 @@ function deleteUserGroupItem (){
 				}
 				$('#header-color').keyup();
 			}
-			getUserGroupItem(); 
+			getUserGroupItem();
 		}
-		
+
 		var gridItem = new Xgrid('userGroupItmeGrid', contextRoot);
 		gridItem.onCheckBox();
 		gridItem.autoNumber();
@@ -757,13 +750,13 @@ function deleteUserGroupItem (){
 		gridItem.loadExportMenu('<s:message code="userGroup.navi.title2"/>');
 		gridItem.loadHeader(false);
 		gridItem.initData('<s:message code="userGroup.msg.select.group"/>');
-		
+
 		//User Group Add
 		var gridSelectUser = new Xgrid('userSelectGrid', contextRoot);
 		gridSelectUser.onCheckBox();
 		gridSelectUser.autoNumber();
 		gridSelectUser.colAdd('add', '<s:message code="common.msg.add"/>', 80, 'center', false, 'nomal',function(row, cell, value, columnDef, dataContext ) {
-			return "<input type='button' value='<s:message code="common.msg.add"/>' class='btn' style='line-height: 0px; background-color: #337ab7;height: 20px; color:white; vertical-align: 1px; font-weight:bold'/>"; 
+			return "<input type='button' value='<s:message code="common.msg.add"/>' class='btn' style='line-height: 0px; background-color: #337ab7;height: 20px; color:white; vertical-align: 1px; font-weight:bold'/>";
 		});
 		gridSelectUser.colAdd('userId', '<s:message code="common.msg.id"/>', 120, 'center', false, 'nomal');
 		gridSelectUser.colAdd('userNm', '<s:message code="common.msg.name"/>', 150, 'left', false, 'nomal');
@@ -780,7 +773,7 @@ function deleteUserGroupItem (){
 			if(ceo=='Y')return 'CEO';
 			else return '';
 		});
-		
+
 		gridSelectUser.onClick = function() {
 			if (gridSelectUser.Col == gridSelectUser.ColIndex('add')) {
 				saveUserGroupItemDirect();
@@ -791,6 +784,5 @@ function deleteUserGroupItem (){
 	</script>
 	<script type="text/javascript" src="<c:url value="/js/colorpicker-colors.js"/>"></script>
 	<script type="text/javascript" src="<c:url value="/js/colorpicker.js"/>"></script>
-	<jsp:include page="../../footer.jsp"/>
 </body>
 </html>

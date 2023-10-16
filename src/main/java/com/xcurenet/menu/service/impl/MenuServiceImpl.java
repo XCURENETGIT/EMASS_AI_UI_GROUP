@@ -45,6 +45,7 @@ public class MenuServiceImpl extends XcnAbstractDAO implements MenuService {
 		List<MenuVO> menus = selectList("com.xcurenet.sqlmap.mappers.mysql.menu.getMenuList", param);
 		setMenuLink(menus, session);
 		setCustomMenu(menus, session);
+
 		return menus;
 	}
 	

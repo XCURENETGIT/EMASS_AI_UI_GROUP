@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
-<%@page import="com.xcurenet.common.util.Common"%>
+<%--<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>--%>
+<%--<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>--%>
+<%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
+<%--<%@page import="com.xcurenet.common.util.Common"%>--%>
 <%
 	String deviceSeq = Common.nvl(request.getParameter("deviceSeq"));
 %>
@@ -9,20 +10,20 @@
 <html lang="ko">
 <head>
 <title><s:message code="deviceInfo.title"/></title>
-<%@ include file="../base.jsp"%>
-<link rel="stylesheet" href="<c:url value="/css/slider.css"/>" />
-<link rel="stylesheet" href="<c:url value="/css/jquery.circliful.css"/>">
-<link rel="stylesheet" href="<c:url value="/css/bootstrap-select.min.css"/>"/>
-<link rel="stylesheet" href="<c:url value="/css/sb-admin-2.css"/>" />
+<%--<%@ include file="../base.jsp"%>--%>
+<%--<link rel="stylesheet" href="<c:url value="/css/slider.css"/>" />--%>
+<%--<link rel="stylesheet" href="<c:url value="/css/jquery.circliful.css"/>">--%>
+<%--<link rel="stylesheet" href="<c:url value="/css/bootstrap-select.min.css"/>"/>--%>
+<%--<link rel="stylesheet" href="<c:url value="/css/sb-admin-2.css"/>" />--%>
 
-<script type="text/javascript" src="<c:url value="/js/bootstrap-slider.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/jquery.circliful.min.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/bootstrap-select.js"/>"></script>
+<%--<script type="text/javascript" src="<c:url value="/js/bootstrap-slider.js"/>"></script>--%>
+<%--<script type="text/javascript" src="<c:url value="/js/jquery.circliful.min.js"/>"></script>--%>
+<%--<script type="text/javascript" src="<c:url value="/js/bootstrap-select.js"/>"></script>--%>
 
-<!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+<%--<!--[if lt IE 9]>--%>
+<%--<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>--%>
+<%--<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>--%>
+<%--<![endif]-->--%>
 
 <style type="text/css">
 body {
@@ -395,8 +396,8 @@ function getDeviceStatus(deviceIp){
 			</div>
 		</div>
 	</div>
-	
-	<jsp:include page="../top.jsp"/>
+<%--	--%>
+<%--	<jsp:include page="../top.jsp"/>--%>
 
 	<div class="container"> 
 		<div class="boxArea">
@@ -414,7 +415,7 @@ function getDeviceStatus(deviceIp){
 		</div>
 	</div>
 	<script type="text/javascript" src="<c:url value="/js/sb-admin-2.js"/>"></script>
-	
-	<jsp:include page="../footer.jsp"/>
+<%--	--%>
+<%--	<jsp:include page="../footer.jsp"/>--%>
 </body>
 </html>
