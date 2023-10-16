@@ -95,8 +95,8 @@ function stop_pid() {
 
   kill $PID
   spinner $PID
- 
-  if [ "$FORCE_PID" != "" ]; then 
+
+  if [ "$FORCE_PID" != "" ]; then
     kill $FORCE_PID 2>/dev/null
   fi
 } # end stop_pid
@@ -112,7 +112,7 @@ fi
 
 
 if [ $# -gt 0 ]; then
-  # if first arg starts with a dash (and it's not -help or -info), 
+  # if first arg starts with a dash (and it's not -help or -info),
   # then assume they are starting $PROGRAM_NAME
   if [ $1 == -* ]; then
     SCRIPT_CMD="start"
@@ -188,7 +188,7 @@ if [ "$SCRIPT_CMD" == "stop" ] || [ "$SCRIPT_CMD" == "restart" ]; then
       echo ""
     fi
   done
-  
+
   if [ "$SCRIPT_CMD" == "stop" ]; then
     exit
   fi

@@ -116,7 +116,7 @@ if test "$1" = "1"; then # Install
 		mv /users/emasspro/conf/application.properties /users/emasspro/conf/application.properties.org
 		java -jar /users/emasspro/lib/updateProperty.jar /users/emasspro/conf/application.properties.rpmnew /users/emasspro/conf/application.properties.org /users/emasspro/conf/application.properties
 	fi
-	
+
 	echo "Post-install script version:" %{version}>> /tmp/%{name}.log
 	echo "-----------------------"
 	echo "RPM is getting installed"
@@ -128,7 +128,7 @@ else # Update ($1 = "2")
 		mv /users/emasspro/conf/application.properties /users/emasspro/conf/application.properties.org
 		java -jar /users/emasspro/lib/updateProperty.jar /users/emasspro/conf/application.properties.rpmnew /users/emasspro/conf/application.properties.org /users/emasspro/conf/application.properties
 	fi
-	
+
 	echo "Post-update script of new version:" %{version}>> /tmp/%{name}.log
 	echo "-----------------------"
 	echo "RPM is getting upgraded"
