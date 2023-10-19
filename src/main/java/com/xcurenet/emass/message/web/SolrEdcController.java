@@ -10,9 +10,12 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.mongodb.client.MongoClient;
+import com.xcurenet.common.util.MongoUtil;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.SortClause;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Description;
 import org.springframework.context.annotation.Scope;
@@ -64,6 +67,9 @@ public class SolrEdcController {
 	
 	@Resource(name = "configAdminService")
 	private ConfigAdminService configAdminService;
+
+	@Autowired
+	MongoUtil mongoUtil;
 
 	@RequestMapping(value = "/auto.xcn")
 	@Description("EDC Solr 메시지 검색")

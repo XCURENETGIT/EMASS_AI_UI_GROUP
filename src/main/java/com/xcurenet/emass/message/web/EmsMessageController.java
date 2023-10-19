@@ -1258,6 +1258,7 @@ public class EmsMessageController {
 	public XcnResponseVO getEmassMessageNew(final HttpServletRequest request, final HttpSession session) throws Exception {
 		String msgId = Common.nvl(request.getParameter("msgId"));
 		EmsMessageVO emass = emsMessageService.getEmassMessageNew(Common.getAdminId(request), msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
+
 		if (emass != null && emass.isConsentFlag()) {
 			SolrCheckedVO checked = new SolrCheckedVO();
 			checked.setId(Common.getAdminId(session));
@@ -1290,11 +1291,7 @@ public class EmsMessageController {
 	public XcnResponseVO getEmassUserInfo(final HttpServletRequest request, final HttpSession session) throws Exception {
 		String msgId = Common.nvl(request.getParameter("msgId"));
 		String uType = Common.nvl(request.getParameter("uType"));
-		if (Common.isEmpty(uType)) {
-			return new XcnResponseVO(XcnRspCode.OK, emsMessageService.getEmassUserInfo(msgId));
-		} else {
 			return new XcnResponseVO(XcnRspCode.OK, emsMessageService.getEmassUserInfo(msgId, uType));
-		}
 	}
 
 	@RequestMapping(value = "/getEmassAttachInfo.xcn")

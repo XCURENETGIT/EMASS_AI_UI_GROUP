@@ -8,11 +8,14 @@ import com.xcurenet.common.types.IP;
 import com.xcurenet.common.util.Common;
 
 import lombok.Data;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 @Data
 public class EmsRecvVO {
 	private String msgId;
+	@Field(name = "RECV_ID")
 	private String recvId;
+	@Field(name = "UTYPE")
 	private String uType;
 	private String eMail;
 	private String name;
@@ -27,6 +30,7 @@ public class EmsRecvVO {
 	private String deptNm;
 	private String jikgubCd;
 	private String jikgubNm;
+	@Field(name = "INSIDE")
 	private String inSide;
 	private String domain;
 	

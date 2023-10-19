@@ -8,7 +8,7 @@
 	<select id="getEmassBody" resultType="emsBodyVO" parameterType="string">
 		SELECT	MSGID AS msgId, BODYSIZE AS bodySize, BODYHASH AS bodyHash, BODYPATH AS bodyPath, BODYCHARSET AS bodyCharset, BODYTYPE AS bodyType, BODYTEXT AS bodyText,
 				SUBJECT AS subject, SVC AS svc, SRCIP AS srcIp, DSTIP AS dstIp, HOST AS host, PATH AS path, USERID AS userId, NAME AS name,
-				DATE_FORMAT(CTIME,'%Y-%m-%d %H.%i.%S') AS ctime
+				DATE_FORMAT(CTIME,'%Y-%m-%d %H.%i.%S') AS ctime, EPMSG_TYPE AS epmsgType
 		FROM	EMS_MESSAGE
 		WHERE	MSGID = #{msgId}
 		LIMIT	1
@@ -103,8 +103,8 @@
 		LIMIT	1
 	</select>
 	
-	
-	<!-- All User(사용자, 수신자, 발신자)-->	
+
+	<!-- All User(사용자, 수신자, 발신자)-->
 	<select id="getEmassUserInfo" resultType="emsRecvVO" parameterType="hashmap">
 		SELECT	MSGID AS msgId,
 				RECV_ID AS recvId,
@@ -130,7 +130,7 @@
 		</if>
 		ORDER	BY UTYPE, NAME
 	</select>
-	
+
 	
 	<!-- attachInfo(첨부파일) -->	
 	<select id="getEmassAttachInfo" resultType="emsAttachVO" parameterType="hashmap">

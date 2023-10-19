@@ -2,6 +2,7 @@ package com.xcurenet.common.util;
 
 import com.xcurenet.audit.service.AuditVO;
 import com.xcurenet.emass.message.service.*;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Sort;
@@ -37,25 +38,23 @@ public class MongoUtil {
 	//단건조회
 	public <T> T selectOne(Query query,  Class<T> vo) {
 		return mongoTemplate.findOne(query, vo);
+
 	}
-
-	public EmsMessageVO selectMsgOne(String msgId) {
-		Query query = new Query(Criteria.where("_id").is(msgId));
-		return mongoTemplate.findOne(query, EmsMessageVO.class);
-	}
-
-	public List<EmsMessageVO> selectMsgList(String msgId) {
-		Query query = new Query(Criteria.where("_id").is(msgId));
-		return mongoTemplate.find(query, EmsMessageVO.class);
-	}
-
-
 
 
 	//단건조회
 	public <T> T selectOne(Query query, Class<T> vo, String collectionName) {
 		return mongoTemplate.findOne(query, vo , collectionName);
 	}
+
+	//특정 id값 조회
+	public <T> T selectId(String msgId, Class<T> vo, String collectionName) {
+		Query query= new Query(Criteria.where("_id").is(msgId));
+
+		return mongoTemplate.findOne(query, vo , collectionName);
+	}
+
+
 
 	//다건조회
 	public <T> List<T> selectList(Query query,  Class<T> vo) {

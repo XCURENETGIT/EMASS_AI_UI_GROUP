@@ -299,7 +299,6 @@ public class HomeController {
 	@Description("법정 공휴일 페이지")
 	public String holidayLegal(Locale locale, Model model) {
 		if (Common.isEquals(Common.getAdminType(httpSession), "S")) {
-			model.addAttribute("headerYn","Y");
 			return "/commons/holidayLegal";
 		} else {
 			return "/emass/dashboard";
@@ -356,8 +355,6 @@ public class HomeController {
 	@RequestMapping(value = "/ems/messageUnknown.do")
 	@Description("EDC 메시지 검색 페이지(전체)")
 	public String messageUnknown(Locale locale, Model model) {
-
-		model.addAttribute("headerYn","N");
 		return "/emass/message/messageUnknown";
 	}
 
@@ -430,7 +427,7 @@ public class HomeController {
 	@RequestMapping(value = "/ems/participantFileInfoPop.do", method = RequestMethod.GET)
 	@Description("참여자 정보 첨부파일 보기 페이지")
 	public String participantFileInfoPop(Locale locale, Model model) {
-		return "/emass/message/participantFileInfoPop.popup";
+		return "/emass/message/participantFileInfoPop";
 	}
 
 	@RequestMapping(value = "/ems/interestUserInfoPop.do", method = RequestMethod.GET)
@@ -442,13 +439,13 @@ public class HomeController {
 	@RequestMapping(value = "/ems/userInfoPop.do", method = RequestMethod.GET)
 	@Description("사용자(수신자) 정보 보기 페이지")
 	public String userInfo(Locale locale, Model model) {
-		return "/emass/message/userInfoPop.popup";
+		return "/emass/message/userInfoPop";
 	}
 
 	@RequestMapping(value = "/ems/userGroupInfoPop.do", method = RequestMethod.GET)
 	@Description("참여자 정보 보기 페이지(그룹방)")
 	public String userGroupInfo(Locale locale, Model model) {
-		return "/emass/message/userGroupInfoPop.popup";
+		return "/emass/message/userGroupInfoPop";
 	}
 
 	@RequestMapping(value = "/ems/regexpInfoPop.do", method = RequestMethod.GET)
@@ -466,7 +463,7 @@ public class HomeController {
 	@RequestMapping(value = "/ems/participantInfoPop.do", method = RequestMethod.GET)
 	@Description("메신저 참여자 정보 보기 페이지")
 	public String participantInfoPop(Locale locale, Model model) {
-		return "/emass/message/participantInfoPop.popup";
+		return "/emass/message/participantInfoPop";
 	}
 
 	/**
@@ -708,7 +705,7 @@ public class HomeController {
 
 	@RequestMapping(value = "/ems/alarmLogPop.do", method = RequestMethod.GET)
 	public String alarmLogPop(Locale locale, Model model) {
-		return "/emass/message/alarmLogPop.popup";
+		return "/emass/message/alarmLogPop";
 	}
 
 	@RequestMapping(value = "/uacs/filterInfo.do", method = RequestMethod.GET)
@@ -793,7 +790,6 @@ public class HomeController {
 	@Description("CC인증 관련 시스템 로그")
 	public String xcnLog(Locale locale, Model model) {
 		if (Common.isEquals(Common.getAdminType(httpSession), "S")) {
-			model.addAttribute("headerYn","Y");
 			return "/commons/xcnLog";
 		} else {
 			return "/emass/dashboard";
@@ -827,7 +823,6 @@ public class HomeController {
 	@Description("SCHEDULER")
 	public String scheduler(Locale locale, Model model) {
 		if (Common.isEquals(Common.getAdminType(httpSession), "S")) {
-			model.addAttribute("headerYn","Y");
 			return "/commons/scheduler";
 		} else {
 			return "/emass/dashboard";

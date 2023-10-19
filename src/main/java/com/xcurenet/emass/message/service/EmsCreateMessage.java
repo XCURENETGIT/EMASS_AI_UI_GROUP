@@ -123,7 +123,7 @@ public class EmsCreateMessage {
 					if (bodyStr.length() > 0) bodyStr = bodyStr.substring(0, bodyStr.length() - 2);
 				}
 
-				List<EmsRecvVO> users = emsMessageService.getEmassUserInfo(msgId);
+				List<EmsRecvVO> users = emsMessageService.getEmassUserInfo(msgId,null);
 
 				for (int i = 0; i < users.size(); i++) {
 					EmsRecvVO u = EmsReDefined.reUserIp(users.get(i), Common.nvl(msg.getSrcIp()), Common.nvl(msg.getDstIp()), Common.nvl(msg.getUsrIp()));
