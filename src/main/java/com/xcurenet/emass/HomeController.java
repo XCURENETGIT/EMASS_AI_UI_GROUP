@@ -944,6 +944,7 @@ public class HomeController {
 	@Description("내부 전송 사용자 Top10(비업무 시간)")
 	public String attachInCntUserNonworkStat(Locale locale, Model model) {
 		return "/emass/aihr/attachInCntUserNonworkStat";
+		
 	}
 
 	@RequestMapping(value = "/ems/attachInCntDeptNonworkStat.do")

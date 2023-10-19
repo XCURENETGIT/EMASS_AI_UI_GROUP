@@ -71,6 +71,11 @@ import com.xcurenet.emass.message.service.SolrCheckedService;
 import com.xcurenet.emass.message.service.SolrEdcService;
 import com.xcurenet.emass.message.web.EmsAttachDownload;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+import java.util.TimeZone;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Service("emsMessageService")
@@ -172,6 +177,9 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 
 		EmsMessageVO emsMessageVO =mongoUtil.selectId(msgId,EmsMessageVO.class,"EMS_MESSAGE");
 
+
+
+
 		if (emsMessageVO == null) {
 			log.info("[Message Not Found] msgid:{}", msgId);
 			return null;
@@ -188,6 +196,19 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		param.put("msgId", msgId);
 
 		EmsMessageVO emsMessageVO =mongoUtil.selectId(msgId,EmsMessageVO.class,"EMS_MESSAGE");
+		String inputDate = emsMessageVO.getCtime();
+		SimpleDateFormat inputFormat = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
+		inputFormat.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
+
+		SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			java.util.Date date = inputFormat.parse(inputDate);
+			String outputDate = outputFormat.format(date);
+			emsMessageVO.setCtime(outputDate);
+
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 
 		if (emsMessageVO == null) {
 			log.info("[Message Not Found] msgid:{}", msgId);
@@ -350,8 +371,6 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 	public List<EmsRecvVO> getEmassUserInfo(String msgId) {
 
 		EmsMessageVO emsMessageVO =mongoUtil.selectId(msgId,EmsMessageVO.class,"EMS_MESSAGE");
-
-
 
 		List<EmsRecvVO> list= emsMessageVO.getRecv_info();
 
@@ -522,7 +541,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 
 	@Override
 	public List<EmsAttachVO> getEmassAttachInfo4Down(String msgId, String attachId) {
-		Map<String, String> param = new HashMap<>();
+		/*Map<String, String> param = new HashMap<>();
 		param.put("msgId", msgId);
 		param.put("attachId", attachId);
 
@@ -549,7 +568,9 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 			attach.setName(msg.getName());
 			attach.setCtime(msg.getCtime());
 		}
-		return attachs;
+		return attachs;*/
+
+		return null;
 	}
 
 	@Override
@@ -598,19 +619,50 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 	//내일 할 부분
 	@Override
 	public EmsAttachTextVO getEmassAttachTextInfo(String msgId, String attachId, String ocrYn) {
-		Map<String, String> param = new HashMap<>();
+/*		Map<String, String> param = new HashMap<>();
 		param.put("msgId", msgId);
-		param.put("attachId", attachId);
+		param.put("attachId", attachId);*/
 
 		EmsAttachTextVO vo = null;
 		if (Common.isEquals(ocrYn, "Y")) {
-			vo = selectOne("com.xcurenet.sqlmap.mappers.mysql.emass.getEmassAttachOcrText", param);
+
+			EmsMessageVO emsMessageVO= mongoUtil.selectId(msgId,EmsMessageVO.class,"EMS_MESSAGE");
+
+			List<EmsAttachVO>list= emsMessageVO.getAttachInfo();
+			EmsAttachVO msg= new EmsAttachVO();
+
+			for(int i=0; i<list.size(); i++){
+				if(list.get(i).getAttachId().equals(attachId)) {
+					msg = list.get(i);
+				}
+			}
+			vo.setAttachName(msg.getAttachName());
+			vo.setAttachPath(msg.getAttachPath());
+			vo.setAttachSize(String.valueOf(msg.getAttachSize()));
+			vo.setAttachTextPath(msg.getAttachTextPath());
+			vo.setAttachExt(msg.getAttachExt());
+
 			if (vo == null) return null;
 			if (Common.isNotEmpty(vo.getAttachText())) {
 				vo.setAttachTextTotalLine(Common.toArray(vo.getAttachText(), "\n").length);
 			}
 		} else {
-			vo = selectOne("com.xcurenet.sqlmap.mappers.mysql.emass.getEmassAttachText", param);
+			EmsMessageVO emsMessageVO= mongoUtil.selectId(msgId,EmsMessageVO.class,"EMS_MESSAGE");
+
+			List<EmsAttachVO>list= emsMessageVO.getAttachInfo();
+			EmsAttachVO msg= new EmsAttachVO();
+
+			for(int i=0; i<list.size(); i++){
+				if(list.get(i).getAttachId().equals(attachId)) {
+					msg = list.get(i);
+				}
+			}
+			vo.setAttachName(msg.getAttachName());
+			vo.setAttachPath(msg.getAttachPath());
+			vo.setAttachSize(String.valueOf(msg.getAttachSize()));
+			vo.setAttachTextPath(msg.getAttachTextPath());
+			vo.setAttachExt(msg.getAttachExt());
+
 			if (vo == null) return null;
 			if (Common.isNotEmpty(vo.getAttachPath())) {
 				String text = Common.toString(Common.toByteArrayGzip(vo.getAttachTextPath(), null), Common.UTF8);
@@ -935,7 +987,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 			JSONParser parser = new JSONParser();
 
 			Object obj = parser.parse(reader);
-			org.json.simple.JSONArray jsonArr = (org.json.simple.JSONArray) obj;
+			JSONArray jsonArr = (JSONArray) obj;
 
 			String decisionDate, fileName, lastUpdated, processId, securityYn, sha256, sourceKey, features = "";
 			String attachId = null;
@@ -981,7 +1033,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 			if (jsonArrSize > 0) {
 				for (int i = 0; i < jsonArrSize; i++) {
 					int j = i + 1;
-					org.json.simple.JSONObject jsonObj = (org.json.simple.JSONObject) jsonArr.get(i);
+					JSONObject jsonObj = (JSONObject) jsonArr.get(i);
 					decisionDate = (String) jsonObj.get("decisionDate");
 
 					fileName = (String) jsonObj.get("fileName");

@@ -89,7 +89,7 @@ public class EmsMessageVO {
 	private String ipBusicd;
 	@Field(name = "IPBUSINM")
 	private String ipBusiNm;
-	@Field(name = "IPDEPTCD")
+	@Field(name = "IP_DEPTCD")
 	private String ipDeptcd;
 	@Field(name = "IPDEPTNM")
 	private String ipDeptNm;
