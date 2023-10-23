@@ -37,6 +37,7 @@
 		<webcontent.dir>${project.basedir}\src\main\webapp\WEB-INF\lib</webcontent.dir>
 	</properties>
 
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -138,6 +139,27 @@
 			<artifactId>lucene-core</artifactId>
 			<version>9.2.0</version>
 		</dependency>
+
+
+<!--		<dependency>-->
+<!--			<groupId>org.apache.camel.springboot</groupId>-->
+<!--			<artifactId>camel-minio-starter</artifactId>-->
+<!--		</dependency>-->
+
+		<!--미나이오-->
+		<dependency>
+			<groupId>io.minio</groupId>
+			<artifactId>minio</artifactId>
+			<version>8.5.6</version>
+		</dependency>
+
+
+<!--				<dependency>-->
+<!--					<groupId>com.jlefebure</groupId>-->
+<!--					<artifactId>spring-boot-starter-minio</artifactId>-->
+<!--					<version>1.10</version>-->
+<!--				</dependency>-->
+
 
 		<dependency>
 			<groupId>commons-codec</groupId>

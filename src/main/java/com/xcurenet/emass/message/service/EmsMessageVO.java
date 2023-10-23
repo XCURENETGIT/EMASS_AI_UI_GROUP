@@ -135,6 +135,9 @@ public class EmsMessageVO {
 	private String subjectStr;
 	private String bodyStr;
 
+	@Field(name = "BODY_PATH")
+	private String bodyPath;
+
 	@Field(name = "RECV_INFO")
 	private List<EmsRecvVO> recv_info;
 

@@ -87,6 +87,8 @@ public class MongoUtil {
 		return results.getMappedResults();
 	}
 
+	
+
 	/**
 	 *
 	 * @param col - 조건 컬럼
@@ -138,4 +140,8 @@ public class MongoUtil {
 
 		return mongoTemplate.find(query, AuditVO.class);
 	}
+
+
+
+
 }

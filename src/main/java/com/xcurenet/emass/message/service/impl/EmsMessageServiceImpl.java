@@ -30,6 +30,8 @@ import javax.mail.internet.MimeMessage;
 
 import com.xcurenet.code.service.AttachTypeVO;
 import com.xcurenet.common.util.MongoUtil;
+import com.xcurenet.minio.MinioFileAdapter;
+import io.minio.MinioClient;
 import org.apache.commons.mail.EmailException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -94,10 +96,20 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 	public ConfigAdminService configAdminService;
 
 	@Autowired
+	public MinioFileAdapter minioFileAdapter;
+
+	@Autowired
 	MongoUtil mongoUtil;
 
 	@Override
 	public EmsBodyVO getEmassBody(String msgId, String firstAdminYn, String adminType) {
+		EmsBodyVO bodyVo = mongoUtil.selectId(msgId,EmsBodyVO.class,"EMS_MESSAGE");
+		return bodyVo;
+	}
+
+//	@Override
+//	public EmsBodyVO getEmassBody(String msgId, String firstAdminYn, String adminType) {
+
 /*
 		Query query= new Query(Criteria.where("_id").is(msgId));
 		EmsBodyVO bodyVo = new EmsBodyVO();
@@ -106,21 +118,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 			if (Integer.valueOf(msgId.substring(4, 6)) > 6) bodyVo = selectOne("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".emass.getEmassBodySm", msgId);
 			else bodyVo = selectOne("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".emass.getEmassBodySm", msgId);
 		} else bodyVo = selectOne("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".emass.getEmassBodySm", msgId);
-		if (bodyVo == null) {
-			EmsMessageVO emsMessage = getEmassMessage(msgId, firstAdminYn, adminType);
-			bodyVo = new EmsBodyVO();
-			bodyVo.setMsgId(emsMessage.getMsgId());
-			bodyVo.setBodySize(emsMessage.getBodySize());
-			bodyVo.setSubject(emsMessage.getSubject());
-			bodyVo.setSvc(emsMessage.getSvc());
-			bodyVo.setDstIp(emsMessage.getDstIp());
-			bodyVo.setHost(emsMessage.getHost());
-			bodyVo.setPath(emsMessage.getPath());
-			bodyVo.setUserId(emsMessage.getUserId());
-			bodyVo.setName(emsMessage.getName());
-			bodyVo.setCtime(emsMessage.getCtime());
-			bodyVo.setEpmsgType(emsMessage.getEpmsgType());
-		}
+
 
 		if (Common.isEquals(bodyVo.getBodyType(), "T")) {
 			bodyVo.setBody(Common.nvl(bodyVo.getBodyText()).getBytes());
@@ -130,8 +128,8 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		}
 		return bodyVo;*/
 
-		return null;
-	}
+//		return null;
+//	}
 
 	@Override
 	public EmsBodyVO getEmassBodyHash(String msgId) {
@@ -335,12 +333,12 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		boolean consentFlag = Config.getBoolean("consent.menu.enable");
 		if (!consentFlag || Common.isEquals(firstAdminYn, "Y")) return true;
 
-		Map<String, Object> param = new HashMap<>();
+	/*	Map<String, Object> param = new HashMap<>();
 		param.put("infoFeedbackConf", Config.getBoolean("info.feedback.used"));
 		param.put("infoHynixConf", Config.getBoolean("info.hynix.used"));
-		param.put("msgId", msgId);
+		param.put("msgId", msgId);*/
 
-		EmsMessageVO emsMessageVO = getConsentMessage(selectOne("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".emass.getEmassMessage", param), firstAdminYn, adminType);
+		EmsMessageVO emsMessageVO = getConsentMessage(mongoUtil.selectId(msgId,EmsMessageVO.class,"EMS_MESSAGE"), firstAdminYn, adminType);
 		return emsMessageVO.isConsentFlag();
 	}
 
@@ -541,36 +539,17 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 
 	@Override
 	public List<EmsAttachVO> getEmassAttachInfo4Down(String msgId, String attachId) {
-		/*Map<String, String> param = new HashMap<>();
+		Map<String, String> param = new HashMap<>();
 		param.put("msgId", msgId);
 		param.put("attachId", attachId);
 
 		EmsMessageVO emsMessageVO= mongoUtil.selectId(msgId,EmsMessageVO.class,"EMS_MESSAGE");
 
 		List<EmsAttachVO>list= emsMessageVO.getAttachInfo();
-		EmsAttachVO msg= new EmsAttachVO();
-
-		for(int i=0; i<list.size(); i++){
-			 msg= list.get(i);
-		}
-
-		List<EmsAttachVO> attachs = selectList("emass.getEmassAttachInfo4Down", param);
 
 
-		for (EmsAttachVO attach : attachs) {
-			attach.setSubject(msg.getSubject());
-			attach.setSvc(msg.getSvc());
-			attach.setSrcIp(msg.getSrcIp());
-			attach.setDstIp(msg.getDstIp());
-			attach.setHost(msg.getHost());
-			attach.setPath(msg.getPath());
-			attach.setUserId(msg.getUserId());
-			attach.setName(msg.getName());
-			attach.setCtime(msg.getCtime());
-		}
-		return attachs;*/
+		return list;
 
-		return null;
 	}
 
 	@Override

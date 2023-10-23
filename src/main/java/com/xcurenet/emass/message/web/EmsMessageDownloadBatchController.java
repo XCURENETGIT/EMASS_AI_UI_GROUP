@@ -239,7 +239,8 @@ public class EmsMessageDownloadBatchController {
 		FileOutputStream out = null;
 		try {
 			EmsBodyVO emsBody = emsMessageService.getEmassBody(edc.getMsgid(), firstAdminYn, adminType);
-			String body = new EmsCreateMessage(locale).getHeaderMessage(edc.getMsgid(), EmsMessageController.getBodyStr(null, emsBody), null, locale, firstAdminYn, adminId, adminType);
+			String body = null;
+//			String body = new EmsCreateMessage(locale).getHeaderMessage(edc.getMsgid(), EmsMessageController.getBodyStr(null, emsBody), null, locale, firstAdminYn, adminId, adminType);
 			if (body == null) body = "no data";
 			in = new ByteArrayInputStream(body.getBytes());
 

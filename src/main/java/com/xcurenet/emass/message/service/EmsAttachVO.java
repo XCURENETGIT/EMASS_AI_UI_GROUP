@@ -42,6 +42,14 @@ public class EmsAttachVO implements Comparable<EmsAttachVO>{
 	private String attachTextHarPath;
 	@Field(name = "ATTACHSPACE")
 	private String attachSpace;
+
+	@Field(name = "ATTACHTEXT")
+	private String attachText;
+
+	@Field(name = "DRM")
+	private String drm;
+
+
 	private boolean consentFlag;
 
 	private String subject;

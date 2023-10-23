@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.xcurenet.minio.MinioFileAdapter;
 import org.apache.catalina.connector.ClientAbortException;
 import org.apache.commons.compress.archivers.ArchiveOutputStream;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
@@ -103,7 +105,7 @@ public class EmsMessageController {
 
 	@Resource(name = "emsMessageService")
 	public EmsMessageService emsMessageService;
-	
+
 	@Autowired
 	public MessengerController messengerController;
 
@@ -121,6 +123,9 @@ public class EmsMessageController {
 
 	@Autowired
 	public SolrCheckedService solrCheckedService;
+
+	@Autowired
+	public MinioFileAdapter minioFileAdapter;
 
 	@RequestMapping(value = "/getEmassBody.xcn")
 	@Description("EMASS 메시지 본문 조회")
@@ -155,6 +160,19 @@ public class EmsMessageController {
 		}
 	}
 
+
+	@RequestMapping(value = "/getEmassBodyStr.xcn")
+	@Description("EMASS 메시지 본문 조회")
+	@AuditOperation(Operation.BODY_VIEW)
+	@ResponseBody
+	public XcnResponseVO getEmassBodyStr(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+		String msgId = Common.nvl(request.getParameter("msgId"));
+		String userCharset = Common.nvl(request.getParameter("userCharset"));
+		EmsBodyVO emsBody = emsMessageService.getEmassBody(msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
+		return new XcnResponseVO(XcnRspCode.OK, getBodyStr(userCharset, emsBody));
+
+	}
+
 	@RequestMapping(value = "/emassMailForward.xcn")
 	@Description("EMASS 메일 전달")
 	@AuditOperation(Operation.MAIL_SEND)
@@ -176,13 +194,15 @@ public class EmsMessageController {
 			if (Common.isNotEmpty(msgId)) {
 				EmsMessageVO msg = emsMessageService.getEmassMessage(msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
 				EmsBodyVO emsBody = emsMessageService.getEmassBody(msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
-				if( Common.isNotEmpty(emsBody.getBody())){
+				if (Common.isNotEmpty(emsBody.getBody())) {
 					emsBodyStr = getBodyStrProc(userCharset, emsBody);
 					if (Common.isEmpty(emsBodyStr)) {
 						String svc = Common.nvl(msg.getSvc());
 						if (Common.nvl(svc).startsWith("Q")) {
-							if (Common.nvl(svc).indexOf("J") == 3) emsBodyStr = Prop.propFormat("common.messenger.join");
-							else if (Common.nvl(svc).indexOf("L") == 3) emsBodyStr = Prop.propFormat("common.messenger.leave");
+							if (Common.nvl(svc).indexOf("J") == 3)
+								emsBodyStr = Prop.propFormat("common.messenger.join");
+							else if (Common.nvl(svc).indexOf("L") == 3)
+								emsBodyStr = Prop.propFormat("common.messenger.leave");
 						}
 					}
 				}
@@ -254,13 +274,15 @@ public class EmsMessageController {
 			if (Common.isNotEmpty(msgId)) {
 				EmsMessageVO msg = emsMessageService.getEmassMessage(msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
 				EmsBodyVO emsBody = emsMessageService.getEmassBody(msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
-				if( Common.isNotEmpty(emsBody.getBody())){
+				if (Common.isNotEmpty(emsBody.getBody())) {
 					emsBodyStr = getBodyStrProc(userCharset, emsBody);
 					if (Common.isEmpty(emsBodyStr)) {
 						String svc = Common.nvl(msg.getSvc());
 						if (Common.nvl(svc).startsWith("Q")) {
-							if (Common.nvl(svc).indexOf("J") == 3) emsBodyStr = Prop.propFormat("common.messenger.join");
-							else if (Common.nvl(svc).indexOf("L") == 3) emsBodyStr = Prop.propFormat("common.messenger.leave");
+							if (Common.nvl(svc).indexOf("J") == 3)
+								emsBodyStr = Prop.propFormat("common.messenger.join");
+							else if (Common.nvl(svc).indexOf("L") == 3)
+								emsBodyStr = Prop.propFormat("common.messenger.leave");
 						}
 					}
 				}
@@ -299,10 +321,10 @@ public class EmsMessageController {
 			infoSb.append("TO : ").append(to).append(MailInfo.ENTER);
 			infoSb.append("CC : ").append(cc).append(MailInfo.ENTER);
 			infoSb.append("BODY : ").append(body).append(MailInfo.ENTER);
-			if(Common.isNotEmpty(emsBodyStr)) infoSb.append("ATTACH : ").append(attach);
+			if (Common.isNotEmpty(emsBodyStr)) infoSb.append("ATTACH : ").append(attach);
 
 			createInfo(bodyDoc.html(), body);
-			if(Common.isNotEmpty(emsBodyStr)) createInfo(emsBodyStr, attach);
+			if (Common.isNotEmpty(emsBodyStr)) createInfo(emsBodyStr, attach);
 			createInfo(infoSb.toString(), info);
 
 			return new XcnResponseVO(XcnRspCode.OK);
@@ -400,10 +422,12 @@ public class EmsMessageController {
 						List<SolrEdcVO> emass = EmsReDefined.reDefined(getEmassData(adminId, condition, searchTime, i - 1).getEmass(), locale);
 
 						for (SolrEdcVO edc : emass) {
-							if (bodyFlag) inputZipBody(os, locale, edc, Common.getFirstAdminYn(request.getSession()), Common.getAdminId(request), Common.getAdminType(request.getSession()));
+							if (bodyFlag)
+								inputZipBody(os, locale, edc, Common.getFirstAdminYn(request.getSession()), Common.getAdminId(request), Common.getAdminType(request.getSession()));
 							if (attachFlag) inputAttach(os, attachDown, edc);
 						}
-						if (listFlag) xlsxWriter = createExcelZipFile(os, xlsxWriter, emass, header, Prop.propFormat("DATA_MONITOR.MESSAGE_INFO", locale), total, i, solrCnt, bodyFlag, attachFlag, exportFileExt);
+						if (listFlag)
+							xlsxWriter = createExcelZipFile(os, xlsxWriter, emass, header, Prop.propFormat("DATA_MONITOR.MESSAGE_INFO", locale), total, i, solrCnt, bodyFlag, attachFlag, exportFileExt);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -565,19 +589,20 @@ public class EmsMessageController {
 						List<SolrEdcVO> emass = EmsReDefined.reDefined(getEmassData(adminId, condition, searchTime, i - 1).getEmass(), locale);
 
 						for (SolrEdcVO edc : emass) {
-							if (bodyFlag) inputZipBody(os, locale, edc, Common.getFirstAdminYn(request.getSession()), Common.getAdminId(request), Common.getAdminType(request.getSession()));
+							if (bodyFlag)
+								inputZipBody(os, locale, edc, Common.getFirstAdminYn(request.getSession()), Common.getAdminId(request), Common.getAdminType(request.getSession()));
 							if (attachFlag) inputAttach(os, attachDown, edc);
 						}
 
-						if( i%cnt == 1 || i == 1){
+						if (i % cnt == 1 || i == 1) {
 							xOut = new ByteArrayOutputStream();
 							csvWriter = new CsvWriterEMASS(header, new OutputStreamWriter(xOut, Common.EUCKR));
 							log.info("[CSV Write] Create New file start");
 						}
 
-						csvWriter.appendData(emass, (i-1)*PAGE_BREAK);
+						csvWriter.appendData(emass, (i - 1) * PAGE_BREAK);
 
-						if( i%cnt == 0 || i == queryCnt){
+						if (i % cnt == 0 || i == queryCnt) {
 
 							long lastNum = i * PAGE_BREAK;
 							long startNum = lastNum - (cnt) * PAGE_BREAK + 1;
@@ -587,7 +612,7 @@ public class EmsMessageController {
 							}
 							if (lastNum > total) lastNum = total;
 
-							String fileName = "list_"+startNum+"-"+lastNum+".csv";
+							String fileName = "list_" + startNum + "-" + lastNum + ".csv";
 
 
 							ByteArrayInputStream bIn = null;
@@ -597,7 +622,7 @@ public class EmsMessageController {
 								bIn = new ByteArrayInputStream(xOut.toByteArray());
 								IOUtils.copy(bIn, os);
 								os.closeArchiveEntry();
-							}catch (Exception e) {
+							} catch (Exception e) {
 								e.printStackTrace();
 							} finally {
 								csvWriter = null;
@@ -689,7 +714,8 @@ public class EmsMessageController {
 						List<SolrEdcVO> emass = EmsReDefined.reDefined(getEmassData(adminId, condition, searchTime, i - 1).getEmass(), locale);
 
 						for (SolrEdcVO edc : emass) {
-							if (bodyFlag) inputZipBody(os, locale, edc, Common.getFirstAdminYn(request.getSession()), Common.getAdminId(request), Common.getAdminType(request.getSession()));
+							if (bodyFlag)
+								inputZipBody(os, locale, edc, Common.getFirstAdminYn(request.getSession()), Common.getAdminId(request), Common.getAdminType(request.getSession()));
 							if (attachFlag) inputAttach(os, attachDown, edc);
 						}
 
@@ -823,17 +849,6 @@ public class EmsMessageController {
 		}
 	}
 
-	@RequestMapping(value = "/getEmassBodyStr.xcn")
-	@Description("EMASS 메시지 본문 조회")
-	@AuditOperation(Operation.BODY_VIEW)
-	@ResponseBody
-	public XcnResponseVO getEmassBodyStr(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
-		String msgId = Common.nvl(request.getParameter("msgId"));
-		String userCharset = Common.nvl(request.getParameter("userCharset"));
-		EmsBodyVO emsBody = emsMessageService.getEmassBody(msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
-		return new XcnResponseVO(XcnRspCode.OK, getBodyStr(userCharset, emsBody));
-	}
-
 	@RequestMapping(value = "/getEmassBodySave.xcn")
 	@Description("EMASS grid 메시지 본문 저장")
 	@ResponseBody
@@ -849,31 +864,58 @@ public class EmsMessageController {
 		String userCharset = Common.nvl(request.getParameter("userCharset"));
 		String print = Common.nvl(request.getParameter("print"));
 
-		ServletOutputStream out = null;
+		EmsBodyVO emsBody = emsMessageService.getEmassBody(msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
+		String subject = EmsReDefined.reSubject(getFileName(emsBody));
+		String fileName = Common.getEDCFileName(emsBody.getCtime(), emsBody.getUserId(), emsBody.getName(), subject, msgId);
+		String objectName = emsBody.getBodyPath();
 
-		try {
-			out = response.getOutputStream();
+		new EmsCreateMessage(request).getHeaderMessage(msgId, getBodyStr(userCharset, emsBody), print, Common.getLocale(request.getSession()),
+				Common.getFirstAdminYn(request.getSession()), Common.getAdminId(request), Common.getAdminType(request.getSession())).getBytes();
 
-			EmsBodyVO emsBody = emsMessageService.getEmassBody(msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
-
-
-			if (Common.isNotEquals(print, "Y")) {
-
-				String subject = EmsReDefined.reSubject(getFileName(emsBody));
-				String fileName = Common.getEDCFileName(emsBody.getCtime(), emsBody.getUserId(), emsBody.getName(), subject, msgId);
-
-				response.setContentType("application/octet-stream");
-				response.setHeader("Content-Transfer-Encoding", "binary");
-				response.setHeader("Connection", "close");
-				response.setHeader("Content-Disposition", "attachment; filename=\"" + Common.getEncodingFileName(request, fileName) + ".html\"");
-			}
-			out.write(new EmsCreateMessage(request).getHeaderMessage(msgId, getBodyStr(userCharset, emsBody), print, Common.getLocale(request.getSession()), Common.getFirstAdminYn(request.getSession()), Common.getAdminId(request), Common.getAdminType(request.getSession())).getBytes());
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			IOUtils.closeQuietly(out);
-		}
+		minioFileAdapter.fileDownload(objectName,fileName, request, response );
 	}
+
+
+//	@RequestMapping(value = "/getEmassBodySave.xcn")
+//	@Description("EMASS grid 메시지 본문 저장")
+//	@ResponseBody
+//	public void getEmassBodySave(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+//
+//		response.setCharacterEncoding(Common.UTF8);
+//		response.setHeader("Cache-control", "no-store");
+//		response.setHeader("Pragma", "no-cache");
+//		response.setDateHeader("Expires", 0);
+//		response.setHeader("Content-Disposition", "inline");
+//
+//		String msgId = Common.nvl(request.getParameter("msgId"));
+//		String userCharset = Common.nvl(request.getParameter("userCharset"));
+//		String print = Common.nvl(request.getParameter("print"));
+//
+//		ServletOutputStream out = null;
+//
+//		try {
+//			out = response.getOutputStream();
+//
+//			EmsBodyVO emsBody = emsMessageService.getEmassBody(msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
+//
+//
+//			if (Common.isNotEquals(print, "Y")) {
+//
+//				String subject = EmsReDefined.reSubject(getFileName(emsBody));
+//				String fileName = Common.getEDCFileName(emsBody.getCtime(), emsBody.getUserId(), emsBody.getName(), subject, msgId);
+//
+//				response.setContentType("application/octet-stream");
+//				response.setHeader("Content-Transfer-Encoding", "binary");
+//				response.setHeader("Connection", "close");
+//				response.setHeader("Content-Disposition", "attachment; filename=\"" + Common.getEncodingFileName(request, fileName) + ".html\"");
+//			}
+//			out.write(new EmsCreateMessage(request).getHeaderMessage(msgId, getBodyStr(userCharset, emsBody), print, Common.getLocale(request.getSession()), Common.getFirstAdminYn(request.getSession()), Common.getAdminId(request), Common.getAdminType(request.getSession())).getBytes());
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} finally {
+//			IOUtils.closeQuietly(out);
+//		}
+//	}
 
 	@RequestMapping(value = "/getMailEmassBody.xcn")
 	@Description("전달 메일용 메시지 본문")
@@ -881,6 +923,7 @@ public class EmsMessageController {
 	public String getMailEmassBody(final HttpServletRequest request) throws Exception {
 		String msgId = Common.nvl(request.getParameter("msgId"));
 		String userCharset = Common.nvl(request.getParameter("userCharset"));
+		log.info("userCharset : " + userCharset);
 		String print = Common.nvl(request.getParameter("print"));
 
 		EmsBodyVO emsBody = emsMessageService.getEmassBody(msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
@@ -1059,54 +1102,72 @@ public class EmsMessageController {
 		}
 	}
 
-	public static String getBodyStr(String userCharset, EmsBodyVO emsBody) throws UnsupportedEncodingException {
+
+//	public static String getBodyStr(String userCharset, EmsBodyVO emsBody) throws UnsupportedEncodingException {
+//		if (emsBody == null) return Prop.propFormat("common.msg.nocontent");
+//		String body = getBodyStrProc(userCharset, emsBody);
+//		if (body == null) {
+//			return Prop.propFormat("common.msg.nocontent");
+//		} else if (emsBody.getSvc().startsWith("Q")) return body;
+//		else {
+////			log.info(Jsoup.parse("&lttable&gt&lt/table&gt").body().html());
+////			log.info(Jsoup.parse("&ltdiv&gt&lt/div&gt").body().html());
+////			log.info(Jsoup.parse("&ltstyle&gt&lt/style&gt").body().html());
+////			log.info(Jsoup.parse("&ltbutton&gt&lt/button&gt").body().html());
+////			log.info(Jsoup.parse("&ltspan&gt&lt/span&gt").body().html());
+////			log.info(Jsoup.parse("&lth&gt&lt/h&gt").body().html());
+////			log.info(Jsoup.parse("&ltinput&gt&lt/input&gt").body().html());
+////			log.info(Jsoup.parse("&ltiframe&gt&lt/iframe&gt").body().html());
+////			log.info(Jsoup.parse("&ltform&gt&lt/form&gt").body().html());
+////			log.info(Jsoup.parse("&lthtml&gt&lt/html&gt").body().html());
+////			log.info(Jsoup.parse("&lt&gt&lt&gt").body().html()); //check
+////			log.info(Jsoup.parse("dfgdfgdfg&lt&amp;&gt&lt/ffff&gt").body().html());
+////			log.info(Jsoup.parse("dfgdfgdfg&lt &gt&lt/ffff&gt").body().html()); //check
+////			log.info(Jsoup.parse("dfgdfgdfg&lt dfgdfg&gt&lt/ffff&gt").body().html()); //check
+////			log.info(Jsoup.parse("dfgdfgdfg&ltsdfsdf &gt&lt/ffff&gt").body().html());
+//			Document doc = Jsoup.parse(body); //태그 변환을 위한 Jsoup Parser
+//			String uri = emsBody.getHost();
+//			if(Common.isEmpty(uri)) uri = emsBody.getSrcIp();
+//
+//			doc.setBaseUri("http://"+uri);
+//			changeLink(doc);
+//
+//			Element bodyEl = doc.body();
+//			replaceTagNames(bodyEl, "HTML", "XHTML", false);
+//			replaceTagNames(bodyEl, "META", "XMETA", false);
+//			replaceTagNames(bodyEl, "STYLE", "XSTYLE", true);
+//			replaceTagNames(bodyEl, "SCRIPT", "TEXTAREA", true);
+//			replaceTagNames(bodyEl, "LINK", "XLINK", true);
+//			replaceTagNames(bodyEl, "BUTTON", "XBUTTON", false);
+//			replaceTagNames(bodyEl, "BASE", "XBASE", true);
+//			replaceTagNames(bodyEl, "IFRAME", "XIFRAME", true);
+//
+//			return doc.body().html();
+//		}
+//	}
+
+
+	public String getBodyStr(String userCharset, EmsBodyVO emsBody) throws IOException {
 		if (emsBody == null) return Prop.propFormat("common.msg.nocontent");
-		String body = getBodyStrProc(userCharset, emsBody);
-		if (body == null) {
-			return Prop.propFormat("common.msg.nocontent");
-		} else if (emsBody.getSvc().startsWith("Q")) return body;
-		else {
-//			log.info(Jsoup.parse("&lttable&gt&lt/table&gt").body().html());
-//			log.info(Jsoup.parse("&ltdiv&gt&lt/div&gt").body().html());
-//			log.info(Jsoup.parse("&ltstyle&gt&lt/style&gt").body().html());
-//			log.info(Jsoup.parse("&ltbutton&gt&lt/button&gt").body().html());
-//			log.info(Jsoup.parse("&ltspan&gt&lt/span&gt").body().html());
-//			log.info(Jsoup.parse("&lth&gt&lt/h&gt").body().html());
-//			log.info(Jsoup.parse("&ltinput&gt&lt/input&gt").body().html());
-//			log.info(Jsoup.parse("&ltiframe&gt&lt/iframe&gt").body().html());
-//			log.info(Jsoup.parse("&ltform&gt&lt/form&gt").body().html());
-//			log.info(Jsoup.parse("&lthtml&gt&lt/html&gt").body().html());
-//			log.info(Jsoup.parse("&lt&gt&lt&gt").body().html()); //check
-//			log.info(Jsoup.parse("dfgdfgdfg&lt&amp;&gt&lt/ffff&gt").body().html());
-//			log.info(Jsoup.parse("dfgdfgdfg&lt &gt&lt/ffff&gt").body().html()); //check
-//			log.info(Jsoup.parse("dfgdfgdfg&lt dfgdfg&gt&lt/ffff&gt").body().html()); //check
-//			log.info(Jsoup.parse("dfgdfgdfg&ltsdfsdf &gt&lt/ffff&gt").body().html());
-			Document doc = Jsoup.parse(body); //태그 변환을 위한 Jsoup Parser
-			String uri = emsBody.getHost();
-			if(Common.isEmpty(uri)) uri = emsBody.getSrcIp();
-			
-			doc.setBaseUri("http://"+uri);
-			changeLink(doc);
-			
-			Element bodyEl = doc.body();
-			replaceTagNames(bodyEl, "HTML", "XHTML", false);
-			replaceTagNames(bodyEl, "META", "XMETA", false);
-			replaceTagNames(bodyEl, "STYLE", "XSTYLE", true);
-			replaceTagNames(bodyEl, "SCRIPT", "TEXTAREA", true);
-			replaceTagNames(bodyEl, "LINK", "XLINK", true);
-			replaceTagNames(bodyEl, "BUTTON", "XBUTTON", false);
-			replaceTagNames(bodyEl, "BASE", "XBASE", true);
-			replaceTagNames(bodyEl, "IFRAME", "XIFRAME", true);
-			
-			return doc.body().html();
+
+		String contents = null;
+		//minio 통해서 파일 가져 옴
+		InputStream object = minioFileAdapter.findFile(emsBody.getBodyPath());
+		if (userCharset.isEmpty()) { // 자동일 때 UTF-8 로 변경
+			contents = IOUtils.toString(object, StandardCharsets.UTF_8);
+		} else {
+			contents = IOUtils.toString(object, userCharset);
 		}
+
+		return contents;
 	}
-	
+
+
 	private static void changeLink(Document doc) {
 		Elements elems = doc.select("[src]");
 		for (Element elem : elems) {
 			if (!elem.attr("src").equals(elem.attr("abs:src"))) {
-				if(!elem.attr("src").startsWith("data:")) {
+				if (!elem.attr("src").startsWith("data:")) {
 					elem.attr("src", elem.attr("abs:src"));
 				}
 			}
@@ -1120,7 +1181,7 @@ public class EmsMessageController {
 		}
 		elems = doc.select("a");
 		for (Element elem : elems) {
-			elem.attr("target","_blank");
+			elem.attr("target", "_blank");
 		}
 	}
 
@@ -1147,14 +1208,14 @@ public class EmsMessageController {
 			charset = userCharset;
 			bodyStr = Common.toString(body, charset);
 		}
-		
-		
+
+
 		EmsBodyType contentType = getEmsBodyType(bodyStr);
 		log.debug("message Type : {} final chrset : {} msgId : {}", contentType, charset, emsBody.getMsgId());
 
-		if (emsBody.getSvc().startsWith("Q")) {
-			return textParser(bodyStr);
-		}
+//		if (emsBody.getSvc().startsWith("Q")) {
+//			return textParser(bodyStr);
+//		}
 
 		switch (contentType) {
 			case MAYBE_HTML:
@@ -1263,7 +1324,7 @@ public class EmsMessageController {
 			SolrCheckedVO checked = new SolrCheckedVO();
 			checked.setId(Common.getAdminId(session));
 			checked.setMsgid(msgId);
-			
+
 			String ctime = emass.getCtime().replaceAll("\\-", "").replaceAll("\\:", "").replaceAll(" ", "");
 			String ctimeyyyymmdd = ctime.substring(0, 8);
 			String ctimeyyyymm = ctime.substring(0, 6);
@@ -1280,7 +1341,7 @@ public class EmsMessageController {
 			checked.setSvc(emass.getSvc());
 			solrCheckedService.setRead(checked);
 		}
-		
+
 		return new XcnResponseVO(XcnRspCode.OK, emass);
 	}
 
@@ -1291,7 +1352,7 @@ public class EmsMessageController {
 	public XcnResponseVO getEmassUserInfo(final HttpServletRequest request, final HttpSession session) throws Exception {
 		String msgId = Common.nvl(request.getParameter("msgId"));
 		String uType = Common.nvl(request.getParameter("uType"));
-			return new XcnResponseVO(XcnRspCode.OK, emsMessageService.getEmassUserInfo(msgId, uType));
+		return new XcnResponseVO(XcnRspCode.OK, emsMessageService.getEmassUserInfo(msgId, uType));
 	}
 
 	@RequestMapping(value = "/getEmassAttachInfo.xcn")
@@ -1309,7 +1370,7 @@ public class EmsMessageController {
 			return new XcnResponseVO(XcnRspCode.OK, emsMessageService.getEmassAttachInfo(msgId, attachId));
 		}
 	}
-	
+
 	@RequestMapping(value = "/findKeywordPages.xcn")
 	@Description("EMASS 첨부파일 내용에 키워드(검색어, 예약어)가 포함된 페이지 넘버")
 	@ResponseBody
@@ -1375,59 +1436,59 @@ public class EmsMessageController {
 		emsAttachDownload.download(attachs, request, response, prediction);
 	}
 
-	 @RequestMapping({"/insertSkFeedback.xcn"})
-	 @Description("SK 피드백 결과")
-	 @ResponseBody
-	 public XcnResponseVO insertSkFeedback(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		 
-		 String radioFeedback = Common.nvl(request.getParameter("radioFeedback"));
-		 String feedbackcomment = Common.nvl(request.getParameter("feedbackcomment"));
-		 String attachId = Common.nvl(request.getParameter("attachId"));
-		 String msgId = Common.nvl(request.getParameter("msgId"));
-		 String attachName = Common.nvl(request.getParameter("attachName"));
-		 String attachHash = Common.nvl(request.getParameter("attachHash"));
-		 int radioFeedbackInt = Integer.parseInt(radioFeedback);
-		 
-		 return new XcnResponseVO(XcnRspCode.OK, emsMessageService.insertSkFeedback(radioFeedbackInt, feedbackcomment, attachId, msgId, attachName, attachHash));
+	@RequestMapping({"/insertSkFeedback.xcn"})
+	@Description("SK 피드백 결과")
+	@ResponseBody
+	public XcnResponseVO insertSkFeedback(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+		String radioFeedback = Common.nvl(request.getParameter("radioFeedback"));
+		String feedbackcomment = Common.nvl(request.getParameter("feedbackcomment"));
+		String attachId = Common.nvl(request.getParameter("attachId"));
+		String msgId = Common.nvl(request.getParameter("msgId"));
+		String attachName = Common.nvl(request.getParameter("attachName"));
+		String attachHash = Common.nvl(request.getParameter("attachHash"));
+		int radioFeedbackInt = Integer.parseInt(radioFeedback);
+
+		return new XcnResponseVO(XcnRspCode.OK, emsMessageService.insertSkFeedback(radioFeedbackInt, feedbackcomment, attachId, msgId, attachName, attachHash));
 	}
-	 
-	 @RequestMapping(value = "/getSolrFeedback.xcn")
-	 @Description("solr에 업데이트 할 피드백 정보 조회")
-	 @ResponseBody
-	 public XcnResponseVO getSolrFeedback(final HttpServletRequest request, final HttpSession session) throws Exception {
+
+	@RequestMapping(value = "/getSolrFeedback.xcn")
+	@Description("solr에 업데이트 할 피드백 정보 조회")
+	@ResponseBody
+	public XcnResponseVO getSolrFeedback(final HttpServletRequest request, final HttpSession session) throws Exception {
 		String msgId = Common.nvl(request.getParameter("msgId"));
 		String feedbackValue = Common.nvl(request.getParameter("feedbackValue"));
-		
+
 		return new XcnResponseVO(XcnRspCode.OK, emsMessageService.insertAndUpdateSolrFeedback(msgId, feedbackValue));
 	}
-	 
-	 @RequestMapping({"/updateSkMlFeedback.xcn"})
-	 @Description("SK 피드백 결과 메시지 상세보기에 반영")
-	 @ResponseBody
-	 public XcnResponseVO updateSkMlFeedback(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		 String msgId = Common.nvl(request.getParameter("msgId"));
-		 String attachId = Common.nvl(request.getParameter("attachId"));
-		 String radioFeedback = Common.nvl(request.getParameter("radioFeedback"));
-		 String attachSecretYn = Common.nvl(request.getParameter("attachSecretYn"));
-		
-		 if(attachSecretYn == "비밀 문서") {
-			 attachSecretYn = "1";
-		 }else if(attachSecretYn == "대외비 문서") {
-			 attachSecretYn = "0";
-		 }else {
-			 if(attachSecretYn == "비밀 문서") {
-				 attachSecretYn = "1";
-			 }else if(attachSecretYn == "대외비 문서") {
-				 attachSecretYn = "0";
-			 }
-		 }
-		 
-		 int radioFeedbackInt = Integer.parseInt(radioFeedback);
-		 int attachSecretYnInt = Integer.parseInt(attachSecretYn);
-		 
-		 return new XcnResponseVO(XcnRspCode.OK, emsMessageService.updateSkMlFeedback(msgId, attachId, radioFeedbackInt, attachSecretYnInt));
+
+	@RequestMapping({"/updateSkMlFeedback.xcn"})
+	@Description("SK 피드백 결과 메시지 상세보기에 반영")
+	@ResponseBody
+	public XcnResponseVO updateSkMlFeedback(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String msgId = Common.nvl(request.getParameter("msgId"));
+		String attachId = Common.nvl(request.getParameter("attachId"));
+		String radioFeedback = Common.nvl(request.getParameter("radioFeedback"));
+		String attachSecretYn = Common.nvl(request.getParameter("attachSecretYn"));
+
+		if (attachSecretYn == "비밀 문서") {
+			attachSecretYn = "1";
+		} else if (attachSecretYn == "대외비 문서") {
+			attachSecretYn = "0";
+		} else {
+			if (attachSecretYn == "비밀 문서") {
+				attachSecretYn = "1";
+			} else if (attachSecretYn == "대외비 문서") {
+				attachSecretYn = "0";
+			}
+		}
+
+		int radioFeedbackInt = Integer.parseInt(radioFeedback);
+		int attachSecretYnInt = Integer.parseInt(attachSecretYn);
+
+		return new XcnResponseVO(XcnRspCode.OK, emsMessageService.updateSkMlFeedback(msgId, attachId, radioFeedbackInt, attachSecretYnInt));
 	}
-	  
+
 	@RequestMapping(value = "/getEmassAttachInfo4DownHash.xcn")
 	@Description("EMASS 파일 다운로드")
 	@ResponseBody
@@ -1496,7 +1557,7 @@ public class EmsMessageController {
 			}
 			String htmlText = new EmsCreateMessage(request).getHeaderMessage(msgId, body, print, Common.getLocale(request.getSession()), Common.getFirstAdminYn(request.getSession()), users, Common.getAdminId(request), Common.getAdminType(request.getSession()));
 			out.write(htmlText.getBytes());
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -1524,18 +1585,20 @@ public class EmsMessageController {
 			}
 		} else return false;
 	}
-	
+
 	public static EmsBodyType getEmsBodyType(String str) {
 		if (str == null) return EmsBodyType.NONE;
 
 		String strTmp = str.toLowerCase().replaceAll(" ", "").trim();
-		if( strTmp == null || strTmp.equals("")) return EmsBodyType.NONE;
-		//if (Common.isEmpty(strTmp)) return EmsBodyType.NONE;
+		if (strTmp == null || strTmp.equals("")) return EmsBodyType.NONE;
+			//if (Common.isEmpty(strTmp)) return EmsBodyType.NONE;
 		else if (mayBeJSON(strTmp)) return EmsBodyType.JSON;
 		else if (str.startsWith("<!DOCTYPE html")) return EmsBodyType.HTML;
-		else if (strTmp.startsWith("mime-version") || strTmp.indexOf("message-id") > -1 || strTmp.indexOf("mime-version") > -1 || strTmp.indexOf ( "content-type:text/html" ) > -1) return EmsBodyType.MIME;
+		else if (strTmp.startsWith("mime-version") || strTmp.indexOf("message-id") > -1 || strTmp.indexOf("mime-version") > -1 || strTmp.indexOf("content-type:text/html") > -1)
+			return EmsBodyType.MIME;
 		else if (DetectHtml.isHtml(str)) return EmsBodyType.HTML;
-		else if (strTmp.startsWith("<table") || strTmp.startsWith("<div") || strTmp.startsWith("<p") || strTmp.indexOf("<styletype='text/css'>") > -1 || strTmp.indexOf("<table") > -1 || strTmp.indexOf("<style") > -1) return EmsBodyType.MAYBE_HTML;
+		else if (strTmp.startsWith("<table") || strTmp.startsWith("<div") || strTmp.startsWith("<p") || strTmp.indexOf("<styletype='text/css'>") > -1 || strTmp.indexOf("<table") > -1 || strTmp.indexOf("<style") > -1)
+			return EmsBodyType.MAYBE_HTML;
 		else return EmsBodyType.OTHER;
 	}
 
@@ -1549,14 +1612,14 @@ public class EmsMessageController {
 	@Description("Background File Export Download")
 	public void downloadMessageFile(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
 		String filePath = Common.nvl(request.getParameter("downFilePath"));
-		if(Common.isEmpty(filePath)) {
+		if (Common.isEmpty(filePath)) {
 			log.warn(Prop.propFormat("java.error.filenotfound"));
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			response.addCookie(new Cookie("fileDownload", "false"));
 			return;
 		}
 		File file = new File(filePath);
-		if(!file.exists()) {
+		if (!file.exists()) {
 			log.warn(Prop.propFormat("java.error.filenotfound"));
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			response.addCookie(new Cookie("fileDownload", "false"));
@@ -1583,7 +1646,7 @@ public class EmsMessageController {
 		int limit = Common.nvz(request.getParameter("limit"));
 		return new XcnResponseVO(XcnRspCode.OK, downloadBatchService.getDownloadBatchList(adminId, exportTypeSel, fileExtSel, statusSel, offset, limit));
 	}
-	
+
 	@RequestMapping(value = "/cancelDownFile.xcn")
 	@Description("다운로드 배치 취소")
 	@ResponseBody
@@ -1609,17 +1672,17 @@ public class EmsMessageController {
 		checked.setBusicd(Common.nvl(request.getParameter("busiCd")));
 		checked.setIp_busicd(Common.nvl(request.getParameter("ipBusicd")));
 		checked.setSvc(Common.nvl(request.getParameter("svc")));
-		
+
 		solrCheckedService.setRead(checked);
 		return new XcnResponseVO(XcnRspCode.OK);
 	}
-	
+
 	@RequestMapping(value = "/updateEmsFeedback.xcn")
 	@Description("메시지 피드백 설정")
 	@ResponseBody
 	public XcnResponseVO updateEmsFeedback(final HttpServletRequest request, final HttpSession session) throws Exception {
 		String adminId = Common.getAdminId(request);
-		String[] msgId = Common.toArray(Common.nvl(request.getParameter("msgId")),",");
+		String[] msgId = Common.toArray(Common.nvl(request.getParameter("msgId")), ",");
 		String feedback = Common.nvl(request.getParameter("feedback"));
 
 		for (int i = 0; i < msgId.length; i++) {
@@ -1628,7 +1691,7 @@ public class EmsMessageController {
 		}
 		return new XcnResponseVO(XcnRspCode.OK);
 	}
-	
+
 	@RequestMapping(value = "/getSearchKeywordAuto.xcn")
 	@Description("운용자별 검색어 자동완성 조회")
 	@ResponseBody
@@ -1638,7 +1701,7 @@ public class EmsMessageController {
 
 		return new XcnResponseVO(XcnRspCode.OK, emsMessageService.getSearchKeywordAuto(adminId, searchKeyword));
 	}
-	
+
 	@RequestMapping(value = "/getSearchKeywordList.xcn")
 	@Description("운용자별 검색어 조회")
 	@ResponseBody
@@ -1648,16 +1711,17 @@ public class EmsMessageController {
 
 		return new XcnResponseVO(XcnRspCode.OK, emsMessageService.getSearchKeywordList(adminId, searchKeyword));
 	}
-	
+
 	@RequestMapping(value = "/insertSearchKeywordList.xcn")
 	@Description("운용자별 검색어 추가")
 	@ResponseBody
 	public XcnResponseVO insertSearchKeywordList(final HttpServletRequest request, final EmsSearchKeywordVO searchKeyword) throws Exception {
 		searchKeyword.setAdminId(Common.getAdminId(request));
-		if( emsMessageService.isSearchKeywordExist(searchKeyword) ) return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("java.already.insert.searchKeyword", request, searchKeyword.getSearchKeyword()));
+		if (emsMessageService.isSearchKeywordExist(searchKeyword))
+			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("java.already.insert.searchKeyword", request, searchKeyword.getSearchKeyword()));
 		else return new XcnResponseVO(XcnRspCode.OK, emsMessageService.insertSearchKeywordList(searchKeyword));
 	}
-	
+
 	@RequestMapping(value = "/deleteSearchKeywordList.xcn")
 	@Description("운용자별 검색어 삭제")
 	@ResponseBody
@@ -1665,40 +1729,40 @@ public class EmsMessageController {
 		searchKeyword.setAdminId(Common.getAdminId(request));
 		return new XcnResponseVO(XcnRspCode.OK, emsMessageService.deleteSearchKeywordList(searchKeyword));
 	}
-	
+
 	@RequestMapping(value = "/getMlFeedbackDate.xcn")
 	@Description("피드백 내용 조회")
 	@ResponseBody
 	public XcnResponseVO getMlFeedbackDate(final HttpServletRequest request, final HttpSession session) throws Exception {
 		String msgId = Common.nvl(request.getParameter("msgId"));
 		String attachId = Common.nvl(request.getParameter("attachId"));
-		
+
 		EmsMlFeedbackVO emass = emsMessageService.getMlFeedbackDate(msgId, attachId);
 		return new XcnResponseVO(XcnRspCode.OK, emass);
 	}
-	
+
 	@RequestMapping(value = "/getFeedbackSecretData.xcn")
 	@Description("피드백 내용 조회")
 	@ResponseBody
 	public XcnResponseVO getFeedbackSecretData(final HttpServletRequest request, final HttpSession session) throws Exception {
 		String msgId = Common.nvl(request.getParameter("msgId"));
 		String attachId = Common.nvl(request.getParameter("attachId"));
-		
+
 		EmsMlFeedbackVO emass = emsMessageService.getMlSecretData(msgId, attachId);
 		return new XcnResponseVO(XcnRspCode.OK, emass);
 	}
-	
+
 	@RequestMapping(value = "/getMlSecretData.xcn")
 	@Description("ml 결과값 조회")
 	@ResponseBody
 	public XcnResponseVO getMlSecretData(final HttpServletRequest request, final HttpSession session) throws Exception {
 		String msgId = Common.nvl(request.getParameter("msgId"));
 		String attachId = Common.nvl(request.getParameter("attachId"));
-		
+
 		EmsMlFeedbackVO emass = emsMessageService.getMlSecretData(msgId, attachId);
 		return new XcnResponseVO(XcnRspCode.OK, emass);
 	}
-	
+
 	@RequestMapping(value = "/getRecvDomainInfo.xcn")
 	@Description("수신자 도메인 조회")
 	@ResponseBody

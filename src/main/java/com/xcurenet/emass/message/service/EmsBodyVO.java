@@ -6,27 +6,45 @@ import com.xcurenet.common.types.IP;
 import com.xcurenet.common.util.Common;
 
 import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+import javax.print.attribute.standard.MediaSize;
 
 @Data
 public class EmsBodyVO {
+
+	@Id
+	@Field(name = "_id")
 	private String msgId;
+
 	private String bodyHash;
 	private long bodySize;
 	private String bodyCharset;
+	@Field(name = "BODY_PATH")
 	private String bodyPath;
 	private byte[] body;
 	private String bodyType;
 	private String bodyText;
-
+	@Field(name = "SUBJECT")
 	private String subject;
 	private String svc;
 	private String srcIp;
 	private String dstIp;
 	private String host;
 	private String path;
+	@Field(name = "USERID")
 	private String userId;
+
+	@Field(name = "FILENAME")
+	private String fileName;
+
+	@Field(name = "NAME")
 	private String name;
+
+	@Field(name = "CTIME")
 	private String ctime;
+
 	private String epmsgType;
 
 	public void setSrcIp(String srcIp) {
