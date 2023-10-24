@@ -364,7 +364,7 @@ function fileExtCheck(obj){
 					<button type = "button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
-					<h3 class="modal-title"><s:message code="OPERATION_MGMT.BUSI_IPRANGE"/>-<s:message code="keyword.msg.upload"/></h3>
+					<h3 class="modal-title"><s:message code="POLICY_SETUP.BUSI_IPRANGE"/>-<s:message code="keyword.msg.upload"/></h3>
 				</div>
 				<div class="modal-body">
 					<form method="post" id="uploadForm" enctype="multipart/form-data" target="upload_file">

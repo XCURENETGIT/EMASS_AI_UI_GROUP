@@ -26,7 +26,7 @@ public class MakeInfoControllerLog {
 		JSONObject param = Common.getParam(request);
 		String comment = Common.nvl(param.get("comment"));
 
-		auditVo.setInformation(Prop.propFormat("OPERATION_MGMT.USER_MGMT")+"┌" + comment);
+		auditVo.setInformation(Prop.propFormat("POLICY_SETUP.USER_MGMT")+"┌" + comment);
 		auditService.insertAudit(request, auditVo);
 	}
 }

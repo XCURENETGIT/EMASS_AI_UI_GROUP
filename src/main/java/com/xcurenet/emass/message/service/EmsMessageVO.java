@@ -121,6 +121,7 @@ public class EmsMessageVO {
 	private String fileName;
 	@Field(name = "CEO")
 	private String ceo;
+
 	private boolean consentFlag;
 	@Field(name = "BODYSNIPPET")
 	private String body_snippet;

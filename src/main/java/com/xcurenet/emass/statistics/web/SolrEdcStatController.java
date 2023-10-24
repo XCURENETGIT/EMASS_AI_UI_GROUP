@@ -79,7 +79,8 @@ public class SolrEdcStatController {
 
 	@Autowired
 	private AdminServiceImpl adminServiceImpl;
-	
+
+
 	@RequestMapping(value = "/getStatList.xcn")
 	@Description("통계 리스트 조회")
 	@AuditOperation(Operation.SEARCH)

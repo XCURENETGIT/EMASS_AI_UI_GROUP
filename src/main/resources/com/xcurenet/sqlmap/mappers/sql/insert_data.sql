@@ -806,7 +806,7 @@ INSERT IGNORE INTO UI_MENU VALUES ('OPERATION_MGMT','운용 관리',NULL,'L','M'
 INSERT IGNORE INTO UI_MENU VALUES ('DEV','장비','OPERATION_MGMT','L','M',NULL,'fa fa-desktop',1,'Y');
 INSERT IGNORE INTO UI_MENU VALUES ('DEV_INFO','장비 정보','DEV','L','M','commons/deviceInfo.do','fa fa-desktop',1,'Y');
 INSERT IGNORE INTO UI_MENU VALUES ('DEV_EVENTLOG','장비 이벤트 로그','DEV','L','M','commons/eventLog.do','fa fa-bell',2,'Y');
-INSERT IGNORE INTO UI_MENU VALUES ('ORG','조직','OPERATION_MGMT','L','S',NULL,'fa fa-users',2,'Y');
+INSERT IGNORE INTO UI_MENU VALUES ('ORG','조직','POLICY_SETUP','L','S',NULL,'fa fa-users',3,'Y');
 INSERT IGNORE INTO UI_MENU VALUES ('ORG_MGMT','조직 관리','ORG','L','S','commons/organizationInfo.do','fa fa-users',1,'Y');
 INSERT IGNORE INTO UI_MENU VALUES ('USER_MGMT','사용자 관리','ORG','L','S','commons/userInfo.do','fa fa-user',2,'Y');
 INSERT IGNORE INTO UI_MENU VALUES ('USER_GROUP_MGMT','사용자 그룹','ORG','L','S','commons/userGroup.do','fa fa-user-circle',3,'Y');

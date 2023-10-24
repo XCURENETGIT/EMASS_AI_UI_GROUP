@@ -10,10 +10,10 @@
 		<ul id="menu-content" class="menu-content collapse out" pMenuId="OPERATION_MGMT">
 			<li menuId="DEV_INFO"><a href="<c:url value="/commons/deviceInfo.do"/>"> <i class="fa fa-desktop fa-lg"></i> <s:message code="OPERATION_MGMT.DEV_INFO"/></a></li>
 			<li menuId="DEV_EVENTLOG"><a href="<c:url value="/commons/eventLog.do"/>"> <i class="fa fa-cog fa-bell"></i> <s:message code="OPERATION_MGMT.DEV_EVENTLOG"/></a></li>
-			<li menuId="ORG_MGMT"><a href="<c:url value="/commons/organizationInfo.do"/>"> <i class="fa fa-users fa-lg"></i> <s:message code="OPERATION_MGMT.ORG_MGMT"/></a></li>
-			<li menuId="USER_MGMT"><a href="<c:url value="/commons/userInfo.do"/>"> <i class="fa fa-user fa-lg"></i> <s:message code="OPERATION_MGMT.USER_MGMT"/></a></li>
+			<li menuId="ORG_MGMT"><a href="<c:url value="/commons/organizationInfo.do"/>"> <i class="fa fa-users fa-lg"></i> <s:message code="POLICY_SETUP.ORG_MGMT"/></a></li>
+			<li menuId="USER_MGMT"><a href="<c:url value="/commons/userInfo.do"/>"> <i class="fa fa-user fa-lg"></i> <s:message code="POLICY_SETUP.USER_MGMT"/></a></li>
 			<li menuId="USER_GROUP_MGMT"><a href="<c:url value="/commons/userGroup.do"/>"> <i class="fa fa-user-circle fa-lg"></i> <s:message code="OPERATION_MGMT.USER_GROUP_MGMT"/></a></li>
-			<li menuId="BUSI_IPRANGE"><a href="<c:url value="/commons/ipRange.do"/>"> <i class="fa fa-building fa-lg"></i> <s:message code="OPERATION_MGMT.BUSI_IPRANGE"/></a></li>
+			<li menuId="BUSI_IPRANGE"><a href="<c:url value="/commons/ipRange.do"/>"> <i class="fa fa-building fa-lg"></i> <s:message code="POLICY_SETUP.BUSI_IPRANGE"/></a></li>
 			<li menuId="CODE_INFO"><a href="<c:url value="/commons/codeInfo.do"/>"> <i class="fa fa-list-ul fa-lg"></i> <s:message code="OPERATION_MGMT.CODE_INFO"/></a></li>
 			<li menuId="ADMIN_MGMT"><a href="<c:url value="/commons/admin.do"/>"> <i class="fa fa-unlock-alt fa-lg"></i> <s:message code="OPERATION_MGMT.ADMIN_MGMT"/></a></li>
 			<li data-toggle="collapse" data-target="#holidays" class="collapsed">
