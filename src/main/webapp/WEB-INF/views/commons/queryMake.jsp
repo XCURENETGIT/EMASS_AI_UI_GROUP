@@ -110,7 +110,7 @@ table.table-condensed th, table.table-condensed td {
 	line-height:23px;
 }
 </style>
-<script type="text/JavaScript">
+<script type="text/javaScript">
 var isConsent = false;
 var erroColumn = "";
 
@@ -268,7 +268,7 @@ $(document).ready(function(){
 		$('#queryHelpPop').hide();
 	});
 	
-	var Querytext=$("#solrQueryText", opener.document).val();
+	var Querytext=$("#elsQueryText", opener.document).val();
 	
 	setQueryMakeCondition(Querytext.split(" "));
 	
@@ -349,16 +349,15 @@ $(document).ready(function(){
 	});
 
 	$('#queryExecuteBtn').click(function () {
-		//opener.$('#solrQueryText').val($('#solrQueryText').val());
-		
-		var solrQueryText = editor.getValue();
-		if(solrQueryText.trim() == "") {
+
+		var elsQueryText = editor.getValue();
+		if(elsQueryText.trim() == "") {
 			ui.alertMsg("<s:message code="message.message.query.input"/>");
 			return;
 		}
 		
 		
-		var queryChk = validateQuery(solrQueryText);
+		var queryChk = validateQuery(elsQueryText);
 		if(!queryChk[0]) {
 			if(queryChk[1] == "field") {
 				if(queryChk[2] == "") {
@@ -385,7 +384,7 @@ $(document).ready(function(){
 			return;
 		}
 		
-		opener.$('#solrQueryText').val(editor.getValue());
+		opener.$('#elsQueryText').val(editor.getValue());
 		opener.getSearchQuery();	
 		
 		if(isConsent) {
@@ -768,12 +767,12 @@ function queryMake (queryType, queryAddMinus) {
 	} else if(queryType == "interUserGroup") {
 		queryMakeInterUserGroup(queryAddMinus);
 	} else {
-		var solrQueryText = editor.getValue();
+		var elsQueryText = editor.getValue();
 		var addQueryText = "";
 		switch (queryType) {
 		
  			case "Querytext":
-				addQueryText=$("#solrQueryText", opener.document).val();
+				addQueryText=$("#elsQueryText", opener.document).val();
  			break;
 			case "ctime":
 				var startDt = $('#startdate').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
@@ -1214,14 +1213,13 @@ function queryMake (queryType, queryAddMinus) {
 		
 		if(addQueryText == "") return;
 			
-		if(solrQueryText == "*:*" || solrQueryText == "") {
-			solrQueryText = addQueryText;
+		if(elsQueryText == "*:*" || elsQueryText == "") {
+			elsQueryText = addQueryText;
 		} else {
-			solrQueryText += " " + addQueryText;
+			elsQueryText += " " + addQueryText;
 		}
 		
-		//$('#solrQueryText').val(solrQueryText);
-		editor.setValue(solrQueryText);
+		editor.setValue(elsQueryText);
 	}
 }
 
@@ -1264,7 +1262,7 @@ function queryMakeInterUserGroup(queryAddMinus) {
 }
 
 function setUserGroupQuery(data, queryAddMinus) {
-	var solrQueryText = editor.getValue();
+	var elsQueryText = editor.getValue();
 	var addQueryText = "";
 	
 	if(data.length > 0) {
@@ -1280,19 +1278,19 @@ function setUserGroupQuery(data, queryAddMinus) {
 		}
 		addQueryText += ")";
 		
-		if(solrQueryText == "*:*" || solrQueryText == "") {
-			solrQueryText = addQueryText;
+		if(elsQueryText == "*:*" || elsQueryText == "") {
+			elsQueryText = addQueryText;
 		} else {
-			solrQueryText += " " + addQueryText;
+			elsQueryText += " " + addQueryText;
 		}
-		editor.setValue(solrQueryText);
+		editor.setValue(elsQueryText);
 		
 	}
 	
 }
 
 function setInterUserGroupQuery(data, queryAddMinus) {
-	var solrQueryText = editor.getValue();
+	var elsQueryText = editor.getValue();
 	var addQueryText = "";
 	
 	if(data.length > 0) {
@@ -1308,12 +1306,12 @@ function setInterUserGroupQuery(data, queryAddMinus) {
 		}
 		addQueryText += ")";
 		
-		if(solrQueryText == "*:*" || solrQueryText == "") {
-			solrQueryText = addQueryText;
+		if(elsQueryText == "*:*" || elsQueryText == "") {
+			elsQueryText = addQueryText;
 		} else {
-			solrQueryText += " " + addQueryText;
+			elsQueryText += " " + addQueryText;
 		}
-		editor.setValue(solrQueryText);
+		editor.setValue(elsQueryText);
 		
 	}
 	
@@ -1987,7 +1985,7 @@ function initEpmsg(){
 									<tr>
 										<th style="font-size:16px;"><s:message code="query.make.query"/></th>
 										<td colspan="6">
-											<textarea id="solrQueryText"></textarea>
+											<textarea id="elsQueryText"></textarea>
 										</td>		
 									</tr>
 									<tr class="not-dashed">
@@ -2052,7 +2050,7 @@ function initEpmsg(){
 	</form>
 </body>
 <script>
-    var editor = CodeMirror.fromTextArea(document.getElementById("solrQueryText"), {
+    var editor = CodeMirror.fromTextArea(document.getElementById("elsQueryText"), {
     	extraKeys: {"Ctrl-Space": "autocomplete"},
     	lineNumbers: true, 
     	mode: 'text/x-solr',

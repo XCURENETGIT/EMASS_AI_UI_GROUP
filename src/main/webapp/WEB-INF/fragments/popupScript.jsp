@@ -23,10 +23,3 @@
     boolean infoHynixConf = Config.getBoolean("info.hynix.used");
     String recvsJikgub = Config.getString("recvs.jikgub.use");
 %>
-
-<script>
-    let contextRoot = '<%=contentPath%>';
-    let consent = '<%=consent%>';
-    let isIPv6 = '<%=isIPv6%>';
-    let isOCR = '<%=isOCR%>';
-</script>

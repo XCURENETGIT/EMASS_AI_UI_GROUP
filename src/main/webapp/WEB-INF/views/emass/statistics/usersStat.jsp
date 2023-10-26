@@ -376,9 +376,6 @@ function getSearchQuery() {
 </script>
 </head>
 <body class="mini-navbar">
-<%--	<jsp:include page="../../top.jsp">--%>
-<%--		<jsp:param name="headerYn" value="N"/>--%>
-<%--	</jsp:include>--%>
 	<div class="container"> 
 		<div class="boxArea">
 			<div class="content_body">
@@ -419,7 +416,7 @@ function getSearchQuery() {
 				</div>
 				<div class="row top_space">
 					<div class="col-xs-12">
-						<textarea class="solrQueryResultText" rows="1" style="width:100%;" id="solrQueryText" placeholder="<s:message code="condition.input.detail"/>"></textarea>
+						<textarea class="solrQueryResultText" rows="1" style="width:100%;" id="elsQueryText" placeholder="<s:message code="condition.input.detail"/>"></textarea>
 					</div>
 				</div>
 				<div class="row top_space2">
@@ -434,8 +431,10 @@ function getSearchQuery() {
 						<div id="basicStatList" class="tab-pane fade in active">
 							<div id="basicStatListGrid" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; height: 400px"></div>
 						</div>
+						<%-- 통계영역 검색 조건 --%>
+						<input id="searched_xAxis" type="hidden"/>
 					</div>
-				</div>
+				</div>^
 				<div class="row top_space2">
 					<div class="col-lg-12">
 						<div class="panel panel-default" id="service.logging.count">
@@ -542,6 +541,7 @@ function getSearchQuery() {
 			$("#chartCntDiv").hide();
 			$('#totalViewDiv').show();
 			var dat = grid1.getRowData( grid1.Row );
+
 			chartDat[tabID] = dat;
 			printChart(dat);
 			gridObj.loadExportMenu('<s:message code="stat.detail.user.list"/>');
@@ -554,25 +554,36 @@ function getSearchQuery() {
 		
 		function getData( flag ) {
 			if ( searchFlag ) return;
-			var xAxis = $('select[name=xAxis]').val();
-			var xAxis_str = $('select[name=xAxis] option:selected').text();
 			var sDate = $('#startdate').val().replaceAll("-","");
 			var eDate = $('#enddate').val().replaceAll("-","");
+
 			if(sDate > eDate) ui.alertMsg('<s:message code="consent.msg.timecheck"/>');
 
+			grid1.on(); //grid on
+			/* 검색 데이터 전송 객체 */
+			var searchData = {
+				  xAxis : $('select[name=xAxis]').val()
+				, xAxis_str : $('select[name=xAxis] option:selected').text()
+				, yAxis : 'userid'
+				, startDate : sDate+"000000"
+				, endDate : eDate+"235959"
+				, offset : grid1.data.length
+				, limit : grid1.pageSize
+				, detailQuery: $('#elsQueryText').val(),
+			}
 			searchFlag = true;
-			grid1.on();
 			ui.get({
 				url : 'getStatList.xcn',
-				startDate: sDate+"000000",
-				endDate: eDate+"235959",
-				detailQuery:$('#solrQueryText').val(),
-				xAxis : xAxis,
-				yAxis : 'userid',
-				offset : grid1.data.length,
-				limit : grid1.pageSize,
-				xAxis_str : xAxis_str,
+				searchParam : JSON.stringify(searchData),
 				success : function(data, total) {
+					/* 통계영역 검색 조건 저장 */
+					if(data.search_xAxis != null) $('#searched_xAxis').val(data.search_xAxis);
+					if(data.search_startDate != null) $('#searched_startDate').val(data.search_startDate);
+					if(data.search_endDate != null) $('#searched_endDate').val(data.searched_endDate);
+
+
+					console.log(data);
+
 					grid1.colInit();
 					grid1.autoNumber();
 					grid1.colAdd('rowKey', '<s:message code="consent.user"/>', 230, 'left', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
@@ -600,13 +611,13 @@ function getSearchQuery() {
 							else return '';
 						});
 					}
+
 					grid1.loadHeader(false);
 					grid1.setData(data.pivotData);
-					
+
 					$('#statlist_cnt').html('<s:message code="common.msg.finish_query"/>:'+grid1.data.length);
 					if ( grid1.loadingPage == 0 ) grid1.Select(-1,-1);
 					searchFlag = false;
-					
 					if( data.pivotData.length > 0 ) {
 						for ( var i=0 ; i < data.length ; i++ ) {
 							var selected = false;
@@ -614,7 +625,6 @@ function getSearchQuery() {
 							else if ( i >= 10 ) break;
 							addOption( 'chartListCount', (i+1), (i+1), selected );
 						}
-						
 						var dat = grid1.getRowData( grid1.Row );
 						totalChartDat = dat;
 						printChart( dat );
@@ -622,6 +632,7 @@ function getSearchQuery() {
 						$('#chartArea1').html('<s:message code="common.msg.nodata"/>');
 						$('#space').height('7px');
 					}
+
 				},
 				error : function(status, message) {
 					ui.alertMsg(message);
@@ -646,31 +657,40 @@ function getSearchQuery() {
 			
 			var xAxis = $('select[name=xAxis]').val();
 			var xAxis_str = $('select[name=xAxis] option:selected').text();
-			
+
 			searchFlag = true;
 			currentgrid.on();
-			
+
+			/* 검색 데이터 전송 객체 */
+			var searchData = {
+					rowKey : rowKey,
+					colKey : colKey,
+					startDate : $('#startdate').val().replaceAll("-","")+"000000",
+					endDate : $('#enddate').val().replaceAll("-","")+"235959",
+					detailQuery: $('#elsQueryText').val(),
+					xAxis : xAxis,
+					xAxis_str : xAxis_str,
+					searched_xAxis : $('#searched_xAxis').val(),
+					yAxis : 'userid',
+					offset : currentgrid.data.length,
+					limit : currentgrid.pageSize,
+					nameStat : 'users',
+			}
+
+
+
 			ui.get({
 				url : 'getStatDetailList.xcn',
-				rowKey : rowKey,
-				colKey : colKey,
-				startDate : $('#startdate').val().replaceAll("-","")+"000000",
-				endDate : $('#enddate').val().replaceAll("-","")+"235959",
-				detailQuery:$('#solrQueryText').val(),
-				xAxis : xAxis,
-				xAxis_str : xAxis_str,
-				yAxis : 'userid',
-				offset : currentgrid.data.length,
-				limit : currentgrid.pageSize,
-				nameStat : 'users',
+				searchParam : JSON.stringify(searchData),
 				success : function(data, total) {
 					if ( lastRow == 'Y' || lastRow == undefined ) detailTotal = total;
+
+					console.log(data.emass);
 					currentgrid.appendData(data.emass);
+
 					if ( currentgrid.loadingPage == 0 ) currentgrid.Select(-1,-1);
-					
 					$('#detailTab'+tabID+' .badge').text('[' + total.comma() + ']');
 					$('#detail_cnt'+tabID).html('<s:message code="common.msg.finish_query"/>: '+currentgrid.data.length);
-					
 					searchFlag = false;
 				},
 				error : function(status, message) {
@@ -681,6 +701,10 @@ function getSearchQuery() {
 				}
 			})
 		}
+
+
+
+
 	</script>
 </body>
 </html>

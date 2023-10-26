@@ -4,7 +4,7 @@
 			statGrid = currGrid;
 			currGrid.autoNumber();
 			currGrid.colAdd('msgid', gridColumn.msgid, 100, 'left', false, 'nomal');
-			currGrid.colAdd('epmsg_type', gridColumn.epmsg_type, 100, 'center', true, 'nomal');
+		//	currGrid.colAdd('epmsg_type', gridColumn.epmsg_type, 100, 'center', true, 'nomal');
 			currGrid.colAdd('xrootmtr', gridColumn.xrootmtr, 100, 'left', true, 'nomal');
 			currGrid.colAdd('interestUserYn', gridColumn.interestUserYn, 40, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 				if (value == 'Y') return '<div class="interestUserCheck"></div>';
@@ -58,18 +58,18 @@
 				if (value == '0') return '';
 				else return value.comma();
 			});
-			currGrid.colAdd('inside', gridColumn.inside, 55, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-				if (value == 'N') return gridColumn.msgout;
-				else if (value == 'Y') return gridColumn.msgin;
-				else return '-';
-			});
+			// currGrid.colAdd('inside', gridColumn.inside, 55, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+			// 	if (value == 'N') return gridColumn.msgout;
+			// 	else if (value == 'Y') return gridColumn.msgin;
+			// 	else return '-';
+			// });
 
 			currGrid.colAdd('direction_svc', gridColumn.direction_svc, 55, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 				if (value == 'I') return gridColumn.receive;
 				else if (value == 'O') return gridColumn.send;
 				else return '-';
 			});
-			currGrid.colAdd('svcNm', gridColumn.svcNm, 180, 'center', false, 'nomal');
+			currGrid.colAdd('service_svcNm', gridColumn.svcNm, 180, 'center', false, 'nomal');
 			currGrid.colAdd('subject', gridColumn.subject, 410, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 				var bodySize = currGrid.getValue(row, 'bodySizeStr');
 				var rtnVal = '<a href="javascript:void(0);" onclick="javascript:viewer_open('+row+',\''+bodySize.substring(0,1)+'\');" class="subject_read'+currGrid.getValue(row, 'readYn')+'">'+value+'</a>&nbsp;<a href="javascript:void(0);" onclick="javascript:viewer_open('+row+',\''+bodySize.substring(0,1)+'\');" class="glyphicon glyphicon-new-window new-window"></a>';
@@ -79,12 +79,12 @@
 				rtnVal = highlightSearchStr(rtnVal, 'subject');
 				return rtnVal;
 			});
-			currGrid.colAdd('ctimeFormat', gridColumn.ctimeFormat, 130, 'center', false, 'nomal');
-			currGrid.colAdd('user', gridColumn.user, 120, 'center', false, 'link');
-			currGrid.colAdd('businm', gridColumn.businm, 120, 'center', true, 'nomal');
-			currGrid.colAdd('deptnm', gridColumn.deptnm, 120, 'center', false, 'nomal');
-			currGrid.colAdd('jikgubnm', gridColumn.jikgubnm, 120, 'center', false, 'nomal');
-			currGrid.colAdd('sender', gridColumn.sender, 130, 'left', false, 'link');
+			// currGrid.colAdd('ctimeFormat', gridColumn.ctimeFormat, 130, 'center', false, 'nomal');
+			currGrid.colAdd('user_name', gridColumn.user, 120, 'center', false, 'link');
+			currGrid.colAdd('user_businm', gridColumn.businm, 120, 'center', true, 'nomal');
+			currGrid.colAdd('user_deptnm', gridColumn.deptnm, 120, 'center', false, 'nomal');
+			currGrid.colAdd('user_jikgubnm', gridColumn.jikgubnm, 120, 'center', false, 'nomal');
+			// currGrid.colAdd('sender', gridColumn.sender, 130, 'left', false, 'link');
 			currGrid.colAdd('allofus', gridColumn.allofus, 150, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 				if( value == undefined || value.length == 0) return '';
 				
@@ -104,6 +104,7 @@
 			currGrid.colAdd('recvsStr', gridColumn.recvs, 220, 'left', false, 'link', function(row, cell, value, columnDef, dataContext) {
 				return value;
 			}, {sorter:sortUtil.inout});
+
 			currGrid.colAdd('to', gridColumn.to, 150, 'left', true, 'link', function(row, cell, value, columnDef, dataContext) {
 				var innOutInfo = currGrid.getValue(row, 'toInOutInfo');
 				if(value == undefined) value = '';
@@ -119,17 +120,17 @@
 				if(value == undefined) value = '';
 				return innOutInfo+value;
 			});
-			currGrid.colAdd('srcip', gridColumn.srcip + ' IP', 100, 'left', false, 'nomal');
-			currGrid.colAdd('dstip', gridColumn.dstip + ' IP', 100, 'left', false, 'nomal');
+			currGrid.colAdd('network_srcip', gridColumn.srcip + ' IP', 100, 'left', false, 'nomal');
+			currGrid.colAdd('network_dstip', gridColumn.dstip + ' IP', 100, 'left', false, 'nomal');
 			currGrid.colAdd('attachname', gridColumn.attachname, 220, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 				var rtnVal = arrayToString(value);
 				var kwds = currGrid.getValue(row, 'kwds');
 				return highlightKeyword(rtnVal, kwds);
 			});
 			currGrid.colAdd('sizeStr', gridColumn.sizeStr, 80, 'left', false, 'nomal');
-			currGrid.colAdd('bodySizeStr', gridColumn.bodySizeStr, 80, 'left', false, 'nomal', null, {sortField:'body_size'});
+			currGrid.colAdd('body_sizeStr', gridColumn.bodySizeStr, 80, 'left', false, 'nomal', null, {sortField:'body_size'});
 			currGrid.colAdd('attachSizeStr', gridColumn.attachSizeStr, 80, 'left', false, 'nomal', null, {sortField:'attachSizeSort'});
-			currGrid.colAdd('kwds', gridColumn.kwds, 120, 'left', false, 'nomal');
+			currGrid.colAdd('kwd_kwds', gridColumn.kwds, 120, 'left', false, 'nomal');
 			currGrid.colAdd('pi_total', gridColumn.pi_total, 70, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
 				if (value == '0') return '';
 				else return value.comma();
