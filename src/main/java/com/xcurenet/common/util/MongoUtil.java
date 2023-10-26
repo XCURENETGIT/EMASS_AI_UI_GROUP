@@ -1,8 +1,8 @@
 package com.xcurenet.common.util;
 
+import com.mongodb.client.result.UpdateResult;
 import com.xcurenet.audit.service.AuditVO;
-import com.xcurenet.emass.message.service.*;
-import org.apache.poi.ss.formula.functions.T;
+import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Sort;
@@ -27,13 +27,15 @@ public class MongoUtil {
 	//최대값
 	public <T> T maxValue(String tableCon, Class<T> vo) {
 		Query query = new Query();
-		if(Common.isNotEmpty(tableCon)) {
-			query.addCriteria(Criteria.where("TABLENAME").is(tableCon));
-		}
+		//mongoTemplate.getCollection(tableCon);
+//		if(Common.isNotEmpty(tableCon)) {
+//			query.addCriteria(Criteria.where("TABLENAME").is(tableCon));
+//		}
 		query.with(Sort.by(Sort.Direction.DESC,"VERSION"));
 		query.limit(1);
-		return selectOne(query, vo);
+		return selectOne(query, vo, tableCon);
 	}
+
 
 	//단건조회
 	public <T> T selectOne(Query query,  Class<T> vo) {
@@ -128,6 +130,20 @@ public class MongoUtil {
 		mongoTemplate.updateFirst(query, update, "EMS_MESSAGE");
 	}
 
+	public UpdateResult updateVersion(String collectionName, String table, long version){
+		Query query = new Query();
+		Update update = new Update();
+		query.addCriteria(Criteria.where("TABLENAME").is(table));
+		update.set("VERSION", version);
+
+		return mongoTemplate.updateMulti(query, update,collectionName);
+
+	}
+
+
+
+
+
 	public List<AuditVO> selectAuditList(Map<String, Object> map) {
 		Query query = new Query();
 		//검색 단어가 있을 경우 작업행위/ 정보 검색
@@ -140,8 +156,6 @@ public class MongoUtil {
 
 		return mongoTemplate.find(query, AuditVO.class);
 	}
-
-
 
 
 }

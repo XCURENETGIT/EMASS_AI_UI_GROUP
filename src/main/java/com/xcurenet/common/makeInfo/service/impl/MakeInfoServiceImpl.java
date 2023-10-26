@@ -2,6 +2,7 @@ package com.xcurenet.common.makeInfo.service.impl;
 
 import javax.annotation.Resource;
 
+import com.xcurenet.common.util.MongoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,10 @@ public class MakeInfoServiceImpl extends XcnAbstractDAO implements MakeInfoServi
 
 	@Resource(name = "config")
 	public Config config;
+
+
+	@Autowired
+	MongoUtil mongoUtil;
 
 	@Autowired
 	private MakeInfoServiceMysql makeInfoServiceMysql;
@@ -28,6 +33,7 @@ public class MakeInfoServiceImpl extends XcnAbstractDAO implements MakeInfoServi
 		config.reloadJikgub();
 		config.reloadEmail();
 		makeInfoServiceMysql.updateAdminUserGroupList();
+
 		return result;
 	}
 
