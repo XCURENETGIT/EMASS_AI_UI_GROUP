@@ -306,7 +306,15 @@
 	<insert id="insertAdminMenu" parameterType="adminVO">
 		INSERT INTO UI_ADMIN_MENU (ADMIN_ID, AUTH_ID) VALUES( #{adminId}, #{menu})
 	</insert>
-
+<!--
+	  운용자 계정잠금 해제
+	<update id="updateAdminStatus" parameterType="adminVO">
+		UPDATE	UI_ADMIN
+		SET		ADMIN_STATUS= #{adminstaus},
+		PW_CHG_DT	= NOW()
+		WHERE	ADMIN_ID	= #{adminId}
+	</update>
+-->
 
 	<!--  운용자 비밀번호 수정 -->
 	<update id="updateAdminPassword" parameterType="adminVO">

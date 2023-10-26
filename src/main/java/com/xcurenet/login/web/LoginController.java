@@ -25,11 +25,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.xcurenet.common.mail.MailInfo;
+import com.xcurenet.common.mail.MailSend;
+import com.xcurenet.login.MailService;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.binary.Base32;
+import org.apache.commons.mail.HtmlEmail;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
@@ -43,6 +51,7 @@ import com.xcurenet.common.session.SessionManagement;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.config.Config;
 import com.xcurenet.common.util.locale.Prop;
+import com.xcurenet.common.dao.XcnAbstractDAO;
 import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.config.service.ConfigAdminService;
@@ -59,20 +68,24 @@ import com.xcurenet.onelogin.saml2.SamlSSOAuth;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 
+
 /**
  * Handles requests for the application home page.
  */
 @Slf4j
 @Controller
+@RequiredArgsConstructor
 public class LoginController {
-	
+
+	/*	private final JavaMailSender javaMailSender;*/
+
 	private static String RSA_WEB_KEY = "_RSA_WEB_Key_";
 
 	private static String RSA_INSTANCE = "RSA";
 
 	@Resource(name = "adminService")
 	public AdminService adminService;
-	
+
 	@Resource(name = "ldapLoginService")
 	private LdapLoginService ldapLoginService;
 
@@ -87,12 +100,62 @@ public class LoginController {
 
 	@Resource(name = "dashBoardService")
 	private DashBoardService dashBoardService;
-	
+
 	@Resource(name = "customDashBoardService")
 	private CustomDashBoardService customDashBoardService;
-	
+
 	@Autowired
 	private NtpScheduler ntpScheduler;
+
+	@Autowired
+	private final MailService mailService;
+
+	@Description("본인확인 메일 전송")
+	@ResponseBody
+	@RequestMapping(value = "/mailSend.xcn")
+	public XcnResponseVO sendMail(LoginVO login, final HttpServletRequest request, final HttpSession session) throws Exception {
+		PrivateKey privateKey = (PrivateKey) session.getAttribute(LoginController.RSA_WEB_KEY);
+
+		String loginId = decryptRsa(privateKey, login.getUserId());
+		login.setUserId(loginId);
+
+		AuditVO audit = new AuditVO();
+		audit.setAdminIp(request.getRemoteAddr());
+		audit.setPMenuId("SYSTEM");
+		audit.setMenuId("CONNECTION");
+		audit.setOperation("LOGIN");
+
+
+		AdminVO admin = adminService.getAdmin(login.getUserId());
+
+		String mail = adminService.getAdmin(admin.getAdminId()).getAdminEmail();
+
+
+		System.out.println(mail);
+
+		int number = mailService.sendMail(mail);
+
+		String num = "" + number;
+
+		return new XcnResponseVO(XcnRspCode.OK,num);
+	}
+	@Description("관리자 접속가능 변경")
+	@RequestMapping("/updateStatus.xcn")
+	public XcnResponseVO updateStatus(LoginVO login, final HttpServletRequest request, final HttpSession session) throws Exception {
+		PrivateKey privateKey = (PrivateKey) session.getAttribute(LoginController.RSA_WEB_KEY);
+
+		String loginId = decryptRsa(privateKey, login.getUserId());
+		login.setUserId(loginId);
+
+		AdminVO admin = adminService.getAdmin(login.getUserId());
+
+		System.out.println(admin.getAdminId());
+
+		adminService.updateAdminStatusOK(admin.getAdminId());
+
+		return new XcnResponseVO(XcnRspCode.OK);
+	}
+
 
 	@RequestMapping(value = "/getRSAKey.xcn")
 	@ResponseBody
@@ -121,7 +184,7 @@ public class LoginController {
 		result.put("publicKeyExponent", publicKeyExponent);
 		return new XcnResponseVO(XcnRspCode.OK, result);
 	}
-	
+
 	@RequestMapping(value = "/logout.xcn")
 	@Description("로그아웃 처리 프로세스")
 	@ResponseBody
@@ -138,27 +201,26 @@ public class LoginController {
 		auditService.insertAudit(audit);
 		return new XcnResponseVO(XcnRspCode.OK);
 	}
-	
+
 	@RequestMapping(value = "/logoutSSOProcess.do")
 	@Description("SSO 로그아웃 처리 프로세스")
 	@ResponseBody
 	public void logoutSSOProcess(final LoginVO login, final HttpServletRequest request, final HttpServletResponse response, final HttpSession session) throws Exception {
 		XcnResponseVO vo = logout(request, response, session);
-		if(vo.isSuccess()) response.sendRedirect(request.getContextPath() + "/logout.do");
+		if (vo.isSuccess()) response.sendRedirect(request.getContextPath() + "/logout.do");
 		else response.sendRedirect(request.getContextPath() + "/error.do");
 	}
-	
+
 	@RequestMapping(value = "/loginSSOProcess.do")
 	@Description("SSO 로그인 처리 프로세스")
 	@ResponseBody
 	public void loginSSOProcess(final LoginVO login, final HttpServletRequest request, final HttpServletResponse response, final HttpSession session) throws Exception {
 		XcnResponseVO vo = loginProcess(login, request, response, session);
-		if(vo.isSuccess()) response.sendRedirect(request.getContextPath() + "/index.do");
-		else if(Common.isEquals(vo.getCode(), XcnRspCode.OK_CUSTOM.get())) {
+		if (vo.isSuccess()) response.sendRedirect(request.getContextPath() + "/index.do");
+		else if (Common.isEquals(vo.getCode(), XcnRspCode.OK_CUSTOM.get())) {
 			request.getSession().setAttribute("message", vo.getMessage());
 			response.sendRedirect(request.getContextPath() + "/loginAuth.do");
-		}
-		else response.sendRedirect(request.getContextPath() + "/error.do");
+		} else response.sendRedirect(request.getContextPath() + "/error.do");
 	}
 
 	@RequestMapping(value = "/loginProcess.xcn")
@@ -174,13 +236,13 @@ public class LoginController {
 		audit.setOperation("LOGIN");
 
 		String msg = "";
-		
+
 		PrivateKey privateKey = (PrivateKey) session.getAttribute(LoginController.RSA_WEB_KEY);
 		String loginId = "";
 		String loginPw = "";
-		
+
 		String sso_type = Config.getString("sso_type");
-		if(Common.isEmpty(login.getUserId()) && Common.isEquals(sso_type, "S")) {
+		if (Common.isEmpty(login.getUserId()) && Common.isEquals(sso_type, "S")) {
 			SamlSSOAuth auth = new SamlSSOAuth(request, response);
 			// processing ADFS authentication result.
 			auth.processResponse();
@@ -188,13 +250,13 @@ public class LoginController {
 				return new XcnResponseVO(XcnRspCode.OK_CUSTOM, "NOT_AUTHENTICATED").setMessage(Prop.propFormat("login.fail.access"));
 			}
 			login = ssoLoginProcess(request, auth);
-		}else {
+		} else {
 			loginId = decryptRsa(privateKey, login.getUserId());
 			loginPw = decryptRsa(privateKey, login.getUserPw());
 			login.setUserId(loginId);
 			login.setUserPw(Common.sha256(loginPw));
 		}
-		
+
 		if (Common.isEmpty(login.getUserId())) {
 			return new XcnResponseVO(XcnRspCode.OK_CUSTOM, "ID_REQUIRED").setMessage(Prop.propFormat("login.require.id"));
 		}
@@ -203,57 +265,55 @@ public class LoginController {
 		}
 
 		AdminVO admin = adminService.getAdmin(login.getUserId());
-		
+
 		//최초 ldap 인증 확인
 		boolean firstLoginCheckFlag = false;
-		if( admin == null && Common.isNotEquals(login.getLoginType(), "S")) {
+		if (admin == null && Common.isNotEquals(login.getLoginType(), "S")) {
 			admin = ldapLoginService.loginProcess(loginId, loginPw);
-			if( admin != null && Common.isNotEmpty(admin.getAdminId()) && !adminService.isAdminIdExist(admin) ) {
+			if (admin != null && Common.isNotEmpty(admin.getAdminId()) && !adminService.isAdminIdExist(admin)) {
 				admin.setAdminPw(Common.EMPTY);
 				adminService.insertAdmin(admin);
 			}
 			firstLoginCheckFlag = true;
 		}
-		
+
 		if (admin == null) {
-			msg = Prop.propFormat("login.fail") + "("+ login.getUserId() +")";
+			msg = Prop.propFormat("login.fail") + "(" + login.getUserId() + ")";
 			audit.setAdminId(login.getUserId());
 			audit.setInformation(msg);
 			auditService.insertAudit(audit);
 			return new XcnResponseVO(XcnRspCode.OK_CUSTOM, "CORRECT_USER").setMessage(msg);
-		}
-		else {
+		} else {
 			audit.setAdminId(login.getUserId());
 			audit.setAdminName(admin.getAdminName());
 		}
-		
+
 		//ldap 인증 로그인
-		if(Common.isEquals(admin.getLoginType(), "L")) {
+		if (Common.isEquals(admin.getLoginType(), "L")) {
 			AdminVO adminVo = admin;
-			if(!firstLoginCheckFlag) adminVo = ldapLoginService.loginProcess(loginId, loginPw);
-			
+			if (!firstLoginCheckFlag) adminVo = ldapLoginService.loginProcess(loginId, loginPw);
+
 			if (adminVo == null) {
-				msg = Prop.propFormat("login.fail") + "("+ login.getUserId() +")";
+				msg = Prop.propFormat("login.fail") + "(" + login.getUserId() + ")";
 				audit.setAdminId(login.getUserId());
 				audit.setInformation(msg);
 				auditService.insertAudit(audit);
 				return new XcnResponseVO(XcnRspCode.OK_CUSTOM, "CORRECT_USER").setMessage(msg);
-			}
-			else {
+			} else {
 				admin.setAdminPw(Common.sha256(loginPw));
 				admin.setAdminEmail(adminVo.getAdminEmail());
 				admin.setAdminName(adminVo.getAdminName());
 				admin.setLoginType("L");
 				admin.setPwchgDt("99991231");
 			}
-		}else if(Common.isEquals(admin.getLoginType(), "S")) { //SSO 인증 로그인
-		
+		} else if (Common.isEquals(admin.getLoginType(), "S")) { //SSO 인증 로그인
+
 		}
-		
+
 		admin.setLoginType(login.getLoginType());
 
 		if (Common.isEquals(admin.getStatus(), "L")) {
-			msg = Prop.propFormat("login.longterm.unuse") + "("+ login.getUserId() +")";
+			msg = Prop.propFormat("login.longterm.unuse") + "(" + login.getUserId() + ")";
 			audit.setInformation(msg);
 			auditService.insertAudit(audit);
 			return new XcnResponseVO(XcnRspCode.OK_CUSTOM, "USER_LOCK").setMessage(msg);
@@ -278,7 +338,7 @@ public class LoginController {
 
 		int passwordFailCount = Config.getInt("password.fail.count");
 		if (admin.getAccessFailCnt() >= passwordFailCount) {
-			msg = Prop.propFormat("login.block.failcount") + "("+ login.getUserId() +")";
+			msg = Prop.propFormat("login.block.failcount") + "(" + login.getUserId() + ")";
 			audit.setAdminName("");
 			audit.setInformation(msg);
 			auditService.insertAudit(audit);
@@ -293,21 +353,21 @@ public class LoginController {
 				lock.setAdmin(admin);
 				lock.setAdminService(adminService);
 				lock.start();
-				msg = Prop.propFormat("login.block.failcount") + "("+ login.getUserId() +")";
+				msg = Prop.propFormat("login.block.failcount") + "(" + login.getUserId() + ")";
 				audit.setAdminName("");
 				audit.setInformation(msg);
 				auditService.insertAudit(audit);
 				return new XcnResponseVO(XcnRspCode.OK_CUSTOM, "PW_EXCESS").setMessage(msg);
 			}
 
-			msg = Prop.propFormat("login.fail") + "("+ login.getUserId() +")";
+			msg = Prop.propFormat("login.fail") + "(" + login.getUserId() + ")";
 			audit.setAdminName("");
 			audit.setInformation(msg);
 			auditService.insertAudit(audit);
 			return new XcnResponseVO(XcnRspCode.OK_CUSTOM, "CORRECT_USER").setMessage(msg);
 		}
 		if (Common.isEquals(admin.getUseYn(), "N")) {
-			msg = Prop.propFormat("login.cannotuse.id") + "("+ login.getUserId() +")";
+			msg = Prop.propFormat("login.cannotuse.id") + "(" + login.getUserId() + ")";
 			audit.setAdminName("");
 			audit.setInformation(msg);
 			auditService.insertAudit(audit);
@@ -321,15 +381,15 @@ public class LoginController {
 		if (passwordChangeDay <= admin.getPasswordChangeDay()) {
 			return new XcnResponseVO(XcnRspCode.OK_CUSTOM, "PW_EXPIRED").setMessage(Prop.propFormat("login.expired.password"));
 		}
-		
+
 		/**
 		 * 구글 OTP 인증
 		 */
-		if(Common.isEquals(Config.getString("google.otp.used"), "true")) {
+		if (Common.isEquals(Config.getString("google.otp.used"), "true")) {
 			JSONObject re = new JSONObject();
-			
+
 			String adminGenerate = adminService.getAdminGenerate(admin.getAdminId());
-			if(Common.isEmpty(adminGenerate)) {
+			if (Common.isEmpty(adminGenerate)) {
 				re = generate(admin.getAdminName());
 				return new XcnResponseVO(XcnRspCode.OK, re);
 			} else {
@@ -337,17 +397,17 @@ public class LoginController {
 				return new XcnResponseVO(XcnRspCode.OK, re);
 			}
 		}
-		
+
 		return setLoginEnv(request, session, admin, audit);
 
 	}
-	
+
 	private XcnResponseVO setLoginEnv(final HttpServletRequest request, final HttpSession session, AdminVO admin, AuditVO audit) {
-		
+
 		String type = Config.getString("session.duplication.type");
 		///SessionManagement sessionManagement = new SessionManagement();
 		boolean isExist = false;
-		
+
 		try {
 			isExist = sessionManagement.isExistId(admin.getAdminId());
 		} catch (Exception e) {
@@ -377,12 +437,12 @@ public class LoginController {
 		admin.setLastLoginIp(request.getRemoteAddr());
 
 		String authMenu = Common.nvl(adminService.getAdminMenu(admin.getAdminId()));
-		if(Common.isEmpty(authMenu)){
+		if (Common.isEmpty(authMenu)) {
 			admin.setMenu("DV,DS,DF,DP,LS,BS,AS,WS,CS,LP");
 			adminService.insertAdminMenu(admin);
 			authMenu = admin.getMenu();
 		}
-		if(Common.isEquals(authMenu, "DV,DS,DF,DP,LS,BS,AS,WS,CS,LP") ) authMenu = "ALL";
+		if (Common.isEquals(authMenu, "DV,DS,DF,DP,LS,BS,AS,WS,CS,LP")) authMenu = "ALL";
 		admin.setMenu(authMenu);
 
 		sessionManagement.createSession(request, admin);
@@ -395,42 +455,42 @@ public class LoginController {
 		String loginMsg = "";
 		loginMsg += "\n";
 		loginMsg += "\n";
-		loginMsg += "         *****  "+Prop.propFormat("login.use.info", Common.getLocale(session), admin.getAdminName())+"  *****";
+		loginMsg += "         *****  " + Prop.propFormat("login.use.info", Common.getLocale(session), admin.getAdminName()) + "  *****";
 		loginMsg += "\n";
 		loginMsg += "\n";
-		loginMsg += Prop.propFormat("login.lastlogin.date", Common.getLocale(session))+" : "+Common.nvl(admin.getLastLoginDt(), "-")+"\n";
-		loginMsg += Prop.propFormat("login.lastlogin.ip", Common.getLocale(session))+" : "+msgLastLoginIp+"\n";
+		loginMsg += Prop.propFormat("login.lastlogin.date", Common.getLocale(session)) + " : " + Common.nvl(admin.getLastLoginDt(), "-") + "\n";
+		loginMsg += Prop.propFormat("login.lastlogin.ip", Common.getLocale(session)) + " : " + msgLastLoginIp + "\n";
 		loginMsg += "\n";
-		loginMsg += Prop.propFormat("login.currentlogin.date", Common.getLocale(session))+" : "+Common.nvl(Common.getTime(), "-")+"\n";
-		loginMsg += Prop.propFormat("login.currentlogin.ip", Common.getLocale(session))+" : "+Common.nvl(request.getRemoteAddr(), "-")+"\n";
+		loginMsg += Prop.propFormat("login.currentlogin.date", Common.getLocale(session)) + " : " + Common.nvl(Common.getTime(), "-") + "\n";
+		loginMsg += Prop.propFormat("login.currentlogin.ip", Common.getLocale(session)) + " : " + Common.nvl(request.getRemoteAddr(), "-") + "\n";
 
 		JSONObject ntpStatus = ntpScheduler.getNtpStatus();
 		loginMsg += "\n";
 		loginMsg += "\n";
-		loginMsg += "         *****  "+Prop.propFormat("trap.message.ntp", Common.getLocale(session))+"  *****";
+		loginMsg += "         *****  " + Prop.propFormat("trap.message.ntp", Common.getLocale(session)) + "  *****";
 		loginMsg += "\n";
 		loginMsg += "\n";
-		loginMsg += Prop.propFormat("trap.message.ntp.server", Common.getLocale(session))+" : "+ntpStatus.getString("ntpServer")+"\n";
-		
-		if(Common.isEquals(ntpStatus.getString("status"), "sync")) {
-			loginMsg += Prop.propFormat("trap.message.ntp.sync.msg", Common.getLocale(session))+" : "+ Prop.propFormat("trap.message.ntp.sync", Common.getLocale(session)) +"\n";
-		} else if(Common.isEquals(ntpStatus.getString("status"), "unsync")) {
-			loginMsg += Prop.propFormat("trap.message.ntp.sync.msg", Common.getLocale(session))+" : "+ Prop.propFormat("trap.message.ntp.unsync", Common.getLocale(session)) +"\n";
+		loginMsg += Prop.propFormat("trap.message.ntp.server", Common.getLocale(session)) + " : " + ntpStatus.getString("ntpServer") + "\n";
+
+		if (Common.isEquals(ntpStatus.getString("status"), "sync")) {
+			loginMsg += Prop.propFormat("trap.message.ntp.sync.msg", Common.getLocale(session)) + " : " + Prop.propFormat("trap.message.ntp.sync", Common.getLocale(session)) + "\n";
+		} else if (Common.isEquals(ntpStatus.getString("status"), "unsync")) {
+			loginMsg += Prop.propFormat("trap.message.ntp.sync.msg", Common.getLocale(session)) + " : " + Prop.propFormat("trap.message.ntp.unsync", Common.getLocale(session)) + "\n";
 		} else {
-			loginMsg += Prop.propFormat("trap.message.ntp.sync.msg", Common.getLocale(session))+" : "+ Prop.propFormat("trap.message.ntp.unconnect", Common.getLocale(session)) +"\n";
+			loginMsg += Prop.propFormat("trap.message.ntp.sync.msg", Common.getLocale(session)) + " : " + Prop.propFormat("trap.message.ntp.unconnect", Common.getLocale(session)) + "\n";
 		}
-		
+
 		obj.put("welcomeInfo", loginMsg);
-		
+
 		CustomDashboardMenuVO dashVo = new CustomDashboardMenuVO();
 		dashVo.setAdminId(admin.getAdminId());
 		dashVo.setDefaultMenu("Y");
 		List<CustomDashboardMenuVO> menuList = customDashBoardService.getDashBoardMenuList(dashVo);
-		if(menuList.size() > 0) obj.put("menuKey", menuList.get(0).getMenuKey());
-		
+		if (menuList.size() > 0) obj.put("menuKey", menuList.get(0).getMenuKey());
+
 		audit.setInformation(Prop.propFormat("login.success.access"));
 		auditService.insertAudit(audit);
-		
+
 		return new XcnResponseVO(XcnRspCode.OK, obj);
 	}
 
@@ -446,9 +506,9 @@ public class LoginController {
 	@Description("system IP 목록")
 	@ResponseBody
 	public XcnResponseVO getAllIpMacList(final HttpServletRequest request) throws Exception {
-		 return new XcnResponseVO(XcnRspCode.OK, adminService.getAllIpMacList());
+		return new XcnResponseVO(XcnRspCode.OK, adminService.getAllIpMacList());
 	}
-	
+
 	@RequestMapping(value = "/secretKeySave.xcn")
 	@Description("구글 OTP 계정 저장")
 	@ResponseBody
@@ -457,61 +517,61 @@ public class LoginController {
 		String secretKey = request.getParameter("secretKey");
 		String pinCode = request.getParameter("pinCode");
 		String firstOTP = request.getParameter("firstOTP");
-		
+
 		PrivateKey privateKey = (PrivateKey) session.getAttribute(LoginController.RSA_WEB_KEY);
-		
+
 		String loginId = decryptRsa(privateKey, adminId);
 		String loginCode = decryptRsa(privateKey, pinCode);
 		String loginSecreKey = decryptRsa(privateKey, secretKey);
-		
+
 		AuditVO audit = new AuditVO();
 		audit.setAdminIp(request.getRemoteAddr());
 		audit.setPMenuId("SYSTEM");
 		audit.setMenuId("CONNECTION");
 		audit.setOperation("LOGIN");
 		audit.setAdminId(loginId);
-		
-		if(!checkCode(loginCode, loginSecreKey)) {
-			String msg = Prop.propFormat("login.google.otp.pincode.error") + "("+ adminId +")";
+
+		if (!checkCode(loginCode, loginSecreKey)) {
+			String msg = Prop.propFormat("login.google.otp.pincode.error") + "(" + adminId + ")";
 			audit.setAdminName("");
 			audit.setInformation(msg);
 			auditService.insertAudit(audit);
 			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("login.google.otp.pincode.errorMsg"));
 		}
-		
+
 		if (Common.isEquals(firstOTP, "true")) {
 			byte[] encSecretKey = loginSecreKey.getBytes();
 			adminService.insertAdminGenerate(loginId, Base64.encodeBase64String(encSecretKey));
 		}
-		
+
 		AdminVO admin = adminService.getAdmin(loginId);
-		
+
 		audit.setAdminName(admin.getAdminName());
-		
+
 		return setLoginEnv(request, session, admin, audit);
 	}
-	
+
 	@RequestMapping(value = "/reloadGoogleOTP.xcn")
 	@Description("구글 OTP 개인키 재발급")
 	@ResponseBody
 	public XcnResponseVO reloadGoogleOTP(LoginVO login, final HttpServletRequest request, final HttpSession session) throws Exception {
 		PrivateKey privateKey = (PrivateKey) session.getAttribute(LoginController.RSA_WEB_KEY);
-		
+
 		String loginId = decryptRsa(privateKey, login.getUserId());
 		login.setUserId(loginId);
-		
+
 		AuditVO audit = new AuditVO();
 		audit.setAdminIp(request.getRemoteAddr());
 		audit.setPMenuId("SYSTEM");
 		audit.setMenuId("CONNECTION");
 		audit.setOperation("LOGIN");
-		
+
 		AdminVO admin = adminService.getAdmin(login.getUserId());
-		
+
 		adminService.deleteAdminGenerate(admin.getAdminId());
 		JSONObject obj = new JSONObject();
 		obj = generate(admin.getAdminName());
-		
+
 		audit.setAdminId(login.getUserId());
 		audit.setAdminName(admin.getAdminName());
 		audit.setInformation(Prop.propFormat("login.google.otp.reload"));
@@ -519,7 +579,7 @@ public class LoginController {
 
 		return new XcnResponseVO(XcnRspCode.OK, obj);
 	}
-	
+
 	private String decryptRsa(PrivateKey privateKey, String securedValue) throws Exception {
 		Cipher cipher = Cipher.getInstance(LoginController.RSA_INSTANCE);
 		byte[] encryptedBytes = hexToByteArray(securedValue);
@@ -528,16 +588,16 @@ public class LoginController {
 		String decryptedValue = new String(decryptedBytes, Common.UTF8);
 		return decryptedValue;
 	}
-	
+
 	/**
 	 * 16진 문자열을 byte 배열로 변환한다.
-	 * 
+	 *
 	 * @param hex
 	 * @return
 	 */
 	public static byte[] hexToByteArray(String hex) {
 		if (hex == null || hex.length() % 2 != 0) {
-			return new byte[] {};
+			return new byte[]{};
 		}
 
 		byte[] bytes = new byte[hex.length() / 2];
@@ -547,42 +607,42 @@ public class LoginController {
 		}
 		return bytes;
 	}
-	
+
 	public LoginVO ssoLoginProcess(HttpServletRequest request, SamlSSOAuth auth) {
 		AdminVO admin = new AdminVO();
-		
+
 		Map<String, List<String>> attributes = auth.getAttributes();
 		Collection<String> keys = attributes.keySet();
-		
-		if(attributes.size() == 0 ){
+
+		if (attributes.size() == 0) {
 			String nameId = auth.getNameId();
-			if(Common.isEmpty(nameId)) nameId = Common.nvl(request.getSession().getAttribute("uid"));
+			if (Common.isEmpty(nameId)) nameId = Common.nvl(request.getSession().getAttribute("uid"));
 			admin.setAdminId(nameId);
 			admin.setAdminName("");
 			log.info("[SSO] Login NameId : {}, session nameId : {}", auth.getNameId(), Common.nvl(request.getSession().getAttribute("uid")));
 		}
-		
-		for(String name : keys){
+
+		for (String name : keys) {
 			log.info("[SSO] key : {}, value : {}", name, attributes.get(name).get(0));
-			if(name.contains("uid")) {
+			if (name.contains("uid")) {
 				List<String> values = attributes.get(name);
 				admin.setAdminId(values.get(0));
 			}
-			
-			if(name.contains("cn")) {
+
+			if (name.contains("cn")) {
 				List<String> values = attributes.get(name);
 				admin.setAdminName(values.get(0));
 			}
-			
-			if(name.contains("mail")) {
+
+			if (name.contains("mail")) {
 				List<String> values = attributes.get(name);
 				admin.setAdminEmail(values.get(0));
 			}
 		}
-		
+
 		// sso연계를 통해서 최초 로그인인 경우 신규로 등록함
-		if( Common.isNotEmpty(admin.getAdminId()) && !adminService.isAdminIdExist(admin) ) {
-			if(Common.isEmpty(Config.getString("sso_authorization"))) {
+		if (Common.isNotEmpty(admin.getAdminId()) && !adminService.isAdminIdExist(admin)) {
+			if (Common.isEmpty(Config.getString("sso_authorization"))) {
 				admin.setAdminPw(Common.EMPTY);
 				admin.setFirstAdminYn("N");
 				admin.setAdminType("M");
@@ -596,20 +656,21 @@ public class LoginController {
 				adminService.insertAdmin(admin);
 			}
 		}
-		if(adminService.isAdminIdExist(admin)) adminService.insertAdminCheck(admin);
-		
+		if (adminService.isAdminIdExist(admin)) adminService.insertAdminCheck(admin);
+
 		LoginVO result = new LoginVO();
 		result.setUserId(admin.getAdminId());
 		result.setLoginType("S");
 
 		return result;
 	}
-	
+
 	/**
 	 * 구글 OTP - 최초 로그인 시 OTP 계정 생성에 필요한
 	 * QR코드 및 개인키 생성
+	 *
 	 * @param userName 운용자 ID
-	 * @param domain 운용자 email의 도메인
+	 * @param domain   운용자 email의 도메인
 	 * @return
 	 */
 	private JSONObject generate(String userName) {
@@ -619,20 +680,21 @@ public class LoginController {
 		Base32 codec = new Base32();
 		byte[] secretKey = Arrays.copyOf(buffer, 10);
 		byte[] bEncodedKey = codec.encode(secretKey);
-		
+
 		String encodedKey = new String(bEncodedKey);
 		String url = getQRcodeURL(userName, encodedKey);
-		
+
 		result.put("secretKey", encodedKey);
 		result.put("qrCodeURL", url);
-		
+
 		return result;
 	}
-	
+
 	/**
 	 * 구글 OTP - QR코드 생성
-	 * @param userName 운용자 ID
-	 * @param domain 운용자 email의 도메인
+	 *
+	 * @param userName  운용자 ID
+	 * @param domain    운용자 email의 도메인
 	 * @param encodeKey 구글 OTP 개인키
 	 * @return
 	 */
@@ -640,25 +702,26 @@ public class LoginController {
 		String orig = "http://chart.apis.google.com/chart?cht=qr&chs=100x100&chl=otpauth://totp/%s%%3Fsecret%%3D%s&chld=H|0";
 		return String.format(orig, userName, encodeKey);
 	}
-	
+
 	/**
 	 * 구글 OTP - 입력한 코드 확인
-	 * @param inCode 입력 코드
+	 *
+	 * @param inCode     입력 코드
 	 * @param secretCode 개인키
 	 * @return
 	 */
 	private boolean checkCode(String inCode, String secretCode) {
 		long otpnum = Integer.parseInt(inCode); //google OTP 앱에 표시되는 번호
-		long delay = new Date().getTime()/30000; //google OTP 앱 번호의 주기 (30초)
+		long delay = new Date().getTime() / 30000; //google OTP 앱 번호의 주기 (30초)
 		boolean re = false;
-		
+
 		try {
 			Base32 codec = new Base32();
 			byte[] decodedKey = codec.decode(secretCode);
 			int window = 3;
-			for(int i = -window; i<=window; ++i) {
+			for (int i = -window; i <= window; ++i) {
 				long hash = verify_code(decodedKey, delay + i);
-				if(hash == otpnum) {
+				if (hash == otpnum) {
 					re = true;
 					break;
 				}
@@ -666,12 +729,13 @@ public class LoginController {
 		} catch (InvalidKeyException | NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
-		
+
 		return re;
 	}
-	
+
 	/**
 	 * 구글 OTP - OTP Key 검증
+	 *
 	 * @param key
 	 * @param t
 	 * @return
@@ -681,30 +745,30 @@ public class LoginController {
 	private int verify_code(byte[] key, long t) throws NoSuchAlgorithmException, InvalidKeyException {
 		byte[] data = new byte[8];
 		long value = t;
-		
-		for(int i=8; i-- > 0; value >>>= 8) {
-			data[i] = (byte)value;
+
+		for (int i = 8; i-- > 0; value >>>= 8) {
+			data[i] = (byte) value;
 		}
-		
+
 		SecretKeySpec signKey = new SecretKeySpec(key, "HmacSHA1");
 		Mac mac = Mac.getInstance("HmacSHA1");
 		mac.init(signKey);
 		byte[] hash = mac.doFinal(data);
-		
+
 		int offset = hash[20 - 1] & 0xF;
-		
+
 		long truncateHash = 0;
-		for (int i=0; i<4; ++i) {
+		for (int i = 0; i < 4; ++i) {
 			truncateHash <<= 8;
 			truncateHash |= (hash[offset + i] & 0xFF);
 		}
-		
+
 		truncateHash &= 0x7FFFFFFF;
 		truncateHash %= 1000000;
-		
-		return (int)truncateHash;
+
+		return (int) truncateHash;
 	}
-	
+
 }
 
 

@@ -1,12 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@page import="java.util.Locale"%>
-<%@page import="com.xcurenet.common.util.config.Config"%>
-<%@page import="com.xcurenet.common.util.Common"%>
-<%@page import="org.springframework.web.servlet.i18n.SessionLocaleResolver"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
-
-
+<%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
 <%
 	String contentPath = request.getContextPath();
 	boolean isIPv6 = Config.isIPv6;

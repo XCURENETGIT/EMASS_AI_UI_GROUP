@@ -341,7 +341,7 @@ var ui = {
 				if (callBack != null && callBack != undefined){
 					setTimeout(function(){
 						callBack();
-					}, 300);
+					}, );
 				}
 			}
 		});
