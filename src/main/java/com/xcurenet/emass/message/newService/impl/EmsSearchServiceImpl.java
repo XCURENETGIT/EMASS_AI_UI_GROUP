@@ -107,6 +107,7 @@ public class EmsSearchServiceImpl implements EmsSearchService {
         }
 
         /* 추후 수정예정 =============================================*/
+
         /* admin snippet */
         List<ConfigAdminVO> conf = configAdminService.getConfAdminOption(adminId);
         String bodysnippetVal = "N";
@@ -118,18 +119,18 @@ public class EmsSearchServiceImpl implements EmsSearchService {
         }
         searchParam.put("bodysnippet", bodysnippetVal);
         setAuthoritys(searchParam, adminId);
+
         /* 추후 수정예정 =============================================*/
 
         /* 검색 */
         ElsSearchResponse elsSearchResponse = getList(searchParam);
         EdcMessage edcMessage = new EdcMessage(elsSearchResponse,adminId);
 
-        
         /* 읽음 확인 관련*/
 //        if (readYn != null && readYn.equals("")) {
 //            edcMessage.setEmass(checkedService.findReadList((List<Emass>) edcMessage.getEmass(), adminId));
 //        }
-
+        
         /* response용 Data 재 빌드 */
         List<EmassResponse> emassResponse = new EmsReDefined((List<Emass>) edcMessage.getEmass(), readYn, consentNo, adminUserGroupService.getAdminUserGroupSimpleAdminList(adminId)).reDefined(adminId, conf);
         edcMessage.setEmass(emassResponse);
@@ -137,7 +138,6 @@ public class EmsSearchServiceImpl implements EmsSearchService {
         String serverTime = getServerTime();
         edcMessage.setSearchTime(serverTime);
         edcMessage.setExcuteQuery(elsSearchResponse.getElsQueryBuilder().getQuery());
-
 
         return edcMessage;
     }
@@ -296,6 +296,8 @@ public class EmsSearchServiceImpl implements EmsSearchService {
                 .query(elasticSearchQuery.getQuery())
                 .includeFields(ElasticSearchCommon.SEARCH_FIELD)
                 .searchAggregations(Common.nvl(searchParam.get("colKey")))
+                .yAxis(Common.nvl(searchParam.get("yAxis").concat(ElasticSearchCommon.FIELD_SUFFIX)))
+                .xAxis(Common.nvl(searchParam.get("xAxis")))
                 .excludeFields(null)
                 .searchParam(searchParam)
                 .build();
@@ -322,25 +324,36 @@ public class EmsSearchServiceImpl implements EmsSearchService {
         String startDate = "";
         String endDate = "";
 
-        String xAxis =  Common.nvl(elsQueryBuilder.getSearchParam().get("xAxis"));
-        String yAxis =  Common.nvl(elsQueryBuilder.getSearchParam().get("yAxis"));
-
-        /* 집계화면에서의 디테일 검색인지 체크 */
-        if(!Common.isEmpty(elsQueryBuilder.getSearchParam().get("searched_xAxis"))) {
-            colSearchType =  elsQueryBuilder.getSearchParam().get("searched_xAxis");
-            if(!Common.isEmpty(ElasticSearchCommon.XFIELD.get(colSearchType))){
-
-                ElasticSearchCommon.getDateFoamat(colSearchType);
-
-                startDate = Common.nvl(elsQueryBuilder.getSearchParam().get("searched_startDate"));
-                endDate = Common.nvl(elsQueryBuilder.getSearchParam().get("searched_endDate"));
-
-            }
-        }
+        String xAxis =  Common.nvl(elsQueryBuilder.getXAxis());
+        String yAxis =  Common.nvl(elsQueryBuilder.getYAxis());
 
         /* 기간 범위 */
         startDate = Common.nvl(elsQueryBuilder.getSearchParam().get("startDate"));
         endDate = Common.nvl(elsQueryBuilder.getSearchParam().get("endDate"));
+
+
+//        DateRangeAggregationBuilder dateRange = null;
+
+        /* 집계화면에서의 디테일 검색인지 체크 */
+//        if(!Common.isEmpty(elsQueryBuilder.getSearchParam().get("searched_xAxis"))) {
+//            colSearchType =  elsQueryBuilder.getSearchParam().get("searched_xAxis");
+//            if(!Common.isEmpty(ElasticSearchCommon.XFIELD.get(colSearchType))){
+//                 dateRange = AggregationBuilders.dateRange(ElasticSearchCommon.CTIME).field(ElasticSearchCommon.CTIME).format("yyyyMMddHHmmss");
+//                int hour = Common.nvz(elsQueryBuilder.getSearchAggregations().substring(0,2));
+//
+//                LocalDateTime from = ElasticSearchCommon.stringToDate(startDate);
+//                LocalDateTime to = ElasticSearchCommon.stringToDate(endDate);
+//                int diffDay = to.compareTo(from);
+//
+//                for(int d=0; d<=diffDay; d++){
+//                   String fromStr =  ElasticSearchCommon.dateToString(from.withHour(hour));
+//                   String toStr =  ElasticSearchCommon.dateToString(from.withHour(hour+1).minusSeconds(1));
+//                   dateRange.addRange(fromStr,toStr);
+//                   from = from.plusDays(1);
+//                }
+//                yAxis = "detail";
+//            }
+//        }
 
         RangeQueryBuilder rangeQuery = new RangeQueryBuilder(ElasticSearchCommon.CTIME).gte(startDate).lte(endDate);
         QueryStringQueryBuilder secondQuery = QueryBuilders.queryStringQuery(elsQueryBuilder.getQuery());
@@ -353,54 +366,24 @@ public class EmsSearchServiceImpl implements EmsSearchService {
                 secondQuery.field(field);
             }
         }
-        
+
         /* 쿼리 merge */
         BoolQueryBuilder complateQuery = new BoolQueryBuilder()
               .filter(rangeQuery)
               .must(secondQuery);
 
-        /*#######################################################################*/
 
-        /* yAxis 검색  */
-        switch (yAxis){
-            case "service" :
-                searchSourceBuilder =   new SearchSourceBuilder()
-                        .from(elsQueryBuilder.getFrom())
-                        .size(elsQueryBuilder.getTo())
-                        .query(complateQuery)
-                        .fetchSource(elsQueryBuilder.getIncludeFields(), elsQueryBuilder.getExcludeFields())
-                        .sort(elsQueryBuilder.getSorts())
-                        .aggregation(AggregationBuilders.terms(ElasticSearchCommon.SERVICE).field(ElasticSearchCommon.SERVICE))
-                        .aggregation(AggregationBuilders.terms(ElasticSearchCommon.SERVICE_GROUP).field(ElasticSearchCommon.SERVICE_GROUP))
-                        .aggregation(AggregationBuilders.terms(ElasticSearchCommon.SERVICE_TYPE).field(ElasticSearchCommon.SERVICE_TYPE))
-                        .aggregation(AggregationBuilders.terms(ElasticSearchCommon.SERVICE_12).field(ElasticSearchCommon.SERVICE_12))
-                        .aggregation(AggregationBuilders.terms(ElasticSearchCommon.SERVICE_3).field(ElasticSearchCommon.SERVICE_3))
-                        .timeout(new TimeValue(60, TimeUnit.SECONDS));
-                break;
-            case "mail" :
-                yAxis = "mail.sender.mail.keyword";
-                searchSourceBuilder = new SearchSourceBuilder()
-                        .from(elsQueryBuilder.getFrom())
-                        .size(elsQueryBuilder.getTo())
-                        .query(complateQuery)
-                        .fetchSource(elsQueryBuilder.getIncludeFields(), elsQueryBuilder.getExcludeFields())
-                        .sort(elsQueryBuilder.getSorts())
-                        .aggregation(initAggregation(yAxis,xAxis))
-                        .timeout(new TimeValue(60, TimeUnit.SECONDS));
-                break;
-            case "userid" :
-                yAxis = "mail.sender.mail.keyword";
-                searchSourceBuilder = new SearchSourceBuilder()
-                        .from(elsQueryBuilder.getFrom())
-                        .size(elsQueryBuilder.getTo())
-                        .query(complateQuery)
-                        .fetchSource(elsQueryBuilder.getIncludeFields(), elsQueryBuilder.getExcludeFields())
-                        .sort(elsQueryBuilder.getSorts())
-                        .aggregation(initAggregation(yAxis,xAxis))
-                        .timeout(new TimeValue(60, TimeUnit.SECONDS));
-                break;
+        /* 빌드 */
+        searchSourceBuilder = new SearchSourceBuilder()
+                .from(elsQueryBuilder.getFrom())
+                .size(elsQueryBuilder.getTo())
+                .query(complateQuery)
+                .fetchSource(elsQueryBuilder.getIncludeFields(), elsQueryBuilder.getExcludeFields())
+                .sort(elsQueryBuilder.getSorts())
+                .aggregation(initAggregation(yAxis,xAxis))
+                .timeout(new TimeValue(60, TimeUnit.SECONDS));
 
-        }
+
         return searchSourceBuilder;
     }
 
@@ -413,7 +396,7 @@ public class EmsSearchServiceImpl implements EmsSearchService {
     public AggregationBuilder initAggregation (String yAxis, String xAxis){
         AggregationBuilder aggregationBuilder = null;
         
-        /* 화면단 Str -> 엘라스틱 서치 검색용 Str로 전환  */
+        /* 화면단 xAxis Str -> 엘라스틱 서치 검색용 Str  */
         String xfield = Common.nvl(ElasticSearchCommon.XFIELD.get(xAxis));
 
         switch (xAxis){

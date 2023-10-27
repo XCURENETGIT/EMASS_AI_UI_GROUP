@@ -11,6 +11,10 @@ import java.util.List;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Nullable
+
+/***
+ *  elastic search Db -> App server 받아오기 위한 Vo
+ */
 public class Emass {
 
     private String allofus;

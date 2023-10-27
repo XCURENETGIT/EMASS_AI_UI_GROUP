@@ -2,13 +2,10 @@ package com.xcurenet.common.util.elasticsearch;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,21 +15,23 @@ public class ElasticSearchCommon {
 
     public static final String INDEX = "emass";
 
-    private static DateTimeFormatter yyyyMMdd = DateTimeFormat.forPattern("yyyyMMdd");
-
-
     public static final String ALL_SEARCH = "*:*";
 
+    public static final String FIELD_SUFFIX = ".keyword";
     public static final String BACKSLASH = "\\";
     public static final String SPACE = " ";
     //private static final String COMMA = ", ";
     public static final String SPECIAL_CHAR = "*";
     public static final String OR_PREFIX = "#";
 
+
+
     public static final String AND_QUERY = "AND";
     public static final String EXCEPT_QUERY = "-";
 
     public static final String CTIME = "ctime";
+    public static final String CTIME_HH = "ctime_hh";
+
     public static final String INFOTYPE = "ml_confd_class";
     public static final String FEEDBACK = "ml_confd_feedback";
     public static final String PROB = "ml_confd_prob";
@@ -96,42 +95,13 @@ public class ElasticSearchCommon {
     private static final String OCR_FIELD = " ocr_attach";
 
 
-    /* 24시 */
-    private static final String TIME_00 = "common.time.00";
-    private static final String TIME_01 = "common.time.01";
-    private static final String TIME_02 = "common.time.02";
-    private static final String TIME_03 = "common.time.03";
-    private static final String TIME_04 = "common.time.04";
-    private static final String TIME_05 = "common.time.05";
-    private static final String TIME_06 = "common.time.06";
-    private static final String TIME_07 = "common.time.07";
-    private static final String TIME_08 = "common.time.08";
-    private static final String TIME_09 = "common.time.09";
-    private static final String TIME_10 = "common.time.10";
-    private static final String TIME_11 = "common.time.11";
-    private static final String TIME_12 = "common.time.12";
-    private static final String TIME_13 = "common.time.13";
-    private static final String TIME_14 = "common.time.14";
-    private static final String TIME_15 = "common.time.15";
-    private static final String TIME_16 = "common.time.16";
-    private static final String TIME_17 = "common.time.17";
-    private static final String TIME_18 = "common.time.18";
-    private static final String TIME_19 = "common.time.19";
-    private static final String TIME_20 = "common.time.20";
-    private static final String TIME_21 = "common.time.21";
-    private static final String TIME_22 = "common.time.22";
-    private static final String TIME_23 = "common.time.23";
-    private static final String TIME_24 = "common.time.24";
+    public static final String TIME_FORMAT = "common.time.";
 
 
-
-    // Date 포맷 지정
-    private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHH:mm:ss");
-
-
+    //body
     public static String[] SEARCH_FIELD = new String[]{
             "allofus", "attach", "attachcnt",
-            "attachexistcnt", "body", "ctime",
+            "attachexistcnt", "ctime",
             "direction", "direction_svc", "filePath",
             "html", "http", "kwd_info", "ltime",
             "mail", "ml", "msgid", "network",
@@ -157,21 +127,26 @@ public class ElasticSearchCommon {
     }};
 
 
-    /* String -> DateFormat */
+    /* String -> LocalDateTime */
+    public static LocalDateTime stringToDate(String dateValue){
+        LocalDateTime date = null;
+           try {
+               date = LocalDateTime.parse(dateValue, java.time.format.DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+           }catch (DateTimeParseException e){
+               e.printStackTrace();
+           }
+        return date;
+    }
 
-    public static DateTime getDateFoamat(String dateValue){
-            try {
-               Date date = simpleDateFormat.parse(dateValue);
-            }catch (ParseException e){
-                e.printStackTrace();
-            }
-//        //원하는 데이터 포맷 지정
-//        String dateValue = simpleDateFormat.format(dateValue);
-//
-//        //지정한 포맷으로 변환
-//        System.out.println("포맷 지정 후 : " + strNowDate);
-
-        return null;
+    /* LocalDateTime -> String */
+    public static String dateToString(LocalDateTime localDateTime){
+        String str = null;
+        try {
+            str = localDateTime.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        }catch (DateTimeParseException e){
+            e.printStackTrace();
+        }
+        return str;
     }
 
 }

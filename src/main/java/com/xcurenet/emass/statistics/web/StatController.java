@@ -43,8 +43,7 @@ public class StatController {
     @AuditOperation(Operation.SEARCH)
     @ResponseBody
     public XcnResponseVO getStatList(final HttpServletRequest request, final HttpSession session) throws IOException {
-
-        /*  search param 정의 */
+        /*############################  search param 정의 ############################*/
         Gson gson = new Gson();
         Map<String,Object> resultParam = Common.getParamMap(request);
         Map<String,String> searchParam = new HashMap<>();
@@ -52,6 +51,7 @@ public class StatController {
             Type type = new TypeToken<Map<String,String>>(){}.getType();
             searchParam = gson.fromJson((String) resultParam.get("searchParam"),type);
         }
+        /*############################################################################*/
 
         //서비스 타입
         if(!Common.isEmpty(searchParam.get("serviceTypes"))) {
@@ -83,7 +83,7 @@ public class StatController {
     @AuditOperation(Operation.SEARCH)
     @ResponseBody
     public XcnResponseVO getDetailList(final HttpServletRequest request, final HttpSession session) throws IOException {
-        /*  search param 정의 */
+        /*############################  search param 정의 ############################*/
         Gson gson = new Gson();
         Map<String,Object> resultParam = Common.getParamMap(request);
         Map<String,String> searchParam = new HashMap<>();
@@ -91,6 +91,7 @@ public class StatController {
             Type type = new TypeToken<Map<String,String>>(){}.getType();
             searchParam = gson.fromJson((String) resultParam.get("searchParam"),type);
         }
+        /*############################################################################*/
 
         EdcMessage edcMessage = emsSearchService.getEmassMessage(searchParam, Common.getAdminId(request), null, null);
 

@@ -12,6 +12,10 @@ import java.util.List;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Nullable
+
+/***
+ *   App server -> client 표시위한 재가공 Vo
+ */
 public class EmassResponse {
 
     private String allofus;
@@ -85,7 +89,6 @@ public class EmassResponse {
     /* pi */
     private List<PiProperties> pi_codes;
     private int pi_total;
-
 
     private String service_svc;
     private String service_svc1;

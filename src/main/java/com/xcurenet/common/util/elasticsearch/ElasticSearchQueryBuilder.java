@@ -17,6 +17,10 @@ public class ElasticSearchQueryBuilder {
     private String   searchAggregations; // 화면에서 받아온 colkey로 집계 검색할 Str
     private String   query; // 쿼리
 
+    private String yAxis; // 페이지별  주요 검색 열
+    private String xAxis; // 통계 영역 열 시간,사업장,부서...
+
+
     /* 검색 범위 */
     private int  from;
     private int to;

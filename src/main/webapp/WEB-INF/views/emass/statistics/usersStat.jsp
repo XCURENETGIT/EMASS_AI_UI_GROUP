@@ -11,6 +11,9 @@
 }
 </style>
 <script>
+
+/*  그리드 , 차트 정의 */
+
 var searchFlag = false;
 var detailTotal = 0;
 var rowKey = "";
@@ -22,6 +25,8 @@ var currentGrid;
 var tabID = 1;
 var tabNum = 0;
 var totalChartDat;
+
+
 $(document).ready(function(){
 	$('#searchBtn').click(function(){
 		closeDetailTab();
@@ -143,7 +148,6 @@ $(document).ready(function(){
 	$('.searchQueryBtn').click(function(){
 		queryMakePop();
 	});
-	
 	
 	//getData ('Y');
 	
@@ -433,6 +437,9 @@ function getSearchQuery() {
 						</div>
 						<%-- 통계영역 검색 조건 --%>
 						<input id="searched_xAxis" type="hidden"/>
+						<input id="searched_startDate" type="hidden"/>
+						<input id="searched_endDate" type="hidden"/>
+
 					</div>
 				</div>^
 				<div class="row top_space2">
@@ -488,6 +495,8 @@ function getSearchQuery() {
 		
 		var tabInfo={};
 		var chartDat={};
+
+		/* 행 클릭 */
 		grid1.onClick = function() {
 			var valChk = grid1.getValue(grid1.Row, grid1.Col);
 			if(valChk == "" || valChk == "-") return;
@@ -504,6 +513,7 @@ function getSearchQuery() {
 			}
 			rowName = grid1.getValue(grid1.Row, 'rowName');
 			colKey = grid1.ColKey(grid1.Col);
+
 			var colKeyNm = colKey;
 			if (colKey == 'rowKey' || colKey == 'total' || colKey == 'NUM') {
 				colKey = "";
@@ -554,17 +564,17 @@ function getSearchQuery() {
 		
 		function getData( flag ) {
 			if ( searchFlag ) return;
+			grid1.on(); //grid on
+
 			var sDate = $('#startdate').val().replaceAll("-","");
 			var eDate = $('#enddate').val().replaceAll("-","");
-
 			if(sDate > eDate) ui.alertMsg('<s:message code="consent.msg.timecheck"/>');
 
-			grid1.on(); //grid on
 			/* 검색 데이터 전송 객체 */
 			var searchData = {
 				  xAxis : $('select[name=xAxis]').val()
 				, xAxis_str : $('select[name=xAxis] option:selected').text()
-				, yAxis : 'userid'
+				, yAxis : 'mail.sender.mail'
 				, startDate : sDate+"000000"
 				, endDate : eDate+"235959"
 				, offset : grid1.data.length
@@ -579,10 +589,8 @@ function getSearchQuery() {
 					/* 통계영역 검색 조건 저장 */
 					if(data.search_xAxis != null) $('#searched_xAxis').val(data.search_xAxis);
 					if(data.search_startDate != null) $('#searched_startDate').val(data.search_startDate);
-					if(data.search_endDate != null) $('#searched_endDate').val(data.searched_endDate);
+					if(data.search_endDate != null) $('#searched_endDate').val(data.search_endDate);
 
-
-					console.log(data);
 
 					grid1.colInit();
 					grid1.autoNumber();
@@ -644,8 +652,10 @@ function getSearchQuery() {
 		}
 
 		function getDetailData( lastRow ) {
-			currentgrid = getCurrentGrid();
 			if ( searchFlag ) return;
+			searchFlag = true;
+			currentgrid = getCurrentGrid();
+			currentgrid.on();
 			
 			if ( lastRow == 'Y' || lastRow == undefined ) {
 				currentgrid.data.length = 0;
@@ -658,25 +668,22 @@ function getSearchQuery() {
 			var xAxis = $('select[name=xAxis]').val();
 			var xAxis_str = $('select[name=xAxis] option:selected').text();
 
-			searchFlag = true;
-			currentgrid.on();
 
 			/* 검색 데이터 전송 객체 */
 			var searchData = {
 					rowKey : rowKey,
 					colKey : colKey,
-					startDate : $('#startdate').val().replaceAll("-","")+"000000",
-					endDate : $('#enddate').val().replaceAll("-","")+"235959",
+					startDate : $('#searched_startDate').val(),
+					endDate : $('#searched_endDate').val(),
 					detailQuery: $('#elsQueryText').val(),
 					xAxis : xAxis,
 					xAxis_str : xAxis_str,
 					searched_xAxis : $('#searched_xAxis').val(),
-					yAxis : 'userid',
+					yAxis : 'mail.sender.mail',
 					offset : currentgrid.data.length,
 					limit : currentgrid.pageSize,
 					nameStat : 'users',
 			}
-
 
 
 			ui.get({
@@ -684,10 +691,7 @@ function getSearchQuery() {
 				searchParam : JSON.stringify(searchData),
 				success : function(data, total) {
 					if ( lastRow == 'Y' || lastRow == undefined ) detailTotal = total;
-
-					console.log(data.emass);
 					currentgrid.appendData(data.emass);
-
 					if ( currentgrid.loadingPage == 0 ) currentgrid.Select(-1,-1);
 					$('#detailTab'+tabID+' .badge').text('[' + total.comma() + ']');
 					$('#detail_cnt'+tabID).html('<s:message code="common.msg.finish_query"/>: '+currentgrid.data.length);
@@ -701,9 +705,6 @@ function getSearchQuery() {
 				}
 			})
 		}
-
-
-
 
 	</script>
 </body>

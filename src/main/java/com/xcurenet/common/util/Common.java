@@ -9,7 +9,7 @@ import com.xcurenet.common.parser.useragent.Parser;
 import com.xcurenet.common.util.config.Config;
 import com.xcurenet.common.util.locale.Prop;
 import com.xcurenet.emass.message.component.AttachFile;
-import com.xcurenet.emass.message.service.EmsReDefined;
+import com.xcurenet.emass.message.newService.EmsReDefined;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSON;
 import net.sf.json.JSONArray;
@@ -30,7 +30,6 @@ import org.joda.time.Hours;
 import org.joda.time.Months;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.springframework.ui.Model;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import javax.servlet.http.HttpServletRequest;
@@ -2574,7 +2573,10 @@ public class Common {
 			sum = sum + i;
 		return sum;
 	}
-	
+
+
+
+
 	/**
 	 * 한글, 영어, 숫자, : 외 나머지 제거 
 	 * @param str

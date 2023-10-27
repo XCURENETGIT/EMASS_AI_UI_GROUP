@@ -182,6 +182,7 @@ public class EmsReDefined {
 				emassResponse.setService_svc2(ems.getService().getSvc2());
 				emassResponse.setService_svc3(ems.getService().getSvc3());
 				emassResponse.setService_svc12(ems.getService().getSvc12());
+
 			}
 
 			emassResponse.setSize(ems.getSize());
@@ -223,6 +224,8 @@ public class EmsReDefined {
 				emassResponse.setService_svcLv1Nm(reSvcLv1Nm(ems.getService().getSvc()));
 				emassResponse.setService_svcLv2Nm(reSvcLv2Nm(ems.getService().getSvc()));
 
+				emassResponse.setUser_conm(reConm(Common.nvl(ems.getUser().getConm()), Common.nvl(ems.getUser().getIp_conm())));
+
 
 			}
 
@@ -235,14 +238,15 @@ public class EmsReDefined {
 			emassResponse.setInterestGroupColor(ems.getInterestGroupColor());
 			emassResponse.setConsentNo(ems.getConsentNo());
 			emassResponse.setReadYn(ems.getReadYn());
-
-
 			emassResponse.setCtime(reCtime(ems.getCtime()));
-			emassResponse.setSubject(reSubject(ems));
-			emassResponse.setUser_conm(reConm(Common.nvl(ems.getUser().getConm()), Common.nvl(ems.getUser().getIp_conm())));
 
+			if(!Common.isEmpty(ems.getSubject())) {
+				emassResponse.setSubject(reSubject(ems));
+			}
+			if(!Common.isEmpty(ems.getUser()) && !Common.isEmpty(ems.getNetwork())) {
+				emassResponse.setService_svcNm(reSvcNm(ems.getService().getSvc(), ems.getNetwork().getProtocol()));
+			}
 
-			emassResponse.setService_svcNm(reSvcNm(ems.getService().getSvc(), ems.getNetwork().getProtocol()));
 
 			/* 스니펫 관련 주석 */
 		//	if(bodysnippetVal.equals("Y")) edc.setBody_snippet(reBodySnippet(edc.getBody_snippet()));

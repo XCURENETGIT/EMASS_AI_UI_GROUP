@@ -5,6 +5,7 @@ import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.config.Config;
 import com.xcurenet.common.util.elasticsearch.ElasticSearchCommon;
 import com.xcurenet.common.util.elasticsearch.ElsSearchResponse;
+import com.xcurenet.common.util.locale.Prop;
 import com.xcurenet.emass.message.service.FacetVO;
 import com.xcurenet.emass.message.vo.emass.Emass;
 import lombok.Data;
@@ -41,10 +42,13 @@ public class EdcMessage {
 
     /* 총 카운트 */
     private long total;
+
+    /* 검색 xAxis */
     private String search_xAxis;
 
-
-
+    /* 검색 Date  */
+    private String search_startDate;
+    private String search_endDate;
 
     public EdcMessage() throws IOException {}
 
@@ -64,11 +68,12 @@ public class EdcMessage {
             if (map.size() > 0)  result.add(mapper.convertValue(map, Emass.class));
         }
 
-//        this.numFound = resp.getResults().getNumFound();
           this.emass = result;
           this.total = searchResponse.getHits().getHits().length;
           this.setPivot(elsSearchResponse);
           this.search_xAxis = Common.nvl(elsSearchResponse.getElsQueryBuilder().getSearchParam().get("xAxis")); //검색한 xAxis 값
+          this.search_startDate = Common.nvl(elsSearchResponse.getElsQueryBuilder().getSearchParam().get("startDate")); //검색한 startDate 값
+          this.search_endDate = Common.nvl(elsSearchResponse.getElsQueryBuilder().getSearchParam().get("endDate")); //검색한 endDate 값
 
 //        this.setFacet(resp);
 //        this.setFacetQuery(resp);
@@ -152,99 +157,110 @@ public class EdcMessage {
         Aggregations aggregations = searchResponse.getAggregations();
         if(aggregations.getAsMap().size() == 0 ) return;
 
-
         /* Pivot field 정의 #############################################################*/
-        String yField = ElasticSearchCommon.YFIELD.get("test");
-        String xField = elsSearchResponse.getElsQueryBuilder().getSearchParam().get("xAxis");
+        String xField = elsSearchResponse.getElsQueryBuilder().getXAxis();
         String xTypeFlag = ElasticSearchCommon.XFIELD.get(xField);
+        String yField = elsSearchResponse.getElsQueryBuilder().getYAxis();
 
-        Map<String, Object> keys = new HashMap<String, Object>();
+//        /* detail 시간별 검색여부 */
+//        boolean detailHourSearch = false;
+//         if(ElasticSearchCommon.CTIME_HH.equals(Common.nvl(elsSearchResponse.getElsQueryBuilder().getSearchParam().get("searched_xAxis")))) detailHourSearch = true;
 
-        /* 시간 분류일 경우 #############################################################*/
-        if(ElasticSearchCommon.CTIME.equals(xTypeFlag)){
-            ParsedDateHistogram results = aggregations.get(ElasticSearchCommon.CTIME);
-            for(MultiBucketsAggregation.Bucket bucket: results.getBuckets()){
-                if(Common.isEmpty(bucket.getAggregations().get(yField))) continue;
-                Terms argments = bucket.getAggregations().get(yField);
+         Map<String, Object> keys = new HashMap<String, Object>();
+         String colKey = Common.nvl(elsSearchResponse.getElsQueryBuilder().getSearchParam().get("colKey"));
+            /* Date 분류일 경우 #############################################################*/
+            if (ElasticSearchCommon.CTIME.equals(xTypeFlag)) {
+                    ParsedDateHistogram results = aggregations.get(ElasticSearchCommon.CTIME);
+                    for (MultiBucketsAggregation.Bucket bucket : results.getBuckets()) {
+                        if (Common.isEmpty(bucket.getAggregations().get(yField))) continue;
+                        Terms argments = bucket.getAggregations().get(yField);
+                        String headerStr = "";
 
-                keys.put(Common.nvl(bucket.getKey()), 0); // pivot header 추가  ( xAxis 정보 일,월,시간...)
-                for(Terms.Bucket arg : argments.getBuckets()){
-                    Map<String, Object> item = new HashMap();
+                        /* 시간분류일경우 Header 재 계산*/
+                        if (("ctime_hh").equals(xField) && !Common.isEmpty(bucket.getKeyAsString())) {
+                            String timeStr = bucket.getKeyAsString();
+                            headerStr = Prop.msg(ElasticSearchCommon.TIME_FORMAT.concat(timeStr.substring(8, 10)));
+                        } else {
+                            headerStr = Common.nvl(bucket.getKey());
+                        }
+
+                         // pivot header 추가  ( xAxis 정보 일,월,시간...)
+                         keys.put(Common.nvl(headerStr), 0);
+
+                        for (Terms.Bucket arg : argments.getBuckets()) {
+                            Map<String, Object> item = new HashMap();
+    //                    if(Common.isOrEquals("", "user_str", "sender_str", "userid")){
+    //                        item.put("rowName", Config.getUserName(Common.nvl(arg.getKey())));
+    //                    }
+                            item.put("rowKey", arg.getKey());
+                            item.put(headerStr, arg.getDocCount());
+                            /* PIVOT XAxis */
+                            result.add(item);
+                    }
+                }
+            } else { /* 시간 분류 외 (사업장,부서 등등) #############################################################*/
+                Terms results = aggregations.get(xTypeFlag);
+                for (Terms.Bucket bucket : results.getBuckets()) {
+                    if (Common.isEmpty(bucket.getAggregations().get(yField))) continue;
+                    Terms argments = bucket.getAggregations().get(yField);
+                    keys.put(Common.nvl(bucket.getKey()), 0); // pivot header 추가
+                    for (Terms.Bucket arg : argments.getBuckets()) {
+                        Map<String, Object> item = new HashMap();
 //                    if(Common.isOrEquals("", "user_str", "sender_str", "userid")){
 //                        item.put("rowName", Config.getUserName(Common.nvl(arg.getKey())));
 //                    }
-                    item.put("rowKey",  arg.getKey());
-                    item.put(Common.nvl(bucket.getKey()), arg.getDocCount());
-                    /* PIVOT XAxis */
-                    result.add(item);
+                        item.put("rowKey", arg.getKey());
+                        item.put(Common.nvl(bucket.getKey()), arg.getDocCount());
+                        /* PIVOT XAxis */
+                        result.add(item);
+                    }
                 }
+
             }
-        }else
-        {   /* 시간 분류 외 (사업장,부서 등등) #############################################################*/
-            Terms results = aggregations.get(xField);
-            for(Terms.Bucket bucket: results.getBuckets()){
-                if(Common.isEmpty(bucket.getAggregations().get(yField))) continue;
-                Terms argments = bucket.getAggregations().get(yField);
-                keys.put(Common.nvl(bucket.getKey()), 0); // pivot header 추가
-                for(Terms.Bucket arg : argments.getBuckets()){
-                    Map<String, Object> item = new HashMap();
-//                    if(Common.isOrEquals("", "user_str", "sender_str", "userid")){
-//                        item.put("rowName", Config.getUserName(Common.nvl(arg.getKey())));
-//                    }
-                    item.put("rowKey",  arg.getKey());
-                    item.put(Common.nvl(bucket.getKey()), arg.getDocCount());
-                    /* PIVOT XAxis */
-                    result.add(item);
+
+            List<String> list = new ArrayList<>(keys.keySet());
+            Collections.sort(list);
+            this.pivotHeader = list;
+
+            /* pivotData 재 계산 #############################################################*/
+            List<Map<String, Object>> pivotDataList = new ArrayList<>();  // 최종 pivot 데이터
+            int idx = 0;
+            for (Map<String, Object> tempPivotList : result) {
+                int rowTotal = 0;
+                Map<String, Object> tempMap = new HashMap<>();
+                for (String header : this.pivotHeader) {
+                    /* header 세팅*/
+                    if (!Common.isEmpty(tempPivotList.get(header))) {
+                        Long Value = Common.nvn(tempPivotList.get(header));
+                        tempMap.put(header, Value);
+                    } else {
+                        tempMap.put(header, 0L);
+                    }
                 }
-            }
+                /* 중복 rowKey 체크  #############################################################*/
+                Map<String, Object> oldMap = null;
+                if ((oldMap = checkRowKey(pivotDataList, Common.nvl(tempPivotList.get("rowKey")))) != null) {
+                    int target = Common.nvz(oldMap.get("idx"));
+                    tempMap.putAll(summaryMap(oldMap, tempMap));
+                    rowTotal = tempMap.values().stream().collect(Collectors.summingInt(v1 -> Common.nvz(v1)));  // 합계 토탈
+                    tempMap.put("total", rowTotal);
 
-        }
-
-
-        List<String> list = new ArrayList<>(keys.keySet());
-        Collections.sort(list);
-        this.pivotHeader = list;
-
-        /* pivotData 재 계산 #############################################################*/
-        List<Map<String,Object>> pivotDataList = new ArrayList<>();  // 최종 pivot 데이터
-        int idx = 0;
-        for(Map<String,Object> tempPivotList : result){
-            int rowTotal = 0;
-            Map<String,Object> tempMap = new HashMap<>();
-            for(String header : this.pivotHeader) {
-                /* header 세팅*/
-                if(!Common.isEmpty(tempPivotList.get(header))) {
-                    Long Value = Common.nvn(tempPivotList.get(header));
-                    tempMap.put(header, Value);
-                }else{
-                    tempMap.put(header, 0L);
+                    /* total 계산 */
+                    pivotDataList.get(target).putAll(tempMap);
+                    continue;
                 }
+                /* 중복 아닐시  #############################################################*/
+                tempMap.put("rowKey", Common.nvl(tempPivotList.get("rowKey")));
+                tempMap.put("rowName", Common.nvl(tempPivotList.get("rowName")));
+                tempMap.put("xAxisType", Common.nvl(tempPivotList.get("xAxisType")));
+                rowTotal = tempMap.values().stream().collect(Collectors.summingInt(v1 -> Common.nvz(v1))); // 합계 토탈
+                tempMap.put("total", rowTotal);
+                pivotDataList.add(tempMap);
+                idx++;
             }
-            /* 중복 rowKey 체크  #############################################################*/
-            Map<String,Object> oldMap = null;
-            if((oldMap = checkRowKey(pivotDataList,Common.nvl(tempPivotList.get("rowKey")))) != null){
-                int target = Common.nvz(oldMap.get("idx"));
-                tempMap.putAll(summaryMap(oldMap,tempMap));
-                 rowTotal = tempMap.values().stream().collect(Collectors.summingInt(v1-> Common.nvz(v1)));  // 합계 토탈
-                tempMap.put("total",rowTotal);
-
-                /* total 계산 */
-                pivotDataList.get(target).putAll(tempMap);
-                continue;
-            }
-            /* 중복 아닐시  #############################################################*/
-            tempMap.put("rowKey",Common.nvl(tempPivotList.get("rowKey")));
-            tempMap.put("rowName",Common.nvl(tempPivotList.get("rowName")));
-            tempMap.put("xAxisType",Common.nvl(tempPivotList.get("xAxisType")));
-            rowTotal = tempMap.values().stream().collect(Collectors.summingInt(v1-> Common.nvz(v1))); // 합계 토탈
-            tempMap.put("total",rowTotal);
-            pivotDataList.add(tempMap);
-            idx++;
-        }
-
+            this.pivotData = pivotDataList;
         /*  ###################################################################################*/
 
-        this.pivotData = pivotDataList;
 
     }
 
