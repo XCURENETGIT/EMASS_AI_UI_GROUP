@@ -13,10 +13,10 @@
   if(request.getRequestURI().toString().indexOf("login.jsp") == -1) adminLanguage = Common.nvl(session.getAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME), "ko");
 %>
 <script>
-   let contextRoot =  '<%=contentPath%>';
-   let consent =  '<%=consent%>';
-   let isIPv6 =  '<%=isIPv6%>';
-   let isOCR = '<%=isOCR%>';
+   var contextRoot =  '<%=contentPath%>';
+   var consent =  '<%=consent%>';
+   var isIPv6 =  '<%=isIPv6%>';
+   var isOCR = '<%=isOCR%>';
 
   /* analysis */
   var messageGridColumn= {
@@ -992,4 +992,9 @@
       }
     });
   }
+
+
+
+
+
 </script>
