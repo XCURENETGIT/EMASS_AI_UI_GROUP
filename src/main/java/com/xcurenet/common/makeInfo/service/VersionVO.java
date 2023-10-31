@@ -1,4 +1,4 @@
-package com.xcurenet.common.makeInfo;
+package com.xcurenet.common.makeInfo.service;
 
 import lombok.Data;
 

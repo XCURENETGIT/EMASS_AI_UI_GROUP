@@ -2,7 +2,9 @@ package com.xcurenet.common.util;
 
 import com.mongodb.client.result.UpdateResult;
 import com.xcurenet.audit.service.AuditVO;
-import net.sf.json.JSONObject;
+import com.xcurenet.common.makeInfo.service.InfoVersionVO;
+import com.xcurenet.common.makeInfo.service.VersionVO;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Sort;
@@ -34,6 +36,15 @@ public class MongoUtil {
 		query.with(Sort.by(Sort.Direction.DESC,"VERSION"));
 		query.limit(1);
 		return selectOne(query, vo, tableCon);
+	}
+
+	public InfoVersionVO selectTableVersion(String tableName){
+//		Criteria criteria = new Criteria("TABLENAME");
+//		criteria.is(tableName);
+		Query query = new Query();
+		query.addCriteria(Criteria.where("TABLENAME").is(tableName));
+		System.out.println(query);
+		return mongoTemplate.findOne(query, InfoVersionVO.class,"INFO_VERSION");
 	}
 
 

@@ -14,7 +14,7 @@
 		<!-- <typeAlias  alias="auditVO" type="java.util.HashMap"/> -->
 		<typeAlias alias="auditVO" type="com.xcurenet.audit.service.AuditVO" />
 		
-		<typeAlias alias="versionVO" type="com.xcurenet.common.makeInfo.VersionVO" />
+		<typeAlias alias="versionVO" type="com.xcurenet.common.makeInfo.service.VersionVO" />
 		
 	</typeAliases>
 	
