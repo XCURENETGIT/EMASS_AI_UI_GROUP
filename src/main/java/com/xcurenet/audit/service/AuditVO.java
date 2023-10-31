@@ -4,7 +4,7 @@ import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
-@Document(collation = "info_audit")
+@Document(collation = "INFO_AUDIT")
 public class AuditVO {
 
 	private String date;

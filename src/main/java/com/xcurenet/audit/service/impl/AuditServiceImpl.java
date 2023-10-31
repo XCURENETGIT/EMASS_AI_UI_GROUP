@@ -77,7 +77,7 @@ public class AuditServiceImpl extends XcnAbstractDAO implements AuditService {
 		audit.setProduct(PRODUCT);
 		audit.setDate(currentDate);
 
-		mongoUtil.insert(audit,"info_audit");
+		mongoUtil.insert(audit,"INFO_AUDIT");
 
 		return 1;
 		//return insert("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".audit.insertAudit", audit);
