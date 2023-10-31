@@ -35,7 +35,13 @@ public class ElasticSearchQuery {
         queryBuffer = new StringBuilder();
     }
 
+
     public String setQuery() {
+        /* 쿼리가 없을시 전체검색*/
+       if(Common.isEmpty(queryBuffer.toString())){
+           queryBuffer.append(ElasticSearchCommon.ALL_SEARCH);
+       }
+
         query = queryBuffer.toString().trim();
         queryBuffer = new StringBuilder();
         return query;
@@ -46,7 +52,9 @@ public class ElasticSearchQuery {
     }
 
     private ElasticSearchQuery addQuery(String query) {
-        this.queryBuffer.append(query).append(ElasticSearchCommon.SPACE);
+        this.queryBuffer.append(ElasticSearchCommon.OPEN_BRACKET)
+            .append(query)
+            .append(ElasticSearchCommon.CLOSE_BRACKET);
         return this;
     }
 
@@ -670,64 +678,7 @@ public class ElasticSearchQuery {
 //    }
 //
 //
-//    /**
-//     * 현재 사용하지 않음
-//     *
-//     * @param adminId
-//     * @param interGroup_not
-//     * @return
-//     */
-//    @Deprecated
-//    public SolrCreateQuery setAllInterestUserGroup(String adminId, String interGroup_not) {
-//        adminUserGroupService = SpringContextUtil.getBean(AdminUserGroupService.class);
-//        List<AdminUserGroupVO> users = adminUserGroupService.getAdminUserGroupSimpleAdminList(adminId);
-//        if (users == null) return this;
-//
-//        for(AdminUserGroupVO user : users) {
-//            String emailStr = user.getUserEmail();
-//            String ipStr = user.getUserIp();
-//            String userId = user.getUserId();
-//
-//            if (emailStr != null || ipStr != null || userId != null) {
-//                if(Common.isEquals(interGroup_not, "Y")) addQuery(EXCEPT_QUERY+"(");
-//                else addQuery(AND_QUERY+"(");
-//            }
-//
-//            if(userId != null) {
-//                addQuery("userid:" + userId );
-//            }
-//
-//            if (emailStr != null) {
-//                String emailQuery = "";
-//                String [] emails = Common.toArray(emailStr, ",");
-//                for (String email : emails) {
-//                    emailQuery += "\"" + email.trim() + "\" ";
-//                }
-//                if (Common.isNotEmpty(emailQuery)) {
-//                    addQuery("sender_str:(" + emailQuery + ")");
-//                    addQuery("recvs:(" + emailQuery + ")");
-//                    addQuery("user_str:(" + emailQuery + ")");
-//                }
-//            }
-//            if (ipStr != null) {
-//                String ipQuery = "";
-//                String [] ips = Common.toArray(ipStr, ",");
-//                for (String ip : ips) {
-//                    ipQuery += "\"" + ip.trim() + "\" ";
-//                }
-//                if (Common.isNotEmpty(ipQuery)) {
-//                    addQuery("recvs:(" + ipQuery + ")");
-//                    addQuery("srcip:(" + ipQuery + ")");
-//                    addQuery("dstip:(" + ipQuery + ")");
-//                }
-//            }
-//            if (emailStr != null || ipStr != null || userId != null) {
-//                addQuery(")");
-//            }
-//        }
-//
-//        return this;
-//    }
+
 //
 //    /**
 //     * 관심 사용자 발신 메일 쿼리

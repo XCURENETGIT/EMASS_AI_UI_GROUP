@@ -602,6 +602,9 @@ function Xgrid ( target, contextRoot, rowHeight, options, dataview ) {
 		if ( this.columnpickerUsed ) return this.columnpicker.getAllColumns();
 		else return this.getCols();
 	};
+	this.getHeaderId = function ( ) {
+			return this.getCols();
+	};
 	this.saveHeader = function ( ) {
 		var header = [];
 		var cols = this.columnpicker.getAllColumns();
