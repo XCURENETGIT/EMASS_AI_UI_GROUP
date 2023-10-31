@@ -66,7 +66,7 @@
 		<typeAlias alias="adminFolderMessageVO" type="com.xcurenet.emass.adminFolder.service.AdminFolderMessageVO" />
 		
 		<typeAlias alias="snmpTrapVO" type="com.xcurenet.common.snmp.service.SnmpTrapVO" />
-		<typeAlias alias="versionVO" type="com.xcurenet.common.makeInfo.VersionVO" />
+		<typeAlias alias="versionVO" type="com.xcurenet.common.makeInfo.service.VersionVO" />
 		
 		<typeAlias alias="codeVO" type="com.xcurenet.code.service.CodeVO" />
 		<typeAlias alias="xcnLogVO" type="com.xcurenet.xcnlog.service.XcnLogVO" />

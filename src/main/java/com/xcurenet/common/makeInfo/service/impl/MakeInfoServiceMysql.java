@@ -13,6 +13,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import com.xcurenet.common.dao.TransactionManager;
@@ -39,8 +41,9 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 
 
 	public long getTableCurrentVersion(String tableName) {
-		InfoVersionVO info = mongoUtil.maxValue(tableName, InfoVersionVO.class);
+		InfoVersionVO info = mongoUtil.selectTableVersion(tableName);
 		if (info == null) return 0;
+		System.out.println(info);
 		return info.getVersion();
 	}
 
@@ -62,12 +65,12 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 			Map<String, Long> map = new HashMap<>();
 			log.info("[MAKE INFO] User information apply start");
 			long version = getTableCurrentVersion("INFO_USER") + 1;
+			System.out.println("INFO_USER" + version);
 			appendData(version, "getInfoUser", "addInfoUser", "INFO_USER");
 			addVersion("INFO_USER", version);
 
 
 			version = getTableCurrentVersion("INFO_IP") + 1;
-
 			appendData(version, "getInfoIp", "addInfoIp", "INFO_IP");
 			addVersion("INFO_IP", version);
 
@@ -367,6 +370,7 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 
 					if (collectionName == "INFO_USER"){
 						InfoUserVO infoUserVO = InfoUserVO.builder()
+								.USERID((String) obj.get("USERID"))
 								.BUSICD((String) obj.get("BUSICD"))
 								.BUSINM((String) obj.get("BUSINM"))
 								.CEO((String) (obj.get("CEO") == "N"? "true" : "false"))

@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class InfoUserVO {
+	private String USERID;
 	private String BUSICD;
 	private String BUSINM;
 	private String CEO;
