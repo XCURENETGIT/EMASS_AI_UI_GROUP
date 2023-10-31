@@ -5,7 +5,7 @@
  * ko.js
  * password.js
  * slick.grid.ui_2.0.js
- * xcnui_2.0.js
+ * _2.0.js
  */
 
 var chartAPIJS={

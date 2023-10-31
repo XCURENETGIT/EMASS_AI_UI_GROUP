@@ -3,8 +3,7 @@ package com.xcurenet.common.util;
 import com.mongodb.client.result.UpdateResult;
 import com.xcurenet.audit.service.AuditVO;
 import com.xcurenet.common.makeInfo.service.InfoVersionVO;
-import com.xcurenet.common.makeInfo.service.VersionVO;
-import org.checkerframework.checker.units.qual.C;
+import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Sort;
@@ -151,7 +150,15 @@ public class MongoUtil {
 
 	}
 
+	public UpdateResult updateDate(String tableName, LocalDateTime localDateTime){
+		Query query = new Query();
+		Update update = new Update();
+		query.addCriteria(Criteria.where("TABLENAME").is(tableName));
+		update.set("DATE", localDateTime);
 
+		return mongoTemplate.updateMulti(query, update,"INFO_VERSION");
+
+	}
 
 
 

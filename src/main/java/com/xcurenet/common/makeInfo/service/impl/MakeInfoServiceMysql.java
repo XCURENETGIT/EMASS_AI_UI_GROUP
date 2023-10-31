@@ -12,6 +12,8 @@ import com.xcurenet.common.util.MongoUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -43,13 +45,12 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 	public long getTableCurrentVersion(String tableName) {
 		InfoVersionVO info = mongoUtil.selectTableVersion(tableName);
 		if (info == null) return 0;
-		System.out.println(info);
-		return info.getVersion();
+		return info.getVERSION();
 	}
 
 
 	public int addVersion(String tableName, long version) {
-		mongoUtil.updateVersion("INFO_VERSION", tableName, version + 1);
+		mongoUtil.updateVersion("INFO_VERSION", tableName, version);
 		return 1;
 
 	}
@@ -65,14 +66,19 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 			Map<String, Long> map = new HashMap<>();
 			log.info("[MAKE INFO] User information apply start");
 			long version = getTableCurrentVersion("INFO_USER") + 1;
-			System.out.println("INFO_USER" + version);
-			appendData(version, "getInfoUser", "addInfoUser", "INFO_USER");
+			LocalDateTime localDateTime = LocalDateTime.now();
+			appendData(version, "getInfoUser",  "INFO_USER",version);
 			addVersion("INFO_USER", version);
+			mongoUtil.updateDate("INFO_USER",localDateTime);
 
 
 			version = getTableCurrentVersion("INFO_IP") + 1;
-			appendData(version, "getInfoIp", "addInfoIp", "INFO_IP");
+			appendData(version, "getInfoIp",  "INFO_IP",version);
 			addVersion("INFO_IP", version);
+			mongoUtil.updateDate("INFO_IP",localDateTime);
+
+
+
 
 
 			version = getTableCurrentVersion("INFO_EMAILADDR") + 1;
@@ -84,8 +90,10 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 				param.put("encryptKey", Config.getString("private.encrypt.key"));
 			}
 			param.put("VERSION", version);
-			appendData( param, "getInfoEmailAddr", "addInfoEmailAddr","INFO_EMAILADDR" );
+			appendData( param, "getInfoEmailAddr", "INFO_EMAILADDR",version );
 			addVersion("INFO_EMAILADDR", version);
+			mongoUtil.updateDate("INFO_EMAILADDR",localDateTime);
+
 
 			addInfoRegExp();
 			log.info("[MAKE INFO] User information apply end");
@@ -118,8 +126,10 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 			log.info("[MAKE INFO] Device information apply start");
 
 			long version = getTableCurrentVersion("INFO_DEVICE") + 1;
-			appendData( version, "getInfoDevice", "addInfoDevice","INFO_DEVICE");
+			LocalDateTime localDateTime = LocalDateTime.now();
+			appendData( version, "getInfoDevice", "INFO_DEVICE",version);
 			addVersion("INFO_DEVICE", version);
+			mongoUtil.updateDate("INFO_DEVICE",localDateTime);
 
 			log.info("[MAKE INFO] Device information apply end");
 
@@ -139,8 +149,11 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 			log.info("[MAKE INFO] Holiday information apply start");
 
 			long version = getTableCurrentVersion("INFO_HOLIDAY") + 1;
-			appendData( version, "getInfoHoliDay", "addInfoHoliDay","INFO_HOLIDAY");
+			LocalDateTime localDateTime = LocalDateTime.now();
+
+			appendData( version, "getInfoHoliDay", "INFO_HOLIDAY",version);
 			addVersion("INFO_HOLIDAY", version);
+			mongoUtil.updateDate("INFO_HOLIDAY",localDateTime);
 
 			log.info("[MAKE INFO] Holiday information apply end");
 
@@ -161,8 +174,11 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 			log.info("[MAKE INFO] WorkDay information apply start");
 
 			long version = getTableCurrentVersion("INFO_WORKDAY") + 1;
-			appendData( version, "getInfoWorkDay", "addInfoWorkDay","INFO_WORKDAY" );
+			LocalDateTime localDateTime = LocalDateTime.now();
+
+			appendData( version, "getInfoWorkDay", "INFO_WORKDAY" ,version);
 			addVersion("INFO_WORKDAY", version);
+			mongoUtil.updateDate("INFO_WORKDAY",localDateTime);
 
 			log.info("[MAKE INFO] WorkDay information apply end");
 
@@ -183,8 +199,10 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 			log.info("[MAKE INFO] Busi IpRange information apply start");
 
 			long version = getTableCurrentVersion("INFO_IPRANGE") + 1;
-			appendData( version, "getInfoIpRange", "addInfoIpRange","INFO_IPRANGE" );
+			LocalDateTime localDateTime = LocalDateTime.now();
+			appendData( version, "getInfoIpRange", "INFO_IPRANGE",version );
 			addVersion("INFO_IPRANGE", version);
+			mongoUtil.updateDate("INFO_IPRANGE",localDateTime);
 
 			log.info("[MAKE INFO] Busi IpRange information apply end");
 
@@ -203,9 +221,11 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 
 			log.info("[MAKE INFO] Dept IpRange information apply start");
 
+			LocalDateTime localDateTime = LocalDateTime.now();
 			long version = getTableCurrentVersion("INFO_IPRANGE_DEPT")+1;
 			result = insert("com.xcurenet.sqlmap.mappers.mysql.makeInfo.addInfoIpRangeDept", version);
 			addVersion("INFO_IPRANGE_DEPT", version);
+			mongoUtil.updateDate("INFO_IPRANGE_DEPT",localDateTime);
 
 			log.info("[MAKE INFO] Dept IpRange information apply end");
 
@@ -227,8 +247,10 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 			log.info("[MAKE INFO] Keyword information apply start");
 
 			long version = getTableCurrentVersion("INFO_KEYWORD") + 1;
-			appendData( version, "getInfoKeyword", "addInfoKeyword","INFO_KEYWORD" );
+			LocalDateTime localDateTime = LocalDateTime.now();
+			appendData( version, "getInfoKeyword", "INFO_KEYWORD",version );
 			addVersion("INFO_KEYWORD", version);
+			mongoUtil.updateDate("INFO_KEYWORD",localDateTime);
 
 			log.info("[MAKE INFO] Keyword information apply end");
 
@@ -245,8 +267,9 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 		Map<String, Long> map = new HashMap<>();
 		map.put("VERSION", version);
 		int result = mongoUtil.insert(map, "INFO_PRIVATE").size();
-		//int result = insert("com.xcurenet.sqlmap.mappers.mysql.makeInfo.addInfoRegExp", version);
+		LocalDateTime localDateTime = LocalDateTime.now();
 		addVersion("INFO_PRIVATE", version);
+		mongoUtil.updateDate("INFO_PRIVATE",localDateTime);
 		return result;
 	}
 
@@ -258,29 +281,34 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 			tx.start();
 
 			log.info("[MAKE INFO] NoLogFilter information apply start");
+			LocalDateTime localDateTime = LocalDateTime.now();
 
 			long version = getTableCurrentVersion("INFO_NOLOG_URL") + 1;
-			appendData( version, "getInfoNoLogUrl", "addInfoNoLogUrl","INFO_NOLOG_URL" );
+			appendData( version, "getInfoNoLogUrl", "INFO_NOLOG_URL",version );
 			addVersion("INFO_NOLOG_URL", version);
+			mongoUtil.updateDate("INFO_NOLOG_URL",localDateTime);
 			save(Common.toJSONArray(selectList("com.xcurenet.sqlmap.mappers.mysql.makeInfo.getInfoNoLogUrl")));
 
 			version = getTableCurrentVersion("INFO_NOLOG_SUBJECT") + 1;
-			appendData( version, "getInfoNoLogSubject", "addInfoNoLogSubject","INFO_NOLOG_SUBJECT" );
+			appendData( version, "getInfoNoLogSubject", "INFO_NOLOG_SUBJECT",version );
 			addVersion("INFO_NOLOG_SUBJECT", version);
+			mongoUtil.updateDate("INFO_NOLOG_SUBJECT",localDateTime);
 
 			version = getTableCurrentVersion("INFO_NOLOG_SIZE") + 1;
-			appendData( version, "getInfoNoLogSize", "addInfoNoLogSize","INFO_NOLOG_SIZE" );
-
-			//insert("com.xcurenet.sqlmap.mappers.mysql.makeInfo.addInfoNoLogSize", version);
+			appendData( version, "getInfoNoLogSize", "INFO_NOLOG_SIZE",version );
 			addVersion("INFO_NOLOG_SIZE", version);
+			mongoUtil.updateDate("INFO_NOLOG_SIZE",localDateTime);
 
 			version = getTableCurrentVersion("INFO_NOLOG_ID") + 1;
-			appendData( version, "getInfoNoLogId", "addInfoNoLogId" ,"INFO_NOLOG_ID");
+			appendData( version, "getInfoNoLogId", "INFO_NOLOG_ID",version);
 			addVersion("INFO_NOLOG_ID", version);
+			mongoUtil.updateDate("INFO_NOLOG_ID",localDateTime);
 
 			version = getTableCurrentVersion("INFO_NOLOG_DOMAIN") + 1;
-			appendData( version, "getInfoNoLogDomain", "addInfoNoLogDomain","INFO_NOLOG_DOMAIN" );
+			appendData( version, "getInfoNoLogDomain", "INFO_NOLOG_DOMAIN",version );
 			addVersion("INFO_NOLOG_DOMAIN", version);
+			mongoUtil.updateDate("INFO_NOLOG_DOMAIN",localDateTime);
+
 
 			log.info("[MAKE INFO] NoLogFilter information apply end");
 
@@ -345,7 +373,7 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 
 
 
-	public void appendData(Long currentVersion, String select, String insert, String collectionName) {
+	public void appendData(Long currentVersion, String select, String collectionName,long version) {
 		long pageSize = 10000;
 		JSONObject param = new JSONObject();
 		param.put("pageSize", pageSize);
@@ -362,7 +390,7 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 			offset += data.size();
 
 			try {
-				long version = Common.nvn(currentVersion) + 1;
+//				long version = Common.nvn(currentVersion) + 1;
 				//sql = DBUtils.getSqlSession ( DBType.PHOENIX, true );
 				for (int i = 0; i < data.size(); i++) {
 					JSONObject obj = data.getJSONObject(i);
@@ -489,7 +517,7 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 		}
 	}
 
-	public void appendData ( JSONObject param, String select, String insert, String collectionName )
+	public void appendData ( JSONObject param, String select,String collectionName,long version )
 	{
 		long pageSize = 10000;
 		param.put ( "pageSize", pageSize );
@@ -508,7 +536,7 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 
 			try
 			{
-				long version = Common.nvn ( param.get("currentVersion") ) + 1;
+//				long version = Common.nvn ( param.get("currentVersion") ) + 1;
 				for ( int i = 0 ; i < data.size ( ) ; i++ )
 				{
 					JSONObject obj = data.getJSONObject ( i );
