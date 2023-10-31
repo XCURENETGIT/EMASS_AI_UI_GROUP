@@ -166,6 +166,8 @@ public class EdcMessage {
 //        boolean detailHourSearch = false;
 //         if(ElasticSearchCommon.CTIME_HH.equals(Common.nvl(elsSearchResponse.getElsQueryBuilder().getSearchParam().get("searched_xAxis")))) detailHourSearch = true;
 
+
+
          Map<String, Object> keys = new HashMap<String, Object>();
          String colKey = Common.nvl(elsSearchResponse.getElsQueryBuilder().getSearchParam().get("colKey"));
             /* Date 분류일 경우 #############################################################*/
@@ -176,14 +178,26 @@ public class EdcMessage {
                         Terms argments = bucket.getAggregations().get(yField);
                         String headerStr = "";
 
-                        /* 시간분류일경우 Header 재 계산*/
-                        if (("ctime_hh").equals(xField) && !Common.isEmpty(bucket.getKeyAsString())) {
-                            String timeStr = bucket.getKeyAsString();
-                            headerStr = Prop.msg(ElasticSearchCommon.TIME_FORMAT.concat(timeStr.substring(8, 10)));
-                        } else {
-                            headerStr = Common.nvl(bucket.getKey());
+                        /* #######  시간분류일경우 Header 재 계산 ####### */
+                        String timeStr = bucket.getKeyAsString();
+
+                        /* Date 단위*/
+                        switch (xField) {
+                            case ElasticSearchCommon.CTIME_HH :
+                                headerStr = Prop.msg(ElasticSearchCommon.TIME_FORMAT.concat(timeStr.substring(8, 10)));
+                                break;
+                            case ElasticSearchCommon.CTIME_YYYYMM :
+                                headerStr = Common.formatMonthStat(timeStr.substring(0,6));
+                                break;
+                            case ElasticSearchCommon.CTIME_YYYYMMDD:
+                                headerStr = Common.formatDate(timeStr.substring(0,8));
+                                break;
+                            default:
+                                headerStr = timeStr;
+                                break;
                         }
 
+                        /* ########################################### */
                          // pivot header 추가  ( xAxis 정보 일,월,시간...)
                          keys.put(Common.nvl(headerStr), 0);
 
@@ -217,9 +231,8 @@ public class EdcMessage {
                 }
 
             }
-
             List<String> list = new ArrayList<>(keys.keySet());
-            Collections.sort(list);
+            Collections.sort(list,Comparator.reverseOrder());
             this.pivotHeader = list;
 
             /* pivotData 재 계산 #############################################################*/
@@ -258,6 +271,7 @@ public class EdcMessage {
                 pivotDataList.add(tempMap);
                 idx++;
             }
+
             this.pivotData = pivotDataList;
         /*  ###################################################################################*/
 

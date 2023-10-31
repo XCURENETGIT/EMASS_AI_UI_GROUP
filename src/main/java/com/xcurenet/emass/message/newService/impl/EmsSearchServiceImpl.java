@@ -16,7 +16,6 @@ import com.xcurenet.emass.message.vo.message.EdcMessage;
 import com.xcurenet.interestUser.service.AdminUserGroupService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.lucene.search.TotalHits;
-import org.apache.solr.client.solrj.SolrServerException;
 import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
@@ -25,10 +24,7 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.core.CountRequest;
 import org.elasticsearch.client.core.CountResponse;
 import org.elasticsearch.core.TimeValue;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.index.query.QueryStringQueryBuilder;
-import org.elasticsearch.index.query.RangeQueryBuilder;
+import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.aggregations.AggregationBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInterval;
@@ -38,6 +34,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -71,8 +68,6 @@ public class EmsSearchServiceImpl implements EmsSearchService {
         ElasticSearchQueryBuilder elsQueryBuilder = setQueryBuilder(searchParam);
 
         try {
-            // 총 카운트 계산
-     //       CountResponse countResponse = getTotalCount(elsQueryBuilder);
             TimeUtil.start(); // 검색 시간 측정
             SearchSourceBuilder searchSourceBuilder = initSearchSource(elsQueryBuilder);// Init SearchSourceBuilder
             SearchRequest searchRequest = new SearchRequest(elsQueryBuilder.getIndices()).source(searchSourceBuilder);
@@ -143,11 +138,8 @@ public class EmsSearchServiceImpl implements EmsSearchService {
         return edcMessage;
     }
 
-
-
     @Override
-    public MessengerEdcGroupVO getMessengerGroupList(Map<String, String> searchParam, String adminId) throws IOException, SolrServerException {
-
+    public MessengerEdcGroupVO getMessengerGroupList(Map<String, String> searchParam, String adminId) throws IOException {
         return null;
     }
 
@@ -271,11 +263,20 @@ public class EmsSearchServiceImpl implements EmsSearchService {
         int offset = 0;
         int limit = 0;
 
-        offset = Integer.parseInt(Common.nvl(searchParam.get("offset"), String.valueOf(0)));
-        limit = Integer.parseInt(Common.nvl(searchParam.get("limit"),String.valueOf(100)));
+        offset = Integer.parseInt(Common.nvl(searchParam.get("offset")));
+        limit = Integer.parseInt(Common.nvl(searchParam.get("limit")));
 
         /* rowKey 존재할시 검색조건 추가 */
-        if(!Common.isEmpty(searchParam.get("rowKey"))) elasticSearchQuery.setSearchQuery(Common.nvl(searchParam.get("rowKey")));
+        if(!Common.isEmpty(searchParam.get("rowKey"))) {
+            if(searchParam.get("rowKey").indexOf(ElasticSearchCommon.COMMA) > -1){
+               String[] rowKeys = searchParam.get("rowKey").split(ElasticSearchCommon.COMMA);
+               for(String rowKey : rowKeys){
+                   elasticSearchQuery.setSearchQuery(Common.nvl(rowKey));
+               }
+            }else {
+                elasticSearchQuery.setSearchQuery(Common.nvl(searchParam.get("rowKey")));
+            }
+        }
 
         /* 아무런 rowKey & colkey  조건이 없을시 */
         if(Common.isEmpty(searchParam.get("rowKey")) && Common.isEmpty(searchParam.get("colKey"))){
@@ -296,13 +297,13 @@ public class EmsSearchServiceImpl implements EmsSearchService {
                 .from(offset)
                 .to(limit)
                 .sorts(sortBuilderList)
-                .searchFields(new String[]{"mail.sender.mail.keyword"})
+                .searchFields(new String[]{Common.nvl(searchParam.get("yAxis"))})
                 .query(elasticSearchQuery.getQuery())
                 .includeFields(ElasticSearchCommon.SEARCH_FIELD)
-   /*             .searchAggregations(Common.nvl(searchParam.get("colKey")))
-                .yAxis(Common.nvl(searchParam.get("yAxis").concat(ElasticSearchCommon.FIELD_SUFFIX)))
+                .searchAggregations(Common.nvl(searchParam.get("colKey")))
+                .yAxis(Common.nvl(searchParam.get("yAxis")))
                 .xAxis(Common.nvl(searchParam.get("xAxis")))
-                .excludeFields(null)*/
+                .excludeFields(null)
                 .searchParam(searchParam)
                 .build();
 
@@ -322,7 +323,6 @@ public class EmsSearchServiceImpl implements EmsSearchService {
      * @return
      */
     public SearchSourceBuilder initSearchSource(ElasticSearchQueryBuilder elsQueryBuilder){
-        String colSearchType = "";
         SearchSourceBuilder searchSourceBuilder = null;
 
         String startDate = "";
@@ -335,29 +335,6 @@ public class EmsSearchServiceImpl implements EmsSearchService {
         startDate = Common.nvl(elsQueryBuilder.getSearchParam().get("startDate"));
         endDate = Common.nvl(elsQueryBuilder.getSearchParam().get("endDate"));
 
-
-//        DateRangeAggregationBuilder dateRange = null;
-
-        /* 집계화면에서의 디테일 검색인지 체크 */
-//        if(!Common.isEmpty(elsQueryBuilder.getSearchParam().get("searched_xAxis"))) {
-//            colSearchType =  elsQueryBuilder.getSearchParam().get("searched_xAxis");
-//            if(!Common.isEmpty(ElasticSearchCommon.XFIELD.get(colSearchType))){
-//                 dateRange = AggregationBuilders.dateRange(ElasticSearchCommon.CTIME).field(ElasticSearchCommon.CTIME).format("yyyyMMddHHmmss");
-//                int hour = Common.nvz(elsQueryBuilder.getSearchAggregations().substring(0,2));
-//
-//                LocalDateTime from = ElasticSearchCommon.stringToDate(startDate);
-//                LocalDateTime to = ElasticSearchCommon.stringToDate(endDate);
-//                int diffDay = to.compareTo(from);
-//
-//                for(int d=0; d<=diffDay; d++){
-//                   String fromStr =  ElasticSearchCommon.dateToString(from.withHour(hour));
-//                   String toStr =  ElasticSearchCommon.dateToString(from.withHour(hour+1).minusSeconds(1));
-//                   dateRange.addRange(fromStr,toStr);
-//                   from = from.plusDays(1);
-//                }
-//                yAxis = "detail";
-//            }
-//        }
 
         RangeQueryBuilder rangeQuery = new RangeQueryBuilder(ElasticSearchCommon.CTIME).gte(startDate).lte(endDate);
         QueryStringQueryBuilder secondQuery = QueryBuilders.queryStringQuery(elsQueryBuilder.getQuery());
@@ -372,24 +349,50 @@ public class EmsSearchServiceImpl implements EmsSearchService {
         }
 
         /* 쿼리 merge */
-        BoolQueryBuilder complateQuery = new BoolQueryBuilder()
-              .filter(rangeQuery)
-              .must(secondQuery);
+        BoolQueryBuilder complateQuery = new BoolQueryBuilder();
+
+        String colSearchType = elsQueryBuilder.getSearchParam().get("searched_xAxis");
+        Boolean isRowKeyCol =  (("rowKey").equals(Common.nvl(elsQueryBuilder.getSearchParam().get("colId")))) ? true : false;
+        Boolean isTotalCol =  (("total").equals(Common.nvl(elsQueryBuilder.getSearchParam().get("colId")))) ? true : false;
 
 
-        /* 빌드 */
+        /* 시간별 디테일 조회 */
+        if(ElasticSearchCommon.CTIME_HH.equals(colSearchType) && !isRowKeyCol && !isTotalCol) {
+            String detailSearchxAxis = elsQueryBuilder.getSearchAggregations();
+            BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
+            int hour = Common.nvz(detailSearchxAxis.replaceAll("[^0-9]", ""));
+
+            LocalDateTime ldtFrom = ElasticSearchCommon.stringToDate( startDate.substring(0,8)+String.format("%02d", hour)+startDate.substring(10,14));
+            LocalDateTime ldtTo = ElasticSearchCommon.stringToDate( endDate.substring(0,8)+String.format("%02d", hour)+endDate.substring(10,14));
+            int diffDay = ldtTo.compareTo(ldtFrom);
+            for(int d=0; d<=diffDay; d++){
+                String fromStr =  ElasticSearchCommon.dateToString(ldtFrom.withHour(hour));
+                String toStr =   ElasticSearchCommon.dateToString(ldtFrom.withHour(hour+1).minusSeconds(1));
+                boolQueryBuilder.should(new RangeQueryBuilder("ctime").from(fromStr).to(toStr));
+                ldtFrom = ldtFrom.plusDays(1);
+            }
+            complateQuery.filter(boolQueryBuilder);
+        }else {
+            complateQuery.filter(rangeQuery);
+        }
+       complateQuery.must(secondQuery);
+
+        log.info(elsQueryBuilder.getQuery());
         searchSourceBuilder = new SearchSourceBuilder()
                 .from(elsQueryBuilder.getFrom())
                 .size(elsQueryBuilder.getTo())
                 .query(complateQuery)
                 .fetchSource(elsQueryBuilder.getIncludeFields(), elsQueryBuilder.getExcludeFields())
                 .sort(elsQueryBuilder.getSorts())
-               /* .aggregation(initAggregation(yAxis,xAxis))*/
+                .aggregation(initAggregation(yAxis, xAxis))
                 .timeout(new TimeValue(60, TimeUnit.SECONDS));
 
 
         return searchSourceBuilder;
     }
+
+
+
 
     /**
      * xAxis 집계 쿼리 설정

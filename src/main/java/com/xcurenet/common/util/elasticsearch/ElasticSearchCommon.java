@@ -17,10 +17,12 @@ public class ElasticSearchCommon {
 
     public static final String ALL_SEARCH = "*:*";
 
-    public static final String FIELD_SUFFIX = ".keyword";
+    public static final String OPEN_BRACKET = "(";
+    public static final String CLOSE_BRACKET = ")";
     public static final String BACKSLASH = "\\";
+    public static final String QUOTES = "\"";
     public static final String SPACE = " ";
-    //private static final String COMMA = ", ";
+    public static final String COMMA = ",";
     public static final String SPECIAL_CHAR = "*";
     public static final String OR_PREFIX = "#";
 
@@ -31,6 +33,9 @@ public class ElasticSearchCommon {
 
     public static final String CTIME = "ctime";
     public static final String CTIME_HH = "ctime_hh";
+    public static final String CTIME_YYYYMM = "ctime_yyyymm";
+    public static final String CTIME_YYYYMMDD = "ctime_yyyymmdd";
+
 
     public static final String INFOTYPE = "ml_confd_class";
     public static final String FEEDBACK = "ml_confd_feedback";
@@ -148,5 +153,6 @@ public class ElasticSearchCommon {
         }
         return str;
     }
+
 
 }
