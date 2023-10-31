@@ -37,15 +37,6 @@ public class MongoUtil {
 		return selectOne(query, vo, tableCon);
 	}
 
-	public InfoVersionVO selectTableVersion(String tableName){
-//		Criteria criteria = new Criteria("TABLENAME");
-//		criteria.is(tableName);
-		Query query = new Query();
-		query.addCriteria(Criteria.where("TABLENAME").is(tableName));
-		System.out.println(query);
-		return mongoTemplate.findOne(query, InfoVersionVO.class,"INFO_VERSION");
-	}
-
 
 	//단건조회
 	public <T> T selectOne(Query query,  Class<T> vo) {

@@ -33,21 +33,19 @@ public class MakeInfoServiceHadoop extends XcnAbstractDAO {
 
 	
 	public long getTableCurrentVersion(String tableName) {
-//		String version = selectOne("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".makeInfo.getTableCurrentVersion", tableName);
 		InfoVersionVO info = mongoUtil.maxValue(tableName, InfoVersionVO.class);
 		if( info == null) return 0;
 		return info.getVERSION();
 	}
 	
-	public long addVersion(String tableName, long version) {
-		InfoVersionVO info = new InfoVersionVO();
-		info.setVERSION(version+1);
-		info.setTABLENAME(tableName);
-		info.setID("system");
-		info.setCOMMENTS("");
+	public void addVersion(String tableName, long version) {
+		InfoVersionVO info = InfoVersionVO.builder()
+				.VERSION(version+1)
+				.TABLENAME(tableName)
+				.ID("system")
+				.COMMENTS("")
+				.build();
 		mongoUtil.insert(info, tableName);
-		return 1;
-		//return insert("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".makeInfo.addVersion", param);
 	}
 
 	
