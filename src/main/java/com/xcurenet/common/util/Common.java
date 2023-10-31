@@ -103,6 +103,8 @@ public class Common {
 	public static final int MAX_VALUE = 5000000;
 	public static String number;
 
+	public static final DateTimeFormatter DATETIMEMILLISSYMBOL = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+
 	public static String getWeekName(int week) {
 		return WEEK_NAME_EN[week];
 	}

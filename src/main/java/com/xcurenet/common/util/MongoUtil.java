@@ -38,11 +38,8 @@ public class MongoUtil {
 	}
 
 	public InfoVersionVO selectTableVersion(String tableName){
-//		Criteria criteria = new Criteria("TABLENAME");
-//		criteria.is(tableName);
 		Query query = new Query();
 		query.addCriteria(Criteria.where("TABLENAME").is(tableName));
-		System.out.println(query);
 		return mongoTemplate.findOne(query, InfoVersionVO.class,"INFO_VERSION");
 	}
 
@@ -50,7 +47,6 @@ public class MongoUtil {
 	//단건조회
 	public <T> T selectOne(Query query,  Class<T> vo) {
 		return mongoTemplate.findOne(query, vo);
-
 	}
 
 
@@ -62,7 +58,6 @@ public class MongoUtil {
 	//특정 id값 조회
 	public <T> T selectId(String msgId, Class<T> vo, String collectionName) {
 		Query query= new Query(Criteria.where("_id").is(msgId));
-
 		return mongoTemplate.findOne(query, vo , collectionName);
 	}
 
@@ -159,21 +154,4 @@ public class MongoUtil {
 		return mongoTemplate.updateMulti(query, update,"INFO_VERSION");
 
 	}
-
-
-
-	public List<AuditVO> selectAuditList(Map<String, Object> map) {
-		Query query = new Query();
-		//검색 단어가 있을 경우 작업행위/ 정보 검색
-		if (map.get("searchStr") != null && map.get("searchStr") != "") {
-			query.addCriteria(Criteria.where("information").regex(".*" + map.get("searchStr") + ".*"));
-		}
-
-		//sort 정렬 -> 최신순이 위로 오게
-		query.with(Sort.by(Sort.Direction.DESC, "date"));
-
-		return mongoTemplate.find(query, AuditVO.class);
-	}
-
-
 }
