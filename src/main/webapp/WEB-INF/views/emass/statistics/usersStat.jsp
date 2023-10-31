@@ -507,7 +507,9 @@ function getSearchQuery() {
 					if(grid1.getValue(i, 'rowKey') == "" || grid1.getValue(i, 'rowKey') == "-") continue;
 					else key += grid1.getValue(i, 'rowKey').replaceAll("\"", "\\\"") + ",";
 				}
+				key = key.substring(0,key.length-1)
 				rowKey = key;
+
 			}else {
 				rowKey = grid1.getValue(grid1.Row, 'rowKey').replaceAll("\"", "\\\"");
 			}
@@ -534,8 +536,8 @@ function getSearchQuery() {
 				$('#detailTab'+delid+' .close').click();
 			}
 			
-			var rowKeys = rowKey.split(",");
-			var displayName = rowKeys.length > 1 ? '<s:message code="common.msg.all"/>' : rowKey.replaceAll("\\\"", "\"");
+
+			var displayName = (rowKey.indexOf(',') > -1) ? '<s:message code="common.msg.all"/>' : rowKey.replaceAll("\\\"", "\"");
 			if(rowName!='') displayName = rowName + '&lt;' + rowKey + '&gt;';
 			var id = 'tab'+tabID;
 			
@@ -559,6 +561,7 @@ function getSearchQuery() {
 			gridObj.changePageSize = function(cnt){
 				getDetailData('Y');
 			};
+
 			getDetailData('Y');
 		};
 		
@@ -574,7 +577,7 @@ function getSearchQuery() {
 			var searchData = {
 				  xAxis : $('select[name=xAxis]').val()
 				, xAxis_str : $('select[name=xAxis] option:selected').text()
-				, yAxis : 'mail.sender.mail'
+				, yAxis : 'user.name'
 				, startDate : sDate+"000000"
 				, endDate : eDate+"235959"
 				, offset : grid1.data.length
@@ -668,8 +671,15 @@ function getSearchQuery() {
 			var xAxis = $('select[name=xAxis]').val();
 			var xAxis_str = $('select[name=xAxis] option:selected').text();
 
+			var colNum = grid1.Col;
+			var isTotalRow = (grid1.Rows==grid1.Row) ? true : false;
+			var colId =  '';
+			if(colNum != '' & colNum != null) colId = grid1.getHeaderId()[grid1.Col].id;
+
+
 
 			/* 검색 데이터 전송 객체 */
+			//headercheck
 			var searchData = {
 					rowKey : rowKey,
 					colKey : colKey,
@@ -679,12 +689,14 @@ function getSearchQuery() {
 					xAxis : xAxis,
 					xAxis_str : xAxis_str,
 					searched_xAxis : $('#searched_xAxis').val(),
-					yAxis : 'mail.sender.mail',
+					colId : colId,
+					yAxis : 'user.name',
 					offset : currentgrid.data.length,
 					limit : currentgrid.pageSize,
 					nameStat : 'users',
 			}
 
+			console.log(searchData);
 
 			ui.get({
 				url : 'getStatDetailList.xcn',
