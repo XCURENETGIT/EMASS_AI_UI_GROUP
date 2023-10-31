@@ -31,10 +31,15 @@ public class ElasticSearchCommon {
     public static final String AND_QUERY = "AND";
     public static final String EXCEPT_QUERY = "-";
 
-    public static final String CTIME = "ctime";
-    public static final String CTIME_HH = "ctime_hh";
-    public static final String CTIME_YYYYMM = "ctime_yyyymm";
-    public static final String CTIME_YYYYMMDD = "ctime_yyyymmdd";
+    public static final String CTIME = "ctime"; // 시간
+    public static final String CTIME_HH = "ctime_hh"; //시간별
+    public static final String CTIME_YYYYMM = "ctime_yyyymm"; //월별
+    public static final String CTIME_YYYYMMDD = "ctime_yyyymmdd"; //일자별
+    public static final String BUSINM = "businm"; //사업장별
+    public static final String CONM = "conm"; //회사별
+    public static final String DEPTNM = "deptnm"; //부서별
+    public static final String DIRECTION_SVC = "direction_svc"; // 수/발신별
+    public static final String JIKGUBNM = "jikgubnm"; // 직급별
 
 
     public static final String INFOTYPE = "ml_confd_class";
@@ -80,7 +85,6 @@ public class ElasticSearchCommon {
     public static final String PI = "pi";
     public static final String USER_ID = "user.id";
     public static final String USER_STR = "user_str";
-    public static final String DIRECTION_SVC = "direction_svc";
     public static final String WORK = "work";
     public static final String DRM = "pi_DRM";
     public static final String ATTACH_EXIST_CNT = "attachexistcnt";

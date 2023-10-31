@@ -10,7 +10,8 @@ import java.util.Map;
 
 @Builder
 @Getter
-public class ElasticSearchQueryBuilder {
+/* 쿼리 파라미터 빌드용 */
+public class QueryParamReady {
 
     private String[] indices; // 대상 인덱스
     private String[] searchFields; // 검색 대상 필드
@@ -31,7 +32,7 @@ public class ElasticSearchQueryBuilder {
     private String[] includeFields; // 대상 필드
     private String[] excludeFields; // 제외 필드
 
-    private Map<String,String> searchParam;
+    private Map<String,Object> searchParam;
 
 }
 

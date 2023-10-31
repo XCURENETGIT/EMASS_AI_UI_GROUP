@@ -8,12 +8,12 @@ public class ElsSearchResponse {
 
     private SearchResponse searchResponse;
     private long totalCnt;
-    private ElasticSearchQueryBuilder elsQueryBuilder;
+    private QueryParamReady queryParamReady;
 
-    public ElsSearchResponse(SearchResponse searchResponse, long totalCnt, ElasticSearchQueryBuilder elsQueryBuilder){
+    public ElsSearchResponse(SearchResponse searchResponse, long totalCnt, QueryParamReady queryParamReady){
         this.searchResponse = searchResponse;
         this.totalCnt = totalCnt;
-        this.elsQueryBuilder = elsQueryBuilder;
+        this.queryParamReady = queryParamReady;
     }
 
 }
