@@ -16,6 +16,7 @@ import com.xcurenet.emass.message.vo.message.EdcMessage;
 import com.xcurenet.interestUser.service.AdminUserGroupService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.lucene.search.TotalHits;
+import org.apache.solr.client.solrj.SolrServerException;
 import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
@@ -142,8 +143,11 @@ public class EmsSearchServiceImpl implements EmsSearchService {
         return edcMessage;
     }
 
+
+
     @Override
-    public MessengerEdcGroupVO getMessengerGroupList(Map<String, String> searchParam, String adminId) throws IOException {
+    public MessengerEdcGroupVO getMessengerGroupList(Map<String, String> searchParam, String adminId) throws IOException, SolrServerException {
+
         return null;
     }
 
@@ -267,8 +271,8 @@ public class EmsSearchServiceImpl implements EmsSearchService {
         int offset = 0;
         int limit = 0;
 
-        offset = Integer.parseInt(Common.nvl(searchParam.get("offset")));
-        limit = Integer.parseInt(Common.nvl(searchParam.get("limit")));
+        offset = Integer.parseInt(Common.nvl(searchParam.get("offset"), String.valueOf(0)));
+        limit = Integer.parseInt(Common.nvl(searchParam.get("limit"),String.valueOf(100)));
 
         /* rowKey 존재할시 검색조건 추가 */
         if(!Common.isEmpty(searchParam.get("rowKey"))) elasticSearchQuery.setSearchQuery(Common.nvl(searchParam.get("rowKey")));
@@ -295,10 +299,10 @@ public class EmsSearchServiceImpl implements EmsSearchService {
                 .searchFields(new String[]{"mail.sender.mail.keyword"})
                 .query(elasticSearchQuery.getQuery())
                 .includeFields(ElasticSearchCommon.SEARCH_FIELD)
-                .searchAggregations(Common.nvl(searchParam.get("colKey")))
+   /*             .searchAggregations(Common.nvl(searchParam.get("colKey")))
                 .yAxis(Common.nvl(searchParam.get("yAxis").concat(ElasticSearchCommon.FIELD_SUFFIX)))
                 .xAxis(Common.nvl(searchParam.get("xAxis")))
-                .excludeFields(null)
+                .excludeFields(null)*/
                 .searchParam(searchParam)
                 .build();
 
@@ -380,7 +384,7 @@ public class EmsSearchServiceImpl implements EmsSearchService {
                 .query(complateQuery)
                 .fetchSource(elsQueryBuilder.getIncludeFields(), elsQueryBuilder.getExcludeFields())
                 .sort(elsQueryBuilder.getSorts())
-                .aggregation(initAggregation(yAxis,xAxis))
+               /* .aggregation(initAggregation(yAxis,xAxis))*/
                 .timeout(new TimeValue(60, TimeUnit.SECONDS));
 
 

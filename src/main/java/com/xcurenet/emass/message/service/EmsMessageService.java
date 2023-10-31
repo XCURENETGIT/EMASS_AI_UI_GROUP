@@ -93,4 +93,5 @@ public interface EmsMessageService {
 	
 	public List<Map<String, Object>> getRecvDomainInfo(String msgId, String inside, String recvsType);
 
+	List<CodeVO> getGenerativeList();
 }

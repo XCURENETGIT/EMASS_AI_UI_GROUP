@@ -101,6 +101,7 @@ public class Common {
 	public static final String HEADER_AJAX = "XMLHttpRequest";
 	
 	public static final int MAX_VALUE = 5000000;
+	public static String number;
 
 	public static String getWeekName(int week) {
 		return WEEK_NAME_EN[week];

@@ -119,6 +119,7 @@ public class LoginController {
 		String loginId = decryptRsa(privateKey, login.getUserId());
 		login.setUserId(loginId);
 
+
 		AuditVO audit = new AuditVO();
 		audit.setAdminIp(request.getRemoteAddr());
 		audit.setPMenuId("SYSTEM");
@@ -137,23 +138,46 @@ public class LoginController {
 
 		String num = "" + number;
 
-		return new XcnResponseVO(XcnRspCode.OK,num);
+		session.setAttribute("number", number);
+
+		return new XcnResponseVO(XcnRspCode.OK, num);
 	}
+
 	@Description("관리자 접속가능 변경")
 	@RequestMapping("/updateStatus.xcn")
-	public XcnResponseVO updateStatus(LoginVO login, final HttpServletRequest request, final HttpSession session) throws Exception {
-		PrivateKey privateKey = (PrivateKey) session.getAttribute(LoginController.RSA_WEB_KEY);
+	public XcnResponseVO statusUpdate(LoginVO login, final HttpServletRequest request, final HttpSession session) throws Exception {
 
-		String loginId = decryptRsa(privateKey, login.getUserId());
-		login.setUserId(loginId);
+		String title = "";
+		login.setUserId(login.getUserId());
+		String number1= request.getParameter("number1");
+
+		AuditVO audit = new AuditVO();
+		audit.setAdminIp(request.getRemoteAddr());
+		audit.setPMenuId("SYSTEM");
+		audit.setMenuId("CONNECTION");
+		audit.setOperation("LOGIN");
 
 		AdminVO admin = adminService.getAdmin(login.getUserId());
 
-		System.out.println(admin.getAdminId());
+		audit.setAdminId(login.getUserId());
+		audit.setAdminName(admin.getAdminName());
+		audit.setInformation(Prop.propFormat("메일코드 확인"));
+		auditService.insertAudit(audit);
+		session.setAttribute(Common.SESSION_CREDENTIAL, admin);
 
-		adminService.updateAdminStatusOK(admin.getAdminId());
-
-		return new XcnResponseVO(XcnRspCode.OK);
+		System.out.println(number1.equals(Common.nvl(session.getAttribute("number"))));
+		if (number1.equals(Common.nvl(session.getAttribute("number")))) {
+			adminService.updateAdminStatusOK(login.getUserId()); //인증에 성공한 경우
+			System.out.println("인증에성공했다....!!!!");
+			//return setLoginEnv(request, session, admin, audit);
+			return new XcnResponseVO(XcnRspCode.OK, "GODCODE");
+		} else {
+			return new XcnResponseVO(XcnRspCode.OK, "NOTCODE");
+		/*else{
+			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("코드가 틀렸습니다"));
+		}
+*/
+		}
 	}
 
 

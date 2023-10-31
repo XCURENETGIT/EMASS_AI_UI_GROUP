@@ -81,7 +81,7 @@ public class SolrEdcStatController {
 	private AdminServiceImpl adminServiceImpl;
 
 
-	@RequestMapping(value = "/getStatList.xcn")
+/*	@RequestMapping(value = "/getStatList.xcn")
 	@Description("통계 리스트 조회")
 	@AuditOperation(Operation.SEARCH)
 	@ResponseBody
@@ -212,8 +212,9 @@ public class SolrEdcStatController {
 		if(yAxis.equals("ml_confd_class") && rowKey.equals("")) solrStatVo = solrEdcService.getEmassMessage(sq, Common.getAdminId(request));
 		else solrStatVo = setAlltotal(solrEdcService.getEmassMessage(sq, Common.getAdminId(request)));
 		return new XcnResponseVO(XcnRspCode.OK, solrStatVo, solrStatVo.getPivotData().size());
-	}
+	}*/
 
+/*
 	@RequestMapping(value = "/getStatDetailList.xcn")
 	@Description("통계 리스트 상세 조회")
 	@AuditOperation(Operation.SEARCH)
@@ -325,17 +326,20 @@ public class SolrEdcStatController {
 		sq.setStart(offset);
 		sq.setRows(limit);
 		sq.setSort("ctime", SolrQuery.ORDER.desc);
-		/*sq.addFacetField(yAxis);
+		*/
+/*sq.addFacetField(yAxis);
 		sq.setFacetLimit(limit);
 		sq.setFacetMinCount(1);
 		sq.setFacetSort("count");
 		if(!(yAxis.equals("") && xAxis.equals(""))) {
 			sq.setParam("facet.pivot", yAxis+","+xAxis);
-		}*/
+		}*//*
+
 		
 		SolrEdcMessageVO solrStatVo = solrEdcService.getEmassMessage(sq, Common.getAdminId(request), "", null);
 		return new XcnResponseVO(XcnRspCode.OK, solrStatVo, solrStatVo.getNumFound());
 	}
+*/
 
 	@RequestMapping(value = "/getCheckedStatList.xcn")
 	@Description("관리자 열람 통계 리스트 조회")

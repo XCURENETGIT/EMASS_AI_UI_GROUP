@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +18,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.xcurenet.emass.message.newService.EmsSearchService;
+import com.xcurenet.emass.message.vo.message.EdcMessage;
 import org.apache.catalina.connector.ClientAbortException;
 import org.apache.commons.compress.archivers.ArchiveOutputStream;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
@@ -73,6 +78,7 @@ import net.sf.json.JSONObject;
 public class MessengerController {
 
 	private static final String MESSENGER = " +svc1:(Q T) ";
+	private static final String MESSENGER2 = " +svc1:(I T) ";
 	private static final String EMPTY_LINE = "\n";
 	private final static DateTimeFormatter yyyyMMddHHmmss2 = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 	private final static DateTimeFormatter yyyyMMdd = DateTimeFormat.forPattern("yyyy-MM-dd");
@@ -80,6 +86,9 @@ public class MessengerController {
 
 	@Resource(name = "solrEdcService")
 	private SolrEdcService solrEdcService;
+
+	@Resource
+	EmsSearchService emsSearchService;
 
 	@Autowired
 	private SolrCheckedService solrCheckedService;
@@ -196,6 +205,39 @@ public class MessengerController {
 		}
 		return cnt;
 	}
+	@RequestMapping(value = "/getMessengerGenertiveList.xcn")
+	@Description("생성형 AI 목록 조회")
+	@AuditOperation(Operation.SEARCH)
+	@ResponseBody
+	public XcnResponseVO getMessengerGenertiveList(final HttpServletRequest request, final HttpSession session) throws Exception {
+
+		JSONObject param = Common.getParam(request);
+		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), Common.getAdminId(session));
+		sq.setQuery(sq.getQuery());
+		if (Common.isEquals(param.get("readYn"), "N")) {
+			sq.addFilterQuery(String.format(SolrEdcServiceImpl.JOIN_UNREAD, Common.getAdminId(session)));
+		}
+		sq.setStart(Common.nvz(param.get("offset"), 0));
+		sq.setRows(Common.nvz(param.get("limit"), 100));
+		sq.setSort("ctime", ORDER.desc);
+		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "deptnm", "jikgubnm", "usr_id");
+
+		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request));
+		return new XcnResponseVO(XcnRspCode.OK, solrEdcGroupVO, solrEdcGroupVO.getNumFound());
+/*
+		Gson gson = new Gson();
+		Map<String,Object> resultParam = Common.getParamMap(request);
+		Map<String,String> searchParam = new HashMap<>();
+		if(!Common.isEmpty(resultParam.get("searchParam"))){
+			Type type = new TypeToken<Map<String,String>>(){}.getType();
+			searchParam = gson.fromJson((String) resultParam.get("searchParam"),type);
+		}
+		EdcMessage edcMessage = setAlltotal(emsSearchService.getEmassMessage(searchParam, Common.getAdminId(request)));
+		edcMessage.getEmass();
+
+		return new XcnResponseVO(XcnRspCode.OK, edcMessage, edcMessage.getTotal());*/
+	}
 
 	@RequestMapping(value = "/getMessengerMessageList.xcn")
 	@Description("메신저 대화내용 목록 조회")
@@ -214,7 +256,7 @@ public class MessengerController {
 		sq.setRows(Common.nvz(param.get("limit"), 100));
 		sq.setSort("ctime", ORDER.desc);
 		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "deptnm", "jikgubnm", "usr_id");
-		
+
 		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request));
 		return new XcnResponseVO(XcnRspCode.OK, solrEdcGroupVO, solrEdcGroupVO.getNumFound());
 	}
@@ -878,5 +920,32 @@ public class MessengerController {
 	@ResponseBody
 	public XcnResponseVO getMessengerList(final HttpServletRequest request, final HttpSession session) throws Exception {
 		return new XcnResponseVO(XcnRspCode.OK, emsMessageService.getMessengerList());
+	}
+
+
+	@RequestMapping(value = "/getGenerativeList.xcn")
+	@Description(" 생성형 ai 서비스 목록 조회")
+	@ResponseBody
+	public XcnResponseVO getGenerativeList(final HttpServletRequest request, final HttpSession session) throws Exception {
+		return new XcnResponseVO(XcnRspCode.OK, emsMessageService.getGenerativeList());
+	}
+
+	private EdcMessage setAlltotal(EdcMessage edcMessage) {
+		List<Map<String, Object>> resultData = edcMessage.getPivotData();
+		Map<String, Object> totalItem = new HashMap<>();
+		long allTotal = 0;
+
+		for(Map<String, Object> datas : resultData) {
+			allTotal = allTotal + Common.nvz(datas.get("total"));
+			for(String header : edcMessage.getPivotHeader()) {
+				totalItem.put(Common.nvl(header), Common.nvz(totalItem.get(header)) + Common.nvz(datas.get(header)));
+			}
+		}
+
+		totalItem.put("total", allTotal);
+		totalItem.put("NUM", Prop.propFormat("bodyview.total"));
+		resultData.add(totalItem);
+		edcMessage.setPivotData(resultData);
+		return edcMessage;
 	}
 }

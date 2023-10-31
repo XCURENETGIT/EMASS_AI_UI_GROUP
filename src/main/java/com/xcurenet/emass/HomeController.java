@@ -46,6 +46,7 @@ public class HomeController {
 		return "/commons/error";
 	}
 
+
 	@RequestMapping(value = "/blank.do", method = RequestMethod.GET)
 	@Description("에러 페이지")
 	public String blank(final HttpSession session, final HttpServletRequest request, @RequestParam(required = false) String locale) {
@@ -369,6 +370,13 @@ public class HomeController {
 	public String messenger(Locale locale, Model model) {
 		model.addAttribute("headerYn","N");
 		return "/emass/message/msg/messenger";
+	}
+
+	@RequestMapping(value = "/ems/msg/test.do", method = RequestMethod.GET)
+	@Description("테스트")
+	public String test(Locale locale, Model model) {
+		model.addAttribute("headerYn","N");
+		return "/emass/message/msg/GenerativeAi";
 	}
 
 	@RequestMapping(value = "/ems/contentBody.do", method = RequestMethod.GET)

@@ -191,7 +191,7 @@ $(document).ready(function(){
 								$('#changePasswordBtn').click();
 							}
                             else if(data=='USER_LOCK'){
-                                $("#unuseAdminPop").modal("show");
+                                $("#unusePop").modal("show");
 							}
 						}, 3000);
 					},
@@ -227,15 +227,20 @@ $(document).ready(function(){
 		$('#pinCode').focus();
 	});
 });
+
+function showUnusePop(){
+    $("#unusePop").modal("hide");
+    $('#unuseAdminPop').modal('show');
+}
+
 function sendMail(){
     var userIdInput = $('#userIdInput').val().ltrim().rtrim();
-
+    confirmTimeOut();
     ui.get({
         url: 'mailSend.xcn',
         userId : rsa.encrypt(userIdInput),
         success: function (data) {
             alert("인증번호 발송");
-            $("#Confirm").attr("value",data);
         },
         error : function (request, status, error) {
             $('#unuseAdminPop').modal('hide');
@@ -246,24 +251,26 @@ function sendMail(){
 
 function confirmNumber(){
     var userIdInput = $('#userIdInput').val().ltrim().rtrim();
-    var number1 = $("#number").val();
-    var number2 = $("#Confirm").val();
-
-
-    if(number1 == number2){
+    var number1 = $("#number").val().ltrim().rtrim();
 
         ui.get({
 	        url: 'updateStatus.xcn',
-            userId : rsa.encrypt(userIdInput),
-	        sucess:function (data){
-                alert("해제되었습니다 다시 로그인하세요.");
-                $("#unuseAdminPop").modal('hide');
-
-	        }
+            userId :userIdInput,
+	        number1 :number1,
+	        sucess:function (status, message, data) {
+                ui.alertMsg(message, function(){
+                    if(data =='GODCODE') {
+                        $("#unuseAdminPop").modal('hide');
+                        $('#unusetime').css("display", "none");
+                        $('#number').val('');
+                        alert("다시 로그인하세요");
+                    }
+                    else if(data=='NOTCODE'){
+                        alert("비번이 틀렸습니다")
+                    }
+                }, 3000);
+            }
         });
-    }else{
-        alert("번호가 다릅니다.");
-    }
 }
 
 function reloadOTPgenerate(){
@@ -333,12 +340,47 @@ function otpTimeOut() {
 	otpDelay = setTimeout(function(){
 		clearInterval(otpInterval);
 		clearTimeout(otpDelay);
-		if(!firstOTP) $('#googleOTPPop').modal('hide');
+		 $('#googleOTPPop').modal('hide');
 	}, 30000);
 }
+function confirmTimeOut() {
+    var t= 0;
+    $('#unusetime').css("display", "block");
+    var t = (30000/250)-1;
+         setInterval(function(){
+       $('#unuseAdminPop #unusetime').html((t--).comma() + 's' );
+    },1000);
+        setTimeout(function(){
+
+         $('#unuseAdminPop').modal('hide');
+
+    }, 30000);
+}
+
+
 </script>
 </head>
 <body id="loginBody">
+
+<div class="modal fade" id="unusePop" tabindex="-1" role="dialog" aria-labelledby="unusePop">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h3 class="modal-title">운용자 계정 잠금</h3>
+			</div>
+
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal">종료하기</button>
+				<button type="button" class="btn btn-primary" accesskey="S" onclick="showUnusePop()">본인인증 후 변경하기</button>
+
+			</div>
+		</div>
+	</div>
+</div>
+
 <%--장기미사용 본인인증 팝업창--%>
 <div class="modal fade" id="unuseAdminPop" tabindex="-1" role="dialog" aria-labelledby="unuseAdminPop">
 	<div class="modal-dialog" role="document" style="height: 500px;">
@@ -347,16 +389,16 @@ function otpTimeOut() {
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
-				<h3 class="modal-title"><s:message code="login.change.password"/></h3>
+				<h3 class="modal-title">운용자 계정 잠금</h3>
 			</div>
 			<div class="modal-body">
-				<label class="control-label col-xs-4"><s:message code="setup.message.unuse.login"/></label>
-				<br>
+				<label class="control-label col-xs-4">이메일 본인인증</label>
+				<div id="unusetime"></div>
+				<br><br>
 				<div class="form-inline" style="border-bottom: 1px dashed #eee;padding: 7px 0px;">
-					<button type="button" name="sendBtn" id="sendBtn" onclick="sendMail()">메일 보내기</button>
-					<input type="text" name="number" id="number" style="width:250px; margin-top: -10px" placeholder="인증번호 입력">
+					<button type="button" name="sendBtn" id="sendBtn" onclick="sendMail()">메일 보내기</button><br>
+					<input type="text" name="number" id="number" style="width:250px; margin-top: -10px" placeholder="인증코드 입력">
 					<button type="button" name="confirmBtn" id="confirmBtn" onclick="confirmNumber()">인증하기</button>
-					<input type="text" id="Confirm" name="Confirm" style="display: none" value="">
 				</div>
 			</div>
 		</div>

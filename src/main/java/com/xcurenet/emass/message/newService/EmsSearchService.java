@@ -5,6 +5,7 @@ import com.xcurenet.emass.message.service.MessengerEdcGroupVO;
 import com.xcurenet.emass.message.service.MessengerGroupUserVO;
 import com.xcurenet.emass.message.service.impl.parseJsonFile;
 import com.xcurenet.emass.message.vo.message.EdcMessage;
+import org.apache.solr.client.solrj.SolrServerException;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,7 +19,7 @@ public interface EmsSearchService {
 
      EdcMessage getEmassMessage(Map<String,String>  searchParam, String adminId, String readYn, String consentNo) throws IOException;
 
-	 MessengerEdcGroupVO getMessengerGroupList(final Map<String,String> searchParam, final String adminId) throws IOException;
+	 MessengerEdcGroupVO getMessengerGroupList(final Map<String,String> searchParam, final String adminId) throws IOException, SolrServerException;
 
 	 MessengerEdcGroupVO getMessengerGroupList(final Map<String,String> searchParam, final String adminId, final boolean detail) throws IOException;
 

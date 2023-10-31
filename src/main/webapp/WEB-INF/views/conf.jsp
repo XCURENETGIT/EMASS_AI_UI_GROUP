@@ -5,6 +5,7 @@
 <html lang="ko">
 <head>
 <title>EMASS LTH - <s:message code="common.msg.setting"/></title>
+
 <%@ include file="./base.jsp"%>
 <style type="text/css">
 html, body {

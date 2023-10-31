@@ -74,11 +74,17 @@ var eikon = {
 			$(this).css('display','none');
 		});
 	},
+		getGenerativeList: function (page) {
+	/*		$('#startsubdatepicker').data("DateTimePicker").date($('#startdatepicker').data("DateTimePicker").date());
+			$('#endsubdatepicker').data("DateTimePicker").date($('#enddatepicker').data("DateTimePicker").date());*/
+
+			getMessengerGenertiveList(page);
+		},
+
 	getMessengerList : function(page){
 		var searchType = $('input:radio[name=searchType]:input:checked').val();
 		$('#startsubdatepicker').data("DateTimePicker").date( $('#startdatepicker').data("DateTimePicker").date() );
 		$('#endsubdatepicker').data("DateTimePicker").date( $('#enddatepicker').data("DateTimePicker").date() );
-		
 		if( searchType == 'G'){
 			getMessengerGroupList(page);
 		}else if( searchType == 'GD'){
@@ -491,7 +497,7 @@ function rtnGroupList(data, type){
 		str += nodataMsg; //common.msg.nodata
 		str += '</p></a>';
 	}
-	
+
 	$('#group_list').html( str );
 	$('#group_list').animate({
 		scrollTop : 0
@@ -534,7 +540,37 @@ function getMessengerGroupList (page){
 		}
 	});
 };
+function getMessengerGenertiveList(page) { //생성형 AI검색
+	var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
+
+	groupMessagePage = page;
+	var offset = groupMessagePage * groupMessagePageBreak - groupMessagePageBreak;
+	ui.onBody('timeline_list', 0, -20);
+	ui.postJson({
+		url: 'getMessengerGenertiveList.xcn',
+		data: JSON.stringify(getCondition()),
+		readYn: readYn,
+		offset: offset,
+
+		limit: groupPageBreak,
+		success: function (data, total) {
+			rtnGroupList(data.groups, 'GD');
+			rtnGroupPage(total, page, 'GD');
+			HighlightGroup( );
+		},
+		error: function (status, message) {
+
+			ui.alertMsg(message);
+		},
+		complete: function () {
+			searchFlag = false;
+			ui.off('timeline_list');
+		}
+	});
+}
+
 function getMessengerMessageList (page){
+
 	//JSON.stringify( condition )
 	var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
 	groupMessagePage = page;

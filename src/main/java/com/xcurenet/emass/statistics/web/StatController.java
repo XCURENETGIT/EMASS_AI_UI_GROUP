@@ -51,22 +51,6 @@ public class StatController {
             Type type = new TypeToken<Map<String,String>>(){}.getType();
             searchParam = gson.fromJson((String) resultParam.get("searchParam"),type);
         }
-        /*############################################################################*/
-
-        //서비스 타입
-        if(!Common.isEmpty(searchParam.get("serviceTypes"))) {
-//            elasticSearchQuery.setService12(searchParam.getServiceTypes());
-//            sq = solrCreateQuery.setQuery();
-//            query = sq.getQuery();
-        }
-
-        //그룹
-//        if(!interGroup.equals("")) {
-//            SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
-//            solrCreateQuery.setInterestUserGroup(interGroup, "N");
-//            sq = solrCreateQuery.setQuery();
-//            query = sq.getQuery();
-//        }
 
         /* 계산 (조건문) */
         EdcMessage edcMessage = setAlltotal(emsSearchService.getEmassMessage(searchParam, Common.getAdminId(request)));

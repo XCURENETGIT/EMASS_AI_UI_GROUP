@@ -13,64 +13,60 @@ import java.io.IOException;
 import java.util.Properties;
 
 @Configuration
-@PropertySource("classpath:/application.properties")
 public class EmailConfig {
-
+	private static final String MAIL_DEBUG = "mail.debug";
+	private static final String MAIL_SMTP_STARTTLS_REQUIRED = "mail.smtp.starttls.required";
+	private static final String MAIL_SMTP_AUTH = "mail.smtp.auth";
+	private static final String MAIL_SMTP_STARTTLS_ENABLE = "mail.smtp.starttls.enable";
 
 	public EmailConfig() throws IOException {
 	}
 
-	@Value("${spring.mail.transport.protocol}")
-	private String protocol;
-
-	@Value("${spring.mail.properties.mail.smtp.auth}")
-	private boolean auth;
-
-	@Value("${spring.mail.properties.mail.smtp.starttls.enable}")
-	private boolean starttls;
-
-	@Value("${spring.mail.debug}")
-	private boolean debug;
-
-	@Value("${spring.mail.host}")
-	private String host;
-
-	@Value("${spring.mail.port}")
-	private int port;
-
-	@Value("${spring.mail.username}")
-	private String username;
-
-	@Value("${spring.mail.password}")
-	private String password;
-
-	@Value("${spring.mail.default.encoding}")
-	private String encoding;
-
-
 	@Bean
-	public HtmlEmail javaMailSender(){
+	public JavaMailSender javaMailSender(){
+
+
+		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+		mailSender.setHost(Config.getString("mail.smtp.host"));
+		mailSender.setProtocol("smtp");
+		mailSender.setPort(Config.getInt("mail.smtp.port"));
+		if (Config.getBoolean("mail.auth")) {
+			mailSender.setUsername(Config.getString("mail.smtp.id"));
+			mailSender.setPassword(Config.getString("mail.smtp.password"));
+		}
+		mailSender.setDefaultEncoding("UTF-8");
+		Properties properties = mailSender.getJavaMailProperties();
+		properties.put(MAIL_SMTP_STARTTLS_REQUIRED,  Config.getString("spring.mail.properties.mail.smtp.starttls.enable"));
+		properties.put(MAIL_SMTP_STARTTLS_ENABLE, Config.getBoolean("mail.ssl"));
+		properties.put(MAIL_SMTP_AUTH, Config.getBoolean("mail.auth"));
+		properties.put(MAIL_DEBUG, true);
+		mailSender.setJavaMailProperties(properties);
+		return mailSender;
+
 /*		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-		Properties properties = new Properties();
-		properties.put("mail.transport.protocol", protocol);
-		properties.put("mail.smtp.auth", auth);
-		properties.put("mail.smtp.starttls.enable", starttls);
-		properties.put("mail.smtp.debug", debug);
+		Properties props = new Properties();
 
-		mailSender.setHost(host);
-		mailSender.setUsername(username);
-		mailSender.setPassword(password);
-		mailSender.setPort(port);
-		mailSender.setDefaultEncoding(encoding);
-		mailSender.setJavaMailProperties(properties);*/
+		mailSender.setHost(Config.getString("mail.smtp.host"));
+		mailSender.setUsername(Config.getString("system.mail.addr"));
+		if (Config.getBoolean("mail.auth")) {
+			props.put("id",(Config.getBoolean("mail.smtp.id")));
+			mailSender.setPassword(Config.getString("mail.smtp.password"));
+		}
+		mailSender.setPort(Config.getInt("mail.smtp.port"));
+		mailSender.setDefaultEncoding("UTF-8");
 
-		HtmlEmail email = new HtmlEmail();
+		props.put("mail.smtp.starttls.enable",(Config.getBoolean("mail.ssl")));
+		props.put("mail.smtp.starttls.enable", Config.getString("spring.mail.properties.mail.smtp.starttls.enable"));
+		mailSender.setJavaMailProperties(props);*/
+
+	/*	HtmlEmail email = new HtmlEmail();
 		email.setCharset("UTF-8");
 		email.setHostName(Config.getString("mail.smtp.host"));
 		email.setSmtpPort(587);
 		email.setStartTLSEnabled(Config.getBoolean("mail.ssl"));
 		if(Config.getBoolean("mail.ssl")) {
-			email.setSSLOnConnect(true);
+
+
 			email.setSslSmtpPort(Config.getString("mail.smtp.port"));
 		}
 		if (Config.getBoolean("mail.auth")) {
@@ -79,8 +75,7 @@ public class EmailConfig {
 		email.setSSLCheckServerIdentity(Config.getBoolean("mail.ssl"));
 		email.setSocketTimeout(120000);
 		email.setSocketConnectionTimeout(120000);
-		email.setDebug(Config.getBoolean("mail.debug"));
+		email.setDebug(Config.getBoolean("mail.debug"));*/
 
-		return email;
 	}
 }
