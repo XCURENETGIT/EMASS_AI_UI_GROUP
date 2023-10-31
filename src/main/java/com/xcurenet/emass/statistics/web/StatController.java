@@ -46,9 +46,9 @@ public class StatController {
         /*############################  search param 정의 ############################*/
         Gson gson = new Gson();
         Map<String,Object> resultParam = Common.getParamMap(request);
-        Map<String,String> searchParam = new HashMap<>();
+        Map<String,Object> searchParam = new HashMap<>();
         if(!Common.isEmpty(resultParam.get("searchParam"))){
-            Type type = new TypeToken<Map<String,String>>(){}.getType();
+            Type type = new TypeToken<Map<String,Object>>(){}.getType();
             searchParam = gson.fromJson((String) resultParam.get("searchParam"),type);
         }
         /*############################################################################*/
@@ -86,9 +86,9 @@ public class StatController {
         /*############################  search param 정의 ############################*/
         Gson gson = new Gson();
         Map<String,Object> resultParam = Common.getParamMap(request);
-        Map<String,String> searchParam = new HashMap<>();
+        Map<String,Object> searchParam = new HashMap<>();
         if(!Common.isEmpty(resultParam.get("searchParam"))){
-            Type type = new TypeToken<Map<String,String>>(){}.getType();
+            Type type = new TypeToken<Map<String,Object>>(){}.getType();
             searchParam = gson.fromJson((String) resultParam.get("searchParam"),type);
         }
         /*############################################################################*/

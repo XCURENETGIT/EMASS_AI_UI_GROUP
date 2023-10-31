@@ -1,10 +1,11 @@
 package com.xcurenet.emass.message.newService;
 
-import com.xcurenet.common.util.elasticsearch.ElsSearchResponse;
 import com.xcurenet.emass.message.service.MessengerEdcGroupVO;
 import com.xcurenet.emass.message.service.MessengerGroupUserVO;
 import com.xcurenet.emass.message.service.impl.parseJsonFile;
 import com.xcurenet.emass.message.vo.message.EdcMessage;
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchResponse;
 
 import java.io.IOException;
 import java.util.List;
@@ -12,19 +13,19 @@ import java.util.Map;
 
 public interface EmsSearchService {
 
-     ElsSearchResponse getList(Map<String,String> searchParam) throws IOException;
+	SearchResponse getList(SearchRequest searchRequest) throws IOException;
 
-     EdcMessage getEmassMessage(final Map<String,String> searchParam, final String adminId) throws IOException;
+     EdcMessage getEmassMessage(final Map<String,Object> searchParam, final String adminId) throws IOException;
 
-     EdcMessage getEmassMessage(Map<String,String>  searchParam, String adminId, String readYn, String consentNo) throws IOException;
+     EdcMessage getEmassMessage(Map<String,Object>  searchParam, String adminId, String readYn, String consentNo) throws IOException;
 
-	 MessengerEdcGroupVO getMessengerGroupList(final Map<String,String> searchParam, final String adminId) throws IOException;
+	 MessengerEdcGroupVO getMessengerGroupList(final Map<String,Object> searchParam, final String adminId) throws IOException;
 
-	 MessengerEdcGroupVO getMessengerGroupList(final Map<String,String> searchParam, final String adminId, final boolean detail) throws IOException;
+	 MessengerEdcGroupVO getMessengerGroupList(final Map<String,Object> searchParam, final String adminId, final boolean detail) throws IOException;
 
-	 MessengerEdcGroupVO getMessengerGroupList(final Map<String,String> searchParam, final String adminId, final boolean detail, final boolean original) throws IOException;
+	 MessengerEdcGroupVO getMessengerGroupList(final Map<String,Object> searchParam, final String adminId, final boolean detail, final boolean original) throws IOException;
 
-	 MessengerGroupUserVO getMessengerGroupUserList(final Map<String,String> searchParam, final String adminId) throws IOException;
+	 MessengerGroupUserVO getMessengerGroupUserList(final Map<String,Object> searchParam, final String adminId) throws IOException;
 
 	 void setFeedback(final String msgId, final String ml_confd_feedback) throws IOException;
 

@@ -71,9 +71,9 @@ public class EdcMessage {
           this.emass = result;
           this.total = searchResponse.getHits().getHits().length;
           this.setPivot(elsSearchResponse);
-          this.search_xAxis = Common.nvl(elsSearchResponse.getElsQueryBuilder().getSearchParam().get("xAxis")); //검색한 xAxis 값
-          this.search_startDate = Common.nvl(elsSearchResponse.getElsQueryBuilder().getSearchParam().get("startDate")); //검색한 startDate 값
-          this.search_endDate = Common.nvl(elsSearchResponse.getElsQueryBuilder().getSearchParam().get("endDate")); //검색한 endDate 값
+          this.search_xAxis = Common.nvl(elsSearchResponse.getQueryParamReady().getSearchParam().get("xAxis")); //검색한 xAxis 값
+          this.search_startDate = Common.nvl(elsSearchResponse.getQueryParamReady().getSearchParam().get("startDate")); //검색한 startDate 값
+          this.search_endDate = Common.nvl(elsSearchResponse.getQueryParamReady().getSearchParam().get("endDate")); //검색한 endDate 값
 
 //        this.setFacet(resp);
 //        this.setFacetQuery(resp);
@@ -158,18 +158,18 @@ public class EdcMessage {
         if(aggregations.getAsMap().size() == 0 ) return;
 
         /* Pivot field 정의 #############################################################*/
-        String xField = elsSearchResponse.getElsQueryBuilder().getXAxis();
+        String xField = elsSearchResponse.getQueryParamReady().getXAxis();
         String xTypeFlag = ElasticSearchCommon.XFIELD.get(xField);
-        String yField = elsSearchResponse.getElsQueryBuilder().getYAxis();
+        String yField = elsSearchResponse.getQueryParamReady().getYAxis();
 
 //        /* detail 시간별 검색여부 */
 //        boolean detailHourSearch = false;
-//         if(ElasticSearchCommon.CTIME_HH.equals(Common.nvl(elsSearchResponse.getElsQueryBuilder().getSearchParam().get("searched_xAxis")))) detailHourSearch = true;
+//         if(ElasticSearchCommon.CTIME_HH.equals(Common.nvl(elsSearchResponse.getQueryReady().getSearchParam().get("searched_xAxis")))) detailHourSearch = true;
 
 
 
          Map<String, Object> keys = new HashMap<String, Object>();
-         String colKey = Common.nvl(elsSearchResponse.getElsQueryBuilder().getSearchParam().get("colKey"));
+         String colKey = Common.nvl(elsSearchResponse.getQueryParamReady().getSearchParam().get("colKey"));
             /* Date 분류일 경우 #############################################################*/
             if (ElasticSearchCommon.CTIME.equals(xTypeFlag)) {
                     ParsedDateHistogram results = aggregations.get(ElasticSearchCommon.CTIME);
@@ -349,17 +349,6 @@ public class EdcMessage {
     private void setTotalCount(final Long total) throws  IOException {
         this.total = total;
     }
-
-
-
-
-
-
-
-
-
-
-
 
 
 
