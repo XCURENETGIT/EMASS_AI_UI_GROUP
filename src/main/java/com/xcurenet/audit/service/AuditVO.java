@@ -1,13 +1,13 @@
 package com.xcurenet.audit.service;
 
 import lombok.Data;
+import org.joda.time.DateTime;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
-@Document(collation = "INFO_AUDIT")
+@Document(collection = "INFO_AUDIT")
 public class AuditVO {
-
-	private String date;
+	private DateTime date;
 	private String adminId;
 	private long seq;
 	private String product;

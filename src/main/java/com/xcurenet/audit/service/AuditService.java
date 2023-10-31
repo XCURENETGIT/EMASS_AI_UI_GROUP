@@ -1,12 +1,13 @@
 package com.xcurenet.audit.service;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 public interface AuditService {
 
-	public List<AuditVO> getAuditList(final String startDt, final String endDt, final String adminId, final String pMenuId, final String menuId, final String operation, String adminId2, String firstAdminYn, String adminType, String searchStr, String pDate, String pAdminId, int pSeq, final int offset, final int limit);
+	public List<AuditVO> getAuditList(Map<String, Object> param);
 
 	public int insertAudit(AuditVO audit);
 
