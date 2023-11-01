@@ -68,18 +68,16 @@ public class EdcMessage {
             if (map.size() > 0)  result.add(mapper.convertValue(map, Emass.class));
         }
 
-          this.emass = result;
-          this.total = searchResponse.getHits().getHits().length;
+       this.emass = result;
+       this.total = searchResponse.getHits().getHits().length;
+
+       // 통계 검색일 경우
+       if(Common.isEquals(ElasticSearchCommon.SEARCH_TYPE_STATISTIC,elsSearchResponse.getQueryParamReady().getSearchParam().get("elsSearchType"))) {
           this.setPivot(elsSearchResponse);
           this.search_xAxis = Common.nvl(elsSearchResponse.getQueryParamReady().getSearchParam().get("xAxis")); //검색한 xAxis 값
           this.search_startDate = Common.nvl(elsSearchResponse.getQueryParamReady().getSearchParam().get("startDate")); //검색한 startDate 값
           this.search_endDate = Common.nvl(elsSearchResponse.getQueryParamReady().getSearchParam().get("endDate")); //검색한 endDate 값
-
-//        this.setFacet(resp);
-//        this.setFacetQuery(resp);
-//        if (resp.getResponse().get("facets") != null) {
-//            this.setFacets((SimpleOrderedMap) resp.getResponse().get("facets"));
-//        }
+       }
 
     }
 

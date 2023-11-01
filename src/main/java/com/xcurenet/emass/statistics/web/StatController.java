@@ -9,6 +9,7 @@ import com.xcurenet.audit.service.Menu;
 import com.xcurenet.audit.service.Operation;
 import com.xcurenet.audit.service.ParentMenu;
 import com.xcurenet.common.util.Common;
+import com.xcurenet.common.util.elasticsearch.ElasticSearchCommon;
 import com.xcurenet.common.util.locale.Prop;
 import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
@@ -50,11 +51,11 @@ public class StatController {
         if(!Common.isEmpty(resultParam.get("searchParam"))){
             Type type = new TypeToken<Map<String,Object>>(){}.getType();
             searchParam = gson.fromJson((String) resultParam.get("searchParam"),type);
+            searchParam.put("elsSearchType", ElasticSearchCommon.SEARCH_TYPE_STATISTIC);
         }
 
         /* 계산 (조건문) */
         EdcMessage edcMessage = setAlltotal(emsSearchService.getEmassMessage(searchParam, Common.getAdminId(request)));
-        edcMessage.getEmass();
 
 
         return new XcnResponseVO(XcnRspCode.OK, edcMessage, edcMessage.getTotal());
@@ -74,6 +75,7 @@ public class StatController {
         if(!Common.isEmpty(resultParam.get("searchParam"))){
             Type type = new TypeToken<Map<String,Object>>(){}.getType();
             searchParam = gson.fromJson((String) resultParam.get("searchParam"),type);
+            searchParam.put("elsSearchType", ElasticSearchCommon.SEARCH_TYPE_STATISTIC);
         }
         /*############################################################################*/
 

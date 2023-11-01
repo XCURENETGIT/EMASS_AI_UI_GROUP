@@ -4,13 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Nullable
-public class Body {
-    private long size;
-    private String sizeStr;
-    private String snippet;
-    private String text;
+public class MailVo {
+    private MailProperties sender;
+    private List<MailProperties> to;
+    private List<MailProperties> cc;
+    private List<MailProperties> bcc;
 }
