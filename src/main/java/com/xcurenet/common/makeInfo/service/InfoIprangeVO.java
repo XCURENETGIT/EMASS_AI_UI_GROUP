@@ -16,6 +16,6 @@ public class InfoIprangeVO {
 	private String INSIDE;
 	private String LATITUDE;
 	private String LONGITUDE;
-	private String SLP;
+	private String SIP;
 	private int VERSION;
 }
