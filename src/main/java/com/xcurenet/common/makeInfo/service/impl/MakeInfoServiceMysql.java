@@ -402,7 +402,7 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 							.INSIDE((String) obj.get("INSIDE"))
 							.LATITUDE((String) obj.get("LATITUDE"))
 							.LONGITUDE((String) obj.get("LONGITUDE"))
-							.SLP((String) obj.get("SLP"))
+							.SIP((String) obj.get("SIP"))
 							.build();
 					mongoUtil.insert(infoIprangeVO, collectionName);
 				} else if (Common.isEquals(collectionName, "INFO_IPRANGE_DEPT")) {
