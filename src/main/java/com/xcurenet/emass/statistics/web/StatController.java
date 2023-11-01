@@ -39,7 +39,7 @@ public class StatController {
     @Resource
     EmsSearchService emsSearchService;
 
-    @RequestMapping(value = "/getStatList.xcn")
+    @RequestMapping(value = "/test_etStatList.xcn")
     @Description("통계 리스트 조회")
     @AuditOperation(Operation.SEARCH)
     @ResponseBody
@@ -63,7 +63,7 @@ public class StatController {
 
 
 
-    @RequestMapping(value = "/getStatDetailList.xcn")
+    @RequestMapping(value = "/test_getStatDetailList.xcn")
     @Description("통계 리스트 상세 조회")
     @AuditOperation(Operation.SEARCH)
     @ResponseBody

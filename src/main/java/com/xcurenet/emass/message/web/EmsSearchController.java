@@ -63,7 +63,7 @@ public class EmsSearchController {
 	MongoUtil mongoUtil;
 
 
-	@RequestMapping(value = "/getList.xcn")
+	@RequestMapping(value = "/test_getList.xcn")
 	@Description("메시지 검색")
 	@AuditOperation(Operation.SEARCH)
 	@ResponseBody
@@ -219,7 +219,7 @@ public class EmsSearchController {
 
 
 
-	@RequestMapping(value = "/getHighlightStr.xcn")
+	@RequestMapping(value = "/test_getHighlightStr.xcn")
 	@Description("solr 하일라이팅 검색어 생성")
 	@ResponseBody
 	public XcnResponseVO getHighlightStr(final HttpServletRequest request, final HttpSession session) throws Exception {
@@ -235,7 +235,7 @@ public class EmsSearchController {
 
 	}
 
-	@RequestMapping(value = "/getQuery.xcn")
+	@RequestMapping(value = "/test_getQuery.xcn")
 	@Description("EDC Solr 메시지 검색")
 	@ResponseBody
 	public XcnResponseVO getQuery(final HttpServletRequest request, final HttpSession session) throws Exception {
