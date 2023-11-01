@@ -14,6 +14,9 @@
 			<ul class="collapse subMenu" id="messages">
 				<li menuId="MESSAGE_INFO"><a href="<c:url value="/ems/message.do"/>"> <i class="fa fa-envelope fa-lg"></i> <s:message code="DATA_MONITOR.MESSAGE_INFO"/></a></li>
 				<li menuId="MESSAGE_SERVICE"><a href="<c:url value="/ems/msg/messenger.do"/>"> <i class="fa fa-envelope fa-lg"></i> <s:message code="DATA_MONITOR.MESSAGE_SERVICE"/></a></li>
+				<li menuId="GENERATIVEAI_SERVICE"><a href="<c:url value="/ems/msg/generativeAi.do"/>"> <i class="fa fa-envelope fa-lg"></i> <s:message code="DATA_MONITOR.GENERATIVEAI_SERVICE"/></a></li>
+				<li menuId="FILETRANSFER_SERVICE"><a href="<c:url value="/ems/msg/fileTransfer.do"/>"> <i class="fa fa-envelope fa-lg"></i> <s:message code="DATA_MONITOR.FILETRANSFER_SERVICE"/></a></li>
+				<li menuId="NOTE_SERVICE"><a href="<c:url value="/ems/msg/note.do"/>"> <i class="fa fa-envelope fa-lg"></i> <s:message code="DATA_MONITOR.NOTE_SERVICE"/></a></li>
 			</ul>
 			<%}else{ %>
 			<li menuId="MESSAGE_INFO"><a href="<c:url value="/ems/message.do"/>"> <i class="fa fa-envelope fa-lg"></i> <span><s:message code="DATA_MONITOR.MESSAGE_INFO"/></span></a></li>

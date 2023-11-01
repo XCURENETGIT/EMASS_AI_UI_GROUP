@@ -53,7 +53,7 @@ public class MailService {
 
 	public int sendMail(String mail){
 
-		if (!Config.getBoolean("mail.forward.flag") || !Config.getBoolean("mail.audit.used"))
+		if (!Config.getBoolean("mail.forward.flag"))
 			return -1;
 
 		MimeMessage message = CreateMail(mail);

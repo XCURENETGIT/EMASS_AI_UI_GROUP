@@ -136,15 +136,16 @@ public class LoginController {
 
 		int number = mailService.sendMail(mail);
 
-	/*	if(number == -1){
+		if(number == -1){
 			return new XcnResponseVO(XcnRspCode.OK_CUSTOM,"MAILNOCHECK");
 		}
-	else {*/
+	else {
 			String num = "" + number;
 
 			session.setAttribute("number", number);
 
 			return new XcnResponseVO(XcnRspCode.OK, num);
+		}
 
 	}
 	@Description("인증코드 세션 삭제")

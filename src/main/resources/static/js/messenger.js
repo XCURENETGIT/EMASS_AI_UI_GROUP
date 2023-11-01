@@ -474,8 +474,8 @@ function rtnGroupList(data, type){
 			if(closeFlag) str += '<span class="tag tag-default tag-pill pull-xs-right">'+endChat+'</span>';
 			else str += '<span class="tag tag-success tag-pill pull-xs-right">'+chatting+'</span>';
 		}
-		str += '	<h5 class="list-group-item-heading" style="padding-left: 14px;">'+data[i].title.replaceAll('<', '&lt;').replaceAll('>', '&gt;')+'</h5>';
-		str += '	<p class="list-group-item-text" style="float:left;">';
+	/*	str += '	<h5 class="list-group-item-heading" style="padding-left: 14px;">'+data[i].title.replaceAll('<', '&lt;').replaceAll('>', '&gt;')+'</h5>';
+		str += '	<p class="list-group-item-text" style="float:left;">';*/
 
 
 		if( svc3 == 'C' ) str += '<i class="fa fa-commenting-o fa-sm"></i> ';

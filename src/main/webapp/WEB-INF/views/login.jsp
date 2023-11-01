@@ -240,20 +240,22 @@ function sendMail(){
 
     if(timeOut!=true){
         alert("아직 유효 메일이 남아있습니다");
-    }
-    else {
-        confirmTimeOut();
+    } else {
         ui.get({
             url: 'mailSend.xcn',
             userId: rsa.encrypt(userIdInput),
             success: function (data) {
+                confirmTimeOut();
                 alert("인증코드 발송");
             },
-            error: function (request ) {
-                if(request=='-1'){
-                    alert("메일서버가 비활성화입니다. 관리자에게 문의해서 해제하시길 바랍니다");
+            error: function (request,status,error,data) {
+                alert("R: "+request+"S: "+status+" E: "+error+" D: "+data);
+                if (error=='MAILNOCHECK') {
+                    alert("메일서버가 비활성화 상태 입니다. 관리자에게 문의하시길 바랍니다");
+                } else {
+                    alert("인증코드 발송에 실패하였습니다 관리자에게 문의하시길 바랍니다");
                 }
-                alert("메일 서버가 불안정합니다 관리자에게 문의해서 해제하시길 바랍니다");
+                timeOut=true;
                 $('#unuseAdminPop').modal('hide');
             }
         })

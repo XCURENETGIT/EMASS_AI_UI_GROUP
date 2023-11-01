@@ -840,7 +840,10 @@ INSERT IGNORE INTO UI_MENU VALUES ('DASHBOARD_MENU','Dashboard 메뉴','DASHBOAR
 INSERT IGNORE INTO UI_MENU VALUES ('DASHBOARD_SETUP','Dashboard 관리','DASHBOARD','L','M','ems/dashboardSetup.do','fa fa-cogs',3,'Y');
 INSERT IGNORE INTO UI_MENU VALUES ('MESSAGE','메시지','DATA_MONITOR','L','M','','fa fa-envelope',2,'Y');
 INSERT IGNORE INTO UI_MENU VALUES ('MESSAGE_INFO','메시지 정보','MESSAGE','L','M','ems/message.do','fa fa-envelope',1,'Y');
-INSERT IGNORE INTO UI_MENU VALUES ('MESSAGE_SERVICE','메신저 모아보기','MESSAGE','L','M','ems/msg/messenger.do','fa fa-envelope',3,'Y');
+INSERT IGNORE INTO UI_MENU VALUES ('DATA_MONITOR.MESSAGE_SERVICE=메신저 모아보기menuArr.push({id:''MESSAGE_SERVICE'',		name:''<s:message code="DATA_MONITOR.MESSAGE_SERVICE"/>'',  		p_id:''DATA_MONITOR''}); //메신저 모아보기','메신저 모아보기','MESSAGE','L','M','ems/msg/messenger.do','fa fa-envelope',3,'Y');
+INSERT IGNORE INTO UI_MENU VALUES ('GENERATIVEAI_SERVICE','생성형AI 모아보기','MESSAGE','L','M','ems/msg/generativeAi.do','fa fa-envelope',4,'Y');
+INSERT IGNORE INTO UI_MENU VALUES ('NOTE_SERVICE','노트 모아보기','MESSAGE','L','M','ems/msg/note.do','fa fa-envelope',5,'Y');
+INSERT IGNORE INTO UI_MENU VALUES ('FILETRANSFER_SERVICE','파일전송 모아보기','MESSAGE','L','M','ems/msg/fileTransfer.do','fa fa-envelope',6,'Y');
 INSERT IGNORE INTO UI_MENU VALUES ('INTEREST_USER','관심 사용자 관리','DATA_MONITOR','L','M','ems/interestUser.do','fa fa-male',3,'Y');
 INSERT IGNORE INTO UI_MENU VALUES ('STAT_REPORT','리포트','DATA_MONITOR','L','M','ems/report.do','fa fa-file-text-o',4,'Y');
 INSERT IGNORE INTO UI_MENU VALUES ('RESERVATION_ALARM','예약 알림','DATA_MONITOR','L','M','ems/reservationAlarm.do','fa fa-calendar',5,'Y');

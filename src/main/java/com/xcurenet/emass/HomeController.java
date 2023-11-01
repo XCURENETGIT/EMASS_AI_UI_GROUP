@@ -372,13 +372,26 @@ public class HomeController {
 		return "/emass/message/msg/messenger";
 	}
 
-	@RequestMapping(value = "/ems/msg/test.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/ems/msg/generativeAi.do", method = RequestMethod.GET)
 	@Description("테스트")
-	public String test(Locale locale, Model model) {
+	public String generativeAi(Locale locale, Model model) {
 		model.addAttribute("headerYn","N");
 		return "/emass/message/msg/GenerativeAi";
 	}
 
+	@RequestMapping(value = "/ems/msg/note.do", method = RequestMethod.GET)
+	@Description("테스트")
+	public String note(Locale locale, Model model) {
+		model.addAttribute("headerYn","N");
+		return "/emass/message/msg/note";
+	}
+
+	@RequestMapping(value = "/ems/msg/FileTransfer.do", method = RequestMethod.GET)
+	@Description("테스트")
+	public String test(Locale locale, Model model) {
+		model.addAttribute("headerYn","N");
+		return "/emass/message/msg/FileTransfer";
+	}
 	@RequestMapping(value = "/ems/contentBody.do", method = RequestMethod.GET)
 	@Description("본문 페이지")
 	public String contentBody(Locale locale, Model model) {
