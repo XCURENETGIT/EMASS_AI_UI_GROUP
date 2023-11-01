@@ -136,14 +136,31 @@ public class LoginController {
 
 		int number = mailService.sendMail(mail);
 
-		String num = "" + number;
+	/*	if(number == -1){
+			return new XcnResponseVO(XcnRspCode.OK_CUSTOM,"MAILNOCHECK");
+		}
+	else {*/
+			String num = "" + number;
 
-		session.setAttribute("number", number);
+			session.setAttribute("number", number);
 
-		return new XcnResponseVO(XcnRspCode.OK, num);
+			return new XcnResponseVO(XcnRspCode.OK, num);
+
+	}
+	@Description("인증코드 세션 삭제")
+	@ResponseBody
+	@RequestMapping("/deleteSession.xcn")
+	public XcnResponseVO deleteSession(LoginVO login, final HttpServletRequest request, final HttpSession session) throws Exception {
+		AdminVO admin = adminService.getAdmin(login.getUserId());
+		session.setAttribute(Common.SESSION_CREDENTIAL, admin);
+		session.removeAttribute("number");
+		return new XcnResponseVO(XcnRspCode.OK);
 	}
 
+
+
 	@Description("관리자 접속가능 변경")
+	@ResponseBody
 	@RequestMapping("/updateStatus.xcn")
 	public XcnResponseVO statusUpdate(LoginVO login, final HttpServletRequest request, final HttpSession session) throws Exception {
 
@@ -151,28 +168,17 @@ public class LoginController {
 		login.setUserId(login.getUserId());
 		String number1= request.getParameter("number1");
 
-		AuditVO audit = new AuditVO();
-		audit.setAdminIp(request.getRemoteAddr());
-		audit.setPMenuId("SYSTEM");
-		audit.setMenuId("CONNECTION");
-		audit.setOperation("LOGIN");
-
 		AdminVO admin = adminService.getAdmin(login.getUserId());
 
-		audit.setAdminId(login.getUserId());
-		audit.setAdminName(admin.getAdminName());
-		audit.setInformation(Prop.propFormat("메일코드 확인"));
-		auditService.insertAudit(audit);
 		session.setAttribute(Common.SESSION_CREDENTIAL, admin);
 
 		System.out.println(number1.equals(Common.nvl(session.getAttribute("number"))));
 		if (number1.equals(Common.nvl(session.getAttribute("number")))) {
 			adminService.updateAdminStatusOK(login.getUserId()); //인증에 성공한 경우
-			System.out.println("인증에성공했다....!!!!");
 			//return setLoginEnv(request, session, admin, audit);
-			return new XcnResponseVO(XcnRspCode.OK, "GODCODE");
+			return new XcnResponseVO(XcnRspCode.OK,"SUCCESS").setMessage(Prop.propFormat("인증에 성공했습니다."));
 		} else {
-			return new XcnResponseVO(XcnRspCode.OK, "NOTCODE");
+			return new XcnResponseVO(XcnRspCode.OK_CUSTOM, "FAIL").setMessage(Prop.propFormat("코드가 틀렸습니다"));
 		/*else{
 			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("코드가 틀렸습니다"));
 		}

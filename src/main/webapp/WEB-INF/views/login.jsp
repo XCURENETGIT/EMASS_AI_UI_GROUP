@@ -233,42 +233,50 @@ function showUnusePop(){
     $('#unuseAdminPop').modal('show');
 }
 
+let timeOut=true;
+
 function sendMail(){
     var userIdInput = $('#userIdInput').val().ltrim().rtrim();
-    confirmTimeOut();
-    ui.get({
-        url: 'mailSend.xcn',
-        userId : rsa.encrypt(userIdInput),
-        success: function (data) {
-            alert("인증번호 발송");
-        },
-        error : function (request, status, error) {
-            $('#unuseAdminPop').modal('hide');
-        },
 
-    })
+    if(timeOut!=true){
+        alert("아직 유효 메일이 남아있습니다");
+    }
+    else {
+        confirmTimeOut();
+        ui.get({
+            url: 'mailSend.xcn',
+            userId: rsa.encrypt(userIdInput),
+            success: function (data) {
+                alert("인증코드 발송");
+            },
+            error: function (request ) {
+                if(request=='-1'){
+                    alert("메일서버가 비활성화입니다. 관리자에게 문의해서 해제하시길 바랍니다");
+                }
+                alert("메일 서버가 불안정합니다 관리자에게 문의해서 해제하시길 바랍니다");
+                $('#unuseAdminPop').modal('hide');
+            }
+        })
+    }
 }
 
 function confirmNumber(){
     var userIdInput = $('#userIdInput').val().ltrim().rtrim();
-    var number1 = $("#number").val().ltrim().rtrim();
+    var number1 = $("#number").val().ltrim().rtrim();;
 
         ui.get({
 	        url: 'updateStatus.xcn',
             userId :userIdInput,
 	        number1 :number1,
-	        sucess:function (status, message, data) {
-                ui.alertMsg(message, function(){
-                    if(data =='GODCODE') {
-                        $("#unuseAdminPop").modal('hide');
-                        $('#unusetime').css("display", "none");
-                        $('#number').val('');
-                        alert("다시 로그인하세요");
-                    }
-                    else if(data=='NOTCODE'){
-                        alert("비번이 틀렸습니다")
-                    }
-                }, 3000);
+	        success:function (data,message){
+                $("#unuseAdminPop").modal('hide');
+                $('#unusetime').css("display", "none");
+                $('#number').val('');
+                alert("잠금이 해제되었습니다. 다시 로그인하세요");
+
+            },
+            error: function (data,message){
+                alert("코드 입력이 잘못되었습니다");
             }
         });
 }
@@ -344,17 +352,23 @@ function otpTimeOut() {
 	}, 30000);
 }
 function confirmTimeOut() {
-    var t= 0;
+     timeOut=false;
     $('#unusetime').css("display", "block");
-    var t = (30000/250)-1;
+    var t =(90000/1000)-1;
          setInterval(function(){
        $('#unuseAdminPop #unusetime').html((t--).comma() + 's' );
     },1000);
         setTimeout(function(){
-
+            timeOut =true;
          $('#unuseAdminPop').modal('hide');
+            $('#unusetime').css("display","none");
+            t= (30000/1000)-1;
+            ui.get({
+                url: 'deleteSession.xcn'
+            });
 
-    }, 30000);
+
+    }, 90000);
 }
 
 
