@@ -8,8 +8,8 @@ import javax.annotation.Nullable;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Nullable
-public class PiProperties {
-    private String code;
-    private int count;
-
+public class MlVo {
+   private String	mlConfdClass;	  //AiHR 인덱스 값
+   private String	mlConfdFeedback; //	AiHR 인덱스 피드백
+   private float	mlConfdProb;     //	AiHR 인덱스 결과 확률
 }

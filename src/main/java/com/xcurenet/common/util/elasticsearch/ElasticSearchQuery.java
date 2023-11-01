@@ -21,6 +21,7 @@ import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -1228,137 +1229,13 @@ public class ElasticSearchQuery {
 //    }
 
 
-
     /***
-     *
-     * @param initSearchSource
-     * @return
-     */
-    public SearchSourceBuilder initSearchSource(QueryParamReady queryParamReady){
-        SearchSourceBuilder searchSourceBuilder = null;
-
-        String startDate = "";
-        String endDate = "";
-
-        String xAxis =  Common.nvl(queryParamReady.getXAxis());
-        String yAxis =  Common.nvl(queryParamReady.getYAxis());
-
-        /* 기간 범위 */
-        startDate = Common.nvl(queryParamReady.getSearchParam().get("startDate"));
-        endDate = Common.nvl(queryParamReady.getSearchParam().get("endDate"));
-
-
-        RangeQueryBuilder rangeQuery = new RangeQueryBuilder(ElasticSearchCommon.CTIME).gte(startDate).lte(endDate);
-        QueryStringQueryBuilder secondQuery = QueryBuilders.queryStringQuery(queryParamReady.getQuery());
-
-
-        /* 검색 대상 필드 존재시 추가 */
-        String[] searchFields =  queryParamReady.getSearchFields();
-        if(searchFields != null && searchFields.length >= 1){
-            for(String field : searchFields){
-                secondQuery.field(field);
-            }
-        }
-
-        /* 쿼리 merge */
-        BoolQueryBuilder complateQuery = new BoolQueryBuilder();
-
-        String colSearchType = (String) queryParamReady.getSearchParam().get("searched_xAxis");
-        Boolean isRowKeyCol =  (("rowKey").equals(Common.nvl(queryParamReady.getSearchParam().get("colId")))) ? true : false;
-        Boolean isTotalCol =  (("total").equals(Common.nvl(queryParamReady.getSearchParam().get("colId")))) ? true : false;
-
-
-        /* 시간별 디테일 조회 */
-        if(ElasticSearchCommon.CTIME_HH.equals(colSearchType) && !isRowKeyCol && !isTotalCol) {
-            String detailSearchxAxis = queryParamReady.getSearchAggregations();
-            BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
-            int hour = Common.nvz(detailSearchxAxis.replaceAll("[^0-9]", ""));
-
-            LocalDateTime ldtFrom = ElasticSearchCommon.stringToDate( startDate.substring(0,8)+String.format("%02d", hour)+startDate.substring(10,14));
-            LocalDateTime ldtTo = ElasticSearchCommon.stringToDate( endDate.substring(0,8)+String.format("%02d", hour)+endDate.substring(10,14));
-            int diffDay = ldtTo.compareTo(ldtFrom);
-            for(int d=0; d<=diffDay; d++){
-                String fromStr =  ElasticSearchCommon.dateToString(ldtFrom.withHour(hour));
-                String toStr =   ElasticSearchCommon.dateToString(ldtFrom.withHour(hour+1).minusSeconds(1));
-                boolQueryBuilder.should(new RangeQueryBuilder("ctime").from(fromStr).to(toStr));
-                ldtFrom = ldtFrom.plusDays(1);
-            }
-            complateQuery.filter(boolQueryBuilder);
-        }else {
-            complateQuery.filter(rangeQuery);
-        }
-        complateQuery.must(secondQuery);
-
-        searchSourceBuilder = new SearchSourceBuilder()
-                .from(queryParamReady.getFrom())
-                .size(queryParamReady.getTo())
-                .query(complateQuery)
-                .fetchSource(queryParamReady.getIncludeFields(), queryParamReady.getExcludeFields())
-                .sort(queryParamReady.getSorts())
-                .aggregation(initAggregation(yAxis, xAxis))
-                .timeout(new TimeValue(60, TimeUnit.SECONDS));
-
-        return searchSourceBuilder;
-    }
-
-
-
-
-    /**
-     * xAxis 집계 쿼리 설정
-     * @param type
-     * @param mainAggs
-     * @return
-     */
-    public AggregationBuilder initAggregation (String yAxis, String xAxis){
-        AggregationBuilder aggregationBuilder = null;
-
-        /* 화면단 xAxis Str -> 엘라스틱 서치 검색용 Str  */
-        String xfield = Common.nvl(ElasticSearchCommon.XFIELD.get(xAxis));
-
-        switch (xAxis){
-            case ElasticSearchCommon.CTIME_HH :  // 시간별  (1시간)
-                aggregationBuilder = AggregationBuilders.dateHistogram(xfield).field(xfield).calendarInterval(DateHistogramInterval.hours(1)).minDocCount(1);
-                aggregationBuilder.subAggregation(AggregationBuilders.terms(yAxis).field(yAxis).minDocCount(1));
-                break;
-            case  ElasticSearchCommon.CTIME_YYYYMMDD :  // 일별 (1일)
-                aggregationBuilder = AggregationBuilders.dateHistogram(xfield).field(xfield).calendarInterval(DateHistogramInterval.days(1)).minDocCount(1);
-                aggregationBuilder.subAggregation(AggregationBuilders.terms(yAxis).field(yAxis).minDocCount(1));
-                break;
-            case ElasticSearchCommon.CTIME_YYYYMM : // 월별 (한달)
-                aggregationBuilder = AggregationBuilders.dateHistogram(xfield).field(xfield).calendarInterval(DateHistogramInterval.MONTH).minDocCount(1);
-                aggregationBuilder.subAggregation(AggregationBuilders.terms(yAxis).field(yAxis).minDocCount(1));
-                break;
-            case ElasticSearchCommon.BUSINM : // 사업장
-                aggregationBuilder = AggregationBuilders.terms(xfield).field(xfield).minDocCount(1);
-                aggregationBuilder.subAggregation(AggregationBuilders.terms(yAxis).field(yAxis).minDocCount(1));
-                break;
-            case ElasticSearchCommon.CONM:// 회사
-                aggregationBuilder = AggregationBuilders.terms(xfield).field(xfield).minDocCount(1);
-                aggregationBuilder.subAggregation(AggregationBuilders.terms(yAxis).field(yAxis).minDocCount(1));
-                break;
-            case ElasticSearchCommon.DEPTNM : // 부서
-                aggregationBuilder = AggregationBuilders.terms(xfield).field(xfield).minDocCount(1);
-                aggregationBuilder.subAggregation(AggregationBuilders.terms(yAxis).field(yAxis).minDocCount(1));
-                break;
-            case ElasticSearchCommon.DIRECTION_SVC : // 수/발신
-                aggregationBuilder = AggregationBuilders.terms(xfield).field(xfield).minDocCount(1);
-                aggregationBuilder.subAggregation(AggregationBuilders.terms(yAxis).field(yAxis).minDocCount(1));
-                break;
-            case ElasticSearchCommon.JIKGUBNM : // 직급
-                aggregationBuilder = AggregationBuilders.terms(xfield).field(xfield).minDocCount(1);
-                aggregationBuilder.subAggregation(AggregationBuilders.terms(yAxis).field(yAxis).minDocCount(1));
-                break;
-        }
-        return aggregationBuilder;
-    }
-
-    /***
-     * setQueryReady
-     * @param setQueryReady
+     *  통계 검색 소스 준비
+     * setStatisticQueryReady
+     * @param setStatisticQueryReady
      * @param searchParam
      */
-    public QueryParamReady setQueryReady(Map<String,Object> searchParam) {
+    public QueryParamReady setStatisticQueryReady(Map<String,Object> searchParam) {
 
         /* sort 관련 */
         setSort("");
@@ -1420,27 +1297,97 @@ public class ElasticSearchQuery {
 
 
     /***
-     * setQueryReady
-     * @param setMsgSearchQueryReady
+     *  통계 검색 소스 빌드
+     * @param initStatisticSearchSource
+     * @return
+     */
+    public SearchSourceBuilder initStatisticSearchSource(QueryParamReady queryParamReady){
+        SearchSourceBuilder searchSourceBuilder = null;
+
+        String startDate = "";
+        String endDate = "";
+
+        String xAxis =  Common.nvl(queryParamReady.getXAxis());
+        String yAxis =  Common.nvl(queryParamReady.getYAxis());
+
+        /* 기간 범위 */
+        startDate = Common.nvl(queryParamReady.getSearchParam().get("startDate"));
+        endDate = Common.nvl(queryParamReady.getSearchParam().get("endDate"));
+
+
+        RangeQueryBuilder rangeQuery = new RangeQueryBuilder(ElasticSearchCommon.CTIME).gte(startDate).lte(endDate);
+        QueryStringQueryBuilder secondQuery = QueryBuilders.queryStringQuery(queryParamReady.getQuery());
+
+
+        /* 검색 대상 필드 존재시 추가 */
+        String[] searchFields =  queryParamReady.getSearchFields();
+        if(searchFields != null && searchFields.length >= 1){
+            for(String field : searchFields){
+                secondQuery.field(field);
+            }
+        }
+
+        /* 쿼리 merge */
+        BoolQueryBuilder complateQuery = new BoolQueryBuilder();
+        String colSearchType = (String) queryParamReady.getSearchParam().get("searched_xAxis");
+        Boolean isRowKeyCol =  (("rowKey").equals(Common.nvl(queryParamReady.getSearchParam().get("colId")))) ? true : false;
+        Boolean isTotalCol =  (("total").equals(Common.nvl(queryParamReady.getSearchParam().get("colId")))) ? true : false;
+
+        /* 시간별 디테일 조회 */
+        if(ElasticSearchCommon.CTIME_HH.equals(colSearchType) && !isRowKeyCol && !isTotalCol) {
+            String detailSearchxAxis = queryParamReady.getSearchAggregations();
+            BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
+            int hour = Common.nvz(detailSearchxAxis.replaceAll("[^0-9]", ""));
+
+            LocalDateTime ldtFrom = ElasticSearchCommon.stringToDate( startDate.substring(0,8)+String.format("%02d", hour)+startDate.substring(10,14));
+            LocalDateTime ldtTo = ElasticSearchCommon.stringToDate( endDate.substring(0,8)+String.format("%02d", hour)+endDate.substring(10,14));
+            int diffDay = (int) ChronoUnit.DAYS.between(ldtFrom,ldtTo);
+            for(int d=0; d<=diffDay; d++){
+                String fromStr =  ElasticSearchCommon.dateToString(ldtFrom.withHour(hour));
+                String toStr =   ElasticSearchCommon.dateToString(ldtFrom.withHour(hour+1).minusSeconds(1));
+                boolQueryBuilder.should(new RangeQueryBuilder("ctime").from(fromStr).to(toStr));
+                ldtFrom = ldtFrom.plusDays(1);
+            }
+            complateQuery.filter(boolQueryBuilder);
+        }else {
+            complateQuery.filter(rangeQuery);
+        }
+        complateQuery.must(secondQuery);
+
+        searchSourceBuilder = new SearchSourceBuilder()
+                .from(queryParamReady.getFrom())
+                .size(queryParamReady.getTo())
+                .query(complateQuery)
+                .fetchSource(queryParamReady.getIncludeFields(), queryParamReady.getExcludeFields())
+                .sort(queryParamReady.getSorts())
+                .aggregation(initAggregation(yAxis, xAxis))
+                .timeout(new TimeValue(60, TimeUnit.SECONDS));
+
+        return searchSourceBuilder;
+    }
+
+
+
+    /***
+     * 메시지 검색 쿼리 준비
+     * setMessageSearchQueryReady
+     * @param setMessageSearchQueryReady
      * @param searchParam
      */
-    public QueryParamReady setMsgSearchQueryReady(Map<String,Object> searchParam) {
-        Map<String,String> conditions = new HashMap<>();
-        if(!Common.isEmpty(searchParam.get("conditions"))){
-            List<Map<String,String>> conditionsList = (List<Map<String, String>>) searchParam.get("conditions");
-            if(!Common.isEmpty(conditions) && (conditions.size() >= 1))  conditions.putAll(conditionsList.get(0));
-        }
+    public QueryParamReady setMessageSearchQueryReady(Map<String,Object> searchParam) {
+
 
         /* sort 관련 */
         setSort("");
         List<SortBuilder<?>> sortBuilderList = getSortInfo();
         log.debug("[SORT] {}", sortBuilderList.stream().collect(Collectors.toList()));
 
+
         /* 검색 갯수 설정  */
         int offset = 0;
         int limit = 0;
-        offset =  0;
-        limit = 100;
+        offset = (int) Math.round(Double.valueOf(Common.nvl(searchParam.get("offset"))));
+        limit =  (int) Math.round(Double.valueOf(Common.nvl(searchParam.get("limit"))));
 
         /* set Query */
         setQuery();
@@ -1464,6 +1411,114 @@ public class ElasticSearchQuery {
         return queryParamReady;
 
     }
+
+
+
+    /***
+     *  메시지 검색 소스 빌드
+     * @param initMessageSearchSource
+     * @return
+     */
+    public SearchSourceBuilder initMessageSearchSource(QueryParamReady queryParamReady){
+        SearchSourceBuilder searchSourceBuilder = null;
+
+        String startDate = "";
+        String endDate = "";
+
+        Map<String,Object> conditions = new HashMap<>();
+
+        if(!Common.isEmpty(queryParamReady.getSearchParam().get("filterData"))){
+            Map<String,Object> tempMap = (Map<String, Object>) queryParamReady.getSearchParam().get("filterData");
+            List<Map<String,Object>> tempList = (List<Map<String, Object>>) tempMap.get("conditions");
+            conditions.putAll(tempList.get(0));
+        }
+
+
+        /* 기간 범위 */
+        startDate = Common.nvl(conditions.get("startDt"));
+        endDate = Common.nvl(conditions.get("endDt"));
+
+
+        RangeQueryBuilder rangeQuery = new RangeQueryBuilder(ElasticSearchCommon.CTIME).gte(startDate).lte(endDate);
+        QueryStringQueryBuilder secondQuery = QueryBuilders.queryStringQuery(queryParamReady.getQuery());
+
+
+        /* 검색 대상 필드 존재시 추가 */
+        String[] searchFields =  queryParamReady.getSearchFields();
+        if(searchFields != null && searchFields.length >= 1){
+            for(String field : searchFields){
+                secondQuery.field(field);
+            }
+        }
+
+        /* 쿼리 merge */
+        BoolQueryBuilder complateQuery = new BoolQueryBuilder();
+        complateQuery.filter(rangeQuery);
+        complateQuery.must(secondQuery);
+
+        searchSourceBuilder = new SearchSourceBuilder()
+                .from(queryParamReady.getFrom())
+                .size(queryParamReady.getTo())
+                .query(complateQuery)
+                .fetchSource(queryParamReady.getIncludeFields(), queryParamReady.getExcludeFields())
+                .sort(queryParamReady.getSorts())
+                .timeout(new TimeValue(60, TimeUnit.SECONDS));
+
+        return searchSourceBuilder;
+    }
+
+
+
+    /**
+     * xAxis 집계 쿼리 설정
+     * @param type
+     * @param mainAggs
+     * @return
+     */
+    public AggregationBuilder initAggregation (String yAxis, String xAxis){
+        AggregationBuilder aggregationBuilder = null;
+
+        /* 화면단 xAxis Str -> 엘라스틱 서치 검색용 Str  */
+        String xfield = Common.nvl(ElasticSearchCommon.XFIELD.get(xAxis));
+
+        switch (xAxis){
+            case ElasticSearchCommon.CTIME_HH :  // 시간별  (1시간)
+                aggregationBuilder = AggregationBuilders.dateHistogram(xfield).field(xfield).calendarInterval(DateHistogramInterval.hours(1)).minDocCount(1);
+                aggregationBuilder.subAggregation(AggregationBuilders.terms(yAxis).field(yAxis).minDocCount(1));
+                break;
+            case  ElasticSearchCommon.CTIME_YYYYMMDD :  // 일별 (1일)
+                aggregationBuilder = AggregationBuilders.dateHistogram(xfield).field(xfield).calendarInterval(DateHistogramInterval.days(1)).minDocCount(1);
+                aggregationBuilder.subAggregation(AggregationBuilders.terms(yAxis).field(yAxis).minDocCount(1));
+                break;
+            case ElasticSearchCommon.CTIME_YYYYMM : // 월별 (한달)
+                aggregationBuilder = AggregationBuilders.dateHistogram(xfield).field(xfield).calendarInterval(DateHistogramInterval.MONTH).minDocCount(1);
+                aggregationBuilder.subAggregation(AggregationBuilders.terms(yAxis).field(yAxis).minDocCount(1));
+                break;
+            case ElasticSearchCommon.BUSINM : // 사업장
+                aggregationBuilder = AggregationBuilders.terms(xfield).field(xfield).minDocCount(1);
+                aggregationBuilder.subAggregation(AggregationBuilders.terms(yAxis).field(yAxis).minDocCount(1));
+                break;
+            case ElasticSearchCommon.CONM:// 회사
+                aggregationBuilder = AggregationBuilders.terms(xfield).field(xfield).minDocCount(1);
+                aggregationBuilder.subAggregation(AggregationBuilders.terms(yAxis).field(yAxis).minDocCount(1));
+                break;
+            case ElasticSearchCommon.DEPTNM : // 부서
+                aggregationBuilder = AggregationBuilders.terms(xfield).field(xfield).minDocCount(1);
+                aggregationBuilder.subAggregation(AggregationBuilders.terms(yAxis).field(yAxis).minDocCount(1));
+                break;
+            case ElasticSearchCommon.DIRECTION_SVC : // 수/발신
+                aggregationBuilder = AggregationBuilders.terms(xfield).field(xfield).minDocCount(1);
+                aggregationBuilder.subAggregation(AggregationBuilders.terms(yAxis).field(yAxis).minDocCount(1));
+                break;
+            case ElasticSearchCommon.JIKGUBNM : // 직급
+                aggregationBuilder = AggregationBuilders.terms(xfield).field(xfield).minDocCount(1);
+                aggregationBuilder.subAggregation(AggregationBuilders.terms(yAxis).field(yAxis).minDocCount(1));
+                break;
+        }
+        return aggregationBuilder;
+    }
+
+
 
     /* search after 검색 소스 보존*/
 //

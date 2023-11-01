@@ -53,7 +53,6 @@
 <script type="text/javascript" src="<c:url value="/js/transition.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/collapse.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/ko.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/messageGrid.js"/>"></script>
 
 <%-- popup js --%>
 <script type="text/javascript" src="<c:url value="/js/Date.js"/>"></script>

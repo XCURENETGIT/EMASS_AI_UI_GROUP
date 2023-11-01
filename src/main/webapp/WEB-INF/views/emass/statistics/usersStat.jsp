@@ -10,6 +10,7 @@
 	left: initial;
 }
 </style>
+<script type="text/javascript" src="<c:url value="/js/messageGrid.js"/>"></script> <%-- 통계 --%>
 <script>
 
 /*  그리드 , 차트 정의 */
@@ -677,9 +678,7 @@ function getSearchQuery() {
 			if(colNum != '' & colNum != null) colId = grid1.getHeaderId()[grid1.Col].id;
 
 
-
 			/* 검색 데이터 전송 객체 */
-			//headercheck
 			var searchData = {
 					rowKey : rowKey,
 					colKey : colKey,
@@ -696,12 +695,11 @@ function getSearchQuery() {
 					nameStat : 'users',
 			}
 
-			console.log(searchData);
-
 			ui.get({
 				url : 'getStatDetailList.xcn',
 				searchParam : JSON.stringify(searchData),
 				success : function(data, total) {
+					console.log(data.emass);
 					if ( lastRow == 'Y' || lastRow == undefined ) detailTotal = total;
 					currentgrid.appendData(data.emass);
 					if ( currentgrid.loadingPage == 0 ) currentgrid.Select(-1,-1);

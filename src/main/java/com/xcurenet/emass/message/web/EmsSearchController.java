@@ -10,6 +10,7 @@ import com.xcurenet.audit.service.Operation;
 import com.xcurenet.audit.service.ParentMenu;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.MongoUtil;
+import com.xcurenet.common.util.elasticsearch.ElasticSearchCommon;
 import com.xcurenet.common.util.elasticsearch.ElasticSearchQuery;
 import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
@@ -71,9 +72,10 @@ public class EmsSearchController {
 		Gson gson = new Gson();
 		Map<String,Object> resultParam = Common.getParamMap(request);
 		Map<String,Object> searchParam = new HashMap<>();
-		if(!Common.isEmpty(resultParam.get("data"))){
+		if(!Common.isEmpty(resultParam.get("searchData"))){
 			Type type = new TypeToken<Map<String,Object>>(){}.getType();
-			searchParam = gson.fromJson((String) resultParam.get("data"),type);
+			 searchParam = gson.fromJson((String) resultParam.get("searchData"),type);
+			 searchParam.put("elsSearchType", ElasticSearchCommon.SEARCH_TYPE_MESSAGE);
 		}
 		/*############################################################################*/
 

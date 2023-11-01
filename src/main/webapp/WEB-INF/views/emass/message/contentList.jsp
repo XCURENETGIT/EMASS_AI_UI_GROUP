@@ -114,6 +114,7 @@ a:hover, a:focus{
 	font-weight: bold;
 }
 </style>
+
 </head>
 <body class="mini-navbar msgBody">
 	<div id="replace_html" style="display: none;"></div>
@@ -171,7 +172,7 @@ var tabId='';
 var tabType;
 var searchedFlag = false;
 var pageType = '';
-
+var grid;
 $(document).ready(function() {
 	document.onclick = function(e){ parent.$('.dropdown-backdrop').click(); }
 	
@@ -248,7 +249,7 @@ function getList(flag, filterVal){
 	if(!searchFlag) return;
 	searchFlag = false;
 	var researchCnt = 0;
-	
+
 	if ( flag == undefined || flag == '') {
 		if(tabType=='D' && parent.$("input:checkbox[id='researchCheckbox']").is(":checked")) {
 			researchCnt = filterValData.conditions.length-1;
@@ -265,46 +266,39 @@ function getList(flag, filterVal){
 	} else {
 		grid.loadingPage++;
 	}
+
+	/* 검색 데이터 전송 객체 */
+	var searchData = {
+		 filterData : filterValData
+		,pageType : pageType
+		,offset : grid.data.length + grid.overlapData.length
+		,limit : grid.pageSize
+		,overlap : overlapUse
+	}
+
 	grid.on();
 	ui.postJson({
 		url : 'getList.xcn',
-		data : JSON.stringify( filterValData ),
-		pageType : pageType,
-		offset : grid.data.length + grid.overlapData.length,
-		limit : grid.pageSize,
-		overlap : overlapUse,
+		searchData : JSON.stringify( searchData ),
 		success : function(data, total) {
 			searchedFlag = true;
-			
 			grid.appendData(data.emass);
 			if ( grid.loadingPage == 0 ) grid.Select(-1,-1);
-			
-			parent.setResultCnt(tabId, total.comma());
-			parent.changeTabName(tabId, '', researchCnt);
-			setServiceGroupCntInfo(data.facet, total);
-			$('#searchTime').val(data.searchTime);
-			
-			var query = filterValData.conditions[0].query;
-			/* console.log("getList filterValData query1 : " + query); */
-			if( query != '' && query != undefined){
-				parent.$('#researchCheckbox').prop('disabled', true);
-			}else{
-				parent.$('#researchCheckbox').prop('disabled', false);
-			}
 
-			
-			//parent.setValueById('solrQueryText', data.excuteQuery);
-			
-			/* selectedTab.find('.resultCnt').html('('+addCommas(total)+')');
-			selectedTab.find('.resultCntHidden').html(total);
-			$('#'+obj.contentId).find('.solrQueryResultText').val(data.excuteQuery);
-			
-			selectedTab.find('img').css('display', 'none');
-			rsKey[selectedTabIdx].total = total;
-			rsKey[selectedTabIdx].searchTime = data.searchTime;
-			
-			if($('#'+rsKey[selectedTabIdx].contentId).find('.tabValue').attr('data-filterType') == 'Q') $('#researchCheckbox').prop('disabled', true);
-			else $('#researchCheckbox').prop('disabled', false); */
+			// parent.setResultCnt(tabId, total.comma());
+			// parent.changeTabName(tabId, '', researchCnt);
+			// setServiceGroupCntInfo(data.facet, total);
+			// $('#searchTime').val(data.searchTime);
+			//
+			// var query = filterValData.conditions[0].query;
+			// /* console.log("getList filterValData query1 : " + query); */
+			// if( query != '' && query != undefined){
+			// 	parent.$('#researchCheckbox').prop('disabled', true);
+			// }else{
+			// 	parent.$('#researchCheckbox').prop('disabled', false);
+			// }
+
+
 		},
 		error : function(status, message) {
 			alert(message);
@@ -752,34 +746,14 @@ function alert(msg){
 	parent.alert(msg);
 }
 
-// var overlapUse='';
-// function getOverLapUse(){
-// 	ui.get({
-// 		url : 'getConfAdmin.xcn',
-// 		confId : 'message.overlap.use',
-// 		success : function(data, total) {
-// 			if(data == null || data == undefined) overlapUse = 'N'; 
-// 			else overlapUse = data.val; 
-// 		},
-// 		error : function(status, message) {
-// 			ui.alertMsg(message);
-// 		},
-// 		complete : function() {
-// 			if(gridInit == 'true') initGrid();
-// 		}
-// 	});
-// }
 
-var grid;
+
 function initGrid(){
-	if( grid != undefined ) return;
-	
 	grid = new Xgrid('messageNewGrid', contextRoot, 20);
 	grid.onCheckBox();
 	grid.autoNumber();
 	grid.colAdd('msgid', '<s:message code="common.msg.msgid"/>', 100, 'left', false, 'nomal');
-	grid.colAdd('epmsg_type', '<s:message code="condition.epmsgType.list"/>', 100, 'center', true, 'nomal');
-	grid.colAdd('xrootmtr', '<s:message code="common.msg.xrootmtr"/>', 100, 'left', true, 'nomal'); 
+	grid.colAdd('xrootmtr', '<s:message code="common.msg.xrootmtr"/>', 100, 'left', true, 'nomal');
 	if(overlapUse == 'Y') {
 		grid.colAdd('overlap', '<s:message code="common.overlap.count"/>', 80, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
 			var overlapData = value;
@@ -787,31 +761,31 @@ function initGrid(){
 			else return overlapData.length.comma();
 		});
 	}
-	grid.colAdd('interestUserYn', '<s:message code="message.msg.interest"/>', 40, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
-		if (value == 'N') return '';
-		/* if (value == 'Y') return '<div class="interestUserCheck"></div>';
-		else if (value == 'N') return ''; */
-		var value = grid.getValue(row, 'interestGroupColor')
-		var str = '';
-		if(value != null && value != undefined && value != ''){
-			var v = value.split(',');
-			for(var i = 0; i < v.length; i++) {
-				str += '<span style="display:inline-block; width: 11px; height: 11px; margin-left: 1px; background-color:'+v[i]+'"></span>';
-			}
-		}
-		return str;
-	});
-	grid.colAdd('readYn', '<s:message code="condition.read"/>', 40, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-		if (value == 'Y') return '<div class="readY"></div>';
-		else if (value == 'N') return '<div class="readN"></div>';
-		else return '-';
-	});
-	
+	<%--grid.colAdd('interestUserYn', '<s:message code="message.msg.interest"/>', 40, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {--%>
+	<%--	if (value == 'N') return '';--%>
+	<%--	/* if (value == 'Y') return '<div class="interestUserCheck"></div>';--%>
+    <%--    else if (value == 'N') return ''; */--%>
+	<%--	var value = grid.getValue(row, 'interestGroupColor')--%>
+	<%--	var str = '';--%>
+	<%--	if(value != null && value != undefined && value != ''){--%>
+	<%--		var v = value.split(',');--%>
+	<%--		for(var i = 0; i < v.length; i++) {--%>
+	<%--			str += '<span style="display:inline-block; width: 11px; height: 11px; margin-left: 1px; background-color:'+v[i]+'"></span>';--%>
+	<%--		}--%>
+	<%--	}--%>
+	<%--	return str;--%>
+	<%--});--%>
+	<%--grid.colAdd('readYn', '<s:message code="condition.read"/>', 40, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {--%>
+	<%--	if (value == 'Y') return '<div class="readY"></div>';--%>
+	<%--	else if (value == 'N') return '<div class="readN"></div>';--%>
+	<%--	else return '-';--%>
+	<%--});--%>
+
 	if( infoFeedbackConf == 'true' && infoFeedbackYn == 'Y' ) {
 		var ml_confd_class_str = infoHynixConf == 'true' ? '<s:message code="condition.itype"/>' : '<s:message code="condition.infotype"/>';
 		var ml_confd_feedback_str = infoHynixConf == 'true' ? '<s:message code="condition.secretFeedback"/>' : '<s:message code="condition.feedback"/>';
 		var ml_confd_prob_str = infoHynixConf == 'true' ? '<s:message code="condition.sprob"/>' : '<s:message code="condition.prob"/>';
-		grid.colAdd('ml_confd_class', ml_confd_class_str, 100, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+		grid.colAdd('ml_mlConfdClass', ml_confd_class_str, 100, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 			if (value == '4') return '<s:message code="condition.info.class4"/>';
 			else if (value == '3') return '<s:message code="condition.info.class3"/>';
 			else if (value == '2') return '<s:message code="condition.info.class2"/>';
@@ -819,18 +793,18 @@ function initGrid(){
 			else if (value == '0') return '<s:message code="condition.info.N"/>'; // for hynix (대외비 문서)
 			else return '<s:message code="common.msg.noinfo"/>';
 		});
-		grid.colAdd('ml_confd_feedback', ml_confd_feedback_str, 110, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+		grid.colAdd('ml_mlConfdFeedback', ml_confd_feedback_str, 110, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 			if (value == '1') return infoHynixConf == 'true' ? '<div class="feedbackCorrect"></div>&nbsp;<s:message code="condition.info.secretFeedbackY"/>' : '<div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.class1"/>';
 			else if (value == '2') return '<div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.class2"/>';
 			else if (value == '3') return '<div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.class3"/>';
 			else if (value == '4') return '<div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.class4"/>';
 			else if (value == '0') return infoHynixConf == 'true' ?'<div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.secretFeedbackN"/>':'<div class="feedbackCorrect"></div>&nbsp;<s:message code="condition.info.feedback0"/>';
 			else if (value == '9') return '<div class="feedbackDefer"></div>&nbsp;<s:message code="condition.info.feedback9"/>';
-			else if (value == '-1') return '-'; 
+			else if (value == '-1') return '-';
 		});
-		grid.colAdd('ml_confd_prob', ml_confd_prob_str+'(%)', 90, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+		grid.colAdd('ml_mlConfdProb', ml_confd_prob_str+'(%)', 90, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 			if(infoHynixConf == 'true'){
-				var sprobRound = Math.round(value*100)/100; 
+				var sprobRound = Math.round(value*100)/100;
 				if( value == undefined || value == null || value == -1.0 ) return '-';
 				return sprobRound * 100;
 			}else{
@@ -838,71 +812,70 @@ function initGrid(){
 			}
 		});
 	}
-	grid.colAdd('attachcnt', '<s:message code="message.msg.file"/>', 35, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
+	grid.colAdd('attachCnt', '<s:message code="message.msg.file"/>', 35, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
 		if (value == '0') return '';
 		else return value.comma();
 	});
-	grid.colAdd('inside', '<s:message code="message.msg.inout"/>', 55, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+	grid.colAdd('user_inside', '<s:message code="message.msg.inout"/>', 55, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 		if (value == 'N') return '<s:message code="message.msg.out"/>';
 		else if (value == 'Y') return '<s:message code="message.msg.in"/>';
 		else return '-';
 	});
-	
-	grid.colAdd('direction_svc', '<s:message code="condition.receive_send"/>', 55, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+
+	grid.colAdd('directionSvc', '<s:message code="condition.receive_send"/>', 55, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 		if (value == 'I') return '<s:message code="condition.receive"/>';
 		else if (value == 'O') return '<s:message code="condition.send"/>';
 		else return '-';
 	});
-	
-	grid.colAdd('svcNm', '<s:message code="condition.service"/>', 180, 'center', false, 'nomal');
+
+	grid.colAdd('service_svcNm', '<s:message code="condition.service"/>', 180, 'center', false, 'nomal');
 	grid.colAdd('subject', '<s:message code="condition.subject"/>', 410, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 		var body_snippet = grid.getValue(row, 'body_snippet').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '\'');
 		if(body_snippet.length > 100) body_snippet = body_snippet.substring(0, 1024)+'...';
-		
+
 		if(value.length > 1024) value = value.substring(0, 1024)+'...';
 		value = value.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '\'');
-		
+
 		//예약어 Highlight 처리
 		if(searchKeyword().length == 0 || parent.keywordHighlight.toString() == 'true') {
 			var kwds = grid.getValue(row, 'kwds');
 			value = highlightKeyword(value, kwds);
 		}
 		value = highlightSearchStr(value, "subject");
-		
+
 		var rtnVal = '<span title="'+body_snippet+'" onclick="" class="subject_read'+grid.getValue(row, 'readYn')+'">'+value+'</span>&nbsp;<a href="javascript:void(0);" onclick="viewer_newOpen('+row+')" class="glyphicon glyphicon-new-window new-window"></a>';
 		if( (isConsent( ) && grid.getValue(row, 'consentNo') == '') || !isDetailView() ) rtnVal = '<span>'+value+'</span>';
-		
+
 		return rtnVal;
 	});
-	grid.colAdd('ctimeFormat', '<s:message code="condition.date"/>', 130, 'center', false, 'nomal');
-	grid.colAdd('user', '<s:message code="consent.user"/>', 120, 'center', false, 'link');
-	grid.colAdd('usr_id', '<s:message code="common.msg.account"/>', 110, 'center', false, 'nomal');
-	grid.colAdd('businm', '<s:message code="common.org.busi"/>', 120, 'center', true, 'nomal');
-	grid.colAdd('ip_businm', '<s:message code="message.actual.business"/>', 120, 'center', true, 'nomal');
-	grid.colAdd('deptnm', '<s:message code="common.org.dept"/>', 120, 'center', false, 'nomal');
-	grid.colAdd('ip_deptnm', '<s:message code="message.actual.dept"/>', 120, 'center', false, 'nomal');
-	grid.colAdd('jikgubnm', '<s:message code="common.org.jikgub"/>', 120, 'center', false, 'nomal');
-	grid.colAdd('sender', '<s:message code="condition.sender"/>', 130, 'left', false, 'link', function(row, cell, value, columnDef, dataContext) {
+	grid.colAdd('ctime', '<s:message code="condition.date"/>', 130, 'center', false, 'nomal');
+	grid.colAdd('user_name', '<s:message code="consent.user"/>', 120, 'center', false, 'link');
+	grid.colAdd('user_id', '<s:message code="common.msg.account"/>', 110, 'center', false, 'nomal');
+	grid.colAdd('user_busiNm', '<s:message code="common.org.busi"/>', 120, 'center', true, 'nomal');
+	grid.colAdd('user_ipBusiNm', '<s:message code="message.actual.business"/>', 120, 'center', true, 'nomal');
+	grid.colAdd('user_deptNm', '<s:message code="common.org.dept"/>', 120, 'center', false, 'nomal');
+	grid.colAdd('user_ipBusiNm', '<s:message code="message.actual.dept"/>', 120, 'center', false, 'nomal');
+	grid.colAdd('user_jikgubNm', '<s:message code="common.org.jikgub"/>', 120, 'center', false, 'nomal');
+	grid.colAdd('sender_mail_name', '<s:message code="condition.sender"/>', 130, 'left', false, 'link', function(row, cell, value, columnDef, dataContext) {
 		return highlightSearchStr(value, "sender");
 	});
 	grid.colAdd('allofus', '<s:message code="condition.allofus"/>', 150, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 		if( value == undefined || value.length == 0) return '';
-		
-		for( var i=0; i<value.length; i++){
-			if(value[i] == 'IA') value[i] = '<s:message code="condition.allofus1"/>';
-			else if(value[i] == 'ET') value[i] = '<s:message code="condition.allofus8"/>';
-			else if(value[i] == 'IT') value[i] = '<s:message code="condition.allofus7"/>';
-			else if(value[i] == 'EA') value[i] = '<s:message code="condition.allofus2"/>';
-			else if(value[i] == 'PT') value[i] = '<s:message code="condition.allofus9"/>';
-			else if(value[i] == 'PA') value[i] = '<s:message code="condition.allofus3"/>';
-			else if(value[i] == 'SO') value[i] = '<s:message code="condition.allofus13"/>';
-			else if(value[i] == 'SI') value[i] = '<s:message code="condition.allofus14"/>';
+		switch (value) {
+			case 'IA' : value = '<s:message code="condition.allofus1"/>';
+			case 'ET' : value = '<s:message code="condition.allofus8"/>';
+			case 'IT' : value = '<s:message code="condition.allofus7"/>';
+			case 'EA' : value = '<s:message code="condition.allofus2"/>';
+			case 'PT' : value = '<s:message code="condition.allofus9"/>';
+			case 'PA' : value = '<s:message code="condition.allofus3"/>';
+			case 'SO' : value = '<s:message code="condition.allofus13"/>';
+			case 'SI' : value = '<s:message code="condition.allofus14"/>';
 		}
-		return value.join(', ');
+		return value;
 	});
-	grid.colAdd('recvsStr', '<s:message code="condition.recv"/>', 220, 'left', false, 'link', function(row, cell, value, columnDef, dataContext) {
-		return highlightSearchStr(value, "recvs");
-	}, {sorter:sortUtil.inout});
+	<%--grid.colAdd('recvsStr', '<s:message code="condition.recv"/>', 220, 'left', false, 'link', function(row, cell, value, columnDef, dataContext) {--%>
+	<%--	return highlightSearchStr(value, "recvs");--%>
+	<%--}, {sorter:sortUtil.inout});--%>
 	grid.colAdd('to', '<s:message code="condition.to"/>', 150, 'left', true, 'link', function(row, cell, value, columnDef, dataContext) {
 		var innOutInfo = grid.getValue(row, 'toInOutInfo');
 		var rtnVal = arrayToString(value);
@@ -910,7 +883,6 @@ function initGrid(){
 	});
 	grid.colAdd('cc', '<s:message code="condition.cc"/>', 150, 'left', true, 'link', function(row, cell, value, columnDef, dataContext) {
 		var innOutInfo = grid.getValue(row, 'ccInOutInfo');
-		
 		var rtnVal = arrayToString(value);
 		return innOutInfo+highlightSearchStr(rtnVal, "cc");
 	});
@@ -919,32 +891,32 @@ function initGrid(){
 		var rtnVal = arrayToString(value);
 		return innOutInfo+highlightSearchStr(rtnVal, "bcc");
 	});
-	grid.colAdd('srcip', '<s:message code="condition.source"/> IP', 100, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+	grid.colAdd('network_srcIp', '<s:message code="condition.source"/> IP', 100, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 		return highlightSearchStr(value, "srcip");
 	}, {sorter:sortUtil.ip});
-	grid.colAdd('dstip', '<s:message code="condition.destination"/> IP', 100, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+	grid.colAdd('network_dstIp', '<s:message code="condition.destination"/> IP', 100, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 		return highlightSearchStr(value, "dstip");
 	}, {sorter:sortUtil.ip});
-	grid.colAdd('attachname', '<s:message code="condition.attach_name"/>', 220, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+	grid.colAdd('attach_name', '<s:message code="condition.attach_name"/>', 220, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 		var rtnVal = arrayToString(value);
 		return highlightSearchStr(rtnVal, "attachname");
 	});
-	grid.colAdd('sizeStr', '<s:message code="condition.size.all"/>', 80, 'left', false, 'nomal', null, {sortField:'size'});
-	grid.colAdd('bodySizeStr', '<s:message code="condition.size.body"/>', 80, 'left', false, 'nomal', null, {sortField:'body_size'});
-	grid.colAdd('attachSizeStr', '<s:message code="condition.size.attach"/>', 80, 'left', false, 'nomal', null, {sortField:'attachSizeSort'});
-	grid.colAdd('kwds', '<s:message code="condition.keyword"/>', 120, 'left', false, 'nomal');
-	grid.colAdd('pi_total', '<s:message code="condition.regexp"/>', 70, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
+	grid.colAdd('size_Str', '<s:message code="condition.size.all"/>', 80, 'left', false, 'nomal', null, {sortField:'size'});
+	grid.colAdd('body_sizeStr', '<s:message code="condition.size.body"/>', 80, 'left', false, 'nomal', null, {sortField:'body_size'});
+	grid.colAdd('attach_sizeStr', '<s:message code="condition.size.attach"/>', 80, 'left', false, 'nomal', null, {sortField:'attachSizeSort'});
+	grid.colAdd('kwd_kwds', '<s:message code="condition.keyword"/>', 120, 'left', false, 'nomal');
+	grid.colAdd('pi_kwds', '<s:message code="condition.regexp"/>', 70, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
 		if (value == '0') return '';
 		else return value.comma();
 	});
-	
+
 	if ( isOCR ) {
-		grid.colAdd('ocr_attach_cnt', 'OCR <s:message code="message.msg.file"/>', 70, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
+		grid.colAdd('ocr_attachCnt', 'OCR <s:message code="message.msg.file"/>', 70, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
 			if (value == '0' || value == '' || value == null || value == undefined ) return '';
 			else return value.comma();
 		});
 	}
-	
+
 	grid.loadHeader(true);
 	grid.loadPageSize();
 	grid.initData('<s:message code="common.msg.search.click"/>');
@@ -952,17 +924,17 @@ function initGrid(){
 		e.preventDefault();
 
 		$("#contextMenu")
-		.data("row", row)
-		.css("top", e.pageY)
-		.css("left", e.pageX)
-		.show();
+				.data("row", row)
+				.css("top", e.pageY)
+				.css("left", e.pageX)
+				.show();
 	};
 	grid.onClick = function() {
 		if($('#contextMenu').css('display')=='block' || $('#contextMenu').css('display')=='inline-block') $('#contextMenu').hide();
-		if (grid.Col == grid.ColIndex('attachcnt')) {
+		if (grid.Col == grid.ColIndex('attachCnt')) {
 			fileInfoViewer( grid.Row );
-		}else if (grid.Col == grid.ColIndex('user')) {
-			userInfoViewer( grid.Row, 'user' );
+		}else if (grid.Col == grid.ColIndex('user_name')) {
+			userInfoViewer( grid.Row, 'user_name' );
 		}else if (grid.Col == grid.ColIndex('sender')) {
 			userInfoViewer( grid.Row, 'sender' );
 		}else if (grid.Col == grid.ColIndex('recvsStr')) {
@@ -978,7 +950,7 @@ function initGrid(){
 		}else if(grid.Col == grid.ColIndex('referer_url')) {
 			var referer_url = grid.getValue(grid.Row, 'referer_url');
 			if(referer_url !='N') fnOpenWindow(referer_url, '', 1024, 800, 'resize');
-		}else if (grid.Col == grid.ColIndex('ocr_attach_cnt')) {
+		}else if (grid.Col == grid.ColIndex('ocr_attachCnt')) {
 			ocrFileInfoViewer( grid.Row );
 		} else if (grid.Col == grid.ColIndex('interestUserYn')) {
 			var interestUserYn = grid.getValue(grid.Row, 'interestUserYn');
@@ -986,7 +958,7 @@ function initGrid(){
 		} else if (grid.Col == grid.ColIndex('overlap')) {
 			overlapInfoViewer( grid.Row );
 		}
-		
+
 		if( !(adminMenu != "ALL" && adminMenu.indexOf("DV") < 0) ) {
 			if(!parent.$('#none_btn').hasClass('areaSelected')) viewer_open(grid.Row);
 			if(popWin) viewer_openFocus(grid.Row);
@@ -1010,7 +982,7 @@ function initGrid(){
 			return;
 		}
 	}
-	
 }
+
 </script>
 </html>

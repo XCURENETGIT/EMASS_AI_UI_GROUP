@@ -13,10 +13,15 @@ import java.util.Map;
 @Getter
 public class ElasticSearchCommon {
 
+    /* EMASS INDEX */
     public static final String INDEX = "emass";
 
-    public static final String ALL_SEARCH = "*:*";
+    /*검색타입*/
+    public static final String SEARCH_TYPE_MESSAGE = "message";
+    public static final String SEARCH_TYPE_STATISTIC = "statistic";
 
+    /* 쿼리 관련 */
+    public static final String ALL_SEARCH = "*:*";
     public static final String OPEN_BRACKET = "(";
     public static final String CLOSE_BRACKET = ")";
     public static final String BACKSLASH = "\\";
@@ -25,12 +30,11 @@ public class ElasticSearchCommon {
     public static final String COMMA = ",";
     public static final String SPECIAL_CHAR = "*";
     public static final String OR_PREFIX = "#";
-
-
-
     public static final String AND_QUERY = "AND";
     public static final String EXCEPT_QUERY = "-";
 
+
+    /* 검색 영역 */
     public static final String CTIME = "ctime"; // 시간
     public static final String CTIME_HH = "ctime_hh"; //시간별
     public static final String CTIME_YYYYMM = "ctime_yyyymm"; //월별
@@ -104,6 +108,8 @@ public class ElasticSearchCommon {
     private static final String OCR_FIELD = " ocr_attach";
 
 
+
+
     public static final String TIME_FORMAT = "common.time.";
 
 
@@ -119,6 +125,7 @@ public class ElasticSearchCommon {
             "user", "xmsgkey", "xparentmtr", "xrootmtr",
     };
 
+    /* 화면에서의 (검색 영역) 값 엘라스틱 서치 필드로 치환 */
     public static Map<String,String> XFIELD = new HashMap<>(){{
         put("ctime_hh", "ctime");
         put("ctime_yyyymmdd", "ctime");
@@ -128,11 +135,6 @@ public class ElasticSearchCommon {
         put("deptnm", "user.deptnm");
         put("direction_svc", "direction_svc");
         put("jikgubnm", "user.jikgubnm");
-    }};
-
-    public static Map<String,String> YFIELD = new HashMap<>(){{
-           put("test","mail.sender.mail.keyword");
-
     }};
 
 

@@ -6,10 +6,10 @@
 			currGrid.colAdd('msgid', gridColumn.msgid, 100, 'left', false, 'nomal');
 		//	currGrid.colAdd('epmsg_type', gridColumn.epmsg_type, 100, 'center', true, 'nomal');
 			currGrid.colAdd('xrootmtr', gridColumn.xrootmtr, 100, 'left', true, 'nomal');
-			currGrid.colAdd('interestUserYn', gridColumn.interestUserYn, 40, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-				if (value == 'Y') return '<div class="interestUserCheck"></div>';
-				else if (value == 'N') return '';
-			});
+			// currGrid.colAdd('interestUserYn', gridColumn.interestUserYn, 40, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+			// 	if (value == 'Y') return '<div class="interestUserCheck"></div>';
+			// 	else if (value == 'N') return '';
+			// });
 			currGrid.colAdd('readYn', gridColumn.readYn, 40, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 				if (value == 'Y') return '<div class="readY"></div>';
 				else if (value == 'N') return '<div class="readN"></div>';
@@ -24,7 +24,7 @@
 				else if (value == '1') return mlConfdClassMsg.C1;
 				else return mlConfdClassMsg.C0;
 			});*/
-			currGrid.colAdd('ml_confd_class', gridColumn.ml_confd_class, 100, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+			currGrid.colAdd('ml_mlConfdClass', gridColumn.ml_confd_class, 100, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 				if (value == '4') return mlConfdClassMsg.C4;
 				else if (value == '3') return mlConfdClassMsg.C3;
 				else if (value == '2') return mlConfdClassMsg.C2;
@@ -41,7 +41,7 @@
 				else if (value == '9') return '<div class="feedbackDefer"></div>&nbsp;' + mlConfdFeedbackMsg.F9;
 				else return '-';
 			});*/
-			currGrid.colAdd('ml_confd_feedback', gridColumn.ml_confd_feedback, 110, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+			currGrid.colAdd('ml_mlConfdFeedback', gridColumn.ml_confd_feedback, 110, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 				if (value == '1') return '<div class="feedbackInCorrect"></div>&nbsp;' + mlConfdClassMsg.C1;
 				else if (value == '2') return '<div class="feedbackInCorrect"></div>&nbsp;' + mlConfdClassMsg.C2;
 				else if (value == '3') return '<div class="feedbackInCorrect"></div>&nbsp;' + mlConfdClassMsg.C3;
@@ -50,11 +50,11 @@
 				else if (value == '9') return '<div class="feedbackDefer"></div>&nbsp;' + mlConfdFeedbackMsg.F9;
 				else return '-';
 			});
-			currGrid.colAdd('ml_confd_prob', gridColumn.ml_confd_prob, 110, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+			currGrid.colAdd('ml_mlConfdProb', gridColumn.ml_confd_prob, 110, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 				return probPercent(value);
 			});
 			}
-			currGrid.colAdd('attachcnt', gridColumn.attachcnt, 35, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
+			currGrid.colAdd('attachCnt', gridColumn.attachcnt, 35, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
 				if (value == '0') return '';
 				else return value.comma();
 			});
@@ -64,7 +64,7 @@
 			// 	else return '-';
 			// });
 
-			currGrid.colAdd('direction_svc', gridColumn.direction_svc, 55, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+			currGrid.colAdd('directionSvc', gridColumn.direction_svc, 55, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 				if (value == 'I') return gridColumn.receive;
 				else if (value == 'O') return gridColumn.send;
 				else return '-';
@@ -101,9 +101,9 @@
 				
 				return value;
 			});
-			currGrid.colAdd('recvsStr', gridColumn.recvs, 220, 'left', false, 'link', function(row, cell, value, columnDef, dataContext) {
-				return value;
-			}, {sorter:sortUtil.inout});
+			// currGrid.colAdd('recvsStr', gridColumn.recvs, 220, 'left', false, 'link', function(row, cell, value, columnDef, dataContext) {
+			// 	return value;
+			// }, {sorter:sortUtil.inout});
 
 			currGrid.colAdd('to', gridColumn.to, 150, 'left', true, 'link', function(row, cell, value, columnDef, dataContext) {
 				var innOutInfo = currGrid.getValue(row, 'toInOutInfo');
@@ -120,23 +120,25 @@
 				if(value == undefined) value = '';
 				return innOutInfo+value;
 			});
+
+
 			currGrid.colAdd('network_srcip', gridColumn.srcip + ' IP', 100, 'left', false, 'nomal');
 			currGrid.colAdd('network_dstip', gridColumn.dstip + ' IP', 100, 'left', false, 'nomal');
-			currGrid.colAdd('attachname', gridColumn.attachname, 220, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+			currGrid.colAdd('attach_name', gridColumn.attachname, 220, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 				var rtnVal = arrayToString(value);
 				var kwds = currGrid.getValue(row, 'kwds');
 				return highlightKeyword(rtnVal, kwds);
 			});
-			currGrid.colAdd('sizeStr', gridColumn.sizeStr, 80, 'left', false, 'nomal');
+			currGrid.colAdd('size_Str', gridColumn.sizeStr, 80, 'left', false, 'nomal');
 			currGrid.colAdd('body_sizeStr', gridColumn.bodySizeStr, 80, 'left', false, 'nomal', null, {sortField:'body_size'});
-			currGrid.colAdd('attachSizeStr', gridColumn.attachSizeStr, 80, 'left', false, 'nomal', null, {sortField:'attachSizeSort'});
+			currGrid.colAdd('attach_sizeStr', gridColumn.attachSizeStr, 80, 'left', false, 'nomal', null, {sortField:'attachSizeSort'});
 			currGrid.colAdd('kwd_kwds', gridColumn.kwds, 120, 'left', false, 'nomal');
-			currGrid.colAdd('pi_total', gridColumn.pi_total, 70, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
-				if (value == '0') return '';
-				else return value.comma();
-			});
+			// currGrid.colAdd('pi_total', gridColumn.pi_total, 70, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
+			// 	if (value == '0') return '';
+			// 	else return value.comma();
+			// });
 			if ( isOCR ) {
-				currGrid.colAdd('ocr_attach_cnt', gridColumn.ocr, 70, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
+				currGrid.colAdd('ocr_attachCnt', gridColumn.ocr, 70, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
 					if (value == '0' || value == '' || value == null || value == undefined ) return '';
 					else return value.comma();
 				});

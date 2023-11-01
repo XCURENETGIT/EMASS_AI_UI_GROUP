@@ -8,8 +8,11 @@ import javax.annotation.Nullable;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Nullable
-public class Http {
-    private String path;
-    private String query;
-    private String host;
+public class HttpVo {
+
+    private String	path;    //	URL PATH
+    private String	query;    //	URL 쿼리
+    private String	host;    //	HOST
+    private String	header;	    //HEADER
+    
 }

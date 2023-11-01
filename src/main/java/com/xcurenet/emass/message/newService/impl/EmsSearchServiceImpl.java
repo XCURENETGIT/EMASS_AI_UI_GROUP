@@ -2,10 +2,7 @@ package com.xcurenet.emass.message.newService.impl;
 
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.TimeUtil;
-import com.xcurenet.common.util.elasticsearch.ElasticSearchConnection;
-import com.xcurenet.common.util.elasticsearch.ElasticSearchQuery;
-import com.xcurenet.common.util.elasticsearch.ElsSearchResponse;
-import com.xcurenet.common.util.elasticsearch.QueryParamReady;
+import com.xcurenet.common.util.elasticsearch.*;
 import com.xcurenet.config.service.ConfigAdminService;
 import com.xcurenet.config.service.ConfigAdminVO;
 import com.xcurenet.emass.message.newService.EmsReDefined;
@@ -79,7 +76,7 @@ public class EmsSearchServiceImpl implements EmsSearchService {
 
     @Override
     public EdcMessage getEmassMessage(Map<String,Object> searchParam, String adminId, String readYn, String consentNo) throws IOException {
-
+        EdcMessage edcMessage = null;
         if (Common.isNotEmpty(readYn) && Common.isNotEmpty(adminId)) {
             if (Common.isEquals(readYn, "Y")) {
              //   sq.addFilterQuery(String.format(JOIN_READ, adminId));
@@ -105,25 +102,42 @@ public class EmsSearchServiceImpl implements EmsSearchService {
         /* 추후 수정예정 =============================================*/
 
         /* 검색 */
-        QueryParamReady queryParamReady = elasticSearchQuery.setQueryReady(searchParam);
-        SearchSourceBuilder searchSourceBuilder = elasticSearchQuery.initSearchSource(queryParamReady); // Init SearchSourceBuilder
-        SearchRequest searchRequest = new SearchRequest(queryParamReady.getIndices()).source(searchSourceBuilder);
-        SearchResponse searchResponse = getList(searchRequest);
-        ElsSearchResponse elsSearchResponse = new ElsSearchResponse(searchResponse, searchResponse.getHits().getTotalHits().value, queryParamReady);
-        EdcMessage edcMessage = new EdcMessage(elsSearchResponse,adminId);
 
-        /* 읽음 확인 관련*/
+        QueryParamReady queryParamReady = null;
+        SearchSourceBuilder searchSourceBuilder = null;
+
+        try {
+            switch (Common.nvl(searchParam.get("elsSearchType"))) {
+                case ElasticSearchCommon.SEARCH_TYPE_MESSAGE:  // 메시지 검색
+                    queryParamReady = elasticSearchQuery.setMessageSearchQueryReady(searchParam);
+                    searchSourceBuilder = elasticSearchQuery.initMessageSearchSource(queryParamReady); // Init MessageSearchSource
+                    break;
+                case ElasticSearchCommon.SEARCH_TYPE_STATISTIC: // 통계 검색
+                    queryParamReady = elasticSearchQuery.setStatisticQueryReady(searchParam);
+                    searchSourceBuilder = elasticSearchQuery.initStatisticSearchSource(queryParamReady); // Init StatisticSearchSource
+                    break;
+            }
+
+            SearchRequest searchRequest = new SearchRequest(queryParamReady.getIndices()).source(searchSourceBuilder);
+            SearchResponse searchResponse = getList(searchRequest);
+            ElsSearchResponse elsSearchResponse = new ElsSearchResponse(searchResponse, searchResponse.getHits().getTotalHits().value, queryParamReady);
+            edcMessage = new EdcMessage(elsSearchResponse, adminId);
+
+            /* 읽음 확인 관련*/
 //        if (readYn != null && readYn.equals("")) {
 //            edcMessage.setEmass(checkedService.findReadList((List<Emass>) edcMessage.getEmass(), adminId));
 //        }
 
-        /* response용 Data 재 빌드 */
-        List<EmassResponse> emassResponse = new EmsReDefined((List<Emass>) edcMessage.getEmass(), readYn, consentNo, adminUserGroupService.getAdminUserGroupSimpleAdminList(adminId)).reDefined(adminId, conf);
-        edcMessage.setEmass(emassResponse);
+            /* response용 Data 재 빌드 */
+            List<EmassResponse> emassResponse = new EmsReDefined((List<Emass>) edcMessage.getEmass(), readYn, consentNo, adminUserGroupService.getAdminUserGroupSimpleAdminList(adminId)).reDefined(adminId, conf);
+            edcMessage.setEmass(emassResponse);
 
-        String serverTime = getServerTime();
-        edcMessage.setSearchTime(serverTime);
-        edcMessage.setExcuteQuery(elsSearchResponse.getQueryParamReady().getQuery());
+            String serverTime = getServerTime();
+            edcMessage.setSearchTime(serverTime);
+            edcMessage.setExcuteQuery(elsSearchResponse.getQueryParamReady().getQuery());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         return edcMessage;
     }

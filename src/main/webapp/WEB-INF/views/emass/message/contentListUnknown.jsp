@@ -259,15 +259,21 @@ function getList(flag, filterVal){
 	}
 	
 	grid.on();
+
+	/* 검색 데이터 전송 객체 */
+	var searchData = {
+		filterData : filterValData
+		,pageType : pageType
+		,offset : grid.data.length + grid.overlapData.length
+		,limit : grid.pageSize
+		,overlap : overlapUse
+	}
+
 	ui.postJson({
 		url : 'getList.xcn',
-		data : JSON.stringify( filterValData ),
-		pageType : pageType,
-		offset : grid.data.length,
-		limit : grid.pageSize,
+		searchData : JSON.stringify( searchData ),
 		success : function(data, total) {
 			searchedFlag = true;
-			
 			grid.appendData(data.emass);
 			if ( grid.loadingPage == 0 ) grid.Select(-1,-1);
 			

@@ -10,10 +10,9 @@ import javax.annotation.Nullable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Nullable
 public class MailProperties {
-    private String alias;
-    private String id;
-    private String name;
-    private String email;
-    private String mail;
-    private String key;
+    private String  alias;  //별칭
+    private String id;	   //ID
+    private String name;    // 이름
+    private String email;   // MAIL
+
 }

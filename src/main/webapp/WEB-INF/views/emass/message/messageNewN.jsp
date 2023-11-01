@@ -1597,7 +1597,8 @@ function getList(type){
 			return;
 		}
 	} else {
-		var search = solrHighlight($('#solrQueryText').val());
+		var search = getHighlight($('#solrQueryText').val());
+
 		$('#searchQueryStrInput').val(search);
 	}
 	
@@ -2026,10 +2027,10 @@ function initHeaderTab(){
  * 고급검색 쿼리 텍스트 추출 (정규 표현식을 이용한 텍스트만 추출)
  * 하일라이팅을 위한 처리
  */
-function solrHighlight(val){
+function getHighlight(val){
 	var result = '';
 	ui.get({
-		url : 'getSolrHighlightStr.xcn',
+		url : 'getHighlightStr.xcn',
 		val : val,
 		asyncFlag : false,
 		success : function(data, total) {
