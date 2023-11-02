@@ -205,36 +205,36 @@
 
 
         function getGroupData(flag) {
-            if (searchFlag) return false;
+	        if (searchFlag) return false;
 
-            if (flag == undefined){
-                gridSearchWordPattern.data.length = 0;
-                gridSearchWordPattern.rtnNextPageFunc =getGroupData;
-                gridSearchWordPattern.loadingPage = 0;
-            }else {
-                gridSearchWordPattern.loadingPage++;
-            }
-            gridSearchWordPattern.on();
-            // relaGrid.on();
-            searchFlag = true;
+	        if (flag == undefined) {
+		        gridSearchWordPattern.data.length = 0;
+		        gridSearchWordPattern.rtnNextPageFunc = getGroupData;
+		        gridSearchWordPattern.loadingPage = 0;
+	        } else {
+		        gridSearchWordPattern.loadingPage++;
+	        }
+	        gridSearchWordPattern.on();
+	        // relaGrid.on();
+	        searchFlag = true;
 
-            ui.get({
-                url: 'getSearchWord.xcn',
-                searchStr : $('#searchWordKeyword').val(),
-                offset:gridSearchWordPattern.data.length,
-                limit:gridSearchWordPattern.pageSize,
-                success: function (data, total) {
-                    gridSearchWordPattern.appendData(data);
-                },
-                error: function (status, message) {
-                    ui.alertMsg(message);
-                },
-                complete: function () {
-                    gridSearchWordPattern.off();
-                    // relaGrid.off();
-                    searchFlag = false;
-                }
-            })
+	        ui.get({
+		        url: 'getSearchWord.xcn',
+		        searchStr: $('#searchWordKeyword').val(),
+		        offset: gridSearchWordPattern.data.length,
+		        limit: gridSearchWordPattern.pageSize,
+		        success: function (data, total) {
+			        gridSearchWordPattern.appendData(data);
+		        },
+		        error: function (status, message) {
+			        ui.alertMsg(message);
+		        },
+		        complete: function () {
+			        gridSearchWordPattern.off();
+			        // relaGrid.off();
+			        searchFlag = false;
+		        }
+	        })
 
 
         }
@@ -354,24 +354,21 @@
 
 
 
-
 <div class="col-xs-7" style="height: 100%; padding-left: 5px;width:calc(100%); text-align: center;">
 	<div class="row">
 		<div class="col-xs-8 text-left" style="padding-left:20px;">
 			<div class="form-group form-inline not-dashed">
 				<div class="input-group">
-					<input type="text" class="form-control input-sm"
-					       placeholder="<s:message code="keyword.message.insert"/>" id="searchWordKeyword"
-					       style="width: 200px;">
+					<input type="text" class="form-control input-sm" placeholder="<s:message code="keyword.message.insert"/>" id="searchWordKeyword" style="width: 200px;">
 					<div class="input-group-btn">
-						<button class="btn btn-sm btn-success" type="button" accesskey="K" id="searchWordSearchBtn"><i
-								class="glyphicon glyphicon-search"></i></button>
+						<button class="btn btn-sm btn-success" type="button" accesskey="K" id="searchWordSearchBtn"><i class="glyphicon glyphicon-search"></i></button>
 					</div>
 				</div>
-				<button type="button" class="btn btn-sm btn-primary" accesskey="A" id="searchWordInsertBtn"><span
-						class="glyphicon glyphicon-plus"></span>&nbsp;<s:message code="common.msg.add"/></button>
-				<button type="button" class="btn btn-sm btn-default" accesskey="E" id="searchWordDeleteBtn"><span
-						class="glyphicon glyphicon-minus"></span>&nbsp;<s:message code="common.msg.delete"/>
+				<button type="button" class="btn btn-sm btn-primary" accesskey="A" id="searchWordInsertBtn">
+					<span class="glyphicon glyphicon-plus"></span>&nbsp;<s:message code="common.msg.add"/>
+				</button>
+				<button type="button" class="btn btn-sm btn-default" accesskey="E" id="searchWordDeleteBtn">
+					<span class="glyphicon glyphicon-minus"></span>&nbsp;<s:message code="common.msg.delete"/>
 				</button>
 			</div>
 		</div>
@@ -383,61 +380,53 @@
 		</div>
 
 	</div>
-
-
 </div>
 
 
 <script type="text/javascript">
-    var gridSearchWordPattern = new Xgrid('searchWordListGrid', contextRoot);
-    gridSearchWordPattern.onCheckBox();
-    gridSearchWordPattern.autoNumber();
-    gridSearchWordPattern.colAdd('searchWord', "키워드", 200, 'left', false, 'link');
-    gridSearchWordPattern.colAdd('relationWord', "연관 키워드", 1300, 'left', false, 'link');
+	var gridSearchWordPattern = new Xgrid('searchWordListGrid', contextRoot);
+	gridSearchWordPattern.onCheckBox();
+	gridSearchWordPattern.autoNumber();
+	gridSearchWordPattern.colAdd('searchWord', "키워드", 200, 'left', false, 'link');
+	gridSearchWordPattern.colAdd('relationWord', "연관 키워드", 1300, 'left', false, 'link');
 
-    gridSearchWordPattern.loadPageSize();
-    gridSearchWordPattern.loadHeader(false);
+	gridSearchWordPattern.loadPageSize();
+	gridSearchWordPattern.loadHeader(false);
 
-    gridSearchWordPattern.changePageSize = function (cnt){
-        getGroupData();
-    }
+	gridSearchWordPattern.changePageSize = function (cnt) {
+		getGroupData();
+	}
 
-    gridSearchWordPattern.onClick = function () {
-        if (gridSearchWordPattern.Col == gridSearchWordPattern.ColIndex('relationWord') && $('#searchRelWordInsertBtn').css('display') == 'inline-block') {
-            var data = gridSearchWordPattern.getRowData(gridSearchWordPattern.Row);
-            $('#searchUpdateName').val(data.searchWord);
-            $('#rekeywordId').val(data.keywordId);
+	gridSearchWordPattern.onClick = function () {
+		if (gridSearchWordPattern.Col == gridSearchWordPattern.ColIndex('relationWord')) {
+			var data = gridSearchWordPattern.getRowData(gridSearchWordPattern.Row);
+			$('#searchUpdateName').val(data.searchWord);
+			$('#rekeywordId').val(data.keywordId);
 
-            var relationWords = data.relationWord.split(',');
-            var data = [];
-            for (var i = 0; i < relationWords.length; i++) {
-                data.push({'relationWord': relationWords[i].ltrim().rtrim()});
-            }
-            relaGrid.setData(data);
-            $('#searchWordUpdatPop').modal('show');
-        }
-        if (gridSearchWordPattern.Col == gridSearchWordPattern.ColIndex('searchWord')) {
-            var data = gridSearchWordPattern.getRowData(gridSearchWordPattern.Row);
-            $('#searchWordUpdateName').val(data.searchWord);
-            $('#keywordUpdateId').val(data.keywordId);
-            $('#searchWordUpdatePop').modal('show');
-        }
+			var result = [];
+			if (data.relationWord != null) {
+				var relationWords = data.relationWord.split(',');
+				for (var i = 0; i < relationWords.length; i++) {
+					result.push({'relationWord': relationWords[i].ltrim().rtrim()});
+				}
+			}
+			relaGrid.setData(result);
+			$('#searchWordUpdatPop').modal('show');
+		}
+		if (gridSearchWordPattern.Col == gridSearchWordPattern.ColIndex('searchWord')) {
+			var data = gridSearchWordPattern.getRowData(gridSearchWordPattern.Row);
+			$('#searchWordUpdateName').val(data.searchWord);
+			$('#keywordUpdateId').val(data.keywordId);
+			$('#searchWordUpdatePop').modal('show');
+		}
+	}
 
-    }
-
-
-
-    var relaGrid = new Xgrid('relaGrid', contextRoot);
-    relaGrid.onCheckBox();
-    relaGrid.autoNumber();
-    relaGrid.colAdd('relationWord', "연관 키워드", 800, 'left', false, 'nomal');
-
-    relaGrid.loadHeader(false);
-
+	var relaGrid = new Xgrid('relaGrid', contextRoot);
+	relaGrid.onCheckBox();
+	relaGrid.autoNumber();
+	relaGrid.colAdd('relationWord', "연관 키워드", 800, 'left', false, 'nomal');
+	relaGrid.loadHeader(false);
 </script>
-
-
-</div>
 
 </body>
 </html>
