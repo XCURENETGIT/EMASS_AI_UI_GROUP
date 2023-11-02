@@ -121,19 +121,10 @@ var infoFeedbackConf = '<%=infoFeedbackConf%>';
 var epmsgType = '<%=epmsgType%>';
 var recvsJikgub = '<%=recvsJikgub%>';
 var infoHynixConf = '<%=infoHynixConf%>';
-var fieldArr = ["date_hh", "date_yyyy", "date_yyyymm", "date_yyyymmdd", "ml_confd_class", "ml_confd_feedback", "ml_confd_prob", "allofus", 
-				 "attach", "attachcnt", "attached", "attachname", "attachhash", "attachsize", "attachtype", "attachexistcnt", 
-                 "bcc", "bname", "body", "body_size", "body_snippet", "busicd", "businm", "cc", "ceo", "cid", "cname", 
-                 "cocd", "conm", "ctime", "ctime_yyyy", "ctime_yyyymm", "ctime_yyyymmdd", "ctime_yyyymmddhh", "ctime_hh", 
-                 "deptcd", "deptnm", "direction", "direction_svc", "dport", "dstip", "host", "inside", "ip_busicd", "ip_businm", 
-                 "ip_cocd", "ip_conm", "jikgubcd", "jikgubnm", "kwd", "kwds", "kwds_attach", "kwds_attachname", "kwds_body", 
-                 "kwds_subject", "ltime", "msgid", "name", "opinion", "password", "path", "pi", "work", "query", "recvs_poid", 
-                 "sender", "siteattr", "sitecode", "size", "sname", "sport", "srcip", "subject", "suborgcd", "suborgnm", "svc", 
-                 "svc1", "svc2", "svc3", "svc12", "tname", "to", "user", "userid", "usr_id", "usr_ip", "xmsgkey", "xparentmtr", 
-                 "xrootmtr", "week", "ocr_attach", "ocr_attach_cnt", "favorite_id", "read_key", "read_time", 
-                 "user_str", "user", "host_str", "host", "attachname_str", "attachname", "sender_str", "sender", "recvs", 
-                 "to", "cc", "bcc", "recvs_name", "tname", "cname", "bname", "ocr_attach", "pi_DRM", "pi_sct",
-                 "pi_total", "pi_ID", "pi_EF", "pi_PN", "pi_FN", "pi_DN", "pi_SN", "pi_CN", "pi_EC", "epmsg_type"];
+var fieldArr = ["service.svc","directionSvc","day.work","user.busiNm","user.deptNm","http.host","mail.sender.name","network.srcIp"
+	,"mail.to.name","network.dstIp","mail.cc.name","mail.bcc.name","allofus","attached","attachExistCnt","attach.drm","kwd.kwd","kwd.kwds"
+	,"pi.id","pi.type","pi.attachNm","pi.kwds","pi.amount","user.id","user.name","user.id","size","body.size","attach.size","xmsgattr"
+];
 
 <%if( consent && Common.isEquals(firstAdminYn, "N") ){ %>
 	isConsent = true;
@@ -141,6 +132,81 @@ var fieldArr = ["date_hh", "date_yyyy", "date_yyyymm", "date_yyyymmdd", "ml_conf
 
 var easyDateStartFlag = false;
 var easyDateEndFlag = false;
+
+
+/* elastic search 관련 */
+
+/* ----- 쿼리 ----- */
+var els_all_search = "*:*";
+
+var els_open_bracket = "(";
+var els_close_bracket = ")";
+var els_open_parentheses = "[";
+var els_close_parentheses = "]";
+
+var els_backslash = "\\";
+var els_quotes = "\"";
+var els_space = " ";
+var els_comma = ",";
+var els_colon = ":";
+var els_special_char = "*";
+var els_or_query = "OR";
+var els_and_query = "AND";
+var els_except_query = "NOT";
+
+/* ----- 필드 ----- */
+
+/*서비스*/
+var fld_service = "service.svc";
+/*수/발신*/
+var fld_directionSvc = "directionSvc";
+/*업무시간구분*/
+var fld_day = "day.work";
+/*사업장명*/
+var fld_busiNm= "user.busiNm";
+/*부서명*/
+var fld_deptNm = "user.deptNm";
+/*URL*/
+var fld_url = "http.host";
+/*발신자*/
+var fld_sender = ["mail.sender.name","network.srcIp"];
+/*수신자*/
+var fld_recvs = ["mail.to.name","network.dstIp"];
+/*수신자 2*/
+var fld_ccSender = ["mail.cc.name","mail.bcc.name"];
+/*OCR*/
+/*수신자 구분*/
+var fld_allofus = "allofus";
+
+/*첨부 여부*/
+var fld_attached = "attached";
+
+/* 첨부 파일 실제 존재*/
+var fld_attachexistcnt = "attachExistCnt";
+
+/*DRM*/
+var fld_drm = "attach.drm";
+/*예약어*/
+var fld_kwd = ["kwd.kwd","kwd.kwds"];
+/*패턴*/
+var fld_pi = ["pi.id","pi.type","pi.attachNm","pi.kwds","pi.amount"];
+/*사용자*/
+var fld_user = ["user.id","user.name"];
+
+/*사용자 그룹*/ /*관심 사용자 그룹*/
+
+var fld_userGroup = "user.id";
+
+/*크기 (전체,본문,첨부파일)  */
+var fld_size = ["size","body.size","attach.size"];
+
+/*KNOX 메일 종류*/
+var fld_mailType = "xmsgattr";
+
+/* ml */
+var fld_ml = ["ml.mlConfdClass","ml.mlConfdFeedback","ml.mlConfdProb"];
+
+
 $(document).ready(function(){
 	initServiceTypeList( );
 	initUserGroupList();
@@ -279,17 +345,17 @@ $(document).ready(function(){
 	
 	$('.queryAdd').click(function () {
 		var queryType = $(this).attr("data-queryType");
-		queryMake (queryType, "+");
+		queryMake (queryType, els_space+els_and_query+els_space);
 	});
 	
 	$('.queryOr').click(function () {
 		var queryType = $(this).attr("data-queryType");
-		queryMake (queryType, "");
+		queryMake (queryType, els_space+els_or_query+els_space);
 	});
 	
 	$('.queryMinus').click(function () {
 		var queryType = $(this).attr("data-queryType");
-		queryMake (queryType, "-");
+		queryMake (queryType, els_space+els_except_query+els_space);
 	});
 	
 	$(document).on('click', '.filterAddBtn', function(){
@@ -720,16 +786,7 @@ function validateQuery(queryText) {
 	return rtn;
 }
 
-/*
-function queryBlankRemove(queryText) {
-	//queryText = queryText.replaceAll(" :", ":");
-	queryText = queryText.replaceAll(/ :/gi, ":");
-	if(queryText.match(/ :/gi) != null) {
-		queryText = queryBlankRemove(queryText)
-	} 
-	return queryText;	
-}
-*/
+
 function queryBlankRemove(queryText) {
 	var preChr = "";
 	var rtn = "";
@@ -743,18 +800,14 @@ function queryBlankRemove(queryText) {
 				else {isQuote = true;}
 			}
 		}
-		
-		if(isQuote) { 
+		if(isQuote) {
 			if((preChr == ' ' && chr == ' ') || (preChr == ' ' && chr == ':') ) {
-				
 			} else {
 				rtn += preChr;
 			}
 		} else {
 			rtn += preChr;
 		}
-		
-		
 		preChr = chr;
 	}
 	rtn += preChr;
@@ -774,16 +827,15 @@ function queryMake (queryType, queryAddMinus) {
  			case "Querytext":
 				addQueryText=$("#elsQueryText", opener.document).val();
  			break;
-			case "ctime":
+			case "ctime": // 시간
 				var startDt = $('#startdate').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
 				var endDt = $('#enddate').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
 				addQueryText = queryAddMinus + "ctime:[" + startDt + " TO " + endDt + "]";
-			break;	
-			case "svc":
+			break;
+			case "svc":  // 서비스
 				var service = $('#serviceTypeSelect').selectpicker('val');
 				if(service) {
-					addQueryText = queryAddMinus + "svc:(";
-					
+					addQueryText = queryAddMinus +  "service.svc"+els_colon+els_open_parentheses;
 					for(var i = 0; i < service.length; i++) {
 						if(i > 0) {
 							addQueryText += " "
@@ -794,28 +846,26 @@ function queryMake (queryType, queryAddMinus) {
 						}
 						else addQueryText += service[i] + "*";
 					}
-					
 					if(service.indexOf("EMMAX") > -1) {
-						addQueryText += "-svc:(EMMA)";
+						addQueryText += els_except_query+els_space+"service.svc"+els_colon+els_open_parentheses+"EMMA"+els_close_parentheses;
 					}
-					
-					addQueryText += ")";
+					addQueryText += els_close_parentheses;
 				}
 			break;
 			case "direction_svc":
 				if($('#receiveSend:checked').length > 0) {
-					addQueryText=queryAddMinus + "direction_svc:" + $('#receiveSend:checked').val();  
+					addQueryText = queryAddMinus + "directionSvc"+els_colon + $('#receiveSend:checked').val();
 				}
 			break;
 			case "work":
 				if($('[name=work]:checked').length > 0) {
-					addQueryText=queryAddMinus + "work:" + $('[name=work]:checked').val();  
+					addQueryText = queryAddMinus + "day.work"+els_colon + $('[name=work]:checked').val();
 				}
 			break;
 			case "ml_confd_class":
 				var infoType = $('#infoTypeSelect').selectpicker('val');
 				if(infoType) {
-					addQueryText = queryAddMinus + "ml_confd_class:(";
+					addQueryText = queryAddMinus + "ml.mlConfdClass"+els_colon+els_open_parentheses;
 					for(var i = 0; i < infoType.length; i++) {
 						if(i > 0) {
 							addQueryText += " "
@@ -828,35 +878,35 @@ function queryMake (queryType, queryAddMinus) {
 			case "ml_confd_feedback":
 				var feedback = $('#feedbackTypeSelect').selectpicker('val');
 				if(feedback) {
-					addQueryText = queryAddMinus + "ml_confd_feedback:(";
+					addQueryText = queryAddMinus + "ml.mlConfdFeedback"+els_colon+els_open_parentheses;
 					for(var i = 0; i < feedback.length; i++) {
 						if(i > 0) {
 							addQueryText += " "
 						} 
 						addQueryText += '"' + feedback[i] + '"';
 					}	
-					addQueryText += ")";
+					addQueryText += els_close_parentheses;
 				}
 			break;
 			case "ml_confd_prob":
 				var prob = $('#probTypeSelect').selectpicker('val');
 				console.log(prob);
 				if(prob) {
-					addQueryText = queryAddMinus + "(";
+					addQueryText = queryAddMinus + els_open_parentheses;
 					for(var i = 0; i < prob.length; i++) {
 						if(i > 0) {
 							addQueryText += " "
 						}
 						var sp = prob[i].split('|');
-						addQueryText += 'ml_confd_prob:[' + sp[0] + ' TO ' + sp[1] + ']';
+						addQueryText += 'mlConfdProb'+els_colon+els_open_bracket + sp[0] + ' TO ' + sp[1] + els_close_bracket;
 					}	
-					addQueryText += ")";
+					addQueryText += els_close_parentheses;
 				}
 			break;
 			case "busi":
 				var busiNm = $('#busi').val();
 				if(busiNm != "") {
-					addQueryText = queryAddMinus + "businm:(";
+					addQueryText = queryAddMinus + "user.busiNm"+els_colon+els_open_parentheses;
 					
 					var busiNmNmArr = busiNm.split("|");
 					
@@ -867,13 +917,13 @@ function queryMake (queryType, queryAddMinus) {
 						addQueryText += busiNmNmArr[i].ltrim().rtrim() + "*";
 					}
 					
-					addQueryText += ")";
+					addQueryText += els_close_parentheses;
 				}
 			break;	
 			case "dept":
 				var deptNm = $('#dept').val();
 				if(deptNm != "") {
-					addQueryText = queryAddMinus + "deptnm:(";
+					addQueryText = queryAddMinus + "deptNm"+els_colon+els_open_parentheses;
 					
 					var deptNmArr = deptNm.split("|");
 					
@@ -884,13 +934,13 @@ function queryMake (queryType, queryAddMinus) {
 						addQueryText += deptNmArr[i].ltrim().rtrim() + "*";
 					}
 					
-					addQueryText += ")";
+					addQueryText += els_close_parentheses;
 				}
 			break;
 			case "host":
 				var host = $('#host').val();
 				if(host != "") {
-					addQueryText = queryAddMinus + "(";
+					addQueryText = queryAddMinus + els_open_parentheses;
 					
 					var hostArr = host.split("|");
 					var hostStr = "";
@@ -901,15 +951,14 @@ function queryMake (queryType, queryAddMinus) {
 						} 
 						hostStr += hostArr[i].ltrim().rtrim() + "*"; 						
 					}
-					addQueryText += " host:(" + hostStr +")";
-					addQueryText += " host_str:(" + hostStr +")";
-					addQueryText += ")";
+					addQueryText += " http.host"+els_colon+els_open_parentheses + hostStr + els_close_parentheses;
+					addQueryText += els_close_parentheses;
 				}
 			break;
 			case "sender":
 				var sender = $('#sender').val();
 				if(sender != "") {
-					addQueryText = queryAddMinus + "(";
+					addQueryText = queryAddMinus  + els_open_parentheses;
 					
 					var senderArr = sender.split("|");
 					var senderStr = "";
@@ -920,10 +969,9 @@ function queryMake (queryType, queryAddMinus) {
 						} 
 						senderStr += senderArr[i].ltrim().rtrim() + "*"; 						
 					}
-					addQueryText += "sender_str:(" + senderStr +")";
-					addQueryText += " sname:(" + senderStr +")";
-					addQueryText += " srcip:(" + senderStr +")";
-					addQueryText += ")";
+					addQueryText += "mail.sender.name"+els_colon+els_open_parentheses + senderStr + els_close_parentheses;
+					addQueryText += "network.srcIp"+els_colon+els_open_parentheses + senderStr + els_close_parentheses;
+					addQueryText += els_close_parentheses;
 				}
 			break;		
 			case "receive":
@@ -942,46 +990,40 @@ function queryMake (queryType, queryAddMinus) {
 						receiveStr += "*" + receiveArr[i].ltrim().rtrim() + "*";
 					}
 					
-					addQueryText += "recvs:(" + receiveStr +")";
-					addQueryText += " recvs_name:(" + receiveStr +")";
-					addQueryText += " dstip:(" + receiveStr +")";
-					addQueryText += ")";
+					addQueryText += "mail.to.name"+els_colon+els_open_parentheses + receiveStr + els_close_parentheses;
+					addQueryText += "network.dstIp"+els_colon+els_open_parentheses + receiveStr + els_close_parentheses;
+					addQueryText += els_close_parentheses;
 				}
 			break;			
 			case "receiveEtc":			
 				var receiveEtcObj = $('input:checkbox[name=receiveEtc]:checked');
-				
 				var receiveEtcArr = $('#receiveEctVal').val().split("|");
 				var receiveEtcStr = "";
 				if(receiveEtcObj.length > 0 && receiveEtcArr.length > 0) {
-					
-					addQueryText = queryAddMinus + "(";
+					addQueryText = queryAddMinus + els_open_parentheses;
 				}
-				
 				for(var i = 0; i < receiveEtcArr.length; i++) {
 					if(i > 0) {
 						receiveEtcStr += " "
 					}
 					receiveEtcStr += "*" + receiveEtcArr[i].ltrim().rtrim() + "*"
 				}
-				
 				for(var i = 0; i < receiveEtcObj.length; i++) {
 					if(i > 0) {
 						addQueryText += " "
 					}
-					
-					addQueryText += receiveEtcObj[i].value + ":(" + receiveEtcStr + ")" ;
+					addQueryText += receiveEtcObj[i].value + els_colon+els_open_parentheses + receiveEtcStr + els_close_parentheses;
 				}
 				
 				if(receiveEtcObj.length > 0 && receiveEtcArr.length > 0) {
-					addQueryText += ")";
+					addQueryText += els_close_parentheses;
 				}
 			break;	
 			
 			case "ocr":
 				var ocrStr = $('#ocr').val();
 				if(ocrStr != "") {
-					addQueryText = queryAddMinus + "ocr_attach:(";
+					addQueryText = queryAddMinus + "ocr.attach"+els_colon+els_open_parentheses;
 					
 					var ocrStrArr = ocrStr.split("|");
 					
@@ -992,22 +1034,22 @@ function queryMake (queryType, queryAddMinus) {
 						addQueryText += ocrStrArr[i].ltrim().rtrim() + "*";
 					}
 					
-					addQueryText += ")";
+					addQueryText += els_close_parentheses;
 				}
 			break;		
 			
 			case "allofus":
 				var allOfus = $('#allOfus').val();
 				if(allOfus != "") {
-					addQueryText = queryAddMinus + "allofus:(" + $('#allOfus').val() + ")";  
+					addQueryText = queryAddMinus + "allofus"+ els_colon + els_open_parentheses + $('#allOfus').val() + els_close_parentheses;
 				}
 			break;
 			case "attach":
 				if($('#attachYn:checked').length > 0) {
-					addQueryText = queryAddMinus + "attached:" + $('#attachYn:checked').val();
+					addQueryText = queryAddMinus + "attached"+ els_colon + els_open_parentheses + $('#attachYn:checked').val() + els_close_parentheses;
 				}
-				
-				if($('#attachVal').val() != "") {
+
+/*				if($('#attachVal').val() != "") {  //선택
 					if($('#attachYn:checked').length > 0) {
 						addQueryText += " ";
 					} 
@@ -1023,7 +1065,7 @@ function queryMake (queryType, queryAddMinus) {
 						addQueryText += valArr[i].toLowerCase();
 					}
 					addQueryText += ")";
-				}
+				}*/
 				
 				resetCode('attach');
 				
@@ -1031,8 +1073,8 @@ function queryMake (queryType, queryAddMinus) {
 			break;
 			
 			case "attachexistcnt":
-				if(queryAddMinus == '+') addQueryText = "+attachexistcnt:[ 1 TO * ]";
-				else addQueryText = "+attachexistcnt:0";
+				if(queryAddMinus == '+') addQueryText = els_and_query+els_space+"attachExistCnt"+els_colon+els_open_bracket+'1 TO * '+els_close_bracket;
+				else addQueryText = els_and_query+els_space+"attachExistCnt"+els_colon+els_open_bracket;
 			break;		
 			case "recvs_poid":
 				var jikgubcd = $('#recvs_poid').selectpicker('val');
@@ -1044,23 +1086,21 @@ function queryMake (queryType, queryAddMinus) {
 						if(i > 0) {
 							addQueryText += " "
 						} 
-						
 						addQueryText += '' + jikgubcd[i] + '*';
 					}
-					
 					addQueryText += ")";
 				}
 			break;		
 			case "keyword":
 				if($('#keywordYn:checked').length > 0) {
-					addQueryText = queryAddMinus + "kwd:" + $('#keywordYn:checked').val();
+					addQueryText = queryAddMinus + "kwd.kwd"+els_colon + $('#keywordYn:checked').val();
 				}
 				
 				if($('#keywordVal').val() != "") {
 					if($('#keywordYn:checked').length > 0) {
 						addQueryText += " ";
 					}  
-					addQueryText += queryAddMinus + "kwds:(";
+					addQueryText += queryAddMinus + "kwds"+els_colon+els_open_parentheses;
 					
 					var valArr = $('#keywordStr').val().split(", ");
 
@@ -1070,7 +1110,7 @@ function queryMake (queryType, queryAddMinus) {
 						} 
 						addQueryText += valArr[i];
 					}
-					addQueryText += ")";
+					addQueryText += els_close_parentheses;
 				}
 				
 				resetCode('keyword');
@@ -1078,53 +1118,53 @@ function queryMake (queryType, queryAddMinus) {
 			case "regexp":
 				if($('#regexpYn:checked').length > 0) {
 					if($('#regexpYn:checked').val() == "Y") {
-						addQueryText = queryAddMinus + "pi_total:[1 TO *]";	
+						addQueryText = queryAddMinus + "pi.amount"+els_colon+els_open_bracket+'1 TO * '+els_close_bracket;
 					} else {
-						addQueryText = queryAddMinus + "pi_total:0";
+						addQueryText = queryAddMinus + "pi.amount"+els_colon+"0";
 					}
 					
 				}
 				
-				if($('#regexpVal').val() != "") {
-					if($('#regexpYn:checked').length > 0) {
-						addQueryText += " ";
-					} 	
-					addQueryText += queryAddMinus + "(";
-					
-					var valArr = $('#regexpVal').val().split("|");
-					
-					for(var i = 0; i < valArr.length; i++) {
-						if(i > 0) {
-							addQueryText += " "
-						} 
-						
-						var valIdArr = valArr[i].split("%");
-						
-						if(!fieldArr.includes("pi_" + valIdArr[0])) fieldArr.push("pi_" + valIdArr[0]);
-						
-						addQueryText += "pi_" + valIdArr[0] + ":["; 
-						
-						var valCntArr = valIdArr[1].split("@");
-						
-						if( valCntArr[0] == 'B' ) {
-							addQueryText += valCntArr[1] + " TO " + valCntArr[2] + "]"; 	
-						} else if( valCntArr[0] == 'L' ) {
-							addQueryText += valCntArr[1] + " TO *]";
-						} else {
-							addQueryText += "* TO " + valCntArr[1] + "]";
-						}
-						
-					}
-					addQueryText += ")";
-				}
-				
+				// if($('#regexpVal').val() != "") {
+				// 	if($('#regexpYn:checked').length > 0) {
+				// 		addQueryText += " ";
+				// 	}
+				// 	addQueryText += queryAddMinus + els_open_bracket;
+				//
+				// 	var valArr = $('#regexpVal').val().split("|");
+				//
+				// 	for(var i = 0; i < valArr.length; i++) {
+				// 		if(i > 0) {
+				// 			addQueryText += " "
+				// 		}
+				//
+				// 		var valIdArr = valArr[i].split("%");
+				//
+				// 		if(!fieldArr.includes("pi_" + valIdArr[0])) fieldArr.push("pi_" + valIdArr[0]);
+				//
+				// 		addQueryText += "pi_" + valIdArr[0] + ":[";
+				//
+				// 		var valCntArr = valIdArr[1].split("@");
+				//
+				// 		if( valCntArr[0] == 'B' ) {
+				// 			addQueryText += valCntArr[1] + " TO " + valCntArr[2] + "]";
+				// 		} else if( valCntArr[0] == 'L' ) {
+				// 			addQueryText += valCntArr[1] + " TO *]";
+				// 		} else {
+				// 			addQueryText += "* TO " + valCntArr[1] + "]";
+				// 		}
+				//
+				// 	}
+				// 	addQueryText += ")";
+				// }
+				//
 				resetCode('regexp');
 				
 				
 			break;
 			
 			case "drm":
-				addQueryText = queryAddMinus + "pi_DRM:*";
+				addQueryText = queryAddMinus + "attach.drm"+els_colon+"*";
 			break;
 			
 			case "sct":
@@ -1134,7 +1174,7 @@ function queryMake (queryType, queryAddMinus) {
 			case "user":
 				var user = $('#user').val();
 				if(user != "") {
-					addQueryText = queryAddMinus + "(";
+					addQueryText = queryAddMinus + els_open_parentheses;
 					
 					var userArr = user.split("|");
 					var userStr = "";
@@ -1145,10 +1185,10 @@ function queryMake (queryType, queryAddMinus) {
 						} 
 						userStr += userArr[i].ltrim().rtrim() + "*";
 					}
-					
-					addQueryText += "user:(" + userStr + ") user_str:(" + userStr + ") userid:(" + userStr + ") name:(" + userStr + ")";
-					
-					addQueryText += ")";
+					//els_colon+els_open_bracket
+					addQueryText += "user.id"+els_colon+els_open_parentheses + userStr + els_close_parentheses
+							 +"user.name"+els_colon+els_open_parentheses + userStr + els_close_parentheses
+					addQueryText += els_close_parentheses;
 				}
 			break;
 			
@@ -1163,19 +1203,19 @@ function queryMake (queryType, queryAddMinus) {
 				if(lowcount != "" || (sizeFilterSelect == "B" && (lowcount != "" || highcount != ""))) {
 					addQueryText = queryAddMinus;
 					if(sizeFilterType == "B") {
-						addQueryText += "body_size:[";
+						addQueryText += "body.size"+els_colon+els_open_bracket;
 					} else if(sizeFilterType == "A") {
-						addQueryText += "attachsize:[";
+						addQueryText += "attach.size"+els_colon+els_open_bracket;
 					} else {
-						addQueryText += "size:[";
+						addQueryText += "size"+els_colon+els_open_bracket;
 					}
 					
 					if(sizeFilterSelect == "B") {
-						addQueryText += lowcount + " TO " +  highcount + "]";
+						addQueryText += lowcount + " TO " +  highcount + els_close_bracket;
 					} else if(sizeFilterSelect == "L") {
-						addQueryText += lowcount + " TO *]";
+						addQueryText += lowcount + " TO *"+ els_close_bracket;
 					} if(sizeFilterSelect == "S") {
-						addQueryText += "* TO " +  lowcount + "]";
+						addQueryText += "* TO " +  lowcount + els_close_bracket;
 					}
 				}
 			break;
@@ -1184,17 +1224,15 @@ function queryMake (queryType, queryAddMinus) {
 				var epmsgType = $('#epmsgTypeSelect').selectpicker('val');
 				
 				if(epmsgType){
-					addQueryText = queryAddMinus + "epmsg_type:(";
+					addQueryText = queryAddMinus + "xmsgattr"+els_colon+els_open_bracket;
 					
 					for(var i = 0; i < epmsgType.length; i++) {								
 						if(i > 0) {
 							addQueryText += " "
 						} 
-						
 						addQueryText += '' + epmsgType[i] + '*';
 					}
-					
-					addQueryText += ")";
+					addQueryText += els_close_bracket;
 				}
 
 			break;
@@ -1703,15 +1741,15 @@ function initEpmsg(){
 										<th><s:message code="condition.recv"/><br>(TO, CC, BCC)</th>
 										<td>
 											<label class="checkbox-inline c-checkbox input-xs" style="padding-left: 20px">
-												<input type="checkbox" class="border-radius-none" name="receiveEtc" value="to">
+												<input type="checkbox" class="border-radius-none" name="receiveEtc" value="mail.to.name">
 												<span class="fa fa-check"></span><s:message code="condition.to"/>
 											</label>
 											<label class="checkbox-inline c-checkbox input-xs">
-												<input type="checkbox" class="border-radius-none" name="receiveEtc" value="cc">
+												<input type="checkbox" class="border-radius-none" name="receiveEtc" value="mail.cc.name">
 												<span class="fa fa-check"></span><s:message code="condition.cc"/>
 											</label>
 											<label class="checkbox-inline c-checkbox input-xs">
-												<input type="checkbox" class="border-radius-none" name="receiveEtc" value="bcc">
+												<input type="checkbox" class="border-radius-none" name="receiveEtc" value="mail.bcc.name">
 												<span class="fa fa-check"></span><s:message code="condition.bcc"/>
 											</label>
 											<input type="text" class="form-control input-xs border-radius-none" id="receiveEctVal" placeholder="<s:message code="condition.recv"/>" style="width: 313px;">

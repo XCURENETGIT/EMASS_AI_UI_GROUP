@@ -595,7 +595,7 @@ function getSearchQuery() {
 					if(data.search_startDate != null) $('#searched_startDate').val(data.search_startDate);
 					if(data.search_endDate != null) $('#searched_endDate').val(data.search_endDate);
 
-
+					console.log(data);
 					grid1.colInit();
 					grid1.autoNumber();
 					grid1.colAdd('rowKey', '<s:message code="consent.user"/>', 230, 'left', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
@@ -699,7 +699,6 @@ function getSearchQuery() {
 				url : 'getStatDetailList.xcn',
 				searchParam : JSON.stringify(searchData),
 				success : function(data, total) {
-					console.log(data.emass);
 					if ( lastRow == 'Y' || lastRow == undefined ) detailTotal = total;
 					currentgrid.appendData(data.emass);
 					if ( currentgrid.loadingPage == 0 ) currentgrid.Select(-1,-1);

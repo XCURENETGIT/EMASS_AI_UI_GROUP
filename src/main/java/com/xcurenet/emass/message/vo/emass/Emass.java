@@ -17,6 +17,7 @@ import java.util.List;
  */
 public class Emass {
 
+   private String  _id;                    // Id
    private String  ltime;                  //로깅타임
    private String  ctime;                  //캡쳐타임
    private String  subject;                //제목

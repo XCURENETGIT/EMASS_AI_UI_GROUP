@@ -11,6 +11,6 @@ import javax.annotation.Nullable;
 public class OcrVo {
 
     private int	attachCnt;  //ocr 첨부 개수
-    private String	attach;	//ocr 첨부 개수
+    private String	attach;
 
 }

@@ -21,17 +21,21 @@ public class ElasticSearchCommon {
     public static final String SEARCH_TYPE_STATISTIC = "statistic";
 
     /* 쿼리 관련 */
+
     public static final String ALL_SEARCH = "*:*";
-    public static final String OPEN_BRACKET = "(";
-    public static final String CLOSE_BRACKET = ")";
+    public static final String OPEN_PARENTHESES = "(";
+    public static final String CLOSE_PARENTHESES = ")";
+    public static final String OPEN_BRACKET = "[";
+    public static final String CLOSE_BRACKET = "]";
     public static final String BACKSLASH = "\\";
     public static final String QUOTES = "\"";
     public static final String SPACE = " ";
     public static final String COMMA = ",";
+    public static final String COLON = ":";
     public static final String SPECIAL_CHAR = "*";
-    public static final String OR_PREFIX = "#";
+    public static final String OR_QUERY  = "OR";
     public static final String AND_QUERY = "AND";
-    public static final String EXCEPT_QUERY = "-";
+    public static final String EXCEPT_QUERY = "NOT";
 
 
     /* 검색 영역 */

@@ -51,15 +51,9 @@ public class ElasticSearchQuery {
     }
 
 
-    public String setQuery() {
-        /* 쿼리가 없을시 전체검색*/
-       if(Common.isEmpty(queryBuffer.toString())){
-           queryBuffer.append(ElasticSearchCommon.ALL_SEARCH);
-       }
-
-        query = queryBuffer.toString().trim();
+    public void setQuery() {
+        this.query = queryBuffer.toString().trim();
         queryBuffer = new StringBuilder();
-        return query;
     }
 
     public String getQuery() {
@@ -67,9 +61,9 @@ public class ElasticSearchQuery {
     }
 
     private ElasticSearchQuery addQuery(String query) {
-        this.queryBuffer.append(ElasticSearchCommon.OPEN_BRACKET)
+        this.queryBuffer.append(ElasticSearchCommon.OPEN_PARENTHESES)
             .append(query)
-            .append(ElasticSearchCommon.CLOSE_BRACKET);
+            .append(ElasticSearchCommon.CLOSE_PARENTHESES);
         return this;
     }
 
@@ -98,16 +92,39 @@ public class ElasticSearchQuery {
 
     }
 
+    public void setDetailQuery(String str) {
+        queryBuffer.append(ElasticSearchCommon.SPACE).append(str);
+    }
 
-    /**
-     * 검색어 쿼리
-     *
+    /***
+     * 검색
+     * @param searchStr
      * @return
      */
     public ElasticSearchQuery setSearchQuery(String searchStr) {
         if (Common.isEmpty(searchStr)) return this;
+
+        if(searchStr.indexOf(ElasticSearchCommon.COMMA) > -1){
+            searchStr = searchStr.replace(",",ElasticSearchCommon.SPACE+ElasticSearchCommon.OR_QUERY+ElasticSearchCommon.SPACE);
+        }
+
         return addQuery(String.format("%s",searchStr));
     }
+
+    /***
+     *
+     * yAxis 검색 필드
+     * @param query
+     * @return
+     */
+
+    public void setyField(String field) {
+        field = field.concat(ElasticSearchCommon.COLON);
+        this.queryBuffer.insert(0,field);
+    }
+
+
+
 
 
 //    /**
@@ -1061,8 +1078,8 @@ public class ElasticSearchQuery {
             String[] terms = query.split(" ");
             for (int i = 0; i < terms.length; i++) {
                 if (terms[i].equals("|")) {
-                    terms[i] = ElasticSearchCommon.OR_PREFIX;
-                } else if (i > 0 && terms[i - 1].equals(ElasticSearchCommon.OR_PREFIX) || terms[i].startsWith("+") || terms[i].startsWith("-")) {
+                    terms[i] = ElasticSearchCommon.OR_QUERY;
+                } else if (i > 0 && terms[i - 1].equals(ElasticSearchCommon.OR_QUERY) || terms[i].startsWith("+") || terms[i].startsWith("-")) {
                 } else if (i < terms.length - 1 && !terms[i + 1].equals("|")) {
                     terms[i] = "+" + terms[i];
                 } else if (!terms[i].startsWith("+") && !terms[i].startsWith("-")) {
@@ -1070,7 +1087,7 @@ public class ElasticSearchQuery {
                 sb.append(appendSpecialchar(terms[i])).append(" ");
             }
         }
-        String result = sb.toString().replace(ElasticSearchCommon.OR_PREFIX, "").replace("__", " ").replace("  ", " ").trim();
+        String result = sb.toString().replace(ElasticSearchCommon.OR_QUERY, "").replace("__", " ").replace("  ", " ").trim();
         return result;
     }
 
@@ -1115,7 +1132,7 @@ public class ElasticSearchQuery {
     private String appendSpecialchar(String str) {
         if (Common.isEmpty(str.trim())) return str;
         else if (str.endsWith(ElasticSearchCommon.SPECIAL_CHAR)) return str;
-        else if (str.endsWith(ElasticSearchCommon.OR_PREFIX)) return str;
+        else if (str.endsWith(ElasticSearchCommon.OR_QUERY)) return str;
         else if (str.endsWith("\"")) return str;
         else return str + ElasticSearchCommon.SPECIAL_CHAR;
     }
@@ -1249,17 +1266,17 @@ public class ElasticSearchQuery {
         offset = (int) Math.round(Double.valueOf(Common.nvl(searchParam.get("offset"))));
         limit =  (int) Math.round(Double.valueOf(Common.nvl(searchParam.get("limit"))));
 
+
         /* rowKey 존재할시 검색조건 추가 */
         if(!Common.isEmpty(searchParam.get("rowKey"))) {
-            String rowKeyStr = (String) searchParam.get("rowKey");
-            if(rowKeyStr.indexOf(ElasticSearchCommon.COMMA) > -1){
-                String[] rowKeys = rowKeyStr.split(ElasticSearchCommon.COMMA);
-                for(String rowKey : rowKeys){
-                    setSearchQuery(Common.nvl(rowKey));
-                }
-            }else {
-                setSearchQuery(Common.nvl(searchParam.get("rowKey")));
-            }
+            setSearchQuery(Common.nvl(searchParam.get("rowKey")));
+        }else{
+            setSearchQuery(Common.nvl(ElasticSearchCommon.ALL_SEARCH));
+        }
+
+        /* yField 설정 */
+        if(!Common.isEmpty(searchParam.get("yAxis"))) {
+            setyField(Common.nvl(searchParam.get("yAxis")));
         }
 
         /* 아무런 rowKey & colkey  조건이 없을시 */
@@ -1267,8 +1284,17 @@ public class ElasticSearchQuery {
             limit = 0;
         }
 
+        /* detail Query 존재시*/
+        if(!Common.isEmpty(searchParam.get("detailQuery"))) {
+            setDetailQuery(Common.nvl(searchParam.get("detailQuery")));
+        }
+
         /* set Query */
         setQuery();
+
+
+
+        log.info("쿼리 테스트 ==================================" + getQuery());
 
         // Custom Query Builder (엘라스틱 서치 쿼리에 쓰기전 빌드)
         QueryParamReady queryParamReady = QueryParamReady.builder()
@@ -1276,7 +1302,6 @@ public class ElasticSearchQuery {
                 .from(offset)
                 .to(limit)
                 .sorts(sortBuilderList)
-                .searchFields(new String[]{Common.nvl(searchParam.get("yAxis"))})
                 .query(getQuery())
                 .includeFields(ElasticSearchCommon.SEARCH_FIELD)
                 .searchAggregations(Common.nvl(searchParam.get("colKey")))
@@ -1316,16 +1341,7 @@ public class ElasticSearchQuery {
 
 
         RangeQueryBuilder rangeQuery = new RangeQueryBuilder(ElasticSearchCommon.CTIME).gte(startDate).lte(endDate);
-        QueryStringQueryBuilder secondQuery = QueryBuilders.queryStringQuery(queryParamReady.getQuery());
-
-
-        /* 검색 대상 필드 존재시 추가 */
-        String[] searchFields =  queryParamReady.getSearchFields();
-        if(searchFields != null && searchFields.length >= 1){
-            for(String field : searchFields){
-                secondQuery.field(field);
-            }
-        }
+       QueryStringQueryBuilder secondQuery = QueryBuilders.queryStringQuery(queryParamReady.getQuery());
 
         /* 쿼리 merge */
         BoolQueryBuilder complateQuery = new BoolQueryBuilder();
@@ -1352,7 +1368,10 @@ public class ElasticSearchQuery {
         }else {
             complateQuery.filter(rangeQuery);
         }
-        complateQuery.must(secondQuery);
+
+       complateQuery.must(secondQuery);
+
+
 
         searchSourceBuilder = new SearchSourceBuilder()
                 .from(queryParamReady.getFrom())
@@ -1442,14 +1461,6 @@ public class ElasticSearchQuery {
         RangeQueryBuilder rangeQuery = new RangeQueryBuilder(ElasticSearchCommon.CTIME).gte(startDate).lte(endDate);
         QueryStringQueryBuilder secondQuery = QueryBuilders.queryStringQuery(queryParamReady.getQuery());
 
-
-        /* 검색 대상 필드 존재시 추가 */
-        String[] searchFields =  queryParamReady.getSearchFields();
-        if(searchFields != null && searchFields.length >= 1){
-            for(String field : searchFields){
-                secondQuery.field(field);
-            }
-        }
 
         /* 쿼리 merge */
         BoolQueryBuilder complateQuery = new BoolQueryBuilder();
