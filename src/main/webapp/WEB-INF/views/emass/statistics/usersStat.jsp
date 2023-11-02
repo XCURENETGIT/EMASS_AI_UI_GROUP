@@ -699,6 +699,8 @@ function getSearchQuery() {
 				url : 'getStatDetailList.xcn',
 				searchParam : JSON.stringify(searchData),
 				success : function(data, total) {
+					console.log(data.emass);
+
 					if ( lastRow == 'Y' || lastRow == undefined ) detailTotal = total;
 					currentgrid.appendData(data.emass);
 					if ( currentgrid.loadingPage == 0 ) currentgrid.Select(-1,-1);

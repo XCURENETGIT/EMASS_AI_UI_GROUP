@@ -81,6 +81,7 @@ public class EmsReDefined {
 			}
 			String totalAttachFileSize = Common.convertFileSize(fileSize);
 
+			emassResponse.set_id(Common.nvl(ems.get_id()));
 			emassResponse.setSize_Str(Common.convertFileSize(ems.getSize()));
 			emassResponse.setAllofus(Common.nvl(ems.getAllofus()));
 

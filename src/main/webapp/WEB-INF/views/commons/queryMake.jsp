@@ -121,7 +121,7 @@ var infoFeedbackConf = '<%=infoFeedbackConf%>';
 var epmsgType = '<%=epmsgType%>';
 var recvsJikgub = '<%=recvsJikgub%>';
 var infoHynixConf = '<%=infoHynixConf%>';
-var fieldArr = ["service.svc","directionSvc","day.work","user.busiNm","user.deptNm","http.host","mail.sender.name","network.srcIp"
+var fieldArr = ["service.svc","directionSvc","day.work","user.businm","user.deptnm","http.host","mail.sender.name","network.srcIp"
 	,"mail.to.name","network.dstIp","mail.cc.name","mail.bcc.name","allofus","attached","attachExistCnt","attach.drm","kwd.kwd","kwd.kwds"
 	,"pi.id","pi.type","pi.attachNm","pi.kwds","pi.amount","user.id","user.name","user.id","size","body.size","attach.size","xmsgattr"
 ];
@@ -139,10 +139,10 @@ var easyDateEndFlag = false;
 /* ----- 쿼리 ----- */
 var els_all_search = "*:*";
 
-var els_open_bracket = "(";
-var els_close_bracket = ")";
-var els_open_parentheses = "[";
-var els_close_parentheses = "]";
+var els_open_bracket = "[";
+var els_close_bracket = "]";
+var els_open_parentheses = "(";
+var els_close_parentheses = ")";
 
 var els_backslash = "\\";
 var els_quotes = "\"";
@@ -163,9 +163,9 @@ var fld_directionSvc = "directionSvc";
 /*업무시간구분*/
 var fld_day = "day.work";
 /*사업장명*/
-var fld_busiNm= "user.busiNm";
+var fld_businm= "user.businm";
 /*부서명*/
-var fld_deptNm = "user.deptNm";
+var fld_deptnm = "user.deptnm";
 /*URL*/
 var fld_url = "http.host";
 /*발신자*/
@@ -906,7 +906,7 @@ function queryMake (queryType, queryAddMinus) {
 			case "busi":
 				var busiNm = $('#busi').val();
 				if(busiNm != "") {
-					addQueryText = queryAddMinus + "user.busiNm"+els_colon+els_open_parentheses;
+					addQueryText = queryAddMinus + "user.businm"+els_colon+els_open_parentheses;
 					
 					var busiNmNmArr = busiNm.split("|");
 					
@@ -923,7 +923,7 @@ function queryMake (queryType, queryAddMinus) {
 			case "dept":
 				var deptNm = $('#dept').val();
 				if(deptNm != "") {
-					addQueryText = queryAddMinus + "deptNm"+els_colon+els_open_parentheses;
+					addQueryText = queryAddMinus + "user.deptnm"+els_colon+els_open_parentheses;
 					
 					var deptNmArr = deptNm.split("|");
 					

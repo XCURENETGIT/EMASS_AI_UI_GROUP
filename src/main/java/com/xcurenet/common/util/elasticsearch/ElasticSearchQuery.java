@@ -1294,7 +1294,7 @@ public class ElasticSearchQuery {
 
 
 
-        log.info("쿼리 테스트 ==================================" + getQuery());
+        log.info("엘라스틱 서치 Query_String (테스트) ===> " + getQuery());
 
         // Custom Query Builder (엘라스틱 서치 쿼리에 쓰기전 빌드)
         QueryParamReady queryParamReady = QueryParamReady.builder()

@@ -3,7 +3,7 @@
 		function initGrid( currGrid, gridColumn){
 			statGrid = currGrid;
 			currGrid.autoNumber();
-			currGrid.colAdd('msgid', gridColumn.msgid, 100, 'left', false, 'nomal');
+			currGrid.colAdd('_id', gridColumn.msgid, 100, 'left', false, 'nomal');
 		//	currGrid.colAdd('epmsg_type', gridColumn.epmsg_type, 100, 'center', true, 'nomal');
 			currGrid.colAdd('xrootmtr', gridColumn.xrootmtr, 100, 'left', true, 'nomal');
 			// currGrid.colAdd('interestUserYn', gridColumn.interestUserYn, 40, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
@@ -69,7 +69,7 @@
 				else if (value == 'O') return gridColumn.send;
 				else return '-';
 			});
-			currGrid.colAdd('service_svcNm', gridColumn.svcNm, 180, 'center', false, 'nomal');
+			currGrid.colAdd('service_svc_Nm', gridColumn.svcNm, 180, 'center', false, 'nomal');
 			currGrid.colAdd('subject', gridColumn.subject, 410, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 				var bodySize = currGrid.getValue(row, 'bodySizeStr');
 				var rtnVal = '<a href="javascript:void(0);" onclick="javascript:viewer_open('+row+',\''+bodySize.substring(0,1)+'\');" class="subject_read'+currGrid.getValue(row, 'readYn')+'">'+value+'</a>&nbsp;<a href="javascript:void(0);" onclick="javascript:viewer_open('+row+',\''+bodySize.substring(0,1)+'\');" class="glyphicon glyphicon-new-window new-window"></a>';
@@ -122,8 +122,8 @@
 			});
 
 
-			currGrid.colAdd('network_srcip', gridColumn.srcip + ' IP', 100, 'left', false, 'nomal');
-			currGrid.colAdd('network_dstip', gridColumn.dstip + ' IP', 100, 'left', false, 'nomal');
+			currGrid.colAdd('network_srcIp', gridColumn.srcip + ' IP', 100, 'left', false, 'nomal');
+			currGrid.colAdd('network_dstIp', gridColumn.dstip + ' IP', 100, 'left', false, 'nomal');
 			currGrid.colAdd('attach_name', gridColumn.attachname, 220, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 				var rtnVal = arrayToString(value);
 				var kwds = currGrid.getValue(row, 'kwds');
@@ -146,7 +146,8 @@
 			
 			currGrid.loadHeader(true);
 			currGrid.initData('');
-			
+
+
 			currGrid.onContextMenu = function(row, col, e){
 				return;
 				

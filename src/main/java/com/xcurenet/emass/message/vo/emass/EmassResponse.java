@@ -15,6 +15,7 @@ import java.util.List;
  */
 public class EmassResponse {
 
+    private String  _id;                    // ID
     private String  ltime;                  //로깅타임
     private String  ctime;                  //캡쳐타임
     private String  subject;                //제목
