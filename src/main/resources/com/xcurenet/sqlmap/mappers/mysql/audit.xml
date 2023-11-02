@@ -6,53 +6,53 @@
 
 	<select id="getAuditList" resultType="auditVO" parameterType="hashmap">
 		SELECT	DATE_FORMAT(DATE, '%Y-%m-%d %T' ) AS date, ADMIN_ID AS adminId, SEQ AS seq, PRODUCT AS product, CATEGORY AS category,
-				OPERATION AS operation, ADMIN_NAME AS adminName, ADMIN_IP AS adminIp, MENU_ID AS menuId, P_MENU_ID AS pMenuId,
-				INFORMATION AS information, COMMENTS AS comments
+		OPERATION AS operation, ADMIN_NAME AS adminName, ADMIN_IP AS adminIp, MENU_ID AS menuId, P_MENU_ID AS pMenuId,
+		INFORMATION AS information, COMMENTS AS comments
 		FROM	INFO_AUDIT
 		WHERE	1=1
 		<if test='searchStr!=null and searchStr!=""'>
-		AND		( INFORMATION	LIKE CONCAT('%', #{searchStr}, '%') )
+			AND		( INFORMATION	LIKE CONCAT('%', #{searchStr}, '%') )
 		</if>
 		<if test='startDt != null and startDt!=""'>
-		AND		DATE BETWEEN STR_TO_DATE( CONCAT(#{startDt}, '000000'), '%Y%m%d%H%i%s') AND STR_TO_DATE( CONCAT(#{endDt}, '235959'), '%Y%m%d%H%i%s')
+			AND		DATE BETWEEN STR_TO_DATE( CONCAT(#{startDt}, '000000'), '%Y%m%d%H%i%s') AND STR_TO_DATE( CONCAT(#{endDt}, '235959'), '%Y%m%d%H%i%s')
 		</if>
 		<if test='product!=null and product!=""'>
-		AND		PRODUCT = #{product}
+			AND		PRODUCT = #{product}
 		</if>
 		<if test='category!=null and category!=""'>
-		AND		CATEGORY = #{category}
+			AND		CATEGORY = #{category}
 		</if>
 		<if test='operation!=null and operation!=""'>
-		AND		OPERATION = #{operation}
+			AND		OPERATION = #{operation}
 		</if>
 		<if test='adminId==null or adminId==""'>
 			<if test='firstAdminYn=="N" and adminType=="S"'>
 				AND	ADMIN_ID IN (
-									SELECT ADMIN_ID FROM UI_ADMIN A WHERE 1 = 1 AND ( A.ADMIN_ID = #{adminId2} OR A.ADMIN_TYPE = 'M' )
-								)
+				SELECT ADMIN_ID FROM UI_ADMIN A WHERE 1 = 1 AND ( A.ADMIN_ID = #{adminId2} OR A.ADMIN_TYPE = 'M' )
+				)
 			</if>
 		</if>
 		<if test='adminId!=null and adminId!=""'>
-		AND		ADMIN_ID = #{adminId}
+			AND		ADMIN_ID = #{adminId}
 		</if>
 		<if test='pMenuId!=null and pMenuId!=""'>
-		AND		P_MENU_ID = #{pMenuId}
+			AND		P_MENU_ID = #{pMenuId}
 		</if>
 		<if test='isHadoop==true'>
-		AND		MENU_ID NOT IN ('POLICY_DID', 'POLICY_URLIP', 'BLOCK_DID', 'BLOCK_URL', 'BLOCK_IP')
+			AND		MENU_ID NOT IN ('POLICY_DID', 'POLICY_URLIP', 'BLOCK_DID', 'BLOCK_URL', 'BLOCK_IP')
 		</if>
 		<if test='menuId!=null and menuId!=""'>
-		AND		MENU_ID = #{menuId}
+			AND		MENU_ID = #{menuId}
 		</if>
 		ORDER	BY DATE DESC, SEQ ASC
 		<if test='offset!=null and limit > 0'>
-		LIMIT	${offset}, ${limit}
+			LIMIT	${offset}, ${limit}
 		</if>
 	</select>
-	
+
 	<insert id="insertAudit" parameterType="auditVO">
 		INSERT INTO INFO_AUDIT ( DATE, ADMIN_ID, SEQ, PRODUCT, CATEGORY, OPERATION, ADMIN_NAME, ADMIN_IP, MENU_ID, P_MENU_ID, INFORMATION, COMMENTS )
 		VALUES ( NOW(), #{adminId}, ${seq}, #{product}, #{category}, #{operation}, #{adminName}, #{adminIp}, #{menuId}, #{pMenuId}, IFNULL(#{information},''), #{comment} )
 	</insert>
-	
+
 </mapper>

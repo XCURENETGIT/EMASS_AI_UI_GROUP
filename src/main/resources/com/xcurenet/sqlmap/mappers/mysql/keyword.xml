@@ -7,29 +7,29 @@
 	<!-- 예약어 그룹 목록 -->
 	<select id="getKeywordGroupList" resultType="keywordGroupVO" parameterType="hashMap">
 		SELECT  GROUP_SEQ AS groupSeq,
-				GROUP_NAME AS groupName,
-				USE_YN AS useYn
+		GROUP_NAME AS groupName,
+		USE_YN AS useYn
 		FROM	UI_KEYWORD_GROUP
 		WHERE	1=1
 		<if test='searchStr!=null and searchStr!=""'>
-		AND		GROUP_NAME LIKE CONCAT('%', #{searchStr}, '%')
+			AND		GROUP_NAME LIKE CONCAT('%', #{searchStr}, '%')
 		</if>
 		<if test='useYn!=null and useYn!=""'>
-		AND		USE_YN = #{useYn}
+			AND		USE_YN = #{useYn}
 		</if>
 		ORDER	BY GROUP_SEQ
 		<if test='offset!=null and limit > 0'>
-		LIMIT	${offset}, ${limit}
+			LIMIT	${offset}, ${limit}
 		</if>
 	</select>
-	
+
 	<!-- 예약어 그룹 중복체크 -->
 	<select id="isKeywordGroupNameExist" resultType="int" parameterType="keywordGroupVO">
 		SELECT  COUNT(*) AS CNT
 		FROM	UI_KEYWORD_GROUP
 		WHERE	GROUP_NAME = #{groupName}
 		<if test='groupSeq!=null and groupSeq!=""'>
-		AND		GROUP_SEQ != #{groupSeq}
+			AND		GROUP_SEQ != #{groupSeq}
 		</if>
 	</select>
 
@@ -41,89 +41,89 @@
 
 	<!-- 예약어 그룹 등록 -->
 	<insert id="insertKeywordGroup" parameterType="keywordGroupVO">
-		INSERT INTO UI_KEYWORD_GROUP (GROUP_SEQ, GROUP_NAME, USE_YN) 
+		INSERT INTO UI_KEYWORD_GROUP (GROUP_SEQ, GROUP_NAME, USE_YN)
 		VALUES ((SELECT IFNULL(MAX(A.GROUP_SEQ)+1, 1001) FROM UI_KEYWORD_GROUP A), #{groupName}, #{useYn})
 	</insert>
-	
+
 	<!-- 예약어 그룹 등록 Import -->
 	<insert id="insertKeywordGroupImport" parameterType="keywordGroupVO">
-		INSERT INTO UI_KEYWORD_GROUP (GROUP_SEQ, GROUP_NAME, USE_YN) 
+		INSERT INTO UI_KEYWORD_GROUP (GROUP_SEQ, GROUP_NAME, USE_YN)
 		VALUES (#{groupSeq}, #{groupName}, 'Y')
 	</insert>
 
 	<!-- 예약어 그룹 수정 -->
 	<update id="updateKeywordGroup" parameterType="keywordGroupVO">
-		UPDATE	UI_KEYWORD_GROUP 
+		UPDATE	UI_KEYWORD_GROUP
 		SET		GROUP_NAME 	= #{groupName},
-				USE_YN 		= #{useYn} 
+		USE_YN 		= #{useYn}
 		WHERE	GROUP_SEQ 	= #{groupSeq}
 	</update>
-	
+
 	<!-- 예약어 그룹 삭제 -->
 	<delete id="deleteKeywordGroup" parameterType="keywordGroupVO">
 		DELETE	UI_KEYWORD_GROUP, UI_KEYWORD
 		FROM	UI_KEYWORD_GROUP
-				LEFT	JOIN UI_KEYWORD ON UI_KEYWORD_GROUP.GROUP_SEQ = UI_KEYWORD.GROUP_SEQ
+		LEFT	JOIN UI_KEYWORD ON UI_KEYWORD_GROUP.GROUP_SEQ = UI_KEYWORD.GROUP_SEQ
 		WHERE	UI_KEYWORD_GROUP.GROUP_SEQ = #{groupSeq}
 	</delete>
-	
-	
+
+
 	<!-- 예약어 목록 -->
 	<select id="getKeywordList" resultType="keywordVO" parameterType="hashMap">
 		SELECT  A.GROUP_SEQ AS groupSeq, A.GROUP_NAME AS groupName, B.KEYWORD_SEQ AS keywordSeq, B.KEYWORD_NAME AS keywordName, B.KEYWORD_DESC AS keywordDesc
 		FROM	UI_KEYWORD_GROUP A, UI_KEYWORD B
 		WHERE	A.GROUP_SEQ = B.GROUP_SEQ
 		<if test='searchStr!=null and searchStr!=""'>
-		AND		B.KEYWORD_NAME LIKE CONCAT('%', #{searchStr}, '%')
+			AND		B.KEYWORD_NAME LIKE CONCAT('%', #{searchStr}, '%')
 		</if>
 		<if test='searchGroupSeq!=null and searchGroupSeq!="0"'>
-		AND		B.GROUP_SEQ = ${searchGroupSeq}
+			AND		B.GROUP_SEQ = ${searchGroupSeq}
 		</if>
 		ORDER	BY B.KEYWORD_SEQ
 		<if test='offset!=null and limit > 0'>
-		LIMIT	${offset}, ${limit}
+			LIMIT	${offset}, ${limit}
 		</if>
 	</select>
-	
+
 	<!-- 예약어 전체 목록 (사용중인 그룹)-->
 	<select id="getKeywordAllList" resultType="keywordVO" parameterType="hashMap">
 		SELECT  A.GROUP_SEQ AS groupSeq, A.GROUP_NAME AS groupName, B.KEYWORD_SEQ AS keywordSeq, B.KEYWORD_NAME AS keywordName, B.KEYWORD_DESC AS keywordDesc
 		FROM	UI_KEYWORD_GROUP A, UI_KEYWORD B
 		WHERE	A.GROUP_SEQ = B.GROUP_SEQ
 		<if test='exitUserYn!="Y"'>
-		AND		A.USE_YN = 'Y'
+			AND		A.USE_YN = 'Y'
 		</if>
 		ORDER	BY B.KEYWORD_NAME
 	</select>
-	
+
 	<!-- 예약어 중복체크 -->
 	<select id="isKeywordNameExist" resultType="int" parameterType="keywordVO">
 		SELECT  COUNT(*) AS CNT
 		FROM	UI_KEYWORD
 		WHERE	KEYWORD_NAME = #{keywordName}
 		<if test='keywordSeq!=null and keywordSeq!=""'>
-		AND		KEYWORD_SEQ != #{keywordSeq}
+			AND		KEYWORD_SEQ != #{keywordSeq}
 		</if>
 	</select>
 
 	<!-- 예약어 추가 -->
 	<insert id="insertKeyword" parameterType="keywordVO">
-		INSERT INTO	UI_KEYWORD (GROUP_SEQ, KEYWORD_SEQ, KEYWORD_NAME, KEYWORD_DESC) 
+		INSERT INTO	UI_KEYWORD (GROUP_SEQ, KEYWORD_SEQ, KEYWORD_NAME, KEYWORD_DESC)
 		VALUES (#{groupSeq}, (SELECT IFNULL(MAX(A.KEYWORD_SEQ)+1, 1001) FROM UI_KEYWORD A), #{keywordName},  #{keywordDesc})
 	</insert>
-	
+
 	<!-- 예약어 수정 -->
 	<update id="updateKeyword" parameterType="keywordVO">
-		UPDATE	UI_KEYWORD 
+		UPDATE	UI_KEYWORD
 		SET		KEYWORD_NAME 	= #{keywordName},
-				KEYWORD_DESC 	= #{keywordDesc} 
+		KEYWORD_DESC 	= #{keywordDesc}
 		WHERE	KEYWORD_SEQ 	= #{keywordSeq}
 	</update>
-	
+
 	<!-- 예약어 삭제 -->
 	<update id="deleteKeyword" parameterType="keywordVO">
 		DELETE	FROM UI_KEYWORD WHERE	KEYWORD_SEQ	= #{keywordSeq}
 	</update>
-	
+
 
 </mapper>

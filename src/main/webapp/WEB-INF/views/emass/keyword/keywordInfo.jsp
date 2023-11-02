@@ -88,7 +88,7 @@ $(document).ready(function(){
 					deleteData : JSON.stringify(rows),
 					success : function ( data, total ) {
 						ui.alertMsg('<s:message code="common.msg.deleted"/>');
-						getGroupData ( );
+						getGroupData ();
 					},
 					error : function (status, message) {
 						ui.alertMsg(message);
@@ -212,6 +212,7 @@ function getGroupData( flag ) {
 	if ( flag == undefined ) {
 		gridGroup.data.length = 0;
 		gridGroup.loadingPage = 0;
+
 	} else {
 		gridGroup.loadingPage++;
 	}
@@ -433,6 +434,8 @@ function fileExtCheck(obj) {
 			</div>
 		</div>
 	</div>
+
+
 	<div id="upload_file"></div>
 	<div class="modal fade" id="uploadPop" role="dialog" aria-labelledby="uploadPop">
 		<div class="modal-dialog" role="document">
@@ -547,23 +550,23 @@ function fileExtCheck(obj) {
 		}
 		gridGroup.loadExportMenu('<s:message code="keyword.msg.part_mgnt"/>');
 		gridGroup.loadHeader(false);
-		gridGroup.initData('<s:message code="common.msg.search.click"/>');
+		<%--//gridGroup.initData('<s:message code="common.msg.search.click"/>');--%>
 		
 		gridGroup.onClick = function() {
 			if (gridGroup.Col == gridGroup.ColIndex('open') && $('#groupInsertBtn').css('display') == 'inline-block') {
 				var data = gridGroup.getRowData(gridGroup.Row);
-				
+
 				$('#groupSeq').val(data.groupSeq);
 				$('#groupName').val(data.groupName);
 				$('[name=useYn][value='+data.useYn+']').prop('checked',true);
-				
+
 				$('#keywordGroupPop').attr('mode','modify');
 				$("#groupName").focus();
 				$('#keywordGroupPop').modal('show');
 			}
 		}
 		gridGroup.onActiveCellChanged = function() {
-			getKeywordData(); 
+			getKeywordData();
 		}
 		
 		var gridKeyword = new Xgrid('keywordListGrid', contextRoot);

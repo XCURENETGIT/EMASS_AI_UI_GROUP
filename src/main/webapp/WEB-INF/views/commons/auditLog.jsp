@@ -31,6 +31,7 @@ menuArr.push({id:'KEYWORD_MGMT', 		name:'<s:message code="DATA_MONITOR.KEYWORD_M
 menuArr.push({id:'CONSENT_MGMT', 		name:'<s:message code="DATA_MONITOR.CONSENT_MGMT"/>', 			p_id:'DATA_MONITOR'}); //동의서 관리
 menuArr.push({id:'BUSI_IPRANGE_VIEW', 	name:'<s:message code="DATA_MONITOR.BUSI_IPRANGE_VIEW"/>',  	p_id:'DATA_MONITOR'}); //사업장 내부 IP 확인
 menuArr.push({id:'DEPT_IPRANGE_VIEW', 	name:'<s:message code="DATA_MONITOR.DEPT_IPRANGE_VIEW"/>',  	p_id:'DATA_MONITOR'}); //부서 내부 IP 확인
+menuArr.push({id:'RELATION_KEYWORD', 	name:'<s:message code="DATA_MONITOR.RELATION_KEYWORD"/>',  	p_id:'DATA_MONITOR'}); //연관 검색어 관리
 menuArr.push({id:'ANALYSIS_RELATION', 	name:'<s:message code="DATA_ANALYSIS.ANALYSIS_RELATION"/>',  	p_id:'DATA_ANALYSIS'}); //데이터 관계 분석
 menuArr.push({id:'ANALYSIS_FLUCTUATION',name:'<s:message code="DATA_ANALYSIS.ANALYSIS_FLUCTUATION"/>',  p_id:'DATA_ANALYSIS'}); //사용량 증감 분석
 menuArr.push({id:'ANALYSIS_CUSTOM', 	name:'<s:message code="DATA_ANALYSIS.ANALYSIS_CUSTOM"/>',  		p_id:'DATA_ANALYSIS'}); //데이터 자유 분석

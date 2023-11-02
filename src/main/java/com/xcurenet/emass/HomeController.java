@@ -719,6 +719,18 @@ public class HomeController {
 		return "/emass/keyword/keywordInfo";
 	}
 
+	@RequestMapping(value = "/ems/regexPatternInfo.do", method = RequestMethod.GET)
+	public String regexPatternInfo(Locale locale, Model model) {
+		model.addAttribute("headerYn","Y");
+		return "/emass/regexPattern/regexPatternInfo";
+	}
+
+	@RequestMapping(value = "/ems/searchWordInfo.do", method = RequestMethod.GET)
+	public String searchWordInfo(Locale locale, Model model){
+		model.addAttribute("headerYn","Y");
+		return "/emass/searchWord/SearchWordInfo";
+	}
+
 	@RequestMapping(value = "/ems/recommend.do", method = RequestMethod.GET)
 	public String recommend(Locale locale, Model model) {
 		return "/emass/message/recommend";

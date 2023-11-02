@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "../../dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xcurenet.sqlmap.mappers.mysql.searchWord">
+
+
+
+	<!--연관 키워드 조회-->
+	<select id = "getSearchWordList" resultType="com.xcurenet.searchWord.service.SearchWordVO" parameterType="hashMap">
+		SELECT A.KEYWORD_ID AS keywordId, A.KEYWORD AS searchWord,
+		(
+		SELECT GROUP_CONCAT(B.KEYWORD_REL SEPARATOR ', ')
+		FROM XCN_KEYWORD_REL AS B
+		WHERE A.KEYWORD_ID = B.KEYWORD_ID
+		GROUP  BY A.KEYWORD_ID
+		) AS relationWord
+		FROM XCN_KEYWORD AS A
+		<if test='searchStr!=null and searchStr!=""'>
+			WHERE KEYWORD LIKE CONCAT(#{searchStr}, '%')
+		</if>
+		ORDER BY A.KEYWORD
+		<if test='offset!=null and limit > 0'>
+			LIMIT	${offset}, ${limit}
+		</if>
+
+	</select>
+
+	<!--	검색 키워드 삭제-->
+	<delete id="deleteSearchWord" parameterType="com.xcurenet.searchWord.service.SearchWordVO">
+		DELETE	FROM XCN_KEYWORD WHERE KEYWORD_ID = #{keywordId}
+	</delete>
+
+	<!--	연관 키워드 개별 삭제-->
+	<delete id="deleteSearchRelWord" parameterType="hashMap">
+		DELETE	FROM XCN_KEYWORD_REL
+		WHERE  KEYWORD_REL= #{relationWord} AND KEYWORD_ID = #{keywordId}
+	</delete>
+
+	<!--	 연관 키워드 전체 삭제-->
+	<delete id="deleteSearchReNum" parameterType="com.xcurenet.searchWord.service.SearchWordVO">
+		DELETE	FROM XCN_KEYWORD_REL WHERE KEYWORD_ID = #{keywordId}
+	</delete>
+
+
+	<!--	검색키워드 등록-->
+	<insert id="insertSearchWord" parameterType="com.xcurenet.searchWord.service.SearchWordVO">
+		INSERT INTO XCN_KEYWORD (KEYWORD) VALUES(#{searchWord})
+	</insert>
+
+
+	<!--	연관 키워드 등록-->
+	<insert id="insertSearchRelWord" parameterType="com.xcurenet.searchWord.service.SearchWordVO">
+		INSERT INTO XCN_KEYWORD_REL (KEYWORD_ID, KEYWORD_REL,WEIGHT)
+		VALUES (#{keywordId}, #{relationWord}, #{searchWordRelaNumber})
+	</insert>
+
+	<!-- 키워드 수정 -->
+	<update id="updateSearchWord" parameterType="com.xcurenet.searchWord.service.SearchWordVO">
+		UPDATE	XCN_KEYWORD
+		SET		KEYWORD 	= #{searchWord}
+		WHERE	KEYWORD_ID 	= #{keywordId}
+	</update>
+
+	<!--	키워드 중복 체크-->
+	<select id="isSearchWordExist" resultType="int" parameterType="com.xcurenet.searchWord.service.SearchWordVO">
+		SELECT  COUNT(*) AS CNT
+		FROM	XCN_KEYWORD
+		WHERE	KEYWORD = #{searchWord}
+	</select>
+
+
+	<!--	검색키워드  기본키 찾기-->
+	<select id="getSearchWordNum" resultType="int" parameterType="com.xcurenet.searchWord.service.SearchWordVO">
+		SELECT KEYWORD_ID
+		FROM XCN_KEYWORD
+		WHERE KEYWORD = #{searchWord}
+	</select>
+</mapper>

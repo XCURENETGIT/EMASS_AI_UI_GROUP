@@ -4,7 +4,7 @@
 
 <mapper namespace="com.xcurenet.sqlmap.mappers.mysql.emass">
 
-	<!-- Body(본문) -->	
+	<!-- Body(본문) -->
 	<select id="getEmassBody" resultType="emsBodyVO" parameterType="string">
 		SELECT	MSGID AS msgId, BODYSIZE AS bodySize, BODYHASH AS bodyHash, BODYPATH AS bodyPath, BODYCHARSET AS bodyCharset, BODYTYPE AS bodyType, BODYTEXT AS bodyText,
 				SUBJECT AS subject, SVC AS svc, SRCIP AS srcIp, DSTIP AS dstIp, HOST AS host, PATH AS path, USERID AS userId, NAME AS name,
@@ -14,7 +14,7 @@
 		LIMIT	1
 	</select>
 
-	<!-- Body Hash(본문 해쉬 정보) -->	
+	<!-- Body Hash(본문 해쉬 정보) -->
 	<select id="getEmassBodyHash" resultType="emsBodyVO" parameterType="string">
 		SELECT	MSGID AS msgId, BODYHASH AS bodyHash
 		FROM	EMS_MESSAGE
@@ -22,7 +22,7 @@
 		LIMIT	1
 	</select>
 
-	<!-- keyword(예약어) -->	
+	<!-- keyword(예약어) -->
 	<select id="getEmassKeyword" resultType="emsKeywordVO" parameterType="string">
 		SELECT	MSGID AS msgId,
 				TYPE AS type,
@@ -31,78 +31,78 @@
 		WHERE	MSGID = #{msgId}
 		ORDER	BY TYPE, KEYWORD
 	</select>
-	
-	
-	<!-- header(헤더) -->	
+
+
+	<!-- header(헤더) -->
 	<select id="getEmassHeader" resultType="emsHeaderVO" parameterType="string">
 		SELECT	MSGID AS msgId, HEADERPATH AS headerPath
 		FROM	EMS_MESSAGE
 		WHERE	MSGID = #{msgId}
 		LIMIT	1
 	</select>
-	
-	
-	<!-- message(데이터 정보) -->	
-	<select id="getEmassMessage" resultType="emsMessageVO" parameterType="string">
-		SELECT	DATE_FORMAT(CTIME,'%Y-%m-%d %T') AS ctime,
-				DATE_FORMAT(LTIME,'%Y-%m-%d %T') AS ltime,
-				MSGID AS msgId,
-				CID AS cId,
-				SRCIP AS srcIp,
-				SPORT AS sPort,
-				DSTIP AS dstIp,
-				DPORT AS dPort,
-				SVC AS svc,
-				SIZE AS size,
-				BODYSIZE AS bodySize,
-				USR_IP AS userIp,
-				USR_ID AS usrId,
-				PASSWORD AS password,
-				USER AS user,
-				SUBJECT AS subject,
-				XMSGKEY AS xMsgKey,
-				XROOTMTR AS xRootMtr,
-				XPARENTMTR AS xParentMtr,
-				HOST AS host,
-				PATH AS path,
-				QUERY AS query,
-				SENDER AS sender,
-				OPINION AS opinion,
-				DEV_WRITER AS devWriter,
-				DEV_DECODER AS devDecoder,
-				SITEATTR AS siteAttr,
-				SITECODE AS siteCode,
-				USERID AS userId,
-				NAME AS name,
-				COCD AS coCd,
-				IP_COCD AS ipCocd,
-				SUBORGCD AS subOrgCd,
-				BUSICD AS busiCd,
-				IP_BUSICD AS ipBusicd,
-				DEPTCD AS deptCd,
-				IP_DEPTCD AS ipDeptcd,
-				JIKGUBCD AS jikgubCd,
-				ALLOFUS AS jikgubCd,
-				ATTACHED AS attached,
-				DIRECTION AS direction,
-				KWD AS kwd,
-				INSIDE AS inSide,
-				PI AS pi,
-				WORK AS work,
-				ATTACHCNT AS attachCnt,
-				CHECKLIST AS checkList,
-				MAILTYPE AS mailType,
-				FILENAME AS fileName,
-				CEO AS ceo,
-				ML_CONFD_CLASS AS ml_confd_class,
-				ML_CONFD_FEEDBACK AS ml_confd_feedback,
-				ML_CONFD_PROB AS ml_confd_prob,
-				ML_CONFD_USERID AS ml_confd_userid
-		FROM	EMS_MESSAGE
-		WHERE	MSGID = #{msgId}
-		LIMIT	1
-	</select>
-	
+
+
+<!--	&lt;!&ndash; message(데이터 정보) &ndash;&gt;-->
+<!--	<select id="getEmassMessage" resultType="emsMessageVO" parameterType="string">-->
+<!--		SELECT	DATE_FORMAT(CTIME,'%Y-%m-%d %T') AS ctime,-->
+<!--				DATE_FORMAT(LTIME,'%Y-%m-%d %T') AS ltime,-->
+<!--				MSGID AS msgId,-->
+<!--				CID AS cId,-->
+<!--				SRCIP AS srcIp,-->
+<!--				SPORT AS sPort,-->
+<!--				DSTIP AS dstIp,-->
+<!--				DPORT AS dPort,-->
+<!--				SVC AS svc,-->
+<!--				SIZE AS size,-->
+<!--				BODYSIZE AS bodySize,-->
+<!--				USR_IP AS userIp,-->
+<!--				USR_ID AS usrId,-->
+<!--				PASSWORD AS password,-->
+<!--				USER AS user,-->
+<!--				SUBJECT AS subject,-->
+<!--				XMSGKEY AS xMsgKey,-->
+<!--				XROOTMTR AS xRootMtr,-->
+<!--				XPARENTMTR AS xParentMtr,-->
+<!--				HOST AS host,-->
+<!--				PATH AS path,-->
+<!--				QUERY AS query,-->
+<!--				SENDER AS sender,-->
+<!--				OPINION AS opinion,-->
+<!--				DEV_WRITER AS devWriter,-->
+<!--				DEV_DECODER AS devDecoder,-->
+<!--				SITEATTR AS siteAttr,-->
+<!--				SITECODE AS siteCode,-->
+<!--				USERID AS userId,-->
+<!--				NAME AS name,-->
+<!--				COCD AS coCd,-->
+<!--				IP_COCD AS ipCocd,-->
+<!--				SUBORGCD AS subOrgCd,-->
+<!--				BUSICD AS busiCd,-->
+<!--				IP_BUSICD AS ipBusicd,-->
+<!--				DEPTCD AS deptCd,-->
+<!--				IP_DEPTCD AS ipDeptcd,-->
+<!--				JIKGUBCD AS jikgubCd,-->
+<!--				ALLOFUS AS jikgubCd,-->
+<!--				ATTACHED AS attached,-->
+<!--				DIRECTION AS direction,-->
+<!--				KWD AS kwd,-->
+<!--				INSIDE AS inSide,-->
+<!--				PI AS pi,-->
+<!--				WORK AS work,-->
+<!--				ATTACHCNT AS attachCnt,-->
+<!--				CHECKLIST AS checkList,-->
+<!--				MAILTYPE AS mailType,-->
+<!--				FILENAME AS fileName,-->
+<!--				CEO AS ceo,-->
+<!--				ML_CONFD_CLASS AS ml_confd_class,-->
+<!--				ML_CONFD_FEEDBACK AS ml_confd_feedback,-->
+<!--				ML_CONFD_PROB AS ml_confd_prob,-->
+<!--				ML_CONFD_USERID AS ml_confd_userid-->
+<!--		FROM	EMS_MESSAGE-->
+<!--		WHERE	MSGID = #{msgId}-->
+<!--		LIMIT	1-->
+<!--	</select>-->
+
 
 	<!-- All User(사용자, 수신자, 발신자)-->
 	<select id="getEmassUserInfo" resultType="emsRecvVO" parameterType="hashmap">
@@ -131,8 +131,8 @@
 		ORDER	BY UTYPE, NAME
 	</select>
 
-	
-	<!-- attachInfo(첨부파일) -->	
+
+	<!-- attachInfo(첨부파일) -->
 	<select id="getEmassAttachInfo" resultType="emsAttachVO" parameterType="hashmap">
 		SELECT	A.MSGID AS msgId,
 				A.ATTACHID AS attachId,
@@ -159,7 +159,7 @@
 				<if test='ocrYn=="Y"'>
 				LEFT JOIN EMS_ATTACHTEXT C ON A.ATTACHHASH = C.ATTACHHASH
 				</if>
-		WHERE 	1=1	
+		WHERE 	1=1
 		<if test='msgId!=null and msgId!=""'>
 		AND 	A.MSGID = #{msgId}
 		</if>
@@ -171,9 +171,9 @@
 		</if>
 		ORDER	BY A.ATTACHNAME
 	</select>
-	
-	
-	<!-- attachInfo(첨부파일) -->	
+
+
+	<!-- attachInfo(첨부파일) -->
 	<select id="getEmassAttachInfo4DownHash" resultType="emsAttachVO" parameterType="hashmap">
 		SELECT	MSGID AS msgId,
 				ATTACHID AS attachId,
@@ -199,8 +199,8 @@
 		AND		ATTACHPATH IS NOT NULL
 		ORDER	BY ATTACHNAME
 	</select>
-	
-	<!-- attachInfo(첨부파일) -->	
+
+	<!-- attachInfo(첨부파일) -->
 	<select id="getEmassAttachInfo4Down" resultType="emsAttachVO" parameterType="hashmap">
 		SELECT	A.MSGID AS msgId,
 				ATTACHID AS attachId,
@@ -227,8 +227,8 @@
 		AND		ATTACHPATH IS NOT NULL
 		ORDER	BY ATTACHNAME
 	</select>
-	
-	<!-- 첨부파일 텍스트 조회 -->	
+
+	<!-- 첨부파일 텍스트 조회 -->
 	<select id="getEmassAttachText" resultType="emsAttachTextVO" parameterType="hashmap">
 		SELECT  A.ATTACHNAME AS attachName, B.ATTACHTEXTPATH AS attachTextPath, B.ATTACHSIZE AS attachSize, B.ATTACHPATH AS attachPath, B.ATTACHEXT AS attachExt
 		FROM	EMS_ATTACH A, EMS_ATTACH_HASH B
@@ -237,17 +237,17 @@
 		AND		A.ATTACHHASH = B.ATTACHHASH
 		LIMIT	1
 	</select>
-	
-	<!-- 첨부파일 텍스트 조회 (o)-->	
+
+	<!-- 첨부파일 텍스트 조회 (o)-->
 	<select id="getEmassAttachTextByHash" resultType="emsAttachTextVO" parameterType="hashmap">
 		SELECT  ATTACHTEXTPATH AS attachTextPath, null AS attachTextHarPath, ATTACHSIZE AS attachSize, ATTACHPATH AS attachPath, null AS attachHarPath, ATTACHEXT AS attachExt
 		FROM	EMS_ATTACH_HASH
 		WHERE	ATTACHHASH = #{attachHash}
 		LIMIT	1
 	</select>
-	
-	
-	<!-- OCR 첨부파일 텍스트 조회 -->	
+
+
+	<!-- OCR 첨부파일 텍스트 조회 -->
 	<select id="getEmassAttachOcrText" resultType="emsAttachTextVO" parameterType="hashmap">
 		SELECT  A.ATTACHHASH, A.ATTACHNAME AS attachName, B.ATTACHTEXTPATH AS attachTextPath, B.ATTACHSIZE AS attachSize, B.ATTACHPATH AS attachPath, B.ATTACHEXT AS attachExt,
 				C.`TEXT` AS attachText
@@ -258,7 +258,7 @@
 		LIMIT	1
 	</select>
 
-	<!-- 패턴 리스트 조회 -->	
+	<!-- 패턴 리스트 조회 -->
 	<select id="getEmassPattern" resultType="emsPiVO" parameterType="string">
 		SELECT  TYPE AS type,
 				ATTACHNAME AS attachName,
@@ -275,8 +275,8 @@
 			END
 			)
 	</select>
-	
-	<!-- 패턴 상세 리스트 조회 -->	
+
+	<!-- 패턴 상세 리스트 조회 -->
 	<select id="getEmassPatternDetail" resultType="emsPiDetailVO" parameterType="hashmap">
 		SELECT  ATTACHNAME AS attachName, KWDS AS kwds, AMOUNT AS total
 		FROM	EMS_PI
@@ -292,8 +292,8 @@
 		</if>
 		ORDER	BY ATTACHNAME, KWDS
 	</select>
-	
-	
+
+
 	<select id="getEmassMessengerAdminXrootMtr" parameterType="hashmap" resultType="emsMessengerAdminXrootMtrVO">
 		SELECT  ADMIN_ID AS adminId, XROOTMTR AS xRootMtr, MSGID AS msgId
 		FROM	UI_ADMIN_XROOTMTR
@@ -303,17 +303,17 @@
 		AND		SRCIP = #{srcip}
 		</if>
 	</select>
-	
+
 	<update id="updateEmassMessengerAdminXrootMtr">
 		REPLACE INTO UI_ADMIN_XROOTMTR	SET ADMIN_ID = #{adminId}, XROOTMTR = #{xRootMtr}, MSGID = #{msgId}, SRCIP = #{srcip}
 	</update>
-	
+
 	<update id="updateEmsFeedback">
 		REPLACE	INTO EMS_MESSAGE
 		SET		ML_CONFD_FEEDBACK = #{feedback}, ML_CONFD_USERID = #{adminId}
 		WHERE	MSGID = #{msgId}
 	</update>
-	
+
 	<select id="getMaxDownSeq" resultType="string">
 		SELECT 	IFNULL(MAX(DOWN_SEQ), 0) + 1 AS downSeq
 		FROM 	UI_DOWNLOAD_BATCH
@@ -332,7 +332,7 @@
 		INSERT	INTO UI_DOWNLOAD_BATCH (DOWN_SEQ, EXPORT_TYPE, EXPORT_FILE_EXT, DOWN_VAL, ADMIN_ID, REQ_DT, END_DT, DOWN_STATUS, STATUS_STR, DOWNFILE_PATH, DOWNFILE_SIZE, TOTAL_ROWS, ING_ROWS, SKIP_ROWS, UPDATE_DT)
 		VALUES	(#{downSeq}, #{exportType}, #{exportFileExt}, #{downVal}, #{adminId}, NOW(), DATE_ADD(NOW(), INTERVAL + 3 DAY), #{downStatus}, #{statusStr}, #{downFilePath}, 0, #{totalRows}, 0, 0, NOW())
 	</insert>
-	
+
 	<update id="updateDownloadBatch" parameterType="downloadBatchVO">
 		UPDATE	UI_DOWNLOAD_BATCH
 		SET		STATUS_STR = #{statusStr},
@@ -348,20 +348,20 @@
 				</if>
 				<if test='ingRows!=null and ingRows!=""'>
 				, ING_ROWS = #{ingRows}
-				</if> 
+				</if>
 				<if test='skipCnt!=null and skipCnt!=""'>
 				, SKIP_ROWS = #{skipCnt}
-				</if>   
+				</if>
 		WHERE	DOWN_SEQ = #{downSeq}
 	</update>
-	
+
 	<update id="shutdownDownloadBatch" parameterType="string">
 		UPDATE	UI_DOWNLOAD_BATCH
 		SET		STATUS_STR = #{val},
 				UPDATE_DT = NOW()
 		WHERE	STATUS_STR IN ('S', 'I')
 	</update>
-	
+
 	<update id="cancelDownFile" parameterType="hashmap">
 		UPDATE	UI_DOWNLOAD_BATCH
 		SET		STATUS_STR = #{statuSel},
@@ -369,23 +369,23 @@
 		WHERE	DOWN_SEQ = #{downSeq}
 		AND		ADMIN_ID = #{adminId}
 	</update>
-	
+
 	<update id="cancelUnkown" parameterType="hashmap">
 		UPDATE	UI_DOWNLOAD_BATCH
 		SET		STATUS_STR = #{statuSel},
 				UPDATE_DT = NOW()
 		WHERE	DOWN_SEQ = #{downSeq}
 	</update>
-	
+
 	<select id="chackCancel" parameterType="downloadBatchVO" resultType="string">
 		SELECT 	STATUS_STR
 		FROM	UI_DOWNLOAD_BATCH
 		WHERE	DOWN_SEQ = #{downSeq}
 		AND		ADMIN_ID = #{adminId}
 	</select>
-	
+
 	<select id="getExportFileExpireData" resultType="downloadBatchVO">
-		SELECT	DOWN_SEQ AS downSeq 
+		SELECT	DOWN_SEQ AS downSeq
 				, EXPORT_TYPE AS exportType
 				, EXPORT_FILE_EXT AS exportFileExt
 				, DOWN_VAL AS downVal
@@ -399,10 +399,10 @@
 		WHERE	DATE_FORMAT(END_DT, '%Y%m%d') <![CDATA[ < ]]> DATE_FORMAT(NOW(), '%Y%m%d')
 		AND		STATUS_STR = 'Y'
 	</select>
-	
+
 	<!-- 다운로드 배치 내역 조회 -->
 	<select id="getDownloadBatchList" resultType="downloadBatchVO" parameterType="hashMap">
-		SELECT 	DOWN_SEQ AS downSeq, DOWN_VAL AS downVal, EXPORT_TYPE AS exportType, EXPORT_FILE_EXT AS exportFileExt, ADMIN_ID AS adminId, DATE_FORMAT(REQ_DT,'%Y-%m-%d %H:%i:%S') AS reqDt, DATE_FORMAT(END_DT,'%Y-%m-%d') AS endDt, DOWN_STATUS AS downStatus, STATUS_STR AS statusStr, DOWNFILE_PATH AS downFilePath, DOWNFILE_SIZE AS downFileSize, ING_ROWS AS ingRows, TOTAL_ROWS AS totalRows, SKIP_ROWS AS skipCnt  
+		SELECT 	DOWN_SEQ AS downSeq, DOWN_VAL AS downVal, EXPORT_TYPE AS exportType, EXPORT_FILE_EXT AS exportFileExt, ADMIN_ID AS adminId, DATE_FORMAT(REQ_DT,'%Y-%m-%d %H:%i:%S') AS reqDt, DATE_FORMAT(END_DT,'%Y-%m-%d') AS endDt, DOWN_STATUS AS downStatus, STATUS_STR AS statusStr, DOWNFILE_PATH AS downFilePath, DOWNFILE_SIZE AS downFileSize, ING_ROWS AS ingRows, TOTAL_ROWS AS totalRows, SKIP_ROWS AS skipCnt
 		FROM 	UI_DOWNLOAD_BATCH
 		WHERE 	ADMIN_ID = #{adminId}
 		<if test='exportTypeSel!=null and exportTypeSel!=""'>
@@ -419,25 +419,25 @@
 		LIMIT	${offset}, ${limit}
 		</if>
 	</select>
-	
+
 	<!-- 다운로드 배치 내역 조회 (for Monitoring) -->
 	<select id="getDownloadBatchIngList" resultType="downloadBatchVO" parameterType="string">
-		SELECT 	DOWN_SEQ AS downSeq, DOWN_VAL AS downVal, EXPORT_TYPE AS exportType, EXPORT_FILE_EXT AS exportFileExt, ADMIN_ID AS adminId, DATE_FORMAT(REQ_DT,'%Y-%m-%d %H:%i:%S') AS reqDt, DATE_FORMAT(END_DT,'%Y-%m-%d') AS endDt, DOWN_STATUS AS downStatus, STATUS_STR AS statusStr, DOWNFILE_PATH AS downFilePath, DOWNFILE_SIZE AS downFileSize, ING_ROWS AS ingRows, TOTAL_ROWS AS totalRows  
+		SELECT 	DOWN_SEQ AS downSeq, DOWN_VAL AS downVal, EXPORT_TYPE AS exportType, EXPORT_FILE_EXT AS exportFileExt, ADMIN_ID AS adminId, DATE_FORMAT(REQ_DT,'%Y-%m-%d %H:%i:%S') AS reqDt, DATE_FORMAT(END_DT,'%Y-%m-%d') AS endDt, DOWN_STATUS AS downStatus, STATUS_STR AS statusStr, DOWNFILE_PATH AS downFilePath, DOWNFILE_SIZE AS downFileSize, ING_ROWS AS ingRows, TOTAL_ROWS AS totalRows
 		FROM 	UI_DOWNLOAD_BATCH
 		WHERE 	STATUS_STR IN ('S', 'I')
 		AND		UPDATE_DT <![CDATA[ < ]]> DATE_SUB(NOW(), INTERVAL #{delay} HOUR)
 		ORDER 	BY REQ_DT DESC
 	</select>
-	
+
 	<delete id="removeDownInfoData" parameterType="hashmap">
-		DELETE 	FROM UI_DOWNLOAD_BATCH 
+		DELETE 	FROM UI_DOWNLOAD_BATCH
 		WHERE 	ADMIN_ID = #{adminId}
 		AND		DOWN_SEQ IN
 		<foreach collection="downList" index="index" item="item" separator="," open="(" close=")">
 			#{item}
 		</foreach>
 	</delete>
-	
+
 	<select id="getSearchKeywordAuto" resultType="emsSearchKeywordVO" parameterType="hashmap">
 		SELECT  SEARCH_KEYWORD AS searchKeyword
 		FROM	UI_SEARCH_KEYWORD
@@ -446,7 +446,7 @@
 		ORDER	BY CREATE_DT DESC
 		LIMIT	10
 	</select>
-	
+
 	<select id="getSearchKeywordList" resultType="emsSearchKeywordVO" parameterType="hashmap">
 		SELECT  SK_SEQ AS skSeq, SEARCH_KEYWORD AS searchKeyword, DATE_FORMAT(CREATE_DT,'%Y-%m-%d %H:%i:%S') AS createDt
 		FROM	UI_SEARCH_KEYWORD
@@ -457,36 +457,36 @@
 		AND		ADMIN_ID = #{adminId}
 		ORDER	BY CREATE_DT DESC
 	</select>
-	
+
 	<insert id="insertSearchKeywordList" parameterType="hashmap">
 		INSERT	INTO UI_SEARCH_KEYWORD(ADMIN_ID, SEARCH_KEYWORD, CREATE_DT) VALUES (#{adminId}, #{searchKeyword}, NOW())
 	</insert>
-	
+
 	<select id="isSearchKeywordExist" resultType="int" parameterType="emsSearchKeywordVO">
 		SELECT	COUNT(*) AS CNT
 		FROM	UI_SEARCH_KEYWORD
 		WHERE	ADMIN_ID	= #{adminId}
 		AND		SEARCH_KEYWORD = #{searchKeyword}
 	</select>
-	
+
 	<delete id="deleteSearchKeywordList" parameterType="emsSearchKeywordVO">
-		DELETE	FROM UI_SEARCH_KEYWORD 
+		DELETE	FROM UI_SEARCH_KEYWORD
 		WHERE	FIND_IN_SET(SK_SEQ, #{skSeq})
 		AND		ADMIN_ID = #{adminId}
 	</delete>
-	
+
 	<select id="getIpBusiNm" resultType="string" parameterType="hashmap">
 		SELECT	BUSINM
 		FROM	UI_BUSI
 		WHERE	BUSICD	= #{ipBusicd}
 	</select>
-	
+
 	<select id="getIpDeptNm" resultType="string" parameterType="hashmap">
 		SELECT	DEPTNM
 		FROM	UI_DEPT
 		WHERE	DEPTCD	= #{ipDeptcd}
 	</select>
-	
+
 	<!-- 전체 패턴 -->
 	<select id="getPatternAllList" resultType="patternVO" parameterType="patternVO">
 		SELECT  CODE AS code, NAME AS name, REGEX AS regex
@@ -496,7 +496,7 @@
 		</if>
 		ORDER	BY name
 	</select>
-	
+
 </mapper>
 
 

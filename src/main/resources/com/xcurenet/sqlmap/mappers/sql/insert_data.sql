@@ -786,6 +786,7 @@ INSERT IGNORE INTO UI_MENU VALUES ('KEYWORD_MGMT','예약어 관리','DATA_MONIT
 INSERT IGNORE INTO UI_MENU VALUES ('CONSENT_MGMT','동의서 관리','DATA_MONITOR','L','M','ems/consent.do','fa fa-flask',7,'Y');
 INSERT IGNORE INTO UI_MENU VALUES ('BUSI_IPRANGE_VIEW','사업장 내부 IP 확인','DATA_MONITOR','L','M','commons/ipRangeView.do','fa fa-building',8,'Y');
 INSERT IGNORE INTO UI_MENU VALUES ('DEPT_IPRANGE_VIEW','부서 내부 IP 확인','DATA_MONITOR','L','M','commons/ipRangeDeptView.do','fa fa-building',9,'Y');
+INSERT IGNORE INTO UI_MENU VALUES ('RELATION_KEYWORD','연관 검색어 관리','DATA_MONITOR','L','M','ems/searchWordInfo.do','fa fa-building',10,'Y');
 INSERT IGNORE INTO UI_MENU VALUES ('DATA_ANALYSIS','통계/분석',NULL,'L','M',NULL,'fa fa-area-chart',2,'Y');
 INSERT IGNORE INTO UI_MENU VALUES ('ANALYSIS_RELATION','데이터 관계 분석','DATA_ANALYSIS','L','M','analysis/dataRelation.do','fa fa-share-alt',1,'Y');
 INSERT IGNORE INTO UI_MENU VALUES ('ANALYSIS_FLUCTUATION','사용량 증감 분석','DATA_ANALYSIS','L','M','analysis/usageCompare.do','fa fa-area-chart',2,'Y');
