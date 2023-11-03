@@ -26,7 +26,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +54,6 @@ public class EmsSearchServiceImpl implements EmsSearchService {
 
     @Override
     public SearchResponse getList(SearchRequest searchRequest) throws IOException {
-        String bodysnippet = "N"; // ?
         SearchResponse searchResponse = null;
         try {
             TimeUtil.start(); // 검색 시간 측정
@@ -78,6 +76,7 @@ public class EmsSearchServiceImpl implements EmsSearchService {
     @Override
     public EdcMessage getEmassMessage(Map<String,Object> searchParam, String adminId, String readYn, String consentNo) throws IOException {
         EdcMessage edcMessage = null;
+
         if (Common.isNotEmpty(readYn) && Common.isNotEmpty(adminId)) {
             if (Common.isEquals(readYn, "Y")) {
              //   sq.addFilterQuery(String.format(JOIN_READ, adminId));
@@ -86,8 +85,7 @@ public class EmsSearchServiceImpl implements EmsSearchService {
             }
         }
 
-        /* 추후 수정예정 =============================================*/
-
+        /*추후 작업예정 =============================================*/
         /* admin snippet */
         List<ConfigAdminVO> conf = configAdminService.getConfAdminOption(adminId);
         String bodysnippetVal = "N";
@@ -100,36 +98,35 @@ public class EmsSearchServiceImpl implements EmsSearchService {
         searchParam.put("bodysnippet", bodysnippetVal);
         setAuthoritys(searchParam, adminId);
 
-        /* 추후 수정예정 =============================================*/
-
         /* 검색 */
-
         QueryParamReady queryParamReady = null;
         SearchSourceBuilder searchSourceBuilder = null;
 
         try {
+            /* 검색 타입 조건 */
             switch (Common.nvl(searchParam.get("elsSearchType"))) {
-                case ElasticSearchCommon.SEARCH_TYPE_MESSAGE:  // 메시지 검색
-                    queryParamReady = elasticSearchQuery.setMessageSearchQueryReady(searchParam);
+                case ElasticSearchCommon.SEARCH_TYPE_MESSAGE:  // 메시지 검색시
+                    queryParamReady = elasticSearchQuery.setMessageSearchQueryReady(searchParam);  // 쿼리 준비
                     searchSourceBuilder = elasticSearchQuery.initMessageSearchSource(queryParamReady); // Init MessageSearchSource
                     break;
-                case ElasticSearchCommon.SEARCH_TYPE_STATISTIC: // 통계 검색
-                    queryParamReady = elasticSearchQuery.setStatisticQueryReady(searchParam);
+                case ElasticSearchCommon.SEARCH_TYPE_STATISTIC: // 통계 검색시
+                    queryParamReady = elasticSearchQuery.setStatisticQueryReady(searchParam); // 쿼리 준비
                     searchSourceBuilder = elasticSearchQuery.initStatisticSearchSource(queryParamReady); // Init StatisticSearchSource
                     break;
             }
 
+            /* 검색 진행 */
             SearchRequest searchRequest = new SearchRequest(queryParamReady.getIndices()).source(searchSourceBuilder);
             SearchResponse searchResponse = getList(searchRequest);
             ElsSearchResponse elsSearchResponse = new ElsSearchResponse(searchResponse, searchResponse.getHits().getTotalHits().value, queryParamReady);
             edcMessage = new EdcMessage(elsSearchResponse, adminId);
 
-            /* 읽음 확인 관련*/
+            /* 읽음 확인 관련 추후 작업 예정*/
 //        if (readYn != null && readYn.equals("")) {
 //            edcMessage.setEmass(checkedService.findReadList((List<Emass>) edcMessage.getEmass(), adminId));
 //        }
 
-            /* response용 Data 재 빌드 */
+            /* response 용 Data로 재 빌드해야함  */
             List<EmassResponse> emassResponse = new EmsReDefined((List<Emass>) edcMessage.getEmass(), readYn, consentNo, adminUserGroupService.getAdminUserGroupSimpleAdminList(adminId)).reDefined(adminId, conf);
             edcMessage.setEmass(emassResponse);
 

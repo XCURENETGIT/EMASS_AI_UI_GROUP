@@ -171,22 +171,24 @@ public class EmsReDefined {
 			emassResponse.setSize(ems.getSize());
 
 			if(!Common.isEmpty(ems.getUser())) {
+
+
 				emassResponse.setUser_id(ems.getUser().getId());
-				emassResponse.setUser_name(ems.getUser().getName());
+				emassResponse.setUser_name(Config.userNames.get(ems.getUser().getId()));
 				emassResponse.setUser_coCd(ems.getUser().getIpCoCd());
 				emassResponse.setUser_coNm(ems.getUser().getIpCoNm());
 				emassResponse.setUser_ipBusiNm(ems.getUser().getIpBusiNm());
 				emassResponse.setUser_ipBusiCd(ems.getUser().getIpBusiCd());
 
 				emassResponse.setUser_coCd(ems.getUser().getCoCd());
-				emassResponse.setUser_coNm(ems.getUser().getCoNm());
+				emassResponse.setUser_coNm(Config.userCoNms.get(ems.getUser().getId()));
 				emassResponse.setUser_busiCd(ems.getUser().getBusiCd());
-				emassResponse.setUser_busiNm(ems.getUser().getBusiNm());
+				emassResponse.setUser_busiNm(Config.userBusiNms.get(ems.getUser().getId()));
 				emassResponse.setUser_suborgCd(ems.getUser().getSuborgCd());
 				emassResponse.setUser_suborgNm(ems.getUser().getSuborgNm());
-				emassResponse.setUser_deptNm(ems.getUser().getDeptNm());
+				emassResponse.setUser_deptNm(Config.userDepts.get(ems.getUser().getId()));
 				emassResponse.setUser_deptCd(ems.getUser().getDeptCd());
-				emassResponse.setUser_jikgubNm(ems.getUser().getJikgubNm());
+				emassResponse.setUser_jikgubNm(Config.userJikgubs.get(ems.getUser().getId()));
 				emassResponse.setUser_jikgubCd(ems.getUser().getJikgubCd());
 				emassResponse.setUser_ceo(ems.getUser().getCeo());
 				emassResponse.setUser_inside(ems.getUser().isInside());
@@ -240,12 +242,9 @@ public class EmsReDefined {
 //			if(Common.isNotEmpty(edc.getBcc())) edc.setBcc(reToccBcc(edc.getBcc(), summaryVal));
 //
 
-
 			emassRes.add(i, emassResponse);
 		}
-
-		/* emassRes 용 rebuild 후 emass 비워줌 */
-		this.emass = null;
+		this.emass = null; /* emassRes rebuild 후 기존의 emass 내용 비워줌 */
 
 		return emassRes;
 	}

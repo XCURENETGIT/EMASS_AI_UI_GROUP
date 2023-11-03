@@ -1,20 +1,7 @@
 package com.xcurenet.user.service.impl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.stereotype.Service;
-
 import com.xcurenet.admin.service.AdminVO;
-import com.xcurenet.code.service.BusiVO;
-import com.xcurenet.code.service.CoVO;
-import com.xcurenet.code.service.DeptVO;
-import com.xcurenet.code.service.GeneralVO;
-import com.xcurenet.code.service.JikgubVO;
-import com.xcurenet.code.service.JikinVO;
+import com.xcurenet.code.service.*;
 import com.xcurenet.common.dao.TransactionManager;
 import com.xcurenet.common.dao.XcnAbstractDAO;
 import com.xcurenet.common.util.Common;
@@ -23,10 +10,15 @@ import com.xcurenet.common.util.config.Config;
 import com.xcurenet.user.service.UserGroupVO;
 import com.xcurenet.user.service.UserService;
 import com.xcurenet.user.service.UserVO;
-
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service("userService")
@@ -67,7 +59,19 @@ public class UserServiceImpl extends XcnAbstractDAO implements UserService {
 		}
 		return selectList("com.xcurenet.sqlmap.mappers.mysql.user.getUserCoNms", param);
 	}
-	
+
+	@Override
+	public List<Map<String, String>> getUserBusiNms() {
+		JSONObject param = new JSONObject();
+		if(Common.isEquals(Config.getString("private.encrypt.useYN"), "Y")){
+			param.put("encryptUseYN", Config.getString("private.encrypt.useYN"));
+			param.put("encryptAlgorithm", Config.getString("private.encrypt.algorithm"));
+			param.put("encryptSize", Config.getString("private.encrypt.size"));
+			param.put("encryptKey", Config.getString("private.encrypt.key"));
+		}
+		return selectList("com.xcurenet.sqlmap.mappers.mysql.user.getUserBusiNms", param);
+	}
+
 	@Override
 	public List<Map<String, String>> getUserDepts() {
 		JSONObject param = new JSONObject();

@@ -3,9 +3,9 @@
 		function initGrid( currGrid, gridColumn){
 			statGrid = currGrid;
 			currGrid.autoNumber();
-			currGrid.colAdd('_id', gridColumn.msgid, 100, 'left', false, 'nomal');
+			currGrid.colAdd('_id', gridColumn.msgid, 100, 'left', false, 'nomal','',0);
 		//	currGrid.colAdd('epmsg_type', gridColumn.epmsg_type, 100, 'center', true, 'nomal');
-			currGrid.colAdd('xrootmtr', gridColumn.xrootmtr, 100, 'left', true, 'nomal');
+			currGrid.colAdd('xrootmtr', gridColumn.xrootmtr, 100, 'left', true, 'nomal','',1);
 			// currGrid.colAdd('interestUserYn', gridColumn.interestUserYn, 40, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 			// 	if (value == 'Y') return '<div class="interestUserCheck"></div>';
 			// 	else if (value == 'N') return '';
@@ -14,7 +14,7 @@
 				if (value == 'Y') return '<div class="readY"></div>';
 				else if (value == 'N') return '<div class="readN"></div>';
 				else return '-';
-			});
+			},2);
 			if( infoFeedbackConf == 'true' && infoFeedbackYn == 'Y' ) {
 			/*currGrid.colAdd('ml_confd_class_label', gridColumn.ml_confd_class, 100, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 				value = currGrid.getValue(row, 'ml_confd_class');
@@ -30,7 +30,7 @@
 				else if (value == '2') return mlConfdClassMsg.C2;
 				else if (value == '1') return mlConfdClassMsg.C1;
 				else return mlConfdClassMsg.C0;
-			});
+			},3);
 			/*currGrid.colAdd('ml_confd_feedback_label', gridColumn.ml_confd_feedback, 110, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 				value = currGrid.getValue(row, 'ml_confd_feedback');
 				if (value == '1') return '<div class="feedbackInCorrect"></div>&nbsp;' + mlConfdClassMsg.C1;
@@ -49,7 +49,7 @@
 				else if (value == '0') return '<div class="feedbackCorrect"></div>&nbsp;' + mlConfdFeedbackMsg.F0;
 				else if (value == '9') return '<div class="feedbackDefer"></div>&nbsp;' + mlConfdFeedbackMsg.F9;
 				else return '-';
-			});
+			},4);
 			currGrid.colAdd('ml_mlConfdProb', gridColumn.ml_confd_prob, 110, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 				return probPercent(value);
 			});
@@ -57,7 +57,7 @@
 			currGrid.colAdd('attachCnt', gridColumn.attachcnt, 35, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
 				if (value == '0') return '';
 				else return value.comma();
-			});
+			},5);
 			// currGrid.colAdd('inside', gridColumn.inside, 55, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 			// 	if (value == 'N') return gridColumn.msgout;
 			// 	else if (value == 'Y') return gridColumn.msgin;
@@ -68,8 +68,8 @@
 				if (value == 'I') return gridColumn.receive;
 				else if (value == 'O') return gridColumn.send;
 				else return '-';
-			});
-			currGrid.colAdd('service_svc_Nm', gridColumn.svcNm, 180, 'center', false, 'nomal');
+			},7);
+			currGrid.colAdd('service_svc_Nm', gridColumn.svcNm, 180, 'center', false, 'nomal','',8);
 			currGrid.colAdd('subject', gridColumn.subject, 410, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 				var bodySize = currGrid.getValue(row, 'bodySizeStr');
 				var rtnVal = '<a href="javascript:void(0);" onclick="javascript:viewer_open('+row+',\''+bodySize.substring(0,1)+'\');" class="subject_read'+currGrid.getValue(row, 'readYn')+'">'+value+'</a>&nbsp;<a href="javascript:void(0);" onclick="javascript:viewer_open('+row+',\''+bodySize.substring(0,1)+'\');" class="glyphicon glyphicon-new-window new-window"></a>';
@@ -78,29 +78,26 @@
 				rtnVal = highlightKeyword(rtnVal, kwds);
 				rtnVal = highlightSearchStr(rtnVal, 'subject');
 				return rtnVal;
-			});
+			},9);
 			// currGrid.colAdd('ctimeFormat', gridColumn.ctimeFormat, 130, 'center', false, 'nomal');
-			currGrid.colAdd('user_name', gridColumn.user, 120, 'center', false, 'link');
-			currGrid.colAdd('user_businm', gridColumn.businm, 120, 'center', true, 'nomal');
-			currGrid.colAdd('user_deptnm', gridColumn.deptnm, 120, 'center', false, 'nomal');
-			currGrid.colAdd('user_jikgubnm', gridColumn.jikgubnm, 120, 'center', false, 'nomal');
+			currGrid.colAdd('user_name', gridColumn.user, 120, 'center', false, 'link','',10);
+			currGrid.colAdd('user_busiNm', gridColumn.businm, 120, 'center', true, 'nomal','',11);
+			currGrid.colAdd('user_deptNm', gridColumn.deptnm, 120, 'center', false, 'nomal','',12);
+			currGrid.colAdd('user_jikgubNm', gridColumn.jikgubnm, 120, 'center', false, 'nomal','',13);
 			// currGrid.colAdd('sender', gridColumn.sender, 130, 'left', false, 'link');
 			currGrid.colAdd('allofus', gridColumn.allofus, 150, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 				if( value == undefined || value.length == 0) return '';
-				
-				for( var i=0; i<value.length; i++){
-					if(value[i] == 'IA') value[i] = allofusMsg.IA;
-					else if(value[i] == 'ET') value[i] = allofusMsg.ET;
-					else if(value[i] == 'IT') value[i] = allofusMsg.IT;
-					else if(value[i] == 'EA') value[i] = allofusMsg.EA;
-					else if(value[i] == 'PT') value[i] = allofusMsg.PT;
-					else if(value[i] == 'PA') value[i] = allofusMsg.PA;
-					else if(value[i] == 'SO') value[i] = allofusMsg.SO;
-					else if(value[i] == 'SI') value[i] = allofusMsg.SI;
+				switch (value) {
+					case 'ET' : value = allofusMsg.ET; break;
+					case 'IA' : value = allofusMsg.IT; break;
+					case 'EA' : value = allofusMsg.EA; break;
+					case 'PT' : value = allofusMsg.PT; break;
+					case 'PA' : value = allofusMsg.PA; break;
+					case 'SO' : value = allofusMsg.SO; break;
+					case 'SI' : value = allofusMsg.SI; break;
 				}
-				
 				return value;
-			});
+			},14);
 			// currGrid.colAdd('recvsStr', gridColumn.recvs, 220, 'left', false, 'link', function(row, cell, value, columnDef, dataContext) {
 			// 	return value;
 			// }, {sorter:sortUtil.inout});
@@ -109,30 +106,30 @@
 				var innOutInfo = currGrid.getValue(row, 'toInOutInfo');
 				if(value == undefined) value = '';
 				return innOutInfo+value;
-			});
+			},15);
 			currGrid.colAdd('cc', gridColumn.cc, 150, 'left', true, 'link', function(row, cell, value, columnDef, dataContext) {
 				var innOutInfo = currGrid.getValue(row, 'ccInOutInfo');
 				if(value == undefined) value = '';
 				return innOutInfo+value;
-			});
+			},16);
 			currGrid.colAdd('bcc', gridColumn.bcc, 150, 'left', true, 'link', function(row, cell, value, columnDef, dataContext) {
 				var innOutInfo = currGrid.getValue(row, 'bccInOutInfo');
 				if(value == undefined) value = '';
 				return innOutInfo+value;
-			});
+			},17);
 
 
-			currGrid.colAdd('network_srcIp', gridColumn.srcip + ' IP', 100, 'left', false, 'nomal');
-			currGrid.colAdd('network_dstIp', gridColumn.dstip + ' IP', 100, 'left', false, 'nomal');
+			currGrid.colAdd('network_srcIp', gridColumn.srcip + ' IP', 100, 'left', false, 'nomal','',18);
+			currGrid.colAdd('network_dstIp', gridColumn.dstip + ' IP', 100, 'left', false, 'nomal','',19);
 			currGrid.colAdd('attach_name', gridColumn.attachname, 220, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 				var rtnVal = arrayToString(value);
 				var kwds = currGrid.getValue(row, 'kwds');
 				return highlightKeyword(rtnVal, kwds);
-			});
-			currGrid.colAdd('size_Str', gridColumn.sizeStr, 80, 'left', false, 'nomal');
-			currGrid.colAdd('body_sizeStr', gridColumn.bodySizeStr, 80, 'left', false, 'nomal', null, {sortField:'body_size'});
-			currGrid.colAdd('attach_sizeStr', gridColumn.attachSizeStr, 80, 'left', false, 'nomal', null, {sortField:'attachSizeSort'});
-			currGrid.colAdd('kwd_kwds', gridColumn.kwds, 120, 'left', false, 'nomal');
+			},20);
+			currGrid.colAdd('size_Str', gridColumn.sizeStr, 80, 'left', false, 'nomal','',21);
+			currGrid.colAdd('body_sizeStr', gridColumn.bodySizeStr, 80, 'left', false, 'nomal', null, {sortField:'body_size'},22);
+			currGrid.colAdd('attach_sizeStr', gridColumn.attachSizeStr, 80, 'left', false, 'nomal', null, {sortField:'attachSizeSort'},23);
+			currGrid.colAdd('kwd_kwds', gridColumn.kwds, 120, 'left', false, 'nomal','',24);
 			// currGrid.colAdd('pi_total', gridColumn.pi_total, 70, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
 			// 	if (value == '0') return '';
 			// 	else return value.comma();

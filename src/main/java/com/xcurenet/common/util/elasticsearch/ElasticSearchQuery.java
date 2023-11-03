@@ -67,9 +67,6 @@ public class ElasticSearchQuery {
         return this;
     }
 
-    private ElasticSearchQuery addFilterQuery(String query) {
-        return this;
-    }
 
     public void setSort(String sort){
         sortInfo = new ArrayList<>();
@@ -88,7 +85,6 @@ public class ElasticSearchQuery {
 //                sortInfo.add(SortBuilders.fieldSort("msgid").order(SortOrder.ASC));
 //            }
 //        }
-
 
     }
 
@@ -122,10 +118,6 @@ public class ElasticSearchQuery {
         field = field.concat(ElasticSearchCommon.COLON);
         this.queryBuffer.insert(0,field);
     }
-
-
-
-
 
 //    /**
 //     * 서비스 그룹 쿼리
@@ -1062,34 +1054,7 @@ public class ElasticSearchQuery {
 //        return result;
 //    }
 //
-    private String getSearchQuery(String query) {
-        if( query.startsWith("|")) query = query.substring(1, query.length());
 
-        query = getTempQuery(query);
-        StringBuilder sb = new StringBuilder();
-        if (query.indexOf("|") < 0 && query.indexOf("+") < 0 && query.indexOf("-") < 0) {
-            String queryStr = "";
-            String[] terms = query.split(" ");
-            for (int i = 0; i < terms.length; i++) {
-                queryStr += appendSpecialchar(terms[i]) + " ";
-            }
-            sb.append("+").append(queryStr.trim().replaceAll(" ", " +").replaceAll("__", " "));
-        } else {
-            String[] terms = query.split(" ");
-            for (int i = 0; i < terms.length; i++) {
-                if (terms[i].equals("|")) {
-                    terms[i] = ElasticSearchCommon.OR_QUERY;
-                } else if (i > 0 && terms[i - 1].equals(ElasticSearchCommon.OR_QUERY) || terms[i].startsWith("+") || terms[i].startsWith("-")) {
-                } else if (i < terms.length - 1 && !terms[i + 1].equals("|")) {
-                    terms[i] = "+" + terms[i];
-                } else if (!terms[i].startsWith("+") && !terms[i].startsWith("-")) {
-                }
-                sb.append(appendSpecialchar(terms[i])).append(" ");
-            }
-        }
-        String result = sb.toString().replace(ElasticSearchCommon.OR_QUERY, "").replace("__", " ").replace("  ", " ").trim();
-        return result;
-    }
 
     /**
      * 공백 구분 임시 쿼리 생성
@@ -1136,114 +1101,7 @@ public class ElasticSearchQuery {
         else if (str.endsWith("\"")) return str;
         else return str + ElasticSearchCommon.SPECIAL_CHAR;
     }
-//
-//    private String createOrQueryAsterisk(String params) {
-//
-//        return createOrQuery(params, " ", "*");
-//    }
-//
-//    private String createOrQueryAsteriskAll(String params) {
-//
-//        return createOrQueryReceiver(params, " ", "*");
-//    }
-//
-//    private String createOrQuery(String params) {
-//
-//        return createOrQuery(params, ",", "");
-//    }
-//
-//    private String createOrQuery(String params, String separator) {
-//        return createOrQuery(params, separator, "");
-//    }
-//
-//    private String createOrQuery(String params, String separator, String addString) {
-//        String[] param = Common.toArray(params, separator);
-//
-//        StringBuilder result = new StringBuilder();
-//        result.append("(");
-//        for (int i = 0; i < param.length; i++) {
-//            result.append(param[i]).append(addString);
-//            if (i != param.length - 1) result.append(SPACE);
-//        }
-//        result.append(")");
-//
-//        return result.toString();
-//    }
-//
-//    private String createOrQueryReceiver(String params, String separator, String addString) {
-//        String[] param = Common.toArray(params, separator);
-//
-//        StringBuilder result = new StringBuilder();
-//        result.append("(");
-//        for (int i = 0; i < param.length; i++) {
-//            result.append(addString).append(param[i]).append(addString);
-//            if (i != param.length - 1) result.append(SPACE);
-//        }
-//        result.append(")");
-//
-//        return result.toString();
-//    }
-//
-//    private String createOrQueryInfoFeedback(String params) {
-//        String[] param = Common.toArray(params, ",");
-//
-//        StringBuilder result = new StringBuilder();
-//        result.append("(");
-//        for (int i = 0; i < param.length; i++) {
-//            if( param[i].equals("1234") ) {
-//                for (int j = 0; j < param[i].length(); j++) {
-//                    result.append("\"").append(param[i].substring(j, j+1)).append("\"").append(SPACE);
-//                }
-//            } else {
-//                result.append("\"").append(param[i]).append("\"");
-//                if (i != param.length - 1) result.append(SPACE);
-//            }
-//        }
-//        result.append(")");
-//
-//        return result.toString();
-//    }
-//
-//    private String createOrQueryProb(String params) {
-//        String[] param = Common.toArray(params, ",");
-//        StringBuilder result = new StringBuilder();
-//        for (String str : param) {
-//            String[] sp = str.split("\\|");
-//            result.append(String.format("%s:[%s TO %s}", PROB, sp[0], sp[1])).append(SPACE);
-//        }
-//        return result.toString();
-//    }
-//
-//    private String createOrQuerySkProb(String params) {
-//        String[] param = Common.toArray(params, ",");
-//        StringBuilder result = new StringBuilder();
-//        for (String str : param) {
-//            String[] sp = str.split("\\|");
-//            result.append(String.format("%s:[%s TO %s}", PROB, sp[0], sp[1])).append(SPACE);
-//        }
-//        return result.toString();
-//    }
-//
-//    public static void main(String[] args) {
-//        int s = 5;
-//        if( ( s>=0  && s<=5) && s!=5) {
-//            System.out.println("5");
-//        }
-//    }
-//
-//    private String createOrQueryAppend(String params, String appendString) {
-//        String[] param = Common.toArray(params, ",");
-//
-//        StringBuilder result = new StringBuilder();
-//        result.append("(");
-//        for (int i = 0; i < param.length; i++) {
-//            result.append(param[i]).append(appendString);
-//            if (i != param.length - 1) result.append(SPACE);
-//        }
-//        result.append(")");
-//
-//        return result.toString();
-//    }
+
 
 
     /***
@@ -1259,7 +1117,7 @@ public class ElasticSearchQuery {
         List<SortBuilder<?>> sortBuilderList = getSortInfo();
         log.debug("[SORT] {}", sortBuilderList.stream().collect(Collectors.toList()));
 
-        /* 검색 갯수 설정  */
+        /* 검색 offset , limit 설정  */
         int offset = 0;
         int limit = 0;
 
@@ -1293,12 +1151,11 @@ public class ElasticSearchQuery {
         setQuery();
 
 
-
         log.info("엘라스틱 서치 Query_String (테스트) ===> " + getQuery());
 
         // Custom Query Builder (엘라스틱 서치 쿼리에 쓰기전 빌드)
         QueryParamReady queryParamReady = QueryParamReady.builder()
-                .indices(new String[]{ElasticSearchCommon.INDEX})
+                .indices(new String[]{ElasticSearchCommon.EDC_MESSAGE_INDEX})
                 .from(offset)
                 .to(limit)
                 .sorts(sortBuilderList)
@@ -1339,9 +1196,8 @@ public class ElasticSearchQuery {
         startDate = Common.nvl(queryParamReady.getSearchParam().get("startDate"));
         endDate = Common.nvl(queryParamReady.getSearchParam().get("endDate"));
 
-
         RangeQueryBuilder rangeQuery = new RangeQueryBuilder(ElasticSearchCommon.CTIME).gte(startDate).lte(endDate);
-       QueryStringQueryBuilder secondQuery = QueryBuilders.queryStringQuery(queryParamReady.getQuery());
+        QueryStringQueryBuilder secondQuery = QueryBuilders.queryStringQuery(queryParamReady.getQuery());
 
         /* 쿼리 merge */
         BoolQueryBuilder complateQuery = new BoolQueryBuilder();
@@ -1368,10 +1224,7 @@ public class ElasticSearchQuery {
         }else {
             complateQuery.filter(rangeQuery);
         }
-
-       complateQuery.must(secondQuery);
-
-
+        complateQuery.must(secondQuery);
 
         searchSourceBuilder = new SearchSourceBuilder()
                 .from(queryParamReady.getFrom())
@@ -1395,14 +1248,13 @@ public class ElasticSearchQuery {
      */
     public QueryParamReady setMessageSearchQueryReady(Map<String,Object> searchParam) {
 
-
         /* sort 관련 */
         setSort("");
         List<SortBuilder<?>> sortBuilderList = getSortInfo();
         log.debug("[SORT] {}", sortBuilderList.stream().collect(Collectors.toList()));
 
 
-        /* 검색 갯수 설정  */
+        /* 검색 offset , limit 설정  */
         int offset = 0;
         int limit = 0;
         offset = (int) Math.round(Double.valueOf(Common.nvl(searchParam.get("offset"))));
@@ -1413,7 +1265,7 @@ public class ElasticSearchQuery {
 
         // Custom Query Builder (엘라스틱 서치 쿼리에 쓰기전 빌드)
         QueryParamReady queryParamReady = QueryParamReady.builder()
-                .indices(new String[]{ElasticSearchCommon.INDEX})
+                .indices(new String[]{ElasticSearchCommon.EDC_MESSAGE_INDEX})
                 .from(offset)
                 .to(limit)
                 .sorts(sortBuilderList)
@@ -1452,11 +1304,9 @@ public class ElasticSearchQuery {
             conditions.putAll(tempList.get(0));
         }
 
-
         /* 기간 범위 */
         startDate = Common.nvl(conditions.get("startDt"));
         endDate = Common.nvl(conditions.get("endDt"));
-
 
         RangeQueryBuilder rangeQuery = new RangeQueryBuilder(ElasticSearchCommon.CTIME).gte(startDate).lte(endDate);
         QueryStringQueryBuilder secondQuery = QueryBuilders.queryStringQuery(queryParamReady.getQuery());
@@ -1505,23 +1355,7 @@ public class ElasticSearchQuery {
                 aggregationBuilder = AggregationBuilders.dateHistogram(xfield).field(xfield).calendarInterval(DateHistogramInterval.MONTH).minDocCount(1);
                 aggregationBuilder.subAggregation(AggregationBuilders.terms(yAxis).field(yAxis).minDocCount(1));
                 break;
-            case ElasticSearchCommon.BUSINM : // 사업장
-                aggregationBuilder = AggregationBuilders.terms(xfield).field(xfield).minDocCount(1);
-                aggregationBuilder.subAggregation(AggregationBuilders.terms(yAxis).field(yAxis).minDocCount(1));
-                break;
-            case ElasticSearchCommon.CONM:// 회사
-                aggregationBuilder = AggregationBuilders.terms(xfield).field(xfield).minDocCount(1);
-                aggregationBuilder.subAggregation(AggregationBuilders.terms(yAxis).field(yAxis).minDocCount(1));
-                break;
-            case ElasticSearchCommon.DEPTNM : // 부서
-                aggregationBuilder = AggregationBuilders.terms(xfield).field(xfield).minDocCount(1);
-                aggregationBuilder.subAggregation(AggregationBuilders.terms(yAxis).field(yAxis).minDocCount(1));
-                break;
-            case ElasticSearchCommon.DIRECTION_SVC : // 수/발신
-                aggregationBuilder = AggregationBuilders.terms(xfield).field(xfield).minDocCount(1);
-                aggregationBuilder.subAggregation(AggregationBuilders.terms(yAxis).field(yAxis).minDocCount(1));
-                break;
-            case ElasticSearchCommon.JIKGUBNM : // 직급
+            default:     // 사업장,회사,부서,수/발신,직급
                 aggregationBuilder = AggregationBuilders.terms(xfield).field(xfield).minDocCount(1);
                 aggregationBuilder.subAggregation(AggregationBuilders.terms(yAxis).field(yAxis).minDocCount(1));
                 break;

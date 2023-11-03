@@ -1,17 +1,11 @@
 package com.xcurenet.user.service;
 
-import java.util.List;
-import java.util.Map;
+import com.xcurenet.admin.service.AdminVO;
+import com.xcurenet.code.service.*;
 
 import javax.servlet.http.HttpServletRequest;
-
-import com.xcurenet.admin.service.AdminVO;
-import com.xcurenet.code.service.BusiVO;
-import com.xcurenet.code.service.CoVO;
-import com.xcurenet.code.service.DeptVO;
-import com.xcurenet.code.service.GeneralVO;
-import com.xcurenet.code.service.JikgubVO;
-import com.xcurenet.code.service.JikinVO;
+import java.util.List;
+import java.util.Map;
 
 public interface UserService {
 
@@ -20,6 +14,8 @@ public interface UserService {
 	public List<Map<String, String>> getUserNames();
 	
 	public List<Map<String, String>> getUserCoNms();
+
+	public List<Map<String, String>> getUserBusiNms();
 	
 	public List<Map<String, String>> getUserDepts();
 	

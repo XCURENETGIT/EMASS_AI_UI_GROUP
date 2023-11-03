@@ -1,18 +1,5 @@
 package com.xcurenet.common.util.config;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Service;
-
 import com.xcurenet.admin.service.AdminService;
 import com.xcurenet.admin.service.AdminVO;
 import com.xcurenet.audit.service.AuditRequestVO;
@@ -29,10 +16,20 @@ import com.xcurenet.emass.service.service.ServiceGroupVO;
 import com.xcurenet.emass.service.service.ServiceTypeService;
 import com.xcurenet.emass.service.service.ServiceTypeVO;
 import com.xcurenet.user.service.UserService;
-
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 @Service("config")
 @Slf4j
@@ -86,6 +83,9 @@ public class Config {
 	public static Map<String, String> userNames; //(key : ip, email, id) (value: 이름) 통계 이름 추출 용도
 
 	public static Map<String, String> userCoNms; //(key : id) (value: 이름) 통계 이름 추출 용도
+
+	public static Map<String, String> userBusiNms; //(key : id) (value: 이름) 통계 이름 추출 용도
+
 
 	public static Map<String, String> userDepts; //(key : id) (value: 이름) 통계 이름 추출 용도
 
@@ -262,6 +262,8 @@ public class Config {
 
 		reloadCo();
 
+		reloadBusi();
+
 		reloadDept();
 
 		reloadJikgub();
@@ -395,6 +397,19 @@ public class Config {
 		}
 		log.info("사용자 회사명 Load End");
 	}
+
+	public void reloadBusi() {
+		log.info("사용자 사업장명 Load Start");
+		userBusiNms = new HashMap<>();
+		List<Map<String, String>> bizs = userService.getUserBusiNms();
+		log.info("사용자 사업장명 Size: {}", bizs.size());
+		for (Map<String, String> biz : bizs) {
+			userBusiNms.put(biz.get("hash_key"), biz.get("value"));
+		}
+		log.info("사용자 사업장명 Load End");
+	}
+
+	
 
 	public void reloadDept() {
 		log.info("사용자 부서명 Load Start");

@@ -88,6 +88,31 @@
 	    JOIN	UI_USER_EMAIL B ON A.USER_ID = B.USER_ID
 	    JOIN	UI_CO C ON A.COCD = C.COCD
 	</select>
+
+	<select id="getUserBusiNms" resultType="hashmap" parameterType="hashmap">
+		SELECT	LOWER(USER_ID) AS hash_key, IFNULL(BUSINM,'-') AS value
+		FROM	UI_USERS A
+		LEFT	JOIN UI_BUSI B
+		ON		A.BUSICD = B.BUSICD
+		UNION
+		SELECT	B.USER_IP , IFNULL(C.BUSINM,'-')
+		FROM	UI_USERS A
+		JOIN	UI_USER_IP B ON A.USER_ID = B.USER_ID
+		JOIN	UI_BUSI C ON A.BUSICD = C.BUSICD
+		UNION
+		SELECT
+		<if test='encryptUseYN == "Y"'>
+			LOWER(CAST(if(B.USER_EMAIL is null, null, xcndec(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, B.USER_EMAIL)) AS CHAR)) AS userEmail,
+		</if>
+		<if test='encryptUseYN != "Y"'>
+			LOWER(B.USER_EMAIL),
+		</if>
+		IFNULL(C.BUSINM,'-')
+		FROM	UI_USERS A
+		JOIN	UI_USER_EMAIL B ON A.USER_ID = B.USER_ID
+		JOIN	UI_BUSI C ON A.BUSICD = C.BUSICD
+	</select>
+
 	
 	<select id="getUserDepts" resultType="hashmap" parameterType="hashmap">
 		SELECT	LOWER(USER_ID) AS hash_key, IFNULL(DEPTNM,'-') AS value

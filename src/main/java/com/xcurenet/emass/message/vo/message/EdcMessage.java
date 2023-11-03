@@ -34,28 +34,26 @@ public class EdcMessage {
     private List<Map<String, Object>> facetData;
     private List<FacetVO> facet;
 
-
     private int facetQueryData;
     private SimpleOrderedMap<Object> facets;
     private String excuteQuery;
     private String searchTime;
 
+
+    /*----- 통계용 필드 -----*/
     /* 총 카운트 */
     private long total;
-
     /* 검색 xAxis */
     private String search_xAxis;
-
     /* 검색 Date  */
     private String search_startDate;
     private String search_endDate;
 
-    public EdcMessage() throws IOException {}
 
+    public EdcMessage() throws IOException {}
     public EdcMessage(final ElsSearchResponse elsSearchResponse) throws IOException {
         this(elsSearchResponse, null);
     }
-
 
     public EdcMessage(final ElsSearchResponse elsSearchResponse,final String adminId) throws  IOException {
         /* response 파싱 */
@@ -65,14 +63,17 @@ public class EdcMessage {
         ObjectMapper mapper = new ObjectMapper();
         for (SearchHit hit : hits) {
             Map<String, Object> map = hit.getSourceAsMap();
-            if (map.size() > 0)  result.add(mapper.convertValue(map, Emass.class));
+            if (map.size() > 0) {
+                map.put("_id",hit.getId());
+                result.add(mapper.convertValue(map, Emass.class));
+            }
         }
 
        this.emass = result;
        this.total = searchResponse.getHits().getHits().length;
 
-       // 통계 검색일 경우
-       if(Common.isEquals(ElasticSearchCommon.SEARCH_TYPE_STATISTIC,elsSearchResponse.getQueryParamReady().getSearchParam().get("elsSearchType"))) {
+       // 통계 검색일 경우 차트 계산
+       if(Common.isEquals(ElasticSearchCommon.SEARCH_TYPE_STATISTIC,elsSearchResponse.getQueryParamReady().getSearchParam().get(ElasticSearchCommon.SEARCH_TYPE))) {
           this.setPivot(elsSearchResponse);
           this.search_xAxis = Common.nvl(elsSearchResponse.getQueryParamReady().getSearchParam().get("xAxis")); //검색한 xAxis 값
           this.search_startDate = Common.nvl(elsSearchResponse.getQueryParamReady().getSearchParam().get("startDate")); //검색한 startDate 값
@@ -80,7 +81,6 @@ public class EdcMessage {
        }
 
     }
-
 
 
     private void setFacetQuery(final QueryResponse resp) {
@@ -160,11 +160,6 @@ public class EdcMessage {
         String xTypeFlag = ElasticSearchCommon.XFIELD.get(xField);
         String yField = elsSearchResponse.getQueryParamReady().getYAxis();
 
-//        /* detail 시간별 검색여부 */
-//        boolean detailHourSearch = false;
-//         if(ElasticSearchCommon.CTIME_HH.equals(Common.nvl(elsSearchResponse.getQueryReady().getSearchParam().get("searched_xAxis")))) detailHourSearch = true;
-
-
 
          Map<String, Object> keys = new HashMap<String, Object>();
          String colKey = Common.nvl(elsSearchResponse.getQueryParamReady().getSearchParam().get("colKey"));
@@ -181,23 +176,22 @@ public class EdcMessage {
 
                         /* Date 단위*/
                         switch (xField) {
-                            case ElasticSearchCommon.CTIME_HH :
+                            case ElasticSearchCommon.CTIME_HH :         //  시간
                                 headerStr = Prop.msg(ElasticSearchCommon.TIME_FORMAT.concat(timeStr.substring(8, 10)));
                                 break;
-                            case ElasticSearchCommon.CTIME_YYYYMM :
+                            case ElasticSearchCommon.CTIME_YYYYMM :     // 월
                                 headerStr = Common.formatMonthStat(timeStr.substring(0,6));
                                 break;
-                            case ElasticSearchCommon.CTIME_YYYYMMDD:
+                            case ElasticSearchCommon.CTIME_YYYYMMDD:    // 일
                                 headerStr = Common.formatDate(timeStr.substring(0,8));
                                 break;
                             default:
                                 headerStr = timeStr;
                                 break;
                         }
-
                         /* ########################################### */
-                         // pivot header 추가  ( xAxis 정보 일,월,시간...)
-                         keys.put(Common.nvl(headerStr), 0);
+
+                         keys.put(Common.nvl(headerStr), 0);     // pivot header 추가  ( xAxis 정보 일,월,시간...)
 
                         for (Terms.Bucket arg : argments.getBuckets()) {
                             Map<String, Object> item = new HashMap();
