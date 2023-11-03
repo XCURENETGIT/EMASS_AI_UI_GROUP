@@ -1,10 +1,8 @@
 package com.xcurenet.emass.message.service;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.xcurenet.common.util.elasticsearch.ElsSearchResponse;
+import com.xcurenet.common.util.Common;
+import com.xcurenet.common.util.locale.Prop;
+import lombok.ToString;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.beans.DocumentObjectBinder;
 import org.apache.solr.client.solrj.response.Group;
@@ -16,10 +14,9 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import com.xcurenet.common.util.Common;
-import com.xcurenet.common.util.locale.Prop;
-
-import lombok.ToString;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @ToString
 public class MessengerEdcGroupVO {

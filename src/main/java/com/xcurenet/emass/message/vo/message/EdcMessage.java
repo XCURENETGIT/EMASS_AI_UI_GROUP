@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.config.Config;
 import com.xcurenet.common.util.elasticsearch.ElasticSearchCommon;
-import com.xcurenet.common.util.elasticsearch.ElsSearchResponse;
+import com.xcurenet.common.util.elasticsearch.ElasticSearchParam;
 import com.xcurenet.common.util.locale.Prop;
 import com.xcurenet.emass.message.service.FacetVO;
 import com.xcurenet.emass.message.vo.emass.Emass;
@@ -30,35 +30,41 @@ public class EdcMessage {
     private List<?> emass;
     private List<String> pivotHeader;
     private List<Map<String, Object>> pivotData;
+
+    /* ---- 아직 엘라스틱 서치용으로 분석&개발 안됨 ---*/
     private List<String> facetHeader;
     private List<Map<String, Object>> facetData;
     private List<FacetVO> facet;
-
     private int facetQueryData;
     private SimpleOrderedMap<Object> facets;
+    /* ------------------------------------------*/
+
     private String excuteQuery;
     private String searchTime;
-
 
     /*----- 통계용 필드 -----*/
     /* 총 카운트 */
     private long total;
-    /* 검색 xAxis */
     private String search_xAxis;
-    /* 검색 Date  */
+    private String search_yAxis;
     private String search_startDate;
     private String search_endDate;
 
 
     public EdcMessage() throws IOException {}
-    public EdcMessage(final ElsSearchResponse elsSearchResponse) throws IOException {
-        this(elsSearchResponse, null);
+    public EdcMessage(final Map<String,Object> responseMap) throws IOException {
+        this(responseMap, null);
     }
 
-    public EdcMessage(final ElsSearchResponse elsSearchResponse,final String adminId) throws  IOException {
+    public EdcMessage(final Map<String,Object> responseMap, final String adminId) throws  IOException {
+        if(responseMap == null) return;
+
         /* response 파싱 */
         List<Emass> result = new ArrayList<>();
-        SearchResponse searchResponse = elsSearchResponse.getSearchResponse();
+        if(responseMap.get("searchResponse") == null) return;
+        SearchResponse searchResponse = (SearchResponse) responseMap.get("searchResponse");
+        searchResponse.getHits();
+
         SearchHit[] hits = searchResponse.getHits().getHits();
         ObjectMapper mapper = new ObjectMapper();
         for (SearchHit hit : hits) {
@@ -68,18 +74,19 @@ public class EdcMessage {
                 result.add(mapper.convertValue(map, Emass.class));
             }
         }
-
        this.emass = result;
        this.total = searchResponse.getHits().getHits().length;
 
-       // 통계 검색일 경우 차트 계산
-       if(Common.isEquals(ElasticSearchCommon.SEARCH_TYPE_STATISTIC,elsSearchResponse.getQueryParamReady().getSearchParam().get(ElasticSearchCommon.SEARCH_TYPE))) {
-          this.setPivot(elsSearchResponse);
-          this.search_xAxis = Common.nvl(elsSearchResponse.getQueryParamReady().getSearchParam().get("xAxis")); //검색한 xAxis 값
-          this.search_startDate = Common.nvl(elsSearchResponse.getQueryParamReady().getSearchParam().get("startDate")); //검색한 startDate 값
-          this.search_endDate = Common.nvl(elsSearchResponse.getQueryParamReady().getSearchParam().get("endDate")); //검색한 endDate 값
-       }
-
+        if(responseMap.get("elsSearchParam") == null) return;
+        ElasticSearchParam elsSearchParam = (ElasticSearchParam) responseMap.get("elsSearchParam");
+       /* 통계 검색인 경우 pivot 계산 */
+        if(Common.isEquals(ElasticSearchCommon.SEARCH_TYPE_STATISTIC,elsSearchParam.getSearchType())){
+            this.search_xAxis = elsSearchParam.getXAxis();
+            this.search_yAxis = elsSearchParam.getYAxis();
+            this.search_startDate = elsSearchParam.getStartDate();
+            this.search_endDate = elsSearchParam.getEndDate();
+            this.setPivot(searchResponse);
+        }
     }
 
 
@@ -146,53 +153,52 @@ public class EdcMessage {
         this.facetData = result;
     }
 
-    private void setPivot(final ElsSearchResponse elsSearchResponse) {
-        List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
-        SearchResponse searchResponse = elsSearchResponse.getSearchResponse();
-        if (searchResponse == null) return;
+    private void setPivot(final SearchResponse searchResponse) {
+             if(searchResponse == null) return;
 
-        //aggregations
-        Aggregations aggregations = searchResponse.getAggregations();
-        if(aggregations.getAsMap().size() == 0 ) return;
+            List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
 
-        /* Pivot field 정의 #############################################################*/
-        String xField = elsSearchResponse.getQueryParamReady().getXAxis();
-        String xTypeFlag = ElasticSearchCommon.XFIELD.get(xField);
-        String yField = elsSearchResponse.getQueryParamReady().getYAxis();
+            //aggregations
+            Aggregations aggregations = searchResponse.getAggregations();
+            if(aggregations.getAsMap().size() == 0 ) return;
 
+            /* Pivot field 정의 #############################################################*/
+            String xField = Common.nvl(search_xAxis);
+            String xTypeFlag = ElasticSearchCommon.XFIELD.get(xField);
+            String yField = Common.nvl(search_yAxis);
 
-         Map<String, Object> keys = new HashMap<String, Object>();
-         String colKey = Common.nvl(elsSearchResponse.getQueryParamReady().getSearchParam().get("colKey"));
             /* Date 분류일 경우 #############################################################*/
             if (ElasticSearchCommon.CTIME.equals(xTypeFlag)) {
+                Map<String, Integer> keys = new HashMap(); // 피벗 헤더 관련
                     ParsedDateHistogram results = aggregations.get(ElasticSearchCommon.CTIME);
                     for (MultiBucketsAggregation.Bucket bucket : results.getBuckets()) {
                         if (Common.isEmpty(bucket.getAggregations().get(yField))) continue;
-                        Terms argments = bucket.getAggregations().get(yField);
-                        String headerStr = "";
+                         Terms argments = bucket.getAggregations().get(yField);
+                         String headerStr = "";
+                         int headerValue = 0;
 
                         /* #######  시간분류일경우 Header 재 계산 ####### */
                         String timeStr = bucket.getKeyAsString();
-
                         /* Date 단위*/
                         switch (xField) {
                             case ElasticSearchCommon.CTIME_HH :         //  시간
-                                headerStr = Prop.msg(ElasticSearchCommon.TIME_FORMAT.concat(timeStr.substring(8, 10)));
+                                headerStr =   Prop.msg(ElasticSearchCommon.TIME_FORMAT.concat(timeStr.substring(8, 10)));
+                                headerValue = Integer.parseInt(timeStr.substring(8, 10));
                                 break;
                             case ElasticSearchCommon.CTIME_YYYYMM :     // 월
                                 headerStr = Common.formatMonthStat(timeStr.substring(0,6));
+                                headerValue = Integer.parseInt(timeStr.substring(0,6));
                                 break;
                             case ElasticSearchCommon.CTIME_YYYYMMDD:    // 일
                                 headerStr = Common.formatDate(timeStr.substring(0,8));
+                                headerValue = Integer.parseInt(timeStr.substring(0,8));
                                 break;
                             default:
                                 headerStr = timeStr;
-                                break;
                         }
+
                         /* ########################################### */
-
-                         keys.put(Common.nvl(headerStr), 0);     // pivot header 추가  ( xAxis 정보 일,월,시간...)
-
+                         keys.put(headerStr,headerValue);    // pivot header 추가  ( xAxis 정보 일,월,시간...)
                         for (Terms.Bucket arg : argments.getBuckets()) {
                             Map<String, Object> item = new HashMap();
     //                    if(Common.isOrEquals("", "user_str", "sender_str", "userid")){
@@ -202,9 +208,15 @@ public class EdcMessage {
                             item.put(headerStr, arg.getDocCount());
                             /* PIVOT XAxis */
                             result.add(item);
-                    }
+                        }
                 }
+                List<Map.Entry<String,Integer>> keyList = new LinkedList<>(keys.entrySet());
+                keyList.sort(Map.Entry.comparingByValue());
+                List<String> headerList = keyList.stream().map( k -> k.getKey()).collect(Collectors.toList());
+                this.pivotHeader = headerList;
+
             } else { /* 시간 분류 외 (사업장,부서 등등) #############################################################*/
+                Map<String, Object> keys = new HashMap(); // 피벗 헤더 관련
                 Terms results = aggregations.get(xTypeFlag);
                 for (Terms.Bucket bucket : results.getBuckets()) {
                     if (Common.isEmpty(bucket.getAggregations().get(yField))) continue;
@@ -221,11 +233,11 @@ public class EdcMessage {
                         result.add(item);
                     }
                 }
-
+                List<String> keyList = new ArrayList(keys.keySet());
+                Collections.sort(keyList);
+                this.pivotHeader = keyList;
             }
-            List<String> list = new ArrayList<>(keys.keySet());
-            Collections.sort(list,Comparator.reverseOrder());
-            this.pivotHeader = list;
+
 
             /* pivotData 재 계산 #############################################################*/
             List<Map<String, Object>> pivotDataList = new ArrayList<>();  // 최종 pivot 데이터

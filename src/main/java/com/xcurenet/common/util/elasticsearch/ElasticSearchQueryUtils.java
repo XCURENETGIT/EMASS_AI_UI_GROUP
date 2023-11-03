@@ -23,7 +23,6 @@ import org.springframework.context.annotation.Configuration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -32,8 +31,8 @@ import java.util.stream.Collectors;
 @Slf4j
 @Data
 @Configuration
-/* 엘라스틱 서치 쿼리 처리 */
-public class ElasticSearchQuery {
+/* 엘라스틱 서치에 사용할 쿼리 유틸  */
+public class ElasticSearchQueryUtils {
 
     private AdminUserGroupService adminUserGroupService;
     private UserService userService;
@@ -45,7 +44,9 @@ public class ElasticSearchQuery {
     public List<SortBuilder<?>> sortInfo;
 
 
-    public ElasticSearchQuery() {
+    public ElasticSearchParam elasticSearchParam;
+
+    public ElasticSearchQueryUtils() {
         query = "";
         queryBuffer = new StringBuilder();
     }
@@ -60,7 +61,7 @@ public class ElasticSearchQuery {
         return query;
     }
 
-    private ElasticSearchQuery addQuery(String query) {
+    private ElasticSearchQueryUtils addQuery(String query) {
         this.queryBuffer.append(ElasticSearchCommon.OPEN_PARENTHESES)
             .append(query)
             .append(ElasticSearchCommon.CLOSE_PARENTHESES);
@@ -70,7 +71,7 @@ public class ElasticSearchQuery {
 
     public void setSort(String sort){
         sortInfo = new ArrayList<>();
-        if( Common.isEmpty(sort)){
+        if( Common.isEmpty(sort)){ // default
             sortInfo.add(SortBuilders.fieldSort("ctime").order(SortOrder.DESC));
             sortInfo.add(SortBuilders.fieldSort("msgid").order(SortOrder.DESC));
         }
@@ -97,7 +98,7 @@ public class ElasticSearchQuery {
      * @param searchStr
      * @return
      */
-    public ElasticSearchQuery setSearchQuery(String searchStr) {
+    public ElasticSearchQueryUtils setSearchQuery(String searchStr) {
         if (Common.isEmpty(searchStr)) return this;
 
         if(searchStr.indexOf(ElasticSearchCommon.COMMA) > -1){
@@ -1110,7 +1111,9 @@ public class ElasticSearchQuery {
      * @param setStatisticQueryReady
      * @param searchParam
      */
-    public QueryParamReady setStatisticQueryReady(Map<String,Object> searchParam) {
+    public void setStatisticQueryParamReady(Map<String,Object> searchParam) {
+        elasticSearchParam = new ElasticSearchParam();
+        elasticSearchParam.setSearchParameters(searchParam);
 
         /* sort 관련 */
         setSort("");
@@ -1121,59 +1124,55 @@ public class ElasticSearchQuery {
         int offset = 0;
         int limit = 0;
 
-        offset = (int) Math.round(Double.valueOf(Common.nvl(searchParam.get("offset"))));
-        limit =  (int) Math.round(Double.valueOf(Common.nvl(searchParam.get("limit"))));
-
+        offset = (int) Math.round(Double.valueOf(Common.nvl(elasticSearchParam.getSearchParameters().get("offset"))));
+        limit =  (int) Math.round(Double.valueOf(Common.nvl(elasticSearchParam.getSearchParameters().get("limit"))));
 
         /* rowKey 존재할시 검색조건 추가 */
-        if(!Common.isEmpty(searchParam.get("rowKey"))) {
-            setSearchQuery(Common.nvl(searchParam.get("rowKey")));
+        if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("rowKey"))) {
+            setSearchQuery(Common.nvl(elasticSearchParam.getSearchParameters().get("rowKey")));
         }else{
             setSearchQuery(Common.nvl(ElasticSearchCommon.ALL_SEARCH));
         }
 
         /* yField 설정 */
-        if(!Common.isEmpty(searchParam.get("yAxis"))) {
-            setyField(Common.nvl(searchParam.get("yAxis")));
+        if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("yAxis"))) {
+            setyField(Common.nvl(elasticSearchParam.getSearchParameters().get("yAxis")));
         }
 
         /* 아무런 rowKey & colkey  조건이 없을시 */
-        if(Common.isEmpty(searchParam.get("rowKey")) && Common.isEmpty(searchParam.get("colKey"))){
+        if(Common.isEmpty(elasticSearchParam.getSearchParameters().get("rowKey")) && Common.isEmpty(elasticSearchParam.getSearchParameters().get("colKey"))){
             limit = 0;
         }
 
         /* detail Query 존재시*/
-        if(!Common.isEmpty(searchParam.get("detailQuery"))) {
-            setDetailQuery(Common.nvl(searchParam.get("detailQuery")));
+        if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("detailQuery"))) {
+            setDetailQuery(Common.nvl(elasticSearchParam.getSearchParameters().get("detailQuery")));
         }
 
-        /* set Query */
+        /* set Query (항상 쿼리 조합 최하단에 위치) */
         setQuery();
-
 
         log.info("엘라스틱 서치 Query_String (테스트) ===> " + getQuery());
 
-        // Custom Query Builder (엘라스틱 서치 쿼리에 쓰기전 빌드)
-        QueryParamReady queryParamReady = QueryParamReady.builder()
-                .indices(new String[]{ElasticSearchCommon.EDC_MESSAGE_INDEX})
-                .from(offset)
-                .to(limit)
-                .sorts(sortBuilderList)
-                .query(getQuery())
-                .includeFields(ElasticSearchCommon.SEARCH_FIELD)
-                .searchAggregations(Common.nvl(searchParam.get("colKey")))
-                .yAxis(Common.nvl(searchParam.get("yAxis")))
-                .xAxis(Common.nvl(searchParam.get("xAxis")))
-                .excludeFields(null)
-                .searchParam(searchParam)
-                .build();
+        this.elasticSearchParam.setIndices(new String[]{ElasticSearchCommon.EDC_MESSAGE_INDEX});
+        this.elasticSearchParam.setFrom(offset);
+        this.elasticSearchParam.setTo(limit);
+        this.elasticSearchParam.setSorts(sortBuilderList);
+        this.elasticSearchParam.setIncludeFields(ElasticSearchCommon.SEARCH_FIELD);
+        this.elasticSearchParam.setExcludeFields(null);
+        this.elasticSearchParam.setXAxis(Common.nvl(elasticSearchParam.getSearchParameters().get("xAxis")));
+        this.elasticSearchParam.setYAxis(Common.nvl(elasticSearchParam.getSearchParameters().get("yAxis")));
+        this.elasticSearchParam.setStartDate(Common.nvl(elasticSearchParam.getSearchParameters().get("startDate")));
+        this.elasticSearchParam.setEndDate(Common.nvl(elasticSearchParam.getSearchParameters().get("endDate")));
+        this.elasticSearchParam.setColId(Common.nvl(elasticSearchParam.getSearchParameters().get("colId")));
+        this.elasticSearchParam.setSearchType(Common.nvl(elasticSearchParam.getSearchParameters().get(ElasticSearchCommon.SEARCH_TYPE)));
+        this.elasticSearchParam.setSearchAggregations(Common.nvl(elasticSearchParam.getSearchParameters().get("colKey")));
+        this.elasticSearchParam.setSearched_xAxis(Common.nvl(elasticSearchParam.getSearchParameters().get("searched_xAxis")));
+
 
         log.debug("[Fields] {}", ElasticSearchCommon.SEARCH_FIELD);
-        log.debug("[SORT] : {}", queryParamReady.getSorts());
-        log.debug("[QUERY] {}", queryParamReady.getQuery());
-
-
-        return queryParamReady;
+        log.debug("[SORT] : {}", getSortInfo());
+        log.debug("[QUERY] {}", getQuery());
 
     }
 
@@ -1183,57 +1182,55 @@ public class ElasticSearchQuery {
      * @param initStatisticSearchSource
      * @return
      */
-    public SearchSourceBuilder initStatisticSearchSource(QueryParamReady queryParamReady){
-        SearchSourceBuilder searchSourceBuilder = null;
+    public SearchSourceBuilder initStatisticSearchSource(Map<String,Object> searchParam){
 
-        String startDate = "";
-        String endDate = "";
+        SearchSourceBuilder searchSourceBuilder = null; // SearchSourceBuilder 리턴용
 
-        String xAxis =  Common.nvl(queryParamReady.getXAxis());
-        String yAxis =  Common.nvl(queryParamReady.getYAxis());
+        setStatisticQueryParamReady(searchParam); // 통계용 파라미터 준비
+        try {
+            RangeQueryBuilder rangeQuery = new RangeQueryBuilder(ElasticSearchCommon.CTIME).gte(elasticSearchParam.getStartDate()).lte(elasticSearchParam.getEndDate()); // date range
+            QueryStringQueryBuilder secondQuery = QueryBuilders.queryStringQuery(query); // 쿼리 스트링 저장
+            BoolQueryBuilder complateQuery = new BoolQueryBuilder(); // complateQuery에서 최종적으로 쿼리 조합
 
-        /* 기간 범위 */
-        startDate = Common.nvl(queryParamReady.getSearchParam().get("startDate"));
-        endDate = Common.nvl(queryParamReady.getSearchParam().get("endDate"));
+            Boolean isRowKeyCol = (("rowKey").equals(Common.nvl(elasticSearchParam.getColId()))) ? true : false; // 선택한 컬럼이 주 key 영역?
+            Boolean isTotalCol = (("total").equals(Common.nvl(elasticSearchParam.getColId()))) ? true : false; // 선택한 컬럼이 total 영역?
 
-        RangeQueryBuilder rangeQuery = new RangeQueryBuilder(ElasticSearchCommon.CTIME).gte(startDate).lte(endDate);
-        QueryStringQueryBuilder secondQuery = QueryBuilders.queryStringQuery(queryParamReady.getQuery());
+            /* 시간별 디테일 검색일 경우 추가 date range 처리 */
+            if (ElasticSearchCommon.CTIME_HH.equals(elasticSearchParam.getSearched_xAxis()) && !isRowKeyCol && !isTotalCol) {
+                BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
+                int hour = Common.nvz(elasticSearchParam.getSearchAggregations().replaceAll("[^0-9]", ""));
 
-        /* 쿼리 merge */
-        BoolQueryBuilder complateQuery = new BoolQueryBuilder();
-        String colSearchType = (String) queryParamReady.getSearchParam().get("searched_xAxis");
-        Boolean isRowKeyCol =  (("rowKey").equals(Common.nvl(queryParamReady.getSearchParam().get("colId")))) ? true : false;
-        Boolean isTotalCol =  (("total").equals(Common.nvl(queryParamReady.getSearchParam().get("colId")))) ? true : false;
-
-        /* 시간별 디테일 조회 */
-        if(ElasticSearchCommon.CTIME_HH.equals(colSearchType) && !isRowKeyCol && !isTotalCol) {
-            String detailSearchxAxis = queryParamReady.getSearchAggregations();
-            BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
-            int hour = Common.nvz(detailSearchxAxis.replaceAll("[^0-9]", ""));
-
-            LocalDateTime ldtFrom = ElasticSearchCommon.stringToDate( startDate.substring(0,8)+String.format("%02d", hour)+startDate.substring(10,14));
-            LocalDateTime ldtTo = ElasticSearchCommon.stringToDate( endDate.substring(0,8)+String.format("%02d", hour)+endDate.substring(10,14));
-            int diffDay = (int) ChronoUnit.DAYS.between(ldtFrom,ldtTo);
-            for(int d=0; d<=diffDay; d++){
-                String fromStr =  ElasticSearchCommon.dateToString(ldtFrom.withHour(hour));
-                String toStr =   ElasticSearchCommon.dateToString(ldtFrom.withHour(hour+1).minusSeconds(1));
-                boolQueryBuilder.should(new RangeQueryBuilder("ctime").from(fromStr).to(toStr));
-                ldtFrom = ldtFrom.plusDays(1);
+                LocalDateTime ldtFrom = ElasticSearchCommon.stringToDate(elasticSearchParam.getStartDate().substring(0, 8) + String.format("%02d", hour) + elasticSearchParam.getStartDate().substring(10, 14));
+                LocalDateTime ldtTo = ElasticSearchCommon.stringToDate(elasticSearchParam.getEndDate().substring(0, 8) + String.format("%02d", hour) + elasticSearchParam.getEndDate().substring(10, 14));
+                int diffDay = (int) ChronoUnit.DAYS.between(ldtFrom, ldtTo);
+                for (int d = 0; d <= diffDay; d++) {
+                    String fromStr = ElasticSearchCommon.dateToString(ldtFrom.withHour(hour));
+                    String toStr = ElasticSearchCommon.dateToString(ldtFrom.withHour(hour + 1).minusSeconds(1));
+                    boolQueryBuilder.should(new RangeQueryBuilder("ctime").from(fromStr).to(toStr));
+                    ldtFrom = ldtFrom.plusDays(1);
+                }
+                complateQuery.filter(boolQueryBuilder); // 시간별 디테일 date range 필터 추가
+            } else {
+                // default date range 필터 추가
+                complateQuery.filter(rangeQuery);
             }
-            complateQuery.filter(boolQueryBuilder);
-        }else {
-            complateQuery.filter(rangeQuery);
-        }
-        complateQuery.must(secondQuery);
+            complateQuery.must(secondQuery);  // 사용할 쿼리 merge 완료
 
-        searchSourceBuilder = new SearchSourceBuilder()
-                .from(queryParamReady.getFrom())
-                .size(queryParamReady.getTo())
-                .query(complateQuery)
-                .fetchSource(queryParamReady.getIncludeFields(), queryParamReady.getExcludeFields())
-                .sort(queryParamReady.getSorts())
-                .aggregation(initAggregation(yAxis, xAxis))
-                .timeout(new TimeValue(60, TimeUnit.SECONDS));
+
+            searchSourceBuilder = new SearchSourceBuilder()
+                    .from(elasticSearchParam.getFrom())
+                    .size(elasticSearchParam.getTo())
+                    .query(complateQuery)
+                    .fetchSource(elasticSearchParam.getIncludeFields(), elasticSearchParam.getExcludeFields())
+                    .sort(elasticSearchParam.getSorts())
+                    .aggregation(initAggregation(elasticSearchParam.getYAxis(), getElasticSearchParam().getXAxis()))
+                    .timeout(new TimeValue(60, TimeUnit.SECONDS));
+
+
+            // searchSourceBuilder build 완료
+        }catch (NullPointerException e){
+            e.printStackTrace();
+        }
 
         return searchSourceBuilder;
     }
@@ -1246,7 +1243,15 @@ public class ElasticSearchQuery {
      * @param setMessageSearchQueryReady
      * @param searchParam
      */
-    public QueryParamReady setMessageSearchQueryReady(Map<String,Object> searchParam) {
+    public void setMessageSearchQueryReady(Map<String,Object> searchParam) {
+        elasticSearchParam = new ElasticSearchParam();
+
+        if(!Common.isEmpty(searchParam.get("filterData"))){
+            Map<String,Object> tempMap = (Map<String, Object>) searchParam.get("filterData");
+            List<Map<String,Object>> tempList = (List<Map<String, Object>>) tempMap.get("conditions");
+            elasticSearchParam.setSearchParameters(tempList.get(0));
+        }
+
 
         /* sort 관련 */
         setSort("");
@@ -1260,26 +1265,28 @@ public class ElasticSearchQuery {
         offset = (int) Math.round(Double.valueOf(Common.nvl(searchParam.get("offset"))));
         limit =  (int) Math.round(Double.valueOf(Common.nvl(searchParam.get("limit"))));
 
+
+        /* 검색 조건 && 검색어 없을시 */
+        if(Common.isEmpty(elasticSearchParam.getSearchParameters().get("searchStr"))) setSearchQuery(Common.nvl(ElasticSearchCommon.ALL_SEARCH));
+
         /* set Query */
         setQuery();
 
-        // Custom Query Builder (엘라스틱 서치 쿼리에 쓰기전 빌드)
-        QueryParamReady queryParamReady = QueryParamReady.builder()
-                .indices(new String[]{ElasticSearchCommon.EDC_MESSAGE_INDEX})
-                .from(offset)
-                .to(limit)
-                .sorts(sortBuilderList)
-                .query(getQuery())
-                .includeFields(ElasticSearchCommon.SEARCH_FIELD)
-                .excludeFields(null)
-                .searchParam(searchParam)
-                .build();
+
+        this.elasticSearchParam.setIndices(new String[]{ElasticSearchCommon.EDC_MESSAGE_INDEX});
+        this.elasticSearchParam.setFrom(offset);
+        this.elasticSearchParam.setTo(limit);
+        this.elasticSearchParam.setSorts(sortBuilderList);
+        this.elasticSearchParam.setIncludeFields(ElasticSearchCommon.SEARCH_FIELD);
+        this.elasticSearchParam.setStartDate(Common.nvl(elasticSearchParam.getSearchParameters().get("startDt")));
+        this.elasticSearchParam.setEndDate(Common.nvl(elasticSearchParam.getSearchParameters().get("endDt")));
+        this.elasticSearchParam.setExcludeFields(null);
+        this.elasticSearchParam.setSearchType(Common.nvl(elasticSearchParam.getSearchParameters().get(ElasticSearchCommon.SEARCH_TYPE)));
 
         log.debug("[Fields] {}", ElasticSearchCommon.SEARCH_FIELD);
-        log.debug("[SORT] : {}", queryParamReady.getSorts());
-        log.debug("[QUERY] {}", queryParamReady.getQuery());
+        log.debug("[SORT] : {}", elasticSearchParam.getSorts());
+        log.debug("[QUERY] {}", getQuery());
 
-        return queryParamReady;
 
     }
 
@@ -1290,26 +1297,13 @@ public class ElasticSearchQuery {
      * @param initMessageSearchSource
      * @return
      */
-    public SearchSourceBuilder initMessageSearchSource(QueryParamReady queryParamReady){
+    public SearchSourceBuilder initMessageSearchSource(Map<String,Object> searchParam){
         SearchSourceBuilder searchSourceBuilder = null;
 
-        String startDate = "";
-        String endDate = "";
+        setMessageSearchQueryReady(searchParam); // 파라미터 준비
 
-        Map<String,Object> conditions = new HashMap<>();
-
-        if(!Common.isEmpty(queryParamReady.getSearchParam().get("filterData"))){
-            Map<String,Object> tempMap = (Map<String, Object>) queryParamReady.getSearchParam().get("filterData");
-            List<Map<String,Object>> tempList = (List<Map<String, Object>>) tempMap.get("conditions");
-            conditions.putAll(tempList.get(0));
-        }
-
-        /* 기간 범위 */
-        startDate = Common.nvl(conditions.get("startDt"));
-        endDate = Common.nvl(conditions.get("endDt"));
-
-        RangeQueryBuilder rangeQuery = new RangeQueryBuilder(ElasticSearchCommon.CTIME).gte(startDate).lte(endDate);
-        QueryStringQueryBuilder secondQuery = QueryBuilders.queryStringQuery(queryParamReady.getQuery());
+        RangeQueryBuilder rangeQuery = new RangeQueryBuilder(ElasticSearchCommon.CTIME).gte(elasticSearchParam.getStartDate()).lte(elasticSearchParam.getEndDate());
+        QueryStringQueryBuilder secondQuery = QueryBuilders.queryStringQuery(query);
 
 
         /* 쿼리 merge */
@@ -1318,11 +1312,11 @@ public class ElasticSearchQuery {
         complateQuery.must(secondQuery);
 
         searchSourceBuilder = new SearchSourceBuilder()
-                .from(queryParamReady.getFrom())
-                .size(queryParamReady.getTo())
+                .from(elasticSearchParam.getFrom())
+                .size(elasticSearchParam.getTo())
                 .query(complateQuery)
-                .fetchSource(queryParamReady.getIncludeFields(), queryParamReady.getExcludeFields())
-                .sort(queryParamReady.getSorts())
+                .fetchSource(elasticSearchParam.getIncludeFields(), elasticSearchParam.getExcludeFields())
+                .sort(elasticSearchParam.getSorts())
                 .timeout(new TimeValue(60, TimeUnit.SECONDS));
 
         return searchSourceBuilder;
