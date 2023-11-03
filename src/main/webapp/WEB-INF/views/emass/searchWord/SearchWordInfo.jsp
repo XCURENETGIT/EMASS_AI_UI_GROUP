@@ -205,36 +205,34 @@
 
 
         function getGroupData(flag) {
-	        if (searchFlag) return false;
+            if (searchFlag) return false;
 
-	        if (flag == undefined) {
-		        gridSearchWordPattern.data.length = 0;
-		        gridSearchWordPattern.rtnNextPageFunc = getGroupData;
-		        gridSearchWordPattern.loadingPage = 0;
-	        } else {
-		        gridSearchWordPattern.loadingPage++;
-	        }
-	        gridSearchWordPattern.on();
-	        // relaGrid.on();
-	        searchFlag = true;
+            if (flag == undefined){
+                gridSearchWordPattern.data.length = 0;
+                gridSearchWordPattern.rtnNextPageFunc =getGroupData;
+                gridSearchWordPattern.loadingPage = 0;
+            }else {
+                gridSearchWordPattern.loadingPage++;
+            }
+            gridSearchWordPattern.on();
+            searchFlag = true;
 
-	        ui.get({
-		        url: 'getSearchWord.xcn',
-		        searchStr: $('#searchWordKeyword').val(),
-		        offset: gridSearchWordPattern.data.length,
-		        limit: gridSearchWordPattern.pageSize,
-		        success: function (data, total) {
-			        gridSearchWordPattern.appendData(data);
-		        },
-		        error: function (status, message) {
-			        ui.alertMsg(message);
-		        },
-		        complete: function () {
-			        gridSearchWordPattern.off();
-			        // relaGrid.off();
-			        searchFlag = false;
-		        }
-	        })
+            ui.get({
+                url: 'getSearchWord.xcn',
+                searchStr : $('#searchWordKeyword').val(),
+                offset:gridSearchWordPattern.data.length,
+                limit:gridSearchWordPattern.pageSize,
+                success: function (data, total) {
+                    gridSearchWordPattern.appendData(data);
+                },
+                error: function (status, message) {
+                    ui.alertMsg(message);
+                },
+                complete: function () {
+                    gridSearchWordPattern.off();
+                    searchFlag = false;
+                }
+            })
 
 
         }
@@ -333,7 +331,11 @@
 					<input type="text" class="form-control" name="searchUpdateName" id="searchUpdateName"
 					       style="width: 350px;" maxlength="60" readonly="readonly">
 					<input type="hidden" class="form-control" name="rekeywordId" id="rekeywordId">
+					<button type="button" class="btn btn-sm btn-primary" accesskey="A" id="searchRelWordInsertBtn"><span
+							class="glyphicon glyphicon-plus"></span>연관키워드 추가</button>
+					<button type="button" class="btn btn-primary" accesskey="S" id="DeleteRelBtn">삭제</button>
 				</div>
+
 
 				<div class="row top_space">
 					<div style="height:500px;" id="selectUserDiv">
@@ -344,9 +346,7 @@
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal"><s:message
 						code="common.msg.close"/></button>
-				<button type="button" class="btn btn-sm btn-primary" accesskey="A" id="searchRelWordInsertBtn"><span
-						class="glyphicon glyphicon-plus"></span>연관키워드 추가</button>
-				<button type="button" class="btn btn-primary" accesskey="S" id="DeleteRelBtn">삭제</button>
+
 			</div>
 		</div>
 	</div>

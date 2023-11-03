@@ -23,6 +23,7 @@
 			<%} %>
 			<li menuId="INTEREST_USER"><a href="<c:url value="/ems/interestUser.do"/>"> <i class="fa fa-male fa-lg"></i> <span><s:message code="DATA_MONITOR.INTEREST_USER"/></span></a></li>
 			<li menuId="RELATION_KEYWORD"><a href="<c:url value="/ems/searchWordInfo.do"/>"> <i class="fa fa-male fa-lg"></i> <span><s:message code="DATA_MONITOR.RELATION_KEYWORD"/></span></a></li>
+			<li menuId="REGEX_PATTERN"><a href="<c:url value="/ems/regexPatternInfo.do"/>"> <i class="fa fa-male fa-lg"></i> <span><s:message code="DATA_MONITOR.REGEX_PATTERN"/></span></a></li>
 			<!-- <li data-toggle="collapse" data-target="#interestuser" class="collapsed">
 				<a href="#"> <i class="fa fa-male fa-lg"></i> <s:message code="DATA_MONITOR.INTEREST_USER"/><span class="arrow"></a>
 			</li>
