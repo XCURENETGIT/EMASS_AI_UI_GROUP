@@ -9,9 +9,7 @@ import com.xcurenet.audit.service.Menu;
 import com.xcurenet.audit.service.Operation;
 import com.xcurenet.audit.service.ParentMenu;
 import com.xcurenet.common.util.Common;
-import com.xcurenet.common.util.MongoUtil;
 import com.xcurenet.common.util.elasticsearch.ElasticSearchCommon;
-import com.xcurenet.common.util.elasticsearch.ElasticSearchQuery;
 import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.config.service.ConfigAdminService;
@@ -23,7 +21,6 @@ import com.xcurenet.emass.searchLog.service.SearchLogService;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.solr.client.solrj.SolrQuery;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -56,12 +53,6 @@ public class EmsSearchController {
 	@Resource(name = "configAdminService")
 	private ConfigAdminService configAdminService;
 
-	@Resource
-	ElasticSearchQuery elasticSearchQuery;
-
-	@Autowired
-	MongoUtil mongoUtil;
-
 
 	@RequestMapping(value = "/test_getList.xcn")
 	@Description("메시지 검색")
@@ -75,7 +66,7 @@ public class EmsSearchController {
 		if(!Common.isEmpty(resultParam.get("searchData"))){
 			Type type = new TypeToken<Map<String,Object>>(){}.getType();
 			 searchParam = gson.fromJson((String) resultParam.get("searchData"),type);
-			 searchParam.put("elsSearchType", ElasticSearchCommon.SEARCH_TYPE_MESSAGE);
+			 searchParam.put(ElasticSearchCommon.SEARCH_TYPE, ElasticSearchCommon.SEARCH_TYPE_MESSAGE);
 		}
 		/*############################################################################*/
 

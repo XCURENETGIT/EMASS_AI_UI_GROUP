@@ -51,9 +51,8 @@ public class EmsStatController {
         if(!Common.isEmpty(resultParam.get("searchParam"))){
             Type type = new TypeToken<Map<String,Object>>(){}.getType();
             searchParam = gson.fromJson((String) resultParam.get("searchParam"),type);
-            searchParam.put("elsSearchType", ElasticSearchCommon.SEARCH_TYPE_STATISTIC);
+            searchParam.put(ElasticSearchCommon.SEARCH_TYPE, ElasticSearchCommon.SEARCH_TYPE_STATISTIC);
         }
-
         /* 계산 (조건문) */
         EdcMessage edcMessage = setAlltotal(emsSearchService.getEmassMessage(searchParam, Common.getAdminId(request)));
 
@@ -75,7 +74,7 @@ public class EmsStatController {
         if(!Common.isEmpty(resultParam.get("searchParam"))){
             Type type = new TypeToken<Map<String,Object>>(){}.getType();
             searchParam = gson.fromJson((String) resultParam.get("searchParam"),type);
-            searchParam.put("elsSearchType", ElasticSearchCommon.SEARCH_TYPE_STATISTIC);
+            searchParam.put(ElasticSearchCommon.SEARCH_TYPE, ElasticSearchCommon.SEARCH_TYPE_STATISTIC);
         }
         /*############################################################################*/
 
@@ -83,6 +82,10 @@ public class EmsStatController {
 
         return new XcnResponseVO(XcnRspCode.OK, edcMessage, edcMessage.getTotal());
     }
+
+
+
+
 
     /*
      * Pivot Data 합계 구한 후 그 결과를
