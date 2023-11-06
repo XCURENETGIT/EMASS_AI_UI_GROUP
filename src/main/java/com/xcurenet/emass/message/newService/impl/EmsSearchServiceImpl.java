@@ -16,6 +16,7 @@ import com.xcurenet.emass.message.vo.message.EdcMessage;
 import com.xcurenet.interestUser.service.AdminUserGroupService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.lucene.search.TotalHits;
+import org.apache.solr.client.solrj.response.QueryResponse;
 import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
@@ -143,17 +144,23 @@ public class EmsSearchServiceImpl implements EmsSearchService {
 
     @Override
     public MessengerEdcGroupVO getMessengerGroupList(Map<String, Object> searchParam, String adminId) throws IOException {
-        return null;
+        return getMessengerGroupList(searchParam, adminId, false);
     }
 
     @Override
     public MessengerEdcGroupVO getMessengerGroupList(Map<String, Object> searchParam, String adminId, boolean detail) throws IOException {
-        return null;
+        return getMessengerGroupList(searchParam, adminId, detail,false);
     }
 
     @Override
     public MessengerEdcGroupVO getMessengerGroupList(Map<String, Object> searchParam, String adminId, boolean detail, boolean original) throws IOException {
-        return null;
+        setAuthoritys(searchParam,adminId);
+        SearchSourceBuilder searchSourceBuilder = null;
+        searchSourceBuilder = elsSearchQueryUtils.initCollectionSearchSource(searchParam);
+        SearchRequest searchRequest = new SearchRequest(elsSearchQueryUtils.getElasticSearchParam().getIndices()).source(searchSourceBuilder);
+        SearchResponse searchResponse = getList(searchRequest);
+        return new MessengerEdcGroupVO(searchResponse);
+
     }
 
     @Override

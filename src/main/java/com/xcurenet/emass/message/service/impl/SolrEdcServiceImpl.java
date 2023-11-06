@@ -201,6 +201,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		String bodysnippetVal = "N";
 		for (int i = 0; i < conf.size(); i++) {
 			if (conf.get(i).getConfId().equals("body.snippet.sum.use")) {
+
 				bodysnippetVal = conf.get(i).getVal();
 				break;
 			}

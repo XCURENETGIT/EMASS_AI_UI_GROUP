@@ -10,6 +10,7 @@ import org.apache.solr.client.solrj.response.GroupCommand;
 import org.apache.solr.client.solrj.response.GroupResponse;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocumentList;
+import org.elasticsearch.action.search.SearchResponse;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -29,6 +30,11 @@ public class MessengerEdcGroupVO {
 	private List<MessengerGroupVO> groups;
 	
 	public MessengerEdcGroupVO(final List<MessengerGroupVO> groups) {
+		this.groups = groups;
+	}
+
+
+	public MessengerEdcGroupVO(final SearchResponse searchResponse){
 		this.groups = groups;
 	}
 
@@ -106,6 +112,7 @@ public class MessengerEdcGroupVO {
 		solrGroupVO.setUser(edc.getUser());
 		solrGroupVO.setSender(edc.getSender());
 		solrGroupVO.setUsr_id(edc.getUsr_id());
+		solrGroupVO.setBody_snippet(edc.getBody_snippet());
 		return solrGroupVO;
 	}
 
@@ -130,6 +137,7 @@ public class MessengerEdcGroupVO {
 		solrGroupVO.setUser(edc.getUser());
 		solrGroupVO.setSender(edc.getSender());
 		solrGroupVO.setUsr_id(edc.getUsr_id());
+		solrGroupVO.setBody_snippet(edc.getBody_snippet());
 		return solrGroupVO;
 	}
 
@@ -217,4 +225,6 @@ public class MessengerEdcGroupVO {
 		}
 		return 0;
 	}
+
+
 }

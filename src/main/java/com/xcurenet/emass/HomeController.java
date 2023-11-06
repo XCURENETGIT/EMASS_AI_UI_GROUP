@@ -386,11 +386,11 @@ public class HomeController {
 		return "/emass/message/msg/note";
 	}
 
-	@RequestMapping(value = "/ems/msg/FileTransfer.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/ems/msg/fileTransfer.do", method = RequestMethod.GET)
 	@Description("테스트")
 	public String test(Locale locale, Model model) {
 		model.addAttribute("headerYn","N");
-		return "/emass/message/msg/FileTransfer";
+		return "/emass/message/msg/fileTransfer";
 	}
 	@RequestMapping(value = "/ems/contentBody.do", method = RequestMethod.GET)
 	@Description("본문 페이지")

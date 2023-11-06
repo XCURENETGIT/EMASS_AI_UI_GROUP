@@ -21,6 +21,7 @@ import org.apache.solr.common.util.NamedList;
 import com.xcurenet.common.util.Common;
 
 import lombok.Data;
+import org.elasticsearch.action.search.SearchResponse;
 
 @Data
 public class MessengerGroupUserVO {

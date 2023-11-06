@@ -94,6 +94,7 @@ $(document).ready(function(){
 	});
 	
 	$('#dept').click(function(){
+        alert("dfadfa");
 		openCodeWindow('deptByCo', $('#coCd_inUser option:selected').val(), $('#deptByCoVal').val(), $('#deptByCoStr').val());
 	});
 	

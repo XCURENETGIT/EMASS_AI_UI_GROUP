@@ -25,6 +25,11 @@ public class ElasticSearchParam {
     private String startDate;
     private String endDate;
 
+
+    /* 조회할 Date정보 */
+    private String serviceType;
+
+
     /* 정렬 속성*/
     private List<SortBuilder<?>> sorts;
 

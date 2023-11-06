@@ -20,6 +20,8 @@ import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.xcurenet.common.util.elasticsearch.ElasticSearchCommon;
+import com.xcurenet.common.util.elasticsearch.ElasticSearchParam;
 import com.xcurenet.emass.message.newService.EmsSearchService;
 import com.xcurenet.emass.message.vo.message.EdcMessage;
 import org.apache.catalina.connector.ClientAbortException;
@@ -87,8 +89,9 @@ public class MessengerController {
 	@Resource(name = "solrEdcService")
 	private SolrEdcService solrEdcService;
 
-	@Resource
-	EmsSearchService emsSearchService;
+	@Resource(name = "emsSearchService")
+	private EmsSearchService emsSearchService;
+
 
 	@Autowired
 	private SolrCheckedService solrCheckedService;
@@ -103,14 +106,14 @@ public class MessengerController {
 		String data = Common.nvl(request.getParameter("body"));
 		JSONArray datas = Common.toJSONArray(data);
 		List<SolrEdcVO> emass = new ArrayList<>();
-		for(int i=0; i<datas.size(); i++) {
+		for (int i = 0; i < datas.size(); i++) {
 			SolrEdcVO edc = new SolrEdcVO();
 			edc.setMsgid(datas.getJSONObject(i).getString("msgid"));
 			edc.setCtime(datas.getJSONObject(i).getString("ctime").replaceAll("-", "").replaceAll(" ", "").replaceAll(":", ""));
-			edc.setCtime_hh(datas.getJSONObject(i).getString("ctime").substring(11,13));
-			edc.setCtime_yyyy(datas.getJSONObject(i).getString("ctime").substring(0,4));
-			edc.setCtime_yyyymm(datas.getJSONObject(i).getString("ctime").substring(0,7).replaceAll("-", ""));
-			edc.setCtime_yyyymmdd(datas.getJSONObject(i).getString("ctime").substring(0,10).replaceAll("-", ""));
+			edc.setCtime_hh(datas.getJSONObject(i).getString("ctime").substring(11, 13));
+			edc.setCtime_yyyy(datas.getJSONObject(i).getString("ctime").substring(0, 4));
+			edc.setCtime_yyyymm(datas.getJSONObject(i).getString("ctime").substring(0, 7).replaceAll("-", ""));
+			edc.setCtime_yyyymmdd(datas.getJSONObject(i).getString("ctime").substring(0, 10).replaceAll("-", ""));
 			emass.add(edc);
 		}
 		return new XcnResponseVO(XcnRspCode.OK, setMessengerRead(emass, Common.getAdminId(session)));
@@ -141,7 +144,7 @@ public class MessengerController {
 		sq.setRows(Common.nvz(param.get("limit"), 100));
 		sq.setSort("ctime", ORDER.desc);
 		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id");
-		
+
 		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request));
 		solrEdcGroupVO.setGroups(setCount(solrEdcGroupVO.getGroups(), Common.getAdminId(request)));
 		return new XcnResponseVO(XcnRspCode.OK, solrEdcGroupVO, solrEdcGroupVO.getNumFound());
@@ -205,27 +208,24 @@ public class MessengerController {
 		}
 		return cnt;
 	}
+
 	@RequestMapping(value = "/getMessengerGenertiveList.xcn")
 	@Description("생성형 AI 목록 조회")
 	@AuditOperation(Operation.SEARCH)
 	@ResponseBody
 	public XcnResponseVO getMessengerGenertiveList(final HttpServletRequest request, final HttpSession session) throws Exception {
-
-		JSONObject param = Common.getParam(request);
-		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
-		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), Common.getAdminId(session));
-		sq.setQuery(sq.getQuery());
-		if (Common.isEquals(param.get("readYn"), "N")) {
-			sq.addFilterQuery(String.format(SolrEdcServiceImpl.JOIN_UNREAD, Common.getAdminId(session)));
+		Gson gson = new Gson();
+		Map<String,Object> resultParam = Common.getParamMap(request);
+		Map<String,Object> searchParam = new HashMap<>();
+		if (!Common.isEmpty(resultParam.get("searchParam"))) {
+			Type type = new TypeToken<Map<String,Object>>(){}.getType();
+			searchParam = gson.fromJson((String) resultParam.get("searchParam"),type);
+			searchParam.put(ElasticSearchCommon.SEARCH_TYPE, ElasticSearchCommon.SEARCH_TYPE_MESSAGE);
 		}
-		sq.setStart(Common.nvz(param.get("offset"), 0));
-		sq.setRows(Common.nvz(param.get("limit"), 100));
-		sq.setSort("ctime", ORDER.desc);
-		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "deptnm", "jikgubnm", "usr_id");
-
-		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request));
-		return new XcnResponseVO(XcnRspCode.OK, solrEdcGroupVO, solrEdcGroupVO.getNumFound());
+			MessengerEdcGroupVO edcMessage = emsSearchService.getMessengerGroupList(searchParam, Common.getAdminId(request));
+			return null;
 /*
+
 		Gson gson = new Gson();
 		Map<String,Object> resultParam = Common.getParamMap(request);
 		Map<String,String> searchParam = new HashMap<>();
@@ -237,6 +237,28 @@ public class MessengerController {
 		edcMessage.getEmass();
 
 		return new XcnResponseVO(XcnRspCode.OK, edcMessage, edcMessage.getTotal());*/
+
+	}
+
+
+	@RequestMapping(value = "/getFiletransferList.xcn")
+	@Description("파일전송 목록 조회")
+	@AuditOperation(Operation.SEARCH)
+	@ResponseBody
+	public XcnResponseVO getFiletransferList(final HttpServletRequest request, final HttpSession session) throws Exception {
+		Gson gson = new Gson();
+		Map<String,Object> resultParam = Common.getParamMap(request);
+		Map<String,Object> searchParam = new HashMap<>();
+		if(!Common.isEmpty(resultParam.get("searchData"))){
+			Type type = new TypeToken<Map<String,Object>>(){}.getType();
+			searchParam = gson.fromJson((String) resultParam.get("searchData"),type);
+			searchParam.put("elsSearchType", ElasticSearchCommon.SEARCH_TYPE_MESSAGE);
+		}
+		/*############################################################################*/
+
+		EdcMessage edcMessage = emsSearchService.getEmassMessage(searchParam,Common.getAdminId(session));
+		return new XcnResponseVO(XcnRspCode.OK, edcMessage, edcMessage.getTotal());
+
 	}
 
 	@RequestMapping(value = "/getMessengerMessageList.xcn")
@@ -928,6 +950,13 @@ public class MessengerController {
 	@ResponseBody
 	public XcnResponseVO getGenerativeList(final HttpServletRequest request, final HttpSession session) throws Exception {
 		return new XcnResponseVO(XcnRspCode.OK, emsMessageService.getGenerativeList());
+	}
+
+	@RequestMapping(value = "/getFileList.xcn")
+	@Description("파일전송 서비스 목록 조회")
+	@ResponseBody
+	public XcnResponseVO getFileList(final HttpServletRequest request, final HttpSession session) throws Exception {
+		return new XcnResponseVO(XcnRspCode.OK, emsMessageService.getFileList());
 	}
 
 	private EdcMessage setAlltotal(EdcMessage edcMessage) {

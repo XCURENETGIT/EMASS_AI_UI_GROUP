@@ -30,4 +30,6 @@ public class MessengerGroupVO {
 	private String usr_id;
 	private String user;
 	private String sender;
+	private String body_snippet;
+
 }

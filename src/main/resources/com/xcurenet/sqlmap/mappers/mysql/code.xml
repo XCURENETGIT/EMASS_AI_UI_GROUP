@@ -839,6 +839,11 @@
 	<select id="getGenerativeList" resultType="codeVO" parameterType="codeVO">
 		SELECT SUBSTRING(SERVICECD, 1, 3) AS code, SERVICENM_LV2 AS codeName FROM UI_SERVICE WHERE SUBSTRING(SERVICECD, 1, 1) = 'I'
 	</select>
+
+	<!-- 생성형AI 목록 -->
+	<select id="getFileList" resultType="codeVO" parameterType="codeVO">
+		SELECT SUBSTRING(SERVICECD, 1, 3) AS code, SERVICENM_LV2 AS codeName FROM UI_SERVICE WHERE SUBSTRING(SERVICECD, 1, 1) = 'F'
+	</select>
 	
 	<!-- 운용자 메뉴 -->
 	<select id="getAdminCodeMenuList" resultType="codeVO" parameterType="codeVO">

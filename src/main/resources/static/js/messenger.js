@@ -457,6 +457,34 @@ function getDetailData(usr_id){
 	}else $('.selectUser').first().click();
 }
 
+function rtnFileList(data, type) {
+	var str = '<table border="1"><thead><tr><th>파일 전송 서비스</th><th>파일명/예상 확장자</th><th>미리보기</th></tr></thead><tbody>';
+
+	alert(data.length);
+	for (var i = 0; i < data.length; i++) {
+		var service = makeMessengerText(data[i].svc)
+		var fileName = data[i].attachName;
+		var ext = data[i].attachType;
+		var srcip = data[i].srcip;
+		var fileExtension = "미리보기";
+
+		// 행 추가
+		str += '<tr>';
+		str += '<td>' + service + data[i].ctime +'<br>'+srcip+'</td>';
+		str += '<td>' + fileName + '/' + ext + '</td>';
+		str += '<td><button onclick="previewFile(\'' + fileName + '\')">미리보기</button></td>';
+		str += '</tr>';
+	}
+
+	str += '</tbody></table>';
+
+	$('#group_list').html(str);
+	$('#group_list').animate({
+		scrollTop: 0
+	}, 0);
+}
+
+
 function rtnGroupList(data, type){
 	var str = '';
 	for (var i = 0; i < data.length; i++) {
@@ -474,8 +502,8 @@ function rtnGroupList(data, type){
 			if(closeFlag) str += '<span class="tag tag-default tag-pill pull-xs-right">'+endChat+'</span>';
 			else str += '<span class="tag tag-success tag-pill pull-xs-right">'+chatting+'</span>';
 		}
-	/*	str += '	<h5 class="list-group-item-heading" style="padding-left: 14px;">'+data[i].title.replaceAll('<', '&lt;').replaceAll('>', '&gt;')+'</h5>';
-		str += '	<p class="list-group-item-text" style="float:left;">';*/
+		str += '	<h5 class="list-group-item-heading" style="padding-left: 14px;">'+data[i].body_snippet.replaceAll('<', '&lt;').replaceAll('>', '&gt;')+'</h5>';
+	/*	str += '	<p class="list-group-item-text" style="float:left;">';*/
 
 
 		if( svc3 == 'C' ) str += '<i class="fa fa-commenting-o fa-sm"></i> ';
@@ -540,20 +568,52 @@ function getMessengerGroupList (page){
 		}
 	});
 };
-function getMessengerGenertiveList(page) { //생성형 AI검색
+
+function getFiletransferList(){
 	var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
-
-	groupMessagePage = page;
-	var offset = groupMessagePage * groupMessagePageBreak - groupMessagePageBreak;
 	ui.onBody('timeline_list', 0, -20);
-	ui.postJson({
-		url: 'getMessengerGenertiveList.xcn',
-		data: JSON.stringify(getCondition()),
-		readYn: readYn,
-		offset: offset,
 
-		limit: groupPageBreak,
+	var searchData = {
+		 startDate : startDt+"000000"
+		, endDate : endDt+"235959"
+		, offset : grid1.data.length
+		, limit : grid1.pageSize
+	}
+
+	ui.postJson({
+		url: 'getFiletransferList.xcn',
+		searchParam : JSON.stringify(searchData),
+
 		success: function (data, total) {
+			alert("성공함");
+			rtnFileList(data.groups, 'G');
+		},
+		error: function (status, message) {
+
+			ui.alertMsg(message);
+		},
+		complete: function () {
+			searchFlag = false;
+			ui.off('timeline_list');
+		}
+	});
+}
+
+function getMessengerGenertiveList(page) { //생성형 AI검색
+
+	var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
+	var searchData = {
+		serviceType:  'IGPS',
+		startDate: '20231105000000',
+		endDate: '20231106235959',
+		offset:100,
+		limit:10
+	};
+	ui.get({
+		url: 'getMessengerGenertiveList.xcn',
+		searchParam : JSON.stringify(searchData),
+		success: function (data, total) {
+			alert("성공");
 			rtnGroupList(data.groups, 'GD');
 			rtnGroupPage(total, page, 'GD');
 			HighlightGroup( );
