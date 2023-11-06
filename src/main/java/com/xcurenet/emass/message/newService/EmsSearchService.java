@@ -3,7 +3,7 @@ package com.xcurenet.emass.message.newService;
 import com.xcurenet.emass.message.service.MessengerEdcGroupVO;
 import com.xcurenet.emass.message.service.MessengerGroupUserVO;
 import com.xcurenet.emass.message.service.impl.parseJsonFile;
-import com.xcurenet.emass.message.vo.message.EdcMessage;
+import com.xcurenet.emass.message.vo.emass.EmassIntegrated;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 
@@ -13,11 +13,11 @@ import java.util.Map;
 
 public interface EmsSearchService {
 
-	SearchResponse getList(SearchRequest searchRequest) throws IOException;
+	 SearchResponse getList(SearchRequest searchRequest) throws IOException;
 
-     EdcMessage getEmassMessage(final Map<String,Object> searchParam, final String adminId) throws IOException;
+	 EmassIntegrated getEmassMessage(final Map<String,Object> searchParam, final String adminId) throws IOException;
 
-     EdcMessage getEmassMessage(Map<String,Object>  searchParam, String adminId, String readYn, String consentNo) throws IOException;
+	 EmassIntegrated getEmassMessage(Map<String,Object>  searchParam, String adminId, String readYn, String consentNo) throws IOException;
 
 	 MessengerEdcGroupVO getMessengerGroupList(final Map<String,Object> searchParam, final String adminId) throws IOException;
 

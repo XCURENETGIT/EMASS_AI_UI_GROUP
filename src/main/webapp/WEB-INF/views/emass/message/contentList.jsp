@@ -203,7 +203,7 @@ function saveMsgBtn(){
 }
 
 function setFeedback(feedback){
-	var msgids = grid.getSelectedKey('msgid');
+	var msgids = grid.getSelectedKey('_id');
 	if( msgids.length == 0 ){
 		alert('<s:message code="condition.message.feedback.selectMsg"/>');
 		return;
@@ -281,23 +281,23 @@ function getList(flag, filterVal){
 		url : 'getList.xcn',
 		searchData : JSON.stringify( searchData ),
 		success : function(data, total) {
+			console.log(data.emass)
 			searchedFlag = true;
 			grid.appendData(data.emass);
 			if ( grid.loadingPage == 0 ) grid.Select(-1,-1);
 
-			// parent.setResultCnt(tabId, total.comma());
-			// parent.changeTabName(tabId, '', researchCnt);
-			// setServiceGroupCntInfo(data.facet, total);
-			// $('#searchTime').val(data.searchTime);
-			//
-			// var query = filterValData.conditions[0].query;
-			// /* console.log("getList filterValData query1 : " + query); */
-			// if( query != '' && query != undefined){
-			// 	parent.$('#researchCheckbox').prop('disabled', true);
-			// }else{
-			// 	parent.$('#researchCheckbox').prop('disabled', false);
-			// }
+			parent.setResultCnt(tabId, total.comma());
+			parent.changeTabName(tabId, '', researchCnt);
+			setServiceGroupCntInfo(data.facet, total);
+			$('#searchTime').val(data.searchTime);
 
+			var query = filterValData.conditions[0].query;
+			/* console.log("getList filterValData query1 : " + query); */
+			if( query != '' && query != undefined){
+				parent.$('#researchCheckbox').prop('disabled', true);
+			}else{
+				parent.$('#researchCheckbox').prop('disabled', false);
+			}
 
 		},
 		error : function(status, message) {
@@ -358,9 +358,10 @@ function setServiceGroupCntInfo(data, total){
 	busiScrollTabs.clearTabs();
 	busiScrollTabs.refreshState();
 	busiScrollTabs.addTab('<span class="tab_selected"><a href="javascript:;" class="busiCounts active" data-svc1=""><i class="fa fa-angle-right" aria-hidden="true"></i> <s:message code="common.msg.all"/><span class="busiCnt">('+total.comma()+')</span></a></span>');
-	for(var i=0; i<data.length; i++){
-		busiScrollTabs.addTab('<span><a href="javascript:;" class="busiCounts" data-svc1="'+data[i].name+'"><i class="fa fa-angle-right" aria-hidden="true"></i> '+parent.getSvc1Nm(data[i].name)+'<span class="busiCnt">('+data[i].count.comma()+')</span></a></span>'); 
-	}
+	/* 임시 주석*/
+	// for(var i=0; i<data.length; i++){
+	// 	busiScrollTabs.addTab('<span><a href="javascript:;" class="busiCounts" data-svc1="'+data[i].name+'"><i class="fa fa-angle-right" aria-hidden="true"></i> '+parent.getSvc1Nm(data[i].name)+'<span class="busiCnt">('+data[i].count.comma()+')</span></a></span>');
+	// }
 }
 
 function arrayToString( array ){
@@ -374,7 +375,6 @@ function highlightSearchStr(rtnVal, column){
 	var QnoSearchPattern = /[\s\"?/|()+*]/;
 	var DnoSearchPattern = /[+*?]/;
 	try{
-		
 		var searchType = '';
 		var searchStr = '';
 		var search = '';
@@ -572,18 +572,18 @@ function sendOverlapData(offset, limit){
 }
 
 function regexpInfoViewer(row, selectedGrid){
-	var msgid = grid.getValue(row, 'msgid');
+	var _id = grid.getValue(row, '_id');
 	if(grid.getValue(row, 'pi_total') == '') return;
 	
-	var url = '<c:url value="/ems/regexpInfoPop.do?msgId='+msgid+'"/>';
+	var url = '<c:url value="/ems/regexpInfoPop.do?_id='+_id+'"/>';
 	return fnOpenWindow(url, 'regexpInfoPop', 1100, 620, 'resize');
 }
 
 function userInfoViewer(row, type, selectedGrid){
-	var msgid = grid.getValue(row, 'msgid');
+	var _id = grid.getValue(row, '_id');
 	if(grid.getValue(row, type) == '') return;
 	
-	var url = '<c:url value="/ems/userInfoPop.do?msgId='+msgid+'&type='+type+'"/>';
+	var url = '<c:url value="/ems/userInfoPop.do?_id='+_id+'&type='+type+'"/>';
 	return fnOpenWindow(url, type+'InfoPop', 1000, 370, 'resize');
 }
 
@@ -595,18 +595,18 @@ function interestUserInfoViewer( row, selectedGrid ){
 }
 
 function fileInfoViewer( row, selectedGrid ){
-	var msgid = grid.getValue(row, 'msgid');
+	var _id = grid.getValue(row, '_id');
 	if(grid.getValue(row, 'attachcnt') == '') return;
 	
-	var url    = '<c:url value="/ems/fileInfoPop.do?msgId='+msgid+'&searchKey=' + encodeURI(searchKeyword()) + '"/>';
+	var url    = '<c:url value="/ems/fileInfoPop.do?_id='+_id+'&searchKey=' + encodeURI(searchKeyword()) + '"/>';
 	var pop = fnOpenWindow(url, 'fileInfoPop', 1015, 400, 'resize');
 }
 
 function ocrFileInfoViewer( row, selectedGrid ){
-	var msgid = grid.getValue(row, 'msgid');
+	var _id = grid.getValue(row, '_id');
 	if(grid.getValue(row, 'ocr_attach_cnt') == '') return;
 	
-	var url    = '<c:url value="/ems/fileInfoPop.do?msgId='+msgid+'&searchKey='+ encodeURI(searchKeyword()) +'"/>';
+	var url    = '<c:url value="/ems/fileInfoPop.do?_id='+_id+'&searchKey='+ encodeURI(searchKeyword()) +'"/>';
 	var pop = fnOpenWindow(url, 'ocrFileInfoPop', 1015, 400, 'resize');
 }
 
@@ -619,7 +619,7 @@ function searchKeyword() {
 }
 
 function viewer_open( row, selectedGrid ){
-	var msgid = grid.getValue(row, 'msgid');
+	var _id = grid.getValue(row, '_id');
 	var bodySize = grid.getValue(row, 'bodySizeStr');
 	var bodySizeNum = bodySize.substr(0, bodySize.indexOf(' '));
 	
@@ -627,11 +627,11 @@ function viewer_open( row, selectedGrid ){
 		var obj = parent.getIframeBodyObj();
 		var kHigh = parent.keywordHighlight;
 		var hostQuery = parent.hostQuery;
-		obj.getMessage(msgid, searchKeyword(), bodySizeNum, kHigh.toString(), hostQuery.toString());
+		obj.getMessage(_id, searchKeyword(), bodySizeNum, kHigh.toString(), hostQuery.toString());
 		obj.$('#detailPatternDiv, #imgPreviewDiv').hide();
 		obj.initHighlight();
 	}else{
-		openMessageBodyPop( grid.id, msgid, searchKeyword(), bodySizeNum);
+		openMessageBodyPop( grid.id, _id, searchKeyword(), bodySizeNum);
 	}
 	var readYn = grid.getValue(row, 'readYn');
 	grid.setValue(row, grid.ColIndex('readYn'), 'Y');
@@ -640,11 +640,11 @@ function viewer_open( row, selectedGrid ){
 
 var popWin;
 function viewer_openPop( row, selectedGrid ){
-	var msgid = grid.getValue(row, 'msgid');
+	var _id = grid.getValue(row, '_id');
 	var bodySize = grid.getValue(row, 'bodySizeStr');
 	var bodySizeNum = bodySize.substr(0, bodySize.indexOf(' '));
 	
-	popWin = openMessageBodyPop( grid.id, msgid, searchKeyword(), bodySizeNum);
+	popWin = openMessageBodyPop( grid.id, _id, searchKeyword(), bodySizeNum);
 	
 	var readYn = grid.getValue(row, 'readYn');
 	grid.setValue(row, grid.ColIndex('readYn'), 'Y');
@@ -652,8 +652,8 @@ function viewer_openPop( row, selectedGrid ){
 
 function viewer_openFocus(row, selectedGrid ){
 	if(popWin){
-		var msgid = grid.getValue(row, 'msgid');
-		popWin.getMessage(msgid, searchKeyword());
+		var _id = grid.getValue(row, '_id');
+		popWin.getMessage(_id, searchKeyword());
 	}
 }
 
@@ -687,11 +687,11 @@ function setGridInfoMulti(value, value1){
 }
 
 function viewer_newOpen(row, selectedGrid){
-	var msgid = grid.getValue(row, 'msgid');
+	var _id = grid.getValue(row, '_id');
 	var bodySize = grid.getValue(row, 'bodySizeStr');
 	var bodySizeNum = bodySize.substr(0, bodySize.indexOf(' '));
 	
-	openMessageBodyPop( '', msgid, searchKeyword(), bodySizeNum);
+	openMessageBodyPop( '', _id, searchKeyword(), bodySizeNum);
 	
 	var readYn = grid.getValue(row, 'readYn');
 	grid.setValue(row, grid.ColIndex('readYn'), 'Y');
@@ -752,7 +752,7 @@ function initGrid(){
 	grid = new Xgrid('messageNewGrid', contextRoot, 20);
 	grid.onCheckBox();
 	grid.autoNumber();
-	grid.colAdd('msgid', '<s:message code="common.msg.msgid"/>', 100, 'left', false, 'nomal');
+	grid.colAdd('_id', '<s:message code="common.msg._id"/>', 100, 'left', false, 'nomal',null,0);
 	grid.colAdd('xrootmtr', '<s:message code="common.msg.xrootmtr"/>', 100, 'left', true, 'nomal');
 	if(overlapUse == 'Y') {
 		grid.colAdd('overlap', '<s:message code="common.overlap.count"/>', 80, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
@@ -775,11 +775,11 @@ function initGrid(){
 	<%--	}--%>
 	<%--	return str;--%>
 	<%--});--%>
-	<%--grid.colAdd('readYn', '<s:message code="condition.read"/>', 40, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {--%>
-	<%--	if (value == 'Y') return '<div class="readY"></div>';--%>
-	<%--	else if (value == 'N') return '<div class="readN"></div>';--%>
-	<%--	else return '-';--%>
-	<%--});--%>
+	grid.colAdd('readYn', '<s:message code="condition.read"/>', 40, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+		if (value == 'Y') return '<div class="readY"></div>';
+		else if (value == 'N') return '<div class="readN"></div>';
+		else return '-';
+	});
 
 	if( infoFeedbackConf == 'true' && infoFeedbackYn == 'Y' ) {
 		var ml_confd_class_str = infoHynixConf == 'true' ? '<s:message code="condition.itype"/>' : '<s:message code="condition.infotype"/>';
@@ -828,7 +828,7 @@ function initGrid(){
 		else return '-';
 	});
 
-	grid.colAdd('service_svcNm', '<s:message code="condition.service"/>', 180, 'center', false, 'nomal');
+	grid.colAdd('service_svc_Nm', '<s:message code="condition.service"/>', 180, 'center', false, 'nomal');
 	grid.colAdd('subject', '<s:message code="condition.subject"/>', 410, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 		var body_snippet = grid.getValue(row, 'body_snippet').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '\'');
 		if(body_snippet.length > 100) body_snippet = body_snippet.substring(0, 1024)+'...';

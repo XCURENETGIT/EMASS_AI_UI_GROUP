@@ -9,7 +9,7 @@ import java.util.Map;
 
 
 @Data
-/* 쿼리 파라미터 빌드용 */
+/* 쿼리 파라미터 */
 public class ElasticSearchParam {
 
     private String searchType;

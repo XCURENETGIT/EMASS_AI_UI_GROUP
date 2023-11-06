@@ -1,4 +1,4 @@
-package com.xcurenet.emass.message.vo.emass.fields;
+package com.xcurenet.emass.message.vo.emass.els.fields;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Nullable
-public class AttachVo {
+public class AttachVo_Els {
    private String	id;   //첨부파일 ID
    private String	name;   //첨부파일 이름
    private String	path;   //첨부파일 경로

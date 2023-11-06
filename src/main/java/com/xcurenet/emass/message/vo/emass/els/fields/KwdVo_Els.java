@@ -1,4 +1,4 @@
-package com.xcurenet.emass.message.vo.emass.fields;
+package com.xcurenet.emass.message.vo.emass.els.fields;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Nullable
-public class KwdVo {
+public class KwdVo_Els {
    private List     kwdsAttach;   //	예약어(첨부내용)
    private List  	kwdsAttachNm;   //	예약어(첨부파일명)
    private boolean  kwd;   //	kwd	예약어 검출 유무

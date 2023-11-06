@@ -603,9 +603,9 @@ function getMessengerGenertiveList(page) { //생성형 AI검색
 
 	var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
 	var searchData = {
-		serviceType:  'IGPS',
-		startDate: '20231105000000',
-		endDate: '20231106235959',
+		serviceType:  'X',
+		startDate: '20231012180000',
+		endDate: '20231030120000',
 		offset:100,
 		limit:10
 	};
@@ -613,6 +613,7 @@ function getMessengerGenertiveList(page) { //생성형 AI검색
 		url: 'getMessengerGenertiveList.xcn',
 		searchParam : JSON.stringify(searchData),
 		success: function (data, total) {
+			console.log(data);
 			alert("성공");
 			rtnGroupList(data.groups, 'GD');
 			rtnGroupPage(total, page, 'GD');

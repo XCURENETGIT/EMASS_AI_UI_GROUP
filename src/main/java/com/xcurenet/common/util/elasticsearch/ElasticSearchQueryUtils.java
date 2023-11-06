@@ -1235,7 +1235,6 @@ public class ElasticSearchQueryUtils {
             }
             complateQuery.must(secondQuery);  // 사용할 쿼리 merge 완료
 
-
             searchSourceBuilder = new SearchSourceBuilder()
                     .from(elasticSearchParam.getFrom())
                     .size(elasticSearchParam.getTo())
@@ -1283,8 +1282,6 @@ public class ElasticSearchQueryUtils {
         }else{
             setSearchQuery(Common.nvl(ElasticSearchCommon.ALL_SEARCH));
         }
-
-
 
         /* set Query (항상 쿼리 조합 최하단에 위치) */
         setQuery();
@@ -1369,8 +1366,8 @@ public class ElasticSearchQueryUtils {
         limit =  (int) Math.round(Double.valueOf(Common.nvl(searchParam.get("limit"))));
 
 
-        /* 검색 조건 && 검색어 없을시 *//*
-        if(Common.isEmpty(elasticSearchParam.getSearchParameters().get("searchStr"))) setSearchQuery(Common.nvl(ElasticSearchCommon.ALL_SEARCH));*/
+        /* 검색 조건 && 검색어 없을시 */
+        if(Common.isEmpty(elasticSearchParam.getSearchParameters().get("searchStr"))) setSearchQuery(Common.nvl(ElasticSearchCommon.ALL_SEARCH));
 
         /* set Query */
         setQuery();

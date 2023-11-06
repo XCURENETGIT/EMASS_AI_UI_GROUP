@@ -1,4 +1,4 @@
-package com.xcurenet.emass.message.vo.message;
+package com.xcurenet.emass.message.vo.emass;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xcurenet.common.util.Common;
@@ -7,7 +7,7 @@ import com.xcurenet.common.util.elasticsearch.ElasticSearchCommon;
 import com.xcurenet.common.util.elasticsearch.ElasticSearchParam;
 import com.xcurenet.common.util.locale.Prop;
 import com.xcurenet.emass.message.service.FacetVO;
-import com.xcurenet.emass.message.vo.emass.Emass;
+import com.xcurenet.emass.message.vo.emass.els.Emass;
 import lombok.Data;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -24,7 +24,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Data
-public class EdcMessage {
+public class EmassIntegrated {
 
     private long numFound;
     private List<?> emass;
@@ -51,12 +51,12 @@ public class EdcMessage {
     private String search_endDate;
 
 
-    public EdcMessage() throws IOException {}
-    public EdcMessage(final Map<String,Object> responseMap) throws IOException {
+    public EmassIntegrated() throws IOException {}
+    public EmassIntegrated(final Map<String,Object> responseMap) throws IOException {
         this(responseMap, null);
     }
 
-    public EdcMessage(final Map<String,Object> responseMap, final String adminId) throws  IOException {
+    public EmassIntegrated(final Map<String,Object> responseMap, final String adminId) throws  IOException {
         if(responseMap == null) return;
 
         /* response 파싱 */

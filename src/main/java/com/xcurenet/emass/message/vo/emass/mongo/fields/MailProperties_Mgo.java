@@ -1,4 +1,4 @@
-package com.xcurenet.emass.message.vo.emass.fields;
+package com.xcurenet.emass.message.vo.emass.mongo.fields;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -9,8 +9,8 @@ import javax.annotation.Nullable;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Nullable
-public class MailProperties {
-    private String  alias;  //별칭
+public class MailProperties_Mgo {
+    private String alias;  //별칭
     private String id;	   //ID
     private String name;    // 이름
     private String email;   // MAIL

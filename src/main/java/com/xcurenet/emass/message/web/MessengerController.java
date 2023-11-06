@@ -1,29 +1,27 @@
 package com.xcurenet.emass.message.web;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.xcurenet.annotations.AuditMenu;
+import com.xcurenet.annotations.AuditOperation;
+import com.xcurenet.annotations.AuditParentMenu;
+import com.xcurenet.audit.service.Menu;
+import com.xcurenet.audit.service.Operation;
+import com.xcurenet.audit.service.ParentMenu;
+import com.xcurenet.common.excel.XLSXWriter;
+import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.elasticsearch.ElasticSearchCommon;
-import com.xcurenet.common.util.elasticsearch.ElasticSearchParam;
+import com.xcurenet.common.util.locale.Prop;
+import com.xcurenet.common.vo.XcnResponseVO;
+import com.xcurenet.common.vo.XcnRspCode;
+import com.xcurenet.emass.message.component.SolrCreateQuery;
 import com.xcurenet.emass.message.newService.EmsSearchService;
-import com.xcurenet.emass.message.vo.message.EdcMessage;
+import com.xcurenet.emass.message.service.*;
+import com.xcurenet.emass.message.service.impl.SolrEdcServiceImpl;
+import com.xcurenet.emass.message.vo.emass.EmassIntegrated;
+import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.apache.catalina.connector.ClientAbortException;
 import org.apache.commons.compress.archivers.ArchiveOutputStream;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
@@ -42,35 +40,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.xcurenet.annotations.AuditMenu;
-import com.xcurenet.annotations.AuditOperation;
-import com.xcurenet.annotations.AuditParentMenu;
-import com.xcurenet.audit.service.Menu;
-import com.xcurenet.audit.service.Operation;
-import com.xcurenet.audit.service.ParentMenu;
-import com.xcurenet.common.excel.XLSXWriter;
-import com.xcurenet.common.util.Common;
-import com.xcurenet.common.util.config.Config;
-import com.xcurenet.common.util.locale.Prop;
-import com.xcurenet.common.vo.XcnResponseVO;
-import com.xcurenet.common.vo.XcnRspCode;
-import com.xcurenet.emass.message.component.SolrCreateQuery;
-import com.xcurenet.emass.message.service.EmsAttachVO;
-import com.xcurenet.emass.message.service.EmsMessageService;
-import com.xcurenet.emass.message.service.EmsMessengerAdminXrootMtrVO;
-import com.xcurenet.emass.message.service.FacetVO;
-import com.xcurenet.emass.message.service.MessengerEdcGroupVO;
-import com.xcurenet.emass.message.service.MessengerGroupUserVO;
-import com.xcurenet.emass.message.service.MessengerGroupVO;
-import com.xcurenet.emass.message.service.SolrCheckedService;
-import com.xcurenet.emass.message.service.SolrEdcMessageVO;
-import com.xcurenet.emass.message.service.SolrEdcService;
-import com.xcurenet.emass.message.service.SolrEdcVO;
-import com.xcurenet.emass.message.service.impl.SolrEdcServiceImpl;
-
-import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.*;
+import java.lang.reflect.Type;
+import java.util.*;
 
 @Scope("prototype")
 @Slf4j
@@ -222,21 +199,16 @@ public class MessengerController {
 			searchParam = gson.fromJson((String) resultParam.get("searchParam"),type);
 			searchParam.put(ElasticSearchCommon.SEARCH_TYPE, ElasticSearchCommon.SEARCH_TYPE_MESSAGE);
 		}
-			MessengerEdcGroupVO edcMessage = emsSearchService.getMessengerGroupList(searchParam, Common.getAdminId(request));
-			return null;
-/*
+		MessengerEdcGroupVO edcMessage = emsSearchService.getMessengerGroupList(searchParam, Common.getAdminId(request));
+//		Gson gson = new Gson();
+//		Map<String,Object> resultParam = Common.getParamMap(request);
+//		Map<String,String> searchParam = new HashMap<>();
+//		if(!Common.isEmpty(resultParam.get("searchParam"))){
+//			Type type = new TypeToken<Map<String,String>>(){}.getType();
+//			searchParam = gson.fromJson((String) resultParam.get("searchParam"),type);
+//		}
 
-		Gson gson = new Gson();
-		Map<String,Object> resultParam = Common.getParamMap(request);
-		Map<String,String> searchParam = new HashMap<>();
-		if(!Common.isEmpty(resultParam.get("searchParam"))){
-			Type type = new TypeToken<Map<String,String>>(){}.getType();
-			searchParam = gson.fromJson((String) resultParam.get("searchParam"),type);
-		}
-		EdcMessage edcMessage = setAlltotal(emsSearchService.getEmassMessage(searchParam, Common.getAdminId(request)));
-		edcMessage.getEmass();
-
-		return new XcnResponseVO(XcnRspCode.OK, edcMessage, edcMessage.getTotal());*/
+		return new XcnResponseVO(XcnRspCode.OK, edcMessage, edcMessage.getNumFound());
 
 	}
 
@@ -256,7 +228,7 @@ public class MessengerController {
 		}
 		/*############################################################################*/
 
-		EdcMessage edcMessage = emsSearchService.getEmassMessage(searchParam,Common.getAdminId(session));
+		EmassIntegrated edcMessage = emsSearchService.getEmassMessage(searchParam,Common.getAdminId(session));
 		return new XcnResponseVO(XcnRspCode.OK, edcMessage, edcMessage.getTotal());
 
 	}
@@ -959,7 +931,7 @@ public class MessengerController {
 		return new XcnResponseVO(XcnRspCode.OK, emsMessageService.getFileList());
 	}
 
-	private EdcMessage setAlltotal(EdcMessage edcMessage) {
+	private EmassIntegrated setAlltotal(EmassIntegrated edcMessage) {
 		List<Map<String, Object>> resultData = edcMessage.getPivotData();
 		Map<String, Object> totalItem = new HashMap<>();
 		long allTotal = 0;

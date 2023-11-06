@@ -1,8 +1,8 @@
-package com.xcurenet.emass.message.vo.emass;
+package com.xcurenet.emass.message.vo.emass.els;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.xcurenet.emass.message.vo.emass.fields.*;
+import com.xcurenet.emass.message.vo.emass.els.fields.*;
 import lombok.Data;
 
 import javax.annotation.Nullable;
@@ -14,6 +14,7 @@ import java.util.List;
 
 /***
  *  elastic search Db -> App server 받아오기 위한 Vo
+ *  Emass
  */
 public class Emass {
 
@@ -45,17 +46,17 @@ public class Emass {
    private String  xmsgAttr;               //
    private String  epHeader;               //
 
-   private BodyVo body;
-   private NetworkVo network;
-   private List<AttachVo> attach;
-   private KwdVo kwd;
-   private ServiceVo service;
-   private HttpVo http;
-   private PiVo pi;
-   private UserVo user;
-   private DayVo day;
-   private OcrVo ocr;
-   private MlVo ml;
-   private MailVo mail;
+   private BodyVo_Els body;
+   private NetworkVo_Els network;
+   private List<AttachVo_Els> attach;
+   private KwdVo_Els kwd;
+   private ServiceVo_Els service;
+   private HttpVo_Els http;
+   private PiVo_Els pi;
+   private UserVo_Els user;
+   private DayVo_Els day;
+   private OcrVo_Els ocr;
+   private MlVo_Els ml;
+   private MailVo_Els mail;
 
 }

@@ -8,11 +8,11 @@ import com.xcurenet.common.util.locale.Prop;
 import com.xcurenet.config.service.ConfigAdminVO;
 import com.xcurenet.emass.iprange.service.IpRangeVO;
 import com.xcurenet.emass.message.service.EmsRecvVO;
-import com.xcurenet.emass.message.vo.emass.Emass;
-import com.xcurenet.emass.message.vo.emass.EmassResponse;
-import com.xcurenet.emass.message.vo.emass.fields.AttachVo;
-import com.xcurenet.emass.message.vo.message.ATTACH_INFO_PROPERTIES;
-import com.xcurenet.emass.message.vo.message.MessageVo;
+import com.xcurenet.emass.message.vo.emass.els.Emass;
+import com.xcurenet.emass.message.vo.emass.els.EmassResponse;
+import com.xcurenet.emass.message.vo.emass.els.fields.AttachVo_Els;
+import com.xcurenet.emass.message.vo.emass.mongo.old.ATTACH_INFO_PROPERTIES;
+import com.xcurenet.emass.message.vo.emass.mongo.old.MessageVo;
 import com.xcurenet.interestUser.service.AdminUserGroupVO;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.math.NumberUtils;
@@ -75,7 +75,7 @@ public class EmsReDefined {
 			/*  첨부파일 총 크기 계산   */
 			Long fileSize = 0L;
 			if(!Common.isEmpty(ems.getAttach())){
-				for(AttachVo attach : ems.getAttach()){
+				for(AttachVo_Els attach : ems.getAttach()){
 					fileSize = fileSize + attach.getSize();
 				}
 			}
@@ -425,7 +425,7 @@ public class EmsReDefined {
 		if(emass.getAttach().size() >= 1){
 			attachInfo = new ArrayList<>();
 			ATTACH_INFO_PROPERTIES attachInfoProperties = new ATTACH_INFO_PROPERTIES();
-			for(AttachVo attach : emass.getAttach()){
+			for(AttachVo_Els attach : emass.getAttach()){
 				attachInfoProperties.setATTACHNAME(Common.nvl(attach.getName()));
 			}
 			attachInfo.add(attachInfoProperties);

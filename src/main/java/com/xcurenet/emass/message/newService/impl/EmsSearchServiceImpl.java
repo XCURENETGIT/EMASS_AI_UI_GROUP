@@ -2,7 +2,9 @@ package com.xcurenet.emass.message.newService.impl;
 
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.TimeUtil;
-import com.xcurenet.common.util.elasticsearch.*;
+import com.xcurenet.common.util.elasticsearch.ElasticSearchCommon;
+import com.xcurenet.common.util.elasticsearch.ElasticSearchConnection;
+import com.xcurenet.common.util.elasticsearch.ElasticSearchQueryUtils;
 import com.xcurenet.config.service.ConfigAdminService;
 import com.xcurenet.config.service.ConfigAdminVO;
 import com.xcurenet.emass.message.newService.EmsReDefined;
@@ -10,13 +12,12 @@ import com.xcurenet.emass.message.newService.EmsSearchService;
 import com.xcurenet.emass.message.service.MessengerEdcGroupVO;
 import com.xcurenet.emass.message.service.MessengerGroupUserVO;
 import com.xcurenet.emass.message.service.impl.parseJsonFile;
-import com.xcurenet.emass.message.vo.emass.Emass;
-import com.xcurenet.emass.message.vo.emass.EmassResponse;
-import com.xcurenet.emass.message.vo.message.EdcMessage;
+import com.xcurenet.emass.message.vo.emass.EmassIntegrated;
+import com.xcurenet.emass.message.vo.emass.els.Emass;
+import com.xcurenet.emass.message.vo.emass.els.EmassResponse;
 import com.xcurenet.interestUser.service.AdminUserGroupService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.lucene.search.TotalHits;
-import org.apache.solr.client.solrj.response.QueryResponse;
 import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
@@ -50,7 +51,6 @@ public class EmsSearchServiceImpl implements EmsSearchService {
     @Resource
     private ConfigAdminService configAdminService;
 
-
     /* client */
     private final RestHighLevelClient client = new ElasticSearchConnection().getElasticSearchClient();
 
@@ -70,14 +70,14 @@ public class EmsSearchServiceImpl implements EmsSearchService {
 
 
     @Override
-    public EdcMessage getEmassMessage(Map<String,Object> searchParam, String adminId) throws IOException {
+    public EmassIntegrated getEmassMessage(Map<String,Object> searchParam, String adminId) throws IOException {
         return getEmassMessage(searchParam, adminId, null, null);
     }
 
 
     @Override
-    public EdcMessage getEmassMessage(Map<String,Object> searchParam, String adminId, String readYn, String consentNo) throws IOException {
-        EdcMessage edcMessage = null;
+    public EmassIntegrated getEmassMessage(Map<String,Object> searchParam, String adminId, String readYn, String consentNo) throws IOException {
+        EmassIntegrated emassIntegrated = null;
 
         if (Common.isNotEmpty(readYn) && Common.isNotEmpty(adminId)) {
             if (Common.isEquals(readYn, "Y")) {
@@ -118,7 +118,7 @@ public class EmsSearchServiceImpl implements EmsSearchService {
             Map<String,Object> responseMap = new HashMap<>();
             responseMap.put("searchResponse",searchResponse);
             responseMap.put("elsSearchParam",elsSearchQueryUtils.getElasticSearchParam());
-            edcMessage = new EdcMessage(responseMap, adminId);
+            emassIntegrated = new EmassIntegrated(responseMap, adminId);
 
             /* 읽음 확인 관련 추후 작업 예정*/
  /*           if (readYn != null && readYn.equals("")) {
@@ -126,12 +126,12 @@ public class EmsSearchServiceImpl implements EmsSearchService {
             }*/
 
             /* response 용 Data로 재 빌드해야함  */
-            List<EmassResponse> emassResponse = new EmsReDefined((List<Emass>) edcMessage.getEmass(), readYn, consentNo, adminUserGroupService.getAdminUserGroupSimpleAdminList(adminId)).reDefined(adminId, conf);
-            edcMessage.setEmass(emassResponse);
+            List<EmassResponse> emassResponse = new EmsReDefined((List<Emass>) emassIntegrated.getEmass(), readYn, consentNo, adminUserGroupService.getAdminUserGroupSimpleAdminList(adminId)).reDefined(adminId, conf);
+            emassIntegrated.setEmass(emassResponse);
 
             String serverTime = getServerTime();
-            edcMessage.setSearchTime(serverTime);
-            edcMessage.setExcuteQuery(elsSearchQueryUtils.getQuery());
+            emassIntegrated.setSearchTime(serverTime);
+            emassIntegrated.setExcuteQuery(elsSearchQueryUtils.getQuery());
 
         }catch (Exception e){
             e.printStackTrace();
@@ -139,7 +139,7 @@ public class EmsSearchServiceImpl implements EmsSearchService {
 
         /* ######################################################################################################################################################################################## */
 
-        return edcMessage;
+        return emassIntegrated;
     }
 
     @Override

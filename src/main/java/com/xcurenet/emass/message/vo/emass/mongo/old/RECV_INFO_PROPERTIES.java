@@ -1,4 +1,4 @@
-package com.xcurenet.emass.message.vo.message;
+package com.xcurenet.emass.message.vo.emass.mongo.old;
 
 import lombok.Data;
 

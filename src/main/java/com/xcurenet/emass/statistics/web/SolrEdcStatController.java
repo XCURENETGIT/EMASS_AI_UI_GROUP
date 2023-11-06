@@ -72,7 +72,7 @@ public class SolrEdcStatController {
     private AdminServiceImpl adminServiceImpl;
 
 
-    @RequestMapping(value = "/getStatList.xcn")
+    @RequestMapping(value = "/test_getStatList.xcn")
     @Description("통계 리스트 조회")
     @AuditOperation(Operation.SEARCH)
     @ResponseBody
@@ -205,7 +205,7 @@ public class SolrEdcStatController {
         return new XcnResponseVO(XcnRspCode.OK, solrStatVo, solrStatVo.getPivotData().size());
     }
 
-    @RequestMapping(value = "/getStatDetailList.xcn")
+    @RequestMapping(value = "/test_getStatDetailList.xcn")
     @Description("통계 리스트 상세 조회")
     @AuditOperation(Operation.SEARCH)
     @ResponseBody
@@ -328,7 +328,7 @@ public class SolrEdcStatController {
         return new XcnResponseVO(XcnRspCode.OK, solrStatVo, solrStatVo.getNumFound());
     }
 
-    @RequestMapping(value = "/getCheckedStatList.xcn")
+    @RequestMapping(value = "/test_getCheckedStatList.xcn")
     @Description("관리자 열람 통계 리스트 조회")
     @AuditOperation(Operation.SEARCH)
     @ResponseBody
@@ -407,7 +407,7 @@ public class SolrEdcStatController {
     }
 
 
-    @RequestMapping(value = "/getStatCheckedDetailList.xcn")
+    @RequestMapping(value = "/test_getStatCheckedDetailList.xcn")
     @Description("관리자 열람 통계 리스트 상세 조회")
     @AuditOperation(Operation.SEARCH)
     @ResponseBody
@@ -455,7 +455,7 @@ public class SolrEdcStatController {
         return new XcnResponseVO(XcnRspCode.OK, solrStatVo, solrStatVo.getNumFound());
     }
 
-    @RequestMapping(value = "/getCheckedReadStatList.xcn")
+    @RequestMapping(value = "/test_getCheckedReadStatList.xcn")
     @Description("관리자 열람 통계 리스트 조회")
     //@AuditOperation(Operation.SEARCH)
     @ResponseBody
@@ -467,7 +467,7 @@ public class SolrEdcStatController {
         return new XcnResponseVO(XcnRspCode.OK, checkedReadStatService.getCheckedReadStatList(xAxis, startDate, endDate, Common.getAdminType(session), Common.getAdminId(session) ));
     }
 
-    @RequestMapping(value = "/getOcrStatList.xcn")
+    @RequestMapping(value = "/test_getOcrStatList.xcn")
     @Description("OCR 통계 리스트 조회")
     @AuditOperation(Operation.SEARCH)
     @ResponseBody
@@ -483,7 +483,7 @@ public class SolrEdcStatController {
         return new XcnResponseVO(XcnRspCode.OK, solrStatVo, solrStatVo.getFacetData().size());
     }
 
-    @RequestMapping(value = "/getOcrStatDetailList.xcn")
+    @RequestMapping(value = "/test_getOcrStatDetailList.xcn")
     @Description("OCR 통계 리스트 상세 조회")
     @AuditOperation(Operation.SEARCH)
     @ResponseBody

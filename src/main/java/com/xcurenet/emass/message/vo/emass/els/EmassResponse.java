@@ -1,7 +1,7 @@
-package com.xcurenet.emass.message.vo.emass;
+package com.xcurenet.emass.message.vo.emass.els;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.xcurenet.emass.message.vo.emass.fields.MailProperties;
+import com.xcurenet.emass.message.vo.emass.els.fields.MailProperties_Els;
 import lombok.Data;
 
 import javax.annotation.Nullable;
@@ -156,9 +156,9 @@ public class EmassResponse {
     private String	sender_mail_name; //	발신자 이름
     private String	sender_mail_email; //	발신자 MAIL
 
-    private List<MailProperties> to;
-    private List<MailProperties> cc;
-    private List<MailProperties> bcc;
+    private List<MailProperties_Els> to;
+    private List<MailProperties_Els> cc;
+    private List<MailProperties_Els> bcc;
 
 
 

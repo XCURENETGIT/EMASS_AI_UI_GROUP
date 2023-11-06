@@ -14,7 +14,7 @@ import com.xcurenet.common.util.locale.Prop;
 import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.emass.message.newService.EmsSearchService;
-import com.xcurenet.emass.message.vo.message.EdcMessage;
+import com.xcurenet.emass.message.vo.emass.EmassIntegrated;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
@@ -39,7 +39,7 @@ public class EmsStatController {
     @Resource
     EmsSearchService emsSearchService;
 
-    @RequestMapping(value = "/test_getStatList.xcn")
+    @RequestMapping(value = "/getStatList.xcn")
     @Description("통계 리스트 조회")
     @AuditOperation(Operation.SEARCH)
     @ResponseBody
@@ -54,15 +54,14 @@ public class EmsStatController {
             searchParam.put(ElasticSearchCommon.SEARCH_TYPE, ElasticSearchCommon.SEARCH_TYPE_STATISTIC);
         }
         /* 계산 (조건문) */
-        EdcMessage edcMessage = setAlltotal(emsSearchService.getEmassMessage(searchParam, Common.getAdminId(request)));
+        EmassIntegrated emassIntegrated = setAlltotal(emsSearchService.getEmassMessage(searchParam, Common.getAdminId(request)));
 
-
-        return new XcnResponseVO(XcnRspCode.OK, edcMessage, edcMessage.getTotal());
+        return new XcnResponseVO(XcnRspCode.OK, emassIntegrated, emassIntegrated.getTotal());
     }
 
 
 
-    @RequestMapping(value = "/test_getStatDetailList.xcn")
+    @RequestMapping(value = "/getStatDetailList.xcn")
     @Description("통계 리스트 상세 조회")
     @AuditOperation(Operation.SEARCH)
     @ResponseBody
@@ -78,9 +77,9 @@ public class EmsStatController {
         }
         /*############################################################################*/
 
-        EdcMessage edcMessage = emsSearchService.getEmassMessage(searchParam, Common.getAdminId(request), null, null);
+        EmassIntegrated emassIntegrated = emsSearchService.getEmassMessage(searchParam, Common.getAdminId(request), null, null);
 
-        return new XcnResponseVO(XcnRspCode.OK, edcMessage, edcMessage.getTotal());
+        return new XcnResponseVO(XcnRspCode.OK,emassIntegrated, emassIntegrated.getTotal());
     }
 
 
@@ -89,9 +88,9 @@ public class EmsStatController {
 
     /*
      * Pivot Data 합계 구한 후 그 결과를
-     * edcMessage 의 Pivot Data 로 추가
+     * EmassIntegrated 의 Pivot Data 로 추가
      */
-    private EdcMessage setAlltotal(EdcMessage edcMessage) {
+    private EmassIntegrated setAlltotal(EmassIntegrated edcMessage) {
         List<Map<String, Object>> resultData = edcMessage.getPivotData();
         Map<String, Object> totalItem = new HashMap<>();
         long allTotal = 0;

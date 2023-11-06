@@ -16,7 +16,7 @@ import com.xcurenet.config.service.ConfigAdminService;
 import com.xcurenet.emass.adminFolder.service.AdminFolderService;
 import com.xcurenet.emass.message.component.SolrCreateQuery;
 import com.xcurenet.emass.message.newService.EmsSearchService;
-import com.xcurenet.emass.message.vo.message.EdcMessage;
+import com.xcurenet.emass.message.vo.emass.EmassIntegrated;
 import com.xcurenet.emass.searchLog.service.SearchLogService;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
@@ -54,7 +54,7 @@ public class EmsSearchController {
 	private ConfigAdminService configAdminService;
 
 
-	@RequestMapping(value = "/test_getList.xcn")
+	@RequestMapping(value = "/getList.xcn")
 	@Description("메시지 검색")
 	@AuditOperation(Operation.SEARCH)
 	@ResponseBody
@@ -70,8 +70,8 @@ public class EmsSearchController {
 		}
 		/*############################################################################*/
 
-		EdcMessage edcMessage = emsSearchService.getEmassMessage(searchParam,Common.getAdminId(session));
-		return new XcnResponseVO(XcnRspCode.OK, edcMessage, edcMessage.getTotal());
+		EmassIntegrated emassIntegrated = emsSearchService.getEmassMessage(searchParam,Common.getAdminId(session));
+		return new XcnResponseVO(XcnRspCode.OK, emassIntegrated, emassIntegrated.getTotal());
 
 	}
 
@@ -210,7 +210,7 @@ public class EmsSearchController {
 
 
 
-	@RequestMapping(value = "/test_getHighlightStr.xcn")
+	@RequestMapping(value = "/getHighlightStr.xcn")
 	@Description("solr 하일라이팅 검색어 생성")
 	@ResponseBody
 	public XcnResponseVO getHighlightStr(final HttpServletRequest request, final HttpSession session) throws Exception {
@@ -226,7 +226,7 @@ public class EmsSearchController {
 
 	}
 
-	@RequestMapping(value = "/test_getQuery.xcn")
+	@RequestMapping(value = "/getQuery.xcn")
 	@Description("EDC Solr 메시지 검색")
 	@ResponseBody
 	public XcnResponseVO getQuery(final HttpServletRequest request, final HttpSession session) throws Exception {
