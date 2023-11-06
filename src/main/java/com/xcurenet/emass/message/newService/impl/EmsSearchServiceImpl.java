@@ -159,7 +159,7 @@ public class EmsSearchServiceImpl implements EmsSearchService {
         searchSourceBuilder = elsSearchQueryUtils.initCollectionSearchSource(searchParam);
         SearchRequest searchRequest = new SearchRequest(elsSearchQueryUtils.getElasticSearchParam().getIndices()).source(searchSourceBuilder);
         SearchResponse searchResponse = getList(searchRequest);
-        return new MessengerEdcGroupVO(searchResponse);
+        return new MessengerEdcGroupVO(searchResponse,adminId,false,false);
 
     }
 

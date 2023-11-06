@@ -19,6 +19,7 @@ import com.xcurenet.emass.message.newService.EmsSearchService;
 import com.xcurenet.emass.message.service.*;
 import com.xcurenet.emass.message.service.impl.SolrEdcServiceImpl;
 import com.xcurenet.emass.message.vo.emass.EmassIntegrated;
+import com.xcurenet.emass.message.vo.emass.els.EmassMessenger;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -127,9 +128,9 @@ public class MessengerController {
 		return new XcnResponseVO(XcnRspCode.OK, solrEdcGroupVO, solrEdcGroupVO.getNumFound());
 	}
 
-	public List<MessengerGroupVO> setCount(List<MessengerGroupVO> groups, String adminId) throws IOException, SolrServerException {
+	public List<EmassMessenger> setCount(List<EmassMessenger> groups, String adminId) throws IOException, SolrServerException {
 		List<String> xrootmtrs = new ArrayList<>();
-		for (MessengerGroupVO group : groups) {
+		for (EmassMessenger group : groups) {
 			xrootmtrs.add("\"" + group.getXrootmtr() + "\"");
 		}
 		if (xrootmtrs.size() == 0) return groups;
@@ -137,7 +138,7 @@ public class MessengerController {
 		Map<String, Long> allCount = getAllCount(xrootmtrs);
 		Map<String, Long> unReadCount = getUnReadCount(xrootmtrs, adminId);
 
-		for (MessengerGroupVO group : groups) {
+		for (EmassMessenger group : groups) {
 			group.setMsg_cnt(Common.nvn(allCount.get(group.getXrootmtr())));
 			group.setUnread_cnt(Common.nvn(unReadCount.get(group.getXrootmtr())));
 		}
@@ -179,8 +180,8 @@ public class MessengerController {
 
 		Map<String, Long> cnt = new HashMap<>();
 		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, adminId);
-		List<MessengerGroupVO> groups = solrEdcGroupVO.getGroups();
-		for (MessengerGroupVO group : groups) {
+		List<EmassMessenger> groups = solrEdcGroupVO.getGroups();
+		for (EmassMessenger group : groups) {
 			cnt.put(group.getXrootmtr(), group.getMsg_cnt());
 		}
 		return cnt;
@@ -674,14 +675,14 @@ public class MessengerController {
 		header.add(getXlsxHeader("content", Prop.propFormat("eikon.msg.chatContents", locale), "750", "left", "LINK"));
 
 		JSONArray data = new JSONArray();
-		List<MessengerGroupVO> list = groups.getGroups();
+		List<EmassMessenger> list = groups.getGroups();
 		if (list != null) {
-			for (MessengerGroupVO item : list) {
+			for (EmassMessenger item : list) {
 				JSONObject dataObj = new JSONObject();
 				dataObj.put("sender", item.getTitle());
 				dataObj.put("ctime", item.getCtime());
 				dataObj.put("content", item.getMessage());
-				if (link && Common.isEquals(item.getAttached(), "Y")) {
+				if (link && Common.isEquals(item.isAttached(), "Y")) {
 					dataObj.put("content_LINK", Common.makeFilepath("attachs", item.getMsgid()));
 				}
 				data.add(dataObj);
@@ -758,11 +759,11 @@ public class MessengerController {
 		}
 	}
 
-	public String getGroupBody(List<MessengerGroupVO> data, String rootmtr, Locale locale) throws Exception {
+	public String getGroupBody(List<EmassMessenger> data, String rootmtr, Locale locale) throws Exception {
 		StringBuffer _sb = new StringBuffer();
 		_sb.append("<table class=\"g_request\"><colgroup><col width=\"120\"><col width=\"*\"><col width=\"70\"></colgroup><tbody>").append(EMPTY_LINE);
 		String tempDay = "";
-		for (MessengerGroupVO item : data) {
+		for (EmassMessenger item : data) {
 			String day = DateTime.parse(item.getCtime(), yyyyMMddHHmmss2).toString(yyyyMMdd);
 			String time = DateTime.parse(item.getCtime(), yyyyMMddHHmmss2).toString(HHmmss);
 			if (Common.isNotEquals(day, tempDay)) {
@@ -797,10 +798,10 @@ public class MessengerController {
 	}
 
 	private void inputAttach(ArchiveOutputStream os, MessengerEdcGroupVO groups) throws Exception {
-		List<MessengerGroupVO> list = groups.getGroups();
+		List<EmassMessenger> list = groups.getGroups();
 		if (list != null) {
 			EmsAttachDownload attachDown = new EmsAttachDownload();
-			for (MessengerGroupVO item : list) {
+			for (EmassMessenger item : list) {
 				List<EmsAttachVO> attachs = emsMessageService.getEmassAttachInfo4Down(item.getMsgid(), null);
 				for (EmsAttachVO attach : attachs) {
 					InputStream in = null;
@@ -887,9 +888,9 @@ public class MessengerController {
 
 				_sb.append(Common.EMPTY_LINE);
 				_sb.append("<" + Prop.propFormat("eikon.msg.chatContents", locale) + ">").append(Common.EMPTY_LINE);
-				List<MessengerGroupVO> list = groups.getGroups();
+				List<EmassMessenger> list = groups.getGroups();
 				if (list != null) {
-					for (MessengerGroupVO item : list) {
+					for (EmassMessenger item : list) {
 						_sb.append(String.format("[%s] [%s] %s", item.getTitle(), item.getCtime(), item.getMessage())).append(Common.EMPTY_LINE);
 					}
 				}

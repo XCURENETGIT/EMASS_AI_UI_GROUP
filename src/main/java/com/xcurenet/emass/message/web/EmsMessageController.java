@@ -1,49 +1,5 @@
 package com.xcurenet.emass.message.web;
 
-import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
-import javax.annotation.Resource;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import com.xcurenet.minio.MinioFileAdapter;
-import org.apache.catalina.connector.ClientAbortException;
-import org.apache.commons.compress.archivers.ArchiveOutputStream;
-import org.apache.commons.compress.archivers.ArchiveStreamFactory;
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
-import org.apache.commons.io.IOUtils;
-import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrQuery.SortClause;
-import org.apache.solr.client.solrj.SolrServerException;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Description;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.xcurenet.annotations.AuditMenu;
 import com.xcurenet.annotations.AuditOperation;
 import com.xcurenet.annotations.AuditParentMenu;
@@ -65,32 +21,47 @@ import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.emass.consent.web.ConsentFileDownload;
 import com.xcurenet.emass.consent.web.ConsentFileVO;
 import com.xcurenet.emass.message.component.SolrCreateQuery;
-import com.xcurenet.emass.message.service.DownloadBatchService;
-import com.xcurenet.emass.message.service.EmsAttachVO;
-import com.xcurenet.emass.message.service.EmsBodyType;
-import com.xcurenet.emass.message.service.EmsBodyVO;
-import com.xcurenet.emass.message.service.EmsCreateMessage;
-import com.xcurenet.emass.message.service.EmsHeaderVO;
-import com.xcurenet.emass.message.service.EmsMessageService;
-import com.xcurenet.emass.message.service.EmsMessageVO;
-import com.xcurenet.emass.message.service.EmsMlFeedbackVO;
-import com.xcurenet.emass.message.service.EmsReDefined;
-import com.xcurenet.emass.message.service.EmsRecvVO;
-import com.xcurenet.emass.message.service.EmsSearchKeywordVO;
-import com.xcurenet.emass.message.service.MessengerEdcGroupVO;
-import com.xcurenet.emass.message.service.MessengerGroupUserVO;
-import com.xcurenet.emass.message.service.MessengerGroupVO;
-import com.xcurenet.emass.message.service.SolrCheckedService;
-import com.xcurenet.emass.message.service.SolrCheckedVO;
-import com.xcurenet.emass.message.service.SolrEdcMessageVO;
-import com.xcurenet.emass.message.service.SolrEdcService;
-import com.xcurenet.emass.message.service.SolrEdcVO;
-
+import com.xcurenet.emass.message.service.*;
+import com.xcurenet.emass.message.vo.emass.els.EmassMessenger;
+import com.xcurenet.minio.MinioFileAdapter;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 import net.sf.json.util.JSONUtils;
+import org.apache.catalina.connector.ClientAbortException;
+import org.apache.commons.compress.archivers.ArchiveOutputStream;
+import org.apache.commons.compress.archivers.ArchiveStreamFactory;
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.io.IOUtils;
+import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.SolrQuery.SortClause;
+import org.apache.solr.client.solrj.SolrServerException;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Description;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 @Controller
 @AuditParentMenu(ParentMenu.DATA_MONITOR)
@@ -209,7 +180,7 @@ public class EmsMessageController {
 			} else {
 				Locale locale = Common.getLocale(request.getSession());
 				MessengerEdcGroupVO groups = messengerController.getMessengerMsgTotal(request);
-				List<MessengerGroupVO> list = groups.getGroups();
+				List<EmassMessenger> list = groups.getGroups();
 				emsBodyStr = getGroupStyle() + messengerController.getGroupBody(list, xRootMtr, locale);
 			}
 			if (Common.isNotEmpty(emsBodyStr)) {
@@ -289,7 +260,7 @@ public class EmsMessageController {
 			} else {
 				Locale locale = Common.getLocale(request.getSession());
 				MessengerEdcGroupVO groups = messengerController.getMessengerMsgTotal(request);
-				List<MessengerGroupVO> list = groups.getGroups();
+				List<EmassMessenger> list = groups.getGroups();
 				emsBodyStr = getGroupStyle() + messengerController.getGroupBody(list, xRootMtr, locale);
 			}
 			if (Common.isNotEmpty(emsBodyStr)) {
@@ -1545,7 +1516,7 @@ public class EmsMessageController {
 
 			MessengerEdcGroupVO groups = messengerController.getMessengerMsgTotal(request);
 			MessengerGroupUserVO users = messengerController.getMessengerGroupUserList(request, 30000);
-			List<MessengerGroupVO> list = groups.getGroups();
+			List<EmassMessenger> list = groups.getGroups();
 
 			String body = messengerController.getGroupBody(list, xRootMtr, locale);
 

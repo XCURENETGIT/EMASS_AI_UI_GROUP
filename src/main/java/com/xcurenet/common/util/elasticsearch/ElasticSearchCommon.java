@@ -121,7 +121,7 @@ public class ElasticSearchCommon {
 
     //body
     public static String[] SEARCH_FIELD = new String[]{
-            "allofus", "attach", "attachcnt",
+            "allofus", "attach", "attachcnt","body",
             "attachexistcnt", "ctime",
             "direction", "direction_svc", "filePath",
             "html", "http", "kwd_info", "ltime",
