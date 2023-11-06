@@ -67,7 +67,7 @@ public class SolrEdcController {
 	@Autowired
 	MongoUtil mongoUtil;
 
-	@RequestMapping(value = "/test_auto.xcn")
+	@RequestMapping(value = "/auto.xcn")
 	@Description("EDC Solr 메시지 검색")
 	@ResponseBody
 	public XcnResponseVO auto(final HttpServletRequest request, final HttpSession session) throws Exception {
@@ -95,7 +95,7 @@ public class SolrEdcController {
 		return new XcnResponseVO(XcnRspCode.OK, facet, facet.size());
 	}
 
-	@RequestMapping(value = "/test_getList.xcn")
+	@RequestMapping(value = "/getList.xcn")
 	@Description("EDC Solr 메시지 검색")
 	@AuditOperation(Operation.SEARCH)
 	@ResponseBody
@@ -200,7 +200,7 @@ public class SolrEdcController {
 		}
 	}
 
-	@RequestMapping(value = "/test_getListRecommend.xcn")
+	@RequestMapping(value = "/getListRecommend.xcn")
 	@Description("EDC Solr 유사문서 추천 검색")
 	@AuditOperation(Operation.SEARCH)
 	@ResponseBody
@@ -302,7 +302,7 @@ public class SolrEdcController {
 
 
 
-	@RequestMapping(value = "/test_getSolrHighlightStr.xcn")
+	@RequestMapping(value = "/getSolrHighlightStr.xcn")
 	@Description("solr 하일라이팅 검색어 생성")
 	@ResponseBody
 	public XcnResponseVO getSolrHighlightStr(final HttpServletRequest request, final HttpSession session) throws Exception {
@@ -318,7 +318,7 @@ public class SolrEdcController {
 
 	}
 
-	@RequestMapping(value = "/test_getQuery.xcn")
+	@RequestMapping(value = "/getQuery.xcn")
 	@Description("EDC Solr 메시지 검색")
 	@ResponseBody
 	public XcnResponseVO getQuery(final HttpServletRequest request, final HttpSession session) throws Exception {
