@@ -28,7 +28,7 @@ public class Emass {
    private String  allofus;                //수신자 소속여부
    private String  directionSvc;           //내/외부 서비스타입
    private String  direction;              //Inbound, Outbound
-   private String  xrootMtr;               //RootMTR (마이싱글)
+   private String  xrootmtr;               //RootMTR (마이싱글)
    private String  xmsgKey;                //x-msgkey
    private String  filePath;               //파일경로
    private String  opinion;                //상신의견(EP)
@@ -45,6 +45,7 @@ public class Emass {
    private String  siteCd;                 //
    private String  xmsgAttr;               //
    private String  epHeader;               //
+
 
    private BodyVo_Els body;
    private NetworkVo_Els network;

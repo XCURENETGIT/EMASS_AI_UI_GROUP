@@ -123,18 +123,19 @@ public class MessengerEdcGroupVO {
 		if(emass.getUser() != null) {
 			emassMessenger.setUser_name(emass.getUser().getName());
 			emassMessenger.setUsr_id(emass.getUser().getId());
-			emassMessenger.setDeptNm(emass.getUser().getDeptNm());
-			emassMessenger.setJikgubNm(emass.getUser().getJikgubNm());
+			emassMessenger.setDeptNm(emass.getUser().getDeptnm());
+			emassMessenger.setJikgubNm(emass.getUser().getJikgubnm());
 		}
 
 		if(emass.getBody() != null) {
 			emassMessenger.setBody_snippet(emass.getBody().getSnippet());
+			emassMessenger.setBody_text(emass.getBody().getText());
 		}
 		if(emass.getMail() != null) {
 			emassMessenger.setSender(emass.getMail().getSender().getName());
 		}
 		if(emass.getNetwork() != null) {
-			emassMessenger.setSrcip(emass.getNetwork().getSrcIp());
+			emassMessenger.setSrcip(emass.getNetwork().getSrcip());
 		}
 
 
@@ -159,7 +160,7 @@ public class MessengerEdcGroupVO {
 			emassMessenger.setAttachname(emass.getAttach().stream().map(m -> m.getName()).collect(Collectors.joining(",")));
 		}
 
-		emassMessenger.setXrootmtr(emass.getXrootMtr());
+		emassMessenger.setXrootmtr(emass.getXrootmtr());
 
 		int total_recvs = 0;
 		if (emass.getMail() != null){
@@ -172,23 +173,24 @@ public class MessengerEdcGroupVO {
 		}
 
 		emassMessenger.setMessage(getMessage(emass));
-		emassMessenger.setTitle(emass.getXmsgAttr());
+		emassMessenger.setTitle(emass.getXrootmtr());
 
 		if(emass.getUser() != null) {
 			emassMessenger.setUser_name(emass.getUser().getName());
 			emassMessenger.setUsr_id(emass.getUser().getId());
-			emassMessenger.setDeptNm(emass.getUser().getDeptNm());
-			emassMessenger.setJikgubNm(emass.getUser().getJikgubNm());
+			emassMessenger.setDeptNm(emass.getUser().getDeptnm());
+			emassMessenger.setJikgubNm(emass.getUser().getJikgubnm());
 		}
 
 		if(emass.getBody() != null) {
 			emassMessenger.setBody_snippet(emass.getBody().getSnippet());
+			emassMessenger.setBody_text(emass.getBody().getText());
 		}
 		if(emass.getMail() != null) {
 			emassMessenger.setSender(emass.getMail().getSender().getName());
 		}
 		if(emass.getNetwork() != null) {
-			emassMessenger.setSrcip(emass.getNetwork().getSrcIp());
+			emassMessenger.setSrcip(emass.getNetwork().getSrcip());
 		}
 
 		return emassMessenger;
@@ -246,7 +248,7 @@ public class MessengerEdcGroupVO {
 	private static String getSender(Emass emass) {
 		//if (Common.isNotEmpty(edc.getName())) return edc.getName();
 		if (Common.isNotEmpty(emass.getMail())) return emass.getMail().getSender().getName();
-		else if(Common.isNotEmpty(emass.getNetwork())) return emass.getNetwork().getSrcIp();
+		else if(Common.isNotEmpty(emass.getNetwork())) return emass.getNetwork().getSrcip();
 		else return null;
 	}
 
