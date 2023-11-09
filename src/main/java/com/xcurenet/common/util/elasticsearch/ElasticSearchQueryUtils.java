@@ -147,9 +147,6 @@ public class ElasticSearchQueryUtils {
             idx++;
         }
         makeParentheses();
-//        this.queryBuffer.insert(0,ElasticSearchCommon.OPEN_PARENTHESES);
-//        this.queryBuffer.insert(queryBuffer.length(),ElasticSearchCommon.CLOSE_PARENTHESES);
-
     }
 
     /***
@@ -233,7 +230,7 @@ public class ElasticSearchQueryUtils {
     }
 
     /***
-     *  현재 String 에 괄호를 만든다.
+     *  현재 StringBuilder 에 괄호를 만든다.
      */
     private StringBuilder makeParentheses(StringBuilder stringBuilder) {
         stringBuilder.insert(0,ElasticSearchCommon.OPEN_PARENTHESES);
@@ -1485,13 +1482,13 @@ public class ElasticSearchQueryUtils {
 
 
         /*################## 검색조건 ####################*/
-        /* 검색 영역 */
+        /* 검색 영역 */  // 쿼리 생성 예) (attach.name:(*:*) OR attach.text:(*:*))
         if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("searchField"))) {
             this.queryBuffer.setLength(0);
             String[] fields = Common.nvl(elasticSearchParam.getSearchParameters().get("searchField")).split(",");
             setSearchField(fields,searchQuery);
         }
-        /* 서비스 타입 값 지정*/
+        /* 서비스 타입 값 지정*/ // 생성 예) AND (service.svc:(MP3) OR (MIM) OR (WKR))
         if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("serviceType"))) {
             String[] serviceTypes = Common.nvl(elasticSearchParam.getSearchParameters().get("serviceType")).split(",");
             addQueryGroup(ElasticSearchCommon.AND_QUERY,ElasticSearchCommon.SERVICE,makeParentheses(serviceTypes));
