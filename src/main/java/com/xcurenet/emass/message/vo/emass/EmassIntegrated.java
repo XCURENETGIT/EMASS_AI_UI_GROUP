@@ -170,6 +170,7 @@ public class EmassIntegrated {
             String xTypeFlag = (!Common.isEmpty(ElasticSearchCommon.XFIELD.get(xField))) ? ElasticSearchCommon.XFIELD.get(xField) : xField;
             String yField = Common.nvl(search_yAxis);
 
+
             /* Date 분류일 경우 #############################################################*/
             if (ElasticSearchCommon.CTIME.equals(xTypeFlag)) {
                 Map<String, Integer> keys = new HashMap(); // 피벗 헤더 관련
@@ -217,17 +218,47 @@ public class EmassIntegrated {
                 keyList.sort(Map.Entry.comparingByValue());
                 List<String> headerList = keyList.stream().map( k -> k.getKey()).collect(Collectors.toList());
                 this.pivotHeader = headerList;
+            }
+            else if(ElasticSearchCommon.USER_ID.equals(xTypeFlag) && ElasticSearchCommon.PI.equals(yField)  ){
+               // pi_code 패턴 관련
+                Map<String, Object> keys = new HashMap();
+                Terms results = aggregations.get(xTypeFlag);
+                for (Terms.Bucket bucket : results.getBuckets()) {
+                    if (Common.isEmpty(bucket.getAggregations().get(yField))) continue;
+                         String rowName = Common.nvl(bucket.getKey()); // main aggregations Key는 유저 아이디
+                         Terms argments = bucket.getAggregations().get(yField);
+                    for (Terms.Bucket arg : argments.getBuckets()) {
+                        Map<String, Object> item = new HashMap();
+                        keys.put(ElasticSearchCommon.PI_PREFIX.concat(Common.nvl(arg.getKey())), 0); // pivot header 추가
+                        item.put("rowName",rowName);
+                        item.put("rowKey",Common.nvl(bucket.getKey()));
+                        item.put(ElasticSearchCommon.PI_PREFIX.concat(Common.nvl(arg.getKey())), arg.getDocCount());
+                        /* PIVOT XAxis */
+                        result.add(item);
+                    }
+                }
+                List<String> keyList = new ArrayList(keys.keySet());
+                Collections.sort(keyList);
+                this.pivotHeader = keyList;
 
-            } else { /* 시간 분류 외 (사업장,부서 등등) #############################################################*/
+            }
+            else { /* 시간 분류 외 (사업장,부서 등등) #############################################################*/
                 Map<String, Object> keys = new HashMap(); // 피벗 헤더 관련
                 Terms results = aggregations.get(xTypeFlag);
                 for (Terms.Bucket bucket : results.getBuckets()) {
-                    localList = new ArrayList<>();
                     if (Common.isEmpty(bucket.getAggregations().get(yField))) continue;
                     Terms argments = bucket.getAggregations().get(yField);
                     keys.put(Common.nvl(bucket.getKey()), 0); // pivot header 추가
-                    findBuckets(argments.getBuckets()); // 모든 depth buckets 조회
-                    result.addAll(localList);
+                    for (Terms.Bucket arg : argments.getBuckets()) {
+                        Map<String, Object> item = new HashMap();
+//                        if(Common.isOrEquals(bucket, "user_str", "sender_str", "userid")){
+//                            item.put("rowName", Config.getUserName(Common.nvl(arg.getKey())));
+//                        }
+                        item.put("rowKey", arg.getKey());
+                        item.put(Common.nvl(bucket.getKey()), arg.getDocCount());
+                        /* PIVOT XAxis */
+                        result.add(item);
+                    }
                 }
                 List<String> keyList = new ArrayList(keys.keySet());
                 Collections.sort(keyList);
@@ -257,7 +288,6 @@ public class EmassIntegrated {
                     tempMap.putAll(summaryMap(oldMap, tempMap));
                     rowTotal = tempMap.values().stream().collect(Collectors.summingInt(v1 -> Common.nvz(v1)));  // 합계 토탈
                     tempMap.put("total", rowTotal);
-
                     /* total 계산 */
                     pivotDataList.get(target).putAll(tempMap);
                     continue;
@@ -273,26 +303,12 @@ public class EmassIntegrated {
             }
 
             this.pivotData = pivotDataList;
+            this.localList = null;
         /*  ###################################################################################*/
 
 
     }
 
-    /***
-     * 모든 하위 buckets 찾기
-     */
-    public void findBuckets(List<? extends Terms.Bucket>  argments){
-        if(argments != null ) return;
-        for (Terms.Bucket arg : argments) {
-            Map<String, Object> item = new HashMap();
-            item.put("rowKey", arg.getKey());
-            item.put(Common.nvl(arg.getKey()), arg.getDocCount());
-            /* PIVOT XAxis */
-            localList.add(item);
-        }
-        findBuckets(argments);
-
-    }
 
     public Map<String,Object> checkRowKey(List<Map<String,Object>> list,String rowKey){
         Map<String,Object> result = null;

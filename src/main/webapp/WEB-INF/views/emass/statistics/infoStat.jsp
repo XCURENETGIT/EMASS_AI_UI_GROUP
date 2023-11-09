@@ -285,7 +285,7 @@
 		var selectedTabIdx = $('.listChart').find('.active').index();
 		var grid = window.__grids[selectedTabIdx];
 		var msgid = grid.getValue(row, 'msgid');
-		if(grid.getValue(row, 'pi_total') == '') return;
+		if(grid.getValue(row, 'total') == '') return;
 
 		var url    = '<c:url value="/ems/regexpInfoPop.do?msgId='+msgid+'"/>';
 	return fnOpenWindow(url, 'regexpInfoPop', 1100, 370, 'resize');
@@ -563,7 +563,7 @@ function fileInfoViewer( row ){
     if(grid1.getValue(row, 'rowName') != '')  return grid1.getValue(row, 'rowName') + '&lt;' + value + '&gt;';
     return value;
   });
-  grid1.colAdd('pi_total', '<s:message code="bodyview.total"/>', 40, 'right', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
+  grid1.colAdd('total', '<s:message code="bodyview.total"/>', 40, 'right', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
     if ( value != undefined ) return value.comma();
     else return '';
   });
@@ -597,9 +597,9 @@ function fileInfoViewer( row ){
   };
   grid1.onClick = function() {
     initProgressbar();
-    if (grid1.Col == grid1.ColIndex('val')||grid1.Col == grid1.ColIndex('pi_total')) {
+    if (grid1.Col == grid1.ColIndex('val')||grid1.Col == grid1.ColIndex('total')) {
       var data = grid1.getRowData(grid1.Row);
-      makeNetwork(grid1.getValue(grid1.Row, 'val'),'',grid1.getValue(grid1.Row, 'pi_total'));
+      makeNetwork(grid1.getValue(grid1.Row, 'val'),'',grid1.getValue(grid1.Row, 'total'));
     }if(grid1.Col == grid1.ColIndex('pi_SN')){
       makeNetwork(grid1.getValue(grid1.Row, 'val'),'SN',grid1.getValue(grid1.Row, 'pi_SN'));
     }if(grid1.Col == grid1.ColIndex('pi_CN')){
@@ -716,7 +716,7 @@ function fileInfoViewer( row ){
   grid2.colAdd('bodySizeStr', '<s:message code="condition.size.body"/>', 80, 'left', false, 'nomal', null, {sortField:'body_size'});
   grid2.colAdd('attachSizeStr', '<s:message code="condition.size.attach"/>', 80, 'left', false, 'nomal', null, {sortField:'attachSizeSort'});
   grid2.colAdd('kwds', '<s:message code="condition.keyword"/>', 120, 'left', false, 'nomal');
-  grid2.colAdd('pi_total', '<s:message code="condition.regexp"/>', 70, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
+  grid2.colAdd('total', '<s:message code="condition.regexp"/>', 70, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
     if (value == '0') return '';
     else return value.comma();
   });
@@ -747,7 +747,7 @@ function fileInfoViewer( row ){
       if(grid.getValue(grid.Row, 'cc') != '') userInfoViewer( grid.Row, 'cc');
     }else if (grid.Col == grid.ColIndex('bcc')) {
       if(grid.getValue(grid.Row, 'bcc') != '') userInfoViewer( grid.Row, 'bcc');
-    }else if(grid.Col == grid.ColIndex('pi_total')) {
+    }else if(grid.Col == grid.ColIndex('total')) {
       regexpInfoViewer(grid.Row);
     }else if(grid.Col == grid.ColIndex('referer_url')) {
       var referer_url = grid.getValue(grid.Row, 'referer_url');
@@ -785,8 +785,8 @@ function fileInfoViewer( row ){
     var sDate = $('#startdate').val().replaceAll("-","");
     var eDate = $('#enddate').val().replaceAll("-","");
     if(sDate > eDate) ui.alertMsg('<s:message code="consent.msg.timecheck"/>');
-    piCount_str :$('select[name=piCount] option:selected').text();
-    piCount : $('select[name=piCount]').val();
+    var piCount_str = $('select[name=piCount] option:selected').text();
+    var piCount = $('select[name=piCount]').val();
 
 
     $('#listTab b').remove();
@@ -812,12 +812,12 @@ function fileInfoViewer( row ){
         if(data.search_xAxis != null) $('#searched_xAxis').val(data.search_xAxis);
         if(data.search_startDate != null) $('#searched_startDate').val(data.search_startDate);
         if(data.search_endDate != null) $('#searched_endDate').val(data.search_endDate);
-/*        grid1.setData(data);
+         grid1.setData(data.pivotData);
         $('#statlist_cnt').html('<s:message code="common.msg.finish_query"/>:'+grid1.data.length);
         if ( grid1.loadingPage == 0 ) grid1.Select(-1,-1);
         $('#listTab').append("<b> ["+piCount_str+"] 기준</b>");
 		$("#listTab").data( "value",piCount);
-        $('.piCountNum').attr('piCountNum',piCount);*/
+        $('.piCountNum').attr('piCountNum',piCount);
         searchFlag = false;
       },
       error : function(status, message) {
@@ -878,10 +878,10 @@ function fileInfoViewer( row ){
     var result = result.substring(0, 4) + "-" + result.substring(4, 6) + "-" + result.substring(6, 8);
     return result;
   }
-  function makeNetwork(value,type,pi_total){
+  function makeNetwork(value,type,total){
     var user_str = value;
     var type = type;
-    var pi_total = pi_total;
+    var total = total;
     var piCount = $('.piCountNum').attr('piCountNum');
 
     let data = {
@@ -900,7 +900,7 @@ function fileInfoViewer( row ){
         grid2.setData(data);
         var nodes= [];
         var edges = [];
-        if(pi_total==0){
+        if(total==0){
           nodes.push({ id: 'noneData', font: { multi: 'html'}, title: '<s:message code="analysis.infostat.notleak"/>', label: '<s:message code="analysis.infostat.notleak"/>',group:'noneData'});
         }
 
@@ -940,7 +940,7 @@ function fileInfoViewer( row ){
             for(var x=0 ; x < data.length ; x++) {
               if(nodeLv1[i] == data[x].user_str && data[x][nodeLv2[j]] > 0) sum += data[x][nodeLv2[j]];
             }
-            if(sum > 0) edges.push({from: nodeLv1[i], to: nodeLv2[j],value:(sum)/(pi_total*4) ,arrows:'to',color:{color:'#3FB168'}, font: { multi: true }, label: sum});
+            if(sum > 0) edges.push({from: nodeLv1[i], to: nodeLv2[j],value:(sum)/(total*4) ,arrows:'to',color:{color:'#3FB168'}, font: { multi: true }, label: sum});
           }
         }
 
@@ -950,7 +950,7 @@ function fileInfoViewer( row ){
             for(var x=0 ; x < data.length ; x++) {
               if(data[x][nodeLv2[i]] > 0 && data[x].ctime_yyyymmdd == nodeLv3[j]) sum += data[x][nodeLv2[i]];
             }
-            if(sum > 0) edges.push({from: nodeLv2[i], to: nodeLv3[j],arrows:'to',value:(sum)/(pi_total*4), color:{color:'#2A6727'},font: { multi: true}, label: sum});
+            if(sum > 0) edges.push({from: nodeLv2[i], to: nodeLv3[j],arrows:'to',value:(sum)/(total*4), color:{color:'#2A6727'},font: { multi: true}, label: sum});
           }
         }
 
@@ -964,7 +964,7 @@ function fileInfoViewer( row ){
                 }
               }
             }
-            if(sum > 0) edges.push({from: nodeLv3[i], to: nodeLv4[j],arrows:'to',value:(sum)/(pi_total*4), font: { multi: true },color:{color:'#808000'}, label: sum});
+            if(sum > 0) edges.push({from: nodeLv3[i], to: nodeLv4[j],arrows:'to',value:(sum)/(total*4), font: { multi: true },color:{color:'#808000'}, label: sum});
           }
         }
 
@@ -978,7 +978,7 @@ function fileInfoViewer( row ){
                 }
               }
             }
-            if(sum > 0) edges.push({from: nodeLv4[i], to: nodeLv5[j],arrows:'to',value:(sum)/(pi_total*4), font: { multi: true },color:{color:'#FFC000'}, label: sum});
+            if(sum > 0) edges.push({from: nodeLv4[i], to: nodeLv5[j],arrows:'to',value:(sum)/(total*4), font: { multi: true },color:{color:'#FFC000'}, label: sum});
           }
         }
         var container = document.getElementById('mynetwork');

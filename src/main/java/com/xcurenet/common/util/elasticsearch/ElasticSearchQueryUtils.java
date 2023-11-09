@@ -1469,12 +1469,6 @@ public class ElasticSearchQueryUtils {
             setyField(Common.nvl(ElasticSearchCommon.SERVICE_GROUP));
         }
 
-        if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("serviceType"))) {
-            setSearchQuery(Common.nvl(elasticSearchParam.getSearchParameters().get("serviceType")));
-        }else{
-            setSearchQuery(Common.nvl(ElasticSearchCommon.ALL_SEARCH));
-        }
-
 
         if(Common.isEmpty(elasticSearchParam.getSearchParameters().get("searchStr"))){
             setSearchQuery(Common.nvl(ElasticSearchCommon.ALL_SEARCH)); // 검색어 없을시 전체 검색어 입력

@@ -70,6 +70,12 @@ public class ElasticSearchCommon {
     public static final String DAY_WORK = "day.work";
     public static final String DIRECTION = "direction";
 
+
+    public static final String PI_PREFIX = "pi_";
+
+
+
+
     public static final String BUSICD = "busicd";
     public static final String IP_BUSICD = "ip_busicd";
     public static final String DEPTCD = "deptcd";
