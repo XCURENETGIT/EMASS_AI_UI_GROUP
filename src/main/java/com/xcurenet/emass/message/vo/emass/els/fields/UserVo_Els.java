@@ -21,9 +21,9 @@ public class UserVo_Els {
     private String	busiNm;	//사업장명
     private String	suborgCd;//	총괄코드
     private String	suborgNm;//	총괄명
-    private String	deptNm;	//부서명
+    private String	deptnm;	//부서명
     private String	deptCd;	//부서코드
-    private String	jikgubNm; //	직급명
+    private String	jikgubnm; //	직급명
     private String	jikgubCd; //	직급코드
     private String	ceo;     //	CEO 여부
     private boolean	inside;	//내부/외부 구분

@@ -145,7 +145,7 @@ public class EmsReDefined {
 			}
 
 			if(!Common.isEmpty(ems.getNetwork())) {
-				emassResponse.setNetwork_srcIp(ems.getNetwork().getSrcIp());
+				emassResponse.setNetwork_srcIp(ems.getNetwork().getSrcip());
 				emassResponse.setNetwork_srcPort(ems.getNetwork().getSrcPort());
 				emassResponse.setNetwork_dstIp(ems.getNetwork().getDstIp());
 				emassResponse.setNetwork_dstPort(ems.getNetwork().getDstPort());
@@ -198,7 +198,7 @@ public class EmsReDefined {
 			emassResponse.setCtime(reCtime(ems.getCtime()));
 			emassResponse.setXmsgAttr(ems.getXmsgAttr());
 			emassResponse.setSubject(reSubject(ems));
-			emassResponse.setXrootMtr(ems.getXrootMtr());
+			emassResponse.setXrootMtr(ems.getXrootmtr());
 			emassResponse.setXmsgKey(ems.getXmsgKey());
 			emassResponse.setFilePath(ems.getFilePath());
 			emassResponse.setOpinion(ems.getOpinion());
@@ -417,7 +417,7 @@ public class EmsReDefined {
 		MessageVo msg = new MessageVo();
 		msg.setSUBJECT(Common.nvl(emass.getSubject()));
 		msg.setSVC(Common.nvl(emass.getService().getSvc()));
-		msg.setSRCIP(Common.nvl(emass.getNetwork().getSrcIp()));
+		msg.setSRCIP(Common.nvl(emass.getNetwork().getSrcip()));
 		msg.setDSTIP(Common.nvl(emass.getNetwork().getDstIp()));
 		msg.setHOST(Common.nvl(emass.getHttp().getHost()));
 		msg.setPATH(Common.nvl(emass.getHttp().getPath()));
@@ -431,7 +431,7 @@ public class EmsReDefined {
 			attachInfo.add(attachInfoProperties);
 		}
 		msg.setATTACH_INFO(attachInfo);
-		msg.setXROOTMTR(Common.nvl(emass.getXrootMtr()));
+		msg.setXROOTMTR(Common.nvl(emass.getXrootmtr()));
 		msg.setPROTOCOL(Common.nvl(emass.getNetwork().getProtocol()));
 
 		return reSubject(msg);

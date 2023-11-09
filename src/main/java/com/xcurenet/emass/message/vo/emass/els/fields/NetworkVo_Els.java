@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Nullable
 public class NetworkVo_Els {
-       private String	  srcIp;  //	발신자 IP
+       private String	  srcip;  //	발신자 IP
        private int	      srcPort;  //	발신자 PORT
        private String	  dstIp;  //	목적지 IP
        private int	      dstPort;  //	목적지 PORT
