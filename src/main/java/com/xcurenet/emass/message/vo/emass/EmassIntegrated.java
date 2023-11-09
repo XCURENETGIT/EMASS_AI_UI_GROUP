@@ -50,7 +50,6 @@ public class EmassIntegrated {
     private String search_startDate;
     private String search_endDate;
 
-    private List localList = null;
 
     public EmassIntegrated() throws IOException {}
     public EmassIntegrated(final Map<String,Object> responseMap) throws IOException {
@@ -303,7 +302,6 @@ public class EmassIntegrated {
             }
 
             this.pivotData = pivotDataList;
-            this.localList = null;
         /*  ###################################################################################*/
 
 

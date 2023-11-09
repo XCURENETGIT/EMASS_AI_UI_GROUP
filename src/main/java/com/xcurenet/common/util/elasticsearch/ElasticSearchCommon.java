@@ -39,7 +39,7 @@ public class ElasticSearchCommon {
     public static final String SPECIAL_CHAR = "*";
     public static final String OR_QUERY  = "OR";
     public static final String AND_QUERY = "AND";
-    public static final String EXCEPT_QUERY = "NOT";
+    public static final String NOT_QUERY = "NOT";
 
 
     /* 검색 영역 */
@@ -67,12 +67,13 @@ public class ElasticSearchCommon {
     public static final String SERVICE_3 = "service.svc3";
     public static final String SERVICE_12 = "service.svc12";
 
+
     public static final String DAY_WORK = "day.work";
     public static final String DIRECTION = "direction";
 
-
     public static final String PI_PREFIX = "pi_";
 
+    public static final String[] RECEIVERS = {"mail.to.name","mail.cc.name","mail.bcc.name"};
 
 
 
@@ -81,7 +82,8 @@ public class ElasticSearchCommon {
     public static final String DEPTCD = "deptcd";
     public static final String IP_DEPTCD = "ip_deptcd";
     public static final String EPMSG_TYPE = "epmsg_type";
-    public static final String[] SENDER = {"sender_str", "sname", "srcip"};
+    public static final String[] SENDER = {"mail.sender.name", "network.srcip"};
+
     public static final String SENDER_UPPER = "sender_str";
     public static final String[] SENDER_NOTUPPER = {"sender", "sname", "srcip"};
     public static final String[] RECEIVER = {"recvs", "recvs_name", "dstip"};
@@ -103,7 +105,9 @@ public class ElasticSearchCommon {
     public static final String KEYWORD = "kwds";
     public static final String PI_TOTAL = "pi_total";
     public static final String PI = "pi.codes.code";
+
     public static final String USER_ID = "user.id";
+    public static final String USER_NAME = "user.name";
     public static final String USER_STR = "user_str";
     public static final String WORK = "work";
     public static final String DRM = "pi_DRM";
@@ -120,6 +124,7 @@ public class ElasticSearchCommon {
 
     public static final String JOIN_READ = " +{!join from=msgid fromIndex=checked to=msgid}id:%s";
     public static final String JOIN_UNREAD = " -{!join from=msgid fromIndex=checked to=msgid}id:%s";
+
 
     private static final String OCR_FIELD = " ocr_attach";
 

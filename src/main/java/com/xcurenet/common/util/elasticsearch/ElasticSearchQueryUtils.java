@@ -156,16 +156,15 @@ public class ElasticSearchQueryUtils {
      *
      * 쿼리 그룹 짓기 (검색영역,서비스 쿼리 등등..)
      */
-    public void addQueryGroup(String Type,String typeValues){
-        this.queryBuffer
-                .append(ElasticSearchCommon.SPACE)
-                .append(ElasticSearchCommon.AND_QUERY)
-                .append(ElasticSearchCommon.SPACE)
-                .append(Type)
+    public void addQueryGroup(String flag,String Type,String typeValues){
+        StringBuilder tempBuilder = new StringBuilder();
+                 tempBuilder.append(Type)
                 .append(ElasticSearchCommon.COLON)
                 .append(typeValues)
                 .append(ElasticSearchCommon.SPACE);
-        makeParentheses();
+        tempBuilder = makeParentheses(tempBuilder);
+        tempBuilder.insert(0,flag.concat(ElasticSearchCommon.SPACE));
+        this.queryBuffer.append(tempBuilder);
     }
 
 
@@ -173,18 +172,20 @@ public class ElasticSearchQueryUtils {
      *
      * 쿼리 그룹 짓기 (검색영역,서비스 쿼리 등등..)
      */
-    public void addQueryGroup(String[] Types,String typeValues){
+    public void addQueryGroup(String flag,String[] Types,String typeValues){
+        int idx = 0;
+        StringBuilder tempBuilder = new StringBuilder();
         for(String type : Types) {
-            this.queryBuffer
-                    .append(ElasticSearchCommon.SPACE)
-                    .append(ElasticSearchCommon.AND_QUERY)
-                    .append(ElasticSearchCommon.SPACE)
-                    .append(type)
+                    if(idx >= 1) tempBuilder.append(ElasticSearchCommon.OR_QUERY).append(ElasticSearchCommon.SPACE);
+                     tempBuilder.append(type)
                     .append(ElasticSearchCommon.COLON)
                     .append(typeValues)
                     .append(ElasticSearchCommon.SPACE);
+            idx++;
         }
-        makeParentheses();
+        tempBuilder = makeParentheses(tempBuilder);
+        tempBuilder.insert(0,flag.concat(ElasticSearchCommon.SPACE));
+        this.queryBuffer.append(tempBuilder);
     }
 
     /***
@@ -231,6 +232,14 @@ public class ElasticSearchQueryUtils {
         this.queryBuffer.insert(queryBuffer.length()-1,ElasticSearchCommon.CLOSE_PARENTHESES);
     }
 
+    /***
+     *  현재 String 에 괄호를 만든다.
+     */
+    private StringBuilder makeParentheses(StringBuilder stringBuilder) {
+        stringBuilder.insert(0,ElasticSearchCommon.OPEN_PARENTHESES);
+        stringBuilder.insert(stringBuilder.length()-1,ElasticSearchCommon.CLOSE_PARENTHESES);
+        return stringBuilder;
+    }
 
 //    /**
 //     * 서비스 그룹 쿼리
@@ -1465,11 +1474,6 @@ public class ElasticSearchQueryUtils {
 
 
 
-        if(!Common.isEmpty(ElasticSearchCommon.SERVICE_GROUP)) {
-            setyField(Common.nvl(ElasticSearchCommon.SERVICE_GROUP));
-        }
-
-
         if(Common.isEmpty(elasticSearchParam.getSearchParameters().get("searchStr"))){
             setSearchQuery(Common.nvl(ElasticSearchCommon.ALL_SEARCH)); // 검색어 없을시 전체 검색어 입력
         }else{
@@ -1490,22 +1494,59 @@ public class ElasticSearchQueryUtils {
         /* 서비스 타입 값 지정*/
         if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("serviceType"))) {
             String[] serviceTypes = Common.nvl(elasticSearchParam.getSearchParameters().get("serviceType")).split(",");
-            addQueryGroup(ElasticSearchCommon.SERVICE,makeParentheses(serviceTypes));
+            addQueryGroup(ElasticSearchCommon.AND_QUERY,ElasticSearchCommon.SERVICE,makeParentheses(serviceTypes));
         }
         /*############################################*/
+
         /*################## 시간 ####################*/
         /* 근무시간 */
         if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("ctimeWork"))) {
-            addQueryGroup(ElasticSearchCommon.DAY_WORK,makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("ctimeWork"))));
+            addQueryGroup(ElasticSearchCommon.AND_QUERY,ElasticSearchCommon.DAY_WORK,makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("ctimeWork"))));
         }
         /*############################################*/
+
         /*################## 사용자 ####################*/
+        // 수/발신 구분
         if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("receiveSend"))) {
-            addQueryGroup(ElasticSearchCommon.DIRECTION,makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("receiveSend"))));
+            addQueryGroup(ElasticSearchCommon.AND_QUERY,ElasticSearchCommon.DIRECTION,makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("receiveSend"))));
         }
+
+        //AND 발신자 검색
+        if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("senders"))) {
+            String[] senders = Common.nvl(elasticSearchParam.getSearchParameters().get("senders")).split(",");
+            addQueryGroup(ElasticSearchCommon.AND_QUERY,ElasticSearchCommon.SENDER,makeParentheses(senders));
+        }
+
+        //NOT 발신자 검색
+        if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("senders_not"))) {
+            String[] senders = Common.nvl(elasticSearchParam.getSearchParameters().get("senders_not")).split(",");
+            addQueryGroup(ElasticSearchCommon.NOT_QUERY,ElasticSearchCommon.SENDER,makeParentheses(senders));
+        }
+
+        //수신자 전체 검색 to,cc,bcc
+        if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("receivers"))) {
+            String[] receivers = ElasticSearchCommon.RECEIVERS;
+            addQueryGroup(ElasticSearchCommon.AND_QUERY,receivers,makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("receivers"))));
+        }
+
+        // 수신자 구분
+        if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("allOfus"))) {
+            String[] allOfuses = Common.nvl(elasticSearchParam.getSearchParameters().get("allOfus")).split(",");
+            addQueryGroup(ElasticSearchCommon.AND_QUERY,ElasticSearchCommon.ALLOFUS,makeParentheses(allOfuses));
+        }
+
+        // 사용자 그룹
+        // 관심 사용자 그룹
+
+
         /*################## 조직 ####################*/
+        // 사업장
+        // 부서
+        
         /*################## 기타 ####################*/
-        /*################## Detail Query ####################*/
+        
+        
+        /*################## Detail(고급) Query ####################*/
 
 
 

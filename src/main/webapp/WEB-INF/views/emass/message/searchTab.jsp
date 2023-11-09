@@ -291,15 +291,15 @@
                         <option value="IA">1) <s:message code="condition.allofus1"/></option>
                         <option value="EA">2) <s:message code="condition.allofus2"/></option>
                         <option value="PA">3) <s:message code="condition.allofus3"/></option>
-                        <option value="IA|EA">4) <s:message code="condition.allofus4"/></option>
-                        <option value="EA|PA">5) <s:message code="condition.allofus5"/></option>
-                        <option value="IA|PA">6) <s:message code="condition.allofus6"/></option>
-                        <option value="IA|IT">7) <s:message code="condition.allofus7"/></option>
-                        <option value="ET|EA">8) <s:message code="condition.allofus8"/></option>
-                        <option value="PT|PA">9) <s:message code="condition.allofus9"/></option>
-                        <option value="IA|ET|IT|EA">10) <s:message code="condition.allofus10"/></option>
-                        <option value="IA|IT|PT|PA">11) <s:message code="condition.allofus11"/></option>
-                        <option value="ET|EA|PT|PA">12) <s:message code="condition.allofus12"/></option>
+                        <option value="IA,EA">4) <s:message code="condition.allofus4"/></option>
+                        <option value="EA,PA">5) <s:message code="condition.allofus5"/></option>
+                        <option value="IA,PA">6) <s:message code="condition.allofus6"/></option>
+                        <option value="IA,IT">7) <s:message code="condition.allofus7"/></option>
+                        <option value="ET,EA">8) <s:message code="condition.allofus8"/></option>
+                        <option value="PT,PA">9) <s:message code="condition.allofus9"/></option>
+                        <option value="IA,ET,IT,EA">10) <s:message code="condition.allofus10"/></option>
+                        <option value="IA,IT,PT,PA">11) <s:message code="condition.allofus11"/></option>
+                        <option value="ET,EA,PT,PA">12) <s:message code="condition.allofus12"/></option>
                         <option value="SO">13) <s:message code="condition.allofus13"/></option>
                         <option value="SI">14) <s:message code="condition.allofus14"/></option>
                     </select>
