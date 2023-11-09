@@ -111,6 +111,10 @@ public class EmsSearchServiceImpl implements EmsSearchService {
                 case ElasticSearchCommon.SEARCH_TYPE_STATISTIC: // 통계 검색시
                     searchSourceBuilder = elsSearchQueryUtils.initStatisticSearchSource(searchParam); // 검색 소스 준비
                     break;
+
+                case ElasticSearchCommon.SEARCH_TYPE_ANALYSIS: // 분석 검색시
+                    searchSourceBuilder = elsSearchQueryUtils.initanalysisSearchSource(searchParam); // 검색 소스 준비
+                    break;
             }
             /* 검색 진행 */
             SearchRequest searchRequest = new SearchRequest(elsSearchQueryUtils.getElasticSearchParam().getIndices()).source(searchSourceBuilder);

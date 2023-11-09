@@ -14,6 +14,8 @@ import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInterval;
+import org.elasticsearch.search.aggregations.bucket.terms.Terms;
+import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
@@ -1366,6 +1368,18 @@ public class ElasticSearchQueryUtils {
         limit =  (int) Math.round(Double.valueOf(Common.nvl(searchParam.get("limit"))));
 
 
+
+        if(!Common.isEmpty(ElasticSearchCommon.SERVICE_GROUP)) {
+            setyField(Common.nvl(ElasticSearchCommon.SERVICE_GROUP));
+        }
+
+        if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("serviceType"))) {
+            setSearchQuery(Common.nvl(elasticSearchParam.getSearchParameters().get("serviceType")));
+        }else{
+            setSearchQuery(Common.nvl(ElasticSearchCommon.ALL_SEARCH));
+        }
+
+
         /* 검색 조건 && 검색어 없을시 */
         if(Common.isEmpty(elasticSearchParam.getSearchParameters().get("searchStr"))) setSearchQuery(Common.nvl(ElasticSearchCommon.ALL_SEARCH));
 
@@ -1501,5 +1515,89 @@ public class ElasticSearchQueryUtils {
 //    }
 
 
+    /***
+     *  분석 소스 빌드
+     * @param initStatisticSearchSource
+     * @return
+     */
+    public void setanalysisSearchQueryReady(Map<String,Object> searchParam) {
+        elasticSearchParam = new ElasticSearchParam();
+        elasticSearchParam.setSearchParameters(searchParam);
 
+        /* sort 관련 */
+        setSort("");
+        List<SortBuilder<?>> sortBuilderList = getSortInfo();
+        log.debug("[SORT] {}", sortBuilderList.stream().collect(Collectors.toList()));
+
+        /* 검색 offset , limit 설정  */
+        int offset = 0;
+        int limit = 0;
+        offset = (int) Math.round(Double.valueOf(Common.nvl(searchParam.get("offset"))));
+        limit =  (int) Math.round(Double.valueOf(Common.nvl(searchParam.get("limit"))));
+
+        setSearchQuery(Common.nvl(ElasticSearchCommon.ALL_SEARCH));
+
+        /* set Query */
+        setQuery();
+        System.out.println("쿼리:"+getQuery());
+
+        this.elasticSearchParam.setIndices(new String[]{ElasticSearchCommon.EDC_MESSAGE_INDEX});
+        this.elasticSearchParam.setFrom(offset);
+        this.elasticSearchParam.setTo(limit);
+        this.elasticSearchParam.setSorts(sortBuilderList);
+        this.elasticSearchParam.setIncludeFields(ElasticSearchCommon.SEARCH_FIELD);
+        this.elasticSearchParam.setStartDate(Common.nvl(elasticSearchParam.getSearchParameters().get("startDate")));
+        this.elasticSearchParam.setEndDate(Common.nvl(elasticSearchParam.getSearchParameters().get("endDate")));
+        this.elasticSearchParam.setExcludeFields(null);
+
+
+        log.debug("[Fields] {}", ElasticSearchCommon.SEARCH_FIELD);
+        log.debug("[SORT] : {}", elasticSearchParam.getSorts());
+        log.debug("[QUERY] {}", getQuery());
+
+
+    }
+
+
+    public SearchSourceBuilder initanalysisSearchSource(Map<String,Object> searchParam) {
+
+        SearchSourceBuilder searchSourceBuilder = null; // SearchSourceBuilder 리턴용
+
+        setanalysisSearchQueryReady(searchParam); // 분석용 파라미터 준비
+
+        RangeQueryBuilder rangeQuery = new RangeQueryBuilder(ElasticSearchCommon.CTIME).gte(elasticSearchParam.getStartDate()).lte(elasticSearchParam.getEndDate());
+        QueryStringQueryBuilder secondQuery = QueryBuilders.queryStringQuery(query);
+        int piCount =  (int) Math.round(Double.valueOf(Common.nvl(searchParam.get("piCount"))));
+
+        /* 쿼리 merge */
+        BoolQueryBuilder complateQuery = new BoolQueryBuilder();
+        complateQuery.filter(rangeQuery);
+        complateQuery.must(secondQuery);
+        AggregationBuilder  pi_aggregation = AggregationBuilders.terms("user_str").field("user.id").minDocCount(1);
+        pi_aggregation.subAggregation(AggregationBuilders.terms("pi_stat").field("pi.codes.code").minDocCount(1));
+        searchSourceBuilder = new SearchSourceBuilder()
+                .from(elasticSearchParam.getFrom())
+                .size(elasticSearchParam.getTo())
+                .query(complateQuery)
+                .fetchSource(elasticSearchParam.getIncludeFields(), elasticSearchParam.getExcludeFields())
+                .sort(elasticSearchParam.getSorts())
+                .aggregation(
+                        pi_aggregation
+                ).timeout(new TimeValue(60, TimeUnit.SECONDS));
+        return searchSourceBuilder;
+    }
+
+/*    public AggregationBuilder initanalysisAggregation (String user_str){
+        AggregationBuilder aggregationBuilder = null;
+
+                aggregationBuilder = AggregationBuilders.terms(user_str).field(user_str);
+                aggregationBuilder.subAggregation(AggregationBuilders.sum("pi_SN_sum").field("pi_SN"));
+                aggregationBuilder.subAggregation(AggregationBuilders.sum("pi_PN_sum").field("pi_PN"));
+                aggregationBuilder.subAggregation(AggregationBuilders.sum("pi_DN_sum").field("pi_DN"));
+                aggregationBuilder.subAggregation(AggregationBuilders.sum("pi_FN_sum").field("pi_FN"));
+                aggregationBuilder.subAggregation(AggregationBuilders.sum("pi_CN_sum").field("pi_CN"));
+
+
+        return aggregationBuilder;
+    }*/
 }

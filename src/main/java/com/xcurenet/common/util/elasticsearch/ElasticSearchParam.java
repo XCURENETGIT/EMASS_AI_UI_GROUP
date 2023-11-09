@@ -46,6 +46,15 @@ public class ElasticSearchParam {
     private String searched_xAxis; // 바로 이전 검색했었던 xAxis값
 
 
+    /* 분석 관련 */
+    private String user_str;
+    private String pi_SN;
+    private String pi_PN;
+    private String pi_DN;
+    private String pi_FN;
+    private String pi_CN;
+
+
     private Map<String,Object> searchParameters; // 유저가 검색에 입력,사용한 값 (객체형태)
 }
 

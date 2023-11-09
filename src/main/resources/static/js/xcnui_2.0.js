@@ -231,7 +231,7 @@ var ui = {
 			var height = $('#' + target).height();
 			var offset = $('#' + target).offset();
 			$('#' + target).append(
-					'<div class="loading_div_grid" id="loading_div_' + target + '"><img id="loading_img_' + target + '" src="' + contextRoot + '/img/loading/Loading.gif"/></div>');
+					'<div class="loading_div_grid" id="loading_div_' + target + '"><img id="loading_img_' + target + '" src="' + contextRoot + '/resources/img/loading/Loading.gif"/></div>');
 			$('#loading_div_' + target).css({
 				"position" : "absolute",
 				"top" : top + "px",
@@ -258,7 +258,7 @@ var ui = {
 			var width = $('#' + target).width();
 			var height = $('#' + target).height();
 			$('#' + target).append(
-					'<div class="loading_div_grid" id="loading_div_' + target + '"><img id="loading_img_' + target + '" src="' + contextRoot + '/img/loading/Loading.gif"/></div>');
+					'<div class="loading_div_grid" id="loading_div_' + target + '"><img id="loading_img_' + target + '" src="' + contextRoot + '/resources/img/loading/Loading.gif"/></div>');
 			$('#loading_div_' + target).css({
 				"position" : "absolute",
 				"top" : top + "px",
@@ -278,17 +278,20 @@ var ui = {
 			$('#loading_div_' + target).show();
 		}
 	},
-	onBody : function() {
+	onBody : function(targetId, top, left) {
+		if(top == undefined) top = 0;
+		if(left == undefined) left = 0;
 		var target = 'body_all';
+		if(targetId != undefined) target = targetId;
 		if ($('#loading_div_' + target).get().length > 0)
 			$('#loading_div_' + target).remove(); // 한번 지우고 새로 처리 해야 한다.
 		if ($('#loading_div_' + target).get().length == 0) {
-			$('body').append('<div class="loading_div_grid" id="loading_div_' + target + '"><img id="loading_img_' + target + '" src="' + contextRoot + '/img/loading/Loading.gif"/></div>');
+			$('body').append('<div class="loading_div_grid" id="loading_div_' + target + '"><img id="loading_img_' + target + '" src="' + contextRoot + '/resources/img/loading/Loading.gif"/></div>');
 			$('#loading_div_' + target).css({
 				"position" : "absolute",
 				"width" : "100%",
 				"height" : "100%",
-				"top" : "0px",
+				"top" : top+"%",
 				"left" : "0px",
 				"right" : "0px",
 				"bottom" : "0px",
@@ -301,7 +304,8 @@ var ui = {
 			var height = $('#loading_div_' + target).height();
 			$('#loading_img_' + target).css({
 				"margin-top" : ((height / 2) - 46) + "px",
-				"width" : "69px"
+				"width" : "69px",
+				"margin-left" : left + "%"
 			});
 		} else {
 			$('#loading_div_' + target).show();
@@ -316,20 +320,13 @@ var ui = {
 	},
 	mobileOn : function() {
 		$.mobile.loading('show', {
-			html : "<span><img src='../css/images/ajax-loader.gif' /></span>"
+			html : "<span><img src='../resources/css/images/ajax-loader.gif' /></span>"
 		});
 	},
 	mobileOff : function() {
 		$.mobile.loading('hide');
 	},
-	notify : function(msg) {
-		$.bootstrapGrowl(msg,{type: 'success', delay: 1000});
-	},
 	alertMsg : function(msg, callBack, timeOut) {
-		if(timeOut == undefined && callBack == undefined) {
-			ui.notify(msg);
-			return;
-		}
 		var dialogInstance = BootstrapDialog.alert({
 			id : 'bootstrap_alert',
 			title : 'Venus - Alert',
@@ -341,11 +338,11 @@ var ui = {
 				if (callBack != null && callBack != undefined){
 					setTimeout(function(){
 						callBack();
-					}, );
+					}, 300);
 				}
 			}
 		});
-		
+
 		if(timeOut!=undefined && timeOut != '') {
 			var title = dialogInstance.getTitle();
 			var t = (timeOut/1000)-1;
@@ -360,7 +357,7 @@ var ui = {
 			}, timeOut);
 		}
 		return;
-		
+
 		//alert(msg);
 		//return;
 		var dialogSize = BootstrapDialog.SIZE_SMALL;
@@ -375,7 +372,7 @@ var ui = {
 
 		var dialogInstance = BootstrapDialog.show({
 			size : dialogSize,
-			title : (title == undefined || title == '') ? '[Venus/EMASS LTH] System Message' : title,
+			title : (title == undefined || title == '') ? '[Venus/EMASS LT] System Message' : title,
 			message : msg,
 			draggable : true,
 			buttons : [ {
@@ -733,6 +730,12 @@ Array.prototype.search = function(search_code, key_label, value_label) {
 Array.prototype.removeAt = function(index) {
 	this.splice(index, 1);
 };
+Array.prototype.unique = function() {
+	var a = [];
+	for (var i=0, l=this.length; i<l; i++)
+		if (a.indexOf(this[i]) === -1) a.push(this[i]);
+	return a;
+}
 
 /**
  * String format Code ex: 'The {0} is dead. Don\'t code {0}. Code {1} that is open source!'.format('ASP', 'PHP');
@@ -993,7 +996,6 @@ function getPage2(total, pageCount, listSize, rtnMethod) {
  * @returns {String}
  */
 function convertFileSize(bytes) {
-	bytes = nvn(bytes);
 	var thresh = 1024;
 	if (bytes < thresh)
 		return bytes + 'B';
@@ -1286,25 +1288,25 @@ function getDateFormat(time) {
 function getDateFormatSize(time) {
 	var result = time;
 	switch(time.length) {
-	case 4 : 
+	case 4 :
 		result = time + xcnuiJS.year;
 		break;
-	case 6 : 
+	case 6 :
 		result = time.substring(0, 4) + "-" + time.substring(4, 6);
 		break;
-	case 8 : 
+	case 8 :
 		result = time.substring(0, 4) + "-" + time.substring(4, 6) + "-" + time.substring(6, 8);
 		break;
-	case 10 : 
+	case 10 :
 		result = time.substring(0, 4) + "-" + time.substring(4, 6) + "-" + time.substring(6, 8) + " " + time.substring(8, 10) + xcnuiJS.hour;
 		break;
-	case 12 : 
+	case 12 :
 		result = time.substring(0, 4) + "-" + time.substring(4, 6) + "-" + time.substring(6, 8) + " " + time.substring(8, 10) + ":" + time.substring(10, 12);
 		break;
-	case 14 : 
+	case 14 :
 		result = time.substring(0, 4) + "-" + time.substring(4, 6) + "-" + time.substring(6, 8) + " " + time.substring(8, 10) + ":" + time.substring(10, 12) + ":" + time.substring(12, 14);
 		break;
-		
+
 	}
 	return result;
 }
@@ -1385,15 +1387,15 @@ function ipValidCheck(ip) {
 	return false;
 }
 
-function idCheck( id ){ 
-	// id 유효성을 검증하는 정규식입니다 . 
+function idCheck( id ){
+	// id 유효성을 검증하는 정규식입니다 .
 	var reg_exp = new RegExp("^[a-zA-Z][a-zA-Z0-9]{3,11}$","g");
-	var match = reg_exp.exec( id ); 
+	var match = reg_exp.exec( id );
 
-	if (match == null || id.length <  5 || id.length > 12) { 
-		return false; 
+	if (match == null || id.length <  5 || id.length > 12) {
+		return false;
 	}
-	return true; 
+	return true;
 }
 
 /**
@@ -1522,7 +1524,7 @@ function fileNameReplace(fileName) {
 }
 
 /**
- * EMASS LTH 데이터 본문 조회 팝업 호출
+ * EMASS LT 데이터 본문 조회 팝업 호출
  *
  * @param msgid
  * @param ctime
@@ -1531,7 +1533,7 @@ function fileNameReplace(fileName) {
 function openContentBody(msgid, ctime, searchkey, openType) {
 	if (openType == undefined)
 		openType = '';
-	return fnOpenWindow(contextRoot + "/search/ContentBodyNew.jsp?msgid=" + msgid + "&ctime=" + ctime + "&searchkey=" + searchkey + "&menuId=M_002&openType=" + openType, "popupMsgWin", "1000", "800",
+	return fnOpenWindow(contextRoot + "/search/ContentBody.jsp?msgid=" + msgid + "&ctime=" + ctime + "&searchkey=" + searchkey + "&menuId=M_002&openType=" + openType, "popupMsgWin", "1000", "800",
 			"fullscreen");
 }
 
@@ -1672,7 +1674,7 @@ $.fn.serializeAll = function() {
 		if(type=='radio'){
 			if($(this).prop("checked")) data.push({ name : this.name, value : $(this).val() });
 		} else data.push({ name : this.name, value : $(this).val() });
-		
+
 	});
 	return data;
 };
@@ -2010,14 +2012,14 @@ $.ui.dialog.prototype.options.autoReposition = true;
 (function(jQuery) {
     jQuery.fn.forceNumeric = function (options) {
         var opts = jQuery.extend({}, jQuery.fn.forceNumeric.defaults, options);
-    
+
         return this.each(function () {
             var o = jQuery.meta ? jQuery.extend({}, opts, $this.data()) : opts;
             $(this).keydown(function (e) {
                 var key = e.which || e.keyCode;
-                
+
                 if (!e.shiftKey && !e.altKey && !e.ctrlKey &&
-                // numbers   
+                // numbers
                     key >= 48 && key <= 57 ||
                 // Numeric keypad
                     key >= 96 && key <= 105 ||
@@ -2030,7 +2032,7 @@ $.ui.dialog.prototype.options.autoReposition = true;
                 // Del and Ins
                    key == 46 || key == 45) {
                    var v=$(this).val();
-                
+
                    return true;
                 } else if (e.ctrlKey){
                     //ctrl-c       ctrl-v       ctrl-x
@@ -2039,13 +2041,13 @@ $.ui.dialog.prototype.options.autoReposition = true;
                 }
                 return false;
             });
-            
+
             $(this).blur(function (e) {
                 var v=jQuery.trim($(this).val());
                 if (v=='') {
                     return;
                 }
-                
+
                 if(o.fixDecimals!=-1) {
                     var num = parseFloat(v);
 
@@ -2056,11 +2058,11 @@ $.ui.dialog.prototype.options.autoReposition = true;
                     var numSix =  num.toFixed(o.fixDecimals);
                     $(this).val(numSix);
                 }
-    
+
             });
-            
-            
-        });   
+
+
+        });
         jQuery.fn.forceNumeric.defaults = {
                 fixDecimals : -1
             };

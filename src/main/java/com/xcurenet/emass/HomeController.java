@@ -619,6 +619,18 @@ public class HomeController {
 		return "/emass/statistics/infoTypeStat";
 	}
 
+
+	/**
+	 * infoStat JSP.
+	 */
+	@RequestMapping(value = "/analysis/infoStat.do", method = RequestMethod.GET)
+	@Description("개인정보 관계 분석 페이지")
+	public String infoStat(Locale locale, Model model) {
+		model.addAttribute("headerYn","N");
+		return "/emass/statistics/infoStat";
+	}
+
+
 	/**
 	 * interestUser JSP.
 	 */

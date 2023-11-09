@@ -20,6 +20,7 @@ public class ElasticSearchCommon {
     /*검색타입*/
     public static final String SEARCH_TYPE = "elsSearchType";
     public static final String SEARCH_TYPE_MESSAGE = "message";
+    public static final String SEARCH_TYPE_ANALYSIS = "analysis";
     public static final String SEARCH_TYPE_STATISTIC = "statistic";
 
     /* 쿼리 관련 */
