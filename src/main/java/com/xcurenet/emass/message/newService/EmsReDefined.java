@@ -11,8 +11,11 @@ import com.xcurenet.emass.message.service.EmsRecvVO;
 import com.xcurenet.emass.message.vo.emass.els.Emass;
 import com.xcurenet.emass.message.vo.emass.els.EmassResponse;
 import com.xcurenet.emass.message.vo.emass.els.fields.AttachVo_Els;
-import com.xcurenet.emass.message.vo.emass.mongo.old.ATTACH_INFO_PROPERTIES;
-import com.xcurenet.emass.message.vo.emass.mongo.old.MessageVo;
+import com.xcurenet.emass.message.vo.emass.mongo.EmassMessage;
+import com.xcurenet.emass.message.vo.emass.mongo.fields.AttachVo_Mgo;
+import com.xcurenet.emass.message.vo.emass.mongo.fields.HttpVo_Mgo;
+import com.xcurenet.emass.message.vo.emass.mongo.fields.NetworkVo_Mgo;
+import com.xcurenet.emass.message.vo.emass.mongo.fields.ServiceVo_Mgo;
 import com.xcurenet.interestUser.service.AdminUserGroupVO;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.math.NumberUtils;
@@ -147,7 +150,7 @@ public class EmsReDefined {
 			if(!Common.isEmpty(ems.getNetwork())) {
 				emassResponse.setNetwork_srcIp(ems.getNetwork().getSrcip());
 				emassResponse.setNetwork_srcPort(ems.getNetwork().getSrcPort());
-				emassResponse.setNetwork_dstIp(ems.getNetwork().getDstIp());
+				emassResponse.setNetwork_dstIp(ems.getNetwork().getDstip());
 				emassResponse.setNetwork_dstPort(ems.getNetwork().getDstPort());
 				emassResponse.setNetwork_protocol(ems.getNetwork().getProtocol());
 				emassResponse.setNetwork_cId(ems.getNetwork().getCId());
@@ -414,55 +417,83 @@ public class EmsReDefined {
 	}
 
 	public static String reSubject(Emass emass) {
-		MessageVo msg = new MessageVo();
-		msg.setSUBJECT(Common.nvl(emass.getSubject()));
-		msg.setSVC(Common.nvl(emass.getService().getSvc()));
-		msg.setSRCIP(Common.nvl(emass.getNetwork().getSrcip()));
-		msg.setDSTIP(Common.nvl(emass.getNetwork().getDstIp()));
-		msg.setHOST(Common.nvl(emass.getHttp().getHost()));
-		msg.setPATH(Common.nvl(emass.getHttp().getPath()));
-		List<ATTACH_INFO_PROPERTIES> attachInfo = null;
-		if(emass.getAttach().size() >= 1){
+		EmassMessage msg = new EmassMessage();
+		if(!Common.isEmpty(emass.getSubject()))  msg.setSubject((Common.nvl(emass.getSubject())));
+
+		if(!Common.isEmpty(emass.getService())) msg.setService(new ServiceVo_Mgo()); msg.getService().setSvc(Common.nvl(emass.getService().getSvc()));
+		if(!Common.isEmpty(emass.getNetwork())) {
+			msg.setNetwork(new NetworkVo_Mgo());
+			msg.getNetwork().setSrcip(Common.nvl(emass.getNetwork().getSrcip()));
+			msg.getNetwork().setDstip((Common.nvl(emass.getNetwork().getDstip())));
+			msg.getNetwork().setProtocol(Common.nvl(emass.getNetwork().getProtocol()));
+		}
+		if(!Common.isEmpty(emass.getHttp())) {
+			msg.setHttp(new HttpVo_Mgo());
+			msg.getHttp().setHost(Common.nvl(emass.getHttp().getHost()));
+			msg.getHttp().setPath(Common.nvl(emass.getHttp().getPath()));
+		}
+
+		List<AttachVo_Mgo> attachInfo = null;
+		if( null != emass.getAttach()  && emass.getAttach().size() >= 1){
 			attachInfo = new ArrayList<>();
-			ATTACH_INFO_PROPERTIES attachInfoProperties = new ATTACH_INFO_PROPERTIES();
+			AttachVo_Mgo attachInfoProperties = new AttachVo_Mgo();
 			for(AttachVo_Els attach : emass.getAttach()){
-				attachInfoProperties.setATTACHNAME(Common.nvl(attach.getName()));
+				attachInfoProperties.setName(Common.nvl(attach.getName()));
 			}
 			attachInfo.add(attachInfoProperties);
+			msg.setAttach(attachInfo);
 		}
-		msg.setATTACH_INFO(attachInfo);
-		msg.setXROOTMTR(Common.nvl(emass.getXrootmtr()));
-		msg.setPROTOCOL(Common.nvl(emass.getNetwork().getProtocol()));
 
+		msg.setXroot_mtr(Common.nvl(emass.getXrootmtr()));
 		return reSubject(msg);
 	}
-	public static String reSubject(MessageVo msg) {
+	public static String reSubject(EmassMessage msg) {
 		String result = null;
 		if(msg == null ) result = Prop.propFormat("common.msg.nosubject");
-		String subject = Common.nvl(msg.getSUBJECT());
-		String svc = Common.nvl(msg.getSVC());
-		if (Common.isEmpty(svc)) result =  subject;
-		String svc1 = Common.nvl(svc).substring(0, 1);
-		String srcip = Common.nvl(msg.getSRCIP());
-		String dstip = Common.nvl(msg.getDSTIP());
-		String host = Common.nvl(msg.getHOST());
-		String path = Common.nvl(msg.getPATH());
+		String subject = Common.nvl(msg.getSubject());
+		String svc = "";
+		String svc1 = "";
+		String srcip = "";
+		String dstip = "";
+		String host = "";
+		String path = "";
+		String Xroot_mtr = "";
+
+		if(!Common.isEmpty(msg.getService())){
+			svc = Common.nvl(msg.getService().getSvc());
+			svc1 =  Common.nvl(msg.getService().getSvc()).substring(0, 1);
+		}else{
+			result =  subject;
+		}
+
+		if(!Common.isEmpty(msg.getNetwork())) {
+			srcip = Common.nvl(msg.getNetwork().getSrcip());
+			dstip = Common.nvl(msg.getNetwork().getDstip());
+		}
+
+		if(!Common.isEmpty(msg.getHttp())) {
+			host = Common.nvl(msg.getHttp().getHost());
+			path = Common.nvl(msg.getHttp().getPath());
+		}
+
+		Xroot_mtr = Common.nvl(msg.getXroot_mtr());
+
 		String webPrefix = Common.nvl(contextPath);
 		if (subject.length() > 1) result = subject.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\"", "'");
 
 		if (Common.isOrEquals(svc1, "F", "Q", "T")){
-			if( Common.isNotEmpty(msg.getXROOTMTR()) || Common.isEquals(svc1, "T")){
+			if( Common.isNotEmpty(Xroot_mtr) || Common.isEquals(svc1, "T")){
 				/* 스니펫 주석 */
 				// if( svc.lastIndexOf("C") == 3 || svc.lastIndexOf("M") == 3 ) return Common.nvl(msg).replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\"", "'");
 
 				if( svc.lastIndexOf("F") == 3 ){
-					List<ATTACH_INFO_PROPERTIES> list = msg.getATTACH_INFO();
+					List<AttachVo_Mgo> list = msg.getAttach();
 					if( list != null) {
 						/* 스니펫 주석 */
 //						if(Common.isNotEmpty(msg.getBody_snippet())) {
 //							return String.join(", ", list) +"<br/>"+Common.nvl(msg.getBody_snippet()).replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\"", "'");
 //						}
-						result =  list.stream().map(a -> a.getATTACHNAME()).collect(Collectors.joining(", "));
+						result =  list.stream().map(a -> a.getName()).collect(Collectors.joining(", "));
 					}
 					else result =  Common.EMPTY;
 				}
@@ -471,7 +502,7 @@ public class EmsReDefined {
 				else result =  srcip + "->" + dstip;
 			}else if(svc.lastIndexOf("GP") > -1 || svc.lastIndexOf("DA") > -1 || svc.lastIndexOf("BI") > -1) {
 				/* 스니펫 주석 */
-		//		return Common.nvl(msg.getBody_snippet()).replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\"", "'");
+				//		return Common.nvl(msg.getBody_snippet()).replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\"", "'");
 				result  = "";
 			}else {
 				return result = srcip + "->" + dstip;
@@ -484,7 +515,6 @@ public class EmsReDefined {
 		else if (Common.isEmpty(subject)) result =  Prop.propFormat("common.msg.nosubject");
 		else
 			result =  subject.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\"", "'");
-
 
 		return result;
 	}

@@ -1,11 +1,11 @@
 package com.xcurenet.emass.message.service;
 
-import java.util.List;
-import java.util.Map;
-
+import com.xcurenet.code.service.CodeVO;
+import com.xcurenet.emass.message.vo.emass.mongo.EmassMessage;
 import org.apache.commons.mail.EmailException;
 
-import com.xcurenet.code.service.CodeVO;
+import java.util.List;
+import java.util.Map;
 
 public interface EmsMessageService {
 
@@ -17,9 +17,9 @@ public interface EmsMessageService {
 
 	public EmsHeaderVO getEmassHeader(final String msgId);
 
-	public EmsMessageVO getEmassMessage(final String msgId, final String firstAdminYn, final String adminType);
+	public EmassMessage getEmassMessage(final String msgId, final String firstAdminYn, final String adminType);
 	
-	public EmsMessageVO getEmassMessageNew(final String adminId, final String msgId, final String firstAdminYn, final String adminType);
+	public EmassMessage getEmassMessageNew(final String adminId, final String msgId, final String firstAdminYn, final String adminType);
 
 	//public List<EmsRecvVO> getEmassUserInfo(final String msgId);
 
@@ -96,4 +96,7 @@ public interface EmsMessageService {
 	List<CodeVO> getGenerativeList();
 
 	List<CodeVO> getFileList();
+
+	/* 임시 맵핑 */
+	EmassMessage tempMapping(Map<String,Object> test);
 }

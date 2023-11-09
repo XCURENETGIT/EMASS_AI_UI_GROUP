@@ -595,7 +595,6 @@ function getSearchQuery() {
 					if(data.search_startDate != null) $('#searched_startDate').val(data.search_startDate);
 					if(data.search_endDate != null) $('#searched_endDate').val(data.search_endDate);
 
-					console.log(data);
 					grid1.colInit();
 					grid1.autoNumber();
 					grid1.colAdd('rowKey', '<s:message code="consent.user"/>', 230, 'left', false, 'link', function ( row, cell, value, columnDef, dataContext ) {

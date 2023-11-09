@@ -10,7 +10,6 @@ import com.xcurenet.common.csv.CsvWriterEMASS;
 import com.xcurenet.common.detect.DetectCharset;
 import com.xcurenet.common.detect.DetectHtml;
 import com.xcurenet.common.excel.XLSXWriterEMASS;
-import com.xcurenet.common.mail.MailInfo;
 import com.xcurenet.common.parser.mime.MimeParser;
 import com.xcurenet.common.parser.mime.MimeVo;
 import com.xcurenet.common.pdf.PdfWriterEMASS;
@@ -20,9 +19,11 @@ import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.emass.consent.web.ConsentFileDownload;
 import com.xcurenet.emass.consent.web.ConsentFileVO;
-import com.xcurenet.emass.message.component.SolrCreateQuery;
+import com.xcurenet.emass.message.newService.EmsSearchService;
 import com.xcurenet.emass.message.service.*;
+import com.xcurenet.emass.message.vo.emass.els.EmassChecked;
 import com.xcurenet.emass.message.vo.emass.els.EmassMessenger;
+import com.xcurenet.emass.message.vo.emass.mongo.EmassMessage;
 import com.xcurenet.minio.MinioFileAdapter;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
@@ -34,13 +35,9 @@ import org.apache.commons.compress.archivers.ArchiveOutputStream;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.io.IOUtils;
-import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrQuery.SortClause;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -80,8 +77,8 @@ public class EmsMessageController {
 	@Autowired
 	public MessengerController messengerController;
 
-	@Resource(name = "solrEdcService")
-	public SolrEdcService solrEdcService;
+	@Resource
+	public EmsSearchService emsSearchService;
 
 	@Autowired
 	public EmsAttachDownload emsAttachDownload;
@@ -91,9 +88,6 @@ public class EmsMessageController {
 
 	@Autowired
 	public ConsentFileDownload consentFileDownload;
-
-	@Autowired
-	public SolrCheckedService solrCheckedService;
 
 	@Autowired
 	public MinioFileAdapter minioFileAdapter;
@@ -149,7 +143,8 @@ public class EmsMessageController {
 	@AuditOperation(Operation.MAIL_SEND)
 	@ResponseBody
 	public XcnResponseVO emassMailForward(final HttpServletRequest request) throws Exception {
-		String xRootMtr = Common.nvl(request.getParameter("xRootMtr"));
+		return  null;
+/*		String xRootMtr = Common.nvl(request.getParameter("xRootMtr"));
 		String msgId = Common.nvl(request.getParameter("msgId"));
 		String userCharset = Common.nvl(request.getParameter("userCharset"));
 		String subject = Common.nvl(request.getParameter("subject"));
@@ -222,7 +217,7 @@ public class EmsMessageController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new XcnResponseVO(XcnRspCode.OK_CUSTOM, Prop.propFormat("java.error.create.mail", request));
+		return new XcnResponseVO(XcnRspCode.OK_CUSTOM, Prop.propFormat("java.error.create.mail", request));*/
 	}
 
 	@RequestMapping(value = "/emassWarningMail.xcn")
@@ -230,7 +225,8 @@ public class EmsMessageController {
 	@AuditOperation(Operation.MAIL_SEND)
 	@ResponseBody
 	public XcnResponseVO emassWarningMail(final HttpServletRequest request) throws Exception {
-		String xRootMtr = Common.nvl(request.getParameter("xRootMtr"));
+		return null;
+/*		String xRootMtr = Common.nvl(request.getParameter("xRootMtr"));
 		String msgId = Common.nvl(request.getParameter("msgId"));
 		String userCharset = Common.nvl(request.getParameter("userCharset"));
 		String subject = Common.nvl(request.getParameter("subject"));
@@ -302,7 +298,7 @@ public class EmsMessageController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new XcnResponseVO(XcnRspCode.OK_CUSTOM, Prop.propFormat("java.error.create.mail", request));
+		return new XcnResponseVO(XcnRspCode.OK_CUSTOM, Prop.propFormat("java.error.create.mail", request));*/
 	}
 
 	private String getGroupStyle() {
@@ -741,7 +737,8 @@ public class EmsMessageController {
 	}
 
 	private SolrEdcMessageVO getEmassData(String adminId, final JSONObject condition, final String searchTime, int page) throws Exception, IOException, SolrServerException {
-		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+		return null;
+/*		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
 		SolrQuery sq = null;
 		if (Common.isNotEmpty(condition.get("msgids"))) {
 			sq = new SolrQuery();
@@ -769,7 +766,7 @@ public class EmsMessageController {
 		sq.setStart(PAGE_BREAK * page);
 		sq.setRows(PAGE_BREAK);
 		log.info("offset : {}", PAGE_BREAK * page);
-		return solrEdcService.getEmassMessage(sq, adminId, solrCreateQuery.getFinalReadYn(), solrCreateQuery.getConsentNo());
+		return solrEdcService.getEmassMessage(sq, adminId, solrCreateQuery.getFinalReadYn(), solrCreateQuery.getConsentNo());*/
 	}
 
 	private void inputAttach(ArchiveOutputStream os, EmsAttachDownload attachDown, SolrEdcVO edc) throws Exception {
@@ -1284,33 +1281,18 @@ public class EmsMessageController {
 		return new XcnResponseVO(XcnRspCode.OK, emsMessageService.getEmassMessage(msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession())));
 	}
 
+
+
 	@RequestMapping(value = "/getEmassMessageNew.xcn")
-	@Description("EMASS 메시지 정보 조회")
+	@Description("EMASS 메시지 정보 조회 (Detail)")
 	@ResponseBody
 	public XcnResponseVO getEmassMessageNew(final HttpServletRequest request, final HttpSession session) throws Exception {
-		String msgId = Common.nvl(request.getParameter("msgId"));
-		EmsMessageVO emass = emsMessageService.getEmassMessageNew(Common.getAdminId(request), msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
+		String _id = Common.nvl(request.getParameter("_id"));
+		_id =  "20220826161859.FTL3E2I23Z2JTXKKNUVBN7V4GGIDW7QV"; // test id
+		EmassMessage emass = emsMessageService.getEmassMessageNew(Common.getAdminId(request), _id, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
 
 		if (emass != null && emass.isConsentFlag()) {
-			SolrCheckedVO checked = new SolrCheckedVO();
-			checked.setId(Common.getAdminId(session));
-			checked.setMsgid(msgId);
-
-			String ctime = emass.getCtime().replaceAll("\\-", "").replaceAll("\\:", "").replaceAll(" ", "");
-			String ctimeyyyymmdd = ctime.substring(0, 8);
-			String ctimeyyyymm = ctime.substring(0, 6);
-			String ctimeyyyy = ctime.substring(0, 4);
-			String ctimehh = ctime.substring(8, 10);
-
-			checked.setCtime(ctime);
-			checked.setCtime_yyyymmdd(ctimeyyyymmdd);
-			checked.setCtime_yyyymm(ctimeyyyymm);
-			checked.setCtime_yyyy(ctimeyyyy);
-			checked.setCtime_hh(ctimehh);
-			checked.setBusicd(emass.getBusiCd());
-			checked.setIp_busicd(emass.getIpBusicd());
-			checked.setSvc(emass.getSvc());
-			solrCheckedService.setRead(checked);
+				// setRead 예정
 		}
 
 		return new XcnResponseVO(XcnRspCode.OK, emass);
@@ -1632,19 +1614,18 @@ public class EmsMessageController {
 	@Description("메시지 읽음 여부 처리")
 	@ResponseBody
 	public XcnResponseVO setRead(final HttpServletRequest request, final HttpSession session) throws Exception {
-		SolrCheckedVO checked = new SolrCheckedVO();
-		checked.setId(Common.getAdminId(session));
-		checked.setMsgid(Common.nvl(request.getParameter("msgId")));
+		EmassChecked checked = new EmassChecked();
+		checked.setUser_id(Common.getAdminId(session));
+		checked.set_id(Common.nvl(request.getParameter("_id")));
 		checked.setCtime(Common.nvl(request.getParameter("ctime")));
 		checked.setCtime_yyyymmdd(Common.nvl(request.getParameter("ctime_yyyymmdd")));
 		checked.setCtime_yyyymm(Common.nvl(request.getParameter("ctime_yyyymm")));
 		checked.setCtime_yyyy(Common.nvl(request.getParameter("ctime_yyyy")));
 		checked.setCtime_hh(Common.nvl(request.getParameter("ctime_hh")));
-		checked.setBusicd(Common.nvl(request.getParameter("busiCd")));
-		checked.setIp_busicd(Common.nvl(request.getParameter("ipBusicd")));
-		checked.setSvc(Common.nvl(request.getParameter("svc")));
-
-		solrCheckedService.setRead(checked);
+		checked.setUser_busiCd(Common.nvl(request.getParameter("busiCd")));
+		checked.setUser_ipBusiCd(Common.nvl(request.getParameter("ipBusicd")));
+		checked.setService_svc(Common.nvl(request.getParameter("svc")));
+		emsSearchService.setRead(checked);
 		return new XcnResponseVO(XcnRspCode.OK);
 	}
 
@@ -1657,7 +1638,7 @@ public class EmsMessageController {
 		String feedback = Common.nvl(request.getParameter("feedback"));
 
 		for (int i = 0; i < msgId.length; i++) {
-			solrEdcService.setFeedback(msgId[i], feedback);
+			emsSearchService.setFeedback(msgId[i], feedback);
 			emsMessageService.updateEmsFeedback(msgId[i], feedback, adminId);
 		}
 		return new XcnResponseVO(XcnRspCode.OK);

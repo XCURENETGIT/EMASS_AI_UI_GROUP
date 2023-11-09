@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
 public class NetworkVo_Els {
        private String	  srcip;  //	발신자 IP
        private int	      srcPort;  //	발신자 PORT
-       private String	  dstIp;  //	목적지 IP
+       private String	  dstip;  //	목적지 IP
        private int	      dstPort;  //	목적지 PORT
        private String	  protocol;  //	프토토콜
        private String	  cId;  //	세션ID

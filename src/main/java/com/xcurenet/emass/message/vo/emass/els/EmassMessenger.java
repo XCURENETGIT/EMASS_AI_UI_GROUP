@@ -32,4 +32,6 @@ public class EmassMessenger {
     private String user_name;
     private String sender;
     private String body_snippet;
+    private String body_text;
+
 }

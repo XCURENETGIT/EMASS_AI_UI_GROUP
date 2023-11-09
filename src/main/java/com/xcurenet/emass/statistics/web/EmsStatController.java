@@ -14,13 +14,9 @@ import com.xcurenet.common.util.locale.Prop;
 import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.emass.message.newService.EmsSearchService;
-import com.xcurenet.emass.message.service.SolrEdcMessageVO;
 import com.xcurenet.emass.message.vo.emass.EmassIntegrated;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONArray;
-import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.common.util.SimpleOrderedMap;
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -105,7 +101,7 @@ public class EmsStatController {
 
         /*############################################################################*/
 
-        EmassIntegrated emassIntegrated = emsSearchService.getEmassMessage(searchParam, Common.getAdminId(request), null, null);
+        EmassIntegrated emassIntegrated = setAlltotal(emsSearchService.getEmassMessage(searchParam, Common.getAdminId(request)));
 
         return new XcnResponseVO(XcnRspCode.OK,emassIntegrated, emassIntegrated.getTotal());
 

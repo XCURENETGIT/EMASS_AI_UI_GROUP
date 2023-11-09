@@ -13,7 +13,7 @@ public class AttachVo_Mgo {
    private String	name;     //	첨부파일 이름
    private String	path;     //	첨부파일 경로
    private String	textPath;    //	첨부파일 텍스트 경로
-   private long	size;      //	첨부파일 사이즈
+   private long	    size;      //	첨부파일 사이즈
    private String	filter_type;    //	첨부파일 필터타입
    private String	ext;      //	첨부파일 확장자
    private String	summary;     //	첨부파일 요약

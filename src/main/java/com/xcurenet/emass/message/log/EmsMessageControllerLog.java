@@ -1,21 +1,19 @@
 package com.xcurenet.emass.message.log;
 
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.xcurenet.audit.service.AuditRequestVO;
 import com.xcurenet.audit.service.AuditService;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.locale.Prop;
+import com.xcurenet.emass.message.newService.EmsReDefined;
 import com.xcurenet.emass.message.service.EmsMessageService;
-import com.xcurenet.emass.message.service.EmsMessageVO;
-import com.xcurenet.emass.message.service.EmsReDefined;
-
+import com.xcurenet.emass.message.vo.emass.mongo.EmassMessage;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Component
 @Slf4j
@@ -139,8 +137,8 @@ public class EmsMessageControllerLog {
 		String menuId = Common.nvl(param.get("menuId"));
 		String pMenuId = Common.nvl(param.get("pMenuId"));
 		
-		EmsMessageVO msg = emsMessageService.getEmassMessage ( msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
-		String subject = EmsReDefined.reSubject(msg);
+		EmassMessage emassMessage = emsMessageService.getEmassMessage ( msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
+		String subject = ""; // EmsReDefined.reSubject(emassMessage);
 		StringBuffer info = new StringBuffer();
 		
 		info.append("["+Prop.propFormat("common.msg.view.body")+"]").append(ENTER);
@@ -166,8 +164,8 @@ public class EmsMessageControllerLog {
 	public void getEmassHeaderDown(final HttpServletRequest request, AuditRequestVO auditVo) {
 		JSONObject param = Common.getParam(request);
 		String msgId = Common.nvl(param.get("msgId"));
-		EmsMessageVO msg = emsMessageService.getEmassMessage ( msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()) );
-		String subject = EmsReDefined.reSubject(msg);
+		EmassMessage emassMessage = emsMessageService.getEmassMessage ( msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()) );
+		String subject = EmsReDefined.reSubject(emassMessage);
 		StringBuffer info = new StringBuffer();
 		
 		info.append("["+Prop.propFormat("common.msg.save.header")+"]").append(ENTER);
@@ -181,8 +179,8 @@ public class EmsMessageControllerLog {
 	public void getEmassOriginalBodyDown(final HttpServletRequest request, AuditRequestVO auditVo) {
 		JSONObject param = Common.getParam(request);
 		String msgId = Common.nvl(param.get("msgId"));
-		EmsMessageVO msg = emsMessageService.getEmassMessage ( msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()) );
-		String subject = EmsReDefined.reSubject(msg);
+		EmassMessage emassMessage = emsMessageService.getEmassMessage ( msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()) );
+		String subject = EmsReDefined.reSubject(emassMessage);
 		StringBuffer info = new StringBuffer();
 		
 		info.append("["+Prop.propFormat("common.msg.save.original")+"]").append(ENTER);

@@ -14,6 +14,7 @@ import com.xcurenet.emass.message.service.MessengerGroupUserVO;
 import com.xcurenet.emass.message.service.impl.parseJsonFile;
 import com.xcurenet.emass.message.vo.emass.EmassIntegrated;
 import com.xcurenet.emass.message.vo.emass.els.Emass;
+import com.xcurenet.emass.message.vo.emass.els.EmassChecked;
 import com.xcurenet.emass.message.vo.emass.els.EmassResponse;
 import com.xcurenet.interestUser.service.AdminUserGroupService;
 import lombok.extern.slf4j.Slf4j;
@@ -132,6 +133,7 @@ public class EmsSearchServiceImpl implements EmsSearchService {
 
             /* response 용 Data로 재 빌드해야함  */
             List<EmassResponse> emassResponse = new EmsReDefined((List<Emass>) emassIntegrated.getEmass(), readYn, consentNo, adminUserGroupService.getAdminUserGroupSimpleAdminList(adminId)).reDefined(adminId, conf);
+
             emassIntegrated.setEmass(emassResponse);
 
             String serverTime = getServerTime();
@@ -247,7 +249,30 @@ public class EmsSearchServiceImpl implements EmsSearchService {
 
 
 
+    @Override
+    public List<EmassChecked> getCheckedList(Map<String, Object> searchParam) throws IOException {
+        return null;
+    }
 
+    @Override
+    public List<Emass> findReadList(List<Emass> emass, String adminId) throws IOException {
+        return null;
+    }
+
+    @Override
+    public void setRead(EmassChecked checked) {
+
+    }
+
+    @Override
+    public boolean setMessengerRead(List<Emass> data, String adminId) {
+        return false;
+    }
+
+    @Override
+    public EmassIntegrated getCheckedStatList(Map<String, Object> searchParam) throws IOException {
+        return null;
+    }
 
 
 

@@ -67,6 +67,8 @@ public class ElasticSearchCommon {
     public static final String SERVICE_3 = "service.svc3";
     public static final String SERVICE_12 = "service.svc12";
 
+    public static final String DAY_WORK = "day.work";
+    public static final String DIRECTION = "direction";
 
     public static final String BUSICD = "busicd";
     public static final String IP_BUSICD = "ip_busicd";
@@ -94,7 +96,7 @@ public class ElasticSearchCommon {
     public static final String KEYWORD_YN = "kwd";
     public static final String KEYWORD = "kwds";
     public static final String PI_TOTAL = "pi_total";
-    public static final String PI = "pi";
+    public static final String PI = "pi.codes.code";
     public static final String USER_ID = "user.id";
     public static final String USER_STR = "user_str";
     public static final String WORK = "work";

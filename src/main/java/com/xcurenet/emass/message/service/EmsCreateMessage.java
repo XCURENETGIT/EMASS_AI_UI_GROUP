@@ -1,28 +1,21 @@
 package com.xcurenet.emass.message.service;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.io.IOUtils;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-
 import com.xcurenet.common.image.ImageUtils;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.SpringContextUtil;
 import com.xcurenet.common.util.config.Config;
 import com.xcurenet.common.util.locale.Prop;
 import com.xcurenet.config.service.ConfigAdminService;
-import com.xcurenet.config.service.ConfigAdminVO;
 import com.xcurenet.emass.message.web.EmsAttachDownload;
+import org.apache.commons.io.IOUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.List;
+import java.util.Locale;
 
 public class EmsCreateMessage {
 
@@ -74,10 +67,10 @@ public class EmsCreateMessage {
 	}
 
 	private String mappingHeader(String msgId, BufferedReader in, String body, String print, Locale locale, String firstAdminYn, MessengerGroupUserVO participants, String adminId, String adminType) {
-		try {
-			EmsMessageVO msg = emsMessageService.getEmassMessage(msgId, firstAdminYn, adminType);
+	/*	try {
+			EmassMessage msg = emsMessageService.getEmassMessage(msgId, firstAdminYn, adminType);
 			if (msg == null) {
-				msg = new EmsMessageVO();
+				msg = new EmassMessage();
 			}
 
 			List<EmsKeywordVO> emsKeywordVOList = null;
@@ -294,7 +287,7 @@ public class EmsCreateMessage {
 			return header_doc.html().toString();
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}*/
 		return Common.EMPTY;
 	}
 	

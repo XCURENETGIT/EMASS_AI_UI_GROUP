@@ -493,27 +493,27 @@ function openCodeWindow(id, oldCode, oldConm){
 										<select id="searchFieldPop" class="selectpicker" data-style="btn-default" style="border-left:1px solid #337ab7;">
 											<option value=""><s:message code="condition.field.search"/></option>
 											<option value="subject"><s:message code="condition.subject"/></option>
-											<option value="body"><s:message code="condition.body"/></option>
-											<option value="attachname attachname_str"><s:message code="condition.attach_name"/></option>
+											<option value="body.text"><s:message code="condition.body"/></option>
+											<option value="attach.name attach.text"><s:message code="condition.attach_name"/></option>
 											<%if(!isOCRCheck){ %>
 											<option value="attach"><s:message code="condition.attach"/></option>
 											<%}else{ %>
 											<option value="attach ocr_attach"><s:message code="condition.attach"/></option>
 											<option value="ocr_attach">OCR</option>
 											<%} %>
-											<option value="host host_str">Host</option>
-											<option value="path">Path</option>
-											<option value="srcip"><s:message code="condition.source"/> IP</option>
-											<option value="dstip"><s:message code="condition.destination"/> IP</option>
+											<option value="http.host">Host</option>
+											<option value="filePath">Path</option>
+											<option value="network.srcip"><s:message code="condition.source"/> IP</option>
+											<option value="network.dstip"><s:message code="condition.destination"/> IP</option>
 											<option value="sender_str"><s:message code="condition.sender"/></option>
 											<option value="sname"><s:message code="condition.sender_name"/></option>
-											<option value="recvs"><s:message code="condition.recv"/></option>
-											<option value="recvs_name"><s:message code="condition.recv_name"/></option>
-											<option value="to tname"><s:message code="condition.recv"/>(<s:message code="condition.to"/>)</option>
-											<option value="cc cname"><s:message code="condition.recv"/>(<s:message code="condition.cc"/>)</option>
-											<option value="bcc bname"><s:message code="condition.recv"/>(<s:message code="condition.bcc"/>)</option>
-											<option value="user user_str userid name"><s:message code="common.org.user"/></option>
-											<option value="usr_id"><s:message code="common.msg.account"/></option>
+											<option value="mail.to.email"><s:message code="condition.recv"/></option>
+											<option value="mail.to.name mail.cc.name mail.bcc.name"><s:message code="condition.recv_name"/></option>
+											<option value="mail.to.name"><s:message code="condition.recv"/>(<s:message code="condition.to"/>)</option>
+											<option value="mail.cc.name "><s:message code="condition.recv"/>(<s:message code="condition.cc"/>)</option>
+											<option value="mail.bcc.name "><s:message code="condition.recv"/>(<s:message code="condition.bcc"/>)</option>
+											<option value="user.name user.id"><s:message code="common.org.user"/></option>
+											<option value="account_user"><s:message code="common.msg.account"/></option>
 										</select>
 										<div class="btn-group filterBtn" data-toggle="buttons" style="display:none;">
 											<label class="btn btn-xs btn-default"><input type="radio" name="easyDatePop" value="1"> <s:message code="condition.today"/></label>

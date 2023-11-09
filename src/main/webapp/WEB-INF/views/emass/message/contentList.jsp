@@ -174,6 +174,8 @@ var searchedFlag = false;
 var pageType = '';
 var grid;
 $(document).ready(function() {
+
+
 	document.onclick = function(e){ parent.$('.dropdown-backdrop').click(); }
 	
 	$('#contextMenuCloseBtn').click(function(){
@@ -281,24 +283,22 @@ function getList(flag, filterVal){
 		url : 'getList.xcn',
 		searchData : JSON.stringify( searchData ),
 		success : function(data, total) {
-			console.log(data.emass)
 			searchedFlag = true;
 			grid.appendData(data.emass);
 			if ( grid.loadingPage == 0 ) grid.Select(-1,-1);
 
-			parent.setResultCnt(tabId, total.comma());
+			parent.setResultCnt(tabId, total);
 			parent.changeTabName(tabId, '', researchCnt);
 			setServiceGroupCntInfo(data.facet, total);
 			$('#searchTime').val(data.searchTime);
 
 			var query = filterValData.conditions[0].query;
-			/* console.log("getList filterValData query1 : " + query); */
+			/!* console.log("getList filterValData query1 : " + query); *!/
 			if( query != '' && query != undefined){
 				parent.$('#researchCheckbox').prop('disabled', true);
 			}else{
 				parent.$('#researchCheckbox').prop('disabled', false);
 			}
-
 		},
 		error : function(status, message) {
 			alert(message);
@@ -357,7 +357,7 @@ function getSubList(flag, svc1, searchTime){
 function setServiceGroupCntInfo(data, total){
 	busiScrollTabs.clearTabs();
 	busiScrollTabs.refreshState();
-	busiScrollTabs.addTab('<span class="tab_selected"><a href="javascript:;" class="busiCounts active" data-svc1=""><i class="fa fa-angle-right" aria-hidden="true"></i> <s:message code="common.msg.all"/><span class="busiCnt">('+total.comma()+')</span></a></span>');
+	busiScrollTabs.addTab('<span class="tab_selected"><a href="javascript:;" class="busiCounts active" data-svc1=""><i class="fa fa-angle-right" aria-hidden="true"></i> <s:message code="common.msg.all"/><span class="busiCnt">('+total+')</span></a></span>');
 	/* 임시 주석*/
 	// for(var i=0; i<data.length; i++){
 	// 	busiScrollTabs.addTab('<span><a href="javascript:;" class="busiCounts" data-svc1="'+data[i].name+'"><i class="fa fa-angle-right" aria-hidden="true"></i> '+parent.getSvc1Nm(data[i].name)+'<span class="busiCnt">('+data[i].count.comma()+')</span></a></span>');
@@ -758,7 +758,7 @@ function initGrid(){
 		grid.colAdd('overlap', '<s:message code="common.overlap.count"/>', 80, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
 			var overlapData = value;
 			if (overlapData == undefined || overlapData.length == '0') return '';
-			else return overlapData.length.comma();
+			else return overlapData.length;
 		});
 	}
 	<%--grid.colAdd('interestUserYn', '<s:message code="message.msg.interest"/>', 40, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {--%>
@@ -814,7 +814,7 @@ function initGrid(){
 	}
 	grid.colAdd('attachCnt', '<s:message code="message.msg.file"/>', 35, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
 		if (value == '0') return '';
-		else return value.comma();
+		else return value;
 	});
 	grid.colAdd('user_inside', '<s:message code="message.msg.inout"/>', 55, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 		if (value == 'N') return '<s:message code="message.msg.out"/>';
@@ -857,7 +857,7 @@ function initGrid(){
 	grid.colAdd('user_ipBusiNm', '<s:message code="message.actual.dept"/>', 120, 'center', false, 'nomal');
 	grid.colAdd('user_jikgubNm', '<s:message code="common.org.jikgub"/>', 120, 'center', false, 'nomal');
 	grid.colAdd('sender_mail_name', '<s:message code="condition.sender"/>', 130, 'left', false, 'link', function(row, cell, value, columnDef, dataContext) {
-		return highlightSearchStr(value, "sender");
+	//	return highlightSearchStr(value, "sender");
 	});
 	grid.colAdd('allofus', '<s:message code="condition.allofus"/>', 150, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 		if( value == undefined || value.length == 0) return '';
@@ -879,27 +879,27 @@ function initGrid(){
 	grid.colAdd('to', '<s:message code="condition.to"/>', 150, 'left', true, 'link', function(row, cell, value, columnDef, dataContext) {
 		var innOutInfo = grid.getValue(row, 'toInOutInfo');
 		var rtnVal = arrayToString(value);
-		return innOutInfo+highlightSearchStr(rtnVal, "to");
+		//return innOutInfo+highlightSearchStr(rtnVal, "to");
 	});
 	grid.colAdd('cc', '<s:message code="condition.cc"/>', 150, 'left', true, 'link', function(row, cell, value, columnDef, dataContext) {
 		var innOutInfo = grid.getValue(row, 'ccInOutInfo');
 		var rtnVal = arrayToString(value);
-		return innOutInfo+highlightSearchStr(rtnVal, "cc");
+	//	return innOutInfo+highlightSearchStr(rtnVal, "cc");
 	});
 	grid.colAdd('bcc', '<s:message code="condition.bcc"/>', 150, 'left', true, 'link', function(row, cell, value, columnDef, dataContext) {
 		var innOutInfo = grid.getValue(row, 'bccInOutInfo');
 		var rtnVal = arrayToString(value);
-		return innOutInfo+highlightSearchStr(rtnVal, "bcc");
+	//	return innOutInfo+highlightSearchStr(rtnVal, "bcc");
 	});
 	grid.colAdd('network_srcIp', '<s:message code="condition.source"/> IP', 100, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-		return highlightSearchStr(value, "srcip");
+	//	return highlightSearchStr(value, "srcip");
 	}, {sorter:sortUtil.ip});
 	grid.colAdd('network_dstIp', '<s:message code="condition.destination"/> IP', 100, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-		return highlightSearchStr(value, "dstip");
+	//	return highlightSearchStr(value, "dstip");
 	}, {sorter:sortUtil.ip});
 	grid.colAdd('attach_name', '<s:message code="condition.attach_name"/>', 220, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 		var rtnVal = arrayToString(value);
-		return highlightSearchStr(rtnVal, "attachname");
+	//	return highlightSearchStr(rtnVal, "attachname");
 	});
 	grid.colAdd('size_Str', '<s:message code="condition.size.all"/>', 80, 'left', false, 'nomal', null, {sortField:'size'});
 	grid.colAdd('body_sizeStr', '<s:message code="condition.size.body"/>', 80, 'left', false, 'nomal', null, {sortField:'body_size'});
@@ -907,13 +907,13 @@ function initGrid(){
 	grid.colAdd('kwd_kwds', '<s:message code="condition.keyword"/>', 120, 'left', false, 'nomal');
 	grid.colAdd('pi_kwds', '<s:message code="condition.regexp"/>', 70, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
 		if (value == '0') return '';
-		else return value.comma();
+		else return value;
 	});
 
 	if ( isOCR ) {
 		grid.colAdd('ocr_attachCnt', 'OCR <s:message code="message.msg.file"/>', 70, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
 			if (value == '0' || value == '' || value == null || value == undefined ) return '';
-			else return value.comma();
+			else return value;
 		});
 	}
 

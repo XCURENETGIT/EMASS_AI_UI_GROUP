@@ -4,6 +4,8 @@ import com.xcurenet.emass.message.service.MessengerEdcGroupVO;
 import com.xcurenet.emass.message.service.MessengerGroupUserVO;
 import com.xcurenet.emass.message.service.impl.parseJsonFile;
 import com.xcurenet.emass.message.vo.emass.EmassIntegrated;
+import com.xcurenet.emass.message.vo.emass.els.Emass;
+import com.xcurenet.emass.message.vo.emass.els.EmassChecked;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 
@@ -17,7 +19,7 @@ public interface EmsSearchService {
 
 	 EmassIntegrated getEmassMessage(final Map<String,Object> searchParam, final String adminId) throws IOException;
 
-	 EmassIntegrated getEmassMessage(Map<String,Object>  searchParam, String adminId, String readYn, String consentNo) throws IOException;
+	 EmassIntegrated getEmassMessage(Map<String,Object> searchParam, String adminId, String readYn, String consentNo) throws IOException;
 
 	 MessengerEdcGroupVO getMessengerGroupList(final Map<String,Object> searchParam, final String adminId) throws IOException;
 
@@ -32,6 +34,19 @@ public interface EmsSearchService {
 	 boolean setSecretInfo(String sourceKey, String securityYn, String doublSecurityPctStr, Map<String, List<parseJsonFile>> sortList) throws IOException;
 
 	 boolean updateSolrFeedbackData(List<parseJsonFile> feedbackList);
+
+
+	 /* 읽음 관련 메서드 */
+
+	 List<EmassChecked> getCheckedList(final Map<String,Object> searchParam) throws IOException;
+
+	 List<Emass> findReadList(final List<Emass> emass, final String adminId) throws IOException;
+
+	 void setRead(final EmassChecked checked);
+
+	 boolean setMessengerRead(List<Emass> data, String adminId);
+
+  	 EmassIntegrated getCheckedStatList(Map<String,Object> searchParam) throws IOException;
 
 
 }

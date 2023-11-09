@@ -490,6 +490,10 @@ function fileInfoViewer( row ){
             <div class="panel-body" style="height: calc(100% - 38px); padding: 10px;">
               <div id="infoStatListGrid" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; height: 500px"></div>
             </div>
+            <%-- 통계영역 검색 조건 --%>
+            <input id="searched_xAxis" type="hidden"/>
+            <input id="searched_startDate" type="hidden"/>
+            <input id="searched_endDate" type="hidden"/>
           </div>
         </div>
         <div class="col-lg-8">
@@ -800,18 +804,20 @@ function fileInfoViewer( row ){
       , menuId: menuId
     }
 
-
-    console.log(searchData);
     ui.get({
       url : 'test_getInfoStatList.xcn',
       searchParam : JSON.stringify(searchData),
       success : function(data, total) {
-        grid1.setData(data);
+        console.log(data);
+        if(data.search_xAxis != null) $('#searched_xAxis').val(data.search_xAxis);
+        if(data.search_startDate != null) $('#searched_startDate').val(data.search_startDate);
+        if(data.search_endDate != null) $('#searched_endDate').val(data.search_endDate);
+/*        grid1.setData(data);
         $('#statlist_cnt').html('<s:message code="common.msg.finish_query"/>:'+grid1.data.length);
         if ( grid1.loadingPage == 0 ) grid1.Select(-1,-1);
         $('#listTab').append("<b> ["+piCount_str+"] 기준</b>");
 		$("#listTab").data( "value",piCount);
-        $('.piCountNum').attr('piCountNum',piCount);
+        $('.piCountNum').attr('piCountNum',piCount);*/
         searchFlag = false;
       },
       error : function(status, message) {

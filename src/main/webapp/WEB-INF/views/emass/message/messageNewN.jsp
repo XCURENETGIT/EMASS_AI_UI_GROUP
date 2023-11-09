@@ -1112,6 +1112,7 @@ $(document).ready(function() {
 		}
 		
 		var searchType = $('#searchType').val();
+		alert('dd');
 		var consentNo = grid.getValue(0, 'consentNo');
 		if( searchType != 'L'){
 			if(isConsent( ) && consentNo == '' && '<%=adminType%>' != 'C'){

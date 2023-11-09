@@ -392,8 +392,22 @@ var con = {
 		}
 
 		condition.searchStr = $('#searchStrInput').val();
-		condition.searchField = arrayToString($('#searchField').selectpicker('val'));
+		condition.searchField = (arrayToString($('#searchField').selectpicker('val')) != '' ) ? arrayToString($('#searchField').selectpicker('val')) : arrayToString($('#searchField').find('option').map(function() {return $(this).val();}).get())
+
+		var searchFieldArr = condition.searchField.split(",");
+		/* 중복의 value 제거 */
+		if(searchFieldArr.length >= 1) {
+			condition.searchField  = arrayToString(searchFieldArr.reduce((prev, item) => {
+				 if(!prev.some(obj => obj === item)){
+					 prev.push(item);
+				 }
+				return prev;
+			}, []));
+		}
+
 		condition.serviceType = arrayToString($('#serviceType').selectpicker('val'));
+
+
 
 		condition.receiveSend = $('input:radio[name=receiveSend]:input:checked').val();
 		condition.receive_option = $('input:radio[name=receive_option]:input:checked').val();

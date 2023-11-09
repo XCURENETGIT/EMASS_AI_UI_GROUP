@@ -6,7 +6,6 @@ import com.xcurenet.emass.message.vo.emass.mongo.fields.*;
 import lombok.Data;
 
 import javax.annotation.Nullable;
-import java.util.Date;
 import java.util.List;
 
 
@@ -20,8 +19,8 @@ import java.util.List;
 public class EmassMessage {
 
     private String	_id;//	메시지ID
-    private Date ltime;	//로깅타임
-    private Date	ctime;	//캡쳐타임
+    private String ltime;	//로깅타임
+    private String	ctime;	//캡쳐타임
     private String	subject;//	제목
     private int	attachExistCnt;	//첨부 존재 개수
     private int	attachCnt;	//첨부파일 개수
@@ -48,6 +47,7 @@ public class EmassMessage {
     private BodyVo_Mgo body;
     private NetworkVo_Mgo network;
     private List<AttachVo_Mgo> attach;
+    private KwdVo_Mgo kwd;
     private ServiceVo_Mgo service;
     private HttpVo_Mgo http;
     private PiVo_Mgo pi;
@@ -58,4 +58,5 @@ public class EmassMessage {
     private MailVo_Mgo mail;
 
 
+    boolean ConsentFlag; // 동의서 관련
 }
