@@ -116,6 +116,7 @@ public class EmsSearchServiceImpl implements EmsSearchService {
                     searchSourceBuilder = elsSearchQueryUtils.initanalysisSearchSource(searchParam); // 검색 소스 준비
                     break;
             }
+
             /* 검색 진행 */
             SearchRequest searchRequest = new SearchRequest(elsSearchQueryUtils.getElasticSearchParam().getIndices()).source(searchSourceBuilder);
             SearchResponse searchResponse = getList(searchRequest); // getList 수행

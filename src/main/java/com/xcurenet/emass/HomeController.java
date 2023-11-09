@@ -53,6 +53,7 @@ public class HomeController {
 		return "/commons/blank";
 	}
 
+
 	@RequestMapping(value = "/print.do", method = RequestMethod.GET)
 	@Description("인쇄 페이지")
 	public String print(final HttpSession session, final HttpServletRequest request, @RequestParam(required = false) String locale) {

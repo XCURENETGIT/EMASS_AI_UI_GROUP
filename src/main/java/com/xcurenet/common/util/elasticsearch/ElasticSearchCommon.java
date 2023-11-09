@@ -17,6 +17,7 @@ public class ElasticSearchCommon {
     public static final String EDC_MESSAGE_INDEX = "emass";   //ems_edc_message
     public static final String EDC_MESSAGE_SEARCH_HIST_INDEX = "ems_search_history";
 
+
     /*검색타입*/
     public static final String SEARCH_TYPE = "elsSearchType";
     public static final String SEARCH_TYPE_MESSAGE = "message";

@@ -800,6 +800,7 @@ function fileInfoViewer( row ){
       , menuId: menuId
     }
 
+
     console.log(searchData);
     ui.get({
       url : 'test_getInfoStatList.xcn',

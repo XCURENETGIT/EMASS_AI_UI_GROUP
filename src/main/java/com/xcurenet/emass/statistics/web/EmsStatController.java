@@ -110,6 +110,7 @@ public class EmsStatController {
         return new XcnResponseVO(XcnRspCode.OK,emassIntegrated, emassIntegrated.getTotal());
 
 
+
        /* String adminId = Common.nvl(request.getParameter("adminId"));
         if (Common.isEmpty(adminId)) adminId = "*";
         String startDate = Common.nvl(request.getParameter("startDate"));

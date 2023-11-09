@@ -1559,6 +1559,7 @@ public class ElasticSearchQueryUtils {
     }
 
 
+
     public SearchSourceBuilder initanalysisSearchSource(Map<String,Object> searchParam) {
 
         SearchSourceBuilder searchSourceBuilder = null; // SearchSourceBuilder 리턴용
