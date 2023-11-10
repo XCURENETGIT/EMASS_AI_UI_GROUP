@@ -34,4 +34,5 @@ public class EmassMessenger {
     private String body_snippet;
     private String body_text;
 
+
 }

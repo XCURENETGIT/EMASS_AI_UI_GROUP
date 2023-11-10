@@ -113,13 +113,16 @@ var eikon = {
 		var startDt = $('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 		var endDt = $('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 
+		var data = {
+			xRootmtr : xRootmtr,
+			startDt : startDt,
+			endDt : endDt,
+			groupField: 'user_id'
+		}
 		//참여자 수, 참여자 정보
 		ui.get({
 			url : 'getMessengerGroupUserList.xcn',
-			xRootMtr : xRootmtr,
-			startDt : startDt,
-			endDt : endDt,
-			groupField : 'usr_id',
+			searchParam : data,
 			success : function(data, total) {
 				participantDataSet = data.groups;
 				userSelectBox(data.groups, srcip, usr_id);
@@ -240,14 +243,18 @@ var eikon = {
 
 function getMessengerMessageTotal(xRootmtr, srcip, startDt, endDt, usr_id, msgid){
 	//마지막 열람 msgid
-	ui.get({
-		url : 'getMessengerMessageTotal.xcn',
+
+	var data = {
 		xRootMtr : xRootmtr,
 		srcip : srcip,
 		startDt : startDt,
 		endDt : endDt,
 		usr_id : usr_id, //기준이 srcip에서 usr_id로 변경되면서 마지막 데이터 기준 변경
-		limit : 0,
+		limit : 0
+	}
+	ui.get({
+		url : 'getMessengerMessageTotal.xcn',
+		searchParam : data,
 		success : function(data, total) {
 			$('#groupSubResultCnt').text(data.comma());
 			getMessengerMessage(xRootmtr, srcip, usr_id, msgid);
@@ -273,15 +280,18 @@ function getMessengerMessage(xRootmtr, srcip, usr_id, msgid) {
 	var startDt = $('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 	var endDt = $('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 	$("#timeline_list").html('');
-	ui.get({
-		url : 'getMessengerMessage.xcn',
-		xRootMtr : xRootmtr,
+	var data = {
+		xRootmtr : xRootmtr,
 		srcip : srcip,
 		startDt : startDt,
 		endDt : endDt,
 		usr_id : usr_id,
-		msgId : nvl(msgid),
-		limit : detailLimit,
+		msgid : nvl(msgid),
+		limit : detailLimit
+	}
+	ui.get({
+		url : 'getMessengerMessage.xcn',
+		searchParam : data,
 		success : function(data, total) {
 			if(data.groups.length > 0) {
 				$('.messenger_prev').css('display','block');
@@ -457,6 +467,41 @@ function getDetailData(usr_id){
 	}else $('.selectUser').first().click();
 }
 
+function rtnGroupGenertiveList(data) {
+	var str = '';
+	for (var i = 0; i < data.length; i++) {
+
+		var className='';
+		if( isConsent() && $('#consentNo').val() == '') className='cursor-default';
+		str += '<a href="#" class="list-group-item list-group-item-action style="min-height:60px;padding: 5px 15px;">';
+		str += '<div class="list-group-item-heading" style="font-size: 20px; margin-left: 15px;">'+data[i].sender+data[i].jikgubNm+'('+data[i].srcip+')'+'</div>';
+		str += '<div class="pull-xs-right" style="font-size: 12px; margin-left: 15px; clear: both;">'+data[i].ctime+'</div>';
+		str += '<div class="pull-xs-right" style="font-size: 12px; margin-left: 15px; border: 1px solid #ccc; padding: 2px 4px; clear: both;">'+makeMessengerText(data[i].svc)+'</div>';
+		//str += '	<h5 class="list-group-item-heading" style="padding-left: 14px;">'+data[i].body_snippet.replaceAll('<', '&lt;').replaceAll('>', '&gt;')+'</h5>';
+		/*	str += '	<p class="list-group-item-text" style="float:left;">';*/
+
+
+		str += "<span style='word-break: break-all'>"+ data[i].body_snippet + "</span>";
+		str += "<span style='position:absolute;top:30px; right: 15px;font-size: 11px; padding: 2px 4px; margin-left: 3px;'>";
+		str += "</span>";
+		str += '</p></a>';
+	}
+	if( data.length == 0 ){
+		str += '<a href="#" class="list-group-item list-group-item-action active" style="cursor:default;height:50px;">';
+		str += '	<p class="list-group-item-text" style="line-height:30px;">';
+		str += '		<i class="fa fa-envelope fa-sm"></i> ';
+		str += nodataMsg; //common.msg.nodata
+		str += '</p></a>';
+	}
+
+	$('#group_list').html( str );
+	$('#group_list').animate({
+		scrollTop : 0
+	}, 0);
+
+}
+
+
 function rtnFileList(data, type) {
 	var str = '<table border="1"><thead><tr><th>파일 전송 서비스</th><th>파일명/예상 확장자</th><th>미리보기</th></tr></thead><tbody>';
 
@@ -502,8 +547,8 @@ function rtnGroupList(data, type){
 			if(closeFlag) str += '<span class="tag tag-default tag-pill pull-xs-right">'+endChat+'</span>';
 			else str += '<span class="tag tag-success tag-pill pull-xs-right">'+chatting+'</span>';
 		}
-		str += '	<h5 class="list-group-item-heading" style="padding-left: 14px;">'+data[i].body_snippet.replaceAll('<', '&lt;').replaceAll('>', '&gt;')+'</h5>';
-	/*	str += '	<p class="list-group-item-text" style="float:left;">';*/
+		str += '	<h5 class="list-group-item-heading" style="padding-left: 14px;">'+data[i].title.replaceAll('<', '&lt;').replaceAll('>', '&gt;')+'</h5>';
+		str += '	<p class="list-group-item-text" style="float:left;">';
 
 
 		if( svc3 == 'C' ) str += '<i class="fa fa-commenting-o fa-sm"></i> ';
@@ -531,7 +576,6 @@ function rtnGroupList(data, type){
 		scrollTop : 0
 	}, 0);
 }
-
 function makeMessengerText( svc ){
 	var str = '';
 	svc = svc.substring(0, svc.length - 1);
@@ -546,14 +590,17 @@ function getMessengerGroupList (page){
 	var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
 	groupPage = page;
 	var offset = groupPage*groupPageBreak - groupPageBreak;
+	let data = {
+		conditions :  getCondition( ) ,
+		limit : groupPageBreak,
+		offset : offset,
+		readYn : readYn
+	}
 	searchFlag = true;
 	ui.onBody('timeline_list', 0, -20);
 	ui.postJson({
 		url : 'getMessengerGroupList.xcn',
-		data : JSON.stringify( getCondition( ) ),
-		readYn : readYn,
-		offset : offset,
-		limit : groupPageBreak,
+		searchParam : JSON.stringify(data),
 		success : function(data, total) {
 			rtnGroupList(data.groups, 'G');
 			rtnGroupPage(total, page, 'G');
@@ -569,7 +616,7 @@ function getMessengerGroupList (page){
 	});
 };
 
-function getFiletransferList(){
+function getFiletransferList(page){
 	var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
 	ui.onBody('timeline_list', 0, -20);
 
@@ -599,24 +646,54 @@ function getFiletransferList(){
 	});
 }
 
-function getMessengerGenertiveList(page) { //생성형 AI검색
+function getMessengerNoteList(page){
 
 	var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
+	groupPage = page;
+	var offset = groupPage*groupPageBreak - groupPageBreak;
 	var searchData = {
-		serviceType:  'X',
+		serviceType:  'XU1S',
 		startDate: '20231012180000',
 		endDate: '20231030120000',
 		offset:100,
 		limit:10
 	};
 	ui.get({
-		url: 'getMessengerGenertiveList.xcn',
+		url: 'getMessengerNoteList.xcn',
 		searchParam : JSON.stringify(searchData),
 		success: function (data, total) {
 			console.log(data);
-			alert("성공");
 			rtnGroupList(data.groups, 'GD');
 			rtnGroupPage(total, page, 'GD');
+			HighlightGroup( );
+		},
+		error: function (status, message) {
+
+			ui.alertMsg(message);
+		},
+		complete: function () {
+			searchFlag = false;
+			ui.off('timeline_list');
+		}
+	});
+}
+
+function getMessengerGenertiveList(page) { //생성형 AI검색
+	var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
+	groupPage = page;
+	var offset = groupPage*groupPageBreak - groupPageBreak;
+	let data = {
+		conditions :  getCondition(),
+		limit : groupPageBreak,
+		offset : 0,
+		readYn : readYn
+	}
+	ui.get({
+		url: 'getMessengerGenertiveList.xcn',
+		searchParam : JSON.stringify(data),
+		success: function (data, total) {
+			console.log(data);
+			rtnGroupGenertiveList(data.groups);
 			HighlightGroup( );
 		},
 		error: function (status, message) {
@@ -637,13 +714,17 @@ function getMessengerMessageList (page){
 	groupMessagePage = page;
 	var offset = groupMessagePage*groupMessagePageBreak - groupMessagePageBreak;
 	searchFlag = true;
+	var data = {
+		conditions : getCondition( ),
+		limit : groupPageBreak,
+		offset : offset,
+		readYn : readYn
+
+	}
 	ui.onBody('timeline_list', 0, -20);
 	ui.postJson({
 		url : 'getMessengerMessageList.xcn',
-		data : JSON.stringify( getCondition( ) ),
-		readYn : readYn,
-		offset : offset,
-		limit : groupPageBreak,
+		searchParam : JSON.stringify(data),
 		success : function(data, total) {
 			rtnGroupList(data.groups, 'GD');
 			rtnGroupPage(total, page, 'GD');

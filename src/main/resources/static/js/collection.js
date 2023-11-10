@@ -17,6 +17,25 @@
         }
     });
 }
+function getNoteServiceList(){
+        ui.get({
+            url : 'getNoteList.xcn',
+            asyncFlag : false,
+            success : function(data, total) {
+                messengerListCnt = data.length;
+                if( data.length > 0 ){
+                    $('#serviceTypeSelect').html( getSelectOptionMessenger( data ) );
+                }
+            },
+            error : function(status, message) {
+                ui.alertMsg('error:' + status);
+            },
+            complete : function() {
+                searchFlag=false;
+            }
+        });
+    }
+
 
     /* 파일전송 드롭박스 구성*/
     function getFileList(){

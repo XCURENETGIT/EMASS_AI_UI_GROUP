@@ -45,6 +45,10 @@ public class ElasticSearchParam {
     private String colId; // 디테일 검색시 클릭했던 column id
     private String searched_xAxis; // 바로 이전 검색했었던 xAxis값
 
+    /* 메신저 관련 */
+    private String xRootmtr;
+    private String groupField;
+
 
     /* 분석 관련 */
     private String user_str;

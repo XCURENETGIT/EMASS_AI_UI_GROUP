@@ -97,6 +97,8 @@ public interface EmsMessageService {
 
 	List<CodeVO> getFileList();
 
+	List<CodeVO> getNoteList();
+
 	/* 임시 맵핑 */
 	EmassMessage tempMapping(Map<String,Object> test);
 }
