@@ -57,5 +57,7 @@ public class ElasticSearchParam {
 
 
     private Map<String,Object> searchParameters; // 유저가 검색에 입력,사용한 값 (객체형태)
+
+
 }
 

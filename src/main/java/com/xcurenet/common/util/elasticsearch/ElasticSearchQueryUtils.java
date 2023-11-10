@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+
 @Slf4j
 @Data
 @Configuration
@@ -237,6 +238,19 @@ public class ElasticSearchQueryUtils {
         stringBuilder.insert(stringBuilder.length()-1,ElasticSearchCommon.CLOSE_PARENTHESES);
         return stringBuilder;
     }
+
+    /***
+     *  특수문자 filter 하여 replace
+     */
+
+    private Map<String,Object> parameterFilter(Map<String,Object> param) {
+          Map<String,Object> filterMap = param;
+           filterMap.entrySet().stream().forEach((k) -> {
+                k.setValue(k.getValue().toString().replaceAll("/", "\\\\/"));
+            });
+            return filterMap;
+    }
+
 
 //    /**
 //     * 서비스 그룹 쿼리
@@ -1376,8 +1390,8 @@ public class ElasticSearchQueryUtils {
 
 
         /* serviceType 설정 */
-        if(!Common.isEmpty(ElasticSearchCommon.SERVICE_GROUP)) {
-            setyField(Common.nvl(ElasticSearchCommon.SERVICE_GROUP));
+        if(!Common.isEmpty(ElasticSearchCommon.SERVICE_SVC1)) {
+            setyField(Common.nvl(ElasticSearchCommon.SERVICE_SVC1));
         }
 
         if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("serviceType"))) {
@@ -1454,7 +1468,7 @@ public class ElasticSearchQueryUtils {
             List<Map<String,Object>> tempList = (List<Map<String, Object>>) tempMap.get("conditions");
             searchParam.remove("filterData");
             tempList.get(0).putAll(searchParam);
-            elasticSearchParam.setSearchParameters(tempList.get(0));
+            elasticSearchParam.setSearchParameters(parameterFilter(tempList.get(0)));
         }
 
         /* sort 관련 */
@@ -1491,7 +1505,7 @@ public class ElasticSearchQueryUtils {
         /* 서비스 타입 값 지정*/ // 생성 예) AND (service.svc:(MP3) OR (MIM) OR (WKR))
         if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("serviceType"))) {
             String[] serviceTypes = Common.nvl(elasticSearchParam.getSearchParameters().get("serviceType")).split(",");
-            addQueryGroup(ElasticSearchCommon.AND_QUERY,ElasticSearchCommon.SERVICE,makeParentheses(serviceTypes));
+            addQueryGroup(ElasticSearchCommon.AND_QUERY,ElasticSearchCommon.SERVICE_SVC,makeParentheses(serviceTypes));
         }
         /*############################################*/
 
@@ -1537,12 +1551,52 @@ public class ElasticSearchQueryUtils {
 
 
         /*################## 조직 ####################*/
-        // 사업장
-        // 부서
-        
+        // AND 사업장
+        if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("busi"))) {
+            addQueryGroup(ElasticSearchCommon.AND_QUERY,ElasticSearchCommon.USER_BUSICD,makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("busi"))));
+        }
+        // NOT 사업장
+        if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("busi_not"))) {
+            addQueryGroup(ElasticSearchCommon.NOT_QUERY,ElasticSearchCommon.USER_BUSICD,makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("busi_not"))));
+        }
+
+        // AND 부서
+        if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("dept"))) {
+            addQueryGroup(ElasticSearchCommon.AND_QUERY,ElasticSearchCommon.USER_DEPTCD,makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("dept"))));
+        }
+        // NOT 부서
+        if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("dept_not"))) {
+            addQueryGroup(ElasticSearchCommon.NOT_QUERY,ElasticSearchCommon.USER_DEPTCD,makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("dept_not"))));
+        }
+
+
         /*################## 기타 ####################*/
-        
-        
+        // AND URL
+        if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("url"))) {
+            addQueryGroup(ElasticSearchCommon.AND_QUERY,ElasticSearchCommon.HTTP_PATH,makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("url"))));
+        }
+        // NOT URL
+        if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("url_not"))) {
+            addQueryGroup(ElasticSearchCommon.NOT_QUERY,ElasticSearchCommon.HTTP_PATH,makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("url_not"))));
+        }
+
+        // AND READYN
+        if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("readYn"))) {
+            // 읽음여부 체크 Y,N,ALL
+          //  addQueryGroup(ElasticSearchCommon.AND_QUERY,ElasticSearchCommon.URL,makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("readYn"))));
+        }
+
+
+        // OCRYn
+        if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("OCRYn"))) {
+            // 읽음여부 체크 Y,N,ALL
+            //  addQueryGroup(ElasticSearchCommon.AND_QUERY,ElasticSearchCommon.OCR_ATTACHCNT,makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("OCRYn"))));
+        }
+
+
+
+
+
         /*################## Detail(고급) Query ####################*/
 
 
