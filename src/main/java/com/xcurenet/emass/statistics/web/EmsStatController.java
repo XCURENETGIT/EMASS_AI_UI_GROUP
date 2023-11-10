@@ -40,7 +40,7 @@ public class EmsStatController {
     @Resource
     EmsSearchService emsSearchService;
 
-    @RequestMapping(value = "/getStatList.xcn")
+    @RequestMapping(value = "/test_getStatList.xcn")
     @Description("통계 리스트 조회")
     @AuditOperation(Operation.SEARCH)
     @ResponseBody
