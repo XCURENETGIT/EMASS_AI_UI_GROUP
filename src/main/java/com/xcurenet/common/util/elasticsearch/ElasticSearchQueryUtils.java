@@ -1597,16 +1597,45 @@ public class ElasticSearchQueryUtils {
           //  addQueryGroup(ElasticSearchCommon.AND_QUERY,ElasticSearchCommon.URL,makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("readYn"))));
         }
 
+        // AND 첨부여부
+        if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("attachYn"))) {
+            String flag = ("Y").equals(Common.nvl(elasticSearchParam.getSearchParameters().get("attachYn"))) ? ElasticSearchCommon.NOT_QUERY  : ElasticSearchCommon.AND_QUERY;
+            addQueryGroup(flag,ElasticSearchCommon.ATTACHCNT,makeParentheses("0"));
+            // 첨부 확장자 찾기
+            if(Common.isEquals("Y",elasticSearchParam.getSearchParameters().get("attachYn")) && !Common.isEmpty(elasticSearchParam.getSearchParameters().get("attachVal"))){
+                String extFlag = ("Y").equals(Common.nvl(elasticSearchParam.getSearchParameters().get("attachYn_not"))) ? ElasticSearchCommon.NOT_QUERY  : ElasticSearchCommon.AND_QUERY;
+                addQueryGroup(extFlag,ElasticSearchCommon.ATTACH_EXT,makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("attachVal"))));
+            }
+
+            // 실제 존재여부
+            if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("realAttYn"))){
+                String existFlag = ("Y").equals(Common.nvl(elasticSearchParam.getSearchParameters().get("realAttYn"))) ? ElasticSearchCommon.NOT_QUERY  : ElasticSearchCommon.AND_QUERY;
+                addQueryGroup(existFlag,ElasticSearchCommon.ATTACH_EXIST,makeParentheses("0"));
+            }
+        }
 
         // OCRYn
         if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("OCRYn"))) {
-            // 읽음여부 체크 Y,N,ALL
             //  addQueryGroup(ElasticSearchCommon.AND_QUERY,ElasticSearchCommon.OCR_ATTACHCNT,makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("OCRYn"))));
         }
 
+        // drmYn
+        if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("drmYn"))) {
+            // drm 체크 Y,N,ALL
+            addQueryGroup(ElasticSearchCommon.AND_QUERY,ElasticSearchCommon.ATTACH_DRM,makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("drmYn"))));
+        }
 
+        // 예약어 관련
+        if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("keywordYn"))) {
+            // keyword  체크 Y,N,ALL
+        }
 
+        // 패턴 관련
+        if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("regexpYn"))) {
+            // keyword  체크 Y,N,ALL
+        }
 
+        // 크기 관련
 
         /*################## Detail(고급) Query ####################*/
 

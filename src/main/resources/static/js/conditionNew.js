@@ -670,7 +670,7 @@ var con = {
 		checkRadioBtn( 'bodyImg', condition.bodyImg );
 		
 		checkRadioBtn( 'attachYn', condition.attachYn );
-		setCodeCount('attach', endId, condition.attachVal, '|');
+		setCodeCount('attach', endId, condition.attachVal, ',');
 		$('#attachBtn').prop("disabled", condition.attachYn != 'Y' ? true : false);
 		$('#attachVal').val( condition.attachVal );
 		$('#attachStr').val( condition.attachStr );
