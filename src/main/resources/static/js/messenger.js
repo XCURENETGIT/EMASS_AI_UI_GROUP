@@ -113,13 +113,16 @@ var eikon = {
 		var startDt = $('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 		var endDt = $('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 
+		var data = {
+			xRootmtr : xRootmtr,
+			startDt : startDt,
+			endDt : endDt,
+			groupField: 'user_id'
+		}
 		//참여자 수, 참여자 정보
 		ui.get({
 			url : 'getMessengerGroupUserList.xcn',
-			xRootMtr : xRootmtr,
-			startDt : startDt,
-			endDt : endDt,
-			groupField : 'usr_id',
+			searchParam : data,
 			success : function(data, total) {
 				participantDataSet = data.groups;
 				userSelectBox(data.groups, srcip, usr_id);
@@ -240,14 +243,18 @@ var eikon = {
 
 function getMessengerMessageTotal(xRootmtr, srcip, startDt, endDt, usr_id, msgid){
 	//마지막 열람 msgid
-	ui.get({
-		url : 'getMessengerMessageTotal.xcn',
+
+	var data = {
 		xRootMtr : xRootmtr,
 		srcip : srcip,
 		startDt : startDt,
 		endDt : endDt,
 		usr_id : usr_id, //기준이 srcip에서 usr_id로 변경되면서 마지막 데이터 기준 변경
-		limit : 0,
+		limit : 0
+	}
+	ui.get({
+		url : 'getMessengerMessageTotal.xcn',
+		searchParam : data,
 		success : function(data, total) {
 			$('#groupSubResultCnt').text(data.comma());
 			getMessengerMessage(xRootmtr, srcip, usr_id, msgid);
@@ -273,15 +280,18 @@ function getMessengerMessage(xRootmtr, srcip, usr_id, msgid) {
 	var startDt = $('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 	var endDt = $('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 	$("#timeline_list").html('');
-	ui.get({
-		url : 'getMessengerMessage.xcn',
-		xRootMtr : xRootmtr,
+	var data = {
+		xRootmtr : xRootmtr,
 		srcip : srcip,
 		startDt : startDt,
 		endDt : endDt,
 		usr_id : usr_id,
-		msgId : nvl(msgid),
-		limit : detailLimit,
+		msgid : nvl(msgid),
+		limit : detailLimit
+	}
+	ui.get({
+		url : 'getMessengerMessage.xcn',
+		searchParam : data,
 		success : function(data, total) {
 			if(data.groups.length > 0) {
 				$('.messenger_prev').css('display','block');
@@ -502,8 +512,8 @@ function rtnGroupList(data, type){
 			if(closeFlag) str += '<span class="tag tag-default tag-pill pull-xs-right">'+endChat+'</span>';
 			else str += '<span class="tag tag-success tag-pill pull-xs-right">'+chatting+'</span>';
 		}
-		str += '	<h5 class="list-group-item-heading" style="padding-left: 14px;">'+data[i].body_snippet.replaceAll('<', '&lt;').replaceAll('>', '&gt;')+'</h5>';
-	/*	str += '	<p class="list-group-item-text" style="float:left;">';*/
+		str += '	<h5 class="list-group-item-heading" style="padding-left: 14px;">'+data[i].title.replaceAll('<', '&lt;').replaceAll('>', '&gt;')+'</h5>';
+		str += '	<p class="list-group-item-text" style="float:left;">';
 
 
 		if( svc3 == 'C' ) str += '<i class="fa fa-commenting-o fa-sm"></i> ';
@@ -531,7 +541,6 @@ function rtnGroupList(data, type){
 		scrollTop : 0
 	}, 0);
 }
-
 function makeMessengerText( svc ){
 	var str = '';
 	svc = svc.substring(0, svc.length - 1);
@@ -546,14 +555,17 @@ function getMessengerGroupList (page){
 	var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
 	groupPage = page;
 	var offset = groupPage*groupPageBreak - groupPageBreak;
+	let data = {
+		conditions :  getCondition( ) ,
+		limit : groupPageBreak,
+		offset : offset,
+		readYn : readYn
+	}
 	searchFlag = true;
 	ui.onBody('timeline_list', 0, -20);
 	ui.postJson({
 		url : 'getMessengerGroupList.xcn',
-		data : JSON.stringify( getCondition( ) ),
-		readYn : readYn,
-		offset : offset,
-		limit : groupPageBreak,
+		searchParam : JSON.stringify(data),
 		success : function(data, total) {
 			rtnGroupList(data.groups, 'G');
 			rtnGroupPage(total, page, 'G');
@@ -637,13 +649,17 @@ function getMessengerMessageList (page){
 	groupMessagePage = page;
 	var offset = groupMessagePage*groupMessagePageBreak - groupMessagePageBreak;
 	searchFlag = true;
+	var data = {
+		conditions : getCondition( ),
+		limit : groupPageBreak,
+		offset : offset,
+		readYn : readYn
+
+	}
 	ui.onBody('timeline_list', 0, -20);
 	ui.postJson({
 		url : 'getMessengerMessageList.xcn',
-		data : JSON.stringify( getCondition( ) ),
-		readYn : readYn,
-		offset : offset,
-		limit : groupPageBreak,
+		searchParam : JSON.stringify(data),
 		success : function(data, total) {
 			rtnGroupList(data.groups, 'GD');
 			rtnGroupPage(total, page, 'GD');
