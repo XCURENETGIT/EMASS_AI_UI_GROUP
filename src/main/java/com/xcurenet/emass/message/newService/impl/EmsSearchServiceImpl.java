@@ -164,12 +164,16 @@ public class EmsSearchServiceImpl implements EmsSearchService {
     public MessengerEdcGroupVO getMessengerGroupList(Map<String, Object> searchParam, String adminId, boolean detail, boolean original) throws IOException {
         setAuthoritys(searchParam,adminId);
         SearchSourceBuilder searchSourceBuilder = null;
+
         switch (Common.nvl(searchParam.get(ElasticSearchCommon.SEARCH_TYPE))) {
             case ElasticSearchCommon.SEARCH_TYPE_MESSENGER: //메세징 검색시
                 searchSourceBuilder = elsSearchQueryUtils.initMessengerGroupSearchSource(searchParam);
                 break;
-
+            case ElasticSearchCommon.SEARCH_TYPE_COLLECTION: //메세징 검색시
+                searchSourceBuilder = elsSearchQueryUtils.initCollectionSearchSource(searchParam);
+                break;
         }
+
         SearchRequest searchRequest = new SearchRequest(elsSearchQueryUtils.getElasticSearchParam().getIndices()).source(searchSourceBuilder);
         SearchResponse searchResponse = getList(searchRequest);
         return new MessengerEdcGroupVO(searchResponse,adminId,false,false);

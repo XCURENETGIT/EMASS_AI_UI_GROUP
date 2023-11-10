@@ -202,6 +202,32 @@ public class MessengerController {
 		if (!Common.isEmpty(resultParam.get("searchParam"))) {
 			Type type = new TypeToken<Map<String,Object>>(){}.getType();
 			searchParam = gson.fromJson((String) resultParam.get("searchParam"),type);
+			searchParam.put(ElasticSearchCommon.SEARCH_TYPE, ElasticSearchCommon.SEARCH_TYPE_COLLECTION);
+		}
+		MessengerEdcGroupVO edcMessage = emsSearchService.getMessengerGroupList(searchParam, Common.getAdminId(request));
+//		Gson gson = new Gson();
+//		Map<String,Object> resultParam = Common.getParamMap(request);
+//		Map<String,String> searchParam = new HashMap<>();
+//		if(!Common.isEmpty(resultParam.get("searchParam"))){
+//			Type type = new TypeToken<Map<String,String>>(){}.getType();
+//			searchParam = gson.fromJson((String) resultParam.get("searchParam"),type);
+//		}
+
+		return new XcnResponseVO(XcnRspCode.OK, edcMessage, edcMessage.getNumFound());
+
+	}
+
+	@RequestMapping(value = "/getMessengerNoteList.xcn")
+	@Description("노트 목록 조회")
+	@AuditOperation(Operation.SEARCH)
+	@ResponseBody
+	public XcnResponseVO getMessengerNoteList(final HttpServletRequest request, final HttpSession session) throws Exception {
+		Gson gson = new Gson();
+		Map<String,Object> resultParam = Common.getParamMap(request);
+		Map<String,Object> searchParam = new HashMap<>();
+		if (!Common.isEmpty(resultParam.get("searchParam"))) {
+			Type type = new TypeToken<Map<String,Object>>(){}.getType();
+			searchParam = gson.fromJson((String) resultParam.get("searchParam"),type);
 			searchParam.put(ElasticSearchCommon.SEARCH_TYPE, ElasticSearchCommon.SEARCH_TYPE_MESSAGE);
 		}
 		MessengerEdcGroupVO edcMessage = emsSearchService.getMessengerGroupList(searchParam, Common.getAdminId(request));
@@ -310,7 +336,7 @@ public class MessengerController {
 
 		return new XcnResponseVO(XcnRspCode.OK, result);
 	}
-
+	
 	public MessengerEdcGroupVO getMessengerMsgTotal(final HttpServletRequest request) throws Exception {
 		return getMessengerMsgTotal(request, false);
 	}
@@ -944,4 +970,13 @@ public class MessengerController {
 		edcMessage.setPivotData(resultData);
 		return edcMessage;
 	}
+
+
+	@RequestMapping(value = "/getNoteList.xcn")
+	@Description("노트 서비스 목록 조회")
+	@ResponseBody
+	public XcnResponseVO getNoteList(final HttpServletRequest request, final HttpSession session) throws Exception {
+		return new XcnResponseVO(XcnRspCode.OK, emsMessageService.getNoteList());
+	}
+
 }

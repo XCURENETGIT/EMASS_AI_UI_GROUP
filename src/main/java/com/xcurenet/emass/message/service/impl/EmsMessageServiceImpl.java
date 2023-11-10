@@ -796,6 +796,11 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		return null;
 	}
 
+	@Override
+	public List<CodeVO> getNoteList() {
+		return selectList("com.xcurenet.sqlmap.mappers.mysql.code.getNoteList");
+	}
+
 
 	@Override
 	public void updateEmsFeedback(String msgId, String feedback, String adminId) {

@@ -290,7 +290,7 @@
                     return;
                 }
 
-                eikon.getGenerativeList();
+                eikon.getGenerativeList(1);
             });
             $("#searchStrInput").keypress(function(e){if( e.keyCode == 13) $('#searchBtn').click();}); //통합 검색 엔터키
 

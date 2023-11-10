@@ -467,6 +467,41 @@ function getDetailData(usr_id){
 	}else $('.selectUser').first().click();
 }
 
+function rtnGroupGenertiveList(data) {
+	var str = '';
+	for (var i = 0; i < data.length; i++) {
+
+		var className='';
+		if( isConsent() && $('#consentNo').val() == '') className='cursor-default';
+		str += '<a href="#" class="list-group-item list-group-item-action style="min-height:60px;padding: 5px 15px;">';
+		str += '<div class="list-group-item-heading" style="font-size: 20px; margin-left: 15px;">'+data[i].sender+data[i].jikgubNm+'('+data[i].srcip+')'+'</div>';
+		str += '<div class="pull-xs-right" style="font-size: 12px; margin-left: 15px; clear: both;">'+data[i].ctime+'</div>';
+		str += '<div class="pull-xs-right" style="font-size: 12px; margin-left: 15px; border: 1px solid #ccc; padding: 2px 4px; clear: both;">'+makeMessengerText(data[i].svc)+'</div>';
+		//str += '	<h5 class="list-group-item-heading" style="padding-left: 14px;">'+data[i].body_snippet.replaceAll('<', '&lt;').replaceAll('>', '&gt;')+'</h5>';
+		/*	str += '	<p class="list-group-item-text" style="float:left;">';*/
+
+
+		str += "<span style='word-break: break-all'>"+ data[i].body_snippet + "</span>";
+		str += "<span style='position:absolute;top:30px; right: 15px;font-size: 11px; padding: 2px 4px; margin-left: 3px;'>";
+		str += "</span>";
+		str += '</p></a>';
+	}
+	if( data.length == 0 ){
+		str += '<a href="#" class="list-group-item list-group-item-action active" style="cursor:default;height:50px;">';
+		str += '	<p class="list-group-item-text" style="line-height:30px;">';
+		str += '		<i class="fa fa-envelope fa-sm"></i> ';
+		str += nodataMsg; //common.msg.nodata
+		str += '</p></a>';
+	}
+
+	$('#group_list').html( str );
+	$('#group_list').animate({
+		scrollTop : 0
+	}, 0);
+
+}
+
+
 function rtnFileList(data, type) {
 	var str = '<table border="1"><thead><tr><th>파일 전송 서비스</th><th>파일명/예상 확장자</th><th>미리보기</th></tr></thead><tbody>';
 
@@ -581,7 +616,7 @@ function getMessengerGroupList (page){
 	});
 };
 
-function getFiletransferList(){
+function getFiletransferList(page){
 	var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
 	ui.onBody('timeline_list', 0, -20);
 
@@ -611,24 +646,54 @@ function getFiletransferList(){
 	});
 }
 
-function getMessengerGenertiveList(page) { //생성형 AI검색
+function getMessengerNoteList(page){
 
 	var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
+	groupPage = page;
+	var offset = groupPage*groupPageBreak - groupPageBreak;
 	var searchData = {
-		serviceType:  'X',
+		serviceType:  'XU1S',
 		startDate: '20231012180000',
 		endDate: '20231030120000',
 		offset:100,
 		limit:10
 	};
 	ui.get({
-		url: 'getMessengerGenertiveList.xcn',
+		url: 'getMessengerNoteList.xcn',
 		searchParam : JSON.stringify(searchData),
 		success: function (data, total) {
 			console.log(data);
-			alert("성공");
 			rtnGroupList(data.groups, 'GD');
 			rtnGroupPage(total, page, 'GD');
+			HighlightGroup( );
+		},
+		error: function (status, message) {
+
+			ui.alertMsg(message);
+		},
+		complete: function () {
+			searchFlag = false;
+			ui.off('timeline_list');
+		}
+	});
+}
+
+function getMessengerGenertiveList(page) { //생성형 AI검색
+	var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
+	groupPage = page;
+	var offset = groupPage*groupPageBreak - groupPageBreak;
+	let data = {
+		conditions :  getCondition(),
+		limit : groupPageBreak,
+		offset : 0,
+		readYn : readYn
+	}
+	ui.get({
+		url: 'getMessengerGenertiveList.xcn',
+		searchParam : JSON.stringify(data),
+		success: function (data, total) {
+			console.log(data);
+			rtnGroupGenertiveList(data.groups);
 			HighlightGroup( );
 		},
 		error: function (status, message) {
