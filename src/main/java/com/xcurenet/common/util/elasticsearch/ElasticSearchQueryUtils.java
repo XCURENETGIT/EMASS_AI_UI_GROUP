@@ -1842,7 +1842,7 @@ public class ElasticSearchQueryUtils {
         }*/
         if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("serviceType"))) {
             String[] serviceTypes = Common.nvl(elasticSearchParam.getSearchParameters().get("serviceType")).split(",");
-            addQueryGroup(ElasticSearchCommon.SPACE,ElasticSearchCommon.SERVICE,makeParentheses(serviceTypes));
+            addQueryGroup(ElasticSearchCommon.SPACE,ElasticSearchCommon.SERVICE_SVC,makeParentheses(serviceTypes));
         }
 
 
