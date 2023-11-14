@@ -358,7 +358,7 @@ var con = {
 		var condition = {};
 
 		if(!document.getElementById('msg_condition_menu') || !$('#msg_condition_saver').hasClass('condition_menu_unselected')){
-			condition.query = $('#elsQueryText').val();
+			condition.query = $('#solrQueryText').val();
 			condition.sort = $('#messageSort').val();
 			
 			if(pageType == 'M') condition.svc1_not = 'U';
@@ -558,10 +558,9 @@ var con = {
 				$('#enddatepicker').data("DateTimePicker").date(condition.endDt.toDate());
 			}
 
-			$('#elsQueryText').val(condition.query);
+			$('#solrQueryText').val(condition.query);
 		}
 		$('#searchStrInput').val(condition.searchStr);
-		console.log(condition.searchStr);
 		$('#searchField').selectpicker('val', stringToArray(condition.searchField) );
 		$('#serviceType').selectpicker('val', stringToArray(condition.serviceType) );
 		
