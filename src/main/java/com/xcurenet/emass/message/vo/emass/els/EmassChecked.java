@@ -11,7 +11,8 @@ import javax.annotation.Nullable;
 @Nullable
 
 /***
- *  조회 관련 Vo
+ *  elastic search Db -> App server 받아오기 위한 Vo
+ *  조회 기록
  */
 public class EmassChecked {
 

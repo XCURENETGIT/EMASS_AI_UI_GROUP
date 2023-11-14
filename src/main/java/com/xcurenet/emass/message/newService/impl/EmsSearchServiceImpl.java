@@ -195,6 +195,7 @@ public class EmsSearchServiceImpl implements EmsSearchService {
                    edcMessage.setEmass(checkedService.findReadList((List<Emass>) edcMessage.getEmass(), adminId));
             }*/
 
+
             /* response 용 Data로 재 빌드해야함  */
             List<EmassResponse> emassResponse = new EmsReDefined((List<Emass>) emassIntegrated.getEmass(), readYn, consentNo, adminUserGroupService.getAdminUserGroupSimpleAdminList(adminId)).reDefined(adminId, conf);
             emassIntegrated.setEmass(emassResponse);

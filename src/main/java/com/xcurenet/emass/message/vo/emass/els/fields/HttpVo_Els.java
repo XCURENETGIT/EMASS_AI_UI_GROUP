@@ -13,6 +13,6 @@ public class HttpVo_Els {
     private String	path;    //	URL PATH
     private String	query;    //	URL 쿼리
     private String	host;    //	HOST
-    private String	header;	    //HEADER
+//    private String	header;	    //HEADER
     
 }

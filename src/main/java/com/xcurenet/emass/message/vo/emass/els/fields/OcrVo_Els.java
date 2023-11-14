@@ -9,8 +9,6 @@ import javax.annotation.Nullable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Nullable
 public class OcrVo_Els {
-
-    private int	attachCnt;  //ocr 첨부 개수
-    private String	attach;
-
+    private int	ocr_attach_cnt;	//ocr 첨부 개수
+    private String	ocr_attach;	//ocr 첨부 텍스트 내용
 }

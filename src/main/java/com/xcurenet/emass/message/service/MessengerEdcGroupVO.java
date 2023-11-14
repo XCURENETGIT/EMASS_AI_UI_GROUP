@@ -113,8 +113,8 @@ public class MessengerEdcGroupVO {
 		emassMessenger.setAttached(emass.isAttached());
 
 		if(emass.getAttach() != null){
-			emassMessenger.setAttachname(emass.getAttach().stream().map(m -> m.getName()).collect(Collectors.joining("|")));
-			emassMessenger.setAttachhash(emass.getAttach().stream().map(m -> m.getHash()).collect(Collectors.joining("|")));
+			emassMessenger.setAttachname(emass.getAttach().stream().map(m -> m.getAttachname()).collect(Collectors.joining("|")));
+			emassMessenger.setAttachhash(emass.getAttach().stream().map(m -> m.getAttachhash()).collect(Collectors.joining("|")));
 		}
 
 		emassMessenger.setMessage(getMessageDetail(emass, 0, original));
@@ -122,17 +122,17 @@ public class MessengerEdcGroupVO {
 
 		if(emass.getUser() != null) {
 			emassMessenger.setUser_name(emass.getUser().getName());
-			emassMessenger.setUsr_id(emass.getUser().getId());
+			emassMessenger.setUsr_id(emass.getUser().getUserid());
 			emassMessenger.setDeptNm(emass.getUser().getDeptnm());
 			emassMessenger.setJikgubNm(emass.getUser().getJikgubnm());
 		}
 
 		if(emass.getBody() != null) {
-			emassMessenger.setBody_snippet(emass.getBody().getSnippet());
-			emassMessenger.setBody_text(emass.getBody().getText());
+			emassMessenger.setBody_snippet(emass.getBody().getBody_snippet());
+			emassMessenger.setBody_text(emass.getBody().getBody_text());
 		}
 		if(emass.getMail() != null) {
-			emassMessenger.setSender(emass.getMail().getSender().getName());
+			emassMessenger.setSender(emass.getMail().getSender().getSname());
 		}
 		if(emass.getNetwork() != null) {
 			emassMessenger.setSrcip(emass.getNetwork().getSrcip());
@@ -157,7 +157,7 @@ public class MessengerEdcGroupVO {
 		emassMessenger.setCtime(reCtime(Common.nvl(emass.getCtime())));
 		emassMessenger.setAttached(emass.isAttached());
 		if(emass.getAttach() != null){
-			emassMessenger.setAttachname(emass.getAttach().stream().map(m -> m.getName()).collect(Collectors.joining(",")));
+			emassMessenger.setAttachname(emass.getAttach().stream().map(m -> m.getAttachname()).collect(Collectors.joining(",")));
 		}
 
 		emassMessenger.setXrootmtr(emass.getXrootmtr());
@@ -177,17 +177,17 @@ public class MessengerEdcGroupVO {
 
 		if(emass.getUser() != null) {
 			emassMessenger.setUser_name(emass.getUser().getName());
-			emassMessenger.setUsr_id(emass.getUser().getId());
+			emassMessenger.setUsr_id(emass.getUser().getUserid());
 			emassMessenger.setDeptNm(emass.getUser().getDeptnm());
 			emassMessenger.setJikgubNm(emass.getUser().getJikgubnm());
 		}
 
 		if(emass.getBody() != null) {
-			emassMessenger.setBody_snippet(emass.getBody().getSnippet());
-			emassMessenger.setBody_text(emass.getBody().getText());
+			emassMessenger.setBody_snippet(emass.getBody().getBody_snippet());
+			emassMessenger.setBody_text(emass.getBody().getBody_text());
 		}
 		if(emass.getMail() != null) {
-			emassMessenger.setSender(emass.getMail().getSender().getName());
+			emassMessenger.setSender(emass.getMail().getSender().getSname());
 		}
 		if(emass.getNetwork() != null) {
 			emassMessenger.setSrcip(emass.getNetwork().getSrcip());
@@ -229,12 +229,12 @@ public class MessengerEdcGroupVO {
 		String result = Common.EMPTY;
 		if(ems.getService() != null) {
 			if (Common.isOrEquals(ems.getService().getSvc3(), "C", "M")) {
-				String body = Common.nvl(ems.getBody().getSnippet());
+				String body = Common.nvl(ems.getBody().getBody_snippet());
 				if (cutLength > 0 && body.length() > cutLength) body = body.substring(0, cutLength);
 				result = body;
 			} else if (Common.isEquals(ems.getService().getSvc3(), "F")) {
 				if( ems.getAttach() != null) {
-					result = ems.getAttach().stream().map(m -> m.getName()).collect(Collectors.joining("\n"));
+					result = ems.getAttach().stream().map(m -> m.getAttachname()).collect(Collectors.joining("\n"));
 				}
 				//if (Common.isNotEmpty(edc.getBody_snippet())) result += "\n" + edc.getBody_snippet();
 			} else if (Common.isEquals(ems.getService().getSvc3(), "J"))
@@ -247,7 +247,7 @@ public class MessengerEdcGroupVO {
 
 	private static String getSender(Emass emass) {
 		//if (Common.isNotEmpty(edc.getName())) return edc.getName();
-		if (Common.isNotEmpty(emass.getMail())) return emass.getMail().getSender().getName();
+		if (Common.isNotEmpty(emass.getMail())) return emass.getMail().getSender().getSname();
 		else if(Common.isNotEmpty(emass.getNetwork())) return emass.getNetwork().getSrcip();
 		else return null;
 	}
