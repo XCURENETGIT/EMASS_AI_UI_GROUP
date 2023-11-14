@@ -9,24 +9,23 @@ import javax.annotation.Nullable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Nullable
 public class AttachVo_Mgo {
-   private String	id;	      //첨부파일 ID
-   private String	name;     //	첨부파일 이름
-   private String	path;     //	첨부파일 경로
-   private String	textPath;    //	첨부파일 텍스트 경로
-   private long	    size;      //	첨부파일 사이즈
-   private String	filter_type;    //	첨부파일 필터타입
-   private String	ext;      //	첨부파일 확장자
-   private String	summary;     //	첨부파일 요약
-   private boolean	exist;    //	첨부파일 유무
-   private String	flink;       //
-   private boolean	encrypted;      //	첨부파일 암호화 여부
-   private boolean	nameExist;      //	첨부파일 이름 유무
-   private String	flinkKey;       //
-   private String	hash;     //	첨부파일 해시
-   private String	desc;     //
-   private boolean	drm;      //	첨바파일 DRM 유무
-   private String	space;       //
-
+   private String	id;  //	첨부파일 ID
+   private String	name;  //	첨부파일 이름
+   private String	path;  //
+   private String	text_path;  //	첨부파일 텍스트 경로
+   private long	    size;  //	첨부파일 사이즈
+   private String	filter_type;  //	첨부파일 필터타입
+   private String	ext;  //	첨부파일 확장자
+   private String	summary;  //	첨부파일 요약
+   private boolean	exist;  //	첨부파일 유무
+   private String	flink;  //
+   private boolean	encrypted;  //	첨부파일 암호화 여부
+   private boolean	name_exist;  //	첨부파일 이름 유무
+   private String	flink_key;  //
+   private String	hash;  //	첨부파일 해시
+   private String	desc;  //
+   private boolean	drm;  //	첨바파일 DRM 유무
+   private String	space;  //
 }
 
 

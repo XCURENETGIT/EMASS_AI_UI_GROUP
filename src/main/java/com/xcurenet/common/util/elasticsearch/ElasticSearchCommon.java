@@ -14,8 +14,16 @@ import java.util.Map;
 public class ElasticSearchCommon {
 
     /* EMASS INDEX */
-    public static final String EDC_MESSAGE_INDEX = "emass";   //ems_edc_message
+    public static final String EDC_MESSAGE_INDEX = "ems_edc_message*";
     public static final String EDC_MESSAGE_SEARCH_HIST_INDEX = "ems_search_history";
+
+    /* ELASTIC SEARCH DOCUMENT UPDATE BY QUERY 관련 */
+    public static final String READER_CREATE = "ctx._source.reader = new ArrayList()";
+    public static final String READER_ADD = "ctx._source.reader.add(params)";
+
+
+
+
 
     /*검색타입*/
     public static final String SEARCH_TYPE = "elsSearchType";
@@ -35,6 +43,7 @@ public class ElasticSearchCommon {
     public static final String QUOTES = "\"";
     public static final String SPACE = " ";
     public static final String COMMA = ",";
+    public static final String PERIOD = ".";
     public static final String COLON = ":";
     public static final String SPECIAL_CHAR = "*";
     public static final String OR_QUERY  = "OR";
@@ -212,15 +221,17 @@ public class ElasticSearchCommon {
 
 
     //body
+
     public static String[] SEARCH_FIELD = new String[]{
-            "allofus", "attach", "attachcnt","body",
-            "attachexistcnt", "ctime",
-            "direction", "direction_svc", "filePath",
-            "html", "http", "kwd_info", "ltime",
-            "mail", "ml", "msgid", "network",
-            "opinion", "opinoion", "password",
-            "pi", "service", "size", "subject",
-            "user", "xmsgkey", "xparentmtr", "xrootmtr",
+            "ltime"	,"ctime", "ctimeYYYY","ctimeYYYYMM",
+            "ctimeYYYYMMDD","ctimeYYYYMMDDHH", "ctimeHH",
+            "subject","attachExistCnt", "attachCnt",
+            "size", "allOfUs", "directionSvc"	, "direction",
+            "xrootMtr","xmsgKey","opinion","xparentMtr",
+            "password","siteAttr","siteCode","attached",
+            "epmsgType","epHeader","piTotal",
+            "body","network","attach","kwd","svc","http","pi",
+            "user","day","ocr","ml","mail"
     };
 
     /* 화면에서의 (검색 영역) 값 엘라스틱 서치 필드로 치환 */

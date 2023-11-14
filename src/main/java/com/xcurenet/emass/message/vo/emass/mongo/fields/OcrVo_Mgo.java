@@ -9,5 +9,5 @@ import javax.annotation.Nullable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Nullable
 public class OcrVo_Mgo {
-    private int	attachCnt;  //ocr 첨부 개수
+    private int	attach_cnt; //ocr 첨부 개수
 }

@@ -514,7 +514,7 @@
             <div class="condition_option" style="padding-top:0;height:500px;">
                 <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="query.make.query"/></div>
                 <div class="condition_item" style="height:100%;margin-top:5px; padding-bottom: 20px;">
-                    <textarea class="queryTextarea" name="serch" placeholder="<s:message code="query.make.input1"/>" id="solrQueryText"></textarea>
+                    <textarea class="queryTextarea" name="serch" placeholder="<s:message code="query.make.input1"/>" id="elsQueryText"></textarea>
                     <input type="hidden" id="searchQueryStrInput">
                 </div>
             </div>

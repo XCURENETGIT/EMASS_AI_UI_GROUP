@@ -1350,17 +1350,16 @@ public class ElasticSearchQueryUtils {
                 // default date range 필터 추가
                 complateQuery.filter(rangeQuery);
             }
-            complateQuery.must(secondQuery);  // 사용할 쿼리 merge 완료
 
+            complateQuery.must(secondQuery);  // 사용할 쿼리 merge 완료
             searchSourceBuilder = new SearchSourceBuilder()
                     .from(elasticSearchParam.getFrom())
                     .size(elasticSearchParam.getTo())
                     .query(complateQuery)
                     .fetchSource(elasticSearchParam.getIncludeFields(), elasticSearchParam.getExcludeFields())
                     .sort(elasticSearchParam.getSorts())
-                    .aggregation(initAggregation(elasticSearchParam.getYAxis(), getElasticSearchParam().getXAxis()))
+                     .aggregation(initAggregation(elasticSearchParam.getYAxis(), getElasticSearchParam().getXAxis()))
                     .timeout(new TimeValue(60, TimeUnit.SECONDS));
-
 
             // searchSourceBuilder build 완료
         }catch (NullPointerException e){
@@ -1496,11 +1495,18 @@ public class ElasticSearchQueryUtils {
 
 
 
-        if(Common.isEmpty(elasticSearchParam.getSearchParameters().get("searchStr"))){
-            setSearchQuery(Common.nvl(ElasticSearchCommon.ALL_SEARCH)); // 검색어 없을시 전체 검색어 입력
-        }else{
+        if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("searchStr"))){
             setSearchQuery(Common.nvl(elasticSearchParam.getSearchParameters().get("searchStr")));
+        }else if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("query"))) {
+            //고급쿼리 (일단 보류)
+//            String allSearch = makeParentheses(ElasticSearchCommon.ALL_SEARCH);
+//            setSearchQuery(allSearch.concat(ElasticSearchCommon.SPACE).concat(Common.nvl(elasticSearchParam.getSearchParameters().get("query"))));
+        }else{
+            setSearchQuery(Common.nvl(ElasticSearchCommon.ALL_SEARCH)); // 검색어 없을시 전체 검색어 입력
         }
+
+        /* 고급 쿼리의 경우*/
+
 
         /* 검색 쿼리 */
         String searchQuery = this.queryBuffer.toString();
@@ -1956,7 +1962,6 @@ public class ElasticSearchQueryUtils {
         /* Aggregations */
         AggregationBuilder  pi_aggregation = AggregationBuilders.terms(elasticSearchParam.getXAxis()).field(elasticSearchParam.getXAxis()).minDocCount(1);
         pi_aggregation.subAggregation(AggregationBuilders.terms(elasticSearchParam.getYAxis()).field(elasticSearchParam.getYAxis()).minDocCount(1));
-
 
         searchSourceBuilder = new SearchSourceBuilder()
                 .from(elasticSearchParam.getFrom())

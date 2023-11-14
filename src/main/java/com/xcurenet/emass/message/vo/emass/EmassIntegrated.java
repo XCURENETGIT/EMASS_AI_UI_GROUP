@@ -9,20 +9,23 @@ import com.xcurenet.common.util.locale.Prop;
 import com.xcurenet.emass.message.service.FacetVO;
 import com.xcurenet.emass.message.vo.emass.els.Emass;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.util.SimpleOrderedMap;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.MultiBucketsAggregation;
 import org.elasticsearch.search.aggregations.bucket.histogram.ParsedDateHistogram;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
+import org.elasticsearch.search.aggregations.metrics.TopHits;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
-
+@Slf4j
 @Data
 public class EmassIntegrated {
 
@@ -30,6 +33,7 @@ public class EmassIntegrated {
     private List<?> emass;
     private List<String> pivotHeader;
     private List<Map<String, Object>> pivotData;
+    private List<Emass> aggregationsData;
 
     /* ---- 아직 엘라스틱 서치용으로 분석&개발 안됨 ---*/
     private List<String> facetHeader;
@@ -63,7 +67,6 @@ public class EmassIntegrated {
         List<Emass> result = new ArrayList<>();
         if(responseMap.get("searchResponse") == null) return;
         SearchResponse searchResponse = (SearchResponse) responseMap.get("searchResponse");
-        searchResponse.getHits();
 
         SearchHit[] hits = searchResponse.getHits().getHits();
         ObjectMapper mapper = new ObjectMapper();
@@ -305,6 +308,54 @@ public class EmassIntegrated {
         /*  ###################################################################################*/
 
 
+    }
+
+
+    /***
+     *   // sub aggrations TopHitsAggregationBuilder 사용시 이 메서드 사용
+     * @param searchResponse
+     */
+    public void setTopHitsAggsDocData(SearchResponse searchResponse){
+        if(searchResponse == null) return;
+        Aggregations aggregations = searchResponse.getAggregations();
+        if(aggregations.getAsMap().size() == 0 ) return;
+
+        List<Emass> result = new ArrayList();
+        Map<String, Aggregation> aggregationsMap =  aggregations.getAsMap(); // 메인 aggs
+        Map<String,Aggregations> groupAggsMap = new HashMap<>();  // 추출할 그룹 aggs
+        //메인 Aggs의 sub Aggs 추출
+        for(Map.Entry<String, Aggregation> map : aggregationsMap.entrySet()) {
+                Aggregation agg =  map.getValue();
+                Terms terms = aggregations.get(agg.getName());
+                for(Terms.Bucket bucket : terms.getBuckets()){
+                    groupAggsMap.put(bucket.getKeyAsString(),bucket.getAggregations());
+                }
+        }
+
+        // sub Aggs에서 document 추출
+        List<TopHits> topHitsList = new ArrayList<>();
+        for(Map.Entry<String, Aggregations> groupAgg : groupAggsMap.entrySet()) {
+            Aggregations groupAggs = groupAggsMap.get(groupAgg.getKey());
+            Map<String, Aggregation> groupAggMap = groupAggs.getAsMap();
+            for (Map.Entry<String, Aggregation> gMap  : groupAggMap.entrySet()) {
+                Aggregation gAgg =  gMap.getValue();
+                topHitsList.add(groupAggs.get(gAgg.getName()));
+            }
+        }
+
+        // emass 데이터로 추출
+        ObjectMapper mapper = new ObjectMapper();
+        for(TopHits topHit : topHitsList){
+            SearchHit[] hits  = topHit.getHits().getHits();
+            for (SearchHit hit : hits) {
+                Map<String, Object> map = hit.getSourceAsMap();
+                if (map.size() > 0) {
+                    map.put("_id",hit.getId());
+                    result.add(mapper.convertValue(map, Emass.class));
+                }
+            }
+        }
+        this.emass = result;
     }
 
 

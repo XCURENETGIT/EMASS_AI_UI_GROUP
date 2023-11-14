@@ -217,7 +217,7 @@ public class EmsReDefined {
 			emassResponse.setEpHeader(ems.getEpHeader());
 
 
-			if(!Common.isEmpty(ems.getUser()) && !Common.isEmpty(ems.getNetwork())) {
+			if(!Common.isEmpty(ems.getUser()) && !Common.isEmpty(ems.getNetwork()) && !Common.isEmpty(ems.getService()) ) {
 				emassResponse.setService_svc_Nm(reSvcNm(ems.getService().getSvc(), ems.getNetwork().getProtocol()));
 			}
 
@@ -420,7 +420,11 @@ public class EmsReDefined {
 		EmassMessage msg = new EmassMessage();
 		if(!Common.isEmpty(emass.getSubject()))  msg.setSubject((Common.nvl(emass.getSubject())));
 
-		if(!Common.isEmpty(emass.getService())) msg.setService(new ServiceVo_Mgo()); msg.getService().setSvc(Common.nvl(emass.getService().getSvc()));
+		if(!Common.isEmpty(emass.getService())){
+			msg.setService(new ServiceVo_Mgo());
+			msg.getService().setSvc(Common.nvl(emass.getService().getSvc()));
+		}
+
 		if(!Common.isEmpty(emass.getNetwork())) {
 			msg.setNetwork(new NetworkVo_Mgo());
 			msg.getNetwork().setSrcip(Common.nvl(emass.getNetwork().getSrcip()));

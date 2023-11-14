@@ -590,6 +590,7 @@ function getSearchQuery() {
 				url : 'getStatList.xcn',
 				searchParam : JSON.stringify(searchData),
 				success : function(data, total) {
+
 					/* 통계영역 검색 조건 저장 */
 					if(data.search_xAxis != null) $('#searched_xAxis').val(data.search_xAxis);
 					if(data.search_startDate != null) $('#searched_startDate').val(data.search_startDate);
@@ -698,8 +699,6 @@ function getSearchQuery() {
 				url : 'getStatDetailList.xcn',
 				searchParam : JSON.stringify(searchData),
 				success : function(data, total) {
-
-					console.log(data);
 
 					if ( lastRow == 'Y' || lastRow == undefined ) detailTotal = total;
 					currentgrid.appendData(data.emass);

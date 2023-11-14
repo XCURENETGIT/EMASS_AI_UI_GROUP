@@ -17,6 +17,8 @@ public interface EmsSearchService {
 
 	 SearchResponse getList(SearchRequest searchRequest) throws IOException;
 
+	 void updateDocument(EmassChecked checked) throws IOException;
+
 	 EmassIntegrated getEmassMessage(final Map<String,Object> searchParam, final String adminId) throws IOException;
 
 	 EmassIntegrated getEmassMessage(Map<String,Object> searchParam, String adminId, String readYn, String consentNo) throws IOException;

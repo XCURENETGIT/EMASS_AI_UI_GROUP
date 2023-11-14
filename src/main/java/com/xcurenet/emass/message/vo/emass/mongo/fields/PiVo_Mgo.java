@@ -10,9 +10,10 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Nullable
 public class PiVo_Mgo {
-   private String	id; // 
-   private String	type; //
-   private String	attachNm; //
-   private List kwds; //
-   private int	amount; //
+   private String	id;   
+   private String	type;   
+   private String	attach_nm;   
+   private List	kwds;   
+   private int	amount;   
+
 }

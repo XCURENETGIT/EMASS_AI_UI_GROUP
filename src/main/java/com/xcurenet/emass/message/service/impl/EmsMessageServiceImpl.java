@@ -14,7 +14,6 @@ import com.xcurenet.emass.consent.service.ConsentService;
 import com.xcurenet.emass.consent.service.ConsentVO;
 import com.xcurenet.emass.message.service.*;
 import com.xcurenet.emass.message.vo.emass.mongo.EmassMessage;
-import com.xcurenet.emass.message.vo.emass.mongo.TestMessage;
 import com.xcurenet.emass.message.web.EmsAttachDownload;
 import com.xcurenet.minio.MinioFileAdapter;
 import lombok.extern.slf4j.Slf4j;
@@ -153,70 +152,40 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		param.put("infoFeedbackConf", Config.getBoolean("info.feedback.used"));
 		param.put("msgId", msgId);
 
-		Map<String,Object> testa = (Map<String, Object>) mongoUtil.selectId(msgId, TestMessage.class,"EMS_MESSAGE");
+	//	TestMessage emassMessage = mongoUtil.selectId(msgId, TestMessage.class,"EMS_MESSAGE");
 
-		/* 더미데이터 임시 맵핑...*/
+		/* response Data mapping */
 
-/*
-		String inputDate = Common.nvl(emassMessage.getCtime());
-		SimpleDateFormat inputFormat = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
-		inputFormat.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
-		SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		try {
-			java.util.Date date = inputFormat.parse(inputDate);
-			String outputDate = outputFormat.format(date);
-			emassMessage.setCtime(outputDate);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		if (emassMessage == null) {
+		return  null;
+	/*	if (emassMessage == null) {
 			log.info("[Message Not Found] msgid:{}", msgId);
 			return null;
 		} else {
 			// 예약어
-			if(emassMessage.getKwd() != null) {
-				if (Common.isEquals(emassMessage.getKwd().isKwd(), "Y")) {
-					List<EmsKeywordVO> emsKeywordVOList = this.getEmassKeyword(msgId);
-					for (int i = 0; i < emsKeywordVOList.size(); i++) {
-						EmsKeywordVO emsKeywordVO = emsKeywordVOList.get(i);
-						String type = emsKeywordVO.getType();
-						String keyword = emsKeywordVO.getKeyword();
-
-						switch (type) {
-							case "A": {
-								if(Common.isEmpty(emassMessage.getAttach())) emassMessage.getAttach().get(i).setName(keyword);
-								else emassMessage.setAttach((List<AttachVo_Mgo>) new AttachVo_Mgo());
-								break;
-							}
-						}
-
-
-
-						if (Common.isEquals(type, "A")) {
-
-							if (Common.isEmpty(emassMessage.getAttachStr())) emsMessageVO.setAttachStr(keyword);
-							else emsMessageVO.setAttachStr(emsMessageVO.getAttachStr() + ", " + keyword);
-
-
-						} else if (Common.isEquals(type, "F")) {
-							if (Common.isEmpty(emsMessageVO.getFileNameStr())) emsMessageVO.setFileNameStr(keyword);
-							else emsMessageVO.setFileNameStr(emsMessageVO.getFileNameStr() + ", " + keyword);
-						} else if (Common.isEquals(type, "S")) {
-							if (Common.isEmpty(emsMessageVO.getSubjectStr())) emsMessageVO.setSubjectStr(keyword);
-							else emsMessageVO.setSubjectStr(emsMessageVO.getSubjectStr() + ", " + keyword);
-						} else if (Common.isEquals(type, "B")) {
-							if (Common.isEmpty(emsMessageVO.getBodyStr())) emsMessageVO.setBodyStr(keyword);
-							else emsMessageVO.setBodyStr(emsMessageVO.getBodyStr() + ", " + keyword);
-						}
+			if (Common.isEquals(emassMessage.getKwd(), "Y")) {
+				List<EmsKeywordVO> emsKeywordVOList = this.getEmassKeyword(msgId);
+				for (int i = 0; i < emsKeywordVOList.size(); i++) {
+					EmsKeywordVO emsKeywordVO = emsKeywordVOList.get(i);
+					String type = emsKeywordVO.getType();
+					String keyword = emsKeywordVO.getKeyword();
+					if (Common.isEquals(type, "A")) {
+						if (Common.isEmpty(emassMessage.getAttach())) emassMessage.setAttachStr(keyword);
+						else emassMessage.setAttachStr(emassMessage.getAttachStr() + ", " + keyword);
+					} else if (Common.isEquals(type, "F")) {
+						if (Common.isEmpty(emassMessage.getFileNameStr())) emassMessage.setFileNameStr(keyword);
+						else emassMessage.setFileNameStr(emassMessage.getFileNameStr() + ", " + keyword);
+					} else if (Common.isEquals(type, "S")) {
+						if (Common.isEmpty(emassMessage.getSubjectStr())) emassMessage.setSubjectStr(keyword);
+						else emassMessage.setSubjectStr(emassMessage.getSubjectStr() + ", " + keyword);
+					} else if (Common.isEquals(type, "B")) {
+						if (Common.isEmpty(emassMessage.getBodyStr())) emassMessage.setBodyStr(keyword);
+						else emassMessage.setBodyStr(emassMessage.getBodyStr() + ", " + keyword);
 					}
 				}
 			}
-*/
-			return null;
-		//	emassMessage.setSubject(com.xcurenet.emass.message.newService.EmsReDefined.reSubject(emassMessage));
+			emassMessage.setSubject(EmsReDefined.reSubject(emassMessage));
 
-			//확인해보기
-/*			List<EmsRecvVO> users = this.getEmassUserInfo(msgId);
+			List<EmsRecvVO> users = this.getEmassUserInfo(msgId);
 			List<EmsRecvVO> user = new ArrayList<>();
 			List<EmsRecvVO> sender = new ArrayList<>();
 			List<EmsRecvVO> recvs = new ArrayList<>();
@@ -230,16 +199,16 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 				configAdminVO.setVal(Config.getString(Config.USER_FORMAT, "#name#/#email#/#businm#/#deptnm#/#jikgubnm#/#ip#"));
 			}
 			String formatval = configAdminVO.getVal();
-			log.info("Message : " + emsMessageVO);
+			log.info("Message : " + emassMessage);
 			for (int i = 0; i < users.size(); i++) {
-				EmsRecvVO u = EmsReDefined.reUserIp(users.get(i), Common.nvl(emsMessageVO.getSrcIp()), Common.nvl(emsMessageVO.getDstIp()), Common.nvl(emsMessageVO.getUsrIp()));
+				EmsRecvVO u = EmsReDefined.reUserIp(users.get(i), Common.nvl(emassMessage.getSrcIp()), Common.nvl(emassMessage.getDstIp()), Common.nvl(emassMessage.getUsrIp()));
 
 				if (Common.isEquals(u.getUType(), "U")) {
-					u.setEMail(EmsReDefined.reUserEmail(users.get(i), Common.nvl(emsMessageVO.getUser())));
+					u.setEMail(EmsReDefined.reUserEmail(users.get(i), Common.nvl(emassMessage.getUser())));
 					u.setViewStr(EmsReDefined.reUser(u, formatval));
 					user.add(u);
 				} else if (Common.isEquals(u.getUType(), "F")) {
-					u.setEMail(EmsReDefined.reUserEmail(users.get(i), Common.nvl(emsMessageVO.getSender())));
+					u.setEMail(EmsReDefined.reUserEmail(users.get(i), Common.nvl(emassMessage.getSender())));
 					u.setViewStr(EmsReDefined.reUser(u, formatval));
 					sender.add(u);
 				} else if (Common.isEquals(u.getUType(), "T")) {
@@ -259,26 +228,28 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 					bcc.add(u);
 				}
 			}
-			emsMessageVO.setUserList(user);
-			emsMessageVO.setSenderList(sender);
-			emsMessageVO.setRecvsList(recvs);
-			emsMessageVO.setToList(to);
-			emsMessageVO.setCcList(cc);
-			emsMessageVO.setBccList(bcc);
+			emassMessage.setUserList(user);
+			emassMessage.setSenderList(sender);
+			emassMessage.setRecvsList(recvs);
+			emassMessage.setToList(to);
+			emassMessage.setCcList(cc);
+			emassMessage.setBccList(bcc);
 
-			if (Common.isNotEmpty(emsMessageVO.getIpBusicd())) emsMessageVO.setIpBusiNm(Common.nvl(getIpBusiNm(emsMessageVO.getIpBusicd())).equals("") ? "unknown" : getIpBusiNm(emsMessageVO.getIpBusicd()));
-			else emsMessageVO.setIpBusiNm("");
+			if (Common.isNotEmpty(emassMessage.getIpBusicd()))
+				emassMessage.setIpBusiNm(Common.nvl(getIpBusiNm(emassMessage.getIpBusicd())).equals("") ? "unknown" : getIpBusiNm(emassMessage.getIpBusicd()));
+			else emassMessage.setIpBusiNm("");
 
-			if (Common.isNotEmpty(emsMessageVO.getIpDeptcd())) emsMessageVO.setIpDeptNm(Common.nvl(getIpDeptNm(emsMessageVO.getIpDeptcd())).equals("") ? "unknown" : getIpDeptNm(emsMessageVO.getIpDeptcd()));
-			else emsMessageVO.setIpDeptNm("");
+			if (Common.isNotEmpty(emassMessage.getIpDeptcd()))
+				emassMessage.setIpDeptNm(Common.nvl(getIpDeptNm(emassMessage.getIpDeptcd())).equals("") ? "unknown" : getIpDeptNm(emassMessage.getIpDeptcd()));
+			else emassMessage.setIpDeptNm("");
 
-			emsMessageVO.setFiles(getEmassAttachInfoConsent(msgId, firstAdminYn, adminType));
-			emsMessageVO.setPatterns(this.getEmassPattern(msgId));
-			return getConsentMessage(emsMessageVO, firstAdminYn, adminType);
+			emassMessage.setFiles(getEmassAttachInfoConsent(msgId, firstAdminYn, adminType));
+			emassMessage.setPatterns(this.getEmassPattern(msgId));
+			return getConsentMessage(emassMessage, firstAdminYn, adminType);
 
-		}
+		}*/
 
- 		*/
+
 	}
 
 	@Override

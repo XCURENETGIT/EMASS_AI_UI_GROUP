@@ -19,12 +19,18 @@ import com.xcurenet.emass.message.vo.emass.els.EmassResponse;
 import com.xcurenet.interestUser.service.AdminUserGroupService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.lucene.search.TotalHits;
-import org.apache.solr.client.solrj.SolrServerException;
 import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.core.TimeValue;
+import org.elasticsearch.index.query.TermQueryBuilder;
+import org.elasticsearch.index.reindex.BulkByScrollResponse;
+import org.elasticsearch.index.reindex.UpdateByQueryRequest;
+import org.elasticsearch.script.Script;
+import org.elasticsearch.script.ScriptType;
+import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +41,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -70,6 +77,62 @@ public class EmsSearchServiceImpl implements EmsSearchService {
         return searchResponse;
     }
 
+    @Override
+    public void updateDocument(EmassChecked checked) throws IOException {
+        BulkByScrollResponse bulkByScrollResponse = null;
+
+        boolean isReaded = false;
+
+        try {
+        // 메시지 아이디 단건 조회
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+            searchSourceBuilder
+                .fetchSource("reader",null)
+                .query(new TermQueryBuilder("_id", checked.get_id()))
+                .timeout(new TimeValue(60, TimeUnit.SECONDS));
+        SearchRequest searchRequest = new SearchRequest(ElasticSearchCommon.EDC_MESSAGE_INDEX).source(searchSourceBuilder);
+        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+
+        if(null == searchResponse || searchResponse.getHits().getTotalHits().value == 0 ) return; // 문서 없을시
+        
+        SearchHit[] hits = searchResponse.getHits().getHits();
+        Map<String, Object> map = hits[0].getSourceAsMap();
+        if(!Common.isEmpty(map.get("reader"))){ // 읽은 기록 존재?
+            List<Map<String, Object>> readerList  = (List<Map<String, Object>>) map.get("reader");
+             for(Map<String,Object> reader : readerList){
+                 if(Common.isEmpty(reader.get("user_id"))) {
+                        if(Common.isEquals(reader.get("user_id"),checked.getUser_id())) isReaded = true; break;  // 접속자 아이디 존재할시 isReaded true
+                 }
+             }
+        }else{ // 읽은 기록 없을시 reader List 객체 생성
+            UpdateByQueryRequest updateByQueryRequest = new UpdateByQueryRequest(ElasticSearchCommon.EDC_MESSAGE_INDEX); // 인덱스 지정
+            updateByQueryRequest.setConflicts("proceed");
+            Map<String, Object> params = new HashMap<>();
+            Script script = new Script(ScriptType.INLINE,"painless", ElasticSearchCommon.READER_CREATE,params);
+            updateByQueryRequest.setScript(script);
+            client.updateByQuery(updateByQueryRequest, RequestOptions.DEFAULT);
+            isReaded = false;
+        }
+
+
+        if(!isReaded) { // 처음 읽었을시 아이디 추가
+            Map<String, Object> params = new HashMap<>();
+            params.put("user_id", checked.getUser_id());
+            params.put("ctime", getServerTime());
+            UpdateByQueryRequest updateByQueryRequest = new UpdateByQueryRequest(ElasticSearchCommon.EDC_MESSAGE_INDEX); // 인덱스 지정
+            updateByQueryRequest.setQuery(new TermQueryBuilder("_id", checked.get_id()));
+            updateByQueryRequest.setConflicts("proceed");
+            Script script = new Script(ScriptType.INLINE, "painless", ElasticSearchCommon.READER_ADD, params);
+            updateByQueryRequest.setScript(script);
+            client.updateByQuery(updateByQueryRequest, RequestOptions.DEFAULT);
+            log.info("[UPDATE_RESULT] 읽음 처리 완료 by {}",checked.getUser_id());
+        }
+        }catch (ElasticsearchException e){
+            e.printStackTrace();
+        }
+
+
+    }
 
     @Override
     public EmassIntegrated getEmassMessage(Map<String,Object> searchParam, String adminId) throws IOException {
@@ -134,7 +197,6 @@ public class EmsSearchServiceImpl implements EmsSearchService {
 
             /* response 용 Data로 재 빌드해야함  */
             List<EmassResponse> emassResponse = new EmsReDefined((List<Emass>) emassIntegrated.getEmass(), readYn, consentNo, adminUserGroupService.getAdminUserGroupSimpleAdminList(adminId)).reDefined(adminId, conf);
-
             emassIntegrated.setEmass(emassResponse);
 
             String serverTime = getServerTime();
@@ -271,7 +333,12 @@ public class EmsSearchServiceImpl implements EmsSearchService {
 
     @Override
     public void setRead(EmassChecked checked) {
-
+        if (Common.isEmpty(checked.get_id())) return;
+        try {
+            updateDocument(checked);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
     @Override
