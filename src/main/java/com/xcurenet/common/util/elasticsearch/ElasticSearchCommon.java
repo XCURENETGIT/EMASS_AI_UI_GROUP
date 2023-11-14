@@ -3,9 +3,11 @@ package com.xcurenet.common.util.elasticsearch;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -220,6 +222,8 @@ public class ElasticSearchCommon {
     public static final String JIKGUBNM = "jikgubnm"; // 직급별
 
 
+    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMddHHmmss");
+
     //body
 
     public static String[] SEARCH_FIELD = new String[]{
@@ -230,7 +234,7 @@ public class ElasticSearchCommon {
             "xrootMtr","xmsgKey","opinion","xparentMtr",
             "password","siteAttr","siteCode","attached",
             "epmsgType","epHeader","piTotal",
-            "body","network","attach","kwd","svc","http","pi",
+            "body","network","attach","kwdInfo","service","http","pi",
             "user","day","ocr","ml","mail"
     };
 
@@ -268,6 +272,18 @@ public class ElasticSearchCommon {
         }
         return str;
     }
+
+    /* Date -> String */
+    public static String dateToString(Date date){
+        String str = null;
+        try {
+            str = DATE_FORMAT.format(date);
+        }catch (DateTimeParseException e){
+            e.printStackTrace();
+        }
+        return str;
+    }
+
 
 
 }

@@ -14,5 +14,5 @@ public class ServiceVo_Els {
     private String svc12; //	서비스타입 대중분류
     private String svc2; //	서비스타입 중분류
     private String svc3; //	서비스타입 소분류
-    private String desc; //	설명
+//    private String desc; //	설명
 }

@@ -10,8 +10,9 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Nullable
 public class MailVo_Els {
-    private MailProperties_Els sender;
-    private List<MailProperties_Els> to;
-    private List<MailProperties_Els> cc;
-    private List<MailProperties_Els> bcc;
+    private Mail_Sender_Properties_Els sender;
+    private List<Mail_To_Properties_Els> to;
+    private List<Mail_Cc_Properties_Els> cc;
+    private List<Mail_Bcc_Properties_Els> bcc;
+    private List<Mail_Recvs_Properties_Els> recvs;
 }

@@ -1,7 +1,10 @@
 package com.xcurenet.emass.message.vo.emass.els;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.xcurenet.emass.message.vo.emass.els.fields.MailProperties_Els;
+import com.xcurenet.emass.message.vo.emass.els.fields.Mail_Bcc_Properties_Els;
+import com.xcurenet.emass.message.vo.emass.els.fields.Mail_Cc_Properties_Els;
+import com.xcurenet.emass.message.vo.emass.els.fields.Mail_Recvs_Properties_Els;
+import com.xcurenet.emass.message.vo.emass.els.fields.Mail_To_Properties_Els;
 import lombok.Data;
 
 import javax.annotation.Nullable;
@@ -15,7 +18,8 @@ import java.util.List;
  */
 public class EmassResponse {
 
-    private String  _id;                    // ID
+    private String  _id;                    // ID (doc id)
+    private String  msgid;                  // msgid
     private String  ltime;                  //로깅타임
     private String  ctime;                  //캡쳐타임
     private String  subject;                //제목
@@ -42,6 +46,7 @@ public class EmassResponse {
     private String  devDecoder;             //
     private String  siteCd;                 //
     private String  xmsgAttr;               //
+    private String  epmsg_type;                         //녹스(대외비 구분값)
     private String  epHeader;               //
 
     /* ------ body -------*/
@@ -114,6 +119,7 @@ public class EmassResponse {
 //    private String	pi_type; //
 //    private String	pi_attachNm; //
       private List pi_kwds; //
+      private String pi; //
 //    private int	pi_amount; //
 
 
@@ -151,16 +157,13 @@ public class EmassResponse {
     private float	ml_mlConfdProb;	 //인덱스 결과 확률
 
     /* ------ sender mail -------*/
-    private	String	sender_mail_alias; //	발신자 별칭
-    private String	sender_mail_id;	 //발신자 ID
     private String	sender_mail_name; //	발신자 이름
     private String	sender_mail_email; //	발신자 MAIL
 
-    private List<MailProperties_Els> to;
-    private List<MailProperties_Els> cc;
-    private List<MailProperties_Els> bcc;
-
-
+    private List<Mail_To_Properties_Els> to;
+    private List<Mail_Cc_Properties_Els> cc;
+    private List<Mail_Bcc_Properties_Els> bcc;
+    private List<Mail_Recvs_Properties_Els> recvs;
 
 
 }

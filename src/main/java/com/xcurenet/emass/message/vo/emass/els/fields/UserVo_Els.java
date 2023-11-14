@@ -9,22 +9,25 @@ import javax.annotation.Nullable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Nullable
 public class UserVo_Els {
-    private String	id;	 //사용자 ID
-    private String	name;  //	사용자 이름
-    private String	ipCoCd;	//회사코드(SRC_IP기준)
-    private String	ipCoNm;	//회사명(SRC_IP기준)
-    private String	ipBusiNm; //	사명장명(SRC_IP기준)
-    private String	ipBusiCd; //	사업장코드(SRC_IP기준)
-    private String	coCd;  //	회사코드
-    private String	coNm;  //	회사명
-    private String	busiCd;	//사업장 코드
-    private String	busiNm;	//사업장명
-    private String	suborgCd;//	총괄코드
-    private String	suborgNm;//	총괄명
-    private String	deptnm;	//부서명
-    private String	deptCd;	//부서코드
-    private String	jikgubnm; //	직급명
-    private String	jikgubCd; //	직급코드
-    private String	ceo;     //	CEO 여부
+    private String	userid;	//사용자 ID
+    private String	name;   //사용자 이름
+    private String	ip_cocd;    //회사코드 IP기준
+    private String	ip_conm;    //회사명 IP기준
+    private String	ip_busicd;  //	사업장코드 IP기준
+    private String	ip_businm;  //	사명장명 IP기준
+    private String	ip_deptcd;  //	부서코드 IP기준
+    private String	ip_deptnm;  //	부서명 IP기준
+    private String	cocd;   //	회사코드
+    private String	conm;   //	회사명
+    private String	busicd;	//사업장 코드
+    private String	businm; // 사업장명
+    private String	suborgcd;   //	총괄코드
+    private String	suborgnm;   //	총괄명
+    private String	deptcd;	    //부서코드
+    private String	deptnm; 	//부서명
+    private String	jikgubcd;   //	직급코드
+    private String	jikgubnm;   //	직급명
+    private boolean	ceo;    //CEO 여부
     private boolean	inside;	//내부/외부 구분
+
 }
