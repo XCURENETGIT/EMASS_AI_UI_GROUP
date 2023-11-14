@@ -122,8 +122,8 @@ public class EmsReDefined {
 
 			if(!Common.isEmpty(ems.getMail())) {
 				if(!Common.isEmpty(ems.getMail().getSender())) {
-					emassResponse.setSender_mail_email(ems.getMail().getSender().getSender());
-					emassResponse.setSender_mail_name(ems.getMail().getSender().getSname());
+					emassResponse.setSender_mail_email(ems.getMail().getSender().getEmail());
+					emassResponse.setSender_mail_name(ems.getMail().getSender().getName());
 				}
 				if(!Common.isEmpty(ems.getMail().getTo())){
 					emassResponse.setTo(ems.getMail().getTo());

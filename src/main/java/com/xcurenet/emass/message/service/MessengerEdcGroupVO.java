@@ -132,7 +132,7 @@ public class MessengerEdcGroupVO {
 			emassMessenger.setBody_text(emass.getBody().getBody_text());
 		}
 		if(emass.getMail() != null) {
-			emassMessenger.setSender(emass.getMail().getSender().getSname());
+			emassMessenger.setSender(emass.getMail().getSender().getName());
 		}
 		if(emass.getNetwork() != null) {
 			emassMessenger.setSrcip(emass.getNetwork().getSrcip());
@@ -187,7 +187,7 @@ public class MessengerEdcGroupVO {
 			emassMessenger.setBody_text(emass.getBody().getBody_text());
 		}
 		if(emass.getMail() != null) {
-			emassMessenger.setSender(emass.getMail().getSender().getSname());
+			emassMessenger.setSender(emass.getMail().getSender().getName());
 		}
 		if(emass.getNetwork() != null) {
 			emassMessenger.setSrcip(emass.getNetwork().getSrcip());
@@ -247,7 +247,7 @@ public class MessengerEdcGroupVO {
 
 	private static String getSender(Emass emass) {
 		//if (Common.isNotEmpty(edc.getName())) return edc.getName();
-		if (Common.isNotEmpty(emass.getMail())) return emass.getMail().getSender().getSname();
+		if (Common.isNotEmpty(emass.getMail())) return emass.getMail().getSender().getName();
 		else if(Common.isNotEmpty(emass.getNetwork())) return emass.getNetwork().getSrcip();
 		else return null;
 	}
