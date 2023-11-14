@@ -1,11 +1,9 @@
 package com.xcurenet.emass.message.vo.emass.els;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.xcurenet.emass.message.vo.emass.els.fields.Mail_Bcc_Properties_Els;
-import com.xcurenet.emass.message.vo.emass.els.fields.Mail_Cc_Properties_Els;
 import com.xcurenet.emass.message.vo.emass.els.fields.Mail_Recvs_Properties_Els;
-import com.xcurenet.emass.message.vo.emass.els.fields.Mail_To_Properties_Els;
 import lombok.Data;
+import org.springframework.boot.autoconfigure.mail.MailProperties;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -160,9 +158,9 @@ public class EmassResponse {
     private String	sender_mail_name; //	발신자 이름
     private String	sender_mail_email; //	발신자 MAIL
 
-    private List<Mail_To_Properties_Els> to;
-    private List<Mail_Cc_Properties_Els> cc;
-    private List<Mail_Bcc_Properties_Els> bcc;
+    private List<MailProperties> to;
+    private List<MailProperties> cc;
+    private List<MailProperties> bcc;
     private List<Mail_Recvs_Properties_Els> recvs;
 
 

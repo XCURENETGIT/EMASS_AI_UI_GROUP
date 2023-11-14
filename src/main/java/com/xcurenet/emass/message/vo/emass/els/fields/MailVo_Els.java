@@ -2,6 +2,7 @@ package com.xcurenet.emass.message.vo.emass.els.fields;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import org.springframework.boot.autoconfigure.mail.MailProperties;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -11,8 +12,8 @@ import java.util.List;
 @Nullable
 public class MailVo_Els {
     private Mail_Sender_Properties_Els sender;
-    private List<Mail_To_Properties_Els> to;
-    private List<Mail_Cc_Properties_Els> cc;
-    private List<Mail_Bcc_Properties_Els> bcc;
+    private List<MailProperties> to;
+    private List<MailProperties> cc;
+    private List<MailProperties> bcc;
     private List<Mail_Recvs_Properties_Els> recvs;
 }
