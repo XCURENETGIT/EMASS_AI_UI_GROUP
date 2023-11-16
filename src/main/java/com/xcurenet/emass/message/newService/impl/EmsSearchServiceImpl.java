@@ -77,7 +77,8 @@ public class EmsSearchServiceImpl implements EmsSearchService {
         return searchResponse;
     }
 
-    @Override
+
+    @Override  // post update 방식
     public void updateDocument(EmassChecked checked) throws IOException {
         BulkByScrollResponse bulkByScrollResponse = null;
 
@@ -94,14 +95,14 @@ public class EmsSearchServiceImpl implements EmsSearchService {
         SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
 
         if(null == searchResponse || searchResponse.getHits().getTotalHits().value == 0 ) return; // 문서 없을시
-        
+
         SearchHit[] hits = searchResponse.getHits().getHits();
         Map<String, Object> map = hits[0].getSourceAsMap();
         if(!Common.isEmpty(map.get("reader"))){ // 읽은 기록 존재?
             List<Map<String, Object>> readerList  = (List<Map<String, Object>>) map.get("reader");
              for(Map<String,Object> reader : readerList){
-                 if(Common.isEmpty(reader.get("user_id"))) {
-                        if(Common.isEquals(reader.get("user_id"),checked.getUser_id())) isReaded = true; break;  // 접속자 아이디 존재할시 isReaded true
+                 if(!Common.isEmpty(reader.get("user_id"))) {
+                        if(Common.isEquals(reader.get("user_id"),checked.getUser_id())) isReaded = true; break; // 접속자 아이디 존재할시 isReaded true
                  }
              }
         }else{ // 읽은 기록 없을시 reader List 객체 생성
@@ -117,8 +118,13 @@ public class EmsSearchServiceImpl implements EmsSearchService {
 
         if(!isReaded) { // 처음 읽었을시 아이디 추가
             Map<String, Object> params = new HashMap<>();
+            /* 기록할 파라미터 */
             params.put("user_id", checked.getUser_id());
-            params.put("ctime", getServerTime());
+            params.put("user_busiCd", checked.getUser_busiCd());
+            params.put("user_ipBusiCd", checked.getUser_ipBusiCd());
+            params.put("service_svc", checked.getService_svc());
+            params.put("ctime", getServerTime()); // 읽은 시각
+
             UpdateByQueryRequest updateByQueryRequest = new UpdateByQueryRequest(ElasticSearchCommon.EDC_MESSAGE_INDEX); // 인덱스 지정
             updateByQueryRequest.setQuery(new TermQueryBuilder("_id", checked.get_id()));
             updateByQueryRequest.setConflicts("proceed");
@@ -131,8 +137,69 @@ public class EmsSearchServiceImpl implements EmsSearchService {
             e.printStackTrace();
         }
 
-
     }
+
+//    @Override  //
+//    public void updateDocument(EmassChecked checked) throws IOException {
+//        BulkByScrollResponse bulkByScrollResponse = null;
+//        boolean isReaded = false;
+//        try {
+//        // 메시지 아이디 단건 조회
+//        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+//            searchSourceBuilder
+//                .fetchSource("reader",null)
+//                .query(new TermQueryBuilder("_id", checked.get_id()))
+//                .timeout(new TimeValue(60, TimeUnit.SECONDS));
+//        SearchRequest searchRequest = new SearchRequest(ElasticSearchCommon.EDC_MESSAGE_SEARCH_HIST_INDEX).source(searchSourceBuilder);
+//        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+//
+//
+//
+//        //test
+//            XContentBuilder builder = XContentFactory.jsonBuilder();
+//            builder.startObject();
+//            {
+//                Field[] fields = checked.getClass().getDeclaredFields();
+//                for(Field field: fields){
+//                    builder.field(field.getName(),field);
+//                    if(field instanceof Object ){
+//                        log.info("test");
+//                    }
+//                }
+//
+//            }
+//            builder.endObject();
+//
+//
+//
+///*            if(null == searchResponse || searchResponse.getHits().getTotalHits().value == 0 ) {  // 문서 없을시
+//                XContentBuilder builder = XContentFactory.jsonBuilder();
+//                builder.startObject();
+//                {
+//                    Field[] fields = checked.getClass().getDeclaredFields();
+//                    for(Field field: fields){
+//                        builder.field(field.getName(),field);
+//                        if(field instanceof Object ){
+//                            log.info("test");
+//                        }
+//                    }
+//
+//                }
+//                builder.endObject();
+//
+//       //         IndexRequest request = new IndexRequest(ElasticSearchCommon.EDC_MESSAGE_SEARCH_HIST_INDEX).id().source(builder);
+//
+//
+//
+//        }else if(){
+//            // 읽은 기록 존재 확인
+//        }*/
+//        }catch (ElasticsearchException e){
+//            e.printStackTrace();
+//        }
+//
+//
+//    }
 
     @Override
     public EmassIntegrated getEmassMessage(Map<String,Object> searchParam, String adminId) throws IOException {
@@ -184,6 +251,7 @@ public class EmsSearchServiceImpl implements EmsSearchService {
 
             /* 검색 진행 */
             SearchRequest searchRequest = new SearchRequest(elsSearchQueryUtils.getElasticSearchParam().getIndices()).source(searchSourceBuilder);
+
             SearchResponse searchResponse = getList(searchRequest); // getList 수행
             Map<String,Object> responseMap = new HashMap<>();
             responseMap.put("searchResponse",searchResponse);
