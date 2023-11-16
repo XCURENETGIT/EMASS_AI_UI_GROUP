@@ -2,11 +2,11 @@ package com.xcurenet.emass.message.vo.emass.els;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.xcurenet.emass.message.vo.emass.els.fields.*;
 import lombok.Data;
 
 import javax.annotation.Nullable;
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -19,46 +19,121 @@ import java.util.List;
  */
 public class Emass {
 
-   private String   _id;                    // doc Id (임시로사용중)
-   private String	msgid;	//엘라스틱서치 아이디
-   private Date ltime;	//로깅타임
-   private Date	    ctime;	//캡쳐타임
-   private String	ctime_yyyy;	//ctime 연도
-   private String	ctime_yyyymm;//	ctime 연월
-   private String	ctime_yyyymmdd;	//ctime 연월일
-   private String	ctime_yyyymmddhh;//	ctime 연월일시
-   private String	ctime_hh;//	ctime 시간
+   @JsonProperty("key")
+   private String	key;//	엘라스틱서치 아이디
+   @JsonProperty("ltime")
+   private String	ltime;	//로깅타임
+   @JsonProperty("ctime")
+   private String	ctime;	//캡쳐타임
+   @JsonProperty("ctimeYYYY")
+   private String	ctimeYYYY;	//ctime 연도
+   @JsonProperty("ctimeYYYYMM")
+   private String	ctimeYYYYMM;//	ctime 연월
+   @JsonProperty("ctimeYYYYMMDD")
+   private String	ctimeYYYYMMDD;	//ctime 연월일
+   @JsonProperty("ctimeYYYYMMDDHH")
+   private String	ctimeYYYYMMDDHH;//	ctime 연월일시
+   @JsonProperty("ctimeHH")
+   private String	ctimeHH;//	ctime 시간
+   @JsonProperty("subject")
    private String	subject;//	제목
-   private int	    attachexistcnt;	//첨부 존재 개수
-   private int	    attachcnt;	//첨부파일 개수
-   private long	    size;//	전체사이즈
-   private String	allofus;//	수신자 소속여부
-   private String	direction_svc;	//내/외부 서비스타입
-   private String	direction;	//Inbound, Outbound
-   private String	xrootmtr;//	원본의 답신/전달 메일에 부여되는 원본 ID
-   private String	xmsgkey;//	메시지 키값
-   private String	opinion;//	상신의견(EP)
-   private String	xparentmtr;	//ParentMTR (마이싱글)
+   @JsonProperty("attached")
+   private String	attached;//	첨부 존재 유무
+   @JsonProperty("attachExistCnt")
+   private int	attachExistCnt;	//첨부 존재 개수
+   @JsonProperty("attachCnt")
+   private int	attachCnt;	//첨부파일 개수
+   @JsonProperty("size")
+   private int	size;//	전체사이즈
+   @JsonProperty("allOfUs")
+   private String	allOfUs;//	수신자 소속여부
+   @JsonProperty("directionSvc")
+   private String	directionSvc;//	서비스타입으로 방향성 구분 (I/O)
+   @JsonProperty("direction")
+   private String	direction;	//Inbound, Outbound (I/O)
+   @JsonProperty("xrootMtr")
+   private String	xrootMtr;//	원본의 답신/전달 메일에 부여되는 원본 ID
+   @JsonProperty("xmsgKey")
+   private String	xmsgKey;//	메시지 키값
+   @JsonProperty("xparentMtr")
+   private String	xparentMtr;	//ParentMTR (마이싱글)
+   @JsonProperty("password")
    private String	password;//	비밀번호
-   private String	siteattr;//	DIP 속성이 있을 경우 DIP로 사업장 맵핑
-   private String	sitecode;//	사업장 코드 매핑용도
-   private boolean	attached;//	첨부파일 여부
-   private String	xmsgattr;//	삼성 그룹망 헤더 정보 파싱 필드
-   private String	epmsg_type;	//녹스(대외비 구분값)
-   private String	epheader;//	서비스타입 유추를 위한 필드
-   private long	    pi_total;//	패턴 탐지 전체 건수
+   @JsonProperty("siteAttr")
+   private String	siteAttr;//	DIP 속성이 있을 경우 DIP로 사업장 맵핑
+   @JsonProperty("siteCode")
+   private String	siteCode;//	사업장 코드 매핑용도
+   @JsonProperty("epmsgType")
+   private String	epmsgType;	//녹스(대외비 구분값)
+   @JsonProperty("epHeader")
+   private String	epHeader;//	서비스타입 유추를 위한 필드
+   @JsonProperty("usrId")
+   private String	usrId;	//사용자구분 아이디
+   @JsonProperty("usrIp")
+   private String	usrIp;	//사용자구분 아이피
+   @JsonProperty("opinion")
+   private String	opinion;//	상신의견(EP)
 
-   private BodyVo_Els body;        //본문
-   private NetworkVo_Els network;  //네트워크
-   private List<AttachVo_Els> attach;  //첨부정보
-   private KwdVo_Els kwdInfo;   // 예약어 관련
-   private ServiceVo_Els service;  // 서비스 관련
-   private HttpVo_Els http;      //http
-   private PiVo_Els pi;          // 패턴
-   private UserVo_Els user;     // 사용자
-   private DayVo_Els day;       // 업무시간 관련
-   private OcrVo_Els ocr;       //
-   private MlVo_Els ml;     //ml
-   private MailVo_Els mail; // 메일
+   @JsonProperty("piTotal")
+   private int	piTotal;//	패턴 전체 검출 건수
+   @JsonProperty("piDRM")
+   private int	piDRM;//	패턴(DRM) 검출 건수
+   @JsonProperty("piID")
+   private int	piID;//	패턴(송수신동일아이디) 검출 건수
+   @JsonProperty("piEF")
+   private int	piEF;//	패턴(암호화파일) 검출 건수
+   @JsonProperty("piPN")
+   private int	piPN;//	패턴(여권번호) 검출 건수
+   @JsonProperty("piDN")
+   private int	piDN;//	패턴(운전면허번호) 검출 건수
+   @JsonProperty("piSN")
+   private int	piSN;//	패턴(주민번호) 검출 건수
+   @JsonProperty("piCN")
+   private int	piCN;//	패턴(카드번호) 검출 건수
+   @JsonProperty("piEC")
+   private int	piEC;//	패턴(확장자변조) 검출 건수
+
+
+   @JsonProperty("service")
+   private ServiceVo_Els service; // 서비스
+
+   @JsonProperty("body")
+   private BodyVo_Els body; //body
+
+   @JsonProperty("network")
+   private NetworkVo_Els network; // network
+
+   @JsonProperty("attach")
+   private List<AttachVo_Els> attach; // attach
+
+   @JsonProperty("kwdInfo")
+   private KwdVo_Els kwdInfo; // kwdInfo
+
+   @JsonProperty("http")
+   private HttpVo_Els http; // http
+
+   @JsonProperty("pi")
+   private PiVo_Els pi; // pi
+
+   @JsonProperty("user")
+   private UserVo_Els user; // user
+
+   @JsonProperty("day")
+   private DayVo_Els day; // day
+
+   @JsonProperty("ocr")
+   private OcrVo_Els ocr; // ocr
+
+   @JsonProperty("ml")
+   private MlVo_Els ml; // ml
+
+   @JsonProperty("sender")
+   private ComProperties_Els sender; // sender
+
+   @JsonProperty("recv")
+   private RecvVo_Els recv; // recv
+
+   @JsonProperty("checked")
+   private CheckedVo_Els checked; // checked
 
 }

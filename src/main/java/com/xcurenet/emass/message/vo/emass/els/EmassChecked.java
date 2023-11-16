@@ -15,8 +15,7 @@ import javax.annotation.Nullable;
  *  조회 기록
  */
 public class EmassChecked {
-
-    private String	_id;//	메시지 아이디
+    private String	_id;//	doc 아이디
     private String  ltime;	//로깅타임
     private String	ctime;	//캡쳐타임
     private String	ctime_yyyy;	//캡쳐타임_년
@@ -30,5 +29,4 @@ public class EmassChecked {
     private String user_busiCd;  // 사업장 코드
     private String user_ipBusiCd; // 사업장 코드 (SRC_IP)
     private String service_svc; // 서비스타입
-
 }

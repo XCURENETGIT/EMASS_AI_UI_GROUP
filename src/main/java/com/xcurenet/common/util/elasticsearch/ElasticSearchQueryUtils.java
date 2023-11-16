@@ -74,7 +74,7 @@ public class ElasticSearchQueryUtils {
         sortInfo = new ArrayList<>();
         if( Common.isEmpty(sort)){ // default
             sortInfo.add(SortBuilders.fieldSort("ctime").order(SortOrder.DESC));
-            sortInfo.add(SortBuilders.fieldSort("msgid").order(SortOrder.DESC));
+          //  sortInfo.add(SortBuilders.fieldSort("msgid").order(SortOrder.DESC));
         }
 
 //        String [] sorts = sort.split(" ");
@@ -250,7 +250,6 @@ public class ElasticSearchQueryUtils {
             });
             return filterMap;
     }
-
 
 //    /**
 //     * 서비스 그룹 쿼리
@@ -1352,13 +1351,14 @@ public class ElasticSearchQueryUtils {
             }
 
             complateQuery.must(secondQuery);  // 사용할 쿼리 merge 완료
+
             searchSourceBuilder = new SearchSourceBuilder()
                     .from(elasticSearchParam.getFrom())
                     .size(elasticSearchParam.getTo())
                     .query(complateQuery)
                     .fetchSource(elasticSearchParam.getIncludeFields(), elasticSearchParam.getExcludeFields())
                     .sort(elasticSearchParam.getSorts())
-                     .aggregation(initAggregation(elasticSearchParam.getYAxis(), getElasticSearchParam().getXAxis()))
+                    .aggregation(initAggregation(elasticSearchParam.getYAxis(), getElasticSearchParam().getXAxis()))
                     .timeout(new TimeValue(60, TimeUnit.SECONDS));
 
             // searchSourceBuilder build 완료
@@ -1528,28 +1528,24 @@ public class ElasticSearchQueryUtils {
 
         /*################## 시간 ####################*/
         /* 근무시간 */
-        if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("ctimeWork"))) {
-            addQueryGroup(ElasticSearchCommon.AND_QUERY,ElasticSearchCommon.DAY_WORK,makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("ctimeWork"))));
-        }
+        if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("ctimeWork"))) addQueryGroup(ElasticSearchCommon.AND_QUERY,ElasticSearchCommon.DAY_WORK,makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("ctimeWork"))));
+
         /*############################################*/
 
         /*################## 사용자 ####################*/
         // 수/발신 구분
-        if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("receiveSend"))) {
-            addQueryGroup(ElasticSearchCommon.AND_QUERY,ElasticSearchCommon.DIRECTION,makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("receiveSend"))));
-        }
+        if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("receiveSend"))) addQueryGroup(ElasticSearchCommon.AND_QUERY,ElasticSearchCommon.DIRECTION,makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("receiveSend"))));
+
 
         //AND 발신자 검색
-        if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("senders"))) {
+        if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("senders")) && Common.isEmpty(elasticSearchParam.getSearchParameters().get("senders_not"))) {
             String[] senders = Common.nvl(elasticSearchParam.getSearchParameters().get("senders")).split(",");
             addQueryGroup(ElasticSearchCommon.AND_QUERY,ElasticSearchCommon.SENDER,makeParentheses(senders));
-        }
-
-        //NOT 발신자 검색
-        if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("senders_not"))) {
+        }else if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("senders_not"))){  //NOT 발신자 검색
             String[] senders = Common.nvl(elasticSearchParam.getSearchParameters().get("senders_not")).split(",");
             addQueryGroup(ElasticSearchCommon.NOT_QUERY,ElasticSearchCommon.SENDER,makeParentheses(senders));
         }
+
 
         //수신자 전체 검색 to,cc,bcc
         if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("receivers"))) {
@@ -1566,42 +1562,34 @@ public class ElasticSearchQueryUtils {
         // 사용자 그룹
         // 관심 사용자 그룹
 
-
         /*################## 조직 ####################*/
         // AND 사업장
-        if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("busi"))) {
+        if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("busi")) && Common.isEmpty(elasticSearchParam.getSearchParameters().get("busi_not"))) {
             addQueryGroup(ElasticSearchCommon.AND_QUERY,ElasticSearchCommon.USER_BUSICD,makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("busi"))));
-        }
-        // NOT 사업장
-        if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("busi_not"))) {
+        }else if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("busi_not"))){    // NOT 사업장
             addQueryGroup(ElasticSearchCommon.NOT_QUERY,ElasticSearchCommon.USER_BUSICD,makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("busi_not"))));
         }
 
         // AND 부서
-        if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("dept"))) {
+        if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("dept")) && Common.isEmpty(elasticSearchParam.getSearchParameters().get("dept_not"))) {
             addQueryGroup(ElasticSearchCommon.AND_QUERY,ElasticSearchCommon.USER_DEPTCD,makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("dept"))));
-        }
-        // NOT 부서
-        if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("dept_not"))) {
+        }else if((!Common.isEmpty(elasticSearchParam.getSearchParameters().get("dept_not")))){   // NOT 부서
             addQueryGroup(ElasticSearchCommon.NOT_QUERY,ElasticSearchCommon.USER_DEPTCD,makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("dept_not"))));
         }
 
-
         /*################## 기타 ####################*/
         // AND URL
-        if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("url"))) {
+        if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("url")) && Common.isEmpty(elasticSearchParam.getSearchParameters().get("url_not"))) {
             addQueryGroup(ElasticSearchCommon.AND_QUERY,ElasticSearchCommon.HTTP_PATH,makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("url"))));
-        }
-        // NOT URL
-        if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("url_not"))) {
+        }else if((!Common.isEmpty(elasticSearchParam.getSearchParameters().get("url_not")))){   // NOT URL
             addQueryGroup(ElasticSearchCommon.NOT_QUERY,ElasticSearchCommon.HTTP_PATH,makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("url_not"))));
         }
 
-        // AND READYN
-        if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("readYn"))) {
-            // 읽음여부 체크 Y,N,ALL
-          //  addQueryGroup(ElasticSearchCommon.AND_QUERY,ElasticSearchCommon.URL,makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("readYn"))));
+        // AND READYN  읽음여부 체크 Y,N,ALL
+        if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("readYn"))){
+          //  addQueryGroup(ElasticSearchCommon.AND_QUERY,ElasticSearchCommon.READER,makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("readYn"))));
         }
+
 
         // AND 첨부여부
         if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("attachYn"))) {
@@ -1612,7 +1600,6 @@ public class ElasticSearchQueryUtils {
                 String extFlag = ("Y").equals(Common.nvl(elasticSearchParam.getSearchParameters().get("attachYn_not"))) ? ElasticSearchCommon.NOT_QUERY  : ElasticSearchCommon.AND_QUERY;
                 addQueryGroup(extFlag,ElasticSearchCommon.ATTACH_EXT,makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("attachVal"))));
             }
-
             // 실제 존재여부
             if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("realAttYn"))){
                 String existFlag = ("Y").equals(Common.nvl(elasticSearchParam.getSearchParameters().get("realAttYn"))) ? ElasticSearchCommon.NOT_QUERY  : ElasticSearchCommon.AND_QUERY;

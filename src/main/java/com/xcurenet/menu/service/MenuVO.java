@@ -21,6 +21,8 @@ public class MenuVO {
 
 	private String menuIcon;
 
+	private String menuImgPath;
+
 	private String menuUseyn;
 	
 	private String lv1_odr;

@@ -1,6 +1,7 @@
 package com.xcurenet.emass.message.vo.emass.els.fields;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import javax.annotation.Nullable;
@@ -9,12 +10,13 @@ import javax.annotation.Nullable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Nullable
 public class BodyVo_Els {
-   private 	long    body_size;         //본문 사이즈
-//   private 	long   body_imgCnt;        //본문 이미지 개수
-//   private 	String body_Charset;   //본문 charset
-//   private 	String body_path;         //본문 경로
-//   private 	String body_hash;         //본문 hash
-   private 	String body_snippet;      //본문 요약
-   private 	String body_text;         //본문 내용
+    @JsonProperty("size")
+   private int	size;	//본문 사이즈
+    @JsonProperty("path")
+   private String	path;//	본문(원본) 경로
+    @JsonProperty("snippet")
+   private String	snippet;//	본문 요약
+    @JsonProperty("text")
+   private String	text;//	본문(텍스트) 내용
 
 }

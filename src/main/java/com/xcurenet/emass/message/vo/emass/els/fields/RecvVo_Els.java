@@ -1,17 +1,16 @@
 package com.xcurenet.emass.message.vo.emass.els.fields;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Nullable
-public class MailProperties_Els {
-    private String  alias;  //별칭
-    private String id;	   //ID
-    private String name;    // 이름
-    private String email;   // MAIL
+public class RecvVo_Els {
+    List<ComProperties_Els> to;
+    List<ComProperties_Els> cc;
+    List<ComProperties_Els> bcc;
 }

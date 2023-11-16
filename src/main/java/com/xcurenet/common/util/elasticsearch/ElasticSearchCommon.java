@@ -17,7 +17,7 @@ public class ElasticSearchCommon {
 
     /* EMASS INDEX */
     public static final String EDC_MESSAGE_INDEX = "ems_edc_message_202311";
-    public static final String EDC_MESSAGE_SEARCH_HIST_INDEX = "ems_search_history";
+    public static final String EDC_MESSAGE_SEARCH_HIST_INDEX = "ems_search_history*";
 
     /* ELASTIC SEARCH DOCUMENT UPDATE BY QUERY 관련 */
     public static final String READER_CREATE = "ctx._source.reader = new ArrayList()";
@@ -80,6 +80,7 @@ public class ElasticSearchCommon {
     public static final String SITECD = "sitecd";  //
     public static final String XMSGATTR = "xmsgattr";  //
     public static final String EPHEADER = "epheader";  //
+    public static final String READER = "reader.user_id";  // 읽음 여부 관련
 
     //body
     public static final String BODY_SIZE = "body.size";     //본문 사이즈

@@ -2,6 +2,7 @@ package com.xcurenet.emass.message.vo.emass.mongo.fields;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.annotation.Nullable;
 
@@ -9,7 +10,16 @@ import javax.annotation.Nullable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Nullable
 public class MlVo_Mgo {
-   private String  ml_confd_class;  //AiHR 인덱스 값
-   private String  ml_confd_feedback; //	AiHR 인덱스 피드백
-   private String  ml_confd_prob; //	AiHR 인덱스 결과 확률
+   @Value("mlConfdClass")
+   private int	mlConfdClass;
+   @Value("mlConfdClassOrg")
+   private int	mlConfdClassOrg;
+   @Value("mlConfdFeedback")
+   private int	mlConfdFeedback;
+   @Value("mlConfdUserId")
+   private String	mlConfdUserId;
+   @Value("mlConfdProb")
+   private float	mlConfdProb;
+
 }
+

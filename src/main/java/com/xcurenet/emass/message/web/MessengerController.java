@@ -702,7 +702,7 @@ public class MessengerController {
 				dataObj.put("sender", item.getTitle());
 				dataObj.put("ctime", item.getCtime());
 				dataObj.put("content", item.getMessage());
-				if (link && Common.isEquals(item.isAttached(), "Y")) {
+				if (link && Common.isEquals(item.getAttached(), "Y")) {
 					dataObj.put("content_LINK", Common.makeFilepath("attachs", item.getMsgid()));
 				}
 				data.add(dataObj);

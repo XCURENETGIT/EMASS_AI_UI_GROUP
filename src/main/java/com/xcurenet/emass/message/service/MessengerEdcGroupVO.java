@@ -104,17 +104,17 @@ public class MessengerEdcGroupVO {
 	 */
 	public static EmassMessenger reDefinedDetail(Emass emass, String adminId, boolean original) {
 		EmassMessenger emassMessenger = new EmassMessenger();
-		emassMessenger.setMsgid(emass.get_id());
+		emassMessenger.setMsgid(emass.getKey());
 		if(emass.getService() != null){
 			emassMessenger.setSvc(Common.nvl(emass.getService().getSvc()));
 			emassMessenger.setSvc3(Common.nvl(emass.getService().getSvc3()));
 		}
 		emassMessenger.setCtime(reCtime(Common.nvl(emass.getCtime())));
-		emassMessenger.setAttached(emass.isAttached());
+		emassMessenger.setAttached(emass.getAttached());
 
 		if(emass.getAttach() != null){
-			emassMessenger.setAttachname(emass.getAttach().stream().map(m -> m.getAttachname()).collect(Collectors.joining("|")));
-			emassMessenger.setAttachhash(emass.getAttach().stream().map(m -> m.getAttachhash()).collect(Collectors.joining("|")));
+			emassMessenger.setAttachname(emass.getAttach().stream().map(m -> m.getName()).collect(Collectors.joining("|")));
+			emassMessenger.setAttachhash(emass.getAttach().stream().map(m -> m.getName()).collect(Collectors.joining("|")));
 		}
 
 		emassMessenger.setMessage(getMessageDetail(emass, 0, original));
@@ -122,20 +122,20 @@ public class MessengerEdcGroupVO {
 
 		if(emass.getUser() != null) {
 			emassMessenger.setUser_name(emass.getUser().getName());
-			emassMessenger.setUsr_id(emass.getUser().getUserid());
-			emassMessenger.setDeptNm(emass.getUser().getDeptnm());
-			emassMessenger.setJikgubNm(emass.getUser().getJikgubnm());
+			emassMessenger.setUsr_id(emass.getUser().getId());
+			emassMessenger.setDeptNm(emass.getUser().getDeptNm());
+			emassMessenger.setJikgubNm(emass.getUser().getJikgubNm());
 		}
 
 		if(emass.getBody() != null) {
-			emassMessenger.setBody_snippet(emass.getBody().getBody_snippet());
-			emassMessenger.setBody_text(emass.getBody().getBody_text());
+			emassMessenger.setBody_snippet(emass.getBody().getSnippet());
+			emassMessenger.setBody_text(emass.getBody().getText());
 		}
-		if(emass.getMail() != null) {
-			emassMessenger.setSender(emass.getMail().getSender().getName());
+		if(emass.getSender() != null) {
+			emassMessenger.setSender(emass.getSender().getName());
 		}
 		if(emass.getNetwork() != null) {
-			emassMessenger.setSrcip(emass.getNetwork().getSrcip());
+			emassMessenger.setSrcip(emass.getNetwork().getSrcIp());
 		}
 
 
@@ -148,49 +148,49 @@ public class MessengerEdcGroupVO {
 	public static EmassMessenger reDefined(Emass emass, String adminId, long msg_cnt) {
 		EmassMessenger emassMessenger = new EmassMessenger();
 		emassMessenger.setMsg_cnt(msg_cnt);
-		emassMessenger.setMsgid(emass.get_id());
+		emassMessenger.setMsgid(emass.getKey());
 		if(emass.getService() != null){
 			emassMessenger.setSvc(Common.nvl(emass.getService().getSvc()));
 			emassMessenger.setSvc3(Common.nvl(emass.getService().getSvc3()));
 		}
 
 		emassMessenger.setCtime(reCtime(Common.nvl(emass.getCtime())));
-		emassMessenger.setAttached(emass.isAttached());
+		emassMessenger.setAttached(emass.getAttached());
 		if(emass.getAttach() != null){
-			emassMessenger.setAttachname(emass.getAttach().stream().map(m -> m.getAttachname()).collect(Collectors.joining(",")));
+			emassMessenger.setAttachname(emass.getAttach().stream().map(m -> m.getName()).collect(Collectors.joining(",")));
 		}
 
-		emassMessenger.setXrootmtr(emass.getXrootmtr());
+		emassMessenger.setXrootmtr(emass.getXrootMtr());
 
 		int total_recvs = 0;
-		if (emass.getMail() != null){
-			if(emass.getMail().getTo() != null) total_recvs = total_recvs +emass.getMail().getTo().size() + 1;
-			if(emass.getMail().getCc() != null) total_recvs = total_recvs +emass.getMail().getCc().size() + 1;
-			if(emass.getMail().getBcc() != null) total_recvs = total_recvs +emass.getMail().getBcc().size() + 1;
+		if (emass.getRecv() != null){
+			if(emass.getRecv().getTo() != null) total_recvs = total_recvs + emass.getRecv().getTo().size() + 1;
+			if(emass.getRecv().getCc() != null) total_recvs = total_recvs + emass.getRecv().getCc().size() + 1;
+			if(emass.getRecv().getBcc() != null) total_recvs = total_recvs + emass.getRecv().getBcc().size() + 1;
 			emassMessenger.setUser_cnt(total_recvs);
 		}else{
 			emassMessenger.setUser_cnt(1);
 		}
 
 		emassMessenger.setMessage(getMessage(emass));
-		emassMessenger.setTitle(emass.getXrootmtr());
+		emassMessenger.setTitle(emass.getXrootMtr());
 
 		if(emass.getUser() != null) {
 			emassMessenger.setUser_name(emass.getUser().getName());
-			emassMessenger.setUsr_id(emass.getUser().getUserid());
-			emassMessenger.setDeptNm(emass.getUser().getDeptnm());
-			emassMessenger.setJikgubNm(emass.getUser().getJikgubnm());
+			emassMessenger.setUsr_id(emass.getUser().getId());
+			emassMessenger.setDeptNm(emass.getUser().getDeptNm());
+			emassMessenger.setJikgubNm(emass.getUser().getJikgubNm());
 		}
 
 		if(emass.getBody() != null) {
-			emassMessenger.setBody_snippet(emass.getBody().getBody_snippet());
-			emassMessenger.setBody_text(emass.getBody().getBody_text());
+			emassMessenger.setBody_snippet(emass.getBody().getSnippet());
+			emassMessenger.setBody_text(emass.getBody().getText());
 		}
-		if(emass.getMail() != null) {
-			emassMessenger.setSender(emass.getMail().getSender().getName());
+		if(emass.getSender() != null) {
+			emassMessenger.setSender(emass.getSender().getName());
 		}
 		if(emass.getNetwork() != null) {
-			emassMessenger.setSrcip(emass.getNetwork().getSrcip());
+			emassMessenger.setSrcip(emass.getNetwork().getSrcIp());
 		}
 
 		return emassMessenger;
@@ -229,12 +229,12 @@ public class MessengerEdcGroupVO {
 		String result = Common.EMPTY;
 		if(ems.getService() != null) {
 			if (Common.isOrEquals(ems.getService().getSvc3(), "C", "M")) {
-				String body = Common.nvl(ems.getBody().getBody_snippet());
+				String body = Common.nvl(ems.getBody().getSnippet());
 				if (cutLength > 0 && body.length() > cutLength) body = body.substring(0, cutLength);
 				result = body;
 			} else if (Common.isEquals(ems.getService().getSvc3(), "F")) {
 				if( ems.getAttach() != null) {
-					result = ems.getAttach().stream().map(m -> m.getAttachname()).collect(Collectors.joining("\n"));
+					result = ems.getAttach().stream().map(m -> m.getName()).collect(Collectors.joining("\n"));
 				}
 				//if (Common.isNotEmpty(edc.getBody_snippet())) result += "\n" + edc.getBody_snippet();
 			} else if (Common.isEquals(ems.getService().getSvc3(), "J"))
@@ -247,8 +247,8 @@ public class MessengerEdcGroupVO {
 
 	private static String getSender(Emass emass) {
 		//if (Common.isNotEmpty(edc.getName())) return edc.getName();
-		if (Common.isNotEmpty(emass.getMail())) return emass.getMail().getSender().getName();
-		else if(Common.isNotEmpty(emass.getNetwork())) return emass.getNetwork().getSrcip();
+		if (Common.isNotEmpty(emass.getSender())) return emass.getSender().getName();
+		else if(Common.isNotEmpty(emass.getNetwork())) return emass.getNetwork().getSrcIp();
 		else return null;
 	}
 

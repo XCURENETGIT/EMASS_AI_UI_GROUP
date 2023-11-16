@@ -1288,12 +1288,18 @@ public class EmsMessageController {
 	@ResponseBody
 	public XcnResponseVO getEmassMessageNew(final HttpServletRequest request, final HttpSession session) throws Exception {
 		String _id = Common.nvl(request.getParameter("_id"));
-		_id =  "20220826161859.FTL3E2I23Z2JTXKKNUVBN7V4GGIDW7QV"; // test id
 		EmassMessage emass = emsMessageService.getEmassMessageNew(Common.getAdminId(request), _id, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
 
-		if (emass != null && emass.isConsentFlag()) {
-				// setRead 예정
-		}
+		/* 읽음 테스트*/
+		EmassChecked checked = new EmassChecked();
+		checked.setUser_id(Common.getAdminId(session));
+		checked.set_id(_id);
+		emsSearchService.setRead(checked);
+
+		/* 읽었을시 */
+//		if (emass != null && emass.isConsentFlag()) {
+//
+//		}
 
 		return new XcnResponseVO(XcnRspCode.OK, emass);
 	}
@@ -1615,8 +1621,9 @@ public class EmsMessageController {
 	@ResponseBody
 	public XcnResponseVO setRead(final HttpServletRequest request, final HttpSession session) throws Exception {
 		EmassChecked checked = new EmassChecked();
-		checked.setUser_id(Common.getAdminId(session));
+
 		checked.set_id(Common.nvl(request.getParameter("_id")));
+		checked.setUser_id(Common.getAdminId(session));
 		checked.setCtime(Common.nvl(request.getParameter("ctime")));
 		checked.setCtime_yyyymmdd(Common.nvl(request.getParameter("ctime_yyyymmdd")));
 		checked.setCtime_yyyymm(Common.nvl(request.getParameter("ctime_yyyymm")));
@@ -1625,6 +1632,7 @@ public class EmsMessageController {
 		checked.setUser_busiCd(Common.nvl(request.getParameter("busiCd")));
 		checked.setUser_ipBusiCd(Common.nvl(request.getParameter("ipBusicd")));
 		checked.setService_svc(Common.nvl(request.getParameter("svc")));
+
 		emsSearchService.setRead(checked);
 		return new XcnResponseVO(XcnRspCode.OK);
 	}

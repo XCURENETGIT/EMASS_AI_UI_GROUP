@@ -54,7 +54,7 @@ public class EmsSearchController {
 	private ConfigAdminService configAdminService;
 
 
-	@RequestMapping(value = "/test_getList.xcn")
+	@RequestMapping(value = "/getList.xcn")
 	@Description("메시지 검색")
 	@AuditOperation(Operation.SEARCH)
 	@ResponseBody
