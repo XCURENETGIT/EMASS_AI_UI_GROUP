@@ -63,20 +63,19 @@ var mainContext = "<%=context%>";
     $(document).ready(function(){
         createMenuList(0); //init Menu
         document.getElementById("sideBar").style.width = "0";
+
         $('.menuList').hover(function (e){
             currentMenuId = $(this).attr('menuid');
-            document.getElementById("sideBar").style.width = "250px";
+            $("#sideBar").css("transition",'0.5s');
+            $("#sideBar").css("width","250px");
             createMenuList(1);
+        });
 
-        },function() {
-            document.getElementById("sideBar").style.width = "0";
-        });
-        $('#sideBar').hover(function (){
-            currentMenuId = $(this).attr('menuid');
-            document.getElementById("sideBar").style.width = "250px";
-        }, function() {
-            document.getElementById("sideBar").style.width = "0";
-        });
+        // $('#sideBar').hover(function (){
+        //     currentMenuId = $(this).attr('menuid');
+        //     $("#sideBar").css("transition",'0.5s');
+        //     $("#sideBar").css("width","250px");
+        // });
 
 
 
@@ -154,9 +153,17 @@ var mainContext = "<%=context%>";
     $(document).on("mouseout", "a[menuClick]", function(){
         $(this).attr('class','');
     });
+    $(document).on("mouseover", "a[lastChildMenu]", function(){
+        $(this).attr('class','active');
+    });
+    $(document).on("mouseout", "a[lastChildMenu]", function(){
+        $(this).attr('class','');
+    });
+
 
 
     $(document).on("click", "span[closeSubMenu]", function(){
+        $("#sideBar").css("transition",'0.0s');
         document.getElementById("sideBar").style.width = "0";
     });
 
@@ -170,7 +177,7 @@ var mainContext = "<%=context%>";
             if(menuList[l].pid == childMenuId){
                 isChild = true;
                 html += '<li><span>-</span>';
-                html += '<a href="' + mainContext + '/' + menuList[l].menuLink +'"class="topMenu ' + menuList[l].menuId + ' menuList"' + 'menuid=' + menuList[l].menuId + '>';
+                html += '<a lastChildMenu href="' + mainContext + '/' + menuList[l].menuLink +'"class="topMenu ' + menuList[l].menuId + ' menuList"' + 'menuid=' + menuList[l].menuId + '>';
                 html +=  '<span> '+ menuList[l].defaultName +' </span>';
                 html += '</a>';
                 html += '</li>';
@@ -185,8 +192,6 @@ var mainContext = "<%=context%>";
 /* 메뉴 관련 #############################################################################################################*/
 
 });
-
-
 </script>
 <!--Gnb-->
 <div id="gnbWrap">
@@ -203,36 +208,6 @@ var mainContext = "<%=context%>";
         <br>
         <ul></ul>
     </div>
-
-<%--    <a href="mainContext/menuList[k].menuLink" class="topMenu menuList[k].menuId menuList" menuid="menuList[k].menuId">--%>
-
-
-<%--            <li><span>-</span><a class="active" href="#">통계</a>--%>
-<%--                <ul>--%>
-<%--                    <li><span>-</span><a href="#">트래픽 추이</a></li>--%>
-<%--                    <li><span>-</span><a href="#">목적지 IP TOP100</a></li>--%>
-<%--                    <li><span>-</span><a href="#">목적지 포트 TOP 100</a></li>--%>
-<%--                    <li><span>-</span><a class="active" href="#">출발지 IP TOP100</a></li>--%>
-<%--                    <li><span>-</span><a href="#">IP/non-IP 빈도</a></li>--%>
-<%--                    <li><span>-</span><a href="#">웹 URL TOP100</a></li>--%>
-<%--                </ul>--%>
-<%--            </li>--%>
-<%--            <li><span>-</span><a href="#">컨텐츠통계</a>--%>
-<%--                <ul>--%>
-<%--                    <li><span>-</span><a href="#">메뉴3-1</a></li>--%>
-<%--                    <li><span>-</span><a href="#">메뉴3-2</a></li>--%>
-<%--                    <li><span>-</span><a href="#">메뉴3-3</a></li>--%>
-<%--                    <li><span>-</span><a href="#">메뉴3-4</a></li>--%>
-<%--                    <li><span>-</span><a href="#">메뉴3-5</a></li>--%>
-<%--                    <li><span>-</span><a href="#">메뉴3-6</a></li>--%>
-<%--                    <li><span>-</span><a href="#">메뉴3-7</a></li>--%>
-<%--                    <li><span>-</span><a href="#">메뉴3-8</a></li>--%>
-<%--                    <li><span>-</span><a href="#">메뉴3-9</a></li>--%>
-<%--                    <li><span>-</span><a href="#">메뉴3-10</a></li>--%>
-<%--                    <li><span>-</span><a href="#">메뉴3-10</a></li>--%>
-<%--                </ul>--%>
-<%--            </li>--%>
-<%--            <li><span>-</span><a href="#">메뉴4</a></li>--%>
     <div class="setting">
         <a href="javascript:;" id="systemSettingsMenu">
             <c:if test="${_USERCREDENTIAL_.firstAdminYn eq 'Y'}">

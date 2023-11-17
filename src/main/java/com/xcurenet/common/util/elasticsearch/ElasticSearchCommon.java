@@ -2,7 +2,6 @@ package com.xcurenet.common.util.elasticsearch;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.units.qual.N;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -249,7 +248,7 @@ public class ElasticSearchCommon {
             "xrootMtr","xmsgKey","opinion","xparentMtr",
             "password","siteAttr","siteCode","attached",
             "epmsgType","epHeader","piTotal",
-            "body","network","attach","kwdInfo","service","http","pi",
+             "network","attach","kwdInfo","service","http","pi",
             "user","day","ocr","ml","mail","piPN","piDN","piSN","piCN","piEC","piFN"
             ,"deptNm","jikgubNm","sender","usrId"
     };
