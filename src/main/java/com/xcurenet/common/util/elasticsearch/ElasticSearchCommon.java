@@ -26,11 +26,12 @@ public class ElasticSearchCommon {
 
 
 
-
     /*검색타입*/
     public static final String SEARCH_TYPE = "elsSearchType";
     public static final String SEARCH_TYPE_MESSAGE = "message";
     public static final String SEARCH_TYPE_MESSENGER = "messenger";
+    public static final String SEARCH_TYPE_MESSENGER_GROUP = "messenger_group";
+    public static final String SEARCH_TYPE_MESSENGER_TOTAL = "messenger_total";
     public static final String SEARCH_TYPE_COLLECTION = "colletion";
     public static final String SEARCH_TYPE_ANALYSIS = "analysis";
     public static final String SEARCH_TYPE_STATISTIC = "statistic";
@@ -63,7 +64,7 @@ public class ElasticSearchCommon {
     public static final String ALLOFUS = "allofus";  //수신자 소속여부
     public static final String DIRECTIONSVC = "directionsvc";  //내/외부 서비스타입
     public static final String DIRECTION = "direction";  //Inbound, Outbound
-    public static final String XROOTMTR = "xrootmtr";  //RootMTR (마이싱글)
+    public static final String XROOTMTR = "xrootMtr";  //RootMTR (마이싱글)
     public static final String XMSGKEY = "xmsgkey";  //x-msgkey
     public static final String FILEPATH = "filepath";  //파일경로
     public static final String OPINION = "opinion";  //상신의견(EP)

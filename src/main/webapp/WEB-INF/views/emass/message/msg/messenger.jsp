@@ -457,7 +457,7 @@
                 }
             });
 
-            $(document).on('click','.selectUser',function(){
+            $(document).on('click','#group_list a',function(){
                 var name = $(this).attr('data-name');
                 var srcip = $(this).attr('data-srcip');
                 var usr_id = $(this).attr('data-usrid');
@@ -1118,7 +1118,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="row" style="height: calc(100% - 160px);padding:0 3px 0 5px;">
+				<div class="row" style="height: calc(100% - 180px);padding:0 3px 0 5px;">
 					<div id="scrollArea" class="clusterize-scroll">
 						<div class="messenger_prev" title="<s:message code='eikon.msg.show.prev'/>">+</div>
 						<div id="timeline_list" style="padding-right:10px;">

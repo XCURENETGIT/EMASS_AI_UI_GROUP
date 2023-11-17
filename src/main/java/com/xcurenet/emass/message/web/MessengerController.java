@@ -28,6 +28,7 @@ import org.apache.commons.compress.archivers.ArchiveOutputStream;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.io.IOUtils;
+import org.apache.lucene.search.TotalHits;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.ORDER;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -107,10 +108,11 @@ public class MessengerController {
 		if (!Common.isEmpty(resultParam.get("searchParam"))) {
 			Type type = new TypeToken<Map<String,Object>>(){}.getType();
 			searchParam = gson.fromJson((String) resultParam.get("searchParam"),type);
-			searchParam.put(ElasticSearchCommon.SEARCH_TYPE, ElasticSearchCommon.SEARCH_TYPE_MESSENGER);
+			searchParam.put(ElasticSearchCommon.SEARCH_TYPE, ElasticSearchCommon.SEARCH_TYPE_MESSENGER_GROUP);
 
 		}
 		MessengerEdcGroupVO edcMessage = emsSearchService.getMessengerGroupList(searchParam, Common.getAdminId(session));
+		log.info("MessengerGroupList Found: "+edcMessage.getNumFound());
 		return new XcnResponseVO(XcnRspCode.OK, edcMessage, edcMessage.getNumFound());
 	}
 
@@ -126,10 +128,69 @@ public class MessengerController {
 			Type type = new TypeToken<Map<String,Object>>(){}.getType();
 			searchParam = gson.fromJson((String) resultParam.get("searchParam"),type);
 			searchParam.put(ElasticSearchCommon.SEARCH_TYPE, ElasticSearchCommon.SEARCH_TYPE_MESSENGER);
+			log.info("Controller MessengerMessageList : "+ searchParam);
 		}
 		MessengerEdcGroupVO edcMessage = emsSearchService.getMessengerGroupList(searchParam, Common.getAdminId(session));
 		return new XcnResponseVO(XcnRspCode.OK, edcMessage, edcMessage.getNumFound());
 
+	}
+
+//	@RequestMapping(value = "/getMessengerMessage.xcn")
+//	@Description("메신저 대화방 대화 내용 조회")
+//	@ResponseBody
+//	public XcnResponseVO getMessengerMessage(final HttpServletRequest request, final HttpSession session) throws Exception {
+//		JSONObject param = Common.getParam(request);
+//		String xRootMtr = Common.nvl(param.get("xRootMtr"));
+//		String srcip = Common.nvl(param.get("srcip"));
+//		String usr_id = Common.nvl(param.get("usr_id"));
+//		String msgId = Common.nvl(param.get("msgId"));
+//		String startDt = Common.nvl(param.get("startDt"));
+//		String endDt = Common.nvl(param.get("endDt"));
+//		int startRange = 0;
+//		int endRange = 0;
+//
+//		SolrQuery sq = new SolrQuery();
+//		if(Common.isEmpty(msgId)) {
+//
+//			EmsMessengerAdminXrootMtrVO emaxm = emsMessageService.getEmassMessengerAdminXrootMtr(xRootMtr, Common.getAdminId(request), srcip, usr_id);
+//
+//			if(Common.isNotEmpty(emaxm)) {
+//				msgId = Common.nvl(emaxm.getMsgId());
+//				startRange = Common.diffOfDate(startDt.substring(0,8), msgId.substring(0,8));
+//				endRange = Common.diffOfDate(endDt.substring(0,8), msgId.substring(0,8));
+//			}
+//
+//		}
+//
+//		if(Common.isEmpty(msgId) || (startRange < 0) || (endRange > 0)) {
+//			sq = getMessengerMsgTotalQuery(request);
+//		} else {
+//			sq = getMessengerMsgNext(request, msgId, true);
+//		}
+//
+//		MessengerEdcGroupVO result = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request), true, false);
+//
+//		return new XcnResponseVO(XcnRspCode.OK, result);
+//	}
+
+
+
+	@RequestMapping(value = "/getMessengerMessage.xcn")
+	@Description("메신저 대화방 대화 내용 조회")
+	@ResponseBody
+	public XcnResponseVO getMessengerMessage(final HttpServletRequest request, final HttpSession session) throws Exception {
+		Gson gson = new Gson();
+		Map<String,Object> resultParam = Common.getParamMap(request);
+		Map<String,Object> searchParam = new HashMap<>();
+		if (!Common.isEmpty(resultParam.get("searchParam"))) {
+			Type type = new TypeToken<Map<String,Object>>(){}.getType();
+			searchParam = gson.fromJson((String) resultParam.get("searchParam"),type);
+			searchParam.put(ElasticSearchCommon.SEARCH_TYPE, ElasticSearchCommon.SEARCH_TYPE_MESSENGER_TOTAL);
+		}
+		String msgId = (String) searchParam.get("msgId");
+		MessengerEdcGroupVO result = emsSearchService.getMessengerGroupList(searchParam, Common.getAdminId(request), true);
+
+		return new XcnResponseVO(XcnRspCode.OK, result);
 	}
 
 	public List<EmassMessenger> setCount(List<EmassMessenger> groups, String adminId) throws IOException, SolrServerException {
@@ -273,44 +334,6 @@ public class MessengerController {
 	}
 
 
-	@RequestMapping(value = "/getMessengerMessage.xcn")
-	@Description("메신저 대화방 대화 내용 조회")
-	@ResponseBody
-	public XcnResponseVO getMessengerMessage(final HttpServletRequest request, final HttpSession session) throws Exception {
-		JSONObject param = Common.getParam(request);
-		String xRootMtr = Common.nvl(param.get("xRootMtr"));
-		String srcip = Common.nvl(param.get("srcip"));
-		String usr_id = Common.nvl(param.get("usr_id"));
-		String msgId = Common.nvl(param.get("msgId"));
-		String startDt = Common.nvl(param.get("startDt"));
-		String endDt = Common.nvl(param.get("endDt"));
-		int startRange = 0;
-		int endRange = 0;
-
-		SolrQuery sq = new SolrQuery();
-		if(Common.isEmpty(msgId)) {
-
-			EmsMessengerAdminXrootMtrVO emaxm = emsMessageService.getEmassMessengerAdminXrootMtr(xRootMtr, Common.getAdminId(request), srcip, usr_id);
-
-			if(Common.isNotEmpty(emaxm)) {
-				msgId = Common.nvl(emaxm.getMsgId());
-				startRange = Common.diffOfDate(startDt.substring(0,8), msgId.substring(0,8));
-				endRange = Common.diffOfDate(endDt.substring(0,8), msgId.substring(0,8));
-			}
-
-		}
-
-		if(Common.isEmpty(msgId) || (startRange < 0) || (endRange > 0)) {
-			sq = getMessengerMsgTotalQuery(request);
-		} else {
-			sq = getMessengerMsgNext(request, msgId, true);
-		}
-
-		MessengerEdcGroupVO result = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request), true, false);
-
-		return new XcnResponseVO(XcnRspCode.OK, result);
-	}
-
 	@RequestMapping(value = "/getMessengerMessageNext.xcn")
 	@Description("메신저 대화방 다음 대화 내용 조회")
 	@ResponseBody
@@ -328,15 +351,19 @@ public class MessengerController {
 	@Description("메신저 대화방 이전 대화 내용 조회")
 	@ResponseBody
 	public XcnResponseVO getMessengerMessagePrev(final HttpServletRequest request, final HttpSession session) throws Exception {
-		JSONObject param = Common.getParam(request);
-		String msgId = Common.nvl(param.get("msgId"));
-
-		SolrQuery prevQuery = getMessengerMsgPrev(request, msgId);
-		MessengerEdcGroupVO result = solrEdcService.getMessengerGroupList(prevQuery, Common.getAdminId(request), true, false);
-
-		return new XcnResponseVO(XcnRspCode.OK, result);
+		Gson gson = new Gson();
+		Map<String,Object> resultParam = Common.getParamMap(request);
+		Map<String,Object> searchParam = new HashMap<>();
+		if (!Common.isEmpty(resultParam.get("searchParam"))) {
+			Type type = new TypeToken<Map<String,Object>>(){}.getType();
+			searchParam = gson.fromJson((String) resultParam.get("searchParam"),type);
+			searchParam.put(ElasticSearchCommon.SEARCH_TYPE, ElasticSearchCommon.SEARCH_TYPE_MESSENGER_TOTAL);
+			log.info("Controller Prev Message: "+searchParam);
+		}
+		//return new XcnResponseVO(XcnRspCode.OK, result);
+		return new XcnResponseVO(XcnRspCode.OK, 0);
 	}
-	
+
 	public MessengerEdcGroupVO getMessengerMsgTotal(final HttpServletRequest request) throws Exception {
 		return getMessengerMsgTotal(request, false);
 	}
@@ -345,40 +372,14 @@ public class MessengerController {
 		Gson gson = new Gson();
 		Map<String,Object> resultParam = Common.getParamMap(request);
 		Map<String,Object> searchParam = new HashMap<>();
-		if (!Common.isEmpty(resultParam.get("searchParam"))) {
+		if (!Common.isEmpty(resultParam.get("searchData"))) {
 			Type type = new TypeToken<Map<String,Object>>(){}.getType();
-			searchParam = gson.fromJson((String) resultParam.get("searchParam"),type);
-		}
+			searchParam = gson.fromJson((String) resultParam.get("searchData"),type);
+			searchParam.put(ElasticSearchCommon.SEARCH_TYPE, ElasticSearchCommon.SEARCH_TYPE_MESSENGER_TOTAL);
 
-		//MessengerEdcGroupVO result = solrEdcService.getMessengerGroupList(totalQuery, Common.getAdminId(request), true, original);
+		}
 		MessengerEdcGroupVO result = emsSearchService.getMessengerGroupList(searchParam, Common.getAdminId(request), true, original);
 		return result;
-	}
-
-	public SolrQuery getMessengerMsgTotalQuery(final HttpServletRequest request) throws Exception {
-		JSONObject param = Common.getParam(request);
-		String xRootMtr = Common.nvl(param.get("xRootMtr"));
-		String srcip = Common.nvl(param.get("srcip"));
-		String usr_id = Common.nvl(param.get("usr_id"));
-		String startDt = Common.nvl(param.get("startDt"));
-		String endDt = Common.nvl(param.get("endDt"));
-		int limit = Common.nvz(param.get("limit"), 100000);
-
-		SolrQuery sq = new SolrQuery();
-		String query = String.format("+ctime:[%s TO %s] +xrootmtr:\"%s\"", startDt, endDt, xRootMtr);
-
-		if(Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
-
-		if(Common.isNotEmpty(usr_id)) query += String.format(" +usr_id:\"%s\"", usr_id);
-		else query += String.format(" -usr_id:*");
-
-		sq.setQuery(query + MESSENGER);
-		sq.setRows(limit);
-		sq.addSort("ctime", ORDER.asc);
-		sq.addSort("msgid", ORDER.asc);
-		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user");
-
-		return sq;
 	}
 
 	public SolrQuery getMessengerMsgNext(final HttpServletRequest request, final String msgId, final boolean lastMsgYn) throws Exception {

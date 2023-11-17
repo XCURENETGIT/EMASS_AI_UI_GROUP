@@ -10,8 +10,8 @@ import javax.annotation.Nullable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Nullable
 public class DayVo_Els {
-    @JsonProperty("week")
-    private int	week;	//몇주차
-    @JsonProperty("work")
-    private String	work;	//업무시간 여부
+	@JsonProperty("week")
+	private int	week;	//몇주차
+	@JsonProperty("work")
+	private String	work;	//업무시간 여부
 }

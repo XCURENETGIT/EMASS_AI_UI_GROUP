@@ -295,21 +295,36 @@ public class EmsSearchServiceImpl implements EmsSearchService {
     public MessengerEdcGroupVO getMessengerGroupList(Map<String, Object> searchParam, String adminId, boolean detail, boolean original) throws IOException {
         setAuthoritys(searchParam,adminId);
         SearchSourceBuilder searchSourceBuilder = null;
+        EmassIntegrated emassIntegrated = null;
 
         switch (Common.nvl(searchParam.get(ElasticSearchCommon.SEARCH_TYPE))) {
-            case ElasticSearchCommon.SEARCH_TYPE_MESSENGER: //메세징 검색시
+            case ElasticSearchCommon.SEARCH_TYPE_MESSENGER: //메세징 리스트 검색시
+                searchSourceBuilder = elsSearchQueryUtils.initMessengerSearchSource(searchParam);
+                break;
+            case ElasticSearchCommon.SEARCH_TYPE_COLLECTION: //생성형 AI,.. 검색
+                searchSourceBuilder = elsSearchQueryUtils.initCollectionSearchSource(searchParam);
+                break;
+            case ElasticSearchCommon.SEARCH_TYPE_MESSENGER_GROUP: //메세징 그룹 검색
                 searchSourceBuilder = elsSearchQueryUtils.initMessengerGroupSearchSource(searchParam);
                 break;
-            case ElasticSearchCommon.SEARCH_TYPE_COLLECTION: //메세징 검색시
-                searchSourceBuilder = elsSearchQueryUtils.initCollectionSearchSource(searchParam);
+            case ElasticSearchCommon.SEARCH_TYPE_MESSENGER_TOTAL: //메세징 토탈 쿼리 날리기
+                searchSourceBuilder = elsSearchQueryUtils.initMessageTotalSearchSource(searchParam);
                 break;
         }
 
         SearchRequest searchRequest = new SearchRequest(elsSearchQueryUtils.getElasticSearchParam().getIndices()).source(searchSourceBuilder);
+        log.info("searchRequest: "+ searchRequest);
         SearchResponse searchResponse = getList(searchRequest);
+
+
+        if (Common.nvl(searchParam.get(ElasticSearchCommon.SEARCH_TYPE)) == ElasticSearchCommon.SEARCH_TYPE_MESSENGER_GROUP){
+            System.out.println("여기로 들어옴");
+           emassIntegrated = new EmassIntegrated(searchParam, adminId);
+           emassIntegrated.setTopHitsAggsDocData(searchResponse);
+        }
+
         return new MessengerEdcGroupVO(searchResponse,adminId,false,false);
     }
-
     @Override
     public MessengerGroupUserVO getMessengerGroupUserList(Map<String, Object> searchParam, String adminId) throws IOException {
         return null;

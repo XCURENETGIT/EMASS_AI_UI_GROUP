@@ -114,7 +114,7 @@ public class MessengerEdcGroupVO {
 
 		if(emass.getAttach() != null){
 			emassMessenger.setAttachname(emass.getAttach().stream().map(m -> m.getName()).collect(Collectors.joining("|")));
-			emassMessenger.setAttachhash(emass.getAttach().stream().map(m -> m.getName()).collect(Collectors.joining("|")));
+			emassMessenger.setAttachhash(emass.getAttach().stream().map(m -> m.getHash()).collect(Collectors.joining("|")));
 		}
 
 		emassMessenger.setMessage(getMessageDetail(emass, 0, original));
@@ -122,9 +122,9 @@ public class MessengerEdcGroupVO {
 
 		if(emass.getUser() != null) {
 			emassMessenger.setUser_name(emass.getUser().getName());
-			emassMessenger.setUsr_id(emass.getUser().getId());
 			emassMessenger.setDeptNm(emass.getUser().getDeptNm());
 			emassMessenger.setJikgubNm(emass.getUser().getJikgubNm());
+			emassMessenger.setUsr_id(emass.getUser().getId());
 		}
 
 		if(emass.getBody() != null) {
@@ -158,6 +158,7 @@ public class MessengerEdcGroupVO {
 		emassMessenger.setAttached(emass.getAttached());
 		if(emass.getAttach() != null){
 			emassMessenger.setAttachname(emass.getAttach().stream().map(m -> m.getName()).collect(Collectors.joining(",")));
+			emassMessenger.setAttachhash(emass.getAttach().stream().map(m -> m.getHash()).collect(Collectors.joining(",")));
 		}
 
 		emassMessenger.setXrootmtr(emass.getXrootMtr());
@@ -177,9 +178,9 @@ public class MessengerEdcGroupVO {
 
 		if(emass.getUser() != null) {
 			emassMessenger.setUser_name(emass.getUser().getName());
-			emassMessenger.setUsr_id(emass.getUser().getId());
 			emassMessenger.setDeptNm(emass.getUser().getDeptNm());
 			emassMessenger.setJikgubNm(emass.getUser().getJikgubNm());
+			emassMessenger.setUsr_id(emass.getUser().getId());
 		}
 
 		if(emass.getBody() != null) {
@@ -198,7 +199,7 @@ public class MessengerEdcGroupVO {
 
 	private static String getTitle(SolrEdcVO edc) {
 		return edc.getXrootmtr();
-		
+
 		/*List<String> recvs = edc.getRecvs();
 		List<String> recvNames = edc.getRecvs_name();
 		if (recvNames == null) recvNames = new ArrayList<>();
@@ -272,13 +273,13 @@ public class MessengerEdcGroupVO {
 	public void setGroups(List<EmassMessenger> groups) {
 		this.groups = groups;
 	}
-	
+
 	public static String textParser(String text) {
 		text = Common.escapeTag(text);
 		//style='word-wrap: break-word;white-space: pre-wrap;white-space: -moz-pre-wrap;white-space: -pre-wrap;white-space: -o-pre-wrap;word-break:break-all;font-size:11px;padding:0;margin:0;border:0;background-color: transparent;'
 		return "<pre class='ignoreHtmlPre'><code>" + text + "</code></pre>";
 	}
-	
+
 	private int getMessengerGroupCnt(QueryResponse resp) {
 		if(Common.isNotEmpty(resp.getFacetField("xrootmtr"))) {
 			return resp.getFacetField("xrootmtr").getValueCount();

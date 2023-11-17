@@ -36,7 +36,7 @@ var eikon = {
 			resizeTimer = setTimeout(function() {
 //				if( $('.btnCustomPosition').is(':visible') ) return;
 				if( $(obj).scrollTop() < 10) {
-					if($($('#timeline_list').children().first().children().first()).hasClass('timeline-panel') || $($('#timeline_list').children().first()).hasClass('timeline-panel')) $('.messenger_prev').css('display','none'); 
+					if($($('#timeline_list').children().first().children().first()).hasClass('timeline-panel') || $($('#timeline_list').children().first()).hasClass('timeline-panel')) $('.messenger_prev').css('display','none');
 					else $('.messenger_prev').css('display','block');
 					$('.messenger_next').css('display','none');
 //					$('.messenger_prev').click();
@@ -51,35 +51,35 @@ var eikon = {
 				}
 			},100);
 		});
-		
+
 		$('.messenger_next, .messenger_prev').on('click', function() {
 			var srcip = $('#selectUserInfo').attr('data-srcip');
 			var usr_id = $('#selectUserInfo').attr('data-usrid');
 			var xrootmtr = $('#xrootmtr').text();
 			var msgIds = [];
-			
+
 			if($(this).hasClass('messenger_next')) {
-				
+
 				var msgid = $('.timeline').children().last().attr('id');
 				getMessengerMessageNext(xrootmtr, srcip, usr_id, msgid);
-				
+
 			} else {
-				
+
 				var firstData = $('.timeline').children().filter(':eq(1)');
 				var msgid = $(firstData).attr('id');
 				getMessengerMessagePrev(xrootmtr, srcip, usr_id, msgid);
-				
+
 			}
-			
+
 			$(this).css('display','none');
 		});
 	},
-		getGenerativeList: function (page) {
-	/*		$('#startsubdatepicker').data("DateTimePicker").date($('#startdatepicker').data("DateTimePicker").date());
-			$('#endsubdatepicker').data("DateTimePicker").date($('#enddatepicker').data("DateTimePicker").date());*/
+	getGenerativeList: function (page) {
+		/*		$('#startsubdatepicker').data("DateTimePicker").date($('#startdatepicker').data("DateTimePicker").date());
+                $('#endsubdatepicker').data("DateTimePicker").date($('#enddatepicker').data("DateTimePicker").date());*/
 
-			getMessengerGenertiveList(page);
-		},
+		getMessengerGenertiveList(page);
+	},
 
 	getMessengerList : function(page){
 		var searchType = $('input:radio[name=searchType]:input:checked').val();
@@ -139,17 +139,17 @@ var eikon = {
 	getMessengerGroupDetail : function(xRootmtr, msgid, srcip, usr_id){
 		searchFlag = true;
 		ui.onBody('timeline_list', 0, 60);
-		
+
 		$("#timeline_list").html('');
-		
+
 		$('#searchMsgStrInput').val('');
 		$('#searchResult').html('');
 		$('#searchResultArea').hide();
 		$('#searchResultBtnArea').hide();
-		
+
 		var startDt = $('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 		var endDt = $('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
-		
+
 		var searchType = $('input:radio[name=searchType]:input:checked').val();
 		if(searchType == null || searchType == undefined) searchType = 'G';
 		if( searchType == 'G'){
@@ -168,10 +168,10 @@ var eikon = {
 		var usr_id = $('#usr_id').text();
 		var startDt = $('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 		var endDt = $('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
-		
+
 		if( offset < 0 ) searchOffset = $('#searchResult').html() - 1;
 		if( offset >= $('#searchResult').html() || offset == 0 ) searchOffset = 0;
-			
+
 		if( searchStr == '' || (xrootmtr == undefined || xrootmtr == '')){
 			$('#searchResult').html('');
 			$('#searchResultArea').hide();
@@ -188,7 +188,7 @@ var eikon = {
 		condition.searchField = 'body attachname attachname_str attach';
 		conArray.push(condition);
 		filterVal.conditions = conArray;
-		
+
 		detailSearchFlag = false;
 
 		ui.postJson({
@@ -244,17 +244,19 @@ var eikon = {
 function getMessengerMessageTotal(xRootmtr, srcip, startDt, endDt, usr_id, msgid){
 	//마지막 열람 msgid
 
-	var data = {
+	var searchData = {
 		xRootMtr : xRootmtr,
 		srcip : srcip,
 		startDt : startDt,
 		endDt : endDt,
 		usr_id : usr_id, //기준이 srcip에서 usr_id로 변경되면서 마지막 데이터 기준 변경
-		limit : 0
-	}
+		limit : detailLimit
+	};
+
+
 	ui.get({
 		url : 'getMessengerMessageTotal.xcn',
-		searchParam : data,
+		searchData : JSON.stringify(searchData),
 		success : function(data, total) {
 			$('#groupSubResultCnt').text(data.comma());
 			getMessengerMessage(xRootmtr, srcip, usr_id, msgid);
@@ -281,17 +283,17 @@ function getMessengerMessage(xRootmtr, srcip, usr_id, msgid) {
 	var endDt = $('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 	$("#timeline_list").html('');
 	var data = {
-		xRootmtr : xRootmtr,
+		xRootMtr  : xRootmtr,
 		srcip : srcip,
-		startDt : startDt,
-		endDt : endDt,
+		startDt  : startDt,
+		endDt  : endDt,
 		usr_id : usr_id,
 		msgid : nvl(msgid),
 		limit : detailLimit
 	}
 	ui.get({
 		url : 'getMessengerMessage.xcn',
-		searchParam : data,
+		searchParam : JSON.stringify(data),
 		success : function(data, total) {
 			if(data.groups.length > 0) {
 				$('.messenger_prev').css('display','block');
@@ -303,7 +305,7 @@ function getMessengerMessage(xRootmtr, srcip, usr_id, msgid) {
 				$('#groupSubResultCnt').text(0);
 				return;
 			}
-			
+
 			detailDataSet = data.groups;
 			prevDetailDataSet = data.groups;
 			$("#timeline_list").html(makeList(false));
@@ -346,12 +348,12 @@ function getMessengerMessageNext(xRootmtr, srcip, usr_id, msgid) {
 				$('.messenger_next').css('display', 'none');
 				return;
 			}
-			
+
 			if(data.groups.length < detailLimit) {
 				$('.messenger_next').css('display', 'none');
 			}
 			detailDataSet = data.groups;
-			
+
 			/**
 			 * 전체 10 페이지가 넘어갈 경우 첫번째 페이지 제거
 			 * 최상단에 날짜 출력
@@ -364,7 +366,7 @@ function getMessengerMessageNext(xRootmtr, srcip, usr_id, msgid) {
 					firstObj.prepend(date);
 				}
 			}
-			
+
 			$("#timeline_list").append(makeList(true));
 			Highlight( );
 		},
@@ -386,15 +388,19 @@ function getMessengerMessagePrev(xRootmtr, srcip, usr_id, msgid) {
 	var startDt = $('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 	var endDt = $('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 	searchFlag = true;
-	ui.get({
-		url : 'getMessengerMessagePrev.xcn',
+
+	var data = {
 		xRootMtr : xRootmtr,
 		srcip : srcip,
 		startDt : startDt,
 		endDt : endDt,
 		usr_id : usr_id,
 		msgId : msgid,
-		limit : detailLimit,
+		limit : detailLimit
+	};
+	ui.get({
+		url : 'getMessengerMessagePrev.xcn',
+		searchParam : JSON.stringify(data),
 		success : function(data, total) {
 			searchFlag = false;
 			if(data.groups.length == 0) {
@@ -407,11 +413,11 @@ function getMessengerMessagePrev(xRootmtr, srcip, usr_id, msgid) {
 				$('.messenger_prev').css('display', 'none');
 			}
 			prevDetailDataSet = data.groups;
-			
+
 			if($(".pageInfoDiv").size() > detailViewPage-1){
 				$(".pageInfoDiv").last().remove();
 			}
-			
+
 			$("#timeline_list").prepend(makePrevList());
 			$('#scrollArea').scrollTop($(".pageInfoDiv").height());
 			Highlight( );
@@ -431,7 +437,7 @@ function getMessengerMessagePrev(xRootmtr, srcip, usr_id, msgid) {
 function userSelectBox(data, srcip, usr_id){
 	var name = $('#selectUserInfo').attr('data-name');
 	var str = '';
-	
+
 	for(var i=0; i<data.length; i++){
 		var ip = data[i].srcip == undefined ? Object.keys(data[i].srcIpList[0]).toString() : data[i].srcip;
 		var selectUserTitle = ip;
@@ -442,12 +448,12 @@ function userSelectBox(data, srcip, usr_id){
 		}
 		else if( nvl(data[i].usr_id) != '') selectUserTitle = data[i].usr_id;
 		else if( nvl(data[i].srcip) != '') selectUserTitle = data[i].srcip;
-		
+
 		$('#selectUserInfo').attr('data-srcip', nvl(ip));
 		$('#selectUserInfo').attr('data-name', nvl(data[i].name));
 		$('#selectUserInfo').attr('data-usrid', nvl(data[i].usr_id));
 		$('#selectUserInfo').html(selectUserTitle);
-		
+
 		str += '<li class="selectUser" data-name="'+nvl(data[i].name)+'" data-srcip="'+nvl(ip)+'" data-usrid="'+nvl(data[i].usr_id)+'"><a href="javascript:void(0);">'+selectUserTitle+'</a></li>';
 	}
 	$('#selectUser_menu').html(str);
@@ -621,7 +627,7 @@ function getFiletransferList(page){
 	ui.onBody('timeline_list', 0, -20);
 
 	var searchData = {
-		 startDate : startDt+"000000"
+		startDate : startDt+"000000"
 		, endDate : endDt+"235959"
 		, offset : grid1.data.length
 		, limit : grid1.pageSize
@@ -757,7 +763,7 @@ function rtnGroupPage(total, page, searchType){
 
 function setMessengerRead(dataSet){
 	if(dataSet == null || dataSet == undefined) dataSet = detailDataSet;
-	
+
 	ui.get({
 		url : 'setMessengerRead.xcn',
 		body : JSON.stringify(dataSet),
@@ -830,7 +836,7 @@ function makeList(nextFlag){
 		if(!chkPati){
 			if( obj.readYn == 'Y' ) str+='	<div class="timeline-badge custom read">';
 			else str+='	<div class="timeline-badge custom unread">';
-			
+
 			if( svc3 == 'C' ) str += '<i class="fa fa-commenting-o fa-sm" style="font-size: 20px;"></i> ';
 			else if( svc3 == 'F' ) str += '<i class="fa fa-floppy-o fa-sm"></i> ';
 			else if( svc3 == 'J' ) str += '<i class="fa fa-sign-in fa-sm"></i> ';
@@ -868,7 +874,7 @@ function makeList(nextFlag){
 		if(chkPati){
 			if( obj.readYn == 'Y' ) str+='	<div class="timeline-badge custom custom_right read">';
 			else str+='	<div class="timeline-badge custom custom_right unread">';
-			
+
 			if( svc3 == 'C' ) str += '<i class="fa fa-commenting-o fa-sm" style="font-size: 20px;"></i> ';
 			else if( svc3 == 'F' ) str += '<i class="fa fa-floppy-o fa-sm"></i> ';
 			else if( svc3 == 'J' ) str += '<i class="fa fa-sign-in fa-sm"></i> ';
@@ -879,8 +885,8 @@ function makeList(nextFlag){
 	}
 	str+='</ul>';
 	if(detailDataSet.length < detailLimit) str += noNextDataMsg();
-	
-	
+
+
 	if(!dataHasFlag){
 		str = noDataMsg();
 	}
@@ -894,13 +900,13 @@ function makePrevList(){
 	if(prevDetailDataSet.length < detailLimit) str += noPrevDataMsg();
 	var usrid = $('#selectUserInfo').attr('data-usrid');
 	var srcip = $('#selectUserInfo').attr('data-srcip');
-	
+
 	for(var i=prevDetailDataSet.length - 1 ; i > -1 ; i--) {
 		dataHasFlag = true;
 		var obj = prevDetailDataSet[i];
 		var chkPati = false;
 		if( (nvl(obj.user) != '' && obj.user == obj.sender) || usrid == obj.title || usrid == obj.sender ) chkPati = true;
-		
+
 		str += checkDatePre(i);
 
 		str+='<li class="timeline-inverted" id="'+obj.msgid+'" ctime="'+obj.ctime+'">';
@@ -909,7 +915,7 @@ function makePrevList(){
 		if(!chkPati){
 			if( obj.readYn == 'Y' ) str+='	<div class="timeline-badge custom read">';
 			else str+='	<div class="timeline-badge custom unread">';
-			
+
 			if( svc3 == 'C' ) str += '<i class="fa fa-commenting-o fa-sm" style="font-size: 20px;"></i> ';
 			else if( svc3 == 'F' ) str += '<i class="fa fa-floppy-o fa-sm"></i> ';
 			else if( svc3 == 'J' ) str += '<i class="fa fa-sign-in fa-sm"></i> ';
@@ -947,7 +953,7 @@ function makePrevList(){
 		if(chkPati){
 			if( obj.readYn == 'Y' ) str+='	<div class="timeline-badge custom custom_right read">';
 			else str+='	<div class="timeline-badge custom custom_right unread">';
-			
+
 			if( svc3 == 'C' ) str += '<i class="fa fa-commenting-o fa-sm" style="font-size: 20px;"></i> ';
 			else if( svc3 == 'F' ) str += '<i class="fa fa-floppy-o fa-sm"></i> ';
 			else if( svc3 == 'J' ) str += '<i class="fa fa-sign-in fa-sm"></i> ';
@@ -957,7 +963,7 @@ function makePrevList(){
 		str+='</li>';
 	}
 	str+='</ul>';
-	
+
 	if(!dataHasFlag){
 		str = noDataMsg();
 	}
@@ -1000,7 +1006,7 @@ function noNextDataMsg(){
 
 function checkDate(idx){
 	var lastTime = $('.timeline').children().last().attr('ctime');
-	
+
 	if( idx > 0 && detailDataSet[idx].ctime.substring(0, 10) == detailDataSet[idx-1].ctime.substring(0, 10) ){
 		return '';
 	}
@@ -1016,7 +1022,7 @@ function checkDate(idx){
 function checkDatePre(idx){
 	var firstData = $('.timeline').children().filter(':eq(1)');
 	var endDate = $(firstData).attr('ctime');
-	
+
 	if( idx==0 && prevDetailDataSet[idx].ctime.substring(0, 10) == endDate.substring(0, 10)) {
 		$('.timeline').children().first().remove();
 	}
@@ -1038,7 +1044,7 @@ function viewDate(dateStr){
 	str+='		</div>';
 	str+='	</div>';
 	str+='</li>';
-	
+
 	return str;
 }
 
@@ -1108,7 +1114,7 @@ function checkList(cnt){
 //function findList(id, line){
 //	ui.onBody('timeline_list', 0, 60);
 //	var selectPage = 1
-//	var str = ''; 
+//	var str = '';
 //
 //	if(line != -1) {
 //		selectPage = Math.ceil((line)/detailPageBreak);
@@ -1122,7 +1128,7 @@ function checkList(cnt){
 //		$("#timeline_list").html('').html(str);
 //		Highlight( );
 //	}
-//	
+//
 //	setTimeout(function(){
 //		ui.off('timeline_list');
 //
@@ -1178,7 +1184,7 @@ function updateEmassMessengerAdminXrootMtr(xrootmtr, lastMsgId, srcip, usr_id){
 	if(readTimeFlag) return true;
 	readTimeFlag = true;
 	moveTargetHeight(lastMsgId, false);
-	
+
 	ui.get({
 		url : 'updateEmassMessengerAdminXrootMtr.xcn',
 		xRootMtr : xrootmtr,
@@ -1271,7 +1277,7 @@ function HighlightGroup( ) {
 		var searchs = $('#searchStrInput').val().split(/\||\+|\s|\*|\"/);
 		if ( searchs.length > 0 ){
 			var group_list_obj = $("#group_list").find('code');
-		
+
 			for ( var i=0 ; i < searchs.length ; i++ ) {
 				if ( searchs[i] == '' ) continue;
 				$( group_list_obj ).highlight(searchs[i], 'BS');
@@ -1293,17 +1299,6 @@ function Highlight( ) {
 		}
 	}, 100);
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 

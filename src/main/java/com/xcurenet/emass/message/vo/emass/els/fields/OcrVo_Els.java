@@ -11,8 +11,8 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Nullable
 public class OcrVo_Els {
-     @JsonProperty("attachCnt")
-    private int	attachCnt;  //	ocr 첨부 개수
-     @JsonProperty("attach")
-    private List attach;  //	ocr 첨부 텍스트 내용
+	@JsonProperty("attachCnt")
+	private int	attachCnt;  //	ocr 첨부 개수
+	@JsonProperty("attach")
+	private List attach;  //	ocr 첨부 텍스트 내용
 }
