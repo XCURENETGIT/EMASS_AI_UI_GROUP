@@ -231,7 +231,7 @@ var ui = {
 			var height = $('#' + target).height();
 			var offset = $('#' + target).offset();
 			$('#' + target).append(
-					'<div class="loading_div_grid" id="loading_div_' + target + '"><img id="loading_img_' + target + '" src="' + contextRoot + '/resources/img/loading/Loading.gif"/></div>');
+					'<div class="loading_div_grid" id="loading_div_' + target + '"><img id="loading_img_' + target + '" src="' + contextRoot + '/img/loading/Loading.gif"/></div>');
 			$('#loading_div_' + target).css({
 				"position" : "absolute",
 				"top" : top + "px",
@@ -258,7 +258,7 @@ var ui = {
 			var width = $('#' + target).width();
 			var height = $('#' + target).height();
 			$('#' + target).append(
-					'<div class="loading_div_grid" id="loading_div_' + target + '"><img id="loading_img_' + target + '" src="' + contextRoot + '/resources/img/loading/Loading.gif"/></div>');
+					'<div class="loading_div_grid" id="loading_div_' + target + '"><img id="loading_img_' + target + '" src="' + contextRoot + '/img/loading/Loading.gif"/></div>');
 			$('#loading_div_' + target).css({
 				"position" : "absolute",
 				"top" : top + "px",
@@ -286,7 +286,7 @@ var ui = {
 		if ($('#loading_div_' + target).get().length > 0)
 			$('#loading_div_' + target).remove(); // 한번 지우고 새로 처리 해야 한다.
 		if ($('#loading_div_' + target).get().length == 0) {
-			$('body').append('<div class="loading_div_grid" id="loading_div_' + target + '"><img id="loading_img_' + target + '" src="' + contextRoot + '/resources/img/loading/Loading.gif"/></div>');
+			$('body').append('<div class="loading_div_grid" id="loading_div_' + target + '"><img id="loading_img_' + target + '" src="' + contextRoot + '/img/loading/Loading.gif"/></div>');
 			$('#loading_div_' + target).css({
 				"position" : "absolute",
 				"width" : "100%",
@@ -320,7 +320,7 @@ var ui = {
 	},
 	mobileOn : function() {
 		$.mobile.loading('show', {
-			html : "<span><img src='../resources/css/images/ajax-loader.gif' /></span>"
+			html : "<span><img src=contextRoot+'/resources/css/images/ajax-loader.gif' /></span>"
 		});
 	},
 	mobileOff : function() {

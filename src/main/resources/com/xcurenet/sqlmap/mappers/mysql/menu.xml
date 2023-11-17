@@ -5,11 +5,11 @@
 
 	
 	<select id="getMenuList" resultType="menuVO" parameterType="hashmap">
-		SELECT	defaultName, menuId, pId, tId, menuLink, pkgType, menuAuth, menuIcon, menuUseyn, lv1_odr, lv2_odr, lv3_odr
+		SELECT	defaultName, menuId, pId, tId, menuLink, pkgType, menuAuth, menuIcon,menuImgPath, menuUseyn,lv1_odr, lv2_odr, lv3_odr
 		FROM	(
-				SELECT  A.MENU_DEFAULT_NAME AS defaultName, A.MENU_ID AS menuId, A.P_MENU_ID AS pId, 
+				SELECT  A.MENU_DEFAULT_NAME AS defaultName, A.MENU_ID AS menuId, A.P_MENU_ID AS pId,
 						IFNULL(IFNULL(B.P_MENU_ID, A.P_MENU_ID), A.MENU_ID) AS tId, A.MENU_LINK AS menuLink,
-						A.PKG_TYPE AS pkgType, A.MENU_AUTH AS menuAuth, A.MENU_ICON AS menuIcon, A.MENU_USEYN AS menuUseyn,
+						A.PKG_TYPE AS pkgType, A.MENU_AUTH AS menuAuth, A.MENU_ICON AS menuIcon, A.MENU_USEYN AS menuUseyn,A.MENU_IMG_PATH AS menuImgPath,
 						CASE	WHEN A.P_MENU_ID IS NULL THEN A.MENU_ORDER
 								WHEN B.P_MENU_ID IS NULL THEN B.MENU_ORDER
 								WHEN C.P_MENU_ID IS NULL THEN C.MENU_ORDER

@@ -1,15 +1,7 @@
 package com.xcurenet.menu.service.impl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import org.springframework.stereotype.Service;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xcurenet.common.dao.XcnAbstractDAO;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.locale.Prop;
@@ -17,17 +9,26 @@ import com.xcurenet.emass.customDashboard.service.CustomDashBoardService;
 import com.xcurenet.emass.customDashboard.service.CustomDashboardMenuVO;
 import com.xcurenet.menu.service.MenuService;
 import com.xcurenet.menu.service.MenuVO;
-
 import net.sf.json.JSONObject;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service("menuService")
 public class MenuServiceImpl extends XcnAbstractDAO implements MenuService {
 
 	@Resource(name = "customDashBoardService")
 	private CustomDashBoardService customDashBoardService;
-	
+
+
 	@Override
-	public List<MenuVO> getMenuList(HttpServletRequest request) {
+	public String getMenuList(HttpServletRequest request) {
 		JSONObject param = Common.getParam(request);
 		String adminId = Common.nvl(param.get("_ses_user_id"));
 		String adminAuth = Common.nvl(param.get("_ses_user_type"));
@@ -38,17 +39,25 @@ public class MenuServiceImpl extends XcnAbstractDAO implements MenuService {
 	}
 
 	@Override
-	public List<MenuVO> getMenuList(String adminId, String adminAuth, HttpSession session) {
-		Map<String, String> param = new HashMap<>();
-		param.put("adminId", adminId);
-		param.put("adminAuth", adminAuth);
-		List<MenuVO> menus = selectList("com.xcurenet.sqlmap.mappers.mysql.menu.getMenuList", param);
-		setMenuLink(menus, session);
-		setCustomMenu(menus, session);
+	public String getMenuList(String adminId, String adminAuth, HttpSession session) {
+		String jsonStr = "";
+		try {
+			Map<String, String> param = new HashMap<>();
+			param.put("adminId", adminId);
+			param.put("adminAuth", adminAuth);
+			List<MenuVO> menus = selectList("com.xcurenet.sqlmap.mappers.mysql.menu.getMenuList", param);
+			setMenuLink(menus, session);
+			setCustomMenu(menus, session);
 
-		return menus;
+			ObjectMapper objectMapper = new ObjectMapper();
+			jsonStr = objectMapper.writeValueAsString(menus);
+		}catch (JsonProcessingException e){
+			e.printStackTrace();
+		}
+		return jsonStr;
 	}
-	
+
+	@ResponseBody
 	private void setCustomMenu(List<MenuVO> menus, HttpSession session) {
 		CustomDashboardMenuVO customDashboardMenuVo = new CustomDashboardMenuVO();
 		customDashboardMenuVo.setAdminId(Common.getAdminId(session));

@@ -26,8 +26,8 @@ public class WebConfig implements WebMvcConfigurer {
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(authorityInterceptor).addPathPatterns("/**").excludePathPatterns("/statusUpdate","/updateStatus.xcn","/login.do", "/loginSSO.do", "/loginAuth.do", "/error.do", "/blank.do", "/loginSSOProcess.do"
 			,"/deleteSession.xcn","/logoutSSOProcess.do", "/getUacsRule.xcn", "/loginProcess.xcn", "/getRSAKey.xcn","/confirmNumber",
-				"/updateAdminPassword.xcn", "/secretKeySave.xcn","/reloadGoogleOTP.xcn","/mailSend.xcn","/sendmail","/makeInfo", "/getRSAKey.xcn", "/loginProcess.xcn", "/admin/updateAdminPassword.vns", "/passwordChange", "/process/**", "/css/**", "/img/**", "/js/**", "/lib/**", "/favicon.ico");
-		registry.addInterceptor(loggerInterceptor).addPathPatterns("/**").excludePathPatterns("/css/**", "/img/**", "/js/**", "/lib/**", "/favicon.ico", "/error");
+				"/updateAdminPassword.xcn", "/secretKeySave.xcn","/reloadGoogleOTP.xcn","/mailSend.xcn","/sendmail","/makeInfo", "/getRSAKey.xcn", "/loginProcess.xcn", "/admin/updateAdminPassword.vns", "/passwordChange", "/process/**", "/css/**", "/img/**", "/js/**", "/lib/**","/fonts/**", "/favicon.ico");
+		registry.addInterceptor(loggerInterceptor).addPathPatterns("/**").excludePathPatterns("/css/**", "/img/**", "/js/**","/fonts/**", "/lib/**", "/favicon.ico", "/error");
 		registry.addInterceptor(localeChangeInterceptor());
 	}
 

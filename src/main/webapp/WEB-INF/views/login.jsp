@@ -1,5 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
+<script type="text/javascript" src="<c:url value="/js/sha256.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/jsbn.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/rsa.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/prng4.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/rng.js"/>"></script>
+<link rel="stylesheet" href="<c:url value="/css/emass_style.css"/>" />
+<link rel="stylesheet" href="<c:url value="/css/reset.css"/>" />
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,12 +27,7 @@
 
 	String locale = Config.getString("default.lang");
 %>
-	<%--<%@ include file="./base.jsp"%>--%>
-<script type="text/javascript" src="<c:url value="/js/sha256.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/jsbn.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/rsa.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/prng4.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/rng.js"/>"></script>
+
 <style type="text/css">
 html,body {padding: 0px;margin: 0px;background-color:#fff;height: 98%;}
 #googleOTPqr { pointer-events: none; }
@@ -36,7 +38,6 @@ html,body {padding: 0px;margin: 0px;background-color:#fff;height: 98%;}
 }
 </style>
 <script type="text/javascript">
-
 var loginMsg = '';
 loginMsg += '\n';
 loginMsg += '\n';
@@ -375,9 +376,17 @@ function confirmTimeOut() {
 
 
 </script>
+
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EMASS PRO</title>
+
+
 </head>
 <body id="loginBody">
-
+<%--
 <div class="modal fade" id="unusePop" tabindex="-1" role="dialog" aria-labelledby="unusePop">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
@@ -397,7 +406,7 @@ function confirmTimeOut() {
 	</div>
 </div>
 
-<%--장기미사용 본인인증 팝업창--%>
+&lt;%&ndash;장기미사용 본인인증 팝업창&ndash;%&gt;
 <div class="modal fade" id="unuseAdminPop" tabindex="-1" role="dialog" aria-labelledby="unuseAdminPop">
 	<div class="modal-dialog" role="document" style="height: 500px;">
 		<div class="modal-content" style="height: 100%;">
@@ -485,84 +494,41 @@ function confirmTimeOut() {
 			</div>
 		</div>
 	</div>
-</div>
+</div>--%>
+
+
 <div id="changePasswordBtn"></div>
 <textarea style="display: none;" id="message"><%=loginMsg%></textarea>
-<form method="post" id="loginForm">
-<table style="width: 100%;">
-	<tr>
-		<td height="150"></td>
-	</tr>
-	<tr>
-		<td>
-			<table style="width: 100%;">
-				<tr>
-					<td height="424" align="center" background="<c:url value="/img/login/bg01.gif"/>">
-						<table style="width: 1000px;">
-							<tr>
-								<td height="424" valign="bottom" background="<c:url value="/img/login/img01_2.jpg"/>">
-									<table style="width: 500px;">
-										<tr>
-											<td width="80">&nbsp;</td>
-											<td width="420">
-												<table style="width: 420px;">
-													<tr>
-														<td width="83" style="text-align: left;">
-															<img src="<c:url value="/img/login/id.gif"/>" width="16" height="9">
-														</td>
-														<td width="212" height="7">
-															<input class="input1" style="width: 200px" id="userIdInput" tabindex="1" value=""/>
-														</td>
-														<td width="125" rowspan="3">
-														<%if(Common.isEquals(locale, "ko")) {%>
-															<a id="loginBtn" tabindex="3" href="#" onMouseOver="MM_swapImage('Image1','','<c:url value="/img/login/btn02.gif"/>',1)" onMouseOut="MM_swapImgRestore()"><img src="<c:url value="/img/login/btn01.gif"/>" name="Image1" width="84" height="60" border="0"></a>
-														<%}else{ %>
-															<a id="loginBtn" tabindex="3" href="#" onMouseOver="MM_swapImage('Image1','','<c:url value="/img/login/btn02_en.gif"/>',1)" onMouseOut="MM_swapImgRestore()"><img src="<c:url value="/img/login/btn01_en.gif"/>" name="Image1" width="84" height="60" border="0"></a>
-														<%} %>
+<div id="login">
+	<div class="logo">
+		<img src="<c:url value="/img/logo_login.png"/>" alt="EmassPro" class="emass">
+	</div>
+	<div id="loginWrap">
+		<!-- 로그인-->
+		<form method="post" id="loginForm">
+			<div class="imgcontainer">
+				<img src="<c:url value="/img/logo_emass.png"/>" alt="EmassPro" class="emass">
+			</div>
 
-														</td>
-													</tr>
-													<tr>
-														<td height="7"></td>
-														<td height="7"></td>
-													</tr>
-													<tr>
-														<td style="text-align: left;">
-															<img src="<c:url value="/img/login/pw.gif"/>" width="75" height="9">
-														</td>
-														<td height="7">
-															<input type="password" class="input1" style="width: 200px" id="userPwInput" tabindex="2" value="" autocomplete="off"/>
-														</td>
-													</tr>
-													<tr>
-														<td style="height: 5px;"></td>
-													</tr>
-													<tr>
-														<td style="text-align: right; padding-right: 10px; color: #3e3e3e;" colspan="2">
-															<label style="cursor: pointer;"><span style="display: inline-block; position: relative; top: 2px;">
-																<input type="checkbox" id="saveLoginId" /></span>
-																<%if(Common.isEquals(locale, "ko")) {%> 로그인 ID 저장
-																<%}else{ %> Save Login ID
-																<%} %>
-															</label>
-														</td>
-													</tr>
-												</table>
-											</td>
-										</tr>
-										<tr>
-											<td height="95" colspan="2"></td>
-										</tr>
-									</table>
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-</table>
-</form>
+			<div class="container">
+				<input type="text"  id="userIdInput"  value=""/>
+				<input type="password" class="input1"  id="userPwInput"  value="" autocomplete="off"/>
+
+				<button id="loginBtn" type="button">로그인</button>
+				<label>
+					<input id="saveLoginId" type="checkbox" checked="checked" name="remember" class="checkbox_align">
+					<%if(Common.isEquals(locale, "ko")) {%> 로그인 ID 저장
+					<%}else{ %> Save Login ID
+					<%} %>
+				</label>
+			</div>
+		</form>
+		<!--//로그인-->
+	</div>
+	<div id="loginText">
+		<h3>Enterprise MessAge Scanning System</h3>
+		<p>온라인(네트워크) 정보유출을 방지하기 위하여<br/>사용자의 전달 메시지 내용에 대하여 로깅 감시하는 시스템입니다.</p>
+	</div>
+</div>
 </body>
 </html>

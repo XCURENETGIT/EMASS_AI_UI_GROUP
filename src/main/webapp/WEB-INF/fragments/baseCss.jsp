@@ -8,8 +8,8 @@
 <link rel="stylesheet" href="<c:url value="/css/non-responsive.css"/>" />
 <link rel="stylesheet" href="<c:url value="/css/font-awesome.min.css"/>" />
 <link rel="stylesheet" href="<c:url value="/css/slick.grid.original.css"/>" />
-<link rel="stylesheet" href="<c:url value="/css/style.css"/>" />
-<link rel="stylesheet" href="<c:url value="/css/custom.css"/>" />
+<%--<link rel="stylesheet" href="<c:url value="/css/style.css"/>" />--%>
+<%--<link rel="stylesheet" href="<c:url value="/css/custom.css"/>" />--%>
 <link rel="stylesheet" href="<c:url value="/css/animate.min.css"/>" />
 <link rel="stylesheet" href="<c:url value="/css/timeLine.css"/>"/>
 
@@ -24,7 +24,9 @@
 <link rel="stylesheet" href="<c:url value="/css/gridstack.css"/>" />
 <link rel="stylesheet" href="<c:url value="/css/sb-admin-2.css"/>" />
 
-
+<%-- 새 디자인 css--%>
+<link rel="stylesheet" href="<c:url value="/css/emass_style.css"/>" />
+<link rel="stylesheet" href="<c:url value="/css/reset.css"/>" />
 
 <link rel="stylesheet" href="<c:url value="/css/message.css"/>"/>
 <link rel="stylesheet" href="<c:url value="/css/jquery.scrollbar.css"/>"/>

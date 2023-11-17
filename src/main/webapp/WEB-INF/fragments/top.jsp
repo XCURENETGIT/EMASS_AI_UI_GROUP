@@ -280,20 +280,33 @@
         <span class="navi"><%=menuNavi%></span>
     </div>
     <%if(Common.isEquals(headerYn, "Y")){%>
-        <div style="position: absolute; top: 60px; right: 300px; z-index: 999;">
-            <a href="javascript: void(0)" id="titleOpen" title="open"><img src="<c:url value="/img/btn/down.png"/>" /></a>
-        </div>
-        <div style="position: absolute; top: 170px; right: 300px; z-index: 999;">
-            <a href="javascript: void(0)" id="titleClose" title="close"><img  src="<c:url value="/img/btn/up.png"/>" /></a>
-        </div>
-        <div class="content_header">
-            <div style="padding: 10px; color: #545454;">
-                <h3><%=menuName%></h3>
-                <div class="subMsg">
-                    <s:message code="${menuId}.msg.header" text="페이지 설명을 입력하세요.(message_ko.properties 페이지의 : ${menuId}.msg.header  값으로 입력)"/>
+    <%-- 1 뎁스 설명 --%>
+    <div style="position: absolute; top: 60px; right: 300px; z-index: 999;">
+        <a href="javascript: void(0)" id="titleOpen" title="open"><img src="<c:url value="/img/btn/down.png"/>" /></a>
+    </div>
+    <div style="position: absolute; top: 170px; right: 300px; z-index: 999;">
+        <a href="javascript: void(0)" id="titleClose" title="close"><img  src="<c:url value="/img/btn/up.png"/>" /></a>
+    </div>
+    <div class="subTit">
+        <h2>
+            1뎁스 타이틀
+            <span class="tooltip">
+                    <a href="#none"><img src="/img/ico_info.png" alt="툴팁"/></a>
+                    <span class="tooltiptext">Tooltip text</span>
+            </span>
+        </h2>
+        <div class="page">
+            <div class="content_header">
+                <div style="padding: 10px; color: #545454;">
+                    <h3><%=menuName%></h3>
+                    <div class="subMsg">
+                        <s:message code="${menuId}.msg.header" text="페이지 설명을 입력하세요.(message_ko.properties 페이지의 : ${menuId}.msg.header  값으로 입력)"/>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
+
     <%} %>
 </header>
 

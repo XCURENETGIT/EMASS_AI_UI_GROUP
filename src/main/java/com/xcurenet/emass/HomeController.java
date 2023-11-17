@@ -757,6 +757,7 @@ public class HomeController {
 	@RequestMapping(value = "/uacs/filterInfo.do", method = RequestMethod.GET)
 	public String filterInfo(Locale locale, Model model) {
 		if (Common.isEquals(Common.getAdminType(httpSession), "S")) {
+			model.addAttribute("headerYn","Y");
 			return "/uacs/filter/filterInfo";
 		} else {
 			return "/emass/dashboard";

@@ -4,15 +4,17 @@
         "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
 <tiles-definitions>
 
+
     <!-- common -->
     <!-- default layout-->
-    <definition name="defaultLayout" template="/WEB-INF/layout/defaultLayout.jsp">
-        <put-attribute name="baseCss" value="/WEB-INF/fragments/baseCss.jsp" />
-        <put-attribute name="baseJs" value="/WEB-INF/fragments/baseJs.jsp" />
-        <put-attribute name="top" value="/WEB-INF/fragments/top.jsp" />
-        <put-attribute name="body" value="" />
-        <put-attribute name="footer" value="/WEB-INF/fragments/footer.jsp" />
-    </definition>
+
+<!--    <definition name="defaultLayout" template="/WEB-INF/layout/defaultLayout.jsp">-->
+<!--        <put-attribute name="baseCss" value="/WEB-INF/fragments/baseCss.jsp" />-->
+<!--        <put-attribute name="baseJs" value="/WEB-INF/fragments/baseJs.jsp" />-->
+<!--        <put-attribute name="top" value="/WEB-INF/fragments/top.jsp" />-->
+<!--        <put-attribute name="body" value="" />-->
+<!--        <put-attribute name="footer" value="/WEB-INF/fragments/footer.jsp" />-->
+<!--    </definition>-->
 
     <!-- no layout-->
     <definition name="noLayout" template="/WEB-INF/layout/noLayout.jsp">
@@ -26,6 +28,20 @@
         <put-attribute name="baseCss" value="/WEB-INF/fragments/baseCss.jsp" />
         <put-attribute name="baseJs" value="/WEB-INF/fragments/baseJs.jsp" />
         <put-attribute name="body" value="" />
+    </definition>
+
+    <definition name="defaultLayout" template="/WEB-INF/layout/newLayout.jsp">
+    <put-attribute name="baseCss" value="/WEB-INF/fragments/baseCss.jsp" />
+    <put-attribute name="baseJs" value="/WEB-INF/fragments/baseJs.jsp" />
+    <put-attribute name="top" value="/WEB-INF/fragments/new_top.jsp" />
+    <put-attribute name="header" value="/WEB-INF/fragments/header.jsp" />
+    <put-attribute name="left" value="/WEB-INF/fragments/new_left.jsp" />
+    <put-attribute name="body" value="" />
+    </definition>
+
+
+    <definition name="/uacs/filter/filterInfo" extends="defaultLayout">
+        <put-attribute name="body" value="/WEB-INF/views/uacs/filter/filterInfo.jsp" />
     </definition>
 
 

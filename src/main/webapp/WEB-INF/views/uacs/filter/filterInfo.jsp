@@ -1,11 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
 <title><s:message code="filterInfo.title"/></title>
-<%@ include file="../../base.jsp"%>
 <style type="text/css">
 .radio-inline {
 	padding-left: 0px;
@@ -624,7 +624,8 @@ function getPdeptOptions(){
 </script>
 </head>
 <body class="mini-navbar">
-	<div class="modal fade" id="idPop" tabindex="-1" role="dialog" aria-labelledby="idPop">
+<%--모달 관련--%>
+<%--	<div class="modal fade" id="idPop" tabindex="-1" role="dialog" aria-labelledby="idPop">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<form method="post" id="idPopForm" onsubmit="return false;">
@@ -1021,45 +1022,53 @@ function getPdeptOptions(){
 				</div>
 			</div>
 		</div>
-	</div>
+	</div>--%>
 	
-	<jsp:include page="../../top.jsp"/>
 
 	<div class="container"> 
 		<div class="boxArea">
 			<div class="content_body">
 				<div class="row">
-					<div class="col-xs-12"> 
-						<ul class="nav nav-tabs codeTab">
-							<li class="active" style=" text-align: center;"><a data-toggle="tab" href="#idList" id="idTab">ID</a></li>
-							<li style=" text-align: center"><a data-toggle="tab" href="#ipList" 				id="ipTab"	>IP</a></li>
-							<li style=" text-align: center"><a data-toggle="tab" href="#domainList" 			id="domainTab"	>Domain</a></li>
-							<li style=" text-align: center"><a data-toggle="tab" href="#urlList"		 		id="urlTab">URL</a></li>
-							<li style=" text-align: center"><a data-toggle="tab" href="#subjectList" 			id="subjectTab"><s:message code="filterInfo.subject"/></a></li>
-							<li style=" text-align: center"><a data-toggle="tab" href="#sizeList" 				id="sizeTab"><s:message code="filterInfo.size"/></a></li>
-							<li style=" text-align: center; display: none;"><a data-toggle="tab" href="#attachList" 			id="attachTab"><s:message code="filterInfo.attach"/></a></li>
-						</ul>
+					<div class="col-xs-12">
+						<div class="subbox">
+							<div class="subtab">
+								<button class="active"><a data-toggle="tab" href="#idList" id="idTab">ID</a></button>
+								<button class="tablinks"><a data-toggle="tab" href="#ipList"  id="ipTab">IP</a></button>
+								<button class="tablinks"><a data-toggle="tab" href="#domainList" 	id="domainTab"	>Domain</a></button>
+								<button class="tablinks"><a data-toggle="tab" href="#urlList"	id="urlTab">URL</a></button>
+								<button class="tablinks"><a data-toggle="tab" href="#subjectList" id="subjectTab"><s:message code="filterInfo.subject"/></a></button>
+								<button class="tablinks"><a data-toggle="tab" href="#sizeList" id="sizeTab"><s:message code="filterInfo.size"/></a></button>
+								<button class="tablinks"><a data-toggle="tab" href="#attachList" id="attachTab"><s:message code="filterInfo.attach"/></a></button>
+							</div>
+						</div>
 					</div>
 				</div>
 				<div class="row top_space">
-					<span style="color: #f25643; font-weight: bold;padding-left:10px;" id="noticeMsg"><s:message code="filterInfo.msg.nologging"/></span>
+
 				</div>
 				<div class="row top_space">
 					<div class="col-xs-12 text-left">
 						<div class="form-group form-inline not-dashed">
-							<div class="form-group">
-								<select class="form-control input-sm" id="serviceType" name="serviceType" style="min-width: 150px;">
-									<option value="">-<s:message code="filterInfo.msg.select.service"/>-</option>
-								</select>
-							</div>
-							<div class="input-group">
-		      					<input type="text" class="form-control input-sm" id="searchStr" style="width: 210px;">
-								<div class="input-group-btn">
-									<button class="btn btn-sm btn-success" type="button" accesskey="Q" id="searchBtn"><i class="glyphicon glyphicon-search"></i></button>
+							<div class="searchArea">
+								<div class="searchSub">
+									<ul>
+										<li>
+											<select  id="serviceType" name="serviceType">
+												<option value="">-<s:message code="filterInfo.msg.select.service"/>-</option>
+											</select>
+										</li>
+										<li><input type="text" id="searchStr" placeholder="placeholder"></li>
+										<li>
+											<button class="btn btn-sm btn-success" type="button" accesskey="Q" id="searchBtn"><i class="glyphicon glyphicon-search"></i></button>
+										</li>
+										<li><span style="color: #f25643; font-weight: bold;padding-left:10px;" id="noticeMsg"><s:message code="filterInfo.msg.nologging"/></span></li>
+									</ul>
+								</div>
+								<div class="btnList">
+									<button class="btn01"> <img src="<c:url value="/img/subBtn_plus.png"/>" alt="<s:message code="common.msg.add"/>"><s:message code="common.msg.add"/></button>
+									<button class="btn01"> <img src="<c:url value="/img/subBtn_trash.png"/>" alt="<s:message code="common.msg.delete"/>"><s:message code="common.msg.delete"/></button>
 								</div>
 							</div>
-	  						<button type="button" class="btn btn-sm btn-primary" accesskey="I" id="insertBtn"><span class="glyphicon glyphicon-plus"></span>&nbsp;<s:message code="common.msg.add"/></button>
-							<button type="button" class="btn btn-sm btn-default" accesskey="D" id="deleteBtn"><span class="glyphicon glyphicon-minus"></span>&nbsp;<s:message code="common.msg.delete"/></button>
 							<button type="button" class="btn btn-sm btn-danger" accesskey="R" id="devStatusBtn" style="display: none;"><span class="glyphicon glyphicon-flash"></span>&nbsp;<s:message code="filterInfo.ruleapply"/></button>
 						</div>
 					</div>
@@ -1354,6 +1363,5 @@ function getPdeptOptions(){
 		deviceGrid.initData('<s:message code="common.msg.nodata"/>');
 	</script>
 
-	<jsp:include page="../../footer.jsp"/>
 </body>
 </html>

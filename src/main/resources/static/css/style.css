@@ -261,7 +261,7 @@ input[type="radio"] {
  	padding-left:15px;
  }
  .content_header{
-	background-image: url('../img/title/title_bg.png');
+	/*background-image: url('../img/title/title_bg.png');*/
 	background-repeat: no-repeat;
 	background-color: #f7f7f7;
 	height:110px;

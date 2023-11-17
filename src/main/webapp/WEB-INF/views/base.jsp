@@ -30,8 +30,8 @@
 <link rel="stylesheet" href="<c:url value="/css/font-awesome.min.css"/>" />
 <link rel="stylesheet" href="<c:url value="/css/slick.grid.original.css"/>" />
 <link rel="stylesheet" href="<c:url value="/css/slick.columnpicker.css"/>" />
-<link rel="stylesheet" href="<c:url value="/css/style.css"/>" />
-<link rel="stylesheet" href="<c:url value="/css/custom.css"/>" />
+<%--<link rel="stylesheet" href="<c:url value="/css/style.css"/>" />
+<link rel="stylesheet" href="<c:url value="/css/custom.css"/>" />--%>
 <link rel="stylesheet" href="<c:url value="/css/animate.min.css"/>" />
 
 
