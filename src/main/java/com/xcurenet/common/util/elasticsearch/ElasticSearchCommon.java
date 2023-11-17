@@ -2,6 +2,7 @@ package com.xcurenet.common.util.elasticsearch;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.checker.units.qual.N;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -16,7 +17,7 @@ import java.util.Map;
 public class ElasticSearchCommon {
 
     /* EMASS INDEX */
-    public static final String EDC_MESSAGE_INDEX = "ems_edc_message_202311";
+    public static final String EDC_MESSAGE_INDEX = "ems_edc_message_202311*";   //ems_edc_message
     public static final String EDC_MESSAGE_SEARCH_HIST_INDEX = "ems_search_history*";
 
     /* ELASTIC SEARCH DOCUMENT UPDATE BY QUERY 관련 */
@@ -35,6 +36,7 @@ public class ElasticSearchCommon {
     public static final String SEARCH_TYPE_COLLECTION = "colletion";
     public static final String SEARCH_TYPE_ANALYSIS = "analysis";
     public static final String SEARCH_TYPE_STATISTIC = "statistic";
+    public static final String SEARCH_TYPE_ANALYSIS_DETAIL = "analysis_detail";
 
     /* 쿼리 관련 */
     public static final String ALL_SEARCH = "*:*";
@@ -143,6 +145,23 @@ public class ElasticSearchCommon {
     public static final String  HTTP_HEADER = "http.header"; //	HEADER
 
     // pi
+
+
+    /* 임시*/
+    public static final String PI_PREFIX = "pi_";
+    public static final String PI_TOTAL = "pi_total";
+    public static final String PI = "pi";
+    public static final String PIID = "piID";
+    public static final String PISN = "piSN";
+    public static final String PICN = "piCN";
+    public static final String PIFN = "piFN";
+    public static final String PIEC = "piEC";
+    public static final String PIEF = "piEF";
+    public static final String PIPN = "piPN";
+    public static final String PIDN = "piDN";
+
+
+
     public static final String  PI_ID = "pi.id";
     public static final String  PI_TYPE = "pi.type";
     public static final String  PI_ATTACHNM = "pi.attachnm";
@@ -208,12 +227,6 @@ public class ElasticSearchCommon {
     public static final String[] SENDER = {"mail.sender.name", "network.srcip"}; //발신자
     public static final String TIME_FORMAT = "common.time.";
 
-
-    /* 임시*/
-    public static final String PI_PREFIX = "pi_";
-    public static final String PI_TOTAL = "pi_total";
-    public static final String PI = "pi.codes.code";
-
     public static final String CTIME_HH = "ctime_hh"; //시간별
     public static final String CTIME_YYYYMM = "ctime_yyyymm"; //월별
     public static final String CTIME_YYYYMMDD = "ctime_yyyymmdd"; //일자별
@@ -237,7 +250,8 @@ public class ElasticSearchCommon {
             "password","siteAttr","siteCode","attached",
             "epmsgType","epHeader","piTotal",
             "body","network","attach","kwdInfo","service","http","pi",
-            "user","day","ocr","ml","mail"
+            "user","day","ocr","ml","mail","piPN","piDN","piSN","piCN","piEC","piFN"
+            ,"deptNm","jikgubNm","sender","usrId"
     };
 
     /* 화면에서의 (검색 영역) 값 엘라스틱 서치 필드로 치환 */

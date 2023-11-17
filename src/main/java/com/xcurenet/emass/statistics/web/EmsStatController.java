@@ -14,9 +14,14 @@ import com.xcurenet.common.util.locale.Prop;
 import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.emass.message.newService.EmsSearchService;
+import com.xcurenet.emass.message.service.SolrEdcMessageVO;
 import com.xcurenet.emass.message.vo.emass.EmassIntegrated;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.common.util.SimpleOrderedMap;
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +46,7 @@ public class EmsStatController {
     @Resource
     EmsSearchService emsSearchService;
 
-    @RequestMapping(value = "/test_getStatList.xcn")
+    @RequestMapping(value = "/getStatList.xcn")
     @Description("통계 리스트 조회")
     @AuditOperation(Operation.SEARCH)
     @ResponseBody
@@ -83,6 +89,81 @@ public class EmsStatController {
         return new XcnResponseVO(XcnRspCode.OK,emassIntegrated, emassIntegrated.getTotal());
     }
 
+    @RequestMapping(value = "/test_getInfoNetwork.xcn")
+    @Description("개인정보 유출 관계 분석 관계도 조회")
+    @ResponseBody
+    public XcnResponseVO getInfoNetwork(final HttpServletRequest request, final HttpSession session) throws SolrServerException, IOException {
+
+        Gson gson = new Gson();
+        Map<String,Object> resultParam = Common.getParamMap(request);
+        Map<String,Object> searchParam = new HashMap<>();
+        if(!Common.isEmpty(resultParam.get("searchParam"))){
+            Type type = new TypeToken<Map<String,Object>>(){}.getType();
+            searchParam = gson.fromJson((String) resultParam.get("searchParam"),type);
+            searchParam.put(ElasticSearchCommon.SEARCH_TYPE, ElasticSearchCommon.SEARCH_TYPE_ANALYSIS_DETAIL);
+        }
+        /*############################################################################*/
+
+        EmassIntegrated emassIntegrated = emsSearchService.getEmassMessage(searchParam, Common.getAdminId(request), null, null);
+
+        return new XcnResponseVO(XcnRspCode.OK,emassIntegrated, emassIntegrated.getTotal());
+
+    /*    String user_str = request.getParameter("user_str");
+        String startDate = Common.nvl(request.getParameter("startDate"));
+        String endDate = Common.nvl(request.getParameter("endDate"));
+        String type = Common.nvl(request.getParameter("type"));
+        String piCount = Common.nvl(request.getParameter("piCount"));
+        String query = "";
+        SolrQuery sq = new SolrQuery();
+        query += String.format("+user_str:"+user_str);
+        if(!(startDate.equals("") && endDate.equals(""))) {
+            query += " +ctime:["+startDate+" TO "+endDate+"] ";
+        }
+        query += String.format("-pi_total:0");
+        if(type.equals("SN")||type.equals("CN")||type.equals("DN")||type.equals("FN")||type.equals("PN")){
+            query += String.format(" +(pi_"+type+":["+piCount+" TO *]) ");
+        }else{
+            query += String.format(" +(pi_SN:["+piCount+" TO *] pi_CN:["+piCount+" TO *] pi_DN:["+piCount+" TO *] pi_FN:["+piCount+" TO *] pi_PN:["+piCount+" TO *]) ");
+        }
+        System.out.println(query);
+        sq.setQuery(query);
+        sq.setStart(0);
+        sq.setRows(Common.MAX_VALUE);
+        sq.setFields("date_hh","date_yyyy","date_yyyymm","date_yyyymmdd","msgid","cid","srcip","sport","dstip","dport","svc","svc1","svc2","svc3","ltime","ctime","ctime_yyyy","ctime_yyyymm","ctime_yyyymmdd","ctime_hh","size","body_size","usr_id","usr_ip","user","userid","name","subject","host","path","xmsgkey","sender","sname","recvs","recvs_name","to","cc","bcc","tname","cocd","conm","suborgcd","suborgnm","busicd","businm","deptcd","deptnm","jikgubcd","jikgubnm","ip_cocd","ip_conm","ip_busicd","ip_businm","allofus","attached","direction","direction_svc","kwd","kwds","inside","work","attachname","attachsize","attachhash","attachtype","attachnameexist","attachcnt","body_snippet","pi_total","read_time","xrootmtr","ocr_attach_cnt","user_str","pi_SN","pi_DN","pi_PN","pi_CN","pi_FN");
+
+        SolrEdcMessageVO solrVo = solrEdcService.getEmassMessage(sq, Common.getAdminId(request), "", null);
+        return new XcnResponseVO(XcnRspCode.OK, solrVo.getEmass(), solrVo.getNumFound());*/
+
+
+
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private static JSONObject bucketsSetting(SimpleOrderedMap<Object> simpleOrderedMap) {
+        List<String> column = new ArrayList<>();
+
+        JSONObject json = new JSONObject();
+        for(Map.Entry e : simpleOrderedMap) {
+            Object value = e.getValue();
+            if(column.contains(e.getKey())) {
+                json.put("buckets", bucketsSetting((SimpleOrderedMap<Object>)e.getValue()).get("buckets"));
+            } else if(value instanceof List) {
+                List<SimpleOrderedMap<Object>> simpleOrderedMapList = (List)value;
+                JSONArray jsonArray = new JSONArray();
+                for (SimpleOrderedMap<Object> simpleOrderedMap2 : simpleOrderedMapList) {
+                    jsonArray.add(bucketsSetting(simpleOrderedMap2));
+                }
+                json.put(e.getKey(), jsonArray);
+            } else {
+                if(value instanceof String || value instanceof Long || value instanceof Integer) {
+                    json.put(e.getKey(), value);
+                } else {
+                    json.put(e.getKey(), Math.round((Double)value));
+                }
+            }
+        }
+        return json;
+    }
 
     @RequestMapping(value = "/test_getInfoStatList.xcn")
     @Description("개인정보 유출 관계 분석 조회")

@@ -36,6 +36,7 @@ menuArr.push({id:'REGEX_PATTERN', 	name:'<s:message code="DATA_MONITOR.REGEX_PAT
 menuArr.push({id:'ANALYSIS_RELATION', 	name:'<s:message code="DATA_ANALYSIS.ANALYSIS_RELATION"/>',  	p_id:'DATA_ANALYSIS'}); //데이터 관계 분석
 menuArr.push({id:'ANALYSIS_FLUCTUATION',name:'<s:message code="DATA_ANALYSIS.ANALYSIS_FLUCTUATION"/>',  p_id:'DATA_ANALYSIS'}); //사용량 증감 분석
 menuArr.push({id:'ANALYSIS_CUSTOM', 	name:'<s:message code="DATA_ANALYSIS.ANALYSIS_CUSTOM"/>',  		p_id:'DATA_ANALYSIS'}); //데이터 자유 분석
+menuArr.push({id:'ANALYSIS_INFO', 	name:'<s:message code="DATA_ANALYSIS.ANALYSIS_INFO"/>',  		p_id:'DATA_ANALYSIS'}); //개인정보 유출관계 분석
 menuArr.push({id:'STAT_USER', 			name:'<s:message code="DATA_ANALYSIS.STAT_USER"/>',  			p_id:'DATA_ANALYSIS'}); //사용자 통계
 menuArr.push({id:'STAT_INTEREST', 		name:'<s:message code="DATA_ANALYSIS.STAT_INTEREST"/>',  		p_id:'DATA_ANALYSIS'}); //관심 사용자 통계
 menuArr.push({id:'STAT_SENDER', 		name:'<s:message code="DATA_ANALYSIS.STAT_SENDER"/>',  			p_id:'DATA_ANALYSIS'}); //발신자 통계

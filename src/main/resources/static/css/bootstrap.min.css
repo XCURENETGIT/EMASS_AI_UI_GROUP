@@ -2754,7 +2754,7 @@ output {
 .form-control {
 	display: block;
 	width: 100%;
-	height: 34px;
+	height: 30px;
 	padding: 6px 12px;
 	font-size: 14px;
 	line-height: 1.42857143;
@@ -5085,7 +5085,7 @@ a.label:focus, a.label:hover {
 	text-align: center;
 	white-space: nowrap;
 	vertical-align: middle;
- 	}
+}
 
 .badge:empty {
 	display: none
@@ -5291,38 +5291,38 @@ a.thumbnail.active, a.thumbnail:focus, a.thumbnail:hover {
 @
 -webkit-keyframes progress-bar-stripes {
 	from {background-position: 40px 0
-}
+	}
 
-to {
-	background-position: 0 0
-}
+	to {
+		background-position: 0 0
+	}
 
 }
 @
 -o-keyframes progress-bar-stripes {
 	from {background-position: 40px 0
-}
+	}
 
-to {
-	background-position: 0 0
-}
+	to {
+		background-position: 0 0
+	}
 
 }
 @
 keyframes progress-bar-stripes {
 	from {background-position: 40px 0
-}
+	}
 
-to {
-	background-position: 0 0
-}
+	to {
+		background-position: 0 0
+	}
 
 }
 .progress {
 	height: 20px;
 	margin-bottom: 20px;
 	overflow: hidden;
-	background-color: #bbbbbb;
+	background-color: #f5f5f5;
 	border-radius: 4px;
 	-webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, .1);
 	box-shadow: inset 0 1px 2px rgba(0, 0, 0, .1)
@@ -6965,95 +6965,95 @@ button.close {
 
 
 .tag {
-  display: inline-block;
-  padding: 0.25em 0.4em;
-  font-size: 75%;
-  font-weight: bold;
-  line-height: 1;
-  color: #fff;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: baseline;
-  border-radius: 0.25rem;
+	display: inline-block;
+	padding: 0.25em 0.4em;
+	font-size: 75%;
+	font-weight: bold;
+	line-height: 1;
+	color: #fff;
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: baseline;
+	border-radius: 0.25rem;
 }
 
 .tag:empty {
-  display: none;
+	display: none;
 }
 
 .btn .tag {
-  position: relative;
-  top: -1px;
+	position: relative;
+	top: -1px;
 }
 
 a.tag:focus, a.tag:hover {
-  color: #fff;
-  text-decoration: none;
-  cursor: pointer;
+	color: #fff;
+	text-decoration: none;
+	cursor: pointer;
 }
 
 .tag-pill {
-  padding-right: 0.6em;
-  padding-left: 0.6em;
-  border-radius: 10rem;
+	padding-right: 0.6em;
+	padding-left: 0.6em;
+	border-radius: 10rem;
 }
 
 .tag-default {
-  background-color: #818a91;
+	background-color: #818a91;
 }
 
 .tag-default[href]:focus, .tag-default[href]:hover {
-  background-color: #687077;
+	background-color: #687077;
 }
 
 .tag-primary {
-  background-color: #0275d8;
+	background-color: #0275d8;
 }
 
 .tag-primary[href]:focus, .tag-primary[href]:hover {
-  background-color: #025aa5;
+	background-color: #025aa5;
 }
 
 .tag-success {
-  background-color: #5cb85c;
+	background-color: #5cb85c;
 }
 
 .tag-success[href]:focus, .tag-success[href]:hover {
-  background-color: #449d44;
+	background-color: #449d44;
 }
 
 .tag-info {
-  background-color: #5bc0de;
+	background-color: #5bc0de;
 }
 
 .tag-info[href]:focus, .tag-info[href]:hover {
-  background-color: #31b0d5;
+	background-color: #31b0d5;
 }
 
 .tag-warning {
-  background-color: #f0ad4e;
+	background-color: #f0ad4e;
 }
 
 .tag-warning[href]:focus, .tag-warning[href]:hover {
-  background-color: #ec971f;
+	background-color: #ec971f;
 }
 
 .tag-danger {
-  background-color: #d9534f;
+	background-color: #d9534f;
 }
 
 .tag-danger[href]:focus, .tag-danger[href]:hover {
-  background-color: #c9302c;
+	background-color: #c9302c;
 }
 .pull-xs-left {
-  float: left !important;
+	float: left !important;
 }
 
 .pull-xs-right {
-  float: right !important;
+	float: right !important;
 }
 
 .pull-xs-none {
-  float: none !important;
+	float: none !important;
 }
 /*# sourceMappingURL=bootstrap.min.css.map */

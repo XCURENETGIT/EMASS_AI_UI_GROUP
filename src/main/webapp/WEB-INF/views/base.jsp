@@ -4,6 +4,7 @@
 <%@page import="com.xcurenet.common.util.Common"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 <%
 	String contentPath = request.getContextPath();
 	boolean isIPv6 = Config.isIPv6;
@@ -19,6 +20,7 @@
 	 isIPv6 = <%=isIPv6%>;
 	 isOCR = <%=isOCR%>;
 </script>
+
 
 
 <link rel="stylesheet" href="<c:url value="/js/css/smoothness/jquery-ui-1.10.3.custom.css"/>" />

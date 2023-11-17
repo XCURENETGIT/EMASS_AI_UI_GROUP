@@ -19,6 +19,7 @@ import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.MultiBucketsAggregation;
 import org.elasticsearch.search.aggregations.bucket.histogram.ParsedDateHistogram;
+import org.elasticsearch.search.aggregations.bucket.nested.Nested;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.metrics.TopHits;
 
@@ -221,14 +222,17 @@ public class EmassIntegrated {
                 List<String> headerList = keyList.stream().map( k -> k.getKey()).collect(Collectors.toList());
                 this.pivotHeader = headerList;
             }
-            else if(ElasticSearchCommon.USER_ID.equals(xTypeFlag) && ElasticSearchCommon.PI.equals(yField)  ){
+            else if(ElasticSearchCommon.USER_NAME.equals(xTypeFlag) && ElasticSearchCommon.PI_TYPE.equals(yField)  ){
                // pi_code 패턴 관련
                 Map<String, Object> keys = new HashMap();
-                Terms results = aggregations.get(xTypeFlag);
+                Terms results = aggregations.get("stat");
+
                 for (Terms.Bucket bucket : results.getBuckets()) {
-                    if (Common.isEmpty(bucket.getAggregations().get(yField))) continue;
-                         String rowName = Common.nvl(bucket.getKey()); // main aggregations Key는 유저 아이디
-                         Terms argments = bucket.getAggregations().get(yField);
+                    if (Common.isEmpty(bucket.getAggregations().get("nested_pi"))) continue;
+                    Nested nestedPi = bucket.getAggregations().get("nested_pi");
+                    Terms argments = nestedPi.getAggregations().get("stat2");
+
+                    String rowName = Common.nvl(bucket.getKey()); // main aggregations Key는 유저 아이디
                     for (Terms.Bucket arg : argments.getBuckets()) {
                         Map<String, Object> item = new HashMap();
                         keys.put(ElasticSearchCommon.PI_PREFIX.concat(Common.nvl(arg.getKey())), 0); // pivot header 추가
@@ -242,8 +246,9 @@ public class EmassIntegrated {
                 List<String> keyList = new ArrayList(keys.keySet());
                 Collections.sort(keyList);
                 this.pivotHeader = keyList;
-
             }
+
+
             else { /* 시간 분류 외 (사업장,부서 등등) #############################################################*/
                 Map<String, Object> keys = new HashMap(); // 피벗 헤더 관련
                 Terms results = aggregations.get(xTypeFlag);

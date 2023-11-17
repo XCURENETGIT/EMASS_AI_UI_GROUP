@@ -1461,7 +1461,7 @@ public class ElasticSearchQueryUtils {
 					.from(elasticSearchParam.getFrom())
 					.size(elasticSearchParam.getTo())
 					.query(complateQuery)
-					 .aggregation(pi_aggregation)
+					.aggregation(pi_aggregation)
 					.fetchSource(elasticSearchParam.getIncludeFields(), elasticSearchParam.getExcludeFields())
 					.sort(elasticSearchParam.getSorts())
 					.timeout(new TimeValue(60, TimeUnit.SECONDS));
@@ -1835,8 +1835,8 @@ public class ElasticSearchQueryUtils {
 		this.elasticSearchParam.setSorts(sortBuilderList);
 		this.elasticSearchParam.setSearchType(Common.nvl(elasticSearchParam.getSearchParameters().get(ElasticSearchCommon.SEARCH_TYPE)));
 		this.elasticSearchParam.setIncludeFields(ElasticSearchCommon.SEARCH_FIELD);
-		this.elasticSearchParam.setXAxis("user.id");
-		this.elasticSearchParam.setYAxis("pi.codes.code");
+		this.elasticSearchParam.setXAxis("user.name");
+		this.elasticSearchParam.setYAxis("pi.type");
 		this.elasticSearchParam.setStartDate(Common.nvl(elasticSearchParam.getSearchParameters().get("startDate")));
 		this.elasticSearchParam.setEndDate(Common.nvl(elasticSearchParam.getSearchParameters().get("endDate")));
 		this.elasticSearchParam.setExcludeFields(null);
@@ -1860,6 +1860,7 @@ public class ElasticSearchQueryUtils {
 		}
 
 
+
 		/* sort 관련 */
 		setSort("");
 		List<SortBuilder<?>> sortBuilderList = getSortInfo();
@@ -1872,19 +1873,15 @@ public class ElasticSearchQueryUtils {
 		offset = (int) Math.round(Double.valueOf(Common.nvl(elasticSearchParam.getSearchParameters().get("offset"))));
 		limit =  (int) Math.round(Double.valueOf(Common.nvl(elasticSearchParam.getSearchParameters().get("limit"))));
 
-/*
-        if(!Common.isEmpty(ElasticSearchCommon.SERVICE_12)) {
-            setyField(Common.nvl(ElasticSearchCommon.SERVICE_12));
-        }*/
-		if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("serviceType"))) {
-			String[] serviceTypes = Common.nvl(elasticSearchParam.getSearchParameters().get("serviceType")).split(",");
-			addQueryGroup(ElasticSearchCommon.SPACE,ElasticSearchCommon.SERVICE_SVC,makeParentheses(serviceTypes));
+		/* serviceType 설정 */
+		if (!Common.isEmpty(ElasticSearchCommon.SERVICE_SVC12)) {
+			setyField(Common.nvl(ElasticSearchCommon.SERVICE_SVC12));
 		}
 
-
-		if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("senders"))) {
-			String[] senders = Common.nvl(elasticSearchParam.getSearchParameters().get("senders")).split(",");
-			addQueryGroup(ElasticSearchCommon.AND_QUERY,ElasticSearchCommon.SENDER,makeParentheses(senders));
+		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("serviceType"))) {
+			setSearchQuery(Common.nvl(elasticSearchParam.getSearchParameters().get("serviceType")));
+		} else {
+			setSearchQuery(Common.nvl(ElasticSearchCommon.ALL_SEARCH));
 		}
 
 
@@ -1914,7 +1911,6 @@ public class ElasticSearchQueryUtils {
 
 	public SearchSourceBuilder initCollectionSearchSource(Map<String,Object> searchParam){
 
-		System.out.println("생성형ai들어옴");
 
 		SearchSourceBuilder searchSourceBuilder = null;
 
@@ -1961,8 +1957,23 @@ public class ElasticSearchQueryUtils {
 		complateQuery.must(secondQuery);
 
 		/* Aggregations */
-		AggregationBuilder  pi_aggregation = AggregationBuilders.terms(elasticSearchParam.getXAxis()).field(elasticSearchParam.getXAxis()).minDocCount(1);
+	/*	AggregationBuilder  pi_aggregation = AggregationBuilders.terms(elasticSearchParam.getXAxis()).field(elasticSearchParam.getXAxis()).minDocCount(1);
 		pi_aggregation.subAggregation(AggregationBuilders.terms(elasticSearchParam.getYAxis()).field(elasticSearchParam.getYAxis()).minDocCount(1));
+*/
+
+		AggregationBuilder piAggregation = AggregationBuilders
+				.terms("stat")
+				.field(elasticSearchParam.getXAxis())
+				.minDocCount(1)
+				.subAggregation(
+						AggregationBuilders
+								.nested("nested_pi", "pi")
+								.subAggregation(
+										AggregationBuilders
+												.terms("stat2")
+												.field(elasticSearchParam.getYAxis())
+								)
+				);
 
 		searchSourceBuilder = new SearchSourceBuilder()
 				.from(elasticSearchParam.getFrom())
@@ -1970,7 +1981,7 @@ public class ElasticSearchQueryUtils {
 				.query(complateQuery)
 				.fetchSource(elasticSearchParam.getIncludeFields(), elasticSearchParam.getExcludeFields())
 				.sort(elasticSearchParam.getSorts())
-				.aggregation(pi_aggregation)
+				.aggregation(piAggregation)
 				.timeout(new TimeValue(60, TimeUnit.SECONDS));
 		return searchSourceBuilder;
 	}
@@ -2128,19 +2139,70 @@ public class ElasticSearchQueryUtils {
 
 	}
 
+	public SearchSourceBuilder initanalysisDetailSearchSource(Map<String, Object> searchParam) {
+
+		SearchSourceBuilder searchSourceBuilder = null;
+
+		setanalysisDetailSearchQueryReady(searchParam); // 파라미터 준비
+
+		RangeQueryBuilder rangeQuery = new RangeQueryBuilder(ElasticSearchCommon.CTIME).gte(elasticSearchParam.getStartDate()).lte(elasticSearchParam.getEndDate());
+		QueryStringQueryBuilder secondQuery = QueryBuilders.queryStringQuery(query);
+
+		/* 쿼리 merge */
+		BoolQueryBuilder complateQuery = new BoolQueryBuilder();
+		complateQuery.filter(rangeQuery);
+		complateQuery.must(secondQuery);
+
+		searchSourceBuilder = new SearchSourceBuilder()
+				.from(elasticSearchParam.getFrom())
+				.query(complateQuery)
+				.fetchSource(elasticSearchParam.getIncludeFields(), elasticSearchParam.getExcludeFields())
+				.sort(elasticSearchParam.getSorts())
+				.timeout(new TimeValue(60, TimeUnit.SECONDS));
+
+		return searchSourceBuilder;
+	}
+
+	private void setanalysisDetailSearchQueryReady(Map<String, Object> searchParam) {
+		clearQuery(); // 쿼리 초기화
+		elasticSearchParam = new ElasticSearchParam();
+
+		elasticSearchParam.setSearchParameters(searchParam);
+
+		/* sort 관련 */
+		setSort("");
+		List<SortBuilder<?>> sortBuilderList = getSortInfo();
+		log.debug("[SORT] {}", sortBuilderList.stream().collect(Collectors.toList()));
 
 
-/*    public AggregationBuilder initanalysisAggregation (String user_str){
-        AggregationBuilder aggregationBuilder = null;
+		/* 검색 쿼리 */
+		String searchQuery = this.queryBuffer.toString();
 
-                aggregationBuilder = AggregationBuilders.terms(user_str).field(user_str);
-                aggregationBuilder.subAggregation(AggregationBuilders.sum("pi_SN_sum").field("pi_SN"));
-                aggregationBuilder.subAggregation(AggregationBuilders.sum("pi_PN_sum").field("pi_PN"));
-                aggregationBuilder.subAggregation(AggregationBuilders.sum("pi_DN_sum").field("pi_DN"));
-                aggregationBuilder.subAggregation(AggregationBuilders.sum("pi_FN_sum").field("pi_FN"));
-                aggregationBuilder.subAggregation(AggregationBuilders.sum("pi_CN_sum").field("pi_CN"));
+		System.out.println(elasticSearchParam.getSearchParameters().get("user_str"));
+
+		if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("user_str"))) {
+			addQueryGroup(ElasticSearchCommon.SPACE,ElasticSearchCommon.USER_NAME,makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("user_str"))));
+		}
 
 
-        return aggregationBuilder;
-    }*/
+		/* set Query (항상 쿼리 조합 최하단에 위치) */
+		setQuery();
+
+		log.info("엘라스틱 서치 Query_String (테스트) ===> " + getQuery());
+		this.elasticSearchParam.setIndices(new String[]{ElasticSearchCommon.EDC_MESSAGE_INDEX});
+		this.elasticSearchParam.setSorts(sortBuilderList);
+		this.elasticSearchParam.setIncludeFields(ElasticSearchCommon.SEARCH_FIELD);
+		this.elasticSearchParam.setStartDate(Common.nvl(elasticSearchParam.getSearchParameters().get("startDate")));
+		this.elasticSearchParam.setEndDate(Common.nvl(elasticSearchParam.getSearchParameters().get("endDate")));
+		this.elasticSearchParam.setExcludeFields(null);
+		this.elasticSearchParam.setSearchType(Common.nvl(elasticSearchParam.getSearchParameters().get(ElasticSearchCommon.SEARCH_TYPE)));
+
+		log.debug("[Fields] {}", ElasticSearchCommon.SEARCH_FIELD);
+		log.debug("[SORT] : {}", elasticSearchParam.getSorts());
+		log.debug("[QUERY] {}", getQuery());
+
+
+	}
+
+
 }

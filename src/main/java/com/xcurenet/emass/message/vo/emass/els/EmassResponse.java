@@ -48,11 +48,12 @@ public class EmassResponse {
 	private int	piDRM; //	패턴(DRM) 검출 건수
 	private int	piID; //	패턴(송수신동일아이디) 검출 건수
 	private int	piEF; //	패턴(암호화파일) 검출 건수
-	private int	piPN; //	패턴(여권번호) 검출 건수
-	private int	piDN; //	패턴(운전면허번호) 검출 건수
-	private int	piSN; //	패턴(주민번호) 검출 건수
-	private int	piCN; //	패턴(카드번호) 검출 건수
-	private int	piEC; //	패턴(확장자변조) 검출 건수
+	private int	pi_PN; //	패턴(여권번호) 검출 건수
+	private int	pi_DN; //	패턴(운전면허번호) 검출 건수
+	private int	pi_SN; //	패턴(주민번호) 검출 건수
+	private int	pi_CN; //	패턴(카드번호) 검출 건수
+	private int	pi_EC; //	패턴(확장자변조) 검출 건수
+	private int	pi_FN;
 
 
 	/* ######## service ######################################################################################################################*/

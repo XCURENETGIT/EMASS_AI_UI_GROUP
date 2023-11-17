@@ -109,6 +109,19 @@ public class EmsMessageVO {
 	private String inSide;
 	@Field(name = "PI")
 	private String pi;
+/*	@Field(name = "PI_TOTAL")
+	private String pi_total;
+	@Field(name = "PI_FN")
+	public int pi_FN;
+	@Field(name = "PI_SN")
+	public int pi_SN;
+	@Field(name = "PI_DN")
+	public int pi_DN;
+	@Field(name = "PI_CN")
+	public int pi_CN;
+	@Field(name = "PI_PN")
+	public int pi_PN;*/
+
 	@Field(name = "WORK")
 	private String work;
 	@Field(name = "ATTATCHNT")

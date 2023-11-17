@@ -792,6 +792,7 @@ INSERT IGNORE INTO UI_MENU VALUES ('DATA_ANALYSIS','통계/분석',NULL,'L','M',
 INSERT IGNORE INTO UI_MENU VALUES ('ANALYSIS_RELATION','데이터 관계 분석','DATA_ANALYSIS','L','M','analysis/dataRelation.do','fa fa-share-alt',1,'Y');
 INSERT IGNORE INTO UI_MENU VALUES ('ANALYSIS_FLUCTUATION','사용량 증감 분석','DATA_ANALYSIS','L','M','analysis/usageCompare.do','fa fa-area-chart',2,'Y');
 INSERT IGNORE INTO UI_MENU VALUES ('ANALYSIS_CUSTOM','데이터 자유 분석','DATA_ANALYSIS','L','M','analysis/dataFreedom.do','fa fa-cube',3,'Y');
+INSERT IGNORE INTO UI_MENU VALUES ('ANALYSIS_INFO','개인정보 유출 관계 분석','DATA_ANALYSIS','L','M','analysis/infoStat.do','fa fa-cube',4,'Y');
 INSERT IGNORE INTO UI_MENU VALUES ('STAT_LABEL','통계','DATA_ANALYSIS','L','M','','fa fa-area-chart',4,'Y');
 INSERT IGNORE INTO UI_MENU VALUES ('STAT_USER','사용자 통계','STAT_LABEL','L','M','ems/usersStat.do','fa fa-pie-chart',1,'Y');
 INSERT IGNORE INTO UI_MENU VALUES ('STAT_INTEREST','관심 사용자 통계','STAT_LABEL','L','M','ems/interestUserStat.do','fa fa-pie-chart',2,'Y');

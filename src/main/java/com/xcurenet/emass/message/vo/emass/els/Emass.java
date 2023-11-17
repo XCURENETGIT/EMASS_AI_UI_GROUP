@@ -92,6 +92,8 @@ public class Emass {
 	private int	piCN;//	패턴(카드번호) 검출 건수
 	@JsonProperty("piEC")
 	private int	piEC;//	패턴(확장자변조) 검출 건수
+	@JsonProperty("piFN")
+	private int	piFN;//
 
 
 	@JsonProperty("service")

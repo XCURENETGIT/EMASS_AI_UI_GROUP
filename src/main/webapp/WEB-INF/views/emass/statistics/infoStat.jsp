@@ -280,36 +280,6 @@
       return false;
     }
 
-    /*
-	function regexpInfoViewer(row){
-		var selectedTabIdx = $('.listChart').find('.active').index();
-		var grid = window.__grids[selectedTabIdx];
-		var msgid = grid.getValue(row, 'msgid');
-		if(grid.getValue(row, 'total') == '') return;
-
-		var url    = '<c:url value="/ems/regexpInfoPop.do?msgId='+msgid+'"/>';
-	return fnOpenWindow(url, 'regexpInfoPop', 1100, 370, 'resize');
-}
-function userInfoViewer(row, type){
-	var selectedTabIdx = $('.listChart').find('.active').index();
-	var grid = window.__grids[selectedTabIdx];
-	var msgid = grid.getValue(row, 'msgid');
-	if(grid.getValue(row, type) == '') return;
-
-	var url    = '<c:url value="/ems/userInfoPop.do?msgId='+msgid+'&type='+type+'"/>';
-	return fnOpenWindow(url, type+'InfoPop', 835, 370, 'resize');
-}
-
-function fileInfoViewer( row ){
-	var selectedTabIdx = $('.listChart').find('.active').index();
-	var grid = window.__grids[selectedTabIdx];
-	var msgid = grid.getValue(row, 'msgid');
-	if(grid.getValue(row, 'attachcnt') == '') return;
-
-	var url    = '<c:url value="/ems/fileInfoPop.do?msgId='+msgid+'"/>';
-	return fnOpenWindow(url, 'fileInfoPop', 1015, 400, 'resize');
-}
-*/
 
     /**
      * Bar Chart
@@ -487,7 +457,7 @@ function fileInfoViewer( row ){
             <div class="panel-heading piCountNum">
               <i class="fa fa-file-text-o fa-fw"></i> <span><s:message code="DATA_ANALYSIS.ANALYSIS_INFO"/></span>
             </div>
-            <div class="panel-body" style="height: calc(100% - 38px); padding: 10px;">
+            <div class="panel-body" style="height: calc(100% - 270px); padding: 10px;">
               <div id="infoStatListGrid" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; height: 500px"></div>
             </div>
             <%-- 통계영역 검색 조건 --%>
@@ -565,27 +535,27 @@ function fileInfoViewer( row ){
   });
   grid1.colAdd('total', '<s:message code="bodyview.total"/>', 40, 'right', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
     if ( value != undefined ) return value.comma();
-    else return '';
+    else return 0;
   });
   grid1.colAdd('pi_SN', '<s:message code="bodyview.sn"/>', 60, 'right', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
     if ( value != undefined ) return value.comma();
-    else return '';
+    else return 0;
   });
   grid1.colAdd('pi_CN', '<s:message code="bodyview.cn"/>',60, 'right', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
     if ( value != undefined ) return value.comma();
-    else return '';
+    else return 0;
   });
   grid1.colAdd('pi_DN', '<s:message code="bodyview.dn"/>', 80, 'right', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
     if ( value != undefined ) return value.comma();
-    else return '';
+    else return  0;
   });
   grid1.colAdd('pi_FN', '<s:message code="bodyview.fn"/>', 90, 'right', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
     if ( value != undefined ) return value.comma();
-    else return '';
+    else return  0;
   });
   grid1.colAdd('pi_PN', '<s:message code="bodyview.pn"/>', 60, 'right', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
     if ( value != undefined ) return value.comma();
-    else return '';
+    else return  0;
   });
 
   grid1.loadExportMenu('<s:message code="DATA_ANALYSIS.ANALYSIS_INFO"/>');
@@ -599,7 +569,7 @@ function fileInfoViewer( row ){
     initProgressbar();
     if (grid1.Col == grid1.ColIndex('val')||grid1.Col == grid1.ColIndex('total')) {
       var data = grid1.getRowData(grid1.Row);
-      makeNetwork(grid1.getValue(grid1.Row, 'val'),'',grid1.getValue(grid1.Row, 'total'));
+      makeNetwork(grid1.getValue(grid1.Row, 'rowName'),'',grid1.getValue(grid1.Row, 'total'));
     }if(grid1.Col == grid1.ColIndex('pi_SN')){
       makeNetwork(grid1.getValue(grid1.Row, 'val'),'SN',grid1.getValue(grid1.Row, 'pi_SN'));
     }if(grid1.Col == grid1.ColIndex('pi_CN')){
@@ -624,7 +594,7 @@ function fileInfoViewer( row ){
     else if (value == 'N') return '<div class="readN"></div>';
     else return '-';
   });
-  grid2.colAdd('attachcnt', '<s:message code="message.msg.file"/>', 35, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
+  grid2.colAdd('attachCnt', '<s:message code="message.msg.file"/>', 35, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
     if (value == '0') return '';
     else return value.comma();
   });
@@ -634,13 +604,13 @@ function fileInfoViewer( row ){
     else return '-';
   });
 
-  grid2.colAdd('direction_svc', '<s:message code="condition.receive_send"/>', 55, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+  grid2.colAdd('directionSvc', '<s:message code="condition.receive_send"/>', 55, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
     if (value == 'I') return '<s:message code="condition.receive"/>';
     else if (value == 'O') return '<s:message code="condition.send"/>';
     else return '-';
   });
 
-  grid2.colAdd('svcNm', '<s:message code="condition.service"/>', 180, 'center', false, 'nomal');
+  grid2.colAdd('service_svc_Nm', '<s:message code="condition.service"/>', 180, 'center', false, 'nomal');
   grid2.colAdd('subject', '<s:message code="condition.subject"/>', 410, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
     var body_snippet = grid2.getValue(row, 'body_snippet').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '\'');
     if(body_snippet.length > 100) body_snippet = body_snippet.substring(0, 1024)+'...';
@@ -658,16 +628,16 @@ function fileInfoViewer( row ){
 
     return rtnVal;
   });
-  grid2.colAdd('ctimeFormat', '<s:message code="condition.date"/>', 130, 'center', false, 'nomal');
-  grid2.colAdd('user', '<s:message code="consent.user"/>', 120, 'center', false, 'link');
-  grid2.colAdd('usr_id', '<s:message code="common.msg.account"/>', 110, 'center', false, 'nomal');
-  grid2.colAdd('businm', '<s:message code="common.org.busi"/>', 120, 'center', true, 'nomal');
-  grid2.colAdd('deptnm', '<s:message code="common.org.dept"/>', 120, 'center', false, 'nomal');
-  grid2.colAdd('jikgubnm', '<s:message code="common.org.jikgub"/>', 120, 'center', false, 'nomal');
-  grid2.colAdd('sender', '<s:message code="condition.sender"/>', 130, 'left', false, 'link', function(row, cell, value, columnDef, dataContext) {
+  grid2.colAdd('ctime', '<s:message code="condition.date"/>', 130, 'center', false, 'nomal');
+  grid2.colAdd('user_name', '<s:message code="consent.user"/>', 120, 'center', false, 'link');
+  grid2.colAdd('usrId', '<s:message code="common.msg.account"/>', 110, 'center', false, 'nomal');
+  grid2.colAdd('sender_busiNm', '<s:message code="common.org.busi"/>', 120, 'center', true, 'nomal');
+  grid2.colAdd('sender_deptNm', '<s:message code="common.org.dept"/>', 120, 'center', false, 'nomal');
+  grid2.colAdd('sender_jikgubNm', '<s:message code="common.org.jikgub"/>', 120, 'center', false, 'nomal');
+  grid2.colAdd('sender_name', '<s:message code="condition.sender"/>', 130, 'left', false, 'link', function(row, cell, value, columnDef, dataContext) {
     return highlightSearchStr(value, "sender");
   });
-  grid2.colAdd('allofus', '<s:message code="condition.allofus"/>', 150, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+  grid2.colAdd('allOfUs', '<s:message code="condition.allofus"/>', 150, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
     if( value == undefined || value.length == 0) return '';
 
     for( var i=0; i<value.length; i++){
@@ -678,7 +648,7 @@ function fileInfoViewer( row ){
       else if(value[i] == 'PT') value[i] = '<s:message code="condition.allofus9"/>';
       else if(value[i] == 'PA') value[i] = '<s:message code="condition.allofus3"/>';
     }
-    return value.join(', ');
+   // return value.join(', ');
   });
   grid2.colAdd('recvs', '<s:message code="condition.recv"/>', 220, 'left', false, 'link', function(row, cell, value, columnDef, dataContext) {
     var innOutInfo = grid2.getValue(row, 'recvsInOutInfo');
@@ -702,15 +672,15 @@ function fileInfoViewer( row ){
     var rtnVal = arrayToString(value);
     return innOutInfo+highlightSearchStr(rtnVal, "bcc");
   });
-  grid2.colAdd('srcip', '<s:message code="condition.source"/> IP', 100, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-    return highlightSearchStr(value, "srcip");
+  grid2.colAdd('network_srcIp', '<s:message code="condition.source"/> IP', 100, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+    return highlightSearchStr(value, "network_srcIp");
   }, {sorter:sortUtil.ip});
-  grid2.colAdd('dstip', '<s:message code="condition.destination"/> IP', 100, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-    return highlightSearchStr(value, "dstip");
+  grid2.colAdd('network_dstIp', '<s:message code="condition.destination"/> IP', 100, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+    return highlightSearchStr(value, "network_dstIp");
   }, {sorter:sortUtil.ip});
-  grid2.colAdd('attachname', '<s:message code="condition.attach_name"/>', 220, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+  grid2.colAdd('attach_Name', '<s:message code="condition.attach_name"/>', 220, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
     var rtnVal = arrayToString(value);
-    return highlightSearchStr(rtnVal, "attachname");
+    return highlightSearchStr(rtnVal, "attach_attach_Name");
   });
   grid2.colAdd('sizeStr', '<s:message code="condition.size.all"/>', 80, 'left', false, 'nomal', null, {sortField:'size'});
   grid2.colAdd('bodySizeStr', '<s:message code="condition.size.body"/>', 80, 'left', false, 'nomal', null, {sortField:'body_size'});
@@ -718,7 +688,7 @@ function fileInfoViewer( row ){
   grid2.colAdd('kwds', '<s:message code="condition.keyword"/>', 120, 'left', false, 'nomal');
   grid2.colAdd('total', '<s:message code="condition.regexp"/>', 70, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
     if (value == '0') return '';
-    else return value.comma();
+    else return 0;
   });
 
   if ( isOCR ) {
@@ -773,9 +743,9 @@ function fileInfoViewer( row ){
 
   var popWin;
   function viewer_openPop( row ){
-    var msgid = grid2.getValue(row, 'msgid');
+    var _id = grid2.getValue(row, '_id');
 
-    popWin = openMessageBodyPop( grid2.id, msgid);
+    popWin = openMessageBodyPop( grid2.id, _id);
     var readYn = grid2.getValue(row, 'readYn');
     grid2.setValue(row, grid2.ColIndex('readYn'), 'Y');
   }
@@ -794,8 +764,8 @@ function fileInfoViewer( row ){
     grid1.on();
 
     var searchData = {
-        piCount_str :$('select[name=piCount] option:selected').text()
-      , startDate : "20231010000000"
+      piCount_str :$('select[name=piCount] option:selected').text()
+      , startDate : sDate+"000000"
       , endDate : eDate+"235959"
       , offset : grid1.data.length
       , limit : grid1.pageSize
@@ -812,11 +782,11 @@ function fileInfoViewer( row ){
         if(data.search_xAxis != null) $('#searched_xAxis').val(data.search_xAxis);
         if(data.search_startDate != null) $('#searched_startDate').val(data.search_startDate);
         if(data.search_endDate != null) $('#searched_endDate').val(data.search_endDate);
-         grid1.setData(data.pivotData);
+        grid1.setData(data.pivotData);
         $('#statlist_cnt').html('<s:message code="common.msg.finish_query"/>:'+grid1.data.length);
         if ( grid1.loadingPage == 0 ) grid1.Select(-1,-1);
         $('#listTab').append("<b> ["+piCount_str+"] 기준</b>");
-		$("#listTab").data( "value",piCount);
+        $("#listTab").data( "value",piCount);
         $('.piCountNum').attr('piCountNum',piCount);
         searchFlag = false;
       },
@@ -894,24 +864,34 @@ function fileInfoViewer( row ){
       type : type,
     }
     ui.postJson({
-      url : 'getInfoNetwork.xcn',
+      url : 'test_getInfoNetwork.xcn',
       searchParam : JSON.stringify(data),
       success : function(data, total) {
-        grid2.setData(data);
+
+        grid2.setData(data.emass);
+   /*     for(var i=0; i<data.emass.length; i++) {
+          alert(data.emass[j]._id);
+          alert(data.emass[j].user_name);
+        }
+*/
         var nodes= [];
         var edges = [];
         if(total==0){
           nodes.push({ id: 'noneData', font: { multi: 'html'}, title: '<s:message code="analysis.infostat.notleak"/>', label: '<s:message code="analysis.infostat.notleak"/>',group:'noneData'});
         }
 
+        //원래 ctime 20231116155436/20231115155221/2023-11-15 09:48:05 citmeYYYYmmDD 20231116/20231115
 
-        var nodeLv1 = getNodeByField('user_str', data);
-        var nodeLv2 = getNodeByPI(data);
+
+        var nodeLv1 = getNodeByField('user_name', data.emass);
+        var nodeLv2 = getNodeByPI(data.emass);
         /* 					var nodeLv3 = getNodeByField('svc', data); */
-        var nodeLv3 = getNodeByField('ctime_yyyymmdd', data);
-        var nodeLv4 = getNodeByField('ctime', data);
-        var nodeLv5 = getNodeByField('msgid', data);
-        var nodeLv6 = getNodeByFieldNoneUnique('subject', data);
+        var nodeLv3 = getNodeByField('ctimeYYYYMMDD', data.emass);
+        var nodeLv4 = getNodeByField('ctime', data.emass);
+        var nodeLv5 = getNodeByField('key', data.emass);
+        var nodeLv6 = getNodeByFieldNoneUnique('subject', data.emass);
+
+
         var nodeUnion = nodeLv1.concat(nodeLv2).concat(nodeLv3).concat(nodeLv4).concat(nodeLv5);
         var height = 35;
         var width = 140;
@@ -937,8 +917,9 @@ function fileInfoViewer( row ){
         for(var i=0 ; i < nodeLv1.length ; i++) {
           for(var j=0 ; j < nodeLv2.length ; j++) {
             var sum = 0;
-            for(var x=0 ; x < data.length ; x++) {
-              if(nodeLv1[i] == data[x].user_str && data[x][nodeLv2[j]] > 0) sum += data[x][nodeLv2[j]];
+            for(var x=0 ; x < data.emass.length; x++) {
+              if(nodeLv1[i] == data.emass[x].user_name && data.emass[x][nodeLv2[j]] > 0)
+                sum += data.emass[x][nodeLv2[j]];
             }
             if(sum > 0) edges.push({from: nodeLv1[i], to: nodeLv2[j],value:(sum)/(total*4) ,arrows:'to',color:{color:'#3FB168'}, font: { multi: true }, label: sum});
           }
@@ -947,8 +928,9 @@ function fileInfoViewer( row ){
         for(var i=0 ; i < nodeLv2.length ; i++) {
           for(var j=0 ; j < nodeLv3.length ; j++) {
             var sum = 0;
-            for(var x=0 ; x < data.length ; x++) {
-              if(data[x][nodeLv2[i]] > 0 && data[x].ctime_yyyymmdd == nodeLv3[j]) sum += data[x][nodeLv2[i]];
+            for(var x=0 ; x < data.emass.length ; x++) {
+              if(data.emass[x][nodeLv2[i]] > 0 && data.emass[x].ctimeYYYYMMDD == nodeLv3[j])
+                sum += data.emass[x][nodeLv2[i]];
             }
             if(sum > 0) edges.push({from: nodeLv2[i], to: nodeLv3[j],arrows:'to',value:(sum)/(total*4), color:{color:'#2A6727'},font: { multi: true}, label: sum});
           }
@@ -957,10 +939,10 @@ function fileInfoViewer( row ){
         for(var i=0 ; i < nodeLv3.length ; i++) {
           for(var j=0 ; j < nodeLv4.length ; j++) {
             var sum = 0;
-            for(var x=0 ; x < data.length ; x++) {
-              if(data[x].ctime_yyyymmdd == nodeLv3[i] && data[x].ctime == nodeLv4[j]) {
+            for(var x=0 ; x < data.emass.length ; x++) {
+              if(data.emass[x].ctimeYYYYMMDD == nodeLv3[i] && data.emass[x].ctime == nodeLv4[j]) {
                 for(var z=0 ; z < piArr.length ; z++) {
-                  sum += data[x][piArr[z]];
+                  sum += data.emass[x][piArr[z]];
                 }
               }
             }
@@ -971,10 +953,10 @@ function fileInfoViewer( row ){
         for(var i=0 ; i < nodeLv4.length ; i++) {
           for(var j=0 ; j < nodeLv5.length ; j++) {
             var sum = 0;
-            for(var x=0 ; x < data.length ; x++) {
-              if(data[x].ctime == nodeLv4[i] && data[x].msgid == nodeLv5[j]) {
+            for(var x=0 ; x < data.emass.length ; x++) {
+              if(data.emass[x].ctime == nodeLv4[i] && data.emass[x].key == nodeLv5[j]) {
                 for(var z=0 ; z < piArr.length ; z++) {
-                  sum += data[x][piArr[z]];
+                  sum += data.emass[x][piArr[z]];
                 }
               }
             }

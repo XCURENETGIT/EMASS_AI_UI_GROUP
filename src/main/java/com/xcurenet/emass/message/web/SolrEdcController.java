@@ -95,7 +95,7 @@ public class SolrEdcController {
 		return new XcnResponseVO(XcnRspCode.OK, facet, facet.size());
 	}
 
-	@RequestMapping(value = "/getList.xcn")
+	@RequestMapping(value = "/test_getList.xcn")
 	@Description("EDC Solr 메시지 검색")
 	@AuditOperation(Operation.SEARCH)
 	@ResponseBody

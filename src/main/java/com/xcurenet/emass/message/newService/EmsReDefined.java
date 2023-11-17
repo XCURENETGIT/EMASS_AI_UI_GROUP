@@ -171,6 +171,16 @@ public class EmsReDefined {
 			}
 
 
+			emassResponse.setPi_CN(ems.getPiCN());
+			emassResponse.setPi_FN(ems.getPiFN());
+			emassResponse.setPi_DN(ems.getPiDN());
+			emassResponse.setPiEF(ems.getPiEF());
+			emassResponse.setPi_PN(ems.getPiPN());
+			emassResponse.setPi_SN(ems.getPiSN());
+			emassResponse.setPiTotal(ems.getPiTotal());
+			emassResponse.setUsrId(ems.getUsrId());
+
+
 			if (!Common.isEmpty(ems.getPi())) {
 				for (PiVo_Els piVoEls : ems.getPi()) {
 					emassResponse.setPi_id(piVoEls.getId());
@@ -193,7 +203,7 @@ public class EmsReDefined {
 
 			if (!Common.isEmpty(ems.getUser())) {
 				emassResponse.setUser_id(ems.getUser().getId());
-				emassResponse.setUser_name(Config.userNames.get(ems.getUser().getId()));
+				emassResponse.setUser_name(ems.getUser().getName());
 				emassResponse.setUser_coCd(ems.getUser().getIpCoCd());
 				emassResponse.setUser_coNm(ems.getUser().getIpCoNm());
 				emassResponse.setUser_ipBusiNm(ems.getUser().getIpBusiNm());
@@ -213,7 +223,11 @@ public class EmsReDefined {
 			}
 
 
-			emassResponse.setCtime(reCtime(ems.getCtime()));
+			emassResponse.setCtime(ems.getCtime());
+			emassResponse.setCtimeYYYYMMDD(ems.getCtimeYYYYMMDD());
+			emassResponse.setCtimeYYYYMMDDHH("2023111509");
+			emassResponse.setCtimeYYYYMM(ems.getCtimeYYYYMM());
+			emassResponse.setCtimeYYYY(ems.getCtimeYYYY());
 			emassResponse.setSubject(reSubject(ems));
 			emassResponse.setXrootMtr(ems.getXrootMtr());
 			emassResponse.setXmsgKey(ems.getXmsgKey());

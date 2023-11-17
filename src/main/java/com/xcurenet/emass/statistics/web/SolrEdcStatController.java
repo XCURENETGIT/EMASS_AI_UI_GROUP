@@ -26,12 +26,14 @@ import com.xcurenet.emass.message.service.SolrEdcService;
 import com.xcurenet.emass.service.service.ServiceTypeVO;
 import com.xcurenet.emass.statistics.service.CheckedReadStatService;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.common.util.SimpleOrderedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -55,6 +57,7 @@ import java.util.stream.Collectors;
 public class SolrEdcStatController {
 
     private final static String CHECKED_QUERY = "+{!join from=msgid fromIndex=checked to=msgid}id:%s ";
+    private final static String FACET_QUERY = "{result: {type: terms,limit: -1,field: \"user_str\",sort: \"count desc\",facet: {pi_SN:\"sum(pi_SN)\", pi_PN:\"sum(pi_PN)\", pi_DN:\"sum(pi_DN)\", pi_FN:\"sum(pi_FN)\", pi_CN:\"sum(pi_CN)\"}}}";
 
     @Resource(name = "solrEdcService")
     private SolrEdcService solrEdcService;
@@ -72,7 +75,7 @@ public class SolrEdcStatController {
     private AdminServiceImpl adminServiceImpl;
 
 
-    @RequestMapping(value = "/getStatList.xcn")
+    @RequestMapping(value = "/test_getStatList.xcn")
     @Description("통계 리스트 조회")
     @AuditOperation(Operation.SEARCH)
     @ResponseBody
@@ -570,6 +573,63 @@ public class SolrEdcStatController {
         return new XcnResponseVO(XcnRspCode.OK, solrStatVo, solrStatVo.getNumFound());
     }
 
+    @SuppressWarnings("unchecked")
+    @RequestMapping(value = "/getInfoStatList.xcn")
+    @Description("개인정보 유출 관계 분석 조회")
+    @AuditOperation(Operation.SEARCH)
+    @ResponseBody
+    public XcnResponseVO getInfoStatList(final HttpServletRequest request, final HttpSession session) throws SolrServerException, IOException {
+        String adminId = Common.nvl(request.getParameter("adminId"));
+        if (Common.isEmpty(adminId)) adminId = "*";
+        String startDate = Common.nvl(request.getParameter("startDate"));
+        String endDate = Common.nvl(request.getParameter("endDate"));
+        String detailQuery = Common.nvl(request.getParameter("detailQuery"));
+        String piCount = Common.nvl(request.getParameter("piCount"));
+
+        StringBuilder query = new StringBuilder();
+        query.append(" +(pi_SN:["+piCount+" TO *] pi_CN:["+piCount+" TO *] pi_DN:["+piCount+" TO *] pi_FN:["+piCount+" TO *] pi_PN:["+piCount+" TO *]) ");
+        SolrQuery sq = new SolrQuery();
+        sq.setRows(0);
+        sq.setParam("json.facet", FACET_QUERY);
+
+        if(Common.isNotEmpty(startDate) && Common.isNotEmpty(endDate)) {
+            query.append(String.format("+ctime:[ %s TO %s ] ", startDate, endDate));
+        }
+        if(Common.isNotEmpty(detailQuery)) {
+            query.append(String.format(" %s ", detailQuery));
+        }
+        sq.setQuery(query.toString());
+
+//		sq.setFacetLimit(limit);
+//		sq.setFacetMinCount(1);
+        //sq.setFacetSort("count");
+
+        SolrEdcMessageVO solrStatVo = solrEdcService.getEmassMessage(sq, adminId);
+        SimpleOrderedMap<Object> facets = solrStatVo.getFacets();
+        JSONArray jArray = new JSONArray();
+        //System.out.println(facets);
+        if(facets != null) {
+            SimpleOrderedMap<Object> map = (SimpleOrderedMap<Object>)facets.get("result");
+            if(map != null) {
+                List<SimpleOrderedMap<Object>> simpleOrderedMapList = (List<SimpleOrderedMap<Object>>)map.get("buckets");
+                for (SimpleOrderedMap<Object> simpleOrderedMap : simpleOrderedMapList) {
+                    jArray.add(bucketsSetting(simpleOrderedMap));
+                }
+            }
+        }
+        int pi_total;
+        for (int i = 0; i < jArray.size(); i++) {
+            pi_total = Common.nvz(jArray.getJSONObject(i).get("pi_SN")) +  Common.nvz(jArray.getJSONObject(i).get("pi_PN")) +  Common.nvz(jArray.getJSONObject(i).get("pi_DN"))+ Common.nvz(jArray.getJSONObject(i).get("pi_FN"))+ Common.nvz(jArray.getJSONObject(i).get("pi_CN"));
+            jArray.getJSONObject(i).put("pi_total", pi_total);
+        }
+        //System.out.println("solrStatVo: " + jArray);
+
+        return new XcnResponseVO(XcnRspCode.OK, jArray, jArray.size());
+        //return new XcnResponseVO(XcnRspCode.OK, solrStatVo, solrStatVo.getNumFound());
+    }
+
+
+
     private SolrEdcMessageVO getFacetResult( String startDate, String endDate, String detailQuery, String xAxis, int limit, String adminId ,String rowKey) throws SolrServerException, IOException {
         SolrEdcMessageVO ocrFacetVO = new SolrEdcMessageVO();
         List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
@@ -706,6 +766,63 @@ public class SolrEdcStatController {
         }
     }
 
+    @RequestMapping(value = "/getInfoNetwork.xcn")
+    @Description("개인정보 유출 관계 분석 관계도 조회")
+    @ResponseBody
+    public XcnResponseVO getInfoNetwork(final HttpServletRequest request, final HttpSession session) throws SolrServerException, IOException {
+        String user_str = request.getParameter("user_str");
+        String startDate = Common.nvl(request.getParameter("startDate"));
+        String endDate = Common.nvl(request.getParameter("endDate"));
+        String type = Common.nvl(request.getParameter("type"));
+        String piCount = Common.nvl(request.getParameter("piCount"));
+        String query = "";
+        SolrQuery sq = new SolrQuery();
+        query += String.format("+user_str:"+user_str);
+        if(!(startDate.equals("") && endDate.equals(""))) {
+            query += " +ctime:["+startDate+" TO "+endDate+"] ";
+        }
+        query += String.format("-pi_total:0");
+        if(type.equals("SN")||type.equals("CN")||type.equals("DN")||type.equals("FN")||type.equals("PN")){
+            query += String.format(" +(pi_"+type+":["+piCount+" TO *]) ");
+        }else{
+            query += String.format(" +(pi_SN:["+piCount+" TO *] pi_CN:["+piCount+" TO *] pi_DN:["+piCount+" TO *] pi_FN:["+piCount+" TO *] pi_PN:["+piCount+" TO *]) ");
+        }
+        System.out.println(query);
+        sq.setQuery(query);
+        sq.setStart(0);
+        sq.setRows(Common.MAX_VALUE);
+        sq.setFields("date_hh","date_yyyy","date_yyyymm","date_yyyymmdd","msgid","cid","srcip","sport","dstip","dport","svc","svc1","svc2","svc3","ltime","ctime","ctime_yyyy","ctime_yyyymm","ctime_yyyymmdd","ctime_hh","size","body_size","usr_id","usr_ip","user","userid","name","subject","host","path","xmsgkey","sender","sname","recvs","recvs_name","to","cc","bcc","tname","cocd","conm","suborgcd","suborgnm","busicd","businm","deptcd","deptnm","jikgubcd","jikgubnm","ip_cocd","ip_conm","ip_busicd","ip_businm","allofus","attached","direction","direction_svc","kwd","kwds","inside","work","attachname","attachsize","attachhash","attachtype","attachnameexist","attachcnt","body_snippet","pi_total","read_time","xrootmtr","ocr_attach_cnt","user_str","pi_SN","pi_DN","pi_PN","pi_CN","pi_FN");
+
+        SolrEdcMessageVO solrVo = solrEdcService.getEmassMessage(sq, Common.getAdminId(request), "", null);
+        return new XcnResponseVO(XcnRspCode.OK, solrVo.getEmass(), solrVo.getNumFound());
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private static JSONObject bucketsSetting(SimpleOrderedMap<Object> simpleOrderedMap) {
+        List<String> column = new ArrayList<>();
+
+        JSONObject json = new JSONObject();
+        for(Map.Entry e : simpleOrderedMap) {
+            Object value = e.getValue();
+            if(column.contains(e.getKey())) {
+                json.put("buckets", bucketsSetting((SimpleOrderedMap<Object>)e.getValue()).get("buckets"));
+            } else if(value instanceof List) {
+                List<SimpleOrderedMap<Object>> simpleOrderedMapList = (List)value;
+                JSONArray jsonArray = new JSONArray();
+                for (SimpleOrderedMap<Object> simpleOrderedMap2 : simpleOrderedMapList) {
+                    jsonArray.add(bucketsSetting(simpleOrderedMap2));
+                }
+                json.put(e.getKey(), jsonArray);
+            } else {
+                if(value instanceof String || value instanceof Long || value instanceof Integer) {
+                    json.put(e.getKey(), value);
+                } else {
+                    json.put(e.getKey(), Math.round((Double)value));
+                }
+            }
+        }
+        return json;
+    }
     /*
      * Pivot Data 합계 구한 후 그 결과를
      * SolrEdcMessageVO 의 Pivot Data 로 추가
@@ -781,7 +898,6 @@ public class SolrEdcStatController {
                 checkedItem.put("edcTotal", Common.nvn(edcItem.get(key)));
             }
         }
-
 
 
         System.out.println();
