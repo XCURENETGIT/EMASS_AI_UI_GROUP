@@ -57,40 +57,37 @@ public class EmassIntegrated {
 
 
     public EmassIntegrated() throws IOException {}
-    public EmassIntegrated(final Map<String,Object> responseMap) throws IOException {
-        this(responseMap, null);
+
+    public EmassIntegrated(final SearchResponse searchResponse,final ElasticSearchParam searchParam) throws IOException {
+        this(searchResponse,searchParam, null);
     }
 
-    public EmassIntegrated(final Map<String,Object> responseMap, final String adminId) throws  IOException {
-        if(responseMap == null) return;
+    public EmassIntegrated(final SearchResponse searchResponse, final ElasticSearchParam searchParam, final String adminId) throws  IOException {
+        if(searchResponse == null) return;
+        if(searchParam == null) return;
 
         /* response 파싱 */
         List<Emass> result = new ArrayList<>();
-        if(responseMap.get("searchResponse") == null) return;
-        SearchResponse searchResponse = (SearchResponse) responseMap.get("searchResponse");
-
         SearchHit[] hits = searchResponse.getHits().getHits();
         ObjectMapper mapper = new ObjectMapper();
         for (SearchHit hit : hits) {
             Map<String, Object> map = hit.getSourceAsMap();
             if (map.size() > 0) {
-                map.put("_id",hit.getId());
+                map.put(ElasticSearchCommon.MSGID,hit.getId());
                 result.add(mapper.convertValue(map, Emass.class));
             }
         }
        this.emass = result;
        this.total = searchResponse.getHits().getHits().length;
 
-        if(responseMap.get("elsSearchParam") == null) return;
-        ElasticSearchParam elsSearchParam = (ElasticSearchParam) responseMap.get("elsSearchParam");
        /* 통계 검색인 경우 pivot 계산 */
         String[] statisticSearchType = new String[]{ElasticSearchCommon.SEARCH_TYPE_STATISTIC,ElasticSearchCommon.SEARCH_TYPE_ANALYSIS};
-        boolean isStatisticType =  Arrays.stream(statisticSearchType).anyMatch( s -> s.equals(elsSearchParam.getSearchType()));
+        boolean isStatisticType =  Arrays.stream(statisticSearchType).anyMatch( s -> s.equals(Common.nvl(searchParam.getSearchType())));
         if(isStatisticType) {
-            this.search_xAxis = elsSearchParam.getXAxis();
-            this.search_yAxis = elsSearchParam.getYAxis();
-            this.search_startDate = elsSearchParam.getStartDate();
-            this.search_endDate = elsSearchParam.getEndDate();
+            this.search_xAxis =  Common.nvl(searchParam.getXAxis());
+            this.search_yAxis = Common.nvl(searchParam.getYAxis());
+            this.search_startDate = Common.nvl(searchParam.getStartDate());
+            this.search_endDate = Common.nvl(searchParam.getEndDate());
             this.setPivot(searchResponse);
         }
     }

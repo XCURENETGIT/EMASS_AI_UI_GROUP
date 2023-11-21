@@ -19,6 +19,7 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.LocalDateTime;
@@ -35,6 +36,11 @@ import java.util.stream.Collectors;
 @Configuration
 /* 엘라스틱 서치에 사용할 쿼리 유틸  */
 public class ElasticSearchQueryUtils {
+
+	/* timeout value*/
+
+	@Value("${els.timeout}")
+	private int timeout;
 
 	private AdminUserGroupService adminUserGroupService;
 	private UserService userService;
@@ -1337,12 +1343,12 @@ public class ElasticSearchQueryUtils {
 				BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
 				int hour = Common.nvz(elasticSearchParam.getSearchAggregations().replaceAll("[^0-9]", ""));
 
-				LocalDateTime ldtFrom = ElasticSearchCommon.stringToDate(elasticSearchParam.getStartDate().substring(0, 8) + String.format("%02d", hour) + elasticSearchParam.getStartDate().substring(10, 14));
-				LocalDateTime ldtTo = ElasticSearchCommon.stringToDate(elasticSearchParam.getEndDate().substring(0, 8) + String.format("%02d", hour) + elasticSearchParam.getEndDate().substring(10, 14));
+				LocalDateTime ldtFrom = ElasticSearchCommon.stringToLocalDateTime(elasticSearchParam.getStartDate().substring(0, 8) + String.format("%02d", hour) + elasticSearchParam.getStartDate().substring(10, 14));
+				LocalDateTime ldtTo = ElasticSearchCommon.stringToLocalDateTime(elasticSearchParam.getEndDate().substring(0, 8) + String.format("%02d", hour) + elasticSearchParam.getEndDate().substring(10, 14));
 				int diffDay = (int) ChronoUnit.DAYS.between(ldtFrom, ldtTo);
 				for (int d = 0; d <= diffDay; d++) {
-					String fromStr = ElasticSearchCommon.dateToString(ldtFrom.withHour(hour));
-					String toStr = ElasticSearchCommon.dateToString(ldtFrom.withHour(hour + 1).minusSeconds(1));
+					String fromStr = ElasticSearchCommon.localdateTimeToString(ldtFrom.withHour(hour));
+					String toStr = ElasticSearchCommon.localdateTimeToString(ldtFrom.withHour(hour + 1).minusSeconds(1));
 					boolQueryBuilder.should(new RangeQueryBuilder("ctime").from(fromStr).to(toStr));
 					ldtFrom = ldtFrom.plusDays(1);
 				}
@@ -1929,7 +1935,7 @@ public class ElasticSearchQueryUtils {
 					.query(complateQuery)
 					.fetchSource(elasticSearchParam.getIncludeFields(), elasticSearchParam.getExcludeFields())
 					.sort(elasticSearchParam.getSorts())
-					.timeout(new TimeValue(60, TimeUnit.SECONDS));
+					.timeout(new TimeValue(timeout, TimeUnit.SECONDS));
 
 
 			// searchSourceBuilder build 완료
@@ -1982,7 +1988,7 @@ public class ElasticSearchQueryUtils {
 				.fetchSource(elasticSearchParam.getIncludeFields(), elasticSearchParam.getExcludeFields())
 				.sort(elasticSearchParam.getSorts())
 				.aggregation(piAggregation)
-				.timeout(new TimeValue(60, TimeUnit.SECONDS));
+				.timeout(new TimeValue(timeout, TimeUnit.SECONDS));
 		return searchSourceBuilder;
 	}
 
@@ -2006,7 +2012,7 @@ public class ElasticSearchQueryUtils {
 					.query(complateQuery)
 					.fetchSource(elasticSearchParam.getIncludeFields(), elasticSearchParam.getExcludeFields())
 					.sort(elasticSearchParam.getSorts())
-					.timeout(new TimeValue(60, TimeUnit.SECONDS));
+					.timeout(new TimeValue(timeout, TimeUnit.SECONDS));
 
 
 			// searchSourceBuilder build 완료
@@ -2095,7 +2101,7 @@ public class ElasticSearchQueryUtils {
 				.query(complateQuery)
 				.fetchSource(elasticSearchParam.getIncludeFields(), elasticSearchParam.getExcludeFields())
 				.sort(elasticSearchParam.getSorts())
-				.timeout(new TimeValue(60, TimeUnit.SECONDS));
+				.timeout(new TimeValue(timeout, TimeUnit.SECONDS));
 
 		return searchSourceBuilder;
 	}
@@ -2158,7 +2164,7 @@ public class ElasticSearchQueryUtils {
 				.query(complateQuery)
 				.fetchSource(elasticSearchParam.getIncludeFields(), elasticSearchParam.getExcludeFields())
 				.sort(elasticSearchParam.getSorts())
-				.timeout(new TimeValue(60, TimeUnit.SECONDS));
+				.timeout(new TimeValue(timeout, TimeUnit.SECONDS));
 
 		return searchSourceBuilder;
 	}

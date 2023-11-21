@@ -2,10 +2,12 @@ package com.xcurenet.common.util;
 
 import com.mongodb.client.result.UpdateResult;
 import com.xcurenet.audit.service.AuditVO;
-import com.xcurenet.common.makeInfo.service.InfoVersionVO;
+import com.xcurenet.emass.message.vo.emass.mongo.EmassCheckedMgo;
+import com.xcurenet.emass.message.vo.emass.mongo.fields.CheckedVo_Mgo;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cloud.configuration.CompatibilityVerifierProperties;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
@@ -16,6 +18,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Field;
 import java.util.*;
 
 @Component
@@ -24,6 +27,8 @@ public class MongoUtil {
 	@Autowired
 	@Qualifier("mongoTemplate")
 	private MongoTemplate mongoTemplate;
+	@Autowired
+	private CompatibilityVerifierProperties compatibilityVerifierProperties;
 
 	//최대값
 	public <T> T maxValue(String tableCon, Class<T> vo) {
@@ -90,7 +95,66 @@ public class MongoUtil {
 		return results.getMappedResults();
 	}
 
-	
+
+	/***
+	 * 개봉 (읽음) 처리
+	 * @param msgId
+	 * @param userId
+	 * @param vo
+	 * @param collectionName
+	 * @return
+	 * @param <T>
+	 */
+
+	public boolean readDoc(String msgId, CheckedVo_Mgo checkedVoMgo, String collectionName) {
+		boolean result = false; // 작업 완료 여부
+		boolean isReaded = false; // 사용자가 문서 읽었는지 여부
+		boolean fisrtRead = false; // 문서에 최초로 읽음 여부
+		try {
+
+			Query query = new Query(Criteria.where("_id").is(msgId));
+			EmassCheckedMgo checkedVoList = mongoTemplate.findOne(query, EmassCheckedMgo.class, collectionName);
+			if(null == checkedVoList.getChecked() ) fisrtRead = true; // 해당 문서를 최초로 읽었다.
+
+			/* 사용자 문서 개봉여부 조회 */
+			if(!fisrtRead) {
+				List<CheckedVo_Mgo> checkedList = checkedVoList.getChecked();
+				for (CheckedVo_Mgo vo : checkedList) {
+					if (checkedVoMgo.getReadId().equals(vo.getReadId())) {
+						isReaded = true;
+						break;
+					} // 접속자 아이디 존재할시 isReaded true
+				}
+			}
+
+			/* 사용자가 문서를 개봉하지 않았을시 */
+			if(!isReaded) {
+				Map<String, Object> reqMap = new HashMap<>();
+				Field[] fields = checkedVoMgo.getClass().getDeclaredFields();
+				for (Field field : fields) {
+					field.setAccessible(true);
+					reqMap.put(field.getName(), field.get(checkedVoMgo));
+				}
+				List reqList = new ArrayList();
+				reqList.add(reqMap);
+
+				Update update = new Update();
+				if(fisrtRead) {
+					update.set("checked", reqList);  // 최초 읽었을시 필드 구조 추가 list
+				}else{
+					update.addToSet("checked", reqMap);
+				}
+				mongoTemplate.findAndModify(query, update,  EmassCheckedMgo.class, collectionName); // 문서 읽음 처리
+				result = true; // 작업 완료 처리
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+			result = false;
+		}
+
+		return result;
+	}
+
 
 	/**
 	 *

@@ -1,6 +1,7 @@
 package com.xcurenet.emass.message.newService.impl;
 
 import com.xcurenet.common.util.Common;
+import com.xcurenet.common.util.KafkaProducerService;
 import com.xcurenet.common.util.TimeUtil;
 import com.xcurenet.common.util.elasticsearch.ElasticSearchCommon;
 import com.xcurenet.common.util.elasticsearch.ElasticSearchConnection;
@@ -9,6 +10,7 @@ import com.xcurenet.config.service.ConfigAdminService;
 import com.xcurenet.config.service.ConfigAdminVO;
 import com.xcurenet.emass.message.newService.EmsReDefined;
 import com.xcurenet.emass.message.newService.EmsSearchService;
+import com.xcurenet.emass.message.service.EmsMessageService;
 import com.xcurenet.emass.message.service.MessengerEdcGroupVO;
 import com.xcurenet.emass.message.service.MessengerGroupUserVO;
 import com.xcurenet.emass.message.service.impl.parseJsonFile;
@@ -16,6 +18,7 @@ import com.xcurenet.emass.message.vo.emass.EmassIntegrated;
 import com.xcurenet.emass.message.vo.emass.els.Emass;
 import com.xcurenet.emass.message.vo.emass.els.EmassChecked;
 import com.xcurenet.emass.message.vo.emass.els.EmassResponse;
+import com.xcurenet.emass.message.vo.emass.mongo.fields.CheckedVo_Mgo;
 import com.xcurenet.interestUser.service.AdminUserGroupService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.lucene.search.TotalHits;
@@ -24,24 +27,16 @@ import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.core.TimeValue;
-import org.elasticsearch.index.query.TermQueryBuilder;
-import org.elasticsearch.index.reindex.BulkByScrollResponse;
-import org.elasticsearch.index.reindex.UpdateByQueryRequest;
-import org.elasticsearch.script.Script;
-import org.elasticsearch.script.ScriptType;
-import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -58,7 +53,16 @@ public class EmsSearchServiceImpl implements EmsSearchService {
     private ElasticSearchQueryUtils elsSearchQueryUtils;
 
     @Resource
+    private KafkaProducerService kafkaProducerService;
+
+    @Resource
     private ConfigAdminService configAdminService;
+
+    @Value("${kafka.checked.index}")
+    private String kafkaCheckedIdx;
+
+    @Resource
+    EmsMessageService messageService; // mongoDb
 
     /* client */
     private final RestHighLevelClient client = new ElasticSearchConnection().getElasticSearchClient();
@@ -78,128 +82,17 @@ public class EmsSearchServiceImpl implements EmsSearchService {
     }
 
 
-    @Override  // post update 방식
-    public void updateDocument(EmassChecked checked) throws IOException {
-        BulkByScrollResponse bulkByScrollResponse = null;
-
-        boolean isReaded = false;
-
-        try {
-        // 메시지 아이디 단건 조회
-        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-            searchSourceBuilder
-                .fetchSource("reader",null)
-                .query(new TermQueryBuilder("_id", checked.get_id()))
-                .timeout(new TimeValue(60, TimeUnit.SECONDS));
-        SearchRequest searchRequest = new SearchRequest(ElasticSearchCommon.EDC_MESSAGE_INDEX).source(searchSourceBuilder);
-        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
-
-        if(null == searchResponse || searchResponse.getHits().getTotalHits().value == 0 ) return; // 문서 없을시
-
-        SearchHit[] hits = searchResponse.getHits().getHits();
-        Map<String, Object> map = hits[0].getSourceAsMap();
-        if(!Common.isEmpty(map.get("reader"))){ // 읽은 기록 존재?
-            List<Map<String, Object>> readerList  = (List<Map<String, Object>>) map.get("reader");
-             for(Map<String,Object> reader : readerList){
-                 if(!Common.isEmpty(reader.get("user_id"))) {
-                        if(Common.isEquals(reader.get("user_id"),checked.getUser_id())) isReaded = true; break; // 접속자 아이디 존재할시 isReaded true
-                 }
-             }
-        }else{ // 읽은 기록 없을시 reader List 객체 생성
-            UpdateByQueryRequest updateByQueryRequest = new UpdateByQueryRequest(ElasticSearchCommon.EDC_MESSAGE_INDEX); // 인덱스 지정
-            updateByQueryRequest.setConflicts("proceed");
-            Map<String, Object> params = new HashMap<>();
-            Script script = new Script(ScriptType.INLINE,"painless", ElasticSearchCommon.READER_CREATE,params);
-            updateByQueryRequest.setScript(script);
-            client.updateByQuery(updateByQueryRequest, RequestOptions.DEFAULT);
-            isReaded = false;
+    @Override
+    public boolean readDoc(String msgId, CheckedVo_Mgo checkedVoMgo)  {
+        boolean isProc = messageService.readDoc(msgId,checkedVoMgo); // 운용자 읽음 처리
+        if(isProc) { // 읽음 처리 작업 완료시
+         //   kafkaProducerService.send(kafkaCheckedIdx,"_id",msgId);
+            log.info("[UPDATE_RESULT] 읽음 처리 완료 {}",getServerTime());
         }
-
-
-        if(!isReaded) { // 처음 읽었을시 아이디 추가
-            Map<String, Object> params = new HashMap<>();
-            /* 기록할 파라미터 */
-            params.put("user_id", checked.getUser_id());
-            params.put("user_busiCd", checked.getUser_busiCd());
-            params.put("user_ipBusiCd", checked.getUser_ipBusiCd());
-            params.put("service_svc", checked.getService_svc());
-            params.put("ctime", getServerTime()); // 읽은 시각
-
-            UpdateByQueryRequest updateByQueryRequest = new UpdateByQueryRequest(ElasticSearchCommon.EDC_MESSAGE_INDEX); // 인덱스 지정
-            updateByQueryRequest.setQuery(new TermQueryBuilder("_id", checked.get_id()));
-            updateByQueryRequest.setConflicts("proceed");
-            Script script = new Script(ScriptType.INLINE, "painless", ElasticSearchCommon.READER_ADD, params);
-            updateByQueryRequest.setScript(script);
-            client.updateByQuery(updateByQueryRequest, RequestOptions.DEFAULT);
-            log.info("[UPDATE_RESULT] 읽음 처리 완료 by {}",checked.getUser_id());
-        }
-        }catch (ElasticsearchException e){
-            e.printStackTrace();
-        }
-
+        return isProc;
     }
 
-//    @Override  //
-//    public void updateDocument(EmassChecked checked) throws IOException {
-//        BulkByScrollResponse bulkByScrollResponse = null;
-//        boolean isReaded = false;
-//        try {
-//        // 메시지 아이디 단건 조회
-//        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-//            searchSourceBuilder
-//                .fetchSource("reader",null)
-//                .query(new TermQueryBuilder("_id", checked.get_id()))
-//                .timeout(new TimeValue(60, TimeUnit.SECONDS));
-//        SearchRequest searchRequest = new SearchRequest(ElasticSearchCommon.EDC_MESSAGE_SEARCH_HIST_INDEX).source(searchSourceBuilder);
-//        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
-//
-//
-//
-//        //test
-//            XContentBuilder builder = XContentFactory.jsonBuilder();
-//            builder.startObject();
-//            {
-//                Field[] fields = checked.getClass().getDeclaredFields();
-//                for(Field field: fields){
-//                    builder.field(field.getName(),field);
-//                    if(field instanceof Object ){
-//                        log.info("test");
-//                    }
-//                }
-//
-//            }
-//            builder.endObject();
-//
-//
-//
-///*            if(null == searchResponse || searchResponse.getHits().getTotalHits().value == 0 ) {  // 문서 없을시
-//                XContentBuilder builder = XContentFactory.jsonBuilder();
-//                builder.startObject();
-//                {
-//                    Field[] fields = checked.getClass().getDeclaredFields();
-//                    for(Field field: fields){
-//                        builder.field(field.getName(),field);
-//                        if(field instanceof Object ){
-//                            log.info("test");
-//                        }
-//                    }
-//
-//                }
-//                builder.endObject();
-//
-//       //         IndexRequest request = new IndexRequest(ElasticSearchCommon.EDC_MESSAGE_SEARCH_HIST_INDEX).id().source(builder);
-//
-//
-//
-//        }else if(){
-//            // 읽은 기록 존재 확인
-//        }*/
-//        }catch (ElasticsearchException e){
-//            e.printStackTrace();
-//        }
-//
-//
-//    }
+
 
     @Override
     public EmassIntegrated getEmassMessage(Map<String,Object> searchParam, String adminId) throws IOException {
@@ -211,13 +104,14 @@ public class EmsSearchServiceImpl implements EmsSearchService {
     public EmassIntegrated getEmassMessage(Map<String,Object> searchParam, String adminId, String readYn, String consentNo) throws IOException {
         EmassIntegrated emassIntegrated = null;
 
-        if (Common.isNotEmpty(readYn) && Common.isNotEmpty(adminId)) {
+        /*추후 작업예정 =============================================*/
+/*        if (Common.isNotEmpty(readYn) && Common.isNotEmpty(adminId)) {
             if (Common.isEquals(readYn, "Y")) {
              //   sq.addFilterQuery(String.format(JOIN_READ, adminId));
             } else {
             //   sq.addFilterQuery(String.format(JOIN_UNREAD, adminId));
             }
-        }
+        }*/
 
         /*추후 작업예정 =============================================*/
         /* admin snippet */
@@ -232,11 +126,12 @@ public class EmsSearchServiceImpl implements EmsSearchService {
         searchParam.put("bodysnippet", bodysnippetVal);
         setAuthoritys(searchParam, adminId);
 
-        /* 검색 로직 ############################################################################################################################################################################# */
-        SearchSourceBuilder searchSourceBuilder = null;
         try {
-            /* 검색 타입 조건 */
+
+            //쿼리 준비 시작
+            SearchSourceBuilder searchSourceBuilder = null;
             switch (Common.nvl(searchParam.get(ElasticSearchCommon.SEARCH_TYPE))) {
+                /* 검색 타입 조건 */
                 case ElasticSearchCommon.SEARCH_TYPE_MESSAGE:  // 메시지 검색시
                     searchSourceBuilder = elsSearchQueryUtils.initMessageSearchSource(searchParam); // 검색 소스 준비
                     break;
@@ -252,26 +147,20 @@ public class EmsSearchServiceImpl implements EmsSearchService {
                     searchSourceBuilder = elsSearchQueryUtils.initanalysisDetailSearchSource(searchParam); // 검색 소스 준비
                     break;
             }
+            
+            // 쿼리 준비 끝
 
             /* 검색 진행 */
             SearchRequest searchRequest = new SearchRequest(elsSearchQueryUtils.getElasticSearchParam().getIndices()).source(searchSourceBuilder);
-
             SearchResponse searchResponse = getList(searchRequest); // getList 수행
-            Map<String,Object> responseMap = new HashMap<>();
-            responseMap.put("searchResponse",searchResponse);
-            responseMap.put("elsSearchParam",elsSearchQueryUtils.getElasticSearchParam());
-            emassIntegrated = new EmassIntegrated(responseMap, adminId);
-
-            /* 읽음 확인 관련 추후 작업 예정*/
- /*           if (readYn != null && readYn.equals("")) {
-                   edcMessage.setEmass(checkedService.findReadList((List<Emass>) edcMessage.getEmass(), adminId));
-            }*/
+            emassIntegrated = new EmassIntegrated(searchResponse,elsSearchQueryUtils.getElasticSearchParam(), adminId);
 
 
-            /* response 용 Data로 재 빌드해야함  */
+            /* front response 용 Data로 재 빌드해야함  */
             List<EmassResponse> emassResponse = new EmsReDefined((List<Emass>) emassIntegrated.getEmass(), readYn, consentNo, adminUserGroupService.getAdminUserGroupSimpleAdminList(adminId)).reDefined(adminId, conf);
             emassIntegrated.setEmass(emassResponse);
 
+            /* 기타 정보 입력*/
             String serverTime = getServerTime();
             emassIntegrated.setSearchTime(serverTime);
             emassIntegrated.setExcuteQuery(elsSearchQueryUtils.getQuery());
@@ -279,8 +168,6 @@ public class EmsSearchServiceImpl implements EmsSearchService {
         }catch (Exception e){
             e.printStackTrace();
         }
-
-        /* ######################################################################################################################################################################################## */
 
         return emassIntegrated;
     }
@@ -323,7 +210,7 @@ public class EmsSearchServiceImpl implements EmsSearchService {
 
         if (Common.nvl(searchParam.get(ElasticSearchCommon.SEARCH_TYPE)) == ElasticSearchCommon.SEARCH_TYPE_MESSENGER_GROUP){
             System.out.println("여기로 들어옴");
-           emassIntegrated = new EmassIntegrated(searchParam, adminId);
+           emassIntegrated = new EmassIntegrated(searchResponse,elsSearchQueryUtils.getElasticSearchParam(), adminId);
            emassIntegrated.setTopHitsAggsDocData(searchResponse);
         }
 
@@ -420,13 +307,12 @@ public class EmsSearchServiceImpl implements EmsSearchService {
     }
 
     @Override
-    public void setRead(EmassChecked checked) {
-        if (Common.isEmpty(checked.get_id())) return;
-        try {
-            updateDocument(checked);
-        }catch (IOException e){
-            e.printStackTrace();
-        }
+    public void setRead(String msgId, String userId) {
+        if (Common.isEmpty(msgId) || Common.isEmpty(userId) ) return;
+            CheckedVo_Mgo checkedVoMgo = new CheckedVo_Mgo();
+            checkedVoMgo.setReadId(userId);
+            checkedVoMgo.setReadDate(ElasticSearchCommon.stringToDate(getServerTime()));
+            readDoc(msgId,checkedVoMgo);
     }
 
     @Override

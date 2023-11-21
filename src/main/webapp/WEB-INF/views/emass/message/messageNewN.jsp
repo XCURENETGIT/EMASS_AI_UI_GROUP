@@ -435,7 +435,7 @@ $(document).ready(function() {
 	$('#searchKeywordSearchStr').enter(function(){getSearchKeywordList( );});
 	$('#addSearchKeywordBtn').click(function(){insertSearchKeywordList( );});
 	$('#delSearchKeywordBtn').click(function(){deleteSearchKeywordList( );});
-	
+
 	$('#searchStrInput').autocomplete({ delay : 0,
 		source : function(request, response) {
 			ui.get({
@@ -2135,7 +2135,7 @@ function checkDownloadBatchExist(){
 </script>
 </head>
 <body class="mini-navbar msgBody" style="overflow: auto;">
-	<div class="msg_container">
+	<div class=""> <%-- msg_container --%>
 		<%@ include file="../left.jsp"%>
 		<div id="searchKeywordDiv" class="searchKeywordDiv">
 			<div class="searchKeywordTab"><s:message code="searchKeyword.management"/>
@@ -2380,7 +2380,7 @@ function checkDownloadBatchExist(){
 			if (grid.Col == grid.ColIndex('searchKeyword')) {
 				var inputType = $('[name=searchKeywordInputType]:checked').val();
 				var data = grid.getRowData(grid.Row);
-				
+
 				if(inputType == 'S') {
 					$('#searchStrInput').val(data.searchKeyword);
 				} else if(inputType == 'A') {

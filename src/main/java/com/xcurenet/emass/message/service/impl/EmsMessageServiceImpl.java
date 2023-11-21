@@ -1,5 +1,6 @@
 package com.xcurenet.emass.message.service.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jcraft.jsch.JSchException;
 import com.xcurenet.code.service.CodeVO;
 import com.xcurenet.common.dao.TransactionManager;
@@ -14,6 +15,7 @@ import com.xcurenet.emass.consent.service.ConsentService;
 import com.xcurenet.emass.consent.service.ConsentVO;
 import com.xcurenet.emass.message.service.*;
 import com.xcurenet.emass.message.vo.emass.mongo.EmassMessage;
+import com.xcurenet.emass.message.vo.emass.mongo.fields.CheckedVo_Mgo;
 import com.xcurenet.emass.message.web.EmsAttachDownload;
 import com.xcurenet.minio.MinioFileAdapter;
 import lombok.extern.slf4j.Slf4j;
@@ -66,9 +68,14 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 	@Autowired
 	MongoUtil mongoUtil;
 
+
+	ObjectMapper objectMapper = new ObjectMapper();
+
+	public String MESSAGE_SCHEME = "EMS_MESSAGE";
+
 	@Override
 	public EmsBodyVO getEmassBody(String msgId, String firstAdminYn, String adminType) {
-		EmsBodyVO bodyVo = mongoUtil.selectId(msgId,EmsBodyVO.class,"EMS_MESSAGE");
+		EmsBodyVO bodyVo = mongoUtil.selectId(msgId,EmsBodyVO.class,MESSAGE_SCHEME);
 		return bodyVo;
 	}
 
@@ -125,7 +132,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 	@Override
 	public EmsHeaderVO getEmassHeader(String msgId) {
 
-		EmsHeaderVO headerVo =mongoUtil.selectId(msgId,EmsHeaderVO.class,"EMS_MESSAGE");
+		EmsHeaderVO headerVo =mongoUtil.selectId(msgId,EmsHeaderVO.class,MESSAGE_SCHEME);
 
 		if (headerVo == null || headerVo.getHeaderPath() == null) return null;
 		headerVo.setHeader(Common.decryptAfterDecompression(headerVo.getHeaderPath()));
@@ -137,7 +144,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		Map<String, Object> param = new HashMap<>();
 		param.put("infoFeedbackConf", Config.getBoolean("info.feedback.used"));
 		param.put("msgId", msgId);
-		EmassMessage emassMessage = mongoUtil.selectId(msgId,EmassMessage.class,"EMS_MESSAGE");
+		EmassMessage emassMessage = mongoUtil.selectId(msgId,EmassMessage.class,MESSAGE_SCHEME);
 		if (emassMessage == null) {
 			log.info("[Message Not Found] msgid:{}", msgId);
 			return null;
@@ -152,7 +159,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		param.put("infoFeedbackConf", Config.getBoolean("info.feedback.used"));
 		param.put("msgId", msgId);
 
-	//	TestMessage emassMessage = mongoUtil.selectId(msgId, TestMessage.class,"EMS_MESSAGE");
+	//	TestMessage emassMessage = mongoUtil.selectId(msgId, TestMessage.class,MESSAGE_SCHEME);
 
 		/* response Data mapping */
 
@@ -289,7 +296,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		param.put("infoHynixConf", Config.getBoolean("info.hynix.used"));
 		param.put("msgId", msgId);*/
 
-		EmassMessage emassMessage = getConsentMessage(mongoUtil.selectId(msgId,EmassMessage.class,"EMS_MESSAGE"), firstAdminYn, adminType);
+		EmassMessage emassMessage = getConsentMessage(mongoUtil.selectId(msgId,EmassMessage.class,MESSAGE_SCHEME), firstAdminYn, adminType);
 		return emassMessage.isConsentFlag();
 	}
 
@@ -319,7 +326,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 
 	public List<EmsRecvVO> getEmassUserInfo(String msgId) {
 
-		EmsMessageVO emsMessageVO =mongoUtil.selectId(msgId,EmsMessageVO.class,"EMS_MESSAGE");
+		EmsMessageVO emsMessageVO =mongoUtil.selectId(msgId,EmsMessageVO.class,MESSAGE_SCHEME);
 
 		List<EmsRecvVO> list= emsMessageVO.getRecv_info();
 
@@ -337,7 +344,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 			query.addCriteria(Criteria.where("UTYPE").in(uType));
 		}
 
-		return mongoUtil.selectList(query,EmsRecvVO.class,"EMS_MESSAGE");
+		return mongoUtil.selectList(query,EmsRecvVO.class,MESSAGE_SCHEME);
 	}
 
 	@Override
@@ -350,7 +357,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 
 
 		String infoHynix = Config.getString("info.hynix.used");
-		EmsMessageVO emsMessageVO=mongoUtil.selectOne(query,EmsMessageVO.class,"EMS_MESSAGE");
+		EmsMessageVO emsMessageVO=mongoUtil.selectOne(query,EmsMessageVO.class,MESSAGE_SCHEME);
 		List<EmsAttachVO> emsAttachVOList= emsMessageVO.getAttachInfo();
 
 		String attachId = "";
@@ -494,7 +501,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		param.put("msgId", msgId);
 		param.put("attachId", attachId);
 
-		EmsMessageVO emsMessageVO= mongoUtil.selectId(msgId,EmsMessageVO.class,"EMS_MESSAGE");
+		EmsMessageVO emsMessageVO= mongoUtil.selectId(msgId,EmsMessageVO.class,MESSAGE_SCHEME);
 
 		List<EmsAttachVO>list= emsMessageVO.getAttachInfo();
 
@@ -531,7 +538,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		return selectOne("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".emass.getEmassAttachInfo", param);*/
 		EmsAttachVO emsAttachVO= new EmsAttachVO();
 
-		EmsMessageVO emsMessageVO =mongoUtil.selectId(msgId,EmsMessageVO.class,"EMS_MESSAGE");
+		EmsMessageVO emsMessageVO =mongoUtil.selectId(msgId,EmsMessageVO.class,MESSAGE_SCHEME);
 
 
 		List<EmsAttachVO>lists =emsMessageVO.getAttachInfo();
@@ -556,7 +563,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		EmsAttachTextVO vo = null;
 		if (Common.isEquals(ocrYn, "Y")) {
 
-			EmsMessageVO emsMessageVO= mongoUtil.selectId(msgId,EmsMessageVO.class,"EMS_MESSAGE");
+			EmsMessageVO emsMessageVO= mongoUtil.selectId(msgId,EmsMessageVO.class,MESSAGE_SCHEME);
 
 			List<EmsAttachVO>list= emsMessageVO.getAttachInfo();
 			EmsAttachVO msg= new EmsAttachVO();
@@ -577,7 +584,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 				vo.setAttachTextTotalLine(Common.toArray(vo.getAttachText(), "\n").length);
 			}
 		} else {
-			EmsMessageVO emsMessageVO= mongoUtil.selectId(msgId,EmsMessageVO.class,"EMS_MESSAGE");
+			EmsMessageVO emsMessageVO= mongoUtil.selectId(msgId,EmsMessageVO.class,MESSAGE_SCHEME);
 
 			List<EmsAttachVO>list= emsMessageVO.getAttachInfo();
 			EmsAttachVO msg= new EmsAttachVO();
@@ -606,7 +613,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 	@Override
 	public List<EmsPiVO> getEmassPattern(String msgId) {
 
-		EmsMessageVO emsMessageVO =mongoUtil.selectId(msgId,EmsMessageVO.class,"EMS_MESSAGE");
+		EmsMessageVO emsMessageVO =mongoUtil.selectId(msgId,EmsMessageVO.class,MESSAGE_SCHEME);
 
 		List<EmsPiVO> list= emsMessageVO.getPrivateInfo();
 
@@ -757,19 +764,17 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		return selectList("com.xcurenet.sqlmap.mappers.mysql.code.getFileList");
 	}
 
-	@Override
-	public EmassMessage tempMapping(Map<String,Object> map) {
-		/* 임시 맵핑*/
-//		EmassMessage emassMessage = new EmassMessage();
-//		emassMessage.set_id(Common.nvl(testMessage.get_id()));
-
-
-		return null;
-	}
 
 	@Override
 	public List<CodeVO> getNoteList() {
 		return selectList("com.xcurenet.sqlmap.mappers.mysql.code.getNoteList");
+	}
+
+
+
+	@Override
+	public boolean readDoc(String msgId, CheckedVo_Mgo checkedVoMgo) {
+		 return mongoUtil.readDoc(msgId,checkedVoMgo,MESSAGE_SCHEME);
 	}
 
 

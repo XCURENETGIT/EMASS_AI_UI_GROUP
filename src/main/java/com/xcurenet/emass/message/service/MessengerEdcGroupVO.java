@@ -104,7 +104,7 @@ public class MessengerEdcGroupVO {
 	 */
 	public static EmassMessenger reDefinedDetail(Emass emass, String adminId, boolean original) {
 		EmassMessenger emassMessenger = new EmassMessenger();
-		emassMessenger.setMsgid(emass.getKey());
+		emassMessenger.setMsgid(emass.getMsgid());
 		if(emass.getService() != null){
 			emassMessenger.setSvc(Common.nvl(emass.getService().getSvc()));
 			emassMessenger.setSvc3(Common.nvl(emass.getService().getSvc3()));
@@ -148,7 +148,7 @@ public class MessengerEdcGroupVO {
 	public static EmassMessenger reDefined(Emass emass, String adminId, long msg_cnt) {
 		EmassMessenger emassMessenger = new EmassMessenger();
 		emassMessenger.setMsg_cnt(msg_cnt);
-		emassMessenger.setMsgid(emass.getKey());
+		emassMessenger.setMsgid(emass.getMsgid());
 		if(emass.getService() != null){
 			emassMessenger.setSvc(Common.nvl(emass.getService().getSvc()));
 			emassMessenger.setSvc3(Common.nvl(emass.getService().getSvc3()));

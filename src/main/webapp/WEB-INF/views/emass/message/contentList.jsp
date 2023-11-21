@@ -205,7 +205,7 @@ function saveMsgBtn(){
 }
 
 function setFeedback(feedback){
-	var msgids = grid.getSelectedKey('_id');
+	var msgids = grid.getSelectedKey('msgid');
 	if( msgids.length == 0 ){
 		alert('<s:message code="condition.message.feedback.selectMsg"/>');
 		return;
@@ -284,7 +284,8 @@ function getList(flag, filterVal){
 		searchData : JSON.stringify( searchData ),
 		success : function(data, total) {
 			searchedFlag = true;
-			grid.appendData(data.emass);
+			grid.appendData(data);
+			console.log(data);
 			if ( grid.loadingPage == 0 ) grid.Select(-1,-1);
 
 			parent.setResultCnt(tabId, total);
@@ -572,18 +573,18 @@ function sendOverlapData(offset, limit){
 }
 
 function regexpInfoViewer(row, selectedGrid){
-	var _id = grid.getValue(row, '_id');
+	var msgid = grid.getValue(row, 'msgid');
 	if(grid.getValue(row, 'pi_total') == '') return;
 	
-	var url = '<c:url value="/ems/regexpInfoPop.do?_id='+_id+'"/>';
+	var url = '<c:url value="/ems/regexpInfoPop.do?_id='+msgid+'"/>';
 	return fnOpenWindow(url, 'regexpInfoPop', 1100, 620, 'resize');
 }
 
 function userInfoViewer(row, type, selectedGrid){
-	var _id = grid.getValue(row, '_id');
+	var msgid = grid.getValue(row, 'msgid');
 	if(grid.getValue(row, type) == '') return;
 	
-	var url = '<c:url value="/ems/userInfoPop.do?_id='+_id+'&type='+type+'"/>';
+	var url = '<c:url value="/ems/userInfoPop.do?_id='+msgid+'&type='+type+'"/>';
 	return fnOpenWindow(url, type+'InfoPop', 1000, 370, 'resize');
 }
 
@@ -595,18 +596,18 @@ function interestUserInfoViewer( row, selectedGrid ){
 }
 
 function fileInfoViewer( row, selectedGrid ){
-	var _id = grid.getValue(row, '_id');
+	var msgid = grid.getValue(row, 'msgid');
 	if(grid.getValue(row, 'attachcnt') == '') return;
 	
-	var url    = '<c:url value="/ems/fileInfoPop.do?_id='+_id+'&searchKey=' + encodeURI(searchKeyword()) + '"/>';
+	var url    = '<c:url value="/ems/fileInfoPop.do?_id='+msgid+'&searchKey=' + encodeURI(searchKeyword()) + '"/>';
 	var pop = fnOpenWindow(url, 'fileInfoPop', 1015, 400, 'resize');
 }
 
 function ocrFileInfoViewer( row, selectedGrid ){
-	var _id = grid.getValue(row, '_id');
+	var msgid = grid.getValue(row, 'msgid');
 	if(grid.getValue(row, 'ocr_attach_cnt') == '') return;
 	
-	var url    = '<c:url value="/ems/fileInfoPop.do?_id='+_id+'&searchKey='+ encodeURI(searchKeyword()) +'"/>';
+	var url    = '<c:url value="/ems/fileInfoPop.do?_id='+msgid+'&searchKey='+ encodeURI(searchKeyword()) +'"/>';
 	var pop = fnOpenWindow(url, 'ocrFileInfoPop', 1015, 400, 'resize');
 }
 
@@ -619,7 +620,7 @@ function searchKeyword() {
 }
 
 function viewer_open( row, selectedGrid ){
-	var _id = grid.getValue(row, '_id');
+	var msgid = grid.getValue(row, 'msgid');
 	var bodySize = grid.getValue(row, 'bodySizeStr');
 	var bodySizeNum = bodySize.substr(0, bodySize.indexOf(' '));
 	
@@ -627,11 +628,11 @@ function viewer_open( row, selectedGrid ){
 		var obj = parent.getIframeBodyObj();
 		var kHigh = parent.keywordHighlight;
 		var hostQuery = parent.hostQuery;
-		obj.getMessage(_id, searchKeyword(), bodySizeNum, kHigh.toString(), hostQuery.toString());
+		obj.getMessage(msgid, searchKeyword(), bodySizeNum, kHigh.toString(), hostQuery.toString());
 		obj.$('#detailPatternDiv, #imgPreviewDiv').hide();
 		obj.initHighlight();
 	}else{
-		openMessageBodyPop( grid.id, _id, searchKeyword(), bodySizeNum);
+		openMessageBodyPop( grid.id, msgid, searchKeyword(), bodySizeNum);
 	}
 	var readYn = grid.getValue(row, 'readYn');
 	grid.setValue(row, grid.ColIndex('readYn'), 'Y');
@@ -640,11 +641,11 @@ function viewer_open( row, selectedGrid ){
 
 var popWin;
 function viewer_openPop( row, selectedGrid ){
-	var _id = grid.getValue(row, '_id');
+	var msgid = grid.getValue(row, 'msgid');
 	var bodySize = grid.getValue(row, 'bodySizeStr');
 	var bodySizeNum = bodySize.substr(0, bodySize.indexOf(' '));
 	
-	popWin = openMessageBodyPop( grid.id, _id, searchKeyword(), bodySizeNum);
+	popWin = openMessageBodyPop( grid.id, msgid, searchKeyword(), bodySizeNum);
 	
 	var readYn = grid.getValue(row, 'readYn');
 	grid.setValue(row, grid.ColIndex('readYn'), 'Y');
@@ -652,8 +653,8 @@ function viewer_openPop( row, selectedGrid ){
 
 function viewer_openFocus(row, selectedGrid ){
 	if(popWin){
-		var _id = grid.getValue(row, '_id');
-		popWin.getMessage(_id, searchKeyword());
+		var msgid = grid.getValue(row, 'msgid');
+		popWin.getMessage(msgid, searchKeyword());
 	}
 }
 
@@ -687,11 +688,11 @@ function setGridInfoMulti(value, value1){
 }
 
 function viewer_newOpen(row, selectedGrid){
-	var _id = grid.getValue(row, '_id');
+	var msgid = grid.getValue(row, 'msgid');
 	var bodySize = grid.getValue(row, 'bodySizeStr');
 	var bodySizeNum = bodySize.substr(0, bodySize.indexOf(' '));
 	
-	openMessageBodyPop( '', _id, searchKeyword(), bodySizeNum);
+	openMessageBodyPop( '', msgid, searchKeyword(), bodySizeNum);
 	
 	var readYn = grid.getValue(row, 'readYn');
 	grid.setValue(row, grid.ColIndex('readYn'), 'Y');
@@ -752,7 +753,7 @@ function initGrid(){
 	grid = new Xgrid('messageNewGrid', contextRoot, 20);
 	grid.onCheckBox();
 	grid.autoNumber();
-	grid.colAdd('_id', '<s:message code="common.msg._id"/>', 100, 'left', false, 'nomal',null,0);
+	grid.colAdd('msgid', '<s:message code="common.msg._id"/>', 100, 'left', false, 'nomal',null,0);
 	grid.colAdd('xrootmtr', '<s:message code="common.msg.xrootmtr"/>', 100, 'left', true, 'nomal');
 	if(overlapUse == 'Y') {
 		grid.colAdd('overlap', '<s:message code="common.overlap.count"/>', 80, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
@@ -859,18 +860,18 @@ function initGrid(){
 	grid.colAdd('sender_mail_name', '<s:message code="condition.sender"/>', 130, 'left', false, 'link', function(row, cell, value, columnDef, dataContext) {
 	//	return highlightSearchStr(value, "sender");
 	});
-	grid.colAdd('allofus', '<s:message code="condition.allofus"/>', 150, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+	grid.colAdd('allOfUs', '<s:message code="condition.allofus"/>', 150, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 		if( value == undefined || value.length == 0) return '';
-		switch (value) {
-			case 'IA' : value = '<s:message code="condition.allofus1"/>';
-			case 'ET' : value = '<s:message code="condition.allofus8"/>';
-			case 'IT' : value = '<s:message code="condition.allofus7"/>';
-			case 'EA' : value = '<s:message code="condition.allofus2"/>';
-			case 'PT' : value = '<s:message code="condition.allofus9"/>';
-			case 'PA' : value = '<s:message code="condition.allofus3"/>';
-			case 'SO' : value = '<s:message code="condition.allofus13"/>';
-			case 'SI' : value = '<s:message code="condition.allofus14"/>';
-		}
+		<%--switch (value) {--%>
+		<%--	case 'IA' : value = '<s:message code="condition.allofus1"/>';--%>
+		<%--	case 'ET' : value = '<s:message code="condition.allofus8"/>';--%>
+		<%--	case 'IT' : value = '<s:message code="condition.allofus7"/>';--%>
+		<%--	case 'EA' : value = '<s:message code="condition.allofus2"/>';--%>
+		<%--	case 'PT' : value = '<s:message code="condition.allofus9"/>';--%>
+		<%--	case 'PA' : value = '<s:message code="condition.allofus3"/>';--%>
+		<%--	case 'SO' : value = '<s:message code="condition.allofus13"/>';--%>
+		<%--	case 'SI' : value = '<s:message code="condition.allofus14"/>';--%>
+		<%--}--%>
 		return value;
 	});
 	<%--grid.colAdd('recvsStr', '<s:message code="condition.recv"/>', 220, 'left', false, 'link', function(row, cell, value, columnDef, dataContext) {--%>
@@ -879,33 +880,33 @@ function initGrid(){
 	grid.colAdd('to', '<s:message code="condition.to"/>', 150, 'left', true, 'link', function(row, cell, value, columnDef, dataContext) {
 		var innOutInfo = grid.getValue(row, 'toInOutInfo');
 		var rtnVal = arrayToString(value);
-		//return innOutInfo+highlightSearchStr(rtnVal, "to");
+		return innOutInfo+highlightSearchStr(rtnVal, "to");
 	});
 	grid.colAdd('cc', '<s:message code="condition.cc"/>', 150, 'left', true, 'link', function(row, cell, value, columnDef, dataContext) {
 		var innOutInfo = grid.getValue(row, 'ccInOutInfo');
 		var rtnVal = arrayToString(value);
-	//	return innOutInfo+highlightSearchStr(rtnVal, "cc");
+		return innOutInfo+highlightSearchStr(rtnVal, "cc");
 	});
 	grid.colAdd('bcc', '<s:message code="condition.bcc"/>', 150, 'left', true, 'link', function(row, cell, value, columnDef, dataContext) {
 		var innOutInfo = grid.getValue(row, 'bccInOutInfo');
 		var rtnVal = arrayToString(value);
-	//	return innOutInfo+highlightSearchStr(rtnVal, "bcc");
+    	return innOutInfo+highlightSearchStr(rtnVal, "bcc");
 	});
 	grid.colAdd('network_srcIp', '<s:message code="condition.source"/> IP', 100, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-	//	return highlightSearchStr(value, "srcip");
+		return highlightSearchStr(value, "network_srcIp");
 	}, {sorter:sortUtil.ip});
 	grid.colAdd('network_dstIp', '<s:message code="condition.destination"/> IP', 100, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-	//	return highlightSearchStr(value, "dstip");
+		return highlightSearchStr(value, "dstip");
 	}, {sorter:sortUtil.ip});
 	grid.colAdd('attach_name', '<s:message code="condition.attach_name"/>', 220, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-		var rtnVal = arrayToString(value);
-	//	return highlightSearchStr(rtnVal, "attachname");
+			rtnVal = arrayToString(value);
+		return highlightSearchStr(rtnVal, "attachname");
 	});
-	grid.colAdd('size_Str', '<s:message code="condition.size.all"/>', 80, 'left', false, 'nomal', null, {sortField:'size'});
+	grid.colAdd('size', '<s:message code="condition.size.all"/>', 80, 'left', false, 'nomal', null, {sortField:'size'});
 	grid.colAdd('body_sizeStr', '<s:message code="condition.size.body"/>', 80, 'left', false, 'nomal', null, {sortField:'body_size'});
 	grid.colAdd('attach_sizeStr', '<s:message code="condition.size.attach"/>', 80, 'left', false, 'nomal', null, {sortField:'attachSizeSort'});
 	grid.colAdd('kwd_kwds', '<s:message code="condition.keyword"/>', 120, 'left', false, 'nomal');
-	grid.colAdd('pi_kwds', '<s:message code="condition.regexp"/>', 70, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
+	grid.colAdd('pi_id', '<s:message code="condition.regexp"/>', 70, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
 		if (value == '0') return '';
 		else return value;
 	});

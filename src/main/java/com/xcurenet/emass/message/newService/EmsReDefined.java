@@ -63,19 +63,22 @@ public class EmsReDefined {
 		}
 	}
 
+	/*################## 화면표시용 재빌드 ############################################################## */
 	public List<EmassResponse> reDefined(String adminId, List<ConfigAdminVO> conf) throws IOException {
 		String bodysnippetVal = "N";
 		String summaryVal = "Y";
-		for (int i = 0; i < conf.size(); i++) {
-			if (conf.get(i).getConfId().equals("body.snippet.sum.use")) bodysnippetVal = conf.get(i).getVal();
-			else if (conf.get(i).getConfId().equals("toccbcc.sum.use")) summaryVal = conf.get(i).getVal();
-		}
 
+		/* 나중 구현 예정 */
+//		for (int i = 0; i < conf.size(); i++) {
+//			if (conf.get(i).getConfId().equals("body.snippet.sum.use")) bodysnippetVal = conf.get(i).getVal();
+//			else if (conf.get(i).getConfId().equals("toccbcc.sum.use")) summaryVal = conf.get(i).getVal();
+//		}
 		EmassResponse emassResponse = null;
 		for (int i = 0; i < emass.size(); i++) {
 			emassResponse = new EmassResponse();
 			Emass ems = emass.get(i);
 
+			/* 첨부파일 관련 ####################### */
 			/*  첨부파일 총 크기 계산   */
 			Long fileSize = 0L;
 			if (!Common.isEmpty(ems.getAttach())) {
@@ -84,15 +87,15 @@ public class EmsReDefined {
 				}
 			}
 			String totalAttachFileSize = Common.convertFileSize(fileSize);
-
-			emassResponse.setKey(Common.nvl(ems.getKey()));
-			emassResponse.setSize(Common.convertFileSize(ems.getSize()));
-			emassResponse.setAllOfUs(Common.nvl(ems.getAllOfUs()));
-
 			emassResponse.setAttach_sizeStr(totalAttachFileSize);
 			emassResponse.setAttachCnt(Common.nvs(ems.getAttachCnt()));
 			emassResponse.setAttachExistCnt(Common.nvs(ems.getAttachExistCnt()));
+			emassResponse.setAttached(ems.getAttached());
 
+
+			/* 문서 관련 ####################### */
+			emassResponse.setMsgid(Common.nvl(ems.getMsgid()));
+			emassResponse.setSize(Common.convertFileSize(ems.getSize()));
 			if (!Common.isEmpty(ems.getBody())) {
 				emassResponse.setBody_size(ems.getBody().getSize());
 				if (bodysnippetVal.equals("Y"))
@@ -100,15 +103,51 @@ public class EmsReDefined {
 				else emassResponse.setBody_snippet("");
 			}
 
+
 			emassResponse.setCtime(Common.nvl(ems.getCtime()));
+			emassResponse.setCtime(ems.getCtime());
+			if(!Common.isEmpty(ems.getCtime())){
+				emassResponse.setCtimeYYYYMMDD(ems.getCtime().substring(0,9));
+				emassResponse.setCtimeYYYYMMDDHH(ems.getCtime());
+				emassResponse.setCtimeYYYYMM(ems.getCtime().substring(0,7));
+				emassResponse.setCtimeYYYYMM(ems.getCtime().substring(0,5));
+			}
+
 			emassResponse.setDirection(Common.nvl(ems.getDirection()));
 			emassResponse.setDirectionSvc(Common.nvl(ems.getDirectionSvc()));
+			emassResponse.setAllOfUs(reAllofUs(ems.getAllOfUs(),Common.getLocale()));  // 수신자 구분
+			emassResponse.setPi_CN(ems.getPiCN());
+			emassResponse.setPi_FN(ems.getPiFN());
+			emassResponse.setPi_DN(ems.getPiDN());
+			emassResponse.setPiEF(ems.getPiEF());
+			emassResponse.setPi_PN(ems.getPiPN());
+			emassResponse.setPi_SN(ems.getPiSN());
+			emassResponse.setPiTotal(ems.getPiTotal());
+			emassResponse.setUsrId(ems.getUsrId());
 
+			emassResponse.setSubject(reSubject(ems));
+			emassResponse.setXrootMtr(ems.getXrootMtr());
+			emassResponse.setXmsgKey(ems.getXmsgKey());
+			emassResponse.setOpinion(ems.getOpinion());
+			emassResponse.setXparentMtr(ems.getXparentMtr());
+
+			emassResponse.setPassword(ems.getPassword());
+			emassResponse.setSiteAttr(ems.getSiteAttr());
+			emassResponse.setSiteCode(ems.getSiteCode());
+			emassResponse.setEpHeader(ems.getEpHeader());
+			emassResponse.setEpmsgType(ems.getEpmsgType());
+			if (!Common.isEmpty(ems.getUser()) && !Common.isEmpty(ems.getNetwork()) && !Common.isEmpty(ems.getService())) {
+				emassResponse.setService_svc_Nm(reSvcNm(ems.getService().getSvc(), ems.getNetwork().getProtocol()));
+			}
+
+			/* HTTP 관련 ####################### */
 			if (!Common.isEmpty(ems.getHttp())) {
 				emassResponse.setHttp_path(Common.nvl(ems.getHttp().getPath()));
 				emassResponse.setHttp_query(Common.nvl(ems.getHttp().getQuery()));
 				emassResponse.setHttp_host(Common.nvl(ems.getHttp().getHost()));
 			}
+
+			/* 키워드 관련 ####################### */
 
 			if (!Common.isEmpty(ems.getKwdInfo())) {
 				emassResponse.setKwdInfo_kwdsAttach(ems.getKwdInfo().getKwdsAttach());
@@ -119,8 +158,7 @@ public class EmsReDefined {
 				emassResponse.setKwdInfo_kwdsSubject(ems.getKwdInfo().getKwdsSubject());
 			}
 
-			emassResponse.setLtime(ems.getLtime());
-
+			/* Sender 관련 ####################### */
 
 			if (!Common.isEmpty(ems.getSender())) {
 				emassResponse.setSender_alias(ems.getSender().getAlias());
@@ -143,17 +181,25 @@ public class EmsReDefined {
 				emassResponse.setSender_inside(ems.getSender().getInside());
 			}
 
+			/* RECV 관련 ####################### */
+
 			if (!Common.isEmpty(ems.getRecv())) {
 				if (!Common.isEmpty(ems.getRecv().getTo())) {
-					emassResponse.setTo(ems.getRecv().getTo());
+					List<String> toList = ems.getRecv().getTo().stream().map(m -> m.getId()).collect(Collectors.toList());
+					emassResponse.setTo(reToccBcc(toList, summaryVal));
 				}
 				if (!Common.isEmpty(ems.getRecv().getCc())) {
-					emassResponse.setCc(ems.getRecv().getCc());
+					List<String> ccList = ems.getRecv().getCc().stream().map(m -> m.getId()).collect(Collectors.toList());
+					emassResponse.setCc(reToccBcc(ccList, summaryVal));
 				}
 				if (!Common.isEmpty(ems.getRecv().getBcc())) {
-					emassResponse.setBcc(ems.getRecv().getBcc());
+					List<String> bccList = ems.getRecv().getBcc().stream().map(m -> m.getId()).collect(Collectors.toList());
+					emassResponse.setCc(reToccBcc(bccList, summaryVal));
 				}
+
 			}
+
+			/* ML 관련 ####################### */
 
 			if (!Common.isEmpty(ems.getMl())) {
 				emassResponse.setMl_mlConfdClass(ems.getMl().getMlConfdClass());
@@ -161,6 +207,7 @@ public class EmsReDefined {
 				emassResponse.setMl_mlConfdProb(ems.getMl().getMlConfdProb());
 			}
 
+			/* NetWork 관련 ####################### */
 			if (!Common.isEmpty(ems.getNetwork())) {
 				emassResponse.setNetwork_srcIp(ems.getNetwork().getSrcIp());
 				emassResponse.setNetwork_srcPort(ems.getNetwork().getSrcPort());
@@ -170,17 +217,7 @@ public class EmsReDefined {
 				emassResponse.setNetwork_cid(ems.getNetwork().getCid());
 			}
 
-
-			emassResponse.setPi_CN(ems.getPiCN());
-			emassResponse.setPi_FN(ems.getPiFN());
-			emassResponse.setPi_DN(ems.getPiDN());
-			emassResponse.setPiEF(ems.getPiEF());
-			emassResponse.setPi_PN(ems.getPiPN());
-			emassResponse.setPi_SN(ems.getPiSN());
-			emassResponse.setPiTotal(ems.getPiTotal());
-			emassResponse.setUsrId(ems.getUsrId());
-
-
+			/* Pi 관련 ####################### */
 			if (!Common.isEmpty(ems.getPi())) {
 				for (PiVo_Els piVoEls : ems.getPi()) {
 					emassResponse.setPi_id(piVoEls.getId());
@@ -192,6 +229,7 @@ public class EmsReDefined {
 
 			}
 
+			/* Serivce 관련 ####################### */
 			if (!Common.isEmpty(ems.getService())) {
 				emassResponse.setService_svc(ems.getService().getSvc());
 				emassResponse.setService_svc1(ems.getService().getSvc1());
@@ -201,6 +239,7 @@ public class EmsReDefined {
 
 			}
 
+			/* USER 관련 ####################### */
 			if (!Common.isEmpty(ems.getUser())) {
 				emassResponse.setUser_id(ems.getUser().getId());
 				emassResponse.setUser_name(ems.getUser().getName());
@@ -223,51 +262,12 @@ public class EmsReDefined {
 			}
 
 
-			emassResponse.setCtime(ems.getCtime());
-			emassResponse.setCtimeYYYYMMDD(ems.getCtimeYYYYMMDD());
-			emassResponse.setCtimeYYYYMMDDHH("2023111509");
-			emassResponse.setCtimeYYYYMM(ems.getCtimeYYYYMM());
-			emassResponse.setCtimeYYYY(ems.getCtimeYYYY());
-			emassResponse.setSubject(reSubject(ems));
-			emassResponse.setXrootMtr(ems.getXrootMtr());
-			emassResponse.setXmsgKey(ems.getXmsgKey());
-			emassResponse.setOpinion(ems.getOpinion());
-			emassResponse.setXparentMtr(ems.getXparentMtr());
-
-			emassResponse.setPassword(ems.getPassword());
-			emassResponse.setSiteAttr(ems.getSiteAttr());
-			emassResponse.setAttached(ems.getAttached());
-			emassResponse.setSiteCode(ems.getSiteCode());
-			emassResponse.setEpHeader(ems.getEpHeader());
-			emassResponse.setEpmsgType(ems.getEpmsgType());
-
-			if (!Common.isEmpty(ems.getUser()) && !Common.isEmpty(ems.getNetwork()) && !Common.isEmpty(ems.getService())) {
-				emassResponse.setService_svc_Nm(reSvcNm(ems.getService().getSvc(), ems.getNetwork().getProtocol()));
-			}
-
-
 			/* 스니펫 관련 주석 */
-
 
 			/* 임시 주석 */
 //			ems.setSenderOrig(edc.getSender()); 	// 변환되기전 sender를 가진다.
 //			edc.setSender(reSender(Common.nvl(edc.getSender()), Common.nvl(edc.getSname()), Common.nvl(edc.getSrcip()), Common.nvl(edc.getUsr_ip())));
 
-			/* 임시 주석 */
-
-//			if(Common.isNotEmpty(edc.getRecvs())) {
-////				if(summaryVal.equals("Y") && edc.getRecvs().size() > 5) {
-////					edc.setRecvsStr(checkInOut(edc.getRecvs()) + edc.getRecvs().get(0).toString() + " " + Prop.propFormat("condition.view.type8") + " " + (edc.getRecvs().size() - 1) + " " + Prop.propFormat("condition.view.type9"));
-////				} else {
-////					edc.setRecvsStr(checkInOut(edc.getRecvs()) + String.join(",", edc.getRecvs()));
-////				}
-//				edc.setRecvsStr(reRecvs(edc.getRecvs(), summaryVal));
-//			} else edc.setRecvsStr("");
-//
-//			if(Common.isNotEmpty(edc.getTo())) edc.setTo(reToccBcc(edc.getTo(), summaryVal));
-//			if(Common.isNotEmpty(edc.getCc())) edc.setCc(reToccBcc(edc.getCc(), summaryVal));
-//			if(Common.isNotEmpty(edc.getBcc())) edc.setBcc(reToccBcc(edc.getBcc(), summaryVal));
-//
 
 			emassRes.add(i, emassResponse);
 		}
@@ -329,7 +329,7 @@ public class EmsReDefined {
 		else if (Common.isEquals(allofus, "PA")) result = Prop.propFormat("condition.allofus3", locale);
 		else if (Common.isEquals(allofus, "SO")) result = Prop.propFormat("condition.allofus13", locale);
 		else if (Common.isEquals(allofus, "SI")) result = Prop.propFormat("condition.allofus14", locale);
-		return allofus;
+		return result;
 	}
 
 

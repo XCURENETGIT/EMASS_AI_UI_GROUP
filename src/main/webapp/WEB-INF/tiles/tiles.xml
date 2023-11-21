@@ -8,7 +8,7 @@
     <!-- common -->
     <!-- default layout-->
 
-<!--    <definition name="defaultLayout" template="/WEB-INF/layout/defaultLayout.jsp">-->
+<!--    <definition name="oldLayout" template="/WEB-INF/layout/defaultLayout.jsp">-->
 <!--        <put-attribute name="baseCss" value="/WEB-INF/fragments/baseCss.jsp" />-->
 <!--        <put-attribute name="baseJs" value="/WEB-INF/fragments/baseJs.jsp" />-->
 <!--        <put-attribute name="top" value="/WEB-INF/fragments/top.jsp" />-->
@@ -39,10 +39,10 @@
     <put-attribute name="body" value="" />
     </definition>
 
-
-    <definition name="/uacs/filter/filterInfo" extends="defaultLayout">
-        <put-attribute name="body" value="/WEB-INF/views/uacs/filter/filterInfo.jsp" />
-    </definition>
+<!--    &lt;!&ndash;테스트용임 &ndash;&gt;-->
+<!--    <definition name="/uacs/filter/filterInfo" extends="defaultLayout">-->
+<!--        <put-attribute name="body" value="/WEB-INF/views/uacs/filter/filterInfo.jsp" />-->
+<!--    </definition>-->
 
 
     <!-- 로그인 관련 layout 적용 제외-->
@@ -72,7 +72,6 @@
     <definition name="/*/*/*.popup" extends="popupLayout">
         <put-attribute name="body" value="/WEB-INF/views/{1}/{2}/{3}.jsp" />
     </definition>
-
 
 
 

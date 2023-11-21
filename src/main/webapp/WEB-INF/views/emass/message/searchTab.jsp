@@ -77,16 +77,16 @@
                             <option value="ocr_attach">OCR</option>
                             <%} %>
                             <option value="http.host">Host</option>
-                            <option value="filePath">Path</option>
+                            <option value="http.path">Path</option>
                             <option value="network.srcip"><s:message code="condition.source"/> IP</option>
                             <option value="network.dstip"><s:message code="condition.destination"/> IP</option>
-                            <option value="mail.sender.email"><s:message code="condition.sender"/></option>
-                            <option value="mail.sender.name"><s:message code="condition.sender_name"/></option>
-                            <option value="mail.to.email,mail.cc.email,mail.bcc.email"><s:message code="condition.recv"/></option>
-                            <option value="mail.to.name,mail.cc.name,mail.bcc.name"><s:message code="condition.recv_name"/></option>
-                            <option value="mail.to.name"><s:message code="condition.recv"/>(<s:message code="condition.to"/>)</option>
-                            <option value="mail.cc.name "><s:message code="condition.recv"/>(<s:message code="condition.cc"/>)</option>
-                            <option value="mail.bcc.name "><s:message code="condition.recv"/>(<s:message code="condition.bcc"/>)</option>
+                            <option value="sender.email"><s:message code="condition.sender"/></option>
+                            <option value="sender.name"><s:message code="condition.sender_name"/></option>
+                            <option value="recv.to.email,recv.cc.email,recv.bcc.email"><s:message code="condition.recv"/></option>
+                            <option value="recv.to.name,recv.cc.name,recv.bcc.name"><s:message code="condition.recv_name"/></option>
+                            <option value="recv.to.name"><s:message code="condition.recv"/>(<s:message code="condition.to"/>)</option>
+                            <option value="recv.cc.name "><s:message code="condition.recv"/>(<s:message code="condition.cc"/>)</option>
+                            <option value="recv.bcc.name "><s:message code="condition.recv"/>(<s:message code="condition.bcc"/>)</option>
                             <option value="user.name,user.id"><s:message code="common.org.user"/></option>
                             <option value="user.id"><s:message code="common.msg.account"/></option>
 

@@ -997,7 +997,7 @@ function getMessage(id, search, bodySize, kHighlight, hostQueryUse){
 	window.getSelection().removeAllRanges();
 	
 	bodySize_str = bodySize;
-	_id = id;
+	msgid = id;
 	searchkey = search;
 
 	if(kHighlight != undefined) keywordHighlight = kHighlight;
@@ -1005,7 +1005,7 @@ function getMessage(id, search, bodySize, kHighlight, hostQueryUse){
 	
 	ui.get({
 		url : 'getEmassMessageNew.xcn',
-		_id : _id,
+		msgid : msgid,
 		success : function(data, total) {
 			setRead(data); //읽음 여부 처리
 			setMessage(data);

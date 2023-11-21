@@ -146,7 +146,7 @@ var mainContext = "<%=context%>";
         }
     }
 
-    /* 임시 마우스 오버 ..*/
+    /*  마우스 오버 */
     $(document).on("mouseover", "a[menuClick]", function(){
         $(this).attr('class','active');
     });

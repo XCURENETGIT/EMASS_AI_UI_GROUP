@@ -2,6 +2,7 @@ package com.xcurenet.emass.message.service;
 
 import com.xcurenet.code.service.CodeVO;
 import com.xcurenet.emass.message.vo.emass.mongo.EmassMessage;
+import com.xcurenet.emass.message.vo.emass.mongo.fields.CheckedVo_Mgo;
 import org.apache.commons.mail.EmailException;
 
 import java.util.List;
@@ -99,6 +100,10 @@ public interface EmsMessageService {
 
 	List<CodeVO> getNoteList();
 
-	/* 임시 맵핑 */
-	EmassMessage tempMapping(Map<String,Object> test);
+	/* 개봉 정보 */
+	boolean readDoc(String msgId, CheckedVo_Mgo checkedVoMgo);
+
+
+
+
 }

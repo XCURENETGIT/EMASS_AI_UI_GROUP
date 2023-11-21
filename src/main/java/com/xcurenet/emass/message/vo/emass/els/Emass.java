@@ -19,22 +19,12 @@ import java.util.List;
  */
 public class Emass {
 
-	@JsonProperty("key")
-	private String	key;//	엘라스틱서치 아이디
+	@JsonProperty("msgid")
+	private String	msgid;//	엘라스틱서치 아이디
 	@JsonProperty("ltime")
 	private String	ltime;	//로깅타임
 	@JsonProperty("ctime")
 	private String	ctime;	//캡쳐타임
-	@JsonProperty("ctimeYYYY")
-	private String	ctimeYYYY;	//ctime 연도
-	@JsonProperty("ctimeYYYYMM")
-	private String	ctimeYYYYMM;//	ctime 연월
-	@JsonProperty("ctimeYYYYMMDD")
-	private String	ctimeYYYYMMDD;	//ctime 연월일
-	@JsonProperty("ctimeYYYYMMDDHH")
-	private String	ctimeYYYYMMDDHH;//	ctime 연월일시
-	@JsonProperty("ctimeHH")
-	private String	ctimeHH;//	ctime 시간
 	@JsonProperty("subject")
 	private String	subject;//	제목
 	@JsonProperty("attached")

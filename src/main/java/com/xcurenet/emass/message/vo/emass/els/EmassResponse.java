@@ -1,7 +1,6 @@
 package com.xcurenet.emass.message.vo.emass.els;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.xcurenet.emass.message.vo.emass.els.fields.ComProperties_Els;
 import lombok.Data;
 
 import javax.annotation.Nullable;
@@ -16,7 +15,7 @@ import java.util.List;
  */
 public class EmassResponse {
 
-	private String	key; //	엘라스틱서치 아이디
+	private String	msgid; //	엘라스틱서치 아이디
 	private String	ltime; //	로깅타임
 	private String	ctime; //	캡쳐타임
 	private String	ctimeYYYY; //	ctime 연도
@@ -172,9 +171,9 @@ public class EmassResponse {
 	private String	sender_ceo;  //	CEO 여부
 	private String	sender_inside;  //	내부/외부 구분
 
-	private List<ComProperties_Els> to;
-	private List<ComProperties_Els> cc;
-	private List<ComProperties_Els> bcc;
+	private List<String> to; // 수신자
+	private List<String> cc; // 참조자
+	private List<String> bcc; // 비밀참조자
 
 	private String	checked_readId; //	메시지 개봉 운용자 아이디
 	private Date checked_readDate; //	메시지 개봉 운용자 아이디

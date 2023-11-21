@@ -6,6 +6,7 @@ import com.xcurenet.emass.message.service.impl.parseJsonFile;
 import com.xcurenet.emass.message.vo.emass.EmassIntegrated;
 import com.xcurenet.emass.message.vo.emass.els.Emass;
 import com.xcurenet.emass.message.vo.emass.els.EmassChecked;
+import com.xcurenet.emass.message.vo.emass.mongo.fields.CheckedVo_Mgo;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 
@@ -17,7 +18,7 @@ public interface EmsSearchService {
 
 	 SearchResponse getList(SearchRequest searchRequest) throws IOException;
 
-	 void updateDocument(EmassChecked checked) throws IOException;
+	 boolean readDoc(String updateDocument, CheckedVo_Mgo checkedVoMgo) throws IOException;
 
 	 EmassIntegrated getEmassMessage(final Map<String,Object> searchParam, final String adminId) throws IOException;
 
@@ -44,7 +45,7 @@ public interface EmsSearchService {
 
 	 List<Emass> findReadList(final List<Emass> emass, final String adminId) throws IOException;
 
-	 void setRead(final EmassChecked checked);
+	 void setRead(final String msgid,final String userId);
 
 	 boolean setMessengerRead(List<Emass> data, String adminId);
 

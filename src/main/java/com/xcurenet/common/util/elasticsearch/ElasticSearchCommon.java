@@ -3,6 +3,7 @@ package com.xcurenet.common.util.elasticsearch;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -16,14 +17,12 @@ import java.util.Map;
 public class ElasticSearchCommon {
 
     /* EMASS INDEX */
-    public static final String EDC_MESSAGE_INDEX = "ems_edc_message_202311*";   //ems_edc_message
+    public static final String EDC_MESSAGE_INDEX = "ems_edc_message*";   //ems_edc_message
     public static final String EDC_MESSAGE_SEARCH_HIST_INDEX = "ems_search_history*";
 
     /* ELASTIC SEARCH DOCUMENT UPDATE BY QUERY 관련 */
     public static final String READER_CREATE = "ctx._source.reader = new ArrayList()";
     public static final String READER_ADD = "ctx._source.reader.add(params)";
-
-
 
 
     /*검색타입*/
@@ -55,7 +54,7 @@ public class ElasticSearchCommon {
     public static final String NOT_QUERY = "NOT";
 
     /* 필드 관련 */
-    public static final String _ID = "_id";    //메시지ID
+    public static final String MSGID = "msgid";    //메시지ID
     public static final String LTIME = "ltime";    //로깅타임
     public static final String CTIME = "ctime";    //캡쳐타임
     public static final String SUBJECT = "subject";  //제목
@@ -73,10 +72,6 @@ public class ElasticSearchCommon {
     public static final String PASSWORD = "password";  //비밀번호
     public static final String SITEATTR = "siteattr";  //
     public static final String ATTACHED = "attached";  //첨부파일 여부
-    public static final String CTIMEYYYY = "ctimeyyyy";  //ctime 연도
-    public static final String CTIMEYYYYMM = "ctimeyyyymm";  //ctime 연월
-    public static final String CTIMEYYYYMMDD = "ctimeyyyymmdd";  //ctime 연월일
-    public static final String CTIMEYYYYMMDDHH = "ctimeyyyymmddhh";  //ctime 연월일시
     public static final String DEVWRITER = "devwriter";  //
     public static final String DEVDECODER = "devdecoder";  //
     public static final String SITECD = "sitecd";  //
@@ -199,33 +194,100 @@ public class ElasticSearchCommon {
     public static final String ML_MLCONFDFEEDBACK = "ml.mlconfdfeedback"; //	AiHR 인덱스 피드백
     public static final String ML_MLCONFDPROB = "ml.mlconfdprob"; //	AiHR 인덱스 결과 확률
 
-    // mail
-    public static final String  MAIL_SENDER_ALIAS = "mail.sender.alias"; //	발신자 별칭
-    public static final String  MAIL_SENDER_ID = "mail.sender.id"; //	발신자 ID
-    public static final String  MAIL_SENDER_NAME = "mail.sender.name"; //	발신자 이름
-    public static final String  MAIL_SENDER_EMAIL = "mail.sender.email"; //	발신자 MAIL
-    
-    public static final String  MAIL_TO_ALIAS = "mail.to.alias"; //	수신자 별칭
-    public static final String  MAIL_TO_ID = "mail.to.id"; //	수신자 id
-    public static final String  MAIL_TO_NAME = "mail.to.name"; //	수신자 이름
-    public static final String  MAIL_TO_EMAIL = "mail.to.email"; //	수신자 이메일
 
-    public static final String  MAIL_CC_ALIAS = "mail.cc.alias"; // 	참조 별칭
-    public static final String  MAIL_CC_ID = "mail.cc.id";	 // 참조 id
-    public static final String  MAIL_CC_NAME = "mail.cc.name";	 // 참조 이름
-    public static final String  MAIL_CC_EMAIL = "mail.cc.email"; // 참조 이메일
+    // 발신자
+    private static final String SENDER_ALIAS = "sender.alias";   //		발신자 별칭
+    private static final String SENDER_ID = "sender.id";   //		발신자 ID
+    private static final String SENDER_USERID = "sender.userid";   //		발신자 아이디(인사연동)
+    private static final String SENDER_NAME = "sender.name";   //		발신자 이름(인사연동)
+    private static final String SENDER_EMAIL = "sender.email";   //		발신자 이메일 (인사연동)
+    private static final String SENDER_IP = "sender.ip";   //		발신자 아이피
+    private static final String SENDER_COCD = "sender.cocd";   //		회사코드
+    private static final String SENDER_CONM = "sender.conm";   //		회사명
+    private static final String SENDER_BUSICD = "sender.busicd";   //		사업장 코드
+    private static final String SENDER_BUSINM = "sender.businm";   //		사업장명
+    private static final String SENDER_SUBORGCD = "sender.suborgcd";   //		총괄코드
+    private static final String SENDER_SUBORGNM = "sender.suborgnm";   //		총괄명
+    private static final String SENDER_DEPTCD = "sender.deptcd";   //		부서코드
+    private static final String SENDER_DEPTNM = "sender.deptnm";   //		부서명
+    private static final String SENDER_JIKGUBCD = "sender.jikgubcd";   //		직급코드
+    private static final String SENDER_JIKGUBNM = "sender.jikgubnm";   //		직급명
+    private static final String SENDER_CEO = "sender.ceo";   //		CEO 여부
+    private static final String SENDER_INSIDE = "sender.inside";   //		내부/외부 구분
 
-    public static final String  MAIL_BCC_ALIAS = "mail.bcc.alias";	 //숨긴참조 별칭
-    public static final String  MAIL_BCC_ID = "mail.bcc.id"; //	숨긴참조 id
-    public static final String  MAIL_BCC_NAME = "mail.bcc.name"; //	숨긴참조 이름
-    public static final String  MAIL_BCC_EMAIL = "mail.bcc.email";	 //숨긴참조 이메일
+    /* 수신자 */
+    private static final String RECV_TO_ALIAS = "recv.to.alias";    //		수신자 별칭
+    private static final String RECV_TO_ID = "recv.to.id"; 	       //	수신자 id
+    private static final String RECV_TO_USERID = "recv.to.userid";  //		수신자 아이디 (인사연동)
+    private static final String RECV_TO_NAME = "recv.to.name"; 	   //	수신자 이름 (인사연동)
+    private static final String RECV_TO_EMAIL = "recv.to.email";    //		수신자 이메일 (인사연동)
+    private static final String RECV_TO_IP = "recv.to.ip" ;		   // 수신자 아이피
+    private static final String RECV_TO_COCD = "recv.to.cocd"; 	     //	회사코드
+    private static final String RECV_TO_CONM = "recv.to.conm"; 	    //	회사명
+    private static final String RECV_TO_BUSICD = "recv.to.busicd";  // 	사업장 코드
+    private static final String RECV_TO_BUSINM = "recv.to.businm";  //	사업장명
+    private static final String RECV_TO_SUBORGCD = "recv.to.suborgcd";  // 	총괄코드
+    private static final String RECV_TO_SUBORGNM = "recv.to.suborgnm";  // 	총괄명
+    private static final String RECV_TO_DEPTCD = "recv.to.deptcd";      //  	부서코드
+    private static final String RECV_TO_DEPTNM = "recv.to.deptnm";      //  	부서명
+    private static final String RECV_TO_JIKGUBCD = "recv.to.jikgubcd";      // 	직급코드
+    private static final String RECV_TO_JIKGUBNM = "recv.to.jikgubnm";  // 	직급명
+    private static final String RECV_TO_CEO = "recv.to.ceo" ;       //	CEO 여부
+    private static final String RECV_TO_INSIDE = "recv.to.inside"; // 	내부/외부 구분
+
+    /* 참조자 */
+    private static final String RECV_CC_ALIAS = "recv.cc.alias";    //		참조자 별칭
+    private static final String RECV_CC_ID = "recv.cc.id"; 	       //	참조자 id
+    private static final String RECV_CC_USERID = "recv.cc.userid";  //		참조자 아이디 (인사연동)
+    private static final String RECV_CC_NAME = "recv.cc.name"; 	   //	참조자 이름 (인사연동)
+    private static final String RECV_CC_EMAIL = "recv.cc.email";    //		참조자 이메일 (인사연동)
+    private static final String RECV_CC_IP = "recv.cc.ip" ;		   // 참조자 아이피
+    private static final String RECV_CC_COCD = "recv.cc.cocd"; 	     //	회사코드
+    private static final String RECV_CC_CONM = "recv.cc.conm"; 	    //	회사명
+    private static final String RECV_CC_BUSICD = "recv.cc.busicd";  // 	사업장 코드
+    private static final String RECV_CC_BUSINM = "recv.cc.businm";  //	사업장명
+    private static final String RECV_CC_SUBORGCD = "recv.cc.suborgcd";  // 	총괄코드
+    private static final String RECV_CC_SUBORGNM = "recv.cc.suborgnm";  // 	총괄명
+    private static final String RECV_CC_DEPTCD = "recv.cc.deptcd";      //  	부서코드
+    private static final String RECV_CC_DEPTNM = "recv.cc.deptnm";      //  	부서명
+    private static final String RECV_CC_JIKGUBCD = "recv.cc.jikgubcd";      // 	직급코드
+    private static final String RECV_CC_JIKGUBNM = "recv.cc.jikgubnm";  // 	직급명
+    private static final String RECV_CC_CEO = "recv.cc.ceo" ;       //	CEO 여부
+    private static final String RECV_CC_INSIDE = "recv.cc.inside"; // 	내부/외부 구분
+
+
+    /* 비밀참조자 */
+    private static final String RECV_BCC_ALIAS = "recv.bcc.alias";    //		비밀참조자 별칭
+    private static final String RECV_BCC_ID = "recv.bcc.id"; 	       //	비밀참조자 id
+    private static final String RECV_BCC_USERID = "recv.bcc.userid";  //		비밀참조자 아이디 (인사연동)
+    private static final String RECV_BCC_NAME = "recv.bcc.name"; 	   //	비밀참조자 이름 (인사연동)
+    private static final String RECV_BCC_EMAIL = "recv.bcc.email";    //		비밀참조자 이메일 (인사연동)
+    private static final String RECV_BCC_IP = "recv.bcc.ip" ;		   // 비밀참조자 아이피
+    private static final String RECV_BCC_COCD = "recv.bcc.cocd"; 	     //	회사코드
+    private static final String RECV_BCC_CONM = "recv.bcc.conm"; 	    //	회사명
+    private static final String RECV_BCC_BUSICD = "recv.bcc.busicd";  // 	사업장 코드
+    private static final String RECV_BCC_BUSINM = "recv.bcc.businm";  //	사업장명
+    private static final String RECV_BCC_SUBORGCD = "recv.bcc.suborgcd";  // 	총괄코드
+    private static final String RECV_BCC_SUBORGNM = "recv.bcc.suborgnm";  // 	총괄명
+    private static final String RECV_BCC_DEPTCD = "recv.bcc.deptcd";      //  	부서코드
+    private static final String RECV_BCC_DEPTNM = "recv.bcc.deptnm";      //  	부서명
+    private static final String RECV_BCC_JIKGUBCD = "recv.bcc.jikgubcd";      // 	직급코드
+    private static final String RECV_BCC_JIKGUBNM = "recv.bcc.jikgubnm";  // 	직급명
+    private static final String RECV_BCC_CEO = "recv.bcc.ceo" ;       //	CEO 여부
+    private static final String RECV_BCC_INSIDE = "recv.bcc.inside"; // 	내부/외부 구분
+
+
+    /* 개봉(읽음) 관련*/
+    public static final String CHECKED_READID  = "checked.readId";	    //메시지 개봉 운용자 아이디
+    public static final String CHECKED_READDATE  = "checked.readDate";  //메시지 개봉 날짜
 
 
     /* 기타 */
-    public static final String[] RECEIVERS = {"mail.to.name","mail.cc.name","mail.bcc.name","network.dstip"}; // 수신자들
-    public static final String[] SENDER = {"mail.sender.name", "network.srcip"}; //발신자
+    public static final String[] RECEIVERS = {"recv.to.name","recv.cc.name","recv.bcc.name","network.dstip"}; // 수신자들
+    public static final String[] SENDER = {"sender.name", "network.srcip"}; //발신자
     public static final String TIME_FORMAT = "common.time.";
 
+    /* 화면 검색시 쓰이는 파라미터 */
     public static final String CTIME_HH = "ctime_hh"; //시간별
     public static final String CTIME_YYYYMM = "ctime_yyyymm"; //월별
     public static final String CTIME_YYYYMMDD = "ctime_yyyymmdd"; //일자별
@@ -238,19 +300,23 @@ public class ElasticSearchCommon {
 
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMddHHmmss");
 
-    //body
-
+    //"body" 주석
     public static String[] SEARCH_FIELD = new String[]{
-            "ltime"	,"ctime", "ctimeYYYY","ctimeYYYYMM",
-            "ctimeYYYYMMDD","ctimeYYYYMMDDHH", "ctimeHH",
-            "subject","attachExistCnt", "attachCnt",
-            "size", "allOfUs", "directionSvc"	, "direction",
-            "xrootMtr","xmsgKey","opinion","xparentMtr",
-            "password","siteAttr","siteCode","attached",
-            "epmsgType","epHeader","piTotal",
-             "network","attach","kwdInfo","service","http","pi",
-            "user","day","ocr","ml","mail","piPN","piDN","piSN","piCN","piEC","piFN"
-            ,"deptNm","jikgubNm","sender","usrId"
+            "ltime", "ctime",
+            "subject", "attached", "attachExistCnt",
+            "attachCnt", "size", "allOfUs",
+            "directionSvc", "direction", "xrootMtr", "xmsgKey",
+            "xparentMtr", "password", "siteAttr",
+            "siteCode", "epmsgType", "epHeader",
+            "usrId", "usrIp", "opinion",
+            "piTotal", "piDRM", "piID",
+            "piEF", "piPN", "piDN",
+            "piSN", "piCN", "piEC",
+            "piFN","service",
+            "network","attach","kwdInfo",
+            "http","pi","user",
+            "day","ocr","ml",
+            "sender","recv","checked"
     };
 
     /* 화면에서의 (검색 영역) 값 엘라스틱 서치 필드로 치환 */
@@ -267,7 +333,7 @@ public class ElasticSearchCommon {
 
 
     /* String -> LocalDateTime */
-    public static LocalDateTime stringToDate(String dateValue){
+    public static LocalDateTime stringToLocalDateTime(String dateValue){
         LocalDateTime date = null;
            try {
                date = LocalDateTime.parse(dateValue, java.time.format.DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
@@ -278,7 +344,7 @@ public class ElasticSearchCommon {
     }
 
     /* LocalDateTime -> String */
-    public static String dateToString(LocalDateTime localDateTime){
+    public static String localdateTimeToString(LocalDateTime localDateTime){
         String str = null;
         try {
             str = localDateTime.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
@@ -287,6 +353,18 @@ public class ElasticSearchCommon {
         }
         return str;
     }
+    /* String -> Date */
+    public static Date stringToDate(String dateValue){
+        Date date = null;
+        try {
+            date = DATE_FORMAT.parse(dateValue);
+        }catch (DateTimeParseException | ParseException e){
+            e.printStackTrace();
+        }
+        return date;
+    }
+
+
 
     /* Date -> String */
     public static String dateToString(Date date){
