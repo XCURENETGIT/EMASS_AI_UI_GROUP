@@ -21,7 +21,6 @@ import com.xcurenet.emass.consent.web.ConsentFileDownload;
 import com.xcurenet.emass.consent.web.ConsentFileVO;
 import com.xcurenet.emass.message.newService.EmsSearchService;
 import com.xcurenet.emass.message.service.*;
-import com.xcurenet.emass.message.vo.emass.els.EmassChecked;
 import com.xcurenet.emass.message.vo.emass.els.EmassMessenger;
 import com.xcurenet.emass.message.vo.emass.mongo.EmassMessage;
 import com.xcurenet.minio.MinioFileAdapter;
@@ -1287,19 +1286,15 @@ public class EmsMessageController {
 	@Description("EMASS 메시지 정보 조회 (Detail)")
 	@ResponseBody
 	public XcnResponseVO getEmassMessageNew(final HttpServletRequest request, final HttpSession session) throws Exception {
-		String _id = Common.nvl(request.getParameter("_id"));
-		EmassMessage emass = emsMessageService.getEmassMessageNew(Common.getAdminId(request), _id, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
+		String msgid = Common.nvl(request.getParameter("msgid"));
+		String userId = Common.getAdminId(session);
+		EmassMessage emass = emsMessageService.getEmassMessageNew(Common.getAdminId(request), msgid, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
 
-		/* 읽음 테스트*/
-		EmassChecked checked = new EmassChecked();
-		checked.setUser_id(Common.getAdminId(session));
-		checked.set_id(_id);
-		emsSearchService.setRead(checked);
-
-		/* 읽었을시 */
-//		if (emass != null && emass.isConsentFlag()) {
-//
-//		}
+		emsSearchService.setRead(msgid,userId);
+		/* 읽음 처리 */
+	//	if (emass != null && emass.isConsentFlag()) {
+	//		emsSearchService.setRead(msgid,userId);
+	//	}
 
 		return new XcnResponseVO(XcnRspCode.OK, emass);
 	}
@@ -1620,20 +1615,10 @@ public class EmsMessageController {
 	@Description("메시지 읽음 여부 처리")
 	@ResponseBody
 	public XcnResponseVO setRead(final HttpServletRequest request, final HttpSession session) throws Exception {
-		EmassChecked checked = new EmassChecked();
+		String msgid = Common.nvl(request.getParameter("msgid"));
+		String userId = Common.getAdminId(session);
+		emsSearchService.setRead(msgid,userId);
 
-		checked.set_id(Common.nvl(request.getParameter("_id")));
-		checked.setUser_id(Common.getAdminId(session));
-		checked.setCtime(Common.nvl(request.getParameter("ctime")));
-		checked.setCtime_yyyymmdd(Common.nvl(request.getParameter("ctime_yyyymmdd")));
-		checked.setCtime_yyyymm(Common.nvl(request.getParameter("ctime_yyyymm")));
-		checked.setCtime_yyyy(Common.nvl(request.getParameter("ctime_yyyy")));
-		checked.setCtime_hh(Common.nvl(request.getParameter("ctime_hh")));
-		checked.setUser_busiCd(Common.nvl(request.getParameter("busiCd")));
-		checked.setUser_ipBusiCd(Common.nvl(request.getParameter("ipBusicd")));
-		checked.setService_svc(Common.nvl(request.getParameter("svc")));
-
-		emsSearchService.setRead(checked);
 		return new XcnResponseVO(XcnRspCode.OK);
 	}
 
