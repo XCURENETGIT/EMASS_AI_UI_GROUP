@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -58,11 +59,11 @@ public class EmsSearchServiceImpl implements EmsSearchService {
     @Resource
     private ConfigAdminService configAdminService;
 
-    @Value("${kafka.checked.index}")
-    private String kafkaCheckedIdx;
-
     @Resource
     EmsMessageService messageService; // mongoDb
+
+    @Value("${kafka.checked.index}")
+    private String kafkaCheckedIdx;
 
     /* client */
     private final RestHighLevelClient client = new ElasticSearchConnection().getElasticSearchClient();
@@ -86,8 +87,8 @@ public class EmsSearchServiceImpl implements EmsSearchService {
     public boolean readDoc(String msgId, CheckedVo_Mgo checkedVoMgo)  {
         boolean isProc = messageService.readDoc(msgId,checkedVoMgo); // 운용자 읽음 처리
         if(isProc) { // 읽음 처리 작업 완료시
-         //   kafkaProducerService.send(kafkaCheckedIdx,"_id",msgId);
-            log.info("[UPDATE_RESULT] 읽음 처리 완료 {}",getServerTime());
+            kafkaProducerService.send(kafkaCheckedIdx,"_id",msgId);
+            //log.info("[UPDATE_RESULT] 읽음 처리 완료 {}",getServerTime());
         }
         return isProc;
     }
@@ -104,17 +105,7 @@ public class EmsSearchServiceImpl implements EmsSearchService {
     public EmassIntegrated getEmassMessage(Map<String,Object> searchParam, String adminId, String readYn, String consentNo) throws IOException {
         EmassIntegrated emassIntegrated = null;
 
-        /*추후 작업예정 =============================================*/
-/*        if (Common.isNotEmpty(readYn) && Common.isNotEmpty(adminId)) {
-            if (Common.isEquals(readYn, "Y")) {
-             //   sq.addFilterQuery(String.format(JOIN_READ, adminId));
-            } else {
-            //   sq.addFilterQuery(String.format(JOIN_UNREAD, adminId));
-            }
-        }*/
-
-        /*추후 작업예정 =============================================*/
-        /* admin snippet */
+        /* 바디 스니펫 사용 설정 불러오기 */
         List<ConfigAdminVO> conf = configAdminService.getConfAdminOption(adminId);
         String bodysnippetVal = "N";
         for (int i = 0; i < conf.size(); i++) {
@@ -123,17 +114,16 @@ public class EmsSearchServiceImpl implements EmsSearchService {
                 break;
             }
         }
-        searchParam.put("bodysnippet", bodysnippetVal);
-        setAuthoritys(searchParam, adminId);
+        searchParam.put(ElasticSearchCommon.BODY_SNIPPET, bodysnippetVal);
+
 
         try {
-
             //쿼리 준비 시작
             SearchSourceBuilder searchSourceBuilder = null;
             switch (Common.nvl(searchParam.get(ElasticSearchCommon.SEARCH_TYPE))) {
                 /* 검색 타입 조건 */
                 case ElasticSearchCommon.SEARCH_TYPE_MESSAGE:  // 메시지 검색시
-                    searchSourceBuilder = elsSearchQueryUtils.initMessageSearchSource(searchParam); // 검색 소스 준비
+                    searchSourceBuilder = elsSearchQueryUtils.initMessageSearchSource(searchParam,adminId); // 검색 소스 준비
                     break;
                 case ElasticSearchCommon.SEARCH_TYPE_STATISTIC: // 통계 검색시
                     searchSourceBuilder = elsSearchQueryUtils.initStatisticSearchSource(searchParam); // 검색 소스 준비
@@ -150,6 +140,7 @@ public class EmsSearchServiceImpl implements EmsSearchService {
             
             // 쿼리 준비 끝
 
+
             /* 검색 진행 */
             SearchRequest searchRequest = new SearchRequest(elsSearchQueryUtils.getElasticSearchParam().getIndices()).source(searchSourceBuilder);
             SearchResponse searchResponse = getList(searchRequest); // getList 수행
@@ -161,7 +152,7 @@ public class EmsSearchServiceImpl implements EmsSearchService {
             emassIntegrated.setEmass(emassResponse);
 
             /* 기타 정보 입력*/
-            String serverTime = getServerTime();
+            String serverTime = getAsiaServerTime();
             emassIntegrated.setSearchTime(serverTime);
             emassIntegrated.setExcuteQuery(elsSearchQueryUtils.getQuery());
 
@@ -184,7 +175,6 @@ public class EmsSearchServiceImpl implements EmsSearchService {
 
     @Override
     public MessengerEdcGroupVO getMessengerGroupList(Map<String, Object> searchParam, String adminId, boolean detail, boolean original) throws IOException {
-        setAuthoritys(searchParam,adminId);
         SearchSourceBuilder searchSourceBuilder = null;
         EmassIntegrated emassIntegrated = null;
 
@@ -249,42 +239,7 @@ public class EmsSearchServiceImpl implements EmsSearchService {
     }
 
 
-    private void setAuthoritys(Map<String,Object> searchParam, String adminId) {
-//        if (Common.isNotEmpty(adminId)) {
-//            String adminType = "S";
-//            if (!Common.isOrEquals(adminId, "*")) {
-//                adminType = adminServiceImpl.getAdmin(adminId).getAdminType();
-//            }
-//
-//            String ceoReadYn = Config.getString("ceo.readyn");
-//
-//            if (Common.isEquals(adminType, "C")) {
-//                sq.addFilterQuery("+ceo:Y");
-//            } else if (!(Common.isEquals(ceoReadYn, "Y") && Common.isEquals(Common.nvl(Config.getFirstAdminYn(adminId), "N"), "Y"))) {
-//                sq.addFilterQuery("-ceo:Y");
-//            }
-//            sq.addFilterQuery("-svc:QEKH");
-//            JSONObject param = new JSONObject();
-//            param.put("adminId", adminId);
-//            param.put("queryType", Config.getString("query.type", "A"));
-//            List<AuthorityVO> authoritys = authorityService.getAdminAuthority(param);
-//            for (AuthorityVO authority : authoritys) {
-//                if (authority.getCnt() > 0) {
-//                    sq.addFilterQuery(authority.getQuery());
-//                }
-//            }
-//            if (log.isInfoEnabled()) {
-//                StringBuilder sb = new StringBuilder();
-//                if (sq.getFilterQueries() != null) {
-//                    for (int i = 0; i < sq.getFilterQueries().length; i++) {
-//                        sb.append(sq.getFilterQueries()[i]).append(" ");
-//                    }
-//                }
-//            }
-//        }
-    }
-
-
+    /* LocalTime */
     private String getServerTime() {
         try {
             return Common.getDateTimeFormat();
@@ -294,6 +249,16 @@ public class EmsSearchServiceImpl implements EmsSearchService {
         return null;
     }
 
+
+    /* 아시아  서버 시간 */
+    private String getAsiaServerTime() {
+        try {
+            return Common.getAsiaServerTime();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 
     @Override
@@ -311,7 +276,8 @@ public class EmsSearchServiceImpl implements EmsSearchService {
         if (Common.isEmpty(msgId) || Common.isEmpty(userId) ) return;
             CheckedVo_Mgo checkedVoMgo = new CheckedVo_Mgo();
             checkedVoMgo.setReadId(userId);
-            checkedVoMgo.setReadDate(ElasticSearchCommon.stringToDate(getServerTime()));
+            String datetime = ("GMT+09:00".equals(TimeZone.getDefault().getID())) ? getAsiaServerTime() : getServerTime();
+            checkedVoMgo.setReadDate(ElasticSearchCommon.stringToDate(datetime));
             readDoc(msgId,checkedVoMgo);
     }
 

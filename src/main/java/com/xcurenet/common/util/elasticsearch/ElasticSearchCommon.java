@@ -49,9 +49,9 @@ public class ElasticSearchCommon {
     public static final String PERIOD = ".";
     public static final String COLON = ":";
     public static final String SPECIAL_CHAR = "*";
-    public static final String OR_QUERY  = "OR";
-    public static final String AND_QUERY = "AND";
-    public static final String NOT_QUERY = "NOT";
+    public static final String OR_QUERY  = " ";
+    public static final String AND_QUERY = "+";
+    public static final String NOT_QUERY = "-";
 
     /* 필드 관련 */
     public static final String MSGID = "msgid";    //메시지ID
@@ -87,6 +87,7 @@ public class ElasticSearchCommon {
     public static final String BODY_HASH = "body.hash";     //본문 hash
     public static final String BODY_SNIPPET = "body.snippet";   //본문 요약
     public static final String BODY_TEXT = "body.text";     //본문 내용
+    
 
     //network
     public static final  String NETWORK_SRCIP = "network.srcip";    //	발신자 IP
@@ -286,6 +287,16 @@ public class ElasticSearchCommon {
     public static final String[] RECEIVERS = {"recv.to.name","recv.cc.name","recv.bcc.name","network.dstip"}; // 수신자들
     public static final String[] SENDER = {"sender.name", "network.srcip"}; //발신자
     public static final String TIME_FORMAT = "common.time.";
+    public static final String[] CEO = {
+            "user.ceo"
+            ,"sender.ceo"
+            ,"recv.to.ceo"
+            ,"recv.cc.ceo"
+            ,"recv.bcc.ceo"
+    }; // CEO 관련
+    
+
+    
 
     /* 화면 검색시 쓰이는 파라미터 */
     public static final String CTIME_HH = "ctime_hh"; //시간별
@@ -299,6 +310,7 @@ public class ElasticSearchCommon {
 
 
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMddHHmmss");
+    
 
     //"body" 주석
     public static String[] SEARCH_FIELD = new String[]{
@@ -353,6 +365,7 @@ public class ElasticSearchCommon {
         }
         return str;
     }
+
     /* String -> Date */
     public static Date stringToDate(String dateValue){
         Date date = null;
@@ -363,8 +376,6 @@ public class ElasticSearchCommon {
         }
         return date;
     }
-
-
 
     /* Date -> String */
     public static String dateToString(Date date){

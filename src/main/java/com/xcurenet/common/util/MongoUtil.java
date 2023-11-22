@@ -109,22 +109,19 @@ public class MongoUtil {
 	public boolean readDoc(String msgId, CheckedVo_Mgo checkedVoMgo, String collectionName) {
 		boolean result = false; // 작업 완료 여부
 		boolean isReaded = false; // 사용자가 문서 읽었는지 여부
-		boolean fisrtRead = false; // 문서에 최초로 읽음 여부
 		try {
 
 			Query query = new Query(Criteria.where("_id").is(msgId));
 			EmassCheckedMgo checkedVoList = mongoTemplate.findOne(query, EmassCheckedMgo.class, collectionName);
-			if(null == checkedVoList.getChecked() ) fisrtRead = true; // 해당 문서를 최초로 읽었다.
+			if(null == checkedVoList ) return false;  // 몽고 db에  문서 없음
 
 			/* 사용자 문서 개봉여부 조회 */
-			if(!fisrtRead) {
-				List<CheckedVo_Mgo> checkedList = checkedVoList.getChecked();
-				for (CheckedVo_Mgo vo : checkedList) {
-					if (checkedVoMgo.getReadId().equals(vo.getReadId())) {
-						isReaded = true;
-						break;
-					} // 접속자 아이디 존재할시 isReaded true
-				}
+			List<CheckedVo_Mgo> checkedList = checkedVoList.getChecked();
+			for (CheckedVo_Mgo vo : checkedList) {
+				if (checkedVoMgo.getReadId().equals(vo.getReadId())) {
+					isReaded = true;
+					break;
+				} // 접속자 아이디 존재할시 isReaded true
 			}
 
 			/* 사용자가 문서를 개봉하지 않았을시 */
@@ -139,11 +136,7 @@ public class MongoUtil {
 				reqList.add(reqMap);
 
 				Update update = new Update();
-				if(fisrtRead) {
-					update.set("checked", reqList);  // 최초 읽었을시 필드 구조 추가 list
-				}else{
-					update.addToSet("checked", reqMap);
-				}
+				update.addToSet("checked", reqMap);
 				mongoTemplate.findAndModify(query, update,  EmassCheckedMgo.class, collectionName); // 문서 읽음 처리
 				result = true; // 작업 완료 처리
 			}

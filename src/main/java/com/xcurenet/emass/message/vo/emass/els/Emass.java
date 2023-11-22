@@ -127,6 +127,6 @@ public class Emass {
 	private RecvVo_Els recv; // recv
 
 	@JsonProperty("checked")
-	private CheckedVo_Els checked; // checked
+	private  List<CheckedVo_Els> checked; // checked
 
 }

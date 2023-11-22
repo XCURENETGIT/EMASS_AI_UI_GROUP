@@ -1,11 +1,16 @@
 package com.xcurenet.common.util.elasticsearch;
 
+import com.xcurenet.admin.service.AdminService;
+import com.xcurenet.admin.service.AuthorityService;
+import com.xcurenet.admin.service.AuthorityVO;
 import com.xcurenet.common.util.Common;
+import com.xcurenet.common.util.config.Config;
 import com.xcurenet.emass.adminFilter.service.AdminFilterService;
 import com.xcurenet.interestUser.service.AdminUserGroupService;
 import com.xcurenet.user.service.UserService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONObject;
 import org.elasticsearch.core.TimeValue;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -22,6 +27,7 @@ import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
+import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -42,9 +48,15 @@ public class ElasticSearchQueryUtils {
 	@Value("${els.timeout}")
 	private int timeout;
 
+	@Resource
+	private AdminService adminService;
+	@Resource
 	private AdminUserGroupService adminUserGroupService;
+	@Resource
+	private AuthorityService authorityService;
+	@Resource
 	private UserService userService;
-
+	@Resource
 	private AdminFilterService adminFilterService;
 
 	public String query;
@@ -118,7 +130,7 @@ public class ElasticSearchQueryUtils {
 		if (Common.isEmpty(searchStr)) return this;
 
 		if(searchStr.indexOf(ElasticSearchCommon.COMMA) > -1){
-			searchStr = searchStr.replace(",",ElasticSearchCommon.SPACE+ElasticSearchCommon.OR_QUERY+ElasticSearchCommon.SPACE);
+			searchStr = searchStr.replace(",",ElasticSearchCommon.OR_QUERY);
 		}
 
 		return addQuery(String.format("%s",searchStr));
@@ -147,10 +159,9 @@ public class ElasticSearchQueryUtils {
 			this.queryBuffer
 					.append(field)
 					.append(ElasticSearchCommon.COLON)
-					.append(searchQuery)
-					.append(ElasticSearchCommon.SPACE);
+					.append(searchQuery);
 			if(idx < fields.length-1) {
-				this.queryBuffer.append(ElasticSearchCommon.OR_QUERY).append(ElasticSearchCommon.SPACE);
+				this.queryBuffer.append(ElasticSearchCommon.OR_QUERY);
 			}
 			idx++;
 		}
@@ -165,10 +176,9 @@ public class ElasticSearchQueryUtils {
 		StringBuilder tempBuilder = new StringBuilder();
 		tempBuilder.append(Type)
 				.append(ElasticSearchCommon.COLON)
-				.append(typeValues)
-				.append(ElasticSearchCommon.SPACE);
+				.append(typeValues);
 		tempBuilder = makeParentheses(tempBuilder);
-		tempBuilder.insert(0,flag.concat(ElasticSearchCommon.SPACE));
+		tempBuilder.insert(0,ElasticSearchCommon.SPACE.concat(flag));
 		this.queryBuffer.append(tempBuilder);
 	}
 
@@ -181,15 +191,14 @@ public class ElasticSearchQueryUtils {
 		int idx = 0;
 		StringBuilder tempBuilder = new StringBuilder();
 		for(String type : Types) {
-			if(idx >= 1) tempBuilder.append(ElasticSearchCommon.OR_QUERY).append(ElasticSearchCommon.SPACE);
+			if(idx >= 1) tempBuilder.append(ElasticSearchCommon.OR_QUERY);
 			tempBuilder.append(type)
 					.append(ElasticSearchCommon.COLON)
-					.append(typeValues)
-					.append(ElasticSearchCommon.SPACE);
+					.append(typeValues);
 			idx++;
 		}
 		tempBuilder = makeParentheses(tempBuilder);
-		tempBuilder.insert(0,flag.concat(ElasticSearchCommon.SPACE));
+		tempBuilder.insert(0,ElasticSearchCommon.SPACE.concat(flag));
 		this.queryBuffer.append(tempBuilder);
 	}
 
@@ -206,9 +215,7 @@ public class ElasticSearchQueryUtils {
 			tempSb.append(arg);
 			tempSb.append(ElasticSearchCommon.CLOSE_PARENTHESES);
 			if(idx < argments.length-1) {
-				tempSb.append(ElasticSearchCommon.SPACE);
 				tempSb.append(ElasticSearchCommon.OR_QUERY);
-				tempSb.append(ElasticSearchCommon.SPACE);
 			}
 			idx++;
 		}
@@ -1173,27 +1180,6 @@ public class ElasticSearchQueryUtils {
 //        }
 //        return this;
 //    }
-//
-//    public String getStartDt(String startDateSelect, int startTimeSelect) {
-//        String result = "";
-//        DateTime startDt = new DateTime(DateTimeZone.forID("Asia/Seoul"));
-//        if (startDateSelect.equals("Y")) result = String.format("%s%02d0000", yyyyMMdd.print(startDt.minusDays(1)), startTimeSelect);
-//        else if (startDateSelect.equals("T")) result = String.format("%s%02d0000", yyyyMMdd.print(DateTime.now()), startTimeSelect);
-//        else if (startDateSelect.equals("W")) result = String.format("%s%02d0000", yyyyMMdd.print(startDt.minusDays(7)), startTimeSelect);
-//
-//        return result;
-//    }
-//
-//    private String getEndDt(String endDateSelect, int endTimeSelect) {
-//        String result = "";
-//        DateTime endDt = new DateTime(DateTimeZone.forID("Asia/Seoul"));
-//        if (endDateSelect.equals("Y")) result = String.format("%s%02d5959", yyyyMMdd.print(endDt.minusDays(1)), endTimeSelect);
-//        else if (endDateSelect.equals("T")) result = String.format("%s%02d5959", yyyyMMdd.print(DateTime.now()), endTimeSelect);
-//        else if (endDateSelect.equals("W")) result = String.format("%s%02d5959", yyyyMMdd.print(endDt.minusDays(7)), endTimeSelect);
-//
-//        return result;
-//    }
-//
 
 
 	/**
@@ -1653,7 +1639,6 @@ public class ElasticSearchQueryUtils {
 		/*################## Detail(고급) Query ####################*/
 
 
-
 		/* set Query (항상 쿼리 조합 최하단에 위치) */
 		setQuery();
 
@@ -1681,10 +1666,11 @@ public class ElasticSearchQueryUtils {
 	 * @param initMessageSearchSource
 	 * @return
 	 */
-	public SearchSourceBuilder initMessageSearchSource(Map<String,Object> searchParam){
+	public SearchSourceBuilder initMessageSearchSource(Map<String,Object> searchParam,String adminId){
 		SearchSourceBuilder searchSourceBuilder = null;
-
+		/* 권한 관련*/
 		setMessageSearchQueryReady(searchParam); // 파라미터 준비
+		setAuthoritys(searchParam, adminId);
 
 		RangeQueryBuilder rangeQuery = new RangeQueryBuilder(ElasticSearchCommon.CTIME).gte(elasticSearchParam.getStartDate()).lte(elasticSearchParam.getEndDate());
 		QueryStringQueryBuilder secondQuery = QueryBuilders.queryStringQuery(query);
@@ -1856,7 +1842,6 @@ public class ElasticSearchQueryUtils {
 	public void setCollectionQueryParamReady(Map<String,Object> searchParam) {
 		elasticSearchParam = new ElasticSearchParam();
 
-
 		if(!Common.isEmpty(searchParam.get("conditions"))){
 			Map<String,Object> tempMap = (Map<String, Object>) searchParam.get("conditions");
 			List<Map<String,Object>> tempList = (List<Map<String, Object>>) tempMap.get("conditions");
@@ -1864,8 +1849,6 @@ public class ElasticSearchQueryUtils {
 			tempList.get(0).putAll(searchParam);
 			elasticSearchParam.setSearchParameters(tempList.get(0));
 		}
-
-
 
 		/* sort 관련 */
 		setSort("");
@@ -2210,5 +2193,47 @@ public class ElasticSearchQueryUtils {
 
 	}
 
+
+
+	private void setAuthoritys(Map<String,Object> searchParam, String adminId) {
+		/* adminType  S:시스템 운용자, M:모니터링 운용자, D:장비 상태 모니터링 운용자 */
+		if (Common.isNotEmpty(adminId)) {
+			String adminType = "S"; // default
+			if (!Common.isOrEquals(adminId, "*")) {
+				adminType = adminService.getAdmin(adminId).getAdminType();
+			}
+
+			String[] ceo = ElasticSearchCommon.CEO; // ceo 검색필드 불러오기
+			String ceoReadYn = Config.getString("ceo.readyn");
+			if (Common.isEquals(adminType, "C")) {
+				addQueryGroup(ElasticSearchCommon.AND_QUERY,ElasticSearchCommon.CEO,makeParentheses(ceo));
+			} else if (!(Common.isEquals(ceoReadYn, "Y") && Common.isEquals(Common.nvl(Config.getFirstAdminYn(adminId), "N"), "Y"))) {
+				addQueryGroup(ElasticSearchCommon.NOT_QUERY,ElasticSearchCommon.CEO,makeParentheses(ceo));
+			}
+
+		//	sq.addFilterQuery("-svc:QEKH");
+
+			JSONObject param = new JSONObject();
+			param.put("adminId", adminId);
+			param.put("queryType", Config.getString("query.type", "A"));
+			List<AuthorityVO> authoritys = authorityService.getAdminAuthority(param);
+
+
+			for (AuthorityVO authority : authoritys) {
+				if (authority.getCnt() > 0) {
+					authority.getQuery();
+				//	sq.addFilterQuery(authority.getQuery());
+				}
+			}
+//			if (log.isInfoEnabled()) {
+//				StringBuilder sb = new StringBuilder();
+//				if (sq.getFilterQueries() != null) {
+//					for (int i = 0; i < sq.getFilterQueries().length; i++) {
+//						sb.append(sq.getFilterQueries()[i]).append(" ");
+//					}
+//				}
+//			}
+		}
+	}
 
 }

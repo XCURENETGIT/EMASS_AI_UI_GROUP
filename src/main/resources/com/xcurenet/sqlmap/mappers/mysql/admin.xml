@@ -6,45 +6,45 @@
 	<select id="getAdminAuthority" resultType="authorityVO" parameterType="hashmap">
 		<if test='queryType=="A" or queryType=="" or queryType==null'>
 			SELECT  'COCD' AS type, 
-					CASE WHEN B IS NULL THEN  CONCAT( '+(cocd:(', A, ') ip_cocd:(', A, ') ) ')
+					CASE WHEN B IS NULL THEN  CONCAT( '+(#{userCoCd}:(', A, ') #{userIpCoCd}:(', A, ') ) ')
 						WHEN A IS NULL THEN CONCAT('+', B) 
-					ELSE CONCAT( '+(cocd:(', A, ') ip_cocd:(', A, ') ', B, ')') END  query, C AS cnt
+					ELSE CONCAT( '+(#{userCoCd}:(', A, ') #{userIpCoCd}:(', A, ') ', B, ')') END  query, C AS cnt
 			FROM    (
-					SELECT  ( SELECT  GROUP_CONCAT( DISTINCT COCD SEPARATOR ' ' ) FROM UI_ADMIN_CO WHERE COCD != 'C00-00' AND ADMIN_ID = #{adminId} ) AS A,
-							( SELECT  '(+cocd:(C00-00) +ip_cocd:(C00-00))' FROM UI_ADMIN_CO WHERE COCD = 'C00-00' AND ADMIN_ID = #{adminId} ) AS B,
+					SELECT  ( SELECT  GROUP_CONCAT( DISTINCT COCD SEPARATOR ' ' ) FROM UI_ADMIN_CO WHERE #{userCoCd} != 'C00-00' AND ADMIN_ID = #{adminId} ) AS A,
+							( SELECT  '(+#{userCoCd}:(C00-00) +#{userIpCoCd}:(C00-00))' FROM UI_ADMIN_CO WHERE COCD = 'C00-00' AND ADMIN_ID = #{adminId} ) AS B,
 							( SELECT COUNT(COCD) FROM UI_ADMIN_CO WHERE ADMIN_ID = #{adminId} ) AS C
 					) AS R
 			UNION	ALL
 			SELECT  'BUSICD' AS type, 
-					CASE WHEN B IS NULL THEN  CONCAT( '+(busicd:(', A, ') ip_busicd:(', A, ') ) ')
+					CASE WHEN B IS NULL THEN  CONCAT( '+(#{userBusiCd}:(', A, ') #{userIpBusiCd}:(', A, ') ) ')
 						WHEN A IS NULL THEN CONCAT('+', B) 
-					ELSE CONCAT( '+(busicd:(', A, ') ip_busicd:(', A, ') ', B, ')') END  query, C AS cnt
+					ELSE CONCAT( '+(#{userBusiCd}:(', A, ') #{userIpBusiCd}:(', A, ') ', B, ')') END  query, C AS cnt
 			FROM    (
 					SELECT  ( SELECT  GROUP_CONCAT( DISTINCT BUSICD SEPARATOR ' ' ) FROM UI_ADMIN_BUSI WHERE BUSICD != 'C00-00' AND ADMIN_ID = #{adminId} ) AS A,
-							( SELECT  '(+busicd:(C00-00) +ip_busicd:(C00-00))' FROM UI_ADMIN_BUSI WHERE BUSICD = 'C00-00' AND ADMIN_ID = #{adminId} ) AS B,
+							( SELECT  '(+#{userBusiCd}:(C00-00) +#{userIpBusiCd}:(C00-00))' FROM UI_ADMIN_BUSI WHERE BUSICD = 'C00-00' AND ADMIN_ID = #{adminId} ) AS B,
 							( SELECT COUNT(BUSICD) FROM UI_ADMIN_BUSI WHERE ADMIN_ID = #{adminId} ) AS C
 					) AS R
 			UNION	ALL
 		</if>
 		<if test='queryType=="B"'>
-			SELECT  'COCD' AS type, CONCAT( '+cocd:(', GROUP_CONCAT( DISTINCT COCD SEPARATOR ' ' ), ')') AS query, COUNT(COCD) AS cnt FROM UI_ADMIN_CO				WHERE ADMIN_ID = #{adminId}
+			SELECT  'COCD' AS type, CONCAT( '#{userCoCd}:(', GROUP_CONCAT( DISTINCT COCD SEPARATOR ' ' ), ')') AS query, COUNT(COCD) AS cnt FROM UI_ADMIN_CO				WHERE ADMIN_ID = #{adminId}
 			UNION	ALL
-			SELECT  'BUSICD' AS type, CONCAT( '+busicd:(', GROUP_CONCAT( DISTINCT BUSICD SEPARATOR ' ' ), ')') AS query, COUNT(BUSICD) AS cnt FROM UI_ADMIN_BUSI	WHERE ADMIN_ID = #{adminId}
+			SELECT  'BUSICD' AS type, CONCAT( '+#{userBusiCd}:(', GROUP_CONCAT( DISTINCT BUSICD SEPARATOR ' ' ), ')') AS query, COUNT(BUSICD) AS cnt FROM UI_ADMIN_BUSI	WHERE ADMIN_ID = #{adminId}
 			UNION	ALL
 		</if>
 		<if test='queryType=="C"'>
-			SELECT  'COCD' AS type, CONCAT( '+ip_cocd:(', GROUP_CONCAT( DISTINCT COCD SEPARATOR ' ' ), ')') AS query, COUNT(COCD) AS cnt FROM UI_ADMIN_CO				WHERE ADMIN_ID = #{adminId}
+			SELECT  'COCD' AS type, CONCAT( '+#{userIpCoCd}:(', GROUP_CONCAT( DISTINCT COCD SEPARATOR ' ' ), ')') AS query, COUNT(COCD) AS cnt FROM UI_ADMIN_CO				WHERE ADMIN_ID = #{adminId}
 			UNION	ALL
-			SELECT  'BUSICD' AS type, CONCAT( '+ip_busicd:(', GROUP_CONCAT( DISTINCT BUSICD SEPARATOR ' ' ), ')') AS query, COUNT(BUSICD) AS cnt FROM UI_ADMIN_BUSI	WHERE ADMIN_ID = #{adminId}
+			SELECT  'BUSICD' AS type, CONCAT( '+#{userIpBusiCd}:(', GROUP_CONCAT( DISTINCT BUSICD SEPARATOR ' ' ), ')') AS query, COUNT(BUSICD) AS cnt FROM UI_ADMIN_BUSI	WHERE ADMIN_ID = #{adminId}
 			UNION	ALL
 		</if>
-		SELECT  'SERVICE' AS type, CONCAT( '+svc12:(', GROUP_CONCAT( DISTINCT SERVICECD SEPARATOR ' ' ), ')') AS query, COUNT(SERVICECD) AS cnt FROM UI_ADMIN_SERVICE	WHERE ADMIN_ID = #{adminId} 
+		SELECT  'SERVICE' AS type, CONCAT( '+#{svc12}:(', GROUP_CONCAT( DISTINCT SERVICECD SEPARATOR ' ' ), ')') AS query, COUNT(SERVICECD) AS cnt FROM UI_ADMIN_SERVICE	WHERE ADMIN_ID = #{adminId}
 		UNION	ALL
-		SELECT  'SERVICE' AS type, CONCAT( '-svc:(', GROUP_CONCAT( DISTINCT SERVICECD SEPARATOR ' ' ), ')') AS query, COUNT(SERVICECD) AS cnt FROM UI_SERVICE	WHERE USE_YN = 'N'
+		SELECT  'SERVICE' AS type, CONCAT( '-#{svc}:(', GROUP_CONCAT( DISTINCT SERVICECD SEPARATOR ' ' ), ')') AS query, COUNT(SERVICECD) AS cnt FROM UI_SERVICE	WHERE USE_YN = 'N'
 		UNION	ALL
-		SELECT  'REGEXP' AS type, CONCAT( '+pi:(', GROUP_CONCAT( DISTINCT CODE SEPARATOR ' ' ), ')') AS query, COUNT(CODE) AS cnt FROM UI_ADMIN_REGEXP			WHERE ADMIN_ID = #{adminId}
+		SELECT  'REGEXP' AS type, CONCAT( '+#{pi}:(', GROUP_CONCAT( DISTINCT CODE SEPARATOR ' ' ), ')') AS query, COUNT(CODE) AS cnt FROM UI_ADMIN_REGEXP			WHERE ADMIN_ID = #{adminId}
 		UNION	ALL
-		SELECT  'USERID' AS type, CONCAT('+userid:(', GROUP_CONCAT( DISTINCT B.USER_ID SEPARATOR ' '),')') AS query, COUNT(B.GROUP_CODE) AS cnt FROM UI_ADMIN_CEO_GROUP A LEFT JOIN UI_USER_GROUP_LIST B ON A.GROUP_CODE=B.GROUP_CODE WHERE ADMIN_ID = #{adminId}
+		SELECT  'USERID' AS type, CONCAT('+#{userId}:(', GROUP_CONCAT( DISTINCT B.USER_ID SEPARATOR ' '),')') AS query, COUNT(B.GROUP_CODE) AS cnt FROM UI_ADMIN_CEO_GROUP A LEFT JOIN UI_USER_GROUP_LIST B ON A.GROUP_CODE=B.GROUP_CODE WHERE ADMIN_ID = #{adminId}
 	</select>
 	
 	

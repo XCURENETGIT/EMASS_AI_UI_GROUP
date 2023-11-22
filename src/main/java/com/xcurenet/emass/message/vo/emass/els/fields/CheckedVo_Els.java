@@ -13,6 +13,6 @@ import java.util.Date;
 public class CheckedVo_Els {
     @JsonProperty("readId")
     private String	readId; //	메시지 개봉 운용자 아이디
-    @JsonProperty("readDate")
-    private Date readDate; //	메시지 개봉 날짜
+    @JsonProperty("readTime")
+    private Date readTime; //	메시지 개봉 날짜
 }

@@ -24,10 +24,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
-import org.joda.time.Days;
-import org.joda.time.Hours;
-import org.joda.time.Months;
+import org.joda.time.*;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
@@ -49,7 +46,6 @@ import java.sql.Array;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.text.*;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -835,6 +831,15 @@ public class Common {
 		return getDateTime(System.currentTimeMillis(), "yyyyMMddHHmmss");
 	}
 
+	// UTC 시간을 사용하는 DB에 데이터 입력시 ex:몽고db (시간설정불가)
+	public static String getAsiaServerTime(){
+		LocalDateTime nowDateTime = new LocalDateTime().now();
+		nowDateTime = nowDateTime.plusHours(9);
+		String format = "yyyyMMddHHmmss";
+		DateTimeFormatter localDateTime = DateTimeFormat.forPattern(format);
+		return localDateTime.print(nowDateTime);
+	}
+
 	public static String getDateTime(long time) throws Exception {
 		return getDateTime(time, "yyyy-MM-dd HH:mm:ss");
 	}
@@ -848,6 +853,7 @@ public class Common {
 	public static String getYesterdayDate() throws Exception {
 		return plusDays(getCurrentDate(), -1);
 	}
+
 
 	public static String getTime() {
 		try {
