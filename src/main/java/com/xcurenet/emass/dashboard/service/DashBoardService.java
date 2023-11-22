@@ -1,11 +1,9 @@
 package com.xcurenet.emass.dashboard.service;
 
+import com.xcurenet.emass.adminFilter.service.AdminFilterVO;
+
 import java.io.IOException;
 import java.util.List;
-
-import org.apache.solr.client.solrj.SolrServerException;
-
-import com.xcurenet.emass.adminFilter.service.AdminFilterVO;
 
 public interface DashBoardService {
 
@@ -17,7 +15,7 @@ public interface DashBoardService {
 
 	public int initDashBoardConfig(final DashboardVO dashboard);
 
-	public FileSendVO getFileSend(final FileSendVO filesend) throws IOException, SolrServerException;
+	public FileSendVO getFileSend(final FileSendVO filesend) throws IOException;
 
 	public long getAdminFilterAmount(final AdminFilterVO adminFilterVo) throws Exception;
 

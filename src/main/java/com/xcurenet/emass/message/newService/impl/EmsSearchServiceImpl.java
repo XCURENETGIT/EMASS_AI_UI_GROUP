@@ -12,7 +12,6 @@ import com.xcurenet.emass.message.newService.EmsReDefined;
 import com.xcurenet.emass.message.newService.EmsSearchService;
 import com.xcurenet.emass.message.service.EmsMessageService;
 import com.xcurenet.emass.message.service.MessengerEdcGroupVO;
-import com.xcurenet.emass.message.service.MessengerGroupUserVO;
 import com.xcurenet.emass.message.service.impl.parseJsonFile;
 import com.xcurenet.emass.message.vo.emass.EmassIntegrated;
 import com.xcurenet.emass.message.vo.emass.els.Emass;
@@ -206,11 +205,7 @@ public class EmsSearchServiceImpl implements EmsSearchService {
 
         return new MessengerEdcGroupVO(searchResponse,adminId,false,false);
     }
-    @Override
-    public MessengerGroupUserVO getMessengerGroupUserList(Map<String, Object> searchParam, String adminId) throws IOException {
-        return null;
 
-    }
 
     @Override
     public void setFeedback(String msgId, String ml_confd_feedback) throws IOException {

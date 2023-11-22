@@ -9,7 +9,6 @@ import com.xcurenet.audit.service.ParentMenu;
 import com.xcurenet.common.csv.CsvWriterEMASS;
 import com.xcurenet.common.detect.DetectCharset;
 import com.xcurenet.common.detect.DetectHtml;
-import com.xcurenet.common.excel.XLSXWriterEMASS;
 import com.xcurenet.common.parser.mime.MimeParser;
 import com.xcurenet.common.parser.mime.MimeVo;
 import com.xcurenet.common.pdf.PdfWriterEMASS;
@@ -21,20 +20,15 @@ import com.xcurenet.emass.consent.web.ConsentFileDownload;
 import com.xcurenet.emass.consent.web.ConsentFileVO;
 import com.xcurenet.emass.message.newService.EmsSearchService;
 import com.xcurenet.emass.message.service.*;
-import com.xcurenet.emass.message.vo.emass.els.EmassMessenger;
 import com.xcurenet.emass.message.vo.emass.mongo.EmassMessage;
+import com.xcurenet.emass.message.vo.emass.mongo.fields.HttpVo_Mgo;
+import com.xcurenet.emass.message.vo.emass.mongo.fields.NetworkVo_Mgo;
 import com.xcurenet.minio.MinioFileAdapter;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 import net.sf.json.util.JSONUtils;
-import org.apache.catalina.connector.ClientAbortException;
 import org.apache.commons.compress.archivers.ArchiveOutputStream;
-import org.apache.commons.compress.archivers.ArchiveStreamFactory;
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.io.IOUtils;
-import org.apache.solr.client.solrj.SolrServerException;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.jsoup.nodes.Document;
@@ -57,7 +51,6 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 @Controller
 @AuditParentMenu(ParentMenu.DATA_MONITOR)
@@ -328,7 +321,7 @@ public class EmsMessageController {
 	@AuditOperation(Operation.DOWNLOAD)
 	@ResponseBody
 	public void getEmassMessageSaveZip(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
-
+/*
 		response.setCharacterEncoding(Common.UTF8);
 		response.setHeader("Cache-control", "no-store");
 		response.setHeader("Pragma", "no-cache");
@@ -408,10 +401,10 @@ public class EmsMessageController {
 			IOUtils.closeQuietly(out);
 			response.flushBuffer();
 			log.info("{} [Write] END...TOTAL : {}", adminId, total);
-		}
+		}*/
 	}
 
-	private XLSXWriterEMASS createExcelFile(ServletOutputStream out, XLSXWriterEMASS xlsxWriter, List<SolrEdcVO> emass, JSONArray header, String title, long total, int queryCnt, int solrCnt) throws Exception {
+	/*private XLSXWriterEMASS createExcelFile(ServletOutputStream out, XLSXWriterEMASS xlsxWriter, List<SolrEdcVO> emass, JSONArray header, String title, long total, int queryCnt, int solrCnt) throws Exception {
 		int totalQueryCnt = (int) Math.ceil(total / (PAGE_BREAK * 1.0)); // 쿼리 실행 횟수
 
 		if (queryCnt == 1) {
@@ -471,7 +464,7 @@ public class EmsMessageController {
 		}
 
 		return xlsxWriter;
-	}
+	}*/
 
 	private void close(CsvWriterEMASS csvWriter, ArchiveOutputStream os) {
 		try {
@@ -494,7 +487,7 @@ public class EmsMessageController {
 	@AuditOperation(Operation.DOWNLOAD)
 	@ResponseBody
 	public void getEmassMessageSaveCSV(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
-		response.setCharacterEncoding(Common.UTF8);
+/*		response.setCharacterEncoding(Common.UTF8);
 		response.setHeader("Cache-control", "no-store");
 		response.setHeader("Pragma", "no-cache");
 		response.setDateHeader("Expires", 0);
@@ -610,7 +603,7 @@ public class EmsMessageController {
 			IOUtils.closeQuietly(out);
 			response.flushBuffer();
 			log.info("{} [CSV Write] END...TOTAL : {}", adminId, total);
-		}
+		}*/
 	}
 
 	@RequestMapping(value = "/getEmassMessageSavePDF.xcn")
@@ -618,6 +611,7 @@ public class EmsMessageController {
 	@AuditOperation(Operation.DOWNLOAD)
 	@ResponseBody
 	public void getEmassMessageSavePDF(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+/*
 		response.setCharacterEncoding(Common.UTF8);
 		response.setHeader("Cache-control", "no-store");
 		response.setHeader("Pragma", "no-cache");
@@ -733,10 +727,13 @@ public class EmsMessageController {
 			response.flushBuffer();
 			log.info("{} [PDF Write] END...TOTAL : {}", adminId, total);
 		}
+*/
 	}
 
+/*
 	private SolrEdcMessageVO getEmassData(String adminId, final JSONObject condition, final String searchTime, int page) throws Exception, IOException, SolrServerException {
 		return null;
+*/
 /*		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
 		SolrQuery sq = null;
 		if (Common.isNotEmpty(condition.get("msgids"))) {
@@ -765,9 +762,12 @@ public class EmsMessageController {
 		sq.setStart(PAGE_BREAK * page);
 		sq.setRows(PAGE_BREAK);
 		log.info("offset : {}", PAGE_BREAK * page);
-		return solrEdcService.getEmassMessage(sq, adminId, solrCreateQuery.getFinalReadYn(), solrCreateQuery.getConsentNo());*/
-	}
+		return solrEdcService.getEmassMessage(sq, adminId, solrCreateQuery.getFinalReadYn(), solrCreateQuery.getConsentNo());*//*
 
+	}
+*/
+
+/*
 	private void inputAttach(ArchiveOutputStream os, EmsAttachDownload attachDown, SolrEdcVO edc) throws Exception {
 		List<EmsAttachVO> attachs = emsMessageService.getEmassAttachInfo4Down(edc.getMsgid(), null);
 		for (EmsAttachVO attach : attachs) {
@@ -841,6 +841,7 @@ public class EmsMessageController {
 
 		minioFileAdapter.fileDownload(objectName,fileName, request, response );
 	}
+*/
 
 
 //	@RequestMapping(value = "/getEmassBodySave.xcn")
@@ -884,28 +885,29 @@ public class EmsMessageController {
 //		}
 //	}
 
-	@RequestMapping(value = "/getMailEmassBody.xcn")
-	@Description("전달 메일용 메시지 본문")
-	@ResponseBody
-	public String getMailEmassBody(final HttpServletRequest request) throws Exception {
-		String msgId = Common.nvl(request.getParameter("msgId"));
-		String userCharset = Common.nvl(request.getParameter("userCharset"));
-		log.info("userCharset : " + userCharset);
-		String print = Common.nvl(request.getParameter("print"));
+//	@RequestMapping(value = "/getMailEmassBody.xcn")
+//	@Description("전달 메일용 메시지 본문")
+//	@ResponseBody
+//	public String getMailEmassBody(final HttpServletRequest request) throws Exception {
+//		String msgId = Common.nvl(request.getParameter("msgId"));
+//		String userCharset = Common.nvl(request.getParameter("userCharset"));
+//		log.info("userCharset : " + userCharset);
+//		String print = Common.nvl(request.getParameter("print"));
+//
+//		EmsBodyVO emsBody = emsMessageService.getEmassBody(msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
+//		String result = Common.nvl(new EmsCreateMessage(request).getHeaderMessage(msgId, getBodyStr(userCharset, emsBody), print, Common.getLocale(request.getSession()), Common.getFirstAdminYn(request.getSession()), Common.getAdminId(request), Common.getAdminType(request.getSession())));
+//		/*
+//		try {
+//			EmsBodyVO emsBody = emsMessageService.getEmassBody(msgId, Common.getFirstAdminYn(request.getSession()));
+//			result = new EmsCreateMessage(request).getHeaderMessage(msgId, getBodyStr(userCharset, emsBody), print, Common.getLocale(request.getSession()), Common.getFirstAdminYn(request.getSession()));
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} finally {
+//		}*/
+//		return result;
+//	}
 
-		EmsBodyVO emsBody = emsMessageService.getEmassBody(msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
-		String result = Common.nvl(new EmsCreateMessage(request).getHeaderMessage(msgId, getBodyStr(userCharset, emsBody), print, Common.getLocale(request.getSession()), Common.getFirstAdminYn(request.getSession()), Common.getAdminId(request), Common.getAdminType(request.getSession())));
-		/*
-		try {
-			EmsBodyVO emsBody = emsMessageService.getEmassBody(msgId, Common.getFirstAdminYn(request.getSession()));
-			result = new EmsCreateMessage(request).getHeaderMessage(msgId, getBodyStr(userCharset, emsBody), print, Common.getLocale(request.getSession()), Common.getFirstAdminYn(request.getSession()));
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-		}*/
-		return result;
-	}
-
+/*
 	@RequestMapping(value = "/getEmassBodySaveZip.xcn")
 	@Description("EMASS grid 메시지 본문 저장")
 	@AuditOperation(Operation.DOWNLOAD)
@@ -961,16 +963,19 @@ public class EmsMessageController {
 			response.flushBuffer();
 		}
 	}
+*/
 
-	private EmsMessageVO getFileName(EmsBodyVO edc) {
-		EmsMessageVO msg = new EmsMessageVO();
-		if (edc == null) return msg;
+	private EmassMessage getFileName(EmsAttachVO edc) {
+		EmassMessage msg = new EmassMessage();
 		msg.setSubject(edc.getSubject());
 		msg.setSvc(edc.getSvc());
-		msg.setSrcIp(edc.getSrcIp());
-		msg.setDstIp(edc.getDstIp());
-		msg.setHost(edc.getHost());
-		msg.setPath(edc.getPath());
+		msg.setNetwork(new NetworkVo_Mgo());
+		msg.getNetwork().setSrcIp(edc.getSrcIp());
+		msg.getNetwork().setDstIp(edc.getDstIp());
+		msg.setHttp(new HttpVo_Mgo());
+		msg.getHttp().setHost(edc.getHost());
+		msg.getHttp().setPath(edc.getPath());
+
 		return msg;
 	}
 
@@ -1468,6 +1473,7 @@ public class EmsMessageController {
 		emsAttachDownload.download(attachs, request, response, null);
 	}
 
+/*
 	@RequestMapping(value = "/getMessengerGroupAllSave.xcn")
 	@Description("메신저 대화내용 저장(본문)")
 	@ResponseBody
@@ -1518,6 +1524,7 @@ public class EmsMessageController {
 			IOUtils.closeQuietly(out);
 		}
 	}
+*/
 
 	@RequestMapping(value = "/getMessageGroupDetail.xcn")
 	@Description("메신저 대화방 상세 목록 조회")

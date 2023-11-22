@@ -6,7 +6,6 @@ import com.xcurenet.code.service.CodeVO;
 import com.xcurenet.common.dao.TransactionManager;
 import com.xcurenet.common.dao.XcnAbstractDAO;
 import com.xcurenet.common.ftp.SFTPUtil;
-import com.xcurenet.common.image.ImageUtils;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.MongoUtil;
 import com.xcurenet.common.util.config.Config;
@@ -16,13 +15,11 @@ import com.xcurenet.emass.consent.service.ConsentVO;
 import com.xcurenet.emass.message.service.*;
 import com.xcurenet.emass.message.vo.emass.mongo.EmassMessage;
 import com.xcurenet.emass.message.vo.emass.mongo.fields.CheckedVo_Mgo;
-import com.xcurenet.emass.message.web.EmsAttachDownload;
 import com.xcurenet.minio.MinioFileAdapter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.mail.EmailException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -38,8 +35,6 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.Reader;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -51,13 +46,9 @@ import java.util.stream.Collectors;
 @Slf4j
 public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageService {
 
-	public SolrCheckedService dd;
 
 	@Resource(name = "consentService")
 	public ConsentService consentService;
-
-	@Resource(name = "solrEdcService")
-	private SolrEdcService solrEdcService;
 
 	@Autowired
 	public ConfigAdminService configAdminService;
@@ -324,14 +315,14 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		return emassMessage;
 	}
 
-	public List<EmsRecvVO> getEmassUserInfo(String msgId) {
+/*	public List<EmsRecvVO> getEmassUserInfo(String msgId) {
 
 		EmsMessageVO emsMessageVO =mongoUtil.selectId(msgId,EmsMessageVO.class,MESSAGE_SCHEME);
 
 		List<EmsRecvVO> list= emsMessageVO.getRecv_info();
 
 		return list;
-	}
+	}*/
 
 	@Override
 	public List<EmsRecvVO> getEmassUserInfo(String msgId, String uType) {
@@ -346,6 +337,9 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 
 		return mongoUtil.selectList(query,EmsRecvVO.class,MESSAGE_SCHEME);
 	}
+
+
+/*
 
 	@Override
 	public List<EmsAttachVO> getEmassAttachInfoConsent(String msgId, String firstAdminYn, String adminType) {
@@ -494,10 +488,11 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 
 		return emsAttachVOList;
 	}
-
+*/
+/*
 	@Override
 	public List<EmsAttachVO> getEmassAttachInfo4Down(String msgId, String attachId) {
-		Map<String, String> param = new HashMap<>();
+	Map<String, String> param = new HashMap<>();
 		param.put("msgId", msgId);
 		param.put("attachId", attachId);
 
@@ -508,7 +503,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 
 		return list;
 
-	}
+	}*/
 
 	@Override
 	public List<EmsAttachVO> getEmassAttachInfo4DownHash(String msgIds, String attachHash) {
@@ -529,13 +524,18 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		return selectList("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".emass.getEmassAttachInfo4DownHash", param);
 	}
 
+
+
+/*
 	@Override
 	public EmsAttachVO getEmassAttachInfo(String msgId, String attachId) {
-		/*Map<String, String> param = new HashMap<>();
+		*/
+/*Map<String, String> param = new HashMap<>();
 		param.put("msgId", msgId);
 		param.put("attachId", attachId);
 
-		return selectOne("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".emass.getEmassAttachInfo", param);*/
+		return selectOne("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".emass.getEmassAttachInfo", param);*//*
+
 		EmsAttachVO emsAttachVO= new EmsAttachVO();
 
 		EmsMessageVO emsMessageVO =mongoUtil.selectId(msgId,EmsMessageVO.class,MESSAGE_SCHEME);
@@ -552,15 +552,16 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		return emsAttachVO;
 
 	}
+*/
 
-	//내일 할 부분
+/*	//내일 할 부분
 	@Override
 	public EmsAttachTextVO getEmassAttachTextInfo(String msgId, String attachId, String ocrYn) {
-/*		Map<String, String> param = new HashMap<>();
+		Map<String, String> param = new HashMap<>();
 		param.put("msgId", msgId);
 		param.put("attachId", attachId);*/
 
-		EmsAttachTextVO vo = null;
+/*		EmsAttachTextVO vo = null;
 		if (Common.isEquals(ocrYn, "Y")) {
 
 			EmsMessageVO emsMessageVO= mongoUtil.selectId(msgId,EmsMessageVO.class,MESSAGE_SCHEME);
@@ -609,16 +610,18 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		}
 		return vo;
 	}
+	*/
 
+/*
 	@Override
 	public List<EmsPiVO> getEmassPattern(String msgId) {
 
-		EmsMessageVO emsMessageVO =mongoUtil.selectId(msgId,EmsMessageVO.class,MESSAGE_SCHEME);
+	EmsMessageVO emsMessageVO =mongoUtil.selectId(msgId,EmsMessageVO.class,MESSAGE_SCHEME);
 
 		List<EmsPiVO> list= emsMessageVO.getPrivateInfo();
 
 		return list;
-	}
+	}*/
 
 	private Map<String, PatternVO> convertMap(List<PatternVO> list) {
 		Map<String, PatternVO> map = new HashMap<>();
@@ -636,6 +639,11 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		param.put("type", type);
 		param.put("attachName", attachName);
 		return selectList("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".emass.getEmassPatternDetail", param);
+	}
+
+	@Override
+	public EmsAttachTextVO getEmassAttachTextInfo(String msgId, String attachId, String ocrYn) {
+		return null;
 	}
 
 	@Override
@@ -940,6 +948,9 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		}
 	}
 
+
+
+/*
 	@Override
 	public Map<String, List<String>> parseJsonFile(String filePath) {
 
@@ -1083,6 +1094,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		}
 		return null;
 	}
+*/
 
 	private Map<String, List<parseJsonFile>> groupingByMsgId(List<parseJsonFile> sumList) {
 		return sumList.stream().collect(Collectors.groupingBy(parseJsonFile::getMsgId));
@@ -1172,6 +1184,8 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		return filePath;
 	}
 
+
+
 	private String makeFeedbackJsonFile(JSONArray jsonArray) {
 		log.info("Feedback JSON ARRAY SIZE : {}", jsonArray.size());
 
@@ -1222,7 +1236,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		return selectOne("com.xcurenet.sqlmap.mappers.mysql.config.getMlFeedbackInfo", confId);
 	}
 
-	@Override
+/*	@Override
 	public boolean insertAndUpdateSolrFeedback(String msgId, String feedbackValue) {
 		log.info("Solr Feedback Process Start");
 
@@ -1268,7 +1282,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		boolean updateCheck = solrEdcService.updateSolrFeedbackData(feedbackList);
 
 		return updateCheck;
-	}
+	}*/
 
 	@Override
 	public int updateSkMlFeedback(String msgId, String attachId, int radioFeedbackInt, int attachSecretYnInt) {
@@ -1316,5 +1330,40 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		param.put("recvsType", recvsType);
 		List<Map<String, Object>> result = selectList("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".emass.getRecvDomainInfo", param);
 		return result;
+	}
+
+
+
+
+
+
+	@Override
+	public List<EmsAttachVO> getEmassAttachInfoConsent(String msgId, String firstAdminYn, String adminType) {
+		return null;
+	}
+
+	@Override
+	public List<EmsAttachVO> getEmassAttachInfo4Down(String msgId, String attachId) {
+		return null;
+	}
+
+	@Override
+	public boolean insertAndUpdateSolrFeedback(String msgId, String feedbackValue) {
+		return false;
+	}
+
+	@Override
+	public Map<String, List<String>> parseJsonFile(String filePath) {
+		return null;
+	}
+
+	@Override
+	public EmsAttachVO getEmassAttachInfo(String msgId, String attachId) {
+		return null;
+	}
+
+	@Override
+	public List<EmsPiVO> getEmassPattern(String msgId) {
+		return null;
 	}
 }

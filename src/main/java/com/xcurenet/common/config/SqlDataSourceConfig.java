@@ -1,9 +1,10 @@
 package com.xcurenet.common.config;
 
-import java.net.MalformedURLException;
-
-import javax.sql.DataSource;
-
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.zaxxer.hikari.HikariDataSource;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -22,12 +23,7 @@ import org.springframework.data.mongodb.core.SimpleMongoClientDatabaseFactory;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientSettings;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.xcurenet.common.solr.SolrConnection;
-import com.zaxxer.hikari.HikariDataSource;
+import javax.sql.DataSource;
 
 @Configuration
 public class SqlDataSourceConfig {
@@ -35,10 +31,8 @@ public class SqlDataSourceConfig {
 	private static final String MYBATIS_CONFIG_PATH = "classpath:mybatis-config.xml";
 
 	@Value("${spring.datasource.mongodb.uri}")
-	private String uri;
+	private String mongoUri;
 
-	@Value("${solr.servers}")
-	private String solrServer;
 
 	@Bean
 	@Primary
@@ -71,7 +65,7 @@ public class SqlDataSourceConfig {
 	@Bean
 	@ConfigurationProperties("spring.datasource.mongodb")
 	public MongoClient mongoDataSource() {
-		ConnectionString con = new ConnectionString(uri);
+		ConnectionString con = new ConnectionString(mongoUri);
 		MongoClientSettings mongClientSet = MongoClientSettings.builder().readPreference(com.mongodb.ReadPreference.primary()).applyConnectionString(con).build();
 		return MongoClients.create(mongClientSet);
 	}
@@ -86,13 +80,6 @@ public class SqlDataSourceConfig {
 		return new MongoTemplate(mongoDatabaseFactory);
 	}
 
-	@Bean
-	public SolrConnection emassSolrClient() throws MalformedURLException {
-		return new SolrConnection(solrServer, "edc");
-	}
 
-	@Bean
-	public SolrConnection checkedSolrClient() throws MalformedURLException {
-		return new SolrConnection(solrServer, "checked");
-	}
+
 }

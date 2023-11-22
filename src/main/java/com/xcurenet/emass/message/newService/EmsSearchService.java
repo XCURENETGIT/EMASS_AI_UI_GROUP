@@ -1,7 +1,6 @@
 package com.xcurenet.emass.message.newService;
 
 import com.xcurenet.emass.message.service.MessengerEdcGroupVO;
-import com.xcurenet.emass.message.service.MessengerGroupUserVO;
 import com.xcurenet.emass.message.service.impl.parseJsonFile;
 import com.xcurenet.emass.message.vo.emass.EmassIntegrated;
 import com.xcurenet.emass.message.vo.emass.els.Emass;
@@ -30,7 +29,7 @@ public interface EmsSearchService {
 
 	 MessengerEdcGroupVO getMessengerGroupList(final Map<String,Object> searchParam, final String adminId, final boolean detail, final boolean original) throws IOException;
 
-	 MessengerGroupUserVO getMessengerGroupUserList(final Map<String,Object> searchParam, final String adminId) throws IOException;
+//	 MessengerGroupUserVO getMessengerGroupUserList(final Map<String,Object> searchParam, final String adminId) throws IOException;
 
 	 void setFeedback(final String msgId, final String ml_confd_feedback) throws IOException;
 

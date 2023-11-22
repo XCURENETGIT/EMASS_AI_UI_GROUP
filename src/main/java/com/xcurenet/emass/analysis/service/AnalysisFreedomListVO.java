@@ -1,21 +1,13 @@
 package com.xcurenet.emass.analysis.service;
 
-import java.io.IOException;
-import java.util.List;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.xcurenet.common.vo.XcnFacetsVO;
-import com.xcurenet.emass.message.service.SolrEdcMessageVO;
-
-import lombok.Data;
-
+/*
 public @Data class AnalysisFreedomListVO extends XcnFacetsVO {
 
-	private List<Buckets> buckets;
+//	private List<Buckets> buckets;
 	private long totalCount;
 
-	public AnalysisFreedomListVO(SolrEdcMessageVO edc) throws JsonParseException, JsonMappingException, IOException {
+*/
+/*	public AnalysisFreedomListVO(SolrEdcMessageVO edc) throws JsonParseException, JsonMappingException, IOException {
 		this(edc, 1);
 	}
 
@@ -31,5 +23,7 @@ public @Data class AnalysisFreedomListVO extends XcnFacetsVO {
     	private long max;
     	private long min;
     	private List<AnalysisFreedomListVO.Buckets> buckets;
-    }
+    }*//*
+
 }
+*/

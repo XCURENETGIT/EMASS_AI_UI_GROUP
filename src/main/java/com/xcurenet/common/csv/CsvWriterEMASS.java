@@ -1,26 +1,17 @@
 package com.xcurenet.common.csv;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.xcurenet.common.util.Common;
+import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONArray;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.IOUtils;
 
-import com.xcurenet.common.excel.XLSXWriterEMASS;
-import com.xcurenet.common.util.Common;
-import com.xcurenet.emass.message.service.SolrEdcVO;
-
-import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import java.io.*;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 public class CsvWriterEMASS {
@@ -52,51 +43,51 @@ public class CsvWriterEMASS {
 		IOUtils.closeQuietly(writer);
 	}
 	
-	public void appendData(List<SolrEdcVO> data, int offset) throws Exception {
-		int index = 1;
-		for (SolrEdcVO edc : data) {
-			List<String> record = new ArrayList<String>();
-			String key = "";
-			try {
-				for (int j = 0; j < header.size(); j++) {
-					JSONObject h = header.getJSONObject(j);
-					key = Common.nvl(h.get("key"));
-	
-					Object val = null;
-					if (Common.isEquals(key, "NUM")) val = offset+(index++);
-					else if (Common.isEquals(key, "to")) {
-						if(edc.getTo()!=null) {
-							List<String> tos = edc.getTo();
-							val = getPrivateValue(edc, "toInOutInfo") + Common.join(tos, ", ");
-						}
-					} else if(Common.isEquals(key, "cc") ) {
-						if(edc.getCc()!=null) {
-							List<String> ccs = edc.getCc();
-							val = getPrivateValue(edc, "ccInOutInfo") + Common.join(ccs, ", ");
-						}
-					} else if(Common.isEquals(key, "bcc") ) {
-						if(edc.getBcc()!=null) {
-							List<String> bccs = edc.getBcc();
-							val = getPrivateValue(edc, "bccInOutInfo") + Common.join(bccs, ", ");
-						}
-					} else if(Common.isEquals(key, "recvs") ) {
-						if(edc.getRecvs()!=null) {
-							List<String> recvs = edc.getRecvs();
-							val = getPrivateValue(edc, "recvsInOutInfo") + Common.join(recvs, ", ");
-						}
-					}
-					else val = getPrivateValue(edc, key);
-	
-					record.add(Common.nvl(val));
-				}
-				printer.printRecord(record);
-			} catch(Exception e) {
-				log.info("MsgId : {}, Data to long Field : {}", Common.nvl(edc.getMsgid()), Common.nvl(key));
-				throw new Exception(e);
-			}
-		}
-		printer.flush();
-	}
+//	public void appendData(List<SolrEdcVO> data, int offset) throws Exception {
+//		int index = 1;
+//		for (SolrEdcVO edc : data) {
+//			List<String> record = new ArrayList<String>();
+//			String key = "";
+//			try {
+//				for (int j = 0; j < header.size(); j++) {
+//					JSONObject h = header.getJSONObject(j);
+//					key = Common.nvl(h.get("key"));
+//
+//					Object val = null;
+//					if (Common.isEquals(key, "NUM")) val = offset+(index++);
+//					else if (Common.isEquals(key, "to")) {
+//						if(edc.getTo()!=null) {
+//							List<String> tos = edc.getTo();
+//							val = getPrivateValue(edc, "toInOutInfo") + Common.join(tos, ", ");
+//						}
+//					} else if(Common.isEquals(key, "cc") ) {
+//						if(edc.getCc()!=null) {
+//							List<String> ccs = edc.getCc();
+//							val = getPrivateValue(edc, "ccInOutInfo") + Common.join(ccs, ", ");
+//						}
+//					} else if(Common.isEquals(key, "bcc") ) {
+//						if(edc.getBcc()!=null) {
+//							List<String> bccs = edc.getBcc();
+//							val = getPrivateValue(edc, "bccInOutInfo") + Common.join(bccs, ", ");
+//						}
+//					} else if(Common.isEquals(key, "recvs") ) {
+//						if(edc.getRecvs()!=null) {
+//							List<String> recvs = edc.getRecvs();
+//							val = getPrivateValue(edc, "recvsInOutInfo") + Common.join(recvs, ", ");
+//						}
+//					}
+//					else val = getPrivateValue(edc, key);
+//
+//					record.add(Common.nvl(val));
+//				}
+//				printer.printRecord(record);
+//			} catch(Exception e) {
+//				log.info("MsgId : {}, Data to long Field : {}", Common.nvl(edc.getMsgid()), Common.nvl(key));
+//				throw new Exception(e);
+//			}
+//		}
+//		printer.flush();
+//	}
 	
 	@SuppressWarnings("unchecked")
 	private Object getPrivateValue(Object clazz, String f) throws Exception {

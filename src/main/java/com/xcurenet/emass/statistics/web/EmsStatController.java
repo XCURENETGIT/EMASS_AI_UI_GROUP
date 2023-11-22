@@ -14,14 +14,8 @@ import com.xcurenet.common.util.locale.Prop;
 import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.emass.message.newService.EmsSearchService;
-import com.xcurenet.emass.message.service.SolrEdcMessageVO;
 import com.xcurenet.emass.message.vo.emass.EmassIntegrated;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.common.util.SimpleOrderedMap;
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +26,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,7 +61,7 @@ public class EmsStatController {
 
 
 
-    @RequestMapping(value = "/test_getStatDetailList.xcn")
+    @RequestMapping(value = "/getStatDetailList.xcn")
     @Description("통계 리스트 상세 조회")
     @AuditOperation(Operation.SEARCH)
     @ResponseBody
@@ -92,7 +85,7 @@ public class EmsStatController {
     @RequestMapping(value = "/test_getInfoNetwork.xcn")
     @Description("개인정보 유출 관계 분석 관계도 조회")
     @ResponseBody
-    public XcnResponseVO getInfoNetwork(final HttpServletRequest request, final HttpSession session) throws SolrServerException, IOException {
+    public XcnResponseVO getInfoNetwork(final HttpServletRequest request, final HttpSession session) throws IOException {
 
         Gson gson = new Gson();
         Map<String,Object> resultParam = Common.getParamMap(request);
@@ -138,7 +131,7 @@ public class EmsStatController {
 
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
+ /*   @SuppressWarnings({"rawtypes", "unchecked"})
     private static JSONObject bucketsSetting(SimpleOrderedMap<Object> simpleOrderedMap) {
         List<String> column = new ArrayList<>();
 
@@ -163,13 +156,13 @@ public class EmsStatController {
             }
         }
         return json;
-    }
+    }*/
 
-    @RequestMapping(value = "/test_getInfoStatList.xcn")
+    @RequestMapping(value = "/getInfoStatList.xcn")
     @Description("개인정보 유출 관계 분석 조회")
     @AuditOperation(Operation.SEARCH)
     @ResponseBody
-    public XcnResponseVO getInfoStatList(final HttpServletRequest request, final HttpSession session) throws SolrServerException, IOException {
+    public XcnResponseVO getInfoStatList(final HttpServletRequest request, final HttpSession session) throws  IOException {
 
         Gson gson = new Gson();
         Map<String,Object> resultParam = Common.getParamMap(request);

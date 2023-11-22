@@ -1,10 +1,9 @@
 package com.xcurenet.common.exception;
 
-import javax.servlet.http.HttpServletResponse;
-
+import com.xcurenet.common.vo.XcnResponseVO;
+import com.xcurenet.common.vo.XcnRspCode;
 import org.apache.catalina.connector.ClientAbortException;
 import org.apache.ibatis.javassist.NotFoundException;
-import org.apache.solr.client.solrj.SolrServerException;
 import org.mybatis.spring.MyBatisSystemException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -14,8 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.xcurenet.common.vo.XcnResponseVO;
-import com.xcurenet.common.vo.XcnRspCode;
+import javax.servlet.http.HttpServletResponse;
 
 @ControllerAdvice("com.xcurenet")
 public class CommonExceptionHandler {
@@ -64,12 +62,12 @@ public class CommonExceptionHandler {
 		return new XcnResponseVO(XcnRspCode.REQUIRED_PARAMETER_ISNOT_PRESENT).status(HttpServletResponse.SC_BAD_REQUEST, response);
 	}
 
-	@ExceptionHandler(SolrServerException.class)
-	@ResponseBody
-	public XcnResponseVO handleSolrServerException(SolrServerException e, HttpServletResponse response) {
-		e.printStackTrace();
-		return new XcnResponseVO(XcnRspCode.SYSTEM_ERROR).status(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, response);
-	}
+//	@ExceptionHandler(SolrServerException.class)
+//	@ResponseBody
+//	public XcnResponseVO handleSolrServerException(SolrServerException e, HttpServletResponse response) {
+//		e.printStackTrace();
+//		return new XcnResponseVO(XcnRspCode.SYSTEM_ERROR).status(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, response);
+//	}
 
 	@ExceptionHandler(DataIntegrityViolationException.class)
 	@ResponseBody

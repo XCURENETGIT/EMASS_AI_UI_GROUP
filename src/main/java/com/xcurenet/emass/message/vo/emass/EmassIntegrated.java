@@ -10,9 +10,6 @@ import com.xcurenet.emass.message.service.FacetVO;
 import com.xcurenet.emass.message.vo.emass.els.Emass;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.solr.client.solrj.response.FacetField;
-import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.common.util.SimpleOrderedMap;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.aggregations.Aggregation;
@@ -41,7 +38,6 @@ public class EmassIntegrated {
     private List<Map<String, Object>> facetData;
     private List<FacetVO> facet;
     private int facetQueryData;
-    private SimpleOrderedMap<Object> facets;
     /* ------------------------------------------*/
 
     private String excuteQuery;
@@ -92,69 +88,6 @@ public class EmassIntegrated {
         }
     }
 
-
-    private void setFacetQuery(final QueryResponse resp) {
-        Map<String, Integer> facetQuery = resp.getFacetQuery();
-
-        if(facetQuery == null || facetQuery.size() == 0) return;
-
-        Iterator<String> keys = facetQuery.keySet().iterator();
-        facetQueryData = facetQuery.get(keys.next());
-    }
-
-    private void setFacet(final QueryResponse resp) {
-        List<FacetField> fields = resp.getFacetFields();
-        if (fields == null) return;
-        if (fields.size() == 0) return;
-        FacetField field = fields.get(0);
-        String chkSvc = field.getName();
-
-        List<String> list = new ArrayList<String>();
-        List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
-        Map<String, Object> item = new HashMap<String, Object>();
-        List<FacetField.Count> values = field.getValues();
-        if (values == null) return;
-        facet = new ArrayList<FacetVO>();
-        for (FacetField.Count count : values) {
-            item.put(count.getName(), count.getCount());
-            /*
-             * Map<String, Object> item = new HashMap<String, Object>();
-             * item.put("rowKey", count.getName()); item.put("count",
-             * count.getCount());
-             */
-            list.add(count.getName());
-            FacetVO facetVo = new FacetVO();
-            if (chkSvc.equals("svc12")) {
-                facetVo.setName(Config.getServiceLv12Nm(count.getName()));
-                facetVo.setName2(count.getName());
-            }
-
-            else {
-                facetVo.setName(count.getName());
-                facetVo.setUserId(Common.nvl(Config.getUserId(count.getName())));
-                facetVo.setName2(Common.nvl(Config.getUserName(count.getName())));
-                facetVo.setConm(Common.nvl(Config.getUserConm(count.getName())));
-                facetVo.setDeptnm(Common.nvl(Config.getUserDeptnm(count.getName())));
-                facetVo.setJikgubnm(Common.nvl(Config.getUserJikgubnm(count.getName())));
-                facetVo.setEmail(Common.nvl(Config.getUserEmail(count.getName())));
-            }
-            facetVo.setCount(count.getCount());
-            facet.add(facetVo);
-            // result.add(item);
-        }
-        item.put("total", resp.getResults().getNumFound());
-        result.add(item);
-
-        Collections.sort(list);
-        Collections.sort(result, new Comparator<Map<String, Object>>() {
-            @Override
-            public int compare(Map<String, Object> first, Map<String, Object> second) {
-                return ((String) first.get("rowKey")).compareTo((String) second.get("rowKey"));
-            }
-        });
-        this.facetHeader = list;
-        this.facetData = result;
-    }
 
     private void setPivot(final SearchResponse searchResponse) {
              if(searchResponse == null) return;

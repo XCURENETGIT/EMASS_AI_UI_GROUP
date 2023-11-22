@@ -1670,7 +1670,7 @@ public class ElasticSearchQueryUtils {
 		SearchSourceBuilder searchSourceBuilder = null;
 		/* 권한 관련*/
 		setMessageSearchQueryReady(searchParam); // 파라미터 준비
-		setAuthoritys(searchParam, adminId);
+		//setAuthoritys(searchParam, adminId);
 
 		RangeQueryBuilder rangeQuery = new RangeQueryBuilder(ElasticSearchCommon.CTIME).gte(elasticSearchParam.getStartDate()).lte(elasticSearchParam.getEndDate());
 		QueryStringQueryBuilder secondQuery = QueryBuilders.queryStringQuery(query);
@@ -2221,7 +2221,8 @@ public class ElasticSearchQueryUtils {
 
 			for (AuthorityVO authority : authoritys) {
 				if (authority.getCnt() > 0) {
-					authority.getQuery();
+					String test = authority.getQuery();
+					test.length();
 				//	sq.addFilterQuery(authority.getQuery());
 				}
 			}

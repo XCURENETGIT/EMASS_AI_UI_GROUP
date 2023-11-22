@@ -1,30 +1,23 @@
 package com.xcurenet.emass.report.web;
 
-import java.util.List;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import org.apache.solr.client.solrj.SolrQuery;
-import org.springframework.context.annotation.Description;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.xcurenet.annotations.AuditMenu;
 import com.xcurenet.annotations.AuditOperation;
 import com.xcurenet.annotations.AuditParentMenu;
 import com.xcurenet.audit.service.Menu;
 import com.xcurenet.audit.service.Operation;
 import com.xcurenet.audit.service.ParentMenu;
-import com.xcurenet.common.util.Common;
 import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.emass.dashboard.service.DeviceStatusService;
 import com.xcurenet.emass.dashboard.service.DeviceStatusVO;
-import com.xcurenet.emass.message.service.SolrEdcMessageVO;
-import com.xcurenet.emass.message.service.SolrEdcService;
+import org.springframework.context.annotation.Description;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 @AuditParentMenu(ParentMenu.DATA_MONITOR)
@@ -33,10 +26,7 @@ public class ReportController {
 
 	@Resource(name = "deviceStatusService")
 	public DeviceStatusService deviceStatusService;
-	
-	@Resource(name = "solrEdcService")
-	private SolrEdcService solrEdcService;
-	
+
 	@RequestMapping(value = "/getReportDeviceList.xcn")
 	@Description("리포트 - 장비 전체 목록 조회")
 	@AuditOperation(Operation.SEARCH)
@@ -45,7 +35,7 @@ public class ReportController {
 		List<DeviceStatusVO> reportDeviceVO = deviceStatusService.getDeviceStatusList();
 		return new XcnResponseVO(XcnRspCode.OK, reportDeviceVO);
 	}
-	
+/*
 	@RequestMapping(value = "/getReportCnt.xcn")
 	@Description("리포트 - 기간단위별 수집 건수 조회")
 	@AuditOperation(Operation.SEARCH)
@@ -68,7 +58,7 @@ public class ReportController {
 		SolrEdcMessageVO solrReportVo = solrEdcService.getEmassMessage(sq, Common.getAdminId(request));
 		return new XcnResponseVO(XcnRspCode.OK, solrReportVo, solrReportVo.getNumFound());
 	}
-	
+	*/
 	/*
 	@RequestMapping(value = "/statsXlsxWriter.do", method = RequestMethod.POST)
 	@Description("통계 - 통계XLSX Writer 호출")

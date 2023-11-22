@@ -1,28 +1,21 @@
 package com.xcurenet.common.pdf;
 
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.xcurenet.common.util.Common;
+import com.xcurenet.common.util.locale.Prop;
+import com.xcurenet.emass.message.vo.emass.els.Emass;
+import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONArray;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.util.List;
-
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.xcurenet.common.csv.CsvWriterEMASS;
-import com.xcurenet.common.util.Common;
-import com.xcurenet.common.util.locale.Prop;
-import com.xcurenet.emass.message.service.SolrEdcVO;
-
-import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONArray;
 
 @Slf4j
 public class PdfWriterEMASS {
@@ -52,15 +45,15 @@ public class PdfWriterEMASS {
 		writeHeader();
 	}
 	
-	public void appendData(List<SolrEdcVO> data, int offset) throws Exception{
+	public void appendData(List<Emass> data, int offset) throws Exception{
 		Font f2 = new Font(baseFont, 6);
 		int index = 1;
-		for (SolrEdcVO edc : data) {
+		for (Emass edc : data) {
 			String key = "";
 			try {
 				for (int j = 0; j < header.size(); j++) {
 					key = header.getJSONObject(j).getString("key");
-					
+		/*	############## Solr 관련 임시주석 ###############
 					Object val = null;
 					if (Common.isEquals(key, "NUM")) val = offset+(index++);
 					else if (Common.isEquals(key, "to")) {
@@ -89,6 +82,8 @@ public class PdfWriterEMASS {
 					PdfPCell cell = new PdfPCell(new Phrase(Common.nvl(val), f2));
 					cell.setVerticalAlignment(Paragraph.ALIGN_CENTER);
 					table.addCell(cell);
+
+		 */
 				}
 			} catch(Exception e) {
 				log.info("MsgId : {}, Data to long Field : {}", Common.nvl(edc.getMsgid()), Common.nvl(key));

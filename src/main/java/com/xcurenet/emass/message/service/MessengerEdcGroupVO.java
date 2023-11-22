@@ -6,8 +6,6 @@ import com.xcurenet.common.util.locale.Prop;
 import com.xcurenet.emass.message.vo.emass.els.Emass;
 import com.xcurenet.emass.message.vo.emass.els.EmassMessenger;
 import lombok.ToString;
-import org.apache.solr.client.solrj.SolrResponse;
-import org.apache.solr.client.solrj.response.QueryResponse;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.search.SearchHit;
 import org.joda.time.DateTime;
@@ -43,8 +41,6 @@ public class MessengerEdcGroupVO {
 		this(searchResponse, null, false, false);
 	}
 
-	//SolrResponse 참조 에러방지를 위해 남김
-	public MessengerEdcGroupVO(final SolrResponse solrResponse , final String adminId, final boolean detail, final boolean original) throws IOException { }
 
 	public MessengerEdcGroupVO(final SearchResponse  searchResponse , final String adminId, final boolean detail, final boolean original) throws IOException {
 		if(searchResponse == null) return;
@@ -197,29 +193,29 @@ public class MessengerEdcGroupVO {
 		return emassMessenger;
 	}
 
-	private static String getTitle(SolrEdcVO edc) {
-		return edc.getXrootmtr();
-
-		/*List<String> recvs = edc.getRecvs();
-		List<String> recvNames = edc.getRecvs_name();
-		if (recvNames == null) recvNames = new ArrayList<>();
-		for (int i = 0; i < recvNames.size(); i++) {
-			if (Common.isEmpty(recvNames.get(i))) recvNames.set(i, recvs.get(i));
-		}
-		recvNames.add(getSender(edc));
-		Collections.sort(recvNames);
-		List<String> tmp = new ArrayList<>();
-		for (int i = 0; i < recvNames.size(); i++) {
-			if (i > 1) break;
-			tmp.add(recvNames.get(i));
-		}
-		String result = Common.join(tmp, ", ");
-		if (recvNames.size() > 2) {
-			result += "...";
-		}
-		result += " (" + recvNames.size() + Prop.propFormat("eikon.msg.person")+")";
-		return result;*/
-	}
+//	private static String getTitle(SolrEdcVO edc) {
+//		return edc.getXrootmtr();
+//
+//		/*List<String> recvs = edc.getRecvs();
+//		List<String> recvNames = edc.getRecvs_name();
+//		if (recvNames == null) recvNames = new ArrayList<>();
+//		for (int i = 0; i < recvNames.size(); i++) {
+//			if (Common.isEmpty(recvNames.get(i))) recvNames.set(i, recvs.get(i));
+//		}
+//		recvNames.add(getSender(edc));
+//		Collections.sort(recvNames);
+//		List<String> tmp = new ArrayList<>();
+//		for (int i = 0; i < recvNames.size(); i++) {
+//			if (i > 1) break;
+//			tmp.add(recvNames.get(i));
+//		}
+//		String result = Common.join(tmp, ", ");
+//		if (recvNames.size() > 2) {
+//			result += "...";
+//		}
+//		result += " (" + recvNames.size() + Prop.propFormat("eikon.msg.person")+")";
+//		return result;*/
+//	}
 
 	private static String getMessage(Emass ems) {
 		String msg = getMessageDetail(ems, 200, false).replaceAll("\\r", "").replaceAll("\\n", "");
@@ -280,12 +276,7 @@ public class MessengerEdcGroupVO {
 		return "<pre class='ignoreHtmlPre'><code>" + text + "</code></pre>";
 	}
 
-	private int getMessengerGroupCnt(QueryResponse resp) {
-		if(Common.isNotEmpty(resp.getFacetField("xrootmtr"))) {
-			return resp.getFacetField("xrootmtr").getValueCount();
-		}
-		return 0;
-	}
+
 
 
 }

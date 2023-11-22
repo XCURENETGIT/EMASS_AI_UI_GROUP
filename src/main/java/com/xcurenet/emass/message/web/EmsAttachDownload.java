@@ -1,17 +1,16 @@
 package com.xcurenet.emass.message.web;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.List;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.xcurenet.common.crypto.CryptoCommon;
+import com.xcurenet.common.ftp.SFTPUtil;
+import com.xcurenet.common.util.Common;
+import com.xcurenet.common.util.config.Config;
+import com.xcurenet.emass.message.newService.EmsReDefined;
+import com.xcurenet.emass.message.service.EmsAttachVO;
+import com.xcurenet.emass.message.vo.emass.mongo.EmassMessage;
+import com.xcurenet.emass.message.vo.emass.mongo.fields.HttpVo_Mgo;
+import com.xcurenet.emass.message.vo.emass.mongo.fields.NetworkVo_Mgo;
 import com.xcurenet.minio.MinioFileAdapter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.connector.ClientAbortException;
 import org.apache.commons.compress.archivers.ArchiveOutputStream;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
@@ -21,15 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Service;
 
-import com.xcurenet.common.crypto.CryptoCommon;
-import com.xcurenet.common.ftp.SFTPUtil;
-import com.xcurenet.common.util.Common;
-import com.xcurenet.common.util.config.Config;
-import com.xcurenet.emass.message.service.EmsAttachVO;
-import com.xcurenet.emass.message.service.EmsMessageVO;
-import com.xcurenet.emass.message.service.EmsReDefined;
-
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -268,14 +262,17 @@ public class EmsAttachDownload {
 		return null;
 	}
 
-	private EmsMessageVO getFileName(EmsAttachVO edc) {
-		EmsMessageVO msg = new EmsMessageVO();
+	private EmassMessage getFileName(EmsAttachVO edc) {
+		EmassMessage msg = new EmassMessage();
 		msg.setSubject(edc.getSubject());
 		msg.setSvc(edc.getSvc());
-		msg.setSrcIp(edc.getSrcIp());
-		msg.setDstIp(edc.getDstIp());
-		msg.setHost(edc.getHost());
-		msg.setPath(edc.getPath());
+		msg.setNetwork(new NetworkVo_Mgo());
+		msg.getNetwork().setSrcIp(edc.getSrcIp());
+		msg.getNetwork().setDstIp(edc.getDstIp());
+		msg.setHttp(new HttpVo_Mgo());
+		msg.getHttp().setHost(edc.getHost());
+		msg.getHttp().setPath(edc.getPath());
+
 		return msg;
 	}
 }

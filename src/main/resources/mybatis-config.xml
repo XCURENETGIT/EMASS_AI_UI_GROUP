@@ -76,7 +76,7 @@
 		<typeAlias alias="emsBodyVO" type="com.xcurenet.emass.message.service.EmsBodyVO" />
 		<typeAlias alias="emsKeywordVO" type="com.xcurenet.emass.message.service.EmsKeywordVO" />
 		<typeAlias alias="emsHeaderVO" type="com.xcurenet.emass.message.service.EmsHeaderVO" />
-		<typeAlias alias="emsMessageVO" type="com.xcurenet.emass.message.service.EmsMessageVO" />
+<!--		<typeAlias alias="emsMessageVO" type="com.xcurenet.emass.message.service.EmsMessageVO" />-->
 		<typeAlias alias="emsRecvVO" type="com.xcurenet.emass.message.service.EmsRecvVO" />
 		<typeAlias alias="emsAttachVO" type="com.xcurenet.emass.message.service.EmsAttachVO" />
 		<typeAlias alias="emsAttachTextVO" type="com.xcurenet.emass.message.service.EmsAttachTextVO" />

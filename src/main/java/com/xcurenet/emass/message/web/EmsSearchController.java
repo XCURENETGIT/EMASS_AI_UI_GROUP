@@ -14,13 +14,11 @@ import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.config.service.ConfigAdminService;
 import com.xcurenet.emass.adminFolder.service.AdminFolderService;
-import com.xcurenet.emass.message.component.SolrCreateQuery;
 import com.xcurenet.emass.message.newService.EmsSearchService;
 import com.xcurenet.emass.message.vo.emass.EmassIntegrated;
 import com.xcurenet.emass.searchLog.service.SearchLogService;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
-import org.apache.solr.client.solrj.SolrQuery;
 import org.springframework.context.annotation.Description;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -54,7 +52,7 @@ public class EmsSearchController {
 	private ConfigAdminService configAdminService;
 
 
-	@RequestMapping(value = "/getList_test.xcn")
+	@RequestMapping(value = "/getList.xcn")
 	@Description("메시지 검색")
 	@AuditOperation(Operation.SEARCH)
 	@ResponseBody
@@ -71,7 +69,7 @@ public class EmsSearchController {
 		/*############################################################################*/
 
 		EmassIntegrated emassIntegrated = emsSearchService.getEmassMessage(searchParam,Common.getAdminId(session));
-		return new XcnResponseVO(XcnRspCode.OK, emassIntegrated, emassIntegrated.getTotal());
+		return new XcnResponseVO(XcnRspCode.OK, emassIntegrated.getEmass(), emassIntegrated.getTotal());
 
 	}
 
@@ -210,8 +208,8 @@ public class EmsSearchController {
 
 
 
-	@RequestMapping(value = "/test_getHighlightStr.xcn")
-	@Description("solr 하일라이팅 검색어 생성")
+	@RequestMapping(value = "/getHighlightStr.xcn")
+	@Description("하일라이팅 검색어 생성")
 	@ResponseBody
 	public XcnResponseVO getHighlightStr(final HttpServletRequest request, final HttpSession session) throws Exception {
 		JSONObject param = Common.getParam(request);
@@ -226,14 +224,15 @@ public class EmsSearchController {
 
 	}
 
-	@RequestMapping(value = "/test_getQuery.xcn")
-	@Description("EDC Solr 메시지 검색")
+	@RequestMapping(value = "/getQuery.xcn")
+	@Description("메시지 검색")
 	@ResponseBody
 	public XcnResponseVO getQuery(final HttpServletRequest request, final HttpSession session) throws Exception {
 		JSONObject param = Common.getParam(request);
-		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
-		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), Common.getAdminId(session));
-		return new XcnResponseVO(XcnRspCode.OK, sq.getQuery());
+//		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+//		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), Common.getAdminId(session));
+//		return new XcnResponseVO(XcnRspCode.OK, sq.getQuery());
+		return null;
 	}
 
 
