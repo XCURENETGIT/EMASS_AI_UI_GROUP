@@ -6,7 +6,7 @@
 		<filter class="com.xcurenet.common.filter.LogbackFilter" />
 		<encoder>
 			<pattern>
-				EMASS [%d{yyyy-MM-dd HH:mm:ss.SSS}] %-5level %20.-20logger{0}.%-4line [%-25.-25X{adminIp}- %-12X{adminId}] %msg%n
+				[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-5level %20.-20logger{0}.%-4line [%-25.-25X{adminIp}- %-12X{adminId}] %msg%n
 			</pattern>
 		</encoder>
 	</appender>
@@ -19,7 +19,7 @@
 		</rollingPolicy>
 		<encoder>
 			<pattern>
-				EMASS [%d{yyyy-MM-dd HH:mm:ss.SSS}] %-5level %20.-20logger{0}.%-4line %msg%n
+				[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-5level %20.-20logger{0}.%-4line %msg%n
 			</pattern>
 		</encoder>
 	</appender>
@@ -32,7 +32,7 @@
 		</rollingPolicy>
 		<encoder>
 			<pattern>
-				EMASS [%d{yyyy-MM-dd HH:mm:ss.SSS}] %-5level %20.-20logger{0}.%-4line%n\t\t%msg%n\n
+				[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-5level %20.-20logger{0}.%-4line%n\t\t%msg%n\n
 			</pattern>
 		</encoder>
 	</appender>
@@ -45,7 +45,7 @@
 		</rollingPolicy>
 		<encoder>
 			<pattern>
-				EMASS [%d{yyyy-MM-dd HH:mm:ss.SSS}] %-5level %20.-20logger{0}.%-5line %msg%n
+				[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-5level %20.-20logger{0}.%-5line %msg%n
 			</pattern>
 		</encoder>
 	</appender>

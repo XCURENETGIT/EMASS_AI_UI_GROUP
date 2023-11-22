@@ -1,12 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
-<script type="text/javascript" src="<c:url value="/js/sha256.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/jsbn.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/rsa.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/prng4.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/rng.js"/>"></script>
-<link rel="stylesheet" href="<c:url value="/css/emass_style.css"/>" />
-<link rel="stylesheet" href="<c:url value="/css/reset.css"/>" />
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,12 +17,19 @@
 		request.getSession(true);
 	} catch (Exception e){
 	}
-
 	String locale = Config.getString("default.lang");
 %>
 
+<script type="text/javascript" src="<c:url value="/js/sha256.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/jsbn.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/rsa.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/prng4.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/rng.js"/>"></script>
+<link rel="stylesheet" href="<c:url value="/css/emass_style.css"/>" />
+<link rel="stylesheet" href="<c:url value="/css/reset.css"/>" />
+
 <style type="text/css">
-html,body {padding: 0px;margin: 0px;background-color:#fff;height: 98%;}
+html,body {padding: 0px;margin: 0px;width: 100%;height: 100%;}
 #googleOTPqr { pointer-events: none; }
 #reloadBtn{
 	color: #fff;
@@ -50,31 +50,6 @@ loginMsg += '\n';
 loginMsg += '<s:message code="login.currentlogin.date"/> : {3}\n';
 loginMsg += '<s:message code="login.currentlogin.ip"/> : {4}\n';
 
-
-function MM_preloadImages() { //v3.0
-	var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
-	var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
-	if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
-}
-
-function MM_swapImgRestore() { //v3.0
-	var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
-}
-
-function MM_findObj(n, d) { //v4.01
-	var p,i,x;  if(!d) d=document;
-	if((p=n.indexOf("?"))>0&&parent.frames.length) {
-		d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);
-	}
-	if(!(x=d[n])&&d.all) x=d.all[n];
-	for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
-	for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
-	if(!x && d.getElementById) x=d.getElementById(n); return x;
-}
-function MM_swapImage() { //v3.0
-	var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
-	if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
-}
 var firstOTP = false;
 var rsa;
 $(document).ready(function(){
@@ -91,14 +66,11 @@ $(document).ready(function(){
 		var userPwInput = $('#userPwInput').val().ltrim().rtrim();
 		let pinCode = $("#pinCode").val().replaceAll(" ","");
 		let numRegExp = /^[0-9]*$/;
-
 		if(pinCode == '') {
 			let msg = '';
-
 			if(firstOTP) {
 				msg = '<s:message code="login.google.otp.create.secretKey"/>';
 			}
-
 			msg = '<s:message code="login.google.otp.input.pincode"/>';
 			ui.alertMsg(msg);
 			return;
@@ -184,15 +156,12 @@ $(document).ready(function(){
 						}
 					},
 					error : function (status, message, data) {
+						$('#userPwInput').val('');
 						ui.alertMsg(message, function(){
 							if(data =='PW_EXPIRED') {
-                                $('#userPwInput').val('');
 								currentPw = sha256_digest(userPwInput);
 								adminId = userIdInput;
 								$('#changePasswordBtn').click();
-							}
-                            else if(data=='USER_LOCK'){
-                                $("#unusePop").modal("show");
 							}
 						}, 3000);
 					},
@@ -200,7 +169,6 @@ $(document).ready(function(){
 						ui.off('loginBody');
 					}
 				});
-
 			},
 			error : function (status, message) {
 				$('#adminPw').val('');
@@ -228,61 +196,6 @@ $(document).ready(function(){
 		$('#pinCode').focus();
 	});
 });
-
-function showUnusePop(){
-    $("#unusePop").modal("hide");
-    $('#unuseAdminPop').modal('show');
-}
-
-let timeOut=true;
-
-function sendMail(){
-    var userIdInput = $('#userIdInput').val().ltrim().rtrim();
-
-    if(timeOut!=true){
-        alert("아직 유효 메일이 남아있습니다");
-    } else {
-        ui.get({
-            url: 'mailSend.xcn',
-            userId: rsa.encrypt(userIdInput),
-            success: function (data) {
-                confirmTimeOut();
-                alert("인증코드 발송");
-            },
-            error: function (request,status,error,data) {
-                alert("R: "+request+"S: "+status+" E: "+error+" D: "+data);
-                if (error=='MAILNOCHECK') {
-                    alert("메일서버가 비활성화 상태 입니다. 관리자에게 문의하시길 바랍니다");
-                } else {
-                    alert("인증코드 발송에 실패하였습니다 관리자에게 문의하시길 바랍니다");
-                }
-                timeOut=true;
-                $('#unuseAdminPop').modal('hide');
-            }
-        })
-    }
-}
-
-function confirmNumber(){
-    var userIdInput = $('#userIdInput').val().ltrim().rtrim();
-    var number1 = $("#number").val().ltrim().rtrim();;
-
-        ui.get({
-	        url: 'updateStatus.xcn',
-            userId :userIdInput,
-	        number1 :number1,
-	        success:function (data,message){
-                $("#unuseAdminPop").modal('hide');
-                $('#unusetime').css("display", "none");
-                $('#number').val('');
-                alert("잠금이 해제되었습니다. 다시 로그인하세요");
-
-            },
-            error: function (data,message){
-                alert("코드 입력이 잘못되었습니다");
-            }
-        });
-}
 
 function reloadOTPgenerate(){
 	var userIdInput = $('#userIdInput').val().ltrim().rtrim();
@@ -351,85 +264,13 @@ function otpTimeOut() {
 	otpDelay = setTimeout(function(){
 		clearInterval(otpInterval);
 		clearTimeout(otpDelay);
-		 $('#googleOTPPop').modal('hide');
+		if(!firstOTP) $('#googleOTPPop').modal('hide');
 	}, 30000);
 }
-function confirmTimeOut() {
-     timeOut=false;
-    $('#unusetime').css("display", "block");
-    var t =(90000/1000)-1;
-         setInterval(function(){
-       $('#unuseAdminPop #unusetime').html((t--).comma() + 's' );
-    },1000);
-        setTimeout(function(){
-            timeOut =true;
-         $('#unuseAdminPop').modal('hide');
-            $('#unusetime').css("display","none");
-            t= (30000/1000)-1;
-            ui.get({
-                url: 'deleteSession.xcn'
-            });
-
-
-    }, 90000);
-}
-
 
 </script>
-
-
-<meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EMASS PRO</title>
-
 </head>
 <body id="loginBody">
-<%--
-<div class="modal fade" id="unusePop" tabindex="-1" role="dialog" aria-labelledby="unusePop">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-				<h3 class="modal-title">운용자 계정 잠금</h3>
-			</div>
-
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal">종료하기</button>
-				<button type="button" class="btn btn-primary" accesskey="S" onclick="showUnusePop()">본인인증 후 변경하기</button>
-
-			</div>
-		</div>
-	</div>
-</div>
-
-&lt;%&ndash;장기미사용 본인인증 팝업창&ndash;%&gt;
-<div class="modal fade" id="unuseAdminPop" tabindex="-1" role="dialog" aria-labelledby="unuseAdminPop">
-	<div class="modal-dialog" role="document" style="height: 500px;">
-		<div class="modal-content" style="height: 100%;">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-				<h3 class="modal-title">운용자 계정 잠금</h3>
-			</div>
-			<div class="modal-body">
-				<label class="control-label col-xs-4">이메일 본인인증</label>
-				<div id="unusetime"></div>
-				<br><br>
-				<div class="form-inline" style="border-bottom: 1px dashed #eee;padding: 7px 0px;">
-					<button type="button" name="sendBtn" id="sendBtn" onclick="sendMail()">메일 보내기</button><br>
-					<input type="text" name="number" id="number" style="width:250px; margin-top: -10px" placeholder="인증코드 입력">
-					<button type="button" name="confirmBtn" id="confirmBtn" onclick="confirmNumber()">인증하기</button>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-
-
 <div class="modal fade" id="googleOTPPop" tabindex="-1" role="dialog" aria-labelledby="googleOTPModal">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
@@ -493,40 +334,35 @@ function confirmTimeOut() {
 			</div>
 		</div>
 	</div>
-</div>--%>
-
-
+</div>
 <div id="changePasswordBtn"></div>
 <textarea style="display: none;" id="message"><%=loginMsg%></textarea>
+
 <div id="login">
 	<div class="logo">
 		<img src="<c:url value="/img/logo_login.png"/>" alt="EmassPro" class="emass">
 	</div>
 	<div id="loginWrap">
 		<!-- 로그인-->
-		<form method="post" id="loginForm">
+		<form method="post">
 			<div class="imgcontainer">
 				<img src="<c:url value="/img/logo_emass.png"/>" alt="EmassPro" class="emass">
 			</div>
 
 			<div class="container">
-				<input type="text"  id="userIdInput"  value=""/>
-				<input type="password" class="input1"  id="userPwInput"  value="" autocomplete="off"/>
-
+				<input type="text" placeholder="ID" id="userIdInput" required>
+				<input type="password" placeholder="Password" id="userPwInput" autocomplete="off" required>
 				<button id="loginBtn" type="button">로그인</button>
 				<label>
-					<input id="saveLoginId" type="checkbox" checked="checked" name="remember" class="checkbox_align">
-					<%if(Common.isEquals(locale, "ko")) {%> 로그인 ID 저장
-					<%}else{ %> Save Login ID
-					<%} %>
-				</label>
+					<input type="checkbox" checked="checked" id="saveLoginId" class="checkbox_align">
+					<%= Common.isEquals(locale, "ko") ? "로그인 ID 저장" : "Save Login ID" %>
 			</div>
 		</form>
 		<!--//로그인-->
 	</div>
 	<div id="loginText">
 		<h3>Enterprise MessAge Scanning System</h3>
-		<p>온라인(네트워크) 정보유출을 방지하기 위하여<br/>사용자의 전달 메시지 내용에 대하여 로깅 감시하는 시스템입니다.</p>
+		<%--<p>온라인(네트워크) 정보유출을 방지하기 위하여<br/>사용자의 전달 메시지 내용에 대하여 로깅 감시하는 시스템입니다.</p>--%>
 	</div>
 </div>
 </body>
