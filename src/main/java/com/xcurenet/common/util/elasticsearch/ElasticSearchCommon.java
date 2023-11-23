@@ -165,29 +165,31 @@ public class ElasticSearchCommon {
 
      // user
     public static final String USER_ID = "user.id"; //	사용자 ID
+    public static final String USER_USERID = "user.userId"; //	사용자 아이디(인사연동)
     public static final String USER_NAME = "user.name"; // 	사용자 이름
-    public static final String USER_IPCOCD = "user.ipcocd"; // 	회사코드(SRC_IP기준)
-    public static final String USER_IPCONM = "user.ipconm"; // 	회사명(SRC_IP기준)
-    public static final String USER_IPBUSINM = "user.ipbusinm"; // 	사명장명(SRC_IP기준)
-    public static final String USER_IPBUSICD = "user.ipbusicd"; // 	사업장코드(SRC_IP기준)
-    public static final String USER_COCD = "user.cocd"; // 	회사코드
-    public static final String USER_CONM = "user.conm"; // 	회사명
-    public static final String USER_BUSICD = "user.busicd"; // 	사업장 코드
-    public static final String USER_BUSINM = "user.businm"; // 	사업장명
-    public static final String USER_SUBORGCD = "user.suborgcd"; // 	총괄코드
-    public static final String USER_SUBORGNM = "user.suborgnm"; // 	총괄명
-    public static final String USER_DEPTNM = "user.deptnm"; // 	부서명
-    public static final String USER_DEPTCD = "user.deptcd"; // 	부서코드
-    public static final String USER_JIKGUBNM = "user.jikgubnm"; // 	직급명
-    public static final String USER_JIKGUBCD = "user.jikgubcd"; // 	직급코드
+    public static final String USER_IPCOCD = "user.ipcoCd"; // 	회사코드(SRC_IP기준)
+    public static final String USER_IPCONM = "user.ipcoNm"; // 	회사명(SRC_IP기준)
+    public static final String USER_IPBUSINM = "user.ipbusiNm"; // 	사명장명(SRC_IP기준)
+    public static final String USER_IPBUSICD = "user.ipbusiCd"; // 	사업장코드(SRC_IP기준)
+    public static final String USER_COCD = "user.coCd"; // 	회사코드
+    public static final String USER_CONM = "user.coNm"; // 	회사명
+    public static final String USER_BUSICD = "user.busiCd"; // 	사업장 코드
+    public static final String USER_BUSINM = "user.busiNm"; // 	사업장명
+    public static final String USER_SUBORGCD = "user.suborgCd"; // 	총괄코드
+    public static final String USER_SUBORGNM = "user.suborgNm"; // 	총괄명
+    public static final String USER_DEPTNM = "user.deptNm"; // 	부서명
+    public static final String USER_DEPTCD = "user.deptCd"; // 	부서코드
+    public static final String USER_JIKGUBNM = "user.jikgubNm"; // 	직급명
+    public static final String USER_JIKGUBCD = "user.jikgubCd"; // 	직급코드
     public static final String USER_CEO = "user.ceo"; //	CEO 여부
     public static final String USER_INSIDE = "user.inside"; // 	내부/외부 구분
 
     // day
     public static final String DAY_WEEK = "day.week";	//몇주차
     public static final String DAY_WORK = "day.work";	//업무시간 여부
+
     //ocr
-    public static final String OCR_ATTACHCNT = "ocr.attachcnt"; //	ocr 첨부 개수
+    public static final String OCR_ATTACHCNT = "ocr.attachCnt"; //	ocr 첨부 개수
     public static final String OCR_ATTACH = "ocr.attach"; //	ocr 첨부 개수
 
     //ml
@@ -199,60 +201,60 @@ public class ElasticSearchCommon {
     // 발신자
     private static final String SENDER_ALIAS = "sender.alias";   //		발신자 별칭
     private static final String SENDER_ID = "sender.id";   //		발신자 ID
-    private static final String SENDER_USERID = "sender.userid";   //		발신자 아이디(인사연동)
+    private static final String SENDER_USERID = "sender.userId";   //		발신자 아이디(인사연동)
     private static final String SENDER_NAME = "sender.name";   //		발신자 이름(인사연동)
     private static final String SENDER_EMAIL = "sender.email";   //		발신자 이메일 (인사연동)
     private static final String SENDER_IP = "sender.ip";   //		발신자 아이피
-    private static final String SENDER_COCD = "sender.cocd";   //		회사코드
-    private static final String SENDER_CONM = "sender.conm";   //		회사명
-    private static final String SENDER_BUSICD = "sender.busicd";   //		사업장 코드
-    private static final String SENDER_BUSINM = "sender.businm";   //		사업장명
-    private static final String SENDER_SUBORGCD = "sender.suborgcd";   //		총괄코드
-    private static final String SENDER_SUBORGNM = "sender.suborgnm";   //		총괄명
-    private static final String SENDER_DEPTCD = "sender.deptcd";   //		부서코드
-    private static final String SENDER_DEPTNM = "sender.deptnm";   //		부서명
-    private static final String SENDER_JIKGUBCD = "sender.jikgubcd";   //		직급코드
-    private static final String SENDER_JIKGUBNM = "sender.jikgubnm";   //		직급명
+    private static final String SENDER_COCD = "sender.coCd";   //		회사코드
+    private static final String SENDER_CONM = "sender.coNm";   //		회사명
+    private static final String SENDER_BUSICD = "sender.busiCd";   //		사업장 코드
+    private static final String SENDER_BUSINM = "sender.busiNm";   //		사업장명
+    private static final String SENDER_SUBORGCD = "sender.suborgCd";   //		총괄코드
+    private static final String SENDER_SUBORGNM = "sender.suborgNm";   //		총괄명
+    private static final String SENDER_DEPTCD = "sender.deptCd";   //		부서코드
+    private static final String SENDER_DEPTNM = "sender.deptNm";   //		부서명
+    private static final String SENDER_JIKGUBCD = "sender.jikgubCd";   //		직급코드
+    private static final String SENDER_JIKGUBNM = "sender.jikgubNm";   //		직급명
     private static final String SENDER_CEO = "sender.ceo";   //		CEO 여부
     private static final String SENDER_INSIDE = "sender.inside";   //		내부/외부 구분
 
     /* 수신자 */
     private static final String RECV_TO_ALIAS = "recv.to.alias";    //		수신자 별칭
     private static final String RECV_TO_ID = "recv.to.id"; 	       //	수신자 id
-    private static final String RECV_TO_USERID = "recv.to.userid";  //		수신자 아이디 (인사연동)
+    private static final String RECV_TO_USERID = "recv.to.userId";  //		수신자 아이디 (인사연동)
     private static final String RECV_TO_NAME = "recv.to.name"; 	   //	수신자 이름 (인사연동)
     private static final String RECV_TO_EMAIL = "recv.to.email";    //		수신자 이메일 (인사연동)
     private static final String RECV_TO_IP = "recv.to.ip" ;		   // 수신자 아이피
-    private static final String RECV_TO_COCD = "recv.to.cocd"; 	     //	회사코드
-    private static final String RECV_TO_CONM = "recv.to.conm"; 	    //	회사명
-    private static final String RECV_TO_BUSICD = "recv.to.busicd";  // 	사업장 코드
-    private static final String RECV_TO_BUSINM = "recv.to.businm";  //	사업장명
-    private static final String RECV_TO_SUBORGCD = "recv.to.suborgcd";  // 	총괄코드
-    private static final String RECV_TO_SUBORGNM = "recv.to.suborgnm";  // 	총괄명
-    private static final String RECV_TO_DEPTCD = "recv.to.deptcd";      //  	부서코드
-    private static final String RECV_TO_DEPTNM = "recv.to.deptnm";      //  	부서명
-    private static final String RECV_TO_JIKGUBCD = "recv.to.jikgubcd";      // 	직급코드
-    private static final String RECV_TO_JIKGUBNM = "recv.to.jikgubnm";  // 	직급명
+    private static final String RECV_TO_COCD = "recv.to.coCd"; 	     //	회사코드
+    private static final String RECV_TO_CONM = "recv.to.coNm"; 	    //	회사명
+    private static final String RECV_TO_BUSICD = "recv.to.busiCd";  // 	사업장 코드
+    private static final String RECV_TO_BUSINM = "recv.to.busiNm";  //	사업장명
+    private static final String RECV_TO_SUBORGCD = "recv.to.suborgCd";  // 	총괄코드
+    private static final String RECV_TO_SUBORGNM = "recv.to.suborgNm";  // 	총괄명
+    private static final String RECV_TO_DEPTCD = "recv.to.deptCd";      //  	부서코드
+    private static final String RECV_TO_DEPTNM = "recv.to.deptNm";      //  	부서명
+    private static final String RECV_TO_JIKGUBCD = "recv.to.jikgubCd";      // 	직급코드
+    private static final String RECV_TO_JIKGUBNM = "recv.to.jikgubNm";  // 	직급명
     private static final String RECV_TO_CEO = "recv.to.ceo" ;       //	CEO 여부
     private static final String RECV_TO_INSIDE = "recv.to.inside"; // 	내부/외부 구분
 
     /* 참조자 */
     private static final String RECV_CC_ALIAS = "recv.cc.alias";    //		참조자 별칭
     private static final String RECV_CC_ID = "recv.cc.id"; 	       //	참조자 id
-    private static final String RECV_CC_USERID = "recv.cc.userid";  //		참조자 아이디 (인사연동)
+    private static final String RECV_CC_USERID = "recv.cc.userId";  //		참조자 아이디 (인사연동)
     private static final String RECV_CC_NAME = "recv.cc.name"; 	   //	참조자 이름 (인사연동)
     private static final String RECV_CC_EMAIL = "recv.cc.email";    //		참조자 이메일 (인사연동)
     private static final String RECV_CC_IP = "recv.cc.ip" ;		   // 참조자 아이피
-    private static final String RECV_CC_COCD = "recv.cc.cocd"; 	     //	회사코드
-    private static final String RECV_CC_CONM = "recv.cc.conm"; 	    //	회사명
-    private static final String RECV_CC_BUSICD = "recv.cc.busicd";  // 	사업장 코드
-    private static final String RECV_CC_BUSINM = "recv.cc.businm";  //	사업장명
-    private static final String RECV_CC_SUBORGCD = "recv.cc.suborgcd";  // 	총괄코드
-    private static final String RECV_CC_SUBORGNM = "recv.cc.suborgnm";  // 	총괄명
-    private static final String RECV_CC_DEPTCD = "recv.cc.deptcd";      //  	부서코드
-    private static final String RECV_CC_DEPTNM = "recv.cc.deptnm";      //  	부서명
-    private static final String RECV_CC_JIKGUBCD = "recv.cc.jikgubcd";      // 	직급코드
-    private static final String RECV_CC_JIKGUBNM = "recv.cc.jikgubnm";  // 	직급명
+    private static final String RECV_CC_COCD = "recv.cc.coCd"; 	     //	회사코드
+    private static final String RECV_CC_CONM = "recv.cc.coNm"; 	    //	회사명
+    private static final String RECV_CC_BUSICD = "recv.cc.busiCd";  // 	사업장 코드
+    private static final String RECV_CC_BUSINM = "recv.cc.busiNm";  //	사업장명
+    private static final String RECV_CC_SUBORGCD = "recv.cc.suborgCd";  // 	총괄코드
+    private static final String RECV_CC_SUBORGNM = "recv.cc.suborgNm";  // 	총괄명
+    private static final String RECV_CC_DEPTCD = "recv.cc.deptCd";      //  	부서코드
+    private static final String RECV_CC_DEPTNM = "recv.cc.deptNm";      //  	부서명
+    private static final String RECV_CC_JIKGUBCD = "recv.cc.jikgubCd";      // 	직급코드
+    private static final String RECV_CC_JIKGUBNM = "recv.cc.jikgubNm";  // 	직급명
     private static final String RECV_CC_CEO = "recv.cc.ceo" ;       //	CEO 여부
     private static final String RECV_CC_INSIDE = "recv.cc.inside"; // 	내부/외부 구분
 
@@ -260,21 +262,21 @@ public class ElasticSearchCommon {
     /* 비밀참조자 */
     private static final String RECV_BCC_ALIAS = "recv.bcc.alias";    //		비밀참조자 별칭
     private static final String RECV_BCC_ID = "recv.bcc.id"; 	       //	비밀참조자 id
-    private static final String RECV_BCC_USERID = "recv.bcc.userid";  //		비밀참조자 아이디 (인사연동)
+    private static final String RECV_BCC_USERID = "recv.bcc.userId";  //		비밀참조자 아이디 (인사연동)
     private static final String RECV_BCC_NAME = "recv.bcc.name"; 	   //	비밀참조자 이름 (인사연동)
     private static final String RECV_BCC_EMAIL = "recv.bcc.email";    //		비밀참조자 이메일 (인사연동)
     private static final String RECV_BCC_IP = "recv.bcc.ip" ;		   // 비밀참조자 아이피
-    private static final String RECV_BCC_COCD = "recv.bcc.cocd"; 	     //	회사코드
-    private static final String RECV_BCC_CONM = "recv.bcc.conm"; 	    //	회사명
-    private static final String RECV_BCC_BUSICD = "recv.bcc.busicd";  // 	사업장 코드
-    private static final String RECV_BCC_BUSINM = "recv.bcc.businm";  //	사업장명
-    private static final String RECV_BCC_SUBORGCD = "recv.bcc.suborgcd";  // 	총괄코드
-    private static final String RECV_BCC_SUBORGNM = "recv.bcc.suborgnm";  // 	총괄명
-    private static final String RECV_BCC_DEPTCD = "recv.bcc.deptcd";      //  	부서코드
-    private static final String RECV_BCC_DEPTNM = "recv.bcc.deptnm";      //  	부서명
-    private static final String RECV_BCC_JIKGUBCD = "recv.bcc.jikgubcd";      // 	직급코드
-    private static final String RECV_BCC_JIKGUBNM = "recv.bcc.jikgubnm";  // 	직급명
-    private static final String RECV_BCC_CEO = "recv.bcc.ceo" ;       //	CEO 여부
+    private static final String RECV_BCC_COCD = "recv.bcc.coCd"; 	     //	회사코드
+    private static final String RECV_BCC_CONM = "recv.bcc.coNm"; 	    //	회사명
+    private static final String RECV_BCC_BUSICD = "recv.bcc.busiCd";  // 	사업장 코드
+    private static final String RECV_BCC_BUSINM = "recv.bcc.busiNm";  //	사업장명
+    private static final String RECV_BCC_SUBORGCD = "recv.bcc.suborgCd";  // 	총괄코드
+    private static final String RECV_BCC_SUBORGNM = "recv.bcc.suborgNm";  // 	총괄명
+    private static final String RECV_BCC_DEPTCD = "recv.bcc.deptCd";      //  	부서코드
+    private static final String RECV_BCC_DEPTNM = "recv.bcc.deptNm";      //  	부서명
+    private static final String RECV_BCC_JIKGUBCD = "recv.bcc.jikgubCd";      // 	직급코드
+    private static final String RECV_BCC_JIKGUBNM = "recv.bcc.jikgubNm";  // 	직급명
+    private static final String RECV_BCC_CEO = "recv.bcc.ceo";       //	CEO 여부
     private static final String RECV_BCC_INSIDE = "recv.bcc.inside"; // 	내부/외부 구분
 
 

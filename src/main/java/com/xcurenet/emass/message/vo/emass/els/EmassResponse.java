@@ -116,6 +116,7 @@ public class EmassResponse {
 
 	/* ------ user -------*/
 	private String	user_id; //	사용자 ID
+	private String	user_userId; //	사용자 ID
 	private String	user_name; //	사용자 이름
 	private String	user_ipCoCd; //	회사코드 IP기준
 	private String	user_ipCoNm; //	회사명 IP기준

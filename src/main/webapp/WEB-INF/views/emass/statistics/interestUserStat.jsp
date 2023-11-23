@@ -663,6 +663,7 @@ function getSearchQuery() {
             var searchData = {
                 xAxis: xAxis,
                 xAxis_str: xAxis_str,
+				rowKey: rowKey,
                 yAxis: 'user.id',
                 startDate: sDate + "000000",
                 endDate: eDate + "235959",
@@ -670,7 +671,7 @@ function getSearchQuery() {
                 limit: grid1.pageSize,
                 detailQuery: $('#elsQueryText').val(),
                 interGroup : interGroup,
-                interGroupNm : $('#interGroup option:selected').text()
+                interGroupId : $('#interGroup option:selected').text() //나중에 아이디값으로 변경시켜주세요
             }
 			
 			searchFlag = true;

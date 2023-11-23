@@ -79,6 +79,11 @@ public class ElasticSearchQueryUtils {
 		queryBuffer = new StringBuilder();
 	}
 
+	public void setAppendQuery() {
+		this.query = query + queryBuffer.toString().trim();
+		queryBuffer = new StringBuilder();
+	}
+
 	public String getQuery() {
 		return query;
 	}
@@ -169,6 +174,7 @@ public class ElasticSearchQueryUtils {
 		}
 		makeParentheses();
 	}
+
 
 	/***
 	 *
@@ -1260,14 +1266,17 @@ public class ElasticSearchQueryUtils {
 			setyField(Common.nvl(elasticSearchParam.getSearchParameters().get("yAxis")));
 		}
 
-
-		/* rowKey 존재할시 검색조건 추가 */
-		if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("rowKey"))) {
+		/* rowKey만 존재 */
+		if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("rowKey")) && !Common.isEmpty(elasticSearchParam.getSearchParameters().get("interGroupId"))) {
 			setSearchQuery(Common.nvl(elasticSearchParam.getSearchParameters().get("rowKey")));
-		}else{
+		}
+		/* 관심사용자 검색시 */
+		else if(Common.isEmpty(elasticSearchParam.getSearchParameters().get("rowKey")) && !Common.isEmpty(elasticSearchParam.getSearchParameters().get("interGroupId"))) {
+			setSearchQuery(Common.nvl(elasticSearchParam.getSearchParameters().get("interGroupId")));
+		} else{
+			/*아무런 검색조건 없을시*/
 			setSearchQuery(Common.nvl(ElasticSearchCommon.ALL_SEARCH));
 		}
-
 
 		/* 아무런 rowKey & colkey  조건이 없을시 */
 		if(Common.isEmpty(elasticSearchParam.getSearchParameters().get("rowKey")) && Common.isEmpty(elasticSearchParam.getSearchParameters().get("colKey"))){
@@ -1280,24 +1289,17 @@ public class ElasticSearchQueryUtils {
 		}
 
 
-		/* 관심사용자 존재할시 검색조건 추가 */
-		if(!Common.isEmpty(ElasticSearchCommon.USER_ID)) {
-			setyField(Common.nvl(ElasticSearchCommon.USER_ID));
-		}
-
 		if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("interGroup"))) {
 			adminUserGroupService = SpringContextUtil.getBean(AdminUserGroupService.class);
 			List<AdminUserGroupVO> users = adminUserGroupService.getAdminUserGroupSimpleList((String) elasticSearchParam.getSearchParameters().get("interGroup"));
-		/*	if (users.size() == 0) return;*/
-
-			for (AdminUserGroupVO user : users) {
-				String userId = user.getUserId();
-				System.out.println(userId);
-				if (userId != null) setSearchQuery(userId.toLowerCase());
-			}
+		   	if (users.size() == 0) return;
+			String userStr =  users.stream().map(m-> m.getUserId().toLowerCase()).collect(Collectors.joining(","));
+			String[] userArr = userStr.split(",");
+			addQueryGroup(ElasticSearchCommon.AND_QUERY,ElasticSearchCommon.USER_USERID,makeParentheses(userArr));
 		}
 
-			/* set Query (항상 쿼리 조합 최하단에 위치) */
+
+		/* set Query (항상 쿼리 조합 최하단에 위치) */
 		setQuery();
 
 		log.info("엘라스틱 서치 Query_String (테스트) ===> " + getQuery());
@@ -1336,6 +1338,7 @@ public class ElasticSearchQueryUtils {
 		SearchSourceBuilder searchSourceBuilder = null; // SearchSourceBuilder 리턴용
 
 		setStatisticQueryParamReady(searchParam); // 통계용 파라미터 준비
+
 		try {
 			RangeQueryBuilder rangeQuery = new RangeQueryBuilder(ElasticSearchCommon.CTIME).gte(elasticSearchParam.getStartDate()).lte(elasticSearchParam.getEndDate()); // date range
 			QueryStringQueryBuilder secondQuery = QueryBuilders.queryStringQuery(query); // 쿼리 스트링 저장
@@ -1688,9 +1691,10 @@ public class ElasticSearchQueryUtils {
 		SearchSourceBuilder searchSourceBuilder = null;
 		/* 권한 관련*/
 		setMessageSearchQueryReady(searchParam); // 파라미터 준비
-		//setAuthoritys(searchParam, adminId);
+		addAuthoritysQuery(adminId); // 권한 쿼리 조회
 
 		RangeQueryBuilder rangeQuery = new RangeQueryBuilder(ElasticSearchCommon.CTIME).gte(elasticSearchParam.getStartDate()).lte(elasticSearchParam.getEndDate());
+
 		QueryStringQueryBuilder secondQuery = QueryBuilders.queryStringQuery(query);
 
 		/* 쿼리 merge */
@@ -2205,15 +2209,14 @@ public class ElasticSearchQueryUtils {
 		log.debug("[SORT] : {}", elasticSearchParam.getSorts());
 		log.debug("[QUERY] {}", getQuery());
 
-
 	}
 
 
-
-	private void setAuthoritys(Map<String,Object> searchParam, String adminId) {
+	private void addAuthoritysQuery(String adminId) {
 		/* adminType  S:시스템 운용자, M:모니터링 운용자, D:장비 상태 모니터링 운용자 */
 		if (Common.isNotEmpty(adminId)) {
 			String adminType = "S"; // default
+
 			if (!Common.isOrEquals(adminId, "*")) {
 				adminType = adminService.getAdmin(adminId).getAdminType();
 			}
@@ -2226,29 +2229,24 @@ public class ElasticSearchQueryUtils {
 				addQueryGroup(ElasticSearchCommon.NOT_QUERY,ElasticSearchCommon.CEO,makeParentheses(ceo));
 			}
 
-		//	sq.addFilterQuery("-svc:QEKH");
-
+			/* 검색하는 운용자의 검색 회사,사업장 권한 확인 */
+			StringBuilder tempQueryBuilder = new StringBuilder();
 			JSONObject param = new JSONObject();
 			param.put("adminId", adminId);
 			param.put("queryType", Config.getString("query.type", "A"));
 			List<AuthorityVO> authoritys = authorityService.getAdminAuthority(param);
 
-
 			for (AuthorityVO authority : authoritys) {
-				if (authority.getCnt() > 0) {
-					String test = authority.getQuery();
-					test.length();
-				//	sq.addFilterQuery(authority.getQuery());
-				}
+				tempQueryBuilder.append((authority.getQuery() != null)? authority.getQuery() : "");
 			}
-//			if (log.isInfoEnabled()) {
-//				StringBuilder sb = new StringBuilder();
-//				if (sq.getFilterQueries() != null) {
-//					for (int i = 0; i < sq.getFilterQueries().length; i++) {
-//						sb.append(sq.getFilterQueries()[i]).append(" ");
-//					}
-//				}
-//			}
+
+			//로그 enabled시 쿼리 로그
+			if (log.isInfoEnabled()) { }
+
+//			tempQueryBuilder.insert(0,ElasticSearchCommon.SPACE+ElasticSearchCommon.AND_QUERY);
+//			queryBuffer.append(tempQueryBuilder);
+//			setAppendQuery();
+
 		}
 	}
 

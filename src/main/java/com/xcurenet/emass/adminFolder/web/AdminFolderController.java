@@ -1,50 +1,26 @@
-//package com.xcurenet.emass.adminFolder.web;
-//
-//
-//import java.util.ArrayList;
-//import java.util.List;
-//
-//import javax.annotation.Resource;
-//import javax.servlet.http.HttpServletRequest;
-//import javax.servlet.http.HttpSession;
-//
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.context.annotation.Description;
-//import org.springframework.stereotype.Controller;
-//import org.springframework.web.bind.annotation.RequestMapping;
-//import org.springframework.web.bind.annotation.ResponseBody;
-//
-//import com.xcurenet.audit.service.AuditRequestVO;
-//import com.xcurenet.audit.service.AuditService;
-//import com.xcurenet.audit.service.Menu;
-//import com.xcurenet.audit.service.Operation;
-//import com.xcurenet.audit.service.ParentMenu;
-//import com.xcurenet.common.util.Common;
-//import com.xcurenet.common.util.locale.Prop;
-//import com.xcurenet.common.vo.XcnResponseVO;
-//import com.xcurenet.common.vo.XcnRspCode;
-//import com.xcurenet.emass.adminFolder.service.AdminFolderMessageVO;
-//import com.xcurenet.emass.adminFolder.service.AdminFolderService;
-//import com.xcurenet.emass.adminFolder.service.AdminFolderVO;
-//import com.xcurenet.emass.message.component.SolrCreateQuery;
-//import com.xcurenet.emass.message.service.SolrEdcMessageVO;
-//import com.xcurenet.emass.message.service.SolrEdcService;
-//import com.xcurenet.emass.message.service.SolrEdcVO;
-//
-//import edu.emory.mathcs.backport.java.util.Arrays;
-//import lombok.extern.slf4j.Slf4j;
-//import net.sf.json.JSONArray;
-//import net.sf.json.JSONObject;
-//
-//@Slf4j
-//@Controller
-//public class AdminFolderController {
-//
-//	@Resource(name = "solrEdcService")
-//	private SolrEdcService solrEdcService;
-//
-//	@Resource(name = "adminFolderService")
-//	public AdminFolderService adminFolderService;
+import com.xcurenet.common.util.Common;
+import com.xcurenet.common.vo.XcnResponseVO;
+import com.xcurenet.common.vo.XcnRspCode;
+import com.xcurenet.emass.adminFolder.service.AdminFolderService;
+import com.xcurenet.emass.adminFolder.service.AdminFolderVO;
+import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONObject;
+import org.springframework.context.annotation.Description;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.List;
+
+@Slf4j
+@Controller
+public class AdminFolderController {
+
+	@Resource(name = "adminFolderService")
+	public AdminFolderService adminFolderService;
 //
 //	@Autowired
 //	private AuditService auditService;
@@ -121,16 +97,16 @@
 //		return new XcnResponseVO(XcnRspCode.OK, rtnSolrVo, rtnSolrVo.getNumFound());
 //	}
 //
-//	@RequestMapping(value = "/getAdminFolderList.xcn")
-//	@Description("관리자 메시지 폴더 리스트 조회")
-//	@ResponseBody
-//	public XcnResponseVO getAdminFolderList(final HttpServletRequest request, final HttpSession session) throws Exception {
-//		JSONObject param = Common.getParam(request);
-//		String adminId = Common.getAdminId(session);
-//
-//		List<AdminFolderVO> users = adminFolderService.getAdminFolderList(adminId, Common.nvl(param.get("searchStr")), request.getContextPath());
-//		return new XcnResponseVO(XcnRspCode.OK, users);
-//	}
+	@RequestMapping(value = "/getAdminFolderList.xcn")
+	@Description("관리자 메시지 폴더 리스트 조회")
+	@ResponseBody
+	public XcnResponseVO getAdminFolderList(final HttpServletRequest request, final HttpSession session) throws Exception {
+		JSONObject param = Common.getParam(request);
+		String adminId = Common.getAdminId(session);
+
+		List<AdminFolderVO> users = adminFolderService.getAdminFolderList(adminId, Common.nvl(param.get("searchStr")), request.getContextPath());
+		return new XcnResponseVO(XcnRspCode.OK, users);
+	}
 //
 //	@RequestMapping(value = "/insertAdminFolder.xcn")
 //	@Description("관리자 메시지 폴더 등록")
@@ -237,4 +213,4 @@
 //			return new XcnResponseVO(XcnRspCode.OK, adminFolderService.updateUserFolderMessage(list));
 //		}
 //	}
-//}
+}

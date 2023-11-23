@@ -242,6 +242,7 @@ public class EmsReDefined {
 			/* USER 관련 ####################### */
 			if (!Common.isEmpty(ems.getUser())) {
 				emassResponse.setUser_id(ems.getUser().getId());
+				emassResponse.setUser_userId(ems.getUser().getUserId());
 				emassResponse.setUser_name(ems.getUser().getName());
 				emassResponse.setUser_coCd(ems.getUser().getIpCoCd());
 				emassResponse.setUser_coNm(ems.getUser().getIpCoNm());

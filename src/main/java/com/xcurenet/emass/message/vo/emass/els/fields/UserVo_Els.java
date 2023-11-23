@@ -13,6 +13,8 @@ public class UserVo_Els {
 
 	@JsonProperty("id")
 	private String	id; //	사용자 ID
+	@JsonProperty("userId")
+	private String userId; //	사용자 ID (인사연동 기준 아이디 기존)
 	@JsonProperty("name")
 	private String	name; //	사용자 이름
 	@JsonProperty("ipCoCd")
