@@ -322,7 +322,7 @@ public class ElasticSearchCommon {
             "directionSvc", "direction", "xrootMtr", "xmsgKey",
             "xparentMtr", "password", "siteAttr",
             "siteCode", "epmsgType", "epHeader",
-            "usrId", "usrIp", "opinion",
+            "usrId", "usrIp", "opinion","body.path","body.snippet","body.size",
             "piTotal", "piDRM", "piID",
             "piEF", "piPN", "piDN",
             "piSN", "piCN", "piEC",

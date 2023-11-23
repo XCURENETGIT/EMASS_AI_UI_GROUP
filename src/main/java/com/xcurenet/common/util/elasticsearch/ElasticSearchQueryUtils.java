@@ -1553,6 +1553,9 @@ public class ElasticSearchQueryUtils {
 		}
 		/*############################################*/
 
+
+		/*############################################*/
+
 		/*################## 시간 ####################*/
 		/* 근무시간 */
 		if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("ctimeWork"))) addQueryGroup(ElasticSearchCommon.AND_QUERY,ElasticSearchCommon.DAY_WORK,makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("ctimeWork"))));
@@ -2060,11 +2063,20 @@ public class ElasticSearchQueryUtils {
 			setyField(Common.nvl(ElasticSearchCommon.SERVICE_SVC12));
 		}
 
+//		if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("searchStr"))){
+//			setSearchQuery(Common.nvl(elasticSearchParam.getSearchParameters().get("searchStr")));
+//		}else{
+//			setSearchQuery(Common.nvl(ElasticSearchCommon.ALL_SEARCH)); // 검색어 없을시 전체 검색어 입력
+//		}
+
+
 		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("serviceType"))) {
 			setSearchQuery(Common.nvl(elasticSearchParam.getSearchParameters().get("serviceType")));
 		} else {
 			setSearchQuery(Common.nvl(ElasticSearchCommon.ALL_SEARCH));
 		}
+
+
 
 		/* set Query (항상 쿼리 조합 최하단에 위치) */
 		setQuery();

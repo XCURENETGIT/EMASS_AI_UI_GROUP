@@ -738,7 +738,7 @@ function fileInfoViewer( row ){
         var searchData = {
             xAxis: xAxis,
             xAxis_str: xAxis_str,
-            yAxis: 'user.name',
+            yAxis: 'userId',
             startDate: sDate + "000000",
             endDate: eDate + "235959",
             offset: grid1.data.length,
@@ -769,7 +769,6 @@ function fileInfoViewer( row ){
                 });
                 for (var i = 0; i < data.pivotHeader.length; i++) {
                     var Header = data.pivotHeader[i];
-                    console.log("Header: " + Header);
                     var HeaderNm = "";
                     if (xAxis == "ctime_yyyymmdd") HeaderNm = Header;
                     else if (xAxis == "ctime_yyyymm") HeaderNm = Header.substr(0, 4) + "-" + Header.substr(4, 2);
@@ -783,7 +782,6 @@ function fileInfoViewer( row ){
                         else return '';
                     });
                 }
-
                 grid1.loadHeader(false);
                 grid1.setData(data.pivotData);
 
@@ -849,7 +847,7 @@ function fileInfoViewer( row ){
             xAxis_str: xAxis_str,
             searched_xAxis: $('#searched_xAxis').val(),
             colId: colId,
-            yAxis: 'user.name',
+            yAxis: 'userId',
             offset: currentgrid.data.length,
             limit: currentgrid.pageSize,
             nameStat: 'users',
