@@ -4,9 +4,11 @@ import com.xcurenet.admin.service.AdminService;
 import com.xcurenet.admin.service.AuthorityService;
 import com.xcurenet.admin.service.AuthorityVO;
 import com.xcurenet.common.util.Common;
+import com.xcurenet.common.util.SpringContextUtil;
 import com.xcurenet.common.util.config.Config;
 import com.xcurenet.emass.adminFilter.service.AdminFilterService;
 import com.xcurenet.interestUser.service.AdminUserGroupService;
+import com.xcurenet.interestUser.service.AdminUserGroupVO;
 import com.xcurenet.user.service.UserService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -1277,7 +1279,25 @@ public class ElasticSearchQueryUtils {
 			setDetailQuery(Common.nvl(elasticSearchParam.getSearchParameters().get("detailQuery")));
 		}
 
-		/* set Query (항상 쿼리 조합 최하단에 위치) */
+
+		/* 관심사용자 존재할시 검색조건 추가 */
+		if(!Common.isEmpty(ElasticSearchCommon.USER_ID)) {
+			setyField(Common.nvl(ElasticSearchCommon.USER_ID));
+		}
+
+		if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("interGroup"))) {
+			adminUserGroupService = SpringContextUtil.getBean(AdminUserGroupService.class);
+			List<AdminUserGroupVO> users = adminUserGroupService.getAdminUserGroupSimpleList((String) elasticSearchParam.getSearchParameters().get("interGroup"));
+		/*	if (users.size() == 0) return;*/
+
+			for (AdminUserGroupVO user : users) {
+				String userId = user.getUserId();
+				System.out.println(userId);
+				if (userId != null) setSearchQuery(userId.toLowerCase());
+			}
+		}
+
+			/* set Query (항상 쿼리 조합 최하단에 위치) */
 		setQuery();
 
 		log.info("엘라스틱 서치 Query_String (테스트) ===> " + getQuery());
