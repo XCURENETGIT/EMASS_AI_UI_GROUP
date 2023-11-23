@@ -207,7 +207,6 @@ public class EmsSearchServiceImpl implements EmsSearchService {
 
 
         if (Common.nvl(searchParam.get(ElasticSearchCommon.SEARCH_TYPE)) == ElasticSearchCommon.SEARCH_TYPE_MESSENGER_GROUP){
-            System.out.println("여기로 들어옴");
            emassIntegrated = new EmassIntegrated(searchResponse,elsSearchQueryUtils.getElasticSearchParam(), adminId);
            emassIntegrated.setTopHitsAggsDocData(searchResponse);
         }

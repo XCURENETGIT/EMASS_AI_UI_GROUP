@@ -5,6 +5,7 @@ import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.locale.Prop;
 import com.xcurenet.emass.message.vo.emass.els.Emass;
 import com.xcurenet.emass.message.vo.emass.els.EmassMessenger;
+import lombok.Data;
 import lombok.ToString;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.search.SearchHit;
@@ -19,6 +20,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @ToString
+@Data
 public class MessengerEdcGroupVO {
 
 	private final static DateTimeFormatter yyyyMMddHHmmss = DateTimeFormat.forPattern("yyyyMMddHHmmss");
@@ -28,7 +30,7 @@ public class MessengerEdcGroupVO {
 
 	private long total;
 
-
+	private List<?> emass;
 
 	private List<EmassMessenger> groups;
 
@@ -59,7 +61,7 @@ public class MessengerEdcGroupVO {
 				result.add(mapper.convertValue(map, Emass.class));
 			}
 		}
-
+		this.emass = result;
 		this.groups = new ArrayList<>();
 		this.numFound = searchResponse.getHits().getHits().length;
 		this.total = searchResponse.getHits().getTotalHits().value;

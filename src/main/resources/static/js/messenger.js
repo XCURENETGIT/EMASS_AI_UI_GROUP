@@ -179,7 +179,7 @@ var eikon = {
 			return;
 		}
 
-		var filterVal = {};
+		var conditions = {};
 		var conArray = [];
 		var condition = {};
 		condition.searchStr = searchStr;
@@ -187,17 +187,21 @@ var eikon = {
 		condition.endDt = endDt;
 		condition.searchField = 'body attachname attachname_str attach';
 		conArray.push(condition);
-		filterVal.conditions = conArray;
+		conditions.conditions = conArray;
 
 		detailSearchFlag = false;
 
-		ui.postJson({
-			url : 'getMessengerGroupDetailSearch.xcn',
+		var data = {
+			conditions : conditions,
 			xRootMtr : xrootmtr,
 			srcip: srcip,
 			usr_id: usr_id,
-			data : JSON.stringify( filterVal ),
 			offset : searchOffset,
+		}
+
+		ui.postJson({
+			url : 'getMessengerGroupDetailSearch.xcn',
+			searchParam  : JSON.stringify( data ),
 			success : function(data, total) {
 				focusMsgId = data.toString();
 				if(total > 0){

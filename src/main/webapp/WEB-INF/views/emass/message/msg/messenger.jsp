@@ -10,6 +10,7 @@
 <script type="text/javascript" src="<c:url value="/js/messenger.js"/>"></script>
 
 <head>
+	<link rel="stylesheet" type="text/css" href="../css/emass_style.css"/>
 	<title>EMASS LT - <s:message code="DATA_MONITOR.MESSAGE_SERVICE"/></title>
 	<style>
 		.clusterize-scroll{
