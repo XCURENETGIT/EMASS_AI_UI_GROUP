@@ -2901,8 +2901,8 @@ fieldset[disabled] input[type=checkbox], fieldset[disabled] input[type=radio], i
 }
 
 select.input-sm {
-	height: 30px;
-	line-height: 30px
+	height: 26px;
+	line-height: 26px
 }
 
 select[multiple].input-sm, textarea.input-sm {
@@ -4101,7 +4101,8 @@ select[multiple].input-group-sm>.form-control, select[multiple].input-group-sm>.
 .nav>li>a {
 	position: relative;
 	display: block;
-	padding: 10px 15px
+	padding: 10px 15px;
+	color: #333333;
 }
 
 .nav>li>a:focus, .nav>li>a:hover {
@@ -4142,14 +4143,21 @@ select[multiple].input-group-sm>.form-control, select[multiple].input-group-sm>.
 
 .nav-tabs>li {
 	float: left;
-	margin-bottom: -1px
+	margin-bottom: -1px;
+	/*margin-right: 7px;*/
 }
 
 .nav-tabs>li>a {
-	margin-right: 2px;
-	line-height: 1.42857143;
-	border: 1px solid transparent;
-	border-radius: 4px 4px 0 0
+	margin-right: 4px;
+	margin-bottom: 12px;
+	height: 28px;
+	background-color: #DDDDDD ;
+	/*line-height: 1.42857143;*/
+	border: none;
+	float: left;
+	padding: 6px 20px;
+	display: inline-block;
+	/*border-radius: 4px 4px 0 0*/
 }
 
 .nav-tabs>li>a:hover {
@@ -4157,9 +4165,9 @@ select[multiple].input-group-sm>.form-control, select[multiple].input-group-sm>.
 }
 
 .nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
-	color: #555;
+	color: #fff;
 	cursor: default;
-	background-color: #fff;
+	background-color: #242330;
 	border: 1px solid #ddd;
 	border-bottom-color: transparent
 }
@@ -5081,7 +5089,6 @@ a.label:focus, a.label:hover {
 	font-size: 12px;
 	font-weight: 700;
 	line-height: 1;
-	color: #000;
 	text-align: center;
 	white-space: nowrap;
 	vertical-align: middle;
@@ -6008,18 +6015,19 @@ a.list-group-item-danger.active, a.list-group-item-danger.active:focus, a.list-g
 }
 
 .close {
+	/*color: #dddddd;*/
 	float: right;
 	font-size: 21px;
-	font-weight: 700;
-	line-height: 1;
-	color: #000;
-	text-shadow: 0 1px 0 #fff;
-	filter: alpha(opacity = 20);
-	opacity: .2
+	font-weight: 500;
+
+	/*line-height: 1;*/
+	/*text-shadow: 0 1px 0 #fff;*/
+	/*filter: alpha(opacity = 20);*/
+	/*opacity: .2*/
 }
 
 .close:focus, .close:hover {
-	color: #000;
+	color: #ddd;
 	text-decoration: none;
 	cursor: pointer;
 	filter: alpha(opacity = 50);
@@ -6028,7 +6036,6 @@ a.list-group-item-danger.active, a.list-group-item-danger.active:focus, a.list-g
 
 button.close {
 	-webkit-appearance: none;
-	padding: 0;
 	cursor: pointer;
 	background: 0 0;
 	border: 0

@@ -281,6 +281,7 @@ public class HomeController {
 	@Description("감사로그 페이지")
 	public String auditLog(Locale locale, Model model) {
 		if (Common.isEquals(Common.getAdminType(httpSession), "S")) {
+			model.addAttribute("headerYn","Y");
 			return "/commons/auditLog";
 		} else {
 			return "/emass/dashboard";
@@ -494,7 +495,7 @@ public class HomeController {
 	@RequestMapping(value = "/ems/usersStat.do", method = RequestMethod.GET)
 	@Description("사용자 통계 페이지")
 	public String usersStat(Locale locale, Model model) {
-		model.addAttribute("headerYn","N");
+		model.addAttribute("headerYn","Y");
 		return "/emass/statistics/usersStat";
 	}
 
@@ -505,7 +506,7 @@ public class HomeController {
 	@Description("관심 사용자 통계 페이지")
 	public String interestUserStat(Locale locale, Model model) {
 
-		model.addAttribute("headerYn","N");
+		model.addAttribute("headerYn","Y");
 
 		return "/emass/statistics/interestUserStat";
 	}

@@ -146,8 +146,8 @@ input[type="radio"]:checked + span {
 }
 
 input[type="text"] {
-	height: 23px;
-	line-height: 23px;
+	height: 26px;
+	line-height: 26px;
 	border:1px solid #D3D3D3;
 	font-size: 12px;
 	padding-left: 3px;

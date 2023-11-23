@@ -65,7 +65,7 @@ function Xgrid ( target, contextRoot, rowHeight, options, dataview ) {
 
 		var str = '';
 		str += '<div class="btn-group dropup grid_rowcount" id="'+this.id+'_listCnt">';
-		str += '<button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">';
+		str += '<button type="button" class="btn btn-xs btn-default dropdown-toggle" style="color: #375E9A; background: #fff; border:1px solid #375E9A;" data-toggle="dropdown">';
 		str += '	<span class="glyphicon glyphicon-list-alt"></span> '+slickGridJS.listCnt+' (<span class="dropdown-text">'+rownum.comma()+'</span>) <span val="'+rownum+'" class="caret"></span>';
 		str += '</button>';
 		str += '<ul class="dropdown-menu dropdown-menu-right" role="menu">';
@@ -103,7 +103,7 @@ function Xgrid ( target, contextRoot, rowHeight, options, dataview ) {
 		}
 		var str = '';
 		str += '<div class="btn-group dropup">';
-		str += '	<button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">';
+		str += '	<button type="button" class="btn btn-xs btn-default dropdown-toggle" style="color: #375E9A; background: #fff; border:1px solid #375E9A;" data-toggle="dropdown">';
 		str += '		<span class="glyphicon glyphicon-download-alt"></span> '+slickGridJS.exportData+' <span class="caret"></span>';
 		str += '	</button>';
 		str += '	<ul class="dropdown-menu dropdown-menu-right" role="menu">';

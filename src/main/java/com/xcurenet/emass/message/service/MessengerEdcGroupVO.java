@@ -26,6 +26,10 @@ public class MessengerEdcGroupVO {
 
 	private long numFound;
 
+	private long total;
+
+
+
 	private List<EmassMessenger> groups;
 
 	public MessengerEdcGroupVO(final List<EmassMessenger> groups) {
@@ -40,7 +44,6 @@ public class MessengerEdcGroupVO {
 	public MessengerEdcGroupVO(final SearchResponse  searchResponse, final String adminId, final boolean detail) throws  IOException {
 		this(searchResponse, null, false, false);
 	}
-
 
 	public MessengerEdcGroupVO(final SearchResponse  searchResponse , final String adminId, final boolean detail, final boolean original) throws IOException {
 		if(searchResponse == null) return;
@@ -59,6 +62,8 @@ public class MessengerEdcGroupVO {
 
 		this.groups = new ArrayList<>();
 		this.numFound = searchResponse.getHits().getHits().length;
+		this.total = searchResponse.getHits().getTotalHits().value;
+
 
 		if(result.size() >= 1){
 			for(Emass ems : result) {
@@ -256,6 +261,10 @@ public class MessengerEdcGroupVO {
 
 	public long getNumFound() {
 		return numFound;
+	}
+
+	public long getTotal() {
+		return total;
 	}
 
 	public void setNumFound(long numFound) {

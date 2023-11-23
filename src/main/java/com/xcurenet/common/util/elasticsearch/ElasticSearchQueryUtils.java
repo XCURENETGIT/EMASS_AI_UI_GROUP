@@ -1372,7 +1372,6 @@ public class ElasticSearchQueryUtils {
 		if(!Common.isEmpty(searchParam.get("conditions"))){
 			Map<String,Object> tempMap = (Map<String, Object>) searchParam.get("conditions");
 			List<Map<String,Object>> tempList = (List<Map<String, Object>>) tempMap.get("conditions");
-			log.info("tempList : " + tempList.get(0));
 			tempList.get(0).put("limit", searchParam.get("limit"));
 			tempList.get(0).put("offset", searchParam.get("offset"));
 			elasticSearchParam.setSearchParameters(tempList.get(0));
@@ -1393,8 +1392,8 @@ public class ElasticSearchQueryUtils {
 
 
 		/* serviceType 설정 */
-		if(!Common.isEmpty(ElasticSearchCommon.SERVICE_SVC1)) {
-			setyField(Common.nvl(ElasticSearchCommon.SERVICE_SVC1));
+		if(!Common.isEmpty(ElasticSearchCommon.SERVICE_SVC12)) {
+			setyField(Common.nvl(ElasticSearchCommon.SERVICE_SVC12));
 		}
 
 		if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("serviceType"))) {
@@ -1447,7 +1446,6 @@ public class ElasticSearchQueryUtils {
 
 			AggregationBuilder pi_aggregation = AggregationBuilders.terms("xrootMtr").field("xrootMtr").minDocCount(1);
 			pi_aggregation.subAggregation(topHitsAggregationBuilder);
-			log.info("pi_aggregation: "+pi_aggregation);
 
 			searchSourceBuilder = new SearchSourceBuilder()
 					.from(elasticSearchParam.getFrom())
@@ -2012,7 +2010,6 @@ public class ElasticSearchQueryUtils {
 		if (!Common.isEmpty(searchParam.get("conditions"))) {
 			Map<String, Object> tempMap = (Map<String, Object>) searchParam.get("conditions");
 			List<Map<String, Object>> tempList = (List<Map<String, Object>>) tempMap.get("conditions");
-			log.info("tempList : " + tempList.get(0));
 			tempList.get(0).put("limit", searchParam.get("limit"));
 			tempList.get(0).put("offset", searchParam.get("offset"));
 			elasticSearchParam.setSearchParameters(tempList.get(0));
@@ -2035,8 +2032,8 @@ public class ElasticSearchQueryUtils {
 
 
 		/* serviceType 설정 */
-		if (!Common.isEmpty(ElasticSearchCommon.SERVICE_SVC1)) {
-			setyField(Common.nvl(ElasticSearchCommon.SERVICE_SVC1));
+		if (!Common.isEmpty(ElasticSearchCommon.SERVICE_SVC12)) {
+			setyField(Common.nvl(ElasticSearchCommon.SERVICE_SVC12));
 		}
 
 		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("serviceType"))) {
@@ -2093,8 +2090,6 @@ public class ElasticSearchQueryUtils {
 		elasticSearchParam = new ElasticSearchParam();
 
 		elasticSearchParam.setSearchParameters(searchParam);
-		log.info("totalQuery SearchParam : "+searchParam);
-
 
 		setSort("");
 		List<SortBuilder<?>> sortBuilderList = getSortInfo();
@@ -2102,12 +2097,12 @@ public class ElasticSearchQueryUtils {
 
 		int limit = 0;
 		limit = (int) Math.round(Double.valueOf(Common.nvl(elasticSearchParam.getSearchParameters().get("limit"))));
-		log.info("totalQuery xRootMtr: "+elasticSearchParam.getSearchParameters().get("xRootMtr"));
 
 		//xRootMtr
 		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("xRootMtr"))) {
 			addQueryGroup(ElasticSearchCommon.SPACE, ElasticSearchCommon.XROOTMTR, makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("xRootMtr"))));
 		}
+
 
 		setQuery();
 
