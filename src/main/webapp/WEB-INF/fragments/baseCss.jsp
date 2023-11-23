@@ -25,8 +25,8 @@
 <link rel="stylesheet" href="<c:url value="/css/sb-admin-2.css"/>" />
 
 <%-- 새 디자인 css--%>
-<link rel="stylesheet" href="<c:url value="/css/emass_style.css"/>" />
 <link rel="stylesheet" href="<c:url value="/css/reset.css"/>" />
+<link rel="stylesheet" href="<c:url value="/css/emass_style.css"/>" />
 
 <link rel="stylesheet" href="<c:url value="/css/message.css"/>"/>
 <link rel="stylesheet" href="<c:url value="/css/jquery.scrollbar.css"/>"/>
