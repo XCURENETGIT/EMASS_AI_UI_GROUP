@@ -110,7 +110,7 @@ code, kbd, pre, samp {
 
 button, input, optgroup, select, textarea {
 	margin: 0;
-	font: inherit;
+	/*font: inherit;*/
 	color: inherit
 }
 
@@ -1801,8 +1801,8 @@ pre code {
 }
 
 .container {
-	padding-right: 15px;
-	padding-left: 15px;
+	/*padding-right: 15px;
+	padding-left: 15px;*/
 	margin-right: auto;
 	margin-left: auto
 }
@@ -3547,7 +3547,7 @@ a.btn.disabled, fieldset[disabled] a.btn {
 	padding: 1px 5px;
 	font-size: 12px;
 	line-height: 1.5;
-	border-radius: 3px
+	border-radius: 0px
 }
 
 .btn-block {
@@ -6182,7 +6182,7 @@ button.close {
 	}
 }
 
-.tooltip {
+.btooltip {
 	position: absolute;
 	z-index: 1070;
 	display: block;
@@ -6206,32 +6206,32 @@ button.close {
 	line-break: auto
 }
 
-.tooltip.in {
+.btooltip.in {
 	filter: alpha(opacity = 90);
 	opacity: .9
 }
 
-.tooltip.top {
+.btooltip.top {
 	padding: 5px 0;
 	margin-top: -3px
 }
 
-.tooltip.right {
+.btooltip.right {
 	padding: 0 5px;
 	margin-left: 3px
 }
 
-.tooltip.bottom {
+.btooltip.bottom {
 	padding: 5px 0;
 	margin-top: 3px
 }
 
-.tooltip.left {
+.btooltip.left {
 	padding: 0 5px;
 	margin-left: -3px
 }
 
-.tooltip-inner {
+.btooltip-inner {
 	max-width: 200px;
 	padding: 3px 8px;
 	color: #fff;
@@ -6240,7 +6240,7 @@ button.close {
 	border-radius: 4px
 }
 
-.tooltip-arrow {
+.btooltip-arrow {
 	position: absolute;
 	width: 0;
 	height: 0;
@@ -6248,7 +6248,7 @@ button.close {
 	border-style: solid
 }
 
-.tooltip.top .tooltip-arrow {
+.btooltip.top .btooltip-arrow {
 	bottom: 0;
 	left: 50%;
 	margin-left: -5px;
@@ -6256,7 +6256,7 @@ button.close {
 	border-top-color: #000
 }
 
-.tooltip.top-left .tooltip-arrow {
+.btooltip.top-left .btooltip-arrow {
 	right: 5px;
 	bottom: 0;
 	margin-bottom: -5px;
@@ -6264,7 +6264,7 @@ button.close {
 	border-top-color: #000
 }
 
-.tooltip.top-right .tooltip-arrow {
+.btooltip.top-right .btooltip-arrow {
 	bottom: 0;
 	left: 5px;
 	margin-bottom: -5px;
@@ -6272,7 +6272,7 @@ button.close {
 	border-top-color: #000
 }
 
-.tooltip.right .tooltip-arrow {
+.btooltip.right .btooltip-arrow {
 	top: 50%;
 	left: 0;
 	margin-top: -5px;
@@ -6280,7 +6280,7 @@ button.close {
 	border-right-color: #000
 }
 
-.tooltip.left .tooltip-arrow {
+.btooltip.left .btooltip-arrow {
 	top: 50%;
 	right: 0;
 	margin-top: -5px;
@@ -6288,7 +6288,7 @@ button.close {
 	border-left-color: #000
 }
 
-.tooltip.bottom .tooltip-arrow {
+.btooltip.bottom .btooltip-arrow {
 	top: 0;
 	left: 50%;
 	margin-left: -5px;
@@ -6296,7 +6296,7 @@ button.close {
 	border-bottom-color: #000
 }
 
-.tooltip.bottom-left .tooltip-arrow {
+.btooltip.bottom-left .btooltip-arrow {
 	top: 0;
 	right: 5px;
 	margin-top: -5px;
@@ -6304,7 +6304,7 @@ button.close {
 	border-bottom-color: #000
 }
 
-.tooltip.bottom-right .tooltip-arrow {
+.btooltip.bottom-right .btooltip-arrow {
 	top: 0;
 	left: 5px;
 	margin-top: -5px;

@@ -809,8 +809,8 @@ body .ui-tooltip {
 /* Component containers
 ----------------------------------*/
 .ui-widget {
-	font-family: "돋움", Dotum, "굴림", Gulim, Helvetica, Sans-serif;
-	font-size: 12px;
+	/*font-family: "돋움", Dotum, "굴림", Gulim, Helvetica, Sans-serif;
+	font-size: 12px;*/
 }
 .ui-widget .ui-widget {
 	font-size: 1em;
@@ -819,8 +819,8 @@ body .ui-tooltip {
 .ui-widget select,
 .ui-widget textarea,
 .ui-widget button {
-	font-family: "돋움", Dotum, "굴림", Gulim, Helvetica, Sans-serif;
-	font-size: 1em;
+	/*font-family: "돋움", Dotum, "굴림", Gulim, Helvetica, Sans-serif;
+	font-size: 1em;*/
 }
 .ui-widget-content {
 	border: 1px solid #7D7D7D;
@@ -850,8 +850,8 @@ body .ui-tooltip {
 .ui-state-default,
 .ui-widget-content .ui-state-default,
 .ui-widget-header .ui-state-default {
-	border: 1px solid #cdc9c4;
-	background: #e6e6e6 url(images/ui-bg_glass_75_e6e6e6_1x400.png) 50% 50% repeat-x;
+	border: 1px solid #ddd;
+	/*background: #e6e6e6 url(images/ui-bg_glass_75_e6e6e6_1x400.png) 50% 50% repeat-x;*/
 	font-weight: normal;
 	color: #434343;
 }
@@ -1191,17 +1191,17 @@ body .ui-tooltip {
 
 
 .ui-widget-content {
-	border-radius: 2px;
+/*	border-radius: 2px;
    -moz-border-radius: 2px;
    -webkit-border-radius: 2px;
    -o-border-radius: 2px;
    
    border-bottom-left-radius: 3px;
-   border-bottom-right-radius: 3px;
+   border-bottom-right-radius: 3px;*/
 }
 .ui-dialog-titlebar {
-	border-top-left-radius: 2px;
-	border-top-right-radius: 2px;
+/*	border-top-left-radius: 2px;
+	border-top-right-radius: 2px;*/
 }
 	
 	

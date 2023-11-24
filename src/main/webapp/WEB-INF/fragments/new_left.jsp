@@ -6,39 +6,16 @@
 <%@ page import="com.xcurenet.common.util.Common" %>
 <%@ page import="com.xcurenet.common.util.config.Config" %>
 <%@ page import="com.xcurenet.common.ntp.NtpScheduler" %>
-<%@page import="com.xcurenet.menu.service.MenuService" %>
-<%@ page import="com.xcurenet.common.util.SpringContextUtil" %>
-
 <%@ page import="net.sf.json.JSONObject" %>
 
 <%
-	String uri = new org.springframework.web.util.UrlPathHelper().getOriginatingRequestUri(request);
-	if (uri.indexOf("/index.do") > -1) uri = "/ems/index.do";
-	if (uri.indexOf("/deviceInfoDetail.do") > -1) uri = "/commons/deviceInfo.do";
-	if (uri.indexOf("/deviceInfoDetailHadoop.do") > -1) uri = "/commons/deviceInfo.do";
-	if (uri.indexOf("/ems/dashboard.do") > -1) uri += "?" + new org.springframework.web.util.UrlPathHelper().getOriginatingQueryString(request);
-
-	MenuService menuService = SpringContextUtil.getBean(MenuService.class);
 	String context = request.getContextPath();
-
-//    String headerYn = Common.nvl(Common.getParam(request).get("headerYn"));
-//    String headerCloseYn = Common.nvl(Common.getParam(request).get("headerCloseYn"));
-//    String menuKey = Common.nvl(Common.getParam(request).get("menuKey"));
-
-	String headerYn = (String) request.getAttribute("headerYn");
-	String headerCloseYn = (String) request.getAttribute("headerCloseYn");
-	String menuKey = (String) request.getAttribute("menuKey");
-
 	boolean infoFeedbackConf = Config.getBoolean("info.feedback.used");
 	boolean infoHynixConf = Config.getBoolean("info.hynix.used");
 	String infoFeedbackYn = Common.getInfoFeedbackYn(session);
 	JSONObject ntpInfo = NtpScheduler.ntpStatus;
-	String menuList = menuService.getMenuList(request); //메뉴리스트 JSON 데이터로 받아옴
 %>
-
-
 <script type="text/javascript">
-
 	let infoFeedbackConf = '<%=infoFeedbackConf%>';
 	let infoHynixConf = '<%=infoHynixConf%>';
 	let infoFeedbackYn = '<%=infoFeedbackYn%>';
@@ -50,8 +27,6 @@
 	/* 메뉴  관련 ###########################################################################################################*/
 	let currentMenuId;
 	let currentMenuTid;
-    let menuList = <%=menuList%>;
-    let mainUri = "<%=uri%>";
     let mainContext = "<%=context%>";
 	let sideBar;
 
@@ -69,7 +44,9 @@
 			menuId = currentMenu.menuId;
 			pMenuId = currentMenu.tid;
 
+			$('.subTit .page a.menu1').html($('a[menuid="'+pMenuId+'"] span').text());
 			$('a[menuid="'+pMenuId+'"]').addClass('active');
+			$('a[menuid="'+pMenuId+'"] img').attr('src', $('a[menuid="'+pMenuId+'"] img').attr('src').replaceAll('.png', '_on.png'));
 		}
 
 		$('.menuList').on("click", function (event) {

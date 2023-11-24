@@ -31,7 +31,7 @@ function Xgrid ( target, contextRoot, rowHeight, options, dataview ) {
 	this.status_cnt_ing_name = this.options.status_cnt_ing_name == '' ? slickGridJS.searchCnt : this.options.status_cnt_ing_name;
 	this.status_cnt_end_name = this.options.status_cnt_end_name == '' ? slickGridJS.searchSuccess : this.options.status_cnt_end_name;
 	this.more_btn = this.options.more_btn == '' ? 'slick_grid_more_btn' : this.options.more_btn;
-	this.num_title = 'No';
+	this.num_title = 'No.';
 	this.id = target;
 	this.commonId = this.options.commonId;
 	this.target = '#'+target;

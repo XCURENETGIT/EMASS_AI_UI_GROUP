@@ -11,6 +11,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>EMASS PRO</title>
+
         <tiles:insertAttribute name="baseCss" ignore="true"/>
         <tiles:insertAttribute name="baseJs" ignore="true"/>
     </head>

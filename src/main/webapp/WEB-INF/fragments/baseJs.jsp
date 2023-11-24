@@ -65,6 +65,7 @@
 <script type="text/javascript" src="<c:url value="/js/QueryConditionNew.js"/>"></script>
 
 
+<script  type="text/javascript" src="<c:url value="/js/chartAPI.js" />"   defer></script>
 <script type="text/javascript" src="<c:url value="/js/highcharts.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/highcharts-3d.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/exporting.js"/>"></script>

@@ -24,10 +24,3 @@
     String adminLanguage = systemLanguage;
     if(request.getRequestURI().toString().indexOf("login.jsp") == -1) adminLanguage = Common.nvl(session.getAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME), "ko");
 %>
-<script for="InnoFD" event="OnDownloadComplete">
-    document.InnoFD.RemoveAllFiles( );
-    ui.alertMsg("<s:message code="common.msg.down.complete"/>", null, 2000);
-</script>
-<script  type="text/javascript" src="<c:url value="/js/chartAPI.js" />"   defer></script>
-<script  type="text/javascript" src="<c:url value="/js/InnoFD.js"/>"  defer></script>
-

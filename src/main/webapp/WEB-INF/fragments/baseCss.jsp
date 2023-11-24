@@ -1,11 +1,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 
-
 <link rel="stylesheet" href="<c:url value="/js/css/smoothness/jquery-ui-1.10.3.custom.css"/>" />
 <link rel="stylesheet" href="<c:url value="/css/bootstrap.min.css"/>" />
 <link rel="stylesheet" href="<c:url value="/css/bootstrap-dialog.css"/>" />
 <link rel="stylesheet" href="<c:url value="/css/non-responsive.css"/>" />
+<link rel="stylesheet" href="<c:url value="/css/reset.css"/>" />
+<link rel="stylesheet" href="<c:url value="/css/emass_style.css"/>" />
+
 <link rel="stylesheet" href="<c:url value="/css/font-awesome.min.css"/>" />
 <link rel="stylesheet" href="<c:url value="/css/slick.grid.original.css"/>" />
 <%--<link rel="stylesheet" href="<c:url value="/css/style.css"/>" />--%>
@@ -23,10 +25,6 @@
 <link rel="stylesheet" href="<c:url value="/css/odometer-theme-default.css"/>" />
 <link rel="stylesheet" href="<c:url value="/css/gridstack.css"/>" />
 <link rel="stylesheet" href="<c:url value="/css/sb-admin-2.css"/>" />
-
-<%-- 새 디자인 css--%>
-<link rel="stylesheet" href="<c:url value="/css/reset.css"/>" />
-<link rel="stylesheet" href="<c:url value="/css/emass_style.css"/>" />
 
 <link rel="stylesheet" href="<c:url value="/css/message.css"/>"/>
 <link rel="stylesheet" href="<c:url value="/css/jquery.scrollbar.css"/>"/>
