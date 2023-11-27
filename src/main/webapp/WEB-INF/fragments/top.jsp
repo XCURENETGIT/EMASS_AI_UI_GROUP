@@ -338,22 +338,22 @@
         $('.topMenuLi:eq(0) .topMenu').attr('href', '<c:url value="/ems/dashboard.do?menuKey="/>' + val);
     }
 
-    function changeNTP(ntpServer, lv) {
-        var ntpStr = 'NTP - ' + ntpServer;
-        var titleStr = '';
+    <%--function changeNTP(ntpServer, lv) {--%>
+    <%--    var ntpStr = 'NTP - ' + ntpServer;--%>
+    <%--    var titleStr = '';--%>
 
-        if(lv=='info') {
-            ntpStr += '&nbsp;<span class="fa fa-soild fa-circle fa-lg" style="color:lightgreen;"></span>';
-            titleStr = '<s:message code="trap.message.ntp.sync"/>';
-        } else if(lv=='warning') {
-            ntpStr += '&nbsp;<span class="fa fa-soild fa-circle fa-lg" style="color:orange;"></span>';
-            titleStr = '<s:message code="trap.message.ntp.unsync"/>';
-        } else {
-            ntpStr += '&nbsp;<span class="fa fa-soild fa-circle fa-lg" style="color:red;"></span>';
-            titleStr = '<s:message code="trap.message.ntp.unconnect"/>';
-        }
+    <%--    if(lv=='info') {--%>
+    <%--        ntpStr += '&nbsp;<span class="fa fa-soild fa-circle fa-lg" style="color:lightgreen;"></span>';--%>
+    <%--        titleStr = '<s:message code="trap.message.ntp.sync"/>';--%>
+    <%--    } else if(lv=='warning') {--%>
+    <%--        ntpStr += '&nbsp;<span class="fa fa-soild fa-circle fa-lg" style="color:orange;"></span>';--%>
+    <%--        titleStr = '<s:message code="trap.message.ntp.unsync"/>';--%>
+    <%--    } else {--%>
+    <%--        ntpStr += '&nbsp;<span class="fa fa-soild fa-circle fa-lg" style="color:red;"></span>';--%>
+    <%--        titleStr = '<s:message code="trap.message.ntp.unconnect"/>';--%>
+    <%--    }--%>
 
-        $('#ntpStatus').html(ntpStr);
-        $('#ntpStatus').parent().attr('title', titleStr);
-    }
+    <%--    $('#ntpStatus').html(ntpStr);--%>
+    <%--    $('#ntpStatus').parent().attr('title', titleStr);--%>
+    <%--}--%>
 </script>

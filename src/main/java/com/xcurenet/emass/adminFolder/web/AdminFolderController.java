@@ -1,10 +1,6 @@
-import com.xcurenet.common.util.Common;
 import com.xcurenet.common.vo.XcnResponseVO;
-import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.emass.adminFolder.service.AdminFolderService;
-import com.xcurenet.emass.adminFolder.service.AdminFolderVO;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONObject;
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +9,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
 @Slf4j
 @Controller
@@ -101,11 +96,12 @@ public class AdminFolderController {
 	@Description("관리자 메시지 폴더 리스트 조회")
 	@ResponseBody
 	public XcnResponseVO getAdminFolderList(final HttpServletRequest request, final HttpSession session) throws Exception {
-		JSONObject param = Common.getParam(request);
-		String adminId = Common.getAdminId(session);
-
-		List<AdminFolderVO> users = adminFolderService.getAdminFolderList(adminId, Common.nvl(param.get("searchStr")), request.getContextPath());
-		return new XcnResponseVO(XcnRspCode.OK, users);
+//		JSONObject param = Common.getParam(request);
+//		String adminId = Common.getAdminId(session);
+//
+//		List<AdminFolderVO> users = adminFolderService.getAdminFolderList(adminId, Common.nvl(param.get("searchStr")), request.getContextPath());
+//		return new XcnResponseVO(XcnRspCode.OK, users);
+		return null;
 	}
 //
 //	@RequestMapping(value = "/insertAdminFolder.xcn")

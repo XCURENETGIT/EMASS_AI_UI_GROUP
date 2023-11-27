@@ -168,32 +168,32 @@ function saveFolderDataGrid( grid ){
 
 function getAdminFolderList( ){
 	var searchStr = $('#folderSearchStr').val();
-	ui.get({
-		url : 'getAdminFolderList.xcn',
-		searchStr : searchStr,
-		success : function(data, total) {
-			initFolderTree(data);
-		},
-		error : function(status, message) {
-			ui.alertMsg('error:' + status);
-		},
-		complete : function() {
-		}
-	});
+	// ui.get({
+	// 	url : 'getAdminFolderList.xcn',
+	// 	searchStr : searchStr,
+	// 	success : function(data, total) {
+	// 		//initFolderTree(data);
+	// 	},
+	// 	error : function(status, message) {
+	// 		ui.alertMsg('error:' + status);
+	// 	},
+	// 	complete : function() {
+	// 	}
+	// });
 }
 
 function getAdminFolderListPop( ){
-	ui.get({
-		url : 'getAdminFolderList.xcn',
-		success : function(data, total) {
-			$.fn.zTree.init($("#folderTreePop"), ztreePop_setting, data);
-		},
-		error : function(status, message) {
-			ui.alertMsg('error:' + status);
-		},
-		complete : function() {
-		}
-	});
+	// ui.get({
+	// 	url : 'getAdminFolderList.xcn',
+	// 	success : function(data, total) {
+	// 		//$.fn.zTree.init($("#folderTreePop"), ztreePop_setting, data);
+	// 	},
+	// 	error : function(status, message) {
+	// 		ui.alertMsg('error:' + status);
+	// 	},
+	// 	complete : function() {
+	// 	}
+	// });
 }
 
 function initFolderTree(data){

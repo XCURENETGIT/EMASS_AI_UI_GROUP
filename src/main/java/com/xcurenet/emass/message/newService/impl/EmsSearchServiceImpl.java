@@ -26,13 +26,6 @@ import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.core.TimeValue;
-import org.elasticsearch.index.query.TermQueryBuilder;
-import org.elasticsearch.index.reindex.BulkByScrollResponse;
-import org.elasticsearch.index.reindex.UpdateByQueryRequest;
-import org.elasticsearch.script.Script;
-import org.elasticsearch.script.ScriptType;
-import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -40,12 +33,10 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -124,30 +115,11 @@ public class EmsSearchServiceImpl implements EmsSearchService {
         }
         searchParam.put(ElasticSearchCommon.BODY_SNIPPET, bodysnippetVal);
 
-
         try {
             //쿼리 준비 시작
-            SearchSourceBuilder searchSourceBuilder = null;
-            switch (Common.nvl(searchParam.get(ElasticSearchCommon.SEARCH_TYPE))) {
-                /* 검색 타입 조건 */
-                case ElasticSearchCommon.SEARCH_TYPE_MESSAGE:  // 메시지 검색시
-                    searchSourceBuilder = elsSearchQueryUtils.initMessageSearchSource(searchParam,adminId); // 검색 소스 준비
-                    break;
-                case ElasticSearchCommon.SEARCH_TYPE_STATISTIC: // 통계 검색시
-                    searchSourceBuilder = elsSearchQueryUtils.initStatisticSearchSource(searchParam); // 검색 소스 준비
-                    break;
+            SearchSourceBuilder searchSourceBuilder = elsSearchQueryUtils.initSearchSource(searchParam,adminId);
 
-                case ElasticSearchCommon.SEARCH_TYPE_ANALYSIS: // 분석 검색시
-                    searchSourceBuilder = elsSearchQueryUtils.initanalysisSearchSource(searchParam); // 검색 소스 준비
-                    break;
-
-                case ElasticSearchCommon.SEARCH_TYPE_ANALYSIS_DETAIL: // 분석 검색시
-                    searchSourceBuilder = elsSearchQueryUtils.initanalysisDetailSearchSource(searchParam); // 검색 소스 준비
-                    break;
-            }
-
-            // 쿼리 준비 끝
-
+            if(null == searchSourceBuilder) throw new NullPointerException();
 
             /* 검색 진행 */
             SearchRequest searchRequest = new SearchRequest(elsSearchQueryUtils.getElasticSearchParam().getIndices()).source(searchSourceBuilder);

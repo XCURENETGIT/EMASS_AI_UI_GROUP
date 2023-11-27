@@ -33,6 +33,7 @@ import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -61,12 +62,17 @@ public class ElasticSearchQueryUtils {
 	@Resource
 	private AdminFilterService adminFilterService;
 
+	public ElasticSearchParam elasticSearchParam;
+
 	public String query;
 	public StringBuilder queryBuffer;
 	public List<SortBuilder<?>> sortInfo;
 
+	private List<Map<String, Object>> authQueryCompanyRelated;
+	private List<Map<String, Object>> authQueryEtcRelated;
+	private boolean ceoSearch;
 
-	public ElasticSearchParam elasticSearchParam;
+
 
 	public ElasticSearchQueryUtils() {
 		query = "";
@@ -209,6 +215,8 @@ public class ElasticSearchQueryUtils {
 		tempBuilder.insert(0,ElasticSearchCommon.SPACE.concat(flag));
 		this.queryBuffer.append(tempBuilder);
 	}
+
+
 
 	/***
 	 *  argments에 괄호 감싸기
@@ -1238,6 +1246,29 @@ public class ElasticSearchQueryUtils {
 
 
 
+	public SearchSourceBuilder initSearchSource(Map<String,Object> searchParam,String adminId) {
+		  SearchSourceBuilder result = null;
+            switch (Common.nvl(searchParam.get(ElasticSearchCommon.SEARCH_TYPE))) {
+                /* 검색 타입 조건 */
+                case ElasticSearchCommon.SEARCH_TYPE_MESSAGE:  // 메시지 검색시
+					result = initMessageSearchSource(searchParam,adminId); // 검색 소스 준비
+                    break;
+                case ElasticSearchCommon.SEARCH_TYPE_STATISTIC: // 통계 검색시
+					result = initStatisticSearchSource(searchParam,adminId); // 검색 소스 준비
+                    break;
+                case ElasticSearchCommon.SEARCH_TYPE_ANALYSIS: // 분석 검색시
+					result = initAnalysisSearchSource(searchParam,adminId); // 검색 소스 준비
+                    break;
+                case ElasticSearchCommon.SEARCH_TYPE_ANALYSIS_DETAIL: // 분석 검색시
+					result = initAnalysisDetailSearchSource(searchParam,adminId); // 검색 소스 준비
+                    break;
+            }
+
+			return result;
+	}
+
+
+
 	/***
 	 *  통계 검색 소스 준비
 	 * setStatisticQueryReady
@@ -1320,7 +1351,6 @@ public class ElasticSearchQueryUtils {
 		this.elasticSearchParam.setSearched_xAxis(Common.nvl(elasticSearchParam.getSearchParameters().get("searched_xAxis")));
 
 
-
 		log.debug("[Fields] {}", ElasticSearchCommon.SEARCH_FIELD);
 		log.debug("[SORT] : {}", getSortInfo());
 		log.debug("[QUERY] {}", getQuery());
@@ -1333,7 +1363,7 @@ public class ElasticSearchQueryUtils {
 	 * @param initStatisticSearchSource
 	 * @return
 	 */
-	public SearchSourceBuilder initStatisticSearchSource(Map<String,Object> searchParam){
+	public SearchSourceBuilder initStatisticSearchSource(Map<String,Object> searchParam,String adminId){
 
 		SearchSourceBuilder searchSourceBuilder = null; // SearchSourceBuilder 리턴용
 
@@ -1366,6 +1396,46 @@ public class ElasticSearchQueryUtils {
 				// default date range 필터 추가
 				complateQuery.filter(rangeQuery);
 			}
+
+
+
+			/*################ 권한 관련 ##################################################################*/
+			setAuthoritysFilter(adminId); // set 권한 리스트
+			// 권한 filter 추가
+			BoolQueryBuilder authQuery = new BoolQueryBuilder();
+			BoolQueryBuilder ceoQuery = new BoolQueryBuilder();
+
+			/* 회사 권한 관련 (회사,사업장) 필터 */
+			for(Map<String,Object> authCom : authQueryCompanyRelated){
+				authQuery.should(QueryBuilders.termsQuery((String) authCom.get("type"), (String[]) authCom.get("values")));
+			}
+			authQuery.minimumShouldMatch(1);
+			complateQuery.filter(authQuery);
+
+			/* 기타 필터 (서비스,패턴,그룹)* 임시 주석/
+//			for(Map<String,Object> authEtc : authQueryEtcRelated) {
+//				complateQuery.should(QueryBuilders.termsQuery((String) authEtc.get("type"), (String[]) authEtc.get("values")));
+//			}
+//			complateQuery.minimumShouldMatch(1);
+			*/
+
+			// ceo 관련
+			if(!this.ceoSearch) {
+				ceoQuery.should(QueryBuilders.matchQuery("user.ceo", "N"));
+				ceoQuery.should(QueryBuilders.matchQuery("sender.ceo", "false"));
+				ceoQuery.should(QueryBuilders.matchQuery("to.ceo", "false"));
+				ceoQuery.should(QueryBuilders.matchQuery("cc.ceo", "false"));
+				ceoQuery.should(QueryBuilders.matchQuery("bcc.ceo", "false"));
+				ceoQuery.minimumShouldMatch(1);
+				complateQuery.must(ceoQuery);
+			}
+
+			/*#####################################################################################################*/
+
+
+
+
+
 
 			complateQuery.must(secondQuery);  // 사용할 쿼리 merge 완료
 
@@ -1681,7 +1751,6 @@ public class ElasticSearchQueryUtils {
 		log.debug("[SORT] : {}", elasticSearchParam.getSorts());
 		log.debug("[QUERY] {}", getQuery());
 
-
 	}
 
 
@@ -1690,28 +1759,60 @@ public class ElasticSearchQueryUtils {
 	 * @param initMessageSearchSource
 	 * @return
 	 */
-	public SearchSourceBuilder initMessageSearchSource(Map<String,Object> searchParam,String adminId){
+	public SearchSourceBuilder initMessageSearchSource(Map<String,Object> searchParam,String adminId)  {
 		SearchSourceBuilder searchSourceBuilder = null;
-		/* 권한 관련*/
-		setMessageSearchQueryReady(searchParam); // 파라미터 준비
-		addAuthoritysQuery(adminId); // 권한 쿼리 조회
 
-		RangeQueryBuilder rangeQuery = new RangeQueryBuilder(ElasticSearchCommon.CTIME).gte(elasticSearchParam.getStartDate()).lte(elasticSearchParam.getEndDate());
+			/* 권한 관련*/
+			setMessageSearchQueryReady(searchParam); // 파라미터 준비
 
-		QueryStringQueryBuilder secondQuery = QueryBuilders.queryStringQuery(query);
+			RangeQueryBuilder rangeQuery = new RangeQueryBuilder(ElasticSearchCommon.CTIME).gte(elasticSearchParam.getStartDate()).lte(elasticSearchParam.getEndDate());
+			QueryStringQueryBuilder secondQuery = QueryBuilders.queryStringQuery(query);
 
-		/* 쿼리 merge */
-		BoolQueryBuilder complateQuery = new BoolQueryBuilder();
-		complateQuery.filter(rangeQuery);
-		complateQuery.must(secondQuery);
+			BoolQueryBuilder complateQuery = new BoolQueryBuilder();
+			complateQuery.filter(rangeQuery);
 
-		searchSourceBuilder = new SearchSourceBuilder()
-				.from(elasticSearchParam.getFrom())
-				.size(elasticSearchParam.getTo())
-				.query(complateQuery)
-				.fetchSource(elasticSearchParam.getIncludeFields(), elasticSearchParam.getExcludeFields())
-				.sort(elasticSearchParam.getSorts())
-				.timeout(new TimeValue(60, TimeUnit.SECONDS));
+			/*################ 권한 관련 ##################################################################*/
+			setAuthoritysFilter(adminId); // set 권한 리스트
+			// 권한 filter 추가
+		    BoolQueryBuilder authQuery = new BoolQueryBuilder();
+		    BoolQueryBuilder ceoQuery = new BoolQueryBuilder();
+
+			/* 회사 권한 관련 (회사,사업장) 필터 */
+		    for(Map<String,Object> authCom : authQueryCompanyRelated){
+				authQuery.should(QueryBuilders.termsQuery((String) authCom.get("type"), (String[]) authCom.get("values")));
+			 }
+			authQuery.minimumShouldMatch(1);
+			complateQuery.filter(authQuery);
+
+			/* 기타 필터 (서비스,패턴,그룹)* 임시 주석/
+//			for(Map<String,Object> authEtc : authQueryEtcRelated) {
+//				complateQuery.should(QueryBuilders.termsQuery((String) authEtc.get("type"), (String[]) authEtc.get("values")));
+//			}
+//			complateQuery.minimumShouldMatch(1);
+			*/
+
+			// ceo 관련
+			if(!this.ceoSearch) {
+				ceoQuery.should(QueryBuilders.matchQuery("user.ceo", "N"));
+				ceoQuery.should(QueryBuilders.matchQuery("sender.ceo", "false"));
+				ceoQuery.should(QueryBuilders.matchQuery("to.ceo", "false"));
+				ceoQuery.should(QueryBuilders.matchQuery("cc.ceo", "false"));
+				ceoQuery.should(QueryBuilders.matchQuery("bcc.ceo", "false"));
+				ceoQuery.minimumShouldMatch(1);
+				complateQuery.must(ceoQuery);
+			}
+
+			/*#####################################################################################################*/
+
+			complateQuery.must(secondQuery);
+			searchSourceBuilder = new SearchSourceBuilder()
+						.from(elasticSearchParam.getFrom())
+						.size(elasticSearchParam.getTo())
+						.query(complateQuery)
+						.fetchSource(elasticSearchParam.getIncludeFields(), elasticSearchParam.getExcludeFields())
+						.sort(elasticSearchParam.getSorts())
+						.timeout(new TimeValue(60, TimeUnit.SECONDS));
+
 
 		return searchSourceBuilder;
 	}
@@ -1956,7 +2057,7 @@ public class ElasticSearchQueryUtils {
 
 
 
-	public SearchSourceBuilder initanalysisSearchSource(Map<String,Object> searchParam) {
+	public SearchSourceBuilder initAnalysisSearchSource(Map<String,Object> searchParam,String adminId) {
 
 		SearchSourceBuilder searchSourceBuilder = null; // SearchSourceBuilder 리턴용
 
@@ -2159,7 +2260,7 @@ public class ElasticSearchQueryUtils {
 
 	}
 
-	public SearchSourceBuilder initanalysisDetailSearchSource(Map<String, Object> searchParam) {
+	public SearchSourceBuilder initAnalysisDetailSearchSource(Map<String, Object> searchParam,String adminId) {
 
 		SearchSourceBuilder searchSourceBuilder = null;
 
@@ -2224,8 +2325,12 @@ public class ElasticSearchQueryUtils {
 	}
 
 
-	private void addAuthoritysQuery(String adminId) {
+	private void setAuthoritysFilter(String adminId) {
 		/* adminType  S:시스템 운용자, M:모니터링 운용자, D:장비 상태 모니터링 운용자 */
+		this.authQueryCompanyRelated = new ArrayList<>();
+		this.authQueryEtcRelated = new ArrayList<>();
+		this.ceoSearch = false;
+
 		if (Common.isNotEmpty(adminId)) {
 			String adminType = "S"; // default
 
@@ -2236,30 +2341,42 @@ public class ElasticSearchQueryUtils {
 			String[] ceo = ElasticSearchCommon.CEO; // ceo 검색필드 불러오기
 			String ceoReadYn = Config.getString("ceo.readyn");
 			if (Common.isEquals(adminType, "C")) {
-				addQueryGroup(ElasticSearchCommon.AND_QUERY,ElasticSearchCommon.CEO,makeParentheses(ceo));
+				this.ceoSearch = false;
 			} else if (!(Common.isEquals(ceoReadYn, "Y") && Common.isEquals(Common.nvl(Config.getFirstAdminYn(adminId), "N"), "Y"))) {
-				addQueryGroup(ElasticSearchCommon.NOT_QUERY,ElasticSearchCommon.CEO,makeParentheses(ceo));
+				this.ceoSearch = true;
 			}
 
 			/* 검색하는 운용자의 검색 회사,사업장 권한 확인 */
-			StringBuilder tempQueryBuilder = new StringBuilder();
 			JSONObject param = new JSONObject();
 			param.put("adminId", adminId);
 			param.put("queryType", Config.getString("query.type", "A"));
-			List<AuthorityVO> authoritys = authorityService.getAdminAuthority(param);
+			List<AuthorityVO> authFilter =  authorityService.getAdminAuthority(param);
 
-			for (AuthorityVO authority : authoritys) {
-				tempQueryBuilder.append((authority.getQuery() != null)? authority.getQuery() : "");
+			for (AuthorityVO authorityVO : authFilter) {
+				Map<String,Object> tempMap = new HashMap<>();
+				String[] types = ElasticSearchCommon.AUTH_FIELD_MAP.get(authorityVO.getType());
+				for(String type : types) {
+					tempMap.put("type", type);
+					String[] codes = null;
+					if(Common.isEmpty(authorityVO.getCodes())) codes = new String[]{""};
+					else codes = (authorityVO.getCodes().split(",").length >= 1) ? authorityVO.getCodes().split(",") : new String[]{""};
+					tempMap.put("values", codes);
+				}
+				if(ElasticSearchCommon.COMPANY_RELATED.indexOf( authorityVO.getType()) > -1)  { //회사관련 코드
+					this.authQueryCompanyRelated.add(tempMap);
+				}else{
+					this.authQueryEtcRelated.add(tempMap);
+				}
 			}
-
 			//로그 enabled시 쿼리 로그
 			if (log.isInfoEnabled()) { }
-
-//			tempQueryBuilder.insert(0,ElasticSearchCommon.SPACE+ElasticSearchCommon.AND_QUERY);
-//			queryBuffer.append(tempQueryBuilder);
-//			setAppendQuery();
-
 		}
+
 	}
+
+	private void setAuthQuery() {
+
+	}
+
 
 }

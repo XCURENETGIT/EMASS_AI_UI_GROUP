@@ -167,10 +167,10 @@ public class ElasticSearchCommon {
     public static final String USER_ID = "user.id"; //	사용자 ID
     public static final String USER_USERID = "user.userId"; //	사용자 아이디(인사연동)
     public static final String USER_NAME = "user.name"; // 	사용자 이름
-    public static final String USER_IPCOCD = "user.ipcoCd"; // 	회사코드(SRC_IP기준)
-    public static final String USER_IPCONM = "user.ipcoNm"; // 	회사명(SRC_IP기준)
-    public static final String USER_IPBUSINM = "user.ipbusiNm"; // 	사명장명(SRC_IP기준)
-    public static final String USER_IPBUSICD = "user.ipbusiCd"; // 	사업장코드(SRC_IP기준)
+    public static final String USER_IPCOCD = "user.ipCoCd"; // 	회사코드(SRC_IP기준)
+    public static final String USER_IPCONM = "user.ipCoNm"; // 	회사명(SRC_IP기준)
+    public static final String USER_IPBUSINM = "user.ipBusiNm"; // 	사명장명(SRC_IP기준)
+    public static final String USER_IPBUSICD = "user.ipBusiCd"; // 	사업장코드(SRC_IP기준)
     public static final String USER_COCD = "user.coCd"; // 	회사코드
     public static final String USER_CONM = "user.coNm"; // 	회사명
     public static final String USER_BUSICD = "user.busiCd"; // 	사업장 코드
@@ -296,9 +296,17 @@ public class ElasticSearchCommon {
             ,"recv.cc.ceo"
             ,"recv.bcc.ceo"
     }; // CEO 관련
-    
 
-    
+    /* AUTH_FIELD_MAP */
+    public static Map<String,String[]> AUTH_FIELD_MAP = new HashMap<>(){{
+            put("COCD",new String[]{USER_COCD,USER_IPCOCD});
+            put("BUSICD",new String[]{USER_BUSICD,USER_IPBUSICD});
+            put("SERVICECD",new String[]{SERVICE_SVC});
+            put("PICD",new String[]{PI_ID});
+            put("GROUPCD",new String[]{USER_USERID});
+    }};
+
+    public static String COMPANY_RELATED  = "COCD,BUSICD";
 
     /* 화면 검색시 쓰이는 파라미터 */
     public static final String CTIME_HH = "ctime_hh"; //시간별
