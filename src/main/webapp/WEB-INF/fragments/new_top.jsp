@@ -7,16 +7,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 <%
-
-String headerYn = (String) request.getAttribute("headerYn");
-String headerCloseYn = (String) request.getAttribute("headerCloseYn");
-String menuKey = (String) request.getAttribute("menuKey");
-
-boolean infoFeedbackConf = Config.getBoolean("info.feedback.used");
-boolean infoHynixConf = Config.getBoolean("info.hynix.used");
-String infoFeedbackYn = Common.getInfoFeedbackYn(session);
 JSONObject ntpInfo =  NtpScheduler.ntpStatus;
-
 %>
 
 
@@ -42,13 +33,17 @@ JSONObject ntpInfo =  NtpScheduler.ntpStatus;
         <div class="ipinfo_right">
             <p class="ntp">
                 <%if(Common.isEquals(ntpInfo.getString("status"), "sync")) {%>
-                <span class="top_flag01"></span>&nbsp;
+                <span id="ntpColor" class="top_flag01"></span>&nbsp;
                 <%} else if(Common.isEquals(ntpInfo.getString("status"), "unsync")) {%>
-                <span class="top_flag01"></span>&nbsp; <%-- 추후 오렌지색 변경 --%>
+                <span id="ntpColor" class="top_flag02"></span>&nbsp; <%-- 추후 오렌지색 변경 --%>
                 <%} else {%>
-                <span class="top_flag01"></span>&nbsp;  <%-- 추후 레드 변경--%>
+                <span id="ntpColor" class="top_flag03"></span>&nbsp;  <%-- 추후 레드 변경--%>
                 <%}%>
-                <a href="javascript:;"  class="graybbb" id="ntpStatus"> NTP - <%=Common.nvl(ntpInfo.get("ntpServer")) %>  </a>
+                <span id="ntpStatus" class="fb600">NTP - <%=Common.nvl(ntpInfo.get("ntpServer")) %></span>
+            </p>
+            <p>
+                <span class="graybbb">접속시간:23.10.09</span>
+                <span class="graybbb">접속IP:23.10.09</span>
             </p>
             <p>
                 <a href="#"><img src="<c:url value="/img/icon_top_bell.png"/>" alt="알림"></a>
@@ -70,20 +65,18 @@ JSONObject ntpInfo =  NtpScheduler.ntpStatus;
     }
 
     function changeNTP(ntpServer, lv) {
-        var ntpStr = 'NTP - ' + ntpServer;
-        var titleStr = '';
-
-        if(lv=='info') {
-            ntpStr += '&nbsp;<span class="fa fa-soild fa-circle fa-lg" style="color:lightgreen;"></span>';
+        let ntpStr = 'NTP - ' + ntpServer;
+        let titleStr = '';
+        if(lv==='info') {
+            $('#ntpColor').removeClass().addClass('top_flag01');
             titleStr = '<s:message code="trap.message.ntp.sync"/>';
-        } else if(lv=='warning') {
-            ntpStr += '&nbsp;<span class="fa fa-soild fa-circle fa-lg" style="color:orange;"></span>';
+        } else if(lv==='warning') {
+            $('#ntpColor').removeClass().addClass('top_flag02');
             titleStr = '<s:message code="trap.message.ntp.unsync"/>';
         } else {
-            ntpStr += '&nbsp;<span class="fa fa-soild fa-circle fa-lg" style="color:red;"></span>';
+            $('#ntpColor').removeClass().addClass('top_flag03');
             titleStr = '<s:message code="trap.message.ntp.unconnect"/>';
         }
-
         $('#ntpStatus').html(ntpStr);
         $('#ntpStatus').parent().attr('title', titleStr);
     }

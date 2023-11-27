@@ -98,7 +98,7 @@ public class Config {
 	public final static String USER_FORMAT = "message.user.format";
 
 	//db.properties 파일에 정보가 없을때 사용
-	public static final String DB_IP = "15.1.3.159";
+	public static final String DB_IP = "10.200.10.64";
 	public static final String DB_USER = "root";
 	public static final String DB_PASSWORD = "root99";
 

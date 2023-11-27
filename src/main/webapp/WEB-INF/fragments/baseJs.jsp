@@ -1,9 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="org.springframework.web.servlet.i18n.SessionLocaleResolver" %>
-<%@ page import="com.xcurenet.common.util.config.Config"%>
-<%@ page import="org.springframework.web.servlet.i18n.SessionLocaleResolver"%>
 <%@ page import="com.xcurenet.common.util.Common"%>
-<%@ page import="com.xcurenet.common.util.config.Config" %>
 <%@ page import="java.util.Locale" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
@@ -31,6 +27,8 @@
 <script type="text/javascript" src="<c:url value="/js/slick.columnpicker.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/slickgrid-print-plugin.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/slick.rowmovemanager.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/sockjs-0.3.4.min.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/stomp.js"/>"></script>
 
 <%@ include file="/WEB-INF/fragments/common.jsp"%>
 
@@ -69,8 +67,6 @@
 <script type="text/javascript" src="<c:url value="/js/highcharts.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/highcharts-3d.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/exporting.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/sockjs-0.3.4.min.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/stomp.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/sha256.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/password.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/Date.js"/>"></script>

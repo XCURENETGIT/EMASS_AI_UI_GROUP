@@ -199,6 +199,46 @@ public class SFTPUtil {
 		return null;
 	}
 
+
+	public String getCommand(String command) {
+		StringBuilder result = new StringBuilder();
+		InputStream in = null;
+		try {
+			channel = session.openChannel("exec");
+			((ChannelExec) channel).setCommand(command);
+			channel.setInputStream(null);
+			((ChannelExec) channel).setErrStream(System.err);
+
+			in = channel.getInputStream();
+			channel.connect();
+			byte[] tmp = new byte[1024];
+			while (true) {
+				while (in.available() > 0) {
+					int i = in.read(tmp, 0, 1024);
+					if (i < 0) break;
+					result.append(new String(tmp, 0, i)).append("\n");
+				}
+				if (channel.isClosed()) {
+					if (in.available() > 0) continue;
+					log.info("exit-status: " + channel.getExitStatus());
+					break;
+				}
+
+				try {
+					Thread.sleep(100);
+				} catch (Exception ee) {
+				}
+			}
+		} catch (JSchException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			IOUtils.closeQuietly(in);
+		}
+		return result.toString();
+	}
+
 	public void setCommand(String command) {
 		try {
 			channel = session.openChannel("exec");
@@ -226,6 +266,7 @@ public class SFTPUtil {
 				} catch (Exception ee) {
 				}
 			}
+			IOUtils.closeQuietly(in);
 		} catch (JSchException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

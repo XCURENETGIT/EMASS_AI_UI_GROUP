@@ -289,12 +289,6 @@
         if (startDt > endDt) ui.alertMsg('<s:message code="blockHistoryNonBusi.msg.cannot.startendtime"/>');
 
         var options = $('#adminId option');
-
-        /* if( adminId == '' ) {
-			adminId = $.map(options ,function(option) {
-				if( option.value != '') return option.value;
-			}).join(',');
-		} */
         grid.on();
         searchFlag = true;
         ui.get({
@@ -315,6 +309,7 @@
             offset: grid.data.length,
             limit: grid.pageSize,
             success: function (data, total) {
+	            $("#auditLogCount").html('합계 [' + total.comma() + '건]');
                 grid.appendData(data);
             },
             error: function (status, message) {
@@ -328,9 +323,7 @@
     }
 
     function getAdminOptions() {
-
         var result = '';
-
         if (firstAdminYn == 'Y') result += '<option value="">- <s:message code="auditLog.select.admin"/> -</option>';
         ui.get({
             url: 'getAdminList.xcn',
@@ -410,7 +403,7 @@
 			<div class="subtab">
 				<button class="active">
 					운용자 감사로그 목록
-					<span></span>
+					<span id="auditLogCount">[]</span>
 				</button>
 			</div>
 			<div id="auditLogListGrid" class="slickGrid gridArea"></div>

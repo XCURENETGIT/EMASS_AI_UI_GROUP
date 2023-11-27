@@ -1,5 +1,6 @@
 package com.xcurenet.common.util;
 
+import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.xcurenet.admin.service.AdminVO;
 import com.xcurenet.common.crypto.CryptoCommon;
@@ -2128,6 +2129,37 @@ public class Common {
 		}
 		return _sb.toString();
 	}
+
+	public static String commandRunner(final String command) throws IOException {
+		StringBuilder result = new StringBuilder();
+		if(isWindow()){
+			SFTPUtil util = new SFTPUtil();
+			try {
+				util.init(Config.DB_IP, Config.DB_USER, Config.DB_PASSWORD, 22);
+				result.append(util.getCommand(command));
+			} catch (JSchException e) {
+				throw new RuntimeException(e);
+			} finally {
+				util.disconnection();
+			}
+		} else {
+			ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", command);
+			Process process = processBuilder.start();
+			try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));) {
+				String line;
+				while ((line = reader.readLine()) != null) {
+					result.append(line).append("\n");
+				}
+			} finally {
+				process.destroy();
+			}
+		}
+		return result.toString();
+	}
+
+
+
+
 
 	public static String getRpcMessage(HttpServletRequest request, int code) {
 		if (code >= 100000000) return "Read Record Error 2";
