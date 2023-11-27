@@ -132,7 +132,7 @@ function reSizeHeight() {
   console.log('')
   $('.xcn_full').each(function (e) {
     let obj = this;
-    let pTop = $(obj).prev().offset().top + $(obj).prev().outerHeight() + 120;
+    let pTop = $(obj).prev().offset().top + $(obj).prev().outerHeight() + 125;
     let height = window.outerHeight - pTop;
     if(height < 500) height = 500;
     $(obj).find('.contentSub').outerHeight(height);
