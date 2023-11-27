@@ -1397,45 +1397,16 @@ public class ElasticSearchQueryUtils {
 				complateQuery.filter(rangeQuery);
 			}
 
-
-
 			/*################ 권한 관련 ##################################################################*/
-			setAuthoritysFilter(adminId); // set 권한 리스트
+			// set 권한 리스트
+			setAuthoritysFilter(adminId);
+			BoolQueryBuilder authComQuery = getCompanyAuthFilterQuery();
+			BoolQueryBuilder ceoQuery = getCeoFilterQuery();
+
 			// 권한 filter 추가
-			BoolQueryBuilder authQuery = new BoolQueryBuilder();
-			BoolQueryBuilder ceoQuery = new BoolQueryBuilder();
-
-			/* 회사 권한 관련 (회사,사업장) 필터 */
-			for(Map<String,Object> authCom : authQueryCompanyRelated){
-				authQuery.should(QueryBuilders.termsQuery((String) authCom.get("type"), (String[]) authCom.get("values")));
-			}
-			authQuery.minimumShouldMatch(1);
-			complateQuery.filter(authQuery);
-
-			/* 기타 필터 (서비스,패턴,그룹)* 임시 주석/
-//			for(Map<String,Object> authEtc : authQueryEtcRelated) {
-//				complateQuery.should(QueryBuilders.termsQuery((String) authEtc.get("type"), (String[]) authEtc.get("values")));
-//			}
-//			complateQuery.minimumShouldMatch(1);
-			*/
-
-			// ceo 관련
-			if(!this.ceoSearch) {
-				ceoQuery.should(QueryBuilders.matchQuery("user.ceo", "N"));
-				ceoQuery.should(QueryBuilders.matchQuery("sender.ceo", "false"));
-				ceoQuery.should(QueryBuilders.matchQuery("to.ceo", "false"));
-				ceoQuery.should(QueryBuilders.matchQuery("cc.ceo", "false"));
-				ceoQuery.should(QueryBuilders.matchQuery("bcc.ceo", "false"));
-				ceoQuery.minimumShouldMatch(1);
-				complateQuery.must(ceoQuery);
-			}
-
-			/*#####################################################################################################*/
-
-
-
-
-
+			if(null != ceoQuery) complateQuery.must(authComQuery);
+			if(null != ceoQuery) complateQuery.must(ceoQuery);
+			/*##########################################################################################*/
 
 			complateQuery.must(secondQuery);  // 사용할 쿼리 merge 완료
 
@@ -1772,37 +1743,16 @@ public class ElasticSearchQueryUtils {
 			complateQuery.filter(rangeQuery);
 
 			/*################ 권한 관련 ##################################################################*/
-			setAuthoritysFilter(adminId); // set 권한 리스트
+			// set 권한 리스트
+		    setAuthoritysFilter(adminId);
+		    BoolQueryBuilder authComQuery = getCompanyAuthFilterQuery();
+		    BoolQueryBuilder ceoQuery = getCeoFilterQuery();
+
 			// 권한 filter 추가
-		    BoolQueryBuilder authQuery = new BoolQueryBuilder();
-		    BoolQueryBuilder ceoQuery = new BoolQueryBuilder();
+		    if(null != ceoQuery) complateQuery.must(authComQuery);
+			if(null != ceoQuery) complateQuery.must(ceoQuery);
 
-			/* 회사 권한 관련 (회사,사업장) 필터 */
-		    for(Map<String,Object> authCom : authQueryCompanyRelated){
-				authQuery.should(QueryBuilders.termsQuery((String) authCom.get("type"), (String[]) authCom.get("values")));
-			 }
-			authQuery.minimumShouldMatch(1);
-			complateQuery.filter(authQuery);
-
-			/* 기타 필터 (서비스,패턴,그룹)* 임시 주석/
-//			for(Map<String,Object> authEtc : authQueryEtcRelated) {
-//				complateQuery.should(QueryBuilders.termsQuery((String) authEtc.get("type"), (String[]) authEtc.get("values")));
-//			}
-//			complateQuery.minimumShouldMatch(1);
-			*/
-
-			// ceo 관련
-			if(!this.ceoSearch) {
-				ceoQuery.should(QueryBuilders.matchQuery("user.ceo", "N"));
-				ceoQuery.should(QueryBuilders.matchQuery("sender.ceo", "false"));
-				ceoQuery.should(QueryBuilders.matchQuery("to.ceo", "false"));
-				ceoQuery.should(QueryBuilders.matchQuery("cc.ceo", "false"));
-				ceoQuery.should(QueryBuilders.matchQuery("bcc.ceo", "false"));
-				ceoQuery.minimumShouldMatch(1);
-				complateQuery.must(ceoQuery);
-			}
-
-			/*#####################################################################################################*/
+			/*##########################################################################################*/
 
 			complateQuery.must(secondQuery);
 			searchSourceBuilder = new SearchSourceBuilder()
@@ -2362,7 +2312,7 @@ public class ElasticSearchQueryUtils {
 					else codes = (authorityVO.getCodes().split(",").length >= 1) ? authorityVO.getCodes().split(",") : new String[]{""};
 					tempMap.put("values", codes);
 				}
-				if(ElasticSearchCommon.COMPANY_RELATED.indexOf( authorityVO.getType()) > -1)  { //회사관련 코드
+				if(ElasticSearchCommon.COMPANY_RELATED.indexOf(authorityVO.getType()) > -1)  { //회사관련 코드
 					this.authQueryCompanyRelated.add(tempMap);
 				}else{
 					this.authQueryEtcRelated.add(tempMap);
@@ -2374,9 +2324,50 @@ public class ElasticSearchQueryUtils {
 
 	}
 
-	private void setAuthQuery() {
+
+
+
+	/* 회사 권한 관련 (회사,사업장) 필터 */
+	private BoolQueryBuilder getCompanyAuthFilterQuery( ) {
+		BoolQueryBuilder result = null;
+		if(authQueryCompanyRelated.size() >= 1) {
+			result = new BoolQueryBuilder();
+			for (Map<String, Object> authCom : authQueryCompanyRelated) {
+				result.should(QueryBuilders.termsQuery((String) authCom.get("type"), (String[]) authCom.get("values")));
+			}
+		}
+		result.minimumShouldMatch(1);
+		return result;
+	}
+
+	/* 기타 필터 (서비스,패턴,그룹)* 임시 주석 */
+	private BoolQueryBuilder getEtcAuthFilterQuery(){
+		BoolQueryBuilder result = null;
+		if(authQueryEtcRelated.size() >= 1) {
+			//			for(Map<String,Object> authEtc : authQueryEtcRelated) {
+//				result.should(QueryBuilders.termsQuery((String) authEtc.get("type"), (String[]) authEtc.get("values")));
+//			}
+//			complateQuery.minimumShouldMatch(1);
+		}
+		return null;
+	}
+
+	/* ceo 필터 */
+	private BoolQueryBuilder getCeoFilterQuery( ) {
+		BoolQueryBuilder result = null;
+		if(!this.ceoSearch) {
+			result = new BoolQueryBuilder();
+			result.should(QueryBuilders.matchQuery("user.ceo", "N"));
+			result.should(QueryBuilders.matchQuery("sender.ceo", "false"));
+			result.should(QueryBuilders.matchQuery("to.ceo", "false"));
+			result.should(QueryBuilders.matchQuery("cc.ceo", "false"));
+			result.should(QueryBuilders.matchQuery("bcc.ceo", "false"));
+			result.minimumShouldMatch(1);
+		}
+		return result;
 
 	}
+
 
 
 }
