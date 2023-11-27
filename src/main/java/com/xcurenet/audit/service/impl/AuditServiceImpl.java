@@ -7,7 +7,6 @@ import com.xcurenet.audit.service.AuditVO;
 import com.xcurenet.common.dao.XcnAbstractDAO;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.MongoUtil;
-import lombok.extern.java.Log;
 import lombok.extern.log4j.Log4j2;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
@@ -21,7 +20,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -31,6 +29,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class AuditServiceImpl extends XcnAbstractDAO implements AuditService {
 
 	private static final AtomicInteger SEQ = new AtomicInteger();
+
+	private DateTimeFormatter yyyyMMddHHmmssS = DateTimeFormat.forPattern("yyyyMMddHHmmssS");
 
 	private final MongoUtil mongoUtil;
 
@@ -77,10 +77,10 @@ public class AuditServiceImpl extends XcnAbstractDAO implements AuditService {
 	@Override
 	public int insertAudit(AuditVO audit) {
 		if (Common.isEmpty(audit.getAdminId())) return 0;
-
 		audit.setSeq(getNextSeq());
 		audit.setProduct(PRODUCT);
 		audit.setDate(new LocalDateTime().toDateTime(DateTimeZone.UTC));
+		audit.setId(String.format("%s_%s_%s", yyyyMMddHHmmssS.print(audit.getDate().getMillis()), audit.getSeq(), audit.getAdminId()));
 		mongoUtil.insert(audit, "INFO_AUDIT");
 		return 1;
 	}

@@ -312,6 +312,7 @@ public class LoginController {
 			msg = Prop.propFormat("login.fail") + "(" + login.getUserId() + ")";
 			audit.setAdminId(login.getUserId());
 			audit.setInformation(msg);
+			log.info("[LOGIN FAIL] AUDIT : {}", audit);
 			auditService.insertAudit(audit);
 			return new XcnResponseVO(XcnRspCode.OK_CUSTOM, "CORRECT_USER").setMessage(msg);
 		} else {
@@ -387,6 +388,8 @@ public class LoginController {
 				msg = Prop.propFormat("login.block.failcount") + "(" + login.getUserId() + ")";
 				audit.setAdminName("");
 				audit.setInformation(msg);
+
+				log.info("[LOGIN FAIL] AUDIT : {}", audit);
 				auditService.insertAudit(audit);
 				return new XcnResponseVO(XcnRspCode.OK_CUSTOM, "PW_EXCESS").setMessage(msg);
 			}
