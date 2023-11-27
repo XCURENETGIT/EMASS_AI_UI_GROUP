@@ -4,5 +4,5 @@
 <%
     String footer_type = Common.nvl(Common.getParam(request).get("footer_type"));
 %>
-<footer class="unselectable" style="position: fixed; bottom: 0; height: 30px;background-color: #f5f5f5;z-index: -1;">
+<footer class="unselectable" style="position: fixed; bottom: 0; height: 30px;background-color: #f5f5f5;z-index: -1;width: 100%;">
 </footer>
