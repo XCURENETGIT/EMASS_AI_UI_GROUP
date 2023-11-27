@@ -1,10 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp" %>
-
+<style>
+#modal_body_area {min-height: 200px;max-height: 400px;overflow: auto;font-size: 13px;line-height: 24px;}
+</style>
 <script type="text/javascript">
     var adminId2 = '${_USERCREDENTIAL_.adminId}';
     var searchFlag = false;
-
     var menuArr = [];
     menuArr.push({id: 'SYSTEM', name: '<s:message code="SYSTEM"/>', p_id: null});
     menuArr.push({id: 'DATA_MONITOR', name: '<s:message code="DATA_MONITOR"/>', p_id: null});
@@ -351,22 +352,25 @@
         return result;
     }
 </script>
-
-<div class="modal fade" id="auditLogPop" tabindex="-1" role="dialog" aria-labelledby="auditLogPop">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modalHead">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-				<h3 class="modal-title"><s:message code="auditLog.auditlogpop.title"/></h3>
+<div id="auditLogPop" class="modal">
+	<div class="modal-content">
+		<div class="modalHead">
+			<h2><s:message code="auditLog.auditlogpop.title"/></h2>
+			<span class="close" data-dismiss="modal">&times;</span>
+		</div>
+		<div class="modalCon">
+			<div class="modalTop">
+				<h3><s:message code="auditLog.information.msg"/></h3>
+<%--				<p>
+					<span class="red_dot veralign_middle"></span>
+					<s:message code="common.required.msg"/>
+				</p>--%>
 			</div>
 			<div class="modalbody">
-				<div class="form-inline" id="modal_body_area" style="min-height: 200px;max-height: 400px;overflow: auto;">
-				</div>
+				<div class="form-inline" id="modal_body_area"></div>
 			</div>
 			<div class="modalfooter">
-				<button type="button" accesskey="C" class="btn btn-default" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+				<button class="pop_btn01" data-dismiss="modal">닫기</button>
 			</div>
 		</div>
 	</div>
@@ -403,7 +407,12 @@
 	</div>
 	<div class="content xcn_full">
 		<div class="contentSub" style="height: 800px;">
-			<div class="subtab"><button class="active">운용자 감사로그 목록</button></div>
+			<div class="subtab">
+				<button class="active">
+					운용자 감사로그 목록
+					<span></span>
+				</button>
+			</div>
 			<div id="auditLogListGrid" class="slickGrid gridArea"></div>
 		</div>
 	</div>
