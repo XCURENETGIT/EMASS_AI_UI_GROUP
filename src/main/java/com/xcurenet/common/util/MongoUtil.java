@@ -62,7 +62,16 @@ public class MongoUtil {
 		return mongoTemplate.findOne(query, vo , collectionName);
 	}
 
-
+	/**
+	 * 주어진 MongoDB Query의 Count 값을 반환
+	 *
+	 * @param query MongoDB Query
+	 * @param vo Collection Name VO
+	 * @return count
+	 */
+	public Long count(Query query, Class<AuditVO> vo) {
+		return mongoTemplate.count(query, vo);
+	}
 
 	//다건조회
 	public <T> List<T> selectList(Query query,  Class<T> vo) {

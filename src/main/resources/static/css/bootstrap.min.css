@@ -2716,9 +2716,9 @@ input[type=search] {
 }
 
 input[type=checkbox], input[type=radio] {
-	margin: 4px 0 0;
-	margin-top: 1px\9;
-	line-height: normal
+	/*margin: 4px 0 0;*/
+	/*margin-top: 1px\9;*/
+	/*line-height: normal*/
 }
 
 input[type=file] {
@@ -2841,9 +2841,9 @@ input[type=search] {
 }
 
 .checkbox input[type=checkbox], .checkbox-inline input[type=checkbox], .radio input[type=radio], .radio-inline input[type=radio] {
-	position: absolute;
-	margin-top: 4px\9;
-	margin-left: -20px
+	/*position: absolute;*/
+	/*margin-top: 4px\9;*/
+	/*margin-left: -20px*/
 }
 
 .checkbox+.checkbox, .radio+.radio {
@@ -6024,21 +6024,21 @@ a.list-group-item-danger.active, a.list-group-item-danger.active:focus, a.list-g
 }
 
 .close:focus, .close:hover {
-	color: #ddd;
-	text-decoration: none;
-	cursor: pointer;
-	filter: alpha(opacity = 50);
-	opacity: .5
+	/*color: #ddd;*/
+	/*text-decoration: none;*/
+	/*cursor: pointer;*/
+	/*filter: alpha(opacity = 50);*/
+	/*opacity: .5*/
 }
 
 button.close {
-	-webkit-appearance: none;
-	cursor: pointer;
-	background: 0 0;
-	border: 0
+	/*-webkit-appearance: none;*/
+	/*cursor: pointer;*/
+	/*background: 0 0;*/
+	/*border: 0*/
 }
 
-.modal-open {
+/*.modal-open {
 	overflow: hidden
 }
 
@@ -6180,7 +6180,7 @@ button.close {
 	.modal-lg {
 		width: 900px
 	}
-}
+}*/
 
 .btooltip {
 	position: absolute;

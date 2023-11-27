@@ -135,22 +135,22 @@ button[disabled], html input[disabled] {
 }
 
 select {
-	height: 23px;
+	/*height: 23px;
 	line-height: 23px;
 	border:1px solid #D3D3D3;
 	font-size: 12px;
-	padding-left: 3px;
+	padding-left: 3px;*/
 }
 input[type="radio"]:checked + span {
-	font-weight: bold;
+/*	font-weight: bold;*/
 }
 
 input[type="text"] {
-	height: 26px;
+/*	height: 26px;
 	line-height: 26px;
-	/*border:1px solid #D3D3D3;*/
+	!*border:1px solid #D3D3D3;*!
 	font-size: 12px;
-	padding-left: 3px;
+	padding-left: 3px;*/
 }
 .filter-option {
 	font-size: 12px;

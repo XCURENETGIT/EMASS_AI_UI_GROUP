@@ -9,6 +9,8 @@ public interface AuditService {
 
 	public List<AuditVO> getAuditList(Map<String, Object> param);
 
+	public long getAuditListCount(Map<String, Object> param);
+
 	public int insertAudit(AuditVO audit);
 
 	public int insertAudit(final HttpServletRequest request, AuditRequestVO auditVo);

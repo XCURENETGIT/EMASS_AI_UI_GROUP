@@ -1,20 +1,5 @@
 package com.xcurenet.audit.web;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Description;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.xcurenet.admin.service.AdminVO;
 import com.xcurenet.audit.service.AuditRequestVO;
 import com.xcurenet.audit.service.AuditService;
@@ -23,24 +8,31 @@ import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.locale.Prop;
 import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.context.annotation.Description;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.List;
 
-@Slf4j
+@Log4j2
 @Controller
 public class AuditController {
 
 	@Resource(name = "auditService")
 	public AuditService auditService;
 
-	@Autowired
-	private MongoTemplate mongoTemplate;
-
 	@RequestMapping(value = "/getAuditList.xcn")
 	@Description("감사로그 리스트 조회")
 	@ResponseBody
 	public XcnResponseVO getAuditList(final HttpServletRequest request, final HttpSession session) throws Exception {
-		return new XcnResponseVO(XcnRspCode.OK, auditService.getAuditList(Common.getParamMap(request)));
+		List<AuditVO> result = auditService.getAuditList(Common.getParamMap(request));
+		long count = auditService.getAuditListCount(Common.getParamMap(request));
+		return new XcnResponseVO(XcnRspCode.OK, result, count);
 	}
 
 	@RequestMapping(value = "/insertAudit.xcn")
@@ -64,7 +56,6 @@ public class AuditController {
 		auditVo.setInformation(Prop.propFormat("common.msg.print", request));
 		return new XcnResponseVO(XcnRspCode.OK, auditService.insertAudit(request, auditVo));
 	}
-
 
 	public static String splitStrReduce(String str){
 		return Common.splitStrReduce(str, ",", 3);

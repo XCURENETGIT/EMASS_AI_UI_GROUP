@@ -8,6 +8,7 @@ import com.xcurenet.common.dao.XcnAbstractDAO;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.MongoUtil;
 import lombok.extern.log4j.Log4j2;
+import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -46,8 +47,17 @@ public class AuditServiceImpl extends XcnAbstractDAO implements AuditService {
 		return SEQ.getAndDecrement();
 	}
 
+	public long getAuditListCount(Map<String, Object> param) {
+		return mongoUtil.count(getQuery(param, false), AuditVO.class);
+	}
+
 	@Override
 	public List<AuditVO> getAuditList(Map<String, Object> map) {
+		return mongoUtil.selectList(getQuery(map, true), AuditVO.class);
+	}
+
+	@NotNull
+	private static Query getQuery(Map<String, Object> map, boolean page) {
 		String searchStr = Common.nvl(map.get("searchStr"));
 		String startDt = Common.nvl(map.get("startDt"));
 		String endDt = Common.nvl(map.get("endDt"));
@@ -68,11 +78,10 @@ public class AuditServiceImpl extends XcnAbstractDAO implements AuditService {
 			query.addCriteria(Criteria.where("date").gte(s).lt(e));
 		}
 		query.with(Sort.by(Sort.Direction.DESC, "date"));
-		query.with(PageRequest.of((offset / limit), limit));
-
-		log.info("query : {}", query);
-		return mongoUtil.selectList(query, AuditVO.class);
+		if (page) query.with(PageRequest.of((offset / limit), limit));
+		return query;
 	}
+
 
 	@Override
 	public int insertAudit(AuditVO audit) {
