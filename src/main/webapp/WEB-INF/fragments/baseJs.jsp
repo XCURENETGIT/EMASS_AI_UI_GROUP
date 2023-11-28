@@ -5,7 +5,8 @@
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
-
+<script type="text/javascript" src="<c:url value="/js/colorpicker-colors.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/colorpicker.js"/>"></script>
 
 <script type="text/javascript" src="<c:url value="/js/jquery.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/jquery.ui.js"/>"></script>

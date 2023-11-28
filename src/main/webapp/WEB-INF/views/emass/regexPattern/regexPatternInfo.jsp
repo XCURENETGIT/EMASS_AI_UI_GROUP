@@ -203,9 +203,8 @@
 					       style="width: 300px;">
 						<button class="form_btn01" type="button" accesskey="K" id="searchregexNameBtn">조회</button>
 				</div>
-				<button type="button" class="form_btn02" accesskey="A" id="regexPatternInsertBtn"><s:message code="common.msg.add"/></button>
-				<button type="button" class="form_btn02" accesskey="E" id="keywordDeleteBtn">&nbsp;<s:message code="common.msg.delete"/>
-				</button>
+			<button type="button" class="btn01" accesskey="A" id="regexPatternInsertBtn"><img src="../img/icon/subBtn_plus.png" alt="추가"><s:message code="common.msg.add"/></button>
+			<button type="button" class="btn02" accesskey="E" id="keywordDeleteBtn"><img src="../img/icon/subBtn_trash.png" alt="삭제"><s:message code="common.msg.delete"/></button>
 			</div>
 		</div>
 	</div>

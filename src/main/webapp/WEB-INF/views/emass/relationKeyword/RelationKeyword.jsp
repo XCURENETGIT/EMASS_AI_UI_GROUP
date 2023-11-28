@@ -374,10 +374,8 @@
 				<input type="text" placeholder="키워드를 입력하세요" id="searchWordKeyword" style="width: 300px;">
 				<button class="form_btn01" type="button" accesskey="K" id="searchWordSearchBtn">조회</button>
 			</div>
-			<button type="button" class="form_btn02" accesskey="A" id="searchWordInsertBtn"><s:message
-					code="common.msg.add"/></button>
-			<button type="button" class="form_btn02" accesskey="E" id="searchWordDeleteBtn"><s:message
-					code="common.msg.delete"/></button>
+			<button type="button" class="btn01" accesskey="A" id="searchWordInsertBtn"><img src="../img/subBtn_plus.png" alt="추가"><s:message code="common.msg.add"/></button>
+			<button type="button" class="btn02" accesskey="E" id="searchWordDeleteBtn"><img src="../img/subBtn_trash.png" alt="삭제"><s:message code="common.msg.delete"/></button>
 		</div>
 	</div>
 </div>
@@ -386,7 +384,6 @@
 	<div class="contentSub">
 		<div id="searchWordListGrid" class="slickGrid gridArea"></div>
 	</div>
-
 </div>
 </div>
 
