@@ -760,7 +760,7 @@ function getSelectedCodeData( codeType, data ) {
 
                 grid1.colInit();
                 grid1.autoNumber();
-                grid1.colAdd('servicesvcNm', '<s:message code="condition.service"/>', 320, 'left', false, 'link');
+                grid1.colAdd('svcLv12Nm', '<s:message code="condition.service"/>', 320, 'left', false, 'link');
                 grid1.colAdd('total', '<s:message code="bodyview.total"/>', 130, 'right', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
                     if ( value != undefined ) return value.comma();
                     else return '';

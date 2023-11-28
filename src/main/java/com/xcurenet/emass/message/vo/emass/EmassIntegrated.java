@@ -141,7 +141,11 @@ public class EmassIntegrated {
     //                    if(Common.isOrEquals("", "user_str", "sender_str", "userid")){
     //                        item.put("rowName", Config.getUserName(Common.nvl(arg.getKey())));
     //                    }
-
+                            item.put("svc", arg.getKey().toString());
+                            item.put("svcNm", svcDeepNm(arg.getKey().toString()));
+                            item.put("svcLv12Nm", svcLv12GroupNm(arg.getKey().toString()));
+                            item.put("svcLv1Nm", svcLv1Nm(arg.getKey().toString()));
+                            item.put("svcLv2Nm", svcLv2Nm(arg.getKey().toString()));
 
                             item.put("rowKey", arg.getKey());
                             item.put(headerStr, arg.getDocCount());
@@ -235,6 +239,14 @@ public class EmassIntegrated {
                     continue;
                 }
                 /* 중복 아닐시  #############################################################*/
+
+                if(yField.equals("service.svc")) {
+                    tempMap.put("svc", Common.nvl(tempPivotList.get("svc")));
+                    tempMap.put("svcNm", Common.nvl(tempPivotList.get("svcNm")));
+                    tempMap.put("svcLv12Nm", Common.nvl(tempPivotList.get("svcLv12Nm")));
+                    tempMap.put("svcLv1Nm", Common.nvl(tempPivotList.get("svcLv1Nm")));
+                    tempMap.put("svcLv2Nm", Common.nvl(tempPivotList.get("svcLv2Nm")));
+                }
                 tempMap.put("rowKey", Common.nvl(tempPivotList.get("rowKey")));
                 tempMap.put("rowName", Common.nvl(tempPivotList.get("rowName")));
                 tempMap.put("xAxisType", Common.nvl(tempPivotList.get("xAxisType")));
