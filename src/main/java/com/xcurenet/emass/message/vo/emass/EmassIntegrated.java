@@ -141,6 +141,8 @@ public class EmassIntegrated {
     //                    if(Common.isOrEquals("", "user_str", "sender_str", "userid")){
     //                        item.put("rowName", Config.getUserName(Common.nvl(arg.getKey())));
     //                    }
+
+
                             item.put("rowKey", arg.getKey());
                             item.put(headerStr, arg.getDocCount());
                             /* PIVOT XAxis */

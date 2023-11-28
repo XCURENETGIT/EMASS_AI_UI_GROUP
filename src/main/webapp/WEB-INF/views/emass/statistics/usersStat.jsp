@@ -399,13 +399,7 @@ function fileInfoViewer( row ){
 			<div id="startdatepicker"><input type="date" id="startdate" style="width: 110px;"> <span
 					class="hyphen">~</span></div>
 			<div id="enddatepicker"><input type="date" id="enddate" style="width: 110px;"></div>
-				<div>
-					<select id="country" name="country" style="height: 25.99px;">
-						<option value="australia">운영자선택</option>
-						<option value="canada">옵션2</option>
-						<option value="usa">옵션3</option>
-					</select>
-				</div>
+
 				<div class="optiotab">
 					<button class="optionBtn active" id="ctime_hh" value="ctime_hh"><s:message
 							code="common.msg.time"/></button>
@@ -426,10 +420,16 @@ function fileInfoViewer( row ){
 				<div>
 					<button class="form_btn01" accesskey="Q" id="searchBtn" accesskey="s">조회</button>
 					<button class="form_btn02">조건 초기화</button>
+					<button type="button" class="btn btn-sm btn-primary searchQueryBtn">
+						<span class="glyphicon glyphicon-check"></span>&nbsp;<s:message code="query.make.inputer"/></button>
 				</div>
 		</div>
+		<div class="panel" style="width: 100%; margin-bottom: 10px">
+			<div>
+				<textarea class="elsQueryResultText" rows="1" style="width:100%;" id="elsQueryText" placeholder="<s:message code="condition.input.detail"/>"></textarea>
+			</div>
+		</div>
 		<div class="content">
-
 			<div >
 				<div class="chartArea">
 					<div>
@@ -494,8 +494,8 @@ function fileInfoViewer( row ){
 					</div>
 				</div>
 				<!-- 탭 -->
-					<div class="row top_space2">
-						<div class="col-xs-12">
+				<div class="row top_space2">
+					<div class="col-xs-12">
 						<ul class="nav nav-tabs codeTab listChart">
 							<li class="active"><a data-toggle="tab" href="#basicStatList" id=" ">LIST</a>
 							</li>
@@ -506,9 +506,9 @@ function fileInfoViewer( row ){
 				<!-- 테이블 -->
 				<div class="row top_space">
 					<div class="col-lg-12 tab-content">
-						<div id="basicStatList" class="tab-pane fade in active" style="background-color: white;">
+						<div id="basicStatList" class="tab-pane fade in active" style="background-color: white">
 							<div id="basicStatListGrid" class="slickGrid gridArea"
-							     style="position: relative;/* top: 0px; left: 0px; height: 400px; */text-align: center;"></div>
+							     style="position: relative; top: 0px; left: 0px; height: 400px; text-align: center; "></div>
 						</div>
 					</div>
 				</div>

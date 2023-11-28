@@ -449,9 +449,9 @@ function getSearchQuery() {
 				</div>
 			</div>
 			<div class="panel" style="width: 100%;">
-			<div>
-				<textarea class="solrQueryResultText" rows="1" style="width:100%;" id="solrQueryText" placeholder="<s:message code="condition.input.detail"/>"></textarea>
-			</div>
+				<div>
+					<textarea class="elsQueryResultText" rows="1" style="width:100%;" id="elsQueryText" placeholder="<s:message code="condition.input.detail"/>"></textarea>
+				</div>
 			</div>
 			<div class="content">
 

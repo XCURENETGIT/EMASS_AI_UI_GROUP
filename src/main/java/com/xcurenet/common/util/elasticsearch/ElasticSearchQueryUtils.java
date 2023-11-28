@@ -1303,7 +1303,7 @@ public class ElasticSearchQueryUtils {
 
 
 		/* yField 설정 */
-		if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("yAxis"))) {
+		if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("yAxis"))&&Common.isEmpty(elasticSearchParam.getSearchParameters().get("interGroupId"))) {
 			setyField(Common.nvl(elasticSearchParam.getSearchParameters().get("yAxis")));
 		}
 
@@ -1313,7 +1313,7 @@ public class ElasticSearchQueryUtils {
 		}
 		/* 관심사용자 검색시 */
 		else if(Common.isEmpty(elasticSearchParam.getSearchParameters().get("rowKey")) && !Common.isEmpty(elasticSearchParam.getSearchParameters().get("interGroupId"))) {
-			setSearchQuery(Common.nvl(elasticSearchParam.getSearchParameters().get("interGroupId")));
+			/*setSearchQuery(Common.nvl(elasticSearchParam.getSearchParameters().get("interGroupId")));*/
 		} else{
 			/*아무런 검색조건 없을시*/
 			setSearchQuery(Common.nvl(ElasticSearchCommon.ALL_SEARCH));
