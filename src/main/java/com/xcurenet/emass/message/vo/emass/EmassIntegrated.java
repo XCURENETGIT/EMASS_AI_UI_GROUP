@@ -152,7 +152,7 @@ public class EmassIntegrated {
                 List<String> headerList = keyList.stream().map( k -> k.getKey()).collect(Collectors.toList());
                 this.pivotHeader = headerList;
             }
-            else if(ElasticSearchCommon.USER_NAME.equals(xTypeFlag) && ElasticSearchCommon.PI_TYPE.equals(yField)  ){
+            else if(ElasticSearchCommon.USER_ID.equals(xTypeFlag) && ElasticSearchCommon.PI_ID.equals(yField)  ){
                // pi_code 패턴 관련
                 Map<String, Object> keys = new HashMap();
                 Terms results = aggregations.get("stat");
@@ -168,7 +168,10 @@ public class EmassIntegrated {
                         keys.put(ElasticSearchCommon.PI_PREFIX.concat(Common.nvl(arg.getKey())), 0); // pivot header 추가
                         item.put("rowName",rowName);
                         item.put("rowKey",Common.nvl(bucket.getKey()));
-                        item.put(ElasticSearchCommon.PI_PREFIX.concat(Common.nvl(arg.getKey())), arg.getDocCount());
+
+                        if(!arg.getKey().equals("EC")){
+                            item.put(ElasticSearchCommon.PI_PREFIX.concat(Common.nvl(arg.getKey())), arg.getDocCount());
+                        }
                         /* PIVOT XAxis */
                         result.add(item);
                     }

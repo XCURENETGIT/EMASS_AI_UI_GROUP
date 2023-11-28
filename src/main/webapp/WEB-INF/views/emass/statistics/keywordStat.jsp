@@ -3,16 +3,19 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<title>EMASS LTH - <s:message code="DATA_MONITOR.STAT_LABEL"/></title>
-<%@ include file="../../analysis/analysisBase.jsp"%>
-<style type="text/css">
-.panel-heading .dropdown-menu {
-	right: 31px;
-	top: 42px;
-	left: initial;
-}
-</style>
-<script>
+	<link rel="stylesheet" type="text/css" href="../css/emass_style.css"/>
+	<title>EMASS LTH - <s:message code="DATA_MONITOR.STAT_LABEL"/></title>
+	<style type="text/css">
+		.panel-headings .dropdown-menu {
+			right: 8px;
+			top: 25px;
+			left: initial;
+		}
+
+	</style>
+	<script type="text/javascript" src="<c:url value="/js/messageGrid.js"/>"></script>
+	<%-- 통계 --%>
+	<script>
 var searchFlag = false;
 var detailTotal = 0;
 var rowKey = "";
@@ -28,24 +31,24 @@ $(document).ready(function(){
 		closeDetailTab();
 		getData ('Y');
 	});
-	
+
 	$('#chartCntDiv .dropdown-menu li a').click(function(){
 		chartcnt = $(this).text();
 		printChart(totalChartDat);
 	});
-	
+
 	$('#startdatepicker').datetimepicker({
 		format: 'YYYY-MM-DD',
 		locale: 'ko',
 		defaultDate: moment(new Date())
 	});
-	
+
 	$('#enddatepicker').datetimepicker({
 		format: 'YYYY-MM-DD',
 		locale: 'ko',
 		defaultDate: moment(new Date())
 	});
-	
+
 	$(".nav-tabs").on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
 		var id = $(this).parents('li').attr('idx');
 		var hrefNm = $(this).attr('href');
@@ -60,25 +63,25 @@ $(document).ready(function(){
 			printChart(dat);
 		}
 	})
-	
+
 	$('.listChart').on('click','.close',function(){
 		var id = 'tab'+ Number($(this).parents('li').attr('idx'));
 		var obj = tabInfo[id];
 		obj.close();
-		
+
 		var tabID = $(this).parents('a').attr('href');
 		$(this).parents('li').remove();
 		$(tabID).remove();
-		
+
 		tabNum --;
-		
+
 		var tabFirst = $('.listChart a:first');
 		tabFirst.tab('show');
 		$("#chartCntDiv").show();
 		$('#totalViewDiv').hide();
 		printChart(totalChartDat);
 	});
-	
+
 	$('.print_stat').click(function() {
 		var gridDetail = getCurrentGrid();
 		if(gridDetail != undefined) {
@@ -95,7 +98,7 @@ $(document).ready(function(){
 			grid1.print('<s:message code="DATA_MONITOR.STAT_KWD"/>', pMenuId, menuId);
 		}
 	});
-	
+
 	$('.excel_stat').click(function() {
 		var gridDetail = getCurrentGrid();
 		if(gridDetail != undefined) {
@@ -106,7 +109,7 @@ $(document).ready(function(){
 			excelDownLoad(grid1,'<s:message code="DATA_MONITOR.STAT_KWD"/>', svg);
 		}
 	});
-	
+
 	$('.cell_stat').click(function() {
 		var gridDetail = getCurrentGrid();
 		if(gridDetail != undefined) {
@@ -115,7 +118,7 @@ $(document).ready(function(){
 			cellDownLoad(grid1,'<s:message code="DATA_MONITOR.STAT_KWD"/>');
 		}
 	});
-	
+
 	$('.pdf_stat').click(function() {
 		var gridDetail = getCurrentGrid();
 		if(gridDetail != undefined) {
@@ -124,7 +127,7 @@ $(document).ready(function(){
 			pdfDownLoad(grid1,'<s:message code="DATA_MONITOR.STAT_KWD"/>');
 		}
 	});
-	
+
 	$('.csv_stat').click(function() {
 		var gridDetail = getCurrentGrid();
 		if(gridDetail != undefined) {
@@ -133,19 +136,19 @@ $(document).ready(function(){
 			csvDownLoad(grid1,'<s:message code="DATA_MONITOR.STAT_KWD"/>');
 		}
 	});
-	
+
 	$('.totalView').click(function(){
 		$("#chartCntDiv").show();
 		$('#totalViewDiv').hide();
 		printChart(totalChartDat);
 	});
-	
+
 	$('.searchQueryBtn').click(function(){
 		queryMakePop();
 	});
-	
+
 	//getData ('Y');
-	
+
 });
 
 function setGrid( ){
@@ -165,7 +168,7 @@ function regexpInfoViewer(row){
 	var grid = window.__grids[selectedTabIdx];
 	var msgid = grid.getValue(row, 'msgid');
 	if(grid.getValue(row, 'pi_total') == '') return;
-	
+
 	var url    = '<c:url value="/ems/regexpInfoPop.do?msgId='+msgid+'"/>';
 	return fnOpenWindow(url, 'regexpInfoPop', 1100, 370, 'resize');
 }
@@ -175,7 +178,7 @@ function userInfoViewer(row, type){
 	var grid = window.__grids[selectedTabIdx];
 	var msgid = grid.getValue(row, 'msgid');
 	if(grid.getValue(row, type) == '') return;
-	
+
 	var url    = '<c:url value="/ems/userInfoPop.do?msgId='+msgid+'&type='+type+'"/>';
 	return fnOpenWindow(url, type+'InfoPop', 835, 370, 'resize');
 }
@@ -185,7 +188,7 @@ function fileInfoViewer( row ){
 	var grid = window.__grids[selectedTabIdx];
 	var msgid = grid.getValue(row, 'msgid');
 	if(grid.getValue(row, 'attachcnt') == '') return;
-	
+
 	var url    = '<c:url value="/ems/fileInfoPop.do?msgId='+msgid+'"/>';
 	return fnOpenWindow(url, 'fileInfoPop', 1015, 400, 'resize');
 }
@@ -198,7 +201,7 @@ function viewer_open( row, bodySize ){
 	var ctime = $('#searchStrInput').val();
 
 	openMessageBodyPop( grid.id, msgid, $('#searchStrInput').val(), bodySize);
-	
+
 	var readYn = grid.getValue(row, 'readYn');
 	grid.setValue(row, grid.ColIndex('readYn'), 'Y');
 	grid.Select(row,0);
@@ -210,7 +213,7 @@ function viewer_newOpen(row, bodySize){
 	var msgid = grid.getValue(row, 'msgid');
 	var ctime = $('#searchStrInput').val();
 	openMessageBodyPop( '', msgid, $('#searchStrInput').val(), bodySize);
-	
+
 	var readYn = grid.getValue(row, 'readYn');
 	grid.setValue(row, grid.ColIndex('readYn'), 'Y');
 }
@@ -266,7 +269,7 @@ function printChart( dat )
 				if ( grid1.data[i][cols[j].id] == undefined ) items.push(0);
 				else items.push( Number( grid1.data[i][cols[j].id] ) );
 				if ( i == 0 ) categories.push( cols[j].name );
-				if(Number( grid1.data[i][cols[j].id] ) > maxDat) maxDat = Number( grid1.data[i][cols[j].id] );  
+				if(Number( grid1.data[i][cols[j].id] ) > maxDat) maxDat = Number( grid1.data[i][cols[j].id] );
 			}
 			if(grid1.data[i]['NUM'] == '<s:message code="bodyview.total"/>') continue;
 			else data.push({name:grid1.data[i]['rowKey'], data:items});
@@ -286,7 +289,7 @@ function printChart( dat )
 		if(dat['NUM'] == '<s:message code="bodyview.total"/>') return;
 		else data.push({name:dat['rowKey'], data:items});
 	}
-	
+
 	var rotation = 40;
 	if ( chartxAxis == 'W' ) rotation = 0;
 	$('#chartArea1').highcharts({
@@ -370,103 +373,110 @@ function queryMakePop(  ){
 }
 
 function getSearchQuery() {
-	
+
 }
 </script>
 </head>
 <body class="mini-navbar">
 
-	<div class="container"> 
-		<div class="boxArea">
-			<div class="content_body">
-				<div class="row">
-					<div class="col-xs-12 text-left">
-						<div class="form-group form-inline not-dashed">
-							<label for="startdatepicker"><s:message code="condition.select.period"/>:</label>
-							<div class='input-group date' id='startdatepicker'>
-								<input type='text' class="input-sm form-control" id='startdate' />
-								<span class="input-group-addon"> <span class="glyphicon glyphicon-calendar"></span>
-								</span>
-							</div>
-							~
-							<div class='input-group date' id='enddatepicker'>
-								<input type='text' class="input-sm form-control" id='enddate' />
-								<span class="input-group-addon"> <span class="glyphicon glyphicon-calendar"></span>
-								</span>
-							</div>
-							<div class="form-group" style="margin-left: 15px;">
-								<label for="xAxis"><s:message code="stat.area.stat"/>:</label>
-								<select id="xAxis" name="xAxis" class="input-sm form-control">
-									<option value="ctime_hh"><s:message code="common.msg.time"/></option>
-									<option value="ctime_yyyymmdd"><s:message code="common.msg.day"/></option>
-									<option value="ctime_yyyymm"><s:message code="common.msg.month"/></option>
-									<option value="businm"><s:message code="common.org.busi"/></option>
-									<option value="conm"><s:message code="common.org.co"/></option>
-									<option value="deptnm"><s:message code="common.org.dept"/></option>
-									<option value="direction_svc"><s:message code="condition.receive_send"/></option>
-									<option value="jikgubnm"><s:message code="common.org.jikgub"/></option>
-								</select>
-							</div>
-							<div class="form-group form-inline not-dashed">
-								<button type="button" class="btn btn-success btn-sm" accesskey="Q" id="searchBtn" accesskey="s"><span class="glyphicon glyphicon-search"></span></button>
-								<button type="button" class="btn btn-sm btn-primary searchQueryBtn"><span class="glyphicon glyphicon-check"></span>&nbsp;<s:message code="query.make.inputer"/></button>
-							</div>
+<div class="container">
+	<div class="searchArea">
+		<div class="searchSub">
+			<div id="startdatepicker"><input type="date" id="startdate" style="width: 110px;"> <span
+					class="hyphen">~</span></div>
+			<div id="enddatepicker"><input type="date" id="enddate" style="width: 110px;"></div>
+			<div class="optiotab">
+				<button class="optionBtn active" id="ctime_hh" value="ctime_hh"><s:message
+						code="common.msg.time"/></button>
+				<button class="optionBtn" id="ctime_yyyymmdd" value="ctime_yyyymmdd" class="active"><s:message
+						code="common.msg.day"/></button>
+				<button class="optionBtn" id="ctime_yyyymm" value="ctime_yyyymm"><s:message
+						code="common.msg.month"/></button>
+				<button class="optionBtn" id="businm" value="businm"><s:message code="common.org.busi"/></button>
+				<button class="optionBtn" id="conm" value="conm"><s:message code="common.org.co"/></button>
+				<button class="optionBtn" id="deptnm" value="deptnm"><s:message code="common.org.dept"/></button>
+				<button class="optionBtn" id="direction_svc" value="direction_svc"><s:message
+						code="condition.receive_send"/></button>
+				<button class="optionBtn" id="jikgubnm" value="jikgubnm"><s:message
+						code="common.org.jikgub"/></button>
+				<input type="hidden" value="ctime_hh" id="optionHidden">
+				<input type="hidden" value="시간" id="optionHiddenName">
+			</div>
+			<div>
+				<button class="form_btn01" accesskey="Q" id="searchBtn" accesskey="s">조회</button>
+				<button class="form_btn02">조건 초기화</button>
+			</div>
+		</div>
+		<div class="content">
+
+			<div class="contentSub">
+				<div class="chartAreafull">
+					<div>
+						<h3>
+							TOP 통계 Chart
+							<span class="sel">
+                                    <select id="country" name="country">
+                                        <option value="australia">차트 표시 개수(7)</option>
+                                        <option value="canada">옵션2</option>
+                                        <option value="usa">옵션3</option>
+                                      </select>
+                                </span>
+						</h3>
+						<div class="chartBox">
+							차트영역
 						</div>
 					</div>
 				</div>
-				<div class="row top_space">
-					<div class="col-xs-12">
-						<textarea class="solrQueryResultText" rows="1" style="width:100%;" id="solrQueryText" placeholder="<s:message code="condition.input.detail"/>"></textarea>
-					</div>
-				</div>
+
+				<!-- 탭 -->
 				<div class="row top_space2">
 					<div class="col-xs-12">
 						<ul class="nav nav-tabs codeTab listChart">
-							<li class="active" style="width:100px; text-align: center"><a data-toggle="tab" href="#basicStatList" id="listTab" >LIST</a></li>
+							<li class="active"><a data-toggle="tab" href="#basicStatList" id=" ">LIST</a>
+							</li>
+						</ul>
 						</ul>
 					</div>
 				</div>
+				<!-- 테이블 -->
 				<div class="row top_space">
 					<div class="col-lg-12 tab-content">
-						<div id="basicStatList" class="tab-pane fade in active">
-							<div id="basicStatListGrid" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; height: 400px"></div>
+						<div id="basicStatList" class="tab-pane fade in active" style="background-color: white">
+							<div id="basicStatListGrid" class="slickGrid gridArea"
+							     style="position: relative; top: 0px; left: 0px; height: 400px; text-align: center; "></div>
 						</div>
 					</div>
 				</div>
-				<div class="row top_space2">
-					<div class="col-lg-12">
-						<div class="panel panel-default" id="service.logging.count">
-							<div class="panel-heading">
-								<div class="pull-right" id="totalViewDiv" style="display:none;">
-									<button class="totalView btn-info btn-xs" type="button" title="<s:message code="stat.view.all"/>"><s:message code="stat.view.all"/></button>
-								</div>
-								<div class="pull-right" id="chartCntDiv">
-									<button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
-										<span class="glyphicon glyphicon-download-alt"></span>&nbsp;<s:message code="stat.display.count.chart"/> (<span class="dropdown-text">5</span>) <span val="5" class="caret"></span>
-									</button>
-									<ul class="dropdown-menu dropdown-menu-right" role="menu">
-										<li><a href="#">5</a></li>
-										<li><a href="#">10</a></li>
-										<li><a href="#">15</a></li>
-										<li><a href="#">20</a></li>
-									</ul>
-								</div>
-								<i class="fa fa-bar-chart-o fa-fw"></i><span id="chartAreaTitle">TOP <s:message code="DATA_MONITOR.STAT_LABEL"/> CHART </span>
-							</div>
-							<div class="panel-body">
-								<div id="chartArea1" style="height: 230px;"></div>
-							</div>
-						</div>
+				<!-- pagination -->
+				<div class="pageArea">
+					<div class="pagination">
+						<a href="#"><img src="../img/ico_page_left2.png" alt=""></a>
+						<a href="#"><img src="../img/ico_page_left.png" alt=""></a>
+						<a href="#">1</a>
+						<a class="active" href="#">2</a>
+						<a href="#">3</a>
+						<a href="#">4</a>
+						<a href="#">5</a>
+						<a href="#">6</a>
+						<a href="#"><img src="../img/ico_page_right.png" alt=""></a>
+						<a href="#"><img src="../img/ico_page_right2.png" alt=""></a>
 					</div>
 				</div>
+				<!-- //pagination -->
 			</div>
+
 		</div>
+		<!-- content 끝-->
 	</div>
+	<!--ContentArea-->
+</div>
+<!--//Container-->
+</div>
 	<!-- Back to top -->
 	<a href="#0" class="back-to-top cd-top"><span class="[ fa fa-chevron-up ]"></span> <span class="[ ]">Back to the Top</span></a>
-	
+
 	<script type="text/javascript">
-	
+
 		function getCurrentGrid(){
 			var id = Number($('.listChart .active').attr('idx'));
 			return tabInfo['tab'+id];
@@ -483,13 +493,13 @@ function getSearchQuery() {
 		grid1.changePageSize = function(cnt){
 			getData ('Y');
 		};
-		
+
 		var tabInfo={};
 		var chartDat={};
 		grid1.onClick = function() {
 			var valChk = grid1.getValue(grid1.Row, grid1.Col);
 			if(valChk == "" || valChk == "-") return;
-			
+
 			if(grid1.getValue(grid1.Row, 'NUM') == '<s:message code="bodyview.total"/>') {
 				var key = "";
 				for(var i=0; i<grid1.Rows; i++) {
@@ -513,26 +523,26 @@ function getSearchQuery() {
 				var xAxis = $('select[name=xAxis]').val();
 				if (xAxis == "ctime_hh") colKeyNm = colKey + '<s:message code="common.msg.hour"/>';
 			}
-			
+
 			tabID++;
 			tabNum ++;
 			if( tabNum > 3 ) {
 				var delid = $( ".listChart li:nth-child(2)" ).attr('idx');
 				$('#detailTab'+delid+' .close').click();
 			}
-			
+
 			var rowKeys = rowKey.split(",");
 			var displayName = rowKeys.length > 1 ? '<s:message code="common.msg.all"/>' : rowKey.replaceAll("\\\"", "\"");
 			var id = 'tab'+tabID;
 			$('.listChart').append($('<li style="display:inline-flex;text-align: center;z-index:1001;" idx="'+tabID+'" id="liTab'+tabID+'"><a data-toggle="tab" href="#tab'+tabID+'" id="detailTab'+tabID+'" >'+displayName+' - '+colKeyNm+'<span class="badge"></span><button class="close" type="button" title="<s:message code="stat.delete.tab"/>">×</button></a></li>'));
 			$('#basicStatList').after($('<div class="tab-pane fade" id="tab' + tabID + '"><div id="detail_cnt'+tabID+'" style="margin-top:0px; color: #f25643; font-weight: bold; font-size: 13px;"></div><div id="grid'+tabID+'" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; height: 380px"></div></div>'));
-			
+
 			var gid = 'grid'+tabID;
 			var gridObj = new Xgrid(gid, contextRoot);
 			tabInfo[id] = gridObj;
 			$('.nav-tabs a[href="#tab'+tabID+'"]').tab('show');
 			setGrid( );
-			
+
 			$("#chartCntDiv").hide();
 			$('#totalViewDiv').show();
 			var dat = grid1.getRowData( grid1.Row );
@@ -545,27 +555,33 @@ function getSearchQuery() {
 			};
 			getDetailData('Y');
 		};
-		
+
 		function getData( flag ) {
 			if ( searchFlag ) return;
-			var xAxis = $('select[name=xAxis]').val();
-			var xAxis_str = $('select[name=xAxis] option:selected').text();
-			var sDate = $('#startdate').val().replaceAll("-","");
-			var eDate = $('#enddate').val().replaceAll("-","");
+            var xAxis = $('#optionHidden').val();
+            var xAxis_str = $('#optionHiddenName').val();
+            var sDate = $('#startdate').val().replaceAll("-","");
+            var eDate = $('#enddate').val().replaceAll("-","");
 			if(sDate > eDate) ui.alertMsg('<s:message code="consent.msg.timecheck"/>');
-			
-			searchFlag = true;
+
+            var searchData = {
+                xAxis: xAxis,
+                xAxis_str: xAxis_str,
+                rowKey: rowKey,
+                yAxis: 'kwd.kwds',
+                startDate: sDate + "000000",
+                endDate: eDate + "235959",
+                offset: grid1.data.length,
+                limit: grid1.pageSize,
+                detailQuery: $('#elsQueryText').val(),
+            }
+
+
+            searchFlag = true;
 			grid1.on();
 			ui.get({
 				url : 'getStatList.xcn',
-				startDate: sDate+"000000",
-				endDate: eDate+"235959",
-				detailQuery:$('#solrQueryText').val(),
-				xAxis : xAxis,
-				yAxis : 'kwds',
-				offset : grid1.data.length,
-				limit : grid1.pageSize,
-				xAxis_str : xAxis_str,
+                searchParam: JSON.stringify(searchData),
 				success : function(data, total) {
 					grid1.colInit();
 					grid1.autoNumber();
@@ -591,11 +607,11 @@ function getSearchQuery() {
 					}
 					grid1.loadHeader(false);
 					grid1.setData(data.pivotData);
-					
+
 					$('#statlist_cnt').html('<s:message code="common.msg.finish_query"/>:'+grid1.data.length);
 					if ( grid1.loadingPage == 0 ) grid1.Select(-1,-1);
 					searchFlag = false;
-					
+
 					if( data.pivotData.length > 0 ) {
 						for ( var i=0 ; i < data.length ; i++ ) {
 							var selected = false;
@@ -603,7 +619,7 @@ function getSearchQuery() {
 							else if ( i >= 10 ) break;
 							addOption( 'chartListCount', (i+1), (i+1), selected );
 						}
-						
+
 						var dat = grid1.getRowData( grid1.Row );
 						totalChartDat = dat;
 						printChart( dat );
@@ -624,7 +640,7 @@ function getSearchQuery() {
 		function getDetailData( lastRow ) {
 			currentgrid = getCurrentGrid();
 			if ( searchFlag ) return;
-			
+
 			if ( lastRow == 'Y' || lastRow == undefined ) {
 				currentgrid.data.length = 0;
 				currentgrid.rtnNextPageFunc = getDetailData;
@@ -632,10 +648,10 @@ function getSearchQuery() {
 			} else {
 				currentgrid.loadingPage++;
 			}
-			
+
 			var xAxis = $('select[name=xAxis]').val();
 			var xAxis_str = $('select[name=xAxis] option:selected').text();
-			
+
 			searchFlag = true;
 			currentgrid.on();
 			ui.get({
@@ -655,10 +671,10 @@ function getSearchQuery() {
 					if ( lastRow == 'Y' || lastRow == undefined ) detailTotal = total;
 					currentgrid.appendData(data.emass);
 					if ( currentgrid.loadingPage == 0 ) currentgrid.Select(-1,-1);
-					
+
 					$('#detailTab'+tabID+' .badge').text('[' + total.comma() + ']');
 					$('#detail_cnt'+tabID).html('<s:message code="common.msg.finish_query"/>: '+currentgrid.data.length);
-					
+
 					searchFlag = false;
 				},
 				error : function(status, message) {

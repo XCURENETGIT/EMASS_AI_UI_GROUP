@@ -506,9 +506,9 @@ function fileInfoViewer( row ){
 				<!-- 테이블 -->
 				<div class="row top_space">
 					<div class="col-lg-12 tab-content">
-						<div id="basicStatList" class="tab-pane fade in active" style="background-color: white">
+						<div id="basicStatList" class="tab-pane fade in active" style="background-color: white;">
 							<div id="basicStatListGrid" class="slickGrid gridArea"
-							     style="position: relative; top: 0px; left: 0px; height: 400px;"></div>
+							     style="position: relative;/* top: 0px; left: 0px; height: 400px; */text-align: center;"></div>
 						</div>
 					</div>
 				</div>

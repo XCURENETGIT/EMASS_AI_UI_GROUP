@@ -167,6 +167,7 @@ public class ElasticSearchCommon {
      // user
     public static final String USER_ID = "user.id"; //	사용자 ID
     public static final String USER_USERID = "user.userId"; //	사용자 아이디(인사연동)
+    public static final String USER_ID_KEYWORD = "user.id.keyword"; //	사용자 ID
     public static final String USER_NAME = "user.name"; // 	사용자 이름
     public static final String USER_IPCOCD = "user.ipCoCd"; // 	회사코드(SRC_IP기준)
     public static final String USER_IPCONM = "user.ipCoNm"; // 	회사명(SRC_IP기준)
@@ -332,9 +333,9 @@ public class ElasticSearchCommon {
             "xparentMtr", "password", "siteAttr",
             "siteCode", "epmsgType", "epHeader",
             "usrId", "usrIp", "opinion","body.path","body.snippet","body.size",
-            "piTotal", "piDRM", "piID",
+            "piTotal", "piDRM", "piID","kwd",
             "piEF", "piPN", "piDN",
-            "piSN", "piCN", "piEC",
+            "piSN", "piCN","piEC",
             "piFN","service",
             "network","attach","kwdInfo",
             "http","pi","user",

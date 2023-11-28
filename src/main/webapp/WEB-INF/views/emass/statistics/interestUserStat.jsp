@@ -444,7 +444,14 @@ function getSearchQuery() {
 				<div>
 					<button class="form_btn01" accesskey="Q" id="searchBtn" accesskey="s">조회</button>
 					<button class="form_btn02">조건 초기화</button>
+					<button type="button" class="btn btn-sm btn-primary searchQueryBtn">
+						<span class="glyphicon glyphicon-check"></span>&nbsp;<s:message code="query.make.inputer"/></button>
 				</div>
+			</div>
+			<div class="panel" style="width: 100%;">
+			<div>
+				<textarea class="solrQueryResultText" rows="1" style="width:100%;" id="solrQueryText" placeholder="<s:message code="condition.input.detail"/>"></textarea>
+			</div>
 			</div>
 			<div class="content">
 
@@ -526,7 +533,7 @@ function getSearchQuery() {
 						<div class="col-lg-12 tab-content">
 							<div id="basicStatList" class="tab-pane fade in active" style="background-color: white">
 								<div id="basicStatListGrid" class="slickGrid gridArea"
-								     style="position: relative; top: 0px; left: 0px; height: 400px;"></div>
+								     style="position: relative; top: 0px; left: 0px; height: 400px; text-align: center; "></div>
 							</div>
 						</div>
 					</div>
@@ -769,24 +776,34 @@ function getSearchQuery() {
 				ui.alertMsg('<s:message code="interest.select.interest"/>');
 				return;
 			}
-			var xAxis = $('select[name=xAxis]').val();
-			var xAxis_str = $('select[name=xAxis] option:selected').text();
+            var xAxis = $('#optionHidden').val();
+            var xAxis_str = $('#optionHiddenName').val();
+            var colNum = grid1.Col;
+            var isTotalRow = (grid1.Rows == grid1.Row) ? true : false;
+            var colId = '';
+            if (colNum != '' & colNum != null) colId = grid1.getHeaderId()[grid1.Col].id;
+
+            var searchData = {
+                rowKey: rowKey,
+            /*    colKey: colKey,*/
+                startDate: $('#startdate').val().replaceAll("-","")+"000000",
+                endDate: $('#enddate').val().replaceAll("-","")+"235959",
+                detailQuery: $('#elsQueryText').val(),
+                xAxis: xAxis,
+                xAxis_str: xAxis_str,
+                searched_xAxis: $('#searched_xAxis').val(),
+                /*colId: colId,*/
+                yAxis: 'user.id',
+                interGroup : interGroup,
+                offset: currentgrid.data.length,
+                limit: currentgrid.pageSize,
+            }
 			
 			searchFlag = true;
 			currentgrid.on();
 			ui.get({
 				url : 'getStatDetailList.xcn',
-				rowKey : rowKey,
-				colKey : colKey,
-				startDate : $('#startdate').val().replaceAll("-","")+"000000",
-				endDate : $('#enddate').val().replaceAll("-","")+"235959",
-				detailQuery:$('#solrQueryText').val(),
-				xAxis : xAxis,
-				xAxis_str : xAxis_str,
-				yAxis : 'user_str',
-				interGroup : interGroup,
-				offset : currentgrid.data.length,
-				limit : currentgrid.pageSize,
+                searchParam: JSON.stringify(searchData),
 				success : function(data, total) {
 					if ( lastRow == 'Y' || lastRow == undefined ) detailTotal = total;
 					currentgrid.appendData(data.emass);

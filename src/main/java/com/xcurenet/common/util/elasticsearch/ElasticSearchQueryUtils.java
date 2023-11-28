@@ -216,8 +216,6 @@ public class ElasticSearchQueryUtils {
 		this.queryBuffer.append(tempBuilder);
 	}
 
-
-
 	/***
 	 *  argments에 괄호 감싸기
 	 * @param argments
@@ -1262,6 +1260,9 @@ public class ElasticSearchQueryUtils {
                 case ElasticSearchCommon.SEARCH_TYPE_ANALYSIS_DETAIL: // 분석 검색시
 					result = initAnalysisDetailSearchSource(searchParam,adminId); // 검색 소스 준비
                     break;
+	            case ElasticSearchCommon.SEARCH_TYPE_COLLECTION: //생성형 AI,.. 검색
+		            result = initCollectionSearchSource(searchParam,adminId);
+		            break;
             }
 
 			return result;
@@ -1391,7 +1392,9 @@ public class ElasticSearchQueryUtils {
 					boolQueryBuilder.should(new RangeQueryBuilder("ctime").from(fromStr).to(toStr));
 					ldtFrom = ldtFrom.plusDays(1);
 				}
+
 				complateQuery.filter(boolQueryBuilder); // 시간별 디테일 date range 필터 추가
+
 			} else {
 				// default date range 필터 추가
 				complateQuery.filter(rangeQuery);
@@ -1734,6 +1737,7 @@ public class ElasticSearchQueryUtils {
 		log.debug("[SORT] : {}", elasticSearchParam.getSorts());
 		log.debug("[QUERY] {}", getQuery());
 
+
 	}
 
 
@@ -1915,8 +1919,8 @@ public class ElasticSearchQueryUtils {
 		this.elasticSearchParam.setSorts(sortBuilderList);
 		this.elasticSearchParam.setSearchType(Common.nvl(elasticSearchParam.getSearchParameters().get(ElasticSearchCommon.SEARCH_TYPE)));
 		this.elasticSearchParam.setIncludeFields(ElasticSearchCommon.SEARCH_FIELD);
-		this.elasticSearchParam.setXAxis("user.name");
-		this.elasticSearchParam.setYAxis("pi.type");
+		this.elasticSearchParam.setXAxis("user.id");
+		this.elasticSearchParam.setYAxis("pi.id");
 		this.elasticSearchParam.setStartDate(Common.nvl(elasticSearchParam.getSearchParameters().get("startDate")));
 		this.elasticSearchParam.setEndDate(Common.nvl(elasticSearchParam.getSearchParameters().get("endDate")));
 		this.elasticSearchParam.setExcludeFields(null);
@@ -1986,7 +1990,7 @@ public class ElasticSearchQueryUtils {
 
 	}
 
-	public SearchSourceBuilder initCollectionSearchSource(Map<String,Object> searchParam){
+	public SearchSourceBuilder initCollectionSearchSource(Map<String,Object> searchParam,String adminId){
 
 
 		SearchSourceBuilder searchSourceBuilder = null;
@@ -1998,6 +2002,17 @@ public class ElasticSearchQueryUtils {
 			BoolQueryBuilder complateQuery = new BoolQueryBuilder();
 
 			complateQuery.filter(rangeQuery);
+			/*################ 권한 관련 ##################################################################*/
+			// set 권한 리스트
+			setAuthoritysFilter(adminId);
+			BoolQueryBuilder authComQuery = getCompanyAuthFilterQuery();
+			BoolQueryBuilder ceoQuery = getCeoFilterQuery();
+
+			// 권한 filter 추가
+			if(null != ceoQuery) complateQuery.must(ceoQuery);
+			if(null != authComQuery) complateQuery.must(authComQuery);
+			/*##########################################################################################*/
+
 			complateQuery.must(secondQuery);
 
 			searchSourceBuilder = new SearchSourceBuilder()
@@ -2019,49 +2034,6 @@ public class ElasticSearchQueryUtils {
 
 
 
-	public SearchSourceBuilder initAnalysisSearchSource(Map<String,Object> searchParam,String adminId) {
-
-		SearchSourceBuilder searchSourceBuilder = null; // SearchSourceBuilder 리턴용
-
-		setanalysisSearchQueryReady(searchParam); // 분석용 파라미터 준비
-
-		RangeQueryBuilder rangeQuery = new RangeQueryBuilder(ElasticSearchCommon.CTIME).gte(elasticSearchParam.getStartDate()).lte(elasticSearchParam.getEndDate());
-		QueryStringQueryBuilder secondQuery = QueryBuilders.queryStringQuery(query);
-
-		/* 쿼리 merge */
-		BoolQueryBuilder complateQuery = new BoolQueryBuilder();
-		complateQuery.filter(rangeQuery);
-		complateQuery.must(secondQuery);
-
-		/* Aggregations */
-	/*	AggregationBuilder  pi_aggregation = AggregationBuilders.terms(elasticSearchParam.getXAxis()).field(elasticSearchParam.getXAxis()).minDocCount(1);
-		pi_aggregation.subAggregation(AggregationBuilders.terms(elasticSearchParam.getYAxis()).field(elasticSearchParam.getYAxis()).minDocCount(1));
-*/
-
-		AggregationBuilder piAggregation = AggregationBuilders
-				.terms("stat")
-				.field(elasticSearchParam.getXAxis())
-				.minDocCount(1)
-				.subAggregation(
-						AggregationBuilders
-								.nested("nested_pi", "pi")
-								.subAggregation(
-										AggregationBuilders
-												.terms("stat2")
-												.field(elasticSearchParam.getYAxis())
-								)
-				);
-
-		searchSourceBuilder = new SearchSourceBuilder()
-				.from(elasticSearchParam.getFrom())
-				.size(elasticSearchParam.getTo())
-				.query(complateQuery)
-				.fetchSource(elasticSearchParam.getIncludeFields(), elasticSearchParam.getExcludeFields())
-				.sort(elasticSearchParam.getSorts())
-				.aggregation(piAggregation)
-				.timeout(new TimeValue(timeout, TimeUnit.SECONDS));
-		return searchSourceBuilder;
-	}
 
 	public SearchSourceBuilder initMessengerSearchSource(Map<String, Object> searchParam, String adminId) {
 
@@ -2329,6 +2301,68 @@ public class ElasticSearchQueryUtils {
 		log.debug("[QUERY] {}", getQuery());
 
 	}
+	public SearchSourceBuilder initAnalysisSearchSource(Map<String,Object> searchParam,String adminId) {
+
+		SearchSourceBuilder searchSourceBuilder = null; // SearchSourceBuilder 리턴용
+
+		setanalysisSearchQueryReady(searchParam); // 분석용 파라미터 준비
+
+		RangeQueryBuilder rangeQuery = new RangeQueryBuilder(ElasticSearchCommon.CTIME).gte(elasticSearchParam.getStartDate()).lte(elasticSearchParam.getEndDate());
+		QueryStringQueryBuilder secondQuery = QueryBuilders.queryStringQuery(query);
+
+		RangeQueryBuilder piSNRangeQuery = QueryBuilders.rangeQuery(ElasticSearchCommon.PISN).gte((searchParam.get("piCount")));
+		RangeQueryBuilder piCNRangeQuery = QueryBuilders.rangeQuery(ElasticSearchCommon.PICN).gte((searchParam.get("piCount")));
+		RangeQueryBuilder piDNRangeQuery = QueryBuilders.rangeQuery(ElasticSearchCommon.PIDN).gte((searchParam.get("piCount")));
+		RangeQueryBuilder piFNRangeQuery = QueryBuilders.rangeQuery(ElasticSearchCommon.PIFN).gte((searchParam.get("piCount")));
+		RangeQueryBuilder piPNRangeQuery = QueryBuilders.rangeQuery(ElasticSearchCommon.PIPN).gte((searchParam.get("piCount")));
+
+
+		BoolQueryBuilder piRangeQueries = QueryBuilders.boolQuery()
+				.should(piSNRangeQuery)
+				.should(piCNRangeQuery)
+				.should(piDNRangeQuery)
+				.should(piFNRangeQuery)
+				.should(piPNRangeQuery)
+				.minimumShouldMatch(1);
+
+
+		/* 쿼리 merge */
+		BoolQueryBuilder complateQuery = new BoolQueryBuilder();
+		complateQuery.filter(rangeQuery);
+		complateQuery.must(secondQuery);
+		complateQuery.must(piRangeQueries);
+
+
+
+		/* Aggregations */
+	/*	AggregationBuilder  pi_aggregation = AggregationBuilders.terms(elasticSearchParam.getXAxis()).field(elasticSearchParam.getXAxis()).minDocCount(1);
+		pi_aggregation.subAggregation(AggregationBuilders.terms(elasticSearchParam.getYAxis()).field(elasticSearchParam.getYAxis()).minDocCount(1));
+*/
+
+		AggregationBuilder piAggregation = AggregationBuilders
+				.terms("stat")
+				.field(elasticSearchParam.getXAxis())
+				.minDocCount(1)
+				.subAggregation(
+						AggregationBuilders
+								.nested("nested_pi", "pi")
+								.subAggregation(
+										AggregationBuilders
+												.terms("stat2")
+												.field(elasticSearchParam.getYAxis())
+								)
+				);
+
+		searchSourceBuilder = new SearchSourceBuilder()
+				.from(elasticSearchParam.getFrom())
+				.size(elasticSearchParam.getTo())
+				.query(complateQuery)
+				.fetchSource(elasticSearchParam.getIncludeFields(), elasticSearchParam.getExcludeFields())
+				.sort(elasticSearchParam.getSorts())
+				.aggregation(piAggregation)
+				.timeout(new TimeValue(timeout, TimeUnit.SECONDS));
+		return searchSourceBuilder;
+	}
 
 	public SearchSourceBuilder initAnalysisDetailSearchSource(Map<String, Object> searchParam,String adminId) {
 
@@ -2338,11 +2372,29 @@ public class ElasticSearchQueryUtils {
 
 		RangeQueryBuilder rangeQuery = new RangeQueryBuilder(ElasticSearchCommon.CTIME).gte(elasticSearchParam.getStartDate()).lte(elasticSearchParam.getEndDate());
 		QueryStringQueryBuilder secondQuery = QueryBuilders.queryStringQuery(query);
+		RangeQueryBuilder piSNRangeQuery = QueryBuilders.rangeQuery(ElasticSearchCommon.PISN).gte((searchParam.get("piCount")));
+		RangeQueryBuilder piCNRangeQuery = QueryBuilders.rangeQuery(ElasticSearchCommon.PICN).gte((searchParam.get("piCount")));
+		RangeQueryBuilder piDNRangeQuery = QueryBuilders.rangeQuery(ElasticSearchCommon.PIDN).gte((searchParam.get("piCount")));
+		RangeQueryBuilder piFNRangeQuery = QueryBuilders.rangeQuery(ElasticSearchCommon.PIFN).gte((searchParam.get("piCount")));
+		RangeQueryBuilder piPNRangeQuery = QueryBuilders.rangeQuery(ElasticSearchCommon.PIPN).gte((searchParam.get("piCount")));
+
+
+		BoolQueryBuilder piRangeQueries = QueryBuilders.boolQuery()
+				.should(piSNRangeQuery)
+				.should(piCNRangeQuery)
+				.should(piDNRangeQuery)
+				.should(piFNRangeQuery)
+				.should(piPNRangeQuery)
+				.minimumShouldMatch(1);
+
 
 		/* 쿼리 merge */
 		BoolQueryBuilder complateQuery = new BoolQueryBuilder();
 		complateQuery.filter(rangeQuery);
 		complateQuery.must(secondQuery);
+		complateQuery.must(piRangeQueries);
+
+
 
 		searchSourceBuilder = new SearchSourceBuilder()
 				.from(elasticSearchParam.getFrom())
@@ -2372,7 +2424,7 @@ public class ElasticSearchQueryUtils {
 		System.out.println(elasticSearchParam.getSearchParameters().get("user_str"));
 
 		if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("user_str"))) {
-			addQueryGroup(ElasticSearchCommon.SPACE,ElasticSearchCommon.USER_NAME,makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("user_str"))));
+			addQueryGroup(ElasticSearchCommon.SPACE,ElasticSearchCommon.USER_ID,makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("user_str"))));
 		}
 
 

@@ -22,6 +22,11 @@
       left: initial;
     }
 
+    .panel-body {
+      padding : 12px 8px 12px 8px !important;
+    }
+
+
     #loadingBar {
       position: absolute;
       top: 39px;
@@ -547,15 +552,15 @@
   });
   grid1.colAdd('pi_DN', '<s:message code="bodyview.dn"/>', 80, 'right', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
     if ( value != undefined ) return value.comma();
-    else return  0;
+    else return 0;
   });
   grid1.colAdd('pi_FN', '<s:message code="bodyview.fn"/>', 90, 'right', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
     if ( value != undefined ) return value.comma();
-    else return  0;
+    else return 0;
   });
   grid1.colAdd('pi_PN', '<s:message code="bodyview.pn"/>', 60, 'right', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
     if ( value != undefined ) return value.comma();
-    else return  0;
+    else return 0;
   });
 
   grid1.loadExportMenu('<s:message code="DATA_ANALYSIS.ANALYSIS_INFO"/>');
@@ -598,7 +603,7 @@
     if (value == '0') return '';
     else return value.comma();
   });
-  grid2.colAdd('inside', '<s:message code="message.msg.inout"/>', 55, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+  grid2.colAdd('sender_inside', '<s:message code="message.msg.inout"/>', 55, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
     if (value == 'N') return '<s:message code="message.msg.out"/>';
     else if (value == 'Y') return '<s:message code="message.msg.in"/>';
     else return '-';
@@ -634,7 +639,7 @@
   grid2.colAdd('sender_busiNm', '<s:message code="common.org.busi"/>', 120, 'center', true, 'nomal');
   grid2.colAdd('sender_deptNm', '<s:message code="common.org.dept"/>', 120, 'center', false, 'nomal');
   grid2.colAdd('sender_jikgubNm', '<s:message code="common.org.jikgub"/>', 120, 'center', false, 'nomal');
-  grid2.colAdd('sender_name', '<s:message code="condition.sender"/>', 130, 'left', false, 'link', function(row, cell, value, columnDef, dataContext) {
+  grid2.colAdd('user_name', '<s:message code="condition.sender"/>', 130, 'left', false, 'link', function(row, cell, value, columnDef, dataContext) {
     return highlightSearchStr(value, "sender");
   });
   grid2.colAdd('allOfUs', '<s:message code="condition.allofus"/>', 150, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
@@ -682,11 +687,11 @@
     var rtnVal = arrayToString(value);
     return highlightSearchStr(rtnVal, "attach_attach_Name");
   });
-  grid2.colAdd('sizeStr', '<s:message code="condition.size.all"/>', 80, 'left', false, 'nomal', null, {sortField:'size'});
-  grid2.colAdd('bodySizeStr', '<s:message code="condition.size.body"/>', 80, 'left', false, 'nomal', null, {sortField:'body_size'});
-  grid2.colAdd('attachSizeStr', '<s:message code="condition.size.attach"/>', 80, 'left', false, 'nomal', null, {sortField:'attachSizeSort'});
-  grid2.colAdd('kwds', '<s:message code="condition.keyword"/>', 120, 'left', false, 'nomal');
-  grid2.colAdd('total', '<s:message code="condition.regexp"/>', 70, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
+  grid2.colAdd('size', '<s:message code="condition.size.all"/>', 80, 'left', false, 'nomal', null, {sortField:'size'});
+  grid2.colAdd('body_size', '<s:message code="condition.size.body"/>', 80, 'left', false, 'nomal', null, {sortField:'body_size'});
+  grid2.colAdd('attach_sizeStr', '<s:message code="condition.size.attach"/>', 80, 'left', false, 'nomal', null, {sortField:'attachSizeSort'});
+  grid2.colAdd('kwdInfo_kwds', '<s:message code="condition.keyword"/>', 120, 'left', false, 'nomal');
+  grid2.colAdd('piTotal', '<s:message code="condition.regexp"/>', 70, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
     if (value == '0') return '';
     else return 0;
   });
@@ -775,7 +780,7 @@
     }
 
     ui.get({
-      url : 'test_getInfoStatList.xcn',
+      url : 'getInfoStatList.xcn',
       searchParam : JSON.stringify(searchData),
       success : function(data, total) {
         console.log(data);
@@ -883,12 +888,12 @@
         //원래 ctime 20231116155436/20231115155221/2023-11-15 09:48:05 citmeYYYYmmDD 20231116/20231115
 
 
-        var nodeLv1 = getNodeByField('user_name', data.emass);
+        var nodeLv1 = getNodeByField('user_id', data.emass);
         var nodeLv2 = getNodeByPI(data.emass);
         /* 					var nodeLv3 = getNodeByField('svc', data); */
         var nodeLv3 = getNodeByField('ctimeYYYYMMDD', data.emass);
         var nodeLv4 = getNodeByField('ctime', data.emass);
-        var nodeLv5 = getNodeByField('key', data.emass);
+        var nodeLv5 = getNodeByField('msgid', data.emass);
         var nodeLv6 = getNodeByFieldNoneUnique('subject', data.emass);
 
 
@@ -918,7 +923,7 @@
           for(var j=0 ; j < nodeLv2.length ; j++) {
             var sum = 0;
             for(var x=0 ; x < data.emass.length; x++) {
-              if(nodeLv1[i] == data.emass[x].user_name && data.emass[x][nodeLv2[j]] > 0)
+              if(nodeLv1[i] == data.emass[x].user_id && data.emass[x][nodeLv2[j]] > 0)
                 sum += data.emass[x][nodeLv2[j]];
             }
             if(sum > 0) edges.push({from: nodeLv1[i], to: nodeLv2[j],value:(sum)/(total*4) ,arrows:'to',color:{color:'#3FB168'}, font: { multi: true }, label: sum});
@@ -927,6 +932,7 @@
 
         for(var i=0 ; i < nodeLv2.length ; i++) {
           for(var j=0 ; j < nodeLv3.length ; j++) {
+
             var sum = 0;
             for(var x=0 ; x < data.emass.length ; x++) {
               if(data.emass[x][nodeLv2[i]] > 0 && data.emass[x].ctimeYYYYMMDD == nodeLv3[j])
@@ -954,7 +960,7 @@
           for(var j=0 ; j < nodeLv5.length ; j++) {
             var sum = 0;
             for(var x=0 ; x < data.emass.length ; x++) {
-              if(data.emass[x].ctime == nodeLv4[i] && data.emass[x].key == nodeLv5[j]) {
+              if(data.emass[x].ctime == nodeLv4[i] && data.emass[x].msgid == nodeLv5[j]) {
                 for(var z=0 ; z < piArr.length ; z++) {
                   sum += data.emass[x][piArr[z]];
                 }

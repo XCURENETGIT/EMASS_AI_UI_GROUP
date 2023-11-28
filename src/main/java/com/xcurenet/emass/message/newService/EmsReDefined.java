@@ -107,10 +107,9 @@ public class EmsReDefined {
 			emassResponse.setCtime(Common.nvl(ems.getCtime()));
 			emassResponse.setCtime(ems.getCtime());
 			if(!Common.isEmpty(ems.getCtime())){
-				emassResponse.setCtimeYYYYMMDD(ems.getCtime().substring(0,9));
+				emassResponse.setCtimeYYYYMMDD(ems.getCtime().substring(0,8));
 				emassResponse.setCtimeYYYYMMDDHH(ems.getCtime());
-				emassResponse.setCtimeYYYYMM(ems.getCtime().substring(0,7));
-				emassResponse.setCtimeYYYYMM(ems.getCtime().substring(0,5));
+				emassResponse.setCtimeYYYYMM(ems.getCtime().substring(0,6));
 			}
 
 			emassResponse.setDirection(Common.nvl(ems.getDirection()));
