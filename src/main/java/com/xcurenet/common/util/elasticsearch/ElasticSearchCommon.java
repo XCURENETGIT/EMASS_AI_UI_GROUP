@@ -348,11 +348,11 @@ public class ElasticSearchCommon {
         put("ctime_hh", "ctime");
         put("ctime_yyyymmdd", "ctime");
         put("ctime_yyyymm", "ctime");
-        put("businm", "user.businm");
-        put("conm", "user.conm");
-        put("deptnm", "user.deptnm");
+        put("businm", "user.busiCd");
+        put("conm", "user.cdCd");
+        put("deptnm", "user.deptCd");
         put("direction_svc", "direction_svc");
-        put("jikgubnm", "user.jikgubnm");
+        put("jikgubnm", "user.jikgubCd");
     }};
 
 
