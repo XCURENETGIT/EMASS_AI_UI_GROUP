@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class RegexPatternVO {
 
-	private int regexSeq;
+	private String regexSeq;
 	private String regexPatternName;
 	private String regexPattern;
 	private String regexUser;

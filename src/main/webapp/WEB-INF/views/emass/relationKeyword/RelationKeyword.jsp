@@ -12,15 +12,17 @@
 
         $(document).ready(function () {
 
-            $('#searchWordSearchBtn').click(function(){
+            $('#searchWordSearchBtn').click(function () {
                 getGroupData();
             });
 
-            $('#searchWordKeyword').enter(function(){
+            $('#searchWordKeyword').enter(function () {
                 getGroupData();
             });
 
-            $("#searchWordRelaNumber").keyup(function (value) { return /^-?\d*[.]?\d*$/.test(value); });
+            $("#searchWordRelaNumber").keyup(function (value) {
+                return /^-?\d*[.]?\d*$/.test(value);
+            });
 
             $('#searchRelWordInsertBtn').click(function () {
                 $('#searchWordUpdatPop').modal('hide');
@@ -46,17 +48,17 @@
                 }, 500);
             });
 
-            $('.searchWordUpdatePopBtn').click(function () {
+            $('#relationKeywordUpdateBtn').click(function () {
                 var searchWord = $('#searchWordUpdateName').val().ltrim().rtrim();
-                if (searchWord == ''){
+                if (searchWord == '') {
                     ui.alertMsg("수정할 키워드를 입력해주세요");
                     $('#searchWordUpdateName').focus();
                     return false;
                 }
                 var keywordId = $('#keywordUpdateId').val();
                 var data = {
-                    searchWord : searchWord,
-                    keywordId : keywordId
+                    searchWord: searchWord,
+                    keywordId: keywordId
                 };
 
                 ui.confirmMsg('수정 하시겠습니까?', '', '', function (rs) {
@@ -85,7 +87,7 @@
             });
 
 
-            $('.searchWordSavaPopBtn').click(function () {
+            $('#RelationKeywordSaveBtn').click(function () {
                 var searchWord = $('#searchWordName').val().ltrim().rtrim();
                 if (searchWord == '') {
                     ui.alertMsg("키워드를 입력해주세요");
@@ -184,7 +186,7 @@
                         ui.get({
                             url: 'deleteSearchRelaWord.xcn',
                             deleteData: JSON.stringify(rows),
-                            keywordId : keywordId,
+                            keywordId: keywordId,
                             success: function (data, total) {
                                 ui.alertMsg('<s:message code="common.msg.deleted"/>');
                                 $('#searchWordUpdatPop').modal('hide');
@@ -207,11 +209,11 @@
         function getGroupData(flag) {
             if (searchFlag) return false;
 
-            if (flag == undefined){
+            if (flag == undefined) {
                 gridSearchWordPattern.data.length = 0;
-                gridSearchWordPattern.rtnNextPageFunc =getGroupData;
+                gridSearchWordPattern.rtnNextPageFunc = getGroupData;
                 gridSearchWordPattern.loadingPage = 0;
-            }else {
+            } else {
                 gridSearchWordPattern.loadingPage++;
             }
             gridSearchWordPattern.on();
@@ -219,9 +221,9 @@
 
             ui.get({
                 url: 'getSearchWord.xcn',
-                searchStr : $('#searchWordKeyword').val(),
-                offset:gridSearchWordPattern.data.length,
-                limit:gridSearchWordPattern.pageSize,
+                searchStr: $('#searchWordKeyword').val(),
+                offset: gridSearchWordPattern.data.length,
+                limit: gridSearchWordPattern.pageSize,
                 success: function (data, total) {
                     gridSearchWordPattern.appendData(data);
                 },
@@ -243,189 +245,195 @@
 <body class="mini-navbar">
 
 
-<div class="modal fade" id="searchWordPop" tabindex="-1" role="dialog" aria-labelledby="searchWordPop">
-	<div class="modal-dialog" role="document" style="width: 500px;">
-		<div class="modal-content">
-			<form method="post" id="searchWordPopForm">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					<h3 class="modal-title">키워드 관리 - 추가</h3>
+<div class="modal" id="searchWordPop" aria-labelledby="searchWordPop">
+	<div class="modal-content">
+		<form method="post" id="searchWordPopForm">
+			<div class="modalHead">
+				<h2>키워드 관리 - 추가</h2>
+				<span class="close" data-dismiss="modal">&times;</span>
+			</div>
+			<div class="modalCon">
+				<div class="modalbody">
+					<div class="row">
+						<div class="col-35">
+							<label for="searchWordName" class="fname">키워드</label>
+						</div>
+						<div class="col-65">
+							<input type="text" class="form-control" name="searchWordName" id="searchWordName">
+							<input type="hidden" class="form-control" name="keywordId" id="keywordId">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-35">
+							<label for="searchWordRelaName" class="fname">연관 키워드</label>
+						</div>
+						<div class="col-65">
+							<input type="text" class="w100" name="searchWordRelaName" id="searchWordRelaName">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-35">
+							<label for="searchWordRelaNumber" class="fname">가중치</label>
+						</div>
+						<div class="col-65">
+							<input type="number" step="0.01" class="w100" name="searchWordRelaNumber"
+							       id="searchWordRelaNumber">
+						</div>
+					</div>
 				</div>
-				<div class="modal-body">
-
-					<div class="form-group form-inline">
-						<label for="searchWordName" class="control-label col-xs-3">키워드</label>
-						<input type="text" class="form-control" name="searchWordName" id="searchWordName"
-						       style="width: 350px;" maxlength="60">
-						<input type="hidden" class="form-control" name="keywordId" id="keywordId">
-					</div>
-					<div class="form-group form-inline" name="searchRelInput">
-						<label for="searchWordRelaName" class="control-label col-xs-3">연관 키워드</label>
-						<input type="text" class="form-control" name="searchWordRelaName" id="searchWordRelaName"
-						       style="width: 350px; " maxlength="60">
-					</div>
-					<div class="form-group form-inline" name="searchRelInput">
-						<label for="searchWordRelaNumber" class="control-label col-xs-3">가중치</label>
-						<input type="number" step="0.01" class="form-control" name="searchWordRelaNumber"
-						       id="searchWordRelaNumber" style="width: 350px; " maxlength="60">
-					</div>
-
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal"><s:message
+				<div class="modalfooter">
+					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message
 							code="common.msg.close"/></button>
-					<button type="button" class="btn btn-primary searchWordSavaPopBtn" accesskey="S"><s:message
+					<button type="button" class="pop_btn02" accesskey="S" id="RelationKeywordSaveBtn"><s:message
 							code="common.msg.save"/></button>
 				</div>
-			</form>
-		</div>
+			</div>
+		</form>
 	</div>
 </div>
 
-<div class="modal fade" id="searchWordUpdatePop" tabindex="-1" role="dialog" aria-labelledby="searchWordPop">
-	<div class="modal-dialog" role="document" style="width: 500px;">
-		<div class="modal-content">
-			<form method="post" id="searchWordUpdatePopForm">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					<h3 class="modal-title">키워드 관리 - 수정</h3>
-				</div>
-				<div class="modal-body">
 
-					<div class="form-group form-inline">
-						<label for="searchWordUpdateName" class="control-label col-xs-3">키워드</label>
-						<input type="text" class="form-control" name="searchWordName" id="searchWordUpdateName"
-						       style="width: 350px;" maxlength="60">
-						<input type="hidden" class="form-control" name="keywordId" id="keywordUpdateId">
+<div class="modal" id="searchWordUpdatePop" aria-labelledby="searchWordPop">
+	<div class="modal-content">
+		<form method="post" id="searchWordUpdatePopForm">
+			<div class="modalHead">
+				<h2>키워드 관리 - 수정</h2>
+				<span class="close" data-dismiss="modal">&times;</span>
+			</div>
+			<div class="modalCon">
+				<div class="modalbody">
+					<div class="row">
+						<div class="col-35">
+							<label for="searchWordUpdateName" class="fname">키워드</label>
+						</div>
+						<div class="col-65">
+							<input type="text" class="w100" name="searchWordName" id="searchWordUpdateName">
+							<input type="hidden" class="w100" name="keywordId" id="keywordUpdateId">
+						</div>
 					</div>
-
 				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal"><s:message
+				<div class="modalfooter">
+					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message
 							code="common.msg.close"/></button>
-					<button type="button" class="btn btn-primary searchWordUpdatePopBtn" accesskey="S">수정</button>
+					<button type="button" class="pop_btn02" accesskey="S" id="relationKeywordUpdateBtn">수정</button>
 				</div>
-			</form>
-		</div>
+			</div>
+		</form>
 	</div>
 </div>
 
 
 <!--연관 키워드 상세보기, 삭제 -->
-<div class="modal fade" id="searchWordUpdatPop" tabindex="-1" role="dialog" aria-labelledby="searchWordUpdatPop">
-	<div class="modal-dialog" role="document" style="width: 1000px">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-				<h3 class="modal-title">연관 키워드 관리 - 삭제</h3>
+<div class="modal" id="searchWordUpdatPop" aria-labelledby="searchWordUpdatPop">
+	<div class="modal-content">
+		<div class="modalHead">
+			<h2>연관 키워드 관리 - 삭제</h2>
+			<span class="close" data-dismiss="modal">&times;</span>
+		</div>
+		<div class="modalCon">
+			<div class="modalTop">
+				<button type="button" class="pop_btn01" accesskey="A" id="searchRelWordInsertBtn">연관키워드 추가</button>
+				<button type="button" class="pop_btn02" accesskey="S" id="DeleteRelBtn">삭제</button>
 			</div>
-			<div class="modal-body">
-				<div class="form-group form-inline">
-					<label for="searchWordName" class="control-label col-xs-2">키워드</label>
-					<input type="text" class="form-control" name="searchUpdateName" id="searchUpdateName"
-					       style="width: 350px;" maxlength="60" readonly="readonly">
-					<input type="hidden" class="form-control" name="rekeywordId" id="rekeywordId">
-					<button type="button" class="btn btn-sm btn-primary" accesskey="A" id="searchRelWordInsertBtn"><span
-							class="glyphicon glyphicon-plus"></span>연관키워드 추가</button>
-					<button type="button" class="btn btn-primary" accesskey="S" id="DeleteRelBtn">삭제</button>
+			<div class="modalbody">
+				<div class="row" style="float: right">
+
 				</div>
+				<div class="row">
+					<div class="col-35">
+						<label for="searchWordName" class="fname">키워드</label>
+					</div>
+					<div class="col-65">
+						<input type="text" class="w100" name="searchUpdateName" id="searchUpdateName"
+						       readonly="readonly">
+						<input type="hidden" class="form-control" name="rekeywordId" id="rekeywordId">
 
-
-				<div class="row top_space">
-					<div style="height:500px;" id="selectUserDiv">
-						<div id="relaGrid" class="slickGrid gridArea"></div>
 					</div>
 				</div>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal"><s:message
-						code="common.msg.close"/></button>
+					<div class="contentSub">
+						<div id="relaGrid" class="slickGrid gridArea"  style="height: 400px;">
+					</div>
+				</div>
 
 			</div>
+			<div class="modalfooter">
+				<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message
+						code="common.msg.close"/></button>
+			</div>
 		</div>
+
 	</div>
 </div>
 
 
 
-<div class="col-xs-7" style="height: 100%; padding-left: 5px;width:calc(100%); text-align: center;">
-	<div class="row">
-		<div class="col-xs-8 text-left" style="padding-left:20px;">
-			<div class="form-group form-inline not-dashed">
-				<div class="input-group">
-					<input type="text" class="form-control input-sm" placeholder="<s:message code="keyword.message.insert"/>" id="searchWordKeyword" style="width: 200px;">
-					<div class="input-group-btn">
-						<button class="btn btn-sm btn-success" type="button" accesskey="K" id="searchWordSearchBtn"><i class="glyphicon glyphicon-search"></i></button>
-					</div>
-				</div>
-				<button type="button" class="btn btn-sm btn-primary" accesskey="A" id="searchWordInsertBtn">
-					<span class="glyphicon glyphicon-plus"></span>&nbsp;<s:message code="common.msg.add"/>
-				</button>
-				<button type="button" class="btn btn-sm btn-default" accesskey="E" id="searchWordDeleteBtn">
-					<span class="glyphicon glyphicon-minus"></span>&nbsp;<s:message code="common.msg.delete"/>
-				</button>
+<div class="container">
+	<div class="searchArea">
+		<div class="searchSub">
+			<div>
+				<input type="text" placeholder="키워드를 입력하세요" id="searchWordKeyword" style="width: 300px;">
+				<button class="form_btn01" type="button" accesskey="K" id="searchWordSearchBtn">조회</button>
 			</div>
+			<button type="button" class="form_btn02" accesskey="A" id="searchWordInsertBtn"><s:message
+					code="common.msg.add"/></button>
+			<button type="button" class="form_btn02" accesskey="E" id="searchWordDeleteBtn"><s:message
+					code="common.msg.delete"/></button>
 		</div>
 	</div>
+</div>
 
-	<div class="row xcn_full top_space">
-		<div class="col-xs-12" style="height: 100%;">
-			<div id="searchWordListGrid" class="slickGrid gridArea"></div>
-		</div>
-
+<div class="content xcn_full" style="height: 800px;">
+	<div class="contentSub">
+		<div id="searchWordListGrid" class="slickGrid gridArea"></div>
 	</div>
+
+</div>
 </div>
 
 
 <script type="text/javascript">
-	var gridSearchWordPattern = new Xgrid('searchWordListGrid', contextRoot);
-	gridSearchWordPattern.onCheckBox();
-	gridSearchWordPattern.autoNumber();
-	gridSearchWordPattern.colAdd('searchWord', "키워드", 200, 'left', false, 'link');
-	gridSearchWordPattern.colAdd('relationWord', "연관 키워드", 1300, 'left', false, 'link');
+    var gridSearchWordPattern = new Xgrid('searchWordListGrid', contextRoot);
+    gridSearchWordPattern.onCheckBox();
+    gridSearchWordPattern.autoNumber();
+    gridSearchWordPattern.colAdd('searchWord', "키워드", 200, 'left', false, 'link');
+    gridSearchWordPattern.colAdd('relationWord', "연관 키워드", 1300, 'left', false, 'link');
 
-	gridSearchWordPattern.loadPageSize();
-	gridSearchWordPattern.loadHeader(false);
+    gridSearchWordPattern.loadPageSize();
+    gridSearchWordPattern.loadHeader(false);
 
-	gridSearchWordPattern.changePageSize = function (cnt) {
-		getGroupData();
-	}
+    gridSearchWordPattern.changePageSize = function (cnt) {
+        getGroupData();
+    }
 
-	gridSearchWordPattern.onClick = function () {
-		if (gridSearchWordPattern.Col == gridSearchWordPattern.ColIndex('relationWord')) {
-			var data = gridSearchWordPattern.getRowData(gridSearchWordPattern.Row);
-			$('#searchUpdateName').val(data.searchWord);
-			$('#rekeywordId').val(data.keywordId);
+    gridSearchWordPattern.onClick = function () {
+        if (gridSearchWordPattern.Col == gridSearchWordPattern.ColIndex('relationWord')) {
+            var data = gridSearchWordPattern.getRowData(gridSearchWordPattern.Row);
+            $('#searchUpdateName').val(data.searchWord);
+            $('#rekeywordId').val(data.keywordId);
 
-			var result = [];
-			if (data.relationWord != null) {
-				var relationWords = data.relationWord.split(',');
-				for (var i = 0; i < relationWords.length; i++) {
-					result.push({'relationWord': relationWords[i].ltrim().rtrim()});
-				}
-			}
-			relaGrid.setData(result);
-			$('#searchWordUpdatPop').modal('show');
-		}
-		if (gridSearchWordPattern.Col == gridSearchWordPattern.ColIndex('searchWord')) {
-			var data = gridSearchWordPattern.getRowData(gridSearchWordPattern.Row);
-			$('#searchWordUpdateName').val(data.searchWord);
-			$('#keywordUpdateId').val(data.keywordId);
-			$('#searchWordUpdatePop').modal('show');
-		}
-	}
+            var result = [];
+            if (data.relationWord != null) {
+                var relationWords = data.relationWord.split(',');
+                for (var i = 0; i < relationWords.length; i++) {
+                    result.push({'relationWord': relationWords[i].ltrim().rtrim()});
+                }
+            }
+            relaGrid.setData(result);
+            $('#searchWordUpdatPop').modal('show');
+        }
+        if (gridSearchWordPattern.Col == gridSearchWordPattern.ColIndex('searchWord')) {
+            var data = gridSearchWordPattern.getRowData(gridSearchWordPattern.Row);
+            $('#searchWordUpdateName').val(data.searchWord);
+            $('#keywordUpdateId').val(data.keywordId);
+            $('#searchWordUpdatePop').modal('show');
+        }
+    }
 
-	var relaGrid = new Xgrid('relaGrid', contextRoot);
-	relaGrid.onCheckBox();
-	relaGrid.autoNumber();
-	relaGrid.colAdd('relationWord', "연관 키워드", 800, 'left', false, 'nomal');
-	relaGrid.loadHeader(false);
+    var relaGrid = new Xgrid('relaGrid', contextRoot);
+    relaGrid.onCheckBox();
+    relaGrid.autoNumber();
+    relaGrid.colAdd('relationWord', "연관 키워드", 400, 'left', false, 'nomal');
+    relaGrid.loadHeader(false);
 </script>
 
 </body>

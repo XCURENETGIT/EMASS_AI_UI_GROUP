@@ -739,10 +739,10 @@ public class HomeController {
 		return "/emass/regexPattern/regexPatternInfo";
 	}
 
-	@RequestMapping(value = "/ems/searchWordInfo.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/ems/relationKeyword.do", method = RequestMethod.GET)
 	public String searchWordInfo(Locale locale, Model model){
 		model.addAttribute("headerYn","Y");
-		return "/emass/searchWord/SearchWordInfo";
+		return "/emass/relationKeyword/RelationKeyword";
 	}
 
 	@RequestMapping(value = "/ems/recommend.do", method = RequestMethod.GET)
