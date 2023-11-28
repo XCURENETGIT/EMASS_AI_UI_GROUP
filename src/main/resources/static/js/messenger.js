@@ -185,7 +185,8 @@ var eikon = {
 		condition.searchStr = searchStr;
 		condition.startDt = startDt;
 		condition.endDt = endDt;
-		condition.searchField = 'body attachname attachname_str attach';
+		condition.searchField = 'body.snippet attachname attachname_str attach';
+		// condition.searchField = 'body.snippet attachname attachname_str attach';
 		conArray.push(condition);
 		conditions.conditions = conArray;
 
@@ -203,6 +204,7 @@ var eikon = {
 			url : 'getMessengerGroupDetailSearch.xcn',
 			searchParam  : JSON.stringify( data ),
 			success : function(data, total) {
+
 				focusMsgId = data.toString();
 				if(total > 0){
 					$('#searchResult').html(total);

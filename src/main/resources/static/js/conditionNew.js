@@ -907,6 +907,7 @@ function initEpmsg(){
  */
 var specialService=[];
 var parentCode = [];
+var parentNm = [];
 function getServiceGroupList( ){
 //	console.log(parentCode);  UWS,EMM
 	var str = '';
@@ -975,16 +976,18 @@ function getServiceOptionChildren(serviceType) {
 	for (var i = 0; i < specialService.length; i++) {
 		var service = specialService[i];
 		if( service.serviceCd.indexOf(serviceType.serviceCd) > -1 ) {
-			if(!parentCode.includes(serviceType.serviceCd)) parentCode.push(serviceType.serviceCd);
+			if(!parentCode.includes(serviceType.serviceCd)) {
+				parentCode.push(serviceType.serviceCd);
+				parentNm.push(serviceType.serviceNm);
+			}
 			result += '<option value="'+service.serviceCd+'"> └ '+service.serviceNm+'</option>';
 		}
 	}
-	
+
 	return result;
-} 
+}
 function getServiceOptionLiveSearch(code) {
 	var searchWord = "";
-	
 	for (var i = 0; i < code.length; i++) {
 		var pCode = code[i];
 		for(var j = 0; j < specialService.length; j++) {
@@ -992,10 +995,12 @@ function getServiceOptionLiveSearch(code) {
 				searchWord += specialService[j].serviceNm + " ";
 			}
 		}
+		searchWord += parentNm[i];
 		$('[value=' + pCode + ']').attr('data-tokens', searchWord);
 		searchWord = "";
 	}
-} 
+
+}
 
 /**
  * 코드 리스트를 불러와서 조건에 적용

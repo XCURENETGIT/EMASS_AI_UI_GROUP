@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.lang.reflect.Type;
@@ -71,32 +72,30 @@ public class MessengerController {
 //		return solrCheckedService.setMessengerRead(emass, adminId);
 //	}
 
-/*	@RequestMapping(value = "/setMessengerRead.xcn")
+	@RequestMapping(value = "/setMessengerRead.xcn")
 	@Description("메신저 읽음 여부 처리")
 	@ResponseBody
 	public XcnResponseVO setMessengerRead(final HttpServletRequest request, final HttpSession session) throws Exception {
-		String data = Common.nvl(request.getParameter("body"));
-		JSONArray datas = Common.toJSONArray(data);
-		log.info("datas: "+datas);
-		List<SolrEdcVO> emass = new ArrayList<>();
-		for (int i = 0; i < datas.size(); i++) {
-			SolrEdcVO edc = new SolrEdcVO();
-			log.info("msgid: "+datas.getJSONObject(i).getString("msgid"));
-			edc.setMsgid(datas.getJSONObject(i).getString("msgid"));
-			edc.setCtime(datas.getJSONObject(i).getString("ctime").replaceAll("-", "").replaceAll(" ", "").replaceAll(":", ""));
-			log.info("ctime: "+datas.getJSONObject(i).getString("ctime").replaceAll("-", "").replaceAll(" ", "").replaceAll(":", ""));
-			edc.setCtime_hh(datas.getJSONObject(i).getString("ctime").substring(11, 13));
-			edc.setCtime_yyyy(datas.getJSONObject(i).getString("ctime").substring(0, 4));
-			edc.setCtime_yyyymm(datas.getJSONObject(i).getString("ctime").substring(0, 7).replaceAll("-", ""));
-			edc.setCtime_yyyymmdd(datas.getJSONObject(i).getString("ctime").substring(0, 10).replaceAll("-", ""));
-			emass.add(edc);
-		}
-		return new XcnResponseVO(XcnRspCode.OK, setMessengerRead(emass, Common.getAdminId(session)));
+//		String data = Common.nvl(request.getParameter("body"));
+//		JSONArray datas = Common.toJSONArray(data);
+//		log.info("datas: "+datas);
+//		List<SolrEdcVO> emass = new ArrayList<>();
+//		for (int i = 0; i < datas.size(); i++) {
+//			SolrEdcVO edc = new SolrEdcVO();
+//			log.info("msgid: "+datas.getJSONObject(i).getString("msgid"));
+//			edc.setMsgid(datas.getJSONObject(i).getString("msgid"));
+//			edc.setCtime(datas.getJSONObject(i).getString("ctime").replaceAll("-", "").replaceAll(" ", "").replaceAll(":", ""));
+//			log.info("ctime: "+datas.getJSONObject(i).getString("ctime").replaceAll("-", "").replaceAll(" ", "").replaceAll(":", ""));
+//			edc.setCtime_hh(datas.getJSONObject(i).getString("ctime").substring(11, 13));
+//			edc.setCtime_yyyy(datas.getJSONObject(i).getString("ctime").substring(0, 4));
+//			edc.setCtime_yyyymm(datas.getJSONObject(i).getString("ctime").substring(0, 7).replaceAll("-", ""));
+//			edc.setCtime_yyyymmdd(datas.getJSONObject(i).getString("ctime").substring(0, 10).replaceAll("-", ""));
+//			emass.add(edc);
+//		}
+		return new XcnResponseVO(XcnRspCode.OK);
 	}
 
 
-
-	}*/
 	@RequestMapping(value = "/getMessengerGroupList.xcn")
 	@Description("메신저 대화방 목록 조회")
 	@AuditOperation(Operation.SEARCH)
@@ -148,7 +147,7 @@ public class MessengerController {
 		if (!Common.isEmpty(resultParam.get("searchParam"))) {
 			Type type = new TypeToken<Map<String,Object>>(){}.getType();
 			searchParam = gson.fromJson((String) resultParam.get("searchParam"),type);
-			searchParam.put(ElasticSearchCommon.SEARCH_TYPE, ElasticSearchCommon.SEARCH_TYPE_MESSENGER);
+			searchParam.put(ElasticSearchCommon.SEARCH_TYPE, ElasticSearchCommon.SEARCH_TYPE_MESSENGER_DETAIL);
 		}
 
 		MessengerEdcGroupVO messengerEdcGroupVO = emsSearchService.getMessengerGroupList(searchParam,Common.getAdminId(session));
@@ -159,36 +158,8 @@ public class MessengerController {
 				result.add(vo.getMsgid());
 			}
 		}
-		log.info("DetailSearch: "+result);
-		return new XcnResponseVO(XcnRspCode.OK, result, messengerEdcGroupVO.getTotal());
-//		JSONObject param = Common.getParam(request);
-//		String xRootMtr = Common.nvl(param.get("xRootMtr"));
-//		String srcip = Common.nvl(param.get("srcip"));
-//		String usr_id = Common.nvl(param.get("usr_id"));
-//
-//		String addQuery = String.format(" +xrootmtr:\"%s\"", xRootMtr);
-//		if(Common.isNotEmpty(usr_id)) addQuery += String.format(" +usr_id:\"%s\"", usr_id);
-//		else addQuery += " -usr_id:*";
-//		if(Common.isNotEmpty(srcip)) addQuery += String.format(" +srcip:\"%s\"", srcip);
-//
-//		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
-//		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), Common.getAdminId(session));
-//		sq.setQuery(sq.getQuery() + addQuery + MESSENGER);
-//		sq.setStart(Common.nvz(param.get("offset"), 0));
-//		sq.setRows(1);
-//		sq.setSort("ctime", ORDER.asc);
-//		sq.setSort("msgid", ORDER.asc);
-//		sq.setFields("msgid");
-//
-//		SolrEdcMessageVO solrVo = solrEdcService.getEmassMessage(sq, Common.getAdminId(session));
-//		List<SolrEdcVO> list = solrVo.getEmass();
-//		List<String> result = new ArrayList<>();
-//		if (list != null) {
-//			for (SolrEdcVO vo : list) {
-//				result.add(vo.getMsgid());
-//			}
-//		}
 
+		return new XcnResponseVO(XcnRspCode.OK, result, messengerEdcGroupVO.getTotal());
 	}
 
 
@@ -473,10 +444,9 @@ public class MessengerController {
 //		return sq;
 //	}
 
-/*	private boolean setMessengerRead(List<SolrEdcVO> emass, String adminId) {
-		if (Common.isEmpty(emass)) return false;
-		return solrCheckedService.setMessengerRead(emass, adminId);
-	}*/
+	private boolean setMessengerRead( String adminId) {
+		return false;
+	}
 
 	@RequestMapping(value = "/updateEmassMessengerAdminXrootMtr.xcn")
 	@Description("메신저 대화방 운용자 최종 위치 저장")
@@ -609,16 +579,16 @@ public class MessengerController {
 		return new XcnResponseVO(XcnRspCode.OK, solrEdcGroupVO.getNumFoundUser(), solrEdcGroupVO.getNumFoundUser());
 	}*/
 
-/*
+
 	@RequestMapping(value = "/getMessengerGroupUserList.xcn")
 	@Description("메신저 대화방 참여자 리스트 조회")
 	@ResponseBody
 	public XcnResponseVO getMessengerGroupUserList(final HttpServletRequest request, final HttpSession session) throws Exception {
-		MessengerGroupUserVO EdcGroupVO = getMessengerGroupUserList(request, 10000);
-		return new XcnResponseVO(XcnRspCode.OK, EdcGroupVO, EdcGroupVO.getNumFoundUser());
+//		MessengerGroupUserVO EdcGroupVO = getMessengerGroupUserList(request, 10000);
+		return new XcnResponseVO(XcnRspCode.OK, null, 0);
 	}
 
-*/
+
 
 
 
@@ -699,113 +669,113 @@ public class MessengerController {
 		XLSXWriter xlsx = new XLSXWriter(Prop.propFormat("eikon.msg.export.chat", locale) + " : " + xRootMtr, header, data, out);
 		xlsx.execute();
 	}
+//
+//	public String getFileName(String xRootMtr, MessengerGroupUserVO users, Locale locale) {
+//		String fileName = Common.EMPTY;
+////		List<String> groupUsers = new ArrayList<>();
+////		if (users != null) {
+////			for (SolrEdcVO user : users.getGroups()) {
+////				String name = Common.nvl(user.getSname());
+////				String usr_id = Common.nvl(user.getUsr_id());
+////				String srcip = Common.nvl(user.getSrcip());
+////
+////				if(Common.isEmpty(name)) {
+////					if(Common.isNotEmpty(usr_id)) name = usr_id;
+////					else if(Common.isNotEmpty(srcip)) name = srcip;
+////					else name = Common.nvl(user.getUser());
+////				}else {
+////					if(Common.isNotEmpty(usr_id)) name += " ("+usr_id+")";
+////					if(Common.isNotEmpty(srcip)) name += " ("+srcip+")";
+////				}
+////
+////
+////				if (groupUsers.size() <= 2) groupUsers.add(name);
+////				else break;
+////			}
+////			fileName = Common.join(groupUsers, ",") + String.format(" (Total %s" + Prop.propFormat("eikon.msg.person", locale) + ")", users.getGroups().size());
+////			fileName = fileName.replaceAll("[\\\\/:*?\"<>|]", "");
+////		}
+////		if (Common.isEmpty(fileName)) fileName = xRootMtr;
+//		return fileName;
 
-/*	public String getFileName(String xRootMtr, MessengerGroupUserVO users, Locale locale) {
-		String fileName = Common.EMPTY;
-		List<String> groupUsers = new ArrayList<>();
-		if (users != null) {
-			for (SolrEdcVO user : users.getGroups()) {
-				String name = Common.nvl(user.getSname());
-				String usr_id = Common.nvl(user.getUsr_id());
-				String srcip = Common.nvl(user.getSrcip());
 
-				if(Common.isEmpty(name)) {
-					if(Common.isNotEmpty(usr_id)) name = usr_id;
-					else if(Common.isNotEmpty(srcip)) name = srcip;
-					else name = Common.nvl(user.getUser());
-				}else {
-					if(Common.isNotEmpty(usr_id)) name += " ("+usr_id+")";
-					if(Common.isNotEmpty(srcip)) name += " ("+srcip+")";
-				}
-
-
-				if (groupUsers.size() <= 2) groupUsers.add(name);
-				else break;
-			}
-			fileName = Common.join(groupUsers, ",") + String.format(" (Total %s" + Prop.propFormat("eikon.msg.person", locale) + ")", users.getGroups().size());
-			fileName = fileName.replaceAll("[\\\\/:*?\"<>|]", "");
-		}
-		if (Common.isEmpty(fileName)) fileName = xRootMtr;
-		return fileName;
-	}*/
-
-/*	@RequestMapping(value = "/getMessengerGroupAllExport.xcn")
+	@RequestMapping(value = "/getMessengerGroupAllExport.xcn")
 	@Description("메신저 대화내용 내보내기")
 	@AuditOperation(Operation.DOWNLOAD)
 	@ResponseBody
 	public void getMessengerGroupAllExport(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
 
-		JSONObject param = Common.getParam(request);
-		String xRootMtr = Common.nvl(param.get("xRootMtr"));
-
-		response.setCharacterEncoding(Common.UTF8);
-		response.setHeader("Cache-control", "no-store");
-		response.setHeader("Pragma", "no-cache");
-		response.setDateHeader("Expires", 0);
-		response.setContentType("application/octet-stream");
-		response.setHeader("Content-Transfer-Encoding", "binary");
-		response.setHeader("Connection", "close");
-
-		ServletOutputStream out = null;
-		ArchiveOutputStream os = null;
-		try {
-			response.setHeader("Content-Disposition", "attachment; filename=\"" + Common.getDateTimeFormat() + "_message.zip\"");
-
-			out = response.getOutputStream();
-			os = new ArchiveStreamFactory().createArchiveOutputStream("zip", out);
-			MessengerEdcGroupVO groups = getMessengerMsgTotal(request, true);
-			MessengerGroupUserVO users = getMessengerGroupUserList(request, 30000);
-			inputAttach(os, groups);
-			inputZipExcel(os, groups, users, xRootMtr, Common.getLocale(request.getSession()));
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			IOUtils.closeQuietly(os);
-			IOUtils.closeQuietly(out);
-			response.flushBuffer();
-		}
-	}*/
-
-/*
-	public String getGroupBody(List<EmassMessenger> data, String rootmtr, Locale locale) throws Exception {
-		StringBuffer _sb = new StringBuffer();
-		_sb.append("<table class=\"g_request\"><colgroup><col width=\"120\"><col width=\"*\"><col width=\"70\"></colgroup><tbody>").append(EMPTY_LINE);
-		String tempDay = "";
-		for (EmassMessenger item : data) {
-			String day = DateTime.parse(item.getCtime(), yyyyMMddHHmmss2).toString(yyyyMMdd);
-			String time = DateTime.parse(item.getCtime(), yyyyMMddHHmmss2).toString(HHmmss);
-			if (Common.isNotEquals(day, tempDay)) {
-				_sb.append(String.format("<tr><th class=\"date_title\" colspan=\"3\">%s</th></tr>", day)).append(EMPTY_LINE);
-				tempDay = day;
-			}
-			_sb.append(String.format("<tr><th>%s</th><td>%s</td><td>%s</td></tr>", item.getTitle(), item.getMessage().replaceAll("\n", "<br>"), time)).append(EMPTY_LINE);
-		}
-		_sb.append("</tbody></table>");
-		return _sb.toString();
+//		JSONObject param = Common.getParam(request);
+//		String xRootMtr = Common.nvl(param.get("xRootMtr"));
+//
+//		response.setCharacterEncoding(Common.UTF8);
+//		response.setHeader("Cache-control", "no-store");
+//		response.setHeader("Pragma", "no-cache");
+//		response.setDateHeader("Expires", 0);
+//		response.setContentType("application/octet-stream");
+//		response.setHeader("Content-Transfer-Encoding", "binary");
+//		response.setHeader("Connection", "close");
+//
+//		ServletOutputStream out = null;
+//		ArchiveOutputStream os = null;
+//		try {
+//			response.setHeader("Content-Disposition", "attachment; filename=\"" + Common.getDateTimeFormat() + "_message.zip\"");
+//
+//			out = response.getOutputStream();
+//			os = new ArchiveStreamFactory().createArchiveOutputStream("zip", out);
+//			MessengerEdcGroupVO groups = getMessengerMsgTotal(request, true);
+//			MessengerGroupUserVO users = getMessengerGroupUserList(request, 30000);
+//			inputAttach(os, groups);
+//			inputZipExcel(os, groups, users, xRootMtr, Common.getLocale(request.getSession()));
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} finally {
+//			IOUtils.closeQuietly(os);
+//			IOUtils.closeQuietly(out);
+//			response.flushBuffer();
+//		}
 	}
 
-	private void inputZipExcel(ArchiveOutputStream os, MessengerEdcGroupVO groups, MessengerGroupUserVO users, String xRootMtr, Locale locale) throws IOException, Exception {
 
-		ByteArrayOutputStream xOut = new ByteArrayOutputStream();
-		ByteArrayInputStream bIn = null;
-		try {
-			String name = getFileName(xRootMtr, users, locale);
-			os.putArchiveEntry(new ZipArchiveEntry(name + ".xlsx"));
+//	public String getGroupBody(List<EmassMessenger> data, String rootmtr, Locale locale) throws Exception {
+//		StringBuffer _sb = new StringBuffer();
+//		_sb.append("<table class=\"g_request\"><colgroup><col width=\"120\"><col width=\"*\"><col width=\"70\"></colgroup><tbody>").append(EMPTY_LINE);
+//		String tempDay = "";
+//		for (EmassMessenger item : data) {
+//			String day = DateTime.parse(item.getCtime(), yyyyMMddHHmmss2).toString(yyyyMMdd);
+//			String time = DateTime.parse(item.getCtime(), yyyyMMddHHmmss2).toString(HHmmss);
+//			if (Common.isNotEquals(day, tempDay)) {
+//				_sb.append(String.format("<tr><th class=\"date_title\" colspan=\"3\">%s</th></tr>", day)).append(EMPTY_LINE);
+//				tempDay = day;
+//			}
+//			_sb.append(String.format("<tr><th>%s</th><td>%s</td><td>%s</td></tr>", item.getTitle(), item.getMessage().replaceAll("\n", "<br>"), time)).append(EMPTY_LINE);
+//		}
+//		_sb.append("</tbody></table>");
+//		return _sb.toString();
+//	}
+//
+//	private void inputZipExcel(ArchiveOutputStream os, MessengerEdcGroupVO groups, MessengerGroupUserVO users, String xRootMtr, Locale locale) throws IOException, Exception {
+//
+////		ByteArrayOutputStream xOut = new ByteArrayOutputStream();
+////		ByteArrayInputStream bIn = null;
+////		try {
+////			String name = getFileName(xRootMtr, users, locale);
+////			os.putArchiveEntry(new ZipArchiveEntry(name + ".xlsx"));
+////
+////			xlsxExport(xRootMtr, groups, xOut, true, locale);
+////
+////			bIn = new ByteArrayInputStream(xOut.toByteArray());
+////			IOUtils.copy(bIn, os);
+////			os.closeArchiveEntry();
+////		} catch (Exception e) {
+////			e.printStackTrace();
+////		} finally {
+////			IOUtils.closeQuietly(bIn);
+////			IOUtils.closeQuietly(xOut);
+////		}
+//	}
 
-			xlsxExport(xRootMtr, groups, xOut, true, locale);
-
-			bIn = new ByteArrayInputStream(xOut.toByteArray());
-			IOUtils.copy(bIn, os);
-			os.closeArchiveEntry();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			IOUtils.closeQuietly(bIn);
-			IOUtils.closeQuietly(xOut);
-		}
-	}
-*/
 
 	private void inputAttach(ArchiveOutputStream os, MessengerEdcGroupVO groups) throws Exception {
 		List<EmassMessenger> list = groups.getGroups();
@@ -836,89 +806,89 @@ public class MessengerController {
 		}
 	}
 
-/*	@RequestMapping(value = "/getMessengerGroupTextExport.xcn")
+	@RequestMapping(value = "/getMessengerGroupTextExport.xcn")
 	@Description("메신저 대화내용 내보내기")
 	@AuditOperation(Operation.DOWNLOAD)
 	@ResponseBody
 	public void getMessengerGroupTextExport(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
 
-		JSONObject param = Common.getParam(request);
-		String xRootMtr = Common.nvl(param.get("xRootMtr"));
-		String print = Common.nvl(param.get("print"));
-		String type = Common.nvl(param.get("type"), "html").toLowerCase();
-		if (!Common.isOrEquals(type, "html", "txt", "xlsx")) type = "html";
-
-		response.setCharacterEncoding(Common.UTF8);
-		response.setHeader("Cache-control", "no-store");
-		response.setHeader("Pragma", "no-cache");
-		response.setDateHeader("Expires", 0);
-		response.setHeader("Content-Disposition", "inline");
-		if (Common.isEmpty(xRootMtr)) {
-			response.setContentType("application/octet-stream");
-			response.setHeader("Content-Transfer-Encoding", "binary");
-			response.setHeader("Content-Disposition", "attachment; filename=notfound.txt\"");
-			return;
-		}
-
-		Locale locale = Common.getLocale(request.getSession());
-
-		ServletOutputStream out = null;
-		try {
-			out = response.getOutputStream();
-
-			MessengerEdcGroupVO groups = getMessengerMsgTotal(request, true);
-			MessengerGroupUserVO users = getMessengerGroupUserList(request, 30000);
-
-			if (Common.isEquals(type, "xlsx")) {
-				response.setContentType("application/octet-stream");
-				response.setHeader("Content-Transfer-Encoding", "binary");
-				response.setHeader("Content-Disposition", "attachment; filename=\"" + new String(getFileName(xRootMtr, users, Common.getLocale(request.getSession())).getBytes("KSC5601"), "ISO8859_1") + "." + type + "\"");
-				xlsxExport(xRootMtr, groups, out, false, Common.getLocale(request.getSession()));
-			} else {
-				if (Common.isNotEquals(print, "Y")) {
-					response.setContentType("application/octet-stream");
-					response.setHeader("Content-Transfer-Encoding", "binary");
-				}
-				StringBuffer _sb = new StringBuffer();
-				if (Common.isEquals(type, "html")) {
-					_sb.append("<html><body><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /></head><pre>");
-				}
-				_sb.append("<" + Prop.propFormat("condition.xrootmtr", locale) + ">").append(Common.EMPTY_LINE);
-				_sb.append(xRootMtr).append(Common.EMPTY_LINE).append(Common.EMPTY_LINE);
-				_sb.append("<" + Prop.propFormat("condition.participation", locale) + ">").append(Common.EMPTY_LINE);
-
-				if (users != null) {
-					for (SolrEdcVO user : users.getGroups()) {
-						String name = Common.nvl(Common.isEmpty(user.getSname()) ? user.getSender() : user.getSname(), Common.nvl(user.getSrcip())) ;
-						_sb.append(String.format("[%s] ["+Prop.propFormat("common.org.co", locale)+":%s, "+Prop.propFormat("common.org.busi", locale)+":%s, "+Prop.propFormat("common.org.dept", locale)+":%s, "+Prop.propFormat("common.org.jikgub", locale)+":%s]", name, Common.nvl(user.getConm()), Common.nvl(user.getBusinm()), Common.nvl(user.getDeptnm()), Common.nvl(user.getJikgubnm()))).append(Common.EMPTY_LINE);
-						if(Common.isNotEmpty(user.getSname())) _sb.append(String.format("%s(%s)", name, Common.nvl(user.getSender())) + Common.EMPTY_LINE);
-						else _sb.append(String.format("%s", name) + Common.EMPTY_LINE);
-					}
-				}
-
-				_sb.append(Common.EMPTY_LINE);
-				_sb.append("<" + Prop.propFormat("eikon.msg.chatContents", locale) + ">").append(Common.EMPTY_LINE);
-				List<EmassMessenger> list = groups.getGroups();
-				if (list != null) {
-					for (EmassMessenger item : list) {
-						_sb.append(String.format("[%s] [%s] %s", item.getTitle(), item.getCtime(), item.getMessage())).append(Common.EMPTY_LINE);
-					}
-				}
-				if (Common.isEquals(type, "html")) {
-					_sb.append("</pre></body></html>");
-				}
-				if (Common.isNotEquals(print, "Y")) {
-					response.setContentLength(_sb.toString().getBytes().length);
-					response.setHeader("Content-Disposition", "attachment; filename=\"" + new String(getFileName(xRootMtr, users, Common.getLocale(request.getSession())).getBytes("KSC5601"), "ISO8859_1") + "." + type + "\"");
-				}
-				out.write(_sb.toString().getBytes());
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			IOUtils.closeQuietly(out);
-		}
-	}*/
+//		JSONObject param = Common.getParam(request);
+//		String xRootMtr = Common.nvl(param.get("xRootMtr"));
+//		String print = Common.nvl(param.get("print"));
+//		String type = Common.nvl(param.get("type"), "html").toLowerCase();
+//		if (!Common.isOrEquals(type, "html", "txt", "xlsx")) type = "html";
+//
+//		response.setCharacterEncoding(Common.UTF8);
+//		response.setHeader("Cache-control", "no-store");
+//		response.setHeader("Pragma", "no-cache");
+//		response.setDateHeader("Expires", 0);
+//		response.setHeader("Content-Disposition", "inline");
+//		if (Common.isEmpty(xRootMtr)) {
+//			response.setContentType("application/octet-stream");
+//			response.setHeader("Content-Transfer-Encoding", "binary");
+//			response.setHeader("Content-Disposition", "attachment; filename=notfound.txt\"");
+//			return;
+//		}
+//
+//		Locale locale = Common.getLocale(request.getSession());
+//
+//		ServletOutputStream out = null;
+//		try {
+//			out = response.getOutputStream();
+//
+//			MessengerEdcGroupVO groups = getMessengerMsgTotal(request, true);
+//			MessengerGroupUserVO users = getMessengerGroupUserList(request, 30000);
+//
+//			if (Common.isEquals(type, "xlsx")) {
+//				response.setContentType("application/octet-stream");
+//				response.setHeader("Content-Transfer-Encoding", "binary");
+//				response.setHeader("Content-Disposition", "attachment; filename=\"" + new String(getFileName(xRootMtr, users, Common.getLocale(request.getSession())).getBytes("KSC5601"), "ISO8859_1") + "." + type + "\"");
+//				xlsxExport(xRootMtr, groups, out, false, Common.getLocale(request.getSession()));
+//			} else {
+//				if (Common.isNotEquals(print, "Y")) {
+//					response.setContentType("application/octet-stream");
+//					response.setHeader("Content-Transfer-Encoding", "binary");
+//				}
+//				StringBuffer _sb = new StringBuffer();
+//				if (Common.isEquals(type, "html")) {
+//					_sb.append("<html><body><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /></head><pre>");
+//				}
+//				_sb.append("<" + Prop.propFormat("condition.xrootmtr", locale) + ">").append(Common.EMPTY_LINE);
+//				_sb.append(xRootMtr).append(Common.EMPTY_LINE).append(Common.EMPTY_LINE);
+//				_sb.append("<" + Prop.propFormat("condition.participation", locale) + ">").append(Common.EMPTY_LINE);
+//
+//				if (users != null) {
+//					for (SolrEdcVO user : users.getGroups()) {
+//						String name = Common.nvl(Common.isEmpty(user.getSname()) ? user.getSender() : user.getSname(), Common.nvl(user.getSrcip())) ;
+//						_sb.append(String.format("[%s] ["+Prop.propFormat("common.org.co", locale)+":%s, "+Prop.propFormat("common.org.busi", locale)+":%s, "+Prop.propFormat("common.org.dept", locale)+":%s, "+Prop.propFormat("common.org.jikgub", locale)+":%s]", name, Common.nvl(user.getConm()), Common.nvl(user.getBusinm()), Common.nvl(user.getDeptnm()), Common.nvl(user.getJikgubnm()))).append(Common.EMPTY_LINE);
+//						if(Common.isNotEmpty(user.getSname())) _sb.append(String.format("%s(%s)", name, Common.nvl(user.getSender())) + Common.EMPTY_LINE);
+//						else _sb.append(String.format("%s", name) + Common.EMPTY_LINE);
+//					}
+//				}
+//
+//				_sb.append(Common.EMPTY_LINE);
+//				_sb.append("<" + Prop.propFormat("eikon.msg.chatContents", locale) + ">").append(Common.EMPTY_LINE);
+//				List<EmassMessenger> list = groups.getGroups();
+//				if (list != null) {
+//					for (EmassMessenger item : list) {
+//						_sb.append(String.format("[%s] [%s] %s", item.getTitle(), item.getCtime(), item.getMessage())).append(Common.EMPTY_LINE);
+//					}
+//				}
+//				if (Common.isEquals(type, "html")) {
+//					_sb.append("</pre></body></html>");
+//				}
+//				if (Common.isNotEquals(print, "Y")) {
+//					response.setContentLength(_sb.toString().getBytes().length);
+//					response.setHeader("Content-Disposition", "attachment; filename=\"" + new String(getFileName(xRootMtr, users, Common.getLocale(request.getSession())).getBytes("KSC5601"), "ISO8859_1") + "." + type + "\"");
+//				}
+//				out.write(_sb.toString().getBytes());
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} finally {
+//			IOUtils.closeQuietly(out);
+//		}
+	}
 
 	@RequestMapping(value = "/getMessengerList.xcn")
 	@Description("메신저 대화방 상세 목록 조회")

@@ -143,13 +143,13 @@ public class MessengerControllerLog {
 
 	public void getMessengerGroupDetailSearch(final HttpServletRequest request, AuditRequestVO auditVo) {
 		JSONObject param = Common.getParam(request);
-		JSONObject filterVal = Common.toJSONObject(param.get("data"));
+		JSONObject filterVal = Common.toJSONObject(param.get("searchParam"));
 		String xRootMtr = Common.nvl(param.get("xRootMtr"));
 		StringBuffer info = new StringBuffer();
 		info.append("[" + Prop.propFormat("java.log.messenger.group.msg.search") + "]").append(ENTER);
 		info.append(Prop.propFormat("condition.xrootmtr") + " : ").append(xRootMtr).append(ENTER);
 		try {
-			JSONArray conditions = filterVal.getJSONArray("conditions");
+			JSONArray conditions = filterVal.getJSONArray("condition");
 			for (int i = 0; i < conditions.size(); i++) {
 				JSONObject condition = conditions.getJSONObject(i);
 
