@@ -1248,9 +1248,18 @@ public class ElasticSearchQueryUtils {
 		  SearchSourceBuilder result = null;
             switch (Common.nvl(searchParam.get(ElasticSearchCommon.SEARCH_TYPE))) {
                 /* 검색 타입 조건 */
-                case ElasticSearchCommon.SEARCH_TYPE_MESSAGE:  // 메시지 검색시
-					result = initMessageSearchSource(searchParam,adminId); // 검색 소스 준비
-                    break;
+	            case ElasticSearchCommon.SEARCH_TYPE_MESSENGER: //메세징 리스트 검색시
+		            result = initMessengerSearchSource(searchParam, adminId);
+		            break;
+	            case ElasticSearchCommon.SEARCH_TYPE_MESSENGER_GROUP: //메세징 그룹 검색
+		            result = initMessengerGroupSearchSource(searchParam, adminId);
+		            break;
+	            case ElasticSearchCommon.SEARCH_TYPE_MESSENGER_TOTAL: //메세징 토탈 쿼리 날리기
+		            result = initMessageTotalSearchSource(searchParam, adminId);
+		            break;
+	            case ElasticSearchCommon.SEARCH_TYPE_MESSENGER_DETAIL: //메세징 상세 조회
+		            result = initMessageDetailSearchSource(searchParam, adminId);
+		            break;
                 case ElasticSearchCommon.SEARCH_TYPE_STATISTIC: // 통계 검색시
 					result = initStatisticSearchSource(searchParam,adminId); // 검색 소스 준비
                     break;
