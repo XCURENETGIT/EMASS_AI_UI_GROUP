@@ -31,7 +31,6 @@
 		if(Common.nvl(uri).contains(Common.nvl(menu.get("menuLink")))) {
 			menuId = Common.nvl(menu.get("menuId"));
 			menuName = Common.nvl(menu.get("defaultName"));
-			break;
 		}
 	}
 %>
