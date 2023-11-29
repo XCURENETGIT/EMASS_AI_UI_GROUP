@@ -3,14 +3,18 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+	<link rel="stylesheet" type="text/css" href="../css/emass_style.css"/>
 	<title>EMASS LTH - <s:message code="DATA_MONITOR.STAT_LABEL"/></title>
 	<style type="text/css">
-		.panel-heading .dropdown-menu {
-			right: 31px;
-			top: 42px;
+		.panel-headings .dropdown-menu {
+			right: 8px;
+			top: 25px;
 			left: initial;
 		}
+
 	</style>
+	<script type="text/javascript" src="<c:url value="/js/messageGrid.js"/>"></script>
+	<%-- 통계 --%>
 	<script>
         var searchFlag = false;
         var detailTotal = 0;
@@ -23,6 +27,15 @@
         var tabNum = 0;
         var totalChartDat;
         $(document).ready(function(){
+
+            $('.optionBtn').click(function () {
+                $('.optionBtn').removeClass('active');
+                $(this).addClass('active');
+                $('#optionHidden').attr("value", $(this).val());
+                $('#optionHiddenName').attr("value", $(this).text());
+
+            });
+
             $('#searchBtn').click(function(){
                 closeDetailTab();
                 getData ('Y');
@@ -720,7 +733,7 @@ function getSelectedCodeData( codeType, data ) {
             xAxis: xAxis,
             xAxis_str: xAxis_str,
             searched_xAxis: $('#searched_xAxis').val(),
-            colId: colId,
+    /*        colId: colId,*/
             yAxis: 'attach.ext',
             offset: currentgrid.data.length,
             limit: currentgrid.pageSize,

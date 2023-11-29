@@ -32,6 +32,7 @@ $(document).ready(function(){
 		closeDetailTab();
 		getData ('Y');
 	});
+
 	
 	$('#chartCntDiv .dropdown-menu li a').click(function(){
 		chartcnt = $(this).text();

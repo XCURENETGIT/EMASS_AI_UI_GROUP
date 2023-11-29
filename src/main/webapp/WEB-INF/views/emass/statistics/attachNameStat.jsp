@@ -671,23 +671,34 @@ function fileInfoViewer( row ){
             currentgrid.loadingPage++;
         }
 
-        var xAxis = $('select[name=xAxis]').val();
-        var xAxis_str = $('select[name=xAxis] option:selected').text();
+
+        var xAxis = $('#optionHidden').val();
+        var xAxis_str = $('#optionHiddenName').val();
+        var colNum = grid1.Col;
+        var isTotalRow = (grid1.Rows == grid1.Row) ? true : false;
+        var colId = '';
+        if (colNum != '' & colNum != null) colId = grid1.getHeaderId()[grid1.Col].id;
+
+        var searchData = {
+            rowKey: rowKey,
+            colKey : colKey,
+            startDate: $('#startdate').val().replaceAll("-","")+"000000",
+            endDate: $('#enddate').val().replaceAll("-","")+"235959",
+            detailQuery: $('#elsQueryText').val(),
+            xAxis: xAxis,
+            xAxis_str: xAxis_str,
+            searched_xAxis: $('#searched_xAxis').val(),
+            /*colId: colId,*/
+            yAxis: 'attach.id',
+            offset: currentgrid.data.length,
+            limit: currentgrid.pageSize,
+        }
 
         searchFlag = true;
         currentgrid.on();
         ui.get({
             url : 'getStatDetailList.xcn',
-            rowKey : rowKey,
-            colKey : colKey,
-            startDate : $('#startdate').val().replaceAll("-","")+"000000",
-            endDate : $('#enddate').val().replaceAll("-","")+"235959",
-            detailQuery:$('#solrQueryText').val(),
-            xAxis : xAxis,
-            xAxis_str : xAxis_str,
-            yAxis : 'attachname_str',
-            offset : currentgrid.data.length,
-            limit : currentgrid.pageSize,
+            searchParam: JSON.stringify(searchData),
             success : function(data, total) {
                 if ( lastRow == 'Y' || lastRow == undefined ) detailTotal = total;
                 currentgrid.appendData(data.emass);

@@ -28,6 +28,15 @@ var tabID = 1;
 var tabNum = 0;
 var totalChartDat;
 $(document).ready(function(){
+
+    $('.optionBtn').click(function () {
+        $('.optionBtn').removeClass('active');
+        $(this).addClass('active');
+        $('#optionHidden').attr("value", $(this).val());
+        $('#optionHiddenName').attr("value", $(this).text());
+
+    });
+
 	$('#searchBtn').click(function(){
 		closeDetailTab();
 		getData ('Y');
