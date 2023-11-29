@@ -426,22 +426,22 @@ function getSearchQuery() {
 				<textarea class="elsQueryResultText" rows="1" style="width:100%;" id="elsQueryText" placeholder="<s:message code="condition.input.detail"/>"></textarea>
 			</div>
 		</div>
-		<div class="content">
+		<div class="content" style="padding: 20px;">
 			<div >
 				<div class="chartArea">
 					<div>
 						<h3>조회기간</h3>
 						<div class="sublist">
 							<div>
-								<span class="tit">많이 접속한 URL</span>
+								<span class="tit">TOP1 URL</span>
 								<p>99999<span class="text">건</span></p>
 							</div>
 							<div>
-								<span class="tit">두번째 가장 많이 잡힌 URL</span>
+								<span class="tit">TOP2 URL</span>
 								<p>99999<span class="text">건</span></p>
 							</div>
 							<div>
-								<span class="tit">세번째 가장 많이 잡힌 URL</span>
+								<span class="tit">TOP3 URL</span>
 								<p>99999<span class="text">건</span></p>
 							</div>
 							<div>
@@ -713,24 +713,34 @@ function getSearchQuery() {
 			} else {
 				currentgrid.loadingPage++;
 			}
-			
-			var xAxis = $('select[name=xAxis]').val();
-			var xAxis_str = $('select[name=xAxis] option:selected').text();
+
+            var xAxis = $('#optionHidden').val();
+            var xAxis_str = $('#optionHiddenName').val();
+            var colNum = grid1.Col;
+            var isTotalRow = (grid1.Rows == grid1.Row) ? true : false;
+            var colId = '';
+            if (colNum != '' & colNum != null) colId = grid1.getHeaderId()[grid1.Col].id;
+
+            var searchData = {
+                rowKey: rowKey,
+                colKey : colKey,
+                startDate: $('#startdate').val().replaceAll("-","")+"000000",
+                endDate: $('#enddate').val().replaceAll("-","")+"235959",
+                detailQuery: $('#elsQueryText').val(),
+                xAxis: xAxis,
+                xAxis_str: xAxis_str,
+                searched_xAxis: $('#searched_xAxis').val(),
+                /*colId: colId,*/
+                yAxis: 'http.host',
+                offset: currentgrid.data.length,
+                limit: currentgrid.pageSize,
+            }
 			
 			searchFlag = true;
 			currentgrid.on();
 			ui.get({
 				url : 'getStatDetailList.xcn',
-				rowKey : rowKey,
-				colKey : colKey,
-				startDate : $('#startdate').val().replaceAll("-","")+"000000",
-				endDate : $('#enddate').val().replaceAll("-","")+"235959",
-				detailQuery:$('#solrQueryText').val(),
-				xAxis : xAxis,
-				xAxis_str : xAxis_str,
-				yAxis : 'host_str',
-				offset : currentgrid.data.length,
-				limit : currentgrid.pageSize,
+                searchParam: JSON.stringify(searchData),
 				success : function(data, total) {
 					if ( lastRow == 'Y' || lastRow == undefined ) detailTotal = total;
 					currentgrid.appendData(data.emass);

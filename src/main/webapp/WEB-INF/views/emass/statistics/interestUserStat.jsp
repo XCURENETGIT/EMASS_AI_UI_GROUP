@@ -412,122 +412,80 @@ function getSearchQuery() {
 </script>
 </head>
 <body class="mini-navbar">
-
-	<div class="container">
-		<div class="searchArea">
-			<div class="searchSub">
-				<div id="startdatepicker"><input type="date" id="startdate" style="width: 110px;"> <span
-						class="hyphen">~</span></div>
-				<div id="enddatepicker"><input type="date" id="enddate" style="width: 110px;"></div>
-				<div>
-					<select id="interGroup" name="interGroup" class="input-sm form-control">
-						<option value="">- <s:message code="condition.select.interest"/> -</option>
-					</select>
-				</div>
-				<div class="optiotab">
-					<button class="optionBtn active" id="ctime_hh" value="ctime_hh"><s:message
-							code="common.msg.time"/></button>
-					<button class="optionBtn" id="ctime_yyyymmdd" value="ctime_yyyymmdd" class="active"><s:message
-							code="common.msg.day"/></button>
-					<button class="optionBtn" id="ctime_yyyymm" value="ctime_yyyymm"><s:message
-							code="common.msg.month"/></button>
-					<button class="optionBtn" id="businm" value="businm"><s:message code="common.org.busi"/></button>
-					<button class="optionBtn" id="conm" value="conm"><s:message code="common.org.co"/></button>
-					<button class="optionBtn" id="deptnm" value="deptnm"><s:message code="common.org.dept"/></button>
-					<button class="optionBtn" id="direction_svc" value="direction_svc"><s:message
-							code="condition.receive_send"/></button>
-					<button class="optionBtn" id="jikgubnm" value="jikgubnm"><s:message
-							code="common.org.jikgub"/></button>
-					<input type="hidden" value="ctime_hh" id="optionHidden">
-					<input type="hidden" value="시간" id="optionHiddenName">
-				</div>
-				<div>
-					<button class="form_btn01" accesskey="Q" id="searchBtn" accesskey="s">조회</button>
-					<button class="form_btn02">조건 초기화</button>
-					<button type="button" class="btn btn-sm btn-primary searchQueryBtn">
-						<span class="glyphicon glyphicon-check"></span>&nbsp;<s:message code="query.make.inputer"/></button>
-				</div>
+<div class="container">
+	<div class="searchArea">
+		<div class="searchSub">
+			<div id="startdatepicker"><input type="date" id="startdate" style="width: 110px;"> <span
+					class="hyphen">~</span></div>
+			<div id="enddatepicker"><input type="date" id="enddate" style="width: 110px;"></div>
+			<div>
+				<select id="interGroup" name="interGroup" class="input-sm form-control">
+					<option value="">- <s:message code="condition.select.interest"/> -</option>
+				</select>
 			</div>
-			<div class="panel" style="width: 100%;">
-				<div>
-					<textarea class="elsQueryResultText" rows="1" style="width:100%;" id="elsQueryText" placeholder="<s:message code="condition.input.detail"/>"></textarea>
-				</div>
+			<div class="optiotab">
+				<button class="optionBtn active" id="ctime_hh" value="ctime_hh"><s:message
+						code="common.msg.time"/></button>
+				<button class="optionBtn" id="ctime_yyyymmdd" value="ctime_yyyymmdd" class="active"><s:message
+						code="common.msg.day"/></button>
+				<button class="optionBtn" id="ctime_yyyymm" value="ctime_yyyymm"><s:message
+						code="common.msg.month"/></button>
+				<button class="optionBtn" id="businm" value="businm"><s:message code="common.org.busi"/></button>
+				<button class="optionBtn" id="conm" value="conm"><s:message code="common.org.co"/></button>
+				<button class="optionBtn" id="deptnm" value="deptnm"><s:message code="common.org.dept"/></button>
+				<button class="optionBtn" id="direction_svc" value="direction_svc"><s:message
+						code="condition.receive_send"/></button>
+				<button class="optionBtn" id="jikgubnm" value="jikgubnm"><s:message
+						code="common.org.jikgub"/></button>
+				<input type="hidden" value="ctime_hh" id="optionHidden">
+				<input type="hidden" value="시간" id="optionHiddenName">
 			</div>
-			<div class="content">
+			<div>
+				<button class="form_btn01" accesskey="Q" id="searchBtn" accesskey="s">조회</button>
+				<button class="form_btn02">조건 초기화</button>
+				<button type="button" class="btn btn-sm btn-primary searchQueryBtn">
+					<span class="glyphicon glyphicon-check"></span>&nbsp;<s:message code="query.make.inputer"/></button>
+			</div>
+		</div>
 
-				<div >
-					<div class="chartArea">
-						<div>
-							<h3>조회기간</h3>
-							<div class="sublist">
-								<div>
-									<span class="tit">예약어 합계</span>
-									<p>99999<span class="text">건</span></p>
-								</div>
-								<div>
-									<span class="tit">예약어 합계</span>
-									<p>99999<span class="text">건</span></p>
-								</div>
-								<div>
-									<span class="tit">예약어 합계</span>
-									<p>99999<span class="text">건</span></p>
-								</div>
-								<div>
-									<span class="tit">예약어 합계</span>
-									<p>99999<span class="text">건</span></p>
-								</div>
-								<div>
-									<span class="tit">예약어 합계</span>
-									<p>99999<span class="text">건</span></p>
-								</div>
-								<div>
-									<span class="tit">예약어 합계</span>
-									<p>99999<span class="text">건</span></p>
-								</div>
-							</div>
-						</div>
-						<div>
-							<h3>
-								TOP 통계 Chart
-								<span class="sel">
-						<div id="totalViewDiv" style="display:none;">
-							<div class="subtab">
-							<button type="button"
-							        title="<s:message code="stat.view.all"/>"><s:message code="stat.view.all"/></button>
-							</div>
-						</div>
-						<div class="panel-headings" id="chartCntDiv">
-								<button type="button" class="btn btn-xs btn-default dropdown-toggle"
-								        data-toggle="dropdown">
-									<s:message code="stat.display.count.chart"/> (<span class="dropdown-text">5</span>) <span
-										val="5" class="caret"></span>
-								</button>
-								<ul class="dropdown-menu dropdown-menu-right" role="menu">
-									<li><a href="#">5</a></li>
-									<li><a href="#">10</a></li>
-									<li><a href="#">15</a></li>
-									<li><a href="#">20</a></li>
-								</ul>
-						</div>
-						</span>
-							</h3>
-							<div class="panel panel-default" id="service.logging.count">
-								<div class="panel-body">
-									<div id="chartArea1" style="height: 160px;"></div>
-								</div>
+		<div class="panel" style="width: 100%; margin-bottom: 10px">
+			<div>
+				<textarea class="elsQueryResultText" rows="1" style="width:100%;" id="elsQueryText" placeholder="<s:message code="condition.input.detail"/>"></textarea>
+			</div>
+		</div>
+
+		<div class="content">
+
+			<div class="contentSub">
+				<div class="chartAreafull">
+					<div>
+						<h3>
+							TOP 통계 Chart
+							<span class="sel">
+                                    <select id="country" name="country">
+                                        <option value="australia">차트 표시 개수(7)</option>
+                                        <option value="canada">옵션2</option>
+                                        <option value="usa">옵션3</option>
+                                      </select>
+                                </span>
+						</h3>
+						<div class="panel panel-default" id="service.logging.count">
+							<div class="panel-body">
+								<div id="chartArea1" style="height: 160px;"></div>
 							</div>
 						</div>
 					</div>
-					<!-- 탭 -->
-					<div class="row top_space2">
-						<div class="col-xs-12">
-							<ul class="nav nav-tabs codeTab listChart">
-								<li class="active"><a data-toggle="tab" href="#basicStatList" id=" ">LIST</a>
-								</li>
-							</ul>
-							</ul>
-						</div>
+				</div>
+				<!-- 탭 -->
+				<div class="row top_space2">
+					<div class="col-xs-12">
+						<ul class="nav nav-tabs codeTab listChart">
+							<li class="active"><a data-toggle="tab" href="#basicStatList" id=" ">LIST</a>
+							</li>
+						</ul>
+						</ul>
 					</div>
+				</div>
 					<!-- 테이블 -->
 					<div class="row top_space">
 						<div class="col-lg-12 tab-content">

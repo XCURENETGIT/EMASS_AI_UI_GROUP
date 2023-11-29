@@ -150,9 +150,9 @@ var els_space = " ";
 var els_comma = ",";
 var els_colon = ":";
 var els_special_char = "*";
-var els_or_query = "OR";
-var els_and_query = "AND";
-var els_except_query = "NOT";
+var els_or_query = " ";
+var els_and_query = "+";
+var els_except_query = "-";
 
 /* ----- 필드 ----- */
 
@@ -176,7 +176,7 @@ var fld_recvs = ["mail.to.name","network.dstIp"];
 var fld_ccSender = ["mail.cc.name","mail.bcc.name"];
 /*OCR*/
 /*수신자 구분*/
-var fld_allofus = "allofus";
+var fld_allofus = "allOfUs";
 
 /*첨부 여부*/
 var fld_attached = "attached";
