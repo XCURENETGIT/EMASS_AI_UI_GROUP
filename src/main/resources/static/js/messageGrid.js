@@ -3,7 +3,7 @@
 		function initGrid( currGrid, gridColumn){
 			statGrid = currGrid;
 			currGrid.autoNumber();
-			currGrid.colAdd('_id', gridColumn.msgid, 100, 'left', false, 'nomal','',0);
+			currGrid.colAdd('msgid', gridColumn.msgid, 100, 'left', false, 'nomal','',0);
 		//	currGrid.colAdd('epmsg_type', gridColumn.epmsg_type, 100, 'center', true, 'nomal');
 			currGrid.colAdd('xrootmtr', gridColumn.xrootmtr, 100, 'left', true, 'nomal','',1);
 			// currGrid.colAdd('interestUserYn', gridColumn.interestUserYn, 40, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
@@ -85,7 +85,7 @@
 			currGrid.colAdd('user_deptNm', gridColumn.deptnm, 120, 'center', false, 'nomal','',12);
 			currGrid.colAdd('user_jikgubNm', gridColumn.jikgubnm, 120, 'center', false, 'nomal','',13);
 			// currGrid.colAdd('sender', gridColumn.sender, 130, 'left', false, 'link');
-			currGrid.colAdd('allofus', gridColumn.allofus, 150, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+			currGrid.colAdd('allOfUs', gridColumn.allofus, 150, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 				if( value == undefined || value.length == 0) return '';
 				switch (value) {
 					case 'ET' : value = allofusMsg.ET; break;
@@ -95,6 +95,7 @@
 					case 'PA' : value = allofusMsg.PA; break;
 					case 'SO' : value = allofusMsg.SO; break;
 					case 'SI' : value = allofusMsg.SI; break;
+					default: value= value; break;
 				}
 				return value;
 			},14);
@@ -126,10 +127,10 @@
 				var kwds = currGrid.getValue(row, 'kwds');
 				return highlightKeyword(rtnVal, kwds);
 			},20);
-			currGrid.colAdd('size_Str', gridColumn.sizeStr, 80, 'left', false, 'nomal','',21);
-			currGrid.colAdd('body_sizeStr', gridColumn.bodySizeStr, 80, 'left', false, 'nomal', null, {sortField:'body_size'},22);
-			currGrid.colAdd('attach_sizeStr', gridColumn.attachSizeStr, 80, 'left', false, 'nomal', null, {sortField:'attachSizeSort'},23);
-			currGrid.colAdd('kwd_kwds', gridColumn.kwds, 120, 'left', false, 'nomal','',24);
+			currGrid.colAdd('size', gridColumn.sizeStr, 80, 'left', false, 'nomal','',21);
+			currGrid.colAdd('body_size', gridColumn.bodySizeStr, 80, 'left', false, 'nomal', null, {sortField:'body_size'},22);
+			currGrid.colAdd('attach_size', gridColumn.attachSizeStr, 80, 'left', false, 'nomal', null, {sortField:'attachSizeSort'},23);
+			currGrid.colAdd('kwdInfo_kwds', gridColumn.kwds, 120, 'left', false, 'nomal','',24);
 			// currGrid.colAdd('pi_total', gridColumn.pi_total, 70, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
 			// 	if (value == '0') return '';
 			// 	else return value.comma();
