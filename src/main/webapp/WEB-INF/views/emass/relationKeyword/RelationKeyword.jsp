@@ -228,10 +228,18 @@
 				<span class="close" data-dismiss="modal">&times;</span>
 			</div>
 			<div class="modalCon">
+				<div class="modalTop">
+					<h3>키워드 추가</h3>
+					<p>
+						<span class="red_dot veralign_middle"></span>
+						필수 입력 사항입니다.
+					</p>
+				</div>
 				<div class="modalbody">
 					<div class="row">
 						<div class="col-35">
 							<label for="searchWordName" class="fname">키워드</label>
+							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
 							<input type="text" class="form-control" name="searchWordName" id="searchWordName">
@@ -241,6 +249,7 @@
 					<div class="row">
 						<div class="col-35">
 							<label for="searchWordRelaName" class="fname">연관 키워드</label>
+							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
 							<input type="text" class="w100" name="searchWordRelaName" id="searchWordRelaName">
@@ -249,12 +258,16 @@
 					<div class="row">
 						<div class="col-35">
 							<label for="searchWordRelaNumber" class="fname">가중치</label>
+							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
 							<input type="number" step="0.01" class="w100" name="searchWordRelaNumber"
 							       id="searchWordRelaNumber">
 						</div>
 					</div>
+				</div>
+				<div class="info">
+					안내 사항
 				</div>
 				<div class="modalfooter">
 					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message
@@ -276,16 +289,27 @@
 				<span class="close" data-dismiss="modal">&times;</span>
 			</div>
 			<div class="modalCon">
+				<div class="modalTop">
+					<h3>키워드 수정</h3>
+					<p>
+						<span class="red_dot veralign_middle"></span>
+						필수 입력 사항입니다.
+					</p>
+				</div>
 				<div class="modalbody">
 					<div class="row">
 						<div class="col-35">
 							<label for="searchWordUpdateName" class="fname">키워드</label>
+							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
 							<input type="text" class="w100" name="searchWordName" id="searchWordUpdateName">
 							<input type="hidden" class="w100" name="keywordId" id="keywordUpdateId">
 						</div>
 					</div>
+				</div>
+				<div class="info">
+					안내 사항
 				</div>
 				<div class="modalfooter">
 					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message
@@ -322,7 +346,7 @@
 						<input type="hidden" class="form-control" name="rekeywordId" id="rekeywordId">
 					</div>
 				</div>
-					<div class="contentSub">
+					<div class="contentSub" style="padding: 0px;">
 						<div id="relaGrid" class="slickGrid gridArea"  style="height: 400px;">
 					</div>
 				</div>
@@ -401,5 +425,5 @@
     relaGrid.onCheckBox();
     relaGrid.autoNumber();
     relaGrid.colAdd('relationWord', "연관 키워드", 400, 'left', false, 'nomal');
-    relaGrid.loadHeader(false);
+    relaGrid.loadHeader(true);
 </script>

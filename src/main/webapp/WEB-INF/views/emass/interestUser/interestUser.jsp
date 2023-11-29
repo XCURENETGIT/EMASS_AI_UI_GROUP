@@ -718,11 +718,8 @@
 					<button class="form_btn01" type="button" accesskey="G" id="searchGroupBtn">조회</button>
 				</div>
 
-				<button type="button" class="btn01" accesskey="I" id="groupInsertBtn"><img
-						src="../img/icon/subBtn_plus.png"
-						alt="추가"><s:message code="common.msg.add"/></button>
-				<button type="button" class="btn02" accesskey="D" id="groupDeleteBtn"><img
-						src="../img/icon/subBtn_trash.png" alt="삭제"><s:message code="common.msg.delete"/></button>
+				<button type="button" class="btn01" accesskey="I" id="groupInsertBtn"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
+				<button type="button" class="btn02" accesskey="D" id="groupDeleteBtn"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
 			</div>
 			<div class="content xcn_full" style="height: 800px; background-color: transparent">
 				<div class="contentSub" style="height: 800px">
@@ -738,19 +735,10 @@
 					       style="width: 280px;">
 					<button class="form_btn01" type="button" accesskey="K" id="searchStrItemBtn">조회</button>
 				</div>
-				<button type="button" class="btn01" accesskey="A" id="itemInsertBtn"><img
-						src="../img/icon/subBtn_plus.png"
-						alt="추가"><s:message
-						code="common.msg.add"/></button>
-				<button type="button" class="btn02" accesskey="E" id="itemDeleteBtn"><img
-						src="../img/icon/subBtn_trash.png"
-						alt="삭제"><s:message
-						code="common.msg.delete"/></button>
-				<button type="button" class="btn03" accesskey="U" id="uploadBtn"><img
-						src="../img/icon/subBtn_upload.png"
-						alt="업로드">Upload
-				</button>
-				<button type="button" class="btn05" accesskey="U" id="textUploadBtn"><img src="../img/icon/subBtn_textupload.png" alt="Text Upload">Text Upload</button>
+				<button type="button" class="btn01" accesskey="A" id="itemInsertBtn"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
+				<button type="button" class="btn02" accesskey="E" id="itemDeleteBtn"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
+				<button type="button" class="btn03" accesskey="U" id="uploadBtn"><img src="<c:url value="/img/subBtn_upload.png"/>" alt="업로드">Upload</button>
+				<button type="button" class="btn05" accesskey="U" id="textUploadBtn"><img src="<c:url value="/img/subBtn_textupload.png"/>" alt="Text Upload">Text Upload</button>
 			</div>
 			<div class="content xcn_full" style="height: 800px; background-color: transparent">
 				<div class="contentSub " style="height: 800px">
