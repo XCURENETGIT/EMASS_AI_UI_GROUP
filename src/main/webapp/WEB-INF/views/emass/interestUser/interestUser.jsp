@@ -1,540 +1,520 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp" %>
 <% String adminType = Common.getAdminType(session); %>
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-	<title></title>
-	<style type="text/css">
-		#header-color, #picker-custom {
-			height: 24px;
-			line-height: 24px;
-		}
+<style type="text/css">
+	#header-color, #picker-custom {
+		height: 24px;
+		line-height: 24px;
+	}
 
-		#header-color {
-			padding-left: 25px;
-		}
-	</style>
-	<script>
-        var adminType = '<%=adminType%>';
-        var searchFlag = false;
-        $(document).ready(function () {
-            $('textarea').numberedtextarea();
-
-            $('#searchGroupBtn').click(function () {
-                getUserGroup();
-            });
-            $('#searchStrGroup').enter(function () {
-                getUserGroup();
-            });
-
-            $('#searchStrItemBtn').click(function () {
-                getItem();
-            });
-            $('#searchStrItem').enter(function () {
-                getItem();
-            });
-
-            $('#groupInsertBtn').click(function () {
-                $('#userGroupPop input[type=text]').val('');
-                $('#groupSeq').val('');
-                $('.color-cue-name').hide();
-                $('#userGroupPop').attr('mode', 'insert');
-                $('#userGroupPop').modal('show');
-                if ($('.color-chips').css('display') == 'block') {
-                    $('.color-box.color-cue').click();
-                }
-                $('#header-color').val('#5376A3').keyup();
-            });
-
-            $('#groupSavePopBtn').click(function () {
-                saveUserGroup();
-            });
-
-            $('#groupDeleteBtn').click(function () {
-                deleteUerGroup();
-            });
-
-            $('#itemInsertBtn').click(function () {
-                if (gridGroup.getSelectedRows().length < 1) {
-                    ui.alertMsg('<s:message code="userGroup.msg.select.group"/>')
-                    return false;
-                }
-                if (gridItem.data.length >= 1000) {
-                    ui.alertMsg('<s:message code="userGroup.msg.user.max"/>');
-                    return false;
-                }
-                $('#popSearchStr').val('');
-                $('#popUserType').val('');
-                $('#popSearchType').val('all');
-                getUserData();
-                $('#selectPop').modal('show');
-            });
-
-            $('#popSearchBtn').click(function () {
-                getUserData();
-            });
-            $('#popSearchStr').enter(function () {
-                getUserData();
-            });
-            $('#popUserType').change(function () {
-                getUserData();
-            });
-
-            $('#saveUserBtn').click(function () {
-                saveUserGroupItem();
-            });
-            $('#saveTextUploadBtn').click(function () {
-                saveTextUploadItem();
-            });
-
-            $('#itemDeleteBtn').click(function () {
-                deleteUserGroupItem();
-            });
-
-            $('#uploadBtn').click(function () {
-                if (gridGroup.getSelectedRows().length < 1) {
-                    ui.alertMsg('<s:message code="userGroup.msg.select.group"/>')
-                    return false;
-                }
-                if (gridItem.data.length >= 1000) {
-                    ui.alertMsg('<s:message code="userGroup.msg.user.max"/>');
-                    return false;
-                }
-                $('#uploadPop').modal('show');
-            });
-
-            $('#textUploadBtn').click(function () {
-                resetTextArea();
-                if (gridGroup.getSelectedRows().length < 1) {
-                    ui.alertMsg('<s:message code="userGroup.msg.select.group"/>')
-                    return false;
-                }
-                if (gridItem.data.length >= 1000) {
-                    ui.alertMsg('<s:message code="userGroup.msg.user.max"/>');
-                    return false;
-                }
-                $('#textUploadPop').modal('show');
-            });
-
-            $('.uploadPopBtn').click(function () {
-                importKeyword();
-            });
-
-            $("[name=attach]").change(function () {
-                fileExtCheck($(this));
-            });
-
+	#header-color {
+		padding-left: 25px;
+	}
+</style>
+<script type="text/javascript">
+    var adminType = '<%=adminType%>';
+    var searchFlag = false;
+    $(document).ready(function () {
+        $('textarea').numberedtextarea();
+        $('#searchGroupBtn').click(function () {
             getUserGroup();
-
+        });
+        $('#searchStrGroup').enter(function () {
+            getUserGroup();
+        });
+        $('#searchStrItemBtn').click(function () {
+            getItem();
+        });
+        $('#searchStrItem').enter(function () {
+            getItem();
         });
 
-        function resetTextArea() {
-            $('#textUploadTextArea').val('');
-            $('.numberedtextarea-line-numbers').html('<div class="numberedtextarea-number numberedtextarea-number-1">1</div>');
+        $('#groupInsertBtn').click(function () {
+            $('#userGroupPop input[type=text]').val('');
+            $('#groupSeq').val('');
+            $('.color-cue-name').hide();
+            $('#userGroupPop').attr('mode', 'insert');
+            $('#userGroupPop').modal('show');
+            if ($('.color-chips').css('display') == 'block') {
+                $('.color-box.color-cue').click();
+            }
+            $('#header-color').val('#5376A3').keyup();
+        });
+
+        $('#groupSavePopBtn').click(function () {
+            saveUserGroup();
+        });
+        $('#groupDeleteBtn').click(function () {
+            deleteUerGroup();
+        });
+
+        $('#itemInsertBtn').click(function () {
+            if (gridGroup.getSelectedRows().length < 1) {
+                ui.alertMsg('<s:message code="userGroup.msg.select.group"/>')
+                return false;
+            }
+            if (gridItem.data.length >= 1000) {
+                ui.alertMsg('<s:message code="userGroup.msg.user.max"/>');
+                return false;
+            }
+            $('#popSearchStr').val('');
+            $('#popUserType').val('');
+            $('#popSearchType').val('all');
+            getUserData();
+            $('#selectPop').modal('show');
+        });
+
+        $('#popSearchBtn').click(function () {
+            getUserData();
+        });
+        $('#popSearchStr').enter(function () {
+            getUserData();
+        });
+        $('#popUserType').change(function () {
+            getUserData();
+        });
+
+        $('#saveUserBtn').click(function () {
+            saveUserGroupItem();
+        });
+        $('#saveTextUploadBtn').click(function () {
+            saveTextUploadItem();
+        });
+
+        $('#itemDeleteBtn').click(function () {
+            deleteUserGroupItem();
+        });
+
+        $('#uploadBtn').click(function () {
+            if (gridGroup.getSelectedRows().length < 1) {
+                ui.alertMsg('<s:message code="userGroup.msg.select.group"/>')
+                return false;
+            }
+            if (gridItem.data.length >= 1000) {
+                ui.alertMsg('<s:message code="userGroup.msg.user.max"/>');
+                return false;
+            }
+            $('#uploadPop').modal('show');
+        });
+
+        $('#textUploadBtn').click(function () {
+            resetTextArea();
+            if (gridGroup.getSelectedRows().length < 1) {
+                ui.alertMsg('<s:message code="userGroup.msg.select.group"/>')
+                return false;
+            }
+            if (gridItem.data.length >= 1000) {
+                ui.alertMsg('<s:message code="userGroup.msg.user.max"/>');
+                return false;
+            }
+            $('#textUploadPop').modal('show');
+        });
+
+        $('.uploadPopBtn').click(function () {
+            importKeyword();
+        });
+
+        $("[name=attach]").change(function () {
+            fileExtCheck($(this));
+        });
+        getUserGroup();
+    });
+
+    function resetTextArea() {
+        $('#textUploadTextArea').val('');
+        $('.numberedtextarea-line-numbers').html('<div class="numberedtextarea-number numberedtextarea-number-1">1</div>');
+    }
+
+    function importKeyword() {
+        $('#uploadForm').attr('action', '<c:url value="/importAdminGroupUser.xcn"/>');
+
+        var attach = $('[name=attach]').val();
+        if (attach == "") {
+            ui.alertMsg('<s:message code="keyword.msg.upload.file"/>', function () {
+                $("#attach").click();
+            });
+            return;
         }
 
-        function importKeyword() {
-            $('#uploadForm').attr('action', '<c:url value="/importAdminGroupUser.xcn"/>');
+        var fileExt = attach.substring(attach.lastIndexOf(".") + 1, attach.length).toLowerCase();
+        $('#importGroupSeq').val(gridGroup.getValue(gridGroup.Row, "groupSeq"));
+        ui.confirmMsg('<s:message code="keyword.upload.confirm"/>', '', '', function (rs) {
+            if (rs) {
+                loadingOn("uploadPop");
+                $("#uploadForm").ajaxForm({
+                    target: '#upload_file',
+                    beforeSubmit: function () {
+                        $('#attachSpan').html('<input type="file" class="form-control" name="attach" id="attach" style="width: 350px; border: 0px;">');
+                        $('#attach').change(function () {
+                            fileExtCheck($('#attach'));
+                        });
+                    },
+                    success: function (result) {
+                        if (result.success) {
+                            ui.alertMsg('<s:message code="keyword.upload.ok"/>');
+                            $('#uploadPop').modal('hide');
+                            getUserGroupItem();
+                        } else {
+                            ui.alertMsg(result.message);
+                        }
+                    },
+                    error: function () {
+                        ui.alertMsg('<s:message code="keyword.upload.error"/>');
+                    },
+                    complete: function () {
+                        loadingOff("uploadPop");
+                    }
+                }).submit();
+            }
+        });
+    }
 
-            var attach = $('[name=attach]').val();
-            if (attach == "") {
-                ui.alertMsg('<s:message code="keyword.msg.upload.file"/>', function () {
-                    $("#attach").click();
+    function loadingOn(id) {
+        var obj = $('#' + id);
+        var hei = obj.height();
+        $(obj).append('<div class="loading_div"><i class="fa fa-spinner fa-spin fa-3x fa-fw" style="margin-top:' + (hei / 2.5) + 'px"></i></div>');
+        $('.loading_div').css({
+            "position": "absolute",
+            "top": "0px",
+            "left": "15px",
+            "right": "15px",
+            "bottom": "20px",
+            "background-color": "#F0F0F0",
+            "opacity": "0.3",
+            "z-index": "998",
+            "text-align": "center"
+        });
+    }
+
+    function loadingOff(id) {
+        var obj = $('#' + id + ' .loading_div');
+        obj.remove();
+    }
+
+    function fileExtCheck(obj) {
+        var fileName = obj.val();
+        var fileExt = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length).toLowerCase();
+
+        if (!(fileExt == "txt" || fileExt == "text" || fileExt == "csv" || fileExt == "xls" || fileExt == "xlsx")) {
+            ui.alertMsg('<s:message code="keyword.msg.fileext"/>');
+            $('#attachSpan').html('<input type="file" class="form-control" name="attach" id="attach" style="width: 350px; border: 0px;">');
+            $('#attach').change(function () {
+                fileExtCheck($('#attach'));
+            });
+        }
+    }
+
+    function getUserGroup() {
+        if (searchFlag) return false;
+        searchFlag = true;
+        gridGroup.on();
+
+        ui.get({
+            url: 'getAdminUserGroupList.xcn',
+            searchStr: $('#searchStrGroup').val(),
+            success: function (data, total) {
+                gridGroup.setData(data);
+                $('#group_cnt').html("<s:message code="common.msg.listcount"/>: " + gridGroup.data.length);
+                itemClear();
+            },
+            error: function (status, message) {
+                ui.alertMsg(message);
+            },
+            complete: function () {
+                gridGroup.off();
+                searchFlag = false;
+            }
+        });
+    }
+
+    function itemClear() {
+        gridItem.data.remove(0, gridItem.data.length);
+        gridItem.render();
+        $('#item_cnt').html("");
+        gridItem.initData('<s:message code="userGroup.msg.select.group"/>');
+    }
+
+    function getItem() {
+        var rows = gridGroup.getSelectedRows();
+        if (rows == "") {
+            alert('<s:message code="userGroup.msg.select.group"/>')
+            return false;
+        }
+        getUserGroupItem();
+    }
+
+    function getUserGroupItem() {
+        if (searchFlag) return false;
+        var groupSeq = gridGroup.getValue(gridGroup.Row, "groupSeq");
+        searchFlag = true;
+        gridItem.on();
+
+        ui.get({
+            url: 'getAdminUserGroupItemList.xcn',
+            searchStr: $('#searchStrItem').val(),
+            groupSeq: groupSeq,
+            success: function (data, total) {
+                gridItem.setData(data);
+                $('#item_cnt').html("<s:message code="common.msg.listcount"/>: " + gridItem.data.length);
+            },
+            error: function (status, message) {
+                ui.alertMsg(message);
+            },
+            complete: function () {
+                gridItem.off();
+                searchFlag = false;
+            }
+        });
+    }
+
+    function saveUserGroup() {
+        if ($('#groupName').val().ltrim().rtrim() == '') {
+            ui.alertMsg('<s:message code="userGroup.msg.enter.groupname"/>');
+            $('#groupName').focus();
+            return false;
+        }
+        if ($('#header-color').val().ltrim().rtrim() == '') {
+            ui.alertMsg('<s:message code="userGroup.msg.enter.groupname"/>');
+            $('#header-color').focus();
+            return false;
+        }
+        $('#groupColor').val($('#header-color').val());
+        var mode = $('#userGroupPop').attr('mode');
+        var message = mode == 'insert' ? '<s:message code="common.msg.add"/>' : '<s:message code="common.msg.modify"/>';
+        var confirm_msg = mode == 'insert' ? '<s:message code="common.msg.confirm.add"/>' : '<s:message code="common.msg.confirm.modify"/>';
+
+        ui.confirmMsg(confirm_msg, '', '', function (rs) {
+            if (rs) {
+                gridGroup.on();
+                ui.post({
+                    url: mode == 'insert' ? 'insertAdminUserGroup.xcn' : 'updateAdminUserGroup.xcn',
+                    data: $('#userGroupPopForm').serializeAll(),
+                    success: function (data, total) {
+                        ui.alertMsg('<s:message code="common.msg.saved"/>');
+                        $('#userGroupPop').modal('hide');
+                        getUserGroup();
+                    },
+                    error: function (status, message) {
+                        ui.alertMsg(message);
+                    },
+                    complete: function () {
+                        gridGroup.off();
+                    }
                 });
-                return;
             }
+        });
+    }
 
-            var fileExt = attach.substring(attach.lastIndexOf(".") + 1, attach.length).toLowerCase();
-            $('#importGroupSeq').val(gridGroup.getValue(gridGroup.Row, "groupSeq"));
-            ui.confirmMsg('<s:message code="keyword.upload.confirm"/>', '', '', function (rs) {
-                if (rs) {
-                    loadingOn("uploadPop");
-                    $("#uploadForm").ajaxForm({
-                        target: '#upload_file',
-                        beforeSubmit: function () {
-                            $('#attachSpan').html('<input type="file" class="form-control" name="attach" id="attach" style="width: 350px; border: 0px;">');
-                            $('#attach').change(function () {
-                                fileExtCheck($('#attach'));
-                            });
-                        },
-                        success: function (result) {
-                            if (result.success) {
-                                ui.alertMsg('<s:message code="keyword.upload.ok"/>');
-                                $('#uploadPop').modal('hide');
-                                getUserGroupItem();
-                            } else {
-                                ui.alertMsg(result.message);
-                            }
-                        },
-                        error: function () {
-                            ui.alertMsg('<s:message code="keyword.upload.error"/>');
-                        },
-                        complete: function () {
-                            loadingOff("uploadPop");
-                        }
-                    }).submit();
-                }
-            });
+    function deleteUerGroup() {
+        var rows = gridGroup.getSelectedRows();
+        if (rows == '') {
+            ui.alertMsg('<s:message code="common.msg.choose.deleteitem"/>');
+            return false;
         }
-
-        function loadingOn(id) {
-
-            var obj = $('#' + id);
-            var hei = obj.height();
-            $(obj).append('<div class="loading_div"><i class="fa fa-spinner fa-spin fa-3x fa-fw" style="margin-top:' + (hei / 2.5) + 'px"></i></div>');
-            $('.loading_div').css({
-                "position": "absolute",
-                "top": "0px",
-                "left": "15px",
-                "right": "15px",
-                "bottom": "20px",
-                "background-color": "#F0F0F0",
-                "opacity": "0.3",
-                "z-index": "998",
-                "text-align": "center"
-            });
-        }
-
-        function loadingOff(id) {
-            var obj = $('#' + id + ' .loading_div');
-            obj.remove();
-        }
-
-        function fileExtCheck(obj) {
-            var fileName = obj.val();
-            var fileExt = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length).toLowerCase();
-
-            if (!(fileExt == "txt" || fileExt == "text" || fileExt == "csv" || fileExt == "xls" || fileExt == "xlsx")) {
-                ui.alertMsg('<s:message code="keyword.msg.fileext"/>');
-                $('#attachSpan').html('<input type="file" class="form-control" name="attach" id="attach" style="width: 350px; border: 0px;">');
-                $('#attach').change(function () {
-                    fileExtCheck($('#attach'));
+        var names = gridGroup.getSelectedKey('groupName');
+        ui.confirmMsg('<s:message code="common.msg.confirm.deleteitem" arguments="'+names+'" argumentSeparator="|"/>', '', '', function (rs) {
+            if (rs) {
+                gridGroup.on();
+                ui.get({
+                    url: 'deleteAdminUserGroup.xcn',
+                    delData: JSON.stringify(rows),
+                    success: function (data, total) {
+                        ui.alertMsg('<s:message code="common.msg.deleted"/>');
+                        getUserGroup();
+                    },
+                    error: function (status, message) {
+                        ui.alertMsg(message);
+                    },
+                    complete: function () {
+                        gridGroup.off();
+                    }
                 });
             }
+        });
+    }
+
+    function getUserData() {
+        gridSelectUser.on();
+        var userTypeNm = $('#popUserType option:selected').text()
+        var searchTypeNm = $('#popSearchType option:selected').text()
+        if (adminType == "C") {
+            $('#popUserType').val('Y');
+            $('#popUserType').prop('disabled', true);
+        } else {
+            $('#popUserType').prop('disabled', false);
         }
+        var userType = $('#popUserType').val();
 
-        function getUserGroup() {
-            if (searchFlag) return false;
+        if (userTypeNm == "- <s:message code="userInfo.usertype"/> -") userTypeNm = '<s:message code="userInfo.all"/>';
+        var searchType = $('#popSearchType').val();
+        if (searchTypeNm == "- <s:message code="userInfo.all"/> -") searchTypeNm = '<s:message code="userInfo.all"/>';
+        var searchStr = $('#popSearchStr').val();
 
-            searchFlag = true;
-            gridGroup.on();
-            ui.get({
-                url: 'getAdminUserGroupList.xcn',
-                searchStr: $('#searchStrGroup').val(),
-                success: function (data, total) {
-                    gridGroup.setData(data);
-                    $('#group_cnt').html("<s:message code="common.msg.listcount"/>: " + gridGroup.data.length);
-                    itemClear();
-                },
-                error: function (status, message) {
-                    ui.alertMsg(message);
-                },
-                complete: function () {
-                    gridGroup.off();
-                    searchFlag = false;
-                }
-            });
-        }
-
-        function itemClear() {
-            gridItem.data.remove(0, gridItem.data.length);
-            gridItem.render();
-            $('#item_cnt').html("");
-            gridItem.initData('<s:message code="userGroup.msg.select.group"/>');
-        }
-
-        function getItem() {
-            var rows = gridGroup.getSelectedRows();
-            if (rows == "") {
-                alert('<s:message code="userGroup.msg.select.group"/>')
-                return false;
+        ui.get({
+            url: 'getUserList.xcn',
+            userTypeNm: userTypeNm,
+            searchTypeNm: searchTypeNm,
+            userType: userType,
+            searchType: searchType,
+            searchStr: searchStr,
+            logYn: "N",
+            success: function (data, total) {
+                gridSelectUser.setData(data);
+            },
+            error: function (status, message) {
+                ui.alertMsg(message);
+            },
+            complete: function () {
+                gridSelectUser.off();
             }
-            getUserGroupItem();
+        });
+    }
+
+    function saveTextUploadItem() {
+        var value = $('#textUploadTextArea').val();
+        var vs = value.split('\n');
+
+        if (value.replaceAll('\n', '').trimAll() == '') {
+            ui.alertMsg('<s:message code="common.msg.input.contents"/>');
+            return;
+        }
+        if (gridItem.data.length + vs.length > 1000) {
+            ui.alertMsg('<s:message code="userGroup.msg.user.max"/>');
+            return false;
+        }
+        var rows = [];
+        for (var i = 0; i < vs.length; i++) {
+            rows.push({userId: vs[i].trimAll()});
         }
 
-        function getUserGroupItem() {
-            if (searchFlag) return false;
-            var groupSeq = gridGroup.getValue(gridGroup.Row, "groupSeq");
-
-            searchFlag = true;
-            gridItem.on();
-            ui.get({
-                url: 'getAdminUserGroupItemList.xcn',
-                searchStr: $('#searchStrItem').val(),
-                groupSeq: groupSeq,
-                success: function (data, total) {
-                    gridItem.setData(data);
-                    $('#item_cnt').html("<s:message code="common.msg.listcount"/>: " + gridItem.data.length);
-                },
-                error: function (status, message) {
-                    ui.alertMsg(message);
-                },
-                complete: function () {
-                    gridItem.off();
-                    searchFlag = false;
-                }
-            });
-        }
-
-        function saveUserGroup() {
-
-            if ($('#groupName').val().ltrim().rtrim() == '') {
-                ui.alertMsg('<s:message code="userGroup.msg.enter.groupname"/>');
-                $('#groupName').focus();
-                return false;
-            }
-            if ($('#header-color').val().ltrim().rtrim() == '') {
-                ui.alertMsg('<s:message code="userGroup.msg.enter.groupname"/>');
-                $('#header-color').focus();
-                return false;
-            }
-
-            $('#groupColor').val($('#header-color').val());
-
-            var mode = $('#userGroupPop').attr('mode');
-            var message = mode == 'insert' ? '<s:message code="common.msg.add"/>' : '<s:message code="common.msg.modify"/>';
-            var confirm_msg = mode == 'insert' ? '<s:message code="common.msg.confirm.add"/>' : '<s:message code="common.msg.confirm.modify"/>';
-            ui.confirmMsg(confirm_msg, '', '', function (rs) {
-                if (rs) {
-                    gridGroup.on();
-                    ui.post({
-                        url: mode == 'insert' ? 'insertAdminUserGroup.xcn' : 'updateAdminUserGroup.xcn',
-                        data: $('#userGroupPopForm').serializeAll(),
-                        success: function (data, total) {
-                            ui.alertMsg('<s:message code="common.msg.saved"/>');
-                            $('#userGroupPop').modal('hide');
-                            getUserGroup();
-                        },
-                        error: function (status, message) {
-                            ui.alertMsg(message);
-                        },
-                        complete: function () {
-                            gridGroup.off();
+        ui.confirmMsg('<s:message code="common.msg.confirm.add"/>', '', '', function (rs) {
+            if (rs) {
+                ui.get({
+                    url: "insertAdminTextUploadItem.xcn",
+                    groupSeq: gridGroup.getValue(gridGroup.Row, 'groupSeq'),
+                    addData: JSON.stringify(rows),
+                    success: function (data, total) {
+                        if (data == 0) {
+                            ui.alertMsg('<s:message code="keyword.upload.nocontent"/>');
+                        } else {
+                            ui.alertMsg('<s:message code="keyword.upload.ok"/>');
+                            $('#textUploadPop').modal('hide');
+                            getUserGroupItem();
                         }
-                    });
-                }
-            });
-        }
-
-        function deleteUerGroup() {
-            var rows = gridGroup.getSelectedRows();
-            if (rows == '') {
-                ui.alertMsg('<s:message code="common.msg.choose.deleteitem"/>');
-                return false;
+                    },
+                    error: function (status, message) {
+                        ui.alertMsg(message);
+                    },
+                    complete: function () {
+                    }
+                });
             }
-            var names = gridGroup.getSelectedKey('groupName');
-            ui.confirmMsg('<s:message code="common.msg.confirm.deleteitem" arguments="'+names+'" argumentSeparator="|"/>', '', '', function (rs) {
-                if (rs) {
-                    gridGroup.on();
-                    ui.get({
-                        url: 'deleteAdminUserGroup.xcn',
-                        delData: JSON.stringify(rows),
-                        success: function (data, total) {
-                            ui.alertMsg('<s:message code="common.msg.deleted"/>');
-                            getUserGroup();
-                        },
-                        error: function (status, message) {
-                            ui.alertMsg(message);
-                        },
-                        complete: function () {
-                            gridGroup.off();
-                        }
-                    });
-                }
-            });
+        });
+    }
+
+    function saveUserGroupItem() {
+        var rows = gridSelectUser.getSelectedRows();
+        $('#saveUserBtn').prop('disabled', true);
+        if (rows.length == 0) {
+            ui.alertMsg('<s:message code="common.msg.noselect"/>');
+            $('#saveUserBtn').prop('disabled', false);
+            return;
         }
 
-        function getUserData() {
+        if (gridItem.data.length + rows.length > 1000) {
+            ui.alertMsg('<s:message code="userGroup.msg.user.max"/>');
+            $('#saveUserBtn').prop('disabled', false);
+            return false;
+        }
 
-            gridSelectUser.on();
-
-            var userTypeNm = $('#popUserType option:selected').text()
-            var searchTypeNm = $('#popSearchType option:selected').text()
-            if (adminType == "C") {
-                $('#popUserType').val('Y');
-                $('#popUserType').prop('disabled', true);
+        ui.confirmMsg('<s:message code="common.msg.confirm.add"/>', '', '', function (rs) {
+            if (rs) {
+                gridSelectUser.on();
+                ui.get({
+                    url: "insertAdminUserGroupItem.xcn",
+                    groupSeq: gridGroup.getValue(gridGroup.Row, 'groupSeq'),
+                    addData: JSON.stringify(rows),
+                    success: function (data, total) {
+                        ui.alertMsg('<s:message code="common.msg.saved"/>');
+                        $("#selectPop").modal('hide');
+                        getUserGroupItem();
+                    },
+                    error: function (status, message) {
+                        ui.alertMsg(message);
+                    },
+                    complete: function () {
+                        gridSelectUser.off();
+                        $('#saveUserBtn').prop('disabled', false);
+                    }
+                });
             } else {
-                $('#popUserType').prop('disabled', false);
-            }
-            var userType = $('#popUserType').val();
-
-            if (userTypeNm == "- <s:message code="userInfo.usertype"/> -") userTypeNm = '<s:message code="userInfo.all"/>';
-            var searchType = $('#popSearchType').val();
-            if (searchTypeNm == "- <s:message code="userInfo.all"/> -") searchTypeNm = '<s:message code="userInfo.all"/>';
-            var searchStr = $('#popSearchStr').val();
-
-            ui.get({
-                url: 'getUserList.xcn',
-                userTypeNm: userTypeNm,
-                searchTypeNm: searchTypeNm,
-                userType: userType,
-                searchType: searchType,
-                searchStr: searchStr,
-                logYn: "N",
-                success: function (data, total) {
-                    gridSelectUser.setData(data);
-                },
-                error: function (status, message) {
-                    ui.alertMsg(message);
-                },
-                complete: function () {
-                    gridSelectUser.off();
-                }
-            });
-        }
-
-        function saveTextUploadItem() {
-            var value = $('#textUploadTextArea').val();
-            var vs = value.split('\n');
-
-            if (value.replaceAll('\n', '').trimAll() == '') {
-                ui.alertMsg('<s:message code="common.msg.input.contents"/>');
-                return;
-            }
-
-            if (gridItem.data.length + vs.length > 1000) {
-                ui.alertMsg('<s:message code="userGroup.msg.user.max"/>');
-                return false;
-            }
-
-            var rows = [];
-            for (var i = 0; i < vs.length; i++) {
-                rows.push({userId: vs[i].trimAll()});
-            }
-
-            ui.confirmMsg('<s:message code="common.msg.confirm.add"/>', '', '', function (rs) {
-                if (rs) {
-                    ui.get({
-                        url: "insertAdminTextUploadItem.xcn",
-                        groupSeq: gridGroup.getValue(gridGroup.Row, 'groupSeq'),
-                        addData: JSON.stringify(rows),
-                        success: function (data, total) {
-                            if (data == 0) {
-                                ui.alertMsg('<s:message code="keyword.upload.nocontent"/>');
-                            } else {
-                                ui.alertMsg('<s:message code="keyword.upload.ok"/>');
-                                $('#textUploadPop').modal('hide');
-                                getUserGroupItem();
-                            }
-                        },
-                        error: function (status, message) {
-                            ui.alertMsg(message);
-                        },
-                        complete: function () {
-                        }
-                    });
-                }
-            });
-        }
-
-        function saveUserGroupItem() {
-            var rows = gridSelectUser.getSelectedRows();
-            $('#saveUserBtn').prop('disabled', true);
-            if (rows.length == 0) {
-                ui.alertMsg('<s:message code="common.msg.noselect"/>');
                 $('#saveUserBtn').prop('disabled', false);
-                return;
             }
+        });
+    }
 
-            if (gridItem.data.length + rows.length > 1000) {
-                ui.alertMsg('<s:message code="userGroup.msg.user.max"/>');
-                $('#saveUserBtn').prop('disabled', false);
-                return false;
-            }
-
-            ui.confirmMsg('<s:message code="common.msg.confirm.add"/>', '', '', function (rs) {
-                if (rs) {
-                    gridSelectUser.on();
-                    ui.get({
-                        url: "insertAdminUserGroupItem.xcn",
-                        groupSeq: gridGroup.getValue(gridGroup.Row, 'groupSeq'),
-                        addData: JSON.stringify(rows),
-                        success: function (data, total) {
-                            ui.alertMsg('<s:message code="common.msg.saved"/>');
-                            $("#selectPop").modal('hide');
-                            getUserGroupItem();
-                        },
-                        error: function (status, message) {
-                            ui.alertMsg(message);
-                        },
-                        complete: function () {
-                            gridSelectUser.off();
-                            $('#saveUserBtn').prop('disabled', false);
-                        }
-                    });
-                } else {
-                    $('#saveUserBtn').prop('disabled', false);
-                }
-            });
+    function saveUserGroupItemDirect() {
+        var rows = gridSelectUser.getSelectedRows();
+        $('#saveUserBtn').prop('disabled', true);
+        if (rows.length == 0) {
+            ui.alertMsg('<s:message code="common.msg.noselect"/>');
+            $('#saveUserBtn').prop('disabled', false);
+            return;
         }
 
-        function saveUserGroupItemDirect() {
-            var rows = gridSelectUser.getSelectedRows();
-            $('#saveUserBtn').prop('disabled', true);
-            if (rows.length == 0) {
-                ui.alertMsg('<s:message code="common.msg.noselect"/>');
-                $('#saveUserBtn').prop('disabled', false);
-                return;
-            }
-
-            if (gridItem.data.length + rows.length > 1000) {
-                ui.alertMsg('<s:message code="userGroup.msg.user.max"/>');
-                $('#saveUserBtn').prop('disabled', false);
-                return false;
-            }
-
-            gridSelectUser.on();
-            ui.get({
-                url: "insertAdminUserGroupItem.xcn",
-                groupSeq: gridGroup.getValue(gridGroup.Row, 'groupSeq'),
-                addData: JSON.stringify(rows),
-                success: function (data, total) {
-                    ui.notify('<s:message code="interest.message.useradd.info"/>');
-                    getUserGroupItem();
-                },
-                error: function (status, message) {
-                    ui.alertMsg(message);
-                },
-                complete: function () {
-                    gridSelectUser.off();
-                    $('#saveUserBtn').prop('disabled', false);
-                }
-            });
+        if (gridItem.data.length + rows.length > 1000) {
+            ui.alertMsg('<s:message code="userGroup.msg.user.max"/>');
+            $('#saveUserBtn').prop('disabled', false);
+            return false;
         }
 
-        function deleteUserGroupItem() {
-            var rows = gridItem.getSelectedRows();
-            if (rows == '') {
-                ui.alertMsg('<s:message code="common.msg.choose.deleteitem"/>');
-                return false;
+        gridSelectUser.on();
+        ui.get({
+            url: "insertAdminUserGroupItem.xcn",
+            groupSeq: gridGroup.getValue(gridGroup.Row, 'groupSeq'),
+            addData: JSON.stringify(rows),
+            success: function (data, total) {
+                ui.notify('<s:message code="interest.message.useradd.info"/>');
+                getUserGroupItem();
+            },
+            error: function (status, message) {
+                ui.alertMsg(message);
+            },
+            complete: function () {
+                gridSelectUser.off();
+                $('#saveUserBtn').prop('disabled', false);
             }
-            var names = gridItem.getSelectedKey('userNm');
-            ui.confirmMsg('<s:message code="common.msg.confirm.deleteitem" arguments="'+names+'" argumentSeparator="|"/>', '', '', function (rs) {
-                if (rs) {
-                    gridItem.on();
-                    ui.get({
-                        url: 'deleteAdminUserGroupItem.xcn',
-                        delData: JSON.stringify(rows),
-                        success: function (data, total) {
-                            ui.alertMsg('<s:message code="common.msg.deleted"/>');
-                            getUserGroupItem();
-                        },
-                        error: function (status, message) {
-                            ui.alertMsg(message);
-                        },
-                        complete: function () {
-                            gridItem.off();
-                        }
-                    });
-                }
-            });
+        });
+    }
+
+    function deleteUserGroupItem() {
+        var rows = gridItem.getSelectedRows();
+        if (rows == '') {
+            ui.alertMsg('<s:message code="common.msg.choose.deleteitem"/>');
+            return false;
         }
-	</script>
-</head>
-<body class="mini-navbar">
-
-
+        var names = gridItem.getSelectedKey('userNm');
+        ui.confirmMsg('<s:message code="common.msg.confirm.deleteitem" arguments="'+names+'" argumentSeparator="|"/>', '', '', function (rs) {
+            if (rs) {
+                gridItem.on();
+                ui.get({
+                    url: 'deleteAdminUserGroupItem.xcn',
+                    delData: JSON.stringify(rows),
+                    success: function (data, total) {
+                        ui.alertMsg('<s:message code="common.msg.deleted"/>');
+                        getUserGroupItem();
+                    },
+                    error: function (status, message) {
+                        ui.alertMsg(message);
+                    },
+                    complete: function () {
+                        gridItem.off();
+                    }
+                });
+            }
+        });
+    }
+</script>
 
 <div class="modal" id="userGroupPop" aria-labelledby="userGroupPop">
 	<div class="modal-content">
@@ -544,10 +524,18 @@
 				<span class="close" data-dismiss="modal">&times;</span>
 			</div>
 			<div class="modalCon">
+				<div class="modalTop">
+					<h3>관심사용자 추가</h3>
+					<p>
+						<span class="red_dot veralign_middle"></span>
+						필수 입력 사항입니다.
+					</p>
+				</div>
 				<div class="modalbody">
 					<div class="row">
 						<div class="col-35">
 							<label for="groupName" class="fname"><s:message code="userGroup.groupname"/></label>
+							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
 							<input type="text" class="w100" name="groupName" id="groupName" maxlength="55">
@@ -556,25 +544,19 @@
 					</div>
 					<div class="row">
 						<div class="col-35">
-							<label for="groupName" class="control-label"><s:message
-									code="common.msg.color.select"/></label>
-							<br/>
-							<div style="left: -5px; line-height: 24px;" class="color-picker" id="picker" data-target="header-color">
-							</div>
-							<input type="hidden" class="form-control" name="groupColor" id="groupColor"/>
+							<label for="groupName" class="control-label"><s:message code="common.msg.color.select"/></label>
+							<span class="red_dot"></span>
 						</div>
-
-<%--							<div class="color-picker" id="picker"--%>
-<%--							     data-target="header-color"></div>--%>
-<%--							<input type="hidden" class="form-control" name="groupColor" id="groupColor"/>--%>
-
+							<div class="color-picker" id="picker" data-target="header-color"></div>
+							<input type="hidden" class="form-control" name="groupColor" id="groupColor"/>
 					</div>
 				</div>
+				<div class="info">
+					안내 사항
+				</div>
 				<div class="modalfooter">
-					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message
-							code="common.msg.close"/></button>
-					<button type="button" class="pop_btn02" accesskey="S" id="groupSavePopBtn"><s:message
-							code="common.msg.save"/></button>
+					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+					<button type="button" class="pop_btn02" accesskey="S" id="groupSavePopBtn"><s:message code="common.msg.save"/></button>
 				</div>
 			</div>
 		</form>
@@ -609,130 +591,121 @@
 						</select>
 					</div>
 					<div class="input-group">
-						<input type="text" class="w100"
-						       placeholder="<s:message code="common.msg.searchMsg"/>" id="popSearchStr"
-						       style="width: 150px;">
-						<button class="form_btn01" type="button" accesskey="Q"
-						        id="popSearchBtn">조회
+						<input type="text" class="w100" placeholder="<s:message code="common.msg.searchMsg"/>" id="popSearchStr" style="width: 150px;">
+						<button class="form_btn01" type="button" accesskey="Q" id="popSearchBtn">조회
 						</button>
 						<div>
 						</div>
 					</div>
 				</div>
-				<div class="contentSub">
-					<div id="userSelectGrid" class="slickGrid gridArea"  style="height: 300px; height: 300px;"></div>
+				<div class="contentSub" style="padding: 0px;">
+					<div id="userSelectGrid" class="slickGrid gridArea" style="height: 300px; height: 300px;"></div>
 				</div>
 			</div>
 			<div class="modalfooter">
 				<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal" id="userSave"><s:message code="common.msg.close"/></button>
-				<button type="button" class="pop_btn02" accesskey="S" id="saveUserBtn" >선택데이터 저장</button>
+				<button type="button" class="pop_btn02" accesskey="S" id="saveUserBtn">선택데이터 저장</button>
 			</div>
 		</div>
-
 	</div>
-
 </div>
 
 <div id="upload_file"></div>
-<div class="modal" id="uploadPop" role="dialog" aria-labelledby="uploadPop">
+<div class="modal" id="uploadPop" aria-labelledby="uploadPop">
 	<div class="modal-content">
+		<form method="post" id="uploadForm" enctype="multipart/form-data" target="upload_file">
+			<div class="modalHead">
+				<h2><s:message code="DATA_MONITOR.INTEREST_USER"/>-<s:message code="keyword.msg.upload"/></h2>
+				<span class="close" data-dismiss="modal">&times;</span>
+			</div>
+			<div class="modalCon">
+				<div class="modalbody">
+					<div class="row">
+						<div class="col-35">
+							<label for="encoding" class="fname"><s:message code="bodyview.charset"/></label>
+						</div>
+						<div class="col-65">
+							<select class="optiotab" id="encoding" name="encoding">
+								<option value="utf-8">UTF-8</option>
+								<option value="euc-kr">EUC-KR</option>
+							</select>
+							<input type="hidden" class="" name="importGroupSeq" id="importGroupSeq" maxlength="300">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-35">
+							<label for="keywordDesc" class="fname"><s:message code="keyword.select.file"/></label>
+						</div>
+						<div class="col-65">
+							<span id="attachSpan"><input type="file" class="form-control" name="attach" id="attach" style="width: 350px; border: 0px; padding: 0px;"></span>
+						</div>
+					</div>
+				</div>
+				<div class="info"> 안내 사항
+					<div class="form-inline" style="padding-left: 10px;">1) <s:message code="interest.message.upload.info1"/></div>
+					<div class="form-inline" style="padding-left: 10px;">2) <s:message code="interest.message.upload.info2"/></div>
+					<div class="form-inline" style="padding-left: 10px;">3) <s:message code="interest.message.upload.info3"/></div>
+					<div class="form-inline" style="padding-left: 10px;">4) <s:message code="interest.message.upload.info4"/></div>
+					<div style="padding-left: 10px;">5) <s:message code="interest.message.upload.info5"/></div>
+				</div>
+				<div class="modalfooter">
+					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+					<button type="button" class="pop_btn02" accesskey="S"><s:message code="common.msg.save"/></button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+
+<div class="modal" id="textUploadPop" aria-labelledby="textUploadPop">
+	<div class="modal-content" style="width: 450px; height: 700px;">
 		<div class="modalHead">
-			<h2><s:message code="DATA_MONITOR.INTEREST_USER"/>-<s:message code="keyword.msg.upload"/></h2>
+			<h2><s:message code="DATA_MONITOR.INTEREST_USER"/>-Text Upload</h2>
 			<span class="close" data-dismiss="modal">&times;</span>
+		</div>
+		<div class="modalCon">
+			<div class="modalbody" style="height: 430px;">
+				<textarea rows="110" cols="49" style="height:380px; border: 1px solid #ccc; " id="textUploadTextArea"></textarea>
+			</div>
+			<div class="info"> 안내 사항
+				<div class="form-inline" style="padding-left: 10px;">1) <s:message code="interest.message.upload.info3"/></div>
+				<div class="form-inline" style="padding-left: 10px;">2) <s:message code="interest.message.upload.info4"/></div>
+				<div class="form-inline" style="padding-left: 10px;">3) <s:message code="interest.message.upload.info5"/></div>
+				<div class="modal-footer"></div>
+			</div>
 
-		</div>
-		<div class="modal-body">
-			<form method="post" id="uploadForm" enctype="multipart/form-data" target="upload_file">
-				<div class="form-group form-inline">
-					<label for="encoding" class="control-label col-xs-3"><s:message
-							code="bodyview.charset"/></label>
-					<select class="form-control input-sm" id="encoding" name="encoding">
-						<option value="utf-8">UTF-8</option>
-						<option value="euc-kr">EUC-KR</option>
-					</select>
-					<input type="hidden" class="form-control" name="importGroupSeq" id="importGroupSeq"
-					       maxlength="300">
-				</div>
-				<div class="form-group form-inline">
-					<label for="keywordDesc" class="control-label col-xs-3"><s:message
-							code="keyword.select.file"/></label>
-					<span id="attachSpan"><input type="file" class="form-control" name="attach" id="attach"
-					                             style="width: 350px; border: 0px; padding: 0px;"></span>
-				</div>
-				<div class="form-inline" style="margin-top: 20px; padding-left: 10px;">1) <s:message
-						code="interest.message.upload.info1"/></div>
-				<div class="form-inline" style="padding-left: 10px;">2) <s:message
-						code="interest.message.upload.info2"/></div>
-				<div class="form-inline" style="padding-left: 10px;">3) <s:message
-						code="interest.message.upload.info3"/></div>
-				<div class="form-inline" style="padding-left: 10px;">4) <s:message
-						code="interest.message.upload.info4"/></div>
-				<div class="form-inline" style="padding-left: 10px;">5) <s:message
-						code="interest.message.upload.info5"/></div>
-			</form>
-		</div>
-		<div class="modal-footer">
-			<button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal"><s:message
-					code="common.msg.close"/></button>
-			<button type="button" class="btn btn-primary uploadPopBtn" accesskey="S"><s:message
-					code="common.msg.save"/></button>
+			<div class="modalfooter">
+				<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+				<button type="button" class="pop_btn02" accesskey="S" id="saveTextUploadBtn"><s:message code="common.msg.save"/></button>
+			</div>
 		</div>
 	</div>
 </div>
 
-<div class="modal fade" id="textUploadPop" tabindex="-1" role="dialog" aria-labelledby="textUploadPop">
-	<div class="modal-dialog" role="document" style="width: 420px">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-				<h3 class="modal-title"><s:message code="DATA_MONITOR.INTEREST_USER"/>-Text Upload</h3>
-			</div>
-			<div class="modal-body">
-				<textarea rows="25" cols="47" style="border: 1px solid #ccc; " id="textUploadTextArea"></textarea>
-			</div>
-			<div class="form-inline" style="padding-left: 10px;">1) <s:message
-					code="interest.message.upload.info3"/></div>
-			<div class="form-inline" style="padding-left: 10px;">2) <s:message
-					code="interest.message.upload.info4"/></div>
-			<div class="form-inline" style="padding-left: 10px;">3) <s:message
-					code="interest.message.upload.info5"/></div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal"><s:message
-						code="common.msg.close"/></button>
-				<button type="button" class="btn btn-primary" accesskey="S" id="saveTextUploadBtn"><s:message
-						code="common.msg.save"/></button>
-			</div>
-		</div>
-	</div>
-</div>
 
 <div class="container">
 	<div class="searchArea">
 		<div style="width:470px; float: left">
 			<div class="searchSub" style="width: 470px;">
 				<div>
-					<input type="text" placeholder="관심사용자 그룹을 입력하세요" id="searchStrGroup"
-					       style="width: 220px;">
+					<input type="text" placeholder="관심사용자 그룹을 입력하세요" id="searchStrGroup" style="width: 220px;">
 					<button class="form_btn01" type="button" accesskey="G" id="searchGroupBtn">조회</button>
 				</div>
-
 				<button type="button" class="btn01" accesskey="I" id="groupInsertBtn"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
 				<button type="button" class="btn02" accesskey="D" id="groupDeleteBtn"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
 			</div>
-			<div class="content xcn_full" style="height: 800px; background-color: transparent">
-				<div class="contentSub" style="height: 800px">
-					<div id="userGroupListGrid" class="slickGrid gridArea" style="height: 800px;"></div>
+			<div class="content xcn_full" style="background-color: transparent">
+				<div class="contentSub" style="padding: 0px;">
+					<div id="userGroupListGrid" class="slickGrid gridArea"></div>
 				</div>
 			</div>
 		</div>
 
-		<div style="width:calc(100% - 470px); float: left">
+		<div style="width:calc(100% - 470px); padding-left: 16px; float: left">
 			<div class="searchSub" style="width:calc(100% - 470px) ">
 				<div>
-					<input type="text" placeholder="<s:message code="common.msg.searchMsg"/>" id="searchStrItem"
-					       style="width: 280px;">
+					<input type="text" placeholder="<s:message code="common.msg.searchMsg"/>" id="searchStrItem" style="width: 280px;">
 					<button class="form_btn01" type="button" accesskey="K" id="searchStrItemBtn">조회</button>
 				</div>
 				<button type="button" class="btn01" accesskey="A" id="itemInsertBtn"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
@@ -740,9 +713,9 @@
 				<button type="button" class="btn03" accesskey="U" id="uploadBtn"><img src="<c:url value="/img/subBtn_upload.png"/>" alt="업로드">Upload</button>
 				<button type="button" class="btn05" accesskey="U" id="textUploadBtn"><img src="<c:url value="/img/subBtn_textupload.png"/>" alt="Text Upload">Text Upload</button>
 			</div>
-			<div class="content xcn_full" style="height: 800px; background-color: transparent">
-				<div class="contentSub " style="height: 800px">
-					<div id="userGroupItmeGrid" class="slickGrid gridArea" style="height: 800px"></div>
+			<div class="content xcn_full" style=" background-color: transparent">
+				<div class="contentSub " style="padding:0 ">
+					<div id="userGroupItmeGrid" class="slickGrid gridArea"></div>
 				</div>
 			</div>
 		</div>
@@ -751,7 +724,7 @@
 
 
 <script type="text/javascript">
-    var gridGroup = new Xgrid('userGroupListGrid', contextRoot,30);
+    var gridGroup = new Xgrid('userGroupListGrid', contextRoot, 30);
     gridGroup.onCheckBox();
     gridGroup.autoNumber();
     gridGroup.colAdd('groupName', '<s:message code="userGroup.header.groupname"/>', 190, 'left', false, 'nomal');
@@ -783,7 +756,7 @@
         getUserGroupItem();
     }
 
-    var gridItem = new Xgrid('userGroupItmeGrid', contextRoot,30);
+    var gridItem = new Xgrid('userGroupItmeGrid', contextRoot, 30);
     gridItem.onCheckBox();
     gridItem.autoNumber();
     gridItem.colAdd('userId', '<s:message code="common.msg.id"/>', 120, 'center', false, 'nomal');
@@ -802,7 +775,7 @@
         else return '';
     });
     gridItem.loadExportMenu('<s:message code="userGroup.navi.title2"/>');
-    gridItem.loadHeader(false);
+    gridItem.loadHeader(true);
     gridItem.initData('<s:message code="userGroup.msg.select.group"/>');
 
     //User Group Add
@@ -834,7 +807,7 @@
             getUserGroupItem();
         }
     }
-    gridSelectUser.loadHeader(false);
+    gridSelectUser.loadHeader(true);
 </script>
-</body>
-</html>
+<script type="text/javascript" src="<c:url value="/js/colorpicker-colors.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/colorpicker.js"/>"></script>
