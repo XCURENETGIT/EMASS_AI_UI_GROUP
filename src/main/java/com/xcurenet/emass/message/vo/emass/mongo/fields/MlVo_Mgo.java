@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Nullable
-public class MlVo_Mgo {
+public class MlVo_Mgo implements Comparable<MlVo_Mgo> {
    @Value("mlConfdClass")
    private int	mlConfdClass;
    @Value("mlConfdClassOrg")
@@ -20,6 +20,19 @@ public class MlVo_Mgo {
    private String	mlConfdUserId;
    @Value("mlConfdProb")
    private float	mlConfdProb;
+
+
+
+   public int compareTo(MlVo_Mgo j) {
+      if(this.mlConfdProb < j.mlConfdProb) {
+         return 1;
+      } else if(this.mlConfdProb > j.mlConfdProb) {
+         return -1;
+      } else {
+         return 0;
+      }
+   }
+
 
 }
 

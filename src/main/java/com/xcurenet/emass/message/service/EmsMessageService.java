@@ -3,6 +3,8 @@ package com.xcurenet.emass.message.service;
 import com.xcurenet.code.service.CodeVO;
 import com.xcurenet.emass.message.vo.emass.mongo.EmassMessage;
 import com.xcurenet.emass.message.vo.emass.mongo.fields.CheckedVo_Mgo;
+import com.xcurenet.emass.message.vo.emass.mongo.fields.PiVo_Mgo;
+import com.xcurenet.emass.message.vo.emass.mongo.fields.RecvVo_Mgo;
 import org.apache.commons.mail.EmailException;
 
 import java.util.List;
@@ -22,9 +24,12 @@ public interface EmsMessageService {
 	
 	public EmassMessage getEmassMessageNew(final String adminId, final String msgId, final String firstAdminYn, final String adminType);
 
-	//public List<EmsRecvVO> getEmassUserInfo(final String msgId);
+	/* recv 리스트 정보 */
+	public RecvVo_Mgo getEmassRecvInfo(final String msgId);
+	public RecvVo_Mgo getEmassRecvInfo(final String msgId, final String uType);
 
-	public List<EmsRecvVO> getEmassUserInfo(final String msgId, final String uType);
+
+
 
 	public List<EmsAttachVO> getEmassAttachInfoConsent(final String msgId, final String firstAdminYn, final String adminType);
 	
@@ -36,7 +41,7 @@ public interface EmsMessageService {
 
 	//public EmsAttachTextVO getEmassAttachText(final String msgId, final String attachId);
 
-	public List<EmsPiVO> getEmassPattern(final String msgId);
+	public List<PiVo_Mgo> getEmassPattern(final String msgId);
 
 	public List<EmsPiDetailVO> getEmassPatternDetail(final String msgId, final String piId, final String type, final String attachName);
 

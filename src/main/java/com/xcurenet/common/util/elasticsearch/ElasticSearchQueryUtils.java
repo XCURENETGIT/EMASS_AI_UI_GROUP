@@ -1248,6 +1248,9 @@ public class ElasticSearchQueryUtils {
 		  SearchSourceBuilder result = null;
             switch (Common.nvl(searchParam.get(ElasticSearchCommon.SEARCH_TYPE))) {
                 /* 검색 타입 조건 */
+				case ElasticSearchCommon.SEARCH_TYPE_MESSAGE: //메세지 검색시
+					result = initMessageSearchSource(searchParam, adminId);
+					break;
 	            case ElasticSearchCommon.SEARCH_TYPE_MESSENGER: //메세징 리스트 검색시
 		            result = initMessengerSearchSource(searchParam, adminId);
 		            break;
@@ -1416,8 +1419,9 @@ public class ElasticSearchQueryUtils {
 			BoolQueryBuilder ceoQuery = getCeoFilterQuery();
 
 			// 권한 filter 추가
-			if(null != ceoQuery) complateQuery.must(authComQuery);
+			if(null != authComQuery) complateQuery.must(authComQuery);
 			if(null != ceoQuery) complateQuery.must(ceoQuery);
+
 			/*##########################################################################################*/
 
 			complateQuery.must(secondQuery);  // 사용할 쿼리 merge 완료
@@ -1439,10 +1443,8 @@ public class ElasticSearchQueryUtils {
 		return searchSourceBuilder;
 	}
 
-
 /*
     메세징모아보기*/
-
 	public void setMessengerGroupParamReady(Map<String,Object> searchParam) {
 		elasticSearchParam = new ElasticSearchParam();
 		if(!Common.isEmpty(searchParam.get("conditions"))){

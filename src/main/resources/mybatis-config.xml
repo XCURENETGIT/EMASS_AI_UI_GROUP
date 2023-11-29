@@ -92,6 +92,8 @@
 		<typeAlias alias="searchLogVO" type="com.xcurenet.emass.searchLog.service.SearchLogVO" />
 		
 		<typeAlias alias="userGroupVO" type="com.xcurenet.user.service.UserGroupVO" />
+
+		<typeAlias alias="PersCodeInfo" type="com.xcurenet.user.service.PersCodeInfo" />
 		
 		<typeAlias alias="adminUserGroupVO" type="com.xcurenet.interestUser.service.AdminUserGroupVO" />
 		

@@ -1295,11 +1295,10 @@ public class EmsMessageController {
 		String userId = Common.getAdminId(session);
 		EmassMessage emass = emsMessageService.getEmassMessageNew(Common.getAdminId(request), msgid, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
 
-		emsSearchService.setRead(msgid,userId);
 		/* 읽음 처리 */
-	//	if (emass != null && emass.isConsentFlag()) {
-	//		emsSearchService.setRead(msgid,userId);
-	//	}
+		if (emass != null && emass.isConsentFlag()) {
+			emsSearchService.setRead(msgid,userId);
+		}
 
 		return new XcnResponseVO(XcnRspCode.OK, emass);
 	}
@@ -1311,7 +1310,8 @@ public class EmsMessageController {
 	public XcnResponseVO getEmassUserInfo(final HttpServletRequest request, final HttpSession session) throws Exception {
 		String msgId = Common.nvl(request.getParameter("msgId"));
 		String uType = Common.nvl(request.getParameter("uType"));
-		return new XcnResponseVO(XcnRspCode.OK, emsMessageService.getEmassUserInfo(msgId, uType));
+	//	return new XcnResponseVO(XcnRspCode.OK, emsMessageService.getEmassUserInfo(msgId, uType));
+		return null;
 	}
 
 	@RequestMapping(value = "/getEmassAttachInfo.xcn")

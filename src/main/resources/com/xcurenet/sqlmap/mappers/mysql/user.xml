@@ -568,4 +568,73 @@
 		</if>
 		ORDER	BY A.GROUP_CODE
 	</select>
+
+	<!-- 코드 불러오기  회사,사업장,부서,직급, -->
+	<select id="getCompInfo" resultType="PersCodeInfo">
+		SELECT
+			'user.coCd' AS 'type'
+			,A.code AS 'code'
+			,A.name AS 'name'
+		FROM(
+			SELECT
+				C.COCD as code
+				,C.CONM as name
+			FROM UI_CO C
+		) A
+	</select>
+
+	<select id="getBusiInfo" resultType="PersCodeInfo">
+		SELECT
+			'user.busiCd' AS 'type'
+			,A.code AS 'code'
+			,A.name AS 'name'
+		FROM
+		(
+			SELECT
+				C.BUSICD as code
+				,C.BUSINM as name
+			FROM UI_BUSI C
+		) A
+	</select>
+
+
+	<select id="getDeptInfo" resultType="PersCodeInfo">
+		SELECT
+			'user.deptCd' AS 'type'
+			,A.code AS 'code'
+			,A.name AS 'name'
+		FROM(
+			SELECT
+				C.DEPTCD as code
+				,C.DEPTNM as name
+			FROM UI_DEPT C
+		) A
+	</select>
+
+	<select id="getJikgubInfo" resultType="PersCodeInfo">
+		SELECT
+			'user.jikgubCd' AS 'type'
+			,A.code AS 'code'
+			,A.name AS 'name'
+		FROM(
+			SELECT
+				C.JIKGUBCD as code
+				,C.JIKGUBNM as name
+			FROM UI_JIKGUB C
+		) A
+	</select>
+
+	<select id="getServiceInfo" resultType="PersCodeInfo">
+		SELECT
+			'directionSvc' AS 'type'
+			,A.code AS 'code'
+			,A.name AS 'name'
+		FROM(
+			SELECT
+				C.SERVICECD as code
+				,CONCAT(C.SERVICENM_LV1,'-',C.SERVICENM_LV2,'-',C.SERVICENM_LV3) as name
+			FROM UI_SERVICE C
+		) A
+	</select>
+
 </mapper>

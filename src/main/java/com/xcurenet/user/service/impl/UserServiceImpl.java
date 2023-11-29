@@ -7,13 +7,13 @@ import com.xcurenet.common.dao.XcnAbstractDAO;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.TimeUtil;
 import com.xcurenet.common.util.config.Config;
+import com.xcurenet.user.service.PersCodeInfo;
 import com.xcurenet.user.service.UserGroupVO;
 import com.xcurenet.user.service.UserService;
 import com.xcurenet.user.service.UserVO;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.snmp4j.User;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -521,5 +521,32 @@ public class UserServiceImpl extends XcnAbstractDAO implements UserService {
 		param.put("itemList", itemList);
 		return selectList("com.xcurenet.sqlmap.mappers.mysql.user.getConUserGroupList", param);
 	}
+
+
+	@Override
+	public List<PersCodeInfo> getCompInfo() {
+		return selectList("com.xcurenet.sqlmap.mappers.mysql.user.getCompInfo");
+	}
+
+	@Override
+	public List<PersCodeInfo> getBusiInfo() {
+		return selectList("com.xcurenet.sqlmap.mappers.mysql.user.getBusiInfo");
+	}
+
+	@Override
+	public List<PersCodeInfo> getDeptInfo() {
+		return selectList("com.xcurenet.sqlmap.mappers.mysql.user.getDeptInfo");
+	}
+
+	@Override
+	public List<PersCodeInfo> getJikgubInfo() {
+		return selectList("com.xcurenet.sqlmap.mappers.mysql.user.getJikgubInfo");
+	}
+
+	@Override
+	public List<PersCodeInfo> getServiceInfo() {
+		return selectList("com.xcurenet.sqlmap.mappers.mysql.user.getServiceInfo");
+	}
+
 
 }

@@ -1029,6 +1029,11 @@ var ocrFiles = [];
 var msgData;
 function setMessage(msg) {
 	msgData = msg;
+
+	console.log("msgData");
+	console.log(msgData);
+
+
 	window.scrollTo(0,0);
 	if(msg == null) {
 		$('#buttonDiv').css("display", "none");

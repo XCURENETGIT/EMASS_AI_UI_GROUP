@@ -63,7 +63,7 @@ public class ElasticSearchCommon {
     public static final String ATTACHCNT = "attachcnt";  //첨부파일 개수
     public static final String SIZE = "size";    //사이즈
     public static final String ALLOFUS = "allofus";  //수신자 소속여부
-    public static final String DIRECTIONSVC = "directionsvc";  //내/외부 서비스타입
+    public static final String DIRECTIONSVC = "directionSvc";  //내/외부 서비스타입
     public static final String DIRECTION = "direction";  //Inbound, Outbound
     public static final String XROOTMTR = "xrootMtr";  //RootMTR (마이싱글)
     public static final String XMSGKEY = "xmsgkey";  //x-msgkey
@@ -348,11 +348,11 @@ public class ElasticSearchCommon {
         put("ctime_hh", "ctime");
         put("ctime_yyyymmdd", "ctime");
         put("ctime_yyyymm", "ctime");
-        put("businm", "user.busiCd");
-        put("conm", "user.cdCd");
-        put("deptnm", "user.deptCd");
-        put("direction_svc", "direction_svc");
-        put("jikgubnm", "user.jikgubCd");
+        put("businm", ElasticSearchCommon.USER_BUSICD);
+        put("conm", ElasticSearchCommon.USER_COCD);
+        put("deptnm",ElasticSearchCommon.USER_DEPTCD);
+        put("direction_svc", ElasticSearchCommon.DIRECTIONSVC);
+        put("jikgubnm", ElasticSearchCommon.USER_JIKGUBCD);
     }};
 
 

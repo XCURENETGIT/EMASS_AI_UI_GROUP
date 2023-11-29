@@ -7,6 +7,7 @@ import com.xcurenet.common.schedule.service.JobVO;
 import com.xcurenet.common.schedule.service.QuartzCronTrigger;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.SpringContextUtil;
+import com.xcurenet.common.util.elasticsearch.ElasticSearchCommon;
 import com.xcurenet.config.service.ConfigService;
 import com.xcurenet.config.service.ConfigVO;
 import com.xcurenet.emass.iprange.service.IpRangeService;
@@ -15,6 +16,7 @@ import com.xcurenet.emass.service.service.ServiceGroupService;
 import com.xcurenet.emass.service.service.ServiceGroupVO;
 import com.xcurenet.emass.service.service.ServiceTypeService;
 import com.xcurenet.emass.service.service.ServiceTypeVO;
+import com.xcurenet.user.service.PersCodeInfo;
 import com.xcurenet.user.service.UserService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -26,10 +28,8 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service("config")
 @Slf4j
@@ -94,6 +94,22 @@ public class Config {
 	public static Map<String, String> userEmails; //(key : id) (value: 이름) 통계 이름 추출 용도
 
 	public static Map<String, Object> userNamebyEmails; //(key : id) (value: 이름) 통계 이름 추출 용도
+
+
+	/***
+	 *  key : code , value : name
+	 */
+
+	public static List<PersCodeInfo> compInfo = new ArrayList<>(); // 회사
+
+	public static List<PersCodeInfo>  busiInfo = new ArrayList<>(); // 사업장
+
+	public static List<PersCodeInfo> deptInfo = new ArrayList<>();  //부서
+
+	public static List<PersCodeInfo>  jikgubInfo = new ArrayList<>(); // 직급
+
+	public static List<PersCodeInfo>  serviceInfo = new ArrayList<>(); // 서비스
+
 
 	public final static String USER_FORMAT = "message.user.format";
 
@@ -227,7 +243,6 @@ public class Config {
 		}
 	}
 
-
 	@SuppressWarnings("static-access")
 	@PostConstruct
 	@Order(1)
@@ -271,6 +286,17 @@ public class Config {
 		reloadEmail();
 
 		reloadNamebyEmail();
+
+		reloadCompInfo();
+
+		reloadBusi();
+
+		reloadDeptInfo();
+
+		reloadJikgubInfo();
+
+		reloadServiceInfo();
+
 
 		Locale lo = Locale.forLanguageTag(Config.getString("default.lang", "ko"));
 		Locale.setDefault(lo);
@@ -338,6 +364,7 @@ public class Config {
 
 		log.info("[스케쥴러] LOAD END..");
 	}
+
 
 	public static int getInt(final String key) {
 		return getInt(key, 0);
@@ -458,6 +485,58 @@ public class Config {
 		log.info("사용자 이름/아이디 Load End");
 	}
 
+
+	private void reloadCompInfo() {
+
+		List<PersCodeInfo> compInfo =  userService.getCompInfo();
+		log.info("회사 코드맵핑정보 Load START");
+		log.info("회사  Size: {}", compInfo.size());
+		if(null != compInfo || compInfo.size() != 0)  this.compInfo.addAll(compInfo);
+		log.info("회사 코드맵핑정보 Load End");
+	}
+
+	private void reloadBusiInfo() {
+		List<PersCodeInfo> busiInfo =  userService.getBusiInfo();
+		log.info("사업장 코드맵핑정보 Load START");
+		log.info("사업장  Size: {}", busiInfo.size());
+		if(null != busiInfo || busiInfo.size() != 0) this.busiInfo.addAll(busiInfo);
+		log.info("사업장 코드맵핑정보 Load End");
+
+
+	}
+	private void reloadDeptInfo() {
+		List<PersCodeInfo> deptInfo =  userService.getDeptInfo();
+		log.info("부서 코드맵핑정보 Load START");
+		log.info("부서  Size: {}", deptInfo.size());
+		if(null != deptInfo || deptInfo.size() != 0) this.deptInfo.addAll(deptInfo);
+		log.info("부서 코드맵핑정보 Load End");
+
+	}
+
+	private void reloadJikgubInfo() {
+		List<PersCodeInfo> jikgubInfo =  userService.getJikgubInfo();
+		log.info("직급 코드맵핑정보 Load START");
+		log.info("직급  Size: {}", jikgubInfo.size());
+		if(null != jikgubInfo || jikgubInfo.size() != 0) this.jikgubInfo.addAll(jikgubInfo);
+		log.info("직급 코드맵핑정보 Load End");
+
+	}
+
+	private void reloadServiceInfo() {
+		List<PersCodeInfo> serviceInfo =  userService.getServiceInfo();
+		log.info("서비스 코드맵핑정보 Load START");
+		log.info("서비스  Size: {}", serviceInfo.size());
+		if(null != serviceInfo || serviceInfo.size() != 0) this.serviceInfo.addAll(serviceInfo);
+		log.info("서비스 코드맵핑정보 Load End");
+	}
+
+
+
+
+
+
+
+
 	public static String getUserId(final String userKey) {
 		return Common.nvl(userIds.get(userKey.toLowerCase()));
 	}
@@ -472,6 +551,10 @@ public class Config {
 
 	public static String getUserDeptnm(final String userKey) {
 		return Common.nvl(userDepts.get(userKey.toLowerCase()));
+	}
+
+	public static String getUserBusiNm(final String userKey) {
+		return Common.nvl(userBusiNms.get(userKey.toLowerCase()));
 	}
 
 	public static String getUserJikgubnm(final String userKey) {
@@ -490,4 +573,45 @@ public class Config {
 		IpRangeService ipRangeService = SpringContextUtil.getBean(IpRangeService.class);
 		ipRange = ipRangeService.getIpRangeAllList();
 	}
+
+	public static String analysisFlag(final String xAxis,final String code) {
+		if(ElasticSearchCommon.USER_COCD.equals(xAxis)) return getCompName(code);
+		else if(ElasticSearchCommon.USER_BUSICD.equals(xAxis)) return getBusiName(code);
+		else if(ElasticSearchCommon.USER_DEPTCD.equals(xAxis)) return getDeptName(code);
+		else if(ElasticSearchCommon.USER_JIKGUBCD.equals(xAxis)) return getJikgubName(code);
+		else if(ElasticSearchCommon.DIRECTIONSVC.equals(xAxis)) return getServiceName(code);
+		else return "none";
+	}
+
+	public static String getCompName(final String code) {
+		String result = compInfo.stream().filter(m -> Common.isEquals(code,m.getCode())).map(m -> m.getName()).collect(Collectors.joining());
+		if (Common.isEmpty(result)) result = "none";
+		return result;
+	}
+
+	public static String getBusiName(final String code) {
+		String result = busiInfo.stream().filter(m -> Common.isEquals(code,m.getCode())).map(m -> m.getName()).collect(Collectors.joining());
+		if (Common.isEmpty(result)) result = "none";
+		return result;
+	}
+
+	public static String getDeptName(final String code) {
+		String result = deptInfo.stream().filter(m -> Common.isEquals(code,m.getCode())).map(m -> m.getName()).collect(Collectors.joining());
+		if (Common.isEmpty(result)) result = "none";
+		return result;
+	}
+
+	public static String getJikgubName(final String code) {
+		String result = jikgubInfo.stream().filter(m -> Common.isEquals(code,m.getCode())).map(m -> m.getName()).collect(Collectors.joining());
+		if (Common.isEmpty(result)) result = "none";
+		return result;
+	}
+
+	public static String getServiceName(final String code) {
+		String result = serviceInfo.stream().filter(m -> Common.isEquals(code,m.getCode())).map(m -> m.getName()).collect(Collectors.joining());
+		if (Common.isEmpty(result)) result = "none";
+		return result;
+	}
+
+
 }

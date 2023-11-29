@@ -98,6 +98,7 @@ public class EmassMessage {
      @Value("recv")
     private RecvVo_Mgo recv;
 
-     private boolean consentFlag;
+    private boolean consentFlag;
+
 
 }

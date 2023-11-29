@@ -81,4 +81,17 @@ public interface UserService {
 	
 	public List<UserGroupVO> getConUserGroupList(String itemList);
 
+	/* 회사 코드맵핑정보 */
+	public List<PersCodeInfo>  getCompInfo();
+	/* 사업장 코드맵핑정보 */
+	public List<PersCodeInfo>  getBusiInfo();
+	/* 부서 코드맵핑정보 */
+	public List<PersCodeInfo>  getDeptInfo();
+	/* 직급 코드맵핑정보 */
+	public List<PersCodeInfo>  getJikgubInfo();
+	/* 서비스 코드맵핑정보 */
+	public List<PersCodeInfo>  getServiceInfo();
+
+
+
 }

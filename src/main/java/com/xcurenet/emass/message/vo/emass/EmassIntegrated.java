@@ -187,21 +187,22 @@ public class EmassIntegrated {
                 this.pivotHeader = keyList;
             }
 
-
-            else { /* 시간 분류 외 (사업장,부서 등등) #############################################################*/
+            else { /* 시간 분류 외 (회사,사업장,부서,직급,서비스) */
                 Map<String, Object> keys = new HashMap(); // 피벗 헤더 관련
                 Terms results = aggregations.get(xTypeFlag);
                 for (Terms.Bucket bucket : results.getBuckets()) {
                     if (Common.isEmpty(bucket.getAggregations().get(yField))) continue;
                     Terms argments = bucket.getAggregations().get(yField);
-                    keys.put(Common.nvl(bucket.getKey()), 0); // pivot header 추가
+                    String keyName = Config.analysisFlag(xTypeFlag,(String)bucket.getKey());
+
+                    keys.put(keyName, 0); // pivot header 추가
                     for (Terms.Bucket arg : argments.getBuckets()) {
                         Map<String, Object> item = new HashMap();
 //                        if(Common.isOrEquals(bucket, "user_str", "sender_str", "userid")){
 //                            item.put("rowName", Config.getUserName(Common.nvl(arg.getKey())));
 //                        }
                         item.put("rowKey", arg.getKey());
-                        item.put(Common.nvl(bucket.getKey()), arg.getDocCount());
+                        item.put(keyName, arg.getDocCount());
                         /* PIVOT XAxis */
                         result.add(item);
                     }
@@ -210,6 +211,9 @@ public class EmassIntegrated {
                 Collections.sort(keyList);
                 this.pivotHeader = keyList;
             }
+
+
+
 
 
             /* pivotData 재 계산 #############################################################*/
@@ -382,6 +386,20 @@ public class EmassIntegrated {
     private void setTotalCount(final Long total) throws  IOException {
         this.total = total;
     }
+
+
+    /* 코드 -> 네임 */
+//    private String codeToName(String code){
+//        String result = "";
+//        if(Common.isEmpty(xTypeFlag) || Common.isEmpty(code)) result =  "";
+//        if(xTypeFlag.equals(ElasticSearchCommon.USER_BUSICD)) {result = Config.getUserBusiNm(code);}
+//        else if(xTypeFlag.equals(ElasticSearchCommon.USER_COCD)){ result =  Config.getUserConm(code);}
+//        else if(xTypeFlag.equals(ElasticSearchCommon.USER_DEPTCD)) {result = Config.getUserDeptnm(code);}
+//        else if(xTypeFlag.equals(ElasticSearchCommon.DIRECTIONSVC)){ result = code;}
+//        else if(xTypeFlag.equals(ElasticSearchCommon.USER_JIKGUBCD)){ result = Config.getUserJikgubnm(code);}
+//        return result;
+//    }
+
 
 
 

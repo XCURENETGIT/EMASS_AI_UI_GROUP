@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Nullable
-public class AttachVo_Mgo {
+public class AttachVo_Mgo  {
 
    @Value("id")
    private String	id; //	첨부파일 ID

@@ -13,9 +13,7 @@ import com.xcurenet.emass.message.vo.emass.els.EmassResponse;
 import com.xcurenet.emass.message.vo.emass.els.fields.AttachVo_Els;
 import com.xcurenet.emass.message.vo.emass.els.fields.PiVo_Els;
 import com.xcurenet.emass.message.vo.emass.mongo.EmassMessage;
-import com.xcurenet.emass.message.vo.emass.mongo.fields.AttachVo_Mgo;
-import com.xcurenet.emass.message.vo.emass.mongo.fields.HttpVo_Mgo;
-import com.xcurenet.emass.message.vo.emass.mongo.fields.NetworkVo_Mgo;
+import com.xcurenet.emass.message.vo.emass.mongo.fields.*;
 import com.xcurenet.interestUser.service.AdminUserGroupVO;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.math.NumberUtils;
@@ -675,15 +673,15 @@ public class EmsReDefined {
 		return "-";
 	}
 
-	public static EmsRecvVO reUserIp(EmsRecvVO u, String srcip, String dstip, String usrip) {
+	public static ComProperties_Mgo reUserIp(ComProperties_Mgo u, String srcip, String dstip, String usrip) {
 		List<String> ipList = new ArrayList<String>();
-		String[] ips = Common.nvl(u.getIp()).split(", ");
+		String[] ips = Common.nvl(u.getId()).split(", ");
 		for (String ip : ips) {
 			if (Common.isEquals(ip, usrip.trim())) ipList.add(ip);
 			else if (Common.isEquals(ip, srcip.trim())) ipList.add(ip);
 			else if (Common.isEquals(ip, dstip.trim())) ipList.add(ip);
 		}
-		u.setIp(Common.join(ipList, ","));
+		u.setId(Common.join(ipList, ","));
 
 		return u;
 	}
