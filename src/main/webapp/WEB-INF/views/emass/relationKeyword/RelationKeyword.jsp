@@ -1,249 +1,224 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp" %>
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-	<title></title>
-	<style type="text/css">
-	</style>
-
-	<script>
-        var searchFlag = false;
-
-        $(document).ready(function () {
-
-            $('#searchWordSearchBtn').click(function () {
-                getGroupData();
-            });
-
-            $('#searchWordKeyword').enter(function () {
-                getGroupData();
-            });
-
-            $("#searchWordRelaNumber").keyup(function (value) {
-                return /^-?\d*[.]?\d*$/.test(value);
-            });
-
-            $('#searchRelWordInsertBtn').click(function () {
-                $('#searchWordUpdatPop').modal('hide');
-                $('#searchWordPop input[type=text]').val('');
-                $('#searchWordPop').modal('show');
-                var data = gridSearchWordPattern.getRowData(gridSearchWordPattern.Row).searchWord;
-                $('#searchWordName').val(data);
-                $('#searchWordName').attr('readonly', true);
-                setTimeout(function () {
-                    $("#searchWordName").focus();
-                }, 500);
-            });
-
-
-            $('#searchWordInsertBtn').click(function () {
-
-                $('#searchWordPop input[type=text]').val('');
-                $('#searchWordName').attr('readonly', false);
-                $('#searchWordPop').attr('mode', 'insert');
-                $('#searchWordPop').modal('show');
-                setTimeout(function () {
-                    $("#searchWordName").focus();
-                }, 500);
-            });
-
-            $('#relationKeywordUpdateBtn').click(function () {
-                var searchWord = $('#searchWordUpdateName').val().ltrim().rtrim();
-                if (searchWord == '') {
-                    ui.alertMsg("수정할 키워드를 입력해주세요");
-                    $('#searchWordUpdateName').focus();
-                    return false;
-                }
-                var keywordId = $('#keywordUpdateId').val();
-                var data = {
-                    searchWord: searchWord,
-                    keywordId: keywordId
-                };
-
-                ui.confirmMsg('수정 하시겠습니까?', '', '', function (rs) {
-                    if (rs) {
-                        gridSearchWordPattern.on();
-                        ui.post({
-                            url: 'updateSearchWord.xcn',
-                            data: data,
-                            success: function (data, total) {
-                                ui.alertMsg('<s:message code="common.msg.saved"/>');
-                                $('#searchWordUpdatePop').modal('hide');
-                                getGroupData();
-                            },
-                            error: function (status, message) {
-                                ui.alertMsg(message);
-                            },
-                            complete: function () {
-                                gridSearchWordPattern.off();
-
-                            }
-                        });
-                    }
-                });
-
-
-            });
-
-
-            $('#RelationKeywordSaveBtn').click(function () {
-                var searchWord = $('#searchWordName').val().ltrim().rtrim();
-                if (searchWord == '') {
-                    ui.alertMsg("키워드를 입력해주세요");
-                    $('#searchWordName').focus();
-                    return false;
-                }
-                var relationWord = $('#searchWordRelaName').val().ltrim().rtrim();
-                if (relationWord == '') {
-                    ui.alertMsg("연관 키워드를 입력해주세요");
-                    $('#regexPattern').focus();
-                    return false;
-                }
-
-                var searchWordRelaNumber = $('#searchWordRelaNumber').val().ltrim().rtrim();
-                if (searchWordRelaNumber >= 1) {
-                    ui.alertMsg("가중치는 1 이하로 입력해주세요")
-                    $('#searchWordRelaNumber').focus();
-                    return false;
-                }
-
-                if (searchWordRelaNumber == '') {
-                    ui.alertMsg("가중치를 입력해주세요")
-                    $('#searchWordRelaNumber').focus();
-                    return false;
-                }
-
-                var data = {
-                    searchWord: searchWord,
-                    relationWord: relationWord,
-                    searchWordRelaNumber: searchWordRelaNumber
-                }
-
-                ui.confirmMsg('추가하시겠습니까?', '', '', function (rs) {
-                    if (rs) {
-                        gridSearchWordPattern.on();
-                        ui.post({
-                            url: 'insertSearchWord.xcn',
-                            data: data,
-                            success: function (data, total) {
-                                ui.alertMsg('<s:message code="common.msg.saved"/>');
-                                getGroupData();
-                                $('#searchWordPop').modal('hide');
-                            },
-                            error: function (status, message) {
-                                ui.alertMsg(message);
-                            },
-                            complete: function () {
-                                gridSearchWordPattern.off();
-
-                            }
-                        });
-                    }
-                });
-            });
-
-
-            $('#searchWordDeleteBtn').click(function () {
-                var rows = gridSearchWordPattern.getSelectedRows();
-                if (rows == '') {
-                    ui.alertMsg('<s:message code="common.msg.choose.deleteitem"/>');
-                    return false;
-                }
-                ui.confirmMsg('삭제 하겠습니까?', '', '', function (rs) {
-                    if (rs) {
-                        gridSearchWordPattern.on();
-                        ui.get({
-                            url: 'deleteSearchWord.xcn',
-                            deleteData: JSON.stringify(rows),
-                            success: function (data, total) {
-                                ui.alertMsg('<s:message code="common.msg.deleted"/>');
-                                getGroupData();
-
-                            },
-                            error: function (status, message) {
-                                ui.alertMsg(message)
-                            },
-                            complete: function () {
-                                gridSearchWordPattern.off();
-                            }
-                        })
-                    }
-                });
-            });
-
-
-            $('#DeleteRelBtn').click(function () {
-                var rows = relaGrid.getSelectedRows();
-                var keywordId = $('#rekeywordId').val();
-                if (rows == '') {
-                    ui.alertMsg('<s:message code="common.msg.choose.deleteitem"/>');
-                    return false;
-                }
-                ui.confirmMsg('삭제 하겠습니까?', '', '', function (rs) {
-                    if (rs) {
-                        relaGrid.on();
-                        ui.get({
-                            url: 'deleteSearchRelaWord.xcn',
-                            deleteData: JSON.stringify(rows),
-                            keywordId: keywordId,
-                            success: function (data, total) {
-                                ui.alertMsg('<s:message code="common.msg.deleted"/>');
-                                $('#searchWordUpdatPop').modal('hide');
-                                getGroupData();
-                            },
-                            error: function (status, message) {
-                                ui.alertMsg(message)
-                            },
-                            complete: function () {
-                                relaGrid.off();
-                            }
-                        })
-                    }
-                });
-            });
+<script type="text/javascript">
+    var searchFlag = false;
+    $(document).ready(function () {
+        $('#searchWordSearchBtn').click(function () {
             getGroupData();
         });
 
+        $('#searchWordKeyword').enter(function () {
+            getGroupData();
+        });
 
-        function getGroupData(flag) {
-            if (searchFlag) return false;
+        $("#searchWordRelaNumber").keyup(function (value) {
+            return /^-?\d*[.]?\d*$/.test(value);
+        });
 
-            if (flag == undefined) {
-                gridSearchWordPattern.data.length = 0;
-                gridSearchWordPattern.rtnNextPageFunc = getGroupData;
-                gridSearchWordPattern.loadingPage = 0;
-            } else {
-                gridSearchWordPattern.loadingPage++;
+        $('#searchRelWordInsertBtn').click(function () {
+            $('#searchWordUpdatPop').modal('hide');
+            $('#searchWordPop input[type=text]').val('');
+            $('#searchWordPop').modal('show');
+            var data = gridSearchWordPattern.getRowData(gridSearchWordPattern.Row).searchWord;
+            $('#searchWordName').val(data);
+            $('#searchWordName').attr('readonly', true);
+            setTimeout(function () {
+                $("#searchWordName").focus();
+            }, 500);
+        });
+
+        $('#searchWordInsertBtn').click(function () {
+            $('#searchWordPop input[type=text]').val('');
+            $('#searchWordName').attr('readonly', false);
+            $('#searchWordPop').attr('mode', 'insert');
+            $('#searchWordPop').modal('show');
+            setTimeout(function () {
+                $("#searchWordName").focus();
+            }, 500);
+        });
+
+        $('#relationKeywordUpdateBtn').click(function () {
+            var searchWord = $('#searchWordUpdateName').val().ltrim().rtrim();
+            if (searchWord == '') {
+                ui.alertMsg("수정할 키워드를 입력해주세요");
+                $('#searchWordUpdateName').focus();
+                return false;
             }
-            gridSearchWordPattern.on();
-            searchFlag = true;
+            var keywordId = $('#keywordUpdateId').val();
+            var data = {
+                searchWord: searchWord,
+                keywordId: keywordId
+            };
 
-            ui.get({
-                url: 'getSearchWord.xcn',
-                searchStr: $('#searchWordKeyword').val(),
-                offset: gridSearchWordPattern.data.length,
-                limit: gridSearchWordPattern.pageSize,
-                success: function (data, total) {
-                    gridSearchWordPattern.appendData(data);
-                },
-                error: function (status, message) {
-                    ui.alertMsg(message);
-                },
-                complete: function () {
-                    gridSearchWordPattern.off();
-                    searchFlag = false;
+            ui.confirmMsg('수정 하시겠습니까?', '', '', function (rs) {
+                if (rs) {
+                    gridSearchWordPattern.on();
+                    ui.post({
+                        url: 'updateSearchWord.xcn',
+                        data: data,
+                        success: function (data, total) {
+                            ui.alertMsg('<s:message code="common.msg.saved"/>');
+                            $('#searchWordUpdatePop').modal('hide');
+                            getGroupData();
+                        },
+                        error: function (status, message) {
+                            ui.alertMsg(message);
+                        },
+                        complete: function () {
+                            gridSearchWordPattern.off();
+                        }
+                    });
                 }
-            })
+            });
+        });
 
 
+        $('#RelationKeywordSaveBtn').click(function () {
+            var searchWord = $('#searchWordName').val().ltrim().rtrim();
+            if (searchWord == '') {
+                ui.alertMsg("키워드를 입력해주세요");
+                $('#searchWordName').focus();
+                return false;
+            }
+            var relationWord = $('#searchWordRelaName').val().ltrim().rtrim();
+            if (relationWord == '') {
+                ui.alertMsg("연관 키워드를 입력해주세요");
+                $('#regexPattern').focus();
+                return false;
+            }
+
+            var searchWordRelaNumber = $('#searchWordRelaNumber').val().ltrim().rtrim();
+            if (searchWordRelaNumber >= 1) {
+                ui.alertMsg("가중치는 1 이하로 입력해주세요")
+                $('#searchWordRelaNumber').focus();
+                return false;
+            }
+
+            if (searchWordRelaNumber == '') {
+                ui.alertMsg("가중치를 입력해주세요")
+                $('#searchWordRelaNumber').focus();
+                return false;
+            }
+
+            var data = {
+                searchWord: searchWord,
+                relationWord: relationWord,
+                searchWordRelaNumber: searchWordRelaNumber
+            }
+
+            ui.confirmMsg('추가하시겠습니까?', '', '', function (rs) {
+                if (rs) {
+                    gridSearchWordPattern.on();
+                    ui.post({
+                        url: 'insertSearchWord.xcn',
+                        data: data,
+                        success: function (data, total) {
+                            ui.alertMsg('<s:message code="common.msg.saved"/>');
+                            getGroupData();
+                            $('#searchWordPop').modal('hide');
+                        },
+                        error: function (status, message) {
+                            ui.alertMsg(message);
+                        },
+                        complete: function () {
+                            gridSearchWordPattern.off();
+                        }
+                    });
+                }
+            });
+        });
+
+        $('#searchWordDeleteBtn').click(function () {
+            var rows = gridSearchWordPattern.getSelectedRows();
+            if (rows == '') {
+                ui.alertMsg('<s:message code="common.msg.choose.deleteitem"/>');
+                return false;
+            }
+            ui.confirmMsg('삭제 하겠습니까?', '', '', function (rs) {
+                if (rs) {
+                    gridSearchWordPattern.on();
+                    ui.get({
+                        url: 'deleteSearchWord.xcn',
+                        deleteData: JSON.stringify(rows),
+                        success: function (data, total) {
+                            ui.alertMsg('<s:message code="common.msg.deleted"/>');
+                            getGroupData();
+
+                        },
+                        error: function (status, message) {
+                            ui.alertMsg(message)
+                        },
+                        complete: function () {
+                            gridSearchWordPattern.off();
+                        }
+                    })
+                }
+            });
+        });
+
+        $('#DeleteRelBtn').click(function () {
+            var rows = relaGrid.getSelectedRows();
+            var keywordId = $('#rekeywordId').val();
+            if (rows == '') {
+                ui.alertMsg('<s:message code="common.msg.choose.deleteitem"/>');
+                return false;
+            }
+            ui.confirmMsg('삭제 하겠습니까?', '', '', function (rs) {
+                if (rs) {
+                    relaGrid.on();
+                    ui.get({
+                        url: 'deleteSearchRelaWord.xcn',
+                        deleteData: JSON.stringify(rows),
+                        keywordId: keywordId,
+                        success: function (data, total) {
+                            ui.alertMsg('<s:message code="common.msg.deleted"/>');
+                            $('#searchWordUpdatPop').modal('hide');
+                            getGroupData();
+                        },
+                        error: function (status, message) {
+                            ui.alertMsg(message)
+                        },
+                        complete: function () {
+                            relaGrid.off();
+                        }
+                    })
+                }
+            });
+        });
+        getGroupData();
+    });
+
+    function getGroupData(flag) {
+        if (searchFlag) return false;
+
+        if (flag == undefined) {
+            gridSearchWordPattern.data.length = 0;
+            gridSearchWordPattern.rtnNextPageFunc = getGroupData;
+            gridSearchWordPattern.loadingPage = 0;
+        } else {
+            gridSearchWordPattern.loadingPage++;
         }
+        gridSearchWordPattern.on();
+        searchFlag = true;
 
-	</script>
-
-</head>
-<body class="mini-navbar">
-
+        ui.get({
+            url: 'getSearchWord.xcn',
+            searchStr: $('#searchWordKeyword').val(),
+            offset: gridSearchWordPattern.data.length,
+            limit: gridSearchWordPattern.pageSize,
+            success: function (data, total) {
+                gridSearchWordPattern.appendData(data);
+            },
+            error: function (status, message) {
+                ui.alertMsg(message);
+            },
+            complete: function () {
+                gridSearchWordPattern.off();
+                searchFlag = false;
+            }
+        });
+    }
+</script>
 
 <div class="modal" id="searchWordPop" aria-labelledby="searchWordPop">
 	<div class="modal-content">
@@ -337,35 +312,28 @@
 			</div>
 			<div class="modalbody">
 				<div class="row" style="float: right">
-
 				</div>
 				<div class="row">
 					<div class="col-35">
 						<label for="searchWordName" class="fname">키워드</label>
 					</div>
 					<div class="col-65">
-						<input type="text" class="w100" name="searchUpdateName" id="searchUpdateName"
-						       readonly="readonly">
+						<input type="text" class="w100" name="searchUpdateName" id="searchUpdateName" readonly="readonly">
 						<input type="hidden" class="form-control" name="rekeywordId" id="rekeywordId">
-
 					</div>
 				</div>
 					<div class="contentSub">
 						<div id="relaGrid" class="slickGrid gridArea"  style="height: 400px;">
 					</div>
 				</div>
-
 			</div>
 			<div class="modalfooter">
-				<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message
-						code="common.msg.close"/></button>
+				<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal">
+					<s:message code="common.msg.close"/></button>
 			</div>
 		</div>
-
 	</div>
 </div>
-
-
 
 <div class="container">
 	<div class="searchArea">
@@ -374,19 +342,22 @@
 				<input type="text" placeholder="키워드를 입력하세요" id="searchWordKeyword" style="width: 300px;">
 				<button class="form_btn01" type="button" accesskey="K" id="searchWordSearchBtn">조회</button>
 			</div>
-			<button type="button" class="btn01" accesskey="A" id="searchWordInsertBtn"><img src="../img/subBtn_plus.png" alt="추가"><s:message code="common.msg.add"/></button>
-			<button type="button" class="btn02" accesskey="E" id="searchWordDeleteBtn"><img src="../img/subBtn_trash.png" alt="삭제"><s:message code="common.msg.delete"/></button>
+			<button type="button" class="btn01" accesskey="A" id="searchWordInsertBtn"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
+			<button type="button" class="btn02" accesskey="E" id="searchWordDeleteBtn"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
+		</div>
+	</div>
+	<div class="content xcn_full">
+		<div class="contentSub">
+			<div class="subtab">
+				<button class="active">
+					연관 키워드 목록
+					<span id="relationKeywordCount"></span>
+				</button>
+			</div>
+			<div id="searchWordListGrid" class="slickGrid gridArea"></div>
 		</div>
 	</div>
 </div>
-
-<div class="content xcn_full" style="height: 800px;">
-	<div class="contentSub">
-		<div id="searchWordListGrid" class="slickGrid gridArea"></div>
-	</div>
-</div>
-</div>
-
 
 <script type="text/javascript">
     var gridSearchWordPattern = new Xgrid('searchWordListGrid', contextRoot);
@@ -394,9 +365,9 @@
     gridSearchWordPattern.autoNumber();
     gridSearchWordPattern.colAdd('searchWord', "키워드", 200, 'left', false, 'link');
     gridSearchWordPattern.colAdd('relationWord', "연관 키워드", 1300, 'left', false, 'link');
-
+    gridSearchWordPattern.loadExportMenu('연관 키워드 목록');
     gridSearchWordPattern.loadPageSize();
-    gridSearchWordPattern.loadHeader(false);
+    gridSearchWordPattern.loadHeader(true);
 
     gridSearchWordPattern.changePageSize = function (cnt) {
         getGroupData();
@@ -432,6 +403,3 @@
     relaGrid.colAdd('relationWord', "연관 키워드", 400, 'left', false, 'nomal');
     relaGrid.loadHeader(false);
 </script>
-
-</body>
-</html>

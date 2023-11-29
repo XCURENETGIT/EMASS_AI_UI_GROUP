@@ -45,6 +45,7 @@ JSONObject ntpInfo =  NtpScheduler.ntpStatus;
                 <span class="graybbb">접속시간:23.10.09</span>
                 <span class="graybbb">접속IP:23.10.09</span>
             </p>
+
             <p>
                 <a href="#"><img src="<c:url value="/img/icon_top_bell.png"/>" alt="알림"></a>
             </p>

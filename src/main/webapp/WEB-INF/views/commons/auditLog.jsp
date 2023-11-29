@@ -399,7 +399,7 @@
 		</div>
 	</div>
 	<div class="content xcn_full">
-		<div class="contentSub" style="height: 800px;">
+		<div class="contentSub">
 			<div class="subtab">
 				<button class="active">
 					운용자 감사로그 목록
@@ -432,7 +432,7 @@
 
     grid.loadExportMenu('<s:message code="OPERATION_MGMT.AUDIT_LOG"/>');
     grid.loadPageSize();
-    grid.loadHeader(false);
+    grid.loadHeader(true);
 
     grid.initData('<s:message code="common.msg.search.click"/>');
     grid.changePageSize = function (cnt) {
