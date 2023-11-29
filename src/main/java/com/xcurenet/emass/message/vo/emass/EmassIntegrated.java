@@ -17,6 +17,7 @@ import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.MultiBucketsAggregation;
 import org.elasticsearch.search.aggregations.bucket.histogram.ParsedDateHistogram;
 import org.elasticsearch.search.aggregations.bucket.nested.Nested;
+import org.elasticsearch.search.aggregations.bucket.nested.ParsedNested;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.metrics.TopHits;
 
@@ -103,14 +104,22 @@ public class EmassIntegrated {
             String xTypeFlag = (!Common.isEmpty(ElasticSearchCommon.XFIELD.get(xField))) ? ElasticSearchCommon.XFIELD.get(xField) : xField;
             String yField = Common.nvl(search_yAxis);
 
-
             /* Date 분류일 경우 #############################################################*/
             if (ElasticSearchCommon.CTIME.equals(xTypeFlag)) {
                 Map<String, Integer> keys = new HashMap(); // 피벗 헤더 관련
                     ParsedDateHistogram results = aggregations.get(ElasticSearchCommon.CTIME);
                     for (MultiBucketsAggregation.Bucket bucket : results.getBuckets()) {
-                        if (Common.isEmpty(bucket.getAggregations().get(yField))) continue;
-                         Terms argments = bucket.getAggregations().get(yField);
+                        if (Common.isEmpty(bucket.getAggregations().get(yField))){
+                          if(!Common.isEmpty(bucket.getAggregations().get("nested_"+yField))) ElasticSearchCommon.KEY_PREFIX = "nested_";
+                          else continue;
+                        }
+                        Object obj = bucket.getAggregations().get(ElasticSearchCommon.KEY_PREFIX+yField);
+                        Terms argments = null;
+                        if(obj instanceof ParsedNested) {
+                            Aggregations subAggs = ((ParsedNested) obj).getAggregations();
+                            argments = subAggs.get(yField);
+                        } else {argments = bucket.getAggregations().get(yField);}
+
                          String headerStr = "";
                          int headerValue = 0;
 
@@ -191,8 +200,19 @@ public class EmassIntegrated {
                 Map<String, Object> keys = new HashMap(); // 피벗 헤더 관련
                 Terms results = aggregations.get(xTypeFlag);
                 for (Terms.Bucket bucket : results.getBuckets()) {
-                    if (Common.isEmpty(bucket.getAggregations().get(yField))) continue;
-                    Terms argments = bucket.getAggregations().get(yField);
+                    if (Common.isEmpty(bucket.getAggregations().get(yField))){
+                        if(!Common.isEmpty(bucket.getAggregations().get("nested_"+yField))) ElasticSearchCommon.KEY_PREFIX = "nested_";
+                        else continue;
+                    }
+                    Object obj = bucket.getAggregations().get(ElasticSearchCommon.KEY_PREFIX+yField);
+                    Terms argments = null;
+                    if(obj instanceof ParsedNested) {
+                        Aggregations subAggs = ((ParsedNested) obj).getAggregations();
+                        argments = subAggs.get(yField);
+                    } else {argments = bucket.getAggregations().get(yField);}
+
+
+
                     String keyName = Config.analysisFlag(xTypeFlag,(String)bucket.getKey());
 
                     keys.put(keyName, 0); // pivot header 추가

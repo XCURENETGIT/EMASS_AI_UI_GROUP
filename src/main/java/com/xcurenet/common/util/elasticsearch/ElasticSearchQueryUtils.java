@@ -32,10 +32,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -1383,9 +1380,11 @@ public class ElasticSearchQueryUtils {
 		setStatisticQueryParamReady(searchParam); // 통계용 파라미터 준비
 
 		try {
+
 			RangeQueryBuilder rangeQuery = new RangeQueryBuilder(ElasticSearchCommon.CTIME).gte(elasticSearchParam.getStartDate()).lte(elasticSearchParam.getEndDate()); // date range
 			QueryStringQueryBuilder secondQuery = QueryBuilders.queryStringQuery(query); // 쿼리 스트링 저장
 			BoolQueryBuilder complateQuery = new BoolQueryBuilder(); // complateQuery에서 최종적으로 쿼리 조합
+
 
 			Boolean isRowKeyCol = (("rowKey").equals(Common.nvl(elasticSearchParam.getColId()))) ? true : false; // 선택한 컬럼이 주 key 영역?
 			Boolean isTotalCol = (("total").equals(Common.nvl(elasticSearchParam.getColId()))) ? true : false; // 선택한 컬럼이 total 영역?
@@ -1806,24 +1805,35 @@ public class ElasticSearchQueryUtils {
 		/* 화면단 xAxis Str -> 엘라스틱 서치 검색용 Str  */
 		String xfield = Common.nvl(ElasticSearchCommon.XFIELD.get(xAxis));
 
+		//YAxis 가 배열필드일 경우
+		boolean YAxisNested =  Arrays.stream(ElasticSearchCommon.ARRAY_FIELD).anyMatch( s -> s.equals(Common.nvl(yAxis)));
+
 		switch (xAxis){
 			case ElasticSearchCommon.CTIME_HH :  // 시간별  (1시간)
 				aggregationBuilder = AggregationBuilders.dateHistogram(xfield).field(xfield).calendarInterval(DateHistogramInterval.hours(1)).minDocCount(1);
-				aggregationBuilder.subAggregation(AggregationBuilders.terms(yAxis).field(yAxis).minDocCount(1));
 				break;
 			case  ElasticSearchCommon.CTIME_YYYYMMDD :  // 일별 (1일)
-				aggregationBuilder = AggregationBuilders.dateHistogram(xfield).field(xfield).calendarInterval(DateHistogramInterval.days(1)).minDocCount(1);
-				aggregationBuilder.subAggregation(AggregationBuilders.terms(yAxis).field(yAxis).minDocCount(1));
+				 aggregationBuilder = AggregationBuilders.dateHistogram(xfield).field(xfield).calendarInterval(DateHistogramInterval.days(1)).minDocCount(1);
 				break;
 			case ElasticSearchCommon.CTIME_YYYYMM : // 월별 (한달)
 				aggregationBuilder = AggregationBuilders.dateHistogram(xfield).field(xfield).calendarInterval(DateHistogramInterval.MONTH).minDocCount(1);
-				aggregationBuilder.subAggregation(AggregationBuilders.terms(yAxis).field(yAxis).minDocCount(1));
 				break;
 			default:     // 사업장,회사,부서,수/발신,직급
 				aggregationBuilder = AggregationBuilders.terms(xfield).field(xfield).minDocCount(1);
-				aggregationBuilder.subAggregation(AggregationBuilders.terms(yAxis).field(yAxis).minDocCount(1));
 				break;
 		}
+
+		if(YAxisNested) {
+			String nestedPath = "";
+			if(yAxis.indexOf("attach") > -1) nestedPath = "attach";
+			else if(yAxis.indexOf("pi") > -1) nestedPath = "pi";
+			else nestedPath = yAxis;
+			aggregationBuilder.subAggregation(AggregationBuilders.nested("nested_"+yAxis, nestedPath).subAggregation(AggregationBuilders.terms(yAxis).field(yAxis).minDocCount(1)));
+
+		}else {
+			aggregationBuilder.subAggregation(AggregationBuilders.terms(yAxis).field(yAxis).minDocCount(1));
+		}
+
 		return aggregationBuilder;
 	}
 
@@ -2550,7 +2560,6 @@ public class ElasticSearchQueryUtils {
 		return result;
 
 	}
-
 
 
 	

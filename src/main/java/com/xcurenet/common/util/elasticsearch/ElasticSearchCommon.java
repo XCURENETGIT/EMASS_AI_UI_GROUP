@@ -322,7 +322,60 @@ public class ElasticSearchCommon {
 
 
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMddHHmmss");
-    
+
+
+    // Array Fields
+    public static String[] ARRAY_FIELD = new String[]{
+            "kwdInfo.kwdsAttach",
+            "kwdInfo.kwdsAttachNm",
+            "kwdInfo.kwds",
+            "kwdInfo.kwdsBody",
+            "kwdInfo.kwdsSubject",
+            "attach.id",
+            "attach.ext",
+            "attach.hash",
+            "attach.space",
+            "recv.to.alias",
+            "recv.to.id",
+            "recv.to.userId",
+            "recv.to.email",
+            "recv.to.coCd",
+            "recv.to.busiCd",
+            "recv.to.suborgCd",
+            "recv.to.deptCd",
+            "recv.to.jikgubCd",
+            "recv.to.ceo",
+            "recv.to.inside",
+            "recv.cc.alias",
+            "recv.cc.id",
+            "recv.cc.userId",
+            "recv.cc.email",
+            "recv.cc.coCd",
+            "recv.cc.busiCd",
+            "recv.cc.suborgCd",
+            "recv.cc.deptCd",
+            "recv.cc.jikgubCd",
+            "recv.cc.ceo",
+            "recv.cc.inside",
+            "recv.bcc.alias",
+            "recv.bcc.id",
+            "recv.bcc.userId",
+            "recv.bcc.email",
+            "recv.bcc.coCd",
+            "recv.bcc.busiCd",
+            "recv.bcc.suborgCd",
+            "recv.bcc.deptCd",
+            "recv.bcc.jikgubCd",
+            "recv.bcc.ceo",
+            "recv.bcc.inside",
+            "pi.id",
+            "pi.type",
+            "pi.kwds",
+            "pi.amount",
+    };
+
+    public static String KEY_PREFIX = "";
+
 
     //"body" 주석
     public static String[] SEARCH_FIELD = new String[]{
