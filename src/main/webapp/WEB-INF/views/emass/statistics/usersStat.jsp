@@ -424,12 +424,12 @@ function fileInfoViewer( row ){
 						<span class="glyphicon glyphicon-check"></span>&nbsp;<s:message code="query.make.inputer"/></button>
 				</div>
 		</div>
-		<div class="panel" style="width: 100%; margin-bottom: 10px">
+		<div class="panel" style="width: 100%;">
 			<div>
 				<textarea class="elsQueryResultText" rows="1" style="width:100%;" id="elsQueryText" placeholder="<s:message code="condition.input.detail"/>"></textarea>
 			</div>
 		</div>
-		<div class="content">
+		<div class="content" style="padding: 20px;">
 			<div >
 				<div class="chartArea">
 					<div>
@@ -839,19 +839,21 @@ function fileInfoViewer( row ){
         /* 검색 데이터 전송 객체 */
         var searchData = {
             rowKey: rowKey,
-            colKey: colKey,
-            startDate: $('#searched_startDate').val(),
-            endDate: $('#searched_endDate').val(),
+            colKey : colKey,
+            startDate: $('#startdate').val().replaceAll("-","")+"000000",
+            endDate: $('#enddate').val().replaceAll("-","")+"235959",
             detailQuery: $('#elsQueryText').val(),
             xAxis: xAxis,
             xAxis_str: xAxis_str,
             searched_xAxis: $('#searched_xAxis').val(),
-            colId: colId,
+            /*colId: colId,*/
             yAxis: 'user.id',
             offset: currentgrid.data.length,
             limit: currentgrid.pageSize,
-            nameStat: 'users',
         }
+
+        searchFlag = true;
+        currentgrid.on();
 
         ui.get({
             url: 'getStatDetailList.xcn',

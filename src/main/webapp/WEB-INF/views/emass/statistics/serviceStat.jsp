@@ -809,25 +809,35 @@ function getSelectedCodeData( codeType, data ) {
         } else {
             currentgrid.loadingPage++;
         }
-        var xAxis = $('select[name=xAxis]').val();
-        var xAxis_str = $('select[name=xAxis] option:selected').text();
-        var startDate = $('#startdate').val().replaceAll("-","");
-        var endDate = $('#enddate').val().replaceAll("-","");
+        var xAxis = $('#optionHidden').val();
+        var xAxis_str = $('#optionHiddenName').val();
+
+        var colNum = grid1.Col;
+        var isTotalRow = (grid1.Rows == grid1.Row) ? true : false;
+        var colId = '';
+        if (colNum != '' & colNum != null) colId = grid1.getHeaderId()[grid1.Col].id;
+
+        var searchData = {
+            rowKey: rowKey,
+            colKey : colKey,
+            startDate: $('#startdate').val().replaceAll("-","")+"000000",
+            endDate: $('#enddate').val().replaceAll("-","")+"235959",
+            detailQuery: $('#elsQueryText').val(),
+            xAxis: xAxis,
+            xAxis_str: xAxis_str,
+            searched_xAxis: $('#searched_xAxis').val(),
+            /*colId: colId,*/
+            yAxis: 'service.svc',
+            offset: currentgrid.data.length,
+            limit: currentgrid.pageSize,
+        }
+
         searchFlag = true;
         currentgrid.on();
         ui.get({
             url : 'getStatDetailList.xcn',
-            rowKey : rowKey,
-            colKey : pColKey,
-            startDate : startDate+"000000",
-            endDate : endDate+"235959",
-            detailQuery:$('#solrQueryText').val(),
-            xAxis : xAxis,
-            xAxis_str : xAxis_str,
-            yAxis : 'svc12',
-            colRowKey : colRowKey,
-            offset : currentgrid.data.length,
-            limit : currentgrid.pageSize,
+            searchParam: JSON.stringify(searchData),
+
             success : function(data, total) {
                 if ( lastRow == 'Y' || lastRow == undefined ) detailTotal = total;
                 currentgrid.appendData(data.emass);
@@ -848,78 +858,6 @@ function getSelectedCodeData( codeType, data ) {
 
     }
 
-    function getServiceData( lastRow ) {
-        currentgrid = getCurrentGrid();
-        if ( searchFlag ) return;
-
-        if ( lastRow == 'Y' || lastRow == undefined ) {
-            currentgrid.data.length = 0;
-            currentgrid.rtnNextPageFunc = getDetailData;
-            currentgrid.loadingPage = 0;
-        } else {
-            currentgrid.loadingPage++;
-        }
-        var xAxis = $('select[name=xAxis]').val();
-        var xAxis_str = $('select[name=xAxis] option:selected').text();
-        var startDate = $('#startdate').val().replaceAll("-","");
-        var endDate = $('#enddate').val().replaceAll("-","");
-        searchFlag = true;
-        currentgrid.on();
-        ui.get({
-            url : 'getStatList.xcn',
-            startDate: startDate+"000000",
-            endDate: endDate+"235959",
-            detailQuery:$('#solrQueryText').val(),
-            xAxis : xAxis,
-            yAxis : 'svc12',
-            offset : currentgrid.data.length,
-            limit : currentgrid.pageSize,
-            xAxis_str : xAxis_str,
-            rowKey : rowKey,
-            colKey : pColKey,
-            success : function(data, total) {
-                currentgrid.colInit();
-                currentgrid.autoNumber();
-                currentgrid.colAdd('svcNm', '<s:message code="condition.service"/>', 320, 'left', false, 'link');
-                currentgrid.colAdd('total', '<s:message code="bodyview.total"/>', 130, 'right', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
-                    if ( value != undefined ) return value.comma();
-                    else return '';
-                });
-                for ( var i=0 ; i < data.pivotHeader.length ; i++ ) {
-                    var Header = data.pivotHeader[i];
-                    var HeaderNm = "";
-                    if ( xAxis == "ctime_yyyymmdd") HeaderNm = Header.substr(0,4)+"-"+Header.substr(4,2)+"-"+Header.substr(6,2);
-                    else if ( xAxis == "ctime_yyyymm") HeaderNm = Header.substr(0,4)+"-"+Header.substr(4,2);
-                    else if ( xAxis == "direction_svc") {
-                        if(Header == "I") HeaderNm = '<s:message code="condition.receive"/>';
-                        else HeaderNm = '<s:message code="condition.send"/>';
-                    } else if ( xAxis == "ctime_hh") HeaderNm = Header+'<s:message code="common.msg.hour"/>';
-                    else HeaderNm = Header;
-                    currentgrid.colAdd( Header, HeaderNm, 90, "right", false, 'link', function ( row, cell, value, columnDef, dataContext ) {
-                        if ( value != undefined ) return value.comma();
-                        else return '';
-                    });
-                }
-
-                currentgrid.loadHeader(false);
-                currentgrid.setData(data.pivotData);
-
-                $('#statlist_cnt').html('<s:message code="common.msg.finish_query"/>:'+currentgrid.data.length);
-                $('#detailTab'+Number($('.listChart .active').attr('idx'))+' .badge').text('[' + data.numFound.comma() + ']');
-                if ( currentgrid.loadingPage == 0 ) currentgrid.Select(-1,-1);
-                searchFlag = false;
-                chartFlag =true;
-
-                pivotData(data ,currentgrid,"Detail");
-            },
-            error : function(status, message) {
-                ui.alertMsg(message);
-            },
-            complete : function() {
-                currentgrid.off();
-            }
-        });
-    }
     function pivotData (data , dataGrid ,value){
         totalChartDat = "";
         var grid1 = dataGrid;

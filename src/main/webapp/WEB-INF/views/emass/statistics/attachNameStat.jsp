@@ -590,7 +590,7 @@ function fileInfoViewer( row ){
             xAxis: xAxis,
             xAxis_str: xAxis_str,
             rowKey: rowKey,
-            yAxis: 'attach.id.keyword',
+            yAxis: 'attach.id',
             startDate: sDate + "000000",
             endDate: eDate + "235959",
             offset: grid1.data.length,

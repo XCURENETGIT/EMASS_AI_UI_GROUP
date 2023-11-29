@@ -1311,7 +1311,7 @@ public class ElasticSearchQueryUtils {
 		}
 
 		/* rowKey만 존재 */
-		if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("rowKey")) && !Common.isEmpty(elasticSearchParam.getSearchParameters().get("interGroupId"))) {
+		if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("rowKey"))) {
 			setSearchQuery(Common.nvl(elasticSearchParam.getSearchParameters().get("rowKey")));
 		}
 		/* 관심사용자 검색시 */
@@ -1883,7 +1883,7 @@ public class ElasticSearchQueryUtils {
 
 	/***
 	 *  분석 소스 빌드
-	 * @param initStatisticSearchSource
+	 * @param setanalysisSearchQueryReady
 	 * @return
 	 */
 	public void setanalysisSearchQueryReady(Map<String,Object> searchParam) {
