@@ -27,6 +27,15 @@ var tabID = 1;
 var tabNum = 0;
 var totalChartDat;
 $(document).ready(function(){
+
+    $('.optionBtn').click(function () {
+        $('.optionBtn').removeClass('active');
+        $(this).addClass('active');
+        $('#optionHidden').attr("value", $(this).val());
+        $('#optionHiddenName').attr("value", $(this).text());
+
+    });
+
 	$('#searchBtn').click(function(){
 		closeDetailTab();
 		getData ('Y');
@@ -405,8 +414,17 @@ function getSearchQuery() {
 			<div>
 				<button class="form_btn01" accesskey="Q" id="searchBtn" accesskey="s">조회</button>
 				<button class="form_btn02">조건 초기화</button>
+				<button type="button" class="btn btn-sm btn-primary searchQueryBtn">
+					<span class="glyphicon glyphicon-check"></span>&nbsp;<s:message code="query.make.inputer"/></button>
 			</div>
 		</div>
+
+		<div class="panel" style="width: 100%; margin-bottom: 10px">
+			<div>
+				<textarea class="elsQueryResultText" rows="1" style="width:100%;" id="elsQueryText" placeholder="<s:message code="condition.input.detail"/>"></textarea>
+			</div>
+		</div>
+
 		<div class="content">
 
 			<div class="contentSub">
@@ -422,12 +440,13 @@ function getSearchQuery() {
                                       </select>
                                 </span>
 						</h3>
-						<div class="chartBox">
-							차트영역
+						<div class="panel panel-default" id="service.logging.count">
+							<div class="panel-body">
+								<div id="chartArea1" style="height: 160px;"></div>
+							</div>
 						</div>
 					</div>
 				</div>
-
 				<!-- 탭 -->
 				<div class="row top_space2">
 					<div class="col-xs-12">
@@ -568,7 +587,7 @@ function getSearchQuery() {
                 xAxis: xAxis,
                 xAxis_str: xAxis_str,
                 rowKey: rowKey,
-                yAxis: 'kwd.kwds',
+                yAxis: 'kwd.kwds.keyword',
                 startDate: sDate + "000000",
                 endDate: eDate + "235959",
                 offset: grid1.data.length,

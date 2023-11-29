@@ -202,6 +202,12 @@ public class EmassIntegrated {
 //                            item.put("rowName", Config.getUserName(Common.nvl(arg.getKey())));
 //                        }
                         item.put("rowKey", arg.getKey());
+                        item.put(Common.nvl(bucket.getKey()), arg.getDocCount());
+                        item.put("svc", arg.getKey().toString());
+                        item.put("svcNm", svcDeepNm(arg.getKey().toString()));
+                        item.put("svcLv12Nm", svcLv12GroupNm(arg.getKey().toString()));
+                        item.put("svcLv1Nm", svcLv1Nm(arg.getKey().toString()));
+                        item.put("svcLv2Nm", svcLv2Nm(arg.getKey().toString()));
                         item.put(keyName, arg.getDocCount());
                         /* PIVOT XAxis */
                         result.add(item);
@@ -211,9 +217,6 @@ public class EmassIntegrated {
                 Collections.sort(keyList);
                 this.pivotHeader = keyList;
             }
-
-
-
 
 
             /* pivotData 재 계산 #############################################################*/

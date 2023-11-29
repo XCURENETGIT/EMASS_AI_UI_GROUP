@@ -1,19 +1,22 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
-<!DOCTYPE html>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ include file="/WEB-INF/fragments/baseScript.jsp" %>
 <html lang="ko">
 <head>
-<title>EMASS LTH - <s:message code="DATA_MONITOR.STAT_LABEL"/></title>
-<%@ include file="../../analysis/analysisBase.jsp"%>
-<style type="text/css">
-.panel-heading .dropdown-menu {
-	right: 31px;
-	top: 42px;
-	left: initial;
-}
-</style>
-<script>
-var searchFlag = false;
+	<link rel="stylesheet" type="text/css" href="../css/emass_style.css"/>
+	<title>EMASS LTH - <s:message code="DATA_MONITOR.STAT_LABEL"/></title>
+	<style type="text/css">
+		.panel-headings .dropdown-menu {
+			right: 8px;
+			top: 25px;
+			left: initial;
+		}
+
+	</style>
+	<script type="text/javascript" src="<c:url value="/js/messageGrid.js"/>"></script>
+	<%-- 통계 --%>
+	<script>
+
+        var searchFlag = false;
 var detailTotal = 0;
 var rowKey = "";
 var colKey = "";
@@ -24,6 +27,15 @@ var tabID = 1;
 var tabNum = 0;
 var totalChartDat;
 $(document).ready(function(){
+
+    $('.optionBtn').click(function () {
+        $('.optionBtn').removeClass('active');
+        $(this).addClass('active');
+        $('#optionHidden').attr("value", $(this).val());
+        $('#optionHiddenName').attr("value", $(this).text());
+
+    });
+
 	$('#searchBtn').click(function(){
 		closeDetailTab();
 		getData ('Y');
@@ -377,92 +389,152 @@ function getSearchQuery() {
 </script>
 </head>
 <body class="mini-navbar">
-	<div class="container"> 
-		<div class="boxArea">
-			<div class="content_body">
-				<div class="row">
-					<div class="col-xs-12 text-left">
-						<div class="form-group form-inline not-dashed">
-							<label for="startdatepicker"><s:message code="condition.select.period"/>:</label>
-							<div class='input-group date' id='startdatepicker'>
-								<input type='text' class="input-sm form-control" id='startdate' />
-								<span class="input-group-addon"> <span class="glyphicon glyphicon-calendar"></span>
-								</span>
+<div class="container">
+
+	<div class="searchArea">
+		<div class="searchSub">
+			<div id="startdatepicker"><input type="date" id="startdate" style="width: 110px;"> <span
+					class="hyphen">~</span></div>
+			<div id="enddatepicker"><input type="date" id="enddate" style="width: 110px;"></div>
+
+			<div class="optiotab">
+				<button class="optionBtn active" id="ctime_hh" value="ctime_hh"><s:message
+						code="common.msg.time"/></button>
+				<button class="optionBtn" id="ctime_yyyymmdd" value="ctime_yyyymmdd" class="active"><s:message
+						code="common.msg.day"/></button>
+				<button class="optionBtn" id="ctime_yyyymm" value="ctime_yyyymm"><s:message
+						code="common.msg.month"/></button>
+				<button class="optionBtn" id="businm" value="businm"><s:message code="common.org.busi"/></button>
+				<button class="optionBtn" id="conm" value="conm"><s:message code="common.org.co"/></button>
+				<button class="optionBtn" id="deptnm" value="deptnm"><s:message code="common.org.dept"/></button>
+				<button class="optionBtn" id="direction_svc" value="direction_svc"><s:message
+						code="condition.receive_send"/></button>
+				<button class="optionBtn" id="jikgubnm" value="jikgubnm"><s:message
+						code="common.org.jikgub"/></button>
+				<input type="hidden" value="ctime_hh" id="optionHidden">
+				<input type="hidden" value="시간" id="optionHiddenName">
+			</div>
+			<div>
+				<button class="form_btn01" accesskey="Q" id="searchBtn" accesskey="s">조회</button>
+				<button class="form_btn02">조건 초기화</button>
+				<button type="button" class="btn btn-sm btn-primary searchQueryBtn">
+					<span class="glyphicon glyphicon-check"></span>&nbsp;<s:message code="query.make.inputer"/></button>
+			</div>
+		</div>
+		<div class="panel" style="width: 100%; margin-bottom: 10px">
+			<div>
+				<textarea class="elsQueryResultText" rows="1" style="width:100%;" id="elsQueryText" placeholder="<s:message code="condition.input.detail"/>"></textarea>
+			</div>
+		</div>
+		<div class="content">
+			<div >
+				<div class="chartArea">
+					<div>
+						<h3>조회기간</h3>
+						<div class="sublist">
+							<div>
+								<span class="tit">많이 접속한 URL</span>
+								<p>99999<span class="text">건</span></p>
 							</div>
-							~
-							<div class='input-group date' id='enddatepicker'>
-								<input type='text' class="input-sm form-control" id='enddate' />
-								<span class="input-group-addon"> <span class="glyphicon glyphicon-calendar"></span>
-								</span>
+							<div>
+								<span class="tit">두번째 가장 많이 잡힌 URL</span>
+								<p>99999<span class="text">건</span></p>
 							</div>
-							<div class="form-group" style="margin-left: 15px;">
-								<label for="xAxis"><s:message code="stat.area.stat"/>:</label>
-								<select id="xAxis" name="xAxis" class="input-sm form-control">
-									<option value="ctime_hh"><s:message code="common.msg.time"/></option>
-									<option value="ctime_yyyymmdd"><s:message code="common.msg.day"/></option>
-									<option value="ctime_yyyymm"><s:message code="common.msg.month"/></option>
-									<option value="businm"><s:message code="common.org.busi"/></option>
-									<option value="conm"><s:message code="common.org.co"/></option>
-									<option value="deptnm"><s:message code="common.org.dept"/></option>
-									<option value="direction_svc"><s:message code="condition.receive_send"/></option>
-									<option value="jikgubnm"><s:message code="common.org.jikgub"/></option>
-								</select>
+							<div>
+								<span class="tit">세번째 가장 많이 잡힌 URL</span>
+								<p>99999<span class="text">건</span></p>
 							</div>
-							<div class="form-group form-inline not-dashed">
-								<button type="button" class="btn btn-success btn-sm" accesskey="Q" id="searchBtn" accesskey="s"><span class="glyphicon glyphicon-search"></span></button>
-								<button type="button" class="btn btn-sm btn-primary searchQueryBtn"><span class="glyphicon glyphicon-check"></span>&nbsp;<s:message code="query.make.inputer"/></button>
+							<div>
+								<span class="tit">URL 총 합계</span>
+								<p>99999<span class="text">건</span></p>
+							</div>
+							<div>
+								<span class="tit">가장 많이 잡힌 시간</span>
+								<p>99999<span class="text">건</span></p>
+							</div>
+							<div>
+								<span class="tit">가장 적은 값</span>
+								<p>99999<span class="text">건</span></p>
+							</div>
+						</div>
+					</div>
+					<div>
+						<h3>
+							TOP 통계 Chart
+							<span class="sel">
+						<div id="totalViewDiv" style="display:none;">
+							<div class="subtab">
+							<button type="button"
+							        title="<s:message code="stat.view.all"/>"><s:message code="stat.view.all"/></button>
+							</div>
+						</div>
+						<div class="panel-headings" id="chartCntDiv">
+								<button type="button" class="btn btn-xs btn-default dropdown-toggle"
+								        data-toggle="dropdown">
+									<s:message code="stat.display.count.chart"/> (<span class="dropdown-text">5</span>) <span
+										val="5" class="caret"></span>
+								</button>
+								<ul class="dropdown-menu dropdown-menu-right" role="menu">
+									<li><a href="#">5</a></li>
+									<li><a href="#">10</a></li>
+									<li><a href="#">15</a></li>
+									<li><a href="#">20</a></li>
+								</ul>
+						</div>
+						</span>
+						</h3>
+						<div class="panel panel-default" id="service.logging.count">
+							<div class="panel-body">
+								<div id="chartArea1" style="height: 160px;"></div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="row top_space">
-					<div class="col-xs-12">
-						<textarea class="solrQueryResultText" rows="1" style="width:100%;" id="solrQueryText" placeholder="<s:message code="condition.input.detail"/>"></textarea>
-					</div>
-				</div>
+				<!-- 탭 -->
 				<div class="row top_space2">
 					<div class="col-xs-12">
 						<ul class="nav nav-tabs codeTab listChart">
-							<li class="active" style="width:100px; text-align: center"><a data-toggle="tab" href="#basicStatList" id="listTab" >LIST</a></li>
+							<li class="active"><a data-toggle="tab" href="#basicStatList" id=" ">LIST</a>
+							</li>
+						</ul>
 						</ul>
 					</div>
 				</div>
+				<!-- 테이블 -->
 				<div class="row top_space">
 					<div class="col-lg-12 tab-content">
-						<div id="basicStatList" class="tab-pane fade in active">
-							<div id="basicStatListGrid" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; height: 400px"></div>
+						<div id="basicStatList" class="tab-pane fade in active" style="background-color: white">
+							<div id="basicStatListGrid" class="slickGrid gridArea"
+							     style="position: relative; top: 0px; left: 0px; height: 400px; text-align: center; "></div>
 						</div>
 					</div>
 				</div>
-				<div class="row top_space2">
-					<div class="col-lg-12">
-						<div class="panel panel-default" id="service.logging.count">
-							<div class="panel-heading">
-								<div class="pull-right" id="totalViewDiv" style="display:none;">
-									<button class="totalView btn-info btn-xs" type="button" title="<s:message code="stat.view.all"/>"><s:message code="stat.view.all"/></button>
-								</div>
-								<div class="pull-right" id="chartCntDiv">
-									<button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
-										<span class="glyphicon glyphicon-download-alt"></span>&nbsp;<s:message code="stat.display.count.chart"/> (<span class="dropdown-text">5</span>) <span val="5" class="caret"></span>
-									</button>
-									<ul class="dropdown-menu dropdown-menu-right" role="menu">
-										<li><a href="#">5</a></li>
-										<li><a href="#">10</a></li>
-										<li><a href="#">15</a></li>
-										<li><a href="#">20</a></li>
-									</ul>
-								</div>
-								<i class="fa fa-bar-chart-o fa-fw"></i><span id="chartAreaTitle">TOP <s:message code="DATA_MONITOR.STAT_LABEL"/> CHART </span>
-							</div>
-							<div class="panel-body">
-								<div id="chartArea1" style="height: 230px;"></div>
-							</div>
-						</div>
+				<!-- pagination -->
+				<div class="pageArea">
+					<div class="pagination">
+						<a href="#"><img src="../img/ico_page_left2.png" alt=""></a>
+						<a href="#"><img src="../img/ico_page_left.png" alt=""></a>
+						<a href="#">1</a>
+						<a class="active" href="#">2</a>
+						<a href="#">3</a>
+						<a href="#">4</a>
+						<a href="#">5</a>
+						<a href="#">6</a>
+						<a href="#"><img src="../img/ico_page_right.png" alt=""></a>
+						<a href="#"><img src="../img/ico_page_right2.png" alt=""></a>
 					</div>
 				</div>
+				<!-- //pagination -->
 			</div>
+
 		</div>
+		<!-- content 끝-->
 	</div>
+	<!--ContentArea-->
+</div>
+<!--//Container-->
+</div>
+
 	<!-- Back to top -->
 	<a href="#0" class="back-to-top cd-top"><span class="[ fa fa-chevron-up ]"></span> <span class="[ ]">Back to the Top</span></a>
 	
@@ -549,24 +621,31 @@ function getSearchQuery() {
 		
 		function getData( flag ) {
 			if ( searchFlag ) return;
-			var xAxis = $('select[name=xAxis]').val();
-			var xAxis_str = $('select[name=xAxis] option:selected').text();
-			var sDate = $('#startdate').val().replaceAll("-","");
-			var eDate = $('#enddate').val().replaceAll("-","");
-			if(sDate > eDate) ui.alertMsg('<s:message code="consent.msg.timecheck"/>');
-			
+            var sDate = $('#startdate').val().replaceAll("-", "");
+            var eDate = $('#enddate').val().replaceAll("-", "");
+            var xAxis = $('#optionHidden').val();
+            var xAxis_str = $('#optionHiddenName').val();
+            if (sDate > eDate) ui.alertMsg('<s:message code="consent.msg.timecheck"/>');
+            /* 검색 데이터 전송 객체 */
+
+
+            var searchData = {
+                xAxis: xAxis,
+                xAxis_str: xAxis_str,
+                yAxis: 'http.host',
+                startDate: sDate + "000000",
+                endDate: eDate + "235959",
+                offset: grid1.data.length,
+                limit: grid1.pageSize,
+                detailQuery: $('#elsQueryText').val(),
+            }
+
+
 			searchFlag = true;
 			grid1.on();
 			ui.get({
 				url : 'getStatList.xcn',
-				startDate: sDate+"000000",
-				endDate: eDate+"235959",
-				detailQuery:$('#solrQueryText').val(),
-				xAxis : xAxis,
-				yAxis : 'host_str',
-				offset : 1780,
-				limit : grid1.pageSize,
-				xAxis_str : xAxis_str,
+                searchParam: JSON.stringify(searchData),
 				success : function(data, total) {
 					grid1.colInit();
 					grid1.autoNumber();
