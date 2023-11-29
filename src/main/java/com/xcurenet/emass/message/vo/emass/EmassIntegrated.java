@@ -263,7 +263,9 @@ public class EmassIntegrated {
                 idx++;
             }
 
-            this.pivotData = pivotDataList;
+            List dataList = pivotDataList.stream().sorted(Comparator.comparingInt(m -> Integer.parseInt(m.get("total").toString()))).collect(Collectors.toList());
+            Collections.reverse(dataList);
+            this.pivotData = dataList;
         /*  ###################################################################################*/
 
 
