@@ -9,12 +9,17 @@ import lombok.Data;
 import lombok.ToString;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.aggregations.Aggregation;
+import org.elasticsearch.search.aggregations.Aggregations;
+import org.elasticsearch.search.aggregations.bucket.terms.Terms;
+import org.elasticsearch.search.aggregations.metrics.TopHits;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -44,23 +49,27 @@ public class MessengerEdcGroupVO {
 	}
 
 	public MessengerEdcGroupVO(final SearchResponse  searchResponse, final String adminId, final boolean detail) throws  IOException {
-		this(searchResponse, null, false, false);
+		this(false,searchResponse, null, false, false);
 	}
 
-	public MessengerEdcGroupVO(final SearchResponse  searchResponse , final String adminId, final boolean detail, final boolean original) throws IOException {
+	public MessengerEdcGroupVO(final boolean flag,final SearchResponse  searchResponse , final String adminId, final boolean detail, final boolean original ) throws IOException {
 		if(searchResponse == null) return;
-
-		/* response 파싱 */
 		List<Emass> result = new ArrayList<>();
-		SearchHit[] hits = searchResponse.getHits().getHits();
-		ObjectMapper mapper = new ObjectMapper();
-		for (SearchHit hit : hits) {
-			Map<String, Object> map = hit.getSourceAsMap();
-			if (map.size() > 0) {
-				map.put("_id",hit.getId());
-				result.add(mapper.convertValue(map, Emass.class));
+		if(!flag) {
+			/* response 파싱 */
+			SearchHit[] hits = searchResponse.getHits().getHits();
+			ObjectMapper mapper = new ObjectMapper();
+			for (SearchHit hit : hits) {
+				Map<String, Object> map = hit.getSourceAsMap();
+				if (map.size() > 0) {
+					map.put("_id", hit.getId());
+					result.add(mapper.convertValue(map, Emass.class));
+				}
 			}
+		}else{
+			setTopHitsAggsDocDataMsger(searchResponse);
 		}
+
 		this.emass = result;
 		this.groups = new ArrayList<>();
 		this.numFound = searchResponse.getHits().getHits().length;
@@ -287,6 +296,52 @@ public class MessengerEdcGroupVO {
 		return "<pre class='ignoreHtmlPre'><code>" + text + "</code></pre>";
 	}
 
+	/***
+	 *   // sub aggrations TopHitsAggregationBuilder 사용시 이 메서드 사용
+	 * @param searchResponse
+	 */
+	public void setTopHitsAggsDocDataMsger(SearchResponse searchResponse){
+		if(searchResponse == null) return;
+		Aggregations aggregations = searchResponse.getAggregations();
+		if(aggregations.getAsMap().size() == 0 ) return;
+
+		List<Emass> result = new ArrayList();
+		Map<String, Aggregation> aggregationsMap =  aggregations.getAsMap(); // 메인 aggs
+		Map<String,Aggregations> groupAggsMap = new HashMap<>();  // 추출할 그룹 aggs
+		//메인 Aggs의 sub Aggs 추출
+		for(Map.Entry<String, Aggregation> map : aggregationsMap.entrySet()) {
+			Aggregation agg =  map.getValue();
+			Terms terms = aggregations.get(agg.getName());
+			for(Terms.Bucket bucket : terms.getBuckets()){
+				groupAggsMap.put(bucket.getKeyAsString(),bucket.getAggregations());
+			}
+		}
+
+		// sub Aggs에서 document 추출
+		List<TopHits> topHitsList = new ArrayList<>();
+		for(Map.Entry<String, Aggregations> groupAgg : groupAggsMap.entrySet()) {
+			Aggregations groupAggs = groupAggsMap.get(groupAgg.getKey());
+			Map<String, Aggregation> groupAggMap = groupAggs.getAsMap();
+			for (Map.Entry<String, Aggregation> gMap  : groupAggMap.entrySet()) {
+				Aggregation gAgg =  gMap.getValue();
+				topHitsList.add(groupAggs.get(gAgg.getName()));
+			}
+		}
+
+		// emass 데이터로 추출
+		ObjectMapper mapper = new ObjectMapper();
+		for(TopHits topHit : topHitsList){
+			SearchHit[] hits  = topHit.getHits().getHits();
+			for (SearchHit hit : hits) {
+				Map<String, Object> map = hit.getSourceAsMap();
+				if (map.size() > 0) {
+					map.put("_id",hit.getId());
+					result.add(mapper.convertValue(map, Emass.class));
+				}
+			}
+		}
+		this.emass = result;
+	}
 
 
 

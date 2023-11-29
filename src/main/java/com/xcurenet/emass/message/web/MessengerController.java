@@ -14,13 +14,13 @@ import com.xcurenet.common.util.elasticsearch.ElasticSearchCommon;
 import com.xcurenet.common.util.locale.Prop;
 import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
-import com.xcurenet.emass.message.component.SolrCreateQuery;
 import com.xcurenet.emass.message.newService.EmsSearchService;
-import com.xcurenet.emass.message.service.*;
+import com.xcurenet.emass.message.service.EmsAttachVO;
+import com.xcurenet.emass.message.service.EmsMessageService;
+import com.xcurenet.emass.message.service.MessengerEdcGroupVO;
 import com.xcurenet.emass.message.vo.emass.EmassIntegrated;
 import com.xcurenet.emass.message.vo.emass.els.Emass;
 import com.xcurenet.emass.message.vo.emass.els.EmassMessenger;
-import com.xcurenet.emass.message.vo.emass.els.EmassResponse;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -36,11 +36,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.*;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.util.*;
 
@@ -176,6 +178,7 @@ public class MessengerController {
 			searchParam = gson.fromJson((String) resultParam.get("searchParam"),type);
 			searchParam.put(ElasticSearchCommon.SEARCH_TYPE, ElasticSearchCommon.SEARCH_TYPE_MESSENGER_TOTAL);
 		}
+
 		MessengerEdcGroupVO result = emsSearchService.getMessengerGroupList(searchParam, Common.getAdminId(request), true);
 
 		return new XcnResponseVO(XcnRspCode.OK, result);

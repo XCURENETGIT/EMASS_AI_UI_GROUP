@@ -156,6 +156,7 @@ public class EmsSearchServiceImpl implements EmsSearchService {
     @Override
     public MessengerEdcGroupVO getMessengerGroupList(Map<String, Object> searchParam, String adminId, boolean detail, boolean original) throws IOException {
         EmassIntegrated emassIntegrated = null;
+        boolean flag = false;
 
         SearchSourceBuilder searchSourceBuilder = elsSearchQueryUtils.initSearchSource(searchParam,adminId);
 
@@ -169,9 +170,10 @@ public class EmsSearchServiceImpl implements EmsSearchService {
         if (Common.nvl(searchParam.get(ElasticSearchCommon.SEARCH_TYPE)) == ElasticSearchCommon.SEARCH_TYPE_MESSENGER_GROUP){
            emassIntegrated = new EmassIntegrated(searchResponse,elsSearchQueryUtils.getElasticSearchParam(), adminId);
            emassIntegrated.setTopHitsAggsDocData(searchResponse);
+            flag = true;
         }
 
-        return new MessengerEdcGroupVO(searchResponse,adminId,false,false);
+        return new MessengerEdcGroupVO(flag,searchResponse,adminId,false,false);
     }
 
 
