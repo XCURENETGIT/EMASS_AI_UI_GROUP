@@ -543,7 +543,9 @@ function rtnFileList(data, type) {
 
 
 function rtnGroupList(data, type){
+	console.log("data: "+data.length);
 	var str = '';
+	console.log("data.length: "+data.length);
 	for (var i = 0; i < data.length; i++) {
 		var user_cnt = data[i].user_cnt;
 		var svc3 = data[i].svc3;
@@ -559,7 +561,7 @@ function rtnGroupList(data, type){
 			if(closeFlag) str += '<span class="tag tag-default tag-pill pull-xs-right">'+endChat+'</span>';
 			else str += '<span class="tag tag-success tag-pill pull-xs-right">'+chatting+'</span>';
 		}
-		str += '	<h5 class="list-group-item-heading" style="padding-left: 14px;">'+data[i].title.replaceAll('<', '&lt;').replaceAll('>', '&gt;')+'</h5>';
+		str += '	<h5 class="list-group-item-heading" style="padding-left: 14px;">'+data[i].title+'</h5>';
 		str += '	<p class="list-group-item-text" style="float:left;">';
 
 
@@ -614,6 +616,7 @@ function getMessengerGroupList (page){
 		url : 'getMessengerGroupList.xcn',
 		searchParam : JSON.stringify(data),
 		success : function(data, total) {
+			console.log(data.groups);
 			rtnGroupList(data.groups, 'G');
 			rtnGroupPage(total, page, 'G');
 			HighlightGroup( );

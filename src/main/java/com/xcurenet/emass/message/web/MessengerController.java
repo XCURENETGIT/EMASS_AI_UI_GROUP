@@ -103,6 +103,7 @@ public class MessengerController {
 	@AuditOperation(Operation.SEARCH)
 	@ResponseBody
 	public XcnResponseVO getMessengerGroupList(final HttpServletRequest request, final HttpSession session) throws Exception {
+		EmassIntegrated emassIntegrated = null;
 		Gson gson = new Gson();
 		Map<String,Object> resultParam = Common.getParamMap(request);
 		Map<String,Object> searchParam = new HashMap<>();
@@ -116,7 +117,10 @@ public class MessengerController {
 		**** setCount 작성
 		 */
 		MessengerEdcGroupVO edcMessage = emsSearchService.getMessengerGroupList(searchParam, Common.getAdminId(session));
-		return new XcnResponseVO(XcnRspCode.OK, edcMessage, edcMessage.getTotal());
+
+		log.info("EDCMessenger: "+edcMessage.getGroups().size());
+		log.info("totakl: "+edcMessage.getTotal());
+		return new XcnResponseVO(XcnRspCode.OK, edcMessage, edcMessage.getGroups().size());
 	}
 
 	@RequestMapping(value = "/getMessengerMessageList.xcn")

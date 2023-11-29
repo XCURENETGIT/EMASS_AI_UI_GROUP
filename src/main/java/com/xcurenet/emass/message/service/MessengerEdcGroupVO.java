@@ -43,7 +43,6 @@ public class MessengerEdcGroupVO {
 		this.groups = groups;
 	}
 
-
 	public MessengerEdcGroupVO(final SearchResponse  searchResponse, final String adminId) throws  IOException {
 		this(searchResponse, null, false);
 	}
@@ -66,15 +65,15 @@ public class MessengerEdcGroupVO {
 					result.add(mapper.convertValue(map, Emass.class));
 				}
 			}
-		}else{
-			setTopHitsAggsDocDataMsger(searchResponse);
-		}
+			this.emass = result;
 
-		this.emass = result;
+		}else{
+			result = setTopHitsAggsDocDataMsger(searchResponse);
+			this.emass = result;
+		}
 		this.groups = new ArrayList<>();
 		this.numFound = searchResponse.getHits().getHits().length;
 		this.total = searchResponse.getHits().getTotalHits().value;
-
 
 		if(result.size() >= 1){
 			for(Emass ems : result) {
@@ -100,7 +99,7 @@ public class MessengerEdcGroupVO {
 //						this.groups.add(reDefined(new DocumentObjectBinder().getBean(SolrEdcVO.class, solrDocs.get(0)), adminId, msg_cnt));
 //					}
 //				}
-////				this.numFound = gc.getNGroups();
+//				this.numFound = gc.getNGroups();
 //				this.numFound = getMessengerGroupCnt(resp);
 //			}
 //		}
@@ -150,10 +149,7 @@ public class MessengerEdcGroupVO {
 			emassMessenger.setSrcip(emass.getNetwork().getSrcIp());
 		}
 
-
 		emassMessenger.setReadYn("Y");
-
-
 		return emassMessenger;
 	}
 
@@ -300,10 +296,10 @@ public class MessengerEdcGroupVO {
 	 *   // sub aggrations TopHitsAggregationBuilder 사용시 이 메서드 사용
 	 * @param searchResponse
 	 */
-	public void setTopHitsAggsDocDataMsger(SearchResponse searchResponse){
-		if(searchResponse == null) return;
+	public List<Emass> setTopHitsAggsDocDataMsger(SearchResponse searchResponse){
+		if(searchResponse == null) return null;
 		Aggregations aggregations = searchResponse.getAggregations();
-		if(aggregations.getAsMap().size() == 0 ) return;
+		if(aggregations.getAsMap().size() == 0 ) return null;
 
 		List<Emass> result = new ArrayList();
 		Map<String, Aggregation> aggregationsMap =  aggregations.getAsMap(); // 메인 aggs
@@ -340,9 +336,6 @@ public class MessengerEdcGroupVO {
 				}
 			}
 		}
-		this.emass = result;
+		return result;
 	}
-
-
-
 }
