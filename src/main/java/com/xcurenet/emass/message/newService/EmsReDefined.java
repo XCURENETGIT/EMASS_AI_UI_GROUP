@@ -11,9 +11,13 @@ import com.xcurenet.emass.message.service.EmsRecvVO;
 import com.xcurenet.emass.message.vo.emass.els.Emass;
 import com.xcurenet.emass.message.vo.emass.els.EmassResponse;
 import com.xcurenet.emass.message.vo.emass.els.fields.AttachVo_Els;
+import com.xcurenet.emass.message.vo.emass.els.fields.CheckedVo_Els;
 import com.xcurenet.emass.message.vo.emass.els.fields.PiVo_Els;
 import com.xcurenet.emass.message.vo.emass.mongo.EmassMessage;
-import com.xcurenet.emass.message.vo.emass.mongo.fields.*;
+import com.xcurenet.emass.message.vo.emass.mongo.fields.AttachVo_Mgo;
+import com.xcurenet.emass.message.vo.emass.mongo.fields.ComProperties_Mgo;
+import com.xcurenet.emass.message.vo.emass.mongo.fields.HttpVo_Mgo;
+import com.xcurenet.emass.message.vo.emass.mongo.fields.NetworkVo_Mgo;
 import com.xcurenet.interestUser.service.AdminUserGroupVO;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.math.NumberUtils;
@@ -27,6 +31,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+/* elasticSearch db 전용 */
 public class EmsReDefined {
 
 	@Value("${server.servlet.context-path}")
@@ -79,13 +84,14 @@ public class EmsReDefined {
 			/* 첨부파일 관련 ####################### */
 			/*  첨부파일 총 크기 계산   */
 			Long fileSize = 0L;
+			String fileName = "";
 			if (!Common.isEmpty(ems.getAttach())) {
-				for (AttachVo_Els attach : ems.getAttach()) {
-					fileSize = fileSize + attach.getSize();
-				}
+				fileSize = Long.valueOf(ems.getAttach().stream().collect(Collectors.summingInt(m -> m.getSize())));
+				String totalAttachFileSize = Common.convertFileSize(fileSize);
+				emassResponse.setAttach_size_str(totalAttachFileSize);
+				emassResponse.setAttach_name(ems.getAttach().stream().map(m-> m.getName()).collect(Collectors.toList()));
 			}
-			String totalAttachFileSize = Common.convertFileSize(fileSize);
-			emassResponse.setAttach_sizeStr(totalAttachFileSize);
+
 			emassResponse.setAttachCnt(Common.nvs(ems.getAttachCnt()));
 			emassResponse.setAttachExistCnt(Common.nvs(ems.getAttachExistCnt()));
 			emassResponse.setAttached(ems.getAttached());
@@ -93,14 +99,15 @@ public class EmsReDefined {
 
 			/* 문서 관련 ####################### */
 			emassResponse.setMsgid(Common.nvl(ems.getMsgid()));
-			emassResponse.setSize(Common.convertFileSize(ems.getSize()));
+			emassResponse.setSize(Common.convertFileSize(Common.nvl(ems.getSize())));
 			if (!Common.isEmpty(ems.getBody())) {
-				emassResponse.setBody_size(ems.getBody().getSize());
+			//	emassResponse.setBody_size(ems.getBody().getSize());
 				if (bodysnippetVal.equals("Y"))
 					emassResponse.setBody_snippet(reBodySnippet(ems.getBody().getSnippet()));
 				else emassResponse.setBody_snippet("");
-			}
 
+				emassResponse.setBody_size_str(Common.convertFileSize(Common.nvl(ems.getBody().getSize())));
+			}
 
 			emassResponse.setCtime(Common.nvl(ems.getCtime()));
 			emassResponse.setCtime(ems.getCtime());
@@ -145,7 +152,6 @@ public class EmsReDefined {
 			}
 
 			/* 키워드 관련 ####################### */
-
 			if (!Common.isEmpty(ems.getKwdInfo())) {
 				emassResponse.setKwdInfo_kwdsAttach(ems.getKwdInfo().getKwdsAttach());
 				emassResponse.setKwdInfo_kwdsAttachNm(ems.getKwdInfo().getKwdsAttachNm());
@@ -156,7 +162,6 @@ public class EmsReDefined {
 			}
 
 			/* Sender 관련 ####################### */
-
 			if (!Common.isEmpty(ems.getSender())) {
 				emassResponse.setSender_alias(ems.getSender().getAlias());
 				emassResponse.setSender_id(ems.getSender().getId());
@@ -258,6 +263,16 @@ public class EmsReDefined {
 				emassResponse.setUser_jikgubCd(ems.getUser().getJikgubCd());
 				emassResponse.setUser_inside(ems.getUser().getInside());
 			}
+
+
+			/*문서 열람 여부*/
+			if(!Common.isEmpty(ems.getChecked()) && ems.getChecked().size() >= 1){
+				/* 사용자 문서 개봉여부 조회 */
+				List<CheckedVo_Els> checkedList = ems.getChecked();
+				boolean isReaded = checkedList.stream().anyMatch(s-> s.getReadId().equals(adminId));
+				emassResponse.setRead_yn((isReaded) ? 'Y' : 'N');
+			}
+		//	readYn  read_yn;
 
 
 			/* 스니펫 관련 주석 */

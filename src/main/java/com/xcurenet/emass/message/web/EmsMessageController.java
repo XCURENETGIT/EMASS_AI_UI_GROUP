@@ -18,9 +18,11 @@ import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.emass.consent.web.ConsentFileDownload;
 import com.xcurenet.emass.consent.web.ConsentFileVO;
+import com.xcurenet.emass.message.newService.EmsMessageReDefined;
 import com.xcurenet.emass.message.newService.EmsSearchService;
 import com.xcurenet.emass.message.service.*;
 import com.xcurenet.emass.message.vo.emass.mongo.EmassMessage;
+import com.xcurenet.emass.message.vo.emass.mongo.EmassMessageResponse;
 import com.xcurenet.emass.message.vo.emass.mongo.fields.HttpVo_Mgo;
 import com.xcurenet.emass.message.vo.emass.mongo.fields.NetworkVo_Mgo;
 import com.xcurenet.minio.MinioFileAdapter;
@@ -65,6 +67,9 @@ public class EmsMessageController {
 
 	@Resource(name = "emsMessageService")
 	public EmsMessageService emsMessageService;
+
+	@Resource
+	public EmsMessageReDefined emsMessageReDefined;
 
 	@Autowired
 	public MessengerController messengerController;
@@ -1299,8 +1304,10 @@ public class EmsMessageController {
 		if (emass != null && emass.isConsentFlag()) {
 			emsSearchService.setRead(msgid,userId);
 		}
+		/* 데이터 재가공 (미완) */
+		EmassMessageResponse response =  emsMessageReDefined.reDefined(emass);
 
-		return new XcnResponseVO(XcnRspCode.OK, emass);
+		return new XcnResponseVO(XcnRspCode.OK, response);
 	}
 
 

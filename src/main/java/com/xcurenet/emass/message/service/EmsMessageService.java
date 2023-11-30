@@ -29,8 +29,6 @@ public interface EmsMessageService {
 	public RecvVo_Mgo getEmassRecvInfo(final String msgId, final String uType);
 
 
-
-
 	public List<EmsAttachVO> getEmassAttachInfoConsent(final String msgId, final String firstAdminYn, final String adminType);
 	
 	public List<EmsAttachVO> getEmassAttachInfo4Down(final String msgId, final String attachId);

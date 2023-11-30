@@ -1,3 +1,8 @@
+<%@ page import="com.xcurenet.config.service.ConfigAdminService" %>
+<%@ page import="com.xcurenet.common.util.SpringContextUtil" %>
+<%@ page import="net.sf.json.JSONObject" %>
+<%@ page import="com.xcurenet.audit.service.Operation" %>
+<%@ page import="com.xcurenet.config.service.ConfigAdminVO" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
 <%
@@ -18,7 +23,7 @@
 	boolean infoHynixConf = Config.getBoolean("info.hynix.used");
 	
 	String op_attach_save = Operation.ATTACH_SAVE.getOperation();
-	String op_body_save = Operation.BODY_SAVE.getOperation();	
+	String op_body_save = Operation.BODY_SAVE.getOperation();
 	
 	long export_maxCount = Config.getLong("ui.export.maxCount", 1000000);
 %>

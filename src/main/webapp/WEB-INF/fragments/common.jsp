@@ -22,10 +22,11 @@
 	/* analysis */
 	var messageGridColumn = {
 		msgid: '<s:message code="common.msg.msgid"/>',
+		userId: '<s:message code="common.msg.id"/>',
 		epmsg_type: '<s:message code="condition.epmsgType.list"/>',
 		xrootmtr: '<s:message code="common.msg.xrootmtr"/>',
 		interestUserYn: '<s:message code="message.msg.interest"/>',
-		readYn: '<s:message code="condition.read"/>',
+		read_yn: '<s:message code="condition.read"/>',
 		ml_confd_class: '<s:message code="condition.infotype"/>',
 		ml_confd_feedback: '<s:message code="condition.feedback"/>',
 		ml_confd_prob: '<s:message code="condition.prob"/>',

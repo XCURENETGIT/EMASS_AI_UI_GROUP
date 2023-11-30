@@ -4,14 +4,14 @@
 			statGrid = currGrid;
 			currGrid.autoNumber();
 			currGrid.colAdd('msgid', gridColumn.msgid, 100, 'left', false, 'nomal','',0);
-			currGrid.colAdd('user_userId', "아이디", 100, 'left', false, 'nomal','',0);
+			currGrid.colAdd('user_userId', gridColumn.userId, 100, 'left', false, 'nomal','',0);
 		//	currGrid.colAdd('epmsg_type', gridColumn.epmsg_type, 100, 'center', true, 'nomal');
 			currGrid.colAdd('xrootmtr', gridColumn.xrootmtr, 100, 'left', true, 'nomal','',1);
 			// currGrid.colAdd('interestUserYn', gridColumn.interestUserYn, 40, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 			// 	if (value == 'Y') return '<div class="interestUserCheck"></div>';
 			// 	else if (value == 'N') return '';
 			// });
-			currGrid.colAdd('readYn', gridColumn.readYn, 40, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+			currGrid.colAdd('read_yn', gridColumn.readYn, 40, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 				if (value == 'Y') return '<div class="readY"></div>';
 				else if (value == 'N') return '<div class="readN"></div>';
 				else return '-';
@@ -55,7 +55,7 @@
 				return probPercent(value);
 			});
 			}
-			currGrid.colAdd('attachCnt', gridColumn.attachcnt, 35, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
+			currGrid.colAdd('attachCnt', gridColumn.attachcnt, 35, 'right', false, 'link', function(row, cell, value, columnDef, dataContext) {
 				if (value == '0') return '';
 				else return value.comma();
 			},5);
@@ -121,23 +121,23 @@
 			},17);
 
 
-			currGrid.colAdd('network_srcIp', gridColumn.srcip + ' IP', 100, 'left', false, 'nomal','',18);
-			currGrid.colAdd('network_dstIp', gridColumn.dstip + ' IP', 100, 'left', false, 'nomal','',19);
+			currGrid.colAdd('network_srcIp', gridColumn.srcip + ' IP', 100, 'right', false, 'nomal','',18);
+			currGrid.colAdd('network_dstIp', gridColumn.dstip + ' IP', 100, 'right', false, 'nomal','',19);
 			currGrid.colAdd('attach_name', gridColumn.attachname, 220, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 				var rtnVal = arrayToString(value);
 				var kwds = currGrid.getValue(row, 'kwds');
 				return highlightKeyword(rtnVal, kwds);
 			},20);
-			currGrid.colAdd('size', gridColumn.sizeStr, 80, 'left', false, 'nomal','',21);
-			currGrid.colAdd('body_size', gridColumn.bodySizeStr, 80, 'left', false, 'nomal', null, {sortField:'body_size'},22);
-			currGrid.colAdd('attach_size', gridColumn.attachSizeStr, 80, 'left', false, 'nomal', null, {sortField:'attachSizeSort'},23);
+			currGrid.colAdd('size', gridColumn.sizeStr, 80, 'right', false, 'nomal','',21);
+			currGrid.colAdd('body_size_str', gridColumn.bodySizeStr, 80, 'right', false, 'nomal', null, {sortField:'body_size'},22);
+			currGrid.colAdd('attach_size_str', gridColumn.attachSizeStr, 80, 'right', false, 'nomal', null, {sortField:'attachSizeSort'},23);
 			currGrid.colAdd('kwdInfo_kwds', gridColumn.kwds, 120, 'left', false, 'nomal','',24);
 			// currGrid.colAdd('pi_total', gridColumn.pi_total, 70, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
 			// 	if (value == '0') return '';
 			// 	else return value.comma();
 			// });
 			if ( isOCR ) {
-				currGrid.colAdd('ocr_attachCnt', gridColumn.ocr, 70, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
+				currGrid.colAdd('ocr_attachCnt', gridColumn.ocr, 70, 'right', false, 'link', function(row, cell, value, columnDef, dataContext) {
 					if (value == '0' || value == '' || value == null || value == undefined ) return '';
 					else return value.comma();
 				});

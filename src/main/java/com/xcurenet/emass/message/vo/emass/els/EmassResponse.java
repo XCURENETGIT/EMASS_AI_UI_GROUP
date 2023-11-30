@@ -70,7 +70,7 @@ public class EmassResponse {
 	private String	body_path; //	본문(원본) 경로
 	private String	body_snippet; //	본문 요약
 	private String	body_text; //	본문(텍스트) 내용
-
+    private String  body_size_str; // 본문 사이즈 단위
 
 	/* ######## netWork  ######################################################################################################################*/
 
@@ -84,13 +84,13 @@ public class EmassResponse {
 
 	/* ######## attach  ######################################################################################################################*/
 	private String	attach_id; //	첨부파일 ID
-	private String	attach_name; //	첨부파일 이름
+	private List<String> attach_name; //	첨부파일 이름
 	private String	attach_text; //	첨부파일(텍스트) 내용
 	private int 	attach_size; //	첨부파일 사이즈
 	private String	attach_ext; //	첨부파일 확장자
 	private String	attach_hash; //	첨부파일 해시
 
-	private String	attach_sizeStr;   //	첨부파일 사이즈 Str
+	private String	attach_size_str;   //	첨부파일 사이즈 Str
 
 	/* ------ kwd -------*/
 	private List	kwdInfo_kwdsAttach;  //	예약어(첨부내용)
@@ -182,5 +182,7 @@ public class EmassResponse {
 	private String	checked_readDateYYYY; //	메시지 개봉 년
 	private String	checked_readDateYYYYMM; //	메시지 개봉 년월
 	private String	checked_readDateYYYYMMDD; //	메시지 개봉 년월일
+
+	private char read_yn; //	열람여부
 
 }
