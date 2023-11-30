@@ -109,7 +109,7 @@ public class DeviceStatusWorker implements Callable<DeviceVO> {
 	 */
 	private void disk(SFTPUtil sftp) {
 		String hdd = sftp.getCommand("df -h | grep -e /$ -e /users -e /var$ -e /data -e /index");
-		List<String> infos = Common.toList(hdd, "\r\n");
+		List<String> infos = Common.toList(hdd, "\n");
 		JSONArray items = new JSONArray();
 		for (String h : infos) {
 			List<String> partition = Common.toList(h, " ");
