@@ -60,7 +60,7 @@ public class ElasticSearchCommon {
     public static final String CTIME = "ctime";    //캡쳐타임
     public static final String SUBJECT = "subject";  //제목
     public static final String ATTACHEXISTCNT = "attachexistcnt";  //첨부 존재 개수
-    public static final String ATTACHCNT = "attachcnt";  //첨부파일 개수
+    public static final String ATTACHCNT = "attachCnt";  //첨부파일 개수
     public static final String SIZE = "size";    //사이즈
     public static final String ALLOFUS = "allofus";  //수신자 소속여부
     public static final String DIRECTIONSVC = "directionSvc";  //내/외부 서비스타입

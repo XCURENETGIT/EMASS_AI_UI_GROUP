@@ -185,7 +185,7 @@ var eikon = {
 		condition.searchStr = searchStr;
 		condition.startDt = startDt;
 		condition.endDt = endDt;
-		condition.searchField = 'body.snippet attachname attachname_str attach';
+		condition.searchField = 'body.snippet attach.id attach.name attach.text';
 		// condition.searchField = 'body.snippet attachname attachname_str attach';
 		conArray.push(condition);
 		conditions.conditions = conArray;
@@ -210,7 +210,7 @@ var eikon = {
 					$('#searchResult').html(total);
 					$('#searchResultArea').show();
 					$('#searchResultBtnArea').show();
-					checkList(searchOffset);
+					 checkList(searchOffset);
 				}
 				else{
 					$('#searchResult').html('0');
@@ -604,11 +604,13 @@ function getMessengerGroupList (page){
 	var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
 	groupPage = page;
 	var offset = groupPage*groupPageBreak - groupPageBreak;
+	var searchField = 'body.snippet attach.id attach.name attach.text';
 	let data = {
 		conditions :  getCondition( ) ,
 		limit : groupPageBreak,
 		offset : offset,
-		readYn : readYn
+		readYn : readYn,
+		searchField : searchField
 	}
 	searchFlag = true;
 	ui.onBody('timeline_list', 0, -20);
@@ -728,13 +730,14 @@ function getMessengerMessageList (page){
 	var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
 	groupMessagePage = page;
 	var offset = groupMessagePage*groupMessagePageBreak - groupMessagePageBreak;
+	var searchField = 'body.snippet attach.id attach.name attach.text';
 	searchFlag = true;
 	var data = {
 		conditions : getCondition( ),
 		limit : groupPageBreak,
 		offset : offset,
-		readYn : readYn
-
+		readYn : readYn,
+		searchField : searchField
 	}
 	ui.onBody('timeline_list', 0, -20);
 	ui.postJson({
