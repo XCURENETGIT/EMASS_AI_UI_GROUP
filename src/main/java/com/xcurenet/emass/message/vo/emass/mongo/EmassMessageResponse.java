@@ -90,6 +90,7 @@ public class EmassMessageResponse {
   private List<ComProperties_Mgo> bccList; //비밀참조리스트
 
 
+  private boolean consentFlag;
 
 
 }

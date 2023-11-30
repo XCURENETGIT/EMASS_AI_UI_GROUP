@@ -392,6 +392,9 @@ function fileInfoViewer( row ){
 	</script>
 </head>
 <body class="mini-navbar">
+<input id="searched_xAxis" type="hidden"/>
+<input id="searched_startDate" type="hidden"/>
+<input id="searched_endDate" type="hidden"/>
 <div class="container">
 
 	<div class="searchArea">

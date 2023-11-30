@@ -431,8 +431,9 @@ function getSelectedCodeData( codeType, data ) {
 	</script>
 </head>
 <body class="mini-navbar">
-
-<body class="mini-navbar">
+<input id="searched_xAxis" type="hidden"/>
+<input id="searched_startDate" type="hidden"/>
+<input id="searched_endDate" type="hidden"/>
 
 <div class="container">
 	<div class="searchArea">
@@ -649,7 +650,13 @@ function getSelectedCodeData( codeType, data ) {
             searchParam: JSON.stringify(searchData),
 
             success : function(data, total) {
-                grid1.colInit();
+				/* 통계영역 검색 조건 저장 */
+				if (data.search_xAxis != null) $('#searched_xAxis').val(data.search_xAxis);
+				if (data.search_startDate != null) $('#searched_startDate').val(data.search_startDate);
+				if (data.search_endDate != null) $('#searched_endDate').val(data.search_endDate);
+
+
+				grid1.colInit();
                 grid1.autoNumber();
                 grid1.colAdd('rowKey', '<s:message code="consent.attach"/>', 230, 'left', false, 'link');
                 grid1.colAdd('total', '<s:message code="bodyview.total"/>', 130, 'right', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
@@ -725,6 +732,7 @@ function getSelectedCodeData( codeType, data ) {
 
         /* 검색 데이터 전송 객체 */
         var searchData = {
+			detail : "ok",
             rowKey: rowKey,
             colKey: colKey,
             startDate: $('#searched_startDate').val(),
