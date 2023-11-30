@@ -78,15 +78,10 @@ $(document).ready(function(){
 		var attachUrl = '<c:url value="/getEmassAttachInfo4DownHash.xcn"/>?msgIds='+msgId+'&attachHash='+attachHash;
 		if ( attachSize == 0 || attachSize == 'NaN' ) attachSize = 1;
 
-		if ( isActiveX( ) ) {
-			document.InnoFD.RemoveAllFiles( );
-			document.InnoFD.DownloadAndOpen( attachUrl, fileNameReplace(attachName), attachSize );
-		} else{
-			try {
-				AttachDown.location.href = attachUrl;
-			} catch (e) {
-				AttachDown.src = attachUrl;
-			}
+		try {
+			AttachDown.location.href = attachUrl;
+		} catch (e) {
+			AttachDown.src = attachUrl;
 		}
 		var information = '[<s:message code="bodyview.attach.save"/>-<s:message code="bodyview.file.name"/>]'+enter;
 		information += '<s:message code="common.msg.msgid"/> : '+msgId + enter;
@@ -111,16 +106,10 @@ $(document).ready(function(){
 		if( attachSize == 0 || attachSize == 'NaN' ) attachSize = 1;
 		if(txt != '' && txt != 'unknown') attachName += '.'+txt;
 		
-		if ( false ) { //IE에서도 압축 방식을 통한 다운로드로 처리.
-			document.InnoFD.RemoveAllFiles( );
-			document.InnoFD.AppendFile( attachUrl, fileNameReplace(attachName), attachSize);
-			document.InnoFD.StartDownload( );
-		} else{
-			try {
-				AttachDown.location.href = attachUrl;
-			} catch (e) {
-				AttachDown.src = attachUrl;
-			}
+		try {
+			AttachDown.location.href = attachUrl;
+		} catch (e) {
+			AttachDown.src = attachUrl;
 		}
 	});
 	
@@ -138,60 +127,36 @@ $(document).ready(function(){
 		
 		if ( attachSize == 0 || attachSize == 'NaN' ) attachSize = 1;
 		
-		if ( false ) { //IE에서도 압축 방식을 통한 다운로드로 처리.
-			document.InnoFD.RemoveAllFiles( );
-			document.InnoFD.AppendFile( attachUrl, fileNameReplace(attachName), attachSize);
-			document.InnoFD.StartDownload( );
-		} else{
-			try {
-				AttachDown.location.href = attachUrl;
-			} catch (e) {
-				AttachDown.src = attachUrl;
-			}
+		try {
+			AttachDown.location.href = attachUrl;
+		} catch (e) {
+			AttachDown.src = attachUrl;
 		}
 	});
 	$(document).on('click', '#saveAttachBtn', function(){
-		if ( false ) { //IE에서도 압축 방식을 통한 다운로드로 처리.
-			document.InnoFD.RemoveAllFiles( );
-			$('.downloadIcon').each ( function ( i, item ) {
-				var msgId = $(this).parents('tr').attr('msgid');
-				var attachHash = $(this).parents('tr').attr('id');
-				var attachName = $(this).parents('tr').find('.attachName').text();
-				var attachSize = Number( $(this).parents('tr').attr('size') );
-				var attachUrl = '<c:url value="/getEmassAttachInfo4DownHash.xcn"/>?msgIds='+msgId+'&attachHash='+attachHash;
-				if( attachHash == ''){
-					alert('<s:message code="message.message.notfound.attach"/>');
-					return;
-				}
-				if ( attachSize == 0 || attachSize == 'NaN' ) attachSize = 1;
-				document.InnoFD.AppendFile( attachUrl, fileNameReplace(attachName), attachSize);
-			});
-			if ( document.InnoFD.GetCount > 0 ) document.InnoFD.StartDownload( );
-		} else{
-			var downloadFlag = false;
-			$('.downloadIcon').each ( function ( i, item ) {
-				var attachHash = $(this).parents('tr').attr('id');
-				if( attachHash != ''){
-					downloadFlag = true;
-				}
-			});
-			if( !downloadFlag){
-				alert('<s:message code="message.message.notfound.attach"/>');
-				return;
+		var downloadFlag = false;
+		$('.downloadIcon').each ( function ( i, item ) {
+			var attachHash = $(this).parents('tr').attr('id');
+			if( attachHash != ''){
+				downloadFlag = true;
 			}
-			
-			var msgIds=[];
-			$('.downloadIcon').each ( function ( i, item ) {
-				var msgId = $(this).parents('tr').attr('msgid');
-				msgIds.push(msgId);
-			});
-			
-			var attachUrl = '<c:url value="/getEmassAttachInfo4DownHash.xcn"/>?msgIds='+msgIds.join(',');
-			try {
-				AttachDown.location.href = attachUrl;
-			} catch (e) {
-				AttachDown.src = attachUrl;
-			}
+		});
+		if( !downloadFlag){
+			alert('<s:message code="message.message.notfound.attach"/>');
+			return;
+		}
+
+		var msgIds=[];
+		$('.downloadIcon').each ( function ( i, item ) {
+			var msgId = $(this).parents('tr').attr('msgid');
+			msgIds.push(msgId);
+		});
+
+		var attachUrl = '<c:url value="/getEmassAttachInfo4DownHash.xcn"/>?msgIds='+msgIds.join(',');
+		try {
+			AttachDown.location.href = attachUrl;
+		} catch (e) {
+			AttachDown.src = attachUrl;
 		}
 	});
 	ui.off( 'content_body' );
@@ -291,11 +256,6 @@ function changeHtml(str){
 				</div>
 			</div>
 		</div>
-	</div>
-	<div style="width: 0%;height: 0px;">
-		<script type="text/javascript">
-			LoadInnoFD( 1, 1 ); 
-		</script>
 	</div>
 <iframe id="AttachDown" src="about:blank;" height="0" width="0" style="display: none;" ></iframe>
 </body>

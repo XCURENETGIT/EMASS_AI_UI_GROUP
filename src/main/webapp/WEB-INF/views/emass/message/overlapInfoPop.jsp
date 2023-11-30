@@ -5,6 +5,7 @@
 <%@page import="java.util.List"%>
 <%@page import="com.xcurenet.common.util.Common"%>
 <%@page import="com.xcurenet.emass.message.service.SolrEdcVO"%>
+<%@ page import="com.xcurenet.common.util.config.Config" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
@@ -21,7 +22,6 @@
 <head>
 <title>EMASS LTH - <s:message code="message.overlap.poptitle"/></title>
 <%@ include file="../../base.jsp"%>
-<script type="text/javascript" src="<c:url value="/js/InnoFD.js"/>"></script>
 <style type="text/css">
 html,body{height: 100%; padding: 0px; margin: 0px;overflow: auto;min-width: 650px;}
 .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
@@ -778,9 +778,6 @@ function drawGrid() {
 		<iframe id="upload_file" name="upload_file" src="" style="display: none;"></iframe>
 	</div>
 	
-	<script type="text/javascript">
-	LoadInnoFD( 1, 1 ); 
-	</script>
 	<form action="<c:url value="/downEmassAttachByMsgId.xcn"/>" target="ExcelDown" method="post" id="downForm">
 		<input type="hidden" name="msgIds" id="msgIds">
 		<input type="hidden" name="msgId" id="msgId">

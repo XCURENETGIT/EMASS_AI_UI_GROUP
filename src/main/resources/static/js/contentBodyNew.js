@@ -167,24 +167,10 @@ $(document).ready(function(){
 		var attachUrl = contextRoot + '/downEmassAttach.xcn?msgId='+msgId+'&attachId='+attachId;
 		if ( attachSize == 0 || attachSize == 'NaN' ) attachSize = 1;
 
-		if ( isActiveX( ) ) {
-			document.InnoFD.RemoveAllFiles( );
-			document.InnoFD.DownloadAndOpen( attachUrl, fileNameReplace(attachName), attachSize );
-		} else{
-
-/* 		$.fileDownload(attachUrl, {
-			successCallback: function (url) {
-			},
-			failCallback: function (responseHtml, url) {
-				ui.alertMsg('<s:message code="consent.error.file"/>');
-			}
-		}); */
-
-			try {
-				AttachDown.location.href = attachUrl;
-			} catch (e) {
-				AttachDown.src = attachUrl;
-			}
+		try {
+			AttachDown.location.href = attachUrl;
+		} catch (e) {
+			AttachDown.src = attachUrl;
 		}
 
 		var information = '[' + message.attachSave + '-' + message.fileName + ']' + enter;
@@ -208,16 +194,10 @@ $(document).ready(function(){
 		if( attachSize == 0 || attachSize == 'NaN' ) attachSize = 1;
 		if(txt != '' && txt != 'unknown') attachName += '.'+txt;
 
-		if ( false ) { //IE에서도 압축 방식을 통한 다운로드로 처리.
-			document.InnoFD.RemoveAllFiles( );
-			document.InnoFD.AppendFile( attachUrl, fileNameReplace(attachName), attachSize);
-			document.InnoFD.StartDownload( );
-		} else{
-			try {
-				AttachDown.location.href = attachUrl;
-			} catch (e) {
-				AttachDown.src = attachUrl;
-			}
+		try {
+			AttachDown.location.href = attachUrl;
+		} catch (e) {
+			AttachDown.src = attachUrl;
 		}
 
 		var information = '[' + message.attachSave + '-' + message.pre_ext + ']'+enter;
@@ -240,16 +220,10 @@ $(document).ready(function(){
 		var attachUrl = contextRoot + '/downEmassAttach.xcn?msgId=' + msgId + '&attachId=' + attachId;
 		if ( attachSize == 0 || attachSize == 'NaN' ) attachSize = 1;
 
-		if ( false ) { //IE에서도 압축 방식을 통한 다운로드로 처리.
-			document.InnoFD.RemoveAllFiles( );
-			document.InnoFD.AppendFile( attachUrl, fileNameReplace(attachName), attachSize);
-			document.InnoFD.StartDownload( );
-		} else{
-			try {
-				AttachDown.location.href = attachUrl;
-			} catch (e) {
-				AttachDown.src = attachUrl;
-			}
+		try {
+			AttachDown.location.href = attachUrl;
+		} catch (e) {
+			AttachDown.src = attachUrl;
 		}
 
 		var information = '[' + message.attachSave + ']'+enter;
@@ -273,27 +247,11 @@ $(document).ready(function(){
 			e.stopPropagation();
 			return;
 		}
-		if ( false ) { //IE에서도 압축 방식을 통한 다운로드로 처리.
-			document.InnoFD.RemoveAllFiles( );
-			$('.downloadIcon').each ( function ( i, item ) {
-				var attachId = $(this).parents('tr').attr('id');
-				var attachName = $(this).parents('tr').find('.attachName').attr('attachname');
-				var attachSize = Number( $(this).parents('tr').attr('size') );
-				//var attachUrl = '<c:url value="/downEmassAttach.xcn"/>?msgId='+msgId+'&attachId='+attachId;
-				var attachUrl = contextRoot + '/downEmassAttach.xcn?msgId=' + msgId + '&attachId=' + attachId;
-				if ( attachSize == 0 || attachSize == 'NaN' ) attachSize = 1;
-
-				document.InnoFD.AppendFile( attachUrl, fileNameReplace(attachName), attachSize);
-			});
-			if ( document.InnoFD.GetCount > 0 ) document.InnoFD.StartDownload( );
-		} else{
-			//var attachUrl = '<c:url value="/downEmassAttach.xcn"/>?msgId='+msgId;
-			var attachUrl = contextRoot + '/downEmassAttach.xcn?msgId=' + msgId;
-			try {
-				AttachDown.location.href = attachUrl;
-			} catch (e) {
-				AttachDown.src = attachUrl;
-			}
+		var attachUrl = contextRoot + '/downEmassAttach.xcn?msgId=' + msgId;
+		try {
+			AttachDown.location.href = attachUrl;
+		} catch (e) {
+			AttachDown.src = attachUrl;
 		}
 
 		var information = '[' + message.attachSave + ']'+enter;
@@ -403,16 +361,10 @@ $(document).ready(function(){
 			url = contextRoot + '/getMessengerGroupAllSave.xcn?msgId=' + msgId + '&xRootMtr=' + xRootMtr + '&srcip=' + srcip+'&startDt='+startDt+'&endDt='+endDt+'&groupField=usr_id&usr_id=' + usr_id;
 		}
 
-		if ( false ) { //IE에서도 압축 방식을 통한 다운로드로 처리.
-			document.InnoFD.RemoveAllFiles( );
-			document.InnoFD.AppendFile( url, fileNameReplace(fileName), fileSize);
-			document.InnoFD.StartDownload( );
-		} else{
-			try {
-				AttachDown.location.href = url;
-			} catch (e) {
-				AttachDown.src = url;
-			}
+		try {
+			AttachDown.location.href = url;
+		} catch (e) {
+			AttachDown.src = url;
 		}
 
 		var information = '[' + message.bodyView + ']' + enter;

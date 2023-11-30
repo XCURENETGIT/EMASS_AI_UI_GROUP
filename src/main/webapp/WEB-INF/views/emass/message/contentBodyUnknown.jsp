@@ -663,12 +663,6 @@ function getParticipantInfo(){
 		<input type="hidden" name="userCharset" id="userCharsetStr">
 		<input type="hidden" name="mailForwardStr" id="mailForwardStr">
 	</form>
-	<div style="width: 0px;height: 0px;">
-		<script type="text/javascript">
-			LoadInnoFD( 1, 1 ); 
-		</script>
-	</div>
-	
 	<form name="imageForm" method="post" target="">
 		<input type="hidden" name="imgUrl">
 		<input type="hidden" name="fileName">

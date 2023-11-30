@@ -22,7 +22,6 @@
 <head>
 <title>EMASS LTH - <s:message code="consent.attach"/> <s:message code="common.msg.information"/></title>
 <%@ include file="../../base.jsp"%>
-<script type="text/javascript" src="<c:url value="/js/InnoFD.js"/>"></script>
 <style type="text/css">
 html,body{height: 100%; padding: 0px; margin: 0px;overflow: auto;min-width: 650px;}
 table th {

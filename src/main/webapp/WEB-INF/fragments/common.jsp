@@ -120,9 +120,6 @@
 	var firstAdminYn = '${_USERCREDENTIAL_.firstAdminYn}';
 	var adminMenu = '${_USERCREDENTIAL_.menu}';
 	var loginType = '${_USERCREDENTIAL_.loginType}';
-	var innoFD_Lang = 'kr';
-	if (innoFD_Lang == 'kr') innoFD_Lang = 'ko';
-	else innoFD_Lang = 'en';
 	var leftSize = 225;
 	var menuId = "";
 	var pMenuId = "";

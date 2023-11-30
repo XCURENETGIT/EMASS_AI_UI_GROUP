@@ -47,7 +47,6 @@ String conditionParam = Common.nvl(param.get("conditionParam"));
 <%-- <script type="text/javascript" src="<c:url value="/js/jquery.spliter.js"/>"></script> --%>
 <script type="text/javascript" src="<c:url value="/js/jquery.scrollbar.min.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/jquery.ztree.all-3.5.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/InnoFD.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/referrer-killer.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/conditionNew.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/ztreeRMenu.js"/>"></script>

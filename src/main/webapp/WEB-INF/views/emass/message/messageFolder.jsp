@@ -955,9 +955,6 @@ function viewer_newOpen(row, selectedGrid){
 		<iframe id="upload_file" name="upload_file" src="" style="display: none;"></iframe>
 	</div>
 	
-	<script type="text/javascript">
-	LoadInnoFD( 1, 1 ); 
-	</script>
 	<form action="<c:url value="/downEmassAttachByMsgId.xcn"/>" target="ExcelDown" method="post" id="downForm">
 		<input type="hidden" name="msgIds" id="msgIds">
 		<input type="hidden" name="msgId" id="msgId">

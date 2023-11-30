@@ -1143,11 +1143,6 @@
 		</div>
 	</div>
 </div>
-<div style="width: 0%;height: 0px;">
-	<script type="text/javascript">
-        LoadInnoFD( 1, 1 );
-	</script>
-</div>
 <iframe id="AttachDown" src="about:blank;" height="0" width="0" style="display: none;" ></iframe>
 <!-- Back to top -->
 <a href="#0" class="back-to-top cd-top"><span class="[ fa fa-chevron-up ]"></span> <span class="[ ]">Back to the Top</span></a>
