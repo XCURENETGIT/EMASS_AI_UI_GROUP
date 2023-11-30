@@ -439,8 +439,8 @@ function fileInfoViewer( row ){
 						<h3>조회기간</h3>
 						<div class="sublist">
 							<div>
-								<span class="tit">예약어 합계</span>
-								<p>99999<span class="text">건</span></p>
+								<span class="tit">TOP1 검출 사용자</span>
+								<p id="sub_1"><span class="text">건</span></p>
 							</div>
 							<div>
 								<span class="tit">예약어 합계</span>
@@ -638,6 +638,19 @@ function fileInfoViewer( row ){
 
 <script type="text/javascript">
 
+    function setSublist(data) {
+        var element = document.getElementById('sub_1');
+
+        if (element && data && data.length > 0 && data[0].rowKey) {
+            // 첫 번째 rowKey 값을 가져오기
+            var firstRowkey = data[0].rowKey;
+
+            // span 태그에 동적으로 추가
+            element.innerHTML = '<span>' + firstRowkey + '</span>';
+        }
+    }
+
+
     function getCurrentGrid() {
         var id = Number($('.listChart .active').attr('idx'));
         return tabInfo['tab' + id];
@@ -758,6 +771,8 @@ function fileInfoViewer( row ){
                 if (data.search_startDate != null) $('#searched_startDate').val(data.search_startDate);
                 if (data.search_endDate != null) $('#searched_endDate').val(data.search_endDate);
 
+
+                setSublist(data);
                 grid1.colInit();
                 grid1.autoNumber();
                 grid1.colAdd('rowKey', '<s:message code="consent.user"/>', 230, 'left', false, 'link', function (row, cell, value, columnDef, dataContext) {

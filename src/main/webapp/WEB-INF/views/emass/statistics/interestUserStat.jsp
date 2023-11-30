@@ -638,7 +638,7 @@ function getSearchQuery() {
                 xAxis: xAxis,
                 xAxis_str: xAxis_str,
 				rowKey: rowKey,
-                yAxis: 'user.id',
+                yAxis: 'user.userId',
                 startDate: sDate + "000000",
                 endDate: eDate + "235959",
                 offset: grid1.data.length,
@@ -760,7 +760,7 @@ function getSearchQuery() {
                 xAxis_str: xAxis_str,
                 searched_xAxis: $('#searched_xAxis').val(),
                 /*colId: colId,*/
-                yAxis: 'user.id',
+                yAxis: 'user.userId',
                 interGroup : interGroup,
                 offset: currentgrid.data.length,
                 limit: currentgrid.pageSize,

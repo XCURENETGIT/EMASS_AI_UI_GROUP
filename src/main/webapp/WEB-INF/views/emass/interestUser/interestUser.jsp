@@ -714,7 +714,6 @@
 	</div>
 </div>
 
-
 <script type="text/javascript">
     var gridGroup = new Xgrid('userGroupListGrid', contextRoot, 30);
     gridGroup.onCheckBox();

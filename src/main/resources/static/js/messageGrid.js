@@ -4,6 +4,7 @@
 			statGrid = currGrid;
 			currGrid.autoNumber();
 			currGrid.colAdd('msgid', gridColumn.msgid, 100, 'left', false, 'nomal','',0);
+			currGrid.colAdd('user_userId', "아이디", 100, 'left', false, 'nomal','',0);
 		//	currGrid.colAdd('epmsg_type', gridColumn.epmsg_type, 100, 'center', true, 'nomal');
 			currGrid.colAdd('xrootmtr', gridColumn.xrootmtr, 100, 'left', true, 'nomal','',1);
 			// currGrid.colAdd('interestUserYn', gridColumn.interestUserYn, 40, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {

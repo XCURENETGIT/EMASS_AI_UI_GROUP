@@ -32,7 +32,7 @@ $(document).ready(function(){
 		getKeywordData();
 	});
 	
-	$('.groupSavePopBtn').click(function(){
+	$('#groupSavePopBtn').click(function(){
 		if( $('#groupName').val().ltrim().rtrim() == '' ) {
 			ui.alertMsg('<s:message code="keyword.message.part_name"/>');
 			$('#groupName').focus();
@@ -101,7 +101,7 @@ $(document).ready(function(){
 		});
 	});
 	
-	$('.keywordSavePopBtn').click(function(){
+	$('#keywordSavePopBtn').click(function(){
 		var keywordStr = $('#keywordName').val().ltrim().rtrim();
 		if( keywordStr == '' ) {
 			ui.alertMsg('<s:message code="keyword.message.insert"/>');
@@ -298,7 +298,8 @@ function importKeyword() {
 	}
 	
 	var fileExt = attach.substring( attach.lastIndexOf( "." )+1, attach.length ).toLowerCase( );
-	
+    $('#importGroupSeq').val(gridGroup.getValue(gridGroup.Row, "groupSeq"));
+
 	ui.confirmMsg('<s:message code="keyword.upload.confirm"/>', '', '', function(rs){
 		if(rs){
 			loadingOn("uploadPop");
@@ -362,177 +363,200 @@ function fileExtCheck(obj) {
 }
 </script>
 </head>
-<body class="mini-navbar">
-	<div class="modal fade" id="keywordGroupPop" tabindex="-1" role="dialog" aria-labelledby="keywordGroupPop">
-		<div class="modal-dialog" role="document" style="width: 500px;">
-			<div class="modal-content">
-				<form method="post" id="keywordGroupPopForm" onsubmit="return false;">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-						<h3 class="modal-title"><s:message code="keyword.msg.part_mgnt"/>-<s:message code="common.msg.addmodify"/></h3>
-					</div>
-					<div class="modal-body">
-						<div class="form-group form-inline">
-							<label for="groupName" class="control-label col-xs-3"><s:message code="keyword.msg.part_name"/></label>
-							<input type="text" class="form-control" name="groupName" id="groupName" style="width: 350px;" maxlength="60">
-							<input type="hidden" class="form-control" name="groupSeq" id="groupSeq">
+<body>
+<div class="modal" id="keywordGroupPop" aria-labelledby="keywordGroupPop" tabindex="-1" role="dialog">
+	<div class="modal-content">
+		<form method="post" id="keywordGroupPopForm" onsubmit="return false;">
+			<div class="modalHead">
+				<h2><s:message code="keyword.msg.part_mgnt"/>-<s:message code="common.msg.addmodify"/></h2>
+				<span class="close" data-dismiss="modal">&times;</span>
+			</div>
+			<div class="modalCon">
+				<div class="modalTop">
+					<h3>예약어 그룹 추가</h3>
+					<p>
+						<span class="red_dot veralign_middle"></span>
+						필수 입력 사항입니다.
+					</p>
+				</div>
+				<div class="modalbody">
+					<div class="row">
+						<div class="col-35">
+							<label for="groupName" class="fname"><s:message code="keyword.msg.part_name"/></label>
+							<span class="red_dot"></span>
 						</div>
-						<div class="form-inline top_space">
-							<label for="useYn" class="control-label col-xs-3"><s:message code="common.msg.useyn"/></label>
-							<label class="radio-inline c-radio">
-								<input type="radio" name="useYn" value="Y" checked>
-								<span class="fa fa-check"></span><s:message code="common.msg.use"/>
-							</label>
-							<label class="radio-inline c-radio">
-								<input type="radio" name="useYn" value="N">
-								<span class="fa fa-check"></span><s:message code="common.msg.unuse"/>
-							</label>
+						<div class="col-65">
+							<input type="text" class="w100" name="groupName" id="groupName" maxlength="55">
+							<input type="hidden" class="w100" name="groupSeq" id="groupSeq">
 						</div>
 					</div>
-				</form>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
-					<button type="button" class="btn btn-primary groupSavePopBtn" accesskey="S"><s:message code="common.msg.save"/></button>
+					<div class="row">
+						<div class="col-35">
+							<label for="useYn" class="control-label"><s:message code="common.msg.useyn"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<label class="radio-inline c-radio">
+							<input type="radio" name="useYn" value="Y" checked>
+							<s:message code="common.msg.use"/>
+						</label>
+						<label class="radio-inline c-radio">
+							<input type="radio" name="useYn" value="N">
+							<s:message code="common.msg.unuse"/>
+						</label>
+					</div>
+				</div>
+				<div class="modalfooter">
+					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+					<button type="button" class="pop_btn02" accesskey="S" id="groupSavePopBtn"><s:message code="common.msg.save"/></button>
 				</div>
 			</div>
-		</div>
+		</form>
 	</div>
-	
-	<div class="modal fade" id="keywordPop" tabindex="-1" role="dialog" aria-labelledby="keywordPop">
-		<div class="modal-dialog" role="document" style="width: 500px;">
-			<div class="modal-content">
-				<form method="post" id="keywordPopForm">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-						<h3 class="modal-title"><s:message code="DATA_MONITOR.KEYWORD_MGMT"/>-<s:message code="common.msg.addmodify"/></h3>
-					</div>
-					<div class="modal-body">
-						<div class="form-group form-inline">
-							<label for="groupName" class="control-label col-xs-3"><s:message code="keyword.msg.part_name"/></label>
-							<input type="text" class="form-control" name="groupName" id="keyGroupName" style="width: 350px;" readonly="readonly">
-							<input type="hidden" class="form-control" name="groupSeq" id="keyGroupSeq">
-						</div>
-						<div class="form-group form-inline">
-							<label for="keywordName" class="control-label col-xs-3"><s:message code="keyword.msg.keyword"/></label>
-							<input type="text" class="form-control" name="keywordName" id="keywordName" style="width: 350px;" maxlength="60">
-							<input type="hidden" class="form-control" name="keywordSeq" id="keywordSeq">
-						</div>
-						<div class="form-group form-inline">
-							<label for="keywordDesc" class="control-label col-xs-3"><s:message code="keyword.msg.comment"/></label>
-							<input type="text" class="form-control" name="keywordDesc" id="keywordDesc" style="width: 350px;" maxlength="60">
-						</div>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
-						<button type="button" class="btn btn-primary keywordSavePopBtn" accesskey="S"><s:message code="common.msg.save"/></button>
-					</div>
-				</form>
+</div>
+
+<div class="modal" id="keywordPop"  tabindex="-1" role="dialog" aria-labelledby="keywordPop">
+	<div class="modal-content">
+		<form method="post" id="keywordPopForm">
+			<div class="modalHead">
+				<h2><s:message code="DATA_MONITOR.KEYWORD_MGMT"/>-<s:message code="common.msg.addmodify"/></h2>
+				<span class="close" data-dismiss="modal">&times;</span>
 			</div>
-		</div>
-	</div>
-
-
-	<div id="upload_file"></div>
-	<div class="modal fade" id="uploadPop" role="dialog" aria-labelledby="uploadPop">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					<h3 class="modal-title"><s:message code="DATA_MONITOR.KEYWORD_MGMT"/>-<s:message code="keyword.msg.upload"/></h3>
+			<div class="modalCon">
+				<div class="modalTop">
+					<h3>예약어 그룹 추가</h3>
+					<p>
+						<span class="red_dot veralign_middle"></span>
+						필수 입력 사항입니다.
+					</p>
 				</div>
-				<div class="modal-body">
-					<form method="post" id="uploadForm" enctype="multipart/form-data" target="upload_file">
-						<div class="form-group form-inline">
-							<label for="keywordDesc" class="control-label col-xs-3"><s:message code="keyword.msg.colseparator"/></label>
-							 <select class="form-control input-sm" id="separator" name="separator">
-								<option value=",">,</option>
-								<option value="|">|</option>
-							</select>
-							<select class="form-control input-sm" id="encoding" name="encoding">
+				<div class="modalbody">
+					<div class="row">
+						<div class="col-35">
+							<label for="groupName" class="fname"><s:message code="keyword.msg.part_name"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<input type="text" class="w100" name="groupName" id="keyGroupName"  readonly="readonly">
+							<input type="hidden" class="w100" name="groupSeq" id="keyGroupSeq">
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-35">
+							<label for="keywordName" class="fname"><s:message code="keyword.msg.keyword"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<input type="text" class="w100" name="keywordName" id="keywordName" maxlength="60">
+							<input type="text" class="w100" name="keywordSeq" id="keywordSeq">
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-35">
+							<label for="keywordDesc" class="fname"><s:message code="keyword.msg.comment"/></label>
+						</div>
+						<div class="col-65">
+							<input type="text" class="w100" name="keywordDesc" id="keywordDesc" maxlength="60">
+						</div>
+					</div>
+				</div>
+				<div class="modalfooter">
+					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+					<button type="button" class="pop_btn02" accesskey="S" id="keywordSavePopBtn"><s:message code="common.msg.save"/></button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<div id="upload_file"></div>
+<div class="modal" id="uploadPop" aria-labelledby="uploadPop">
+	<div class="modal-content">
+		<form method="post" id="uploadForm" enctype="multipart/form-data" target="upload_file">
+			<div class="modalHead">
+				<h2><s:message code="DATA_MONITOR.KEYWORD_MGMT"/>-<s:message code="keyword.msg.upload"/></h2>
+				<span class="close" data-dismiss="modal">&times;</span>
+			</div>
+			<div class="modalCon">
+				<div class="modalbody">
+					<div class="row">
+						<div class="col-35">
+							<label for="encoding" class="fname"><s:message code="bodyview.charset"/></label>
+						</div>
+						<div class="col-65">
+							<select class="optiotab" id="encoding" name="encoding">
 								<option value="utf-8">UTF-8</option>
 								<option value="euc-kr">EUC-KR</option>
 							</select>
-							
+							<input type="hidden" class="" name="importGroupSeq" id="importGroupSeq" maxlength="300">
 						</div>
-						<div class="form-group form-inline">
-							<label for="keywordDesc" class="control-label col-xs-3"><s:message code="keyword.select.file"/></label>
+					</div>
+					<div class="row">
+						<div class="col-35">
+							<label for="keywordDesc" class="fname"><s:message code="keyword.select.file"/></label>
+						</div>
+						<div class="col-65">
 							<span id="attachSpan"><input type="file" class="form-control" name="attach" id="attach" style="width: 350px; border: 0px; padding: 0px;"></span>
 						</div>
-						<div class="form-inline" style="margin-top: 20px; padding-left: 10px;">1) <s:message code="keyword.message.upload.info1"/></div>
-						<div class="form-inline" style="padding-left: 10px;">2) <s:message code="keyword.message.upload.info2"/></div>
-						<div class="form-inline" style="padding-left: 10px;">3) <s:message code="keyword.message.upload.info3"/></div>
-					</form>
+					</div>
 				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
-					<button type="button" class="btn btn-primary uploadPopBtn" accesskey="S"><s:message code="common.msg.save"/></button>
+				<div class="info"> 안내 사항
+					<div class="form-inline" style="padding-left: 10px;">1) <s:message code="interest.message.upload.info1"/></div>
+					<div class="form-inline" style="padding-left: 10px;">2) <s:message code="interest.message.upload.info2"/></div>
+					<div class="form-inline" style="padding-left: 10px;">3) <s:message code="interest.message.upload.info3"/></div>
+					<div class="form-inline" style="padding-left: 10px;">4) <s:message code="interest.message.upload.info4"/></div>
+					<div style="padding-left: 10px;">5) <s:message code="interest.message.upload.info5"/></div>
+				</div>
+				<div class="modalfooter">
+					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+					<button type="button" class="pop_btn02" accesskey="S"><s:message code="common.msg.save"/></button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+
+<div class="container">
+	<div class="searchArea">
+		<div style="width:470px; float: left">
+			<div class="searchSub" style="width: 470px;">
+				<div>
+					<input type="text" placeholder="<s:message code="keyword.message.part_name"/>" id="searchStrGroup" style="width: 220px;">
+					<button class="form_btn01" type="button" accesskey="G" id="searchGroupBtn"><i class="glyphicon glyphicon-search"></i></button>
+				</div>
+				<button type="button" class="btn01" accesskey="I" id="groupInsertBtn"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
+				<button type="button" class="btn02" accesskey="D" id="groupDeleteBtn"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
+			</div>
+			<div class="content xcn_full" style="background-color: transparent">
+				<div class="contentSub" style="padding: 0px;">
+					<div id="keywordGroupListGrid" class="slickGrid gridArea"></div>
+				</div>
+			</div>
+		</div>
+
+		<div style="width:calc(100% - 470px); padding-left: 16px; float: left">
+			<div class="searchSub" style="width:calc(100% - 470px) ">
+				<div>
+					<input type="text" placeholder="<s:message code="common.msg.searchMsg"/>" id="searchStrKeyword" style="width: 280px;">
+					<button class="form_btn01" type="button" accesskey="K" id="searchStrKeywordBtn"><i class="glyphicon glyphicon-search"></i></button>
+				</div>
+				<c:if test="${_USERCREDENTIAL_.firstAdminYn eq 'Y'}">
+					<button type="button" class="btn01" accesskey="A" id="keywordInsertBtn"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
+					<button type="button" class="btn02" accesskey="E" id="keywordDeleteBtn"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
+					<button type="button" class="btn03" accesskey="U" id="uploadBtn"><img src="<c:url value="/img/subBtn_upload.png"/>" alt="업로드">Upload</button>
+				</c:if>
+			</div>
+			<div class="content xcn_full" style=" background-color: transparent">
+				<div class="contentSub " style="padding:0 ">
+					<div id="keywordListGrid" class="slickGrid gridArea"></div>
 				</div>
 			</div>
 		</div>
 	</div>
-	
-	<div class="container">
-		<div class="boxArea">
-			<div class="content_body">
-				<div class="row" style="line-height: 0px; height:100%;">
-					<div class="col-xs-5" style="height: 100%; padding-right: 5px;width:470px;">
-						<div class="row" style="margin-right:0px;">
-							<div class="col-xs-9 text-left" style="padding-right:0;width:calc(100% - 95px);">
-								<div class="form-group form-inline not-dashed">
-									<div class="input-group">
-										<input type="text" class="form-control input-sm" placeholder="<s:message code="keyword.message.part_name"/>" id="searchStrGroup" style="width: 160px;">
-										<div class="input-group-btn">
-											<button class="btn btn-sm btn-success" type="button" accesskey="G" id="searchStrGroupBtn"><i class="glyphicon glyphicon-search"></i></button>
-										</div>
-									</div>
-									<c:if test="${_USERCREDENTIAL_.firstAdminYn eq 'Y'}">
-										<button type="button" class="btn btn-sm btn-primary" accesskey="I" id="groupInsertBtn"><span class="glyphicon glyphicon-plus"></span>&nbsp;<s:message code="common.msg.add"/></button>
-										<button type="button" class="btn btn-sm btn-default" accesskey="D" id="groupDeleteBtn"><span class="glyphicon glyphicon-minus"></span>&nbsp;<s:message code="common.msg.delete"/></button>
-									</c:if>
-								</div>
-							</div>
-						</div>
-						<div class="row xcn_full top_space">
-							<div class="col-xs-12" style="height: 100%;">
-								<div id="keywordGroupListGrid" class="slickGrid gridArea"></div>
-							</div>
-						</div>
-					</div>
-					<div class="col-xs-7" style="height: 100%; padding-left: 5px;width:calc(100% - 470px);">
-						<div class="row">
-							<div class="col-xs-8 text-left" style="padding-left:20px;">
-								<div class="form-group form-inline not-dashed">
-									<div class="input-group">
-										<input type="text" class="form-control input-sm" placeholder="<s:message code="keyword.message.insert"/>" id="searchStrKeyword" style="width: 200px;">
-										<div class="input-group-btn">
-											<button class="btn btn-sm btn-success" type="button" accesskey="K" id="searchStrKeywordBtn"><i class="glyphicon glyphicon-search"></i></button>
-										</div>
-									</div>
-									<c:if test="${_USERCREDENTIAL_.firstAdminYn eq 'Y'}">
-										<button type="button" class="btn btn-sm btn-primary" accesskey="A" id="keywordInsertBtn"><span class="glyphicon glyphicon-plus"></span>&nbsp;<s:message code="common.msg.add"/></button>
-										<button type="button" class="btn btn-sm btn-default" accesskey="E" id="keywordDeleteBtn"><span class="glyphicon glyphicon-minus"></span>&nbsp;<s:message code="common.msg.delete"/></button>
-										<button type="button" class="btn btn-sm btn-warning" accesskey="U" id="uploadBtn"><span class="glyphicon glyphicon-import"></span>&nbsp;Upload</button>
-									</c:if>
-								</div>
-							</div>
-						</div>
-						<div class="row xcn_full top_space">
-							<div class="col-xs-12" style="height: 100%;">
-								<div id="keywordListGrid" class="slickGrid gridArea"></div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	
+</div>
+</body>
 	<script type="text/javascript">
 		var gridGroup = new Xgrid('keywordGroupListGrid', contextRoot);
 		gridGroup.onCheckBox();

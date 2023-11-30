@@ -1294,45 +1294,62 @@ public class ElasticSearchQueryUtils {
 		int limit = 0;
 
 		offset = (int) Math.round(Double.valueOf(Common.nvl(elasticSearchParam.getSearchParameters().get("offset"))));
-		limit = (int) Math.round(Double.valueOf(Common.nvl(elasticSearchParam.getSearchParameters().get("limit"))));
+		limit =  (int) Math.round(Double.valueOf(Common.nvl(elasticSearchParam.getSearchParameters().get("limit"))));
 
 //&&Common.isEmpty(elasticSearchParam.getSearchParameters().get("interGroupId"))
 		/* yField 설정 */
-		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("yAxis"))) {
+		if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("yAxis"))) {
 			setyField(Common.nvl(elasticSearchParam.getSearchParameters().get("yAxis")));
 		}
 
 		/* rowKey만 존재 */
-		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("rowKey"))) {
+		if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("rowKey"))) {
 			setSearchQuery(Common.nvl(elasticSearchParam.getSearchParameters().get("rowKey")));
 		}
 		/* 관심사용자 검색시 */
-		else if (Common.isEmpty(elasticSearchParam.getSearchParameters().get("rowKey")) && !Common.isEmpty(elasticSearchParam.getSearchParameters().get("interGroupId"))) {
-			/*setSearchQuery(Common.nvl(elasticSearchParam.getSearchParameters().get("interGroupId")));*/
-		} else {
+		else if(Common.isEmpty(elasticSearchParam.getSearchParameters().get("rowKey")) && !Common.isEmpty(elasticSearchParam.getSearchParameters().get("interGroupId"))) {
+			adminUserGroupService = SpringContextUtil.getBean(AdminUserGroupService.class);
+			List<AdminUserGroupVO> users = adminUserGroupService.getAdminUserGroupSimpleList((String) elasticSearchParam.getSearchParameters().get("interGroup"));
+			String userArr="";
+			if(users.size()>1) {
+				for (int i = 0; i < users.size(); i++) {
+					userArr += users.get(i).getUserId();
+					if (i < users.size() - 1) {
+						userArr += " ";
+					}
+				}
+
+
+			}else{
+				userArr=users.get(0).getUserId();
+			}
+			setSearchQuery(userArr);
+		} else{
 			/*아무런 검색조건 없을시*/
 			setSearchQuery(Common.nvl(ElasticSearchCommon.ALL_SEARCH));
 		}
 
 		/* 아무런 rowKey & colkey  조건이 없을시 */
-		if (Common.isEmpty(elasticSearchParam.getSearchParameters().get("rowKey")) && Common.isEmpty(elasticSearchParam.getSearchParameters().get("colKey"))) {
+		if(Common.isEmpty(elasticSearchParam.getSearchParameters().get("rowKey")) && Common.isEmpty(elasticSearchParam.getSearchParameters().get("colKey"))){
 			limit = 0;
 		}
 
 		/* detail Query 존재시*/
-		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("detailQuery"))) {
+		if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("detailQuery"))) {
 			setDetailQuery(Common.nvl(elasticSearchParam.getSearchParameters().get("detailQuery")));
 		}
 
 
-		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("interGroup"))) {
+/*
+		if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("interGroup"))) {
 			adminUserGroupService = SpringContextUtil.getBean(AdminUserGroupService.class);
 			List<AdminUserGroupVO> users = adminUserGroupService.getAdminUserGroupSimpleList((String) elasticSearchParam.getSearchParameters().get("interGroup"));
 			if (users.size() == 0) return;
-			String userStr = users.stream().map(m -> m.getUserId().toLowerCase()).collect(Collectors.joining(","));
+			String userStr =  users.stream().map(m-> m.getUserId().toLowerCase()).collect(Collectors.joining(","));
 			String[] userArr = userStr.split(",");
-			addQueryGroup(ElasticSearchCommon.AND_QUERY, ElasticSearchCommon.USER_USERID, makeParentheses(userArr));
+			addQueryGroup(ElasticSearchCommon.AND_QUERY,ElasticSearchCommon.USER_USERID,makeParentheses(userArr));
 		}
+*/
 
 
 		/* set Query (항상 쿼리 조합 최하단에 위치) */

@@ -73,7 +73,7 @@ $(document).ready(function(){
 		fileExtCheck($(this));
 	});
 	
-	$('.savePopBtn').click(function(){
+	$('#savePopBtn').click(function(){
 		var busiCd = $('#busiCd').val().ltrim().rtrim();
 		var startIp = $('#startIp').val().ltrim().rtrim();
 		var endIp = $('#endIp').val().ltrim().rtrim();
@@ -106,6 +106,7 @@ $(document).ready(function(){
 		$('#hiddenBusiNm').val(busiNm);
 		var updateYn = $('#busiCd').prop('disabled');
 		var url = '';
+
 		if(updateYn){
 			url = 'updateIpRange.xcn';
 			$('#orgStartIp').val(orgStartIp);
@@ -279,150 +280,232 @@ function fileExtCheck(obj){
 </head>
 <body class="mini-navbar">
 
-	<div class="modal fade" id="ipRangePop" tabindex="-1" role="dialog" aria-labelledby="ipRangeModal">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<form method="post" id="ipRangePopForm">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-						<h3 class="modal-title"><s:message code="ipRange.iprangepop.title"/></h3>
-					</div>
-					<div class="modal-body">
-						<div class="form-inline">
-							<label for="attachTypePopInput" class="control-label col-xs-3"><s:message code="common.org.busi"/></label>
-							<select class="form-control input-sm" id="busiCd" name="busiCd">
+<div class="modal" id="ipRangePop" tabindex="-1" role="dialog" aria-labelledby="ipRangeModal">
+	<div class="modal-content">
+		<form method="post" id="ipRangePopForm">
+			<div class="modalHead">
+				<h2><s:message code="DATA_MONITOR.KEYWORD_MGMT"/>-<s:message code="common.msg.addmodify"/></h2>
+				<span class="close" data-dismiss="modal">&times;</span>
+			</div>
+			<div class="modalCon">
+				<div class="modalTop">
+					<h3>사업장 내부 IP 추가</h3>
+					<p>
+						<span class="red_dot veralign_middle"></span>
+						필수 입력 사항입니다.
+					</p>
+				</div>
+				<div class="modalbody">
+					<div class="row">
+						<div class="col-35">
+							<label for="attachTypePopInput" class="fname"><s:message code="common.org.busi"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<select id="busiCd" name="busiCd">
 								<option value="">- <s:message code="common.org.choose.busi"/> -</option>
 							</select>
 							<input type="hidden" name="busiNm" id="hiddenBusiNm">
 						</div>
-						<%if( isIPv6){ %>
-						<div class="form-inline">
-							<label for="attachTypePopInput" class="control-label col-xs-3"><s:message code="didBlock.startip"/></label>
-							<input type="text" class="form-control" name="startIp" id="startIp" style="width:320px;" placeholder="<s:message code="didBlock.startip"/>" required>
-							<p style="padding-left:142px; margin-bottom: 0px;">
+					</div>
+
+					<%if (isIPv6) { %>
+					<div class="row">
+						<div class="col-35">
+							<label for="attachTypePopInput" class="fname"><s:message code="didBlock.startip"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<input type="text" class="w100" name="startIp" id="startIp"
+							       placeholder="<s:message code="didBlock.startip"/>" required>
+							<p>
 								<span style='color:grey;'>[ex: IPv4 - 192.168.0.12 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IPv6 - 2002:9b3d:1a32:4:208:74ff:fe39:6c43]</span>
 							</p>
 						</div>
-						<div class="form-inline">
-							<label for="attachDescPopInput" class="control-label col-xs-3"><s:message code="didBlock.endip"/></label>
-							<input type="text" class="form-control" name="endIp" id="endIp" style="width:320px;" placeholder="<s:message code="didBlock.endip"/>" required>
-							<p style="padding-left:142px; margin-bottom: 0px;">
+					</div>
+
+					<div class="row">
+						<div class="col-35">
+							<label for="attachDescPopInput" class="fname"><s:message code="didBlock.endip"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<input type="text" class="w100" name="endIp" id="endIp"
+							       placeholder="<s:message code="didBlock.endip"/>" required>
+							<p>
 								<span style='color:grey;'>[ex: IPv4 - 192.168.0.12 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IPv6 - 2002:9b3d:1a32:4:208:74ff:fe39:6c43]</span>
 							</p>
 						</div>
-						<div class="form-inline">
-							<label for="attachDescPopInput" class="control-label col-xs-3"><s:message code="common.msg.comment"/></label>
-							<input type="text" class="form-control" name="comment" id="comment" style="width:320px;" placeholder="<s:message code="common.msg.comment"/>" maxlength="500">
-						</div>
-						<div class="form-inline">
-							<label for="attachTypePopInput"></label>
-							<input type="hidden" class="form-control" name="orgStartIp"  id="orgStartIp">
-						</div>
-						<div class="form-inline">
-							<label for="attachTypePopInput"></label>
-							<input type="hidden" class="form-control" name="orgEndIp"  id="orgEndIp">
-						</div>
-						<%} else {%>
-						<div class="form-inline">
-							<label for="attachTypePopInput" class="control-label col-xs-3"><s:message code="didBlock.startip"/></label>
-							<input type="text" class="form-control" name="startIp" id="startIp" placeholder="<s:message code="didBlock.startip"/>" required>
-							
-						</div>
-						<div class="form-inline">
-							<label for="attachDescPopInput" class="control-label col-xs-3"><s:message code="didBlock.endip"/></label>
-							<input type="text" class="form-control" name="endIp" id="endIp" placeholder="<s:message code="didBlock.endip"/>" required>
-						</div>
-						<div class="form-inline">
-							<label for="attachDescPopInput" class="control-label col-xs-3"><s:message code="common.msg.comment"/></label>
-							<input type="text" class="form-control" name="comment" id="comment" placeholder="<s:message code="common.msg.comment"/>" maxlength="500">
-						</div>
-						<div class="form-inline">
-							<label for="attachTypePopInput"></label>
-							<input type="hidden" class="form-control" name="orgStartIp"  id="orgStartIp">
-						</div>
-						<div class="form-inline">
-							<label for="attachTypePopInput"></label>
-							<input type="hidden" class="form-control" name="orgEndIp"  id="orgEndIp">
-						</div>
-						<%} %>
 					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-primary savePopBtn" accesskey="S"><s:message code="common.msg.save"/></button>
-						<button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+
+					<div class="row">
+						<div class="col-35">
+							<label for="attachDescPopInput" class="fname"><s:message code="common.msg.comment"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<input type="text" class="w100" name="comment" id="comment"
+							       placeholder="<s:message code="common.msg.comment"/>" maxlength="500">
+						</div>
 					</div>
-				</form>
+
+					<div class="row">
+						<div class="col-35">
+							<label for="attachTypePopInput" class="fname"></label>
+						</div>
+						<div class="col-65">
+							<input type="hidden" class="w100" name="orgStartIp" id="orgStartIp">
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-35">
+							<label for="attachTypePopInput" class="fname"></label>
+						</div>
+						<div class="col-65">
+							<input type="hidden" class="w100" name="orgEndIp" id="orgEndIp">
+						</div>
+					</div>
+
+					<%} else {%>
+
+					<div class="row">
+						<div class="col-35">
+							<label for="attachTypePopInput" class="fname"><s:message code="didBlock.startip"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<input type="text" class="w100" name="startIp" id="startIp"
+							       placeholder="<s:message code="didBlock.startip"/>" required>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-35">
+							<label for="attachDescPopInput" class="fname"><s:message code="didBlock.endip"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<input type="text" class="w100" name="endIp" id="endIp"
+							       placeholder="<s:message code="didBlock.endip"/>" required>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-35">
+							<label for="attachDescPopInput" class="fname"><s:message code="common.msg.comment"/></label>
+						</div>
+						<div class="col-65">
+							<input type="text" class="w100" name="comment" id="comment"
+							       placeholder="<s:message code="common.msg.comment"/>" maxlength="500">
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-35">
+							<label for="attachTypePopInput" class="fname"></label>
+						</div>
+						<div class="col-65">
+							<input type="hidden" class="w100" name="orgStartIp" id="orgStartIp">
+						</div>
+					</div>
+
+
+					<div class="row">
+						<div class="col-35">
+							<label for="attachTypePopInput" class="fname"></label>
+						</div>
+						<div class="col-65">
+							<input type="hidden" class="w100" name="orgEndIp" id="orgEndIp">
+						</div>
+					</div>
+
+
+					<%} %>
+				</div>
+				<div class="modalfooter">
+					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message
+							code="common.msg.close"/></button>
+					<button type="button" class="pop_btn02" accesskey="S" id="savePopBtn"><s:message
+							code="common.msg.save"/></button>
+				</div>
 			</div>
-		</div>
+		</form>
 	</div>
+</div>
 	<div id="upload_file"></div>
-	<div class="modal fade" id="uploadPop" role="dialog" aria-labelledby="uplaodPop">
-		<div class="modal-dialog" role="document">
-			<div class = "modal-content">
-				<div class="modal-header">
-					<button type = "button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					<h3 class="modal-title"><s:message code="POLICY_SETUP.BUSI_IPRANGE"/>-<s:message code="keyword.msg.upload"/></h3>
+	<div class="modal" id="uploadPop" aria-labelledby="uploadPop">
+		<div class="modal-content">
+			<form method="post" id="uploadForm" enctype="multipart/form-data" target="upload_file">
+				<div class="modalHead">
+					<h2><s:message code="DATA_MONITOR.KEYWORD_MGMT"/>-<s:message code="keyword.msg.upload"/></h2>
+					<span class="close" data-dismiss="modal">&times;</span>
 				</div>
-				<div class="modal-body">
-					<form method="post" id="uploadForm" enctype="multipart/form-data" target="upload_file">
-						<div class="form-group form-inline">
-							<label for="comment" class="control-label col-xs-3"><s:message code="keyword.msg.colseparator"/></label>
-						 	<select class="form-control input-sm" id="separator" name="separator">
-						 		<option value=",">,</option>
-						 		<option value="|">|</option>
-						 	</select>
-						 	<select class="form-control input-sm" id="encoding" name="encoding">
-						 		<option value="utf-8">UTF-8</option>
-						 		<option value="euc-kr">EUC-KR</option>
-						 	</select>
+				<div class="modalCon">
+					<div class="modalbody">
+						<div class="row">
+							<div class="col-35">
+								<label for="encoding" class="fname"><s:message code="bodyview.charset"/></label>
+							</div>
+							<div class="col-65">
+								<select class="optiotab" id="encoding" name="encoding">
+									<option value="utf-8">UTF-8</option>
+									<option value="euc-kr">EUC-KR</option>
+								</select>
+								<input type="hidden" class="" name="importGroupSeq" id="importGroupSeq" maxlength="300">
+							</div>
 						</div>
-						<div class="form-group form-inline">
-							<label for="comment" class="control-label col-xs-3"><s:message code="keyword.select.file"/></label>
-							<span id="attachSpan"><input type="file" class="form-control" name="attach" id="attach" style="width: 350px; border: 0px; padding: 0px;"></span>
+						<div class="row">
+							<div class="col-35">
+								<label for="keywordDesc" class="fname"><s:message code="keyword.select.file"/></label>
+							</div>
+							<div class="col-65">
+								<span id="attachSpan"><input type="file" class="form-control" name="attach" id="attach" style="width: 350px; border: 0px; padding: 0px;"></span>
+							</div>
 						</div>
-						<div class="form-inline" style="margin-top:20px;padding-left:10px;"> 1) <s:message code="keyword.message.upload.info1"/></div>
-						<div class="form-inline" style="padding-left:10px;"> 2) <s:message code="ipRange.msg.upload.info"/></div>
-						<div class="form-inline" style="padding-left: 10px;"> 3) <s:message code="keyword.message.upload.info3"/></div>
-						<div class="form-inline" style="padding-left: 10px;"> 4) <s:message code="ipRange.msg.upload.info1"/></div>
-					</form>
+					</div>
+					<div class="info"> 안내 사항
+						<div class="form-inline" style="padding-left: 10px;">1) <s:message code="interest.message.upload.info1"/></div>
+						<div class="form-inline" style="padding-left: 10px;">2) <s:message code="interest.message.upload.info2"/></div>
+						<div class="form-inline" style="padding-left: 10px;">3) <s:message code="interest.message.upload.info3"/></div>
+						<div class="form-inline" style="padding-left: 10px;">4) <s:message code="interest.message.upload.info4"/></div>
+						<div style="padding-left: 10px;">5) <s:message code="interest.message.upload.info5"/></div>
+					</div>
+					<div class="modalfooter">
+						<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+						<button type="button" class="pop_btn02" accesskey="S"><s:message code="common.msg.save"/></button>
+					</div>
 				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
-					<button type="button" class="btn btn-primary uploadPopBtn" accesskey="S"><s:message code="common.msg.save"/></button>
-				</div>
-			</div>
+			</form>
 		</div>
 	</div>
 
 	<div class="container">
-		<div class="boxArea">
-			<div class="content_body">
-				<div class="row">
-					<div class="col-xs-8 text-left">
-						<div class="form-group form-inline not-dashed">
-							<div class="input-group">
-								<input type="text" class="form-control input-sm" placeholder="<s:message code="ipRange.msg.enter.busicomment"/>" id="searchStrInput" style="width: 250px;">
-								<div class="input-group-btn">
-									<button class="btn btn-sm btn-success" type="button" accesskey="Q" id="searchBtn"><i class="glyphicon glyphicon-search"></i></button>
-								</div>
+		<div class="searchArea">
+			<div class="searchSub">
+							<div>
+								<input type="text"  placeholder="<s:message code="ipRange.msg.enter.busicomment"/>" id="searchStrInput">
+								<button class="form_btn01" type="button" accesskey="Q" id="searchBtn"><s:message code="common.msg.search"/></button>
 							</div>
-							<button type="button" class="btn btn-sm btn-primary" accesskey="I" id="insertBtn"><span class="glyphicon glyphicon-plus"></span>&nbsp;<s:message code="common.msg.add"/></button>
-							<button type="button" class="btn btn-sm btn-default" accesskey="D" id="deleteBtn"><span class="glyphicon glyphicon-minus"></span>&nbsp;<s:message code="common.msg.delete"/></button>
-							<button type="button" class="btn btn-sm btn-warning" accesskey="U" id="uploadBtn"><span class="glyphicon glyphicon-import"></span>&nbsp;Upload</button>
-						</div>
-					</div>
-				</div>
-				<div class="row xcn_full top_space">
-					<div class="col-xs-12" style="height: 100%;">
-						<div id="ipRangeListGrid" class="slickGrid gridArea"></div>
-					</div>
-				</div>
+				<button type="button" class="btn01" accesskey="I" id="insertBtn"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
+				<button type="button" class="btn02" accesskey="D" id="deleteBtn"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
+				<button type="button" class="btn03" accesskey="U" id="uploadBtn"><span class="glyphicon glyphicon-import"></span>&nbsp;Upload</button>
 			</div>
 		</div>
+
+	<div class="content xcn_full">
+		<div class="contentSub">
+			<div class="subtab">
+				<button class="active">
+					사업장 내부 ip 설정 목록
+					<span id="relationKeywordCount"></span>
+				</button>
+			</div>
+			<div id="ipRangeListGrid" class="slickGrid gridArea"></div>
+		</div>
 	</div>
+	</div>
+
 	<script type="text/javascript">
 		var grid = new Xgrid('ipRangeListGrid', contextRoot);
 		grid.onCheckBox();
