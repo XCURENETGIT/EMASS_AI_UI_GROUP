@@ -52,7 +52,7 @@ public class DeviceScheduler {
 		init();
 	}
 
-	@Scheduled(fixedDelay = 5000, initialDelay = 5000)
+	@Scheduled(fixedDelay = 10000, initialDelay = 5000)
 	@Description("장비 상태 모니터링 스케쥴러")
 	public void deviceStatus() throws Exception {
 		if (devices == null || devices.isEmpty()) return;
@@ -60,7 +60,7 @@ public class DeviceScheduler {
 		ExecutorService es = Executors.newFixedThreadPool(devices.size());
 		try {
 			List<DeviceStatusWorker> tasks = deviceStatusTask();
-			List<Future<DeviceVO>> future = es.invokeAll(tasks, 4, TimeUnit.SECONDS);
+			List<Future<DeviceVO>> future = es.invokeAll(tasks, 8, TimeUnit.SECONDS);
 			statusChange(future, tasks);
 		} catch (Exception e) {
 			log.error("deviceStatus check error : ", e);

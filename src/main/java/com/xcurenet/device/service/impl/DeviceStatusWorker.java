@@ -44,6 +44,7 @@ public class DeviceStatusWorker implements Callable<DeviceVO> {
 			memory(sftp);
 			dateTime(sftp);
 			disk(sftp);
+			netWork(sftp);
 
 			log.info("info : {} {}", device.getDeviceIp(), device.getCurrentDevice());
 		} finally {
@@ -82,11 +83,11 @@ public class DeviceStatusWorker implements Callable<DeviceVO> {
 			int total = Common.nvz(infos.get(1), 0);
 			int available = Common.nvz(infos.get(7), 0);
 			device.getCurrentDevice().put("total", Common.convertSnmpSize(total));
-			device.getCurrentDevice().put("used", Common.convertSnmpSize(Common.nvz(infos.get(2), 0)));
-			device.getCurrentDevice().put("free", Common.convertSnmpSize(Common.nvz(infos.get(3), 0)));
-			device.getCurrentDevice().put("shared", Common.convertSnmpSize(Common.nvz(infos.get(4), 0)));
-			device.getCurrentDevice().put("buffers", Common.convertSnmpSize(Common.nvz(infos.get(5), 0)));
-			device.getCurrentDevice().put("cache", Common.convertSnmpSize(Common.nvz(infos.get(6), 0)));
+			device.getCurrentDevice().put("used", Common.convertSnmpSize(infos.get(2)));
+			device.getCurrentDevice().put("free", Common.convertSnmpSize(infos.get(3)));
+			device.getCurrentDevice().put("shared", Common.convertSnmpSize(infos.get(4)));
+			device.getCurrentDevice().put("buffers", Common.convertSnmpSize(infos.get(5)));
+			device.getCurrentDevice().put("cache", Common.convertSnmpSize(infos.get(6)));
 			device.getCurrentDevice().put("available", Common.convertSnmpSize((available)));
 			device.getCurrentDevice().put("usedRate", Common.calculatePercentage(total, available));
 			device.getCurrentDevice().put("used_a", Common.convertSnmpSize(total - available));
@@ -122,5 +123,60 @@ public class DeviceStatusWorker implements Callable<DeviceVO> {
 			items.add(item);
 		}
 		device.getCurrentDevice().put("disk", items);
+	}
+
+
+	/**
+	 * GET CentOS netWork
+	 *
+	 * @param sftp SSH Util
+	 */
+	private void netWork(SFTPUtil sftp) {
+		String result = sftp.getCommand("ifconfig -a");
+		List<String> infos = Common.toList(result, "\n");
+		JSONArray items = new JSONArray();
+		JSONObject item = new JSONObject();
+		boolean filter = false;
+		for (String h : infos) {
+			List<String> cols = Common.toList(h, " ");
+			if (h.startsWith("e")) {
+				filter = true;
+				if (item.get("name") != null) {
+					items.add(item);
+					item = new JSONObject();
+				}
+				item.put("name", cols.get(0));
+				item.put("status", cols.get(1).contains("UP") ? "up" : "down");
+				item.put("mtu", cols.get(3));
+			} else if (!h.startsWith(" ")) {
+				filter = false;
+			}
+
+			if (filter) {
+				if (cols.get(2).contains("netmask")) {
+					item.put("ip", cols.get(1));
+					item.put("netmask", cols.get(3));
+					item.put("broadcast", cols.get(5));
+				} else if (cols.get(0).contains("ether")) {
+					item.put("mac", cols.get(1));
+				} else if (cols.get(0).contains("RX") && cols.get(1).contains("packets")) {
+					item.put("rx_packets", cols.get(2));
+					item.put("rx_bytes", Common.convertSnmpSize(cols.get(4)));
+				} else if (cols.get(0).contains("RX") && cols.get(1).contains("errors")) {
+					item.put("rx_errors", cols.get(2));
+					item.put("rx_dropped", cols.get(4));
+					item.put("rx_overruns", cols.get(6));
+				} else if (cols.get(0).contains("TX") && cols.get(1).contains("packets")) {
+					item.put("tx_packets", cols.get(2));
+					item.put("tx_bytes", Common.convertSnmpSize(cols.get(4)));
+				} else if (cols.get(0).contains("TX") && cols.get(1).contains("errors")) {
+					item.put("tx_errors", cols.get(2));
+					item.put("tx_dropped", cols.get(4));
+					item.put("tx_overruns", cols.get(6));
+				}
+			}
+		}
+		items.add(item);
+		device.getCurrentDevice().put("network", items);
 	}
 }
