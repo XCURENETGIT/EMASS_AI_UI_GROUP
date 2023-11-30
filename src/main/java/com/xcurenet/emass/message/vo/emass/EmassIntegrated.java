@@ -52,6 +52,8 @@ public class EmassIntegrated {
     private String search_startDate;
     private String search_endDate;
 
+    private String rowkey;
+
 
     public EmassIntegrated() throws IOException {}
 
@@ -85,6 +87,9 @@ public class EmassIntegrated {
             this.search_yAxis = Common.nvl(searchParam.getYAxis());
             this.search_startDate = Common.nvl(searchParam.getStartDate());
             this.search_endDate = Common.nvl(searchParam.getEndDate());
+            if(Common.isEmpty(searchParam.getSearchParameters().get("rowKey"))) {
+                this.rowkey = Common.nvl(searchParam.getSearchParameters().get("rowKey"));
+            }
             this.setPivot(searchResponse);
         }
     }
@@ -147,14 +152,6 @@ public class EmassIntegrated {
                          keys.put(headerStr,headerValue);    // pivot header 추가  ( xAxis 정보 일,월,시간...)
                         for (Terms.Bucket arg : argments.getBuckets()) {
                             Map<String, Object> item = new HashMap();
-    //                    if(Common.isOrEquals("", "user_str", "sender_str", "userid")){
-    //                        item.put("rowName", Config.getUserName(Common.nvl(arg.getKey())));
-    //                    }
-                            item.put("svc", arg.getKey().toString());
-                            item.put("svcNm", svcDeepNm(arg.getKey().toString()));
-                            item.put("svcLv12Nm", svcLv12GroupNm(arg.getKey().toString()));
-                            item.put("svcLv1Nm", svcLv1Nm(arg.getKey().toString()));
-                            item.put("svcLv2Nm", svcLv2Nm(arg.getKey().toString()));
 
                             item.put("rowKey", arg.getKey());
                             item.put(headerStr, arg.getDocCount());
@@ -211,8 +208,6 @@ public class EmassIntegrated {
                         argments = subAggs.get(yField);
                     } else {argments = bucket.getAggregations().get(yField);}
 
-
-
                     String keyName = Config.analysisFlag(xTypeFlag,(String)bucket.getKey());
 
                     keys.put(keyName, 0); // pivot header 추가
@@ -223,11 +218,6 @@ public class EmassIntegrated {
 //                        }
                         item.put("rowKey", arg.getKey());
                         item.put(Common.nvl(bucket.getKey()), arg.getDocCount());
-                        item.put("svc", arg.getKey().toString());
-                        item.put("svcNm", svcDeepNm(arg.getKey().toString()));
-                        item.put("svcLv12Nm", svcLv12GroupNm(arg.getKey().toString()));
-                        item.put("svcLv1Nm", svcLv1Nm(arg.getKey().toString()));
-                        item.put("svcLv2Nm", svcLv2Nm(arg.getKey().toString()));
                         item.put(keyName, arg.getDocCount());
                         /* PIVOT XAxis */
                         result.add(item);
@@ -240,15 +230,16 @@ public class EmassIntegrated {
 
 
             /* pivotData 재 계산 #############################################################*/
+            boolean serviceCode = (yField.equals(ElasticSearchCommon.SERVICE_SVC)) ? true : false;
             List<Map<String, Object>> pivotDataList = new ArrayList<>();  // 최종 pivot 데이터
             int idx = 0;
-            for (Map<String, Object> tempPivotList : result) {
+            for (Map<String, Object> tempPivot : result) {
                 int rowTotal = 0;
                 Map<String, Object> tempMap = new HashMap<>();
                 for (String header : this.pivotHeader) {
                     /* header 세팅*/
-                    if (!Common.isEmpty(tempPivotList.get(header))) {
-                        Long Value = Common.nvn(tempPivotList.get(header));
+                    if (!Common.isEmpty(tempPivot.get(header))) {
+                        Long Value = Common.nvn(tempPivot.get(header));
                         tempMap.put(header, Value);
                     } else {
                         tempMap.put(header, 0L);
@@ -256,7 +247,7 @@ public class EmassIntegrated {
                 }
                 /* 중복 rowKey 체크  #############################################################*/
                 Map<String, Object> oldMap = null;
-                if ((oldMap = checkRowKey(pivotDataList, Common.nvl(tempPivotList.get("rowKey")))) != null) {
+                if ((oldMap = checkRowKey(pivotDataList, Common.nvl(tempPivot.get("rowKey")))) != null) {
                     int target = Common.nvz(oldMap.get("idx"));
                     tempMap.putAll(summaryMap(oldMap, tempMap));
                     rowTotal = tempMap.values().stream().collect(Collectors.summingInt(v1 -> Common.nvz(v1)));  // 합계 토탈
@@ -267,16 +258,13 @@ public class EmassIntegrated {
                 }
                 /* 중복 아닐시  #############################################################*/
 
-                if(yField.equals("service.svc")) {
-                    tempMap.put("svc", Common.nvl(tempPivotList.get("svc")));
-                    tempMap.put("svcNm", Common.nvl(tempPivotList.get("svcNm")));
-                    tempMap.put("svcLv12Nm", Common.nvl(tempPivotList.get("svcLv12Nm")));
-                    tempMap.put("svcLv1Nm", Common.nvl(tempPivotList.get("svcLv1Nm")));
-                    tempMap.put("svcLv2Nm", Common.nvl(tempPivotList.get("svcLv2Nm")));
-                }
-                tempMap.put("rowKey", Common.nvl(tempPivotList.get("rowKey")));
-                tempMap.put("rowName", Common.nvl(tempPivotList.get("rowName")));
-                tempMap.put("xAxisType", Common.nvl(tempPivotList.get("xAxisType")));
+                tempMap.put("rowKey", Common.nvl(tempPivot.get("rowKey")));
+                String rowName = "";
+                if(serviceCode) rowName = Config.getServiceName(Common.nvl(tempPivot.get("rowKey")));
+                else rowName = Config.analysisFlag(yField,Common.nvl(tempPivot.get("rowKey")));
+
+                tempMap.put("rowName", rowName);
+                tempMap.put("xAxisType", Common.nvl(tempPivot.get("xAxisType")));
                 rowTotal = tempMap.values().stream().collect(Collectors.summingInt(v1 -> Common.nvz(v1))); // 합계 토탈
                 tempMap.put("total", rowTotal);
                 pivotDataList.add(tempMap);
@@ -411,20 +399,6 @@ public class EmassIntegrated {
     private void setTotalCount(final Long total) throws  IOException {
         this.total = total;
     }
-
-
-    /* 코드 -> 네임 */
-//    private String codeToName(String code){
-//        String result = "";
-//        if(Common.isEmpty(xTypeFlag) || Common.isEmpty(code)) result =  "";
-//        if(xTypeFlag.equals(ElasticSearchCommon.USER_BUSICD)) {result = Config.getUserBusiNm(code);}
-//        else if(xTypeFlag.equals(ElasticSearchCommon.USER_COCD)){ result =  Config.getUserConm(code);}
-//        else if(xTypeFlag.equals(ElasticSearchCommon.USER_DEPTCD)) {result = Config.getUserDeptnm(code);}
-//        else if(xTypeFlag.equals(ElasticSearchCommon.DIRECTIONSVC)){ result = code;}
-//        else if(xTypeFlag.equals(ElasticSearchCommon.USER_JIKGUBCD)){ result = Config.getUserJikgubnm(code);}
-//        return result;
-//    }
-
 
 
 

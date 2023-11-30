@@ -575,12 +575,13 @@ public class Config {
 	}
 
 	public static String analysisFlag(final String xAxis,final String code) {
-		if(ElasticSearchCommon.USER_COCD.equals(xAxis)) return getCompName(code);
+		if(ElasticSearchCommon.USER_USERID.equals(xAxis)) return getUserName(code);
+		else if(ElasticSearchCommon.USER_COCD.equals(xAxis)) return getCompName(code);
 		else if(ElasticSearchCommon.USER_BUSICD.equals(xAxis)) return getBusiName(code);
 		else if(ElasticSearchCommon.USER_DEPTCD.equals(xAxis)) return getDeptName(code);
 		else if(ElasticSearchCommon.USER_JIKGUBCD.equals(xAxis)) return getJikgubName(code);
-		else if(ElasticSearchCommon.DIRECTIONSVC.equals(xAxis)) return getServiceName(code);
-		else return "none";
+		else if(ElasticSearchCommon.SERVICE_SVC.equals(xAxis)) return getServiceName(code);
+		else return code;
 	}
 
 	public static String getCompName(final String code) {

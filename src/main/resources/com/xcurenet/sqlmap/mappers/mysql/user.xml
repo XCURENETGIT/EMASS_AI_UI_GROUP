@@ -632,7 +632,7 @@
 		FROM(
 			SELECT
 				C.SERVICECD as code
-				,CONCAT(C.SERVICENM_LV1,'-',C.SERVICENM_LV2,'-',C.SERVICENM_LV3) as name
+				,CONCAT(C.SERVICENM_LV1,' > ',C.SERVICENM_LV2,' > ',C.SERVICENM_LV3) as name
 			FROM UI_SERVICE C
 		) A
 	</select>
