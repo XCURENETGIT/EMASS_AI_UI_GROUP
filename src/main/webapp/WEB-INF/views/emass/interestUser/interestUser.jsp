@@ -1,16 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp" %>
 <% String adminType = Common.getAdminType(session); %>
-<style type="text/css">
-	#header-color, #picker-custom {
-		height: 24px;
-		line-height: 24px;
-	}
 
-	#header-color {
-		padding-left: 25px;
-	}
-</style>
 <script type="text/javascript">
     var adminType = '<%=adminType%>';
     var searchFlag = false;
@@ -38,7 +29,7 @@
             if ($('.color-chips').css('display') == 'block') {
                 $('.color-box.color-cue').click();
             }
-            $('#header-color').val('#5376A3').keyup();
+            $('#groupColor').val('#5376A3').keyup();
         });
 
         $('#groupSavePopBtn').click(function () {
@@ -273,12 +264,12 @@
             $('#groupName').focus();
             return false;
         }
-        if ($('#header-color').val().ltrim().rtrim() == '') {
-            ui.alertMsg('<s:message code="userGroup.msg.enter.groupname"/>');
-            $('#header-color').focus();
+        if ($('#groupColor').val().ltrim().rtrim() == '') {
+            ui.alertMsg("색상을 선택해주세요.");
+            $('#groupColor').focus();
             return false;
         }
-        $('#groupColor').val($('#header-color').val());
+        $('#groupColor').val();
         var mode = $('#userGroupPop').attr('mode');
         var message = mode == 'insert' ? '<s:message code="common.msg.add"/>' : '<s:message code="common.msg.modify"/>';
         var confirm_msg = mode == 'insert' ? '<s:message code="common.msg.confirm.add"/>' : '<s:message code="common.msg.confirm.modify"/>';
@@ -547,8 +538,9 @@
 							<label for="groupName" class="control-label"><s:message code="common.msg.color.select"/></label>
 							<span class="red_dot"></span>
 						</div>
-							<div class="color-picker" id="picker" data-target="header-color"></div>
-							<input type="hidden" class="form-control" name="groupColor" id="groupColor"/>
+						<div class="col-65">
+							<input type="color" name="groupColor" id="groupColor" value="#e66465" />
+						</div>
 					</div>
 				</div>
 				<div class="info">
@@ -743,7 +735,6 @@
             var data = gridGroup.getRowData(gridGroup.Row);
             $('#groupSeq').val(data.groupSeq);
             $('#groupName').val(data.groupName);
-            $('#header-color').val(data.groupColor);
             $('#userGroupPop').attr('mode', 'modify');
             $("#groupName").focus();
             $('.color-cue-name').hide();
@@ -751,7 +742,7 @@
             if ($('.color-chips').css('display') == 'block') {
                 $('.color-box.color-cue').click();
             }
-            $('#header-color').keyup();
+            $('#groupColor').keyup();
         }
         getUserGroupItem();
     }
@@ -809,5 +800,3 @@
     }
     gridSelectUser.loadHeader(true);
 </script>
-<script type="text/javascript" src="<c:url value="/js/colorpicker-colors.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/colorpicker.js"/>"></script>

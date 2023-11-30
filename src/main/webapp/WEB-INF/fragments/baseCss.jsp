@@ -37,7 +37,7 @@
 
 
 <link rel="stylesheet" href="<c:url value="/css/jquery.numberedtextarea.css"/>" />
-<link rel="stylesheet" href="<c:url value="/css/colorpicker.css"/>"/>
+
 
 
 <style>
