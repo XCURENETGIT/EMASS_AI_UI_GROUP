@@ -938,7 +938,7 @@
               if(data.emass[x][nodeLv2[i]] > 0 && data.emass[x].ctimeYYYYMMDD == nodeLv3[j])
                 sum += data.emass[x][nodeLv2[i]];
             }
-            if(sum > 0) edges.push({from: nodeLv2[i], to: nodeLv3[j],arrows:'to',value:(sum)/(total*4), color:{color:'#2A6727'},font: { multi: true}, label: sum});
+            if(sum > 0) edges.push({from: nodeLv2[i], to: nodeLv3[j],arrows:'to',value:0.1, color:{color:'#000'},font: { multi: true}, label: sum});
           }
         }
 

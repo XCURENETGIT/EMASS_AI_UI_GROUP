@@ -1,9 +1,23 @@
+<%@ page import="com.xcurenet.emass.service.service.ServiceGroupVO" %>
+<%@ page import="java.util.List" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
 <title></title>
+
+<!-- process mapp -->
+<link rel="stylesheet" href="<c:url value="/css/processmap.css"/>"/>
+<link rel="stylesheet" href="<c:url value="/css/vis.min.css"/>"/>
+<script type="text/javascript" src="<c:url value="/js/colorbrewer.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/geometry.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/processmap.js"/>"></script>
+
+<script type="text/javascript" src="<c:url value="/js/d3.v3.min.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/vis.min.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/timeline.js"/>"></script>
+
 <%
 	String[] confColor = Config.colors;
 	List<ServiceGroupVO> groups = Config.serviceGroups;

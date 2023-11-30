@@ -29,7 +29,5 @@
 <link rel="stylesheet" href="<c:url value="/css/contentBody.css"/>"/>
 <link rel="stylesheet" href="<c:url value="/css/jquery.layout.css"/>"/>
 <link rel="stylesheet" href="<c:url value="/css/scrolltabs.css"/>"/>
-<link rel="stylesheet" href="<c:url value="/css/vis.min.css"/>"/>
-<link rel="stylesheet" href="<c:url value="/css/processmap.css"/>"/>
 
 <link rel="stylesheet" href="<c:url value="/css/jquery.numberedtextarea.css"/>" />

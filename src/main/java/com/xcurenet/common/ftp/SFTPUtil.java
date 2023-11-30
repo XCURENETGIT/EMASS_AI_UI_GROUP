@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Vector;
 
+import com.xcurenet.common.util.Common;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
 
 import com.jcraft.jsch.Channel;
@@ -24,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 서버와 연결하여 파일을 업로드하고, 다운로드한다.
  */
-@Slf4j
+@Log4j2
 public class SFTPUtil {
 	public Session session = null;
 
@@ -73,7 +75,7 @@ public class SFTPUtil {
 			channelSftp.cd(path);
 			list = channelSftp.ls(".");
 		} catch (SftpException e) {
-			e.printStackTrace();
+			log.error("", e);
 			return null;
 		}
 		return list;
@@ -92,7 +94,7 @@ public class SFTPUtil {
 			channelSftp.cd(path);
 			list = channelSftp.ls(".");
 		} catch (SftpException e) {
-			e.printStackTrace();
+			log.error("", e);
 			return null;
 		}
 		return list;
@@ -102,7 +104,7 @@ public class SFTPUtil {
 		try {
 			channelSftp.rm(path);
 		} catch (SftpException e) {
-			e.printStackTrace();
+			log.error("", e);
 		}
 	}
 
@@ -110,7 +112,7 @@ public class SFTPUtil {
 		try {
 			channelSftp.rmdir(path);
 		} catch (SftpException e) {
-			e.printStackTrace();
+			log.error("", e);
 		}
 	}
 
@@ -118,7 +120,7 @@ public class SFTPUtil {
 		try {
 			channelSftp.rename(oldpath, newpath);
 		} catch (SftpException e) {
-			e.printStackTrace();
+			log.error("", e);
 		}
 	}
 
@@ -129,7 +131,7 @@ public class SFTPUtil {
 			try {
 				channelSftp.mkdir(path);
 			} catch (SftpException e1) {
-				e1.printStackTrace();
+				log.error("", e1);
 			}
 		}
 	}
@@ -161,7 +163,7 @@ public class SFTPUtil {
 			channelSftp.cd(dir);
 			channelSftp.put(in, name);
 		} catch (SftpException e) {
-			e.printStackTrace();
+			log.error("", e);
 		} finally {
 			IOUtils.closeQuietly(in);
 		}
@@ -182,7 +184,7 @@ public class SFTPUtil {
 			out = new FileOutputStream(new File(path));
 			IOUtils.copyLarge(in, out);
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error("", e);
 		} finally {
 			IOUtils.closeQuietly(out);
 			IOUtils.closeQuietly(in);
@@ -194,7 +196,7 @@ public class SFTPUtil {
 			channelSftp.cd(dir);
 			return channelSftp.get(downloadFileName);
 		} catch (SftpException e) {
-			e.printStackTrace();
+			log.error("", e);
 		}
 		return null;
 	}
@@ -216,37 +218,32 @@ public class SFTPUtil {
 				while (in.available() > 0) {
 					int i = in.read(tmp, 0, 1024);
 					if (i < 0) break;
-					result.append(new String(tmp, 0, i)).append("\n");
+					result.append(new String(tmp, 0, i));
 				}
 				if (channel.isClosed()) {
 					if (in.available() > 0) continue;
-					log.info("exit-status: " + channel.getExitStatus());
+					log.debug("exit-status: " + channel.getExitStatus());
 					break;
 				}
-
-				try {
-					Thread.sleep(100);
-				} catch (Exception ee) {
-				}
+				Common.sleep(100);
 			}
-		} catch (JSchException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (JSchException | IOException e) {
+			log.error("", e);
 		} finally {
 			IOUtils.closeQuietly(in);
 		}
-		return result.toString();
+		return result.toString().trim();
 	}
 
 	public void setCommand(String command) {
+		InputStream in = null;
 		try {
 			channel = session.openChannel("exec");
 			((ChannelExec) channel).setCommand(command);
 			channel.setInputStream(null);
 			((ChannelExec) channel).setErrStream(System.err);
 
-			InputStream in = channel.getInputStream();
+			in = channel.getInputStream();
 			channel.connect();
 			byte[] tmp = new byte[1024];
 			while (true) {
@@ -260,17 +257,13 @@ public class SFTPUtil {
 					log.info("exit-status: " + channel.getExitStatus());
 					break;
 				}
-
-				try {
-					Thread.sleep(100);
-				} catch (Exception ee) {
-				}
+				Common.sleep(100);
 			}
 			IOUtils.closeQuietly(in);
-		} catch (JSchException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (JSchException | IOException e) {
+			log.error("", e);
+		} finally {
+			IOUtils.closeQuietly(in);
 		}
 	}
 
@@ -281,7 +274,7 @@ public class SFTPUtil {
 			fileInfo = channelSftp.lstat(downloadFileName);
 			return fileInfo.getSize();
 		} catch (SftpException e) {
-			e.printStackTrace();
+			log.error("", e);
 		}
 		return -1L;
 	}
