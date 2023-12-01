@@ -665,7 +665,9 @@ public class HomeController {
 	@RequestMapping(value = "/commons/selectCodeSingle.do")
 	@Description("코드 선택 페이지")
 	public String selectCodeSingle(Locale locale, Model model) {
-		return "/commons/selectCodeSingle";
+
+		model.addAttribute("headerYn","N");
+		return "/commons/selectCodeSingle.popup";
 	}
 
 	/**

@@ -1,11 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-<title></title>
-<style>
-</style>
+
 <script type="text/javascript">
 var searchFlag=false;
 var orgStartIp ='';
@@ -570,22 +565,29 @@ function getDeptSchedule(){
 	return schedule.join(' ');
 }
 </script>
-</head>
-<body class="mini-navbar">
 
-	<div class="modal fade" id="ipRangePop" tabindex="-1" role="dialog" aria-labelledby="ipRangeModal">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<form method="post" id="ipRangePopForm">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-						<h3 class="modal-title"><s:message code="deptIpRange.iprangepop.title"/></h3>
-					</div>
-					<div class="modal-body">
-						<div class="form-inline">
-							<label for="attachTypePopInput" class="control-label col-xs-3"><s:message code="common.org.dept"/></label>
+<div class="modal" id="ipRangePop" tabindex="-1" role="dialog" aria-labelledby="ipRangeModal">
+	<div class="modal-content">
+		<form method="post" id="ipRangePopForm">
+			<div class="modalHead">
+				<h2><s:message code="deptIpRange.iprangepop.title"/></h2>
+				<span class="close" data-dismiss="modal">&times;</span>
+			</div>
+			<div class="modalCon">
+				<div class="modalTop">
+					<h3>부서 내부 IP 추가</h3>
+					<p>
+						<span class="red_dot veralign_middle"></span>
+						필수 입력 사항입니다.
+					</p>
+				</div>
+				<div class="modalbody">
+					<div class="row">
+						<div class="col-35">
+							<label for="attachTypePopInput" class="fname"><s:message code="common.org.dept"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
 							<button type="button" class="btn btn-sm btn-default" id="dept" style="border-radius: 0;"><span class="glyphicon glyphicon-plus-sign"></span> <s:message code="common.org.choose.dept"/></button>
 							<span id="deptByCoSelectedArea" class="codeSelectedBtn">
 									<button type="button" class="btn">0</button>
@@ -595,65 +597,133 @@ function getDeptSchedule(){
 							<input type="hidden" id="deptByCoStr" class="selectedTitle" name="deptNm">
 							<input type="hidden" id="deptByCoVal" name="deptCd">
 						</div>
-						<%if( isIPv6){ %>
-						<div class="form-inline">
-							<label for="attachTypePopInput" class="control-label col-xs-3"><s:message code="didBlock.startip"/></label>
-							<input type="text" class="form-control" name="startIp" id="startIp" style="width:320px;" placeholder="<s:message code="didBlock.startip"/>" required>
-							<p style="padding-left:142px; margin-bottom: 0px;">
+					</div>
+
+					<%if (isIPv6) { %>
+					<div class="row">
+						<div class="col-35">
+							<label for="attachTypePopInput" class="fname"><s:message code="didBlock.startip"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<input type="text" class="w100" name="startIp" id="startIp"
+							       placeholder="<s:message code="didBlock.startip"/>" required>
+							<p>
 								<span style='color:grey;'>[ex: IPv4 - 192.168.0.12 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IPv6 - 2002:9b3d:1a32:4:208:74ff:fe39:6c43]</span>
 							</p>
 						</div>
-						<div class="form-inline">
-							<label for="attachDescPopInput" class="control-label col-xs-3"><s:message code="didBlock.endip"/></label>
-							<input type="text" class="form-control" name="endIp" id="endIp" style="width:320px;" placeholder="<s:message code="didBlock.endip"/>" required>
-							<p style="padding-left:142px; margin-bottom: 0px;">
+					</div>
+
+					<div class="row">
+						<div class="col-35">
+							<label for="attachDescPopInput" class="fname"><s:message code="didBlock.endip"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<input type="text" class="w100" name="endIp" id="endIp"
+							       placeholder="<s:message code="didBlock.endip"/>" required>
+							<p>
 								<span style='color:grey;'>[ex: IPv4 - 192.168.0.12 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IPv6 - 2002:9b3d:1a32:4:208:74ff:fe39:6c43]</span>
 							</p>
 						</div>
-						<div class="form-inline">
-							<label for="attachDescPopInput" class="control-label col-xs-3"><s:message code="common.msg.comment"/></label>
-							<input type="text" class="form-control" name="comment" id="comment" style="width:320px;" placeholder="<s:message code="common.msg.comment"/>" maxlength="500">
-						</div>
-						<div class="form-inline">
-							<label for="attachTypePopInput"></label>
-							<input type="hidden" class="form-control" name="orgStartIp"  id="orgStartIp">
-						</div>
-						<div class="form-inline">
-							<label for="attachTypePopInput"></label>
-							<input type="hidden" class="form-control" name="orgEndIp"  id="orgEndIp">
-						</div>
-						<%} else {%>
-						<div class="form-inline">
-							<label for="attachTypePopInput" class="control-label col-xs-3"><s:message code="didBlock.startip"/></label>
-							<input type="text" class="form-control" name="startIp" id="startIp" placeholder="<s:message code="didBlock.startip"/>" required>
-							
-						</div>
-						<div class="form-inline">
-							<label for="attachDescPopInput" class="control-label col-xs-3"><s:message code="didBlock.endip"/></label>
-							<input type="text" class="form-control" name="endIp" id="endIp" placeholder="<s:message code="didBlock.endip"/>" required>
-						</div>
-						<div class="form-inline">
-							<label for="attachDescPopInput" class="control-label col-xs-3"><s:message code="common.msg.comment"/></label>
-							<input type="text" class="form-control" name="comment" id="comment" placeholder="<s:message code="common.msg.comment"/>" maxlength="500">
-						</div>
-						<div class="form-inline">
-							<label for="attachTypePopInput"></label>
-							<input type="hidden" class="form-control" name="orgStartIp"  id="orgStartIp">
-						</div>
-						<div class="form-inline">
-							<label for="attachTypePopInput"></label>
-							<input type="hidden" class="form-control" name="orgEndIp"  id="orgEndIp">
-						</div>
-						<%} %>
 					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-primary savePopBtn" accesskey="S"><s:message code="common.msg.save"/></button>
-						<button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+
+					<div class="row">
+						<div class="col-35">
+							<label for="attachDescPopInput" class="fname"><s:message code="common.msg.comment"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<input type="text" class="w100" name="comment" id="comment"
+							       placeholder="<s:message code="common.msg.comment"/>" maxlength="500">
+						</div>
 					</div>
-				</form>
+
+					<div class="row">
+						<div class="col-35">
+							<label for="attachTypePopInput" class="fname"></label>
+						</div>
+						<div class="col-65">
+							<input type="hidden" class="w100" name="orgStartIp" id="orgStartIp">
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-35">
+							<label for="attachTypePopInput" class="fname"></label>
+						</div>
+						<div class="col-65">
+							<input type="hidden" class="w100" name="orgEndIp" id="orgEndIp">
+						</div>
+					</div>
+
+					<%} else {%>
+
+					<div class="row">
+						<div class="col-35">
+							<label for="attachTypePopInput" class="fname"><s:message code="didBlock.startip"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<input type="text" class="w100" name="startIp" id="startIp"
+							       placeholder="<s:message code="didBlock.startip"/>" required>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-35">
+							<label for="attachDescPopInput" class="fname"><s:message code="didBlock.endip"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<input type="text" class="w100" name="endIp" id="endIp"
+							       placeholder="<s:message code="didBlock.endip"/>" required>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-35">
+							<label for="attachDescPopInput" class="fname"><s:message code="common.msg.comment"/></label>
+						</div>
+						<div class="col-65">
+							<input type="text" class="w100" name="comment" id="comment"
+							       placeholder="<s:message code="common.msg.comment"/>" maxlength="500">
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-35">
+							<label for="attachTypePopInput" class="fname"></label>
+						</div>
+						<div class="col-65">
+							<input type="hidden" class="w100" name="orgStartIp" id="orgStartIp">
+						</div>
+					</div>
+
+
+					<div class="row">
+						<div class="col-35">
+							<label for="attachTypePopInput" class="fname"></label>
+						</div>
+						<div class="col-65">
+							<input type="hidden" class="w100" name="orgEndIp" id="orgEndIp">
+						</div>
+					</div>
+
+
+					<%} %>
+				</div>
+				<div class="modalfooter">
+					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message
+							code="common.msg.close"/></button>
+					<button type="button" class="pop_btn02" accesskey="S" id="savePopBtn"><s:message
+							code="common.msg.save"/></button>
+				</div>
 			</div>
-		</div>
+		</form>
 	</div>
+</div>
+
 	<div id="upload_file"></div>
 	<div class="modal fade" id="uploadPop" role="dialog" aria-labelledby="uplaodPop">
 		<div class="modal-dialog" role="document">
@@ -693,136 +763,182 @@ function getDeptSchedule(){
 			</div>
 		</div>
 	</div>
-	
-	<div class="modal fade" id="setDeptApiPop" tabindex="-1" role="dialog" aria-labelledby="setDeptApiPop">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<form method="post" id="setDeptApiPopForm">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-						<h3 class="modal-title"><s:message code="deptIpRange.set.api"/></h3>
-					</div>
-					<div class="modal-body" style="margin-right: 17px;min-height: 581px">
+
+
+
+<div class="modal" id="setDeptApiPop" tabindex="-1" role="dialog" aria-labelledby="setDeptApiPop">
+	<div class="modal-content">
+		<form method="post" id="setDeptApiPopForm">
+		<div class="modalHead">
+			<h2><s:message code="deptIpRange.set.api"/></h2>
+			<span class="close">&times;</span>
+		</div>
+
+		<div class="modalCon">
+			<div class="modalTop">
+				<div class="modalTop">
+					<h3><s:message code="deptIpRange.method.insa"/></h3>
+					<p>
+						<span class="red_dot veralign_middle"></span>
+						필수 입력 사항입니다.
+					</p>
+					<fieldset>
 						<div>
-							<div>
-								<p style="font-weight: bold;padding-left: 28px;"><s:message code="deptIpRange.method.insa"/></p>
-								<fieldset>
-									<div class="form-inline" style="line-height: 35px;height: 35px;margin-left: 15px; padding-bottom: 35px;border-bottom: 2px solid #5d9cec;">
-										<label  class="col-sm-4 radio-inline c-radio"><input type="radio" value="N" name="dept.auto"><span class="fa fa-check"></span><s:message code="userInfo.directlink"/></label>
-										<label  class="col-sm-4 radio-inline c-radio"><input type="radio" value="Y" name="dept.auto"><span class="fa fa-check"></span><s:message code="userInfo.autolink"/></label>
-									</div>
-								</fieldset>
+							<label  class="col-sm-4 radio-inline c-radio">
+							<div class="radio">
+								<input type="radio"  value="N" name="dept.auto">
+								<span ><s:message code="userInfo.directlink"/></span>
 							</div>
-							<div style="margin-top: 17px;float: left; margin-left: 30px;width:560px;"><p style="font-weight: bold;">[<s:message code="userInfo.set.autolink"/>]</p>
-								<div >
-									<div style="font-weight: 700;">- <s:message code="userInfo.filepath"/>
-										<div class="form-inline" style="border-bottom: 0px;">
-											<input type="text" id="dept.path" placeholder="<s:message code="common.message.input.filepath"/>" class="form-control" style="width: 400px;" maxlength="255">
-										</div>
-									</div>
-									<div style="font-weight: 700;">- <s:message code="userInfo.colseparator"/>
-										<select id="dept.sepa" class="form-control m-b" style="width: 83px; margin-top: 6px;" >
-											<option value="|" selected> | </option>
-											<option value=","> , </option>
-										</select>
-									</div>
-									<div style="display: block;font-weight: 700;margin-top: 20px;">
-										<div>
-											<fieldset>- <s:message code="userInfo.set.day"/>
-												<div class="form-group" style="width: 415px;">
-													<div class="checkbox c-checkbox">
-														<label class="checkbox-inline"><input type="checkbox" value="A" id="allWeek"><span class="fa fa-check"></span><s:message code="userInfo.all"/></label>
-														<label class="checkbox-inline" style="margin-left:0;"><input type="checkbox" name="dept.week" class="dept.week" value="sun"><span class="fa fa-check"></span><s:message code="common.sun"/></label>
-														<label class="checkbox-inline" style="margin-left:0;"><input type="checkbox" name="dept.week" class="dept.week" value="mon"><span class="fa fa-check"></span><s:message code="common.mon"/></label>
-														<label class="checkbox-inline" style="margin-left:0;"><input type="checkbox" name="dept.week" class="dept.week" value="tue"><span class="fa fa-check"></span><s:message code="common.tue"/></label>
-														<label class="checkbox-inline" style="margin-left:0;"><input type="checkbox" name="dept.week" class="dept.week" value="wed"><span class="fa fa-check"></span><s:message code="common.wed"/></label>
-														<label class="checkbox-inline" style="margin-left:0;"><input type="checkbox" name="dept.week" class="dept.week" value="thu"><span class="fa fa-check"></span><s:message code="common.thu"/></label>
-														<label class="checkbox-inline" style="margin-left:0;"><input type="checkbox" name="dept.week" class="dept.week" value="fri"><span class="fa fa-check"></span><s:message code="common.fri"/></label>
-														<label class="checkbox-inline" style="margin-left:0;"><input type="checkbox" name="dept.week" class="dept.week" value="sat"><span class="fa fa-check"></span><s:message code="common.sat"/></label>
-													</div>
-												</div>
-											</fieldset>
-											<fieldset style="margin-top: 7px;">- <s:message code="userInfo.set.time"/>
-												<div class="form-group">
-													<div class="col-sm-3" style="padding-top:20px;margin-left: -16px;margin-top:-10px;" >
-														<select class="form-control m-b" id="dept.time" name="time" style="width: 200px;">
-															<option value="*"><s:message code="userInfo.clock.time"/></option>
-															<option value="1"><s:message code="common.time.1"/></option>
-															<option value="2"><s:message code="common.time.2"/></option>
-															<option value="3"><s:message code="common.time.3"/></option>
-															<option value="4"><s:message code="common.time.4"/></option>
-															<option value="5"><s:message code="common.time.5"/></option>
-															<option value="6"><s:message code="common.time.6"/></option>
-															<option value="7"><s:message code="common.time.7"/></option>
-															<option value="8"><s:message code="common.time.8"/></option>
-															<option value="9"><s:message code="common.time.9"/></option>
-															<option value="10"><s:message code="common.time.10"/></option>
-															<option value="11"><s:message code="common.time.11"/></option>
-															<option value="12"><s:message code="common.time.12"/></option>
-															<option value="13"><s:message code="common.time.13"/></option>
-															<option value="14"><s:message code="common.time.14"/></option>
-															<option value="15"><s:message code="common.time.15"/></option>
-															<option value="16"><s:message code="common.time.16"/></option>
-															<option value="17"><s:message code="common.time.17"/></option>
-															<option value="18"><s:message code="common.time.18"/></option>
-															<option value="19"><s:message code="common.time.19"/></option>
-															<option value="20"><s:message code="common.time.20"/></option>
-															<option value="21"><s:message code="common.time.21"/></option>
-															<option value="22"><s:message code="common.time.22"/></option>
-															<option value="23"><s:message code="common.time.23"/></option>
-															<option value="0"><s:message code="common.time.24"/></option>
-														</select>
-													</div>
-												</div>
-											</fieldset>
-										</div>
-									</div>
-									<div class="form-group" style="font-weight: 700;margin-top: 20px;">- <s:message code="userInfo.no.column"/>
-									</div>
-									<div class="form-inline" style="padding-left:10px;border-bottom:none;"> <s:message code="deptIpRange.msg.upload.info"/></div>
-									<div style="display: block;font-weight: 700;margin-top: 20px;">- <s:message code="userInfo.direct.execute"/>
-										<button id="directExecuteBtn" type="button" accesskey="D" class="btn btn-success" style="margin-left: 84px"><span class="glyphicon glyphicon-import"><s:message code="userInfo.direct.execute"/></span></button>
-									</div>
-								</div>
+							</label>
+							<label  class="col-sm-4 radio-inline c-radio">
+							<div class="radio">
+								<input type="radio" value="Y" name="dept.auto">
+								<span ><s:message code="userInfo.autolink"/></span>
+							</div>
+							</label>
+						</div>
+					</fieldset>
+				</div>
+				<div class="modalbody">
+						<div class="row">
+							<div class="col-35">
+								<label  class="fname"><s:message code="userInfo.filepath"/></label>
+							</div>
+						<div class="col-65">
+								<input type="text" class="w100" name="comment" id="dept.path"
+								       placeholder="<s:message code="common.message.input.filepath"/>" maxlength="255">
+						</div>
+						</div>
+						<div class="row">
+							<div class="col-35">
+								<label  class="fname"><s:message code="userInfo.colseparator"/></label>
+							</div>
+							<div class="col-65">
+								<select class="w100" id="dept.sepa">
+									<option value="|" selected> | </option>
+									<option value=","> , </option>
+								</select>
 							</div>
 						</div>
+
+					<div class="row">
+						<div class="col-35">
+							<label class="fname"><s:message code="userInfo.set.day"/></label>
+						</div>
+						<div class="col-65">
+							<div class="checkbox"><input type="checkbox" value="A" id="allWeek"></span><s:message
+									code="userInfo.all"/></div>
+							<div class="checkbox"><input type="checkbox" name="dept.week" value="sun"><s:message
+									code="common.sun"/></div>
+							<div class="checkbox"><input type="checkbox" name="dept.week" class="dept.week" value="mon"><s:message
+									code="common.mon"/></div>
+							<div class="checkbox"><input type="checkbox" name="dept.week" class="dept.week" value="tue"><s:message
+									code="common.tue"/></div>
+							<div class="checkbox"><input type="checkbox" name="dept.week" class="dept.week" value="wed"><s:message
+									code="common.wed"/></div>
+							<div class="checkbox"><input type="checkbox" name="dept.week" class="dept.week" value="thu"><s:message
+									code="common.thu"/></div>
+							<div class="checkbox"><input type="checkbox" name="dept.week" class="dept.week" value="fri"><s:message
+									code="common.fri"/></div>
+							<div class="checkbox"><input type="checkbox" name="dept.week" class="dept.week" value="sat"><s:message
+									code="common.sat"/></div>
+						</div>
 					</div>
-				</form>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
-					<button type="button" class="btn btn-primary" id="setDeptPopBtn" accesskey="S"><s:message code="common.msg.apply"/></button>
+						<div class="row">
+							<div class="col-35">
+								<label class="fname"><s:message code="userInfo.filepath"/></label>
+							</div>
+							<div class="col-65">
+								<input type="text" class="w100" name="comment" id="dept.path"
+								       placeholder="<s:message code="common.message.input.filepath"/>" maxlength="255">
+							</div>
+						</div>
+
+					<div class="row">
+						<div class="col-35">
+							<label class="fname"><s:message code="userInfo.set.time"/></label>
+						</div>
+						<div class="col-65">
+							<select  class="w100" id="dept.time" name="time">
+								<option value="*"><s:message code="userInfo.clock.time"/></option>
+								<option value="1"><s:message code="common.time.1"/></option>
+								<option value="2"><s:message code="common.time.2"/></option>
+								<option value="3"><s:message code="common.time.3"/></option>
+								<option value="4"><s:message code="common.time.4"/></option>
+								<option value="5"><s:message code="common.time.5"/></option>
+								<option value="6"><s:message code="common.time.6"/></option>
+								<option value="7"><s:message code="common.time.7"/></option>
+								<option value="8"><s:message code="common.time.8"/></option>
+								<option value="9"><s:message code="common.time.9"/></option>
+								<option value="10"><s:message code="common.time.10"/></option>
+								<option value="11"><s:message code="common.time.11"/></option>
+								<option value="12"><s:message code="common.time.12"/></option>
+								<option value="13"><s:message code="common.time.13"/></option>
+								<option value="14"><s:message code="common.time.14"/></option>
+								<option value="15"><s:message code="common.time.15"/></option>
+								<option value="16"><s:message code="common.time.16"/></option>
+								<option value="17"><s:message code="common.time.17"/></option>
+								<option value="18"><s:message code="common.time.18"/></option>
+								<option value="19"><s:message code="common.time.19"/></option>
+								<option value="20"><s:message code="common.time.20"/></option>
+								<option value="21"><s:message code="common.time.21"/></option>
+								<option value="22"><s:message code="common.time.22"/></option>
+								<option value="23"><s:message code="common.time.23"/></option>
+								<option value="0"><s:message code="common.time.24"/></option>
+							</select>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-35">
+							<label  class="fname"><s:message code="userInfo.no.column"/></label>
+						</div>
+						<div class="col-65">
+							<div style="font-size:12px; font-family: Pretendard; "> <s:message code="deptIpRange.msg.upload.info"/> </div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-35">
+							<label  class="fname"> <s:message code="userInfo.direct.execute"/></label>
+						</div>
+						<div class="col-65">
+							<button id="directExecuteBtn" type="button" accesskey="D" class="btn btn-success" style="margin-left: 84px"><span class="glyphicon glyphicon-import"><s:message code="userInfo.direct.execute"/></span></button>
+						</div>
+					</div>
+
 				</div>
 			</div>
 		</div>
+		</form>
 	</div>
+</div>
 
-	<div class="container">
-		<div class="boxArea">
-			<div class="content_body">
-				<div class="row">
-					<div class="col-xs-8 text-left">
-						<div class="form-group form-inline not-dashed">
-							<div class="input-group">
-								<input type="text" class="form-control input-sm" placeholder="<s:message code="ipRange.msg.enter.busicomment"/>" id="searchStrInput" style="width: 250px;">
-								<div class="input-group-btn">
-									<button class="btn btn-sm btn-success" type="button" accesskey="Q" id="searchBtn"><i class="glyphicon glyphicon-search"></i></button>
-								</div>
-							</div>
-							<button type="button" class="btn btn-sm btn-primary" accesskey="I" id="insertBtn"><span class="glyphicon glyphicon-plus"></span>&nbsp;<s:message code="common.msg.add"/></button>
-							<button type="button" class="btn btn-sm btn-default" accesskey="D" id="deleteBtn"><span class="glyphicon glyphicon-minus"></span>&nbsp;<s:message code="common.msg.delete"/></button>
-							<button type="button" class="btn btn-sm btn-warning" accesskey="U" id="uploadBtn"><span class="glyphicon glyphicon-import"></span>&nbsp;Upload</button>
-							<button type="button" class="btn btn-sm btn-warning" accesskey="S" id="setDeptApiBtn"><span class="glyphicon glyphicon-cog"></span>&nbsp;<s:message code="deptIpRange.set.api"/></button>
-							<div id="deptComment" style="margin-left: 455px;margin-top: -15px;font-weight: bold; color:#f25643;display: none;width: 630px;"><s:message code="deptIpRange.msg.insa.auto"/></div>
-						</div>
-					</div>
+
+<div class="container">
+		<div class="searchArea">
+			<div class="searchSub">
+				<div>
+					<input type="text"  placeholder="<s:message code="ipRange.msg.enter.busicomment"/>" id="searchStrInput">
 				</div>
-				<div class="row xcn_full top_space">
-					<div class="col-xs-12" style="height: 100%;">
-						<div id="ipRangeDeptListGrid" class="slickGrid gridArea"></div>
-					</div>
+				<button class="form_btn01" type="button" accesskey="Q" id="searchBtn"><s:message code="common.msg.search"/></button>
+				<button type="button" class="btn01" accesskey="I" id="insertBtn"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
+				<button type="button" class="btn02" accesskey="D" id="deleteBtn"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
+				<button type="button" class="btn03" accesskey="U" id="uploadBtn"><span class="glyphicon glyphicon-import"></span>&nbsp;Upload</button>
+				<button type="button" class="btn btn-sm btn-warning" accesskey="S" id="setDeptApiBtn"><span class="glyphicon glyphicon-cog"></span>&nbsp;<s:message code="deptIpRange.set.api"/></button>
+				<div id="deptComment" style="margin-left: 455px;margin-top: -15px;font-weight: bold; color:#f25643;display: none;width: 630px;"><s:message code="deptIpRange.msg.insa.auto"/></div>
+			</div>
+		</div>
+
+		<div class="content xcn_full">
+			<div class="contentSub">
+				<div class="subtab">
+					<button class="active">
+						부서 내부 ip 설정 목록
+						<span id="relationKeywordCount"></span>
+					</button>
 				</div>
+				<div id="ipRangeDeptListGrid" class="slickGrid gridArea"></div>
 			</div>
 		</div>
 	</div>
@@ -875,5 +991,3 @@ function getDeptSchedule(){
 		<input type="hidden" name="oldCode" id="oldCode"/>
 		<input type="hidden" name="oldConm" id="oldConm"/>					
 	</form>
-</body>
-</html>

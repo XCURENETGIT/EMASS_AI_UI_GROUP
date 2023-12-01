@@ -524,7 +524,7 @@ function fileExtCheck(obj) {
 			<div class="searchSub" style="width: 470px;">
 				<div>
 					<input type="text" placeholder="<s:message code="keyword.message.part_name"/>" id="searchStrGroup" style="width: 220px;">
-					<button class="form_btn01" type="button" accesskey="G" id="searchGroupBtn"><i class="glyphicon glyphicon-search"></i></button>
+					<button class="form_btn01" type="button" accesskey="G" id="searchGroupBtn">검색</button>
 				</div>
 				<button type="button" class="btn01" accesskey="I" id="groupInsertBtn"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
 				<button type="button" class="btn02" accesskey="D" id="groupDeleteBtn"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
@@ -540,8 +540,8 @@ function fileExtCheck(obj) {
 			<div class="searchSub" style="width:calc(100% - 470px) ">
 				<div>
 					<input type="text" placeholder="<s:message code="common.msg.searchMsg"/>" id="searchStrKeyword" style="width: 280px;">
-					<button class="form_btn01" type="button" accesskey="K" id="searchStrKeywordBtn"><i class="glyphicon glyphicon-search"></i></button>
 				</div>
+				<button class="form_btn01" type="button" accesskey="K" id="searchStrKeywordBtn">검색</button>
 				<c:if test="${_USERCREDENTIAL_.firstAdminYn eq 'Y'}">
 					<button type="button" class="btn01" accesskey="A" id="keywordInsertBtn"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
 					<button type="button" class="btn02" accesskey="E" id="keywordDeleteBtn"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
