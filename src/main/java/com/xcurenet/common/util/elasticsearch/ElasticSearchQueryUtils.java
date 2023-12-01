@@ -137,11 +137,21 @@ public class ElasticSearchQueryUtils {
 		if (Common.isEmpty(searchStr)) return this;
 
 		if(searchStr.indexOf(ElasticSearchCommon.COMMA) > -1){
-			searchStr = searchStr.replace(",",ElasticSearchCommon.OR_QUERY);
+			StringBuilder tempBuilder = new StringBuilder();
+			 String[] strArr = searchStr.split(",");
+			int idx = 0;
+			 for(String srr : strArr){
+				 if(idx <= strArr.length-1) {
+					 tempBuilder.append(makeParentheses(srr).concat(ElasticSearchCommon.OR_QUERY));
+				 }
+				 idx++;
+			 }
+			searchStr = tempBuilder.toString();
 		}
 
 		return addQuery(String.format("%s",searchStr));
 	}
+
 
 	/***
 	 *
@@ -1339,7 +1349,6 @@ public class ElasticSearchQueryUtils {
 
 
 
-
 		/* set Query (항상 쿼리 조합 최하단에 위치) */
 		setQuery();
 
@@ -1601,7 +1610,8 @@ public class ElasticSearchQueryUtils {
 		offset = (int) Math.round(Double.valueOf(Common.nvl(searchParam.get("offset"))));
 		limit =  (int) Math.round(Double.valueOf(Common.nvl(searchParam.get("limit"))));
 
-		messageSearchIntergrated();
+
+		messageSearchIntergrated(); // 검색 조건에 따른 쿼리 셋팅
 
 		log.info("엘라스틱 서치 Query_String (테스트) ===> " + getQuery());
 		this.elasticSearchParam.setIndices(new String[]{ElasticSearchCommon.EDC_MESSAGE_INDEX});
