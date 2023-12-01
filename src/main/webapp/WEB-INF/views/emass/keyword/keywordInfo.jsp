@@ -1,13 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
 
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-<title></title>
-<style type="text/css">
-
-</style>
 <script>
 var searchFlag = false;
 $(document).ready(function(){
@@ -362,8 +355,7 @@ function fileExtCheck(obj) {
 	}
 }
 </script>
-</head>
-<body>
+
 <div class="modal" id="keywordGroupPop" aria-labelledby="keywordGroupPop" tabindex="-1" role="dialog">
 	<div class="modal-content">
 		<form method="post" id="keywordGroupPopForm" onsubmit="return false;">
@@ -540,8 +532,8 @@ function fileExtCheck(obj) {
 			<div class="searchSub" style="width:calc(100% - 470px) ">
 				<div>
 					<input type="text" placeholder="<s:message code="common.msg.searchMsg"/>" id="searchStrKeyword" style="width: 280px;">
+					<button class="form_btn01" type="button" accesskey="K" id="searchStrKeywordBtn">검색</button>
 				</div>
-				<button class="form_btn01" type="button" accesskey="K" id="searchStrKeywordBtn">검색</button>
 				<c:if test="${_USERCREDENTIAL_.firstAdminYn eq 'Y'}">
 					<button type="button" class="btn01" accesskey="A" id="keywordInsertBtn"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
 					<button type="button" class="btn02" accesskey="E" id="keywordDeleteBtn"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
@@ -617,7 +609,3 @@ function fileExtCheck(obj) {
 		gridKeyword.loadHeader(false);
 		gridKeyword.initData('<s:message code="keyword.message.part_select"/>');
 	</script>
-
-</body>
-
-</html>
