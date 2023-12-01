@@ -694,7 +694,7 @@ function getSelectedCodeData( codeType, data ) {
 
     var grid1 = new Xgrid('basicStatListGrid', contextRoot);
     grid1.autoNumber();
- grid1.colAdd('rowKey', '서비스타입', 100, 'left', true, 'nomal');
+    grid1.colAdd('rowKey', '서비스타입', 100, 'left', true, 'nomal');
     grid1.colAdd('svcLv1Nm', '<s:message code="stat.service.type"/>', 230, 'left', false, 'nomal');
     grid1.colAdd('svcLv2Nm', '<s:message code="condition.service"/>', 230, 'left', false, 'link');
     //grid1.colAdd('svcNm', '상세 서비스명', 230, 'left', false, 'link');
@@ -760,8 +760,12 @@ function getSelectedCodeData( codeType, data ) {
 
                 grid1.colInit();
                 grid1.autoNumber();
-                grid1.colAdd('rowKey', '<s:message code="condition.service"/>', 0, 'left', true, 'nomal','',1);
-                grid1.colAdd('rowName', '<s:message code="condition.service"/>', 320, 'left', false, 'link');
+				grid1.colAdd('rowKey', '<s:message code="condition.service"/>', 230, 'left', false, 'link', function (row, cell, value, columnDef, dataContext) {
+					if (grid1.getValue(row, 'rowName') != '') {
+						return grid1.getValue(row, 'rowName') + value ;
+					}
+					return value;
+				});
                 grid1.colAdd('total', '<s:message code="bodyview.total"/>', 130, 'right', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
                     if ( value != undefined ) return value.comma();
                     else return '';
