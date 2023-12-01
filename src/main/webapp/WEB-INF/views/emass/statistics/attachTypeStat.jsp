@@ -572,11 +572,15 @@ function getSelectedCodeData( codeType, data ) {
                 if(grid1.getValue(i, 'rowKey') == "" || grid1.getValue(i, 'rowKey') == "-") continue;
                 else key += grid1.getValue(i, 'rowKey').replaceAll("\"", "\\\"") + ",";
             }
+			key = key.substring(0, key.length - 1)
             rowKey = key;
         }else {
-            rowKey = grid1.getValue(grid1.Row, 'rowKey');
+			rowKey = grid1.getValue(grid1.Row, 'rowKey').replaceAll("\"", "\\\"");
         }
+		rowName = grid1.getValue(grid1.Row, 'rowName');
         colKey = grid1.ColKey(grid1.Col);
+
+
         var colKeyNm = colKey;
         if (colKey == 'rowKey' || colKey == 'total' || colKey == 'NUM') {
             colKey = "";
@@ -597,10 +601,11 @@ function getSelectedCodeData( codeType, data ) {
             $('#detailTab'+delid+' .close').click();
         }
 
-        var rowKeys = rowKey.split(",");
-        var displayName = rowKeys.length > 1 ? '<s:message code="common.msg.all"/>' : rowKey;
-        var id = 'tab'+tabID;
-        $('.listChart').append($('<li style="display:inline-flex;text-align: center;z-index:1001;" idx="'+tabID+'" id="liTab'+tabID+'"><a data-toggle="tab" href="#tab'+tabID+'" id="detailTab'+tabID+'" >'+displayName+' - '+colKeyNm+'<span class="badge"></span><button class="close" type="button" title="<s:message code="stat.delete.tab"/>">×</button></a></li>'));
+		var displayName = (rowKey.indexOf(',') > -1) ? '<s:message code="common.msg.all"/>' : rowKey.replaceAll("\\\"", "\"");
+		if (rowName != '') displayName = rowName + '&lt;' + rowKey + '&gt;';
+		var id = 'tab' + tabID;
+
+		$('.listChart').append($('<li style="display:inline-flex;text-align: center;z-index:1001;" idx="'+tabID+'" id="liTab'+tabID+'"><a data-toggle="tab" href="#tab'+tabID+'" id="detailTab'+tabID+'" >'+displayName+' - '+colKeyNm+'<span class="badge"></span><button class="close" type="button" title="<s:message code="stat.delete.tab"/>">×</button></a></li>'));
         $('#basicStatList').after($('<div class="tab-pane fade" id="tab' + tabID + '"><div id="detail_cnt'+tabID+'" style="margin-top:0px; color: #f25643; font-weight: bold; font-size: 13px;"></div><div id="grid'+tabID+'" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; height: 380px"></div></div>'));
 
         var gid = 'grid'+tabID;
@@ -658,7 +663,10 @@ function getSelectedCodeData( codeType, data ) {
 
 				grid1.colInit();
                 grid1.autoNumber();
-                grid1.colAdd('rowKey', '<s:message code="consent.attach"/>', 230, 'left', false, 'link');
+
+				grid1.colAdd('rowKey', '<s:message code="consent.attach"/>', 230, 'left', false, 'link', function (row, cell, value, columnDef, dataContext) {
+					return value;
+				});
                 grid1.colAdd('total', '<s:message code="bodyview.total"/>', 130, 'right', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
                     if ( value != undefined ) return value.comma();
                     else return '';
@@ -732,7 +740,6 @@ function getSelectedCodeData( codeType, data ) {
 
         /* 검색 데이터 전송 객체 */
         var searchData = {
-			detail : "ok",
             rowKey: rowKey,
             colKey: colKey,
             startDate: $('#searched_startDate').val(),
@@ -741,13 +748,14 @@ function getSelectedCodeData( codeType, data ) {
             xAxis: xAxis,
             xAxis_str: xAxis_str,
             searched_xAxis: $('#searched_xAxis').val(),
-    /*        colId: colId,*/
+			colId: colId,
             yAxis: 'attach.ext',
             offset: currentgrid.data.length,
             limit: currentgrid.pageSize,
             nameStat : "attachStat",
         }
 
+		console.log(colId);
 
         ui.get({
             url : 'getStatDetailList.xcn',

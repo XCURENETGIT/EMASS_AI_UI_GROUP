@@ -42,6 +42,7 @@ public class ElasticSearchParam {
     private String yAxis; // 페이지별  주요 검색 열
     private String xAxis; // 통계 영역 열 시간,사업장,부서...
 
+    private String colKey; // 디테일 검색시 클릭했던 column Value값
     private String colId; // 디테일 검색시 클릭했던 column id
     private String searched_xAxis; // 바로 이전 검색했었던 xAxis값
 
@@ -58,6 +59,11 @@ public class ElasticSearchParam {
     private String pi_FN;
     private String pi_CN;
 
+
+    private boolean isDetailed; // 상세 검색
+    private boolean yAxisIsNested; //
+
+    private List<QueryField> queryField;
 
 
     private Map<String,Object> searchParameters; // 유저가 검색에 입력,사용한 값 (객체형태)
