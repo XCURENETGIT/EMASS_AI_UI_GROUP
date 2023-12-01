@@ -113,13 +113,7 @@ public class MessengerController {
 			searchParam.put(ElasticSearchCommon.SEARCH_TYPE, ElasticSearchCommon.SEARCH_TYPE_MESSENGER_GROUP);
 
 		}
-		/*
-		**** setCount 작성
-		 */
 		MessengerEdcGroupVO edcMessage = emsSearchService.getMessengerGroupList(searchParam, Common.getAdminId(session));
-
-		log.info("EDCMessenger: "+edcMessage.getGroups().size());
-		log.info("totakl: "+edcMessage.getTotal());
 		return new XcnResponseVO(XcnRspCode.OK, edcMessage, edcMessage.getGroups().size());
 	}
 
@@ -187,22 +181,6 @@ public class MessengerController {
 
 		return new XcnResponseVO(XcnRspCode.OK, result);
 	}
-
-//	public List<EmassMessenger> setCount(List<EmassMessenger> groups, String adminId) throws IOException {
-//		List<String> xrootmtrs = new ArrayList<>();
-//		for (EmassMessenger group : groups) {
-//			xrootmtrs.add("\"" + group.getXrootmtr() + "\"");
-//		}
-//		if (xrootmtrs.size() == 0) return groups;
-//
-//		Map<String, Long> allCount = getAllCount(xrootmtrs);
-//		Map<String, Long> unReadCount = getUnReadCount(xrootmtrs, adminId);
-//
-//		for (EmassMessenger group : groups) {
-//			group.setMsg_cnt(Common.nvn(allCount.get(group.getXrootmtr())));
-//			group.setUnread_cnt(Common.nvn(unReadCount.get(group.getXrootmtr())));
-//		}
-//		return groups;
 
 /*
 	private Map<String, Long> getAllCount(List<String> xrootmtrs) throws IOException, SolrServerException {
