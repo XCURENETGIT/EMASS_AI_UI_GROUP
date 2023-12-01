@@ -174,11 +174,9 @@ public class EmassIntegrated {
                     Nested nestedPi = bucket.getAggregations().get("nested_pi");
                     Terms argments = nestedPi.getAggregations().get("stat2");
 
-                    String rowName = Common.nvl(bucket.getKey()); // main aggregations Key는 유저 아이디
                     for (Terms.Bucket arg : argments.getBuckets()) {
                         Map<String, Object> item = new HashMap();
                         keys.put(ElasticSearchCommon.PI_PREFIX.concat(Common.nvl(arg.getKey())), 0); // pivot header 추가
-                        item.put("rowName",rowName);
                         item.put("rowKey",Common.nvl(bucket.getKey()));
 
                         if(!arg.getKey().equals("EC")){

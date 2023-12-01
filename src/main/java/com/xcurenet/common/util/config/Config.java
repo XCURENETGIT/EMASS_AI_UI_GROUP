@@ -575,7 +575,8 @@ public class Config {
 	}
 
 	public static String analysisFlag(final String xAxis,final String code) {
-		if(ElasticSearchCommon.USER_USERID.equals(xAxis)) return getUserName(code);
+		if(xAxis != null && xAxis.contains("userId")||xAxis.equals("pi.id") ) {
+			return getUserName(code);}
 		else if(ElasticSearchCommon.USER_COCD.equals(xAxis)) return getCompName(code);
 		else if(ElasticSearchCommon.USER_BUSICD.equals(xAxis)) return getBusiName(code);
 		else if(ElasticSearchCommon.USER_DEPTCD.equals(xAxis)) return getDeptName(code);

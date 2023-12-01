@@ -534,8 +534,8 @@
 
   var grid1 = new Xgrid('infoStatListGrid', contextRoot);
   grid1.autoNumber();
-  grid1.colAdd('val', '<s:message code="consent.user"/>', 150, 'left', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
-    if(grid1.getValue(row, 'rowName') != '')  return grid1.getValue(row, 'rowName') + '&lt;' + value + '&gt;';
+  grid1.colAdd('rowKey', '<s:message code="consent.user"/>', 150, 'left', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
+    if(grid1.getValue(row, 'rowKey') != '')  return grid1.getValue(row, 'rowName') + '&lt;' + value + '&gt;';
     return value;
   });
   grid1.colAdd('total', '<s:message code="bodyview.total"/>', 40, 'right', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
@@ -572,19 +572,19 @@
   };
   grid1.onClick = function() {
     initProgressbar();
-    if (grid1.Col == grid1.ColIndex('val')||grid1.Col == grid1.ColIndex('total')) {
+    if (grid1.Col == grid1.ColIndex('rowKey')||grid1.Col == grid1.ColIndex('total')) {
       var data = grid1.getRowData(grid1.Row);
-      makeNetwork(grid1.getValue(grid1.Row, 'rowName'),'',grid1.getValue(grid1.Row, 'total'));
+      makeNetwork(grid1.getValue(grid1.Row, 'rowKey'),'',grid1.getValue(grid1.Row, 'total'));
     }if(grid1.Col == grid1.ColIndex('pi_SN')){
-      makeNetwork(grid1.getValue(grid1.Row, 'val'),'SN',grid1.getValue(grid1.Row, 'pi_SN'));
+      makeNetwork(grid1.getValue(grid1.Row, 'rowKey'),'SN',grid1.getValue(grid1.Row, 'pi_SN'));
     }if(grid1.Col == grid1.ColIndex('pi_CN')){
-      makeNetwork(grid1.getValue(grid1.Row, 'val'),'CN',grid1.getValue(grid1.Row, 'pi_CN'));
+      makeNetwork(grid1.getValue(grid1.Row, 'rowKey'),'CN',grid1.getValue(grid1.Row, 'pi_CN'));
     }if(grid1.Col == grid1.ColIndex('pi_DN')){
-      makeNetwork(grid1.getValue(grid1.Row, 'val'),'DN',grid1.getValue(grid1.Row, 'pi_DN'));
+      makeNetwork(grid1.getValue(grid1.Row, 'rowKey'),'DN',grid1.getValue(grid1.Row, 'pi_DN'));
     }if(grid1.Col == grid1.ColIndex('pi_FN')){
-      makeNetwork(grid1.getValue(grid1.Row, 'val'),'FN',grid1.getValue(grid1.Row, 'pi_FN'));
+      makeNetwork(grid1.getValue(grid1.Row, 'rowKey'),'FN',grid1.getValue(grid1.Row, 'pi_FN'));
     }if(grid1.Col == grid1.ColIndex('pi_PN')){
-      makeNetwork(grid1.getValue(grid1.Row, 'val'),'PN',grid1.getValue(grid1.Row, 'pi_PN'));
+      makeNetwork(grid1.getValue(grid1.Row, 'rowKey'),'PN',grid1.getValue(grid1.Row, 'pi_PN'));
     }
   };
 
