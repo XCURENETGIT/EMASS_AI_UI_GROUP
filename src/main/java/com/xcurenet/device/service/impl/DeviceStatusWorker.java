@@ -46,7 +46,7 @@ public class DeviceStatusWorker implements Callable<DeviceVO> {
 			disk(sftp);
 			netWork(sftp);
 
-			log.info("info : {} {}", device.getDeviceIp(), device.getCurrentDevice());
+			log.debug("info : {} {}", device.getDeviceIp(), device.getCurrentDevice());
 		} finally {
 			sftp.disconnection();
 		}
@@ -145,8 +145,8 @@ public class DeviceStatusWorker implements Callable<DeviceVO> {
 					items.add(item);
 					item = new JSONObject();
 				}
-				item.put("name", cols.get(0));
-				item.put("status", cols.get(1).contains("UP") ? "up" : "down");
+				item.put("name", cols.get(0).replace(":", ""));
+				item.put("status", cols.get(1).contains("UP") ? "UP" : "DOWN");
 				item.put("mtu", cols.get(3));
 			} else if (!h.startsWith(" ")) {
 				filter = false;

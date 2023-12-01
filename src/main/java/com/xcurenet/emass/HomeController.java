@@ -175,12 +175,7 @@ public class HomeController {
 	@RequestMapping(value = "/commons/deviceInfo.do", method = RequestMethod.GET)
 	@Description("장비 정보 페이지")
 	public String deviceInfo(Locale locale, Model model) {
-		if (Common.isOrEquals(Common.getAdminType(httpSession), "S", "M", "C")) {
-			model.addAttribute("headerYn","Y");
-			return "/commons/deviceInfoMysql";
-		} else {
-			return "/emass/dashboard";
-		}
+		return "/commons/deviceInfoMysql";
 	}
 
 	@RequestMapping(value = "/commons/deviceInfoDetail.do", method = RequestMethod.GET)

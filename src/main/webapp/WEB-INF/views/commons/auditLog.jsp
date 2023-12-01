@@ -309,7 +309,7 @@
             offset: grid.data.length,
             limit: grid.pageSize,
             success: function (data, total) {
-	            $("#auditLogCount").html('합계 [' + total.comma() + '건]');
+	            $("#auditLogCount").html(' [' + total.comma() + '건]');
                 grid.appendData(data);
             },
             error: function (status, message) {

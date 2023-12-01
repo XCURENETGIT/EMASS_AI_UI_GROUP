@@ -36,7 +36,7 @@ public class NtpScheduler {
 
 	public static JSONObject ntpStatus = new JSONObject();
 
-	@Scheduled(fixedDelay = 5000)
+	@Scheduled(fixedDelay = 60000)
 	public void checkNtp() {
 		JSONObject socketMsg = getNtpStatus();
 		simpMessagingTemplate.convertAndSend("/topic/ntpCheck", socketMsg);
@@ -47,8 +47,6 @@ public class NtpScheduler {
 		String resultServer = "";
 		boolean synchronizedNTP = false;
 		boolean dataStart = false;
-		log.info("[NTP Check]");
-
 		try {
 			String message = Common.commandRunner(NTP_COMMAND);
 			if (Common.isNotEmpty(message)) {
