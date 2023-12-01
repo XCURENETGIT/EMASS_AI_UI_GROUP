@@ -21,6 +21,7 @@ import com.xcurenet.emass.message.service.MessengerEdcGroupVO;
 import com.xcurenet.emass.message.vo.emass.EmassIntegrated;
 import com.xcurenet.emass.message.vo.emass.els.Emass;
 import com.xcurenet.emass.message.vo.emass.els.EmassMessenger;
+import com.xcurenet.emass.message.vo.emass.els.fields.AttachVo_Els;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -103,7 +104,6 @@ public class MessengerController {
 	@AuditOperation(Operation.SEARCH)
 	@ResponseBody
 	public XcnResponseVO getMessengerGroupList(final HttpServletRequest request, final HttpSession session) throws Exception {
-		EmassIntegrated emassIntegrated = null;
 		Gson gson = new Gson();
 		Map<String,Object> resultParam = Common.getParamMap(request);
 		Map<String,Object> searchParam = new HashMap<>();
@@ -225,78 +225,7 @@ public class MessengerController {
 		return cnt;
 	}*/
 
-	@RequestMapping(value = "/getMessengerGenertiveList.xcn")
-	@Description("생성형 AI 목록 조회")
-	@AuditOperation(Operation.SEARCH)
-	@ResponseBody
-	public XcnResponseVO getMessengerGenertiveList(final HttpServletRequest request, final HttpSession session) throws Exception {
-		Gson gson = new Gson();
-		Map<String,Object> resultParam = Common.getParamMap(request);
-		Map<String,Object> searchParam = new HashMap<>();
-		if (!Common.isEmpty(resultParam.get("searchParam"))) {
-			Type type = new TypeToken<Map<String,Object>>(){}.getType();
-			searchParam = gson.fromJson((String) resultParam.get("searchParam"),type);
-			searchParam.put(ElasticSearchCommon.SEARCH_TYPE, ElasticSearchCommon.SEARCH_TYPE_COLLECTION);
-		}
-		MessengerEdcGroupVO edcMessage = emsSearchService.getMessengerGroupList(searchParam, Common.getAdminId(request));
-//		Gson gson = new Gson();
-//		Map<String,Object> resultParam = Common.getParamMap(request);
-//		Map<String,String> searchParam = new HashMap<>();
-//		if(!Common.isEmpty(resultParam.get("searchParam"))){
-//			Type type = new TypeToken<Map<String,String>>(){}.getType();
-//			searchParam = gson.fromJson((String) resultParam.get("searchParam"),type);
-//		}
 
-		return new XcnResponseVO(XcnRspCode.OK, edcMessage, edcMessage.getNumFound());
-
-	}
-
-	@RequestMapping(value = "/getMessengerNoteList.xcn")
-	@Description("노트 목록 조회")
-	@AuditOperation(Operation.SEARCH)
-	@ResponseBody
-	public XcnResponseVO getMessengerNoteList(final HttpServletRequest request, final HttpSession session) throws Exception {
-		Gson gson = new Gson();
-		Map<String,Object> resultParam = Common.getParamMap(request);
-		Map<String,Object> searchParam = new HashMap<>();
-		if (!Common.isEmpty(resultParam.get("searchParam"))) {
-			Type type = new TypeToken<Map<String,Object>>(){}.getType();
-			searchParam = gson.fromJson((String) resultParam.get("searchParam"),type);
-			searchParam.put(ElasticSearchCommon.SEARCH_TYPE, ElasticSearchCommon.SEARCH_TYPE_MESSAGE);
-		}
-		MessengerEdcGroupVO edcMessage = emsSearchService.getMessengerGroupList(searchParam, Common.getAdminId(request));
-//		Gson gson = new Gson();
-//		Map<String,Object> resultParam = Common.getParamMap(request);
-//		Map<String,String> searchParam = new HashMap<>();
-//		if(!Common.isEmpty(resultParam.get("searchParam"))){
-//			Type type = new TypeToken<Map<String,String>>(){}.getType();
-//			searchParam = gson.fromJson((String) resultParam.get("searchParam"),type);
-//		}
-
-		return new XcnResponseVO(XcnRspCode.OK, edcMessage, edcMessage.getNumFound());
-
-	}
-
-
-	@RequestMapping(value = "/getFiletransferList.xcn")
-	@Description("파일전송 목록 조회")
-	@AuditOperation(Operation.SEARCH)
-	@ResponseBody
-	public XcnResponseVO getFiletransferList(final HttpServletRequest request, final HttpSession session) throws Exception {
-		Gson gson = new Gson();
-		Map<String,Object> resultParam = Common.getParamMap(request);
-		Map<String,Object> searchParam = new HashMap<>();
-		if(!Common.isEmpty(resultParam.get("searchData"))){
-			Type type = new TypeToken<Map<String,Object>>(){}.getType();
-			searchParam = gson.fromJson((String) resultParam.get("searchData"),type);
-			searchParam.put("elsSearchType", ElasticSearchCommon.SEARCH_TYPE_MESSAGE);
-		}
-		/*############################################################################*/
-
-		EmassIntegrated edcMessage = emsSearchService.getEmassMessage(searchParam,Common.getAdminId(session));
-		return new XcnResponseVO(XcnRspCode.OK, edcMessage, edcMessage.getTotal());
-
-	}
 
 	@RequestMapping(value = "/getMessengerMessageTotal.xcn")
 	@Description("메신저 대화방 대화 내용 전체 건수 조회")
@@ -491,70 +420,50 @@ public class MessengerController {
 //		return new XcnResponseVO(XcnRspCode.OK, solrEdcGroupVO.getNumFound(), solrEdcGroupVO.getNumFound());
 //	}
 
-/*
+
 	@RequestMapping(value = "/getMessengerGroupAttachList.xcn")
 	@Description("메신저 대화방 첨부 전송 리스트 조회")
 	@ResponseBody
 	public XcnResponseVO getMessengerGroupAttachList(final HttpServletRequest request, final HttpSession session) throws Exception {
-		JSONObject param = Common.getParam(request);
-		String xRootMtr = Common.nvl(param.get("xRootMtr"));
-		String srcip = Common.nvl(param.get("srcip"));
-		String usr_id = Common.nvl(param.get("usr_id"));
-		String startDt = Common.nvl(param.get("startDt"));
-		String endDt = Common.nvl(param.get("endDt"));
-		String searchStr = Common.nvl(param.get("searchStr"));
-
-		SolrQuery sq = new SolrQuery();
-		String query = "";
-		if(Common.isNotEmpty(startDt) && Common.isNotEmpty(endDt)) query += String.format("+ctime:[%s TO %s] ", startDt, endDt);
-		query += String.format("+xrootmtr:\"%s\" +attached:Y", xRootMtr);
-		if(Common.isNotEmpty(usr_id)) query += String.format(" +usr_id:\"%s\"", usr_id);
-		else query += " -usr_id:*";
-		if(Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
-		if(Common.isNotEmpty(searchStr)) query += String.format(" +body:(*%s*) ", searchStr);
-
-		sq.setQuery(query + MESSENGER);
-		sq.setStart(0);
-		sq.setRows(30000);
-		sq.setSort("ctime", ORDER.asc);
-		SolrEdcMessageVO edcVO = solrEdcService.getEmassMessage(sq, Common.getAdminId(request));
-
+		Gson gson = new Gson();
+		Map<String,Object> resultParam = Common.getParamMap(request);
+		Map<String,Object> searchParam = new HashMap<>();
+		if (!Common.isEmpty(resultParam.get("searchParam"))) {
+			Type type = new TypeToken<Map<String,Object>>(){}.getType();
+			searchParam = gson.fromJson((String) resultParam.get("searchParam"),type);
+			searchParam.put(ElasticSearchCommon.SEARCH_TYPE, ElasticSearchCommon.SEARCH_TYPE_MESSENGER_FILE);
+		}
 		List<Map<String, String>> result = new ArrayList<>();
-		List<SolrEdcVO> emass = edcVO.getEmass();
-		if (emass != null) {
-			for (SolrEdcVO edc : emass) {
-				List<String> attachs = edc.getAttachname();
-				List<String> attachHashs = edc.getAttachhash();
-				List<Long> attachSizes = edc.getAttachsize();
-				List<String> attachtypes = edc.getAttachtype();
-				if (attachs == null) break;
-				for (int i = 0; i < attachs.size(); i++) {
-					String attach = attachs.get(i);
+		List<Emass> emassList = (List<Emass>) emsSearchService.getMessengerGroupList(searchParam,Common.getAdminId(session)).getEmass();
+		if (emassList != null){
+			for (Emass emass : emassList){
+				List<AttachVo_Els> attachs  = emass.getAttach();
+				for (int i = 0; i<attachs.size(); i++){
 					Map<String, String> obj = new HashMap<>();
-					obj.put("msgid", edc.getMsgid());
-					obj.put("ctime", edc.getCtime());
-					obj.put("srcip", edc.getSrcip());
-					obj.put("user", edc.getUser());
-					obj.put("name", edc.getName());
-					obj.put("sender", edc.getSender());
-					obj.put("sname", edc.getSname());
-					obj.put("conm", edc.getConm());
-					obj.put("businm", edc.getBusinm());
-					obj.put("xrootmtr", edc.getXrootmtr());
-					obj.put("deptnm", edc.getDeptnm());
-					obj.put("jikgubnm", edc.getJikgubnm());
-					obj.put("attachname", attach);
-					if (attachHashs == null) obj.put("attachhash", Common.EMPTY);
-					else obj.put("attachhash", Common.nvl(attachHashs.get(i)));
-					obj.put("attachsize", Common.nvl(attachSizes.get(i)));
-					obj.put("attachtype", Common.nvl(attachtypes.get(i)));
+					obj.put("msgid", emass.getMsgid());
+					obj.put("ctime", emass.getCtime());
+					obj.put("srcip", emass.getNetwork().getSrcIp());
+					obj.put("user", emass.getUser().getUserId());
+					obj.put("name", emass.getUser().getName());
+					obj.put("sender", emass.getSender().getId());
+					obj.put("sname", emass.getSender().getName());
+					obj.put("conm", emass.getSender().getCoNm());
+					obj.put("businm", emass.getSender().getBusiNm());
+					obj.put("xrootmtr", emass.getXrootMtr());
+					obj.put("deptnm", emass.getSender().getDeptNm());
+					obj.put("jikgubnm", emass.getSender().getJikgubNm());
+					obj.put("attachname", emass.getAttach().get(i).getName());
+					if ((emass.getAttach().get(i).getHash()) == null) obj.put("attachhash", Common.EMPTY);
+					else obj.put("attachhash", Common.nvl((emass.getAttach().get(i).getHash())));
+					obj.put("attachsize", Common.nvl((emass.getAttach().get(i).getSize())));
+					obj.put("attachtype", Common.nvl((emass.getAttach().get(i).getExt())));
 					result.add(obj);
 				}
 			}
 		}
 		return new XcnResponseVO(XcnRspCode.OK, result, result.size());
 	}
-*/
+
 
 /*	@RequestMapping(value = "/getMessengerGroupUserCnt.xcn")
 	@Description("메신저 대화방 참여자 건수 조회")
@@ -922,6 +831,79 @@ public class MessengerController {
 	@ResponseBody
 	public XcnResponseVO getNoteList(final HttpServletRequest request, final HttpSession session) throws Exception {
 		return new XcnResponseVO(XcnRspCode.OK, emsMessageService.getNoteList());
+	}
+
+	@RequestMapping(value = "/getMessengerGenertiveList.xcn")
+	@Description("생성형 AI 목록 조회")
+	@AuditOperation(Operation.SEARCH)
+	@ResponseBody
+	public XcnResponseVO getMessengerGenertiveList(final HttpServletRequest request, final HttpSession session) throws Exception {
+		Gson gson = new Gson();
+		Map<String,Object> resultParam = Common.getParamMap(request);
+		Map<String,Object> searchParam = new HashMap<>();
+		if (!Common.isEmpty(resultParam.get("searchParam"))) {
+			Type type = new TypeToken<Map<String,Object>>(){}.getType();
+			searchParam = gson.fromJson((String) resultParam.get("searchParam"),type);
+			searchParam.put(ElasticSearchCommon.SEARCH_TYPE, ElasticSearchCommon.SEARCH_TYPE_COLLECTION);
+		}
+		MessengerEdcGroupVO edcMessage = emsSearchService.getMessengerGroupList(searchParam, Common.getAdminId(request));
+//		Gson gson = new Gson();
+//		Map<String,Object> resultParam = Common.getParamMap(request);
+//		Map<String,String> searchParam = new HashMap<>();
+//		if(!Common.isEmpty(resultParam.get("searchParam"))){
+//			Type type = new TypeToken<Map<String,String>>(){}.getType();
+//			searchParam = gson.fromJson((String) resultParam.get("searchParam"),type);
+//		}
+
+		return new XcnResponseVO(XcnRspCode.OK, edcMessage, edcMessage.getNumFound());
+
+	}
+
+	@RequestMapping(value = "/getMessengerNoteList.xcn")
+	@Description("노트 목록 조회")
+	@AuditOperation(Operation.SEARCH)
+	@ResponseBody
+	public XcnResponseVO getMessengerNoteList(final HttpServletRequest request, final HttpSession session) throws Exception {
+		Gson gson = new Gson();
+		Map<String,Object> resultParam = Common.getParamMap(request);
+		Map<String,Object> searchParam = new HashMap<>();
+		if (!Common.isEmpty(resultParam.get("searchParam"))) {
+			Type type = new TypeToken<Map<String,Object>>(){}.getType();
+			searchParam = gson.fromJson((String) resultParam.get("searchParam"),type);
+			searchParam.put(ElasticSearchCommon.SEARCH_TYPE, ElasticSearchCommon.SEARCH_TYPE_MESSAGE);
+		}
+		MessengerEdcGroupVO edcMessage = emsSearchService.getMessengerGroupList(searchParam, Common.getAdminId(request));
+//		Gson gson = new Gson();
+//		Map<String,Object> resultParam = Common.getParamMap(request);
+//		Map<String,String> searchParam = new HashMap<>();
+//		if(!Common.isEmpty(resultParam.get("searchParam"))){
+//			Type type = new TypeToken<Map<String,String>>(){}.getType();
+//			searchParam = gson.fromJson((String) resultParam.get("searchParam"),type);
+//		}
+
+		return new XcnResponseVO(XcnRspCode.OK, edcMessage, edcMessage.getNumFound());
+
+	}
+
+
+	@RequestMapping(value = "/getFiletransferList.xcn")
+	@Description("파일전송 목록 조회")
+	@AuditOperation(Operation.SEARCH)
+	@ResponseBody
+	public XcnResponseVO getFiletransferList(final HttpServletRequest request, final HttpSession session) throws Exception {
+		Gson gson = new Gson();
+		Map<String,Object> resultParam = Common.getParamMap(request);
+		Map<String,Object> searchParam = new HashMap<>();
+		if(!Common.isEmpty(resultParam.get("searchData"))){
+			Type type = new TypeToken<Map<String,Object>>(){}.getType();
+			searchParam = gson.fromJson((String) resultParam.get("searchData"),type);
+			searchParam.put("elsSearchType", ElasticSearchCommon.SEARCH_TYPE_MESSAGE);
+		}
+		/*############################################################################*/
+
+		EmassIntegrated edcMessage = emsSearchService.getEmassMessage(searchParam,Common.getAdminId(session));
+		return new XcnResponseVO(XcnRspCode.OK, edcMessage, edcMessage.getTotal());
+
 	}
 
 }

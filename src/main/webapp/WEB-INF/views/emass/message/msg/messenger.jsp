@@ -833,11 +833,16 @@
             var pop = fnOpenWindow(url, 'participant', 1015, 450, 'resize');
         }
 
+        let searchParam = {
+            xrootmtr :  $('#xrootmtr').text(),
+            attachYn : 'Y'
+        };
+
+
         function getParticipantFileList(){
-            var xrootmtr = $('#xrootmtr').text();
             ui.get({
                 url : 'getMessengerGroupAttachList.xcn',
-                xRootMtr : xrootmtr,
+                searchParam : JSON.stringify(searchParam),
                 success : function(data, total) {
                     alert( JSON.stringify( data ) );
                     //getFileList(data);

@@ -32,6 +32,7 @@ public class ElasticSearchCommon {
     public static final String SEARCH_TYPE_MESSENGER_GROUP = "messenger_group";
     public static final String SEARCH_TYPE_MESSENGER_TOTAL = "messenger_total";
     public static final String SEARCH_TYPE_MESSENGER_DETAIL = "messenger_detail";
+    public static final String SEARCH_TYPE_MESSENGER_FILE = "messenger_file";
     public static final String SEARCH_TYPE_COLLECTION = "colletion";
     public static final String SEARCH_TYPE_ANALYSIS = "analysis";
     public static final String SEARCH_TYPE_STATISTIC = "statistic";

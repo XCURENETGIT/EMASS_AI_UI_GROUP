@@ -73,7 +73,6 @@ public class ElasticSearchQueryUtils {
 		queryBuffer = new StringBuilder();
 	}
 
-
 	public void setQuery() {
 		this.query = queryBuffer.toString().trim();
 		queryBuffer = new StringBuilder();
@@ -96,9 +95,9 @@ public class ElasticSearchQueryUtils {
 	}
 
 
-	public void setSort(String sort){
+	public void setSort(String sort) {
 		sortInfo = new ArrayList<>();
-		if( Common.isEmpty(sort)){ // default
+		if (Common.isEmpty(sort)) { // default
 			sortInfo.add(SortBuilders.fieldSort("ctime").order(SortOrder.DESC));
 //                                 sortInfo.add(SortBuilders.fieldSort("msgid").order(SortOrder.DESC));
 		}
@@ -118,15 +117,17 @@ public class ElasticSearchQueryUtils {
 
 
 	/**
-	 //     * 서비스 타입 쿼리
-	 //     *
-	 //     * @param serviceTypes
-	 //     * @return
-	 //     */
+	 * //     * 서비스 타입 쿼리
+	 * //     *
+	 * //     * @param serviceTypes
+	 * //     * @return
+	 * //
+	 */
 
 	public void setDetailQuery(String str) {
 		queryBuffer.append(ElasticSearchCommon.SPACE).append(str);
 	}
+
 
 	/***
 	 * 검색
@@ -138,14 +139,14 @@ public class ElasticSearchQueryUtils {
 
 		if(searchStr.indexOf(ElasticSearchCommon.COMMA) > -1){
 			StringBuilder tempBuilder = new StringBuilder();
-			 String[] strArr = searchStr.split(",");
+			String[] strArr = searchStr.split(",");
 			int idx = 0;
-			 for(String srr : strArr){
-				 if(idx <= strArr.length-1) {
-					 tempBuilder.append(makeParentheses(srr).concat(ElasticSearchCommon.OR_QUERY));
-				 }
-				 idx++;
-			 }
+			for(String srr : strArr){
+				if(idx <= strArr.length-1) {
+					tempBuilder.append(makeParentheses(srr).concat(ElasticSearchCommon.OR_QUERY));
+				}
+				idx++;
+			}
 			searchStr = tempBuilder.toString();
 		}
 
@@ -162,7 +163,7 @@ public class ElasticSearchQueryUtils {
 
 	public void setyField(String field) {
 		field = field.concat(ElasticSearchCommon.COLON);
-		this.queryBuffer.insert(0,field);
+		this.queryBuffer.insert(0, field);
 	}
 
 
@@ -170,14 +171,14 @@ public class ElasticSearchQueryUtils {
 	 *
 	 * 메시징 검색 필드
 	 */
-	public void setSearchField(String[] fields,String searchQuery){
+	public void setSearchField(String[] fields, String searchQuery) {
 		int idx = 0;
-		for(String field : fields){
+		for (String field : fields) {
 			this.queryBuffer
 					.append(field)
 					.append(ElasticSearchCommon.COLON)
 					.append(searchQuery);
-			if(idx < fields.length-1) {
+			if (idx < fields.length - 1) {
 				this.queryBuffer.append(ElasticSearchCommon.OR_QUERY);
 			}
 			idx++;
@@ -190,13 +191,13 @@ public class ElasticSearchQueryUtils {
 	 *
 	 * 쿼리 그룹 짓기 (검색영역,서비스 쿼리 등등..)
 	 */
-	public void addQueryGroup(String flag,String Type,String typeValues){
+	public void addQueryGroup(String flag, String Type, String typeValues) {
 		StringBuilder tempBuilder = new StringBuilder();
 		tempBuilder.append(Type)
 				.append(ElasticSearchCommon.COLON)
 				.append(typeValues);
 		tempBuilder = makeParentheses(tempBuilder);
-		tempBuilder.insert(0,ElasticSearchCommon.SPACE.concat(flag));
+		tempBuilder.insert(0, ElasticSearchCommon.SPACE.concat(flag));
 		this.queryBuffer.append(tempBuilder);
 	}
 
@@ -205,18 +206,18 @@ public class ElasticSearchQueryUtils {
 	 *
 	 * 쿼리 그룹 짓기 (검색영역,서비스 쿼리 등등..)
 	 */
-	public void addQueryGroup(String flag,String[] Types,String typeValues){
+	public void addQueryGroup(String flag, String[] Types, String typeValues) {
 		int idx = 0;
 		StringBuilder tempBuilder = new StringBuilder();
-		for(String type : Types) {
-			if(idx >= 1) tempBuilder.append(ElasticSearchCommon.OR_QUERY);
+		for (String type : Types) {
+			if (idx >= 1) tempBuilder.append(ElasticSearchCommon.OR_QUERY);
 			tempBuilder.append(type)
 					.append(ElasticSearchCommon.COLON)
 					.append(typeValues);
 			idx++;
 		}
 		tempBuilder = makeParentheses(tempBuilder);
-		tempBuilder.insert(0,ElasticSearchCommon.SPACE.concat(flag));
+		tempBuilder.insert(0, ElasticSearchCommon.SPACE.concat(flag));
 		this.queryBuffer.append(tempBuilder);
 	}
 
@@ -228,11 +229,11 @@ public class ElasticSearchQueryUtils {
 	private String makeParentheses(String[] argments) {
 		StringBuilder tempSb = new StringBuilder();
 		int idx = 0;
-		for(String arg : argments){
+		for (String arg : argments) {
 			tempSb.append(ElasticSearchCommon.OPEN_PARENTHESES);
 			tempSb.append(arg);
 			tempSb.append(ElasticSearchCommon.CLOSE_PARENTHESES);
-			if(idx < argments.length-1) {
+			if (idx < argments.length - 1) {
 				tempSb.append(ElasticSearchCommon.OR_QUERY);
 			}
 			idx++;
@@ -258,16 +259,16 @@ public class ElasticSearchQueryUtils {
 	 *  현재 queryBuffer 에 괄호를 만든다.
 	 */
 	private void makeParentheses() {
-		this.queryBuffer.insert(0,ElasticSearchCommon.OPEN_PARENTHESES);
-		this.queryBuffer.insert(queryBuffer.length()-1,ElasticSearchCommon.CLOSE_PARENTHESES);
+		this.queryBuffer.insert(0, ElasticSearchCommon.OPEN_PARENTHESES);
+		this.queryBuffer.insert(queryBuffer.length() - 1, ElasticSearchCommon.CLOSE_PARENTHESES);
 	}
 
 	/***
 	 *  현재 StringBuilder 에 괄호를 만든다.
 	 */
 	private StringBuilder makeParentheses(StringBuilder stringBuilder) {
-		stringBuilder.insert(0,ElasticSearchCommon.OPEN_PARENTHESES);
-		stringBuilder.insert(stringBuilder.length()-1,ElasticSearchCommon.CLOSE_PARENTHESES);
+		stringBuilder.insert(0, ElasticSearchCommon.OPEN_PARENTHESES);
+		stringBuilder.insert(stringBuilder.length() - 1, ElasticSearchCommon.CLOSE_PARENTHESES);
 		return stringBuilder;
 	}
 
@@ -275,8 +276,8 @@ public class ElasticSearchQueryUtils {
 	 *  특수문자 filter 하여 replace
 	 */
 
-	private Map<String,Object> parameterFilter(Map<String,Object> param) {
-		Map<String,Object> filterMap = param;
+	private Map<String, Object> parameterFilter(Map<String, Object> param) {
+		Map<String, Object> filterMap = param;
 		filterMap.entrySet().stream().forEach((k) -> {
 			k.setValue(k.getValue().toString().replaceAll("/", "\\\\/"));
 		});
@@ -1247,42 +1248,45 @@ public class ElasticSearchQueryUtils {
 	}
 
 
+	public SearchSourceBuilder initSearchSource(Map<String, Object> searchParam, String adminId) {
+		SearchSourceBuilder result = null;
+		switch (Common.nvl(searchParam.get(ElasticSearchCommon.SEARCH_TYPE))) {
+			/* 검색 타입 조건 */
+			case ElasticSearchCommon.SEARCH_TYPE_MESSAGE: //메세지 검색시
+				result = initMessageSearchSource(searchParam, adminId);
+				break;
+			case ElasticSearchCommon.SEARCH_TYPE_MESSENGER: //메세징 리스트 검색시
+				result = initMessengerSearchSource(searchParam, adminId);
+				break;
+			case ElasticSearchCommon.SEARCH_TYPE_MESSENGER_GROUP: //메세징 그룹 검색
+				result = initMessengerGroupSearchSource(searchParam, adminId);
+				break;
+			case ElasticSearchCommon.SEARCH_TYPE_MESSENGER_TOTAL: //메세징 토탈 쿼리 날리기
+				result = initMessageTotalSearchSource(searchParam, adminId);
+				break;
+			case ElasticSearchCommon.SEARCH_TYPE_MESSENGER_DETAIL: //메세징 상세 조회
+				result = initMessageDetailSearchSource(searchParam, adminId);
+				break;
+			case ElasticSearchCommon.SEARCH_TYPE_MESSENGER_FILE: //메세징 상세 조회
+				result = initMessageFileSearchSource(searchParam, adminId);
+				break;
+			case ElasticSearchCommon.SEARCH_TYPE_STATISTIC: // 통계 검색시
+				result = initStatisticSearchSource(searchParam, adminId); // 검색 소스 준비
+				break;
+			case ElasticSearchCommon.SEARCH_TYPE_ANALYSIS: // 분석 검색시
+				result = initAnalysisSearchSource(searchParam, adminId); // 검색 소스 준비
+				break;
+			case ElasticSearchCommon.SEARCH_TYPE_ANALYSIS_DETAIL: // 분석 검색시
+				result = initAnalysisDetailSearchSource(searchParam, adminId); // 검색 소스 준비
+				break;
+			case ElasticSearchCommon.SEARCH_TYPE_COLLECTION: //생성형 AI,.. 검색
+				result = initCollectionSearchSource(searchParam, adminId);
+				break;
+		}
 
-	public SearchSourceBuilder initSearchSource(Map<String,Object> searchParam,String adminId) {
-		  SearchSourceBuilder result = null;
-            switch (Common.nvl(searchParam.get(ElasticSearchCommon.SEARCH_TYPE))) {
-                /* 검색 타입 조건 */
-				case ElasticSearchCommon.SEARCH_TYPE_MESSAGE: //메세지 검색시
-					result = initMessageSearchSource(searchParam, adminId);
-					break;
-	            case ElasticSearchCommon.SEARCH_TYPE_MESSENGER: //메세징 리스트 검색시
-		            result = initMessengerSearchSource(searchParam, adminId);
-		            break;
-	            case ElasticSearchCommon.SEARCH_TYPE_MESSENGER_GROUP: //메세징 그룹 검색
-		            result = initMessengerGroupSearchSource(searchParam, adminId);
-		            break;
-	            case ElasticSearchCommon.SEARCH_TYPE_MESSENGER_TOTAL: //메세징 토탈 쿼리 날리기
-		            result = initMessageTotalSearchSource(searchParam, adminId);
-		            break;
-	            case ElasticSearchCommon.SEARCH_TYPE_MESSENGER_DETAIL: //메세징 상세 조회
-		            result = initMessageDetailSearchSource(searchParam, adminId);
-		            break;
-                case ElasticSearchCommon.SEARCH_TYPE_STATISTIC: // 통계 검색시
-					result = initStatisticSearchSource(searchParam,adminId); // 검색 소스 준비
-                    break;
-                case ElasticSearchCommon.SEARCH_TYPE_ANALYSIS: // 분석 검색시
-					result = initAnalysisSearchSource(searchParam,adminId); // 검색 소스 준비
-                    break;
-                case ElasticSearchCommon.SEARCH_TYPE_ANALYSIS_DETAIL: // 분석 검색시
-					result = initAnalysisDetailSearchSource(searchParam,adminId); // 검색 소스 준비
-                    break;
-	            case ElasticSearchCommon.SEARCH_TYPE_COLLECTION: //생성형 AI,.. 검색
-		            result = initCollectionSearchSource(searchParam,adminId);
-		            break;
-            }
-
-			return result;
+		return result;
 	}
+
 
 
 
@@ -1307,47 +1311,45 @@ public class ElasticSearchQueryUtils {
 		int limit = 0;
 
 		offset = (int) Math.round(Double.valueOf(Common.nvl(elasticSearchParam.getSearchParameters().get("offset"))));
-		limit =  (int) Math.round(Double.valueOf(Common.nvl(elasticSearchParam.getSearchParameters().get("limit"))));
+		limit = (int) Math.round(Double.valueOf(Common.nvl(elasticSearchParam.getSearchParameters().get("limit"))));
 
 
 		/* yField 설정 */
-		if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("yAxis"))) {
+		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("yAxis"))) {
 			setyField(Common.nvl(elasticSearchParam.getSearchParameters().get("yAxis")));
 		}
 
 		/* rowKey만 존재 */
-		if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("rowKey"))) {
+		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("rowKey"))) {
 			setSearchQuery(Common.nvl(elasticSearchParam.getSearchParameters().get("rowKey")));
 		}
 		/* 관심사용자 검색시 */
-		else if(Common.isEmpty(elasticSearchParam.getSearchParameters().get("rowKey")) && !Common.isEmpty(elasticSearchParam.getSearchParameters().get("interGroupId"))) {
+		else if (Common.isEmpty(elasticSearchParam.getSearchParameters().get("rowKey")) && !Common.isEmpty(elasticSearchParam.getSearchParameters().get("interGroupId"))) {
 			/*setSearchQuery(Common.nvl(elasticSearchParam.getSearchParameters().get("interGroupId")));*/
-		} else{
+		} else {
 			/*아무런 검색조건 없을시*/
 			setSearchQuery(Common.nvl(ElasticSearchCommon.ALL_SEARCH));
 		}
 
 		/* 아무런 rowKey & colkey  조건이 없을시 */
-		if(Common.isEmpty(elasticSearchParam.getSearchParameters().get("rowKey")) && Common.isEmpty(elasticSearchParam.getSearchParameters().get("colKey"))){
+		if (Common.isEmpty(elasticSearchParam.getSearchParameters().get("rowKey")) && Common.isEmpty(elasticSearchParam.getSearchParameters().get("colKey"))) {
 			limit = 0;
 		}
 
 		/* detail Query 존재시*/
-		if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("detailQuery"))) {
+		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("detailQuery"))) {
 			setDetailQuery(Common.nvl(elasticSearchParam.getSearchParameters().get("detailQuery")));
 		}
 
 		/*관심사용자*/
-		if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("interGroup"))) {
+		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("interGroup"))) {
 			adminUserGroupService = SpringContextUtil.getBean(AdminUserGroupService.class);
 			List<AdminUserGroupVO> users = adminUserGroupService.getAdminUserGroupSimpleList((String) elasticSearchParam.getSearchParameters().get("interGroup"));
-		   	if (users.size() == 0) return;
-			String userStr =  users.stream().map(m-> m.getUserId().toLowerCase()).collect(Collectors.joining(","));
+			if (users.size() == 0) return;
+			String userStr = users.stream().map(m -> m.getUserId().toLowerCase()).collect(Collectors.joining(","));
 			String[] userArr = userStr.split(",");
-			addQueryGroup(ElasticSearchCommon.AND_QUERY,ElasticSearchCommon.USER_USERID,makeParentheses(userArr));
+			addQueryGroup(ElasticSearchCommon.AND_QUERY, ElasticSearchCommon.USER_USERID, makeParentheses(userArr));
 		}
-
-
 
 		/* set Query (항상 쿼리 조합 최하단에 위치) */
 		setQuery();
@@ -1373,8 +1375,8 @@ public class ElasticSearchQueryUtils {
 		log.debug("[Fields] {}", ElasticSearchCommon.SEARCH_FIELD);
 		log.debug("[SORT] : {}", getSortInfo());
 		log.debug("[QUERY] {}", getQuery());
-
 	}
+
 
 
 	/***
@@ -1382,7 +1384,7 @@ public class ElasticSearchQueryUtils {
 	 * @param initStatisticSearchSource
 	 * @return
 	 */
-	public SearchSourceBuilder initStatisticSearchSource(Map<String,Object> searchParam,String adminId){
+	public SearchSourceBuilder initStatisticSearchSource(Map<String, Object> searchParam, String adminId) {
 
 		SearchSourceBuilder searchSourceBuilder = null; // SearchSourceBuilder 리턴용
 
@@ -1428,24 +1430,24 @@ public class ElasticSearchQueryUtils {
 			BoolQueryBuilder ceoQuery = getCeoFilterQuery();
 			/*##########################################################################################*/
 
-			if(Arrays.stream(ElasticSearchCommon.ARRAY_FIELD).anyMatch( s -> s.equals(Common.nvl(elasticSearchParam.getYAxis()))) && elasticSearchParam.getSearchParameters().get("detail") != null) {
+			if (Arrays.stream(ElasticSearchCommon.ARRAY_FIELD).anyMatch(s -> s.equals(Common.nvl(elasticSearchParam.getYAxis()))) && elasticSearchParam.getSearchParameters().get("detail") != null) {
 				String nestedPath = "";
-				if(elasticSearchParam.getYAxis().indexOf("attach") > -1) nestedPath = "attach";
-				else if(elasticSearchParam.getYAxis().indexOf("pi") > -1) nestedPath = "pi";
+				if (elasticSearchParam.getYAxis().indexOf("attach") > -1) nestedPath = "attach";
+				else if (elasticSearchParam.getYAxis().indexOf("pi") > -1) nestedPath = "pi";
 				else nestedPath = elasticSearchParam.getYAxis();
 
 
 				// 권한 filter 추가
-				if(null != authComQuery) complateQuery.must(authComQuery);
-				if(null != ceoQuery)  complateQuery.must(ceoQuery);
+				if (null != authComQuery) complateQuery.must(authComQuery);
+				if (null != ceoQuery) complateQuery.must(ceoQuery);
 				complateQuery.must(secondQuery);
 
-				NestedQueryBuilder nestedQueryBuilder = QueryBuilders.nestedQuery(nestedPath,secondQuery, ScoreMode.Avg);
+				NestedQueryBuilder nestedQueryBuilder = QueryBuilders.nestedQuery(nestedPath, secondQuery, ScoreMode.Avg);
 				complateQuery.must(nestedQueryBuilder);
-			}else {
+			} else {
 				// 권한 filter 추가
-				if(null != authComQuery) complateQuery.must(authComQuery);
-				if(null != ceoQuery) complateQuery.must(ceoQuery);
+				if (null != authComQuery) complateQuery.must(authComQuery);
+				if (null != ceoQuery) complateQuery.must(ceoQuery);
 				complateQuery.must(secondQuery);  // 사용할 쿼리 merge 완료
 			}
 
@@ -1459,20 +1461,22 @@ public class ElasticSearchQueryUtils {
 					.timeout(new TimeValue(60, TimeUnit.SECONDS));
 
 			// searchSourceBuilder build 완료
-		}catch (NullPointerException e){
+		} catch (NullPointerException e) {
 			e.printStackTrace();
 		}
 
 		return searchSourceBuilder;
 	}
 
-/*
-    메세징모아보기*/
-	public void setMessengerGroupParamReady(Map<String,Object> searchParam) {
+
+
+	/*
+		메세징모아보기*/
+	public void setMessengerGroupParamReady(Map<String, Object> searchParam) {
 		elasticSearchParam = new ElasticSearchParam();
-		if(!Common.isEmpty(searchParam.get("conditions"))){
-			Map<String,Object> tempMap = (Map<String, Object>) searchParam.get("conditions");
-			List<Map<String,Object>> tempList = (List<Map<String, Object>>) tempMap.get("conditions");
+		if (!Common.isEmpty(searchParam.get("conditions"))) {
+			Map<String, Object> tempMap = (Map<String, Object>) searchParam.get("conditions");
+			List<Map<String, Object>> tempList = (List<Map<String, Object>>) tempMap.get("conditions");
 			tempList.get(0).put("limit", searchParam.get("limit"));
 			tempList.get(0).put("offset", searchParam.get("offset"));
 			elasticSearchParam.setSearchParameters(tempList.get(0));
@@ -1489,17 +1493,17 @@ public class ElasticSearchQueryUtils {
 		int limit = 0;
 
 		offset = (int) Math.round(Double.valueOf(Common.nvl(elasticSearchParam.getSearchParameters().get("offset"))));
-		limit =  (int) Math.round(Double.valueOf(Common.nvl(elasticSearchParam.getSearchParameters().get("limit"))));
+		limit = (int) Math.round(Double.valueOf(Common.nvl(elasticSearchParam.getSearchParameters().get("limit"))));
 
 
 		/* serviceType 설정 */
-		if(!Common.isEmpty(ElasticSearchCommon.SERVICE_SVC12)) {
+		if (!Common.isEmpty(ElasticSearchCommon.SERVICE_SVC12)) {
 			setyField(Common.nvl(ElasticSearchCommon.SERVICE_SVC12));
 		}
 
-		if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("serviceType"))) {
+		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("serviceType"))) {
 			setSearchQuery(Common.nvl(elasticSearchParam.getSearchParameters().get("serviceType")));
-		}else{
+		} else {
 			setSearchQuery(Common.nvl(ElasticSearchCommon.ALL_SEARCH));
 		}
 
@@ -1518,7 +1522,6 @@ public class ElasticSearchQueryUtils {
 		this.elasticSearchParam.setEndDate(Common.nvl(elasticSearchParam.getSearchParameters().get("endDt")));
 
 
-
 		log.debug("[Fields] {}", ElasticSearchCommon.SEARCH_FIELD);
 		log.debug("[SORT] : {}", getSortInfo());
 		log.debug("[QUERY] {}", getQuery());
@@ -1532,7 +1535,7 @@ public class ElasticSearchQueryUtils {
 		setMessengerParamReady(searchParam);
 		try {
 			RangeQueryBuilder rangeQuery = new RangeQueryBuilder(ElasticSearchCommon.CTIME).gte(elasticSearchParam.getStartDate()).lte(elasticSearchParam.getEndDate());
-			QueryStringQueryBuilder secondQuery = QueryBuilders.queryStringQuery(query); // 쿼리 스트링 저장
+			QueryStringQueryBuilder secondQuery = QueryBuilders.queryStringQuery(ElasticSearchCommon.AND_QUERY + query); // 쿼리 스트링 저장
 			BoolQueryBuilder complateQuery = new BoolQueryBuilder();
 
 			complateQuery.filter(rangeQuery);
@@ -1545,15 +1548,15 @@ public class ElasticSearchQueryUtils {
 			BoolQueryBuilder ceoQuery = getCeoFilterQuery();
 
 			// 권한 filter 추가
-			if(null != authComQuery) complateQuery.must(authComQuery);
-			if(null != ceoQuery) complateQuery.must(ceoQuery);
+			if (null != authComQuery) complateQuery.must(authComQuery);
+			if (null != ceoQuery) complateQuery.must(ceoQuery);
 			/*##########################################################################################*/
 
 
 			TopHitsAggregationBuilder topHitsAggregationBuilder = new TopHitsAggregationBuilder("docs")
 					.from(0)
 					.size(1)
-					.sort("ctime",SortOrder.DESC)
+					.sort("ctime", SortOrder.DESC)
 					.fetchSource(elasticSearchParam.getIncludeFields(), elasticSearchParam.getExcludeFields());
 
 
@@ -1578,6 +1581,84 @@ public class ElasticSearchQueryUtils {
 		return searchSourceBuilder;
 
 	}
+
+	private SearchSourceBuilder initMessageFileSearchSource(Map<String, Object> searchParam, String adminId) {
+
+		SearchSourceBuilder searchSourceBuilder = null;
+
+		setMessengeFileReady(searchParam);
+
+
+			RangeQueryBuilder rangeQuery = new RangeQueryBuilder(ElasticSearchCommon.CTIME).gte(elasticSearchParam.getStartDate()).lte(elasticSearchParam.getEndDate());
+			QueryStringQueryBuilder secondQuery = QueryBuilders.queryStringQuery(ElasticSearchCommon.AND_QUERY + query); // 쿼리 스트링 저장
+			BoolQueryBuilder complateQuery = new BoolQueryBuilder();
+
+			complateQuery.filter(rangeQuery);
+			complateQuery.must(secondQuery);
+
+			/*################ 권한 관련 ##################################################################*/
+			// set 권한 리스트
+			setAuthoritysFilter(adminId);
+			BoolQueryBuilder authComQuery = getCompanyAuthFilterQuery();
+			BoolQueryBuilder ceoQuery = getCeoFilterQuery();
+
+			// 권한 filter 추가
+			if (null != authComQuery) complateQuery.must(authComQuery);
+			if (null != ceoQuery) complateQuery.must(ceoQuery);
+			/*##########################################################################################*/
+
+
+			searchSourceBuilder = new SearchSourceBuilder()
+					.from(elasticSearchParam.getFrom())
+					.query(complateQuery)
+					.fetchSource(elasticSearchParam.getIncludeFields(), elasticSearchParam.getExcludeFields())
+					.sort(elasticSearchParam.getSorts())
+					.timeout(new TimeValue(60, TimeUnit.SECONDS));
+
+		return searchSourceBuilder;
+
+
+	}
+
+	private void setMessengeFileReady(Map<String, Object> searchParam) {
+		elasticSearchParam = new ElasticSearchParam();
+
+		elasticSearchParam.setSearchParameters(searchParam);
+
+		setSort("");
+		List<SortBuilder<?>> sortBuilderList = getSortInfo();
+		log.debug("[SORT] {}", sortBuilderList.stream().collect(Collectors.toList()));
+
+		//xRootMtr
+		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("xRootMtr"))) {
+			addQueryGroup(ElasticSearchCommon.SPACE, ElasticSearchCommon.XROOTMTR, makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("xRootMtr"))));
+		}
+
+		//첨부 여부 검색
+		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("attachYn"))) {
+			if (elasticSearchParam.getSearchParameters().get("attachYn").equals("Y")) {
+				addQueryGroup(ElasticSearchCommon.NOT_QUERY, ElasticSearchCommon.ATTACHCNT, makeParentheses("0"));
+			}
+		}
+
+		setQuery();
+
+
+		log.info("엘라스틱 서치 MessengerTotalQuery_String (테스트) ===> " + getQuery());
+		this.elasticSearchParam.setIndices(new String[]{ElasticSearchCommon.EDC_MESSAGE_INDEX});
+		this.elasticSearchParam.setSorts(sortBuilderList);
+		this.elasticSearchParam.setIncludeFields(ElasticSearchCommon.SEARCH_FIELD);
+		this.elasticSearchParam.setStartDate(Common.nvl(elasticSearchParam.getSearchParameters().get("startDt")));
+		this.elasticSearchParam.setEndDate(Common.nvl(elasticSearchParam.getSearchParameters().get("endDt")));
+		this.elasticSearchParam.setExcludeFields(null);
+		this.elasticSearchParam.setSearchType(Common.nvl(elasticSearchParam.getSearchParameters().get(ElasticSearchCommon.SEARCH_TYPE)));
+
+		log.debug("[Fields] {}", ElasticSearchCommon.SEARCH_FIELD);
+		log.debug("[SORT] : {}", elasticSearchParam.getSorts());
+		log.debug("[QUERY] {}", getQuery());
+
+	}
+
 	/*
 
 /***
@@ -1586,13 +1667,13 @@ public class ElasticSearchQueryUtils {
 		 * @param setMessageSearchQueryReady
 		 * @param searchParam
 		 */
-	public void setMessageSearchQueryReady(Map<String,Object> searchParam) {
-		 clearQuery(); // 쿼리 초기화
-		 elasticSearchParam = new ElasticSearchParam();
+	public void setMessageSearchQueryReady(Map<String, Object> searchParam) {
+		clearQuery(); // 쿼리 초기화
+		elasticSearchParam = new ElasticSearchParam();
 
-		if(!Common.isEmpty(searchParam.get("filterData"))){
-			Map<String,Object> tempMap = (Map<String, Object>) searchParam.get("filterData");
-			List<Map<String,Object>> tempList = (List<Map<String, Object>>) tempMap.get("conditions");
+		if (!Common.isEmpty(searchParam.get("filterData"))) {
+			Map<String, Object> tempMap = (Map<String, Object>) searchParam.get("filterData");
+			List<Map<String, Object>> tempList = (List<Map<String, Object>>) tempMap.get("conditions");
 			searchParam.remove("filterData");
 			tempList.get(0).putAll(searchParam);
 			elasticSearchParam.setSearchParameters(parameterFilter(tempList.get(0)));
@@ -1608,10 +1689,154 @@ public class ElasticSearchQueryUtils {
 		int offset = 0;
 		int limit = 0;
 		offset = (int) Math.round(Double.valueOf(Common.nvl(searchParam.get("offset"))));
-		limit =  (int) Math.round(Double.valueOf(Common.nvl(searchParam.get("limit"))));
+		limit = (int) Math.round(Double.valueOf(Common.nvl(searchParam.get("limit"))));
 
 
-		messageSearchIntergrated(); // 검색 조건에 따른 쿼리 셋팅
+		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("searchStr"))) {
+			setSearchQuery(Common.nvl(elasticSearchParam.getSearchParameters().get("searchStr")));
+		} else if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("query"))) {
+			//고급쿼리 (일단 보류)
+//            String allSearch = makeParentheses(ElasticSearchCommon.ALL_SEARCH);
+//            setSearchQuery(allSearch.concat(ElasticSearchCommon.SPACE).concat(Common.nvl(elasticSearchParam.getSearchParameters().get("query"))));
+		} else {
+			setSearchQuery(Common.nvl(ElasticSearchCommon.ALL_SEARCH)); // 검색어 없을시 전체 검색어 입력
+		}
+
+		/* 고급 쿼리의 경우*/
+
+
+		/* 검색 쿼리 */
+		String searchQuery = this.queryBuffer.toString();
+
+
+		/*################## 검색조건 ####################*/
+		/* 검색 영역 */  // 쿼리 생성 예) (attach.name:(*:*) OR attach.text:(*:*))
+		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("searchField"))) {
+			this.queryBuffer.setLength(0);
+			String[] fields = Common.nvl(elasticSearchParam.getSearchParameters().get("searchField")).split(",");
+			setSearchField(fields, searchQuery);
+		}
+		/* 서비스 타입 값 지정*/ // 생성 예) AND (service.svc:(MP3) OR (MIM) OR (WKR))
+		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("serviceType"))) {
+			String[] serviceTypes = Common.nvl(elasticSearchParam.getSearchParameters().get("serviceType")).split(",");
+			addQueryGroup(ElasticSearchCommon.AND_QUERY, ElasticSearchCommon.SERVICE_SVC, makeParentheses(serviceTypes));
+		}
+		/*############################################*/
+
+
+		/*############################################*/
+
+		/*################## 시간 ####################*/
+		/* 근무시간 */
+		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("ctimeWork")))
+			addQueryGroup(ElasticSearchCommon.AND_QUERY, ElasticSearchCommon.DAY_WORK, makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("ctimeWork"))));
+
+		/*############################################*/
+
+		/*################## 사용자 ####################*/
+		// 수/발신 구분
+		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("receiveSend")))
+			addQueryGroup(ElasticSearchCommon.AND_QUERY, ElasticSearchCommon.DIRECTION, makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("receiveSend"))));
+
+
+		//AND 발신자 검색
+		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("senders")) && Common.isEmpty(elasticSearchParam.getSearchParameters().get("senders_not"))) {
+			String[] senders = Common.nvl(elasticSearchParam.getSearchParameters().get("senders")).split(",");
+			addQueryGroup(ElasticSearchCommon.AND_QUERY, ElasticSearchCommon.SENDER, makeParentheses(senders));
+		} else if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("senders_not"))) {  //NOT 발신자 검색
+			String[] senders = Common.nvl(elasticSearchParam.getSearchParameters().get("senders_not")).split(",");
+			addQueryGroup(ElasticSearchCommon.NOT_QUERY, ElasticSearchCommon.SENDER, makeParentheses(senders));
+		}
+
+
+		//수신자 전체 검색 to,cc,bcc
+		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("receivers"))) {
+			String[] receivers = ElasticSearchCommon.RECEIVERS;
+			addQueryGroup(ElasticSearchCommon.AND_QUERY, receivers, makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("receivers"))));
+		}
+
+		// 수신자 구분
+		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("allOfus"))) {
+			String[] allOfuses = Common.nvl(elasticSearchParam.getSearchParameters().get("allOfus")).split(",");
+			addQueryGroup(ElasticSearchCommon.AND_QUERY, ElasticSearchCommon.ALLOFUS, makeParentheses(allOfuses));
+		}
+
+		// 사용자 그룹
+		// 관심 사용자 그룹
+
+		/*################## 조직 ####################*/
+		// AND 사업장
+		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("busi")) && Common.isEmpty(elasticSearchParam.getSearchParameters().get("busi_not"))) {
+			addQueryGroup(ElasticSearchCommon.AND_QUERY, ElasticSearchCommon.USER_BUSICD, makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("busi"))));
+		} else if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("busi_not"))) {    // NOT 사업장
+			addQueryGroup(ElasticSearchCommon.NOT_QUERY, ElasticSearchCommon.USER_BUSICD, makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("busi_not"))));
+		}
+
+		// AND 부서
+		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("dept")) && Common.isEmpty(elasticSearchParam.getSearchParameters().get("dept_not"))) {
+			addQueryGroup(ElasticSearchCommon.AND_QUERY, ElasticSearchCommon.USER_DEPTCD, makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("dept"))));
+		} else if ((!Common.isEmpty(elasticSearchParam.getSearchParameters().get("dept_not")))) {   // NOT 부서
+			addQueryGroup(ElasticSearchCommon.NOT_QUERY, ElasticSearchCommon.USER_DEPTCD, makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("dept_not"))));
+		}
+
+		/*################## 기타 ####################*/
+		// AND URL
+		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("url")) && Common.isEmpty(elasticSearchParam.getSearchParameters().get("url_not"))) {
+			addQueryGroup(ElasticSearchCommon.AND_QUERY, ElasticSearchCommon.HTTP_PATH, makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("url"))));
+		} else if ((!Common.isEmpty(elasticSearchParam.getSearchParameters().get("url_not")))) {   // NOT URL
+			addQueryGroup(ElasticSearchCommon.NOT_QUERY, ElasticSearchCommon.HTTP_PATH, makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("url_not"))));
+		}
+
+		// AND READYN  읽음여부 체크 Y,N,ALL
+		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("readYn"))) {
+			//  addQueryGroup(ElasticSearchCommon.AND_QUERY,ElasticSearchCommon.READER,makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("readYn"))));
+		}
+
+
+		// AND 첨부여부
+		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("attachYn"))) {
+			String flag = ("Y").equals(Common.nvl(elasticSearchParam.getSearchParameters().get("attachYn"))) ? ElasticSearchCommon.NOT_QUERY : ElasticSearchCommon.AND_QUERY;
+			addQueryGroup(flag, ElasticSearchCommon.ATTACHCNT, makeParentheses("0"));
+			// 첨부 확장자 찾기
+			if (Common.isEquals("Y", elasticSearchParam.getSearchParameters().get("attachYn")) && !Common.isEmpty(elasticSearchParam.getSearchParameters().get("attachVal"))) {
+				String extFlag = ("Y").equals(Common.nvl(elasticSearchParam.getSearchParameters().get("attachYn_not"))) ? ElasticSearchCommon.NOT_QUERY : ElasticSearchCommon.AND_QUERY;
+				addQueryGroup(extFlag, ElasticSearchCommon.ATTACH_EXT, makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("attachVal"))));
+			}
+			// 실제 존재여부
+			if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("realAttYn"))) {
+				String existFlag = ("Y").equals(Common.nvl(elasticSearchParam.getSearchParameters().get("realAttYn"))) ? ElasticSearchCommon.NOT_QUERY : ElasticSearchCommon.AND_QUERY;
+				addQueryGroup(existFlag, ElasticSearchCommon.ATTACH_EXIST, makeParentheses("0"));
+			}
+		}
+
+		// OCRYn
+		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("OCRYn"))) {
+			//  addQueryGroup(ElasticSearchCommon.AND_QUERY,ElasticSearchCommon.OCR_ATTACHCNT,makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("OCRYn"))));
+		}
+
+		// drmYn
+		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("drmYn"))) {
+			// drm 체크 Y,N,ALL
+			addQueryGroup(ElasticSearchCommon.AND_QUERY, ElasticSearchCommon.ATTACH_DRM, makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("drmYn"))));
+		}
+
+		// 예약어 관련
+		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("keywordYn"))) {
+			// keyword  체크 Y,N,ALL
+		}
+
+		// 패턴 관련
+		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("regexpYn"))) {
+			// keyword  체크 Y,N,ALL
+		}
+
+		// 크기 관련
+
+		/*################## Detail(고급) Query ####################*/
+
+
+		/* set Query (항상 쿼리 조합 최하단에 위치) */
+		setQuery();
 
 		log.info("엘라스틱 서치 Query_String (테스트) ===> " + getQuery());
 		this.elasticSearchParam.setIndices(new String[]{ElasticSearchCommon.EDC_MESSAGE_INDEX});
@@ -1637,38 +1862,38 @@ public class ElasticSearchQueryUtils {
 	 * @param initMessageSearchSource
 	 * @return
 	 */
-	public SearchSourceBuilder initMessageSearchSource(Map<String,Object> searchParam,String adminId)  {
+	public SearchSourceBuilder initMessageSearchSource(Map<String, Object> searchParam, String adminId) {
 		SearchSourceBuilder searchSourceBuilder = null;
 
-			/* 권한 관련*/
-			setMessageSearchQueryReady(searchParam); // 파라미터 준비
+		/* 권한 관련*/
+		setMessageSearchQueryReady(searchParam); // 파라미터 준비
 
-			RangeQueryBuilder rangeQuery = new RangeQueryBuilder(ElasticSearchCommon.CTIME).gte(elasticSearchParam.getStartDate()).lte(elasticSearchParam.getEndDate());
-			QueryStringQueryBuilder secondQuery = QueryBuilders.queryStringQuery(query);
+		RangeQueryBuilder rangeQuery = new RangeQueryBuilder(ElasticSearchCommon.CTIME).gte(elasticSearchParam.getStartDate()).lte(elasticSearchParam.getEndDate());
+		QueryStringQueryBuilder secondQuery = QueryBuilders.queryStringQuery(query);
 
-			BoolQueryBuilder complateQuery = new BoolQueryBuilder();
-			complateQuery.filter(rangeQuery);
+		BoolQueryBuilder complateQuery = new BoolQueryBuilder();
+		complateQuery.filter(rangeQuery);
 
-			/*################ 권한 관련 ##################################################################*/
-			// set 권한 리스트
-		    setAuthoritysFilter(adminId);
-		    BoolQueryBuilder authComQuery = getCompanyAuthFilterQuery();
-		    BoolQueryBuilder ceoQuery = getCeoFilterQuery();
+		/*################ 권한 관련 ##################################################################*/
+		// set 권한 리스트
+		setAuthoritysFilter(adminId);
+		BoolQueryBuilder authComQuery = getCompanyAuthFilterQuery();
+		BoolQueryBuilder ceoQuery = getCeoFilterQuery();
 
-			// 권한 filter 추가
-		    if(null != ceoQuery) complateQuery.must(authComQuery);
-			if(null != ceoQuery) complateQuery.must(ceoQuery);
+		// 권한 filter 추가
+		if (null != ceoQuery) complateQuery.must(authComQuery);
+		if (null != ceoQuery) complateQuery.must(ceoQuery);
 
-			/*##########################################################################################*/
+		/*##########################################################################################*/
 
-			complateQuery.must(secondQuery);
-			searchSourceBuilder = new SearchSourceBuilder()
-						.from(elasticSearchParam.getFrom())
-						.size(elasticSearchParam.getTo())
-						.query(complateQuery)
-						.fetchSource(elasticSearchParam.getIncludeFields(), elasticSearchParam.getExcludeFields())
-						.sort(elasticSearchParam.getSorts())
-						.timeout(new TimeValue(60, TimeUnit.SECONDS));
+		complateQuery.must(secondQuery);
+		searchSourceBuilder = new SearchSourceBuilder()
+				.from(elasticSearchParam.getFrom())
+				.size(elasticSearchParam.getTo())
+				.query(complateQuery)
+				.fetchSource(elasticSearchParam.getIncludeFields(), elasticSearchParam.getExcludeFields())
+				.sort(elasticSearchParam.getSorts())
+				.timeout(new TimeValue(60, TimeUnit.SECONDS));
 
 
 		return searchSourceBuilder;
@@ -1676,27 +1901,28 @@ public class ElasticSearchQueryUtils {
 
 	/**
 	 * xAxis 집계 쿼리 설정
+	 *
 	 * @param type
 	 * @param mainAggs
 	 * @return
 	 */
-	public AggregationBuilder initAggregation (String yAxis, String xAxis){
+	public AggregationBuilder initAggregation(String yAxis, String xAxis) {
 		AggregationBuilder aggregationBuilder = null;
 
 		/* 화면단 xAxis Str -> 엘라스틱 서치 검색용 Str  */
 		String xfield = Common.nvl(ElasticSearchCommon.XFIELD.get(xAxis));
 
 		//YAxis 가 배열필드일 경우
-		boolean YAxisNested =  Arrays.stream(ElasticSearchCommon.ARRAY_FIELD).anyMatch(s -> s.equals(Common.nvl(yAxis)));
+		boolean YAxisNested = Arrays.stream(ElasticSearchCommon.ARRAY_FIELD).anyMatch(s -> s.equals(Common.nvl(yAxis)));
 
-		switch (xAxis){
-			case ElasticSearchCommon.CTIME_HH :  // 시간별  (1시간)
+		switch (xAxis) {
+			case ElasticSearchCommon.CTIME_HH:  // 시간별  (1시간)
 				aggregationBuilder = AggregationBuilders.dateHistogram(xfield).field(xfield).calendarInterval(DateHistogramInterval.hours(1)).minDocCount(1);
 				break;
-			case  ElasticSearchCommon.CTIME_YYYYMMDD :  // 일별 (1일)
-				 aggregationBuilder = AggregationBuilders.dateHistogram(xfield).field(xfield).calendarInterval(DateHistogramInterval.days(1)).minDocCount(1);
+			case ElasticSearchCommon.CTIME_YYYYMMDD:  // 일별 (1일)
+				aggregationBuilder = AggregationBuilders.dateHistogram(xfield).field(xfield).calendarInterval(DateHistogramInterval.days(1)).minDocCount(1);
 				break;
-			case ElasticSearchCommon.CTIME_YYYYMM : // 월별 (한달)
+			case ElasticSearchCommon.CTIME_YYYYMM: // 월별 (한달)
 				aggregationBuilder = AggregationBuilders.dateHistogram(xfield).field(xfield).calendarInterval(DateHistogramInterval.MONTH).minDocCount(1);
 				break;
 			default:     // 사업장,회사,부서,수/발신,직급
@@ -1704,14 +1930,14 @@ public class ElasticSearchQueryUtils {
 				break;
 		}
 
-		if(YAxisNested) {
+		if (YAxisNested) {
 			String nestedPath = "";
-			if(yAxis.indexOf("attach") > -1) nestedPath = "attach";
-			else if(yAxis.indexOf("pi") > -1) nestedPath = "pi";
+			if (yAxis.indexOf("attach") > -1) nestedPath = "attach";
+			else if (yAxis.indexOf("pi") > -1) nestedPath = "pi";
 			else nestedPath = yAxis;
-			aggregationBuilder.subAggregation(AggregationBuilders.nested("nested_"+yAxis, nestedPath).subAggregation(AggregationBuilders.terms(yAxis).field(yAxis).minDocCount(1)));
+			aggregationBuilder.subAggregation(AggregationBuilders.nested("nested_" + yAxis, nestedPath).subAggregation(AggregationBuilders.terms(yAxis).field(yAxis).minDocCount(1)));
 
-		}else {
+		} else {
 			aggregationBuilder.subAggregation(AggregationBuilders.terms(yAxis).field(yAxis).minDocCount(1));
 		}
 
@@ -1778,7 +2004,7 @@ public class ElasticSearchQueryUtils {
 	 * @param setanalysisSearchQueryReady
 	 * @return
 	 */
-	public void setanalysisSearchQueryReady(Map<String,Object> searchParam) {
+	public void setanalysisSearchQueryReady(Map<String, Object> searchParam) {
 		elasticSearchParam = new ElasticSearchParam();
 		elasticSearchParam.setSearchParameters(searchParam);
 
@@ -1792,22 +2018,22 @@ public class ElasticSearchQueryUtils {
 		int offset = 0;
 		int limit = 0;
 		offset = (int) Math.round(Double.valueOf(Common.nvl(searchParam.get("offset"))));
-		limit =  (int) Math.round(Double.valueOf(Common.nvl(searchParam.get("limit"))));
+		limit = (int) Math.round(Double.valueOf(Common.nvl(searchParam.get("limit"))));
 
 		/* yField 설정 */
-		if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("yAxis"))) {
+		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("yAxis"))) {
 			setyField(Common.nvl(elasticSearchParam.getSearchParameters().get("yAxis")));
 		}
 
 		/* rowKey 존재할시 검색조건 추가 */
-		if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("rowKey"))) {
+		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("rowKey"))) {
 			setSearchQuery(Common.nvl(elasticSearchParam.getSearchParameters().get("rowKey")));
-		}else{
+		} else {
 			setSearchQuery(Common.nvl(ElasticSearchCommon.ALL_SEARCH));
 		}
 
 		/* 아무런 rowKey & colkey  조건이 없을시 */
-		if(Common.isEmpty(elasticSearchParam.getSearchParameters().get("rowKey")) && Common.isEmpty(elasticSearchParam.getSearchParameters().get("colKey"))){
+		if (Common.isEmpty(elasticSearchParam.getSearchParameters().get("rowKey")) && Common.isEmpty(elasticSearchParam.getSearchParameters().get("colKey"))) {
 			limit = 0;
 		}
 
@@ -1834,12 +2060,12 @@ public class ElasticSearchQueryUtils {
 
 	}
 
-	public void setCollectionQueryParamReady(Map<String,Object> searchParam) {
+	public void setCollectionQueryParamReady(Map<String, Object> searchParam) {
 		elasticSearchParam = new ElasticSearchParam();
 
-		if(!Common.isEmpty(searchParam.get("conditions"))){
-			Map<String,Object> tempMap = (Map<String, Object>) searchParam.get("conditions");
-			List<Map<String,Object>> tempList = (List<Map<String, Object>>) tempMap.get("conditions");
+		if (!Common.isEmpty(searchParam.get("conditions"))) {
+			Map<String, Object> tempMap = (Map<String, Object>) searchParam.get("conditions");
+			List<Map<String, Object>> tempList = (List<Map<String, Object>>) tempMap.get("conditions");
 			searchParam.remove("conditions");
 			tempList.get(0).putAll(searchParam);
 			elasticSearchParam.setSearchParameters(tempList.get(0));
@@ -1855,7 +2081,7 @@ public class ElasticSearchQueryUtils {
 		int limit = 0;
 
 		offset = (int) Math.round(Double.valueOf(Common.nvl(elasticSearchParam.getSearchParameters().get("offset"))));
-		limit =  (int) Math.round(Double.valueOf(Common.nvl(elasticSearchParam.getSearchParameters().get("limit"))));
+		limit = (int) Math.round(Double.valueOf(Common.nvl(elasticSearchParam.getSearchParameters().get("limit"))));
 
 		/* serviceType 설정 */
 		if (!Common.isEmpty(ElasticSearchCommon.SERVICE_SVC12)) {
@@ -1893,7 +2119,7 @@ public class ElasticSearchQueryUtils {
 
 	}
 
-	public SearchSourceBuilder initCollectionSearchSource(Map<String,Object> searchParam,String adminId){
+	public SearchSourceBuilder initCollectionSearchSource(Map<String, Object> searchParam, String adminId) {
 
 
 		SearchSourceBuilder searchSourceBuilder = null;
@@ -1912,8 +2138,8 @@ public class ElasticSearchQueryUtils {
 			BoolQueryBuilder ceoQuery = getCeoFilterQuery();
 
 			// 권한 filter 추가
-			if(null != ceoQuery) complateQuery.must(ceoQuery);
-			if(null != authComQuery) complateQuery.must(authComQuery);
+			if (null != ceoQuery) complateQuery.must(ceoQuery);
+			if (null != authComQuery) complateQuery.must(authComQuery);
 			/*##########################################################################################*/
 
 			complateQuery.must(secondQuery);
@@ -1928,7 +2154,7 @@ public class ElasticSearchQueryUtils {
 
 
 			// searchSourceBuilder build 완료
-		}catch (NullPointerException e){
+		} catch (NullPointerException e) {
 			e.printStackTrace();
 		}
 
@@ -1936,21 +2162,17 @@ public class ElasticSearchQueryUtils {
 	}
 
 
-
-
 	public SearchSourceBuilder initMessengerSearchSource(Map<String, Object> searchParam, String adminId) {
-
 		SearchSourceBuilder searchSourceBuilder = null;
 
-
 		setMessengerParamReady(searchParam);
-			RangeQueryBuilder rangeQuery = new RangeQueryBuilder(ElasticSearchCommon.CTIME).gte(elasticSearchParam.getStartDate()).lte(elasticSearchParam.getEndDate());
-			QueryStringQueryBuilder secondQuery = QueryBuilders.queryStringQuery(query); // 쿼리 스트링 저장
-			BoolQueryBuilder complateQuery = new BoolQueryBuilder();
 
-			complateQuery.filter(rangeQuery);
-			complateQuery.must(secondQuery);
+		RangeQueryBuilder rangeQuery = new RangeQueryBuilder(ElasticSearchCommon.CTIME).gte(elasticSearchParam.getStartDate()).lte(elasticSearchParam.getEndDate());
+		QueryStringQueryBuilder secondQuery = QueryBuilders.queryStringQuery(ElasticSearchCommon.AND_QUERY + query);
 
+		BoolQueryBuilder complateQuery = new BoolQueryBuilder();
+		complateQuery.filter(rangeQuery);
+		complateQuery.must(secondQuery);
 		/*################ 권한 관련 ##################################################################*/
 		// set 권한 리스트
 		setAuthoritysFilter(adminId);
@@ -1958,18 +2180,19 @@ public class ElasticSearchQueryUtils {
 		BoolQueryBuilder ceoQuery = getCeoFilterQuery();
 
 		// 권한 filter 추가
-		if(null != authComQuery) complateQuery.must(authComQuery);
-		if(null != ceoQuery) complateQuery.must(ceoQuery);
+		if (null != ceoQuery) complateQuery.must(authComQuery);
+		if (null != ceoQuery) complateQuery.must(ceoQuery);
+
 		/*##########################################################################################*/
 
-			searchSourceBuilder = new SearchSourceBuilder()
-					.from(elasticSearchParam.getFrom())
-					.size(elasticSearchParam.getTo())
-					.query(complateQuery)
-					.fetchSource(elasticSearchParam.getIncludeFields(), elasticSearchParam.getExcludeFields())
-					.sort(elasticSearchParam.getSorts())
-					.timeout(new TimeValue(timeout, TimeUnit.SECONDS));
 
+		searchSourceBuilder = new SearchSourceBuilder()
+				.from(elasticSearchParam.getFrom())
+				.size(elasticSearchParam.getTo())
+				.query(complateQuery)
+				.fetchSource(elasticSearchParam.getIncludeFields(), elasticSearchParam.getExcludeFields())
+				.sort(elasticSearchParam.getSorts())
+				.timeout(new TimeValue(60, TimeUnit.SECONDS));
 
 		return searchSourceBuilder;
 	}
@@ -1982,10 +2205,9 @@ public class ElasticSearchQueryUtils {
 			List<Map<String, Object>> tempList = (List<Map<String, Object>>) tempMap.get("conditions");
 			tempList.get(0).put("limit", searchParam.get("limit"));
 			tempList.get(0).put("offset", searchParam.get("offset"));
+			tempList.get(0).put("searchField", searchParam.get("searchField"));
 			elasticSearchParam.setSearchParameters(tempList.get(0));
 		}
-		log.info("***searcdhParan: "+ elasticSearchParam.getSearchParameters().get("searchStr"));
-
 
 		/* sort 관련 */
 		setSort("");
@@ -1996,21 +2218,58 @@ public class ElasticSearchQueryUtils {
 		int offset = 0;
 		int limit = 0;
 
-
 		offset = (int) Math.round(Double.valueOf(Common.nvl(elasticSearchParam.getSearchParameters().get("offset"))));
 		limit = (int) Math.round(Double.valueOf(Common.nvl(elasticSearchParam.getSearchParameters().get("limit"))));
 
-
-		/* serviceType 설정 */
-		if (!Common.isEmpty(ElasticSearchCommon.SERVICE_SVC12)) {
-			setyField(Common.nvl(ElasticSearchCommon.SERVICE_SVC12));
-		}
-
-		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("serviceType"))) {
-			setSearchQuery(Common.nvl(elasticSearchParam.getSearchParameters().get("serviceType")));
+		//검색어 설정
+		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("searchStr"))) {
+			setSearchQuery("*" + Common.nvl(elasticSearchParam.getSearchParameters().get("searchStr")) + "*");
 		} else {
-			setSearchQuery(Common.nvl(ElasticSearchCommon.ALL_SEARCH));
+			setSearchQuery(Common.nvl(ElasticSearchCommon.ALL_SEARCH)); // 검색어 없을시 전체 검색어 입력
 		}
+
+		String searchQuery = this.queryBuffer.toString();
+
+		//검색 영역 설정
+		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("searchField"))) {
+			this.queryBuffer.setLength(0);
+			String[] fields = Common.nvl(elasticSearchParam.getSearchParameters().get("searchField")).split(" ");
+			setSearchField(fields, searchQuery);
+		}
+
+		//서비스 타입 설정
+		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("serviceType"))) {
+			String[] serviceTypes = Common.nvl(elasticSearchParam.getSearchParameters().get("serviceType")).split(",");
+			addQueryGroup(ElasticSearchCommon.AND_QUERY, ElasticSearchCommon.SERVICE_SVC12, makeParentheses(serviceTypes));
+		}
+
+
+		//사업장 검색
+		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("busi"))) {
+			addQueryGroup(ElasticSearchCommon.AND_QUERY, ElasticSearchCommon.USER_BUSICD, makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("busi"))));
+		}
+
+		//부서 선택
+		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("dept"))) {
+			String[] serviceTypes = Common.nvl(elasticSearchParam.getSearchParameters().get("dept")).split(",");
+			addQueryGroup(ElasticSearchCommon.AND_QUERY, ElasticSearchCommon.USER_DEPTCD, makeParentheses(serviceTypes));
+		}
+
+		//첨부 여부 검색
+		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("attachYn"))) {
+			if (elasticSearchParam.getSearchParameters().get("attachYn").equals("Y")) {
+				addQueryGroup(ElasticSearchCommon.NOT_QUERY, ElasticSearchCommon.ATTACHCNT, makeParentheses("0"));
+			}
+		}
+		//참여자 정보 검색
+		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("senders"))) {
+			addQueryGroup(ElasticSearchCommon.AND_QUERY, ElasticSearchCommon.SENDER, makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("senders"))));
+		}
+
+		//************* 아직 안함 읽음 여부 체크 -> 안 읽음 메세지 N 으로 들어옴 -> READER이 null 인것만 검색해야 함
+//		if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("readYn"))){
+//			  addQueryGroup(ElasticSearchCommon.AND_QUERY,ElasticSearchCommon.READER,makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("readYn"))));
+//		}
 
 		/* set Query (항상 쿼리 조합 최하단에 위치) */
 		setQuery();
@@ -2025,7 +2284,7 @@ public class ElasticSearchQueryUtils {
 		this.elasticSearchParam.setExcludeFields(null);
 		this.elasticSearchParam.setStartDate(Common.nvl(elasticSearchParam.getSearchParameters().get("startDt")));
 		this.elasticSearchParam.setEndDate(Common.nvl(elasticSearchParam.getSearchParameters().get("endDt")));
-
+		this.elasticSearchParam.setSearchType(Common.nvl(elasticSearchParam.getSearchParameters().get(ElasticSearchCommon.SEARCH_TYPE)));
 
 		log.debug("[Fields] {}", ElasticSearchCommon.SEARCH_FIELD);
 		log.debug("[SORT] : {}", getSortInfo());
@@ -2039,7 +2298,7 @@ public class ElasticSearchQueryUtils {
 		setMessengerDetailQueryReady(searchParam);
 
 		RangeQueryBuilder rangeQuery = new RangeQueryBuilder(ElasticSearchCommon.CTIME).gte(elasticSearchParam.getStartDate()).lte(elasticSearchParam.getEndDate());
-		QueryStringQueryBuilder secondQuery = QueryBuilders.queryStringQuery(query); // 쿼리 스트링 저장
+		QueryStringQueryBuilder secondQuery = QueryBuilders.queryStringQuery(ElasticSearchCommon.AND_QUERY + query); // 쿼리 스트링 저장
 		BoolQueryBuilder complateQuery = new BoolQueryBuilder();
 
 		complateQuery.filter(rangeQuery);
@@ -2052,8 +2311,8 @@ public class ElasticSearchQueryUtils {
 		BoolQueryBuilder ceoQuery = getCeoFilterQuery();
 
 		// 권한 filter 추가
-		if(null != authComQuery) complateQuery.must(authComQuery);
-		if(null != ceoQuery) complateQuery.must(ceoQuery);
+		if (null != authComQuery) complateQuery.must(authComQuery);
+		if (null != ceoQuery) complateQuery.must(ceoQuery);
 		/*##########################################################################################*/
 
 
@@ -2090,29 +2349,33 @@ public class ElasticSearchQueryUtils {
 
 		offset = (int) Math.round(Double.valueOf(Common.nvl(elasticSearchParam.getSearchParameters().get("offset"))));
 
-		if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("searchStr"))){
-			setSearchQuery(Common.nvl(elasticSearchParam.getSearchParameters().get("searchStr")));
-		}else{
+		//검색어 설정
+		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("searchStr"))) {
+			setSearchQuery("*" + Common.nvl(elasticSearchParam.getSearchParameters().get("searchStr")) + "*");
+		} else {
 			setSearchQuery(Common.nvl(ElasticSearchCommon.ALL_SEARCH)); // 검색어 없을시 전체 검색어 입력
 		}
 
-		/* 검색 쿼리 */
 		String searchQuery = this.queryBuffer.toString();
 
-		if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("searchField"))) {
+		//검색 영역 설정
+		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("searchField"))) {
 			this.queryBuffer.setLength(0);
 			String[] fields = Common.nvl(elasticSearchParam.getSearchParameters().get("searchField")).split(" ");
-			setSearchField(fields,searchQuery);
+			setSearchField(fields, searchQuery);
 		}
 
-//		if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("searchField"))) {
-//			setyField(Common.nvl(ElasticSearchCommon.BODY_SNIPPET));
-//		}
+		//서비스 타입 설정
+		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("serviceType"))) {
+			String[] serviceTypes = Common.nvl(elasticSearchParam.getSearchParameters().get("serviceType")).split(",");
+			addQueryGroup(ElasticSearchCommon.AND_QUERY, ElasticSearchCommon.SERVICE_SVC12, makeParentheses(serviceTypes));
+		}
 
 		//xRootMtr
 		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("xRootMtr"))) {
 			addQueryGroup(ElasticSearchCommon.AND_QUERY, ElasticSearchCommon.XROOTMTR, makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("xRootMtr"))));
 		}
+
 
 		/* set Query (항상 쿼리 조합 최하단에 위치) */
 		setQuery();
@@ -2133,6 +2396,7 @@ public class ElasticSearchQueryUtils {
 		log.debug("[QUERY] {}", getQuery());
 	}
 
+
 	public SearchSourceBuilder initMessageTotalSearchSource(Map<String, Object> searchParam, String adminId) {
 		SearchSourceBuilder searchSourceBuilder = null; // SearchSourceBuilder 리턴용
 
@@ -2152,8 +2416,8 @@ public class ElasticSearchQueryUtils {
 		BoolQueryBuilder ceoQuery = getCeoFilterQuery();
 
 		// 권한 filter 추가
-		if(null != authComQuery) complateQuery.must(authComQuery);
-		if(null != ceoQuery) complateQuery.must(ceoQuery);
+		if (null != authComQuery) complateQuery.must(authComQuery);
+		if (null != ceoQuery) complateQuery.must(ceoQuery);
 		/*##########################################################################################*/
 
 
@@ -2204,7 +2468,8 @@ public class ElasticSearchQueryUtils {
 		log.debug("[QUERY] {}", getQuery());
 
 	}
-	public SearchSourceBuilder initAnalysisSearchSource(Map<String,Object> searchParam,String adminId) {
+
+	public SearchSourceBuilder initAnalysisSearchSource(Map<String, Object> searchParam, String adminId) {
 
 		SearchSourceBuilder searchSourceBuilder = null; // SearchSourceBuilder 리턴용
 
@@ -2267,7 +2532,7 @@ public class ElasticSearchQueryUtils {
 		return searchSourceBuilder;
 	}
 
-	public SearchSourceBuilder initAnalysisDetailSearchSource(Map<String, Object> searchParam,String adminId) {
+	public SearchSourceBuilder initAnalysisDetailSearchSource(Map<String, Object> searchParam, String adminId) {
 
 		SearchSourceBuilder searchSourceBuilder = null;
 
@@ -2298,7 +2563,6 @@ public class ElasticSearchQueryUtils {
 		complateQuery.must(piRangeQueries);
 
 
-
 		searchSourceBuilder = new SearchSourceBuilder()
 				.from(elasticSearchParam.getFrom())
 				.query(complateQuery)
@@ -2326,8 +2590,8 @@ public class ElasticSearchQueryUtils {
 
 		System.out.println(elasticSearchParam.getSearchParameters().get("user_str"));
 
-		if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("user_str"))) {
-			addQueryGroup(ElasticSearchCommon.SPACE,ElasticSearchCommon.USER_ID,makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("user_str"))));
+		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("user_str"))) {
+			addQueryGroup(ElasticSearchCommon.SPACE, ElasticSearchCommon.USER_ID, makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("user_str"))));
 		}
 
 
@@ -2401,7 +2665,6 @@ public class ElasticSearchQueryUtils {
 
 
 
-
 	/* 회사 권한 관련 (회사,사업장) 필터 */
 	private BoolQueryBuilder getCompanyAuthFilterQuery( ) {
 		BoolQueryBuilder result = null;
@@ -2458,8 +2721,8 @@ public class ElasticSearchQueryUtils {
 			setSearchQuery(Common.nvl(elasticSearchParam.getSearchParameters().get("searchStr")));
 		}else if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("query"))) {
 			//고급쿼리 (일단 보류)
-	//            String allSearch = makeParentheses(ElasticSearchCommon.ALL_SEARCH);
-	//            setSearchQuery(allSearch.concat(ElasticSearchCommon.SPACE).concat(Common.nvl(elasticSearchParam.getSearchParameters().get("query"))));
+			//            String allSearch = makeParentheses(ElasticSearchCommon.ALL_SEARCH);
+			//            setSearchQuery(allSearch.concat(ElasticSearchCommon.SPACE).concat(Common.nvl(elasticSearchParam.getSearchParameters().get("query"))));
 		}else{
 			setSearchQuery(Common.nvl(ElasticSearchCommon.ALL_SEARCH)); // 검색어 없을시 전체 검색어 입력
 		}
@@ -2467,22 +2730,22 @@ public class ElasticSearchQueryUtils {
 
 
 	public void messageSearch(){
-			searchField();
-			serviceType();
-			workTime();
-			recv();
-			sender();
-			receivers();
-			allOfUs();
-			biz();
-			dept();
-			url();
-			readYn();
-			attachYn();
-			ocrYn();
-			drmYn();
-			keywordYn();
-			pattenYn() ;
+		searchField();
+		serviceType();
+		workTime();
+		recv();
+		sender();
+		receivers();
+		allOfUs();
+		biz();
+		dept();
+		url();
+		readYn();
+		attachYn();
+		ocrYn();
+		drmYn();
+		keywordYn();
+		pattenYn() ;
 	}
 
 

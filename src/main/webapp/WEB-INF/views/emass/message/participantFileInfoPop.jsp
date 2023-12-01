@@ -169,15 +169,19 @@ function getParticipantFileList(){
 		getFileList( [] );
 		return;
 	}
+    let searchParam = {
+        xRootMtr : xrootmtr,
+        srcip : srcip,
+        usr_id : usr_id,
+        startDt: startDt,
+        endDt: endDt,
+        searchStr: searchStr,
+        attachYn : 'Y'
+    }
 	
 	ui.get({
 		url : 'getMessengerGroupAttachList.xcn',
-		xRootMtr : xrootmtr,
-		srcip : srcip,
-		usr_id : usr_id,
-		startDt: startDt,
-		endDt: endDt,
-		searchStr: searchStr,
+        searchParam : JSON.stringify(searchParam),
 		success : function(data, total) {
 			getFileList(data);
 		},
