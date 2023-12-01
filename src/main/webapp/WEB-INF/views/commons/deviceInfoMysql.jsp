@@ -281,10 +281,12 @@
 		<div class="searchSub">
 			<div>
 				<input type="text" placeholder="장비 이름을 입력하세요." id="searchStrGroup" style="width: 220px;">
+				<button class="form_btn01" accesskey="Q" id="searchBtn" accesskey="s">조회</button>
 			</div>
-			<button class="form_btn01" accesskey="Q" id="searchBtn" accesskey="s">조회</button>
-			<button type="button" class="btn01" accesskey="I" id="deviceInsert"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
-			<button type="button" class="btn02" accesskey="D" id="deviceDelete"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
+			<div class="btnform">
+				<button type="button" class="btn01" accesskey="I" id="deviceInsert"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
+				<button type="button" class="btn02" accesskey="D" id="deviceDelete"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
+			</div>
 		</div>
 	</div>
 	<div class="content xcn_full">
