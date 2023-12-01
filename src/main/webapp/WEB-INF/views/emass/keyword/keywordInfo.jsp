@@ -518,9 +518,11 @@ function fileExtCheck(obj) {
 					<input type="text" placeholder="<s:message code="keyword.message.part_name"/>" id="searchStrGroup" style="width: 220px;">
 					<button class="form_btn01" type="button" accesskey="G" id="searchGroupBtn">검색</button>
 				</div>
+				<div class="btnform">
 				<button type="button" class="btn01" accesskey="I" id="groupInsertBtn"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
 				<button type="button" class="btn02" accesskey="D" id="groupDeleteBtn"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
-			</div>
+				</div>
+				</div>
 			<div class="content xcn_full" style="background-color: transparent">
 				<div class="contentSub" style="padding: 0px;">
 					<div id="keywordGroupListGrid" class="slickGrid gridArea"></div>
@@ -535,9 +537,11 @@ function fileExtCheck(obj) {
 					<button class="form_btn01" type="button" accesskey="K" id="searchStrKeywordBtn">검색</button>
 				</div>
 				<c:if test="${_USERCREDENTIAL_.firstAdminYn eq 'Y'}">
+				<div class="btnform">
 					<button type="button" class="btn01" accesskey="A" id="keywordInsertBtn"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
 					<button type="button" class="btn02" accesskey="E" id="keywordDeleteBtn"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
 					<button type="button" class="btn03" accesskey="U" id="uploadBtn"><img src="<c:url value="/img/subBtn_upload.png"/>" alt="업로드">Upload</button>
+				</div>
 				</c:if>
 			</div>
 			<div class="content xcn_full" style=" background-color: transparent">

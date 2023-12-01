@@ -688,7 +688,7 @@ function fileInfoViewer( row ){
             xAxis: xAxis,
             xAxis_str: xAxis_str,
             searched_xAxis: $('#searched_xAxis').val(),
-            /*colId: colId,*/
+            colId: colId,
             yAxis: 'attach.id',
             offset: currentgrid.data.length,
             limit: currentgrid.pageSize,

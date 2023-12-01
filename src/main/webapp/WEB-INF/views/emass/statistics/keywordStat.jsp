@@ -684,7 +684,7 @@ function getSearchQuery() {
                 xAxis: xAxis,
                 xAxis_str: xAxis_str,
                 searched_xAxis: $('#searched_xAxis').val(),
-                /*colId: colId,*/
+                colId: colId,
                 yAxis: 'kwd.kwds.keyword',
                 offset: currentgrid.data.length,
                 limit: currentgrid.pageSize,

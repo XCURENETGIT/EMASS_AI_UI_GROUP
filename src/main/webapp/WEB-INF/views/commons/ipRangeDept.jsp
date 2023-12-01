@@ -216,7 +216,7 @@ $(document).ready(function(){
 		fileExtCheck($(this));
 	});
 	
-	$('.savePopBtn').click(function(){
+	$('#savePopBtn').click(function(){
 		var deptCd = $('#deptByCoVal').val().ltrim().rtrim();
 		var startIp = $('#startIp').val().ltrim().rtrim();
 		var endIp = $('#endIp').val().ltrim().rtrim();
@@ -724,45 +724,52 @@ function getDeptSchedule(){
 	</div>
 </div>
 
-	<div id="upload_file"></div>
-	<div class="modal fade" id="uploadPop" role="dialog" aria-labelledby="uplaodPop">
-		<div class="modal-dialog" role="document">
-			<div class = "modal-content">
-				<div class="modal-header">
-					<button type = "button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					<h3 class="modal-title"><s:message code="POLICY_SETUP.DEPT_IPRANGE"/>-<s:message code="keyword.msg.upload"/></h3>
-				</div>
-				<div class="modal-body">
-					<form method="post" id="uploadForm" enctype="multipart/form-data" target="upload_file">
-						<div class="form-group form-inline">
-							<label for="comment" class="control-label col-xs-3"><s:message code="keyword.msg.colseparator"/></label>
-						 	<select class="form-control input-sm" id="separator" name="separator">
-						 		<option value=",">,</option>
-						 		<option value="|">|</option>
-						 	</select>
-						 	<select class="form-control input-sm" id="encoding" name="encoding">
-						 		<option value="utf-8">UTF-8</option>
-						 		<option value="euc-kr">EUC-KR</option>
-						 	</select>
+<div id="upload_file"></div>
+<div class="modal" id="uploadPop" aria-labelledby="uploadPop">
+	<div class="modal-content">
+		<form method="post" id="uploadForm" enctype="multipart/form-data" target="upload_file">
+			<div class="modalHead">
+				<h2><s:message code="DATA_MONITOR.KEYWORD_MGMT"/>-<s:message code="keyword.msg.upload"/></h2>
+				<span class="close" data-dismiss="modal">&times;</span>
+			</div>
+			<div class="modalCon">
+				<div class="modalbody">
+					<div class="row">
+						<div class="col-35">
+							<label for="encoding" class="fname"><s:message code="bodyview.charset"/></label>
 						</div>
-						<div class="form-group form-inline">
-							<label for="comment" class="control-label col-xs-3"><s:message code="keyword.select.file"/></label>
+						<div class="col-65">
+							<select class="optiotab" id="encoding" name="encoding">
+								<option value="utf-8">UTF-8</option>
+								<option value="euc-kr">EUC-KR</option>
+							</select>
+							<input type="hidden" class="" name="importGroupSeq" id="importGroupSeq" maxlength="300">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-35">
+							<label for="keywordDesc" class="fname"><s:message code="keyword.select.file"/></label>
+						</div>
+						<div class="col-65">
 							<span id="attachSpan"><input type="file" class="form-control" name="attach" id="attach" style="width: 350px; border: 0px; padding: 0px;"></span>
 						</div>
-						<div class="form-inline" style="margin-top:20px;padding-left:10px;"> 1) <s:message code="keyword.message.upload.info1"/></div>
-						<div class="form-inline" style="padding-left:10px;"> 2) <s:message code="deptIpRange.msg.upload.info"/></div>
-						<div class="form-inline" style="padding-left: 10px;"> 3) <s:message code="keyword.message.upload.info3"/></div>
-					</form>
+					</div>
 				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
-					<button type="button" class="btn btn-primary uploadPopBtn" accesskey="S"><s:message code="common.msg.save"/></button>
+				<div class="info"> 안내 사항
+					<div class="form-inline" style="padding-left: 10px;">1) <s:message code="interest.message.upload.info1"/></div>
+					<div class="form-inline" style="padding-left: 10px;">2) <s:message code="interest.message.upload.info2"/></div>
+					<div class="form-inline" style="padding-left: 10px;">3) <s:message code="interest.message.upload.info3"/></div>
+					<div class="form-inline" style="padding-left: 10px;">4) <s:message code="interest.message.upload.info4"/></div>
+					<div style="padding-left: 10px;">5) <s:message code="interest.message.upload.info5"/></div>
+				</div>
+				<div class="modalfooter">
+					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+					<button type="button" class="pop_btn02" accesskey="S"><s:message code="common.msg.save"/></button>
 				</div>
 			</div>
-		</div>
+		</form>
 	</div>
+</div>
 
 
 
@@ -771,7 +778,7 @@ function getDeptSchedule(){
 		<form method="post" id="setDeptApiPopForm">
 		<div class="modalHead">
 			<h2><s:message code="deptIpRange.set.api"/></h2>
-			<span class="close">&times;</span>
+			<span class="close" data-dismiss="modal">&times;</span>
 		</div>
 
 		<div class="modalCon">
@@ -922,11 +929,13 @@ function getDeptSchedule(){
 					<input type="text"  placeholder="<s:message code="ipRange.msg.enter.busicomment"/>" id="searchStrInput">
 					<button class="form_btn01" type="button" accesskey="Q" id="searchBtn"><s:message code="common.msg.search"/></button>
 				</div>
+				<div class="btnform">
 				<button type="button" class="btn01" accesskey="I" id="insertBtn"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
 				<button type="button" class="btn02" accesskey="D" id="deleteBtn"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
 				<button type="button" class="btn03" accesskey="U" id="uploadBtn"><span class="glyphicon glyphicon-import"></span>&nbsp;Upload</button>
-				<button type="button" class="btn btn-sm btn-warning" accesskey="S" id="setDeptApiBtn"><span class="glyphicon glyphicon-cog"></span>&nbsp;<s:message code="deptIpRange.set.api"/></button>
+				<%--<button type="button" class="btn btn-sm btn-warning" accesskey="S" id="setDeptApiBtn"><span class="glyphicon glyphicon-cog"></span>&nbsp;<s:message code="deptIpRange.set.api"/></button>--%>
 				<div id="deptComment" style="margin-left: 455px;margin-top: -15px;font-weight: bold; color:#f25643;display: none;width: 630px;"><s:message code="deptIpRange.msg.insa.auto"/></div>
+				</div>
 			</div>
 		</div>
 
