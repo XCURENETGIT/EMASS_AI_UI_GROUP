@@ -164,7 +164,7 @@ public class EmassIntegrated {
                 List<String> headerList = keyList.stream().map( k -> k.getKey()).collect(Collectors.toList());
                 this.pivotHeader = headerList;
             }
-            else if(ElasticSearchCommon.USER_ID.equals(xTypeFlag) && ElasticSearchCommon.PI_ID.equals(yField)  ){
+            else if(ElasticSearchCommon.USER_USERID.equals(xTypeFlag) && ElasticSearchCommon.PI_ID.equals(yField)  ){
                // pi_code 패턴 관련
                 Map<String, Object> keys = new HashMap();
                 Terms results = aggregations.get("stat");

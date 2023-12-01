@@ -2048,7 +2048,7 @@ public class ElasticSearchQueryUtils {
 		this.elasticSearchParam.setSorts(sortBuilderList);
 		this.elasticSearchParam.setSearchType(Common.nvl(elasticSearchParam.getSearchParameters().get(ElasticSearchCommon.SEARCH_TYPE)));
 		this.elasticSearchParam.setIncludeFields(ElasticSearchCommon.SEARCH_FIELD);
-		this.elasticSearchParam.setXAxis("user.id");
+		this.elasticSearchParam.setXAxis("user.userId");
 		this.elasticSearchParam.setYAxis("pi.id");
 		this.elasticSearchParam.setStartDate(Common.nvl(elasticSearchParam.getSearchParameters().get("startDate")));
 		this.elasticSearchParam.setEndDate(Common.nvl(elasticSearchParam.getSearchParameters().get("endDate")));

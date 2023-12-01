@@ -469,7 +469,7 @@ function getSearchQuery() {
 					</div>
 				</div>
 				<!-- pagination -->
-				<div class="pageArea">
+<%--				<div class="pageArea">
 					<div class="pagination">
 						<a href="#"><img src="../img/ico_page_left2.png" alt=""></a>
 						<a href="#"><img src="../img/ico_page_left.png" alt=""></a>
@@ -482,7 +482,7 @@ function getSearchQuery() {
 						<a href="#"><img src="../img/ico_page_right.png" alt=""></a>
 						<a href="#"><img src="../img/ico_page_right2.png" alt=""></a>
 					</div>
-				</div>
+				</div>--%>
 				<!-- //pagination -->
 			</div>
 

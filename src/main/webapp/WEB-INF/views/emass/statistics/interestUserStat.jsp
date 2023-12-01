@@ -505,7 +505,7 @@ function getSearchQuery() {
 						</div>
 					</div>
 					<!-- pagination -->
-					<div class="pageArea">
+	<%--				<div class="pageArea">
 						<div class="pagination">
 							<a href="#"><img src="../img/ico_page_left2.png" alt=""></a>
 							<a href="#"><img src="../img/ico_page_left.png" alt=""></a>
@@ -518,7 +518,7 @@ function getSearchQuery() {
 							<a href="#"><img src="../img/ico_page_right.png" alt=""></a>
 							<a href="#"><img src="../img/ico_page_right2.png" alt=""></a>
 						</div>
-					</div>
+					</div>--%>
 					<!-- //pagination -->
 				</div>
 
@@ -654,16 +654,14 @@ function getSearchQuery() {
 				url : 'getStatList.xcn',
                 searchParam: JSON.stringify(searchData),
 				success : function(data, total) {
-
-
 					grid1.colInit();
 					grid1.autoNumber();
-					grid1.colAdd('rowKey', '<s:message code="consent.user"/>', 230, 'left', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
-						if(grid1.getValue(row, 'rowName') != '') {
-							return grid1.getValue(row, 'rowName') + '&lt;' + value + '&gt;';
-						}
-						return value;
-					});
+                    grid1.colAdd('rowKey', '<s:message code="consent.user"/>', 230, 'left', false, 'link', function (row, cell, value, columnDef, dataContext) {
+                        if (grid1.getValue(row, 'rowName') != '') {
+                            return grid1.getValue(row, 'rowName') + '&lt;' + value + '&gt;';
+                        }
+                        return value;
+                    });
 					grid1.colAdd('total', '<s:message code="bodyview.total"/>', 130, 'right', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
 						if ( value != undefined ) return value.comma();
 						else return '';
