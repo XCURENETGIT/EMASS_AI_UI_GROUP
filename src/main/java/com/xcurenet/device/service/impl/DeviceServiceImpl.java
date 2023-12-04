@@ -14,11 +14,12 @@ import com.xcurenet.device.service.DeviceVO;
 public class DeviceServiceImpl extends XcnAbstractDAO implements DeviceService {
 
 	@Override
-	public List<DeviceVO> getDeviceList(String searchStr, int offset, int limitx) {
+	public List<DeviceVO> getDeviceList(String searchStr, final String deviceType, int offset, int limit) {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("searchStr", searchStr);
+		param.put("deviceType", deviceType);
 		param.put("offset", offset);
-		param.put("limit", limitx);
+		param.put("limit", limit);
 		return selectList("com.xcurenet.sqlmap.mappers.mysql.device.getDeviceList", param);
 	}
 	
@@ -45,8 +46,7 @@ public class DeviceServiceImpl extends XcnAbstractDAO implements DeviceService {
 
 	@Override
 	public boolean isDeviceIpExist(DeviceVO device) {
-		if ((int) selectOne("com.xcurenet.sqlmap.mappers.mysql.device.isDeviceIpExist", device) > 0) return true;
-		return false;
+		return (int) selectOne("com.xcurenet.sqlmap.mappers.mysql.device.isDeviceIpExist", device) > 0;
 	}
 
 	@Override

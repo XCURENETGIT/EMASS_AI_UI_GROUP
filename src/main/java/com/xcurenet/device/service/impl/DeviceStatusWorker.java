@@ -19,12 +19,12 @@ import java.util.concurrent.Callable;
 @Scope("prototype")
 public class DeviceStatusWorker implements Callable<DeviceVO> {
 
-	public static final String CRITICAL = "X"; // 치명
-	public static final String ERROR = "E"; // 에러
-	public static final String WARN = "W"; // 경고
-	public static final String NORMAL = "I"; // 관심
-	public static final String SUCCESS = "S"; // 정상
-	public static final String NOT_CONNECT = "C"; // 연결오류
+	private static final int CRITICAL = 3;      // 심각 C
+	private static final int ERROR = 2;         // 경고 E
+	private static final int WARN = 1;          // 주의 W
+	private static final int NORMAL = 0;        // 정상 S
+	private static final int NOT_CONNECT = 4;   // 연결오류 N
+	private int currentStatus = 0;
 
 	private int port = 22;
 
@@ -32,25 +32,42 @@ public class DeviceStatusWorker implements Callable<DeviceVO> {
 
 	@Override
 	public DeviceVO call() throws Exception {
-		log.info("[STATUS] device : {}", device.getDeviceIp());
+		log.debug("[STATUS] device : {}", device.getDeviceIp());
 		JSONObject item = device.getCurrentDevice();
 		if (item == null) device.setCurrentDevice(new JSONObject());
 
 		SFTPUtil sftp = new SFTPUtil();
 		try {
 			sftp.init(device.getDeviceIp(), device.getSshId(), device.getSshPw(), port);
+			setDeviceStatus(NORMAL);
 
 			loadAvg(sftp);
 			memory(sftp);
 			dateTime(sftp);
 			disk(sftp);
 			netWork(sftp);
-
-			log.debug("info : {} {}", device.getDeviceIp(), device.getCurrentDevice());
+		} catch (Exception e) {
+			log.warn("Device status check Error : {} {}", device.getDeviceIp(), e.getMessage());
+			setDeviceStatus(NOT_CONNECT);
 		} finally {
 			sftp.disconnection();
+			device.getCurrentDevice().put("status", getDeviceStatus());
+			log.debug("info : {} {} {}", device.getDeviceIp(), device.getCurrentDevice().get("status"), device.getCurrentDevice());
 		}
 		return device;
+	}
+
+	private String getDeviceStatus() {
+		if (currentStatus == NORMAL) return "S";
+		else if (currentStatus == WARN) return "W";
+		else if (currentStatus == ERROR) return "E";
+		else if (currentStatus == CRITICAL) return "C";
+		else if (currentStatus == NOT_CONNECT) return "N";
+		return "S";
+	}
+
+	private void setDeviceStatus(final int status) {
+		if (currentStatus < status) setCurrentStatus(status);
 	}
 
 
@@ -62,7 +79,15 @@ public class DeviceStatusWorker implements Callable<DeviceVO> {
 	private void loadAvg(SFTPUtil sftp) {
 		String load = sftp.getCommand("cat /proc/loadavg");
 		if (load.isEmpty()) device.getCurrentDevice().put("load", "");
-		else device.getCurrentDevice().put("load", String.join(", ", Common.toList(load, " ").subList(0, 3)));
+		else {
+			List<String> loads = Common.toList(load, " ").subList(0, 3);
+			for (String l : loads) {
+				if (Common.nvf(l, 0) >= 40) setDeviceStatus(CRITICAL);
+				else if (Common.nvf(l, 0) >= 20) setDeviceStatus(ERROR);
+				else if (Common.nvf(l, 0) >= 10) setDeviceStatus(WARN);
+			}
+			device.getCurrentDevice().put("load", String.join(", ", loads));
+		}
 	}
 
 	/**
@@ -82,6 +107,11 @@ public class DeviceStatusWorker implements Callable<DeviceVO> {
 			List<String> infos = Common.toList(mem, " ");
 			int total = Common.nvz(infos.get(1), 0);
 			int available = Common.nvz(infos.get(7), 0);
+			String usedRate = Common.calculatePercentage(total, available);
+			if (Common.nvf(usedRate, 0) >= 98) setDeviceStatus(CRITICAL);
+			else if (Common.nvf(usedRate, 0) >= 95) setDeviceStatus(ERROR);
+			else if (Common.nvf(usedRate, 0) >= 90) setDeviceStatus(WARN);
+
 			device.getCurrentDevice().put("total", Common.convertSnmpSize(total));
 			device.getCurrentDevice().put("used", Common.convertSnmpSize(infos.get(2)));
 			device.getCurrentDevice().put("free", Common.convertSnmpSize(infos.get(3)));
@@ -89,7 +119,7 @@ public class DeviceStatusWorker implements Callable<DeviceVO> {
 			device.getCurrentDevice().put("buffers", Common.convertSnmpSize(infos.get(5)));
 			device.getCurrentDevice().put("cache", Common.convertSnmpSize(infos.get(6)));
 			device.getCurrentDevice().put("available", Common.convertSnmpSize((available)));
-			device.getCurrentDevice().put("usedRate", Common.calculatePercentage(total, available));
+			device.getCurrentDevice().put("usedRate", usedRate + "%");
 			device.getCurrentDevice().put("used_a", Common.convertSnmpSize(total - available));
 		}
 	}
@@ -121,6 +151,11 @@ public class DeviceStatusWorker implements Callable<DeviceVO> {
 			item.put("use", partition.get(4));
 			item.put("mount", partition.get(5));
 			items.add(item);
+
+			float use = Common.nvf(partition.get(4).replace("%", ""), 0);
+			if (use >= 95) setDeviceStatus(CRITICAL);
+			else if (use >= 90) setDeviceStatus(ERROR);
+			else if (use >= 85) setDeviceStatus(WARN);
 		}
 		device.getCurrentDevice().put("disk", items);
 	}
@@ -148,6 +183,8 @@ public class DeviceStatusWorker implements Callable<DeviceVO> {
 				item.put("name", cols.get(0).replace(":", ""));
 				item.put("status", cols.get(1).contains("UP") ? "UP" : "DOWN");
 				item.put("mtu", cols.get(3));
+
+				if (Common.isEquals(item.get("status"), "DOWN")) setDeviceStatus(CRITICAL);
 			} else if (!h.startsWith(" ")) {
 				filter = false;
 			}
@@ -166,6 +203,7 @@ public class DeviceStatusWorker implements Callable<DeviceVO> {
 					item.put("rx_errors", cols.get(2));
 					item.put("rx_dropped", cols.get(4));
 					item.put("rx_overruns", cols.get(6));
+					if (Common.nvn(item.get("rx_errors")) > 0) setDeviceStatus(CRITICAL);
 				} else if (cols.get(0).contains("TX") && cols.get(1).contains("packets")) {
 					item.put("tx_packets", cols.get(2));
 					item.put("tx_bytes", Common.convertSnmpSize(cols.get(4)));

@@ -26,7 +26,7 @@ public interface DeviceService {
 	 * @param limit
 	 * @return
 	 */
-	public List<DeviceVO> getDeviceList(final String searchStr, final int offset, final int limit);
+	public List<DeviceVO> getDeviceList(final String searchStr, final String deviceType, final int offset, final int limit);
 
 	/**
 	 * 특정 장비 상세 조회 (deviceSeq 검색)

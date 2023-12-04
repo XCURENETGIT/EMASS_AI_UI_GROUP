@@ -489,6 +489,29 @@ public class Common {
 	}
 
 	/**
+	 * Null to Empty String
+	 *
+	 * @param target
+	 * @return
+	 */
+	public static float nvf(Object target) {
+		return nvf(target, 0.0F);
+	}
+
+	/**
+	 * Null to Empty String
+	 *
+	 * @param target
+	 * @return
+	 */
+	public static float nvf(Object target, float defaultNum) {
+		if (target != null) {
+			if (!String.valueOf(target).equalsIgnoreCase("null") && !String.valueOf(target).isEmpty()) return Float.parseFloat(String.valueOf(target));
+		}
+		return defaultNum;
+	}
+
+	/**
 	 * Trim All
 	 *
 	 * @param target
@@ -1756,7 +1779,7 @@ public class Common {
 	}
 
 	public static String calculatePercentage(int total, int available) {
-		return String.format("%.1f%%", ((double) (total - available) / total) * 100);
+		return String.format("%.1f", ((double) (total - available) / total) * 100);
 	}
 
 	/**

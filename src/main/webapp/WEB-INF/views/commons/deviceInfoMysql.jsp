@@ -1,169 +1,199 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp" %>
-<%
-	String deviceSeq = Common.nvl(request.getParameter("deviceSeq"));
-%>
-
+<!--
+장비 			이벤트수치	레벨
+disk 사용율		85			주의
+disk 사용율		90			경고
+disk 사용율		95			심각
+장비 연결		Fail		심각
+네트워크 Status	DOWN		심각
+RX ERR			1			주의
+로드평균			10			주의
+로드평균			20			경고
+로드평균			40			심각
+메모리 사용율	90			주의
+메모리 사용율	95			경고
+메모리 사용율	98			심각
+Date			1분			경고
+-->
 <style>
-	th {
-		text-align: center;
-		vertical-align: middle;
-	}
-
-	.subTable{
-		width: 100%;
-		table-layout: fixed;
-	}
-
-	.subTable_tr th:first-child {
-		border-left: 1px solid #ddd;
-	}
-
-	.subTable_tr td {
-		border-bottom: 1px solid #ddd;
-		border-left: 1px solid #ddd;
-		background-color: #EEEFF2;
-		font-weight: 600;
-	}
-
-	.subTable tr {
-		border-bottom: 1px solid #ddd;
-	}
-
-	.subTable td {
-		vertical-align: middle;
-		font-weight: 400;
-	}
-	.subTable th {
-		height: 28px;
-		line-height: 28px;
-		vertical-align: middle;
-		font-weight: 600;
-		border-top: 0;
-	}
-
-	.none_padding {
-		padding: 0 !important;
-		vertical-align: top !important;
-	}
-
-	.left {
-		text-align: left !important;
-	}
-
-	.subTable_bottom {
-		border-bottom: 1px solid #a04ae0 !important;
-	}
-
-	.subTb {
-		width: 100%;
-	}
-
-	.subTb td {
-		line-height: 20px;
-		height: 25px;
-		padding: 2px;
-		width: 100%;
-	}
-	.subTb tr {
-		background-color: white;
-	}
-	.subTb tr:last-child {
-		border-bottom: 0;
-	}
-	.usage {
-		position: relative;
-		margin: 0;
-		line-height: 13px;
-	}
-	.usage .usage-reading {
-		z-index: 2;
-		display: block;
-		position: relative;
-		padding-bottom: 3px;
-		border: 1px solid transparent;
-		text-align: center;
-		color: #424242;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-	}
+	th {text-align: center;vertical-align: middle;}
+	.subTable{width: 100%;table-layout: fixed;}
+	.subTable_tr th:first-child {border-left: 1px solid #ddd;}
+	.subTable_tr td {border-bottom: 1px solid #ddd;border-left: 1px solid #ddd;background-color: #EEEFF2;font-weight: 600;}
+	.subTable tr {border-bottom: 1px solid #ddd;}
+	.subTable td {vertical-align: middle;font-weight: 400;}
+	.subTable th {height: 28px;line-height: 28px;vertical-align: middle;font-weight: 600;border-top: 0;}
+	.none_padding {padding: 0 !important;vertical-align: top !important;}
+	.left {text-align: left !important;}
+	.subTable_bottom {border-bottom: 1px solid #a04ae0 !important;}
+	.subTb {width: 100%;}
+	.subTb td {line-height: 20px;height: 25px;padding: 2px;width: 100%;}
+	.subTb tr {background-color: white;}
+	.subTb tr:last-child {border-bottom: 0;}
+	.usage {position: relative;margin: 0;line-height: 13px;}
+	.usage .usage-reading {z-index: 2;display: block;position: relative;padding-bottom: 3px;border: 1px solid transparent;text-align: center;color: #424242;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
 	.usage .usage-low {background-color: #96C55A;}
-	.usage .usage-bar {
-		z-index: 1;
-	}
-	.usage .usage-bar, .usage .usage-bar-rest {
-		position: absolute;
-		bottom: 0;
-		left: 0;
-		width: 100%;
-		height: 2px;
-	}
-	.usage .usage-bar-rest {
-		z-index: 0;
-		background-color: #ddd;
-	}
+	.usage .usage-bar {z-index: 1;}
+	.usage .usage-bar, .usage .usage-bar-rest {position: absolute;bottom: 0;left: 0;width: 100%;height: 2px;}
+	.usage .usage-bar-rest {z-index: 0;background-color: #ddd;}
 </style>
 <script type="text/javascript">
 	$(document).ready(function () {
 		$('#deviceInsert').click(function () {
+			$('#deviceAddPop').attr('mode', 'insert');
 			$('#deviceAddPop').modal('show');
 		});
 
+		$('#deviceDelete').click(function () {
+			let deviceSeqs = [];
+			$("input[name='checkDevice']:checked").each(function() {
+				deviceSeqs.push($(this).attr('deviceseq'));
+			});
+			if(deviceSeqs.length === 0) {
+				ui.alertMsg('<s:message code="common.msg.choose.deleteitem"/>');
+				return;
+			}
+
+			ui.confirmMsg('<s:message code="common.msg.confirm.delete"/>', '', '', function(rs){
+				ui.onBody();
+				ui.get({
+					url: 'deleteDevice.xcn',
+					deviceSeq : deviceSeqs.join(','),
+					success: function (data, total) {
+						ui.alertMsg('<s:message code="common.msg.deleted"/>');
+						getDevice();
+					},
+					error: function (status, message) {
+						ui.alertMsg(message);
+					},
+					complete: function () {
+						ui.off();
+					}
+				});
+			});
+		});
+
+		$('#checkAll').click(function () {
+			$('input:checkbox[name="checkDevice"]').prop('checked', $(this).prop('checked'));
+		});
+
+		$(document).on('click', '.tableLink', function (event) {
+			event.stopPropagation();
+			let device = findDevice($(this).attr("deviceSeq"));
+			$('#deviceAddPop').attr('deviceSeq', device.deviceSeq);
+			$('input:radio[name="deviceType"]:radio[value="' + device.deviceType + '"]').prop('checked', true);
+			$('#deviceName').val(device.deviceNm);
+			$('#deviceIp').val(device.deviceIp);
+			$('#sshId').val(device.sshId);
+			$('#sshPw').val(device.sshPw);
+
+			$('#deviceAddPop').attr('mode', 'modify');
+			$('#deviceAddPop').modal('show');
+			//$('#deviceAddPop').modal({backdrop: 'static', keyboard: false}, 'show');
+		});
+
+		$('#deviceType').change(function () {
+			getDevice();
+		});
+		$('#searchStr').enter(function () {getDevice();});
+		$('#searchBtn').click(function () {getDevice();});
+
+		$('#deviceInfoSaveBtn').click(function(){
+			if( $('#deviceName').val() === '' ) {
+				ui.alertMsg('<s:message code="deviceInfo.msg.enter.devname"/>');
+				$('#deviceNm').focus();
+				return;
+			}
+			if( $('#deviceIp').val() === '' ) {
+				ui.alertMsg('<s:message code="deviceInfo.msg.enter.ip"/>');
+				$('#accessIp').focus();
+				return;
+			}
+
+			if( !checkIP( $('#deviceIp').val() ) ) {
+				ui.alertMsg( '<s:message code="deviceInfo.msg.ip.wrong"/>');
+				$('#accessIp').focus();
+				return;
+			}
+			if( $('#sshId').val() === '' ) {
+				ui.alertMsg('SSH 아이디를 입력하세요.');
+				$('#sshId').focus();
+				return;
+			}
+			if( $('#sshPw').val() === '' ) {
+				ui.alertMsg('SSH 비밀번호를 입력하세요.');
+				$('#sshPw').focus();
+				return;
+			}
+
+			let id = $('#deviceAddPop').attr('mode');
+			if( id === 'insert' ) insertDevice();
+			else if( id === 'modify' ) modifyDevice();
+		});
 		getDevice();
 	});
 
+	let deviceList = [];
 	function getDevice() {
+		$('#checkAll').prop('checked', false);
+
+		ui.onBody();
 		ui.get({
 			url: 'getDeviceList.xcn',
+			deviceType : $('#deviceType').val(),
+			searchStr : $('#searchStr').val(),
 			success: function (data, total) {
-				console.log(data.devices);
-				if (data.devices.length > 1) {
+				if (data.devices != null && data.devices.length > 0) {
+					deviceList = data.devices;
 					deviceInfo(data.devices);
+				} else {
+					$("#deviceCount").html(' [0건]');
+					$('#deviceBody').html('<tr><td colspan="19">데이터가 존재하지 않습니다.</td></tr>');
 				}
 			},
 			error: function (status, message) {
 				ui.alertMsg(message);
 			},
 			complete: function () {
+				ui.off();
 			}
 		});
 	}
+	function findDevice(deviceSeq) {
+		for(let i=0 ; i < deviceList.length ; i++) {
+			if( deviceList[i].deviceSeq === deviceSeq) return deviceList[i];
+		}
+		return null;
+	}
 
 	function deviceInfo(data) {
-
 		$("#deviceCount").html(' [' + data.length.comma() + '건]');
 		let str = '';
 		for (let i = 0; i < data.length; i++) {
-			let statusStr = "";
-			let status = data[i].deviceStatus;
-			if (status == 'S') statusStr = "성공";
-			else if (status == 'F') statusStr = "실패";
-			else if (status == 'T') statusStr = "연결실패";
-			else statusStr = "불일치";
-
-			let device = data[i].currentDevice;
+			let device = nvJson(data[i].currentDevice);
+			let statusStr = getStatusName(data[i].currentDevice.status);
 			str += '<tr>';
-			str += '<td><input type="checkbox"></td>';
+			str += '<td><input type="checkbox" name="checkDevice" deviceSeq="'+data[i].deviceSeq+'"></td>';
 			str += '<td>' + (i + 1) + '</td>';
 			str += '<td>' + statusStr + '</td>';
-			str += '<td>' + data[i].deviceNm + '</td>';
+			str += '<td><a href="#" deviceSeq="'+data[i].deviceSeq+'" class="tableLink">' + data[i].deviceNm + '</a></td>';
 			str += '<td>' + data[i].deviceIp + '</td>';
-			str += '<td>역할</td>';
+			str += '<td>' + getDeviceTypeName(data[i].deviceType) + '</td>';
 			str += '<td>' + device.load + '</td>';
 
 			str += '<td>';
-			str += '    <span class="usage_rate">' + device.usedRate + '</span>';
+			str += '    <span class="usage_rate">' + nvl(device.usedRate) + '</span>';
 			str += '    <span>';
 			str += '        <div class="usage">';
-			str += '            <span class="usage-reading">' + device.used + ' / ' + data[i].currentDevice.total + '</span>';
+			str += '            <span class="usage-reading">' + nvn(device.used) + ' / ' + nvn(device.total) + '</span>';
 			str += '            <span class="usage-bar usage-low" style="width: ' + device.usedRate + '"></span>';
 			str += '            <span class="usage-bar-rest"></span>';
 			str += '        </div>';
 			str += '    </span>';
 			str += '</td>';
 
-			str += '<td>' + device.date + '</td>';
+			str += '<td>' + nvl(device.date) + '</td>';
 			let rows = device.disk.length > device.network.length ? device.disk.length : device.network.length;
 			str += '<td class="none_padding">' + subTb(rows, device.disk, 'mount', 'left') + '</td>';
 			str += '<td class="none_padding">' + subTbDisk(rows, device.disk) + '</td>';
@@ -181,6 +211,32 @@
 			str += '</tr>';
 		}
 		$('#deviceBody').html(str);
+	}
+
+	function nvJson(data){
+		try {
+			if(data === undefined || data.network === undefined || data.load === undefined || data.disk === undefined) {
+				return {load:0, disk:[], network:[]};
+			} else return data;
+		} catch (e) {
+			return {load:0, disk:[], network:[]};
+		}
+	}
+
+	function getStatusName(code){
+		if(code === 'S') return '정상';
+		else if(code === 'W') return '주의';
+		else if(code === 'E') return '경고';
+		else if(code === 'C') return '심각';
+		else if(code === 'N') return '연결실패';
+		else return '';
+	}
+
+	function getDeviceTypeName(code) {
+		if(code === 'C') return '패킷 수집 장비';
+		else if(code === 'A') return '패킷 분석 장비';
+		else if(code === 'L') return '로깅 장비';
+		else return '';
 	}
 
 	function subTb(rows, data, key, align) {
@@ -210,27 +266,112 @@
 		}
 		return result + '</table>';
 	}
+
+	//장비 추가
+	function insertDevice(){
+		$('#deviceInfoSaveBtn').prop('disabled', true);
+		ui.confirmMsg('<s:message code="common.msg.confirm.save"/>', '', '', function(rs){
+			if(rs){
+				ui.onBody();
+				ui.get({
+					url : 'insertDevice.xcn',
+					deviceType : $("input[name='deviceType']:checked").val(),
+					deviceNm : $('#deviceName').val(),
+					deviceIp : $('#deviceIp').val(),
+					sshId : $('#sshId').val(),
+					sshPw : $('#sshPw').val(),
+					success : function ( data, total ) {
+						ui.alertMsg('<s:message code="common.msg.saved"/>');
+						$('#deviceAddPop').modal('hide');
+						getDevice();
+
+					},
+					error : function (status, message) {
+						ui.alertMsg(message);
+					},
+					complete : function (){
+						$('#deviceInfoSaveBtn').prop('disabled', false);
+						ui.off();
+					}
+				});
+			} else {
+				$('#deviceInfoSaveBtn').prop('disabled', false);
+			}
+		});
+	}
+	function modifyDevice() {
+		$('#deviceInfoSaveBtn').prop('disabled', true);
+		ui.confirmMsg('<s:message code="common.msg.confirm.modify"/>', '', '', function (rs) {
+			if (rs) {
+				ui.onBody()
+				ui.get({
+					url: 'updateDevice.xcn',
+					deviceSeq: $('#deviceAddPop').attr('deviceSeq'),
+					deviceType: $("input[name='deviceType']:checked").val(),
+					deviceNm: $('#deviceName').val(),
+					deviceIp: $('#deviceIp').val(),
+					sshId: $('#sshId').val(),
+					sshPw: $('#sshPw').val(),
+					success: function (data, total) {
+						ui.alertMsg('<s:message code="common.msg.modified"/>');
+						$('#deviceAddPop').modal('hide');
+						getDevice();
+					},
+					error: function (status, message) {
+						ui.alertMsg(message);
+					},
+					complete: function () {
+						$('#deviceInfoSaveBtn').prop('disabled', false);
+						ui.off();
+					}
+				});
+			} else {
+				$('#deviceInfoSaveBtn').prop('disabled', false);
+			}
+		});
+	}
 </script>
 
-<div class="modal" id="deviceAddPop" aria-labelledby="keywordGroupPop" tabindex="-1" role="dialog">
+<div class="modal" id="deviceAddPop" aria-labelledby="keywordGroupPop" tabindex="-1" role="dialog" data-backdrop="static">
 	<div class="modal-content">
 		<form method="post" id="deviceAddPopForm" onsubmit="return false;">
 			<div class="modalHead">
-				<h2>장비추가</h2>
+				<h2><s:message code="deviceInfo.addDevPop.title"/></h2>
 				<span class="close" data-dismiss="modal">&times;</span>
 			</div>
 			<div class="modalCon">
 				<div class="modalTop">
-					<h3>장비 추가</h3>
+					<h3>장비 정보 입력</h3>
 					<p>
 						<span class="red_dot veralign_middle"></span>
 						필수 입력 사항입니다.
 					</p>
 				</div>
 				<div class="modalbody">
+					<form method="post" id="addDevPopForm">
 					<div class="row">
 						<div class="col-35">
-							<label for="deviceName" class="fname">이름</label>
+							<label for="deviceName" class="fname">장비 유형</label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<div class="radio">
+								<input type="radio" value="C" name="deviceType" checked>
+								<span>패킷 수집 장비</span>
+							</div>
+							<div class="radio">
+								<input type="radio" value="A" name="deviceType">
+								<span>패킷 분석 장비</span>
+							</div>
+							<div class="radio">
+								<input type="radio" value="L" name="deviceType">
+								<span>로깅 장비</span>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-35">
+							<label for="deviceName" class="fname">장비 이름</label>
 							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
@@ -252,7 +393,7 @@
 							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
-							<input type="text" class="w100" name="deviceSSHId" id="deviceSSHId">
+							<input type="text" class="w100" name="sshId" id="sshId">
 						</div>
 					</div>
 					<div class="row">
@@ -261,10 +402,10 @@
 							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
-							<input type="password" class="w100" name="deviceSSHPassword" id="deviceSSHPassword">
+							<input type="password" class="w100" name="sshPw" id="sshPw">
 						</div>
 					</div>
-
+					</form>
 				</div>
 				<div class="modalfooter">
 					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
@@ -280,7 +421,13 @@
 	<div class="searchArea">
 		<div class="searchSub">
 			<div>
-				<input type="text" placeholder="장비 이름을 입력하세요." id="searchStrGroup" style="width: 220px;">
+				<select id="deviceType" style="display: inline;margin-right: 4px">
+					<option value="">- 장비 유형 -</option>
+					<option value="C">패킷 수집 장비</option>
+					<option value="A">패킷 분석 장비</option>
+					<option value="L">로깅 장비</option>
+				</select>
+				<input type="text" placeholder="장비 이름 / IP를 입력하세요." id="searchStr" style="width: 220px;">
 				<button class="form_btn01" accesskey="Q" id="searchBtn" accesskey="s">조회</button>
 			</div>
 			<div class="btnform">
@@ -325,12 +472,12 @@
 					</colgroup>
 					<thead>
 					<tr>
-						<th rowspan="2"><input type="checkbox" id="checkBox"/></th>
+						<th rowspan="2"><input type="checkbox" id="checkAll"/></th>
 						<th  rowspan="2">No.</th>
 						<th rowspan="2">상태</th>
-						<th rowspan="2">이름</th>
+						<th rowspan="2">장비 이름</th>
 						<th rowspan="2">IP</th>
-						<th rowspan="2">역할</th>
+						<th rowspan="2">장비 유형</th>
 						<th rowspan="2">로드평균</th>
 						<th rowspan="2">메모리 사용량</th>
 						<th rowspan="2">Date</th>

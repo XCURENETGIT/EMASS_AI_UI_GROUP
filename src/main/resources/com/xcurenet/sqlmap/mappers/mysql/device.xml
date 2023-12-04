@@ -73,7 +73,10 @@
 		<if test='searchStr!=null and searchStr!=""'>
 		AND		( DEVICE_NM  LIKE CONCAT( '%', #{searchStr} ,'%') OR  DEVICE_IP LIKE CONCAT( '%', #{searchStr}, '%' )  )
 		</if>
-		ORDER   BY CREATE_DT DESC
+		<if test='deviceType!=null and deviceType!=""'>
+		AND	    DEVICE_TYPE 			= #{deviceType}
+		</if>
+		ORDER   BY CASE WHEN DEVICE_TYPE = 'C' THEN 1 WHEN DEVICE_TYPE = 'A' THEN 2 ELSE 3 END,  DEVICE_IP, CREATE_DT DESC
 		<if test='offset!=null and limit > 0'>
 		LIMIT	${offset}, ${limit}
 		</if>

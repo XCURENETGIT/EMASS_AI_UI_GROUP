@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -26,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class DeviceScheduler {
 
-	private List<DeviceVO> devices;
+	private static final List<DeviceVO> devices = Collections.synchronizedList(new ArrayList<>());
 
 	@Resource(name = "deviceService")
 	private DeviceService deviceService;
@@ -36,9 +37,11 @@ public class DeviceScheduler {
 
 	@PostConstruct
 	public void init() {
-		synchronized (this) {
-			devices = deviceService.getDeviceList(null, 0, 0);
-			log.info("[DEVICE] {}", devices.size());
+		synchronized (devices) {
+			devices.clear();
+			devices.addAll(deviceService.getDeviceList(null, null, 0, 0));
+			deviceStatus();
+			log.info("[DEVICE] SIZE : {}", devices.size());
 		}
 	}
 
@@ -52,52 +55,56 @@ public class DeviceScheduler {
 		init();
 	}
 
-	@Scheduled(fixedDelay = 10000, initialDelay = 5000)
+	@Scheduled(fixedDelay = 10000, initialDelay = 10000)
 	@Description("장비 상태 모니터링 스케쥴러")
-	public void deviceStatus() throws Exception {
-		if (devices == null || devices.isEmpty()) return;
-
-		ExecutorService es = Executors.newFixedThreadPool(devices.size());
-		try {
-			List<DeviceStatusWorker> tasks = deviceStatusTask();
-			List<Future<DeviceVO>> future = es.invokeAll(tasks, 8, TimeUnit.SECONDS);
-			statusChange(future, tasks);
-		} catch (Exception e) {
-			log.error("deviceStatus check error : ", e);
-		} finally {
-			es.shutdownNow();
+	public void deviceStatus() {
+		synchronized (devices) {
+			if (devices.isEmpty()) return;
+			ExecutorService es = Executors.newFixedThreadPool(devices.size());
+			try {
+				List<DeviceStatusWorker> tasks = deviceStatusTask();
+				List<Future<DeviceVO>> future = es.invokeAll(tasks, 8, TimeUnit.SECONDS);
+				statusChange(future, tasks);
+			} catch (Exception e) {
+				log.error("deviceStatus check error : ", e);
+			} finally {
+				es.shutdownNow();
+			}
 		}
 	}
 
 	private List<DeviceStatusWorker> deviceStatusTask() {
 		List<DeviceStatusWorker> deviceStatusTask = new ArrayList<>();
-		for (DeviceVO device : devices) {
-			DeviceStatusWorker st = this.context.getBean(DeviceStatusWorker.class);
-			st.setDevice(device);
-			deviceStatusTask.add(st);
+		synchronized (devices) {
+			for (DeviceVO device : devices) {
+				DeviceStatusWorker st = this.context.getBean(DeviceStatusWorker.class);
+				st.setDevice(device);
+				deviceStatusTask.add(st);
+			}
 		}
 		return deviceStatusTask;
 	}
 
 	public void statusChange(List<Future<DeviceVO>> futures, List<DeviceStatusWorker> tasks) {
 		try {
-			for (int i = 0; i < futures.size(); i++) {
-				final Future<DeviceVO> future = futures.get(i);
-				try {
-					DeviceVO device;
-					if (future.isCancelled()) device = tasks.get(i).getDevice();
-					else device = future.get();
+			synchronized (devices) {
+				for (int i = 0; i < futures.size(); i++) {
+					final Future<DeviceVO> future = futures.get(i);
+					try {
+						DeviceVO device;
+						if (future.isCancelled()) device = tasks.get(i).getDevice();
+						else device = future.get();
 
-					for (int j = 0; j < devices.size(); j++) {
-						if (Common.isEquals(devices.get(j).getDeviceIp(), device.getDeviceIp())) {
-							devices.set(j, device);
-							break;
+						for (int j = 0; j < devices.size(); j++) {
+							if (Common.isEquals(devices.get(j).getDeviceIp(), device.getDeviceIp())) {
+								devices.set(j, device);
+								break;
+							}
 						}
+					} catch (Exception e) {
+						log.error("", e);
 					}
-				} catch (Exception e) {
-					log.error("", e);
 				}
-
 			}
 		} catch (Exception e) {
 			log.error("", e);
@@ -106,10 +113,12 @@ public class DeviceScheduler {
 
 
 	public JSONObject getDeviceStatus(String deviceSeq) {
-		if (devices == null || devices.isEmpty()) return new JSONObject();
-		for (DeviceVO device : devices) {
-			if (Common.isEquals(device.getDeviceSeq(), deviceSeq)) {
-				return device.getCurrentDevice();
+		synchronized (devices) {
+			if (devices.isEmpty()) return new JSONObject();
+			for (DeviceVO device : devices) {
+				if (Common.isEquals(device.getDeviceSeq(), deviceSeq)) {
+					return device.getCurrentDevice();
+				}
 			}
 		}
 		return new JSONObject();

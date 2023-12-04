@@ -16,6 +16,8 @@ import com.xcurenet.config.service.ConfigAdminVO;
 import com.xcurenet.device.service.DeviceService;
 import com.xcurenet.device.service.DeviceVO;
 import com.xcurenet.device.service.impl.DeviceScheduler;
+import lombok.extern.log4j.Log4j2;
+import net.sf.json.JSONObject;
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +33,7 @@ import java.util.Map;
 /**
  * Handles requests for the application home page.
  */
+@Log4j2
 @Controller
 @AuditParentMenu(ParentMenu.OPERATION_MGMT)
 @AuditMenu(Menu.DEV_INFO)
@@ -53,11 +56,12 @@ public class DeviceController {
 	@ResponseBody
 	public XcnResponseVO getDeviceList(final HttpServletRequest request) throws Exception {
 		String searchStr = Common.nvl(request.getParameter("searchStr"));
+		String deviceType = Common.nvl(request.getParameter("deviceType"));
 		int offset = Common.nvz(request.getParameter("offset"));
 		int limit = Common.nvz(request.getParameter("limit"));
 
 		Map<String, Object> result = new HashMap<>();
-		List<DeviceVO> devices = deviceService.getDeviceList(searchStr, offset, limit);
+		List<DeviceVO> devices = deviceService.getDeviceList(searchStr, deviceType, offset, limit);
 		for (int i = 0; i < devices.size(); i++) {
 			DeviceVO device = devices.get(i);
 			device.setCurrentDevice(deviceScheduler.getDeviceStatus(device.getDeviceSeq()));
@@ -73,9 +77,10 @@ public class DeviceController {
 	@ResponseBody
 	public XcnResponseVO getDeviceListInDetail(final HttpServletRequest request) {
 		String searchStr = Common.nvl(request.getParameter("searchStr"));
+		String deviceType = Common.nvl(request.getParameter("deviceType"));
 		int offset = Common.nvz(request.getParameter("offset"));
 		int limit = Common.nvz(request.getParameter("limit"));
-		return new XcnResponseVO(XcnRspCode.OK, deviceService.getDeviceList(searchStr, offset, limit));
+		return new XcnResponseVO(XcnRspCode.OK, deviceService.getDeviceList(searchStr, deviceType, offset, limit));
 	}
 
 	@RequestMapping(value = "/getCollectionDevice.xcn")
@@ -169,11 +174,13 @@ public class DeviceController {
 	@AuditOperation(Operation.DELETE)
 	@ResponseBody
 	public XcnResponseVO deleteDevice(DeviceVO device) {
-		deviceScheduler.reload();
-		XcnResponseVO rs = new XcnResponseVO(XcnRspCode.OK, deviceService.deleteDevice(device));
+		String[] devices = Common.toArray(device.getDeviceSeq(), ",");
+		for (String d : devices) {
+			device.setDeviceSeq(d);
+			deviceService.deleteDevice(device);
+		}
 		deviceScheduler.reload();
 		makeInfoService.addInfoDevice();
-		return rs;
+		return new XcnResponseVO(XcnRspCode.OK);
 	}
-
 }

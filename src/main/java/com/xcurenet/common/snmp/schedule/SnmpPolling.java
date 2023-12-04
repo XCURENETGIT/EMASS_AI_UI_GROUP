@@ -50,7 +50,7 @@ public class SnmpPolling {
 	@PostConstruct
 	public void init() {
 		log.info("[장비정보] LOAD START..");
-		devices = deviceService.getDeviceList(null, 0, 0);
+		devices = deviceService.getDeviceList(null, null,0, 0);
 		log.info("[장비정보] LOAD END..");
 	}
 
