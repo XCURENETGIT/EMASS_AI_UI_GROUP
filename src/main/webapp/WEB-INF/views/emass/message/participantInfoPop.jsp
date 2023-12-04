@@ -42,17 +42,20 @@ function getParticipantInfo( flag ){
 		return;
 	}
 	grid.on();
+    var data = {
+        xRootMtr : xrootmtr,
+        srcip: srcip,
+        usr_id: usr_id,
+        startDt: startDt,
+        endDt: endDt,
+        searchStr: searchStr,
+        groupField: 'sender_str'
+    };
 	ui.get({
 		url : 'getMessengerGroupUserList.xcn',
-		xRootMtr : xrootmtr,
-		srcip: srcip,
-		usr_id: usr_id,
-		startDt: startDt,
-		endDt: endDt,
-		searchStr: searchStr,
-		groupField: 'sender_str',
+        searchParam : JSON.stringify(data),
 		success : function(data, total) {
-			grid.setData(data.groups);
+			grid.setData(data.emass);
 		},
 		error : function(status, message) {
 			ui.alertMsg(message);
@@ -108,11 +111,11 @@ function getParticipantInfo( flag ){
 				else return value;
 			}); */
 			grid.colAdd('usr_id', 'ID', 250, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-				if (value == null) return '-'; 
+				if (value == null) return '-';
 				else return value;
 			});
 			grid.colAdd('sname', '<s:message code="common.msg.name"/>', 180, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-				if (value == null) return '-'; 
+				if (value == null) return '-';
 				else return value;
 			});
 			grid.onClick = function() {

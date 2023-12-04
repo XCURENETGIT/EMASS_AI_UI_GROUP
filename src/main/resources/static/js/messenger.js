@@ -114,18 +114,19 @@ var eikon = {
 		var endDt = $('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 
 		var data = {
-			xRootmtr : xRootmtr,
+			xRootMtr : xRootmtr,
 			startDt : startDt,
 			endDt : endDt,
 			groupField: 'user_id'
 		}
+
 		//참여자 수, 참여자 정보
 		ui.get({
 			url : 'getMessengerGroupUserList.xcn',
-			searchParam : data,
+			searchParam : JSON.stringify(data),
 			success : function(data, total) {
-				participantDataSet = data.groups;
-				userSelectBox(data.groups, srcip, usr_id);
+				participantDataSet = data.emass;
+				userSelectBox(data.emass, srcip, usr_id);
 				//getMessengerGroupDetail(xRootmtr, msgid, srcip);
 				//$('#groupParticipantCnt').html(total.comma());
 			},
@@ -445,22 +446,23 @@ function userSelectBox(data, srcip, usr_id){
 	var str = '';
 
 	for(var i=0; i<data.length; i++){
-		var ip = data[i].srcip == undefined ? Object.keys(data[i].srcIpList[0]).toString() : data[i].srcip;
+		var ip = data[i].sender.ip;
+		// var ip = data[i].srcip == undefined ? Object.keys(data[i].srcIpList[0]).toString() : data[i].srcip;
 		var selectUserTitle = ip;
-		if( nvl(data[i].name) != '') {
-			selectUserTitle = data[i].name;
-			if( nvl(data[i].usr_id) != '') selectUserTitle += ' ('+data[i].usr_id+')';
-			else if( nvl(data[i].srcip) != '') selectUserTitle += ' ('+data[i].srcip+')';
+		if( nvl(data[i].sender.name) != '') {
+			selectUserTitle = data[i].sender.name;
+			if( nvl(data[i].sender.usr_id) != '') selectUserTitle += ' ('+data[i].sender.usr_id+')';
+			else if( nvl(data[i].network.srcip) != '') selectUserTitle += ' ('+data[i].network.srcip+')';
 		}
-		else if( nvl(data[i].usr_id) != '') selectUserTitle = data[i].usr_id;
-		else if( nvl(data[i].srcip) != '') selectUserTitle = data[i].srcip;
+		else if( nvl(data[i].sender.usr_id) != '') selectUserTitle = data[i].sender.usr_id;
+		else if( nvl(data[i].network.srcip) != '') selectUserTitle = data[i].network.srcip;
 
 		$('#selectUserInfo').attr('data-srcip', nvl(ip));
-		$('#selectUserInfo').attr('data-name', nvl(data[i].name));
-		$('#selectUserInfo').attr('data-usrid', nvl(data[i].usr_id));
+		$('#selectUserInfo').attr('data-name', nvl(data[i].sender.name));
+		$('#selectUserInfo').attr('data-usrid', nvl(data[i].sender.usr_id));
 		$('#selectUserInfo').html(selectUserTitle);
 
-		str += '<li class="selectUser" data-name="'+nvl(data[i].name)+'" data-srcip="'+nvl(ip)+'" data-usrid="'+nvl(data[i].usr_id)+'"><a href="javascript:void(0);">'+selectUserTitle+'</a></li>';
+		str += '<li class="selectUser" data-name="'+nvl(data[i].sender.name)+'" data-srcip="'+nvl(ip)+'" data-usrid="'+nvl(data[i].sender.usr_id)+'"><a href="javascript:void(0);">'+selectUserTitle+'</a></li>';
 	}
 	$('#selectUser_menu').html(str);
 	getDetailData(usr_id);
