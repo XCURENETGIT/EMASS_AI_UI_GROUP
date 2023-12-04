@@ -36,7 +36,7 @@ public class MessengerEdcGroupUserVO {
 		for (SearchHit hit : hits) {
 			Map<String, Object> map = hit.getSourceAsMap();
 			if (map.size() > 0) {
-				map.put("_id", hit.getId());
+				map.put("msgid", hit.getId());
 				result.add(mapper.convertValue(map, Emass.class));
 			}
 		}

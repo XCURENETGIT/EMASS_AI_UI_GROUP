@@ -33,10 +33,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -262,10 +259,16 @@ public class EmsSearchServiceImpl implements EmsSearchService {
 		String datetime = ("GMT+09:00".equals(TimeZone.getDefault().getID())) ? getAsiaServerTime() : getServerTime();
 		checkedVoMgo.setReadDate(ElasticSearchCommon.stringToDate(datetime));
 		readDoc(msgId,checkedVoMgo);
+
 	}
 
 	@Override
 	public boolean setMessengerRead(List<Emass> data, String adminId) {
+		String msgId = null;
+		for (Emass edc : data){
+			msgId = edc.getMsgid();
+			setRead(msgId, adminId);
+		}
 		return false;
 	}
 

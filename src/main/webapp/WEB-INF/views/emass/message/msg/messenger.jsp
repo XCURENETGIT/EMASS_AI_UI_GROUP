@@ -458,7 +458,7 @@
                 }
             });
 
-            $(document).on('click','#group_list a',function(){
+            $(document).on('click','.selectUser',function(){
                 var name = $(this).attr('data-name');
                 var srcip = $(this).attr('data-srcip');
                 var usr_id = $(this).attr('data-usrid');
