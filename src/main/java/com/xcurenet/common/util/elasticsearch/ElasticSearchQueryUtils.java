@@ -2467,7 +2467,7 @@ public class ElasticSearchQueryUtils {
 		System.out.println(elasticSearchParam.getSearchParameters().get("user_str"));
 
 		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("user_str"))) {
-			addQueryGroup(ElasticSearchCommon.SPACE, ElasticSearchCommon.USER_ID, makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("user_str"))));
+			addQueryGroup(ElasticSearchCommon.SPACE, ElasticSearchCommon.USER_USERID, makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("user_str"))));
 		}
 
 

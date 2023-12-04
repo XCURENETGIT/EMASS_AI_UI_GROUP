@@ -116,7 +116,7 @@ public class SnmpPolling {
 		try {
 			List<SnmpThread> tasks = deviceStatusTask();
 			List<Future<DeviceVO>> future = es.invokeAll(tasks, 4, TimeUnit.SECONDS);
-			statusChange(future, tasks);
+/*			statusChange(future, tasks);*/
 		} catch (Exception e) {
 			log.error("deviceStatus check error : {}", e);
 		} finally {
