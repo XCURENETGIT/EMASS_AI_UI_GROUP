@@ -452,8 +452,7 @@ function getSearchQuery() {
 			<div>
 				<button class="form_btn01" accesskey="Q" id="searchBtn" accesskey="s">조회</button>
 				<button class="form_btn02">조건 초기화</button>
-				<button type="button" class="btn btn-sm btn-primary searchQueryBtn">
-					<span class="glyphicon glyphicon-check"></span>&nbsp;<s:message code="query.make.inputer"/></button>
+				<button type="button" class="form_btn05"><s:message code="query.make.inputer"/></button>
 			</div>
 		</div>
 

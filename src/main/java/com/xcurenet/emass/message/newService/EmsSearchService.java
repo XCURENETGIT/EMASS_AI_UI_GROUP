@@ -27,9 +27,11 @@ public interface EmsSearchService {
 
 	 MessengerEdcGroupVO getMessengerGroupList(final Map<String,Object> searchParam, final String adminId, final boolean detail) throws IOException;
 
-	 MessengerEdcGroupVO getMessengerGroupList(final Map<String,Object> searchParam, final String adminId, final boolean detail, final boolean original) throws IOException;
+	//MessengerGroupUserVO getMessengerGroupUserList(final Map<String,Object> searchParam, final String adminId, final boolean detail, final boolean original) throws IOException;
 
-//	 MessengerGroupUserVO getMessengerGroupUserList(final Map<String,Object> searchParam, final String adminId) throws IOException;
+	MessengerEdcGroupVO getMessengerGroupList(Map<String, Object> searchParam, String adminId, boolean detail, boolean original) throws IOException;
+
+	public MessengerEdcGroupUserVO getMessengerGroupUserList(final Map<String,Object> searchParam, final String adminId, final boolean detail, final boolean original) throws IOException;
 
 	 void setFeedback(final String msgId, final String ml_confd_feedback) throws IOException;
 

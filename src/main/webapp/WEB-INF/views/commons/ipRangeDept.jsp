@@ -910,7 +910,7 @@ function getDeptSchedule(){
 							<label  class="fname"> <s:message code="userInfo.direct.execute"/></label>
 						</div>
 						<div class="col-65">
-							<button id="directExecuteBtn" type="button" accesskey="D" class="btn btn-success" style="margin-left: 84px"><span class="glyphicon glyphicon-import"><s:message code="userInfo.direct.execute"/></span></button>
+							<button id="directExecuteBtn" type="button" accesskey="D" class="form_btn01_02" style="margin-left: 84px"><span><s:message code="userInfo.direct.execute"/></span></button>
 						</div>
 					</div>
 
@@ -933,7 +933,7 @@ function getDeptSchedule(){
 				<button type="button" class="btn01" accesskey="I" id="insertBtn"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
 				<button type="button" class="btn02" accesskey="D" id="deleteBtn"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
 				<button type="button" class="btn03" accesskey="U" id="uploadBtn"><span class="glyphicon glyphicon-import"></span>&nbsp;Upload</button>
-				<%--<button type="button" class="btn btn-sm btn-warning" accesskey="S" id="setDeptApiBtn"><span class="glyphicon glyphicon-cog"></span>&nbsp;<s:message code="deptIpRange.set.api"/></button>--%>
+				<button type="button" class="btn05" accesskey="S"  id="setDeptApiBtn"><span class="glyphicon glyphicon-cog"></span>&nbsp;<s:message code="deptIpRange.set.api"/></button>
 				<div id="deptComment" style="margin-left: 455px;margin-top: -15px;font-weight: bold; color:#f25643;display: none;width: 630px;"><s:message code="deptIpRange.msg.insa.auto"/></div>
 				</div>
 			</div>

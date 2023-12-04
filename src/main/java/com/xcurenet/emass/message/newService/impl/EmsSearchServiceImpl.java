@@ -10,6 +10,7 @@ import com.xcurenet.config.service.ConfigAdminService;
 import com.xcurenet.config.service.ConfigAdminVO;
 import com.xcurenet.emass.message.newService.EmsReDefined;
 import com.xcurenet.emass.message.newService.EmsSearchService;
+import com.xcurenet.emass.message.newService.MessengerEdcGroupUserVO;
 import com.xcurenet.emass.message.service.EmsMessageService;
 import com.xcurenet.emass.message.service.MessengerEdcGroupVO;
 import com.xcurenet.emass.message.service.impl.parseJsonFile;
@@ -153,6 +154,8 @@ public class EmsSearchServiceImpl implements EmsSearchService {
 		return getMessengerGroupList(searchParam, adminId, detail,false);
 	}
 
+
+
 	@Override
 	public MessengerEdcGroupVO getMessengerGroupList(Map<String, Object> searchParam, String adminId, boolean detail, boolean original) throws IOException {
 		EmassIntegrated emassIntegrated = null;
@@ -174,6 +177,22 @@ public class EmsSearchServiceImpl implements EmsSearchService {
 
 		return new MessengerEdcGroupVO(flag,searchResponse,adminId,false,false);
 	}
+
+	@Override
+	public MessengerEdcGroupUserVO getMessengerGroupUserList(Map<String, Object> searchParam, String adminId, boolean detail, boolean original) throws IOException {
+		SearchSourceBuilder searchSourceBuilder = elsSearchQueryUtils.initUserSearchSource(searchParam,adminId);
+
+		if(null == searchSourceBuilder) throw new NullPointerException();
+
+		SearchRequest searchRequest = new SearchRequest(elsSearchQueryUtils.getElasticSearchParam().getIndices()).source(searchSourceBuilder);
+		SearchResponse searchResponse = getList(searchRequest);
+
+		return new MessengerEdcGroupUserVO(searchResponse);
+	}
+
+
+
+
 
 
 	@Override

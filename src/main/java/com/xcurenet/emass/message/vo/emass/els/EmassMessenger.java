@@ -58,5 +58,11 @@ public class EmassMessenger {
     @JsonProperty("body_text")
     private String body_text;
 
+    //인사 매핑
+    @JsonProperty("busiNm")
+    private String busiNm;
+
+    @JsonProperty("coNm")
+    private String coNm;
 
 }

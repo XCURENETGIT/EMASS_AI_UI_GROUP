@@ -106,7 +106,4 @@ public interface EmsMessageService {
 	/* 개봉 정보 */
 	boolean readDoc(String msgId, CheckedVo_Mgo checkedVoMgo);
 
-
-
-
 }

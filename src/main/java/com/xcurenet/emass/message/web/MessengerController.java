@@ -15,6 +15,7 @@ import com.xcurenet.common.util.locale.Prop;
 import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.emass.message.newService.EmsSearchService;
+import com.xcurenet.emass.message.newService.MessengerEdcGroupUserVO;
 import com.xcurenet.emass.message.service.EmsAttachVO;
 import com.xcurenet.emass.message.service.EmsMessageService;
 import com.xcurenet.emass.message.service.MessengerEdcGroupVO;
@@ -260,7 +261,6 @@ public class MessengerController {
 			Type type = new TypeToken<Map<String,Object>>(){}.getType();
 			searchParam = gson.fromJson((String) resultParam.get("searchParam"),type);
 			searchParam.put(ElasticSearchCommon.SEARCH_TYPE, ElasticSearchCommon.SEARCH_TYPE_MESSENGER_TOTAL);
-			log.info("Controller Prev Message: "+searchParam);
 		}
 		//return new XcnResponseVO(XcnRspCode.OK, result);
 		return new XcnResponseVO(XcnRspCode.OK, 0);
@@ -478,8 +478,15 @@ public class MessengerController {
 	@Description("메신저 대화방 참여자 리스트 조회")
 	@ResponseBody
 	public XcnResponseVO getMessengerGroupUserList(final HttpServletRequest request, final HttpSession session) throws Exception {
-//		MessengerGroupUserVO EdcGroupVO = getMessengerGroupUserList(request, 10000);
-		return new XcnResponseVO(XcnRspCode.OK, null, 0);
+		Gson gson = new Gson();
+		Map<String,Object> resultParam = Common.getParamMap(request);
+		Map<String,Object> searchParam = new HashMap<>();
+		if (!Common.isEmpty(resultParam.get("searchParam"))) {
+			Type type = new TypeToken<Map<String,Object>>(){}.getType();
+			searchParam = gson.fromJson((String) resultParam.get("searchParam"),type);
+		}
+		MessengerEdcGroupUserVO messengerEdcGroupUserVO = emsSearchService.getMessengerGroupUserList(searchParam, Common.getAdminId(request), false, false);
+		return new XcnResponseVO(XcnRspCode.OK, messengerEdcGroupUserVO, messengerEdcGroupUserVO.getNumFoundUser());
 	}
 
 
