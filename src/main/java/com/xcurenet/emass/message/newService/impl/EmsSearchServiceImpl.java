@@ -160,9 +160,11 @@ public class EmsSearchServiceImpl implements EmsSearchService {
 
 		SearchSourceBuilder searchSourceBuilder = elsSearchQueryUtils.initSearchSource(searchParam,adminId);
 
+
 		if(null == searchSourceBuilder) throw new NullPointerException();
 
 		SearchRequest searchRequest = new SearchRequest(elsSearchQueryUtils.getElasticSearchParam().getIndices()).source(searchSourceBuilder);
+		System.out.println(searchRequest);
 		SearchResponse searchResponse = getList(searchRequest);
 
 

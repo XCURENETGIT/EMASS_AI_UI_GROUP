@@ -289,6 +289,7 @@ function getMessengerMessageTotal(xRootmtr, srcip, startDt, endDt, usr_id, msgid
 function getMessengerMessage(xRootmtr, srcip, usr_id, msgid) {
 	var startDt = $('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 	var endDt = $('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+	var offset = detailStartPage  * detailPageBreak  - detailPageBreak ;
 	$("#timeline_list").html('');
 	var data = {
 		xRootMtr  : xRootmtr,
@@ -298,13 +299,14 @@ function getMessengerMessage(xRootmtr, srcip, usr_id, msgid) {
 		usr_id : usr_id,
 		msgid : nvl(msgid),
 		limit : detailLimit,
-		offset : 0
+		offset : offset
 	}
-	console.log(data.offset);
+	console.log("MessengerMessageOfsset: "+data.offset);
 	ui.get({
 		url : 'getMessengerMessage.xcn',
 		searchParam : JSON.stringify(data),
 		success : function(data, total) {
+			detailStartPage++;
 			if(data.groups.length > 0) {
 				$('.messenger_prev').css('display','block');
 			}
@@ -398,6 +400,7 @@ function getMessengerMessagePrev(xRootmtr, srcip, usr_id, msgid) {
 	var startDt = $('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 	var endDt = $('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 	searchFlag = true;
+	var offset = detailStartPage  * detailPageBreak  - detailPageBreak ;
 
 	var data = {
 		xRootMtr : xRootmtr,
@@ -406,12 +409,14 @@ function getMessengerMessagePrev(xRootmtr, srcip, usr_id, msgid) {
 		endDt : endDt,
 		usr_id : usr_id,
 		msgId : msgid,
-		limit : detailLimit
+		limit : detailLimit,
+		offset : offset
 	};
 	ui.get({
 		url : 'getMessengerMessagePrev.xcn',
 		searchParam : JSON.stringify(data),
 		success : function(data, total) {
+			detailStartPage++;
 			searchFlag = false;
 			if(data.groups.length == 0) {
 				prevDetailDataSet = [];
@@ -548,9 +553,7 @@ function rtnFileList(data, type) {
 
 
 function rtnGroupList(data, type){
-	console.log("data: "+data.length);
 	var str = '';
-	console.log("data.length: "+data.length);
 	for (var i = 0; i < data.length; i++) {
 		var user_cnt = data[i].user_cnt;
 		var svc3 = data[i].svc3;

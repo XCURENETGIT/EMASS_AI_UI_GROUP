@@ -1652,6 +1652,7 @@ public class ElasticSearchQueryUtils {
 		elasticSearchParam.setSearchParameters(searchParam);
 
 		setSort("");
+		sortInfo.add(SortBuilders.fieldSort("ctime").order(SortOrder.ASC));
 		List<SortBuilder<?>> sortBuilderList = getSortInfo();
 		log.debug("[SORT] {}", sortBuilderList.stream().collect(Collectors.toList()));
 
@@ -2131,6 +2132,7 @@ public class ElasticSearchQueryUtils {
 
 		/* sort 관련 */
 		setSort("");
+		sortInfo.add(SortBuilders.fieldSort("ctime").order(SortOrder.ASC));
 		List<SortBuilder<?>> sortBuilderList = getSortInfo();
 		log.debug("[SORT] {}", sortBuilderList.stream().collect(Collectors.toList()));
 
@@ -2257,14 +2259,14 @@ public class ElasticSearchQueryUtils {
 		complateQuery.must(secondQuery);
 
 		/*################ 권한 관련 ##################################################################*/
-		// set 권한 리스트
-		setAuthoritysFilter(adminId);
-		BoolQueryBuilder authComQuery = getCompanyAuthFilterQuery();
-		BoolQueryBuilder ceoQuery = getCeoFilterQuery();
-
-		// 권한 filter 추가
-		if (null != authComQuery) complateQuery.must(authComQuery);
-		if (null != ceoQuery) complateQuery.must(ceoQuery);
+//		// set 권한 리스트
+//		setAuthoritysFilter(adminId);
+//		BoolQueryBuilder authComQuery = getCompanyAuthFilterQuery();
+//		BoolQueryBuilder ceoQuery = getCeoFilterQuery();
+//
+//		// 권한 filter 추가
+//		if (null != authComQuery) complateQuery.must(authComQuery);
+//		if (null != ceoQuery) complateQuery.must(ceoQuery);
 		/*##########################################################################################*/
 
 
@@ -2293,6 +2295,7 @@ public class ElasticSearchQueryUtils {
 
 		/* sort 관련 */
 		setSort("");
+		sortInfo.add(SortBuilders.fieldSort("ctime").order(SortOrder.ASC));
 		List<SortBuilder<?>> sortBuilderList = getSortInfo();
 		log.debug("[SORT] {}", sortBuilderList.stream().collect(Collectors.toList()));
 
@@ -2391,8 +2394,10 @@ public class ElasticSearchQueryUtils {
 		System.out.println(elasticSearchParam);
 
 		setSort("");
+		sortInfo.add(SortBuilders.fieldSort("ctime").order(SortOrder.ASC));
 		List<SortBuilder<?>> sortBuilderList = getSortInfo();
 		log.debug("[SORT] {}", sortBuilderList.stream().collect(Collectors.toList()));
+
 
 		int offset = 0;
 		int limit = 0;
@@ -2403,6 +2408,7 @@ public class ElasticSearchQueryUtils {
 		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("xRootMtr"))) {
 			addQueryGroup(ElasticSearchCommon.SPACE, ElasticSearchCommon.XROOTMTR, makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("xRootMtr"))));
 		}
+		System.out.println("offset: "+offset);
 
 
 		setQuery();
