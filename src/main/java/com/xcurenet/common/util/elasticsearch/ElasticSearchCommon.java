@@ -40,6 +40,7 @@ public class ElasticSearchCommon {
 
     /* 쿼리 관련 */
     public static final String ALL_SEARCH = "*:*";
+    public static final String NONE_SEARCH = "NOT *:*";
     public static final String OPEN_PARENTHESES = "(";
     public static final String CLOSE_PARENTHESES = ")";
     public static final String OPEN_BRACKET = "[";

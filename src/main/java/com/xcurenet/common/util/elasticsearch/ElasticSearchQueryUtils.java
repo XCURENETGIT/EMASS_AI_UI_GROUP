@@ -1335,8 +1335,10 @@ public class ElasticSearchQueryUtils {
 				setyField(Common.nvl(elasticSearchParam.getSearchParameters().get("yAxis")));
 			}else {
 				/*아무런 검색조건 없을시*/
+				if(Common.isEmpty(elasticSearchParam.getSearchParameters().get("interGroup"))){
 				if(	elasticSearchParam.isYAxisIsNested() && !isTotalCol)  setSearchQuery(Common.nvl(ElasticSearchCommon.ALL_SEARCH));
 			    else   setSearchQuery(Common.nvl(ElasticSearchCommon.ALL_SEARCH));
+				}
 			}
 
 		}
@@ -1353,13 +1355,16 @@ public class ElasticSearchQueryUtils {
 		}
 
 		/*관심사용자*/
-		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("interGroup"))) {
+		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("interGroup")) && !Common.isEmpty(elasticSearchParam.getSearchParameters().get("interGroupId") )) {
 			adminUserGroupService = SpringContextUtil.getBean(AdminUserGroupService.class);
 			List<AdminUserGroupVO> users = adminUserGroupService.getAdminUserGroupSimpleList((String) elasticSearchParam.getSearchParameters().get("interGroup"));
-			if (users.size() == 0) return;
-			String userStr = users.stream().map(m -> m.getUserId().toLowerCase()).collect(Collectors.joining(","));
-			String[] userArr = userStr.split(",");
-			addQueryGroup(ElasticSearchCommon.AND_QUERY, ElasticSearchCommon.USER_USERID, makeParentheses(userArr));
+			if (users.size() == 0) {
+				setSearchQuery(Common.nvl(ElasticSearchCommon.NONE_SEARCH));
+			}else {
+				String userStr = users.stream().map(m -> m.getUserId().toLowerCase()).collect(Collectors.joining(","));
+				String[] userArr = userStr.split(",");
+				addQueryGroup(ElasticSearchCommon.AND_QUERY, ElasticSearchCommon.USER_USERID, "("+makeParentheses(userArr)+")");
+			}
 		}
 
 
