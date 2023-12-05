@@ -14,10 +14,9 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.Aggregations;
-import org.elasticsearch.search.aggregations.bucket.MultiBucketsAggregation;
+import org.elasticsearch.search.aggregations.bucket.histogram.Histogram;
 import org.elasticsearch.search.aggregations.bucket.histogram.ParsedDateHistogram;
-import org.elasticsearch.search.aggregations.bucket.nested.Nested;
-import org.elasticsearch.search.aggregations.bucket.nested.ParsedNested;
+import org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.metrics.TopHits;
 
@@ -32,7 +31,6 @@ public class EmassIntegrated {
     private List<?> emass;
     private List<String> pivotHeader;
     private List<Map<String, Object>> pivotData;
-    private List<Emass> aggregationsData;
 
     /* ---- 아직 엘라스틱 서치용으로 분석&개발 안됨 ---*/
     private List<String> facetHeader;
@@ -49,10 +47,15 @@ public class EmassIntegrated {
     private long total;
     private String search_xAxis;
     private String search_yAxis;
+    private String convertedXField;
+    private String convertedYField;
     private String search_startDate;
     private String search_endDate;
 
     private String rowkey;
+    private  Map<String, Integer> headerKeys = new HashMap<>();
+    private  List<String> sortedHeaderList = new ArrayList<>();
+    List<Map<String, Object>> pivotResult = new ArrayList();
 
 
     public EmassIntegrated() throws IOException {}
@@ -62,8 +65,7 @@ public class EmassIntegrated {
     }
 
     public EmassIntegrated(final SearchResponse searchResponse, final ElasticSearchParam searchParam, final String adminId) throws  IOException {
-        if(searchResponse == null) return;
-        if(searchParam == null) return;
+        if(null == searchResponse || null == searchParam) return;
 
         /* response 파싱 */
         List<Emass> result = new ArrayList<>();
@@ -79,201 +81,24 @@ public class EmassIntegrated {
        this.emass = result;
        this.total = searchResponse.getHits().getHits().length;
 
-       /* 통계 검색인 경우 pivot 계산 */
-        String[] statisticSearchType = new String[]{ElasticSearchCommon.SEARCH_TYPE_STATISTIC,ElasticSearchCommon.SEARCH_TYPE_ANALYSIS};
-        boolean isStatisticType =  Arrays.stream(statisticSearchType).anyMatch( s -> s.equals(Common.nvl(searchParam.getSearchType())));
-        if(isStatisticType) {
-            this.search_xAxis =  Common.nvl(searchParam.getXAxis());
-            this.search_yAxis = Common.nvl(searchParam.getYAxis());
-            this.search_startDate = Common.nvl(searchParam.getStartDate());
-            this.search_endDate = Common.nvl(searchParam.getEndDate());
-            if(Common.isEmpty(searchParam.getSearchParameters().get("rowKey"))) {
-                this.rowkey = Common.nvl(searchParam.getSearchParameters().get("rowKey"));
-            }
-            this.setPivot(searchResponse);
-        }
+        pivotCalculator(searchResponse,searchParam);
+          //  this.setPivot(searchResponse);
     }
 
 
-    private void setPivot(final SearchResponse searchResponse) {
-             if(searchResponse == null) return;
+    private void setPivot(Aggregations aggregations) {
+            Terms results = aggregations.get(search_yAxis);
+            if(null == results) return;
+            if(ElasticSearchCommon.CTIME.equals(convertedXField)) dateCalculator(results); //Yaxis 조건 시간 계산일시
+            else etcCalculator(results);  // 그 외
 
-            List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
+            List dataList = reCalculator(); // 재 계산
 
-            //aggregations
-            Aggregations aggregations = searchResponse.getAggregations();
-            if(aggregations.getAsMap().size() == 0 ) return;
+            /* 헤더 관련 */
+            if(sortedHeaderList.size() != 0)  this.pivotHeader = sortedHeaderList.stream().map(m -> Config.analysisFlag(convertedXField,m)).collect(Collectors.toList());
+            else this.pivotHeader = sortedHeaderList;
 
-            /* Pivot field 정의 #############################################################*/
-            String xField = Common.nvl(search_xAxis);
-            String xTypeFlag = (!Common.isEmpty(ElasticSearchCommon.XFIELD.get(xField))) ? ElasticSearchCommon.XFIELD.get(xField) : xField;
-            String yField = Common.nvl(search_yAxis);
-
-            /* Date 분류일 경우 #############################################################*/
-            if (ElasticSearchCommon.CTIME.equals(xTypeFlag)) {
-                Map<String, Integer> keys = new HashMap(); // 피벗 헤더 관련
-                    ParsedDateHistogram results = aggregations.get(ElasticSearchCommon.CTIME);
-                    for (MultiBucketsAggregation.Bucket bucket : results.getBuckets()) {
-                        if (Common.isEmpty(bucket.getAggregations().get(yField))){
-                          if(!Common.isEmpty(bucket.getAggregations().get("nested_"+yField))) ElasticSearchCommon.KEY_PREFIX = "nested_";
-                          else continue;
-                        }
-                        Object obj = bucket.getAggregations().get(ElasticSearchCommon.KEY_PREFIX+yField);
-                        Terms argments = null;
-                        if(obj instanceof ParsedNested) {
-                            Aggregations subAggs = ((ParsedNested) obj).getAggregations();
-                            argments = subAggs.get(yField);
-                        } else {argments = bucket.getAggregations().get(yField);}
-
-                         String headerStr = "";
-                         int headerValue = 0;
-
-                        /* #######  시간분류일경우 Header 재 계산 ####### */
-                        String timeStr = bucket.getKeyAsString();
-                        /* Date 단위*/
-                        switch (xField) {
-                            case ElasticSearchCommon.CTIME_HH :         //  시간
-                                headerStr =   Prop.msg(ElasticSearchCommon.TIME_FORMAT.concat(timeStr.substring(8, 10)));
-                                headerValue = Integer.parseInt(timeStr.substring(8, 10));
-                                break;
-                            case ElasticSearchCommon.CTIME_YYYYMM :     // 월
-                                headerStr = Common.formatMonthStat(timeStr.substring(0,6));
-                                headerValue = Integer.parseInt(timeStr.substring(0,6));
-                                break;
-                            case ElasticSearchCommon.CTIME_YYYYMMDD:    // 일
-                                headerStr = Common.formatDate(timeStr.substring(0,8));
-                                headerValue = Integer.parseInt(timeStr.substring(0,8));
-                                break;
-                            default:
-                                headerStr = timeStr;
-                        }
-
-                        /* ########################################### */
-                         keys.put(headerStr,headerValue);    // pivot header 추가  ( xAxis 정보 일,월,시간...)
-                        for (Terms.Bucket arg : argments.getBuckets()) {
-                            Map<String, Object> item = new HashMap();
-
-                            item.put("rowKey", arg.getKey());
-                            item.put(headerStr, arg.getDocCount());
-                            /* PIVOT XAxis */
-                            result.add(item);
-                        }
-                }
-                List<Map.Entry<String,Integer>> keyList = new LinkedList<>(keys.entrySet());
-                keyList.sort(Map.Entry.comparingByValue());
-                List<String> headerList = keyList.stream().map( k -> k.getKey()).collect(Collectors.toList());
-                this.pivotHeader = headerList;
-            }
-            else if(ElasticSearchCommon.USER_USERID.equals(xTypeFlag) && ElasticSearchCommon.PI_ID.equals(yField)  ){
-               // pi_code 패턴 관련
-                Map<String, Object> keys = new HashMap();
-                Terms results = aggregations.get("stat");
-
-                for (Terms.Bucket bucket : results.getBuckets()) {
-                    if (Common.isEmpty(bucket.getAggregations().get("nested_pi"))) continue;
-                    Nested nestedPi = bucket.getAggregations().get("nested_pi");
-                    Terms argments = nestedPi.getAggregations().get("stat2");
-
-                    for (Terms.Bucket arg : argments.getBuckets()) {
-                        Map<String, Object> item = new HashMap();
-                        keys.put(ElasticSearchCommon.PI_PREFIX.concat(Common.nvl(arg.getKey())), 0); // pivot header 추가
-                        item.put("rowKey",Common.nvl(bucket.getKey()));
-
-                        if(!arg.getKey().equals("EC")){
-                            item.put(ElasticSearchCommon.PI_PREFIX.concat(Common.nvl(arg.getKey())), arg.getDocCount());
-                        }
-                        /* PIVOT XAxis */
-                        result.add(item);
-                    }
-                }
-                List<String> keyList = new ArrayList(keys.keySet());
-                Collections.sort(keyList);
-                this.pivotHeader = keyList;
-            }
-
-            else { /* 시간 분류 외 (회사,사업장,부서,직급,서비스) */
-                Map<String, Object> keys = new HashMap(); // 피벗 헤더 관련
-                Terms results = aggregations.get(xTypeFlag);
-                for (Terms.Bucket bucket : results.getBuckets()) {
-                    if (Common.isEmpty(bucket.getAggregations().get(yField))){
-                        if(!Common.isEmpty(bucket.getAggregations().get("nested_"+yField))) ElasticSearchCommon.KEY_PREFIX = "nested_";
-                        else continue;
-                    }
-                    Object obj = bucket.getAggregations().get(ElasticSearchCommon.KEY_PREFIX+yField);
-                    Terms argments = null;
-                    if(obj instanceof ParsedNested) {
-                        Aggregations subAggs = ((ParsedNested) obj).getAggregations();
-                        argments = subAggs.get(yField);
-                    } else {argments = bucket.getAggregations().get(yField);}
-
-                    String keyName = Config.analysisFlag(xTypeFlag,(String)bucket.getKey());
-
-                    keys.put(keyName, 0); // pivot header 추가
-                    for (Terms.Bucket arg : argments.getBuckets()) {
-                        Map<String, Object> item = new HashMap();
-//                        if(Common.isOrEquals(bucket, "user_str", "sender_str", "userid")){
-//                            item.put("rowName", Config.getUserName(Common.nvl(arg.getKey())));
-//                        }
-                        item.put("rowKey", arg.getKey());
-                        item.put(Common.nvl(bucket.getKey()), arg.getDocCount());
-                        item.put(keyName, arg.getDocCount());
-                        /* PIVOT XAxis */
-                        result.add(item);
-                    }
-                }
-                List<String> keyList = new ArrayList(keys.keySet());
-                Collections.sort(keyList);
-                this.pivotHeader = keyList;
-            }
-
-
-            /* pivotData 재 계산 #############################################################*/
-            boolean serviceCode = (yField.equals(ElasticSearchCommon.SERVICE_SVC)) ? true : false;
-            List<Map<String, Object>> pivotDataList = new ArrayList<>();  // 최종 pivot 데이터
-            int idx = 0;
-            for (Map<String, Object> tempPivot : result) {
-                int rowTotal = 0;
-                Map<String, Object> tempMap = new HashMap<>();
-                for (String header : this.pivotHeader) {
-                    /* header 세팅*/
-                    if (!Common.isEmpty(tempPivot.get(header))) {
-                        Long Value = Common.nvn(tempPivot.get(header));
-                        tempMap.put(header, Value);
-                    } else {
-                        tempMap.put(header, 0L);
-                    }
-                }
-                /* 중복 rowKey 체크  #############################################################*/
-                Map<String, Object> oldMap = null;
-                if ((oldMap = checkRowKey(pivotDataList, Common.nvl(tempPivot.get("rowKey")))) != null) {
-                    int target = Common.nvz(oldMap.get("idx"));
-                    tempMap.putAll(summaryMap(oldMap, tempMap));
-                    rowTotal = tempMap.values().stream().collect(Collectors.summingInt(v1 -> Common.nvz(v1)));  // 합계 토탈
-                    tempMap.put("total", rowTotal);
-                    /* total 계산 */
-                    pivotDataList.get(target).putAll(tempMap);
-                    continue;
-                }
-                /* 중복 아닐시  #############################################################*/
-
-                tempMap.put("rowKey", Common.nvl(tempPivot.get("rowKey")));
-                String rowName = "";
-                if(serviceCode) rowName = Config.getServiceName(Common.nvl(tempPivot.get("rowKey")));
-                else rowName = Config.analysisFlag(yField,Common.nvl(tempPivot.get("rowKey")));
-
-                tempMap.put("rowName", rowName);
-                tempMap.put("xAxisType", Common.nvl(tempPivot.get("xAxisType")));
-                rowTotal = tempMap.values().stream().collect(Collectors.summingInt(v1 -> Common.nvz(v1))); // 합계 토탈
-                tempMap.put("total", rowTotal);
-                pivotDataList.add(tempMap);
-                idx++;
-            }
-
-            List dataList = pivotDataList.stream().sorted(Comparator.comparingInt(m -> Integer.parseInt(m.get("total").toString()))).collect(Collectors.toList());
-            Collections.reverse(dataList);
             this.pivotData = dataList;
-        /*  ###################################################################################*/
-
 
     }
 
@@ -398,6 +223,117 @@ public class EmassIntegrated {
         this.total = total;
     }
 
+    private void pivotCalculator(SearchResponse searchResponse,ElasticSearchParam searchParam){
+        /* 통계 검색인 경우 pivot 계산 */
+        Aggregations aggregations = searchResponse.getAggregations();
+        if(null == aggregations || aggregations.getAsMap().size() == 0) return;
 
+        this.search_xAxis = Common.nvl(searchParam.getXAxis());
+        this.search_yAxis = Common.nvl(searchParam.getYAxis());
+        this.search_startDate = Common.nvl(searchParam.getStartDate());
+        this.search_endDate = Common.nvl(searchParam.getEndDate());
+        this.convertedXField = Config.getElsConvertField(search_xAxis);
+        this.convertedYField = Config.getElsConvertField(search_yAxis);
+
+        this.setPivot(aggregations);
+
+    }
+
+
+    private void dateCalculator(Terms results){
+        /* 시간 분류  */
+        List<Terms.Bucket> bucketList = (List<Terms.Bucket>) results.getBuckets();
+        for (Terms.Bucket bucket : bucketList) {
+            Aggregations aggs = bucket.getAggregations();
+            List<Aggregation> aggsList = aggs.asList();
+            ParsedDateHistogram bucketArgments = (ParsedDateHistogram) aggsList.get(0); //subAggregations를 하나만 주고있어서 인덱스 0만 가져옴
+
+            /* data 관련 */
+            Map<String, Object> item = new HashMap();
+            for(Histogram.Bucket args : bucketArgments.getBuckets()){
+                String headerKey = convertTimeStr(args.getKeyAsString(),search_xAxis);
+                String headerStr = Prop.msg(ElasticSearchCommon.TIME_FORMAT.concat(headerKey));
+                item.put("rowKey", bucket.getKeyAsString());
+                item.put(headerStr, args.getDocCount());
+                headerKeys.put(headerStr,!Common.isEmpty(headerKey) ? Integer.parseInt(headerKey) : 0 );
+            }
+            item.put("total",bucket.getDocCount());
+            pivotResult.add(item);
+        }
+        List<Map.Entry<String,Integer>> keyList = new LinkedList<>(headerKeys.entrySet());
+        keyList.sort(Map.Entry.comparingByValue());
+        sortedHeaderList = keyList.stream().map( k -> k.getKey()).collect(Collectors.toList());
+
+    }
+
+    private void etcCalculator(Terms results){
+        /* 시간 분류 외 (회사,사업장,부서,직급,서비스) */
+        List<Terms.Bucket> bucketList = (List<Terms.Bucket>) results.getBuckets();
+
+        for (Terms.Bucket bucket : bucketList) {
+            Aggregations aggs = bucket.getAggregations();
+            List<Aggregation> aggsList = aggs.asList();
+            ParsedStringTerms bucketArgments = (ParsedStringTerms) aggsList.get(0);
+            Map<String, Object> item = new HashMap();
+            for (Terms.Bucket arg : bucketArgments.getBuckets()) {
+                headerKeys.put(arg.getKeyAsString(), 0); // pivot header 추가
+                item.put("rowKey", bucket.getKeyAsString());
+                item.put(arg.getKeyAsString(), arg.getDocCount());
+            }
+            item.put("total",bucket.getDocCount());
+            pivotResult.add(item);
+
+        }
+        List<Map.Entry<String,Integer>> keyList = new LinkedList<>(headerKeys.entrySet());
+        sortedHeaderList = keyList.stream().map( k -> k.getKey()).collect(Collectors.toList());
+
+    }
+
+    public List reCalculator(){
+        List<Map<String, Object>> pivotDataList = new ArrayList<>();  // 최종 pivot 데이터
+        int idx = 0;
+        for (Map<String, Object> tempPivot : pivotResult) {
+            Map<String, Object> tempMap = new HashMap<>();
+            for (String header : sortedHeaderList) {
+                /* header 세팅*/
+                String headerKey = Config.analysisFlag(convertedXField,header);
+                if (!Common.isEmpty(tempPivot.get(header))) {
+                    Long Value = Common.nvn(tempPivot.get(header));
+                    tempMap.put(headerKey, Value);
+                } else {
+                    tempMap.put(headerKey, 0L);
+                }
+            }
+            /* 중복 rowKey 체크  #############################################################*/
+            Map<String, Object> oldMap = null;
+            if ((oldMap = checkRowKey(pivotDataList, Common.nvl(tempPivot.get("rowKey")))) != null) {
+                int target = Common.nvz(oldMap.get("idx"));
+                tempMap.putAll(summaryMap(oldMap, tempMap));
+                /* total 계산 */
+                pivotDataList.get(target).putAll(tempMap);
+                continue;
+            }
+            /* 중복 아닐시  #############################################################*/
+            tempMap.put("rowKey", Common.nvl(tempPivot.get("rowKey")));  // rowKey
+            tempMap.put("rowName", Config.analysisFlag(convertedYField,Common.nvl(tempPivot.get("rowKey")))); // rowName
+            tempMap.put("total", Common.nvl(tempPivot.get("total")));
+            pivotDataList.add(tempMap);
+            idx++;
+        }
+
+        List resultList = pivotDataList.stream().sorted(Comparator.comparingInt(m -> Integer.parseInt(m.get("total").toString()))).collect(Collectors.toList());
+        Collections.reverse(resultList);
+        return resultList;
+    }
+
+
+
+    public  String convertTimeStr(String str,String flag){
+        if(Common.isEmpty(str)) return str;
+        if (ElasticSearchCommon.CTIME_HH.equals(flag))  return  str.substring(8, 10);
+        else if(ElasticSearchCommon.CTIME_YYYYMM.equals(flag))  return  str.substring(8, 10);
+        else if(ElasticSearchCommon.CTIME_YYYYMMDD.equals(flag))  return  str.substring(8, 10);
+        else return str;
+    }
 
 }

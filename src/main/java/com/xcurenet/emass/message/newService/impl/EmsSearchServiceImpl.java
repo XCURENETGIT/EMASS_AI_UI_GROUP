@@ -134,6 +134,7 @@ public class EmsSearchServiceImpl implements EmsSearchService {
 			emassIntegrated.setSearchTime(serverTime);
 			emassIntegrated.setExcuteQuery(elsSearchQueryUtils.getQuery());
 
+
 		}catch (Exception e){
 			e.printStackTrace();
 		}

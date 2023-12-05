@@ -148,6 +148,8 @@ public class Config {
 
 	public static String DBMS_NAME = "mysql";
 
+	public static Map<String,String> elsFields = new HashMap<>();
+
 	public static ServiceGroupVO getServiceGroup(final String groupCd) {
 		for (ServiceGroupVO service : serviceGroups) {
 			if (Common.isEquals(service.getGroupCd(), groupCd)) return service;
@@ -243,6 +245,17 @@ public class Config {
 		}
 	}
 
+	public static String getElsConvertField(String field) {
+		  String fieldStr = field;
+			for(Map.Entry<String, String> map : elsFields.entrySet()){
+				if(map.getKey().indexOf(fieldStr) > -1) {
+					fieldStr = map.getValue();
+					break;
+				}
+			}
+			return fieldStr;
+	}
+
 	@SuppressWarnings("static-access")
 	@PostConstruct
 	@Order(1)
@@ -296,6 +309,8 @@ public class Config {
 		reloadJikgubInfo();
 
 		reloadServiceInfo();
+
+		loadElsFieldMap(); // els 필드 컨버터 jsp -> java
 
 
 		Locale lo = Locale.forLanguageTag(Config.getString("default.lang", "ko"));
@@ -574,14 +589,13 @@ public class Config {
 		ipRange = ipRangeService.getIpRangeAllList();
 	}
 
-	public static String analysisFlag(final String xAxis,final String code) {
-		if(xAxis != null && xAxis.contains("userId")||xAxis.equals("pi.id") ) {
-			return getUserName(code);}
-		else if(ElasticSearchCommon.USER_COCD.equals(xAxis)) return getCompName(code);
-		else if(ElasticSearchCommon.USER_BUSICD.equals(xAxis)) return getBusiName(code);
-		else if(ElasticSearchCommon.USER_DEPTCD.equals(xAxis)) return getDeptName(code);
-		else if(ElasticSearchCommon.USER_JIKGUBCD.equals(xAxis)) return getJikgubName(code);
-		else if(ElasticSearchCommon.SERVICE_SVC.equals(xAxis)) return getServiceName(code);
+	public static String analysisFlag(final String field,final String code) {
+		if(ElasticSearchCommon.USER_USERID.equals(field)) return getUserName(code);
+		else if(ElasticSearchCommon.USER_COCD.equals(field)) return getCompName(code);
+		else if(ElasticSearchCommon.USER_BUSICD.equals(field)) return getBusiName(code);
+		else if(ElasticSearchCommon.USER_DEPTCD.equals(field)) return getDeptName(code);
+		else if(ElasticSearchCommon.USER_JIKGUBCD.equals(field)) return getJikgubName(code);
+		else if(ElasticSearchCommon.SERVICE_SVC.equals(field)) return getServiceName(code);
 		else return code;
 	}
 
@@ -615,5 +629,16 @@ public class Config {
 		return result;
 	}
 
+
+	public static void loadElsFieldMap(){
+		elsFields.put("ctime_hh", "ctime");
+		elsFields.put("ctime_yyyymmdd", "ctime");
+		elsFields.put("ctime_yyyymm", "ctime");
+		elsFields.put("businm", ElasticSearchCommon.USER_BUSICD);
+		elsFields.put("conm", ElasticSearchCommon.USER_COCD);
+		elsFields.put("deptnm",ElasticSearchCommon.USER_DEPTCD);
+		elsFields.put("direction_svc", ElasticSearchCommon.DIRECTIONSVC);
+		elsFields.put("jikgubnm,jikgub", ElasticSearchCommon.USER_JIKGUBCD);
+	}
 
 }

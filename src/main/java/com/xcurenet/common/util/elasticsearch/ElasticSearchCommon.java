@@ -17,7 +17,7 @@ import java.util.Map;
 public class ElasticSearchCommon {
 
     /* EMASS INDEX */
-    public static final String EDC_MESSAGE_INDEX = "ems_edc_message*";   //ems_edc_message
+    public static final String EDC_MESSAGE_INDEX = "ems_edc_message_202312";   //ems_edc_message
     public static final String EDC_MESSAGE_SEARCH_HIST_INDEX = "ems_search_history*";
 
     /* ELASTIC SEARCH DOCUMENT UPDATE BY QUERY 관련 */
@@ -327,6 +327,8 @@ public class ElasticSearchCommon {
 
 
     // Array Fields
+    public static String NESTED = "nested_";
+
     public static String[] ARRAY_FIELD = new String[]{
             "kwdInfo.kwdsAttach",
             "kwdInfo.kwdsAttachNm",
@@ -398,17 +400,10 @@ public class ElasticSearchCommon {
             "sender","recv","checked"
     };
 
-    /* 화면에서의 (검색 영역) 값 엘라스틱 서치 필드로 치환 */
-    public static Map<String,String> XFIELD = new HashMap<>(){{
-        put("ctime_hh", "ctime");
-        put("ctime_yyyymmdd", "ctime");
-        put("ctime_yyyymm", "ctime");
-        put("businm", ElasticSearchCommon.USER_BUSICD);
-        put("conm", ElasticSearchCommon.USER_COCD);
-        put("deptnm",ElasticSearchCommon.USER_DEPTCD);
-        put("direction_svc", ElasticSearchCommon.DIRECTIONSVC);
-        put("jikgubnm", ElasticSearchCommon.USER_JIKGUBCD);
-    }};
+    /* 화면에서의 (검색 영역) 값 엘라스틱 서치 필드로 치환  */
+
+    public static Map<String,String> FIELDS = new HashMap<>();
+
 
 
     /* String -> LocalDateTime */
@@ -454,6 +449,11 @@ public class ElasticSearchCommon {
         }
         return str;
     }
+
+
+
+
+
 
 
 
