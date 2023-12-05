@@ -4,7 +4,7 @@ package com.xcurenet.emass.message.vo.emass.mongo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.xcurenet.emass.message.vo.emass.mongo.fields.*;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import javax.annotation.Nullable;
 import java.util.Date;
@@ -20,82 +20,82 @@ import java.util.List;
  */
 public class EmassMessage {
     
-    @Value("_id")
+    @Field("_id")
     private String	_id; //	메시지ID
-    @Value("ltime")
+    @Field("ltime")
     private Date ltime; //	로깅타임
-    @Value("ctime")
+    @Field("ctime")
     private Date	ctime; //	캡쳐타임
-    @Value("subject")
+    @Field("subject")
     private String	subject; //	제목
-    @Value("attached")
+    @Field("attached")
     private String	attached; //	첨부 존재 유무(Y, N)
-    @Value("attachExistCnt")
+    @Field("attachExistCnt")
     private int	attachExistCnt; //	첨부 존재 개수
-    @Value("attachCnt")
+    @Field("attachCnt")
     private int	attachCnt; //	첨부파일 개수
-    @Value("//	사이즈")
+    @Field("//	사이즈")
     private int	size; //	사이즈
-    @Value("allOfUs")
+    @Field("allOfUs")
     private String	allOfUs; //	수신자 소속여부
-    @Value("directionSvc")
+    @Field("directionSvc")
     private String	directionSvc; //	Inbound, Outbound (I/O)
-    @Value("direction")
+    @Field("direction")
     private String	direction; //	Inbound, Outbound (I/O)
-    @Value("xrootMtr")
+    @Field("xrootMtr")
     private String	xrootMtr; //
-    @Value("xmsgKey")
+    @Field("xmsgKey")
     private String	xmsgKey; //
-    @Value("xparentMtr")
+    @Field("xparentMtr")
     private String	xparentMtr; //
-    @Value("password")
+    @Field("password")
     private String	password; //	비밀번호
-    @Value("siteAttr")
+    @Field("siteAttr")
     private String	siteAttr; //
-    @Value("siteCode")
+    @Field("siteCode")
     private String	siteCode; //
-    @Value("epMsgType")
+    @Field("epMsgType")
     private String	epMsgType; //
-    @Value("epHeader")
+    @Field("epHeader")
     private String	epHeader; //
-    @Value("usrId")
+    @Field("usrId")
     private String	usrId; //
-    @Value("usrIp")
+    @Field("usrIp")
     private String	usrIp; //
-    @Value("opinion")
+    @Field("opinion")
     private String	opinion; //	상신의견(EP)
-    @Value("devWriter")
+    @Field("devWriter")
     private String	devWriter; //	Writer 장비 호스트명
-    @Value("devDecoder")
+    @Field("devDecoder")
     private String	devDecoder; //	디코더 장비 호스트명
-    @Value("fileName")
+    @Field("fileName")
     private String	fileName; //	디코더 처리 파일명
-    @Value("svc")
+    @Field("svc")
     private String	svc; //	서비스타입
 
-    @Value("body")
+    @Field("body")
     private BodyVo_Mgo body;
-     @Value("network")
+     @Field("network")
     private NetworkVo_Mgo  network;
-     @Value("attach")
+     @Field("attach")
     private List<AttachVo_Mgo>  attach;
-     @Value("kwdInfo")
+     @Field("kwdInfo")
     private KwdVo_Mgo kwdInfo;
-     @Value("http")
+     @Field("http")
     private HttpVo_Mgo  http;
-     @Value("pi")
+     @Field("pi")
     private List<PiVo_Mgo>  pi;
-     @Value("user")
+     @Field("user")
     private UserVo_Mgo  user;
-     @Value("day")
+     @Field("day")
     private DayVo_Mgo  day;
-     @Value("ocr")
+     @Field("ocr")
     private OcrVo_Mgo ocr;
-     @Value("ml")
+     @Field("ml")
     private MlVo_Mgo   ml;
-     @Value("sender")
+     @Field("sender")
     private ComProperties_Mgo sender;
-     @Value("recv")
+     @Field("recv")
     private RecvVo_Mgo recv;
 
     private boolean consentFlag;
