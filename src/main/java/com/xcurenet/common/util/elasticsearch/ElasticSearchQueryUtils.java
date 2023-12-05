@@ -2154,7 +2154,7 @@ public class ElasticSearchQueryUtils {
 		//서비스 타입 설정
 		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("serviceType"))) {
 			String[] serviceTypes = Common.nvl(elasticSearchParam.getSearchParameters().get("serviceType")).split(",");
-			addQueryGroup(ElasticSearchCommon.AND_QUERY, ElasticSearchCommon.SERVICE_SVC12, makeParentheses(serviceTypes));
+			addQueryGroup(ElasticSearchCommon.AND_QUERY, ElasticSearchCommon.SERVICE_SVC12, makeParentheses(makeParentheses(serviceTypes)));
 		}
 
 
@@ -2383,12 +2383,15 @@ public class ElasticSearchQueryUtils {
 		elasticSearchParam = new ElasticSearchParam();
 
 		elasticSearchParam.setSearchParameters(searchParam);
+		System.out.println(elasticSearchParam);
 
 		setSort("");
 		List<SortBuilder<?>> sortBuilderList = getSortInfo();
 		log.debug("[SORT] {}", sortBuilderList.stream().collect(Collectors.toList()));
 
+		int offset = 0;
 		int limit = 0;
+		offset = (int) Math.round(Double.valueOf(Common.nvl(elasticSearchParam.getSearchParameters().get("offset"))));
 		limit = (int) Math.round(Double.valueOf(Common.nvl(elasticSearchParam.getSearchParameters().get("limit"))));
 
 		//xRootMtr
@@ -2402,6 +2405,7 @@ public class ElasticSearchQueryUtils {
 
 		log.info("엘라스틱 서치 MessengerTotalQuery_String (테스트) ===> " + getQuery());
 		this.elasticSearchParam.setIndices(new String[]{ElasticSearchCommon.EDC_MESSAGE_INDEX});
+		this.elasticSearchParam.setFrom(offset);
 		this.elasticSearchParam.setTo(limit);
 		this.elasticSearchParam.setSorts(sortBuilderList);
 		this.elasticSearchParam.setIncludeFields(ElasticSearchCommon.SEARCH_FIELD);

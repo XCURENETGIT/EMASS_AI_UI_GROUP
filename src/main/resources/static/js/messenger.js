@@ -257,7 +257,8 @@ function getMessengerMessageTotal(xRootmtr, srcip, startDt, endDt, usr_id, msgid
 		startDt : startDt,
 		endDt : endDt,
 		usr_id : usr_id, //기준이 srcip에서 usr_id로 변경되면서 마지막 데이터 기준 변경
-		limit : detailLimit
+		limit : detailLimit,
+		offset : 0
 	};
 
 
@@ -296,8 +297,10 @@ function getMessengerMessage(xRootmtr, srcip, usr_id, msgid) {
 		endDt  : endDt,
 		usr_id : usr_id,
 		msgid : nvl(msgid),
-		limit : detailLimit
+		limit : detailLimit,
+		offset : 0
 	}
+	console.log(data.offset);
 	ui.get({
 		url : 'getMessengerMessage.xcn',
 		searchParam : JSON.stringify(data),
