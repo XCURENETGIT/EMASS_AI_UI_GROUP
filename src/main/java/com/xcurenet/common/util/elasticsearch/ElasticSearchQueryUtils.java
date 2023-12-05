@@ -1569,13 +1569,13 @@ public class ElasticSearchQueryUtils {
 
 			/*################ 권한 관련 ##################################################################*/
 			// set 권한 리스트
-			setAuthoritysFilter(adminId);
-			BoolQueryBuilder authComQuery = getCompanyAuthFilterQuery();
-			BoolQueryBuilder ceoQuery = getCeoFilterQuery();
-
-			// 권한 filter 추가
-			if (null != authComQuery) complateQuery.must(authComQuery);
-			if (null != ceoQuery) complateQuery.must(ceoQuery);
+//			setAuthoritysFilter(adminId);
+//			BoolQueryBuilder authComQuery = getCompanyAuthFilterQuery();
+//			BoolQueryBuilder ceoQuery = getCeoFilterQuery();
+//
+//			// 권한 filter 추가
+//			if (null != authComQuery) complateQuery.must(authComQuery);
+//			if (null != ceoQuery) complateQuery.must(ceoQuery);
 			/*##########################################################################################*/
 
 
@@ -1796,17 +1796,17 @@ public class ElasticSearchQueryUtils {
 		/* 권한 관련*/
 
 
-		/*################ 권한 관련 ##################################################################*/
-		// set 권한 리스트
-		setAuthoritysFilter(adminId);
-		BoolQueryBuilder authComQuery = getCompanyAuthFilterQuery();
-		BoolQueryBuilder ceoQuery = getCeoFilterQuery();
-
-		// 권한 filter 추가
-		if(null != ceoQuery) complateQuery.must(authComQuery);
-		if(null != ceoQuery) complateQuery.must(ceoQuery);
-
-		/*##########################################################################################*/
+//		/*################ 권한 관련 ##################################################################*/
+//		// set 권한 리스트
+//		setAuthoritysFilter(adminId);
+//		BoolQueryBuilder authComQuery = getCompanyAuthFilterQuery();
+//		BoolQueryBuilder ceoQuery = getCeoFilterQuery();
+//
+//		// 권한 filter 추가
+//		if(null != ceoQuery) complateQuery.must(authComQuery);
+//		if(null != ceoQuery) complateQuery.must(ceoQuery);
+//
+//		/*##########################################################################################*/
 
 		complateQuery.must(secondQuery);
 		searchSourceBuilder = new SearchSourceBuilder()
@@ -2087,20 +2087,20 @@ public class ElasticSearchQueryUtils {
 		setMessengerParamReady(searchParam);
 
 		RangeQueryBuilder rangeQuery = new RangeQueryBuilder(ElasticSearchCommon.CTIME).gte(elasticSearchParam.getStartDate()).lte(elasticSearchParam.getEndDate());
-		QueryStringQueryBuilder secondQuery = QueryBuilders.queryStringQuery(ElasticSearchCommon.AND_QUERY + query);
+		QueryStringQueryBuilder secondQuery = QueryBuilders.queryStringQuery(ElasticSearchCommon.AND_QUERY+query);
 
 		BoolQueryBuilder complateQuery = new BoolQueryBuilder();
 		complateQuery.filter(rangeQuery);
 		complateQuery.must(secondQuery);
 		/*################ 권한 관련 ##################################################################*/
 		// set 권한 리스트
-		setAuthoritysFilter(adminId);
-		BoolQueryBuilder authComQuery = getCompanyAuthFilterQuery();
-		BoolQueryBuilder ceoQuery = getCeoFilterQuery();
-
-		// 권한 filter 추가
-		if (null != ceoQuery) complateQuery.must(authComQuery);
-		if (null != ceoQuery) complateQuery.must(ceoQuery);
+//		setAuthoritysFilter(adminId);
+//		BoolQueryBuilder authComQuery = getCompanyAuthFilterQuery();
+//		BoolQueryBuilder ceoQuery = getCeoFilterQuery();
+//
+//		// 권한 filter 추가
+//		if (null != ceoQuery) complateQuery.must(authComQuery);
+//		if (null != ceoQuery) complateQuery.must(ceoQuery);
 
 		/*##########################################################################################*/
 
@@ -2127,6 +2127,7 @@ public class ElasticSearchQueryUtils {
 			tempList.get(0).put("searchField", searchParam.get("searchField"));
 			elasticSearchParam.setSearchParameters(tempList.get(0));
 		}
+
 
 		/* sort 관련 */
 		setSort("");
@@ -2161,7 +2162,6 @@ public class ElasticSearchQueryUtils {
 			String[] serviceTypes = Common.nvl(elasticSearchParam.getSearchParameters().get("serviceType")).split(",");
 			addQueryGroup(ElasticSearchCommon.AND_QUERY, ElasticSearchCommon.SERVICE_SVC12, makeParentheses(makeParentheses(serviceTypes)));
 		}
-
 
 		//사업장 검색
 		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("busi"))) {
@@ -2363,13 +2363,13 @@ public class ElasticSearchQueryUtils {
 
 		/*################ 권한 관련 ##################################################################*/
 		// set 권한 리스트
-		setAuthoritysFilter(adminId);
-		BoolQueryBuilder authComQuery = getCompanyAuthFilterQuery();
-		BoolQueryBuilder ceoQuery = getCeoFilterQuery();
-
-		// 권한 filter 추가
-		if (null != authComQuery) complateQuery.must(authComQuery);
-		if (null != ceoQuery) complateQuery.must(ceoQuery);
+//		setAuthoritysFilter(adminId);
+//		BoolQueryBuilder authComQuery = getCompanyAuthFilterQuery();
+//		BoolQueryBuilder ceoQuery = getCeoFilterQuery();
+//
+//		// 권한 filter 추가
+//		if (null != authComQuery) complateQuery.must(authComQuery);
+//		if (null != ceoQuery) complateQuery.must(ceoQuery);
 		/*##########################################################################################*/
 
 

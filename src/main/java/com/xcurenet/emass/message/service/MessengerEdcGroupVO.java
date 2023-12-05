@@ -257,8 +257,7 @@ public class MessengerEdcGroupVO {
 	private static String getSender(Emass emass) {
 		//if (Common.isNotEmpty(edc.getName())) return edc.getName();
 		if (Common.isNotEmpty(emass.getSender())) return emass.getSender().getName();
-		else if(Common.isNotEmpty(emass.getNetwork())) return emass.getNetwork().getSrcIp();
-		else return null;
+		else return emass.getNetwork().getSrcIp();
 	}
 
 	private static String reCtime(String ctime) {

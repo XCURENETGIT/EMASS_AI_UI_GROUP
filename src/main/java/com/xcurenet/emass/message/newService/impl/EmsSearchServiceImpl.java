@@ -172,6 +172,7 @@ public class EmsSearchServiceImpl implements EmsSearchService {
 			flag = true;
 		}
 
+
 		return new MessengerEdcGroupVO(flag,searchResponse,adminId,false,false);
 	}
 
