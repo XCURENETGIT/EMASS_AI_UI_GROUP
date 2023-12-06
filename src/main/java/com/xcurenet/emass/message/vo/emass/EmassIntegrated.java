@@ -29,8 +29,8 @@ public class EmassIntegrated {
 
     private long numFound;
     private List<?> emass;
-    private List<String> pivotHeader;
-    private List<Map<String, Object>> pivotData;
+
+
 
     /* ---- 아직 엘라스틱 서치용으로 분석&개발 안됨 ---*/
     private List<String> facetHeader;
@@ -53,8 +53,10 @@ public class EmassIntegrated {
     private String search_endDate;
 
     private String rowkey;
+    private Map<String,String> pivotHeader = new HashMap<>();
+    private List<Map<String, Object>> pivotData;
     private  Map<String, Integer> headerKeys = new HashMap<>();
-    private  List<String> sortedHeaderList = new ArrayList<>();
+    private  List<String> sortedHeaderList = new ArrayList();
     List<Map<String, Object>> pivotResult = new ArrayList();
 
 
@@ -95,8 +97,13 @@ public class EmassIntegrated {
             List dataList = reCalculator(); // 재 계산
 
             /* 헤더 관련 */
-            if(sortedHeaderList.size() != 0)  this.pivotHeader = sortedHeaderList.stream().map(m -> Config.analysisFlag(convertedXField,m)).collect(Collectors.toList());
-            else this.pivotHeader = sortedHeaderList;
+            if(sortedHeaderList.size() != 0) {
+                for (String header : sortedHeaderList) {
+                    pivotHeader.put(header,Config.analysisFlag(convertedXField,header));
+                }
+            }else {
+                this.pivotHeader = null;
+            }
 
             this.pivotData = dataList;
 
@@ -234,6 +241,7 @@ public class EmassIntegrated {
         this.search_endDate = Common.nvl(searchParam.getEndDate());
         this.convertedXField = Config.getElsConvertField(search_xAxis);
         this.convertedYField = Config.getElsConvertField(search_yAxis);
+        this.rowkey = Common.nvl(searchParam.getSearchParameters().get("rowKey"));
 
         this.setPivot(aggregations);
 
@@ -251,8 +259,8 @@ public class EmassIntegrated {
             /* data 관련 */
             Map<String, Object> item = new HashMap();
             for(Histogram.Bucket args : bucketArgments.getBuckets()){
-                String headerKey = convertTimeStr(args.getKeyAsString(),search_xAxis);
-                String headerStr = Prop.msg(ElasticSearchCommon.TIME_FORMAT.concat(headerKey));
+                String headerKey = convertTimeStr(args.getKeyAsString(),search_xAxis,true);
+                String headerStr = convertTimeStr(args.getKeyAsString(),search_xAxis,false);
                 item.put("rowKey", bucket.getKeyAsString());
                 item.put(headerStr, args.getDocCount());
                 headerKeys.put(headerStr,!Common.isEmpty(headerKey) ? Integer.parseInt(headerKey) : 0 );
@@ -296,7 +304,7 @@ public class EmassIntegrated {
             Map<String, Object> tempMap = new HashMap<>();
             for (String header : sortedHeaderList) {
                 /* header 세팅*/
-                String headerKey = Config.analysisFlag(convertedXField,header);
+                String headerKey = header;
                 if (!Common.isEmpty(tempPivot.get(header))) {
                     Long Value = Common.nvn(tempPivot.get(header));
                     tempMap.put(headerKey, Value);
@@ -328,12 +336,15 @@ public class EmassIntegrated {
 
 
 
-    public  String convertTimeStr(String str,String flag){
+    public  String convertTimeStr(String str,String flag,boolean key){
         if(Common.isEmpty(str)) return str;
-        if (ElasticSearchCommon.CTIME_HH.equals(flag))  return  str.substring(8, 10);
-        else if(ElasticSearchCommon.CTIME_YYYYMM.equals(flag))  return  str.substring(8, 10);
-        else if(ElasticSearchCommon.CTIME_YYYYMMDD.equals(flag))  return  str.substring(8, 10);
+        if (ElasticSearchCommon.CTIME_HH.equals(flag))  return  (key) ? str.substring(8, 10) : Prop.msg(ElasticSearchCommon.TIME_FORMAT.concat(str.substring(8, 10)));
+        else if(ElasticSearchCommon.CTIME_YYYYMM.equals(flag))  return  (key) ? str.substring(0, 6) : Common.formatMonthStat(str.substring(0, 6));
+        else if(ElasticSearchCommon.CTIME_YYYYMMDD.equals(flag))  return (key) ? str.substring(0, 8) : Common.formatDate(str.substring(0, 8));
         else return str;
     }
+
+
+
 
 }

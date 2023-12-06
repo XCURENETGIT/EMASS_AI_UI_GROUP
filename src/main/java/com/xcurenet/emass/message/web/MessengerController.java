@@ -711,7 +711,7 @@ public class MessengerController {
 
 		for(Map<String, Object> datas : resultData) {
 			allTotal = allTotal + Common.nvz(datas.get("total"));
-			for(String header : edcMessage.getPivotHeader()) {
+			for(String header : edcMessage.getPivotHeader().keySet()) {
 				totalItem.put(Common.nvl(header), Common.nvz(totalItem.get(header)) + Common.nvz(datas.get(header)));
 			}
 		}

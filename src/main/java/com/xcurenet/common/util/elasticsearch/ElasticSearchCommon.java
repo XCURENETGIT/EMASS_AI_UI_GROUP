@@ -316,6 +316,9 @@ public class ElasticSearchCommon {
     public static final String CTIME_HH = "ctime_hh"; //시간별
     public static final String CTIME_YYYYMM = "ctime_yyyymm"; //월별
     public static final String CTIME_YYYYMMDD = "ctime_yyyymmdd"; //일자별
+    public static final String CTIME_ARRAY = "ctime_yyyymmdd,ctime_yyyymm,ctime_hh";
+
+
     public static final String BUSINM = "businm"; //사업장별
     public static final String CONM = "conm"; //회사별
     public static final String DEPTNM = "deptnm"; //부서별

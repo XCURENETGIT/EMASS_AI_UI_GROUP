@@ -56,7 +56,8 @@ public class EmsStatController {
         /* 계산 (조건문) */
         EmassIntegrated emassIntegrated = setAlltotal(emsSearchService.getEmassMessage(searchParam, Common.getAdminId(request)));
 
-        return new XcnResponseVO(XcnRspCode.OK, emassIntegrated, emassIntegrated.getTotal());
+
+        return new XcnResponseVO(XcnRspCode.OK, emassIntegrated, (null == emassIntegrated.getPivotData()) ? 0L : emassIntegrated.getTotal());
     }
 
 
@@ -244,7 +245,7 @@ public class EmsStatController {
 
         for(Map<String, Object> datas : resultData) {
             allTotal = allTotal + Common.nvz(datas.get("total"));
-            for(String header : edcMessage.getPivotHeader()) {
+            for(String header : edcMessage.getPivotHeader().keySet()) {
                 totalItem.put(Common.nvl(header), Common.nvz(totalItem.get(header)) + Common.nvz(datas.get(header)));
             }
         }
