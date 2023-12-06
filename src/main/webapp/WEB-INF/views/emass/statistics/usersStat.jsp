@@ -765,7 +765,8 @@ function fileInfoViewer( row ){
             url: 'getStatList.xcn',
             searchParam: JSON.stringify(searchData),
             success: function (data, total) {
-				console.log(data);
+				if(null == data.pivotData) return;
+
 
                 /* 통계영역 검색 조건 저장 */
                 if (data.search_xAxis != null) $('#searched_xAxis').val(data.search_xAxis);
@@ -786,20 +787,24 @@ function fileInfoViewer( row ){
                     if (value != undefined) return value.comma();
                     else return '';
                 });
-                for (var i = 0; i < data.pivotHeader.length; i++) {
-                    var Header = data.pivotHeader[i];
-                    var HeaderNm = "";
-                    if (xAxis == "ctime_yyyymmdd") HeaderNm = Header;
-                    else if (xAxis == "ctime_yyyymm") HeaderNm = Header.substr(0, 4) + "-" + Header.substr(4, 2);
-                    else if (xAxis == "direction_svc") {
-                        if (Header == "I") HeaderNm = '<s:message code="condition.receive"/>';
-                        else HeaderNm = '<s:message code="condition.send"/>';
-                    } else if (xAxis == "ctime_hh") HeaderNm = Header;
-                    else HeaderNm = Header;
-                    grid1.colAdd(Header, HeaderNm, 90, "right", false, 'link', function (row, cell, value, columnDef, dataContext) {
+
+				var idx = 0;
+                for (let key in data.pivotHeader) {
+                    var HeaderKey = key;
+                    var HeaderNm = data.pivotHeader[key];
+                    // if (xAxis == "ctime_yyyymmdd") HeaderNm = HeaderKey;
+                    // else if (xAxis == "ctime_yyyymm") HeaderNm = HeaderKey;
+                    <%--else if (xAxis == "direction_svc") {--%>
+                    <%--    if (Header == "I") HeaderNm = '<s:message code="condition.receive"/>';--%>
+                    <%--    else HeaderNm = '<s:message code="condition.send"/>';--%>
+                    <%--} else if (xAxis == "ctime_hh") HeaderNm = Header;--%>
+                    <%--else HeaderNm = Header;--%>
+
+                    grid1.colAdd(HeaderKey, HeaderNm, 90, "right", false, 'link', function (row, cell, value, columnDef, dataContext) {
                         if (value != undefined) return value.comma();
                         else return '';
                     });
+					idx++;
                 }
                 grid1.loadHeader(false);
                 grid1.setData(data.pivotData);
@@ -854,6 +859,7 @@ function fileInfoViewer( row ){
         var colId = '';
         if (colNum != '' & colNum != null) colId = grid1.getHeaderId()[grid1.Col].id;
 
+		console.log(colKey);
 
         /* 검색 데이터 전송 객체 */
         var searchData = {
@@ -878,7 +884,6 @@ function fileInfoViewer( row ){
             url: 'getStatDetailList.xcn',
             searchParam: JSON.stringify(searchData),
             success: function (data, total) {
-
                 if (lastRow == 'Y' || lastRow == undefined) detailTotal = total;
                 currentgrid.appendData(data.emass);
                 if (currentgrid.loadingPage == 0) currentgrid.Select(-1, -1);

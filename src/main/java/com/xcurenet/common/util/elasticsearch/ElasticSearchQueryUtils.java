@@ -13,9 +13,11 @@ import com.xcurenet.user.service.UserService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
-import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.core.TimeValue;
-import org.elasticsearch.index.query.*;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.QueryStringQueryBuilder;
+import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInterval;
@@ -30,7 +32,10 @@ import org.springframework.context.annotation.Configuration;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -45,6 +50,10 @@ public class ElasticSearchQueryUtils {
 
 	@Value("${els.timeout}")
 	private int timeout;
+
+	private int offset;
+
+	private int limit;
 
 	@Resource
 	private AdminService adminService;
@@ -89,7 +98,8 @@ public class ElasticSearchQueryUtils {
 	}
 
 	private ElasticSearchQueryUtils addQuery(String query) {
-		this.queryBuffer.append(ElasticSearchCommon.OPEN_PARENTHESES)
+		this.queryBuffer.append(ElasticSearchCommon.AND_QUERY)
+				.append(ElasticSearchCommon.OPEN_PARENTHESES)
 				.append(query)
 				.append(ElasticSearchCommon.CLOSE_PARENTHESES);
 		return this;
@@ -154,6 +164,18 @@ public class ElasticSearchQueryUtils {
 		return addQuery(String.format("%s",searchStr));
 	}
 
+	public void setSearchQuery(String... searchStr) {
+		if (Common.isEmpty(searchStr)) return;
+		int idx = 0;
+		for (String str : searchStr) {
+			if (idx <= str.length() - 1) {
+				setSearchQuery(str);
+			}
+			idx++;
+		}
+	}
+
+
 
 	/***
 	 *
@@ -165,6 +187,10 @@ public class ElasticSearchQueryUtils {
 	public void setyField(String field) {
 		field = field.concat(ElasticSearchCommon.COLON);
 		this.queryBuffer.insert(0, field);
+	}
+
+	public void setDateField(String query) {
+		this.addQuery(query);
 	}
 
 
@@ -197,6 +223,22 @@ public class ElasticSearchQueryUtils {
 		tempBuilder.append(Type)
 				.append(ElasticSearchCommon.COLON)
 				.append(typeValues);
+		tempBuilder = makeParentheses(tempBuilder);
+		tempBuilder.insert(0, ElasticSearchCommon.SPACE.concat(flag));
+		this.queryBuffer.append(tempBuilder);
+	}
+
+	/***
+	 *
+	 * 쿼리 그룹 짓기
+	 */
+	public void addQueryGroup(String flag, String Type, String[] typeValues) {
+		StringBuilder tempBuilder = new StringBuilder();
+		for(String value : typeValues) {
+			tempBuilder.append(Type)
+					.append(ElasticSearchCommon.COLON)
+					.append(value);
+		}
 		tempBuilder = makeParentheses(tempBuilder);
 		tempBuilder.insert(0, ElasticSearchCommon.SPACE.concat(flag));
 		this.queryBuffer.append(tempBuilder);
@@ -1297,59 +1339,19 @@ public class ElasticSearchQueryUtils {
 	 * @param setStatisticQueryReady
 	 * @param searchParam
 	 */
-	public void setStatisticQueryParamReady(Map<String,Object> searchParam) {
+	public void setStatisticQueryString(Map<String,Object> searchParam,String adminId) {
 		elasticSearchParam = new ElasticSearchParam();
-
 		elasticSearchParam.setSearchParameters(searchParam);
+		elasticSearchParam.setStartDate(Common.nvl(elasticSearchParam.getSearchParameters().get("startDate")));
+		elasticSearchParam.setEndDate(Common.nvl(elasticSearchParam.getSearchParameters().get("endDate")));
 
-		/* sort 관련 */
-		setSort("");
-		List<SortBuilder<?>> sortBuilderList = getSortInfo();
-		log.debug("[SORT] {}", sortBuilderList.stream().collect(Collectors.toList()));
+		if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("colId"))) this.elasticSearchParam.setDetailed(true); // 디테일 검색여부
 
-		/* 검색 offset , limit 설정  */
-		int offset = 0;
-		int limit = 0;
+		setSearchDate(elasticSearchParam.getStartDate(),elasticSearchParam.getEndDate()); // 검색 날짜 지정
+		if(!elasticSearchParam.isDetailed()) setQueryString(); 		// 일반 검색 set 쿼리스트링
+		else setDetailQueryString(); // 디테일 검색 set 쿼리스트링
 
-		offset = (int) Math.round(Double.valueOf(Common.nvl(elasticSearchParam.getSearchParameters().get("offset"))));
-		limit =  (int) Math.round(Double.valueOf(Common.nvl(elasticSearchParam.getSearchParameters().get("limit"))));
-
-	     if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("colId"))) this.elasticSearchParam.setDetailed(true); //디테일 검색여부
-	     if(Arrays.stream(ElasticSearchCommon.ARRAY_FIELD).anyMatch( s -> s.equals(Common.nvl(elasticSearchParam.getSearchParameters().get("yAxis")))))	this.elasticSearchParam.setYAxisIsNested(true); // Y필드가 배열필드인지 판단
-		 boolean isTotalCol = (("total").equals(Common.nvl(elasticSearchParam.getColId()))) ? true : false; // 선택한 컬럼이 total 영역?
-
-
-		// 디테일 검색
-		if(elasticSearchParam.isDetailed()){
-			if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("yAxis")) && !elasticSearchParam.isYAxisIsNested()) {
-				setyField(Common.nvl(elasticSearchParam.getSearchParameters().get("yAxis")));
-			}
-
-			/* rowKey만 존재 */
-			if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("rowKey")) && !elasticSearchParam.isYAxisIsNested()) {
-				setSearchQuery(Common.nvl(elasticSearchParam.getSearchParameters().get("rowKey")));
-			}
-
-		}else{
-			if(Common.isEmpty(elasticSearchParam.getSearchParameters().get("yAxis")) && !elasticSearchParam.isYAxisIsNested()) {
-				setyField(Common.nvl(elasticSearchParam.getSearchParameters().get("yAxis")));
-			}else {
-				/*아무런 검색조건 없을시*/
-				if(Common.isEmpty(elasticSearchParam.getSearchParameters().get("interGroup"))){
-				if(	elasticSearchParam.isYAxisIsNested() && !isTotalCol)  setSearchQuery(Common.nvl(ElasticSearchCommon.ALL_SEARCH));
-			    else   setSearchQuery(Common.nvl(ElasticSearchCommon.ALL_SEARCH));
-				}
-			}
-
-		}
-
-
-		/* 아무런 rowKey & colkey  조건이 없을시 */
-		if(Common.isEmpty(elasticSearchParam.getSearchParameters().get("rowKey")) && Common.isEmpty(elasticSearchParam.getSearchParameters().get("colKey"))){
-			limit = 0;
-		}
-
-		/* detail Query 존재시*/
+		/* Advanced search 존재시*/
 		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("detailQuery"))) {
 			setDetailQuery(Common.nvl(elasticSearchParam.getSearchParameters().get("detailQuery")));
 		}
@@ -1367,17 +1369,132 @@ public class ElasticSearchQueryUtils {
 			}
 		}
 
-
+		/* 권한 쿼리 추가*/
+		setAuthoritysFilter(adminId); 	// set 권한 리스트
+		setCompanyAuthFilterQuery(); // 회사 권한
+		setCeoFilterQuery(); // ceo 권한
 
 		/* set Query (항상 쿼리 조합 최하단에 위치) */
 		setQuery();
+		setElsSearchParam();
+	}
 
-		log.info("엘라스틱 서치 Query_String (테스트) ===> " + getQuery());
 
+	/***
+	 *  통계 검색 소스 빌드
+	 * @param initStatisticSearchSource
+	 * @return
+	 */
+	public SearchSourceBuilder initStatisticSearchSource(Map<String, Object> searchParam, String adminId) {
+		SearchSourceBuilder searchSourceBuilder = null; // SearchSourceBuilder 리턴용
+		setStatisticQueryString(searchParam,adminId); // 쿼리스트링 준비
+		try {
+			QueryStringQueryBuilder secondQuery = QueryBuilders.queryStringQuery(query); // 쿼리 스트링 저장
+			BoolQueryBuilder complateQuery = new BoolQueryBuilder(); // complateQuery에서 최종적으로 쿼리 조합
+
+			//디테일 검색
+			if(elasticSearchParam.isDetailed()) {
+				BoolQueryBuilder timeRange = detailSearchBuild();
+				if (null != timeRange) complateQuery.filter(timeRange);
+			}
+
+			complateQuery.must(secondQuery);
+			searchSourceBuilder = new SearchSourceBuilder()
+					.from(elasticSearchParam.getFrom())
+					.size(elasticSearchParam.getTo())
+					.query(complateQuery)
+					.fetchSource(elasticSearchParam.getIncludeFields(), elasticSearchParam.getExcludeFields())
+					.sort(elasticSearchParam.getSorts())
+					.aggregation(initAggregation(elasticSearchParam.getYAxis(), getElasticSearchParam().getXAxis()))
+					.timeout(new TimeValue(60, TimeUnit.SECONDS));
+
+		//	log.info(" q : " + searchSourceBuilder.query());
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		}
+
+		return searchSourceBuilder;
+	}
+
+
+	public void setQueryString() {
+		offset = 0;
+		limit = 0;
+		setSearchQuery(Common.nvl(elasticSearchParam.getSearchParameters().get("yAxis"))+ElasticSearchCommon.COLON+makeParentheses(Common.nvl(ElasticSearchCommon.ALL_SEARCH)));
+
+	}
+
+	public void setDetailQueryString() {
+		offset = (int) Math.round(Double.valueOf(Common.nvl(elasticSearchParam.getSearchParameters().get("offset"))));
+		limit =  (int) Math.round(Double.valueOf(Common.nvl(elasticSearchParam.getSearchParameters().get("limit"))));
+
+
+		boolean isRowKeyCol = (("rowKey").equals(Common.nvl(elasticSearchParam.getSearchParameters().get("colId")))) ? true : false; // 선택한 컬럼이 주 key 영역?
+		boolean isTotalCol = (("total").equals(Common.nvl(elasticSearchParam.getSearchParameters().get("colId")))) ? true : false; // 선택한 컬럼이 total 영역?
+		boolean isDateSearch = ((ElasticSearchCommon.CTIME_ARRAY).indexOf(Common.nvl(elasticSearchParam.getSearchParameters().get("xAxis"))) >- 1) ? true : false; // 선택한 컬럼이 date 영역?
+
+		String xAxis  = Common.nvl(elasticSearchParam.getSearchParameters().get("xAxis"));
+		String yAxis  = Common.nvl(elasticSearchParam.getSearchParameters().get("yAxis"));
+		String colKey = Common.nvl(elasticSearchParam.getSearchParameters().get("colKey"));
+
+		if(isDateSearch){
+			String startDate = "";
+			String endDate = "";
+			if(ElasticSearchCommon.CTIME_YYYYMMDD.equals(xAxis)){
+				startDate = colKey.replaceAll("[^0-9]", "").concat("000000");
+				endDate = colKey.replaceAll("[^0-9]", "").concat("235959");
+			}else if(ElasticSearchCommon.CTIME_YYYYMM.equals(xAxis)){
+//				LocalDate date = LocalDate.parse(colKey);
+//				date.withDayOfMonth(1);
+//				date.withDayOfMonth(date.lengthOfMonth());
+			}
+			setSearchDate(startDate,endDate);
+			setSearchQuery(yAxis + ElasticSearchCommon.COLON + makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("rowKey"))));
+		}else {
+			if (!isTotalCol && !isRowKeyCol) {
+				xAxis = Config.getElsConvertField(xAxis);
+				yAxis = Config.getElsConvertField(yAxis);
+				setSearchQuery(
+						yAxis + ElasticSearchCommon.COLON + makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("rowKey")))
+						, xAxis + ElasticSearchCommon.COLON + makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("colKey"))
+						));
+			} else {
+				setSearchQuery(yAxis + ElasticSearchCommon.COLON + makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("rowKey"))));
+			}
+		}
+
+	}
+
+
+	public BoolQueryBuilder detailSearchBuild() {
+		boolean isRowKeyCol = (("rowKey").equals(Common.nvl(elasticSearchParam.getSearchParameters().get("colId")))) ? true : false; // 선택한 컬럼이 주 key 영역?
+		boolean isTotalCol = (("total").equals(Common.nvl(elasticSearchParam.getSearchParameters().get("colId")))) ? true : false; // 선택한 컬럼이 total 영역?
+
+		/* 시간별 디테일 검색일 경우 추가 date range 처리 */
+		if (ElasticSearchCommon.CTIME_HH.equals(elasticSearchParam.getSearched_xAxis()) && !isRowKeyCol && !isTotalCol ) {
+			BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
+			int hour = Common.nvz(elasticSearchParam.getSearchAggregations().replaceAll("[^0-9]", ""));
+
+			LocalDateTime ldtFrom = ElasticSearchCommon.stringToLocalDateTime(elasticSearchParam.getStartDate().substring(0, 8) + String.format("%02d", hour) + elasticSearchParam.getStartDate().substring(10, 14));
+			LocalDateTime ldtTo = ElasticSearchCommon.stringToLocalDateTime(elasticSearchParam.getEndDate().substring(0, 8) + String.format("%02d", hour) + elasticSearchParam.getEndDate().substring(10, 14));
+			int diffDay = (int) ChronoUnit.DAYS.between(ldtFrom, ldtTo);
+			for (int d = 0; d <= diffDay; d++) {
+				String fromStr = ElasticSearchCommon.localdateTimeToString(ldtFrom.withHour(hour));
+				String toStr = ElasticSearchCommon.localdateTimeToString(ldtFrom.withHour(hour + 1).minusSeconds(1));
+				boolQueryBuilder.should(new RangeQueryBuilder("ctime").from(fromStr).to(toStr));
+				ldtFrom = ldtFrom.plusDays(1);
+			}
+			return boolQueryBuilder;
+		} else return  null;
+
+	}
+
+
+	public void setElsSearchParam(){
 		this.elasticSearchParam.setIndices(new String[]{ElasticSearchCommon.EDC_MESSAGE_INDEX});
 		this.elasticSearchParam.setFrom(offset);
 		this.elasticSearchParam.setTo(limit);
-		this.elasticSearchParam.setSorts(sortBuilderList);
+		this.elasticSearchParam.setSorts(sortField(""));
 		this.elasticSearchParam.setIncludeFields(ElasticSearchCommon.SEARCH_FIELD);
 		this.elasticSearchParam.setExcludeFields(null);
 		this.elasticSearchParam.setXAxis(Common.nvl(elasticSearchParam.getSearchParameters().get("xAxis")));
@@ -1390,107 +1507,14 @@ public class ElasticSearchQueryUtils {
 		this.elasticSearchParam.setSearchAggregations(Common.nvl(elasticSearchParam.getSearchParameters().get("colKey")));
 		this.elasticSearchParam.setSearched_xAxis(Common.nvl(elasticSearchParam.getSearchParameters().get("searched_xAxis")));
 
-
 		log.debug("[Fields] {}", ElasticSearchCommon.SEARCH_FIELD);
 		log.debug("[SORT] : {}", getSortInfo());
 		log.debug("[QUERY] {}", getQuery());
-
 	}
 
 
-	/***
-	 *  통계 검색 소스 빌드
-	 * @param initStatisticSearchSource
-	 * @return
-	 */
-	public SearchSourceBuilder initStatisticSearchSource(Map<String, Object> searchParam, String adminId) {
-
-		SearchSourceBuilder searchSourceBuilder = null; // SearchSourceBuilder 리턴용
-
-		setStatisticQueryParamReady(searchParam); // 통계용 파라미터 준비
-
-		try {
-
-			RangeQueryBuilder rangeQuery = new RangeQueryBuilder(ElasticSearchCommon.CTIME).gte(elasticSearchParam.getStartDate()).lte(elasticSearchParam.getEndDate()); // date range
-			QueryStringQueryBuilder secondQuery = QueryBuilders.queryStringQuery(query); // 쿼리 스트링 저장
-			BoolQueryBuilder complateQuery = new BoolQueryBuilder(); // complateQuery에서 최종적으로 쿼리 조합
 
 
-			boolean isRowKeyCol = (("rowKey").equals(Common.nvl(elasticSearchParam.getColId()))) ? true : false; // 선택한 컬럼이 주 key 영역?
-			boolean isTotalCol = (("total").equals(Common.nvl(elasticSearchParam.getColId()))) ? true : false; // 선택한 컬럼이 total 영역?
-
-
-			/* 시간별 디테일 검색일 경우 추가 date range 처리 */
-			if (ElasticSearchCommon.CTIME_HH.equals(elasticSearchParam.getSearched_xAxis()) && elasticSearchParam.isDetailed() && !isTotalCol && !isRowKeyCol) {
-				BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
-				int hour = Common.nvz(elasticSearchParam.getSearchAggregations().replaceAll("[^0-9]", ""));
-
-				LocalDateTime ldtFrom = ElasticSearchCommon.stringToLocalDateTime(elasticSearchParam.getStartDate().substring(0, 8) + String.format("%02d", hour) + elasticSearchParam.getStartDate().substring(10, 14));
-				LocalDateTime ldtTo = ElasticSearchCommon.stringToLocalDateTime(elasticSearchParam.getEndDate().substring(0, 8) + String.format("%02d", hour) + elasticSearchParam.getEndDate().substring(10, 14));
-				int diffDay = (int) ChronoUnit.DAYS.between(ldtFrom, ldtTo);
-				for (int d = 0; d <= diffDay; d++) {
-					String fromStr = ElasticSearchCommon.localdateTimeToString(ldtFrom.withHour(hour));
-					String toStr = ElasticSearchCommon.localdateTimeToString(ldtFrom.withHour(hour + 1).minusSeconds(1));
-					boolQueryBuilder.should(new RangeQueryBuilder("ctime").from(fromStr).to(toStr));
-					ldtFrom = ldtFrom.plusDays(1);
-				}
-				complateQuery.filter(boolQueryBuilder); // 시간별 디테일 date range 필터 추가
-
-			} else {
-				// default date range 필터 추가
-				complateQuery.filter(rangeQuery);
-			}
-
-
-			/*################ 권한 관련 ##################################################################*/
-			// set 권한 리스트
-//		   	setAuthoritysFilter(adminId);
-			// 권한 filter 추가
-//			 complateQuery.must(getCompanyAuthFilterQuery());
-//			 complateQuery.must(getCeoFilterQuery());
-			/*##########################################################################################*/
-
-
-			/*  디테일 배열 검색일경우 (파일첨부,패턴등등...*/
-			if(elasticSearchParam.isYAxisIsNested() && elasticSearchParam.isDetailed()) {
-				String nestedPath = "";
-				if(elasticSearchParam.getYAxis().indexOf("attach") > -1) nestedPath = "attach";
-				else if(elasticSearchParam.getYAxis().indexOf("pi") > -1) nestedPath = "pi";
-				else nestedPath = elasticSearchParam.getYAxis();
-
-				BoolQueryBuilder nested = new BoolQueryBuilder();
-				if(!Common.isEmpty(elasticSearchParam.getSearchParameters().get("rowKey"))){
-					String[] keys = (elasticSearchParam.getSearchParameters().get("rowKey").toString().indexOf(",") > -1) ? elasticSearchParam.getSearchParameters().get("rowKey").toString().split(",")  : new String[]{elasticSearchParam.getSearchParameters().get("rowKey").toString()};
-					for(String key :  keys){
-						nested.should(QueryBuilders.termQuery(elasticSearchParam.getYAxis(), key));
-					}
-					nested.minimumShouldMatch(1);
-				}
-				NestedQueryBuilder nestedQueryBuilder = QueryBuilders.nestedQuery(nestedPath,nested, ScoreMode.Avg);
-				complateQuery.must(nestedQueryBuilder);
-			}else{
-				complateQuery.must(secondQuery);
-			}
-
-
-			searchSourceBuilder = new SearchSourceBuilder()
-					.from(elasticSearchParam.getFrom())
-					.size(elasticSearchParam.getTo())
-					.query(complateQuery)
-					.fetchSource(elasticSearchParam.getIncludeFields(), elasticSearchParam.getExcludeFields())
-					.sort(elasticSearchParam.getSorts())
-					.aggregation(initAggregation(elasticSearchParam.getYAxis(), getElasticSearchParam().getXAxis()))
-					.timeout(new TimeValue(60, TimeUnit.SECONDS));
-
-		   //	log.info("complate Query :  " + searchSourceBuilder.query());
-
-			// searchSourceBuilder build 완료
-		} catch (NullPointerException e) {
-			e.printStackTrace();
-		}
-
-		return searchSourceBuilder;
-	}
 
 
 
@@ -1624,12 +1648,7 @@ public class ElasticSearchQueryUtils {
 			/*################ 권한 관련 ##################################################################*/
 			// set 권한 리스트
 			setAuthoritysFilter(adminId);
-			BoolQueryBuilder authComQuery = getCompanyAuthFilterQuery();
-			BoolQueryBuilder ceoQuery = getCeoFilterQuery();
 
-			// 권한 filter 추가
-			if (null != authComQuery) complateQuery.must(authComQuery);
-			if (null != ceoQuery) complateQuery.must(ceoQuery);
 			/*##########################################################################################*/
 
 
@@ -1758,12 +1777,7 @@ public class ElasticSearchQueryUtils {
 			/*################ 권한 관련 ##################################################################*/
 			// set 권한 리스트
 		    setAuthoritysFilter(adminId);
-		    BoolQueryBuilder authComQuery = getCompanyAuthFilterQuery();
-		    BoolQueryBuilder ceoQuery = getCeoFilterQuery();
 
-			// 권한 filter 추가
-		    if(null != ceoQuery) complateQuery.must(authComQuery);
-			if(null != ceoQuery) complateQuery.must(ceoQuery);
 
 			/*##########################################################################################*/
 
@@ -1832,18 +1846,7 @@ public class ElasticSearchQueryUtils {
 		String xfield = Common.nvl(Config.getElsConvertField(xAxis));
 
 		//YAxis 가 배열필드일 경우
-		boolean YAxisNested = Arrays.stream(ElasticSearchCommon.ARRAY_FIELD).anyMatch(s -> s.equals(Common.nvl(yAxis)));
-		if (YAxisNested) {
-			String nestedPath = "";
-			if (yAxis.indexOf("attach") > -1) nestedPath = "attach";
-			else if (yAxis.indexOf("pi") > -1) nestedPath = "pi";
-			else nestedPath = yAxis;
-			aggregationBuilder = (AggregationBuilders.nested(ElasticSearchCommon.NESTED+yAxis, nestedPath).subAggregation(AggregationBuilders.terms(yAxis).field(yAxis).minDocCount(1)));
-
-		} else {
-			aggregationBuilder = AggregationBuilders.terms(yAxis).field(yAxis).minDocCount(1);
-		}
-
+		aggregationBuilder = AggregationBuilders.terms(yAxis).field(yAxis).minDocCount(1);
 
 		switch (xAxis) {
 			case ElasticSearchCommon.CTIME_HH:  // 시간별  (1시간)
@@ -2054,12 +2057,7 @@ public class ElasticSearchQueryUtils {
 			/*################ 권한 관련 ##################################################################*/
 			// set 권한 리스트
 			setAuthoritysFilter(adminId);
-			BoolQueryBuilder authComQuery = getCompanyAuthFilterQuery();
-			BoolQueryBuilder ceoQuery = getCeoFilterQuery();
 
-			// 권한 filter 추가
-			if (null != ceoQuery) complateQuery.must(ceoQuery);
-			if (null != authComQuery) complateQuery.must(authComQuery);
 			/*##########################################################################################*/
 
 			complateQuery.must(secondQuery);
@@ -2624,16 +2622,12 @@ public class ElasticSearchQueryUtils {
 
 
 	/* 회사 권한 관련 (회사,사업장) 필터 */
-	private BoolQueryBuilder getCompanyAuthFilterQuery( ) {
-		BoolQueryBuilder result = null;
+	private void setCompanyAuthFilterQuery( ) {
 		if(authQueryCompanyRelated.size() >= 1) {
-			result = new BoolQueryBuilder();
 			for (Map<String, Object> authCom : authQueryCompanyRelated) {
-				result.should(QueryBuilders.termsQuery((String) authCom.get("type"), (String[]) authCom.get("values")));
+				addQueryGroup(ElasticSearchCommon.AND_QUERY,(String) authCom.get("type"),makeParentheses((String[]) authCom.get("values")));
 			}
 		}
-		result.minimumShouldMatch(1);
-		return result;
 	}
 
 	/* 기타 필터 (서비스,패턴,그룹)* 임시 주석 */
@@ -2649,23 +2643,9 @@ public class ElasticSearchQueryUtils {
 	}
 
 	/* ceo 필터 */
-	private BoolQueryBuilder getCeoFilterQuery( ) {
-		BoolQueryBuilder result = null;
-		if(!this.ceoSearch) {
-			result = new BoolQueryBuilder();
-			result.should(QueryBuilders.termQuery("user.ceo", "N"));
-			result.should(QueryBuilders.termQuery("sender.ceo", "false"));
-			result.should(QueryBuilders.termQuery("to.ceo", "false"));
-			result.should(QueryBuilders.termQuery("cc.ceo", "false"));
-			result.should(QueryBuilders.termQuery("bcc.ceo", "false"));
-			result.minimumShouldMatch(1);
-		}
-		return result;
-
+	private void setCeoFilterQuery() {
+		if(!this.ceoSearch)  addQueryGroup(ElasticSearchCommon.AND_QUERY,ElasticSearchCommon.CEO,makeParentheses("N"));
 	}
-
-
-
 
 
 	public void messageSearchIntergrated(){
@@ -2704,6 +2684,23 @@ public class ElasticSearchQueryUtils {
 			drmYn();
 			keywordYn();
 			pattenYn() ;
+	}
+
+	public List<SortBuilder<?>> sortField(String fields){
+		/* sort 관련 */
+		setSort(fields);
+		List<SortBuilder<?>> sortBuilderList = getSortInfo();
+		log.debug("[SORT] {}", sortBuilderList.stream().collect(Collectors.toList()));
+
+		return sortBuilderList;
+	}
+
+
+	// 기간 검색
+	public void setSearchDate(String startDate,String endDate)  {
+			String query = ElasticSearchCommon.AND_QUERY + ElasticSearchCommon.CTIME + ElasticSearchCommon.COLON + ElasticSearchCommon.OPEN_BRACKET;
+			String date = String.format(query + "%s TO %s" + ElasticSearchCommon.CLOSE_BRACKET ,startDate, endDate);
+			setDateField(date);
 	}
 
 
