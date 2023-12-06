@@ -169,7 +169,7 @@ public class ElasticSearchQueryUtils {
 		int idx = 0;
 		for (String str : searchStr) {
 			if (idx <= str.length() - 1) {
-				setSearchQuery(str);
+				setSearchQuery(makeParentheses(str));
 			}
 			idx++;
 		}
@@ -1340,6 +1340,7 @@ public class ElasticSearchQueryUtils {
 	 * @param searchParam
 	 */
 	public void setStatisticQueryString(Map<String,Object> searchParam,String adminId) {
+		clearQuery();
 		elasticSearchParam = new ElasticSearchParam();
 		elasticSearchParam.setSearchParameters(searchParam);
 		elasticSearchParam.setStartDate(Common.nvl(elasticSearchParam.getSearchParameters().get("startDate")));
@@ -1435,7 +1436,10 @@ public class ElasticSearchQueryUtils {
 
 		String xAxis  = Common.nvl(elasticSearchParam.getSearchParameters().get("xAxis"));
 		String yAxis  = Common.nvl(elasticSearchParam.getSearchParameters().get("yAxis"));
-		String colKey = Common.nvl(elasticSearchParam.getSearchParameters().get("colKey"));
+
+		String rowKey =  (Common.nvl(elasticSearchParam.getSearchParameters().get("rowKey")).indexOf(",") > -1 ) ? makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("rowKey")).split(",")) : Common.nvl(elasticSearchParam.getSearchParameters().get("rowKey"));
+		String colKey =  (Common.nvl(elasticSearchParam.getSearchParameters().get("colKey")).indexOf(",") > -1 ) ? makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("colKey")).split(",")) : Common.nvl(elasticSearchParam.getSearchParameters().get("colKey"));
+
 
 		if(isDateSearch){
 			String startDate = "";
@@ -1443,23 +1447,27 @@ public class ElasticSearchQueryUtils {
 			if(ElasticSearchCommon.CTIME_YYYYMMDD.equals(xAxis)){
 				startDate = colKey.replaceAll("[^0-9]", "").concat("000000");
 				endDate = colKey.replaceAll("[^0-9]", "").concat("235959");
+				setSearchDate(startDate,endDate);
+				setSearchQuery(yAxis + ElasticSearchCommon.COLON + makeParentheses(rowKey));
 			}else if(ElasticSearchCommon.CTIME_YYYYMM.equals(xAxis)){
 //				LocalDate date = LocalDate.parse(colKey);
 //				date.withDayOfMonth(1);
 //				date.withDayOfMonth(date.lengthOfMonth());
+
+			}else{
+				setSearchQuery(yAxis + ElasticSearchCommon.COLON + makeParentheses(rowKey));
 			}
-			setSearchDate(startDate,endDate);
-			setSearchQuery(yAxis + ElasticSearchCommon.COLON + makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("rowKey"))));
+
 		}else {
 			if (!isTotalCol && !isRowKeyCol) {
 				xAxis = Config.getElsConvertField(xAxis);
 				yAxis = Config.getElsConvertField(yAxis);
 				setSearchQuery(
-						yAxis + ElasticSearchCommon.COLON + makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("rowKey")))
-						, xAxis + ElasticSearchCommon.COLON + makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("colKey"))
-						));
+						yAxis + ElasticSearchCommon.COLON + makeParentheses(rowKey)
+						, xAxis + ElasticSearchCommon.COLON + makeParentheses(colKey)
+				 );
 			} else {
-				setSearchQuery(yAxis + ElasticSearchCommon.COLON + makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("rowKey"))));
+				setSearchQuery(yAxis + ElasticSearchCommon.COLON + makeParentheses(rowKey));
 			}
 		}
 
@@ -1475,8 +1483,8 @@ public class ElasticSearchQueryUtils {
 			BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
 			int hour = Common.nvz(elasticSearchParam.getSearchAggregations().replaceAll("[^0-9]", ""));
 
-			LocalDateTime ldtFrom = ElasticSearchCommon.stringToLocalDateTime(elasticSearchParam.getStartDate().substring(0, 8) + String.format("%02d", hour) + elasticSearchParam.getStartDate().substring(10, 14));
-			LocalDateTime ldtTo = ElasticSearchCommon.stringToLocalDateTime(elasticSearchParam.getEndDate().substring(0, 8) + String.format("%02d", hour) + elasticSearchParam.getEndDate().substring(10, 14));
+			LocalDateTime ldtFrom = ElasticSearchCommon.stringToLocalDateTime(Common.nvl(elasticSearchParam.getSearchParameters().get("startDate")).substring(0, 8) + String.format("%02d", hour) + elasticSearchParam.getStartDate().substring(10, 14));
+			LocalDateTime ldtTo = ElasticSearchCommon.stringToLocalDateTime(Common.nvl(elasticSearchParam.getSearchParameters().get("endDate")).substring(0, 8) + String.format("%02d", hour) + elasticSearchParam.getEndDate().substring(10, 14));
 			int diffDay = (int) ChronoUnit.DAYS.between(ldtFrom, ldtTo);
 			for (int d = 0; d <= diffDay; d++) {
 				String fromStr = ElasticSearchCommon.localdateTimeToString(ldtFrom.withHour(hour));

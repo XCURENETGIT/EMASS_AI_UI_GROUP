@@ -751,7 +751,6 @@ function getSelectedCodeData( codeType, data ) {
             searchParam: JSON.stringify(searchData),
 
             success : function(data, total) {
-				console.log(data);
                 /* 통계영역 검색 조건 저장 */
                 if (data.search_xAxis != null) $('#searched_xAxis').val(data.search_xAxis);
                 if (data.search_startDate != null) $('#searched_startDate').val(data.search_startDate);
@@ -771,21 +770,43 @@ function getSelectedCodeData( codeType, data ) {
                     if ( value != undefined ) return value.comma();
                     else return '';
                 });
-                for ( var i=0 ; i < data.pivotHeader.length ; i++ ) {
-                    var Header = data.pivotHeader[i];
-                    var HeaderNm = "";
-                    if ( xAxis == "ctime_yyyymmdd") HeaderNm = Header.substr(0,4)+"-"+Header.substr(4,2)+"-"+Header.substr(6,2);
-                    else if ( xAxis == "ctime_yyyymm") HeaderNm = Header.substr(0,4)+"-"+Header.substr(4,2);
-                    else if ( xAxis == "direction_svc") {
-                        if(Header == "I") HeaderNm = '<s:message code="condition.receive"/>';
-                        else HeaderNm = '<s:message code="condition.send"/>';
-                    } else if ( xAxis == "ctime_hh") HeaderNm = Header+'<s:message code="common.msg.hour"/>';
-                    else HeaderNm = Header;
-                    grid1.colAdd( Header, HeaderNm, 90, "right", false, 'link', function ( row, cell, value, columnDef, dataContext ) {
-                        if ( value != undefined ) return value.comma();
-                        else return '';
-                    });
-                }
+
+				if(xAxis == "ctime_hh"){
+					for (var key = 0 ; key < data.sortedHeaderList.length; key++) {
+						var HeaderKey = data.sortedHeaderList[key];
+						var HeaderNm = data.sortedHeaderList[key];
+						// if (xAxis == "ctime_yyyymmdd") HeaderNm = HeaderKey;
+						// else if (xAxis == "ctime_yyyymm") HeaderNm = HeaderKey;
+						if (xAxis == "direction_svc") {
+							if (HeaderKey == "I") HeaderNm = '<s:message code="condition.receive"/>';
+							else HeaderNm = '<s:message code="condition.send"/>';
+						}
+						//else if (xAxis == "ctime_hh") HeaderNm = Header;
+						<%--else HeaderNm = Header;--%>
+						grid1.colAdd(HeaderKey, HeaderNm, 90, "right", false, 'link', function (row, cell, value, columnDef, dataContext) {
+							if (value != undefined) return value.comma();
+							else return '';
+						});
+					}
+				}else {
+					for (let key in data.pivotHeader) {
+						var HeaderKey = key;
+						var HeaderNm = data.pivotHeader[key];
+						// if (xAxis == "ctime_yyyymmdd") HeaderNm = HeaderKey;
+						// else if (xAxis == "ctime_yyyymm") HeaderNm = HeaderKey;
+						if (xAxis == "direction_svc") {
+							if (HeaderKey == "I") HeaderNm = '<s:message code="condition.receive"/>';
+							else HeaderNm = '<s:message code="condition.send"/>';
+						}
+						//else if (xAxis == "ctime_hh") HeaderNm = Header;
+						<%--else HeaderNm = Header;--%>
+						grid1.colAdd(HeaderKey, HeaderNm, 90, "right", false, 'link', function (row, cell, value, columnDef, dataContext) {
+							if (value != undefined) return value.comma();
+							else return '';
+						});
+					}
+				}
+
                 grid1.loadHeader(false);
                 grid1.setData(data.pivotData);
 

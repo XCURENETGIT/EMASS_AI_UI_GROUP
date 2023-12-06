@@ -17,7 +17,7 @@ import java.util.Map;
 public class ElasticSearchCommon {
 
     /* EMASS INDEX */
-    public static final String EDC_MESSAGE_INDEX = "ems_edc_message_202312";   //ems_edc_message
+    public static final String EDC_MESSAGE_INDEX = "ems_edc_message_*";   //ems_edc_message
     public static final String EDC_MESSAGE_SEARCH_HIST_INDEX = "ems_search_history*";
 
     /* ELASTIC SEARCH DOCUMENT UPDATE BY QUERY 관련 */

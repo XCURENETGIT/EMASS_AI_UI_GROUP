@@ -85,28 +85,33 @@ public class EmassIntegrated {
 
         pivotCalculator(searchResponse,searchParam);
           //  this.setPivot(searchResponse);
+        responseCheck();
+    }
+
+    private void responseCheck() {
+        this.convertedXField = "";
+        this.convertedYField = "";
+
     }
 
 
     private void setPivot(Aggregations aggregations) {
-            Terms results = aggregations.get(search_yAxis);
-            if(null == results) return;
-            if(ElasticSearchCommon.CTIME.equals(convertedXField)) dateCalculator(results); //Yaxis 조건 시간 계산일시
-            else etcCalculator(results);  // 그 외
+        Terms results = aggregations.get(search_yAxis);
+        if(null == results) return;
+        if(ElasticSearchCommon.CTIME.equals(convertedXField)) dateCalculator(results); //Yaxis 조건 시간 계산일시
+        else etcCalculator(results);  // 그 외
 
-            List dataList = reCalculator(); // 재 계산
+        List dataList = reCalculator(); // 재 계산
 
-            /* 헤더 관련 */
-            if(sortedHeaderList.size() != 0) {
-                for (String header : sortedHeaderList) {
-                    pivotHeader.put(header,Config.analysisFlag(convertedXField,header));
-                }
-            }else {
-                this.pivotHeader = null;
+        /* 헤더 관련 */
+        if(sortedHeaderList.size() != 0) {
+            for (String header : sortedHeaderList) {
+                pivotHeader.put(header,Config.analysisFlag(convertedXField,header));
             }
-
-            this.pivotData = dataList;
-
+        }else {
+            this.pivotHeader = null;
+        }
+        this.pivotData = dataList;
     }
 
 
