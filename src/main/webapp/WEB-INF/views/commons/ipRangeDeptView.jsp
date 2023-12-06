@@ -1,11 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-<title></title>
-<style>
-</style>
+
 <script type="text/javascript">
 var searchFlag=false;
 var orgStartIp ='';
@@ -60,30 +55,29 @@ function getData(lastRow) {
 }
 </script>
 </head>
-<body class="mini-navbar">
-	<div class="container">
-		<div class="boxArea">
-			<div class="content_body">
-				<div class="row">
-					<div class="col-xs-8 text-left">
-						<div class="form-group form-inline not-dashed">
-							<div class="input-group">
-								<input type="text" class="form-control input-sm" placeholder="<s:message code="ipRange.msg.enter.busicomment"/>" id="searchStrInput" style="width: 250px;">
-								<div class="input-group-btn">
-									<button class="btn btn-sm btn-success" type="button" accesskey="Q" id="searchBtn"><i class="glyphicon glyphicon-search"></i></button>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row xcn_full top_space">
-					<div class="col-xs-12" style="height: 100%;">
-						<div id="ipRangeDeptListGrid" class="slickGrid gridArea"></div>
-					</div>
-				</div>
+
+<div class="container">
+	<div class="searchArea">
+		<div class="searchSub">
+			<div>
+				<input type="text"  placeholder="<s:message code="ipRange.msg.enter.busicomment"/>" id="searchStrInput">
+				<button class="form_btn01" type="button" accesskey="Q" id="searchBtn"><s:message code="common.msg.search"/></button>
 			</div>
 		</div>
 	</div>
+	<div class="content xcn_full">
+		<div class="contentSub">
+			<div class="subtab">
+				<button class="active">
+					부서 내부 ip 확인
+					<span id="relationKeywordCount"></span>
+				</button>
+			</div>
+			<div id="ipRangeDeptListGrid" class="slickGrid gridArea"></div>
+		</div>
+	</div>
+</div>
+
 	<script type="text/javascript">
 		var grid = new Xgrid('ipRangeDeptListGrid', contextRoot);
 		grid.onCheckBox();
@@ -109,5 +103,3 @@ function getData(lastRow) {
 		<input type="hidden" name="oldCode" id="oldCode"/>
 		<input type="hidden" name="oldConm" id="oldConm"/>					
 	</form>
-</body>
-</html>

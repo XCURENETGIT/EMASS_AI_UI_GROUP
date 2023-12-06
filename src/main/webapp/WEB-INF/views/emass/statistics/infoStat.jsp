@@ -429,25 +429,19 @@
       </select>
     </div>
     <div>
-      <select id="country" name="country">
-        <option value="australia">사업장 선택</option>
-        <option value="canada">옵션2</option>
-        <option value="usa">옵션3</option>
-      </select>
+      <select id="busiSelect" data-style="btn-default btn-sm" multiple data-show-subtext="true" data-live-search="true" data-actions-box="true"></select>
+    </div>
+    <div id="selectedCodeTitle"></div>
+    <div class="btn-group" data-toggle="buttons" style="margin-top: 0px;">
+      <button type="button" class="btn btn-sm btn-default" id="dept"><span class="glyphicon glyphicon-plus-sign"></span>&nbsp;<s:message code="common.org.choose.dept"/></button>
+      <span id="deptSelectedArea" class="codeSelectedBtn">
+										<button type="button" class="btn"  style="z-index: 2">0</button>
+									</span>
+      <input type="hidden" id="deptStr" class="selectedTitle">
+      <input type="hidden" id="deptVal">
     </div>
     <div>
-      <select id="country" name="country">
-        <option value="australia">부서 선택</option>
-        <option value="canada">옵션2</option>
-        <option value="usa">옵션3</option>
-      </select>
-    </div>
-    <div>
-      <select id="country" name="country">
-        <option value="australia">사용자선택</option>
-        <option value="canada">옵션2</option>
-        <option value="usa">옵션3</option>
-      </select>
+      <input type="text" placeholder="사용자를 입력하세요">
     </div>
     <div>
       <button class="form_btn01" type="button" accesskey="Q" id="searchBtn"><s:message code="common.msg.search"/></button>
@@ -744,6 +738,8 @@
       if(sDate > eDate) ui.alertMsg('<s:message code="consent.msg.timecheck"/>');
       var piCount_str = $('select[name=piCount] option:selected').text();
       var piCount = $('select[name=piCount]').val();
+      if(piCount_str=="기준 유출 건수") ui.alertMsg("기준 유출 건수를 선택해주세요");
+
 
 
       $('#listTab b').remove();
