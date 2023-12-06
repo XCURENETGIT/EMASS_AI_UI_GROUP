@@ -5,15 +5,6 @@
 	String oldCode = Common.nvl( request.getParameter("oldCode") );
 	String oldConm = Common.nvl( request.getParameter("oldConm") );
 %>
-
-<head>
-<title><s:message code="selectCodeAll.title"/></title>
-	<link rel="stylesheet" type="text/css" href="../css/emass_style.css"/>
-<style>
-html,body{height: 100%; padding: 0px; margin: 0px;overflow: auto;min-width: 900px;}
-.panel {margin-bottom: 0px !important;}
-.bootstrap-dialog-body { color : #cb2828; }
-</style>
 <script>
 var codeType = '<%=codeType%>';
 var coCd = '<%=coCd%>';
@@ -233,8 +224,6 @@ function getCodeList() {
 }
 </script>
 
-</head>
-<body class="mini-navbar msgBody">
 	<div class="modal fade" id="countPop" tabindex="-1" role="dialog" aria-labelledby="countPop">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content" style="width: 520px;">
@@ -300,48 +289,45 @@ function getCodeList() {
 
 
 	<!--popup-->
-	<div id="popupWrap">
+	<div id="popupWrap" class="xcn_container">
 		<!-- left -->
-		<div class="item">
-			<h3 class="blue"><span class="bullet01"></span><s:message code="selectCodeAll.list"/></h3>
-			<div class="grayBg mat8 popupInner">
-				<div>
-					<input type="text"  placeholder="<s:message code="common.msg.searchMsg"/>" id="searchStr">
-					<button class="form_btn01"type="button" accesskey="Q" id="searchBtn"></button>
+		<div class="row">
+			<div class="item" style="width: calc(50% - 30px);float: left;">
+				<h3 class="blue"><span class="bullet01"></span><s:message code="selectCodeAll.list"/></h3>
+				<div class="grayBg mat8 popupInner">
+					<div>
+						<input type="text" placeholder="<s:message code="common.msg.searchMsg"/>" id="searchStr">
+						<button class="form_btn01" type="button" accesskey="Q" id="searchBtn"></button>
+					</div>
+				</div>
+				<!-- 테이블 -->
+				<div class="pop_tableArea mat16">
+						<!-- 테이블 -->
+					<div id="coCdGrid"  class="subTable slickGrid gridArea" style="height: calc(100% - 150px)"> </div>
 				</div>
 			</div>
-			<!-- 테이블 -->
-			<div class="pop_tableArea mat16">
-					<!-- 테이블 -->
-					<div id="coCdGrid"  class="subTable slickGrid gridArea"> ></div>
+			<div class="item" style="width: 60px;float: left;height: 100%;padding-top: 20%;">
+				<button class="pop_btn03 dis_block" type="button" accesskey="I" id="addBtn">
+					<img src="<c:url value="/img/ico_double_left.png"/>" alt=">>">
+				</button>
+				<button class="pop_btn03 dis_block mat8" type="button" accesskey="D" id="removeBtn">
+					<img src="<c:url value="/img/ico_double_right.png"/>" alt="<<">
+				</button>
 			</div>
-			<!-- //테이블 -->
-		</div>
-		<!-- //left -->
-		<!--Center-->
-		<div class="item">
-			<button class="pop_btn03 dis_block" type="button" accesskey="I" id="addBtn">
-				<img src="../img/ico_double_left.png" alt=">>">
-			</button>
-			<button class="pop_btn03 dis_block mat8" type="button" accesskey="D" id="removeBtn">
-				<img src="../img/ico_double_right.png" alt="<<">
-			</button>
-		</div>
-		<!--//Center-->
-		<!-- right -->
-		<div class="item">
-			<h3 class="blue"><span class="bullet01"></span><s:message code="selectCodeAll.selected.list"/></h3>
-			<div class="grayBg mat8 popupInner">
-				<div class="txt_right">
-					<button class="form_btn03" accesskey="Y" id="selectBtn"><s:message code="common.msg.select"/></button>
-					<button class="form_btn04" accesskey="N" id="noSelectBtn"><s:message code="selectCodeAll.noselect"/></button>
+			<div class="item" style="width: calc(50% - 30px);float: left;">
+				<h3 class="blue"><span class="bullet01"></span><s:message code="selectCodeAll.selected.list"/></h3>
+				<div class="grayBg mat8 popupInner">
+					<div class="txt_right">
+						<button class="form_btn03" accesskey="Y" id="selectBtn"><s:message code="common.msg.select"/></button>
+						<button class="form_btn04" accesskey="N" id="noSelectBtn"><s:message code="selectCodeAll.noselect"/></button>
+					</div>
+				</div>
+				<!-- 테이블 -->
+				<div class="pop_tableArea mat16">
+					<div id="coCdGrid2"  class="subTable slickGrid gridArea" style="height: calc(100% - 150px)"></div>
 				</div>
 			</div>
-			<!-- 테이블 -->
-			<div class="pop_tableArea mat16">
-				<div id="coCdGrid2"  class="subTable slickGrid gridArea">></div>
-			</div>
-		<!-- //right -->
+		</div>
 	</div>
 	<!--//popup-->
 
