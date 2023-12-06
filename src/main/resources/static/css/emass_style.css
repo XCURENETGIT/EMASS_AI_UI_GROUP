@@ -260,6 +260,8 @@ body,html {width:100%; height:100%;}
 .form_btn05 { color:#fff; font-weight:600; font-size:13px; height:26px; line-height: 28px; display: inline-block;padding:0 12px 0 32px;vertical-align: middle; text-align: center;  background:#242330 url(../img/ico_pencil.svg) 12px center no-repeat; border:0; border-radius:2px ; -webkit-border-radius:2px ; -moz-border-radius:2px ; -ms-border-radius:2px ; -o-border-radius:2px ; }
 .pop_btn01 {color:#333; height:36px; padding:0 20px; line-height: 32px; font-size:14px;vertical-align:middle;display: inline-block; border-radius: 2px;border: 1px solid #ccc;background: #fff;}
 .pop_btn02 {color:#fff; height:36px; padding:0 20px; line-height: 32px; font-size:14px;vertical-align:middle;display: inline-block; border-radius: 2px;border: 1px solid #1C64D3;background: #1C64D3;}
+.pop_btn03 {color:#fff; width:32px; height:32px; font-size:14px;vertical-align:middle;display: inline-block; border-radius: 2px; background: #1C64D3; border:0;}
+.pop_btn03:hover {background-color:#375E9A;}
 .table_btn01 {color:#fff; font-weight:400; font-size:12px; height:24px; line-height: 24px; padding:0 6px; background-color: #1A73F9; display: inline-block; vertical-align: middle; text-align: center;   border:0; border-radius:2px ; -webkit-border-radius:2px ; -moz-border-radius:2px ; -ms-border-radius:2px ; -o-border-radius:2px ;}
 
 /* width/height */
@@ -357,6 +359,17 @@ body,html {width:100%; height:100%;}
 	text-align: center;padding: 5px 0;border-radius: 6px; font-size:12px;position: absolute;z-index: 1;bottom: 90%;left: 50%;margin-left: -60px;
 	opacity: 0;transition: opacity 0.3s;-webkit-transition: opacity 0.3s;-moz-transition: opacity 0.3s;-ms-transition: opacity 0.3s;-o-transition: opacity 0.3s;}
 .xcnTooltip:hover .tooltiptext {visibility: visible;opacity: 1;}
+
+/* POPUp */
+#popupWrap {position: relative; display: flex; display: inline-flex; min-width:600px; width:100%;  flex-wrap: wrap; padding:20px;
+	flex-direction: row;flex-wrap: nowrap;align-items: stretch; overflow-x: auto; min-height: 600px; }
+#popupWrap .item { position: relative; align-self: top; padding:12px 12px 12px 12px; }
+#popupWrap .item .pageArea {position: absolute; width:97%; bottom:16px;}
+#popupWrap .item .pageArea .sortBtn {position: absolute; right:20px;}
+#popupWrap .item:nth-child(1) { flex-grow: 1; border:1px solid #ccc;}
+#popupWrap .item:nth-child(2) { flex-grow: 32px; align-self: center; }
+#popupWrap .item:nth-child(3) { flex-grow: 1; border:1px solid #ccc;}
+.popupInner {padding:8px;}
 
 /* Modal */
 #modalBtn {color:#375E9A; padding:8px 16px;font-size:12px;vertical-align:middle;display: inline-block; border-radius: 2px;border: 1px solid #375E9A;background: #F5F8FF; }

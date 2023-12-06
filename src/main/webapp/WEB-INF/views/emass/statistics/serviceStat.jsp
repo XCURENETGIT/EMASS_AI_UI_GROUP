@@ -656,7 +656,7 @@ function getSelectedCodeData( codeType, data ) {
 						</div>
 					</div>
 				</div>
-				<!-- pagination -->
+<%--				<!-- pagination -->
 				<div class="pageArea">
 					<div class="pagination">
 						<a href="#"><img src="../img/ico_page_left2.png" alt=""></a>
@@ -671,7 +671,7 @@ function getSelectedCodeData( codeType, data ) {
 						<a href="#"><img src="../img/ico_page_right2.png" alt=""></a>
 					</div>
 				</div>
-				<!-- //pagination -->
+				<!-- //pagination -->--%>
 			</div>
 
 		</div>

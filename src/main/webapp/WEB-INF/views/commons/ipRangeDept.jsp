@@ -588,7 +588,7 @@ function getDeptSchedule(){
 							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
-							<button type="button" class="btn btn-sm btn-default" id="dept" style="border-radius: 0;"><span class="glyphicon glyphicon-plus-sign"></span> <s:message code="common.org.choose.dept"/></button>
+							<button class="btn01" id="dept"><img src="../img/subBtn_plus.png" alt="추가">부서 추가</button>
 							<span id="deptByCoSelectedArea" class="codeSelectedBtn">
 									<button type="button" class="btn">0</button>
 							</span>
