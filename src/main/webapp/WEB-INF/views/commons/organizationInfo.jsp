@@ -5,11 +5,22 @@
 <head>
 <title></title>
 <style type="text/css">
+	.tab-content{
+		display: none;
+		background: #ededed;
+		padding: 15px;
+	}
+
+	.tab-content.active{
+		display: inherit;
+	}
 </style>
 <script type="text/javascript">
 var searchFlag=false;
 var coCdPDept='';
 $(document).ready(function(){
+
+
 	
 	$('#export_menu_co').css('display', '');
 	$('#export_menu_busi').hide();
@@ -661,251 +672,172 @@ function getPdeptOptions(){
 </head>
 <body class="mini-navbar" >
 
-	<div class="modal fade" id="coPop" tabindex="-1" role="dialog" aria-labelledby="coModal">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<form method="post" id="coPopForm">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					<h3 class="modal-title"><s:message code="common.org.co"/>-<s:message code="common.msg.addmodify"/></h3>
-				</div>
-				<div class="modal-body">
-					<div class="form-inline">
-						<label for="coCdPopInput" class="control-label col-xs-3"><s:message code="common.org.cocd"/></label>
-						<input type="text" class="form-control" name="coCd" id="coCdPopInput" placeholder="<s:message code="common.org.cocd"/>" required maxlength="20">
-					</div>
-					<div class="form-inline">
-						<label for="coNmPopInput" class="control-label col-xs-3"><s:message code="common.org.conm"/></label>
-						<input type="text" class="form-control" name="coNm" id="coNmPopInput" placeholder="<s:message code="common.org.conm"/>" required maxlength="20">
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
-					<button type="button" class="btn btn-primary savePopBtn" accesskey="S"><s:message code="common.msg.save"/></button>
-				</div>
-				</form>
+<div class="modal" id="coPop" tabindex="-1" role="dialog" aria-labelledby="coModal">
+	<div class="modal-content">
+		<form method="post" id="coPopForm">
+			<div class="modalHead">
+				<h2><s:message code="common.org.co"/>-<s:message code="common.msg.addmodify"/></h2>
+				<span class="close" data-dismiss="modal">&times;</span>
 			</div>
-		</div>
-	</div>
-	
-	<div class="modal fade" id="busiPop" tabindex="-1" role="dialog" aria-labelledby="busiModal">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<form method="post" id="busiPopForm">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					<h3 class="modal-title"><s:message code="common.org.busi"/>-<s:message code="common.msg.addmodify"/></h3>
+			<div class="modalCon">
+				<div class="modalTop">
+					<h3>회사 추가</h3>
+					<p>
+						<span class="red_dot veralign_middle"></span>
+						필수 입력 사항입니다.
+					</p>
 				</div>
-				<div class="modal-body">
-					<div class="form-inline">
-						<label for="busiCdPopInput" class="control-label col-xs-3"><s:message code="common.org.co"/></label>
-						<div class="form-group" id="coNmPopSelect_inBusi"></div>
-						<input type="hidden" name="coNm" id="coNmHidden">
+				<div class="modalbody">
+					<div class="row">
+						<div class="col-35">
+							<label for="coCdPopInput"><s:message code="common.org.cocd"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<input type="text" name="coCd" id="coCdPopInput" placeholder="<s:message code="common.org.cocd"/>" required maxlength="20">
+						</div>
 					</div>
-					<div class="form-inline">
-						<label for="busiCdPopInput" class="control-label col-xs-3"><s:message code="common.org.busicd"/></label>
-						<input type="text" class="form-control" name="busiCd" id="busiCdPopInput" placeholder="<s:message code="common.org.busicd"/>" required maxlength="20">
-					</div>
-					<div class="form-inline">
-						<label for="busiNmPopInput" class="control-label col-xs-3"><s:message code="common.org.businm"/></label>
-						<input type="text" class="form-control" name="busiNm" id="busiNmPopInput" placeholder="<s:message code="common.org.businm"/>" required maxlength="20">
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
-					<button type="button" class="btn btn-primary savePopBtn" accesskey="S"><s:message code="common.msg.save"/></button>
-				</div>
-				</form>
-			</div>
-		</div>
-	</div>
-	
-	<div class="modal fade" id="generalPop" tabindex="-1" role="dialog" aria-labelledby="generalModal">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<form method="post" id="generalPopForm">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					<h3 class="modal-title"><s:message code="common.org.general"/>-<s:message code="common.msg.addmodify"/></h3>
-				</div>
-				<div class="modal-body">
-					<div class="form-inline">
-						<label for="generalCdPopInput" class="control-label col-xs-3"><s:message code="common.org.co"/></label>
-						<div class="form-group" id="coNmPopSelect_inGeneral"></div>
-						<input type="hidden" name="coNm" id="coNmHiddenGeneral">
-					</div>
-					<div class="form-inline">
-						<label for="generalCdPopInput" class="control-label col-xs-3"><s:message code="common.org.generalcd"/></label>
-						<input type="text" class="form-control" name="generalCd" id="generalCdPopInput" placeholder="<s:message code="common.org.generalcd"/>" required maxlength="20">
-					</div>
-					<div class="form-inline">
-						<label for="generalNmPopInput" class="control-label col-xs-3"><s:message code="common.org.generalnm"/></label>
-						<input type="text" class="form-control" name="generalNm" id="generalNmPopInput" placeholder="<s:message code="common.org.generalnm"/>" required maxlength="20">
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
-					<button type="button" class="btn btn-primary savePopBtn" accesskey="S"><s:message code="common.msg.save"/></button>
-				</div>
-				</form>
-			</div>
-		</div>
-	</div>
-	
-	<div class="modal fade" id="deptPop" tabindex="-1" role="dialog" aria-labelledby="deptModal">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<form method="post" id="deptPopForm">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					<h3 class="modal-title"><s:message code="common.org.dept"/>-<s:message code="common.msg.addmodify"/></h3>
-				</div>
-				<div class="modal-body">
-					<div class="form-inline">
-						<label for="deptCdPopInput" class="control-label col-xs-3"><s:message code="common.org.co"/></label>
-						<div class="form-group" id="coNmPopSelect_inDept"></div>
-						<input type="hidden" name="coNm" id="coNmHiddenDept">
-					</div>
-					<div class="form-inline">
-						<label for="deptCdPopInput" class="control-label col-xs-3"><s:message code="common.org.pdept"/></label>
-						<div class="form-group" id="pDeptPopSelect_inDept"></div>
-						<input type="hidden" name="pDeptNm" id="parentHiddenDept">
-					</div>
-					<div class="form-inline">
-						<label for="deptCdPopInput" class="control-label col-xs-3"><s:message code="common.org.deptcd"/></label>
-						<input type="text" class="form-control" name="deptCd" id="deptCdPopInput" placeholder="<s:message code="common.org.deptcd"/>" required maxlength="20">
-					</div>
-					<div class="form-inline">
-						<label for="deptNmPopInput" class="control-label col-xs-3"><s:message code="common.org.deptnm"/></label>
-						<input type="text" class="form-control" name="deptNm" id="deptNmPopInput" placeholder="<s:message code="common.org.deptnm"/>" required maxlength="20">
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
-					<button type="button" class="btn btn-primary savePopBtn" accesskey="S"><s:message code="common.msg.save"/></button>
-				</div>
-				</form>
-			</div>
-		</div>
-	</div>
-
-	<div class="modal fade" id="jikgubPop" tabindex="-1" role="dialog" aria-labelledby="jikgubModal">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<form method="post" id="jikgubPopForm">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					<h3 class="modal-title"><s:message code="common.org.jikgub"/>-<s:message code="common.msg.addmodify"/></h3>
-				</div>
-				<div class="modal-body">
-					<div class="form-inline">
-						<label for="jikgubCdPopInput" class="control-label col-xs-3"><s:message code="common.org.jikgubcd"/></label>
-						<input type="text" class="form-control" name="jikgubCd" id="jikgubCdPopInput" placeholder="<s:message code="common.org.jikgubcd"/>" required maxlength="20">
-					</div>
-					<div class="form-inline">
-						<label for="jikgubNmPopInput" class="control-label col-xs-3"><s:message code="common.org.jikgubnm"/></label>
-						<input type="text" class="form-control" name="jikgubNm" id="jikgubNmPopInput" placeholder="<s:message code="common.org.jikgubnm"/>" required maxlength="20">
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
-					<button type="button" class="btn btn-primary savePopBtn" accesskey="S"><s:message code="common.msg.save"/></button>
-				</div>
-				</form>
-			</div>
-		</div>
-	</div>
-	
-	<div class="modal fade" id="jikinPop" tabindex="-1" role="dialog" aria-labelledby="jikinModal">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<form method="post" id="jikinPopForm">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					<h3 class="modal-title"><s:message code="common.org.jikin"/>-<s:message code="common.msg.addmodify"/></h3>
-				</div>
-				<div class="modal-body">
-					<div class="form-inline">
-						<label for="jikinCdPopInput" class="control-label col-xs-3"><s:message code="common.org.jikincd"/></label>
-						<input type="text" class="form-control" name="jikinCd" id="jikinCdPopInput" placeholder="<s:message code="common.org.jikincd"/>" required maxlength="20">
-					</div>
-					<div class="form-inline">
-						<label for="jikinNmPopInput" class="control-label col-xs-3"><s:message code="common.org.jikinnm"/></label>
-						<input type="text" class="form-control" name="jikinNm" id="jikinNmPopInput" placeholder="<s:message code="common.org.jikinnm"/>" required maxlength="20">
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
-					<button type="button" class="btn btn-primary savePopBtn" accesskey="S"><s:message code="common.msg.save"/></button>
-				</div>
-				</form>
-			</div>
-		</div>
-	</div>
-	<div class="container">
-		<div class="boxArea">
-			<div class="content_body">
-				<div class="row">
-					<div class="col-xs-12"> 
-						<ul class="nav nav-tabs codeTab">
-							<li class="active" style=" text-align: center"><a data-toggle="tab" href="#coList" 	id="coTab" 		><s:message code="common.org.co"/></a></li>
-							<li style=" text-align: center"><a data-toggle="tab" href="#busiList" 				id="busiTab" 	><s:message code="common.org.busi"/></a></li>
-							<li style=" text-align: center"><a data-toggle="tab" href="#generalList" 			id="generalTab" ><s:message code="common.org.general"/></a></li>
-							<li style=" text-align: center"><a data-toggle="tab" href="#deptList" 				id="deptTab" 	><s:message code="common.org.dept"/></a></li>
-							<li style=" text-align: center"><a data-toggle="tab" href="#jikgubList" 			id="jikgubTab" 	><s:message code="common.org.jikgub"/></a></li>
-							<li style=" text-align: center"><a data-toggle="tab" href="#jikinList" 				id="jikinTab" 	><s:message code="common.org.jikin"/></a></li>
-						</ul>
-					</div>
-				</div>
-				<div class="row top_space">
-					<div class="col-xs-8 text-left">
-						<div class="form-group form-inline not-dashed">
-							<div class="input-group">
-								<input type="text" class="form-control input-sm" placeholder="<s:message code="organizationInfo.enter.cocdconm"/>" id="searchStrInput" style="width: 280px;" maxlength="20">
-								<div class="input-group-btn">
-									<button class="btn btn-sm btn-success" type="button" accesskey="Q" id="searchBtn"><i class="glyphicon glyphicon-search"></i></button>
-								</div>
-							</div>
-							<button type="button" class="btn btn-sm btn-primary" accesskey="I" id="insertBtn" style="display: none;"><span class="glyphicon glyphicon-plus"></span>&nbsp;<s:message code="common.msg.add"/></button>
-							<button type="button" class="btn btn-sm btn-default" accesskey="D" id="deleteBtn" style="display: none;"><span class="glyphicon glyphicon-minus"></span>&nbsp;<s:message code="common.msg.delete"/></button>
+					<div class="row">
+						<div class="col-35">
+							<label for="coNmPopInput"><s:message code="common.org.conm"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<input type="text" name="coNm" id="coNmPopInput" placeholder="<s:message code="common.org.conm"/>" required maxlength="20">
 						</div>
 					</div>
 				</div>
-				<div class="tab-content codeContent xcn_full top_space">
-					<div id="coList" class="tab-pane fade in active" style="height:100%;">
-						<div id="coListGrid" class="slickGrid gridArea"></div>
-					</div>
-					<div id="busiList" class="tab-pane fade" style="height:100%;">
-						<div id="busiListGrid" class="slickGrid gridArea"></div>
-					</div>
-					<div id="generalList" class="tab-pane fade" style="height:100%;">
-						<div id="generalListGrid" class="slickGrid gridArea"></div>
-					</div>
-					<div id="deptList" class="tab-pane fade" style="height:100%;">
-						<div id="deptListGrid" class="slickGrid gridArea"></div>
-					</div>
-					<div id="jikgubList" class="tab-pane fade" style="height:100%;">
-						<div id="jikgubListGrid" class="slickGrid gridArea"></div>
-					</div>
-					<div id="jikinList" class="tab-pane fade" style="height:100%;">
-						<div id="jikinListGrid" class="slickGrid gridArea"></div>
-					</div>
+				<div class="modalfooter">
+					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+					<button type="button" class="pop_btn02" accesskey="S" class="savePopBtn"><s:message code="common.msg.save"/></button>
 				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<div class="modal" id="busiPop" tabindex="-1" role="dialog" aria-labelledby="busiModal">
+	<div class="modal-content">
+		<form method="post" id="busiPopForm">
+			<div class="modalHead">
+				<h2><s:message code="common.org.busi"/>-<s:message code="common.msg.addmodify"/></h2>
+				<span class="close" data-dismiss="modal">&times;</span>
+			</div>
+			<div class="modalCon">
+				<div class="modalTop">
+					<h3>사업장 추가</h3>
+					<p>
+						<span class="red_dot veralign_middle"></span>
+						필수 입력 사항입니다.
+					</p>
+				</div>
+				<div class="modalbody">
+					<div class="row">
+						<div class="col-35">
+							<label for="busiCdPopInput"><s:message code="common.org.co"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<div id="coNmPopSelect_inBusi"></div>
+							<input type="hidden" name="coNm" id="coNmHidden">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-35">
+							<label for="busiCdPopInput"><s:message code="common.org.busicd"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<input type="text" name="busiCd" id="busiCdPopInput" placeholder="<s:message code="common.org.busicd"/>" required maxlength="20">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-35">
+							<label for="busiNmPopInput"><s:message code="common.org.businm"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<input type="text" class="form-control" name="busiNm" id="busiNmPopInput" placeholder="<s:message code="common.org.businm"/>" required maxlength="20">
+						</div>
+					</div>
+
+				<div class="modalfooter">
+					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+					<button type="button" class="pop_btn02" accesskey="S" class="savePopBtn"><s:message code="common.msg.save"/></button>
+				</div>
+			</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+
+<div class="container">
+	<div class="searchArea">
+		<div class="searchSub">
+			<div>
+				<input type="text" placeholder="<s:message code="ipRange.msg.enter.busicomment"/>" id="searchStrInput">
+				<button class="form_btn01" type="button" accesskey="Q" id="searchBtn"><s:message
+						code="common.msg.search"/></button>
+			</div>
+			<div class="btnform">
+				<button type="button" class="btn01" accesskey="I" id="insertBtn"><img
+						src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
+				<button type="button" class="btn02" accesskey="D" id="deleteBtn"><img
+						src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/>
+				</button>
 			</div>
 		</div>
 	</div>
+	<div class="content xcn_full">
+		<div class="contentSub">
+			<div class="subtab">
+				<div class="row">
+					<div class="col-xs-12">
+						<ul class="nav nav-tabs codeTab" id="codeTab">
+							<li class="active" style=" text-align: center"><a data-toggle="tab" href="#coList"
+							                                                  id="coTab"><s:message
+									code="common.org.co"/></a></li>
+							<li style=" text-align: center"><a data-toggle="tab" href="#busiList"
+							                                   id="busiTab"><s:message code="common.org.busi"/></a></li>
+							<li style=" text-align: center"><a data-toggle="tab" href="#generalList"
+							                                   id="generalTab"><s:message
+									code="common.org.general"/></a></li>
+							<li style=" text-align: center"><a data-toggle="tab" href="#deptList"
+							                                   id="deptTab"><s:message code="common.org.dept"/></a></li>
+							<li style=" text-align: center"><a data-toggle="tab" href="#jikgubList"
+							                                   id="jikgubTab"><s:message code="common.org.jikgub"/></a>
+							</li>
+							<li style=" text-align: center"><a data-toggle="tab" href="#jikinList"
+							                                   id="jikinTab"><s:message code="common.org.jikin"/></a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+				<div id="coList" class="tab-content active"style="height:100%;">
+					<div id="coListGrid" class="slickGrid gridArea"></div>
+				</div>
+				<div id="busiList" class="tab-content" style="height:100%;">
+					<div id="busiListGrid" class="slickGrid gridArea"></div>
+				</div>
+				<div id="generalList" class="tab-content" style="height:100%;">
+					<div id="generalListGrid" class="slickGrid gridArea"></div>
+				</div>
+				<div id="deptList" class="tab-content" style="height:100%;">
+					<div id="deptListGrid" class="slickGrid gridArea"></div>
+				</div>
+				<div id="jikgubList" class="tab-content" style="height:100%;">
+					<div id="jikgubListGrid" class="slickGrid gridArea"></div>
+				</div>
+				<div id="jikinList" class="tab-content" style="height:100%;">
+					<div id="jikinListGrid" class="slickGrid gridArea"></div>
+				</div>
+		</div>
+	</div>
+</div>
+</div>
+</body>
 	<script type="text/javascript">
 		var gridCo = new Xgrid('coListGrid', contextRoot);
 		gridCo.onCheckBox();

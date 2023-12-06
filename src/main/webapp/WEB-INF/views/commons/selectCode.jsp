@@ -1,5 +1,3 @@
-<%@ page import="com.xcurenet.common.util.Common" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/fragments/popupScript.jsp"%>
 <%
 	String codeType = Common.nvl( request.getParameter("codeType") );
@@ -7,10 +5,10 @@
 	String oldCode = Common.nvl( request.getParameter("oldCode") );
 	String oldConm = Common.nvl( request.getParameter("oldConm") );
 %>
-<!DOCTYPE html>
-<html lang="ko">
+
 <head>
 <title><s:message code="selectCodeAll.title"/></title>
+	<link rel="stylesheet" type="text/css" href="../css/emass_style.css"/>
 <style>
 html,body{height: 100%; padding: 0px; margin: 0px;overflow: auto;min-width: 900px;}
 .panel {margin-bottom: 0px !important;}
@@ -299,86 +297,55 @@ function getCodeList() {
 			</div>
 		</div>
 	</div>
-	
-	<header class="header">
-		<div class="naviBack">
-			<img src="<c:url value="/img/title/home_icon.png"/>">
-			<span class="navi"><span id="code_title"></span><s:message code="common.msg.select"/></span>
-		</div>
-	</header>
 
-	<div class="xcn_container" style="min-width: 900px">
-		<div class="boxArea">
-			<div class="content_body">
-				<div style="width: calc(50% - 25px); float: left;height:100%">
-					<div class="panel with-nav-tabs panel-primary" style="height: 100%;">
-						<div class="panel-heading">
-							<ul class="nav nav-tabs">
-								<li class="active"><a href="#result1" data-toggle="tab" style="width: 70px; font-weight: bold;"><s:message code="selectCodeAll.list"/></a></li>
-							</ul>
-						</div>
-						<div class="panel-body">
-							<div class="tab-content" style="height:calc(100% - 40px);">
-								<div class="tab-pane fade in active" id="result1">
-									<div class="resultHeader">
-										<div class="form-inline">
-											<select class="form-control input-sm" id="busiCd" name="busiCd" style="display: none;max-width:155px;">
-												<option value="">- <s:message code="selectCodeAll.select.type.service"/> -</option>
-											</select>
-											<div class="input-group">
-												<input type="text" class="form-control input-sm" placeholder="<s:message code="common.msg.searchMsg"/>" id="searchStr" style="width: 180px;">
-												<div class="input-group-btn">
-													<button class="btn btn-sm btn-success" type="button" accesskey="Q" id="searchBtn"><i class="glyphicon glyphicon-search"></i></button>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="resultBody top_space" style="height: 100%;">
-										<div id="coCdGrid" class="slickGrid gridArea"></div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div style="width: 40px; float: left; height: 100%">
-					<div style="position: relative; top: 45%; left: 3px;">
-						<button class="btn btn-sm btn-primary" type="button" accesskey="I" id="addBtn"><i class="glyphicon glyphicon-arrow-right"></i></button><br /><br />
-						<button class="btn btn-sm btn-primary" type="button" accesskey="D" id="removeBtn"><i class="glyphicon glyphicon-arrow-left"></i></button>
-					</div>
-				</div>
-				<div style="width: calc(50% - 25px); float: left; height: 100%">
-					<div class="panel with-nav-tabs panel-primary" style="height: 100%;">
-						<div class="panel-heading">
-							<ul class="nav nav-tabs">
-								<li class="active"><a href="#result1" data-toggle="tab" style="width: 110px; font-weight: bold;"><s:message code="selectCodeAll.selected.list"/></a></li>
-							</ul>
-						</div>
-						<div class="panel-body">
-							<div class="tab-content" style="height:calc(100% - 40px);">
-								<div class="tab-pane fade in active" id="result1">
-									<div class="resultHeader">
-										<div class="form-inline text-right">
-											<div class="input-group">
-												<button type="button" class="btn btn-sm btn-primary" accesskey="Y" id="selectBtn"><span class="glyphicon glyphicon-ok"></span>&nbsp;<s:message code="common.msg.select"/></button>
-											</div>
-											<div class="input-group">
-												<button type="button" class="btn btn-sm btn-default" accesskey="N" id="noSelectBtn"><span class="glyphicon glyphicon-remove"></span>&nbsp;<s:message code="selectCodeAll.noselect"/></button>
-											</div>
-										</div>
-									</div>
-									<div class="resultBody top_space" style="height: 100%;">
-										<div id="coCdGrid2" class="slickGrid gridArea"></div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+
+	<!--popup-->
+	<div id="popupWrap">
+		<!-- left -->
+		<div class="item">
+			<h3 class="blue"><span class="bullet01"></span><s:message code="selectCodeAll.list"/></h3>
+			<div class="grayBg mat8 popupInner">
+				<div>
+					<input type="text"  placeholder="<s:message code="common.msg.searchMsg"/>" id="searchStr">
+					<button class="form_btn01"type="button" accesskey="Q" id="searchBtn"></button>
 				</div>
 			</div>
+			<!-- 테이블 -->
+			<div class="pop_tableArea mat16">
+					<!-- 테이블 -->
+					<div id="coCdGrid"  class="subTable slickGrid gridArea"> ></div>
+			</div>
+			<!-- //테이블 -->
 		</div>
+		<!-- //left -->
+		<!--Center-->
+		<div class="item">
+			<button class="pop_btn03 dis_block" type="button" accesskey="I" id="addBtn">
+				<img src="../img/ico_double_left.png" alt=">>">
+			</button>
+			<button class="pop_btn03 dis_block mat8" type="button" accesskey="D" id="removeBtn">
+				<img src="../img/ico_double_right.png" alt="<<">
+			</button>
+		</div>
+		<!--//Center-->
+		<!-- right -->
+		<div class="item">
+			<h3 class="blue"><span class="bullet01"></span><s:message code="selectCodeAll.selected.list"/></h3>
+			<div class="grayBg mat8 popupInner">
+				<div class="txt_right">
+					<button class="form_btn03" accesskey="Y" id="selectBtn"><s:message code="common.msg.select"/></button>
+					<button class="form_btn04" accesskey="N" id="noSelectBtn"><s:message code="selectCodeAll.noselect"/></button>
+				</div>
+			</div>
+			<!-- 테이블 -->
+			<div class="pop_tableArea mat16">
+				<div id="coCdGrid2"  class="subTable slickGrid gridArea">></div>
+			</div>
+		<!-- //right -->
 	</div>
-	
+	<!--//popup-->
+
+
 	<script type="text/javascript">
 		var grid = new Xgrid('coCdGrid', contextRoot);
 			grid.setDrag(true);
@@ -431,6 +398,7 @@ function getCodeList() {
 		
 		grid.loadHeader(false);
 		grid.initData('<s:message code="selectCodeAll.select.code"/>')
+/*
 		grid.onDragStart = function(e,dd){
 			$('#coCdGrid2').css('border', '2px solid #FFA040');
 		};
@@ -440,6 +408,7 @@ function getCodeList() {
 			}
 			$('#coCdGrid2').css('border','border: 1px solid #EFEFEF;border-top: 2px solid #7A7A7A;');
 		};
+*/
 
 		var options={};
 		options.status_cnt_id='#total_cnt2';
@@ -518,5 +487,3 @@ function getCodeList() {
 		grid2.loadHeader(false);
 		grid2.initData('<s:message code="selectCodeAll.select.code"/>');
 	</script>
-</body>
-</html>
