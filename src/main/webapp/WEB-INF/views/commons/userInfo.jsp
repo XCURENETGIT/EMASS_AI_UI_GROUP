@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
-<!DOCTYPE html>
-<html lang="ko">
+
 <head>
 <title></title>
 <%
@@ -92,17 +91,17 @@ $(document).ready(function(){
 	$('#setUserPop').on('hide.bs.modal', function() {
 		getInsaConfig()
 	});
-	
+
 	$('#dept').click(function(){
         alert("dfadfa");
 		openCodeWindow('deptByCo', $('#coCd_inUser option:selected').val(), $('#deptByCoVal').val(), $('#deptByCoStr').val());
 	});
-	
+
 	$(document).on('mouseover', '.codeSelectedBtn', function(e){
 		$('#selectedCodeTitle').show();
 		$('#selectedCodeTitle').css('right', (($(document).width()-e.pageX)-724)+'px');
 		$('#selectedCodeTitle').css('top', e.pageY-120+'px');
-		
+
 		var str = $(this).parent().find('.selectedTitle').val();
 		if( str != undefined ) str = str.replaceAll('\\|', ',');
 		$('#selectedCodeTitle').html(str);
@@ -110,7 +109,7 @@ $(document).ready(function(){
 	$(document).on('mousemove', '.codeSelectedBtn', function(e){
 		var right = (($(document).width()-e.pageX)-724)+'px';
 		var top = e.pageY-120+'px';
-		
+
 		$('#selectedCodeTitle').css('right', right);
 		$('#selectedCodeTitle').css('top', top);
 		var str = $(this).parent().find('.selectedTitle').val();
@@ -164,7 +163,7 @@ $(document).ready(function(){
 			});
 		}
 	});
-	
+
 	$('#setUserPopBtn').click(function(){
 		var checkWeekFlag = '';
 		var data = [];
@@ -252,7 +251,7 @@ $(document).ready(function(){
 				return;
 			}
 		}
-		var checkedInsaText = ''; 
+		var checkedInsaText = '';
 		var checkedInsa = $('input:radio[name="insa\\.auto"]:checked').val();
 		if(checkedInsa=='Y'){
 			checkedInsaText = '<s:message code="userInfo.autolink"/>';
@@ -296,8 +295,8 @@ $(document).ready(function(){
 	$('#userType').change(function(){
 		getData();
 	});
-	
-	$('.savePopBtn').click(function(){
+
+	$('#savePopBtn').click(function(){
 		var mode = $('#userPop').attr('mode');
 		if( $('#userId').val() == '' ){
 			ui.alertMsg('<s:message code="userInfo.msg.enter.id"/>');
@@ -309,7 +308,7 @@ $(document).ready(function(){
 			$('#userNm').focus();
 			return;
 		}
-		
+
 		var ip = $('#userIp').val().trimAll();
 		var email = $('#userEmail').val().trimAll();
 		if ( email != "" ) {
@@ -364,7 +363,7 @@ $(document).ready(function(){
 		}
 		var jikinCd_inUser = $('#jikinCd_inUser option:selected').text();
 		$('#jikinHiddenNm').val(jikinCd_inUser);
-		var message = mode=='insert' ? '<s:message code="common.msg.confirm.add"/>' : '<s:message code="common.msg.confirm.modify"/>'; 
+		var message = mode=='insert' ? '<s:message code="common.msg.confirm.add"/>' : '<s:message code="common.msg.confirm.modify"/>';
 		ui.confirmMsg(message, '', '', function(rs){
 			if(rs){
 				grid.on();
@@ -372,7 +371,7 @@ $(document).ready(function(){
 					url :mode=='insert' ? 'insertUser.xcn' : 'updateUser.xcn',
 					data : $('#userPopForm').serializeAll(),
 					success : function ( data, total ) {
-						
+
 						ui.alertMsg('<s:message code="common.msg.saved"/>');
 						$('#userPop').modal('hide');
 						getData ( );
@@ -387,7 +386,7 @@ $(document).ready(function(){
 			}
 		});
 	});
-	
+
 	$('#insertBtn').click(function(){
 		$('#userPop').attr('mode', 'insert');
 		var options = getCoOptions();
@@ -396,27 +395,27 @@ $(document).ready(function(){
 		var deptOptions = getDeptOptions();
 		var jikgubOptions = getJikgubOptions();
 		var jikinOptions = getJikinOptions();
-	
+
 		var str = '<select class="form-control input-sm" id="coCd_inUser" name="coCd" style=" min-width: 197px;">';
 		str += options;
 		str += '</select>';
 		$("#coSelect_inUser").html(str);
-		
+
 		var strBusi = '<select class="form-control input-sm" id="busiCd_inUser" name="busiCd" style=" min-width: 197px;">';
 		strBusi += busiOptions;
 		strBusi += '</select>';
 		$("#busiSelect_inUser").html(strBusi);
-		
+
 		var strGeneral = '<select class="form-control input-sm" id="generalCd_inUser" name="generalCd" style=" min-width: 197px;">';
 		strGeneral += generalOptions;
 		strGeneral += '</select>';
 		$("#generalSelect_inUser").html(strGeneral);
-		
+
 		var strJikgub = '<select class="form-control input-sm" id="jikgubCd_inUser" name="jikgubCd" style=" min-width: 197px;">';
 		strJikgub += jikgubOptions;
 		strJikgub += '</select>';
 		$("#jikgubSelect_inUser").html(strJikgub);
-		
+
 		var strJikin = '<select class="form-control input-sm" id="jikinCd_inUser" name="jikinCd" style=" min-width: 197px;">';
 		strJikin += jikinOptions;
 		strJikin += '</select>';
@@ -432,7 +431,7 @@ $(document).ready(function(){
 		coSelectDisabled();
 		$('#busiCdPopInput').focus();
 	});
-	
+
 
 	$('#deleteBtn').click(function(){
 		var rows = grid.getSelectedKey('userId');
@@ -484,7 +483,7 @@ $(document).ready(function(){
 		strGeneral += generalOptions;
 		strGeneral += '</select>';
 		$("#generalSelect_inUser").html(strGeneral);
-		
+
 		coSelectDisabled('change');
 	});
 	//총괄 상세조회 팝업
@@ -499,7 +498,7 @@ $(document).ready(function(){
 	$('#jikgubSchPop').click(function(){
 		$('#schJikgubPop').modal('show');
 	});
-	
+
 	$('#makeInfoBtn').click(function(){
 		ui.confirmMsg( '<s:message code="userInfo.msg.confirm.insa"/>', '', '', function(rs){
 			if(rs){
@@ -520,7 +519,7 @@ $(document).ready(function(){
 			}
 		});
 	});
-	
+
 	$(document).on("change",".insaSelctClass",function(){
 		if($(this).val() == 'delete' && current_select_count>11){
 			$(this).parent().remove();
@@ -539,13 +538,13 @@ $(document).ready(function(){
 		str += options;
 		str += '</select></li>';
 		$("#insaSelect").append(str);
-			
+
 		current_select_count = current_select_count+1;
 		}else{
 			ui.alertMsg('<s:message code="userInfo.msg.colcreate"/>');
 		}
 	});
-	
+
 	$('#directExecuteBtn').click(function(){
 		ui.confirmMsg('<s:message code="common.msg.confirm.apply"/>', '', '', function(rs){
 			if(rs) {
@@ -576,7 +575,7 @@ function getInsaConfig(){
 		success : function ( data, total ) {
 			if(api_insaYn == 'Y') $('#setInfoBtn').hide();
 			else $('#setInfoBtn').show();
-			
+
 			if((nvl(data, 'N') == 'N' || data.val == 'N') && api_insaYn != 'Y') {
 				$('#insertBtn').show();
 				$('#deleteBtn').show();
@@ -588,7 +587,7 @@ function getInsaConfig(){
 				$('#makeInfoBtn').hide();
 				$('#insaComment').show();
 			}
-			
+
 		},
 		error : function (status, message) {
 			ui.alertMsg(message);
@@ -691,7 +690,7 @@ function setInsaRadioVal(data, id){
 		}
 	}
 	$('input:radio[name='+idIndicator('insa.auto')+']:input[value=N]').prop("checked", true);
-	
+
 }
 function setInsa_schedule(insa_schedule){
 	var data = [];
@@ -703,7 +702,7 @@ function idIndicator(id){
 }
 function coSelectDisabled(mode){
 	var coCd_for_disabled = $("#coCd_inUser option:selected").val();
-	
+
 	if(coCd_for_disabled == '' ){
 		$('#busiCd_inUser').prop('disabled',true);
 		$('#generalCd_inUser').prop('disabled',true);
@@ -718,7 +717,7 @@ function coSelectDisabled(mode){
 		if( mode == 'change' ) resetCode('deptByCo');
 	}
 }
-//선택된 탭의 폼 값 입력 함수 
+//선택된 탭의 폼 값 입력 함수
 function getCurrentPopForm(){
 	var tab = getCurrentTab();
 	if(tab=='coTab') return $('#coPopForm').serializeAll();
@@ -907,22 +906,22 @@ function allSelectOptions(){
 		str += options;
 		str += '</select>';
 	$("#coSelect_inUser").html(str);
-	
+
 	var strBusi = '<select class="form-control input-sm" id="busiCd_inUser" name="busiCd" style=" min-width: 197px;">';
 		strBusi += busiOptions;
 		strBusi += '</select>';
 	$("#busiSelect_inUser").html(strBusi);
-	
+
 	var strGeneral = '<select class="form-control input-sm" id="generalCd_inUser" name="generalCd" style=" min-width: 197px;">';
 		strGeneral += generalOptions;
 		strGeneral += '</select>';
 	$("#generalSelect_inUser").html(strGeneral);
-	
+
 	var strJikgub = '<select class="form-control input-sm" id="jikgubCd_inUser" name="jikgubCd" style=" min-width: 197px;">';
 		strJikgub += jikgubOptions;
 		strJikgub += '</select>';
 	$("#jikgubSelect_inUser").html(strJikgub);
-	
+
 	var strJikin = '<select class="form-control input-sm" id="jikinCd_inUser" name="jikinCd" style=" min-width: 197px;">';
 		strJikin += jikinOptions;
 		strJikin += '</select>';
@@ -980,7 +979,7 @@ function getInsaSchedule(){
 	return schedule.join(' ');
 }
 function makeInsaSelectBox(options,data){
-	
+
 	var arr = ''
 	var arr2 = ''
 	for(var i=0 ; i < data.length ; i++){
@@ -988,7 +987,7 @@ function makeInsaSelectBox(options,data){
 			arr = data[i].val.replace(/\\/g,'');
 			if(arr!='')arr2 = jQuery.parseJSON(arr);
 			//arr =  data[i].val.replace(/\\/g,'');
-			
+
 		}
 	}
 	var str = '';
@@ -1041,10 +1040,10 @@ function makeInsaOptions(){
 function openCodeWindow(id, coCd, oldCode, oldConm){
 	$('#oldCode').val(oldCode);
 	$('#oldConm').val(oldConm);
-	
+
 	var url    = '<c:url value="/commons/selectCodeSingle.do?codeType='+id+'&coCd='+coCd+'"/>';
 	fnOpenWindow('', 'selectCodeWinPopup', 520, 600);
-	
+
 	$('#codeParam').attr('target','selectCodeWinPopup');
 	$('#codeParam').attr('action', url);
 	$('#codeParam').attr('method','post');
@@ -1056,7 +1055,7 @@ function getSelectedCodeData( codeType, data ) {
 	for(var i=0; i<data.length; i++){
 		str += data[i].codeName;
 		val += data[i].code;
-		
+
 		if( i != data.length-1){
 			if( codeType == 'deptByCo'){
 				str +=', ';
@@ -1073,7 +1072,7 @@ function getSelectedCodeData( codeType, data ) {
 	}
 	$('#'+codeType+'Str').val(str);
 	$('#'+codeType+'Val').val(val);
-	
+
 	if( $('#'+codeType+'Str').val() != '' ){
 		$('#'+codeType+'SelectedArea').find('.btn').text(data.length);
 		$('#'+codeType+'SelectedArea').show();
@@ -1091,7 +1090,6 @@ function resetCode(codeType){
 }
 </script>
 </head>
-<body class="mini-navbar">
 	<div class="modal fade" id="schGeneralPop" tabindex="-1" role="dialog" aria-labelledby="schGeneralModal" style="z-index: 10000;">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
@@ -1267,7 +1265,7 @@ function resetCode(codeType){
 									<button id="addSelectBox" type="button" accesskey="A" class="btn btn-default" style="margin-left: 84px"><span class="glyphicon glyphicon-plus"><s:message code="common.msg.add"/></span></button>
 										<div style="margin-left: -15px; margin-top: 20px;">
 											<ol id="insaSelect" >
-											</ol>	
+											</ol>
 										</div>
 									</div>
 								</fieldset>
@@ -1334,146 +1332,186 @@ function resetCode(codeType){
 			</div>
 		</div>
 	</div>
-	<div class="modal fade" id="userPop" tabindex="-1" role="dialog" aria-labelledby="userPop">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<form method="post" id="userPopForm">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-						<h3 class="modal-title"><s:message code="userInfo.userPop.title"/></h3>
-					</div>
-					<div class="modal-body">
-						<div class="form-inline">
-							<label for="ceo_inUser" class="control-label col-xs-3"><s:message code="userInfo.usertype"/></label>
-							<select class="form-control input-sm" id="ceo_inUser" name="ceo" style=" min-width: 197px;">
+<div class="modal"  id="userPop" tabindex="-1" role="dialog" aria-labelledby="userPop">
+	<div class="modal-content">
+		<form method="post" id="userPopForm">
+			<div class="modalHead">
+				<h2><s:message code="userInfo.userPop.title"/></h2>
+				<span class="close" data-dismiss="modal">&times;</span>
+			</div>
+			<div class="modalCon">
+				<div class="modalTop">
+					<h3>사용자 추가 및 수정</h3>
+					<p>
+						<span class="red_dot veralign_middle"></span>
+						필수 입력 사항입니다.
+					</p>
+				</div>
+				<div class="modalbody">
+					<div class="row">
+						<div class="col-35">
+							<label for="ceo_inUser" class="fname"><s:message code="userInfo.usertype"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<select id="ceo_inUser" class="w100" name="ceo">
 								<option value="N"><s:message code="userInfo.normal"/></option>
 								<option value="Y">CEO</option>
 							</select>
 							<input type="hidden" id="ceoHiddenNm" name="ceoNm">
 						</div>
-						<div class="form-inline">
-							<label for="userId" class="control-label col-xs-3"><s:message code="common.msg.id"/></label>
-							<input type="text" class="form-control" name="userId" id="userId" placeholder="<s:message code="common.msg.id"/>" maxlength="50">
+					</div>
+					<div class="row">
+						<div class="col-35">
+							<label for="userId" class="fname"><s:message code="common.msg.id"/></label>
+							<span class="red_dot"></span>
 						</div>
-						<div class="form-inline">
-							<label for="userNm" class="control-label col-xs-3"><s:message code="common.msg.name"/></label>
-							<input type="text" class="form-control" name="userNm" id="userNm" placeholder="<s:message code="common.msg.name"/>" maxlength="255">
+						<div class="col-65">
+							<input type="text" class="w100" name="userId" id="userId" placeholder="<s:message code="common.msg.id"/>" maxlength="50">
 						</div>
-						<div class="form-inline">
-							<label for="coSelect_inUser" class="control-label col-xs-3"><s:message code="common.org.co"/></label>
+					</div>
+
+					<div class="row">
+						<div class="col-35">
+							<label for="userNm" class="fname"><s:message code="common.msg.name"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<input type="text" class="w100" name="userNm" id="userNm" placeholder="<s:message code="common.msg.name"/>" maxlength="255">
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-35">
+							<label for="coSelect_inUser" class="fname"><s:message code="common.org.co"/></label>
+						</div>
+						<div class="col-65">
 							<div class="form-group" id="coSelect_inUser"></div>
 							<input type="hidden" id="coHiddenNm" name="coNm">
 						</div>
-						<div class="form-inline">
-							<label for="busiSelect_inUser" class="control-label col-xs-3"><s:message code="common.org.busi"/></label>
+					</div>
+
+					<div class="row">
+						<div class="col-35">
+							<label for="busiSelect_inUser" class="fname"><s:message code="common.org.busi"/></label>
+						</div>
+						<div class="col-65">
 							<div class="form-group" id="busiSelect_inUser"></div>
 							<input type="hidden" id="busiHiddenNm" name="busiNm">
 						</div>
-						<div class="form-inline">
-							<div id="selectedCodeTitle"></div>
-							<label for="deptSelect_inUser" class="control-label col-xs-3"><s:message code="common.org.dept"/></label>
-							<div class="btn-group" data-toggle="buttons">
-								<button type="button" class="btn btn-sm btn-default" id="dept" style="border-radius: 0;"><span class="glyphicon glyphicon-plus-sign"></span> <s:message code="common.org.choose.dept"/></button>
-								<span id="deptByCoSelectedArea" class="codeSelectedBtn">
-									<button type="button" class="btn">0</button>
-								</span>
-								<span id="deptByCoStrSpan"></span>
-								<input type="hidden" id="deptByCoStr" class="selectedTitle" name="deptNm">
-								<input type="hidden" id="deptByCoVal" name="deptCd">
-							</div>
+					</div>
+
+					<div class="row">
+						<div class="col-35">
+							<label for="jikgubSelect_inUser" class="fname"><s:message code="common.org.jikgub"/></label>
 						</div>
-						<div class="form-inline">
-							<label for="jikgubSelect_inUser" class="control-label col-xs-3"><s:message code="common.org.jikgub"/></label>
-							<div class="form-group" id="jikgubSelect_inUser"></div>
+						<div class="col-65">
+							<div id="jikgubSelect_inUser"></div>
 							<input type="hidden" id="jikgubHiddenNm" name="jikgubNm">
 						</div>
-						<div class="form-inline">
-							<label for="generalSelect_inUser" class="control-label col-xs-3"><s:message code="common.org.general"/></label>
-							<div class="form-group" id="generalSelect_inUser"></div>
+					</div>
+					<div class="row">
+						<div class="col-35">
+							<label for="generalSelect_inUser" class="fname"><s:message code="common.org.general"/></label>
+						</div>
+						<div class="col-65">
+							<div id="generalSelect_inUser"></div>
 							<input type="hidden" id="generalHiddenNm" name="generalNm">
 						</div>
-						<div class="form-inline">
-							<label for="jikinSelect_inUser" class="control-label col-xs-3"><s:message code="common.org.jikin"/></label>
-							<div class="form-group" id="jikinSelect_inUser"></div>
-							<input type="hidden" id="jikinHiddenNm" name="jikinNm">
+					</div>
+					<div class="row">
+						<div class="col-35">
+							<label for="jikinSelect_inUser" class="fname"><s:message code="common.org.jikin"/></label>
 						</div>
-						<div class="form-inline">
-							<label for="userIp" class="control-label col-xs-3">IP</label>
-							<input type="text" class="form-control" name="userIp" id="userIp" placeholder="<s:message code="userInfo.msg.ip"/>" style="width: 400px;">
+						<div class="col-65">
+							<div id="jikinSelect_inUser"></div>
+							<input type="hidden" id="jikinHiddenNm" name="jikinHiddenNm">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-35">
+							<label for="userIp" class="fname">IP</label>
+						</div>
+						<div class="col-65">
+							<div id="jikinSelect_inUser"></div>
+							<input type="text" class="w100" name="userIp" id="userIp" placeholder="<s:message code="userInfo.msg.ip"/>">
 							<%if( isIPv6){ %>
-							<p style="padding-left:142px; margin-bottom: 0px;">
+							<p>
 								<span style='color:grey;'>[ex: IPv4 - 192.168.0.12 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IPv6 - 2002:9b3d:1a32:4:208:74ff:fe39:6c43]</span>
 							</p>
 							<%} %>
 						</div>
-						<div class="form-inline">
-							<label for="userEmail" class="control-label col-xs-3">E-Mail</label>
-							<input type="text" class="form-control" name="userEmail" id="userEmail" placeholder="<s:message code="userInfo.msg.email"/>" style="width: 400px;">
+					</div>
+					<div class="row">
+						<div class="col-35">
+							<label for="userEmail" class="fname">E-Mail</label>
+						</div>
+						<div class="col-65">
+							<input type="text" class="w100" name="userEmail" id="userEmail" placeholder="<s:message code="userInfo.msg.email"/>">
 						</div>
 					</div>
-				</form>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
-					<button type="button" class="btn btn-primary savePopBtn" accesskey="S" id="savePopBtn"><s:message code="common.msg.save"/></button>
+
+
+				</div>
+				<div class="modalfooter">
+					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message
+							code="common.msg.close"/></button>
+					<button type="button" class="pop_btn02" accesskey="S" id="savePopBtn"><s:message
+							code="common.msg.save"/></button>
 				</div>
 			</div>
-		</div>
+		</form>
 	</div>
+</div>
+
 	<div class="container">
-		<div class="boxArea">
-			<div class="content_body">
-				<div class="row">
-					<div class="col-xs-8 text-left">
-						<div class="form-group form-inline not-dashed">
-							<div class="input-group">
-								<select class="form-control input-sm" id="userType" style="float: left;">
-									<option value="">- <s:message code="userInfo.usertype"/> -</option>
-									<option value="N"><s:message code="userInfo.normal"/></option>
-									<option value="Y">CEO</option>
-								</select>
-							</div>
-							<div class="input-group">
-								<select class="form-control input-sm" id="searchType" style="float: left;">
-									<option value="all">- <s:message code="userInfo.all"/> -</option>
-									<option value="userId"><s:message code="common.msg.id"/></option>
-									<option value="userNm"><s:message code="common.msg.name"/></option>
-									<option value="userEmail">E-Mail</option>
-									<option value="userIp">IP</option>
-									<option value="userDept"><s:message code="common.org.dept"/></option>
-								</select>
-							</div>
-							<div class="input-group">
-								<input type="text" class="form-control input-sm" placeholder="<s:message code="common.msg.searchMsg"/>" id="searchStr" style="width: 150px;">
-								<div class="input-group-btn">
-									<button class="btn btn-sm btn-success" type="button" accesskey="Q" id="searchBtn"><i class="glyphicon glyphicon-search"></i></button>
-								</div>
-							</div>
-							<button type="button" class="btn btn-sm btn-primary" accesskey="I" id="insertBtn" style="display: none;"><span class="glyphicon glyphicon-plus"></span>&nbsp;<s:message code="common.msg.add"/></button>
-							<button type="button" class="btn btn-sm btn-default" accesskey="D" id="deleteBtn" style="display: none;"><span class="glyphicon glyphicon-minus"></span>&nbsp;<s:message code="common.msg.delete"/></button>
-							<button type="button" class="btn btn-sm btn-default" accesskey="M" id="makeInfoBtn" style="display: none;"><span class="glyphicon glyphicon-user"></span>&nbsp;<s:message code="userInfo.info.insa"/></button>
-							<button type="button" class="btn btn-sm btn-primary" accesskey="U" id="uploadInfoBtn" style="display:none;"><span class="glyphicon glyphicon-upload" style="display:none;"></span>&nbsp;<s:message code="userInfo.upload"/></button>
-							<button type="button" class="btn btn-sm btn-warning <%=Common.isEquals(api_insaYn, "Y") ? "hide" : "" %>" accesskey="S" id="setInfoBtn"><span class="glyphicon glyphicon-cog"></span>&nbsp;<s:message code="userInfo.set.insa"/></button>
-							<div id="insaComment" style="margin-left: 550px;margin-top: -15px;font-weight: bold; color:#f25643;display: none;width: 600px;"><s:message code="userInfo.msg.insa.auto"/></div>
-						</div>
-					</div>
+		<div class="searchArea">
+			<div class="searchSub">
+				<div>
+					<select id="userType" style="float: left;">
+						<option value="">- <s:message code="userInfo.usertype"/> -</option>
+						<option value="N"><s:message code="userInfo.normal"/></option>
+						<option value="Y">CEO</option>
+					</select>
 				</div>
-				<div class="row xcn_full top_space">
-					<div class="col-xs-12" style="height: 100%;">
-						<div id="userListGrid" class="slickGrid gridArea"></div>
-					</div>
+				<div>
+						<select id="searchType" style="float: left;">
+							<option value="all">- <s:message code="userInfo.all"/> -</option>
+							<option value="userId"><s:message code="common.msg.id"/></option>
+							<option value="userNm"><s:message code="common.msg.name"/></option>
+							<option value="userEmail">E-Mail</option>
+							<option value="userIp">IP</option>
+							<option value="userDept"><s:message code="common.org.dept"/></option>
+						</select>
+					</select>
+				</div>
+				<div>
+					<input type="text"  placeholder="<s:message code="ipRange.msg.enter.busicomment"/>" id="searchStr">
+					<button class="form_btn01" type="button" accesskey="Q" id="searchBtn"><s:message code="common.msg.search"/></button>
+				</div>
+				<div class="btnform">
+					<button type="button" class="btn01" accesskey="I" id="insertBtn"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
+					<button type="button" class="btn02" accesskey="D" id="deleteBtn"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
+					<button type="button" class="btn03" accesskey="U" id="makeInfoBtn"><span class="glyphicon glyphicon-import"></span>&nbsp;<s:message code="userInfo.info.insa"/></button>
+					<button type="button" class="btn05" <%=Common.isEquals(api_insaYn, "Y") ? "hide" : "" %>" accesskey="S"  id="setInfoBtn"><span class="glyphicon glyphicon-cog"></span>&nbsp;<s:message code="userInfo.set.insa"/></button>
+					<div id="insaComment"><s:message code="userInfo.msg.insa.auto"/></div>
 				</div>
 			</div>
 		</div>
+
+		<div class="content xcn_full">
+			<div class="contentSub">
+				<div id="userListGrid" class="slickGrid gridArea"></div>
+			</div>
+		</div>
 	</div>
-	
+
 	<script type="text/javascript">
-		
+
 		var grid = new Xgrid('userListGrid', contextRoot);
 		grid.onCheckBox();
 		grid.autoNumber();
-		
+
 		grid.colAdd('userId', '<s:message code="common.msg.id"/>', 120, 'center', false, 'link');
 		grid.colAdd('userNm', '<s:message code="common.msg.name"/>', 200, 'left', false, 'nomal');
 		grid.colAdd('userEmail', 'E-Mail', 250, 'left', false, 'nomal');
@@ -1504,7 +1542,7 @@ function resetCode(codeType){
 				$('#deptByCoVal').val(grid.getValue(grid.Row, 'deptCd'));
 				$('#deptByCoStr').val(grid.getValue(grid.Row, 'deptNm'));
 				$('#deptByCoStrSpan').html(grid.getValue(grid.Row, 'deptNm'));
-				
+
 				if( $('#deptByCoStr').val() != '' ){
 					$('#deptByCoSelectedArea').find('.btn').text(1);
 					$('#deptByCoSelectedArea').show();
@@ -1513,7 +1551,7 @@ function resetCode(codeType){
 					$('#deptByCoSelectedArea').find('.btn').text(0);
 					$('#deptByCoSelectedArea').hide();
 				}
-				
+
 				$('#jikgubCd_inUser').val(grid.getValue(grid.Row, 'jikgubCd'));
 				$('#jikinCd_inUser').val(grid.getValue(grid.Row, 'jikinCd'));
 				$('#userIp').val(grid.getValue(grid.Row, 'userIp'));
@@ -1530,10 +1568,8 @@ function resetCode(codeType){
 			getData();
 		};
 	</script>
-	
+
 	<form method="post" id="codeParam">
 		<input type="hidden" name="oldCode" id="oldCode"/>
-		<input type="hidden" name="oldConm" id="oldConm"/>					
+		<input type="hidden" name="oldConm" id="oldConm"/>
 	</form>
-</body>
-</html>

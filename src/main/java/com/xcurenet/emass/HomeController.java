@@ -818,7 +818,7 @@ public class HomeController {
 	@RequestMapping(value = "/commons/selectCode.do")
 	@Description("코드 선택 페이지")
 	public String selectCode(Locale locale, Model model) {
-		return "/commons/selectCode";
+		return "/commons/selectCode.popup";
 	}
 	@RequestMapping(value = "/commons/selectCodeAll.do")
 	@Description("코드 선택 페이지")
