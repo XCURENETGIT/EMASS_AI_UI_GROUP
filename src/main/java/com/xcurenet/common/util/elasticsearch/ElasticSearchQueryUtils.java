@@ -2391,7 +2391,6 @@ public class ElasticSearchQueryUtils {
 		elasticSearchParam = new ElasticSearchParam();
 
 		elasticSearchParam.setSearchParameters(searchParam);
-		System.out.println(elasticSearchParam);
 
 		setSort("");
 		sortInfo.add(SortBuilders.fieldSort("ctime").order(SortOrder.ASC));
@@ -2408,12 +2407,9 @@ public class ElasticSearchQueryUtils {
 		if (!Common.isEmpty(elasticSearchParam.getSearchParameters().get("xRootMtr"))) {
 			addQueryGroup(ElasticSearchCommon.SPACE, ElasticSearchCommon.XROOTMTR, makeParentheses(Common.nvl(elasticSearchParam.getSearchParameters().get("xRootMtr"))));
 		}
-		System.out.println("offset: "+offset);
 
 
 		setQuery();
-
-
 		log.info("엘라스틱 서치 MessengerTotalQuery_String (테스트) ===> " + getQuery());
 		this.elasticSearchParam.setIndices(new String[]{ElasticSearchCommon.EDC_MESSAGE_INDEX});
 		this.elasticSearchParam.setFrom(offset);

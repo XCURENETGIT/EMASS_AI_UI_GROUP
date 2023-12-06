@@ -192,6 +192,7 @@ var eikon = {
 		conditions.conditions = conArray;
 
 		detailSearchFlag = false;
+		alert(searchOffset);
 
 		var data = {
 			conditions : conditions,
@@ -205,7 +206,6 @@ var eikon = {
 			url : 'getMessengerGroupDetailSearch.xcn',
 			searchParam  : JSON.stringify( data ),
 			success : function(data, total) {
-
 				focusMsgId = data.toString();
 				if(total > 0){
 					$('#searchResult').html(total);
@@ -299,9 +299,8 @@ function getMessengerMessage(xRootmtr, srcip, usr_id, msgid) {
 		usr_id : usr_id,
 		msgid : nvl(msgid),
 		limit : detailLimit,
-		offset : offset
+		offset : 0
 	}
-	console.log("MessengerMessageOfsset: "+data.offset);
 	ui.get({
 		url : 'getMessengerMessage.xcn',
 		searchParam : JSON.stringify(data),
@@ -626,7 +625,6 @@ function getMessengerGroupList (page){
 		url : 'getMessengerGroupList.xcn',
 		searchParam : JSON.stringify(data),
 		success : function(data, total) {
-			console.log(data.groups);
 			rtnGroupList(data.groups, 'G');
 			rtnGroupPage(total, page, 'G');
 			HighlightGroup( );

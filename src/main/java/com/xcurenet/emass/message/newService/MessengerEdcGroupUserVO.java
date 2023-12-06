@@ -48,7 +48,6 @@ public class MessengerEdcGroupUserVO {
 
 		if (result.size() > 1){
 			for (Emass emass : result){
-				System.out.println("emass : "+emass);
 				this.groups.add(groupUser(emass));
 			}
 		}
