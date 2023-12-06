@@ -303,10 +303,10 @@ function getCodeList() {
 				<!-- 테이블 -->
 				<div class="pop_tableArea mat16">
 						<!-- 테이블 -->
-					<div id="coCdGrid"  class="subTable slickGrid gridArea"> </div>
+					<div id="coCdGrid"  class="subTable slickGrid gridArea" style="height: calc(100% - 150px)"> </div>
 				</div>
 			</div>
-			<div class="item" style="width: 60px;float: left;">
+			<div class="item" style="width: 60px;float: left;height: 100%;padding-top: 20%;">
 				<button class="pop_btn03 dis_block" type="button" accesskey="I" id="addBtn">
 					<img src="<c:url value="/img/ico_double_left.png"/>" alt=">>">
 				</button>
@@ -324,7 +324,7 @@ function getCodeList() {
 				</div>
 				<!-- 테이블 -->
 				<div class="pop_tableArea mat16">
-					<div id="coCdGrid2"  class="subTable slickGrid gridArea"></div>
+					<div id="coCdGrid2"  class="subTable slickGrid gridArea" style="height: calc(100% - 150px)"></div>
 				</div>
 			</div>
 		</div>
