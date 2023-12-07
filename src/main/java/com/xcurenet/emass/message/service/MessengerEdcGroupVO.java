@@ -35,6 +35,8 @@ public class MessengerEdcGroupVO {
 
 	private long total;
 
+	private List<?> emass;
+
 	private List<EmassMessenger> groups;
 
 	public MessengerEdcGroupVO(final List<EmassMessenger> groups) {
@@ -64,10 +66,12 @@ public class MessengerEdcGroupVO {
 					result.add(mapper.convertValue(map, Emass.class));
 				}
 			}
+			this.emass = result;
 
 			//메신저 그룹일때
 		}else{
 			result = setTopHitsAggsDocDataMsger(searchResponse);
+			this.emass = result;
 		}
 		this.groups = new ArrayList<>();
 		this.numFound = searchResponse.getHits().getHits().length;
@@ -105,12 +109,6 @@ public class MessengerEdcGroupVO {
 
 	}
 
-	/**
-	 * 아이콘 메신저 그룹방 상세보기
-	 *
-	 * @param edc
-	 * @return
-	 */
 	public static EmassMessenger reDefinedDetail(Emass emass, String adminId, boolean original) {
 		EmassMessenger emassMessenger = new EmassMessenger();
 		emassMessenger.setMsgid(emass.getMsgid());
@@ -164,6 +162,7 @@ public class MessengerEdcGroupVO {
 		emassMessenger.setAttached(emass.getAttached());
 		if(emass.getAttach() != null){
 			emassMessenger.setAttachname(emass.getAttach().stream().map(m -> m.getName()).collect(Collectors.joining(",")));
+			emassMessenger.setAttachhash(emass.getAttach().stream().map(m -> m.getHash()).collect(Collectors.joining(",")));
 //			emassMessenger.setAttachhash(emass.getAttach().stream().map(m -> m.getHash()).collect(Collectors.joining(",")));
 		}
 
@@ -188,9 +187,13 @@ public class MessengerEdcGroupVO {
 			emassMessenger.setJikgubNm(emass.getUser().getJikgubNm());
 			emassMessenger.setUsr_id(emass.getUser().getId());
 		}
+
 		if(emass.getBody() != null) {
 			emassMessenger.setBody_snippet(emass.getBody().getSnippet());
 			emassMessenger.setBody_text(emass.getBody().getText());
+		}
+		if(emass.getSender() != null) {
+			emassMessenger.setSender(emass.getSender().getName());
 		}
 		if(emass.getNetwork() != null) {
 			emassMessenger.setSrcip(emass.getNetwork().getSrcIp());
@@ -249,6 +252,8 @@ public class MessengerEdcGroupVO {
 	}
 
 	private static String getSender(Emass emass) {
+		//if (Common.isNotEmpty(edc.getName())) return edc.getName();
+		if (Common.isNotEmpty(emass.getSender())) return emass.getSender().getName();
 		if (Common.isNotEmpty(emass.getSender().getName())) return emass.getSender().getName();
 		else if (Common.isNotEmpty(emass.getSender().getEmail())) return emass.getSender().getEmail();
 		else if (Common.isNotEmpty(emass.getUser().getName())) return emass.getUser().getName();
@@ -325,6 +330,7 @@ public class MessengerEdcGroupVO {
 			for (SearchHit hit : hits) {
 				Map<String, Object> map = hit.getSourceAsMap();
 				if (map.size() > 0) {
+					map.put("_id",hit.getId());
 					map.put("msgid",hit.getId());
 					result.add(mapper.convertValue(map, Emass.class));
 				}
@@ -333,3 +339,4 @@ public class MessengerEdcGroupVO {
 		return result;
 	}
 }
+

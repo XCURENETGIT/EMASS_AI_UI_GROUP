@@ -15,12 +15,17 @@ import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.config.service.ConfigAdminService;
 import com.xcurenet.emass.adminFolder.service.AdminFolderService;
 import com.xcurenet.emass.message.newService.EmsSearchService;
+import com.xcurenet.emass.message.newService.impl.EmsElasticServiceImpl;
 import com.xcurenet.emass.message.vo.emass.EmassIntegrated;
 import com.xcurenet.emass.searchLog.service.SearchLogService;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -52,7 +57,7 @@ public class EmsSearchController {
 	private ConfigAdminService configAdminService;
 
 
-	@RequestMapping(value = "/getList.xcn")
+	@RequestMapping(value = "/test_getList.xcn")
 	@Description("메시지 검색")
 	@AuditOperation(Operation.SEARCH)
 	@ResponseBody

@@ -8,6 +8,9 @@
 //import javax.annotation.Resource;
 //
 //import org.apache.commons.collections4.CollectionUtils;
+//import org.apache.solr.client.solrj.SolrQuery;
+//import org.apache.solr.client.solrj.SolrServerException;
+//import org.apache.solr.common.SolrInputDocument;
 //import org.joda.time.DateTime;
 //import org.joda.time.format.DateTimeFormat;
 //import org.joda.time.format.DateTimeFormatter;

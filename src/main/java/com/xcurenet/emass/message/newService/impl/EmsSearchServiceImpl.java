@@ -261,7 +261,7 @@ public class EmsSearchServiceImpl implements EmsSearchService {
 		CheckedVo_Mgo checkedVoMgo = new CheckedVo_Mgo();
 		checkedVoMgo.setReadId(userId);
 		String datetime = ("GMT+09:00".equals(TimeZone.getDefault().getID())) ? getAsiaServerTime() : getServerTime();
-		checkedVoMgo.setReadDate(ElasticSearchCommon.stringToDate(datetime));
+		//checkedVoMgo.setReadDate(ElasticSearchCommon.stringToDate(datetime));
 		readDoc(msgId,checkedVoMgo);
 
 	}

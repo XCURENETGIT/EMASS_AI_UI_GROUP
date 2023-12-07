@@ -37,14 +37,14 @@ public class MongoUtil {
 //		if(Common.isNotEmpty(tableCon)) {
 //			query.addCriteria(Criteria.where("TABLENAME").is(tableCon));
 //		}
-		query.with(Sort.by(Sort.Direction.DESC,"VERSION"));
+		query.with(Sort.by(Sort.Direction.DESC, "VERSION"));
 		query.limit(1);
 		return selectOne(query, vo, tableCon);
 	}
 
 
 	//단건조회
-	public <T> T selectOne(Query query,  Class<T> vo) {
+	public <T> T selectOne(Query query, Class<T> vo) {
 		return mongoTemplate.findOne(query, vo);
 
 	}
@@ -52,21 +52,20 @@ public class MongoUtil {
 
 	//단건조회
 	public <T> T selectOne(Query query, Class<T> vo, String collectionName) {
-		return mongoTemplate.findOne(query, vo , collectionName);
+		return mongoTemplate.findOne(query, vo, collectionName);
 	}
 
 	//특정 id값 조회
 	public <T> T selectId(String msgId, Class<T> vo, String collectionName) {
-		Query query= new Query(Criteria.where("_id").is(msgId));
-
-		return mongoTemplate.findOne(query, vo , collectionName);
+		Query query = new Query(Criteria.where("_id").is(msgId));
+		return mongoTemplate.findOne(query, vo, collectionName);
 	}
 
 	/**
 	 * 주어진 MongoDB Query의 Count 값을 반환
 	 *
 	 * @param query MongoDB Query
-	 * @param vo Collection Name VO
+	 * @param vo    Collection Name VO
 	 * @return count
 	 */
 	public Long count(Query query, Class<AuditVO> vo) {
@@ -74,17 +73,17 @@ public class MongoUtil {
 	}
 
 	//다건조회
-	public <T> List<T> selectList(Query query,  Class<T> vo) {
+	public <T> List<T> selectList(Query query, Class<T> vo) {
 		return mongoTemplate.find(query, vo);
 	}
 
 	//다건조회
-	public <T> List<T> selectList(Query query,  Class<T> vo, String collectionName) {
+	public <T> List<T> selectList(Query query, Class<T> vo, String collectionName) {
 		return mongoTemplate.find(query, vo, collectionName);
 	}
 
 	public <T> T insert(T object, String collectionName) {
-		return mongoTemplate.insert(object,collectionName);
+		return mongoTemplate.insert(object, collectionName);
 	}
 
 	//단건등록
@@ -98,9 +97,9 @@ public class MongoUtil {
 	}
 
 	//조인조회
-	public <T> List<T> joinSelect(LookupOperation lo, String joinColcn, Class<T> vo ) {
+	public <T> List<T> joinSelect(LookupOperation lo, String joinColcn, Class<T> vo) {
 		Aggregation aggregation = Aggregation.newAggregation(lo);
-		AggregationResults<T> results = mongoTemplate.aggregate(aggregation, joinColcn ,vo);
+		AggregationResults<T> results = mongoTemplate.aggregate(aggregation, joinColcn, vo);
 		return results.getMappedResults();
 	}
 
@@ -122,7 +121,7 @@ public class MongoUtil {
 
 			Query query = new Query(Criteria.where("_id").is(msgId));
 			EmassCheckedMgo checkedVoList = mongoTemplate.findOne(query, EmassCheckedMgo.class, collectionName);
-			if(null == checkedVoList ) return false;  // 몽고 db에  문서 없음
+			if (null == checkedVoList) return false;  // 몽고 db에  문서 없음
 
 			/* 사용자 문서 개봉여부 조회 */
 			List<CheckedVo_Mgo> checkedList = checkedVoList.getChecked();
@@ -134,7 +133,7 @@ public class MongoUtil {
 			}
 
 			/* 사용자가 문서를 개봉하지 않았을시 */
-			if(!isReaded) {
+			if (!isReaded) {
 				Map<String, Object> reqMap = new HashMap<>();
 				Field[] fields = checkedVoMgo.getClass().getDeclaredFields();
 				for (Field field : fields) {
@@ -146,10 +145,10 @@ public class MongoUtil {
 
 				Update update = new Update();
 				update.addToSet("checked", reqMap);
-				mongoTemplate.findAndModify(query, update,  EmassCheckedMgo.class, collectionName); // 문서 읽음 처리
+				mongoTemplate.findAndModify(query, update, EmassCheckedMgo.class, collectionName); // 문서 읽음 처리
 				result = true; // 작업 완료 처리
 			}
-		}catch (Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			result = false;
 		}
@@ -159,64 +158,62 @@ public class MongoUtil {
 
 
 	/**
-	 *
-	 * @param col - 조건 컬럼
-	 * @param where - 조건
-	 * @param updateCol - 수정 할 컬럼
-	 * @param val - 수정할 값
+	 * @param col        - 조건 컬럼
+	 * @param where      - 조건
+	 * @param updateCol  - 수정 할 컬럼
+	 * @param val        - 수정할 값
 	 * @param collection - 수정할 컬렉션 명
-	 * @param multiYn - 다건 수정 여부 (Y: 다건수정, N: 단건 수정)
+	 * @param multiYn    - 다건 수정 여부 (Y: 다건수정, N: 단건 수정)
 	 */
 	public void update(String[] col, String[] where, String[] updateCol, String[] val, String collection, String multiYn) {
-		Query query   = new Query();
+		Query query = new Query();
 		Update update = new Update();
 
-		for(int i=0; i<col.length; i++) {
+		for (int i = 0; i < col.length; i++) {
 			query.addCriteria(Criteria.where(col[i]).is(where[i]));
 		}
 
-		for(int i=0; i<updateCol.length; i++) {
+		for (int i = 0; i < updateCol.length; i++) {
 			update.set(updateCol[i], val[i]);
 		}
 
-		if(Common.isEquals("Y", multiYn)) {
+		if (Common.isEquals("Y", multiYn)) {
 			mongoTemplate.updateMulti(query, update, collection);
-		}else {
+		} else {
 			mongoTemplate.updateFirst(query, update, collection);
 		}
 	}
 
 	public void updateEmsFeedback(String msgId, String adminId, String feedback) {
-		Query query   = new Query();
+		Query query = new Query();
 		Update update = new Update();
 
 		query.addCriteria(Criteria.where("_id").is(msgId));
 		update.set("ML_CONFD_FEEDBACK", feedback);
-		update.set("ML_CONFD_USERID"  , adminId);
+		update.set("ML_CONFD_USERID", adminId);
 
 		mongoTemplate.updateFirst(query, update, "EMS_MESSAGE");
 	}
 
-	public UpdateResult updateVersion(String collectionName, String table, long version){
+	public UpdateResult updateVersion(String collectionName, String table, long version) {
 		Query query = new Query();
 		Update update = new Update();
 		query.addCriteria(Criteria.where("TABLENAME").is(table));
 		update.set("VERSION", version);
 
-		return mongoTemplate.updateMulti(query, update,collectionName);
+		return mongoTemplate.updateMulti(query, update, collectionName);
 
 	}
 
-	public UpdateResult updateDate(String tableName, LocalDateTime localDateTime){
+	public UpdateResult updateDate(String tableName, LocalDateTime localDateTime) {
 		Query query = new Query();
 		Update update = new Update();
 		query.addCriteria(Criteria.where("TABLENAME").is(tableName));
 		update.set("DATE", localDateTime);
 
-		return mongoTemplate.updateMulti(query, update,"INFO_VERSION");
+		return mongoTemplate.updateMulti(query, update, "INFO_VERSION");
 
 	}
-
 
 
 	public List<AuditVO> selectAuditList(Map<String, Object> map) {

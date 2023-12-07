@@ -1,80 +1,80 @@
 var defaultFilterData = {
-		"filterName": "",
-		"filter_seq" : "",
-		"p_filter_seq": "",
-		"addServiceGroup":"",
-		"searchTime":"",
-		"conditions": []
+	"filterName": "",
+	"filter_seq" : "",
+	"p_filter_seq": "",
+	"addServiceGroup":"",
+	"searchTime":"",
+	"conditions": []
 };
 var defaultConditions =[];
 var defaultCondition = {
-		//검색
-		"searchStr": "",
-		"searchField": "",
-		"serviceType": "",
+	//검색
+	"searchStr": "",
+	"searchField": "",
+	"serviceType": "",
 
-		// 대외비 
-		"epmsg_type": "",
-		"initEpmsgName": "",
-		
-		//시간
-		"easyDate": "",
-		"startDt": "20180101000000",
-		"endDt": "20180101235959",
-		"ctimeWork": "",
-		"period": 1,
-		
-		//정보
-		"infoType":"",
-		"feedbackType":"",
-		"probType":"",
-		
-		//SK 확률정보
-		"skInfoType":"",
-		"skFeedbackType":"",
-		"skProbType":"",
+	// 대외비
+	"epmsg_type": "",
+	"initEpmsgName": "",
 
-		//사용자
-		"receiveSend": "",
-		"receivers": "",
-		"senders": "",
-		"allOfus": "",
-		"userGroupSeq": "",
-		"userGroupName": "",
-		"interGroup": "",
-		"interGroupName": "",
+	//시간
+	"easyDate": "",
+	"startDt": "20180101000000",
+	"endDt": "20180101235959",
+	"ctimeWork": "",
+	"period": 1,
 
-		//조직
-		"busi": "",
-		"busiStr": "",
-		"dept": "",
-		"deptStr": "",
+	//정보
+	"infoType":"",
+	"feedbackType":"",
+	"probType":"",
 
-		//기타
-		"readYn": "",
-		"attachYn": "",
-		"attachVal": "",
-		"attachStr": "",
-		"keywordYn": "",
-		"keywordVal": "",
-		"keywordStr": "",
-		"regexpYn": "",
-		"regexpVal": "",
-		"regexpStr": "",
-		"drmYn": "",
-		"realAttYn": "",
-		"sctYn": "",
-		"sizeType": "",
-		"sizeStartVal": "0",
-		"sizeEndVal": "0",
-		"sizeOption": "L",
-		"bodyImg" : "",
-		"OCRYn" : "",
-		//공통
-		"sort": "ctime desc",
-		"query": "",
-		"filterType": "C",
-		"reSearch": false
+	//SK 확률정보
+	"skInfoType":"",
+	"skFeedbackType":"",
+	"skProbType":"",
+
+	//사용자
+	"receiveSend": "",
+	"receivers": "",
+	"senders": "",
+	"allOfus": "",
+	"userGroupSeq": "",
+	"userGroupName": "",
+	"interGroup": "",
+	"interGroupName": "",
+
+	//조직
+	"busi": "",
+	"busiStr": "",
+	"dept": "",
+	"deptStr": "",
+
+	//기타
+	"readYn": "",
+	"attachYn": "",
+	"attachVal": "",
+	"attachStr": "",
+	"keywordYn": "",
+	"keywordVal": "",
+	"keywordStr": "",
+	"regexpYn": "",
+	"regexpVal": "",
+	"regexpStr": "",
+	"drmYn": "",
+	"realAttYn": "",
+	"sctYn": "",
+	"sizeType": "",
+	"sizeStartVal": "0",
+	"sizeEndVal": "0",
+	"sizeOption": "L",
+	"bodyImg" : "",
+	"OCRYn" : "",
+	//공통
+	"sort": "ctime desc",
+	"query": "",
+	"filterType": "C",
+	"reSearch": false
 };
 
 var con = {
@@ -114,13 +114,13 @@ var con = {
 			checkRadioBtn( 'easyDate', 3 );
 
 			$('#solrQueryText').val('');
-			
+
 			if(!$('.filterIcon').hasClass('hide')) {
 				$('.filterIcon').addClass('hide');
 				$('.filterIcon').attr('title', '');
 				$('.filterIcon').attr('data-id', '');
 			}
-			
+
 			if(!$('.queryIcon').hasClass('hide')) {
 				$('.queryIcon').addClass('hide');
 				$('.queryIcon').attr('title', '');
@@ -144,7 +144,7 @@ var con = {
 		$('#messageSort'+endId).val('ctime desc');
 		$('#searchStrInput'+endId).val('');
 		$('#serviceType'+endId).selectpicker('val', []);
-		
+
 		if( infoFeedbackConf == 'true' && infoFeedbackYn == 'Y' ) {
 			$('#infoType'+endId).selectpicker('val', []);
 			$('#feedbackType'+endId).selectpicker('val', []);
@@ -155,7 +155,7 @@ var con = {
 				$('#skProbType'+endId).selectpicker('val', []);
 			}
 		}
-		
+
 		$('#searchField'+endId).selectpicker('val', []);
 		$('#easyDate'+endId).val('');
 		$('#interGroup'+endId).val('');
@@ -174,21 +174,21 @@ var con = {
 		$('.receivers_detail').hide();
 		$('#receivers').parent().show();
 		$('#receivers').parent().before().show();
-				
+
 		$('#receivers'+endId).val('');
 		$('#m_to'+endId).val('');
 		$('#m_cc'+endId).val('');
 		$('#m_bcc'+endId).val('');
 		$('#senders'+endId).val('');
 		$('#rcvJikgub'+endId).selectpicker('val', []);
-		
+
 		$('#initEpmsg'+endId).selectpicker('val', []);
 
 		$('#busi'+endId).selectpicker('val', [] );
 		$('#deptStr'+endId).val('');
 		$('#deptVal'+endId).val('');
 		setCodeCount('dept', endId, '', ',');
-		
+
 		$('#url'+endId).val('');
 
 		checkRadioBtn( 'serviceYn'+endId, '' );
@@ -207,7 +207,7 @@ var con = {
 		$('#sizeEndVal'+endId).val('');
 		$('#sizeOption'+endId).val('L');
 		checkRadioBtn( 'sizeType'+endId, '' );
-		
+
 		$('input:checkbox[id="senders_not"]').prop("checked", false);
 		$('input:checkbox[id="senders_not"]').prop("disabled", true);
 		$('input:checkbox[id="receivers_not"]').prop("checked", false);
@@ -232,7 +232,7 @@ var con = {
 			$('input:checkbox[id="receivers_upperCase"]').prop("checked", false);
 			$('input:checkbox[id="receivers_upperCase"]').prop("disabled", true);
 		}
-		
+
 		$('input:checkbox[id="m_to_not"]').prop("checked", false);
 		$('input:checkbox[id="m_to_not"]').prop("disabled", true);
 		$('input:checkbox[id="m_cc_not"]').prop("checked", false);
@@ -241,7 +241,7 @@ var con = {
 		$('input:checkbox[id="m_bcc_not"]').prop("disabled", true);
 		$('input:checkbox[id="url_not"]').prop("checked", false);
 		$('input:checkbox[id="url_not"]').prop("disabled", true);
-		
+
 		$('#attachBtn').prop("disabled", true);
 		$('#keywordBtn').prop("disabled", true);
 		$('#regexpBtn').prop("disabled", true);
@@ -255,13 +255,13 @@ var con = {
 	// type = N : 신규 생성을 위한 데이터
 	// type = D : 일반 검색
 	// type = Q : 고급 검색
-	getFilterVal : function(endId, type) { 
+	getFilterVal : function(endId, type) {
 		var filterName = '';
 		var filter_seq = '';
 		var p_filter_seq = '';
 		var filterType = '';
 		var filterId = type == 'N' ? 1000 : '';
-		
+
 		if(!document.getElementById('msg_condition_menu')) {
 			filterType = 'Q';
 		}else if(!$('#msg_condition_menu').hasClass('condition_menu_unselected')){
@@ -271,7 +271,7 @@ var con = {
 			filterType = 'Q';
 			if( $('.queryIcon').attr('data-id') != '') filterId = $('.queryIcon').attr('data-id');
 		}
-		
+
 		if(filterId != ''){
 			var filterTree = $.fn.zTree.getZTreeObj("filterTree");
 			var treeNode = filterTree.getNodeByParam("id", filterId, null);
@@ -285,7 +285,7 @@ var con = {
 				p_filter_seq = treeNode.pId;
 			}
 		}
-		
+
 		var filterVal = {
 			"filterName": filterName,
 			"filter_seq" : filter_seq,
@@ -293,7 +293,7 @@ var con = {
 			"filterType": filterType,
 			"conditions": con.getConditions(endId, type)
 		};
-		
+
 		if( isConsent() && endId == ''){
 			filterVal.consentNo = $('#consentNo').val();
 			filterVal.consentName = $('#consentName').text();
@@ -337,7 +337,7 @@ var con = {
 		}else{
 			$("input:checkbox[id='researchCheckbox']").prop("checked", false);
 		}
-		
+
 		if(filterVal != undefined) con.setCondition(filterVal.conditions[filterVal.conditions.length-1], '');
 	},
 	/**
@@ -360,10 +360,10 @@ var con = {
 		if(!document.getElementById('msg_condition_menu') || !$('#msg_condition_saver').hasClass('condition_menu_unselected')){
 			condition.query = $('#solrQueryText').val();
 			condition.sort = $('#messageSort').val();
-			
+
 			if(pageType == 'M') condition.svc1_not = 'U';
 			else if(pageType == 'U') condition.svc1 = 'U';
-			
+
 			return condition;
 		}
 
@@ -382,7 +382,7 @@ var con = {
 			condition.period = period;
 			condition.startDt = startDt;
 			condition.endDt = endDt;
-			
+
 		}else{
 			condition.easyDate = $('#easyDate').val();
 			condition.startDt = $('#startdatepicker'+endId).data("DateTimePicker").date().format('YYYYMMDDHHmmss');
@@ -392,22 +392,8 @@ var con = {
 		}
 
 		condition.searchStr = $('#searchStrInput').val();
-		condition.searchField = (arrayToString($('#searchField').selectpicker('val')) != '' ) ? arrayToString($('#searchField').selectpicker('val')) : arrayToString($('#searchField').find('option').map(function() {return $(this).val();}).get())
-
-		var searchFieldArr = condition.searchField.split(",");
-		/* 중복의 value 제거 */
-		if(searchFieldArr.length >= 1) {
-			condition.searchField  = arrayToString(searchFieldArr.reduce((prev, item) => {
-				 if(!prev.some(obj => obj === item)){
-					 prev.push(item);
-				 }
-				return prev;
-			}, []));
-		}
-
+		condition.searchField = arrayToString($('#searchField').selectpicker('val'));
 		condition.serviceType = arrayToString($('#serviceType').selectpicker('val'));
-
-
 
 		condition.receiveSend = $('input:radio[name=receiveSend]:input:checked').val();
 		condition.receive_option = $('input:radio[name=receive_option]:input:checked').val();
@@ -431,7 +417,7 @@ var con = {
 			condition.m_bcc = $('#m_bcc').val();
 			condition.m_bcc_not = $('input:checkbox[id="m_bcc_not"]').is(":checked") ? 'Y' : '';
 		}
-		
+
 		if( infoFeedbackConf == 'true' && infoFeedbackYn == 'Y' ) {
 			condition.infoType = arrayToString($('#infoType').selectpicker('val'));
 			condition.feedbackType = arrayToString($('#feedbackType').selectpicker('val'));
@@ -442,66 +428,66 @@ var con = {
 				condition.skProbType = arrayToString($('#skProbType').selectpicker('val'));
 			}
 		}
-		
+
 		condition.rcvJikgub = arrayToString($('#rcvJikgub').selectpicker('val'));
 		condition.recv_jikgub_not = $('input:checkbox[id="recv_jikgub_not"]').is(":checked") ? 'Y' : '';
-		
+
 		condition.senders = $('#senders').val();
 		if(rsUppercase == "Y") {
 			condition.senders_upperCase = $('input:checkbox[id="senders_upperCase"]').is(":checked") ? 'Y' : '';
 		}
 		condition.senders_not = $('input:checkbox[id="senders_not"]').is(":checked") ? 'Y' : '';
-		
+
 		condition.allOfus = $('#allOfus').val();
-		
+
 		condition.userGroupSeq = $('#userGroupSeq').val();
 		condition.userGroupSeq_not = $('input:checkbox[id="userGroupSeq_not"]').is(":checked") ? 'Y' : '';
 		if(condition.userGroupSeq != '') condition.userGroupName = $('#userGroupSeq option:selected').text();
 		else condition.userGroupName = '';
-		
+
 		condition.interGroup = $('#interGroup').val();
 		condition.interGroup_not = $('input:checkbox[id="interGroup_not"]').is(":checked") ? 'Y' : '';
 		if(condition.interGroup != '') condition.interGroupName = $('#interGroup option:selected').text();
 		else condition.interGroupName = '';
 
 		condition.epmsgType = arrayToString($('#initEpmsg').selectpicker('val'));
-		
+
 		condition.busi = arrayToString($('#busi').selectpicker('val'));
 		condition.busi_not = $('input:checkbox[id="busi_not"]').is(":checked") ? 'Y' : '';
-		
+
 		if(condition.busi != '') condition.busiStr = $('#busi').parent().find('.filter-option').text();
 		else condition.busiStr = '';
-		
+
 		condition.dept = $('#deptVal').val();
 		condition.dept_not = $('input:checkbox[id="dept_not"]').is(":checked") ? 'Y' : '';
-		
+
 		if(condition.dept != '') condition.deptStr = $('#deptStr').val();
 		else condition.deptStr = '';
-		
+
 		condition.url = $('#url').val();
 		condition.url_not = $('input:checkbox[id="url_not"]').is(":checked") ? 'Y' : '';
 
 		condition.readYn = $('input:radio[name=readYn]:input:checked').val();
 		condition.OCRYn = $('input:radio[name=OCRYn]:input:checked').val();
 		condition.bodyImg = $('input:radio[name=bodyImg]:input:checked').val();
-		
+
 		condition.attachYn = $('input:radio[name=attachYn]:input:checked').val();
 		condition.attachVal = $('#attachVal').val();
 		condition.attachStr = $('#attachStr').val();
 		condition.attachYn_not = $('input:checkbox[id="attachYn_not"]').is(":checked") ? 'Y' : '';
-		
+
 		condition.keywordYn = $('input:radio[name=keywordYn]:input:checked').val();
 		condition.keywordVal = $('#keywordVal').val();
 		condition.keywordStr = $('#keywordStr').val();
 		condition.keywordYn_not = $('input:checkbox[id="keywordYn_not"]').is(":checked") ? 'Y' : '';
-		
+
 		condition.regexpYn = $('input:radio[name=regexpYn]:input:checked').val();
 		condition.regexpVal = $('#regexpVal').val();
 		condition.regexpStr = $('#regexpStr').val();
 		condition.drmYn = $('input:radio[name=drmYn]:input:checked').val();
 		condition.realAttYn = $('input:radio[name=realAttYn]:input:checked').val();
 		condition.sctYn = $('input:radio[name=sctYn]:input:checked').val();
-		
+
 		if($('#sizeStartVal').val() >= 0){
 			condition.sizeStartVal = $('#sizeStartVal').val()*1024;
 		}else{
@@ -512,17 +498,17 @@ var con = {
 		}else{
 			condition.sizeEndVal = '';
 		}
-		
+
 		condition.sizeOption = $('#sizeOption').val();
 		condition.sizeType = $('input:radio[name=sizeType'+']:input:checked').val();
 
 		condition.sort = $('#messageSort').val();
 		condition.reSearch = $("input:checkbox[id='researchCheckbox']").is(":checked");
 		condition.ctimeWork = $('input:radio[name=ctimeWork'+']:input:checked').val();
-		
+
 		if(pageType == 'M') condition.svc1_not = 'U';
 		else if(pageType == 'U') condition.svc1 = 'U';
-		
+
 		return condition;
 
 	},
@@ -563,7 +549,7 @@ var con = {
 		$('#searchStrInput').val(condition.searchStr);
 		$('#searchField').selectpicker('val', stringToArray(condition.searchField) );
 		$('#serviceType').selectpicker('val', stringToArray(condition.serviceType) );
-		
+
 		if( infoFeedbackConf == 'true' && infoFeedbackYn == 'Y' ) {
 			$('#infoType').selectpicker('val', stringToArray(condition.infoType) );
 			$('#feedbackType').selectpicker('val', stringToArray(condition.feedbackType) );
@@ -616,7 +602,7 @@ var con = {
 				$('input:checkbox[id="m_bcc_not"]').prop("checked", condition.rcvBcc_not == 'Y' ? true : false);
 			}
 		}
-		
+
 		$('#senders').val( condition.senders );
 		$('input:checkbox[id="senders_not"]').prop("disabled", condition.senders == '' ? true : false);
 		$('input:checkbox[id="senders_not"]').prop("checked", condition.senders_not == 'Y' ? true : false);
@@ -624,13 +610,13 @@ var con = {
 			$('input:checkbox[id="senders_upperCase"]').prop("disabled", condition.senders == '' ? true : false);
 			$('input:checkbox[id="senders_upperCase"]').prop("checked", condition.senders_upperCase == 'Y' ? true : false);
 		}
-		
+
 		$('#initEpmsg').selectpicker('val', stringToArray(condition.epmsgType) );
-		
+
 		$('#userGroupSeq').val(condition.userGroupSeq);
 		$('input:checkbox[id="userGroupSeq_not"]').prop("disabled", condition.userGroupSeq == '' ? true : false);
 		$('input:checkbox[id="userGroupSeq_not"]').prop("checked", condition.userGroupSeq_not == 'Y' ? true : false);
-		
+
 		$('#allOfus').val( condition.allOfus );
 		$('#interGroup').val(condition.interGroup);
 		$('input:checkbox[id="interGroup_not"]').prop("disabled", condition.interGroup == '' ? true : false);
@@ -640,16 +626,16 @@ var con = {
 		//$('#rcvCc').val( condition.rcvCc ); //미구현
 		//$('#rcvBcc').val( condition.rcvBcc ); //미구현
 		//$('#jikgubInput').val( condition.jikgub ); //미구현
-		
+
 		$('#rcvJikgub').selectpicker('val', stringToArray(condition.rcvJikgub) );
 		$('#busi').selectpicker('val', stringToArray(condition.busi) );
 		$('input:checkbox[id="busi_not"]').prop("disabled", condition.busi == '' ? true : false);
 		$('input:checkbox[id="busi_not"]').prop("checked", condition.busi_not == 'Y' ? true : false);
-		
+
 		$('input:checkbox[id="recv_jikgub_not"]').prop("disabled", condition.rcvJikgub == '' ? true : false);
 		$('input:checkbox[id="recv_jikgub_not"]').prop("checked", condition.recv_jikgub_not == 'Y' ? true : false);
 		if(condition.dept != "") {
-			$('#deptVal').val( condition.dept ); 
+			$('#deptVal').val( condition.dept );
 			$('#deptStr').val( condition.deptStr );
 			$('#deptSelectedArea').show();
 		}else{
@@ -660,7 +646,7 @@ var con = {
 		setCodeCount('dept', endId, condition.dept, ',');
 		$('input:checkbox[id="dept_not"]').prop("disabled", condition.dept == '' ? true : false);
 		$('input:checkbox[id="dept_not"]').prop("checked", condition.dept_not == 'Y' ? true : false);
-		
+
 		$('#url').val( condition.url );
 		$('input:checkbox[id="url_not"]').prop("disabled", condition.url == '' ? true : false);
 		$('input:checkbox[id="url_not"]').prop("checked", condition.url_not == 'Y' ? true : false);
@@ -668,9 +654,9 @@ var con = {
 		checkRadioBtn( 'readYn', condition.readYn );
 		checkRadioBtn( 'OCRYn', condition.OCRYn );
 		checkRadioBtn( 'bodyImg', condition.bodyImg );
-		
+
 		checkRadioBtn( 'attachYn', condition.attachYn );
-		setCodeCount('attach', endId, condition.attachVal, ',');
+		setCodeCount('attach', endId, condition.attachVal, '|');
 		$('#attachBtn').prop("disabled", condition.attachYn != 'Y' ? true : false);
 		$('#attachVal').val( condition.attachVal );
 		$('#attachStr').val( condition.attachStr );
@@ -704,10 +690,10 @@ var con = {
 		checkRadioBtn( 'sizeType', condition.sizeType );
 
 		checkRadioBtn( 'ctimeWork', condition.ctimeWork );
-		
+
 		if( condition.sort == '') $('#messageSort').val('ctime desc');
 		else $('#messageSort').val(condition.sort);
-		
+
 		//$("input:checkbox[id='researchCheckbox"+"']").prop("checked", eval(condition.reSearch == undefined ? false : condition.reSearch));
 	}
 }
@@ -722,7 +708,7 @@ function changeDate( val )
 {
 	easyDateStartFlag = true;
 	easyDateEndFlag = true;
-	
+
 	var dateObj = new Date();
 	if ( val == "1" ) $('#startdatepicker').data("DateTimePicker").date( new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), 00, 00, 00 ) );
 	else if ( val == "2" ) $('#startdatepicker').data("DateTimePicker").date( new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()-1, 00, 00, 00 ) );
@@ -732,7 +718,7 @@ function changeDate( val )
 	else if ( val == "6" ) $('#startdatepicker').data("DateTimePicker").date( new Date( dateObj.getFullYear(), dateObj.getMonth()-1, dateObj.getDate(), 00, 00, 00 ) );
 	else if ( val == "7" ) $('#startdatepicker').data("DateTimePicker").date( new Date( dateObj.getFullYear(), dateObj.getMonth()-2, dateObj.getDate(), 00, 00, 00 ) );
 	else if ( val == "8" ) $('#startdatepicker').data("DateTimePicker").date( new Date( dateObj.getFullYear(), dateObj.getMonth()-3, dateObj.getDate(), 00, 00, 00 ) );
-	
+
 	if ( val == "2" ) $('#enddatepicker').data("DateTimePicker").date( new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()-1, 23, 59, 59 ) );
 	else if ( val != "" ) $('#enddatepicker').data("DateTimePicker").date( new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), 23, 59, 59 ) );
 }
@@ -793,7 +779,7 @@ function initCondition(endId){
 				$('#recv_jikgub_not').prop('disabled', false);
 			}
 		});
-	
+
 		$('#busi').selectpicker({
 			size: 'auto',
 			width:'260px',
@@ -811,12 +797,12 @@ function initCondition(endId){
 				$('#busi_not').prop('disabled', false);
 			}
 		});
-		
+
 		$(document).on('click', '.filterAddBtn', function(){
 			var code = $(this).attr('id').substring(0, $(this).attr('id').length-3);
 			openCodeWindow(code, $('#'+code+'Val').val(), $('#'+code+'Str').val());
 		});
-		
+
 		$('#interGroup').change(function(){
 			if($(this).val()==''){
 				$('#interGroup_not').prop('checked', false);
@@ -838,7 +824,7 @@ function initCondition(endId){
 			var code = $(this).attr('id').substring(0, $(this).attr('id').length-6);
 			openCodeWindow(code, $('#'+code+'ValPop').val(), $('#'+code+'StrPop').val());
 		});
-		
+
 		var dateObj = new Date();
 		$('#startdatepickerAdd').datetimepicker({
 			format: 'YYYY-MM-DD HH:mm:ss',
@@ -909,7 +895,6 @@ var specialService=[];
 var parentCode = [];
 var parentNm = [];
 function getServiceGroupList( ){
-//	console.log(parentCode);  UWS,EMM
 	var str = '';
 	for (var i = 0; i < serviceTypes.length; i++) {
 		if( str.indexOf(serviceTypes[i].groupCd ) == -1){
@@ -933,7 +918,7 @@ function getServiceTypeList( ){
 	var svc1_not = '';
 	if(pageType == 'U') svc1 = pageType;
 	if(pageType == 'M') svc1_not = 'U';
-	
+
 	ui.get({
 		url : 'getServiceListByAuth.xcn',
 		svc1 : svc1,
@@ -961,9 +946,9 @@ function getServiceOptionStr( ){
 				}
 				if( serviceTypes[j].serviceCd.length == 3){
 					str += getServiceOptionChildren(serviceTypes[j]);
-				} else if ( serviceTypes[j].serviceCd.length == 4 ) continue; 
+				} else if ( serviceTypes[j].serviceCd.length == 4 ) continue;
 				else str += '<option value="'+serviceTypes[j].serviceCd+'">'+serviceTypes[j].serviceNm+'</option>';
-				
+
 				idx++;
 			}
 		}
@@ -1001,6 +986,7 @@ function getServiceOptionLiveSearch(code) {
 	}
 
 }
+
 
 /**
  * 코드 리스트를 불러와서 조건에 적용
@@ -1186,7 +1172,7 @@ function getSelectedCodeData( codeType, data ) {
 				}
 			}
 		}
-		
+
 		if(data.length == 0){
 			if( codeType == 'dept'){
 				$('#'+codeType+'_not'+endId).prop('disabled', true);
@@ -1202,7 +1188,7 @@ function getSelectedCodeData( codeType, data ) {
 				$('#'+codeType+'Yn_not'+endId).prop('disabled', false);
 			}
 		}
-		
+
 		if( val != '' ){
 			str = str.rtrim();
 			val = val.trimAll();
@@ -1245,7 +1231,7 @@ function resetCode(codeType){
 			$('#'+codeType+'Yn_not'+endId).prop('checked', false);
 			$('#'+codeType+'Yn_not'+endId).prop('disabled', true);
 		}
-		
+
 	}
 }
 
@@ -1285,11 +1271,11 @@ function rtnDefaultVal( val, defaultVal ){
 }
 
 function getJson(str) {
-    var result;
+	var result;
 	try {
 		result = JSON.parse(str);
-    } catch (e) {
-    	result = str;
-    }
-    return result;
+	} catch (e) {
+		result = str;
+	}
+	return result;
 }
