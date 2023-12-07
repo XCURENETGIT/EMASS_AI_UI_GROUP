@@ -108,7 +108,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 				.withFields(Common.toArray(sq.getFields(), ","))
 				.withQuery(QueryBuilders.queryStringQuery(sq.getQuery()))
 				.withFilter(QueryBuilders.queryStringQuery(String.join(" ", sq.getFilterQueries())))
-				.withPageable(PageRequest.of(sq.getStart() / sq.getRows(), sq.getRows(), getSort(sq)))
+				.withPageable(PageRequest.of(getPage(sq), sq.getRows(), getSort(sq)))
 				.withAggregations(getAggregations(sq))
 				.withAggregations(getAggregationsByPivot(sq))
 				.build();
@@ -121,6 +121,11 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			log.info("[QUERY_RESULT] TOTAL_COUNT : {}, QUERY_TIME : {}", 0, TimeUtil.print());
 		}
 		return hits;
+	}
+
+	private int getPage(SolrQuery sq) {
+		if (sq.getRows() == 0) sq.setRows(100);
+		return sq.getStart() / sq.getRows();
 	}
 
 
