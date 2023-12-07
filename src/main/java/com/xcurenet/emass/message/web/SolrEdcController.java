@@ -315,7 +315,7 @@ public class SolrEdcController {
 
 
 
-	@RequestMapping(value = "/test_getSolrHighlightStr.xcn")
+	@RequestMapping(value = "/getSolrHighlightStr.xcn")
 	@Description("solr 하일라이팅 검색어 생성")
 	@ResponseBody
 	public XcnResponseVO getSolrHighlightStr(final HttpServletRequest request, final HttpSession session) throws Exception {

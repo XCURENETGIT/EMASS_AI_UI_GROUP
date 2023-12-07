@@ -19,11 +19,15 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.SortClause;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.aggregations.*;
+import org.elasticsearch.search.aggregations.bucket.terms.Terms;
+import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.elasticsearch.core.AggregationsContainer;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
@@ -104,7 +108,9 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 				.withFields(Common.toArray(sq.getFields(), ","))
 				.withQuery(QueryBuilders.queryStringQuery(sq.getQuery()))
 				.withFilter(QueryBuilders.queryStringQuery(String.join(" ", sq.getFilterQueries())))
-				.withPageable(PageRequest.of(sq.getStart(), sq.getRows(), getSort(sq)))
+				.withPageable(PageRequest.of(sq.getStart() / sq.getRows(), sq.getRows(), getSort(sq)))
+				.withAggregations(getAggregations(sq))
+				.withAggregations(getAggregationsByPivot(sq))
 				.build();
 		searchQuery.setTrackTotalHits(true);
 		SearchHits<SolrEdcVO> hits = operation.search(searchQuery, SolrEdcVO.class);
@@ -116,6 +122,65 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		}
 		return hits;
 	}
+
+
+	private void print(AggregationsContainer<?> aggregations) {
+		if (aggregations == null) return;
+		Aggregations agg = (Aggregations) aggregations.aggregations();
+		for (Map.Entry<String, Aggregation> map : agg.asMap().entrySet()) {
+			Terms terms = agg.get(map.getValue().getName());
+			for (Terms.Bucket bucket : terms.getBuckets()) {
+				log.info("{}  {} {}", terms.getName(), bucket.getKey(), bucket.getDocCount());
+			}
+		}
+	}
+
+
+	/**
+	 * Solr Facet convert Elastic Search Term Aggregation
+	 *
+	 * @param sq Solr Query
+	 * @return spring data Aggregations
+	 */
+	private List<AbstractAggregationBuilder<?>> getAggregations(SolrQuery sq) {
+		List<AbstractAggregationBuilder<?>> aggregations = new ArrayList<>();
+		if (sq.getFacetFields() == null) return aggregations;
+		for (String field : sq.getFacetFields()) {
+			AbstractAggregationBuilder<TermsAggregationBuilder> termsAggregation = AggregationBuilders.terms(field)
+					.field(field)
+					.order(BucketOrder.count(false))
+					.size(maxCount(sq.getFacetLimit()))
+					.minDocCount(sq.getFacetMinCount());
+			aggregations.add(termsAggregation);
+		}
+		return aggregations;
+	}
+
+	/**
+	 * Solr Facet pivot convert Elastic Search Aggregation
+	 *
+	 * @param sq Solr Query
+	 * @return spring data Aggregations
+	 */
+	private List<AbstractAggregationBuilder<?>> getAggregationsByPivot(SolrQuery sq) {
+		List<AbstractAggregationBuilder<?>> aggregations = new ArrayList<>();
+		List<String> pivots = Common.toList(sq.get("facet.pivot"), ",");
+		if (pivots.size() > 1) {
+			//f."+yAxis+".facet.limit
+			AbstractAggregationBuilder<TermsAggregationBuilder> termsAggregation = AggregationBuilders.terms(pivots.get(0))
+					.field(pivots.get(0))
+					.order(BucketOrder.count(false))
+					.size(maxCount(Common.nvz(sq.get("f." + pivots.get(0) + ".facet.limit"))))
+					.minDocCount(Common.nvz(sq.getFacetMinCount(), 1))
+					.subAggregation(AggregationBuilders.terms(pivots.get(1))
+							.field(pivots.get(1))
+							.size(maxCount(Common.nvz(sq.get("f." + pivots.get(1) + ".facet.limit"))))
+							.minDocCount(Common.nvz(sq.getFacetMinCount(), 1)));
+			aggregations.add(termsAggregation);
+		}
+		return aggregations;
+	}
+
 
 	/**
 	 * Solr sort convert spring data sort
@@ -136,6 +201,10 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			}
 		}
 		return sort;
+	}
+
+	private int maxCount(int cnt) {
+		return cnt > 0 ? cnt : Integer.MAX_VALUE;
 	}
 
 	private void printQueryLog(SolrQuery sq, SearchHits<SolrEdcVO> resp) {

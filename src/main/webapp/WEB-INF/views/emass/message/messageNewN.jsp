@@ -508,7 +508,7 @@ $(document).ready(function() {
 	$('.scrollbar-inner').scrollbar();
 	
 	$('#searchBtn').click(function(){searchData( );}); //일반 검색 버튼 클릭
-	$('#searchQueryBtn').click(function(){toggleElsQuery();}); //고급 버튼 클릭
+	$('#searchQueryBtn').click(function(){toggleSolrQuery();}); //고급 버튼 클릭
 	$("#searchStrInput").keypress(function(e){if( e.keyCode == 13) searchData( );}); //통합 검색 엔터키
 
 	var dateObj = new Date();
@@ -937,9 +937,9 @@ $(document).ready(function() {
 			$('#periodSetupMenu').css('height', '230px');
 		}
 		else if(!$('#msg_condition_saver').hasClass('condition_menu_unselected')){
-			if($('#elsQueryText').val()==''){
+			if($('#solrQueryText').val()==''){
 				alert('<s:message code="query.make.input"/>');
-				$('#elsQueryText').focus();
+				$('#solrQueryText').focus();
 				return;
 			}
 			$('#periodSetupPop').hide();
@@ -1561,8 +1561,8 @@ function searchData( ){
 }
 
 //고급 검색식 검색
-function toggleElsQuery(){
-	if($('#elsQueryText').val() == ''){
+function toggleSolrQuery(){
+	if($('#solrQueryText').val() == ''){
 		alert('<s:message code="query.make.empty.search"/>');
 		return;
 	}
@@ -1600,8 +1600,7 @@ function getList(type){
 			return;
 		}
 	} else {
-		var search = getHighlight($('#elsQueryText').val());
-
+		var search = solrHighlight($('#solrQueryText').val());
 		$('#searchQueryStrInput').val(search);
 	}
 	
@@ -1996,7 +1995,6 @@ function queryMakePop(  ){
 
 function getSearchQuery() {
 
-	
 }
 function confIconHide() {
 	$('#confError').hide();
@@ -2031,10 +2029,10 @@ function initHeaderTab(){
  * 고급검색 쿼리 텍스트 추출 (정규 표현식을 이용한 텍스트만 추출)
  * 하일라이팅을 위한 처리
  */
-function getHighlight(val){
+function solrHighlight(val){
 	var result = '';
 	ui.get({
-		url : 'getHighlightStr.xcn',
+		url : 'getSolrHighlightStr.xcn',
 		val : val,
 		asyncFlag : false,
 		success : function(data, total) {

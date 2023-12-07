@@ -1,7 +1,7 @@
 var popOpenFlag = false;
 function initConditionSetup( ){
 	setupCondition( );
-	
+
 	$(document).on('click', '.filterAddBtn', function(){
 		var code = $(this).attr('id').substring(0, $(this).attr('id').length-3);
 		openCodeWindow(code, $('#'+code+'Val').val(), $('#'+code+'Str').val());
@@ -14,13 +14,13 @@ function initConditionSetup( ){
 
 function setupCondition( ){
 	$('.tab_header').css('position', 'relative');
-	
+
 	$('#filterSaveBtn').click(function(){
 		$('#savePathPopDiv').show();
 		$('#selectConditionPopDiv').hide();
 		saveFilterData( 'save' );
 	});
-	
+
 	$('#filterResetBtn').click(function(){
 		initCondition( '' );
 	});
@@ -28,11 +28,11 @@ function setupCondition( ){
 	$(document).on('mouseover', '.codeSelectedBtn', function(e){
 		var endId = '';
 		if( popOpenFlag ) endId = 'Pop';
-		
+
 		$('#selectedCodeTitle'+endId).show();
 		$('#selectedCodeTitle'+endId).css('right', $(document).width()-e.pageX+'px');
 		$('#selectedCodeTitle'+endId).css('top', e.pageY-45+'px');
-		
+
 		var str = $(this).parent().find('.selectedTitle').val();
 		if( str != undefined ) str = str.replaceAll('\\|', ',');
 		$('#selectedCodeTitle'+endId).html(str);
@@ -46,7 +46,7 @@ function setupCondition( ){
 			right = $('#smartFilterSavePop').find('.modal-dialog').width()-e.pageX+175+'px';
 			top = e.pageY-90+'px';
 		}
-		
+
 		$('#selectedCodeTitle'+endId).css('right', right);
 		$('#selectedCodeTitle'+endId).css('top', top);
 		var str = $(this).parent().find('.selectedTitle').val();
@@ -64,7 +64,7 @@ function setupCondition( ){
 		resetCode($(this).attr('id').substring(0, $(this).attr('id').length-12-endId.length));
 		$('#selectedCodeTitle'+endId).hide();
 	});
-	
+
 	if (pageType == "DIV") {
 		dateInitSetupNew( );		//추후 변경 필요
 		conditionSetupNew('');		//추후 변경 필요
@@ -72,13 +72,13 @@ function setupCondition( ){
 		dateInitSetup( );
 		conditionSetup('');
 	}
-	
+
 	conditionSetup('Pop');
 	setSelectpicker();
-	
+
 	initInterestUser();
 	initUserGroupList();
-	
+
 	//$('th').css('display', 'none');
 }
 
@@ -108,7 +108,7 @@ function getSelectedCodeData( codeType, data ) {
 				}
 				val += '%' + data[i].count;
 			}
-			
+
 			if( i != data.length-1){
 				if( codeType == 'dept'){
 					str +=', ';
@@ -127,7 +127,7 @@ function getSelectedCodeData( codeType, data ) {
 		if( popOpenFlag ) endId = 'Pop';
 		$('#'+codeType+'Str'+endId).val(str);
 		$('#'+codeType+'Val'+endId).val(val);
-		
+
 		if( $('#'+codeType+'Str'+endId).val() != '' ){
 			$('#'+codeType+'SelectedArea'+endId).find('.btn').text(data.length);
 			$('#'+codeType+'SelectedArea'+endId).show();
@@ -136,7 +136,7 @@ function getSelectedCodeData( codeType, data ) {
 			$('#'+codeType+'SelectedArea'+endId).hide();
 		}
 	}
-	
+
 }
 function resetCode(codeType){
 	var endId = '';
@@ -221,7 +221,7 @@ function getCodeList( codeType ){
 			ui.alertMsg('error:' + status);
 		},
 		complete 	: function() {
-		    searchFlag=false;
+			searchFlag=false;
 		}
 	});
 }
@@ -240,10 +240,10 @@ function initInterestUser(){
 			if(pageType == "DIV") {
 				getInterestUserOptionsNew(data, '');
 			} else {
-				getInterestUserOptions(data, '');	
+				getInterestUserOptions(data, '');
 			}
-			
-			
+
+
 			getInterestUserOptions(data, 'Pop');
 		},
 		error : function(status, message) {
@@ -280,7 +280,7 @@ function getUserGroupListOptions(data, endId){
 		width:'180px',
 		noneSelectedText:'-'+condition.userGroupNaviTitle2+'-'
 	});
-	
+
 	var result='<option value="">-'+condition.userGroupNaviTitle2+'-</option>';
 	for(var i=0 ; i<data.length; i++){
 		result+='<option value="' + data[i].groupCode + '">' +  data[i].groupName + '</option>';
@@ -296,7 +296,7 @@ function getUserGroupListOptionsNew(data, endId){
 		style:'btn-xs btn-default',
 		noneSelectedText:'-'+condition.userGroupNaviTitle2+'-'
 	});
-	
+
 	var result='<option value="">-'+condition.userGroupNaviTitle2+'-</option>';
 	for(var i=0 ; i<data.length; i++){
 		result+='<option value="' + data[i].groupCode + '">' +  data[i].groupName + '</option>';
@@ -315,7 +315,7 @@ function getInterestUserOptions(data, endId){
 		width:'180px',
 		noneSelectedText:'-'+condition.selectInterest+'-'
 	});
-	
+
 	var result='<option value="">-'+condition.selectInterest+'-</option>';
 	result+='<option value="all">'+condition.interestUserAll+'</option>';
 	for(var i=0 ; i<data.length; i++){
@@ -332,7 +332,7 @@ function getInterestUserOptionsNew(data, endId){
 		style:'btn-xs btn-default',
 		noneSelectedText:'-'+condition.selectInterest+'-'
 	});
-	
+
 	var result='<option value="">-'+condition.selectInterest+'-</option>';
 	result+='<option value="all">'+condition.interestUserAll+'</option>';
 	for(var i=0 ; i<data.length; i++){
@@ -363,13 +363,13 @@ function conditionSetup( endId ){
 	$( 'input[name="regexpYn'+endId+'"]:radio' ).change(function(){
 		changeRadioVal('regexp', endId, $(this).val() );
 	});
-	
+
 	$('#searchField'+endId).selectpicker({
 		container:'body',
 		width:'115px',
 		noneSelectedText:condition.commonMsgAll
 	});
-	
+
 	$('#serviceTypeSelect'+endId).selectpicker({
 		container:'body',
 		size: 15,
@@ -381,7 +381,7 @@ function conditionSetup( endId ){
 		deselectAllText:condition.msgUnselect_all,
 		liveSearchPlaceholder:condition.searchService
 	});
-	
+
 	var allofus_width = '475px';
 	if( endId != '') allofus_width = '400px';
 	$('#allOfus'+endId).selectpicker({
@@ -396,7 +396,7 @@ function conditionSetup( endId ){
 		container:'body',
 		width:'70px'
 	});
-	
+
 	$('#busiSelect'+endId).selectpicker({
 		container:'body',
 		size: 15,
@@ -410,7 +410,7 @@ function conditionSetup( endId ){
 	$('#dept'+endId).click(function(){
 		openCodeWindow('dept', $('#deptVal'+endId).val(), $('#deptStr'+endId).val());
 	});
-	
+
 	var size_slider = document.getElementById('size-setup'+endId);
 	noUiSlider.create(size_slider, {
 		start: [ 0 ],
@@ -427,14 +427,14 @@ function conditionSetup( endId ){
 		$('#sizeEndVal'+endId).val(0);
 		$('#sizeStartValStr'+endId).html( convertFileSize( value ) );
 	});
-	
+
 	document.getElementById('sizeStartVal'+endId).addEventListener('change', function(){
 		size_slider.noUiSlider.set([this.value, null]);
 	});
 	document.getElementById('sizeEndVal'+endId).addEventListener('change', function(){
 		size_slider.noUiSlider.set([null, this.value]);
 	});
-	
+
 	$('#sizeStartValStr'+endId).click(function(){
 		$(this).hide();
 		$('#sizeStartVal'+endId).show();
@@ -453,7 +453,7 @@ function conditionSetup( endId ){
 		$(this).hide();
 		$('#sizeEndValStr'+endId).show();
 	});
-	
+
 	$('#sizeStartVal'+endId).keypress(function(e){
 		if( e.keyCode == 13){
 			$(this).hide();
@@ -466,11 +466,11 @@ function conditionSetup( endId ){
 			$('#sizeEndValStr'+endId).show();
 		}
 	});
-	
+
 	$('#sizeFilterSelect'+endId).change(function(){
 		setSizeFilter( 'size-setup'+endId, $(this).val() );
 	});
-	
+
 	if( endId == 'Pop'){
 		$('input:radio[name=filterTypePop]').change(function () {
 			var value = $('input:radio[name=filterTypePop]:input:checked').val();
@@ -480,17 +480,17 @@ function conditionSetup( endId ){
 			}else{
 				$('#selectConditionPopArea').hide();
 				$('#selectQueryPopArea').show();
-				
+
 			}
 		});
-		
+
 		$('#smartFilterSavePop').on('show.bs.modal', function(){
 			getAdminFilterListPop( );
-			
+
 			if( $('#modalType').val() == 'add'){
 				$('#startdatepickerPop').data("DateTimePicker").date($('#startdatepicker').data("DateTimePicker").date());
 				$('#enddatepickerPop').data("DateTimePicker").date($('#enddatepicker').data("DateTimePicker").date());
-				
+
 				$("#startdatepickerPop").prop('disabled', true);
 				$("#enddatepickerPop").prop('disabled', true);
 				initCondition('Pop');
@@ -502,14 +502,14 @@ function conditionSetup( endId ){
 				$('#normalDateArea').show();
 				$('#simpleDateArea').hide();
 				$('#noselectDateArea').hide();
-				
+
 				$('#selectConditionPopArea').show();
 				$('#selectQueryPopArea').hide();
-				
+
 				var selectedTabIdx = $('#resultTab').find('.active').index();
 				var filterType = $('#'+rsKey[selectedTabIdx].contentId).find('.tabValue').attr('data-filterType');
 				if( filterType == 'C') filterType = 'D';
-				
+
 				checkRadioBtn( 'filterTypePop', filterType );
 				if( filterType == 'Q'){
 					$('#selectConditionPopArea').show();
@@ -517,7 +517,7 @@ function conditionSetup( endId ){
 					$('#selectConditionPopDiv').hide();
 					$('#queryInputTextareaPop').val($('#solrQueryText').val());
 				}
-				
+
 				setCondition( 'Pop', getCondition('') );
 			}
 			else{
@@ -528,7 +528,7 @@ function conditionSetup( endId ){
 					if( filterType == 'D'){
 						$('#selectConditionPopArea').show();
 						$('#selectQueryPopArea').hide();
-						
+
 						var jsonData = JSON.parse(treeNode.conditions);
 						setOnlyCondition( 'Pop', jsonData[jsonData.length-1] );
 					}else{
@@ -550,12 +550,12 @@ function conditionSetup( endId ){
 				var treeNode = nodes[0];
 				treeNode.tId = 'filterTreePop_'+ treeNode.tId.split('_')[1];
 				treeNode.isHover = false;
-				
+
 				var filterTreePop = $.fn.zTree.getZTreeObj("filterTreePop");
 				filterTreePop.selectNode(treeNode);
 			}
 			$('#filterNamePopInput').focus();
-			
+
 			popOpenFlag = true;
 		}).on('hidden.bs.modal', function(){
 			popOpenFlag = false;
@@ -563,21 +563,21 @@ function conditionSetup( endId ){
 			initCondition( 'Pop' );
 			getAdminFilterList( );
 		});
-		
+
 		$('#smartFolderSavePop').on('show.bs.modal', function(){
 			getAdminFolderListPop( );
-			
+
 		}).on('shown.bs.modal', function(){
 			var nodes = zFolderTree.getSelectedNodes();
 			if (nodes.length > 0) {
 				var treeNode = nodes[0];
 				treeNode.tId = 'folderTreePop_'+ treeNode.tId.split('_')[1];
 				treeNode.isHover = false;
-				
+
 				var filterTreePop = $.fn.zTree.getZTreeObj("folderTreePop");
 				filterTreePop.selectNode(treeNode);
 			}
-			
+
 			popOpenFlag = true;
 		}).on('hidden.bs.modal', function(){
 			popOpenFlag = false;
@@ -608,14 +608,14 @@ function conditionSetupNew( endId ){
 	$( 'input[name="regexpYn'+endId+'"]:radio' ).change(function(){
 		changeRadioVal('regexp', endId, $(this).val() );
 	});
-	
+
 	$('#searchField').selectpicker({
 		container:'body',
 		size: 15,
 		width:'170px',
 		style:'btn-xs btn-default'
 	});
-	
+
 	$('#serviceTypeSelect').selectpicker({
 		container:'body',
 		size: 15,
@@ -636,7 +636,7 @@ function conditionSetupNew( endId ){
 		style:'btn-xs btn-default',
 		width:allofus_width
 	});
-	
+
 	$('#sizeFilterType'+endId).selectpicker({
 		container:'body',
 		style:'btn-xs btn-default',
@@ -647,7 +647,7 @@ function conditionSetupNew( endId ){
 		style:'btn-xs btn-default',
 		width:'65px'
 	});
-	
+
 	$('#busiSelect'+endId).selectpicker({
 		container:'body',
 		size: 15,
@@ -662,7 +662,7 @@ function conditionSetupNew( endId ){
 	$('#dept'+endId).click(function(){
 		openCodeWindow('dept', $('#deptVal'+endId).val(), $('#deptStr'+endId).val());
 	});
-	
+
 	var size_slider = document.getElementById('size-setup'+endId);
 	noUiSlider.create(size_slider, {
 		start: [ 0 ],
@@ -679,14 +679,14 @@ function conditionSetupNew( endId ){
 		$('#sizeEndVal'+endId).val(0);
 		$('#sizeStartValStr'+endId).html( convertFileSize( value ) );
 	});
-	
+
 	document.getElementById('sizeStartVal'+endId).addEventListener('change', function(){
 		size_slider.noUiSlider.set([this.value, null]);
 	});
 	document.getElementById('sizeEndVal'+endId).addEventListener('change', function(){
 		size_slider.noUiSlider.set([null, this.value]);
 	});
-	
+
 	$('#sizeStartValStr'+endId).click(function(){
 		$(this).hide();
 		$('#sizeStartVal'+endId).show();
@@ -705,7 +705,7 @@ function conditionSetupNew( endId ){
 		$(this).hide();
 		$('#sizeEndValStr'+endId).show();
 	});
-	
+
 	$('#sizeStartVal'+endId).keypress(function(e){
 		if( e.keyCode == 13){
 			$(this).hide();
@@ -718,11 +718,11 @@ function conditionSetupNew( endId ){
 			$('#sizeEndValStr'+endId).show();
 		}
 	});
-	
+
 	$('#sizeFilterSelect'+endId).change(function(){
 		setSizeFilter( 'size-setup'+endId, $(this).val() );
 	});
-	
+
 	if( endId == 'Pop'){
 		$('input:radio[name=filterTypePop]').change(function () {
 			var value = $('input:radio[name=filterTypePop]:input:checked').val();
@@ -732,17 +732,17 @@ function conditionSetupNew( endId ){
 			}else{
 				$('#selectConditionPopArea').hide();
 				$('#selectQueryPopArea').show();
-				
+
 			}
 		});
-		
+
 		$('#smartFilterSavePop').on('show.bs.modal', function(){
 			getAdminFilterListPop( );
-			
+
 			if( $('#modalType').val() == 'add'){
 				$('#startdatepickerPop').data("DateTimePicker").date($('#startdatepicker').data("DateTimePicker").date());
 				$('#enddatepickerPop').data("DateTimePicker").date($('#enddatepicker').data("DateTimePicker").date());
-				
+
 				$("#startdatepickerPop").prop('disabled', true);
 				$("#enddatepickerPop").prop('disabled', true);
 				initCondition('Pop');
@@ -754,14 +754,14 @@ function conditionSetupNew( endId ){
 				$('#normalDateArea').show();
 				$('#simpleDateArea').hide();
 				$('#noselectDateArea').hide();
-				
+
 				$('#selectConditionPopArea').show();
 				$('#selectQueryPopArea').hide();
-				
+
 				var selectedTabIdx = $('#resultTab').find('.active').index();
 				var filterType = $('#'+rsKey[selectedTabIdx].contentId).find('.tabValue').attr('data-filterType');
 				if( filterType == 'C') filterType = 'D';
-				
+
 				checkRadioBtn( 'filterTypePop', filterType );
 				if( filterType == 'Q'){
 					$('#selectConditionPopArea').show();
@@ -769,7 +769,7 @@ function conditionSetupNew( endId ){
 					$('#selectConditionPopDiv').hide();
 					$('#queryInputTextareaPop').val($('#solrQueryText').val());
 				}
-				
+
 				setCondition( 'Pop', getCondition('') );
 			}
 			else{
@@ -780,7 +780,7 @@ function conditionSetupNew( endId ){
 					if( filterType == 'D'){
 						$('#selectConditionPopArea').show();
 						$('#selectQueryPopArea').hide();
-						
+
 						var jsonData = JSON.parse(treeNode.conditions);
 						setOnlyCondition( 'Pop', jsonData[jsonData.length-1] );
 					}else{
@@ -802,12 +802,12 @@ function conditionSetupNew( endId ){
 				var treeNode = nodes[0];
 				treeNode.tId = 'filterTreePop_'+ treeNode.tId.split('_')[1];
 				treeNode.isHover = false;
-				
+
 				var filterTreePop = $.fn.zTree.getZTreeObj("filterTreePop");
 				filterTreePop.selectNode(treeNode);
 			}
 			$('#filterNamePopInput').focus();
-			
+
 			popOpenFlag = true;
 		}).on('hidden.bs.modal', function(){
 			popOpenFlag = false;
@@ -837,9 +837,9 @@ function setUserQuery(treeNode){
 	condition.startDt = newTreeNode.startDt;
 	condition.endDt = newTreeNode.endDt;
 	condition.query = newTreeNode.conditions;
-	
+
 	setOnlyCondition( 'Pop', condition );
-	
+
 	$('#queryInputTextareaPop').val(newTreeNode.conditions);
 }
 
@@ -859,7 +859,7 @@ function dateInitSetup( ){
 		}else{
 			unSelectRadioVal('easyDate');
 		}
-    });
+	});
 	$('#enddatepicker').datetimepicker({
 		format: 'YYYY-MM-DD HH:mm:ss',
 		locale: 'ko',
@@ -872,8 +872,8 @@ function dateInitSetup( ){
 		}else{
 			unSelectRadioVal('easyDate');
 		}
-    });
-	
+	});
+
 	$('#startdatepickerPop').datetimepicker({
 		format: 'YYYY-MM-DD HH:mm:ss',
 		locale: 'ko',
@@ -886,7 +886,7 @@ function dateInitSetup( ){
 		}else{
 			unSelectRadioVal('easyDatePop');
 		}
-    });
+	});
 	$('#enddatepickerPop').datetimepicker({
 		format: 'YYYY-MM-DD HH:mm:ss',
 		locale: 'ko',
@@ -899,8 +899,8 @@ function dateInitSetup( ){
 		}else{
 			unSelectRadioVal('easyDatePop');
 		}
-    });
-	
+	});
+
 	$('#startdatepickerAdd').datetimepicker({
 		format: 'YYYY-MM-DD HH:mm:ss',
 		locale: 'ko',
@@ -913,14 +913,14 @@ function dateInitSetup( ){
 		sideBySide: true,
 		defaultDate: moment(new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), 23, 59, 59 ) )
 	});
-	
+
 	$('input:radio[name=easyDate]').change(function () {
 		changeDate($('input:radio[name=easyDate]:input:checked').val());
 	});
-	
+
 	$('#filterOptionPopSelect').change(function(){
 		var val = $(this).val();
-		
+
 		if( val == '1'){
 			$('#normalDateArea').show();
 			$('#simpleDateArea').hide();
@@ -978,8 +978,8 @@ function dateInitSetupNew( ){
 		}else{
 			unSelectRadioVal('easyDate');
 		}
-    });
-	
+	});
+
 	$('#enddatepicker').datetimepicker({
 		widgetParent:'.boxArea',
 		format: 'YYYY-MM-DD HH:mm:ss',
@@ -993,19 +993,19 @@ function dateInitSetupNew( ){
 		}else{
 			unSelectRadioVal('easyDate');
 		}
-    }).on('dp.show', function(){
-        var datepicker = $("body").find('.bootstrap-datetimepicker-widget:last');
-        if (datepicker.hasClass('bottom')) {
-           var top = $(this).offset().top + $(this).outerHeight();
-           var left = $(this).offset().left;
-           datepicker.css({
-              'top': top + 'px', 
-              'bottom': 'auto',
-              'left': left+'px'
-           });
-        }
-     });
-	
+	}).on('dp.show', function(){
+		var datepicker = $("body").find('.bootstrap-datetimepicker-widget:last');
+		if (datepicker.hasClass('bottom')) {
+			var top = $(this).offset().top + $(this).outerHeight();
+			var left = $(this).offset().left;
+			datepicker.css({
+				'top': top + 'px',
+				'bottom': 'auto',
+				'left': left+'px'
+			});
+		}
+	});
+
 	$('#startdatepickerPop').datetimepicker({
 		format: 'YYYY-MM-DD HH:mm:ss',
 		locale: 'ko',
@@ -1018,7 +1018,7 @@ function dateInitSetupNew( ){
 		}else{
 			unSelectRadioVal('easyDatePop');
 		}
-    });
+	});
 	$('#enddatepickerPop').datetimepicker({
 		format: 'YYYY-MM-DD HH:mm:ss',
 		locale: 'ko',
@@ -1031,8 +1031,8 @@ function dateInitSetupNew( ){
 		}else{
 			unSelectRadioVal('easyDatePop');
 		}
-    });
-	
+	});
+
 	$('#startdatepickerAdd').datetimepicker({
 		format: 'YYYY-MM-DD HH:mm:ss',
 		locale: 'ko',
@@ -1045,14 +1045,14 @@ function dateInitSetupNew( ){
 		sideBySide: true,
 		defaultDate: moment(new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), 23, 59, 59 ) )
 	});
-	
+
 	$('input:radio[name=easyDate]').change(function () {
 		changeDate($('input:radio[name=easyDate]:input:checked').val());
 	});
-	
+
 	$('#filterOptionPopSelect').change(function(){
 		var val = $(this).val();
-		
+
 		if( val == '1'){
 			$('#normalDateArea').show();
 			$('#simpleDateArea').hide();
@@ -1073,7 +1073,7 @@ function dateInitSetupNew( ){
 function setSizeFilter( id, val ){
 	var endId = '';
 	if( id == 'size-setupPop') endId = 'Pop';
-	
+
 	var sizeIds = {
 		sizeRangeValStr:'sizeRangeValStr'+endId,
 		sizeStartValStr:'sizeStartValStr'+endId,
@@ -1081,7 +1081,7 @@ function setSizeFilter( id, val ){
 		sizeStartVal:'sizeStartVal'+endId,
 		sizeEndVal:'sizeEndVal'+endId
 	};
-	
+
 	var size_slider = document.getElementById(id);
 	if( size_slider.noUiSlider != undefined ) size_slider.noUiSlider.destroy( );
 	$('#'+sizeIds.sizeRangeValStr).hide();
@@ -1098,7 +1098,7 @@ function setSizeFilter( id, val ){
 				'max': [ 1073741824 ]
 			}
 		};
-		
+
 		var sizeValues = [
 			document.getElementById(sizeIds.sizeStartVal),
 			document.getElementById(sizeIds.sizeEndVal)
@@ -1125,7 +1125,7 @@ function setSizeFilter( id, val ){
 				'max': 1073741824
 			}
 		};
-		
+
 		noUiSlider.create(size_slider, options);
 		size_slider.noUiSlider.on('update', function( values, handle ) {
 			var value = parseInt(values[handle]);
@@ -1133,7 +1133,7 @@ function setSizeFilter( id, val ){
 			$('#'+sizeIds.sizeEndVal).val( 0 );
 			$('#'+sizeIds.sizeStartValStr).html( convertFileSize( value ) );
 		});
-		
+
 	}else if(val == 'S'){
 		options = {
 			start: $('#'+sizeIds.sizeStartVal).val(),
@@ -1153,7 +1153,7 @@ function setSizeFilter( id, val ){
 			$('#'+sizeIds.sizeStartValStr).html( convertFileSize( value ) );
 		});
 	}
-	
+
 	document.getElementById(sizeIds.sizeStartVal).addEventListener('change', function(){
 		size_slider.noUiSlider.set([this.value, null]);
 	});
@@ -1169,7 +1169,7 @@ function changeDate( val )
 {
 	easyDateStartFlag = true;
 	easyDateEndFlag = true;
-	
+
 	var dateObj = new Date();
 	if ( val == "1" ) $('#startdatepicker').data("DateTimePicker").date( new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), 00, 00, 00 ) );
 	else if ( val == "2" ) $('#startdatepicker').data("DateTimePicker").date( new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()-1, 00, 00, 00 ) );
@@ -1179,7 +1179,7 @@ function changeDate( val )
 	else if ( val == "6" ) $('#startdatepicker').data("DateTimePicker").date( new Date( dateObj.getFullYear(), dateObj.getMonth()-1, dateObj.getDate(), 00, 00, 00 ) );
 	else if ( val == "7" ) $('#startdatepicker').data("DateTimePicker").date( new Date( dateObj.getFullYear(), dateObj.getMonth()-2, dateObj.getDate(), 00, 00, 00 ) );
 	else if ( val == "8" ) $('#startdatepicker').data("DateTimePicker").date( new Date( dateObj.getFullYear(), dateObj.getMonth()-3, dateObj.getDate(), 00, 00, 00 ) );
-	
+
 	if ( val == "2" ) $('#enddatepicker').data("DateTimePicker").date( new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()-1, 23, 59, 59 ) );
 	else if ( val != "" ) $('#enddatepicker').data("DateTimePicker").date( new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), 23, 59, 59 ) );
 }
@@ -1188,7 +1188,7 @@ function initCondition( endId ){
 	$('#filterName').val('');
 	$('#filter_seq').val('');
 	$('#p_filter_seq').val('');
-	
+
 	if( isConsent() && endId == ''){
 		$('#consentNo').val('');
 		$('#consentName').text('');
@@ -1197,19 +1197,19 @@ function initCondition( endId ){
 		$('#consentUserId').val('');
 		$('#consentBtn').removeClass('active');
 	}
-	
+
 	if( endId == ''){
 		//$('#researchCheckbox').prop('disabled', false);
 		$("input:checkbox[id='researchCheckbox"+endId+"']").prop("checked", false);
-		
+
 		easyDateStartFlag = true;
 		easyDateEndFlag = true;
-		
+
 		var dateObj = new Date();
 		$('#startdatepicker'+endId).data("DateTimePicker").date( new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()-7, 00, 00, 00 ) );
 		$('#enddatepicker'+endId).data("DateTimePicker").date( new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), 23, 59, 59 ) );
 		checkRadioBtn( 'easyDate', 3 );
-		
+
 		$('#solrQueryText').val('');
 	}else{
 		$('#filterNamePopInput').val('');
@@ -1220,7 +1220,7 @@ function initCondition( endId ){
 		$('#simpleDateArea').hide();
 		$('#noselectDateArea').hide();
 		checkRadioBtn( 'dashboardSelPop', '' );
-		
+
 		checkRadioBtn( 'filterTypePop', 'D' );
 		$('#selectConditionPopArea').show();
 		$('#selectQueryPopArea').hide();
@@ -1235,18 +1235,18 @@ function initCondition( endId ){
 	checkRadioBtn( 'regexp_drmYn'+endId, '' );
 	checkRadioBtn( 'regexp_sctYn'+endId, '' );
 	checkRadioBtn( 'ctimeWork'+endId, '' );
-	
+
 	checkRadioBtn( 'readYn'+endId, '' );
 	checkRadioBtn( 'receiveSend'+endId, '' );
-	
+
 	$('#receivers'+endId).val('');
 	$('#senders'+endId).val('');
-	
+
 	$('#busiSelect'+endId).selectpicker('val', [] );
 	$('#deptStr'+endId).val('');
 	$('#deptVal'+endId).val('');
 	$('#deptSelectedArea'+endId).hide();
-	
+
 	checkRadioBtn( 'serviceYn'+endId, '' );
 	checkRadioBtn( 'attachYn'+endId, '' );
 	$('#attachBtnArea'+endId).hide();
@@ -1254,9 +1254,9 @@ function initCondition( endId ){
 	$('#keywordBtnArea'+endId).hide();
 	checkRadioBtn( 'regexpYn'+endId, '' );
 	$('#regexpBtnArea'+endId).hide();
-	
+
 	$('#allOfus'+endId).selectpicker('val', '');
-	
+
 	$('#sizeStartVal'+endId).val(0);
 	$('#sizeEndVal'+endId).val(0);
 	$('#sizeFilterSelect'+endId).selectpicker('val', 'L');
@@ -1281,11 +1281,11 @@ function unSelectRadioVal( name ){
  */
 function getCondition( endId ){
 	var filterVal = {};
-	
+
 	filterVal.filterName = $('#filterName').val();
 	filterVal.filter_seq = $('filter_seq').val();
 	filterVal.p_filter_seq = $('#p_filter_seq').val();
-	
+
 	if( isConsent() && endId == ''){
 		filterVal.consentNo = $('#consentNo').val();
 		filterVal.consentName = $('#consentName').text();
@@ -1294,13 +1294,13 @@ function getCondition( endId ){
 		//filterVal.consentEmail = $('#consentEmail').val();
 		filterVal.consentUserId = $('#consentUserId').val();
 	}
-	
+
 	if( endId != '' ){
 		var filterName = $('#filterNamePopInput').val();
 		var filterTreePop = $.fn.zTree.getZTreeObj("filterTreePop");
 		var nodes = filterTreePop.getSelectedNodes();
 		var p_filter_seq = nodes[0].id;
-		
+
 		filterVal.filterName = filterName;
 		filterVal.filter_seq = nodes[0].id;
 		filterVal.p_filter_seq = nodes[0].pId;
@@ -1310,18 +1310,18 @@ function getCondition( endId ){
 	var conArray = [];
 	conArray.push( createCondition( endId ) );
 	filterVal.conditions = conArray;
-	
+
 	//console.log(JSON.stringify(filterVal))
 	return filterVal;
 }
 
 function addCondition(endId, filterVal){
 	var filterVal = $.extend(true, {}, filterVal);
-	
+
 	filterVal.filterName = '';
 	filterVal.filter_seq = '';
 	filterVal.p_filter_seq = '';
-	
+
 	if( isConsent() && endId == ''){
 		filterVal.consentNo = $('#consentNo').val();
 		filterVal.consentName = $('#consentName').text();
@@ -1329,13 +1329,13 @@ function addCondition(endId, filterVal){
 		//filterVal.consentEmail = $('#consentEmail').val();
 		filterVal.consentUserId = $('#consentUserId').val();
 	}
-	
+
 	if( endId != '' ){
 		var filterName = $('#filterNamePopInput').val();
 		var filterTreePop = $.fn.zTree.getZTreeObj("filterTreePop");
 		var nodes = filterTreePop.getSelectedNodes();
 		var p_filter_seq = nodes[0].id;
-		
+
 		filterVal.filterName = filterName;
 		filterVal.filter_seq = nodes[0].id;
 		filterVal.p_filter_seq = nodes[0].pId;
@@ -1344,7 +1344,7 @@ function addCondition(endId, filterVal){
 	var conArray = [];
 	conArray.push( createCondition( endId ) );
 	filterVal.conditions = conArray;
-	
+
 	return filterVal;
 }
 
@@ -1361,7 +1361,7 @@ function createCondition( endId ){
 	condition.interUser = $('#userSeq'+endId).selectpicker('val');
 	if(condition.interUser != '') condition.interUserName = $('#userSeq'+endId).parent().find('.filter-option').text();
 	else condition.interUserName = '';
-	
+
 	condition.senders = $('#senders'+endId).val();
 	condition.receivers = $('#receivers'+endId).val();
 	condition.rcvTo = $('#rcvTo'+endId).val();
@@ -1369,22 +1369,22 @@ function createCondition( endId ){
 	condition.rcvBcc = $('#rcvBcc'+endId).val();
 	condition.rcvJikgub = $('#rcvJikgub'+endId).val();
 	condition.allOfus = $('#allOfus'+endId).val();
-	
+
 	condition.ctimeWork = $('input:radio[name=ctimeWork'+endId+']:input:checked').val();
 
 	condition.busi = arrayToString($('#busiSelect'+endId).selectpicker('val'));
 	if(condition.busi != '') condition.busiStr = $('#busiSelect'+endId).parent().find('.filter-option').text();
 	else condition.busiStr = '';
-	
+
 	condition.dept = $('#deptVal'+endId).val();
 	if(condition.dept != '') condition.deptStr = $('#deptStr'+endId).val();
 	else condition.deptStr = '';
-	
+
 	condition.jikgub = $('#jikgubInput'+endId).val();
-	
+
 	condition.readYn = $('input:radio[name=readYn'+endId+']:input:checked').val();
 	condition.receiveSend = $('input:radio[name=receiveSend'+endId+']:input:checked').val();
-	
+
 	condition.attachYn = $('input:radio[name=attachYn'+endId+']:input:checked').val();
 	condition.attachVal = $('#attachVal'+endId).val();
 	condition.attachStr = $('#attachStr'+endId).val();
@@ -1394,20 +1394,20 @@ function createCondition( endId ){
 	condition.regexpYn = $('input:radio[name=regexpYn'+endId+']:input:checked').val();
 	condition.regexpVal = $('#regexpVal'+endId).val();
 	condition.regexpStr = $('#regexpStr'+endId).val();
-	
+
 	condition.allOfus = $('#allOfus'+endId).val();
-	
+
 	condition.sizeStartVal = $('#sizeStartVal'+endId).val();
 	condition.sizeEndVal = $('#sizeEndVal'+endId).val();
 	condition.sizeOption = $('#sizeFilterSelect'+endId).val();
 	condition.sizeType = $('#sizeFilterType'+endId).val();
-	
+
 	condition.drmYn = $('input:radio[name=regexp_drmYn'+endId+']:input:checked').val();
 	condition.sctYn = $('input:radio[name=regexp_sctYn'+endId+']:input:checked').val();
 	condition.userGroupSeq = arrayToString($('#userGroupSeq'+endId).selectpicker('val'));
 	if(condition.userGroupSeq != '') condition.userGroupName = $('#userGroupSeq'+endId).parent().find('.filter-option').text();
 	else condition.userGroupName = '';
-	
+
 	if( endId != '' ){
 		condition.easyDate = '';
 		var period = $('#filterOptionPopSelect').val();
@@ -1423,11 +1423,11 @@ function createCondition( endId ){
 		condition.period = period;
 		condition.startDt = startDt;
 		condition.endDt = endDt;
-		
+
 		var filterType = $('input:radio[name=filterTypePop]:input:checked').val();
 		if(filterType == 'Q') condition.query = $('#queryInputTextareaPop').val();
 		else condition.query = '';
-		
+
 		condition.filterType = filterType;
 	}else{
 		condition.period = 1;
@@ -1435,7 +1435,7 @@ function createCondition( endId ){
 		condition.endDt = $('#enddatepicker'+endId).data("DateTimePicker").date().format('YYYYMMDDHHmmss');
 		condition.easyDate = $('input:radio[name=easyDate'+endId+']:input:checked').val();
 		condition.query = $('#solrQueryText').val();
-		
+
 		var selectedTabIdx = $('#resultTab').find('.active').index();
 		condition.filterType = $('#'+rsKey[selectedTabIdx].contentId).find('.tabValue').attr('data-filterType');
 	}
@@ -1446,34 +1446,34 @@ function setCondition( endId, filterVal ){
 	$('#filterName').val(filterVal.name);
 	$('#filter_seq').val(filterVal.id);
 	$('#p_filter_seq').val(filterVal.pId);
-	
+
 	if( isConsent() && endId == ''){
 		$('#consentNo').val(filterVal.consentNo);
 		$('#consentName').text(filterVal.consentName);
 		//$('#consentIp').val(filterVal.consentIp);
 		//$('#consentEmail').val(filterVal.consentEmail);
 		$('#consentUserId').val(filterVal.consentUserId);
-		
+
 		if( filterVal.consentNo == '') $('#consentBtn').removeClass('active');
 		else $('#consentBtn').addClass('active');
 	}
 	if( endId != ''){
 		checkRadioBtn( 'dashboardSelPop', filterVal.dashboard );
 	}
-	
+
 	var conArray = getJson(filterVal.conditions);
 	setOnlyCondition( endId, conArray[conArray.length-1] );
 }
 
 function setOnlyCondition( endId, condition ){
-	
+
 	if( condition.easyDate == '' ) unSelectRadioVal('easyDate'+endId);
 	else checkRadioBtn( 'easyDate'+endId, condition.easyDate );
-	
+
 	if( endId != ''){
 		$('#filterOptionPopSelect').selectpicker('val', condition.period );
 		$('#filterOptionPopSelect').change();
-		
+
 		if( condition.period == 1){
 			$('#startdatepicker'+endId).data("DateTimePicker").date(condition.startDt.toDate());
 			$('#enddatepicker'+endId).data("DateTimePicker").date(condition.endDt.toDate());
@@ -1483,7 +1483,7 @@ function setOnlyCondition( endId, condition ){
 		}
 	}
 	else{
-		
+
 		if( condition.period == 1){
 			$('#startdatepicker'+endId).data("DateTimePicker").date(condition.startDt.toDate());
 			$('#enddatepicker'+endId).data("DateTimePicker").date(condition.endDt.toDate());
@@ -1495,20 +1495,20 @@ function setOnlyCondition( endId, condition ){
 			$('#startdatepicker'+endId).data("DateTimePicker").date(condition.startDt.toDate());
 			$('#enddatepicker'+endId).data("DateTimePicker").date(condition.endDt.toDate());
 		}
-		
+
 		$('#solrQueryText').val(condition.query);
 	}
 	if( condition.sort == '') $('#messageSort'+endId).selectpicker('val', 'ctime desc');
 	else $('#messageSort'+endId).selectpicker('val', condition.sort);
-	
+
 	$("input:checkbox[id='researchCheckbox"+endId+"']").prop("checked", eval(condition.reSearch == undefined ? false : condition.reSearch));
 	$('#searchStrInput'+endId).val(condition.searchStr);
 	$('#searchField'+endId).selectpicker('val', condition.searchField );
 	$('#serviceTypeSelect'+endId).selectpicker('val', stringToArray(condition.serviceType) );
 	$('#userSeq'+endId).selectpicker('val', stringToArray(condition.interUser));
-	
+
 	checkRadioBtn( 'ctimeWork'+endId, condition.ctimeWork );
-	
+
 	$('#senders'+endId).val( condition.senders );
 	$('#receivers'+endId).val( condition.receivers );
 	$('#rcvTo'+endId).val( condition.rcvTo );
@@ -1517,9 +1517,9 @@ function setOnlyCondition( endId, condition ){
 	$('#rcvJikgub'+endId).val( condition.rcvJikgub );
 	$('#allOfus'+endId).val( condition.allOfus );
 
-	
+
 	$('#busiSelect'+endId).selectpicker('val', stringToArray(condition.busi) );
-	
+
 	if(condition.dept != "") {
 		$('#deptVal'+endId).val( condition.dept );
 		$('#deptStr'+endId).val( condition.deptStr );
@@ -1530,37 +1530,37 @@ function setOnlyCondition( endId, condition ){
 		$('#deptSelectedArea').hide();
 	}
 	setCodeCount('dept', endId, condition.dept, ',');
-	
+
 	$('#jikgubInput'+endId).val( condition.jikgub );
-	
+
 	checkRadioBtn( 'readYn'+endId, condition.readYn );
 	checkRadioBtn( 'receiveSend'+endId, condition.receiveSend );
-	
+
 	checkRadioBtn( 'attachYn'+endId, condition.attachYn );
 	setCodeCount('attach', endId, condition.attachVal, '|');
 	$('#attachVal'+endId).val( condition.attachVal );
 	$('#attachStr'+endId).val( condition.attachStr );
 	changeRadioVal('attach', endId, condition.attachYn);
-	
+
 	checkRadioBtn( 'keywordYn'+endId, condition.keywordYn );
 	setCodeCount('keyword', endId, condition.keywordVal, '|');
 	$('#keywordVal'+endId).val( condition.keywordVal );
 	$('#keywordStr'+endId).val( condition.keywordStr );
 	changeRadioVal('keyword', endId, condition.keywordYn);
-	
+
 	checkRadioBtn( 'regexpYn'+endId, condition.regexpYn );
 	setCodeCount('regexp', endId, condition.regexpVal, '|');
 	$('#regexpVal'+endId).val( condition.regexpVal );
 	$('#regexpStr'+endId).val( condition.regexpStr );
 	changeRadioVal('regexp', endId, condition.regexpYn);
-	
+
 	$('#sizeStartVal'+endId).val(rtnDefaultVal(condition.sizeStartVal, 0));
 	$('#sizeEndVal'+endId).val(rtnDefaultVal(condition.sizeEndVal, 0));
 	$('#sizeFilterSelect'+endId).selectpicker('val', rtnDefaultVal(condition.sizeOption, 'L'));
 	$('#sizeFilterType'+endId).selectpicker('val', rtnDefaultVal(condition.sizeType, ''));
-	
+
 	setSizeFilter( 'size-setup'+endId, rtnDefaultVal(condition.sizeOption, 'L') );
-	
+
 	$('#userGroupSeq'+endId).selectpicker('val', stringToArray(condition.userGroupSeq));
 	checkRadioBtn( 'regexp_drmYn'+endId, condition.drmYn );
 	checkRadioBtn( 'regexp_sctYn'+endId, condition.sctYn );
@@ -1596,11 +1596,11 @@ function rtnDefaultVal( val, defaultVal ){
 }
 
 function getJson(str) {
-    var result;
+	var result;
 	try {
 		result = JSON.parse(str);
-    } catch (e) {
-    	result = str;
-    }
-    return result;
+	} catch (e) {
+		result = str;
+	}
+	return result;
 }

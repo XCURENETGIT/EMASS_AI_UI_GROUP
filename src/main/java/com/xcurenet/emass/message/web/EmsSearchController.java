@@ -213,7 +213,7 @@ public class EmsSearchController {
 
 
 
-	@RequestMapping(value = "/getHighlightStr.xcn")
+	@RequestMapping(value = "/test_getHighlightStr.xcn")
 	@Description("하일라이팅 검색어 생성")
 	@ResponseBody
 	public XcnResponseVO getHighlightStr(final HttpServletRequest request, final HttpSession session) throws Exception {

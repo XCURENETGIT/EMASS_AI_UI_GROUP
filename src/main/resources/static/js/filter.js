@@ -4,13 +4,13 @@ function initFilterSetup( ){
 
 	rMenu = $('#rMenu');
 	getAdminFilterList( );
-	
+
 	$('#dateSearch').click(function(){
 		var zTree = $.fn.zTree.getZTreeObj("filterTree");
 		var nodes = zTree.getSelectedNodes();
 		if (nodes.length > 0) {
 			var treeNode = $.extend(true, {}, nodes[0]);
-			
+
 			if( treeNode.filterType == 'D'){
 				console.log(treeNode)
 				var conditions = JSON.parse(treeNode.conditions);
@@ -22,7 +22,7 @@ function initFilterSetup( ){
 				treeNode.filterName = treeNode.name;
 				treeNode.filter_seq = treeNode.id;
 				treeNode.p_filter_seq = treeNode.pId;
-				
+
 				var conditions = [];
 				var condition = {};
 				condition.period = treeNode.userDtCd;
@@ -33,14 +33,14 @@ function initFilterSetup( ){
 				treeNode.conditions = conditions;
 				rtnFilterClick( treeNode, 'searchQuery' );
 			}
-			
-			
+
+
 		}else{
 			alert(filter.msgConnectError);
 		}
 		hideRPeriod();
 	});
-	
+
 	$('#saveFilterBtn').click(function(){
 		var type = $('#modalType').val(); //add, modify
 		var filterName = $('#filterNamePopInput').val();
@@ -50,7 +50,7 @@ function initFilterSetup( ){
 			});
 			return;
 		}
-		
+
 		var period = $('#filterOptionPopSelect').val();
 		var startDt = $('#startdatepickerPop').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
 		var endDt = $('#enddatepickerPop').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
@@ -82,20 +82,20 @@ function initFilterSetup( ){
 				return;
 			}
 		}
-		
+
 		var filterTreePop = $.fn.zTree.getZTreeObj("filterTreePop");
 		var nodes = filterTreePop.getSelectedNodes();
 		if( nodes.length == 0 ){
 			alert(condition.messageSelectFolder);
 			return;
 		}
-		
+
 		if( (type == 'add'||type == 'save') && (nodes[0].filterType != 'F' && nodes[0].filterType != 'U') ){
 			alert(condition.messageSelectFolder);
 			return;
 		}
 		var param = getCondition('Pop');
-		
+
 		var url = '';
 		if( type == 'add' || type == 'save'){
 			url = '/insertAdminFilterData.xcn';
@@ -124,7 +124,7 @@ function initFilterSetup( ){
 			}
 		});
 	});
-	
+
 	$('#saveAdminFilterBtn').click(function(){
 		if( $('#file').val() == '' ) {
 			ui.alertMsg(filter.msgSelectFile);
@@ -141,32 +141,32 @@ function initFilterSetup( ){
 					target : '#upload_file',
 					beforeSubmit: function() {
 					},
-			        success: function(result) {
-			        	if(result.success) {
-			        		getAdminFilterList( );
-			        		ui.alertMsg(filter.msgSaved, function(){
-			        			$('#filterImportPop').modal('hide');
-			        			$('#file').val('');
-			        			
-			        		});
-			        	} else {
-			        		ui.alertMsg(filter.msgSaveError+'\n'+result.message);
-			        	}
-			        },
-			        error : function(){
-			        	ui.alertMsg(filter.msgSaveError);
-			        },
-			        complete : function(){
-			        	ui.off('filterImportPop');
-			        }
-			    }).submit();
+					success: function(result) {
+						if(result.success) {
+							getAdminFilterList( );
+							ui.alertMsg(filter.msgSaved, function(){
+								$('#filterImportPop').modal('hide');
+								$('#file').val('');
+
+							});
+						} else {
+							ui.alertMsg(filter.msgSaveError+'\n'+result.message);
+						}
+					},
+					error : function(){
+						ui.alertMsg(filter.msgSaveError);
+					},
+					complete : function(){
+						ui.off('filterImportPop');
+					}
+				}).submit();
 			}
 		});
 	});
 	$("#filterImportPop").on('hidden.bs.modal', function() {
 		$('#file').val('');
 	});
-	
+
 	$('#periodMenuCloseBtn').click(function(){hideRPeriod(); });
 	$('#filterSearchBtn').click(function(){getAdminFilterList( ); });
 	$("#filterSearchStr").keypress(function(e){if( e.keyCode == 13) getAdminFilterList( ); });
@@ -183,7 +183,7 @@ function insertAdminFilterData(){
 		});
 		return;
 	}
-	
+
 	var period = $('#filterOptionPopSelect').val();
 	var startDt = $('#startdatepickerPop').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
 	var endDt = $('#enddatepickerPop').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
@@ -215,7 +215,7 @@ function insertAdminFilterData(){
 			return;
 		}
 	}
-	
+
 	var param = con.getFilterVal('Pop', 'N');
 
 	var url = url = '/insertAdminFilterData.xcn';
@@ -252,7 +252,7 @@ function updateAdminFilterData(){
 		});
 		return;
 	}
-	
+
 	var param = con.getFilterVal('Pop', 'N');
 	var url = 'updateAdminFilterData.xcn';
 
@@ -340,7 +340,7 @@ function getAdminFilterListPop( ){
 function initTree(data){
 	$.fn.zTree.init($("#filterTree"), ztree_setting, data);
 	zTree = $.fn.zTree.getZTreeObj("filterTree");
-	
+
 	$( window ).bind('keydown', function(e){
 		//console.log("e.keyCode = "+e.keyCode);
 		var filterTree = $.fn.zTree.getZTreeObj("filterTree");
@@ -348,11 +348,11 @@ function initTree(data){
 		if( nodes.length == 0 ){
 			return;
 		}
-		
+
 		if( e.keyCode == 113 ){
 			var filterType = nodes[0].filterType;
 			if( filterType == 'R' || filterType == 'U') return;
-			
+
 			zTree.editName(nodes[0]); //F2 key
 		}
 		else if( e.keyCode == 46 ) { //del key
@@ -363,7 +363,7 @@ function initTree(data){
 				$('#rMenu').css('visibility', 'hidden');
 			}
 		}
-		
+
 		if ($('#rMenu').css('visibility') == 'visible'){
 			if( e.keyCode == 70 ) { //F 새폴더
 				addFilterFolder();
@@ -381,7 +381,7 @@ function initTree(data){
 				if($('#filter_update').css('display') != 'none') saveFilterOnTree( 'modify' );
 			}
 			return false;
-		} 
+		}
 	});
 }
 
@@ -426,7 +426,7 @@ function exportFilter(url){
 			}else{
 				$('#filter_ids').val('');
 			}
-			
+
 			$('#exportDownForm').attr('action', url);
 			$('#exportDownForm').attr('method','post');
 			$('#exportDownForm').submit();
@@ -445,7 +445,7 @@ function addFilterFolder()
 	}
 	var treeNode = nodes[0];
 	if( treeNode.filterType != 'F' && treeNode.filterType != 'U') return;
-	
+
 	$('#rMenu').css('visibility', 'hidden');
 	treeNode = zTree.addNodes(treeNode, {id:(-1), pId:treeNode.id, name:filter.folderNew, filterType:'F'});
 	zTree.editName(treeNode[0]);
@@ -475,11 +475,11 @@ function deleteFilter(){
 		}
 		nodeInfos.push({id:nodes[0].id, pId:nodes[0].pId, name:nodes[0].name});
 	}
-	
+
 	var confirmMsg = "";
 	if(nodes[0].filterType != 'F') confirmMsg =filter.msgFilterDelete(nodes[0].name);
 	else confirmMsg = filter.msgfolderDelete(nodes[0].name);
-	
+
 	if(nodes[0].children != undefined) confirmMsg = filter.msgAllDelete(nodes[0].name);
 
 	ui.confirmMsg(confirmMsg, filter.folderDelete, "small", function(rs){
@@ -525,9 +525,9 @@ function hideRPeriod() {
 }
 function showRPeriod(x, y) {
 	$("#periodMenu ul").css('display','');
-	
+
 	if( y+$('#periodMenu').height() > $(window).height()) y-=$('#periodMenu').height();
-		
+
 	$('#periodMenu').css({
 		"top" : (y-50) + "px",
 		"left" : (x-$('.nav-side-menu').width()) + "px",
