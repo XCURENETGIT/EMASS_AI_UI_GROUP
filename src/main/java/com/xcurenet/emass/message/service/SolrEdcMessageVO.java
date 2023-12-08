@@ -59,8 +59,8 @@ public class SolrEdcMessageVO {
 	public SolrEdcMessageVO(final SearchHits<SolrEdcVO> resp, final String adminId) throws SolrServerException, IOException {
 		this.numFound = resp.getTotalHits();
 		resp.getSearchHits().stream().map(SearchHit::getContent).forEach(s -> this.emass.add(s));
-		this.setPivot(resp);
 		this.setFacet(resp);
+		this.setPivot(resp);
 	//	this.setFacetQuery(resp);
 //		if (resp.getAggregations() != null) {
 //			this.setFacets((SimpleOrderedMap) resp.getAggregations());
@@ -88,7 +88,8 @@ public class SolrEdcMessageVO {
 		String mainKey = mainAggsMap.keySet().stream().collect(Collectors.joining());
 
 		Terms facetPivot = elasticSearchAggregations.aggregations().get(mainKey); // aggregations main Key
-		if (null == facetPivot) return;
+		if (null == facetPivot || facetPivot.getBuckets().size() == 0 ) return;
+		if( facetPivot.getBuckets().get(0).getAggregations().asList().size() >= 1) return; // sub aggregations 1개이상경우 return (통계 검색)
 		String chkSvc = mainKey;
 
 		List<String> list = new ArrayList<String>();
@@ -164,46 +165,50 @@ public class SolrEdcMessageVO {
 		ElasticsearchAggregations elasticSearchAggregations = (ElasticsearchAggregations) resp.getAggregations();
 		if(elasticSearchAggregations == null) return;
 
+
 		//main aggregations key 출력
 		Aggregations mainAggregations = elasticSearchAggregations.aggregations();
 		Map<String, Aggregation> mainAggsMap = mainAggregations.getAsMap();
 		String mainKey = mainAggsMap.keySet().stream().collect(Collectors.joining());
 
 		Terms facetPivot = elasticSearchAggregations.aggregations().get(mainKey); // aggregations main Key
-		if (null == facetPivot) return;
-		String svcChk = mainKey;
-
+		if (null == facetPivot ) return;
 		Map<String, Object> keys = new HashMap<String, Object>();
 		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
-		List<Terms.Bucket> bucketList = (List<Terms.Bucket>) facetPivot.getBuckets();
-		Aggregations subAggs = null;
-		if(null != bucketList && bucketList.size() >= 1) subAggs = bucketList.get(0).getAggregations(); // sub Aggregations 여부
-		if(null == subAggs || subAggs.asList().size() == 0) {
-			for (Terms.Bucket bucket : bucketList) {
-				String bucketKey = bucket.getKeyAsString();
-				long docCount = bucket.getDocCount();
-				keys.put(Common.nvl(bucketKey), 0);
-				result.add(pivotParse(svcChk,bucketKey,docCount));
-			}
-		} else {
-			// subAggregations 존재 (통계)
-			for(Terms.Bucket bucket : bucketList){
-				Map<String, Object> item = new HashMap<String, Object>();
-				Aggregations aggs = bucket.getAggregations();
-				List<Aggregation> aggsList = aggs.asList();
-				for(Aggregation subaggs :  aggsList) {
-					ParsedStringTerms bucketArgments = (ParsedStringTerms) subaggs;
-					String buckeyKey = bucket.getKeyAsString();
+		if(facetPivot.getBuckets().size() >= 1 ) {
+			if (facetPivot.getBuckets().get(0).getAggregations().asList().size() == 0) return; // sub aggregations 0개인경우 return (메시지 검색)
+			String svcChk = mainKey;
+			List<Terms.Bucket> bucketList = (List<Terms.Bucket>) facetPivot.getBuckets();
+			Aggregations subAggs = null;
+			if (null != bucketList && bucketList.size() >= 1)
+				subAggs = bucketList.get(0).getAggregations(); // sub Aggregations 여부
+			if (null == subAggs || subAggs.asList().size() == 0) {
+				for (Terms.Bucket bucket : bucketList) {
+					String bucketKey = bucket.getKeyAsString();
 					long docCount = bucket.getDocCount();
-					for (Terms.Bucket arg : bucketArgments.getBuckets()) {
-						item.put(Common.nvl(arg.getKeyAsString()), arg.getDocCount());
-						keys.put(Common.nvl(arg.getKey()), 0);
-						item.putAll(pivotParse(svcChk,buckeyKey, docCount));
-					}
+					keys.put(Common.nvl(bucketKey), 0);
+					result.add(pivotParse(svcChk, bucketKey, docCount));
 				}
-				result.add(item);
-			}
+			} else {
+				// subAggregations 존재 (통계)
+				for (Terms.Bucket bucket : bucketList) {
+					Map<String, Object> item = new HashMap<String, Object>();
+					Aggregations aggs = bucket.getAggregations();
+					List<Aggregation> aggsList = aggs.asList();
+					for (Aggregation subaggs : aggsList) {
+						ParsedStringTerms bucketArgments = (ParsedStringTerms) subaggs;
+						String buckeyKey = bucket.getKeyAsString();
+						long docCount = bucket.getDocCount();
+						for (Terms.Bucket arg : bucketArgments.getBuckets()) {
+							item.put(Common.nvl(arg.getKeyAsString()), arg.getDocCount());
+							keys.put(Common.nvl(arg.getKey()), 0);
+							item.putAll(pivotParse(svcChk, buckeyKey, docCount));
+						}
+					}
+					result.add(item);
+				}
 
+			}
 		}
 		List<String> list = new ArrayList<String>(keys.keySet());
 		Collections.sort(list);
