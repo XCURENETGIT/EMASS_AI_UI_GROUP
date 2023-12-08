@@ -99,7 +99,7 @@ public class SolrEdcMessageVO {
 		Aggregations subAggs = null;
 		if(null != bucketList && bucketList.size() >= 1) subAggs = bucketList.get(0).getAggregations(); // sub Aggregations 여부
 
-		if(subAggs.asList().size() == 0) {
+		if(null == subAggs || subAggs.asList().size() == 0) {
 			for (Terms.Bucket bucket : bucketList) {
 				String bucketKey = bucket.getKeyAsString();
 				long docCount = bucket.getDocCount();
@@ -178,7 +178,7 @@ public class SolrEdcMessageVO {
 		List<Terms.Bucket> bucketList = (List<Terms.Bucket>) facetPivot.getBuckets();
 		Aggregations subAggs = null;
 		if(null != bucketList && bucketList.size() >= 1) subAggs = bucketList.get(0).getAggregations(); // sub Aggregations 여부
-		if(subAggs.asList().size() == 0) {
+		if(null == subAggs || subAggs.asList().size() == 0) {
 			for (Terms.Bucket bucket : bucketList) {
 				String bucketKey = bucket.getKeyAsString();
 				long docCount = bucket.getDocCount();
