@@ -1,5 +1,6 @@
 package com.xcurenet.emass.message.service;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.AllArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +21,8 @@ import java.util.Map;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Nullable
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Document(indexName = "edc_*")
 public class SolrEdcVO {
 
@@ -45,6 +49,8 @@ public class SolrEdcVO {
 	public String svc2;
 
 	public String svc3;
+
+	public String svc12;
 
 	public String ltime;
 

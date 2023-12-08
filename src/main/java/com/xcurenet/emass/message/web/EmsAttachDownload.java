@@ -4,11 +4,9 @@ import com.xcurenet.common.crypto.CryptoCommon;
 import com.xcurenet.common.ftp.SFTPUtil;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.config.Config;
-import com.xcurenet.emass.message.newService.EmsReDefined;
 import com.xcurenet.emass.message.service.EmsAttachVO;
-import com.xcurenet.emass.message.vo.emass.mongo.EmassMessage;
-import com.xcurenet.emass.message.vo.emass.mongo.fields.HttpVo_Mgo;
-import com.xcurenet.emass.message.vo.emass.mongo.fields.NetworkVo_Mgo;
+import com.xcurenet.emass.message.service.EmsMessageVO;
+import com.xcurenet.emass.message.service.EmsReDefined;
 import com.xcurenet.minio.MinioFileAdapter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.connector.ClientAbortException;
@@ -80,7 +78,6 @@ public class EmsAttachDownload {
 //		}
 //	}
 
-
 	@Description("파일 다운로드")
 	public void download(final EmsAttachVO attach, final HttpServletRequest request, final HttpServletResponse response, final String prediction) throws Exception {
 		response.setCharacterEncoding(Common.UTF8);
@@ -93,6 +90,7 @@ public class EmsAttachDownload {
 		String fileName = attach.getAttachName();
 		minioFileAdapter.fileDownload(objectName, fileName, request, response);
 	}
+
 
 
 //	@Description("파일 다운로드")
@@ -186,6 +184,7 @@ public class EmsAttachDownload {
 					String path = attach.getAttachPath();
 					String harPath = attach.getAttachHarPath();
 					log.info("path:{}, harPath:{}", path, harPath);
+					in = getAttach(path, harPath);
 					in = minioFileAdapter.findFile(attach.getAttachPath());
 					if (in == null) continue;
 					if (Common.isEquals(prediction, "Y")) attach.setAttachName(attach.getAttachName() + "." + attach.getAttachExt());
@@ -262,17 +261,15 @@ public class EmsAttachDownload {
 		return null;
 	}
 
-	private EmassMessage getFileName(EmsAttachVO edc) {
-		EmassMessage msg = new EmassMessage();
+	private EmsMessageVO getFileName(EmsAttachVO edc) {
+		EmsMessageVO msg = new EmsMessageVO();
 		msg.setSubject(edc.getSubject());
 		msg.setSvc(edc.getSvc());
-		msg.setNetwork(new NetworkVo_Mgo());
-		msg.getNetwork().setSrcIp(edc.getSrcIp());
-		msg.getNetwork().setDstIp(edc.getDstIp());
-		msg.setHttp(new HttpVo_Mgo());
-		msg.getHttp().setHost(edc.getHost());
-		msg.getHttp().setPath(edc.getPath());
-
+		msg.setSrcIp(edc.getSrcIp());
+		msg.setDstIp(edc.getDstIp());
+		msg.setHost(edc.getHost());
+		msg.setPath(edc.getPath());
 		return msg;
 	}
 }
+

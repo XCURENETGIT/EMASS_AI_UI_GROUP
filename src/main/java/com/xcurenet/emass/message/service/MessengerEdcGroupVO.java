@@ -3,11 +3,9 @@ package com.xcurenet.emass.message.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.locale.Prop;
-import com.xcurenet.emass.message.vo.emass.els.Emass;
-import com.xcurenet.emass.message.vo.emass.els.EmassMessenger;
-import lombok.Data;
 import lombok.ToString;
-import org.elasticsearch.action.search.SearchResponse;
+import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.response.QueryResponse;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.Aggregations;
@@ -16,16 +14,16 @@ import org.elasticsearch.search.aggregations.metrics.TopHits;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.springframework.data.elasticsearch.core.ElasticsearchAggregations;
+import org.springframework.data.elasticsearch.core.SearchHits;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @ToString
-@Data
 public class MessengerEdcGroupVO {
 
 	private final static DateTimeFormatter yyyyMMddHHmmss = DateTimeFormat.forPattern("yyyyMMddHHmmss");
@@ -33,231 +31,183 @@ public class MessengerEdcGroupVO {
 
 	private long numFound;
 
-	private long total;
+	private List<MessengerGroupVO> groups;
 
-	private List<?> emass;
-
-	private List<EmassMessenger> groups;
-
-	public MessengerEdcGroupVO(final List<EmassMessenger> groups) {
+	public MessengerEdcGroupVO(final List<MessengerGroupVO> groups) {
 		this.groups = groups;
 	}
 
-	public MessengerEdcGroupVO(final SearchResponse  searchResponse, final String adminId) throws  IOException {
-		this(searchResponse, null, false);
+	public MessengerEdcGroupVO(final SearchHits<SolrEdcVO> resp) throws SolrServerException, IOException {
+		this(resp, null, false);
 	}
 
-	public MessengerEdcGroupVO(final SearchResponse  searchResponse, final String adminId, final boolean detail) throws  IOException {
-		this(false,searchResponse, null, false, false);
+	public MessengerEdcGroupVO(final SearchHits<SolrEdcVO> resp, final String adminId) throws SolrServerException, IOException {
+		this(resp, null, false);
 	}
 
-	public MessengerEdcGroupVO(final boolean flag,final SearchResponse  searchResponse , final String adminId, final boolean detail, final boolean original ) throws IOException {
-		if(searchResponse == null) return;
-		List<Emass> result = new ArrayList<>();
-		//메신저 그룹이 아닐때
-		if(!flag) {
-			/* response 파싱 */
-			SearchHit[] hits = searchResponse.getHits().getHits();
-			ObjectMapper mapper = new ObjectMapper();
-			for (SearchHit hit : hits) {
-				Map<String, Object> map = hit.getSourceAsMap();
-				if (map.size() > 0) {
-					map.put("msgid", hit.getId());
-					result.add(mapper.convertValue(map, Emass.class));
-				}
-			}
-			this.emass = result;
+	public MessengerEdcGroupVO(final SearchHits<SolrEdcVO> resp, final String adminId, final boolean detail) throws SolrServerException, IOException {
+		this(resp, null, false, false);
+	}
 
-			//메신저 그룹일때
-		}else{
-			result = setTopHitsAggsDocDataMsger(searchResponse);
-			this.emass = result;
-		}
+	public MessengerEdcGroupVO(SearchHits<SolrEdcVO> resp, final String adminId, final boolean detail, final boolean original) throws SolrServerException, IOException {
 		this.groups = new ArrayList<>();
-		this.numFound = searchResponse.getHits().getHits().length;
-		this.total = searchResponse.getHits().getTotalHits().value;
 
-		if(result.size() >= 1){
-			for(Emass ems : result) {
-				if (detail) {
-					this.groups.add(reDefinedDetail(ems, adminId, original));
-				} else {
-					this.groups.add(reDefined(ems, adminId, 0));
+		ObjectMapper mapper = new ObjectMapper(); //임시
+
+		ElasticsearchAggregations elasticSearchAggregations = (ElasticsearchAggregations) resp.getAggregations();
+
+		if (null != elasticSearchAggregations ) {
+			Aggregations mainAggregations = elasticSearchAggregations.aggregations();
+			if (null == mainAggregations ) return;
+
+			Map<String, Aggregation> mainAggsMap = mainAggregations.getAsMap();
+			Map<String,Aggregations> groupAggsMap = new HashMap<>();  // 추출할 그룹 aggs
+
+
+			//메인 Aggs의 sub Aggs 추출
+			for(Map.Entry<String, Aggregation> map : mainAggsMap.entrySet()) {
+				Aggregation agg =  map.getValue();
+				Terms terms = mainAggregations.get(agg.getName());
+				this.numFound  = terms.getSumOfOtherDocCounts();
+				for(Terms.Bucket bucket : terms.getBuckets()){
+					groupAggsMap.put(bucket.getKeyAsString(),bucket.getAggregations());
 				}
 			}
-		}
-
-		/* 분석 필요*/
-//		if (resp.getGroupResponse() != null) {
-//			GroupResponse gres = resp.getGroupResponse();
-//			List<GroupCommand> gGroupCommands = gres.getValues();
-//			if (gGroupCommands.size() > 0) {
-//				GroupCommand gc = gGroupCommands.get(0);
-//				List<Group> groups = gc.getValues();
-//				for (Group group : groups) {
-//					long msg_cnt = group.getResult().getNumFound();
-//					SolrDocumentList solrDocs = group.getResult();
-//					if (solrDocs.size() > 0) {
-//						this.groups.add(reDefined(new DocumentObjectBinder().getBean(SolrEdcVO.class, solrDocs.get(0)), adminId, msg_cnt));
-//					}
-//				}
-//				this.numFound = gc.getNGroups();
-//				this.numFound = getMessengerGroupCnt(resp);
-//			}
-//		}
 
 
-	}
-
-	public static EmassMessenger reDefinedDetail(Emass emass, String adminId, boolean original) {
-		EmassMessenger emassMessenger = new EmassMessenger();
-		emassMessenger.setMsgid(emass.getMsgid());
-		if(emass.getService() != null){
-			emassMessenger.setSvc(Common.nvl(emass.getService().getSvc()));
-			emassMessenger.setSvc3(Common.nvl(emass.getService().getSvc3()));
-		}
-		emassMessenger.setCtime(reCtime(Common.nvl(emass.getCtime())));
-		emassMessenger.setAttached(emass.getAttached());
-
-		if(emass.getAttach() != null){
-			emassMessenger.setAttachname(emass.getAttach().stream().map(m -> m.getName()).collect(Collectors.joining("|")));
-			emassMessenger.setAttachhash(emass.getAttach().stream().map(m -> m.getHash()).collect(Collectors.joining("|")));
-		}
-
-		emassMessenger.setMessage(getMessageDetail(emass, 0, original));
-		emassMessenger.setTitle(getSender(emass));
-
-		if(emass.getUser() != null) {
-			emassMessenger.setUser_name(emass.getUser().getName());
-			emassMessenger.setDeptNm(emass.getUser().getDeptNm());
-			emassMessenger.setJikgubNm(emass.getUser().getJikgubNm());
-			emassMessenger.setUsr_id(emass.getUser().getId());
-		}
-
-		if(emass.getBody() != null) {
-			emassMessenger.setBody_snippet(emass.getBody().getSnippet());
-			emassMessenger.setBody_text(emass.getBody().getText());
-		}
-		if(emass.getSender() != null) {
-			emassMessenger.setSender(emass.getSender().getName());
-		}
-		if(emass.getNetwork() != null) {
-			emassMessenger.setSrcip(emass.getNetwork().getSrcIp());
-		}
-
-		emassMessenger.setReadYn("Y");
-		return emassMessenger;
-	}
-
-	public static EmassMessenger reDefined(Emass emass, String adminId, long msg_cnt) {
-		EmassMessenger emassMessenger = new EmassMessenger();
-		emassMessenger.setMsg_cnt(msg_cnt);
-		emassMessenger.setMsgid(emass.getMsgid());
-		if(emass.getService() != null){
-			emassMessenger.setSvc(Common.nvl(emass.getService().getSvc()));
-			emassMessenger.setSvc3(Common.nvl(emass.getService().getSvc3()));
-		}
-
-		emassMessenger.setCtime(reCtime(Common.nvl(emass.getCtime())));
-		emassMessenger.setAttached(emass.getAttached());
-		if(emass.getAttach() != null){
-			emassMessenger.setAttachname(emass.getAttach().stream().map(m -> m.getName()).collect(Collectors.joining(",")));
-			emassMessenger.setAttachhash(emass.getAttach().stream().map(m -> m.getHash()).collect(Collectors.joining(",")));
-//			emassMessenger.setAttachhash(emass.getAttach().stream().map(m -> m.getHash()).collect(Collectors.joining(",")));
-		}
-
-		emassMessenger.setXrootmtr(emass.getXrootMtr());
-
-		int total_recvs = 0;
-		if (emass.getRecv() != null){
-			if(emass.getRecv().getTo() != null) total_recvs = total_recvs + emass.getRecv().getTo().size() + 1;
-			if(emass.getRecv().getCc() != null) total_recvs = total_recvs + emass.getRecv().getCc().size() + 1;
-			if(emass.getRecv().getBcc() != null) total_recvs = total_recvs + emass.getRecv().getBcc().size() + 1;
-			emassMessenger.setUser_cnt(total_recvs);
-		}else{
-			emassMessenger.setUser_cnt(1);
-		}
-
-		emassMessenger.setMessage(getMessage(emass));
-		emassMessenger.setTitle(emass.getXrootMtr());
-
-		if(emass.getUser() != null) {
-			emassMessenger.setUser_name(emass.getUser().getName());
-			emassMessenger.setDeptNm(emass.getUser().getDeptNm());
-			emassMessenger.setJikgubNm(emass.getUser().getJikgubNm());
-			emassMessenger.setUsr_id(emass.getUser().getId());
-		}
-
-		if(emass.getBody() != null) {
-			emassMessenger.setBody_snippet(emass.getBody().getSnippet());
-			emassMessenger.setBody_text(emass.getBody().getText());
-		}
-		if(emass.getSender() != null) {
-			emassMessenger.setSender(emass.getSender().getName());
-		}
-		if(emass.getNetwork() != null) {
-			emassMessenger.setSrcip(emass.getNetwork().getSrcIp());
-		}
-
-		return emassMessenger;
-	}
-
-//	private static String getTitle(SolrEdcVO edc) {
-//		return edc.getXrootmtr();
-//
-//		/*List<String> recvs = edc.getRecvs();
-//		List<String> recvNames = edc.getRecvs_name();
-//		if (recvNames == null) recvNames = new ArrayList<>();
-//		for (int i = 0; i < recvNames.size(); i++) {
-//			if (Common.isEmpty(recvNames.get(i))) recvNames.set(i, recvs.get(i));
-//		}
-//		recvNames.add(getSender(edc));
-//		Collections.sort(recvNames);
-//		List<String> tmp = new ArrayList<>();
-//		for (int i = 0; i < recvNames.size(); i++) {
-//			if (i > 1) break;
-//			tmp.add(recvNames.get(i));
-//		}
-//		String result = Common.join(tmp, ", ");
-//		if (recvNames.size() > 2) {
-//			result += "...";
-//		}
-//		result += " (" + recvNames.size() + Prop.propFormat("eikon.msg.person")+")";
-//		return result;*/
-//	}
-
-	private static String getMessage(Emass ems) {
-		String msg = getMessageDetail(ems, 200, false).replaceAll("\\r", "").replaceAll("\\n", "");
-		return getSender(ems) + " : " + msg;
-	}
-
-	private static String getMessageDetail(Emass ems, int cutLength, boolean original) {
-		String result = Common.EMPTY;
-		if(ems.getService() != null) {
-			if (Common.isOrEquals(ems.getService().getSvc3(), "C", "M")) {
-				String body = Common.nvl(ems.getBody().getSnippet());
-				if (cutLength > 0 && body.length() > cutLength) body = body.substring(0, cutLength);
-				result = body;
-			} else if (Common.isEquals(ems.getService().getSvc3(), "F")) {
-				if( ems.getAttach() != null) {
-					result = ems.getAttach().stream().map(m -> m.getName()).collect(Collectors.joining("\n"));
+			// sub Aggs에서 document 추출
+			List<TopHits> topHitsList = new ArrayList<>();
+			for(Map.Entry<String, Aggregations> groupAgg : groupAggsMap.entrySet()) {
+				Aggregations groupAggs = groupAggsMap.get(groupAgg.getKey());
+				Map<String, Aggregation> groupAggMap = groupAggs.getAsMap();
+				for (Map.Entry<String, Aggregation> gMap  : groupAggMap.entrySet()) {
+					Aggregation gAgg =  gMap.getValue();
+					topHitsList.add(groupAggs.get(gAgg.getName()));
 				}
-				//if (Common.isNotEmpty(edc.getBody_snippet())) result += "\n" + edc.getBody_snippet();
-			} else if (Common.isEquals(ems.getService().getSvc3(), "J"))
-				result = "[" + Prop.propFormat("common.messenger.join") + "]";
-			else if (Common.isEquals(ems.getService().getSvc3(), "L"))
-				result = "[" + Prop.propFormat("common.messenger.leave") + "]";
+			}
+
+
+			for(TopHits topHits : topHitsList){
+				org.elasticsearch.search.SearchHit[] hits  = topHits.getHits().getHits();
+				for (SearchHit hit : hits) {
+					Map<String, Object> map = hit.getSourceAsMap();
+					if (map.size() > 0) {
+						map.put("_id",hit.getId());
+						SolrEdcVO solrEdcVO = mapper.convertValue(map, SolrEdcVO.class);
+						if(detail) this.groups.add(reDefinedDetail(solrEdcVO,  adminId, original));
+						else  this.groups.add(reDefined(solrEdcVO, adminId,0L));
+					}
+				}
+			}
+
 		}
+
+
+	}
+
+	/**
+	 * 아이콘 메신저 그룹방 상세보기
+	 *
+	 * @param edc
+	 * @return
+	 */
+	public static MessengerGroupVO reDefinedDetail(SolrEdcVO edc, String adminId, boolean original) {
+		MessengerGroupVO solrGroupVO = new MessengerGroupVO();
+		solrGroupVO.setMsgid(edc.getMsgid());
+		solrGroupVO.setSvc(edc.getSvc());
+		solrGroupVO.setSvc3(edc.getSvc3());
+		solrGroupVO.setCtime(reCtime(edc.getCtime()));
+		solrGroupVO.setAttached(edc.getAttached());
+		if (edc.getAttachname() != null && edc.getAttachname().size() > 0) {
+			solrGroupVO.setAttachname(Common.join(edc.getAttachname(), "|"));
+			solrGroupVO.setAttachhash(Common.join(edc.getAttachhash(), "|"));
+		}
+		solrGroupVO.setMessage(getMessageDetail(edc, 0, original));
+		solrGroupVO.setTitle(getSender(edc));
+		solrGroupVO.setDeptNm(edc.getDeptnm());
+		solrGroupVO.setJikgubNm(edc.getJikgubnm());
+		solrGroupVO.setSrcip(edc.getSrcip());
+		solrGroupVO.setName(edc.getName());
+		solrGroupVO.setReadYn("Y");
+		solrGroupVO.setUser(edc.getUser());
+		solrGroupVO.setSender(edc.getSender());
+		solrGroupVO.setUsr_id(edc.getUsr_id());
+		return solrGroupVO;
+	}
+
+	public static MessengerGroupVO reDefined(SolrEdcVO edc, String adminId, long msg_cnt) {
+		MessengerGroupVO solrGroupVO = new MessengerGroupVO();
+		solrGroupVO.setMsg_cnt(msg_cnt);
+		solrGroupVO.setMsgid(edc.getMsgid());
+		solrGroupVO.setSvc(edc.getSvc());
+		solrGroupVO.setSvc3(edc.getSvc3());
+		solrGroupVO.setCtime(reCtime(edc.getCtime()));
+		solrGroupVO.setAttached(edc.getAttached());
+		solrGroupVO.setAttachname(Common.join(edc.getAttachname(), ","));
+		solrGroupVO.setXrootmtr(edc.getXrootmtr());
+		if (edc.getRecvs() != null) solrGroupVO.setUser_cnt(edc.getRecvs().size() + 1);
+		else solrGroupVO.setUser_cnt(1);
+		solrGroupVO.setMessage(getMessage(edc));
+		solrGroupVO.setTitle(getTitle(edc));
+		solrGroupVO.setDeptNm(edc.getDeptnm());
+		solrGroupVO.setJikgubNm(edc.getJikgubnm());
+		solrGroupVO.setSrcip(edc.getSrcip());
+		solrGroupVO.setName(edc.getName());
+		solrGroupVO.setUser(edc.getUser());
+		solrGroupVO.setSender(edc.getSender());
+		solrGroupVO.setUsr_id(edc.getUsr_id());
+		return solrGroupVO;
+	}
+
+	private static String getTitle(SolrEdcVO edc) {
+		return edc.getXrootmtr();
+
+		/*List<String> recvs = edc.getRecvs();
+		List<String> recvNames = edc.getRecvs_name();
+		if (recvNames == null) recvNames = new ArrayList<>();
+		for (int i = 0; i < recvNames.size(); i++) {
+			if (Common.isEmpty(recvNames.get(i))) recvNames.set(i, recvs.get(i));
+		}
+		recvNames.add(getSender(edc));
+		Collections.sort(recvNames);
+		List<String> tmp = new ArrayList<>();
+		for (int i = 0; i < recvNames.size(); i++) {
+			if (i > 1) break;
+			tmp.add(recvNames.get(i));
+		}
+		String result = Common.join(tmp, ", ");
+		if (recvNames.size() > 2) {
+			result += "...";
+		}
+		result += " (" + recvNames.size() + Prop.propFormat("eikon.msg.person")+")";
+		return result;*/
+	}
+
+	private static String getMessage(SolrEdcVO edc) {
+		String msg = getMessageDetail(edc, 200, false).replaceAll("\\r", "").replaceAll("\\n", "");
+		return getSender(edc) + " : " + msg;
+	}
+
+	private static String getMessageDetail(SolrEdcVO edc, int cutLength, boolean original) {
+		String result = Common.EMPTY;
+		if (Common.isOrEquals(edc.getSvc3(), "C", "M")) {
+			String body = Common.nvl(edc.getBody_snippet());
+			if( cutLength > 0 && body.length() > cutLength) body = body.substring(0, cutLength);
+			result = body;
+		}
+		else if (Common.isEquals(edc.getSvc3(), "F")) {
+			result = Common.join(edc.getAttachname(), "\n");
+			//if (Common.isNotEmpty(edc.getBody_snippet())) result += "\n" + edc.getBody_snippet();
+		} else if (Common.isEquals(edc.getSvc3(), "J")) result = "["+Prop.propFormat("common.messenger.join")+"]";
+		else if (Common.isEquals(edc.getSvc3(), "L")) result = "["+Prop.propFormat("common.messenger.leave")+"]";
 		return original ? result : textParser(result);
 	}
 
-	private static String getSender(Emass emass) {
+	private static String getSender(SolrEdcVO edc) {
 		//if (Common.isNotEmpty(edc.getName())) return edc.getName();
-		if (Common.isNotEmpty(emass.getSender())) return emass.getSender().getName();
-		if (Common.isNotEmpty(emass.getSender().getName())) return emass.getSender().getName();
-		else if (Common.isNotEmpty(emass.getSender().getEmail())) return emass.getSender().getEmail();
-		else if (Common.isNotEmpty(emass.getUser().getName())) return emass.getUser().getName();
-		else return emass.getNetwork().getSrcIp();
+		if (Common.isNotEmpty(edc.getSname())) return edc.getSname();
+		else if (Common.isNotEmpty(edc.getSender())) return edc.getSender();
+		return edc.getSrcip();
 	}
 
 	private static String reCtime(String ctime) {
@@ -269,19 +219,15 @@ public class MessengerEdcGroupVO {
 		return numFound;
 	}
 
-	public long getTotal() {
-		return total;
-	}
-
 	public void setNumFound(long numFound) {
 		this.numFound = numFound;
 	}
 
-	public List<EmassMessenger> getGroups() {
+	public List<MessengerGroupVO> getGroups() {
 		return groups;
 	}
 
-	public void setGroups(List<EmassMessenger> groups) {
+	public void setGroups(List<MessengerGroupVO> groups) {
 		this.groups = groups;
 	}
 
@@ -291,52 +237,10 @@ public class MessengerEdcGroupVO {
 		return "<pre class='ignoreHtmlPre'><code>" + text + "</code></pre>";
 	}
 
-	/***
-	 *   // sub aggrations TopHitsAggregationBuilder 사용시 이 메서드 사용
-	 * @param searchResponse
-	 */
-	public List<Emass> setTopHitsAggsDocDataMsger(SearchResponse searchResponse){
-		if(searchResponse == null) return null;
-		Aggregations aggregations = searchResponse.getAggregations();
-		if(aggregations.getAsMap().size() == 0 ) return null;
-
-		List<Emass> result = new ArrayList();
-		Map<String, Aggregation> aggregationsMap =  aggregations.getAsMap(); // 메인 aggs
-		Map<String,Aggregations> groupAggsMap = new HashMap<>();  // 추출할 그룹 aggs
-		//메인 Aggs의 sub Aggs 추출
-		for(Map.Entry<String, Aggregation> map : aggregationsMap.entrySet()) {
-			Aggregation agg =  map.getValue();
-			Terms terms = aggregations.get(agg.getName());
-			for(Terms.Bucket bucket : terms.getBuckets()){
-				groupAggsMap.put(bucket.getKeyAsString(),bucket.getAggregations());
-			}
+	private int getMessengerGroupCnt(QueryResponse resp) {
+		if(Common.isNotEmpty(resp.getFacetField("xrootmtr"))) {
+			return resp.getFacetField("xrootmtr").getValueCount();
 		}
-
-		// sub Aggs에서 document 추출
-		List<TopHits> topHitsList = new ArrayList<>();
-		for(Map.Entry<String, Aggregations> groupAgg : groupAggsMap.entrySet()) {
-			Aggregations groupAggs = groupAggsMap.get(groupAgg.getKey());
-			Map<String, Aggregation> groupAggMap = groupAggs.getAsMap();
-			for (Map.Entry<String, Aggregation> gMap  : groupAggMap.entrySet()) {
-				Aggregation gAgg =  gMap.getValue();
-				topHitsList.add(groupAggs.get(gAgg.getName()));
-			}
-		}
-
-		// emass 데이터로 추출
-		ObjectMapper mapper = new ObjectMapper();
-		for(TopHits topHit : topHitsList){
-			SearchHit[] hits  = topHit.getHits().getHits();
-			for (SearchHit hit : hits) {
-				Map<String, Object> map = hit.getSourceAsMap();
-				if (map.size() > 0) {
-					map.put("_id",hit.getId());
-					map.put("msgid",hit.getId());
-					result.add(mapper.convertValue(map, Emass.class));
-				}
-			}
-		}
-		return result;
+		return 0;
 	}
 }
-

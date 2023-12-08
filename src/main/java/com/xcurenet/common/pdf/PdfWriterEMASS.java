@@ -6,7 +6,7 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.locale.Prop;
-import com.xcurenet.emass.message.vo.emass.els.Emass;
+import com.xcurenet.emass.message.service.SolrEdcVO;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 
@@ -36,24 +36,24 @@ public class PdfWriterEMASS {
 		this.title = title;
 		this.header = header;
 		this.out = out;
-		
+
 		init();
 	}
-	
+
 	private void init() throws Exception {
 		open();
 		writeHeader();
 	}
-	
-	public void appendData(List<Emass> data, int offset) throws Exception{
+
+	public void appendData(List<SolrEdcVO> data, int offset) throws Exception{
 		Font f2 = new Font(baseFont, 6);
 		int index = 1;
-		for (Emass edc : data) {
+		for (SolrEdcVO edc : data) {
 			String key = "";
 			try {
 				for (int j = 0; j < header.size(); j++) {
 					key = header.getJSONObject(j).getString("key");
-		/*	############## Solr 관련 임시주석 ###############
+
 					Object val = null;
 					if (Common.isEquals(key, "NUM")) val = offset+(index++);
 					else if (Common.isEquals(key, "to")) {
@@ -78,12 +78,10 @@ public class PdfWriterEMASS {
 						}
 					}
 					else val = getPrivateValue(edc, key);
-					
+
 					PdfPCell cell = new PdfPCell(new Phrase(Common.nvl(val), f2));
 					cell.setVerticalAlignment(Paragraph.ALIGN_CENTER);
 					table.addCell(cell);
-
-		 */
 				}
 			} catch(Exception e) {
 				log.info("MsgId : {}, Data to long Field : {}", Common.nvl(edc.getMsgid()), Common.nvl(key));
@@ -91,7 +89,7 @@ public class PdfWriterEMASS {
 			}
 		}
 		doc.add(table);
-		
+
 		table = new PdfPTable(header.size());
 		table.setWidthPercentage(100);
 		float[] widths = new float[header.size()];
@@ -100,12 +98,12 @@ public class PdfWriterEMASS {
 		}
 		table.setWidths(widths);
 	}
-	
+
 	public void close() throws Exception {
 		table = null;
 		doc.close();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private Object getPrivateValue(Object clazz, String f) throws Exception {
 		try {
