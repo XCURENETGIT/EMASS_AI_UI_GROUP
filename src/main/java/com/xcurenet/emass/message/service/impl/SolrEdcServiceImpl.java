@@ -76,23 +76,24 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		String bodysnippet = "N";
 		//solr parameter information
 		Iterator<String> params = sq.getParameterNamesIterator();
-		while(params.hasNext()) {
+		while (params.hasNext()) {
 			String name = params.next();
 			String value = sq.get(name);
-			if(Common.isEquals(name, "bodysnippet")) bodysnippet = value;
+			if (Common.isEquals(name, "bodysnippet")) bodysnippet = value;
 			log.debug("{} : {}", name, value);
 		}
 
-		try{
+		try {
 			String sort = sq.getSortField();
-			if(Common.isEmpty(sort)) {
-				sq.setSort(SortClause.desc ("ctime"));
-				sq.addSort(SortClause.desc ("msgid"));
+			if (Common.isEmpty(sort)) {
+				sq.setSort(SortClause.desc("ctime"));
+				sq.addSort(SortClause.desc("msgid"));
 			}
 			log.debug("[SORT] : {}", sq.getSortField());
 			log.debug("[QUERY] {}", sq.getQuery());
-			if(Common.isNotEmpty(sq.getFilterQueries())) log.debug("[FILTER_QUERY] {}", StringUtils.join(sq.getFilterQueries(), ' '));
-		} catch(Exception e){}
+			if (Common.isNotEmpty(sq.getFilterQueries())) log.debug("[FILTER_QUERY] {}", StringUtils.join(sq.getFilterQueries(), ' '));
+		} catch (Exception e) {
+		}
 
 		TimeUtil.start();
 		if (sq.getFields() == null) {
@@ -115,9 +116,9 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		searchQuery.setTrackTotalHits(true);
 		SearchHits<SolrEdcVO> hits = operation.search(searchQuery, SolrEdcVO.class);
 
-		try{
+		try {
 			printQueryLog(sq, hits);
-		}catch(Exception e){
+		} catch (Exception e) {
 			log.info("[QUERY_RESULT] TOTAL_COUNT : {}, QUERY_TIME : {}", 0, TimeUtil.print());
 		}
 		return hits;
@@ -268,7 +269,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		}
 
 		List<ConfigAdminVO> conf = configAdminService.getConfAdminOption(adminId);
-		String bodysnippetVal="N";
+		String bodysnippetVal = "N";
 		for (ConfigAdminVO configAdminVO : conf) {
 			if (configAdminVO.getConfId().equals("body.snippet.sum.use")) {
 				bodysnippetVal = configAdminVO.getVal();
@@ -329,12 +330,12 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 		int idx = 0; //중복 데이터 find 할때 범위 축소를 위한 Index
 
-		for(SolrEdcVO obj : emass) {
+		for (SolrEdcVO obj : emass) {
 			List<SolrEdcVO> overlapData = setOverLapCnt(allOverlap, obj, idx); //중복 제거한 데이터 List 에서 데이터 별로 중복 데이터 find
 
-			if(overlapData.isEmpty()) { //중복 데이터 없을시
+			if (overlapData.isEmpty()) { //중복 데이터 없을시
 				result.add(obj);
-			} else if(!overlapData.isEmpty()) { //중복 데이터 있을 시
+			} else if (!overlapData.isEmpty()) { //중복 데이터 있을 시
 				result.add(setReaderMsg(overlapData, obj)); //중복 데이터와 전체 크기를 비교하여 제일 큰 데이터를 대표 메시지로 선정하여 최종 결과 List에 추가
 
 				idx += overlapData.size(); //존재 하는 중복 데이터 만큼 Index 증가하여 다음 중복 데이터 find
@@ -361,15 +362,15 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	private void setAuthoritys(SolrQuery sq, String adminId) {
 		if (Common.isNotEmpty(adminId)) {
 			String adminType = "S";
-			if(!Common.isOrEquals(adminId, "*")) {
+			if (!Common.isOrEquals(adminId, "*")) {
 				adminType = adminServiceImpl.getAdmin(adminId).getAdminType();
 			}
 
 			String ceoReadYn = Config.getString("ceo.readyn");
 
-			if(Common.isEquals(adminType, "C")) {
+			if (Common.isEquals(adminType, "C")) {
 				sq.addFilterQuery("+ceo:Y");
-			}else if(!(Common.isEquals(ceoReadYn, "Y") && Common.isEquals(Common.nvl(Config.getFirstAdminYn(adminId), "N"), "Y")) ) {
+			} else if (!(Common.isEquals(ceoReadYn, "Y") && Common.isEquals(Common.nvl(Config.getFirstAdminYn(adminId), "N"), "Y"))) {
 				sq.addFilterQuery("-ceo:Y");
 			}
 			sq.addFilterQuery("-svc:QEKH");
@@ -396,20 +397,21 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	/**
 	 * 중복 제거된 데이터 별로 중복 데이터 List 에서 서비스별 제목과 발신자가 동일한 데이터 추출
 	 * 이때 제목과 발신자는 reDefined 된 문자열로 비교
-	 * @param emass -> 중복 데이터 List
-	 * @param base -> 중복 제거된 데이터 별 Object
+	 *
+	 * @param emass   -> 중복 데이터 List
+	 * @param base    -> 중복 제거된 데이터 별 Object
 	 * @param findIdx -> 이미 찾은 중복 데이터 갯수 ( skip 할 Index 값 )
 	 * @return
 	 */
 	private List<SolrEdcVO> setOverLapCnt(List<SolrEdcVO> emass, SolrEdcVO base, int findIdx) {
 		List<SolrEdcVO> result = new ArrayList<>();
 
-		for(int i=findIdx; i<emass.size(); i++) {
+		for (int i = findIdx; i < emass.size(); i++) {
 			SolrEdcVO data = emass.get(i);
 
-			if(Common.isEquals(data.getSvcNm(), base.getSvcNm())) {
-				if(Common.isEquals(data.getSubject(), base.getSubject()) && Common.isEquals(data.getSender(), base.getSender())) {
-					if(Common.isNotEquals(data.getMsgid(), base.getMsgid())) result.add(data);
+			if (Common.isEquals(data.getSvcNm(), base.getSvcNm())) {
+				if (Common.isEquals(data.getSubject(), base.getSubject()) && Common.isEquals(data.getSender(), base.getSender())) {
+					if (Common.isNotEquals(data.getMsgid(), base.getMsgid())) result.add(data);
 				} else break; //중복 데이터 List 는 졍렬 된 상태이기 때문에 break
 			}
 		}
@@ -420,8 +422,9 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	/**
 	 * 중복된 데이터와 중복 데이터를 구한 기준 데이터 전체 크기 비교
 	 * 전체 크기가 가장 큰 데이터를 대표 메시지
+	 *
 	 * @param emass -> 중복 데이터
-	 * @param base -> 중복 데이터가 존재하는 최근 데이터
+	 * @param base  -> 중복 데이터가 존재하는 최근 데이터
 	 * @return
 	 */
 	private SolrEdcVO setReaderMsg(List<SolrEdcVO> emass, SolrEdcVO base) {
@@ -432,7 +435,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 		//내림차순 정렬 후 첫번째 데이터와만 크기 비교 후 대표 메시지 선정
 		SolrEdcVO tmp = emass.get(0);
-		if(tmp.getSize() > base.getSize()) {
+		if (tmp.getSize() > base.getSize()) {
 			emass.set(0, reader);
 			reader = tmp;
 		}
@@ -471,6 +474,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	private List<SolrEdcVO> overlapSortData(List<SolrEdcVO> data) {
 		Collections.sort(data, new Comparator<SolrEdcVO>() {
 			int ret = 0;
+
 			@Override
 			public int compare(SolrEdcVO first, SolrEdcVO second) {
 				if ((first.getSvcNm()).compareTo(second.getSvcNm()) > 0) {
@@ -479,19 +483,19 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 				if ((first.getSvcNm()).compareTo(second.getSvcNm()) == 0) {
 					if ((first.getSubject()).compareTo(second.getSubject()) > 0) {
 						ret = 1;
-					}else if((first.getSubject()).compareTo(second.getSubject()) == 0) {
+					} else if ((first.getSubject()).compareTo(second.getSubject()) == 0) {
 						if ((first.getSender()).compareTo(second.getSender()) > 0) {
 							ret = 1;
-						}else if((first.getSender()).compareTo(second.getSender()) == 0) {
+						} else if ((first.getSender()).compareTo(second.getSender()) == 0) {
 							ret = 0;
-						}else if((first.getSender()).compareTo(second.getSender()) < 0) {
+						} else if ((first.getSender()).compareTo(second.getSender()) < 0) {
 							ret = -1;
 						}
-					}else if((first.getSubject()).compareTo(second.getSubject()) < 0) {
+					} else if ((first.getSubject()).compareTo(second.getSubject()) < 0) {
 						ret = -1;
 					}
 				}
-				if((first.getSvcNm()).compareTo(second.getSvcNm()) < 0) {
+				if ((first.getSvcNm()).compareTo(second.getSvcNm()) < 0) {
 					ret = -1;
 				}
 				return ret;
@@ -506,7 +510,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		return false;
 	}
 
-	public static Map<Date, List<parseJsonFile>> groupingByMlFeedbackTime(List<parseJsonFile> feedbackList){
+	public static Map<Date, List<parseJsonFile>> groupingByMlFeedbackTime(List<parseJsonFile> feedbackList) {
 		return feedbackList.stream().collect(Collectors.groupingBy(parseJsonFile::getMlFeedbackTime));
 	}
 

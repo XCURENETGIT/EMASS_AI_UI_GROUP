@@ -70,7 +70,7 @@
 		GROUP	BY LEFT(SERVICECD, 1), SERVICENM_LV1, LEFT(SERVICECD, 3), SERVICENM_LV2, USE_YN
 		ORDER	BY MAX(SORT)
 	</select>
-	
+
 	<!-- 권한에 맞는 서비스 타입 목록 조회 -->
 	<select id="getServiceListAuth" resultType="serviceTypeVO" parameterType="hashMap">
 		SELECT  groupCd, groupNm, serviceCd, serviceNm, '' AS `inOut`
@@ -86,7 +86,7 @@
 						'' AS `inOut`, SORT
 				FROM    UI_SERVICE
 				WHERE 0 =(SELECT COUNT(*) AS CNT FROM UI_ADMIN_SERVICE WHERE ADMIN_ID=#{adminId}) AND USE_YN='Y'
-				
+
 				UNION
         		SELECT	LEFT(A.SERVICECD, 1) AS groupCd, SERVICENM_LV1 AS groupNm,
 						LEFT(A.SERVICECD, 4) AS serviceCd, SERVICENM_LV3 AS serviceNm,
@@ -101,7 +101,7 @@
 				FROM    UI_SERVICE
 				WHERE   0 =(SELECT COUNT(*) AS CNT FROM UI_ADMIN_SERVICE WHERE ADMIN_ID=#{adminId}) AND USE_YN='Y'
 				AND     ( LEFT(SERVICECD, 3) = 'EMM' OR SERVICECD IN ('UWSH', 'UWSM', 'UWSL') )
-				
+
 				UNION
         		SELECT	LEFT(A.SERVICECD, 1) AS groupCd, SERVICENM_LV1 AS groupNm,
 						CONCAT(LEFT(A.SERVICECD, 4),'X') AS serviceCd, CONCAT('[ ',SERVICENM_LV2,'_',SERVICENM_LV3,CASE WHEN (SELECT COUNT(*) AS CNT FROM UI_SERVICE WHERE SERVICECD = 'EMMA' AND SERVICENM_LV3 REGEXP '[가-힣]') > 0 THEN ' 제외 ]' ELSE ' except ]' END) AS serviceNm,
@@ -116,7 +116,7 @@
 				FROM    UI_SERVICE
 				WHERE   0 =(SELECT COUNT(*) AS CNT FROM UI_ADMIN_SERVICE WHERE ADMIN_ID=#{adminId}) AND USE_YN='Y'
 				AND     SERVICECD = 'EMMA'
-				
+
           ) as rs
 		<where>
 			<if test='svc1!=null and svc1!=""'>

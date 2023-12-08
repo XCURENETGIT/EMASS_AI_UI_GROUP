@@ -286,7 +286,7 @@
 
 				parent.setResultCnt(tabId, total.comma());
 				parent.changeTabName(tabId, '', researchCnt);
-				//setServiceGroupCntInfo(data.facet, total);
+				setServiceGroupCntInfo(data.facet, total);
 				$('#searchTime').val(data.searchTime);
 
 				var query = filterValData.conditions[0].query;
