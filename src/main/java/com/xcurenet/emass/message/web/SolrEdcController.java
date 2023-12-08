@@ -1,26 +1,5 @@
 package com.xcurenet.emass.message.web;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrQuery.SortClause;
-import org.apache.solr.client.solrj.SolrServerException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Description;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.xcurenet.annotations.AuditMenu;
 import com.xcurenet.annotations.AuditOperation;
 import com.xcurenet.annotations.AuditParentMenu;
@@ -41,10 +20,24 @@ import com.xcurenet.emass.message.service.SolrEdcMessageVO;
 import com.xcurenet.emass.message.service.SolrEdcService;
 import com.xcurenet.emass.message.service.SolrEdcVO;
 import com.xcurenet.emass.searchLog.service.SearchLogService;
-
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.SolrQuery.SortClause;
+import org.springframework.context.annotation.Description;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Scope("prototype")
@@ -65,7 +58,7 @@ public class SolrEdcController {
 	@Resource(name = "configAdminService")
 	private ConfigAdminService configAdminService;
 
-	@RequestMapping(value = "/test_auto.xcn")
+	@RequestMapping(value = "/auto.xcn")
 	@Description("EDC Solr 메시지 검색")
 	@ResponseBody
 	public XcnResponseVO auto(final HttpServletRequest request, final HttpSession session) throws Exception {
@@ -93,7 +86,7 @@ public class SolrEdcController {
 		return new XcnResponseVO(XcnRspCode.OK, facet, facet.size());
 	}
 
-	@RequestMapping(value = "/test_getListByRootMtr.xcn")
+	@RequestMapping(value = "/getListByRootMtr.xcn")
 	@Description("EDC Solr 메시지 검색")
 	@ResponseBody
 	public XcnResponseVO getListByRootMtr(final HttpServletRequest request, final HttpSession session) throws Exception {
@@ -213,7 +206,7 @@ public class SolrEdcController {
 		}
 	}
 
-	@RequestMapping(value = "/test_getListRecommend.xcn")
+	@RequestMapping(value = "/getListRecommend.xcn")
 	@Description("EDC Solr 유사문서 추천 검색")
 	@AuditOperation(Operation.SEARCH)
 	@ResponseBody
@@ -331,7 +324,7 @@ public class SolrEdcController {
 
 	}
 
-	@RequestMapping(value = "/test_getQuery.xcn")
+	@RequestMapping(value = "/getQuery.xcn")
 	@Description("EDC Solr 메시지 검색")
 	@ResponseBody
 	public XcnResponseVO getQuery(final HttpServletRequest request, final HttpSession session) throws Exception {

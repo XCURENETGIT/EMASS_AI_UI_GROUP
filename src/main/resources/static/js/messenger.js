@@ -74,17 +74,11 @@ var eikon = {
 			$(this).css('display','none');
 		});
 	},
-	getGenerativeList: function (page) {
-		/*		$('#startsubdatepicker').data("DateTimePicker").date($('#startdatepicker').data("DateTimePicker").date());
-                $('#endsubdatepicker').data("DateTimePicker").date($('#enddatepicker').data("DateTimePicker").date());*/
-
-		getMessengerGenertiveList(page);
-	},
-
 	getMessengerList : function(page){
 		var searchType = $('input:radio[name=searchType]:input:checked').val();
 		$('#startsubdatepicker').data("DateTimePicker").date( $('#startdatepicker').data("DateTimePicker").date() );
 		$('#endsubdatepicker').data("DateTimePicker").date( $('#enddatepicker').data("DateTimePicker").date() );
+
 		if( searchType == 'G'){
 			getMessengerGroupList(page);
 		}else if( searchType == 'GD'){
@@ -113,20 +107,16 @@ var eikon = {
 		var startDt = $('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 		var endDt = $('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 
-		var data = {
-			xRootMtr : xRootmtr,
-			startDt : startDt,
-			endDt : endDt,
-			groupField: 'user_id'
-		}
-
 		//참여자 수, 참여자 정보
 		ui.get({
 			url : 'getMessengerGroupUserList.xcn',
-			searchParam : JSON.stringify(data),
+			xRootMtr : xRootmtr,
+			startDt : startDt,
+			endDt : endDt,
+			groupField : 'usr_id',
 			success : function(data, total) {
-				participantDataSet = data.emass;
-				userSelectBox(data.emass, srcip, usr_id);
+				participantDataSet = data.groups;
+				userSelectBox(data.groups, srcip, usr_id);
 				//getMessengerGroupDetail(xRootmtr, msgid, srcip);
 				//$('#groupParticipantCnt').html(total.comma());
 			},
@@ -180,38 +170,32 @@ var eikon = {
 			return;
 		}
 
-		var conditions = {};
+		var filterVal = {};
 		var conArray = [];
 		var condition = {};
 		condition.searchStr = searchStr;
 		condition.startDt = startDt;
 		condition.endDt = endDt;
-		condition.searchField = 'body.snippet attach.id attach.name attach.text';
-		// condition.searchField = 'body.snippet attachname attachname_str attach';
+		condition.searchField = 'body attachname attachname_str attach';
 		conArray.push(condition);
-		conditions.conditions = conArray;
+		filterVal.conditions = conArray;
 
 		detailSearchFlag = false;
-		alert(searchOffset);
-
-		var data = {
-			conditions : conditions,
-			xRootMtr : xrootmtr,
-			srcip: srcip,
-			usr_id: usr_id,
-			offset : searchOffset,
-		}
 
 		ui.postJson({
 			url : 'getMessengerGroupDetailSearch.xcn',
-			searchParam  : JSON.stringify( data ),
+			xRootMtr : xrootmtr,
+			srcip: srcip,
+			usr_id: usr_id,
+			data : JSON.stringify( filterVal ),
+			offset : searchOffset,
 			success : function(data, total) {
 				focusMsgId = data.toString();
 				if(total > 0){
 					$('#searchResult').html(total);
 					$('#searchResultArea').show();
 					$('#searchResultBtnArea').show();
-					 checkList(searchOffset);
+					checkList(searchOffset);
 				}
 				else{
 					$('#searchResult').html('0');
@@ -250,21 +234,14 @@ var eikon = {
 
 function getMessengerMessageTotal(xRootmtr, srcip, startDt, endDt, usr_id, msgid){
 	//마지막 열람 msgid
-
-	var searchData = {
+	ui.get({
+		url : 'getMessengerMessageTotal.xcn',
 		xRootMtr : xRootmtr,
 		srcip : srcip,
 		startDt : startDt,
 		endDt : endDt,
 		usr_id : usr_id, //기준이 srcip에서 usr_id로 변경되면서 마지막 데이터 기준 변경
-		limit : detailLimit,
-		offset : 0
-	};
-
-
-	ui.get({
-		url : 'getMessengerMessageTotal.xcn',
-		searchData : JSON.stringify(searchData),
+		limit : 0,
 		success : function(data, total) {
 			$('#groupSubResultCnt').text(data.comma());
 			getMessengerMessage(xRootmtr, srcip, usr_id, msgid);
@@ -289,23 +266,17 @@ function getMessengerMessageTotal(xRootmtr, srcip, startDt, endDt, usr_id, msgid
 function getMessengerMessage(xRootmtr, srcip, usr_id, msgid) {
 	var startDt = $('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 	var endDt = $('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
-	var offset = detailStartPage  * detailPageBreak  - detailPageBreak ;
 	$("#timeline_list").html('');
-	var data = {
-		xRootMtr  : xRootmtr,
-		srcip : srcip,
-		startDt  : startDt,
-		endDt  : endDt,
-		usr_id : usr_id,
-		msgid : nvl(msgid),
-		limit : detailLimit,
-		offset : 0
-	}
 	ui.get({
 		url : 'getMessengerMessage.xcn',
-		searchParam : JSON.stringify(data),
+		xRootMtr : xRootmtr,
+		srcip : srcip,
+		startDt : startDt,
+		endDt : endDt,
+		usr_id : usr_id,
+		msgId : nvl(msgid),
+		limit : detailLimit,
 		success : function(data, total) {
-			detailStartPage++;
 			if(data.groups.length > 0) {
 				$('.messenger_prev').css('display','block');
 			}
@@ -399,9 +370,8 @@ function getMessengerMessagePrev(xRootmtr, srcip, usr_id, msgid) {
 	var startDt = $('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 	var endDt = $('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 	searchFlag = true;
-	var offset = detailStartPage  * detailPageBreak  - detailPageBreak ;
-
-	var data = {
+	ui.get({
+		url : 'getMessengerMessagePrev.xcn',
 		xRootMtr : xRootmtr,
 		srcip : srcip,
 		startDt : startDt,
@@ -409,13 +379,7 @@ function getMessengerMessagePrev(xRootmtr, srcip, usr_id, msgid) {
 		usr_id : usr_id,
 		msgId : msgid,
 		limit : detailLimit,
-		offset : offset
-	};
-	ui.get({
-		url : 'getMessengerMessagePrev.xcn',
-		searchParam : JSON.stringify(data),
 		success : function(data, total) {
-			detailStartPage++;
 			searchFlag = false;
 			if(data.groups.length == 0) {
 				prevDetailDataSet = [];
@@ -453,23 +417,22 @@ function userSelectBox(data, srcip, usr_id){
 	var str = '';
 
 	for(var i=0; i<data.length; i++){
-		var ip = data[i].sender.ip;
-		// var ip = data[i].srcip == undefined ? Object.keys(data[i].srcIpList[0]).toString() : data[i].srcip;
+		var ip = data[i].srcip == undefined ? Object.keys(data[i].srcIpList[0]).toString() : data[i].srcip;
 		var selectUserTitle = ip;
-		if( nvl(data[i].sender.name) != '') {
-			selectUserTitle = data[i].sender.name;
-			if( nvl(data[i].sender.usr_id) != '') selectUserTitle += ' ('+data[i].sender.usr_id+')';
-			else if( nvl(data[i].network.srcip) != '') selectUserTitle += ' ('+data[i].network.srcip+')';
+		if( nvl(data[i].name) != '') {
+			selectUserTitle = data[i].name;
+			if( nvl(data[i].usr_id) != '') selectUserTitle += ' ('+data[i].usr_id+')';
+			else if( nvl(data[i].srcip) != '') selectUserTitle += ' ('+data[i].srcip+')';
 		}
-		else if( nvl(data[i].sender.usr_id) != '') selectUserTitle = data[i].sender.usr_id;
-		else if( nvl(data[i].network.srcip) != '') selectUserTitle = data[i].network.srcip;
+		else if( nvl(data[i].usr_id) != '') selectUserTitle = data[i].usr_id;
+		else if( nvl(data[i].srcip) != '') selectUserTitle = data[i].srcip;
 
 		$('#selectUserInfo').attr('data-srcip', nvl(ip));
-		$('#selectUserInfo').attr('data-name', nvl(data[i].sender.name));
-		$('#selectUserInfo').attr('data-usrid', nvl(data[i].sender.usr_id));
+		$('#selectUserInfo').attr('data-name', nvl(data[i].name));
+		$('#selectUserInfo').attr('data-usrid', nvl(data[i].usr_id));
 		$('#selectUserInfo').html(selectUserTitle);
 
-		str += '<li class="selectUser" data-name="'+nvl(data[i].sender.name)+'" data-srcip="'+nvl(ip)+'" data-usrid="'+nvl(data[i].sender.usr_id)+'"><a href="javascript:void(0);">'+selectUserTitle+'</a></li>';
+		str += '<li class="selectUser" data-name="'+nvl(data[i].name)+'" data-srcip="'+nvl(ip)+'" data-usrid="'+nvl(data[i].usr_id)+'"><a href="javascript:void(0);">'+selectUserTitle+'</a></li>';
 	}
 	$('#selectUser_menu').html(str);
 	getDetailData(usr_id);
@@ -488,69 +451,6 @@ function getDetailData(usr_id){
 	}else $('.selectUser').first().click();
 }
 
-function rtnGroupGenertiveList(data) {
-	var str = '';
-	for (var i = 0; i < data.length; i++) {
-
-		var className='';
-		if( isConsent() && $('#consentNo').val() == '') className='cursor-default';
-		str += '<a href="#" class="list-group-item list-group-item-action style="min-height:60px;padding: 5px 15px;">';
-		str += '<div class="list-group-item-heading" style="font-size: 20px; margin-left: 15px;">'+data[i].sender+data[i].jikgubNm+'('+data[i].srcip+')'+'</div>';
-		str += '<div class="pull-xs-right" style="font-size: 12px; margin-left: 15px; clear: both;">'+data[i].ctime+'</div>';
-		str += '<div class="pull-xs-right" style="font-size: 12px; margin-left: 15px; border: 1px solid #ccc; padding: 2px 4px; clear: both;">'+makeMessengerText(data[i].svc)+'</div>';
-		//str += '	<h5 class="list-group-item-heading" style="padding-left: 14px;">'+data[i].body_snippet.replaceAll('<', '&lt;').replaceAll('>', '&gt;')+'</h5>';
-		/*	str += '	<p class="list-group-item-text" style="float:left;">';*/
-
-
-		str += "<span style='word-break: break-all'>"+ data[i].body_snippet + "</span>";
-		str += "<span style='position:absolute;top:30px; right: 15px;font-size: 11px; padding: 2px 4px; margin-left: 3px;'>";
-		str += "</span>";
-		str += '</p></a>';
-	}
-	if( data.length == 0 ){
-		str += '<a href="#" class="list-group-item list-group-item-action active" style="cursor:default;height:50px;">';
-		str += '	<p class="list-group-item-text" style="line-height:30px;">';
-		str += '		<i class="fa fa-envelope fa-sm"></i> ';
-		str += nodataMsg; //common.msg.nodata
-		str += '</p></a>';
-	}
-
-	$('#group_list').html( str );
-	$('#group_list').animate({
-		scrollTop : 0
-	}, 0);
-
-}
-
-
-function rtnFileList(data, type) {
-	var str = '<table border="1"><thead><tr><th>파일 전송 서비스</th><th>파일명/예상 확장자</th><th>미리보기</th></tr></thead><tbody>';
-
-	alert(data.length);
-	for (var i = 0; i < data.length; i++) {
-		var service = makeMessengerText(data[i].svc)
-		var fileName = data[i].attachName;
-		var ext = data[i].attachType;
-		var srcip = data[i].srcip;
-		var fileExtension = "미리보기";
-
-		// 행 추가
-		str += '<tr>';
-		str += '<td>' + service + data[i].ctime +'<br>'+srcip+'</td>';
-		str += '<td>' + fileName + '/' + ext + '</td>';
-		str += '<td><button onclick="previewFile(\'' + fileName + '\')">미리보기</button></td>';
-		str += '</tr>';
-	}
-
-	str += '</tbody></table>';
-
-	$('#group_list').html(str);
-	$('#group_list').animate({
-		scrollTop: 0
-	}, 0);
-}
-
-
 function rtnGroupList(data, type){
 	var str = '';
 	for (var i = 0; i < data.length; i++) {
@@ -568,7 +468,7 @@ function rtnGroupList(data, type){
 			if(closeFlag) str += '<span class="tag tag-default tag-pill pull-xs-right">'+endChat+'</span>';
 			else str += '<span class="tag tag-success tag-pill pull-xs-right">'+chatting+'</span>';
 		}
-		str += '	<h5 class="list-group-item-heading" style="padding-left: 14px;">'+data[i].title+'</h5>';
+		str += '	<h5 class="list-group-item-heading" style="padding-left: 14px;">'+data[i].title.replaceAll('<', '&lt;').replaceAll('>', '&gt;')+'</h5>';
 		str += '	<p class="list-group-item-text" style="float:left;">';
 
 
@@ -597,6 +497,7 @@ function rtnGroupList(data, type){
 		scrollTop : 0
 	}, 0);
 }
+
 function makeMessengerText( svc ){
 	var str = '';
 	svc = svc.substring(0, svc.length - 1);
@@ -611,19 +512,14 @@ function getMessengerGroupList (page){
 	var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
 	groupPage = page;
 	var offset = groupPage*groupPageBreak - groupPageBreak;
-	var searchField = 'body.snippet attach.id attach.name attach.text';
-	let data = {
-		conditions :  getCondition( ) ,
-		limit : groupPageBreak,
-		offset : offset,
-		readYn : readYn,
-		searchField : searchField
-	}
 	searchFlag = true;
 	ui.onBody('timeline_list', 0, -20);
 	ui.postJson({
 		url : 'getMessengerGroupList.xcn',
-		searchParam : JSON.stringify(data),
+		data : JSON.stringify( getCondition( ) ),
+		readYn : readYn,
+		offset : offset,
+		limit : groupPageBreak,
 		success : function(data, total) {
 			rtnGroupList(data.groups, 'G');
 			rtnGroupPage(total, page, 'G');
@@ -638,117 +534,19 @@ function getMessengerGroupList (page){
 		}
 	});
 };
-
-function getFiletransferList(page){
-	var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
-	ui.onBody('timeline_list', 0, -20);
-
-	var searchData = {
-		startDate : startDt+"000000"
-		, endDate : endDt+"235959"
-		, offset : grid1.data.length
-		, limit : grid1.pageSize
-	}
-
-	ui.postJson({
-		url: 'getFiletransferList.xcn',
-		searchParam : JSON.stringify(searchData),
-
-		success: function (data, total) {
-			alert("성공함");
-			rtnFileList(data.groups, 'G');
-		},
-		error: function (status, message) {
-
-			ui.alertMsg(message);
-		},
-		complete: function () {
-			searchFlag = false;
-			ui.off('timeline_list');
-		}
-	});
-}
-
-function getMessengerNoteList(page){
-
-	var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
-	groupPage = page;
-	var offset = groupPage*groupPageBreak - groupPageBreak;
-	var searchData = {
-		serviceType:  'XU1S',
-		startDate: '20231012180000',
-		endDate: '20231030120000',
-		offset:100,
-		limit:10
-	};
-	ui.get({
-		url: 'getMessengerNoteList.xcn',
-		searchParam : JSON.stringify(searchData),
-		success: function (data, total) {
-			console.log(data);
-			rtnGroupList(data.groups, 'GD');
-			rtnGroupPage(total, page, 'GD');
-			HighlightGroup( );
-		},
-		error: function (status, message) {
-
-			ui.alertMsg(message);
-		},
-		complete: function () {
-			searchFlag = false;
-			ui.off('timeline_list');
-		}
-	});
-}
-
-function getMessengerGenertiveList(page) { //생성형 AI검색
-	var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
-	groupPage = page;
-	var offset = groupPage*groupPageBreak - groupPageBreak;
-	let data = {
-		conditions :  getCondition(),
-		limit : groupPageBreak,
-		offset : 0,
-		readYn : readYn
-	}
-	ui.get({
-		url: 'getMessengerGenertiveList.xcn',
-		searchParam : JSON.stringify(data),
-		success: function (data, total) {
-			console.log(data);
-			rtnGroupGenertiveList(data.groups);
-			HighlightGroup( );
-		},
-		error: function (status, message) {
-
-			ui.alertMsg(message);
-		},
-		complete: function () {
-			searchFlag = false;
-			ui.off('timeline_list');
-		}
-	});
-}
-
 function getMessengerMessageList (page){
-
 	//JSON.stringify( condition )
 	var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
 	groupMessagePage = page;
 	var offset = groupMessagePage*groupMessagePageBreak - groupMessagePageBreak;
-	var searchField = 'body.snippet attach.id attach.name attach.text';
 	searchFlag = true;
-	var data = {
-		conditions : getCondition( ),
-		limit : groupPageBreak,
-		offset : offset,
-		readYn : readYn,
-		searchField : searchField
-	}
 	ui.onBody('timeline_list', 0, -20);
 	ui.postJson({
 		url : 'getMessengerMessageList.xcn',
-		searchParam : JSON.stringify(data),
+		data : JSON.stringify( getCondition( ) ),
+		readYn : readYn,
+		offset : offset,
+		limit : groupPageBreak,
 		success : function(data, total) {
 			rtnGroupList(data.groups, 'GD');
 			rtnGroupPage(total, page, 'GD');
@@ -1317,6 +1115,17 @@ function Highlight( ) {
 		}
 	}, 100);
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

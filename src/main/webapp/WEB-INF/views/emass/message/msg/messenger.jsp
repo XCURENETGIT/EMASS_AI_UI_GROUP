@@ -1,17 +1,17 @@
+<%@ page import="com.xcurenet.common.util.Common" %>
+<%@ include file="/WEB-INF/fragments/baseScript.jsp" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 <%
 	String adminType = Common.getAdminType(session);
 	String firstAdminYn = Common.getFirstAdminYn(session);
-
 %>
 <!DOCTYPE html>
 <html lang="ko">
-<script type="text/javascript" src="<c:url value="/js/messenger.js"/>"></script>
-
 <head>
-	<link rel="stylesheet" type="text/css" href="../css/emass_style.css"/>
 	<title>EMASS LT - <s:message code="DATA_MONITOR.MESSAGE_SERVICE"/></title>
+
 	<style>
 		.clusterize-scroll{
 			overflow: auto;
@@ -232,700 +232,695 @@
 		}
 	</style>
 	<script>
-        var messengerListCnt = 0;
-        var nodataMsg = '<s:message code="common.msg.nodata"/>';
-        var chatting = '<s:message code="eikon.msg.chat"/>';
-        var endChat = '<s:message code="eikon.msg.finish"/>';
-        var unreadTitle = '<s:message code="eikon.msg.unreadTitle"/>';
-        var condition = {
-            messageInputFilter:'<s:message code="condition.message.input.filter"/>',
-            messageInputPeriod:'<s:message code="condition.message.input.period"/>',
-            consentMsgTimecheck:'<s:message code="consent.msg.timecheck"/>',
-            messageNumbercheck:'<s:message code="condition.message.numbercheck"/>',
-            messageFolderFilter:'<s:message code="condition.message.folder.filter"/>',
-            messageSelectFolder:'<s:message code="condition.message.select.folder"/>',
-            msgSaved:'<s:message code="common.msg.saved"/>',
-            selectInterest:'<s:message code="condition.select.interest"/>',
-            interestUserAll:'<s:message code="interest.user.all"/>',
-            commonMsgAll:'<s:message code="common.msg.all"/>',
-            serviceAll:'<s:message code="condition.service.all"/>',
-            messengerAll:'<s:message code="condition.messenger.all"/>',
-            orgBusiAll:'<s:message code="common.org.busi.all"/>',
-            orgDeptAll:'<s:message code="common.org.dept.all"/>',
-            msgSelect_all:'<s:message code="common.msg.select_all"/>',
-            msgUnselect_all:'<s:message code="common.msg.unselect_all"/>',
-            msgNoresult:'<s:message code="common.msg.noresult"/>',
-            msgConnectError:'<s:message code="common.msg.connect.error"/>',
-            messageSelectDashboard:'<s:message code="condition.message.select.dashboard"/>',
-            msgConfirmSave:'<s:message code="common.msg.confirm.save"/>',
-            searchService:'<s:message code="condition.search.service"/>',
-            authAlert:'<s:message code="admin.auth.alert"/>',
-            noselect:'<s:message code="common.msg.noselect"/>'
+		var messengerListCnt = 0;
+		var nodataMsg = '<s:message code="common.msg.nodata"/>';
+		var chatting = '<s:message code="eikon.msg.chat"/>';
+		var endChat = '<s:message code="eikon.msg.finish"/>';
+		var unreadTitle = '<s:message code="eikon.msg.unreadTitle"/>';
+		var condition = {
+			messageInputFilter:'<s:message code="condition.message.input.filter"/>',
+			messageInputPeriod:'<s:message code="condition.message.input.period"/>',
+			consentMsgTimecheck:'<s:message code="consent.msg.timecheck"/>',
+			messageNumbercheck:'<s:message code="condition.message.numbercheck"/>',
+			messageFolderFilter:'<s:message code="condition.message.folder.filter"/>',
+			messageSelectFolder:'<s:message code="condition.message.select.folder"/>',
+			msgSaved:'<s:message code="common.msg.saved"/>',
+			selectInterest:'<s:message code="condition.select.interest"/>',
+			interestUserAll:'<s:message code="interest.user.all"/>',
+			commonMsgAll:'<s:message code="common.msg.all"/>',
+			serviceAll:'<s:message code="condition.service.all"/>',
+			messengerAll:'<s:message code="condition.messenger.all"/>',
+			orgBusiAll:'<s:message code="common.org.busi.all"/>',
+			orgDeptAll:'<s:message code="common.org.dept.all"/>',
+			msgSelect_all:'<s:message code="common.msg.select_all"/>',
+			msgUnselect_all:'<s:message code="common.msg.unselect_all"/>',
+			msgNoresult:'<s:message code="common.msg.noresult"/>',
+			msgConnectError:'<s:message code="common.msg.connect.error"/>',
+			messageSelectDashboard:'<s:message code="condition.message.select.dashboard"/>',
+			msgConfirmSave:'<s:message code="common.msg.confirm.save"/>',
+			searchService:'<s:message code="condition.search.service"/>',
+			authAlert:'<s:message code="admin.auth.alert"/>',
+			noselect:'<s:message code="common.msg.noselect"/>'
 
-        };
-        $(document).ready(function(){
-            $(window).resize(function() {
-                if($(window).width() < 1700){
-                    $('#searchResultBtnArea').addClass('btnCustomPosition');
-                }else{
-                    $('#searchResultBtnArea').removeClass('btnCustomPosition');
-                }
-            });
+		};
+		$(document).ready(function(){
+			$(window).resize(function() {
+				if($(window).width() < 1700){
+					$('#searchResultBtnArea').addClass('btnCustomPosition');
+				}else{
+					$('#searchResultBtnArea').removeClass('btnCustomPosition');
+				}
+			});
 
-            $('#searchBtn').click(function(){
-                if( messengerListCnt == 0 ) {
-                    ui.alertMsg('<s:message code="eikon.noList"/>');
-                    return;
-                }
-                var startDt = $('#startDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
-                var endDt = $('#endDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
-                if( startDt == ''){
-                    ui.alertMsg('<s:message code="message.message.startdt.input"/>');
-                    return;
-                }
-                if( endDt == ''){
-                    ui.alertMsg('<s:message code="message.message.enddt.input"/>');
-                    return;
-                }
-                if(startDt > endDt) {
-                    ui.alertMsg('<s:message code="consent.msg.timecheck"/>');
-                    return;
-                }
-                if(getDayInterval(startDt, endDt) > 31) {
-                    ui.alertMsg('<s:message code="eikon.msg.select.date"/>');
-                    return;
-                }
+			$('#searchBtn').click(function(){
+				if( messengerListCnt == 0 ) {
+					ui.alertMsg('<s:message code="eikon.noList"/>');
+					return;
+				}
+				var startDt = $('#startDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+				var endDt = $('#endDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+				if( startDt == ''){
+					ui.alertMsg('<s:message code="message.message.startdt.input"/>');
+					return;
+				}
+				if( endDt == ''){
+					ui.alertMsg('<s:message code="message.message.enddt.input"/>');
+					return;
+				}
+				if(startDt > endDt) {
+					ui.alertMsg('<s:message code="consent.msg.timecheck"/>');
+					return;
+				}
+				if(getDayInterval(startDt, endDt) > 31) {
+					ui.alertMsg('<s:message code="eikon.msg.select.date"/>');
+					return;
+				}
 
-                eikon.getMessengerList(1);
-            });
-            $("#searchStrInput").keypress(function(e){if( e.keyCode == 13) $('#searchBtn').click();}); //통합 검색 엔터키
+				eikon.getMessengerList(1);
+			});
+			$("#searchStrInput").keypress(function(e){if( e.keyCode == 13) $('#searchBtn').click();}); //통합 검색 엔터키
 
-            $('#searchMsgBtn').click(function(){
-                if($('#searchMsgStrInput').val() == "") $('#searchMsgQueryBtn').click();
-                else eikon.findMessageList(0);
-                //eikon.getMessengerDetailList($('#xrootmtr').text(),$('#msgid').text(), $('#srcip').text());
-            });
-            $('#searchMsgQueryBtn').click(function(){
-                var selectedUsrId = $('#selectUserInfo').attr('data-usrid');
-                getDetailData(selectedUsrId);
-            });
-            $("#searchMsgStrInput").keypress(function(e){
-                if( e.keyCode == 13) {
-                    if($('#searchMsgStrInput').val() == "") $('#searchMsgQueryBtn').click();
-                    else $('#searchMsgBtn').click();
-                }
-            });
+			$('#searchMsgBtn').click(function(){
+				if($('#searchMsgStrInput').val() == "") $('#searchMsgQueryBtn').click();
+				else eikon.findMessageList(0);
+				//eikon.getMessengerDetailList($('#xrootmtr').text(),$('#msgid').text(), $('#srcip').text());
+			});
+			$('#searchMsgQueryBtn').click(function(){
+				var selectedUsrId = $('#selectUserInfo').attr('data-usrid');
+				getDetailData(selectedUsrId);
+			});
+			$("#searchMsgStrInput").keypress(function(e){
+				if( e.keyCode == 13) {
+					if($('#searchMsgStrInput').val() == "") $('#searchMsgQueryBtn').click();
+					else $('#searchMsgBtn').click();
+				}
+			});
 
-            $('#searchMsgUp').click(function(){
-                eikon.findMessageList(--searchOffset);
+			$('#searchMsgUp').click(function(){
+				eikon.findMessageList(--searchOffset);
 // 		checkList(--searchOffset);
-            });
-            $('#searchMsgDn').click(function(){
+			});
+			$('#searchMsgDn').click(function(){
 // 		checkList(++searchOffset);
-                eikon.findMessageList(++searchOffset);
-            });
-            $('#listCntArea').click(function(){
-                //if( $('#messageTotalCnt').html() == 0 || $('#messageTotalCnt').html() == '') return;
-                openSelectDiv();
-            });
-            $('#userCntArea').click(function(){
-                if( $('#selectUserInfo').html() == '-') return;
-                openSelectUserDiv();
-            });
+				eikon.findMessageList(++searchOffset);
+			});
+			$('#listCntArea').click(function(){
+				//if( $('#messageTotalCnt').html() == 0 || $('#messageTotalCnt').html() == '') return;
+				openSelectDiv();
+			});
+			$('#userCntArea').click(function(){
+				if( $('#selectUserInfo').html() == '-') return;
+				openSelectUserDiv();
+			});
 
-            $('#dept').click(function(){
-                var code = $(this).attr('id');
-                openCodeWindow(code, $('#'+code+'Val').val(), $('#'+code+'Str').val());
-            });
+			$('#dept').click(function(){
+				var code = $(this).attr('id');
+				openCodeWindow(code, $('#'+code+'Val').val(), $('#'+code+'Str').val());
+			});
 
-            $('.txt_down').click(function(){
-                downloadList('txt');
-                hideSelect();
-            });
-            $('.excel_down').click(function(){
-                downloadList('xlsx');
-                hideSelect();
-            });
-            $('.html_down').click(function(){
-                downloadList('html');
-                hideSelect();
-            });
-            $('.excel_file_down').click(function(){
-                var xrootmtr = $('#xrootmtr').text();
-                var srcip = $('#srcip').text();
-                var usr_id = $('#usr_id').text();
-                var startDt = $('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
-                var endDt = $('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
-                var searchStr = '';
-                if( xrootmtr == '') return;
-                eikon.getMessengerGroupAllExport('<c:url value="/getMessengerGroupAllExport.xcn"/>?xRootMtr='+xrootmtr+'&srcip='+srcip+'&usr_id='+usr_id+'&startDt='+startDt+'&endDt='+endDt+'&searchStr='+searchStr);
-                hideSelect();
-            });
+			$('.txt_down').click(function(){
+				downloadList('txt');
+				hideSelect();
+			});
+			$('.excel_down').click(function(){
+				downloadList('xlsx');
+				hideSelect();
+			});
+			$('.html_down').click(function(){
+				downloadList('html');
+				hideSelect();
+			});
+			$('.excel_file_down').click(function(){
+				var xrootmtr = $('#xrootmtr').text();
+				var srcip = $('#srcip').text();
+				var usr_id = $('#usr_id').text();
+				var startDt = $('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+				var endDt = $('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+				var searchStr = '';
+				if( xrootmtr == '') return;
+				eikon.getMessengerGroupAllExport('<c:url value="/getMessengerGroupAllExport.xcn"/>?xRootMtr='+xrootmtr+'&srcip='+srcip+'&usr_id='+usr_id+'&startDt='+startDt+'&endDt='+endDt+'&searchStr='+searchStr);
+				hideSelect();
+			});
 
-            $(document).on('mouseover', '.codeSelectedBtn', function(e){
-                $('#selectedCodeTitle').show();
-                $('#selectedCodeTitle').css('left', (e.pageX + 5)+'px');
-                $('#selectedCodeTitle').css('top', (e.pageY - 120)+'px');
+			$(document).on('mouseover', '.codeSelectedBtn', function(e){
+				$('#selectedCodeTitle').show();
+				$('#selectedCodeTitle').css('left', (e.pageX + 5)+'px');
+				$('#selectedCodeTitle').css('top', (e.pageY - 120)+'px');
 
-                var str = $(this).parent().find('.selectedTitle').val();
-                if( str != undefined ) str = str.replaceAll('\\|', ',');
-                $('#selectedCodeTitle').html(str);
-            });
+				var str = $(this).parent().find('.selectedTitle').val();
+				if( str != undefined ) str = str.replaceAll('\\|', ',');
+				$('#selectedCodeTitle').html(str);
+			});
 
-            $(document).on('mousemove', '.codeSelectedBtn', function(e){
-                $('#selectedCodeTitle').css('left', (e.pageX + 5)+'px');
-                $('#selectedCodeTitle').css('top', (e.pageY - 120)+'px');
+			$(document).on('mousemove', '.codeSelectedBtn', function(e){
+				$('#selectedCodeTitle').css('left', (e.pageX + 5)+'px');
+				$('#selectedCodeTitle').css('top', (e.pageY - 120)+'px');
 
-                var str = $(this).parent().find('.selectedTitle').val();
-                if( str != undefined ) str = str.replaceAll('\\|', ',');
-                $('#selectedCodeTitle').html(str);
-            });
+				var str = $(this).parent().find('.selectedTitle').val();
+				if( str != undefined ) str = str.replaceAll('\\|', ',');
+				$('#selectedCodeTitle').html(str);
+			});
 
-            $(document).on('mouseout', '.codeSelectedBtn', function(e){
-                $('#selectedCodeTitle').hide();
-            });
+			$(document).on('mouseout', '.codeSelectedBtn', function(e){
+				$('#selectedCodeTitle').hide();
+			});
 
-            $(document).on('click', '.codeSelectedBtn', function(e){
-                $('#deptVal, #deptStr').val('');
-                $('#deptSelectedArea').hide();
-            });
+			$(document).on('click', '.codeSelectedBtn', function(e){
+				$('#deptVal, #deptStr').val('');
+				$('#deptSelectedArea').hide();
+			});
 
-            $(document).on('click', '#timeline_list div.list-group-item', function(e){
-                var xrootmtr = $('#xrootmtr').text();
-                var srcip = $('#srcip').text();
-                var usr_id = $('#usr_id').text();
-                var id = $(this).parent().parent().attr('id');
-                updateEmassMessengerAdminXrootMtr(xrootmtr, id, srcip, usr_id);
+			$(document).on('click', '#timeline_list div.list-group-item', function(e){
+				var xrootmtr = $('#xrootmtr').text();
+				var srcip = $('#srcip').text();
+				var usr_id = $('#usr_id').text();
+				var id = $(this).parent().parent().attr('id');
+				updateEmassMessengerAdminXrootMtr(xrootmtr, id, srcip, usr_id);
 
-                moveTargetHeight(id, false);
-            });
+				moveTargetHeight(id, false);
+			});
 
-            $(document).on('click', '#group_list a', function(){
-                if( (isConsent() && $('#consentNo').val() == '') || $(this).attr('xrootmtr') == ''){
-                    return;
-                }
+			$(document).on('click', '#group_list a', function(){
+				if( (isConsent() && $('#consentNo').val() == '') || $(this).attr('xrootmtr') == ''){
+					return;
+				}
 
-                //if($(this).hasClass('active')) return;
-                $('#group_list a').each(function(){
-                    $(this).removeClass('active');
-                });
+				//if($(this).hasClass('active')) return;
+				$('#group_list a').each(function(){
+					$(this).removeClass('active');
+				});
 
-                $(this).addClass('active');
-                $('#xrootmtr').text($(this).attr('xrootmtr'));
+				$(this).addClass('active');
+				$('#xrootmtr').text($(this).attr('xrootmtr'));
 
-                $('#srcip').text($(this).attr('srcip'));
-                $('#msgid').text($(this).attr('msgid'));
-                $('#usrid').text($(this).attr('usrid'));
+				$('#srcip').text($(this).attr('srcip'));
+				$('#msgid').text($(this).attr('msgid'));
+				$('#usrid').text($(this).attr('usrid'));
 
-                $('#selectUserInfo').attr('data-name', '');
-                $('#selectUserInfo').attr('data-srcip', '');
-                $('#selectUserInfo').attr('data-usrid', '');
-                $('#selectUserInfo').html('');
-                $('#searchMsgStrInput').val('');
-                $('#startSubDt').val($('#startDt').val());
-                $('#endSubDt').val($('#endDt').val());
-                focusMsgId = '';
-                eikon.getMessengerDetailList($(this).attr('xrootmtr'), $(this).attr('msgid'), $(this).attr('srcip'), $(this).attr('usrid'));
-            });
+				$('#selectUserInfo').attr('data-name', '');
+				$('#selectUserInfo').attr('data-srcip', '');
+				$('#selectUserInfo').attr('data-usrid', '');
+				$('#selectUserInfo').html('');
+				$('#searchMsgStrInput').val('');
+				$('#startSubDt').val($('#startDt').val());
+				$('#endSubDt').val($('#endDt').val());
+				focusMsgId = '';
+				eikon.getMessengerDetailList($(this).attr('xrootmtr'), $(this).attr('msgid'), $(this).attr('srcip'), $(this).attr('usrid'));
+			});
 
-            $( 'input[name="searchType"]:radio' ).change(function(){
-                eikon.getMessengerList(1);
-            });
+			$( 'input[name="searchType"]:radio' ).change(function(){
+				eikon.getMessengerList(1);
+			});
 
-            $('#groupFileCnt').click(function(){
-                fileInfoViewer( $('#xrootmtr').text(), $('#srcip').text(), $('#usr_id').text() );
-            });
+			$('#groupFileCnt').click(function(){
+				fileInfoViewer( $('#xrootmtr').text(), $('#srcip').text(), $('#usr_id').text() );
+			});
 
-            $('#groupParticipant').click(function(){
-                participantInfoViewer( $('#xrootmtr').text(), $('#usr_id').text() );
-            });
+			$('#groupParticipant').click(function(){
+				participantInfoViewer( $('#xrootmtr').text(), $('#usr_id').text() );
+			});
 
-            $(document).on('click','.file_link',function(){
-                var msgId = $(this).attr('msgid');
-                var attachHash = $(this).attr('attachhash');
-                var attachName = $(this).text();
+			$(document).on('click','.file_link',function(){
+				var msgId = $(this).attr('msgid');
+				var attachHash = $(this).attr('attachhash');
+				var attachName = $(this).text();
 
-                var attachUrl = '<c:url value="/getEmassAttachInfo4DownHash.xcn"/>?msgIds='+msgId+'&attachHash='+attachHash;
+				var attachUrl = '<c:url value="/getEmassAttachInfo4DownHash.xcn"/>?msgIds='+msgId+'&attachHash='+attachHash;
 
-                if( attachHash == ''){
-                    alert('<s:message code="message.message.notfound.attach"/>');
-                    return;
-                }
-                try {
-                    AttachDown.location.href = attachUrl;
-                } catch (e) {
-                    AttachDown.src = attachUrl;
-                }
-            });
+				if( attachHash == ''){
+					alert('<s:message code="message.message.notfound.attach"/>');
+					return;
+				}
+				try {
+					AttachDown.location.href = attachUrl;
+				} catch (e) {
+					AttachDown.src = attachUrl;
+				}
+			});
 
-            $(document).on('click','.selectUser',function(){
-                var name = $(this).attr('data-name');
-                var srcip = $(this).attr('data-srcip');
-                var usr_id = $(this).attr('data-usrid');
-                var xrootmtr = $('#xrootmtr').text();
-                var msgid = $('#msgid').text();
-                $('#selectUserInfo').attr('data-srcip', srcip);
-                $('#selectUserInfo').attr('data-name', name);
-                $('#selectUserInfo').attr('data-usrid', usr_id);
+			$(document).on('click','#group_list a',function(){
+				var name = $(this).attr('data-name');
+				var srcip = $(this).attr('data-srcip');
+				var usr_id = $(this).attr('data-usrid');
+				var xrootmtr = $('#xrootmtr').text();
+				var msgid = $('#msgid').text();
+				$('#selectUserInfo').attr('data-srcip', srcip);
+				$('#selectUserInfo').attr('data-name', name);
+				$('#selectUserInfo').attr('data-usrid', usr_id);
 
-                $('#selectUserInfo').html($(this).text());
-                $('#srcip').text(srcip);
-                $('#usr_id').text(usr_id);
-                eikon.getMessengerGroupDetail(xrootmtr, msgid, srcip, usr_id);
-                hideUserSelect();
-            });
+				$('#selectUserInfo').html($(this).text());
+				$('#srcip').text(srcip);
+				$('#usr_id').text(usr_id);
+				eikon.getMessengerGroupDetail(xrootmtr, msgid, srcip, usr_id);
+				hideUserSelect();
+			});
 
-            initCondition();
-            eikon.init();
+			initCondition();
+			eikon.init();
 // 	$('#searchBtn').click();
 
-        });
+		});
 
-        function openCodeWindow(id, oldCode, oldConm){
-            $('#oldCode').val(oldCode);
-            $('#oldConm').val(oldConm);
+		function openCodeWindow(id, oldCode, oldConm){
+			$('#oldCode').val(oldCode);
+			$('#oldConm').val(oldConm);
 
-            var url    = '<c:url value="/commons/selectCode.do?codeType='+id+'"/>';
-            var pop = fnOpenWindow('', 'selectCodeWinPopup', 1200, 700, 'resize');
+			var url    = '<c:url value="/commons/selectCode.do?codeType='+id+'"/>';
+			var pop = fnOpenWindow('', 'selectCodeWinPopup', 1200, 700, 'resize');
 
-            $('#codeParam').attr('target','selectCodeWinPopup');
-            $('#codeParam').attr('action', url);
-            $('#codeParam').attr('method','post');
-            $('#codeParam').submit();
-        }
+			$('#codeParam').attr('target','selectCodeWinPopup');
+			$('#codeParam').attr('action', url);
+			$('#codeParam').attr('method','post');
+			$('#codeParam').submit();
+		}
 
-        function openSelectUserDiv(){
-            var status = $('#userCntArea').hasClass('clicked');
-            if( status){
-                hideUserSelect();
-            }
-            else{
-                showUserSelect();
-            }
-        }
-        function hideUserSelect() {
-            if ($('#selectUser_menu')){
-                $('#selectUser_menu').hide();
-                $('#userCntArea').removeClass('clicked');
-            }
-            $(document).unbind("mousedown", onBodyMouseDownPeriodUser);
-        }
-        function showUserSelect() {
-            $('#selectUser_menu').show();
-            $('#userCntArea').addClass('clicked');
-            $(document).bind("mousedown", onBodyMouseDownPeriodUser);
-        }
-        function onBodyMouseDownPeriodUser(event) {
-            if (!(event.target.id == "selectUser_menu" || $(event.target).parents("#selectUser_menu").length > 0)) {
-                hideUserSelect();
-            }
-        }
+		function openSelectUserDiv(){
+			var status = $('#userCntArea').hasClass('clicked');
+			if( status){
+				hideUserSelect();
+			}
+			else{
+				showUserSelect();
+			}
+		}
+		function hideUserSelect() {
+			if ($('#selectUser_menu')){
+				$('#selectUser_menu').hide();
+				$('#userCntArea').removeClass('clicked');
+			}
+			$(document).unbind("mousedown", onBodyMouseDownPeriodUser);
+		}
+		function showUserSelect() {
+			$('#selectUser_menu').show();
+			$('#userCntArea').addClass('clicked');
+			$(document).bind("mousedown", onBodyMouseDownPeriodUser);
+		}
+		function onBodyMouseDownPeriodUser(event) {
+			if (!(event.target.id == "selectUser_menu" || $(event.target).parents("#selectUser_menu").length > 0)) {
+				hideUserSelect();
+			}
+		}
 
-        function openSelectDiv(){
-            var status = $('#listCntArea').hasClass('clicked');
-            if( status){
-                hideSelect();
-            }
-            else{
-                showSelect();
-            }
-        }
-        function hideSelect() {
-            if ($('#export_menu')){
-                $('#export_menu').hide();
-                $('#listCntArea').removeClass('clicked');
-            }
-            $(document).unbind("mousedown", onBodyMouseDownPeriod);
-        }
-        function showSelect() {
-            $('#export_menu').show();
-            $('#listCntArea').addClass('clicked');
-            $(document).bind("mousedown", onBodyMouseDownPeriod);
-        }
-        function onBodyMouseDownPeriod(event) {
-            if (!(event.target.id == "export_menu" || $(event.target).parents("#export_menu").length > 0)) {
-                hideSelect();
-            }
-        }
+		function openSelectDiv(){
+			var status = $('#listCntArea').hasClass('clicked');
+			if( status){
+				hideSelect();
+			}
+			else{
+				showSelect();
+			}
+		}
+		function hideSelect() {
+			if ($('#export_menu')){
+				$('#export_menu').hide();
+				$('#listCntArea').removeClass('clicked');
+			}
+			$(document).unbind("mousedown", onBodyMouseDownPeriod);
+		}
+		function showSelect() {
+			$('#export_menu').show();
+			$('#listCntArea').addClass('clicked');
+			$(document).bind("mousedown", onBodyMouseDownPeriod);
+		}
+		function onBodyMouseDownPeriod(event) {
+			if (!(event.target.id == "export_menu" || $(event.target).parents("#export_menu").length > 0)) {
+				hideSelect();
+			}
+		}
 
 
-        function downloadList(type){
-            var xrootmtr = $('#xrootmtr').text();
-            var srcip = $('#srcip').text();
-            var usr_id = $('#usr_id').text();
-            if( xrootmtr == '') return;
-            var startDt = $('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
-            var endDt = $('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
-            var searchStr = '';
+		function downloadList(type){
+			var xrootmtr = $('#xrootmtr').text();
+			var srcip = $('#srcip').text();
+			var usr_id = $('#usr_id').text();
+			if( xrootmtr == '') return;
+			var startDt = $('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+			var endDt = $('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+			var searchStr = '';
 
-            eikon.getMessengerGroupTextExport('<c:url value="/getMessengerGroupTextExport.xcn"/>?xRootMtr='+xrootmtr+'&srcip='+srcip+'&usr_id='+usr_id+'&startDt='+startDt+'&endDt='+endDt+'&searchStr='+searchStr+'&type='+type+'&groupField=sender_str', xrootmtr);
-        }
+			eikon.getMessengerGroupTextExport('<c:url value="/getMessengerGroupTextExport.xcn"/>?xRootMtr='+xrootmtr+'&srcip='+srcip+'&usr_id='+usr_id+'&startDt='+startDt+'&endDt='+endDt+'&searchStr='+searchStr+'&type='+type+'&groupField=sender_str', xrootmtr);
+		}
 
-        function searchConsentNo(){
-            var url    = '<c:url value="/ems/selectConsent.do"/>';
-            return fnOpenWindow(url, 'selectConsentWinPopup', 830, 700, 'resize');
-        }
-        function selectedConsent( obj ){
-            if( obj == ''){
-                $('#consentNo').val('');
-                $('#consentName').text('');
-                /* $('#consentIp').val('');
-				$('#consentEmail').val(''); */
-                $('#consentUserId').val('');
-                $('#consentBtn').removeClass('active');
-            }else{
-                $('#consentNo').val(obj.no);
-                $('#consentName').text(obj.name + "["+obj.userId+", "+(obj.deptNm == '' ? '<s:message code="consent.select.consentDept"/>' : obj.deptNm)+"]");
-                /* $('#consentIp').val(obj.userIp);
-				$('#consentEmail').val(obj.userEmail); */
-                $('#consentUserId').val(obj.userId);
-                $('#consentBtn').addClass('active');
-            }
-        }
+		function searchConsentNo(){
+			var url    = '<c:url value="/ems/selectConsent.do"/>';
+			return fnOpenWindow(url, 'selectConsentWinPopup', 830, 700, 'resize');
+		}
+		function selectedConsent( obj ){
+			if( obj == ''){
+				$('#consentNo').val('');
+				$('#consentName').text('');
+				/* $('#consentIp').val('');
+                $('#consentEmail').val(''); */
+				$('#consentUserId').val('');
+				$('#consentBtn').removeClass('active');
+			}else{
+				$('#consentNo').val(obj.no);
+				$('#consentName').text(obj.name + "["+obj.userId+", "+(obj.deptNm == '' ? '<s:message code="consent.select.consentDept"/>' : obj.deptNm)+"]");
+				/* $('#consentIp').val(obj.userIp);
+                $('#consentEmail').val(obj.userEmail); */
+				$('#consentUserId').val(obj.userId);
+				$('#consentBtn').addClass('active');
+			}
+		}
 
-        function initCondition(){
-            getMessengerList();
-            getCodeList('busi');
-            getCodeList('dept');
+		function initCondition(){
+			getMessengerList();
+			getCodeList('busi');
+			getCodeList('dept');
 
-            var dateObj = new Date();
-            $('#startdatepicker').datetimepicker({
-                format: 'YYYY-MM-DD HH:mm:ss',
-                locale: 'ko',
-                sideBySide: true,
-                defaultDate: moment(new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate() - 1 ) )
-            }).on("dp.change", function (e) {
-                if( easyDateStartFlag ){
-                    easyDateStartFlag = false;
-                    return;
-                }else{
-                    $('#easyDate').val('');
-                }
-            });
-            $('#enddatepicker').datetimepicker({
-                format: 'YYYY-MM-DD HH:mm:ss',
-                locale: 'ko',
-                sideBySide: true,
-                defaultDate: moment(new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), 23, 59, 59 ) )
-            }).on("dp.change", function (e) {
-                if( easyDateEndFlag ){
-                    easyDateEndFlag = false;
-                    return;
-                }else{
-                    $('#easyDate').val('');
-                }
-            });
+			var dateObj = new Date();
+			$('#startdatepicker').datetimepicker({
+				format: 'YYYY-MM-DD HH:mm:ss',
+				locale: 'ko',
+				sideBySide: true,
+				defaultDate: moment(new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate() - 1 ) )
+			}).on("dp.change", function (e) {
+				if( easyDateStartFlag ){
+					easyDateStartFlag = false;
+					return;
+				}else{
+					$('#easyDate').val('');
+				}
+			});
+			$('#enddatepicker').datetimepicker({
+				format: 'YYYY-MM-DD HH:mm:ss',
+				locale: 'ko',
+				sideBySide: true,
+				defaultDate: moment(new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), 23, 59, 59 ) )
+			}).on("dp.change", function (e) {
+				if( easyDateEndFlag ){
+					easyDateEndFlag = false;
+					return;
+				}else{
+					$('#easyDate').val('');
+				}
+			});
 
-            $('#startsubdatepicker').datetimepicker({
-                format: 'YYYY-MM-DD HH:mm:ss',
-                locale: 'ko',
-                widgetParent : '.boxArea',
-                sideBySide: true,
-                defaultDate: moment(new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()-1 ) )
-            }).on("dp.change", function (e) {
-            }).on('dp.show', function(){
-                var datepicker = $("body").find('.bootstrap-datetimepicker-widget:last');
-                if (datepicker.hasClass('bottom')) {
-                    var top = $(this).offset().top + $(this).outerHeight();
-                    var left = $(this).offset().left;
-                    datepicker.css({
-                        'top': (top-80) + 'px',
-                        'bottom': 'auto',
-                        'left': left+'px'
-                    });
-                }
-            });
-            $('#endsubdatepicker').datetimepicker({
-                format: 'YYYY-MM-DD HH:mm:ss',
-                locale: 'ko',
-                widgetParent : '.boxArea',
-                sideBySide: true,
-                defaultDate: moment(new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), 23, 59, 59 ) )
-            }).on("dp.change", function (e) {
-            }).on('dp.show', function(){
-                var datepicker = $("body").find('.bootstrap-datetimepicker-widget:last');
-                if (datepicker.hasClass('bottom')) {
-                    var top = $(this).offset().top + $(this).outerHeight();
-                    var left = $(this).offset().left;
-                    var rightDivWidth = $('#rightDiv').width();
-                    if(rightDivWidth < 640) left = left - 280;
-                    datepicker.css({
-                        'top': (top-80) + 'px',
-                        'bottom': 'auto',
-                        'left': (left)+'px'
-                    });
-                }
-            });
-            $('#easyDate').change(function(){
-                changeDate($(this).val());
-            });
-            $('#timedatepicker').datetimepicker({
-                format: 'YYYY-MM-DD',
-                locale: 'ko',
-                defaultDate: moment(new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), 23, 59, 59 ) )
-            }).on("dp.change", function (e) {
-                var date = $(this).data("DateTimePicker").date().format('YYYY-MM-DD');
-                detailDateFocus(date);
+			$('#startsubdatepicker').datetimepicker({
+				format: 'YYYY-MM-DD HH:mm:ss',
+				locale: 'ko',
+				widgetParent : '.boxArea',
+				sideBySide: true,
+				defaultDate: moment(new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()-1 ) )
+			}).on("dp.change", function (e) {
+			}).on('dp.show', function(){
+				var datepicker = $("body").find('.bootstrap-datetimepicker-widget:last');
+				if (datepicker.hasClass('bottom')) {
+					var top = $(this).offset().top + $(this).outerHeight();
+					var left = $(this).offset().left;
+					datepicker.css({
+						'top': (top-80) + 'px',
+						'bottom': 'auto',
+						'left': left+'px'
+					});
+				}
+			});
+			$('#endsubdatepicker').datetimepicker({
+				format: 'YYYY-MM-DD HH:mm:ss',
+				locale: 'ko',
+				widgetParent : '.boxArea',
+				sideBySide: true,
+				defaultDate: moment(new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), 23, 59, 59 ) )
+			}).on("dp.change", function (e) {
+			}).on('dp.show', function(){
+				var datepicker = $("body").find('.bootstrap-datetimepicker-widget:last');
+				if (datepicker.hasClass('bottom')) {
+					var top = $(this).offset().top + $(this).outerHeight();
+					var left = $(this).offset().left;
+					var rightDivWidth = $('#rightDiv').width();
+					if(rightDivWidth < 640) left = left - 280;
+					datepicker.css({
+						'top': (top-80) + 'px',
+						'bottom': 'auto',
+						'left': (left)+'px'
+					});
+				}
+			});
+			$('#easyDate').change(function(){
+				changeDate($(this).val());
+			});
+			$('#timedatepicker').datetimepicker({
+				format: 'YYYY-MM-DD',
+				locale: 'ko',
+				defaultDate: moment(new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), 23, 59, 59 ) )
+			}).on("dp.change", function (e) {
+				var date = $(this).data("DateTimePicker").date().format('YYYY-MM-DD');
+				detailDateFocus(date);
 
-                $('#searchMsgStrInput').val('');
-                $('#searchResult').html('');
-                $('#searchResultArea').hide();
-                $('#searchResultBtnArea').hide();
-            });
+				$('#searchMsgStrInput').val('');
+				$('#searchResult').html('');
+				$('#searchResultArea').hide();
+				$('#searchResultBtnArea').hide();
+			});
 
-            $('#serviceTypeSelect').selectpicker({
-                container:'body',
-                size: 15,
-                width:'180px',
-                noneSelectedText:condition.serviceAll,
-                noneResultsText:condition.msgNoresult+' ',
-                selectAllText:condition.msgSelect_all,
-                deselectAllText:condition.msgUnselect_all,
-                liveSearchPlaceholder:condition.searchService
-            });
-
-            $('#busiSelect').selectpicker({
-                container:'body',
-                size: 15,
-                width:'180px',
-                searchLabel:true,
-                noneSelectedText:'<s:message code="common.org.busi.all"/>',
-                noneResultsText:'<s:message code="common.msg.noresult"/>'+' ',
-                selectAllText:'<s:message code="common.msg.select_all"/>',
-                deselectAllText:'<s:message code="common.msg.unselect_all"/>'
-            });
-            /* $('#deptSelect').selectpicker({
+			$('#serviceTypeSelect').selectpicker({
 				container:'body',
 				size: 15,
-				width:'222px',
+				width:'180px',
+				noneSelectedText:condition.serviceAll,
+				noneResultsText:condition.msgNoresult+' ',
+				selectAllText:condition.msgSelect_all,
+				deselectAllText:condition.msgUnselect_all,
+				liveSearchPlaceholder:condition.searchService
+			});
+
+			$('#busiSelect').selectpicker({
+				container:'body',
+				size: 15,
+				width:'180px',
 				searchLabel:true,
-				noneSelectedText:'<s:message code="common.org.dept.all"/>',
+				noneSelectedText:'<s:message code="common.org.busi.all"/>',
+				noneResultsText:'<s:message code="common.msg.noresult"/>'+' ',
+				selectAllText:'<s:message code="common.msg.select_all"/>',
+				deselectAllText:'<s:message code="common.msg.unselect_all"/>'
+			});
+			/* $('#deptSelect').selectpicker({
+                container:'body',
+                size: 15,
+                width:'222px',
+                searchLabel:true,
+                noneSelectedText:'<s:message code="common.org.dept.all"/>',
 		noneResultsText:'<s:message code="common.msg.noresult"/>'+' ',
 		selectAllText:'<s:message code="common.msg.select_all"/>',
 		deselectAllText:'<s:message code="common.msg.unselect_all"/>'
 	}); */
 
-            $('#searchField').selectpicker({
-                container:'body',
-                width:'100px',
-                noneSelectedText:'<s:message code="common.msg.all"/>'
-            });
+			$('#searchField').selectpicker({
+				container:'body',
+				width:'100px',
+				noneSelectedText:'<s:message code="common.msg.all"/>'
+			});
 
-            $( 'input[name="attachYn"]:radio' ).change(function(){
-                if($(this).val() == '') $("#searchField option:eq(1)").prop('disabled', false);
-                else $("#searchField option:eq(1)").prop('disabled', true);
+			$( 'input[name="attachYn"]:radio' ).change(function(){
+				if($(this).val() == '') $("#searchField option:eq(1)").prop('disabled', false);
+				else $("#searchField option:eq(1)").prop('disabled', true);
 
-                $('#searchField').selectpicker('refresh');
-            });
-        }
+				$('#searchField').selectpicker('refresh');
+			});
+		}
 
-        function getCodeList( codeType ){
-            ui.get({
-                url 		: 'getCodeList.xcn',
-                codeType	: codeType,
-                success 	: function(data, total) {
-                    $('#'+codeType+'Select').html(getSelectOption( data ));
-                    $('#'+codeType+'Select').selectpicker('refresh');
-                    $('#'+codeType+'SelectPop').html(getSelectOption( data ));
-                    $('#'+codeType+'SelectPop').selectpicker('refresh');
-                },
-                error 		: function(status, message) {
-                    ui.alertMsg('error:' + status);
-                },
-                complete 	: function() {
-                    searchFlag=false;
-                }
-            });
-        }
-        function getSelectOption( data ){
-            var str = '';
-            for (var i = 0; i < data.length; i++) {
-                str += '<option value="'+data[i].code+'">'+data[i].codeName+'</option>';
-            }
-            return str;
-        }
-
-
-
-        function getCondition( ){
-            var filterVal = {};
-
-            if( isConsent()){
-                filterVal.consentNo = $('#consentNo').val();
-                filterVal.consentName = $('#consentName').text();
-                //filterVal.consentIp = $('#consentIp').val();
-                //filterVal.consentEmail = $('#consentEmail').val();
-                filterVal.consentUserId = $('#consentUserId').val();
-            }
-
-            var conArray = [];
-            conArray.push( createCondition( ) );
-            filterVal.conditions = conArray;
-
-            //console.log(JSON.stringify(filterVal))
-            return filterVal;
-        }
-
-        function createCondition( ){
-            var allSelect = new Array();
-            var condition = {};
-            if( $('#serviceTypeSelect').selectpicker('val') == null ) {
-                $('#serviceTypeSelect option').each(function(){
-                    if( $(this).val() != '' && $(this).val() != null ) allSelect.push( $(this).val() );
-                });
-                condition.serviceType = arrayToString(allSelect);
-            } else {
-                condition.serviceType = arrayToString($('#serviceTypeSelect').selectpicker('val'));
-            }
-            condition.searchStr = $('#searchStrInput').val();
-            condition.senders = $('#senders').val();
-            condition.attachYn = $('input:radio[name=attachYn]:input:checked').val();
-            condition.busi = arrayToString($('#busiSelect').selectpicker('val'));
-
-            if(condition.busi != '') condition.busiStr = $('#busiSelect').parent().find('.filter-option').text();
-            else condition.busiStr = '';
-
-            var dv = $('#deptVal').val().split('|');
-            condition.dept = dv.join(',');
-            if(condition.dept != '') condition.deptStr = $('#deptStr').val();
-            else condition.deptStr = '';
-            /* condition.dept = arrayToString($('#deptSelect').selectpicker('val'));
-			if(condition.dept != '') condition.deptStr = $('#deptSelect').parent().find('.filter-option').text();
-			else condition.deptStr = ''; */
-
-            condition.period = 1;
-            condition.startDt = $('#startdatepicker').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
-            condition.endDt = $('#enddatepicker').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
-
-            return condition;
-        }
-
-        function arrayToString( array ){
-            if( array == null || array == undefined ) return "";
-            else{
-                return array.toString();
-            }
-        }
-        function stringToArray( string ){
-            if( string == null || string == undefined || string == '' ) return '';
-            else if( typeof string !='string') return string;
-            else{
-                return string.split(',');
-            }
-        }
-
-        function fileInfoViewer( xrootmtr, srcip, usr_id ){
-            var startDt = $('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
-            var endDt = $('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
-            var searchStr = '';
-
-            var url    = '<c:url value="/ems/participantFileInfoPop.do?xrootmtr='+xrootmtr+'&srcip='+srcip+'&usr_id='+usr_id+'&startDt='+startDt+'&endDt='+endDt+'&searchStr='+encodeURI(searchStr)+'"/>';
-            var pop = fnOpenWindow(url, 'fileInfoPop', 1000, 400, 'resize');
-        }
-
-        function participantInfoViewer( xrootmtr, usr_id ){
-            var srcip = $('#srcip').text();
-            var startDt = $('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
-            var endDt = $('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
-            var searchStr = '';
-
-            var url    = '<c:url value="/ems/participantInfoPop.do?xrootmtr='+xrootmtr+'&srcip='+srcip+'&usr_id='+usr_id+'&startDt='+startDt+'&endDt='+endDt+'&searchStr='+searchStr+'"/>';
-            var pop = fnOpenWindow(url, 'participant', 1015, 450, 'resize');
-        }
-
-        let searchParam = {
-            xrootmtr :  $('#xrootmtr').text(),
-            attachYn : 'Y'
-        };
+		function getCodeList( codeType ){
+			ui.get({
+				url 		: 'getCodeList.xcn',
+				codeType	: codeType,
+				success 	: function(data, total) {
+					$('#'+codeType+'Select').html(getSelectOption( data ));
+					$('#'+codeType+'Select').selectpicker('refresh');
+					$('#'+codeType+'SelectPop').html(getSelectOption( data ));
+					$('#'+codeType+'SelectPop').selectpicker('refresh');
+				},
+				error 		: function(status, message) {
+					ui.alertMsg('error:' + status);
+				},
+				complete 	: function() {
+					searchFlag=false;
+				}
+			});
+		}
+		function getSelectOption( data ){
+			var str = '';
+			for (var i = 0; i < data.length; i++) {
+				str += '<option value="'+data[i].code+'">'+data[i].codeName+'</option>';
+			}
+			return str;
+		}
 
 
-        function getParticipantFileList(){
-            ui.get({
-                url : 'getMessengerGroupAttachList.xcn',
-                searchParam : JSON.stringify(searchParam),
-                success : function(data, total) {
-                    alert( JSON.stringify( data ) );
-                    //getFileList(data);
-                },
-                error : function(status, message) {
-                    ui.alertMsg(message);
-                },
-                complete : function() {
 
-                }
-            });
-        }
+		function getCondition( ){
+			var filterVal = {};
 
-        function getMessengerList(){
-            ui.get({
-                url : 'getMessengerList.xcn',
-                asyncFlag : false,
-                success : function(data, total) {
-                    messengerListCnt = data.length;
-                    if( data.length > 0 ){
-                        $('#serviceTypeSelect').html( getSelectOptionMessenger( data ) );
-                    }
-                },
-                error : function(status, message) {
-                    ui.alertMsg('error:' + status);
-                },
-                complete : function() {
-                    searchFlag=false;
-                }
-            });
-        }
+			if( isConsent()){
+				filterVal.consentNo = $('#consentNo').val();
+				filterVal.consentName = $('#consentName').text();
+				//filterVal.consentIp = $('#consentIp').val();
+				//filterVal.consentEmail = $('#consentEmail').val();
+				filterVal.consentUserId = $('#consentUserId').val();
+			}
 
-        function getSelectOptionMessenger( data ){
-            //var str = '<option value="">- <s:message code="eikon.msg.svcType"/> -</option>';
-            var str = '';
-            for (var i = 0; i < data.length; i++) {
-                str += '<option value="'+data[i].code+'">'+data[i].codeName+'</option>';
-            }
-            return str;
-        }
+			var conArray = [];
+			conArray.push( createCondition( ) );
+			filterVal.conditions = conArray;
 
-        function getSelectedCodeData( codeType, data ) {
-            var str = '';
-            var val = '';
-            for(var i=0; i<data.length; i++){
-                str += data[i].codeName;
-                val += data[i].code;
-                if( codeType == 'regexp' ) {
-                    var arr = data[i].count.split('@');
-                    if( arr[0] == 'B' ) str += '(' + arr[1] + '<s:message code="selectCodeAll.items"/> ~ ' + arr[2] + '<s:message code="selectCodeAll.items"/>)';
-                    else if( arr[0] == 'L' ) str += '(' + arr[1] + '<s:message code="selectCodeAll.items"/> <s:message code="selectCodeAll.over"/>)';
-                    else str += '(' + arr[1] + '<s:message code="selectCodeAll.items"/> <s:message code="selectCodeAll.below"/>)';
-                    val += '%' + data[i].count;
-                }
+			//console.log(JSON.stringify(filterVal))
+			return filterVal;
+		}
 
-                if( i != data.length-1){
-                    str +=', ';
-                    val +='|';
-                }
-            }
-            if( val != '' ){
-                str = str.rtrim();
-                val = val.trimAll();
-            }
+		function createCondition( ){
+			var allSelect = new Array();
+			var condition = {};
+			if( $('#serviceTypeSelect').selectpicker('val') == null ) {
+				$('#serviceTypeSelect option').each(function(){
+					if( $(this).val() != '' && $(this).val() != null ) allSelect.push( $(this).val() );
+				});
+				condition.serviceType = arrayToString(allSelect);
+			} else {
+				condition.serviceType = arrayToString($('#serviceTypeSelect').selectpicker('val'));
+			}
+			condition.searchStr = $('#searchStrInput').val();
+			condition.senders = $('#senders').val();
+			condition.attachYn = $('input:radio[name=attachYn]:input:checked').val();
+			condition.busi = arrayToString($('#busiSelect').selectpicker('val'));
 
-            $('#'+codeType+'Str').val(str);
-            $('#'+codeType+'Val').val(val);
+			if(condition.busi != '') condition.busiStr = $('#busiSelect').parent().find('.filter-option').text();
+			else condition.busiStr = '';
 
-            if( $('#'+codeType+'Str').val() != '' ){
-                $('#'+codeType+'SelectedArea').find('.btn').text(data.length);
-                $('#'+codeType+'SelectedArea').show();
-            }else{
-                $('#'+codeType+'SelectedArea').find('.btn').text(0);
-                $('#'+codeType+'SelectedArea').hide();
-            }
-        }
+			var dv = $('#deptVal').val().split('|');
+			condition.dept = dv.join(',');
+			if(condition.dept != '') condition.deptStr = $('#deptStr').val();
+			else condition.deptStr = '';
+			/* condition.dept = arrayToString($('#deptSelect').selectpicker('val'));
+            if(condition.dept != '') condition.deptStr = $('#deptSelect').parent().find('.filter-option').text();
+            else condition.deptStr = ''; */
 
-        function resetCode(codeType){
-            if( codeType == 'deptByCo' )  $('#deptByCoStrSpan').html('');
-            $('#'+codeType+'Val').val('');
-            $('#'+codeType+'Str').val('');
-            $('#'+codeType+'SelectedArea').hide();
-        }
+			condition.period = 1;
+			condition.startDt = $('#startdatepicker').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
+			condition.endDt = $('#enddatepicker').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
+
+			return condition;
+		}
+
+		function arrayToString( array ){
+			if( array == null || array == undefined ) return "";
+			else{
+				return array.toString();
+			}
+		}
+		function stringToArray( string ){
+			if( string == null || string == undefined || string == '' ) return '';
+			else if( typeof string !='string') return string;
+			else{
+				return string.split(',');
+			}
+		}
+
+		function fileInfoViewer( xrootmtr, srcip, usr_id ){
+			var startDt = $('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+			var endDt = $('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+			var searchStr = '';
+
+			var url    = '<c:url value="/ems/participantFileInfoPop.do?xrootmtr='+xrootmtr+'&srcip='+srcip+'&usr_id='+usr_id+'&startDt='+startDt+'&endDt='+endDt+'&searchStr='+encodeURI(searchStr)+'"/>';
+			var pop = fnOpenWindow(url, 'fileInfoPop', 1000, 400, 'resize');
+		}
+
+		function participantInfoViewer( xrootmtr, usr_id ){
+			var srcip = $('#srcip').text();
+			var startDt = $('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+			var endDt = $('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+			var searchStr = '';
+
+			var url    = '<c:url value="/ems/participantInfoPop.do?xrootmtr='+xrootmtr+'&srcip='+srcip+'&usr_id='+usr_id+'&startDt='+startDt+'&endDt='+endDt+'&searchStr='+searchStr+'"/>';
+			var pop = fnOpenWindow(url, 'participant', 1015, 450, 'resize');
+		}
+
+		function getParticipantFileList(){
+			var xrootmtr = $('#xrootmtr').text();
+			ui.get({
+				url : 'getMessengerGroupAttachList.xcn',
+				xRootMtr : xrootmtr,
+				success : function(data, total) {
+					alert( JSON.stringify( data ) );
+					//getFileList(data);
+				},
+				error : function(status, message) {
+					ui.alertMsg(message);
+				},
+				complete : function() {
+
+				}
+			});
+		}
+
+		function getMessengerList(){
+			ui.get({
+				url : 'getMessengerList.xcn',
+				asyncFlag : false,
+				success : function(data, total) {
+					messengerListCnt = data.length;
+					if( data.length > 0 ){
+						$('#serviceTypeSelect').html( getSelectOptionMessenger( data ) );
+					}
+				},
+				error : function(status, message) {
+					ui.alertMsg('error:' + status);
+				},
+				complete : function() {
+					searchFlag=false;
+				}
+			});
+		}
+
+		function getSelectOptionMessenger( data ){
+			//var str = '<option value="">- <s:message code="eikon.msg.svcType"/> -</option>';
+			var str = '';
+			for (var i = 0; i < data.length; i++) {
+				str += '<option value="'+data[i].code+'">'+data[i].codeName+'</option>';
+			}
+			return str;
+		}
+
+		function getSelectedCodeData( codeType, data ) {
+			var str = '';
+			var val = '';
+			for(var i=0; i<data.length; i++){
+				str += data[i].codeName;
+				val += data[i].code;
+				if( codeType == 'regexp' ) {
+					var arr = data[i].count.split('@');
+					if( arr[0] == 'B' ) str += '(' + arr[1] + '<s:message code="selectCodeAll.items"/> ~ ' + arr[2] + '<s:message code="selectCodeAll.items"/>)';
+					else if( arr[0] == 'L' ) str += '(' + arr[1] + '<s:message code="selectCodeAll.items"/> <s:message code="selectCodeAll.over"/>)';
+					else str += '(' + arr[1] + '<s:message code="selectCodeAll.items"/> <s:message code="selectCodeAll.below"/>)';
+					val += '%' + data[i].count;
+				}
+
+				if( i != data.length-1){
+					str +=', ';
+					val +='|';
+				}
+			}
+			if( val != '' ){
+				str = str.rtrim();
+				val = val.trimAll();
+			}
+
+			$('#'+codeType+'Str').val(str);
+			$('#'+codeType+'Val').val(val);
+
+			if( $('#'+codeType+'Str').val() != '' ){
+				$('#'+codeType+'SelectedArea').find('.btn').text(data.length);
+				$('#'+codeType+'SelectedArea').show();
+			}else{
+				$('#'+codeType+'SelectedArea').find('.btn').text(0);
+				$('#'+codeType+'SelectedArea').hide();
+			}
+		}
+
+		function resetCode(codeType){
+			if( codeType == 'deptByCo' )  $('#deptByCoStrSpan').html('');
+			$('#'+codeType+'Val').val('');
+			$('#'+codeType+'Str').val('');
+			$('#'+codeType+'SelectedArea').hide();
+		}
 	</script>
 </head>
 <body class="mini-navbar">
@@ -999,8 +994,8 @@
 								<select id="busiSelect" class="selectpicker" data-style="btn-default btn-sm" multiple data-show-subtext="true" data-live-search="true" data-actions-box="true"></select>
 							</div>
 							<%-- <div class="input-group select-xs" style="width:150px;display:inline-block;">
-								<select id="deptSelect" class="selectpicker" data-style="btn-default" multiple data-show-subtext="true" data-live-search="true" data-actions-box="true"></select>
-							</div> --%>
+                                <select id="deptSelect" class="selectpicker" data-style="btn-default" multiple data-show-subtext="true" data-live-search="true" data-actions-box="true"></select>
+                            </div> --%>
 							<div id="selectedCodeTitle"></div>
 							<div class="btn-group" data-toggle="buttons" style="margin-top: 0px;">
 								<button type="button" class="btn btn-sm btn-default" id="dept"><span class="glyphicon glyphicon-plus-sign"></span>&nbsp;<s:message code="common.org.choose.dept"/></button>
@@ -1124,7 +1119,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="row" style="height: calc(100% - 180px);padding:0 3px 0 5px;">
+				<div class="row" style="height: calc(100% - 160px);padding:0 3px 0 5px;">
 					<div id="scrollArea" class="clusterize-scroll">
 						<div class="messenger_prev" title="<s:message code='eikon.msg.show.prev'/>">+</div>
 						<div id="timeline_list" style="padding-right:10px;">
@@ -1147,6 +1142,11 @@
 			</div>
 		</div>
 	</div>
+</div>
+<div style="width: 0%;height: 0px;">
+	<script type="text/javascript">
+		LoadInnoFD( 1, 1 );
+	</script>
 </div>
 <iframe id="AttachDown" src="about:blank;" height="0" width="0" style="display: none;" ></iframe>
 <!-- Back to top -->

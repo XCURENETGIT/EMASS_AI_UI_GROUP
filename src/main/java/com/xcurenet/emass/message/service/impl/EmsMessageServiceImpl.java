@@ -1,28 +1,25 @@
 package com.xcurenet.emass.message.service.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jcraft.jsch.JSchException;
 import com.xcurenet.code.service.CodeVO;
 import com.xcurenet.common.dao.TransactionManager;
 import com.xcurenet.common.dao.XcnAbstractDAO;
 import com.xcurenet.common.ftp.SFTPUtil;
+import com.xcurenet.common.image.ImageUtils;
 import com.xcurenet.common.util.Common;
-import com.xcurenet.common.util.MongoUtil;
 import com.xcurenet.common.util.config.Config;
+import com.xcurenet.config.service.ConfigAdminService;
+import com.xcurenet.config.service.ConfigAdminVO;
 import com.xcurenet.emass.consent.service.ConsentService;
 import com.xcurenet.emass.consent.service.ConsentVO;
 import com.xcurenet.emass.message.service.*;
-import com.xcurenet.emass.message.vo.emass.mongo.EmassMessage;
-import com.xcurenet.emass.message.vo.emass.mongo.fields.CheckedVo_Mgo;
-import com.xcurenet.emass.message.vo.emass.mongo.fields.PiVo_Mgo;
-import com.xcurenet.emass.message.vo.emass.mongo.fields.RecvVo_Mgo;
+import com.xcurenet.emass.message.web.EmsAttachDownload;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.mail.EmailException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -35,6 +32,8 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.Reader;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -50,32 +49,41 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 	@Resource(name = "consentService")
 	public ConsentService consentService;
 
+	@Resource(name = "solrEdcService")
+	private SolrEdcService solrEdcService;
+
 	@Autowired
-	MongoUtil mongoUtil;
-
-
-	ObjectMapper objectMapper = new ObjectMapper();
-
-	public String MESSAGE_SCHEME = "EMS_MESSAGE";
+	public ConfigAdminService configAdminService;
 
 	@Override
 	public EmsBodyVO getEmassBody(String msgId, String firstAdminYn, String adminType) {
-		EmsBodyVO bodyVo = mongoUtil.selectId(msgId, EmsBodyVO.class, MESSAGE_SCHEME);
-		return bodyVo;
-	}
-
-//	@Override
-//	public EmsBodyVO getEmassBody(String msgId, String firstAdminYn, String adminType) {
-
-/*
-		Query query= new Query(Criteria.where("_id").is(msgId));
 		EmsBodyVO bodyVo = new EmsBodyVO();
 
 		if (Common.isEquals(Config.getString("body.samsung.tables"), "Y")) {
-			if (Integer.valueOf(msgId.substring(4, 6)) > 6) bodyVo = selectOne("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".emass.getEmassBodySm", msgId);
-			else bodyVo = selectOne("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".emass.getEmassBodySm", msgId);
-		} else bodyVo = selectOne("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".emass.getEmassBodySm", msgId);
 
+			if (Integer.valueOf(msgId.substring(4, 6)) > 6) bodyVo = selectOne("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".emass.getEmassBodySm", msgId);
+			else bodyVo = selectOne("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".emass.getEmassBody", msgId);
+
+		} else bodyVo = selectOne("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".emass.getEmassBody", msgId);
+
+		if (bodyVo == null) {
+
+			EmsMessageVO emsMessage = getEmassMessage(msgId, firstAdminYn, adminType);
+
+			bodyVo = new EmsBodyVO();
+
+			bodyVo.setMsgId(emsMessage.getMsgId());
+			bodyVo.setBodySize(emsMessage.getBodySize());
+			bodyVo.setSubject(emsMessage.getSubject());
+			bodyVo.setSvc(emsMessage.getSvc());
+			bodyVo.setDstIp(emsMessage.getDstIp());
+			bodyVo.setHost(emsMessage.getHost());
+			bodyVo.setPath(emsMessage.getPath());
+			bodyVo.setUserId(emsMessage.getUserId());
+			bodyVo.setName(emsMessage.getName());
+			bodyVo.setCtime(emsMessage.getCtime());
+			bodyVo.setEpmsgType(emsMessage.getEpmsgType());
+		}
 
 		if (Common.isEquals(bodyVo.getBodyType(), "T")) {
 			bodyVo.setBody(Common.nvl(bodyVo.getBodyText()).getBytes());
@@ -83,15 +91,12 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 			if (bodyVo.getBodyPath() == null) return bodyVo;
 			bodyVo.setBody(Common.decryptAfterDecompression(bodyVo.getBodyPath()));
 		}
-		return bodyVo;*/
-
-//		return null;
-//	}
+		return bodyVo;
+	}
 
 	@Override
 	public EmsBodyVO getEmassBodyHash(String msgId) {
 		EmsBodyVO bodyVo = new EmsBodyVO();
-		Query query = new Query(Criteria.where("_id").is(msgId));
 
 		if (Common.isEquals(Config.getString("body.samsung.tables"), "Y")) {
 			if (Integer.valueOf(msgId.substring(4, 6)) > 6) bodyVo = selectOne("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".emass.getEmassBodyHashSm", msgId);
@@ -104,7 +109,6 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 	@Override
 	public List<EmsKeywordVO> getEmassKeyword(String msgId) {
 		List<EmsKeywordVO> keywordVo = new ArrayList<>();
-		Query query = new Query(Criteria.where("_id").is(msgId));
 
 		if (Common.isEquals(Config.getString("body.samsung.tables"), "Y")) {
 			if (Integer.valueOf(msgId.substring(4, 6)) > 6) keywordVo = selectList("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".emass.getEmassKeywordSm", msgId);
@@ -116,8 +120,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 
 	@Override
 	public EmsHeaderVO getEmassHeader(String msgId) {
-
-		EmsHeaderVO headerVo = mongoUtil.selectId(msgId, EmsHeaderVO.class, MESSAGE_SCHEME);
+		EmsHeaderVO headerVo = selectOne("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".emass.getEmassHeader", msgId);
 
 		if (headerVo == null || headerVo.getHeaderPath() == null) return null;
 		headerVo.setHeader(Common.decryptAfterDecompression(headerVo.getHeaderPath()));
@@ -125,38 +128,118 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 	}
 
 	@Override
-	public EmassMessage getEmassMessage(String msgId, String firstAdminYn, String adminType) {
+	public EmsMessageVO getEmassMessage(String msgId, String firstAdminYn, String adminType) {
 		Map<String, Object> param = new HashMap<>();
 		param.put("infoFeedbackConf", Config.getBoolean("info.feedback.used"));
 		param.put("msgId", msgId);
-		EmassMessage emassMessage = mongoUtil.selectId(msgId, EmassMessage.class, MESSAGE_SCHEME);
-		if (emassMessage == null) {
+
+		EmsMessageVO emsMessageVO = selectOne("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".emass.getEmassMessage", param);
+		if (emsMessageVO == null) {
 			log.info("[Message Not Found] msgid:{}", msgId);
 			return null;
 		} else {
-			return getConsentMessage(emassMessage, firstAdminYn, adminType);
+			return getConsentMessage(emsMessageVO, firstAdminYn, adminType);
 		}
 	}
 
 	@Override
-	public EmassMessage getEmassMessageNew(String adminId, String msgId, String firstAdminYn, String adminType) {
+	public EmsMessageVO getEmassMessageNew(String adminId, String msgId, String firstAdminYn, String adminType) {
+
 		Map<String, Object> param = new HashMap<>();
 		param.put("infoFeedbackConf", Config.getBoolean("info.feedback.used"));
 		param.put("msgId", msgId);
 
-		EmassMessage emassMessage = mongoUtil.selectId(msgId, EmassMessage.class, MESSAGE_SCHEME);
+		EmsMessageVO emsMessageVO = selectOne("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".emass.getEmassMessage", param);
 
-		/* response Data mapping */
-		if (emassMessage == null) {
+		if (emsMessageVO == null) {
 			log.info("[Message Not Found] msgid:{}", msgId);
 			return null;
 		} else {
-			return getConsentMessage(emassMessage, firstAdminYn, adminType);
+			// 예약어
+			if (Common.isEquals(emsMessageVO.getKwd(), "Y")) {
+				List<EmsKeywordVO> emsKeywordVOList = this.getEmassKeyword(msgId);
+				for (int i = 0; i < emsKeywordVOList.size(); i++) {
+					EmsKeywordVO emsKeywordVO = emsKeywordVOList.get(i);
+					String type = emsKeywordVO.getType();
+					String keyword = emsKeywordVO.getKeyword();
+					if (Common.isEquals(type, "A")) {
+						if (Common.isEmpty(emsMessageVO.getAttachStr())) emsMessageVO.setAttachStr(keyword);
+						else emsMessageVO.setAttachStr(emsMessageVO.getAttachStr() + ", " + keyword);
+					} else if (Common.isEquals(type, "F")) {
+						if (Common.isEmpty(emsMessageVO.getFileNameStr())) emsMessageVO.setFileNameStr(keyword);
+						else emsMessageVO.setFileNameStr(emsMessageVO.getFileNameStr() + ", " + keyword);
+					} else if (Common.isEquals(type, "S")) {
+						if (Common.isEmpty(emsMessageVO.getSubjectStr())) emsMessageVO.setSubjectStr(keyword);
+						else emsMessageVO.setSubjectStr(emsMessageVO.getSubjectStr() + ", " + keyword);
+					} else if (Common.isEquals(type, "B")) {
+						if (Common.isEmpty(emsMessageVO.getBodyStr())) emsMessageVO.setBodyStr(keyword);
+						else emsMessageVO.setBodyStr(emsMessageVO.getBodyStr() + ", " + keyword);
+					}
+				}
+			}
+			emsMessageVO.setSubject(EmsReDefined.reSubject(emsMessageVO));
+
+			List<EmsRecvVO> users = this.getEmassUserInfo(msgId);
+			List<EmsRecvVO> user = new ArrayList<>();
+			List<EmsRecvVO> sender = new ArrayList<>();
+			List<EmsRecvVO> recvs = new ArrayList<>();
+			List<EmsRecvVO> to = new ArrayList<>();
+			List<EmsRecvVO> cc = new ArrayList<>();
+			List<EmsRecvVO> bcc = new ArrayList<>();
+
+			ConfigAdminVO configAdminVO = configAdminService.getConfAdmin(Config.USER_FORMAT, adminId);
+			if (configAdminVO == null || Common.isEmpty(configAdminVO.getVal())) {
+				configAdminVO = new ConfigAdminVO();
+				configAdminVO.setVal(Config.getString(Config.USER_FORMAT, "#name#/#email#/#businm#/#deptnm#/#jikgubnm#/#ip#"));
+			}
+			String formatval = configAdminVO.getVal();
+			log.info("Message : " + emsMessageVO);
+			for (int i = 0; i < users.size(); i++) {
+				EmsRecvVO u = EmsReDefined.reUserIp(users.get(i), Common.nvl(emsMessageVO.getSrcIp()), Common.nvl(emsMessageVO.getDstIp()), Common.nvl(emsMessageVO.getUsrIp()));
+
+				if (Common.isEquals(u.getUType(), "U")) {
+					u.setEMail(EmsReDefined.reUserEmail(users.get(i), Common.nvl(emsMessageVO.getUser())));
+					u.setViewStr(EmsReDefined.reUser(u, formatval));
+					user.add(u);
+				} else if (Common.isEquals(u.getUType(), "F")) {
+					u.setEMail(EmsReDefined.reUserEmail(users.get(i), Common.nvl(emsMessageVO.getSender())));
+					u.setViewStr(EmsReDefined.reUser(u, formatval));
+					sender.add(u);
+				} else if (Common.isEquals(u.getUType(), "T")) {
+					u.setEMail(EmsReDefined.reUserEmail(users.get(i)));
+					u.setViewStr(EmsReDefined.reUser(u, formatval));
+					recvs.add(u);
+					to.add(u);
+				} else if (Common.isEquals(u.getUType(), "C")) {
+					u.setEMail(EmsReDefined.reUserEmail(users.get(i)));
+					u.setViewStr(EmsReDefined.reUser(u, formatval));
+					recvs.add(u);
+					cc.add(u);
+				} else if (Common.isEquals(u.getUType(), "B")) {
+					u.setEMail(EmsReDefined.reUserEmail(users.get(i)));
+					u.setViewStr(EmsReDefined.reUser(u, formatval));
+					recvs.add(u);
+					bcc.add(u);
+				}
+			}
+			emsMessageVO.setUserList(user);
+			emsMessageVO.setSenderList(sender);
+			emsMessageVO.setRecvsList(recvs);
+			emsMessageVO.setToList(to);
+			emsMessageVO.setCcList(cc);
+			emsMessageVO.setBccList(bcc);
+
+			if (Common.isNotEmpty(emsMessageVO.getIpBusicd())) emsMessageVO.setIpBusiNm(Common.nvl(getIpBusiNm(emsMessageVO.getIpBusicd())).equals("") ? "unknown" : getIpBusiNm(emsMessageVO.getIpBusicd()));
+			else emsMessageVO.setIpBusiNm("");
+
+			if (Common.isNotEmpty(emsMessageVO.getIpDeptcd())) emsMessageVO.setIpDeptNm(Common.nvl(getIpDeptNm(emsMessageVO.getIpDeptcd())).equals("") ? "unknown" : getIpDeptNm(emsMessageVO.getIpDeptcd()));
+			else emsMessageVO.setIpDeptNm("");
+
+			emsMessageVO.setFiles(getEmassAttachInfoConsent(msgId, firstAdminYn, adminType));
+			emsMessageVO.setPatterns(this.getEmassPattern(msgId));
+			return getConsentMessage(emsMessageVO, firstAdminYn, adminType);
 		}
-
-
 	}
-
 
 	@Override
 	public String getIpBusiNm(String ipBusicd) {
@@ -190,103 +273,99 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		boolean consentFlag = Config.getBoolean("consent.menu.enable");
 		if (!consentFlag || Common.isEquals(firstAdminYn, "Y")) return true;
 
-	/*	Map<String, Object> param = new HashMap<>();
+		Map<String, Object> param = new HashMap<>();
 		param.put("infoFeedbackConf", Config.getBoolean("info.feedback.used"));
 		param.put("infoHynixConf", Config.getBoolean("info.hynix.used"));
-		param.put("msgId", msgId);*/
+		param.put("msgId", msgId);
 
-		EmassMessage emassMessage = getConsentMessage(mongoUtil.selectId(msgId, EmassMessage.class, MESSAGE_SCHEME), firstAdminYn, adminType);
-		return emassMessage.isConsentFlag();
+		EmsMessageVO emsMessageVO = getConsentMessage(selectOne("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".emass.getEmassMessage", param), firstAdminYn, adminType);
+		return emsMessageVO.isConsentFlag();
 	}
 
-	private EmassMessage getConsentMessage(EmassMessage emassMessage, String firstAdminYn, String adminType) {
+	private EmsMessageVO getConsentMessage(EmsMessageVO emsMessageVO, String firstAdminYn, String adminType) {
 		boolean consentFlag = Config.getBoolean("consent.menu.enable");
-		emassMessage.setConsentFlag(true);
+		emsMessageVO.setConsentFlag(true);
 
-		if (!consentFlag || Common.isEquals(firstAdminYn, "Y")) return emassMessage;
+		if (!consentFlag || Common.isEquals(firstAdminYn, "Y")) return emsMessageVO;
 
 		if (consentFlag && Common.isNotEquals(firstAdminYn, "Y") && Common.isNotEquals(adminType, "C")) {
 			boolean consentRtnFlag = false;
 			List<ConsentVO> consentList = consentService.getConsentSearchList("", "");
 			for (int i = 0; i < consentList.size(); i++) {
 				ConsentVO consent = consentList.get(i);
-				if (Common.isEquals(emassMessage.getUser().getId(), consent.getUserId())) {
+				if (Common.isEquals(emsMessageVO.getUserId(), consent.getUserId())) {
 					consentRtnFlag = true;
 					break;
 				}
 			}
 			if (!consentRtnFlag) {
-				emassMessage = new EmassMessage();
-				emassMessage.setConsentFlag(consentRtnFlag);
+				emsMessageVO = new EmsMessageVO();
+				emsMessageVO.setConsentFlag(consentRtnFlag);
 			}
 		}
-		return emassMessage;
+		return emsMessageVO;
 	}
 
 	@Override
-	public RecvVo_Mgo getEmassRecvInfo(String msgId) {
-		RecvVo_Mgo recvList = mongoUtil.selectId(msgId, RecvVo_Mgo.class, MESSAGE_SCHEME);
-		return recvList;
+	public List<EmsRecvVO> getEmassUserInfo(String msgId) {
+		Map<String, String> param = new HashMap<>();
+		param.put("msgId", msgId);
+		return selectList("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".emass.getEmassUserInfo", param);
 	}
 
 	@Override
-	public RecvVo_Mgo getEmassRecvInfo(String msgId, String uType) {
-//		Query query = new Query(Criteria.where("_id").is(msgId));
-////		if(uType!=null && uType!=""){
-////			query.addCriteria(Criteria.where("UTYPE").in(uType));
-////		}
-//		return mongoUtil.selectList(query,RecvVo_Mgo.class,MESSAGE_SCHEME);
-		return null;
+	public List<EmsRecvVO> getEmassUserInfo(String msgId, String uType) {
+		Map<String, String> param = new HashMap<>();
+		param.put("msgId", msgId);
+		param.put("uType", uType);
+		return selectList("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".emass.getEmassUserInfo", param);
 	}
-
 
 	@Override
 	public List<EmsAttachVO> getEmassAttachInfoConsent(String msgId, String firstAdminYn, String adminType) {
-/*
+		Map<String, String> param = new HashMap<>();
 		Map<String, String> param2 = new HashMap<>();
-		Query query= new Query();
 		String[] msgIds = Common.toArray(msgId, ",");
-		if (msgIds.length == 1) {query.addCriteria(Criteria.where("_id").is(msgId));}
-		else {query.addCriteria(Criteria.where("_id").is(msgIds));}
+		if (msgIds.length == 1) param.put("msgId", msgId);
+		else param.put("msgIds", msgId);
 
 		String infoHynix = Config.getString("info.hynix.used");
-		EmassMessage emsMessageVO = mongoUtil.selectOne(query,EmassMessage.class,MESSAGE_SCHEME);
+		List<EmsAttachVO> emsAttachVOList = selectList("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".emass.getEmassAttachInfo", param);
 
 		String attachId = "";
 		int ml_confd_class, mlFeedbackYN;
 		double ml_confd_prob;
 		String mlFeedbackComment, mlFeedbackTimeStr, ml_confd_classStr, mlFeedbackYNStr, features;
 
-		List<AttachVo_Mgo> emsAttachVOList = emsMessageVO.getAttach();
-//		MlVo_Mgo MlVo = emsMessageVO.getMl();
-//		// .merged 파일로 인한 재정렬
-//		Collections.sort(emsAttachVOList, new Comparator<MlVo_Mgo>() {
-//			public int compare(EmsAttachVO o1, EmsAttachVO o2) {
-//				String oneAttachId = o1.getAttachId();
-//				String nextAttachId = o2.getAttachId();
-//				int re = 0;
-//				if (oneAttachId.startsWith("/") && nextAttachId.startsWith("/")) {
-//					re = oneAttachId.substring(oneAttachId.lastIndexOf("/") + 1).compareTo(nextAttachId.substring(nextAttachId.lastIndexOf("/") + 1));
-//				} else if (oneAttachId.startsWith("/")) {
-//					re = oneAttachId.substring(oneAttachId.lastIndexOf("/") + 1).compareTo(nextAttachId);
-//				} else if (nextAttachId.startsWith("/")) {
-//					re = nextAttachId.substring(oneAttachId.lastIndexOf("/") + 1).compareTo(oneAttachId);
-//				} else {
-//					re = oneAttachId.compareTo(nextAttachId);
-//				}
-//
-//				return re;
-//			}
-//		});
+		// .merged 파일로 인한 재정렬
+		Collections.sort(emsAttachVOList, new Comparator<EmsAttachVO>() {
+			@Override
+			public int compare(EmsAttachVO o1, EmsAttachVO o2) {
+				String oneAttachId = o1.getAttachId();
+				String nextAttachId = o2.getAttachId();
+				int re = 0;
+				if (oneAttachId.startsWith("/") && nextAttachId.startsWith("/")) {
+					re = oneAttachId.substring(oneAttachId.lastIndexOf("/") + 1).compareTo(nextAttachId.substring(nextAttachId.lastIndexOf("/") + 1));
+				} else if (oneAttachId.startsWith("/")) {
+					re = oneAttachId.substring(oneAttachId.lastIndexOf("/") + 1).compareTo(nextAttachId);
+				} else if (nextAttachId.startsWith("/")) {
+					re = nextAttachId.substring(oneAttachId.lastIndexOf("/") + 1).compareTo(oneAttachId);
+				} else {
+					re = oneAttachId.compareTo(nextAttachId);
+				}
+
+				return re;
+			}
+		});
 
 		EmsAttachDownload attachDown = new EmsAttachDownload();
 		for (int i = 0; i < emsAttachVOList.size(); i++) {
 			EmsMlFeedbackVO emsResultVO = null;
 			EmsMlFeedbackVO emsFeedbackVO = null;
-			AttachVo_Mgo emsAttachVO = emsAttachVOList.get(i);
+			EmsAttachVO emsAttachVO = emsAttachVOList.get(i);
 
 			if (Common.isEquals(infoHynix, "true")) {
-				attachId = emsAttachVO.getId();
+				attachId = emsAttachVO.getAttachId();
 				param2.put("msgId", msgId);
 				param2.put("attachId", attachId);
 
@@ -342,7 +421,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 			}
 
 			Map<String, String> hashParam = new HashMap<>();
-			String attachHash = Common.nvl(emsAttachVO);
+			String attachHash = Common.nvl(emsAttachVO.getAttachHash());
 			hashParam.put("attachHash", attachHash);
 
 //			if(Common.isEmpty(emsAttachVO.getAttachTextPath()) && Common.isEmpty(emsAttachVO.getAttachTextHarPath()) && Common.isNotEmpty(attachHash)) {
@@ -372,8 +451,6 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 				}
 			}
 		}
-
-
 		for (int j = 0; j < msgIds.length; j++) {
 			if (!isConsent(msgIds[j], firstAdminYn, adminType)) {
 				for (int i = 0; i < emsAttachVOList.size(); i++) {
@@ -386,26 +463,31 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		if (Common.isEquals(infoHynix, "true")) {
 			Collections.sort(emsAttachVOList);
 		}
-*/
 
-		return null;
+		return emsAttachVOList;
 	}
 
-/*
 	@Override
 	public List<EmsAttachVO> getEmassAttachInfo4Down(String msgId, String attachId) {
-	Map<String, String> param = new HashMap<>();
+		Map<String, String> param = new HashMap<>();
 		param.put("msgId", msgId);
 		param.put("attachId", attachId);
 
-		EmsMessageVO emsMessageVO= mongoUtil.selectId(msgId,EmsMessageVO.class,MESSAGE_SCHEME);
-
-		List<EmsAttachVO>list= emsMessageVO.getAttachInfo();
-
-
-		return list;
-
-	}*/
+		EmsAttachVO msg = selectOne("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".emass.getEmassAttachInfoMessage", param);
+		List<EmsAttachVO> attachs = selectList("emass.getEmassAttachInfo4Down", param);
+		for (EmsAttachVO attach : attachs) {
+			attach.setSubject(msg.getSubject());
+			attach.setSvc(msg.getSvc());
+			attach.setSrcIp(msg.getSrcIp());
+			attach.setDstIp(msg.getDstIp());
+			attach.setHost(msg.getHost());
+			attach.setPath(msg.getPath());
+			attach.setUserId(msg.getUserId());
+			attach.setName(msg.getName());
+			attach.setCtime(msg.getCtime());
+		}
+		return attachs;
+	}
 
 	@Override
 	public List<EmsAttachVO> getEmassAttachInfo4DownHash(String msgIds, String attachHash) {
@@ -426,83 +508,29 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		return selectList("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".emass.getEmassAttachInfo4DownHash", param);
 	}
 
-
-
-/*
 	@Override
 	public EmsAttachVO getEmassAttachInfo(String msgId, String attachId) {
-		*/
-/*Map<String, String> param = new HashMap<>();
+		Map<String, String> param = new HashMap<>();
 		param.put("msgId", msgId);
 		param.put("attachId", attachId);
-
-		return selectOne("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".emass.getEmassAttachInfo", param);*//*
-
-		EmsAttachVO emsAttachVO= new EmsAttachVO();
-
-		EmsMessageVO emsMessageVO =mongoUtil.selectId(msgId,EmsMessageVO.class,MESSAGE_SCHEME);
-
-
-		List<EmsAttachVO>lists =emsMessageVO.getAttachInfo();
-
-		for(int i=0; i<lists.size(); i++){
-			if(lists.get(i).getAttachId().equals(attachId)){
-
-				emsAttachVO=lists.get(i);
-			}
-		}
-		return emsAttachVO;
-
+		return selectOne("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".emass.getEmassAttachInfo", param);
 	}
-*/
 
-/*	//내일 할 부분
 	@Override
 	public EmsAttachTextVO getEmassAttachTextInfo(String msgId, String attachId, String ocrYn) {
 		Map<String, String> param = new HashMap<>();
 		param.put("msgId", msgId);
-		param.put("attachId", attachId);*/
+		param.put("attachId", attachId);
 
-/*		EmsAttachTextVO vo = null;
+		EmsAttachTextVO vo = null;
 		if (Common.isEquals(ocrYn, "Y")) {
-
-			EmsMessageVO emsMessageVO= mongoUtil.selectId(msgId,EmsMessageVO.class,MESSAGE_SCHEME);
-
-			List<EmsAttachVO>list= emsMessageVO.getAttachInfo();
-			EmsAttachVO msg= new EmsAttachVO();
-
-			for(int i=0; i<list.size(); i++){
-				if(list.get(i).getAttachId().equals(attachId)) {
-					msg = list.get(i);
-				}
-			}
-			vo.setAttachName(msg.getAttachName());
-			vo.setAttachPath(msg.getAttachPath());
-			vo.setAttachSize(String.valueOf(msg.getAttachSize()));
-			vo.setAttachTextPath(msg.getAttachTextPath());
-			vo.setAttachExt(msg.getAttachExt());
-
+			vo = selectOne("com.xcurenet.sqlmap.mappers.mysql.emass.getEmassAttachOcrText", param);
 			if (vo == null) return null;
 			if (Common.isNotEmpty(vo.getAttachText())) {
 				vo.setAttachTextTotalLine(Common.toArray(vo.getAttachText(), "\n").length);
 			}
 		} else {
-			EmsMessageVO emsMessageVO= mongoUtil.selectId(msgId,EmsMessageVO.class,MESSAGE_SCHEME);
-
-			List<EmsAttachVO>list= emsMessageVO.getAttachInfo();
-			EmsAttachVO msg= new EmsAttachVO();
-
-			for(int i=0; i<list.size(); i++){
-				if(list.get(i).getAttachId().equals(attachId)) {
-					msg = list.get(i);
-				}
-			}
-			vo.setAttachName(msg.getAttachName());
-			vo.setAttachPath(msg.getAttachPath());
-			vo.setAttachSize(String.valueOf(msg.getAttachSize()));
-			vo.setAttachTextPath(msg.getAttachTextPath());
-			vo.setAttachExt(msg.getAttachExt());
-
+			vo = selectOne("com.xcurenet.sqlmap.mappers.mysql.emass.getEmassAttachText", param);
 			if (vo == null) return null;
 			if (Common.isNotEmpty(vo.getAttachPath())) {
 				String text = Common.toString(Common.toByteArrayGzip(vo.getAttachTextPath(), null), Common.UTF8);
@@ -512,14 +540,16 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		}
 		return vo;
 	}
-	*/
-
 
 	@Override
-	public List<PiVo_Mgo> getEmassPattern(String msgId) {
-		EmassMessage emsMessageVO = mongoUtil.selectId(msgId, EmassMessage.class, MESSAGE_SCHEME);
-		List<PiVo_Mgo> list = emsMessageVO.getPi();
-		return list;
+	public List<EmsPiVO> getEmassPattern(String msgId) {
+		List<EmsPiVO> emsPis = selectList("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".emass.getEmassPattern", msgId);
+		Map<String, PatternVO> pattern = convertMap(selectList("com.xcurenet.sqlmap.mappers.mysql.emass.getPatternAllList", new PatternVO()));
+		for (EmsPiVO emsPi : emsPis) {
+			PatternVO vo = pattern.get(emsPi.getPiid());
+			if (vo != null) emsPi.setPiName(vo.getName());
+		}
+		return emsPis;
 	}
 
 	private Map<String, PatternVO> convertMap(List<PatternVO> list) {
@@ -538,11 +568,6 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		param.put("type", type);
 		param.put("attachName", attachName);
 		return selectList("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".emass.getEmassPatternDetail", param);
-	}
-
-	@Override
-	public EmsAttachTextVO getEmassAttachTextInfo(String msgId, String attachId, String ocrYn) {
-		return null;
 	}
 
 	@Override
@@ -660,29 +685,6 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 	public List<CodeVO> getMessengerList() {
 		return selectList("com.xcurenet.sqlmap.mappers.mysql.code.getMessengerList");
 	}
-
-	@Override
-	public List<CodeVO> getGenerativeList() {
-		return selectList("com.xcurenet.sqlmap.mappers.mysql.code.getGenerativeList");
-	}
-
-	@Override
-	public List<CodeVO> getFileList() {
-		return selectList("com.xcurenet.sqlmap.mappers.mysql.code.getFileList");
-	}
-
-
-	@Override
-	public List<CodeVO> getNoteList() {
-		return selectList("com.xcurenet.sqlmap.mappers.mysql.code.getNoteList");
-	}
-
-
-	@Override
-	public boolean readDoc(String msgId, CheckedVo_Mgo checkedVoMgo) {
-		return mongoUtil.readDoc(msgId, checkedVoMgo, MESSAGE_SCHEME);
-	}
-
 
 	@Override
 	public void updateEmsFeedback(String msgId, String feedback, String adminId) {
@@ -846,9 +848,6 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		}
 	}
 
-
-
-/*
 	@Override
 	public Map<String, List<String>> parseJsonFile(String filePath) {
 
@@ -857,7 +856,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 			JSONParser parser = new JSONParser();
 
 			Object obj = parser.parse(reader);
-			JSONArray jsonArr = (JSONArray) obj;
+			org.json.simple.JSONArray jsonArr = (org.json.simple.JSONArray) obj;
 
 			String decisionDate, fileName, lastUpdated, processId, securityYn, sha256, sourceKey, features = "";
 			String attachId = null;
@@ -903,7 +902,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 			if (jsonArrSize > 0) {
 				for (int i = 0; i < jsonArrSize; i++) {
 					int j = i + 1;
-					JSONObject jsonObj = (JSONObject) jsonArr.get(i);
+					org.json.simple.JSONObject jsonObj = (org.json.simple.JSONObject) jsonArr.get(i);
 					decisionDate = (String) jsonObj.get("decisionDate");
 
 					fileName = (String) jsonObj.get("fileName");
@@ -992,7 +991,6 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		}
 		return null;
 	}
-*/
 
 	private Map<String, List<parseJsonFile>> groupingByMsgId(List<parseJsonFile> sumList) {
 		return sumList.stream().collect(Collectors.groupingBy(parseJsonFile::getMsgId));
@@ -1082,7 +1080,6 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		return filePath;
 	}
 
-
 	private String makeFeedbackJsonFile(JSONArray jsonArray) {
 		log.info("Feedback JSON ARRAY SIZE : {}", jsonArray.size());
 
@@ -1133,7 +1130,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		return selectOne("com.xcurenet.sqlmap.mappers.mysql.config.getMlFeedbackInfo", confId);
 	}
 
-/*	@Override
+	@Override
 	public boolean insertAndUpdateSolrFeedback(String msgId, String feedbackValue) {
 		log.info("Solr Feedback Process Start");
 
@@ -1179,7 +1176,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		boolean updateCheck = solrEdcService.updateSolrFeedbackData(feedbackList);
 
 		return updateCheck;
-	}*/
+	}
 
 	@Override
 	public int updateSkMlFeedback(String msgId, String attachId, int radioFeedbackInt, int attachSecretYnInt) {
@@ -1228,27 +1225,4 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		List<Map<String, Object>> result = selectList("com.xcurenet.sqlmap.mappers." + Config.DBMS_NAME + ".emass.getRecvDomainInfo", param);
 		return result;
 	}
-
-
-	@Override
-	public List<EmsAttachVO> getEmassAttachInfo4Down(String msgId, String attachId) {
-		return null;
-	}
-
-	@Override
-	public boolean insertAndUpdateSolrFeedback(String msgId, String feedbackValue) {
-		return false;
-	}
-
-	@Override
-	public Map<String, List<String>> parseJsonFile(String filePath) {
-		return null;
-	}
-
-	@Override
-	public EmsAttachVO getEmassAttachInfo(String msgId, String attachId) {
-		return null;
-	}
-
-
 }

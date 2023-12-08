@@ -91,6 +91,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			}
 			log.debug("[SORT] : {}", sq.getSortField());
 			log.debug("[QUERY] {}", sq.getQuery());
+			log.info("[QUERY] {}", sq.getQuery());
 			if (Common.isNotEmpty(sq.getFilterQueries())) log.debug("[FILTER_QUERY] {}", StringUtils.join(sq.getFilterQueries(), ' '));
 		} catch (Exception e) {
 		}
@@ -157,10 +158,12 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 					.order(BucketOrder.count(false))
 					.size(maxCount(sq.getFacetLimit()))
 					.minDocCount(sq.getFacetMinCount());
+				if((null != sq.get("group") && Common.isEquals("true",sq.get("group")))) termsAggregation = termsAggregation.subAggregation(AggregationBuilders.topHits(field).size(1));
 			aggregations.add(termsAggregation);
 		}
 		return aggregations;
 	}
+
 
 	/**
 	 * Solr Facet pivot convert Elastic Search Aggregation
@@ -240,22 +243,18 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 	@Override
 	public MessengerEdcGroupVO getMessengerGroupList(final SolrQuery sq, final String adminId, final boolean detail, final boolean original) throws SolrServerException, IOException {
-//		setAuthoritys(sq, adminId);
-//		QueryResponse resp = getList(sq);
-//		sq.clear();
-//		return new MessengerEdcGroupVO(resp, adminId, detail, original);
-
-		return null;
+		setAuthoritys(sq, adminId);
+		SearchHits<SolrEdcVO> resp = getList(sq);
+		sq.clear();
+		return new MessengerEdcGroupVO(resp, adminId, detail, original);
 	}
 
 	@Override
 	public MessengerGroupUserVO getMessengerGroupUserList(SolrQuery sq, String adminId) throws IOException, SolrServerException {
-//		setAuthoritys(sq, adminId);
-//		QueryResponse resp = getList(sq);
-//		sq.clear();
-//		return new MessengerGroupUserVO(resp);
-
-		return null;
+		setAuthoritys(sq, adminId);
+		SearchHits<SolrEdcVO> resp = getList(sq);
+		sq.clear();
+		return new MessengerGroupUserVO(resp);
 	}
 
 	@Override
