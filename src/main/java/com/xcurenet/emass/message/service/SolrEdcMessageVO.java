@@ -19,6 +19,7 @@ import org.springframework.data.elasticsearch.core.SearchHits;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @ToString
 public class SolrEdcMessageVO {
@@ -80,8 +81,15 @@ public class SolrEdcMessageVO {
 	private void setFacet(final SearchHits<SolrEdcVO> resp) {
 		ElasticsearchAggregations elasticSearchAggregations = (ElasticsearchAggregations) resp.getAggregations();
 		if(elasticSearchAggregations == null) return;
-		Terms facetPivot = elasticSearchAggregations.aggregations().get("svc1"); // 메시지 임시 aggregations
-		String chkSvc = facetPivot.getName();
+
+		//main aggregations key 출력
+		Aggregations mainAggregations = elasticSearchAggregations.aggregations();
+		Map<String, Aggregation> mainAggsMap = mainAggregations.getAsMap();
+		String mainKey = mainAggsMap.keySet().stream().collect(Collectors.joining());
+
+		Terms facetPivot = elasticSearchAggregations.aggregations().get(mainKey); // aggregations main Key
+		if (null == facetPivot) return;
+		String chkSvc = mainKey;
 
 		List<String> list = new ArrayList<String>();
 		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
@@ -91,7 +99,7 @@ public class SolrEdcMessageVO {
 		Aggregations subAggs = null;
 		if(null != bucketList && bucketList.size() >= 1) subAggs = bucketList.get(0).getAggregations(); // sub Aggregations 여부
 
-		if(null == subAggs) {
+		if(subAggs.asList().size() == 0) {
 			for (Terms.Bucket bucket : bucketList) {
 				String bucketKey = bucket.getKeyAsString();
 				long docCount = bucket.getDocCount();
@@ -155,16 +163,22 @@ public class SolrEdcMessageVO {
 	private void setPivot(final SearchHits<SolrEdcVO> resp) {
 		ElasticsearchAggregations elasticSearchAggregations = (ElasticsearchAggregations) resp.getAggregations();
 		if(elasticSearchAggregations == null) return;
-		Terms facetPivot = elasticSearchAggregations.aggregations().get("userid"); // 통계 임시 메인 aggregations key
+
+		//main aggregations key 출력
+		Aggregations mainAggregations = elasticSearchAggregations.aggregations();
+		Map<String, Aggregation> mainAggsMap = mainAggregations.getAsMap();
+		String mainKey = mainAggsMap.keySet().stream().collect(Collectors.joining());
+
+		Terms facetPivot = elasticSearchAggregations.aggregations().get(mainKey); // aggregations main Key
 		if (null == facetPivot) return;
-		String svcChk = facetPivot.getName();
+		String svcChk = mainKey;
 
 		Map<String, Object> keys = new HashMap<String, Object>();
 		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
 		List<Terms.Bucket> bucketList = (List<Terms.Bucket>) facetPivot.getBuckets();
 		Aggregations subAggs = null;
 		if(null != bucketList && bucketList.size() >= 1) subAggs = bucketList.get(0).getAggregations(); // sub Aggregations 여부
-		if(null == subAggs) {
+		if(subAggs.asList().size() == 0) {
 			for (Terms.Bucket bucket : bucketList) {
 				String bucketKey = bucket.getKeyAsString();
 				long docCount = bucket.getDocCount();
