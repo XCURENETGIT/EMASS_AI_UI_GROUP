@@ -2,6 +2,7 @@
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 <link rel="stylesheet" href="<c:url value="/js/css/smoothness/jquery-ui-1.10.3.custom.css"/>" />
 <link rel="stylesheet" href="<c:url value="/css/bootstrap.min.css"/>" />
+<link rel="stylesheet" href="<c:url value="/css/panelsTab.css"/>"/>
 <link rel="stylesheet" href="<c:url value="/css/bootstrap-dialog.css"/>" />
 <link rel="stylesheet" href="<c:url value="/css/non-responsive.css"/>" />
 <link rel="stylesheet" href="<c:url value="/css/reset.css"/>" />
