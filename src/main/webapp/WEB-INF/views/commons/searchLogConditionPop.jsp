@@ -1,52 +1,28 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/fragments/popupScript.jsp" %>
-<!DOCTYPE html>
-<html lang="ko">
 <head>
 	<title>EMASS LTH - <s:message code="condition.select.condition"/></title>
 	<style type="text/css">
+		.bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {
+			width: 100px;
+		}
+
+		.bootstrap-select > button > span {
+			font: 13px Pretendard;
+		}
+		.bootstrap-select.btn-group .dropdown-toggle .filter-option{
+			top:3px;
+		}
+
 		html, body {
-			height: 100%;
+			height: 100px;
 			padding: 0px;
 			margin: 0px;
 			overflow: auto;
 			min-width: 650px;
 		}
 
-		.bootstrap-select {
-			width: auto;
-		}
 
-		.bootstrap-select.btn-group[class*=col-] .dropdown-menu.open {
-			left: 0;
-			right: auto;
-		}
-
-		.selecBtnArea .btn {
-			padding: 2px 20px 2px 10px;
-		}
-
-		.selecBtnArea .bootstrap-select {
-			margin-top: 3px;
-			margin-bottom: 2px;
-		}
-
-		#selectedCodeTitle {
-			display: none;
-			border: 1px solid #458A45;
-			position: absolute;
-			background-color: #5CB85C;
-			color: #fff;
-			z-index: 999;
-			font-size: 15px;
-			padding: 3px;
-			max-width: 400px;
-			word-break: break-all;
-		}
-
-		.bootstrap-select.btn-group .dropdown-menu.inner {
-			box-shadow: none !important;
-		}
 	</style>
 	<script type="text/javascript">
         function initLayout() {
@@ -202,7 +178,7 @@
                 noneSelectedText: '<s:message code="common.msg.all"/>'
             });
 
-            var width = '412px';
+            var width = '200px';
             $('#serviceTypeSelect').selectpicker({
                 container: 'body',
                 size: 15,
@@ -386,7 +362,7 @@
         function getInterestUserOptions(data) {
             $('#interGroup').selectpicker({
                 container: 'body',
-                width: '412px',
+                width: '200px',
                 noneSelectedText: '-<s:message code="condition.select.interest"/>-'
             });
 
@@ -402,7 +378,7 @@
         function getUserGroupListOptions(data) {
             $('#userGroupSeq').selectpicker({
                 container: 'body',
-                width: '412px',
+                width: '200px',
                 noneSelectedText: '-<s:message code="userGroup.navi.title2"/>-'
             });
 
@@ -451,40 +427,36 @@
 </head>
 
 
-<div class="xcn_container" id="popupWrap">
+<div class="xcn_container" id="popupWrap" >
 	<div class="item">
 		<h3 class="blue"><span class="bullet01"></span></span>검색 조건</h3>
 		<div class="grayBg mat8 popupInner">
 			<div class="form-group form-inline filterDiv condition consent">
 				<div class="row">
 					<div class="col-35">
-
 						<label for="consentStr" class="fname"><s:message code="consent.consent"/></label>
 					</div>
 					<div class="col-65">
-						<input type="text" class="w100" id="consentStr" style="width: 300px;"/>
+						<input type="text" class="w100" id="consentStr" style="width: 200px;"/>
 					</div>
 				</div>
 			</div>
 
 			<div class="row">
 				<div class="col-35">
-					<label for="serviceTypeSelect" class="fname"><s:message
-							code="condition.service"/></label>
+					<label for="serviceTypeSelect" class="fname"><s:message code="condition.service"/></label>
 				</div>
 				<div class="col-65">
-					<select id="serviceTypeSelect" class="w100" data-style="btn-default btn-sm" multiple
-					        data-show-subtext="true" data-live-search="true" data-actions-box="true"></select>
+					<select id="serviceTypeSelect" class="w100" multiple data-show-subtext="true" data-live-search="true" data-actions-box="true"></select>
 				</div>
 			</div>
 
 			<div class="row">
 				<div class="col-35">
-					<label for="searchField" class="fname"><s:message
-							code="condition.field.search"/></label>
+					<label for="searchField" class="fname"><s:message code="condition.field.search"/></label>
 				</div>
 				<div class="col-65">
-					<select id="searchField" class="select" data-style="btn-default btn-sm" style="width: 130px;">
+					<select id="searchField" class="select" style="width: 200px;">
 						<option value=""><s:message code="condition.field.search"/></option>
 						<option value="subject"><s:message code="condition.subject"/></option>
 						<option value="body"><s:message code="condition.body"/></option>
@@ -512,31 +484,27 @@
 						<option value="user user_str userid name"><s:message code="common.org.user"/></option>
 						<option value="usr_id"><s:message code="common.msg.account"/></option>
 					</select>
-					<input type="search" class="w100" id="searchStrInput" style="width: 130px;"
-					       placeholder="<s:message code="condition.search_str"/>"/>
+					<input type="search" class="w100" id="searchStrInput" style="width: 130px;" placeholder="<s:message code="condition.search_str"/>"/>
 				</div>
 			</div>
 
 			<div class="row">
 				<div class="col-35">
-					<label for="day_msg" class="fname"><s:message
-							code="condition.period.setting"/></label>
+					<label for="day_msg" class="fname"><s:message code="condition.period.setting"/></label>
 				</div>
 				<div class="col-65">
 					<div id="day_msg" style="display:inline-flex;">
 						<div class="input-group">
-							<div class="input-group date" id="startdatepicker">
-								<input type="text" id="startDt" class="input-sm form-control border-radius-none"
-								       style="width: 130px;"/>
+							<div class="fname" id="startdatepicker">
+								<input type="text" id="startDt" class="input-sm form-control border-radius-none" style="width: 130px;"/>
 							</div>
 						</div>
 						&nbsp;
 						<div class="input-group" style="line-height: 28px;">~</div>
 						&nbsp;
 						<div class="input-group">
-							<div class="input-group date" id="enddatepicker">
-								<input type="text" id="endDt" class="input-sm form-control border-radius-none"
-								       style="width: 130px;"/>
+							<div class="fname" id="enddatepicker">
+								<input type="text" id="endDt" class="input-sm form-control border-radius-none" style="width: 130px;"/>
 							</div>
 						</div>
 					</div>
@@ -544,74 +512,89 @@
 						<span><s:message code="mail.message.condition_info"/></span>
 					</div>
 				</div>
+			</div>
 
-				<div class="form-inline" id="recvSendGroup">
-					<label for="" class="control-label col-xs-3"><s:message code="condition.receive_send"/></label>
-					<label class="radio-inline c-radio"><input type="radio" name="receiveSendVal" value="" checked><span
-							class="fa fa-check"></span><s:message code="common.msg.all"/></label>
-					<label class="radio-inline c-radio"><input type="radio" name="receiveSendVal" value="I"><span
-							class="fa fa-check"></span><s:message code="condition.receive"/></label>
-					<label class="radio-inline c-radio"><input type="radio" name="receiveSendVal" value="O"><span
-							class="fa fa-check"></span><s:message code="condition.send"/></label>
+			<div class="row">
+				<div class="col-35">
+					<div id="recvSendGroup">
+						<label for="" class="fname"><s:message code="condition.receive_send"/></label>
+					</div>
+				</div>
+				<div class="col-65">
+					<label class="radio-inline c-radio"><input type="radio" name="receiveSendVal" value="" checked><span></span> &nbsp<s:message code="common.msg.all"/></label>
+					<label class="radio-inline c-radio"><input type="radio" name="receiveSendVal" value="I"><span></span>&nbsp<s:message code="condition.receive"/></label>
+					<label class="radio-inline c-radio"><input type="radio" name="receiveSendVal" value="O"><span></span>&nbsp<s:message code="condition.send"/></label>
 					<input type="hidden" name="receiveSend" id="receiveSend">
 				</div>
+			</div>
 
-				<div class="form-inline" id="ctimeWorkGroup">
-					<label for="" class="control-label col-xs-3"><s:message code="condition.ctimework"/></label>
-					<label class="radio-inline c-radio"><input type="radio" name="ctimeWorkVal" value="" checked><span
-							class="fa fa-check"></span><s:message code="condition.ctimework.all"/></label>
-					<label class="radio-inline c-radio"><input type="radio" name="ctimeWorkVal" value="W"><span
-							class="fa fa-check"></span><s:message code="condition.work"/></label>
-					<label class="radio-inline c-radio"><input type="radio" name="ctimeWorkVal" value="R"><span
-							class="fa fa-check"></span><s:message code="condition.notwork"/></label>
+			<div class="row">
+				<div class="col-35">
+					<div id="ctimeWorkGroup">
+						<label for="" class="fname"><s:message code="condition.ctimework"/></label>
+					</div>
+				</div>
+				<div class="col-65">
+					<label class="radio-inline c-radio"><input type="radio" name="ctimeWorkVal" value="" checked><span></span>&nbsp<s:message code="condition.ctimework.all"/></label>
+					<label class="radio-inline c-radio"><input type="radio" name="ctimeWorkVal" value="W"><span></span>&nbsp<s:message code="condition.work"/></label>
+					<label class="radio-inline c-radio"><input type="radio" name="ctimeWorkVal" value="R"><span></span>&nbsp<s:message code="condition.notwork"/></label>
 					<input type="hidden" name="ctimeWork" id="ctimeWork">
 				</div>
+			</div>
 
-				<div class="form-inline" id="readYnGroup">
-					<label for="" class="control-label col-xs-3"><s:message code="condition.isread"/></label>
-					<label class="radio-inline c-radio"><input type="radio" name="readYnVal" value="" checked><span
-							class="fa fa-check"></span><s:message code="common.msg.all"/></label>
-					<label class="radio-inline c-radio"><input type="radio" name="readYnVal" value="Y"><span
-							class="fa fa-check"></span><s:message code="condition.read"/></label>
-					<label class="radio-inline c-radio"><input type="radio" name="readYnVal" value="N"><span
-							class="fa fa-check"></span><s:message code="condition.unread"/></label>
+			<div class="row">
+				<div class="col-35">
+					<label for="" class="fname"><s:message code="condition.isread"/></label>
+				</div>
+				<div class="col-65">
+					<label class="radio-inline c-radio"><input type="radio" name="readYnVal" value="" checked><span></span>&nbsp<s:message code="common.msg.all"/></label>
+					<label class="radio-inline c-radio"><input type="radio" name="readYnVal" value="Y"><span></span>&nbsp<s:message code="condition.read"/></label>
+					<label class="radio-inline c-radio"><input type="radio" name="readYnVal" value="N"><span></span>&nbsp<s:message code="condition.unread"/></label>
 					<input type="hidden" name="readYn" id="readYn">
 				</div>
+			</div>
 
-				<div class="form-group form-inline">
-					<label for="receivers" class="control-label col-xs-3"><s:message
-							code="condition.receiver_sender"/></label>
-					<div class="input-group">
-						<input type="text" class="form-control input-sm" id="receivers"
-						       placeholder="<s:message code="condition.recv"/>"/>
-					</div>
-					<div class="input-group">
-						<input type="text" class="form-control input-sm" id="senders"
-						       placeholder="<s:message code="condition.sender"/>"/>
+			<div class="row">
+				<div class="col-35">
+					<label for="receivers" class="fname"><s:message code="condition.receiver_sender"/></label>
+				</div>
+				<div class="col-65">
+					<div>
+						<input type="text" class="w100" id="receivers" placeholder="<s:message code="condition.recv"/>" style="width: 130px;"/>
+
+						<input type="text" class="w100" id="senders" placeholder="<s:message code="condition.sender"/>" style="width: 130px;"/>
 					</div>
 				</div>
+			</div>
 
-				<div class="form-group form-inline">
-					<label for="busiSelect" class="control-label col-xs-3"><s:message code="common.org.businm"/></label>
-					<div class="btn-group filterBtn" data-toggle="buttons" style="margin-top:3px;">
-						<select id="busiSelect" class="selectpicker col-xs" data-style="btn-default btn-sm" multiple
-						        data-show-subtext="true" data-live-search="true" data-actions-box="true"></select>
-					</div>
-					<label for="" class="control-label col-xs-3"></label>
+			<div class="row">
+				<div class="col-35">
+					<label for="busiSelect" class="fname"><s:message code="common.org.businm"/></label>
 				</div>
-
-				<div class="form-inline">
-					<label for="deptStrDiv" class="control-label col-xs-3"><s:message code="common.org.deptnm"/></label>
-					<div class="input-group">
-						<div id="deptStrDiv" class="codeSelectedDiv"></div>
+				<div class="col-65">
+					<div class="w100" data-toggle="buttons" style="margin-top:3px; ">
+						<select id="busiSelect" class="w100" multiple data-show-subtext="true" data-live-search="true" data-actions-box="true"></select>
 					</div>
+					<label for=""></label>
 				</div>
+			</div>
 
-				<div class="form-group form-inline">
-					<label for="allOfus" class="control-label col-xs-3"><s:message code="condition.allofus"/></label>
-					<div class="btn-group filterBtn" data-toggle="buttons" style="margin-top:3px;">
-						<select class="selectpicker col-xs" id="allOfus" data-style="btn-default btn-sm"
-						        style="width:100%;">
+			<div class="row">
+				<div class="col-35">
+					<label for="deptStrDiv" class="fname"><s:message code="common.org.deptnm"/></label>
+				</div>
+				<div class="col-65">
+					<div id="deptStrDiv" class="codeSelectedDiv"></div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-35">
+					<label for="allOfus" class="fname"><s:message code="condition.allofus"/></label>
+				</div>
+				<div class="col-65">
+					<div class="w100" data-toggle="buttons" style="margin-top:3px; width: 20% ">
+						<select id="allOfus" data-style="btn-default btn-sm" style="width:20%;">
 							<option value=""><s:message code="condition.allofus.all"/></option>
 							<option value="IA">1) <s:message code="condition.allofus1"/></option>
 							<option value="EA">2) <s:message code="condition.allofus2"/></option>
@@ -630,106 +613,117 @@
 						</select>
 					</div>
 				</div>
+			</div>
 
-				<div class="form-group form-inline">
-					<label for="userGroupSeq" class="control-label col-xs-3"><s:message
-							code="userGroup.navi.title2"/></label>
-					<div class="btn-group filterBtn" data-toggle="buttons" style="margin-top:3px;">
-						<select id="userGroupSeq" class="selectpicker col-xs" data-style="btn-default btn-sm"></select>
+			<div class="row">
+				<div class="col-35">
+					<label for="userGroupSeq" class="fname"><s:message code="userGroup.navi.title2"/></label>
+				</div>
+				<div class="col-65">
+					<div class="w100" data-toggle="buttons" style="margin-top:3px;">
+						<select id="userGroupSeq" class="select" data-style="btn-default btn-sm"></select>
 					</div>
 					<input type="hidden" id="userGroupStr">
 				</div>
+			</div>
 
-				<div class="form-group form-inline">
-					<label for="interGroup" class="control-label col-xs-3"><s:message code="interest.user"/></label>
-					<div class="btn-group filterBtn" data-toggle="buttons" style="margin-top:3px;">
+			<div class="row">
+				<div class="col-35">
+					<label for="interGroup" class="fname"><s:message code="interest.user"/></label>
+				</div>
+				<div class="col-65">
+					<div class="w100" data-toggle="buttons" style="margin-top:3px;">
 						<select id="interGroup" class="selectpicker col-xs" data-style="btn-default btn-sm"></select>
 					</div>
 				</div>
+			</div>
 
-				<!-- 첨부여부 -->
-				<div class="form-inline">
-					<label for="" class="control-label col-xs-3"><s:message code="condition.isattached"/></label>
-					<label class="radio-inline c-radio"><input type="radio" name="attachYnVal" value="" checked><span
-							class="fa fa-check"></span><s:message code="common.msg.all"/></label>
-					<label class="radio-inline c-radio"><input type="radio" name="attachYnVal" value="Y"><span
-							class="fa fa-check"></span><s:message code="condition.exist"/></label>
-					<label class="radio-inline c-radio"><input type="radio" name="attachYnVal" value="N"><span
-							class="fa fa-check"></span><s:message code="condition.none"/></label>
-					<input type="text" class="form-control input-sm" id="attachList"
-					       style="display: none; width: 220px;"/>
+			<!-- 첨부여부 -->
+			<div class="row">
+				<div class="col-35">
+					<label for="" class="fname"><s:message code="condition.isattached"/></label>
 				</div>
+				<div class="col-65">
+					<label class="radio-inline c-radio"><input type="radio" name="attachYnVal" value="" checked><span></span>&nbsp<s:message code="common.msg.all"/></label>
+					<label class="radio-inline c-radio"><input type="radio" name="attachYnVal" value="Y"><span></span>&nbsp<s:message code="condition.exist"/></label>
+					<label class="radio-inline c-radio"><input type="radio" name="attachYnVal" value="N"><span></span>&nbsp<s:message code="condition.none"/></label>
+					<input type="text" id="attachList" style="display: none; width: 220px;"/>
+				</div>
+			</div>
 
-				<!-- 예약어 -->
-				<div class="form-inline">
-					<label for="" class="control-label col-xs-3"><s:message code="condition.keyword"/></label>
+			<!-- 예약어 -->
+			<div class="row">
+				<div class="col-35">
+					<label for="" class="fname"><s:message code="condition.keyword"/></label>
+				</div>
+				<div class="col-65">
 					<label class="radio-inline c-radio"><input type="radio" name="keywordYnVal" value="" checked><span
-							class="fa fa-check"></span><s:message code="common.msg.all"/></label>
-					<label class="radio-inline c-radio"><input type="radio" name="keywordYnVal" value="Y"><span
-							class="fa fa-check"></span><s:message code="condition.exist"/></label>
-					<label class="radio-inline c-radio"><input type="radio" name="keywordYnVal" value="N"><span
-							class="fa fa-check"></span><s:message code="condition.none"/></label>
-					<input type="text" class="form-control input-sm" id="keywordList"
-					       style="display: none; width: 220px;"/>
+					></span>&nbsp<s:message code="common.msg.all"/></label>
+					<label class="radio-inline c-radio"><input type="radio" name="keywordYnVal" value="Y"><span></span>&nbsp<s:message code="condition.exist"/></label>
+					<label class="radio-inline c-radio"><input type="radio" name="keywordYnVal" value="N"><span></span>&nbsp<s:message code="condition.none"/></label>
+					<input type="text" id="keywordList" style="display: none; width: 220px;"/>
 				</div>
+			</div>
 
-				<!-- 패턴검출 -->
-				<div class="form-inline">
-					<label for="" class="control-label col-xs-3"><s:message code="condition.regexp.detect"/></label>
-					<label class="radio-inline c-radio"><input type="radio" name="regexpYnVal" value="" checked><span
-							class="fa fa-check"></span><s:message code="common.msg.all"/></label>
-					<label class="radio-inline c-radio"><input type="radio" name="regexpYnVal" value="Y"><span
-							class="fa fa-check"></span><s:message code="condition.exist"/></label>
-					<label class="radio-inline c-radio"><input type="radio" name="regexpYnVal" value="N"><span
-							class="fa fa-check"></span><s:message code="condition.none"/></label>
-					<input type="text" class="form-control input-sm" id="regexpList"
-					       style="display: none; width: 220px;"/>
+			<!-- 패턴검출 -->
+			<div class="row">
+				<div class="col-35">
+					<label for="" class="fname"><s:message code="condition.regexp.detect"/></label>
 				</div>
-
-				<!-- DRM -->
-				<div class="form-inline">
-					<label for="" class="control-label col-xs-3">DRM</label>
-					<label class="radio-inline c-radio"><input type="radio" name="regexp_drmYnVal" value=""
-					                                           checked><span
-							class="fa fa-check"></span><s:message code="common.msg.all"/></label>
-					<label class="radio-inline c-radio"><input type="radio" name="regexp_drmYnVal" value="Y"><span
-							class="fa fa-check"></span><s:message code="condition.exist"/></label>
-					<label class="radio-inline c-radio"><input type="radio" name="regexp_drmYnVal" value="N"><span
-							class="fa fa-check"></span><s:message code="condition.none"/></label>
+				<div class="col-65">
+					<label class="radio-inline c-radio"><input type="radio" name="regexpYnVal" value="" checked><span></span>&nbsp<s:message code="common.msg.all"/></label>
+					<label class="radio-inline c-radio"><input type="radio" name="regexpYnVal" value="Y"><span></span>&nbsp<s:message code="condition.exist"/></label>
+					<label class="radio-inline c-radio"><input type="radio" name="regexpYnVal" value="N"><span></span>&nbsp<s:message code="condition.none"/></label>
+					<input type="text" id="regexpList" style="display: none; width: 220px;"/>
 				</div>
+			</div>
 
-				<!-- 수신필터 -->
-				<div class="form-inline">
-					<label for="" class="control-label col-xs-3"><s:message code="condition.sct"/></label>
-					<label class="radio-inline c-radio"><input type="radio" name="regexp_sctYnVal" value=""
-					                                           checked><span
-							class="fa fa-check"></span><s:message code="common.msg.all"/></label>
-					<label class="radio-inline c-radio"><input type="radio" name="regexp_sctYnVal" value="Y"><span
-							class="fa fa-check"></span><s:message code="condition.exist"/></label>
-					<label class="radio-inline c-radio"><input type="radio" name="regexp_sctYnVal" value="N"><span
-							class="fa fa-check"></span><s:message code="condition.none"/></label>
+			<!-- DRM -->
+			<div class="row">
+				<div class="col-35">
+					<label for="" class="fname">DRM</label>
 				</div>
+				<div class="col-65">
+					<label class="radio-inline c-radio"><input type="radio" name="regexp_drmYnVal" value="" checked><span></span>&nbsp<s:message code="common.msg.all"/></label>
+					<label class="radio-inline c-radio"><input type="radio" name="regexp_drmYnVal" value="Y"><span></span>&nbsp<s:message code="condition.exist"/></label>
+					<label class="radio-inline c-radio"><input type="radio" name="regexp_drmYnVal" value="N"><span></span>&nbsp<s:message code="condition.none"/></label>
+				</div>
+			</div>
 
-				<div class="form-inline">
-					<label for="" class="control-label col-xs-3"><s:message code="filterInfo.size"/></label>
-					<div class="selecBtnArea">
-						<select class="selectpicker col-xs" data-style="btn-primary" id="sizeFilterType">
+			<!-- 수신필터 -->
+			<div class="row">
+				<div class="col-35">
+					<label for="" class="fname"><s:message code="condition.sct"/></label>
+				</div>
+				<div class="col-65">
+					<label class="radio-inline c-radio"><input type="radio" name="regexp_sctYnVal" value="" checked><span></span>&nbsp<s:message code="common.msg.all"/></label>
+					<label class="radio-inline c-radio"><input type="radio" name="regexp_sctYnVal" value="Y"><span></span>&nbsp<s:message code="condition.exist"/></label>
+					<label class="radio-inline c-radio"><input type="radio" name="regexp_sctYnVal" value="N"><span></span>&nbsp<s:message code="condition.none"/></label>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-35">
+					<label for="" class="fname"><s:message code="filterInfo.size"/></label>
+				</div>
+				<div class="col-65">
+						<select  id="sizeFilterType" style="width: 100px; color: #333;background-color: #fff; border-color: #ccc; font-size: 13px;     height: 23px;line-height: 23px;">
 							<option value=""><s:message code="condition.size.all"/></option>
 							<option value="B"><s:message code="condition.size.body"/></option>
 							<option value="A"><s:message code="condition.size.attach"/></option>
 						</select>
-						<select class="selectpicker col-xs" data-style="btn-primary" id="sizeFilterSelect">
-							<option value="L"><s:message code="condition.over"/></option>
-							<option value="S"><s:message code="condition.below"/></option>
-							<option value="B"><s:message code="condition.range"/></option>
+						<select  id="sizeFilterSelect" >
+							<option value="L" style="width: 100px;"><s:message code="condition.over"/></option>
+							<option value="S" style="width: 100px;"><s:message code="condition.below"/></option>
+							<option value="B" style="width: 100px;"><s:message code="condition.range"/></option>
 						</select>
-						<input type="text" class="form-control input-sm" id="sizeStartVal"
-						       style="width: 90px; display: none;"/>
+						<input type="text" class="w100" id="sizeStartVal"
+						       style="width: 50px; display: none;"/>
 						<span id="sizeRangeValStr" style="display: none;"> ~ </span>
-						<input type="text" class="form-control input-sm" id="sizeEndVal"
-						       style="width: 90px; display: none;"/>
-					</div>
+						<input type="text" class="w100" id="sizeEndVal"
+						       style="width: 50px; display: none;"/>
 				</div>
 			</div>
 		</div>
 	</div>
+</div>
