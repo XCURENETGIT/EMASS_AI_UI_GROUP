@@ -345,7 +345,7 @@
         return result;
     }
 </script>
-<div id="auditLogPop" class="modal">
+<div id="auditLogPop" class="modal" data-backdrop="static">
 	<div class="modal-content">
 		<div class="modalHead">
 			<h2><s:message code="auditLog.auditlogpop.title"/></h2>
