@@ -5,7 +5,6 @@
 	String sso_type = Config.getString("sso_type");
 %>
 <head>
-	<title></title>
 	<style type="text/css">
 		.radio-inline {
 			padding-left: 0px;
@@ -401,19 +400,6 @@
             var adminHp = $('#adminHp').val();
             /* if ( adminHp == '' ) {
                 ui.alertMsg( '
-
-
-
-
-
-
-
-
-
-
-
-
-
             <s:message code="admin.msg.enter.hp"/>');
 		$('#adminHp').focus( );
 		return;
@@ -587,175 +573,216 @@
         }
 	</script>
 </head>
-<div class="modal fade" id="adminPop" tabindex="-1" role="dialog" aria-labelledby="adminPop">
-	<div class="modal-dialog modal-lg" role="document">
-		<div class="modal-content">
-			<form method="post" id="userPopForm">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					<h3 class="modal-title"><s:message code="admin.adminpop.title"/></h3>
+<div class="modal" id="adminPop">
+	<div class="modal-content" style="width: 1230px;">
+		<form method="post" id="userPopForm">
+			<div class="modalHead">
+				<h2><s:message code="admin.adminpop.title"/></h2>
+				<span class="close" data-dismiss="modal">&times;</span>
+			</div>
+			<div class="modalCon">
+				<div class="modalTop">
+					<h3><s:message code="admin.adminpop.title"/></h3>
+					<p>
+						<span class="red_dot veralign_middle"></span>
+						필수 입력 사항입니다.
+					</p>
 				</div>
-				<div class="modal-body">
+				<div class="modalbody">
 					<div class="row">
-						<div class="col-md-6" style="border-right: 1px solid #e5e5e5;">
-							<h3><s:message code="admin.basic.info"/></h3>
-							<div class="form-group form-inline">
-								<label for="adminId" class="control-label col-xs-3"><s:message
-										code="common.msg.id"/></label>
-								<input type="text" class="form-control" name="adminId" id="adminId"
-								       placeholder="<s:message code="common.msg.id"/>" style="width: 300px;"
-								       maxlength="20">
+						<div class="col-50">
+							<span style="font-size: 25px;"><s:message code="admin.basic.info"/></span>
+							<br><br>
+							<div class="row">
+								<div class="col-35">
+									<label for="adminId" class="fname"><s:message code="common.msg.id"/></label>
+								</div>
+								<div class="col-65">
+									<input type="text" class="w100" name="adminId" id="adminId" placeholder="<s:message code="common.msg.id"/>" maxlength="10">
+								</div>
 							</div>
-							<div class="form-group form-inline">
-								<label for="adminName" class="control-label col-xs-3"><s:message
-										code="common.msg.name"/></label>
-								<input type="text" class="form-control" name="adminName" id="adminName"
-								       placeholder="<s:message code="common.msg.name"/>" style="width: 300px;"
-								       maxlength="50">
+							<div class="row">
+								<div class="col-35">
+									<label for="adminName" class="fname"><s:message code="common.msg.name"/></label>
+								</div>
+								<div class="col-65">
+									<input type="text" class="w100" name="adminName" id="adminName" placeholder="<s:message code="common.msg.name"/>" maxlength="50">
+								</div>
 							</div>
-							<div class="form-group form-inline">
-								<label for="adminPw" class="control-label col-xs-3"><s:message code="admin.pw"/></label>
-								<input type="password" class="form-control" name="adminPw" id="adminPw"
-								       placeholder="<s:message code="admin.pw"/>" style="width: 300px;" maxlength="128"
-								       autocomplete="off">
-								<input type="hidden" name="oldPw" id="oldPw">
+							<div class="row">
+								<div class="col-35">
+									<label for="adminPw" class="fname"><s:message code="admin.pw"/></label>
+								</div>
+								<div class="col-65">
+									<input type="password" class="w100" name="adminPw" id="adminPw" placeholder="<s:message code="admin.pw"/>" maxlength="128" autocomplete="off">
+									<input type="hidden" name="oldPw" id="oldPw">
+								</div>
 							</div>
-							<div class="form-group form-inline">
-								<label for="c_adminPw" class="control-label col-xs-3"><s:message
-										code="admin.cpw"/></label>
-								<input type="password" class="form-control" name="c_adminPw" id="c_adminPw"
-								       placeholder="<s:message code="admin.cpw"/>" style="width: 300px;" maxlength="128"
-								       autocomplete="off">
+							<div class="row">
+								<div class="col-35">
+									<label for="c_adminPw" class="fname"><s:message code="admin.cpw"/></label>
+								</div>
+								<div class="col-65">
+									<input type="password" class="w100" name="c_adminPw" id="c_adminPw" placeholder="<s:message code="admin.cpw"/>" maxlength="128" autocomplete="off">
+								</div>
 							</div>
-							<div class="form-group form-inline">
-								<label for="adminEmail" class="control-label col-xs-3">E-Mail</label>
-								<input type="text" class="form-control" name="adminEmail" id="adminEmail"
-								       placeholder="E-Mail" style="width: 300px;" maxlength="600">
+							<div class="row">
+								<div class="col-35">
+									<label for="adminEmail" class="fname">E-Mail</label>
+								</div>
+								<div class="col-65">
+									<input type="text" class="w100" name="adminEmail" id="adminEmail" placeholder="E-Mail" maxlength="600">
+								</div>
 							</div>
-							<div class="form-group form-inline">
-								<label for="adminHp" class="control-label col-xs-3"><s:message code="admin.hp"/></label>
-								<input type="text" class="form-control" name="adminHp" id="adminHp"
-								       placeholder="<s:message code="admin.hp"/>" style="width: 300px;" maxlength="50">
-								<s:message code="admin.enter.minus"/> <span style="padding-left:15px;"><s:message
-									code="admin.msg.hp"/></span>
+							<div class="row">
+								<div class="col-35">
+									<label for="adminHp" class="fname"><s:message code="admin.hp"/></label>
+								</div>
+								<div class="col-65">
+									<input type="text" class="w100" name="adminHp" id="adminHp" placeholder="<s:message code="admin.hp"/>" maxlength="50">
+									<s:message code="admin.enter.minus"/> <span style="padding-left:15px;"><s:message code="admin.msg.hp"/></span>
+								</div>
 							</div>
-							<div class="form-group form-inline">
-								<label for="comment" class="control-label col-xs-3"><s:message
-										code="admin.purpose"/></label>
-								<input type="text" class="form-control" name="comment" id="comment"
-								       placeholder="<s:message code="admin.purpose"/>" style="width: 300px;"
-								       maxlength="500">
+							<div class="row">
+								<div class="col-35">
+									<label for="comment" class="fname"><s:message code="admin.purpose"/></label>
+								</div>
+								<div class="col-65">
+									<input type="text" class="w100" name="comment" id="comment" placeholder="<s:message code="admin.purpose"/>" maxlength="500">
+								</div>
 							</div>
-							<div class=" form-inline" style="display:none;" id="certTypeDiv">
-								<label for="comment" class="control-label col-xs-3"><s:message
-										code="admin.connection.methode"/></label>
-								<select class="form-control input-sm" id="loginType" style="width:300px;">
-									<option value="C" selected><s:message code="admin.system.login"/></option>
-									<!--<option value="L">외부 시스템 로그인(LDAP 인증)</option> -->
-									<option value="S"><s:message code="admin.outside.login"/></option>
-								</select>
+
+							<div class="row" id="certTypeDiv">
+								<div class="col-35">
+									<label for="comment" class="fname"><s:message code="admin.connection.methode"/></label>
+								</div>
+								<div class="col-65">
+									<select class="w100" id="loginType">
+										<option value="C" selected><s:message code="admin.system.login"/></option>
+										<!--<option value="L">외부 시스템 로그인(LDAP 인증)</option> -->
+										<option value="S"><s:message code="admin.outside.login"/></option>
+									</select>
+								</div>
 							</div>
-							<div class="form-inline">
-								<label for="adminType" class="control-label col-xs-3"><s:message
-										code="admin.admintype"/></label>
-								<label class="radio-inline c-radio">
-									<input type="radio" name="adminType" class="adminType" value="M" checked>
-									<span class="fa fa-check"></span><s:message code="admin.monitoring.admin"/>
-								</label>
-								<label class="radio-inline c-radio">
-									<input type="radio" name="adminType" class="adminType adminTypeSys" value="S">
-									<span class="fa fa-check"></span><s:message code="admin.system.admin"/>
-								</label>
-								<label class="radio-inline c-radio">
-									<input type="radio" name="adminType" class="adminType" value="C">
-									<span class="fa fa-check"></span>CEO <s:message code="admin.monitoring.admin"/>
-								</label>
-								<label class="radio-inline c-radio">
-									<input type="radio" name="adminTypeS" class="adminTypeS" value="" checked="checked">
-									<span class="fa fa-check"></span><s:message code="admin.chief.admin"/>
-								</label>
-								<input type="hidden" name="adminTypeNm" id="hiddenAdminType">
-								<input type="hidden" name="adminTypeInfo" id="adminTypeInfo">
+
+							<div class="row" id="certTypeDiv">
+								<div class="col-35">
+									<label for="adminType" class="fname"><s:message code="admin.admintype"/></label>
+								</div>
+								<div class="col-65">
+									<label class="radio-inline c-radio">
+										<input type="radio" name="adminType" class="adminType" value="M" checked><s:message code="admin.monitoring.admin"/>
+									</label>
+									<label class="radio-inline c-radio">
+										<input type="radio" name="adminType" class="adminType adminTypeSys" value="S">
+										<s:message code="admin.system.admin"/>
+									</label>
+									<label class="radio-inline c-radio">
+										<input type="radio" name="adminType" class="adminType" value="C">
+										CEO <s:message code="admin.monitoring.admin"/>
+									</label>
+									<label class="radio-inline c-radio">
+										<input type="radio" name="adminTypeS" class="adminTypeS" value="" checked="checked">
+										<s:message code="admin.chief.admin"/>
+									</label>
+									<input type="hidden" name="adminTypeNm" id="hiddenAdminType">
+									<input type="hidden" name="adminTypeInfo" id="adminTypeInfo">
+								</div>
 							</div>
-							<div class="form-inline">
-								<label for="workStatus" class="control-label col-xs-3"><s:message
-										code="common.msg.retirement"/>/<s:message code="common.msg.leave"/></label>
-								<label class="checkbox-inline c-checkbox" style="padding-left: 0px;">
-									<input type="checkbox" name="workStatus" value="R">
-									<span class="fa fa-check"></span><s:message code="common.msg.retirement"/>
-								</label>
-								<label class="checkbox-inline c-checkbox" style="padding-left: 0px;">
-									<input type="checkbox" name="workStatus" value="O">
-									<span class="fa fa-check"></span><s:message code="common.msg.leave"/>
-								</label>
-								<input type="hidden" name="workStatusNm" id="hiddenWorkStatus">
+							<div class="row">
+								<div class="col-35">
+									<label for="workStatus" class="fname"><s:message code="common.msg.retirement"/>/<s:message code="common.msg.leave"/></label>
+								</div>
+								<div class="col-65">
+									<label class="checkbox-inline c-checkbox" style="padding-left: 0px;">
+										<input type="checkbox" name="workStatus" value="R">
+										<s:message code="common.msg.retirement"/>
+									</label>
+									<label class="checkbox-inline c-checkbox" style="padding-left: 0px;">
+										<input type="checkbox" name="workStatus" value="O">
+										<s:message code="common.msg.leave"/>
+									</label>
+									<input type="hidden" name="workStatusNm" id="hiddenWorkStatus">
+								</div>
 							</div>
-							<div class="form-inline" style="border-bottom: 1px solid #e5e5e5;">
-								<label for="useYn" class="control-label col-xs-3"><s:message
-										code="common.msg.useyn"/></label>
-								<label class="radio-inline c-radio">
-									<input type="radio" name="useYn" value="Y" checked>
-									<span class="fa fa-check"></span><s:message code="common.msg.use"/>
-								</label>
-								<label class="radio-inline c-radio">
-									<input type="radio" name="useYn" value="N">
-									<span class="fa fa-check"></span><s:message code="common.msg.unuse"/>
-								</label>
-								<input type="hidden" name="useYnNm" id="hiddenUseYn">
+
+							<div class="row">
+								<div class="col-35">
+									<label for="useYn" class="fname"><s:message code="common.msg.useyn"/></label>
+								</div>
+								<div class="col-65">
+									<label class="radio-inline c-radio">
+										<input type="radio" name="useYn" value="Y" checked>
+										<s:message code="common.msg.use"/>
+									</label>
+									<label class="radio-inline c-radio">
+										<input type="radio" name="useYn" value="N">
+										<s:message code="common.msg.unuse"/>
+									</label>
+									<input type="hidden" name="useYnNm" id="hiddenUseYn">
+								</div>
 							</div>
+
 							<br>
-							<h3><s:message code="admin.access.control"/></h3>
-							<div class="form-group form-inline">
-								<label for="accessIp" class="control-label col-xs-3"><s:message
-										code="admin.connect.ip"/></label>
-								<input type="text" class="form-control" name="accessIp" id="accessIp"
-								       placeholder="<s:message code="userInfo.msg.ip"/>" style="width: 400px;">
-								<%if (isIPv6) { %>
-								<p style="padding-left:190px; margin-bottom: 0px;">
-									<span style='color:grey;'>[ex: IPv4 - 192.168.0.12 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IPv6 - 2002:9b3d:1a32:4:208:74ff:fe39:6c43]</span>
-								</p>
-								<%} %>
-								<button type="button" class="btn btn-primary" accesskey="I" id="selIpBtn"
-								        style="display:none;"><s:message code="common.msg.select"/></button>
+							<span style="font-size: 25px;"><s:message code="admin.access.control"/></span><br>
+							<br>
+							<div class="row">
+								<div class="col-35">
+									<label for="accessIp" class="fname"><s:message code="admin.connect.ip"/></label>
+								</div>
+								<div class="col-65">
+									<input type="text" class="w100" name="accessIp" id="accessIp" placeholder="<s:message code="userInfo.msg.ip"/>">
+									<%if (isIPv6) { %>
+									<p style="padding-left:190px; margin-bottom: 0px;">
+										<span style='color:grey;'>[ex: IPv4 - 192.168.0.12 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IPv6 - 2002:9b3d:1a32:4:208:74ff:fe39:6c43]</span>
+									</p>
+									<%} %>
+									<button type="button" class="btn btn-primary" accesskey="I" id="selIpBtn" style="display:none;"><s:message code="common.msg.select"/></button>
+								</div>
 							</div>
 
 							<%--OTP재설정--%>
 							<br>
-							<h3><s:message code="common.msg.otpReset"/></h3>
-							<div class="form-group form-inline">
-								<label for="accessIp" class="control-label col-xs-4"><s:message code="common.msg.otpReset"/></label>
-								<button type="button" class="btn btn-primary" accesskey="I" id="otpResetBtn"
-								        style="display: none"><s:message code="common.msg.otpReset"/></button>
+							<span style="font-size: 25px;"><s:message code="common.msg.otpReset"/></span>
+							<br><br>
+							<div class="row">
+								<div class="col-35">
+									<label for="accessIp" class="fname"><s:message code="common.msg.otpReset"/></label>
+								</div>
+								<div class="col-65">
+									<button type="button" class="form_btn01_02" accesskey="I" id="otpResetBtn" style="display: none"><s:message code="common.msg.otpReset"/></button>
+								</div>
 							</div>
 						</div>
+						<div class="col-50 mal16">
+							<span style="font-size: 25px;"><s:message code="admin.search.auth"/></span>
+							<br><br>
 
-
-
-						<div class="col-md-6">
-							<h3><s:message code="admin.search.auth"/></h3>
-							<div class="form-group form-inline">
-								<label for="coCd" class="control-label col-xs-4"><s:message
-										code="common.org.co"/></label>
-								<button type="button" class="btn btn-primary selBtn btn-sm" accesskey="O" id="co">
-									<s:message code="common.msg.select"/></button>
-								<!-- <span style="display: inline-block; height: 20px; position: relative; top: 7px;" class="ellipsis" id="coText"></span> -->
-								<input type="text" id="coText" name="coText" class="ellipsis"
-								       style="border: 0px; background-color: #fff;" disabled="disabled"/>
-								<input type="hidden" name="coCd" id="coHidden"/>
-								<input type="hidden" name="oldCode" id="oldCode"/>
-								<input type="hidden" name="oldConm" id="oldConm"/>
+							<div class="row">
+								<div class="col-35">
+									<label for="coCd" class="fname"><s:message code="common.org.co"/></label>
+								</div>
+								<div class="col-65">
+									<button type="button" class="form_btn03 selBtn btn-sm" accesskey="O" id="co">
+										<s:message code="common.msg.select"/></button>
+									<!-- <span style="display: inline-block; height: 20px; position: relative; top: 7px;" class="ellipsis" id="coText"></span> -->
+									<input type="text" id="coText" name="coText" style="border: 0px; background-color: transparent;" disabled="disabled"/>
+									<input type="hidden" name="coCd" id="coHidden"/>
+									<input type="hidden" name="oldCode" id="oldCode"/>
+									<input type="hidden" name="oldConm" id="oldConm"/>
+								</div>
 							</div>
-							<div class="form-group form-inline">
-								<label for="busiCd" class="control-label col-xs-4"><s:message
-										code="common.org.busi"/></label>
-								<button type="button" class="btn btn-primary selBtn btn-sm" id="busi"
-								        disabled="disabled"><s:message code="common.msg.select"/></button>
-								<!-- <span style="display: inline-block; height: 20px; position: relative; top: 7px;" class="ellipsis" id="busiText"></span> -->
-								<input type="text" id="busiText" name="busiText" class="ellipsis"
-								       style="border: 0px; background-color: #fff;" disabled="disabled"/>
-								<input type="hidden" name="busiCd" id="busiHidden"/>
+
+							<div class="row">
+								<div class="col-35">
+									<label for="busiCd" class="fname"><s:message code="common.org.busi"/></label>
+								</div>
+								<div class="col-65">
+									<button type="button" class="form_btn03 selBtn btn-sm" id="busi" disabled="disabled"><s:message code="common.msg.select"/></button>
+									<!-- <span style="display: inline-block; height: 20px; position: relative; top: 7px;" class="ellipsis" id="busiText"></span> -->
+									<input type="text" id="busiText" name="busiText" style="border: 0px; background-color: transparent;" disabled="disabled"/>
+									<input type="hidden" name="busiCd" id="busiHidden"/>
+								</div>
 							</div>
 							<!--  부서권한
 								<div class="form-group form-inline">
@@ -765,157 +792,152 @@
 									<input type="hidden" name="deptCd" id="deptHidden" />
 								</div>
 								 -->
-							<div class="form-group form-inline">
-								<label for="serviceType" class="control-label col-xs-4"><s:message
-										code="filterInfo.servicetype"/></label>
-								<button type="button" class="btn btn-primary selBtn btn-sm" accesskey="T" id="service">
-									<s:message code="common.msg.select"/></button>
-								<!-- <span style="display: inline-block; height: 20px; position: relative; top: 7px;" class="ellipsis" id="svcText"></span> -->
-								<input type="text" id="serviceText" name="serviceText" class="ellipsis"
-								       style="border: 0px; background-color: #fff;" disabled="disabled"/>
-								<input type="hidden" name="service" id="serviceHidden"/>
+							<div class="row">
+								<div class="col-35">
+									<label for="serviceType" class="fname"><s:message code="filterInfo.servicetype"/></label>
+								</div>
+								<div class="col-65">
+									<button type="button" class="form_btn03 selBtn btn-sm" accesskey="T" id="service">
+										<s:message code="common.msg.select"/></button>
+									<!-- <span style="display: inline-block; height: 20px; position: relative; top: 7px;" class="ellipsis" id="svcText"></span> -->
+									<input type="text" id="serviceText" name="serviceText" style="border: 0px; background-color: transparent;" disabled="disabled"/>
+									<input type="hidden" name="service" id="serviceHidden"/>
+								</div>
 							</div>
-							<div class="form-group form-inline">
-								<label for="personalInfo" class="control-label col-xs-4"><s:message
-										code="common.msg.regexp"/></label>
-								<button type="button" class="btn btn-primary selBtn btn-sm" accesskey="P" id="regexp">
-									<s:message code="common.msg.select"/></button>
-								<!-- <span style="display: inline-block; height: 20px; position: relative; top: 7px;" class="ellipsis" id="patternText"></span> -->
-								<input type="text" id="regexpText" name="regexpText" class="ellipsis"
-								       style="border: 0px; background-color: #fff;" disabled="disabled"/>
-								<input type="hidden" name="regexp" id="regexpHidden"/>
+
+							<div class="row">
+								<div class="col-35">
+									<label for="personalInfo" class="fname"><s:message code="common.msg.regexp"/></label>
+								</div>
+								<div class="col-65">
+									<button type="button" class="form_btn03 selBtn btn-sm" accesskey="P" id="regexp">
+										<s:message code="common.msg.select"/></button>
+									<!-- <span style="display: inline-block; height: 20px; position: relative; top: 7px;" class="ellipsis" id="patternText"></span> -->
+									<input type="text" id="regexpText" name="regexpText" style="border: 0px; background-color: transparent;" disabled="disabled"/>
+									<input type="hidden" name="regexp" id="regexpHidden"/>
+								</div>
 							</div>
-							<div class="form-group form-inline" id="readAuthDiv">
-								<label for="personalInfo" class="control-label col-xs-4"><s:message
-										code="userGroup.navi.title2"/></label>
-								<button type="button" class="btn btn-primary selBtn btn-sm" accesskey="R" id="readAuth">
-									<s:message code="common.msg.select"/></button>
-								<input type="text" id="readAuthText" name="readAuthText" class="ellipsis"
-								       style="border: 0px; background-color: #fff;" disabled="disabled"/>
-								<input type="hidden" name="readAuth" id="readAuthHidden"/>
+
+							<div class="row" id="readAuthDiv">
+								<div class="col-35">
+									<label for="personalInfo" class="fname"><s:message code="userGroup.navi.title2"/></label>
+								</div>
+								<div class="col-65">
+									<button type="button" class="btn btn-primary selBtn btn-sm" accesskey="R" id="readAuth">
+										<s:message code="common.msg.select"/></button>
+									<input type="text" id="readAuthText" name="readAuthText" class="ellipsis" style="border: 0px; background-color: transparent;" disabled="disabled"/>
+									<input type="hidden" name="readAuth" id="readAuthHidden"/>
+								</div>
 							</div>
-							<div class="form-inline" style="border-bottom: none;">
-								<label for="chkMenu" class="control-label col-xs-12"><s:message
-										code="OPERATION_MGMT.BODY_VIEW"/>
-									<button class="btn btn-secondary btn-xs" type="button" accesskey="B"
-									        id="selAllBodyBtn" style="margin:1px; border: 1px solid #ccc;"><s:message
-											code="common.msg.select_all"/></button>
-									<button class="btn btn-secondary btn-xs" type="button" accesskey="C"
-									        id="resetAllBodyBtn" style="margin:1px; border: 1px solid #ccc;"><s:message
-											code="common.msg.unselect_all"/></button>
-								</label>
-								<div id="divBodyChk"
-								     style="border: 1px solid #e5e5e5; margin-left: 15px; padding: 15px; display: inline-block; width: 95%;">
+
+							<div class="row" style="border-bottom: none;">
+								<div class="col-65">
+									<label for="chkMenu" class="fname"><s:message code="OPERATION_MGMT.BODY_VIEW"/>
+										<button class="btn btn-secondary btn-xs" type="button" accesskey="B" id="selAllBodyBtn" style="margin:1px; border: 1px solid #ccc;"><s:message code="common.msg.select_all"/></button>
+										<button class="btn btn-secondary btn-xs" type="button" accesskey="C" id="resetAllBodyBtn" style="margin:1px; border: 1px solid #ccc;"><s:message code="common.msg.unselect_all"/></button>
+
+								</div>
+								<div id="divBodyChk" class="col-65" style="border: 1px solid #e5e5e5; margin-left: 15px; padding: 15px; display: inline-block; width: 95%;">
 									<label class="checkbox-inline c-checkbox" style="padding-left: 0px;">
 										<input type="checkbox" name="chkMenu" value="DV" checked>
-										<span class="fa fa-check"></span><s:message code="common.msg.search"/>
+										<s:message code="common.msg.search"/>
 									</label>
 									<label class="checkbox-inline c-checkbox" style="padding-left: 0px;">
 										<input type="checkbox" name="chkMenu" value="DS" checked>
-										<span class="fa fa-check"></span><s:message code="common.msg.save"/>
+										<s:message code="common.msg.save"/>
 									</label>
 									<label class="checkbox-inline c-checkbox" style="padding-left: 0px;">
 										<input type="checkbox" name="chkMenu" value="DF" checked>
-										<span class="fa fa-check"></span><s:message code="common.msg.forward_mail"/>
+										<s:message code="common.msg.forward_mail"/>
 									</label>
 									<label class="checkbox-inline c-checkbox" style="padding-left: 0px;">
 										<input type="checkbox" name="chkMenu" value="DP" checked>
-										<span class="fa fa-check"></span><s:message code="common.msg.print"/>
+										<s:message code="common.msg.print"/>
 									</label>
 									<input type="hidden" name="menu" id="menuHidden"/>
 								</div>
 							</div>
-							<div class="form-inline">
-								<label for="menuInfo" class="control-label col-xs-12"><s:message
-										code="DATA_MONITOR.MESSAGE"/> <s:message code="common.msg.export"/>
-									<button class="btn btn-secondary btn-xs" type="button" accesskey="E"
-									        id="selAllExpBtn" style="margin:1px; border: 1px solid #ccc;"><s:message
-											code="common.msg.select_all"/></button>
-									<button class="btn btn-secondary btn-xs" type="button" accesskey="F"
-									        id="resetAllExpBtn" style="margin:1px; border: 1px solid #ccc;"><s:message
-											code="common.msg.unselect_all"/></button>
-								</label>
-								<div id="divExpChk"
-								     style="border: 1px solid #e5e5e5; margin-left: 15px; padding: 15px; display: inline-block; width: 95%;">
-									<label class="checkbox-inline c-checkbox" style="padding: 2px 0px;">
-										<input type="checkbox" name="chkMenu" value="LS" checked>
-										<span class="fa fa-check"></span><s:message code="selectCodeAll.list"/>
+
+							<div class="row">
+								<div class="col-65">
+									<label for="menuInfo" class="fname"><s:message code="DATA_MONITOR.MESSAGE"/> <s:message code="common.msg.export"/>
+										<button class="btn btn-secondary btn-xs" type="button" accesskey="E" id="selAllExpBtn" style="margin:1px; border: 1px solid #ccc;"><s:message code="common.msg.select_all"/></button>
+										<button class="btn btn-secondary btn-xs" type="button" accesskey="F" id="resetAllExpBtn" style="margin:1px; border: 1px solid #ccc;"><s:message code="common.msg.unselect_all"/></button>
 									</label>
-									<label class="checkbox-inline c-checkbox" style="padding: 2px 0px;">
-										<input type="checkbox" name="chkMenu" value="BS" checked>
-										<span class="fa fa-check"></span><s:message code="condition.body"/>
-									</label>
-									<label class="checkbox-inline c-checkbox" style="padding: 2px 0px;">
-										<input type="checkbox" name="chkMenu" value="AS" checked>
-										<span class="fa fa-check"></span><s:message code="consent.attach"/>
-									</label>
-									<label class="checkbox-inline c-checkbox" style="padding: 2px 0px;">
-										<input type="checkbox" name="chkMenu" value="WS" checked>
-										<span class="fa fa-check"></span><s:message
-											code="selectCodeAll.list"/>+<s:message code="condition.body"/>
-									</label>
+								</div>
+								<div id="divExpChk" class="col-65" style="border: 1px solid #e5e5e5; margin-left: 15px; padding: 15px; display: inline-block; width: 95%;">
+									<label class="checkbox-inline c-checkbox" style="padding: 2px 0px;"><input type="checkbox" name="chkMenu" value="LS" checked><s:message code="selectCodeAll.list"/></label>
+									<label class="checkbox-inline c-checkbox" style="padding: 2px 0px;"><input type="checkbox" name="chkMenu" value="BS" checked><s:message code="condition.body"/></label>
+									<label class="checkbox-inline c-checkbox" style="padding: 2px 0px;"><input type="checkbox" name="chkMenu" value="AS" checked><s:message code="consent.attach"/></label>
+									<label class="checkbox-inline c-checkbox" style="padding: 2px 0px;"><input type="checkbox" name="chkMenu" value="WS" checked><s:message code="selectCodeAll.list"/>+<s:message code="condition.body"/></label>
 									<br>
 									<label class="checkbox-inline c-checkbox" style="padding: 2px 0px;">
 										<input type="checkbox" name="chkMenu" value="CS" checked>
-										<span class="fa fa-check"></span><s:message
-											code="selectCodeAll.list"/>+<s:message code="condition.body"/>+<s:message
-											code="consent.attach"/>
+										<s:message code="selectCodeAll.list"/>+<s:message code="condition.body"/>+<s:message code="consent.attach"/>
 									</label>
 									<label class="checkbox-inline c-checkbox" style="padding: 2px 0px;">
 										<input type="checkbox" name="chkMenu" value="LP" checked>
-										<span class="fa fa-check"></span><s:message code="selectCodeAll.list"/>
+										<s:message code="selectCodeAll.list"/>
 										<s:message code="common.msg.print"/>
 									</label>
 								</div>
 							</div>
-							<div class="form-inline">
-								<label for="approbator" class="control-label col-xs-4"><s:message
-										code="admin.consent.apply"/></label>
-								<label class="radio-inline c-radio">
-									<input type="radio" name="approbator" value="N" checked>
-									<span class="fa fa-check"></span><s:message code="admin.normal.admin"/>
-								</label>
-								<label class="radio-inline c-radio">
-									<input type="radio" name="approbator" value="A">
-									<span class="fa fa-check"></span><s:message code="admin.apply.user"/>
-								</label>
-								<input type="hidden" name="approbatorNm" id="hiddenApprobator">
+
+							<div class="row">
+								<div class="col-35">
+									<label for="approbator" class="fname"><s:message code="admin.consent.apply"/></label>
+								</div>
+								<div class="col-65">
+									<label class="radio-inline c-radio">
+										<input type="radio" name="approbator" value="N" checked>
+										<s:message code="admin.normal.admin"/>
+									</label>
+									<label class="radio-inline c-radio">
+										<input type="radio" name="approbator" value="A">
+										<s:message code="admin.apply.user"/>
+									</label>
+									<input type="hidden" name="approbatorNm" id="hiddenApprobator">
+								</div>
 							</div>
-							<div class="form-inline" style="border-bottom: 1px solid #e5e5e5;">
-								<label for="infoFeedbackYn" class="control-label col-xs-4"><s:message
-										code="condition.infotype"/>/<s:message code="condition.feedback"/></label>
-								<label class="radio-inline c-radio">
-									<input type="radio" name="infoFeedbackYn" value="Y">
-									<span class="fa fa-check"></span><s:message code="common.msg.use"/>
-								</label>
-								<label class="radio-inline c-radio">
-									<input type="radio" name="infoFeedbackYn" value="N" checked>
-									<span class="fa fa-check"></span><s:message code="common.msg.unuse"/>
-								</label>
+
+							<div class="row">
+								<div class="col-35">
+									<label for="infoFeedbackYn" class="fname"><s:message code="condition.infotype"/>/<s:message code="condition.feedback"/></label>
+								</div>
+								<div class="col-65">
+									<label class="radio-inline c-radio">
+										<input type="radio" name="infoFeedbackYn" value="Y">
+										<s:message code="common.msg.use"/>
+									</label>
+									<label class="radio-inline c-radio">
+										<input type="radio" name="infoFeedbackYn" value="N" checked>
+										<s:message code="common.msg.unuse"/>
+									</label>
+								</div>
+
 							</div>
-							<div id="msgAuthComment" class="form-inline" style="border-bottom: 1px solid #e5e5e5;">
-								<div style="padding-left: 15px;"><s:message code="admin.add.msgAuthComment"/></div>
-							</div>
-							<div id="infoFeedbackComment" class="form-inline"
-							     style="border-bottom: 1px solid #e5e5e5; display: none;">
-								<div style="padding-left: 15px;"><s:message code="admin.add.buy"/></div>
+							<div class="info" style="background-color: transparent">
+								안내 사항
+								<div id="msgAuthComment" class="form-inline">
+									<div style="padding-left: 15px;"><s:message code="admin.add.msgAuthComment"/></div>
+								</div>
+								<div id="infoFeedbackComment" class="form-inline">
+									<div style="padding-left: 15px;"><s:message code="admin.add.buy"/></div>
+								</div>
 							</div>
 						</div>
+
+					</div>
+					<div class="modalfooter">
+						<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+						<button type="button" class="pop_btn02 savePopBtn" accesskey="S" id="savePopBtn"><s:message code="common.msg.save"/></button>
 					</div>
 				</div>
-			</form>
-			<div class="modal-footer">
-
-
-				<button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal"><s:message
-						code="common.msg.close"/></button>
-				<button type="button" class="btn btn-primary savePopBtn" accesskey="S" id="savePopBtn"><s:message
-						code="common.msg.save"/></button>
 			</div>
-		</div>
+
+		</form>
 	</div>
 </div>
-
 
 <div class="modal" id="statusPop">
 	<div class="modal-content">
@@ -940,10 +962,8 @@
 					</div>
 				</div>
 				<div class="modalfooter">
-					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message
-							code="common.msg.close"/></button>
-					<button type="button" class="pop_btn02" accesskey="S" id="applyPopBtn"><s:message
-							code="common.msg.apply"/></button>
+					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+					<button type="button" class="pop_btn02" accesskey="S" id="applyPopBtn"><s:message code="common.msg.apply"/></button>
 				</div>
 			</div>
 		</form>
@@ -973,8 +993,7 @@
 							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
-							<input type="text" class="w100" name="systemIp1" id="systemIp1"
-							       placeholder="<s:message code="admin.msg.enter.ip"/>">
+							<input type="text" class="w100" name="systemIp1" id="systemIp1" placeholder="<s:message code="admin.msg.enter.ip"/>">
 						</div>
 					</div>
 					<div class="row">
@@ -983,16 +1002,13 @@
 							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
-							<input type="text" class="w100" name="systemIp2" id="systemIp2"
-							       placeholder="<s:message code="admin.msg.enter.ip"/>">
+							<input type="text" class="w100" name="systemIp2" id="systemIp2" placeholder="<s:message code="admin.msg.enter.ip"/>">
 						</div>
 					</div>
 				</div>
 				<div class="modalfooter">
-					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message
-							code="common.msg.close"/></button>
-					<button type="button" class="pop_btn02" accesskey="S" id="saveIpMacPopBtn"><s:message
-							code="common.msg.save"/></button>
+					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+					<button type="button" class="pop_btn02" accesskey="S" id="saveIpMacPopBtn"><s:message code="common.msg.save"/></button>
 				</div>
 			</div>
 		</form>
@@ -1011,9 +1027,7 @@
 				</select>
 			</div>
 			<div>
-				<input type="text"
-				       placeholder="<s:message code="admin.msg.idname"/>" id="searchStr"
-				       style="width: 250px;">
+				<input type="text" placeholder="<s:message code="admin.msg.idname"/>" id="searchStr" style="width: 250px;">
 				<button class="form_btn01" type="button" accesskey="Q" id="searchBtn">조회</button>
 				<button type="button" class="btn01" accesskey="I" id="insertBtn"><s:message code="common.msg.add"/>
 				</button>
