@@ -47,7 +47,7 @@ $(document).ready(function(){
 		ui.get({
 			url : 'getConfList.xcn',
 			success : function ( data, total ) {
-				setInsaRadioVal(data, 'insa.auto');
+                setInsaButtonVal(data, 'insa.auto');
 				setInsaRadioVal(data, 'insa.basepoint');
 				setInsaRadioVal(data, 'insa.dept.basepoint');
 				setInsaVal(data, 'insa.path');
@@ -57,7 +57,7 @@ $(document).ready(function(){
 				//setInsaColumnVal(data,'insa.cols');
 				var options = makeInsaOptions;
 				makeInsaSelectBox(options,data);
-				if($('input:radio[name="insa\\.auto"]:checked').val() == 'N'){
+                if ($('button[name="insa\\.auto"][value="N"]').hasClass("active")) {
 					$('#insa\\.path').prop("disabled",true);
 					$('#insa\\.sepa').prop("disabled",true);
 					$('#allWeek').prop("disabled",true);
@@ -124,8 +124,10 @@ $(document).ready(function(){
 		$('#selectedCodeTitle').hide();
 	});
 
-	$('input:radio[name="insa\\.auto"]').change(function(){
-		if($(this).val() == 'N'){
+    $('button[name="insa.auto"]').click(function(){
+        if($(this).val() == 'N'){
+            $(this).addClass('active');
+            $('button[name="insa.auto"]').not(this).removeClass('active');
 			$('#insa\\.path').prop("disabled",true);
 			$('#insa\\.sepa').prop("disabled",true);
 			$('#allWeek').prop("disabled",true);
@@ -137,6 +139,8 @@ $(document).ready(function(){
 			$('#addSelectBox').prop("disabled",true);
 			$('#directExecuteBtn').prop("disabled",true);
 		}else{
+            $(this).addClass('active');
+            $('button[name="insa.auto"]').not(this).removeClass('active');
 			$('#insa\\.path').prop("disabled",false);
 			$('#insa\\.sepa').prop("disabled",false);
 			$('#allWeek').prop("disabled",false);
@@ -692,6 +696,28 @@ function setInsaRadioVal(data, id){
 	$('input:radio[name='+idIndicator('insa.auto')+']:input[value=N]').prop("checked", true);
 
 }
+
+function setInsaButtonVal(data, id) {
+    for (var i = 0; i < data.length; i++) {
+        if (data[i].confId == id) {
+            $('button[name=' + idIndicator(id) + '][value=' + data[i].val + ']').addClass("active");
+            return;
+        }
+    }
+    $('button[name=' + idIndicator('insa.auto') + '][value=N]').addClass("active");
+}
+
+/*function setInsaButtonVal(data, id){
+    for(var i=0 ; i < data.length ; i++){
+        if(data[i].confId == id ) {
+            return;
+        }
+    }
+    $('input:radio[name='+idIndicator('insa.auto')+']:input[value=N]').prop("checked", true);
+
+}*/
+
+
 function setInsa_schedule(insa_schedule){
 	var data = [];
 	data.push({confId:'insa.schedule', val:insa_schedule});
@@ -930,10 +956,10 @@ function allSelectOptions(){
 function valueCheckInfo(){
 	var data=[];
 	var columnArray = [];
-	if($('input:radio[name="insa\\.auto"]:checked').val() == 'N'){
-		data.push({confId:'insa.auto', val:'N'});
-		return data;
-	} else {
+    if ($('button[name="insa\\.auto"][value="N"]').hasClass("active")) {
+        data.push({ confId: 'insa.auto', val: 'N' });
+        return data;
+    }else {
 		data.push({confId:'insa.auto', val:'Y'});
 		data.push({confId:'insa.basepoint', val:$('input:radio[name="insa\\.basepoint"]:checked').val()});
 		data.push({confId:'insa.dept.basepoint', val:$('input:radio[name="insa\\.dept\\.basepoint"]:checked').val()});
@@ -994,15 +1020,17 @@ function makeInsaSelectBox(options,data){
 	//console.log(arr)
 	if(arr==''){
 		for(var i=0 ; i<current_select_count; i++){
-			str += '<li style="padding-bottom:2px;font-weight: 700;"><select class="insaSelctClass" id="COL'+i+'" name="insa.select" style=" min-width: 197px;">';
+            str += '<span class="num_list mat8">'+(i+1)+'</span>';
+			str += '<select class="w90" id="COL'+i+'" name="insa.select">';
 			str += options;
-			str += '</select></li>';
+			str += '</select>';
 		}
 	}else{
 		for(var i=0 ; i<arr2.length; i++){
-			str += '<li style="padding-bottom:2px;font-weight: 700;"><select class="insaSelctClass" id="COL'+i+'" name="insa.select" style=" min-width: 197px;">';
+            str += '<span class="num_list mat8">'+(i+1)+'</span>';
+			str += '<select class="w90" id="COL'+i+'" name="insa.select">';
 			str += options;
-			str += '</select></li>';
+			str += '</select>';
 		}
 	}
 	$("#insaSelect").html(str);
@@ -1150,137 +1178,146 @@ function resetCode(codeType){
 			</div>
 		</div>
 	</div>
-	<div class="modal fade" id="setUserPop" tabindex="-1" role="dialog" aria-labelledby="setUserPop">
-		<div class="modal-dialog" role="document" style="width: 815px;">
+
+<div class="modal" id="setUserPop" tabindex="-1" role="dialog" aria-labelledby="setUserPop">
 			<div class="modal-content">
-				<form method="post" id="setUserPopForm">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-						<h3 class="modal-title"><s:message code="userInfo.set.insa"/></h3>
+				<div class="modalHead">
+					<h2><s:message code="userInfo.set.insa"/></h2>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modalCon">
+					<div class="modalTop">
+						<h3>인사 정보 관리 방법</h3>
+						<div class="optiotab w100 mat8">
+							<button class="tablinks w50" value="N" name="insa.auto"><s:message code="userInfo.directlink"/></button>
+							<button class="tablinks w50"  value="Y" name="insa.auto">	&#10004;<s:message code="userInfo.autolink"/></button>
+						</div>
 					</div>
-					<div class="modal-body" style="margin-right: 17px;min-height: 581px">
-						<div>
-							<div>
-								<p style="font-weight: bold;padding-left: 28px;"><s:message code="userInfo.method.insa"/></p>
-								<fieldset>
-									<div class="form-inline" style="line-height: 35px;height: 35px;margin-left: 15px; padding-bottom: 35px;border-bottom: 2px solid #5d9cec;">
-										<label  class="col-sm-4 radio-inline c-radio"><input type="radio" value="N" name="insa.auto"><span class="fa fa-check"></span><s:message code="userInfo.directlink"/></label>
-										<label  class="col-sm-4 radio-inline c-radio"><input type="radio" value="Y" name="insa.auto"><span class="fa fa-check"></span><s:message code="userInfo.autolink"/></label>
-									</div>
-								</fieldset>
-							</div>
-							<div style="margin-top: 17px;float: left; margin-left: 30px;width:560px;"><p style="font-weight: bold;">[<s:message code="userInfo.set.autolink"/>]</p>
-								<div >
-									<div style="font-weight: 700; margin-bottom: 15px;">- <s:message code="userInfo.basepoint"/>
-										<fieldset>
-											<div class="form-inline not-dashed" style="padding-top: 5px;">
-												<div style="overflow: hidden; margin-bottom: 3px;"><label  class="col-sm-12 radio-inline c-radio"><input type="radio" value="F" name="insa.basepoint" checked="checked"><span class="fa fa-check"></span><s:message code="userInfo.basepoint.file"/></label></div>
-												<div><label  class="col-sm-12 radio-inline c-radio"><input type="radio" value="I" name="insa.basepoint"><span class="fa fa-check"></span><s:message code="userInfo.basepoint.ip"/></label></div>
-											</div>
-										</fieldset>
-									</div>
-									<div style="font-weight: 700;">- <s:message code="userInfo.filepath"/>
-										<div class="form-inline" style="border-bottom: 0px;">
-											<input type="text" id="insa.path" placeholder="<s:message code="common.message.input.filepath"/>" class="form-control" style="width: 400px;" maxlength="255">
+					<div class="modalbody">
+						<form method="post" id="setUserPopForm">
+							<h4 class="blue02" style="position: relative; font-size:14px; font-weight: 600; margin-bottom:8px;"><s:message code="userInfo.set.autolink"/></h4>
+							<div class="row bortop_dd pt8">
+								<div class="col-50">
+									<div class="radio w100 mat8">
+										<label for="fname"><s:message code="userInfo.basepoint"/></label>
+										<div class="radio w100 mat4">
+											<input type="radio"  value="F" name="insa.basepoint" checked="checked">
+											<span><s:message code="userInfo.basepoint.file"/></span>
+										</div>
+										<div class="radio w100 mat4">
+											<input type="radio" value="I" name="insa.basepoint">
+											<span><s:message code="userInfo.basepoint.ip"/></span>
 										</div>
 									</div>
-									<div style="font-weight: 700;">- <s:message code="userInfo.colseparator"/>
-										<!-- <div class="form-inline" style="border-bottom: 0px;">
-											<input type="text" class="form-control" id="insa.sepa"  style="width: 35px;" maxlength="1">("," 또는 "|" 를 입력하세요.)
-										</div> -->
-										<select id="insa.sepa" class="form-control m-b" style="width: 83px; margin-top: 6px;" >
+									<div class="mat16">
+										<label for="fname"><s:message code="userInfo.filepath"/></label>
+										<input class="w100 mat8" type="text" id="insa.path" placeholder="<s:message code="common.message.input.filepath"/>">
+									</div>
+									<div class="mat16">
+										<label for="fname"><s:message code="userInfo.colseparator"/></label>
+										<select class="w100" id="insa.sepa">
 											<option value="|" selected> | </option>
 											<option value=","> , </option>
 										</select>
 									</div>
-									<div style="display: block;font-weight: 700;margin-top: 20px;">
-										<div>
-											<fieldset>- <s:message code="userInfo.set.day"/>
-												<div class="form-group" style="width: 415px;">
-													<div class="checkbox c-checkbox">
-														<label class="checkbox-inline"><input type="checkbox" value="A" id="allWeek"><span class="fa fa-check"></span><s:message code="userInfo.all"/></label>
-														<label class="checkbox-inline" style="margin-left:0;"><input type="checkbox" name="insa.week" class="insa.week" value="sun"><span class="fa fa-check"></span><s:message code="common.sun"/></label>
-														<label class="checkbox-inline" style="margin-left:0;"><input type="checkbox" name="insa.week" class="insa.week" value="mon"><span class="fa fa-check"></span><s:message code="common.mon"/></label>
-														<label class="checkbox-inline" style="margin-left:0;"><input type="checkbox" name="insa.week" class="insa.week" value="tue"><span class="fa fa-check"></span><s:message code="common.tue"/></label>
-														<label class="checkbox-inline" style="margin-left:0;"><input type="checkbox" name="insa.week" class="insa.week" value="wed"><span class="fa fa-check"></span><s:message code="common.wed"/></label>
-														<label class="checkbox-inline" style="margin-left:0;"><input type="checkbox" name="insa.week" class="insa.week" value="thu"><span class="fa fa-check"></span><s:message code="common.thu"/></label>
-														<label class="checkbox-inline" style="margin-left:0;"><input type="checkbox" name="insa.week" class="insa.week" value="fri"><span class="fa fa-check"></span><s:message code="common.fri"/></label>
-														<label class="checkbox-inline" style="margin-left:0;"><input type="checkbox" name="insa.week" class="insa.week" value="sat"><span class="fa fa-check"></span><s:message code="common.sat"/></label>
-													</div>
-												</div>
-											</fieldset>
-											<fieldset style="margin-top: 7px;">- <s:message code="userInfo.set.time"/>
-												<div class="form-group">
-													<div class="col-sm-3" style="padding-top:20px;margin-left: -16px;margin-top:-10px;" >
-														<select class="form-control m-b" id="insa.time" name="time" style="width: 200px;">
-															<option value="*"><s:message code="userInfo.clock.time"/></option>
-															<option value="1"><s:message code="common.time.1"/></option>
-															<option value="2"><s:message code="common.time.2"/></option>
-															<option value="3"><s:message code="common.time.3"/></option>
-															<option value="4"><s:message code="common.time.4"/></option>
-															<option value="5"><s:message code="common.time.5"/></option>
-															<option value="6"><s:message code="common.time.6"/></option>
-															<option value="7"><s:message code="common.time.7"/></option>
-															<option value="8"><s:message code="common.time.8"/></option>
-															<option value="9"><s:message code="common.time.9"/></option>
-															<option value="10"><s:message code="common.time.10"/></option>
-															<option value="11"><s:message code="common.time.11"/></option>
-															<option value="12"><s:message code="common.time.12"/></option>
-															<option value="13"><s:message code="common.time.13"/></option>
-															<option value="14"><s:message code="common.time.14"/></option>
-															<option value="15"><s:message code="common.time.15"/></option>
-															<option value="16"><s:message code="common.time.16"/></option>
-															<option value="17"><s:message code="common.time.17"/></option>
-															<option value="18"><s:message code="common.time.18"/></option>
-															<option value="19"><s:message code="common.time.19"/></option>
-															<option value="20"><s:message code="common.time.20"/></option>
-															<option value="21"><s:message code="common.time.21"/></option>
-															<option value="22"><s:message code="common.time.22"/></option>
-															<option value="23"><s:message code="common.time.23"/></option>
-															<option value="0"><s:message code="common.time.24"/></option>
-														</select>
-													</div>
-												</div>
-											</fieldset>
+									<div class="mat16">
+										<div class="col-35">
+											<label for="fname"><s:message code="userInfo.set.day"/></label>
+										</div>
+										<div class="col-65 txt_right">
+											<div class="checkbox">
+												<input type="checkbox" checked="checked"  value="A" id="allWeek">
+												<span><s:message code="userInfo.all"/></span>
+											</div>
+										</div>
+										<div class="clear">
+												<div class="checkbox"><input type="checkbox" name="insa.week" value="sun"><span><s:message code="common.sun"/></span></div>
+												<div class="checkbox"><input type="checkbox" name="insa.week"value="mon"><span><s:message code="common.mon"/></span></div>
+												<div class="checkbox"><input type="checkbox" name="insa.week" value="tue"><span><s:message code="common.tue"/></span></div>
+												<div class="checkbox"><input type="checkbox" name="insa.week" value="wed"><span><s:message code="common.wed"/></span></div>
+												<div class="checkbox"><input type="checkbox" name="insa.week" value="thu"><span><s:message code="common.thu"/></span></div>
+												<div class="checkbox"><input type="checkbox" name="insa.week" value="fri"><span><s:message code="common.fri"/></span></div>
+												<div class="checkbox"><input type="checkbox" name="insa.week" value="sat"><span><s:message code="common.sat"/></span></div>
 										</div>
 									</div>
-									<div style="display: block;font-weight: 700;margin-top: 20px;">- <s:message code="userInfo.direct.execute"/>
-										<button id="directExecuteBtn" type="button" accesskey="D" class="btn btn-success" style="margin-left: 84px"><span class="glyphicon glyphicon-import"><s:message code="userInfo.direct.execute"/></span></button>
+									<div class="mat16">
+										<label for="fname"><s:message code="userInfo.set.time"/></label>
+										<select class="w100" id="insa.time" name="time">
+										<option value="*"><s:message code="userInfo.clock.time"/></option>
+										<option value="1"><s:message code="common.time.1"/></option>
+										<option value="2"><s:message code="common.time.2"/></option>
+										<option value="3"><s:message code="common.time.3"/></option>
+										<option value="4"><s:message code="common.time.4"/></option>
+										<option value="5"><s:message code="common.time.5"/></option>
+										<option value="6"><s:message code="common.time.6"/></option>
+										<option value="7"><s:message code="common.time.7"/></option>
+										<option value="8"><s:message code="common.time.8"/></option>
+										<option value="9"><s:message code="common.time.9"/></option>
+										<option value="10"><s:message code="common.time.10"/></option>
+										<option value="11"><s:message code="common.time.11"/></option>
+										<option value="12"><s:message code="common.time.12"/></option>
+										<option value="13"><s:message code="common.time.13"/></option>
+										<option value="14"><s:message code="common.time.14"/></option>
+										<option value="15"><s:message code="common.time.15"/></option>
+										<option value="16"><s:message code="common.time.16"/></option>
+										<option value="17"><s:message code="common.time.17"/></option>
+										<option value="18"><s:message code="common.time.18"/></option>
+										<option value="19"><s:message code="common.time.19"/></option>
+										<option value="20"><s:message code="common.time.20"/></option>
+										<option value="21"><s:message code="common.time.21"/></option>
+										<option value="22"><s:message code="common.time.22"/></option>
+										<option value="23"><s:message code="common.time.23"/></option>
+										<option value="0"><s:message code="common.time.24"/></option>
+										</select>
+									</div>
+									<div class="mat16">
+										<div class="col-35">
+											<label for="fname"><s:message code="userInfo.direct.execute"/></label>
+										</div>
+										<div class="col-65 txt_right">
+											<button class="form_btn01_02" id="directExecuteBtn" accesskey="D"><s:message code="userInfo.direct.execute"/></button>
+										</div>
+									</div>
+								</div>
+								<div class="col-50 mal16">
+									<label for="fname"><s:message code="userInfo.dept.basepoint"/></label>
+									<div class="radio mat4 w100">
+										<div class="radio w100 mat4">
+											<input type="radio" value="F" name="insa.dept.basepoint" checked="checked">
+											<span ><s:message code="userInfo.basepoint.file"/></span>
+										</div>
+										<div class="radio w100 mat4">
+											<input type="radio" value="I" name="insa.dept.basepoint">
+											<span ><s:message code="userInfo.dept.basepoint.ip"/></span>
+										</div>
+									</div>
+									<div class="mat16">
+										<div class="col-35">
+											<label for="fname"><s:message code="userInfo.no.column"/></label>
+										</div>
+										<div class="col-65 txt_right">
+											<button class="btn01 btnform"> <img src="../img/subBtn_plus.png" alt="추가">추가</button>
+										</div>
+										<p class="clear w100">
+										<div id="insaSelect"  class="w90">
+										</div>
+										</p>
 									</div>
 								</div>
 							</div>
-							<div style="display: inline-block;margin-top: 45px;">
-								<fieldset>
-									<div style="font-weight: 700; margin-bottom: 15px;margin-left: -127px;">- <s:message code="userInfo.dept.basepoint"/>
-										<fieldset>
-											<div class="form-inline not-dashed" style="padding-top: 5px;">
-												<div style="overflow: hidden; margin-bottom: 3px;"><label  class="col-sm-12 radio-inline c-radio"><input type="radio" value="F" name="insa.dept.basepoint" checked="checked"><span class="fa fa-check"></span><s:message code="userInfo.basepoint.file"/></label></div>
-												<div><label  class="col-sm-12 radio-inline c-radio"><input type="radio" value="I" name="insa.dept.basepoint"><span class="fa fa-check"></span><s:message code="userInfo.dept.basepoint.ip"/></label></div>
-											</div>
-										</fieldset>
-									</div>
-									<div class="form-group" style="font-weight: 700;margin-left: -127px;">- <s:message code="userInfo.no.column"/>
-									<button id="addSelectBox" type="button" accesskey="A" class="btn btn-default" style="margin-left: 84px"><span class="glyphicon glyphicon-plus"><s:message code="common.msg.add"/></span></button>
-										<div style="margin-left: -15px; margin-top: 20px;">
-											<ol id="insaSelect" >
-											</ol>
-										</div>
-									</div>
-								</fieldset>
-							</div>
-						</div>
+						</form>
 					</div>
-				</form>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
-					<button type="button" class="btn btn-primary" id="setUserPopBtn" accesskey="S"><s:message code="common.msg.apply"/></button>
+					<div class="modalfooter">
+						<button class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+						<button class="pop_btn02" id="setUserPopBtn" accesskey="S"><s:message code="common.msg.apply"/></button>
+					</div>
 				</div>
 			</div>
-		</div>
-	</div>
-	<div class="modal fade" id="uploadUserPop" tabindex="-1" role="dialog" aria-labelledby="uploadUserPop">
+</div>
+
+<div class="modal fade" id="uploadUserPop" tabindex="-1" role="dialog" aria-labelledby="uploadUserPop">
 		<div class="modal-dialog" role="document" style="width: 800px;">
 			<div class="modal-content">
 				<form method="post" id="uploadUserPopForm">

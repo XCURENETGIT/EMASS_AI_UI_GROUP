@@ -297,7 +297,7 @@ function getCodeList() {
 				<div class="grayBg mat8 popupInner">
 					<div>
 						<input type="text" placeholder="<s:message code="common.msg.searchMsg"/>" id="searchStr">
-						<button class="form_btn01" type="button" accesskey="Q" id="searchBtn"></button>
+						<button class="form_btn01" type="button" accesskey="Q" id="searchBtn"><s:message code="common.msg.search"/></button>
 					</div>
 				</div>
 				<!-- 테이블 -->
