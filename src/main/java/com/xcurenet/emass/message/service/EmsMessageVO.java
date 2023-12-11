@@ -1,13 +1,20 @@
 package com.xcurenet.emass.message.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.xcurenet.common.types.IP;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.config.Config;
 
+import com.xcurenet.emass.message.service.vo.EmassKeywordData;
 import lombok.Data;
+import org.joda.time.DateTime;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 @Data
 public class EmsMessageVO {
@@ -23,6 +30,13 @@ public class EmsMessageVO {
 	private String ctime;
 	private long size;
 	private long bodySize;
+	private String bodyHash;
+	private String bodyCharset;
+	private String bodyPath;
+	private String bodyTextPath;
+	private String bodyType;
+	private String bodyText;
+
 	private String usrIp;
 	private String usrId;
 	private String password;
@@ -66,67 +80,65 @@ public class EmsMessageVO {
 	private String ceo;
 	private boolean consentFlag;
 	private String body_snippet;
-	private List<String> attachname;
+	private List<String> attachname = new ArrayList<>();
 	private String ocr_attach_cnt;
 	private String protocol;
 	private String webPrefix;
-
 	private String attachStr;
 	private String fileNameStr;
 	private String subjectStr;
 	private String bodyStr;
+	private List<EmsRecvVO> userList = new ArrayList<>();
+	private List<EmsRecvVO> senderList = new ArrayList<>();
+	private List<EmsRecvVO> recvsList = new ArrayList<>();
+	private List<EmsRecvVO> toList = new ArrayList<>();
+	private List<EmsRecvVO> ccList = new ArrayList<>();
+	private List<EmsRecvVO> bccList = new ArrayList<>();
 
-	private List<EmsRecvVO> userList;
-	private List<EmsRecvVO> senderList;
-	private List<EmsRecvVO> recvsList;
-	private List<EmsRecvVO> toList;
-	private List<EmsRecvVO> ccList;
-	private List<EmsRecvVO> bccList;
-
-	private List<EmsAttachVO> files;
-	private List<EmsPiVO> patterns;
-
+	private List<EmsAttachVO> files = new ArrayList<>();
+	private List<EmsPiVO> patterns = new ArrayList<>();
 	private int ml_confd_class;
 	private int ml_confd_feedback;
 	private double ml_confd_prob;
 	private String ml_confd_userid;
-
 	private String epmsgType;
-
-	public void setSrcIp(String srcIp) {
-		if (Common.isNotEmpty(srcIp)) {
-			try {
-				this.srcIp = new IP(srcIp).toCanonicalAddr();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	public void setDstIp(String dstIp) {
-		if (Common.isNotEmpty(dstIp)) {
-			try {
-				this.dstIp = new IP(dstIp).toCanonicalAddr();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	public void setUsrIp(String usrIp) {
-		if (Common.isNotEmpty(usrIp)) {
-			try {
-				this.usrIp = new IP(usrIp).toCanonicalAddr();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
+	private EmassKeywordData keywordInfo;
+	private String header;
 
 	public void setSvc(String svc) {
-		if(Common.isNotEmpty(svc)) {
+		if (Common.isNotEmpty(svc)) {
 			this.svcNm = Config.getServiceNm(svc);
 			this.svc = svc;
 		}
+	}
+
+	public void setdPort(int dPort) {
+		this.dPort = dPort;
+		if(Common.isNotEquals(this.webPrefix, "https://") && dPort == 443) this.webPrefix = "https://";
+	}
+	public void setProtocol(String protocol) {
+		this.protocol = protocol;
+		if(Common.isNotEquals(this.webPrefix, "https://")) {
+			if(Common.isEquals(protocol, "h2")) this.webPrefix = "https://";
+			else this.webPrefix = "http://";
+		}
+	}
+
+	public void setWebPrefix(String webPrefix) {
+		this.webPrefix = webPrefix;
+	}
+	public String getWebPrefix() {
+		return Common.isEmpty(this.webPrefix) ? "http://" : this.webPrefix;
+	}
+
+	@JsonIgnore
+	public List<EmsRecvVO> getFullUsers() {
+		List<EmsRecvVO> result = new ArrayList<>();
+		result.addAll(userList);
+		result.addAll(senderList);
+		result.addAll(toList);
+		result.addAll(ccList);
+		result.addAll(bccList);
+		return result;
 	}
 }

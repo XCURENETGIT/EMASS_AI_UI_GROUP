@@ -1,21 +1,15 @@
 package com.xcurenet.emass.message.service;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.xcurenet.common.types.IP;
-import com.xcurenet.common.util.Common;
-
 import lombok.Data;
-import org.springframework.data.mongodb.core.mapping.Field;
+
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 
 @Data
 public class EmsRecvVO {
 	private String msgId;
-	@Field(name = "RECV_ID")
 	private String recvId;
-	@Field(name = "UTYPE")
 	private String uType;
 	private String eMail;
 	private String name;
@@ -30,23 +24,23 @@ public class EmsRecvVO {
 	private String deptNm;
 	private String jikgubCd;
 	private String jikgubNm;
-	@Field(name = "INSIDE")
 	private String inSide;
 	private String domain;
-	
 	private String viewStr;
 	private String formatStr;
 
-	public void setIp(String ip) {
-		List<String> ipArr = new ArrayList<>();
-		String[] ips = Common.toArray(ip, ",");
-		for (String ipa : ips) {
-			try {
-				ipArr.add(new IP(ipa.trim()).toCanonicalAddr());
-			} catch (IOException e) {
-				e.printStackTrace();
+
+	public static Map<String, Object> toMap(EmsRecvVO person) {
+		try {
+			Field[] fields = person.getClass().getDeclaredFields();
+			Map<String, Object> results = new HashMap<>();
+			for (Field field : fields) {
+				results.put(field.getName(), field.get(person));
 			}
+			return results;
+
+		} catch (IllegalAccessException | IllegalArgumentException e) {
+			return null;
 		}
-		this.ip = Common.join(ipArr, ", ");
 	}
 }

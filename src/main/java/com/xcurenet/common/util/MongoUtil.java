@@ -1,9 +1,9 @@
 package com.xcurenet.common.util;
 
-import com.mongodb.client.result.UpdateResult;
 import com.xcurenet.audit.service.AuditVO;
 import com.xcurenet.emass.message.vo.emass.mongo.EmassCheckedMgo;
 import com.xcurenet.emass.message.vo.emass.mongo.fields.CheckedVo_Mgo;
+import lombok.extern.log4j.Log4j2;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,22 +21,33 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Field;
 import java.util.*;
 
+@Log4j2
 @Component
 public class MongoUtil {
+
+	private static final String EMS_MESSAGE_COLLECTION = "EMS_MESSAGE";
 
 	@Autowired
 	@Qualifier("mongoTemplate")
 	private MongoTemplate mongoTemplate;
+
+
 	@Autowired
 	private CompatibilityVerifierProperties compatibilityVerifierProperties;
 
-	//최대값
+	private String getCollectionName(final String msgId, final String collectionName) {
+		return String.format("%s_%s", collectionName, msgId.substring(0, 6));
+	}
+
+	/**
+	 * INFO_* 테이블의 seq 값
+	 *
+	 * @param tableCon 테이블
+	 * @param vo       INFO VO
+	 * @return 최대값
+	 */
 	public <T> T maxValue(String tableCon, Class<T> vo) {
 		Query query = new Query();
-		//mongoTemplate.getCollection(tableCon);
-//		if(Common.isNotEmpty(tableCon)) {
-//			query.addCriteria(Criteria.where("TABLENAME").is(tableCon));
-//		}
 		query.with(Sort.by(Sort.Direction.DESC, "VERSION"));
 		query.limit(1);
 		return selectOne(query, vo, tableCon);
@@ -55,11 +66,16 @@ public class MongoUtil {
 		return mongoTemplate.findOne(query, vo, collectionName);
 	}
 
+	public <T> T selectId(String msgId, Class<T> vo) {
+		return selectId(msgId, vo, EMS_MESSAGE_COLLECTION);
+	}
+
 	//특정 id값 조회
 	public <T> T selectId(String msgId, Class<T> vo, String collectionName) {
 		Query query = new Query(Criteria.where("_id").is(msgId));
-		return mongoTemplate.findOne(query, vo, collectionName);
+		return mongoTemplate.findOne(query, vo, getCollectionName(msgId, collectionName));
 	}
+
 
 	/**
 	 * 주어진 MongoDB Query의 Count 값을 반환
@@ -149,10 +165,8 @@ public class MongoUtil {
 				result = true; // 작업 완료 처리
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			result = false;
+			log.error("", e);
 		}
-
 		return result;
 	}
 
@@ -168,7 +182,6 @@ public class MongoUtil {
 	public void update(String[] col, String[] where, String[] updateCol, String[] val, String collection, String multiYn) {
 		Query query = new Query();
 		Update update = new Update();
-
 		for (int i = 0; i < col.length; i++) {
 			query.addCriteria(Criteria.where(col[i]).is(where[i]));
 		}
@@ -184,37 +197,26 @@ public class MongoUtil {
 		}
 	}
 
-	public void updateEmsFeedback(String msgId, String adminId, String feedback) {
-		Query query = new Query();
-		Update update = new Update();
-
-		query.addCriteria(Criteria.where("_id").is(msgId));
-		update.set("ML_CONFD_FEEDBACK", feedback);
-		update.set("ML_CONFD_USERID", adminId);
-
-		mongoTemplate.updateFirst(query, update, "EMS_MESSAGE");
+	public void upsertEmsMessage(final String msgId, Query query, Update update) {
+		mongoTemplate.upsert(query, update, getCollectionName(msgId, EMS_MESSAGE_COLLECTION));
 	}
 
-	public UpdateResult updateVersion(String collectionName, String table, long version) {
+	public void updateVersion(String collectionName, String table, long version) {
 		Query query = new Query();
 		Update update = new Update();
 		query.addCriteria(Criteria.where("TABLENAME").is(table));
 		update.set("VERSION", version);
-
-		return mongoTemplate.updateMulti(query, update, collectionName);
-
+		mongoTemplate.updateMulti(query, update, collectionName);
 	}
 
-	public UpdateResult updateDate(String tableName, LocalDateTime localDateTime) {
+	public void updateDate(String tableName, LocalDateTime localDateTime) {
 		Query query = new Query();
 		Update update = new Update();
 		query.addCriteria(Criteria.where("TABLENAME").is(tableName));
 		update.set("DATE", localDateTime);
-
-		return mongoTemplate.updateMulti(query, update, "INFO_VERSION");
+		mongoTemplate.updateMulti(query, update, "INFO_VERSION");
 
 	}
-
 
 	public List<AuditVO> selectAuditList(Map<String, Object> map) {
 		Query query = new Query();
@@ -222,12 +224,8 @@ public class MongoUtil {
 		if (map.get("searchStr") != null && map.get("searchStr") != "") {
 			query.addCriteria(Criteria.where("information").regex(".*" + map.get("searchStr") + ".*"));
 		}
-
 		//sort 정렬 -> 최신순이 위로 오게
 		query.with(Sort.by(Sort.Direction.DESC, "date"));
-
 		return mongoTemplate.find(query, AuditVO.class);
 	}
-
-
 }

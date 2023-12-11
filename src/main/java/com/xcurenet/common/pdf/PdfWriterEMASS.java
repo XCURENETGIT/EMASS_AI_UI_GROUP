@@ -1,21 +1,28 @@
 package com.xcurenet.common.pdf;
 
-import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.xcurenet.common.util.Common;
-import com.xcurenet.common.util.locale.Prop;
-import com.xcurenet.emass.message.service.SolrEdcVO;
-import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONArray;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.util.List;
+
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.xcurenet.common.csv.CsvWriterEMASS;
+import com.xcurenet.common.util.Common;
+import com.xcurenet.common.util.locale.Prop;
+import com.xcurenet.emass.message.service.SolrEdcVO;
+
+import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONArray;
 
 @Slf4j
 public class PdfWriterEMASS {

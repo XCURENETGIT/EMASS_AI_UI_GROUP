@@ -1,19 +1,26 @@
 package com.xcurenet.common.csv;
 
-import com.xcurenet.common.util.Common;
-import com.xcurenet.emass.message.service.SolrEdcVO;
-import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.IOUtils;
 
-import java.io.*;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
+import com.xcurenet.common.excel.XLSXWriterEMASS;
+import com.xcurenet.common.util.Common;
+import com.xcurenet.emass.message.service.SolrEdcVO;
+
+import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 @Slf4j
 public class CsvWriterEMASS {

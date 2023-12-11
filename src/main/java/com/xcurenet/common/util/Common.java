@@ -104,14 +104,16 @@ public class Common {
 
 	public static final DateTimeFormatter DATETIMEMILLISSYMBOL = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
+	public static final DateTimeFormatter yyyyMMddHHmmss = DateTimeFormat.forPattern("yyyyMMddHHmmss");
+
+	public static final DateTimeFormatter yyyy_MM_dd_HH_mm_ss = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+
 	public static String getWeekName(int week) {
 		return WEEK_NAME_EN[week];
 	}
 
 	public static boolean isWindow() {
-		String os_name = System.getProperty("os.name").toLowerCase();
-		if (os_name.startsWith("windows")) return true;
-		else return false;
+		return System.getProperty("os.name").toLowerCase().startsWith("windows");
 	}
 
 	public static void release(HttpSession session) {
@@ -754,9 +756,8 @@ public class Common {
 	 */
 	public static String formatDate3(String orgDate) throws Exception {
 		DateTimeFormatter org = DateTimeFormat.forPattern("yyyyMMddHHmmss");
-		DateTimeFormatter newF = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 		DateTime date = DateTime.parse(orgDate.replaceAll("-", "").replaceAll(" ", ""), org);
-		return newF.print(date);
+		return yyyy_MM_dd_HH_mm_ss.print(date);
 	}
 
 	/**
