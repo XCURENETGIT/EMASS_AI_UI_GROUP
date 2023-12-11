@@ -1,7 +1,19 @@
 package com.xcurenet.emass.message.component;
 
-import java.util.List;
-
+import com.xcurenet.common.util.Common;
+import com.xcurenet.common.util.SpringContextUtil;
+import com.xcurenet.common.util.config.Config;
+import com.xcurenet.common.util.elasticsearch.ElasticSearchCommon;
+import com.xcurenet.emass.adminFilter.service.AdminFilterService;
+import com.xcurenet.emass.adminFilter.service.AdminFilterVO;
+import com.xcurenet.interestUser.service.AdminUserGroupService;
+import com.xcurenet.interestUser.service.AdminUserGroupVO;
+import com.xcurenet.user.service.UserGroupVO;
+import com.xcurenet.user.service.UserService;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.SortClause;
@@ -10,20 +22,7 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import com.xcurenet.common.util.Common;
-import com.xcurenet.common.util.SpringContextUtil;
-import com.xcurenet.common.util.config.Config;
-import com.xcurenet.emass.adminFilter.service.AdminFilterService;
-import com.xcurenet.emass.adminFilter.service.AdminFilterVO;
-import com.xcurenet.interestUser.service.AdminUserGroupService;
-import com.xcurenet.interestUser.service.AdminUserGroupVO;
-import com.xcurenet.user.service.UserGroupVO;
-import com.xcurenet.user.service.UserService;
-
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import java.util.List;
 
 @Slf4j
 @Data
@@ -327,6 +326,22 @@ public class SolrCreateQuery {
 		if (Common.isEmpty(services)) return this;
 		return addQuery(String.format("%s%s:%s", AND_QUERY, SERVICE_12, createOrQuery(services)));
 	}
+
+
+
+	/***
+	 *  argment에 괄호 감싸기
+	 * @param argment
+	 * @return
+	 */
+	private String makeParentheses(String argment) {
+		StringBuilder tempSb = new StringBuilder();
+		tempSb.append(ElasticSearchCommon.OPEN_PARENTHESES);
+		tempSb.append(argment);
+		tempSb.append(ElasticSearchCommon.CLOSE_PARENTHESES);
+		return tempSb.toString();
+	}
+
 
 	/**
 	 * 정보 분류 쿼리
@@ -1275,7 +1290,7 @@ public class SolrCreateQuery {
 		StringBuilder result = new StringBuilder();
 		result.append("(");
 		for (int i = 0; i < param.length; i++) {
-			result.append(param[i]).append(addString);
+			result.append(makeParentheses(param[i])).append(addString);
 			if (i != param.length - 1) result.append(SPACE);
 		}
 		result.append(")");
