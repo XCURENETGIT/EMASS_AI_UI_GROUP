@@ -160,7 +160,7 @@ input[type="text"] {
 	position: absolute;
 	left: 0px;
 	padding-left: 6px;
-	width: calc(100% - 25px) !important;
+	width: calc(100% - 25px);
 }
 
 .footer_msg {
