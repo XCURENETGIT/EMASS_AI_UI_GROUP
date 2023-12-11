@@ -494,6 +494,15 @@ public class HomeController {
 		return "/emass/statistics/usersStat";
 	}
 
+	@RequestMapping(value = "/analysis/usageCompare.do", method = RequestMethod.GET)
+	@Description("사용량 즌감 분석")
+	public String userCompare(Locale locale, Model model) {
+		model.addAttribute("headerYn","Y");
+		return "/analysis/usageCompare";
+	}
+
+
+
 	/**
 	 * interestUserStat JSP.
 	 */
@@ -764,7 +773,8 @@ public class HomeController {
 
 	@RequestMapping(value = "/uacs/selectDevStatus.do")
 	public String selectDevStatus(Locale locale, Model model) {
-		return "/uacs/filter/selectDevStatus";
+		model.addAttribute("headerYn","N");
+		return "/uacs/filter/selectDevStatus.popup";
 	}
 
 	@RequestMapping(value = "/uacs/didBlock.do", method = RequestMethod.GET)

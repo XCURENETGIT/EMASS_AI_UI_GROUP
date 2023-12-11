@@ -583,13 +583,6 @@ function setMessengerRead(dataSet){
 	ui.get({
 		url : 'setMessengerRead.xcn',
 		body : JSON.stringify(dataSet),
-//		xRootMtr : rootmtr,
-//		srcIp : srcip,
-//		usr_id : usr_id, //기준이 srcip에서 usr_id로 변경되면서 마지막 데이터 기준 변경
-//		startDt : startDt,
-//		endDt : endDt,
-//		searchStr : searchStr,
-//		limit : detailLimit,
 		success : function(data, total) {
 
 		},

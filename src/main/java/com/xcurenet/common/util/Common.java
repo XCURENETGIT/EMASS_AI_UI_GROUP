@@ -99,7 +99,7 @@ public class Common {
 
 	public static final String HEADER_AJAX = "XMLHttpRequest";
 	
-	public static final int MAX_VALUE = 5000000;
+	public static final int MAX_VALUE = 10000; //엘라스틱 서치 최대 검색
 	public static String number;
 
 	public static final DateTimeFormatter DATETIMEMILLISSYMBOL = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");

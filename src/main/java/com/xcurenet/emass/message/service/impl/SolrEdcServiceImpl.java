@@ -106,17 +106,21 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		log.debug("[Fields] {}", sq.getFields());
 		sq.setParam("wt", "json");
 
+		/* set 필터 쿼리 */
+		String filterQuery = null;
+		filterQuery =  (null != sq.getFilterQueries())? String.join(" ", sq.getFilterQueries()) : "";
+
 		Query searchQuery = new NativeSearchQueryBuilder()
 				.withFields(Common.toArray(sq.getFields(), ","))
 				.withQuery(QueryBuilders.queryStringQuery(sq.getQuery()))
-				.withFilter(QueryBuilders.queryStringQuery(String.join(" ", sq.getFilterQueries())))
+				.withFilter(QueryBuilders.queryStringQuery(filterQuery))
 				.withPageable(PageRequest.of(getPage(sq), sq.getRows(), getSort(sq)))
 				.withAggregations(getAggregations(sq))
 				.withAggregations(getAggregationsByPivot(sq))
 				.build();
+
 		searchQuery.setTrackTotalHits(true);
 		SearchHits<SolrEdcVO> hits = operation.search(searchQuery, SolrEdcVO.class);
-
 		try {
 			printQueryLog(sq, hits);
 		} catch (Exception e) {
@@ -127,6 +131,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 	private int getPage(SolrQuery sq) {
 		if (sq.getRows() == 0) sq.setRows(100);
+		if (null == sq.getStart()) sq.setStart(0);
 		return sq.getStart() / sq.getRows();
 	}
 
