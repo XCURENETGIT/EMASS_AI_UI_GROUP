@@ -125,6 +125,8 @@
 	var menuId = "";
 	var pMenuId = "";
 
+
+
 	function reSizeHeight() {
 		$('.xcn_full').each(function (e) {
 			let obj = this;
@@ -136,6 +138,26 @@
 	}
 
 	$(document).ready(function () {
+
+        //언어 설정
+		$('#korLan').click(function (){
+            var adminLang = (this).getAttribute('data-value');
+            ui.confirmMsg('<s:message code="common.msg.change.apply"/>', '', '', function(rs){
+                if(rs){
+                    document.location.href = '<c:url value="/changeLocale?locale='+encodeURI(adminLang)+'"/>';
+                }
+            });
+		})
+
+        $('#EnLan').click(function (){
+            var adminLang = (this).getAttribute('data-value');
+            ui.confirmMsg('<s:message code="common.msg.change.apply"/>', '', '', function(rs){
+                if(rs){
+                    document.location.href = '<c:url value="/changeLocale?locale='+encodeURI(adminLang)+'"/>';
+                }
+            });
+        })
+
 		$(document).keydown(function (event) {
 			if (event.keyCode == 32 || event.keyCode == 13) {
 				if ($('#bootstrap_alert:visible').length > 0) {

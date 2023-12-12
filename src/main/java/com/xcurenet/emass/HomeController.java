@@ -77,7 +77,6 @@ public class HomeController {
 		conf.setConfId("language");
 		conf.setVal(locale);
 		configAdminService.setConfAdmin(conf);
-
 		session.setAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, lo);
 		String redirectURL = "redirect:" + request.getHeader("referer");
 		return redirectURL;
