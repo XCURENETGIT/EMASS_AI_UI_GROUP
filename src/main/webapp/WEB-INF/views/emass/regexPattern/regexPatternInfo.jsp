@@ -128,7 +128,7 @@
     }
 </script>
 
-<div class="modal" id="regexPatternPop" aria-labelledby="regexPatternPop">
+<div class="modal" id="regexPatternPop" aria-labelledby="regexPatternPop" data-backdrop="static">
 	<div class="modal-content">
 		<form method="post" id="regexPatternPopForm">
 			<div class="modalHead">

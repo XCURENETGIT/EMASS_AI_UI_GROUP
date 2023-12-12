@@ -220,7 +220,7 @@
     }
 </script>
 
-<div class="modal" id="searchWordPop" aria-labelledby="searchWordPop">
+<div class="modal" id="searchWordPop" aria-labelledby="searchWordPop" data-backdrop="static">
 	<div class="modal-content">
 		<form method="post" id="searchWordPopForm">
 			<div class="modalHead">
@@ -281,7 +281,7 @@
 </div>
 
 
-<div class="modal" id="searchWordUpdatePop" aria-labelledby="searchWordPop">
+<div class="modal" id="searchWordUpdatePop" aria-labelledby="searchWordPop" data-backdrop="static">
 	<div class="modal-content">
 		<form method="post" id="searchWordUpdatePopForm">
 			<div class="modalHead">
@@ -323,7 +323,7 @@
 
 
 <!--연관 키워드 상세보기, 삭제 -->
-<div class="modal" id="searchWordUpdatPop" aria-labelledby="searchWordUpdatPop">
+<div class="modal" id="searchWordUpdatPop" aria-labelledby="searchWordUpdatPop" data-backdrop="static">
 	<div class="modal-content">
 		<div class="modalHead">
 			<h2>연관 키워드 관리 - 삭제</h2>

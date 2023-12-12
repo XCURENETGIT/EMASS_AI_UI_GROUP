@@ -687,7 +687,7 @@
 	</div>
 </div>
 
-<div class="modal" id="ipPop">
+<div class="modal" id="ipPop" data-backdrop="static">
 	<div class="modal-content">
 		<form method="post" id="ipPopForm">
 			<div class="modalHead">
@@ -949,7 +949,7 @@
 </div>
 
 
-<div class="modal" id="domainPop">
+<div class="modal" id="domainPop" data-backdrop="static">
 	<div class="modal-content">
 		<form method="post" id="domainPopForm" onsubmit="return false;">
 			<div class="modalHead">
@@ -1000,7 +1000,7 @@
 </div>
 
 
-<div class="modal" id="urlPop">
+<div class="modal" id="urlPop" data-backdrop="static">
 	<div class="modal-content">
 		<form method="post" id="urlPopForm" onsubmit="return false;">
 			<div class="modalHead">
@@ -1044,7 +1044,7 @@
 </div>
 
 
-<div class="modal" id="subjectPop">
+<div class="modal" id="subjectPop" data-backdrop="static">
 	<div class="modal-content">
 		<form method="post" id="subjectPopForm" onsubmit="return false;">
 			<div class="modalHead">
@@ -1104,7 +1104,7 @@
 </div>
 
 
-<div class="modal" id="sizePop">
+<div class="modal" id="sizePop" data-backdrop="static">
 	<div class="modal-content">
 		<form method="post" id="sizePopForm" onsubmit="return false;">
 			<div class="modalHead">
@@ -1168,7 +1168,7 @@
 </div>
 
 
-<div class="modal" id="attachPop">
+<div class="modal" id="attachPop" data-backdrop="static">
 	<div class="modal-content">
 		<form method="post" id="attachPopForm" onsubmit="return false;">
 			<div class="modalHead">

@@ -507,7 +507,7 @@
     }
 </script>
 
-<div class="modal" id="userGroupPop" aria-labelledby="userGroupPop">
+<div class="modal" id="userGroupPop" aria-labelledby="userGroupPop" data-backdrop="static">
 	<div class="modal-content">
 		<form method="post" id="userGroupPopForm" onsubmit="return false;">
 			<div class="modalHead">
@@ -556,7 +556,7 @@
 </div>
 
 <!-- 공통 Group 항목 선택-->
-<div class="modal" id="selectPop" aria-labelledby="selectPop">
+<div class="modal" id="selectPop" aria-labelledby="selectPop" data-backdrop="static">
 	<div class="modal-content" style="width: 1200px">
 		<div class="modalHead">
 			<h2><s:message code="common.org.choose.user"/></h2>
@@ -603,7 +603,7 @@
 </div>
 
 <div id="upload_file"></div>
-<div class="modal" id="uploadPop" aria-labelledby="uploadPop">
+<div class="modal" id="uploadPop" aria-labelledby="uploadPop" data-backdrop="static">
 	<div class="modal-content">
 		<form method="post" id="uploadForm" enctype="multipart/form-data" target="upload_file">
 			<div class="modalHead">
@@ -650,7 +650,7 @@
 </div>
 
 
-<div class="modal" id="textUploadPop" aria-labelledby="textUploadPop">
+<div class="modal" id="textUploadPop" aria-labelledby="textUploadPop" data-backdrop="static">
 	<div class="modal-content" style="width: 450px; height: 700px;">
 		<div class="modalHead">
 			<h2><s:message code="DATA_MONITOR.INTEREST_USER"/>-Text Upload</h2>

@@ -255,7 +255,7 @@
 </script>
 
 
-<div class="modal" id="servicePop">
+<div class="modal" id="servicePop" data-backdrop="static">
 	<div class="modal-content">
 		<form method="post" id="servicePopForm">
 			<div class="modalHead">
@@ -321,7 +321,7 @@
 	</div>
 </div>
 
-<div class="modal" id="attachPop">
+<div class="modal" id="attachPop" data-backdrop="static">
 	<div class="modal-content">
 		<form method="post" id="attachPopForm">
 			<div class="modalHead">

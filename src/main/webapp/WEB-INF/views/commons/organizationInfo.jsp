@@ -672,7 +672,7 @@
 </head>
 <body class="mini-navbar" >
 
-<div class="modal" id="coPop" tabindex="-1" role="dialog" aria-labelledby="coModal">
+<div class="modal" id="coPop" tabindex="-1" role="dialog" aria-labelledby="coModal" data-backdrop="static">
 	<div class="modal-content">
 		<form method="post" id="coPopForm">
 			<div class="modalHead">
@@ -716,7 +716,7 @@
 	</div>
 </div>
 
-<div class="modal" id="busiPop" tabindex="-1" role="dialog" aria-labelledby="busiModal">
+<div class="modal" id="busiPop" tabindex="-1" role="dialog" aria-labelledby="busiModal" data-backdrop="static">
 	<div class="modal-content">
 		<form method="post" id="busiPopForm">
 			<div class="modalHead">

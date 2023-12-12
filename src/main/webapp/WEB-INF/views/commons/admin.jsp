@@ -971,7 +971,7 @@
 </div>
 
 
-<div class="modal" id="ipMacPop">
+<div class="modal" id="ipMacPop" data-backdrop="static">
 	<div class="modal-content">
 		<form method="post" id="ipMacPopForm">
 			<div class="modalHead">

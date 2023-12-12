@@ -427,7 +427,7 @@
 </head>
 
 
-<div class="xcn_container" id="popupWrap" >
+<div class="xcn_container" id="popupWrap" data-backdrop="static">
 	<div class="item">
 		<h3 class="blue"><span class="bullet01"></span></span>검색 조건</h3>
 		<div class="grayBg mat8 popupInner">
