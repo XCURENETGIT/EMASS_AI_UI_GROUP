@@ -633,25 +633,18 @@ function getSearchQuery() {
 			var eDate = $('#enddate').val().replaceAll("-","");
 			if(sDate > eDate) ui.alertMsg('<s:message code="consent.msg.timecheck"/>');
 
-            var searchData = {
-                xAxis: xAxis,
-                xAxis_str: xAxis_str,
-				rowKey: rowKey,
-                yAxis: 'user.userId',
-                startDate: sDate + "000000",
-                endDate: eDate + "235959",
-                offset: grid1.data.length,
-                limit: grid1.pageSize,
-                detailQuery: $('#elsQueryText').val(),
-                interGroup : interGroup,
-                interGroupId : $('#interGroup option:selected').text() //나중에 아이디값으로 변경시켜주세요
-            }
-			
 			searchFlag = true;
 			grid1.on();
 			ui.get({
 				url : 'getStatList.xcn',
-                searchParam: JSON.stringify(searchData),
+                startDate: sDate+"000000",
+                endDate: eDate+"235959",
+                detailQuery:$('#solrQueryText').val(),
+                xAxis : xAxis,
+                yAxis : 'userid',
+                offset : grid1.data.length,
+                limit : grid1.pageSize,
+                xAxis_str : xAxis_str,
 				success : function(data, total) {
 					grid1.colInit();
 					grid1.autoNumber();
@@ -747,27 +740,21 @@ function getSearchQuery() {
             var colId = '';
             if (colNum != '' & colNum != null) colId = grid1.getHeaderId()[grid1.Col].id;
 
-            var searchData = {
-                rowKey: rowKey,
-            /*    colKey: colKey,*/
-                startDate: $('#startdate').val().replaceAll("-","")+"000000",
-                endDate: $('#enddate').val().replaceAll("-","")+"235959",
-                detailQuery: $('#elsQueryText').val(),
-                xAxis: xAxis,
-                xAxis_str: xAxis_str,
-                searched_xAxis: $('#searched_xAxis').val(),
-                colId: colId,
-                yAxis: 'user.userId',
-                interGroup : interGroup,
-                offset: currentgrid.data.length,
-                limit: currentgrid.pageSize,
-            }
-			
 			searchFlag = true;
 			currentgrid.on();
 			ui.get({
 				url : 'getStatDetailList.xcn',
-                searchParam: JSON.stringify(searchData),
+                rowKey : rowKey,
+                colKey : colKey,
+                startDate : $('#startdate').val().replaceAll("-","")+"000000",
+                endDate : $('#enddate').val().replaceAll("-","")+"235959",
+                detailQuery:$('#elsQueryText').val(),
+                xAxis : xAxis,
+                xAxis_str : xAxis_str,
+                yAxis : 'userid',
+                interGroup : interGroup,
+                offset : currentgrid.data.length,
+                limit : currentgrid.pageSize,
 				success : function(data, total) {
 					if ( lastRow == 'Y' || lastRow == undefined ) detailTotal = total;
 					currentgrid.appendData(data.emass);

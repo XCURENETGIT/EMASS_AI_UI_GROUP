@@ -571,12 +571,12 @@ function getSelectedCodeData( codeType, data ) {
                 if(grid1.getValue(i, 'rowKey') == "" || grid1.getValue(i, 'rowKey') == "-") continue;
                 else key += grid1.getValue(i, 'rowKey').replaceAll("\"", "\\\"") + ",";
             }
-			key = key.substring(0, key.length - 1)
+            key = key.substring(0, key.length - 1)
             rowKey = key;
         }else {
-			rowKey = grid1.getValue(grid1.Row, 'rowKey').replaceAll("\"", "\\\"");
+            rowKey = grid1.getValue(grid1.Row, 'rowKey').replaceAll("\"", "\\\"");
         }
-		rowName = grid1.getValue(grid1.Row, 'rowName');
+        rowName = grid1.getValue(grid1.Row, 'rowName');
         colKey = grid1.ColKey(grid1.Col);
 
 
@@ -600,11 +600,11 @@ function getSelectedCodeData( codeType, data ) {
             $('#detailTab'+delid+' .close').click();
         }
 
-		var displayName = (rowKey.indexOf(',') > -1) ? '<s:message code="common.msg.all"/>' : rowKey.replaceAll("\\\"", "\"");
-		if (rowName != '') displayName = rowName + '&lt;' + rowKey + '&gt;';
-		var id = 'tab' + tabID;
+        var displayName = (rowKey.indexOf(',') > -1) ? '<s:message code="common.msg.all"/>' : rowKey.replaceAll("\\\"", "\"");
+        if (rowName != '') displayName = rowName + '&lt;' + rowKey + '&gt;';
+        var id = 'tab' + tabID;
 
-		$('.listChart').append($('<li style="display:inline-flex;text-align: center;z-index:1001;" idx="'+tabID+'" id="liTab'+tabID+'"><a data-toggle="tab" href="#tab'+tabID+'" id="detailTab'+tabID+'" >'+displayName+' - '+colKeyNm+'<span class="badge"></span><button class="close" type="button" title="<s:message code="stat.delete.tab"/>">×</button></a></li>'));
+        $('.listChart').append($('<li style="display:inline-flex;text-align: center;z-index:1001;" idx="'+tabID+'" id="liTab'+tabID+'"><a data-toggle="tab" href="#tab'+tabID+'" id="detailTab'+tabID+'" >'+displayName+' - '+colKeyNm+'<span class="badge"></span><button class="close" type="button" title="<s:message code="stat.delete.tab"/>">×</button></a></li>'));
         $('#basicStatList').after($('<div class="tab-pane fade" id="tab' + tabID + '"><div id="detail_cnt'+tabID+'" style="margin-top:0px; color: #f25643; font-weight: bold; font-size: 13px;"></div><div id="grid'+tabID+'" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; height: 380px"></div></div>'));
 
         var gid = 'grid'+tabID;
@@ -644,7 +644,7 @@ function getSelectedCodeData( codeType, data ) {
             offset: grid1.data.length,
             limit: grid1.pageSize,
             detailQuery: $('#elsQueryText').val(),
-	        xAxis_str : xAxis_str
+            xAxis_str : xAxis_str
         }
 
         searchFlag = true;
@@ -654,60 +654,37 @@ function getSelectedCodeData( codeType, data ) {
             searchParam: JSON.stringify(searchData),
 
             success : function(data, total) {
-				/* 통계영역 검색 조건 저장 */
-				if (data.search_xAxis != null) $('#searched_xAxis').val(data.search_xAxis);
-				if (data.search_startDate != null) $('#searched_startDate').val(data.search_startDate);
-				if (data.search_endDate != null) $('#searched_endDate').val(data.search_endDate);
+                /* 통계영역 검색 조건 저장 */
+                if (data.search_xAxis != null) $('#searched_xAxis').val(data.search_xAxis);
+                if (data.search_startDate != null) $('#searched_startDate').val(data.search_startDate);
+                if (data.search_endDate != null) $('#searched_endDate').val(data.search_endDate);
 
 
-				grid1.colInit();
+                grid1.colInit();
                 grid1.autoNumber();
 
-				console.log(data);
-
-				grid1.colAdd('rowKey', '<s:message code="consent.attach"/>', 230, 'left', false, 'link', function (row, cell, value, columnDef, dataContext) {
-					return value;
-				});
+                grid1.colAdd('rowKey', '<s:message code="consent.attach"/>', 230, 'left', false, 'link', function (row, cell, value, columnDef, dataContext) {
+                    return value;
+                });
                 grid1.colAdd('total', '<s:message code="bodyview.total"/>', 130, 'right', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
                     if ( value != undefined ) return value.comma();
                     else return '';
                 });
-
-				if(xAxis == "ctime_hh"){
-					for (var key = 0 ; key < data.sortedHeaderList.length; key++) {
-						var HeaderKey = data.sortedHeaderList[key];
-						var HeaderNm = data.sortedHeaderList[key];
-						// if (xAxis == "ctime_yyyymmdd") HeaderNm = HeaderKey;
-						// else if (xAxis == "ctime_yyyymm") HeaderNm = HeaderKey;
-						if (xAxis == "direction_svc") {
-							if (HeaderKey == "I") HeaderNm = '<s:message code="condition.receive"/>';
-							else HeaderNm = '<s:message code="condition.send"/>';
-						}
-						//else if (xAxis == "ctime_hh") HeaderNm = Header;
-						<%--else HeaderNm = Header;--%>
-						grid1.colAdd(HeaderKey, HeaderNm, 90, "right", false, 'link', function (row, cell, value, columnDef, dataContext) {
-							if (value != undefined) return value.comma();
-							else return '';
-						});
-					}
-				}else {
-					for (let key in data.pivotHeader) {
-						var HeaderKey = key;
-						var HeaderNm = data.pivotHeader[key];
-						// if (xAxis == "ctime_yyyymmdd") HeaderNm = HeaderKey;
-						// else if (xAxis == "ctime_yyyymm") HeaderNm = HeaderKey;
-						if (xAxis == "direction_svc") {
-							if (HeaderKey == "I") HeaderNm = '<s:message code="condition.receive"/>';
-							else HeaderNm = '<s:message code="condition.send"/>';
-						}
-						//else if (xAxis == "ctime_hh") HeaderNm = Header;
-						<%--else HeaderNm = Header;--%>
-						grid1.colAdd(HeaderKey, HeaderNm, 90, "right", false, 'link', function (row, cell, value, columnDef, dataContext) {
-							if (value != undefined) return value.comma();
-							else return '';
-						});
-					}
-				}
+                for ( var i=0 ; i < data.pivotHeader.length ; i++ ) {
+                    var Header = data.pivotHeader[i];
+                    var HeaderNm = "";
+                    if ( xAxis == "ctime_yyyymmdd") HeaderNm = Header.substr(0,4)+"-"+Header.substr(4,2)+"-"+Header.substr(6,2);
+                    else if ( xAxis == "ctime_yyyymm") HeaderNm = Header.substr(0,4)+"-"+Header.substr(4,2);
+                    else if ( xAxis == "direction_svc") {
+                        if(Header == "I") HeaderNm = '<s:message code="condition.receive"/>';
+                        else HeaderNm = '<s:message code="condition.send"/>';
+                    } else if ( xAxis == "ctime_hh") HeaderNm = Header+'<s:message code="common.msg.hour"/>';
+                    else HeaderNm = Header;
+                    grid1.colAdd( Header, HeaderNm, 90, "right", false, 'link', function ( row, cell, value, columnDef, dataContext ) {
+                        if ( value != undefined ) return value.comma();
+                        else return '';
+                    });
+                }
                 grid1.loadHeader(false);
                 grid1.setData(data.pivotData);
 
@@ -770,14 +747,14 @@ function getSelectedCodeData( codeType, data ) {
             xAxis: xAxis,
             xAxis_str: xAxis_str,
             searched_xAxis: $('#searched_xAxis').val(),
-			colId: colId,
+            colId: colId,
             yAxis: 'attach.ext',
             offset: currentgrid.data.length,
             limit: currentgrid.pageSize,
             nameStat : "attachStat",
         }
 
-		console.log(colId);
+        console.log(colId);
 
         ui.get({
             url : 'getStatDetailList.xcn',

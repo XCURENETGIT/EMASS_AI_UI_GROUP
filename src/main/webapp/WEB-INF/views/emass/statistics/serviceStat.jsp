@@ -656,22 +656,22 @@ function getSelectedCodeData( codeType, data ) {
 						</div>
 					</div>
 				</div>
-<%--				<!-- pagination -->
-				<div class="pageArea">
-					<div class="pagination">
-						<a href="#"><img src="../img/ico_page_left2.png" alt=""></a>
-						<a href="#"><img src="../img/ico_page_left.png" alt=""></a>
-						<a href="#">1</a>
-						<a class="active" href="#">2</a>
-						<a href="#">3</a>
-						<a href="#">4</a>
-						<a href="#">5</a>
-						<a href="#">6</a>
-						<a href="#"><img src="../img/ico_page_right.png" alt=""></a>
-						<a href="#"><img src="../img/ico_page_right2.png" alt=""></a>
-					</div>
-				</div>
-				<!-- //pagination -->--%>
+				<%--				<!-- pagination -->
+								<div class="pageArea">
+									<div class="pagination">
+										<a href="#"><img src="../img/ico_page_left2.png" alt=""></a>
+										<a href="#"><img src="../img/ico_page_left.png" alt=""></a>
+										<a href="#">1</a>
+										<a class="active" href="#">2</a>
+										<a href="#">3</a>
+										<a href="#">4</a>
+										<a href="#">5</a>
+										<a href="#">6</a>
+										<a href="#"><img src="../img/ico_page_right.png" alt=""></a>
+										<a href="#"><img src="../img/ico_page_right2.png" alt=""></a>
+									</div>
+								</div>
+								<!-- //pagination -->--%>
 			</div>
 
 		</div>
@@ -732,25 +732,22 @@ function getSelectedCodeData( codeType, data ) {
         var xAxis_str = $('#optionHiddenName').val();
         if (sDate > eDate) ui.alertMsg('<s:message code="consent.msg.timecheck"/>');
 
-        var searchData = {
-            xAxis: xAxis,
-            xAxis_str: xAxis_str,
-            yAxis: 'service.svc',
-            startDate: sDate + "000000",
-            endDate: eDate + "235959",
-            offset: grid1.data.length,
-            limit: grid1.pageSize,
-            detailQuery: $('#elsQueryText').val(),
-            rowKey : rowKey,
-        }
 
         searchFlag = true;
         grid1.on();
         ui.get({
             url : 'getStatList.xcn',
-            searchParam: JSON.stringify(searchData),
-
+            startDate: sDate+"000000",
+            endDate: eDate+"235959",
+            detailQuery:$('#elsQueryText').val(),
+            xAxis : xAxis,
+            yAxis : 'svc12',
+            offset : grid1.data.length,
+            limit : grid1.pageSize,
+            xAxis_str : xAxis_str,
+            rowKey : rowKey,
             success : function(data, total) {
+                console.log(data);
                 /* 통계영역 검색 조건 저장 */
                 if (data.search_xAxis != null) $('#searched_xAxis').val(data.search_xAxis);
                 if (data.search_startDate != null) $('#searched_startDate').val(data.search_startDate);
@@ -770,43 +767,21 @@ function getSelectedCodeData( codeType, data ) {
                     if ( value != undefined ) return value.comma();
                     else return '';
                 });
-
-				if(xAxis == "ctime_hh"){
-					for (var key = 0 ; key < data.sortedHeaderList.length; key++) {
-						var HeaderKey = data.sortedHeaderList[key];
-						var HeaderNm = data.sortedHeaderList[key];
-						// if (xAxis == "ctime_yyyymmdd") HeaderNm = HeaderKey;
-						// else if (xAxis == "ctime_yyyymm") HeaderNm = HeaderKey;
-						if (xAxis == "direction_svc") {
-							if (HeaderKey == "I") HeaderNm = '<s:message code="condition.receive"/>';
-							else HeaderNm = '<s:message code="condition.send"/>';
-						}
-						//else if (xAxis == "ctime_hh") HeaderNm = Header;
-						<%--else HeaderNm = Header;--%>
-						grid1.colAdd(HeaderKey, HeaderNm, 90, "right", false, 'link', function (row, cell, value, columnDef, dataContext) {
-							if (value != undefined) return value.comma();
-							else return '';
-						});
-					}
-				}else {
-					for (let key in data.pivotHeader) {
-						var HeaderKey = key;
-						var HeaderNm = data.pivotHeader[key];
-						// if (xAxis == "ctime_yyyymmdd") HeaderNm = HeaderKey;
-						// else if (xAxis == "ctime_yyyymm") HeaderNm = HeaderKey;
-						if (xAxis == "direction_svc") {
-							if (HeaderKey == "I") HeaderNm = '<s:message code="condition.receive"/>';
-							else HeaderNm = '<s:message code="condition.send"/>';
-						}
-						//else if (xAxis == "ctime_hh") HeaderNm = Header;
-						<%--else HeaderNm = Header;--%>
-						grid1.colAdd(HeaderKey, HeaderNm, 90, "right", false, 'link', function (row, cell, value, columnDef, dataContext) {
-							if (value != undefined) return value.comma();
-							else return '';
-						});
-					}
-				}
-
+                for ( var i=0 ; i < data.pivotHeader.length ; i++ ) {
+                    var Header = data.pivotHeader[i];
+                    var HeaderNm = "";
+                    if ( xAxis == "ctime_yyyymmdd") HeaderNm = Header.substr(0,4)+"-"+Header.substr(4,2)+"-"+Header.substr(6,2);
+                    else if ( xAxis == "ctime_yyyymm") HeaderNm = Header.substr(0,4)+"-"+Header.substr(4,2);
+                    else if ( xAxis == "direction_svc") {
+                        if(Header == "I") HeaderNm = '<s:message code="condition.receive"/>';
+                        else HeaderNm = '<s:message code="condition.send"/>';
+                    } else if ( xAxis == "ctime_hh") HeaderNm = Header+'<s:message code="common.msg.hour"/>';
+                    else HeaderNm = Header;
+                    grid1.colAdd( Header, HeaderNm, 90, "right", false, 'link', function ( row, cell, value, columnDef, dataContext ) {
+                        if ( value != undefined ) return value.comma();
+                        else return '';
+                    });
+                }
                 grid1.loadHeader(false);
                 grid1.setData(data.pivotData);
 
@@ -844,26 +819,22 @@ function getSelectedCodeData( codeType, data ) {
         var colId = '';
         if (colNum != '' & colNum != null) colId = grid1.getHeaderId()[grid1.Col].id;
 
-        var searchData = {
-            rowKey: rowKey,
-            colKey : colKey,
-            startDate: $('#startdate').val().replaceAll("-","")+"000000",
-            endDate: $('#enddate').val().replaceAll("-","")+"235959",
-            detailQuery: $('#elsQueryText').val(),
-            xAxis: xAxis,
-            xAxis_str: xAxis_str,
-            searched_xAxis: $('#searched_xAxis').val(),
-            colId: colId,
-            yAxis: 'service.svc',
-            offset: currentgrid.data.length,
-            limit: currentgrid.pageSize,
-        }
 
         searchFlag = true;
         currentgrid.on();
         ui.get({
             url : 'getStatDetailList.xcn',
-            searchParam: JSON.stringify(searchData),
+            rowKey : rowKey,
+            colKey : pColKey,
+            startDate : startDate+"000000",
+            endDate : endDate+"235959",
+            detailQuery:$('#elsQueryText').val(),
+            xAxis : xAxis,
+            xAxis_str : xAxis_str,
+            yAxis : 'svc12',
+            colRowKey : colRowKey,
+            offset : currentgrid.data.length,
+            limit : currentgrid.pageSize,
 
             success : function(data, total) {
                 if ( lastRow == 'Y' || lastRow == undefined ) detailTotal = total;

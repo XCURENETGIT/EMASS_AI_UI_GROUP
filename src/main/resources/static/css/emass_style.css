@@ -116,13 +116,16 @@ body,html {width:100%; height:100%;}
 .subTit button.menu:hover {opacity: 0.5;}
 /*bullet*/
 .bullet01 { width:8px; height:8px;margin-right:4px; background-color:#1A73F9; display: inline-block; border-radius:50% ; -webkit-border-radius:50% ; -moz-border-radius:50% ; -ms-border-radius:50% ; -o-border-radius:50% ; }
+.bullet02 { width:6px; height:6px; margin-right:4px; vertical-align:middle; background-color:#555; display: inline-block; border-radius:70% ; -webkit-border-radius:70% ; -moz-border-radius:70% ; -ms-border-radius:70% ; -o-border-radius:70% ; }
+
 
 /* Content */
 #contentArea .page {position: absolute; right:20px; top:40px; font-size:12px; color:#555;}
 #contentArea .page a { color:#555 !important;}
 #contentArea .page a.focus {color:#1A73F9!important;}
 #contentArea .content {position: relative;width:100%; min-height:500px; clear: both;background-color: #f5f5f5;}
-.contentSub {position: relative; padding:20px;}
+.contentSub {position: relative; padding:20px;height:100%;*zoom:1;}
+.contentSub::after {content:''; display:block; clear:both;}
 .contentSub .sel {position:absolute; right:0; top:-8px;}
 .chartArea {display: grid; grid-template-columns: 1fr 1fr; margin-bottom:24px;column-gap: 12px;}
 .chartArea {display: grid; grid-template-columns: 600px 1fr; margin-bottom:24px;column-gap: 12px;}
@@ -206,8 +209,20 @@ body,html {width:100%; height:100%;}
 .fixBtn {position:fixed; bottom:12px; width:300px; border-top:1px solid #ddd;}
 .fixBtn > div { width:100%; text-align: right !important;  margin:16px 0 8px;}
 
+/* 설정 탭 */
+.verticaltab {float: left; width: 20%; border: 1px solid #ddd; margin-top:48px; }
+.verticaltab button {display: block; width: 100%;font-weight: 300; background-color: #fff; color: black; padding: 16px 16px; border: none;outline: none; text-align: left; }
+.verticaltab button:hover {background-color: #F2F6FF;}
+.verticaltab button.active {background-color: #375E9A; color:#fff; }
+.vertical_content {float: left; width: 80%;  margin-top:16px; padding: 0 0 0 20px; border-left: none; padding-bottom:40px;}
+.vertical_content h2 {font-size:24px; font-weight: 600;}
+.vertical_content .rightbtn { position: absolute; right:0; bottom:0;}
+.vertical_content div {position: relative;}
+
 .formText { background:url(../img/ico_arrow_curve.png) center left no-repeat; padding-left:16px;}
 .formText .tit {font-size:13px; color:#111; font-weight: 600; display: inline-block; margin-right:16px;}
+.indenttxt {background:url(../img/ico_arrow_curve.png) 0px 2px no-repeat; margin-left:4px; padding-left:20px;font-size:13px !important; color:#111; line-height: 1.4;}
+.infotxt {font-size: 14px; line-height: 1.3; }
 .num_add { font-size:13px; padding:6px 12px 7px 12px;font-weight: 600; background-color: #375E9A; color:#fff; display: inline-block; border-radius:2px ; -webkit-border-radius:2px ; -moz-border-radius:2px ; -ms-border-radius:2px ; -o-border-radius:2px ; }
 .num_list { font-size:12px; width:20px; height:24px; line-height:24px; text-align: center; vertical-align: bottom; font-weight: 600; background-color: #375E9A; color:#fff; display: inline-block; border-radius:2px ; -webkit-border-radius:2px ; -moz-border-radius:2px ; -ms-border-radius:2px ; -o-border-radius:2px ; }
 
@@ -217,6 +232,7 @@ body,html {width:100%; height:100%;}
 .main_tab button {display: block;background-color: inherit;  border: none; margin-bottom:12px; outline: none;text-align: left;cursor: pointer;}
 .main_tab button:hover {background-color: #ddd; color:#fff;}
 .main_tab button.active {color:#fff;  font-weight:600;}
+
 .tabcontent { height: 300px; border-left: none; }
 .tabcontent ul li { line-height: 1.5; padding:16px 0; margin-left:24px;border-bottom:1px solid #ddd;}
 .tabcontent ul li:first-child{padding-top:0;}
@@ -291,6 +307,7 @@ body,html {width:100%; height:100%;}
 .w20 {width:20%;}
 .w25 {width:25%;}
 .w15 {width:15%;}
+.w60 {width:60%;}
 .w100 {width:100%;}
 .w300p {width:300px;}
 .w140p {width:150px;}
@@ -298,6 +315,7 @@ body,html {width:100%; height:100%;}
 .w100p {width:100px;}
 .w90p {width:90px;}
 .w90 {width:90%;}
+.w99 {width:99%;}
 .h100 {height:100px;}
 .h200 {height:200px;}
 .h350 {height:350px;}
@@ -320,6 +338,7 @@ body,html {width:100%; height:100%;}
 .mar8 {margin-right:8px;}
 .mat24{margin-top:24px;}
 .mat32{margin-top:32px;}
+.mab12 {margin-bottom:12px;}
 
 
 /* padding */
@@ -334,6 +353,8 @@ body,html {width:100%; height:100%;}
 /* overflow-y: auto; */
 .y_scroll { overflow-y:scroll; }
 .clear {clear: both;}
+.hidden {overflow: hidden;}
+
 
 /* Background */.btn05 { color:#333; border: 1px solid #ddd;background: #fff; height:26px; padding:0 8px; line-height: 26px; font-size:12px;vertical-align:middle;display: inline-block; border-radius: 2px; }
 .blueBg {background-color:#F2F6FF !important;}
@@ -349,6 +370,8 @@ body,html {width:100%; height:100%;}
 .bordd{border:1px solid #ddd;}
 .bortop_dd{border-top:1px solid #ddd;}
 .borleft_none{border-left:none !important;}
+.borbottom_dd{border-bottom:1px solid #ddd;}
+.borleft_none{border-left:none !important;}
 .borcc{border:1px solid #ccc;}
 .bornone {border:none !important;}
 .borradius { border-radius:12px ; -webkit-border-radius:12px ; -moz-border-radius:12px ; -ms-border-radius:12px ; -o-border-radius:12px ; }
@@ -356,6 +379,7 @@ body,html {width:100%; height:100%;}
 
 /* display */
 .dis_block { display: block;}
+.dis_inlineblock {display: inline-block;}
 
 
 /* color */
@@ -376,8 +400,9 @@ body,html {width:100%; height:100%;}
 .veralign_middle {vertical-align:middle;}
 
 /*font weight*/
-.fb600 {font-weight:600;}
-.fb800 {font-weight:800;}
+.fb400 {font-weight:400!important;}
+.fb600 {font-weight:600!important;}
+.fb800 {font-weight:800 !important;}
 
 /*flag*/
 .top_flag01 { display:inline-block; border-radius:100%; ; width:8px; height:8px; background-color:lightgreen; -webkit-border-radius:100% ; -moz-border-radius:100% ; -ms-border-radius:100% ; -o-border-radius:100% ; }
@@ -462,12 +487,16 @@ body,html {width:100%; height:100%;}
 .close:hover,.close:focus {color: black;text-decoration: none;cursor: pointer;}
 
 .row {overflow: hidden;margin-bottom:12px;margin-left: 0;margin-right: 0;}
+.row ol,ul{list-style: none;}
+.row ul li {border-top:1px dashed #ddd; padding-top:12px; padding-bottom:12px !important;}
+.row ul li:first-child {border:none;padding-top:0;}
 .row:last-child {margin-bottom:0;}
 .row label {vertical-align: middle;line-height: 1.5; font-size:14px;font-weight:400;}
 .row select {display: inline-block;}
 .row:after {content: "";display: table;clear: both;}
 .checkbox {font-size:13px; margin-right:12px; margin-bottom:4px;display: inline-block;}
 .checkbox input {vertical-align: top;}
+.checkbox span.checktit {font-size:14px; margin-left:-4px;}
 .radio {font-size:13px; margin-right:12px;margin-bottom:4px; display: inline-block;}
 .radio input {vertical-align: top;}
 
@@ -483,10 +512,17 @@ body,html {width:100%; height:100%;}
 /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
 @media screen and (max-height: 450px) {#sideBar {padding-top: 15px;}#sideBar li {font-size: 18px;}}
 
+.spinner {position: relative;  font-family: Pretendard; }
+.spinner_up:hover, .spinner_down:hover {text-decoration: none; background-color: #F2F6FF;}
+.spinner_up {font-size: 20px; font-weight: 600; width:32px; height:32px; border:1px solid #1A73F9; background-color: #fff; line-height:1 ; color: #1A73F9; }
+.spinner_down {font-size: 20px; font-weight: 600; width:32px; height:32px;border:1px solid #1A73F9; background-color: #fff; line-height:1 ; color: #1A73F9; }
+.spinner_input {height:32px;border:1px solid #ddd; padding:8px; vertical-align: middle; text-align: center; !important;}
 .clearfix button { padding: 14px 20px; margin: 8px 0; border: none;cursor: pointer;opacity: 0.9;}
 .clearfix button:hover {opacity:1;}
 .cancelbtn, .deletebtn {float: left; width: 50%;}
 .fullbtn {width: 100%;background-color: #1a73f9;}
+.fullbtn02 {width: 100% ;padding: 14px 20px; border:1px solid #656C74; color:#fff; font-size: 14px; background:none;}
+.fullbtn02:hover {}
 .cancelbtn {background-color: #eee; color:#111;  font-size:16px;}
 .deletebtn {background-color: #1a73f9; color:#fff;  font-size:16px;}
 .alertContainer {width:400px; overflow: hidden; display: inline-block; padding: 24px 20px 16px; text-align: center; }

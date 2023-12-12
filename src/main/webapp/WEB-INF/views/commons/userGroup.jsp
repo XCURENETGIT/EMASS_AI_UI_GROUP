@@ -284,141 +284,138 @@ function deleteUserGroupItem (){
 </script>
 </head>
 <body class="mini-navbar">
-	<div class="modal fade" id="userGroupPop" tabindex="-1" role="dialog" aria-labelledby="userGroupPop">
-		<div class="modal-dialog modal-sm" role="document">
-			<div class="modal-content">
-				<form method="post" id="userGroupPopForm" onsubmit="return false;">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					<h3 class="modal-title"><s:message code="userGroup.grouppop.title"/></h3>
-				</div>
-				<div class="modal-body">
-					<div class="form-group">
-						<label for="groupCode" class="control-label"><s:message code="userGroup.groupcode"/></label>
-						<input type="text" class="form-control" name="groupCode" id="groupCode" maxlength="60">
-					</div>
-					<div class="form-group" style="padding-top: 10px;">
-						<label for="groupName" class="control-label"><s:message code="userGroup.groupname"/></label>
-						<input type="text" class="form-control" name="groupName" id="groupName" maxlength="300">
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
-					<button type="button" class="btn btn-primary" accesskey="S" id="groupSavePopBtn"><s:message code="common.msg.save"/></button>
-				</div>
-				</form>
+<div class="modal" id="userGroupPop" tabindex="-1" role="dialog" aria-labelledby="userGroupPop">
+	<div class="modal-content">
+		<form method="post" id="userGroupPopForm">
+			<div class="modalHead">
+				<h2><s:message code="userGroup.grouppop.title"/></h2>
+				<span class="close" data-dismiss="modal">&times;</span>
 			</div>
-		</div>
-	</div>
-	
-	<!-- 공통 Group 항목 선택-->
-	<div class="modal fade" id="selectPop" tabindex="-1" role="dialog" aria-labelledby="selectPop">
-		<div class="modal-dialog" role="document"  style="width: 1000px">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					<h3 class="modal-title"><s:message code="common.org.choose.user"/></h3>
+			<div class="modalCon">
+				<div class="modalTop">
+					<h3>사용자 그룹 추가</h3>
+					<p>
+						<span class="red_dot veralign_middle"></span>
+						필수 입력 사항입니다.
+					</p>
 				</div>
-				<div class="modal-body">
+				<div class="modalbody">
 					<div class="row">
-						<div class="col-xs-12 text-left">
-							<div class="form-group form-inline not-dashed">
-								<div class="input-group">
-									<select class="form-control input-sm" id="popUserType" style="float: left;">
-										<option value="">- <s:message code="userInfo.usertype"/> -</option>
-										<option value="N"><s:message code="userInfo.normal"/></option>
-										<option value="Y">CEO</option>
-									</select>
-								</div>
-								<div class="input-group">
-									<select class="form-control input-sm" id="popSearchType" style="float: left;">
-										<option value="all">- <s:message code="userInfo.all"/> -</option>
-										<option value="userId"><s:message code="common.msg.id"/></option>
-										<option value="userNm"><s:message code="common.msg.name"/></option>
-										<option value="userEmail">E-Mail</option>
-										<option value="userIp">IP</option>
-										<option value="userDept"><s:message code="common.org.dept"/></option>
-									</select>
-								</div>
-								<div class="input-group">
-									<input type="text" class="form-control input-sm" placeholder="<s:message code="common.msg.searchMsg"/>" id="popSearchStr" style="width: 180px;">
-									<div class="input-group-btn">
-										<button class="btn btn-sm btn-success" type="button" accesskey="Q" id="popSearchBtn"><i class="glyphicon glyphicon-search"></i></button>
-									</div>
-								</div>
-							</div>
+						<div class="col-35">
+							<label for="groupCode" class="fname"><s:message code="userGroup.groupcode"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<input type="text" class="w100" name="groupCode" id="groupCode" maxlength="60">
 						</div>
 					</div>
-					<div class="row top_space">
-						<div style="height:500px;" id="selectUserDiv">
-							<div id="userSelectGrid" class="slickGrid gridArea"></div>
+
+					<div class="row">
+						<div class="col-35">
+							<label for="groupName" class="fname"><s:message code="userGroup.groupname"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<input type="text" class="w100" name="groupName" id="groupName" maxlength="300">
+						</div>
+					</div>
+
+				<div class="modalfooter">
+					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+					<button type="button" class="pop_btn02" accesskey="S" id="groupSavePopBtn"><s:message code="common.msg.save"/></button>
+				</div>
+			</div>
+			</div>
+		</form>
+	</div>
+</div>
+<!-- 공통 Group 항목 선택-->
+<div class="modal" id="selectPop" aria-labelledby="selectPop">
+	<div class="modal-content" style="width: 1200px">
+		<div class="modalHead">
+			<h2><s:message code="common.org.choose.user"/></h2>
+			<span class="close" data-dismiss="modal">&times;</span>
+		</div>
+		<div class="modalCon">
+			<div class="modalbody">
+				<div>
+					<div>
+						<select class="w100" id="popUserType" style="float: left; width: 120px;">
+							<option value="">- <s:message code="userInfo.usertype"/> -</option>
+							<option value="N"><s:message code="userInfo.normal"/></option>
+							<option value="Y">CEO</option>
+						</select>
+					</div>
+					<div>
+						<select class="w100" id="popSearchType" style="float: left; width: 120px;">
+							<option value="all">- <s:message code="userInfo.all"/> -</option>
+							<option value="userId"><s:message code="common.msg.id"/></option>
+							<option value="userNm"><s:message code="common.msg.name"/></option>
+							<option value="userEmail">E-Mail</option>
+							<option value="userIp">IP</option>
+							<option value="userDept"><s:message code="common.org.dept"/></option>
+						</select>
+					</div>
+					<div class="input-group">
+						<input type="text" class="w100" placeholder="<s:message code="common.msg.searchMsg"/>" id="popSearchStr" style="width: 150px;">
+						<button class="form_btn01" type="button" accesskey="Q" id="popSearchBtn">조회
+						</button>
+						<div>
 						</div>
 					</div>
 				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
-					<button type="button" class="btn btn-primary" accesskey="S" id="saveUserBtn" ><s:message code="common.msg.save"/></button>
+				<div class="contentSub" style="padding: 0px;">
+					<div id="userSelectGrid" class="slickGrid gridArea" style="height: 300px; height: 300px;"></div>
 				</div>
+			</div>
+			<div class="modalfooter">
+				<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal" id="userSave"><s:message code="common.msg.close"/></button>
+				<button type="button" class="pop_btn02" accesskey="S" id="saveUserBtn">선택데이터 저장</button>
 			</div>
 		</div>
 	</div>
-	
+</div>
+
 	<div class="container">
-		<div class="boxArea">
-			<div class="content_body">
-				<div class="row" style="height: 100%;">
-					<div class="col-xs-5" style="height: 100%;">
-						<div class="row">
-							<div class="col-xs-9 text-left">
-								<div class="form-group form-inline not-dashed">
-									<div class="input-group">
-										<input type="text" class="form-control input-sm" placeholder="<s:message code="common.msg.searchMsg"/>" id="searchStrGroup" style="width: 160px;">
-										<div class="input-group-btn">
-											<button class="btn btn-sm btn-success" type="button" accesskey="G" id="searchGroupBtn"><i class="glyphicon glyphicon-search"></i></button>
-										</div>
-									</div>
-									<button type="button" class="btn btn-sm btn-primary" accesskey="I" id="groupInsertBtn"><span class="glyphicon glyphicon-plus"></span>&nbsp;<s:message code="common.msg.add"/></button>
-									<button type="button" class="btn btn-sm btn-default" accesskey="D" id="groupDeleteBtn"><span class="glyphicon glyphicon-minus"></span>&nbsp;<s:message code="common.msg.delete"/></button>
-								</div>
-							</div>
-						</div>
-						<div class="row xcn_full top_space">
-							<div class="col-xs-12" style="height: 100%;">
-								<div id="userGroupListGrid" class="slickGrid gridArea"></div>
-							</div>
-						</div>
-						<!-- <div id="group_cnt" style="margin-top:12px; color: #f25643; font-weight: bold; font-size: 13px; padding-top: 3px;"></div> -->
+		<div class="searchArea">
+			<div style="width:470px; float: left">
+				<div class="searchSub" style="width: 470px;">
+					<div>
+						<input type="text" placeholder="<s:message code="common.msg.searchMsg"/>" id="searchStrGroup" style="width: 220px;">
+						<button class="form_btn01" type="button"  accesskey="G" id="searchGroupBtn">검색</button>
 					</div>
-					<div class="col-xs-7" style="height: 100%;">
-						<div class="row">
-							<div class="col-xs-9 text-left">
-								<div class="form-group form-inline not-dashed">
-									<div class="input-group">
-										<input type="text" class="form-control input-sm" placeholder="<s:message code="common.msg.searchMsg"/>" id="searchStrItem" style="width: 200px;">
-										<div class="input-group-btn">
-											<button class="btn btn-sm btn-success" type="button" accesskey="K" id="searchStrItemBtn"><i class="glyphicon glyphicon-search"></i></button>
-										</div>
-									</div>
-									<button type="button" class="btn btn-sm btn-primary" accesskey="A" id="itemInsertBtn"><span class="glyphicon glyphicon-plus"></span>&nbsp;<s:message code="common.msg.add"/></button>
-									<button type="button" class="btn btn-sm btn-default" accesskey="E" id="itemDeleteBtn"><span class="glyphicon glyphicon-minus"></span>&nbsp;<s:message code="common.msg.delete"/></button>
-								</div>
-							</div>
+					<div class="btnform">
+						<button type="button" class="btn01" accesskey="I" id="groupInsertBtn"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
+						<button type="button" class="btn02" accesskey="D" id="groupDeleteBtn"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
+					</div>
+				</div>
+				<div class="content xcn_full" style="background-color: transparent">
+					<div class="contentSub" style="padding: 0px;">
+						<div id="userGroupListGrid" class="slickGrid gridArea"></div>
+					</div>
+				</div>
+			</div>
+
+			<div style="width:calc(100% - 470px); padding-left: 16px; float: left">
+				<div class="searchSub" style="width:calc(100% - 470px) ">
+					<div>
+						<input type="text" placeholder="<s:message code="common.msg.searchMsg"/>" id="searchStrItem" style="width: 280px;">
+						<button class="form_btn01" type="button" accesskey="K" id="searchStrItemBtn">검색</button>
+					</div>
+						<div class="btnform">
+							<button type="button" class="btn01" accesskey="A" id="itemInsertBtn"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
+							<button type="button" class="btn02" accesskey="E" id="itemDeleteBtn"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
 						</div>
-						<div class="row xcn_full top_space">
-							<div class="col-xs-12" style="height: 100%;">
-								<div id="userGroupItmeGrid" class="slickGrid gridArea"></div>
-							</div>
-						</div>
-						<!-- <div id="item_cnt" style="margin-top:12px; color: #f25643; font-weight: bold; font-size: 13px; padding-top: 3px;"></div> -->
+				</div>
+				<div class="content xcn_full" style=" background-color: transparent">
+					<div class="contentSub " style="padding:0 ">
+						<div id="userGroupItmeGrid" class="slickGrid gridArea"></div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+</body>
 	
 	<script type="text/javascript">
 		var gridGroup = new Xgrid('userGroupListGrid', contextRoot);
