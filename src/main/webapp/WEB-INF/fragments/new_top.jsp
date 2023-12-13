@@ -104,7 +104,7 @@
 				<div class="dropdown-content" >
 					<a id="korLan" data-value="ko"><img src="<c:url value="/img/icon_top_kor.png"/>" alt="KOR">&nbsp;KOR</a>
 
-					<a id="EnLan" data-value="en" ><img src="<c:url value="/img/icon_top_eng.png"/>" alt="ENG">&nbsp;ENG ss</a>
+					<a id="EnLan" data-value="en" ><img src="<c:url value="/img/icon_top_eng.png"/>" alt="ENG">&nbsp;ENG</a>
 				</div>
 			</div>
 		</div>
