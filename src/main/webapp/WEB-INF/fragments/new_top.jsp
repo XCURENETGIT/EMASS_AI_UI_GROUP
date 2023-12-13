@@ -16,6 +16,61 @@
 	JSONObject ntpInfo = NtpScheduler.ntpStatus;
 %>
 
+<div class="modal" id="changePasswordPop" data-backdrop="static">
+	<div class="modal-content">
+		<div class="modalHead">
+			<h2><s:message code="OPERATION_MGMT.CHANGE_PW"/></h2>
+			<span class="close" data-dismiss="modal">&times;</span>
+		</div>
+		<div class="modalCon">
+			<div class="modalTop">
+				<h3>비밀번호 변경</h3>
+				<p>
+					<span class="red_dot veralign_middle"></span>
+					필수 입력 사항입니다.
+				</p>
+			</div>
+			<div class="modalbody">
+				<div class="row">
+					<div class="col-35">
+						<label for="attachTypePopInput" class="fname"><s:message code="base.current.pw"/></label>
+						<span class="red_dot"></span>
+					</div>
+					<div class="col-65">
+						<input type="password" class="w100" id="current_password" placeholder="<s:message code="base.current.pw"/>" required
+						       autocomplete="off">
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-35">
+						<label for="attachDescPopInput" class="fname"><s:message code="base.changed.pw"/></label>
+						<span class="red_dot"></span>
+					</div>
+					<div class="col-65">
+						<input type="password" class="w100" id="change_password" placeholder="<s:message code="base.changed.pw"/>" required
+						       autocomplete="off">
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-35">
+						<label for="attachDescPopInput" class="fname"><s:message code="base.changeconfirm.pw"/></label>
+						<span class="red_dot"></span>
+					</div>
+					<div class="col-65">
+						<input type="password" class="w100" id="current_confirm_password"
+						       placeholder="<s:message code="base.changeconfirm.pw"/>" required autocomplete="off">
+					</div>
+				</div>
+			</div>
+
+			<div class="modalfooter">
+				<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+				<button type="button" class="pop_btn02" accesskey="S" id="changePasswordSaveBtn"><s:message code="common.msg.change"/></button>
+			</div>
+		</div>
+	</div>
+</div>
+
 
 <div id="header">
 	<div class="allmenu">
@@ -28,16 +83,13 @@
 			<span><a href="#"><img src="<c:url value="/img/icon_top_user.png"/>" alt="mypage"></a></span>
 			<div class="myDropdown">
 				<span>${_USERCREDENTIAL_.adminId}(${_USERCREDENTIAL_.adminName})</span>
+				<span> &#9662;</span>
 				<div class="dropdown-content">
-					<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" role="button"
-					   aria-haspopup="true" aria-expanded="false"><span
-							class="glyphicon glyphicon-user"></span> ${_USERCREDENTIAL_.adminId}(${_USERCREDENTIAL_.adminName})
-						<span class="caret"></span></a>
 					<c:if test="${_USERCREDENTIAL_.loginType ne 'S'}">
-						<a href="javascript:;" id="changePasswordBtn"><span class="glyphicon glyphicon-th-list"></span>
+						<a href="javascript:;" id="changePasswordBtn"></span>
 							<s:message code="OPERATION_MGMT.CHANGE_PW"/></a>
 					</c:if>
-					<a href="javascript:;" id="logoutBtn"><span class="glyphicon glyphicon-log-out"></span>
+					<a href="javascript:;" id="logoutBtn">
 						<s:message code="OPERATION_MGMT.LOGOUT"/></a>
 				</div>
 			</div>
@@ -46,16 +98,16 @@
 				<span><img src="<c:url value="/img/icon_top_kor.png"/>" alt="kor"></span>
 				<span id="spanLan">KOR &#9662;</span>
 				<% } else {%>
-				<span><img src="<c:url value="/img/icon_top_eng.png"/>" alt="eng" ></span>
+				<span><img src="<c:url value="/img/icon_top_eng.png"/>" alt="eng"></span>
 				<span id="spanLan">ENG &#9662;</span>
 				<%}%>
-				<div class="dropdown-content">
-					<a id="korLan" data-value="ko"><img src="<c:url value="/img/icon_top_kor.png"/>" alt="KOR">KOR</a>
-					<a id="EnLan" data-value="en"><img src="<c:url value="/img/icon_top_eng.png"/>" alt="ENG">ENG</a>
+				<div class="dropdown-content" >
+					<a id="korLan" data-value="ko" style="padding: 6px 16px;"><img src="<c:url value="/img/icon_top_kor.png"/>" alt="KOR">&nbsp;<span style="color: #111111; margin-bottom: 10px;" >KOR</a>
+
+					<a id="EnLan" data-value="en" style="padding: 6px 16px;"><img src="<c:url value="/img/icon_top_eng.png"/>" alt="ENG">&nbsp;<span style="color: #111111;; margin-bottom: 10px;" >ENG</span></a>
 				</div>
 			</div>
 		</div>
-
 
 		<div class="ipinfo_right">
 			<p class="ntp">
