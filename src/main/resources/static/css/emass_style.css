@@ -6,7 +6,7 @@ body,html {width:100%; height:100%;}
 #header {position:fixed; width:100%; height:50px;min-width:1200px;z-index:99999;}
 #container {position: relative; width:100%; padding-top:50px; *zoom:1;}
 #container::after {content:''; display:block; clear:both;}
-#container #gnbWrap {position: fixed; z-index:99999; min-width:76px; height:100%;background-color: #242330; }
+#container #gnbWrap {position: fixed; z-index:99; min-width:76px; height:100%;background-color: #242330; }
 #container #contentArea {position: relative;margin-left:78px; width: calc(100% - 78px);  height:100%;}
 
 /* Header */
@@ -23,11 +23,11 @@ body,html {width:100%; height:100%;}
 
 
 /* Gnb */
-#gnb {position: relative;width:100%; background-color: #242330; margin-top:16px; margin-left:-1px;}
+#gnb {position: relative;width:100%; background-color: #242330; margin-top:16px; }
 #gnb ul li {margin-bottom:32px;}
 #gnb ul li a{display: block;text-align: center;}
 #gnb ul li a span{ display: block;font-size:13px; margin-top:4px; letter-spacing: -1; }
-#gnb ul li a.active{border-left:4px solid #88B8FF;}
+#gnb ul li a.active{ border-right:4px solid #88B8FF; margin-left:4px;}
 #gnb ul li a.active span {font-size:13px; font-weight: 600 !important; color:#88B8FF;}
 #gnbWrap .setting {position: fixed;width:64px; margin:0 auto; text-align: center; bottom:10px; padding:10px 0;}
 #gnbWrap .setting a{ font-size:14px;}
@@ -104,11 +104,11 @@ body,html {width:100%; height:100%;}
 #xcn_mainWrap .right .filetop10 div.list ul li > p span.righttext {position:absolute; top:1px; right:0; text-align: right; color:#555; font-size:14px;}
 
 /* Title */
-#container,#popupWrap h2 {position: relative; font-size:18px; font-weight: 600; color:#111;margin-bottom:8px;}
-#container,#popupWrap h3 {position: relative; font-size:16px; font-weight: 600; color:#111;margin-bottom:8px;}
-#container,#popupWrap h3 .sel {position:absolute; right:0; top:-8px;}
-#container, #popupWrap h4 {position: relative; font-size:14px; font-weight: 600; color:#111;margin-bottom:8px;}
-#container,#popupWrap h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
+h2 {position: relative; font-size:18px; font-weight: 600; color:#111;margin-bottom:8px;}
+h3 {position: relative; font-size:16px; font-weight: 600; color:#111;margin-bottom:8px;}
+h3 .sel {position:absolute; right:0; top:-8px;}
+h4 {position: relative; font-size:14px; font-weight: 600; color:#111;margin-bottom:8px;}
+h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 .subTit {padding:20px;}
 .subTit h2 {font-size:24px; font-weight:700;}
 .subTit p {font-size:13px; color:#555; font-weight:400; margin-top:8px; border-bottom:1px solid #ddd;padding-bottom:16px;}
@@ -148,11 +148,12 @@ body,html {width:100%; height:100%;}
 #contentArea .searchArea .searchSub div {float:left; display: inline-block;margin-bottom:8px;margin-right:8px;}
 #contentArea .searchArea .btnList {text-align:right; float:right; width:20%;}
 
-.myDropdown { position: relative; display: inline-block; cursor: pointer;}
-.dropdown-content {margin-top:1px; display: none; position: absolute; background-color: #f9f9f9; min-width: 140px; border-radius:2px;  }
-.dropdown-content a {color: #111;padding: 12px 16px;display: block;font-size:13px;}
-.dropdown-content a:hover {background-color: #f5f5f5; border-radius:2px;color: #111;}
-.myDropdown:hover .dropdown-content {display: block;}
+.myDropdown { position: relative; display: inline-block; cursor: pointer; color: #fff; font-size: 13px;z-index: 9999;}
+.dropdown-content {margin-top:1px; display: none; position: absolute; left:50%; margin-left:-70px; background-color: #fff; min-width: 140px; border-radius:2px; box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);}
+.dropdown-content a {color: #111;padding: 12px 16px;display:block; vertical-align: middle; font-size:13px; font-weight: 400;}
+.dropdown-content a img {width:20px; height:16px; border:1px solid #fff; vertical-align: middle; margin-bottom:4px; margin-right:4px;}
+.dropdown-content a:hover {background-color: #f5f5f5; border-radius:2px;color: #111; font-weight: 600; }
+.myDropdown:hover .dropdown-content {display: block; z-index: 9999;}
 .myDropdown:hover .dropbtn {text-decoration:underline;}
 
 /*

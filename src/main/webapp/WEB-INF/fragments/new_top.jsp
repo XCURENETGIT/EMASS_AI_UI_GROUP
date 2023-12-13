@@ -102,9 +102,9 @@
 				<span id="spanLan">ENG &#9662;</span>
 				<%}%>
 				<div class="dropdown-content" >
-					<a id="korLan" data-value="ko" style="padding: 6px 16px;"><img src="<c:url value="/img/icon_top_kor.png"/>" alt="KOR">&nbsp;<span style="color: #111111; margin-bottom: 10px;" >KOR</a>
+					<a id="korLan" data-value="ko"><img src="<c:url value="/img/icon_top_kor.png"/>" alt="KOR">&nbsp;KOR</a>
 
-					<a id="EnLan" data-value="en" style="padding: 6px 16px;"><img src="<c:url value="/img/icon_top_eng.png"/>" alt="ENG">&nbsp;<span style="color: #111111;; margin-bottom: 10px;" >ENG</span></a>
+					<a id="EnLan" data-value="en" ><img src="<c:url value="/img/icon_top_eng.png"/>" alt="ENG">&nbsp;ENG</a>
 				</div>
 			</div>
 		</div>

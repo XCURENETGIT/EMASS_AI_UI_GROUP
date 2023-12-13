@@ -5,10 +5,7 @@
  */
 
 /* Account for fixed navbar */
-body {
-  padding-top: 70px;
-  padding-bottom: 30px;
-}
+
 
 body,
 .navbar-fixed-top,
@@ -47,7 +44,7 @@ body,
 
 /* Reset the container */
 .container {
-  width: 100%;
+  width: 99.4%;
   max-width: none !important;
   margin: 0px;
 }
