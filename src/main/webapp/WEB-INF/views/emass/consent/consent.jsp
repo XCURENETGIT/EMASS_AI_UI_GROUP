@@ -546,7 +546,7 @@
 </div>
 
 <iframe id="upload_file" name="upload_file" src="" style="display: none;"></iframe>
-<div class="container">
+<div>
 	<div class="searchArea">
 		<div class="searchSub">
 			<div class="searchSub">
@@ -562,7 +562,7 @@
 					<option value="E"><s:message code="consent.retire.consent"/></option>
 				</select>
 				&nbsp;&nbsp;&nbsp;
-				<select id="consentStatus" style="float: left; ">
+				<select id="consentStatus" style="float: left; margin-left:8px;">
 					<option value="all">- <s:message code="consent.status.approved"/> -</option>
 					<option value=""><s:message code="consent.wait"/></option>
 					<option value="A"><s:message code="consent.approved"/></option>
@@ -570,7 +570,7 @@
 					<option value="C"><s:message code="common.msg.cancel"/></option>
 				</select>
 				<input type="text" placeholder="<s:message code="consent.name.input"/>" id="searchStr"
-				       style="width: 130px;">
+				       style="width: 200px;">
 				<button class="form_btn01" type="button" accesskey="Q" id="searchBtn">조회</button>
 				<button type="button" class="btn01" accesskey="I" id="insertBtn"><img
 						src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>

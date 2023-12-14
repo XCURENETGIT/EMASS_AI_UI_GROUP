@@ -565,7 +565,7 @@ function fileExtCheck(obj) {
 		});
 		if( $('#groupInsertBtn').css('display') == 'inline-block' ) {
 			gridGroup.colAdd('open', '<s:message code="common.msg.modify"/>', 80, 'center', false, 'noal',function(row, cell, value, columnDef, dataContext ) {
-				 return "<input type='button' value='<s:message code="common.msg.modify"/>' class='btn modifyBtn' style='line-height: 0px; background-color: #337ab7;height: 20px; color:white; vertical-align: 1px; font-weight:bold'/>";
+				 return "<input type='button' value='<s:message code="common.msg.modify"/>' class='table_btn01' style='line-height: 0px; color:white; vertical-align: 1px; font-weight:bold;'/>";
 			});
 		}
 		gridGroup.loadExportMenu('<s:message code="keyword.msg.part_mgnt"/>');

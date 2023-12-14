@@ -49,7 +49,7 @@ function getData(lastRow) {
 </script>
 </head>
 
-<div class="container">
+<div>
 	<div class="searchArea">
 		<div class="searchSub">
 			<div>

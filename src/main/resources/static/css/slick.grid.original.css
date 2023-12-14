@@ -28,24 +28,23 @@
 	line-height: 40px;
 	height: 40px;
 	font-size: 13px;
-	padding-left: 5px;
+	padding-left: 0px;
 }
 
 .slickgrid_statusbar .status_func {
 	float: right;
-	padding-right: 5px;
+	padding-right: 0px;
 	line-height: 40px;
 	height: 40px;
 	font-size: 13px;
 }
 .slickgrid_statusbar .status_rownum {
 	float: right;
-	padding-right: 5px;
+	padding-left: 5px;
 	line-height: 40px;
 	height: 40px;
 	font-size: 13px;
 }
-
 
 .slickgrid_statusbar .nextpage {
 	float: left;

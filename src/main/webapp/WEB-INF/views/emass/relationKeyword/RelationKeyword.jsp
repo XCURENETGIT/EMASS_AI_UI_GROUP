@@ -359,7 +359,7 @@
 	</div>
 </div>
 
-<div class="container">
+<div>
 	<div class="searchArea">
 		<div class="searchSub">
 			<div>
@@ -378,7 +378,7 @@
 					<span id="relationKeywordCount"></span>
 				</button>
 			</div>
-			<div id="searchWordListGrid" class="slickGrid gridArea"></div>
+			<div id="searchWordListGrid" class="slickGrid gridArea" ></div>
 		</div>
 	</div>
 </div>
