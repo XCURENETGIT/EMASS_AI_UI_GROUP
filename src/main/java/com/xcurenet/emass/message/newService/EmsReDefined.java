@@ -101,7 +101,7 @@ public class EmsReDefined {
 			emassResponse.setMsgid(Common.nvl(ems.getMsgid()));
 			emassResponse.setSize(Common.convertFileSize(Common.nvl(ems.getSize())));
 			if (!Common.isEmpty(ems.getBody())) {
-			//	emassResponse.setBody_size(ems.getBody().getSize());
+				//	emassResponse.setBody_size(ems.getBody().getSize());
 				if (bodysnippetVal.equals("Y"))
 					emassResponse.setBody_snippet(reBodySnippet(ems.getBody().getSnippet()));
 				else emassResponse.setBody_snippet("");
@@ -272,7 +272,7 @@ public class EmsReDefined {
 				boolean isReaded = checkedList.stream().anyMatch(s-> s.getReadId().equals(adminId));
 				emassResponse.setRead_yn((isReaded) ? 'Y' : 'N');
 			}
-		//	readYn  read_yn;
+			//	readYn  read_yn;
 
 
 			/* 스니펫 관련 주석 */

@@ -5,6 +5,9 @@
 	.radio-inline {
 		padding-left: 0px;
 	}
+	.radio input {
+		vertical-align: middle;
+	}
 
 	.tab-content {
 		display: none;
@@ -637,7 +640,7 @@
 </script>
 </head>
 <%--모달 관련--%>
-<div class="modal" id="idPop">
+<div class="modal" id="idPop" data-backdrop="static">
 	<div class="modal-content">
 		<form method="post" id="idPopForm" onsubmit="return false;">
 			<div class="modalHead">
@@ -712,10 +715,10 @@
 						<div class="col-65">
 							<div class="radio">
 								<input type="radio" name="ipVer" value="4" checked>
-								<span>IPv4</span>
+								<span >IPv4</span>
 							</div>
 							<div class="radio">
-								<input type="radio" name="ipVer" value="6">
+								<input type="radio" name="ipVer" value="6" >
 								<span>IPv6</span>
 							</div>
 						</div>
@@ -765,7 +768,7 @@
 						<div class="col-65">
 							<div class="checkbox nologCheck" style="padding-left: 0px;">
 								<input type="checkbox" name="serverIpAll" id="serverIpAll" value="Y" class="checkbox">
-								<span class="fa fa-check"></span><s:message code="common.msg.all"/>
+								<s:message code="common.msg.all"/>
 							</div>
 							<input type="text" class="w100" name="serverSIp" id="serverSIp" placeholder="<s:message code="filterInfo.sip"/>" style="width: 120px;">
 							~
@@ -829,12 +832,12 @@
 						</div>
 						<div class="col-65">
 							<div class="radio">
-								<input type="radio" name="ipVer" value="4" checked>
-								<span>IPv4</span>
+								<input type="radio" name="ipVer" value="4" id="ipVersionRadion1" checked>
+								<label for="ipVersionRadion1">IPv4</label>
 							</div>
 							<div class="radio">
-								<input type="radio" name="ipVer" value="6">
-								<span>IPv6</span>
+								<input type="radio" name="ipVer" value="6" id="ipVersionRadion2">
+								<label for="ipVersionRadion2">IPv6</label>
 							</div>
 						</div>
 					</div>
@@ -847,7 +850,7 @@
 						<div class="col-65">
 							<div class="checkbox nologCheck" style="padding-left: 0px;">
 								<input type="checkbox" name="userIpAll" id="userIpAll" value="Y">
-								<span><s:message code="common.msg.all"/></span>
+								<label for="userIpAll"><s:message code="common.msg.all"/></label>
 							</div>
 							<input type="text" class="w100" name="userSIp" id="userSIp" placeholder="<s:message code="filterInfo.sip"/>" style="width: 120px;">
 							~
@@ -863,7 +866,7 @@
 						<div class="col-65">
 							<div class="checkbox nologCheck" style="padding-left: 0px;">
 								<input type="checkbox" name="userPortAll" id="userPortAll" value="Y">
-								<span><s:message code="common.msg.all"/></span>
+								<label for="userPortAll"><s:message code="common.msg.all"/></label>
 							</div>
 							<input type="text" class="w100" name="userSPort" id="userSPort" placeholder="<s:message code="filterInfo.sport"/>" maxlength="5" style="width: 62px">
 							~
@@ -881,7 +884,7 @@
 						<div class="col-65">
 							<div class="checkbox nologCheck" style="padding-left: 0px;">
 								<input type="checkbox" name="serverIpAll" id="serverIpAll" value="Y">
-								<span><s:message code="common.msg.all"/></span>
+								<label for="serverIpAll"><s:message code="common.msg.all"/></label>
 							</div>
 							<input type="text" class="w100" name="serverSIp" id="serverSIp" placeholder="<s:message code="filterInfo.sip"/>" style="width: 120px;">
 							~
@@ -897,7 +900,7 @@
 						<div class="col-65">
 							<div class="checkbox nologCheck" style="padding-left: 0px;">
 								<input type="checkbox" name="serverPortAll" id="serverPortAll" value="Y">
-								<span class="fa fa-check"></span><s:message code="common.msg.all"/>
+								<label for="serverPortAll"><s:message code="common.msg.all"/></label>
 							</div>
 							<input type="text" class="w100" name="serverSPort" id="serverSPort" placeholder="<s:message code="filterInfo.sport"/>" maxlength="5" style="width: 62px">
 							~
@@ -1441,7 +1444,7 @@
             $('.pop_btn02').prop('disabled', false);
             mode = 'modify';
             $("#urlPop").modal('show');
-            $('#noLogurl').val(gridUrl.getValue(gridUrl.Row, 'url'));
+            $("#url").val(gridUrl.getValue(gridUrl.Row, 'url'));
             $('#urlLogSeq').val(gridUrl.getValue(gridUrl.Row, 'urlLogSeq'));
         }
     };

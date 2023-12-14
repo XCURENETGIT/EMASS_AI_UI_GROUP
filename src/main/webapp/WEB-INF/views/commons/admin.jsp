@@ -823,7 +823,7 @@
 									<label for="personalInfo" class="fname"><s:message code="userGroup.navi.title2"/></label>
 								</div>
 								<div class="col-65">
-									<button type="button" class="btn btn-primary selBtn btn-sm" accesskey="R" id="readAuth">
+									<button type="button" class="form_btn03 selBtn btn-sm" accesskey="R" id="readAuth">
 										<s:message code="common.msg.select"/></button>
 									<input type="text" id="readAuthText" name="readAuthText" class="ellipsis" style="border: 0px; background-color: transparent;" disabled="disabled"/>
 									<input type="hidden" name="readAuth" id="readAuthHidden"/>

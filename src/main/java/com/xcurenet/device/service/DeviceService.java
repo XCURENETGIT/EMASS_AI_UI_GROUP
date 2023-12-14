@@ -16,7 +16,7 @@ public interface DeviceService {
 	 *
 	 * @return
 	 */
-	public List<DeviceVO> getCollectionDevice(final String searchStr, final int offset, final int limit);
+	public List<DeviceVO> getCollectionDevice(final String searchStr);
 
 	/**
 	 * 전체 장비 목록 조회

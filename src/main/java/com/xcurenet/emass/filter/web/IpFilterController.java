@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -217,11 +218,13 @@ public class IpFilterController {
 	@ResponseBody
 	public XcnResponseVO ruleApplyIpFilter(final HttpServletRequest request) throws Exception {
 		JSONArray data = Common.toJSONArray(request.getParameter("devData"));
+
 		
 		JSONArray json = ipFilterService.ruleApplyIpFilter( data );
 		boolean flag = true;
 		String msg = "";
 		String info = "";
+
 		
 		for (int i = 0; i < json.size(); i++) {
 			if( Boolean.valueOf( json.getJSONObject(i).get("success").toString() )) {
@@ -233,12 +236,13 @@ public class IpFilterController {
 				info += json.getJSONObject(i).get("message").toString() + "┌";
 			}
 		}
-		
+
 		AuditRequestVO auditVo = new AuditRequestVO();
 		auditVo.setPMenuId(ParentMenu.POLICY_SETUP.getParentMenuId());
 		auditVo.setMenuId(Menu.POLICY_NOLOG.getMenuId());
 		auditVo.setOperation(Operation.RULE_APPLY.getOperation());
 		auditVo.setInformation("["+Prop.propFormat("filterInfo.ruleapply")+"]┌"+info.replaceAll("<span style=\"color: #ff0000;\">", "").replaceAll("</span>", ""));
+		System.out.println("auditVO"+auditVo);
 		auditService.insertAudit(request, auditVo);
 		
 		if( flag ) {

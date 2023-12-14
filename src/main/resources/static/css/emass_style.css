@@ -140,6 +140,13 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 .inner_personaldata { padding:20px; background-color: #fff; border:1px solid #ddd; height:429px;}
 .personaldataBox {overflow: auto;  }
 
+/* 메신저*/
+.inner_messenger {position: relative; /*height: 100vh;*/height: calc(100vh - 50px); display: grid; grid-template-columns: 340px 1fr 1fr 300px; }
+.inner_messenger .leftSearch {position: relative; background-color: #f8f8f8;}
+.inner_messenger .messengerList {}
+.inner_messenger .chatList { position: relative; background-color: #606973; }
+.inner_messenger .rightFile { background-color: #414A54;}
+
 
 /*
 #contentArea .content .contentSub .chartArea div ul li {border:1px solid #ddd; border-radius:2px ;  background-color:#fff ; width:32%; float:left; margin-right:1%;}*/
@@ -536,3 +543,221 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 /*.modal {z-index: 1; left: 0; top: 0;width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4);}*/
 .alert_modal {  position: relative;  width:400px; background-color: #fefefe;margin: 5% auto 15% auto; border: 1px solid #888;}
 .clearfix::after {content: "";clear: both; display: table;}
+
+/*메신저*/
+.sns_slack {background:url(../img/ico_sns_slack.png) left top no-repeat;}
+.sns_facebook {background:url(../img/ico_sns_facebook.png) left top no-repeat;}
+.sns_line {background:url(../img/ico_sns_line.png) left top no-repeat;}
+
+:root {--black: #111;--white: #fff;--bg: #f8f8f8;--bluebg: #F2F6FF;--light:#ededed;}
+.messengerList .messengerBox {width: 100%; height:840px; overflow-y: auto;}
+.messengerList .messengerBox .people { margin-left: -1px; }
+.messengerList .messengerBox .people .person {position: relative;padding:10px 20px 10px;cursor: pointer;overflow: hidden; }
+.messengerList .messengerBox .people .person:after {
+	position: absolute;
+	bottom: 0;
+	left: 50%;
+	display: block;
+	width: 95%;
+	height: 1px;
+	content: "";
+	color: #1C64D3;
+	background-color: var(--light);
+	transform: translate(-50%, 0);
+	-webkit-transform: translate(-50%, 0);
+	-moz-transform: translate(-50%, 0);
+	-ms-transform: translate(-50%, 0);
+	-o-transform: translate(-50%, 0);
+}
+.messengerList .messengerBox .people .person span {display: inline-block;}
+.messengerList .messengerBox .people .person p {margin:4px;}
+.messengerList .messengerBox .people .person .left{position: relative; float:left; width:70%; }
+.messengerList .messengerBox .people .person .right{position: relative; float:right; width:30%; text-align: right;}
+.messengerList .messengerBox .people .person .logo{padding-left:20px;font-size:16px; font-weight:300;}
+.messengerList .messengerBox .people .person .chatid {height:16px;line-height: 16px; font-size: 16PX; font-weight: 600;}
+.messengerList .messengerBox .people .person .file { width:16px; height:16px; vertical-align: top;
+	background:url(../img/ico_link_angled.png) left center no-repeat;}
+.messengerList .messengerBox .people .person .name {font-size: 14px; color:#555;}
+.messengerList .messengerBox .people .person .bar {width:1px; height:10px; background-color: #ddd; margin:0 4px;}
+.messengerList .messengerBox .people .person .preview {font-size: 14px;color:#111;width: 60%;white-space: nowrap;text-overflow: ellipsis;}
+.messengerList .messengerBox .people .person .time {font-size: 14px; color:#777;}
+.messengerList .messengerBox .people .person .new {margin-left:4px; background-color:#1A73F9; color:#fff; padding:4px 8px; font-weight:600; font-size:14px; border-radius:16px ; -webkit-border-radius:16px ; -moz-border-radius:16px ; -ms-border-radius:16px ; -o-border-radius:16px ; }
+.messengerList .messengerBox .people .person.active, .messengerList .messengerBox .people .person:hover {background-color: var(--bluebg);}
+.messengerList .messengerBox .people .person.active span, .messengerList .messengerBox .people .person:hover span {}
+.messengerList .messengerBox .people .person.active:after, .messengerList .messengerBox .people .person:hover:after {display: none;}
+.chatList { position: relative; min-width: 400px;  overflow-x: hidden; overflow-y: auto;}
+.chatList::-webkit-scrollbar {display: none; /* Chrome, Safari, Opera*/}
+.chatList .chatBox {position: relative; min-width: 100%; padding-bottom:20px;}
+.chatList .chatBox .top { position: sticky; top:0; left:0; bottom:0; right:0; min-width: 400px; background-color: #606973; color:#fff; font-size:14px; padding:20px 16px; z-index: 99999;}
+.chatDate { position: relative; display: grid; grid-template-columns: 70% 30%; padding-top:12px;}
+.chatList .chatBox .top span {position: relative; font-weight: 300; }
+.chatList .chatBox .top span .chatid {font-weight: 600; margin-left:8px;}
+.chatList .chatBox .top .myDropdown {float:right; z-index: 99999;}
+.chatList .chatBox .chat {position: relative;display: none;flex-direction: column; z-index: 1;padding:0 16px;}
+.chatList .chatBox .chat.active-chat {display: block;display: flex;overflow: hidden;}
+.chatList .chatBox .chat.active-chat .bubble {transition-timing-function: cubic-bezier(0.4, -0.04, 1, 1);}
+.chatList .chatBox .chat.active-chat .bubble:nth-of-type(1) {
+	-webkit-animation-duration: 0.15s;
+	animation-duration: 0.15s;
+}
+.chatList .chatBox .chat.active-chat .bubble:nth-of-type(2) {
+	-webkit-animation-duration: 0.3s;
+	animation-duration: 0.3s;
+}
+.chatList .chatBox .chat.active-chat .bubble:nth-of-type(3) {
+	-webkit-animation-duration: 0.45s;
+	animation-duration: 0.45s;
+}
+.chatList .chatBox .chat.active-chat .bubble:nth-of-type(4) {
+	-webkit-animation-duration: 0.6s;
+	animation-duration: 0.6s;
+}
+.chatList .chatBox .chat.active-chat .bubble:nth-of-type(5) {
+	-webkit-animation-duration: 0.75s;
+	animation-duration: 0.75s;
+}
+.chatList .chatBox .chat.active-chat .bubble:nth-of-type(6) {
+	-webkit-animation-duration: 0.9s;
+	animation-duration: 0.9s;
+}
+.chatList .chatBox .chat.active-chat .bubble:nth-of-type(7) {
+	-webkit-animation-duration: 1.05s;
+	animation-duration: 1.05s;
+}
+.chatList .chatBox .chat.active-chat .bubble:nth-of-type(8) {
+	-webkit-animation-duration: 1.2s;
+	animation-duration: 1.2s;
+}
+.chatList .chatBox .chat.active-chat .bubble:nth-of-type(9) {
+	-webkit-animation-duration: 1.35s;
+	animation-duration: 1.35s;
+}
+.chatList .chatBox .chat.active-chat .bubble:nth-of-type(10) {
+	-webkit-animation-duration: 1.5s;
+	animation-duration: 1.5s;
+}
+.chatList .chatBox .chat.active-chat .bubble:nth-of-type(11) {
+	-webkit-animation-duration: 1.65s;
+	animation-duration: 1.65s;
+}
+.chatList .chatBox .chat.active-chat .bubble:nth-of-type(12) {
+	-webkit-animation-duration: 1.8s;
+	animation-duration: 1.8s;
+}
+.chatList .chatBox .bubbleDate { font-size:13px; color:#fff; letter-spacing: 0;}
+.chatList .chatBox .bubble { width:100%; margin-top:12px;}
+.chatList .chatBox .bubble .you:before, .chatList .chatBox .bubble .me:before {
+	position: absolute;
+	top: 19px;
+	display: block;
+	width: 8px;
+	height: 6px;
+	content: " ";
+	transform: rotate(29deg) skew(-35deg);
+}
+.chatList .chatBox .bubble .you {
+	font-size: 14px;
+	position: relative;
+	display: inline-block;
+	clear: both;
+	margin-bottom: 4px;
+	padding: 12px 16px;
+	vertical-align: top;
+	border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	-ms-border-radius: 4px;
+	-o-border-radius: 4px;
+	color: var(--black);
+	background-color: var(--white);
+}
+.slide_left {    align-self: flex-start;
+	-webkit-animation-name: slideFromLeft;
+	animation-name: slideFromLeft;}
+.slide_right {     align-self: flex-end;
+	-webkit-animation-name: slideFromRight;
+	animation-name: slideFromRight;}
+.chatList .chatBox .bubble .you:before {left: -3px;background-color: var(--white);}
+.chatList .chatBox .bubble .me {
+	text-align: right;
+	font-size: 14px;
+	position: relative;
+	display: inline-block;
+	clear: both;
+	margin-bottom: 4px;
+	padding: 12px 16px;
+	vertical-align: top;
+	border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	-ms-border-radius: 4px;
+	-o-border-radius: 4px;
+	color: var(--dark);
+	background-color: #FAE100;
+}
+
+.filedown { position: relative; width:100%;}
+.filedown .img {width:32px; height:32px; margin-right:8px; vertical-align: middle; background:url(../img/img_chatbg.png) center center no-repeat;}
+.filedown span {display: inline-block; margin-right:8px; text-align: left; vertical-align: middle;font-weight:300;}
+
+.fileListdown { position: relative; width:100%;}
+.fileListdown .img {width:32px; height:32px; margin-right:8px; vertical-align: middle; background:url(../img/img_chatbg.png) center center no-repeat;}
+.fileListdown span  { display: inline-block; margin-right:8px; text-align: left; vertical-align: middle;font-weight:300; font-size:13px; color:#ddd;}
+.fileListdown span a {  overflow: hidden; max-width:130px;white-space: nowrap;text-overflow: ellipsis;word-break: break-all; font-size:13px; display: block; margin-bottom:4px; }
+.fileListdown span.btn {position: absolute; right:0; top:8px; }
+
+.chatList .chatBox .bubble .me:before { right: -3px;background-color: #FAE100;}
+.chatList .chatBox .conversation-start {position: relative;width: 100%;margin-bottom: 27px;text-align: center;}
+.chatList .chatBox .conversation-start span {font-weight: 600; font-size: 14px;display: inline-block;color: #fff;}
+.chatList .chatBox .conversation-start span:before, .chatList .chatBox .conversation-start span:after {
+	position: absolute;
+	top: 10px;
+	display: inline-block;
+	width: 35%;
+	height: 1px;
+	content: "";
+	background-color:#8C939A;
+}
+.chatList .chatBox .conversation-start span:before {left: 0;}
+.chatList .chatBox .conversation-start span:after {right: 0;}
+
+@keyframes slideFromLeft {
+	0% {
+		margin-left: -200px;
+		opacity: 0;
+	}
+	100% {
+		margin-left: 0;
+		opacity: 1;
+	}
+}
+@-webkit-keyframes slideFromLeft {
+	0% {
+		margin-left: -200px;
+		opacity: 0;
+	}
+	100% {
+		margin-left: 0;
+		opacity: 1;
+	}
+}
+@keyframes slideFromRight {
+	0% {
+		margin-right: -200px;
+		opacity: 0;
+	}
+	100% {
+		margin-right: 0;
+		opacity: 1;
+	}
+}
+@-webkit-keyframes slideFromRight {
+	0% {
+		margin-right: -200px;
+		opacity: 0;
+	}
+	100% {
+		margin-right: 0;
+		opacity: 1;
+	}
+}

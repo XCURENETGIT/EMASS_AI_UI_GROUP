@@ -70,7 +70,7 @@ public class EmassResponse {
 	private String	body_path; //	본문(원본) 경로
 	private String	body_snippet; //	본문 요약
 	private String	body_text; //	본문(텍스트) 내용
-    private String  body_size_str; // 본문 사이즈 단위
+	private String  body_size_str; // 본문 사이즈 단위
 
 	/* ######## netWork  ######################################################################################################################*/
 

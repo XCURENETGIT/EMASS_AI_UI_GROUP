@@ -76,6 +76,9 @@ var eikon = {
 	},
 	getMessengerList : function(page){
 		var searchType = $('input:radio[name=searchType]:input:checked').val();
+
+		console.log($('#startsubdatepicker').data("DateTimePicker").date($('#startdatepicker').data("DateTimePicker").date() ));
+
 		$('#startsubdatepicker').data("DateTimePicker").date( $('#startdatepicker').data("DateTimePicker").date() );
 		$('#endsubdatepicker').data("DateTimePicker").date( $('#enddatepicker').data("DateTimePicker").date() );
 

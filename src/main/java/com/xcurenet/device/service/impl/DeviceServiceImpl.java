@@ -24,11 +24,11 @@ public class DeviceServiceImpl extends XcnAbstractDAO implements DeviceService {
 	}
 	
 	@Override
-	public List<DeviceVO> getCollectionDevice(String searchStr, int offset, int limit) {
+	public List<DeviceVO> getCollectionDevice(String searchStr) {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("searchStr", searchStr);
-		param.put("offset", offset);
-		param.put("limit", limit);
+//		param.put("offset", offset);
+//		param.put("limit", limit);
 		return selectList("com.xcurenet.sqlmap.mappers.mysql.device.getCollectionDevice", param);
 	}
 

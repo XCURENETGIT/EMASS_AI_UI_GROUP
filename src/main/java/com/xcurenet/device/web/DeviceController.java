@@ -86,8 +86,9 @@ public class DeviceController {
 	@RequestMapping(value = "/getCollectionDevice.xcn")
 	@Description("수집 장비 리스트 조회")
 	@ResponseBody
-	public XcnResponseVO getCollectionDevice() {
-		return new XcnResponseVO(XcnRspCode.OK, deviceService.getCollectionDevice());
+	public XcnResponseVO getCollectionDevice(final HttpServletRequest request) {
+		String searchStr = Common.nvl(request.getParameter("searchStr"));
+		return new XcnResponseVO(XcnRspCode.OK, deviceService.getCollectionDevice(searchStr));
 	}
 
 	@RequestMapping(value = "/getDeviceInfo.xcn")

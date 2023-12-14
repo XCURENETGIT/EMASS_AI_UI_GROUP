@@ -393,11 +393,13 @@ public class GetSnmp {
 		//log.warn("Set HDD Alarm host:{} index:{}, hddNotifyLimit:{}, hddWarnLimit:{}, hddAlarmLimit:{}", ip, index, hddNotifyLimit, hddWarnLimit, hddAlarmLimit);
 		if (Common.isEmpty(ip)) return false;
 
+		//여기서 null 에러 발생
 		String sysInfoUserId = getDeviceSysEID(ip);
 		if (Common.isEmpty(sysInfoUserId)) return false;
 		
 		String emdcIpfInfoFileCtrl = snmpMibLoader.getOID("emdcIpfInfoFileCtrl");
 		String oidStr = emdcIpfInfoFileCtrl + "." + sysInfoUserId + SNMP_OID_PREFIX;
+
 		log.warn ( "DELETE Device Info IP : " + ip + "  OID : " + oidStr );
 		if ( !snmpUtil.setValue ( oidStr, DELETE_ALL ) ) return false;
 		

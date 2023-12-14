@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp" %>
 <style>
+	.radio input {
+		vertical-align: middle;
+	}
 	.tab-content {
 		display: none;
 		background: #ededed;
@@ -302,10 +305,8 @@
 						</div>
 						<div class="col-65">
 							<div class="radio">
-								<label>
-									<input type="radio" name="useYn" value="Y" checked>
-									<span><s:message code="common.msg.use"/></span>
-								</label>
+								<input type="radio" name="useYn" value="Y" checked>
+								<span><s:message code="common.msg.use"/></span>
 							</div>
 							<div class="radio">
 								<input type="radio" name="useYn" value="N">

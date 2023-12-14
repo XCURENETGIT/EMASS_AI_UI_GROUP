@@ -127,7 +127,7 @@ public class MessengerController {
 
 		/* 임시 주석*/
 		Map<String, Long> allCount = getAllCount(xrootmtrs);
-    	Map<String, Long> unReadCount = getUnReadCount(xrootmtrs, adminId);
+		Map<String, Long> unReadCount = getUnReadCount(xrootmtrs, adminId);
 
 		for (MessengerGroupVO group : groups) {
 			group.setMsg_cnt(Common.nvn(allCount.get(group.getXrootmtr())));
@@ -174,7 +174,7 @@ public class MessengerController {
 	private Map<String, Long> getUnReadCount(List<String> xrootmtrs, String adminId) throws IOException, SolrServerException {
 		SolrQuery sq = new SolrQuery();
 		sq.setQuery(String.format(" +xrootmtr:( %s ) %s ",makeParentheses(  Common.join(xrootmtrs, " ")), MESSENGER));
-	//	sq.setQuery(sq.getQuery() + String.format(SolrEdcServiceImpl.JOIN_UNREAD, adminId)); // 추후 안읽음 쿼리 추가해야함
+		//	sq.setQuery(sq.getQuery() + String.format(SolrEdcServiceImpl.JOIN_UNREAD, adminId)); // 추후 안읽음 쿼리 추가해야함
 
 		sq.setParam("group", true);
 		sq.setParam("group.facet", true);
@@ -604,7 +604,7 @@ public class MessengerController {
 		sq.setParam("group.field", groupField);
 		sq.setParam("facet", true);
 		sq.setFacetLimit(rows);
-	//	sq.setParam("facet.pivot", groupField+"srcip");  // "{!stats=usr_id}"+groupField=",srcip"  내용
+		//	sq.setParam("facet.pivot", groupField+"srcip");  // "{!stats=usr_id}"+groupField=",srcip"  내용
 		if(Common.isEquals(groupField, "usr_id")) sq.setParam("facet.query", "-usr_id:*");
 		sq.setParam("facet.field", "srcip");
 		sq.setFacetMinCount(1);
