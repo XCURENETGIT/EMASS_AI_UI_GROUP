@@ -370,6 +370,7 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .blueBg {background-color:#F2F6FF !important;}
 .greenBg {background-color:#E4F4F1 !important;}
 .yellowBg {background-color:#FFF8E3 !important;}
+.blackBg {background-color:#242330 !important;}
 .redBg {background-color:#FFF1F1 !important;}
 .grayBg {background-color:#EEF1F6 !important;}
 .grayBg02 {background-color:#F8F8F8 !important;}
@@ -530,7 +531,7 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .clearfix button { padding: 14px 20px; margin: 8px 0; border: none;cursor: pointer;opacity: 0.9;}
 .clearfix button:hover {opacity:1;}
 .cancelbtn, .deletebtn {float: left; width: 50%;}
-.fullbtn {width: 100%;background-color: #1a73f9;}
+.fullbtn {width: 100% ;padding: 14px 20px; background-color: #1C64D3; border:none; color:#fff;}
 .fullbtn02 {width: 100% ;padding: 14px 20px; border:1px solid #656C74; color:#fff; font-size: 14px; background:none;}
 .fullbtn02:hover {}
 .cancelbtn {background-color: #eee; color:#111;  font-size:16px;}
