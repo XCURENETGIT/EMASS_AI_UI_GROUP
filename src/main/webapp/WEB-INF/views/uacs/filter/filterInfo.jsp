@@ -924,7 +924,8 @@
 						<div class="col-35">
 							<%--								<div class="form-inline not-dashed" style="padding-top: 20px;">--%>
 							<div style="position: relative; top: 15px;">
-								<label for="" class="w100" style=""><s:message code="filterInfo.applydevice"/></label>
+
+								<label for="" class="fname"><s:message code="filterInfo.applydevice"/></label>
 								<span class="red_dot"></span>
 								<input type="hidden" name="deviceInfo" id="deviceInfo"/>
 							</div>
@@ -1021,7 +1022,7 @@
 				<div class="modalbody">
 					<div class="row">
 						<div class="col-35">
-							<label for="url" class="w100">URL</label>
+							<label for="url" class="fname">URL</label>
 							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">

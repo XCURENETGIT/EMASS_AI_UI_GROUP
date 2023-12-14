@@ -242,7 +242,6 @@ public class IpFilterController {
 		auditVo.setMenuId(Menu.POLICY_NOLOG.getMenuId());
 		auditVo.setOperation(Operation.RULE_APPLY.getOperation());
 		auditVo.setInformation("["+Prop.propFormat("filterInfo.ruleapply")+"]┌"+info.replaceAll("<span style=\"color: #ff0000;\">", "").replaceAll("</span>", ""));
-		System.out.println("auditVO"+auditVo);
 		auditService.insertAudit(request, auditVo);
 		
 		if( flag ) {
