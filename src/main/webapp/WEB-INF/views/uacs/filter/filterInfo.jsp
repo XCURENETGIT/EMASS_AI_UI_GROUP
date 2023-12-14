@@ -139,7 +139,7 @@
 
         $('#insertBtn').click(function () {
             $('#sizeServiceCd').prop('disabled', false);
-            $('.pop_btn02').prop('disabled', false);
+            $('.savePopBtn').prop('disabled', false);
             mode = 'insert';
             $('#idServiceCd, #domainServiceCd, #subjectServiceCd, #sizeServiceCd, #attachServiceCd').val('');
             $('#userId, #domain, #noLogurl, #subject, #lowSize, #highSize').val('');
@@ -169,8 +169,8 @@
             }
         });
 
-        $('.pop_btn02').click(function () {
-            $('.pop_btn02').prop('disabled', true);
+        $('.savePopBtn').click(function () {
+            $('.savePopBtn').prop('disabled', true);
             var url;
             var popFormId;
             var flag = false;
@@ -433,7 +433,7 @@
             if (sizeCondition == 'B') {
                 if (Number($('#lowSize').val()) > Number($('#highSize').val())) {
                     ui.alertMsg('<s:message code="filterInfo.msg.cannot.startend"/>');
-                    $('.pop_btn02').prop('disabled', false);
+                    $('.savePopBtn').prop('disabled', false);
                     return;
                 }
                 if (!$('#highSize').val().isNumber()) {
@@ -463,8 +463,9 @@
     }
 
     function saveData(url, popFormId) {
+
         if (!validationCheck()) {
-            $('.pop_btn02').prop('disabled', false);
+            $('.savePopBtn').prop('disabled', false);
             return;
         }
         var message = mode == 'insert' ? '<s:message code="common.msg.confirm.add"/>' : '<s:message code="common.msg.confirm.modify"/>';
@@ -484,11 +485,11 @@
                     },
                     complete: function () {
                         gridObj.off();
-                        $('.pop_btn02').prop('disabled', false);
+                        $('.savePopBtn').prop('disabled', false);
                     }
                 });
             } else {
-                $('.pop_btn02').prop('disabled', false);
+                $('.savePopBtn').prop('disabled', false);
             }
         });
     }
@@ -683,7 +684,7 @@
 				</div>
 				<div class="modalfooter">
 					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
-					<button type="button" class="pop_btn02" accesskey="S"><s:message code="common.msg.save"/></button>
+					<button type="button" class="pop_btn02 savePopBtn" accesskey="S"><s:message code="common.msg.save"/></button>
 				</div>
 			</div>
 		</form>
@@ -944,7 +945,7 @@
 				<input type="hidden" name="tabId"/>
 				<div class="modalfooter">
 					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
-					<button type="button" class="pop_btn02" accesskey="S" id="savePopBtn">
+					<button type="button" class="pop_btn02 savePopBtn" accesskey="S" id="savePopBtn">
 						<s:message code="common.msg.save"/></button>
 				</div>
 			</div>
@@ -996,7 +997,7 @@
 				</div>
 				<div class="modalfooter">
 					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
-					<button type="button" class="pop_btn02" accesskey="S" id="savePopBtn"><s:message code="common.msg.save"/></button>
+					<button type="button" class="pop_btn02 savePopBtn" accesskey="S" id="savePopBtn"><s:message code="common.msg.save"/></button>
 				</div>
 			</div>
 		</form>
@@ -1040,7 +1041,7 @@
 				</div>
 				<div class="modalfooter">
 					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
-					<button type="button" class="pop_btn02" accesskey="S"><s:message code="common.msg.save"/></button>
+					<button type="button" class="pop_btn02 savePopBtn" accesskey="S"><s:message code="common.msg.save"/></button>
 				</div>
 			</div>
 		</form>
@@ -1100,7 +1101,7 @@
 				</div>
 				<div class="modalfooter">
 					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
-					<button type="button" class="pop_btn02" accesskey="S"><s:message code="common.msg.save"/></button>
+					<button type="button" class="pop_btn02 savePopBtn" accesskey="S"><s:message code="common.msg.save"/></button>
 				</div>
 			</div>
 		</form>
@@ -1164,7 +1165,7 @@
 				<input type="hidden" name="tabId"/>
 				<div class="modalfooter">
 					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
-					<button type="button" class="pop_btn02" accesskey="S"><s:message code="common.msg.save"/></button>
+					<button type="button" class="pop_btn02 savePopBtn" accesskey="S"><s:message code="common.msg.save"/></button>
 				</div>
 			</div>
 		</form>
@@ -1227,7 +1228,7 @@
 				</div>
 				<div class="modalfooter">
 					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
-					<button type="button" class="pop_btn02" accesskey="S" id="savePopBtn"><s:message code="common.msg.save"/></button>
+					<button type="button" class="pop_btn02 savePopBtn" accesskey="S" id="savePopBtn"><s:message code="common.msg.save"/></button>
 				</div>
 			</div>
 		</form>
@@ -1309,7 +1310,7 @@
     gridId.loadExportMenu('<s:message code="POLICY_SETUP.POLICY_NOLOG"/>-ID');
     gridId.onClick = function () {
         if (gridId.Col == gridId.ColIndex('userId')) {
-            $('.pop_btn02').prop('disabled', false);
+            $('savePopBtn').prop('disabled', false);
             mode = 'modify';
             $("#idPop").modal('show');
             $('#userId').val(gridId.getValue(gridId.Row, 'userId'));
@@ -1422,7 +1423,7 @@
     gridDomain.loadExportMenu('<s:message code="POLICY_SETUP.POLICY_NOLOG"/>-Domain');
     gridDomain.onClick = function () {
         if (gridDomain.Col == gridDomain.ColIndex('domain')) {
-            $('.pop_btn02').prop('disabled', false);
+            $('savePopBtn').prop('disabled', false);
             mode = 'modify';
             $("#domainPop").modal('show');
             $('#domain').val(gridDomain.getValue(gridDomain.Row, 'domain'));
@@ -1442,7 +1443,7 @@
     gridUrl.loadExportMenu('<s:message code="POLICY_SETUP.POLICY_NOLOG"/>-URL');
     gridUrl.onClick = function () {
         if (gridUrl.Col == gridUrl.ColIndex('url')) {
-            $('.pop_btn02').prop('disabled', false);
+            $('savePopBtn').prop('disabled', false);
             mode = 'modify';
             $("#urlPop").modal('show');
             $("#url").val(gridUrl.getValue(gridUrl.Row, 'url'));
@@ -1464,7 +1465,7 @@
     gridSubject.loadExportMenu('<s:message code="POLICY_SETUP.POLICY_NOLOG"/>-<s:message code="filterInfo.subject"/>');
     gridSubject.onClick = function () {
         if (gridSubject.Col == gridSubject.ColIndex('subject')) {
-            $('.pop_btn02').prop('disabled', false);
+            $('.savePopBtn').prop('disabled', false);
             mode = 'modify';
             $("#subjectPop").modal('show');
             $('#subject').val(gridSubject.getValue(gridSubject.Row, 'subject'));
@@ -1496,7 +1497,7 @@
     gridSize.onClick = function () {
         if (gridSize.Col == gridSize.ColIndex('serviceNm')) {
             $('#sizeServiceCd').prop('disabled', true);
-            $('.pop_btn02').prop('disabled', false);
+            $('.savePopBtn').prop('disabled', false);
             mode = 'modify';
             $("#sizePop").modal('show');
             $('#lowSize').val(gridSize.getValue(gridSize.Row, 'lowSize'));
@@ -1521,7 +1522,7 @@
     gridAttach.loadExportMenu('<s:message code="POLICY_SETUP.POLICY_NOLOG"/>-<s:message code="filterInfo.subject"/>');
     gridAttach.onClick = function () {
         if (gridAttach.Col == gridAttach.ColIndex('attach')) {
-            $('.pop_btn02').prop('disabled', false);
+            $('.savePopBtn').prop('disabled', false);
             mode = 'modify';
             $("#subjectPop").modal('show');
             $('#subject').val(gridSubject.getValue(gridSubject.Row, 'subject'));
