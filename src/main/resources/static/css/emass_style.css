@@ -499,7 +499,7 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .row {overflow: hidden;margin-bottom:12px;margin-left: 0;margin-right: 0;}
 .row ol,ul{list-style: none;}
 .row ul li {border-top:1px dashed #ddd; padding-top:12px; padding-bottom:12px !important;}
-.row ul li:first-child {border:none;padding-top:0;}
+.row ul li:first-child {border:none;}
 .row:last-child {margin-bottom:0;}
 .row label {vertical-align: middle;line-height: 1.5; font-size:14px;font-weight:400;}
 .row select {display: inline-block;}

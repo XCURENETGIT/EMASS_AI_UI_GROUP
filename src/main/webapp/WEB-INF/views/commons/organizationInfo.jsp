@@ -694,7 +694,7 @@
 							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
-							<input type="text" name="coCd" id="coCdPopInput" placeholder="<s:message code="common.org.cocd"/>" required maxlength="20">
+							<input type="text" class="w100" name="coCd" id="coCdPopInput" placeholder="<s:message code="common.org.cocd"/>" required maxlength="20">
 						</div>
 					</div>
 					<div class="row">
@@ -703,13 +703,13 @@
 							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
-							<input type="text" name="coNm" id="coNmPopInput" placeholder="<s:message code="common.org.conm"/>" required maxlength="20">
+							<input type="text"class="w100"  name="coNm" id="coNmPopInput" placeholder="<s:message code="common.org.conm"/>" required maxlength="20">
 						</div>
 					</div>
 				</div>
 				<div class="modalfooter">
 					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
-					<button type="button" class="pop_btn02" accesskey="S" class="savePopBtn"><s:message code="common.msg.save"/></button>
+					<button type="button" class="pop_btn02 savePopBtn" accesskey="S"><s:message code="common.msg.save"/></button>
 				</div>
 			</div>
 		</form>
@@ -748,7 +748,7 @@
 							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
-							<input type="text" name="busiCd" id="busiCdPopInput" placeholder="<s:message code="common.org.busicd"/>" required maxlength="20">
+							<input type="text" class="w100" name="busiCd" id="busiCdPopInput" placeholder="<s:message code="common.org.busicd"/>" required maxlength="20">
 						</div>
 					</div>
 					<div class="row">
@@ -757,19 +757,291 @@
 							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
-							<input type="text" class="form-control" name="busiNm" id="busiNmPopInput" placeholder="<s:message code="common.org.businm"/>" required maxlength="20">
+							<input type="text" class="w100" name="busiNm" id="busiNmPopInput" placeholder="<s:message code="common.org.businm"/>" required maxlength="20">
 						</div>
 					</div>
 
 					<div class="modalfooter">
 						<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
-						<button type="button" class="pop_btn02" accesskey="S" class="savePopBtn"><s:message code="common.msg.save"/></button>
+						<button type="button" class="pop_btn02 savePopBtn" accesskey="S"><s:message code="common.msg.save"/></button>
 					</div>
 				</div>
 			</div>
 		</form>
 	</div>
 </div>
+
+<div class="modal" id="busiPop" tabindex="-1" role="dialog" aria-labelledby="busiModal" data-backdrop="static">
+	<div class="modal-content">
+		<form method="post" id="busiPopForm">
+			<div class="modalHead">
+				<h2><s:message code="common.org.busi"/>-<s:message code="common.msg.addmodify"/></h2>
+				<span class="close" data-dismiss="modal">&times;</span>
+			</div>
+			<div class="modalCon">
+				<div class="modalTop">
+					<h3>총괄 추가</h3>
+					<p>
+						<span class="red_dot veralign_middle"></span>
+						필수 입력 사항입니다.
+					</p>
+				</div>
+				<div class="modalbody">
+					<div class="row">
+						<div class="col-35">
+							<label for="busiCdPopInput"><s:message code="common.org.co"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<div id="coNmPopSelect_inBusi"></div>
+							<input type="hidden" name="coNm" id="coNmHidden">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-35">
+							<label for="busiCdPopInput"><s:message code="common.org.busicd"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<input type="text" class="w100" name="busiCd" id="busiCdPopInput" placeholder="<s:message code="common.org.busicd"/>" required maxlength="20">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-35">
+							<label for="busiNmPopInput"><s:message code="common.org.businm"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<input type="text" class="w100" name="busiNm" id="busiNmPopInput" placeholder="<s:message code="common.org.businm"/>" required maxlength="20">
+						</div>
+					</div>
+
+					<div class="modalfooter">
+						<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+						<button type="button" class="pop_btn02 savePopBtn" accesskey="S"><s:message code="common.msg.save"/></button>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+
+
+<div class="modal" id="generalPop" tabindex="-1" role="dialog" aria-labelledby="generalModal" data-backdrop="static">
+	<div class="modal-content">
+		<form method="post" id="generalPopForm">
+			<div class="modalHead">
+				<h2><s:message code="common.org.general"/>-<s:message code="common.msg.addmodify"/></h2>
+				<span class="close" data-dismiss="modal">&times;</span>
+			</div>
+			<div class="modalCon">
+				<div class="modalTop">
+					<h3>총괄 추가</h3>
+					<p>
+						<span class="red_dot veralign_middle"></span>
+						필수 입력 사항입니다.
+					</p>
+				</div>
+				<div class="modalbody">
+					<div class="row">
+						<div class="col-35">
+							<label for="generalCdPopInput"><s:message code="common.org.co"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<div id="coNmPopSelect_inGeneral"></div>
+							<input type="hidden" name="coNm" id="coNmHiddenGeneral">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-35">
+							<label for="generalCdPopInput"><s:message code="common.org.generalcd"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<input type="text" class="w100"  name="generalCd" id="generalCdPopInput" placeholder="<s:message code="common.org.generalcd"/>" required maxlength="20">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-35">
+							<label for="generalNmPopInput"><s:message code="common.org.generalnm"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<input type="text" class="w100"   name="generalNm" id="generalNmPopInput" placeholder="<s:message code="common.org.generalnm"/>" required maxlength="20">
+						</div>
+					</div>
+
+					<div class="modalfooter">
+						<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+						<button type="button" class="pop_btn02 savePopBtn" accesskey="S"><s:message code="common.msg.save"/></button>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<div class="modal" id="deptPop" tabindex="-1" role="dialog" aria-labelledby="deptModal" data-backdrop="static">
+	<div class="modal-content">
+		<form method="post" id="deptPopForm">
+			<div class="modalHead">
+				<h2><s:message code="common.org.dept"/>-<s:message code="common.msg.addmodify"/></h2>
+				<span class="close" data-dismiss="modal">&times;</span>
+			</div>
+			<div class="modalCon">
+				<div class="modalTop">
+					<h3>부서 추가</h3>
+					<p>
+						<span class="red_dot veralign_middle"></span>
+						필수 입력 사항입니다.
+					</p>
+				</div>
+				<div class="modalbody">
+					<div class="row">
+						<div class="col-35">
+							<label for="deptCdPopInput"><s:message code="common.org.co"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<div id="coNmPopSelect_inDept"></div>
+							<input type="hidden" name="coNm" id="coNmHiddenDept">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-35">
+							<label for="deptCdPopInput"><s:message code="common.org.pdept"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<div id="pDeptPopSelect_inDept"></div>
+							<input type="hidden" name="pDeptNm" id="parentHiddenDept">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-35">
+							<label for="deptCdPopInput"><s:message code="common.org.deptcd"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<input type="text"  class="w100"  name="deptCd" id="deptCdPopInput" placeholder="<s:message code="common.org.deptcd"/>" required maxlength="20">
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-35">
+							<label for="deptCdPopInput"><s:message code="common.org.deptnm"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<input type="text" class="w100" name="deptNm" id="deptNmPopInput" placeholder="<s:message code="common.org.deptnm"/>" required maxlength="20">
+						</div>
+					</div>
+
+					<div class="modalfooter">
+						<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+						<button type="button" class="pop_btn02 savePopBtn" accesskey="S"><s:message code="common.msg.save"/></button>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+
+<div class="modal" id="jikgubPop" tabindex="-1" role="dialog" aria-labelledby="jikgubModal" data-backdrop="static">
+	<div class="modal-content">
+		<form method="post" id="jikgubPopForm">
+			<div class="modalHead">
+				<h2><s:message code="common.org.jikgub"/>-<s:message code="common.msg.addmodify"/></h2>
+				<span class="close" data-dismiss="modal">&times;</span>
+			</div>
+			<div class="modalCon">
+				<div class="modalTop">
+					<h3>직급 추가</h3>
+					<p>
+						<span class="red_dot veralign_middle"></span>
+						필수 입력 사항입니다.
+					</p>
+				</div>
+				<div class="modalbody">
+					<div class="row">
+						<div class="col-35">
+							<label for="jikgubCdPopInput"><s:message code="common.org.jikgubcd"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<input type="text" class="w100"   name="jikgubCd" id="jikgubCdPopInput" placeholder="<s:message code="common.org.jikgubcd"/>" required maxlength="20">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-35">
+							<label for="jikgubNmPopInput"><s:message code="common.org.jikgubnm"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<input type="text" class="w100"   name="jikgubNm" id="jikgubNmPopInput" placeholder="<s:message code="common.org.jikgubnm"/>" required maxlength="20">
+						</div>
+					</div>
+
+					<div class="modalfooter">
+						<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+						<button type="button" class="pop_btn02 savePopBtn" accesskey="S"><s:message code="common.msg.save"/></button>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+
+
+<div class="modal" id="jikinPop" tabindex="-1" role="dialog" aria-labelledby="jikinModal" data-backdrop="static">
+	<div class="modal-content">
+		<form method="post" id="jikinPopForm">
+			<div class="modalHead">
+				<h2><s:message code="common.org.jikin"/>-<s:message code="common.msg.addmodify"/></h2>
+				<span class="close" data-dismiss="modal">&times;</span>
+			</div>
+			<div class="modalCon">
+				<div class="modalTop">
+					<h3>재직 추가</h3>
+					<p>
+						<span class="red_dot veralign_middle"></span>
+						필수 입력 사항입니다.
+					</p>
+				</div>
+				<div class="modalbody">
+					<div class="row">
+						<div class="col-35">
+							<label for="jikinCdPopInput"><s:message code="common.org.jikincd"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<input type="text" class="w100"   name="jikinCd" id="jikinCdPopInput" placeholder="<s:message code="common.org.jikincd"/>" required maxlength="20">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-35">
+							<label for="jikinNmPopInput"><s:message code="common.org.jikinnm"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<div class="col-65">
+							<input type="text" class="w100"   name="jikinNm" id="jikinNmPopInput" placeholder="<s:message code="common.org.jikinnm"/>" required maxlength="20">
+						</div>
+					</div>
+					<div class="modalfooter">
+						<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+						<button type="button" class="pop_btn02 savePopBtn" accesskey="S"><s:message code="common.msg.save"/></button>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+
 
 
 <div class="container">
