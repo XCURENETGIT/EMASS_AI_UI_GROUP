@@ -120,18 +120,19 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
-/*reset*/
 
+/*reset*/
 a {color:#fff; text-decoration: none; padding:0;margin:0;}
 a:active {}
 a:hover {color:#ddd;}
 input[type=text], input[type=password], select, textarea {font-size:12px;border-radius: 2px;height:26px;line-height: 26px;border-radius: 2px;border: 1px solid #CCC;background: #FFF;padding: 0 4px;align-items: center;-webkit-border-radius: 2px;-moz-border-radius: 2px;-ms-border-radius: 2px;-o-border-radius: 2px;}
-select:disabled { background-color:#ddd; border: 1px solid #aaa;}
 input:disabled{ background-color:#eee; border: 1px solid #CCC;}
 input[type="text"].error,select.error{border:1px solid #FC5656; color:#FC5656; background-color:#fff;}
+select:disabled { background-color:#ddd; border: 1px solid #aaa;}
 select { font-size:12px; border-radius: 2px; height:26px; line-height: 26px; resize: vertical; border-radius: 2px; border: 1px solid #CCC; background: #FFF; display: flex; padding: 0 4px; align-items: center; -webkit-border-radius: 2px; -moz-border-radius: 2px; -ms-border-radius: 2px; -o-border-radius: 2px; }
 button {cursor: pointer;font-family: Pretendard;}
 button:hover {text-decoration: underline;}
+
 /* IE 기본 스타일 제거 */
 select::-ms-expand{display: none; /* IE 10, 11 */}
 input[type="date"]{font-size:12px;font-family: Pretendard;height:26px;line-height:26px;padding-left:8px;padding-right:4px;color: #111;border:1px solid #ccc;border-radius: 2px;-webkit-border-radius: 2px;-moz-border-radius: 2px;-ms-border-radius: 2px;-o-border-radius: 2px;}
@@ -145,3 +146,4 @@ input[type="radio"]:disabled + span {opacity: 0.7;cursor: not-allowed;}
 input[type="checkbox"]:checked + span  {color:#1A73F9}
 input[type="checkbox"]:disabled {appearance: none; border-radius: 2px; width:12px; height:12px; background-color: #eee; border: 1px solid #CCC; box-shadow: none;opacity:1;cursor: not-allowed;}
 input[type="checkbox"]:disabled + span {opacity: 0.7;cursor: not-allowed;}
+input[type="checkbox"] {vertical-align: middle !important;}

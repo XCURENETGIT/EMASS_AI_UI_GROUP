@@ -111,13 +111,13 @@ h4 {position: relative; font-size:14px; font-weight: 600; color:#111;margin-bott
 h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 .subTit {padding:20px;}
 .subTit h2 {font-size:24px; font-weight:700;}
-.subTit p {font-size:13px; color:#555; font-weight:400; margin-top:8px; border-bottom:1px solid #ddd;padding-bottom:16px;}
+.subTit p {font-size:13px; color:#555; font-weight:400; margin-top:8px; border-bottom:1px solid #ddd;padding-bottom:16px; line-height:1.5;}
 .subTit button.menu {width:24px; height:24px; vertical-align: bottom; background:url(../img/Icon_tit_menu.png) bottom center no-repeat; border:0;}
 .subTit button.menu:hover {opacity: 0.5;}
+
 /*bullet*/
 .bullet01 { width:8px; height:8px;margin-right:4px; background-color:#1A73F9; display: inline-block; border-radius:50% ; -webkit-border-radius:50% ; -moz-border-radius:50% ; -ms-border-radius:50% ; -o-border-radius:50% ; }
 .bullet02 { width:6px; height:6px; margin-right:4px; vertical-align:middle; background-color:#555; display: inline-block; border-radius:70% ; -webkit-border-radius:70% ; -moz-border-radius:70% ; -ms-border-radius:70% ; -o-border-radius:70% ; }
-
 
 /* Content */
 #contentArea .page {position: absolute; right:20px; top:40px; font-size:12px; color:#555;}
@@ -279,8 +279,10 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 #PDF {background-color:orange;}*/
 
 /*Btn*/
+button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
+/*
 .btnList img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
-.btnform img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
+.btnform img {margin-top:-3px;margin-right:2px; vertical-align:middle;}*/
 .btnList button {margin-bottom:8px;}
 .btn01 {color:#375E9A; height:26px; line-height: 26px;  padding:0 8px; font-size:12px; vertical-align:middle;display: inline-block; border-radius: 2px;border: 1px solid #375E9A;background: #F5F8FF;}
 .btn02 {color:#D64D4D;  height:26px;line-height: 26px; border: 1px solid #ED8D8D;  background: #FFF8F8;  padding:0 8px;  font-size:12px;vertical-align:middle; display: inline-block; border-radius: 2px; }
@@ -288,7 +290,7 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 .btn04 {font-size:13px; line-height:13px; padding:4px 8px; border:1px solid #375E9A; color:#375E9A; background:#fff url(../img/ico_page_down.png) 95.5% no-repeat;padding-right:20px;}
 .btn05 { color:#333; border: 1px solid #ddd;background: #fff; height:26px; padding:0 8px; line-height: 26px; font-size:12px;vertical-align:middle;display: inline-block; border-radius: 2px; }
 /*.pop_btn01:hover, .pop_btn02:hover, .form_btn01:hover ,.form_btn02:hover{text-decoration: underline;}*/
-.form_btn01 { color:#fff; font-weight:600; font-size:13px; height:26px; line-height: 28px; display: inline-block;padding:0 12px 0 32px;vertical-align: middle; text-align: center;  background:#1A73F9 url(../img/icon/ico_search.svg) 12px center no-repeat; border:0; border-radius:2px ; -webkit-border-radius:2px ; -moz-border-radius:2px ; -ms-border-radius:2px ; -o-border-radius:2px ; }
+.form_btn01 { color:#fff; font-weight:600; font-size:13px; height:26px; line-height: 28px;  display: inline-block;padding:0 12px 0 32px; vertical-align: middle; text-align: center;  background:#1A73F9 url(../img/icon/ico_search.svg) 12px center no-repeat; border:0; border-radius:2px ; -webkit-border-radius:2px ; -moz-border-radius:2px ; -ms-border-radius:2px ; -o-border-radius:2px ; }
 .form_btn01_02 { color:#fff; font-weight:600; font-size:13px; height:26px; line-height: 28px; display: inline-block;padding:0 12px 0 32px;vertical-align: middle; text-align: center;  background:#1A73F9 url(../img/ico_check_w.svg) 12px center no-repeat; border:0; border-radius:2px ; -webkit-border-radius:2px ; -moz-border-radius:2px ; -ms-border-radius:2px ; -o-border-radius:2px ; }
 .form_btn02 { color:#fff; font-weight:600; font-size:13px; height:26px; line-height: 28px; display: inline-block;padding:0 12px 0 32px;vertical-align: middle; text-align: center;   background:#59576D url(../img/icon/ico_refresh.svg) 12px center no-repeat; border:0; border-radius:2px ; -webkit-border-radius:2px ; -moz-border-radius:2px ; -ms-border-radius:2px ; -o-border-radius:2px ; }
 .form_btn03 { color:#fff; font-weight:600; font-size:13px; height:26px; line-height: 28px; display: inline-block;padding:0 12px 0 32px;vertical-align: middle; text-align: center;  background:#242330 url(../img/ico_check_w.svg) 12px center no-repeat; border:0; border-radius:2px ; -webkit-border-radius:2px ; -moz-border-radius:2px ; -ms-border-radius:2px ; -o-border-radius:2px ; }

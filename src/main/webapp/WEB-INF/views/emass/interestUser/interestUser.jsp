@@ -720,7 +720,7 @@
     gridGroup.autoNumber();
     gridGroup.colAdd('groupName', '<s:message code="userGroup.header.groupname"/>', 190, 'left', false, 'nomal');
     gridGroup.colAdd('groupColor', '<s:message code="common.msg.color"/>', 70, 'center', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
-        return "<input type='button' value='' class='btn' style='line-height: 0px; background-color: " + value + "; height: 20px; vertical-align: 1px;'/>";
+        return "<input type='button' value='' class='btn' style='line-height: 0px; background-color: " + value + "; height: 20px; vertical-align: middle;'/>";
     });
     gridGroup.colAdd('open', '<s:message code="common.msg.modify"/>', 80, 'center', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
         return "<input type='button' value='<s:message code="common.msg.modify"/>' class='table_btn01' />";
@@ -773,7 +773,7 @@
     gridSelectUser.onCheckBox();
     gridSelectUser.autoNumber();
     gridSelectUser.colAdd('add', '<s:message code="common.msg.add"/>', 80, 'center', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
-        return "<input type='button' value='<s:message code="common.msg.add"/>' class='btn' style='line-height: 0px; background-color: #337ab7;height: 20px; color:white; vertical-align: 1px; font-weight:bold'/>";
+        return "<input type='button' value='<s:message code="common.msg.add"/>' class='btn' style='line-height: 0px; background-color: #337ab7;height: 20px; color:white; vertical-align: middle; font-weight:bold'/>";
     });
     gridSelectUser.colAdd('userId', '<s:message code="common.msg.id"/>', 120, 'center', false, 'nomal');
     gridSelectUser.colAdd('userNm', '<s:message code="common.msg.name"/>', 150, 'left', false, 'nomal');
