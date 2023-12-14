@@ -49,6 +49,7 @@ public class NtpScheduler {
 		boolean dataStart = false;
 		try {
 			String message = Common.commandRunner(NTP_COMMAND);
+			log.debug("\n{}", message);
 			if (Common.isNotEmpty(message)) {
 				String[] lines = Common.toArray(message, "\n");
 				for (String line : lines) {
@@ -56,7 +57,7 @@ public class NtpScheduler {
 						dataStart = true;
 					} else if (dataStart) {
 						String[] tokens = line.trim().split("\\s+");
-						if (tokens.length >= 10) {
+						if (tokens.length >= 5) {
 							if (tokens[0].startsWith("^*") || Common.isEquals(tokens[4], "377")) synchronizedNTP = true;
 							if (tokens[0].startsWith("^*")) resultServer = tokens[1];
 						}
@@ -81,7 +82,7 @@ public class NtpScheduler {
 			result.put("status", "sync");
 		}
 
-		log.info(result.toString());
+		log.debug(result.toString());
 		ntpStatus = result;
 		return ntpStatus;
 	}

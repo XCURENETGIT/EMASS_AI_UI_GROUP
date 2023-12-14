@@ -4,5 +4,4 @@
 <%
     String footer_type = Common.nvl(Common.getParam(request).get("footer_type"));
 %>
-<footer class="unselectable" style="position: fixed; bottom: 0; height: 30px; background-color:none;z-index: -1;width: 100%;">
-</footer>
+<iframe id="ExcelDown" name="ExcelDown" src="about:blank;" style="display: none;" height="0" width="0" ></iframe>

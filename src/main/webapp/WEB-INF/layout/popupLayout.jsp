@@ -14,5 +14,6 @@
     </head>
     <body>
         <tiles:insertAttribute name="body" />
+        <tiles:insertAttribute name="footer" ignore="true"/>
     </body>
 </html>
