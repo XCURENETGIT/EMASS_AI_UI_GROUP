@@ -9,7 +9,7 @@
 %>
 <!DOCTYPE html>
 <html lang="ko">
-<head>
+<head>\
 	<title>EMASS LT - <s:message code="DATA_MONITOR.MESSAGE_SERVICE"/></title>
 
 	<style>

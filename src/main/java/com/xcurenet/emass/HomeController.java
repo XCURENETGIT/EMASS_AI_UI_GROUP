@@ -126,6 +126,7 @@ public class HomeController {
 		return "/emass/dashboard";
 	}
 
+
 	@RequestMapping(value = "/login.do", method = RequestMethod.GET)
 	@Description("로그인 페이지")
 	public String login(Locale locale, Model model, final HttpServletResponse response, final HttpServletRequest request, final HttpSession session) throws Exception {

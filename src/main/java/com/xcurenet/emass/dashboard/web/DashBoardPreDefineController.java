@@ -82,6 +82,7 @@ public class DashBoardPreDefineController {
 			vo.setTotal(riskBehaviorVO.getTotal());
 			vo.setUnRead(riskBehaviorVO.getUnRead());
 		}
+
 		return new XcnResponseVO(XcnRspCode.OK, vo);
 	}
 
@@ -95,8 +96,8 @@ public class DashBoardPreDefineController {
 		vo.setStartDt(Common.getCurrentDate() + "000000");
 		vo.setEndDt(Common.getDateTime(now, "yyyyMMddHHmmss"));
 		vo.setTermDtStr(Prop.propFormat("condition.hour", session, "00")+" ~ " + Common.getDateTime(now, Prop.propFormat("condition.time", session, "HH", "mm", "ss")));
-
 		KeywordDetectionVO keywordDetectionVO = dashBoardPreDefineService.getTodayKeywordDetection(vo);
+
 		if (keywordDetectionVO != null) {
 			vo.setTotal(keywordDetectionVO.getTotal());
 			vo.setUnRead(keywordDetectionVO.getUnRead());

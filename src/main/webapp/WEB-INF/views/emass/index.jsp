@@ -528,12 +528,12 @@ function getTodayRiskBehavior( ) {
  */
 var getTodayKeywordDetectionSetTime;
 function getTodayKeywordDetection( ) {
-
 	if(getTodayKeywordDetectionSetTime!=null) window.clearTimeout(getTodayKeywordDetectionSetTime);
 	ui.get({
 		url : 'getTodayKeywordDetection.xcn',
 		searchStr :'',
 		success : function(data, total) {
+            alert(data);
 			try {
 				$('#getTodayKeywordDetection_unRead').html(data.unRead);
 				$('#getTodayKeywordDetection_totalCnt').html(data.total);

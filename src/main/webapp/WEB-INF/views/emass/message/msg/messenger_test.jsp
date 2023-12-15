@@ -7,8 +7,7 @@
 	String adminType = Common.getAdminType(session);
 	String firstAdminYn = Common.getFirstAdminYn(session);
 %>
-<!DOCTYPE html>
-<html lang="ko">
+
 <head>
 	<title>EMASS LT - <s:message code="DATA_MONITOR.MESSAGE_SERVICE"/></title>
 
@@ -742,12 +741,84 @@
 				width:'222px',
 				searchLabel:true,
 				noneSelectedText:'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             <s:message code="common.org.dept.all"/>',
 		noneResultsText:'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             <s:message code="common.msg.noresult"/>'+' ',
 		selectAllText:'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             <s:message code="common.msg.select_all"/>',
 		deselectAllText:'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             <s:message code="common.msg.unselect_all"/>'
 	}); */
 
@@ -970,7 +1041,7 @@
         }
 	</script>
 </head>
-<div id="container">
+<div class="container">
 	<div id="contentArea" style="margin-left: 30px;">
 		<div class="inner_messenger">
 			<%--			검색 영역--%>
@@ -1023,16 +1094,14 @@
 								</div>
 							</div>
 
-								<%--								<div id="startdatepicker">--%>
-								<%--									<input type="date" id="startDt" class="w45 mat8" style="width: 140px;">--%>
-								<%--									<span class="w10 dis_inlineblock txt_center">&nbsp;~&nbsp;</span>--%>
-								<%--								</div>--%>
+							<%--								<div id="startdatepicker">--%>
+							<%--									<input type="date" id="startDt" class="w45 mat8" style="width: 140px;">--%>
+							<%--									<span class="w10 dis_inlineblock txt_center">&nbsp;~&nbsp;</span>--%>
+							<%--								</div>--%>
 
-								<%--								<div id="enddatepicker">--%>
-								<%--									<input type="date" id="endDt" class="w45 mat8" style="width: 140px;">--%>
-								<%--								</div>--%>
-
-
+							<%--								<div id="enddatepicker">--%>
+							<%--									<input type="date" id="endDt" class="w45 mat8" style="width: 140px;">--%>
+							<%--								</div>--%>
 
 
 							<div class="optiotab w100 mat8" data-toggle="buttons">
@@ -1066,21 +1135,51 @@
 						<div class="checkbox">
 							<label><input type="checkbox" name="readYn" id="readYn"><s:message code="eikon.msg.notRead"/></label>
 						</div>
-
-						<div class="input-group-btn" style="width:40px;">
-							<button class="btn btn-md btn-success" type="button" accesskey="Q" id="searchBtn"><i
-									class="glyphicon glyphicon-search"></i></button>
-						</div>
+						<button class="fullbtn" type="button" accesskey="Q" id="searchBtn">검색</button>
 					</div>
-
-
 				</div>
 			</div>
 			<%--			검색 끝!--%>
 			<%--			검색 결과 영역--%>
 			<div class="messengerList">
-
 				<div class="messengerBox">
+					<div class="subTit">
+						<h2 class="ma_none">
+							<span class="xcnTooltip">
+                                      헤더 여기로 가져 오기
+                                    </span>
+						</h2>
+					</div>
+					<div class="bortop_dd pt16">
+						<div class="btn-group" data-toggle="buttons" style="float:left;width:300px;">
+							<label class="btn btn-secondary btn-sm active">
+								<input type="radio" name="searchType" value="G" checked><i class="fa fa-group fa-sm" style="font-size: 12px;"></i>
+								<s:message code="eikon.msg.chats"/>
+							</label>
+							<label class="btn btn-secondary btn-sm">
+								<input type="radio" name="searchType" value="GD"><i class="fa fa-envelope fa-sm" style="font-size: 12px;"></i>
+								<s:message code="eikon.msg.chatContents"/>
+							</label>
+						</div>
+					</div>
+
+					<div style="height:30px;padding-left:10px;border-bottom: 2px solid #A8B8BC;" id="tab">
+						<div style="float:right;line-height:25px;padding-right:15px;padding-top:5px;color: #f25643; font-weight: bold; font-size: 13px;">
+							<s:message code="common.msg.finish_query"/> : <span id="groupResultCnt">0</span>
+						</div>
+					</div>
+					<div class="row" style="margin: 0px; margin-left: -1px; overflow: auto; height: calc(100% - 220px);">
+						<div class="list-group" id="group_list" style="margin-bottom: 0px;">
+							<a href="#" class="list-group-item list-group-item-action active" style="cursor:default;height:50px;">
+								<p class="list-group-item-text" style="line-height:30px;">
+									<i class="fa fa-envelope fa-sm"></i> <s:message code="eikon.msg.select.condition"/>
+								</p>
+							</a>
+						</div>
+					</div>
+
+					<%--					페이징--%>
+					<div style="height:30px;padding-left:32%; margin-top: 15px;" id="groupPage"></div>
 				</div>
 			</div>
 
@@ -1088,6 +1187,105 @@
 			<!-- 채팅 -->
 			<div class="chatList">
 				<div class="chatBox">
+					<div class="top">
+						<div style="display: flex">
+							<div style="width: 300px;">
+								<span>대화방 아이디<span class="chatid"><span id="xrootmtr"></span><span id="srcip" style="display:none;"></span><span
+										id="usr_id" style="display:none;"></span><span id="msgid" style="display:none;"></span></span></span>
+							</div>
+							<div title="" id="userButton">
+								<span><i class="glyphicon glyphicon-user"></i> <s:message code="condition.user"/> : </span>
+							</div>
+							<div title="<s:message code="condition.user"/>" id="userCntArea">
+								<div style="position: relative;display:block;padding-right: 10px;">
+									<span id="selectUserInfo" data-srcip="" data-name="" data-usrid="">-</span>
+									<span class="bs-caret"><span class="caret"></span></span>
+								</div>
+							</div>
+						</div>
+
+						<div class="chatDate">
+							<div class="searchSub" style="display: flex">
+
+								<div class="form-group form-inline">
+									<div class="input-group" style="padding-left:5px;">
+										<div class="input-group date" id="startsubdatepicker">
+											<input type="text" id="startSubDt" class="input-sm form-control border-radius-none"
+											       style="width: 130px;"/>
+											<span class="input-group-addon startDateBtn border-radius-none"> <span
+													class="glyphicon glyphicon-calendar"></span>
+									</span>
+										</div>
+									</div>
+									~
+									<div class="input-group">
+										<div class="input-group date" id="endsubdatepicker">
+											<input type="text" id="endSubDt" class="input-sm form-control border-radius-none" style="width: 130px;"/>
+											<span class="input-group-addon endDateBtn border-radius-none"><span
+													class="glyphicon glyphicon-calendar"></span></span>
+										</div>
+									</div>
+								</div>
+
+								<button class="form_btn01" type="button" accesskey="M" id="searchMsgQueryBtn">조회</button>
+							</div>
+
+							<div class="searchSub txt_right">
+								<input type="text" class="w50" placeholder="<s:message code="condition.research"/>" id="searchMsgStrInput">
+								<button class="form_btn01 blackBg" type="button" accesskey="M" id="searchMsgBtn">검색</button>
+							</div>
+						</div>
+						<%--							<div class="col-lg-12"><span style="font-size: 12px; background-color: #444; color: #fff; display: block; padding-left: 3px; padding-right: 3px;border-top-left-radius:4px;border-top-right-radius:4px;height:20px;padding-top:3px;">&nbsp;<s:message code="condition.xrootmtr"/> : <span id="xrootmtr"></span><span id="srcip" style="display:none;"></span><span id="usr_id" style="display:none;"></span><span id="msgid" style="display:none;"></span></span></div>--%>
+					</div>
+
+					<%--					채팅 검색 부분 끝!--%>
+
+					<%--					채팅 본문 내용 보이는 구간 시작  -> ***** 아직 안함 --%>
+					<div style="padding-bottom: 10px;">
+						<div class="form-group form-inline">
+
+
+							<div class="input-group date" id="timedatepicker" style="margin-left: 5px;display:none;">
+								<input type="text" id="timeDt" class="input-sm form-control border-radius-none" style="display:none;"/>
+								<span class="input-group-addon startDateBtn border-radius-none">
+									<span class="glyphicon glyphicon-calendar"></span>
+								</span>
+							</div>
+							<div class="input-group" id="searchResultArea"
+							     style="height:30px;line-height:30px;vertical-align: middle;padding-left:10px;display:none;">
+								<div style="float:left;width:50px;text-align: center;">
+									<span id="selectCnt" style="color:#fff;">0</span><span style="color:#fff;">/</span><span id="searchResult"
+									                                                                                         style="width:50px;color:#fff;">0 &nbsp;</span>
+								</div>
+							</div>
+							<div class="input-group btnCustomPosition" id="searchResultBtnArea" style="display:none;">
+								<button class="btn btn-md btn-warning" type="button" accesskey="U" id="searchMsgUp" style="padding:6px"><i
+										class="glyphicon glyphicon-chevron-up"></i></button>
+								<button class="btn btn-md btn-warning" type="button" accesskey="D" id="searchMsgDn" style="padding:6px"><i
+										class="glyphicon glyphicon-chevron-down"></i></button>
+							</div>
+						</div>
+					</div>
+					<div class="row" style="height: calc(100% - 160px);padding:0 3px 0 5px;">
+						<div id="scrollArea" class="clusterize-scroll">
+							<div class="messenger_prev" title="<s:message code='eikon.msg.show.prev'/>">+</div>
+							<div id="timeline_list" style="padding-right:10px;">
+								<div class="timeline-panel" style="padding-left:10px;">
+									<div class="list-group-item cursor-text">
+										<div class="timeline-body" style="text-align: center;">
+											<s:message code="eikon.select.data"/>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="messenger_next" title="<s:message code='eikon.msg.show.next'/>">+</div>
+						</div>
+					</div>
+					<div class="row" style="height: 30px;padding:0 3px 0 5px;">
+						<div style="line-height:25px;padding-top:5px;color: #f25643; font-weight: bold; font-size: 13px;">
+							<s:message code="eikon.msg.total.cnt"/> : <span id="groupSubResultCnt">0</span>
+						</div>
+					</div>
 				</div>
 			</div>
 
@@ -1099,6 +1297,8 @@
 		</div>
 	</div>
 </div>
+
+
 <div style="width: 0%;height: 0px;">
 	<script type="text/javascript">
         LoadInnoFD(1, 1);
@@ -1112,5 +1312,3 @@
 	<input type="hidden" name="oldCode" id="oldCode"></input>
 	<input type="hidden" name="oldConm" id="oldConm"></input>
 </form>
-</body>
-</html>
