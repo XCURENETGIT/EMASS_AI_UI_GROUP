@@ -127,18 +127,18 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 .contentSub {position: relative; padding:20px;height:100%;*zoom:1;}
 .contentSub::after {content:''; display:block; clear:both;}
 .contentSub .sel {position:absolute; right:0; top:-8px;}
-.chartArea {display: grid; grid-template-columns: 1fr 1fr; margin-bottom:24px;column-gap: 12px;}
-.chartArea {display: grid; grid-template-columns: 600px 1fr; margin-bottom:24px;column-gap: 12px;}
+.chartArea {display: grid; grid-template-columns: 1fr 1fr; margin-bottom:12px;column-gap: 12px;}
+.chartArea02 {display: grid; grid-template-columns: 600px 1fr; margin-bottom:24px;column-gap: 12px;}
 .chartAreafull {display: grid; grid-template-columns: 1fr; margin-bottom:24px;column-gap: 12px;}
 
-.sublist {display: grid; grid-template-columns: 1fr 1fr 1fr; margin-bottom:24px; column-gap: 12px; }
+.sublist {display: grid; grid-template-columns: 1fr 1fr 1fr; column-gap: 12px; }
 .sublist div {border:1px solid #ddd; background-color: #fff;padding:16px;margin-bottom:12px;}
 .sublist div .tit {background:url(../img/ico_tit01.png) top left no-repeat; font-size:14px; color:#111;padding-left:20px;}
 .sublist p {font-size:30px; font-weight:700; color:#1A73F9;margin-top:4px; text-align: right;}
 .sublist p span {font-size:14px; color:#555;margin-left:4px;}
 .chartBox {height:180px; padding:20px; background-color: #fff; border:1px solid #ddd; }
-.inner_personaldata { padding:20px; background-color: #fff; border:1px solid #ddd; height:429px;}
-.personaldataBox {overflow: auto;  }
+.inner_personaldata { padding:20px; background-color: #fff; border:1px solid #ddd;}
+.personaldataBox {overflow: auto;  height:342px;}
 
 /* 메신저*/
 .inner_messenger {position: relative; /*height: 100vh;*/height: calc(100vh - 50px); display: grid; grid-template-columns: 340px 1fr 1fr 300px; }
@@ -154,7 +154,7 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 #contentArea .searchArea .searchSub {position: relative; width:80%; float:left; overflow: hidden; }
 #contentArea .searchArea .searchSub div {float:left; display: inline-block;margin-bottom:8px;margin-right:8px;}
 #contentArea .searchArea .btnList {text-align:right; float:right; width:20%;}
-
+#contentArea .searchArea .textarea {min-height:56px;}
 .myDropdown { position: relative; display: inline-block; cursor: pointer; color: #fff; font-size: 13px;z-index: 9999;}
 .dropdown-content {margin-top:1px; display: none; position: absolute; left:50%; margin-left:-70px; background-color: #fff; min-width: 140px; border-radius:2px; box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);}
 .dropdown-content a {color: #111;padding: 12px 16px;display:block; vertical-align: middle; font-size:13px; font-weight: 400;}

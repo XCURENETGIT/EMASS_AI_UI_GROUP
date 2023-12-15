@@ -391,10 +391,10 @@ function fileInfoViewer( row ){
 <input id="searched_xAxis" type="hidden"/>
 <input id="searched_startDate" type="hidden"/>
 <input id="searched_endDate" type="hidden"/>
-<div class="container">
+<div>
 
-	<div class="searchArea">
-		<div class="searchSub">
+	<div class="searchArea w100">
+		<div class="searchSub w100">
 			<div id="startdatepicker"><input type="date" id="startdate" style="width: 110px;"> <span
 					class="hyphen">~</span></div>
 			<div id="enddatepicker"><input type="date" id="enddate" style="width: 110px;"></div>
@@ -422,47 +422,46 @@ function fileInfoViewer( row ){
 				<button type="button" class="form_btn05"><s:message code="query.make.inputer"/></button>
 			</div>
 		</div>
-		<div class="panel" style="width: 100%;">
-			<div>
-				<textarea class="solrQueryResultText" rows="1" style="width:100%;" id="solrQueryText" placeholder="<s:message code="condition.input.detail"/>"></textarea>
-			</div>
+		<div class="w100">
+			<textarea class="w100 textarea" id="solrQueryText" placeholder="<s:message code="condition.input.detail"/>"></textarea>
 		</div>
-		<div class="content" style="padding: 20px;">
-			<div >
-				<div class="chartArea">
-					<div>
-						<h3>조회기간</h3>
-						<div class="sublist">
-							<div>
-								<span class="tit">TOP1 검출 사용자</span>
-								<p id="sub_1"><span class="text">건</span></p>
-							</div>
-							<div>
-								<span class="tit">예약어 합계</span>
-								<p>99999<span class="text">건</span></p>
-							</div>
-							<div>
-								<span class="tit">예약어 합계</span>
-								<p>99999<span class="text">건</span></p>
-							</div>
-							<div>
-								<span class="tit">예약어 합계</span>
-								<p>99999<span class="text">건</span></p>
-							</div>
-							<div>
-								<span class="tit">예약어 합계</span>
-								<p>99999<span class="text">건</span></p>
-							</div>
-							<div>
-								<span class="tit">예약어 합계</span>
-								<p>99999<span class="text">건</span></p>
-							</div>
+	</div>
+	<div class="content">
+		<div class="contentSub">
+			<div class="chartArea">
+				<div>
+					<h3>조회기간</h3>
+					<div class="sublist">
+						<div>
+							<span class="tit">TOP1 검출 사용자</span>
+							<p id="sub_1"><span class="text">건</span></p>
+						</div>
+						<div>
+							<span class="tit">예약어 합계</span>
+							<p>99999<span class="text">건</span></p>
+						</div>
+						<div>
+							<span class="tit">예약어 합계</span>
+							<p>99999<span class="text">건</span></p>
+						</div>
+						<div>
+							<span class="tit">예약어 합계</span>
+							<p>99999<span class="text">건</span></p>
+						</div>
+						<div>
+							<span class="tit">예약어 합계</span>
+							<p>99999<span class="text">건</span></p>
+						</div>
+						<div>
+							<span class="tit">예약어 합계</span>
+							<p>99999<span class="text">건</span></p>
 						</div>
 					</div>
-					<div>
-						<h3>
-							TOP 통계 Chart
-							<span class="sel">
+				</div>
+				<div>
+					<h3>
+						TOP 통계 Chart
+						<span class="sel">
 						<div id="totalViewDiv" style="display:none;">
 							<div class="subtab">
 							<button type="button"
@@ -483,54 +482,47 @@ function fileInfoViewer( row ){
 								</ul>
 						</div>
 						</span>
-						</h3>
-						<div class="panel panel-default" id="service.logging.count">
-							<div class="panel-body">
-								<div id="chartArea1" style="height: 160px;"></div>
-							</div>
+					</h3>
+					<div class="panel panel-default" id="service.logging.count">
+						<div class="panel-body bornone">
+							<div id="chartArea1" style="height: 160px;"></div>
 						</div>
 					</div>
 				</div>
-				<!-- 탭 -->
-				<div class="row top_space2">
-					<div class="col-xs-12">
-						<ul class="nav nav-tabs codeTab listChart">
-							<li class="active"><a data-toggle="tab" href="#basicStatList" id=" ">LIST</a>
-							</li>
-						</ul>
-						</ul>
-					</div>
-				</div>
-				<!-- 테이블 -->
-				<div class="row top_space">
-					<div class="col-lg-12 tab-content">
-						<div id="basicStatList" class="tab-pane fade in active" style="background-color: white">
-							<div id="basicStatListGrid" class="slickGrid gridArea"
-								 style="position: relative; top: 0px; left: 0px; height: 400px; text-align: center; "></div>
-						</div>
-					</div>
-				</div>
-				<!-- pagination -->
-				<div class="pageArea">
-					<div class="pagination">
-						<a href="#"><img src="../img/ico_page_left2.png" alt=""></a>
-						<a href="#"><img src="../img/ico_page_left.png" alt=""></a>
-						<a href="#">1</a>
-						<a class="active" href="#">2</a>
-						<a href="#">3</a>
-						<a href="#">4</a>
-						<a href="#">5</a>
-						<a href="#">6</a>
-						<a href="#"><img src="../img/ico_page_right.png" alt=""></a>
-						<a href="#"><img src="../img/ico_page_right2.png" alt=""></a>
-					</div>
-				</div>
-				<!-- //pagination -->
 			</div>
-
+			<!-- 탭 -->
+			<div class="subtab">
+				<button class="active">LIST</button>
+			</div>
+			<!-- 테이블 -->
+			<div class="row top_space">
+				<div>
+					<div id="basicStatList" class="fade in active">
+						<div id="basicStatListGrid" class="slickGrid gridArea"
+							 style="position: relative; top: 0px; left: 0px; height:340px; text-align: center; "></div>
+					</div>
+				</div>
+			</div>
+			<!-- pagination
+			<div class="pageArea">
+				<div class="pagination">
+					<a href="#"><img src="../img/ico_page_left2.png" alt=""></a>
+					<a href="#"><img src="../img/ico_page_left.png" alt=""></a>
+					<a href="#">1</a>
+					<a class="active" href="#">2</a>
+					<a href="#">3</a>
+					<a href="#">4</a>
+					<a href="#">5</a>
+					<a href="#">6</a>
+					<a href="#"><img src="../img/ico_page_right.png" alt=""></a>
+					<a href="#"><img src="../img/ico_page_right2.png" alt=""></a>
+				</div>
+			</div> -->
+			<!-- //pagination -->
 		</div>
-		<!-- content 끝-->
+
 	</div>
+	<!-- content 끝-->
 	<!--ContentArea-->
 </div>
 <!--//Container-->
