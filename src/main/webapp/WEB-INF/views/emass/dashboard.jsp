@@ -137,7 +137,7 @@
         });
     }
 
-    //서비스 타입 별 수집 건수(그룹웨어 )
+    //서비스 타입 별 수집 건수(그룹웨어), 금일 서비스별 데이터 수집 비율
     var getServiceDataLoggingSetTime;
 
     function getServiceDataLogging() {
@@ -151,6 +151,8 @@
                 var todayGroupWareSum = data.facet[GroupWareNum][1];
                 $('#todayGroupWareSum').html(todayGroupWareSum + "<span>건</span>");
 
+                printChart(data.facet);
+
             },
             error: function (status, message) {
                 //ui.alertMsg(message);
@@ -160,6 +162,74 @@
                     getServiceDataLogging();
                 }, updateTime);
             }
+        });
+    }
+
+
+    var chart = null;
+    function printChart(data) {
+        $('#svcDataChart').html('');
+
+        if(data.length == 0 ) {
+            $('#svcDataChart').html('<s:message code="dashboard.message.nodata.today"/>');
+            return;
+        }
+        $('#svcDataChart').highcharts({
+            chart: {
+                type: 'column',
+                options3d: {
+                    enabled: true,
+                    alpha: 10,
+                    beta: 0,
+                    depth: 50,
+                    viewDistance: 25
+                }
+            },
+            exporting : {
+                enabled: false
+            },
+            credits : {
+                enabled: false
+            },
+            title: {
+                text: ''
+            },
+            xAxis: {
+                type: 'category',
+                labels: {
+                    rotation: -20,
+                    x: 25,
+                    style: {
+                        fontSize: '13px',
+                        fontFamily: 'DINLig, Verdana, sans-serif'
+                    }
+                },gridLineWidth: 0
+            },
+            yAxis: {
+                type: 'logarithmic',
+                min:1,
+                title: {
+                    text: '(<s:message code="common.msg.count"/>)',
+                    rotation: 0
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            tooltip: {
+                pointFormat: '<s:message code="dashboard.collect.data_count"/> : <b>{point.y:,.0f} (<s:message code="common.msg.cnt"/>)</b>'
+            },
+            series: [{
+                name: 'Population',
+                data: data,
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.y:,.0f}',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }]
         });
     }
 
@@ -209,37 +279,48 @@
 		<%--금일 데이터 수집 건수 끝 ~~ --%>
 		<%--				금일 패턴 수집 건수--%>
 
-		<div class="m_chartArea">
-			<div>
-				<h3>금일 패턴 수집 건수</h3>
-				<div class="mainlist">
-					<div>
-						<span class="tit07">여권번호 <span class="red_dot"></span> </span>
-						<%--							<p class="blue">9,199,999<span class="text">건</span></p>--%>
-					</div>
-					<div>
-						<span class="tit08">운전면허번호</span>
-						<%--							<p class="blue">99,999<span class="text">건</span></p>--%>
-					</div>
-					<div>
-						<span class="tit09">외국인등록번호</span>
-						<%--							<p class="blue">199,999<span class="text">건</span></p>--%>
-					</div>
-					<div>
-						<span class="tit10">주민번호</span>
-						<%--							<p class="blue">99,999<span class="text">건</span></p>--%>
-					</div>
-					<div>
-						<span class="tit11">카드번호</span>
-						<%--							<p class="blue">199,999<span class="text">건</span></p>--%>
-					</div>
-					<div>
-						<span class="tit12">확장자 변조 파일 <span class="red_dot"></span> </span>
-						<%--							<p class="blue">99,999<span class="text">건</span></p>--%>
+			<div class="m_chartArea">
+				<div>
+					<h3>금일 패턴 수집 건수</h3>
+					<div class="mainlist">
+						<div>
+							<span class="tit07">여권번호 <span class="red_dot"></span> </span>
+<%--							<p class="blue">9,199,999<span class="text">건</span></p>--%>
+						</div>
+						<div>
+							<span class="tit08">운전면허번호</span>
+<%--							<p class="blue">99,999<span class="text">건</span></p>--%>
+						</div>
+						<div>
+							<span class="tit09">외국인등록번호</span>
+<%--							<p class="blue">199,999<span class="text">건</span></p>--%>
+						</div>
+						<div>
+							<span class="tit10">주민번호</span>
+<%--							<p class="blue">99,999<span class="text">건</span></p>--%>
+						</div>
+						<div>
+							<span class="tit11">카드번호</span>
+<%--							<p class="blue">199,999<span class="text">건</span></p>--%>
+						</div>
+						<div>
+							<span class="tit12">확장자 변조 파일 <span class="red_dot"></span> </span>
+<%--							<p class="blue">99,999<span class="text">건</span></p>--%>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
+			<%--				금일 패턴 수집 건수 끝!!--%>
+<%--			금일 서비스별 데이터 수집 비율 시작--%>
+			<div class="m_grapha">
+				<div class="graphaBox">
+					<h3>금일 서비스별 데이터 수집 비율</h3>
+					<div class="bordd" id="svcDataChart">
+					</div>
+				</div>
+			</div>
+			<%--			금일 서비스별 데이터 수집 비율 끝!!--%>
+
 
 	</div>
 </div>
