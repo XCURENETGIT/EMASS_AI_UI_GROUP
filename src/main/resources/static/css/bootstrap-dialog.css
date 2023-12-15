@@ -12,11 +12,14 @@
 }
 .bootstrap-dialog .bootstrap-dialog-title {
   color: #fff;
-  display: inline-block;
+  display: none !important;
   font-size: 16px;
 }
+
 .bootstrap-dialog .bootstrap-dialog-message {
   font-size: 14px;
+  padding:20px;
+  text-align: center;
 }
 .bootstrap-dialog .bootstrap-dialog-button-icon {
   margin-right: 3px;
