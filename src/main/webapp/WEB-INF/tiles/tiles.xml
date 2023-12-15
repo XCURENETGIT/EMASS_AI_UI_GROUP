@@ -5,23 +5,11 @@
 <tiles-definitions>
 
 
-    <!-- common -->
-    <!-- default layout-->
-
-<!--    <definition name="oldLayout" template="/WEB-INF/layout/defaultLayout.jsp">-->
-<!--        <put-attribute name="baseCss" value="/WEB-INF/fragments/baseCss.jsp" />-->
-<!--        <put-attribute name="baseJs" value="/WEB-INF/fragments/baseJs.jsp" />-->
-<!--        <put-attribute name="top" value="/WEB-INF/fragments/top.jsp" />-->
-<!--        <put-attribute name="body" value="" />-->
-<!--        <put-attribute name="footer" value="/WEB-INF/fragments/footer.jsp" />-->
-<!--    </definition>-->
-
     <!-- no layout-->
     <definition name="noLayout" template="/WEB-INF/layout/noLayout.jsp">
-        <put-attribute name="baseCss" value="/WEB-INF/fragments/baseCss.jsp" />
-        <put-attribute name="baseJs" value="/WEB-INF/fragments/baseJs.jsp" />
         <put-attribute name="body" value="" />
     </definition>
+
 
     <!-- popup layout-->
     <definition name="popupLayout" template="/WEB-INF/layout/popupLayout.jsp">
@@ -30,20 +18,53 @@
         <put-attribute name="body" value="" />
     </definition>
 
+    <!-- 기본 레이아웃 -->
     <definition name="defaultLayout" template="/WEB-INF/layout/newLayout.jsp">
-    <put-attribute name="baseCss" value="/WEB-INF/fragments/baseCss.jsp" />
-    <put-attribute name="baseJs" value="/WEB-INF/fragments/baseJs.jsp" />
-    <put-attribute name="top" value="/WEB-INF/fragments/new_top.jsp" />
-    <put-attribute name="header" value="/WEB-INF/fragments/header.jsp" />
-    <put-attribute name="left" value="/WEB-INF/fragments/new_left.jsp" />
-    <put-attribute name="footer" value="/WEB-INF/fragments/footer.jsp" />
-    <put-attribute name="body" value="" />
+        <!-- 페이지 기본 CSS/JSS-->
+        <put-attribute name="baseCss" value="/WEB-INF/fragments/baseCss.jsp" />
+        <put-attribute name="baseJs" value="/WEB-INF/fragments/baseJs.jsp" />
+
+        <put-attribute name="top" value="/WEB-INF/fragments/new_top.jsp" />
+        <put-attribute name="header" value="/WEB-INF/fragments/header.jsp" />
+        <put-attribute name="lnb" value="/WEB-INF/fragments/new_left.jsp" />
+        <put-attribute name="footer" value="/WEB-INF/fragments/footer.jsp" />
+
+        <put-attribute name="content" value="" />
     </definition>
 
-<!--    &lt;!&ndash;테스트용임 &ndash;&gt;-->
-<!--    <definition name="/uacs/filter/filterInfo" extends="defaultLayout">-->
-<!--        <put-attribute name="body" value="/WEB-INF/views/uacs/filter/filterInfo.jsp" />-->
+<!--    &lt;!&ndash; 통계 레이아웃 &ndash;&gt;-->
+<!--    <definition name="statisticsLayout" template="/WEB-INF/layout/newLayout.jsp">-->
+<!--        &lt;!&ndash; 페이지 기본 CSS/JSS&ndash;&gt;-->
+<!--        <put-attribute name="baseCss" value="/WEB-INF/fragments/baseCss.jsp" />-->
+<!--        <put-attribute name="baseJs" value="/WEB-INF/fragments/baseJs.jsp" />-->
+
+
+<!--        <put-attribute name="top" value="/WEB-INF/fragments/new_top.jsp" />-->
+<!--        <put-attribute name="header" value="/WEB-INF/fragments/header.jsp" />-->
+<!--        <put-attribute name="lnb" value="/WEB-INF/fragments/new_left.jsp" />-->
+<!--        <put-attribute name="footer" value="/WEB-INF/fragments/footer.jsp" />-->
+
+<!--        <put-attribute name="dynamicContent" value="" />-->
 <!--    </definition>-->
+
+
+    <!-- messageLayout  -->
+    <definition name="messageLayout" template="/WEB-INF/views/emass/message/messageNewN.jsp">
+        <!-- 페이지 기본 CSS/JSS-->
+        <put-attribute name="messageCss" value="/WEB-INF/fragments/messageCss.jsp" />
+        <put-attribute name="messageJs" value="/WEB-INF/fragments/messageJs.jsp" />
+
+        <put-attribute name="top" value="/WEB-INF/fragments/new_top.jsp" />
+        <put-attribute name="header" value="/WEB-INF/fragments/header.jsp" />
+        <put-attribute name="lnb" value="/WEB-INF/fragments/new_left.jsp" />
+        <put-attribute name="footer" value="/WEB-INF/fragments/footer.jsp" />
+        <put-attribute name="left" value="/WEB-INF/views/emass/left.jsp" />
+        <put-attribute name="filterNew" value="/WEB-INF/views/emass/message/filterNew.jsp" />
+
+        <put-attribute name="content" value="" />
+    </definition>
+
+
 
 
     <!-- 로그인 관련 layout 적용 제외-->
@@ -75,56 +96,69 @@
     </definition>
 
 
-
-    <!-- emass message content -->
-    <definition name="/emass/message/contentList" extends="noLayout">
-        <put-attribute name="body"  value="/WEB-INF/views/emass/message/contentList.jsp" />
-    </definition>
-    <definition name="/emass/message/contentBodyNew" extends="noLayout">
-        <put-attribute name="body"  value="/WEB-INF/views/emass/message/contentBodyNew.jsp" />
-    </definition>
-
-    <!-- emass message -->
-    <definition name="/emass/message/*" extends="defaultLayout">
-        <put-attribute name="body" value="/WEB-INF/views/emass/message/{1}.jsp" />
-    </definition>
-    <definition name="/emass/message/*/*" extends="defaultLayout">
-        <put-attribute name="body" value="/WEB-INF/views/emass/message/{1}/{2}.jsp" />
-    </definition>
+    <!-- no layout-->
+<!--    <definition name="dashboards" extends="noLayout">-->
+<!--        <put-attribute name="body" value="/WEB-INF/views/emass/dashboardContent.jsp" />-->
+<!--    </definition>-->
+<!--    <definition name="dashboards" extends="noLayout">-->
+<!--        <put-attribute name="body" value="/WEB-INF/views/emass/dashboardMenu.jsp" />-->
+<!--    </definition>-->
+<!--    <definition name="index" extends="noLayout">-->
+<!--        <put-attribute name="body" value="/WEB-INF/views/emass/index.jsp" />-->
+<!--    </definition>-->
+<!--    <definition name="left" extends="noLayout">-->
+<!--        <put-attribute name="body" value="/WEB-INF/views/emass/left.jsp" />-->
+<!--    </definition>-->
 
 
-    <!--  폴더별 맵핑 분류 (asterisk 검색은 소스 최하단 위치해야함 (우선순위가 최우선이라서 )) -->
-    <!-- emass -->
+    <!-- 현재 디폴트 주소 -->
     <definition name="/emass/*" extends="defaultLayout">
-        <put-attribute name="body" value="/WEB-INF/views/emass/{1}.jsp" />
-    </definition>
-    <definition name="/emass/*/*" extends="defaultLayout">
-        <put-attribute name="body" value="/WEB-INF/views/emass/{1}/{2}.jsp" />
+        <put-attribute name="content" value="/WEB-INF/views/emass/{1}.jsp" />
     </definition>
 
-    <!-- analysis -->
-    <definition name="/analysis/*" extends="defaultLayout">
-        <put-attribute name="body" value="/WEB-INF/views/analysis/{1}.jsp" />
+
+    <!--############  동적 내용들 ############-->
+<!--    <definition name="dynamicContent" template="/WEB-INF/fragments/emptyContent.jsp">-->
+<!--        <put-attribute name="content"  value="" />-->
+<!--    </definition>-->
+
+    <!-- 통계 -->
+    <definition name="/emass/statistics/*" extends="defaultLayout">
+        <put-attribute name="content" value="/WEB-INF/views/emass/statistics/{1}.jsp" />
     </definition>
-    <definition name="/analysis/*/*" extends="defaultLayout">
-        <put-attribute name="body" value="/WEB-INF/views/analysis/{1}/{2}.jsp" />
+
+    <!-- 분석  -->
+    <definition name="/analysis/*" extends="defaultLayout">
+        <put-attribute name="content" value="/WEB-INF/views/analysis/{1}.jsp" />
     </definition>
 
     <!-- commons -->
     <definition name="/commons/*" extends="defaultLayout">
-        <put-attribute name="body" value="/WEB-INF/views/commons/{1}.jsp" />
-    </definition>
-    <definition name="/commons/*/*" extends="defaultLayout">
-        <put-attribute name="body" value="/WEB-INF/views/commons/{1}/{2}.jsp" />
+        <put-attribute name="content" value="/WEB-INF/views/commons/{1}.jsp" />
     </definition>
 
     <!-- uacs -->
     <definition name="/uacs/*" extends="defaultLayout">
-        <put-attribute name="body" value="/WEB-INF/views/uacs/{1}.jsp" />
+        <put-attribute name="content" value="/WEB-INF/views/uacs/{1}.jsp" />
     </definition>
-    <definition name="/uacs/*/*" extends="defaultLayout">
-        <put-attribute name="body" value="/WEB-INF/views/uacs/{1}/{2}.jsp" />
+
+
+
+    <!-- emass message -->
+    <definition name="/emass/message/messageNewN" extends="messageLayout">
+        <put-attribute name="content" value="/WEB-INF/views/emass/message/messageNewN.jsp" />
     </definition>
+
+    <definition name="/emass/message/contentList" extends="noLayout">
+        <put-attribute name="body" value="/WEB-INF/views/emass/message/contentList.jsp" />
+    </definition>
+
+    <definition name="/emass/message/contentBody" extends="noLayout">
+        <put-attribute name="body" value="/WEB-INF/views/emass/message/contentBody.jsp" />
+    </definition>
+
+
+    <!--###########################-->
 
 
 

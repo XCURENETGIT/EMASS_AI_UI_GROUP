@@ -20,7 +20,7 @@ import com.xcurenet.emass.message.service.SolrEdcService;
 import com.xcurenet.emass.message.service.SolrEdcVO;
 import com.xcurenet.emass.service.service.ServiceTypeVO;
 import com.xcurenet.emass.statistics.service.CheckedReadStatService;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import net.sf.json.JSONObject;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -41,7 +41,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Slf4j
+@Log4j2
 @Controller
 @AuditParentMenu(ParentMenu.DATA_ANALYSIS)
 @AuditMenu(Menu.STAT_USER)

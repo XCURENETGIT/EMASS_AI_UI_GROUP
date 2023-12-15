@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ include file="/WEB-INF/fragments/baseScript.jsp" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -25,7 +25,6 @@
 		var tabNum = 0;
 		var totalChartDat;
 		$(document).ready(function(){
-
 
 			$('.optionBtn').click(function () {
 				$('.optionBtn').removeClass('active');

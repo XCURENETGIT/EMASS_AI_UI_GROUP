@@ -243,7 +243,7 @@ function rtnFilterClick(filterVal, type){
 				</div>
 				<div class="modal-body">
 					<div class="form-inline">
-						<label for="ruleFile" class="control-label col-xs-3" style="vertical-align: bottom;"><s:message code="didBlock.select.file"/></label>
+						<label for="ruleFile_div" class="control-label col-xs-3" style="vertical-align: bottom;"><s:message code="didBlock.select.file"/></label>
 						<div id="ruleFile_div">
 							<input type="file" class="form-control" name="file" id="file" style="width: 300px;">
 						</div>

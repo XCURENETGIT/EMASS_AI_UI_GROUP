@@ -1145,7 +1145,7 @@
 </div>
 <div style="width: 0%;height: 0px;">
 	<script type="text/javascript">
-		LoadInnoFD( 1, 1 );
+		// LoadInnoFD( 1, 1 );
 	</script>
 </div>
 <iframe id="AttachDown" src="about:blank;" height="0" width="0" style="display: none;" ></iframe>

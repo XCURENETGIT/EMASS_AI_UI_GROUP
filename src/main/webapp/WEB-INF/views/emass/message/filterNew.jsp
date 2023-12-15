@@ -1,332 +1,327 @@
-<%@page import="com.xcurenet.common.util.Common"%>
-<%@page import="com.xcurenet.common.util.config.Config"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
-
 <style type="text/css">
-#leftTab .active a{
-	background-color: #5FA2DD;
-	border:1px solid #ddd;
-	border-bottom:0;
-	color:#fff;
-	box-shadow: none;
-}
-#leftTab .active a:hover{
-	background-color: #5FA2DD;
-	color:#fff;
-	
-}
-#leftTab li:hover {
-	
-}
-#leftTab li a{
-	border:1px solid #ddd;
-	border-bottom:0;
-	background-color:#fff;
-	color:#000;
-	box-shadow: inset 0 -8px 7px -9px rgba(0,0,0,.4);
-	padding:5px 15px;
-}
-#leftTab li a:hover{
-	background-color: #eee;
-	color:#000;
-}
-.tabbable{
-	height:100%;
-}
+	#leftTab .active a{
+		background-color: #5FA2DD;
+		border:1px solid #ddd;
+		border-bottom:0;
+		color:#fff;
+		box-shadow: none;
+	}
+	#leftTab .active a:hover{
+		background-color: #5FA2DD;
+		color:#fff;
+
+	}
+	#leftTab li:hover {
+
+	}
+	#leftTab li a{
+		border:1px solid #ddd;
+		border-bottom:0;
+		background-color:#fff;
+		color:#000;
+		box-shadow: inset 0 -8px 7px -9px rgba(0,0,0,.4);
+		padding:5px 15px;
+	}
+	#leftTab li a:hover{
+		background-color: #eee;
+		color:#000;
+	}
+	.tabbable{
+		height:100%;
+	}
 
 
-#selectedCodeTitle, #selectedCodeTitlePop {
-	display:none;
-	border: 1px solid #458A45;
-	position: absolute;
-	background-color: #5CB85C;
-	color: #fff;
-	z-index: 999;
-	font-size: 15px;
-	padding: 3px;
-	max-width: 400px;
-	word-break: break-all;
-}
+	#selectedCodeTitle, #selectedCodeTitlePop {
+		display:none;
+		border: 1px solid #458A45;
+		position: absolute;
+		background-color: #5CB85C;
+		color: #fff;
+		z-index: 999;
+		font-size: 15px;
+		padding: 3px;
+		max-width: 400px;
+		word-break: break-all;
+	}
 
-.bootstrap-select.btn-group[class*=col-] .dropdown-menu.open {
-	left: 0;
-	right: auto;
-}
+	.bootstrap-select.btn-group[class*=col-] .dropdown-menu.open {
+		left: 0;
+		right: auto;
+	}
 
-.selecBtnArea .btn, .select-xs .btn {
-	padding: 6px 25px 5px 10px;
-	font-size: 12px;
-}
+	.selecBtnArea .btn, .select-xs .btn {
+		padding: 6px 25px 5px 10px;
+		font-size: 12px;
+	}
 
-.selecBtnArea .bootstrap-select {
-	margin-bottom: 2px;
-}
+	.selecBtnArea .bootstrap-select {
+		margin-bottom: 2px;
+	}
 
-.bootstrap-select{
-	display:inline-block;
-}
-.bootstrap-select button{
-	border-radius:0;
-}
+	.bootstrap-select{
+		display:inline-block;
+	}
+	.bootstrap-select button{
+		border-radius:0;
+	}
 
-#smartFilterSavePop .form-inline:not(.not-dashed) {
-	border-bottom: 1px dashed #eee;
-	padding: 7px 0px;
-}
+	#smartFilterSavePop .form-inline:not(.not-dashed) {
+		border-bottom: 1px dashed #eee;
+		padding: 7px 0px;
+	}
 
-.input-xs {
-	height: 22px;
-	padding: 2px 5px;
-	font-size: 12px;
-	line-height: 1.5;
-	border-radius: 3px;
-}
+	.input-xs {
+		height: 22px;
+		padding: 2px 5px;
+		font-size: 12px;
+		line-height: 1.5;
+		border-radius: 3px;
+	}
 
-#tab0 .form-inline:not(.not-dashed) {
-	border-bottom: 1px dashed #eee;
-	
-}
+	#tab0 .form-inline:not(.not-dashed) {
+		border-bottom: 1px dashed #eee;
 
-#tab0 .not-dashed {
-	padding-bottom: 0px !important;
-}
+	}
 
-#tab0 .form-inline {
-	padding: 3px 0px;
-	min-height: 1px;
-	width: 100%;
-	float: left;
-}
+	#tab0 .not-dashed {
+		padding-bottom: 0px !important;
+	}
 
-#tab0 .btn-group-xs>.btn, .btn-xs {
-    padding: 4px 5px;
-    font-size: 12px;
-    line-height: 1.5;
-    border-radius: 3px;
-}
+	#tab0 .form-inline {
+		padding: 3px 0px;
+		min-height: 1px;
+		width: 100%;
+		float: left;
+	}
 
-#tab0 .input-xs {
-	height: 28px;
-	padding: 2px 5px;
-	font-size: 12px;
-	line-height: 1.5;
-	border-radius: 3px;
-}
+	#tab0 .btn-group-xs>.btn, .btn-xs {
+		padding: 4px 5px;
+		font-size: 12px;
+		line-height: 1.5;
+		border-radius: 3px;
+	}
 
-.filterHeader{
-	width:160px;
-	float:left;
-}
+	#tab0 .input-xs {
+		height: 28px;
+		padding: 2px 5px;
+		font-size: 12px;
+		line-height: 1.5;
+		border-radius: 3px;
+	}
 
-.filterHeader2{
-	width:100px;
-	float:left;
-}
+	.filterHeader{
+		width:160px;
+		float:left;
+	}
 
-#filterNamePopInput.form-control:focus,#queryInputTextareaPop:focus{
-	border-color: #4d90fe;
-	outline: 0;
-	-webkit-box-shadow: none;
-	box-shadow: none;
-	border-radius: 2px;
-	border-width: 0.9px;
-}
-#filterNamePopInput.form-control,#queryInputTextareaPop{
-	border-color: #ccc;
-	outline: 0;
-	-webkit-box-shadow: none;
-	box-shadow: none;
-	border-radius: 2px;
-}
-.bootstrap-select [data-id=serviceTypePop],.bootstrap-select [data-id=busiPop] {
-	height: 23px;
-	line-height : 23px;
-	vertical-align: top;
-	border-radius: 0;
-}
-.bootstrap-select [data-id=serviceTypePop] > span,.bootstrap-select [data-id=busiPop] > span {
-	line-height: 23px;
-	font-family: dotum, Verdana, arial, sans-serif;
-}
-#dashboardsetupArea .btn,#filterTypeArea .btn {
-	border-radius:0;
-}
-.dropdown-menu {
-	max-height: 500px;
-	overflow-y: auto;
-}
+	.filterHeader2{
+		width:100px;
+		float:left;
+	}
+
+	#filterNamePopInput.form-control:focus,#queryInputTextareaPop:focus{
+		border-color: #4d90fe;
+		outline: 0;
+		-webkit-box-shadow: none;
+		box-shadow: none;
+		border-radius: 2px;
+		border-width: 0.9px;
+	}
+	#filterNamePopInput.form-control,#queryInputTextareaPop{
+		border-color: #ccc;
+		outline: 0;
+		-webkit-box-shadow: none;
+		box-shadow: none;
+		border-radius: 2px;
+	}
+	.bootstrap-select [data-id=serviceTypePop],.bootstrap-select [data-id=busiPop] {
+		height: 23px;
+		line-height : 23px;
+		vertical-align: top;
+		border-radius: 0;
+	}
+	.bootstrap-select [data-id=serviceTypePop] > span,.bootstrap-select [data-id=busiPop] > span {
+		line-height: 23px;
+		font-family: dotum, Verdana, arial, sans-serif;
+	}
+	#dashboardsetupArea .btn,#filterTypeArea .btn {
+		border-radius:0;
+	}
+	.dropdown-menu {
+		max-height: 500px;
+		overflow-y: auto;
+	}
 </style>
 <script type="text/javascript">
-$(document).ready(function() {
-	$('[data-id="serviceTypePop"] , [data-id="busiPop"]').css('width','260px');
-	$('#serviceTypePop , #busiPop').selectpicker({
-		container:'body',
-		size: 15,
-		width:'260px',
-		noneResultsText:condition.msgNoresult+' ',
-		selectAllText:condition.msgSelect_all,
-		deselectAllText:condition.msgUnselect_all
-	});
-	var dateObj = new Date();
-	$('#startdatepickerPop').datetimepicker({
-		format: 'YYYY-MM-DD HH:mm:ss',
-		locale: 'ko',
-		sideBySide: true,
-		defaultDate: moment(new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()-1 ) ),
-	}).on("dp.change", function (e) {
-	});
-	$('#enddatepickerPop').datetimepicker({
-		format: 'YYYY-MM-DD HH:mm:ss',
-		locale: 'ko',
-		sideBySide: true,
-		defaultDate: moment(new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()-1 ) ),
-	}).on("dp.change", function (e) {
-	});
-	$('.startDateBtn').click(function(){
-		$('#startdatepickerPop').focus();
-	});
-	$('.endDateBtn').click(function(){
-		$('#enddatepickerPop').focus();
-	});
-	$('#smartFilterSavePop').on('show.bs.modal', function() {
-		var value = $('input:radio[name=filterTypePop]:input:checked').val();
-		if( value == 'D'){
-			$('#selectConditionPopArea').show();
-			$('#selectQueryPopArea').hide();
-		}else{
-			$('#selectConditionPopArea').hide();
-			$('#selectQueryPopArea').show();
-		}
-		var value_attached = $('#sizeOptionPop option:selected').val();
-		if(value_attached=='over'){
-			$('#sizeEndValPop').attr('disabled','disabled');
-		}else if(value_attached=='under'){
-			$('#sizeEndValPop').attr('disabled','disabled');
-		}else{
-			$('#sizeEndValPop').removeAttr('disabled');
-		}
-		
-	});
-	$('#sizeOptionPop').change(function () {
-		var value_attached = $("#sizeOptionPop option:selected").val();
-		if(value_attached=='over'){
-			$('#sizeEndValPop').attr('disabled','disabled');
-		}else if(value_attached=='under'){
-			$('#sizeEndValPop').attr('disabled','disabled');
-		}else{
-			$('#sizeEndValPop').removeAttr('disabled');
-		}
-	});
-	$('input:radio[name=filterTypePop]').change(function () {
-		var value = $('input:radio[name=filterTypePop]:input:checked').val();
-		if( value == 'D'){
-			$('#selectConditionPopArea').show();
-			$('#selectQueryPopArea').hide();
-		}else{
-			$('#selectConditionPopArea').hide();
-			$('#selectQueryPopArea').show();
-			
-		}
-	});
-	$('#filterOptionPopSelect').change(function(){
-		var val = $(this).val();
-		
-		if( val == '1'){
-			$('#normalDateArea').show();
-			$('#simpleDateArea').hide();
-			$('#noselectDateArea').hide();
-		}else if( val == '2'){
-			$('#normalDateArea').hide();
-			$('#simpleDateArea').show();
-			$('#noselectDateArea').hide();
-		}else if( val == '3'){
-			$('#normalDateArea').hide();
-			$('#simpleDateArea').hide();
-			$('#noselectDateArea').show();
-		}
-	});
-	
-	
-	$('#saveFilterSetup').click(function(){
-		if( !$('#msg_condition_menu').hasClass('condition_menu_unselected') ){
-			if($('.filterIcon').hasClass('hide')) insertAdminFilterData();
-			else updateAdminFilterData(); 
-		}else if(!$('#msg_condition_saver').hasClass('condition_menu_unselected')){
-			if($('.queryIcon').hasClass('hide')) insertAdminFilterData();
-			else updateAdminFilterData();
-		}
-	});
-});
-var filter={
-	msgConnectError:'<s:message code="common.msg.connect.error"/>',
-	add:'<s:message code="filterInfo.filter.add"/>',
-	filterNew:'<s:message code="message.msg.newCondition"/>',
-	folderNew:'<s:message code="filterInfo.folder.new"/>',
-	folderDelete:'<s:message code="filterInfo.folder.delete"/>',
-	msgSelectFile:'<s:message code="filterInfo.incorrect.file"/>',
-	msgSaved:'<s:message code="common.msg.saved"/>',
-	msgSaveError:'<s:message code="common.msg.save.error"/>',
-	msgImportData:'<s:message code="filterInfo.msg.import.data"/>',
-	msgExportData:'<s:message code="filterInfo.msg.export.data"/>',
-	msgFilterDelete:function(param){
-		return '<s:message code="filterInfo.msg.filter.delete" arguments="'+param+'" />';
-	},
-	msgfolderDelete:function(param){
-		return '<s:message code="filterInfo.msg.folder.delete" arguments="'+param+'" />';
-	},
-	msgAllDelete:function(param){
-		return '<s:message code="filterInfo.msg.all.delete" arguments="'+param+'" />';
-	},
-	selectMsg:'<s:message code="filterInfo.selectMsg"/>',
-	selectDelMsg:'<s:message code="filterInfo.selectDelMsg"/>',
-	selectMsgFolder:'<s:message code="filterInfo.selectMsgFolder"/>'
-};
+	$(document).ready(function() {
+		$('[data-id="serviceTypePop"] , [data-id="busiPop"]').css('width','260px');
+		$('#serviceTypePop , #busiPop').selectpicker({
+			container:'body',
+			size: 15,
+			width:'260px',
+			noneResultsText:condition.msgNoresult+' ',
+			selectAllText:condition.msgSelect_all,
+			deselectAllText:condition.msgUnselect_all
+		});
+		var dateObj = new Date();
+		$('#startdatepickerPop').datetimepicker({
+			format: 'YYYY-MM-DD HH:mm:ss',
+			locale: 'ko',
+			sideBySide: true,
+			defaultDate: moment(new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()-1 ) ),
+		}).on("dp.change", function (e) {
+		});
+		$('#enddatepickerPop').datetimepicker({
+			format: 'YYYY-MM-DD HH:mm:ss',
+			locale: 'ko',
+			sideBySide: true,
+			defaultDate: moment(new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()-1 ) ),
+		}).on("dp.change", function (e) {
+		});
+		$('.startDateBtn').click(function(){
+			$('#startdatepickerPop').focus();
+		});
+		$('.endDateBtn').click(function(){
+			$('#enddatepickerPop').focus();
+		});
+		$('#smartFilterSavePop').on('show.bs.modal', function() {
+			var value = $('input:radio[name=filterTypePop]:input:checked').val();
+			if( value == 'D'){
+				$('#selectConditionPopArea').show();
+				$('#selectQueryPopArea').hide();
+			}else{
+				$('#selectConditionPopArea').hide();
+				$('#selectQueryPopArea').show();
+			}
+			var value_attached = $('#sizeOptionPop option:selected').val();
+			if(value_attached=='over'){
+				$('#sizeEndValPop').attr('disabled','disabled');
+			}else if(value_attached=='under'){
+				$('#sizeEndValPop').attr('disabled','disabled');
+			}else{
+				$('#sizeEndValPop').removeAttr('disabled');
+			}
 
-function openCodeWindow(id, oldCode, oldConm){
-	$('#oldCode').val(oldCode);
-	$('#oldConm').val(oldConm);
-	
-	var url    = '<c:url value="/commons/selectCode.do?codeType='+id+'"/>';
-	fnOpenWindow('', 'selectCodeWinPopup', 1200, 700, 'resize');
-	
-	$('#codeParam').attr('target','selectCodeWinPopup');
-	$('#codeParam').attr('action', url);
-	$('#codeParam').attr('method','post');
-	$('#codeParam').submit();
-}
+		});
+		$('#sizeOptionPop').change(function () {
+			var value_attached = $("#sizeOptionPop option:selected").val();
+			if(value_attached=='over'){
+				$('#sizeEndValPop').attr('disabled','disabled');
+			}else if(value_attached=='under'){
+				$('#sizeEndValPop').attr('disabled','disabled');
+			}else{
+				$('#sizeEndValPop').removeAttr('disabled');
+			}
+		});
+		$('input:radio[name=filterTypePop]').change(function () {
+			var value = $('input:radio[name=filterTypePop]:input:checked').val();
+			if( value == 'D'){
+				$('#selectConditionPopArea').show();
+				$('#selectQueryPopArea').hide();
+			}else{
+				$('#selectConditionPopArea').hide();
+				$('#selectQueryPopArea').show();
 
-function rtnFilterClick(filterVal, type){
-	if($("#searchBox").is(":checked")) addTab();
-	
-	if( type == 'searchCondition'){
-		$('#msg_condition_menu').click();
-		if(filterVal.conditions.length > 1){
-			var filter = $.extend(true, {}, filterVal);
-			filter.conditions.remove(filter.conditions.length-1);
-			getIframeListObj().filterValData = filter;
+			}
+		});
+		$('#filterOptionPopSelect').change(function(){
+			var val = $(this).val();
+
+			if( val == '1'){
+				$('#normalDateArea').show();
+				$('#simpleDateArea').hide();
+				$('#noselectDateArea').hide();
+			}else if( val == '2'){
+				$('#normalDateArea').hide();
+				$('#simpleDateArea').show();
+				$('#noselectDateArea').hide();
+			}else if( val == '3'){
+				$('#normalDateArea').hide();
+				$('#simpleDateArea').hide();
+				$('#noselectDateArea').show();
+			}
+		});
+
+
+		$('#saveFilterSetup').click(function(){
+			if( !$('#msg_condition_menu').hasClass('condition_menu_unselected') ){
+				if($('.filterIcon').hasClass('hide')) insertAdminFilterData();
+				else updateAdminFilterData();
+			}else if(!$('#msg_condition_saver').hasClass('condition_menu_unselected')){
+				if($('.queryIcon').hasClass('hide')) insertAdminFilterData();
+				else updateAdminFilterData();
+			}
+		});
+	});
+	var filter={
+		msgConnectError:'<s:message code="common.msg.connect.error"/>',
+		add:'<s:message code="filterInfo.filter.add"/>',
+		filterNew:'<s:message code="message.msg.newCondition"/>',
+		folderNew:'<s:message code="filterInfo.folder.new"/>',
+		folderDelete:'<s:message code="filterInfo.folder.delete"/>',
+		msgSelectFile:'<s:message code="filterInfo.incorrect.file"/>',
+		msgSaved:'<s:message code="common.msg.saved"/>',
+		msgSaveError:'<s:message code="common.msg.save.error"/>',
+		msgImportData:'<s:message code="filterInfo.msg.import.data"/>',
+		msgExportData:'<s:message code="filterInfo.msg.export.data"/>',
+		msgFilterDelete:function(param){
+			return '<s:message code="filterInfo.msg.filter.delete" arguments="'+param+'" />';
+		},
+		msgfolderDelete:function(param){
+			return '<s:message code="filterInfo.msg.folder.delete" arguments="'+param+'" />';
+		},
+		msgAllDelete:function(param){
+			return '<s:message code="filterInfo.msg.all.delete" arguments="'+param+'" />';
+		},
+		selectMsg:'<s:message code="filterInfo.selectMsg"/>',
+		selectDelMsg:'<s:message code="filterInfo.selectDelMsg"/>',
+		selectMsgFolder:'<s:message code="filterInfo.selectMsgFolder"/>'
+	};
+
+	function openCodeWindow(id, oldCode, oldConm){
+		$('#oldCode').val(oldCode);
+		$('#oldConm').val(oldConm);
+
+		var url    = '<c:url value="/commons/selectCode.do?codeType='+id+'"/>';
+		fnOpenWindow('', 'selectCodeWinPopup', 1200, 700, 'resize');
+
+		$('#codeParam').attr('target','selectCodeWinPopup');
+		$('#codeParam').attr('action', url);
+		$('#codeParam').attr('method','post');
+		$('#codeParam').submit();
+	}
+
+	function rtnFilterClick(filterVal, type){
+		if($("#searchBox").is(":checked")) addTab();
+
+		if( type == 'searchCondition'){
+			$('#msg_condition_menu').click();
+			if(filterVal.conditions.length > 1){
+				var filter = $.extend(true, {}, filterVal);
+				filter.conditions.remove(filter.conditions.length-1);
+				getIframeListObj().filterValData = filter;
+			}
+			con.setFilterVal(filterVal);
+			//con.setCondition(filterVal.conditions[filterVal.conditions.length-1], '');
+			$('.filterIcon').removeClass('hide');
+			$('.filterIcon').attr('title', filterVal.name);
+			$('.filterIcon').attr('data-id', filterVal.id);
+
+			if($("#searchBox").is(":checked")) searchData();
+
 		}
-		con.setFilterVal(filterVal);
-		//con.setCondition(filterVal.conditions[filterVal.conditions.length-1], '');
-		$('.filterIcon').removeClass('hide');
-		$('.filterIcon').attr('title', filterVal.name);
-		$('.filterIcon').attr('data-id', filterVal.id);
-		
-		if($("#searchBox").is(":checked")) searchData();
-		
+		else if( type == 'searchQuery'){
+			con.resetFilter('');
+			$('#msg_condition_saver').click();
+			var query = filterVal.conditions[0].query;
+			$('#solrQueryText').val(query);
+			$('.queryIcon').removeClass('hide');
+			$('.queryIcon').attr('title', filterVal.name);
+			$('.queryIcon').attr('data-id', filterVal.id);
+
+			if($("#searchBox").is(":checked")) toggleSolrQuery();
+		}
 	}
-	else if( type == 'searchQuery'){
-		con.resetFilter('');
-		$('#msg_condition_saver').click();
-		var query = filterVal.conditions[0].query;
-		$('#solrQueryText').val(query);
-		$('.queryIcon').removeClass('hide');
-		$('.queryIcon').attr('title', filterVal.name);
-		$('.queryIcon').attr('data-id', filterVal.id);
-		
-		if($("#searchBox").is(":checked")) toggleSolrQuery();
-	}
-}
 
 
 </script>
@@ -359,7 +354,7 @@ function rtnFilterClick(filterVal, type){
 			<img alt="" src="<c:url value="/img/ztree/open_folder.png"/>" style="vertical-align: middle;width: 16px;">
 			<span><s:message code="common.msg.delete"/>(D)</span>
 		</li>
-		
+
 		<li id="filter_new" onclick="saveFilterOnTree('add');">
 			<img alt="" src="<c:url value="/img/ztree/filter.png"/>" style="vertical-align: middle;width: 16px;">
 			<span><s:message code="filterInfo.filter.new"/>(A)</span>
@@ -376,8 +371,8 @@ function rtnFilterClick(filterVal, type){
 			<img alt="" src="<c:url value="/img/ztree/delete.png"/>" style="vertical-align: middle;width: 16px;height: 14px;">
 			<span><s:message code="filterInfo.filter.delete"/>(D)</span>
 		</li>
-		
-		
+
+
 		<li id="f_folder_new" onclick="addFolderFolder();">
 			<img alt="" src="<c:url value="/img/ztree/open_folder.png"/>" style="vertical-align: middle;width: 16px;">
 			<span><s:message code="filterInfo.folder.new"/>(F)</span>
@@ -390,7 +385,7 @@ function rtnFilterClick(filterVal, type){
 			<img alt="" src="<c:url value="/img/ztree/open_folder.png"/>" style="vertical-align: middle;width: 16px;">
 			<span><s:message code="common.msg.delete"/>(D)</span>
 		</li>
-		
+
 		<%-- <li id="f_data_new" onclick="saveFolderOnTree('add');">
 			<img alt="" src="<c:url value="/img/ztree/msgFolder_empty.png"/>" style="vertical-align: middle;width: 16px;">
 			<span><s:message code="filterInfo.folderAdd"/>(A)</span>
@@ -403,8 +398,8 @@ function rtnFilterClick(filterVal, type){
 			<img alt="" src="<c:url value="/img/ztree/delete.png"/>" style="vertical-align: middle;width: 16px;height: 14px;">
 			<span><s:message code="filterInfo.folderDelete"/>(D)</span>
 		</li> --%>
-		
-		
+
+
 	</ul>
 </div>
 
@@ -487,7 +482,7 @@ function rtnFilterClick(filterVal, type){
 					</div>
 				</div>
 				<div id="simpleDateArea" style="display:none;">
-					[<s:message code="condition.standard"/>] 
+					[<s:message code="condition.standard"/>]
 					<input type="text" class="input-xs form-control" id="startDayPop" style="padding:2px 5px;position: relative;width:40px;"/> <s:message code="condition.before"/> ~
 					<input type="text" class="input-xs form-control" id="endDayPop" style="padding:2px 5px;position: relative;width:40px;"/> <s:message code="condition.before"/>
 				</div>
@@ -558,5 +553,5 @@ function rtnFilterClick(filterVal, type){
 </form>
 <form method="post" id="codeParam">
 	<input type="hidden" name="oldCode" id="oldCode"/>
-	<input type="hidden" name="oldConm" id="oldConm"/>					
+	<input type="hidden" name="oldConm" id="oldConm"/>
 </form>

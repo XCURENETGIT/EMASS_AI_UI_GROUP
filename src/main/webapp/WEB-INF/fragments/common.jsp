@@ -604,6 +604,17 @@
 			}
 		}
 	}
+	//팝업 전용
+	function checkMenuId(){
+		if(opener){
+			try {
+				menuId = opener.menuId;
+				pMenuId = opener.pMenuId;
+			} catch (e) {
+				console.error(e);
+			}
+		}
+	}
 
 	function getTargetGrid(target) {
 		for (var i = 0; i < window.__grids.length; i++) {
@@ -612,15 +623,14 @@
 		}
 		return null;
 	}
-
 	//동의서 사용 대상자 여부
-	function isConsent() {
-		if (consent && firstAdminYn != 'Y') return true;
+	function isConsent( ){
+		if( consent && firstAdminYn != 'Y' ) return true;
 		else return false;
 	}
 
-	function isDetailView() {
-		if (adminMenu == 'ALL' || adminMenu.indexOf("DV") > -1) return true;
+	function isDetailView( ){
+		if( adminMenu == 'ALL' || adminMenu.indexOf("DV") > -1) return true;
 		else return false;
 	}
 
@@ -631,34 +641,34 @@
 	}
 
 	// 메시지 본문 조회 팝업
-	function openMessageBody(title, msgId, searchKey) {
-		if (!isDetailView()) return;
-		return openMessageBodyPop(title, msgId, searchKey, '');
+	function openMessageBody( title, msgId, searchKey){
+		if( !isDetailView() ) return;
+		return openMessageBodyPop(title, msgId, searchKey);
 	}
+	function openMessageBodyPop(title, msgId, searchKey){
+		if( !isDetailView() ) return;
+		if( searchKey == undefined ) searchKey = '';
 
-	function openMessageBodyPop(title, msgId, searchKey, bodySize) {
-		if (!isDetailView()) return;
-		if (searchKey == undefined) searchKey = '';
-
-		var url = '<c:url value="/ems/contentBodyNew.do?msgid='+msgId+'&searchKey='+encodeURI(searchKey)+'&bodySize='+bodySize+'"/>';
-		if (title == '') title = '_blank';
-		return fnOpenWindow(url, title, 1600, 700, 'resize');
-	}
-
-	function openMessageBodyUnknownPop(title, msgId, searchKey) {
-		if (!isDetailView()) return;
-		if (searchKey == undefined) searchKey = '';
-
-		var url = '<c:url value="/ems/contentBodyUnknown.do?msgid='+msgId+'&searchKey='+encodeURI(searchKey)+'"/>';
-		if (title == '') title = '_blank';
+		var url    = '<c:url value="/ems/contentBodyNew.do?msgid='+msgId+'&searchKey='+searchKey+'"/>';
+		if( title == '' ) title='No_Title'+makeDateTime();
 		return fnOpenWindow(url, title, 1000, 700, 'resize');
 	}
 
-	function openGroupMessagePop() {
-		var url = '<c:url value="/ems/contentGroup.do"/>';
-		var title = '_blank';
+	function openGroupMessagePop(){
+		var url    = '<c:url value="/ems/contentGroup.do"/>';
+		var title='_blank'+makeDateTime();
 		return fnOpenWindow(url, title, 1280, 800, 'resize');
 	}
+
+	function makeDateTime(){
+		return new Date().format('yyyymmddHHnnss');
+	}
+
+
+
+
+
+
 
 	// 목록개수 건수 조회
 	function getPageSize(id) {

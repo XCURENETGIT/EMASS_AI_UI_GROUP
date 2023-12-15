@@ -9,6 +9,7 @@
 	pageContext.setAttribute("arch", systemArch);
 %>
 
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>

@@ -1,5 +1,12 @@
+<%@ page import="com.xcurenet.common.util.config.Config" %>
+<%@ page import="com.xcurenet.common.util.Common" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
+<%@ page import="com.xcurenet.common.util.Common" %>
+<%@ page import="com.xcurenet.common.util.config.Config" %>
+<%@ page import="java.util.Locale" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
+<%@ include file="/WEB-INF/fragments/loginScript.jsp"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,13 +27,8 @@
 		String locale = Config.getString("default.lang");
 	%>
 
-	<script type="text/javascript" src="<c:url value="/js/sha256.js"/>"></script>
-	<script type="text/javascript" src="<c:url value="/js/jsbn.js"/>"></script>
-	<script type="text/javascript" src="<c:url value="/js/rsa.js"/>"></script>
-	<script type="text/javascript" src="<c:url value="/js/prng4.js"/>"></script>
-	<script type="text/javascript" src="<c:url value="/js/rng.js"/>"></script>
-	<link rel="stylesheet" href="<c:url value="/css/emass_style.css"/>" />
-	<link rel="stylesheet" href="<c:url value="/css/reset.css"/>" />
+
+
 
 	<style type="text/css">
 		html,body {padding: 0px;margin: 0px;width: 100%;height: 100%;}
@@ -38,311 +40,311 @@
 		}
 	</style>
 	<script type="text/javascript">
-        var loginMsg = '';
-        loginMsg += '\n';
-        loginMsg += '\n';
-        loginMsg += '         *****  {0}  *****';
-        loginMsg += '\n';
-        loginMsg += '\n';
-        loginMsg += '<s:message code="login.lastlogin.date"/> : {1}\n';
-        loginMsg += '<s:message code="login.lastlogin.ip"/> : {2}\n';
-        loginMsg += '\n';
-        loginMsg += '<s:message code="login.currentlogin.date"/> : {3}\n';
-        loginMsg += '<s:message code="login.currentlogin.ip"/> : {4}\n';
+		var loginMsg = '';
+		loginMsg += '\n';
+		loginMsg += '\n';
+		loginMsg += '         *****  {0}  *****';
+		loginMsg += '\n';
+		loginMsg += '\n';
+		loginMsg += '<s:message code="login.lastlogin.date"/> : {1}\n';
+		loginMsg += '<s:message code="login.lastlogin.ip"/> : {2}\n';
+		loginMsg += '\n';
+		loginMsg += '<s:message code="login.currentlogin.date"/> : {3}\n';
+		loginMsg += '<s:message code="login.currentlogin.ip"/> : {4}\n';
 
-        var firstOTP = false;
-        var rsa;
-        $(document).ready(function(){
-            var userId = getCookie('Cookie_userId');
-            $('#userIdInput').val(userId);
+		var firstOTP = false;
+		var rsa;
+		$(document).ready(function(){
+			var userId = getCookie('Cookie_userId');
+			$('#userIdInput').val(userId);
 
-            if($('#userIdInput').val() != '') {
-                $('#saveLoginId').prop('checked', true);
-                $('#userPwInput').focus();
-            } else $('#userIdInput').focus();
+			if($('#userIdInput').val() != '') {
+				$('#saveLoginId').prop('checked', true);
+				$('#userPwInput').focus();
+			} else $('#userIdInput').focus();
 
-            $("#secretSaveBtn").click(function() {
-                var userIdInput = $('#userIdInput').val().ltrim().rtrim();
-                var userPwInput = $('#userPwInput').val().ltrim().rtrim();
-                let pinCode = $("#pinCode").val().replaceAll(" ","");
-                let numRegExp = /^[0-9]*$/;
-                if(pinCode == '') {
-                    let msg = '';
-                    if(firstOTP) {
-                        msg = '<s:message code="login.google.otp.create.secretKey"/>';
-                    }
-                    msg = '<s:message code="login.google.otp.input.pincode"/>';
-                    ui.alertMsg(msg);
-                    return;
-                }
+			$("#secretSaveBtn").click(function() {
+				var userIdInput = $('#userIdInput').val().ltrim().rtrim();
+				var userPwInput = $('#userPwInput').val().ltrim().rtrim();
+				let pinCode = $("#pinCode").val().replaceAll(" ","");
+				let numRegExp = /^[0-9]*$/;
+				if(pinCode == '') {
+					let msg = '';
+					if(firstOTP) {
+						msg = '<s:message code="login.google.otp.create.secretKey"/>';
+					}
+					msg = '<s:message code="login.google.otp.input.pincode"/>';
+					ui.alertMsg(msg);
+					return;
+				}
 
-                if(!numRegExp.test(pinCode)) {
-                    ui.alertMsg('<s:message code="login.google.otp.input.pincode2"/>');
-                    return;
-                }
+				if(!numRegExp.test(pinCode)) {
+					ui.alertMsg('<s:message code="login.google.otp.input.pincode2"/>');
+					return;
+				}
 
-                ui.on('loginBody');
-                ui.get({
-                    url : 'secretKeySave.xcn',
-                    pinCode : rsa.encrypt(pinCode),
-                    secretKey : rsa.encrypt($("#secretKey").val().ltrim().rtrim()),
-                    userId : rsa.encrypt(userIdInput),
-                    firstOTP : firstOTP,
-                    success : function ( data, total ) {
-                        $("#googleOTPPop").modal("hide");
-                        successLogin(data, userIdInput, userPwInput);
-                    },
-                    error : function (status, message, data) {
-                        $('#pinCode').val('');
-                        ui.alertMsg(message, function(){
-                            $('#pinCode').focus();
-                        }, 3000);
-                    },
-                    complete : function (){
-                        ui.off('loginBody');
-                    }
-                });
-            });
+				ui.on('loginBody');
+				ui.get({
+					url : 'secretKeySave.xcn',
+					pinCode : rsa.encrypt(pinCode),
+					secretKey : rsa.encrypt($("#secretKey").val().ltrim().rtrim()),
+					userId : rsa.encrypt(userIdInput),
+					firstOTP : firstOTP,
+					success : function ( data, total ) {
+						$("#googleOTPPop").modal("hide");
+						successLogin(data, userIdInput, userPwInput);
+					},
+					error : function (status, message, data) {
+						$('#pinCode').val('');
+						ui.alertMsg(message, function(){
+							$('#pinCode').focus();
+						}, 3000);
+					},
+					complete : function (){
+						ui.off('loginBody');
+					}
+				});
+			});
 
-            $('#googleOTPPop').on('shown.bs.modal',function() {
-                $('#pinCode').focus();
-            });
+			$('#googleOTPPop').on('shown.bs.modal',function() {
+				$('#pinCode').focus();
+			});
 
-            $('#loginBtn').click(function(){
-                var userIdInput = $('#userIdInput').val().ltrim().rtrim();
-                var userPwInput = $('#userPwInput').val().ltrim().rtrim();
-                if( userIdInput == '' ){
-                    ui.alertMsg('<s:message code="login.input.id"/>');
-                    return;
-                }
-                if( userPwInput == '' ){
-                    ui.alertMsg('<s:message code="login.input.password"/>');
-                    return;
-                }
-                rsa = new RSAKey();
-                ui.on('loginBody');
-                ui.get({
-                    url : 'getRSAKey.xcn',
-                    success : function ( data ) {
-                        rsa.setPublic(data.publicKeyModulus, data.publicKeyExponent);
+			$('#loginBtn').click(function(){
+				var userIdInput = $('#userIdInput').val().ltrim().rtrim();
+				var userPwInput = $('#userPwInput').val().ltrim().rtrim();
+				if( userIdInput == '' ){
+					ui.alertMsg('<s:message code="login.input.id"/>');
+					return;
+				}
+				if( userPwInput == '' ){
+					ui.alertMsg('<s:message code="login.input.password"/>');
+					return;
+				}
+				rsa = new RSAKey();
+				ui.on('loginBody');
+				ui.get({
+					url : 'getRSAKey.xcn',
+					success : function ( data ) {
+						rsa.setPublic(data.publicKeyModulus, data.publicKeyExponent);
 
-                        ui.get({
-                            url : 'loginProcess.xcn',
-                            userId : rsa.encrypt(userIdInput),
-                            userPw : rsa.encrypt(userPwInput),
-                            success : function ( data, total ) {
-                                //구글 OTP
-                                if(data.secretKey != null || data.secretKey != undefined) {
-                                    $("#googleOTPPop").modal("show");
-                                    $('#googleOTPPop .modal-title').html('<s:message code="login.google.otp"/>');
-                                    $("#secretKey").val(data.secretKey);
-                                    if(data.qrCodeURL != null || data.qrCodeURL != undefined) {
-                                        $('#otpQRrow').css("display", "block");
-                                        $('#secretKeyRow').css("display","block");
-                                        $('#reloadBtn').css("display","inline-block");
-                                        $("#googleOTPqr").attr("src",data.qrCodeURL);
-                                        $('#otpMessage').html('<s:message code="login.google.otp.first.login"/>');
-                                        firstOTP = true;
-                                    } else {
-                                        $('#otpQRrow').css("display", "none");
-                                        $('#secretKeyRow').css("display","none");
-                                        $('#reloadBtn').css("display","none");
-                                        $('#otpMessage').html('<s:message code="login.google.otp.message1"/>');
-                                        firstOTP = false;
-                                    }
-                                    otpTimeOut();
-                                } else {
-                                    successLogin(data, userIdInput, userPwInput);
-                                }
-                            },
-                            error : function (status, message, data) {
-                                $('#userPwInput').val('');
-                                ui.alertMsg(message, function(){
-                                    if(data =='PW_EXPIRED') {
-                                        currentPw = sha256_digest(userPwInput);
-                                        adminId = userIdInput;
-                                        $('#changePasswordBtn').click();
-                                    }
-                                }, 3000);
-                            },
-                            complete : function (){
-                                ui.off('loginBody');
-                            }
-                        });
-                    },
-                    error : function (status, message) {
-                        $('#adminPw').val('');
-                        alert(message);
-                        ui.off();
-                    },
-                    complete : function (){
-                    }
-                });
-            });
+						ui.get({
+							url : 'loginProcess.xcn',
+							userId : rsa.encrypt(userIdInput),
+							userPw : rsa.encrypt(userPwInput),
+							success : function ( data, total ) {
+								//구글 OTP
+								if(data.secretKey != null || data.secretKey != undefined) {
+									$("#googleOTPPop").modal("show");
+									$('#googleOTPPop .modal-title').html('<s:message code="login.google.otp"/>');
+									$("#secretKey").val(data.secretKey);
+									if(data.qrCodeURL != null || data.qrCodeURL != undefined) {
+										$('#otpQRrow').css("display", "block");
+										$('#secretKeyRow').css("display","block");
+										$('#reloadBtn').css("display","inline-block");
+										$("#googleOTPqr").attr("src",data.qrCodeURL);
+										$('#otpMessage').html('<s:message code="login.google.otp.first.login"/>');
+										firstOTP = true;
+									} else {
+										$('#otpQRrow').css("display", "none");
+										$('#secretKeyRow').css("display","none");
+										$('#reloadBtn').css("display","none");
+										$('#otpMessage').html('<s:message code="login.google.otp.message1"/>');
+										firstOTP = false;
+									}
+									otpTimeOut();
+								} else {
+									successLogin(data, userIdInput, userPwInput);
+								}
+							},
+							error : function (status, message, data) {
+								$('#userPwInput').val('');
+								ui.alertMsg(message, function(){
+									if(data =='PW_EXPIRED') {
+										currentPw = sha256_digest(userPwInput);
+										adminId = userIdInput;
+										$('#changePasswordBtn').click();
+									}
+								}, 3000);
+							},
+							complete : function (){
+								ui.off('loginBody');
+							}
+						});
+					},
+					error : function (status, message) {
+						$('#adminPw').val('');
+						alert(message);
+						ui.off();
+					},
+					complete : function (){
+					}
+				});
+			});
 
-            $('#userIdInput').enter(function(){
-                if( $('#userIdInput').val() != '' ) $('#userPwInput').focus();
-            });
-            $('#userPwInput').enter(function(){
-                if( $('#userPwInput').val() != '' ) $('#loginBtn').click();
-            });
+			$('#userIdInput').enter(function(){
+				if( $('#userIdInput').val() != '' ) $('#userPwInput').focus();
+			});
+			$('#userPwInput').enter(function(){
+				if( $('#userPwInput').val() != '' ) $('#loginBtn').click();
+			});
 
-            $("#pinCode").enter(function() {
-                if( $('#pinCode').val() != '' ) $('#secretSaveBtn').click();
-            });
+			$("#pinCode").enter(function() {
+				if( $('#pinCode').val() != '' ) $('#secretSaveBtn').click();
+			});
 
-            $('#reloadBtn').on('click', function() {
-                reloadOTPgenerate();
-                $('#pinCode').focus();
-            });
-        });
+			$('#reloadBtn').on('click', function() {
+				reloadOTPgenerate();
+				$('#pinCode').focus();
+			});
+		});
 
-        function showUnusePop(){
-            $("#unusePop").modal("hide");
-            $('#unuseAdminPop').modal('show');
-        }
+		function showUnusePop(){
+			$("#unusePop").modal("hide");
+			$('#unuseAdminPop').modal('show');
+		}
 
-        let timeOut=true;
+		let timeOut=true;
 
-        function sendMail(){
-            var userIdInput = $('#userIdInput').val().ltrim().rtrim();
+		function sendMail(){
+			var userIdInput = $('#userIdInput').val().ltrim().rtrim();
 
-            if(timeOut!=true){
-                alert("아직 유효 메일이 남아있습니다");
-            } else {
-                ui.get({
-                    url: 'mailSend.xcn',
-                    userId: rsa.encrypt(userIdInput),
-                    success: function (data) {
-                        confirmTimeOut();
-                        alert("인증코드 발송");
-                    },
-                    error: function (request,status,error,data) {
-                        alert("R: "+request+"S: "+status+" E: "+error+" D: "+data);
-                        if (error=='MAILNOCHECK') {
-                            alert("메일서버가 비활성화 상태 입니다. 관리자에게 문의하시길 바랍니다");
-                        } else {
-                            alert("인증코드 발송에 실패하였습니다 관리자에게 문의하시길 바랍니다");
-                        }
-                        timeOut=true;
-                        $('#unuseAdminPop').modal('hide');
-                    }
-                })
-            }
-        }
+			if(timeOut!=true){
+				alert("아직 유효 메일이 남아있습니다");
+			} else {
+				ui.get({
+					url: 'mailSend.xcn',
+					userId: rsa.encrypt(userIdInput),
+					success: function (data) {
+						confirmTimeOut();
+						alert("인증코드 발송");
+					},
+					error: function (request,status,error,data) {
+						alert("R: "+request+"S: "+status+" E: "+error+" D: "+data);
+						if (error=='MAILNOCHECK') {
+							alert("메일서버가 비활성화 상태 입니다. 관리자에게 문의하시길 바랍니다");
+						} else {
+							alert("인증코드 발송에 실패하였습니다 관리자에게 문의하시길 바랍니다");
+						}
+						timeOut=true;
+						$('#unuseAdminPop').modal('hide');
+					}
+				})
+			}
+		}
 
-        function confirmNumber(){
-            var userIdInput = $('#userIdInput').val().ltrim().rtrim();
-            var number1 = $("#number").val().ltrim().rtrim();;
+		function confirmNumber(){
+			var userIdInput = $('#userIdInput').val().ltrim().rtrim();
+			var number1 = $("#number").val().ltrim().rtrim();;
 
-            ui.get({
-                url: 'updateStatus.xcn',
-                userId :userIdInput,
-                number1 :number1,
-                success:function (data,message){
-                    $("#unuseAdminPop").modal('hide');
-                    $('#unusetime').css("display", "none");
-                    $('#number').val('');
-                    alert("잠금이 해제되었습니다. 다시 로그인하세요");
+			ui.get({
+				url: 'updateStatus.xcn',
+				userId :userIdInput,
+				number1 :number1,
+				success:function (data,message){
+					$("#unuseAdminPop").modal('hide');
+					$('#unusetime').css("display", "none");
+					$('#number').val('');
+					alert("잠금이 해제되었습니다. 다시 로그인하세요");
 
-                },
-                error: function (data,message){
-                    alert("코드 입력이 잘못되었습니다");
-                }
-            });
-        }
-
-
-        function reloadOTPgenerate(){
-            var userIdInput = $('#userIdInput').val().ltrim().rtrim();
-            ui.on('googleOTPPop');
-            ui.get({
-                url : 'reloadGoogleOTP.xcn',
-                userId : rsa.encrypt(userIdInput),
-                success : function ( data, total ) {
-                    //구글 OTP 재발급
-                    $('#googleOTPPop .modal-title').html('<s:message code="login.google.otp"/>');
-                    $('#otpQRrow').css("display", "block");
-                    $("#googleOTPqr").attr("src",data.qrCodeURL);
-                    $("#secretKey").val(data.secretKey);
-                    $('#otpMessage').html('<s:message code="login.google.otp.first.login"/>');
-                    firstOTP = true;
-                    otpTimeOut();
-                },
-                error : function (status, message, data) {
-                    $('#googleOTPPop').modal('hide');
-                    alert(message);
-                },
-                complete : function (){
-                    ui.off();
-                }
-            });
-        }
-
-        function successLogin(data, userId, userPw) {
-            var adminName=nvl(data.adminName,'-');
-            var	msg = '';
-            if( ( data.pwchgDt=='' || data.pwchgDt == null ) || (( data.pwchgDt=='' || data.pwchgDt == null ) && data.firstAdminYn == 'Y') ){
-                $('#first_adminId').val(userId);
-                $('#first_cur_adminPw').val(sha256_digest(userPw));
-                msg = '<s:message code="login.first.access"/>';
-                loginCheck(data.firstAdminYn);
-                return;
-            }else{
-                if($('#saveLoginId').is(':checked')) {
-                    var userId = $('#userIdInput').val();
-                    setCookie('Cookie_userId', userId, 30);
-                } else {
-                    setCookie('Cookie_userId', '', -1);
-                }
-                msg = $('#message').val() + data.welcomeInfo;
-            }
-
-            ui.alertMsg(msg, function(){
-                if( data.menuKey != undefined && data.menuKey != ''){
-                    document.location.href = '<c:url value="/ems/dashboard.do?menuKey="/>'+data.menuKey;
-                }else{
-                    document.location.href = '<c:url value="/ems/index.do"/>';
-                }
-            }, 3000);
-        }
-        var otpInterval;
-        var otpDelay;
-        function otpTimeOut() {
-            clearInterval(otpInterval);
-            clearTimeout(otpDelay);
-            var title = $('#googleOTPPop .modal-title').html();
-            var t = (30000/1000)-1;
-            otpInterval = setInterval(function(){
-                if(!firstOTP) $('#googleOTPPop .modal-title').html(title + '  <div style="float:right;text-align:right;font-weight:normal;font-size:13px;">Auto Close ' + (t--).comma() + ' \'s</div>' );
-            },1000);
-
-            otpDelay = setTimeout(function(){
-                clearInterval(otpInterval);
-                clearTimeout(otpDelay);
-                if(!firstOTP) $('#googleOTPPop').modal('hide');
-            }, 30000);
-        }
-
-        function confirmTimeOut() {
-            timeOut=false;
-            $('#unusetime').css("display", "block");
-            var t =(90000/1000)-1;
-            setInterval(function(){
-                $('#unuseAdminPop #unusetime').html((t--).comma() + 's' );
-            },1000);
-            setTimeout(function(){
-                timeOut =true;
-                $('#unuseAdminPop').modal('hide');
-                $('#unusetime').css("display","none");
-                t= (30000/1000)-1;
-                ui.get({
-                    url: 'deleteSession.xcn'
-                });
+				},
+				error: function (data,message){
+					alert("코드 입력이 잘못되었습니다");
+				}
+			});
+		}
 
 
-            }, 90000);
-        }
+		function reloadOTPgenerate(){
+			var userIdInput = $('#userIdInput').val().ltrim().rtrim();
+			ui.on('googleOTPPop');
+			ui.get({
+				url : 'reloadGoogleOTP.xcn',
+				userId : rsa.encrypt(userIdInput),
+				success : function ( data, total ) {
+					//구글 OTP 재발급
+					$('#googleOTPPop .modal-title').html('<s:message code="login.google.otp"/>');
+					$('#otpQRrow').css("display", "block");
+					$("#googleOTPqr").attr("src",data.qrCodeURL);
+					$("#secretKey").val(data.secretKey);
+					$('#otpMessage').html('<s:message code="login.google.otp.first.login"/>');
+					firstOTP = true;
+					otpTimeOut();
+				},
+				error : function (status, message, data) {
+					$('#googleOTPPop').modal('hide');
+					alert(message);
+				},
+				complete : function (){
+					ui.off();
+				}
+			});
+		}
+
+		function successLogin(data, userId, userPw) {
+			var adminName=nvl(data.adminName,'-');
+			var	msg = '';
+			if( ( data.pwchgDt=='' || data.pwchgDt == null ) || (( data.pwchgDt=='' || data.pwchgDt == null ) && data.firstAdminYn == 'Y') ){
+				$('#first_adminId').val(userId);
+				$('#first_cur_adminPw').val(sha256_digest(userPw));
+				msg = '<s:message code="login.first.access"/>';
+				loginCheck(data.firstAdminYn);
+				return;
+			}else{
+				if($('#saveLoginId').is(':checked')) {
+					var userId = $('#userIdInput').val();
+					setCookie('Cookie_userId', userId, 30);
+				} else {
+					setCookie('Cookie_userId', '', -1);
+				}
+				msg = $('#message').val() + data.welcomeInfo;
+			}
+
+			ui.alertMsg(msg, function(){
+				if( data.menuKey != undefined && data.menuKey != ''){
+					document.location.href = '<c:url value="/ems/dashboard.do?menuKey="/>'+data.menuKey;
+				}else{
+					document.location.href = '<c:url value="/ems/index.do"/>';
+				}
+			}, 3000);
+		}
+		var otpInterval;
+		var otpDelay;
+		function otpTimeOut() {
+			clearInterval(otpInterval);
+			clearTimeout(otpDelay);
+			var title = $('#googleOTPPop .modal-title').html();
+			var t = (30000/1000)-1;
+			otpInterval = setInterval(function(){
+				if(!firstOTP) $('#googleOTPPop .modal-title').html(title + '  <div style="float:right;text-align:right;font-weight:normal;font-size:13px;">Auto Close ' + (t--).comma() + ' \'s</div>' );
+			},1000);
+
+			otpDelay = setTimeout(function(){
+				clearInterval(otpInterval);
+				clearTimeout(otpDelay);
+				if(!firstOTP) $('#googleOTPPop').modal('hide');
+			}, 30000);
+		}
+
+		function confirmTimeOut() {
+			timeOut=false;
+			$('#unusetime').css("display", "block");
+			var t =(90000/1000)-1;
+			setInterval(function(){
+				$('#unuseAdminPop #unusetime').html((t--).comma() + 's' );
+			},1000);
+			setTimeout(function(){
+				timeOut =true;
+				$('#unuseAdminPop').modal('hide');
+				$('#unusetime').css("display","none");
+				t= (30000/1000)-1;
+				ui.get({
+					url: 'deleteSession.xcn'
+				});
+
+
+			}, 90000);
+		}
 
 
 

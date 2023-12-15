@@ -6,7 +6,7 @@
 	<div class="menu-list">
 		<ul id="menu-content" class="menu-content collapse out" pMenuId="DATA_MONITOR">
 			<li menuId="DASHBOARD"><a href="<c:url value="/ems/index.do"/>"> <i class="fa fa-dashboard fa-lg"></i> <span><s:message code="DATA_MONITOR.DASHBOARD"/></span></a></li>
-			
+
 			<%if(Config.getBoolean("eikon.menu.enable")){ %>
 			<li data-toggle="collapse" data-target="#messages" class="collapsed">
 				<a href="#"> <i class="fa fa-envelope fa-lg"></i> <span><s:message code="DATA_MONITOR.MESSAGE"/></span><span class="arrow"></span></a>
@@ -51,9 +51,9 @@
 				<li menuId="STAT_OCR"><a href="<c:url value="/ems/ocrStat.do"/>"> <i class="fa fa-pie-chart fa-lg"></i> OCR <s:message code="DATA_ANALYSIS.STAT_LABEL"/></a></li>
 				<%}%>
 			</ul>
-						
+
 			<li menuId="STAT_REPORT"><a href="<c:url value="/ems/report.do"/>"> <i class="fa fa-file-text-o fa-lg"></i> <span><s:message code="DATA_MONITOR.STAT_REPORT"/></span></a></li>
-			
+
 			<li menuId="RESERVATION_ALARM"><a href="<c:url value="/ems/reservationAlarm.do"/>">  <i class="fa fa-calendar fa-lg"></i> <span><s:message code="DATA_MONITOR.RESERVATION_ALARM"/></span></a></li>
 			<li menuId="KEYWORD_MGMT"><a href="<c:url value="/ems/keywordInfo.do"/>"> <i class="fa fa-tasks fa-lg"></i> <span><s:message code="DATA_MONITOR.KEYWORD_MGMT"/></span></a></li>
 			<%if(Config.getBoolean("consent.history.enable")){%>

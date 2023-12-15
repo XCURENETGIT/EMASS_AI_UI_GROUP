@@ -358,7 +358,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		try {
 			return Common.getDateTimeFormat();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("[ERROR] {}", e.getMessage());
 		}
 		return null;
 	}

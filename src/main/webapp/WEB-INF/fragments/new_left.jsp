@@ -27,7 +27,7 @@
 	/* 메뉴  관련 ###########################################################################################################*/
 	let currentMenuId;
 	let currentMenuTid;
-    let mainContext = "<%=context%>";
+	let mainContext = "<%=context%>";
 	let sideBar;
 
 	$(document).ready(function () {

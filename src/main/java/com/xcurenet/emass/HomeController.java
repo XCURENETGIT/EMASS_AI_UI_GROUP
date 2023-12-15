@@ -340,6 +340,7 @@ public class HomeController {
 	@RequestMapping(value = "/ems/message.do")
 	@Description("EDC 메시지 검색 페이지(전체)")
 	public String message(Locale locale, Model model) {
+		model.addAttribute("headerYn","N");
 		return "/emass/message/messageNewN";
 	}
 

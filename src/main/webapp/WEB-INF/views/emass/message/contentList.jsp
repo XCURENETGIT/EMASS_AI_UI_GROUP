@@ -3,8 +3,13 @@
 <%@ page import="net.sf.json.JSONObject" %>
 <%@ page import="com.xcurenet.audit.service.Operation" %>
 <%@ page import="com.xcurenet.config.service.ConfigAdminVO" %>
+<%@ page import="com.xcurenet.common.util.Common" %>
+<%@ page import="com.xcurenet.common.util.config.Config" %>
+<%@ include file="/WEB-INF/fragments/messageCss.jsp"%>
+<%@ include file="/WEB-INF/fragments/messageJs.jsp"%>
+<%@ include file="/WEB-INF/fragments/messageScript.jsp"%>
+
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
 <%
 	ConfigAdminService configAdminService = SpringContextUtil.getBean(ConfigAdminService.class);
 
