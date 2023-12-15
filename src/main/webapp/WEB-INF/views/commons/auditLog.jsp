@@ -379,6 +379,8 @@
 				<input type="text"  placeholder="<s:message code="common.msg.searchMsg"/>" id="searchStr" style="width: 300px;">
 				<button class="form_btn01" accesskey="Q" id="searchBtn" accesskey="s">조회</button>
 			</div>
+		</div>
+		<div class="searchSub">
 			<div>
 				<select id="adminId" style="width: 205px;">
 					<option value="">- <s:message code="auditLog.select.admin"/> -</option>
@@ -395,7 +397,6 @@
 				</select>
 			</div>
 		</div>
-
 	</div>
 	<div class="content xcn_full">
 		<div class="contentSub">
