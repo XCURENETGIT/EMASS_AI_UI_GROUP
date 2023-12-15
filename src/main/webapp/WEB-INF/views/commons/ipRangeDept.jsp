@@ -566,7 +566,7 @@ function getDeptSchedule(){
 }
 </script>
 
-<div class="modal" id="ipRangePop" tabindex="-1" role="dialog" aria-labelledby="ipRangeModal">
+<div class="modal" id="ipRangePop" tabindex="-1" role="dialog" aria-labelledby="ipRangeModal" data-backdrop="static">
 	<div class="modal-content">
 		<form method="post" id="ipRangePopForm">
 			<div class="modalHead">
@@ -725,7 +725,7 @@ function getDeptSchedule(){
 </div>
 
 <div id="upload_file"></div>
-<div class="modal" id="uploadPop" aria-labelledby="uploadPop">
+<div class="modal" id="uploadPop" aria-labelledby="uploadPop"  data-backdrop="static">
 	<div class="modal-content">
 		<form method="post" id="uploadForm" enctype="multipart/form-data" target="upload_file">
 			<div class="modalHead">
@@ -773,7 +773,7 @@ function getDeptSchedule(){
 
 
 
-<div class="modal" id="setDeptApiPop" tabindex="-1" role="dialog" aria-labelledby="setDeptApiPop">
+<div class="modal" id="setDeptApiPop" tabindex="-1" role="dialog" aria-labelledby="setDeptApiPop"
 	<div class="modal-content">
 		<form method="post" id="setDeptApiPopForm">
 		<div class="modalHead">

@@ -771,61 +771,6 @@
 	</div>
 </div>
 
-<div class="modal" id="busiPop" tabindex="-1" role="dialog" aria-labelledby="busiModal" data-backdrop="static">
-	<div class="modal-content">
-		<form method="post" id="busiPopForm">
-			<div class="modalHead">
-				<h2><s:message code="common.org.busi"/>-<s:message code="common.msg.addmodify"/></h2>
-				<span class="close" data-dismiss="modal">&times;</span>
-			</div>
-			<div class="modalCon">
-				<div class="modalTop">
-					<h3>총괄 추가</h3>
-					<p>
-						<span class="red_dot veralign_middle"></span>
-						필수 입력 사항입니다.
-					</p>
-				</div>
-				<div class="modalbody">
-					<div class="row">
-						<div class="col-35">
-							<label for="busiCdPopInput"><s:message code="common.org.co"/></label>
-							<span class="red_dot"></span>
-						</div>
-						<div class="col-65">
-							<div id="coNmPopSelect_inBusi"></div>
-							<input type="hidden" name="coNm" id="coNmHidden">
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-35">
-							<label for="busiCdPopInput"><s:message code="common.org.busicd"/></label>
-							<span class="red_dot"></span>
-						</div>
-						<div class="col-65">
-							<input type="text" class="w100" name="busiCd" id="busiCdPopInput" placeholder="<s:message code="common.org.busicd"/>" required maxlength="20">
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-35">
-							<label for="busiNmPopInput"><s:message code="common.org.businm"/></label>
-							<span class="red_dot"></span>
-						</div>
-						<div class="col-65">
-							<input type="text" class="w100" name="busiNm" id="busiNmPopInput" placeholder="<s:message code="common.org.businm"/>" required maxlength="20">
-						</div>
-					</div>
-
-					<div class="modalfooter">
-						<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
-						<button type="button" class="pop_btn02 savePopBtn" accesskey="S"><s:message code="common.msg.save"/></button>
-					</div>
-				</div>
-			</div>
-		</form>
-	</div>
-</div>
-
 
 
 <div class="modal" id="generalPop" tabindex="-1" role="dialog" aria-labelledby="generalModal" data-backdrop="static">

@@ -694,7 +694,7 @@
 										</div>
 										<div id="mailField">
 											<div class="form-inline">
-												<label for="alarmTo" class=" col-xs-4">*<s:message code="mail.recv"/></label>\
+												<label for="alarmTo" class=" col-xs-4">*<s:message code="mail.recv"/></label>
 												<div class="input-group col-xs-8">
 														<span class="input-group-btn" style="width: 25px;">
 															<button class="btn btn-primary btn-sm" type="button" accesskey="T" id="alarmToBtn"><s:message code="consent.select"/></button>
@@ -785,25 +785,20 @@
 	</div>
 </div>
 
-<div class="modal fade" id="resvAlarmLogPop" tabindex="-1" role="dialog" aria-labelledby="resvAlarmLogPop">
-	<div class="modal-dialog" role="document" style="height: 500px;">
-		<div class="modal-content" style="height: 100%;">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-				<h3 class="modal-title"><s:message code="mail.excute.list.alarm"/></h3>
+<div class="modal" id="resvAlarmLogPop" tabindex="-1" role="dialog" aria-labelledby="resvAlarmLogPop" data-backdrop="static">
+	<div class="modal-content">
+			<div class="modalHead">
+				<h2><s:message code="mail.excute.list.alarm"/></h2>
+				<span class="close" data-dismiss="modal">x</span>
 			</div>
-			<div class="modal-body" style="height: 100%;">
-				<div class="row top_space" style="height: calc(100% - 85px);">
-					<div class="col-xs-12" style="height: 100%;">
+			<div class="modalCon">
+				<div class="modalbody">
 						<div id="alarmLogListGrid" class="slickGrid gridArea"></div>
-					</div>
 				</div>
 			</div>
-		</div>
 	</div>
 </div>
+
 
 <div class="container">
 	<div class="searchArea">
