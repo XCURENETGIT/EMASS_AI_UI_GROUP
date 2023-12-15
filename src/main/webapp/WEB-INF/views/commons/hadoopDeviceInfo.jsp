@@ -888,15 +888,15 @@ function off(id) {
 					</div>
 				
 					<div id="deviceIpDiv" class="form-inline">
-						<label for="deviceIp" class="control-label col-xs-5">IP</label>
+						<label for="deviceIp" class=" col-xs-5">IP</label>
 						<input type="text" class="form-control" name="deviceIp" id="deviceIp" placeholder="IP" required maxlength="64">
 					</div>
 					<div class="form-inline">
-						<label for="deviceNm" class="control-label col-xs-5"><s:message code="common.msg.name"/></label>
+						<label for="deviceNm" class=" col-xs-5"><s:message code="common.msg.name"/></label>
 						<input type="text" class="form-control" name="deviceNm" id="deviceNm" placeholder="<s:message code="common.msg.name"/>" required maxlength="256">
 					</div>
 					<!-- <div class="form-inline">
-						<label for="deviceType" class="control-label col-xs-5">타입</label>
+						<label for="deviceType" class=" col-xs-5">타입</label>
 						<select class="form-control input-sm" id="deviceType" name="deviceType">
 							<option value="">- 타입선택 -</option>
 							<option value="C">수집장비</option>
@@ -904,20 +904,20 @@ function off(id) {
 						</select>
 					</div> -->
 					<div class="form-inline">
-						<label for="comment" class="control-label col-xs-5"><s:message code="common.msg.comment"/></label>
+						<label for="comment" class=" col-xs-5"><s:message code="common.msg.comment"/></label>
 						<input type="text" class="form-control" name="comment" id="comment" placeholder="<s:message code="common.msg.comment"/>" required maxlength="512">
 						<input type="hidden" id="devSeqHidden" name="deviceSeq">
 					</div>
 					<div id="deviceSshIdDiv" class="form-inline">
-						<label for="sshId" class="control-label col-xs-5"><s:message code="deviceInfo.ssh.id"/></label>
+						<label for="sshId" class=" col-xs-5"><s:message code="deviceInfo.ssh.id"/></label>
 						<input type="text" class="form-control" name="sshId" id="sshId" placeholder="<s:message code="deviceInfo.ssh.id"/>" required maxlength="256">
 					</div>
 					<div id="deviceSshPwDiv" class="form-inline">
-						<label for="sshPw" class="control-label col-xs-5"><s:message code="deviceInfo.ssh.pw"/></label>
+						<label for="sshPw" class=" col-xs-5"><s:message code="deviceInfo.ssh.pw"/></label>
 						<input type="password" class="form-control" name="sshPw" id="sshPw" placeholder="<s:message code="deviceInfo.ssh.pw"/>" required maxlength="512" autocomplete="off">
 					</div>
 					<div id="alertDiv" class="form-inline" style="display:none;">
-						<label for="alertDeviceCC" class="control-label col-xs-12"><s:message code="deviceInfo.set.critical.default"/></label>
+						<label for="alertDeviceCC" class=" col-xs-12"><s:message code="deviceInfo.set.critical.default"/></label>
 						<img src="<c:url value="/img/alertDeviceCC.png"/>" style="width: 560px; height: 200px;">
 					</div>
 				</div>
@@ -948,7 +948,7 @@ function off(id) {
 					</div>
 					<div style="background-color: #000; opacity: .2; position: absolute; top: 50px; left: 0px; right: 0px; bottom: 0px; z-index: 999;" id="alarmModal"></div>
 					<div class="form-inline">
-						<label for="ip" class="control-label col-xs-1"><s:message code="deviceInfo.interest"/></label>
+						<label for="ip" class=" col-xs-1"><s:message code="deviceInfo.interest"/></label>
 						<div class="row" style="padding-left: 100px; font-size: 12px;">
 							<label>
 								<s:message code="deviceInfo.msg.over.alarmlog"/>
@@ -959,7 +959,7 @@ function off(id) {
 						</div>
 					</div>
 					<div class="form-inline">
-						<label for="ip" class="control-label col-xs-1"><s:message code="deviceInfo.caution"/></label>
+						<label for="ip" class=" col-xs-1"><s:message code="deviceInfo.caution"/></label>
 						<div class="row" style="padding-left: 100px; font-size: 12px;">
 							<label>
 								<s:message code="deviceInfo.msg.over.log"/>
@@ -970,7 +970,7 @@ function off(id) {
 						</div>
 					</div>
 					<div class="form-inline">
-						<label for="ip" class="control-label col-xs-1"><s:message code="deviceInfo.danger"/></label>
+						<label for="ip" class=" col-xs-1"><s:message code="deviceInfo.danger"/></label>
 						<div class="row" style="padding-left: 100px; font-size: 12px;">
 							<label>
 								<s:message code="deviceInfo.msg.continue.deletelog"/>

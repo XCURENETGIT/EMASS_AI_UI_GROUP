@@ -535,7 +535,7 @@
 					</div>
 					<div class="row">
 						<div class="col-35">
-							<label for="groupName" class="control-label"><s:message code="common.msg.color.select"/></label>
+							<label for="groupName" class=""><s:message code="common.msg.color.select"/></label>
 							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">

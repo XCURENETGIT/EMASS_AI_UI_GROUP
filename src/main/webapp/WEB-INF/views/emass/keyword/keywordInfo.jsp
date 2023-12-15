@@ -384,7 +384,7 @@ function fileExtCheck(obj) {
 					</div>
 					<div class="row">
 						<div class="col-35">
-							<label for="useYn" class="control-label"><s:message code="common.msg.useyn"/></label>
+							<label for="useYn" class=""><s:message code="common.msg.useyn"/></label>
 							<span class="red_dot"></span>
 						</div>
 						<label class="radio-inline c-radio">

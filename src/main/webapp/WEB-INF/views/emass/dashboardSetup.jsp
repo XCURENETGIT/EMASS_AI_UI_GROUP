@@ -597,13 +597,13 @@
 					<div class="row">
 						<div class="col-md-6" style="border-right: 1px solid #e5e5e5;">
 							<h3><s:message code="admin.basic.info"/></h3>
-							<div class="form-group form-inline">
-								<label for="dashName" class="control-label col-xs-4"><s:message code="dashboardSetup.dashname"/></label>
+							<div >
+								<label for="dashName" class=" col-xs-4"><s:message code="dashboardSetup.dashname"/></label>
 								<input type="text" class="form-control" name="dashName" id="dashName" placeholder="<s:message code="dashboardSetup.dashname"/>" style="width: 250px;" maxlength="20">
 								<input type="hidden" name="dashKey" id="dashKey">
 							</div>
 							<div class="form-inline">
-								<label for="dashType" class="control-label col-xs-4"><s:message code="dashboardSetup.dashtype"/></label>
+								<label for="dashType" class=" col-xs-4"><s:message code="dashboardSetup.dashtype"/></label>
 								<label class="radio-inline c-radio">
 									<input type="radio" name="dashType" value="S" checked>
 									<span class="fa fa-check"></span><s:message code="dashboardSetup.dashtype.single"/>
@@ -621,8 +621,8 @@
 									<span class="fa fa-check"></span><s:message code="dashboardSetup.dashtype.list"/>
 								</label>
 							</div>
-							<div class="form-group form-inline" id="dashDoubleArea" style="display:none;">
-								<label for="dash_x" class="control-label col-xs-4"><s:message code="dashboardSetup.multData"/></label>
+							<div  id="dashDoubleArea" style="display:none;">
+								<label for="dash_x" class=" col-xs-4"><s:message code="dashboardSetup.multData"/></label>
 								<select class="form-control input-sm" id="dashMultiLeft" name="dashMultiLeft">
 									<option value="read"><s:message code="dashboardSetup.readCount"/></option>
 									<option value="unread" selected><s:message code="dashboardSetup.unreadCount"/></option>
@@ -634,8 +634,8 @@
 									<option value="total" selected><s:message code="dashboardSetup.allCount"/></option>
 								</select>
 							</div>
-							<div class="form-group form-inline" id="dashChartArea" style="display:none;">
-								<label for="dashChart" class="control-label col-xs-4" style="height:60px;"><s:message code="dashboardSetup.chartType"/></label>
+							<div  id="dashChartArea" style="display:none;">
+								<label for="dashChart" class=" col-xs-4" style="height:60px;"><s:message code="dashboardSetup.chartType"/></label>
 								<div>
 									<label class="radio-inline c-radio">
 										<input type="radio" name="dashChart" value="P" checked>
@@ -662,8 +662,8 @@
 									<input type="hidden" name="dashChartNm" id="hiddenDashChart">
 								</div>
 							</div>
-							<div class="form-group form-inline" id="dashXYArea" style="display:none;">
-								<label for="dash_x" class="control-label col-xs-4"><s:message code="dashboardSetup.chartXY"/></label>
+							<div  id="dashXYArea" style="display:none;">
+								<label for="dash_x" class=" col-xs-4"><s:message code="dashboardSetup.chartXY"/></label>
 								<select class="form-control input-sm" id="dashChartX" name="dashChartX" >
 									<option value="svc1"><s:message code="condition.service"/></option>
 									<option value="ctime_hh"><s:message code="dashboardSetup.standardTime"/></option>
@@ -677,8 +677,8 @@
 									<option value="total"><s:message code="common.msg.count"/></option>
 								</select>
 							</div>
-							<div class="form-group form-inline">
-								<label for="dashIcon" class="control-label col-xs-4" style="height:80px;"><s:message code="dashboardSetup.dashicon"/></label>
+							<div >
+								<label for="dashIcon" class=" col-xs-4" style="height:80px;"><s:message code="dashboardSetup.dashicon"/></label>
 								<button type="button" class="btn btn-default dashIcon" data-value="fa fa-envelope"><i class="fa fa-envelope"></i></button>
 								<button type="button" class="btn btn-default dashIcon" data-value="fa fa-users"><i class="fa fa-users"></i></button>
 								<button type="button" class="btn btn-default dashIcon" data-value="fa fa-warning"><i class="fa fa-warning"></i></button>
@@ -694,8 +694,8 @@
 								<button type="button" class="btn btn-default dashIcon" data-value="fa fa-line-chart"><i class="fa fa-line-chart"></i></button>
 								<input type="hidden" id="dashIcon" name="dashIcon" />
 							</div>
-							<div class="form-group form-inline">
-								<label for="dashColor" class="control-label col-xs-4"><s:message code="dashboardSetup.background"/></label>
+							<div >
+								<label for="dashColor" class=" col-xs-4"><s:message code="dashboardSetup.background"/></label>
 								<button type="button" class="btn btn-primary dashColor" data-value="panel-primary">&nbsp;&nbsp;</button>
 								<button type="button" class="btn btn-default dashColor" data-value="panel-white">&nbsp;&nbsp;</button>
 								<button type="button" class="btn btn-secondary dashColor" data-value="panel-gray">&nbsp;&nbsp;</button>
@@ -704,8 +704,8 @@
 								<button type="button" class="btn btn-warning dashColor" data-value="panel-yellow">&nbsp;&nbsp;</button>
 								<input type="hidden" name="dashColor" id="dashColor" />
 							</div>
-							<div class="form-group form-inline">
-								<label for="useYn" class="control-label col-xs-4"><s:message code="common.msg.useyn"/></label>
+							<div >
+								<label for="useYn" class=" col-xs-4"><s:message code="common.msg.useyn"/></label>
 								<label class="radio-inline c-radio">
 									<input type="radio" name="useYn" value="Y" checked>
 									<span class="fa fa-check"></span><s:message code="common.msg.use"/>
@@ -716,8 +716,8 @@
 								</label>
 								<input type="hidden" name="useYnNm" id="hiddenUseYn">
 							</div>
-							<div class="form-group form-inline" style="border-bottom: 1px solid #e5e5e5;">
-								<label for="dashComment" class="control-label col-xs-4"><s:message code="common.msg.comment"/></label>
+							<div  style="border-bottom: 1px solid #e5e5e5;">
+								<label for="dashComment" class=" col-xs-4"><s:message code="common.msg.comment"/></label>
 								<input type="text" class="form-control" name="dashComment" id="dashComment" placeholder='<s:message code="filterInfo.comment"/>' style="width: 250px;" maxlength="50">
 							</div>
 							<br/>

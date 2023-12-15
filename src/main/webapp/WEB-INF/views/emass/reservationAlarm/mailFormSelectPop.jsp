@@ -88,7 +88,7 @@ function getData() {
 				<div class="row" style="margin-top: 30px;">
 					<div class="col-sm-12" style="height: 100%;">
 						<div class="form-inline not-dashed">
-							<label for="formContent" class="control-label col-xs-4" style="padding-left: 5px;"><s:message code="mail.form.content"/></label>
+							<label for="formContent" class=" col-xs-4" style="padding-left: 5px;"><s:message code="mail.form.content"/></label>
 							<textarea class="form-control" style="width:100%; height: 300px; margin-top: 5px; background-color: #f8f6f6; margin-left: 1px;" name="formContent" id="formContent" readonly="readonly"></textarea>
 						</div>
 					</div>

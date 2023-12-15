@@ -142,7 +142,7 @@ function getShareAdmin() {
 					</div>
 					<div class="modal-body">
 						<div class="form-group">
-							<label for="attachTypePopInput" class="control-label"><s:message code="selectCodeAll.date"/></label>
+							<label for="attachTypePopInput" class=""><s:message code="selectCodeAll.date"/></label>
 							<div class='input-group date' id='datePicker'>
 								<input type='text' class="input-sm form-control" id='date' />
 								<span class="input-group-addon"> <span class="glyphicon glyphicon-calendar"></span>
@@ -150,7 +150,7 @@ function getShareAdmin() {
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="attachDescPopInput" class="control-label"><s:message code="common.msg.comment"/></label>
+							<label for="attachDescPopInput" class=""><s:message code="common.msg.comment"/></label>
 							<input type="text" class="form-control" name="comment" id="comment" placeholder="<s:message code="common.msg.comment"/>" required>
 						</div>
 					</div>

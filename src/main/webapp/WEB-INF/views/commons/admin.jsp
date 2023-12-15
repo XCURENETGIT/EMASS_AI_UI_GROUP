@@ -785,8 +785,8 @@
 								</div>
 							</div>
 							<!--  부서권한
-								<div class="form-group form-inline">
-									<label for="deptCd" class="control-label col-xs-4"><s:message code="common.org.dept"/></label>
+								<div >
+									<label for="deptCd" class=" col-xs-4"><s:message code="common.org.dept"/></label>
 									<button type="button" class="btn btn-primary selBtn btn-sm" id="dept" disabled="disabled"><s:message code="common.msg.select"/></button>
 									<input type="text" id="deptText" name="deptText" class="ellipsis" style="border: 0px; background-color: #fff;" disabled="disabled" />
 									<input type="hidden" name="deptCd" id="deptHidden" />

@@ -416,7 +416,7 @@
 		<div style="height:25px;">
 			<s:message code="filterInfo.message.period"/>
 		</div>
-		<div class="form-group form-inline" style="width:100%;">
+		<div  style="width:100%;">
 			<div class="input-group" style="width:50px;font-weight: bold;">
 				<s:message code="condition.period"/>
 			</div>
@@ -454,11 +454,11 @@
 			<span><s:message code="filterInfo.msg.msgInfo"/></span>
 		</div>
 		<div class="form-inline">
-			<label for="filterNamePopInput" class="control-label filterHeader2"><s:message code="condition.name"/></label>
+			<label for="filterNamePopInput" class=" filterHeader2"><s:message code="condition.name"/></label>
 			<input type="text" class="form-control" style="width:380px;" name="attachName" id="filterNamePopInput" placeholder="<s:message code="condition.name"/>" required maxlength="128">
 		</div>
 		<div class="form-inline" id="periodSetupPop">
-			<label for="datePopArea" class="control-label filterHeader2"><s:message code="condition.period"/></label>
+			<label for="datePopArea" class=" filterHeader2"><s:message code="condition.period"/></label>
 			<div id="datePopArea" style="padding-right:15px;">
 				<select name="searchArea" class="condition_select" id="filterOptionPopSelect">
 					<option value="1"><s:message code="condition.period.default"/></option>
@@ -468,7 +468,7 @@
 			</div>
 		</div>
 		<div class="form-inline" id="periodSetupDatePop">
-			<label for="dateSelectArea" class="control-label filterHeader2"><s:message code="condition.period.setting"/></label>
+			<label for="dateSelectArea" class=" filterHeader2"><s:message code="condition.period.setting"/></label>
 			<div id="dateSelectArea">
 				<div id="normalDateArea">
 					<div class="input-group date col-xs-3" id="startdatepickerPop">
@@ -508,7 +508,7 @@
 				</div>
 				<div class="modal-body">
 					<div class="form-inline">
-						<label for="ruleFile" class="control-label col-xs-3" style="vertical-align: bottom;"><s:message code="didBlock.select.file"/></label>
+						<label for="ruleFile" class=" col-xs-3" style="vertical-align: bottom;"><s:message code="didBlock.select.file"/></label>
 						<div id="ruleFile_div">
 							<input type="file" class="form-control" name="file" id="file" style="width: 300px;">
 						</div>
@@ -535,7 +535,7 @@
 			</div>
 			<div class="modal-body">
 				<div class="form-inline" id="saveFolderPathPopDiv">
-					<label for="savePathPopArea" class="control-label col-xs-2"><s:message code="condition.savepath"/></label>
+					<label for="savePathPopArea" class=" col-xs-2"><s:message code="condition.savepath"/></label>
 					<div class="form-control" id="saveFolderPathPopArea" style="height:350px;width:500px;">
 						<ul id="folderTreePop" class="ztree scrollbar" style="height:100%;width:100%;overflow:auto;"></ul>
 					</div>

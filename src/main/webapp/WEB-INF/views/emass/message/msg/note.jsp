@@ -665,7 +665,7 @@
 				</div>
 			</div>
 			<div style="background-color: #eee; margin-top: 5px;">
-				<div class="form-group form-inline" style="padding-left: 10px;">
+				<div  style="padding-left: 10px;">
 					<div class="input-group select-xs" style="width:98px">
 						<select name="searchArea" class="selectpicker" id="easyDate" data-style="btn-default btn-sm">
 							<option value="" selected="selected"><s:message code="condition.select.period"/></option>
@@ -675,7 +675,7 @@
 							<option value="6"><s:message code="condition.month" arguments="1"/></option>
 						</select>
 					</div>
-					<div class="form-group form-inline" style="padding-right:5px;">
+					<div  style="padding-right:5px;">
 						<div class="input-group">
 							<div class="input-group date" id="startdatepicker">
 								<input type="text" id="startDt" class="input-sm form-control border-radius-none" style="width: 150px;" />

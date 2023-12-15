@@ -226,7 +226,7 @@ function getParticipantInfo(){
 				<s:message code="common.messenger.msg2"/><br/>
 				<s:message code="common.messenger.msg3"/><br/>
 			</div>
-			<div class="form-group form-inline" style="width:100%;">
+			<div  style="width:100%;">
 				<div class="input-group" style="width:50px;font-weight: bold;">
 					<s:message code="condition.period"/>
 				</div>

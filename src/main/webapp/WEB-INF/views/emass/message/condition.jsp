@@ -385,11 +385,11 @@ function openCodeWindow(id, oldCode, oldConm){
 			</div>
 			<div class="modal-body">
 				<div class="form-inline">
-					<label for="filterNamePopInput" class="control-label col-xs-2"><s:message code="condition.name"/></label>
+					<label for="filterNamePopInput" class=" col-xs-2"><s:message code="condition.name"/></label>
 					<input type="text" class="form-control" style="width:460px;" name="attachName" id="filterNamePopInput" placeholder="<s:message code="condition.name"/>" required maxlength="128">
 				</div>
 				<div class="form-inline">
-					<label for="datePopArea" class="control-label col-xs-2"><s:message code="condition.period"/></label>
+					<label for="datePopArea" class=" col-xs-2"><s:message code="condition.period"/></label>
 					<div id="datePopArea" style="padding-right:15px;">
 						<select class="selectpicker col-xs col-xs-3" id="filterOptionPopSelect">
 							<option value="1"><s:message code="condition.period.default"/></option>
@@ -418,7 +418,7 @@ function openCodeWindow(id, oldCode, oldConm){
 					</div>
 				</div>
 				<div class="form-inline" id="dashboardSetup" style="display: none;">
-					<label for="dashboardsetupArea" class="control-label col-xs-2"><s:message code="condition.dashboard.setting"/></label>
+					<label for="dashboardsetupArea" class=" col-xs-2"><s:message code="condition.dashboard.setting"/></label>
 					<div class="btn-group filterBtn" data-toggle="buttons" id="dashboardsetupArea">
 						<label class="btn btn-sm btn-default active"><input type="radio" name="dashboardSelPop" value="" checked> <s:message code="condition.unselect"/></label>
 						<label class="btn btn-sm btn-default"><input type="radio" name="dashboardSelPop" value="user.filter1"> <s:message code="condition.position" arguments="1" argumentSeparator="|"/></label>
@@ -431,27 +431,27 @@ function openCodeWindow(id, oldCode, oldConm){
 					</div>
 				</div>
 				<div class="form-inline">
-					<label for="filterTypeArea" class="control-label col-xs-2"> <s:message code="condition.filter_type"/></label>
+					<label for="filterTypeArea" class=" col-xs-2"> <s:message code="condition.filter_type"/></label>
 					<div class="btn-group filterBtn" data-toggle="buttons" id="filterTypeArea">
 						<label class="btn btn-sm btn-default active"><input type="radio" name="filterTypePop" value="D" checked> <s:message code="condition.condition_filter"/></label>
 						<label class="btn btn-sm btn-default"><input type="radio" name="filterTypePop" value="Q"> <s:message code="condition.advance_filter"/></label>
 					</div>
 				</div>
 				<div class="form-inline" id="selectQueryPopArea">
-					<label for="queryDataArea" class="control-label col-xs-2"><s:message code="condition.advance"/></label>
+					<label for="queryDataArea" class=" col-xs-2"><s:message code="condition.advance"/></label>
 					<div class="btn-group filterBtn" data-toggle="buttons" id="queryDataArea">
 						<textarea rows="5" id="queryInputTextareaPop" style="width:700px;padding:10px;"></textarea>
 					</div>
 				</div>
 				<div class="form-inline" id="selectConditionPopArea">
 					<div class="form-inline" id="savePathPopDiv" style="display:none;">
-						<label for="savePathPopArea" class="control-label col-xs-2"><s:message code="condition.savepath"/></label>
+						<label for="savePathPopArea" class=" col-xs-2"><s:message code="condition.savepath"/></label>
 						<div class="form-control" id="savePathPopArea" style="height:350px;width:700px;">
 							<ul id="filterTreePop" class="ztree scrollbar" style="height:100%;width:100%;overflow:auto;"></ul>
 						</div>
 					</div>
 					<div class="form-inline" id="selectConditionPopDiv">
-						<label for="selectedConditionPopArea" class="control-label col-xs-2"><s:message code="condition.filter_setting"/></label>
+						<label for="selectedConditionPopArea" class=" col-xs-2"><s:message code="condition.filter_setting"/></label>
 						<div class="form-control" id="selectedConditionPopArea" style="height:430px;width:950px;">
 							<div id="selectedCodeTitlePop"></div>
 							<table class="table table-bordered" style="margin-bottom:0;width:100%;">
@@ -763,7 +763,7 @@ function openCodeWindow(id, oldCode, oldConm){
 			</div>
 			<div class="modal-body">
 				<div class="form-inline" id="saveFolderPathPopDiv">
-					<label for="savePathPopArea" class="control-label col-xs-2"><s:message code="condition.savepath"/></label>
+					<label for="savePathPopArea" class=" col-xs-2"><s:message code="condition.savepath"/></label>
 					<div class="form-control" id="saveFolderPathPopArea" style="height:350px;width:500px;">
 						<ul id="folderTreePop" class="ztree scrollbar" style="height:100%;width:100%;overflow:auto;"></ul>
 					</div>

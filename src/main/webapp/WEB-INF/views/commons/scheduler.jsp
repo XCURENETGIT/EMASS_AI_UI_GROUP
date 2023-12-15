@@ -60,7 +60,7 @@ function getData(lastRow) {
 			<div class="content_body">
 				<div class="row">
 					<div class="col-xs-8 text-left">
-						<div class="form-group form-inline">
+						<div >
 							<div class="btn-group">
 								<button type="button" class="btn btn-success btn-sm" accesskey="Q" id="searchBtn"><span title="refresh" class="glyphicon glyphicon-repeat"></span> REFRESH</button>
 							</div>

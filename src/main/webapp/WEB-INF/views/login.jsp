@@ -353,15 +353,15 @@
 			</div>
 			<div class="modal-body">
 				<div class="form-inline" id="secretKeyRow" style="border-bottom: 1px dashed #eee;padding: 7px 0px;">
-					<label for="secretKey" class="control-label col-xs-4"><s:message code="login.google.otp.secretKey"/></label>
+					<label for="secretKey" class=" col-xs-4"><s:message code="login.google.otp.secretKey"/></label>
 					<input type="text" class="form-control" id="secretKey" placeholder="<s:message code="login.google.otp.secretKey"/>" disabled>
 				</div>
 				<div class="form-inline" id="otpQRrow" style="border-bottom: 1px dashed #eee;padding: 7px 0px;">
-					<label for="googleOTPqr" class="control-label col-xs-4" style="margin-top:45px;"><s:message code="login.google.otp.qrcode"/></label>
+					<label for="googleOTPqr" class=" col-xs-4" style="margin-top:45px;"><s:message code="login.google.otp.qrcode"/></label>
 					<img id="googleOTPqr" style="width:100px; height:100px;" alt="Google OTP"/>
 				</div>
 				<div class="form-inline" style="border-bottom: 1px dashed #eee;padding: 7px 0px;">
-					<label for="pinCode" class="control-label col-xs-4"><s:message code="login.google.otp.pin"/></label>
+					<label for="pinCode" class=" col-xs-4"><s:message code="login.google.otp.pin"/></label>
 					<input type="text" class="form-control" id="pinCode" placeholder="<s:message code="login.google.otp.pin"/>">
 				</div>
 				<div class="form-inline" id="otpMessage" style="border-bottom: 1px dashed #eee;padding: 7px 0px;"></div>
@@ -386,15 +386,15 @@
 			</div>
 			<div class="modal-body">
 				<div class="form-inline" style="border-bottom: 1px dashed #eee;padding: 7px 0px;">
-					<label for="attachTypePopInput" class="control-label col-xs-4"><s:message code="login.current.password"/></label>
+					<label for="attachTypePopInput" class=" col-xs-4"><s:message code="login.current.password"/></label>
 					<input type="password" class="form-control" id="current_password" placeholder="<s:message code="login.current.password"/>" required autocomplete="off">
 				</div>
 				<div class="form-inline" style="border-bottom: 1px dashed #eee;padding: 7px 0px;">
-					<label for="attachDescPopInput" class="control-label col-xs-4"><s:message code="login.change.password"/></label>
+					<label for="attachDescPopInput" class=" col-xs-4"><s:message code="login.change.password"/></label>
 					<input type="password" class="form-control" id="change_password" placeholder="<s:message code="login.change.password"/>" required autocomplete="off">
 				</div>
 				<div class="form-inline" style="border-bottom: 1px dashed #eee;padding: 7px 0px;">
-					<label for="attachDescPopInput" class="control-label col-xs-4"><s:message code="login.confirm.password"/></label>
+					<label for="attachDescPopInput" class=" col-xs-4"><s:message code="login.confirm.password"/></label>
 					<input type="password" class="form-control" id="current_confirm_password" placeholder="<s:message code="login.confirm.password"/>" required autocomplete="off">
 				</div>
 			</div>

@@ -167,7 +167,7 @@ function getData() {
 					<div class="modal-body">
 						<div class="row form-inline">
 							<div class="col-xs-12 text-left">
-								<label for="formSubjectSel" class="control-label col-xs-3" style="padding-left: 0px;"><s:message code="mail.form.subject"/></label>
+								<label for="formSubjectSel" class=" col-xs-3" style="padding-left: 0px;"><s:message code="mail.form.subject"/></label>
 							</div>
 						</div>
 						<div class="form-inline top_space not-dashed">
@@ -185,7 +185,7 @@ function getData() {
 						</div>
 						<div class="row form-inline" style="margin-top: 10px;">
 							<div class="col-xs-12 text-left">
-								<label for="formContentSel" class="control-label col-xs-3" style="padding-left: 0px;"><s:message code="mail.form.content"/></label>
+								<label for="formContentSel" class=" col-xs-3" style="padding-left: 0px;"><s:message code="mail.form.content"/></label>
 							</div>
 						</div>
 						<div class="form-inline top_space not-dashed">
@@ -225,7 +225,7 @@ function getData() {
 						</div>
 						<div class="row form-inline" style="margin-top: 10px;">
 							<div class="col-xs-12 text-left">
-								<label for="formComment" class="control-label col-xs-3" style="padding-left: 0px;"><s:message code="mail.form.comment"/></label>
+								<label for="formComment" class=" col-xs-3" style="padding-left: 0px;"><s:message code="mail.form.comment"/></label>
 							</div>
 						</div>
 						<div class="form-inline top_space not-dashed">

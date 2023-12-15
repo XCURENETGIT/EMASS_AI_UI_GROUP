@@ -2872,7 +2872,7 @@ function openNologUrlPop(host_path){
 								</tr>
 								<tr style="font-weight: bold;">
 									<th>
-										<label for="ruleFile" class="control-label" style="vertical-align: bottom;line-height:35px;">¤ <s:message code="download.msg.file.count"/></label>
+										<label for="ruleFile" class="" style="vertical-align: bottom;line-height:35px;">¤ <s:message code="download.msg.file.count"/></label>
 									</th>
 									<td>
 										<select id="dataLength_select" class="selectpicker" data-style="btn-default">

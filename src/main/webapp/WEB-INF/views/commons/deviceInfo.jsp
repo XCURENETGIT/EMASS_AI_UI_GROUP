@@ -371,20 +371,20 @@ function getDeviceStatus(deviceIp){
 						</fieldset>
 					</div>
 					<div id="deviceIpDiv" class="form-inline">
-						<label for="deviceIp" class="control-label col-xs-3">IP</label>
+						<label for="deviceIp" class=" col-xs-3">IP</label>
 						<input type="text" class="form-control" name="deviceIp" id="deviceIp" placeholder="IP" style="width: 400px;" required maxlength="64">
 					</div>
 					<div class="form-inline">
-						<label for="deviceNm" class="control-label col-xs-3"><s:message code="common.msg.name"/></label>
+						<label for="deviceNm" class=" col-xs-3"><s:message code="common.msg.name"/></label>
 						<input type="text" class="form-control" name="deviceNm" id="deviceNm" placeholder="<s:message code="common.msg.name"/>" style="width: 400px;" required maxlength="256">
 					</div>
 					<div class="form-inline">
-						<label for="comment" class="control-label col-xs-3"><s:message code="common.msg.comment"/></label>
+						<label for="comment" class=" col-xs-3"><s:message code="common.msg.comment"/></label>
 						<input type="text" class="form-control" name="comment" id="comment" placeholder="<s:message code="common.msg.comment"/>" style="width: 400px;" required maxlength="512">
 						<input type="hidden" id="devSeqHidden" name="deviceSeq">
 					</div>
 					<div id="alertDiv" class="form-inline" style="display:none;">
-						<label for="alertDeviceCC" class="control-label col-xs-12"><s:message code="deviceInfo.set.critical.default"/></label>
+						<label for="alertDeviceCC" class=" col-xs-12"><s:message code="deviceInfo.set.critical.default"/></label>
 						<img src="<c:url value="/img/alertDeviceCC.png"/>" style="width: 560px; height: 200px;">
 					</div>
 				</div>

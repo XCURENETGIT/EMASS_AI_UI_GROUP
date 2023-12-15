@@ -1523,7 +1523,7 @@ function initEpmsg(){
 									<tr id="ctimeTr">
 										<th><s:message code="condition.period"/></th>
 										<td>
-											<div class="form-group form-inline" style="float:left;width:320px;">
+											<div  style="float:left;width:320px;">
 												<div class="input-group">
 													<div class="input-group date" id="startdate" style="width:150px;">
 														<input type="text" id="queryStartDt" class="input-xs form-control border-radius-none" />
@@ -1965,7 +1965,7 @@ function initEpmsg(){
 									<tr>
 										<th><s:message code="filterInfo.size"/></th>
 										<td>
-											<div class="form-group form-inline" style="float:left;width:320px;">
+											<div  style="float:left;width:320px;">
 												<select class="input-xs border-radius-none" id="sizeFilterType" style="padding: 0px;">
 													<option value=""><s:message code="condition.size.all"/></option>
 													<option value="B"><s:message code="condition.size.body"/></option>

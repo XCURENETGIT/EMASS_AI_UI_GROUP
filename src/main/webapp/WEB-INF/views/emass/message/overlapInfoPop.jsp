@@ -753,7 +753,7 @@ function drawGrid() {
 								</tr>
 								<tr style="font-weight: bold;">
 									<th>
-										<label for="ruleFile" class="control-label" style="vertical-align: bottom;line-height:35px;">¤ <s:message code="download.msg.file.count"/></label>
+										<label for="ruleFile" class="" style="vertical-align: bottom;line-height:35px;">¤ <s:message code="download.msg.file.count"/></label>
 									</th>
 									<td>
 										<select id="dataLength_select" class="selectpicker" data-style="btn-default">
@@ -804,7 +804,7 @@ function drawGrid() {
 				</div>
 				<div class="modal-body">
 					<div class="form-inline" id="saveFolderPathPopDiv">
-						<label for="savePathPopArea" class="control-label col-xs-2"><s:message code="condition.savepath"/></label>
+						<label for="savePathPopArea" class=" col-xs-2"><s:message code="condition.savepath"/></label>
 						<div class="form-control" id="saveFolderPathPopArea" style="height:350px;width:500px;">
 							<ul id="folderTreePop" class="ztree scrollbar" style="height:100%;width:100%;overflow:auto;"></ul>
 						</div>

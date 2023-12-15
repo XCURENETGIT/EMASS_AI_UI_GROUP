@@ -1003,7 +1003,7 @@
 						<div>
 							<div style="display: flex;">
 
-								<div class="form-group form-inline" style="padding-right:5px;">
+								<div  style="padding-right:5px;">
 									<div class="input-group">
 										<div class="input-group date" id="startdatepicker">
 											<input type="text" id="startDt" class="input-sm form-control border-radius-none" style="width: 150px;"/>

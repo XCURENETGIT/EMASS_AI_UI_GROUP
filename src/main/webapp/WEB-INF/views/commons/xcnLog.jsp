@@ -92,7 +92,7 @@ function getData(lastRow) {
 					<div class="content_body" style="height:100%;">
 						<div class="row" style="line-height: 0px;">
 							<div class="col-xs-8 text-left">
-								<div class="form-group form-inline">
+								<div >
 									<div class='input-group date' id='startDatePicker'>
 										<input type='text' class="input-sm form-control" id='startDt' />
 										<span class="input-group-addon"> <span class="glyphicon glyphicon-calendar"></span>

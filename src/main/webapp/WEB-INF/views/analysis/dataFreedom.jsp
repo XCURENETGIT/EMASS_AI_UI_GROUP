@@ -179,7 +179,7 @@ $(document).ready(function(){
 									<i class="fa fa-file-text-o fa-fw"></i> <span>LIST</span>
 								</div>
 								<div class="panel-body" style="height: calc(100% - 38px); padding: 10px;">
-									<div class="form-group form-inline" id="termsData"></div>
+									<div  id="termsData"></div>
 									<div class="zero-clipboard" style="margin-top: 30px;">
 										<span id="termsPopover" class="btn-popover">
 											<a tabindex="0" class="btn btn-xs" role="button" data-toggle="popover" data-container="#termsPopover" data-html="true" data-placement="bottom" title="<s:message code="analysis.freedom.ui.dest"/>"><span class="glyphicon glyphicon-question-sign"></span></a>
@@ -290,7 +290,7 @@ $(document).ready(function(){
 									<i class="fa fa-file-text-o fa-fw"></i> <span><s:message code="analysis.freedom.ui.column"/></span>
 								</div>
 								<div class="panel-body" style="height: calc(100% - 38px); padding: 10px;">
-									<div class="form-group form-inline" id="columnData"></div>
+									<div  id="columnData"></div>
 									<div class="zero-clipboard" style="margin-top: 30px;">
 										<span id="columnPopover" class="btn-popover">
 											<a tabindex="0" class="btn btn-xs" role="button" data-toggle="popover" data-container="#columnPopover" data-html="true" data-placement="bottom" title="<s:message code="analysis.freedom.ui.columnexam"/>"><span class="glyphicon glyphicon-question-sign"></span></a>
@@ -330,7 +330,7 @@ $(document).ready(function(){
 									<i class="fa fa-file-text-o fa-fw"></i> <span><s:message code="analysis.freedom.ui.data"/></span>
 								</div>
 								<div class="panel-body" style="height: calc(100% - 38px); padding: 10px;">
-									<div class="form-group form-inline" id="dataData"></div>
+									<div  id="dataData"></div>
 									<div class="zero-clipboard" style="margin-top: 30px;">
 										<span id="dataPopover" class="btn-popover">
 											<a tabindex="0" class="btn btn-xs" role="button" data-toggle="popover" data-container="#dataPopover" data-html="true" data-placement="bottom" title="<s:message code="analysis.freedom.ui.exam15"/>"><span class="glyphicon glyphicon-question-sign"></span></a>
@@ -389,7 +389,7 @@ $(document).ready(function(){
 					</div>
 					<div class="panel panel-default" style="height:150px;padding-left:40px;margin-bottom:15px;overflow-y:auto;">
 						<div class="panel-body" style="height: 100%;">
-							<div class="form-group form-inline" id="dataData">
+							<div  id="dataData">
 							</div>
 						</div>
 					</div>
@@ -413,7 +413,7 @@ $(document).ready(function(){
 					</div>
 					<div class="panel panel-default" style="height:150px;padding-top:0;margin-bottom:15px;">
 						<div class="panel-body" style="height: 100%;">
-							<div class="form-group form-inline" id="chartData">
+							<div  id="chartData">
 								<div class="row">
 									<div class="col-lg-6" style="padding-left:0px;padding-right:0px;text-align:center;">
 										<img src="<c:url value="/img/icon/area.bmp"/>" width="30" height="30" style="cursor:pointer;" onclick="javascript:search('area');"/>

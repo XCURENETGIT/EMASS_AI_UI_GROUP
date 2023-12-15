@@ -1022,7 +1022,7 @@ function preventEnter(e){
 				</div>
 				<div class="modal-body">
 					<div class="form-group">
-						<label for="fileSendPopInput" class="control-label"><s:message code="dashboard.file_size"/> (<s:message code="stat.traffic.unit2"/>)</label>
+						<label for="fileSendPopInput" class=""><s:message code="dashboard.file_size"/> (<s:message code="stat.traffic.unit2"/>)</label>
 						<input type="text" class="form-control" name="fileSize" id="fileSendPopInput" placeholder="<s:message code="dashboard.file_size"/>" required onkeydown="return preventEnter(event);">
 					</div>
 				</div>
@@ -1047,7 +1047,7 @@ function preventEnter(e){
 				</div>
 				<div class="modal-body">
 					<div class="form-group">
-						<label for="devStatusPopSelect" class="control-label"><s:message code="dashboard.select.device"/></label>
+						<label for="devStatusPopSelect" class=""><s:message code="dashboard.select.device"/></label>
 						<div id="devStatusPopSelect">
 						
 						</div>

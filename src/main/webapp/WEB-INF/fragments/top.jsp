@@ -55,15 +55,15 @@
             </div>
             <div class="modal-body">
                 <div class="form-inline" style="border-bottom: 1px dashed #eee;padding: 7px 0px;">
-                    <label for="attachTypePopInput" class="control-label col-xs-5"><s:message code="base.current.pw"/></label>
+                    <label for="attachTypePopInput" class=" col-xs-5"><s:message code="base.current.pw"/></label>
                     <input type="password" class="form-control" style="width:250px;" id="current_password" placeholder="<s:message code="base.current.pw"/>" required autocomplete="off">
                 </div>
                 <div class="form-inline" style="border-bottom: 1px dashed #eee;padding: 7px 0px;">
-                    <label for="attachDescPopInput" class="control-label col-xs-5"><s:message code="base.changed.pw"/></label>
+                    <label for="attachDescPopInput" class=" col-xs-5"><s:message code="base.changed.pw"/></label>
                     <input type="password" class="form-control" style="width:250px;" id="change_password" placeholder="<s:message code="base.changed.pw"/>" required autocomplete="off">
                 </div>
                 <div class="form-inline" style="border-bottom: 1px dashed #eee;padding: 7px 0px;">
-                    <label for="attachDescPopInput" class="control-label col-xs-5"><s:message code="base.changeconfirm.pw"/></label>
+                    <label for="attachDescPopInput" class=" col-xs-5"><s:message code="base.changeconfirm.pw"/></label>
                     <input type="password" class="form-control" style="width:250px;" id="current_confirm_password" placeholder="<s:message code="base.changeconfirm.pw"/>" required autocomplete="off">
                 </div>
             </div>
