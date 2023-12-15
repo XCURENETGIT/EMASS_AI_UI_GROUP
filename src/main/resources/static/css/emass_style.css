@@ -150,10 +150,10 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 
 /*
 #contentArea .content .contentSub .chartArea div ul li {border:1px solid #ddd; border-radius:2px ;  background-color:#fff ; width:32%; float:left; margin-right:1%;}*/
-.searchArea{ position: relative;padding:0 20px;overflow: hidden;margin-bottom:12px; overflow: hidden;clear: both;}
-.searchArea .searchSub {position: relative; width:80%; float:left; overflow: hidden; }
-.searchArea .searchSub div {float:left; display: inline-block;margin-bottom:8px;margin-right:8px;}
-.searchArea .btnList {text-align:right; float:right; width:20%;}
+#contentArea .searchArea{ position: relative;padding:0 20px;overflow: hidden;margin-bottom:12px; overflow: hidden;clear: both;}
+#contentArea .searchArea .searchSub {position: relative; width:80%; float:left; overflow: hidden; }
+#contentArea .searchArea .searchSub div {float:left; display: inline-block;margin-bottom:8px;margin-right:8px;}
+#contentArea .searchArea .btnList {text-align:right; float:right; width:20%;}
 
 .myDropdown { position: relative; display: inline-block; cursor: pointer; color: #fff; font-size: 13px;z-index: 9999;}
 .dropdown-content {margin-top:1px; display: none; position: absolute; left:50%; margin-left:-70px; background-color: #fff; min-width: 140px; border-radius:2px; box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);}
