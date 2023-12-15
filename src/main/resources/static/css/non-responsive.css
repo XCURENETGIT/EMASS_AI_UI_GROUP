@@ -176,7 +176,7 @@ body,
   width: 100%;
 }
 
-.navbar-form .control-label {
+.navbar-form . {
   margin-bottom: 0;
   vertical-align: middle;
 }
@@ -235,7 +235,7 @@ body,
   width: 100%;
 }
 
-.form-inline .control-label {
+.form-inline . {
   margin-bottom: 0;
   vertical-align: middle;
 }
