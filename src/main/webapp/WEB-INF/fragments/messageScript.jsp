@@ -1094,15 +1094,7 @@
     return Math.floor(val * 100);
   }
 </script>
-<script for="InnoFD" event="OnDownloadComplete">
-  document.InnoFD.RemoveAllFiles( );
-  ui.alertMsg("<s:message code="common.msg.down.complete"/>", null, 2000);
-</script>
 
-<script for="InnoFD" event="OnDownloadError">
-  document.InnoFD.RemoveAllFiles( );
-  ui.alertMsg("<s:message code="common.msg.down.error"/>", null, 2000);
-</script>
 <div class="modal fade" id="TheFirstChangePw" tabindex="-1" role="dialog" aria-labelledby="TheFirstChangePwModal" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog" role="document">
     <div class="modal-content">

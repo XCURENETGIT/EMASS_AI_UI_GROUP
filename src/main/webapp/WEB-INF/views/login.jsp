@@ -1,10 +1,3 @@
-<%@ page import="com.xcurenet.common.util.config.Config" %>
-<%@ page import="com.xcurenet.common.util.Common" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
-<%@ page import="com.xcurenet.common.util.Common" %>
-<%@ page import="com.xcurenet.common.util.config.Config" %>
-<%@ page import="java.util.Locale" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/fragments/loginScript.jsp"%>
 <!DOCTYPE html>
@@ -26,8 +19,6 @@
 		}
 		String locale = Config.getString("default.lang");
 	%>
-
-
 
 
 	<style type="text/css">

@@ -18,7 +18,9 @@
   if(request.getRequestURI().toString().indexOf("login.jsp") == -1) adminLanguage = Common.nvl(session.getAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME), "ko");
 
 %>
-
+<link rel="stylesheet" href="<c:url value="/css/bootstrap-dialog.css"/>" />
+<link rel="stylesheet" href="<c:url value="/css/sb-admin-2.css"/>" />
+<link rel="stylesheet" href="<c:url value="/css/panelsTab.css"/>" />
 <link rel="stylesheet" href="<c:url value="/css/emass_style.css"/>" />
 <link rel="stylesheet" href="<c:url value="/css/reset.css"/>" />
 <script type="text/javascript" src="<c:url value="/js/jquery.js"/>"></script>
@@ -29,7 +31,7 @@
 <script type="text/javascript" src="<c:url value="/js/xcnui_en.js"/>"></script>
 <%}%>
 
-
+<script type="text/javascript" src="<c:url value="/js/sb-admin-2.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/xcnui_2.0.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/sha256.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/jsbn.js"/>"></script>
