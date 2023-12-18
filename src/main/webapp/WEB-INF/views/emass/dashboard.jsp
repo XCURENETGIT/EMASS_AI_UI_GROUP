@@ -36,6 +36,7 @@
         getTodayPatternPrivacy();
         getFileSendTotal();
         getServiceDataLogging();
+        getFile();
 
     })
     // 금일 예약어 합계
@@ -165,12 +166,56 @@
         });
     }
 
+    //첨부파일 수집 현황
+    var getFileSetTime;
+    function getFile() {
+        if (getFileSetTime != null) window.clearTimeout(getFileSetTime);
+        ui.get({
+            url: 'getTodayFile.xcn',
+            success: function (data, total) {
+
+            },
+            error: function (status, message) {
+                //ui.alertMsg(message);
+            },
+            complete: function () {
+                getFileSetTime = window.setTimeout(function () {
+                    getFile();
+                }, updateTime);
+            }
+        });
+    }
+
+
+    // //금일 패턴 수집 건수
+    // var getServicePatternSetTime;
+    // function getServiceDataLogging() {
+    //
+    //     if (getServicePatternSetTime != null) window.clearTimeout(getServicePatternSetTime);
+    //     ui.get({
+    //         url: 'getAllTodayPatternPrivacy.xcn',
+    //         success: function (data, total) {
+    //             // console.log(data.facet);
+    //
+    //         },
+    //         error: function (status, message) {
+    //             //ui.alertMsg(message);
+    //         },
+    //         complete: function () {
+    //             getServicePatternSetTime = window.setTimeout(function () {
+    //                 getServiceDataLogging();
+    //             }, updateTime);
+    //         }
+    //     });
+    // }
+
 
     var chart = null;
+
     function printChart(data) {
         $('#svcDataChart').html('');
 
-        if(data.length == 0 ) {
+        if (data.length == 0) {
             $('#svcDataChart').html('<s:message code="dashboard.message.nodata.today"/>');
             return;
         }
@@ -185,10 +230,10 @@
                     viewDistance: 25
                 }
             },
-            exporting : {
+            exporting: {
                 enabled: false
             },
-            credits : {
+            credits: {
                 enabled: false
             },
             title: {
@@ -203,11 +248,11 @@
                         fontSize: '13px',
                         fontFamily: 'DINLig, Verdana, sans-serif'
                     }
-                },gridLineWidth: 0
+                }, gridLineWidth: 0
             },
             yAxis: {
                 type: 'logarithmic',
-                min:1,
+                min: 1,
                 title: {
                     text: '(<s:message code="common.msg.count"/>)',
                     rotation: 0
@@ -279,49 +324,102 @@
 		<%--금일 데이터 수집 건수 끝 ~~ --%>
 		<%--				금일 패턴 수집 건수--%>
 
-			<div class="m_chartArea">
-				<div>
-					<h3>금일 패턴 수집 건수</h3>
-					<div class="mainlist">
-						<div>
-							<span class="tit07">여권번호 <span class="red_dot"></span> </span>
-<%--							<p class="blue">9,199,999<span class="text">건</span></p>--%>
-						</div>
-						<div>
-							<span class="tit08">운전면허번호</span>
-<%--							<p class="blue">99,999<span class="text">건</span></p>--%>
-						</div>
-						<div>
-							<span class="tit09">외국인등록번호</span>
-<%--							<p class="blue">199,999<span class="text">건</span></p>--%>
-						</div>
-						<div>
-							<span class="tit10">주민번호</span>
-<%--							<p class="blue">99,999<span class="text">건</span></p>--%>
-						</div>
-						<div>
-							<span class="tit11">카드번호</span>
-<%--							<p class="blue">199,999<span class="text">건</span></p>--%>
-						</div>
-						<div>
-							<span class="tit12">확장자 변조 파일 <span class="red_dot"></span> </span>
-<%--							<p class="blue">99,999<span class="text">건</span></p>--%>
-						</div>
+		<div class="m_chartArea">
+			<div>
+				<h3>금일 패턴 수집 건수</h3>
+				<div class="mainlist">
+					<div>
+						<span class="tit07">여권번호 <span class="red_dot"></span> </span>
+						<%--							<p class="blue">9,199,999<span class="text">건</span></p>--%>
+					</div>
+					<div>
+						<span class="tit08">운전면허번호</span>
+						<%--							<p class="blue">99,999<span class="text">건</span></p>--%>
+					</div>
+					<div>
+						<span class="tit09">외국인등록번호</span>
+						<%--							<p class="blue">199,999<span class="text">건</span></p>--%>
+					</div>
+					<div>
+						<span class="tit10">주민번호</span>
+						<%--							<p class="blue">99,999<span class="text">건</span></p>--%>
+					</div>
+					<div>
+						<span class="tit11">카드번호</span>
+						<%--							<p class="blue">199,999<span class="text">건</span></p>--%>
+					</div>
+					<div>
+						<span class="tit12">확장자 변조 파일 <span class="red_dot"></span> </span>
+						<%--							<p class="blue">99,999<span class="text">건</span></p>--%>
 					</div>
 				</div>
 			</div>
-			<%--				금일 패턴 수집 건수 끝!!--%>
-<%--			금일 서비스별 데이터 수집 비율 시작--%>
-			<div class="m_grapha">
-				<div class="graphaBox">
-					<h3>금일 서비스별 데이터 수집 비율</h3>
-					<div class="bordd" id="svcDataChart">
-					</div>
+		</div>
+		<%--				금일 패턴 수집 건수 끝!!--%>
+		<%--			금일 서비스별 데이터 수집 비율 시작--%>
+		<div class="m_grapha">
+			<div class="graphaBox">
+				<h3>금일 서비스별 데이터 수집 비율</h3>
+				<div class="bordd" id="svcDataChart">
 				</div>
 			</div>
 			<%--			금일 서비스별 데이터 수집 비율 끝!!--%>
 
+			<%--			금일 첨부파일 수집 현황 시작!!--%>
+			<div class="graphaBox">
+				<h3>금일 첨부파일 수집 현황</h3>
+				<div class="bordd">
+					<div class="main_tab">
+						<button class="tablink ppt" onclick="openCity('PPT', this, '#E7443A')" id="defaultOpen">PPT</button>
+						<button class="tablink word" onclick="openCity('Word', this, '#3770C3')">Word</button>
+						<button class="tablink excel" onclick="openCity('Excel', this, '#3B9A45')">Excel</button>
+						<button class="tablink pdf" onclick="openCity('PDF', this, '#B7433B')">PDF</button>
+					</div>
+					<div id="PPT" class="tabcontent">
+						<ul>
+							<li>
+								<p>
+									~10MB
+									<span>199,999 건</span>
+								</p>
+							</li>
+							<li>
+								<p>
+									~50MB
+									<span>1 건</span>
+								</p>
+							</li>
+							<li>
+								<p>
+									~100MB
+									<span>9,999 건</span>
+								</p>
+							</li>
+							<li>
+								<p>
+									~150MB
+									<span>77 건</span>
+								</p>
+							</li>
+							<li>
+								<p>
+									~200MB
+									<span>9,999 건</span>
+								</p>
+							</li>
+							<li>
+								<p>
+									~250MB
+									<span>9,999 건</span>
+								</p>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
 
+
+		</div>
 	</div>
 </div>
 
@@ -331,3 +429,65 @@
 <%--	</form>--%>
 
 <%@ include file="./dashboardContent.jsp" %>
+<script>
+
+    function openCity(cityName, elmnt, color) {
+        var i, tabcontent, tablink;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablink");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].style.backgroundColor = "#f5f5f5";
+            tablinks[i].style.color = "black";
+        }
+        document.getElementById(cityName).style.display = "block";
+        elmnt.style.backgroundColor = color;
+        elmnt.style.color = "white";
+
+    }
+
+    // Get the element with id="defaultOpen" and click on it
+    document.getElementById("defaultOpen").click();
+
+</script>
+
+<script>
+    function openCity2(evt, cityName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("text_tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+
+    document.getElementById("defaultOpen2").click();
+
+</script>
+
+<script>
+    function openCity3(evt, cityName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("text_tabcontent2");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks2");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+
+    document.getElementById("defaultOpen3").click();
+
+
+</script>

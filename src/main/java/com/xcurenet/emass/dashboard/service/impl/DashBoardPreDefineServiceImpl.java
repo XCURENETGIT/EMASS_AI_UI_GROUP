@@ -6,15 +6,20 @@ import com.xcurenet.emass.dashboard.service.*;
 import com.xcurenet.emass.message.service.FacetVO;
 import com.xcurenet.emass.message.service.SolrEdcMessageVO;
 import com.xcurenet.emass.message.service.SolrEdcService;
+import com.xcurenet.emass.message.service.SolrEdcVO;
 import com.xcurenet.emass.message.service.impl.SolrEdcServiceImpl;
+import com.xcurenet.emass.message.vo.emass.els.Emass;
 import com.xcurenet.emass.service.service.ServiceGroupVO;
+import net.sf.json.JSONArray;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.common.util.SimpleOrderedMap;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service("dashBoardPreDefineService")
@@ -165,6 +170,7 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		return result;
 	}
 
+
 //	@Override
 //	public ServiceDataLoggingVO getServiceDataLogging(ServiceDataLoggingVO serviceDataLoggingVO) throws IOException, SolrServerException {
 //
@@ -220,14 +226,12 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 	    sq.setRows(0);
 	    SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, patternPrivacyVO.getAdminId());
 	    result.setTotal(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));
-
-
 	    sq.setQuery(query);
 	    sq.setRows(0);
 //	    sq.addFilterQuery(String.format(SolrEdcServiceImpl.JOIN_UNREAD, patternPrivacyVO.getAdminId()));
 	    edc = solrEdcService.getEmassMessage(sq, patternPrivacyVO.getAdminId());
 	    result.setUnRead(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));
-	    return result;
+		return result;
     }
 
     @Override
@@ -265,6 +269,33 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 	    result.setUnRead(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));
 	    return result;
     }
+	@Override
+	public TodayFileVO getTodayFile(TodayFileVO vo) throws SolrServerException, IOException {
+		TodayFileVO result = new TodayFileVO();
+		String query = String.format("+ctime:[%s TO %s]  +attachtype:png", vo.getStartDt(), vo.getEndDt());
+		SolrQuery sq = new SolrQuery();
+		sq.setQuery(query);
+		sq.setRows(0);
+		sq.addFacetField("attachtype");
+
+		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, vo.getAdminId());
+		List<SolrEdcVO> solrEdcVOList = edc.getEmass();
+		result.setTotal(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));
+		sq.setQuery(query);
+		sq.setRows(0);
+		List<List<Object>> items = new ArrayList<>();
+		for (SolrEdcVO solrEdcVO : solrEdcVOList){
+			System.out.println(solrEdcVO);
+			for (Long i : solrEdcVO.getAttachsize()){
+				if (i < 50) {
+
+				}
+			}
+		}
+
+
+		return result;
+	}
 
     @Override
     public ServiceDataLoggingVO getServiceDataLogging(ServiceDataLoggingVO serviceDataLoggingVO) throws IOException, SolrServerException {

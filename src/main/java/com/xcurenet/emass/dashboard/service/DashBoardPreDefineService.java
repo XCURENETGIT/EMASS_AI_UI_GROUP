@@ -21,6 +21,8 @@ public interface DashBoardPreDefineService {
 
 	public InterestUserServiceVO getInterestUserService(final InterestUserServiceVO interestUserServiceVO) throws IOException ;
 
+	public TodayFileVO getTodayFile(TodayFileVO vo) throws SolrServerException, IOException;
+
 	// public DashboardVO getDashboard(final DashboardVO dashboardVO) throws
 	// IOException;
 }

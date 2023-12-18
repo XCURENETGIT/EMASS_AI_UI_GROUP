@@ -61,7 +61,8 @@ public class SolrEdcMessageVO {
 		resp.getSearchHits().stream().map(SearchHit::getContent).forEach(s -> this.emass.add(s));
 		this.setFacet(resp);
 		this.setPivot(resp);
-	//	this.setFacetQuery(resp);
+//		this.setFacetQuery(resp);
+//		if (resp.getAggregations() != null) {
 //		if (resp.getAggregations() != null) {
 //			this.setFacets((SimpleOrderedMap) resp.getAggregations());
 //		}
