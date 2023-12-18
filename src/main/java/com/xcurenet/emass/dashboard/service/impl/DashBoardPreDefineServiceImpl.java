@@ -17,6 +17,7 @@ import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Log4j2
 @Service("dashBoardPreDefineService")
@@ -104,7 +105,7 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 //		return result;
 //	}
 
-    @Override
+	@Override
 	public InterestUserMailVO getInterestUserMail(InterestUserMailVO interestUserMailVO) throws IOException {
 		InterestUserMailVO result = new InterestUserMailVO();
 
@@ -208,10 +209,8 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 
 
 
-    @Override
-    public TodayDataStatusVO getTodayDataStatus(TodayDataStatusVO todayDataStatusVO) throws IOException, SolrServerException {
-
-
+	@Override
+	public TodayDataStatusVO getTodayDataStatus(TodayDataStatusVO todayDataStatusVO) throws IOException, SolrServerException {
 		TodayDataStatusVO result = new TodayDataStatusVO();
 		SolrQuery sq = new SolrQuery();
 
@@ -223,7 +222,7 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 
 		sq.setParam("facet", true);
 		sq.setParam("facet.field", "attachsize");
-		sq.setParam("facet.ranges","0,10,50,100,150,200");
+		sq.setParam("facet.ranges",todayDataStatusVO.getRange());
 
 		sq.setParam("facet.limit", "-1");
 		sq.setParam("facet.mincount", "1");
@@ -240,151 +239,126 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		sq.setQuery(String.format("+ctime:[%s TO %s]", todayDataStatusVO.getStartDt(), todayDataStatusVO.getEndDt()));
 
 		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, todayDataStatusVO.getAdminId());
-		List<List<Object>> items = new ArrayList<>();
-		List<FacetVO> facet = edc.getFacet();
-
-
-//		List<ServiceGroupVO> groups = Config.serviceGroups;
-//		for (ServiceGroupVO group : groups) {
-//			List<Object> item = new ArrayList<>();
-//			boolean isAdd = false;
-//			for (FacetVO vo : facet) {
-//				if (Common.isEquals(group.getGroupCd(), vo.getName())) {
-//					item.add(Config.getServiceGroupNm(vo.getName()));
-//					item.add(vo.getCount());
-//					isAdd = true;
-//					break;
-//				}
-//			}
-//			if (!isAdd) {
-//				item.add(group.getGroupNm());
-//				item.add(0);
-//			}
-//			items.add(item);
-//		}
+		result.setPivotData(edc.getPivotData());
 
 		log.info("결과	=======================================");
 		log.info(edc);
 
 		return result;
-    }
+	}
 
-    @Override
-    public PatternPrivacyVO getTodayPatternPrivacy(PatternPrivacyVO patternPrivacyVO) throws IOException, SolrServerException {
-	    PatternPrivacyVO result = new PatternPrivacyVO();
-
-	    String query = String.format("+ctime:[%s TO %s] +(pi_CN:[ 1 TO * ] pi_FN:[ 1 TO * ] pi_SN:[ 1 TO * ] pi_PN:[ 1 TO * ] pi_DN:[ 1 TO * ])", patternPrivacyVO.getStartDt(), patternPrivacyVO.getEndDt());
-	    SolrQuery sq = new SolrQuery();
-	    sq.setQuery(query);
-	    sq.setRows(0);
-	    SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, patternPrivacyVO.getAdminId());
-	    result.setTotal(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));
-	    sq.setQuery(query);
-	    sq.setRows(0);
-//	    sq.addFilterQuery(String.format(SolrEdcServiceImpl.JOIN_UNREAD, patternPrivacyVO.getAdminId()));
-	    edc = solrEdcService.getEmassMessage(sq, patternPrivacyVO.getAdminId());
-	    result.setUnRead(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));
-		return result;
-    }
-
-    @Override
-    public RiskBehaviorVO getTodayRiskBehavior(RiskBehaviorVO riskBehaviorVO) throws IOException, SolrServerException {
-	    RiskBehaviorVO result = new RiskBehaviorVO();
-
-	    String query = String.format("+ctime:[%s TO %s] +(pi_EC:[ 1 TO * ] pi_EF:[ 1 TO * ] pi_ID:[ 1 TO * ])", riskBehaviorVO.getStartDt(), riskBehaviorVO.getEndDt());
-	    SolrQuery sq = new SolrQuery();
-	    sq.setQuery(query);
-	    sq.setRows(0);
-	    SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, riskBehaviorVO.getAdminId());
-	    result.setTotal(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));;
-	    sq.setQuery(query);
-	    sq.setRows(0);
-//	    sq.addFilterQuery(String.format(SolrEdcServiceImpl.JOIN_UNREAD, riskBehaviorVO.getAdminId()));
-	    edc = solrEdcService.getEmassMessage(sq, riskBehaviorVO.getAdminId());
-	    result.setUnRead(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));
-	    return result;
-    }
-
-    @Override
-    public KeywordDetectionVO getTodayKeywordDetection(KeywordDetectionVO keywordDetectionVO) throws IOException, SolrServerException {
-	    KeywordDetectionVO result = new KeywordDetectionVO();
-
-	    String query = String.format("+ctime:[%s TO %s]  +kwd:Y", keywordDetectionVO.getStartDt(), keywordDetectionVO.getEndDt());
-	    SolrQuery sq = new SolrQuery();
-	    sq.setQuery(query);
-	    sq.setRows(0);
-	    SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, keywordDetectionVO.getAdminId());
-	    result.setTotal(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));
-
-	    sq.setQuery(query);
-	    sq.setRows(0);
-	    edc = solrEdcService.getEmassMessage(sq, keywordDetectionVO.getAdminId());
-	    result.setUnRead(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));
-	    return result;
-    }
 	@Override
-	public TodayFileVO getTodayFile(TodayFileVO vo) throws SolrServerException, IOException {
-		TodayFileVO result = new TodayFileVO();
-		String query = String.format("+ctime:[%s TO %s]  +attachtype:png", vo.getStartDt(), vo.getEndDt());
+	public PatternPrivacyVO getTodayPatternPrivacy(PatternPrivacyVO patternPrivacyVO) throws IOException, SolrServerException {
+		PatternPrivacyVO result = new PatternPrivacyVO();
+
+		String query = String.format("+ctime:[%s TO %s] +(pi_CN:[ 1 TO * ] pi_FN:[ 1 TO * ] pi_SN:[ 1 TO * ] pi_PN:[ 1 TO * ] pi_DN:[ 1 TO * ])", patternPrivacyVO.getStartDt(), patternPrivacyVO.getEndDt());
 		SolrQuery sq = new SolrQuery();
 		sq.setQuery(query);
 		sq.setRows(0);
-		sq.addFacetField("attachtype");
-
-		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, vo.getAdminId());
-		List<SolrEdcVO> solrEdcVOList = edc.getEmass();
+		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, patternPrivacyVO.getAdminId());
 		result.setTotal(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));
 		sq.setQuery(query);
 		sq.setRows(0);
-		List<List<Object>> items = new ArrayList<>();
-		for (SolrEdcVO solrEdcVO : solrEdcVOList){
-			System.out.println(solrEdcVO);
-			for (Long i : solrEdcVO.getAttachsize()){
-				if (i < 50) {
+//	    sq.addFilterQuery(String.format(SolrEdcServiceImpl.JOIN_UNREAD, patternPrivacyVO.getAdminId()));
+		edc = solrEdcService.getEmassMessage(sq, patternPrivacyVO.getAdminId());
+		result.setUnRead(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));
+		return result;
+	}
 
-				}
-			}
+	@Override
+	public RiskBehaviorVO getTodayRiskBehavior(RiskBehaviorVO riskBehaviorVO) throws IOException, SolrServerException {
+		RiskBehaviorVO result = new RiskBehaviorVO();
+
+		String query = String.format("+ctime:[%s TO %s] +(pi_EC:[ 1 TO * ] pi_EF:[ 1 TO * ] pi_ID:[ 1 TO * ])", riskBehaviorVO.getStartDt(), riskBehaviorVO.getEndDt());
+		SolrQuery sq = new SolrQuery();
+		sq.setQuery(query);
+		sq.setRows(0);
+		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, riskBehaviorVO.getAdminId());
+		result.setTotal(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));;
+		sq.setQuery(query);
+		sq.setRows(0);
+//	    sq.addFilterQuery(String.format(SolrEdcServiceImpl.JOIN_UNREAD, riskBehaviorVO.getAdminId()));
+		edc = solrEdcService.getEmassMessage(sq, riskBehaviorVO.getAdminId());
+		result.setUnRead(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));
+		return result;
+	}
+
+	@Override
+	public KeywordDetectionVO getTodayKeywordDetection(KeywordDetectionVO keywordDetectionVO) throws IOException, SolrServerException {
+		KeywordDetectionVO result = new KeywordDetectionVO();
+
+		String query = String.format("+ctime:[%s TO %s]  +kwd:Y", keywordDetectionVO.getStartDt(), keywordDetectionVO.getEndDt());
+		SolrQuery sq = new SolrQuery();
+		sq.setQuery(query);
+		sq.setRows(0);
+		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, keywordDetectionVO.getAdminId());
+		result.setTotal(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));
+
+		sq.setQuery(query);
+		sq.setRows(0);
+		edc = solrEdcService.getEmassMessage(sq, keywordDetectionVO.getAdminId());
+		result.setUnRead(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));
+		return result;
+	}
+
+	@Override
+	public FileTopVO getTodayFileTop(FileTopVO vo) throws SolrServerException, IOException {
+		FileTopVO result = new FileTopVO();
+		String query = String.format("+ctime:[%s TO %s]  +attached:Y", vo.getStartDt(), vo.getEndDt());
+		SolrQuery sq = new SolrQuery();
+		sq.setRows(10);
+		sq.setSort("attachsize", SolrQuery.ORDER.desc);
+		sq.setQuery(query);
+		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, vo.getAdminId());
+		List<String> filesize = new ArrayList<>();
+		List<String> fileType = new ArrayList<>();
+		for (SolrEdcVO solrEdcVO : edc.getEmass()){
+			filesize.add(solrEdcVO.getAttachSizeStr());
+			fileType.add(solrEdcVO.getAttachtype().get(0));
 		}
-
+		result.setFileSize(filesize);
+		result.setFileType(fileType);
+		result.setTotal(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));
 
 		return result;
 	}
 
-    @Override
-    public ServiceDataLoggingVO getServiceDataLogging(ServiceDataLoggingVO serviceDataLoggingVO) throws IOException, SolrServerException {
-	    ServiceDataLoggingVO result = new ServiceDataLoggingVO();
-	    SolrQuery sq = new SolrQuery();
-	    sq.setQuery(String.format("+ctime:[%s TO %s]", serviceDataLoggingVO.getStartDt(), serviceDataLoggingVO.getEndDt()));
-	    sq.setRows(0);
-	    sq.addFacetField("svc1");
-	    sq.setFacetLimit(-1);
-	    sq.setFacetMinCount(1);
-	    sq.setFacetSort("count");
 
-	    SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, serviceDataLoggingVO.getAdminId());
-	    List<List<Object>> items = new ArrayList<>();
-	    List<FacetVO> facet = edc.getFacet();
+	@Override
+	public ServiceDataLoggingVO getServiceDataLogging(ServiceDataLoggingVO serviceDataLoggingVO) throws IOException, SolrServerException {
+		ServiceDataLoggingVO result = new ServiceDataLoggingVO();
+		SolrQuery sq = new SolrQuery();
+		sq.setQuery(String.format("+ctime:[%s TO %s]", serviceDataLoggingVO.getStartDt(), serviceDataLoggingVO.getEndDt()));
+		sq.setRows(0);
+		sq.addFacetField("svc1");
+		sq.setFacetLimit(-1);
+		sq.setFacetMinCount(1);
+		sq.setFacetSort("count");
 
-	    List<ServiceGroupVO> groups = Config.serviceGroups;
-	    for (ServiceGroupVO group : groups) {
-		    List<Object> item = new ArrayList<>();
-		    boolean isAdd = false;
-		    for (FacetVO vo : facet) {
-			    if (Common.isEquals(group.getGroupCd(), vo.getName())) {
-				    item.add(Config.getServiceGroupNm(vo.getName()));
-				    item.add(vo.getCount());
-				    isAdd = true;
-				    break;
-			    }
-		    }
-		    if (!isAdd) {
-			    item.add(group.getGroupNm());
-			    item.add(0);
-		    }
-		    items.add(item);
-	    }
-	    result.setFacet(items);
-	    return result;
-    }
+		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, serviceDataLoggingVO.getAdminId());
+		List<List<Object>> items = new ArrayList<>();
+		List<FacetVO> facet = edc.getFacet();
+
+		List<ServiceGroupVO> groups = Config.serviceGroups;
+		for (ServiceGroupVO group : groups) {
+			List<Object> item = new ArrayList<>();
+			boolean isAdd = false;
+			for (FacetVO vo : facet) {
+				if (Common.isEquals(group.getGroupCd(), vo.getName())) {
+					item.add(Config.getServiceGroupNm(vo.getName()));
+					item.add(vo.getCount());
+					isAdd = true;
+					break;
+				}
+			}
+			if (!isAdd) {
+				item.add(group.getGroupNm());
+				item.add(0);
+			}
+			items.add(item);
+		}
+		result.setFacet(items);
+		return result;
+	}
 
 }

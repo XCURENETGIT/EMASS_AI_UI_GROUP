@@ -7,14 +7,21 @@ import com.xcurenet.common.dao.TransactionManager;
 import com.xcurenet.common.dao.XcnAbstractDAO;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.vo.XcnResponseVO;
+import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.emass.customDashboard.service.*;
+import com.xcurenet.emass.message.service.SolrEdcService;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONObject;
+import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.response.FacetField;
+import org.apache.solr.client.solrj.response.QueryResponse;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +30,8 @@ import java.util.Map;
 @Service("customDashBoardService")
 public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements CustomDashBoardService {
 
-
+	@Resource(name = "solrEdcService")
+	private SolrEdcService solrEdcService;
 	@Resource(name = "authorityService")
 	private AuthorityService authorityService;
 
@@ -578,10 +586,64 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 		return rs;
 	}
 
-    @Override
-    public XcnResponseVO getLoggingData(HttpServletRequest request, HttpSession session) throws Exception {
-        return null;
-    }
+	@Override
+	public XcnResponseVO getLoggingData(final HttpServletRequest request, final HttpSession session) throws Exception {
+		JSONObject param = Common.getParam(request);
+		long now = System.currentTimeMillis();
+		String systemArch = Common.nvl(param.get("systemArch"));
+		String date = Common.nvl(param.get("date")).replace("-", "");
+		if (date == "") date = Common.getCurrentDate();
+		System.out.println(date);
+
+		String startDate = Common.plusDays(date, -7);
+		String endDate = Common.plusDays(date, -1);
+
+		SolrQuery sq = new SolrQuery();
+		sq.setQuery(String.format("+ctime_yyyymmdd:[ %s TO %s ]", startDate, endDate));
+		sq.setRows(0);
+		sq.setGetFieldStatistics(true);
+		sq.addGetFieldStatistics("attachsize");
+		sq.addStatsFieldFacets("attachsize","ctime_yyyymmdd");
+		sq.addFacetField("ctime_yyyymmdd");
+		sq.setFacetLimit(7);
+		sq.setFacetSort("ctime_yyyymmdd");
+		sq.setFacetMinCount(1);
+
+		setAuthoritys(sq, systemArch, session);
+
+		log.info("query : {}", sq.getQuery());
+
+		QueryResponse res = solrEdcService.getSolrServer().query(sq);
+		List<Map<String, String>> result = new ArrayList<>();
+		List<FacetField> loggingCounts = res.getFacetFields();
+		for(FacetField field : loggingCounts) {
+			List<FacetField.Count> values = field.getValues();
+			for(FacetField.Count count : values) {
+				Map<String, String> item = findItem(result, count.getName());
+				item.put("logging", count.getCount() + "");
+				if (item.get("date") == null) {
+					item.put("date", count.getName());
+					result.add(item);
+				}
+			}
+		}
+
+		param.put("startDate", startDate);
+		param.put("endDate", endDate);
+		List<Object> objs = selectList("com.xcurenet.sqlmap.mappers.mysql.customDashboard.getHdfsDirSize", param);
+//		System.out.println("objs: " + objs);
+
+		for(Object obj : objs) {
+			JSONObject json = Common.toJSONObject(obj);
+			Map<String, String> item = findItem(result, json.getString("date"));
+			item.put("attach", json.getString("total"));
+			if (item.get("date") == null) {
+				item.put("date", json.getString("date"));
+				result.add(item);
+			}
+		}
+		return new XcnResponseVO(XcnRspCode.OK, result);
+	}
 
     @Override
 	public List<FileDataVO> getFileSizeData(final HttpServletRequest request, final HttpSession session) throws Exception {
@@ -600,7 +662,7 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 		return Common.nvz(selectOne("com.xcurenet.sqlmap.mappers.mysql.menu.checkMonitoring"));
 	}
 
-	private void setAuthoritys(String systemArch, HttpSession session) {
+	private void setAuthoritys(SolrQuery sq, String systemArch, HttpSession session) {
 //		String adminId = Common.getAdminId(session);
 //		String adminType = Common.getAdminType(session);
 //

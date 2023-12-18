@@ -136,11 +136,6 @@ public class SolrEdcMessageVO {
 							facetParse(chkSvc, buckeyKey, docCount);
 						}
 					}
-
-
-
-
-
 				}
 			}
 

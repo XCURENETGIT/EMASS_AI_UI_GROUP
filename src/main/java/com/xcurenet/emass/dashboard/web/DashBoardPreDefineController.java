@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.net.http.HttpRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -35,11 +36,16 @@ public class DashBoardPreDefineController {
 	private final static String FACET_QUERY = "{result: {type: terms,limit: -1,field: \"user_str\",sort: \"count desc\",facet: {pi_SN:\"sum(pi_SN)\", pi_PN:\"sum(pi_PN)\", pi_DN:\"sum(pi_DN)\", pi_FN:\"sum(pi_FN)\", pi_CN:\"sum(pi_CN)\"}}}";
 
 	@RequestMapping(value = "/getTodayDataStatus.xcn")
-	@Description("Dashboard - 금일 데이터 수집 현황")
+	@Description("Dashboard - 금일 첨부파일 수집 현황")
 	@ResponseBody
-	public XcnResponseVO getTodayDataStatus(final HttpSession session) throws Exception {
+	public XcnResponseVO getTodayDataStatus(final HttpSession session, final HttpServletRequest request) throws Exception {
+		JSONObject param = Common.getParam(request);
 		long now = System.currentTimeMillis();
+		String range = Common.nvl(param.get("range"));
+		if (range == null) range = "0,10,50,100,150,200";
+
 		TodayDataStatusVO vo = new TodayDataStatusVO();
+		vo.setRange(range);
 		vo.setAdminId(Common.getAdminId(session));
 		vo.setStartDt(Common.getCurrentDate() + "000000");
 		vo.setEndDt(Common.getDateTime(now, "yyyyMMddHHmmss"));
@@ -48,8 +54,7 @@ public class DashBoardPreDefineController {
 
 		TodayDataStatusVO todayDataStatusVO = dashBoardPreDefineService.getTodayDataStatus(vo);
 		if (todayDataStatusVO != null) {
-			vo.setTotal(todayDataStatusVO.getTotal());
-			vo.setUnRead(todayDataStatusVO.getUnRead());
+			vo.setPivotData(todayDataStatusVO.getPivotData());
 		}
 		return new XcnResponseVO(XcnRspCode.OK, vo);
 	}
@@ -194,27 +199,23 @@ public class DashBoardPreDefineController {
 		}
 		return new XcnResponseVO(XcnRspCode.OK, vo);
 	}
-
-	@RequestMapping(value = "/getTodayFile.xcn")
-	@Description("Dashboard - 첨부파일 수집 현황")
+	@RequestMapping(value = "/getTodayFileTop.xcn")
+	@Description("Dashboard - 금일 첨부파일 용량 top10")
 	@ResponseBody
-	public XcnResponseVO getTodayFile(final HttpSession session) throws Exception {
+	public XcnResponseVO getTodayFileTop(final HttpSession session) throws Exception {
 
 		long now = System.currentTimeMillis();
-		TodayFileVO vo = new TodayFileVO();
+		FileTopVO vo = new FileTopVO();
 		vo.setAdminId(Common.getAdminId(session));
 		vo.setStartDt(Common.getCurrentDate() + "000000");
 		vo.setEndDt(Common.getDateTime(now, "yyyyMMddHHmmss"));
 		vo.setTermDtStr(Prop.propFormat("condition.hour", session, "00")+" ~ " + Common.getDateTime(now, Prop.propFormat("condition.time", session, "HH", "mm", "ss")));
 
-		TodayFileVO todayFileVO = dashBoardPreDefineService.getTodayFile(vo);
-		if (todayFileVO !=null){
-			vo.setTotal(todayFileVO.getTotal());
-		}
-
-
-		return new XcnResponseVO(XcnRspCode.OK, vo);
+		FileTopVO todayFileVO = dashBoardPreDefineService.getTodayFileTop(vo);
+		return new XcnResponseVO(XcnRspCode.OK, todayFileVO);
 	}
+
+
 
 	@RequestMapping(value = "/getInterestUserMail.xcn")
 	@Description("Dashboard - 관심 사용자 발신 메일 수집 건수")

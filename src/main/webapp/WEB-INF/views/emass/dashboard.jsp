@@ -30,30 +30,74 @@
         menuKey = $.urlParam('menuKey');
         if (menuKey) dashboardInit();
         else getDefaultMenuKey();
-		//
-        // getTodayKeywordDetection();
-        // getTodayRiskBehavior();
-        // getTodayPatternPrivacy();
-        // getFileSendTotal();
-        // getServiceDataLogging();
-        // getFile();
-		//
 
-		getTodayDataStatus();
-
+        getTodayKeywordDetection();
+        getTodayRiskBehavior();
+        getTodayPatternPrivacy();
+        getFileSendTotal();
+        getServiceDataLogging();
+        // getFileTop();
+        getTodayDataStatus();
 
     })
 
-	function getTodayDataStatus(){
+
+    function getTodayFileList(data,rowSearchkey){
+        let array = [0,0,0,0,0,0];
+        let arrayStr = ["~10MB", "~50MB", "~100MB", "~150MB", "~200MB", "250MB~"]
+
+        // 여기에 쿼리 쓰기
+        let targetKey;
+        for (var i = 0; i<data.pivotData.length; i++){
+            if (data.pivotData[i].rowKey == rowSearchkey){
+                targetKey = data.pivotData[i];
+                break;
+            }
+        }
+        for (const  key in targetKey){
+            if (!isNaN(parseInt(key))) {
+                const numericKey = parseInt(key);
+                if (0 <= numericKey && numericKey <= 10) {
+                    array[0] += targetKey[key];
+                } else if (11 <= numericKey && numericKey <= 50) {
+                    array[1] += targetKey[key];
+                } else if (51 <= numericKey && numericKey <= 100) {
+                    array[2] += targetKey[key];
+                } else if (101 <= numericKey && numericKey <= 150) {
+                    array[3] += targetKey[key];
+                } else if (151 <= numericKey && numericKey <= 200) {
+                    array[4] += targetKey[key];
+                } else {
+                    array[5] += targetKey[key];
+                }
+            }
+        }
+
+        var str = "<div class='tabcontent' id="+rowSearchkey+">";
+        str+= "<ul>";
+        for (let i = 0; i<6; i++){
+            str+="<li><p>";
+            str+=arrayStr[i];
+            str+="<span>"+array[i]+"</span>";
+            str+="</p></li>"
+        }
+        str+="</ul>";
+        str+="</div>";
+        $('#dataStatus').html(str);
+    }
+
+	function getTodayDataStatus(rowSearchkey){
 		ui.get({
 			url: 'getTodayDataStatus.xcn',
+			range : "0,10,50,100,150,200",
 			searchStr: '',
 			success: function (data, total) {
-				console.log("data: " + data);
-
+                if (rowSearchkey == null) rowSearchkey = "unknown";
+                getTodayFileList(data,rowSearchkey);
 			},
 			error: function (status, message) {
 				//ui.alertMsg(message);
+
 			},
 			complete: function () {
 
@@ -72,7 +116,7 @@
             url: 'getTodayKeywordDetection.xcn',
             searchStr: '',
             success: function (data, total) {
-                console.log("data: " + data.total);
+
                 try {
                     $('#TodayKeywordTotalCnt').html(data.total + "<span>건</span>");
                     // off('keyword.message.count');
@@ -139,6 +183,38 @@
         });
     }
 
+    // //파일 top10
+    // var getFileTopTime;
+	//
+    // function getFileTop() {
+    //     if (getFileTopTime != null) window.clearTimeout(getFileTopTime);
+    //     ui.get({
+    //         url: 'getTodayFileTop.xcn',
+    //         success: function (data, total) {
+    //             let str = "<ul>";
+    //             for (let i = 0; i<data.fileType.length; i++){
+    //                str+="<li>";
+    //                str+="<span class=num>"+(i+1)+"</span>";
+    //                str+="<p><span>"+data.fileSize[i]+"</span></p>";
+    //                str+="</li>";
+    //                if (i>2){
+    //                    break;
+    //                }
+    //             }
+    //             str+="</ul>";
+    //             $('#bigFileTop').html(str);
+    //         },
+    //         error: function (status, message) {
+    //             ui.alertMsg(message);
+    //         },
+    //         complete: function () {
+    //             getFileTopTime = window.setTimeout(function () {
+    //                 getFileTop();
+    //             }, updateTime);
+    //         }
+    //     });
+    // }
+
     //금일 1MB 이상 파일전송
     var getFileSendTotalSetTime;
 
@@ -170,7 +246,6 @@
         ui.get({
             url: 'getServiceDataLogging.xcn',
             success: function (data, total) {
-                console.log(data.facet);
                 var GroupWareNum = 17;
                 var todayGroupWareSum = data.facet[GroupWareNum][1];
                 $('#todayGroupWareSum').html(todayGroupWareSum + "<span>건</span>");
@@ -184,26 +259,6 @@
             complete: function () {
                 getServiceDataLoggingSetTime = window.setTimeout(function () {
                     getServiceDataLogging();
-                }, updateTime);
-            }
-        });
-    }
-
-    //첨부파일 수집 현황
-    var getFileSetTime;
-    function getFile() {
-        if (getFileSetTime != null) window.clearTimeout(getFileSetTime);
-        ui.get({
-            url: 'getTodayFile.xcn',
-            success: function (data, total) {
-
-            },
-            error: function (status, message) {
-                //ui.alertMsg(message);
-            },
-            complete: function () {
-                getFileSetTime = window.setTimeout(function () {
-                    getFile();
                 }, updateTime);
             }
         });
@@ -393,50 +448,13 @@
 				<h3>금일 첨부파일 수집 현황</h3>
 				<div class="bordd">
 					<div class="main_tab">
-						<button class="tablink ppt" onclick="openCity('PPT', this, '#E7443A')" id="defaultOpen">PPT</button>
-						<button class="tablink word" onclick="openCity('Word', this, '#3770C3')">Word</button>
-						<button class="tablink excel" onclick="openCity('Excel', this, '#3B9A45')">Excel</button>
-						<button class="tablink pdf" onclick="openCity('PDF', this, '#B7433B')">PDF</button>
+						<button class="tablink ppt" onclick="openCity('unknown', this, '#E7443A')" id="defaultOpen">PPT</button>
+						<button class="tablink word" onclick="openCity('gif', this, '#3770C3')">Word</button>
+						<button class="tablink excel" onclick="openCity('jpg', this, '#3B9A45')">Excel</button>
+						<button class="tablink pdf" onclick="openCity('txt', this, '#B7433B')">PDF</button>
 					</div>
-					<div id="PPT" class="tabcontent">
-						<ul>
-							<li>
-								<p>
-									~10MB
-									<span>199,999 건</span>
-								</p>
-							</li>
-							<li>
-								<p>
-									~50MB
-									<span>1 건</span>
-								</p>
-							</li>
-							<li>
-								<p>
-									~100MB
-									<span>9,999 건</span>
-								</p>
-							</li>
-							<li>
-								<p>
-									~150MB
-									<span>77 건</span>
-								</p>
-							</li>
-							<li>
-								<p>
-									~200MB
-									<span>9,999 건</span>
-								</p>
-							</li>
-							<li>
-								<p>
-									~250MB
-									<span>9,999 건</span>
-								</p>
-							</li>
-						</ul>
+					<div id="dataStatus">
+
 					</div>
 				</div>
 			</div>
@@ -465,9 +483,10 @@
             tablinks[i].style.backgroundColor = "#f5f5f5";
             tablinks[i].style.color = "black";
         }
-        document.getElementById(cityName).style.display = "block";
+        // document.getElementById(cityName).style.display = "block";
         elmnt.style.backgroundColor = color;
         elmnt.style.color = "white";
+        getTodayDataStatus(cityName);
 
     }
 

@@ -16,4 +16,5 @@ public class FileSendVO {
 	private String adminId;
 
 	private String termDtStr;
+
 }

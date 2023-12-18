@@ -2,19 +2,18 @@ package com.xcurenet.emass.dashboard.service;
 
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Data
-public class TodayDataStatusVO {
+public class FileTopVO {
+	private List<Object> list;
 
-	private String total;
+	private List<String> fileSize;
 
-	private String unRead;
+	private List<String> fileType;
 
 	private String startDt;
-
-	private String range;
 
 	private String endDt;
 
@@ -22,7 +21,5 @@ public class TodayDataStatusVO {
 
 	private String termDtStr;
 
-	List<Map<String, Object>> pivotData;
-
-
+	private String total;
 }
