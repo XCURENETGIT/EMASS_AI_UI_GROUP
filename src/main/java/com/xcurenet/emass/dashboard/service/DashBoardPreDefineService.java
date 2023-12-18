@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public interface DashBoardPreDefineService {
 
-	public TodayDataStatusVO getTodayDataStatus(final TodayDataStatusVO todayDataStatusVO) throws IOException ;
+	public TodayDataStatusVO getTodayDataStatus(final TodayDataStatusVO todayDataStatusVO) throws IOException, SolrServerException;
 
 	public PatternPrivacyVO getTodayPatternPrivacy(final PatternPrivacyVO patternPrivacyVO) throws IOException, SolrServerException;
 

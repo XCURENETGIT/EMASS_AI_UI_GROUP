@@ -157,16 +157,59 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	private List<AbstractAggregationBuilder<?>> getAggregations(SolrQuery sq) {
 		List<AbstractAggregationBuilder<?>> aggregations = new ArrayList<>();
 		if (sq.getFacetFields() == null) return aggregations;
+		if((null != sq.get("group") && Common.isEquals("true",sq.get("group")))) {
+			aggregations = getGroupAggregations(sq);
+		}else {
+			for (String field : sq.getFacetFields()) {
+				AbstractAggregationBuilder<TermsAggregationBuilder> termsAggregation = AggregationBuilders.terms(field)
+						.field(field)
+						.order(BucketOrder.count(false))
+						.size(maxCount(sq.getFacetLimit()))
+						.minDocCount(sq.getFacetMinCount());
+						 aggregations.add(termsAggregation);
+			}
+		}
+		return aggregations;
+	}
+
+
+	private List<AbstractAggregationBuilder<?>> getGroupAggregations(SolrQuery sq) {
+		List<AbstractAggregationBuilder<?>> aggregations = new ArrayList<>();
+		String mainField = Common.nvl(sq.get("group.field"));
 		for (String field : sq.getFacetFields()) {
-			AbstractAggregationBuilder<TermsAggregationBuilder> termsAggregation = AggregationBuilders.terms(field)
-					.field(field)
+			AbstractAggregationBuilder<TermsAggregationBuilder> termsAggregation = AggregationBuilders.terms(mainField)
+					.field(mainField)
 					.order(BucketOrder.count(false))
 					.size(maxCount(sq.getFacetLimit()))
 					.minDocCount(sq.getFacetMinCount());
-				if((null != sq.get("group") && Common.isEquals("true",sq.get("group")))) termsAggregation = termsAggregation.subAggregation(AggregationBuilders.topHits(field).size(1));
-			aggregations.add(termsAggregation);
+					if(Common.isEmpty(sq.get("facet.ranges"))) {termsAggregation  = termsAggregation.subAggregation(AggregationBuilders.topHits(field).size(1));}
+					else {
+						List<String> ranges = Common.toList(sq.get("facet.ranges"), ",");
+						termsAggregation = termsAggregation.subAggregation(addRanges(field, ranges));
+					}
+					aggregations.add(termsAggregation);
 		}
 		return aggregations;
+	}
+
+	private AggregationBuilder addRanges(String key,List<String> ranges){
+		AggregationBuilder aggregationBuilder = null;
+		aggregationBuilder = AggregationBuilders.terms(key).field(key);
+		long val1 = 0;
+		long val2 = 0;
+
+
+		//hardcoding
+		aggregationBuilder = aggregationBuilder.subAggregation(
+				AggregationBuilders.range(key).field(key)
+						.addRange(0,10)
+						.addRange(10,50)
+						.addRange(50,100)
+						.addRange(150,200)
+						.addRange(200,250)
+		);
+
+		return aggregationBuilder;
 	}
 
 

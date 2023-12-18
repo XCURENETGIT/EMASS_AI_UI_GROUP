@@ -11,6 +11,7 @@ import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.common.util.SimpleOrderedMap;
 import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.Aggregations;
+import org.elasticsearch.search.aggregations.bucket.terms.ParsedLongTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.springframework.data.elasticsearch.core.ElasticsearchAggregations;
@@ -115,14 +116,31 @@ public class SolrEdcMessageVO {
 				Aggregations aggs = bucket.getAggregations();
 				List<Aggregation> aggsList = aggs.asList();
 				for(Aggregation subaggs :  aggsList) {
-					ParsedStringTerms bucketArgments = (ParsedStringTerms) subaggs;
-					String headerKey = bucket.getKeyAsString();
-					long docCount = bucket.getDocCount();
-					for (Terms.Bucket arg : bucketArgments.getBuckets()) {
-						String buckeyKey = arg.getKeyAsString();
-						list.add(headerKey);
-						facetParse(chkSvc, buckeyKey, docCount);
+					if(subaggs instanceof ParsedStringTerms) {
+						String headerKey = bucket.getKeyAsString();
+						long docCount = bucket.getDocCount();
+						ParsedStringTerms bucketArgments = (ParsedStringTerms) subaggs;
+						for (Terms.Bucket arg : bucketArgments.getBuckets()) {
+							String buckeyKey = arg.getKeyAsString();
+							list.add(headerKey);
+							facetParse(chkSvc, buckeyKey, docCount);
+						}
 					}
+					else if(subaggs instanceof ParsedLongTerms){
+						String headerKey = bucket.getKeyAsString();
+						long docCount = bucket.getDocCount();
+						ParsedLongTerms bucketArgments = (ParsedLongTerms) subaggs;
+						for (Terms.Bucket arg : bucketArgments.getBuckets()) {
+							String buckeyKey = arg.getKeyAsString();
+							list.add(headerKey);
+							facetParse(chkSvc, buckeyKey, docCount);
+						}
+					}
+
+
+
+
+
 				}
 			}
 
@@ -197,14 +215,27 @@ public class SolrEdcMessageVO {
 					Aggregations aggs = bucket.getAggregations();
 					List<Aggregation> aggsList = aggs.asList();
 					for (Aggregation subaggs : aggsList) {
-						ParsedStringTerms bucketArgments = (ParsedStringTerms) subaggs;
-						String buckeyKey = bucket.getKeyAsString();
-						long docCount = bucket.getDocCount();
-						for (Terms.Bucket arg : bucketArgments.getBuckets()) {
-							item.put(Common.nvl(arg.getKeyAsString()), arg.getDocCount());
-							keys.put(Common.nvl(arg.getKey()), 0);
-							item.putAll(pivotParse(svcChk, buckeyKey, docCount));
+						if(subaggs instanceof ParsedStringTerms) {
+							ParsedStringTerms bucketArgments = (ParsedStringTerms) subaggs;
+							String buckeyKey = bucket.getKeyAsString();
+							long docCount = bucket.getDocCount();
+							for (Terms.Bucket arg : bucketArgments.getBuckets()) {
+								item.put(Common.nvl(arg.getKeyAsString()), arg.getDocCount());
+								keys.put(Common.nvl(arg.getKey()), 0);
+								item.putAll(pivotParse(svcChk, buckeyKey, docCount));
+							}
 						}
+						else if(subaggs instanceof ParsedLongTerms){
+							ParsedLongTerms bucketArgments = (ParsedLongTerms) subaggs;
+							String buckeyKey = bucket.getKeyAsString();
+							long docCount = bucket.getDocCount();
+							for (Terms.Bucket arg : bucketArgments.getBuckets()) {
+								item.put(Common.nvl(arg.getKeyAsString()), arg.getDocCount());
+								keys.put(Common.nvl(arg.getKey()), 0);
+								item.putAll(pivotParse(svcChk, buckeyKey, docCount));
+							}
+						}
+
 					}
 					result.add(item);
 				}

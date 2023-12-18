@@ -7,21 +7,18 @@ import com.xcurenet.emass.message.service.FacetVO;
 import com.xcurenet.emass.message.service.SolrEdcMessageVO;
 import com.xcurenet.emass.message.service.SolrEdcService;
 import com.xcurenet.emass.message.service.SolrEdcVO;
-import com.xcurenet.emass.message.service.impl.SolrEdcServiceImpl;
-import com.xcurenet.emass.message.vo.emass.els.Emass;
 import com.xcurenet.emass.service.service.ServiceGroupVO;
-import net.sf.json.JSONArray;
+import lombok.extern.log4j.Log4j2;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.common.util.SimpleOrderedMap;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
+@Log4j2
 @Service("dashBoardPreDefineService")
 public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService {
 
@@ -212,8 +209,64 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 
 
     @Override
-    public TodayDataStatusVO getTodayDataStatus(TodayDataStatusVO todayDataStatusVO) throws IOException {
-        return null;
+    public TodayDataStatusVO getTodayDataStatus(TodayDataStatusVO todayDataStatusVO) throws IOException, SolrServerException {
+
+
+		TodayDataStatusVO result = new TodayDataStatusVO();
+		SolrQuery sq = new SolrQuery();
+
+		sq.addFacetField("attachtype");
+		sq.setParam("group", true);
+		sq.setParam("group.facet", true);
+		sq.setParam("group.ngroups", true);
+		sq.setParam("group.field", "attachtype");
+
+		sq.setParam("facet", true);
+		sq.setParam("facet.field", "attachsize");
+		sq.setParam("facet.ranges","0,10,50,100,150,200");
+
+		sq.setParam("facet.limit", "-1");
+		sq.setParam("facet.mincount", "1");
+
+		sq.setFacetLimit(-1);
+		sq.setFacetMinCount(1);
+		sq.setFacetSort("count");
+
+		sq.setQuery("*:*");
+		sq.setStart(Common.nvz(0));
+		sq.setRows(Common.nvz(1));
+		sq.setSort("ctime", SolrQuery.ORDER.desc);
+		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id");
+		sq.setQuery(String.format("+ctime:[%s TO %s]", todayDataStatusVO.getStartDt(), todayDataStatusVO.getEndDt()));
+
+		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, todayDataStatusVO.getAdminId());
+		List<List<Object>> items = new ArrayList<>();
+		List<FacetVO> facet = edc.getFacet();
+
+
+//		List<ServiceGroupVO> groups = Config.serviceGroups;
+//		for (ServiceGroupVO group : groups) {
+//			List<Object> item = new ArrayList<>();
+//			boolean isAdd = false;
+//			for (FacetVO vo : facet) {
+//				if (Common.isEquals(group.getGroupCd(), vo.getName())) {
+//					item.add(Config.getServiceGroupNm(vo.getName()));
+//					item.add(vo.getCount());
+//					isAdd = true;
+//					break;
+//				}
+//			}
+//			if (!isAdd) {
+//				item.add(group.getGroupNm());
+//				item.add(0);
+//			}
+//			items.add(item);
+//		}
+
+		log.info("결과	=======================================");
+		log.info(edc);
+
+		return result;
     }
 
     @Override

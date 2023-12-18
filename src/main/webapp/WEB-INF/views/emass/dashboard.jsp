@@ -30,15 +30,38 @@
         menuKey = $.urlParam('menuKey');
         if (menuKey) dashboardInit();
         else getDefaultMenuKey();
+		//
+        // getTodayKeywordDetection();
+        // getTodayRiskBehavior();
+        // getTodayPatternPrivacy();
+        // getFileSendTotal();
+        // getServiceDataLogging();
+        // getFile();
+		//
 
-        getTodayKeywordDetection();
-        getTodayRiskBehavior();
-        getTodayPatternPrivacy();
-        getFileSendTotal();
-        getServiceDataLogging();
-        getFile();
+		getTodayDataStatus();
+
 
     })
+
+	function getTodayDataStatus(){
+		ui.get({
+			url: 'getTodayDataStatus.xcn',
+			searchStr: '',
+			success: function (data, total) {
+				console.log("data: " + data);
+
+			},
+			error: function (status, message) {
+				//ui.alertMsg(message);
+			},
+			complete: function () {
+
+			}
+		});
+	}
+
+
     // 금일 예약어 합계
     var getTodayKeywordDetectionSetTime;
 

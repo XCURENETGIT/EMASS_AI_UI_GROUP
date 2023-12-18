@@ -1,15 +1,14 @@
 package com.xcurenet.emass.dashboard.web;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
+import com.xcurenet.common.util.Common;
+import com.xcurenet.common.util.locale.Prop;
+import com.xcurenet.common.vo.XcnResponseVO;
+import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.emass.dashboard.service.*;
 import com.xcurenet.emass.message.service.SolrEdcMessageVO;
 import com.xcurenet.emass.message.service.SolrEdcService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.apache.poi.ss.formula.functions.Today;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.common.util.SimpleOrderedMap;
 import org.springframework.context.annotation.Description;
@@ -17,11 +16,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.xcurenet.common.util.Common;
-import com.xcurenet.common.util.locale.Prop;
-import com.xcurenet.common.vo.XcnResponseVO;
-import com.xcurenet.common.vo.XcnRspCode;
-
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +44,7 @@ public class DashBoardPreDefineController {
 		vo.setStartDt(Common.getCurrentDate() + "000000");
 		vo.setEndDt(Common.getDateTime(now, "yyyyMMddHHmmss"));
 		vo.setTermDtStr(Prop.propFormat("condition.hour", session, "00")+" ~ " + Common.getDateTime(now, Prop.propFormat("condition.time", session, "HH", "mm", "ss")));
+
 
 		TodayDataStatusVO todayDataStatusVO = dashBoardPreDefineService.getTodayDataStatus(vo);
 		if (todayDataStatusVO != null) {
