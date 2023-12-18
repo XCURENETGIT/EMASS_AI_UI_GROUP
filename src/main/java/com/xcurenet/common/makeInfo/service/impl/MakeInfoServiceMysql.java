@@ -311,7 +311,8 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 			try {
 				ftp.init(device.getDeviceIp(), device.getSshId(), device.getSshPw(), 22);
 				ftp.mkdir(Config.DECODER_CONF_PATH);
-				ftp.upload(Config.DECODER_CONF_PATH, urlFile);
+				ftp.upload(Config.DECODER_CONF_PATH, urlFile.getName() + ".tmp", urlFile);
+				ftp.rename(Common.makeFilepath(Config.DECODER_CONF_PATH, urlFile.getName() + ".tmp"), Common.makeFilepath(Config.DECODER_CONF_PATH, urlFile.getName()));
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
