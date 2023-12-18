@@ -105,9 +105,9 @@
     grid.onCheckBox();
     grid.autoNumber();
     grid.colAdd('deviceType', '<s:message code="selectDevStatus.type.device"/>', 100, 'center', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
-        if (value == 'I') return '<s:message code="selectDevStatus.dev.integrated"/>';
+        if (value == 'A') return '<s:message code="selectDevStatus.dev.integrated"/>';
         else if (value == 'C') return '<s:message code="selectDevStatus.dev.logging"/>';
-        else if (value == 'C') return '<s:message code="selectDevStatus.dev.analysis"/>';
+        else if (value == 'L') return '<s:message code="selectDevStatus.dev.analysis"/>';
         else return '<s:message code="selectDevStatus.dev.database"/>'
     });
     grid.colAdd('deviceIp', '<s:message code="selectDevStatus.devip"/>', 120, 'left', false, 'nomal');

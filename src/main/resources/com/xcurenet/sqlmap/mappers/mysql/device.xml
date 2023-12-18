@@ -30,7 +30,7 @@
 				USE_YN AS useYn,
 				DATE_FORMAT(CREATE_DT, '%Y-%m-%d %T' ) AS createDt
 		FROM	UI_DEVICE
-		WHERE	DEVICE_TYPE IN ('A', 'C')
+		WHERE	DEVICE_TYPE IN ('A')
 		<if test='searchStr!=null and searchStr!=""'>
 		AND		( DEVICE_NM  LIKE CONCAT( '%', #{searchStr} ,'%') OR  DEVICE_IP LIKE CONCAT( '%', #{searchStr}, '%' )  )
 		</if>

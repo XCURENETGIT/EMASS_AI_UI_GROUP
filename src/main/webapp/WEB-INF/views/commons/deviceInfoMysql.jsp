@@ -177,7 +177,7 @@ Date			1분			경고
 			str += '<td><input type="checkbox" name="checkDevice" deviceSeq="'+data[i].deviceSeq+'"></td>';
 			str += '<td>' + (i + 1) + '</td>';
 			str += '<td>' + statusStr + '</td>';
-			str += '<td><a href="#" deviceSeq="'+data[i].deviceSeq+'" class="tableLink">' + data[i].deviceNm + '</a></td>';
+			str += '<td><a href="#" deviceSeq="'+data[i].deviceSeq+'" class="tableLink slick-cell link ">' + data[i].deviceNm + '</a></td>';
 			str += '<td>' + data[i].deviceIp + '</td>';
 			str += '<td>' + getDeviceTypeName(data[i].deviceType) + '</td>';
 			str += '<td>' + device.load + '</td>';
