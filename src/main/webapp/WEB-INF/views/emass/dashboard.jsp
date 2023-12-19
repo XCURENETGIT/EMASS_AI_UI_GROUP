@@ -448,10 +448,32 @@
 				<h3>금일 첨부파일 수집 현황</h3>
 				<div class="bordd">
 					<div class="main_tab">
+						<button class="tablink text" onclick="openCity('text', this, '#777777')" id="defaultOpen">TXT</button>
+						<button class="tablink jpg" onclick="openCity('jpg', this, '#9A52D2')">JPG</button>
+						<button class="tablink gif" onclick="openCity('gif', this, '#EA8323')">GIF</button>
+						<button class="tablink png" onclick="openCity('png', this, '#268770')">PNG</button>
+						<button class="tablink mp4" onclick="openCity('mp4', this, '#9A52D2')">MP4</button>
+						<button class="tablink exe" onclick="openCity('exe', this, '#B7433B')">EXE</button>
+						<button class="tablink html" onclick="openCity('html', this, '#EA8323')">HTML</button>
+						<button class="tablink java" onclick="openCity('java', this, '#9A52D2')">JAVA</button>
+						<!-- 배경 컬러 코드
+						 회색:#777777
+						 초록:#268770
+						 청록:#0F97B5
+						 보라:#9A52D2
+						 분홍:#E33E83
+						 빨강:#E7443A
+						 자주:#B7433B
+						 파랑:#3770C3
+						 연두:#3B9A45
+						 주황:#EA8323
+						 -->
+						<!--
 						<button class="tablink ppt" onclick="openCity('unknown', this, '#E7443A')" id="defaultOpen">PPT</button>
 						<button class="tablink word" onclick="openCity('gif', this, '#3770C3')">Word</button>
 						<button class="tablink excel" onclick="openCity('jpg', this, '#3B9A45')">Excel</button>
 						<button class="tablink pdf" onclick="openCity('txt', this, '#B7433B')">PDF</button>
+						-->
 					</div>
 					<div id="dataStatus">
 

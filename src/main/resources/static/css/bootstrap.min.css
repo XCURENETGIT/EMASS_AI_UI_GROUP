@@ -2863,13 +2863,17 @@ input[type=search] {
 	vertical-align: middle;
 	cursor: pointer;
 	appearance: none;
-
+	padding:12px 0;
+	width:100%;
+	color: #555;
 
 }
 
-.checkbox-inline+.checkbox-inline, .radio-inline+.radio-inline {
+
+.checkbox-inline b +.checkbox-inline b, .radio-inline+.radio-inline {
 	margin-top: 0;
-	margin-left: 10px;
+	font-family: Pretendard !important;
+	color:#0000cc !important;
 }
 
 fieldset[disabled] input[type=checkbox], fieldset[disabled] input[type=radio], input[type=checkbox].disabled, input[type=checkbox][disabled], input[type=radio].disabled, input[type=radio][disabled] {
@@ -5674,7 +5678,7 @@ a.list-group-item-danger.active, a.list-group-item-danger.active:focus, a.list-g
 	padding: 10px 15px;
 	border-bottom: 1px solid transparent;
 	border-top-left-radius: 3px;
-	border-top-right-radius: 3px
+	border-top-right-radius: 3px;
 }
 
 .panel-heading>.dropdown .dropdown-toggle {
@@ -5685,7 +5689,8 @@ a.list-group-item-danger.active, a.list-group-item-danger.active:focus, a.list-g
 	margin-top: 0;
 	margin-bottom: 0;
 	font-size: 16px;
-	color: inherit
+	color:#111;
+
 }
 
 .panel-title>.small, .panel-title>.small>a, .panel-title>a, .panel-title>small, .panel-title>small>a {
