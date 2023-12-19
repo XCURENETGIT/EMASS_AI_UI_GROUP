@@ -7,11 +7,12 @@ import java.util.List;
 
 @Data
 public class FileTopVO {
-	private List<Object> list;
 
 	private List<String> fileSize;
 
 	private List<String> fileType;
+
+	private List<String> user;
 
 	private String startDt;
 

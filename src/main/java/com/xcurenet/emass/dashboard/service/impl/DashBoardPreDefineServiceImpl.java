@@ -208,7 +208,6 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 //	}
 
 
-
 	@Override
 	public TodayDataStatusVO getTodayDataStatus(TodayDataStatusVO todayDataStatusVO) throws IOException, SolrServerException {
 		TodayDataStatusVO result = new TodayDataStatusVO();
@@ -222,7 +221,7 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 
 		sq.setParam("facet", true);
 		sq.setParam("facet.field", "attachsize");
-		sq.setParam("facet.ranges",todayDataStatusVO.getRange());
+		sq.setParam("facet.ranges", todayDataStatusVO.getRange());
 
 		sq.setParam("facet.limit", "-1");
 		sq.setParam("facet.mincount", "1");
@@ -274,7 +273,8 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		sq.setQuery(query);
 		sq.setRows(0);
 		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, riskBehaviorVO.getAdminId());
-		result.setTotal(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));;
+		result.setTotal(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));
+		;
 		sq.setQuery(query);
 		sq.setRows(0);
 //	    sq.addFilterQuery(String.format(SolrEdcServiceImpl.JOIN_UNREAD, riskBehaviorVO.getAdminId()));
@@ -312,13 +312,28 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, vo.getAdminId());
 		List<String> filesize = new ArrayList<>();
 		List<String> fileType = new ArrayList<>();
-		for (SolrEdcVO solrEdcVO : edc.getEmass()){
+		for (SolrEdcVO solrEdcVO : edc.getEmass()) {
 			filesize.add(solrEdcVO.getAttachSizeStr());
 			fileType.add(solrEdcVO.getAttachtype().get(0));
 		}
 		result.setFileSize(filesize);
 		result.setFileType(fileType);
 		result.setTotal(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));
+
+		return result;
+	}
+
+	@Override
+	public FileTopVO getTodayFilePerson(FileTopVO vo) throws SolrServerException, IOException {
+		FileTopVO result = new FileTopVO();
+		String query = String.format("+ctime:[%s TO %s]  +attached:Y", vo.getStartDt(), vo.getEndDt());
+		SolrQuery sq = new SolrQuery();
+		sq.setSort("attachexistcnt", SolrQuery.ORDER.desc);
+		sq.addFacetField("userid");
+		sq.setRows(10);
+		sq.setQuery(query);
+		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, vo.getAdminId());
+//		System.out.println(edc);
 
 		return result;
 	}
@@ -338,26 +353,31 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, serviceDataLoggingVO.getAdminId());
 		List<List<Object>> items = new ArrayList<>();
 		List<FacetVO> facet = edc.getFacet();
+		if (facet == null) result.setFacet(items);
+		else {
 
-		List<ServiceGroupVO> groups = Config.serviceGroups;
-		for (ServiceGroupVO group : groups) {
-			List<Object> item = new ArrayList<>();
-			boolean isAdd = false;
-			for (FacetVO vo : facet) {
-				if (Common.isEquals(group.getGroupCd(), vo.getName())) {
-					item.add(Config.getServiceGroupNm(vo.getName()));
-					item.add(vo.getCount());
-					isAdd = true;
-					break;
+
+			List<ServiceGroupVO> groups = Config.serviceGroups;
+			for (ServiceGroupVO group : groups) {
+				List<Object> item = new ArrayList<>();
+				boolean isAdd = false;
+				for (FacetVO vo : facet) {
+					if (Common.isEquals(group.getGroupCd(), vo.getName())) {
+						item.add(Config.getServiceGroupNm(vo.getName()));
+						item.add(vo.getCount());
+						isAdd = true;
+						break;
+					}
 				}
+				if (!isAdd) {
+					item.add(group.getGroupNm());
+					item.add(0);
+				}
+				items.add(item);
 			}
-			if (!isAdd) {
-				item.add(group.getGroupNm());
-				item.add(0);
-			}
-			items.add(item);
 		}
 		result.setFacet(items);
+
 		return result;
 	}
 
