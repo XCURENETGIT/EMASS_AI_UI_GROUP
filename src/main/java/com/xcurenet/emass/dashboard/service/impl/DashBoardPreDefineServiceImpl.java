@@ -9,6 +9,7 @@ import com.xcurenet.emass.message.service.SolrEdcService;
 import com.xcurenet.emass.message.service.SolrEdcVO;
 import com.xcurenet.emass.service.service.ServiceGroupVO;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.springframework.stereotype.Service;
@@ -208,7 +209,6 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 //	}
 
 
-
 	@Override
 	public TodayDataStatusVO getTodayDataStatus(TodayDataStatusVO todayDataStatusVO) throws IOException, SolrServerException {
 		TodayDataStatusVO result = new TodayDataStatusVO();
@@ -222,7 +222,7 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 
 		sq.setParam("facet", true);
 		sq.setParam("facet.field", "attachsize");
-		sq.setParam("facet.ranges",todayDataStatusVO.getRange());
+		sq.setParam("facet.ranges", todayDataStatusVO.getRange());
 
 		sq.setParam("facet.limit", "-1");
 		sq.setParam("facet.mincount", "1");
@@ -240,9 +240,6 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 
 		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, todayDataStatusVO.getAdminId());
 		result.setPivotData(edc.getPivotData());
-
-		log.info("결과	=======================================");
-		log.info(edc);
 
 		return result;
 	}
@@ -274,7 +271,8 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		sq.setQuery(query);
 		sq.setRows(0);
 		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, riskBehaviorVO.getAdminId());
-		result.setTotal(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));;
+		result.setTotal(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));
+		;
 		sq.setQuery(query);
 		sq.setRows(0);
 //	    sq.addFilterQuery(String.format(SolrEdcServiceImpl.JOIN_UNREAD, riskBehaviorVO.getAdminId()));
@@ -312,7 +310,7 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, vo.getAdminId());
 		List<String> filesize = new ArrayList<>();
 		List<String> fileType = new ArrayList<>();
-		for (SolrEdcVO solrEdcVO : edc.getEmass()){
+		for (SolrEdcVO solrEdcVO : edc.getEmass()) {
 			filesize.add(solrEdcVO.getAttachSizeStr());
 			fileType.add(solrEdcVO.getAttachtype().get(0));
 		}
@@ -320,6 +318,36 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		result.setFileType(fileType);
 		result.setTotal(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));
 
+		return result;
+	}
+
+	@Override
+	public FileTopVO getTodayFilePerson(FileTopVO vo) throws SolrServerException, IOException {
+		FileTopVO result = new FileTopVO();
+		String query = String.format("+ctime:[%s TO %s]  +attached:Y", vo.getStartDt(), vo.getEndDt());
+		SolrQuery sq = new SolrQuery();
+		sq.setSort("attachexistcnt", SolrQuery.ORDER.desc);
+		sq.setRows(0);
+		sq.setFacet(true);
+		sq.addFacetField("userid");
+		sq.setFacetSort("attachexistcnt");
+		sq.setFacetLimit(10);
+		sq.setFacetMinCount(1);
+		sq.setQuery(query);
+		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, vo.getAdminId());
+		List<List<Object>> items = new ArrayList<>();
+		if (edc.getFacet() == null) result.setFacet(items);
+		else {
+			for (FacetVO facetVO : edc.getFacet()) {
+				List<Object> item = new ArrayList<>();
+				item.add(facetVO.getName2());
+				item.add(facetVO.getDeptnm());
+				item.add(facetVO.getCount());
+
+				items.add(item);
+			}
+		}
+		result.setFacet(items);
 		return result;
 	}
 
@@ -338,26 +366,31 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, serviceDataLoggingVO.getAdminId());
 		List<List<Object>> items = new ArrayList<>();
 		List<FacetVO> facet = edc.getFacet();
+		if (facet == null) result.setFacet(items);
+		else {
 
-		List<ServiceGroupVO> groups = Config.serviceGroups;
-		for (ServiceGroupVO group : groups) {
-			List<Object> item = new ArrayList<>();
-			boolean isAdd = false;
-			for (FacetVO vo : facet) {
-				if (Common.isEquals(group.getGroupCd(), vo.getName())) {
-					item.add(Config.getServiceGroupNm(vo.getName()));
-					item.add(vo.getCount());
-					isAdd = true;
-					break;
+
+			List<ServiceGroupVO> groups = Config.serviceGroups;
+			for (ServiceGroupVO group : groups) {
+				List<Object> item = new ArrayList<>();
+				boolean isAdd = false;
+				for (FacetVO vo : facet) {
+					if (Common.isEquals(group.getGroupCd(), vo.getName())) {
+						item.add(Config.getServiceGroupNm(vo.getName()));
+						item.add(vo.getCount());
+						isAdd = true;
+						break;
+					}
 				}
+				if (!isAdd) {
+					item.add(group.getGroupNm());
+					item.add(0);
+				}
+				items.add(item);
 			}
-			if (!isAdd) {
-				item.add(group.getGroupNm());
-				item.add(0);
-			}
-			items.add(item);
 		}
 		result.setFacet(items);
+
 		return result;
 	}
 

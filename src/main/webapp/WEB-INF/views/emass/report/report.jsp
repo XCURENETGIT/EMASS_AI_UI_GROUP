@@ -11,21 +11,21 @@
 var clickFlag = false;
 $(document).ready(function(){
 	$('#searchBtn').click(function(){
-		
+
 	});
-	
+
 	$('#startdatepicker').datetimepicker({
 		format: 'YYYY-MM-DD',
 		locale: 'ko',
 		defaultDate: moment(new Date())
 	});
-	
+
 	$('#enddatepicker').datetimepicker({
 		format: 'YYYY-MM-DD',
 		locale: 'ko',
 		defaultDate: moment(new Date())
 	});
-	
+
 	$('.print_link2').click(function() {
 		if( $('input:checkbox[name="reportMenu"]:checked').length == 0 ) {
 			alert('<s:message code="report.msg.select.statitem"/>');
@@ -33,23 +33,23 @@ $(document).ready(function(){
 		}
 		print($('#printDiv').html());
 	});
-	
+
 	$('.excel_link3').click(function() {
 		if( $('input:checkbox[name="reportMenu"]:checked').length == 0 ) {
 			alert('<s:message code="report.msg.select.statitem"/>');
 			return;
 		}
-		
+
 		var check = 'false';
 		$('input:checkbox[name="reportMenu"]:checked').each(function(){
 			if($(this).attr('id') == 'user_str' || $(this).attr('id') == 'sender_str') check = 'true';
 		});
-		
+
 		var htmlData = '<html><head><title></title></head><body>'+$('#printDiv').html().replaceAll("\t", "")+'</body></html>';
 		var title = $('#repTitle').text();
 		reportExcelDownLoad(title, htmlData, check);
 	});
-	
+
 	$('#changeTitle').click(function() {
 		if( $('#inputTitle').val() == '' ) {
 			alert('<s:message code="report.message.subject.update"/>');
@@ -59,12 +59,12 @@ $(document).ready(function(){
 		$('#divTitle').css('display','none');
 		$('#inputTitle').val('');
 	});
-	
+
 	$('input:checkbox[name="reportMenu"]').change(function() {
 		var facetfield = $(this).attr("id");
 		var repTitle = $(this).val();
 		var repListTitle = "rep"+facetfield;
-		
+
 		if ($(this).is(":checked")) {
 			dateinit();
 			if(facetfield=="device") getReportDevice();
@@ -74,12 +74,12 @@ $(document).ready(function(){
 			$("#"+ repListTitle).remove();
 			clickFlag = false;
 		}
-		
+
 		if($('input:checkbox[name="reportMenu"]:checked').length == 14) {
 			clickFlag = true;
 		}
 	});
-	
+
 	$('#selectAll').click(function() {
 		if(!clickFlag) {
 			$('input[name=reportMenu]:checkbox').each(function(){
@@ -91,7 +91,7 @@ $(document).ready(function(){
 			clickFlag = true;
 		}
 	});
-	
+
 	$('#unSelectAll').click(function() {
 		$('input[name=reportMenu]:checkbox').each(function(){
 			if ($(this).is(":checked")) {
@@ -101,7 +101,7 @@ $(document).ready(function(){
 		});
 		clickFlag = false;
 	});
-	
+
 	dateinit();
 });
 
@@ -140,8 +140,8 @@ function titlechange() {
 
 function print(printArea)
 {
-		win = window.open(); 
-		self.focus(); 
+		win = window.open();
+		self.focus();
 		win.document.open();
 		win.document.write('<html><head><title></title><link rel="stylesheet" href="<c:url value="/css/bootstrap.min.css"/>"/>');
 		win.document.write('<link rel="stylesheet" href="<c:url value="/css/bootstrap.min.css"/>" media="print" />');
@@ -159,13 +159,13 @@ function print(printArea)
 			pMenuId : pMenuId,
 			menuId : menuId,
 			success : function ( data, total ) {
-				
+
 			},
 			error : function (status, message) {
 				ui.alertMsg(message);
 			},
 			complete : function (){
-				
+
 			}
 		});
 		setTimeout(function(){
@@ -208,21 +208,21 @@ function getReportDevice() {
 	}
 	var addStr = "";
 	var addStrDiv = "";
-	addStrDiv += "<div class='col-md-12' id='repdevice'>";
+	addStrDiv += "<div id='repdevice'>";
 	addStrDiv += "</div>";
 	$('#reportList').append(addStrDiv);
-	
+
 	addStr += "	<div class='panel panel-default'>";
 	addStr += "		<div class='panel-heading'>";
-	addStr += "			<h3 class='panel-title'><s:message code='OPERATION_MGMT.DEV_INFO'/></h3>";
+	addStr += "			<h3 class='panel-title p8'><s:message code='OPERATION_MGMT.DEV_INFO'/></h3>";
 	addStr += "		</div>";
-	addStr += "		<div class='panel-body' id='tabledevice'>";
-	
+	addStr += "		<div class='panel-body' style='overflow-y: scroll;' id='tabledevice'>";
+
 	ui.get({
 		url : 'getReportDeviceList.xcn',
 		success : function(data, total) {
-				addStr += "	<table class='table table-striped' name='<s:message code='OPERATION_MGMT.DEV_INFO'/>'>";
-				addStr += "		<thead>";
+				addStr += "	<table class='subTable borbottom_dd ' name='<s:message code='OPERATION_MGMT.DEV_INFO'/>'>";
+				addStr += "		<thead class='head'>";
 				addStr += "			<tr>";
 				addStr += "				<th><s:message code='common.msg.number'/></th>";
 				addStr += "				<th><s:message code='common.msg.device'/>IP</th>";
@@ -240,7 +240,7 @@ function getReportDevice() {
 					else if(type=="A") type='<s:message code="device.msg.all_in_one"/>';
 					else if(type=="L") type='<s:message code="device.msg.division.analysis"/>';
 					else type="-";
-					
+
 					if(status=="S") status='<s:message code="common.msg.success"/>';
 					else if(status=="F") status='<s:message code="common.msg.fail"/>';
 					else if(status=="T") status='<s:message code="common.msg.connect_fail"/>';
@@ -278,13 +278,13 @@ function getData( facetfield, repTitle ) {
 	}
 	var addStr = "";
 	var addStrDiv = "";
-	addStrDiv += "<div class='col-md-12' id='rep"+facetfield+"'>";
+	addStrDiv += "<div id='rep"+facetfield+"'>";
 	addStrDiv += "</div>";
 	$('#reportList').append(addStrDiv);
-	
+
 	addStr += "	<div class='panel panel-default'>";
 	addStr += "		<div class='panel-heading'>";
-	addStr += "			<h3 class='panel-title'>"+repTitle+" TOP10"+"</h3>";
+	addStr += "			<h3 class='panel-title p8'>"+repTitle+" TOP10"+"</h3>";
 	addStr += "		</div>";
 	addStr += "		<div class='panel-body' id='table"+facetfield+"'>";
 	ui.get({
@@ -296,9 +296,9 @@ function getData( facetfield, repTitle ) {
 		success : function(data, total) {
 			if(total==0) {
 				addStr += "<p><s:message code='common.msg.nodata'/><p>";
-				addStr += "</li>";	
+				addStr += "</li>";
 			} else {
-				addStr += "	<table class='table table-stripe' name='"+repTitle+" TOP10'>";
+				addStr += "	<table class='subTable borbottom_dd table-stripe' name='"+repTitle+" TOP10'>";
 				addStr += "		<colgroup>";
 				addStr += "		<col width='70'>";
 				if(facetfield == 'user_str' || facetfield == 'sender_str') {
@@ -326,7 +326,7 @@ function getData( facetfield, repTitle ) {
 					addStr += "			<th style='text-align:left;'><s:message code='common.org.deptnm'/></th>";
 					addStr += "			<th style='text-align:left;'><s:message code='common.org.jikgubnm'/></th>";
 					addStr += "			<th style='text-align:left;'>E-Mail</th>";
-				} 
+				}
 				addStr += "				<th style='text-align:right;'><s:message code='common.msg.count'/></th>";
 				addStr += "			</tr>";
 				addStr += "		</thead>";
@@ -365,123 +365,131 @@ function getData( facetfield, repTitle ) {
 
 </script>
 </head>
-<body class="mini-navbar">
-	
-	<div class="container">
-		<div class="boxArea">
-			<div class="content_body">
-				<div class="row">
-					<div class="col-xs-8 form-inline not-dashed">
-						<div class="form-group form-inline not-dashed">
-							<div class='input-group date' id='startdatepicker'>
-								<input type='text' class="input-sm form-control" id='startdate' />
-								<span class="input-group-addon"> <span class="glyphicon glyphicon-calendar"></span>
-								</span>
+<body>
+
+	<div>
+		<!-- 검색영역 -->
+		<div class="searchArea w100">
+			<div class="searchSub w100">
+				<div id="startdatepicker"><input type="date" id="startdate" style="width: 110px;">
+					<span class="hyphen">~</span></div>
+				<div id="enddatepicker"><input type="date" id="enddate" style="width: 110px;"></div>
+				<div class="infotxt mat4 blue">&nbsp<s:message code="report.message.period"/></div>
+			</div>
+
+			<div class="btnList">
+				<button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
+					<span class="glyphicon glyphicon-download-alt"></span>&nbsp;<s:message code="common.msg.export"/> <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu dropdown-menu-right"  role="menu">
+					<li><a href="#" class="excel_link3"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="common.msg.excel"/>(xlsx)</a></li>
+					<li><a href="#" class="print_link2"><span class="glyphicon glyphicon-print"></span>&nbsp;<s:message code="common.msg.print"/></a></li>
+				</ul>
+			</div>
+		</div>
+		<!-- //검색영역 -->
+		<div class="content" style="min-height:730px;">
+			<div class="contentSub">
+				<div class="chartArea02">
+					<!-- 통계 항목 선택-->
+					<div>
+						<h3><s:message code="report.msg.select.stat"/></h3>
+						<div class="inner_personaldata">
+							<div class="grayBg02 txt_right p12">
+								<button class="form_btn03" type="button" accesskey="Y" id="selectAll"><s:message code="common.msg.select_all"/></button>
+								<button class="form_btn04" type="button" accesskey="N" id="unSelectAll" style="margin-left: 5px;"><s:message code="common.msg.unselect_all"/></button>
 							</div>
-							~
-							<div class='input-group date' id='enddatepicker'>
-								<input type='text' class="input-sm form-control" id='enddate' />
-								<span class="input-group-addon"> <span class="glyphicon glyphicon-calendar"></span>
-								</span>
-							</div>
-							<div class="form-group form-inline not-dashed" style="color: #f25643; font-weight: bold;">&nbsp;&nbsp;<s:message code="report.message.period"/></div>
-						</div>
-					</div>
-					<div class="col-xs-4 text-right">
-						<div class="btn-group">
-							<button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
-								<span class="glyphicon glyphicon-download-alt"></span>&nbsp;<s:message code="common.msg.export"/> <span class="caret"></span>
-							</button>
-							<ul class="dropdown-menu dropdown-menu-right" style="width:80px;" role="menu">
-								<li><a href="#" class="excel_link3"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="common.msg.excel"/>(xlsx)</a></li>
-								<li><a href="#" class="print_link2"><span class="glyphicon glyphicon-print"></span>&nbsp;<s:message code="common.msg.print"/></a></li>
-							</ul>
-						</div>
-					</div>
-				</div>
-				<div class="row xcn_full top_space">
-					<div class="col-lg-3" style="height: 100%">
-						<div class="panel panel-default" style="height: 100%;margin-bottom: 0px">
-							<div class="panel-heading">
-								<i class="fa fa-bar-chart-o fa-fw"></i> <s:message code="report.msg.select.stat"/>
-							</div>
-							<div class="panel-body" style="height: calc(100% - 38px);">
-								<div class="form-inline btn-group" style="width:100%;margin-bottom: 10px;">
-									<button class="btn btn-default" type="button" accesskey="Y" id="selectAll"><s:message code="common.msg.select_all"/></button>
-									<button class="btn btn-default" type="button" accesskey="N" id="unSelectAll" style="margin-left: 5px;"><s:message code="common.msg.unselect_all"/></button>
-								</div>
-								<label class="checkbox-inline c-checkbox" style="margin-left:10px; width:100%;margin-bottom: 10px;">
+							<div style="height: calc(100% - 0px);" class="mat8">
+								<label class="checkbox-inline c-checkbox borbottom_dashed">
 									<input type="checkbox" name="reportMenu" id="device" value="<s:message code="OPERATION_MGMT.DEV_INFO"/>">
-									<span class="fa fa-check"></span><i class="fa fa-desktop fa-fw"></i> <s:message code="OPERATION_MGMT.DEV_INFO"/>
+									<span class="fa fa-check"><b class="mal8"><s:message code="OPERATION_MGMT.DEV_INFO"/></b>
+									<span class="ico_right mat4"><i class="fa fa-desktop fa-fw" ></i></span></span>
 								</label>
-								<label class="checkbox-inline c-checkbox" style="width:100%;margin-bottom: 10px;">
+								<label class="checkbox-inline c-checkbox borbottom_dashed">
 									<input type="checkbox" name="reportMenu" id="conm" value="<s:message code="common.org.conm"/>">
-									<span class="fa fa-check"></span><i class="fa fa-user fa-fw"></i> <s:message code="common.org.conm"/> TOP10
+									<span class="fa fa-check"><b class="mal8"><s:message code="common.org.conm"/> TOP10</b>
+									<span class="ico_right mat4"><i class="fa fa-user fa-fw"></i></span></span>
 								</label>
-								<label class="checkbox-inline c-checkbox" style="width:100%;margin-bottom: 10px;">
+								<label class="checkbox-inline c-checkbox borbottom_dashed">
 									<input type="checkbox" name="reportMenu" id="deptnm" value="<s:message code="common.org.deptnm"/>">
-									<span class="fa fa-check"></span><i class="fa fa-user fa-fw"></i> <s:message code="common.org.deptnm"/> TOP10
+									<span class="fa fa-check"><b class="mal8"><s:message code="common.org.deptnm"/> TOP10</b>
+									<span class="ico_right mat4"><i class="fa fa-user fa-fw"></i></span></span>
 								</label>
-								<label class="checkbox-inline c-checkbox" style="width:100%;margin-bottom: 10px;">
+								<label class="checkbox-inline c-checkbox borbottom_dashed">
 									<input type="checkbox" name="reportMenu" id="user_str" value="<s:message code="consent.user"/>">
-									<span class="fa fa-check"></span><i class="fa fa-user fa-fw"></i> <s:message code="consent.user"/> TOP10
+									<span class="fa fa-check"><b class="mal8"><s:message code="consent.user"/> TOP10</b>
+									<span class="ico_right mat4"><i class="fa fa-user fa-fw"></i></span></span>
 								</label>
-								<label class="checkbox-inline c-checkbox" style="width:100%;margin-bottom: 10px;">
+								<label class="checkbox-inline c-checkbox borbottom_dashed">
 									<input type="checkbox" name="reportMenu" id="jikgubnm" value="<s:message code="common.org.jikgubnm"/>">
-									<span class="fa fa-check"></span><i class="fa fa-user fa-fw"></i> <s:message code="common.org.jikgubnm"/> TOP10
+									<span class="fa fa-check"><b class="mal8"><s:message code="common.org.jikgubnm"/> TOP10</b>
+									<span class="ico_right mat4"><i class="fa fa-user fa-fw"></i></span></span>
 								</label>
-								<label class="checkbox-inline c-checkbox" style="width:100%;margin-bottom: 10px;">
+								<label class="checkbox-inline c-checkbox borbottom_dashed">
 									<input type="checkbox" name="reportMenu" id="sender_str" value="<s:message code="condition.sender"/>">
-									<span class="fa fa-check"></span><i class="fa fa-paper-plane-o fa-fw"></i> <s:message code="condition.sender"/> TOP10
+									<span class="fa fa-check"><b class="mal8"><s:message code="condition.sender"/>TOP10</b>
+									<span class="ico_right mat4"><i class="fa fa-paper-plane-o fa-fw"></i></span></span>
 								</label>
-								<label class="checkbox-inline c-checkbox" style="width:100%;margin-bottom: 10px;">
+								<label class="checkbox-inline c-checkbox borbottom_dashed">
 									<input type="checkbox" name="reportMenu" id="svc12" value="<s:message code="condition.service_type"/>">
-									<span class="fa fa-check"></span><i class="fa fa-share-alt fa-fw"></i> <s:message code="condition.service_type"/> TOP10
+									<span class="fa fa-check"><b class="mal8"><s:message code="condition.service_type"/>TOP10</b>
+									<span class="ico_right mat4"><i class="fa fa-share-alt fa-fw"></i></span></span>
 								</label>
-								<label class="checkbox-inline c-checkbox" style="width:100%;margin-bottom: 10px;">
+								<label class="checkbox-inline c-checkbox borbottom_dashed">
 									<input type="checkbox" name="reportMenu" id="kwds" value="<s:message code="condition.keyword"/>">
-									<span class="fa fa-check"></span><i class="fa fa-key fa-fw"></i> <s:message code="condition.keyword"/> TOP10
+									<span class="fa fa-check"><b class="mal8"><s:message code="condition.keyword"/>TOP10</b>
+									<span class="ico_right mat4"><i class="fa fa-key fa-fw"></i></span></span>
 								</label>
-								<label class="checkbox-inline c-checkbox" style="width:100%;margin-bottom: 10px;">
+								<label class="checkbox-inline c-checkbox borbottom_dashed">
 									<input type="checkbox" name="reportMenu" id="attachtype" value="<s:message code="condition.attach_type"/>">
-									<span class="fa fa-check"></span><i class="fa fa-paperclip fa-fw"></i> <s:message code="condition.attach_type"/> TOP10
+									<span class="fa fa-check"><b class="mal8"><s:message code="condition.attach_type"/>TOP10</b>
+									<span class="ico_right mat4"><i class="fa fa-paperclip fa-fw"></i></span></span>
 								</label>
-								<label class="checkbox-inline c-checkbox" style="width:100%;margin-bottom: 10px;">
+								<label class="checkbox-inline c-checkbox borbottom_dashed">
 									<input type="checkbox" name="reportMenu" id="attachname_str" value="<s:message code="condition.attach_name"/>">
-									<span class="fa fa-check"></span><i class="fa fa-file-word-o fa-fw"></i> <s:message code="condition.attach_name"/> TOP10
+									<span class="fa fa-check"><b class="mal8"><s:message code="condition.attach_name"/>TOP10</b>
+									<span class="ico_right mat4"><i class="fa fa-file-word-o fa-fw"></i></span></span>
 								</label>
-								<label class="checkbox-inline c-checkbox" style="width:100%;">
+								<label class="checkbox-inline c-checkbox">
 									<input type="checkbox" name="reportMenu" id="host_str" value="URL">
-									<span class="fa fa-check"></span><i class="fa fa-info-circle fa-fw"></i> URL TOP10
+									<span class="fa fa-check"><b class="mal8">URL TOP10</b>
+									<span class="ico_right mat4"><i class="fa fa-info-circle fa-fw"></i></span></span>
 								</label>
+
 							</div>
 						</div>
 					</div>
-					<div class="col-lg-9" style="height: 100%">
-						<div class="panel panel-default" style="height: 100%;margin-bottom: 0px">
-							<div class="panel-heading">
-								<i class="fa fa-file-text-o fa-fw"></i> Report
-							</div>
-							<div class="panel-body" style="height: calc(100% - 38px);">
-								<div id="printDiv" style="border: 1px solid #ccc; overflow: auto; height: 100%">
-									<div class ="a4" id="reportDiv" >
-										<div class="form-inline hidden-print" style="display: none; text-align:center" id="divTitle">
-											<input type="text" class="input-sm form-control" style="width: 250px;" id="inputTitle" maxlength="16">
-											<button type="button" class="btn btn-success btn-sm" id="changeTitle"><s:message code="report.msg.rename_subject"/></button>
+					<!-- //통계 항목 선택-->
+					<!-- Report-->
+					<div>
+						<h3>Report</h3>
+						<div class="inner_personaldata">
+							<div style="height: calc(100% - 38px);">
+								<div id="printDiv" >
+									<div class ="a4" id="reportDiv">
+										<div class="grayBg02 p12 txt_center">
+											<h3 class="fs20 ma_none">
+												<a href="#" class="fb600" id="repTitle">EMASS LTH Report</a>
+												<button onclick="titlechange();" class="btn05 mal8"><img src="../img/subBtn_textupload.png" alt=""><s:message code="report.msg.rename_subject"/></button>
+											</h3>
+											<div class="form-inline hidden-print mat8" style="display: none;" id="divTitle">
+												<input type="text" class="input-sm form-control" style="width: 250px;" id="inputTitle" maxlength="16">
+												<button type="button" class="form_btn05" id="changeTitle"><s:message code="common.msg.modify"/></button>
+											</div>
 										</div>
-										<h3 style="text-align: center;"><u><a href="#" onclick="titlechange();" id="repTitle">EMASS LTH Report</a></u></h3>
-										<br>
-										<p id="reportDate" style="text-align: right; padding-right:15px"></p>
-										<br>
-										<p id="searchDate" style="text-align: right; padding-right:15px"></p>
-										<br>
-										<div id="reportList">
+										<p class="indenttxt mat8">
+										<span id="reportDate"></span>
+										<span id="searchDate"></span>
+										</p>
+										<div id="reportList" class="mat8">
 										</div>
 									</div>
 								</div>
 							</div>
+
 						</div>
 					</div>
+					<!-- //Report-->
 				</div>
 			</div>
 		</div>

@@ -593,7 +593,6 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 		String systemArch = Common.nvl(param.get("systemArch"));
 		String date = Common.nvl(param.get("date")).replace("-", "");
 		if (date == "") date = Common.getCurrentDate();
-		System.out.println(date);
 
 		String startDate = Common.plusDays(date, -7);
 		String endDate = Common.plusDays(date, -1);
