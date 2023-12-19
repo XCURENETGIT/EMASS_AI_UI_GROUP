@@ -141,7 +141,7 @@ input {
 	line-height: normal
 }
 
-input[type=checkbox], input[type=radio] {
+input[type=radio] {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
@@ -2718,7 +2718,7 @@ input[type=search] {
 	box-sizing: border-box
 }
 
-input[type=checkbox], input[type=radio] {
+ input[type=radio] {
 	/*margin: 4px 0 0;*/
 	/*margin-top: 1px\9;*/
 	/*line-height: normal*/
@@ -3153,7 +3153,7 @@ select[multiple].input-lg, textarea.input-lg {
 	.form-inline .checkbox label, .form-inline .radio label {
 		padding-left: 0
 	}
-	.form-inline .checkbox input[type=checkbox], .form-inline .radio input[type=radio] {
+	.form-inline , .form-inline .radio input[type=radio] {
 		position: relative;
 		margin-left: 0
 	}
@@ -4052,7 +4052,7 @@ select[multiple].input-group-sm>.form-control, select[multiple].input-group-sm>.
 	border-radius: 6px
 }
 
-.input-group-addon input[type=checkbox], .input-group-addon input[type=radio] {
+.input-group-addon , .input-group-addon input[type=radio] {
 	margin-top: 0
 }
 
@@ -4592,7 +4592,7 @@ select[multiple].input-group-sm>.form-control, select[multiple].input-group-sm>.
 	.navbar-form .checkbox label, .navbar-form .radio label {
 		padding-left: 0
 	}
-	.navbar-form .checkbox input[type=checkbox], .navbar-form .radio input[type=radio] {
+	.navbar-form .radio input[type=radio] {
 		position: relative;
 		margin-left: 0
 	}
