@@ -117,7 +117,37 @@
             url: 'getTodayFilePerson.xcn',
             searchStr: '',
             success: function (data, total) {
+                let str = "";
+                if (data.total == 0) {
+                    str += "금일 파일 데이터가 존재하지 않습니다.";
+                } else {
+                    str += "<div class='teamList'><ul>";
+                    for (let i = 0; i < 4; i++) {
+                        let name = getFormattedValue("size", data.facet[i]);
+                        let names = getFormattedValue("size", name[0]);
+                        let bu = getFormattedValue("size", name[1]);
+                        let count = getFormattedValue("count", name[2]);
 
+                        str += "<li><p class='num'>" + (i + 1) + "</p>";
+                        str += "<p><span class='name blue'>" + names + "</span>";
+                        str += "<span class='team'>" + bu + "</span></p>";
+                        str += "<p class='teamnum'>";
+                        str += "<span class='name'>" + count + "</span>";
+                        str += "</p></li>"
+                    }
+                    str += "</ul></div>";
+                    str += "<div class='list'><ul>";
+                    for (let i = 4; i < 10; i++) {
+                        let name = getFormattedValue("ddd", data.facet[i]);
+                        let names = getFormattedValue("ddd", name[0]);
+                        let count = getFormattedValue("count", name[2]);
+                        str += "<li><span class='num'>" + (i + 1) + "</span>";
+                        str += "<p><span>" + names + "</span>";
+                        str += "<span class='righttext'>" + count + "</span></p></li>";
+                    }
+                    str += "</ul></div>"
+                }
+                $('#FilePeople').html(str);
 
             },
             error: function (status, message) {
@@ -130,6 +160,13 @@
 
             }
         });
+    }
+
+    function getFormattedValue(size, value) {
+        if (size == "size") return (value === undefined || value === null) ? ' ' : value;
+        else if (size == "count") return (value === undefined || value === null) ? ' ' : value + "건";
+        else return (value === undefined || value === null) ? '-' : value;
+
     }
 
 
@@ -213,6 +250,7 @@
 
     //파일 top10
     var getFileTopTime;
+
     function getFileTop() {
         if (getFileTopTime != null) window.clearTimeout(getFileTopTime);
         ui.get({
@@ -226,44 +264,7 @@
                 }
 
                 $('#bigFileTop').html(str);
-                // var str = "";
-                // // console.log(dta.fi)
-                // if (data.total == 0) str += "금일 파일 데이터가 존재하지 않습니다.";
-                // else {
-                //     str += "<div><ul>";
-                //     for (let i = 0; i < 4; i++) {
-                //         let filesSize;
-                //         if (data.fileSize[i] === undefined || data.fileSize[i] === null) filesSize = '-';
-                //         else filesSize = data.fileSize[i];
-                //         let filesType;
-                //         if (data.fileType[i] === undefined || data.fileType[i] === null) filesType = '-';
-                //         else filesType = data.fileType[i];
-				//
-                //         str += "<li>"
-                //         str += "<span class='num'>" + (i + 1) + "</span>"
-                //         str += "<p><span>" + filesSize + "</span></p>"
-                //         str += "</li>";
-                //     }
-                //     str += "</ul></div>";
-                //     str += "<div class='list'><ul>";
-                //     for (let i = 4; i < 10; i++) {
-                //         let filesSize;
-                //         if (data.fileSize[i] === undefined || data.fileSize[i] === null) filesSize = '-';
-                //         else filesSize = data.fileSize[i];
-                //         let filesType;
-                //         if (data.fileType[i] === undefined || data.fileType[i] === null) filesType = '-';
-                //         else filesType = data.fileType[i];
-				//
-                //         str += "<li>"
-                //         str += "<span class='num'>" + (i + 1) + "</span>"
-                //         str += "<p><span>" + filesSize + "</span></p>"
-                //         str += "</li>";
-                //     }
-                //     str += "</ul></div>";
-                // }
 
-
-                $('#bigFileTop').html(str);
             },
             error: function (status, message) {
                 ui.alertMsg(message);
@@ -275,19 +276,20 @@
             }
         });
     }
+
     function generateFileList(startIndex, endIndex, fileSizeArray, fileTypeArray) {
         let listStr = "";
         if (startIndex == 0) listStr += "<div><ul>";
-        else listStr+="<div class='list'><ul>"
+        else listStr += "<div class='list'><ul>"
         for (let i = startIndex; i < endIndex; i++) {
-            let filesSize = getFormattedValue("size",fileSizeArray[i]);
-            let filesType = getFormattedValue("type",fileTypeArray[i]);
+            let filesSize = getFormattedValue("size", fileSizeArray[i]);
+            let filesType = getFormattedValue("type", fileTypeArray[i]);
 
             listStr += "<li>";
             listStr += "<span class='num'>" + (i + 1) + "</span>";
-            listStr += "<p><span style='width: 10px'>" + filesType +"</span>";
+            listStr += "<p><span style='width: 10px'>" + filesType + "</span>";
             listStr += "&nbsp; &nbsp; &nbsp;"
-            listStr += "<span class='righttext'>"+ filesSize+"</span></p>";
+            listStr += "<span class='righttext'>" + filesSize + "</span></p>";
             listStr += "</li>";
         }
 
@@ -297,10 +299,6 @@
         return listStr;
     }
 
-    function getFormattedValue(size,value) {
-        if (size == "size") return (value === undefined || value === null) ? ' ' : value;
-        else return (value === undefined || value === null) ? '-' : value;
-    }
 
     //금일 1MB 이상 파일전송
     var getFileSendTotalSetTime;
@@ -607,8 +605,7 @@
 			<%--			파일 다 사용자 TOP 10--%>
 			<div>
 				<h3>파일 다 사용자 TOP 10</h3>
-				<div class="filetop10">
-
+				<div class="filetop10" id="FilePeople">
 				</div>
 			</div>
 

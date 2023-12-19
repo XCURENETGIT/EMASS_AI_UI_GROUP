@@ -9,6 +9,7 @@ import com.xcurenet.emass.message.service.SolrEdcService;
 import com.xcurenet.emass.message.service.SolrEdcVO;
 import com.xcurenet.emass.service.service.ServiceGroupVO;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.springframework.stereotype.Service;
@@ -240,9 +241,6 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, todayDataStatusVO.getAdminId());
 		result.setPivotData(edc.getPivotData());
 
-		log.info("결과	=======================================");
-		log.info(edc);
-
 		return result;
 	}
 
@@ -329,12 +327,27 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		String query = String.format("+ctime:[%s TO %s]  +attached:Y", vo.getStartDt(), vo.getEndDt());
 		SolrQuery sq = new SolrQuery();
 		sq.setSort("attachexistcnt", SolrQuery.ORDER.desc);
+		sq.setRows(0);
+		sq.setFacet(true);
 		sq.addFacetField("userid");
-		sq.setRows(10);
+		sq.setFacetSort("attachexistcnt");
+		sq.setFacetLimit(10);
+		sq.setFacetMinCount(1);
 		sq.setQuery(query);
 		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, vo.getAdminId());
-//		System.out.println(edc);
+		List<List<Object>> items = new ArrayList<>();
+		if (edc.getFacet() == null) result.setFacet(items);
+		else {
+			for (FacetVO facetVO : edc.getFacet()) {
+				List<Object> item = new ArrayList<>();
+				item.add(facetVO.getName2());
+				item.add(facetVO.getDeptnm());
+				item.add(facetVO.getCount());
 
+				items.add(item);
+			}
+		}
+		result.setFacet(items);
 		return result;
 	}
 
