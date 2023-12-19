@@ -91,11 +91,11 @@ table th {
 <script type="text/javascript">
 var param_deviceSeq = '<%=deviceSeq%>';
 $(document).ready(function(){
-	
+
 	$(document).on('click', '.nav-tabs a', function(){
 		getDeviceInfo( );
 	});
-	
+
 	$('#deviceSelect').selectpicker({
 		container:'body',
 		width:'300px',
@@ -104,7 +104,7 @@ $(document).ready(function(){
 	}).change(function(){
 		getDeviceInfo( );
 	});
-	
+
 	//장비 추가
 	$('#insertBtn').click(function(){
 		$('#addDevPop').attr('mode', 'insert');
@@ -115,7 +115,7 @@ $(document).ready(function(){
 		$('#deviceSshIdDiv, #deviceSshPwDiv').show();
 		$('input:radio[name=deviceType]').prop("disabled", false);
 	});
-	
+
 	$('.savePopBtn').click(function(){
 		if( !checkIP( $('#deviceIp').val() ) ) {
 			ui.alertMsg( '<s:message code="deviceInfo.msg.ip.wrong"/>');
@@ -148,19 +148,19 @@ $(document).ready(function(){
 		if( id == 'insert' ) insertDevice();
 		else if( id == 'modify' ) modifyDevice();
 	});
-	
+
 	$('input:radio[name=deviceType]').click(function(){
-		
+
 		if( $(this).val() == 'A' || $(this).val() == 'C' ) {
 			$('#sshId, #sshPw').prop('disabled', false);
 			$('#deviceSshIdDiv, #deviceSshPwDiv').show();
-			
+
 		} else {
 			$('#sshId, #sshPw').val('').prop('disabled', true);
 			$('#deviceSshIdDiv, #deviceSshPwDiv').hide();
 		}
 	});
-	
+
 	getDevice();
 });
 
@@ -211,25 +211,25 @@ function makeDeviceTab( data ){
 		if( data[i].deviceType == 'M' ) {
 		str += '					<i class="fa fa-desktop fa-5x"></i>';
 		} else if( data[i].deviceType == 'A' ) {
-			str += '					<i class="fa fa-tasks fa-5x"></i>';	
+			str += '					<i class="fa fa-tasks fa-5x"></i>';
 		} else if( data[i].deviceType == 'C' ) {
-			str += '					<i class="fa fa-database fa-5x"></i>';	
+			str += '					<i class="fa fa-database fa-5x"></i>';
 		} else if( data[i].deviceType == 'L' ) {
-			str += '					<i class="fa fa-ioxhost fa-5x"></i>';	
+			str += '					<i class="fa fa-ioxhost fa-5x"></i>';
 		} else {
 			str += '					<i class="fa fa-header fa-5x"></i>';
 		}
-		
+
 		str += '					<span style="position: absolute; top: 40px; left: 82px;"></span>';
 		str += '				</div>';
 		str += '				<div class="col-xs-9 text-right">';
 		str += '					<div class="huge" style="font-weight: bold;" id="deviceStatus' + (i+1) + '">'+getStatusMsg(data[i].deviceStatus)+'</div>';
 		str += '					<div id="deviceStatus' + (i+1) + 'Time">'+ (data[i].comment == '' ? '<s:message code="deviceInfo.noComment"/>' : data[i].comment ) +'</div>';
-		
+
 		if( data[i].deviceType == 'M' ) {
 			str += '				<div>[ <s:message code="deviceInfo.hadoopdevM"/> ]</div>';
 		} else if( data[i].deviceType == 'A' ) {
-			str += '				<div>[ <s:message code="deviceInfo.integraldev"/> ]</div>';	
+			str += '				<div>[ <s:message code="deviceInfo.integraldev"/> ]</div>';
 		} else if( data[i].deviceType == 'C' ) {
 			str += '				<div>[ <s:message code="deviceInfo.loggingdev"/> ]</div>';
 		} else if( data[i].deviceType == 'L' ) {
@@ -237,7 +237,7 @@ function makeDeviceTab( data ){
 		} else {
 			str += '				<div>[ <s:message code="deviceInfo.hadoopdevH"/> ]</div>';
 		}
-		
+
 		str += '				</div>';
 		str += '			</div>';
 		str += '		</div>';
@@ -250,11 +250,11 @@ function makeDeviceTab( data ){
 		str += '		</a>';
 		str += '	</div>';
 		str += '</div>';
-		
+
 		$(document).on('click', '#deviceStatus' + (i+1) + 'Link', function(){
 			var deviceSeq = $(this).attr('deviceSeq');
 			var deviceType = $(this).attr('deviceType');
-			
+
 			if( deviceType == 'M' ) location.href = '<c:url value="/commons/deviceInfoDetailHadoop.do"/>?deviceSeq=' + deviceSeq;
 			else location.href = '<c:url value="/commons/deviceInfoDetail.do"/>?deviceSeq=' + deviceSeq;
 		});
@@ -316,7 +316,7 @@ function off(id) {
 }
 
 /**
- * 장비 상태 조회 - SNMP 
+ * 장비 상태 조회 - SNMP
  */
 var devicePolling;
 function getDeviceStatus(deviceIp){
@@ -329,11 +329,11 @@ function getDeviceStatus(deviceIp){
 			if(data==null) {
 				return;
 			}
-			
+
 			if( data.isConnection == undefined && data.deviceType == 'M' ) {
-				
+
 			} else if( data.isConnection) {
-				
+
 			}
 		},
 		error : function(status, message) {
@@ -399,7 +399,7 @@ function getDeviceStatus(deviceIp){
 <%--	--%>
 <%--	<jsp:include page="../top.jsp"/>--%>
 
-	<div class="container"> 
+	<div>
 		<div class="boxArea">
 			<div class="content_body">
 				<div class="row" >

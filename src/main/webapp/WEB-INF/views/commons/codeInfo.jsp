@@ -6,8 +6,7 @@
 	}
 	.tab-content {
 		display: none;
-		background: #ededed;
-		padding: 15px;
+
 	}
 
 	.tab-content.active {
@@ -380,11 +379,11 @@
 	</div>
 </div>
 
-<div class="container">
+<div>
 	<div class="searchArea">
 		<div class="searchSub">
-			<div id="useYnDiv">
-				<select id="useYnSelect" style="float: left;">
+			<div id="useYnDiv" class="ma_none mat4">
+				<select id="useYnSelect">
 					<option value=""><s:message code="common.msg.all"/></option>
 					<option value="Y" selected><s:message code="common.msg.use"/></option>
 					<option value="N"><s:message code="common.msg.unuse"/></option>
@@ -392,14 +391,16 @@
 			</div>
 			<input type="text" placeholder="<s:message code="codeInfo.msg.enter.svc"/>" id="searchStrInput" style="width: 250px;">
 			<button class="form_btn01" type="button" accesskey="Q" id="searchBtn">조회</button>
-			<button type="button" class="btn01" accesskey="I" id="insertBtn" style="display: none;"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
-			<button type="button" class="btn02" accesskey="D" id="deleteBtn" style="display: none;"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
-		</div>
+			<div>
+				<button type="button" class="btn01" accesskey="I" id="insertBtn" style="display: none;"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
+				<button type="button" class="btn02" accesskey="D" id="deleteBtn" style="display: none;"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
+			</div>
+			</div>
 	</div>
 	<div class="content xcn_full">
 		<div class="contentSub">
 			<div class="subtab">
-				<ul class="nav nav-tabs codeTab">
+				<ul class="nav-tabs">
 					<li class="active" style=" text-align: center"><a data-toggle="tab" href="#serviceList" id="serviceTab" class="coTabClass"><s:message code="condition.service"/></a></li>
 					<li style="text-align: center"><a data-toggle="tab" href="#attachList" id="attachTab"><s:message code="codeInfo.filetype"/></a></li>
 				</ul>
