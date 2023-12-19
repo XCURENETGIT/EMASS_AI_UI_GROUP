@@ -129,7 +129,7 @@
 </head>
 
 
-<div class="container">
+<div>
 	<div class="searchArea">
 		<div class="searchSub">
 			<div id="startDatePicker"><input type="date" id="startDt" style="width: 110px;">

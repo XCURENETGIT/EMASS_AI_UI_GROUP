@@ -536,7 +536,7 @@
 						<button type="button" class="pop_btn02" accesskey="A" id="approveBtn" style="display: none;">
 							<s:message code="consent.approved"/></button>
 						&nbsp;&nbsp;
-						<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+						<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal" ><s:message code="common.msg.close"/></button>
 						<button type="button" class="pop_btn02 savePopBtn" accesskey="S" id="savePopBtn"><s:message code="common.msg.save"/></button>
 
 				</div>

@@ -1016,7 +1016,7 @@
 </div>
 
 
-<div class="container">
+<div>
 	<div class="searchArea">
 		<div class="searchSub">
 			<div>

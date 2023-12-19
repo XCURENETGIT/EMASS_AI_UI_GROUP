@@ -417,7 +417,7 @@ Date			1분			경고
 </div>
 
 
-<div class="container">
+<div>
 	<div class="searchArea">
 		<div class="searchSub">
 			<div>
