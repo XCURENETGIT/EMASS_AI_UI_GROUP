@@ -215,6 +215,23 @@ public class DashBoardPreDefineController {
 		return new XcnResponseVO(XcnRspCode.OK, todayFileVO);
 	}
 
+	@RequestMapping(value = "/getTodayFilePerson.xcn")
+	@Description("Dashboard - 금일 파일 다 사용자 TOP 10")
+	@ResponseBody
+	public XcnResponseVO getTodayFilePerson(final HttpSession session) throws Exception {
+
+		long now = System.currentTimeMillis();
+		FileTopVO vo = new FileTopVO();
+		vo.setAdminId(Common.getAdminId(session));
+		vo.setStartDt(Common.getCurrentDate() + "000000");
+		vo.setEndDt(Common.getDateTime(now, "yyyyMMddHHmmss"));
+		vo.setTermDtStr(Prop.propFormat("condition.hour", session, "00")+" ~ " + Common.getDateTime(now, Prop.propFormat("condition.time", session, "HH", "mm", "ss")));
+
+		FileTopVO todayFileVO = dashBoardPreDefineService.getTodayFilePerson(vo);
+		return new XcnResponseVO(XcnRspCode.OK, todayFileVO);
+	}
+
+
 
 
 	@RequestMapping(value = "/getInterestUserMail.xcn")

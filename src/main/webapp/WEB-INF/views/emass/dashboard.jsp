@@ -36,25 +36,26 @@
         getTodayPatternPrivacy();
         getFileSendTotal();
         getServiceDataLogging();
-        // getFileTop();
+        getFileTop();
         getTodayDataStatus();
+        getTodayFilePerson();
 
     })
 
 
-    function getTodayFileList(data,rowSearchkey){
-        let array = [0,0,0,0,0,0];
+    function getTodayFileList(data, rowSearchkey) {
+        let array = [0, 0, 0, 0, 0, 0];
         let arrayStr = ["~10MB", "~50MB", "~100MB", "~150MB", "~200MB", "250MB~"]
 
         // 여기에 쿼리 쓰기
         let targetKey;
-        for (var i = 0; i<data.pivotData.length; i++){
-            if (data.pivotData[i].rowKey == rowSearchkey){
+        for (var i = 0; i < data.pivotData.length; i++) {
+            if (data.pivotData[i].rowKey == rowSearchkey) {
                 targetKey = data.pivotData[i];
                 break;
             }
         }
-        for (const  key in targetKey){
+        for (const key in targetKey) {
             if (!isNaN(parseInt(key))) {
                 const numericKey = parseInt(key);
                 if (0 <= numericKey && numericKey <= 10) {
@@ -73,37 +74,100 @@
             }
         }
 
-        var str = "<div class='tabcontent' id="+rowSearchkey+">";
-        str+= "<ul>";
-        for (let i = 0; i<6; i++){
-            str+="<li><p>";
-            str+=arrayStr[i];
-            str+="<span>"+array[i]+"</span>";
-            str+="</p></li>"
+        var str = "<div class='tabcontent' id=" + rowSearchkey + ">";
+        str += "<ul>";
+        for (let i = 0; i < 6; i++) {
+            str += "<li><p>";
+            str += arrayStr[i];
+            str += "<span>" + array[i] + "</span>";
+            str += "</p></li>"
         }
-        str+="</ul>";
-        str+="</div>";
+        str += "</ul>";
+        str += "</div>";
         $('#dataStatus').html(str);
     }
 
-	function getTodayDataStatus(rowSearchkey){
-		ui.get({
-			url: 'getTodayDataStatus.xcn',
-			range : "0,10,50,100,150,200",
-			searchStr: '',
-			success: function (data, total) {
+    //금일 첨부파일 수집 현황
+    function getTodayDataStatus(rowSearchkey) {
+        ui.get({
+            url: 'getTodayDataStatus.xcn',
+            range: "0,10,50,100,150,200",
+            searchStr: '',
+            success: function (data, total) {
                 if (rowSearchkey == null) rowSearchkey = "unknown";
-                getTodayFileList(data,rowSearchkey);
-			},
-			error: function (status, message) {
-				//ui.alertMsg(message);
+                getTodayFileList(data, rowSearchkey);
+            },
+            error: function (status, message) {
+                //ui.alertMsg(message);
 
-			},
-			complete: function () {
+            },
+            complete: function () {
 
-			}
-		});
-	}
+            }
+        });
+    }
+
+    //금일 파일 다사용자 TOP 10
+    var getTodayFilePersonSetTime;
+
+    function getTodayFilePerson() {
+        if (getTodayFilePersonSetTime != null) window.clearTimeout(getTodayFilePersonSetTime);
+
+        ui.get({
+            url: 'getTodayFilePerson.xcn',
+            searchStr: '',
+            success: function (data, total) {
+                let str = "";
+                if (data.total == 0) {
+                    str += "금일 파일 데이터가 존재하지 않습니다.";
+                } else {
+                    str += "<div class='teamList'><ul>";
+                    for (let i = 0; i < 4; i++) {
+                        let name = getFormattedValue("size", data.facet[i]);
+                        let names = getFormattedValue("size", name[0]);
+                        let bu = getFormattedValue("size", name[1]);
+                        let count = getFormattedValue("count", name[2]);
+
+                        str += "<li><p class='num'>" + (i + 1) + "</p>";
+                        str += "<p><span class='name blue'>" + names + "</span>";
+                        str += "<span class='team'>" + bu + "</span></p>";
+                        str += "<p class='teamnum'>";
+                        str += "<span class='name'>" + count + "</span>";
+                        str += "</p></li>"
+                    }
+                    str += "</ul></div>";
+                    str += "<div class='list'><ul>";
+                    for (let i = 4; i < 10; i++) {
+                        let name = getFormattedValue("ddd", data.facet[i]);
+                        let names = getFormattedValue("ddd", name[0]);
+                        let count = getFormattedValue("count", name[2]);
+                        str += "<li><span class='num'>" + (i + 1) + "</span>";
+                        str += "<p><span>" + names + "</span>";
+                        str += "<span class='righttext'>" + count + "</span></p></li>";
+                    }
+                    str += "</ul></div>"
+                }
+                $('#FilePeople').html(str);
+
+            },
+            error: function (status, message) {
+                //ui.alertMsg(message);
+            },
+            complete: function () {
+                getTodayFilePersonSetTime = window.setTimeout(function () {
+                    getTodayKeywordDetection();
+                }, updateTime);
+
+            }
+        });
+    }
+
+    function getFormattedValue(size, value) {
+        if (size == "size") return (value === undefined || value === null) ? ' ' : value;
+        else if (size == "count") return (value === undefined || value === null) ? ' ' : value + "건";
+        else return (value === undefined || value === null) ? '-' : value;
+
+    }
 
 
     // 금일 예약어 합계
@@ -183,37 +247,58 @@
         });
     }
 
-    // //파일 top10
-    // var getFileTopTime;
-	//
-    // function getFileTop() {
-    //     if (getFileTopTime != null) window.clearTimeout(getFileTopTime);
-    //     ui.get({
-    //         url: 'getTodayFileTop.xcn',
-    //         success: function (data, total) {
-    //             let str = "<ul>";
-    //             for (let i = 0; i<data.fileType.length; i++){
-    //                str+="<li>";
-    //                str+="<span class=num>"+(i+1)+"</span>";
-    //                str+="<p><span>"+data.fileSize[i]+"</span></p>";
-    //                str+="</li>";
-    //                if (i>2){
-    //                    break;
-    //                }
-    //             }
-    //             str+="</ul>";
-    //             $('#bigFileTop').html(str);
-    //         },
-    //         error: function (status, message) {
-    //             ui.alertMsg(message);
-    //         },
-    //         complete: function () {
-    //             getFileTopTime = window.setTimeout(function () {
-    //                 getFileTop();
-    //             }, updateTime);
-    //         }
-    //     });
-    // }
+
+    //파일 top10
+    var getFileTopTime;
+
+    function getFileTop() {
+        if (getFileTopTime != null) window.clearTimeout(getFileTopTime);
+        ui.get({
+            url: 'getTodayFileTop.xcn',
+            success: function (data, total) {
+                var str = generateFileList(0, 4, data.fileSize, data.fileType);
+                str += generateFileList(4, 10, data.fileSize, data.fileType);
+
+                if (data.total == 0) {
+                    str = "금일 파일 데이터가 존재하지 않습니다.";
+                }
+
+                $('#bigFileTop').html(str);
+
+            },
+            error: function (status, message) {
+                ui.alertMsg(message);
+            },
+            complete: function () {
+                getFileTopTime = window.setTimeout(function () {
+                    getFileTop();
+                }, updateTime);
+            }
+        });
+    }
+
+    function generateFileList(startIndex, endIndex, fileSizeArray, fileTypeArray) {
+        let listStr = "";
+        if (startIndex == 0) listStr += "<div><ul>";
+        else listStr += "<div class='list'><ul>"
+        for (let i = startIndex; i < endIndex; i++) {
+            let filesSize = getFormattedValue("size", fileSizeArray[i]);
+            let filesType = getFormattedValue("type", fileTypeArray[i]);
+
+            listStr += "<li>";
+            listStr += "<span class='num'>" + (i + 1) + "</span>";
+            listStr += "<p><span style='width: 10px'>" + filesType + "</span>";
+            listStr += "&nbsp; &nbsp; &nbsp;"
+            listStr += "<span class='righttext'>" + filesSize + "</span></p>";
+            listStr += "</li>";
+        }
+
+
+        listStr += "</ul></div>";
+
+        return listStr;
+    }
+
 
     //금일 1MB 이상 파일전송
     var getFileSendTotalSetTime;
@@ -246,8 +331,13 @@
         ui.get({
             url: 'getServiceDataLogging.xcn',
             success: function (data, total) {
-                var GroupWareNum = 17;
-                var todayGroupWareSum = data.facet[GroupWareNum][1];
+                var todayGroupWareSum = 0;
+                for (var i = 0; i < data.facet.length; i++) {
+                    if (data.facet[i][0] == "그룹웨어") {
+                        todayGroupWareSum = data.facet[i][1];
+                        break;
+                    }
+                }
                 $('#todayGroupWareSum').html(todayGroupWareSum + "<span>건</span>");
 
                 printChart(data.facet);
@@ -476,14 +566,74 @@
 						-->
 					</div>
 					<div id="dataStatus">
-
 					</div>
 				</div>
 			</div>
+			<%--			금일 첨부파일 수집 현황 끝--%>
+		</div>
+	</div>
+	<%--	왼쪽 끝--%>
+	<%--	오른쪽 시작--%>
+	<div class="right">
+		<div>
+			<%--			금일 트래픽 추이, 종류 시작--%>
+			<div class="text_tab">
+				<span class="tablinks" onclick="openCity2(event, 'con01')" id="defaultOpen2">금일 트래픽 추이</span>
+				<span class="bar"></span>
+				<span class="tablinks" onclick="openCity2(event, 'con02')">금일 트래픽 종류 비율</span>
+			</div>
 
+			<div id="con01" class="text_tabcontent">
+				금일 트래픽 추이
+			</div>
+
+			<div id="con02" class="text_tabcontent">
+				금일 트래픽 종류 비율
+			</div>
+		</div>
+		<%--			금일 트래픽 추이, 종류 끝--%>
+		<%--		일별 용량, 로컬 데이터 정보 시작--%>
+		<div>
+			<div class="text_tab mat32">
+				<span class="tablinks2" onclick="openCity3(event, 'con03')">일별 용량 정보</span>
+				<span class="bar"></span>
+				<span class="tablinks2" onclick="openCity3(event, 'con04')" id="defaultOpen3">로컬 데이터 정보</span>
+			</div>
+			<div id="con03" class="text_tabcontent2">
+				<div>
+					일별 용량 정보
+				</div>
+			</div>
+
+			<div id="con04" class="text_tabcontent2">
+				<div class="h200">
+					로컬 데이터 정보
+
+				</div>
+			</div>
+		</div>
+		<%--		일별 용량, 로컬 데이터 정보 끝--%>
+
+		<%--		대용량 파일 TOP 10 시작--%>
+		<div class="m_grapha mat32">
+			<div>
+				<h3>대용량 파일 TOP 10</h3>
+				<div class="bigtop10" id="bigFileTop">
+
+
+				</div>
+			</div>
+			<%--		대용량 파일 TOP 10 끝--%>
+			<%--			파일 다 사용자 TOP 10--%>
+			<div>
+				<h3>파일 다 사용자 TOP 10</h3>
+				<div class="filetop10" id="FilePeople">
+				</div>
+			</div>
 
 		</div>
 	</div>
+
 </div>
 
 <%--	<a href="#0" class="back-to-top cd-top"><span class="[ fa fa-chevron-up ]"></span> <span class="[ ]">Back to the Top</span></a>--%>
