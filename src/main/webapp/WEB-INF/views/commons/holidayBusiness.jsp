@@ -4,22 +4,16 @@
 	<title></title>
 	<link rel="stylesheet" href="<c:url value="/css/panelsTab.css"/>"/>
 	<style>
-		.checkbox-inline + .checkbox-inline, .radio-inline + .radio-inline {
-			margin-left: 0px;
+		.checkbox-inline + .checkbox-inline, .radio-inline + .radio-inline { margin-left: 0px;}
+		.checkbox-inline, .radio-inline {line-height: 30px; font-size: 13px;}
+		.c-checkbox input, .c-radio input {
+			/* opacity: 0; */
+			position: absolute;
+			margin-left: 20px !important;
+			border:1px solid #000;
 		}
 
-		.checkbox-inline, .radio-inline {
-			font-size: 13px;
-		}
-
-		.c-checkbox span, .c-radio span {
-			position: relative;
-			top: 4px;
-		}
-
-		.ui_checked {
-			background-color: transparent;
-		}
+		.ui_checked { background-color: #efefef; }
 	</style>
 	<script>
         var searchFlag = false;
@@ -585,7 +579,7 @@
 								<div class="form-group">
 									<label class="checkbox-inline c-checkbox pt8" style="font-weight: bold">
 										<input type="checkbox" class="workTimeAmAll" name="workTimeAmAll">
-										<b><s:message code="common.msg.selectUnselect"/></b>
+										<s:message code="common.msg.selectUnselect"/>
 									</label>
 								</div>
 								<%for (int i = 0; i <= 11; i++) {%>

@@ -773,14 +773,13 @@ function getDeptSchedule(){
 
 
 
-<div class="modal" id="setDeptApiPop" tabindex="-1" role="dialog" aria-labelledby="setDeptApiPop"
+<div class="modal" id="setDeptApiPop" tabindex="-1" role="dialog" aria-labelledby="setDeptApiPop">
 	<div class="modal-content">
 		<form method="post" id="setDeptApiPopForm">
 		<div class="modalHead">
 			<h2><s:message code="deptIpRange.set.api"/></h2>
 			<span class="close" data-dismiss="modal">&times;</span>
 		</div>
-
 		<div class="modalCon">
 			<div class="modalTop">
 				<div class="modalTop">
@@ -794,13 +793,13 @@ function getDeptSchedule(){
 							<label  class="col-sm-4 radio-inline c-radio">
 							<div class="radio">
 								<input type="radio"  value="N" name="dept.auto">
-								<span ><s:message code="userInfo.directlink"/></span>
+								<span class="fa fa-check"></span><s:message code="userInfo.directlink"/>
 							</div>
 							</label>
 							<label  class="col-sm-4 radio-inline c-radio">
 							<div class="radio">
 								<input type="radio" value="Y" name="dept.auto">
-								<span ><s:message code="userInfo.autolink"/></span>
+								<span class="fa fa-check"></span><s:message code="userInfo.autolink"/>
 							</div>
 							</label>
 						</div>
@@ -922,7 +921,7 @@ function getDeptSchedule(){
 </div>
 
 
-<div class="container">
+	<div>
 		<div class="searchArea">
 			<div class="searchSub">
 				<div>

@@ -7,7 +7,7 @@
 <html lang="ko">
 <head>
     <title>EMASS LTH - <s:message code="condition.select.condition"/></title>
-    <style type="text/css">
+    <style>
         * {
             font-size: 12px;
         }
@@ -62,7 +62,7 @@
 
         .exceptOption, .exceptOption2 {
             position: relative;
-            padding-left: 10px;
+            padding-left: 30px;
         }
 
         .exceptOption {
@@ -1310,12 +1310,12 @@
                             <s:message code="condition.ctimework"/></label>
 
                         <label class="radio-inline c-radio"><input type="radio" name="ctimeWorkVal" value=""
-                                                                   checked><span class="fa fa-check"><span class="text"><s:message
-                                code="condition.ctimework.all"/></span></span></label>
+                                                                   checked><span class="fa fa-check"></span><s:message
+                                code="condition.ctimework.all"/></label>
                         <label class="radio-inline c-radio"><input type="radio" name="ctimeWorkVal" value="W"><span
-                                class="fa fa-check"><span class="text"><s:message code="condition.work"/></span></span></label>
+                                class="fa fa-check"></span><s:message code="condition.work"/></label>
                         <label class="radio-inline c-radio"><input type="radio" name="ctimeWorkVal" value="R"><span
-                                class="fa fa-check"><span class="text"><s:message code="condition.notwork"/></span></span></label>
+                                class="fa fa-check"></span><s:message code="condition.notwork"/></label>
                         <input type="hidden" name="ctimeWork" id="ctimeWork">
 
 
@@ -1361,13 +1361,14 @@
                     </li>
                     <li class="form-inline" id="recvSendGroup">
                         <label for="" class=" col-xs-3"><s:message code="condition.receive_send"/></label>
-                        <label class="radio-inline c-radio"><input type="radio" name="receiveSendVal" value=""
-                                                                   checked><span class="fa fa-check"><span class="text"><s:message
-                                code="common.msg.all"/></span></span></label>
+                        <label class="radio-inline c-radio">
+                            <input type="radio" name="receiveSendVal" value="" checked>
+                            <span class="fa fa-check"></span><s:message
+                                code="common.msg.all"/></label>
                         <label class="radio-inline c-radio"><input type="radio" name="receiveSendVal" value="I"><span
-                                class="fa fa-check"><span class="text"><s:message code="condition.receive"/></span></span></label>
+                                class="fa fa-check"></span><s:message code="condition.receive"/></label>
                         <label class="radio-inline c-radio"><input type="radio" name="receiveSendVal" value="O"><span
-                                class="fa fa-check"><span class="text"><s:message code="condition.send"/></span></span></label>
+                                class="fa fa-check"></span><s:message code="condition.send"/></label>
                         <input type="hidden" name="receiveSend" id="receiveSend">
                     </li>
                     <li>
@@ -1377,12 +1378,12 @@
                                    placeholder="<s:message code="condition.sender"/>" style="width: 290px;"/>
                             <label class="checkbox-inline c-checkbox exceptOption">
                                 <input type="checkbox" name="senders_not" disabled="disabled">
-                                <span class="fa fa-check"><span class="text"><s:message code="query.make.except"/></span></span>
+                                <span class="fa fa-check"></span><s:message code="query.make.except"/>
                             </label>
                             <%if (Common.isEquals(rsUppercase, "Y")) {%>
                             <label class="checkbox-inline c-checkbox exceptOption">
                                 <input type="checkbox" name="senders_upperCase" disabled="disabled">
-                                <span class="fa fa-check"><span class="text"><s:message code="condition.uppercase"/></span></span>
+                                <span class="fa fa-check"></span><s:message code="condition.uppercase"/>
                             </label>
                             <%} %>
                         </div>
@@ -1391,10 +1392,10 @@
                         <label for="" class=" col-xs-3"><s:message code="condition.detail.recvs"/></label>
                         <label class="radio-inline c-radio"><input type="radio" name="receive_option"
                                                                    id="receive_option_all" value="" checked><span
-                                class="fa fa-check"><span class="text"><s:message code="common.msg.all"/></span></span></label>
+                                class="fa fa-check"></span><s:message code="common.msg.all"/></label>
                         <label class="radio-inline c-radio"><input type="radio" name="receive_option"
                                                                    id="receive_option_more" value="detail"><span
-                                class="fa fa-check"><span class="text"><s:message code="condition.info.detail"/></span></span></label>
+                                class="fa fa-check"></span><s:message code="condition.info.detail"/></label>
                         <input type="hidden" name="receiveSend" id="receiveSend">
                     </li>
                     <li>
@@ -1544,11 +1545,11 @@
                     <li class="form-inline" id="readYnGroup">
                         <label for="" class=" col-xs-3"><s:message code="condition.isread"/></label>
                         <label class="radio-inline c-radio"><input type="radio" name="readYnVal" value="" checked><span
-                                class="fa fa-check"><span class="text"><s:message code="common.msg.all"/></span></span></label>
+                                class="fa fa-check"></span><s:message code="common.msg.all"/></label>
                         <label class="radio-inline c-radio"><input type="radio" name="readYnVal" value="Y"><span
-                                class="fa fa-check"><span class="text"><s:message code="condition.read"/></span></span></label>
+                                class="fa fa-check"></span><s:message code="condition.read"/></label>
                         <label class="radio-inline c-radio"><input type="radio" name="readYnVal" value="N"><span
-                                class="fa fa-check"><span class="text"><s:message code="condition.unread"/></span></span></label>
+                                class="fa fa-check"></span><s:message code="condition.unread"/></label>
                         <input type="hidden" name="readYn" id="readYn">
                     </li>
                     <!-- 첨부여부 -->
@@ -1560,13 +1561,13 @@
                             <div style="height:35px;line-height:35px;">
                                 <label class="radio-inline c-radio"><input type="radio" name="attachYnVal" value=""
                                                                            checked><span
-                                        class="fa fa-check"><span class="text"><s:message code="common.msg.all"/></span></span></label>
+                                        class="fa fa-check"></span><s:message code="common.msg.all"/></label>
                                 <label class="radio-inline c-radio"><input type="radio" name="attachYnVal"
                                                                            value="Y"><span
-                                        class="fa fa-check"><span class="text"><s:message code="condition.exist"/></span></span></label>
+                                        class="fa fa-check"></span><s:message code="condition.exist"/></label>
                                 <label class="radio-inline c-radio"><input type="radio" name="attachYnVal"
                                                                            value="N"><span
-                                        class="fa fa-check"><span class="text"><s:message code="condition.none"/></span></span></label>
+                                        class="fa fa-check"></span><s:message code="condition.none"/></label>
                                 <input type="hidden" name="attachYn" id="attachYn">
 
                                 <span id="attachBtnArea" style="display:none;">
@@ -1580,7 +1581,7 @@
 									</span>
                                 <label class="checkbox-inline c-checkbox exceptOption2">
                                     <input type="checkbox" name="attach_not" disabled="disabled">
-                                    <span class="fa fa-check"><span class="text"><s:message code="query.make.except"/></span></span>
+                                    <span class="fa fa-check"></span><s:message code="query.make.except"/>
                                 </label>
                                 <input type="hidden" id="attachStr">
                                 <input type="hidden" id="attachVal" class="selectedTitle">
