@@ -28,7 +28,6 @@
 
 <link rel="stylesheet" href="<c:url value="/css/jquery.scrollbar.css"/>"/>
 <link rel="stylesheet" href="<c:url value="/css/zTreeStyle.css"/>"/>
-<link rel="stylesheet" href="<c:url value="/css/contentBody.css"/>"/>
 <link rel="stylesheet" href="<c:url value="/css/jquery.layout.css"/>"/>
 <link rel="stylesheet" href="<c:url value="/css/scrolltabs.css"/>"/>
 
