@@ -483,8 +483,8 @@ function fileInfoViewer( row ){
 						</div>
 						</span>
 					</h3>
-					<div class="panel panel-default" id="service.logging.count">
-						<div class="panel-body bornone">
+					<div class="panel-default" id="service.logging.count">
+						<div class="inner_personaldata" style="height:180px;">
 							<div id="chartArea1" style="height: 160px;"></div>
 						</div>
 					</div>
