@@ -88,15 +88,15 @@ pre {
 	position: relative;
 	top: 3px;
 }
-.differentExt{
-	background-color:#FFE8E8;
-}
-.unknownExt{
-	background-color:#FFFAC3;
-}
-.fileNameExistN{
-	background-color:#E0F7DA;
-}
+/*.differentExt{*/
+/*	background-color:#FFE8E8;*/
+/*}*/
+/*.unknownExt{*/
+/*	background-color:#FFFAC3;*/
+/*}*/
+/*.fileNameExistN{*/
+/*	background-color:#E0F7DA;*/
+/*}*/
 .found td .attachName {
 	cursor:pointer;
 }

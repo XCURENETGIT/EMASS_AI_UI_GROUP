@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 public class EmsMessageConvert {
 
 	public EmsMessageVO convertData(EmassMessageData data) {
+		if(null == data) {data = new EmassMessageData();} // null err방지
 		EmsMessageVO vo = new EmsMessageVO();
 		vo.setMsgId(data.getMsgId());
 		if (data.getNetworkInfo() != null) {

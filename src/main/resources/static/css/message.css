@@ -597,105 +597,260 @@ input[type="text"] {
 	border-left: 1px solid #cbcbcb;
 }
 .attach_file_img {
-	background-size: contain;
+	/*background-size: contain;*/
 	background-repeat: no-repeat;
-	width: 16px;
-	height: 16px;
-	display: inline-block;
+	/*width: 16px;*/
+	/*height: 16px;*/
+	/*display: inline-block;*/
 	vertical-align: sub;
-	background-image: url(../img/file/none.png);
+	background: url(../img/file/none.png) 8px center no-repeat;
 }
 
 .attach_png {
-	background-image: url(../img/file/png.png);
+	background: url(../img/file/png.png) 8px center no-repeat;
 }
 .attach_cab {
-	background-image: url(../img/file/cab.png);
+	background: url(../img/file/cab.png)8px center no-repeat;
 }
 .attach_jpg {
-	background-image: url(../img/file/jpg.png);
+	background: url(../img/file/jpg.png)8px center no-repeat;
 }
 .attach_jpeg {
-	background-image: url(../img/file/jpeg.png);
+	background: url(../img/file/jpeg.png)8px center no-repeat;
 }
 .attach_asf {
-	background-image: url(../img/file/asf.png);
+	background: url(../img/file/asf.png)8px center no-repeat;
 }
 .attach_avi {
-	background-image: url(../img/file/avi.png);
+	background: url(../img/file/avi.png)8px center no-repeat;
 }
 .attach_bmp {
-	background-image: url(../img/file/bmp.png);
+	background: url(../img/file/bmp.png)8px center no-repeat;
 }
 .attach_doc {
-	background-image: url(../img/file/doc.png);
+	background: url(../img/file/doc.png) 8px center no-repeat;
 }
 .attach_docx {
-	background-image: url(../img/file/docx.png);
+	background: url(../img/file/docx.png) 8px center no-repeat;
 }
 .attach_DRM {
-	background-image: url(../img/file/DRM.png);
+	background: url(../img/file/DRM.png) 8px center no-repeat;
 }
 .attach_gif {
-	background-image: url(../img/file/gif.png);
+	background: url(../img/file/gif.png) 8px center no-repeat;
 }
 .attach_gul {
-	background-image: url(../img/file/gul.png);
+	background: url(../img/file/gul.png) 8px center no-repeat;
 }
 .attach_htm {
-	background-image: url(../img/file/htm.png);
+	background: url(../img/file/htm.png) 8px center no-repeat;
 }
 .attach_html {
-	background-image: url(../img/file/html.png);
+	background: url(../img/file/html.png) 8px center no-repeat;
 }
 .attach_hwp {
-	background-image: url(../img/file/hwp.png);
+	background: url(../img/file/hwp.png) 8px center no-repeat;
 }
 .attach_link {
-	background-image: url(../img/file/link.png);
+	background: url(../img/file/link.png) 8px center no-repeat;
 }
 .attach_mp3 {
-	background-image: url(../img/file/mp3.png);
+	background: url(../img/file/mp3.png) 8px center no-repeat;
 }
 .attach_mp4 {
-	background-image: url(../img/file/mp4.png);
+	background: url(../img/file/mp4.png) 8px center no-repeat;
 }
 .attach_unknown {
-	background-image: url(../img/file/none.png);
+	background: url(../img/file/none.png) 8px center no-repeat;
 }
 .attach_office {
-	background-image: url(../img/file/office.png);
+	background: url(../img/file/office.png) 8px center no-repeat;
 }
 .attach_pdf {
-	background-image: url(../img/file/pdf.png);
+	background: url(../img/file/pdf.png) 8px center no-repeat;
 }
 .attach_ppt{
-	background-image: url(../img/file/ppt.png);
+	background: url(../img/file/ppt.png) 8px center no-repeat;
 }
 .attach_pptx {
-	background-image: url(../img/file/pptx.png);
+	background: url(../img/file/pptx.png) 8px center no-repeat;
 }
 .attach_rar {
-	background-image: url(../img/file/rar.png);
+	background: url(../img/file/rar.png) 8px center no-repeat;
 }
 .attach_text {
-	background-image: url(../img/file/text.png);
+	background: url(../img/file/text.png) 8px center no-repeat;
 }
 .attach_txt {
-	background-image: url(../img/file/txt.png);
+	background: url(../img/file/txt.png) 8px center no-repeat;
 }
 .attach_wav {
-	background-image: url(../img/file/wav.png);
+	background: url(../img/file/wav.png) 8px center no-repeat;
 }
 .attach_xls {
-	background-image: url(../img/file/xls.png);
+	background: url(../img/file/xls.png) 8px center no-repeat;
 }
 .attach_xlsx {
-	background-image: url(../img/file/xlsx.png);
+	background: url(../img/file/xlsx.png) 8px center no-repeat;
 }
 .attach_xml {
-	background-image: url(../img/file/xml.png);
+	background: url(../img/file/xml.png) 8px center no-repeat;
 }
 .attach_zip {
-	background-image: url(../img/file/zip.png);
+	background: url(../img/file/zip.png) 8px center no-repeat;
 }
+
+
+/* =================================================================  */
+
+/*
+Copyright (c) 2021 Kil Hyung-jin, with Reserved Font Name Pretendard.
+https://github.com/orioncactus/pretendard
+
+This Font Software is licensed under the SIL Open Font License, Version 1.1.
+This license is copied below, and is also available with a FAQ at:
+http://scripts.sil.org/OFL
+*/
+
+@font-face {
+	font-family: 'Pretendard';
+	font-weight: 900;
+	font-display: swap;
+	src: local('Pretendard Black'), url("../fonts/woff2/Pretendard-Black.subset.woff2") format('woff2'), url("../fonts/woff/Pretendard-Black.subset.woff") format('woff');
+}
+
+@font-face {
+	font-family: 'Pretendard';
+	font-weight: 800;
+	font-display: swap;
+	src: local('Pretendard ExtraBold'), url("../fonts/woff2/Pretendard-ExtraBold.subset.woff2") format('woff2'), url("../fonts/woff/Pretendard-ExtraBold.subset.woff") format('woff');
+}
+
+@font-face {
+	font-family: 'Pretendard';
+	font-weight: 700;
+	font-display: swap;
+	src: local('Pretendard Bold'), url("../fonts/woff2/Pretendard-Bold.subset.woff2") format('woff2'), url("../fonts/woff/Pretendard-Bold.subset.woff") format('woff');
+}
+
+@font-face {
+	font-family: 'Pretendard';
+	font-weight: 600;
+	font-display: swap;
+	src: local('Pretendard SemiBold'), url("../fonts/woff2/Pretendard-SemiBold.subset.woff2") format('woff2'), url("../fonts/woff/Pretendard-SemiBold.subset.woff") format('woff');
+}
+
+@font-face {
+	font-family: 'Pretendard';
+	font-weight: 500;
+	font-display: swap;
+	src: local('Pretendard Medium'), url("../fonts/woff2/Pretendard-Medium.subset.woff2") format('woff2'), url("../fonts/woff/Pretendard-Medium.subset.woff") format('woff');
+}
+
+@font-face {
+	font-family: 'Pretendard';
+	font-weight: 400;
+	font-display: swap;
+	src: local('Pretendard Regular'), url("../fonts/woff2/Pretendard-Regular.subset.woff2") format('woff2'), url("../fonts/woff/Pretendard-Regular.subset.woff") format('woff');
+}
+
+@font-face {
+	font-family: 'Pretendard';
+	font-weight: 300;
+	font-display: swap;
+	src: local('Pretendard Light'), url("../fonts/woff2/Pretendard-Light.subset.woff2") format('woff2'), url("../fonts/woff/Pretendard-Light.subset.woff") format('woff');
+}
+
+@font-face {
+	font-family: 'Pretendard';
+	font-weight: 200;
+	font-display: swap;
+	src: local('Pretendard ExtraLight'), url("../fonts/woff2/Pretendard-ExtraLight.subset.woff2") format('woff2'), url("../fonts/woff/Pretendard-ExtraLight.subset.woff") format('woff');
+}
+
+@font-face {
+	font-family: 'Pretendard';
+	font-weight: 100;
+	font-display: swap;
+	src: local('Pretendard Thin'), url("../fonts/woff2/Pretendard-Thin.subset.woff2") format('woff2'), url("../fonts/woff/Pretendard-Thin.subset.woff") format('woff');
+}
+
+* {margin:0; padding: 0;box-sizing:border-box;}
+html, body, div, span, applet, object, iframe,
+h1, h2, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+	font-family: Pretendard;
+	font-weight:400;
+	box-sizing:border-box;
+
+
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+	display: block;
+
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+/*reset*/
+#gnbWrap   a  {color:#fff; text-decoration: none; padding:0;margin:0;}
+#gnbWrap   a:active {}
+#gnbWrap   a:hover {color:#ddd; text-decoration: underline;}
+
+
+input[type=password], input[type=text], select { vertical-align: middle;font-family: Pretendard; font-size:12px;border-radius: 2px;height:26px;line-height: 26px;border-radius: 2px;border: 1px solid #CCC;background: #FFF;padding: 0 4px;align-items: center;-webkit-border-radius: 2px;-moz-border-radius: 2px;-ms-border-radius: 2px;-o-border-radius: 2px;}
+select:disabled { background-color:#ddd; border: 1px solid #aaa;}
+input:disabled{ background-color:#eee; border: 1px solid #CCC;}
+input[type="text"].error,select.error{border:1px solid #FC5656; color:#FC5656; background-color:#fff;}
+select { font-size:12px; border-radius: 2px; height:26px; line-height: 26px; resize: vertical; border-radius: 2px; border: 1px solid #ccc; background: #FFF; display: flex; padding: 0 4px 0 4px;  display:inline-block; align-items: center; -webkit-border-radius: 2px; -moz-border-radius: 2px; -ms-border-radius: 2px; -o-border-radius: 2px; }
+button {cursor: pointer;font-family: Pretendard; vertical-align: middle;}
+button:hover {text-decoration: underline;}
+
+/* IE 기본 스타일 제거 */
+select::-ms-expand{display: none; /* IE 10, 11 */}
+input[type="date"]{font-size:12px;font-family: Pretendard;height:26px;line-height:26px;padding-left:8px;padding-right:4px;color: #111;border:1px solid #ccc;border-radius: 2px;-webkit-border-radius: 2px;-moz-border-radius: 2px;-ms-border-radius: 2px;-o-border-radius: 2px;}
+::-webkit-calendar-picker-indicator{background-color: #ffffff;padding: 5px;cursor: pointer;}
+.txt_error {margin:4px 0; font-size:12px; color:#FC5656}
+
+
+input[type="radio"]:checked + span  {color:#1A73F9}
+input[type="radio"]:disabled { appearance: none; border-radius: 50%; width:12px; height:12px; background-color: #eee; border: 1px solid #CCC; box-shadow: none; opacity:1; cursor: not-allowed; -webkit-border-radius: 50%; -moz-border-radius: 50%; -ms-border-radius: 50%; -o-border-radius: 50%; }
+input[type="radio"]:disabled + span {opacity: 0.7;cursor: not-allowed;}
+input[type="checkbox"]:checked + span  {color:#1A73F9}
+input[type="checkbox"]:disabled {appearance: none; border-radius: 2px; width:12px; height:12px; background-color: #eee; border: 1px solid #CCC; box-shadow: none;opacity:1;cursor: not-allowed;}
+input[type="checkbox"]:disabled + span {opacity: 0.7;cursor: not-allowed;}
+input[type="checkbox"] {vertical-align: middle !important;}

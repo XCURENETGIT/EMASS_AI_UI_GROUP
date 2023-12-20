@@ -6,11 +6,14 @@
 
 <%-- 메시지 페이지 전용 --%>
 <link rel="stylesheet" href="<c:url value="/css/bootstrap.min.css"/>" />
+<link rel="stylesheet" href="<c:url value="/css/emass_message_style.css"/>" />
+<link rel="stylesheet" href="<c:url value="/css/message.css"/>"/> <%-- message css--%>
+
 <link rel="stylesheet" href="<c:url value="/css/panelsTab.css"/>"/>
 <link rel="stylesheet" href="<c:url value="/css/bootstrap-dialog.css"/>" />
 <link rel="stylesheet" href="<c:url value="/css/non-responsive.css"/>" />
-<link rel="stylesheet" href="<c:url value="/css/reset.css"/>" />
-<link rel="stylesheet" href="<c:url value="/css/emass_style.css"/>" />
+
+
 
 <link rel="stylesheet" href="<c:url value="/css/font-awesome.min.css"/>" />
 <link rel="stylesheet" href="<c:url value="/css/slick.grid.original.css"/>" />
@@ -29,7 +32,7 @@
 <link rel="stylesheet" href="<c:url value="/css/gridstack.css"/>" />
 <link rel="stylesheet" href="<c:url value="/css/sb-admin-2.css"/>" />
 
-<link rel="stylesheet" href="<c:url value="/css/message.css"/>"/>
+
 <link rel="stylesheet" href="<c:url value="/css/jquery.scrollbar.css"/>"/>
 <link rel="stylesheet" href="<c:url value="/css/zTreeStyle.css"/>"/>
 <link rel="stylesheet" href="<c:url value="/css/contentBody.css"/>"/>

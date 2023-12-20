@@ -336,8 +336,6 @@
     </style>
     <script type="text/javascript">
 
-
-
         var op_attach_save = '<%=op_attach_save%>';
         var op_body_save = '<%=op_body_save%>';
         var op_body_print = '<%=op_body_print%>';
@@ -500,10 +498,7 @@
                 return split(term).pop();
             }
 
-            $(document).on('click','#exportMsg',function(){
-                if( $('#feedbackBtn').css('display') != 'none' ) $('.dropdown-menu.dropdown-menu-left').css('margin-left','90px');
-                else $('.dropdown-menu.dropdown-menu-left').css('margin-left','20px');
-            });
+
 
             ui.onBody('msgBody', 0, 0);
             con.init();
@@ -797,7 +792,7 @@
                         center__spacing_open:3,
                         east__paneSelector: ".inner-east",
                         east__maskContents:  true,
-                        east__size: 680,
+                        east__size: 900,
                         east__spacing_open:3,
                         north__spacing_open:0
                     },
@@ -999,9 +994,7 @@
                 $('#periodSetupMenu').show();
             });
 
-            $('#saveMsgData').click(function(){
-                saveFolderDataGrid( getIframeListObj().grid );
-            });
+
 
             $('.searchKeywordCloseBtn').click(function(){
                 $('#searchKeywordDiv').hide();
@@ -2691,36 +2684,6 @@
                                     <%-- 보기 설정 --%>
                                  <div class="viewSetup" style="position: absolute;top:40px;right:10px;z-index: 9;">
                                         <div style="display: inline-block; padding-left:10px;vertical-align: bottom;">
-                                            <a href="javascript:;" style="padding-right:10px; color:#383838; cursor: pointer; font-size: 12px;float: right;"data-toggle="dropdown" id="exportMsg"><s:message code="common.msg.export"/></a>
-                                            <ul class="dropdown-menu dropdown-menu-left" role="menu" style="min-width:100px;font-size:13px;">
-                                                <li style="display:none;"><a href="javascript:void(0);" id="body_link_btn" class="body_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-text-o" style="font-size:16px"></span>&nbsp;<s:message code="condition.body"/></a></li>
-                                                <li style="display:none;"><a href="javascript:void(0);" id="attach_link_btn" class="attach_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-archive-o" style="font-size:16px"></span>&nbsp;<s:message code="consent.attach"/></a></li>
-                                                <li style="display:none;"><a href="javascript:void(0);" id="excel_link_btn" class="excel_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>" option="Y"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/> (<s:message code="common.msg.excel"/> xlsx)</a></li>
-                                                <li style="display:none;"><a href="javascript:void(0);" id="cell_link_btn" class="cell_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>" option="Y"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/> (<s:message code="common.msg.hancel"/> cell)</a></li>
-                                                <li style="display:none;"><a href="javascript:void(0);" id="csv_link_btn" class="csv_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>" option="Y"><span class="fa fa-file-text" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/> (<s:message code="common.msg.text"/> csv)</a></li>
-                                                <li style="display:none;"><a href="javascript:void(0);" id="pdf_link_btn" class="pdf_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>" option="Y"><span class="fa fa-file-pdf-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/> (PDF)</a></li>
-                                                <c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'LS') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
-                                                    <li><a href="javascript:void(0);" class="all_down_link" data-type="L" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/></a></li>
-                                                </c:if>
-                                                <c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'BS') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
-                                                    <li><a href="javascript:void(0);" class="all_down_link" data-type="B" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-text-o" style="font-size:16px"></span>&nbsp;<s:message code="condition.body"/></a></li>
-                                                </c:if>
-                                                <c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'AS') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
-                                                    <li><a href="javascript:void(0);" class="all_down_link" data-type="A" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-archive-o" style="font-size:16px"></span>&nbsp;<s:message code="consent.attach"/></a></li>
-                                                </c:if>
-                                                <c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'WS') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
-                                                    <li><a href="javascript:void(0);" class="all_down_link" data-type="LB" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/>+<s:message code="condition.body"/></a></li>
-                                                </c:if>
-                                                <c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'CS') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
-                                                    <li><a href="javascript:void(0);" class="all_down_link" data-type="LBA" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/>+<s:message code="condition.body"/>+<s:message code="consent.attach"/></a></li>
-                                                </c:if>
-                                                <c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'LP') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
-                                                    <li><a href="javascript:void(0);" class="print_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="glyphicon glyphicon-print"></span>&nbsp;<s:message code="selectCodeAll.list"/> <s:message code="common.msg.print"/></a></li>
-                                                </c:if>
-                                                <li class="dropdown-divider"></li>
-                                                <li><a href="javascript:void(0);" class="downList" data-target="tabGrid" ><span class="glyphicon glyphicon-th-list"></span>&nbsp;<s:message code="common.msg.download"/> <s:message code="mail.view.list"/></a></li>
-                                            </ul>
-                                            <a href="javascript:;" style="padding-right:10px; color:#383838; cursor: pointer; font-size: 12px;float: right;" id="saveMsgData"><s:message code="filterInfo.setMsgFolder1"/></a>
                                             <a href="javascript:;" style="padding-right:10px; color:#383838; cursor: pointer; font-size: 12px;float: right; display: none;" id="feedbackBtn"><s:message code="condition.feedback"/> <s:message code="common.msg.setting"/></a>
                                             <ul id="feedbackSetting" style="display: none; z-index: 991; padding: 5px 0px;">
                                                 <li><a href="javascript:void(0);" onclick="setFeedback(0);" style="padding-left: 20px;"><span class="feedbackCorrect" style="display: inline-block; position: relative; top: 0px;"></span>&nbsp;<s:message code="condition.info.feedback0"/></a></li>
@@ -2831,7 +2794,7 @@
                                     </div>
                                     <div id="contentListArea" class="inner-center">
                                         <iframe src="<c:url value="/ems/contentList.do?gridInit=true"/>" id="contentList0" class="contentList"></iframe>
-                                        <iframe src="<c:url value="/ems/contentList.do?gridInit="/>" id="contentList1" class="contentList" style="left:-10000px"></iframe>
+                                        <iframe src="<c:url value="/ems/contentList.do?gridInit="/>" id="contentList1" class="contentList" style="left:-10000px;"></iframe>
                                     </div>
                                     <div id="contentBodyArea" class="inner-east">
                                         <iframe src="<c:url value="/ems/contentBodyNew.do"/>" id="contentBody0" class="contentBody" name="contentBody"></iframe>

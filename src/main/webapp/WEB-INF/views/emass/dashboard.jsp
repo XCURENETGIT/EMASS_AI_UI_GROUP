@@ -30,17 +30,17 @@
         menuKey = $.urlParam('menuKey');
         if (menuKey) dashboardInit();
         else getDefaultMenuKey();
-
-        getAllTodayPatternPrivacy();
-        getTodayKeywordDetection();
-        getTodayRiskBehavior();
-        getTodayPatternPrivacy();
-        getFileSendTotal();
-        getServiceDataLogging();
-        getFileTop();
-        getTodayNotWork();
-        getTodayDataStatus();
-        getTodayFilePerson();
+		//
+        // getAllTodayPatternPrivacy();
+        // getTodayKeywordDetection();
+        // getTodayRiskBehavior();
+        // getTodayPatternPrivacy();
+        // getFileSendTotal();
+        // getServiceDataLogging();
+        // getFileTop();
+        // getTodayNotWork();
+        // getTodayDataStatus();
+        // getTodayFilePerson();
         getLoggingData();
 
     });
