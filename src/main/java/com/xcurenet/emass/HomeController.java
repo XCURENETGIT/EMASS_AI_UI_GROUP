@@ -690,7 +690,7 @@ public class HomeController {
 	/**
 	 * report JSP.
 	 */
-	@RequestMapping(value = "/ems/report.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/report/contentReport.do", method = RequestMethod.GET)
 	@Description("리포트 페이지")
 	public String report(Locale locale, Model model) {
 		return "/emass/report/report";

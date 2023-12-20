@@ -429,21 +429,6 @@
       </select>
     </div>
     <div>
-      <select id="busiSelect" data-style="btn-default btn-sm" multiple data-show-subtext="true" data-live-search="true" data-actions-box="true"></select>
-    </div>
-    <div id="selectedCodeTitle"></div>
-    <div class="btn-group" data-toggle="buttons" style="margin-top: 0px;">
-      <button type="button" class="btn btn-sm btn-default" id="dept"><span class="glyphicon glyphicon-plus-sign"></span>&nbsp;<s:message code="common.org.choose.dept"/></button>
-      <span id="deptSelectedArea" class="codeSelectedBtn">
-										<button type="button" class="btn"  style="z-index: 2">0</button>
-									</span>
-      <input type="hidden" id="deptStr" class="selectedTitle">
-      <input type="hidden" id="deptVal">
-    </div>
-    <div>
-      <input type="text" placeholder="사용자를 입력하세요">
-    </div>
-    <div>
       <button class="form_btn01" type="button" accesskey="Q" id="searchBtn"><s:message code="common.msg.search"/></button>
     </div>
   </div>
