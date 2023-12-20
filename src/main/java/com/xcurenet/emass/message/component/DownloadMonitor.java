@@ -2,6 +2,7 @@ package com.xcurenet.emass.message.component;
 
 import java.util.List;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -13,9 +14,9 @@ import com.xcurenet.emass.message.service.DownloadBatchVO;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
+@Log4j2
 @Component
-public class DownloadMonitor{
+public class DownloadMonitor {
 
 	@Value("#{'download.monitor.fixedRate'}")
 	private String delay;
@@ -28,7 +29,7 @@ public class DownloadMonitor{
 		DownloadBatchService batchService = SpringContextUtil.getBean(DownloadBatchService.class);
 		List<DownloadBatchVO> batchList = batchService.getDownloadBatchIngList(String.valueOf(t));
 
-		for(DownloadBatchVO batch : batchList) {
+		for (DownloadBatchVO batch : batchList) {
 			batchService.cancelUnkown("M", batch.getDownSeq());
 		}
 		log.info("[Download Batch Down] Download Batch State Update End... {}", TimeUtil.print());

@@ -1,23 +1,21 @@
 package com.xcurenet.common.snmp.schedule;
 
-import java.util.concurrent.Callable;
-
+import com.xcurenet.common.snmp.get.GetSnmp;
+import com.xcurenet.common.util.Common;
+import com.xcurenet.device.service.DeviceVO;
+import lombok.Data;
+import lombok.extern.log4j.Log4j2;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import com.xcurenet.common.snmp.get.GetSnmp;
-import com.xcurenet.common.util.Common;
-import com.xcurenet.device.service.DeviceVO;
-
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import java.util.concurrent.Callable;
 
 @Data
-@Slf4j
+@Log4j2
 @Service("snmpThread")
 @Scope("prototype")
 public class SnmpThread implements Callable<DeviceVO> {
@@ -70,10 +68,10 @@ public class SnmpThread implements Callable<DeviceVO> {
 		boolean info = false;
 		for (int i = 0; i < hdds.size(); i++) {
 			JSONObject obj = hdds.getJSONObject(i);
-			double hddAlarmLimit = Double.valueOf(Common.nvl(obj.get("hddAlarmLimit"), "0"));
-			double hddInfoUsage = Double.valueOf(Common.nvl(obj.get("hddInfoUsage"), "0"));
-			double hddWarnLimit = Double.valueOf(Common.nvl(obj.get("hddWarnLimit"), "0"));
-			double hddNotifyLimit = Double.valueOf(Common.nvl(obj.get("hddNotifyLimit"), "0"));
+			double hddAlarmLimit = Double.parseDouble(Common.nvl(obj.get("hddAlarmLimit"), "0"));
+			double hddInfoUsage = Double.parseDouble(Common.nvl(obj.get("hddInfoUsage"), "0"));
+			double hddWarnLimit = Double.parseDouble(Common.nvl(obj.get("hddWarnLimit"), "0"));
+			double hddNotifyLimit = Double.parseDouble(Common.nvl(obj.get("hddNotifyLimit"), "0"));
 			if (hddAlarmLimit > 0 && hddAlarmLimit <= hddInfoUsage) {
 				danger = true;
 				break;
@@ -83,7 +81,7 @@ public class SnmpThread implements Callable<DeviceVO> {
 				info = true;
 			}
 		}
-		if (hdds.size() == 0) return WARN;
+		if (hdds.isEmpty()) return WARN;
 		else if (danger) return ERROR;
 		else if (warn) return WARN;
 		else if (info) return NORMAL;
@@ -91,7 +89,7 @@ public class SnmpThread implements Callable<DeviceVO> {
 	}
 
 	private String getProcessStatus(JSONArray process, String deviceType) {
-		if (process.size() == 0) {
+		if (process.isEmpty()) {
 			if (deviceType.equals("H")) return "";
 			else return WARN;
 		}
@@ -103,7 +101,7 @@ public class SnmpThread implements Callable<DeviceVO> {
 	}
 
 	private String getInterfaceStatus(JSONArray interfaces) {
-		if (interfaces.size() == 0) return WARN;
+		if (interfaces.isEmpty()) return WARN;
 		for (int i = 0; i < interfaces.size(); i++) {
 			JSONObject proc = interfaces.getJSONObject(i);
 			if (Common.isEquals(proc.get("netConfState"), "0")) return ERROR;

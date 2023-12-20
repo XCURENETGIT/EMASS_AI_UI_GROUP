@@ -19,6 +19,8 @@ import com.xcurenet.emass.service.service.ServiceTypeVO;
 import com.xcurenet.user.service.PersCodeInfo;
 import com.xcurenet.user.service.UserService;
 import lombok.Data;
+import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +33,9 @@ import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Service("config")
-@Slf4j
+@Log4j2
 @Data
+@Service("config")
 public class Config {
 
 	@Autowired
@@ -62,6 +64,7 @@ public class Config {
 
 	private static List<ConfigVO> configs;
 
+	@Getter
 	private static List<IpRangeVO> ipRange;
 
 	public static List<ServiceTypeVO> serviceTypes;
@@ -102,13 +105,13 @@ public class Config {
 
 	public static List<PersCodeInfo> compInfo = new ArrayList<>(); // 회사
 
-	public static List<PersCodeInfo>  busiInfo = new ArrayList<>(); // 사업장
+	public static List<PersCodeInfo> busiInfo = new ArrayList<>(); // 사업장
 
 	public static List<PersCodeInfo> deptInfo = new ArrayList<>();  //부서
 
-	public static List<PersCodeInfo>  jikgubInfo = new ArrayList<>(); // 직급
+	public static List<PersCodeInfo> jikgubInfo = new ArrayList<>(); // 직급
 
-	public static List<PersCodeInfo>  serviceInfo = new ArrayList<>(); // 서비스
+	public static List<PersCodeInfo> serviceInfo = new ArrayList<>(); // 서비스
 
 
 	public final static String USER_FORMAT = "message.user.format";
@@ -148,7 +151,7 @@ public class Config {
 
 	public static String DBMS_NAME = "mysql";
 
-	public static Map<String,String> elsFields = new HashMap<>();
+	public static Map<String, String> elsFields = new HashMap<>();
 
 	public static ServiceGroupVO getServiceGroup(final String groupCd) {
 		for (ServiceGroupVO service : serviceGroups) {
@@ -182,14 +185,14 @@ public class Config {
 
 	public static String getServiceLv12GroupNm(final String svc) {
 		for (ServiceTypeVO service : serviceTypes) {
-			if (Common.nvl(service.getServiceCd()).indexOf(svc) > -1) return service.getGroupNm();
+			if (Common.nvl(service.getServiceCd()).contains(svc)) return service.getGroupNm();
 		}
 		return null;
 	}
 
 	public static String getServiceLv12Nm(final String svc) {
 		for (ServiceTypeVO service : serviceTypes) {
-			if (Common.nvl(service.getServiceCd()).indexOf(svc) > -1) return service.getServiceNm();
+			if (Common.nvl(service.getServiceCd()).contains(svc)) return service.getServiceNm();
 		}
 		return null;
 	}
@@ -211,7 +214,7 @@ public class Config {
 
 	public static String getServiceDeepNm(final String svc) {
 		for (ServiceTypeVO service : serviceTypesAll) {
-			if (Common.nvl(service.getServiceCd()).indexOf(svc) > -1) {
+			if (Common.nvl(service.getServiceCd()).contains(svc)) {
 				return service.getServiceNm();
 			}
 		}
@@ -237,32 +240,31 @@ public class Config {
 	}
 
 	public static String getProtocolNm(final String protocol) {
-		if(Common.isEmpty(protocol)) return "";
-		if(Common.isEquals(protocol, "h2")){
+		if (Common.isEmpty(protocol)) return "";
+		if (Common.isEquals(protocol, "h2")) {
 			return "http/2";
-		}else {
+		} else {
 			return "http/1";
 		}
 	}
 
 	public static String getElsConvertField(String field) {
-		  String fieldStr = field;
-			for(Map.Entry<String, String> map : elsFields.entrySet()){
-				if(map.getKey().indexOf(fieldStr) > -1) {
-					fieldStr = map.getValue();
-					break;
-				}
+		String fieldStr = field;
+		for (Map.Entry<String, String> map : elsFields.entrySet()) {
+			if (map.getKey().contains(fieldStr)) {
+				fieldStr = map.getValue();
+				break;
 			}
-			return fieldStr;
+		}
+		return fieldStr;
 	}
 
-	@SuppressWarnings("static-access")
-	@PostConstruct
 	@Order(1)
+	@PostConstruct
 	public void init() {
 		springContextUtil.setApplicationContext(applicationContext);
 
-		log.info("[설정정보] LOAD START..");
+		log.info("[CONFIG] LOAD START..");
 
 		configs = configService.getConfList();
 
@@ -317,9 +319,9 @@ public class Config {
 		Locale.setDefault(lo);
 		log.info("시스템 언어:{}", lo.getLanguage());
 
-		log.info("[설정정보] LOAD END..");
+		log.info("[CONFIG] LOAD END..");
 
-		log.info("[스케쥴러] LOAD START..");
+		log.info("[SCHEDULER] LOAD START..");
 
 		//SCHEDULE_INSA_LOAD
 		JobVO job = new JobVO();
@@ -351,7 +353,7 @@ public class Config {
 			}
 		}
 
-		if(Common.isNotEmpty(Config.getString("api.insa.useyn"))) {
+		if (Common.isNotEmpty(Config.getString("api.insa.useyn"))) {
 			JobVO apiUserJob = new JobVO();
 			apiUserJob.setJobId("SCHEDULE_INSA_API_LOAD");
 			apiUserJob.setJobClass("userInsaJob");
@@ -377,7 +379,7 @@ public class Config {
 		exportFileDelJob.setDescription("Export File Expire");
 		trigger.putJob(exportFileDelJob.getJobId(), SpringContextUtil.getBean(exportFileDelJob.getJobClass()).getClass(), exportFileDelJob.getCronExp(), exportFileDelJob.getDescription());
 
-		log.info("[스케쥴러] LOAD END..");
+		log.info("[SCHEDULER] LOAD END..");
 	}
 
 
@@ -408,149 +410,113 @@ public class Config {
 	}
 
 	public void reloadUserId() {
-		log.info("사용자 아이디 정보 Load Start");
 		userIds = new HashMap<>();
 		List<Map<String, String>> userIds2 = userService.getUserIds();
-		log.info("사용자 아이디 정보  Size: {}", userIds2.size());
 		for (Map<String, String> userId2 : userIds2) {
 			userIds.put(userId2.get("hash_key"), userId2.get("value"));
 		}
-		log.info("사용자 정보 Load End");
+		log.info("사용자 아이디 : {}", userIds.size());
 	}
 
 	public void reloadUser() {
-		log.info("사용자 정보 Load Start");
 		userNames = new HashMap<>();
 		List<Map<String, String>> users = userService.getUserNames();
-		log.info("사용자 정보 Size: {}", users.size());
 		for (Map<String, String> user : users) {
 			userNames.put(user.get("hash_key"), user.get("value"));
 		}
-		log.info("사용자 정보 Load End");
+		log.info("사용자 이름 : {}", users.size());
 	}
 
 	public void reloadCo() {
-		log.info("사용자 회사명 Load Start");
 		userCoNms = new HashMap<>();
 		List<Map<String, String>> cos = userService.getUserCoNms();
-		log.info("사용자 회사명 Size: {}", cos.size());
+
 		for (Map<String, String> co : cos) {
 			userCoNms.put(co.get("hash_key"), co.get("value"));
 		}
-		log.info("사용자 회사명 Load End");
+		log.info("사용자 회사명 : {}", cos.size());
 	}
 
 	public void reloadBusi() {
-		log.info("사용자 사업장명 Load Start");
 		userBusiNms = new HashMap<>();
 		List<Map<String, String>> bizs = userService.getUserBusiNms();
-		log.info("사용자 사업장명 Size: {}", bizs.size());
 		for (Map<String, String> biz : bizs) {
 			userBusiNms.put(biz.get("hash_key"), biz.get("value"));
 		}
-		log.info("사용자 사업장명 Load End");
+		log.info("사용자 사업장 : {}", bizs.size());
 	}
 
-	
 
 	public void reloadDept() {
-		log.info("사용자 부서명 Load Start");
 		userDepts = new HashMap<>();
 		List<Map<String, String>> depts = userService.getUserDepts();
-		log.info("사용자 부서명 Size: {}", depts.size());
 		for (Map<String, String> dept : depts) {
 			userDepts.put(dept.get("hash_key"), dept.get("value"));
 		}
-		log.info("사용자 부서명 Load End");
+		log.info("사용자 부서 : {}", depts.size());
 	}
 
 	public void reloadJikgub() {
-		log.info("사용자 직급명 Load Start");
 		userJikgubs = new HashMap<>();
 		List<Map<String, String>> jikgubs = userService.getUserJikgubs();
-		log.info("사용자 직급명 Size: {}", jikgubs.size());
 		for (Map<String, String> jikgub : jikgubs) {
 			userJikgubs.put(jikgub.get("hash_key"), jikgub.get("value"));
 		}
-		log.info("사용자 직급명 Load End");
+		log.info("사용자 직급 : {}", jikgubs.size());
 	}
 
 	public void reloadEmail() {
-		log.info("사용자 Email Load Start");
 		userEmails = new HashMap<>();
 		List<Map<String, String>> emails = userService.getUserEmails();
-		log.info("사용자 Email Size: {}", emails.size());
 		for (Map<String, String> email : emails) {
 			userEmails.put(email.get("hash_key"), email.get("value"));
 		}
-		log.info("사용자 Email Load End");
+		log.info("사용자 Email : {}", emails.size());
 	}
 
 	public void reloadNamebyEmail() {
-		log.info("사용자 이름/아이디 Load Start");
 		userNamebyEmails = new HashMap<>();
 		List<Map<String, String>> emails = userService.getUserNamebyEmail();
-		log.info("사용자 이름/아이디 Size: {}", emails.size());
 		for (Map<String, String> email : emails) {
 			JSONObject obj = new JSONObject();
 			obj.put("name", email.get("hash_name"));
 			obj.put("id", email.get("hash_id"));
 			userNamebyEmails.put(email.get("hash_key"), obj);
 		}
-		log.info("사용자 이름/아이디 Load End");
+		log.info("사용자 이름/아이디 : {}", emails.size());
 	}
 
 
 	private void reloadCompInfo() {
-
-		List<PersCodeInfo> compInfo =  userService.getCompInfo();
-		log.info("회사 코드맵핑정보 Load START");
-		log.info("회사  Size: {}", compInfo.size());
-		if(null != compInfo || compInfo.size() != 0)  this.compInfo.addAll(compInfo);
-		log.info("회사 코드맵핑정보 Load End");
+		List<PersCodeInfo> compInfo = userService.getCompInfo();
+		Config.compInfo.addAll(compInfo);
+		log.info("회사 : {}", compInfo.size());
 	}
 
 	private void reloadBusiInfo() {
-		List<PersCodeInfo> busiInfo =  userService.getBusiInfo();
-		log.info("사업장 코드맵핑정보 Load START");
-		log.info("사업장  Size: {}", busiInfo.size());
-		if(null != busiInfo || busiInfo.size() != 0) this.busiInfo.addAll(busiInfo);
-		log.info("사업장 코드맵핑정보 Load End");
-
-
+		List<PersCodeInfo> busiInfo = userService.getBusiInfo();
+		Config.busiInfo.addAll(busiInfo);
+		log.info("사업장 : {}", busiInfo.size());
 	}
-	private void reloadDeptInfo() {
-		List<PersCodeInfo> deptInfo =  userService.getDeptInfo();
-		log.info("부서 코드맵핑정보 Load START");
-		log.info("부서  Size: {}", deptInfo.size());
-		if(null != deptInfo || deptInfo.size() != 0) this.deptInfo.addAll(deptInfo);
-		log.info("부서 코드맵핑정보 Load End");
 
+	private void reloadDeptInfo() {
+		List<PersCodeInfo> deptInfo = userService.getDeptInfo();
+		Config.deptInfo.addAll(deptInfo);
+		log.info("부서 : {}", deptInfo.size());
 	}
 
 	private void reloadJikgubInfo() {
-		List<PersCodeInfo> jikgubInfo =  userService.getJikgubInfo();
-		log.info("직급 코드맵핑정보 Load START");
-		log.info("직급  Size: {}", jikgubInfo.size());
-		if(null != jikgubInfo || jikgubInfo.size() != 0) this.jikgubInfo.addAll(jikgubInfo);
-		log.info("직급 코드맵핑정보 Load End");
+		List<PersCodeInfo> jikgubInfo = userService.getJikgubInfo();
+		Config.jikgubInfo.addAll(jikgubInfo);
+		log.info("직급 : {}", jikgubInfo.size());
 
 	}
 
 	private void reloadServiceInfo() {
-		List<PersCodeInfo> serviceInfo =  userService.getServiceInfo();
-		log.info("서비스 코드맵핑정보 Load START");
-		log.info("서비스  Size: {}", serviceInfo.size());
-		if(null != serviceInfo || serviceInfo.size() != 0) this.serviceInfo.addAll(serviceInfo);
-		log.info("서비스 코드맵핑정보 Load End");
+		List<PersCodeInfo> serviceInfo = userService.getServiceInfo();
+		Config.serviceInfo.addAll(serviceInfo);
+		log.info("서비스 : {}", serviceInfo.size());
 	}
-
-
-
-
-
-
-
 
 	public static String getUserId(final String userKey) {
 		return Common.nvl(userIds.get(userKey.toLowerCase()));
@@ -580,63 +546,58 @@ public class Config {
 		return Common.nvl(userEmails.get(userKey.toLowerCase()));
 	}
 
-	public static List<IpRangeVO> getIpRange() {
-		return ipRange;
-	}
-
 	public static void reloadIpRange() {
 		IpRangeService ipRangeService = SpringContextUtil.getBean(IpRangeService.class);
 		ipRange = ipRangeService.getIpRangeAllList();
 	}
 
-	public static String analysisFlag(final String field,final String code) {
-		if(ElasticSearchCommon.USER_USERID.equals(field)) return getUserName(code);
-		else if(ElasticSearchCommon.USER_COCD.equals(field)) return getCompName(code);
-		else if(ElasticSearchCommon.USER_BUSICD.equals(field)) return getBusiName(code);
-		else if(ElasticSearchCommon.USER_DEPTCD.equals(field)) return getDeptName(code);
-		else if(ElasticSearchCommon.USER_JIKGUBCD.equals(field)) return getJikgubName(code);
-		else if(ElasticSearchCommon.SERVICE_SVC.equals(field)) return getServiceName(code);
+	public static String analysisFlag(final String field, final String code) {
+		if (ElasticSearchCommon.USER_USERID.equals(field)) return getUserName(code);
+		else if (ElasticSearchCommon.USER_COCD.equals(field)) return getCompName(code);
+		else if (ElasticSearchCommon.USER_BUSICD.equals(field)) return getBusiName(code);
+		else if (ElasticSearchCommon.USER_DEPTCD.equals(field)) return getDeptName(code);
+		else if (ElasticSearchCommon.USER_JIKGUBCD.equals(field)) return getJikgubName(code);
+		else if (ElasticSearchCommon.SERVICE_SVC.equals(field)) return getServiceName(code);
 		else return code;
 	}
 
 	public static String getCompName(final String code) {
-		String result = compInfo.stream().filter(m -> Common.isEquals(code,m.getCode())).map(m -> m.getName()).collect(Collectors.joining());
+		String result = compInfo.stream().filter(m -> Common.isEquals(code, m.getCode())).map(m -> m.getName()).collect(Collectors.joining());
 		if (Common.isEmpty(result)) result = "none";
 		return result;
 	}
 
 	public static String getBusiName(final String code) {
-		String result = busiInfo.stream().filter(m -> Common.isEquals(code,m.getCode())).map(m -> m.getName()).collect(Collectors.joining());
+		String result = busiInfo.stream().filter(m -> Common.isEquals(code, m.getCode())).map(m -> m.getName()).collect(Collectors.joining());
 		if (Common.isEmpty(result)) result = "none";
 		return result;
 	}
 
 	public static String getDeptName(final String code) {
-		String result = deptInfo.stream().filter(m -> Common.isEquals(code,m.getCode())).map(m -> m.getName()).collect(Collectors.joining());
+		String result = deptInfo.stream().filter(m -> Common.isEquals(code, m.getCode())).map(m -> m.getName()).collect(Collectors.joining());
 		if (Common.isEmpty(result)) result = "none";
 		return result;
 	}
 
 	public static String getJikgubName(final String code) {
-		String result = jikgubInfo.stream().filter(m -> Common.isEquals(code,m.getCode())).map(m -> m.getName()).collect(Collectors.joining());
+		String result = jikgubInfo.stream().filter(m -> Common.isEquals(code, m.getCode())).map(m -> m.getName()).collect(Collectors.joining());
 		if (Common.isEmpty(result)) result = "none";
 		return result;
 	}
 
 	public static String getServiceName(final String code) {
-		String result = serviceInfo.stream().filter(m -> Common.isEquals(code,m.getCode())).map(m -> m.getName()).collect(Collectors.joining());
+		String result = serviceInfo.stream().filter(m -> Common.isEquals(code, m.getCode())).map(m -> m.getName()).collect(Collectors.joining());
 		if (Common.isEmpty(result)) result = "none";
 		return result;
 	}
 
-
-	public static void loadElsFieldMap(){
+	public static void loadElsFieldMap() {
 		elsFields.put("ctime_hh", "ctime");
 		elsFields.put("ctime_yyyymmdd", "ctime");
 		elsFields.put("ctime_yyyymm", "ctime");
 		elsFields.put("businm", ElasticSearchCommon.USER_BUSICD);
 		elsFields.put("conm", ElasticSearchCommon.USER_COCD);
-		elsFields.put("deptnm",ElasticSearchCommon.USER_DEPTCD);
+		elsFields.put("deptnm", ElasticSearchCommon.USER_DEPTCD);
 		elsFields.put("direction_svc", ElasticSearchCommon.DIRECTIONSVC);
 		elsFields.put("jikgubnm,jikgub", ElasticSearchCommon.USER_JIKGUBCD);
 	}

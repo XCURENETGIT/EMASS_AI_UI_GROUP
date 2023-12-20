@@ -1,24 +1,22 @@
 package com.xcurenet.common.snmp.get;
 
-import java.net.Inet4Address;
-import java.net.Inet6Address;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.text.DecimalFormat;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
 import com.xcurenet.common.snmp.SnmpMibLoader;
 import com.xcurenet.common.snmp.SnmpUtil;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.config.Config;
 import com.xcurenet.emass.filter.service.IpFilterVO;
-
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import java.net.Inet4Address;
+import java.net.Inet6Address;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.text.DecimalFormat;
 
 /**
  * 수집 장비와 DB서버의 신호를 관리한다. (수집 장비와의 통신은 SNMP로 정의한다.)
@@ -26,8 +24,8 @@ import net.sf.json.JSONObject;
  * @author jochangmin
  * @since 2012-11-3
  */
+@Log4j2
 @Service
-@Slf4j
 @Scope("prototype")
 public class GetSnmp {
 
@@ -47,14 +45,10 @@ public class GetSnmp {
 
 	/**
 	 * Device is Connection
-	 *
-	 * @param ip
-	 * @return
 	 */
 	public boolean isConnection(String ip) {
 		snmpUtil.setHost(ip);
-		if (snmpUtil.getTable("sysInfoTable").size() == 0) return false;
-		else return true;
+		return !snmpUtil.getTable("sysInfoTable").isEmpty();
 	}
 
 	public JSONArray getIifTrafficTable(String ip) {
@@ -83,9 +77,8 @@ public class GetSnmp {
 			result.put("hdd", getHddInfo(snmpUtil.getTable("hddInfoTable")));
 			result.put("process", getProcessInfo(snmpUtil.getTable("procEmassTable")));
 			result.put("interface", getNetwork(snmpUtil.getTable("netConfTable")));
-
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("", e);
 		} finally {
 			snmpUtil.close();
 		}
@@ -111,18 +104,18 @@ public class GetSnmp {
 		result.put("sysConfigOS", "-");
 		result.put("cpuInfoModel", "-");
 
-		if (sysInfoTable.size() > 0) {
+		if (!sysInfoTable.isEmpty()) {
 			JSONObject sysInfo = sysInfoTable.getJSONObject(0);
 			result.put("sysInfoIpAddr", Common.nvl(sysInfo.get("sysInfoIpAddr")));
 			result.put("sysInfoUptime", Common.nvl(sysInfo.get("sysInfoUptime")));
 			result.put("sysInfoDate", Common.nvl(sysInfo.get("sysInfoDate")));
 			result.put("sysInfoHostname", Common.nvl(sysInfo.get("sysInfoHostname")));
 		}
-		if (sysConfigTable.size() > 0) {
+		if (!sysConfigTable.isEmpty()) {
 			JSONObject sysConfig = sysConfigTable.getJSONObject(0);
 			result.put("sysConfigOS", Common.nvl(sysConfig.get("sysConfigOS")));
 		}
-		if (cpuInfoTable.size() > 0) {
+		if (!cpuInfoTable.isEmpty()) {
 			JSONObject cpuInfo = cpuInfoTable.getJSONObject(0);
 			result.put("cpuInfoModel", Common.nvl(cpuInfo.get("cpuInfoModel")));
 		}
@@ -142,13 +135,13 @@ public class GetSnmp {
 		result.put("memInfoUsage", "0");
 		result.put("memInfoLimit", "0");
 
-		if (cpuLoadTable.size() > 0) {
+		if (!cpuLoadTable.isEmpty()) {
 			JSONObject cpu = cpuLoadTable.getJSONObject(0);
 			result.put("cpuLoadUsage", Common.convertSnmpVal(Common.nvz(cpu.get("cpuLoadUsage"))));
 			result.put("cpuLoadLimit", Common.nvz(cpu.get("cpuLoadLimit")));
 		}
 
-		if (memInfoTable.size() > 0) {
+		if (!memInfoTable.isEmpty()) {
 			JSONObject mem = memInfoTable.getJSONObject(0);
 			result.put("memInfoTotal", memory(mem.get("memInfoTotal")));
 			result.put("memInfoUsed", memory(mem.get("memInfoUsed")));
@@ -189,7 +182,7 @@ public class GetSnmp {
 	public static String memory(Object sizez) {
 		long size = Common.nvn(sizez);
 		if (size <= 0) return "0 MB";
-		final String[] units = new String[] {" KB", " MB", " GB", " TB", " PB", " EB", " ZB", " YB"};
+		final String[] units = new String[]{" KB", " MB", " GB", " TB", " PB", " EB", " ZB", " YB"};
 		int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
 		return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + units[digitGroups];
 	}
@@ -197,7 +190,7 @@ public class GetSnmp {
 	public static String rxtx(Object sizez) {
 		long size = Common.nvn(sizez);
 		if (size <= 0) return "0";
-		final String[] units = new String[] {" Byte", " KB", " MB", " GB", " TB", " PB", " EB", " ZB", " YB"};
+		final String[] units = new String[]{" Byte", " KB", " MB", " GB", " TB", " PB", " EB", " ZB", " YB"};
 		int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
 		return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + units[digitGroups];
 	}
@@ -205,20 +198,18 @@ public class GetSnmp {
 	public static String hdd(Object sizez) {
 		long size = Common.nvn(sizez);
 		if (size <= 0) return "0";
-		final String[] units = new String[] {" MB", " GB", " TB", " PB", " EB", " ZB", " YB"};
+		final String[] units = new String[]{" MB", " GB", " TB", " PB", " EB", " ZB", " YB"};
 		int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
 		return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + units[digitGroups];
 	}
 
 	/**
 	 * Get QoS
-	 *
-	 * @return
 	 */
 	public int getQoS(String ip) {
 		snmpUtil.setHost(ip);
 		JSONArray QoSRuleTable = snmpUtil.getTable("QoSRuleTable");
-		if (QoSRuleTable.size() > 0) {
+		if (!QoSRuleTable.isEmpty()) {
 			return Common.nvz(QoSRuleTable.getJSONObject(0).get("qosRuleSpeed"));
 		}
 		return 0;
@@ -226,13 +217,11 @@ public class GetSnmp {
 
 	/**
 	 * Set QoS
-	 *
-	 * @return
 	 */
 	public boolean setQoS(String ip, int qos) {
 		snmpUtil.setHost(ip);
 		JSONArray QoSRuleTable = snmpUtil.getTable("QoSRuleTable");
-		if (QoSRuleTable.size() > 0) {
+		if (!QoSRuleTable.isEmpty()) {
 			return snmpUtil.setValue(snmpMibLoader.getOID("qosRuleSpeed") + "." + QoSRuleTable.getJSONObject(0).get("index"), qos);
 		}
 		return false;
@@ -240,14 +229,12 @@ public class GetSnmp {
 
 	/**
 	 * Set Process Restart
-	 *
-	 * @return
 	 */
 	public boolean setProcessRestart(String ip, int index) {
 		log.warn("Process Restart host:{} index:{} ", ip, index);
 		snmpUtil.setHost(ip);
 		JSONArray procEmassTable = snmpUtil.getTable("procEmassTable");
-		if (procEmassTable.size() > 0) {
+		if (!procEmassTable.isEmpty()) {
 			return snmpUtil.setValue(snmpMibLoader.getOID("procEmassCommand") + "." + procEmassTable.getJSONObject(index).get("index"), 2);
 		}
 		return false;
@@ -255,14 +242,12 @@ public class GetSnmp {
 
 	/**
 	 * Set Process Stop
-	 *
-	 * @return
 	 */
 	public boolean setProcessStop(String ip, int index) {
 		log.warn("Process Stop host:{} index:{} ", ip, index);
 		snmpUtil.setHost(ip);
 		JSONArray procEmassTable = snmpUtil.getTable("procEmassTable");
-		if (procEmassTable.size() > 0) {
+		if (!procEmassTable.isEmpty()) {
 			return snmpUtil.setValue(snmpMibLoader.getOID("procEmassCommand") + "." + procEmassTable.getJSONObject(index).get("index"), 1);
 		}
 		return false;
@@ -270,14 +255,12 @@ public class GetSnmp {
 
 	/**
 	 * Set HDD Alarm
-	 *
-	 * @return
 	 */
 	public boolean setHddAlarm(String ip, int index, int hddNotifyLimit, int hddWarnLimit, int hddAlarmLimit) {
 		log.warn("Set HDD Alarm host:{} index:{}, hddNotifyLimit:{}, hddWarnLimit:{}, hddAlarmLimit:{}", ip, index, hddNotifyLimit, hddWarnLimit, hddAlarmLimit);
 		snmpUtil.setHost(ip);
 		JSONArray hddInfoTable = snmpUtil.getTable("hddInfoTable");
-		if (hddInfoTable.size() > 0) {
+		if (!hddInfoTable.isEmpty()) {
 
 			JSONObject obj = hddInfoTable.getJSONObject(index);
 
@@ -285,87 +268,68 @@ public class GetSnmp {
 			//hddWarnLimit   주의 임계치
 			//hddAlarmLimit  위험 임계치
 
-			boolean notify = snmpUtil.setValue(snmpMibLoader.getOID("hddNotifyLimit") + "." + obj.get("index"), hddNotifyLimit); 	//관심
-			boolean warn = snmpUtil.setValue(snmpMibLoader.getOID("hddWarnLimit") + "." + obj.get("index"), hddWarnLimit);  	 	//주의
-			boolean alarm = snmpUtil.setValue(snmpMibLoader.getOID("hddAlarmLimit") + "." + obj.get("index"), hddAlarmLimit);  	//위험
+			boolean notify = snmpUtil.setValue(snmpMibLoader.getOID("hddNotifyLimit") + "." + obj.get("index"), hddNotifyLimit);    //관심
+			boolean warn = snmpUtil.setValue(snmpMibLoader.getOID("hddWarnLimit") + "." + obj.get("index"), hddWarnLimit);        //주의
+			boolean alarm = snmpUtil.setValue(snmpMibLoader.getOID("hddAlarmLimit") + "." + obj.get("index"), hddAlarmLimit);    //위험
 
-			boolean set = snmpUtil.setValue(snmpMibLoader.getOID("hddSetLimit") + "." + obj.get("index"), hddAlarmLimit-5);
-			boolean delete = snmpUtil.setValue(snmpMibLoader.getOID("hddDeleteLimit") + "." + obj.get("index"), hddAlarmLimit); 	//위험 임계치와 삭제 임계치를 같이 사용한다.
-			if (set && notify && warn && alarm && delete) {
-				return true;
-			}
+			boolean set = snmpUtil.setValue(snmpMibLoader.getOID("hddSetLimit") + "." + obj.get("index"), hddAlarmLimit - 5);
+			boolean delete = snmpUtil.setValue(snmpMibLoader.getOID("hddDeleteLimit") + "." + obj.get("index"), hddAlarmLimit);    //위험 임계치와 삭제 임계치를 같이 사용한다.
+			return set && notify && warn && alarm && delete;
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Set CPU Alarm
-	 *
-	 * @return
 	 */
 	public boolean setCpuAlarm(String ip, int index, int cpuLoadLimit) {
 		log.warn("Set CPU Alarm host:{} index:{}, cpuLoadLimit:{}", ip, index, cpuLoadLimit);
 		snmpUtil.setHost(ip);
 		JSONArray cpuLoadTable = snmpUtil.getTable("cpuLoadTable");
-		if (cpuLoadTable.size() > 0) {
-
+		if (!cpuLoadTable.isEmpty()) {
 			JSONObject obj = cpuLoadTable.getJSONObject(index);
-
-			boolean warn = snmpUtil.setValue(snmpMibLoader.getOID("cpuLoadLimit") + "." + obj.get("index"), cpuLoadLimit);  	 	//주의
-
-			if (warn) return true;
+			return snmpUtil.setValue(snmpMibLoader.getOID("cpuLoadLimit") + "." + obj.get("index"), cpuLoadLimit);
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Set Memory Alarm
-	 *
-	 * @return
 	 */
 	public boolean setMemoryAlarm(String ip, int index, int memInfoLimit) {
 		log.warn("Set Memory Alarm host:{} index:{}, memInfoLimit:{}", ip, index, memInfoLimit);
 		snmpUtil.setHost(ip);
 		JSONArray memInfoTable = snmpUtil.getTable("memInfoTable");
-		if (memInfoTable.size() > 0) {
-
+		if (!memInfoTable.isEmpty()) {
 			JSONObject obj = memInfoTable.getJSONObject(index);
-
-			boolean warn = snmpUtil.setValue(snmpMibLoader.getOID("memInfoLimit") + "." + obj.get("index"), memInfoLimit);  	 	//주의
-
-			if (warn) return true;
+			return snmpUtil.setValue(snmpMibLoader.getOID("memInfoLimit") + "." + obj.get("index"), memInfoLimit);
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Set HDD Alarm CC버전용
-	 *
-	 * @return
 	 */
 	public boolean setHddAlarmCC(String ip, int hddNotifyLimit, int hddWarnLimit, int hddAlarmLimit) {
 		log.warn("Set HDD Alarm CC host:{} hddNotifyLimit:{}, hddWarnLimit:{}, hddAlarmLimit:{}", ip, hddNotifyLimit, hddWarnLimit, hddAlarmLimit);
 		snmpUtil.setHost(ip);
 		JSONArray hddInfoTable = snmpUtil.getTable("hddInfoTable");
-		if (hddInfoTable.size() > 0) {
-
-			for ( int i = 0 ; i < hddInfoTable.size ( ) ; i++ )
-			{
+		if (!hddInfoTable.isEmpty()) {
+			for (int i = 0; i < hddInfoTable.size(); i++) {
 				JSONObject obj = hddInfoTable.getJSONObject(i);
 				String hddInfoMountDir = obj.getString("hddInfoMountDir").toLowerCase();
-				if ( hddInfoMountDir.equals ( "/users" ) )
-				{
+				if (hddInfoMountDir.equals("/users")) {
 					String index = obj.getString("index");
 					//hddNotifyLimit 관심 임계치
 					//hddWarnLimit   주의 임계치
 					//hddAlarmLimit  위험 임계치
 
-					boolean notify = snmpUtil.setValue(snmpMibLoader.getOID("hddNotifyLimit") + "." + index, hddNotifyLimit); 	//알림
-					boolean warn = snmpUtil.setValue(snmpMibLoader.getOID("hddWarnLimit") + "." + index, hddWarnLimit);  	 	//포화
-					boolean alarm = snmpUtil.setValue(snmpMibLoader.getOID("hddAlarmLimit") + "." + index, hddAlarmLimit);  	//삭제
+					boolean notify = snmpUtil.setValue(snmpMibLoader.getOID("hddNotifyLimit") + "." + index, hddNotifyLimit);    //알림
+					boolean warn = snmpUtil.setValue(snmpMibLoader.getOID("hddWarnLimit") + "." + index, hddWarnLimit);        //포화
+					boolean alarm = snmpUtil.setValue(snmpMibLoader.getOID("hddAlarmLimit") + "." + index, hddAlarmLimit);    //삭제
 
-					boolean set = snmpUtil.setValue(snmpMibLoader.getOID("hddSetLimit") + "." + index, hddAlarmLimit-5);
-					boolean delete = snmpUtil.setValue(snmpMibLoader.getOID("hddDeleteLimit") + "." + index, hddAlarmLimit); 	//위험 임계치와 삭제 임계치를 같이 사용한다.
+					boolean set = snmpUtil.setValue(snmpMibLoader.getOID("hddSetLimit") + "." + index, hddAlarmLimit - 5);
+					boolean delete = snmpUtil.setValue(snmpMibLoader.getOID("hddDeleteLimit") + "." + index, hddAlarmLimit);    //위험 임계치와 삭제 임계치를 같이 사용한다.
 					if (set && notify && warn && alarm && delete) {
 						return true;
 					}
@@ -380,11 +344,11 @@ public class GetSnmp {
 		String result = null;
 		try {
 			JSONArray sysInfo = snmpUtil.getTable("sysInfoTable");
-			if (sysInfo.size() > 0) {
+			if (!sysInfo.isEmpty()) {
 				result = Common.nvl(sysInfo.getJSONObject(0).get("sysInfoUserId"));
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("", e);
 		}
 		return result;
 	}
@@ -396,19 +360,19 @@ public class GetSnmp {
 		//여기서 null 에러 발생
 		String sysInfoUserId = getDeviceSysEID(ip);
 		if (Common.isEmpty(sysInfoUserId)) return false;
-		
+
 		String emdcIpfInfoFileCtrl = snmpMibLoader.getOID("emdcIpfInfoFileCtrl");
 		String oidStr = emdcIpfInfoFileCtrl + "." + sysInfoUserId + SNMP_OID_PREFIX;
 
-		log.warn ( "DELETE Device Info IP : " + ip + "  OID : " + oidStr );
-		if ( !snmpUtil.setValue ( oidStr, DELETE_ALL ) ) return false;
-		
-		if ( Config.isIPv6 ) {
+		log.warn("DELETE Device Info IP : " + ip + "  OID : " + oidStr);
+		if (!snmpUtil.setValue(oidStr, DELETE_ALL)) return false;
+
+		if (Config.isIPv6) {
 			String emdcIpfV6InfoFileCtrl = snmpMibLoader.getOID("emdcIpfV6InfoFileCtrl");
 			String oidV6Str = emdcIpfV6InfoFileCtrl + "." + sysInfoUserId + SNMP_OID_PREFIX;
-			
-			log.warn ( "DELETE Device Info IP : " + ip + " OIDV6 : " + oidV6Str );
-			if ( !snmpUtil.setValue ( oidV6Str, DELETE_ALL ) ) return false;
+
+			log.warn("DELETE Device Info IP : " + ip + " OIDV6 : " + oidV6Str);
+			return snmpUtil.setValue(oidV6Str, DELETE_ALL);
 		}
 
 		return true;
@@ -419,83 +383,83 @@ public class GetSnmp {
 		if (Common.isEmpty(index)) return false;
 		int indexVal = Common.nvz(index);
 
-		String sysInfoUserId = getDeviceSysEID( ip );
+		String sysInfoUserId = getDeviceSysEID(ip);
 		if (Common.isEmpty(sysInfoUserId)) return false;
-		int sysInfoUserIdVal = Common.nvz( sysInfoUserId );
+		int sysInfoUserIdVal = Common.nvz(sysInfoUserId);
 
-		String userIdVal = "." + Common.nvl ( (sysInfoUserIdVal * SNMP_OID_INDEX) + indexVal ) + SNMP_OID_PREFIX;
-		
+		String userIdVal = "." + Common.nvl((sysInfoUserIdVal * SNMP_OID_INDEX) + indexVal) + SNMP_OID_PREFIX;
+
 		if (getIPversion(ipFilter.getUserSIp()).equals("4") && getIPversion(ipFilter.getServerSIp()).equals("4")) {
 
-			String oidStr = snmpMibLoader.getOID ( "emdcIpfRuleVersion" ) + userIdVal;
-			if ( !snmpUtil.setValue ( oidStr, Common.nvz ( ipFilter.getRuleVersion() ) ) ) return false;
-	
-			oidStr = snmpMibLoader.getOID ( "emdcIpfRuleSipFrom" ) + userIdVal;
-			if ( !snmpUtil.setValue ( oidStr, ipFilter.getUserSIp() ) ) return false;
-	
-			oidStr = snmpMibLoader.getOID ( "emdcIpfRuleSipTo" ) + userIdVal;
-			if ( !snmpUtil.setValue ( oidStr, ipFilter.getUserEIp() ) ) return false;
-	
-			oidStr = snmpMibLoader.getOID ( "emdcIpfRuleSportFrom" ) + userIdVal;
-			if ( !snmpUtil.setValue ( oidStr, Common.nvz ( ipFilter.getUserSPort() ) ) ) return false;
-	
-			oidStr = snmpMibLoader.getOID ( "emdcIpfRuleSportTo" ) + userIdVal;
-			if ( !snmpUtil.setValue ( oidStr, Common.nvz ( ipFilter.getUserEPort() ) ) ) return false;
-	
-			oidStr = snmpMibLoader.getOID ( "emdcIpfRuleDipFrom" ) + userIdVal;
-			if ( !snmpUtil.setValue ( oidStr, ipFilter.getServerSIp() ) ) return false;
-	
-			oidStr = snmpMibLoader.getOID ( "emdcIpfRuleDipTo" ) + userIdVal;
-			if ( !snmpUtil.setValue ( oidStr, ipFilter.getServerEIp() ) ) return false;
-	
-			oidStr = snmpMibLoader.getOID ( "emdcIpfRuleDportFrom" ) + userIdVal;
-			if ( !snmpUtil.setValue ( oidStr, Common.nvz ( ipFilter.getServerSPort() ) ) ) return false;
-	
-			oidStr = snmpMibLoader.getOID ( "emdcIpfRuleDportTo" ) + userIdVal;
-			if ( !snmpUtil.setValue ( oidStr, Common.nvz ( ipFilter.getServerEPort()) ) ) return false;
-	
-			oidStr = snmpMibLoader.getOID ( "emdcIpfRuleProtocol" ) + userIdVal;
-			if ( !snmpUtil.setValue ( oidStr, Common.nvz ( ipFilter.getProtocol() ) ) ) return false;
-	
-			oidStr = snmpMibLoader.getOID ( "emdcIpfRuleAction" ) + userIdVal;
-			if ( !snmpUtil.setValue ( oidStr, Common.nvz ( ipFilter.getAction() ) ) ) return false;
-	
-			log.warn ( "UPDATE IP Filter Rule OID : " + oidStr );
+			String oidStr = snmpMibLoader.getOID("emdcIpfRuleVersion") + userIdVal;
+			if (!snmpUtil.setValue(oidStr, Common.nvz(ipFilter.getRuleVersion()))) return false;
+
+			oidStr = snmpMibLoader.getOID("emdcIpfRuleSipFrom") + userIdVal;
+			if (!snmpUtil.setValue(oidStr, ipFilter.getUserSIp())) return false;
+
+			oidStr = snmpMibLoader.getOID("emdcIpfRuleSipTo") + userIdVal;
+			if (!snmpUtil.setValue(oidStr, ipFilter.getUserEIp())) return false;
+
+			oidStr = snmpMibLoader.getOID("emdcIpfRuleSportFrom") + userIdVal;
+			if (!snmpUtil.setValue(oidStr, Common.nvz(ipFilter.getUserSPort()))) return false;
+
+			oidStr = snmpMibLoader.getOID("emdcIpfRuleSportTo") + userIdVal;
+			if (!snmpUtil.setValue(oidStr, Common.nvz(ipFilter.getUserEPort()))) return false;
+
+			oidStr = snmpMibLoader.getOID("emdcIpfRuleDipFrom") + userIdVal;
+			if (!snmpUtil.setValue(oidStr, ipFilter.getServerSIp())) return false;
+
+			oidStr = snmpMibLoader.getOID("emdcIpfRuleDipTo") + userIdVal;
+			if (!snmpUtil.setValue(oidStr, ipFilter.getServerEIp())) return false;
+
+			oidStr = snmpMibLoader.getOID("emdcIpfRuleDportFrom") + userIdVal;
+			if (!snmpUtil.setValue(oidStr, Common.nvz(ipFilter.getServerSPort()))) return false;
+
+			oidStr = snmpMibLoader.getOID("emdcIpfRuleDportTo") + userIdVal;
+			if (!snmpUtil.setValue(oidStr, Common.nvz(ipFilter.getServerEPort()))) return false;
+
+			oidStr = snmpMibLoader.getOID("emdcIpfRuleProtocol") + userIdVal;
+			if (!snmpUtil.setValue(oidStr, Common.nvz(ipFilter.getProtocol()))) return false;
+
+			oidStr = snmpMibLoader.getOID("emdcIpfRuleAction") + userIdVal;
+			if (!snmpUtil.setValue(oidStr, Common.nvz(ipFilter.getAction()))) return false;
+
+			log.warn("UPDATE IP Filter Rule OID : " + oidStr);
 		} else if (Config.isIPv6 && getIPversion(ipFilter.getUserSIp()).equals("6") && getIPversion(ipFilter.getServerSIp()).equals("6")) {
-			String oidV6Str = snmpMibLoader.getOID ( "emdcIpfV6RuleVersion" ) + userIdVal;
-			if ( !snmpUtil.setValue ( oidV6Str, Common.nvz ( ipFilter.getRuleVersion() ) ) ) return false;
-			
-			oidV6Str = snmpMibLoader.getOID ( "emdcIpfV6RuleSipFrom" ) + userIdVal;
-			if ( !snmpUtil.setValue ( oidV6Str, ipFilter.getUserSIp() ) ) return false;
+			String oidV6Str = snmpMibLoader.getOID("emdcIpfV6RuleVersion") + userIdVal;
+			if (!snmpUtil.setValue(oidV6Str, Common.nvz(ipFilter.getRuleVersion()))) return false;
 
-			oidV6Str = snmpMibLoader.getOID ( "emdcIpfV6RuleSipTo" ) + userIdVal;
-			if ( !snmpUtil.setValue ( oidV6Str, ipFilter.getUserEIp() ) ) return false;
+			oidV6Str = snmpMibLoader.getOID("emdcIpfV6RuleSipFrom") + userIdVal;
+			if (!snmpUtil.setValue(oidV6Str, ipFilter.getUserSIp())) return false;
 
-			oidV6Str = snmpMibLoader.getOID ( "emdcIpfV6RuleSportFrom" ) + userIdVal;
-			if ( !snmpUtil.setValue ( oidV6Str, Common.nvz ( ipFilter.getUserSPort() ) ) ) return false;
+			oidV6Str = snmpMibLoader.getOID("emdcIpfV6RuleSipTo") + userIdVal;
+			if (!snmpUtil.setValue(oidV6Str, ipFilter.getUserEIp())) return false;
 
-			oidV6Str = snmpMibLoader.getOID ( "emdcIpfV6RuleSportTo" ) + userIdVal;
-			if ( !snmpUtil.setValue ( oidV6Str, Common.nvz ( ipFilter.getUserEPort() ) ) ) return false;
+			oidV6Str = snmpMibLoader.getOID("emdcIpfV6RuleSportFrom") + userIdVal;
+			if (!snmpUtil.setValue(oidV6Str, Common.nvz(ipFilter.getUserSPort()))) return false;
 
-			oidV6Str = snmpMibLoader.getOID ( "emdcIpfV6RuleDipFrom" ) + userIdVal;
-			if ( !snmpUtil.setValue ( oidV6Str, ipFilter.getServerSIp() ) ) return false;
+			oidV6Str = snmpMibLoader.getOID("emdcIpfV6RuleSportTo") + userIdVal;
+			if (!snmpUtil.setValue(oidV6Str, Common.nvz(ipFilter.getUserEPort()))) return false;
 
-			oidV6Str = snmpMibLoader.getOID ( "emdcIpfV6RuleDipTo" ) + userIdVal;
-			if ( !snmpUtil.setValue ( oidV6Str, ipFilter.getServerEIp() ) ) return false;
+			oidV6Str = snmpMibLoader.getOID("emdcIpfV6RuleDipFrom") + userIdVal;
+			if (!snmpUtil.setValue(oidV6Str, ipFilter.getServerSIp())) return false;
 
-			oidV6Str = snmpMibLoader.getOID ( "emdcIpfV6RuleDportFrom" ) + userIdVal;
-			if ( !snmpUtil.setValue ( oidV6Str, Common.nvz ( ipFilter.getServerSPort() ) ) ) return false;
+			oidV6Str = snmpMibLoader.getOID("emdcIpfV6RuleDipTo") + userIdVal;
+			if (!snmpUtil.setValue(oidV6Str, ipFilter.getServerEIp())) return false;
 
-			oidV6Str = snmpMibLoader.getOID ( "emdcIpfV6RuleDportTo" ) + userIdVal;
-			if ( !snmpUtil.setValue ( oidV6Str, Common.nvz ( ipFilter.getServerEPort() ) ) ) return false;
+			oidV6Str = snmpMibLoader.getOID("emdcIpfV6RuleDportFrom") + userIdVal;
+			if (!snmpUtil.setValue(oidV6Str, Common.nvz(ipFilter.getServerSPort()))) return false;
 
-			oidV6Str = snmpMibLoader.getOID ( "emdcIpfV6RuleProtocol" ) + userIdVal;
-			if ( !snmpUtil.setValue ( oidV6Str, Common.nvz ( ipFilter.getProtocol() ) ) ) return false;
+			oidV6Str = snmpMibLoader.getOID("emdcIpfV6RuleDportTo") + userIdVal;
+			if (!snmpUtil.setValue(oidV6Str, Common.nvz(ipFilter.getServerEPort()))) return false;
 
-			oidV6Str = snmpMibLoader.getOID ( "emdcIpfV6RuleAction" ) + userIdVal;
-			if ( !snmpUtil.setValue ( oidV6Str, Common.nvz ( ipFilter.getAction() ) ) ) return false;
-			
-			log.warn ( "UPDATE IP Filter Rule OID : " + oidV6Str );
+			oidV6Str = snmpMibLoader.getOID("emdcIpfV6RuleProtocol") + userIdVal;
+			if (!snmpUtil.setValue(oidV6Str, Common.nvz(ipFilter.getProtocol()))) return false;
+
+			oidV6Str = snmpMibLoader.getOID("emdcIpfV6RuleAction") + userIdVal;
+			if (!snmpUtil.setValue(oidV6Str, Common.nvz(ipFilter.getAction()))) return false;
+
+			log.warn("UPDATE IP Filter Rule OID : " + oidV6Str);
 		}
 
 		return true;
@@ -510,25 +474,24 @@ public class GetSnmp {
 
 		String emdcIpfInfoFileCtrl = snmpMibLoader.getOID("emdcIpfInfoFileCtrl");
 		String oidStr = emdcIpfInfoFileCtrl + "." + sysInfoUserId + SNMP_OID_PREFIX;
-		if ( !snmpUtil.setValue ( oidStr, OVERWRITE ) ) return false;
-		
-		if ( Config.isIPv6 ) {
+		if (!snmpUtil.setValue(oidStr, OVERWRITE)) return false;
+
+		if (Config.isIPv6) {
 			String emdcIpfV6InfoFileCtrl = snmpMibLoader.getOID("emdcIpfV6InfoFileCtrl");
 			String oidV6Str = emdcIpfV6InfoFileCtrl + "." + sysInfoUserId + SNMP_OID_PREFIX;
-			if ( !snmpUtil.setValue ( oidV6Str, OVERWRITE ) ) return false;
+			return snmpUtil.setValue(oidV6Str, OVERWRITE);
 		}
 
 		return true;
 	}
 
-	public String getIPversion ( String ip )
-	{
+	public String getIPversion(String ip) {
 		String result = "";
 		InetAddress address = null;
 		try {
 			address = InetAddress.getByName(ip);
 		} catch (UnknownHostException e) {
-			e.printStackTrace();
+			log.error("", e);
 		}
 		if (address instanceof Inet6Address) {
 			result = "6";

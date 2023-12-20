@@ -1,28 +1,19 @@
 package com.xcurenet.common.snmp;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.TreeMap;
-import java.util.Vector;
-
+import com.xcurenet.common.util.config.Config;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import net.percederberg.mibble.*;
+import net.percederberg.mibble.value.ObjectIdentifierValue;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.snmp4j.CommunityTarget;
 import org.snmp4j.PDU;
 import org.snmp4j.Snmp;
 import org.snmp4j.TransportMapping;
 import org.snmp4j.event.ResponseEvent;
 import org.snmp4j.mp.SnmpConstants;
-import org.snmp4j.smi.Integer32;
-import org.snmp4j.smi.OID;
-import org.snmp4j.smi.OctetString;
-import org.snmp4j.smi.UdpAddress;
-import org.snmp4j.smi.Variable;
-import org.snmp4j.smi.VariableBinding;
+import org.snmp4j.smi.*;
 import org.snmp4j.transport.DefaultUdpTransportMapping;
 import org.snmp4j.util.DefaultPDUFactory;
 import org.snmp4j.util.TableEvent;
@@ -31,19 +22,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import com.xcurenet.common.util.config.Config;
-
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
-import net.percederberg.mibble.Mib;
-import net.percederberg.mibble.MibLoader;
-import net.percederberg.mibble.MibLoaderException;
-import net.percederberg.mibble.MibSymbol;
-import net.percederberg.mibble.MibValue;
-import net.percederberg.mibble.MibValueSymbol;
-import net.percederberg.mibble.value.ObjectIdentifierValue;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+import java.util.Map.Entry;
 
 @Slf4j
 @Data
@@ -59,7 +41,7 @@ public class SnmpUtil {
 	private int retries = 0;
 	private int timeout = 5000;
 	private String community = Config.getString("snmpa.community");
-//	private String community = "";
+	//	private String community = "";
 	private int snmpVersion = SnmpConstants.version2c;
 	private TransportMapping<?> transport = null;
 
@@ -86,7 +68,7 @@ public class SnmpUtil {
 				transport.close();
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error("", e);
 		}
 	}
 
@@ -133,20 +115,20 @@ public class SnmpUtil {
 				int errorStatus = responsePDU.getErrorStatus();
 				if (errorStatus == PDU.noError) {
 					Vector<? extends VariableBinding> vbs = responsePDU.getVariableBindings();
-					if (vbs.size() > 0) {
+					if (!vbs.isEmpty()) {
 						VariableBinding vb = vbs.get(0);
 						Variable ret = vb.getVariable();
 						result = ret.toString();
 					}
 				}
 			}
-		} catch (Exception e) {
-			result = null;
+		} catch (IOException e) {
+			log.error("", e);
 		} finally {
 			if (_snmp != null) try {
 				_snmp.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				log.error("", e);
 			}
 		}
 		return result;
@@ -165,7 +147,7 @@ public class SnmpUtil {
 		JSONArray result = new JSONArray();
 		if (oid == null) return result;
 
-		OID[] oids = new OID[] {new OID(oid)};
+		OID[] oids = new OID[]{new OID(oid)};
 		Snmp _snmp = null;
 		try {
 			_snmp = getSnmp();
@@ -181,12 +163,12 @@ public class SnmpUtil {
 				result.add(item);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("", e);
 		} finally {
 			if (_snmp != null) try {
 				_snmp.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				log.error("", e);
 			}
 		}
 		return result;
@@ -207,10 +189,8 @@ public class SnmpUtil {
 			MibLoader loader = new MibLoader();
 			loader.addDir(file.getParentFile());
 			result = loader.load(file);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (MibLoaderException e) {
-			e.printStackTrace();
+		} catch (IOException | MibLoaderException e) {
+			log.error("", e);
 		}
 		return result;
 	}
@@ -229,7 +209,7 @@ public class SnmpUtil {
 		Mib mib = loadMib(new File(filePath));
 		if (mib == null) return null;
 		MibSymbol symbol = mib.getSymbol(name);
-		if (symbol != null && symbol instanceof MibValueSymbol) {
+		if (symbol instanceof MibValueSymbol) {
 			MibValue value = ((MibValueSymbol) symbol).getValue();
 			if (value instanceof ObjectIdentifierValue) {
 				oid = "." + ((ObjectIdentifierValue) value).toString() + "";
@@ -248,9 +228,7 @@ public class SnmpUtil {
 		JSONArray result = new JSONArray();
 		JSONObject item = new JSONObject();
 		boolean firstFlag = true;
-		Iterator<Entry<String, List<String>>> iterator = fieldMap.entrySet().iterator();
-		while (iterator.hasNext()) {
-			Map.Entry<String, List<String>> entry = iterator.next();
+		for (Entry<String, List<String>> entry : fieldMap.entrySet()) {
 			List<String> val = entry.getValue();
 			for (int i = 0; i < val.size(); i++) {
 				item = new JSONObject();
@@ -284,7 +262,7 @@ public class SnmpUtil {
 	public JSONArray getTable(String tableOid, TreeMap<String, String> field) {
 		JSONArray result = new JSONArray();
 		if (tableOid == null) return result;
-		OID[] oids = new OID[] {new OID(tableOid)};
+		OID[] oids = new OID[]{new OID(tableOid)};
 		Snmp _snmp = null;
 		try {
 			_snmp = getSnmp();
@@ -303,7 +281,7 @@ public class SnmpUtil {
 						if (name == null) continue;
 						String fieldOid = snmpMibLoader.getOID(name);
 						String index = vb.getOid().format().substring(fieldOid.length());
-						if (fieldName.equals("")) fieldName = name;
+						if (fieldName.isEmpty()) fieldName = name;
 						if (!fieldName.equals(name)) {
 							fieldMap.put(fieldName, values);
 							fieldName = name;
@@ -317,7 +295,7 @@ public class SnmpUtil {
 					}
 				}
 			}
-			if (values.size() > 0) // 마지막 추가
+			if (!values.isEmpty()) // 마지막 추가
 			{
 				fieldMap.put(fieldName, values);
 				fieldMap.put("index", indexList);
@@ -329,7 +307,7 @@ public class SnmpUtil {
 			if (_snmp != null) try {
 				_snmp.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				log.error("", e);
 			}
 		}
 		return result;
@@ -378,9 +356,7 @@ public class SnmpUtil {
 		OID oid = new OID(oidStr);
 		Variable var = new Integer32(value);
 		VariableBinding varBind = new VariableBinding(oid, var);
-
 		log.warn(String.format("HOST:%s\tOID:%s\t VALUE(integer):%s", this.getHost(), oidStr, value));
-
 		return setValue(varBind);
 	}
 
@@ -403,7 +379,6 @@ public class SnmpUtil {
 			pdu.setRequestID(new Integer32(1));
 
 			snmp = new Snmp(transport);
-
 			ResponseEvent response = snmp.set(pdu, getTarget());
 			if (response != null) {
 				PDU responsePDU = response.getResponse();
@@ -418,7 +393,7 @@ public class SnmpUtil {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("", e);
 			result = false;
 		} finally {
 			if (snmp != null) try {
@@ -436,7 +411,6 @@ public class SnmpUtil {
 	 * @return
 	 */
 	public static float convertSnmpVal(int rate) {
-		float rateF = rate;
-		return (float) (Math.round((rateF / 100) * 100) / 100.0);
+		return (float) (Math.round(((float) rate / 100) * 100) / 100.0);
 	}
 }

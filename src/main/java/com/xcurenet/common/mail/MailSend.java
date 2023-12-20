@@ -75,8 +75,8 @@ public class MailSend implements Runnable {
 			email.setSentDate(new Date());
 
 			Map<String, String> map = new HashMap<>();
-			map.put("X-PROPHET_ADMIN-FORWARD", "EMASSLTHUI");
-			map.put("X-EMASS_ADMIN-FORWARD", "EMASSLTHUI");
+			map.put("X-PROPHET_ADMIN-FORWARD", "EMASSPROUI");
+			map.put("X-EMASS_ADMIN-FORWARD", "EMASSPROUI");
 			email.setHeaders(map);
 
 			String sendResult = email.send();
