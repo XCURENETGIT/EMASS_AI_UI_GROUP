@@ -151,7 +151,7 @@ public class SolrEdcMessageVO {
 						ParsedSum bucketArgments = (ParsedSum) subaggs;
 						String headerKey = bucket.getKeyAsString();
 						long docCount = bucket.getDocCount();
-						String buckeyKey = bucketArgments.getValueAsString();
+						String buckeyKey = bucketArgments.getName();
 						list.add(headerKey);
 						facetParse(chkSvc, buckeyKey, docCount);
 					}
@@ -263,7 +263,7 @@ public class SolrEdcMessageVO {
 							ParsedSum bucketArgments = (ParsedSum) subaggs;
 							String buckeyKey = bucket.getKeyAsString();
 							long docCount = bucket.getDocCount();
-							item.put(Common.nvl(bucketArgments.getValueAsString()), bucketArgments.getValue());
+							item.put(Common.nvl(bucketArgments.getName()), bucketArgments.getValue());
 							keys.put(Common.nvl(bucketArgments.getName()), 0);
 							item.putAll(pivotParse(svcChk, buckeyKey, docCount));
 						}
