@@ -16,6 +16,7 @@ import org.elasticsearch.search.aggregations.bucket.range.Range;
 import org.elasticsearch.search.aggregations.bucket.terms.ParsedLongTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
+import org.elasticsearch.search.aggregations.metrics.ParsedSum;
 import org.springframework.data.elasticsearch.core.ElasticsearchAggregations;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
@@ -146,6 +147,13 @@ public class SolrEdcMessageVO {
 							list.add(headerKey);
 							facetParse(chkSvc, buckeyKey, docCount);
 						}
+					}else if(subaggs instanceof ParsedSum){
+						ParsedSum bucketArgments = (ParsedSum) subaggs;
+						String headerKey = bucket.getKeyAsString();
+						long docCount = bucket.getDocCount();
+						String buckeyKey = bucketArgments.getValueAsString();
+						list.add(headerKey);
+						facetParse(chkSvc, buckeyKey, docCount);
 					}
 				}
 			}
@@ -251,6 +259,16 @@ public class SolrEdcMessageVO {
 								item.putAll(pivotParse(svcChk, buckeyKey, docCount));
 							}
 						}
+						else if(subaggs instanceof ParsedSum){
+							ParsedSum bucketArgments = (ParsedSum) subaggs;
+							String buckeyKey = bucket.getKeyAsString();
+							long docCount = bucket.getDocCount();
+							item.put(Common.nvl(bucketArgments.getValueAsString()), bucketArgments.getValue());
+							keys.put(Common.nvl(bucketArgments.getName()), 0);
+							item.putAll(pivotParse(svcChk, buckeyKey, docCount));
+						}
+
+
 
 					}
 					result.add(item);

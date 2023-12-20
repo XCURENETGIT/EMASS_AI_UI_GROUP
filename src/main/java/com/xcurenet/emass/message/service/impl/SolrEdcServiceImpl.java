@@ -183,11 +183,15 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 					.order(BucketOrder.count(false))
 					.size(maxCount(sq.getFacetLimit()))
 					.minDocCount(sq.getFacetMinCount());
-					if(Common.isEmpty(sq.get("facet.ranges"))) {termsAggregation  = termsAggregation.subAggregation(AggregationBuilders.topHits(field).size(1));}
-					else {
+					if(!Common.isEmpty(sq.get("facet.ranges"))) {
 						List<String> ranges = Common.toList(sq.get("facet.ranges"), ",");
 						termsAggregation = termsAggregation.subAggregation(addRanges(field, ranges));
 					}
+					else if((null != sq.get("facet.sum") && Common.isEquals("true",sq.get("facet.sum")))) {
+						String key = sq.get("facet.field");
+						termsAggregation = termsAggregation.subAggregation(AggregationBuilders.sum(key).field(key));
+					}
+					else {termsAggregation  = termsAggregation.subAggregation(AggregationBuilders.topHits(field).size(1));}
 					aggregations.add(termsAggregation);
 		}
 		return aggregations;

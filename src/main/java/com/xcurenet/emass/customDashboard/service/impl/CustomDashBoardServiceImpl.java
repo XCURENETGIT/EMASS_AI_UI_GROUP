@@ -16,8 +16,6 @@ import com.xcurenet.emass.message.service.SolrEdcService;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.response.FacetField;
-import org.apache.solr.client.solrj.response.QueryResponse;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -602,27 +600,27 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 
 		SolrQuery sq = new SolrQuery();
 
-		sq.addFacetField("ctime_yyyymmdd");
+//		sq.addFacetField("ctime_yyyymmdd");
 		sq.setParam("group", true);
 		sq.setParam("group.facet", true);
 		sq.setParam("group.ngroups", true);
 		sq.setParam("group.field", "ctime_yyyymmdd");
 
 		sq.setParam("facet", true);
+		sq.setParam("facet.sum", true);
 		sq.setParam("facet.field", "attachsize");
-		sq.setParam("facet.ranges", "0,1");
 
 		sq.setParam("facet.limit", "-1");
-		sq.setParam("facet.mincount", "1");
+		sq.setParam("facet.mincount", "-1");
 
-		sq.setFacetLimit(7);
+//		sq.setFacetLimit(7);
 		sq.setFacetMinCount(1);
 		sq.setQuery("*:*");
 		sq.setStart(Common.nvz(0));
 		sq.setRows(Common.nvz(1));
 		sq.setSort("ctime", SolrQuery.ORDER.desc);
 		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id");
-		sq.setQuery(String.format("+ctime_yyyymmdd:[ %s TO %s ]", startDate, endDate));
+	//	sq.setQuery(String.format("+ctime_yyyymmdd:[ %s TO %s ]", startDate, endDate));
 
 
 //		SolrQuery sq = new SolrQuery();
