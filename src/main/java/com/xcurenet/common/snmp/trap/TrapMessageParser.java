@@ -1,19 +1,16 @@
 package com.xcurenet.common.snmp.trap;
 
-import java.util.Vector;
-
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.snmp4j.smi.VariableBinding;
-
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.locale.Prop;
-
-import lombok.extern.slf4j.Slf4j;
+import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.snmp4j.smi.VariableBinding;
 
-@Slf4j
+import java.util.Vector;
+
+@Log4j2
 public class TrapMessageParser {
 
 	public static final String TRAP_MESSAGE_PREFIX = "|";
@@ -26,24 +23,18 @@ public class TrapMessageParser {
 	public static final String TRAP_MESSAGE_SNMP = "SNMP";
 	public static final String TRAP_MESSAGE_PROC = "PROC";
 	public static final String TRAP_MESSAGE_TRA = "TRA";
-	public static final String TRAP_MESSAGE_INT = "ITG"; //무결성 훼손
-	
-	private static DateTimeFormatter yyyyMMddHHmmss = DateTimeFormat.forPattern ( "yyyyMMddHHmmss" );
 
 	private static final int TRAP_BLANK_LINE = 2;
 	private int message_total_size = 0;
+	@Getter
 	private String messageType;
-	private Vector<?> vars;
-	private String sourceIP;
+	private final Vector<?> vars;
+	private final String sourceIP;
 
 	public TrapMessageParser(String sourceIP, Vector<?> vars) {
 		this.sourceIP = sourceIP;
 		this.vars = vars;
 		this.init();
-	}
-
-	public String getMessageType() {
-		return this.messageType;
 	}
 
 	public JSONObject messageParser() {
@@ -65,7 +56,7 @@ public class TrapMessageParser {
 					else if (Common.isEquals(cols[1], TRAP_MESSAGE_PROC)) item = getPROCParser(cols);
 					else if (Common.isEquals(cols[1], TRAP_MESSAGE_TRA)) item = getTRAParser(cols);
 				} catch (Exception e) {
-					e.printStackTrace();
+					log.error("", e);
 				}
 				data.add(item);
 			}
@@ -77,14 +68,11 @@ public class TrapMessageParser {
 		result.put("MSG_TYPE", this.messageType);
 		result.put("MSG_SIZE", this.message_total_size);
 		result.put("MSG_DATA", data);
-
 		return result;
 	}
 
 	/**
 	 * TRA Message Parser
-	 *
-	 * @return
 	 */
 	public JSONObject getTRAParser(String[] cols) {
 		JSONObject item = new JSONObject();
@@ -93,14 +81,12 @@ public class TrapMessageParser {
 		item.put("status", cols[3]);
 		item.put("ipAddr", cols[4]);
 		item.put("master_ip", this.sourceIP);
-		item.put("level", (Common.isEquals(item.get("status"), "0") == true ? "I" : "E"));
+		item.put("level", (Common.isEquals(item.get("status"), "0") ? "I" : "E"));
 		return item;
 	}
 
 	/**
 	 * SNMP Message Parser
-	 *
-	 * @return
 	 */
 	public JSONObject getSNMPParser(String[] cols) {
 		JSONObject item = new JSONObject();
@@ -108,14 +94,12 @@ public class TrapMessageParser {
 		item.put("status", cols[2]);
 		item.put("ipAddr", cols[3]);
 		item.put("master_ip", this.sourceIP);
-		item.put("level", (Common.isEquals(item.get("status"), "up") == true ? "I" : "E"));
+		item.put("level", (Common.isEquals(item.get("status"), "up") ? "I" : "E"));
 		return item;
 	}
 
 	/**
 	 * PROC Message Parser
-	 *
-	 * @return
 	 */
 	public JSONObject getPROCParser(String[] cols) {
 		JSONObject item = new JSONObject();
@@ -136,8 +120,6 @@ public class TrapMessageParser {
 
 	/**
 	 * CPU Message Parser
-	 *
-	 * @return
 	 */
 	public JSONObject getCPUParser(String[] cols) {
 		JSONObject item = new JSONObject();
@@ -153,8 +135,6 @@ public class TrapMessageParser {
 
 	/**
 	 * MEM Message Parser
-	 *
-	 * @return
 	 */
 	public JSONObject getMEMParser(String[] cols) {
 		JSONObject item = new JSONObject();
@@ -175,8 +155,6 @@ public class TrapMessageParser {
 
 	/**
 	 * HDD/CLR Message Parser
-	 *
-	 * @return
 	 */
 	public JSONObject getHDDCLRParser(String[] cols) {
 		JSONObject item = new JSONObject();
@@ -225,8 +203,6 @@ public class TrapMessageParser {
 
 	/**
 	 * SVC Message Parser
-	 *
-	 * @return
 	 */
 	public JSONObject getSVCParser(String[] cols) {
 		JSONObject item = new JSONObject();
@@ -236,14 +212,12 @@ public class TrapMessageParser {
 		item.put("status", cols[4]);
 		item.put("ipAddr", cols[5]);
 		item.put("master_ip", this.sourceIP);
-		item.put("level", (Common.isEquals(item.get("status"), "0") == true ? "I" : "E"));
+		item.put("level", (Common.isEquals(item.get("status"), "0") ? "I" : "E"));
 		return item;
 	}
 
 	/**
 	 * LINK Message Parser
-	 *
-	 * @return
 	 */
 	public JSONObject getLINKParser(String[] cols) {
 		JSONObject item = new JSONObject();
@@ -252,7 +226,7 @@ public class TrapMessageParser {
 		item.put("iifTrafficState", cols[3]);
 		item.put("ipAddr", cols[4]);
 		item.put("master_ip", this.sourceIP);
-		item.put("level", (Common.isEquals(item.get("iifTrafficState"), "up") == true ? "I" : "E"));
+		item.put("level", (Common.isEquals(item.get("iifTrafficState"), "up") ? "I" : "E"));
 		return item;
 	}
 
@@ -306,56 +280,15 @@ public class TrapMessageParser {
 		result.put("content", content);
 		return result;
 	}
-	
-	/**
-	 * 장비의 무결성이 훼손된 경우 메시지
-	 * @return
-	 */
-	public JSONObject getIntegrityMessage( )
-	{
-		String checkDate = "";
-		String deviceName = "";
-		JSONArray data = new JSONArray ( );
-		for ( int i = 0 ; i < message_total_size ; i++ )
-		{
-			String line = getLine ( i );
-			if ( line == null ) continue;
-			if ( i == 0 ) continue;//Message Header
-
-			String[] lines = line.split ( "\\" + TRAP_MESSAGE_PREFIX );
-			if ( i == 1 ) //Message Info
-			{
-				checkDate = yyyyMMddHHmmss.parseDateTime ( lines[0] ).toString ( "yyyy-MM-dd HH:mm:ss" );
-				deviceName = lines[1];
-				continue;
-			}
-
-			JSONObject item = new JSONObject ( );
-			item.put ( "moudle", lines[0] );
-			item.put ( "path", lines[1] );
-			data.add ( item );
-		}
-
-		JSONObject result = new JSONObject ( );
-		result.put ( "DEVICE_IP", this.sourceIP );
-		result.put ( "MSG_TYPE", this.messageType );
-		result.put ( "MSG_SIZE", this.message_total_size );
-		result.put ( "CHECK_DATE", checkDate );
-		result.put ( "DEVICE_HOST", deviceName );
-		result.put ( "MSG_DATA", data );
-		return result;
-	}
 
 	/**
 	 * Trap Receiver Debug Code
-	 *
-	 * @param event
 	 */
 	private void init() {
 		message_total_size = vars.size() - TRAP_BLANK_LINE;
 		if (message_total_size > 0) {
 			String variable = getLine(0);
-			if (variable != null && variable.indexOf(TRAP_MESSAGE_PREFIX) > -1) {
+			if (variable != null && variable.contains(TRAP_MESSAGE_PREFIX)) {
 				String[] line = variable.split("\\" + TRAP_MESSAGE_PREFIX);
 				if (line.length > 0) this.messageType = line[1];
 			}

@@ -12,6 +12,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Description;
@@ -35,6 +36,7 @@ import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.device.service.DeviceService;
 import com.xcurenet.device.service.DeviceVO;
 
+@Log4j2
 @Controller
 @AuditParentMenu(ParentMenu.OPERATION_MGMT)
 @AuditMenu(Menu.DEV_INFO)
@@ -70,9 +72,9 @@ public class SnmpController {
 	public XcnResponseVO getDeviceStatusByDeviceSeq(final HttpServletRequest request, final HttpSession session) throws Exception {
 		String deviceSeq = Common.nvl(request.getParameter("deviceSeq"));
 		List<DeviceVO> devices = snmpPolling.getDevices();
-		for (int i = 0; i < devices.size(); i++) {
-			if (Common.isEquals(deviceSeq, devices.get(i).getDeviceSeq())) {
-				return new XcnResponseVO(XcnRspCode.OK, devices.get(i).getCurrentDevice());
+		for (DeviceVO device : devices) {
+			if (Common.isEquals(deviceSeq, device.getDeviceSeq())) {
+				return new XcnResponseVO(XcnRspCode.OK, device.getCurrentDevice());
 			}
 		}
 		return new XcnResponseVO(XcnRspCode.OK_CUSTOM, "not found device");
@@ -198,10 +200,8 @@ public class SnmpController {
 
 			List<Future<DeviceVO>> futures = es.invokeAll(deviceStatusTask, 4, TimeUnit.SECONDS);
 			snmpPolling.statusChange(futures, deviceStatusTask);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			e.printStackTrace();
+		} catch (InterruptedException | ExecutionException e) {
+			log.error("", e);
 		} finally {
 			es.shutdownNow();
 		}

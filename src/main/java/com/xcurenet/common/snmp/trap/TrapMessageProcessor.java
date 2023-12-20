@@ -1,15 +1,5 @@
 package com.xcurenet.common.snmp.trap;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Controller;
-
 import com.xcurenet.admin.service.AdminService;
 import com.xcurenet.common.auditMail.AuditMailSender;
 import com.xcurenet.common.sms.SmsSender;
@@ -20,11 +10,18 @@ import com.xcurenet.common.snmp.service.SnmpTrapVO;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.device.service.DeviceService;
 import com.xcurenet.device.service.DeviceVO;
-
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import net.sf.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Controller;
 
-@Slf4j
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+@Log4j2
 @Controller
 public class TrapMessageProcessor {
 
@@ -89,9 +86,9 @@ public class TrapMessageProcessor {
 				} else if (Common.isOrEquals(smsType, SmsType.CPU_THRESHOLD)) {
 					admins = adminService.getAdminNotifyByConfId("device.cpu.sms." + device.getDeviceSeq());
 				}
-				
-				for (int i = 0; i < admins.size(); i++) {
-					sms.setReceiver(Common.nvl(admins.get(i).get("ADMIN_HP")));
+
+				for (Map<String, Object> admin : admins) {
+					sms.setReceiver(Common.nvl(admin.get("ADMIN_HP")));
 					smsSender.sendSms(sms);
 				}
 
@@ -106,13 +103,13 @@ public class TrapMessageProcessor {
 				} else if (Common.isOrEquals(smsType, SmsType.CPU_THRESHOLD)) {
 					admins = adminService.getAdminNotifyByConfId("device.cpu.notify." + device.getDeviceSeq());
 				}
-				
+
 				for (int i = 0; i < admins.size(); i++) {
 					template.convertAndSendToUser(Common.nvl(admins.get(i).get("ADMIN_ID")), "/trap", trap);
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("", e);
 		}
 
 		log.info("[SNMP TRAP] Insert Event Table Finish...");

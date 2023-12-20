@@ -1,26 +1,24 @@
 package com.xcurenet.common.snmp.schedule;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Callable;
-
+import com.xcurenet.common.snmp.get.GetSnmp;
+import com.xcurenet.common.util.Common;
+import com.xcurenet.device.service.DeviceTrafficStatVO;
+import com.xcurenet.device.service.DeviceVO;
+import lombok.Data;
+import lombok.extern.log4j.Log4j2;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import com.xcurenet.common.snmp.get.GetSnmp;
-import com.xcurenet.common.util.Common;
-import com.xcurenet.device.service.DeviceTrafficStatVO;
-import com.xcurenet.device.service.DeviceVO;
-
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
 
 @Data
-@Slf4j
+@Log4j2
 @Service("snmpStat")
 @Scope("prototype")
 public class SnmpStat implements Callable<List<DeviceTrafficStatVO>> {
@@ -32,7 +30,7 @@ public class SnmpStat implements Callable<List<DeviceTrafficStatVO>> {
 
 	@Override
 	public List<DeviceTrafficStatVO> call() throws Exception {
-		//if (!Common.isEquals(device.getDeviceType(), "C")) return null;
+		if (Common.isNotEquals(device.getDeviceType(), "A")) return null;
 
 		List<DeviceTrafficStatVO> traffics = new ArrayList<>();
 		GetSnmp snmp = this.context.getBean(GetSnmp.class);
