@@ -83,7 +83,6 @@ public class CustomDashBoardController {
 	@Description("Dashboard - 로깅 데이터 건수 조회")
 	@ResponseBody
 	public XcnResponseVO getLoggingData(final HttpServletRequest request, final HttpSession session) throws Exception {
-		System.out.println("gma");
 		return new XcnResponseVO(XcnRspCode.OK, customDashBoardService.getLoggingData(request, session));
 	}
 	
