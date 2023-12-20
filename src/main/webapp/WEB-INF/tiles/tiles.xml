@@ -93,10 +93,16 @@
     <definition name="/commons/*" extends="defaultLayout">
         <put-attribute name="content" value="/WEB-INF/views/commons/{1}.jsp" />
     </definition>
+    <definition name="/commons/*/*" extends="defaultLayout">
+        <put-attribute name="content" value="/WEB-INF/views/commons/{1}/{2}.jsp" />
+    </definition>
+
     <definition name="/uacs/*" extends="defaultLayout">
         <put-attribute name="content" value="/WEB-INF/views/uacs/{1}.jsp" />
     </definition>
-
+    <definition name="/uacs/*/*" extends="defaultLayout">
+        <put-attribute name="content" value="/WEB-INF/views/uacs/{1}/{2}.jsp" />
+    </definition>
 
     <!-- emass message -->
     <definition name="/emass/message/messageNewN" extends="messageLayout">
