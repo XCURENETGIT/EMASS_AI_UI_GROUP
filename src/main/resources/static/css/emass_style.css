@@ -119,6 +119,8 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 .subTit button.menu {width:24px; height:24px; vertical-align: bottom; background:url(../img/Icon_tit_menu.png) bottom center no-repeat; border:0;}
 .subTit button.menu:hover {opacity: 0.5;}
 
+.conTit {font-size:14px; font-weight:600; border-top:1px solid #555; text-align: center;}
+
 /*bullet*/
 .bullet01 { width:8px; height:8px;margin-right:4px; background-color:#1A73F9; display: inline-block; border-radius:50% ; -webkit-border-radius:50% ; -moz-border-radius:50% ; -ms-border-radius:50% ; -o-border-radius:50% ; }
 .bullet02 { width:6px; height:6px; margin-right:4px; vertical-align:middle; background-color:#555; display: inline-block; border-radius:70% ; -webkit-border-radius:70% ; -moz-border-radius:70% ; -ms-border-radius:70% ; -o-border-radius:70% ; }
@@ -132,8 +134,10 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 .contentSub::after {content:''; display:block; clear:both;}
 .contentSub .sel {position:absolute; right:0; top:-8px;}
 .chartArea {display: grid; grid-template-columns: 1fr 1fr; margin-bottom:12px;column-gap: 12px;}
-.chartArea02 {display: grid; grid-template-columns: 600px 1fr; margin-bottom:24px;column-gap: 12px;}
+.chartArea02 {display: grid; grid-template-columns: 600px 1fr; margin-bottom:24px; column-gap: 12px;}
+.chartArea02 > div {position: relative;}
 .chartAreafull {display: grid; grid-template-columns: 1fr; margin-bottom:24px;column-gap: 12px;}
+.chartArea03 {display: grid; grid-template-columns: 1fr 1fr 1fr; margin-bottom:12px;column-gap: 8px;}
 
 .sublist {display: grid; grid-template-columns: 1fr 1fr 1fr; column-gap: 12px; }
 .sublist div {border:1px solid #ddd; background-color: #fff;padding:16px;margin-bottom:12px;}
@@ -141,7 +145,10 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 .sublist p {font-size:30px; font-weight:700; color:#1A73F9;margin-top:4px; text-align: right;}
 .sublist p span {font-size:14px; color:#555;margin-left:4px;}
 .chartBox {height:180px; padding:20px; background-color: #fff; border:1px solid #ddd; }
+
 .inner_personaldata { padding:20px; background-color: #fff; border:1px solid #ddd;}
+.inner_scroll{ padding:20px; background-color: #fff; border:1px solid #ddd; display: grid;grid-template-rows: auto auto auto;grid-auto-flow: column;}
+.inner_emass { padding:16px; overflow: hidden;}
 .personaldataBox {overflow: auto;  height:342px;}
 .ico_right {position: absolute; right:0; top:8px;}
 
@@ -347,6 +354,7 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .w150p {width:150px;}
 .w100p {width:100px;}
 .w90p {width:90px;}
+.w80 {width:80%;}
 .w90 {width:90%;}
 .w99 {width:99%;}
 .h100 {height:100px;}
@@ -355,9 +363,12 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .h400 {height:400px;}
 .h429 {height:429px;}
 
+.col-20 {float: left;width: 20%;}
 .col-35 {float: left;width: 35%;}
-.col-65 {float: left;width: 65%;}
 .col-50 {float: left;width: 48%;}
+.col-65 {float: left;width: 65%;}
+.col-80 {float: left;width: 80%;}
+
 
 /* margin*/
 .ma_none{margin:0 !important;}
@@ -379,14 +390,17 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .p20 {padding:20px !important;}
 .p8 {padding:8px !important;}
 .p12 {padding:12px !important;}
+.ptb12 {padding:12px 0 !important;}
 .pt16 {padding-top:16px;} {padding-top:8px;}
-.pt8 {padding-bottom:8px;}
+.pt8 {padding-top:8px;}
+.pb8 {padding-bottom:8px;}
 .pl20 {padding-left:20px;}
 .pr20 {padding-right:20px;}
 
 
 /* overflow-y: auto; */
 .y_scroll { overflow-y:scroll; }
+.x_scroll { overflow-x:scroll; }
 .clear {clear: both;}
 .hidden {overflow: hidden;}
 
@@ -405,6 +419,7 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .bordd{border:1px solid #ddd;}
 .borbottom_dashed {border-bottom:1px dashed #ccc;}
 .bortop_dd{border-top:1px solid #ddd;}
+.bortop_55{border-top:1px solid #555;}
 .borleft_none{border-left:none !important;}
 .borbottom_dd{border-bottom:1px solid #ddd;}
 .borleft_none{border-left:none !important;}
@@ -437,6 +452,7 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 
 /*font weight*/
 .fs12 {font-size:12px !important;}
+.fs14 {font-size:14px !important;}
 .fs20 {font-size:20px !important;}
 .fb400 {font-weight:400!important;}
 .fb600 {font-weight:600!important;}
@@ -463,6 +479,13 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .subTable th:first-child, td:first-child {border-left: none;}
 .subTable th, td {border-bottom:1px solid #ddd;}
 .subTable tr:nth-child(even) {background-color: #f8f8f8; }
+
+.subTable2 {position: relative;  width:100%; font-size: 13px; background-color: #fff;table-layout: fixed;}
+.subTable2 th {border-left:1px solid #ddd; border-top:1px solid #111;background-color:#EEEFF2;font-weight:600;padding:4px; }
+.subTable2 td {border-left:1px solid #ddd; text-align: center;padding:4px; color:#555;}
+.subTable2 th:first-child, td:first-child {border-left: none;}
+.subTable2 th, td {border-bottom:1px solid #ddd; vertical-align: middle;}
+.subTable2 tr:nth-child(even){background-color: #f8f8f8}
 
 .xcnTooltip {position: relative;display: inline-block;}
 .xcnTooltip .tooltiptext {visibility: hidden;width: 120px;background-color: #555;color: #fff;

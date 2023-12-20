@@ -9,7 +9,6 @@
 		}
 
 		.checkbox-inline, .radio-inline {
-			line-height: 30px;
 			font-size: 13px;
 		}
 
@@ -499,170 +498,142 @@
 </div>
 
 
-<div class="container">
-	<div class="searchArea">
-		<div style="width: 660px; float: left">
-			<div class="row">
-				<div class="searchSub" style="width: 660px;">
-					<div>
-						<label for="busiCd"><s:message code="common.org.busi"/></label>
-						<span>
-						<select id="busiCd" name="busiCd" style="min-width: 150px;">
-						<option value="">-<s:message code="ipRange.msg.select.busi"/>-</option>
-						</select>
-						</span>
-					</div>
-				</div>
+<div>
+	<!-- 검색 -->
+	<div class="searchArea w100">
+		<div class="searchSub w100">
+			<div>
+				<label for="busiCd" style="display:none;"><s:message code="common.org.busi"/></label>
+				<select id="busiCd" name="busiCd" style="min-width: 150px;">
+					<option value="">-<s:message code="ipRange.msg.select.busi"/>-</option>
+				</select>
 			</div>
-
-			<div class="row top_space">
-				<div class="col-xs-12">
-					<ul class="nav nav-tabs codeTab">
-						<li class="active" style="text-align: center"><a data-toggle="tab"><s:message code="holidayBusiness.worktype"/></a></li>
-					</ul>
-				</div>
-			</div>
-
-			<div class="row top_space">
-				<div class="col-xs-12 text-right">
-					<div class="form-group form-inline not-dashed">
+		</div>
+	</div>
+	<!-- //검색 -->
+	<!-- content -->
+	<div class="content">
+		<div class="contentSub">
+			<div class="chartArea02">
+				<!-- 업무구분 -->
+				<div>
+					<h3><s:message code="holidayBusiness.worktype"/></h3>
+					<div class="sel">
 						<button type="button" class="btn05" accesskey="S" id="saveBtn">
 							<img src="<c:url value="/img/subBtn_save.png"/>" alt="저장"><s:message code="common.msg.save"/>
 						</button>
 					</div>
-				</div>
-			</div>
+					<div class="panel panel-default p20">
 
-			<div class="row xcn_full top_space">
-				<div class="col-xs-12" style="height: 100%; width: 660px;">
-					<div class="row">
-						<div style="width: 170px; float: left; margin-right: 10px;">
-							<div style="background-color: #f8f8f8; border-top: 2px solid #7a7a7a; border-bottom: 1px solid #cdc9c4; margin-bottom: 5px; height: 35px; line-height: 35px; font-weight: bold; text-align: center;">
-								<s:message code="holidayBusiness.select.workday"/></div>
-							<div class="form-group">
-								<label class="checkbox-inline c-checkbox" style="font-weight: bold">
-									<input type="checkbox" class="holidayCheckAll" name="holidayCheckAll">
-									<s:message code="common.msg.selectUnselect"/>
-								</label>
+						<div class="chartArea03">
+							<div>
+								<div class="p12 grayBg02 mab12 conTit">
+									<s:message code="holidayBusiness.select.workday"/>
+								</div>
+								<div class="form-group pt8">
+									<label class="checkbox-inline c-checkbox" style="font-weight: bold">
+										<input type="checkbox" class="holidayCheckAll" name="holidayCheckAll">
+										<b><s:message code="common.msg.selectUnselect"/></b>
+									</label>
+								</div>
+								<div class="form-group">
+									<label class="checkbox-inline c-checkbox">
+										<input type="checkbox" class="holidayCheck" name="holidayCheck">
+										<s:message code="common.sunday"/>
+									</label>
+								</div>
+								<div class="form-group">
+									<label class="checkbox-inline c-checkbox">
+										<input type="checkbox" class="holidayCheck" name="holidayCheck" value="0">
+										<s:message code="common.monday"/>
+									</label>
+								</div>
+								<div class="form-group">
+									<label class="checkbox-inline c-checkbox">
+										<input type="checkbox" class="holidayCheck" name="holidayCheck" value="0">
+										<s:message code="common.tuesday"/>
+									</label>
+								</div>
+								<div class="form-group">
+									<label class="checkbox-inline c-checkbox">
+										<input type="checkbox" class="holidayCheck" name="holidayCheck" value="0">
+										<s:message code="common.wednesday"/>
+									</label>
+								</div>
+								<div class="form-group">
+									<label class="checkbox-inline c-checkbox">
+										<input type="checkbox" class="holidayCheck" name="holidayCheck" value="0">
+										<s:message code="common.thursday"/>
+									</label>
+								</div>
+								<div class="form-group">
+									<label class="checkbox-inline c-checkbox">
+										<input type="checkbox" class="holidayCheck" name="holidayCheck" value="0">
+										<s:message code="common.friday"/>
+									</label>
+								</div>
+								<div class="form-group">
+									<label class="checkbox-inline c-checkbox">
+										<input type="checkbox" class="holidayCheck" name="holidayCheck" value="0">
+										<s:message code="common.saturday"/>
+									</label>
+								</div>
 							</div>
-							<div class="form-group">
-								<label class="checkbox-inline c-checkbox">
-									<input type="checkbox" class="holidayCheck" name="holidayCheck">
-									<s:message code="common.sunday"/>
-								</label>
+							<div>
+								<div class="p12 grayBg02 mab12 conTit">
+									<s:message code="holidayBusiness.select.worktimeam"/></div>
+								<div class="form-group">
+									<label class="checkbox-inline c-checkbox pt8" style="font-weight: bold">
+										<input type="checkbox" class="workTimeAmAll" name="workTimeAmAll">
+										<b><s:message code="common.msg.selectUnselect"/></b>
+									</label>
+								</div>
+								<%for (int i = 0; i <= 11; i++) {%>
+								<div class="form-group">
+									<label class="checkbox-inline c-checkbox amTime">
+										<input type="checkbox" class="workTime" name="workTime" value="<%=i%>">
+										<%=Common.lPad(i, 2, "0")%>:00
+										~ <%=Common.lPad(i, 2, "0")%>:59:59
+									</label>
+								</div>
+								<%}%>
 							</div>
-							<div class="form-group">
-								<label class="checkbox-inline c-checkbox">
-									<input type="checkbox" class="holidayCheck" name="holidayCheck" value="0">
-									<s:message code="common.monday"/>
-								</label>
-							</div>
-							<div class="form-group">
-								<label class="checkbox-inline c-checkbox">
-									<input type="checkbox" class="holidayCheck" name="holidayCheck" value="0">
-									<s:message code="common.tuesday"/>
-								</label>
-							</div>
-							<div class="form-group">
-								<label class="checkbox-inline c-checkbox">
-									<input type="checkbox" class="holidayCheck" name="holidayCheck" value="0">
-									<s:message code="common.wednesday"/>
-								</label>
-							</div>
-							<div class="form-group">
-								<label class="checkbox-inline c-checkbox">
-									<input type="checkbox" class="holidayCheck" name="holidayCheck" value="0">
-									<s:message code="common.thursday"/>
-								</label>
-							</div>
-							<div class="form-group">
-								<label class="checkbox-inline c-checkbox">
-									<input type="checkbox" class="holidayCheck" name="holidayCheck" value="0">
-									<s:message code="common.friday"/>
-								</label>
-							</div>
-							<div class="form-group">
-								<label class="checkbox-inline c-checkbox">
-									<input type="checkbox" class="holidayCheck" name="holidayCheck" value="0">
-									<s:message code="common.saturday"/>
-								</label>
+							<div>
+								<div class="p12 grayBg02 mab12 conTit">
+									<s:message code="holidayBusiness.select.worktimepm"/></div>
+								<div class="form-group">
+									<label class="checkbox-inline c-checkbox pt8" style="font-weight: bold">
+										<input type="checkbox" class="workTimePmAll" name="workTimePmAll">
+										<b><s:message code="common.msg.selectUnselect"/></b>
+									</label>
+								</div>
+								<%for (int i = 12; i <= 23; i++) {%>
+								<div class="form-group">
+									<label class="checkbox-inline c-checkbox pmTime">
+										<input type="checkbox" class="workTime" name="workTime" value="<%=i%>">
+										<%=Common.lPad(i, 2, "0")%>:00
+										~ <%=Common.lPad(i, 2, "0")%>:59:59
+									</label>
+								</div>
+								<%}%>
 							</div>
 						</div>
-						<div style="width: 220px; float: left; margin-right: 10px;">
-							<div style="background-color: #f8f8f8; border-top: 2px solid #7a7a7a; border-bottom: 1px solid #cdc9c4; margin-bottom: 5px; height: 35px; line-height: 35px; font-weight: bold; text-align: center;">
-								<s:message code="holidayBusiness.select.worktimeam"/></div>
-							<div class="form-group">
-								<label class="checkbox-inline c-checkbox" style="font-weight: bold">
-									<input type="checkbox" class="workTimeAmAll" name="workTimeAmAll">
-									<s:message code="common.msg.selectUnselect"/>
-								</label>
-							</div>
-							<%for (int i = 0; i <= 11; i++) {%>
-							<div class="form-group">
-								<label class="checkbox-inline c-checkbox amTime">
-									<input type="checkbox" class="workTime" name="workTime" value="<%=i%>">
-									<%=Common.lPad(i, 2, "0")%>:00
-									~ <%=Common.lPad(i, 2, "0")%>:59:59
-								</label>
-							</div>
-							<%}%>
+						<div class="inner_emass blueBg">
+							<p class="col-35"><span class="bullet01"></span><span class="blue mal4"><s:message code="holidayBusiness.workday"/></span></span></p>
+							<span id="weekNameSpan" class="col-65 fs14"></span>
 						</div>
-						<div style="width: 220px; float: left;">
-							<div style="background-color: #f8f8f8; border-top: 2px solid #7a7a7a; border-bottom: 1px solid #cdc9c4; margin-bottom: 5px; height: 35px; line-height: 35px; font-weight: bold; text-align: center;">
-								<s:message code="holidayBusiness.select.worktimepm"/></div>
-							<div class="form-group">
-								<label class="checkbox-inline c-checkbox" style="font-weight: bold">
-									<input type="checkbox" class="workTimePmAll" name="workTimePmAll">
-									<s:message code="common.msg.selectUnselect"/>
-								</label>
-							</div>
-							<%for (int i = 12; i <= 23; i++) {%>
-							<div class="form-group">
-								<label class="checkbox-inline c-checkbox pmTime">
-									<input type="checkbox" class="workTime" name="workTime" value="<%=i%>">
-									<%=Common.lPad(i, 2, "0")%>:00
-									~ <%=Common.lPad(i, 2, "0")%>:59:59
-								</label>
-							</div>
-							<%}%>
+						<div class="inner_emass blueBg mat8 line_h1_5">
+							<p class="col-35"><span class="bullet01"></span><span class="blue mal4"><s:message code="holidayBusiness.worktime"/></span></span></p>
+							<span id="hourNameSpan" class="col-65 fs14"></span>
 						</div>
-					</div>
-					<div class="row">&nbsp;</div>
-					<div class="row" style="padding:0px 5px;">
-						<table style="border-top: 2px solid #7a7a7a; border-bottom: 1px solid #cdc9c4; width: 100%;">
-							<tr>
-								<th style="width: 150px; background-color: #f8f8f8; text-align: center;"><s:message code="holidayBusiness.workday"/></th>
-								<td style="padding: 5px; text-align: center;"><span id="weekNameSpan"></span></td>
-							</tr>
-						</table>
-					</div>
-					<div class="row">&nbsp;</div>
-					<div class="row" style="padding:0px 5px;">
-						<table style="border-top: 2px solid #7a7a7a; border-bottom: 1px solid #cdc9c4; width: 100%;">
-							<tr>
-								<th style="width: 150px; background-color: #f8f8f8; text-align: center;"><s:message code="holidayBusiness.worktime"/></th>
-								<td style="padding: 5px; text-align: center;"><span id="hourNameSpan" style="word-break:break-all; font-weight:normal;"></span>
-								</td>
-							</tr>
-						</table>
 					</div>
 				</div>
-			</div>
-		</div>
-
-		<div style="width:calc(100% - 660px); float: left; padding-left: 16px; ">
-			<div class="row" style="height: 34px;">&nbsp;</div>
-			<div class="row top_space2">
-				<div class="col-xs-12">
-					<ul class="nav nav-tabs codeTab">
-						<li class="active" style="text-align: center"><a data-toggle="tab"><s:message code="holidayBusiness.list.busiholiday"/></a></li>
-					</ul>
-				</div>
-			</div>
-			<div class="row top_space">
-				<div class="col-xs-8 text-left">
-					<div class="form-group form-inline not-dashed">
-						<select class="form-control input-sm" id="year">
+				<!-- //업무구분 -->
+				<!-- 사업장 휴일 목록 -->
+				<div>
+					<h3><s:message code="holidayBusiness.list.busiholiday"/></h3>
+					<div class="sel">
+						<select id="year">
 							<option value="">- <s:message code="holidayBusiness.select.year"/> -</option>
 						</select>
 						<button type="button" class="btn01" accesskey="I" id="insertBtn">
@@ -672,17 +643,21 @@
 							<s:message code="common.msg.delete"/>
 						</button>
 					</div>
+					<div>
+						<div class="inner_scroll">
+							<div style="overflow-x:auto;">
+								<div id="holidayListGrid" class="slickGrid gridArea" style=" min-height: 545px;"></div>
+							</div>
+						</div>
+					</div>
+
 				</div>
-			</div>
-			<div class="content xcn_full" style="background-color: transparent;">
-				<div class="contentSub" style="height: 100%; padding: 0px">
-					<div id="holidayListGrid" class="slickGrid gridArea" style="min-height: 470px;"></div>
-				</div>
+				<!-- //사업장 휴일 목록 -->
 			</div>
 		</div>
 	</div>
+	<!-- //content -->
 </div>
-
 
 <script type="text/javascript">
     var grid = new Xgrid('holidayListGrid', contextRoot);
