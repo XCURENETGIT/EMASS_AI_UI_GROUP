@@ -6,6 +6,7 @@
 <title></title>
 <style>
 .table-striped > tbody > tr:nth-of-type(2n+1){background-color: #fff;}
+.checkbox-inline input[type="checkbox"] {appearance: none !important;}
 </style>
 <script>
 var clickFlag = false;
@@ -400,57 +401,57 @@ function getData( facetfield, repTitle ) {
 								<button class="form_btn04" type="button" accesskey="N" id="unSelectAll" style="margin-left: 5px;"><s:message code="common.msg.unselect_all"/></button>
 							</div>
 							<div style="height: calc(100% - 0px);" class="mat8">
-								<label class="checkbox-inline c-checkbox borbottom_dashed">
+								<label class="checkbox-inline c-checkbox borbottom_dashed ptb12">
 									<input type="checkbox" name="reportMenu" id="device" value="<s:message code="OPERATION_MGMT.DEV_INFO"/>">
 									<span class="fa fa-check"><b class="mal8"><s:message code="OPERATION_MGMT.DEV_INFO"/></b>
 									<span class="ico_right mat4"><i class="fa fa-desktop fa-fw" ></i></span></span>
 								</label>
-								<label class="checkbox-inline c-checkbox borbottom_dashed">
+								<label class="checkbox-inline c-checkbox borbottom_dashed ptb12">
 									<input type="checkbox" name="reportMenu" id="conm" value="<s:message code="common.org.conm"/>">
 									<span class="fa fa-check"><b class="mal8"><s:message code="common.org.conm"/> TOP10</b>
 									<span class="ico_right mat4"><i class="fa fa-user fa-fw"></i></span></span>
 								</label>
-								<label class="checkbox-inline c-checkbox borbottom_dashed">
+								<label class="checkbox-inline c-checkbox borbottom_dashed ptb12">
 									<input type="checkbox" name="reportMenu" id="deptnm" value="<s:message code="common.org.deptnm"/>">
 									<span class="fa fa-check"><b class="mal8"><s:message code="common.org.deptnm"/> TOP10</b>
 									<span class="ico_right mat4"><i class="fa fa-user fa-fw"></i></span></span>
 								</label>
-								<label class="checkbox-inline c-checkbox borbottom_dashed">
+								<label class="checkbox-inline c-checkbox borbottom_dashed ptb12">
 									<input type="checkbox" name="reportMenu" id="user_str" value="<s:message code="consent.user"/>">
 									<span class="fa fa-check"><b class="mal8"><s:message code="consent.user"/> TOP10</b>
 									<span class="ico_right mat4"><i class="fa fa-user fa-fw"></i></span></span>
 								</label>
-								<label class="checkbox-inline c-checkbox borbottom_dashed">
+								<label class="checkbox-inline c-checkbox borbottom_dashed ptb12">
 									<input type="checkbox" name="reportMenu" id="jikgubnm" value="<s:message code="common.org.jikgubnm"/>">
 									<span class="fa fa-check"><b class="mal8"><s:message code="common.org.jikgubnm"/> TOP10</b>
 									<span class="ico_right mat4"><i class="fa fa-user fa-fw"></i></span></span>
 								</label>
-								<label class="checkbox-inline c-checkbox borbottom_dashed">
+								<label class="checkbox-inline c-checkbox borbottom_dashed ptb12">
 									<input type="checkbox" name="reportMenu" id="sender_str" value="<s:message code="condition.sender"/>">
 									<span class="fa fa-check"><b class="mal8"><s:message code="condition.sender"/>TOP10</b>
 									<span class="ico_right mat4"><i class="fa fa-paper-plane-o fa-fw"></i></span></span>
 								</label>
-								<label class="checkbox-inline c-checkbox borbottom_dashed">
+								<label class="checkbox-inline c-checkbox borbottom_dashed ptb12">
 									<input type="checkbox" name="reportMenu" id="svc12" value="<s:message code="condition.service_type"/>">
 									<span class="fa fa-check"><b class="mal8"><s:message code="condition.service_type"/>TOP10</b>
 									<span class="ico_right mat4"><i class="fa fa-share-alt fa-fw"></i></span></span>
 								</label>
-								<label class="checkbox-inline c-checkbox borbottom_dashed">
+								<label class="checkbox-inline c-checkbox borbottom_dashed ptb12">
 									<input type="checkbox" name="reportMenu" id="kwds" value="<s:message code="condition.keyword"/>">
 									<span class="fa fa-check"><b class="mal8"><s:message code="condition.keyword"/>TOP10</b>
 									<span class="ico_right mat4"><i class="fa fa-key fa-fw"></i></span></span>
 								</label>
-								<label class="checkbox-inline c-checkbox borbottom_dashed">
+								<label class="checkbox-inline c-checkbox borbottom_dashed ptb12">
 									<input type="checkbox" name="reportMenu" id="attachtype" value="<s:message code="condition.attach_type"/>">
 									<span class="fa fa-check"><b class="mal8"><s:message code="condition.attach_type"/>TOP10</b>
 									<span class="ico_right mat4"><i class="fa fa-paperclip fa-fw"></i></span></span>
 								</label>
-								<label class="checkbox-inline c-checkbox borbottom_dashed">
+								<label class="checkbox-inline c-checkbox borbottom_dashed ptb12">
 									<input type="checkbox" name="reportMenu" id="attachname_str" value="<s:message code="condition.attach_name"/>">
 									<span class="fa fa-check"><b class="mal8"><s:message code="condition.attach_name"/>TOP10</b>
 									<span class="ico_right mat4"><i class="fa fa-file-word-o fa-fw"></i></span></span>
 								</label>
-								<label class="checkbox-inline c-checkbox">
+								<label class="checkbox-inline c-checkbox ptb12">
 									<input type="checkbox" name="reportMenu" id="host_str" value="URL">
 									<span class="fa fa-check"><b class="mal8">URL TOP10</b>
 									<span class="ico_right mat4"><i class="fa fa-info-circle fa-fw"></i></span></span>

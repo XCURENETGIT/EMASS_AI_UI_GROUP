@@ -74,7 +74,7 @@ $(document).ready(function(){
 		}
 	})
 	
-	$('.listChart').on('click','.close',function(){
+	$('.listChart').on('click','.closeBtn',function(){
 		var id = 'tab'+ Number($(this).parents('li').attr('idx'));
 		var obj = tabInfo[id];
 		obj.close();
@@ -452,7 +452,7 @@ function getSearchQuery() {
 			<div>
 				<button class="form_btn01" accesskey="Q" id="searchBtn" accesskey="s">조회</button>
 				<button class="form_btn02">조건 초기화</button>
-				<button type="button" class="form_btn05"><s:message code="query.make.inputer"/></button>
+				<button type="button" class="form_btn05 searchQueryBtn"><s:message code="query.make.inputer"/></button>
 			</div>
 		</div>
 
@@ -463,7 +463,6 @@ function getSearchQuery() {
 		</div>
 
 		<div class="content">
-
 			<div class="contentSub">
 				<div class="chartAreafull">
 					<div>
@@ -479,7 +478,7 @@ function getSearchQuery() {
 						</h3>
 						<div class="panel panel-default" id="service.logging.count">
 							<div class="panel-body">
-								<div id="chartArea1" style="height: 160px;"></div>
+								<div id="chartArea1" style="height: 300px;"></div>
 							</div>
 						</div>
 					</div>
@@ -598,7 +597,7 @@ function getSearchQuery() {
 			var displayName = rowKeys.length > 1 ? '<s:message code="common.msg.all"/>' : rowKey.replaceAll("\\\"", "\"");
 			if(rowName!='') displayName = rowName + '&lt;' + rowKey + '&gt;';
 			var id = 'tab'+tabID;
-			$('.listChart').append($('<li style="display:inline-flex;text-align: center;z-index:1001;" idx="'+tabID+'" id="liTab'+tabID+'"><a data-toggle="tab" href="#tab'+tabID+'" id="detailTab'+tabID+'" >'+displayName+' - '+colKeyNm+'<span class="badge"></span><button class="close" type="button" title="<s:message code="stat.delete.tab"/>">×</button></a></li>'));
+			$('.listChart').append($('<li style="display:inline-flex;text-align: center;z-index:1001;" idx="'+tabID+'" id="liTab'+tabID+'"><a data-toggle="tab" href="#tab'+tabID+'" id="detailTab'+tabID+'" >'+displayName+' - '+colKeyNm+'<span class="badge"></span><button type="button" class="closeBtn" style="float:right"><img src="<c:url value="/img/ico_closed.png"/>" alt="닫기"></button></a></li>'));
 			$('#basicStatList').after($('<div class="tab-pane fade" id="tab' + tabID + '"><div id="detail_cnt'+tabID+'" style="margin-top:0px; color: #f25643; font-weight: bold; font-size: 13px;"></div><div id="grid'+tabID+'" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; height: 380px"></div></div>'));
 			
 			var gid = 'grid'+tabID;
@@ -639,9 +638,11 @@ function getSearchQuery() {
 				url : 'getStatList.xcn',
                 startDate: sDate+"000000",
                 endDate: eDate+"235959",
-                detailQuery:$('#solrQueryText').val(),
+                detailQuery:$('#elsQueryText').val(),
                 xAxis : xAxis,
                 yAxis : 'userid',
+                interGroup : interGroup,
+                interGroupNm : $('#interGroup option:selected').text(),
                 offset : grid1.data.length,
                 limit : grid1.pageSize,
                 xAxis_str : xAxis_str,

@@ -129,7 +129,7 @@ input[type=text], input[type=password], input[type=search], select, textarea {fo
 input:disabled{ background-color:#eee; border: 1px solid #CCC;}
 input[type="text"].error,select.error{border:1px solid #FC5656; color:#FC5656; background-color:#fff;}
 select:disabled { background-color:#ddd; border: 1px solid #aaa;}
-select { font-size:12px; border-radius: 2px; height:26px; line-height: 26px; resize: vertical; border-radius: 2px; border: 1px solid #CCC; background: #FFF; display: flex; padding: 0 4px; align-items: center; -webkit-border-radius: 2px; -moz-border-radius: 2px; -ms-border-radius: 2px; -o-border-radius: 2px; }
+select { font-size:12px; border-radius: 2px; height:26px; line-height: 26px; resize: vertical; border-radius: 2px; border: 1px solid #CCC; background: #FFF; padding: 0 4px; align-items: center; -webkit-border-radius: 2px; -moz-border-radius: 2px; -ms-border-radius: 2px; -o-border-radius: 2px; }
 button {cursor: pointer;font-family: Pretendard;}
 button:hover {text-decoration: underline;}
 
