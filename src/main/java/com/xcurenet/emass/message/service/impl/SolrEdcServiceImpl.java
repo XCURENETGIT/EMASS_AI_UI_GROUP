@@ -20,6 +20,7 @@ import org.apache.solr.client.solrj.SolrQuery.SortClause;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.aggregations.*;
+import org.elasticsearch.search.aggregations.bucket.range.RangeAggregationBuilder;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.slf4j.MDC;
@@ -192,24 +193,26 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		return aggregations;
 	}
 
-	private AggregationBuilder addRanges(String key,List<String> ranges){
-		AggregationBuilder aggregationBuilder = null;
-		aggregationBuilder = AggregationBuilders.terms(key).field(key);
+	private RangeAggregationBuilder addRanges(String key,List<String> ranges){
+		/* ranges */
+		RangeAggregationBuilder rangeBuilder = AggregationBuilders.range(key).field(key);
 		long val1 = 0;
 		long val2 = 0;
 
+		int idx = 0;
+		for(int k = 0;k < ranges.size();k++){
+			if(idx == ranges.size()-1) {
+				val1 = (Common.nvz(ranges.get(idx-1)));
+				val2 = (Common.nvz(ranges.get(idx)));
+			}else {
+				val1 = (Common.nvz(ranges.get(idx)));
+				val2 = (Common.nvz(ranges.get(idx + 1)));
+			}
+			rangeBuilder = rangeBuilder.addRange(val1, val2);
+			idx++;
+		}
 
-		//hardcoding
-		aggregationBuilder = aggregationBuilder.subAggregation(
-				AggregationBuilders.range(key).field(key)
-						.addRange(0,10)
-						.addRange(10,50)
-						.addRange(50,100)
-						.addRange(150,200)
-						.addRange(200,250)
-		);
-
-		return aggregationBuilder;
+		return  rangeBuilder;
 	}
 
 

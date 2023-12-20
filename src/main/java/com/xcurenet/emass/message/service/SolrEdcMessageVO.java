@@ -11,6 +11,8 @@ import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.common.util.SimpleOrderedMap;
 import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.Aggregations;
+import org.elasticsearch.search.aggregations.bucket.range.ParsedRange;
+import org.elasticsearch.search.aggregations.bucket.range.Range;
 import org.elasticsearch.search.aggregations.bucket.terms.ParsedLongTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
@@ -135,6 +137,15 @@ public class SolrEdcMessageVO {
 							list.add(headerKey);
 							facetParse(chkSvc, buckeyKey, docCount);
 						}
+					}else if(subaggs instanceof ParsedRange){
+						ParsedRange bucketArgments = (ParsedRange) subaggs;
+						String headerKey = bucket.getKeyAsString();
+						long docCount = bucket.getDocCount();
+						for (Range.Bucket arg : bucketArgments.getBuckets()) {
+							String buckeyKey = arg.getKeyAsString();
+							list.add(headerKey);
+							facetParse(chkSvc, buckeyKey, docCount);
+						}
 					}
 				}
 			}
@@ -225,6 +236,16 @@ public class SolrEdcMessageVO {
 							String buckeyKey = bucket.getKeyAsString();
 							long docCount = bucket.getDocCount();
 							for (Terms.Bucket arg : bucketArgments.getBuckets()) {
+								item.put(Common.nvl(arg.getKeyAsString()), arg.getDocCount());
+								keys.put(Common.nvl(arg.getKey()), 0);
+								item.putAll(pivotParse(svcChk, buckeyKey, docCount));
+							}
+						}
+						else if(subaggs instanceof ParsedRange){
+							ParsedRange bucketArgments = (ParsedRange) subaggs;
+							String buckeyKey = bucket.getKeyAsString();
+							long docCount = bucket.getDocCount();
+							for (Range.Bucket arg : bucketArgments.getBuckets()) {
 								item.put(Common.nvl(arg.getKeyAsString()), arg.getDocCount());
 								keys.put(Common.nvl(arg.getKey()), 0);
 								item.putAll(pivotParse(svcChk, buckeyKey, docCount));
