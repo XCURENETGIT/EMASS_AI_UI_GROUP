@@ -84,6 +84,9 @@ body,html {width:100%; height:100%;}
 #xcn_mainWrap .right .bigtop10 div.list ul li > p span {}
 #xcn_mainWrap .right .bigtop10 div.list ul li > p span.righttext {position:absolute; top:1px; right:0; text-align: right; color:#555; font-size:14px;}
 
+
+
+
 #xcn_mainWrap .right .filetop10 {overflow: auto;}
 #xcn_mainWrap .right .filetop10 { position: relative; min-width:100%; min-height:200px; background-color: #fff; border:1px solid #ddd; padding:20px; display: grid; grid-template-columns: 1fr 1fr; column-gap: 12px;}
 #xcn_mainWrap .right .filetop10 .teamList {}

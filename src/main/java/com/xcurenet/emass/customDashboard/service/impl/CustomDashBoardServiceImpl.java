@@ -3,12 +3,15 @@ package com.xcurenet.emass.customDashboard.service.impl;
 import com.xcurenet.admin.service.AdminService;
 import com.xcurenet.admin.service.AdminVO;
 import com.xcurenet.admin.service.AuthorityService;
+import com.xcurenet.admin.service.AuthorityVO;
 import com.xcurenet.common.dao.TransactionManager;
 import com.xcurenet.common.dao.XcnAbstractDAO;
 import com.xcurenet.common.util.Common;
+import com.xcurenet.common.util.config.Config;
 import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.emass.customDashboard.service.*;
+import com.xcurenet.emass.message.service.SolrEdcMessageVO;
 import com.xcurenet.emass.message.service.SolrEdcService;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
@@ -590,57 +593,58 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 	public XcnResponseVO getLoggingData(final HttpServletRequest request, final HttpSession session) throws Exception {
 		JSONObject param = Common.getParam(request);
 		long now = System.currentTimeMillis();
-		String systemArch = Common.nvl(param.get("systemArch"));
-		String date = Common.nvl(param.get("date")).replace("-", "");
-		if (date == "") date = Common.getCurrentDate();
+		String date = Common.getCurrentDate();
+//		String date = Common.nvl(param.get("date")).replace("-", "");
+//		if (date == "") date = Common.getCurrentDate();
 
 		String startDate = Common.plusDays(date, -7);
 		String endDate = Common.plusDays(date, -1);
 
 		SolrQuery sq = new SolrQuery();
-		sq.setQuery(String.format("+ctime_yyyymmdd:[ %s TO %s ]", startDate, endDate));
-		sq.setRows(0);
-		sq.setGetFieldStatistics(true);
-		sq.addGetFieldStatistics("attachsize");
-		sq.addStatsFieldFacets("attachsize","ctime_yyyymmdd");
+
 		sq.addFacetField("ctime_yyyymmdd");
+		sq.setParam("group", true);
+		sq.setParam("group.facet", true);
+		sq.setParam("group.ngroups", true);
+		sq.setParam("group.field", "ctime_yyyymmdd");
+
+		sq.setParam("facet", true);
+		sq.setParam("facet.field", "attachsize");
+		sq.setParam("facet.ranges", "0,1");
+
+		sq.setParam("facet.limit", "-1");
+		sq.setParam("facet.mincount", "1");
+
 		sq.setFacetLimit(7);
-		sq.setFacetSort("ctime_yyyymmdd");
 		sq.setFacetMinCount(1);
+		sq.setQuery("*:*");
+		sq.setStart(Common.nvz(0));
+		sq.setRows(Common.nvz(1));
+		sq.setSort("ctime", SolrQuery.ORDER.desc);
+		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id");
+		sq.setQuery(String.format("+ctime_yyyymmdd:[ %s TO %s ]", startDate, endDate));
 
-		setAuthoritys(sq, systemArch, session);
 
+//		SolrQuery sq = new SolrQuery();
+//		sq.setQuery(String.format("+ctime_yyyymmdd:[ %s TO %s ]", startDate, endDate));
+//		sq.setRows(0);
+//
+//		sq.setGetFieldStatistics(true);
+//		sq.addGetFieldStatistics("attachsize");
+//		sq.addStatsFieldFacets("attachsize","ctime_yyyymmdd");
+//		sq.addFacetField("ctime_yyyymmdd");
+//		sq.setFacetLimit(7);
+//		sq.setFacetSort("ctime_yyyymmdd");
+//		sq.setFacetMinCount(1);
+		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, Common.getAdminId(session));
+
+//		System.out.println(edc.getFacetHeader());
+//		System.out.println("facet: "+edc.getFacet());
+//		System.out.println("pibot"+edc.getPivotData());
 		log.info("query : {}", sq.getQuery());
 
-		QueryResponse res = solrEdcService.getSolrServer().query(sq);
 		List<Map<String, String>> result = new ArrayList<>();
-		List<FacetField> loggingCounts = res.getFacetFields();
-		for(FacetField field : loggingCounts) {
-			List<FacetField.Count> values = field.getValues();
-			for(FacetField.Count count : values) {
-				Map<String, String> item = findItem(result, count.getName());
-				item.put("logging", count.getCount() + "");
-				if (item.get("date") == null) {
-					item.put("date", count.getName());
-					result.add(item);
-				}
-			}
-		}
 
-		param.put("startDate", startDate);
-		param.put("endDate", endDate);
-		List<Object> objs = selectList("com.xcurenet.sqlmap.mappers.mysql.customDashboard.getHdfsDirSize", param);
-//		System.out.println("objs: " + objs);
-
-		for(Object obj : objs) {
-			JSONObject json = Common.toJSONObject(obj);
-			Map<String, String> item = findItem(result, json.getString("date"));
-			item.put("attach", json.getString("total"));
-			if (item.get("date") == null) {
-				item.put("date", json.getString("date"));
-				result.add(item);
-			}
-		}
 		return new XcnResponseVO(XcnRspCode.OK, result);
 	}
 
@@ -662,42 +666,42 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 	}
 
 	private void setAuthoritys(SolrQuery sq, String systemArch, HttpSession session) {
-//		String adminId = Common.getAdminId(session);
-//		String adminType = Common.getAdminType(session);
-//
-//		if(Common.isEmpty(adminId)) return;
-//
-//		if(Common.isEquals(systemArch, "multiple") && Common.isOrEquals(adminType, "M", "C")) {
-//			String ceoReadYn = Config.getString("ceo.readyn");
-//			JSONObject param = new JSONObject();
-//
-//			if(Common.isEquals(adminType, "C")) {
-//				sq.addFilterQuery("+ceo:Y");
-//			}else if(!(Common.isEquals(ceoReadYn, "Y") && Common.isEquals(Common.nvl(Config.getFirstAdminYn(adminId), "N"), "Y")) ) {
-//				sq.addFilterQuery("-ceo:Y");
-//			}
-//
-//			sq.addFilterQuery("-svc:QEKH");
-//
-//			param.put("adminId", adminId);
-//			param.put("queryType", Config.getString("query.type", "A"));
-//			List<AuthorityVO> authoritys = authorityService.getAdminAuthority(param);
-//			for (AuthorityVO authority : authoritys) {
-//				if (authority.getCnt() > 0) {
-//					sq.addFilterQuery(authority.getQuery());
-//				}
-//			}
-//
-//			if (log.isInfoEnabled()) {
-//				StringBuffer _sb = new StringBuffer();
-//				if (sq.getFilterQueries() != null) {
-//					for (int i = 0; i < sq.getFilterQueries().length; i++) {
-//						_sb.append(sq.getFilterQueries()[i]).append(" ");
-//					}
-//				}
-//				log.info("filterQuery : {}", _sb);
-//			}
-//		}
+		String adminId = Common.getAdminId(session);
+		String adminType = Common.getAdminType(session);
+
+		if(Common.isEmpty(adminId)) return;
+
+		if(Common.isEquals(systemArch, "multiple") && Common.isOrEquals(adminType, "M", "C")) {
+			String ceoReadYn = Config.getString("ceo.readyn");
+			JSONObject param = new JSONObject();
+
+			if(Common.isEquals(adminType, "C")) {
+				sq.addFilterQuery("+ceo:Y");
+			}else if(!(Common.isEquals(ceoReadYn, "Y") && Common.isEquals(Common.nvl(Config.getFirstAdminYn(adminId), "N"), "Y")) ) {
+				sq.addFilterQuery("-ceo:Y");
+			}
+
+			sq.addFilterQuery("-svc:QEKH");
+
+			param.put("adminId", adminId);
+			param.put("queryType", Config.getString("query.type", "A"));
+			List<AuthorityVO> authoritys = authorityService.getAdminAuthority(param);
+			for (AuthorityVO authority : authoritys) {
+				if (authority.getCnt() > 0) {
+					sq.addFilterQuery(authority.getQuery());
+				}
+			}
+
+			if (log.isInfoEnabled()) {
+				StringBuffer _sb = new StringBuffer();
+				if (sq.getFilterQueries() != null) {
+					for (int i = 0; i < sq.getFilterQueries().length; i++) {
+						_sb.append(sq.getFilterQueries()[i]).append(" ");
+					}
+				}
+				log.info("filterQuery : {}", _sb);
+			}
+		}
 	}
 
     @Override

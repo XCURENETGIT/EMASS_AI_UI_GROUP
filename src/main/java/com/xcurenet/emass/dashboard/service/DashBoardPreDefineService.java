@@ -25,6 +25,10 @@ public interface DashBoardPreDefineService {
 
 	public FileTopVO getTodayFilePerson(FileTopVO vo) throws SolrServerException, IOException;
 
+	public PatternPrivacyVO getAllTodayPatternPrivacy(PatternPrivacyVO vo) throws SolrServerException, IOException;
+
+	public TodayNotWorkVO getTodayNotWork(TodayNotWorkVO vo) throws SolrServerException, IOException;
+
 	// public DashboardVO getDashboard(final DashboardVO dashboardVO) throws
 	// IOException;
 }

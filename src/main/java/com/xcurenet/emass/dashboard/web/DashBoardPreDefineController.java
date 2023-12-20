@@ -114,31 +114,8 @@ public class DashBoardPreDefineController {
 		vo.setEndDt(Common.getDateTime(now, "yyyyMMddHHmmss"));
 		vo.setTermDtStr(Prop.propFormat("condition.hour", session, "00")+" ~ " + Common.getDateTime(now, Prop.propFormat("condition.time", session, "HH", "mm", "ss")));
 
+		PatternPrivacyVO result = dashBoardPreDefineService.getAllTodayPatternPrivacy(vo);
 
-		String query = String.format("+ctime:[%s TO %s] +(pi_CN:[ 1 TO * ] pi_FN:[ 1 TO * ] pi_SN:[ 1 TO * ] pi_PN:[ 1 TO * ] pi_DN:[ 1 TO * ])", vo.getStartDt(), vo.getEndDt());
-		SolrQuery sq = new SolrQuery();
-		sq.setRows(0);
-		sq.setParam("json.facet", FACET_QUERY);
-		sq.setQuery(query.toString());
-		SolrEdcMessageVO solrStatVo = solrEdcService.getEmassMessage(sq, vo.getAdminId());
-		SimpleOrderedMap<Object> facets = solrStatVo.getFacets();
-
-
-		JSONArray jArray = new JSONArray();
-		if(facets != null) {
-			SimpleOrderedMap<Object> map = (SimpleOrderedMap<Object>)facets.get("result");
-			if(map != null) {
-				List<SimpleOrderedMap<Object>> simpleOrderedMapList = (List<SimpleOrderedMap<Object>>)map.get("buckets");
-				for (SimpleOrderedMap<Object> simpleOrderedMap : simpleOrderedMapList) {
-					jArray.add(bucketsSetting(simpleOrderedMap));
-				}
-			}
-		}
-		int pi_total;
-		for (int i = 0; i < jArray.size(); i++) {
-			pi_total = Common.nvz(jArray.getJSONObject(i).get("pi_SN")) +  Common.nvz(jArray.getJSONObject(i).get("pi_PN")) +  Common.nvz(jArray.getJSONObject(i).get("pi_DN"))+ Common.nvz(jArray.getJSONObject(i).get("pi_FN"))+ Common.nvz(jArray.getJSONObject(i).get("pi_CN"));
-			jArray.getJSONObject(i).put("pi_total", pi_total);
-		}
 		return new XcnResponseVO(XcnRspCode.OK, null,0);
 	}
 
@@ -159,6 +136,24 @@ public class DashBoardPreDefineController {
 			vo.setUnRead(riskBehaviorVO.getUnRead());
 		}
 
+		return new XcnResponseVO(XcnRspCode.OK, vo);
+	}
+
+	@RequestMapping(value = "/getTodayNotWork.xcn")
+	@Description("Dashboard - 비 업무시간 데이터")
+	@ResponseBody
+	public XcnResponseVO getTodayNotWork(final HttpSession session) throws Exception {
+		long now = System.currentTimeMillis();
+		TodayNotWorkVO vo = new TodayNotWorkVO();
+		vo.setAdminId(Common.getAdminId(session));
+		vo.setStartDt(Common.getCurrentDate() + "000000");
+		vo.setEndDt(Common.getDateTime(now, "yyyyMMddHHmmss"));
+		vo.setTermDtStr(Prop.propFormat("condition.hour", session, "00")+" ~ " + Common.getDateTime(now, Prop.propFormat("condition.time", session, "HH", "mm", "ss")));
+
+		TodayNotWorkVO todayNotWorkVO = dashBoardPreDefineService.getTodayNotWork(vo);
+		if (todayNotWorkVO != null) {
+			vo.setTotal(todayNotWorkVO.getTotal());
+		}
 		return new XcnResponseVO(XcnRspCode.OK, vo);
 	}
 

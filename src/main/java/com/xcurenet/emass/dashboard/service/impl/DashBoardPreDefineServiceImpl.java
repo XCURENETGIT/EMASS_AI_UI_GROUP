@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static org.apache.solr.common.params.FacetParams.FACET_QUERY;
+
 @Log4j2
 @Service("dashBoardPreDefineService")
 public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService {
@@ -28,6 +30,8 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 	private SolrEdcService solrEdcService;
 
 	private static final String ABBREVIATION = "ui.dashboard.abbreviation";
+
+	private final static String FACET_QUERY = "{result: {type: terms,limit: -1,field: \"user_str\",sort: \"count desc\",facet: {pi_SN:\"sum(pi_SN)\", pi_PN:\"sum(pi_PN)\", pi_DN:\"sum(pi_DN)\", pi_FN:\"sum(pi_FN)\", pi_CN:\"sum(pi_CN)\"}}}";
 
 //	@Override
 //	public TodayDataStatusVO getTodayDataStatus(TodayDataStatusVO todayDataStatusVO) throws IOException, SolrServerException {
@@ -245,6 +249,54 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 	}
 
 	@Override
+	public PatternPrivacyVO getAllTodayPatternPrivacy(PatternPrivacyVO vo) throws SolrServerException, IOException {
+		PatternPrivacyVO result = new PatternPrivacyVO();
+		String query = String.format("+ctime:[%s TO %s] +(pi_EC:[ 1 TO * ] pi_EF:[ 1 TO * ] pi_ID:[ 1 TO * ])", vo.getStartDt(), vo.getEndDt());
+		SolrQuery sq = new SolrQuery();
+		sq.setRows(0);
+		sq.setFacet(true);
+		sq.setFacetMinCount(1);
+		sq.setParam("json.facet", FACET_QUERY);
+		sq.setQuery(query);
+		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, vo.getAdminId());
+//		System.out.println("gg: "+edc);
+
+
+
+//		JSONArray jArray = new JSONArray();
+//		if(facets != null) {
+//			SimpleOrderedMap<Object> map = (SimpleOrderedMap<Object>)facets.get("result");
+//			if(map != null) {
+//				List<SimpleOrderedMap<Object>> simpleOrderedMapList = (List<SimpleOrderedMap<Object>>)map.get("buckets");
+//				for (SimpleOrderedMap<Object> simpleOrderedMap : simpleOrderedMapList) {
+//					jArray.add(bucketsSetting(simpleOrderedMap));
+//				}
+//			}
+//		}
+//		int pi_total;
+//		for (int i = 0; i < jArray.size(); i++) {
+//			pi_total = Common.nvz(jArray.getJSONObject(i).get("pi_SN")) +  Common.nvz(jArray.getJSONObject(i).get("pi_PN")) +  Common.nvz(jArray.getJSONObject(i).get("pi_DN"))+ Common.nvz(jArray.getJSONObject(i).get("pi_FN"))+ Common.nvz(jArray.getJSONObject(i).get("pi_CN"));
+//			jArray.getJSONObject(i).put("pi_total", pi_total);
+//		}
+//		System.out.println("jArray: "+jArray);
+
+		return null;
+	}
+
+	@Override
+	public TodayNotWorkVO getTodayNotWork(TodayNotWorkVO vo) throws SolrServerException, IOException {
+		TodayNotWorkVO result = new TodayNotWorkVO();
+
+		String query = String.format("+ctime:[%s TO %s] +work:R", vo.getStartDt(), vo.getEndDt());
+		SolrQuery sq = new SolrQuery();
+		sq.setQuery(query);
+		sq.setRows(0);
+		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, vo.getAdminId());
+		result.setTotal(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));
+		return result;
+	}
+
+	@Override
 	public PatternPrivacyVO getTodayPatternPrivacy(PatternPrivacyVO patternPrivacyVO) throws IOException, SolrServerException {
 		PatternPrivacyVO result = new PatternPrivacyVO();
 
@@ -350,6 +402,8 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		result.setFacet(items);
 		return result;
 	}
+
+
 
 
 	@Override

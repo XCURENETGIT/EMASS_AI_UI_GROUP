@@ -31,17 +31,34 @@
         if (menuKey) dashboardInit();
         else getDefaultMenuKey();
 
+        getAllTodayPatternPrivacy();
         getTodayKeywordDetection();
         getTodayRiskBehavior();
         getTodayPatternPrivacy();
         getFileSendTotal();
         getServiceDataLogging();
         getFileTop();
+        getTodayNotWork();
         getTodayDataStatus();
         getTodayFilePerson();
+        getLoggingData();
 
-    })
+    });
 
+    function getLoggingData(){
+        ui.get({
+            url: 'getLoggingData.xcn',
+            success: function (data, total) {
+            },
+            error: function (status, message) {
+                //ui.alertMsg(message);
+
+            },
+            complete: function () {
+
+            }
+        });
+    }
 
     function getTodayFileList(data, rowSearchkey) {
         let array = [0, 0, 0, 0, 0, 0];
@@ -94,7 +111,7 @@
             range: "0,10,50,100,150,200",
             searchStr: '',
             success: function (data, total) {
-                if (rowSearchkey == null) rowSearchkey = "unknown";
+                if (rowSearchkey == null) rowSearchkey = "txt";
                 getTodayFileList(data, rowSearchkey);
             },
             error: function (status, message) {
@@ -199,6 +216,31 @@
         });
     }
 
+    //금일 비업무시간 건수
+    var getTodayNotWorkSetTime;
+    function getTodayNotWork() {
+        if (getTodayNotWorkSetTime != null) window.clearTimeout(getTodayNotWorkSetTime);
+        ui.get({
+            url: 'getTodayNotWork.xcn',
+            searchStr: '',
+            success: function (data, total) {
+                try {
+                    $('#todayNotWork').html(data.total + "<span>건</span>");
+                    // off('riskBehavior.message.count');
+                } catch (e) {
+                }
+            },
+            error: function (status, message) {
+                //ui.alertMsg(message);
+            },
+            complete: function () {
+                getTodayRiskBehaviorSetTime = window.setTimeout(function () {
+                    getTodayRiskBehavior();
+                }, updateTime);
+            }
+        });
+    }
+
     //금일 위험행위 메세지 건수
     var getTodayRiskBehaviorSetTime;
 
@@ -256,11 +298,30 @@
         ui.get({
             url: 'getTodayFileTop.xcn',
             success: function (data, total) {
-                var str = generateFileList(0, 4, data.fileSize, data.fileType);
-                str += generateFileList(4, 10, data.fileSize, data.fileType);
-
+	            let str = "";
                 if (data.total == 0) {
-                    str = "금일 파일 데이터가 존재하지 않습니다.";
+                    str += "금일 파일 데이터가 존재하지 않습니다.";
+                }else{
+                    str+="<div><ul>";
+                    for(let i = 0; i<4; i++){
+                        let filesSize = getFormattedValue("size", data.fileSize[i]);
+                        let filesType = getFormattedValue("type", data.fileType[i]);
+	                    str+="<li>"
+	                    str+="<span class = 'num'>"+(i+1)+"</span>";
+                        str+="<p class='file blueBg'><span>"+ filesSize +"</span></p>";
+                        str+="</li>"
+                    }
+                    str+="</ul></div>";
+
+                    str+="<div class='list'><ul>";
+                    for (let i = 4; i<10; i++){
+                        let filesSize = getFormattedValue("size", data.fileSize[i]);
+                        let filesType = getFormattedValue("type", data.fileType[i]);
+                        str+="<li><span class='num'>"+(i+1)+"</span>";
+                        str+="<p><span>"+filesType+"</span>"
+	                    str+="<span class='righttext'>"+filesSize+"</span></p></li>"
+                    }
+                    str+="<ul><div>";
                 }
 
                 $('#bigFileTop').html(str);
@@ -355,27 +416,27 @@
     }
 
 
-    // //금일 패턴 수집 건수
-    // var getServicePatternSetTime;
-    // function getServiceDataLogging() {
-    //
-    //     if (getServicePatternSetTime != null) window.clearTimeout(getServicePatternSetTime);
-    //     ui.get({
-    //         url: 'getAllTodayPatternPrivacy.xcn',
-    //         success: function (data, total) {
-    //             // console.log(data.facet);
-    //
-    //         },
-    //         error: function (status, message) {
-    //             //ui.alertMsg(message);
-    //         },
-    //         complete: function () {
-    //             getServicePatternSetTime = window.setTimeout(function () {
-    //                 getServiceDataLogging();
-    //             }, updateTime);
-    //         }
-    //     });
-    // }
+    //금일 패턴 수집 건수
+    var getAllTodayPatternPrivacySetTime;
+    function getAllTodayPatternPrivacy() {
+
+        if (getAllTodayPatternPrivacySetTime != null) window.clearTimeout(getAllTodayPatternPrivacySetTime);
+        ui.get({
+            url: 'getAllTodayPatternPrivacy.xcn',
+            success: function (data, total) {
+                // console.log(data.facet);
+
+            },
+            error: function (status, message) {
+                //ui.alertMsg(message);
+            },
+            complete: function () {
+                getServicePatternSetTime = window.setTimeout(function () {
+                    getServiceDataLogging();
+                }, updateTime);
+            }
+        });
+    }
 
 
     var chart = null;
@@ -471,8 +532,7 @@
 					</div>
 					<div class="yellowBg bornone">
 						<span class="tit03">비업무시간 데이터</span>
-						<%--						******건수 아직 안함!!--%>
-						<%--								<p>199,999<span class="text">건</span></p>--%>
+						<p id="todayNotWork">-<span>건</span>
 					</div>
 					<div class="redBg bornone">
 						<span class="tit04">위험행위 메시지</span>
@@ -538,14 +598,14 @@
 				<h3>금일 첨부파일 수집 현황</h3>
 				<div class="bordd">
 					<div class="main_tab">
-						<button class="tablink text" onclick="openCity('text', this, '#777777')" id="defaultOpen">TXT</button>
+						<button class="tablink text" onclick="openCity('txt', this, '#777777')" id="defaultOpen">TXT</button>
 						<button class="tablink jpg" onclick="openCity('jpg', this, '#9A52D2')">JPG</button>
 						<button class="tablink gif" onclick="openCity('gif', this, '#EA8323')">GIF</button>
 						<button class="tablink png" onclick="openCity('png', this, '#268770')">PNG</button>
 						<button class="tablink mp4" onclick="openCity('mp4', this, '#9A52D2')">MP4</button>
-						<button class="tablink exe" onclick="openCity('exe', this, '#B7433B')">EXE</button>
-						<button class="tablink html" onclick="openCity('html', this, '#EA8323')">HTML</button>
-						<button class="tablink java" onclick="openCity('java', this, '#9A52D2')">JAVA</button>
+<%--						<button class="tablink exe" onclick="openCity('exe', this, '#B7433B')">EXE</button>--%>
+<%--						<button class="tablink html" onclick="openCity('html', this, '#EA8323')">HTML</button>
+						<button class="tablink java" onclick="openCity('java', this, '#9A52D2')">JAVA</button>--%>
 						<!-- 배경 컬러 코드
 						 회색:#777777
 						 초록:#268770
@@ -558,12 +618,6 @@
 						 연두:#3B9A45
 						 주황:#EA8323
 						 -->
-						<!--
-						<button class="tablink ppt" onclick="openCity('unknown', this, '#E7443A')" id="defaultOpen">PPT</button>
-						<button class="tablink word" onclick="openCity('gif', this, '#3770C3')">Word</button>
-						<button class="tablink excel" onclick="openCity('jpg', this, '#3B9A45')">Excel</button>
-						<button class="tablink pdf" onclick="openCity('txt', this, '#B7433B')">PDF</button>
-						-->
 					</div>
 					<div id="dataStatus">
 					</div>
@@ -601,7 +655,7 @@
 			</div>
 			<div id="con03" class="text_tabcontent2">
 				<div>
-					일별 용량 정보
+					일별 로깅 데이터
 				</div>
 			</div>
 
