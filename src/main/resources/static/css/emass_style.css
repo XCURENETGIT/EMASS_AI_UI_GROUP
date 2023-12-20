@@ -52,9 +52,9 @@ body,html {width:100%; height:100%;}
 #xcn_mainWrap .left .m_chartArea {margin-top:8px;}
 #xcn_mainWrap .left .m_grapha {display: grid; grid-template-columns: 1fr 1fr; column-gap: 12px;}
 #xcn_mainWrap .left .m_grapha .graphaBox {}
-#xcn_mainWrap .left .m_grapha .graphaBox > div {min-height:345px; padding:20px;display: grid; grid-template-columns: 90px 1fr; column-gap: 12px;}
+#xcn_mainWrap .left .m_grapha .graphaBox > div {min-height:352px; padding:20px;display: grid; grid-template-columns: 90px 1fr; column-gap: 12px;}
 .mainlist {display: grid; grid-template-columns: 1fr 1fr 1fr; margin-bottom:24px; column-gap: 12px; }
-.mainlist div {border:1px solid #ddd; background-color: #fff;padding:16px;margin-bottom:12px;}
+.mainlist div { min-height:82px;  border:1px solid #ddd; background-color: #fff;padding:16px;margin-bottom:12px;}
 .mainlist p {min-width:150px; font-size:30px; font-weight:700; color:#1A73F9;margin-top:4px; text-align: right;}
 .mainlist p span {font-size:14px; color:#555;margin-left:4px;}
 .mainlist div .tit01 {background:url(../img/ico_main_tit01.png) top left no-repeat; font-size:14px; font-weight: 400; color:#111;padding-left:20px;}
@@ -77,14 +77,13 @@ body,html {width:100%; height:100%;}
 #xcn_mainWrap .right .bigtop10 div > ul > li:last-child {margin-bottom:0;}
 #xcn_mainWrap .right .bigtop10 div > ul > li > .num {width:36px; height:36px; text-align: center; line-height:1.7; display: inline-block; font-size:20px; background-color:#f5f5f5; font-weight:600;}
 #xcn_mainWrap .right .bigtop10 div > ul > li > .file {position:relative; float:right;  height:36px; font-size:14px;}
-#xcn_mainWrap .right .bigtop10 ul > li > .file span {position:absolute; top:11px; right:12px; display: inline-block;  font-size:14px; color:#111; font-size:16px; font-weight:400;}
+#xcn_mainWrap .right .bigtop10 ul > li > .file .filename {position:absolute; top:11px; left:10px; display:inline-block; font-size:16px; font-weight:600;  color:#111;}
+#xcn_mainWrap .right .bigtop10 ul > li > .file .Volume {position:absolute; top:11px; right:10px; display: inline-block;  color:#111; font-size:16px; font-weight:400;}
 #xcn_mainWrap .right .bigtop10 div.list ul li {position:relative; min-width:160px; height:22px; display: grid;  grid-template-columns:24px 1fr; column-gap: 8px;}
 #xcn_mainWrap .right .bigtop10 div.list ul li > .num {width:24px; height:24px; line-height:1.5; font-size:16px;  border:1px solid #ddd; background-color: #fff;}
 #xcn_mainWrap .right .bigtop10 div.list ul li > p {height:24px; line-height: 1.5; color:#333;}
 #xcn_mainWrap .right .bigtop10 div.list ul li > p span {}
 #xcn_mainWrap .right .bigtop10 div.list ul li > p span.righttext {position:absolute; top:1px; right:0; text-align: right; color:#555; font-size:14px;}
-
-
 
 
 #xcn_mainWrap .right .filetop10 {overflow: auto;}
@@ -146,7 +145,7 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 .sublist p span {font-size:14px; color:#555;margin-left:4px;}
 .chartBox {height:180px; padding:20px; background-color: #fff; border:1px solid #ddd; }
 
-.inner_personaldata { padding:20px; background-color: #fff; border:1px solid #ddd;}
+.inner_personaldata {background-color: #fff; border:1px solid #ddd;}
 .inner_scroll{ padding:20px; background-color: #fff; border:1px solid #ddd; display: grid;grid-template-rows: auto auto auto;grid-auto-flow: column;}
 .inner_emass { padding:16px; overflow: hidden;}
 .personaldataBox {overflow: auto;  height:342px;}
@@ -291,7 +290,7 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 .word {background:url(../img/ico_word.png) 8px center no-repeat; }
 .excel {background:url(../img/ico_excel.png) 8px center no-repeat;}
 .pdf {background:url(../img/ico_pdf.png) 8px center no-repeat;}
-.text {background:url(../img/ico_text.png) 8px center no-repeat; }
+.i_text {background:url(../img/ico_text.png) 8px center no-repeat; }
 .jpg {background:url(../img/ico_jpg.png) 8px center no-repeat; }
 .gif {background:url(../img/ico_gif.png) 8px center no-repeat;}
 .png {background:url(../img/ico_png.png) 8px center no-repeat;}
