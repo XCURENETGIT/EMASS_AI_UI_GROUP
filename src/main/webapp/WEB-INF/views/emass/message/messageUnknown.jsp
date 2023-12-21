@@ -2085,7 +2085,7 @@ function openNologUrlPop(host_path){
 						<button class="search_btn" id="searchBtn"><span><s:message code="common.search1"/></span></button>
 					</div>
 
-					<div class="checkbox c-checkbox" style="width:75px;position: absolute;top: 70px; left:15px;font-size:12px;">
+					<div class="checkbox " style="width:75px;position: absolute;top: 70px; left:15px;font-size:12px;">
 						<label><input type="checkbox" name="researchCheckbox" id="researchCheckbox" disabled><span class="fa fa-check"></span><s:message code="condition.research1"/></label>
 					</div>
 					

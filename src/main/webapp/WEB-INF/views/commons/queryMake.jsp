@@ -1740,15 +1740,15 @@ function initEpmsg(){
 									<tr>
 										<th><s:message code="condition.recv"/><br>(TO, CC, BCC)</th>
 										<td>
-											<label class="checkbox-inline c-checkbox input-xs" style="padding-left: 20px">
+											<label class="checkbox-inline  input-xs" style="padding-left: 20px">
 												<input type="checkbox" class="border-radius-none" name="receiveEtc" value="mail.to.name">
 												<span class="fa fa-check"></span><s:message code="condition.to"/>
 											</label>
-											<label class="checkbox-inline c-checkbox input-xs">
+											<label class="checkbox-inline  input-xs">
 												<input type="checkbox" class="border-radius-none" name="receiveEtc" value="mail.cc.name">
 												<span class="fa fa-check"></span><s:message code="condition.cc"/>
 											</label>
-											<label class="checkbox-inline c-checkbox input-xs">
+											<label class="checkbox-inline  input-xs">
 												<input type="checkbox" class="border-radius-none" name="receiveEtc" value="mail.bcc.name">
 												<span class="fa fa-check"></span><s:message code="condition.bcc"/>
 											</label>

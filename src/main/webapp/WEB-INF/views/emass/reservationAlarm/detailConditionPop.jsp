@@ -1376,12 +1376,12 @@
                         <div class="input-group">
                             <input type="text" class="form-control input-sm condition_input_text" id="senders"
                                    placeholder="<s:message code="condition.sender"/>" style="width: 290px;"/>
-                            <label class="checkbox-inline c-checkbox exceptOption">
+                            <label class="checkbox-inline  exceptOption">
                                 <input type="checkbox" name="senders_not" disabled="disabled">
                                 <span class="fa fa-check"></span><s:message code="query.make.except"/>
                             </label>
                             <%if (Common.isEquals(rsUppercase, "Y")) {%>
-                            <label class="checkbox-inline c-checkbox exceptOption">
+                            <label class="checkbox-inline  exceptOption">
                                 <input type="checkbox" name="senders_upperCase" disabled="disabled">
                                 <span class="fa fa-check"></span><s:message code="condition.uppercase"/>
                             </label>
@@ -1403,12 +1403,12 @@
                         <div class="input-group">
                             <input type="text" class="form-control input-sm condition_input_text" id="receivers"
                                    placeholder="<s:message code="condition.recv"/>" style="width: 290px;"/>
-                            <label class="checkbox-inline c-checkbox exceptOption">
+                            <label class="checkbox-inline  exceptOption">
                                 <input type="checkbox" name="receivers_not" disabled="disabled">
                                 <span class="fa fa-check"></span><s:message code="query.make.except"/>
                             </label>
                             <%if (Common.isEquals(rsUppercase, "Y")) {%>
-                            <label class="checkbox-inline c-checkbox exceptOption">
+                            <label class="checkbox-inline  exceptOption">
                                 <input type="checkbox" name="receivers_upperCase" disabled="disabled">
                                 <span class="fa fa-check"></span><s:message code="condition.uppercase"/>
                             </label>
@@ -1422,7 +1422,7 @@
                             <div class="input-group">
                                 <input type="text" class="form-control input-sm condition_input_text" id="rcvTo"
                                        placeholder="<s:message code="condition.to"/>" style="width: 412px;"/>
-                                <label class="checkbox-inline c-checkbox exceptOption">
+                                <label class="checkbox-inline  exceptOption">
                                     <input type="checkbox" name="rcvTo_not" disabled="disabled">
                                     <span class="fa fa-check"></span><s:message code="query.make.except"/>
                                 </label>
@@ -1434,7 +1434,7 @@
                             <div class="input-group">
                                 <input type="text" class="form-control input-sm condition_input_text" id="rcvCc"
                                        placeholder="<s:message code="condition.cc"/>" style="width: 412px;"/>
-                                <label class="checkbox-inline c-checkbox exceptOption">
+                                <label class="checkbox-inline  exceptOption">
                                     <input type="checkbox" name="rcvCc_not" disabled="disabled">
                                     <span class="fa fa-check"></span><s:message code="query.make.except"/>
                                 </label>
@@ -1446,7 +1446,7 @@
                             <div class="input-group">
                                 <input type="text" class="form-control input-sm condition_input_text" id="rcvBcc"
                                        placeholder="<s:message code="condition.bcc"/>" style="width: 412px;"/>
-                                <label class="checkbox-inline c-checkbox exceptOption">
+                                <label class="checkbox-inline  exceptOption">
                                     <input type="checkbox" name="rcvBcc_not" disabled="disabled">
                                     <span class="fa fa-check"></span><s:message code="query.make.except"/>
                                 </label>
@@ -1484,7 +1484,7 @@
                             <select id="userGroupSeq" class="selectpicker col-xs"
                                     data-style="btn-default btn-sm"></select>
                         </div>
-                        <label class="checkbox-inline c-checkbox exceptOption2">
+                        <label class="checkbox-inline  exceptOption2">
                             <input type="checkbox" name="userGroupSeq_not" disabled="disabled">
                             <span class="fa fa-check"></span><s:message code="query.make.except"/>
                         </label>
@@ -1496,7 +1496,7 @@
                             <select id="interGroup" class="selectpicker col-xs"
                                     data-style="btn-default btn-sm"></select>
                         </div>
-                        <label class="checkbox-inline c-checkbox exceptOption2">
+                        <label class="checkbox-inline  exceptOption2">
                             <input type="checkbox" name="interGroup_not" disabled="disabled">
                             <span class="fa fa-check"></span><s:message code="query.make.except"/>
                         </label>
@@ -1508,7 +1508,7 @@
                         <div class="btn-group filterBtn" data-toggle="buttons" style="margin-top:3px;">
                             <select id="busiSelect" class="selectpicker col-xs" data-style="btn-default btn-sm" multiple
                                     data-show-subtext="true" data-live-search="true" data-actions-box="true"></select>
-                            <label class="checkbox-inline c-checkbox exceptOption2">
+                            <label class="checkbox-inline  exceptOption2">
                                 <input type="checkbox" name="busi_not" disabled="disabled">
                                 <span class="fa fa-check"></span><s:message code="query.make.except"/>
                             </label>
@@ -1523,7 +1523,7 @@
                                 <input type="hidden" id="deptStr" class="selectedTitle">
                                 <input type="hidden" id="deptVal">
                             </div>
-                            <label class="checkbox-inline c-checkbox exceptOption">
+                            <label class="checkbox-inline  exceptOption">
                                 <input type="checkbox" name="dept_not" disabled="disabled">
                                 <span class="fa fa-check"></span><s:message code="query.make.except"/>
                             </label>
@@ -1536,7 +1536,7 @@
                         <div class="input-group">
                             <input type="text" class="form-control input-sm condition_input_text" id="url"
                                    placeholder="URL" style="width: 372px;"/>
-                            <label class="checkbox-inline c-checkbox exceptOption">
+                            <label class="checkbox-inline  exceptOption">
                                 <input type="checkbox" name="url_not" disabled="disabled">
                                 <span class="fa fa-check"></span><s:message code="query.make.except"/>
                             </label>
@@ -1579,7 +1579,7 @@
                                 <span id="attachSelectedArea" class="codeSelectedBtn">
 										<button type="button" class="btn">0</button>
 									</span>
-                                <label class="checkbox-inline c-checkbox exceptOption2">
+                                <label class="checkbox-inline  exceptOption2">
                                     <input type="checkbox" name="attach_not" disabled="disabled">
                                     <span class="fa fa-check"></span><s:message code="query.make.except"/>
                                 </label>
@@ -1636,7 +1636,7 @@
                         <span id="keywordSelectedArea" class="codeSelectedBtn">
 								<button type="button" class="btn">0</button>
 							</span>
-                        <label class="checkbox-inline c-checkbox exceptOption2">
+                        <label class="checkbox-inline  exceptOption2">
                             <input type="checkbox" name="keyword_not" disabled="disabled">
                             <span class="fa fa-check"></span><s:message code="query.make.except"/>
                         </label>

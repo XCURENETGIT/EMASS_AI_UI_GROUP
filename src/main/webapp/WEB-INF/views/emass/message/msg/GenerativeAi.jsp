@@ -685,7 +685,7 @@
 								class="glyphicon glyphicon-search"></i></button>
 					</div>
 				</div>
-				<div class="checkbox c-checkbox" style="width:150px;">
+				<div class="checkbox " style="width:150px;">
 					<label><input type="checkbox" name="readYn" id="readYn"><span class="fa fa-check"></span><s:message
 							code="eikon.msg.notRead"/></label>
 				</div>

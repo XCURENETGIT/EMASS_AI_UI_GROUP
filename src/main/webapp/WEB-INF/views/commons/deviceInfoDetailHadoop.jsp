@@ -72,7 +72,7 @@
 	color: #BE7533;
 	font-weight: bold;
 }
-.c-checkbox input[type=checkbox]:checked + span {
+. input[type=checkbox]:checked + span {
 	background-color: #be7533;
 }
 .bootstrap-select .btn{
@@ -1369,7 +1369,7 @@ function off(id) {
 				<div class="modal-body">
 					<div style="padding-bottom: 50px;">
 						<div class="form-inline col-xs-6">
-							<label class="checkbox c-checkbox"><input type="checkbox" id="alarmUsed"><span class="fa fa-check"></span><s:message code="deviceInfo.use.critical"/></label>
+							<label class="checkbox "><input type="checkbox" id="alarmUsed"><span class="fa fa-check"></span><s:message code="deviceInfo.use.critical"/></label>
 						</div>
 					</div>
 					<div style="background-color: #000; opacity: .2; position: absolute; top: 50px; left: 0px; right: 0px; bottom: 0px; z-index: 999;" id="alarmModal"></div>

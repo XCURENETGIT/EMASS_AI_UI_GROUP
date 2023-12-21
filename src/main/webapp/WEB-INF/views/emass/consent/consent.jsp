@@ -483,7 +483,7 @@
 					</div>
 					<div class="row">
 						<div class="col-35">
-							<div class="checkbox c-checkbox">
+							<div class="checkbox ">
 								<label class="fname" style="font-weight: 700;"><input type="checkbox" id="alarmSetup">
 									<s:message code="consent.alarm.setup"/></label>
 								<input type="hidden" name="alarmYn" id="alarmYn" value="N"/>
@@ -510,15 +510,15 @@
 							<label for="alarmType" class="fname"><s:message code="consent.alarm.type"/></label>
 						</div>
 						<div class="col-65">
-							<label class="checkbox-inline c-checkbox" style="padding-left: 0px;">
+							<label class="checkbox-inline " style="padding-left: 0px;">
 								<input type="checkbox" name="alarmType" value="E">
 								<s:message code="mail.msg"/>
 							</label>
-							<label class="checkbox-inline c-checkbox" style="padding-left: 0px;">
+							<label class="checkbox-inline " style="padding-left: 0px;">
 								<input type="checkbox" name="alarmType" value="S">
 								SMS
 							</label>
-							<label class="checkbox-inline c-checkbox" style="padding-left: 0px;">
+							<label class="checkbox-inline " style="padding-left: 0px;">
 								<input type="checkbox" name="alarmType" value="M">
 								</span><s:message code="mail.alert_message"/>
 							</label>

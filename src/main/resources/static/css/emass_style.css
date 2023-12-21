@@ -146,6 +146,7 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 .chartBox {height:180px; padding:20px; background-color: #fff; border:1px solid #ddd; }
 
 .inner_personaldata {background-color: #fff; border:1px solid #ddd;}
+.inner_personaldata > div {display: block;}
 .inner_scroll{ padding:20px; background-color: #fff; border:1px solid #ddd; display: grid;grid-template-rows: auto auto auto;grid-auto-flow: column;}
 .inner_emass { padding:16px; overflow: hidden;}
 .personaldataBox {overflow: auto;  height:342px;}

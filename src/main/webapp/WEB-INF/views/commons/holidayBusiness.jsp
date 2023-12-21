@@ -6,7 +6,7 @@
 	<style>
 		.checkbox-inline + .checkbox-inline, .radio-inline + .radio-inline { margin-left: 0px;}
 		.checkbox-inline, .radio-inline { font-size: 13px;}
-		.c-checkbox input, .c-radio input {
+		. input, .c-radio input {
 			opacity: 1 !important;
 			border:1px solid #000;
 			padding-left:0px !important;
@@ -527,49 +527,49 @@
 									<s:message code="holidayBusiness.select.workday"/>
 								</div>
 								<div class="form-group">
-									<label class="checkbox-inline c-checkbox pt8" style="font-weight: bold">
+									<label class="checkbox-inline  pt8" style="font-weight: bold">
 										<input type="checkbox" class="holidayCheckAll" name="holidayCheckAll">
 										<s:message code="common.msg.selectUnselect"/>
 									</label>
 								</div>
 								<div class="form-group">
-									<label class="checkbox-inline c-checkbox">
+									<label class="checkbox-inline ">
 										<input type="checkbox" class="holidayCheck" name="holidayCheck">
 										<s:message code="common.sunday"/>
 									</label>
 								</div>
 								<div class="form-group">
-									<label class="checkbox-inline c-checkbox">
+									<label class="checkbox-inline ">
 										<input type="checkbox" class="holidayCheck" name="holidayCheck" value="0">
 										<s:message code="common.monday"/>
 									</label>
 								</div>
 								<div class="form-group">
-									<label class="checkbox-inline c-checkbox">
+									<label class="checkbox-inline ">
 										<input type="checkbox" class="holidayCheck" name="holidayCheck" value="0">
 										<s:message code="common.tuesday"/>
 									</label>
 								</div>
 								<div class="form-group">
-									<label class="checkbox-inline c-checkbox">
+									<label class="checkbox-inline ">
 										<input type="checkbox" class="holidayCheck" name="holidayCheck" value="0">
 										<s:message code="common.wednesday"/>
 									</label>
 								</div>
 								<div class="form-group">
-									<label class="checkbox-inline c-checkbox">
+									<label class="checkbox-inline ">
 										<input type="checkbox" class="holidayCheck" name="holidayCheck" value="0">
 										<s:message code="common.thursday"/>
 									</label>
 								</div>
 								<div class="form-group">
-									<label class="checkbox-inline c-checkbox">
+									<label class="checkbox-inline ">
 										<input type="checkbox" class="holidayCheck" name="holidayCheck" value="0">
 										<s:message code="common.friday"/>
 									</label>
 								</div>
 								<div class="form-group">
-									<label class="checkbox-inline c-checkbox">
+									<label class="checkbox-inline ">
 										<input type="checkbox" class="holidayCheck" name="holidayCheck" value="0">
 										<s:message code="common.saturday"/>
 									</label>
@@ -579,14 +579,14 @@
 								<div class="p12 grayBg02 mab12 conTit">
 									<s:message code="holidayBusiness.select.worktimeam"/></div>
 								<div class="form-group">
-									<label class="checkbox-inline c-checkbox pt8" style="font-weight: bold">
+									<label class="checkbox-inline  pt8" style="font-weight: bold">
 										<input type="checkbox" class="workTimeAmAll" name="workTimeAmAll">
 										<s:message code="common.msg.selectUnselect"/>
 									</label>
 								</div>
 								<%for (int i = 0; i <= 11; i++) {%>
 								<div class="form-group">
-									<label class="checkbox-inline c-checkbox amTime">
+									<label class="checkbox-inline  amTime">
 										<input type="checkbox" class="workTime" name="workTime" value="<%=i%>">
 										<%=Common.lPad(i, 2, "0")%>:00
 										~ <%=Common.lPad(i, 2, "0")%>:59:59
@@ -598,14 +598,14 @@
 								<div class="p12 grayBg02 mab12 conTit">
 									<s:message code="holidayBusiness.select.worktimepm"/></div>
 								<div class="form-group">
-									<label class="checkbox-inline c-checkbox pt8" style="font-weight: bold">
+									<label class="checkbox-inline  pt8" style="font-weight: bold">
 										<input type="checkbox" class="workTimePmAll" name="workTimePmAll">
 										<s:message code="common.msg.selectUnselect"/>
 									</label>
 								</div>
 								<%for (int i = 12; i <= 23; i++) {%>
 								<div class="form-group">
-									<label class="checkbox-inline c-checkbox pmTime">
+									<label class="checkbox-inline  pmTime">
 										<input type="checkbox" class="workTime" name="workTime" value="<%=i%>">
 										<%=Common.lPad(i, 2, "0")%>:00
 										~ <%=Common.lPad(i, 2, "0")%>:59:59

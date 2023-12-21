@@ -694,11 +694,11 @@
 									<label for="workStatus" class="fname"><s:message code="common.msg.retirement"/>/<s:message code="common.msg.leave"/></label>
 								</div>
 								<div class="col-65">
-									<label class="checkbox-inline c-checkbox" style="padding-left: 0px;">
+									<label class="checkbox-inline " style="padding-left: 0px;">
 										<input type="checkbox" name="workStatus" value="R">
 										<s:message code="common.msg.retirement"/>
 									</label>
-									<label class="checkbox-inline c-checkbox" style="padding-left: 0px;">
+									<label class="checkbox-inline " style="padding-left: 0px;">
 										<input type="checkbox" name="workStatus" value="O">
 										<s:message code="common.msg.leave"/>
 									</label>
@@ -838,19 +838,19 @@
 
 								</div>
 								<div id="divBodyChk" class="col-65" style="border: 1px solid #e5e5e5; margin-left: 15px; padding: 15px; display: inline-block; width: 95%;">
-									<label class="checkbox-inline c-checkbox" style="padding-left: 0px;">
+									<label class="checkbox-inline " style="padding-left: 0px;">
 										<input type="checkbox" name="chkMenu" value="DV" checked>
 										<s:message code="common.msg.search"/>
 									</label>
-									<label class="checkbox-inline c-checkbox" style="padding-left: 0px;">
+									<label class="checkbox-inline " style="padding-left: 0px;">
 										<input type="checkbox" name="chkMenu" value="DS" checked>
 										<s:message code="common.msg.save"/>
 									</label>
-									<label class="checkbox-inline c-checkbox" style="padding-left: 0px;">
+									<label class="checkbox-inline " style="padding-left: 0px;">
 										<input type="checkbox" name="chkMenu" value="DF" checked>
 										<s:message code="common.msg.forward_mail"/>
 									</label>
-									<label class="checkbox-inline c-checkbox" style="padding-left: 0px;">
+									<label class="checkbox-inline " style="padding-left: 0px;">
 										<input type="checkbox" name="chkMenu" value="DP" checked>
 										<s:message code="common.msg.print"/>
 									</label>
@@ -866,16 +866,16 @@
 									</label>
 								</div>
 								<div id="divExpChk" class="col-65" style="border: 1px solid #e5e5e5; margin-left: 15px; padding: 15px; display: inline-block; width: 95%;">
-									<label class="checkbox-inline c-checkbox" style="padding: 2px 0px;"><input type="checkbox" name="chkMenu" value="LS" checked><s:message code="selectCodeAll.list"/></label>
-									<label class="checkbox-inline c-checkbox" style="padding: 2px 0px;"><input type="checkbox" name="chkMenu" value="BS" checked><s:message code="condition.body"/></label>
-									<label class="checkbox-inline c-checkbox" style="padding: 2px 0px;"><input type="checkbox" name="chkMenu" value="AS" checked><s:message code="consent.attach"/></label>
-									<label class="checkbox-inline c-checkbox" style="padding: 2px 0px;"><input type="checkbox" name="chkMenu" value="WS" checked><s:message code="selectCodeAll.list"/>+<s:message code="condition.body"/></label>
+									<label class="checkbox-inline " style="padding: 2px 0px;"><input type="checkbox" name="chkMenu" value="LS" checked><s:message code="selectCodeAll.list"/></label>
+									<label class="checkbox-inline " style="padding: 2px 0px;"><input type="checkbox" name="chkMenu" value="BS" checked><s:message code="condition.body"/></label>
+									<label class="checkbox-inline " style="padding: 2px 0px;"><input type="checkbox" name="chkMenu" value="AS" checked><s:message code="consent.attach"/></label>
+									<label class="checkbox-inline " style="padding: 2px 0px;"><input type="checkbox" name="chkMenu" value="WS" checked><s:message code="selectCodeAll.list"/>+<s:message code="condition.body"/></label>
 									<br>
-									<label class="checkbox-inline c-checkbox" style="padding: 2px 0px;">
+									<label class="checkbox-inline " style="padding: 2px 0px;">
 										<input type="checkbox" name="chkMenu" value="CS" checked>
 										<s:message code="selectCodeAll.list"/>+<s:message code="condition.body"/>+<s:message code="consent.attach"/>
 									</label>
-									<label class="checkbox-inline c-checkbox" style="padding: 2px 0px;">
+									<label class="checkbox-inline " style="padding: 2px 0px;">
 										<input type="checkbox" name="chkMenu" value="LP" checked>
 										<s:message code="selectCodeAll.list"/>
 										<s:message code="common.msg.print"/>

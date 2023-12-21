@@ -78,7 +78,7 @@ table th {
 	color: #BE7533;
 	font-weight: bold;
 }
-.c-checkbox input[type=checkbox]:checked + span {
+. input[type=checkbox]:checked + span {
 	background-color: #be7533;
 }
 .bootstrap-select .btn{
@@ -1185,7 +1185,7 @@ function off(id) {
 				<div class="modal-body">
 					<div style="padding-bottom: 50px;">
 						<div class="form-inline col-xs-6">
-							<label class="checkbox c-checkbox"><input type="checkbox" id="alarmUsed"><span class="fa fa-check"></span><s:message code="deviceInfo.use.critical"/></label>
+							<label class="checkbox "><input type="checkbox" id="alarmUsed"><span class="fa fa-check"></span><s:message code="deviceInfo.use.critical"/></label>
 						</div>
 					</div>
 					<div style="background-color: #000; opacity: .2; position: absolute; top: 50px; left: 0px; right: 0px; bottom: 0px; z-index: 999;" id="alarmModal"></div>
@@ -1245,7 +1245,7 @@ function off(id) {
 				<div class="modal-body">
 					<div style="padding-bottom: 50px;">
 						<div class="form-inline col-xs-6">
-							<label class="checkbox c-checkbox"><input type="checkbox" id="alarmCpuUsed"><span class="fa fa-check"></span><s:message code="deviceInfo.use.critical"/></label>
+							<label class="checkbox "><input type="checkbox" id="alarmCpuUsed"><span class="fa fa-check"></span><s:message code="deviceInfo.use.critical"/></label>
 						</div>
 					</div>
 					<div style="background-color: #000; opacity: .2; position: absolute; top: 50px; left: 0px; right: 0px; bottom: 0px; z-index: 999;" id="alarmCpuModal"></div>
@@ -1283,7 +1283,7 @@ function off(id) {
 				<div class="modal-body">
 					<div style="padding-bottom: 50px;">
 						<div class="form-inline col-xs-6">
-							<label class="checkbox c-checkbox"><input type="checkbox" id="alarmMemoryUsed"><span class="fa fa-check"></span><s:message code="deviceInfo.use.critical"/></label>
+							<label class="checkbox "><input type="checkbox" id="alarmMemoryUsed"><span class="fa fa-check"></span><s:message code="deviceInfo.use.critical"/></label>
 						</div>
 					</div>
 					<div style="background-color: #000; opacity: .2; position: absolute; top: 50px; left: 0px; right: 0px; bottom: 0px; z-index: 999;" id="alarmMemoryModal"></div>
@@ -1428,8 +1428,8 @@ function off(id) {
 									<div class="form-inline not-dashed">
 										<i class="fa fa-bar-chart-o fa-fw"></i> CPU&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 										<span id="filesystemSpan">
-											<label class="checkbox c-checkbox" style="color: #be7533;"><input type="checkbox" id="sms_file_cpu"><span class="fa fa-check" style="border: 1px solid #be7533"></span>SMS</label>
-											<label class="checkbox c-checkbox" style="color: #be7533;"><input type="checkbox" id="notify_file_cpu"><span class="fa fa-check" style="border: 1px solid #be7533"></span><s:message code="deviceInfo.alarm"/></label>
+											<label class="checkbox " style="color: #be7533;"><input type="checkbox" id="sms_file_cpu"><span class="fa fa-check" style="border: 1px solid #be7533"></span>SMS</label>
+											<label class="checkbox " style="color: #be7533;"><input type="checkbox" id="notify_file_cpu"><span class="fa fa-check" style="border: 1px solid #be7533"></span><s:message code="deviceInfo.alarm"/></label>
 											<label style="color: #be7533;">(<s:message code="deviceInfo.set.alarm.critical"/>)</label>
 										</span>
 										<span style="float: right;">
@@ -1448,8 +1448,8 @@ function off(id) {
 									<div class="form-inline not-dashed">
 										<i class="fa fa-bar-chart-o fa-fw"></i> Memory&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 										<span id="filesystemSpan">
-											<label class="checkbox c-checkbox" style="color: #be7533;"><input type="checkbox" id="sms_file_mem"><span class="fa fa-check" style="border: 1px solid #be7533"></span>SMS</label>
-											<label class="checkbox c-checkbox" style="color: #be7533;"><input type="checkbox" id="notify_file_mem"><span class="fa fa-check" style="border: 1px solid #be7533"></span><s:message code="deviceInfo.alarm"/></label>
+											<label class="checkbox " style="color: #be7533;"><input type="checkbox" id="sms_file_mem"><span class="fa fa-check" style="border: 1px solid #be7533"></span>SMS</label>
+											<label class="checkbox " style="color: #be7533;"><input type="checkbox" id="notify_file_mem"><span class="fa fa-check" style="border: 1px solid #be7533"></span><s:message code="deviceInfo.alarm"/></label>
 											<label style="color: #be7533;">(<s:message code="deviceInfo.set.alarm.critical"/>)</label>
 										</span>
 										<span style="float: right;">
@@ -1510,8 +1510,8 @@ function off(id) {
 									<div class="form-inline not-dashed">
 										<i class="fa fa-bar-chart-o fa-fw"></i> <s:message code="deviceInfo.filesystem"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 										<span id="filesystemSpan">
-											<label class="checkbox c-checkbox" style="color: #be7533;"><input type="checkbox" id="sms_file"><span class="fa fa-check" style="border: 1px solid #be7533"></span>SMS</label>
-											<label class="checkbox c-checkbox" style="color: #be7533;"><input type="checkbox" id="notify_file"><span class="fa fa-check" style="border: 1px solid #be7533"></span><s:message code="deviceInfo.alarm"/></label>
+											<label class="checkbox " style="color: #be7533;"><input type="checkbox" id="sms_file"><span class="fa fa-check" style="border: 1px solid #be7533"></span>SMS</label>
+											<label class="checkbox " style="color: #be7533;"><input type="checkbox" id="notify_file"><span class="fa fa-check" style="border: 1px solid #be7533"></span><s:message code="deviceInfo.alarm"/></label>
 											<label style="color: #be7533;">(<s:message code="deviceInfo.set.alarm.critical"/>)</label>
 										</span>
 									</div>
@@ -1527,8 +1527,8 @@ function off(id) {
 								<div class="panel-heading">
 									<div class="form-inline not-dashed">
 										<i class="fa fa-bar-chart-o fa-fw"></i> <s:message code="deviceInfo.process"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-										<label class="checkbox c-checkbox" style="color: #be7533;"><input type="checkbox" id="sms_proc"><span class="fa fa-check" style="border: 1px solid #be7533"></span>SMS</label>
-										<label class="checkbox c-checkbox" style="color: #be7533;"><input type="checkbox" id="notify_proc"><span class="fa fa-check" style="border: 1px solid #be7533"></span><s:message code="deviceInfo.alarm"/></label>
+										<label class="checkbox " style="color: #be7533;"><input type="checkbox" id="sms_proc"><span class="fa fa-check" style="border: 1px solid #be7533"></span>SMS</label>
+										<label class="checkbox " style="color: #be7533;"><input type="checkbox" id="notify_proc"><span class="fa fa-check" style="border: 1px solid #be7533"></span><s:message code="deviceInfo.alarm"/></label>
 										<label style="color: #be7533;">(<s:message code="deviceInfo.set.alarm.status"/>)</label>
 									</div>
 								</div>
@@ -1557,8 +1557,8 @@ function off(id) {
 								<div class="panel-heading">
 									<div class="form-inline not-dashed">
 										<i class="fa fa-bar-chart-o fa-fw"></i> <s:message code="deviceInfo.interface"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-										<label class="checkbox c-checkbox" style="color: #be7533;"><input type="checkbox" id="sms_inter"><span class="fa fa-check" style="border: 1px solid #be7533"></span>SMS</label>
-										<label class="checkbox c-checkbox" style="color: #be7533;"><input type="checkbox" id="notify_inter"><span class="fa fa-check" style="border: 1px solid #be7533"></span><s:message code="deviceInfo.alarm"/></label>
+										<label class="checkbox " style="color: #be7533;"><input type="checkbox" id="sms_inter"><span class="fa fa-check" style="border: 1px solid #be7533"></span>SMS</label>
+										<label class="checkbox " style="color: #be7533;"><input type="checkbox" id="notify_inter"><span class="fa fa-check" style="border: 1px solid #be7533"></span><s:message code="deviceInfo.alarm"/></label>
 										<label style="color: #be7533;">(<s:message code="deviceInfo.set.alarm.status"/>)</label>
 									</div>
 								</div>

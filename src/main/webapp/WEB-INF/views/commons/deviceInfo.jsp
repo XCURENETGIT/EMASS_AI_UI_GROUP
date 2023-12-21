@@ -77,7 +77,7 @@ table th {
 	color: #BE7533;
 	font-weight: bold;
 }
-.c-checkbox input[type=checkbox]:checked + span {
+. input[type=checkbox]:checked + span {
 	background-color: #be7533;
 }
 .bootstrap-select .btn{
