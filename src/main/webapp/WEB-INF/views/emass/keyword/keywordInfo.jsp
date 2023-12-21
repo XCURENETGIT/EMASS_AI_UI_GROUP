@@ -510,7 +510,7 @@ function fileExtCheck(obj) {
 </div>
 
 
-<div class="container">
+<div>
 	<div class="searchArea">
 		<div style="width:470px; float: left">
 			<div class="searchSub" style="width: 470px;">
@@ -523,11 +523,11 @@ function fileExtCheck(obj) {
 				<button type="button" class="btn02" accesskey="D" id="groupDeleteBtn"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
 				</div>
 				</div>
-			<div class="content xcn_full" style="background-color: transparent">
+			<!--<div class="content xcn_full" style="background-color: transparent">
 				<div class="contentSub" style="padding: 0px;">
 					<div id="keywordGroupListGrid" class="slickGrid gridArea"></div>
 				</div>
-			</div>
+			</div>-->
 		</div>
 
 		<div style="width:calc(100% - 470px); padding-left: 16px; float: left">
@@ -544,10 +544,20 @@ function fileExtCheck(obj) {
 				</div>
 				</c:if>
 			</div>
-			<div class="content xcn_full" style=" background-color: transparent">
+			<!--<div class="content xcn_full" style=" background-color: transparent">
 				<div class="contentSub " style="padding:0 ">
 					<div id="keywordListGrid" class="slickGrid gridArea"></div>
 				</div>
+			</div>-->
+		</div>
+	</div>
+	<div class="content" style="overflow:hidden;">
+		<div class="contentSub" style="width:500px; float: left">
+			<div id="keywordGroupListGrid" class="slickGrid gridArea"></div>
+		</div>
+		<div>
+			<div class="contentSub " style="width:calc(100% - 500px); float: left; padding-left:0px !important;">
+				<div id="keywordListGrid" class="slickGrid gridArea"></div>
 			</div>
 		</div>
 	</div>
@@ -565,7 +575,7 @@ function fileExtCheck(obj) {
 		});
 		if( $('#groupInsertBtn').css('display') == 'inline-block' ) {
 			gridGroup.colAdd('open', '<s:message code="common.msg.modify"/>', 80, 'center', false, 'noal',function(row, cell, value, columnDef, dataContext ) {
-				 return "<input type='button' value='<s:message code="common.msg.modify"/>' class='table_btn01' style='line-height: 0px; color:white; vertical-align: 1px; font-weight:bold;'/>";
+				 return "<input type='button' value='<s:message code="common.msg.modify"/>' class='table_btn01' style='line-height: 0px; color:white; height:20px; vertical-align: 1px; font-weight:bold;'/>";
 			});
 		}
 		gridGroup.loadExportMenu('<s:message code="keyword.msg.part_mgnt"/>');
