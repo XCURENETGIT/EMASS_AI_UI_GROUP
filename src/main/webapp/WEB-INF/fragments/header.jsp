@@ -39,7 +39,7 @@ let menuList = <%=menuList%>;
 let mainUri = "<%=uri%>";
 </script>
 <c:set var="menuId" value="<%=menuId%>"/>
-<%if(Common.isEquals(headerYn, "Y")){%>
+<%if(!uri.contains("dashboard.do") && (Common.isEmpty(headerYn) || Common.isEquals(headerYn, "Y"))){%>
 <div class="subTit">
 	<h2>
 		<%=menuName%>

@@ -15,7 +15,7 @@ var chartAPI = {
 						onclick: function () {
 							this.exportChart();
 						}
-					},{
+					}/*,{
 						text: '<br />',
 						onclick: function () {}
 					},
@@ -34,7 +34,7 @@ var chartAPI = {
 					}, {
 						text: '<img src="'+contextRoot+'/img/icon/area.bmp" width="16" style="width:16px;height:16px;vertical-align: middle;"> ' + chartAPIJS.areaChart,
 						onclick: function () {chartAPI.changeChartType('areaspline', this);}
-					}]
+					}*/]
 				}
 			},
 			chartOptions: {

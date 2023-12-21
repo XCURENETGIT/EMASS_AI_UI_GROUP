@@ -236,7 +236,7 @@
       });
     });
 
-    $('button').easyHotkey();
+    //$('button').easyHotkey();
 
     $('#TheFirstSaveBtn').click(function(){
       $('#TheFirstSaveBtn').prop('disabled', true);

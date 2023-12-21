@@ -360,7 +360,7 @@
                         let filesType = getFormattedValue("type", data.fileType[i]);
                         str+="<li>"
                         str+="<span class = 'num'>"+(i+1)+"</span>";
-                        str+="<p class='file blueBg'><span>"+ filesSize +"</span></p>";
+                        str+="<p class='file blueBg'><span class='filename blue'>EXCEL</span><span class='Volume'>"+ filesSize +"</span></p>";
                         str+="</li>"
                     }
                     str+="</ul></div>";
@@ -745,7 +745,7 @@
 				<h3>금일 첨부파일 수집 현황</h3>
 				<div class="bordd">
 					<div class="main_tab">
-						<button class="tablink text" onclick="openCity('txt', this, '#777777')" id="defaultOpen">TXT</button>
+						<button class="tablink i_text" onclick="openCity('txt', this, '#777777')" id="defaultOpen">TXT</button>
 						<button class="tablink jpg" onclick="openCity('jpg', this, '#9A52D2')">JPG</button>
 						<button class="tablink gif" onclick="openCity('gif', this, '#EA8323')">GIF</button>
 						<button class="tablink png" onclick="openCity('png', this, '#268770')">PNG</button>
