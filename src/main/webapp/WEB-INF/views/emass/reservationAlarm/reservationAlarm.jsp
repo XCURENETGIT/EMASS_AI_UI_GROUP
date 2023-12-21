@@ -897,7 +897,6 @@
 			<div class="pop_tableArea mat16">
 				<div id="alarmLogListGrid" class="slickGrid gridArea"></div>
 			</div>
-		</div>
 	</div>
 </div>
 
@@ -905,17 +904,14 @@
 <div>
 	<div class="searchArea">
 		<div class="searchSub">
-
-				<input type="text" placeholder="<s:message code="mail.message.input.alarm_name"/>" id="searchStr">
-				<button class="form_btn01" type="button" accesskey="Q" id="searchBtn"><s:message
-						code="common.msg.search"/></button>
-
+			<input type="text" placeholder="<s:message code="mail.message.input.alarm_name"/>" id="searchStr">
+			<button class="form_btn01" type="button" accesskey="Q" id="searchBtn"><s:message code="common.msg.search"/></button>
 			<button type="button" class="btn01" id="insertBtn" accesskey="I"><img
 					src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
 			<button type="button" class="btn02" id="deleteBtn" accesskey="D"><img
 					src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
-			<button type="button" class="btn03" id="mailFormBtn" accesskey="M"><span
-					class="glyphicon glyphicon-import"></span>&nbsp;<s:message code="mail.mgnt.form"/></button>
+			<button type="button" class="btn03" id="mailFormBtn" accesskey="M">
+				<span class="glyphicon glyphicon-import"></span>&nbsp;<s:message code="mail.mgnt.form"/></button>
 		</div>
 	</div>
 

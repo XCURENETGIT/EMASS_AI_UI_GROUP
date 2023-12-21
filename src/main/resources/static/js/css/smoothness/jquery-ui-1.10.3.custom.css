@@ -821,6 +821,7 @@ body .ui-tooltip {
 .ui-widget button {
 	/*font-family: "돋움", Dotum, "굴림", Gulim, Helvetica, Sans-serif;
 	font-size: 1em;*/
+	vertical-align: middle;
 }
 .ui-widget-content {
 

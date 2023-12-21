@@ -363,7 +363,7 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .h400 {height:400px;}
 .h429 {height:429px;}
 
-.col-20 {float: left;width: 20%;}
+.col-20 {float: left;width: 20%; overflow: hidden;}
 .col-35 {float: left;width: 35%;}
 .col-50 {float: left;width: 48%;}
 .col-65 {float: left;width: 65%;}
