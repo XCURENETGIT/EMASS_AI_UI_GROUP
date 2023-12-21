@@ -451,7 +451,7 @@
 				<div id="fileDiv" class="messageCon">
 					<div class="top grayBg03">
 						<h4><s:message code="bodyview.file.info"/></h4><h4 id="fileCntArea"></h4> <%--뒤에 파일 갯수 표기--%>
-						<div class="btn btnform">
+						<div class="messagePageBtn btnform">
 							<button class="btn05" id="allDownload"><img src="<c:url value="/img/subBtn_save.png"/>"  alt="확대"> <s:message code="bodyview.file.allDownload"/></button>
 						</div>
 					</div>
@@ -460,7 +460,7 @@
 				<div class="messageCon" id="bodyDiv">
 					<div class="top grayBg03">
 							<h4>본문내용</h4>
-							<div class="btn btnform">
+							<div class="messagePageBtn btnform">
 								<button class="btn05 font_size" id="large_txt"><img src="<c:url value="/img/subBtn_add.png"/>"  alt="<s:message code="bodyview.msg.zoomIn"/>"><s:message code="bodyview.msg.zoomIn"/></button>
 								<button class="btn05 font_size" id="small_txt"><img src="<c:url value="/img/subBtn_add02.png"/>" alt="<s:message code="bodyview.msg.zoomOut"/>"><s:message code="bodyview.msg.zoomOut"/></button>
 								<button class="btn05" id="copyBodyBtn"><img src="<c:url value="/img/subBtn_copy.png"/>" alt="<s:message code="bodyview.body.contentCopy"/>"><s:message code="bodyview.body.contentCopy"/></button>

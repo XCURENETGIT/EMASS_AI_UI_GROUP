@@ -147,6 +147,26 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 .messageCon .buttons {right:0px; top:0px;  display:inline-block; color:#555; text-align: right; }
 .messageCon .btn select{vertical-align: middle;}
 .messageCon .conBox { position: relative; padding:16px;}
+.messagePageBtn {
+    display: inline-block;
+    padding: 4px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border-radius: 2px
+}
+
 #emassBody { min-height: 200px;}
 
 .filelist {position: relative;}

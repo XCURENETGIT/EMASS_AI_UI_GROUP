@@ -1436,7 +1436,7 @@ function setFileDiv(msg) {
 						fileStr += '<a >';
 						fileStr += '' + attachName+ ' ('+convertFileSize(file.attachSize)+ ')';
 						fileStr += '</a>';
-						fileStr += '<div class="btn buttons">';
+						fileStr += '<div class="messagePageBtn buttons">';
 							if(nvl(file.ocrYn) == "Y") {
 								fileStr += '<img alt="" src="' + contextRoot + '/img/view.png" style="width: 15px;">';
 								fileStr += '<span class="attachOcrText" style="padding-left:5px; cursor:pointer; text-decoration: underline;">';
