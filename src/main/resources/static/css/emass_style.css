@@ -552,11 +552,11 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .row label {vertical-align: middle;line-height: 1.5; font-size:14px;font-weight:400;}
 .row select {display: inline-block;}
 .row:after {content: "";display: table;clear: both;}
-.checkbox {font-size:13px; margin-right:12px; margin-bottom:4px;display: inline-block;}
-.checkbox input {vertical-align: top;}
-.checkbox span.checktit {font-size:14px; margin-left:-4px;}
-.radio {font-size:13px; margin-right:12px;margin-bottom:4px; display: inline-block;}
-.radio input {vertical-align: top;}
+.row .checkbox {font-size:13px; margin-right:12px; margin-bottom:4px;display: inline-block;}
+.row .checkbox input {vertical-align: middle; margin-left:-4px;}
+.row .checkbox span.checktit {font-size:14px; margin-left:-4px;}
+.row .radio {font-size:13px; margin-right:12px;margin-bottom:4px; display: inline-block;}
+.row .radio input {vertical-align: top;}
 
 .info {background: url(../img/icon/ico_alert.png) left top no-repeat;padding-left:20px;padding-top:1px; font-size:14px; margin-top:8px;}
 
