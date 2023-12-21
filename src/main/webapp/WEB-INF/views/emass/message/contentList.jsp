@@ -206,6 +206,12 @@
 		parent.readyFlag = true;
 	});
 
+	function msgValid(msgid) {
+
+		if(undefined != msgid && msgid != '' ) return true;
+		else return false;
+	}
+
 	function saveMsgBtn(){
 		parent.$('#saveMsgData').click();
 		$('#contextMenu').hide();
@@ -703,14 +709,14 @@
 	}
 
 	function viewer_newOpen(row, selectedGrid){
-		var msgid = grid.getValue(row, 'msgid');
-		var bodySize = grid.getValue(row, 'bodySizeStr');
-		var bodySizeNum = bodySize.substr(0, bodySize.indexOf(' '));
-
-		openMessageBodyPop( '', msgid, searchKeyword(), bodySizeNum);
-
-		var readYn = grid.getValue(row, 'readYn');
-		grid.setValue(row, grid.ColIndex('readYn'), 'Y');
+		if(row != -1){
+			var msgid = grid.getValue(row, 'msgid');
+			var bodySize = grid.getValue(row, 'bodySizeStr');
+			var bodySizeNum = bodySize.substr(0, bodySize.indexOf(' '));
+			openMessageBodyPop('', msgid, searchKeyword(), bodySizeNum);
+			var readYn = grid.getValue(row, 'readYn');
+			grid.setValue(row, grid.ColIndex('readYn'), 'Y');
+		}else alert('<s:message code="bodyview.select.message" />');
 	}
 
 	function setReadDisplayChangeRootmtr( rootmtr ){

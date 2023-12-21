@@ -469,6 +469,8 @@ public class SolrEdcStatController {
         int limit = Common.nvz(request.getParameter("limit"));
 
         SolrEdcMessageVO solrStatVo = getFacetResult(startDate, endDate, detailQuery, xAxis, limit, Common.getAdminId(request), rowKey);
+
+
         return new XcnResponseVO(XcnRspCode.OK, solrStatVo, solrStatVo.getFacetData().size());
     }
 
@@ -590,7 +592,7 @@ public class SolrEdcStatController {
         String noOcrQuery = "";
 
         query += String.format(" +ctime:[%s TO %s]", startDate, endDate);
-        query += " +(attachtype:(tiff tif png gif bmp jpg jpeg pcx dcx jb2 jfif jp2 jpc j2k pdf) attachspace:BODY)";
+        query += " +(attachtype:((tiff) (tif) (png) (gif) (bmp) (jpg) (jpeg) (pcx) (dcx) (jb2) (jfif) (jp2) (jpc) (j2k) (pdf)) attachspace:BODY)";
 
         if(Common.isNotEmpty(detailQuery)) {
             query += " " + detailQuery;
@@ -630,17 +632,17 @@ public class SolrEdcStatController {
         setAuthoritys(sq, adminId);
 
         SearchHits<SolrEdcVO> resp = solrEdcService.getList(sq);
-
+//
 //        List<FacetField> fields = resp.getFacetFields();
 //        Map<String, Object> item = new HashMap<String, Object>();
 //        if ( resp.getResults().getNumFound() > 0 ) {
 //            if (fields != null && fields.size() > 0) {
 //                FacetField field = fields.get(0);
 //
-//                List<Count> values = field.getValues();
+//                List<FacetField.Count> values = field.getValues();
 //
 //                if (values != null) {
-//                    for (Count count : values) {
+//                    for (FacetField.Count count : values) {
 //                        item.put(count.getName(), count.getCount());
 //                        list.add(count.getName());
 //                    }

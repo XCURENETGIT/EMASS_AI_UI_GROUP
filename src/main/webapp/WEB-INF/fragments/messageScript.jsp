@@ -821,8 +821,9 @@
     if( !isDetailView() ) return;
     if( searchKey == undefined ) searchKey = '';
 
-    var url    = '<c:url value="/ems/contentBodyNew.do?msgid='+msgId+'&searchKey='+searchKey+'"/>';
-    if( title == '' ) title='No_Title'+makeDateTime();
+    var url  = '<c:url value="/ems/contentBodyNew.do?msgid='+msgId+'&searchKey='+searchKey+'"/>';
+
+    if( title == '' ) title='No_Title'+ ''// makeDateTime();
     return fnOpenWindow(url, title, 1000, 700, 'resize');
   }
 
@@ -1093,6 +1094,7 @@
     console.log(Math.floor(val * 100));
     return Math.floor(val * 100);
   }
+
 </script>
 
 <div class="modal fade" id="TheFirstChangePw" tabindex="-1" role="dialog" aria-labelledby="TheFirstChangePwModal" data-backdrop="static" data-keyboard="false">

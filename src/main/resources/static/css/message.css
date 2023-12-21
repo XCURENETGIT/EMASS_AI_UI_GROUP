@@ -854,3 +854,8 @@ input[type="checkbox"]:checked + span  {color:#1A73F9}
 input[type="checkbox"]:disabled {appearance: none; border-radius: 2px; width:12px; height:12px; background-color: #eee; border: 1px solid #CCC; box-shadow: none;opacity:1;cursor: not-allowed;}
 input[type="checkbox"]:disabled + span {opacity: 0.7;cursor: not-allowed;}
 input[type="checkbox"] {vertical-align: middle !important;}
+
+/* 드롭다운 메뉴  */
+
+.dropdown-additionMenu {left:21.2%;}
+.dropdown-exportMenu  {left:81.2%;}

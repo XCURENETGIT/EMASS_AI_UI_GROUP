@@ -1,3 +1,7 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <style type="text/css">
 	#leftTab .active a{
 		background-color: #5FA2DD;
@@ -525,25 +529,26 @@
 </div>
 <div class="modal fade smartFolderSave" id="smartFolderSavePop" tabindex="-1" data-backdrop="static" data-keyboard="false" role="dialog" aria-labelledby="attachModal">
 	<input type="hidden" id="modalFolderType"/>
-	<div class="modal-dialog modal-lg" role="document" style="width:700px;">
+	<div  role="document" >
 		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-				<h3 class="modal-title"><s:message code="filterInfo.setMsgFolder"/></h3>
+			<div class="modalHead">
+				<h2><s:message code="filterInfo.setMsgFolder"/></h2>
 			</div>
-			<div class="modal-body">
-				<div class="form-inline" id="saveFolderPathPopDiv">
-					<label for="savePathPopArea" class=" col-xs-2"><s:message code="condition.savepath"/></label>
-					<div class="form-control" id="saveFolderPathPopArea" style="height:350px;width:500px;">
-						<ul id="folderTreePop" class="ztree scrollbar" style="height:100%;width:100%;overflow:auto;"></ul>
+			<div class="modalCon">
+				<div class="modalTop">
+					<h3><label for="folderTreePop"><s:message code="condition.savepath"/></label></h3>
+				</div>
+				<div class="modalbody">
+					<div class="form-inline" id="saveFolderPathPopDiv">
+						<div class="form-control" id="saveFolderPathPopArea" style="height:350px;width:500px;">
+							<ul id="folderTreePop" class="ztree scrollbar" style="height:100%;width:100%;overflow:auto;"></ul>
+						</div>
 					</div>
 				</div>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-primary savePopBtn" accesskey="S" id="saveFolderBtn"><s:message code="common.msg.save"/></button>
-				<button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+				<div class="modalfooter">
+					<button type="button" class="pop_btn02"   data-dismiss="modal" aria-label="Close"><s:message code="common.msg.close"/></button>
+					<button type="button" class="pop_btn01 savePopBtn" accesskey="S" id="saveFolderBtn"><s:message code="common.msg.save"/></button>
+				</div>
 			</div>
 		</div>
 	</div>

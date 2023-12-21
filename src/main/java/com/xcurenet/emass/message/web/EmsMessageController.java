@@ -818,7 +818,6 @@ public class EmsMessageController {
 		String print = Common.nvl(request.getParameter("print"));
 
 		ServletOutputStream out = null;
-
 		try {
 			out = response.getOutputStream();
 

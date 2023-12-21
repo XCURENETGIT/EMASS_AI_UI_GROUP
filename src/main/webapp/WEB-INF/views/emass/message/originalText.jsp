@@ -6,6 +6,7 @@
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="org.springframework.web.context.WebApplicationContext"%>
 <%@page import="com.xcurenet.emass.message.service.EmsBodyVO"%>
+<%@ page import="com.xcurenet.emass.message.service.EmsMessageService" %>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>

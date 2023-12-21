@@ -74,18 +74,23 @@ $(document).ready(function(){
 		alert(message.copyBodyMsg);
 	});
 
+	function msgValid() {
+		if(undefined != msgId && msgId != '' ) return true;
+		else return false;
+	}
+
 	$(document).on('click', '#usersInfoBtn', function(){
 		var url = '';
-
 //		if( isGroupMessenger( ) && detailFlag ){
 //			//url = '<c:url value="/ems/userGroupInfoPop.do?xRootMtr='+xRootMtr+'"/>';
 //			url = contextRoot + '/ems/userGroupInfoPop.do?xRootMtr=' + xRootMtr;
 //			return fnOpenWindow(url, 'userGroupInfoPop', 835, 370, 'resize');
 //		}else{
 			//url = '<c:url value="/ems/userInfoPop.do?msgId='+msgId+'&type="/>';
-			url = contextRoot + '/ems/userInfoPop.do?msgId=' + msgId + '&type=""'
-			return fnOpenWindow(url, 'userInfoPop', 835, 370, 'resize');
-		//}
+		if(msgValid()) {
+			 url = contextRoot + '/ems/userInfoPop.do?msgId=' + msgId + '&type=""'
+			 return fnOpenWindow(url, 'userInfoPop', 835, 370, 'resize');
+		 }else  alert('<s:message code="bodyview.select.message" />');
 
 	});
 	$(document).on('click', '.attachText', function(){
@@ -98,14 +103,18 @@ $(document).ready(function(){
 	$(document).on('click', '.attachOcrText', function(){
 		var attachId = $(this).parents('tr').attr('id');
 		//var url = '<c:url value="/ems/attachText.do?msgId='+msgId+'&attachId='+attachId+'&searchKey='+searchkey+'&ocrYn=Y"/>';
+		if(msgValid()) {
 		var url = contextRoot + '/ems/attachText.do?msgId=' + msgId+ '&attachId=' + attachId + '&searchKey=' + encodeURI(searchkey) + '&ocrYn=Y';
 		fnOpenWindow(url, 'attachText', 1050, 800, 'resize');
+		}else  alert('<s:message code="bodyview.select.message" />');
 	});
 
 	$(document).on('click', '#originalBtn', function(){
 		//var url = '<c:url value="/ems/originalText.do?type=original&msgId='+msgId+'"/>';
-		var url = contextRoot + '/ems/originalText.do?type=original&msgId=' + msgId;
-		fnOpenWindow(url, 'originalText', 1050, 800, 'resize');
+		if(msgValid()) {
+			var url = contextRoot + '/ems/originalText.do?type=original&msgId=' + msgId;
+			fnOpenWindow(url, 'originalText', 1050, 800, 'resize');
+		}else  alert('<s:message code="bodyview.select.message" />');
 	});
 
 	$(document).on('click', '#msgIdBtn', function(){
@@ -132,8 +141,10 @@ $(document).ready(function(){
 
 	$(document).on('click', '#headerBtn', function(){
 		//var url = '<c:url value="/ems/originalText.do?type=header&msgId='+msgId+'"/>';
-		var url = contextRoot + '/ems/originalText.do?type=header&msgId=' + msgId;
-		fnOpenWindow(url, 'headerText', 1050, 800, 'resize');
+		if(undefined != msgId && msgId != '' ) {
+			var url = contextRoot + '/ems/originalText.do?type=header&msgId=' + msgId;
+			fnOpenWindow(url, 'headerText', 1050, 800, 'resize');
+		}else  alert('<s:message code="bodyview.select.message" />');
 	});
 
 	$(document).on('mouseover', '.attachName', function(){
@@ -215,7 +226,6 @@ $(document).ready(function(){
 			return;
 		}
 		if( $(this).parents('ul').hasClass('notfound')) return;
-
 		var attachId = $(this).parents('ul').attr('id');
 		var attachName = $(this).parents('ul').find('.attachName').attr('attachname');
 		var attachSize = Number( $(this).parents('ul').attr('size') );
@@ -327,22 +337,24 @@ $(document).ready(function(){
 			alert(contentBodyDivJS.noAuthority);
 			return;
 		}
-		var charset = $('#bodyEncoding').val();
-		//var url = '<c:url value="/getEmassBodySave.xcn?msgId='+msgId+'&userCharset='+charset+'&print=Y"/>';
-		//if( detailFlag ) url = '<c:url value="/getMessengerGroupAllSave.xcn?msgId='+msgId+'&xRootMtr='+xRootMtr+'&print=Y"/>';
-		var url = contextRoot + '/getEmassBodySave.xcn?msgId=' + msgId + '&userCharset=' + charset + '&print=Y';
-		if( detailFlag ){
-			var startDt = $('#startdatepickerBody').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
-			var endDt = $('#enddatepickerBody').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
-			
-			url = contextRoot + '/getMessengerGroupAllSave.xcn?msgId=' + msgId + '&xRootMtr=' + xRootMtr + '&srcip=' + srcip+'&startDt='+startDt+'&endDt='+endDt+'&groupField=usr_id&print=Y&usr_id=' + usr_id;
-		}
-		fnOpenWindow( url, 'message_print', '1000', '800', 'scroll' );
+		if(msgValid()) {
+			var charset = $('#bodyEncoding').val();
+			//var url = '<c:url value="/getEmassBodySave.xcn?msgId='+msgId+'&userCharset='+charset+'&print=Y"/>';
+			//if( detailFlag ) url = '<c:url value="/getMessengerGroupAllSave.xcn?msgId='+msgId+'&xRootMtr='+xRootMtr+'&print=Y"/>';
+			var url = contextRoot + '/getEmassBodySave.xcn?msgId=' + msgId + '&userCharset=' + charset + '&print=Y';
+			if (detailFlag) {
+				var startDt = $('#startdatepickerBody').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
+				var endDt = $('#enddatepickerBody').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
 
-		var information = '[' + message.bodyPrint + ']'+enter;
-		if( detailFlag ) information += message.xrootmtr + ' : ' + xRootMtr + ' ';
-		else information += message.msgid + ' : ' + msgId + ' ';
-		insertAudit(op_body_print, information);
+				url = contextRoot + '/getMessengerGroupAllSave.xcn?msgId=' + msgId + '&xRootMtr=' + xRootMtr + '&srcip=' + srcip + '&startDt=' + startDt + '&endDt=' + endDt + '&groupField=usr_id&print=Y&usr_id=' + usr_id;
+			}
+			fnOpenWindow(url, 'message_print', '1000', '800', 'scroll');
+
+			var information = '[' + message.bodyPrint + ']' + enter;
+			if (detailFlag) information += message.xrootmtr + ' : ' + xRootMtr + ' ';
+			else information += message.msgid + ' : ' + msgId + ' ';
+			insertAudit(op_body_print, information);
+		}else alert('<s:message code="bodyview.select.message" />');
 	});
 
 	$('#saveBtn').click ( function ( ) {
@@ -350,31 +362,66 @@ $(document).ready(function(){
 			alert(contentBodyDivJS.noAuthority);
 			return;
 		}
-		
-		var charset = $('#bodyEncoding').val();
-		//var url = '<c:url value="/getEmassBodySave.xcn?msgId='+msgId+'&userCharset='+charset+'&print=N"/>';
-		var url = contextRoot + '/getEmassBodySave.xcn?msgId='+msgId+'&userCharset='+charset+'&print=N';
-		var fileName = msgId+'.html';
-		var fileSize = 1;
 
-		//if( detailFlag ) url = '<c:url value="/getMessengerGroupAllSave.xcn?msgId='+msgId+'&xRootMtr='+xRootMtr+'&srcip='+srcip+'"/>';
-		if( detailFlag ){
-			var startDt = $('#startdatepickerBody').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
-			var endDt = $('#enddatepickerBody').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
-			
-			url = contextRoot + '/getMessengerGroupAllSave.xcn?msgId=' + msgId + '&xRootMtr=' + xRootMtr + '&srcip=' + srcip+'&startDt='+startDt+'&endDt='+endDt+'&groupField=usr_id&usr_id=' + usr_id;
+		if(msgValid()) {
+			var charset = $('#bodyEncoding').val();
+			//var url = '<c:url value="/getEmassBodySave.xcn?msgId='+msgId+'&userCharset='+charset+'&print=N"/>';
+			var url = contextRoot + '/getEmassBodySave.xcn?msgId=' + msgId + '&userCharset=' + charset + '&print=N';
+			var fileName = msgId + '.html';
+			var fileSize = 1;
+
+			//if( detailFlag ) url = '<c:url value="/getMessengerGroupAllSave.xcn?msgId='+msgId+'&xRootMtr='+xRootMtr+'&srcip='+srcip+'"/>';
+			if (detailFlag) {
+				var startDt = $('#startdatepickerBody').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
+				var endDt = $('#enddatepickerBody').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
+				url = contextRoot + '/getMessengerGroupAllSave.xcn?msgId=' + msgId + '&xRootMtr=' + xRootMtr + '&srcip=' + srcip + '&startDt=' + startDt + '&endDt=' + endDt + '&groupField=usr_id&usr_id=' + usr_id;
+			}
+			try {
+				AttachDown.location.href = url;
+			} catch (e) {
+				AttachDown.src = url;
+			}
+			var information = '[' + message.bodyView + ']' + enter;
+			if (detailFlag) information += message.xrootmtr + ' : ' + xRootMtr + ' ';
+			else information += message.msgid + ' : ' + msgId + ' ';
+			insertAudit(op_body_save, information);
+		}else alert('<s:message code="bodyview.select.message" />')
+
+	});
+
+	$(document).on('click', '#allDownload', function(){
+		if(adminMenu != "ALL" && adminMenu.indexOf("AS") < 0 && adminMenu.indexOf("CS") < 0) {
+			alert(message.authAlert);
+			return;
 		}
 
-		try {
-			AttachDown.location.href = url;
-		} catch (e) {
-			AttachDown.src = url;
-		}
+		$(this).each(function( index, element ) {
+			console.log(element);
+		});
 
-		var information = '[' + message.bodyView + ']' + enter;
-		if( detailFlag ) information += message.xrootmtr + ' : ' + xRootMtr + ' ';
-		else information += message.msgid + ' : ' + msgId + ' ';
-		insertAudit(op_body_save, information);
+
+
+		// if( $(this).parents('ul').hasClass('notfound')) return;
+		// var attachId = $(this).parents('ul').attr('id');
+		// var attachName = $(this).parents('ul').find('.attachName').attr('attachname');
+		// var attachSize = Number( $(this).parents('ul').attr('size') );
+		// //var attachUrl = '<c:url value="/downEmassAttach.xcn"/>?msgId='+msgId+'&attachId='+attachId;
+		// var attachUrl = contextRoot + '/downEmassAttach.xcn?msgId=' + msgId + '&attachId=' + attachId;
+		// if ( attachSize == 0 || attachSize == 'NaN' ) attachSize = 1;
+		//
+		//
+		// try {
+		// 	AttachDown.location.href = attachUrl;
+		// } catch (e) {
+		// 	AttachDown.src = attachUrl;
+		// }
+		//
+		// var information = '[' + message.attachSave + ']'+enter;
+		// information += message.msgid + ' : ' + msgId + enter;
+		// information += message.fileName + ' : ' + attachName + enter
+		// insertAudit(op_attach_save, information);
+
+
 	});
 
 	$('#mailFowardBtn').click(function(){
@@ -433,13 +480,15 @@ $(document).ready(function(){
 	});
 	
 	$('#domainBtn').click(function(){
-		var url = contextRoot + '/ems/domainInfo.do?msgId=' + msgId;
-		if( detailFlag ) url = contextRoot + '/ems/domainInfo.do?xRootMtr=' + xRootMtr + '&userCharset='+charset;
-		if($('#toTr').css('display') != 'none' || $('#ccTr').css('display') != 'none' || $('#bccTr').css('display') != 'none' ) {
-			fnOpenWindow( url, 'message_domain', '700', '420', 'scroll' );
-		} else {
-			ui.alertMsg(contentBody.noRecvs);
-		}
+		if(undefined != msgId && msgId != '' ) {
+			var url = contextRoot + '/ems/domainInfo.do?msgId=' + msgId;
+			if( detailFlag ) url = contextRoot + '/ems/domainInfo.do?xRootMtr=' + xRootMtr + '&userCharset='+charset;
+			if($('#toTr').css('display') != 'none' || $('#ccTr').css('display') != 'none' || $('#bccTr').css('display') != 'none' ) {
+				fnOpenWindow( url, 'message_domain', '700', '420', 'scroll' );
+			} else {
+				ui.alertMsg(contentBody.noRecvs);
+			}
+		}else  alert('<s:message code="bodyview.select.message" />');
 	});
 	
 	$(document).on('mouseover', '.userInfoSpan', function(e){
@@ -546,7 +595,6 @@ $(document).ready(function(){
 	});
 
 	$('.body_toggle').click(function(){
-		console.log($(this))
 		$(this).next().toggle();
 	});
 	$('.fileFold, .patternFold').click(function() {
@@ -618,11 +666,12 @@ function setConfFoldAdmin(val){
 	});*/
 }
 function viewer_open( row, grid ){
-	var msgid = grid.getValue(row, 'msgid');
-	var bodySize = grid.getValue(row, 'bodySizeStr');
-	var bodySizeNum = bodySize.substr(0, bodySize.indexOf(' '));
-	
-	openMessageBodyPop( grid.id, msgid, '', bodySizeNum);
+	if(row != -1) {
+		var msgid = grid.getValue(row, 'msgid');
+		var bodySize = grid.getValue(row, 'bodySizeStr');
+		var bodySizeNum = bodySize.substr(0, bodySize.indexOf(' '));
+		openMessageBodyPop(grid.id, msgid, '', bodySizeNum);
+	}else alert('<s:message code="bodyview.select.message" />');
 }
 function getBody(userCharset){
 	if(isGroupMessenger()){
@@ -892,12 +941,14 @@ function selectText() {
 
 function init(){
 	var windowName = window.name;
-	if(windowName == ''){
+	if(windowName == 'No_Title'){
 		//$('#headerIcon').switchClass('fa-object-group', 'fa-object-ungroup');
 		//$('#headerIcon').attr('title', message.windowNew);
 		$('#prevBtn').prop('disabled', true);
 		$('#nextBtn').prop('disabled', true);
 		$('#openBigContent').hide();
+		$('#saveMsgData').hide();
+		$('#exportMsg').hide();
 	}else{
 		//$('#headerIcon').switchClass('fa-object-ungroup', 'fa-object-group');
 		//$('#headerIcon').attr('title', message.windowTab);
@@ -985,6 +1036,7 @@ var ocrFiles = [];
 var msgData;
 function setMessage(msg) {
 	msgData = msg;
+
 	window.scrollTo(0,0);
 	if(msg == null) {
 		$('#buttonDiv').css("display", "none");
@@ -1040,7 +1092,7 @@ function setMessage(msg) {
 		$('#recvOrsend').attr('class', 'top redBg');
 		$('#recvOrsend').find('#sub_flag_send').attr("style","display:none");
 		$('#recvOrsend').find('#sub_flag_reception').show();
-		$('#recvOrsend').find('#subject').attr('class','red02');
+		$('#recvOrsend').find('#subject').attr('class','red');
 
 	}/* 발신 */
 	else if(msg.direction == 'O'){
@@ -1319,8 +1371,7 @@ function setFileDiv(msg) {
 		$('#fileDiv').css("display", "");
 		$('#fileCntArea').html(' ('+files.length+')');
 
-
-		for(var i = 0; i <= files.length;i++) {
+		for(var i = 0; i < files.length;i++) {
 			var file = files[i];
 			var attachName = file.attachName;
 			var attachHash = file.attachHash;
@@ -1340,7 +1391,7 @@ function setFileDiv(msg) {
 			var mlFeedbackComment = file.mlFeedbackComment;
 			var features = file.features;
 			var mlReason = null;
-			var ext = attachName.split(".");
+			var ext = (attachName.indexOf(',') > -1) ? attachName.split(',') : '';
 			var trClass = "found";
 
 
@@ -1358,7 +1409,8 @@ function setFileDiv(msg) {
 			if(attachFeedbackDate == undefined || attachFeedbackDate == null) attachFeedbackDate = '-';
 			
 			if(nvl(file.attachPath) == "") trClass = "notfound";
-			if(ext.length > 1 && nvl(attachExt) == ext[ext.length-1]) {
+
+			if('' != ext &&  ext.length > 1 && nvl(attachExt) == ext[ext.length-1]) {
 				extClass = "";
 			} else {
 				extClass = " differentExt";
@@ -1376,12 +1428,14 @@ function setFileDiv(msg) {
 				 noName = '['+contentBody.unknownFileName+'] ';
 			}
 
-			fileStr = '<ul msgid="' + msg.msgId + '" id="' + file.attachId + '" size="' + file.attachSize + '" class="' + trClass + extClass +'" >';
+
+
+			fileStr += '<ul msgid="' + msg.msgId + '" id="' + file.attachId + '" size="' + file.attachSize + '" class="' + trClass + extClass +'" >';
 				fileStr += '<li>';
 					/* 제목 */
-					fileStr += '<div class="attach_' + attachExt +' attach_file_img" style="padding-left:30px;">';
-					if(attachNameExist == "N") fileStr += '<span>['+contentBody.unknownFileName+']</span> ';
-						fileStr += '<a class="attachName" attachname="' + attachName + '">';
+					fileStr += '<div class="attach_' + attachExt +' attach_file_img" style="padding-left:5px;">';
+					// if(attachNameExist == "N") fileStr += '<span>['+contentBody.unknownFileName+']</span> ';
+						fileStr += '<a >';
 						fileStr += '' + attachName+ ' ('+convertFileSize(file.attachSize)+ ')';
 						fileStr += '</a>';
 						fileStr += '<div class="btn buttons">';
@@ -1395,15 +1449,15 @@ function setFileDiv(msg) {
 							if(nvl(file.attachTextPath) != "") {
 								fileStr += '<button class="attachText btn03 borradius" style="padding-left:5px; cursor:pointer;"> '+contentBody.urlIpBlockPreview+'</button>';
 							}else{
-								fileStr += '<button class="btn03 borradius"><img src="' + contextRoot + '/img/subBtn_eye.png" alt="미리보기">미리보기</button>';
+								fileStr += '<button class="btn03 borradius attachName"  attachname="' + attachName + '"><img src="' + contextRoot + '/img/subBtn_eye.png" alt="미리보기">미리보기</button>';
 							}
 						fileStr += '</div>';
 					fileStr += '</div>';
 				fileStr += '</li>';
 
 			fileStr += '</ul>';
-			$('#filelist').append(fileStr);
-	
+			$('#filelist').html(fileStr);
+
 			if(nvl(file.ocrYn) == "Y") {
 				ocrFiles.push(file);
 				ocrYn = true;
@@ -2144,7 +2198,6 @@ $(document).on('click','#exportMsg',function(){
 
 
 $(document).on('click', '.body_link_new', function(){
-	alert('dd')
 	var grid = parent.getIframeListObj().grid;
 	if (grid.Rows == 0) {
 		alert('<s:message code="common.msg.nodata"/>');
@@ -2172,7 +2225,6 @@ $(document).on('click', '.body_link_new', function(){
 
 
 $(document).on('click', '.attach_link_new', function(){
-	alert('dd')
 	var grid = parent.getIframeListObj().grid;
 	if (grid.Rows == 0) {
 		alert('<s:message code="common.msg.nodata"/>');

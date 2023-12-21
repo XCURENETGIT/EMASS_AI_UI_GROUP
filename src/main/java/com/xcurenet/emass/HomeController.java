@@ -417,43 +417,43 @@ public class HomeController {
 	@RequestMapping(value = "/ems/mailFoward.do", method = RequestMethod.GET)
 	@Description("메일 전달 페이지")
 	public String mailFoward(Locale locale, Model model) {
-		return "/emass/message/mailFoward";
+		return "/emass/message/mailFoward.popup";
 	}
 
 	@RequestMapping(value = "/ems/warningMail.do", method = RequestMethod.GET)
 	@Description("경고 메일 페이지")
 	public String warningMail(Locale locale, Model model) {
-		return "/emass/message/warningMail";
+		return "/emass/message/warningMail.popup";
 	}
 
 	@RequestMapping(value = "/ems/domainInfo.do", method = RequestMethod.GET)
 	@Description("도메인 정보 페이지")
 	public String domainInfo(Locale locale, Model model) {
-		return "/emass/message/domainInfo";
+		return "/emass/message/domainInfo.popup";
 	}
 
 	@RequestMapping(value = "/ems/attachText.do", method = RequestMethod.GET)
 	@Description("첨부파일 내용 보기 페이지")
 	public String attachText(Locale locale, Model model) {
-		return "/emass/message/attachText";
+		return "/emass/message/attachText.popup";
 	}
 
 	@RequestMapping(value = "/ems/originalText.do", method = RequestMethod.GET)
 	@Description("원문/헤더 내용 보기 페이지")
 	public String originalText(Locale locale, Model model) {
-		return "/emass/message/originalText";
+		return "/emass/message/originalText.popup";
 	}
 
 	@RequestMapping(value = "/ems/fileInfoPop.do", method = RequestMethod.GET)
 	@Description("첨부파일 정보 보기 페이지")
 	public String fileInfo(Locale locale, Model model) {
-		return "/emass/message/fileInfoPop";
+		return "/emass/message/fileInfoPop.popup";
 	}
 
 	@RequestMapping(value = "/ems/participantFileInfoPop.do", method = RequestMethod.GET)
 	@Description("참여자 정보 첨부파일 보기 페이지")
 	public String participantFileInfoPop(Locale locale, Model model) {
-		return "/emass/message/participantFileInfoPop";
+		return "/emass/message/participantFileInfoPop.popup";
 	}
 
 	@RequestMapping(value = "/ems/interestUserInfoPop.do", method = RequestMethod.GET)
@@ -465,7 +465,7 @@ public class HomeController {
 	@RequestMapping(value = "/ems/userInfoPop.do", method = RequestMethod.GET)
 	@Description("사용자(수신자) 정보 보기 페이지")
 	public String userInfo(Locale locale, Model model) {
-		return "/emass/message/userInfoPop";
+		return "/emass/message/userInfoPop.popup";
 	}
 
 	@RequestMapping(value = "/ems/userGroupInfoPop.do", method = RequestMethod.GET)
@@ -477,19 +477,19 @@ public class HomeController {
 	@RequestMapping(value = "/ems/regexpInfoPop.do", method = RequestMethod.GET)
 	@Description("패턴 정보 보기 페이지")
 	public String regexpInfo(Locale locale, Model model) {
-		return "/emass/message/regexpInfoPop";
+		return "/emass/message/regexpInfoPop.popup";
 	}
 
 	@RequestMapping(value = "/ems/overlapInfoPop.do")
 	@Description("중복 메시지 전체 보기 페이지")
 	public String overlapInfoPop(Locale locale, Model model) {
-		return "/emass/message/overlapInfoPop";
+		return "/emass/message/overlapInfoPop.popup";
 	}
 
 	@RequestMapping(value = "/ems/participantInfoPop.do", method = RequestMethod.GET)
 	@Description("메신저 참여자 정보 보기 페이지")
 	public String participantInfoPop(Locale locale, Model model) {
-		return "/emass/message/participantInfoPop";
+		return "/emass/message/participantInfoPop.popup";
 	}
 
 	/**
@@ -920,12 +920,8 @@ public class HomeController {
 	@RequestMapping(value = "/ems/imgFullsize.do")
 	@Description("첨부 이미지 전체크기 보기")
 	public String imgFullsize(Locale locale, Model model) {
-		return "/emass/message/imageFullSize";
+		return "/emass/message/imageFullSize.popup";
 	}
-
-
-
-
 
 
 

@@ -268,6 +268,7 @@
 				$('#imgPreviewDiv').attr('url',url);
 				$('#imgPreviewDiv').attr('fileName',fileName);
 
+
 				var left = $(obj).offset().left;
 				if( $(obj).offset().left + $('#imgPreviewDiv').width() > $(window).width()){
 					left-=$('#imgPreviewDiv').width()-20;
@@ -277,6 +278,10 @@
 				setTimeout(function(){
 					$('#imgPreviewDiv').fadeIn();
 				}, 100);
+
+
+
+
 			}
 		}
 
@@ -298,33 +303,62 @@
 <div class="inner_message">
 	<div class="messageBtn">
 		<div class="btnform">
-			<button class="btn01"><img src="../img/subBtn_arrow_left_12.png" alt=""></button>
-			<button class="btn01"><img src="../img/subBtn_arrow_right_12.png" alt=""></button>
-			<button class="btn05"><img src="../img/subBtn_save.png" alt="저장"><s:message code="common.msg.save"/></button>
-			<button class="btn05"><img src="../img/subBtn_mail.png" alt="인쇄"><s:message code="common.msg.print"/></button>
-			<button class="btn05 dropdown-toggle"><img src="../img/subBtn_settings.png" data-toggle="dropdown" alt="추가기능"><s:message code="common.msg.addFunctions"/><span class="caret"></span></button>
-			<ul class="dropdown-menu dropdown-menu-left" role="menu" style="min-width:100px;font-size:13px;left:178px;" id="additionalBtn">
-				<li><a href="javascript:void(0);" id="usersInfoBtn"><s:message code="common.msg.userinfo"/></a></li>
-				<li class="dropdown-divider"></li>
-				<li><a href="javascript:void(0);" id="headerBtn"><s:message code="common.msg.headerInfo"/></a></li>
-				<li class="dropdown-divider"></li>
-				<li><a href="javascript:void(0);" id="originalBtn"><s:message code="common.msg.originalInfo"/></a></li>
-				<li class="dropdown-divider"></li>
-				<li><a href="javascript:void(0);" id="domainBtn"><s:message code="common.msg.domainInfo"/></a></li>
-				<li class="dropdown-divider"></li>
-				<li><a href="javascript:void(0);" id="mailFowardBtn"><s:message code="common.msg.forward_mail"/></a></li>
-				<li class="dropdown-divider"></li>
-				<li><a href="javascript:void(0);" id="warnMailBtn"><s:message code="common.msg.warning_mail"/></a></li>
-				<li class="dropdown-divider"></li>
-				<li><a href="javascript:void(0);" id="msgIdBtn">ID</a></li>
-			</ul>
-			<button class="btn05"><img src="../img/subBtn_link.png" alt="새창"><s:message code="bodyview.window.new"/></button>
+			<button class="btn01" id="prevBtn"><img src="../img/subBtn_arrow_left_12.png" alt=""></button>
+			<button class="btn01" id="nextBtn"><img src="../img/subBtn_arrow_right_12.png" alt=""></button>
+			<button class ="btn05 msg_button" id="saveBtn"><img src="../img/subBtn_save.png" alt="<s:message code="common.msg.save"/>"><s:message code="common.msg.save"/></button>
+			<button class="btn05" id="printBtn"><img src="../img/subBtn_mail.png" alt="<s:message code="common.msg.print"/>"><s:message code="common.msg.print"/></button>
+			<button class="btn05 msg_button dropdown-toggle" data-toggle="dropdown" ><img src="../img/subBtn_settings.png" data-toggle="dropdown" alt="<s:message code="common.msg.addFunctions"/>"><s:message code="common.msg.addFunctions"/><span class="caret"></span></button>
+				<ul class="dropdown-menu dropdown-additionMenu" role="menu" style="min-width:100px;font-size:13px;" id="additionalBtn">
+					<li><a href="javascript:void(0);" id="usersInfoBtn"><s:message code="common.msg.userinfo"/></a></li>
+					<li class="dropdown-divider"></li>
+					<li><a href="javascript:void(0);" id="headerBtn"><s:message code="common.msg.headerInfo"/></a></li>
+					<li class="dropdown-divider"></li>
+					<li><a href="javascript:void(0);" id="originalBtn"><s:message code="common.msg.originalInfo"/></a></li>
+					<li class="dropdown-divider"></li>
+					<li><a href="javascript:void(0);" id="domainBtn"><s:message code="common.msg.domainInfo"/></a></li>
+					<li class="dropdown-divider"></li>
+					<li><a href="javascript:void(0);" id="mailFowardBtn"><s:message code="common.msg.forward_mail"/></a></li>
+					<li class="dropdown-divider"></li>
+					<li><a href="javascript:void(0);" id="warnMailBtn"><s:message code="common.msg.warning_mail"/></a></li>
+					<li class="dropdown-divider"></li>
+					<li><a href="javascript:void(0);" id="msgIdBtn">ID</a></li>
+				</ul>
+			<button class="btn05" id="openBigContent"><img src="../img/subBtn_link.png" alt="새창"><s:message code="bodyview.window.new"/></button>
 		</div>
 		<div class="btnform txt_right">
 			<%-- 메시지 보관--%>
-			<button  class="btn05" id="saveMsgData"><s:message code="filterInfo.setMsgFolder1"/></button>
+			<%--saveMsgData--%>
+			<button class="btn05" id="saveMsgData"><s:message code="filterInfo.setMsgFolder1"/></button>
 			<%-- 내보내기--%>
-			<button  class="btn05" id="a">내보내기</button>
+			<button  class="btn05" href="javascript:;" style="padding-right:10px; color:#383838; cursor: pointer; font-size: 12px;left:178px;"data-toggle="dropdown" id="exportMsg"><s:message code="common.msg.export"/><span class="caret"></span></button>
+			<ul class="dropdown-menu dropdown-exportMenu" role="menu" style="min-width:100px;font-size:13px;">
+				<li style="display:none;"><a href="javascript:void(0);" id="body_link_btn" class="body_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-text-o" style="font-size:16px"></span>&nbsp;<s:message code="condition.body"/></a></li>
+				<li style="display:none;"><a href="javascript:void(0);" id="attach_link_btn" class="attach_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-archive-o" style="font-size:16px"></span>&nbsp;<s:message code="consent.attach"/></a></li>
+				<li style="display:none;"><a href="javascript:void(0);" id="excel_link_btn" class="excel_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>" option="Y"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/> (<s:message code="common.msg.excel"/> xlsx)</a></li>
+				<li style="display:none;"><a href="javascript:void(0);" id="cell_link_btn" class="cell_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>" option="Y"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/> (<s:message code="common.msg.hancel"/> cell)</a></li>
+				<li style="display:none;"><a href="javascript:void(0);" id="csv_link_btn" class="csv_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>" option="Y"><span class="fa fa-file-text" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/> (<s:message code="common.msg.text"/> csv)</a></li>
+				<li style="display:none;"><a href="javascript:void(0);" id="pdf_link_btn" class="pdf_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>" option="Y"><span class="fa fa-file-pdf-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/> (PDF)</a></li>
+				<c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'LS') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
+					<li><a href="javascript:void(0);" class="all_down_link" data-type="L" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/></a></li>
+				</c:if>
+				<c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'BS') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
+					<li><a href="javascript:void(0);" class="all_down_link" data-type="B" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-text-o" style="font-size:16px"></span>&nbsp;<s:message code="condition.body"/></a></li>
+				</c:if>
+				<c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'AS') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
+					<li><a href="javascript:void(0);" class="all_down_link" data-type="A" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-archive-o" style="font-size:16px"></span>&nbsp;<s:message code="consent.attach"/></a></li>
+				</c:if>
+				<c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'WS') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
+					<li><a href="javascript:void(0);" class="all_down_link" data-type="LB" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/>+<s:message code="condition.body"/></a></li>
+				</c:if>
+				<c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'CS') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
+					<li><a href="javascript:void(0);" class="all_down_link" data-type="LBA" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/>+<s:message code="condition.body"/>+<s:message code="consent.attach"/></a></li>
+				</c:if>
+				<c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'LP') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
+					<li><a href="javascript:void(0);" class="print_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="glyphicon glyphicon-print"></span>&nbsp;<s:message code="selectCodeAll.list"/> <s:message code="common.msg.print"/></a></li>
+				</c:if>
+				<li class="dropdown-divider"></li>
+				<li><a href="javascript:void(0);" class="downList" data-target="tabGrid" ><span class="glyphicon glyphicon-th-list"></span>&nbsp;<s:message code="common.msg.download"/> <s:message code="mail.view.list"/></a></li>
+			</ul>
 		</div>
 	</div>
 	<div class="messageCon"> <%--     condition.receive ,  condition.send--%>
@@ -365,7 +399,7 @@
 			<div class="top grayBg03">
 				<h4><s:message code="bodyview.file.info"/></h4><h4 id="fileCntArea"></h4> <%--뒤에 파일 갯수 표기--%>
 				<div class="btn btnform">
-					<button class="btn05"><img src="<c:url value="/img/subBtn_save.png"/>"  alt="확대"> <s:message code="bodyview.file.allDownload"/></button>
+					<button class="btn05" id="allDownload"><img src="<c:url value="/img/subBtn_save.png"/>"  alt="확대"> <s:message code="bodyview.file.allDownload"/></button>
 				</div>
 			</div>
 			<div id="filelist"></div>
@@ -390,8 +424,28 @@
 			<div class="conBox" id="emassBody"/>
 		</div>
 
+	<div id="imgPreviewDiv"></div>
+	<div id="infoDiv" style="overflow-y:auto;display:none;">
+		<div id="infoDivTextHeader">
+			<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+			<s:message code="common.msg.textdecode"/>(unescape)
+		</div>
+		<div id="infoDivText">
+		</div>
+	</div>
+	<iframe id="AttachDown" src="about:blank;" height="0" width="0" style="display: none;" ></iframe>
+	<form id="mailForwardForm" method="post">
+		<input type="hidden" name="msgId" id="msgIdStr">
+		<input type="hidden" name="xRootMtr" id="xRootMtrStr">
+		<input type="hidden" name="userCharset" id="userCharsetStr">
+		<input type="hidden" name="mailForwardStr" id="mailForwardStr">
+	</form>
+	<form name="imageForm" method="post" target="">
+		<input type="hidden" name="imgUrl">
+		<input type="hidden" name="fileName">
+	</form>
+</body>
 </div>
-
 
 
 
@@ -491,18 +545,18 @@
 <%--	</div>--%>
 
 <%--</div>--%>
-<iframe id="AttachDown" src="about:blank;" height="0" width="0" style="display: none;" ></iframe>
-<form id="mailForwardForm" method="post">
-	<input type="hidden" name="msgId" id="msgIdStr">
-	<input type="hidden" name="xRootMtr" id="xRootMtrStr">
-	<input type="hidden" name="userCharset" id="userCharsetStr">
-	<input type="hidden" name="mailForwardStr" id="mailForwardStr">
-</form>
 
-<form name="imageForm" method="post" target="">
-	<input type="hidden" name="imgUrl">
-	<input type="hidden" name="fileName">
-</form>
+<%--<form id="mailForwardForm" method="post">--%>
+<%--	<input type="hidden" name="msgId" id="msgIdStr">--%>
+<%--	<input type="hidden" name="xRootMtr" id="xRootMtrStr">--%>
+<%--	<input type="hidden" name="userCharset" id="userCharsetStr">--%>
+<%--	<input type="hidden" name="mailForwardStr" id="mailForwardStr">--%>
+<%--</form>--%>
+
+<%--<form name="imageForm" method="post" target="">--%>
+<%--	<input type="hidden" name="imgUrl">--%>
+<%--	<input type="hidden" name="fileName">--%>
+<%--</form>--%>
 
 
 </body>
