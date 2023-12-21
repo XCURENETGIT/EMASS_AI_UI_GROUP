@@ -19,6 +19,7 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -46,7 +47,7 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 
 	@Override
 	public int saveDashBoardMenu(CustomDashboardMenuVO customDashboardMenuVo) {
-		if( Common.isEmpty(customDashboardMenuVo.getMenuKey())) {
+		if (Common.isEmpty(customDashboardMenuVo.getMenuKey())) {
 			customDashboardMenuVo.setMenuKey(Common.nvl(selectOne("com.xcurenet.sqlmap.mappers.mysql.customDashboard.getDashBoardMenuMaxMenuKey")));
 		}
 		return insert("com.xcurenet.sqlmap.mappers.mysql.customDashboard.saveDashBoardMenu", customDashboardMenuVo);
@@ -104,9 +105,9 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 
 	@Override
 	public int saveDashBoardContent(CustomDashboardVO customDashboardVo) {
-		if( Common.isEmpty(customDashboardVo.getDashKey())) {
+		if (Common.isEmpty(customDashboardVo.getDashKey())) {
 			customDashboardVo.setDashKey(Common.nvl(selectOne("com.xcurenet.sqlmap.mappers.mysql.customDashboard.saveDashBoardContentMaxDashKey")));
-		} else if(Common.isNotEmpty(customDashboardVo.getAdminIds())){
+		} else if (Common.isNotEmpty(customDashboardVo.getAdminIds())) {
 			String orgDashKey = customDashboardVo.getDashKey();
 			String orgAdminId = customDashboardVo.getAdminId();
 			batchUpdate(customDashboardVo);
@@ -141,16 +142,16 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 		CustomDashboardVO customDashboardVo = new CustomDashboardVO();
 		int result = 0;
 
-		for(int i=0; i<dashKey.size(); i++) {
+		for (int i = 0; i < dashKey.size(); i++) {
 			customDashboardVo.setDashKey(dashKey.get(i));
 			customDashboardVo.setAdminId("sysadmin");
 			customDashboardVo = selectOne("com.xcurenet.sqlmap.mappers.mysql.customDashboard.getDashBoardContentList", customDashboardVo);
 
-			for(int j=0; j<adminId.size(); j++) {
+			for (int j = 0; j < adminId.size(); j++) {
 
 				String admin = adminId.get(j);
 
-				if(isShareExist(admin, dashKey.get(i), "") == 0) {
+				if (isShareExist(admin, dashKey.get(i), "") == 0) {
 					customDashboardVo.setAdminId(admin);
 					String newDashKey = Common.nvl(selectOne("com.xcurenet.sqlmap.mappers.mysql.customDashboard.saveDashBoardContentMaxDashKey"));
 
@@ -174,7 +175,7 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 		try {
 			tx.start();
 			List<String> shareAdminId = Common.toList(deleteData.getAdminIds(), ",");
-			for(String id : shareAdminId) {
+			for (String id : shareAdminId) {
 				CustomDashboardVO tmpVo = new CustomDashboardVO();
 				tmpVo.setDashKey(deleteData.getDashKey());
 				tmpVo.setAdminId(id);
@@ -200,11 +201,11 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 		try {
 			tx.start();
 
-			for(int i=0; i<dashKey.size(); i++) {
+			for (int i = 0; i < dashKey.size(); i++) {
 
 				CustomDashboardVO customDashboardVo = new CustomDashboardVO();
 
-				for(int j=0; j<oldAdmin.size(); j++) {
+				for (int j = 0; j < oldAdmin.size(); j++) {
 
 					String admin = oldAdmin.get(j);
 					params.put("adminId", admin);
@@ -242,8 +243,8 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 
 			Map<String, Object> param = new HashMap<>();
 			param.put("adminId", adminId);
-			if(Common.isNotEmpty(pdashKey)) param.put("pdashKey", pdashKey);
-			if(Common.isNotEmpty(dashKey)) param.put("dashKey", dashKey);
+			if (Common.isNotEmpty(pdashKey)) param.put("pdashKey", pdashKey);
+			if (Common.isNotEmpty(dashKey)) param.put("dashKey", dashKey);
 
 			result = delete("com.xcurenet.sqlmap.mappers.mysql.customDashboard.deleteDashboardShare", param);
 
@@ -297,9 +298,9 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 			tx.start();
 			result = delete("com.xcurenet.sqlmap.mappers.mysql.customDashboard.deleteDashBoard", customDashboardVos.get(0));
 			for (CustomDashboardVO customDashboardVo : customDashboardVos) {
-				if(Common.isEmpty(customDashboardVo.getDashKey())) {
+				if (Common.isEmpty(customDashboardVo.getDashKey())) {
 					String id = customDashboardVo.getId();
-					String dashKey = id.substring(id.indexOf("_")+1, id.length());
+					String dashKey = id.substring(id.indexOf("_") + 1, id.length());
 					customDashboardVo.setDashKey(dashKey);
 				}
 				result = insert("com.xcurenet.sqlmap.mappers.mysql.customDashboard.saveDashBoard", customDashboardVo);
@@ -318,12 +319,12 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 	}
 
 
-    @Override
+	@Override
 	public int isShareExist(String adminId, String pdashKey, String dashKey) {
 		Map<String, Object> param = new HashMap<>();
 		param.put("adminId", adminId);
-		if(Common.isNotEmpty(pdashKey)) param.put("pdashKey", pdashKey);
-		if(Common.isNotEmpty(dashKey)) param.put("dashKey", dashKey);
+		if (Common.isNotEmpty(pdashKey)) param.put("pdashKey", pdashKey);
+		if (Common.isNotEmpty(dashKey)) param.put("dashKey", dashKey);
 
 		return selectOne("com.xcurenet.sqlmap.mappers.mysql.customDashboard.isShareExist", param);
 	}
@@ -332,7 +333,7 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 		List<String> adminId = Common.toList(customDashboardVo.getAdminIds(), ",");
 		String orgDashKey = customDashboardVo.getDashKey();
 		CustomDashboardVO shareDashboardVo = customDashboardVo;
-		for(int i=0; i<adminId.size(); i++) {
+		for (int i = 0; i < adminId.size(); i++) {
 			shareDashboardVo.setDashKey(orgDashKey);
 			shareDashboardVo.setAdminId(adminId.get(i));
 			String dashKey = selectOne("com.xcurenet.sqlmap.mappers.mysql.customDashboard.getShareDashKey", shareDashboardVo);
@@ -341,7 +342,7 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 		}
 	}
 
-	public static void main(String[] args) throws  IOException {
+	public static void main(String[] args) throws IOException {
 //		CustomDashBoardServiceImpl ss = new CustomDashBoardServiceImpl();
 //		SolrQuery sq = new SolrQuery();
 //		//sq.setQuery("+ctime_yyyymmdd:[" + dateFormat.format(cal.getTime()) + " TO " + date + "]");
@@ -386,8 +387,8 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 	}
 
 	private Map<String, String> findItem(List<Map<String, String>> result, String date) {
-		for(Map<String, String> item : result) {
-			if(Common.isEquals(item.get("date"), date)) return item;
+		for (Map<String, String> item : result) {
+			if (Common.isEquals(item.get("date"), date)) return item;
 		}
 		return new HashMap<>();
 	}
@@ -571,7 +572,7 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 
 	@Override
 	public int saveLoggingData(final HttpServletRequest request, final HttpSession session) {
-		Map<String,String> param = new HashMap<>();
+		Map<String, String> param = new HashMap<>();
 		param.put("adminId", Common.getAdminId(session));
 		param.put("useYn", Common.nvl(request.getParameter("useYn")));
 		insert("com.xcurenet.sqlmap.mappers.mysql.customDashboard.saveLoggingData", param);
@@ -580,27 +581,22 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 
 	@Override
 	public String getLoggingDataSetting(final HttpSession session) throws Exception {
-		Map<String,String> param = new HashMap<>();
+		Map<String, String> param = new HashMap<>();
 		param.put("adminId", Common.getAdminId(session));
 		String rs = Common.nvl(selectOne("com.xcurenet.sqlmap.mappers.mysql.customDashboard.getLoggingDataSetting", param));
-		if(rs.isEmpty()) rs = "N";
+		if (rs.isEmpty()) rs = "N";
 		return rs;
 	}
 
 	@Override
 	public XcnResponseVO getLoggingData(final HttpServletRequest request, final HttpSession session) throws Exception {
-		JSONObject param = Common.getParam(request);
-		long now = System.currentTimeMillis();
-		String date = Common.getCurrentDate();
-//		String date = Common.nvl(param.get("date")).replace("-", "");
-//		if (date == "") date = Common.getCurrentDate();
 
+		String date = Common.getCurrentDate();
 		String startDate = Common.plusDays(date, -7);
 		String endDate = Common.plusDays(date, -1);
 
 		SolrQuery sq = new SolrQuery();
 
-//		sq.addFacetField("ctime_yyyymmdd");
 		sq.setParam("group", true);
 		sq.setParam("group.facet", true);
 		sq.setParam("group.ngroups", true);
@@ -612,50 +608,46 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 
 		sq.setParam("facet.limit", "-1");
 		sq.setParam("facet.mincount", "-1");
+		sq.setFacetSort("ctime_yyyymmdd");
 
-//		sq.setFacetLimit(7);
 		sq.setFacetMinCount(1);
 		sq.setQuery("*:*");
 		sq.setStart(Common.nvz(0));
 		sq.setRows(Common.nvz(1));
-		sq.setSort("ctime", SolrQuery.ORDER.desc);
+		sq.setSort("ctime_yyyymmdd", SolrQuery.ORDER.desc);
 		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id");
-	//	sq.setQuery(String.format("+ctime_yyyymmdd:[ %s TO %s ]", startDate, endDate));
+		sq.setQuery(String.format("+ctime_yyyymmdd:[ %s TO %s ]", startDate, endDate));
 
-
-//		SolrQuery sq = new SolrQuery();
-//		sq.setQuery(String.format("+ctime_yyyymmdd:[ %s TO %s ]", startDate, endDate));
-//		sq.setRows(0);
-//
-//		sq.setGetFieldStatistics(true);
-//		sq.addGetFieldStatistics("attachsize");
-//		sq.addStatsFieldFacets("attachsize","ctime_yyyymmdd");
-//		sq.addFacetField("ctime_yyyymmdd");
-//		sq.setFacetLimit(7);
-//		sq.setFacetSort("ctime_yyyymmdd");
-//		sq.setFacetMinCount(1);
 		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, Common.getAdminId(session));
 
-//		System.out.println(edc.getFacetHeader());
-//		System.out.println("facet: "+edc.getFacet());
-//		System.out.println("pibot"+edc.getPivotData());
 		log.info("query : {}", sq.getQuery());
 
-		List<Map<String, String>> result = new ArrayList<>();
+		List<Map<String, Object>> result = new ArrayList<>();
 
+		for (int i = 0; i<edc.getPivotData().size(); i++){
+			Map<String, Object> item = new HashMap<>();
+			item.put("date",edc.getPivotData().get(i).get("rowKey"));
+			item.put("logging", edc.getPivotData().get(i).get("total"));
+			double doubleNum = (double) edc.getPivotData().get(i).get("attachsize");
+			long attach = (long) doubleNum;
+			item.put("attach", attach);
+			item.put("attachStr", Common.convertFileSize(attach));
+			result.add(item);
+		}
 		return new XcnResponseVO(XcnRspCode.OK, result);
 	}
 
-    @Override
+
+	@Override
 	public List<FileDataVO> getFileSizeData(final HttpServletRequest request, final HttpSession session) throws Exception {
 		String date = Common.nvl(request.getParameter("date"));
-		return selectList("com.xcurenet.sqlmap.mappers.mysql.customDashboard.getFileSizeData",date);
+		return selectList("com.xcurenet.sqlmap.mappers.mysql.customDashboard.getFileSizeData", date);
 	}
 
 	@Override
 	public List<FileDataVO> getFileCount(final HttpServletRequest request, final HttpSession session) throws Exception {
 		String date = Common.nvl(request.getParameter("date"));
-		return selectList("com.xcurenet.sqlmap.mappers.mysql.customDashboard.getFileCount",date);
+		return selectList("com.xcurenet.sqlmap.mappers.mysql.customDashboard.getFileCount", date);
 	}
 
 	@Override
@@ -667,15 +659,15 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 		String adminId = Common.getAdminId(session);
 		String adminType = Common.getAdminType(session);
 
-		if(Common.isEmpty(adminId)) return;
+		if (Common.isEmpty(adminId)) return;
 
-		if(Common.isEquals(systemArch, "multiple") && Common.isOrEquals(adminType, "M", "C")) {
+		if (Common.isEquals(systemArch, "multiple") && Common.isOrEquals(adminType, "M", "C")) {
 			String ceoReadYn = Config.getString("ceo.readyn");
 			JSONObject param = new JSONObject();
 
-			if(Common.isEquals(adminType, "C")) {
+			if (Common.isEquals(adminType, "C")) {
 				sq.addFilterQuery("+ceo:Y");
-			}else if(!(Common.isEquals(ceoReadYn, "Y") && Common.isEquals(Common.nvl(Config.getFirstAdminYn(adminId), "N"), "Y")) ) {
+			} else if (!(Common.isEquals(ceoReadYn, "Y") && Common.isEquals(Common.nvl(Config.getFirstAdminYn(adminId), "N"), "Y"))) {
 				sq.addFilterQuery("-ceo:Y");
 			}
 
@@ -702,9 +694,9 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 		}
 	}
 
-    @Override
-    public XcnResponseVO getDashBoardContentData(CustomDashboardVO customDashboardVo) {
-        return null;
-    }
+	@Override
+	public XcnResponseVO getDashBoardContentData(CustomDashboardVO customDashboardVo) {
+		return null;
+	}
 
 }

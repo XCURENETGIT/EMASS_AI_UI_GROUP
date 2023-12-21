@@ -19,14 +19,14 @@ $(document).ready(function(){
 	$('#searchStrInput').enter(function(){
 		getData();
 	});
-	
+
 	$('#insertBtn').click(function(){
 		$("#ipRangePop").modal('show');
 		$('#busiCd, #startIp, #endIp, #comment').val('');
 		$('.savePopBtn').prop("disabled", false);
 		$('#busiCd').prop('disabled',false);
 	});
-	
+
 	$('#deleteBtn').click(function(){
 		$('#deleteBtn').prop('disabled', true);
 		var rows = grid.getSelectedRows();
@@ -36,7 +36,7 @@ $(document).ready(function(){
 			$('#deleteBtn').prop('disabled', false);
 			return;
 		}
-		
+
 		ui.confirmMsg('<s:message code="filterInfo.msg.confirm.deleteitem"/>', '', '', function(rs){
 			if(rs) {
 				grid.on();
@@ -64,15 +64,15 @@ $(document).ready(function(){
 	$('#uploadBtn').click(function(){
 		$('#uploadPop').modal('show');
 	});
-	
+
 	$('.uploadPopBtn').click(function(){
 		importIp();
 	});
-	
+
 	$("[name=attach]").change(function (){
 		fileExtCheck($(this));
 	});
-	
+
 	$('#savePopBtn').click(function(){
 		var busiCd = $('#busiCd').val().ltrim().rtrim();
 		var startIp = $('#startIp').val().ltrim().rtrim();
@@ -114,8 +114,8 @@ $(document).ready(function(){
 		}else{
 			url = 'insertIpRange.xcn';
 		}
-		
-		
+
+
 		ui.confirmMsg('<s:message code="common.msg.confirm.add"/>', '', '', function(rs){
 			if(rs){
 				grid.on();
@@ -127,7 +127,7 @@ $(document).ready(function(){
 							ui.alertMsg('<s:message code="common.msg.modified"/>');
 						}else{
 							ui.alertMsg('<s:message code="common.msg.added"/>');
-							
+
 						}
 						$('#ipRangePop').modal('hide');
 						getData();
@@ -165,7 +165,7 @@ function getData(lastRow) {
 	if(checkIP(searchStrInput)){
 		ipSig = true;
 	}
-	
+
 	ui.get({
 		url : 'getIpRangeList.xcn',
 		searchStr : searchStrInput,
@@ -206,15 +206,15 @@ function getBusiOptions(){
 
 function importIp(){
 	$('#uploadForm').attr('action','<c:url value="/importIprange.xcn"/>');
-	
+
 	var attach = $('[name=attach]').val();
 	if(attach == ""){
 		ui.alertMsg('<s:message code="keyword.msg.upload.file"/>', function () { $("#attach").click(); });
 		return;
 	}
-	
+
 	var fileExt = attach.substring(attach.lastIndexOf(".") +1 , attach.length).toLowerCase();
-	
+
 	ui.confirmMsg('<s:message code="keyword.upload.confirm"/>', '', '', function(rs){
 		if(rs){
 			loadingOn("uploadPop");
@@ -460,16 +460,16 @@ function fileExtCheck(obj){
 								<label for="keywordDesc" class="fname"><s:message code="keyword.select.file"/></label>
 							</div>
 							<div class="col-65">
-								<span id="attachSpan"><input type="file" class="form-control" name="attach" id="attach" style="width: 350px; border: 0px; padding: 0px;"></span>
+								<span id="attachSpan"><input type="file" class="form-control" name="attach" id="attach" style="width: 100%; border: 0px; padding: 0px;"></span>
 							</div>
 						</div>
 					</div>
 					<div class="info"> 안내 사항
-						<div class="form-inline" style="padding-left: 10px;">1) <s:message code="interest.message.upload.info1"/></div>
-						<div class="form-inline" style="padding-left: 10px;">2) <s:message code="interest.message.upload.info2"/></div>
-						<div class="form-inline" style="padding-left: 10px;">3) <s:message code="interest.message.upload.info3"/></div>
-						<div class="form-inline" style="padding-left: 10px;">4) <s:message code="interest.message.upload.info4"/></div>
-						<div style="padding-left: 10px;">5) <s:message code="interest.message.upload.info5"/></div>
+						<div class="form-inline mat4">1) <s:message code="interest.message.upload.info1"/></div>
+						<div class="form-inline">2) <s:message code="interest.message.upload.info2"/></div>
+						<div class="form-inline">3) <s:message code="interest.message.upload.info3"/></div>
+						<div class="form-inline">4) <s:message code="interest.message.upload.info4"/></div>
+						<div >5) <s:message code="interest.message.upload.info5"/></div>
 					</div>
 					<div class="modalfooter">
 						<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
@@ -480,7 +480,7 @@ function fileExtCheck(obj){
 		</div>
 	</div>
 
-	<div class="container">
+	<div>
 		<div class="searchArea">
 			<div class="searchSub">
 							<div>
@@ -526,7 +526,7 @@ function fileExtCheck(obj){
 				$('#createDt').val(data.createDt);
 				orgStartIp = data.startIp;
 				orgEndIp = data.endIp;
-				
+
 			}
 		};
 		grid.loadExportMenu('<s:message code="ipRange.set.iprange"/>');

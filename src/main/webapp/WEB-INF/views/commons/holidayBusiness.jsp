@@ -4,22 +4,18 @@
 	<title></title>
 	<link rel="stylesheet" href="<c:url value="/css/panelsTab.css"/>"/>
 	<style>
-		.checkbox-inline + .checkbox-inline, .radio-inline + .radio-inline {
-			margin-left: 0px;
-		}
+		.checkbox-inline + .checkbox-inline, .radio-inline + .radio-inline { margin-left: 0px;}
+		.checkbox-inline, .radio-inline { font-size: 13px;}
+		.c-checkbox input, .c-radio input {
+			opacity: 1 !important;
+			border:1px solid #000;
+			padding-left:0px !important;
+			position: relative !important;
+			margin:-4px 0 0 0; vertical-align:middle;
 
-		.checkbox-inline, .radio-inline {
-			font-size: 13px;
 		}
-
-		.c-checkbox span, .c-radio span {
-			position: relative;
-			top: 4px;
-		}
-
-		.ui_checked {
-			background-color: transparent;
-		}
+		.checkbox-inline, .radio-inline {padding:0 !important;}
+		.ui_checked { }
 	</style>
 	<script>
         var searchFlag = false;
@@ -530,10 +526,10 @@
 								<div class="p12 grayBg02 mab12 conTit">
 									<s:message code="holidayBusiness.select.workday"/>
 								</div>
-								<div class="form-group pt8">
-									<label class="checkbox-inline c-checkbox" style="font-weight: bold">
+								<div class="form-group">
+									<label class="checkbox-inline c-checkbox pt8" style="font-weight: bold">
 										<input type="checkbox" class="holidayCheckAll" name="holidayCheckAll">
-										<b><s:message code="common.msg.selectUnselect"/></b>
+										<s:message code="common.msg.selectUnselect"/>
 									</label>
 								</div>
 								<div class="form-group">
@@ -585,7 +581,7 @@
 								<div class="form-group">
 									<label class="checkbox-inline c-checkbox pt8" style="font-weight: bold">
 										<input type="checkbox" class="workTimeAmAll" name="workTimeAmAll">
-										<b><s:message code="common.msg.selectUnselect"/></b>
+										<s:message code="common.msg.selectUnselect"/>
 									</label>
 								</div>
 								<%for (int i = 0; i <= 11; i++) {%>
@@ -604,7 +600,7 @@
 								<div class="form-group">
 									<label class="checkbox-inline c-checkbox pt8" style="font-weight: bold">
 										<input type="checkbox" class="workTimePmAll" name="workTimePmAll">
-										<b><s:message code="common.msg.selectUnselect"/></b>
+										<s:message code="common.msg.selectUnselect"/>
 									</label>
 								</div>
 								<%for (int i = 12; i <= 23; i++) {%>

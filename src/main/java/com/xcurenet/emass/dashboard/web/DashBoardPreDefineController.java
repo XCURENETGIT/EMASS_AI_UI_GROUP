@@ -7,6 +7,7 @@ import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.emass.dashboard.service.*;
 import com.xcurenet.emass.message.service.SolrEdcMessageVO;
 import com.xcurenet.emass.message.service.SolrEdcService;
+import com.xcurenet.minio.MinioFileAdapter;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -33,6 +34,9 @@ public class DashBoardPreDefineController {
 	@Resource(name = "solrEdcService")
 	private SolrEdcService solrEdcService;
 
+	@Resource
+	public MinioFileAdapter minioFileAdapter;
+
 	private final static String FACET_QUERY = "{result: {type: terms,limit: -1,field: \"user_str\",sort: \"count desc\",facet: {pi_SN:\"sum(pi_SN)\", pi_PN:\"sum(pi_PN)\", pi_DN:\"sum(pi_DN)\", pi_FN:\"sum(pi_FN)\", pi_CN:\"sum(pi_CN)\"}}}";
 
 	@RequestMapping(value = "/getTodayDataStatus.xcn")
@@ -57,6 +61,14 @@ public class DashBoardPreDefineController {
 			vo.setPivotData(todayDataStatusVO.getPivotData());
 		}
 		return new XcnResponseVO(XcnRspCode.OK, vo);
+	}
+
+	@RequestMapping(value = "/getMinioSize.xcn")
+	@Description("Dashboard - Minio 용량")
+	@ResponseBody
+	public XcnResponseVO getMinioSize(final HttpSession session, final HttpServletRequest request) throws Exception {
+		minioFileAdapter.getObjectsByDate("20231220");
+		return new XcnResponseVO(XcnRspCode.OK, 0);
 	}
 
 	@RequestMapping(value = "/getTodayPatternPrivacy.xcn")

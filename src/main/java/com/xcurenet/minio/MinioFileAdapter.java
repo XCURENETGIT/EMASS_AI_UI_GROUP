@@ -3,6 +3,9 @@ package com.xcurenet.minio;
 import com.xcurenet.common.crypto.CryptoCommon;
 import com.xcurenet.common.util.Common;
 import io.minio.*;
+import io.minio.errors.MinioException;
+import io.minio.messages.Bucket;
+import io.minio.messages.Item;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +19,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.List;
 
 
 @Log4j2
@@ -84,6 +89,35 @@ public class MinioFileAdapter {
 			log.warn("file found error : {} {}", e.getMessage(), objectName);
 		}
 		return null;
+	}
+
+	//날짜 별로 용량 가져 오기
+	public void getObjectsByDate(String date) {
+		try {
+			// 버킷의 객체 목록 가져오기
+			Iterable<Result<Item>> results = minioClient.listObjects(
+					ListObjectsArgs.builder()
+							.bucket(bucket).build()
+			);
+
+			long totalSize = 0;
+
+			for (Result<Item> result : results) {
+				Item item = result.get();
+//				System.out.println("Object Name: " + item.objectName());
+//				System.out.println("Size: " + item.size() + " bytes");
+//				System.out.println("Last Modified: " + item.lastModified());
+
+				totalSize += item.size();
+			}
+
+		} catch (MinioException e) {
+			System.err.println("MinIO exception occurred: " + e.getMessage());
+			e.printStackTrace();
+		} catch (Exception e) {
+			System.err.println("Exception occurred: " + e.getMessage());
+			e.printStackTrace();
+		}
 	}
 
 
