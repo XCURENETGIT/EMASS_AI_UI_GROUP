@@ -2,6 +2,30 @@
 <%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
 
 <script type="text/javascript" src="<c:url value="/js/messageGrid.js"/>"></script>
+<style>
+.nav.nav-tabs > li > a {
+	cursor: pointer !important;
+	min-width: 50px !important;
+}
+.subtab button {
+	right: 5px;
+	height: 25px !important;;
+	padding: 0 !important;
+	margin: 0 !important;;
+	background-color: transparent !important;
+	color: #908bad !important;
+	line-height: 25px !important;
+	top: 0 !important;
+	font-size: 17px;
+}
+.badge {
+	padding: 0 !important;
+	vertical-align : top !important;
+}
+.nav-tabs>li {
+	margin-right : 4px !important;
+}
+</style>
 <script>
 	Highcharts.setOptions({
 		chart: {
@@ -47,14 +71,20 @@
 		$('.optionBtn').click(function () {
 			$('.optionBtn').removeClass('active');
 			$(this).addClass('active');
-			$('#optionHidden').attr("value", $(this).val());
-			$('#optionHiddenName').attr("value", $(this).text());
 		});
 
 		$('#searchBtn').click(function(){
 			closeDetailTab();
 			getData ('Y');
 		});
+		$('#clearBtn').click(function(){
+			$('#startdate').val(new Date().format('yyyy-mm-dd'));
+			$('#enddate').val(new Date().format('yyyy-mm-dd'));
+
+			$('.optionBtn').removeClass('active');
+			$('#deptnm').addClass('active');
+		});
+
 
 		$('#chartCntDiv .dropdown-menu li a').click(function(){
 			chartcnt = $(this).text();
@@ -97,74 +127,11 @@
 			printChart(totalChartDat);
 		});
 
-		$('.print_stat').click(function() {
-			var gridDetail = getCurrentGrid();
-			if(gridDetail != undefined) {
-				if (gridDetail.Rows == 0) {
-					alert('<s:message code="common.msg.nodata"/>');
-					return;
-				}
-				gridDetail.print('<s:message code="stat.detail.user.list"/>', pMenuId, menuId);
-			} else {
-				if (grid1.Rows == 0) {
-					alert('<s:message code="common.msg.nodata"/>');
-					return;
-				}
-				grid1.print('<s:message code="DATA_MONITOR.STAT_USER"/>', pMenuId, menuId);
-			}
-		});
-
-		$('.excel_stat').click(function() {
-			var gridDetail = getCurrentGrid();
-			if(gridDetail != undefined) {
-				excelDownLoad(gridDetail,'<s:message code="stat.detail.user.list"/>');
-			} else {
-				chart = $('#chartArea1').highcharts();
-				var svg = chart.getSVG();
-				excelDownLoad(grid1,'<s:message code="DATA_MONITOR.STAT_USER"/>', svg);
-			}
-		});
-
-		$('.cell_stat').click(function() {
-			var gridDetail = getCurrentGrid();
-			if(gridDetail != undefined) {
-				cellDownLoad(gridDetail,'<s:message code="stat.detail.user.list"/>');
-			} else {
-				cellDownLoad(grid1,'<s:message code="DATA_MONITOR.STAT_USER"/>');
-			}
-		});
-
-		$('.pdf_stat').click(function() {
-			var gridDetail = getCurrentGrid();
-			if(gridDetail != undefined) {
-				pdfDownLoad(gridDetail,'<s:message code="stat.detail.user.list"/>');
-			} else {
-				pdfDownLoad(grid1,'<s:message code="DATA_MONITOR.STAT_USER"/>');
-			}
-		});
-
-		$('.csv_stat').click(function() {
-			var gridDetail = getCurrentGrid();
-			if(gridDetail != undefined) {
-				csvDownLoad(gridDetail,'<s:message code="stat.detail.user.list"/>');
-			} else {
-				csvDownLoad(grid1,'<s:message code="DATA_MONITOR.STAT_USER"/>');
-			}
-		});
-
 		$('.totalView').click(function(){
 			$("#chartCntDiv").show();
 			$('#totalViewDiv').hide();
 			printChart(totalChartDat);
 		});
-
-		$('.searchQueryBtn').click(function(){
-			queryMakePop();
-		});
-
-
-		//getData ('Y');
-
 	});
 
 	function setGrid( ){
@@ -172,42 +139,10 @@
 		initGrid(currentgrid, messageGridColumn);
 	}
 
-	function closeDetailTab()
-	{
+	function closeDetailTab() {
 		var tabFirst = $('.listChart a:first');
 		tabFirst.tab('show');
 	}
-
-	/*
-    function regexpInfoViewer(row){
-        var selectedTabIdx = $('.listChart').find('.active').index();
-        var grid = window.__grids[selectedTabIdx];
-        var msgid = grid.getValue(row, 'msgid');
-        if(grid.getValue(row, 'pi_total') == '') return;
-
-        var url    = '<c:url value="/ems/regexpInfoPop.do?msgId='+msgid+'"/>';
-return fnOpenWindow(url, 'regexpInfoPop', 1100, 370, 'resize');
-}
-function userInfoViewer(row, type){
-var selectedTabIdx = $('.listChart').find('.active').index();
-var grid = window.__grids[selectedTabIdx];
-var msgid = grid.getValue(row, 'msgid');
-if(grid.getValue(row, type) == '') return;
-
-var url    = '<c:url value="/ems/userInfoPop.do?msgId='+msgid+'&type='+type+'"/>';
-return fnOpenWindow(url, type+'InfoPop', 835, 370, 'resize');
-}
-
-function fileInfoViewer( row ){
-var selectedTabIdx = $('.listChart').find('.active').index();
-var grid = window.__grids[selectedTabIdx];
-var msgid = grid.getValue(row, 'msgid');
-if(grid.getValue(row, 'attachcnt') == '') return;
-
-var url    = '<c:url value="/ems/fileInfoPop.do?msgId='+msgid+'"/>';
-return fnOpenWindow(url, 'fileInfoPop', 1015, 400, 'resize');
-}
-*/
 
 	function viewer_open( row, bodySize){
 		var selectedTabIdx = $('.listChart').find('.active').index();
@@ -334,53 +269,7 @@ return fnOpenWindow(url, 'fileInfoPop', 1015, 400, 'resize');
 			series: data
 		});
 	}
-
-	function excelDownLoad(grid, title, svg) {
-		if (grid.Rows == 0) {
-			alert('<s:message code="common.msg.nodata"/>');
-			return;
-		}
-		var header = grid.getHeaderEXCEL();
-		var body = grid.getBodyEXCEL();
-		grid.on();
-		ui.postJson({
-			url : 'utils/xlsxWriter.do',
-			title : title,
-			header : header,
-			body : body,
-			pMenuId : pMenuId,
-			menuId: menuId,
-			svg : svg,
-			success : function(data, total) {
-				try {
-					ExcelDown.location.href = '<c:url value="/utils/xlsxDown.do"/>?path=' + data;
-				} catch (e) {
-					ExcelDown.src = '<c:url value="/utils/xlsxDown.do"/>?path=' + data;
-				}
-			},
-			error : function(status, message) {
-				ui.alertMsg(message);
-			},
-			complete : function() {
-				grid.off();
-			}
-		});
-	}
-
-	function queryMakePop(  ){
-		var url = '<c:url value="/commons/queryMake.do?statType=users"/>';
-		fnOpenWindow(url, 'queryMakePop', 1400, 870, 'resize');
-	}
-
-	function getSearchQuery() {
-
-	}
 </script>
-
-<input id="searched_xAxis" type="hidden"/>
-<input id="searched_startDate" type="hidden"/>
-<input id="searched_endDate" type="hidden"/>
-
 <div>
 	<div class="searchArea w100">
 		<div class="searchSub w100">
@@ -393,20 +282,18 @@ return fnOpenWindow(url, 'fileInfoPop', 1015, 400, 'resize');
 			</div>
 
 			<div class="optiotab">
-				<button class="optionBtn active" id="ctime_hh" value="ctime_hh"><s:message code="common.msg.time"/></button>
+				<button class="optionBtn" id="ctime_hh" value="ctime_hh"><s:message code="common.msg.time"/></button>
 				<button class="optionBtn" id="ctime_yyyymmdd" value="ctime_yyyymmdd" class="active"><s:message code="common.msg.day"/></button>
 				<button class="optionBtn" id="ctime_yyyymm" value="ctime_yyyymm"><s:message code="common.msg.month"/></button>
 				<button class="optionBtn" id="businm" value="businm"><s:message code="common.org.busi"/></button>
 				<button class="optionBtn" id="conm" value="conm"><s:message code="common.org.co"/></button>
-				<button class="optionBtn" id="deptnm" value="deptnm"><s:message code="common.org.dept"/></button>
+				<button class="optionBtn active" id="deptnm" value="deptnm"><s:message code="common.org.dept"/></button>
 				<button class="optionBtn" id="direction_svc" value="direction_svc"><s:message code="condition.receive_send"/></button>
 				<button class="optionBtn" id="jikgubnm" value="jikgubnm"><s:message code="common.org.jikgub"/></button>
-				<input type="hidden" value="ctime_hh" id="optionHidden">
-				<input type="hidden" value="시간" id="optionHiddenName">
 			</div>
 			<div>
-				<button class="form_btn01" accesskey="Q" id="searchBtn" accesskey="s">조회</button>
-				<button class="form_btn02">조건 초기화</button>
+				<button class="form_btn01" id="searchBtn"><s:message code="common.msg.search"/></button>
+				<button class="form_btn02" id="clearBtn"><s:message code="condition.reset"/></button>
 			</div>
 		</div>
 	</div>
@@ -472,12 +359,16 @@ return fnOpenWindow(url, 'fileInfoPop', 1015, 400, 'resize');
 				</div>
 			</div>
 			<div class="subtab">
-				<button class="active">LIST</button>
-			</div>
-			<div>
 				<div>
-					<div id="basicStatList" class="fade in active">
-						<div id="basicStatListGrid" class="slickGrid gridArea" style="height: 340px;"></div>
+					<ul class="nav nav-tabs codeTab listChart">
+						<li class="active"><a data-toggle="tab" href="#basicStatList" id="listTab" >사용자 TOP</a></li>
+					</ul>
+				</div>
+			</div>
+			<div class="xcn_full">
+				<div class="tab-content">
+					<div id="basicStatList" class="tab-pane fade in active">
+						<div id="basicStatListGrid" class="slickGrid gridArea" style="min-height: 200px;"></div>
 					</div>
 				</div>
 			</div>
@@ -502,7 +393,7 @@ return fnOpenWindow(url, 'fileInfoPop', 1015, 400, 'resize');
 	grid1.autoNumber();
 	grid1.colAdd( "rowKey", '<s:message code="consent.user"/>', 230, "left", false, 'link' );
 	grid1.colAdd("total", '<s:message code="bodyview.total"/>', 130, "right", false, 'nomal' );
-	grid1.loadExportMenu('<s:message code="DATA_ANALYSIS.STAT_USER"/>');
+	grid1.loadExportMenu('<s:message code="DATA_MONITOR.STAT_USER"/>');
 	grid1.loadPageSize();
 	grid1.loadHeader(false);
 	grid1.initData('<s:message code="common.msg.search.click"/>');
@@ -578,12 +469,10 @@ return fnOpenWindow(url, 'fileInfoPop', 1015, 400, 'resize');
 
 	function getData( flag ) {
 		if ( searchFlag ) return;
-		var xAxis = $('select[name=xAxis]').val();
-		var xAxis_str = $('select[name=xAxis] option:selected').text();
 		var sDate = $('#startdate').val().replaceAll("-", "");
 		var eDate = $('#enddate').val().replaceAll("-", "");
-		var xAxis = $('#optionHidden').val();
-		var xAxis_str = $('#optionHiddenName').val();
+		var xAxis = $('button.optionBtn.active').val();
+		var xAxis_str = $('button.optionBtn.active').text();
 		if (sDate > eDate) ui.alertMsg('<s:message code="consent.msg.timecheck"/>');
 		if(sDate === '' || eDate === '') {
 			alert('<s:message code="holidayBusiness.msg.enter.date"/>');
@@ -674,9 +563,8 @@ return fnOpenWindow(url, 'fileInfoPop', 1015, 400, 'resize');
 			currentgrid.loadingPage++;
 		}
 
-		var xAxis = $('#optionHidden').val();
-		var xAxis_str = $('#optionHiddenName').val();
-
+		var xAxis = $('button.optionBtn.active').val();
+		var xAxis_str = $('button.optionBtn.active').text();
 		searchFlag = true;
 		currentgrid.on();
 
@@ -698,7 +586,7 @@ return fnOpenWindow(url, 'fileInfoPop', 1015, 400, 'resize');
 				currentgrid.appendData(data.emass);
 				if ( currentgrid.loadingPage == 0 ) currentgrid.Select(-1,-1);
 
-				$('#detailTab'+tabID+' .badge').text('[' + total.comma() + ']');
+				$('#detailTab'+tabID+' .badge').html('&nbsp;[' + total.comma() + ']');
 				$('#detail_cnt'+tabID).html('<s:message code="common.msg.finish_query"/>: '+currentgrid.data.length);
 
 				searchFlag = false;

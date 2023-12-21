@@ -128,16 +128,19 @@
 
 
 	function reSizeHeight() {
-		$('.xcn_full').each(function (e) {
-			let obj = this;
-			let pTop = $(obj).prev().offset().top + $(obj).prev().outerHeight() + 125;
-			let height = window.outerHeight - pTop;
-			if (height < 500) height = 500;
-			$(obj).find('.contentSub').outerHeight(height);
+		let h = $(window).height();
+		$('.slickGrid').each(function (e) {
+			console.log('h : ' + h + '  top : ' + $(this).offset().top)
+			let nHeight = h - $(this).offset().top - 90;
+			nHeight = nHeight < 200 ? 200 : nHeight;
+			if($(this).offset().top > 0 ) $(this).outerHeight(nHeight);
 		});
 	}
 
 	$(document).ready(function () {
+		$(".nav-tabs").on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
+			reSizeHeight();
+		});
 
         //언어 설정
 		$('#korLan').click(function (){
