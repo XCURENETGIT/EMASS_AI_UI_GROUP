@@ -66,8 +66,9 @@
 	var tabID = 1;
 	var tabNum = 0;
 	var totalChartDat;
+	var serviceList=[];
 	$(document).ready(function(){
-
+		getServiceList();
 		$('.optionBtn').click(function () {
 			$('.optionBtn').removeClass('active');
 			$(this).addClass('active');
@@ -133,6 +134,20 @@
 			printChart(totalChartDat);
 		});
 	});
+
+	function getServiceList(){
+		ui.get({
+			url : 'getServiceGroupList.xcn',
+			success : function(data, total) {
+				serviceList = data;
+			},
+			error : function(status, message) {
+				ui.alertMsg(message);
+			},
+			complete : function() {
+			}
+		});
+	}
 
 	function setGrid( ){
 		currentgrid = getCurrentGrid();
@@ -282,14 +297,11 @@
 			</div>
 
 			<div class="optiotab">
+				<button class="optionBtn active" id="svc1" value="svc1">서비스타입</button>
+				<button class="optionBtn" id="direction_svc" value="direction_svc"><s:message code="condition.receive_send"/></button>
 				<button class="optionBtn" id="ctime_hh" value="ctime_hh"><s:message code="common.msg.time"/></button>
 				<button class="optionBtn" id="ctime_yyyymmdd" value="ctime_yyyymmdd" class="active"><s:message code="common.msg.day"/></button>
 				<button class="optionBtn" id="ctime_yyyymm" value="ctime_yyyymm"><s:message code="common.msg.month"/></button>
-				<button class="optionBtn" id="businm" value="businm"><s:message code="common.org.busi"/></button>
-				<button class="optionBtn" id="conm" value="conm"><s:message code="common.org.co"/></button>
-				<button class="optionBtn active" id="deptnm" value="deptnm"><s:message code="common.org.dept"/></button>
-				<button class="optionBtn" id="direction_svc" value="direction_svc"><s:message code="condition.receive_send"/></button>
-				<button class="optionBtn" id="jikgubnm" value="jikgubnm"><s:message code="common.org.jikgub"/></button>
 			</div>
 			<div>
 				<button class="form_btn01" id="searchBtn"><s:message code="common.msg.search"/></button>
@@ -299,36 +311,7 @@
 	</div>
 	<div class="content">
 		<div class="contentSub">
-			<div class="chartArea">
-				<div>
-					<h3>조회기간</h3>
-					<div class="sublist">
-						<div>
-							<span class="tit">TOP1 검출 사용자</span>
-							<p id="sub_1"><span class="text">건</span></p>
-						</div>
-						<div>
-							<span class="tit">예약어 합계</span>
-							<p>99999<span class="text">건</span></p>
-						</div>
-						<div>
-							<span class="tit">예약어 합계</span>
-							<p>99999<span class="text">건</span></p>
-						</div>
-						<div>
-							<span class="tit">예약어 합계</span>
-							<p>99999<span class="text">건</span></p>
-						</div>
-						<div>
-							<span class="tit">예약어 합계</span>
-							<p>99999<span class="text">건</span></p>
-						</div>
-						<div>
-							<span class="tit">예약어 합계</span>
-							<p>99999<span class="text">건</span></p>
-						</div>
-					</div>
-				</div>
+			<div class="chartAreafull">
 				<div>
 					<h3>
 						TOP 통계 Chart
@@ -513,6 +496,7 @@
 						if(Header == "I") HeaderNm = '<s:message code="condition.receive"/>';
 						else HeaderNm = '<s:message code="condition.send"/>';
 					} else if ( xAxis == "ctime_hh") HeaderNm = Header+'<s:message code="common.msg.hour"/>';
+					else if(xAxis === 'svc1') HeaderNm = serviceList.search(Header, 'groupCd', 'groupNm');
 					else HeaderNm = Header;
 					grid1.colAdd( Header, HeaderNm, 90, "right", false, 'link', function ( row, cell, value, columnDef, dataContext ) {
 						if ( value != undefined ) return value.comma();
