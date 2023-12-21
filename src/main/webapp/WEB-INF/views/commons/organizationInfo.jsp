@@ -7,8 +7,6 @@
 	<style type="text/css">
 		.tab-content{
 			display: none;
-			background: #ededed;
-			padding: 15px;
 		}
 
 		.tab-content.active{
@@ -989,48 +987,41 @@
 
 
 
-<div class="container">
+<div>
 	<div class="searchArea">
 		<div class="searchSub">
-			<div>
-				<input type="text" placeholder="<s:message code="ipRange.msg.enter.busicomment"/>" id="searchStrInput">
-				<button class="form_btn01" type="button" accesskey="Q" id="searchBtn"><s:message
-						code="common.msg.search"/></button>
-			</div>
-			<div class="btnform">
-				<button type="button" class="btn01" accesskey="I" id="insertBtn"><img
-						src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
-				<button type="button" class="btn02" accesskey="D" id="deleteBtn"><img
-						src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/>
-				</button>
-			</div>
+			<input type="text" placeholder="<s:message code="ipRange.msg.enter.busicomment"/>" id="searchStrInput" class="w40">
+			<button class="form_btn01" type="button" accesskey="Q" id="searchBtn"><s:message
+					code="common.msg.search"/></button>
+
+			<button type="button" class="btn01" accesskey="I" id="insertBtn"><img
+					src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
+			<button type="button" class="btn02" accesskey="D" id="deleteBtn"><img
+					src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/>
+			</button>
 		</div>
 	</div>
 	<div class="content xcn_full">
 		<div class="contentSub">
 			<div class="subtab">
-				<div class="row">
-					<div class="col-xs-12">
-						<ul class="nav nav-tabs codeTab" id="codeTab">
-							<li class="active" style=" text-align: center"><a data-toggle="tab" href="#coList"
-							                                                  id="coTab"><s:message
-									code="common.org.co"/></a></li>
-							<li style=" text-align: center"><a data-toggle="tab" href="#busiList"
-							                                   id="busiTab"><s:message code="common.org.busi"/></a></li>
-							<li style=" text-align: center"><a data-toggle="tab" href="#generalList"
-							                                   id="generalTab"><s:message
-									code="common.org.general"/></a></li>
-							<li style=" text-align: center"><a data-toggle="tab" href="#deptList"
-							                                   id="deptTab"><s:message code="common.org.dept"/></a></li>
-							<li style=" text-align: center"><a data-toggle="tab" href="#jikgubList"
-							                                   id="jikgubTab"><s:message code="common.org.jikgub"/></a>
-							</li>
-							<li style=" text-align: center"><a data-toggle="tab" href="#jikinList"
-							                                   id="jikinTab"><s:message code="common.org.jikin"/></a>
-							</li>
-						</ul>
-					</div>
-				</div>
+				<ul class="nav nav-tabs codeTab" id="codeTab">
+					<li class="active" style=" text-align: center"><a data-toggle="tab" href="#coList"
+																	  id="coTab"><s:message
+							code="common.org.co"/></a></li>
+					<li style=" text-align: center"><a data-toggle="tab" href="#busiList"
+													   id="busiTab"><s:message code="common.org.busi"/></a></li>
+					<li style=" text-align: center"><a data-toggle="tab" href="#generalList"
+													   id="generalTab"><s:message
+							code="common.org.general"/></a></li>
+					<li style=" text-align: center"><a data-toggle="tab" href="#deptList"
+													   id="deptTab"><s:message code="common.org.dept"/></a></li>
+					<li style=" text-align: center"><a data-toggle="tab" href="#jikgubList"
+													   id="jikgubTab"><s:message code="common.org.jikgub"/></a>
+					</li>
+					<li style=" text-align: center"><a data-toggle="tab" href="#jikinList"
+													   id="jikinTab"><s:message code="common.org.jikin"/></a>
+					</li>
+				</ul>
 			</div>
 			<div id="coList" class="tab-content active"style="height:100%;">
 				<div id="coListGrid" class="slickGrid gridArea"></div>

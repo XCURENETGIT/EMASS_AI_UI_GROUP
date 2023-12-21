@@ -19,6 +19,54 @@
 			overflow: hidden;
 			white-space: nowrap;
 		}
+		.nav {
+			padding-left: 0;
+			margin-bottom: 0;
+			list-style: none
+		}
+
+		.nav>li {
+			position: relative;
+			display: block;
+		}
+
+		.nav>li>a {
+			position: relative;
+			display: block;
+			padding: 12px 20px;
+			min-width: 160px;
+			color: #333333;
+			background-color: #f8f8f8;
+		}
+
+		.nav>li>a:focus, .nav>li>a:hover {
+			text-decoration: none;
+			background-color: #eee
+		}
+
+		.nav>li.disabled>a {
+			color: #777
+		}
+
+		.nav>li.disabled>a:focus, .nav>li.disabled>a:hover {
+			color: #777;
+			text-decoration: none;
+			cursor: not-allowed;
+			background-color: transparent
+		}
+
+
+
+		.nav .nav-divider {
+			height: 1px;
+			margin: 9px 0;
+			overflow: hidden;
+			background-color: #e5e5e5
+		}
+
+		.nav>li>a>img {
+			max-width: none
+		}
 	</style>
 	<script type="text/javascript">
 
@@ -854,14 +902,14 @@
 </div>
 
 
-<div class="container">
+<div>
 	<div class="searchArea">
 		<div class="searchSub">
-			<div>
+
 				<input type="text" placeholder="<s:message code="mail.message.input.alarm_name"/>" id="searchStr">
 				<button class="form_btn01" type="button" accesskey="Q" id="searchBtn"><s:message
 						code="common.msg.search"/></button>
-			</div>
+
 			<button type="button" class="btn01" id="insertBtn" accesskey="I"><img
 					src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
 			<button type="button" class="btn02" id="deleteBtn" accesskey="D"><img
@@ -871,7 +919,7 @@
 		</div>
 	</div>
 
-	<div class="content xcn_full">
+	<div class="content">
 		<div class="contentSub">
 			<div class="subtab">
 				<button class="active">

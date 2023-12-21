@@ -21,7 +21,8 @@
 			overflow: auto;
 			min-width: 650px;
 		}
-
+		input[type="radio"]:disabled {appearance: auto; }
+		input[type=text],input[type=search] {background: none;}
 
 	</style>
 	<script type="text/javascript">
@@ -428,11 +429,11 @@
 
 
 <div class="xcn_container" id="popupWrap" data-backdrop="static">
-	<div class="item">
-		<h3 class="blue"><span class="bullet01"></span></span>검색 조건</h3>
-		<div class="grayBg mat8 popupInner">
+	<div class="item grayBg02" style="height:900px;">
+		<h3 class="grayBg02 borbottom_dashed p12"><span class="bullet02"></span></span>검색 조건</h3>
+		<div class="dis popupInner">
 			<div class="form-group form-inline filterDiv condition consent">
-				<div class="row">
+				<div class="row borbottom_dashed pb8">
 					<div class="col-35">
 						<label for="consentStr" class="fname"><s:message code="consent.consent"/></label>
 					</div>
@@ -442,7 +443,7 @@
 				</div>
 			</div>
 
-			<div class="row">
+			<div class="row borbottom_dashed pb8">
 				<div class="col-35">
 					<label for="serviceTypeSelect" class="fname"><s:message code="condition.service"/></label>
 				</div>
@@ -451,7 +452,7 @@
 				</div>
 			</div>
 
-			<div class="row">
+			<div class="row borbottom_dashed pb8">
 				<div class="col-35">
 					<label for="searchField" class="fname"><s:message code="condition.field.search"/></label>
 				</div>
@@ -488,7 +489,7 @@
 				</div>
 			</div>
 
-			<div class="row">
+			<div class="row borbottom_dashed pb8">
 				<div class="col-35">
 					<label for="day_msg" class="fname"><s:message code="condition.period.setting"/></label>
 				</div>
@@ -514,47 +515,47 @@
 				</div>
 			</div>
 
-			<div class="row">
+			<div class="row borbottom_dashed pb8">
 				<div class="col-35">
 					<div id="recvSendGroup">
 						<label for="" class="fname"><s:message code="condition.receive_send"/></label>
 					</div>
 				</div>
 				<div class="col-65">
-					<label class="radio-inline c-radio"><input type="radio" name="receiveSendVal" value="" checked><span></span> &nbsp<s:message code="common.msg.all"/></label>
-					<label class="radio-inline c-radio"><input type="radio" name="receiveSendVal" value="I"><span></span>&nbsp<s:message code="condition.receive"/></label>
-					<label class="radio-inline c-radio"><input type="radio" name="receiveSendVal" value="O"><span></span>&nbsp<s:message code="condition.send"/></label>
+					<label class="radio-inline c-radio"><input type="radio" name="receiveSendVal" value="" checked> &nbsp<s:message code="common.msg.all"/></label>
+					<label class="radio-inline c-radio"><input type="radio" name="receiveSendVal" value="I">&nbsp<s:message code="condition.receive"/></label>
+					<label class="radio-inline c-radio"><input type="radio" name="receiveSendVal" value="O">&nbsp<s:message code="condition.send"/></label>
 					<input type="hidden" name="receiveSend" id="receiveSend">
 				</div>
 			</div>
 
-			<div class="row">
+			<div class="row borbottom_dashed pb8">
 				<div class="col-35">
 					<div id="ctimeWorkGroup">
 						<label for="" class="fname"><s:message code="condition.ctimework"/></label>
 					</div>
 				</div>
 				<div class="col-65">
-					<label class="radio-inline c-radio"><input type="radio" name="ctimeWorkVal" value="" checked><span></span>&nbsp<s:message code="condition.ctimework.all"/></label>
-					<label class="radio-inline c-radio"><input type="radio" name="ctimeWorkVal" value="W"><span></span>&nbsp<s:message code="condition.work"/></label>
-					<label class="radio-inline c-radio"><input type="radio" name="ctimeWorkVal" value="R"><span></span>&nbsp<s:message code="condition.notwork"/></label>
+					<label class="radio-inline c-radio"><input type="radio" name="ctimeWorkVal" value="" checked>&nbsp<s:message code="condition.ctimework.all"/></label>
+					<label class="radio-inline c-radio"><input type="radio" name="ctimeWorkVal" value="W">&nbsp<s:message code="condition.work"/></label>
+					<label class="radio-inline c-radio"><input type="radio" name="ctimeWorkVal" value="R">&nbsp<s:message code="condition.notwork"/></label>
 					<input type="hidden" name="ctimeWork" id="ctimeWork">
 				</div>
 			</div>
 
-			<div class="row">
+			<div class="row borbottom_dashed pb8">
 				<div class="col-35">
 					<label for="" class="fname"><s:message code="condition.isread"/></label>
 				</div>
 				<div class="col-65">
-					<label class="radio-inline c-radio"><input type="radio" name="readYnVal" value="" checked><span></span>&nbsp<s:message code="common.msg.all"/></label>
-					<label class="radio-inline c-radio"><input type="radio" name="readYnVal" value="Y"><span></span>&nbsp<s:message code="condition.read"/></label>
-					<label class="radio-inline c-radio"><input type="radio" name="readYnVal" value="N"><span></span>&nbsp<s:message code="condition.unread"/></label>
+					<label class="radio-inline c-radio"><input type="radio" name="readYnVal" value="" checked>&nbsp<s:message code="common.msg.all"/></label>
+					<label class="radio-inline c-radio"><input type="radio" name="readYnVal" value="Y">&nbsp<s:message code="condition.read"/></label>
+					<label class="radio-inline c-radio"><input type="radio" name="readYnVal" value="N">&nbsp<s:message code="condition.unread"/></label>
 					<input type="hidden" name="readYn" id="readYn">
 				</div>
 			</div>
 
-			<div class="row">
+			<div class="row borbottom_dashed pb8">
 				<div class="col-35">
 					<label for="receivers" class="fname"><s:message code="condition.receiver_sender"/></label>
 				</div>
@@ -567,7 +568,7 @@
 				</div>
 			</div>
 
-			<div class="row">
+			<div class="row borbottom_dashed pb8">
 				<div class="col-35">
 					<label for="busiSelect" class="fname"><s:message code="common.org.businm"/></label>
 				</div>
@@ -579,7 +580,7 @@
 				</div>
 			</div>
 
-			<div class="row">
+			<div class="row borbottom_dashed pb8">
 				<div class="col-35">
 					<label for="deptStrDiv" class="fname"><s:message code="common.org.deptnm"/></label>
 				</div>
@@ -588,7 +589,7 @@
 				</div>
 			</div>
 
-			<div class="row">
+			<div class="row borbottom_dashed pb8">
 				<div class="col-35">
 					<label for="allOfus" class="fname"><s:message code="condition.allofus"/></label>
 				</div>
@@ -615,7 +616,7 @@
 				</div>
 			</div>
 
-			<div class="row">
+			<div class="row borbottom_dashed pb8">
 				<div class="col-35">
 					<label for="userGroupSeq" class="fname"><s:message code="userGroup.navi.title2"/></label>
 				</div>
@@ -627,7 +628,7 @@
 				</div>
 			</div>
 
-			<div class="row">
+			<div class="row borbottom_dashed pb8">
 				<div class="col-35">
 					<label for="interGroup" class="fname"><s:message code="interest.user"/></label>
 				</div>
@@ -639,70 +640,69 @@
 			</div>
 
 			<!-- 첨부여부 -->
-			<div class="row">
+			<div class="row borbottom_dashed pb8">
 				<div class="col-35">
 					<label for="" class="fname"><s:message code="condition.isattached"/></label>
 				</div>
 				<div class="col-65">
-					<label class="radio-inline c-radio"><input type="radio" name="attachYnVal" value="" checked><span></span>&nbsp<s:message code="common.msg.all"/></label>
-					<label class="radio-inline c-radio"><input type="radio" name="attachYnVal" value="Y"><span></span>&nbsp<s:message code="condition.exist"/></label>
-					<label class="radio-inline c-radio"><input type="radio" name="attachYnVal" value="N"><span></span>&nbsp<s:message code="condition.none"/></label>
+					<label class="radio-inline c-radio"><input type="radio" name="attachYnVal" value="" checked>&nbsp<s:message code="common.msg.all"/></label>
+					<label class="radio-inline c-radio"><input type="radio" name="attachYnVal" value="Y">&nbsp<s:message code="condition.exist"/></label>
+					<label class="radio-inline c-radio"><input type="radio" name="attachYnVal" value="N">&nbsp<s:message code="condition.none"/></label>
 					<input type="text" id="attachList" style="display: none; width: 220px;"/>
 				</div>
 			</div>
 
 			<!-- 예약어 -->
-			<div class="row">
+			<div class="row borbottom_dashed pb8">
 				<div class="col-35">
 					<label for="" class="fname"><s:message code="condition.keyword"/></label>
 				</div>
 				<div class="col-65">
-					<label class="radio-inline c-radio"><input type="radio" name="keywordYnVal" value="" checked><span
-					></span>&nbsp<s:message code="common.msg.all"/></label>
-					<label class="radio-inline c-radio"><input type="radio" name="keywordYnVal" value="Y"><span></span>&nbsp<s:message code="condition.exist"/></label>
-					<label class="radio-inline c-radio"><input type="radio" name="keywordYnVal" value="N"><span></span>&nbsp<s:message code="condition.none"/></label>
+					<label class="radio-inline c-radio"><input type="radio" name="keywordYnVal" value="" checked>&nbsp<s:message code="common.msg.all"/></label>
+					<label class="radio-inline c-radio"><input type="radio" name="keywordYnVal" value="Y">&nbsp<s:message code="condition.exist"/></label>
+					<label class="radio-inline c-radio"><input type="radio" name="keywordYnVal" value="N">&nbsp<s:message code="condition.none"/></label>
 					<input type="text" id="keywordList" style="display: none; width: 220px;"/>
 				</div>
 			</div>
 
 			<!-- 패턴검출 -->
-			<div class="row">
+			<div class="row borbottom_dashed pb8">
 				<div class="col-35">
 					<label for="" class="fname"><s:message code="condition.regexp.detect"/></label>
 				</div>
 				<div class="col-65">
-					<label class="radio-inline c-radio"><input type="radio" name="regexpYnVal" value="" checked><span></span>&nbsp<s:message code="common.msg.all"/></label>
-					<label class="radio-inline c-radio"><input type="radio" name="regexpYnVal" value="Y"><span></span>&nbsp<s:message code="condition.exist"/></label>
-					<label class="radio-inline c-radio"><input type="radio" name="regexpYnVal" value="N"><span></span>&nbsp<s:message code="condition.none"/></label>
+					<label class="radio-inline c-radio"><input type="radio" name="regexpYnVal" value="" checked>&nbsp<s:message code="common.msg.all"/></label>
+					<label class="radio-inline c-radio"><input type="radio" name="regexpYnVal" value="Y">&nbsp<s:message code="condition.exist"/></label>
+					<label class="radio-inline c-radio"><input type="radio" name="regexpYnVal" value="N">&nbsp<s:message code="condition.none"/></label>
 					<input type="text" id="regexpList" style="display: none; width: 220px;"/>
 				</div>
 			</div>
 
 			<!-- DRM -->
-			<div class="row">
+			<div class="row borbottom_dashed pb8">
 				<div class="col-35">
 					<label for="" class="fname">DRM</label>
 				</div>
 				<div class="col-65">
-					<label class="radio-inline c-radio"><input type="radio" name="regexp_drmYnVal" value="" checked><span></span>&nbsp<s:message code="common.msg.all"/></label>
-					<label class="radio-inline c-radio"><input type="radio" name="regexp_drmYnVal" value="Y"><span></span>&nbsp<s:message code="condition.exist"/></label>
-					<label class="radio-inline c-radio"><input type="radio" name="regexp_drmYnVal" value="N"><span></span>&nbsp<s:message code="condition.none"/></label>
+					<label class="radio-inline c-radio"><input type="radio" name="regexp_drmYnVal" value="" checked>&nbsp<s:message code="common.msg.all"/></label>
+					<label class="radio-inline c-radio"><input type="radio" name="regexp_drmYnVal" value="Y">&nbsp<s:message code="condition.exist"/></label>
+					<label class="radio-inline c-radio"><input type="radio" name="regexp_drmYnVal" value="N">&nbsp<s:message code="condition.none"/></label>
 				</div>
 			</div>
 
 			<!-- 수신필터 -->
-			<div class="row">
+			<div class="row borbottom_dashed pb8">
 				<div class="col-35">
 					<label for="" class="fname"><s:message code="condition.sct"/></label>
 				</div>
 				<div class="col-65">
-					<label class="radio-inline c-radio"><input type="radio" name="regexp_sctYnVal" value="" checked><span></span>&nbsp<s:message code="common.msg.all"/></label>
-					<label class="radio-inline c-radio"><input type="radio" name="regexp_sctYnVal" value="Y"><span></span>&nbsp<s:message code="condition.exist"/></label>
-					<label class="radio-inline c-radio"><input type="radio" name="regexp_sctYnVal" value="N"><span></span>&nbsp<s:message code="condition.none"/></label>
+					<label class="radio-inline c-radio"><input type="radio" name="regexp_sctYnVal" value="" checked>&nbsp<s:message code="common.msg.all"/></label>
+					<label class="radio-inline c-radio"><input type="radio" name="regexp_sctYnVal" value="Y">&nbsp<s:message code="condition.exist"/></label>
+					<label class="radio-inline c-radio"><input type="radio" name="regexp_sctYnVal" value="N">&nbsp<s:message code="condition.none"/></label>
 				</div>
 			</div>
 
-			<div class="row">
+			<div class="row borbottom_dashed pb8">
 				<div class="col-35">
 					<label for="" class="fname"><s:message code="filterInfo.size"/></label>
 				</div>

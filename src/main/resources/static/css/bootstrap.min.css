@@ -2749,7 +2749,7 @@ fieldset[disabled] input[type=checkbox], fieldset[disabled] input[type=radio], i
 
 .checkbox label, .radio label {
 	min-height: 20px;
-	padding-left: 20px;
+	padding-left: 0;
 	margin-bottom: 0;
 	font-weight: 400;
 	cursor: pointer
@@ -3217,11 +3217,10 @@ select[multiple].input-lg, textarea.input-lg {
 
 .btn {
 	display: inline-block;
-	padding: 6px 12px;
+	padding: 4px 12px;
 	margin-bottom: 0;
 	font-size: 14px;
 	font-weight: 400;
-	line-height: 1.42857143;
 	text-align: center;
 	white-space: nowrap;
 	vertical-align: middle;
@@ -3233,8 +3232,8 @@ select[multiple].input-lg, textarea.input-lg {
 	-ms-user-select: none;
 	user-select: none;
 	background-image: none;
-	border: 1px solid transparent;
-	border-radius: 4px
+	border: 1px solid #ccc;
+	border-radius: 2px
 }
 
 .btn.active.focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn:active:focus, .btn:focus {
@@ -4112,7 +4111,7 @@ select[multiple].input-group-sm>.form-control, select[multiple].input-group-sm>.
 	z-index: 2;
 	margin-left: -1px
 }
-
+/*
 .nav {
 	padding-left: 0;
 	margin-bottom: 0;
@@ -4164,7 +4163,7 @@ select[multiple].input-group-sm>.form-control, select[multiple].input-group-sm>.
 .nav>li>a>img {
 	max-width: none
 }
-
+*/
 /*
 .nav-tabs {
 	border-bottom: 1px solid #ddd
@@ -4260,6 +4259,7 @@ select[multiple].input-group-sm>.form-control, select[multiple].input-group-sm>.
 .nav-pills>li.active>a, .nav-pills>li.active>a:focus, .nav-pills>li.active>a:hover {
 	color: #fff;
 	background-color:#1A73F9;
+
 }
 
 .nav-stacked>li {
@@ -7092,6 +7092,8 @@ a.tag:focus, a.tag:hover {
 	float: none !important;
 }
 /*# sourceMappingURL=bootstrap.min.css.map */
+
+
 
 
 

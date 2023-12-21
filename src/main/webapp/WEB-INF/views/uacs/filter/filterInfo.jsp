@@ -11,8 +11,6 @@
 
 	.tab-content {
 		display: none;
-		background: #ededed;
-		padding: 15px;
 	}
 
 	.tab-content.active {
@@ -690,7 +688,6 @@
 		</form>
 	</div>
 </div>
-
 <div class="modal" id="ipPop" data-backdrop="static">
 	<div class="modal-content">
 		<form method="post" id="ipPopForm">
@@ -952,8 +949,6 @@
 		</form>
 	</div>
 </div>
-
-
 <div class="modal" id="domainPop" data-backdrop="static">
 	<div class="modal-content">
 		<form method="post" id="domainPopForm" onsubmit="return false;">
@@ -1003,8 +998,6 @@
 		</form>
 	</div>
 </div>
-
-
 <div class="modal" id="urlPop" data-backdrop="static">
 	<div class="modal-content">
 		<form method="post" id="urlPopForm" onsubmit="return false;">
@@ -1047,8 +1040,6 @@
 		</form>
 	</div>
 </div>
-
-
 <div class="modal" id="subjectPop" data-backdrop="static">
 	<div class="modal-content">
 		<form method="post" id="subjectPopForm" onsubmit="return false;">
@@ -1107,8 +1098,6 @@
 		</form>
 	</div>
 </div>
-
-
 <div class="modal" id="sizePop" data-backdrop="static">
 	<div class="modal-content">
 		<form method="post" id="sizePopForm" onsubmit="return false;">
@@ -1171,8 +1160,6 @@
 		</form>
 	</div>
 </div>
-
-
 <div class="modal" id="attachPop" data-backdrop="static">
 	<div class="modal-content">
 		<form method="post" id="attachPopForm" onsubmit="return false;">
@@ -1234,30 +1221,19 @@
 		</form>
 	</div>
 </div>
+<div>
 
-
-<div class="container">
-	<div>
-		<span style="color: #f25643; font-weight: bold;padding-left:18px;" id="noticeMsg"><s:message
-				code="filterInfo.msg.nologging"/></span>
-		<br>
-	</div>
 	<div class="searchArea">
 		<div class="searchSub">
-			<div>
 				<select id="serviceType" name="serviceType" style="min-width: 150px;">
 					<option value="">-<s:message code="filterInfo.msg.select.service"/>-</option>
 				</select>
-			</div>
-			<div>
 				<input type="text"  id="searchStr" style="width: 210px;">
-			</div>
-			<div>
 				<button class="form_btn01" type="button" accesskey="Q" id="searchBtn">조회</button>
 				<button type="button" class="btn01" accesskey="I" id="insertBtn"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
 				<button type="button" class="btn02" accesskey="D" id="deleteBtn"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
 				<button type="button" class="form_btn06" accesskey="R" id="devStatusBtn" style="display: none;"><s:message code="filterInfo.ruleapply"/></button>
-			</div>
+				<p class="red fs12 fb600 mat8" id="noticeMsg"><s:message code="filterInfo.msg.nologging"/></pclass>
 		</div>
 	</div>
 	<div class="content xcn_full">
