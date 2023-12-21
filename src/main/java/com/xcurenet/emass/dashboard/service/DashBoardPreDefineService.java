@@ -1,5 +1,6 @@
 package com.xcurenet.emass.dashboard.service;
 
+import com.xcurenet.common.vo.XcnResponseVO;
 import org.apache.solr.client.solrj.SolrServerException;
 
 import java.io.IOException;
@@ -28,6 +29,9 @@ public interface DashBoardPreDefineService {
 	public PatternPrivacyVO getAllTodayPatternPrivacy(PatternPrivacyVO vo) throws SolrServerException, IOException;
 
 	public TodayNotWorkVO getTodayNotWork(TodayNotWorkVO vo) throws SolrServerException, IOException;
+
+	public XcnResponseVO getBodySize(BodySizeVO vo) throws Exception;
+
 
 	// public DashboardVO getDashboard(final DashboardVO dashboardVO) throws
 	// IOException;

@@ -42,16 +42,17 @@
         getTodayDataStatus();
         getTodayFilePerson();
         getLoggingData();
-        // getMinioData();
+        getBodySize();
 
     });
 
-    function getMinioData(){
+    function getBodySize(){
+
         ui.get({
-            url: 'getMinioSize.xcn',
+            url: 'getBodySize.xcn',
             success: function (data, total) {
-                makeTableLoggingData(data.data);
-                printChart2(data.data);
+                makeTableSizeData(data.data);
+                printChart3(data.data);
             },
             error: function (status, message) {
                 //ui.alertMsg(message);
@@ -61,6 +62,29 @@
 
             }
         });
+    }
+
+
+
+    function makeTableSizeData(data){
+        var str = "<table class='mainTable'><tr>"
+        str+="<th> 구분 </th>";
+        for (var i = 0; i<data.length; i++){
+            var year = data[i].date.slice(0, 4);
+            var month = data[i].date.slice(4, 6) - 1;
+            var day = data[i].date.slice(6, 8);
+            var dateObject = new Date(year, month, day);
+            var formattedDate = dateObject.getFullYear() + "-" + padZero(dateObject.getMonth() + 1) + "-" + padZero(dateObject.getDate());
+            str+="<th>"+formattedDate+"</th>";
+        }
+        str+="</tr><tr>";
+        str+="<td> 용량 </td>";
+        for (var i = 0; i<data.length; i++){
+            str+="<td>"+data[i].bodySizeStr+"</td>";
+        }
+        str+="</tr></table></div>"
+
+        $('#sizeTable').html(data.length > 0 ? str : '<s:message code="common.msg.nodata"/>');
     }
 
 
@@ -360,7 +384,7 @@
                         let filesType = getFormattedValue("type", data.fileType[i]);
                         str+="<li>"
                         str+="<span class = 'num'>"+(i+1)+"</span>";
-                        str+="<p class='file blueBg'><span class='filename blue'>EXCEL</span><span class='Volume'>"+ filesSize +"</span></p>";
+                        str+="<p class='file blueBg'><span class='filename blue'>"+filesType+"</span><span class='Volume'>"+ filesSize +"</span></p>";
                         str+="</li>"
                     }
                     str+="</ul></div>";
@@ -489,6 +513,96 @@
             }
         });
     }
+
+
+    var chart2 = null;
+    var chartxAxis2;
+    function printChart3( dat )
+    {
+        var data = [];
+        var tMax = [];
+        var cols = [];
+        var categories = [];
+
+        if( dat.length == 0) {
+            $('#sizeChart').html('<s:message code="common.msg.nodata"/>');
+            return false;
+        } else {
+            for ( var i=0 ; i < dat.length ; i++ ) {
+                var items = [];
+                items.push(dat[i].date);
+	            items.push(Number(dat[i].bodySize));
+                data.push(items);
+                tMax.push("8000000000");
+            }
+        }
+
+        var max = tMax.reduce(function(a,b){
+            return Math.max(a,b);
+        });
+        var rotation = 40;
+        // if ( chartxAxis2 == 'W' ) rotation = 0;
+        $('#sizeChart').highcharts({
+            chart: {
+                type: 'line',
+                options3d: {
+                    enabled: true,
+                    alpha: 0,
+                    beta: 0,
+                    viewDistance: 15,
+                    depth: 40
+                },
+                marginTop: 25,
+                marginRight: 45
+            },
+            title: {
+                text: null
+            },
+            exporting: {enabled: false},
+            credits: chartAPI.credits,
+            xAxis: {
+                type: 'category'
+            },
+            yAxis: {
+                allowDecimals: false,
+                min: 0,
+                max: max,
+                title: {
+                    text: '',
+                    rotation: 0
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            tooltip: {
+                formatter: function () {
+                    return '<span style="color:' + this.series.color + '">\u25CF</span> ' + convertFileSize(this.point.y);
+                }
+
+            },
+            plotOptions: {
+            },
+            series: [{
+                data : data,
+                dataLabels: {
+                    enabled: true,
+                    color: '#000',
+                    align: 'center',
+                    y: 10, // 10 pixels down from the top
+                    style: {
+                        fontSize: '11px',
+                        fontFamily: 'Gulim, Dotum, Helvetica'
+                    },
+                    formatter: function () {
+                        return convertFileSize(this.point.y);
+                    }
+                }
+            }]
+        });
+    }
+
+
 
 
     var chart = null;
@@ -798,22 +912,16 @@
 			<div class="text_tab mat32">
 				<span class="tablinks2" onclick="openCity3(event, 'con03')" id="defaultOpen3">일별 로깅 데이터 정보</span>
 				<span class="bar"></span>
-				<span class="tablinks2" onclick="openCity3(event, 'con04')" >일별 용량 정보</span>
+				<span class="tablinks2" onclick="openCity3(event, 'con04')" >일별 전체 용량 정보</span>
 			</div>
 			<div id="con03" class="text_tabcontent2">
-				<div class="h200" id="loggingChart">
-				</div>
-
-				<div id="loggingCount">
-
-				</div>
+				<div class="h200" id="loggingChart"></div>
+				<div id="loggingCount"></div>
 			</div>
 
 			<div id="con04" class="text_tabcontent2">
-				<div class="h200">
-					로컬 데이터 정보
-
-				</div>
+				<div class="h200" id="sizeChart"></div>
+				<div id="sizeTable"></div>
 			</div>
 		</div>
 		<%--		일별 용량, 로컬 데이터 정보 끝--%>

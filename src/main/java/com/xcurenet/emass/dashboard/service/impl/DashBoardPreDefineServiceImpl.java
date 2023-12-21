@@ -2,12 +2,15 @@ package com.xcurenet.emass.dashboard.service.impl;
 
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.config.Config;
+import com.xcurenet.common.vo.XcnResponseVO;
+import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.emass.dashboard.service.*;
 import com.xcurenet.emass.message.service.FacetVO;
 import com.xcurenet.emass.message.service.SolrEdcMessageVO;
 import com.xcurenet.emass.message.service.SolrEdcService;
 import com.xcurenet.emass.message.service.SolrEdcVO;
 import com.xcurenet.emass.service.service.ServiceGroupVO;
+import com.xcurenet.minio.MinioFileAdapter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +29,9 @@ import static org.apache.solr.common.params.FacetParams.FACET_QUERY;
 @Log4j2
 @Service("dashBoardPreDefineService")
 public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService {
+
+	@Resource
+	public MinioFileAdapter minioFileAdapter;
 
 	@Resource(name = "solrEdcService")
 	private SolrEdcService solrEdcService;
@@ -296,6 +303,7 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		return result;
 	}
 
+
 	@Override
 	public PatternPrivacyVO getTodayPatternPrivacy(PatternPrivacyVO patternPrivacyVO) throws IOException, SolrServerException {
 		PatternPrivacyVO result = new PatternPrivacyVO();
@@ -401,6 +409,55 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		}
 		result.setFacet(items);
 		return result;
+	}
+
+	@Override
+	public XcnResponseVO getBodySize(BodySizeVO vo) throws Exception {
+		String date = Common.getCurrentDate();
+		String startDate = Common.plusDays(date, -7);
+		String endDate = Common.plusDays(date, -1);
+
+
+		SolrQuery sq = new SolrQuery();
+
+		sq.setParam("group", true);
+		sq.setParam("group.facet", true);
+		sq.setParam("group.ngroups", true);
+		sq.setParam("group.field", "ctime_yyyymmdd");
+
+		sq.setParam("facet", true);
+		sq.setParam("facet.sum", true);
+		sq.setParam("facet.field", "body_size");
+
+		sq.setParam("facet.limit", "-1");
+		sq.setParam("facet.mincount", "-1");
+		sq.setFacetSort("ctime_yyyymmdd");
+
+		sq.setFacetMinCount(1);
+		sq.setQuery("*:*");
+		sq.setStart(Common.nvz(0));
+		sq.setRows(Common.nvz(1));
+		sq.setSort("ctime_yyyymmdd", SolrQuery.ORDER.desc);
+		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id");
+		sq.setQuery(String.format("+ctime_yyyymmdd:[ %s TO %s ]", startDate, endDate));
+
+		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq,vo.getAdminId());
+
+		List<Map<String, Object>> result = new ArrayList<>();
+
+		for (int i = 0; i<edc.getPivotData().size(); i++){
+			Map<String, Object> item = new HashMap<>();
+			item.put("date",edc.getPivotData().get(i).get("rowKey"));
+			item.put("total", edc.getPivotData().get(i).get("total"));
+			double doubleNum = (double) edc.getPivotData().get(i).get("body_size");
+			long attach = (long) doubleNum;
+			item.put("bodySize", attach);
+			item.put("bodySizeStr", Common.convertFileSize(attach));
+			result.add(item);
+		}
+
+
+		return new XcnResponseVO(XcnRspCode.OK, result);
 	}
 
 

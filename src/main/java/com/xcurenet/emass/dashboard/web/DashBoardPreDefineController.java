@@ -34,8 +34,6 @@ public class DashBoardPreDefineController {
 	@Resource(name = "solrEdcService")
 	private SolrEdcService solrEdcService;
 
-	@Resource
-	public MinioFileAdapter minioFileAdapter;
 
 	private final static String FACET_QUERY = "{result: {type: terms,limit: -1,field: \"user_str\",sort: \"count desc\",facet: {pi_SN:\"sum(pi_SN)\", pi_PN:\"sum(pi_PN)\", pi_DN:\"sum(pi_DN)\", pi_FN:\"sum(pi_FN)\", pi_CN:\"sum(pi_CN)\"}}}";
 
@@ -61,14 +59,6 @@ public class DashBoardPreDefineController {
 			vo.setPivotData(todayDataStatusVO.getPivotData());
 		}
 		return new XcnResponseVO(XcnRspCode.OK, vo);
-	}
-
-	@RequestMapping(value = "/getMinioSize.xcn")
-	@Description("Dashboard - Minio 용량")
-	@ResponseBody
-	public XcnResponseVO getMinioSize(final HttpSession session, final HttpServletRequest request) throws Exception {
-		minioFileAdapter.getObjectsByDate("20231220");
-		return new XcnResponseVO(XcnRspCode.OK, 0);
 	}
 
 	@RequestMapping(value = "/getTodayPatternPrivacy.xcn")
@@ -130,6 +120,21 @@ public class DashBoardPreDefineController {
 
 		return new XcnResponseVO(XcnRspCode.OK, null,0);
 	}
+
+	@RequestMapping(value = "getBodySize.xcn")
+	@Description("Dashboard - 일별 용량")
+	@ResponseBody
+	public XcnResponseVO getBodySize(final HttpSession session) throws Exception {
+		long now = System.currentTimeMillis();
+		BodySizeVO vo = new BodySizeVO();
+		vo.setAdminId(Common.getAdminId(session));
+		vo.setStartDt(Common.getCurrentDate() + "000000");
+		vo.setEndDt(Common.getDateTime(now, "yyyyMMddHHmmss"));
+		vo.setTermDtStr(Prop.propFormat("condition.hour", session, "00")+" ~ " + Common.getDateTime(now, Prop.propFormat("condition.time", session, "HH", "mm", "ss")));
+
+		return new XcnResponseVO(XcnRspCode.OK, dashBoardPreDefineService.getBodySize(vo));
+	}
+
 
 	@RequestMapping(value = "/getTodayRiskBehavior.xcn")
 	@Description("Dashboard - 패턴(위험행위)")
