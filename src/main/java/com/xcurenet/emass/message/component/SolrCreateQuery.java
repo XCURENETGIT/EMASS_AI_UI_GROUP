@@ -680,7 +680,10 @@ public class SolrCreateQuery {
 	public SolrCreateQuery setInterestUserGroup(String interGroup, String interGroup_not) {
 		adminUserGroupService = SpringContextUtil.getBean(AdminUserGroupService.class);
 		List<AdminUserGroupVO> users = adminUserGroupService.getAdminUserGroupSimpleList(interGroup);
-		if (users.size() == 0) return this;
+		if (users.isEmpty()) {
+			addQuery(AND_QUERY+"userid:\"not_found_user\"");
+			return this;
+		}
 
 		if(Common.isEquals(interGroup_not, "Y")) addQuery(EXCEPT_QUERY+"(");
 		else addQuery(AND_QUERY+"(");
