@@ -4,7 +4,7 @@ body,html { height:100%;}
 /* Layout */
 #wrap { position: relative;width:100%; height:100%; min-width:1200px;}
 #header {position:fixed; width:100%; height:50px;min-width:1200px;z-index:99999;}
-#container {position: relative; width:100%; padding-top:50px; *zoom:1;}
+#container {position: relative; width:100%; *zoom:1;}
 #container::after {content:''; display:block; clear:both;}
 #container #gnbWrap {position: fixed; z-index:99999; min-width:76px; height:100%;background-color: #242330; }
 #container #contentArea {position: relative;margin-left:78px; width: calc(100% - 78px);  height:100%; }
@@ -277,6 +277,9 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 .pop_btn03 {color:#fff; width:32px; height:32px; font-size:14px;vertical-align:middle;display: inline-block; border-radius: 2px; background: #1C64D3; border:0;}
 .pop_btn03:hover {background-color:#375E9A;}
 .table_btn01 {color:#fff; font-weight:400; font-size:12px; height:24px; line-height: 24px; padding:0 6px; background-color: #1A73F9; display: inline-block; vertical-align: middle; text-align: center;   border:0; border-radius:2px ; -webkit-border-radius:2px ; -moz-border-radius:2px ; -ms-border-radius:2px ; -o-border-radius:2px ;}
+
+
+
 
 /* width/height */
 .w50 {width:50%;}

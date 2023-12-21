@@ -172,11 +172,11 @@ $(document).ready(function(){
 			alert(message.authAlert);
 			return;
 		}
-		if( $(this).parents('ul').hasClass('notfound')) return;
+		if( $(this).parents('li').hasClass('notfound')) return;
 
-		var attachId = $(this).parents('ul').attr('id');
+		var attachId = $(this).parents('li').attr('id');
 		var attachName = $(this).attr('attachname');
-		var attachSize = Number( $(this).parents('ul').attr('size') );
+		var attachSize = Number( $(this).parents('li').attr('size') );
 		//var attachUrl = '<c:url value="/downEmassAttach.xcn"/>?msgId='+msgId+'&attachId='+attachId;
 		var attachUrl = contextRoot + '/downEmassAttach.xcn?msgId='+msgId+'&attachId='+attachId;
 		if ( attachSize == 0 || attachSize == 'NaN' ) attachSize = 1;
@@ -198,11 +198,11 @@ $(document).ready(function(){
 			alert(message.authAlert);
 			return;
 		}
-		if( $(this).parents('ul').hasClass('notfound')) return;
+		if( $(this).parents('li').hasClass('notfound')) return;
 		var txt = $(this).text();
-		var attachId = $(this).parents('ul').attr('id');
-		var attachName = $(this).parents('ul').find('.attachName').attr('attachname');
-		var attachSize = Number( $(this).parents('ul').attr('size') );
+		var attachId = $(this).parents('li').attr('id');
+		var attachName = $(this).parents('li').find('.attachName').attr('attachname');
+		var attachSize = Number( $(this).parents('li').attr('size') );
 		//var attachUrl = '<c:url value="/downEmassAttach.xcn"/>?msgId='+msgId+'&attachId='+attachId+'&prediction=Y';
 		var attachUrl = contextRoot + '/downEmassAttach.xcn?msgId=' + msgId + '&attachId=' + attachId + '&prediction=Y';
 		if( attachSize == 0 || attachSize == 'NaN' ) attachSize = 1;
@@ -225,10 +225,10 @@ $(document).ready(function(){
 			alert(message.authAlert);
 			return;
 		}
-		if( $(this).parents('ul').hasClass('notfound')) return;
-		var attachId = $(this).parents('ul').attr('id');
-		var attachName = $(this).parents('ul').find('.attachName').attr('attachname');
-		var attachSize = Number( $(this).parents('ul').attr('size') );
+		if( $(this).parents('li').hasClass('notfound')) return;
+		var attachId = $(this).parents('li').attr('id');
+		var attachName = $(this).parents('li').find('.attachName').attr('attachname');
+		var attachSize = Number( $(this).parents('li').attr('size') );
 		//var attachUrl = '<c:url value="/downEmassAttach.xcn"/>?msgId='+msgId+'&attachId='+attachId;
 		var attachUrl = contextRoot + '/downEmassAttach.xcn?msgId=' + msgId + '&attachId=' + attachId;
 		if ( attachSize == 0 || attachSize == 'NaN' ) attachSize = 1;
@@ -401,10 +401,10 @@ $(document).ready(function(){
 
 
 
-		// if( $(this).parents('ul').hasClass('notfound')) return;
-		// var attachId = $(this).parents('ul').attr('id');
-		// var attachName = $(this).parents('ul').find('.attachName').attr('attachname');
-		// var attachSize = Number( $(this).parents('ul').attr('size') );
+		// if( $(this).parents('li').hasClass('notfound')) return;
+		// var attachId = $(this).parents('li').attr('id');
+		// var attachName = $(this).parents('li').find('.attachName').attr('attachname');
+		// var attachSize = Number( $(this).parents('li').attr('size') );
 		// //var attachUrl = '<c:url value="/downEmassAttach.xcn"/>?msgId='+msgId+'&attachId='+attachId;
 		// var attachUrl = contextRoot + '/downEmassAttach.xcn?msgId=' + msgId + '&attachId=' + attachId;
 		// if ( attachSize == 0 || attachSize == 'NaN' ) attachSize = 1;
@@ -1036,7 +1036,6 @@ var ocrFiles = [];
 var msgData;
 function setMessage(msg) {
 	msgData = msg;
-
 	window.scrollTo(0,0);
 	if(msg == null) {
 		$('#buttonDiv').css("display", "none");
@@ -1357,7 +1356,7 @@ function getFold(){
 }
 
 function setFileDiv(msg) {
-	var fileRows = $('#filelist').find('ul').find('li').length;
+	var fileRows = $('#filelist').find('li').length;
 	for(var i = fileRows; i >= 1; i--) {
 		$('#filelist  > ul > li:last').remove();
 	}
@@ -1430,8 +1429,7 @@ function setFileDiv(msg) {
 
 
 
-			fileStr += '<ul msgid="' + msg.msgId + '" id="' + file.attachId + '" size="' + file.attachSize + '" class="' + trClass + extClass +'" >';
-				fileStr += '<li>';
+			fileStr += '<li msgid="' + msg.msgId + '" id="' + file.attachId + '" size="' + file.attachSize + '" class="' + trClass + extClass +'" >';
 					/* 제목 */
 					fileStr += '<div class="attach_' + attachExt +' attach_file_img" style="padding-left:5px;">';
 					// if(attachNameExist == "N") fileStr += '<span>['+contentBody.unknownFileName+']</span> ';
@@ -1453,9 +1451,7 @@ function setFileDiv(msg) {
 							}
 						fileStr += '</div>';
 					fileStr += '</div>';
-				fileStr += '</li>';
-
-			fileStr += '</ul>';
+			fileStr += '</li>';
 			$('#filelist').html(fileStr);
 
 			if(nvl(file.ocrYn) == "Y") {

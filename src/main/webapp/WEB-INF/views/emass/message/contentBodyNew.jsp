@@ -30,6 +30,7 @@
 	boolean hostQuery = false;
 	ConfigAdminVO hostQueryVO = configAdminService.getConfAdmin("host.query.use", adminId);
 	if(Common.isNotEmpty(hostQueryVO)) hostQuery = Common.isEquals(Common.nvl(hostQueryVO.getVal()), "Y") ? true : false;
+
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -63,22 +64,22 @@
 			min-width: 600px;
 		}
 
-		/*.empty-dashboard-message{*/
-		/*	position: absolute;*/
-		/*	top: 35px;*/
-		/*	bottom: 100px;*/
-		/*	left: 0;*/
-		/*	right: 0;*/
-		/*	margin: auto;*/
-		/*	width: 70%;*/
-		/*	height:250px;*/
-		/*}*/
-		/*.empty-dashboard-message h2, .empty-dashboard-message p{*/
-		/*	text-align:center;*/
-		/*}*/
-		/*.empty-dashboard-message p{*/
-		/*	font-size: 14px;*/
-		/*}*/
+		.empty-dashboard-message{
+			position: absolute;
+			top: 35px;
+			bottom: 100px;
+			left: 0;
+			right: 0;
+			margin: auto;
+			width: 70%;
+			height:250px;
+		}
+		.empty-dashboard-message h2, .empty-dashboard-message p{
+			text-align:center;
+		}
+		.empty-dashboard-message p{
+			font-size: 14px;
+		}
 		.row {
 			margin : 0px !important;
 		}
@@ -89,6 +90,60 @@
 		#infoTable td div {
 			word-break:break-all;
 		}
+
+
+
+
+		.cd-top {
+			background-color: rgb(51, 122, 183) !important;
+			bottom: 40px;
+			color: rgb(255, 255, 255) !important;
+			display: inline-block;
+			font-size: 18px;
+			line-height: 24px;
+			position: fixed;
+			opacity: 0;
+			right: -158px;
+			text-align: center;
+			text-decoration: none !important;
+			-webkit-transform: scale(2) translate(47px,-10px);
+			-moz-transform: scale(2) translate(47px,-10px);
+			-o-transform: scale(2) translate(47px,-10px);
+			-ms-transform: scale(2) translate(47px,-10px);
+			transform: scale(2) translate(47px,-10px);
+			-webkit-transition: all 0.3s ease-in-out;
+			-moz-transition: all 0.3s ease-in-out;
+			-o-transition: all 0.3s ease-in-out;
+			-ms-transition: all 0.3s ease-in-out;
+			transition: all 0.3s ease-in-out;
+			visibility: hidden;
+			white-space: nowrap;
+			width: auto;
+		}
+		.cd-top:hover{
+			text-decoration: none !important;
+			color: #333 !important;
+		}
+
+
+		.cd-top .fa {
+			padding: 16px 16px;
+			border-right: 1px solid  rgb(71, 142, 203);
+		}
+		.cd-top span:last-child {
+			padding: 13px 14px;
+		}
+
+		.cd-is-visible {
+			opacity: 0.9;
+			-webkit-transform: scale(1) translate(0px,0px);
+			-moz-transform: scale(1) translate(0px,0px);
+			-o-transform: scale(1) translate(0px,0px);
+			-ms-transform: scale(1) translate(0px,0px);
+			transform: scale(1) translate(0px,0px);
+			visibility: visible;
+		}
+
 		.fa-chevron-up {
 			background-color: #5a9ad0;
 		}
@@ -96,6 +151,7 @@
 			text-decoration: none;
 			opacity: .8;
 		}
+
 		.fold_on {
 			overflow:hidden;
 			height: 15px;
@@ -130,8 +186,8 @@
 		var kHighlight = '<%=keywordHighlight%>';
 		var hostQueryUse = '<%=hostQuery%>';
 
-		$(document).ready(function(){
 
+		$(document).ready(function(){
 
 			if(popup_msgId!= '') {
 				getMessage(popup_msgId, popup_searchKey, popup_bodySize, kHighlight,hostQueryUse);
@@ -293,273 +349,281 @@
 			var pop = fnOpenWindow(url, 'participant', 1015, 450, 'resize');
 		}
 
-
-
-
 	</script>
 </head>
-<body class="grayBg02">
-<!-- content-->
-<div class="inner_message">
-	<div class="messageBtn">
-		<div class="btnform">
-			<button class="btn01" id="prevBtn"><img src="../img/subBtn_arrow_left_12.png" alt=""></button>
-			<button class="btn01" id="nextBtn"><img src="../img/subBtn_arrow_right_12.png" alt=""></button>
-			<button class ="btn05 msg_button" id="saveBtn"><img src="../img/subBtn_save.png" alt="<s:message code="common.msg.save"/>"><s:message code="common.msg.save"/></button>
-			<button class="btn05" id="printBtn"><img src="../img/subBtn_mail.png" alt="<s:message code="common.msg.print"/>"><s:message code="common.msg.print"/></button>
-			<button class="btn05 msg_button dropdown-toggle" data-toggle="dropdown" ><img src="../img/subBtn_settings.png" data-toggle="dropdown" alt="<s:message code="common.msg.addFunctions"/>"><s:message code="common.msg.addFunctions"/><span class="caret"></span></button>
-				<ul class="dropdown-menu dropdown-additionMenu" role="menu" style="min-width:100px;font-size:13px;" id="additionalBtn">
-					<li><a href="javascript:void(0);" id="usersInfoBtn"><s:message code="common.msg.userinfo"/></a></li>
-					<li class="dropdown-divider"></li>
-					<li><a href="javascript:void(0);" id="headerBtn"><s:message code="common.msg.headerInfo"/></a></li>
-					<li class="dropdown-divider"></li>
-					<li><a href="javascript:void(0);" id="originalBtn"><s:message code="common.msg.originalInfo"/></a></li>
-					<li class="dropdown-divider"></li>
-					<li><a href="javascript:void(0);" id="domainBtn"><s:message code="common.msg.domainInfo"/></a></li>
-					<li class="dropdown-divider"></li>
-					<li><a href="javascript:void(0);" id="mailFowardBtn"><s:message code="common.msg.forward_mail"/></a></li>
-					<li class="dropdown-divider"></li>
-					<li><a href="javascript:void(0);" id="warnMailBtn"><s:message code="common.msg.warning_mail"/></a></li>
-					<li class="dropdown-divider"></li>
-					<li><a href="javascript:void(0);" id="msgIdBtn">ID</a></li>
-				</ul>
-			<button class="btn05" id="openBigContent"><img src="../img/subBtn_link.png" alt="새창"><s:message code="bodyview.window.new"/></button>
-		</div>
-		<div class="btnform txt_right">
-			<%-- 메시지 보관--%>
-			<%--saveMsgData--%>
-			<button class="btn05" id="saveMsgData"><s:message code="filterInfo.setMsgFolder1"/></button>
-			<%-- 내보내기--%>
-			<button  class="btn05" href="javascript:;" style="padding-right:10px; color:#383838; cursor: pointer; font-size: 12px;left:178px;"data-toggle="dropdown" id="exportMsg"><s:message code="common.msg.export"/><span class="caret"></span></button>
-			<ul class="dropdown-menu dropdown-exportMenu" role="menu" style="min-width:100px;font-size:13px;">
-				<li style="display:none;"><a href="javascript:void(0);" id="body_link_btn" class="body_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-text-o" style="font-size:16px"></span>&nbsp;<s:message code="condition.body"/></a></li>
-				<li style="display:none;"><a href="javascript:void(0);" id="attach_link_btn" class="attach_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-archive-o" style="font-size:16px"></span>&nbsp;<s:message code="consent.attach"/></a></li>
-				<li style="display:none;"><a href="javascript:void(0);" id="excel_link_btn" class="excel_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>" option="Y"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/> (<s:message code="common.msg.excel"/> xlsx)</a></li>
-				<li style="display:none;"><a href="javascript:void(0);" id="cell_link_btn" class="cell_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>" option="Y"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/> (<s:message code="common.msg.hancel"/> cell)</a></li>
-				<li style="display:none;"><a href="javascript:void(0);" id="csv_link_btn" class="csv_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>" option="Y"><span class="fa fa-file-text" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/> (<s:message code="common.msg.text"/> csv)</a></li>
-				<li style="display:none;"><a href="javascript:void(0);" id="pdf_link_btn" class="pdf_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>" option="Y"><span class="fa fa-file-pdf-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/> (PDF)</a></li>
-				<c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'LS') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
-					<li><a href="javascript:void(0);" class="all_down_link" data-type="L" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/></a></li>
-				</c:if>
-				<c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'BS') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
-					<li><a href="javascript:void(0);" class="all_down_link" data-type="B" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-text-o" style="font-size:16px"></span>&nbsp;<s:message code="condition.body"/></a></li>
-				</c:if>
-				<c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'AS') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
-					<li><a href="javascript:void(0);" class="all_down_link" data-type="A" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-archive-o" style="font-size:16px"></span>&nbsp;<s:message code="consent.attach"/></a></li>
-				</c:if>
-				<c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'WS') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
-					<li><a href="javascript:void(0);" class="all_down_link" data-type="LB" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/>+<s:message code="condition.body"/></a></li>
-				</c:if>
-				<c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'CS') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
-					<li><a href="javascript:void(0);" class="all_down_link" data-type="LBA" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/>+<s:message code="condition.body"/>+<s:message code="consent.attach"/></a></li>
-				</c:if>
-				<c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'LP') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
-					<li><a href="javascript:void(0);" class="print_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="glyphicon glyphicon-print"></span>&nbsp;<s:message code="selectCodeAll.list"/> <s:message code="common.msg.print"/></a></li>
-				</c:if>
-				<li class="dropdown-divider"></li>
-				<li><a href="javascript:void(0);" class="downList" data-target="tabGrid" ><span class="glyphicon glyphicon-th-list"></span>&nbsp;<s:message code="common.msg.download"/> <s:message code="mail.view.list"/></a></li>
-			</ul>
-		</div>
-	</div>
-	<div class="messageCon"> <%--     condition.receive ,  condition.send--%>
-			<%--  수신 / 발신 정보 표시 --%>
-			<div id="recvOrsend" class="top ">
-				<span class="sub_flag_send" id="sub_flag_send" style="display: none"><s:message code="condition.send"/> </span>
-				<span class="sub_flag_reception" id="sub_flag_reception" style="display: none"><s:message code="condition.receive"/> </span>
-				<h4 class="red02" id="subject"></h4>
-				<span class="loca" id="svc"></span>
-			</div>
-
-			<div class="conBox">
-					<div id="userTr">
-						<h5 id="userid"></h5>
-						<span class="loca" id="ctimeTd"></span>
-					</div>
-				<table class="subTable mat8">
-					<tr>
-						<th><s:message code="bodyview.srcIp"/></th>
-						<td class="topline" id="srcipTd"></td>
-						<th><s:message code="bodyview.dstIp"/></th>
-						<td class="topline" id="dstipTd"></td>
-					</tr>
-					<tr>
-						<th><s:message code="bodyview.body.size"/></th>
-						<td id="bodySizeTd"></td>
-						<th><s:message code="bodyview.userId"/></th>
-						<td id="userIdTd"></td>
-					</tr>
-					<tr>
-						<th><s:message code="bodyview.hostPathInfo"/></th>
-						<td colspan="3" class="mal8 tableLink txt_left" id="hostDiv"></td>
-					</tr>
-				</table>
-			</div>
-		</div>
-		<div id="fileDiv" class="messageCon">
-			<div class="top grayBg03">
-				<h4><s:message code="bodyview.file.info"/></h4><h4 id="fileCntArea"></h4> <%--뒤에 파일 갯수 표기--%>
-				<div class="btn btnform">
-					<button class="btn05" id="allDownload"><img src="<c:url value="/img/subBtn_save.png"/>"  alt="확대"> <s:message code="bodyview.file.allDownload"/></button>
+<div class="grayBg02">
+	<!-- 메시지 상세 시작 -->
+	<div class="inner_message" id="msgDiv" style="display: none">
+			<div class="messageBtn">
+				<div class="btnform">
+					<button class="btn01" id="prevBtn"><img src="../img/subBtn_arrow_left_12.png" alt=""></button>
+					<button class="btn01" id="nextBtn"><img src="../img/subBtn_arrow_right_12.png" alt=""></button>
+					<button class ="btn05 msg_button" id="saveBtn"><img src="../img/subBtn_save.png" alt="<s:message code="common.msg.save"/>"><s:message code="common.msg.save"/></button>
+					<button class="btn05" id="printBtn"><img src="../img/subBtn_mail.png" alt="<s:message code="common.msg.print"/>"><s:message code="common.msg.print"/></button>
+					<button class="btn05 msg_button dropdown-toggle" data-toggle="dropdown" ><img src="../img/subBtn_settings.png" data-toggle="dropdown" alt="<s:message code="common.msg.addFunctions"/>"><s:message code="common.msg.addFunctions"/><span class="caret"></span></button>
+						<ul class="dropdown-menu dropdown-additionMenu" role="menu" style="min-width:100px;font-size:13px;" id="additionalBtn">
+							<li><a href="javascript:void(0);" id="usersInfoBtn"><s:message code="common.msg.userinfo"/></a></li>
+							<li class="dropdown-divider"></li>
+							<li><a href="javascript:void(0);" id="headerBtn"><s:message code="common.msg.headerInfo"/></a></li>
+							<li class="dropdown-divider"></li>
+							<li><a href="javascript:void(0);" id="originalBtn"><s:message code="common.msg.originalInfo"/></a></li>
+							<li class="dropdown-divider"></li>
+							<li><a href="javascript:void(0);" id="domainBtn"><s:message code="common.msg.domainInfo"/></a></li>
+							<li class="dropdown-divider"></li>
+							<li><a href="javascript:void(0);" id="mailFowardBtn"><s:message code="common.msg.forward_mail"/></a></li>
+							<li class="dropdown-divider"></li>
+							<li><a href="javascript:void(0);" id="warnMailBtn"><s:message code="common.msg.warning_mail"/></a></li>
+							<li class="dropdown-divider"></li>
+							<li><a href="javascript:void(0);" id="msgIdBtn">ID</a></li>
+						</ul>
+					<button class="btn05" id="openBigContent"><img src="../img/subBtn_link.png" alt="새창"><s:message code="bodyview.window.new"/></button>
+				</div>
+				<div class="btnform txt_right">
+					<%-- 메시지 보관--%>
+					<%--saveMsgData--%>
+					<button class="btn05" id="saveMsgData"><s:message code="filterInfo.setMsgFolder1"/></button>
+					<%-- 내보내기--%>
+					<button  class="btn05" href="javascript:;" style="padding-right:10px; color:#383838; cursor: pointer; font-size: 12px;left:178px;"data-toggle="dropdown" id="exportMsg"><s:message code="common.msg.export"/><span class="caret"></span></button>
+					<ul class="dropdown-menu dropdown-exportMenu" role="menu" style="min-width:100px;font-size:13px;">
+						<li style="display:none;"><a href="javascript:void(0);" id="body_link_btn" class="body_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-text-o" style="font-size:16px"></span>&nbsp;<s:message code="condition.body"/></a></li>
+						<li style="display:none;"><a href="javascript:void(0);" id="attach_link_btn" class="attach_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-archive-o" style="font-size:16px"></span>&nbsp;<s:message code="consent.attach"/></a></li>
+						<li style="display:none;"><a href="javascript:void(0);" id="excel_link_btn" class="excel_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>" option="Y"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/> (<s:message code="common.msg.excel"/> xlsx)</a></li>
+						<li style="display:none;"><a href="javascript:void(0);" id="cell_link_btn" class="cell_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>" option="Y"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/> (<s:message code="common.msg.hancel"/> cell)</a></li>
+						<li style="display:none;"><a href="javascript:void(0);" id="csv_link_btn" class="csv_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>" option="Y"><span class="fa fa-file-text" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/> (<s:message code="common.msg.text"/> csv)</a></li>
+						<li style="display:none;"><a href="javascript:void(0);" id="pdf_link_btn" class="pdf_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>" option="Y"><span class="fa fa-file-pdf-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/> (PDF)</a></li>
+						<c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'LS') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
+							<li><a href="javascript:void(0);" class="all_down_link" data-type="L" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/></a></li>
+						</c:if>
+						<c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'BS') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
+							<li><a href="javascript:void(0);" class="all_down_link" data-type="B" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-text-o" style="font-size:16px"></span>&nbsp;<s:message code="condition.body"/></a></li>
+						</c:if>
+						<c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'AS') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
+							<li><a href="javascript:void(0);" class="all_down_link" data-type="A" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-archive-o" style="font-size:16px"></span>&nbsp;<s:message code="consent.attach"/></a></li>
+						</c:if>
+						<c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'WS') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
+							<li><a href="javascript:void(0);" class="all_down_link" data-type="LB" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/>+<s:message code="condition.body"/></a></li>
+						</c:if>
+						<c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'CS') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
+							<li><a href="javascript:void(0);" class="all_down_link" data-type="LBA" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/>+<s:message code="condition.body"/>+<s:message code="consent.attach"/></a></li>
+						</c:if>
+						<c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'LP') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
+							<li><a href="javascript:void(0);" class="print_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="glyphicon glyphicon-print"></span>&nbsp;<s:message code="selectCodeAll.list"/> <s:message code="common.msg.print"/></a></li>
+						</c:if>
+						<li class="dropdown-divider"></li>
+						<li><a href="javascript:void(0);" class="downList" data-target="tabGrid" ><span class="glyphicon glyphicon-th-list"></span>&nbsp;<s:message code="common.msg.download"/> <s:message code="mail.view.list"/></a></li>
+					</ul>
 				</div>
 			</div>
-			<div id="filelist"></div>
-		</div>
-		<div class="messageCon" id="bodyDiv">
-			<div class="top grayBg03">
-					<h4>본문내용</h4>
-					<div class="btn btnform">
-						<button class="btn05 font_size" id="large_txt"><img src="<c:url value="/img/subBtn_add.png"/>"  alt="<s:message code="bodyview.msg.zoomIn"/>"><s:message code="bodyview.msg.zoomIn"/></button>
-						<button class="btn05 font_size" id="small_txt"><img src="<c:url value="/img/subBtn_add02.png"/>" alt="<s:message code="bodyview.msg.zoomOut"/>"><s:message code="bodyview.msg.zoomOut"/></button>
-						<button class="btn05" id="copyBodyBtn"><img src="<c:url value="/img/subBtn_copy.png"/>" alt="<s:message code="bodyview.body.contentCopy"/>"><s:message code="bodyview.body.contentCopy"/></button>
-						<select class="btn05" name="bodyEncoding" id="bodyEncoding">
-							<option value=""><s:message code="common.msg.auto"/></option>
-							<option value="utf-8">UTF-8</option>
-							<option value="euc-kr">EUC-KR</option>
-						</select>
+			<div class="messageCon"> <%--     condition.receive ,  condition.send--%>
+					<%--  수신 / 발신 정보 표시 --%>
+					<div id="recvOrsend" class="top ">
+						<span class="sub_flag_send" id="sub_flag_send" style="display: none"><s:message code="condition.send"/> </span>
+						<span class="sub_flag_reception" id="sub_flag_reception" style="display: none"><s:message code="condition.receive"/> </span>
+						<h4 class="red02" id="subject"></h4>
+						<span class="loca" id="svc"></span>
 					</div>
-<%--					<div class="conBox" id="bodyStrDiv">--%>
-<%--						<span style="font-weight: bold;" id="bodyStr"></span>--%>
-<%--					</div>--%>
-			</div>
-			<div class="conBox" id="emassBody"/>
-		</div>
 
-	<div id="imgPreviewDiv"></div>
-	<div id="infoDiv" style="overflow-y:auto;display:none;">
-		<div id="infoDivTextHeader">
-			<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
-			<s:message code="common.msg.textdecode"/>(unescape)
-		</div>
-		<div id="infoDivText">
+					<div class="conBox">
+							<div id="userTr">
+								<h5 id="userid"></h5>
+								<span class="loca" id="ctimeTd"></span>
+							</div>
+						<table class="subTable mat8">
+							<tr>
+								<th><s:message code="bodyview.srcIp"/></th>
+								<td class="topline" id="srcipTd"></td>
+								<th><s:message code="bodyview.dstIp"/></th>
+								<td class="topline" id="dstipTd"></td>
+							</tr>
+							<tr>
+								<th><s:message code="bodyview.body.size"/></th>
+								<td id="bodySizeTd"></td>
+								<th><s:message code="bodyview.userId"/></th>
+								<td id="userIdTd"></td>
+							</tr>
+							<tr>
+								<th><s:message code="bodyview.hostPathInfo"/></th>
+								<td colspan="3" class="mal8 tableLink txt_left" id="hostDiv"></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<div id="fileDiv" class="messageCon">
+					<div class="top grayBg03">
+						<h4><s:message code="bodyview.file.info"/></h4><h4 id="fileCntArea"></h4> <%--뒤에 파일 갯수 표기--%>
+						<div class="btn btnform">
+							<button class="btn05" id="allDownload"><img src="<c:url value="/img/subBtn_save.png"/>"  alt="확대"> <s:message code="bodyview.file.allDownload"/></button>
+						</div>
+					</div>
+					<ul id="filelist"></ul>
+				</div>
+				<div class="messageCon" id="bodyDiv">
+					<div class="top grayBg03">
+							<h4>본문내용</h4>
+							<div class="btn btnform">
+								<button class="btn05 font_size" id="large_txt"><img src="<c:url value="/img/subBtn_add.png"/>"  alt="<s:message code="bodyview.msg.zoomIn"/>"><s:message code="bodyview.msg.zoomIn"/></button>
+								<button class="btn05 font_size" id="small_txt"><img src="<c:url value="/img/subBtn_add02.png"/>" alt="<s:message code="bodyview.msg.zoomOut"/>"><s:message code="bodyview.msg.zoomOut"/></button>
+								<button class="btn05" id="copyBodyBtn"><img src="<c:url value="/img/subBtn_copy.png"/>" alt="<s:message code="bodyview.body.contentCopy"/>"><s:message code="bodyview.body.contentCopy"/></button>
+								<select class="btn05" name="bodyEncoding" id="bodyEncoding">
+									<option value=""><s:message code="common.msg.auto"/></option>
+									<option value="utf-8">UTF-8</option>
+									<option value="euc-kr">EUC-KR</option>
+								</select>
+							</div>
+							<div class="conBox" id="bodyStrDiv">
+								<span><s:message code="condition.body"/> <s:message code="bodyview.find.keyword"/> : </span>
+								<span style="font-weight: bold;" id="bodyStr"></span>
+							</div>
+					</div>
+					<div class="conBox" id="emassBody"/>
+				</div>
+			<div id="imgPreviewDiv"></div>
+			<div id="infoDiv" style="overflow-y:auto;display:none;">
+				<div id="infoDivTextHeader">
+					<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+					<s:message code="common.msg.textdecode"/>(unescape)
+				</div>
+				<div id="infoDivText">
+				</div>
+			</div>
+			<a href="#0" class="back-to-top cd-top" style="z-index: 99999999"><span class="[ fa fa-chevron-up ]"></span> <span class="[ ]">Back to the Top</span></a>
+			<iframe id="AttachDown" src="about:blank;" height="0" width="0" style="display: none;" ></iframe>
+			<form id="mailForwardForm" method="post">
+				<input type="hidden" name="msgId" id="msgIdStr">
+				<input type="hidden" name="xRootMtr" id="xRootMtrStr">
+				<input type="hidden" name="userCharset" id="userCharsetStr">
+				<input type="hidden" name="mailForwardStr" id="mailForwardStr">
+			</form>
+			<form name="imageForm" method="post" target="">
+				<input type="hidden" name="imgUrl">
+				<input type="hidden" name="fileName">
+			</form>
 		</div>
 	</div>
-	<iframe id="AttachDown" src="about:blank;" height="0" width="0" style="display: none;" ></iframe>
-	<form id="mailForwardForm" method="post">
-		<input type="hidden" name="msgId" id="msgIdStr">
-		<input type="hidden" name="xRootMtr" id="xRootMtrStr">
-		<input type="hidden" name="userCharset" id="userCharsetStr">
-		<input type="hidden" name="mailForwardStr" id="mailForwardStr">
-	</form>
-	<form name="imageForm" method="post" target="">
-		<input type="hidden" name="imgUrl">
-		<input type="hidden" name="fileName">
-	</form>
-</body>
+<%-- 메시지 상세 끝 --%>
+
+
+	<div class="boxArea" id="notfoundmsgDiv" style="display: none;">
+		<div class="content_body">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="panel panel-default" style="height:180px;">
+						<div class="panel-heading" style="font-weight: bold;height:40px;">
+							<div class="pull-left" style="cursor:default;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;word-wrap:normal">
+								<s:message code="common.msg.information"/>
+							</div>
+						</div>
+						<div class="panel-body css-body">
+							<div style="font-size: 20px;font-weight: bold;padding-top:20px;">
+								<img src="<c:url value="/img/warn.png"/>" width="60"> <s:message code="bodyview.message.notfoundmsg"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="featureModal"  style="z-index: 1060;">	<!-- modal -->
+		<div class="modal-dialog" role="document">
+			<div class="modal-content" style="width: 920px; height:155px;">
+				<form method="post" id="mlResultPopForm" onsubmit="return false">
+					<div class="modal-header">
+						<span>판단 근거</span>
+						<table class="table table-bordered">
+							<colgroup>
+								<col style="width: 180px;"/>
+							</colgroup>
+							<tr>
+								<td scope="row"><label class="form-check-label" id="featuresValue"></label></td>
+							</tr>
+						</table>
+					</div>
+
+				</form>
+				<div class="modal-footer" style = "height: 10px;">
+					<!-- <button type="button" class="btn btn-primary feedbackSave">피드백 저장</button>  -->
+					<button type="button" id = "closeModal" data-dismiss="modal">닫기</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="boxArea" id="notfoundconsentDiv" style="display: none;">
+		<div class="content_body">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="panel panel-default" style="height:180px;">
+						<div class="panel-heading" style="font-weight: bold;height:40px;">
+							<div class="pull-left" style="cursor:default;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;word-wrap:normal">
+								<s:message code="common.msg.information"/>
+							</div>
+						</div>
+						<div class="panel-body css-body">
+							<div style="font-size: 20px;font-weight: bold;padding-top:20px;">
+								<img src="<c:url value="/img/warn.png"/>" width="60"> <s:message code="bodyview.message.notfoundconsent"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="msg_body_container" id="notSelectDiv" style="display:none;">
+		<div class="boxArea" style="overflow-x:hidden;overflow-y: auto;">
+			<div id="emptyDiv" class="empty-dashboard-message">
+				<h1 style="text-align:center;font-size:100px;color:#253f56;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></h1>
+				<h2><s:message code="bodyview.select.message"/></h2>
+				<p><s:message code="bodyview.message.info"/></p>
+			</div>
+		</div>
+	</div>
+	<%-- userInfoDiv --%>
+	<div id="userInfoDiv" style="display:none;">
+		<div>
+			<div style="float:left;">
+				<img src="<c:url value="/img/person.png"/>" width="64">
+			</div>
+			<div style="float:left;width:calc(100% - 65px);height:64px;padding-top:12px;padding-left:10px;">
+				<div class="ellipsis" id="userNamePop" style="font-weight: bold;"></div>
+				<div class="ellipsis" id="userEmailPop" style="word-break: break-word; font-size:11px;"></div>
+			</div>
+			<div style="clear:both;width:100%;padding:10px 10px 10px 10px;">
+				<div>
+					<table style="table-layout: fixed;width:100%;">
+						<colgroup>
+							<col width="70px">
+							<col width="*">
+						</colgroup>
+						<tr>
+							<th><s:message code="common.org.co"/></th>
+							<td><div class="ellipsis" id="userCoNmPop"></div></td>
+						</tr>
+						<tr>
+							<th><s:message code="common.org.busi"/></th>
+							<td><div class="ellipsis" id="userBusiNmPop"></div></td>
+						</tr>
+						<tr>
+							<th><s:message code="common.org.general"/></th>
+							<td><div class="ellipsis" id="userSuborgNmPop"></div></td>
+						</tr>
+						<tr>
+							<th><s:message code="common.org.dept"/></th>
+							<td><div class="ellipsis" id="userDeptNmPop"></div></td>
+						</tr>
+						<tr>
+							<th><s:message code="common.org.jikgub"/></th>
+							<td><div class="ellipsis" id="userJikgubNmPop"></div></td>
+						</tr>
+						<tr>
+							<th>IP</th>
+							<td><div id="userIpPop"></div></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
-
-
-<%--<div class="inner_message">--%>
-<%--	<div class="messageBtn">--%>
-<%--		<div class="btnform">--%>
-<%--			<button class="btn01"><img src="<c:url value="/img/subBtn_arrow_left_12.png"/>" alt=""></button>--%>
-<%--			<button class="btn01"><img src="<c:url value="/img/subBtn_arrow_right_12.png"/>" alt=""></button>--%>
-<%--			<button class="btn05"><img src="<c:url value="/img/subBtn_save.png"/>" alt=""></button>--%>
-<%--			<button class="btn05"><img src="<c:url value="/img/subBtn_mail.png"/>" alt=""></button>--%>
-<%--			<button class="btn05"><img src="<c:url value="/img/subBtn_settings.png"/>" alt=""></button>--%>
-<%--			<button class="btn05"><img src="<c:url value="/img/subBtn_link.png"/>" alt=""></button>--%>
-<%--		</div>--%>
-<%--		<div class="btnform txt_right">--%>
-<%--			&lt;%&ndash; 메시지 보관 -> 사용자 정의 폴더&ndash;%&gt;--%>
-<%--			<button class="btn05"><img src="<c:url value="/img/subBtn_notification.png"/>" alt=""></button>--%>
-<%--			&lt;%&ndash;내보내기 list 조합 &ndash;%&gt;--%>
-<%--			&lt;%&ndash; 목록,본문,첨부파일,목록+본문,목록+본문+첨부파일,목록 인쇄,다운로드 내역보기 &ndash;%&gt;--%>
-<%--			<select id="" name="">--%>
-<%--				<option value=""></option>--%>
-<%--			</select>--%>
-<%--		</div>--%>
-<%--	</div>--%>
-<%--	<div class="messageCon">--%>
-<%--		&lt;%&ndash;  수신 &ndash;%&gt;--%>
-<%--		<div class="top blueBg">--%>
-<%--			<span class="sub_flag_send"><s:message code="condition.send"/></span>--%>
-<%--			<h4 class="blue02" id="subject"></h4>  &lt;%&ndash; subject &ndash;%&gt;--%>
-<%--			<span class="loca" id="svc"></span>--%>
-<%--		</div>--%>
-<%--		&lt;%&ndash; 발신&ndash;%&gt;--%>
-<%--		&lt;%&ndash;		<div class="top redBg">&ndash;%&gt;--%>
-<%--		&lt;%&ndash;			<span class="sub_flag_reception"><s:message code="condition.receive"/></span>&ndash;%&gt;--%>
-<%--		&lt;%&ndash;			<h4 class="red" id="subject"></h4>&ndash;%&gt;--%>
-<%--		&lt;%&ndash;			<span class="loca" id="svc" >메신저 > 네이버밴드채팅</span>&ndash;%&gt;--%>
-<%--		&lt;%&ndash;		</div>&ndash;%&gt;--%>
-
-<%--		&lt;%&ndash;			&ndash;%&gt;--%>
-<%--		&lt;%&ndash;<s:message code="message.message.notfound.attach"/> &ndash;%&gt;--%>
-<%--		&lt;%&ndash;--%>
-<%--        condition.receive=수신--%>
-<%--condition.send=발신--%>
-
-<%--        &ndash;%&gt;--%>
-
-<%--		<div class="conBox">--%>
-<%--			<p>--%>
-<%--			<h5 id="useInfo"></h5>--%>
-<%--			<span class="loca" id="ctime"></span>--%>
-<%--			</p>--%>
-<%--			<table class="subTable mat8">--%>
-<%--				<tr>--%>
-<%--					<th>출발지 IP</th>--%>
-<%--					<td class="topline" id="srcIp"></td>--%>
-<%--					<th>목적지 IP</th>--%>
-<%--					<td class="topline" id="dstIp"></td>--%>
-<%--				</tr>--%>
-<%--				<tr>--%>
-<%--					<th>크기</th>--%>
-<%--					<td id="attach_size_str"></td>--%>
-<%--					<th>접속계정</th>--%>
-<%--					<td id="user_userId"></td>--%>
-<%--				</tr>--%>
-<%--				<tr>--%>
-<%--					<th>HOST/Path</th>--%>
-<%--					<td colspan="3" class="mal8 tableLink txt_left" id="http_path"></td>--%>
-<%--				</tr>--%>
-<%--			</table>--%>
-<%--		</div>--%>
-<%--	</div>--%>
-<%--	<div class="messageCon">--%>
-<%--		<div class="top grayBg03">--%>
-<%--			<h4>><s:message code="DETAILE_MESSAGE.FILE.INFO"/>  </h4> &lt;%&ndash;뒤에 파일 갯수 표기&ndash;%&gt;--%>
-<%--			<div class="btn btnform">--%>
-<%--				<button class="btn05"><img src="<c:url value="/img/subBtn_save.png"/>"  alt="확대"> <s:message code="DETAILE_MESSAGE.FILE.ALL_DOWNLOAD"/></button>--%>
-<%--			</div>--%>
-<%--		</div>--%>
-<%--		<div class="filelist">--%>
-<%--			<ul> </ul>--%>
-<%--		</div>--%>
-<%--	</div>--%>
-<%--	<div class="messageCon">--%>
-<%--		<div class="top grayBg03">--%>
-<%--			<h4>본문내용</h4>--%>
-<%--			<div class="btn btnform">--%>
-<%--				<button class="btn05"><img src="<c:url value="/img/subBtn_add.png"/>"  alt="<s:message code="common.msg.zoom.in"/>"><s:message code="common.msg.zoom.in"/></button>--%>
-<%--				<button class="btn05"><img src="<c:url value="/img/subBtn_add02.png"/>" alt="<s:message code="common.msg.zoom.out"/>"><s:message code="common.msg.zoom.out"/></button>--%>
-<%--				<button class="btn05"><img src="<c:url value="/img/subBtn_copy.png"/>" alt="<s:message code="message.msg.copy.body"/>"><s:message code="message.msg.copy.body"/></button>--%>
-<%--				&lt;%&ndash;				<select id="" name="">--%>
-<%--                                    <option value="">언어셋</option>--%>
-<%--                                    <option value="">옵션2</option>--%>
-<%--                                    <option value="">옵션3</option>--%>
-<%--                                </select>&ndash;%&gt;--%>
-<%--			</div>--%>
-<%--		</div>--%>
-<%--		<div class="conBox">본문</div>--%>
-<%--	</div>--%>
-
-<%--</div>--%>
-
-<%--<form id="mailForwardForm" method="post">--%>
-<%--	<input type="hidden" name="msgId" id="msgIdStr">--%>
-<%--	<input type="hidden" name="xRootMtr" id="xRootMtrStr">--%>
-<%--	<input type="hidden" name="userCharset" id="userCharsetStr">--%>
-<%--	<input type="hidden" name="mailForwardStr" id="mailForwardStr">--%>
-<%--</form>--%>
-
-<%--<form name="imageForm" method="post" target="">--%>
-<%--	<input type="hidden" name="imgUrl">--%>
-<%--	<input type="hidden" name="fileName">--%>
-<%--</form>--%>
-
-
-</body>
 <script type="text/javascript">
 	var op_attach_save = '<%=op_attach_save%>';
 	var op_body_save = '<%=op_body_save%>';

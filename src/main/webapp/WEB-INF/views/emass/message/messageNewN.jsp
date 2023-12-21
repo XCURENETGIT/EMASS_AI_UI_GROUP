@@ -2,6 +2,7 @@
 <%@page import="com.xcurenet.audit.service.Operation"%>
 <%@ page import="com.xcurenet.common.util.Common" %>
 <%@ page import="com.xcurenet.common.util.config.Config" %>
+<%@ page import="com.xcurenet.common.util.SpringContextUtil" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -27,6 +28,11 @@
     JSONObject param = Common.getParam(request);
     String filterSeq = Common.nvl(param.get("filterSeq"));
     String conditionParam = Common.nvl(param.get("conditionParam"));
+
+    String uri = new org.springframework.web.util.UrlPathHelper().getOriginatingRequestUri(request);
+    MenuService menuService = SpringContextUtil.getBean(MenuService.class);
+    String menuList = menuService.getMenuList(request);
+
 
 %>
 <!DOCTYPE html>
@@ -335,6 +341,8 @@
         }
     </style>
     <script type="text/javascript">
+        let menuList = <%=menuList%>;
+        let mainUri = "<%=uri%>";
 
         var op_attach_save = '<%=op_attach_save%>';
         var op_body_save = '<%=op_body_save%>';
@@ -499,7 +507,6 @@
             }
 
 
-
             ui.onBody('msgBody', 0, 0);
             con.init();
             initFilterSetup();
@@ -508,13 +515,8 @@
             getFilterSearchBox();
 
             if( infoFeedbackConf == 'true' && infoFeedbackYn == 'Y' ) {
-                if(infoHynixConf == 'true'){
-                    $('#infoFeedbackDiv, #feedbackBtn, #sctDiv').hide();
-                    $('#secretDocuDiv').show();
-                }else{
-                    $('#infoFeedbackDiv, #feedbackBtn, #sctDiv').show();
-                    $('#secretDocuDiv').hide();
-                }
+                $('#infoFeedbackDiv, #feedbackBtn, #sctDiv').show();
+                $('#secretDocuDiv').hide();
             }
             else $('#infoFeedbackDiv, #feedbackBtn, #sctDiv').hide();
 
@@ -792,7 +794,7 @@
                         center__spacing_open:3,
                         east__paneSelector: ".inner-east",
                         east__maskContents:  true,
-                        east__size: 900,
+                        east__size: 640,
                         east__spacing_open:3,
                         north__spacing_open:0
                     },
@@ -2151,8 +2153,6 @@
         <div id="container">
             <tiles:insertAttribute name="lnb" ignore="true"/>
             <div id="contentArea">
-                <%-- header--%>
-                <tiles:insertAttribute name="header" ignore="true"/>
                 <%-- content --%>
                         <div class="msg_container">
                             <tiles:insertAttribute name="left" ignore="true"/>
@@ -2202,8 +2202,8 @@
                                         <div class="searchButtonArea">
                                             <button class="search_btn" id="searchBtn"><span><s:message code="common.search1"/></span></button>
                                         </div>
-                                        <div class="checkbox " style="width:75px;position: absolute;top: 70px; left:15px;font-size:12px;">
-                                            <label><input type="checkbox" name="researchCheckbox" id="researchCheckbox" disabled><span class="fa fa-check"></span><s:message code="condition.research1"/></label>
+                                        <div class="checkbox c-checkbox" style="width:75px;position: absolute;top: 70px; left:35px;font-size:12px;">
+                                            <label><input type="checkbox" name="researchCheckbox" id="researchCheckbox" disabled style="display: none;"><span class="fa fa-check"></span><s:message code="condition.research1"/></label>
                                         </div>
 
                                         <div class="condition_save">
@@ -2220,7 +2220,7 @@
                                             <div class="condition_option" style="padding-top:15px;">
                                                 <div class="condition_item">
                                                     <div class="condition_title" style="float: left;"><i class="fa fa-caret-right"></i> <s:message code="condition.search_str"/>
-                                                        <img style="width: 16px;margin-bottom: 2px;" src="<c:url value="/img/icon/question.png"/>" class="areaBtn" id="searchHelpBtn">
+                                                        <img style="width: 16px;" src="<c:url value="/img/icon/question.png"/>" class="areaBtn" id="searchHelpBtn">
                                                     </div>
                                                     <div style="float: right; padding-right: 22px;">
                                                         <a href="javascript:;" class="showSearchKeywordBtn"><i class="fa fa-cog"></i> <s:message code="searchKeyword.management"/></a>
@@ -2681,10 +2681,11 @@
                                         <input type="hidden" readonly="readonly" id="consentShortName">
                                     </div>
                                     <%} %>
-                                    <%-- 보기 설정 --%>
-                                 <div class="viewSetup" style="position: absolute;top:40px;right:10px;z-index: 9;">
-                                        <div style="display: inline-block; padding-left:10px;vertical-align: bottom;">
-                                            <a href="javascript:;" style="padding-right:10px; color:#383838; cursor: pointer; font-size: 12px;float: right; display: none;" id="feedbackBtn"><s:message code="condition.feedback"/> <s:message code="common.msg.setting"/></a>
+                                     <%-- 피드백 설정 --%>
+                                     <%-- 보기 설정 --%>
+                                     <div class="viewSetup" style="position: absolute;top:32px;right:1px;z-index: 9;">
+                                         <a href="javascript:;" style="padding-right:10px; color:#383838; cursor: pointer; font-size: 12px;float: right; display: none;" id="feedbackBtn"><s:message code="condition.feedback"/> <s:message code="common.msg.setting"/></a>
+                                         <div style="display: inline-block; padding-left:10px;vertical-align: bottom;">
                                             <ul id="feedbackSetting" style="display: none; z-index: 991; padding: 5px 0px;">
                                                 <li><a href="javascript:void(0);" onclick="setFeedback(0);" style="padding-left: 20px;"><span class="feedbackCorrect" style="display: inline-block; position: relative; top: 0px;"></span>&nbsp;<s:message code="condition.info.feedback0"/></a></li>
                                                 <li><a href="javascript:void(0);" onclick="setFeedback(1);" style="padding-left: 20px;"><span class="feedbackInCorrect" style="display: inline-block; position: relative; top: 0px;"></span>&nbsp;<s:message code="condition.info.class1"/></a></li>
@@ -2695,9 +2696,9 @@
                                             </ul>
                                             <div style="position: fixed; top: 0px; bottom: 0px; left: 0px; right: 0px; z-index: 990; display: none; width: 100%; height: 100%;" id="overlay"></div>
                                         </div>
-                                        <a href="javascript:;" style="color:#383838;font-size: 12px;" class="dropdown-toggle" data-toggle="dropdown" id="config_toggle">
+                                        <button class="btn05 dropdown-toggle" data-toggle="dropdown" id="config_toggle">
                                             <s:message code="condition.view.setup"/><span class="caret"></span>
-                                        </a>
+                                        </button>
                                         <div class="dropdown-menu dropdown-menu-right"  style="min-width:180px;font-size:12px; height: 380px; padding:0;" id="additionalBtn">
                                             <div class="listRow" style="padding: 0;">
                                                 <div class="listRowLeft" style="text-align:center; font-weight: bold; background-color: #eaeaea; width: 120px; height: 34px;"><s:message code="condition.view.stype"/></div>
@@ -2785,7 +2786,7 @@
                                                             <span class="resultCntSpan" style="padding-right:0px;"></span>
                                                         </li>
                                                         <li class="tab_li" data-index="">
-                                                            <div class="tab_txt_top addTabDiv" style="padding:0 10px;"><span class="glyphicon glyphicon-plus" style="cursor:pointer;color:#494949;"></span></div>
+                                                            <div class="tab_txt_top addTabDiv" style="padding:0 10px;"><span class="glyphicon glyphicon-plus" style="cursor:pointer;color:#494949;top:7px;"></span></div>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -2803,16 +2804,15 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="searchHelpDiv" style="display: block;position: absolute;top: 130px;right: 350px;display: none;text-align: left;z-index: 1040;border: 1px solid #555;background-color: #f4f4f4;width: 500px;height: 420px;font-size:12px;">
-                            <div class="searchHelpHeader" style="height:30px;background-color:#253f56;color:#fff;padding-left:10px;line-height:30px;font-weight: bold;cursor:move;">
-                                <div style="float:left;width:100px;">
-                                    <i class="glyphicon glyphicon-question-sign"></i>&nbsp;<s:message code="help.msg.title"/>
-                                </div>
+
+                        <div id="searchHelpDiv" style="display: block;position: absolute;top: 130px;right: 350px;display: none;text-align: left;z-index: 1040;border: 1px solid #555;background-color: white;width: 500px;height: 420px;font-size:12px;">
+                            <div class="modalHead">
+                                <i class="glyphicon glyphicon-question-sign"></i>&nbsp;<s:message code="help.msg.title"/>
                                 <div style="float:right;padding-right:8px;" class="searchHelpDivCloseArea">
                                     <span class="glyphicon glyphicon-remove" style="cursor:pointer;" id="searchHelpDivCloseBtn"></span>
                                 </div>
                             </div>
-                            <div style="width:100%;padding:10px 10px 10px 10px;" class="searchHelpDivBody">
+                            <div class="modalCon">
                                 <div>
                                     <div style="height:25px;">
                                         <h5 style="font-size:13px;">■ <span style="color:#FF0000;"><s:message code="help.msg.default"/></span></h5>
@@ -2850,6 +2850,8 @@
                                 </div>
                             </div>
                         </div>
+
+s
                         <div class="modal fade" id="exportDialog" tabindex="-1" role="dialog" aria-labelledby="exportDialog">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
@@ -2975,7 +2977,7 @@
                                 <li class="tab_li"><div class="tab_close"></div><div class="tab_txt_top addTabDiv" style="float:left;"></div><span class="resultCntSpan" style="padding-right:15px;"></span></li>
                             </ul>
                             <ul id="addTab">
-                                <li class="tab_li addTabLi" data-index=""><div class="tab_txt_top addTabDiv" style="padding:0 10px;"><span class="fa fa-spinner fa-spin" style="cursor:pointer;color:#494949;"></span></div></li>
+                                <li class="tab_li addTabLi" data-index=""><div class="tab_txt_top addTabDiv" style="padding:0 10px;"><span class="fa fa-spinner fa-spin" style="cursor:pointer;color:#494949;top:7px;"></span></div></li>
                             </ul>
                         </div>
             </div> <!--//ContentArea-->

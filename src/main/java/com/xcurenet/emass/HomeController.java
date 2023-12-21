@@ -360,7 +360,7 @@ public class HomeController {
 	@RequestMapping(value = "/ems/messageFolder.do")
 	@Description("EDC 메시지 검색 페이지(전체)")
 	public String messageFolder(Locale locale, Model model) {
-		return "/emass/message/messageFolder";
+		return "/emass/message/messageFolder.popup";
 	}
 
 	@RequestMapping(value = "/ems/msg/messenger.do", method = RequestMethod.GET)

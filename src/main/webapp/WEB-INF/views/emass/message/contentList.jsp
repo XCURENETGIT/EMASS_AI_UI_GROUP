@@ -200,6 +200,7 @@
 // 	getOverLapUse();
 		initServiceTab();
 		setTimeout(function(){parent.ui.off();}, 1000)
+
 		if(gridInit == 'true') initGrid();
 
 		parent.setAddTabFlag(false);
@@ -291,23 +292,25 @@
 			overlap : overlapUse,
 			success : function(data, total) {
 				searchedFlag = true;
+				if(data.emass.length > 0) {
+					grid.appendData(data.emass);
+					if (grid.loadingPage == 0) grid.Select(-1, -1);
 
-				grid.appendData(data.emass);
-				if ( grid.loadingPage == 0 ) grid.Select(-1,-1);
+					parent.setResultCnt(tabId, total.comma());
+					parent.changeTabName(tabId, '', researchCnt);
+					setServiceGroupCntInfo(data.facet, total);
+					$('#searchTime').val(data.searchTime);
 
-				parent.setResultCnt(tabId, total.comma());
-				parent.changeTabName(tabId, '', researchCnt);
-				setServiceGroupCntInfo(data.facet, total);
-				$('#searchTime').val(data.searchTime);
-
-				var query = filterValData.conditions[0].query;
-				/* console.log("getList filterValData query1 : " + query); */
-				if( query != '' && query != undefined){
-					parent.$('#researchCheckbox').prop('disabled', true);
-				}else{
-					parent.$('#researchCheckbox').prop('disabled', false);
+					var query = filterValData.conditions[0].query;
+					if (query != '' && query != undefined) {
+						parent.$('#researchCheckbox').prop('disabled', true);
+					} else {
+						parent.$('#researchCheckbox').prop('disabled', false);
+					}
+				}else {
+					//alert('<s:message code="common.msg.noresult"/>');
+					searchFlag = false;
 				}
-
 
 				//parent.setValueById('solrQueryText', data.excuteQuery);
 
