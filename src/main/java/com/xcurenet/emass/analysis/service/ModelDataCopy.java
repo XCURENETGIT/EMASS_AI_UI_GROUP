@@ -20,9 +20,9 @@ public class ModelDataCopy {
 				if(methodNameCheck(originalMethod.getName(), FIRST_GET))
 				{
 					Object result = originalMethod.invoke(original, new Object[]{});
-					
+
 					Method method = getCopySetMethod(copyClass, originalMethod.getName());
-					
+
 					if(method != null)
 						method.invoke(copyObject, new Object[]{result});
 				}
@@ -37,7 +37,7 @@ public class ModelDataCopy {
 			//log.error("Model Copy InvocationTargetException");
 			e.printStackTrace();
 		}
-		
+
 		return copyObject;
 	}
 
@@ -73,7 +73,7 @@ public class ModelDataCopy {
 
 		return list;
 	}
-	
+
 	private static boolean methodNameCheck(String originalMethodName, String firstName)
 	{
 		if(originalMethodName.toUpperCase().indexOf(firstName) == 0)
@@ -81,7 +81,7 @@ public class ModelDataCopy {
 		else
 			return false;
 	}
-	
+
 	private static Method getCopySetMethod(Class<?> classObject, String methodName)
 	{
 		methodName = methodName.substring(3);
@@ -90,7 +90,7 @@ public class ModelDataCopy {
 			if(method.getName().toUpperCase().equals(FIRST_SET+methodName.toUpperCase()))
 				return method;
 		}
-		
+
 		return null;
 	}
 
@@ -105,7 +105,7 @@ public class ModelDataCopy {
 					return method;
 			}
 		}
-		
+
 		return null;
 	}
 }

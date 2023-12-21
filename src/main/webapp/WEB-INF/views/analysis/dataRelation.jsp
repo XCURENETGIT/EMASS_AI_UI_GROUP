@@ -2,10 +2,6 @@
 <%@ page import="java.util.List" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-<title></title>
 
 <!-- process mapp -->
 <link rel="stylesheet" href="<c:url value="/css/processmap.css"/>"/>
@@ -153,9 +149,7 @@ function eventEnterSearch(event) {
 }
 
 </script>
-</head>
-<body class="mini-navbar">
-	<div class="container"> 
+	<div class="container">
 		<div class="boxArea">
 			<div class="content_body">
 				<form id="frm">
@@ -638,5 +632,3 @@ function eventEnterSearch(event) {
 		}
 
 	</script>
-</body>
-</html>

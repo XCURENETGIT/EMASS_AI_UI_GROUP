@@ -10,7 +10,7 @@ import org.joda.time.format.DateTimeFormatter;
 import lombok.Data;
 
 public @Data class UsageChartSchedulerVO implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
 
 	private String ctime;
@@ -51,7 +51,7 @@ public @Data class UsageChartSchedulerVO implements Serializable {
 
 	public int getDateWeekOfMonth() {
 		if(dateWeekOfMonth == 0) {
-	        Calendar calendar = Calendar.getInstance();
+			Calendar calendar = Calendar.getInstance();
 			DateTimeFormatter yyyyMMdd = DateTimeFormat.forPattern("yyyyMMdd");
 			DateTime date = DateTime.parse(ctime.substring(0, 8), yyyyMMdd);
 			calendar.setTime(date.toDate());
@@ -62,7 +62,7 @@ public @Data class UsageChartSchedulerVO implements Serializable {
 	}
 	public int getDateDayOfWeek() {
 		if(dateDayOfWeek == 0) {
-	        Calendar calendar = Calendar.getInstance();
+			Calendar calendar = Calendar.getInstance();
 			DateTimeFormatter yyyyMMdd = DateTimeFormat.forPattern("yyyyMMdd");
 			DateTime date = DateTime.parse(ctime.substring(0, 8), yyyyMMdd);
 			calendar.setTime(date.toDate());
