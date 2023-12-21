@@ -678,6 +678,7 @@ public class SolrCreateQuery {
 	 * 관심 사용자 그룹 쿼리
 	 */
 	public SolrCreateQuery setInterestUserGroup(String interGroup, String interGroup_not) {
+		if (Common.isEmpty(interGroup)) return this;
 		adminUserGroupService = SpringContextUtil.getBean(AdminUserGroupService.class);
 		List<AdminUserGroupVO> users = adminUserGroupService.getAdminUserGroupSimpleList(interGroup);
 		if (users.isEmpty()) {
