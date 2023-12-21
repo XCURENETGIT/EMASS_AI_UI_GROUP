@@ -39,6 +39,7 @@ let menuList = <%=menuList%>;
 let mainUri = "<%=uri%>";
 </script>
 <c:set var="menuId" value="<%=menuId%>"/>
+<%if(Common.isEquals(headerYn, "Y")){%>
 <div class="subTit">
 	<h2>
 		<%=menuName%>
@@ -47,3 +48,4 @@ let mainUri = "<%=uri%>";
 	<p><s:message code="${menuId}.msg.header"/></p>
 	<div class="page"><a href="#">홈 </a> / <a href="#" class="menu1">1뎁스 메뉴</a> / <a href="#" class="focus"><%=menuName%></a></div>
 </div>
+<%} %>
