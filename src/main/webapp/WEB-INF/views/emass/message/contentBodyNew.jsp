@@ -696,30 +696,27 @@
 					</div>
 					<ul id="filelist"></ul>
 				</div>
-				<div class="row" id="patternDiv">
-					<div class="col-lg-12">
-						<div class="panel panel-default" id="">
-							<div class="panel-heading body_toggle patternFold">
-								<i class="fa fa-superpowers fa-fw"></i> <s:message code="bodyview.info.pattern"/><span id="patternCntArea"></span>
-								<div class="pull-right">
-									<span></span>
-								</div>
+				<div class="messageCon" id="patternDiv">
+					<div class="panel panel-default" id="">
+						<div class="panel-heading body_toggle patternFold">
+							<i class="fa fa-superpowers fa-fw"></i> <s:message code="bodyview.info.pattern"/><span id="patternCntArea"></span>
+							<div class="pull-right">
+								<span></span>
 							</div>
-							<div class="panel-body css-body" style="display:none;">
-								<div>
-									<table class="table table-bordered" id="patternTable">
-										<tr>
-											<th colspan="2"><s:message code="common.msg.separator"/></th>
-											<th colspan="2"><s:message code="bodyview.info.detect"/></th>
-										</tr>
-									</table>
-								</div>
+						</div>
+						<div class="panel-body css-body" style="display:none;">
+							<div>
+								<table class="table table-bordered" id="patternTable">
+									<tr>
+										<th colspan="2"><s:message code="common.msg.separator"/></th>
+										<th colspan="2"><s:message code="bodyview.info.detect"/></th>
+									</tr>
+								</table>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="row" id="detailPatternDiv" style="display:none;">
-					<div class="col-lg-12">
+				<div class="messageCon" id="detailPatternDiv" style="display:none;">
 						<div class="panel panel-default" id="">
 							<div class="panel-heading">
 								<i class="fa fa-superpowers fa-fw"></i> <s:message code="common.msg.detail.pattern"/>
@@ -730,7 +727,6 @@
 							<div class="panel-body" id="detailArea" style="overflow: auto;padding-top:10px;">
 							</div>
 						</div>
-					</div>
 				</div>
 				<div class="messageCon" id="bodyDiv">
 					<div class="top grayBg03">
