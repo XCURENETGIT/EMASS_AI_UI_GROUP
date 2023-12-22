@@ -38,6 +38,14 @@ public interface DashBoardPreDefineService {
 
 	public List<Map<String, Object>> getTodayTrafficSize() throws Exception;
 
+	public PatternPrivacyVO getTodayPassportData(PatternPrivacyVO vo) throws SolrServerException, IOException;
+
+	public PatternPrivacyVO getTodayDriveData(PatternPrivacyVO vo) throws SolrServerException, IOException;
+	public PatternPrivacyVO TodayForeignerData(PatternPrivacyVO vo) throws SolrServerException, IOException;
+	public PatternPrivacyVO TodaySecurityData(PatternPrivacyVO vo) throws SolrServerException, IOException;
+	public PatternPrivacyVO TodayCardNumberData(PatternPrivacyVO vo) throws SolrServerException, IOException;
+	public PatternPrivacyVO getExtensionModulation(PatternPrivacyVO vo) throws SolrServerException, IOException;
+
 
 	// public DashboardVO getDashboard(final DashboardVO dashboardVO) throws
 	// IOException;

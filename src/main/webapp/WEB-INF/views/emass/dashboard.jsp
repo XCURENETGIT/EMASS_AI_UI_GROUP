@@ -15,6 +15,34 @@
 </style>
 <title>EMASS LTH - Dashboard</title>
 <script type="text/javascript">
+    Highcharts.setOptions({
+        chart: {
+            type: 'column',
+            marginTop : 15,
+            marginBottom : 60,
+            spacingBottom: 0
+        },
+        global : { useUTC : false },
+        gridLineColor: '#fff',
+        colors: ['#80599F', '#656C7C', '#598AD3', '#D35976', '#DDDDDD', '#bb6ecb', '#439851', '#33a0c4', '#7558cb', '#97b420'],
+        lang: {
+            months: [ '<s:message code="common.january"/>', '<s:message code="common.february"/>', '<s:message code="common.march"/>', '<s:message code="common.april"/>', '<s:message code="common.may"/>', '<s:message code="common.june"/>', '<s:message code="common.july"/>', '<s:message code="common.august"/>', '<s:message code="common.september"/>', '<s:message code="common.october"/>', '<s:message code="common.november"/>', '<s:message code="common.december"/>' ],
+            shortMonths : [ '<s:message code="common.january"/>', '<s:message code="common.february"/>', '<s:message code="common.march"/>', '<s:message code="common.april"/>', '<s:message code="common.may"/>', '<s:message code="common.june"/>', '<s:message code="common.july"/>', '<s:message code="common.august"/>', '<s:message code="common.september"/>', '<s:message code="common.october"/>', '<s:message code="common.november"/>', '<s:message code="common.december"/>' ],
+            weekdays : [ '<s:message code="common.sunday"/>', '<s:message code="common.monday"/>', '<s:message code="common.tuesday"/>', '<s:message code="common.wednesday"/>', '<s:message code="common.thursday"/>', '<s:message code="common.friday"/>', '<s:message code="common.saturday"/>' ],
+            contextButtonTitle : '<s:message code="common.msg.char_type"/>',
+            thousandsSep : ','
+        },
+        xAxis: {
+            dateTimeLabelFormats: {
+                day: '<s:message code="dashboard.display.day" arguments="%b,%d" />'
+            }
+        },
+        yAxis: {
+            gridLineColor: '#333',
+            gridLineWidth : 0.1
+        }
+    });
+
     var updateTime = 40000;
     var dashboardGrid;
 
@@ -36,7 +64,7 @@
         if (menuKey) dashboardInit();
         else getDefaultMenuKey();
 
-        getAllTodayPatternPrivacy();
+        // getAllTodayPatternPrivacy();
         getTodayKeywordDetection();
         getTodayRiskBehavior();
         getTodayPatternPrivacy();
@@ -51,7 +79,105 @@
         getTrafficData();
         getTodayTrafficData();
 
+        TodayPassportData();
+        getTodayDriveData();
+        TodayForeignerData();
+        TodaySecurityData();
+	    TodayCardNumberData();
+        getExtensionModulation();
+
+
     });
+
+
+    function TodayPassportData(){
+        ui.get({
+            url: 'getTodayPassportData.xcn',
+            success: function (data, total) {
+                $('#TodayPasswordTotalCnt').html(data.total + "<span>건</span>");
+            },
+            error: function (status, message) {
+            },
+            complete: function () {
+            }
+        });
+    }
+
+    function TodayForeignerData(){
+        ui.get({
+            url: 'TodayForeignerData.xcn',
+            success: function (data, total) {
+                $('#TodayForeignerTotalCnt').html(data.total + "<span>건</span>");
+            },
+            error: function (status, message) {
+            },
+            complete: function () {
+
+            }
+        });
+    }
+
+    function TodaySecurityData(){
+        ui.get({
+            url: 'TodaySecurityData.xcn',
+            success: function (data, total) {
+                $('#TodaySecurityTotalCnt').html(data.total + "<span>건</span>");
+            },
+            error: function (status, message) {
+            },
+            complete: function () {
+
+            }
+        });
+    }
+
+    function TodayCardNumberData(){
+        ui.get({
+            url: 'TodayCardNumberData.xcn',
+            success: function (data, total) {
+                $('#TodayCardNumberTotalCnt').html(data.total + "<span>건</span>");
+            },
+            error: function (status, message) {
+            },
+            complete: function () {
+
+            }
+        });
+    }
+
+
+    function getTodayDriveData(){
+        ui.get({
+            url: 'getTodayDriveData.xcn',
+            success: function (data, total) {
+                $('#TodayDriveTotalCnt').html(data.total + "<span>건</span>");
+            },
+            error: function (status, message) {
+
+            },
+            complete: function () {
+
+            }
+        });
+    }
+
+    function getExtensionModulation(){
+
+        ui.get({
+            url: 'getExtensionModulation.xcn',
+            success: function (data, total) {
+                $('#TodayExtensionModulationTotalCnt').html(data.total + "<span>건</span>");
+            },
+            error: function (status, message) {
+
+            },
+            complete: function () {
+
+            }
+        });
+    }
+
+
 
     function getTodayTrafficData(){
         ui.get({
@@ -120,16 +246,10 @@
         // if ( chartxAxis2 == 'W' ) rotation = 0;
         $('#con01').highcharts({
             chart: {
-                type: 'line',
-                options3d: {
-                    enabled: true,
-                    alpha: 0,
-                    beta: 0,
-                    viewDistance: 15,
-                    depth: 40
-                },
-                marginTop: 25,
-                marginRight: 45
+                type: 'column',
+                marginTop : 5,
+                marginBottom : 28,
+                spacingBottom: 0
             },
             title: {
                 text: null
@@ -160,20 +280,7 @@
             plotOptions: {
             },
             series: [{
-                data : data,
-                dataLabels: {
-                    enabled: true,
-                    color: '#000',
-                    align: 'center',
-                    y: 10, // 10 pixels down from the top
-                    style: {
-                        fontSize: '11px',
-                        fontFamily: 'Gulim, Dotum, Helvetica'
-                    },
-                    formatter: function () {
-                        return convertFileSize(this.point.y);
-                    }
-                }
+                data : data
             }]
         });
     }
@@ -364,8 +471,10 @@
 
 
     function getTodayFileList(data, rowSearchkey) {
+        console.log(data);
         let array = [0, 0, 0, 0, 0, 0];
         let arrayStr = ["~10MB", "~50MB", "~100MB", "~150MB", "~200MB", "250MB~"]
+
 
         // 여기에 쿼리 쓰기
         let targetKey;
@@ -414,7 +523,7 @@
             range: "0,10,50,100,150,200",
             searchStr: '',
             success: function (data, total) {
-                if (rowSearchkey == null) rowSearchkey = "txt";
+                if (rowSearchkey == null) rowSearchkey = "xlsx";
                 getTodayFileList(data, rowSearchkey);
             },
             error: function (status, message) {
@@ -607,21 +716,23 @@
                 }else{
                     str+="<div><ul>";
                     for(let i = 0; i<4; i++){
+                        let fileName = data.fileName[i].slice(0,5)+"...";
                         let filesSize = getFormattedValue("size", data.fileSize[i]);
                         let filesType = getFormattedValue("type", data.fileType[i]);
                         str+="<li>"
                         str+="<span class = 'num'>"+(i+1)+"</span>";
-                        str+="<p class='file blueBg'><span class='filename blue'>"+filesType+"</span><span class='Volume'>"+ filesSize +"</span></p>";
+                        str+="<p class='file blueBg'><span class='filename blue'>"+fileName+"</span><span class='Volume'>"+ filesSize +"</span></p>";
                         str+="</li>"
                     }
                     str+="</ul></div>";
 
                     str+="<div class='list'><ul>";
                     for (let i = 4; i<10; i++){
+                        let fileName = data.fileName[i].slice(0,5)+"...";
                         let filesSize = getFormattedValue("size", data.fileSize[i]);
                         let filesType = getFormattedValue("type", data.fileType[i]);
                         str+="<li><span class='num'>"+(i+1)+"</span>";
-                        str+="<p><span>"+filesType+"</span>"
+                        str+="<p><span>"+fileName+"</span>"
                         str+="<span class='righttext'>"+filesSize+"</span></p></li>"
                     }
                     str+="<ul><div>";
@@ -703,8 +814,8 @@
                     }
                 }
                 $('#todayGroupWareSum').html(todayGroupWareSum + "<span>건</span>");
-
-                printChart(data.facet);
+                if (data.facet.length  == 0) $('#svcDataChart').html("금일 데이터가 존재하지 않습니다");
+                else printChart(data.facet);
 
             },
             error: function (status, message) {
@@ -761,9 +872,9 @@
                 var year = dat[i].date.substring(0, 4);
                 var month = dat[i].date.substring(4, 6);
                 var day = dat[i].date.substring(6, 8);
-
                 var formattedDate = year + '-' + month + '-' + day;
                 items.push(formattedDate);
+
                 items.push(Number(dat[i].bodySize));
                 data.push(items);
                 if (Number(dat[i].bodySize) > max) {
@@ -850,6 +961,7 @@
         var categories = [];
         var logging = [];
         var attach = [];
+        var attachStr = [];
         if( dat.length == 0) {
             $('#loggingChart').html('<s:message code="common.msg.nodata"/>');
             return false;
@@ -858,6 +970,7 @@
                 categories.push(getDateFormatSize(dat[i].date));
                 logging.push(Number(dat[i].logging));
                 attach.push(dat[i].attach == undefined ? 0 : Number(dat[i].attach));
+                // attachStr.push(dat[i].attachStr);
             }
         }
 
@@ -928,8 +1041,10 @@
                     type: 'spline',
                     data: attach,
                     visible : visible,
-                    showInLegend: visible
-                }]
+                    showInLegend: visible,
+                },
+
+            ]
         });
 
     }
@@ -946,22 +1061,10 @@
             return;
         }
         $('#svcDataChart').highcharts({
-            chart: {
-                type: 'column',
-                options3d: {
-                    enabled: true,
-                    alpha: 10,
-                    beta: 0,
-                    depth: 50,
-                    viewDistance: 25
-                }
-            },
             exporting: {
                 enabled: false
             },
-            credits: {
-                enabled: false
-            },
+            credits: chartAPI.credits,
             title: {
                 text: ''
             },
@@ -980,7 +1083,7 @@
                 type: 'logarithmic',
                 min: 1,
                 title: {
-                    text: '(<s:message code="common.msg.count"/>)',
+                    text: '',
                     rotation: 0
                 }
             },
@@ -1055,27 +1158,27 @@
 				<div class="mainlist">
 					<div>
 						<span class="tit07">여권번호 <span class="red_dot"></span> </span>
-						<p class="blue">0<span class="text">건</span></p>
+						<p class="blue" id="TodayPasswordTotalCnt">-<span class="text">건</span></p>
 					</div>
 					<div>
 						<span class="tit08">운전면허번호</span>
-						<p class="blue">0<span class="text">건</span></p>
+						<p class="blue" id="TodayDriveTotalCnt">-<span class="text">건</span></p>
 					</div>
 					<div>
 						<span class="tit09">외국인등록번호</span>
-						<p class="blue">0<span class="text">건</span></p>
+						<p class="blue" id="TodayForeignerTotalCnt">-<span class="text">건</span></p>
 					</div>
 					<div>
 						<span class="tit10">주민번호</span>
-						<p class="blue">0<span class="text">건</span></p>
+						<p class="blue" id="TodaySecurityTotalCnt">-<span class="text">건</span></p>
 					</div>
 					<div>
 						<span class="tit11">카드번호</span>
-						<p class="blue">0<span class="text">건</span></p>
+						<p class="blue" id="TodayCardNumberTotalCnt">-<span class="text">건</span></p>
 					</div>
 					<div>
 						<span class="tit12">확장자 변조 파일 <span class="red_dot"></span> </span>
-						<p class="blue">0<span class="text">건</span></p>
+						<p class="blue" id="TodayExtensionModulationTotalCnt">-<span class="text">건</span></p>
 					</div>
 				</div>
 			</div>
@@ -1095,11 +1198,13 @@
 				<h3>금일 첨부파일 수집 현황</h3>
 				<div class="bordd">
 					<div class="main_tab">
-						<button class="tablink i_text" onclick="openCity('txt', this, '#777777')" id="defaultOpen">TXT</button>
+						<button class="tablink excel" onclick="openCity('xlsx', this, '#3770C3')" id="defaultOpen">EXEL</button>
+						<button class="tablink word" onclick="openCity('doc', this, '#3770C3')">DOC</button>
+						<button class="tablink pdf" onclick="openCity('pdf', this, '#3770C3')">PDF</button>
 						<button class="tablink jpg" onclick="openCity('jpg', this, '#9A52D2')">JPG</button>
 						<button class="tablink gif" onclick="openCity('gif', this, '#EA8323')">GIF</button>
 						<button class="tablink png" onclick="openCity('png', this, '#268770')">PNG</button>
-						<button class="tablink mp4" onclick="openCity('mp4', this, '#9A52D2')">MP4</button>
+
 						<%--						<button class="tablink exe" onclick="openCity('exe', this, '#B7433B')">EXE</button>--%>
 						<%--						<button class="tablink html" onclick="openCity('html', this, '#EA8323')">HTML</button>
 												<button class="tablink java" onclick="openCity('java', this, '#9A52D2')">JAVA</button>--%>
@@ -1123,7 +1228,7 @@
 			<%--			금일 첨부파일 수집 현황 끝--%>
 		</div>
 	</div>
-	<%--	왼쪽 끝--%>
+	<%--	왼쪽 끝--
 	<%--	오른쪽 시작--%>
 	<div class="right">
 		<div>

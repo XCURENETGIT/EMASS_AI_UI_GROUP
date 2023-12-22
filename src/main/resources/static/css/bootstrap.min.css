@@ -5711,7 +5711,7 @@ a.list-group-item-danger.active, a.list-group-item-danger.active:focus, a.list-g
 
 .panel-footer {
 	padding: 10px 15px;
-	background-color: #f5f5f5;
+	background-color: transparent;
 	border-top: 1px solid #ddd;
 	border-bottom-right-radius: 3px;
 	border-bottom-left-radius: 3px

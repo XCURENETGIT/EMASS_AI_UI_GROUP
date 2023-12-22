@@ -407,10 +407,6 @@ table.dataTable thead .sorting:after {
     color: #f0ad4e;
 }
 
-.panel-yellow a:hover {
-    color: #df8a13;
-}
-
 .panel-heading .iconSetting, .panel-heading .iconSetting:VISITED {
 	color: #fff;
 }

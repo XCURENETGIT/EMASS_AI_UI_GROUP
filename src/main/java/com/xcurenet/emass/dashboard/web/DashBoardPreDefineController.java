@@ -117,6 +117,7 @@ public class DashBoardPreDefineController {
 		return new XcnResponseVO(XcnRspCode.OK, result);
 	}
 
+
 	@RequestMapping(value = "/getTodayTrafficData.xcn")
 	@Description("Dashboard - 당일 트래픽 정보")
 	@ResponseBody
@@ -127,10 +128,26 @@ public class DashBoardPreDefineController {
 	}
 
 
-	@RequestMapping(value = "/getAllTodayPatternPrivacy.xcn")
-	@Description("Dashboard - 전체 패턴(개인정보)")
+//	@RequestMapping(value = "/getAllTodayPatternPrivacy.xcn")
+//	@Description("Dashboard - 전체 패턴(개인정보)")
+//	@ResponseBody
+//	public XcnResponseVO getAllTodayPatternPrivacy(final HttpSession session) throws Exception {
+//		long now = System.currentTimeMillis();
+//		PatternPrivacyVO vo = new PatternPrivacyVO();
+//		vo.setAdminId(Common.getAdminId(session));
+//		vo.setStartDt(Common.getCurrentDate() + "000000");
+//		vo.setEndDt(Common.getDateTime(now, "yyyyMMddHHmmss"));
+//		vo.setTermDtStr(Prop.propFormat("condition.hour", session, "00")+" ~ " + Common.getDateTime(now, Prop.propFormat("condition.time", session, "HH", "mm", "ss")));
+//
+//		PatternPrivacyVO result = dashBoardPreDefineService.getAllTodayPatternPrivacy(vo);
+//
+//		return new XcnResponseVO(XcnRspCode.OK, null,0);
+//	}
+
+	@RequestMapping(value = "/getTodayPassportData.xcn")
+	@Description("Dashboard - 여권번호 수집 건수")
 	@ResponseBody
-	public XcnResponseVO getAllTodayPatternPrivacy(final HttpSession session) throws Exception {
+	public XcnResponseVO getTodayPassportData(final HttpSession session) throws Exception {
 		long now = System.currentTimeMillis();
 		PatternPrivacyVO vo = new PatternPrivacyVO();
 		vo.setAdminId(Common.getAdminId(session));
@@ -138,9 +155,41 @@ public class DashBoardPreDefineController {
 		vo.setEndDt(Common.getDateTime(now, "yyyyMMddHHmmss"));
 		vo.setTermDtStr(Prop.propFormat("condition.hour", session, "00")+" ~ " + Common.getDateTime(now, Prop.propFormat("condition.time", session, "HH", "mm", "ss")));
 
-		PatternPrivacyVO result = dashBoardPreDefineService.getAllTodayPatternPrivacy(vo);
+		PatternPrivacyVO result = dashBoardPreDefineService.getTodayPassportData(vo);
 
-		return new XcnResponseVO(XcnRspCode.OK, null,0);
+		return new XcnResponseVO(XcnRspCode.OK, result);
+	}
+
+	@RequestMapping(value = "/getTodayDriveData.xcn")
+	@Description("Dashboard - 운전면허 수집 건수")
+	@ResponseBody
+	public XcnResponseVO getTodayDriveData(final HttpSession session) throws Exception {
+		long now = System.currentTimeMillis();
+		PatternPrivacyVO vo = new PatternPrivacyVO();
+		vo.setAdminId(Common.getAdminId(session));
+		vo.setStartDt(Common.getCurrentDate() + "000000");
+		vo.setEndDt(Common.getDateTime(now, "yyyyMMddHHmmss"));
+		vo.setTermDtStr(Prop.propFormat("condition.hour", session, "00")+" ~ " + Common.getDateTime(now, Prop.propFormat("condition.time", session, "HH", "mm", "ss")));
+
+		PatternPrivacyVO result = dashBoardPreDefineService.getTodayDriveData(vo);
+
+		return new XcnResponseVO(XcnRspCode.OK, result);
+	}
+
+	@RequestMapping(value = "/getExtensionModulation.xcn")
+	@Description("Dashboard - 확장자 변조 파일 건수")
+	@ResponseBody
+	public XcnResponseVO getExtensionModulation(final HttpSession session) throws Exception {
+		long now = System.currentTimeMillis();
+		PatternPrivacyVO vo = new PatternPrivacyVO();
+		vo.setAdminId(Common.getAdminId(session));
+		vo.setStartDt(Common.getCurrentDate() + "000000");
+		vo.setEndDt(Common.getDateTime(now, "yyyyMMddHHmmss"));
+		vo.setTermDtStr(Prop.propFormat("condition.hour", session, "00")+" ~ " + Common.getDateTime(now, Prop.propFormat("condition.time", session, "HH", "mm", "ss")));
+
+		PatternPrivacyVO result = dashBoardPreDefineService.getExtensionModulation(vo);
+
+		return new XcnResponseVO(XcnRspCode.OK, result);
 	}
 
 	@RequestMapping(value = "getBodySize.xcn")
@@ -155,6 +204,54 @@ public class DashBoardPreDefineController {
 		vo.setTermDtStr(Prop.propFormat("condition.hour", session, "00")+" ~ " + Common.getDateTime(now, Prop.propFormat("condition.time", session, "HH", "mm", "ss")));
 
 		return new XcnResponseVO(XcnRspCode.OK, dashBoardPreDefineService.getBodySize(vo));
+	}
+
+	@RequestMapping(value = "/TodayForeignerData.xcn")
+	@Description("Dashboard - 외국인 등록 번호 수집 건수")
+	@ResponseBody
+	public XcnResponseVO TodayForeignerData(final HttpSession session) throws Exception {
+		long now = System.currentTimeMillis();
+		PatternPrivacyVO vo = new PatternPrivacyVO();
+		vo.setAdminId(Common.getAdminId(session));
+		vo.setStartDt(Common.getCurrentDate() + "000000");
+		vo.setEndDt(Common.getDateTime(now, "yyyyMMddHHmmss"));
+		vo.setTermDtStr(Prop.propFormat("condition.hour", session, "00")+" ~ " + Common.getDateTime(now, Prop.propFormat("condition.time", session, "HH", "mm", "ss")));
+
+		PatternPrivacyVO result = dashBoardPreDefineService.TodayForeignerData(vo);
+
+		return new XcnResponseVO(XcnRspCode.OK, result);
+	}
+
+	@RequestMapping(value = "/TodaySecurityData.xcn")
+	@Description("Dashboard - 주민  번호 수집 건수")
+	@ResponseBody
+	public XcnResponseVO TodaySecurityData(final HttpSession session) throws Exception {
+		long now = System.currentTimeMillis();
+		PatternPrivacyVO vo = new PatternPrivacyVO();
+		vo.setAdminId(Common.getAdminId(session));
+		vo.setStartDt(Common.getCurrentDate() + "000000");
+		vo.setEndDt(Common.getDateTime(now, "yyyyMMddHHmmss"));
+		vo.setTermDtStr(Prop.propFormat("condition.hour", session, "00")+" ~ " + Common.getDateTime(now, Prop.propFormat("condition.time", session, "HH", "mm", "ss")));
+
+		PatternPrivacyVO result = dashBoardPreDefineService.TodaySecurityData(vo);
+
+		return new XcnResponseVO(XcnRspCode.OK, result);
+	}
+
+	@RequestMapping(value = "/TodayCardNumberData.xcn")
+	@Description("Dashboard - 주민  번호 수집 건수")
+	@ResponseBody
+	public XcnResponseVO TodayCardNumberData(final HttpSession session) throws Exception {
+		long now = System.currentTimeMillis();
+		PatternPrivacyVO vo = new PatternPrivacyVO();
+		vo.setAdminId(Common.getAdminId(session));
+		vo.setStartDt(Common.getCurrentDate() + "000000");
+		vo.setEndDt(Common.getDateTime(now, "yyyyMMddHHmmss"));
+		vo.setTermDtStr(Prop.propFormat("condition.hour", session, "00")+" ~ " + Common.getDateTime(now, Prop.propFormat("condition.time", session, "HH", "mm", "ss")));
+
+		PatternPrivacyVO result = dashBoardPreDefineService.TodayCardNumberData(vo);
+
+		return new XcnResponseVO(XcnRspCode.OK, result);
 	}
 
 

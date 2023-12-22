@@ -143,8 +143,8 @@
                 $('input:radio[name=dashChart]:input[value=P]').prop("checked", true);
                 $('#dashChartX').val('svc1');
                 $('#dashChartY').val('total');
-                $('#dashIcon').val('fa fa-envelope');
-                $('#dashColor').val('panel-primary');
+                $('#dashIcon').val('tit01');
+                $('#dashColor').val('blueBg');
                 $('#alarmVal').val(''); //dashCondition
                 $('#alarmValStr').val('');
                 $('#dashComment').val('');
@@ -463,8 +463,8 @@
                 data.dashChart = $(":input:radio[name=dashChart]:checked").val();
                 data.dashChartX = $('#dashChartX').val();
                 data.dashChartY = $('#dashChartY').val();
-                data.dashIcon = $('#dashIcon').val() == '' ? 'fa fa-envelope' : $('#dashIcon').val();
-                data.dashColor = $('#dashColor').val() == '' ? 'panel-primary' : $('#dashColor').val();
+                data.dashIcon = $('#dashIcon').val() == '' ? 'tit01' : $('#dashIcon').val();
+                data.dashColor = $('#dashColor').val() == '' ? 'blueBg' : $('#dashColor').val();
                 data.dashCondition = $('#alarmVal').val() == '' ? {} : JSON.parse($('#alarmVal').val());
             }
 
@@ -472,7 +472,7 @@
             var saveData = '';
             if (data.dashType == 'S') {
                 htmlData = $('#singleDataFormat').html();
-                $('#dashHtmlSample').css('width', '50%');
+                $('#dashHtmlSample').css('width', '70%');
                 $('#dashHtmlSample').css('height', '120px');
             } else if (data.dashType == 'D') {
                 htmlData = $('#dualDataFormat').html();
@@ -582,169 +582,213 @@
 </div>
 
 
-
-<div class="modal fade" id="setupDashboardContentPop" tabindex="-1" role="dialog" aria-labelledby="setupDashboardModal">
-	<div class="modal-dialog modal-lg" role="document">
-		<div class="modal-content">
-			<form method="post" id="setupDashboardContentPopForm">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					<h3 class="modal-title"><s:message code="dashboardSetup.addModify"/></h3>
+<div class="modal" id="setupDashboardContentPop" data-backdrop="static">
+	<div class="modal-content" style="width: 1000px;">
+		<form method="post" id="setupDashboardContentPopForm">
+			<div class="modalHead">
+				<h2><s:message code="dashboardSetup.addModify"/></h2>
+				<span class="close" data-dismiss="modal">&times;</span>
+			</div>
+			<div class="modalCon">
+				<div class="modalTop">
+					<h3>Dashboard 추가/수정</h3>
+					<p>
+						<span class="red_dot veralign_middle"></span>
+						필수 입력 사항입니다.
+					</p>
 				</div>
-				<div class="modal-body">
+				<div class="modalbody">
 					<div class="row">
-						<div class="col-md-6" style="border-right: 1px solid #e5e5e5;">
+						<div class="col-50">
 							<h3><s:message code="admin.basic.info"/></h3>
-							<div>
-								<label for="dashName" class=" col-xs-4"><s:message code="dashboardSetup.dashname"/></label>
-								<input type="text" class="form-control" name="dashName" id="dashName"
-								       placeholder="<s:message code="dashboardSetup.dashname"/>" style="width: 250px;" maxlength="20">
-								<input type="hidden" name="dashKey" id="dashKey">
-							</div>
-							<div class="form-inline">
-								<label for="dashType" class=" col-xs-4"><s:message code="dashboardSetup.dashtype"/></label>
-								<label class="radio-inline c-radio">
-									<input type="radio" name="dashType" value="S" checked>
-									<span class="fa fa-check"></span><s:message code="dashboardSetup.dashtype.single"/>
-								</label>
-								<label class="radio-inline c-radio">
-									<input type="radio" name="dashType" value="D">
-									<span class="fa fa-check"></span><s:message code="dashboardSetup.dashtype.multi"/>
-								</label>
-								<label class="radio-inline c-radio">
-									<input type="radio" name="dashType" value="C">
-									<span class="fa fa-check"></span><s:message code="dashboardSetup.dashtype.chart"/>
-								</label>
-								<label class="radio-inline c-radio">
-									<input type="radio" name="dashType" value="L">
-									<span class="fa fa-check"></span><s:message code="dashboardSetup.dashtype.list"/>
-								</label>
-							</div>
-							<div id="dashDoubleArea" style="display:none;">
-								<label for="dash_x" class=" col-xs-4"><s:message code="dashboardSetup.multData"/></label>
-								<select class="form-control input-sm" id="dashMultiLeft" name="dashMultiLeft">
-									<option value="read"><s:message code="dashboardSetup.readCount"/></option>
-									<option value="unread" selected><s:message code="dashboardSetup.unreadCount"/></option>
-									<option value="total"><s:message code="dashboardSetup.allCount"/></option>
-								</select> /
-								<select class="form-control input-sm" id="dashMultiRight" name="dashMultiRight">
-									<option value="read"><s:message code="dashboardSetup.readCount"/></option>
-									<option value="unread"><s:message code="dashboardSetup.unreadCount"/></option>
-									<option value="total" selected><s:message code="dashboardSetup.allCount"/></option>
-								</select>
-							</div>
-							<div id="dashChartArea" style="display:none;">
-								<label for="dashChart" class=" col-xs-4" style="height:60px;"><s:message code="dashboardSetup.chartType"/></label>
-								<div>
-									<label class="radio-inline c-radio">
-										<input type="radio" name="dashChart" value="P" checked>
-										<span class="fa fa-check"></span><s:message code="dashboardSetup.dashchart.pie"/>
-										<img src="<c:url value="/img/icon/chart_pie.png"/>" width="24" height="24">
-									</label>
-									<label class="radio-inline c-radio">
-										<input type="radio" name="dashChart" value="L">
-										<span class="fa fa-check"></span><s:message code="dashboardSetup.dashchart.line"/>
-										<img src="<c:url value="/img/icon/line.bmp"/>" width="24" height="24">
-									</label>
+							<div class="row">
+								<div class="col-35">
+									<label for="dashName" class="fname"><s:message code="dashboardSetup.dashname"/></label>
 								</div>
-								<div class="top_space">
-									<label class="radio-inline c-radio">
-										<input type="radio" name="dashChart" value="A">
-										<span class="fa fa-check"></span><s:message code="dashboardSetup.dashchart.area"/>
-										<img src="<c:url value="/img/icon/area.bmp"/>" width="24" height="24">
-									</label>
-									<label class="radio-inline c-radio">
-										<input type="radio" name="dashChart" value="B">
-										<span class="fa fa-check"></span><s:message code="dashboardSetup.dashchart.bar"/>
-										<img src="<c:url value="/img/icon/bar.bmp"/>" width="24" height="24">
-									</label>
-									<input type="hidden" name="dashChartNm" id="hiddenDashChart">
+								<div class="col-65">
+									<input type="text" class="w100" name="dashName" id="dashName"
+									       placeholder="<s:message code="dashboardSetup.dashname"/>" style="width: 250px;" maxlength="20">
+									<input type="hidden" name="dashKey" id="dashKey">
 								</div>
 							</div>
-							<div id="dashXYArea" style="display:none;">
-								<label for="dash_x" class=" col-xs-4"><s:message code="dashboardSetup.chartXY"/></label>
-								<select class="form-control input-sm" id="dashChartX" name="dashChartX">
-									<option value="svc1"><s:message code="condition.service"/></option>
-									<option value="ctime_hh"><s:message code="dashboardSetup.standardTime"/></option>
-									<option value="ctime_yyyymmddhh"><s:message code="dashboardSetup.standardDay"/></option>
-									<option value="conm"><s:message code="common.org.co"/></option>
-									<option value="businm"><s:message code="dashboardSetup.stardardBusi"/></option>
-									<option value="ip_businm"><s:message code="dashboardSetup.stardardBusiIp"/></option>
-									<option value="deptnm"><s:message code="common.org.dept"/></option>
-								</select>
-								<select class="form-control input-sm" id="dashChartY" name="dashChartY">
-									<option value="total"><s:message code="common.msg.count"/></option>
-								</select>
+							<div class="row">
+								<div class="col-35">
+									<label for="dashType" class="fname"><s:message code="dashboardSetup.dashtype"/></label>
+								</div>
+								<div class="col-65">
+									<label class="radio-inline c-radio">
+										<input type="radio" name="dashType" value="S" checked><s:message code="dashboardSetup.dashtype.single"/>
+									</label>
+									<%--								<label class="radio-inline c-radio">--%>
+									<%--									<input type="radio" name="dashType" value="D"><s:message code="dashboardSetup.dashtype.multi"/>--%>
+									<%--								</label>--%>
+									<label class="radio-inline c-radio">
+										<input type="radio" name="dashType" value="C"><s:message code="dashboardSetup.dashtype.chart"/>
+									</label>
+									<label class="radio-inline c-radio">
+										<input type="radio" name="dashType" value="L"><s:message code="dashboardSetup.dashtype.list"/>
+									</label>
+								</div>
 							</div>
-							<div>
-								<label for="dashIcon" class=" col-xs-4" style="height:80px;"><s:message code="dashboardSetup.dashicon"/></label>
-								<button type="button" class="btn btn-default dashIcon" data-value="fa fa-envelope"><i class="fa fa-envelope"></i>
-								</button>
-								<button type="button" class="btn btn-default dashIcon" data-value="fa fa-users"><i class="fa fa-users"></i></button>
-								<button type="button" class="btn btn-default dashIcon" data-value="fa fa-warning"><i class="fa fa-warning"></i>
-								</button>
-								<button type="button" class="btn btn-default dashIcon" data-value="fa fa-heart"><i class="fa fa-heart"></i></button>
-								<button type="button" class="btn btn-default dashIcon" data-value="fa fa-download"><i class="fa fa-download"></i>
-								</button>
-								<button type="button" class="btn btn-default dashIcon" data-value="fa fa-star-o"><i class="fa fa-star-o"></i></button>
-								<button type="button" class="btn btn-default dashIcon" data-value="fa fa-save"><i class="fa fa-save"></i></button>
-								<button type="button" class="btn btn-default dashIcon" data-value="fa fa-user"><i class="fa fa-user"></i></button>
-								<button type="button" class="btn btn-default dashIcon" data-value="fa fa-font"><i class="fa fa-font"></i></button>
-								<button type="button" class="btn btn-default dashIcon" data-value="fa fa-pie-chart"><i class="fa fa-pie-chart"></i>
-								</button>
-								<button type="button" class="btn btn-default dashIcon" data-value="fa fa-area-chart"><i class="fa fa-area-chart"></i>
-								</button>
-								<button type="button" class="btn btn-default dashIcon" data-value="fa fa-bar-chart"><i class="fa fa-bar-chart"></i>
-								</button>
-								<button type="button" class="btn btn-default dashIcon" data-value="fa fa-line-chart"><i class="fa fa-line-chart"></i>
-								</button>
-								<input type="hidden" id="dashIcon" name="dashIcon"/>
+
+							<%--							<div id="dashDoubleArea" style="display:none;">--%>
+							<%--								<div class="row">--%>
+							<%--									<div class="col-35">--%>
+							<%--								<label for="dash_x" class="fname"><s:message code="dashboardSetup.multData"/></label>--%>
+							<%--									</div>--%>
+							<%--									<div class="col-65">--%>
+							<%--								<select class="w100" id="dashMultiLeft" name="dashMultiLeft">--%>
+							<%--									<option value="read"><s:message code="dashboardSetup.readCount"/></option>--%>
+							<%--									<option value="unread" selected><s:message code="dashboardSetup.unreadCount"/></option>--%>
+							<%--									<option value="total"><s:message code="dashboardSetup.allCount"/></option>--%>
+							<%--								</select>--%>
+							<%--								<select class="w100" id="dashMultiRight" name="dashMultiRight">--%>
+							<%--									<option value="read"><s:message code="dashboardSetup.readCount"/></option>--%>
+							<%--									<option value="unread"><s:message code="dashboardSetup.unreadCount"/></option>--%>
+							<%--									<option value="total" selected><s:message code="dashboardSetup.allCount"/></option>--%>
+							<%--								</select>--%>
+							<%--							</div>--%>
+							<%--								</div>--%>
+							<%--							</div>--%>
+
+								<div class="row" id="dashChartArea" style="display:none;">
+									<div class="col-35">
+										<label for="dashChart" class="fname" style="height:60px;"><s:message code="dashboardSetup.chartType"/></label>
+									</div>
+									<div class="col-65">
+										<label class="radio-inline c-radio">
+											<input type="radio" name="dashChart" value="P" checked>
+											<s:message code="dashboardSetup.dashchart.pie"/>
+											<img src="<c:url value="/img/icon/chart_pie.png"/>" width="24" height="24">
+										</label>
+										<label class="radio-inline c-radio">
+											<input type="radio" name="dashChart" value="L">
+											<s:message code="dashboardSetup.dashchart.line"/>
+											<img src="<c:url value="/img/icon/line.bmp"/>" width="24" height="24">
+										</label>
+										<label class="radio-inline c-radio">
+											<input type="radio" name="dashChart" value="A">
+											<s:message code="dashboardSetup.dashchart.area"/>
+											<img src="<c:url value="/img/icon/area.bmp"/>" width="24" height="24">
+										</label>
+										<label class="radio-inline c-radio">
+											<input type="radio" name="dashChart" value="B">
+											<s:message code="dashboardSetup.dashchart.bar"/>
+											<img src="<c:url value="/img/icon/bar.bmp"/>" width="24" height="24">
+										</label>
+										<input type="hidden" name="dashChartNm" id="hiddenDashChart">
+									</div>
+								</div>
+
+
+								<div class="row" id="dashXYArea" style="display:none;">
+									<div class="col-35">
+										<label for="dash_x" class="fname"><s:message code="dashboardSetup.chartXY"/></label>
+									</div>
+									<div class="col-65">
+										<select class="w100" id="dashChartX" name="dashChartX">
+											<option value="svc1"><s:message code="condition.service"/></option>
+											<option value="ctime_hh"><s:message code="dashboardSetup.standardTime"/></option>
+											<option value="ctime_yyyymmddhh"><s:message code="dashboardSetup.standardDay"/></option>
+											<option value="conm"><s:message code="common.org.co"/></option>
+											<option value="businm"><s:message code="dashboardSetup.stardardBusi"/></option>
+											<option value="ip_businm"><s:message code="dashboardSetup.stardardBusiIp"/></option>
+											<option value="deptnm"><s:message code="common.org.dept"/></option>
+										</select>
+										<select class="w100" id="dashChartY" name="dashChartY">
+											<option value="total"><s:message code="common.msg.count"/></option>
+										</select>
+									</div>
+								</div>
+
+
+							<div class="row">
+								<div class="col-35">
+									<label for="dashIcon" class="fname" style="height:80px;"><s:message code="dashboardSetup.dashicon"/></label>
+								</div>
+								<div class="col-65">
+									<button type="button" class="btn btn-default dashIcon" data-value="tit01"><img
+											src="<c:url value="/img/ico_main_tit01.png"/>"></button>
+									<button type="button" class="btn btn-default dashIcon" data-value="tit02"><img
+											src="<c:url value="/img/ico_main_tit02.png"/>"></button>
+									<button type="button" class="btn btn-default dashIcon" data-value="tit03"><img
+											src="<c:url value="/img/ico_main_tit03.png"/>"></button>
+									<button type="button" class="btn btn-default dashIcon" data-value="tit04"><img
+											src="<c:url value="/img/ico_main_tit04.png"/>"></button>
+									<button type="button" class="btn btn-default dashIcon" data-value="tit05"><img
+											src="<c:url value="/img/ico_main_tit05.png"/>"></button>
+									<button type="button" class="btn btn-default dashIcon" data-value="tit06"><img
+											src="<c:url value="/img/ico_main_tit06.png"/>"></button>
+									<button type="button" class="btn btn-default dashIcon" data-value="tit07"><img
+											src="<c:url value="/img/ico_main_tit07.png"/>"></button>
+									<button type="button" class="btn btn-default dashIcon" data-value="tit08"><img
+											src="<c:url value="/img/ico_main_tit08.png"/>"></button>
+									<button type="button" class="btn btn-default dashIcon" data-value="tit09"><img
+											src="<c:url value="/img/ico_main_tit09.png"/>"></button>
+									<button type="button" class="btn btn-default dashIcon" data-value="tit10"><img
+											src="<c:url value="/img/ico_main_tit10.png"/>"></button>
+									<button type="button" class="btn btn-default dashIcon" data-value="tit11"><img
+											src="<c:url value="/img/ico_main_tit11.png"/>"></button>
+									<button type="button" class="btn btn-default dashIcon" data-value="tit02"><img
+											src="<c:url value="/img/ico_main_tit12.png"/>"></button>
+									<input type="hidden" id="dashIcon" name="dashIcon"/>
+								</div>
 							</div>
-							<div>
-								<label for="dashColor" class=" col-xs-4"><s:message code="dashboardSetup.background"/></label>
-								<button type="button" class="btn btn-primary dashColor" data-value="panel-primary">&nbsp;&nbsp;</button>
-								<button type="button" class="btn btn-default dashColor" data-value="panel-white">&nbsp;&nbsp;</button>
-								<button type="button" class="btn btn-secondary dashColor" data-value="panel-gray">&nbsp;&nbsp;</button>
-								<button type="button" class="btn btn-success dashColor" data-value="panel-green">&nbsp;&nbsp;</button>
-								<button type="button" class="btn btn-danger dashColor" data-value="panel-red">&nbsp;&nbsp;</button>
-								<button type="button" class="btn btn-warning dashColor" data-value="panel-yellow">&nbsp;&nbsp;</button>
-								<input type="hidden" name="dashColor" id="dashColor"/>
+
+							<div class="row">
+								<div class="col-35">
+									<label for="dashColor" class="fname"><s:message code="dashboardSetup.background"/></label>
+								</div>
+								<div class="col-65">
+									<button type="button" class="btn blueBg dashColor" data-value="blueBg">&nbsp;&nbsp;</button>
+									<button type="button" class="btn btn-default dashColor" data-value="panel-white">&nbsp;&nbsp;</button>
+									<button type="button" class="btn purpleBg dashColor" data-value="purpleBg">&nbsp;&nbsp;</button>
+									<button type="button" class="btn greenBg dashColor" data-value="greenBg">&nbsp;&nbsp;</button>
+									<button type="button" class="btn redBg dashColor" data-value="redBg">&nbsp;&nbsp;</button>
+									<button type="button" class="btn yellowBg dashColor" data-value="yellowBg">&nbsp;&nbsp;</button>
+									<input type="hidden" name="dashColor" id="dashColor"/>
+								</div>
 							</div>
-							<div>
-								<label for="useYn" class=" col-xs-4"><s:message code="common.msg.useyn"/></label>
-								<label class="radio-inline c-radio">
-									<input type="radio" name="useYn" value="Y" checked>
-									<span class="fa fa-check"></span><s:message code="common.msg.use"/>
-								</label>
-								<label class="radio-inline c-radio">
-									<input type="radio" name="useYn" value="N">
-									<span class="fa fa-check"></span><s:message code="common.msg.unuse"/>
-								</label>
-								<input type="hidden" name="useYnNm" id="hiddenUseYn">
+
+							<div class="row">
+								<div class="col-35">
+									<label for="useYn" class="fname"><s:message code="common.msg.useyn"/></label>
+								</div>
+								<div class="col-65">
+									<label class="radio-inline c-radio">
+										<input type="radio" name="useYn" value="Y" checked>
+										<s:message code="common.msg.use"/>
+									</label>
+									<label class="radio-inline c-radio">
+										<input type="radio" name="useYn" value="N">
+										<s:message code="common.msg.unuse"/>
+									</label>
+									<input type="hidden" name="useYnNm" id="hiddenUseYn">
+								</div>
 							</div>
-							<div style="border-bottom: 1px solid #e5e5e5;">
-								<label for="dashComment" class=" col-xs-4"><s:message code="common.msg.comment"/></label>
-								<input type="text" class="form-control" name="dashComment" id="dashComment"
-								       placeholder='<s:message code="filterInfo.comment"/>' style="width: 250px;" maxlength="50">
+
+							<div class="row" style="border-bottom: 1px solid #e5e5e5;">
+								<div class="col-35">
+									<label for="dashComment" class="fname"><s:message code="common.msg.comment"/></label>
+								</div>
+								<div class="col-65">
+									<input type="text" class="w100" name="dashComment" id="dashComment"
+									       placeholder='<s:message code="filterInfo.comment"/>' style="width: 250px;" maxlength="50">
+								</div>
 							</div>
+
 							<br/>
 							<h3><s:message code="condition.filter_setting"/></h3>
 							<div class="form-inline not-dashed">
-								<button type="button" class="btn btn-primary btn-sm" accesskey="S" id="dashConditionBtn"><s:message
-										code="condition.filter_setting"/></button>
+								<button type="button" class="form_btn01_02" accesskey="S" id="dashConditionBtn">조건 설정</button>
 							</div>
 							<div>
 								<textarea class="form-control" style="display:none" name="dashCondition" id="alarmVal"></textarea>
 								<textarea class="form-control" style="height: 130px; margin-top: 1px;resize:none;" name="alarmValStr" id="alarmValStr"
 								          readonly></textarea>
-								<div class="form-inline" style="text-align: right; font-weight: bold; font-size: 13px;">
-									<s:message code="mail.set.item"/>
-								</div>
 							</div>
 						</div>
-						<div class="col-md-6">
+						<div class="col-50 mal16">
 							<h3><s:message code="urlIpBlock.preview"/></h3>
 							<div class="grid-stack" style="height:120px;" id="dashHtmlSample"></div>
 							<input type=hidden name="html" id="dashHtml"/>
@@ -752,17 +796,18 @@
 						<input type=hidden name="adminIds" id="adminIds"/>
 					</div>
 				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
-					<button type="button" class="btn btn-primary savePopBtn" accesskey="S" id="dashSaveBtn"><s:message
+				<div class="modalfooter">
+					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+					<button type="button" class="pop_btn02 savePopBtn" accesskey="S" id="dashSaveBtn"><s:message
 							code="common.msg.save"/></button>
-					<button type="button" class="btn btn-primary savePopBtn conentBatchBtn" accesskey="D" id="dashShareSaveBtn"><s:message
+					<button type="button" class="pop_btn02 savePopBtn conentBatchBtn" accesskey="D" id="dashShareSaveBtn"><s:message
 							code="selectAdmin.share.save"/></button>
 				</div>
-			</form>
-		</div>
+			</div>
+		</form>
 	</div>
 </div>
+
 
 <div class="searchArea">
 	<div class="searchSub">
@@ -802,7 +847,10 @@
     gridDashboard.onCheckBox();
     gridDashboard.autoNumber();
     gridDashboard.colAdd('dashIcon', '<s:message code="dashboardSetup.dashicon"/>', 60, 'center', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
-        return '<i class="customClass ' + value + '" style="font-size:20px !important;"></i>';
+        // return '<i class="customClass ' + value + '" style="font-size:20px !important;"></i>';
+        return '<img src="<c:url value="/img/ico_main_'+ value + '.png"/>">';
+
+
     });
     gridDashboard.colAdd('dashName', '<s:message code="dashboardSetup.dashname"/>', 170, 'left', false, 'link');
     gridDashboard.colAdd('dashType', '<s:message code="common.msg.type"/>', 80, 'center', false, 'nomal', function (row, cell, value, columnDef, dataContext) {

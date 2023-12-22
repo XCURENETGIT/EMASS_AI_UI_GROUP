@@ -92,18 +92,18 @@
     color: #b52b27;
 }
 
-.panel-yellow {
-    border-color: #f0ad4e;
+.panel-yellowBg {
+    border-color: #FFF8E3;
 }
 
-.panel-yellow .panel-heading {
-    border-color: #f0ad4e;
+.panel-yellowBg .panel-heading {
+    border-color: #FFF8E3;
     color: #fff;
-    background-color: #f0ad4e;
+    background-color: #FFF8E3;
 }
 
-.panel-yellow a {
-    color: #f0ad4e;
+.panel-yellowBg a {
+    color: #FFF8E3;
 }
 
 .panel-yellow a:hover {

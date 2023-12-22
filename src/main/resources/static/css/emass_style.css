@@ -425,6 +425,17 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .grayBg03 {background-color:#EEEFF2 !important;}
 .purpleBg {background-color:#FCF2FF !important;}
 
+/*borderColor*/
+.whiteBgBorder {border-color: #fff }
+.blueBgBorder {border-color: #F2F6FF }
+.greenBgBorder {border-color: #E4F4F1 }
+.yellowBgBorder {border-color: #FFF8E3 }
+.blackBgBorder {border-color: #FFF8E3 }
+.redBgBorder {border-color: #FFF1F1 }
+.grayBgBorder {border-color: #EEF1F6 }
+.grayBg02Border {border-color: #F8F8F8 }
+.grayBg03Border {border-color: #EEEFF2 }
+.purpleBgBorder {border-color: #FCF2FF }
 /* border */
 .bordd{border:1px solid #ddd;}
 .borbottom_dashed {border-bottom:1px dashed #ccc;}

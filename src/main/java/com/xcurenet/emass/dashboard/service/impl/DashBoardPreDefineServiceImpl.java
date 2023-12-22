@@ -310,7 +310,8 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 	public PatternPrivacyVO getTodayPatternPrivacy(PatternPrivacyVO patternPrivacyVO) throws IOException, SolrServerException {
 		PatternPrivacyVO result = new PatternPrivacyVO();
 
-		String query = String.format("+ctime:[%s TO %s] +(pi_CN:[ 1 TO * ] pi_FN:[ 1 TO * ] pi_SN:[ 1 TO * ] pi_PN:[ 1 TO * ] pi_DN:[ 1 TO * ])", patternPrivacyVO.getStartDt(), patternPrivacyVO.getEndDt());
+		String query = String.format("+ctime:[%s TO %s] +(pi_CN:[ 1 TO * ] pi_FN:[ 1 TO * ] pi_SN:[ 1 TO * ] pi_PN:[ 1 TO * ] pi_DN:[ 1 TO * ] pi_CN:[ 1 TO * ] pi_MN:[ 1 TO * ] pi_AN:[ 1 TO * ] pi_CRN:[ 1 TO * ] pi_SSN:[ 1 TO * ] pi_IMEI:[ 1 TO * ] pi_BRN:[ 1 TO * ] pi_CPN:[ 1 TO * ] pi_MCN:[ 1 TO * ])"
+				, patternPrivacyVO.getStartDt(), patternPrivacyVO.getEndDt());
 		SolrQuery sq = new SolrQuery();
 		sq.setQuery(query);
 		sq.setRows(0);
@@ -318,9 +319,98 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		result.setTotal(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));
 		sq.setQuery(query);
 		sq.setRows(0);
-//	    sq.addFilterQuery(String.format(SolrEdcServiceImpl.JOIN_UNREAD, patternPrivacyVO.getAdminId()));
 		edc = solrEdcService.getEmassMessage(sq, patternPrivacyVO.getAdminId());
 		result.setUnRead(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));
+		return result;
+	}
+
+	@Override
+	public PatternPrivacyVO getExtensionModulation(PatternPrivacyVO patternPrivacyVO) throws IOException, SolrServerException {
+		PatternPrivacyVO result = new PatternPrivacyVO();
+
+		String query = String.format("+ctime:[%s TO %s] +(pi_EC:[ 1 TO * ])", patternPrivacyVO.getStartDt(), patternPrivacyVO.getEndDt());
+		SolrQuery sq = new SolrQuery();
+		sq.setQuery(query);
+		sq.setRows(0);
+		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, patternPrivacyVO.getAdminId());
+		result.setTotal(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));;
+		sq.setQuery(query);
+		sq.setRows(0);
+		return result;
+	}
+
+	@Override
+	public PatternPrivacyVO getTodayPassportData(PatternPrivacyVO vo) throws SolrServerException, IOException {
+		PatternPrivacyVO result = new PatternPrivacyVO();
+
+		String query = String.format("+ctime:[%s TO %s] +(pi_PN:[ 1 TO * ])", vo.getStartDt(), vo.getEndDt());
+		SolrQuery sq = new SolrQuery();
+		sq.setQuery(query);
+		sq.setRows(0);
+		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, vo.getAdminId());
+		result.setTotal(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));;
+		sq.setQuery(query);
+		sq.setRows(0);
+		return result;
+	}
+
+	@Override
+	public PatternPrivacyVO getTodayDriveData(PatternPrivacyVO vo) throws SolrServerException, IOException {
+		PatternPrivacyVO result = new PatternPrivacyVO();
+
+		String query = String.format("+ctime:[%s TO %s] +(pi_DN:[ 1 TO * ])", vo.getStartDt(), vo.getEndDt());
+		SolrQuery sq = new SolrQuery();
+		sq.setQuery(query);
+		sq.setRows(0);
+		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, vo.getAdminId());
+		result.setTotal(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));;
+		sq.setQuery(query);
+		sq.setRows(0);
+		return result;
+	}
+
+	@Override
+	public PatternPrivacyVO TodayForeignerData(PatternPrivacyVO vo) throws SolrServerException, IOException {
+		PatternPrivacyVO result = new PatternPrivacyVO();
+
+		String query = String.format("+ctime:[%s TO %s] +(pi_FN:[ 1 TO * ])", vo.getStartDt(), vo.getEndDt());
+		SolrQuery sq = new SolrQuery();
+		sq.setQuery(query);
+		sq.setRows(0);
+		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, vo.getAdminId());
+		result.setTotal(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));;
+		sq.setQuery(query);
+		sq.setRows(0);
+		return result;
+	}
+
+	@Override
+	public PatternPrivacyVO TodaySecurityData(PatternPrivacyVO vo) throws SolrServerException, IOException {
+		PatternPrivacyVO result = new PatternPrivacyVO();
+
+		String query = String.format("+ctime:[%s TO %s] +(pi_SN:[ 1 TO * ])", vo.getStartDt(), vo.getEndDt());
+		SolrQuery sq = new SolrQuery();
+		sq.setQuery(query);
+		sq.setRows(0);
+		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, vo.getAdminId());
+		result.setTotal(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));;
+		sq.setQuery(query);
+		sq.setRows(0);
+		return result;
+	}
+
+	@Override
+	public PatternPrivacyVO TodayCardNumberData(PatternPrivacyVO vo) throws SolrServerException, IOException {
+		PatternPrivacyVO result = new PatternPrivacyVO();
+
+		String query = String.format("+ctime:[%s TO %s] +(pi_CN:[ 1 TO * ])", vo.getStartDt(), vo.getEndDt());
+		SolrQuery sq = new SolrQuery();
+		sq.setQuery(query);
+		sq.setRows(0);
+		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, vo.getAdminId());
+		result.setTotal(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));;
+		sq.setQuery(query);
+		sq.setRows(0);
 		return result;
 	}
 
@@ -333,8 +423,7 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		sq.setQuery(query);
 		sq.setRows(0);
 		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, riskBehaviorVO.getAdminId());
-		result.setTotal(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));
-		;
+		result.setTotal(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));;
 		sq.setQuery(query);
 		sq.setRows(0);
 //	    sq.addFilterQuery(String.format(SolrEdcServiceImpl.JOIN_UNREAD, riskBehaviorVO.getAdminId()));
@@ -372,16 +461,23 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, vo.getAdminId());
 		List<String> filesize = new ArrayList<>();
 		List<String> fileType = new ArrayList<>();
+		List<String> fileName = new ArrayList<>();
+
 		for (SolrEdcVO solrEdcVO : edc.getEmass()) {
 			filesize.add(solrEdcVO.getAttachSizeStr());
 			fileType.add(solrEdcVO.getAttachtype().get(0));
+			fileName.add(solrEdcVO.getAttachname().get(0));
 		}
 		result.setFileSize(filesize);
 		result.setFileType(fileType);
+		result.setFileName(fileName);
+
 		result.setTotal(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));
 
 		return result;
 	}
+
+
 
 	@Override
 	public FileTopVO getTodayFilePerson(FileTopVO vo) throws SolrServerException, IOException {
@@ -525,6 +621,8 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 
 		return transformedData;
 	}
+
+
 
 	private static double parseCount(Object value) {
 		// Assuming the count is represented as a String like "15467.47/15467.46"
