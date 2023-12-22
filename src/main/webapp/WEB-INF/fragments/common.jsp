@@ -161,8 +161,8 @@
             });
         })
 
-		$(document).keydown(function (event) {
-			if (event.keyCode == 32 || event.keyCode == 13) {
+		$(window).keydown(function (event) {
+			if (event.keyCode === 32 || event.keyCode === 13) {
 				if ($('#bootstrap_alert:visible').length > 0) {
 					$('#bootstrap_alert:visible').find('button').click();
 				}
@@ -333,7 +333,6 @@
 
 		$('#changeLanguageSaveBtn').click(function () {
 			var adminLang = $('#adminLang').val();
-
 			ui.confirmMsg('<s:message code="common.msg.change.apply"/>', '', '', function (rs) {
 				if (rs) {
 					document.location.href = '<c:url value="/changeLocale?locale='+encodeURI(adminLang)+'"/>';
@@ -364,16 +363,6 @@
 			fnOpenWindow('<c:url value="/endPoints"/>', 'endPoints', 1300, 650, 'scroll');
 		});
 
-		$(window).scroll(function () {
-			$(this).scrollTop() > 200 ? $('.back-to-top').addClass('cd-is-visible') : $('.back-to-top').removeClass('cd-is-visible cd-fade-out');
-		}).trigger('scroll');
-
-		$('.back-to-top').on('click', function (event) {
-			event.preventDefault();
-			$('html,body').animate({
-				scrollTop: 0
-			}, 500);
-		});
 
 		$(document).on('click', '.print_link', function () {
 			var grid = getTargetGrid($(this).attr('data-target'));
