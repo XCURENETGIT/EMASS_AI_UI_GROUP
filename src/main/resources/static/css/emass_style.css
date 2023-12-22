@@ -213,7 +213,8 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 
 /*Tab*/
 .subtab {display:inline-block; overflow: hidden;}
-.subtab button { float: left;  height:28px; padding: 6px 20px;  display:inline-block; color:#333333; font-size:13px; margin-right:4px; margin-bottom:12px; border: none; outline: none; cursor: pointer;transition: 0.3s; background-color: #DDDDDD; -webkit-transition: 0.3s; -moz-transition: 0.3s; -ms-transition: 0.3s; -o-transition: 0.3s; }
+.subtab > button { float: left;  height:28px; padding: 6px 20px;  display:inline-block; color:#333333; font-size:13px; margin-right:4px; margin-bottom:12px; border: none; outline: none; cursor: pointer;transition: 0.3s; background-color: #DDDDDD; -webkit-transition: 0.3s; -moz-transition: 0.3s; -ms-transition: 0.3s; -o-transition: 0.3s; }
+.subtab button.subtab_close { float: left; height:10px; display:inline-block; border:none; margin-left:8px; margin-top:-2px; background: none;  font-size:13px; cursor: pointer;}
 .subtab button.active {background-color: #242330; color:#fff;}
 .subtab .plus { width: 25px; height:28px; padding:0; background-color:#f5f5f5; border:1px solid #ddd; text-align: center;}
 .subtab .tab_active { font-size:13px; background-color: #DDDDDD;  height:28px; padding: 6px 20px;  display:inline-block;font-weight:600;  cursor: pointer;}
@@ -443,6 +444,7 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .blue{color:#1A73F9 !important;}
 .red{color:#FC5656 !important;}
 .blue02{color:#1C64D3    !important}
+.blue03{color:#88B8FF    !important}
 .purple{color:#675CED !important;}
 .red_dot { display: inline-block; vertical-align: top; background-color:#FC5656; width:4px; height:4px; border-radius:100%; -webkit-border-radius:100%; -moz-border-radius:100%; -ms-border-radius:100%; -o-border-radius:100%; }
 

@@ -3,28 +3,7 @@
 
 <script type="text/javascript" src="<c:url value="/js/messageGrid.js"/>"></script>
 <style>
-.nav.nav-tabs > li > a {
-	cursor: pointer !important;
-	min-width: 50px !important;
-}
-.subtab button {
-	right: 5px;
-	height: 25px !important;;
-	padding: 0 !important;
-	margin: 0 !important;;
-	background-color: transparent !important;
-	color: #908bad !important;
-	line-height: 25px !important;
-	top: 0 !important;
-	font-size: 17px;
-}
-.badge {
-	padding: 0 !important;
-	vertical-align : top !important;
-}
-.nav-tabs>li {
-	margin-right : 4px !important;
-}
+
 </style>
 <script>
 	Highcharts.setOptions({
@@ -426,7 +405,7 @@
 		var displayName = (rowKey.indexOf(',') > -1) ? '<s:message code="common.msg.all"/>' : rowKey.replaceAll("\\\"", "\"");
 		if(rowName!='') displayName = rowName + '&lt;' + rowKey + '&gt;';
 		var id = 'tab'+tabID;
-        $('.listChart').append($('<li style="display:inline-flex;text-align: center;z-index:1001;" idx="'+tabID+'" id="liTab'+tabID+'"><a data-toggle="tab" href="#tab'+tabID+'" id="detailTab'+tabID+'" style="display: flex; align-items: center; justify-content: center;">'+displayName+' - '+colKeyNm+'<span class="badge"></span><button type="button" class="closeBtn" style="float:right; color:white;">x</button></a></li>'));
+        $('.listChart').append($('<li style="display:inline-flex;text-align: center;z-index:1001;" idx="'+tabID+'" id="liTab'+tabID+'"><a data-toggle="tab" href="#tab'+tabID+'" id="detailTab'+tabID+'" style="display: flex; align-items: center; justify-content: center;">'+displayName+' - '+colKeyNm+'<span class="badge mal4"></span><button type="button" class="subtab_close">	&#10006;</button></a></li>'));
 		$('#basicStatList').after($('<div class="tab-pane fade" id="tab' + tabID + '"><div id="grid'+tabID+'" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; height: 400px"></div></div>'));
 
 		var gid = 'grid'+tabID;

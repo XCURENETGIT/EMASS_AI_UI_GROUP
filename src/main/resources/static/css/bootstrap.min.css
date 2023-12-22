@@ -4181,12 +4181,18 @@ select[multiple].input-group-sm>.form-control, select[multiple].input-group-sm>.
 	color:#333333;
 	border: none;
 	float: left;
-	padding: 6px 20px;
+	padding: 7px 20px 8px 20px;
 	display: inline-block;
 }
 
 .nav-tabs>li>a:hover {
 
+}
+.nav-tabs>li.active>a .badge, .nav-tabs>li.active>a:focus .badge , .nav-tabs>li.active>a:hover .badge {
+	color: #88B8FF;
+	cursor: default;
+	background-color: #242330;
+	border-bottom-color: transparent
 }
 
 .nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
@@ -4195,6 +4201,7 @@ select[multiple].input-group-sm>.form-control, select[multiple].input-group-sm>.
 	background-color: #242330;
 	border-bottom-color: transparent
 }
+.nav-tabs>li.active>a button, .nav-tabs>li.active>a:focus button, .nav-tabs>li.active>a:hover button { color:#fff !important;}
 
 .nav-tabs.nav-justified {
 	width: 100%;
@@ -5113,7 +5120,6 @@ a.label:focus, a.label:hover {
 .badge {
 	display: inline-block;
 	min-width: 10px;
-	padding: 3px 9px;
 	font-size: 12px;
 	font-weight: 700;
 	line-height: 1;
