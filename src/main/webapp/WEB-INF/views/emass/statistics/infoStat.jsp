@@ -3,103 +3,11 @@
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp" %>
 
-<link rel="stylesheet" href="<c:url value="/resources/css/vis.min.css"/>"/>
-<script type="text/javascript" src="<c:url value="/resources/js/messageGrid.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/resources/js/vis.min.js"/>"></script>
+<link rel="stylesheet" href="<c:url value="/css/vis.min.css"/>"/>
+<script type="text/javascript" src="<c:url value="/js/messageGrid.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/vis.min.js"/>"></script>
 <%@ include file="../../analysis/analysisBase.jsp" %>
 
-
-<style type="text/css">
-	.panel-heading .dropdown-menu {
-		right: 31px;
-		top: 42px;
-		left: initial;
-	}
-
-	#loadingBar {
-		position: absolute;
-		top: 39px;
-		left: 11px;
-		width: 1252px;
-		height: 545px;
-		background-color: rgba(210, 232, 255, 0.8);
-		-webkit-transition: all 0.5s ease;
-		-moz-transition: all 0.5s ease;
-		-ms-transition: all 0.5s ease;
-		-o-transition: all 0.5s ease;
-		transition: all 0.5s ease;
-		opacity: 1;
-	}
-
-	#text {
-		position: absolute;
-		top: 4px;
-		left: 530px;
-		width: 30px;
-		height: 50px;
-		margin: auto auto auto auto;
-		font-size: 16px;
-		color: #5a5a5a;
-		font-weight: bold;
-	}
-
-	#text_loading {
-		position: absolute;
-		top: -45px;
-		left: 8px;
-		width: 500px;
-		height: 50px;
-		margin: auto auto auto auto;
-		font-size: 24px;
-		color: #5a5a5a;
-		font-weight: bold;
-	}
-
-
-	div.outerBorder {
-		position: relative;
-		top: 350px;
-		width: 600px;
-		height: 44px;
-		margin: auto auto auto auto;
-		border: 8px solid rgba(0, 0, 0, 0.1);
-		background: rgb(252, 252, 252); /* Old browsers */
-		background: -moz-linear-gradient(top, rgba(252, 252, 252, 1) 0%, rgba(237, 237, 237, 1) 100%); /* FF3.6+ */
-		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(252, 252, 252, 1)), color-stop(100%, rgba(237, 237, 237, 1))); /* Chrome,Safari4+ */
-		background: -webkit-linear-gradient(top, rgba(252, 252, 252, 1) 0%, rgba(237, 237, 237, 1) 100%); /* Chrome10+,Safari5.1+ */
-		background: -o-linear-gradient(top, rgba(252, 252, 252, 1) 0%, rgba(237, 237, 237, 1) 100%); /* Opera 11.10+ */
-		background: -ms-linear-gradient(top, rgba(252, 252, 252, 1) 0%, rgba(237, 237, 237, 1) 100%); /* IE10+ */
-		background: linear-gradient(to bottom, rgba(252, 252, 252, 1) 0%, rgba(237, 237, 237, 1) 100%); /* W3C */
-		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fcfcfc', endColorstr='#ededed', GradientType=0); /* IE6-9 */
-		border-radius: 72px;
-		box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-	}
-
-	#border {
-		position: absolute;
-		top: 3px;
-		left: 10px;
-		width: 500px;
-		height: 22px;
-		margin: auto auto auto auto;
-		box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.2);
-		border-radius: 10px;
-	}
-
-	#bar {
-		position: absolute;
-		top: 1px;
-		left: 0px;
-		width: 20px;
-		height: 20px;
-		margin: auto auto auto auto;
-		border-radius: 11px;
-		border: 2px solid rgba(30, 30, 30, 0.05);
-		background: rgb(0, 173, 246); /* Old browsers */
-		box-shadow: 2px 0px 4px rgba(0, 0, 0, 0.4);
-	}
-
-</style>
 <script>
 	var searchFlag = false;
 	var detailTotal = 0;
@@ -118,25 +26,24 @@
 			getData('Y');
 		});
 
+		$('#clearBtn').click(function(){
+			$('#startdate').val(new Date().format('yyyy-mm-dd'));
+			$('#enddate').val(new Date().format('yyyy-mm-dd'));
+
+			//$('.optionBtn').removeClass('active');
+			//$('#deptnm').addClass('active');
+		});
+
 		$('#chartCntDiv .dropdown-menu li a').click(function () {
 			chartcnt = $(this).text();
 			printChart(totalChartDat);
 		});
 
-		$('#startdatepicker').datetimepicker({
-			format: 'YYYY-MM-DD',
-			locale: 'ko',
-			defaultDate: moment(new Date())
-		});
-
-		$('#enddatepicker').datetimepicker({
-			format: 'YYYY-MM-DD',
-			locale: 'ko',
-			defaultDate: moment(new Date())
-		});
+		$('#startdate').val(new Date().format('yyyy-mm-dd'));
+		$('#enddate').val(new Date().format('yyyy-mm-dd'));
 
 		$(".nav-tabs").on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
-			var id = $(this).parents('li').attr('idx');
+/*			var id = $(this).parents('li').attr('idx');
 			var hrefNm = $(this).attr('href');
 			if (hrefNm == '#infoStatList') {
 				$("#chartCntDiv").show();
@@ -147,7 +54,7 @@
 				$('#totalViewDiv').show();
 				var dat = chartDat[id];
 				printChart(dat);
-			}
+			}*/
 		})
 
 		$('.listChart').on('click', '.close', function () {
@@ -169,71 +76,11 @@
 			printChart(totalChartDat);
 		});
 
-		$('.print_stat').click(function () {
-			var gridDetail = getCurrentGrid();
-			if (gridDetail != undefined) {
-				if (gridDetail.Rows == 0) {
-					alert('<s:message code="common.msg.nodata"/>');
-					return;
-				}
-				gridDetail.print('<s:message code="stat.detail.user.list"/>', pMenuId, menuId);
-			} else {
-				if (grid1.Rows == 0) {
-					alert('<s:message code="common.msg.nodata"/>');
-					return;
-				}
-				grid1.print('<s:message code="DATA_MONITOR.STAT_USER"/>', pMenuId, menuId);
-			}
-		});
-
-		$('.excel_stat').click(function () {
-			var gridDetail = getCurrentGrid();
-			if (gridDetail != undefined) {
-				excelDownLoad(gridDetail, '<s:message code="stat.detail.user.list"/>');
-			} else {
-				chart = $('#chartArea1').highcharts();
-				var svg = chart.getSVG();
-				excelDownLoad(grid1, '<s:message code="DATA_MONITOR.STAT_USER"/>', svg);
-			}
-		});
-
-		$('.cell_stat').click(function () {
-			var gridDetail = getCurrentGrid();
-			if (gridDetail != undefined) {
-				cellDownLoad(gridDetail, '<s:message code="stat.detail.user.list"/>');
-			} else {
-				cellDownLoad(grid1, '<s:message code="DATA_MONITOR.STAT_USER"/>');
-			}
-		});
-
-		$('.pdf_stat').click(function () {
-			var gridDetail = getCurrentGrid();
-			if (gridDetail != undefined) {
-				pdfDownLoad(gridDetail, '<s:message code="stat.detail.user.list"/>');
-			} else {
-				pdfDownLoad(grid1, '<s:message code="DATA_MONITOR.STAT_USER"/>');
-			}
-		});
-
-		$('.csv_stat').click(function () {
-			var gridDetail = getCurrentGrid();
-			if (gridDetail != undefined) {
-				csvDownLoad(gridDetail, '<s:message code="stat.detail.user.list"/>');
-			} else {
-				csvDownLoad(grid1, '<s:message code="DATA_MONITOR.STAT_USER"/>');
-			}
-		});
-
 		$('.totalView').click(function () {
 			$("#chartCntDiv").show();
 			$('#totalViewDiv').hide();
 			printChart(totalChartDat);
 		});
-
-		$('.searchQueryBtn').click(function () {
-			queryMakePop();
-		});
-
 
 		getData('Y');
 
@@ -358,45 +205,7 @@
 		});
 	}
 
-	function excelDownLoad(grid, title, svg) {
-		if (grid.Rows == 0) {
-			alert('<s:message code="common.msg.nodata"/>');
-			return;
-		}
-		var header = grid.getHeaderEXCEL();
-		var body = grid.getBodyEXCEL();
-		grid.on();
-		ui.postJson({
-			url: 'utils/xlsxWriter.do',
-			title: title,
-			header: header,
-			body: body,
-			pMenuId: pMenuId,
-			menuId: menuId,
-			svg: svg,
-			success: function (data, total) {
-				try {
-					ExcelDown.location.href = '<c:url value="/utils/xlsxDown.do"/>?path=' + data;
-				} catch (e) {
-					ExcelDown.src = '<c:url value="/utils/xlsxDown.do"/>?path=' + data;
-				}
-			},
-			error: function (status, message) {
-				ui.alertMsg(message);
-			},
-			complete: function () {
-				grid.off();
-			}
-		});
-	}
-
-	function queryMakePop() {
-		var url = '<c:url value="/commons/queryMake.do?statType=users"/>';
-		fnOpenWindow(url, 'queryMakePop', 1400, 870, 'resize');
-	}
-
 	function getSearchQuery() {
-
 	}
 
 	function initProgressbar() {
@@ -449,7 +258,17 @@
 			<div>
 				<div class="tab-content">
 					<div id="privateChart" class="tab-pane fade in active">
-						<div id="selectGridx" class="slickGrid gridArea" style="min-height: 200px;"></div>
+						<div class="slickGrid gridArea" style="min-height: 200px;">
+							<div id="mynetwork" style="border:1px solid lightgray;height: 516px;"></div>
+							<div id="loadingBar" style="display: none;">
+								<div class="outerBorder">
+									<div id="text">0%</div>
+									<div id="border">
+										<div id="bar"></div>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
 					<div id="privateDetail" class="tab-pane fade in">
 						<div id="selectGrid" class="slickGrid gridArea" style="min-height: 200px;"></div>
@@ -538,193 +357,18 @@
 	};
 	grid1.onClick = function () {
 		initProgressbar();
-		if (grid1.Col == grid1.ColIndex('val') || grid1.Col == grid1.ColIndex('pi_total')) {
-			var data = grid1.getRowData(grid1.Row);
-			makeNetwork(grid1.getValue(grid1.Row, 'val'), '', grid1.getValue(grid1.Row, 'pi_total'));
-		}
-		if (grid1.Col == grid1.ColIndex('pi_SN')) {
-			makeNetwork(grid1.getValue(grid1.Row, 'val'), 'SN', grid1.getValue(grid1.Row, 'pi_SN'));
-		}
-		if (grid1.Col == grid1.ColIndex('pi_CN')) {
-			makeNetwork(grid1.getValue(grid1.Row, 'val'), 'CN', grid1.getValue(grid1.Row, 'pi_CN'));
-		}
-		if (grid1.Col == grid1.ColIndex('pi_DN')) {
-			makeNetwork(grid1.getValue(grid1.Row, 'val'), 'DN', grid1.getValue(grid1.Row, 'pi_DN'));
-		}
-		if (grid1.Col == grid1.ColIndex('pi_FN')) {
-			makeNetwork(grid1.getValue(grid1.Row, 'val'), 'FN', grid1.getValue(grid1.Row, 'pi_FN'));
-		}
-		if (grid1.Col == grid1.ColIndex('pi_PN')) {
-			makeNetwork(grid1.getValue(grid1.Row, 'val'), 'PN', grid1.getValue(grid1.Row, 'pi_PN'));
-		}
+		makeNetwork(grid1.getValue(grid1.Row, 'rowKey'), grid1.ColKey(grid1.Col), grid1.getValue(grid1.Row, grid1.Col));
 	};
 
 	var grid2 = new Xgrid('selectGrid', contextRoot);
-	grid2.autoNumber();
-	grid2.colAdd('interestUserYn', '<s:message code="message.msg.interest"/>', 40, 'center', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
-		if (value == 'Y') return '<div class="interestUserCheck"></div>';
-		else if (value == 'N') return '';
-	});
-	grid2.colAdd('readYn', '<s:message code="condition.read"/>', 40, 'center', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
-		if (value == 'Y') return '<div class="readY"></div>';
-		else if (value == 'N') return '<div class="readN"></div>';
-		else return '-';
-	});
-	grid2.colAdd('attachcnt', '<s:message code="message.msg.file"/>', 35, 'center', false, 'link', function (row, cell, value, columnDef, dataContext) {
-		if (value == '0') return '';
-		else return value.comma();
-	});
-	grid2.colAdd('inside', '<s:message code="message.msg.inout"/>', 55, 'center', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
-		if (value == 'N') return '<s:message code="message.msg.out"/>';
-		else if (value == 'Y') return '<s:message code="message.msg.in"/>';
-		else return '-';
-	});
+	initGrid(grid2, messageGridColumn);
 
-	grid2.colAdd('direction_svc', '<s:message code="condition.receive_send"/>', 55, 'center', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
-		if (value == 'I') return '<s:message code="condition.receive"/>';
-		else if (value == 'O') return '<s:message code="condition.send"/>';
-		else return '-';
-	});
 
-	grid2.colAdd('svcNm', '<s:message code="condition.service"/>', 180, 'center', false, 'nomal');
-	grid2.colAdd('subject', '<s:message code="condition.subject"/>', 410, 'left', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
-		var body_snippet = grid2.getValue(row, 'body_snippet').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '\'');
-		if (body_snippet.length > 100) body_snippet = body_snippet.substring(0, 1024) + '...';
-
-		if (value.length > 1024) value = value.substring(0, 1024) + '...';
-		value = value.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '\'');
-
-		//예약어 Highlight 처리
-		var kwds = grid2.getValue(row, 'kwds');
-		value = highlightKeyword(value, kwds);
-		value = highlightSearchStr(value, "subject");
-
-		var rtnVal = '<span title="' + body_snippet + '" onclick="" class="subject_read' + grid2.getValue(row, 'readYn') + '">' + value + '</span>&nbsp;<a href="javascript:void(0);" onclick="viewer_openPop(' + row + ')" class="glyphicon glyphicon-new-window new-window"></a>';
-		if ((isConsent() && grid2.getValue(row, 'consentNo') == '') || !isDetailView()) rtnVal = '<span>' + value + '</span>';
-
-		return rtnVal;
-	});
-	grid2.colAdd('ctimeFormat', '<s:message code="condition.date"/>', 130, 'center', false, 'nomal');
-	grid2.colAdd('user', '<s:message code="consent.user"/>', 120, 'center', false, 'link');
-	grid2.colAdd('usr_id', '<s:message code="common.msg.account"/>', 110, 'center', false, 'nomal');
-	grid2.colAdd('businm', '<s:message code="common.org.busi"/>', 120, 'center', true, 'nomal');
-	grid2.colAdd('deptnm', '<s:message code="common.org.dept"/>', 120, 'center', false, 'nomal');
-	grid2.colAdd('jikgubnm', '<s:message code="common.org.jikgub"/>', 120, 'center', false, 'nomal');
-	grid2.colAdd('sender', '<s:message code="condition.sender"/>', 130, 'left', false, 'link', function (row, cell, value, columnDef, dataContext) {
-		return highlightSearchStr(value, "sender");
-	});
-	grid2.colAdd('allofus', '<s:message code="condition.allofus"/>', 150, 'left', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
-		if (value == undefined || value.length == 0) return '';
-
-		for (var i = 0; i < value.length; i++) {
-			if (value[i] == 'IA') value[i] = '<s:message code="condition.allofus1"/>';
-			else if (value[i] == 'ET') value[i] = '<s:message code="condition.allofus8"/>';
-			else if (value[i] == 'IT') value[i] = '<s:message code="condition.allofus7"/>';
-			else if (value[i] == 'EA') value[i] = '<s:message code="condition.allofus2"/>';
-			else if (value[i] == 'PT') value[i] = '<s:message code="condition.allofus9"/>';
-			else if (value[i] == 'PA') value[i] = '<s:message code="condition.allofus3"/>';
-		}
-		return value.join(', ');
-	});
-	grid2.colAdd('recvs', '<s:message code="condition.recv"/>', 220, 'left', false, 'link', function (row, cell, value, columnDef, dataContext) {
-		var innOutInfo = grid2.getValue(row, 'recvsInOutInfo');
-
-		var rtnVal = arrayToString(value);
-		return innOutInfo + highlightSearchStr(rtnVal, "recvs");
-	});
-	grid2.colAdd('to', '<s:message code="condition.to"/>', 150, 'left', true, 'link', function (row, cell, value, columnDef, dataContext) {
-		var innOutInfo = grid2.getValue(row, 'toInOutInfo');
-		var rtnVal = arrayToString(value);
-		return innOutInfo + highlightSearchStr(rtnVal, "to");
-	});
-	grid2.colAdd('cc', '<s:message code="condition.cc"/>', 150, 'left', true, 'link', function (row, cell, value, columnDef, dataContext) {
-		var innOutInfo = grid2.getValue(row, 'ccInOutInfo');
-
-		var rtnVal = arrayToString(value);
-		return innOutInfo + highlightSearchStr(rtnVal, "cc");
-	});
-	grid2.colAdd('bcc', '<s:message code="condition.bcc"/>', 150, 'left', true, 'link', function (row, cell, value, columnDef, dataContext) {
-		var innOutInfo = grid2.getValue(row, 'bccInOutInfo');
-		var rtnVal = arrayToString(value);
-		return innOutInfo + highlightSearchStr(rtnVal, "bcc");
-	});
-	grid2.colAdd('srcip', '<s:message code="condition.source"/> IP', 100, 'left', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
-		return highlightSearchStr(value, "srcip");
-	}, {sorter: sortUtil.ip});
-	grid2.colAdd('dstip', '<s:message code="condition.destination"/> IP', 100, 'left', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
-		return highlightSearchStr(value, "dstip");
-	}, {sorter: sortUtil.ip});
-	grid2.colAdd('attachname', '<s:message code="condition.attach_name"/>', 220, 'left', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
-		var rtnVal = arrayToString(value);
-		return highlightSearchStr(rtnVal, "attachname");
-	});
-	grid2.colAdd('sizeStr', '<s:message code="condition.size.all"/>', 80, 'left', false, 'nomal', null, {sortField: 'size'});
-	grid2.colAdd('bodySizeStr', '<s:message code="condition.size.body"/>', 80, 'left', false, 'nomal', null, {sortField: 'body_size'});
-	grid2.colAdd('attachSizeStr', '<s:message code="condition.size.attach"/>', 80, 'left', false, 'nomal', null, {sortField: 'attachSizeSort'});
-	grid2.colAdd('kwds', '<s:message code="condition.keyword"/>', 120, 'left', false, 'nomal');
-	grid2.colAdd('pi_total', '<s:message code="condition.regexp"/>', 70, 'center', false, 'link', function (row, cell, value, columnDef, dataContext) {
-		if (value == '0') return '';
-		else return value.comma();
-	});
-
-	if (isOCR) {
-		grid2.colAdd('ocr_attach_cnt', 'OCR <s:message code="message.msg.file"/>', 70, 'center', false, 'link', function (row, cell, value, columnDef, dataContext) {
-			if (value == '0' || value == '' || value == null || value == undefined) return '';
-			else return value.comma();
-		});
-	}
-	grid2.loadExportMenu('<s:message code="DATA_ANALYSIS.ANALYSIS_INFO"/>');
-	grid2.loadPageSize();
-	grid2.loadHeader(false);
-	grid2.initData('<s:message code="common.msg.search.click"/>');
-
-	grid2.onClick = function () {
-		if (grid.Col == grid.ColIndex('attachcnt')) {
-			fileInfoViewer(grid.Row);
-		} else if (grid.Col == grid.ColIndex('user')) {
-			userInfoViewer(grid.Row, 'user');
-		} else if (grid.Col == grid.ColIndex('sender')) {
-			userInfoViewer(grid.Row, 'sender');
-		} else if (grid.Col == grid.ColIndex('recvs')) {
-			if (grid.getValue(grid.Row, 'recvs') != '') userInfoViewer(grid.Row, 'recvs');
-		} else if (grid.Col == grid.ColIndex('to')) {
-			if (grid.getValue(grid.Row, 'to') != '') userInfoViewer(grid.Row, 'to');
-		} else if (grid.Col == grid.ColIndex('cc')) {
-			if (grid.getValue(grid.Row, 'cc') != '') userInfoViewer(grid.Row, 'cc');
-		} else if (grid.Col == grid.ColIndex('bcc')) {
-			if (grid.getValue(grid.Row, 'bcc') != '') userInfoViewer(grid.Row, 'bcc');
-		} else if (grid.Col == grid.ColIndex('pi_total')) {
-			regexpInfoViewer(grid.Row);
-		} else if (grid.Col == grid.ColIndex('referer_url')) {
-			var referer_url = grid.getValue(grid.Row, 'referer_url');
-			if (referer_url != 'N') fnOpenWindow(referer_url, '', 1024, 800, 'resize');
-		} else if (grid.Col == grid.ColIndex('ocr_attach_cnt')) {
-			ocrFileInfoViewer(grid.Row);
-		}
-
-		if (!(adminMenu != "ALL" && adminMenu.indexOf("DV") < 0)) {
-			if (!parent.$('#none_btn').hasClass('areaSelected')) viewer_open(grid.Row);
-			if (popWin) viewer_openFocus(grid.Row);
-		} else {
-			alert('<s:message code="message.auth.no.detailview"/>');
-			return;
-		}
-	};
-	grid2.changePageSize = function (cnt) {
-		//parent.getList();
-	};
-	grid2.onDblClick = function () {
-		viewer_openPop(grid2.Row);
-	}
-
-	var popWin;
-
-	function viewer_openPop(row) {
+	function viewer_open(row, bodySize ){
 		var msgid = grid2.getValue(row, 'msgid');
-
-		popWin = openMessageBodyPop(grid2.id, msgid);
-		var readYn = grid2.getValue(row, 'readYn');
-		grid2.setValue(row, grid2.ColIndex('readYn'), 'Y');
+		openMessageBodyPop(grid2.id, msgid, '', bodySize);
+		grid.setValue(row, grid2.ColIndex('readYn'), 'Y');
+		grid.Select(row, 0);
 	}
 
 	function getData(flag) {
@@ -819,7 +463,7 @@
 		var user_str = value;
 		var type = type;
 		var pi_total = pi_total;
-		var piCount = $('.piCountNum').attr('piCountNum');
+		var piCount = 1;
 		ui.postJson({
 			url: 'getInfoNetwork.xcn',
 			user_str: user_str,
@@ -831,6 +475,7 @@
 			limit: -1,
 			success: function (data, total) {
 				grid2.setData(data);
+				return;
 				var nodes = [];
 				var edges = [];
 				if (pi_total == 0) {

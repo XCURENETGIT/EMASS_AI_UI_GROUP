@@ -655,8 +655,6 @@ public class SolrEdcStatController {
 	@Description("개인정보 유출 관계 분석 조회")
 	@ResponseBody
 	public XcnResponseVO getInfoStatList(final HttpServletRequest request, final HttpSession session) throws IOException, SolrServerException {
-		String[] piFields = {"pi_SN", "pi_PN", "pi_DN", "pi_FN", "pi_CN", "pi_MN", "pi_AN", "pi_CRN", "pi_SSN", "pi_IMEI", "pi_BRN", "pi_CPN", "pi_MCN"};
-
 		JSONObject param = Common.getParam(request);
 		String userStr = Common.nvl(param.get("user_str"));
 		String startDate = Common.nvl(param.get("startDate"));
@@ -668,7 +666,7 @@ public class SolrEdcStatController {
 		if (!(startDate.isEmpty() && endDate.isEmpty())) query.append(" +ctime:[").append(startDate).append(" TO ").append(endDate).append("] ");
 		query.append(" -pi_total:0 ");
 		query.append(" +( ");
-		for (String field : piFields) {
+		for (String field : Config.PRIVATE_SVC) {
 			query.append(field).append(":[").append(piCount).append(" TO * ] ");
 		}
 		query.append(" ) ");
@@ -678,22 +676,56 @@ public class SolrEdcStatController {
 		sq.setStart(0);
 		sq.setRows(0);
 		sq.set("aggregation.field", "user_str");
-		sq.set("aggregation.sub.fields", piFields);
+		sq.set("aggregation.sub.fields", Config.PRIVATE_SVC);
 		sq.set("aggregation.limit", 100);
 		sq.setParam("piAnalysisYn", "Y");
 
 		SolrEdcMessageVO solrVo = solrEdcService.getEmassMessage(sq, Common.getAdminId(request), "", null);
 		List<Map<String, Object>> list = solrVo.getPivotData();
 		for (Map<String, Object> item : list) {
-			int total = 0;
-			for (String field : piFields) {
-				total += Common.nvz(item.get(field));
+			double total = 0;
+			for (String field : Config.PRIVATE_SVC) {
+				total += Common.nvd(item.get(field));
 			}
-			log.info("total : {}", total);
 			item.put("pi_total", total);
 		}
-
-		log.info("list : {}", list);
 		return new XcnResponseVO(XcnRspCode.OK, list);
+	}
+
+
+	@RequestMapping(value = "/getInfoNetwork.xcn")
+	@Description("개인정보 유출 관계 분석 관계도 조회")
+	@ResponseBody
+	public XcnResponseVO getInfoNetwork(final HttpServletRequest request, final HttpSession session) throws SolrServerException, IOException {
+		String user_str = request.getParameter("user_str");
+		String startDate = Common.nvl(request.getParameter("startDate"));
+		String endDate = Common.nvl(request.getParameter("endDate"));
+		String type = Common.nvl(request.getParameter("type"));
+		String piCount = Common.nvl(request.getParameter("piCount"));
+
+		StringBuilder query = new StringBuilder();
+		query.append(String.format("+user_str:" + user_str));
+		if (!(startDate.isEmpty() && endDate.isEmpty())) {
+			query.append(" +ctime:[").append(startDate).append(" TO ").append(endDate).append("] ");
+		}
+		query.append(" -pi_total:0 ");
+		if (Common.isEquals(type, "pi_total")) {
+			query.append(" +( ");
+			for (String field : Config.PRIVATE_SVC) {
+				query.append(field).append(":[").append(piCount).append(" TO * ] ");
+			}
+			query.append(" ) ");
+		} else {
+			query.append(" +(").append(type).append(":[").append(piCount).append(" TO *]) ");
+		}
+
+		SolrQuery sq = new SolrQuery();
+		sq.setQuery(query.toString());
+		sq.setStart(0);
+		sq.setRows(Common.MAX_VALUE);
+		sq.setFields("date_hh","date_yyyy","date_yyyymm","date_yyyymmdd","msgid","cid","srcip","sport","dstip","dport","svc","svc1","svc2","svc3","ltime","ctime","ctime_yyyy","ctime_yyyymm","ctime_yyyymmdd","ctime_hh","size","body_size","usr_id","usr_ip","user","userid","name","subject","host","path","xmsgkey","sender","sname","recvs","recvs_name","to","cc","bcc","tname","cocd","conm","suborgcd","suborgnm","busicd","businm","deptcd","deptnm","jikgubcd","jikgubnm","ip_cocd","ip_conm","ip_busicd","ip_businm","allofus","attached","direction","direction_svc","kwd","kwds","inside","work","attachname","attachsize","attachhash","attachtype","attachnameexist","attachcnt","body_snippet","pi_total","read_time","xrootmtr","ocr_attach_cnt","user_str","pi_SN","pi_DN","pi_PN","pi_CN","pi_FN");
+
+		SolrEdcMessageVO solrVo = solrEdcService.getEmassMessage(sq, Common.getAdminId(request), "", null);
+		return new XcnResponseVO(XcnRspCode.OK, solrVo.getEmass(), solrVo.getNumFound());
 	}
 }
