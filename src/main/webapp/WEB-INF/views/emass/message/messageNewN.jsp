@@ -353,7 +353,6 @@
         var adminEmail = '${_USERCREDENTIAL_.adminEmail}';
         var msgInfoLayout;
         var addTabFlag = false;
-        var checkMsgCnt = 10000;
         var re = /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\'\"\\(\=]/gi;
 
         var filterSeq = '<%=filterSeq%>';
@@ -431,6 +430,7 @@
             }else{
                 $('#epmsgList').show();
             }
+
 
 
             if(epmsgAttach == ""){
@@ -1105,104 +1105,8 @@
                 e.stopPropagation();
             });
 
-            $(document).on('click', '.all_down_link', function(){
-                var searchType = $(this).attr('data-type');
-                $('#searchType').val(searchType);
-                var title = $(this).text();
-                $('#exportTitle').text(title+' '+'<s:message code="common.msg.export"/>');
-
-                $('#exportDialog').modal('show');
-            });
-
-            $("#exportDialog").on('show.bs.modal', function() {
-                $('input:radio[name=exportDataRange]:input:checked').prop("checked", false);
-
-                var grid = getIframeListObj().grid;
-                var rows = grid.getSelectedKey('msgid').length;
-                var total = grid.data.length;
-
-                if(total == 0){
-                    ui.alertMsg('<s:message code="common.msg.nodata"/>');
-                    return false;
-                }
-
-                var searchType = $('#searchType').val();
-                var consentNo = grid.getValue(0, 'consentNo');
-                if( searchType != 'L'){
-                    if(isConsent( ) && consentNo == '' && '<%=adminType%>' != 'C'){
-                        alert('<s:message code="download.msg.consent"/>');
-                        return false;
-                    }
-                }
-
-                if(searchType != "L" && searchType.indexOf('L') > -1) {
-                    if($('input:radio[name=exportFileType]:input:checked').val() == "xlsx") {
-                        $("input:radio[name='bodyInExcel']:radio[value='N']").prop("checked", true);
-                        $('#bodyInExcel').show();
-                        $('#bodyInExcelMsg').hide();
-                        $('#bodyInExcelIdx').hide();
-                    }else {
-                        $('#bodyInExcel').hide();
-                        $('#bodyInExcelMsg').hide();
-                        $('#bodyInExcelIdx').hide();
-                    }
-                } else {
-                    $('#bodyInExcel').hide();
-                    $('#bodyInExcelMsg').hide();
-                    $('#bodyInExcelIdx').hide();
-                }
 
 
-                $('#searchTime').val('');
-                $('#searchCondition').val('');
-                $('#searchHeader').val('');
-                $('#searchTotal').val('');
-                $('#dataLength').val('');
-                $('#exportFileExt').val('');
-
-                if( (rows > checkMsgCnt) || (rows == 0 && grid.data.length > checkMsgCnt)){
-                    $('input:radio[name=exportDataRange]:input[value=A]').parent().click();
-                }else{
-                    $('input:radio[name=exportDataRange]:input[value=S]').parent().click();
-                }
-            });
-
-            $( 'input[name="exportDataRange"]:radio' ).change(function(){
-                var grid = getIframeListObj().grid;
-                var rows = grid.getSelectedKey('msgid').length;
-                var total = getIframeListObj().$('#busiCntArea').find('.tab_selected').find('.busiCnt').text();
-                total = total.replace(re,"")
-                var downTotal = total;
-                var exportDataRange = $(this).val();
-                if( exportDataRange == 'S'){
-                    $('#sizeWarnMsg').hide();
-
-                    if( rows > 0) downTotal = rows;
-                    else downTotal = grid.data.length;
-
-                    if( downTotal > checkMsgCnt){
-                        ui.alertMsg('<s:message code="download.message.check.total" arguments="'+addCommas(checkMsgCnt)+'" argumentSeparator="|"/>');
-                        $('input:radio[name=exportDataRange]:input[value=A]').parent().click();
-                        return;
-                    }
-                }
-
-                var searchType = $('#searchType').val();
-                if( searchType.indexOf('L') > -1){
-                    $('#exportFileTypeArea').show();
-                    if(downTotal > 50000){
-                        $('#sizeWarnMsg').show();
-                    }else{
-                        $('#sizeWarnMsg').hide();
-                    }
-                }
-                else {
-                    $('#exportFileTypeArea').hide();
-                    $('#sizeWarnMsg').hide();
-                }
-                $('#exportDataSize').text(addCommas(downTotal));
-                $('#searchTotal').val(downTotal);
-            });
 
             $('input[name="exportFileType"]:radio').change( function() {
                 var searchType = $('#searchType').val()
@@ -1248,121 +1152,9 @@
 
                 grid.print(title, pMenuId, menuId);
             });
-            $('#allDownBtn').click(function(){
-                var grid = getIframeListObj().grid;
-                var rows = grid.getSelectedKey('msgid').length;
-                var total = getIframeListObj().$('#busiCntArea').find('.tab_selected').find('.busiCnt').text();
-                total = total.replace(re,"")
-                grid.on();
-                var bodyInExcel = $('input:radio[name=bodyInExcel]:input:checked').val();
-                var header = grid.getHeaderEXCEL();
-                if(bodyInExcel == "Y") {
-                    header = JSON.parse(header);
-                    header.splice($('#nowColIdx').val(),0,{"key":"body","title":"<s:message code='condition.body' />","width":410,"align":"left"});
-                    header = JSON.stringify(header);
-                }
-                var param = JSON.stringify( getIframeListObj().filterValData );
-                var dataLength = $('#dataLength_select').selectpicker('val');
-                var searchType = $('#searchType').val();
-                var exportFileType = $('input:radio[name=exportFileType]:input:checked').val();
-                var exportDataRange = $('input:radio[name=exportDataRange]:input:checked').val();
 
-                $('#searchTime').val(getIframeListObj().$('#searchTime').val());
-                $('#searchCondition').val(param);
-                $('#searchHeader').val(header);
-                $('#dataLength').val(dataLength);
-                $('#exportFileExt').val(exportFileType);
 
-                if( exportDataRange == 'A'){
-                    //중복체크
-                    ui.get({
-                        url : 'checkDownloadBatchExist.xcn',
-                        searchCondition : param,
-                        searchTotal : $('#searchTotal').val(),
-                        searchType : searchType,
-                        exportFileExt : exportFileType,
-                        success : function(data, total) {
-                            if(data > 0) {
-                                downloadBatchExist = true;
-                            } else {
-                                downloadBatchExist = false;
-                            }
-                        },
-                        error : function(status, message) {
-                            ui.alertMsg(message);
-                        },
-                        complete : function() {
-                            if(downloadBatchExist) {
-                                ui.alertMsg('<s:message code="download.msg.exist" />');
-                            } else {
-                                $('#isBackground').val('Y');
-                                if( searchType == 'B'){
-                                    $('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveBatchZip.xcn"/>');
-                                    $('#allDownForm').submit();
-                                }else if(searchType == 'A' ){
-                                    $('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveBatchZip.xcn"/>');
-                                    $('#allDownForm').submit();
-                                }else if(exportFileType == 'xlsx' || exportFileType == 'cell'){
-                                    $('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveBatchZip.xcn"/>');
-                                    $('#allDownForm').submit();
-                                }else if(exportFileType == 'csv'){
-                                    $('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveBatchCSV.xcn"/>');
-                                    $('#allDownForm').submit();
-                                }else if(exportFileType == 'pdf'){
-                                    $('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveBatchPDF.xcn"/>');
-                                    $('#allDownForm').submit();
-                                }
-                            }
-                        }
-                    });
 
-                }else{
-                    $('#isBackground').val('N');
-                    if( searchType == 'B'){
-                        $('.body_link_new').click();
-                    }else if(searchType == 'A' ){
-                        $('.attach_link_new').click();
-                    }
-                    else if(searchType == 'LB' || searchType == 'LBA' ){
-                        var msgids = grid.getSelectedKey('msgid');
-                        if( msgids.length == 0 ){
-                            msgids = grid.getKeyData('msgid');
-                        }
-                        var selected_condition = {};
-                        selected_condition.msgids = msgids;
-                        selected_condition.sort = $('#messageSort').val();
-
-                        $('#searchCondition').val(JSON.stringify( selected_condition ));
-                        $('#searchTotal').val(msgids.length);
-
-                        if(exportFileType == 'xlsx' || exportFileType == 'cell'){
-                            $('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveZip.xcn"/>');
-                            $('#allDownForm').submit();
-                        }else if(exportFileType == 'csv'){
-                            $('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveCSV.xcn"/>');
-                            $('#allDownForm').submit();
-                        }else if(exportFileType == 'pdf'){
-                            $('#allDownForm').attr('action', '<c:url value="/getEmassMessageSavePDF.xcn"/>');
-                            $('#allDownForm').submit();
-                        }
-                    }else{
-                        if(exportFileType == 'xlsx'){
-                            $('.excel_link_new').click();
-                        }else if(exportFileType == 'cell'){
-                            $('.cell_link_new').click();
-                        }else if(exportFileType == 'csv'){
-                            $('.csv_link_new').click();
-                        }else if(exportFileType == 'pdf'){
-                            $('.pdf_link_new').click();
-                        }
-                    }
-                }
-
-                $('#exportDialog').modal('hide');
-                setTimeout(function(){
-                    grid.off();
-                }, 500);
-            });
             $(document).on('click', '.excel_link_new', function(){
                 var grid = getIframeListObj().grid;
                 var title = $(this).attr('rel');
@@ -2148,372 +1940,371 @@
     </script>
 </head>
 <body class="mini-navbar msgBody">
-    <div id="wrap" >
-        <tiles:insertAttribute name="top" ignore="true"/>
-        <div id="container">
-            <tiles:insertAttribute name="lnb" ignore="true"/>
-            <div id="contentArea">
-                <%-- content --%>
-                        <div class="msg_container">
-                            <tiles:insertAttribute name="left" ignore="true"/>
-                            <div id="searchKeywordDiv" class="searchKeywordDiv">
-                                <div class="searchKeywordTab"><s:message code="searchKeyword.management"/>
-                                    <div class="rightGroup"><span class="searchKeywordCloseBtn">&times;</span></div>
-                                </div>
-                                <div class="searchKeywordSearch" style="padding: 5px 5px 5px 10px;">
-                                    <input class="condition_input_text" type="text" name="serch" placeholder="<s:message code="searchKeyword.search"/>" id="searchKeywordSearchStr" style="width:calc(100% - 150px);">
-                                    <button class="search_btn" id="searchKeywordSearchBtn"><span><s:message code="common.search"/></span></button>
-                                    <button class="msg_button" id="addSearchKeywordBtn"><span><s:message code="common.msg.add"/></span></button>
-                                    <button class="msg_button" id="delSearchKeywordBtn"><span><s:message code="common.msg.delete"/></span></button>
-                                </div>
-                                <div style="padding-left: 10px;">
-                                    <span style="font-weight: bold; display: inline-block; margin-right: 10px;"><i class="fa fa-caret-right"></i> <s:message code="searchKeyword.inputMode"/></span>
-                                    <label class="searchKeywordInputType"><input type="radio" name="searchKeywordInputType" value="S" checked="checked"> <span><s:message code="searchKeyword.single"/></span></label>
-                                    <label class="searchKeywordInputType"><input type="radio" name="searchKeywordInputType" value="A"> <span>AND</span></label>
-                                    <label class="searchKeywordInputType"><input type="radio" name="searchKeywordInputType" value="O"> <span>OR</span></label>
-                                </div>
-                                <div id="searchKeywordGrid" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px;min-height:200px;height:calc(100% - 100px);"></div>
+<div id="wrap" >
+    <tiles:insertAttribute name="top" ignore="true"/>
+    <div id="container">
+        <tiles:insertAttribute name="lnb" ignore="true"/>
+        <div id="contentArea">
+            <%-- content --%>
+            <div class="msg_container">
+                <tiles:insertAttribute name="left" ignore="true"/>
+                <div id="searchKeywordDiv" class="searchKeywordDiv">
+                    <div class="searchKeywordTab"><s:message code="searchKeyword.management"/>
+                        <div class="rightGroup"><span class="searchKeywordCloseBtn">&times;</span></div>
+                    </div>
+                    <div class="searchKeywordSearch" style="padding: 5px 5px 5px 10px;">
+                        <input class="condition_input_text" type="text" name="serch" placeholder="<s:message code="searchKeyword.search"/>" id="searchKeywordSearchStr" style="width:calc(100% - 150px);">
+                        <button class="search_btn" id="searchKeywordSearchBtn"><span><s:message code="common.search"/></span></button>
+                        <button class="msg_button" id="addSearchKeywordBtn"><span><s:message code="common.msg.add"/></span></button>
+                        <button class="msg_button" id="delSearchKeywordBtn"><span><s:message code="common.msg.delete"/></span></button>
+                    </div>
+                    <div style="padding-left: 10px;">
+                        <span style="font-weight: bold; display: inline-block; margin-right: 10px;"><i class="fa fa-caret-right"></i> <s:message code="searchKeyword.inputMode"/></span>
+                        <label class="searchKeywordInputType"><input type="radio" name="searchKeywordInputType" value="S" checked="checked"> <span><s:message code="searchKeyword.single"/></span></label>
+                        <label class="searchKeywordInputType"><input type="radio" name="searchKeywordInputType" value="A"> <span>AND</span></label>
+                        <label class="searchKeywordInputType"><input type="radio" name="searchKeywordInputType" value="O"> <span>OR</span></label>
+                    </div>
+                    <div id="searchKeywordGrid" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px;min-height:200px;height:calc(100% - 100px);"></div>
+                </div>
+                <div id="filterHeaderDiv" class="filterHeaderDiv">
+                    <div class="filterHeaderTab"><s:message code="common.msg.conditionBox"/>
+                        <div class="rightGroup">
+                            <span class="searchBoxSpan"><label><input type="checkbox" id="searchBox"/><span> <s:message code="common.msg.searchNow"/></span></label></span>
+                            <span class="filterCloseBtn">&times;</span></div>
+                    </div>
+                    <div class="filterSearch" style="padding: 5px 5px 5px 10px;">
+                        <input class="condition_input_text" type="text" name="serch" placeholder="<s:message code="filterInfo.search.filter"/>" id="filterSearchStr" style="width:calc(100% - 60px);">
+                        <button class="search_btn" id="filterSearchBtn"><span><s:message code="common.search"/></span></button>
+                    </div>
+                    <div class="scrollbar-inner saveFilterTab_tree">
+                        <ul id="filterTree" class="ztree scrollbar"></ul>
+                    </div>
+                </div>
+                <tiles:insertAttribute name="filterNew" ignore="true"/>
+                <div class="content mainBodyArea" id="mainBodyArea" style="height:100%;">
+                    <div id="content_left" class="ui-layout-west" style="overflow-y:hidden">
+                        <div class="section_menu" style="min-width:299px;">
+                            <div style=" display:flex;">
+                                <div id="msg_condition_menu" class="filter_menu" style="width: 33.3%;"><div class="filter_icon"><span class="filter_icon_text"><s:message code="condition.select.search1"/></span></div></div>
+                                <div id="msg_condition_saver" class="filter_menu condition_menu_unselected" style="width: 33.3%;border-left: 1px solid #cbcbcb;"><div class="filter_folder_icon"><span class="filter_icon_text"><s:message code="condition.advance_search1"/></span></div></div>
+                                <div id="msg_folder" class="filter_menu condition_menu_unselected" style="width: 33.3%;border-left: 1px solid #cbcbcb;"><div class="msg_folder_icon"><span class="filter_icon_text"><s:message code="filterInfo.messageFolder1"/></span></div></div>
                             </div>
-                            <div id="filterHeaderDiv" class="filterHeaderDiv">
-                                <div class="filterHeaderTab"><s:message code="common.msg.conditionBox"/>
-                                    <div class="rightGroup">
-                                        <span class="searchBoxSpan"><label><input type="checkbox" id="searchBox"/><span> <s:message code="common.msg.searchNow"/></span></label></span>
-                                        <span class="filterCloseBtn">&times;</span></div>
-                                </div>
-                                <div class="filterSearch" style="padding: 5px 5px 5px 10px;">
-                                    <input class="condition_input_text" type="text" name="serch" placeholder="<s:message code="filterInfo.search.filter"/>" id="filterSearchStr" style="width:calc(100% - 60px);">
-                                    <button class="search_btn" id="filterSearchBtn"><span><s:message code="common.search"/></span></button>
-                                </div>
-                                <div class="scrollbar-inner saveFilterTab_tree">
-                                    <ul id="filterTree" class="ztree scrollbar"></ul>
-                                </div>
+                        </div>
+                        <div id="search_top_area" style="height: calc(100% - 55px);min-width:299px;">
+                            <div class="searchButtonArea">
+                                <button class="search_btn" id="searchBtn"><span><s:message code="common.search1"/></span></button>
                             </div>
-                            <tiles:insertAttribute name="filterNew" ignore="true"/>
-                            <div class="content mainBodyArea" id="mainBodyArea" style="height:100%;">
-                                <div id="content_left" class="ui-layout-west" style="overflow-y:hidden">
-                                    <div class="section_menu" style="min-width:299px;">
-                                        <div style=" display:flex;">
-                                            <div id="msg_condition_menu" class="filter_menu" style="width: 33.3%;"><div class="filter_icon"><span class="filter_icon_text"><s:message code="condition.select.search1"/></span></div></div>
-                                            <div id="msg_condition_saver" class="filter_menu condition_menu_unselected" style="width: 33.3%;border-left: 1px solid #cbcbcb;"><div class="filter_folder_icon"><span class="filter_icon_text"><s:message code="condition.advance_search1"/></span></div></div>
-                                            <div id="msg_folder" class="filter_menu condition_menu_unselected" style="width: 33.3%;border-left: 1px solid #cbcbcb;"><div class="msg_folder_icon"><span class="filter_icon_text"><s:message code="filterInfo.messageFolder1"/></span></div></div>
+                            <div class="checkbox c-checkbox" style="width:75px;position: absolute;top: 70px; left:35px;font-size:12px;">
+                                <label><input type="checkbox" name="researchCheckbox" id="researchCheckbox" disabled style="display: none;"><span class="fa fa-check"></span><s:message code="condition.research1"/></label>
+                            </div>
+
+                            <div class="condition_save">
+                                <a href="javascript:;" class="resetCondition" style="float:left;padding-left:15px;"><i class="fa fa-refresh"></i> <s:message code="condition.reset1"/></a>
+                                <a href="javascript:;" class="showFilterBtn"><i class="fa fa-folder-open-o"></i> <s:message code="filterInfo.box"/></a>
+                                <span class="filterIcon hide" data-id=""><i class="fa fa-filter" aria-hidden="true"></i></span>
+                                <span style="float:right;">&nbsp;|&nbsp;</span>
+                                <a href="javascript:;" class="saveCondition" style="padding-right:0;"><i class="fa fa-floppy-o"></i> <s:message code="condition.save"/></a>
+                            </div>
+                            <div class="condition_top_sub"></div>
+                            <div class="condition_top">▲</div>
+                            <%-- 조건 검색 --%>
+                            <div id="condition_detail" class="section_condition scrollbar-inner">
+                                <div class="condition_option" style="padding-top:15px;">
+                                    <div class="condition_item">
+                                        <div class="condition_title" style="float: left;"><i class="fa fa-caret-right"></i> <s:message code="condition.search_str"/>
+                                            <img style="width: 16px;" src="<c:url value="/img/icon/question.png"/>" class="areaBtn" id="searchHelpBtn">
+                                        </div>
+                                        <div style="float: right; padding-right: 22px;">
+                                            <a href="javascript:;" class="showSearchKeywordBtn"><i class="fa fa-cog"></i> <s:message code="searchKeyword.management"/></a>
+                                        </div>
+                                        <div style="margin-top: 5px;">
+                                            <input class="condition_input_text" type="text" id="searchStrInput" name="serch" placeholder="<s:message code="common.msg.searchMsg"/>" style="width: 260px;height: 35px;border: 2px solid #337AB7;padding-left: 5px;">
+                                        </div>
+                                        <div style="margin-top: 15px;"></div>
+
+                                        <div class="condition_item">
+                                            <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="condition.field.search"/></div>
+                                            <select id="searchField" title="<s:message code="condition.field.search.all"/>" class="selectpicker" data-style="btn-default" multiple data-show-subtext="true" data-actions-box="true" data-live-search="true">
+                                                <option value="subject"><s:message code="condition.subject"/></option>
+                                                <option value="body"><s:message code="condition.body"/></option>
+                                                <option value="attachname attachname_str"><s:message code="condition.attach_name"/></option>
+                                                <% if(!isOCR){ %>
+                                                <option value="attach"><s:message code="condition.attach"/></option>
+                                                <%}else{ %>
+                                                <option value="attach ocr_attach"><s:message code="condition.attach"/></option>
+                                                <option value="ocr_attach">OCR</option>
+                                                <%} %>
+                                                <option value="host host_str">Host</option>
+                                                <option value="path query">Path</option>
+                                                <option value="srcip"><s:message code="condition.source"/> IP</option>
+                                                <option value="dstip"><s:message code="condition.destination"/> IP</option>
+                                                <option value="sender_str"><s:message code="condition.sender"/></option>
+                                                <option value="sname"><s:message code="condition.sender_name"/></option>
+                                                <option value="recvs"><s:message code="condition.recv"/></option>
+                                                <option value="recvs_name"><s:message code="condition.recv_name"/></option>
+                                                <option value="to tname"><s:message code="condition.recv"/>(<s:message code="condition.to"/>)</option>
+                                                <option value="cc cname"><s:message code="condition.recv"/>(<s:message code="condition.cc"/>)</option>
+                                                <option value="bcc bname"><s:message code="condition.recv"/>(<s:message code="condition.bcc"/>)</option>
+                                                <option value="user user_str userid name"><s:message code="common.org.user"/></option>
+                                                <option value="usr_id"><s:message code="common.msg.account"/></option>
+                                            </select>
                                         </div>
                                     </div>
-                                    <div id="search_top_area" style="height: calc(100% - 55px);min-width:299px;">
-                                        <div class="searchButtonArea">
-                                            <button class="search_btn" id="searchBtn"><span><s:message code="common.search1"/></span></button>
+                                    <div class="condition_divider"></div>
+                                    <div class="condition_item">
+                                        <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="condition.service"/></div>
+                                        <select id="serviceType" title="<s:message code="condition.service.all"/>" class="selectpicker" data-style="btn-default" multiple data-show-subtext="true" data-actions-box="true" data-live-search="true"></select>
+                                    </div>
+                                    <!--  대외비 목록 -->
+                                    <div class="condition_item" id="epmsgList">
+                                        <div class="condition_divider"></div>
+                                        <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.epmsgType.list"/></div>
+                                        <select id="initEpmsg" title="<s:message code="condition.epmsgType.all"/>" class="selectpicker" data-style="btn-default" multiple data-show-subtext="true" data-actions-box="true"data-live-search="true"></select>
+                                        <input type="hidden" id="initEpmsgName" />
+                                    </div>
+                                    <!-- Knox 첨부 여부  -->
+                                    <div class="condition_item" id ="KnoxAttachYN">
+                                        <div class="condition_divider"></div>
+                                        <div class="condition_title"><i class="fa fa-caret-right"></i>  <s:message code="condition.epmsgType.bodyImg"/></div>
+                                        <div class="condition_sub_title">
+                                            <label class="condition_label"><input type="radio" name="bodyImg" value="" checked="checked"> <span><s:message code="common.msg.all"/></span></label>
+                                            <label class="condition_label"><input type="radio" name="bodyImg" value="Y"> <span><s:message code="condition.exist"/></span></label>
+                                            <label class="condition_label"><input type="radio" name="bodyImg" value="N"> <span><s:message code="condition.none"/></span></label>
                                         </div>
-                                        <div class="checkbox c-checkbox" style="width:75px;position: absolute;top: 70px; left:35px;font-size:12px;">
-                                            <label><input type="checkbox" name="researchCheckbox" id="researchCheckbox" disabled style="display: none;"><span class="fa fa-check"></span><s:message code="condition.research1"/></label>
+                                    </div>
+
+                                </div>
+                                <div class="condition_group display_none">
+                                    <s:message code="common.msg.time"/><i class="fa fa-minus-square"></i>
+                                </div>
+                                <div class="condition_option">
+                                    <div class="condition_item">
+                                        <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="condition.period"/></div>
+                                        <select name="searchArea" class="condition_select" id="easyDate">
+                                            <option value="" selected="selected"><s:message code="condition.select.period"/></option>
+                                            <option value="1"><s:message code="condition.today"/></option>
+                                            <option value="2"><s:message code="condition.yesterday"/></option>
+                                            <option value="3"><s:message code="condition.week" arguments="1"/></option>
+                                            <option value="6"><s:message code="condition.month" arguments="1"/></option>
+                                            <option value="7"><s:message code="condition.month" arguments="2"/></option>
+                                            <option value="8"><s:message code="condition.month" arguments="3"/></option>
+                                        </select>
+                                        <div style="display: flex; width: 260px; padding-top: 4px;">
+                                            <input type="text" id="startdatepicker" class="input-xs form-control border-radius-none" style="padding: 1px 0px 0px 3px;border-radius: 0;font-size: 11px; width: 125px;"/>
+                                            <span style="padding-top: 4px;">-</span>
+                                            <input type="text" id="enddatepicker" class="input-xs form-control border-radius-none"  style="padding: 1px 0px 0px 3px;border-radius: 0;font-size: 11px; width: 125px;"/>
                                         </div>
-
-                                        <div class="condition_save">
-                                            <a href="javascript:;" class="resetCondition" style="float:left;padding-left:15px;"><i class="fa fa-refresh"></i> <s:message code="condition.reset1"/></a>
-                                            <a href="javascript:;" class="showFilterBtn"><i class="fa fa-folder-open-o"></i> <s:message code="filterInfo.box"/></a>
-                                            <span class="filterIcon hide" data-id=""><i class="fa fa-filter" aria-hidden="true"></i></span>
-                                            <span style="float:right;">&nbsp;|&nbsp;</span>
-                                            <a href="javascript:;" class="saveCondition" style="padding-right:0;"><i class="fa fa-floppy-o"></i> <s:message code="condition.save"/></a>
+                                    </div>
+                                    <div class="condition_divider"></div>
+                                    <div class="condition_item">
+                                        <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="condition.work"/></div>
+                                        <div class="condition_sub_title">
+                                            <label class="condition_label"><input type="radio" name="ctimeWork" value="" checked="checked"> <span><s:message code="common.msg.all"/></span></label>
+                                            <label class="condition_label"><input type="radio" name="ctimeWork" value="W"> <span><s:message code="condition.work"/></span></label>
+                                            <label class="condition_label"><input type="radio" name="ctimeWork" value="R"> <span><s:message code="condition.notwork"/></span></label>
                                         </div>
-                                        <div class="condition_top_sub"></div>
-                                        <div class="condition_top">▲</div>
-                                        <%-- 조건 검색 --%>
-                                        <div id="condition_detail" class="section_condition scrollbar-inner">
-                                            <div class="condition_option" style="padding-top:15px;">
-                                                <div class="condition_item">
-                                                    <div class="condition_title" style="float: left;"><i class="fa fa-caret-right"></i> <s:message code="condition.search_str"/>
-                                                        <img style="width: 16px;" src="<c:url value="/img/icon/question.png"/>" class="areaBtn" id="searchHelpBtn">
-                                                    </div>
-                                                    <div style="float: right; padding-right: 22px;">
-                                                        <a href="javascript:;" class="showSearchKeywordBtn"><i class="fa fa-cog"></i> <s:message code="searchKeyword.management"/></a>
-                                                    </div>
-                                                    <div style="margin-top: 5px;">
-                                                        <input class="condition_input_text" type="text" id="searchStrInput" name="serch" placeholder="<s:message code="common.msg.searchMsg"/>" style="width: 260px;height: 35px;border: 2px solid #337AB7;padding-left: 5px;">
-                                                    </div>
-                                                    <div style="margin-top: 15px;"></div>
+                                    </div>
+                                </div>
+                                <div id="infoFeedbackDiv" style="display: none;">
+                                    <div class="condition_group display_none">
+                                        <s:message code="common.msg.information"/><i class="fa fa-minus-square"></i>
+                                    </div>
+                                    <div class="condition_option">
+                                        <div class="condition_item">
+                                            <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="condition.infotype"/></div>
+                                            <select id="infoType" title="<s:message code="condition.infotype.all"/>" class="selectpicker" data-style="btn-default" multiple data-show-subtext="true" data-actions-box="true" data-live-search="true">
+                                                <option value="4"><s:message code="condition.info.class4"/></option>
+                                                <option value="3"><s:message code="condition.info.class3"/></option>
+                                                <option value="2"><s:message code="condition.info.class2"/></option>
+                                                <option value="1"><s:message code="condition.info.class1"/></option>
+                                            </select>
+                                        </div>
+                                        <div class="condition_divider"></div>
+                                        <div class="condition_item">
+                                            <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="condition.feedback"/></div>
+                                            <select id="feedbackType" title="<s:message code="condition.feedback.all"/>" class="selectpicker" data-style="btn-default" multiple data-show-subtext="true" data-actions-box="true" data-live-search="true">
+                                                <option value="0"><s:message code="condition.info.feedback0"/></option>
+                                                <option value="1"><s:message code="condition.info.feedback1"/></option>
+                                                <option value="2"><s:message code="condition.info.feedback2"/></option>
+                                                <option value="3"><s:message code="condition.info.feedback3"/></option>
+                                                <option value="4"><s:message code="condition.info.feedback4"/></option>
+                                                <option value="9"><s:message code="condition.info.feedback9"/></option>
+                                                <option value="-1"><s:message code="condition.info.feedback-1"/></option>
+                                            </select>
+                                        </div>
+                                        <div class="condition_divider"></div>
+                                        <div class="condition_item">
+                                            <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="condition.prob"/>(%)</div>
+                                            <select id="probType" title="<s:message code="condition.prob.all"/>" class="selectpicker" data-style="btn-default" multiple data-show-subtext="true" data-actions-box="true" data-live-search="true">
+                                                <option value="0.5|1.1">50 ~ 100</option>
+                                                <option value="0.1|0.5">10 ~ 49</option>
+                                                <option value="0|0.1">0 ~ 9</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="condition_group display_none">
+                                    <s:message code="condition.user"/><i class="fa fa-minus-square"></i>
+                                </div>
+                                <div class="condition_option">
+                                    <div class="condition_item">
+                                        <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="condition.receive_send"/></div>
+                                        <div class="condition_sub_title">
+                                            <label class="condition_label"><input type="radio" name="receiveSend" value="" checked="checked"> <span><s:message code="common.msg.all"/></span></label>
+                                            <label class="condition_label"><input type="radio" name="receiveSend" value="I"> <span><s:message code="condition.receive"/></span></label>
+                                            <label class="condition_label"><input type="radio" name="receiveSend" value="O"> <span><s:message code="condition.send"/></span></label>
+                                        </div>
+                                    </div>
+                                    <div class="condition_divider"></div>
+                                    <div class="condition_item">
+                                        <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.sender"/></div>
+                                        <%if(Common.isEquals(rsUppercase, "Y")) {%>
+                                        <div class="condition_left">&nbsp;<label style="font-weight: normal;"><input type="checkbox" id="senders_upperCase" disabled/><span style="position: relative;top: -2px;font-weight: normal;"> <s:message code="condition.uppercase"/></span></label></div>
+                                        <%} %>
+                                        <div class="condition_not"><label><input type="checkbox" id="senders_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
+                                        <input class="condition_input_text" type="text" id="senders" name="serch" placeholder="<s:message code="condition.message.sender"/>">
+                                    </div>
+                                    <div class="condition_divider"></div>
+                                    <div class="condition_item">
+                                        <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.detail.recvs"/></div>
+                                        <div class="condition_sub_title">
+                                            <label class="condition_label"><input type="radio" name="receive_option" id="receive_option_all" value="" checked="checked"> <span><s:message code="common.msg.all"/></span></label>
+                                            <label class="condition_label"><input type="radio" name="receive_option" id="receive_option_more" value="detail"> <span><s:message code="condition.info.detail"/></span></label>
+                                        </div>
+                                    </div>
+                                    <div class="condition_divider"></div>
+                                    <div class="condition_item">
+                                        <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.recv"/></div>
+                                        <%if(Common.isEquals(rsUppercase, "Y")) {%>
+                                        <div class="condition_left">&nbsp;<label style="font-weight: normal;"><input type="checkbox" id="receivers_upperCase" disabled/><span style="position: relative;top: -2px;font-weight: normal;"> <s:message code="condition.uppercase"/></span></label></div>
+                                        <%} %>
+                                        <div class="condition_not"><label><input type="checkbox" id="receivers_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
+                                        <input class="condition_input_text" type="text" id="receivers" name="serch" placeholder="<s:message code="condition.message.receiver"/>">
+                                    </div>
+                                    <div class="receivers_detail" style="display: none;">
+                                        <div class="condition_item">
+                                            <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.recv"/> (<s:message code="condition.to"/>)</div>
+                                            <div class="condition_not"><label><input type="checkbox" id="m_to_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
+                                            <input class="condition_input_text" type="text" id="m_to" name="serch" placeholder="<s:message code="condition.input.to"/>">
+                                        </div>
+                                        <div class="condition_divider"></div>
+                                        <div class="condition_item">
+                                            <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.recv"/> (<s:message code="condition.cc"/>)</div>
+                                            <div class="condition_not"><label><input type="checkbox" id="m_cc_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
+                                            <input class="condition_input_text" type="text" id="m_cc" name="serch" placeholder="<s:message code="condition.input.cc"/>">
+                                        </div>
+                                        <div class="condition_divider"></div>
+                                        <div class="condition_item">
+                                            <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.recv"/> (<s:message code="condition.bcc"/>)</div>
+                                            <div class="condition_not"><label><input type="checkbox" id="m_bcc_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
+                                            <input class="condition_input_text" type="text" id="m_bcc" name="serch" placeholder="<s:message code="condition.input.bcc"/>">
+                                        </div>
+                                    </div>
+                                    <div class="condition_divider recvs_jikgub"></div>
+                                    <div class="condition_item recvs_jikgub">
+                                        <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.recv_jikgub"/></div>
+                                        <div class="condition_not"><label><input type="checkbox" id="recv_jikgub_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
+                                        <select id="rcvJikgub" title="<s:message code="condition.recv_jikgub.all"/>" class="selectpicker" data-style="btn-default" multiple data-show-subtext="true" data-actions-box="true"data-live-search="true"></select>
+                                    </div>
+                                    <div class="condition_divider"></div>
+                                    <div class="condition_item">
+                                        <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="condition.allofus"/></div>
+                                        <select name="searchArea" class="condition_select" id="allOfus">
+                                            <option value=""><s:message code="condition.allofus.all"/></option>
+                                            <option value="IA">1) <s:message code="condition.allofus1"/></option>
+                                            <option value="EA">2) <s:message code="condition.allofus2"/></option>
+                                            <option value="PA">3) <s:message code="condition.allofus3"/></option>
+                                            <option value="IA|EA">4) <s:message code="condition.allofus4"/></option>
+                                            <option value="EA|PA">5) <s:message code="condition.allofus5"/></option>
+                                            <option value="IA|PA">6) <s:message code="condition.allofus6"/></option>
+                                            <option value="IA|IT">7) <s:message code="condition.allofus7"/></option>
+                                            <option value="ET|EA">8) <s:message code="condition.allofus8"/></option>
+                                            <option value="PT|PA">9) <s:message code="condition.allofus9"/></option>
+                                            <option value="IA|ET|IT|EA">10) <s:message code="condition.allofus10"/></option>
+                                            <option value="IA|IT|PT|PA">11) <s:message code="condition.allofus11"/></option>
+                                            <option value="ET|EA|PT|PA">12) <s:message code="condition.allofus12"/></option>
+                                            <option value="SO">13) <s:message code="condition.allofus13"/></option>
+                                            <option value="SI">14) <s:message code="condition.allofus14"/></option>
+                                        </select>
+                                    </div>
+                                    <div class="condition_divider"></div>
+                                    <div class="condition_item">
+                                        <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.userGroup"/></div>
+                                        <div class="condition_not"><label><input type="checkbox" id="userGroupSeq_not" disabled /><span> <s:message code="query.make.except"/></span></label></div>
+                                        <select name="searchArea" class="condition_select" id="userGroupSeq"></select>
+                                        <input type="hidden" id="userGroupName" />
+                                    </div>
+                                    <div class="condition_divider"></div>
+                                    <div class="condition_item">
+                                        <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.interestGroup"/></div>
+                                        <div class="condition_not"><label><input type="checkbox" id="interGroup_not" disabled /><span> <s:message code="query.make.except"/></span></label></div>
+                                        <select name="searchArea" class="condition_select" id="interGroup"></select>
+                                        <input type="hidden" id="interGroupName" />
+                                    </div>
+                                </div>
 
-                                                    <div class="condition_item">
-                                                        <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="condition.field.search"/></div>
-                                                        <select id="searchField" title="<s:message code="condition.field.search.all"/>" class="selectpicker" data-style="btn-default" multiple data-show-subtext="true" data-actions-box="true" data-live-search="true">
-                                                            <option value="subject"><s:message code="condition.subject"/></option>
-                                                            <option value="body"><s:message code="condition.body"/></option>
-                                                            <option value="attachname attachname_str"><s:message code="condition.attach_name"/></option>
-                                                            <% if(!isOCR){ %>
-                                                            <option value="attach"><s:message code="condition.attach"/></option>
-                                                            <%}else{ %>
-                                                            <option value="attach ocr_attach"><s:message code="condition.attach"/></option>
-                                                            <option value="ocr_attach">OCR</option>
-                                                            <%} %>
-                                                            <option value="host host_str">Host</option>
-                                                            <option value="path query">Path</option>
-                                                            <option value="srcip"><s:message code="condition.source"/> IP</option>
-                                                            <option value="dstip"><s:message code="condition.destination"/> IP</option>
-                                                            <option value="sender_str"><s:message code="condition.sender"/></option>
-                                                            <option value="sname"><s:message code="condition.sender_name"/></option>
-                                                            <option value="recvs"><s:message code="condition.recv"/></option>
-                                                            <option value="recvs_name"><s:message code="condition.recv_name"/></option>
-                                                            <option value="to tname"><s:message code="condition.recv"/>(<s:message code="condition.to"/>)</option>
-                                                            <option value="cc cname"><s:message code="condition.recv"/>(<s:message code="condition.cc"/>)</option>
-                                                            <option value="bcc bname"><s:message code="condition.recv"/>(<s:message code="condition.bcc"/>)</option>
-                                                            <option value="user user_str userid name"><s:message code="common.org.user"/></option>
-                                                            <option value="usr_id"><s:message code="common.msg.account"/></option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="condition_divider"></div>
-                                                <div class="condition_item">
-                                                    <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="condition.service"/></div>
-                                                    <select id="serviceType" title="<s:message code="condition.service.all"/>" class="selectpicker" data-style="btn-default" multiple data-show-subtext="true" data-actions-box="true" data-live-search="true"></select>
-                                                </div>
-                                                <!--  대외비 목록 -->
-                                                <div class="condition_item" id="epmsgList">
-                                                    <div class="condition_divider"></div>
-                                                    <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.epmsgType.list"/></div>
-                                                    <select id="initEpmsg" title="<s:message code="condition.epmsgType.all"/>" class="selectpicker" data-style="btn-default" multiple data-show-subtext="true" data-actions-box="true"data-live-search="true"></select>
-                                                    <input type="hidden" id="initEpmsgName" />
-                                                </div>
-                                                <!-- Knox 첨부 여부  -->
-                                                <div class="condition_item" id ="KnoxAttachYN">
-                                                    <div class="condition_divider"></div>
-                                                    <div class="condition_title"><i class="fa fa-caret-right"></i>  <s:message code="condition.epmsgType.bodyImg"/></div>
-                                                    <div class="condition_sub_title">
-                                                        <label class="condition_label"><input type="radio" name="bodyImg" value="" checked="checked"> <span><s:message code="common.msg.all"/></span></label>
-                                                        <label class="condition_label"><input type="radio" name="bodyImg" value="Y"> <span><s:message code="condition.exist"/></span></label>
-                                                        <label class="condition_label"><input type="radio" name="bodyImg" value="N"> <span><s:message code="condition.none"/></span></label>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                            <div class="condition_group display_none">
-                                                <s:message code="common.msg.time"/><i class="fa fa-minus-square"></i>
-                                            </div>
-                                            <div class="condition_option">
-                                                <div class="condition_item">
-                                                    <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="condition.period"/></div>
-                                                    <select name="searchArea" class="condition_select" id="easyDate">
-                                                        <option value="" selected="selected"><s:message code="condition.select.period"/></option>
-                                                        <option value="1"><s:message code="condition.today"/></option>
-                                                        <option value="2"><s:message code="condition.yesterday"/></option>
-                                                        <option value="3"><s:message code="condition.week" arguments="1"/></option>
-                                                        <option value="6"><s:message code="condition.month" arguments="1"/></option>
-                                                        <option value="7"><s:message code="condition.month" arguments="2"/></option>
-                                                        <option value="8"><s:message code="condition.month" arguments="3"/></option>
-                                                    </select>
-                                                    <div style="display: flex; width: 260px; padding-top: 4px;">
-                                                        <input type="text" id="startdatepicker" class="input-xs form-control border-radius-none" style="padding: 1px 0px 0px 3px;border-radius: 0;font-size: 11px; width: 125px;"/>
-                                                        <span style="padding-top: 4px;">-</span>
-                                                        <input type="text" id="enddatepicker" class="input-xs form-control border-radius-none"  style="padding: 1px 0px 0px 3px;border-radius: 0;font-size: 11px; width: 125px;"/>
-                                                    </div>
-                                                </div>
-                                                <div class="condition_divider"></div>
-                                                <div class="condition_item">
-                                                    <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="condition.work"/></div>
-                                                    <div class="condition_sub_title">
-                                                        <label class="condition_label"><input type="radio" name="ctimeWork" value="" checked="checked"> <span><s:message code="common.msg.all"/></span></label>
-                                                        <label class="condition_label"><input type="radio" name="ctimeWork" value="W"> <span><s:message code="condition.work"/></span></label>
-                                                        <label class="condition_label"><input type="radio" name="ctimeWork" value="R"> <span><s:message code="condition.notwork"/></span></label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div id="infoFeedbackDiv" style="display: none;">
-                                                <div class="condition_group display_none">
-                                                    <s:message code="common.msg.information"/><i class="fa fa-minus-square"></i>
-                                                </div>
-                                                <div class="condition_option">
-                                                    <div class="condition_item">
-                                                        <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="condition.infotype"/></div>
-                                                        <select id="infoType" title="<s:message code="condition.infotype.all"/>" class="selectpicker" data-style="btn-default" multiple data-show-subtext="true" data-actions-box="true" data-live-search="true">
-                                                            <option value="4"><s:message code="condition.info.class4"/></option>
-                                                            <option value="3"><s:message code="condition.info.class3"/></option>
-                                                            <option value="2"><s:message code="condition.info.class2"/></option>
-                                                            <option value="1"><s:message code="condition.info.class1"/></option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="condition_divider"></div>
-                                                    <div class="condition_item">
-                                                        <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="condition.feedback"/></div>
-                                                        <select id="feedbackType" title="<s:message code="condition.feedback.all"/>" class="selectpicker" data-style="btn-default" multiple data-show-subtext="true" data-actions-box="true" data-live-search="true">
-                                                            <option value="0"><s:message code="condition.info.feedback0"/></option>
-                                                            <option value="1"><s:message code="condition.info.feedback1"/></option>
-                                                            <option value="2"><s:message code="condition.info.feedback2"/></option>
-                                                            <option value="3"><s:message code="condition.info.feedback3"/></option>
-                                                            <option value="4"><s:message code="condition.info.feedback4"/></option>
-                                                            <option value="9"><s:message code="condition.info.feedback9"/></option>
-                                                            <option value="-1"><s:message code="condition.info.feedback-1"/></option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="condition_divider"></div>
-                                                    <div class="condition_item">
-                                                        <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="condition.prob"/>(%)</div>
-                                                        <select id="probType" title="<s:message code="condition.prob.all"/>" class="selectpicker" data-style="btn-default" multiple data-show-subtext="true" data-actions-box="true" data-live-search="true">
-                                                            <option value="0.5|1.1">50 ~ 100</option>
-                                                            <option value="0.1|0.5">10 ~ 49</option>
-                                                            <option value="0|0.1">0 ~ 9</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="condition_group display_none">
-                                                <s:message code="condition.user"/><i class="fa fa-minus-square"></i>
-                                            </div>
-                                            <div class="condition_option">
-                                                <div class="condition_item">
-                                                    <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="condition.receive_send"/></div>
-                                                    <div class="condition_sub_title">
-                                                        <label class="condition_label"><input type="radio" name="receiveSend" value="" checked="checked"> <span><s:message code="common.msg.all"/></span></label>
-                                                        <label class="condition_label"><input type="radio" name="receiveSend" value="I"> <span><s:message code="condition.receive"/></span></label>
-                                                        <label class="condition_label"><input type="radio" name="receiveSend" value="O"> <span><s:message code="condition.send"/></span></label>
-                                                    </div>
-                                                </div>
-                                                <div class="condition_divider"></div>
-                                                <div class="condition_item">
-                                                    <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.sender"/></div>
-                                                    <%if(Common.isEquals(rsUppercase, "Y")) {%>
-                                                    <div class="condition_left">&nbsp;<label style="font-weight: normal;"><input type="checkbox" id="senders_upperCase" disabled/><span style="position: relative;top: -2px;font-weight: normal;"> <s:message code="condition.uppercase"/></span></label></div>
-                                                    <%} %>
-                                                    <div class="condition_not"><label><input type="checkbox" id="senders_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
-                                                    <input class="condition_input_text" type="text" id="senders" name="serch" placeholder="<s:message code="condition.message.sender"/>">
-                                                </div>
-                                                <div class="condition_divider"></div>
-                                                <div class="condition_item">
-                                                    <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.detail.recvs"/></div>
-                                                    <div class="condition_sub_title">
-                                                        <label class="condition_label"><input type="radio" name="receive_option" id="receive_option_all" value="" checked="checked"> <span><s:message code="common.msg.all"/></span></label>
-                                                        <label class="condition_label"><input type="radio" name="receive_option" id="receive_option_more" value="detail"> <span><s:message code="condition.info.detail"/></span></label>
-                                                    </div>
-                                                </div>
-                                                <div class="condition_divider"></div>
-                                                <div class="condition_item">
-                                                    <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.recv"/></div>
-                                                    <%if(Common.isEquals(rsUppercase, "Y")) {%>
-                                                    <div class="condition_left">&nbsp;<label style="font-weight: normal;"><input type="checkbox" id="receivers_upperCase" disabled/><span style="position: relative;top: -2px;font-weight: normal;"> <s:message code="condition.uppercase"/></span></label></div>
-                                                    <%} %>
-                                                    <div class="condition_not"><label><input type="checkbox" id="receivers_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
-                                                    <input class="condition_input_text" type="text" id="receivers" name="serch" placeholder="<s:message code="condition.message.receiver"/>">
-                                                </div>
-                                                <div class="receivers_detail" style="display: none;">
-                                                    <div class="condition_item">
-                                                        <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.recv"/> (<s:message code="condition.to"/>)</div>
-                                                        <div class="condition_not"><label><input type="checkbox" id="m_to_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
-                                                        <input class="condition_input_text" type="text" id="m_to" name="serch" placeholder="<s:message code="condition.input.to"/>">
-                                                    </div>
-                                                    <div class="condition_divider"></div>
-                                                    <div class="condition_item">
-                                                        <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.recv"/> (<s:message code="condition.cc"/>)</div>
-                                                        <div class="condition_not"><label><input type="checkbox" id="m_cc_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
-                                                        <input class="condition_input_text" type="text" id="m_cc" name="serch" placeholder="<s:message code="condition.input.cc"/>">
-                                                    </div>
-                                                    <div class="condition_divider"></div>
-                                                    <div class="condition_item">
-                                                        <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.recv"/> (<s:message code="condition.bcc"/>)</div>
-                                                        <div class="condition_not"><label><input type="checkbox" id="m_bcc_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
-                                                        <input class="condition_input_text" type="text" id="m_bcc" name="serch" placeholder="<s:message code="condition.input.bcc"/>">
-                                                    </div>
-                                                </div>
-                                                <div class="condition_divider recvs_jikgub"></div>
-                                                <div class="condition_item recvs_jikgub">
-                                                    <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.recv_jikgub"/></div>
-                                                    <div class="condition_not"><label><input type="checkbox" id="recv_jikgub_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
-                                                    <select id="rcvJikgub" title="<s:message code="condition.recv_jikgub.all"/>" class="selectpicker" data-style="btn-default" multiple data-show-subtext="true" data-actions-box="true"data-live-search="true"></select>
-                                                </div>
-                                                <div class="condition_divider"></div>
-                                                <div class="condition_item">
-                                                    <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="condition.allofus"/></div>
-                                                    <select name="searchArea" class="condition_select" id="allOfus">
-                                                        <option value=""><s:message code="condition.allofus.all"/></option>
-                                                        <option value="IA">1) <s:message code="condition.allofus1"/></option>
-                                                        <option value="EA">2) <s:message code="condition.allofus2"/></option>
-                                                        <option value="PA">3) <s:message code="condition.allofus3"/></option>
-                                                        <option value="IA|EA">4) <s:message code="condition.allofus4"/></option>
-                                                        <option value="EA|PA">5) <s:message code="condition.allofus5"/></option>
-                                                        <option value="IA|PA">6) <s:message code="condition.allofus6"/></option>
-                                                        <option value="IA|IT">7) <s:message code="condition.allofus7"/></option>
-                                                        <option value="ET|EA">8) <s:message code="condition.allofus8"/></option>
-                                                        <option value="PT|PA">9) <s:message code="condition.allofus9"/></option>
-                                                        <option value="IA|ET|IT|EA">10) <s:message code="condition.allofus10"/></option>
-                                                        <option value="IA|IT|PT|PA">11) <s:message code="condition.allofus11"/></option>
-                                                        <option value="ET|EA|PT|PA">12) <s:message code="condition.allofus12"/></option>
-                                                        <option value="SO">13) <s:message code="condition.allofus13"/></option>
-                                                        <option value="SI">14) <s:message code="condition.allofus14"/></option>
-                                                    </select>
-                                                </div>
-                                                <div class="condition_divider"></div>
-                                                <div class="condition_item">
-                                                    <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.userGroup"/></div>
-                                                    <div class="condition_not"><label><input type="checkbox" id="userGroupSeq_not" disabled /><span> <s:message code="query.make.except"/></span></label></div>
-                                                    <select name="searchArea" class="condition_select" id="userGroupSeq"></select>
-                                                    <input type="hidden" id="userGroupName" />
-                                                </div>
-                                                <div class="condition_divider"></div>
-                                                <div class="condition_item">
-                                                    <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.interestGroup"/></div>
-                                                    <div class="condition_not"><label><input type="checkbox" id="interGroup_not" disabled /><span> <s:message code="query.make.except"/></span></label></div>
-                                                    <select name="searchArea" class="condition_select" id="interGroup"></select>
-                                                    <input type="hidden" id="interGroupName" />
-                                                </div>
-                                            </div>
-
-                                            <div class="condition_group display_none">
-                                                <s:message code="condition.organization"/><i class="fa fa-minus-square"></i>
-                                            </div>
-                                            <div class="condition_option">
-                                                <div class="condition_item">
-                                                    <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="common.org.busi"/></div>
-                                                    <div class="condition_not"><label><input type="checkbox" id="busi_not" disabled /><span> <s:message code="query.make.except"/></span></label></div>
-                                                    <select id="busi" title="<s:message code="common.org.busi.all"/>" class="selectpicker" data-style="btn-default" multiple data-show-subtext="true" data-actions-box="true"data-live-search="true"></select>
-                                                    <input type="hidden" id="busiStr" />
-                                                </div>
-                                                <div class="condition_divider"></div>
-                                                <div class="condition_item">
-                                                    <span class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="common.org.dept"/></span>
-                                                    <div class="condition_not"><label><input type="checkbox" id="dept_not" disabled /><span> <s:message code="query.make.except"/></span></label></div>
-                                                    <div class="condition_sub_title">
-                                                        <span class="condition_title" style="width: 65px;display: inline-block;"><s:message code="common.org.choose.dept"/></span>
-                                                        <span class="condition_sub_title">
-                                                <button style="width:61px;position: relative;" id="deptBtn" class="button_style filterAddBtn" title="<s:message code="common.msg.select"/>">
-                                                    <span class="ui-icon ui-icon-circle-plus icon_style"></span><s:message code="common.msg.select"/>
+                                <div class="condition_group display_none">
+                                    <s:message code="condition.organization"/><i class="fa fa-minus-square"></i>
+                                </div>
+                                <div class="condition_option">
+                                    <div class="condition_item">
+                                        <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="common.org.busi"/></div>
+                                        <div class="condition_not"><label><input type="checkbox" id="busi_not" disabled /><span> <s:message code="query.make.except"/></span></label></div>
+                                        <select id="busi" title="<s:message code="common.org.busi.all"/>" class="selectpicker" data-style="btn-default" multiple data-show-subtext="true" data-actions-box="true"data-live-search="true"></select>
+                                        <input type="hidden" id="busiStr" />
+                                    </div>
+                                    <div class="condition_divider"></div>
+                                    <div class="condition_item">
+                                        <span class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="common.org.dept"/></span>
+                                        <div class="condition_not"><label><input type="checkbox" id="dept_not" disabled /><span> <s:message code="query.make.except"/></span></label></div>
+                                        <div class="condition_sub_title">
+                                            <span class="condition_title" style="width: 65px;display: inline-block;"><s:message code="common.org.choose.dept"/></span>
+                                                <button style="width:61px;height: 25px;position: relative;" id="deptBtn" class="button_style filterAddBtn" title="<s:message code="common.msg.select"/>">
+                                                    <span class="ui-icon ui-icon-circle-plus icon_style"></span>  <s:message code="common.msg.select"/>
                                                     <span id="deptSelectedArea" class="codeSelectedBtn" style="display:none;">
                                                         <span class="btn" title="">0</span>
                                                     </span>
                                                 </button>
                                             </span>
-                                                    </div>
-                                                    <input type="hidden" id="deptVal" />
-                                                    <input type="hidden" id="deptStr" />
-                                                </div>
-                                            </div>
+                                        </div>
+                                        <input type="hidden" id="deptVal" />
+                                        <input type="hidden" id="deptStr" />
+                                    </div>
+                                </div>
 
-                                            <div class="condition_group display_none">
-                                                <s:message code="condition.etc"/><i class="fa fa-minus-square"></i>
-                                            </div>
-                                            <div class="condition_option">
-                                                <div class="condition_item">
-                                                    <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> URL
-                                                        <img style="cursor:help; width: 16px;margin-bottom: 2px;" src="<c:url value="/img/icon/icon_help.png"/>" class="areaBtn" title="http:// <s:message code="query.make.except"/>">
-                                                    </div>
-                                                    <div class="condition_not"><label><input type="checkbox" id="url_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
-                                                    <textarea id=url class="condition_input_text" style="resize: none"></textarea>
-                                                </div>
-                                                <div class="condition_divider"></div>
-                                                <div class="condition_item">
-                                                    <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="condition.isread"/></div>
-                                                    <div class="condition_sub_title">
-                                                        <label class="condition_label"><input type="radio" name="readYn" value="" checked="checked"> <span><s:message code="common.msg.all"/></span></label>
-                                                        <label class="condition_label"><input type="radio" name="readYn" value="Y"> <span><s:message code="condition.read"/></span></label>
-                                                        <label class="condition_label"><input type="radio" name="readYn" value="N"> <span><s:message code="condition.unread"/></span></label>
-                                                    </div>
-                                                </div>
-                                                <div class="condition_divider"></div>
-                                                <div class="condition_item" id="attached_in">
-                                                    <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.isattached"/></div>
-                                                    <div class="condition_sub_title">
-                                                        <label class="condition_label"><input type="radio" name="attachYn" value="" checked="checked"> <span>All</span></label>
-                                                        <label class="condition_label"><input type="radio" name="attachYn" value="Y"> <span><s:message code="condition.exist"/></span></label>
-                                                        <label class="condition_label"><input type="radio" name="attachYn" value="N"> <span><s:message code="condition.none"/></span></label>
-                                                    </div>
-                                                    <input type="hidden" id="attachVal" />
-                                                    <input type="hidden" id="attachStr" />
-                                                    <div class="condition_sub_title" style="padding-left: 10px;float:left;padding-bottom:5px;">
-                                                        <span class="condition_title" style="width: 65px;display: inline-block;"><s:message code="condition.select"/></span>
-                                                        <span class="condition_sub_title">
+                                <div class="condition_group display_none">
+                                    <s:message code="condition.etc"/><i class="fa fa-minus-square"></i>
+                                </div>
+                                <div class="condition_option">
+                                    <div class="condition_item">
+                                        <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> URL
+                                            <img style="cursor:help; width: 16px;margin-bottom: 2px;" src="<c:url value="/img/icon/icon_help.png"/>" class="areaBtn" title="http:// <s:message code="query.make.except"/>">
+                                        </div>
+                                        <div class="condition_not"><label><input type="checkbox" id="url_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
+                                        <textarea id=url class="condition_input_text" style="resize: none"></textarea>
+                                    </div>
+                                    <div class="condition_divider"></div>
+                                    <div class="condition_item">
+                                        <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="condition.isread"/></div>
+                                        <div class="condition_sub_title">
+                                            <label class="condition_label"><input type="radio" name="readYn" value="" checked="checked"> <span><s:message code="common.msg.all"/></span></label>
+                                            <label class="condition_label"><input type="radio" name="readYn" value="Y"> <span><s:message code="condition.read"/></span></label>
+                                            <label class="condition_label"><input type="radio" name="readYn" value="N"> <span><s:message code="condition.unread"/></span></label>
+                                        </div>
+                                    </div>
+                                    <div class="condition_divider"></div>
+                                    <div class="condition_item" id="attached_in">
+                                        <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.isattached"/></div>
+                                        <div class="condition_sub_title">
+                                            <label class="condition_label"><input type="radio" name="attachYn" value="" checked="checked"> <span>All</span></label>
+                                            <label class="condition_label"><input type="radio" name="attachYn" value="Y"> <span><s:message code="condition.exist"/></span></label>
+                                            <label class="condition_label"><input type="radio" name="attachYn" value="N"> <span><s:message code="condition.none"/></span></label>
+                                        </div>
+                                        <input type="hidden" id="attachVal" />
+                                        <input type="hidden" id="attachStr" />
+                                        <div class="condition_sub_title" style="padding-left: 10px;float:left;padding-bottom:5px;">
+                                            <span class="condition_title" style="width: 65px;display: inline-block;"><s:message code="condition.select"/></span>
+                                            <span class="condition_sub_title">
                                                 <button style="width:61px;position: relative;" id="attachBtn" class="button_style filterAddBtn" title="<s:message code="condition.select"/>">
                                                     <span class="ui-icon ui-icon-circle-plus icon_style"></span><s:message code="condition.select"/>
                                                     <span id="attachSelectedArea" class="codeSelectedBtn" style="display:none;">
@@ -2521,48 +2312,48 @@
                                                     </span>
                                                 </button>
                                             </span>
-                                                    </div>
-                                                    <div class="condition_not"><label><input type="checkbox" id="attachYn_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
-                                                    <div class="condition_sub_title" style="padding-left: 10px;">
-                                                        <span class="condition_title" style="width: 65px;display: inline-block;"> <s:message code="condition.actual.attachment"/></span>
-                                                        <span class="condition_sub_title">
+                                        </div>
+                                        <div class="condition_not"><label><input type="checkbox" id="attachYn_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
+                                        <div class="condition_sub_title" style="padding-left: 10px;">
+                                            <span class="condition_title" style="width: 65px;display: inline-block;"> <s:message code="condition.actual.attachment"/></span>
+                                            <span class="condition_sub_title">
                                                 <label class="condition_label" style="margin-right: 5px;"><input type="radio" name="realAttYn" value="" checked="checked" disabled="disabled"> <span><s:message code="common.msg.all"/></span></label>
                                                 <label class="condition_label" style="margin-right: 5px;"><input type="radio" name="realAttYn" value="Y" disabled="disabled"> <span><s:message code="condition.onemore"/></span></label>
                                                 <label class="condition_label" style="margin-right: 5px;"><input type="radio" name="realAttYn" value="N" disabled="disabled"> <span><s:message code="condition.none"/></span></label>
                                             </span>
-                                                    </div>
-                                                    <div class="condition_sub_title" style="padding-left: 10px;">
-                                                        <span class="condition_title" style="width: 65px;display: inline-block;"> DRM</span>
-                                                        <span class="condition_sub_title">
+                                        </div>
+                                        <div class="condition_sub_title" style="padding-left: 10px;">
+                                            <span class="condition_title" style="width: 65px;display: inline-block;"> DRM</span>
+                                            <span class="condition_sub_title">
                                                 <label class="condition_label" style="margin-right: 5px;"><input type="radio" name="drmYn" value="" checked="checked" disabled="disabled"> <span><s:message code="common.msg.all"/></span></label>
                                                 <label class="condition_label" style="margin-right: 5px;"><input type="radio" name="drmYn" value="Y" disabled="disabled"> <span><s:message code="condition.exist"/></span></label>
                                                 <label class="condition_label" style="margin-right: 5px;"><input type="radio" name="drmYn" value="N" disabled="disabled"> <span><s:message code="condition.none"/></span></label>
                                             </span>
-                                                    </div>
-                                                </div>
-                                                <!-- OCR 첨부 여부  -->
-                                                <div class="condition_divider"></div>
-                                                <div class="condition_item" id ="ocrAttachYn">
-                                                    <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="condition.ocr.attach"/></div>
-                                                    <div class="condition_sub_title">
-                                                        <label class="condition_label"><input type="radio" name="OCRYn" value="" checked="checked"> <span><s:message code="common.msg.all"/></span></label>
-                                                        <label class="condition_label"><input type="radio" name="OCRYn" value="Y"> <span><s:message code="condition.exist"/></span></label>
-                                                        <label class="condition_label"><input type="radio" name="OCRYn" value="N"> <span><s:message code="condition.none"/></span></label>
-                                                    </div>
-                                                </div>
+                                        </div>
+                                    </div>
+                                    <!-- OCR 첨부 여부  -->
+                                    <div class="condition_divider"></div>
+                                    <div class="condition_item" id ="ocrAttachYn">
+                                        <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="condition.ocr.attach"/></div>
+                                        <div class="condition_sub_title">
+                                            <label class="condition_label"><input type="radio" name="OCRYn" value="" checked="checked"> <span><s:message code="common.msg.all"/></span></label>
+                                            <label class="condition_label"><input type="radio" name="OCRYn" value="Y"> <span><s:message code="condition.exist"/></span></label>
+                                            <label class="condition_label"><input type="radio" name="OCRYn" value="N"> <span><s:message code="condition.none"/></span></label>
+                                        </div>
+                                    </div>
 
-                                                <div class="condition_divider"></div>
-                                                <div class="condition_item">
-                                                    <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.keyword"/></div>
-                                                    <div class="condition_not"><label><input type="checkbox" id="keywordYn_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
-                                                    <div class="condition_sub_title">
-                                                        <label class="condition_label"><input type="radio" name="keywordYn" value="" checked="checked"> <span><s:message code="common.msg.all"/></span></label>
-                                                        <label class="condition_label"><input type="radio" name="keywordYn" value="Y"> <span><s:message code="condition.exist"/></span></label>
-                                                        <label class="condition_label"><input type="radio" name="keywordYn" value="N"> <span><s:message code="condition.none"/></span></label>
-                                                    </div>
-                                                    <div class="condition_sub_title">
-                                                        <span class="condition_title" style="width: 65px;display: inline-block;"><s:message code="condition.select"/></span>
-                                                        <span class="condition_sub_title">
+                                    <div class="condition_divider"></div>
+                                    <div class="condition_item">
+                                        <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.keyword"/></div>
+                                        <div class="condition_not"><label><input type="checkbox" id="keywordYn_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
+                                        <div class="condition_sub_title">
+                                            <label class="condition_label"><input type="radio" name="keywordYn" value="" checked="checked"> <span><s:message code="common.msg.all"/></span></label>
+                                            <label class="condition_label"><input type="radio" name="keywordYn" value="Y"> <span><s:message code="condition.exist"/></span></label>
+                                            <label class="condition_label"><input type="radio" name="keywordYn" value="N"> <span><s:message code="condition.none"/></span></label>
+                                        </div>
+                                        <div class="condition_sub_title">
+                                            <span class="condition_title" style="width: 65px;display: inline-block;"><s:message code="condition.select"/></span>
+                                            <span class="condition_sub_title">
                                                 <button style="width:61px;position: relative;" id="keywordBtn" class="button_style filterAddBtn" title="<s:message code="condition.select"/>">
                                                     <span class="ui-icon ui-icon-circle-plus icon_style"></span><s:message code="condition.select"/>
                                                     <span id="keywordSelectedArea" class="codeSelectedBtn" style="display:none;">
@@ -2570,21 +2361,21 @@
                                                     </span>
                                                 </button>
                                             </span>
-                                                    </div>
-                                                    <input type="hidden" id="keywordVal" />
-                                                    <input type="hidden" id="keywordStr" />
-                                                </div>
-                                                <div class="condition_divider"></div>
-                                                <div class="condition_item">
-                                                    <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="condition.regexp"/></div>
-                                                    <div class="condition_sub_title">
-                                                        <label class="condition_label"><input type="radio" name="regexpYn" value="" checked="checked"> <span><s:message code="common.msg.all"/></span></label>
-                                                        <label class="condition_label"><input type="radio" name="regexpYn" value="Y"> <span><s:message code="condition.exist"/></span></label>
-                                                        <label class="condition_label"><input type="radio" name="regexpYn" value="N"> <span><s:message code="condition.none"/></span></label>
-                                                    </div>
-                                                    <div class="condition_sub_title">
-                                                        <span class="condition_title" style="width: 65px;display: inline-block;"><s:message code="condition.select"/></span>
-                                                        <span class="condition_sub_title">
+                                        </div>
+                                        <input type="hidden" id="keywordVal" />
+                                        <input type="hidden" id="keywordStr" />
+                                    </div>
+                                    <div class="condition_divider"></div>
+                                    <div class="condition_item">
+                                        <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="condition.regexp"/></div>
+                                        <div class="condition_sub_title">
+                                            <label class="condition_label"><input type="radio" name="regexpYn" value="" checked="checked"> <span><s:message code="common.msg.all"/></span></label>
+                                            <label class="condition_label"><input type="radio" name="regexpYn" value="Y"> <span><s:message code="condition.exist"/></span></label>
+                                            <label class="condition_label"><input type="radio" name="regexpYn" value="N"> <span><s:message code="condition.none"/></span></label>
+                                        </div>
+                                        <div class="condition_sub_title">
+                                            <span class="condition_title" style="width: 65px;display: inline-block;"><s:message code="condition.select"/></span>
+                                            <span class="condition_sub_title">
                                                 <button style="width:61px;position: relative;" id="regexpBtn" class="button_style filterAddBtn" title="<s:message code="condition.select"/>">
                                                     <span class="ui-icon ui-icon-circle-plus icon_style"></span><s:message code="condition.select"/>
                                                     <span id="regexpSelectedArea" class="codeSelectedBtn" style="display:none;">
@@ -2592,161 +2383,161 @@
                                                     </span>
                                                 </button>
                                             </span>
-                                                    </div>
-                                                    <input type="hidden" id="regexpVal" />
-                                                    <input type="hidden" id="regexpStr" />
-                                                </div>
-                                                <div id="sctDiv" style="display: none;">
-                                                    <div class="condition_divider"></div>
-                                                    <div class="condition_item">
-                                                        <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="condition.sct"/></div>
-                                                        <div class="condition_sub_title">
-                                                            <label class="condition_label"><input type="radio" name="sctYn" value="" checked="checked"> <span><s:message code="common.msg.all"/></span></label>
-                                                            <label class="condition_label"><input type="radio" name="sctYn" value="Y"> <span><s:message code="condition.exist"/></span></label>
-                                                            <label class="condition_label"><input type="radio" name="sctYn" value="N"> <span><s:message code="condition.none"/></span></label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="condition_divider"></div>
-                                                <div class="condition_item">
-                                                    <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="condition.size"/>
-                                                        <img style="cursor:help; width: 16px;margin-bottom: 2px;" src="<c:url value="/img/icon/icon_help.png"/>" class="areaBtn" title="<s:message code="filterInfo.unit"/> : KByte">
-                                                    </div>
-                                                    <div class="condition_sub_title">
-                                                        <label class="condition_label"><input type="radio" name="sizeType" value="" checked="checked"> <span><s:message code="common.msg.all"/></span></label>
-                                                        <label class="condition_label"><input type="radio" name="sizeType" value="B"> <span><s:message code="condition.size.body"/></span></label>
-                                                        <label class="condition_label"><input type="radio" name="sizeType" value="A"> <span><s:message code="condition.size.attach"/></span></label>
-                                                    </div>
-                                                    <div style="padding-top: 6px;">
-                                                        <input type="text" style="width:60px;" id="sizeStartVal">
-                                                        <select class="searchSelect" name="attach_size" id="sizeOption">
-                                                            <option value="L"><s:message code="condition.over"/></option>
-                                                            <option value="S"><s:message code="condition.below"/></option>
-                                                            <option value="B"><s:message code="condition.range"/></option>
-                                                        </select>
-                                                        <input type="text" style="width:60px;" id="sizeEndVal" disabled> (KBytes)
-                                                    </div>
-                                                </div>
+                                        </div>
+                                        <input type="hidden" id="regexpVal" />
+                                        <input type="hidden" id="regexpStr" />
+                                    </div>
+                                    <div id="sctDiv" style="display: none;">
+                                        <div class="condition_divider"></div>
+                                        <div class="condition_item">
+                                            <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="condition.sct"/></div>
+                                            <div class="condition_sub_title">
+                                                <label class="condition_label"><input type="radio" name="sctYn" value="" checked="checked"> <span><s:message code="common.msg.all"/></span></label>
+                                                <label class="condition_label"><input type="radio" name="sctYn" value="Y"> <span><s:message code="condition.exist"/></span></label>
+                                                <label class="condition_label"><input type="radio" name="sctYn" value="N"> <span><s:message code="condition.none"/></span></label>
                                             </div>
                                         </div>
                                     </div>
-
-                                     <%-- 조건 검색 끝--%>
-                                    <div class="in" id="saveFilterTab" style="width:100%; height:calc(100% - 66px); display: none;">
-                                        <div class="searchButtonArea">
-                                            <button class="search_btn" id="searchQueryBtn"><span><s:message code="common.search1"/></span></button>
+                                    <div class="condition_divider"></div>
+                                    <div class="condition_item">
+                                        <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="condition.size"/>
+                                            <img style="cursor:help; width: 16px;margin-bottom: 2px;" src="<c:url value="/img/icon/icon_help.png"/>" class="areaBtn" title="<s:message code="filterInfo.unit"/> : KByte">
                                         </div>
-                                        <div class="condition_save">
-                                            <a href="javascript:;" class="resetCondition" style="float:left;padding-left:15px;"><i class="fa fa-refresh"></i> <s:message code="condition.reset1"/></a>
-                                            <a href="javascript:;" class="showFilterBtn"><i class="fa fa-folder-open-o"></i> <s:message code="filterInfo.box"/></a>
-                                            <span class="queryIcon hide" data-id=""><i class="fa fa-filter" aria-hidden="true"></i></span>
-                                            <span style="float:right;">&nbsp;|&nbsp;</span>
-                                            <a href="javascript:;" class="saveCondition" style="padding-right:0;"><i class="fa fa-floppy-o"></i> <s:message code="condition.save"/></a>
+                                        <div class="condition_sub_title">
+                                            <label class="condition_label"><input type="radio" name="sizeType" value="" checked="checked"> <span><s:message code="common.msg.all"/></span></label>
+                                            <label class="condition_label"><input type="radio" name="sizeType" value="B"> <span><s:message code="condition.size.body"/></span></label>
+                                            <label class="condition_label"><input type="radio" name="sizeType" value="A"> <span><s:message code="condition.size.attach"/></span></label>
                                         </div>
-                                        <div id="query_detail" class="section_condition scrollbar-inner">
-                                            <div class="condition_option" style="padding-top:0;height:500px;">
-                                                <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="query.make.query"/></div>
-                                                <div class="condition_item" style="height:100%;margin-top:5px; padding-bottom: 20px;">
-                                                    <textarea class="queryTextarea" name="serch" placeholder="<s:message code="query.make.input1"/>" id="solrQueryText"></textarea>
-                                                    <input type="hidden" id="searchQueryStrInput">
-                                                </div>
-                                            </div>
-                                            <div class="condition_option">
-                                                <div class="condition_item">
-                                                    <button type="button" class="btn btn-sm btn-primary searchQueryBtn"><span class="glyphicon glyphicon-check"></span>&nbsp;<s:message code="query.make.inputer"/></button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="in" id="message_folderTab" style="width:100%; height:calc(100% - 66px); display: none;">
-                                        <div style="display: flex;padding: 5px 5px 5px 10px;">
-                                            <input class="condition_input_text" type="text" name="serch" placeholder="<s:message code="filterInfo.folder.search"/>" id="folderSearchStr" style="width: 250px;">
-                                            <button class="search_btn" id="folderSearchBtn"><span><s:message code="common.search"/></span></button>
-                                        </div>
-                                        <div class="scrollbar-inner saveFilterTab_tree">
-                                            <ul id="folderTree" class="ztree" style="height:100%;width:100%;overflow:auto;"></ul>
+                                        <div style="padding-top: 6px;">
+                                            <input type="text" style="width:60px;" id="sizeStartVal">
+                                            <select class="searchSelect" name="attach_size" id="sizeOption">
+                                                <option value="L"><s:message code="condition.over"/></option>
+                                                <option value="S"><s:message code="condition.below"/></option>
+                                                <option value="B"><s:message code="condition.range"/></option>
+                                            </select>
+                                            <input type="text" style="width:60px;" id="sizeEndVal" disabled> (KBytes)
                                         </div>
                                     </div>
                                 </div>
-                                <div id="section_cen" style="" class="ui-layout-center">
-                                    <%if( consent && Common.isEquals(firstAdminYn, "N") && Common.isNotEquals(adminType, "C")){ %>
-                                    <div style="position: absolute;z-index: 1;padding-top: 1px;padding-left: 5px;">
-                                        <button class="search_btn" style="width:150px;" accesskey="O" id="consentBtn" onclick="searchConsentNo();"><span class="glyphicon glyphicon-tags"></span>&nbsp;<s:message code="consent.select.consent"/></button>
-                                        <button class="reset_btn" accesskey="X" id="resetConsentBtn" onclick="resetConsentNo();">X</button>
-                                        <input type="text" style="width:120px;height:28px;display:none;" readonly="readonly" id="consentNo">
-                                        <input type="hidden" readonly="readonly" id="consentIp">
-                                        <input type="hidden" readonly="readonly" id="consentEmail">
-                                        <input type="hidden" readonly="readonly" id="consentUserId">
-                                        <span id="consentName" style="font-weight: bold;"></span>
-                                        <input type="hidden" readonly="readonly" id="consentShortName">
+                            </div>
+                        </div>
+
+                        <%-- 조건 검색 끝--%>
+                        <div class="in" id="saveFilterTab" style="width:100%; height:calc(100% - 66px); display: none;">
+                            <div class="searchButtonArea">
+                                <button class="search_btn" id="searchQueryBtn"><span><s:message code="common.search1"/></span></button>
+                            </div>
+                            <div class="condition_save">
+                                <a href="javascript:;" class="resetCondition" style="float:left;padding-left:15px;"><i class="fa fa-refresh"></i> <s:message code="condition.reset1"/></a>
+                                <a href="javascript:;" class="showFilterBtn"><i class="fa fa-folder-open-o"></i> <s:message code="filterInfo.box"/></a>
+                                <span class="queryIcon hide" data-id=""><i class="fa fa-filter" aria-hidden="true"></i></span>
+                                <span style="float:right;">&nbsp;|&nbsp;</span>
+                                <a href="javascript:;" class="saveCondition" style="padding-right:0;"><i class="fa fa-floppy-o"></i> <s:message code="condition.save"/></a>
+                            </div>
+                            <div id="query_detail" class="section_condition scrollbar-inner">
+                                <div class="condition_option" style="padding-top:0;height:500px;">
+                                    <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="query.make.query"/></div>
+                                    <div class="condition_item" style="height:100%;margin-top:5px; padding-bottom: 20px;">
+                                        <textarea class="queryTextarea" name="serch" placeholder="<s:message code="query.make.input1"/>" id="solrQueryText"></textarea>
+                                        <input type="hidden" id="searchQueryStrInput">
                                     </div>
-                                    <%} %>
-                                     <%-- 피드백 설정 --%>
-                                     <%-- 보기 설정 --%>
-                                     <div class="viewSetup" style="position: absolute;top:32px;right:1px;z-index: 9;">
-                                         <a href="javascript:;" style="padding-right:10px; color:#383838; cursor: pointer; font-size: 12px;float: right; display: none;" id="feedbackBtn"><s:message code="condition.feedback"/> <s:message code="common.msg.setting"/></a>
-                                         <div style="display: inline-block; padding-left:10px;vertical-align: bottom;">
-                                            <ul id="feedbackSetting" style="display: none; z-index: 991; padding: 5px 0px;">
-                                                <li><a href="javascript:void(0);" onclick="setFeedback(0);" style="padding-left: 20px;"><span class="feedbackCorrect" style="display: inline-block; position: relative; top: 0px;"></span>&nbsp;<s:message code="condition.info.feedback0"/></a></li>
-                                                <li><a href="javascript:void(0);" onclick="setFeedback(1);" style="padding-left: 20px;"><span class="feedbackInCorrect" style="display: inline-block; position: relative; top: 0px;"></span>&nbsp;<s:message code="condition.info.class1"/></a></li>
-                                                <li><a href="javascript:void(0);" onclick="setFeedback(2);" style="padding-left: 20px;"><span class="feedbackInCorrect" style="display: inline-block; position: relative; top: 0px;"></span>&nbsp;<s:message code="condition.info.class2"/></a></li>
-                                                <li><a href="javascript:void(0);" onclick="setFeedback(3);" style="padding-left: 20px;"><span class="feedbackInCorrect" style="display: inline-block; position: relative; top: 0px;"></span>&nbsp;<s:message code="condition.info.class3"/></a></li>
-                                                <li><a href="javascript:void(0);" onclick="setFeedback(4);" style="padding-left: 20px;"><span class="feedbackInCorrect" style="display: inline-block; position: relative; top: 0px;"></span>&nbsp;<s:message code="condition.info.class4"/></a></li>
-                                                <li><a href="javascript:void(0);" onclick="setFeedback(9);" style="padding-left: 20px;"><span class="feedbackDefer" style="display: inline-block; position: relative; top: 0px;"></span>&nbsp;<s:message code="condition.info.feedback9"/></a></li>
-                                            </ul>
-                                            <div style="position: fixed; top: 0px; bottom: 0px; left: 0px; right: 0px; z-index: 990; display: none; width: 100%; height: 100%;" id="overlay"></div>
-                                        </div>
-                                        <button class="btn05 dropdown-toggle" data-toggle="dropdown" id="config_toggle">
-                                            <s:message code="condition.view.setup"/><span class="caret"></span>
-                                        </button>
-                                        <div class="dropdown-menu dropdown-menu-right"  style="min-width:180px;font-size:12px; height: 380px; padding:0;" id="additionalBtn">
-                                            <div class="listRow" style="padding: 0;">
-                                                <div class="listRowLeft" style="text-align:center; font-weight: bold; background-color: #eaeaea; width: 120px; height: 34px;"><s:message code="condition.view.stype"/></div>
-                                                <div class="listRowLeft" style="height: 20px;line-height: 15px;position: relative;top: 7px;padding: 0 3px;margin-left: 5px;">
-                                                    <a id="none_btn" style="font-size: 11px; font-weight: initial; line-height: 20px; padding-right: 5px;" class="areaBtn"><img src="<c:url value="/img/message/message_none.jpg"/>"  style="padding-right: 4px;padding-bottom: 2px"><s:message code="condition.view.type1"/> </a>
-                                                    <a id="bottom_btn" style="font-size: 11px; font-weight: initial; line-height: 20px; padding-right: 5px;" class="areaBtn"><img src="<c:url value="/img/message/message_bottom.jpg"/>" style="padding-right: 4px;padding-bottom: 2px"><s:message code="condition.view.type2"/></a>
-                                                    <a id="right_btn" style="font-size: 11px; font-weight: initial; line-height: 20px; padding-right: 5px;" class="areaBtn"><img src="<c:url value="/img/message/message_right.jpg"/>" style="padding-right: 4px;padding-bottom: 2px"><s:message code="condition.view.type3"/></a>
+                                </div>
+                                <div class="condition_option">
+                                    <div class="condition_item">
+                                        <button type="button" class="btn btn-sm btn-primary searchQueryBtn"><span class="glyphicon glyphicon-check"></span>&nbsp;<s:message code="query.make.inputer"/></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="in" id="message_folderTab" style="width:100%; height:calc(100% - 66px); display: none;">
+                            <div style="display: flex;padding: 5px 5px 5px 10px;">
+                                <input class="condition_input_text" type="text" name="serch" placeholder="<s:message code="filterInfo.folder.search"/>" id="folderSearchStr" style="width: 250px;">
+                                <button class="search_btn" id="folderSearchBtn"><span><s:message code="common.search"/></span></button>
+                            </div>
+                            <div class="scrollbar-inner saveFilterTab_tree">
+                                <ul id="folderTree" class="ztree" style="height:100%;width:100%;overflow:auto;"></ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="section_cen" style="" class="ui-layout-center">
+                        <%if( consent && Common.isEquals(firstAdminYn, "N") && Common.isNotEquals(adminType, "C")){ %>
+                        <div style="position: absolute;z-index: 1;padding-top: 1px;padding-left: 5px;">
+                            <button class="search_btn" style="width:150px;" accesskey="O" id="consentBtn" onclick="searchConsentNo();"><span class="glyphicon glyphicon-tags"></span>&nbsp;<s:message code="consent.select.consent"/></button>
+                            <button class="reset_btn" accesskey="X" id="resetConsentBtn" onclick="resetConsentNo();">X</button>
+                            <input type="text" style="width:120px;height:28px;display:none;" readonly="readonly" id="consentNo">
+                            <input type="hidden" readonly="readonly" id="consentIp">
+                            <input type="hidden" readonly="readonly" id="consentEmail">
+                            <input type="hidden" readonly="readonly" id="consentUserId">
+                            <span id="consentName" style="font-weight: bold;"></span>
+                            <input type="hidden" readonly="readonly" id="consentShortName">
+                        </div>
+                        <%} %>
+                        <%-- 피드백 설정 --%>
+                        <%-- 보기 설정 --%>
+                        <div class="viewSetup" style="position: absolute;top:32px;right:1px;z-index: 9;">
+                            <a href="javascript:;" style="padding-right:10px; color:#383838; cursor: pointer; font-size: 12px;float: right; display: none;" id="feedbackBtn"><s:message code="condition.feedback"/> <s:message code="common.msg.setting"/></a>
+                            <div style="display: inline-block; padding-left:10px;vertical-align: bottom;">
+                                <ul id="feedbackSetting" style="display: none; z-index: 991; padding: 5px 0px;">
+                                    <li><a href="javascript:void(0);" onclick="setFeedback(0);" style="padding-left: 20px;"><span class="feedbackCorrect" style="display: inline-block; position: relative; top: 0px;"></span>&nbsp;<s:message code="condition.info.feedback0"/></a></li>
+                                    <li><a href="javascript:void(0);" onclick="setFeedback(1);" style="padding-left: 20px;"><span class="feedbackInCorrect" style="display: inline-block; position: relative; top: 0px;"></span>&nbsp;<s:message code="condition.info.class1"/></a></li>
+                                    <li><a href="javascript:void(0);" onclick="setFeedback(2);" style="padding-left: 20px;"><span class="feedbackInCorrect" style="display: inline-block; position: relative; top: 0px;"></span>&nbsp;<s:message code="condition.info.class2"/></a></li>
+                                    <li><a href="javascript:void(0);" onclick="setFeedback(3);" style="padding-left: 20px;"><span class="feedbackInCorrect" style="display: inline-block; position: relative; top: 0px;"></span>&nbsp;<s:message code="condition.info.class3"/></a></li>
+                                    <li><a href="javascript:void(0);" onclick="setFeedback(4);" style="padding-left: 20px;"><span class="feedbackInCorrect" style="display: inline-block; position: relative; top: 0px;"></span>&nbsp;<s:message code="condition.info.class4"/></a></li>
+                                    <li><a href="javascript:void(0);" onclick="setFeedback(9);" style="padding-left: 20px;"><span class="feedbackDefer" style="display: inline-block; position: relative; top: 0px;"></span>&nbsp;<s:message code="condition.info.feedback9"/></a></li>
+                                </ul>
+                                <div style="position: fixed; top: 0px; bottom: 0px; left: 0px; right: 0px; z-index: 990; display: none; width: 100%; height: 100%;" id="overlay"></div>
+                            </div>
+                            <button class="btn05 dropdown-toggle" data-toggle="dropdown" id="config_toggle">
+                                <s:message code="condition.view.setup"/><span class="caret"></span>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right"  style="min-width:180px;font-size:12px; height: 380px; padding:0;" id="additionalBtn">
+                                <div class="listRow" style="padding: 0;">
+                                    <div class="listRowLeft" style="text-align:center; font-weight: bold; background-color: #eaeaea; width: 120px; height: 34px;"><s:message code="condition.view.stype"/></div>
+                                    <div class="listRowLeft" style="height: 20px;line-height: 15px;position: relative;top: 7px;padding: 0 3px;margin-left: 5px;">
+                                        <a id="none_btn" style="font-size: 11px; font-weight: initial; line-height: 20px; padding-right: 5px;" class="areaBtn"><img src="<c:url value="/img/message/message_none.jpg"/>"  style="padding-right: 4px;padding-bottom: 2px"><s:message code="condition.view.type1"/> </a>
+                                        <a id="bottom_btn" style="font-size: 11px; font-weight: initial; line-height: 20px; padding-right: 5px;" class="areaBtn"><img src="<c:url value="/img/message/message_bottom.jpg"/>" style="padding-right: 4px;padding-bottom: 2px"><s:message code="condition.view.type2"/></a>
+                                        <a id="right_btn" style="font-size: 11px; font-weight: initial; line-height: 20px; padding-right: 5px;" class="areaBtn"><img src="<c:url value="/img/message/message_right.jpg"/>" style="padding-right: 4px;padding-bottom: 2px"><s:message code="condition.view.type3"/></a>
 
 
-                                                </div>
-                                                <!-- <button class ="msg_button" id="config_colse" style="height: 22px; line-height: 19px; float: right; margin-top: 5px;margin-right: 10px;">닫기</button> -->
-                                            </div>
-                                            <div class="listRow" style="padding: 0;">
-                                                <div class="listRowLeft" style="text-align:center; font-weight: bold; background-color: #eaeaea; width: 120px; height: 34px;"><s:message code="condition.orderType"/></div>
-                                                <select id="messageSort" class="listRowLeft" style="margin-top:5px; margin-left: 5px;">
-                                                    <option value="ctime desc">▼ <s:message code="condition.date"/></option>
-                                                    <option value="ctime asc">▲ <s:message code="condition.date"/></option>
-                                                    <option value="pi_total desc">▼ <s:message code="condition.regexp"/></option>
-                                                    <option value="pi_total asc">▲ <s:message code="condition.regexp"/></option>
-                                                    <option value="size desc">▼ <s:message code="condition.size.all"/></option>
-                                                    <option value="size asc">▲ <s:message code="condition.size.all"/></option>
-                                                    <option value="body_size desc">▼ <s:message code="condition.size.body"/></option>
-                                                    <option value="body_size asc">▲ <s:message code="condition.size.body"/></option>
-                                                </select>
-                                            </div>
-                                            <div class="listRow" style="padding: 0;">
-                                                <div class="listRowLeft" style="text-align:center; font-weight: bold; background-color: #eaeaea; width: 120px; height: 34px;"><s:message code="condition.view.type5"/></div>
-                                                <label style="font-weight: normal; cursor: pointer;"><input type="checkbox" class="listRowLeft" style="margin-top:10px; margin-left: 5px;" name="subjectbody" />&nbsp;&nbsp;<s:message code="common.msg.use"/></label>
-                                            </div>
-                                            <div class="listRow" style="padding: 0;">
-                                                <div class="listRowLeft" style="text-align:center; font-weight: bold; background-color: #eaeaea; width: 120px; height: 34px;"><s:message code="condition.view.type10"/></div>
-                                                <label style="font-weight: normal; cursor: pointer;"><input type="checkbox" class="listRowLeft" style="margin-top:10px; margin-left: 5px;" name="overlapUse" />&nbsp;&nbsp;<s:message code="common.msg.use"/> <s:message code="condition.view.type11"/></label>
-                                            </div>
-                                            <div class="listRow" style="padding: 0;">
-                                                <div class="listRowLeft" style="text-align:center; font-weight: bold; background-color: #eaeaea; width: 120px; height: 34px;"><s:message code="condition.view.type6"/></div>
-                                                <label style="font-weight: normal; cursor: pointer;"><input type="checkbox" class="listRowLeft" style="margin-top:10px; margin-left: 5px;" name="summary" />&nbsp;&nbsp;<s:message code="common.msg.use"/> <s:message code="condition.view.type7"/></label>
-                                            </div>
-                                            <div class="listRow" style="padding: 0;">
-                                                <div class="listRowLeft" style="text-align:center; font-weight: bold; background-color: #eaeaea; width: 120px; height: 34px;"><s:message code="condition.view.type12"/></div>
-                                                <label style="font-weight: normal; cursor: pointer;"><input type="checkbox" class="listRowLeft" style="margin-top:10px; margin-left: 5px;" name="keywordHighlight" />&nbsp;&nbsp;<s:message code="common.msg.use"/> <s:message code="condition.view.type13"/></label>
-                                            </div>
-                                            <div class="listRow" style="padding: 0;">
-                                                <div class="listRowLeft" style="text-align:center; font-weight: bold; background-color: #eaeaea; width: 120px; height: 34px;"><s:message code="condition.view.type14"/></div>
-                                                <label style="font-weight: normal; cursor: pointer;"><input type="checkbox" class="listRowLeft" style="margin-top:10px; margin-left: 5px;" name="hostQuery" />&nbsp;&nbsp;<s:message code="common.msg.use"/> <s:message code="condition.view.type15"/></label>
-                                            </div>
-                                            <div class="listRow" style="width: 575px; border-bottom: none; padding: 0;">
-                                                <div class="listRowLeft" style="text-align:center; font-weight: bold; background-color: #eaeaea; width: 120px; height: 202px;padding-top: 70px;"><s:message code="condition.view.type4"/></div>
-                                                <div class="listRowLeft" style="padding-left: 5px;">
+                                    </div>
+                                    <!-- <button class ="msg_button" id="config_colse" style="height: 22px; line-height: 19px; float: right; margin-top: 5px;margin-right: 10px;">닫기</button> -->
+                                </div>
+                                <div class="listRow" style="padding: 0;">
+                                    <div class="listRowLeft" style="text-align:center; font-weight: bold; background-color: #eaeaea; width: 120px; height: 34px;"><s:message code="condition.orderType"/></div>
+                                    <select id="messageSort" class="listRowLeft" style="margin-top:5px; margin-left: 5px;">
+                                        <option value="ctime desc">▼ <s:message code="condition.date"/></option>
+                                        <option value="ctime asc">▲ <s:message code="condition.date"/></option>
+                                        <option value="pi_total desc">▼ <s:message code="condition.regexp"/></option>
+                                        <option value="pi_total asc">▲ <s:message code="condition.regexp"/></option>
+                                        <option value="size desc">▼ <s:message code="condition.size.all"/></option>
+                                        <option value="size asc">▲ <s:message code="condition.size.all"/></option>
+                                        <option value="body_size desc">▼ <s:message code="condition.size.body"/></option>
+                                        <option value="body_size asc">▲ <s:message code="condition.size.body"/></option>
+                                    </select>
+                                </div>
+                                <div class="listRow" style="padding: 0;">
+                                    <div class="listRowLeft" style="text-align:center; font-weight: bold; background-color: #eaeaea; width: 120px; height: 34px;"><s:message code="condition.view.type5"/></div>
+                                    <label style="font-weight: normal; cursor: pointer;"><input type="checkbox" class="listRowLeft" style="margin-top:10px; margin-left: 5px;" name="subjectbody" />&nbsp;&nbsp;<s:message code="common.msg.use"/></label>
+                                </div>
+                                <div class="listRow" style="padding: 0;">
+                                    <div class="listRowLeft" style="text-align:center; font-weight: bold; background-color: #eaeaea; width: 120px; height: 34px;"><s:message code="condition.view.type10"/></div>
+                                    <label style="font-weight: normal; cursor: pointer;"><input type="checkbox" class="listRowLeft" style="margin-top:10px; margin-left: 5px;" name="overlapUse" />&nbsp;&nbsp;<s:message code="common.msg.use"/> <s:message code="condition.view.type11"/></label>
+                                </div>
+                                <div class="listRow" style="padding: 0;">
+                                    <div class="listRowLeft" style="text-align:center; font-weight: bold; background-color: #eaeaea; width: 120px; height: 34px;"><s:message code="condition.view.type6"/></div>
+                                    <label style="font-weight: normal; cursor: pointer;"><input type="checkbox" class="listRowLeft" style="margin-top:10px; margin-left: 5px;" name="summary" />&nbsp;&nbsp;<s:message code="common.msg.use"/> <s:message code="condition.view.type7"/></label>
+                                </div>
+                                <div class="listRow" style="padding: 0;">
+                                    <div class="listRowLeft" style="text-align:center; font-weight: bold; background-color: #eaeaea; width: 120px; height: 34px;"><s:message code="condition.view.type12"/></div>
+                                    <label style="font-weight: normal; cursor: pointer;"><input type="checkbox" class="listRowLeft" style="margin-top:10px; margin-left: 5px;" name="keywordHighlight" />&nbsp;&nbsp;<s:message code="common.msg.use"/> <s:message code="condition.view.type13"/></label>
+                                </div>
+                                <div class="listRow" style="padding: 0;">
+                                    <div class="listRowLeft" style="text-align:center; font-weight: bold; background-color: #eaeaea; width: 120px; height: 34px;"><s:message code="condition.view.type14"/></div>
+                                    <label style="font-weight: normal; cursor: pointer;"><input type="checkbox" class="listRowLeft" style="margin-top:10px; margin-left: 5px;" name="hostQuery" />&nbsp;&nbsp;<s:message code="common.msg.use"/> <s:message code="condition.view.type15"/></label>
+                                </div>
+                                <div class="listRow" style="width: 575px; border-bottom: none; padding: 0;">
+                                    <div class="listRowLeft" style="text-align:center; font-weight: bold; background-color: #eaeaea; width: 120px; height: 202px;padding-top: 70px;"><s:message code="condition.view.type4"/></div>
+                                    <div class="listRowLeft" style="padding-left: 5px;">
                                         <span style="width: 435px; display:block;">
                                             <input id="insaFormatInput" style="width: 330px;" type="text" value="" data-format="name,emaile,busi,dept,jikgub,ip"/>
                                             <img src="<c:url value="/img/message/exclamation.png"/>" id="confError" style="display: none; padding-bottom:2px;" title="<s:message code="message.insa.error"/>">
@@ -2754,235 +2545,115 @@
                                             <span style="padding-left: 7px;" id="insaFormatOk"> <s:message code="common.msg.apply"/> </span>
                                             <span style="padding-left: 7px;" id="insaFormatClear"> <s:message code="common.msg.remove"/> </span>
                                         </span>
-                                                    <span style="width: 435px; display:block;">
+                                        <span style="width: 435px; display:block;">
                                             <input  id="insaFormatInputEx" style="width:435px;cursor: auto !important;" disabled type="text" value="<s:message code="message.help.example"/>)" data-format="name,emaile,busi,dept,jikgub,ip"/>
                                         </span>
-                                                    <select id="messageFormat" size="8" style="width:435px; margin-top: 10px; padding-top: 2px; height:110px;">
-                                                        <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_name"/>/hong@xcurent.com/<s:message code="message.help.sample_bunm"/>/<s:message code="message.help.sample_deptnm"/>/<s:message code="message.help.sample_jikgubnm"/>/192.168.0.1" data-format="name/email/businm/deptnm/jikgubnm/ip">name/email/businm/deptnm/jikgubnm/ip</option>
-                                                        <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_name"/>-hong@xcurent.com-<s:message code="message.help.sample_bunm"/>-<s:message code="message.help.sample_deptnm"/>-<s:message code="message.help.sample_jikgubnm"/>-192.168.0.1" data-format="name-email-businm-deptnm-jikgubnm-ip">name-email-businm-deptnm-jikgubnm-ip</option>
-                                                        <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_name"/>,hong@xcurent.com,<s:message code="message.help.sample_bunm"/>,<s:message code="message.help.sample_deptnm"/>,<s:message code="message.help.sample_jikgubnm"/>,192.168.0.1" data-format="name,email,businm,deptnm,jikgubnm,ip">name,email,businm,deptnm,jikgubnm,ip</option>
-                                                        <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_name"/>[hong@xcurent.com,<s:message code="message.help.sample_bunm"/>,<s:message code="message.help.sample_deptnm"/>,<s:message code="message.help.sample_jikgubnm"/>,192.168.0.1]" data-format="name[email,businm,deptnm,jikgubnm,ip]">name[email,businm,deptnm,jikgubnm,ip]</option>
-                                                        <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_bunm"/>/<s:message code="message.help.sample_deptnm"/>/<s:message code="message.help.sample_name"/>" data-format="businm/deptnm/name">businm/deptnm/name</option>
-                                                        <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_bunm"/>-<s:message code="message.help.sample_deptnm"/>-<s:message code="message.help.sample_jikgubnm"/>-<s:message code="message.help.sample_name"/>" data-format="businm-deptnm-jikgubnm-name">businm-deptnm-jikgubnm-name</option>
-                                                        <option value="<s:message code="message.help.example"/>) [<s:message code="message.help.sample_bunm"/>-<s:message code="message.help.sample_deptnm"/>-<s:message code="message.help.sample_jikgubnm"/>]-<s:message code="message.help.sample_name"/>" data-format="[businm-deptnm-jikgubnm]-name">[businm-deptnm-jikgubnm]-name</option>
-                                                        <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_name"/>,hong@xcurent.com,192.168.0.1" data-format="name,email,ip">name,email,ip</option>
-                                                        <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_name"/>(hong@xcurent.com,192.168.0.1)" data-format="name(email,ip)">name(email,ip)</option>
-                                                        <option value="" data-format=""> <s:message code="message.user.custom"/></option>
-                                                    </select>
+                                        <select id="messageFormat" size="8" style="width:435px; margin-top: 10px; padding-top: 2px; height:110px;">
+                                            <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_name"/>/hong@xcurent.com/<s:message code="message.help.sample_bunm"/>/<s:message code="message.help.sample_deptnm"/>/<s:message code="message.help.sample_jikgubnm"/>/192.168.0.1" data-format="name/email/businm/deptnm/jikgubnm/ip">name/email/businm/deptnm/jikgubnm/ip</option>
+                                            <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_name"/>-hong@xcurent.com-<s:message code="message.help.sample_bunm"/>-<s:message code="message.help.sample_deptnm"/>-<s:message code="message.help.sample_jikgubnm"/>-192.168.0.1" data-format="name-email-businm-deptnm-jikgubnm-ip">name-email-businm-deptnm-jikgubnm-ip</option>
+                                            <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_name"/>,hong@xcurent.com,<s:message code="message.help.sample_bunm"/>,<s:message code="message.help.sample_deptnm"/>,<s:message code="message.help.sample_jikgubnm"/>,192.168.0.1" data-format="name,email,businm,deptnm,jikgubnm,ip">name,email,businm,deptnm,jikgubnm,ip</option>
+                                            <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_name"/>[hong@xcurent.com,<s:message code="message.help.sample_bunm"/>,<s:message code="message.help.sample_deptnm"/>,<s:message code="message.help.sample_jikgubnm"/>,192.168.0.1]" data-format="name[email,businm,deptnm,jikgubnm,ip]">name[email,businm,deptnm,jikgubnm,ip]</option>
+                                            <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_bunm"/>/<s:message code="message.help.sample_deptnm"/>/<s:message code="message.help.sample_name"/>" data-format="businm/deptnm/name">businm/deptnm/name</option>
+                                            <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_bunm"/>-<s:message code="message.help.sample_deptnm"/>-<s:message code="message.help.sample_jikgubnm"/>-<s:message code="message.help.sample_name"/>" data-format="businm-deptnm-jikgubnm-name">businm-deptnm-jikgubnm-name</option>
+                                            <option value="<s:message code="message.help.example"/>) [<s:message code="message.help.sample_bunm"/>-<s:message code="message.help.sample_deptnm"/>-<s:message code="message.help.sample_jikgubnm"/>]-<s:message code="message.help.sample_name"/>" data-format="[businm-deptnm-jikgubnm]-name">[businm-deptnm-jikgubnm]-name</option>
+                                            <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_name"/>,hong@xcurent.com,192.168.0.1" data-format="name,email,ip">name,email,ip</option>
+                                            <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_name"/>(hong@xcurent.com,192.168.0.1)" data-format="name(email,ip)">name(email,ip)</option>
+                                            <option value="" data-format=""> <s:message code="message.user.custom"/></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="content" class="ui-layout-north" style="position: absolute;left: 0px;right: 0px;bottom: 0px;top: 0px;font-family: 돋움,Dotum;">
+                            <div style="position: relative;zoom: 1;z-index: 20;overflow: hidden;">
+                                <div class="mail_header">
+                                    <div class="leftHideBtn"><button class ="msg_button list_icon"><i class="fa fa-bars" aria-hidden="true"></i></button></div>
+                                    <div class="tabWrap" id="headerTabs">
+                                        <ul class="listTab_div" id="resultTabs">
+                                            <li class="tab_li select" id="result0" data-index="0">
+                                                <div class="tab_txt_top addTabDiv" id="result_tab0" style="float:left;">
+                                                    <s:message code="message.msg.newtab"/>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div id="content" class="ui-layout-north" style="position: absolute;left: 0px;right: 0px;bottom: 0px;top: 0px;font-family: 돋움,Dotum;">
-                                        <div style="position: relative;zoom: 1;z-index: 20;overflow: hidden;">
-                                            <div class="mail_header">
-                                                <div class="leftHideBtn"><button class ="msg_button list_icon"><i class="fa fa-bars" aria-hidden="true"></i></button></div>
-                                                <div class="tabWrap" id="headerTabs">
-                                                    <ul class="listTab_div" id="resultTabs">
-                                                        <li class="tab_li select" id="result0" data-index="0">
-                                                            <div class="tab_txt_top addTabDiv" id="result_tab0" style="float:left;">
-                                                                <s:message code="message.msg.newtab"/>
-                                                            </div>
-                                                            <span class="resultCntSpan" style="padding-right:0px;"></span>
-                                                        </li>
-                                                        <li class="tab_li" data-index="">
-                                                            <div class="tab_txt_top addTabDiv" style="padding:0 10px;"><span class="glyphicon glyphicon-plus" style="cursor:pointer;color:#494949;top:7px;"></span></div>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div id="contentListArea" class="inner-center">
-                                        <iframe src="<c:url value="/ems/contentList.do?gridInit=true"/>" id="contentList0" class="contentList"></iframe>
-                                        <iframe src="<c:url value="/ems/contentList.do?gridInit="/>" id="contentList1" class="contentList" style="left:-10000px;"></iframe>
-                                    </div>
-                                    <div id="contentBodyArea" class="inner-east">
-                                        <iframe src="<c:url value="/ems/contentBodyNew.do"/>" id="contentBody0" class="contentBody" name="contentBody"></iframe>
-                                        <iframe src="<c:url value="/ems/contentBodyNew.do"/>" id="contentBody1" class="contentBody" name="contentBody" style="left:-10000px;"></iframe>
+                                                <span class="resultCntSpan" style="padding-right:0px;"></span>
+                                            </li>
+                                            <li class="tab_li" data-index="">
+                                                <div class="tab_txt_top addTabDiv" style="padding:0 10px;"><span class="glyphicon glyphicon-plus" style="cursor:pointer;color:#494949;top:7px;"></span></div>
+                                            </li>
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <div id="contentListArea" class="inner-center">
+                            <iframe src="<c:url value="/ems/contentList.do?gridInit=true"/>" id="contentList0" class="contentList"></iframe>
+                            <iframe src="<c:url value="/ems/contentList.do?gridInit="/>" id="contentList1" class="contentList" style="left:-10000px;"></iframe>
+                        </div>
+                        <div id="contentBodyArea" class="inner-east">
+                            <iframe src="<c:url value="/ems/contentBodyNew.do"/>" id="contentBody0" class="contentBody" name="contentBody"></iframe>
+                            <iframe src="<c:url value="/ems/contentBodyNew.do"/>" id="contentBody1" class="contentBody" name="contentBody" style="left:-10000px;"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                        <div id="searchHelpDiv" style="display: block;position: absolute;top: 130px;right: 350px;display: none;text-align: left;z-index: 1040;border: 1px solid #555;background-color: white;width: 500px;height: 420px;font-size:12px;">
-                            <div class="modalHead">
-                                <i class="glyphicon glyphicon-question-sign"></i>&nbsp;<s:message code="help.msg.title"/>
-                                <div style="float:right;padding-right:8px;" class="searchHelpDivCloseArea">
-                                    <span class="glyphicon glyphicon-remove" style="cursor:pointer;" id="searchHelpDivCloseBtn"></span>
-                                </div>
-                            </div>
-                            <div class="modalCon">
-                                <div>
-                                    <div style="height:25px;">
-                                        <h5 style="font-size:13px;">■ <span style="color:#FF0000;"><s:message code="help.msg.default"/></span></h5>
-                                    </div>
-                                    <div>
-                                        <span>■ <s:message code="help.msg.all"/></span><br/>
-                                        <span style="padding-left:10px;font-weight: bold;"><s:message code="help.msg.all.ex"/></span><br/>
-                                        <span style="padding-left:10px;"><s:message code="help.msg.all.explain"/></span><br/>
-                                    </div>
-                                    <div style="padding-top:5px;">
-                                        <span>■ <s:message code="help.msg.except"/></span><br/>
-                                        <span style="padding-left:10px;font-weight: bold;"><s:message code="help.msg.except.ex"/></span><br/>
-                                        <span style="padding-left:10px;"><s:message code="help.msg.except.explain"/> </span><br/>
-                                    </div>
-                                    <div style="padding-top:5px;">
-                                        <span>■ <s:message code="help.msg.or"/></span><br/>
-                                        <span style="padding-left:10px;font-weight: bold;"><s:message code="help.msg.or.ex"/></span><br/>
-                                        <span style="padding-left:10px;"><s:message code="help.msg.or.explain"/> </span><br/>
-                                    </div>
-                                    <div style="padding-top:5px;">
-                                        <span>■ <s:message code="help.msg.exact"/></span><br/>
-                                        <span style="padding-left:10px;font-weight: bold;"><s:message code="help.msg.exact.ex"/></span><br/>
-                                        <span style="padding-left:10px;"><s:message code="help.msg.exact.explain"/> </span><br/>
-                                    </div>
-                                    <div style="padding-top:5px;">
-                                        <span>■ <s:message code="help.msg.astar"/></span><br/>
-                                        <span style="padding-left:10px;font-weight: bold;"><s:message code="help.msg.astar.ex"/></span><br/>
-                                        <span style="padding-left:10px;"><s:message code="help.msg.astar.explain"/> </span><br/>
-                                    </div>
-                                    <div style="padding-top:5px;">
-                                        <span>■ <s:message code="help.msg.question"/></span><br/>
-                                        <span style="padding-left:10px;font-weight: bold;"><s:message code="help.msg.question.ex"/></span><br/>
-                                        <span style="padding-left:10px;"><s:message code="help.msg.question.explain"/></span><br/>
-                                    </div>
-                                </div>
-                            </div>
+            <div id="searchHelpDiv" style="display: block;position: absolute;top: 130px;right: 350px;display: none;text-align: left;z-index: 1040;border: 1px solid #555;background-color: white;width: 500px;height: 420px;font-size:12px;">
+                <div class="modalHead">
+                    <i class="glyphicon glyphicon-question-sign"></i>&nbsp;<s:message code="help.msg.title"/>
+                    <div style="float:right;padding-right:8px;" class="searchHelpDivCloseArea">
+                        <span class="glyphicon glyphicon-remove" style="cursor:pointer;" id="searchHelpDivCloseBtn"></span>
+                    </div>
+                </div>
+                <div class="modalCon">
+                    <div>
+                        <div style="height:25px;">
+                            <h5 style="font-size:13px;">■ <span style="color:#FF0000;"><s:message code="help.msg.default"/></span></h5>
                         </div>
+                        <div>
+                            <span>■ <s:message code="help.msg.all"/></span><br/>
+                            <span style="padding-left:10px;font-weight: bold;"><s:message code="help.msg.all.ex"/></span><br/>
+                            <span style="padding-left:10px;"><s:message code="help.msg.all.explain"/></span><br/>
+                        </div>
+                        <div style="padding-top:5px;">
+                            <span>■ <s:message code="help.msg.except"/></span><br/>
+                            <span style="padding-left:10px;font-weight: bold;"><s:message code="help.msg.except.ex"/></span><br/>
+                            <span style="padding-left:10px;"><s:message code="help.msg.except.explain"/> </span><br/>
+                        </div>
+                        <div style="padding-top:5px;">
+                            <span>■ <s:message code="help.msg.or"/></span><br/>
+                            <span style="padding-left:10px;font-weight: bold;"><s:message code="help.msg.or.ex"/></span><br/>
+                            <span style="padding-left:10px;"><s:message code="help.msg.or.explain"/> </span><br/>
+                        </div>
+                        <div style="padding-top:5px;">
+                            <span>■ <s:message code="help.msg.exact"/></span><br/>
+                            <span style="padding-left:10px;font-weight: bold;"><s:message code="help.msg.exact.ex"/></span><br/>
+                            <span style="padding-left:10px;"><s:message code="help.msg.exact.explain"/> </span><br/>
+                        </div>
+                        <div style="padding-top:5px;">
+                            <span>■ <s:message code="help.msg.astar"/></span><br/>
+                            <span style="padding-left:10px;font-weight: bold;"><s:message code="help.msg.astar.ex"/></span><br/>
+                            <span style="padding-left:10px;"><s:message code="help.msg.astar.explain"/> </span><br/>
+                        </div>
+                        <div style="padding-top:5px;">
+                            <span>■ <s:message code="help.msg.question"/></span><br/>
+                            <span style="padding-left:10px;font-weight: bold;"><s:message code="help.msg.question.ex"/></span><br/>
+                            <span style="padding-left:10px;"><s:message code="help.msg.question.explain"/></span><br/>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-s
-                        <div class="modal fade" id="exportDialog" tabindex="-1" role="dialog" aria-labelledby="exportDialog">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                        <h3 class="modal-title" id="exportTitle">&nbsp;</h3>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="form-inline">
-                                            <div class="content_body" style="height:100%;padding-top: 0;">
-                                                <table class="table table-bordered" style="margin-bottom:0;width:100%;">
-                                                    <colgroup>
-                                                        <col width="210">
-                                                        <col width="*">
-                                                    </colgroup>
-                                                    <tr>
-                                                        <th>
-                                                            <s:message code="download.msg.dataArea"/>
-                                                        </th>
-                                                        <td>
-                                                            <div class="btn-group filterBtn" data-toggle="buttons" style="margin-top:3px;">
-                                                                <label class="btn btn-sm btn-default"><input type="radio" name="exportDataRange" id="exportDataSelect" value="S"> <s:message code="download.msg.select.count"/></label>
-                                                                <label class="btn btn-sm btn-default active"><input type="radio" name="exportDataRange" id="exportDataAll" value="A" checked> <s:message code="download.msg.search.count"/></label>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr id="exportFileTypeArea">
-                                                        <th>
-                                                            <s:message code="download.msg.fileType"/>
-                                                        </th>
-                                                        <td>
-                                                            <div class="btn-group filterBtn" data-toggle="buttons" style="margin-top:3px;">
-                                                                <label class="btn btn-sm btn-default active"><input type="radio" name="exportFileType" id="exportExcel" value="xlsx" checked> <s:message code="common.msg.excel"/>(xlsx)</label>
-                                                                <label class="btn btn-sm btn-default"><input type="radio" name="exportFileType" id="exportHancel" value="cell"> <s:message code="common.msg.hancel"/>(cell)</label>
-                                                                <label class="btn btn-sm btn-default"><input type="radio" name="exportFileType" id="exportText" value="csv"> <s:message code="common.msg.text"/>(csv)</label>
-                                                                <label class="btn btn-sm btn-default"><input type="radio" name="exportFileType" id="exportPdf" value="pdf"> <s:message code="selectCodeAll.list"/>(PDF)</label>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>
-                                                            <s:message code="download.msg.export.count"/>
-                                                        </th>
-                                                        <td>
-                                                            <span id="exportDataSize" style="line-height:32px;">0</span>
-                                                        </td>
-                                                    </tr>
-                                                    <tr id="bodyInExcel">
-                                                        <th>
-                                                            <s:message code="download.msg.body.in.excel"/>
-                                                        </th>
-                                                        <td>
-                                                            <label class="condition_label"><input type="radio" name="bodyInExcel" value="Y"> <span><s:message code="common.msg.include"/></span></label>
-                                                            <label class="condition_label"><input type="radio" name="bodyInExcel" value="N" checked="checked"> <span><s:message code="common.msg.not.include"/></span></label>
-                                                        </td>
-                                                    </tr>
-                                                    <tr id="bodyInExcelMsg" style="font-weight: bold;display:none;">
-                                                        <td colspan="2">
-                                                            <s:message code="download.msg.body.in.excelMsg" />
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                                <table class="table table-bordered" style="margin-bottom:0;width:100%;margin-top:15px;display:none;" id="bodyInExcelIdx">
-                                                    <colgroup>
-                                                        <col width="210">
-                                                        <col width="*">
-                                                    </colgroup>
-                                                    <tr>
-                                                        <th style="font-weight: bold;">
-                                                            <s:message code="download.msg.now.col.order" />
-                                                        </th>
-                                                        <td>
-                                                            <select id="nowColIdx" data-style="btn-default">
-                                                            </select>
-                                                        </td>
-                                                    </tr>
-                                                    <tr style="font-weight: bold;">
-                                                        <td colspan="2">
-                                                            <s:message code="download.msg.body.col.idx" />
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                                <table class="table table-bordered" style="margin-bottom:0;width:100%;margin-top:15px;" id="sizeWarnMsg">
-                                                    <colgroup>
-                                                        <col width="210">
-                                                        <col width="*">
-                                                    </colgroup>
-                                                    <tr style="font-weight: bold;">
-                                                        <td colspan="2">
-                                                            <s:message code="download.msg.warn" arguments="50,000" argumentSeparator="|"/>
-                                                        </td>
-                                                    </tr>
-                                                    <tr style="font-weight: bold;">
-                                                        <th>
-                                                            <label for="ruleFile" class="control-label" style="vertical-align: bottom;line-height:35px;">¤ <s:message code="download.msg.file.count"/></label>
-                                                        </th>
-                                                        <td>
-                                                            <select id="dataLength_select" class="selectpicker" data-style="btn-default">
-                                                                <option value="20000">20,000</option>
-                                                                <option value="30000">30,000</option>
-                                                                <option value="40000">40,000</option>
-                                                                <option value="50000" selected>50,000</option>
-                                                                <option value="100000">100,000</option>
-                                                            </select>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
-                                        <button type="button" class="btn btn-primary savePopBtn" accesskey="S" id="allDownBtn"><s:message code="common.msg.export"/></button>
-                                    </div>
-                                </div>
-                            </div>
-                            <iframe id="upload_file" name="upload_file" src="" style="display: none;"></iframe>
-                        </div>
-                        <div style="display:none;">
-                            <ul id="newTab">
-                                <li class="tab_li"><div class="tab_close"></div><div class="tab_txt_top addTabDiv" style="float:left;"></div><span class="resultCntSpan" style="padding-right:15px;"></span></li>
-                            </ul>
-                            <ul id="addTab">
-                                <li class="tab_li addTabLi" data-index=""><div class="tab_txt_top addTabDiv" style="padding:0 10px;"><span class="fa fa-spinner fa-spin" style="cursor:pointer;color:#494949;top:7px;"></span></div></li>
-                            </ul>
-                        </div>
-            </div> <!--//ContentArea-->
-        </div><!--//Container-->
-    </div> <!--//wrap-->
+
+            <div style="display:none;">
+                <ul id="newTab">
+                    <li class="tab_li"><div class="tab_close"></div><div class="tab_txt_top addTabDiv" style="float:left;"></div><span class="resultCntSpan" style="padding-right:15px;"></span></li>
+                </ul>
+                <ul id="addTab">
+                    <li class="tab_li addTabLi" data-index=""><div class="tab_txt_top addTabDiv" style="padding:0 10px;"><span class="fa fa-spinner fa-spin" style="cursor:pointer;color:#494949;top:7px;"></span></div></li>
+                </ul>
+            </div>
+        </div> <!--//ContentArea-->
+    </div><!--//Container-->
+</div> <!--//wrap-->
 
 </body>
 <form action="<c:url value="/downEmassAttachByMsgId.xcn"/>" target="ExcelDown" method="post" id="downForm">
@@ -3002,6 +2673,9 @@ s
     <input type="hidden" name="paramFolderSeq" id="paramFolderSeq">
     <input type="hidden" name="paramFolderName" id="paramFolderName">
 </form>
+
+<input type="hidden" name="checkMsgCnt" id="checkMsgCnt" value="10000"/>
+
 <script type="text/javascript">
     var grid = new Xgrid('searchKeywordGrid', contextRoot);
     grid.onCheckBox();

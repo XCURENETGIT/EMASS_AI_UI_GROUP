@@ -1,11 +1,10 @@
-<%@page import="com.xcurenet.audit.service.Operation"%>
 <%@page import="net.sf.json.JSONObject"%>
 <%@page import="net.sf.json.JSONArray"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
 <%@page import="com.xcurenet.common.util.Common"%>
 <%@page import="com.xcurenet.emass.message.service.SolrEdcVO"%>
-<%@ page import="com.xcurenet.common.util.config.Config" %>
+<%@ include file="/WEB-INF/fragments/popupScript.jsp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
@@ -13,15 +12,12 @@
 	JSONObject param = Common.getParam ( request );
 	JSONArray overLapdata = Common.toJSONArray(param.get("body"));
 	List<SolrEdcVO> emass = new ArrayList<SolrEdcVO>(overLapdata);
-	String infoFeedbackYn = Common.getInfoFeedbackYn(session);
 	int total = Common.nvz(param.get("total"));
-	boolean infoFeedbackConf = Config.getBoolean("info.feedback.used");
 %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
 <title>EMASS LTH - <s:message code="message.overlap.poptitle"/></title>
-<%@ include file="../../base.jsp"%>
 <style type="text/css">
 html,body{height: 100%; padding: 0px; margin: 0px;overflow: auto;min-width: 650px;}
 .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {

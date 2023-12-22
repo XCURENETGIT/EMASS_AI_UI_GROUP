@@ -1088,17 +1088,16 @@ function setMessage(msg) {
 
 	/* 수신 */
 	if(msg.direction == 'I') {
-		$('#recvOrsend').attr('class', 'top redBg');
-		$('#recvOrsend').find('#sub_flag_send').attr("style","display:none");
-		$('#recvOrsend').find('#sub_flag_reception').show();
-		$('#recvOrsend').find('#subject').attr('class','red');
-
-	}/* 발신 */
-	else if(msg.direction == 'O'){
 		$('#recvOrsend').attr('class', 'top blueBg');
 		$('#recvOrsend').find('#sub_flag_reception').attr("style","display:none");
 		$('#recvOrsend').find('#sub_flag_send').show();
 		$('#recvOrsend').find('#subject').attr('class','blue02');
+	}/* 발신 */
+	else if(msg.direction == 'O'){
+		$('#recvOrsend').attr('class', 'top redBg');
+		$('#recvOrsend').find('#sub_flag_send').attr("style","display:none");
+		$('#recvOrsend').find('#sub_flag_reception').show();
+		$('#recvOrsend').find('#subject').attr('class','red');
 	}
 
 
@@ -2182,6 +2181,10 @@ function updateEmsFeedback(feedback) {
 	});
 }
 
+
+
+/* 내보내기 & 다운로드 관련 */
+
 /* 메시지 보관 */
 $(document).on('click','#saveMsgData',function(){
 	parent.saveFolderDataGrid(parent.getIframeListObj().grid);
@@ -2199,7 +2202,6 @@ $(document).on('click', '.body_link_new', function(){
 		alert('<s:message code="common.msg.nodata"/>');
 		return;
 	}
-
 	grid.on();
 	setTimeout(function(){
 		var msgid = grid.getSelectedKey('msgid');
@@ -2236,8 +2238,4 @@ $(document).on('click', '.attach_link_new', function(){
 		$('#downForm').submit();
 		grid.off();
 	}, 300);
-});
-
-$(document).on('click', '.all_down_link', function(){
-	alert('보류')
 });

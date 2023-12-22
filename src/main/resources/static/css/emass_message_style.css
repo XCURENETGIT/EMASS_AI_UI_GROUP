@@ -234,6 +234,21 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 .optiotab button:hover {text-decoration: underline; background-color: #f8f8f8;}
 .optiotab button.active { color:#1A73F9; border:1px solid #1A73F9; font-weight:600; z-index:99999;margin-left:-1px;}
 
+/* 검색 탭*/
+.leftSearchTab {position: relative; width:100%; border-bottom:2px solid #1C64D3;}
+.leftSearchTab button {border:1px solid #ddd; border-bottom:none; background-color: #fff; font-size:15px; font-weight:300;color:#777; padding:8px 16px;}
+.leftSearchTab button.active {background-color: #1C64D3; color: #fff; font-weight:600; border:none;}
+
+/* 설정 탭 */
+.verticaltab {float: left; width: 20%; border: 1px solid #ddd; margin-top:48px; }
+.verticaltab button {display: block; width: 100%;font-weight: 300; background-color: #fff; color: black; padding: 16px 16px; border: none;outline: none; text-align: left; }
+.verticaltab button:hover {background-color: #F2F6FF;}
+.verticaltab button.active {background-color: #375E9A; color:#fff; }
+.vertical_content {float: left; width: 80%;  margin-top:16px; padding: 0 0 0 20px; border-left: none; padding-bottom:40px;}
+.vertical_content h2 {font-size:24px; font-weight: 600;}
+.vertical_content .rightbtn { position: absolute; right:0; bottom:0;}
+.vertical_content div {position: relative;}
+
 .main_tab {float: left; width:110px; height: 300px;}
 .main_tab button {display: block;background-color: inherit;  border: none; margin-bottom:12px; outline: none;text-align: left;cursor: pointer;}
 .main_tab button:hover {background-color: #ddd; color:#fff;}
@@ -441,10 +456,13 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 .row label {vertical-align: middle;line-height: 1.5; font-size:14px;font-weight:400;}
 .row select {display: inline-block;}
 .row:after {content: "";display: table;clear: both;}
-.checkbox {font-size:13px; margin-right:12px; margin-bottom:4px;display: inline-block;}
-.checkbox input {vertical-align: top;}
+.checkbox {font-size:13px; margin-right:12px; margin-bottom:4px;display: inline-block; }
+.checkbox input {vertical-align: middle; width:16px; height:16px; vertical-align: -3px;}
+.checkbox span.checktit {font-size:14px; margin-left:-4px;}
 .radio {font-size:13px; margin-right:12px;margin-bottom:4px; display: inline-block;}
-.radio input {vertical-align: top;}
+.radio input {vertical-align: middle; width:16px; height:16px; vertical-align: -3px;}
+
+
 
 .info {background:#fff url(../img/ico_alert.png) left top no-repeat;padding-left:20px;padding-top:1px; font-size:14px; margin-top:8px;}
 
@@ -479,4 +497,5 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 /*.modal {z-index: 1; left: 0; top: 0;width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4);}*/
 .alert_modal {  position: relative;  width:400px; background-color: #fefefe;margin: 5% auto 15% auto; border: 1px solid #888;}
 .clearfix::after {content: "";clear: both; display: table;}
+
 

@@ -1094,7 +1094,6 @@
 
   function probPercent(val) {
     if( val == undefined || val == null || val == -1.0 ) return '';
-    console.log(Math.floor(val * 100));
     return Math.floor(val * 100);
   }
 
@@ -1154,3 +1153,4 @@
     </div>
   </div>
 </div>
+

@@ -5,6 +5,7 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="com.xcurenet.common.util.config.Config" %>
 <%@ page import="com.xcurenet.common.util.Common" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/fragments/messageCss.jsp"%>
 <%@ include file="/WEB-INF/fragments/messageJs.jsp"%>
@@ -30,6 +31,9 @@
 	boolean hostQuery = false;
 	ConfigAdminVO hostQueryVO = configAdminService.getConfAdmin("host.query.use", adminId);
 	if(Common.isNotEmpty(hostQueryVO)) hostQuery = Common.isEquals(Common.nvl(hostQueryVO.getVal()), "Y") ? true : false;
+
+
+	String adminType    = Common.getAdminType(session);
 
 %>
 <!DOCTYPE html>
@@ -185,7 +189,7 @@
 		var mode='';
 		var kHighlight = '<%=keywordHighlight%>';
 		var hostQueryUse = '<%=hostQuery%>';
-
+		var re = /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\'\"\\(\=]/gi;
 
 		$(document).ready(function(){
 
@@ -211,9 +215,7 @@
 				else $(this).find('.fold').addClass('fold_on');
 			});
 
-			$('#testx').click(function(){
-				console.log($(this).html());
-			});
+
 
 			$('#recommendBtn').click(function(){
 				var d = new Date();
@@ -335,9 +337,6 @@
 					$('#imgPreviewDiv').fadeIn();
 				}, 100);
 
-
-
-
 			}
 		}
 
@@ -349,6 +348,250 @@
 			var pop = fnOpenWindow(url, 'participant', 1015, 450, 'resize');
 		}
 
+		/* 내보내기 tablinks */
+		$(document).on('click', '.tablinks', function(){
+			var children = $(this).parent().children('button') // 배열
+			var _thisIdx = $(this).index(); // 선택된 idx
+
+			$(children).each(function(index) {
+				if(_thisIdx == index){
+					$(this).attr('class','active tablinks w50');
+					console.log($(this).find('input').prop("checked", true))
+					$(this).find('input:radio').prop("checked", false);
+
+				}else{
+					$(this).attr('class','tablinks w50');
+					$(this).find('input:radio').prop("checked", false);
+				}
+			});
+		});
+
+
+		$(document).on('click', '.all_down_link', function(){
+			var searchType = $(this).attr('data-type');
+			parent.$('#searchType').val(searchType);
+			var title = $(this).text();
+			$('#exportTitle').text(title+' '+'<s:message code="common.msg.export"/>');
+			$('#exportDialog').modal('show');
+		});
+
+
+		/* exportDialog  모달 실행 */
+		$(document).on('show.bs.modal','#exportDialog', function () {
+			$('input:radio[name=exportDataRange]:input:checked').prop("checked", false);
+
+			var grid = parent.getIframeListObj().grid;
+			var rows = grid.getSelectedKey('msgid').length;
+			var total = grid.data.length;
+
+			if(total == 0){
+				ui.alertMsg('<s:message code="common.msg.nodata"/>');
+				return false;
+			}
+
+			var searchType =  parent.$("#searchType").val();
+
+
+			var consentNo = grid.getValue(0, 'consentNo');
+			if( searchType != 'L'){
+				if(isConsent( ) && consentNo == '' && '<%=adminType%>' != 'C'){
+					alert('<s:message code="download.msg.consent"/>');
+					return false;
+				}
+			}
+
+			if(searchType != "L" && searchType.indexOf('L') > -1) {
+				if($('input:radio[name=exportFileType]:input:checked').val() == "xlsx") {
+					$("input:radio[name='bodyInExcel']:radio[value='N']").prop("checked", true);
+					$('#bodyInExcel').show();
+					$('#bodyInExcelMsg').hide();
+					$('#bodyInExcelIdx').hide();
+				}else {
+					$('#bodyInExcel').hide();
+					$('#bodyInExcelMsg').hide();
+					$('#bodyInExcelIdx').hide();
+				}
+			} else {
+				$('#bodyInExcel').hide();
+				$('#bodyInExcelMsg').hide();
+				$('#bodyInExcelIdx').hide();
+			}
+
+
+			parent.$('#searchTime').val('');
+			parent.$('#searchCondition').val('');
+			parent.$('#searchHeader').val('');
+			parent.$('#searchTotal').val('');
+			parent.$('#dataLength').val('');
+			parent.$('#exportFileExt').val('');
+
+			var checkMsgCnt = parent.$('#checkMsgCnt').val();
+			if( (rows > checkMsgCnt) || (rows == 0 && grid.data.length > checkMsgCnt)){
+				$('input:radio[name=exportDataRange]:input[value=A]').click();
+
+			}else{
+				$('input:radio[name=exportDataRange]:input[value=S]').click();
+			}
+		});
+
+
+		$(document).on('change','input[name="exportDataRange"]:radio', function () {
+			var grid = parent.getIframeListObj().grid;
+			var rows = grid.getSelectedKey('msgid').length;
+			var total = parent.getIframeListObj().$('#busiCntArea').find('.tab_selected').find('.busiCnt').text();
+			total = total.replace(re,"")
+			var downTotal = total;
+			var exportDataRange = $(this).val();
+			if( exportDataRange == 'S'){
+				$('#sizeWarnMsg').hide();
+
+				if( rows > 0) downTotal = rows;
+				else downTotal = grid.data.length;
+
+				var checkMsgCnt = parent.$('#checkMsgCnt').val();
+				if( downTotal > checkMsgCnt){
+					ui.alertMsg('<s:message code="download.message.check.total" arguments="'+addCommas(checkMsgCnt)+'" argumentSeparator="|"/>');
+					$('input:radio[name=exportDataRange]:input[value=A]').parent().click();
+					return;
+				}
+			}
+
+			var searchType = parent.$('#searchType').val();
+			if( searchType.indexOf('L') > -1){
+				$('#exportFileTypeArea').show();
+				if(downTotal > 50000){
+					$('#sizeWarnMsg').show();
+				}else{
+					$('#sizeWarnMsg').hide();
+				}
+			}
+			else {
+				$('#exportFileTypeArea').hide();
+				$('#sizeWarnMsg').hide();
+			}
+			$('#exportDataSize').text(addCommas(downTotal));
+			parent.$('#searchTotal').val(downTotal);
+		});
+
+
+		var downloadBatchExist=true;
+		$(document).on('click', '#allDownBtn', function(){
+			var grid = parent.getIframeListObj().grid;
+			var rows = grid.getSelectedKey('msgid').length;
+			var total = parent.getIframeListObj().$('#busiCntArea').find('.tab_selected').find('.busiCnt').text();
+			total = total.replace(re,"")
+			grid.on();
+			var bodyInExcel = parent.$('input:radio[name=bodyInExcel]:input:checked').val();
+			var header = grid.getHeaderEXCEL();
+			if(bodyInExcel == "Y") {
+				header = JSON.parse(header);
+				header.splice($('#nowColIdx').val(),0,{"key":"body","title":"<s:message code='condition.body' />","width":410,"align":"left"});
+				header = JSON.stringify(header);
+			}
+			var param = JSON.stringify( parent.getIframeListObj().filterValData );
+			var dataLength = parent.$('#dataLength_select').selectpicker('val');
+			var searchType = parent.$('#searchType').val();
+			var exportFileType = $('input:radio[name=exportFileType]:input:checked').val();
+			var exportDataRange = $('input:radio[name=exportDataRange]:input:checked').val();
+
+			parent.$('#searchTime').val(parent.getIframeListObj().parent.$('#searchTime').val());
+			parent.$('#searchCondition').val(param);
+			parent.$('#searchHeader').val(header);
+			parent.$('#dataLength').val(dataLength);
+			parent.$('#exportFileExt').val(exportFileType);
+
+
+			if( exportDataRange == 'A'){
+				//중복체크
+				ui.get({
+					url : 'checkDownloadBatchExist.xcn',
+					searchCondition : param,
+					searchTotal : parent.$('#searchTotal').val(),
+					searchType : searchType,
+					exportFileExt : exportFileType,
+					success : function(data, total) {
+						if(data > 0) {
+							downloadBatchExist = true;
+						} else {
+							downloadBatchExist = false;
+						}
+					},
+					error : function(status, message) {
+						ui.alertMsg(message);
+					},
+					complete : function() {
+						if(downloadBatchExist) {
+							ui.alertMsg('<s:message code="download.msg.exist" />');
+						} else {
+							$('#isBackground').val('Y');
+							if( searchType == 'B'){
+								$('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveBatchZip.xcn"/>');
+								$('#allDownForm').submit();
+							}else if(searchType == 'A' ){
+								$('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveBatchZip.xcn"/>');
+								$('#allDownForm').submit();
+							}else if(exportFileType == 'xlsx' || exportFileType == 'cell'){
+								$('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveBatchZip.xcn"/>');
+								$('#allDownForm').submit();
+							}else if(exportFileType == 'csv'){
+								$('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveBatchCSV.xcn"/>');
+								$('#allDownForm').submit();
+							}else if(exportFileType == 'pdf'){
+								$('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveBatchPDF.xcn"/>');
+								$('#allDownForm').submit();
+							}
+						}
+					}
+				});
+
+			}else{
+
+				$('#isBackground').val('N');
+				if( searchType == 'B'){
+					$('.body_link_new').click();
+				}else if(searchType == 'A' ){
+					$('.attach_link_new').click();
+				}
+				else if(searchType == 'LB' || searchType == 'LBA' ){
+					var msgids = grid.getSelectedKey('msgid');
+					if( msgids.length == 0 ){
+						msgids = grid.getKeyData('msgid');
+					}
+					var selected_condition = {};
+					selected_condition.msgids = msgids;
+					selected_condition.sort = $('#messageSort').val();
+
+					$('#searchCondition').val(JSON.stringify( selected_condition ));
+					$('#searchTotal').val(msgids.length);
+
+					if(exportFileType == 'xlsx' || exportFileType == 'cell'){
+						parent.$('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveZip.xcn"/>');
+						parent.$('#allDownForm').submit();
+					}else if(exportFileType == 'csv'){
+						parent.$('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveCSV.xcn"/>');
+						parent.$('#allDownForm').submit();
+					}else if(exportFileType == 'pdf'){
+						parent.$('#allDownForm').attr('action', '<c:url value="/getEmassMessageSavePDF.xcn"/>');
+						parent.$('#allDownForm').submit();
+					}
+				}else{
+					if(exportFileType == 'xlsx'){
+						parent.$('.excel_link_new').click();
+					}else if(exportFileType == 'cell'){
+						parent.$('.cell_link_new').click();
+					}else if(exportFileType == 'csv'){
+						parent.$('.csv_link_new').click();
+					}else if(exportFileType == 'pdf'){
+						parent.$('.pdf_link_new').click();
+					}
+				}
+			}
+
+			$('#exportDialog').modal('hide');
+			setTimeout(function(){
+				grid.off();
+			}, 500);
+		});
 	</script>
 </head>
 <div class="grayBg02">
@@ -383,7 +626,7 @@
 					<%--saveMsgData--%>
 					<button class="btn05" id="saveMsgData"><s:message code="filterInfo.setMsgFolder1"/></button>
 					<%-- 내보내기--%>
-					<button  class="btn05" href="javascript:;" style="padding-right:10px; color:#383838; cursor: pointer; font-size: 12px;left:178px;"data-toggle="dropdown" id="exportMsg"><s:message code="common.msg.export"/><span class="caret"></span></button>
+					<button  class="btn05" href="javascript:;" style="padding-right:10px; color:#383838; cursor: pointer; font-size: 12px;left:178px;"data-toggle="dropdown" id="exportMsg"><s:message code="common.msg.export"/> <span class="caret"></span></button>
 					<ul class="dropdown-menu dropdown-exportMenu" role="menu" style="min-width:100px;font-size:13px;">
 						<li style="display:none;"><a href="javascript:void(0);" id="body_link_btn" class="body_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-text-o" style="font-size:16px"></span>&nbsp;<s:message code="condition.body"/></a></li>
 						<li style="display:none;"><a href="javascript:void(0);" id="attach_link_btn" class="attach_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-archive-o" style="font-size:16px"></span>&nbsp;<s:message code="consent.attach"/></a></li>
@@ -622,7 +865,109 @@
 			</div>
 		</div>
 	</div>
+
+	<%-- 내보내기 모달 --%>
+	<div id="exportDialog"  class="modal fade vertical_content" role="document" tabindex="-1" role="dialog" aria-labelledby="exportDialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h3 class="modal-title" id="exportTitle">&nbsp;</h3>
+				</div>
+				<div class="row bordd p12 clear mat8">
+					<ul>
+						<li class="pr20 pl20 pl20 grayBg02">
+							<span class="bullet02"></span><label for="fname" class="fb600">	<s:message code="download.msg.dataArea"/></label>
+							<p>
+							<div class="optiotab w99 mat8" data-toggle="buttons">
+								<label class="active tablinks w50" name="optBts"><input type="radio" name="exportDataRange" id="exportDataSelect" value="S"> <s:message code="download.msg.select.count"/></label>
+								<label class="tablinks w50" name="optBts"><input type="radio" name="exportDataRange" id="exportDataAll" value="A" > <s:message code="download.msg.search.count"/></label>
+							</div>
+							</p>
+						</li>
+						<li id="exportFileTypeArea">
+							<span class="bullet02"></span><label for="fname" class="fb600">	<s:message code="download.msg.fileType"/></label>
+							<p>
+							<div class="optiotab w99 mat8" data-toggle="buttons" >
+								<label class="active tablinks w50" name="optBts"><input type="radio" name="exportFileType" id="exportExcel" value="xlsx" > <s:message code="common.msg.excel"/>(xlsx)</label>
+								<label class="tablinks w50" name="optBts"><input type="radio" name="exportFileType" id="exportHancel" value="cell"> <s:message code="common.msg.hancel"/>(cell)</label>
+								<label class="tablinks w50" name="optBts"><input type="radio" name="exportFileType" id="exportText" value="csv"> <s:message code="common.msg.text"/>(csv)</label>
+								<label class="tablinks w50" name="optBts"><input type="radio" name="exportFileType" id="exportPdf" value="pdf"> <s:message code="selectCodeAll.list"/>(PDF)</label>
+							</div>
+							</p>
+						</li>
+						<li>
+							<span class="bullet02"></span><label for="fname" class="fb600">	<s:message code="download.msg.export.count"/></label>
+							<div class="optiotab w99 mat8">
+								<span id="exportDataSize" style="line-height:32px;">0</span>
+							</div>
+						</li>
+						<li>
+							<table class="table table-bordered" style="margin-bottom:0;width:100%;margin-top:15px;display:none;" id="bodyInExcelIdx">
+								<colgroup>
+									<col width="210">
+									<col width="*">
+								</colgroup>
+								<tr>
+									<th style="font-weight: bold;">
+										<s:message code="download.msg.now.col.order" />
+									</th>
+									<td>
+										<select id="nowColIdx" data-style="btn-default">
+										</select>
+									</td>
+								</tr>
+								<tr style="font-weight: bold;">
+									<td colspan="2">
+										<s:message code="download.msg.body.col.idx" />
+									</td>
+								</tr>
+							</table>
+						</li>
+						<%--					<li>--%>
+						<%--						<table class="table table-bordered" style="margin-bottom:0;width:100%;margin-top:15px;" id="sizeWarnMsg">--%>
+						<%--							<colgroup>--%>
+						<%--								<col width="210">--%>
+						<%--								<col width="*">--%>
+						<%--							</colgroup>--%>
+						<%--							<tr style="font-weight: bold;">--%>
+						<%--								<td colspan="2">--%>
+						<%--									<s:message code="download.msg.warn" arguments="50,000" argumentSeparator="|"/>--%>
+						<%--								</td>--%>
+						<%--							</tr>--%>
+						<%--							<tr style="font-weight: bold;">--%>
+						<%--								<th>--%>
+						<%--									<label for="ruleFile" class="control-label" style="vertical-align: bottom;line-height:35px;">¤ <s:message code="download.msg.file.count"/></label>--%>
+						<%--								</th>--%>
+						<%--								<td>--%>
+						<%--									<select id="dataLength_select" class="selectpicker" data-style="btn-default">--%>
+						<%--										<option value="20000">20,000</option>--%>
+						<%--										<option value="30000">30,000</option>--%>
+						<%--										<option value="40000">40,000</option>--%>
+						<%--										<option value="50000" selected>50,000</option>--%>
+						<%--										<option value="100000">100,000</option>--%>
+						<%--									</select>--%>
+						<%--								</td>--%>
+						<%--							</tr>--%>
+						<%--						</table>--%>
+						<%--					</li>--%>
+					</ul>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+					<button type="button" class="btn btn-primary savePopBtn" accesskey="S" id="allDownBtn"><s:message code="common.msg.export"/></button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
 </div>
+
 
 <script type="text/javascript">
 	var op_attach_save = '<%=op_attach_save%>';
