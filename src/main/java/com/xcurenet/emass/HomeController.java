@@ -643,7 +643,6 @@ public class HomeController {
 	@RequestMapping(value = "/analysis/infoStat.do", method = RequestMethod.GET)
 	@Description("개인정보 관계 분석 페이지")
 	public String infoStat(Locale locale, Model model) {
-		model.addAttribute("headerYn","Y");
 		return "/emass/statistics/infoStat";
 	}
 
