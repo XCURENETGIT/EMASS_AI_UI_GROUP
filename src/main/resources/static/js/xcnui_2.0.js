@@ -329,7 +329,7 @@ var ui = {
 	alertMsg : function(msg, callBack, timeOut) {
 		var dialogInstance = BootstrapDialog.alert({
 			id : 'bootstrap_alert',
-			title : 'Venus - Alert',
+			title : 'EMASS PRO',
 			message: msg,
 			closable: true,
 			draggable: true,
@@ -347,8 +347,7 @@ var ui = {
 			var title = dialogInstance.getTitle();
 			var t = (timeOut/1000)-1;
 			var interval = setInterval(function(){
-				$('#bootstrap_alert_title').css('width','95%');
-				dialogInstance.setTitle(title + '  <div style="float:right;text-align:right;">Auto Close ' + (t--).comma() + ' \'s</div>' );
+				dialogInstance.setTitle(title + '  <div class="auto_close">Auto Close ' + (t--).comma() + ' \'s</div>' );
 			},1000);
 
 			setTimeout(function(){
@@ -410,7 +409,7 @@ var ui = {
 		BootstrapDialog.confirm({
 			//size : dialogSize,
 			id : 'bootstrap_confirm',
-			title : (title == undefined || title == '') ? 'Venus - Confirm' : title,
+			title : (title == undefined || title == '') ? 'EMASS PRO' : title,
 			message : msg,
 			draggable : true,
 			btnOKLabel : xcnuiJS.confirm,
