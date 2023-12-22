@@ -13,14 +13,14 @@
 	text-align: center;
 	font-size: 14px;
 	padding:3px;
-	margin-top:5px;
+	margin-top:20px;
 	margin-right:20px;
 }
 
 #chartPopover .popover {
 	min-width:610px;
 	width:610px;
-	height:270px;
+	height:200px;
 }
 
 /*
@@ -165,143 +165,130 @@ function eventEnterSearch(event) {
 </head>
 <body class="mini-navbar">
 
-	<div class="container"> 
-		<div class="boxArea">
-			<div class="content_body">
-				<form id="frm">
-					<div class="row">
-						<div class="col-xs-12">
-							<div class="form-group form-inline not-dashed">
-								<div class="form-group form-inline not-dashed">
-									<label for="startdate"><s:message code="condition.period"/>:</label> 
-									<div class='input-group date' id='startdatepicker'>
-										<input type='text' class="input-sm form-control" id='startDate' name='startDate' />
-										<span class="input-group-addon"> <span class="glyphicon glyphicon-calendar"></span>
-										</span>
-									</div>
-									~
-									<div class='input-group date' id='enddatepicker'>
-										<input type='text' class="input-sm form-control" id='endDate' name='endDate' />
-										<span class="input-group-addon"> <span class="glyphicon glyphicon-calendar"></span>
-										</span>
-									</div>
-								</div>
-								<div class="form-group form-inline not-dashed">
-									<button type="button" id="dateYesterday" accesskey="Y" class="btn btn-sm btn-default"><s:message code="condition.yesterday"/></button>
-									<button type="button" id="dateToday" accesskey="T" class="btn btn-sm btn-default"><s:message code="condition.today"/></button>
-									<button type="button" id="dateWeek" accesskey="W" class="btn btn-sm btn-default"><s:message code="condition.week" arguments="1" argumentSeparator="|"/></button>
-									<button type="button" id="dateMonth" accesskey="M" class="btn btn-sm btn-default"><s:message code="condition.month" arguments="1" argumentSeparator="|"/></button>
-									<button type="button" id="dateYear" accesskey="E" class="btn btn-sm btn-default"><s:message code="condition.latelyyear" arguments="1" argumentSeparator="|"/></button>
-								</div>
-							</div>
-						</div>
+<div>
+	<!-- 검색 -->
+	<div class="searchArea">
+		<div class="searchSub_full">
+			<form id="frm">
+				<div class="searchSub_Box">
+					<div id="startDatePicker"><input type="date" id="startDate" name='startDate' style="width: 110px;">
+						<span class="hyphen">~</span></div>
+					<div id="endDatePicker"><input type="date" id="endDate" name='endDate' style="width: 110px;"></div>
+
+					<div class="form-group optiotab">
+						<button type="button" id="dateYesterday" accesskey="Y" style="width:72px;"><s:message code="condition.yesterday"/></button>
+						<button type="button" id="dateToday" accesskey="T" style="width:72px;"><s:message code="condition.today"/></button>
+						<button type="button" id="dateWeek" accesskey="W" ><s:message code="condition.week" arguments="1" argumentSeparator="|"/></button>
+						<button type="button" id="dateMonth" accesskey="M" ><s:message code="condition.month" arguments="1" argumentSeparator="|"/></button>
+						<button type="button" id="dateYear" accesskey="E" ><s:message code="condition.latelyyear" arguments="1" argumentSeparator="|"/></button>
 					</div>
-					<div class="row top_space">
-						<div class="col-xs-12">
-							<div class="form-group form-inline not-dashed">
-								<div class="form-group">
-									<label for="unit"><s:message code="analysis.usagecompare.groupunit"/>:</label>
-									<select id="unit" name="unit" class="input-sm form-control">
-										<option value="t"><s:message code="analysis.usagecompare.timeunit"/></option>
-										<option value="d"><s:message code="analysis.usagecompare.dayunit"/></option>
-										<option value="w"><s:message code="analysis.usagecompare.weekunit"/></option>
-										<option value="m"><s:message code="analysis.usagecompare.monthunit"/></option>
-									</select>
-								</div>
-								<div class="form-group form-inline not-dashed" style="margin-left: 15px;">
-									<label for="item"><s:message code="analysis.usagecompare.searchitem"/>:</label>
-									<select id="item" name="item" class="input-sm form-control">
-										<option value="totalSize"><s:message code="analysis.relation.ui.packetsize"/></option>
-										<option value="fileSize"><s:message code="analysis.relation.attachsize"/></option>
-										<option value="inMail"><s:message code="analysis.usagecompare.ui.mailcount"/></option>
-										<option value="outMail"><s:message code="analysis.usagecompare.ui.webmailcount"/></option>
-										<option value="ftp">FTP(GET/PUT)</option>
-									</select>
-								</div>
-								<div class="form-group form-inline not-dashed">
-									<div class="input-group">
-										<button type="button" class="btn btn-success btn-sm" accesskey="Q" id="btnSearch"><span class="glyphicon glyphicon-search"></span></button>
-									</div>
-									<div class="btn-group form-inline not-dashed">
-										<button type="button" id="btnReset" accesskey="R" class="btn btn-sm btn-default btn-warning">
-											<span class="glyphicon glyphicon-refresh"></span>&nbsp;<s:message code="condition.reset"/>
-										</button>
-									</div>
-								</div>
-							</div>
-						</div>
+					<div>
+						<select id="unit" name="unit">
+							<option value="t">시간단위</option>
+							<option value="d">일단위</option>
+							<option value="w">주단위</option>
+							<option value="m">월단위</option>
+						</select>
 					</div>
-				</form>
-				<div class="row top_space">
-					<div class="col-xs-12">
-						<div class="panel panel-default" >
-							<div class="panel-heading">
-								<i class="fa fa-area-chart fa-fw"></i><span id="chartAreaTitle"><s:message code="analysis.usagecompare.ui.usagecomparechart"/> </span>
-								<span id="chartPopover" class="btn-popover">
-									<a tabindex="0" class="btn btn-xs" role="button" data-toggle="popover" data-trigger="focus" data-container="#chartPopover" data-html="true" data-placement="bottom" title="<s:message code="analysis.usagecompare.ui.avgsearchdata"/>"><span class="glyphicon glyphicon-question-sign" style="font-size:20px;"></span></a>
-								</span>
-								<div id="popover-content-chart" class="hide" style="height:100%;">
-									<div style="padding-left:10px;">
-										<ul style="padding-left:15px;">
-											<li style="margin-bottom:7px;"><font color="red"><s:message code="analysis.usagecompare.timeunit"/></font> : <s:message code="analysis.usagecompare.ui.msg1"/></li>
-											<li style="margin-bottom:7px;"><font color="red"><s:message code="analysis.usagecompare.dayunit"/></font> : <s:message code="analysis.usagecompare.ui.msg2"/></li>
-											<li style="margin-bottom:7px;"><font color="red"><s:message code="analysis.usagecompare.weekunit"/></font> : <s:message code="analysis.usagecompare.ui.msg3"/></li>
-											<li><font color="red"><s:message code="analysis.usagecompare.monthunit"/></font> : <s:message code="analysis.usagecompare.ui.msg4"/></li>
-										</ul>
-									</div>
-								</div>
-							</div>
-							<div class="panel-body">
-								<div id="compareChart" style="height: 250px;"><s:message code="analysis.usagecompare.search"/></div>
-							</div>
-						</div>
+					<div>
+						<select id="item" name="item" class="input-sm form-control">
+							<option value="totalSize"><s:message code="analysis.relation.ui.packetsize"/></option>
+							<option value="fileSize"><s:message code="analysis.relation.attachsize"/></option>
+							<option value="inMail"><s:message code="analysis.usagecompare.ui.mailcount"/></option>
+							<option value="outMail"><s:message code="analysis.usagecompare.ui.webmailcount"/></option>
+							<option value="ftp">FTP(GET/PUT)</option>
+						</select>
+					</div>
+					<div class="btnform">
+						<button type="button" accesskey="Q" class="form_btn01" id="searchBtn"><s:message code="common.msg.search"/></button>
+						<button type="button" accesskey="Q" class="form_btn02" id="searchBtn"><s:message code="condition.reset"/></button>
 					</div>
 				</div>
-				<div class="row" style="margin-bottom:5px;">
-					<div class="col-lg-4">
-						<div class="panel with-nav-tabs" style="height:100%;">
-							<div class="panel-heading" style="padding:0;">
-								<ul class="nav nav-tabs codeTab">
-									<li class="active" ><a data-target="#result0" aria-controls="result0" role="tab" data-toggle="tab"><s:message code="analysis.usagecompare.ui.usersum"/></a></li>
-								</ul>
-							</div>
-							<div class="panel-body" style="padding: 4px 0px 0px 0px;">
-								<div class="tab-content" style="height:100%;" id="resultData">
-									<div role="tabpanel" class="tab-pane fade active in" id="result0">
-										<div id="usageList">
-											<div style="min-height:400px;height: 400px;">
-												<div id="usageListGrid" class="slickGrid gridArea" style="height: 100%;"></div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
+			</form>
+		</div>
+	</div>
+	<!-- //검색 -->
+	<div class="content">
+		<div class="contentSub">
+			<!-- 차트 -->
+			<div class="chartArea_full">
+				<h3><s:message code="analysis.usagecompare.ui.usagecomparechart"/></h3>
+				<span id="chartPopover" class="btn-popover">
+					<a tabindex="0" class="blue" role="button" data-toggle="popover" data-trigger="focus" data-container="#chartPopover" data-html="true" data-placement="bottom" title="<s:message code="analysis.usagecompare.ui.avgsearchdata"/>"><span class="glyphicon glyphicon-question-sign" style="font-size:14px;"></span></a>
+				</span>
+				<div id="popover-content-chart" class="hide" style="height:100%;">
+					<div style="padding-left:10px;">
+						<ul style="padding-left:15px;">
+							<li style="margin-bottom:7px;"><font color="red"><s:message code="analysis.usagecompare.timeunit"/></font> : <s:message code="analysis.usagecompare.ui.msg1"/></li>
+							<li style="margin-bottom:7px;"><font color="red"><s:message code="analysis.usagecompare.dayunit"/></font> : <s:message code="analysis.usagecompare.ui.msg2"/></li>
+							<li style="margin-bottom:7px;"><font color="red"><s:message code="analysis.usagecompare.weekunit"/></font> : <s:message code="analysis.usagecompare.ui.msg3"/></li>
+							<li><font color="red"><s:message code="analysis.usagecompare.monthunit"/></font> : <s:message code="analysis.usagecompare.ui.msg4"/></li>
+						</ul>
 					</div>
-					<div class="col-lg-8">
-						<div class="panel with-nav-tabs" style="height:100%;">
-							<div class="panel-heading" style="padding:0;">
-								<ul class="nav nav-tabs codeTab">
-									<li class="active" ><a data-target="#result0" aria-controls="result0" role="tab" data-toggle="tab"><s:message code="analysis.usagecompare.ui.detaillist"/></a></li>
-								</ul>
-							</div>
-							<div class="panel-body" style="padding: 4px 0px 0px 0px;">
-								<div class="tab-content" style="height:100%;" id="resultData">
-									<div role="tabpanel" class="tab-pane fade active in" id="result0">
-										<div id="detailList">
-											<div style="min-height:400px;height: 400px;">
-												<div id="detailListGrid" class="slickGrid gridArea" style="height: 100%;"></div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
+				</div>
+				<div class="inner_personaldata p20" style="height: 200px;">
+					<div class="panel-body">
+						<div id="compareChart" style="height: 250px;"><s:message code="analysis.usagecompare.search"/></div>
 					</div>
 				</div>
 			</div>
+			<!-- //차트-->
+			<!-- 컨텐츠 -->
+			<div class="mat32">
+				<!-- 사용자별 합계-->
+				<div class="col-lg-4">
+					<!-- //탭 -->
+					<div class="subtab mt32">
+						<ul class="nav nav-tabs codeTab" id="codeTab">
+							<li class="active" ><a data-target="#result0" aria-controls="result0" role="tab" data-toggle="tab"><s:message code="analysis.usagecompare.ui.usersum"/></a></li>
+						</ul>
+					</div>
+					<!-- //탭 -->
+					<div class="tab-content" style="height:100%;" id="resultData">
+						<div role="tabpanel" class="tab-pane fade active in" id="result0">
+							<div id="usageList">
+								<div style="min-height:400px;height: 400px;">
+									<div id="usageListGrid" class="slickGrid gridArea" style="height: 100%;"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- //사용자별 합계-->
+				<!-- 상세 목록-->
+				<div class="col-lg-8">
+					<!-- //탭 -->
+					<div class="subtab mt32">
+						<ul class="nav nav-tabs codeTab" id="codeTab">
+							<li class="active" ><a data-target="#result0" aria-controls="result0" role="tab" data-toggle="tab"><s:message code="analysis.usagecompare.ui.detaillist"/></a></li>
+						</ul>
+					</div>
+					<!-- //탭 -->
+					<div>
+						<div class="tab-content" style="height:100%;" id="resultData">
+							<div role="tabpanel" class="tab-pane fade active in" id="result0">
+								<div id="detailList">
+									<div style="min-height:400px;height: 400px;">
+										<div id="detailListGrid" class="slickGrid gridArea" style="height: 100%;"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- //상세 목록-->
+			</div>
 		</div>
 	</div>
+</div>
+
+
+
+
+
+
+
+
 	<!-- Back to top -->
 	<a href="#0" class="back-to-top cd-top"><span class="[ fa fa-chevron-up ]"></span> <span class="[ ]">Back to the Top</span></a>
 	

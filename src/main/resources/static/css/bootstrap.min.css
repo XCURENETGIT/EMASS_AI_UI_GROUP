@@ -2615,7 +2615,7 @@ output {
 	color: #555;
 	background-color: #fff;
 	border: 1px solid #ccc;
-	border-radius: 2px;
+
 }
 
 .form-control:focus {
@@ -2923,7 +2923,7 @@ fieldset[disabled] input[type=checkbox], fieldset[disabled] input[type=radio], i
 	padding: 5px 10px;
 	font-size: 12px;
 	line-height: 1.5;
-	border-radius: 3px
+
 }
 
 select.input-sm {
@@ -2940,7 +2940,7 @@ select[multiple].input-sm, textarea.input-sm {
 	padding: 5px 10px;
 	font-size: 12px;
 	line-height: 1.5;
-	border-radius: 3px
+
 }
 
 .form-group-sm select.form-control {

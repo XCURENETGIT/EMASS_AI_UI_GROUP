@@ -149,163 +149,101 @@ function eventEnterSearch(event) {
 }
 
 </script>
-	<div class="container">
-		<div class="boxArea">
-			<div class="content_body">
+	<div>
+		<!-- 검색 -->
+		<div class="searchArea">
+			<div class="searchSub_full">
 				<form id="frm">
-					<div class="row">
-						<div class="col-xs-12">
-							<div class="form-group form-inline not-dashed">
-								<div class="form-group">
-									<label for="unit"><s:message code="analysis.relation.unit"/>:</label>
-									<select id="unit" name="unit" class="input-sm form-control">
-										<option value="file"><s:message code="consent.attach"/></option>
-										<option value="mailid"><s:message code="analysis.relation.mailid"/></option>
-										<option value="messenger"><s:message code="analysis.relation.messenger"/></option>
-									</select>
-								</div>
-								<div class="form-group form-inline not-dashed" style="margin-left: 15px;">
-									<label for="startdate"><s:message code="condition.period"/>:</label> 
-									<div class='input-group date' id='startdatepicker'>
-										<input type='text' class="input-sm form-control" id='startDate' name='startDate' />
-										<span class="input-group-addon"> <span class="glyphicon glyphicon-calendar"></span>
-										</span>
-									</div>
-									~
-									<div class='input-group date' id='enddatepicker'>
-										<input type='text' class="input-sm form-control" id='endDate' name='endDate' />
-										<span class="input-group-addon"> <span class="glyphicon glyphicon-calendar"></span>
-										</span>
-									</div>
-								</div>
-								<div class="form-group form-inline not-dashed">
-									<button type="button" id="dateYesterday" accesskey="Y" class="btn btn-sm btn-default"><s:message code="condition.yesterday"/></button>
-									<button type="button" id="dateToday" accesskey="T" class="btn btn-sm btn-default"><s:message code="condition.today"/></button>
-									<button type="button" id="dateWeek" accesskey="W" class="btn btn-sm btn-default"><s:message code="condition.week" arguments="1" argumentSeparator="|"/></button>
-									<button type="button" id="dateMonth" accesskey="M" class="btn btn-sm btn-default"><s:message code="condition.month" arguments="1" argumentSeparator="|"/></button>
-								</div>
-							</div>
+					<div class="searchSub_Box">
+						<div>
+							<select id="unit" name="unit">
+								<option value=""><s:message code="analysis.relation.unit"/>:</option>
+								<option value="file"><s:message code="consent.attach"/></option>
+								<option value="mailid"><s:message code="analysis.relation.mailid"/></option>
+								<option value="messenger"><s:message code="analysis.relation.messenger"/></option>
+							</select>
+						</div>
+						<div id="startDatePicker"><input type="date" id="startDate" name='startDate' style="width: 110px;">
+							<span class="hyphen">~</span></div>
+						<div id="endDatePicker"><input type="date" id="endDate" name='endDate' style="width: 110px;"></div>
+						<div class="form-group optiotab">
+							<button type="button" id="dateYesterday" accesskey="Y" style="width:72px;"><s:message code="condition.yesterday"/></button>
+							<button type="button" id="dateToday" accesskey="T" style="width:72px;"><s:message code="condition.today"/></button>
+							<button type="button" id="dateWeek" accesskey="W" ><s:message code="condition.week" arguments="1" argumentSeparator="|"/></button>
+							<button type="button" id="dateMonth" accesskey="M" ><s:message code="condition.month" arguments="1" argumentSeparator="|"/></button>
+						</div>
+						<div>
+							<select id="interGroup" name="interGroup" class="input-sm form-control">
+								<option value=""><s:message code="interest.user"/></option>
+							</select>
+						</div>
+						<div>
+							<input type="text" placeholder="<s:message code="condition.subject"/>" id="title" name="title"style="width: 325px;">
 						</div>
 					</div>
-					<div class="row top_space">
-						<div class="col-xs-12">
-							<div class="form-group form-inline not-dashed">
-								<div class="form-group">
-									<label for="title"><s:message code="condition.subject"/>:</label> 
-									<div class='input-group'>
-										<input type="text" id="title" name="title" class="input-sm form-control" style="width: 200px;" />
-									</div>
-								</div>
-								<div class="form-group form-inline not-dashed" style="margin-left: 15px;">
-									<label for="sendUser"><s:message code="condition.from"/>:</label> 
-									<div class='input-group'>
-										<input type="text" id="sendUser" name="sendUser" class="input-sm form-control" style="width: 170px;" />
-									</div>
-								</div>
-								<div class="form-group form-inline not-dashed" style="margin-left: 15px;">
-									<label for="receiveUser"><s:message code="condition.to"/>:</label> 
-									<div class='input-group'>
-										<input type="text" id="receiveUser" name="receiveUser" class="input-sm form-control" style="width: 170px;" />
-									</div>
-								</div>
-							</div>
+					<div class="searchSub_Box">
+
+						<div>
+							<input type="text" placeholder="<s:message code="condition.from"/>" id="sendUser" name="sendUser" style="width: 160px;">
 						</div>
-					</div>
-					<div class="row top_space">
-						<div class="col-xs-12">
-							<div class="form-group form-inline not-dashed">
-								<div class="form-group">
-									<label for="interGroup"><s:message code="interest.user"/>:</label>
-									<div class='input-group'>
-										<select id="interGroup" name="interGroup" class="input-sm form-control">
-											<option value=""><s:message code="analysis.ui.all"/></option>
-										</select>
-									</div>
-								</div>
-								<div class="form-group form-inline not-dashed" style="margin-left: 15px;">
-									<label for="keyword"><s:message code="condition.keyword"/>:</label> 
-									<div class='input-group'>
-										<input type="text" id="keyword" name="keyword" class="input-sm form-control" />
-									</div>
-								</div>
-								<div class="form-group form-inline not-dashed" style="margin-left: 15px;">
-									<label for="fileSize"><s:message code="analysis.relation.attachsize"/>(MByte <s:message code="filterInfo.rangeL"/>):</label> 
-									<div class='input-group'>
-										<input type="text" id="fileSize" name="fileSize" class="input-sm form-control numberinput" style="width: 90px;" maxlength="7" />
-									</div>
-									<div class="btn-group form-inline not-dashed">
-										<button type="button" class="btn btn-success btn-sm" accesskey="Q" id="btnSearch"><span class="glyphicon glyphicon-search"></span></button>
-									</div>
-									<div class="btn-group form-inline not-dashed">
-										<button type="button" id="btnReset" accesskey="R" class="btn btn-sm btn-warning">
-											<span class="glyphicon glyphicon-refresh"></span>&nbsp;<s:message code="condition.reset"/>
-										</button>
-									</div>
-								</div>
-							</div>
+						<div>
+							<input type="text" placeholder="<s:message code="condition.to"/>" id="receiveUser" name="receiveUser"  style="width: 160px;">
+						</div>
+						<div>
+							<input type="text" id="keyword" name="keyword" placeholder="<s:message code="condition.keyword"/>" style="width: 160px;" class="input-sm form-control" />
+						</div>
+
+						<div>
+							<input type="text" id="fileSize" name="fileSize"  style="width: 80px;"placeholder="<s:message code="analysis.relation.attachsize"/>" maxlength="8" /><span class="fs12 mal4">(MByte <s:message code="filterInfo.rangeL"/>)</span>
+						</div>
+						<div class="btnform">
+							<button type="button" accesskey="Q" class="form_btn01" id="searchBtn"><s:message code="common.msg.search"/></button>
+							<button type="button" accesskey="Q" class="form_btn02" id="searchBtn"><s:message code="condition.reset"/></button>
 						</div>
 					</div>
 				</form>
-				<div class="row top_space">
-					<div class="col-lg-4">
-						<div class="panel panel-default" style="height:500px;">
-							<div class="panel-heading">
-								<i class="fa fa-file-text-o fa-fw"></i> <span>LIST</span>
-							</div>
-							<div class="panel-body" style="height: calc(100% - 38px); padding: 10px;">
-								<div id="basicStatListGrid" class="slickGrid gridArea"></div>
-							</div>
+			</div>
+		</div>
+		<!-- //검색 -->
+		<div class="content">
+			<div class="contentSub">
+				<div class="chartArea02">
+					<!-- 리스트-->
+					<div>
+						<h3>List</h3>
+						<div class="inner_personaldata p20" style="height: 340px; overflow-y: scroll;">
+							<div id="basicStatListGrid" class="slickGrid gridArea"></div>
 						</div>
 					</div>
-					<div class="col-lg-8">
-						<div class="panel panel-default" style="height:500px;">
-							<div class="panel-heading">
-								<i class="fa fa-share-alt fa-fw"></i> <span><s:message code="analysis.relation.ui.relationships"/></span>
-								<div id="popover-content-chart" class="hide">
-									<div style="padding-left:10px;">
-										<ul style="padding-left:15px;">
-											<li style="margin-bottom:7px;"><s:message code="analysis.relation.ui.msg1"/></li>
-										</ul>
-									</div>
-								</div>
-								<span id="chartFull" class="btn-full" style="display:none">
-									<a tabindex="0" class="btn btn-xs" role="button" data-trigger="focus" data-container="#chartFull" title="<s:message code="analysis.relation.ui.enlarge"/>"><span class="glyphicon glyphicon glyphicon-fullscreen" style="font-size:20px;"></span></a>
-								</span>
-							</div>
-							<div class="panel-body" style="padding: 0;">
-								<div id="relation_div" >
-									<div class="initText" style="padding:11px;"><s:message code="analysis.relation.ui.msg5"/></div>
-									<div id="graph-container" style="height: 421px; overflow:hidden">
-										<div id="graph"></div>
-									</div>
-								</div>
-							</div>
+					<!-- //리스트-->
+					<!-- 관계도 -->
+					<div>
+						<h3><s:message code="analysis.relation.ui.relationships"/></h3>
+						<div class="inner_personaldata p20">
+							<div id="graph-container" style="height: 300px; overflow:hidden"></div>
 						</div>
 					</div>
+					<!-- //관계도 -->
 				</div>
-				<div class="row" style="margin-bottom:5px;">
-					<div class="col-lg-12">
-						<div class="panel with-nav-tabs" style="height:100%;">
-							<div class="panel-heading" style="padding:0;">
-								<ul class="nav nav-tabs codeTab">
-									<li class="active" ><a data-target="#result0" aria-controls="result0" role="tab" data-toggle="tab">Timeline</a></li>
-									<li><a data-target="#result1" aria-controls="result1" role="tab" data-toggle="tab"><s:message code="analysis.relation.ui.selectlist"/> <span class="resultCnt"></span></a></li>
-								</ul>
+				<!-- 탭 -->
+				<div class="subtab">
+					<ul class="nav nav-tabs codeTab" id="codeTab">
+						<li class="active" ><a data-target="#result0" aria-controls="result0" role="tab" data-toggle="tab">Timeline</a></li>
+						<li><a data-target="#result1" aria-controls="result1" role="tab" data-toggle="tab"><s:message code="analysis.relation.ui.selectlist"/> <span class="resultCnt"></span></a></li>
+					</ul>
+				</div>
+				<!-- //탭 -->
+				<div>
+					<div class="tab-content" style="height:100%;" id="resultData">
+						<div role="tabpanel" class="tab-pane fade active in" id="result0">
+							<div id="timeline" style="min-height:400px;">
+								<div style="padding: 5px;"><s:message code="analysis.relation.ui.notimeline"/></div>
 							</div>
-							<div class="panel-body" style="padding: 4px 0px 0px 0px;">
-								<div class="tab-content" style="height:100%;" id="resultData">
-									<div role="tabpanel" class="tab-pane fade active in" id="result0">
-										<div id="timeline" style="min-height:400px;">
-											<div style="padding: 5px;"><s:message code="analysis.relation.ui.notimeline"/></div>
-										</div>
-									</div>
-									<div role="tabpanel" class="tab-pane fade in" id="result1">
-										<div id="selectList">
-											<div style="min-height:400px;height: 400px;">
-												<div id="selectGrid" class="slickGrid gridArea" style="height: 100%;"></div>
-											</div>
-										</div>
-									</div>
+						</div>
+						<div role="tabpanel" class="tab-pane fade in" id="result1">
+							<div id="selectList">
+								<div style="min-height:400px;height: 400px;">
+									<div id="selectGrid" class="slickGrid gridArea" style="height: 100%;"></div>
 								</div>
 							</div>
 						</div>
@@ -314,23 +252,7 @@ function eventEnterSearch(event) {
 			</div>
 		</div>
 	</div>
-	<div id="chartFullDiv" class="chartFull" style="display:none">
-		<div class="panel panel-default" style="min-height:800px; height:800px;">
-			<div class="panel-heading">
-				<i class="fa fa-share-alt fa-fw"></i> <span>관계도</span>
-				<span class="btn-popover">
-					<a tabindex="0" class="btn btn-xs" role="button" onclick="javascript:chartFullClose();"><span class="glyphicon glyphicon-remove" style="font-size:20px;"></span></a>
-				</span>
-			</div>
-			<div class="panel-body" style="height: 100%;padding:0px;">
-				<div id="relation_divFull" style="overflow:hidden;">
-					<div id="graph-containerFull">
-						<div id="graphFull" ></div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+
 
 	<!-- Back to top -->
 	<a href="#0" class="back-to-top cd-top"><span class="[ fa fa-chevron-up ]"></span> <span class="[ ]">Back to the Top</span></a>
