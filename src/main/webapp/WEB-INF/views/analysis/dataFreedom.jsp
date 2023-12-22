@@ -8,18 +8,7 @@
 <script type="text/javascript" src="<c:url value="/js/messageGrid.js"/>"></script>
 
 <style>
-* {
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-}
 
-select {
-	height: 25px;
-	border-radius: 3px;
-	border: 1px solid #ccc;
-	vertical-align: middle;
-}
 
 .zero-clipboard {
 	position: relative;
@@ -30,7 +19,6 @@ select {
 	left: -1px;
 	display:block;
 	color: #ffffff;
-	border: 1px solid #e1e1e8;
 	border-radius:4px 0px 4px 0px;
 	background-color: #3D84C1;
 	font-size: 14px;
@@ -38,14 +26,12 @@ select {
 	padding:3px;
 }
 .btn-popover {
-	position: absolute;
-	top: -24px;
-	left: 0;
+	z-index: 999999999;
 	text-align: center;
 }
 
 .btn-popover .glyphicon {
-	font-size: 20px;
+	font-size: 16px;
 } 
 
 .btn--message-popover {
@@ -70,12 +56,10 @@ select {
 #columnPopover .popover {
 	min-width:500px;
 	width:500px;
-	height:320px;
 }
 #dataPopover .popover {
 	min-width:700px;
 	width:700px;
-	height:130px;
 }
 .messageList { 
 	position:absolute;
@@ -150,287 +134,102 @@ $(document).ready(function(){
 
 });
 </script>
-	<div class="container">
-		<div class="boxArea">
-			<div class="content_body">
-				<form id="frm">
-					<div class="row top_space">
-						<div class="col-lg-5">
-							<div class="panel panel-default">
-								<div class="panel-heading">
-									<i class="fa fa-file-text-o fa-fw"></i> <span>LIST</span>
-								</div>
-								<div class="panel-body" style="height: calc(100% - 38px); padding: 10px;">
-									<div  id="termsData"></div>
-									<div class="zero-clipboard" style="margin-top: 30px;">
-										<span id="termsPopover" class="btn-popover">
-											<a tabindex="0" class="btn btn-xs" role="button" data-toggle="popover" data-container="#termsPopover" data-html="true" data-placement="bottom" title="<s:message code="analysis.freedom.ui.dest"/>"><span class="glyphicon glyphicon-question-sign"></span></a>
-										</span>
-										<div id="popover-content-terms" class="hide">
-											<div style="padding-left:10px;">
-												<div>1. <s:message code="analysis.freedom.ui.exam18"/></div>
-												<div class="form-inline">
-													<select class="form-control"><option value=""></option></select>
-													<select class="form-control"><option value=""></option></select>
-													<select class="form-control"><option value=""><s:message code="common.org.user"/></option></select>
-													<select class="form-control"><option value="">=</option></select>
-													<span><input type="text" class="form-control" style="width: 250px;" value="<s:message code="analysis.freedom.ui.man1"/>" /></span>
-													<select class="form-control"><option value=""></option></select>
-												</div>
-											</div>
-											<div style="padding-top:10px;padding-left:10px;">
-												<div>2. <s:message code="analysis.freedom.ui.exam19"/></div>
-												<div class="form-inline">
-													<select class="form-control"><option value=""></option></select>
-													<select class="form-control"><option value=""></option></select>
-													<select class="form-control"><option value=""><s:message code="common.org.user"/></option></select>
-													<select class="form-control"><option value="">IN</option></select>
-													<span><input type="text" class="form-control" style="width: 250px;" value="<s:message code="analysis.freedom.ui.man1"/>,<s:message code="analysis.freedom.ui.man2"/>" /></span>
-													<select class="form-control"><option value=""></option></select>
-												</div>
-											</div>
-											<div style="padding-top:10px;padding-left:10px;">
-												<div>3. <s:message code="analysis.freedom.ui.exam20"/></div>
-												<div class="form-inline">
-													<select class="form-control"><option value=""></option></select>
-													<select class="form-control"><option value=""></option></select>
-													<select class="form-control"><option value=""><s:message code="analysis.freedom.ui.mailtitle"/></option></select>
-													<select class="form-control"><option value="">IN</option></select>
-													<span><input type="text" class="form-control" style="width: 250px;" value="<s:message code="analysis.freedom.ui.exam2"/>" /></span>
-													<select class="form-control"><option value=""></option></select>
-												</div>
-											</div>
-											<div style="padding-top:10px;padding-left:10px;">
-												<div>4. <s:message code="analysis.freedom.ui.exam21"/></div>
-												<div class="form-inline">
-													<select class="form-control"><option value=""></option></select>
-													<select class="form-control"><option value=""></option></select>
-													<select class="form-control"><option value=""><s:message code="analysis.freedom.ui.isattach"/></option></select>
-													<select class="form-control"><option value="">=</option></select>
-													<span><input type="text" class="form-control" style="width: 250px;" value="Y" /></span>
-													<select class="form-control"><option value=""></option></select>
-												</div>
-											</div>
-											<div style="padding-top:10px;padding-left:10px;">
-												<div>5. <s:message code="analysis.freedom.ui.exam22"/></div>
-												<div class="form-inline">
-													<select class="form-control"><option value=""></option></select>
-													<select class="form-control"><option value=""></option></select>
-													<select class="form-control"><option value=""><s:message code="analysis.freedom.ui.size"/></option></select>
-													<select class="form-control"><option value="">>=</option></select>
-													<span><input type="text" class="form-control" style="width: 250px;" value="1000000" /></span>
-													<select class="form-control"><option value=""></option></select>
-												</div>
-											</div>
-											<div style="padding-top:10px;padding-left:10px;">
-												<div>6. <s:message code="analysis.freedom.ui.exam23"/></div>
-												<div class="form-inline">
-													<select class="form-control"><option value=""></option></select>
-													<select class="form-control"><option value="">(</option></select>
-													<select class="form-control"><option value=""><s:message code="analysis.freedom.ui.size"/></option></select>
-													<select class="form-control"><option value="">>=</option></select>
-													<span><input type="text" class="form-control" style="width: 250px;" value="1000000" /></span>
-													<select class="form-control"><option value=""></option></select>
-												</div>
-												<div class="form-inline">
-													<select class="form-control"><option value="">OR</option></select>
-													<select class="form-control"><option value=""></option></select>
-													<select class="form-control"><option value=""><s:message code="analysis.freedom.ui.size"/></option></select>
-													<select class="form-control"><option value=""><=</option></select>
-													<span><input type="text" class="form-control" style="width: 250px;" value="1000000000" /></span>
-													<select class="form-control"><option value="">)</option></select>
-												</div>
-												<div class="form-inline">
-													<select class="form-control"><option value="">AND</option></select>
-													<select class="form-control"><option value=""></option></select>
-													<select class="form-control"><option value=""><s:message code="analysis.freedom.ui.mailto"/></option></select>
-													<select class="form-control"><option value=""><=</option></select>
-													<span><input type="text" class="form-control" style="width: 250px;" value="user@test.com" /></span>
-													<select class="form-control"><option value=""></option></select>
-												</div>
-											</div>
-											<div style="padding-top:10px;padding-left:10px;">
-												<div>7. <s:message code="analysis.freedom.ui.exam24"/></div>
-												<div class="form-inline">
-													<select class="form-control"><option value=""></option></select>
-													<select class="form-control"><option value=""></option></select>
-													<select class="form-control"><option value=""><s:message code="condition.date"/></option></select>
-													<select class="form-control"><option value="">=</option></select>
-													<span><input type="text" class="form-control" style="width: 100px;" value="2016-06-01" /> ~ <input type="text" class="form-control" style="width: 100px;" value="2016-06-15" /></span>
-													<select class="form-control"><option value=""></option></select>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						
-						<div class="col-lg-3">
-							<div class="panel panel-default">
-								<div class="panel-heading">
-									<i class="fa fa-file-text-o fa-fw"></i> <span><s:message code="analysis.freedom.ui.column"/></span>
-								</div>
-								<div class="panel-body" style="height: calc(100% - 38px); padding: 10px;">
-									<div  id="columnData"></div>
-									<div class="zero-clipboard" style="margin-top: 30px;">
-										<span id="columnPopover" class="btn-popover">
-											<a tabindex="0" class="btn btn-xs" role="button" data-toggle="popover" data-container="#columnPopover" data-html="true" data-placement="bottom" title="<s:message code="analysis.freedom.ui.columnexam"/>"><span class="glyphicon glyphicon-question-sign"></span></a>
-										</span>
-										<div id="popover-content-column" class="hide">
-											<div style="padding-left:10px;">
-												<ul style="padding-left:15px;">
-													<li><s:message code="analysis.freedom.ui.exam7"/> <span style="color:red;" id="maxChartCount"></span><s:message code="analysis.freedom.ui.exam8"/></li>
-													<li><s:message code="analysis.freedom.ui.exam9"/></li>
-													<li><s:message code="analysis.freedom.ui.exam10"/></li>
-												</ul>
-											</div>
-											<div style="padding-top:10px;padding-left:10px;">
-												<div>1. <font color="red"><s:message code="analysis.freedom.ui.exam11"/></font> <s:message code="analysis.freedom.ui.exam12"/></div>
-												<div class="form-inline">
-													<select class="form-control"><option value=""><s:message code="analysis.freedom.ui.exam14"/></option></select>
-												</div>
-											</div>
-											<div style="padding-top:10px;padding-left:10px;">
-												<div>2. <font color="red"><s:message code="analysis.freedom.ui.exam13"/></font> <s:message code="analysis.freedom.ui.exam12"/></div>
-												<div class="form-inline">
-													<select class="form-control"><option value=""><s:message code="common.org.dept"/></option></select>
-													<select class="form-control"><option value=""><s:message code="common.org.jikgub"/></option></select>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						
-						
-						
-						<div class="col-lg-3">
-							<div class="panel panel-default">
-								<div class="panel-heading">
-									<i class="fa fa-file-text-o fa-fw"></i> <span><s:message code="analysis.freedom.ui.data"/></span>
-								</div>
-								<div class="panel-body" style="height: calc(100% - 38px); padding: 10px;">
-									<div  id="dataData"></div>
-									<div class="zero-clipboard" style="margin-top: 30px;">
-										<span id="dataPopover" class="btn-popover">
-											<a tabindex="0" class="btn btn-xs" role="button" data-toggle="popover" data-container="#dataPopover" data-html="true" data-placement="bottom" title="<s:message code="analysis.freedom.ui.exam15"/>"><span class="glyphicon glyphicon-question-sign"></span></a>
-										</span>
-										<div id="popover-content-data" class="hide">
-											<div style="padding-left:10px;">
-												<ul style="padding-left:15px;">
-													<li><s:message code="analysis.freedom.ui.exam16"/></li>
-													<li><s:message code="analysis.freedom.ui.exam17"/></li>
-												</ul>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-lg-1">
-							<div class="panel panel-default">
-								<div class="panel-heading">
-									<i class="fa fa-file-text-o fa-fw"></i> <span><s:message code="analysis.freedom.ui.chartkind"/></span>
-								</div>
-								<div class="panel-body" style="height: calc(100% - 38px); padding: 10px;">
-									<div class="form-group form-inline not-dashed" id="chartData">
-										<div class="row">
-											<div class="col-lg-6" style="padding-left:0px;padding-right:0px;text-align:center;">
-												<img src="<c:url value="/img/icon/area.bmp"/>" width="30" height="30" style="cursor:pointer;" onclick="javascript:search('area');"/>
-											</div>
-											<div class="col-lg-6" style="padding-left:0px;padding-right:0px;text-align:center;">
-												<img src="<c:url value="/img/icon/line.bmp"/>" width="30" height="30" style="cursor:pointer;" onclick="javascript:search('line');"/>
-											</div>
-										</div>
-										<br/>
-										<div class="row">
-											<div class="col-lg-6" style="padding-left:0px;padding-right:0px;text-align:center;">
-												<img src="<c:url value="/img/icon/bar.bmp"/>" width="30" height="30" style="cursor:pointer;" onclick="javascript:search('column');"/>
-											</div>
-											<div class="col-lg-6" style="padding-left:0px;padding-right:0px;text-align:center;">
-												<img src="<c:url value="/img/icon/chart_pie.png"/>" width="30" height="30" style="cursor:pointer;" onclick="javascript:search('pie');"/>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						
-						
-					</div>
-					
-					
-					
-					
-				<%-- 
-				<div class="col-lg-3" style="padding-left:0px">
-					<div class="zero-clipboard">
-						<span class="btn-clipboard"><s:message code="analysis.freedom.ui.data"/></span>
-					</div>
-					<div class="panel panel-default" style="height:150px;padding-left:40px;margin-bottom:15px;overflow-y:auto;">
-						<div class="panel-body" style="height: 100%;">
-							<div  id="dataData">
-							</div>
-						</div>
-					</div>
-					<div class="zero-clipboard">
-						<span id="dataPopover" class="btn-popover">
-							<a tabindex="0" class="btn btn-xs" role="button" data-toggle="popover" data-container="#dataPopover" data-html="true" data-placement="bottom" title="<s:message code="analysis.freedom.ui.exam15"/>"><span class="glyphicon glyphicon-question-sign"></span></a>
-						</span>
-						<div id="popover-content-data" class="hide">
-							<div style="padding-left:10px;">
-								<ul style="padding-left:15px;">
-									<li><s:message code="analysis.freedom.ui.exam16"/></li>
-									<li><s:message code="analysis.freedom.ui.exam17"/></li>
-								</ul>
-							</div>
-						</div>
-					</div>
+	<div class="searchArea">
+		<form id="frm">
+		<div class="chartArea04">
+			<!--LIST-->
+			<div>
+				<div class="lineTit">
+					<h3>LIST</h3>
+					<span id="termsPopover" class="btn-popover">
+					<a tabindex="0" class="black02" role="button" data-toggle="popover" data-container="#termsPopover" data-html="true" data-placement="bottom" title="<s:message code="analysis.freedom.ui.dest"/>"><span class="glyphicon glyphicon-question-sign"></span></a>
+					</span>
 				</div>
-				<div class="col-lg-1" style="padding-left:0px">
-					<div class="zero-clipboard">
-						<span class="btn-clipboard"><s:message code="analysis.freedom.ui.chartkind"/></span>
-					</div>
-					<div class="panel panel-default" style="height:150px;padding-top:0;margin-bottom:15px;">
-						<div class="panel-body" style="height: 100%;">
-							<div  id="chartData">
-								<div class="row">
-									<div class="col-lg-6" style="padding-left:0px;padding-right:0px;text-align:center;">
-										<img src="<c:url value="/img/icon/area.bmp"/>" width="30" height="30" style="cursor:pointer;" onclick="javascript:search('area');"/>
-									</div>
-									<div class="col-lg-6" style="padding-left:0px;padding-right:0px;text-align:center;">
-										<img src="<c:url value="/img/icon/line.bmp"/>" width="30" height="30" style="cursor:pointer;" onclick="javascript:search('line');"/>
-									</div>
-								</div>
-								<br/>
-								<div class="row">
-									<div class="col-lg-6" style="padding-left:0px;padding-right:0px;text-align:center;">
-										<img src="<c:url value="/img/icon/bar.bmp"/>" width="30" height="30" style="cursor:pointer;" onclick="javascript:search('column');"/>
-									</div>
-									<div class="col-lg-6" style="padding-left:0px;padding-right:0px;text-align:center;">
-										<img src="<c:url value="/img/icon/chart_pie.png"/>" width="30" height="30" style="cursor:pointer;" onclick="javascript:search('pie');"/>
-									</div>
-								</div>
+				<div id="termsData"></div>
+			</div>
+			<!--//LIST-->
+			<!--컬럼-->
+			<div>
+				<div class="lineTit">
+					<h3><s:message code="analysis.freedom.ui.column"/></h3>
+					<span id="columnPopover" class="btn-popover">
+						<a tabindex="0" class="black02" role="button" data-toggle="popover" data-container="#columnPopover" data-html="true" data-placement="bottom" title="<s:message code="analysis.freedom.ui.columnexam"/>"><span class="glyphicon glyphicon-question-sign"></span></a>
+					</span>
+				</div>
+				<div  id="columnData"></div>
+
+				<div class="zero-clipboard" style="margin-top: 30px;">
+					<div id="popover-content-column" class="hide">
+						<div style="padding-left:10px;">
+							<ul>
+								<li><s:message code="analysis.freedom.ui.exam7"/> <span style="color:red;" id="maxChartCount"></span><s:message code="analysis.freedom.ui.exam8"/></li>
+								<li><s:message code="analysis.freedom.ui.exam9"/></li>
+								<li><s:message code="analysis.freedom.ui.exam10"/></li>
+							</ul>
+						</div>
+						<div style="padding-top:10px;padding-left:10px;">
+							<div>1. <font color="red"><s:message code="analysis.freedom.ui.exam11"/></font> <s:message code="analysis.freedom.ui.exam12"/></div>
+							<div class="form-inline">
+								<select class="form-control"><option value=""><s:message code="analysis.freedom.ui.exam14"/></option></select>
 							</div>
 						</div>
-					</div>
-				</div> --%>
-				</form>
-				<div class="row" style="height:600px;">
-					<div class="col-lg-12">
-						<div style="height:100%;line-height:0px;">
-							<div class="panel panel-default" style="height:600px;min-height:600px;">
-								<div class="panel-body" style="height: 100%;padding:0px;">
-				  					<div id="chartDiv" style="height: 100%; padding: 30px;"><s:message code="analysis.freedom.ui.result"/></div>
-								</div>
+						<div style="padding-top:10px;padding-left:10px;">
+							<div>2. <font color="red"><s:message code="analysis.freedom.ui.exam13"/></font> <s:message code="analysis.freedom.ui.exam12"/></div>
+							<div class="form-inline">
+								<select class="form-control"><option value=""><s:message code="common.org.dept"/></option></select>
+								<select class="form-control"><option value=""><s:message code="common.org.jikgub"/></option></select>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
+			<!--//컬럼-->
+			<!--데이터-->
+			<div>
+				<div class="lineTit">
+					<h3><s:message code="analysis.freedom.ui.data"/></h3>
+					<span id="dataPopover" class="btn-popover">
+						<a tabindex="0" class="black02" role="button" data-toggle="popover" data-container="#dataPopover" data-html="true" data-placement="bottom" title="<s:message code="analysis.freedom.ui.exam15"/>"><span class="glyphicon glyphicon-question-sign"></span></a>
+					</span>
+				</div>
+				<div  id="dataData"></div>
+				<div class="zero-clipboard" style="margin-top: 30px;">
+					<div id="popover-content-data" class="hide">
+						<div style="padding-left:10px;">
+							<ul style="padding-left:15px;">
+								<li><s:message code="analysis.freedom.ui.exam16"/></li>
+								<li><s:message code="analysis.freedom.ui.exam17"/></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--//데이터-->
+			<!--차트종류-->
+			<div>
+				<h3><s:message code="analysis.freedom.ui.chartkind"/></h3>
+				<div class="pt8">
+					<img src="<c:url value="/img/icon/img_chart_area_on.png"/>" width="40" height="40" style="cursor:pointer;" onclick="javascript:search('area');"/>
+					<img src="<c:url value="/img/icon/img_chart_line_on.png"/>" width="40" height="40" style="cursor:pointer;" onclick="javascript:search('line');"/>
+					<img src="<c:url value="/img/icon/img_chart_bar_on.png"/>" width="40" height="40" style="cursor:pointer;" onclick="javascript:search('column');"/>
+					<img src="<c:url value="/img/icon/img_chart_pie_on.png"/>" width="40" height="40" style="cursor:pointer;" onclick="javascript:search('pie');"/>
+				</div>
+			</div>
+			<!--//차트종류-->
 		</div>
+		</form>
+
+		<!-- old -->
+		<div class="boxArea">
+			<div class="content_body">
+				<div class="panel panel-default" style="min-height:600px;">
+					<div class="panel-body" style="height: 100%;padding:0px;">
+						<div id="chartDiv" style="height: 100%; padding: 30px;"><s:message code="analysis.freedom.ui.result"/></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- //old -->
 	</div>
 	
 	<div id="chartHtml" style="display:none;">
@@ -481,33 +280,29 @@ $(document).ready(function(){
 				<option value="<=">&lt;=</option>
 				<option value="IN">IN</option>
 			</select>
-			<span id="inputNumber" style="display:none;"><input type="text" id="sizeNum" name="sizeNum" class="form-control btn-xs numberinput" onchange="javascirpt:SearchTrue();" style="width: 250px;height:25px;" placeholder="<s:message code="analysis.freedom.ui.exam25"/>"  data-toggle="tooltip" data-placement="top" title="<s:message code="analysis.freedom.ui.exam25"/>"  maxlength="7"/></span>
-			<span id="inputText"><input type="text" id="context" name="context" class="form-control btn-xs" onchange="javascirpt:SearchTrue();" style="width: 250px;height:25px;" placeholder="<s:message code="analysis.freedom.ui.exam26"/>"  data-toggle="tooltip" data-placement="top" title="<s:message code="analysis.freedom.ui.exam26"/>" /></span>
+			<span id="inputNumber" style="display:none;"><input type="text" id="sizeNum" name="sizeNum" class="btn-xs numberinput" onchange="javascirpt:SearchTrue();" style="width: 250px;height:26px;" placeholder="<s:message code="analysis.freedom.ui.exam25"/>"  data-toggle="tooltip" data-placement="top" title="<s:message code="analysis.freedom.ui.exam25"/>"  maxlength="7"/></span>
+			<span id="inputText"><input type="text" id="context" name="context" class="btn-xs" onchange="javascirpt:SearchTrue();" style="width: 250px;height:26px;" placeholder="<s:message code="analysis.freedom.ui.exam26"/>"  data-toggle="tooltip" data-placement="top" title="<s:message code="analysis.freedom.ui.exam26"/>" /></span>
 			<span id="inputDate" style="display:none;">
 				<div class="input-group date" id="sdatepicker">
-					<input type="text" class="input-sm form-control" style="width: 90px;height:25px;" id="startDate" name="startDate" onchange="javascirpt:SearchTrue();" />
-					<span class="input-group-addon" style="height:25px;padding:3px 6px;"> <span class="glyphicon glyphicon-calendar"></span></span>
+					<input type="text" class="input-sm form-control" style="width: 90px;height:26px;" id="startDate" name="startDate" onchange="javascirpt:SearchTrue();" />
+					<span class="input-group-addon" style="height:26px;padding:3px 6px;"> <span class="glyphicon glyphicon-calendar"></span></span>
 				</div>
 				~
 				<div class="input-group date" id="edatepicker">
-					<input type="text" class="input-sm form-control" style="width: 90px;height:25px;" id="endDate" name="endDate" onchange="javascirpt:SearchTrue();" />
-					<span class="input-group-addon" style="height:25px;padding:3px 6px;"> <span class="glyphicon glyphicon-calendar"></span></span>
+					<input type="text" class="input-sm form-control" style="width: 90px;height:26px;" id="endDate" name="endDate" onchange="javascirpt:SearchTrue();" />
+					<span class="input-group-addon" style="height:26px;padding:3px 6px;"> <span class="glyphicon glyphicon-calendar"></span></span>
 				</div>
 			</span>
 			<span id="inputServiceType" style="display:none;">
-				<select class="form-control input-sm" id="serviceCd" name="serviceCd" style="width:250px; height:25px;padding-top:0px;padding-bottom:0px;" onchange="javascirpt:SearchTrue();">
+				<select class="form-control input-sm" id="serviceCd" name="serviceCd" style="width:250px; height:26px;padding-top:0px;padding-bottom:0px;" onchange="javascirpt:SearchTrue();">
 				</select>
 			</span>
 			<select id="afterPparen" name="afterPparen">
 				<option value=""> </option>
 				<option value=")">)</option>
 			</select>
-			<button type="button" id="btnTermsDel" class="btn" style="height:25px;vertical-align: middle;padding:0px 5px 0px 5px;" onclick="javascript:SearchTrue();terms.delTerms;">
-				<span class="glyphicon glyphicon-minus"></span>
-			</button>
-			<button type="button" id="btnTermsAdd" class="btn" style="height:25px;vertical-align: middle;padding:0px 5px 0px 5px" onclick="javascript:SearchTrue();terms.addTerms;">
-				<span class="glyphicon glyphicon-plus"></span>
-			</button>
+			<button type="button" class="btn01" accesskey="I"id="btnTermsAdd" onclick="javascript:SearchTrue();terms.addTerms;" style="position: absolute; top:0px; right:0;"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
+			<button type="button" class="btn02" accesskey="D" id="btnTermsDel" onclick="javascript:SearchTrue();terms.delTerms;"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
 		</div>
 	</div>
 
@@ -536,12 +331,14 @@ $(document).ready(function(){
 				<option value="attachname_str"><s:message code="condition.attach_name"/></option>
 				<option value="kwds"><s:message code="condition.keyword"/></option>
 			</select>
-			<button type="button" id="btnColumnDel" class="btn" style="height:25px;vertical-align: middle;padding:0px 5px 0px 5px;" onclick="javascript:SearchTrue();columns.del;">
+			<button type="button" class="btn01" accesskey="I"id="btnTermsAdd" onclick="javascript:SearchTrue();columns.add;" style="position: absolute; top:0px; right:0;"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
+			<button type="button" class="btn02" accesskey="D" id="btnTermsDel" onclick="javascript:SearchTrue();columns.del;"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
+			<!--<button type="button" id="btnColumnDel" class="btn" style="height:26px;vertical-align: middle;padding:0px 5px 0px 5px;" onclick="javascript:SearchTrue();columns.del;">
 				<span class="glyphicon glyphicon-minus"></span>
 			</button>
-			<button type="button" id="btnColumnAdd" class="btn" style="height:25px;vertical-align: middle;padding:0px 5px 0px 5px;" onclick="javascript:SearchTrue();columns.add;">
+			<button type="button" id="btnColumnAdd" class="btn" style="height:26px;vertical-align: middle;padding:0px 5px 0px 5px;" onclick="javascript:SearchTrue();columns.add;">
 				<span class="glyphicon glyphicon-plus"></span>
-			</button>
+			</button>-->
 		</div>
 	</div>
 
@@ -557,12 +354,14 @@ $(document).ready(function(){
 			<select id="groupData" name="groupData" onchange="javascirpt:SearchTrue();">
 				<option value="size"><s:message code="analysis.freedom.totbyte"/></option>
 			</select>
-			<button type="button" id="btnDataDel" class="btn" style="height:25px;vertical-align: middle;padding:0px 5px 0px 5px;" onclick="javascript:SearchTrue();datas.del;">
+			<button type="button" class="btn01" accesskey="I" id="btnDataAdd" onclick="javascript:SearchTrue();datas.add;"style="position: absolute; top:0px; right:0;"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
+			<button type="button" class="btn02" accesskey="D" id="btnDataDel" onclick="javascript:SearchTrue();datas.del;"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
+			<!--<button type="button" id="btnDataDel" class="btn" style="height:26px;vertical-align: middle;padding:0px 5px 0px 5px;" onclick="javascript:SearchTrue();datas.del;">
 				<span class="glyphicon glyphicon-minus"></span>
 			</button>
-			<button type="button" id="btnDataAdd" class="btn" style="height:25px;vertical-align: middle;padding:0px 5px 0px 5px;" onclick="javascript:SearchTrue();datas.add;">
+			<button type="button" id="btnDataAdd" class="btn" style="height:26px;vertical-align: middle;padding:0px 5px 0px 5px;" onclick="javascript:SearchTrue();datas.add;">
 				<span class="glyphicon glyphicon-plus"></span>
-			</button>
+			</button>-->
 		</div>
 	</div>
 
@@ -578,7 +377,7 @@ $(document).ready(function(){
 				<div class="resultHeader" style="height:35px;margin-top:5px;">
 					<div class="form-inline" style="height:42px;">
 						<div class="btnArea text-left col-xs-7 form-group">
-							<div class="resultMsgDiv" style="height:25px;">
+							<div class="resultMsgDiv" style="height:26px;">
 								<span></span>
 							</div>
 						</div>

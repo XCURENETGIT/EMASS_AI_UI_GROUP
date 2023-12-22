@@ -298,10 +298,14 @@ public class SolrEdcMessageVO {
 		if (Common.isOrEquals( svcChk, "user_str", "sender_str", "userid")) {
 			item.put("rowName", Config.getUserName(Common.nvl(bucketKey)));
 		}
-
+		item.put("name", bucketKey);
+		item.put("userId", Common.nvl(Config.getUserId(bucketKey)));
+		item.put("name2", Common.nvl(Config.getUserName(bucketKey)));
+		item.put("conm", Common.nvl(Config.getUserConm(bucketKey)));
+		item.put("deptnm", Common.nvl(Config.getUserDeptnm(bucketKey)));
+		item.put("jikgubnm", Common.nvl(Config.getUserJikgubnm(bucketKey)));
+		item.put("email", Common.nvl(Config.getUserEmail(bucketKey)));
 		item.put("total", docCount);
-
-
 		return item;
 	}
 

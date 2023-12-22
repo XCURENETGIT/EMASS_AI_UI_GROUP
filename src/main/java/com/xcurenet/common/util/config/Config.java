@@ -79,6 +79,8 @@ public class Config {
 
 	public static List<AdminVO> adminList;
 
+	public static final String[] PRIVATE_SVC = {"pi_SN", "pi_PN", "pi_DN", "pi_FN", "pi_CN", "pi_MN", "pi_AN", "pi_CRN", "pi_SSN", "pi_IMEI", "pi_BRN", "pi_CPN", "pi_MCN"};
+
 	public static String[] colors = {"#7cb5ec", "#c9cbf6", "#90ed7d", "#f7a35c", "#8085e9", "#f15c80", "#e4d354", "#2b908f", "#f45b5b", "#91e8e1", "#B5CA92", "#a7efff", "#B8B8BA", "#FFB2F5", "#47C83E", "#fee79f", "#8bc4bf", "#bf4444", "#7CB823", "#19D4FF", "#097500"};
 
 	public static Map<String, String> userIds; //(key : ip, email, id) (value: 이름) 통계 이름 추출 용도

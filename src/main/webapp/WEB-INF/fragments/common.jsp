@@ -130,7 +130,6 @@
 	function reSizeHeight() {
 		let h = $(window).height();
 		$('.slickGrid').each(function (e) {
-			console.log('h : ' + h + '  top : ' + $(this).offset().top)
 			let nHeight = h - $(this).offset().top - 50;
 			nHeight = nHeight < 200 ? 200 : nHeight;
 			if($(this).offset().top > 0 ) $(this).outerHeight(nHeight);

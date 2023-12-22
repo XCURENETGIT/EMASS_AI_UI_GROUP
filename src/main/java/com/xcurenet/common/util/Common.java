@@ -514,6 +514,29 @@ public class Common {
 	}
 
 	/**
+	 * Null to Empty String
+	 *
+	 * @param target
+	 * @return
+	 */
+	public static double nvd(Object target) {
+		return nvf(target, 0.0F);
+	}
+
+	/**
+	 * Null to Empty String
+	 *
+	 * @param target
+	 * @return
+	 */
+	public static double nvd(Object target, float defaultNum) {
+		if (target != null) {
+			if (!String.valueOf(target).equalsIgnoreCase("null") && !String.valueOf(target).isEmpty()) return Double.parseDouble(String.valueOf(target));
+		}
+		return defaultNum;
+	}
+
+	/**
 	 * Trim All
 	 *
 	 * @param target

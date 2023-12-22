@@ -1,5 +1,7 @@
 package com.xcurenet.emass.message.service.impl;
 
+import co.elastic.clients.elasticsearch._types.Script;
+import com.xcurenet.EmassproApplication;
 import com.xcurenet.admin.service.AuthorityService;
 import com.xcurenet.admin.service.AuthorityVO;
 import com.xcurenet.admin.service.impl.AdminServiceImpl;
@@ -19,6 +21,7 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.SortClause;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.script.ScriptService;
 import org.elasticsearch.search.aggregations.*;
 import org.elasticsearch.search.aggregations.bucket.range.RangeAggregationBuilder;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
@@ -26,6 +29,8 @@ import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilde
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.core.AggregationsContainer;
@@ -33,6 +38,7 @@ import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.Query;
+import org.springframework.data.elasticsearch.core.query.ScriptField;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -118,9 +124,9 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 				.withPageable(PageRequest.of(getPage(sq), sq.getRows(), getSort(sq)))
 				.withAggregations(getAggregations(sq))
 				.withAggregations(getAggregationsByPivot(sq))
+				.withTrackTotalHits(true)
 				.build();
 
-		searchQuery.setTrackTotalHits(true);
 		SearchHits<SolrEdcVO> hits = operation.search(searchQuery, SolrEdcVO.class);
 		try {
 			printQueryLog(sq, hits);
@@ -128,6 +134,33 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			log.info("[QUERY_RESULT] TOTAL_COUNT : {}, QUERY_TIME : {}", 0, TimeUtil.print());
 		}
 		return hits;
+	}
+
+	public static void main(String[] args) throws SolrServerException, IOException {
+		ConfigurableApplicationContext context = SpringApplication.run(EmassproApplication.class, args);
+		SolrEdcServiceImpl service = context.getBean(SolrEdcServiceImpl.class);
+
+
+		String query = "+ctime:[20231022000000 TO 20231222235959] -pi_total:0 +(pi_SN:[ 1 TO *] pi_CN:[ 1 TO *] pi_DN:[ 1 TO *] pi_FN:[ 1 TO *] pi_PN:[ 1 TO *])";
+
+		SolrQuery sq = new SolrQuery();
+		sq.setQuery(query);
+		sq.setStart(0);
+		sq.setRows(0);
+		sq.set("aggregation.field", "user_str");
+		sq.set("aggregation.sub.fields", "pi_SN", "pi_PN", "pi_DN", "pi_FN", "pi_CN");
+		sq.set("aggregation.limit", 100);
+		sq.setParam("piAnalysisYn", "Y");
+
+		log.info("Solr Query : {}", sq);
+		SearchHits<SolrEdcVO> hits = service.getList(sq);
+		log.info("ce.getList(sq) : {}", hits);
+		log.info("getAggregations : {} ", hits.getAggregations().aggregations() );
+		SolrEdcMessageVO vo = new SolrEdcMessageVO(hits, null);
+
+		log.info("SOLR : {}", vo);
+
+		context.close();
 	}
 
 	private int getPage(SolrQuery sq) {
@@ -157,7 +190,9 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	 */
 	private List<AbstractAggregationBuilder<?>> getAggregations(SolrQuery sq) {
 		List<AbstractAggregationBuilder<?>> aggregations = new ArrayList<>();
+		if(Common.isEquals(sq.get("piAnalysisYn"), "Y"))  return getPiAnalysisAggregations(sq);
 		if (sq.getFacetFields() == null) return aggregations;
+
 		if((null != sq.get("group") && Common.isEquals("true",sq.get("group")))) {
 			aggregations = getGroupAggregations(sq);
 		}else {
@@ -186,16 +221,32 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 					if(!Common.isEmpty(sq.get("facet.ranges"))) {
 						List<String> ranges = Common.toList(sq.get("facet.ranges"), ",");
 						termsAggregation = termsAggregation.subAggregation(addRanges(field, ranges));
-					}
-					else if((null != sq.get("facet.sum") && Common.isEquals("true",sq.get("facet.sum")))) {
+					} else if((null != sq.get("facet.sum") && Common.isEquals("true",sq.get("facet.sum")))) {
 						String key = sq.get("facet.field");
 						termsAggregation = termsAggregation.subAggregation(AggregationBuilders.sum(key).field(key));
-					}
-					else {termsAggregation  = termsAggregation.subAggregation(AggregationBuilders.topHits(field).size(1));}
+					} else {termsAggregation  = termsAggregation.subAggregation(AggregationBuilders.topHits(field).size(1));}
 					aggregations.add(termsAggregation);
 		}
 		return aggregations;
 	}
+
+	private List<AbstractAggregationBuilder<?>> getPiAnalysisAggregations(SolrQuery sq) {
+		List<AbstractAggregationBuilder<?>> aggregations = new ArrayList<>();
+
+		String mainField = Common.nvl(sq.get("aggregation.field"));
+		AbstractAggregationBuilder<TermsAggregationBuilder> termsAggregation = AggregationBuilders.terms(mainField)
+				.field(mainField)
+				.order(BucketOrder.count(false))
+				.size(maxCount(Common.nvz(sq.get("aggregation.limit"))));
+
+		String[] fields = sq.getParams("aggregation.sub.fields");
+		for (String field : fields) {
+			termsAggregation.subAggregation(AggregationBuilders.sum(field).field(field));
+		}
+		aggregations.add(termsAggregation);
+		return aggregations;
+	}
+
 
 	private RangeAggregationBuilder addRanges(String key,List<String> ranges){
 		/* ranges */
@@ -228,6 +279,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	 */
 	private List<AbstractAggregationBuilder<?>> getAggregationsByPivot(SolrQuery sq) {
 		List<AbstractAggregationBuilder<?>> aggregations = new ArrayList<>();
+		if(Common.isEquals(sq.get("piAnalysisYn"), "Y")) return aggregations;
 		List<String> pivots = Common.toList(sq.get("facet.pivot"), ",");
 		if (pivots.size() > 1) {
 			//f."+yAxis+".facet.limit

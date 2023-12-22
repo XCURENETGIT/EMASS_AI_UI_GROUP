@@ -133,7 +133,7 @@
 
 	</div>
 </div>
-
+<div id="replace_html" style="display: none;"></div>
 
 <script type="text/javascript">
 
