@@ -4,6 +4,8 @@ import com.xcurenet.common.vo.XcnResponseVO;
 import org.apache.solr.client.solrj.SolrServerException;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 
 public interface DashBoardPreDefineService {
@@ -31,6 +33,10 @@ public interface DashBoardPreDefineService {
 	public TodayNotWorkVO getTodayNotWork(TodayNotWorkVO vo) throws SolrServerException, IOException;
 
 	public XcnResponseVO getBodySize(BodySizeVO vo) throws Exception;
+
+	public List<Map<String, Object>> getTrafficSize() throws Exception;
+
+	public List<Map<String, Object>> getTodayTrafficSize() throws Exception;
 
 
 	// public DashboardVO getDashboard(final DashboardVO dashboardVO) throws

@@ -8,6 +8,11 @@
 	String systemArch = Config.getString("system.arch");
 	pageContext.setAttribute("arch", systemArch);
 %>
+<style>
+	th{
+		text-align: center;
+	}
+</style>
 <title>EMASS LTH - Dashboard</title>
 <script type="text/javascript">
     var updateTime = 40000;
@@ -43,8 +48,230 @@
         getTodayFilePerson();
         getLoggingData();
         getBodySize();
+        getTrafficData();
+        getTodayTrafficData();
 
     });
+
+    function getTodayTrafficData(){
+        ui.get({
+            url: 'getTodayTrafficData.xcn',
+            success: function (data, total) {
+                printChartTraffic2(data);
+
+            },
+            error: function (status, message) {
+
+            },
+            complete: function () {
+
+            }
+        });
+    }
+
+    function getTrafficData(){
+        ui.get({
+            url: 'getTrafficData.xcn',
+            success: function (data, total) {
+                console.log(data);
+                printChartTraffic(data);
+
+            },
+            error: function (status, message) {
+
+            },
+            complete: function () {
+
+            }
+        });
+    }
+
+
+
+    var chart2 = null;
+    var chartxAxis2;
+    function printChartTraffic2( dat ) {
+        var data = [];
+        var tMax = [];
+        var cols = [];
+        var categories = [];
+
+        if( dat.length == 0) {
+            $('#con01').html('<s:message code="common.msg.nodata"/>');
+            return false;
+        } else {
+            var max = 0;
+            for ( var i=0 ; i < dat.length ; i++ ) {
+                var items = [];
+                items.push(dat[i].date);
+                items.push(Number(dat[i].longNum));
+                data.push(items);
+                if (Number(dat[i].longNum) > max) {
+                    max = Number(dat[i].longNum);
+                }
+                tMax.push(max);
+            }
+        }
+
+        var max = tMax.reduce(function(a,b){
+            return Math.max(a,b);
+        });
+        var rotation = 40;
+        // if ( chartxAxis2 == 'W' ) rotation = 0;
+        $('#con01').highcharts({
+            chart: {
+                type: 'line',
+                options3d: {
+                    enabled: true,
+                    alpha: 0,
+                    beta: 0,
+                    viewDistance: 15,
+                    depth: 40
+                },
+                marginTop: 25,
+                marginRight: 45
+            },
+            title: {
+                text: null
+            },
+            exporting: {enabled: false},
+            credits: chartAPI.credits,
+            xAxis: {
+                type: 'category'
+            },
+            yAxis: {
+                allowDecimals: false,
+                min: 0,
+                max: max,
+                title: {
+                    text: '',
+                    rotation: 0
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            tooltip: {
+                formatter: function () {
+                    return '<span style="color:' + this.series.color + '">\u25CF</span> ' + convertFileSize(this.point.y);
+                }
+
+            },
+            plotOptions: {
+            },
+            series: [{
+                data : data,
+                dataLabels: {
+                    enabled: true,
+                    color: '#000',
+                    align: 'center',
+                    y: 10, // 10 pixels down from the top
+                    style: {
+                        fontSize: '11px',
+                        fontFamily: 'Gulim, Dotum, Helvetica'
+                    },
+                    formatter: function () {
+                        return convertFileSize(this.point.y);
+                    }
+                }
+            }]
+        });
+    }
+
+
+
+
+    var chart2 = null;
+    var chartxAxis2;
+    function printChartTraffic( dat ) {
+        var data = [];
+        var tMax = [];
+        var cols = [];
+        var categories = [];
+
+        if( dat.length == 0) {
+            $('#con02').html('<s:message code="common.msg.nodata"/>');
+            return false;
+        } else {
+            var max = 0;
+            for ( var i=0 ; i < dat.length ; i++ ) {
+                var items = [];
+                items.push(dat[i].date);
+                items.push(Number(dat[i].longNum));
+                data.push(items);
+                if (Number(dat[i].longNum) > max) {
+                    max = Number(dat[i].longNum);
+                }
+                tMax.push(max);
+            }
+        }
+
+        var max = tMax.reduce(function(a,b){
+            return Math.max(a,b);
+        });
+        var rotation = 40;
+        // if ( chartxAxis2 == 'W' ) rotation = 0;
+        $('#con02').highcharts({
+            chart: {
+                type: 'line',
+                options3d: {
+                    enabled: true,
+                    alpha: 0,
+                    beta: 0,
+                    viewDistance: 15,
+                    depth: 40
+                },
+                marginTop: 25,
+                marginRight: 45
+            },
+            title: {
+                text: null
+            },
+            exporting: {enabled: false},
+            credits: chartAPI.credits,
+            xAxis: {
+                type: 'category'
+            },
+            yAxis: {
+                allowDecimals: false,
+                min: 0,
+                max: max,
+                title: {
+                    text: '',
+                    rotation: 0
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            tooltip: {
+                formatter: function () {
+                    return '<span style="color:' + this.series.color + '">\u25CF</span> ' + convertFileSize(this.point.y);
+                }
+
+            },
+            plotOptions: {
+            },
+            series: [{
+                data : data,
+                dataLabels: {
+                    enabled: true,
+                    color: '#000',
+                    align: 'center',
+                    y: 10, // 10 pixels down from the top
+                    style: {
+                        fontSize: '11px',
+                        fontFamily: 'Gulim, Dotum, Helvetica'
+                    },
+                    formatter: function () {
+                        return convertFileSize(this.point.y);
+                    }
+                }
+            }]
+        });
+    }
+
+
 
     function getBodySize(){
 
@@ -528,12 +755,21 @@
             $('#sizeChart').html('<s:message code="common.msg.nodata"/>');
             return false;
         } else {
+            var max = 0;
             for ( var i=0 ; i < dat.length ; i++ ) {
                 var items = [];
-                items.push(dat[i].date);
-	            items.push(Number(dat[i].bodySize));
+                var year = dat[i].date.substring(0, 4);
+                var month = dat[i].date.substring(4, 6);
+                var day = dat[i].date.substring(6, 8);
+
+                var formattedDate = year + '-' + month + '-' + day;
+                items.push(formattedDate);
+                items.push(Number(dat[i].bodySize));
                 data.push(items);
-                tMax.push("8000000000");
+                if (Number(dat[i].bodySize) > max) {
+                    max = Number(dat[i].bodySize);
+                }
+                tMax.push(max);
             }
         }
 
@@ -893,17 +1129,17 @@
 		<div>
 			<%--			금일 트래픽 추이, 종류 시작--%>
 			<div class="text_tab">
-				<span class="tablinks" onclick="openCity2(event, 'con01')" id="defaultOpen2">금일 트래픽 추이</span>
+				<span class="tablinks" onclick="openCity2(event, 'con01')" id="defaultOpen2">금일 트래픽</span>
 				<span class="bar"></span>
-				<span class="tablinks" onclick="openCity2(event, 'con02')">금일 트래픽 종류 비율</span>
+				<span class="tablinks" onclick="openCity2(event, 'con02')">최근 7일 트래픽 추이</span>
 			</div>
 
 			<div id="con01" class="text_tabcontent">
-				금일 트래픽 추이
+				<div id="todayTraffic" ></div>
 			</div>
 
 			<div id="con02" class="text_tabcontent">
-				금일 트래픽 종류 비율
+<%--				<div id="weekTraffic"></div>--%>
 			</div>
 		</div>
 		<%--			금일 트래픽 추이, 종류 끝--%>

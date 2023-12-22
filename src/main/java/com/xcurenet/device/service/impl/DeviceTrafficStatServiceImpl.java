@@ -57,9 +57,14 @@ public class DeviceTrafficStatServiceImpl extends XcnAbstractDAO implements Devi
 	public List<Map<String, Object>> getTrafficStatList_Day(String startDt, String endDt) {
 		StringBuffer query1 = new StringBuffer();
 		StringBuffer query2 = new StringBuffer();
+		System.out.println("startDt: "+startDt);
+		System.out.println("endDt: "+endDt);
 		int days = Common.diffOfDate(startDt, endDt);
+		System.out.println("days: "+days);
+
 		for (int i = 0; i <= days; i++) {
 			String key = Common.formatDate(Common.plusDays(startDt, i));
+			System.out.println("key: "+key);
 			query1.append("CAST( CONCAT( IFNULL(TX_" + i + ",'0'), '/', IFNULL(RX_" + i + ", '0')) AS CHAR ) \"" + key + "\",");
 			query2.append("SUM( CASE WHEN DATE_FORMAT(INSERT_DT, '%Y-%m-%d') = '" + key + "' AND DIRECTION = '1' THEN CASE WHEN HOUR_SIZE > 0 THEN ROUND(HOUR_SIZE/1024/1024,2) END END ) \"TX_" + i + "\",").append("\n");
 			query2.append("SUM( CASE WHEN DATE_FORMAT(INSERT_DT, '%Y-%m-%d') = '" + key + "' AND DIRECTION = '0' THEN CASE WHEN HOUR_SIZE > 0 THEN ROUND(HOUR_SIZE/1024/1024,2) END END ) \"RX_" + i + "\",").append("\n");
@@ -69,6 +74,7 @@ public class DeviceTrafficStatServiceImpl extends XcnAbstractDAO implements Devi
 		param.put("endDt", endDt);
 		param.put("query1", query1.toString());
 		param.put("query2", query2.toString());
+
 		return selectList("com.xcurenet.sqlmap.mappers.mysql.deviceStat.getTrafficStatList", param);
 	}
 

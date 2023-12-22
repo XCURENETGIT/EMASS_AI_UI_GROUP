@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service("customDashBoardService")
@@ -634,6 +635,8 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 			item.put("attachStr", Common.convertFileSize(attach));
 			result.add(item);
 		}
+
+		result = result.stream().sorted((o1, o2) -> o1.get("date").toString().compareTo(o2.get("date").toString()) ).collect(Collectors.toList());
 		return new XcnResponseVO(XcnRspCode.OK, result);
 	}
 

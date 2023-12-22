@@ -4,6 +4,7 @@ import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.config.Config;
 import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
+import com.xcurenet.device.service.DeviceTrafficStatService;
 import com.xcurenet.emass.dashboard.service.*;
 import com.xcurenet.emass.message.service.FacetVO;
 import com.xcurenet.emass.message.service.SolrEdcMessageVO;
@@ -19,10 +20,8 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.apache.solr.common.params.FacetParams.FACET_QUERY;
 
@@ -35,6 +34,10 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 
 	@Resource(name = "solrEdcService")
 	private SolrEdcService solrEdcService;
+
+	@Resource(name = "deviceTrafficStatService")
+	private DeviceTrafficStatService deviceTrafficStatService;
+
 
 	private static final String ABBREVIATION = "ui.dashboard.abbreviation";
 
@@ -269,7 +272,6 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 //		System.out.println("gg: "+edc);
 
 
-
 //		JSONArray jArray = new JSONArray();
 //		if(facets != null) {
 //			SimpleOrderedMap<Object> map = (SimpleOrderedMap<Object>)facets.get("result");
@@ -427,7 +429,7 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 
 		sq.setParam("facet", true);
 		sq.setParam("facet.sum", true);
-		sq.setParam("facet.field", "body_size");
+		sq.setParam("facet.field", "size");
 
 		sq.setParam("facet.limit", "-1");
 		sq.setParam("facet.mincount", "-1");
@@ -441,25 +443,94 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id");
 		sq.setQuery(String.format("+ctime_yyyymmdd:[ %s TO %s ]", startDate, endDate));
 
-		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq,vo.getAdminId());
+		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, vo.getAdminId());
 
 		List<Map<String, Object>> result = new ArrayList<>();
 
-		for (int i = 0; i<edc.getPivotData().size(); i++){
+		long max = 0;
+		for (int i = 0; i < edc.getPivotData().size(); i++) {
 			Map<String, Object> item = new HashMap<>();
-			item.put("date",edc.getPivotData().get(i).get("rowKey"));
+			item.put("date", edc.getPivotData().get(i).get("rowKey"));
 			item.put("total", edc.getPivotData().get(i).get("total"));
-			double doubleNum = (double) edc.getPivotData().get(i).get("body_size");
+			double doubleNum = (double) edc.getPivotData().get(i).get("size");
 			long attach = (long) doubleNum;
 			item.put("bodySize", attach);
 			item.put("bodySizeStr", Common.convertFileSize(attach));
+			if (attach > max) {
+				max = attach;
+			}
 			result.add(item);
 		}
-
-
+		result = result.stream().sorted((o1, o2) -> o1.get("date").toString().compareTo(o2.get("date").toString()) ).collect(Collectors.toList());
 		return new XcnResponseVO(XcnRspCode.OK, result);
 	}
 
+	@Override
+	public List<Map<String, Object>> getTrafficSize() throws Exception {
+		String date = Common.getCurrentDate();
+		String startDate = Common.plusDays(date, -7);
+		String endDate = Common.plusDays(date, -1);
+		List<Map<String, Object>> result = deviceTrafficStatService.getTrafficStatList_Day(startDate, endDate);
+
+		List<Map<String, Object>> transformedData = new ArrayList<>();
+
+		for (Map<String, Object> entry : result) {
+			for (Map.Entry<String, Object> subEntry : entry.entrySet()) {
+				String key = subEntry.getKey();
+				if (key.matches("\\d{4}-\\d{2}-\\d{2}")) {
+					Map<String, Object> transformedEntry = new HashMap<>();
+					transformedEntry.put("date", subEntry.getKey());
+					long num = (long) parseCount(subEntry.getValue());
+					transformedEntry.put("longNum",num);
+					transformedEntry.put("longNumStr",Common.convertFileSize(num));
+					transformedData.add(transformedEntry);
+				}
+			}
+		}
+		transformedData = transformedData.stream().sorted((o1, o2) -> o1.get("date").toString().compareTo(o2.get("date").toString()) ).collect(Collectors.toList());
+
+		return transformedData;
+
+	} public static boolean isInteger(String strValue) {
+		try {
+			Integer.parseInt(strValue);
+			return true;
+		} catch (NumberFormatException ex) {
+			return false;
+		}
+	}
+
+	@Override
+	public List<Map<String, Object>> getTodayTrafficSize() throws Exception {
+		String date = Common.getCurrentDate();
+		List<Map<String, Object>> result = deviceTrafficStatService.getTrafficStatList_Hour(date, date);
+
+		List<Map<String, Object>> transformedData = new ArrayList<>();
+
+		for (Map<String, Object> entry : result) {
+			for (Map.Entry<String, Object> subEntry : entry.entrySet()) {
+				String key = subEntry.getKey();
+				if (isInteger(key)){
+					Map<String, Object> transformedEntry = new HashMap<>();
+					transformedEntry.put("date", subEntry.getKey());
+					long num = (long) parseCount(subEntry.getValue());
+					transformedEntry.put("longNum",num);
+					transformedEntry.put("longNumStr",Common.convertFileSize(num));
+					transformedData.add(transformedEntry);
+				}
+			}
+		}
+		transformedData = transformedData.stream().sorted((o1, o2) -> o1.get("date").toString().compareTo(o2.get("date").toString()) ).collect(Collectors.toList());
+		System.out.println(transformedData);
+
+		return transformedData;
+	}
+
+	private static double parseCount(Object value) {
+		// Assuming the count is represented as a String like "15467.47/15467.46"
+		String[] parts = ((String) value).split("/");
+		return Double.parseDouble(parts[0]);
+	}
 
 
 

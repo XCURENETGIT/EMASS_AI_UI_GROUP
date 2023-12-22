@@ -4,6 +4,7 @@ import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.locale.Prop;
 import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
+import com.xcurenet.device.service.DeviceTrafficStatService;
 import com.xcurenet.emass.dashboard.service.*;
 import com.xcurenet.emass.message.service.SolrEdcMessageVO;
 import com.xcurenet.emass.message.service.SolrEdcService;
@@ -30,6 +31,9 @@ public class DashBoardPreDefineController {
 
 	@Resource(name = "dashBoardPreDefineService")
 	private DashBoardPreDefineService dashBoardPreDefineService;
+
+	@Resource(name = "deviceTrafficStatService")
+	private DeviceTrafficStatService deviceTrafficStatService;
 
 	@Resource(name = "solrEdcService")
 	private SolrEdcService solrEdcService;
@@ -104,6 +108,24 @@ public class DashBoardPreDefineController {
 		}
 		return json;
 	}
+	@RequestMapping(value = "/getTrafficData.xcn")
+	@Description("Dashboard - 최근 7일 트래픽 정보")
+	@ResponseBody
+	public XcnResponseVO getTrafficData(final HttpSession session) throws Exception {
+		List<Map<String, Object>> result = dashBoardPreDefineService.getTrafficSize();
+
+		return new XcnResponseVO(XcnRspCode.OK, result);
+	}
+
+	@RequestMapping(value = "/getTodayTrafficData.xcn")
+	@Description("Dashboard - 당일 트래픽 정보")
+	@ResponseBody
+	public XcnResponseVO getTodayTrafficData(final HttpSession session) throws Exception {
+		List<Map<String, Object>> result = dashBoardPreDefineService.getTodayTrafficSize();
+
+		return new XcnResponseVO(XcnRspCode.OK, result);
+	}
+
 
 	@RequestMapping(value = "/getAllTodayPatternPrivacy.xcn")
 	@Description("Dashboard - 전체 패턴(개인정보)")
