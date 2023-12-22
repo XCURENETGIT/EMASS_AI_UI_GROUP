@@ -89,7 +89,7 @@
             }
         })
 
-        $('.listChart').on('click','.closeBtn',function(){
+        $('.listChart').on('click','.subtab_close',function(){
             var id = 'tab'+ Number($(this).parents('li').attr('idx'));
             var obj = tabInfo[id];
             obj.close();
@@ -403,7 +403,7 @@
         tabNum ++;
         if( tabNum > 3 ) {
             var delid = $( ".listChart li:nth-child(2)" ).attr('idx');
-            $('#detailTab'+delid+' .closeBtn').click();
+            $('#detailTab'+delid+' .subtab_close').click();
         }
 
         var displayName = (rowKey.indexOf(',') > -1) ? '<s:message code="common.msg.all"/>' : rowKey.replaceAll("\\\"", "\"");

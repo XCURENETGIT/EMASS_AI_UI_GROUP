@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 @Data
 @JsonInclude(Include.NON_NULL)
@@ -14,7 +17,10 @@ public class MessengerGroupVO {
 	private long msg_cnt;
 	private long unread_cnt;
 	private String ctime;
+	@Id
+	@Field(type = FieldType.Text)
 	private String msgid;
+
 	private String xrootmtr;
 	private String svc;
 	private String svc3;

@@ -7,4 +7,5 @@ public class EmsMessengerAdminXrootMtrVO {
 	private String adminId;
 	private String xRootMtr;
 	private String msgId;
+	private String userid;
 }

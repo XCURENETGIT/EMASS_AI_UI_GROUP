@@ -94,6 +94,43 @@ var eikon = {
 	getMessengerDetailList : function(xRootmtr, msgid, srcip){
 		eikon.getMessengerDetailList(xRootmtr, msgid, '', '');
 	},
+	getGenerativeDetailList:function (userid, msgid, srcip, usr_id){
+		if(!isDetailView()){
+			alert(condition.authAlert);
+			return;
+		}
+		if(userid == ''){
+			return;
+		}
+
+		$('#searchResultArea').hide();
+		$('#searchResultBtnArea').hide();
+		detailStartPage = 1;
+		detailEndPage = 1;
+		var startDt =$('#startDt').val()+"000000";
+	 	var endDt =$('#endDt').val()+"235959";
+
+		//참여자 수, 참여자 정보
+		ui.get({
+			url : 'getGenerativeGroupUserList.xcn',
+			userid : userid,
+			startDt : startDt,
+			endDt : endDt,
+			groupField : 'usr_id',
+			success : function(data, total) {
+				alert("성공");
+				participantDataSet = data.groups;
+				userSelectBox(data.groups, srcip, usr_id);
+				//getMessengerGroupDetail(xRootmtr, msgid, srcip);
+				//$('#groupParticipantCnt').html(total.coFgemma());
+			},
+			error : function(status, message) {
+				ui.alertMsg(message);
+			},
+			complete : function() {
+			}
+		});
+	},
 	getMessengerDetailList : function(xRootmtr, msgid, srcip, usr_id){
 		if(!isDetailView()){
 			alert(condition.authAlert);

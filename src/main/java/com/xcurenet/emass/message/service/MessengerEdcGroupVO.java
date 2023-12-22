@@ -93,7 +93,7 @@ public class MessengerEdcGroupVO {
 				for (SearchHit hit : hits) {
 					Map<String, Object> map = hit.getSourceAsMap();
 					if (map.size() > 0) {
-						map.put("_id",hit.getId());
+						map.put("msgid",hit.getId());
 						SolrEdcVO solrEdcVO = mapper.convertValue(map, SolrEdcVO.class);
 						if(detail) this.groups.add(reDefinedDetail(solrEdcVO,  adminId, original));
 						else  this.groups.add(reDefined(solrEdcVO, adminId,0L));
