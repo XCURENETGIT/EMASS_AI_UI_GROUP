@@ -814,6 +814,7 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 	}
 }
 
+.modal {z-index: 99999 !important;}
 #bootstrap_alert .modal-dialog .modal-content {padding: 15px !important;max-width: 500px;}
 #bootstrap_alert .modal-dialog .modal-content .modal-footer button {width: 100% !important; padding: 14px 20px !important; margin: 14px 0 8px 0; background-color: #1C64D3 !important; border: none !important; color: #fff !important; font-size: 16px; cursor: pointer;}
 #bootstrap_alert .modal-dialog .modal-content .modal-footer .bootstrap-dialog-footer-buttons {padding: 8px 0 0 0;font-size: 16px;}
