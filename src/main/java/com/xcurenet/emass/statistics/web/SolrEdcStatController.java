@@ -444,6 +444,25 @@ public class SolrEdcStatController {
         return new XcnResponseVO(XcnRspCode.OK, solrStatVo, solrStatVo.getNumFound());
     }
 
+    @RequestMapping(value = "/getOcrStatList.xcn")
+    @Description("OCR 통계 리스트 조회")
+    @AuditOperation(Operation.SEARCH)
+    @ResponseBody
+    public XcnResponseVO getOcrStatList(final HttpServletRequest request, final HttpSession session) throws SolrServerException, IOException {
+        String xAxis = Common.nvl(request.getParameter("xAxis"));
+        String yAxis = Common.nvl(request.getParameter("yAxis"));
+        String startDate = Common.nvl(request.getParameter("startDate"));
+        String endDate = Common.nvl(request.getParameter("endDate"));
+        String detailQuery = Common.nvl(request.getParameter("detailQuery"));
+        String rowKey = Common.nvl(request.getParameter("rowKey"));
+        int limit = Common.nvz(request.getParameter("limit"));
+
+        SolrEdcMessageVO solrStatVo = getFacetResult(startDate, endDate, detailQuery, xAxis, limit, Common.getAdminId(request), rowKey);
+
+
+        return new XcnResponseVO(XcnRspCode.OK, solrStatVo, solrStatVo.getFacetData().size());
+    }
+
     @RequestMapping(value = "/getCheckedReadStatList.xcn")
     @Description("관리자 열람 통계 리스트 조회")
     //@AuditOperation(Operation.SEARCH)
@@ -456,23 +475,6 @@ public class SolrEdcStatController {
         return new XcnResponseVO(XcnRspCode.OK, checkedReadStatService.getCheckedReadStatList(xAxis, startDate, endDate, Common.getAdminType(session), Common.getAdminId(session) ));
     }
 
-    @RequestMapping(value = "/getOcrStatList.xcn")
-    @Description("OCR 통계 리스트 조회")
-    @AuditOperation(Operation.SEARCH)
-    @ResponseBody
-    public XcnResponseVO getOcrStatList(final HttpServletRequest request, final HttpSession session) throws SolrServerException, IOException {
-        String xAxis = Common.nvl(request.getParameter("xAxis"));
-        String startDate = Common.nvl(request.getParameter("startDate"));
-        String endDate = Common.nvl(request.getParameter("endDate"));
-        String detailQuery = Common.nvl(request.getParameter("detailQuery"));
-        String rowKey = Common.nvl(request.getParameter("rowKey"));
-        int limit = Common.nvz(request.getParameter("limit"));
-
-        SolrEdcMessageVO solrStatVo = getFacetResult(startDate, endDate, detailQuery, xAxis, limit, Common.getAdminId(request), rowKey);
-
-
-        return new XcnResponseVO(XcnRspCode.OK, solrStatVo, solrStatVo.getFacetData().size());
-    }
 
     @RequestMapping(value = "/getOcrStatDetailList.xcn")
     @Description("OCR 통계 리스트 상세 조회")

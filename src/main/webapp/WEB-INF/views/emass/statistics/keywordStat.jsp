@@ -73,7 +73,7 @@ $(document).ready(function(){
 		}
 	})
 
-	$('.listChart').on('click','.close',function(){
+	$('.listChart').on('click','.closeBtn',function(){
 		var id = 'tab'+ Number($(this).parents('li').attr('idx'));
 		var obj = tabInfo[id];
 		obj.close();
@@ -414,7 +414,7 @@ function getSearchQuery() {
 			<div>
 				<button class="form_btn01" accesskey="Q" id="searchBtn" accesskey="s">조회</button>
 				<button class="form_btn02">조건 초기화</button>
-				<button type="button" class="form_btn05"><s:message code="query.make.inputer"/></button>
+				<button type="button" class="form_btn05 searchQueryBtn"><s:message code="query.make.inputer"/></button>
 			</div>
 		</div>
 
@@ -432,16 +432,28 @@ function getSearchQuery() {
 						<h3>
 							TOP 통계 Chart
 							<span class="sel">
-                                    <select id="country" name="country">
-                                        <option value="australia">차트 표시 개수(7)</option>
-                                        <option value="canada">옵션2</option>
-                                        <option value="usa">옵션3</option>
-                                      </select>
-                                </span>
+						<div id="totalViewDiv" style="display:none;">
+							<div class="subtab">
+							<button type="button"
+							        title="<s:message code="stat.view.all"/>"><s:message code="stat.view.all"/></button>
+							</div>
+						</div>
+						<div class="panel-headings" id="chartCntDiv">
+								<button type="button" class="btn btn-xs btn-default dropdown-toggle"
+								        data-toggle="dropdown">
+									<s:message code="stat.display.count.chart"/> (<span class="dropdown-text">5</span>) <span
+										val="5" class="caret"></span>
+								</button>
+								<ul class="dropdown-menu dropdown-menu-right" role="menu">
+									<li><a href="#">5</a></li>
+									<li><a href="#">10</a></li>
+								</ul>
+						</div>
+						</span>
 						</h3>
 						<div class="panel panel-default" id="service.logging.count">
 							<div class="panel-body">
-								<div id="chartArea1" style="height: 160px;"></div>
+								<div id="chartArea1" style="height: 300px;"></div>
 							</div>
 						</div>
 					</div>
@@ -465,22 +477,6 @@ function getSearchQuery() {
 						</div>
 					</div>
 				</div>
-				<!-- pagination -->
-				<div class="pageArea">
-					<div class="pagination">
-						<a href="#"><img src="../img/ico_page_left2.png" alt=""></a>
-						<a href="#"><img src="../img/ico_page_left.png" alt=""></a>
-						<a href="#">1</a>
-						<a class="active" href="#">2</a>
-						<a href="#">3</a>
-						<a href="#">4</a>
-						<a href="#">5</a>
-						<a href="#">6</a>
-						<a href="#"><img src="../img/ico_page_right.png" alt=""></a>
-						<a href="#"><img src="../img/ico_page_right2.png" alt=""></a>
-					</div>
-				</div>
-				<!-- //pagination -->
 			</div>
 
 		</div>
@@ -552,8 +548,8 @@ function getSearchQuery() {
 			var rowKeys = rowKey.split(",");
 			var displayName = rowKeys.length > 1 ? '<s:message code="common.msg.all"/>' : rowKey.replaceAll("\\\"", "\"");
 			var id = 'tab'+tabID;
-			$('.listChart').append($('<li style="display:inline-flex;text-align: center;z-index:1001;" idx="'+tabID+'" id="liTab'+tabID+'"><a data-toggle="tab" href="#tab'+tabID+'" id="detailTab'+tabID+'" >'+displayName+' - '+colKeyNm+'<span class="badge"></span><button class="close" type="button" title="<s:message code="stat.delete.tab"/>">×</button></a></li>'));
-			$('#basicStatList').after($('<div class="tab-pane fade" id="tab' + tabID + '"><div id="detail_cnt'+tabID+'" style="margin-top:0px; color: #f25643; font-weight: bold; font-size: 13px;"></div><div id="grid'+tabID+'" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; height: 380px"></div></div>'));
+            $('.listChart').append($('<li style="display:inline-flex;text-align: center;z-index:1001;" idx="'+tabID+'" id="liTab'+tabID+'"><a data-toggle="tab" href="#tab'+tabID+'" id="detailTab'+tabID+'" >'+displayName+' - '+colKeyNm+'<span class="badge"></span><button type="button" class="closeBtn" style="float:right"><img src="<c:url value="/img/ico_closed.png"/>" alt="닫기"></button></a></li>'));
+            $('#basicStatList').after($('<div class="tab-pane fade" id="tab' + tabID + '"><div id="detail_cnt'+tabID+'" style="margin-top:0px; color: #f25643; font-weight: bold; font-size: 13px;"></div><div id="grid'+tabID+'" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; height: 380px"></div></div>'));
 
 			var gid = 'grid'+tabID;
 			var gridObj = new Xgrid(gid, contextRoot);
@@ -582,24 +578,18 @@ function getSearchQuery() {
             var eDate = $('#enddate').val().replaceAll("-","");
 			if(sDate > eDate) ui.alertMsg('<s:message code="consent.msg.timecheck"/>');
 
-            var searchData = {
-                xAxis: xAxis,
-                xAxis_str: xAxis_str,
-                rowKey: rowKey,
-                yAxis: 'kwd.kwds.keyword',
-                startDate: sDate + "000000",
-                endDate: eDate + "235959",
-                offset: grid1.data.length,
-                limit: grid1.pageSize,
-                detailQuery: $('#elsQueryText').val(),
-            }
-
-
             searchFlag = true;
 			grid1.on();
 			ui.get({
 				url : 'getStatList.xcn',
-                searchParam: JSON.stringify(searchData),
+                startDate: sDate+"000000",
+                endDate: eDate+"235959",
+                detailQuery:$('#elsQueryText').val(),
+                xAxis : xAxis,
+                yAxis : 'kwds',
+                offset : grid1.data.length,
+                limit : grid1.pageSize,
+                xAxis_str : xAxis_str,
 				success : function(data, total) {
 					grid1.colInit();
 					grid1.autoNumber();
@@ -674,28 +664,22 @@ function getSearchQuery() {
             var colId = '';
             if (colNum != '' & colNum != null) colId = grid1.getHeaderId()[grid1.Col].id;
 
-            var searchData = {
-                rowKey: rowKey,
-                colKey : colKey,
-                startDate: $('#startdate').val().replaceAll("-","")+"000000",
-                endDate: $('#enddate').val().replaceAll("-","")+"235959",
-                detailQuery: $('#elsQueryText').val(),
-                xAxis: xAxis,
-                xAxis_str: xAxis_str,
-                searched_xAxis: $('#searched_xAxis').val(),
-                colId: colId,
-                yAxis: 'kwd.kwds.keyword',
-                offset: currentgrid.data.length,
-                limit: currentgrid.pageSize,
-                nameStat : "kwdStat",
-            }
-
 
             searchFlag = true;
 			currentgrid.on();
 			ui.get({
 				url : 'getStatDetailList.xcn',
-                searchParam: JSON.stringify(searchData),
+                rowKey : rowKey,
+                colKey : colKey,
+                startDate : $('#startdate').val().replaceAll("-","")+"000000",
+                endDate : $('#enddate').val().replaceAll("-","")+"235959",
+                detailQuery:$('#solrQueryText').val(),
+                xAxis : xAxis,
+                xAxis_str : xAxis_str,
+                yAxis : 'kwds',
+                offset : currentgrid.data.length,
+                limit : currentgrid.pageSize,
+                nameStat : "kwdStat",
 				success : function(data, total) {
 					if ( lastRow == 'Y' || lastRow == undefined ) detailTotal = total;
 					currentgrid.appendData(data.emass);

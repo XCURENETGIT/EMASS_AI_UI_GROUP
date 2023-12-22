@@ -378,7 +378,7 @@ public class HomeController {
 	}
 
 	@RequestMapping(value = "/ems/msg/generativeAi.do", method = RequestMethod.GET)
-	@Description("테스트")
+	@Description("생성형ai ")
 	public String generativeAi(Locale locale, Model model) {
 		model.addAttribute("headerYn","N");
 		return "/emass/message/msg/GenerativeAi";

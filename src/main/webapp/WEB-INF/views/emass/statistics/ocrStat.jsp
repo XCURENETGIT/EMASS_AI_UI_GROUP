@@ -98,7 +98,7 @@ $(document).ready(function(){
 		}
 	})
 	
-	$('.listChart').on('click','.close',function(){
+	$('.listChart').on('click','.closeBtn',function(){
 		currentgrid = getCurrentGrid();
 		var id = 'tab'+ Number($(this).parents('li').attr('idx'));
 		var obj = tabInfo[id];
@@ -527,8 +527,8 @@ function clickEvent(dataGrid) {
 // 		tabName = ' - ' + displayName;
 		colKeyNm += ' <s:message code="analysis.usagecompare.ui.detaillist"/>';
 	}
+    $('.listChart').append($('<li style="display:inline-flex;text-align: center;z-index:1001;" idx="'+tabID+'" id="liTab'+tabID+'"><a data-toggle="tab" href="#tab'+tabID+'" id="detailTab'+tabID+'" >'+displayName+' - '+colKeyNm+'<span class="badge"></span><button type="button" class="closeBtn" style="float:right"><img src="<c:url value="/img/ico_closed.png"/>" alt="닫기"></button></a></li>'));
 
-	$('.listChart').append($('<li style="display:inline-flex;text-align: center;z-index:1001;" idx="'+tabID+'" id="'+liTab+tabID+'"><a data-toggle="tab" href="#tab'+tabID+'" id="detailTab'+tabID+'" >'+ name + tabName+' - '+colKeyNm+'<span class="badge"></span><button class="close" type="button" title="<s:message code="stat.delete.tab"/>">×</button></a></li>'));
 	$('#basicStatList').after($('<div class="tab-pane fade" id="tab' + tabID + '"><div id="detail_cnt'+tabID+'" style="margin-top:0px; color: #f25643; font-weight: bold; font-size: 13px;"></div><div id="grid'+tabID+'" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; height: 380px"></div></div>'));
 	
 	var gid = 'grid'+tabID;
@@ -569,95 +569,107 @@ function clickEvent(dataGrid) {
 </script>
 </head>
 <body class="mini-navbar">
-	<div class="container"> 
-		<div class="boxArea">
-			<div class="content_body">
-				<div class="row">
-					<div class="col-xs-12 text-left">
-						<div class="form-group form-inline not-dashed">
-							<label for="startdatepicker"><s:message code="condition.select.period"/>:</label>
-							<div class='input-group date' id='startdatepicker'>
-								<input type='text' class="input-sm form-control" id='startdate' />
-								<span class="input-group-addon"> <span class="glyphicon glyphicon-calendar"></span>
-								</span>
+<div class="container">
+	<div class="searchArea">
+		<div class="searchSub">
+			<div id="startdatepicker"><input type="date" id="startdate" style="width: 110px;"> <span
+					class="hyphen">~</span></div>
+			<div id="enddatepicker"><input type="date" id="enddate" style="width: 110px;"></div>
+			<div class="optiotab">
+				<button class="optionBtn active" id="ctime_hh" value="ctime_hh"><s:message
+						code="common.msg.time"/></button>
+				<button class="optionBtn" id="ctime_yyyymmdd" value="ctime_yyyymmdd" class="active"><s:message
+						code="common.msg.day"/></button>
+				<button class="optionBtn" id="ctime_yyyymm" value="ctime_yyyymm"><s:message
+						code="common.msg.month"/></button>
+				<button class="optionBtn" id="businm" value="businm"><s:message code="common.org.busi"/></button>
+				<button class="optionBtn" id="conm" value="conm"><s:message code="common.org.co"/></button>
+				<button class="optionBtn" id="deptnm" value="deptnm"><s:message code="common.org.dept"/></button>
+				<button class="optionBtn" id="direction_svc" value="direction_svc"><s:message
+						code="condition.receive_send"/></button>
+				<button class="optionBtn" id="jikgubnm" value="jikgubnm"><s:message
+						code="common.org.jikgub"/></button>
+				<input type="hidden" value="ctime_hh" id="optionHidden">
+				<input type="hidden" value="시간" id="optionHiddenName">
+			</div>
+			<div>
+				<button class="form_btn01" accesskey="Q" id="searchBtn" accesskey="s">조회</button>
+				<button class="form_btn02">조건 초기화</button>
+				<button type="button" class="form_btn05 searchQueryBtn"><s:message code="query.make.inputer"/></button>
+			</div>
+		</div>
+
+		<div class="panel" style="width: 100%; margin-bottom: 10px">
+			<div>
+				<textarea class="elsQueryResultText" rows="1" style="width:100%;" id="elsQueryText" placeholder="<s:message code="condition.input.detail"/>"></textarea>
+			</div>
+		</div>
+
+		<div class="content">
+
+			<div class="contentSub">
+				<div class="chartAreafull">
+					<div>
+						<h3>
+							TOP 통계 Chart
+							<span class="sel">
+						<div id="totalViewDiv" style="display:none;">
+							<div class="subtab">
+							<button type="button"
+							        title="<s:message code="stat.view.all"/>"><s:message code="stat.view.all"/></button>
 							</div>
-							~
-							<div class='input-group date' id='enddatepicker'>
-								<input type='text' class="input-sm form-control" id='enddate' />
-								<span class="input-group-addon"> <span class="glyphicon glyphicon-calendar"></span>
-								</span>
-							</div>
-							<div class="form-group" style="margin-left: 15px;">
-								<label for="xAxis"><s:message code="stat.area.stat"/>:</label>
-								<select id="xAxis" name="xAxis" class="input-sm form-control">
-									<option value="ctime_hh"><s:message code="common.msg.time"/></option>
-									<option value="ctime_yyyymmdd"><s:message code="common.msg.day"/></option>
-									<option value="ctime_yyyymm"><s:message code="common.msg.month"/></option>
-									<option value="businm"><s:message code="common.org.busi"/></option>
-									<option value="conm"><s:message code="common.org.co"/></option>
-									<option value="deptnm"><s:message code="common.org.dept"/></option>
-									<option value="direction_svc"><s:message code="condition.receive_send"/></option>
-									<option value="jikgubnm"><s:message code="common.org.jikgub"/></option>
-								</select>
-							</div>
-							<div class="form-group form-inline not-dashed">
-								<button type="button" class="btn btn-success btn-sm" accesskey="Q" id="searchBtn" accesskey="s"><span class="glyphicon glyphicon-search"></span></button>
-								<button type="button" class="btn btn-sm btn-primary searchQueryBtn"><span class="glyphicon glyphicon-check"></span>&nbsp;<s:message code="query.make.inputer"/></button>
+						</div>
+						<div class="panel-headings" id="chartCntDiv">
+								<button type="button" class="btn btn-xs btn-default dropdown-toggle"
+								        data-toggle="dropdown">
+									<s:message code="stat.display.count.chart"/> (<span class="dropdown-text">5</span>) <span
+										val="5" class="caret"></span>
+								</button>
+								<ul class="dropdown-menu dropdown-menu-right" role="menu">
+									<li><a href="#">5</a></li>
+									<li><a href="#">10</a></li>
+								</ul>
+						</div>
+						</span>
+						</h3>
+						<div class="panel panel-default" id="service.logging.count">
+							<div class="panel-body">
+								<div id="chartArea1" style="height: 300px;"></div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="row top_space">
-					<div class="col-xs-12">
-						<textarea class="solrQueryResultText" rows="1" style="width:100%;" id="solrQueryText" placeholder="<s:message code="condition.input.detail"/>"></textarea>
-					</div>
-				</div>
+				<!-- 탭 -->
 				<div class="row top_space2">
 					<div class="col-xs-12">
 						<ul class="nav nav-tabs codeTab listChart">
-							<li class="active" style="width:100px; text-align: center"><a data-toggle="tab" href="#basicStatList" id="listTab" >LIST</a></li>
+							<li class="active"><a data-toggle="tab" href="#basicStatList" id=" ">LIST</a>
+							</li>
+						</ul>
 						</ul>
 					</div>
 				</div>
+				<!-- 테이블 -->
 				<div class="row top_space">
 					<div class="col-lg-12 tab-content">
-						<div id="basicStatList" class="tab-pane fade in active">
-							<div id="basicStatListGrid" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; height: 400px"></div>
-						</div>
-					</div>
-				</div>
-				<div class="row top_space2">
-					<div class="col-lg-12">
-						<div class="panel panel-default" id="service.logging.count">
-							<div class="panel-heading">
-								<div class="pull-right" id="totalViewDiv" style="display:none;">
-									<button class="totalView btn-info btn-xs" type="button" title="<s:message code="stat.view.all"/>"><s:message code="stat.view.all"/></button>
-								</div>
-								<div class="pull-right" id="chartCntDiv">
-									<button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
-										<span class="glyphicon glyphicon-download-alt"></span>&nbsp;<s:message code="stat.display.count.chart"/> (<span class="dropdown-text">5</span>) <span val="5" class="caret"></span>
-									</button>
-									<ul class="dropdown-menu dropdown-menu-right" role="menu">
-										<li><a href="#">5</a></li>
-										<li><a href="#">10</a></li>
-										<li><a href="#">15</a></li>
-										<li><a href="#">20</a></li>
-									</ul>
-								</div>
-								<i class="fa fa-bar-chart-o fa-fw"></i><span id="chartAreaTitle">TOP <s:message code="DATA_MONITOR.STAT_LABEL"/> CHART </span>
-							</div>
-							<div class="panel-body">
-								<div id="chartArea1" style="height: 230px;"></div>
-							</div>
+						<div id="basicStatList" class="tab-pane fade in active" style="background-color: white">
+							<div id="basicStatListGrid" class="slickGrid gridArea"
+							     style="position: relative; top: 0px; left: 0px; height: 400px; text-align: center; "></div>
 						</div>
 					</div>
 				</div>
 			</div>
+
 		</div>
+		<!-- content 끝-->
 	</div>
-	<!-- Back to top -->
-	<a href="#0" class="back-to-top cd-top"><span class="[ fa fa-chevron-up ]"></span> <span class="[ ]">Back to the Top</span></a>
-	
+	<!--ContentArea-->
+</div>
+<!--//Container-->
+</div>
+<!-- Back to top -->
+<a href="#0" class="back-to-top cd-top"><span class="[ fa fa-chevron-up ]"></span> <span class="[ ]">Back to the Top</span></a>
+
 	<script type="text/javascript">
 	
 		function getCurrentGrid(){
@@ -696,10 +708,12 @@ function clickEvent(dataGrid) {
 		
 		function getData( flag ) {
 			if ( searchFlag ) return;
-			var xAxis = $('select[name=xAxis]').val();
-			var xAxis_str = $('select[name=xAxis] option:selected').text();
-			var sDate = $('#startdate').val().replaceAll("-","");
-			var eDate = $('#enddate').val().replaceAll("-","");
+            var xAxis = $('select[name=xAxis]').val();
+            var xAxis_str = $('select[name=xAxis] option:selected').text();
+            var sDate = $('#startdate').val().replaceAll("-", "");
+            var eDate = $('#enddate').val().replaceAll("-", "");
+            var xAxis = $('#optionHidden').val();
+            var xAxis_str = $('#optionHiddenName').val();
 			if(sDate > eDate) ui.alertMsg('<s:message code="consent.msg.timecheck"/>');
 			searchFlag = true;
 			grid1.on();
@@ -707,7 +721,7 @@ function clickEvent(dataGrid) {
 				url : 'getOcrStatList.xcn',
 				startDate: sDate+"000000",
 				endDate: eDate+"235959",
-				detailQuery:$('#solrQueryText').val(),
+				detailQuery:$('#elsQueryText').val(),
 				xAxis : xAxis,
 				yAxis : 'ocr_attach_cnt',
 				offset : grid1.data.length,
@@ -768,9 +782,13 @@ function clickEvent(dataGrid) {
 			} else {
 				currentgrid.loadingPage++;
 			}
-			
-			var xAxis = $('select[name=xAxis]').val();
-			var xAxis_str = $('select[name=xAxis] option:selected').text();
+
+            var xAxis = $('select[name=xAxis]').val();
+            var xAxis_str = $('select[name=xAxis] option:selected').text();
+            var sDate = $('#startdate').val().replaceAll("-", "");
+            var eDate = $('#enddate').val().replaceAll("-", "");
+            var xAxis = $('#optionHidden').val();
+            var xAxis_str = $('#optionHiddenName').val();
 			
 			searchFlag = true;
 			currentgrid.on();

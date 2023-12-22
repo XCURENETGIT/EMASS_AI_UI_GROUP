@@ -538,6 +538,13 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		return selectList("com.xcurenet.sqlmap.mappers.mysql.code.getMessengerList");
 	}
 
+
+	@Override
+	public List<CodeVO> getGenerativeList() {
+		return selectList("com.xcurenet.sqlmap.mappers.mysql.code.getGenerativeList");
+	}
+
+
 	@Override
 	public void updateEmsFeedback(String msgId, String feedback, String adminId) {
 		Query query = new Query().addCriteria(Criteria.where("_id").is(msgId));

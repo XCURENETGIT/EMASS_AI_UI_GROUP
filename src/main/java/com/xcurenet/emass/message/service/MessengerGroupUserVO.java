@@ -74,6 +74,8 @@ public class MessengerGroupUserVO {
 						vo.setJikgubnm(Common.nvl(hitsMap.get("jikgubnm")));
 						vo.setSender(Common.nvl(hitsMap.get("sender")));
 						vo.setSname(Common.nvl(hitsMap.get("sname")));
+						vo.setUserid(Common.nvl(hitsMap.get("userid")));
+						vo.setBody_snippet(Common.nvl(hitsMap.get("body_snippet")));
 					}
 					vo.setSrcIpList(srcIpList);
 					groups.add(vo);

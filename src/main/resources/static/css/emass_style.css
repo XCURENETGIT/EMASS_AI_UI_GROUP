@@ -344,6 +344,7 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .w30 {width:30%;}
 .w33 {width:33.4%;}
 .w35 {width:35%;}
+.w10 {width:10%;}
 .w20 {width:20%;}
 .w25 {width:25%;}
 .w15 {width:15%;}
@@ -598,6 +599,7 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .sns_slack {background:url(../img/ico_sns_slack.png) left top no-repeat;}
 .sns_facebook {background:url(../img/ico_sns_facebook.png) left top no-repeat;}
 .sns_line {background:url(../img/ico_sns_line.png) left top no-repeat;}
+.sns_chatGPT{background:url(../img/ico_sns_chatgpt.png) left top no-repeat;}
 
 :root {--black: #111;--white: #fff;--bg: #f8f8f8;--bluebg: #F2F6FF;--light:#ededed;}
 .messengerList .messengerBox {width: 100%; height:840px; overflow-y: auto;}

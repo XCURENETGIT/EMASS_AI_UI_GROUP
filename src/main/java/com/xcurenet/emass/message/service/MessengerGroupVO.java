@@ -18,6 +18,7 @@ public class MessengerGroupVO {
 	private String xrootmtr;
 	private String svc;
 	private String svc3;
+	private String userid;
 	private String attached;
 	private String attachhash;
 	private String attachname;

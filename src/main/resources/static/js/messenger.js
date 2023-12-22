@@ -84,6 +84,10 @@ var eikon = {
 			getMessengerMessageList(page);
 		}
 	},
+	getGenerativeList : function(page){
+		var searchType = $('input:radio[name=searchType]:input:checked').val();
+			getGenerativeGroupList(page);
+	},
 	getMessengerDetailList : function(xRootmtr, msgid){
 		eikon.getMessengerDetailList(xRootmtr, msgid, '');
 	},
@@ -117,7 +121,7 @@ var eikon = {
 				participantDataSet = data.groups;
 				userSelectBox(data.groups, srcip, usr_id);
 				//getMessengerGroupDetail(xRootmtr, msgid, srcip);
-				//$('#groupParticipantCnt').html(total.comma());
+				//$('#groupParticipantCnt').html(total.coFgemma());
 			},
 			error : function(status, message) {
 				ui.alertMsg(message);
@@ -560,6 +564,36 @@ function getMessengerMessageList (page){
 		}
 	});
 };
+
+
+function getGenerativeGroupList (page){
+	var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
+	groupPage = page;
+	var offset = groupPage*groupPageBreak - groupPageBreak;
+	searchFlag = true;
+	ui.onBody('timeline_list', 0, -20);
+	ui.postJson({
+		url : 'getGenerativeGroupList.xcn',
+		data : JSON.stringify( getCondition( )),
+		readYn : readYn,
+		offset : offset,
+		limit : groupPageBreak,
+		success : function(data, total) {
+			rtnGenerativeGroupList(data.groups)
+			rtnnGenerativeGroupPage(total, page);
+		/*	rtnGroupList(data.groups, 'G');
+			rtnGroupPage(total, page, 'G');
+			HighlightGroup( );*/
+		},
+		error : function(status, message) {
+			ui.alertMsg(message);
+		},
+		complete : function() {
+			searchFlag = false;
+			ui.off('timeline_list');
+		}
+	});
+}
 
 function rtnGroupPage(total, page, searchType){
 	$('#groupResultCnt').html(total.comma());

@@ -417,7 +417,7 @@ function getSearchQuery() {
 			<div>
 				<button class="form_btn01" accesskey="Q" id="searchBtn" accesskey="s">조회</button>
 				<button class="form_btn02">조건 초기화</button>
-				<button type="button" class="form_btn05"><s:message code="query.make.inputer"/></button>
+				<button type="button" class="form_btn05 searchQueryBtn"><s:message code="query.make.inputer"/></button>
 			</div>
 		</div>
 		<div class="panel" style="width: 100%; margin-bottom: 10px">
@@ -476,15 +476,13 @@ function getSearchQuery() {
 								<ul class="dropdown-menu dropdown-menu-right" role="menu">
 									<li><a href="#">5</a></li>
 									<li><a href="#">10</a></li>
-									<li><a href="#">15</a></li>
-									<li><a href="#">20</a></li>
 								</ul>
 						</div>
 						</span>
 						</h3>
 						<div class="panel panel-default" id="service.logging.count">
 							<div class="panel-body">
-								<div id="chartArea1" style="height: 160px;"></div>
+								<div id="chartArea1" style="height: 300px;"></div>
 							</div>
 						</div>
 					</div>
@@ -508,22 +506,6 @@ function getSearchQuery() {
 						</div>
 					</div>
 				</div>
-				<!-- pagination -->
-				<div class="pageArea">
-					<div class="pagination">
-						<a href="#"><img src="../img/ico_page_left2.png" alt=""></a>
-						<a href="#"><img src="../img/ico_page_left.png" alt=""></a>
-						<a href="#">1</a>
-						<a class="active" href="#">2</a>
-						<a href="#">3</a>
-						<a href="#">4</a>
-						<a href="#">5</a>
-						<a href="#">6</a>
-						<a href="#"><img src="../img/ico_page_right.png" alt=""></a>
-						<a href="#"><img src="../img/ico_page_right2.png" alt=""></a>
-					</div>
-				</div>
-				<!-- //pagination -->
 			</div>
 
 		</div>
@@ -590,14 +572,14 @@ function getSearchQuery() {
 			tabNum ++;
 			if( tabNum > 3 ) {
 				var delid = $( ".listChart li:nth-child(2)" ).attr('idx');
-				$('#detailTab'+delid+' .close').click();
+				$('#detailTab'+delid+' .closeBtn').click();
 			}
 			
 			var rowKeys = rowKey.split(",");
 			var displayName = rowKeys.length > 1 ? '<s:message code="common.msg.all"/>' : rowKey.replaceAll("\\\"", "\"");
 			var id = 'tab'+tabID;
-			$('.listChart').append($('<li style="display:inline-flex;text-align: center;z-index:1001;" idx="'+tabID+'" id="liTab'+tabID+'"><a data-toggle="tab" href="#tab'+tabID+'" id="detailTab'+tabID+'" >'+displayName+' - '+colKeyNm+'<span class="badge"></span><button class="close" type="button" title="<s:message code="stat.delete.tab"/>">×</button></a></li>'));
-			$('#basicStatList').after($('<div class="tab-pane fade" id="tab' + tabID + '"><div id="detail_cnt'+tabID+'" style="margin-top:0px; color: #f25643; font-weight: bold; font-size: 13px;"></div><div id="grid'+tabID+'" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; height: 380px"></div></div>'));
+            $('.listChart').append($('<li style="display:inline-flex;text-align: center;z-index:1001;" idx="'+tabID+'" id="liTab'+tabID+'"><a data-toggle="tab" href="#tab'+tabID+'" id="detailTab'+tabID+'" >'+displayName+' - '+colKeyNm+'<span class="badge"></span><button type="button" class="closeBtn" style="float:right"><img src="<c:url value="/img/ico_closed.png"/>" alt="닫기"></button></a></li>'));
+            $('#basicStatList').after($('<div class="tab-pane fade" id="tab' + tabID + '"><div id="detail_cnt'+tabID+'" style="margin-top:0px; color: #f25643; font-weight: bold; font-size: 13px;"></div><div id="grid'+tabID+'" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; height: 380px"></div></div>'));
 			
 			var gid = 'grid'+tabID;
 			var gridObj = new Xgrid(gid, contextRoot);
@@ -625,26 +607,19 @@ function getSearchQuery() {
             var xAxis = $('#optionHidden').val();
             var xAxis_str = $('#optionHiddenName').val();
             if (sDate > eDate) ui.alertMsg('<s:message code="consent.msg.timecheck"/>');
-            /* 검색 데이터 전송 객체 */
-
-
-            var searchData = {
-                xAxis: xAxis,
-                xAxis_str: xAxis_str,
-                yAxis: 'http.host',
-                startDate: sDate + "000000",
-                endDate: eDate + "235959",
-                offset: grid1.data.length,
-                limit: grid1.pageSize,
-                detailQuery: $('#elsQueryText').val(),
-            }
-
 
 			searchFlag = true;
 			grid1.on();
 			ui.get({
 				url : 'getStatList.xcn',
-                searchParam: JSON.stringify(searchData),
+                startDate: sDate+"000000",
+                endDate: eDate+"235959",
+                detailQuery:$('#elsQueryText').val(),
+                xAxis : xAxis,
+                yAxis : 'host_str',
+                offset : 1780,
+                limit : grid1.pageSize,
+                xAxis_str : xAxis_str,
 				success : function(data, total) {
 					grid1.colInit();
 					grid1.autoNumber();
@@ -720,26 +695,20 @@ function getSearchQuery() {
             var colId = '';
             if (colNum != '' & colNum != null) colId = grid1.getHeaderId()[grid1.Col].id;
 
-            var searchData = {
-                rowKey: rowKey,
-                colKey : colKey,
-                startDate: $('#startdate').val().replaceAll("-","")+"000000",
-                endDate: $('#enddate').val().replaceAll("-","")+"235959",
-                detailQuery: $('#elsQueryText').val(),
-                xAxis: xAxis,
-                xAxis_str: xAxis_str,
-                searched_xAxis: $('#searched_xAxis').val(),
-                colId: colId,
-                yAxis: 'http.host',
-                offset: currentgrid.data.length,
-                limit: currentgrid.pageSize,
-            }
-			
 			searchFlag = true;
 			currentgrid.on();
 			ui.get({
 				url : 'getStatDetailList.xcn',
-                searchParam: JSON.stringify(searchData),
+                rowKey : rowKey,
+                colKey : colKey,
+                startDate : $('#startdate').val().replaceAll("-","")+"000000",
+                endDate : $('#enddate').val().replaceAll("-","")+"235959",
+                detailQuery:$('#solrQueryText').val(),
+                xAxis : xAxis,
+                xAxis_str : xAxis_str,
+                yAxis : 'host_str',
+                offset : currentgrid.data.length,
+                limit : currentgrid.pageSize,
 				success : function(data, total) {
 					if ( lastRow == 'Y' || lastRow == undefined ) detailTotal = total;
 					currentgrid.appendData(data.emass);

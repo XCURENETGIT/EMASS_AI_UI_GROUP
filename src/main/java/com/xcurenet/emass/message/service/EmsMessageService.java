@@ -64,4 +64,6 @@ public interface EmsMessageService {
 	public String getIpDeptNm(final String ipDeptcd);
 
 	public List<Map<String, Object>> getRecvDomainInfo(String msgId, String inside, String recvsType);
+
+	public List<CodeVO> getGenerativeList();
 }

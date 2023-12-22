@@ -461,7 +461,7 @@ function getSelectedCodeData( codeType, data ) {
 			<div>
 				<button class="form_btn01" accesskey="Q" id="searchBtn" accesskey="s">조회</button>
 				<button class="form_btn02">조건 초기화</button>
-				<button type="button" class="form_btn05"><s:message code="query.make.inputer"/></button>
+				<button type="button" class="form_btn05 searchQueryBtn"><s:message code="query.make.inputer"/></button>
 			</div>
 		</div>
 
@@ -479,16 +479,28 @@ function getSelectedCodeData( codeType, data ) {
 						<h3>
 							TOP 통계 Chart
 							<span class="sel">
-                                    <select id="country" name="country">
-                                        <option value="australia">차트 표시 개수(7)</option>
-                                        <option value="canada">옵션2</option>
-                                        <option value="usa">옵션3</option>
-                                      </select>
-                                </span>
+						<div id="totalViewDiv" style="display:none;">
+							<div class="subtab">
+							<button type="button"
+							        title="<s:message code="stat.view.all"/>"><s:message code="stat.view.all"/></button>
+							</div>
+						</div>
+						<div class="panel-headings" id="chartCntDiv">
+								<button type="button" class="btn btn-xs btn-default dropdown-toggle"
+								        data-toggle="dropdown">
+									<s:message code="stat.display.count.chart"/> (<span class="dropdown-text">5</span>) <span
+										val="5" class="caret"></span>
+								</button>
+								<ul class="dropdown-menu dropdown-menu-right" role="menu">
+									<li><a href="#">5</a></li>
+									<li><a href="#">10</a></li>
+								</ul>
+						</div>
+						</span>
 						</h3>
 						<div class="panel panel-default" id="service.logging.count">
 							<div class="panel-body">
-								<div id="chartArea1" style="height: 160px;"></div>
+								<div id="chartArea1" style="height: 300px;"></div>
 							</div>
 						</div>
 					</div>
@@ -512,22 +524,6 @@ function getSelectedCodeData( codeType, data ) {
 						</div>
 					</div>
 				</div>
-				<!-- pagination -->
-				<div class="pageArea">
-					<div class="pagination">
-						<a href="#"><img src="../img/ico_page_left2.png" alt=""></a>
-						<a href="#"><img src="../img/ico_page_left.png" alt=""></a>
-						<a href="#">1</a>
-						<a class="active" href="#">2</a>
-						<a href="#">3</a>
-						<a href="#">4</a>
-						<a href="#">5</a>
-						<a href="#">6</a>
-						<a href="#"><img src="../img/ico_page_right.png" alt=""></a>
-						<a href="#"><img src="../img/ico_page_right2.png" alt=""></a>
-					</div>
-				</div>
-				<!-- //pagination -->
 			</div>
 
 		</div>
@@ -635,23 +631,18 @@ function getSelectedCodeData( codeType, data ) {
         var eDate = $('#enddate').val().replaceAll("-","");
         if(sDate > eDate) ui.alertMsg('<s:message code="consent.msg.timecheck"/>');
 
-        var searchData = {
-            xAxis: xAxis,
-            xAxis_str: xAxis_str,
-            yAxis: 'attach.ext',
-            startDate: sDate + "000000",
-            endDate: eDate + "235959",
-            offset: grid1.data.length,
-            limit: grid1.pageSize,
-            detailQuery: $('#elsQueryText').val(),
-            xAxis_str : xAxis_str
-        }
-
         searchFlag = true;
         grid1.on();
         ui.get({
             url : 'getStatList.xcn',
-            searchParam: JSON.stringify(searchData),
+	        startDate: sDate+"000000",
+            endDate: eDate+"235959",
+            detailQuery:$('#elsQueryText').val(),
+            xAxis : xAxis,
+            yAxis : 'attachtype',
+            offset : grid1.data.length,
+            limit : grid1.pageSize,
+            xAxis_str : xAxis_str,
 
             success : function(data, total) {
                 /* 통계영역 검색 조건 저장 */
@@ -737,28 +728,20 @@ function getSelectedCodeData( codeType, data ) {
         var colId = '';
         if (colNum != '' & colNum != null) colId = grid1.getHeaderId()[grid1.Col].id;
 
-        /* 검색 데이터 전송 객체 */
-        var searchData = {
-            rowKey: rowKey,
-            colKey: colKey,
-            startDate: $('#searched_startDate').val(),
-            endDate: $('#searched_endDate').val(),
-            detailQuery: $('#elsQueryText').val(),
-            xAxis: xAxis,
-            xAxis_str: xAxis_str,
-            searched_xAxis: $('#searched_xAxis').val(),
-            colId: colId,
-            yAxis: 'attach.ext',
-            offset: currentgrid.data.length,
-            limit: currentgrid.pageSize,
-            nameStat : "attachStat",
-        }
-
-        console.log(colId);
-
         ui.get({
             url : 'getStatDetailList.xcn',
-            searchParam: JSON.stringify(searchData),
+            rowKey : rowKey,
+            colKey : colKey,
+            startDate :  $('#searched_startDate').val(),
+            endDate : $('#searched_endDate').val(),
+            detailQuery:$('#elsQueryText').val(),
+            xAxis : xAxis,
+            xAxis_str : xAxis_str,
+            yAxis : 'attachtype',
+            nameStat : "attachStat",
+            //attachType : selAttach,
+            offset : currentgrid.data.length,
+            limit : currentgrid.pageSize,
             success : function(data, total) {
                 if ( lastRow == 'Y' || lastRow == undefined ) detailTotal = total;
                 currentgrid.appendData(data.emass);

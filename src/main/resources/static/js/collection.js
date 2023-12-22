@@ -77,6 +77,89 @@ function getNoteServiceList(){
         return filterVal;
     }
 
+    function rtnnGenerativeGroupPage(total, page){
+        $('#groupResultCnt').html(total.comma());
+        $('#groupPage').html(getPage2(total, page, groupPageBreak, 'eikon.getGenerativeList'));
+
+        $('#groupPage a').addClass('btn');
+        $('#groupPage a').addClass('btn-sm');
+        $('#groupPage a').addClass('btn-primary');
+        $('#groupPage a').attr('role','button');
+        $('#groupPage .direction').css('margin-right','4px');
+        $('#groupPage strong').css('padding-left','10px');
+        $('#groupPage strong').css('padding-right','10px');
+    }
+
+
+    function rtnGenerativeGroupList(data) {
+
+        var str = '';
+        var groupList = document.getElementById("group_list");
+
+        // Clear existing content
+        groupList.innerHTML = "";
+
+        // Create a new ul element
+        var ul = document.createElement("ul");
+        ul.className = "people";
+
+        // Loop through the data and create li elements
+        for (var i = 0; i < data.length; i++) {
+            var li = document.createElement("li");
+            li.className = "person";
+            li.setAttribute("data-chat", "person" + (i + 1));
+
+            // Create left div
+            var leftDiv = document.createElement("div");
+            leftDiv.className = "left";
+
+            var leftContent = "<p><span class='chatid'>" + data[i].userid + "</span>";
+            if (data[i].attached === 'Y') {
+                leftContent += "<span class='file'></span>";
+            }
+            leftContent += "</p>" +
+                "<p><span class='name'>" + data[i].user + "</span><span class='bar'></span><span class='preview'>" + data[i].body_snippet + "</span></p>";
+
+            leftDiv.innerHTML = leftContent;
+            li.appendChild(leftDiv);
+
+            // Create right div
+            var rightDiv = document.createElement("div");
+            rightDiv.className = "right";
+            var imageName =mainContext+"/img/ico_sns_"+ makeMessengerText(data[i].svc).toLowerCase()+".png";
+            var makescv = makeMessengerText(data[i].svc);
+            var rightContent = "<p><span class='logo'><img src="+imageName+">"+makescv+"</span></p>";
+
+
+            if (data[i].unread_cnt > 0) {
+                rightContent += "<span class='new'>" + data[i].unread_cnt + "</span>";
+            }
+
+            rightContent += "</p><span class='time'>" + data[i].ctime + "</span>";
+
+            rightDiv.innerHTML = rightContent;
+            li.appendChild(rightDiv);
+
+            // Append li to ul
+            ul.appendChild(li);
+
+        }
+        if( data.length == 0 ){
+            str += '<a href="#" class="list-group-item list-group-item-action active" style="cursor:default;height:50px;">';
+            str += '	<p class="list-group-item-text" style="line-height:30px;">';
+            str += '		<i class="fa fa-envelope fa-sm"></i> ';
+            str += nodataMsg; //common.msg.nodata
+            str += '</p></a>';
+            $('#group_list').html( str );
+        }
+
+        groupList.appendChild(ul);
+
+
+    }
+
+
+
     function createCondition( ){
         var allSelect = new Array();
         var condition = {};
