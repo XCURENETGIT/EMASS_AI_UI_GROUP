@@ -109,7 +109,7 @@
 			}
 		})
 
-		$('.listChart').on('click','.close',function(){
+		$('.listChart').on('click','.closeBtn',function(){
 			var id = 'tab'+ Number($(this).parents('li').attr('idx'));
 			var obj = tabInfo[id];
 			obj.close();
@@ -438,14 +438,13 @@
 		tabNum ++;
 		if( tabNum > 3 ) {
 			var delid = $( ".listChart li:nth-child(2)" ).attr('idx');
-			$('#detailTab'+delid+' .close').click();
+			$('#detailTab'+delid+' .closeBtn').click();
 		}
 
 		var displayName = (rowKey.indexOf(',') > -1) ? '<s:message code="common.msg.all"/>' : rowKey.replaceAll("\\\"", "\"");
 		if(rowName!='') displayName = rowName + '&lt;' + rowKey + '&gt;';
 		var id = 'tab'+tabID;
-
-		$('.listChart').append($('<li style="display:inline-flex; text-align: center" idx="'+tabID+'" id="liTab'+tabID+'"><a data-toggle="tab" href="#tab'+tabID+'" id="detailTab'+tabID+'" >' + displayName + ' - '+colKeyNm + '<span class="badge"></span><button class="close" type="button" title="<s:message code="stat.delete.tab"/>"> ×</button></a></li>'));
+        $('.listChart').append($('<li style="display:inline-flex;text-align: center;z-index:1001;" idx="'+tabID+'" id="liTab'+tabID+'"><a data-toggle="tab" href="#tab'+tabID+'" id="detailTab'+tabID+'" style="display: flex; align-items: center; justify-content: center;">'+displayName+' - '+colKeyNm+'<span class="badge"></span><button type="button" class="closeBtn" style="float:right; color:white;">x</button></a></li>'));
 		$('#basicStatList').after($('<div class="tab-pane fade" id="tab' + tabID + '"><div id="grid'+tabID+'" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; height: 400px"></div></div>'));
 
 		var gid = 'grid'+tabID;
@@ -564,6 +563,12 @@
 		currentgrid = getCurrentGrid();
 		if ( searchFlag ) return;
 
+        var interGroup = $('#interGroup').val();
+        if(interGroup == "") {
+            ui.alertMsg('<s:message code="interest.select.interest"/>');
+            return;
+        }
+
 		if ( lastRow == 'Y' || lastRow == undefined ) {
 			currentgrid.data.length = 0;
 			currentgrid.rtnNextPageFunc = getDetailData;
@@ -583,8 +588,7 @@
 			colKey : colKey,
 			startDate : $('#startdate').val().replaceAll("-","")+"000000",
 			endDate : $('#enddate').val().replaceAll("-","")+"235959",
-			interGroup : interGroup,
-			interGroupNm : $('#interGroup option:selected').text(),
+            interGroup : interGroup,
 			detailQuery: '',
 			xAxis : xAxis,
 			xAxis_str : xAxis_str,

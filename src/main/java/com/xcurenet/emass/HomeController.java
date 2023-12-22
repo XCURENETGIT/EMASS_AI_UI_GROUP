@@ -530,7 +530,7 @@ public class HomeController {
 	@Description("첨부파일명 통계 페이지")
 	public String attachNameStat(Locale locale, Model model) {
 
-		model.addAttribute("headerYn","N");
+		model.addAttribute("headerYn","Y");
 		return "/emass/statistics/attachNameStat";
 	}
 
@@ -541,7 +541,7 @@ public class HomeController {
 	@Description("첨부파일 타입 통계 페이지")
 	public String attachTypeStat(Locale locale, Model model) {
 
-		model.addAttribute("headerYn","N");
+		model.addAttribute("headerYn","Y");
 		return "/emass/statistics/attachTypeStat";
 	}
 
@@ -551,7 +551,7 @@ public class HomeController {
 	@RequestMapping(value = "/ems/hostStat.do", method = RequestMethod.GET)
 	@Description("URL 통계 페이지")
 	public String hostStat(Locale locale, Model model) {
-		model.addAttribute("headerYn","N");
+		model.addAttribute("headerYn","Y");
 		return "/emass/statistics/hostStat";
 	}
 
@@ -561,7 +561,7 @@ public class HomeController {
 	@RequestMapping(value = "/ems/keywordStat.do", method = RequestMethod.GET)
 	@Description("예약어 통계 페이지")
 	public String keywordStat(Locale locale, Model model) {
-		model.addAttribute("headerYn","N");
+		model.addAttribute("headerYn","Y");
 		return "/emass/statistics/keywordStat";
 	}
 
@@ -571,7 +571,7 @@ public class HomeController {
 	@RequestMapping(value = "/ems/senderStat.do", method = RequestMethod.GET)
 	@Description("발신자 통계 페이지")
 	public String senderStat(Locale locale, Model model) {
-		model.addAttribute("headerYn","N");
+		model.addAttribute("headerYn","Y");
 		return "/emass/statistics/senderStat";
 	}
 
@@ -581,7 +581,7 @@ public class HomeController {
 	@RequestMapping(value = "/ems/serviceStat.do", method = RequestMethod.GET)
 	@Description("서비스타입 통계 페이지")
 	public String serviceStat(Locale locale, Model model) {
-		model.addAttribute("headerYn","N");
+		model.addAttribute("headerYn","Y");
 		return "/emass/statistics/serviceStat";
 	}
 
@@ -592,7 +592,7 @@ public class HomeController {
 	@Description("관리자 열람 통계 페이지")
 	public String adminReadStat(Locale locale, Model model) {
 
-		model.addAttribute("headerYn","N");
+		model.addAttribute("headerYn","Y");
 		return "/emass/statistics/adminReadStat";
 	}
 
@@ -602,6 +602,7 @@ public class HomeController {
 	@RequestMapping(value = "/ems/manualStat.do", method = RequestMethod.GET)
 	@Description("사용자 정의 통계 페이지")
 	public String manualStat(Locale locale, Model model) {
+		model.addAttribute("headerYn","Y");
 		return "/emass/statistics/manualStat";
 	}
 
@@ -611,7 +612,8 @@ public class HomeController {
 	@RequestMapping(value = "/ems/trafficStat.do", method = RequestMethod.GET)
 	@Description("장비 트래픽 통계 페이지")
 	public String trafficStat(Locale locale, Model model) {
-		model.addAttribute("headerYn","N");
+		model.addAttribute("headerYn","Y");
+
 		return "/emass/statistics/trafficStat";
 	}
 
@@ -621,6 +623,7 @@ public class HomeController {
 	@RequestMapping(value = "/ems/ocrStat.do", method = RequestMethod.GET)
 	@Description("OCR 통계 페이지")
 	public String ocrStat(Locale locale, Model model) {
+		model.addAttribute("headerYn","Y");
 		return "/emass/statistics/ocrStat";
 	}
 
@@ -640,7 +643,7 @@ public class HomeController {
 	@RequestMapping(value = "/analysis/infoStat.do", method = RequestMethod.GET)
 	@Description("개인정보 관계 분석 페이지")
 	public String infoStat(Locale locale, Model model) {
-		model.addAttribute("headerYn","N");
+		model.addAttribute("headerYn","Y");
 		return "/emass/statistics/infoStat";
 	}
 

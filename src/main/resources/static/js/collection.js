@@ -113,12 +113,14 @@ function getNoteServiceList(){
             var leftDiv = document.createElement("div");
             leftDiv.className = "left";
 
+            var bodySnippet = data[i].body_snippet.length > 40 ? data[i].body_snippet.substring(0, 40) + "..." : data[i].body_snippet;
+
             var leftContent = "<p><span class='chatid'>" + data[i].userid + "</span>";
             if (data[i].attached === 'Y') {
                 leftContent += "<span class='file'></span>";
             }
             leftContent += "</p>" +
-                "<p><span class='name'>" + data[i].user + "</span><span class='bar'></span><span class='preview'>" + data[i].body_snippet + "</span></p>";
+                "<p><span class='name'>" + data[i].user + "</span><span class='bar'></span><span class='preview'>" + bodySnippet + "</span></p>";
 
             leftDiv.innerHTML = leftContent;
             li.appendChild(leftDiv);
