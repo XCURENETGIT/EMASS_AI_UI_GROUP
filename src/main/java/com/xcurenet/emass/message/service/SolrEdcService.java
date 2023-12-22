@@ -36,5 +36,4 @@ public interface SolrEdcService {
 
 	public boolean updateSolrFeedbackData(List<parseJsonFile> feedbackList);
 
-
 }

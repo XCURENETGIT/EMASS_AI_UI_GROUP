@@ -52,8 +52,14 @@
                 }
             });
 
-            document.getElementById("startDt").valueAsDate = new Date();
+            var today = new Date();
+            today.setDate(today.getDate() - 2);
+
+            document.getElementById("startDt").valueAsDate = today;
             document.getElementById("endDt").valueAsDate = new Date();
+
+            document.getElementById("startSubDt").valueAsDate = today;
+            document.getElementById("endSubDt").valueAsDate = new Date();
 
             $('#searchBtn').click(function () {
                 if (messengerListCnt == 0) {
@@ -185,18 +191,18 @@
                 moveTargetHeight(id, false);
             });
 
-            $(document).on('click', '#group_list a', function () {
-                if ((isConsent() && $('#consentNo').val() == '') || $(this).attr('xrootmtr') == '') {
+            $(document).on('click', '.person', function () {
+
+                if ((isConsent() && $('#consentNo').val() == '') || $(this).attr('userid') == '') {
                     return;
                 }
-
                 //if($(this).hasClass('active')) return;
-                $('#group_list a').each(function () {
+                $('.person').each(function () {
                     $(this).removeClass('active');
                 });
 
                 $(this).addClass('active');
-                $('#xrootmtr').text($(this).attr('xrootmtr'));
+                $('#userid').text($(this).attr('userid'));
 
                 $('#srcip').text($(this).attr('srcip'));
                 $('#msgid').text($(this).attr('msgid'));
@@ -207,10 +213,11 @@
                 $('#selectUserInfo').attr('data-usrid', '');
                 $('#selectUserInfo').html('');
                 $('#searchMsgStrInput').val('');
-                $('#startSubDt').val($('#startDt').val());
-                $('#endSubDt').val($('#endDt').val());
+                $('#startSubDt').val($('#startDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, ''));
+                $('#endSubDt').val($('#endDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, ''));
                 focusMsgId = '';
-                eikon.getMessengerDetailList($(this).attr('xrootmtr'), $(this).attr('msgid'), $(this).attr('srcip'), $(this).attr('usrid'));
+
+                getGenerativeDetailList($(this).attr('userid'), $(this).attr('srcip'), $(this).attr('usr_id'), $(this).attr('msgid'));
             });
 
             $('input[name="searchType"]:radio').change(function () {
@@ -218,11 +225,11 @@
             });
 
             $('#groupFileCnt').click(function () {
-                fileInfoViewer($('#xrootmtr').text(), $('#srcip').text(), $('#usr_id').text());
+                fileInfoViewer($('#userid').text(), $('#srcip').text(), $('#usr_id').text());
             });
 
             $('#groupParticipant').click(function () {
-                participantInfoViewer($('#xrootmtr').text(), $('#usr_id').text());
+                participantInfoViewer($('#userid').text(), $('#usr_id').text());
             });
 
             $(document).on('click', '.file_link', function () {
@@ -808,14 +815,11 @@
 
 				<!-- pagination -->
 				<div class="pl20 pr20">
-					<div class="pageArea bornone">
-						<div class="pagination">
-							<div style="height:30px;padding-left:32%; margin-top: 15px;" id="groupPage"></div>
-						</div>
+					<div class="pageArea bornone" id="groupPage">
 						<div class="total fb600">
-							<s:message code="common.msg.finish_query"/> : <span id="groupResultCnt" class="red fb600">0</span>
 						</div>
 					</div>
+					<s:message code="common.msg.finish_query"/> : <span id="groupResultCnt" class="red fb600">0</span>
 				</div>
 				<!-- //pagination -->
 			</div>
@@ -842,29 +846,11 @@
 						</div>
 
 						<div class="chatDate">
-							<div class="searchSub" style="display: flex">
+							<div class="searchSub" >
 
-								<div class="form-group form-inline">
-									<div class="input-group" style="padding-left:5px;">
-										<div class="input-group date" id="startsubdatepicker">
-											<input type="text" id="startSubDt" class="input-sm form-control border-radius-none"
-											       style="width: 130px;"/>
-											<span class="input-group-addon startDateBtn border-radius-none"> <span
-													class="glyphicon glyphicon-calendar"></span>
-									</span>
-										</div>
-									</div>
-									~
-									<div class="input-group">
-										<div class="input-group date" id="endsubdatepicker">
-											<input type="text" id="endSubDt" class="input-sm form-control border-radius-none" style="width: 130px;"/>
-											<span class="input-group-addon endDateBtn border-radius-none"><span
-													class="glyphicon glyphicon-calendar"></span></span>
-										</div>
-									</div>
+								<div class="searchSub">
+									<input class="w35" type="date" id="startSubDt"  value="2023-11-20"> ~ <input class="w35" type="date" id="endSubDt"  value="2023-11-20">
 								</div>
-
-								<button class="form_btn01" type="button" accesskey="M" id="searchMsgQueryBtn">조회</button>
 							</div>
 
 							<div class="searchSub txt_right">
@@ -918,14 +904,26 @@
 							<div class="messenger_next" title="<s:message code='eikon.msg.show.next'/>">+</div>
 						</div>
 					</div>
-					<div class="row" style="height: 30px;padding:0 3px 0 5px;">
-						<div style="line-height:25px;padding-top:5px;color: #f25643; font-weight: bold; font-size: 13px;">
-							<s:message code="eikon.msg.total.cnt"/> : <span id="groupSubResultCnt">0</span>
+				<%--	<div class="chat active-chat" data-chat="person2">
+						<div class="conversation-start">
+							<span>Today, 5:38 PM</span>
 						</div>
+						<div class="bubble slide_left">
+							<div class="you">출근</div>
+							<div class="bubbleDate">
+								<span>U066A8MA3NJ</span>
+								<span>2023.11.19  08:00:00</span>
+							</div>
+						</div>
+						<div class="bubble txt_right slide_right">
+							<div class="me">출근</div>
+							<div class="bubbleDate">
+								<span>U066A8MA3NJ</span>
+								<span>2023.11.19  08:00:00</span>
+							</div>
+						</div>--%>
 					</div>
 				</div>
-			</div>
-
 			<!-- 채팅 끝! -->
 			<!-- 첨부파일 -->
 			<div class="rightFile p20">

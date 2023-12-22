@@ -401,7 +401,7 @@
 			});
 
 			$(document).on('click', '#group_list a', function(){
-				if( (isConsent() && $('#consentNo').val() == '') || $(this).attr('xrootmtr') == ''){
+				if( (isConsent() && $('#consentNo').val() == '') || $(this).attr('userid') == ''){
 					return;
 				}
 
