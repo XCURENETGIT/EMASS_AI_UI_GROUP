@@ -241,9 +241,6 @@
 
 		/* grid 관련 */
 
-
-
-
 		var contentBody = {
 			urlIpBlockPreview:'<s:message code="urlIpBlock.preview"/>',
 			bodyviewSn:'<s:message code="bodyview.sn"/>',
@@ -347,24 +344,23 @@
 			var url    = '<c:url value="/ems/participantInfoPop.do?xrootmtr='+xRootMtr+'&srcip='+srcip+'&usr_id='+usr_id+'&startDt='+startDt+'&endDt='+endDt+'"/>';
 			var pop = fnOpenWindow(url, 'participant', 1015, 450, 'resize');
 		}
-
-		/* 내보내기 tablinks */
-		$(document).on('click', '.tablinks', function(){
-			var children = $(this).parent().children('button') // 배열
-			var _thisIdx = $(this).index(); // 선택된 idx
-
-			$(children).each(function(index) {
-				if(_thisIdx == index){
-					$(this).attr('class','active tablinks w50');
-					console.log($(this).find('input').prop("checked", true))
-					$(this).find('input:radio').prop("checked", false);
-
-				}else{
-					$(this).attr('class','tablinks w50');
-					$(this).find('input:radio').prop("checked", false);
-				}
-			});
-		});
+		//
+		// /* 내보내기 tablinks */
+		// $(document).on('click', '.tablinks', function(){
+		// 	var children = $(this).parent().children('button') // 배열
+		// 	var _thisIdx = $(this).index(); // 선택된 idx
+		//
+		// 	$(children).each(function(index) {
+		// 		if(_thisIdx == index){
+		// 			$(this).attr('class','active tablinks w50');
+		// 			$(this).find('input:radio').prop("checked", false);
+		//
+		// 		}else{
+		// 			$(this).attr('class','tablinks w50');
+		// 			$(this).find('input:radio').prop("checked", false);
+		// 		}
+		// 	});
+		// });
 
 
 		$(document).on('click', '.all_down_link', function(){
@@ -699,6 +695,42 @@
 						</div>
 					</div>
 					<ul id="filelist"></ul>
+				</div>
+				<div class="row" id="patternDiv">
+					<div class="col-lg-12">
+						<div class="panel panel-default" id="">
+							<div class="panel-heading body_toggle patternFold">
+								<i class="fa fa-superpowers fa-fw"></i> <s:message code="bodyview.info.pattern"/><span id="patternCntArea"></span>
+								<div class="pull-right">
+									<span></span>
+								</div>
+							</div>
+							<div class="panel-body css-body" style="display:none;">
+								<div>
+									<table class="table table-bordered" id="patternTable">
+										<tr>
+											<th colspan="2"><s:message code="common.msg.separator"/></th>
+											<th colspan="2"><s:message code="bodyview.info.detect"/></th>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row" id="detailPatternDiv" style="display:none;">
+					<div class="col-lg-12">
+						<div class="panel panel-default" id="">
+							<div class="panel-heading">
+								<i class="fa fa-superpowers fa-fw"></i> <s:message code="common.msg.detail.pattern"/>
+								<div class="pull-right" style="position:relative;top:-2px;">
+									<button class="msg_button body_selectBtn" id="hidePatternBtn" onclick="javascript:$('#detailPatternDiv').hide();"><s:message code="bodyview.hide"/></button>
+								</div>
+							</div>
+							<div class="panel-body" id="detailArea" style="overflow: auto;padding-top:10px;">
+							</div>
+						</div>
+					</div>
 				</div>
 				<div class="messageCon" id="bodyDiv">
 					<div class="top grayBg03">
