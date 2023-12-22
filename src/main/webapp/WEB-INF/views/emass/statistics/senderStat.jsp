@@ -406,7 +406,7 @@
         if(rowName!='') displayName = rowName + '&lt;' + rowKey + '&gt;';
         var id = 'tab'+tabID;
 
-        $('.listChart').append($('<li style="display:inline-flex; text-align: center" idx="'+tabID+'" id="liTab'+tabID+'"><a data-toggle="tab" href="#tab'+tabID+'" id="detailTab'+tabID+'" >' + displayName + ' - '+colKeyNm + '<span class="badge mal4"></span><button type="button" class="subtab_close">	&#10006;</button></a></li>'));
+        $('.listChart').append($('<li style="display:inline-flex; text-align: center" idx="'+tabID+'" id="liTab'+tabID+'"><a data-toggle="tab" href="#tab'+tabID+'" id="detailTab'+tabID+'" >' + displayName + ' - '+colKeyNm + '<span class="badge mal4"></span><button type="button" class="subtab_close closeBtn">	&#10006;</button></a></li>'));
         $('#basicStatList').after($('<div class="tab-pane fade" id="tab' + tabID + '"><div id="grid'+tabID+'" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; height: 400px"></div></div>'));
 
         var gid = 'grid'+tabID;
