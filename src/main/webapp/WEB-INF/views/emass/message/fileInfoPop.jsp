@@ -5,12 +5,11 @@
 <%@page import="net.sf.json.JSONObject"%>
 <%@page import="com.xcurenet.common.util.Common"%>
 <%@page import="com.xcurenet.emass.message.service.EmsMessageService"%>
-<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
-<%@page import="org.springframework.web.context.WebApplicationContext"%>
-<%@page import="com.xcurenet.emass.message.service.EmsAttachTextVO"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
-
+<%@ include file="/WEB-INF/fragments/messageCss.jsp"%>
+<%@ include file="/WEB-INF/fragments/messageJs.jsp"%>
+<%@ include file="/WEB-INF/fragments/messageScript.jsp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 	EmsMessageService emassService = SpringContextUtil.getBean(EmsMessageService.class);
@@ -32,8 +31,7 @@
 <html lang="ko">
 <head>
 <title>EMASS LTH - <s:message code="consent.attach"/> <s:message code="common.msg.information"/></title>
-<%@ include file="../../base.jsp"%>
-<link rel="stylesheet" href="<c:url value="/css/message.css"/>"/>
+
 <style type="text/css">
 html,body{height: 100%; padding: 0px; margin: 0px;overflow: auto;min-width: 650px;}
 .attachExt{

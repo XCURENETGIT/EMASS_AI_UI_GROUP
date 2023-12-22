@@ -696,8 +696,9 @@
 					</div>
 					<ul id="filelist"></ul>
 				</div>
+				<%-- 패턴 --%>
 				<div class="messageCon" id="patternDiv">
-					<div class="panel panel-default" id="">
+					<div class="top grayBg03" id="">
 						<div class="panel-heading body_toggle patternFold">
 							<i class="fa fa-superpowers fa-fw"></i> <s:message code="bodyview.info.pattern"/><span id="patternCntArea"></span>
 							<div class="pull-right">
