@@ -134,8 +134,10 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 .chartArea {display: grid; grid-template-columns: 1fr 1fr; margin-bottom:12px;column-gap: 12px;}
 .chartArea02 {display: grid; grid-template-columns: 600px 1fr; margin-bottom:24px; column-gap: 12px;}
 .chartArea02 > div {position: relative;}
-.chartAreafull {display: grid; grid-template-columns: 1fr; margin-bottom:24px;column-gap: 12px;}
 .chartArea03 {display: grid; grid-template-columns: 1fr 1fr 1fr; margin-bottom:12px;column-gap: 8px;}
+.chartArea04 {display: grid; grid-template-columns: auto 25% 25% 184px; column-gap: 20px;}
+.chartArea04 > div {position: relative; }
+.chartAreafull {display: grid; grid-template-columns: 1fr; margin-bottom:24px;column-gap: 12px;}
 
 .sublist {display: grid; grid-template-columns: 1fr 1fr 1fr; column-gap: 12px; }
 .sublist div {border:1px solid #ddd; background-color: #fff;padding:16px;margin-bottom:12px;}
@@ -143,7 +145,8 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 .sublist p {font-size:30px; font-weight:700; color:#1A73F9;margin-top:4px; text-align: right;}
 .sublist p span {font-size:14px; color:#555;margin-left:4px;}
 .chartBox {height:180px; padding:20px; background-color: #fff; border:1px solid #ddd; }
-
+.lineTit {border-bottom:1px solid #ddd; margin-bottom:16px; padding-bottom:12px; }
+.lineTit h3 { vertical-align: top; display: inline-block;}
 .inner_personaldata {background-color: #fff; border:1px solid #ddd;}
 .inner_personaldata > div {display: block;}
 .inner_scroll{ padding:20px; background-color: #fff; border:1px solid #ddd; display: grid;grid-template-rows: auto auto auto;grid-auto-flow: column;}
@@ -380,6 +383,7 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .mal8{margin-left:8px;}
 .mat8{margin-top:8px;}
 .mat4{margin-top:4px;}
+.mat12{margin-top:12px;}
 .mat16{margin-top:16px;}
 .mal4 {margin-left:4px;}
 .mal8 {margin-left:8px;}
@@ -440,12 +444,14 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 
 /* color */
 .graybbb {color:#bbb !important;}
+.black02 {color:#59576D !important;}
 .black {color:#111 !important;}
 .blue{color:#1A73F9 !important;}
 .red{color:#FC5656 !important;}
 .blue02{color:#1C64D3    !important}
 .blue03{color:#88B8FF    !important}
 .purple{color:#675CED !important;}
+
 .red_dot { display: inline-block; vertical-align: top; background-color:#FC5656; width:4px; height:4px; border-radius:100%; -webkit-border-radius:100%; -moz-border-radius:100%; -ms-border-radius:100%; -o-border-radius:100%; }
 
 
