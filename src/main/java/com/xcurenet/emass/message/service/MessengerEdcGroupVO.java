@@ -64,12 +64,13 @@ public class MessengerEdcGroupVO {
 			Map<String,Aggregations> groupAggsMap = new HashMap<>();  // 추출할 그룹 aggs
 
 
+			long total = 0;
 			//메인 Aggs의 sub Aggs 추출
 			for(Map.Entry<String, Aggregation> map : mainAggsMap.entrySet()) {
 				Aggregation agg =  map.getValue();
 				Terms terms = mainAggregations.get(agg.getName());
-				this.numFound  = terms.getSumOfOtherDocCounts();
 				for(Terms.Bucket bucket : terms.getBuckets()){
+					total = total + bucket.getDocCount();
 					groupAggsMap.put(bucket.getKeyAsString(),bucket.getAggregations());
 				}
 			}
@@ -99,6 +100,8 @@ public class MessengerEdcGroupVO {
 					}
 				}
 			}
+
+			this.numFound = total;
 
 		}
 
