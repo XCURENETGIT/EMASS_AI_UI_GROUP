@@ -121,8 +121,8 @@
 				<span id="ntpStatus" class="fb600">NTP - <%=Common.nvl(ntpInfo.get("ntpServer")) %></span>
 			</p>
 			<p>
-				<span class="graybbb">접속시간:23.10.09</span>
-				<span class="graybbb">접속IP:23.10.09</span>
+				<span class="graybbb"><s:message code="login.login.date"/> : ${sessionScope.sessionLastLoginDt}</span>
+				<span class="graybbb"><s:message code="login.login.ip"/> : <%=Common.nvl(request.getRemoteAddr(), "-")%></span>
 			</p>
 
 			<p>
