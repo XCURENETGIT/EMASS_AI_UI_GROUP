@@ -226,12 +226,17 @@
 				<input type="date" id="enddate" style="width: 110px;"/>
 			</div>
 
-			<div class="optiotab">
-				<button class="optionBtn active" id="svc1" value="svc1">서비스타입</button>
-				<button class="optionBtn" id="direction_svc" value="direction_svc"><s:message code="condition.receive_send"/></button>
-				<button class="optionBtn" id="ctime_hh" value="ctime_hh"><s:message code="common.msg.time"/></button>
-				<button class="optionBtn" id="ctime_yyyymmdd" value="ctime_yyyymmdd" class="active"><s:message code="common.msg.day"/></button>
-				<button class="optionBtn" id="ctime_yyyymm" value="ctime_yyyymm"><s:message code="common.msg.month"/></button>
+			<div>
+				<select id="piCount" name="piCount">
+					<option value="">기준 유출 건수</option>
+					<option value="1" selected="">1건 이상</option>
+					<option value="2">2건 이상</option>
+					<option value="5">5건 이상</option>
+					<option value="10">10건 이상</option>
+					<option value="20">20건 이상</option>
+					<option value="50">50건 이상</option>
+					<option value="100">100건 이상</option>
+				</select>
 			</div>
 			<div>
 				<button class="form_btn01" id="searchBtn"><s:message code="common.msg.search"/></button>
@@ -259,7 +264,7 @@
 				<div class="tab-content">
 					<div id="privateChart" class="tab-pane fade in active">
 						<div class="slickGrid gridArea" style="min-height: 200px;">
-							<div id="mynetwork" style="border:1px solid lightgray;height: 516px;"></div>
+							<div id="mynetwork" style="border:1px solid lightgray;min-height: 516px;height: 516px;"></div>
 							<div id="loadingBar" style="display: none;">
 								<div class="outerBorder">
 									<div id="text">0%</div>
@@ -385,7 +390,6 @@
 			url: 'getInfoStatList.xcn',
 			startDate: sDate + "000000",
 			endDate: eDate + "235959",
-			detailQuery: $('#solrQueryText').val(),
 			offset: grid1.data.length,
 			limit: grid1.pageSize,
 			piCount: piCount,
@@ -393,10 +397,7 @@
 			menuId: menuId,
 			success: function (data, total) {
 				grid1.setData(data);
-
-				$('#statlist_cnt').html('<s:message code="common.msg.finish_query"/>:' + grid1.data.length);
 				if (grid1.loadingPage == 0) grid1.Select(-1, -1);
-				$('.piCountNum').attr('piCountNum', piCount);
 				searchFlag = false;
 			},
 			error: function (status, message) {
@@ -459,33 +460,26 @@
 		return date.substring(0, 4) + "-" + date.substring(4, 6) + "-" + date.substring(6, 8);
 	}
 
-	function makeNetwork(value, type, pi_total) {
+	function makeNetwork(value,type,pi_total){
 		var user_str = value;
 		var type = type;
 		var pi_total = pi_total;
-		var piCount = 1;
+		var piCount = $('#piCount').val();
 		ui.postJson({
-			url: 'getInfoNetwork.xcn',
-			user_str: user_str,
-			type: type,
-			startDate: $('#startdate').val().replaceAll("-", "") + "000000",
-			endDate: $('#enddate').val().replaceAll("-", "") + "235959",
-			piCount: piCount,
-			offset: 0,
-			limit: -1,
-			success: function (data, total) {
+			url : 'getInfoNetwork.xcn',
+			user_str : user_str,
+			type : type,
+			startDate : $('#startdate').val().replaceAll("-","")+"000000",
+			endDate : $('#enddate').val().replaceAll("-","")+"235959",
+			piCount : piCount,
+			offset : 0,
+			limit : -1,
+			success : function(data, total) {
 				grid2.setData(data);
-				return;
-				var nodes = [];
+				var nodes= [];
 				var edges = [];
-				if (pi_total == 0) {
-					nodes.push({
-						id: 'noneData',
-						font: {multi: 'html'},
-						title: '<s:message code="analysis.infostat.notleak"/>',
-						label: '<s:message code="analysis.infostat.notleak"/>',
-						group: 'noneData'
-					});
+				if(pi_total==0){
+					nodes.push({ id: 'noneData', font: { multi: 'html'}, title: '<s:message code="analysis.infostat.notleak"/>', label: '<s:message code="analysis.infostat.notleak"/>',group:'noneData'});
 				}
 				var nodeLv1 = getNodeByField('user_str', data);
 				var nodeLv2 = getNodeByPI(data);
@@ -494,77 +488,82 @@
 				var nodeLv4 = getNodeByField('ctime', data);
 				var nodeLv5 = getNodeByField('msgid', data);
 				var nodeLv6 = getNodeByFieldNoneUnique('subject', data);
-				for (var i = 0; i < nodeLv1.length; i++) {
-					nodes.push({id: nodeLv1[i], font: {multi: 'html'}, title: nodeLv1[i], label: nodeLv1[i], group: 'user'});
+				var nodeUnion = nodeLv1.concat(nodeLv2).concat(nodeLv3).concat(nodeLv4).concat(nodeLv5);
+				var height = 35;
+				var width = 140;
+				var idx=0;
+				for(var i=0 ; i < nodeLv1.length ; i++) {
+					nodes.push({ id: nodeLv1[i], font: { multi: 'html'}, title: nodeLv1[i], label: nodeLv1[i],group:'user'});
 				}
-				for (var i = 0; i < nodeLv2.length; i++) {
-					var pi = getPatternInfo(nodeLv2[i]);
-					nodes.push({id: nodeLv2[i], font: {multi: 'html'}, title: pi.pi_Nm, label: pi.pi_Nm, group: pi.pattern_group});
+				for(var i=0 ; i < nodeLv2.length ; i++) {
+					var pi= getPatternInfo(nodeLv2[i]);
+					nodes.push({ id: nodeLv2[i], font: { multi: 'html'}, title: pi.pi_Nm, label: pi.pi_Nm,group:pi.pattern_group});
 				}
-				for (var i = 0; i < nodeLv3.length; i++) {
-					nodes.push({id: nodeLv3[i], font: {multi: 'html'}, title: getDateFormat(nodeLv3[i]), label: getDateFormat(nodeLv3[i]), group: 'date'});
+				for(var i=0 ; i < nodeLv3.length ; i++) {
+					nodes.push({ id: nodeLv3[i], font: { multi: 'html'}, title: getDateFormat(nodeLv3[i]), label: getDateFormat(nodeLv3[i]),group:'date'});
 				}
-				for (var i = 0; i < nodeLv4.length; i++) {
-					nodes.push({id: nodeLv4[i], font: {multi: 'html'}, title: getTimeFormat(nodeLv4[i]), label: getTimeFormat(nodeLv4[i]), group: 'time'});
+				for(var i=0 ; i < nodeLv4.length ; i++) {
+					nodes.push({ id: nodeLv4[i], font: { multi: 'html'}, title: getTimeFormat(nodeLv4[i]), label: getTimeFormat(nodeLv4[i]),group:'time'});
 				}
-				for (var i = 0; i < nodeLv5.length; i++) {
-					nodes.push({id: nodeLv5[i], font: {multi: 'html'}, title: nodeLv6[i], group: 'msg'});
+				for(var i=0 ; i < nodeLv5.length ; i++) {
+					nodes.push({ id: nodeLv5[i], font: { multi: 'html'}, title: nodeLv6[i],group:'msg'});
 				}
 
 
-				for (var i = 0; i < nodeLv1.length; i++) {
-					for (var j = 0; j < nodeLv2.length; j++) {
+				for(var i=0 ; i < nodeLv1.length ; i++) {
+					for(var j=0 ; j < nodeLv2.length ; j++) {
 						var sum = 0;
-						for (var x = 0; x < data.length; x++) {
-							if (nodeLv1[i] == data[x].user_str && data[x][nodeLv2[j]] > 0) sum += data[x][nodeLv2[j]];
+						for(var x=0 ; x < data.length ; x++) {
+							if(nodeLv1[i] == data[x].user_str && data[x][nodeLv2[j]] > 0) sum += data[x][nodeLv2[j]];
 						}
-						if (sum > 0) edges.push({from: nodeLv1[i], to: nodeLv2[j], value: (sum) / (pi_total * 4), arrows: 'to', color: {color: '#3FB168'}, font: {multi: true}, label: sum});
+						if(sum > 0) edges.push({from: nodeLv1[i], to: nodeLv2[j],value:(sum)/(pi_total*4) ,arrows:'to',color:{color:'#3FB168'}, font: { multi: true }, label: sum});
+					}
+				}
+				console.log(edges)
+
+				for(var i=0 ; i < nodeLv2.length ; i++) {
+					for(var j=0 ; j < nodeLv3.length ; j++) {
+						var sum = 0;
+						for(var x=0 ; x < data.length ; x++) {
+							if(data[x][nodeLv2[i]] > 0 && data[x].ctime_yyyymmdd == nodeLv3[j]) sum += data[x][nodeLv2[i]];
+						}
+						if(sum > 0) edges.push({from: nodeLv2[i], to: nodeLv3[j],arrows:'to',value:(sum)/(pi_total*4), color:{color:'#2A6727'},font: { multi: true}, label: sum});
 					}
 				}
 
-				for (var i = 0; i < nodeLv2.length; i++) {
-					for (var j = 0; j < nodeLv3.length; j++) {
+				for(var i=0 ; i < nodeLv3.length ; i++) {
+					for(var j=0 ; j < nodeLv4.length ; j++) {
 						var sum = 0;
-						for (var x = 0; x < data.length; x++) {
-							if (data[x][nodeLv2[i]] > 0 && data[x].ctime_yyyymmdd == nodeLv3[j]) sum += data[x][nodeLv2[i]];
-						}
-						if (sum > 0) edges.push({from: nodeLv2[i], to: nodeLv3[j], arrows: 'to', value: (sum) / (pi_total * 4), color: {color: '#2A6727'}, font: {multi: true}, label: sum});
-					}
-				}
-
-				for (var i = 0; i < nodeLv3.length; i++) {
-					for (var j = 0; j < nodeLv4.length; j++) {
-						var sum = 0;
-						for (var x = 0; x < data.length; x++) {
-							if (data[x].ctime_yyyymmdd == nodeLv3[i] && data[x].ctime == nodeLv4[j]) {
-								for (var z = 0; z < piArr.length; z++) {
+						for(var x=0 ; x < data.length ; x++) {
+							if(data[x].ctime_yyyymmdd == nodeLv3[i] && data[x].ctime == nodeLv4[j]) {
+								for(var z=0 ; z < piArr.length ; z++) {
 									sum += data[x][piArr[z]];
 								}
 							}
 						}
-						if (sum > 0) edges.push({from: nodeLv3[i], to: nodeLv4[j], arrows: 'to', value: (sum) / (pi_total * 4), font: {multi: true}, color: {color: '#808000'}, label: sum});
+						if(sum > 0) edges.push({from: nodeLv3[i], to: nodeLv4[j],arrows:'to',value:(sum)/(pi_total*4), font: { multi: true },color:{color:'#808000'}, label: sum});
 					}
 				}
 
-				for (var i = 0; i < nodeLv4.length; i++) {
-					for (var j = 0; j < nodeLv5.length; j++) {
+				for(var i=0 ; i < nodeLv4.length ; i++) {
+					for(var j=0 ; j < nodeLv5.length ; j++) {
 						var sum = 0;
-						for (var x = 0; x < data.length; x++) {
-							if (data[x].ctime == nodeLv4[i] && data[x].msgid == nodeLv5[j]) {
-								for (var z = 0; z < piArr.length; z++) {
+						for(var x=0 ; x < data.length ; x++) {
+							if(data[x].ctime == nodeLv4[i] && data[x].msgid == nodeLv5[j]) {
+								for(var z=0 ; z < piArr.length ; z++) {
 									sum += data[x][piArr[z]];
 								}
 							}
 						}
-						if (sum > 0) edges.push({from: nodeLv4[i], to: nodeLv5[j], arrows: 'to', value: (sum) / (pi_total * 4), font: {multi: true}, color: {color: '#FFC000'}, label: sum});
+						if(sum > 0) edges.push({from: nodeLv4[i], to: nodeLv5[j],arrows:'to',value:(sum)/(pi_total*4), font: { multi: true },color:{color:'#FFC000'}, label: sum});
 					}
 				}
+
 				var container = document.getElementById('mynetwork');
 				var data_ = {
 					nodes: nodes,
 					edges: edges
 				};
-
 				var options = {
 					groups: {
 						noneData: {
@@ -630,6 +629,78 @@
 								color: '#414141'
 							},
 						},
+						pattern_MN: {
+							shape: 'icon',
+							icon: {
+								face: 'FontAwesome',
+								code: '\uf2c2',
+								size: 50,
+								color: '#414141'
+							},
+						},
+						pattern_AN: {
+							shape: 'icon',
+							icon: {
+								face: 'FontAwesome',
+								code: '\uf2c2',
+								size: 50,
+								color: '#414141'
+							},
+						},
+						pattern_CRN: {
+							shape: 'icon',
+							icon: {
+								face: 'FontAwesome',
+								code: '\uf2c2',
+								size: 50,
+								color: '#414141'
+							},
+						},
+						pattern_SSN: {
+							shape: 'icon',
+							icon: {
+								face: 'FontAwesome',
+								code: '\uf2c2',
+								size: 50,
+								color: '#414141'
+							},
+						},
+						pattern_IMEI: {
+							shape: 'icon',
+							icon: {
+								face: 'FontAwesome',
+								code: '\uf2c2',
+								size: 50,
+								color: '#414141'
+							},
+						},
+						pattern_BRN: {
+							shape: 'icon',
+							icon: {
+								face: 'FontAwesome',
+								code: '\uf2c2',
+								size: 50,
+								color: '#414141'
+							},
+						},
+						pattern_CPN: {
+							shape: 'icon',
+							icon: {
+								face: 'FontAwesome',
+								code: '\uf2c2',
+								size: 50,
+								color: '#414141'
+							},
+						},
+						pattern_MCN: {
+							shape: 'icon',
+							icon: {
+								face: 'FontAwesome',
+								code: '\uf2c2',
+								size: 50,
+								color: '#414141'
+							},
+						},
 						msg: {
 							shape: 'icon',
 							icon: {
@@ -643,39 +714,32 @@
 								nodeDistance: 10,
 							}
 						}
+
 					},
 					edges: {
-						color: '#FF0000',
+						color:'#FF0000',
 						font: {
-							size: 13,
-							bold: {
-								color: '#808080'
-							}
+							size: 13
 						},
 						arrowStrikethrough: true,
 					},
 					nodes: {
 						shape: 'box',
-						font: {
-							bold: {
-								color: '#808080'
-							}
-						}
 					},
 					manipulation: false,
 					layout: {
 						hierarchical: {
 							enabled: true,
-							levelSeparation: 300,
+							levelSeparation:300,
 							direction: 'LR',
 							sortMethod: 'directed'
 						}
 					},
 					physics: {
 						stabilization: {
-							enabled: true,
-							iterations: 1000,
-							updateInterval: 10
+							enabled:true,
+							iterations:1000,
+							updateInterval:10
 						},
 						hierarchicalRepulsion: {
 							nodeDistance: 100
@@ -689,48 +753,46 @@
 					}
 				};
 				var network = new vis.Network(container, data_, options);
-				network.on("getConnectedNodes", function (params) {
+				network.on("getConnectedNodes", function(params) {
 				});
-				network.on("click", function (params) {
+				network.on("click",function(params){
+					console.log(params.nodes[0]);
 				});
+				//현재 선택된 노드의 아이디를 가지고 옴
 				var mySelectionOrder = [];
 				var previouslySelected = {};
-				network.on('select', function (params) {
+				network.on('select', function(params) {
 					var selected = {};
-					params.nodes.forEach(function (n) {
-						if (!previouslySelected[n]) {
+					params.nodes.forEach(function(n) {
+						if ( ! previouslySelected[n]) {
 							mySelectionOrder.push(n);
 						}
 						selected[n] = true;
 					});
 					mySelectionOrder = mySelectionOrder.filter(
-						function (e, i, a) {
-							return selected[e];
-						});
+						function(e, i, a) { return selected[e]; });
 					previouslySelected = selected;
 				});
-				network.on("stabilizationProgress", function (params) {
+				network.on("stabilizationProgress", function(params) {
 					var maxWidth = 496;
 					var minWidth = 20;
-					var widthFactor = params.iterations / params.total;
-					var width = Math.max(minWidth, maxWidth * widthFactor);
+					var widthFactor = params.iterations/params.total;
+					var width = Math.max(minWidth,maxWidth * widthFactor);
 					document.getElementById('bar').style.width = width + 'px';
-					document.getElementById('text').innerHTML = Math.round(widthFactor * 100) + '%';
+					document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
 				});
-				network.once("stabilizationIterationsDone", function () {
+				network.once("stabilizationIterationsDone", function() {
 					document.getElementById('text').innerHTML = '100%';
 					document.getElementById('bar').style.width = '496px';
 					document.getElementById('loadingBar').style.opacity = 0;
 					// really clean the dom element
-					setTimeout(function () {
-						document.getElementById('loadingBar').style.display = 'none';
-					}, 500);
+					setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
 				});
 			},
-			error: function (status, message) {
+			error : function(status, message) {
 				alert(message);
 			},
-			complete: function () {
+			complete : function() {
 			}
 		});
 	}

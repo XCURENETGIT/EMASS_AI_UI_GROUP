@@ -179,6 +179,19 @@ public class SolrEdcVO {
 	public String body_snippet;
 
 	public int pi_total;
+	public int pi_FN;
+	public int pi_SN;
+	public int pi_DN;
+	public int pi_CN;
+	public int pi_PN;
+	public int pi_MN;
+	public int pi_AN;
+	public int pi_CRN;
+	public int pi_SSN;
+	public int pi_IMEI;
+	public int pi_BRN;
+	public int pi_CPN;
+	public int pi_MCN;
 
 
 	public String xrootmtr;
@@ -238,4 +251,6 @@ public class SolrEdcVO {
 	public String confidence;
 
 	public List<Map<String, Object>> overlap;
+
+	public String user_str;
 }

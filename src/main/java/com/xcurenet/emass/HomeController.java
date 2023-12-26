@@ -502,6 +502,16 @@ public class HomeController {
 		return "/emass/statistics/usersStat";
 	}
 
+	/**
+	 * usersStat JSP.
+	 */
+	@RequestMapping(value = "/ems/dstIpTop.do", method = RequestMethod.GET)
+	@Description("목적지 IP 통계")
+	public String dstIpTop(Locale locale, Model model) {
+		model.addAttribute("headerYn","Y");
+		return "/emass/statistics/dstIpTop";
+	}
+
 	@RequestMapping(value = "/analysis/usageCompare.do", method = RequestMethod.GET)
 	@Description("사용량 즌감 분석")
 	public String userCompare(Locale locale, Model model) {

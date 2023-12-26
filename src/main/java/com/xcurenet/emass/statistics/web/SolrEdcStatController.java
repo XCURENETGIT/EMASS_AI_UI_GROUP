@@ -1,7 +1,5 @@
 package com.xcurenet.emass.statistics.web;
 
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
 import com.xcurenet.admin.service.AuthorityService;
 import com.xcurenet.admin.service.AuthorityVO;
 import com.xcurenet.admin.service.impl.AdminServiceImpl;
@@ -13,7 +11,6 @@ import com.xcurenet.audit.service.Operation;
 import com.xcurenet.audit.service.ParentMenu;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.config.Config;
-import com.xcurenet.common.util.elasticsearch.ElasticSearchCommon;
 import com.xcurenet.common.util.locale.Prop;
 import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
@@ -21,19 +18,14 @@ import com.xcurenet.emass.message.component.SolrCreateQuery;
 import com.xcurenet.emass.message.service.SolrEdcMessageVO;
 import com.xcurenet.emass.message.service.SolrEdcService;
 import com.xcurenet.emass.message.service.SolrEdcVO;
-import com.xcurenet.emass.message.vo.emass.EmassIntegrated;
 import com.xcurenet.emass.service.service.ServiceTypeVO;
 import com.xcurenet.emass.statistics.service.CheckedReadStatService;
 import lombok.extern.log4j.Log4j2;
-import net.sf.json.JSON;
 import net.sf.json.JSONObject;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Description;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,7 +35,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -723,7 +714,6 @@ public class SolrEdcStatController {
 		sq.setQuery(query.toString());
 		sq.setStart(0);
 		sq.setRows(Common.MAX_VALUE);
-		sq.setFields("date_hh","date_yyyy","date_yyyymm","date_yyyymmdd","msgid","cid","srcip","sport","dstip","dport","svc","svc1","svc2","svc3","ltime","ctime","ctime_yyyy","ctime_yyyymm","ctime_yyyymmdd","ctime_hh","size","body_size","usr_id","usr_ip","user","userid","name","subject","host","path","xmsgkey","sender","sname","recvs","recvs_name","to","cc","bcc","tname","cocd","conm","suborgcd","suborgnm","busicd","businm","deptcd","deptnm","jikgubcd","jikgubnm","ip_cocd","ip_conm","ip_busicd","ip_businm","allofus","attached","direction","direction_svc","kwd","kwds","inside","work","attachname","attachsize","attachhash","attachtype","attachnameexist","attachcnt","body_snippet","pi_total","read_time","xrootmtr","ocr_attach_cnt","user_str","pi_SN","pi_DN","pi_PN","pi_CN","pi_FN");
 
 		SolrEdcMessageVO solrVo = solrEdcService.getEmassMessage(sq, Common.getAdminId(request), "", null);
 		return new XcnResponseVO(XcnRspCode.OK, solrVo.getEmass(), solrVo.getNumFound());
