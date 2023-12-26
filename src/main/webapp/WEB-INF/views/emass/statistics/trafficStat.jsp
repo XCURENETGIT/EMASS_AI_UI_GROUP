@@ -131,91 +131,55 @@
 	</script>
 </head>
 <body class="mini-navbar">
-<div class="container">
-	<div class="boxArea">
-		<div class="content_body">
-			<div class="row">
-				<div class="col-xs-12 text-left">
-					<div class="form-group form-inline not-dashed">
-						<label for="startdatepicker"><s:message code="condition.select.period"/>:</label>
-						<div class='input-group date' id='startdatepicker'>
-							<input type='text' class="input-sm form-control" id='startdate' />
-							<span class="input-group-addon"> <span class="glyphicon glyphicon-calendar"></span>
-								</span>
-						</div>
-						~
-						<div class='input-group date' id='enddatepicker'>
-							<input type='text' class="input-sm form-control" id='enddate' />
-							<span class="input-group-addon"> <span class="glyphicon glyphicon-calendar"></span>
-								</span>
-						</div>
-						<div class="form-group" style="margin-left: 15px;">
-							<label for="xAxis"><s:message code="stat.area.stat"/>:</label>
-							<select id="xAxis" name="xAxis" class="input-sm form-control">
-								<option value="H"><s:message code="common.msg.time"/></option>
-								<option value="M"><s:message code="common.msg.month"/></option>
-								<option value="D"><s:message code="common.msg.day"/></option>
-								<option value="W"><s:message code="common.msg.week"/></option>
-							</select>
-						</div>
-						<div class="form-group form-inline not-dashed">
-							<button type="button" class="btn btn-success btn-sm" accesskey="Q" id="searchBtn" accesskey="s"><span class="glyphicon glyphicon-search"></span></button>
-							<%-- <button type="button" class="btn btn-sm btn-primary searchQueryBtn"><span class="glyphicon glyphicon-check"></span>&nbsp;<s:message code="condition.detail"/></button> --%>
-						</div>
-					</div>
-				</div>
+<div>
+	<!-- 검색 -->
+	<div class="searchArea w100">
+		<div class="searchSub w100">
+			<div>
+				<input type="date" id="startdate"  style="width: 110px;"/>
+				<span class="hyphen">~</span>
 			</div>
-			<div class="row top_space">
-				<div class="col-xs-12">
-					<%-- <textarea class="solrQueryResultText" rows="1" style="width:100%;" id="solrQueryText" placeholder="<s:message code="condition.input.detail"/>"></textarea> --%>
-				</div>
+			<div>
+				<input type="date" id="enddate"  style="width: 110px;"/>
 			</div>
-			<div class="row top_space2">
-				<div class="col-xs-12">
-					<ul class="nav nav-tabs codeTab listChart">
-						<li class="active" style="width:100px; text-align: center"><a data-toggle="tab" href="#basicStatList" id="listTab" >LIST</a></li>
-					</ul>
-				</div>
+
+
+			<div>
+				<select id="xAxis" name="xAxis">
+					<option value="H"><s:message code="common.msg.time"/></option>
+					<option value="M"><s:message code="common.msg.month"/></option>
+					<option value="D"><s:message code="common.msg.day"/></option>
+					<option value="W"><s:message code="common.msg.week"/></option>
+				</select>
 			</div>
-			<div class="row top_space">
-				<div class="col-lg-12 tab-content">
-					<div id="basicStatList" class="tab-pane fade in active">
-						<!-- <div id="statlist_cnt" style="margin-top:0px; color: #f25643; font-weight: bold; font-size: 13px;"></div> -->
-						<div style="position: absolute; top: -25px; left: 120px;">
-							[ <span style="color: red;">■ <s:message code="stat.traffic.tx"/></span>&nbsp;/&nbsp;<span style="color: blue;">■ <s:message code="stat.traffic.rx"/></span> ]&nbsp; : <s:message code="stat.traffic.unit"/>
-						</div>
-						<div id="basicStatListGrid" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; height: 400px"></div>
-					</div>
-				</div>
-			</div>
-			<div class="row top_space2">
-				<div class="col-lg-12">
-					<div class="panel panel-default" id="service.logging.count">
-						<div class="panel-heading">
-							<div class="pull-right" id="totalViewDiv" style="display:none;">
-								<button class="totalView btn-info btn-xs" type="button" title="<s:message code="stat.view.all"/>"><s:message code="stat.view.all"/></button>
-							</div>
-							<div class="pull-right" id="chartCntDiv">
-								<button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
-									<span class="glyphicon glyphicon-download-alt"></span>&nbsp;<s:message code="stat.display.count.chart"/> (<span class="dropdown-text">5</span>) <span val="5" class="caret"></span>
-								</button>
-								<ul class="dropdown-menu dropdown-menu-right" role="menu">
-									<li><a href="#">5</a></li>
-									<li><a href="#">10</a></li>
-									<li><a href="#">15</a></li>
-									<li><a href="#">20</a></li>
-								</ul>
-							</div>
-							<i class="fa fa-bar-chart-o fa-fw"></i><span id="chartAreaTitle">TOP <s:message code="DATA_MONITOR.STAT_LABEL"/> CHART </span>
-						</div>
-						<div class="panel-body">
-							<div id="chartArea1" style="height: 230px;"></div>
-						</div>
-					</div>
-				</div>
+
+			<div>
+				<button class="form_btn01" id="searchBtn"><s:message code="common.msg.search"/></button>
 			</div>
 		</div>
 	</div>
+	<!-- //검색 -->
+	<!-- 차트-->
+	<div class="content xcn_full">
+		<div class="contentSub">
+			<h3><span id="chartAreaTitle">TOP <s:message code="DATA_MONITOR.STAT_LABEL"/> CHART </span></h3>
+			<div class="inner_personaldata p20">
+				<div id="chartArea1" style="height: 230px;"></div>
+			</div>
+			<div class="mat32">
+				<div class="subtab">
+					<button class="active mt32">
+						LIST
+						<span id="consentCount"></span>
+					</button>
+				</div>
+			</div>
+			<div id="basicStatListGrid" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; height: 400px"></div>
+		</div>
+
+	</div>
+	<!-- //차트-->
+
 </div>
 <script type="text/javascript">
     var grid1 = new Xgrid('basicStatListGrid', contextRoot);
