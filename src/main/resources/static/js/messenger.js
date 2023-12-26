@@ -86,50 +86,13 @@ var eikon = {
 	},
 	getGenerativeList : function(page){
 		var searchType = $('input:radio[name=searchType]:input:checked').val();
-			getGenerativeGroupList(page);
+		getGenerativeGroupList(page);
 	},
 	getMessengerDetailList : function(xRootmtr, msgid){
 		eikon.getMessengerDetailList(xRootmtr, msgid, '');
 	},
 	getMessengerDetailList : function(xRootmtr, msgid, srcip){
 		eikon.getMessengerDetailList(xRootmtr, msgid, '', '');
-	},
-	getGenerativeDetailList:function (userid, msgid, srcip, usr_id){
-		if(!isDetailView()){
-			alert(condition.authAlert);
-			return;
-		}
-		if(userid == ''){
-			return;
-		}
-
-		$('#searchResultArea').hide();
-		$('#searchResultBtnArea').hide();
-		detailStartPage = 1;
-		detailEndPage = 1;
-		var startDt =$('#startDt').val()+"000000";
-	 	var endDt =$('#endDt').val()+"235959";
-
-		//참여자 수, 참여자 정보
-		ui.get({
-			url : 'getGenerativeGroupUserList.xcn',
-			userid : userid,
-			startDt : startDt,
-			endDt : endDt,
-			groupField : 'usr_id',
-			success : function(data, total) {
-				alert("성공");
-				participantDataSet = data.groups;
-				userSelectBox(data.groups, srcip, usr_id);
-				//getMessengerGroupDetail(xRootmtr, msgid, srcip);
-				//$('#groupParticipantCnt').html(total.coFgemma());
-			},
-			error : function(status, message) {
-				ui.alertMsg(message);
-			},
-			complete : function() {
-			}
-		});
 	},
 	getMessengerDetailList : function(xRootmtr, msgid, srcip, usr_id){
 		if(!isDetailView()){
@@ -607,6 +570,8 @@ function getGenerativeGroupList (page){
 	var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
 	groupPage = page;
 	var offset = groupPage*groupPageBreak - groupPageBreak;
+	alert(offset);
+	alert(groupPageBreak);
 	searchFlag = true;
 	ui.onBody('timeline_list', 0, -20);
 	ui.postJson({
@@ -618,9 +583,9 @@ function getGenerativeGroupList (page){
 		success : function(data, total) {
 			rtnGenerativeGroupList(data.groups)
 			rtnnGenerativeGroupPage(total, page);
-		/*	rtnGroupList(data.groups, 'G');
-			rtnGroupPage(total, page, 'G');
-			HighlightGroup( );*/
+			/*	rtnGroupList(data.groups, 'G');
+                rtnGroupPage(total, page, 'G');
+                HighlightGroup( );*/
 		},
 		error : function(status, message) {
 			ui.alertMsg(message);
@@ -745,21 +710,11 @@ function makeList(nextFlag){
 				str+='<a href="javascript:void(0);" class="file_link" msgid="'+obj.msgid+'" attachhash="'+nvl(hashes[j]).trim()+'">'+nvl(files[j]).trim()+'<br /></a>';
 			}
 		}
-		else str+=''+obj.message.replaceAll('\n', '<br/>')+'';
+		else str+=''+obj.body_snippet.replaceAll('\n', '<br/>')+'';
 		str+='			</div>';
 		str+='		</div>';
 		str+='	</div>';
 
-		if(chkPati){
-			if( obj.readYn == 'Y' ) str+='	<div class="timeline-badge custom custom_right read">';
-			else str+='	<div class="timeline-badge custom custom_right unread">';
-
-			if( svc3 == 'C' ) str += '<i class="fa fa-commenting-o fa-sm" style="font-size: 20px;"></i> ';
-			else if( svc3 == 'F' ) str += '<i class="fa fa-floppy-o fa-sm"></i> ';
-			else if( svc3 == 'J' ) str += '<i class="fa fa-sign-in fa-sm"></i> ';
-			else if( svc3 == 'L' ) str += '<i class="fa fa-sign-out fa-sm"></i> ';
-			str+='	</div>';
-		}
 		str+='</li>';
 	}
 	str+='</ul>';
@@ -817,14 +772,14 @@ function makePrevList(){
 		if( svc3 == 'F' ){
 			var files = '';
 			var hashes = '';
-			if(obj.message != undefined) files = obj.message.split('|');
+			if(obj.body_snippet != undefined) files = obj.body_snippet.split('|');
 			if(obj.attachhash != undefined) hashes = obj.attachhash.split('|');
 
 			for( var j = 0; j < files.length; j++ ){
 				str+='<a href="javascript:void(0);" class="file_link" msgid="'+obj.msgid+'" attachhash="'+nvl(hashes[j]).trim()+'">'+nvl(files[j]).trim()+'<br /></a>';
 			}
 		}
-		else str+=''+obj.message.replaceAll('\n', '<br/>')+'';
+		else str+=''+obj.body_snippet.replaceAll('\n', '<br/>')+'';
 		str+='			</div>';
 		str+='		</div>';
 		str+='	</div>';

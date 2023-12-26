@@ -6,6 +6,50 @@
 	String firstAdminYn = Common.getFirstAdminYn(session);
 %>
 
+
+<script type="text/javascript" src="<c:url value="/js/collecton.js"/>"></script>
+
+<style>
+	.messenger_prev{
+		position: relative;
+		width: 30px;
+		background-color: rgba(0, 94, 193, 0.32);
+		text-align: center;
+		margin-left: 50.5%;
+		z-index: 100000;
+		-moz-border-radius: 50px;
+		-webkit-border-radius: 50px;
+		border-radius: 50px;
+		height: 30px;
+		line-height: 30px;
+		font-size: 10px;
+		font-weight: bold;
+		cursor: pointer;
+		color: #fff;
+		display: none;
+	}
+	.messenger_next{
+		position: absolute;
+		width: 30px;
+		top: 93%;
+		background-color: rgba(0, 94, 193, 0.32);
+		text-align: center;
+		margin-left: 91%;
+		z-index: 100000;
+		-moz-border-radius: 50px;
+		-webkit-border-radius: 50px;
+		border-radius: 50px;
+		height: 30px;
+		line-height: 30px;
+		font-size: 10px;
+		font-weight: bold;
+		cursor: pointer;
+		color:#fff;
+		display:none;
+
+	}
+</style>
+
 <head>
 	<title>EMASS LT - <s:message code="DATA_MONITOR.MESSAGE_SERVICE"/></title>
 	<script type="text/javascript" src="<c:url value="/js/messageGrid.js"/>"></script>
@@ -80,12 +124,12 @@
                     ui.alertMsg('<s:message code="consent.msg.timecheck"/>');
                     return;
                 }
-                if (getDayInterval(startDt, endDt) > 31) {
+          /*      if (getDayInterval(startDt, endDt) > 31) {
                     ui.alertMsg('<s:message code="eikon.msg.select.date"/>');
                     return;
-                }
+                }*/
 
-                eikon.getGenerativeList(1);
+                eikon2.getGenerativeList(1);
             });
             $("#searchStrInput").keypress(function (e) {
                 if (e.keyCode == 13) $('#searchBtn').click();
@@ -93,7 +137,7 @@
 
             $('#searchMsgBtn').click(function () {
                 if ($('#searchMsgStrInput').val() == "") $('#searchMsgQueryBtn').click();
-                else eikon.findMessageList(0);
+                else eikon2.findMessageList(0);
                 //eikon.getMessengerDetailList($('#xrootmtr').text(),$('#msgid').text(), $('#srcip').text());
             });
             $('#searchMsgQueryBtn').click(function () {
@@ -108,12 +152,12 @@
             });
 
             $('#searchMsgUp').click(function () {
-                eikon.findMessageList(--searchOffset);
+                eikon2.findMessageList(--searchOffset);
 // 		checkList(--searchOffset);
             });
             $('#searchMsgDn').click(function () {
 // 		checkList(++searchOffset);
-                eikon.findMessageList(++searchOffset);
+                eikon2.findMessageList(++searchOffset);
             });
             $('#listCntArea').click(function () {
                 //if( $('#messageTotalCnt').html() == 0 || $('#messageTotalCnt').html() == '') return;
@@ -149,7 +193,7 @@
                 var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
                 var searchStr = '';
                 if (xrootmtr == '') return;
-                eikon.getMessengerGroupAllExport('<c:url value="/getMessengerGroupAllExport.xcn"/>?xRootMtr=' + xrootmtr + '&srcip=' + srcip + '&usr_id=' + usr_id + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr);
+                eikon2.getMessengerGroupAllExport('<c:url value="/getMessengerGroupAllExport.xcn"/>?xRootMtr=' + xrootmtr + '&srcip=' + srcip + '&usr_id=' + usr_id + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr);
                 hideSelect();
             });
 
@@ -216,12 +260,11 @@
                 $('#startSubDt').val($('#startDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, ''));
                 $('#endSubDt').val($('#endDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, ''));
                 focusMsgId = '';
-
-                getGenerativeDetailList($(this).attr('userid'), $(this).attr('srcip'), $(this).attr('usr_id'), $(this).attr('msgid'));
+                /*eikon2.getGenerativeDetailList($(this).attr('userid'), $(this).attr('msgid'), $(this).attr('srcip'), $(this).attr('usrid'));*/
             });
 
             $('input[name="searchType"]:radio').change(function () {
-                eikon.getMessengerList(1);
+                eikon2.getGenerativeList(1);
             });
 
             $('#groupFileCnt').click(function () {
@@ -250,25 +293,26 @@
                 }
             });
 
-            $(document).on('click', '#group_list a', function () {
-                var name = $(this).attr('data-name');
-                var srcip = $(this).attr('data-srcip');
-                var usr_id = $(this).attr('data-usrid');
-                var xrootmtr = $('#xrootmtr').text();
-                var msgid = $('#msgid').text();
+            $(document).on('click', '.person', function () {
+                var name = $(this).attr('userid');
+                var srcip = $(this).attr('srcip');
+                var usr_id = $(this).attr('usr_id');
+                var userid =  $(this).attr('userid');
+                var msgid = $(this).attr('msgid');
+
                 $('#selectUserInfo').attr('data-srcip', srcip);
                 $('#selectUserInfo').attr('data-name', name);
                 $('#selectUserInfo').attr('data-usrid', usr_id);
 
-                $('#selectUserInfo').html($(this).text());
+                $('#selectUserInfo').html(name);
                 $('#srcip').text(srcip);
                 $('#usr_id').text(usr_id);
-                eikon.getMessengerGroupDetail(xrootmtr, msgid, srcip, usr_id);
+                eikon2.getGenerativeDetailList(userid, msgid, srcip, usr_id);
                 hideUserSelect();
             });
 
             initCondition();
-            eikon.init();
+            eikon2.init();
 // 	$('#searchBtn').click();
 
         });
@@ -354,7 +398,7 @@
             var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
             var searchStr = '';
 
-            eikon.getMessengerGroupTextExport('<c:url value="/getMessengerGroupTextExport.xcn"/>?xRootMtr=' + xrootmtr + '&srcip=' + srcip + '&usr_id=' + usr_id + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr + '&type=' + type + '&groupField=sender_str', xrootmtr);
+            eikon2.getMessengerGroupTextExport('<c:url value="/getMessengerGroupTextExport.xcn"/>?xRootMtr=' + xrootmtr + '&srcip=' + srcip + '&usr_id=' + usr_id + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr + '&type=' + type + '&groupField=sender_str', xrootmtr);
         }
 
         function searchConsentNo() {

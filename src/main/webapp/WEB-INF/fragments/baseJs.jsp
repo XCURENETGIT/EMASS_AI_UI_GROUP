@@ -75,7 +75,7 @@
 <script type="text/javascript" src="<c:url value="/js/nouislider.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/jquery.circliful.min.js"/>"></script>
 
-<script type="text/javascript" src="<c:url value="/js/messenger.js"/>"></script>
+
 <script type="text/javascript" src="<c:url value="/js/dropdowns-enhancement.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/jquery.scrollbar.min.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/jquery.ztree.all-3.5.js"/>"></script>

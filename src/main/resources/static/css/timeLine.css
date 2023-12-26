@@ -160,7 +160,7 @@
 
 .timeline > li.timeline-inverted > .panel_right {
   float: right;
-  margin-right:60px;
+ /* margin-right:60px;*/
 }
 
 .timeline > li.timeline-inverted > .panel_right:before {

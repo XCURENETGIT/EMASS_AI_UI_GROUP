@@ -7,6 +7,8 @@
 	String adminType = Common.getAdminType(session);
 	String firstAdminYn = Common.getFirstAdminYn(session);
 %>
+
+<script type="text/javascript" src="<c:url value="/js/messenger.js"/>"></script>
 <!DOCTYPE html>
 <html lang="ko">
 <head>\
