@@ -42,9 +42,12 @@ public class CustomDashBoardMenuController {
 	public String dashboard(final CustomDashboardMenuVO customDashboardMenuVo, final HttpSession session) {
 		customDashboardMenuVo.setAdminId(Common.getAdminId(session));
 		List<CustomDashboardMenuVO> result = customDashBoardService.getDashBoardMenuList(customDashboardMenuVo);
+
 		if(CollectionUtils.isNotEmpty(result)) {
-			return "/emass/dashboard";
-		} else {
+			if (Common.isEquals("0", result.get(0).getMenuKey())) return "/emass/dashboard_default";
+			else return "/emass/dashboard";
+		}
+		else {
 			return "/error/403";
 		}
 	}
