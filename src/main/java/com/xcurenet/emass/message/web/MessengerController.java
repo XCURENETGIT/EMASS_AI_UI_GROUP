@@ -514,10 +514,10 @@ public class MessengerController {
 		if(Common.isNotEmpty(usr_id)) query += String.format(" +usr_id:\"%s\"", usr_id);
 		else query += String.format(" -usr_id:*");
 
-		//이미 출력된 동시간대 데이터 제외
+	/*	//이미 출력된 동시간대 데이터 제외
 		if(Common.isNotEmpty(msgId)) {
 			query += String.format(" +msgid:[* TO %s}", msgId);
-		}
+		}*/
 
 		if(Common.isNotEmpty(searchStr)) query += String.format(" +body:(*%s*) ", searchStr);
 
@@ -569,6 +569,8 @@ public class MessengerController {
 		sq.setParam("group.field", "userid");
 		sq.setParam("facet", true);
 		sq.setParam("facet.field", "userid");
+		sq.setParam("facet.offset", "0");
+		sq.setParam("facet.size", "100");
 
 
 		String query = String.format("+ctime:[%s TO %s] +userid:\"%s\"", startDt, endDt, userid);
