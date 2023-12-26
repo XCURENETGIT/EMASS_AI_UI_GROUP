@@ -9,7 +9,7 @@
 	pageContext.setAttribute("arch", systemArch);
 %>
 <style>
-	th{
+	th {
 		text-align: center;
 	}
 </style>
@@ -18,19 +18,19 @@
     Highcharts.setOptions({
         chart: {
             type: 'column',
-            marginTop : 15,
-            marginBottom : 60,
+            marginTop: 15,
+            marginBottom: 60,
             spacingBottom: 0
         },
-        global : { useUTC : false },
+        global: {useUTC: false},
         gridLineColor: '#fff',
         colors: ['#80599F', '#656C7C', '#598AD3', '#D35976', '#DDDDDD', '#bb6ecb', '#439851', '#33a0c4', '#7558cb', '#97b420'],
         lang: {
-            months: [ '<s:message code="common.january"/>', '<s:message code="common.february"/>', '<s:message code="common.march"/>', '<s:message code="common.april"/>', '<s:message code="common.may"/>', '<s:message code="common.june"/>', '<s:message code="common.july"/>', '<s:message code="common.august"/>', '<s:message code="common.september"/>', '<s:message code="common.october"/>', '<s:message code="common.november"/>', '<s:message code="common.december"/>' ],
-            shortMonths : [ '<s:message code="common.january"/>', '<s:message code="common.february"/>', '<s:message code="common.march"/>', '<s:message code="common.april"/>', '<s:message code="common.may"/>', '<s:message code="common.june"/>', '<s:message code="common.july"/>', '<s:message code="common.august"/>', '<s:message code="common.september"/>', '<s:message code="common.october"/>', '<s:message code="common.november"/>', '<s:message code="common.december"/>' ],
-            weekdays : [ '<s:message code="common.sunday"/>', '<s:message code="common.monday"/>', '<s:message code="common.tuesday"/>', '<s:message code="common.wednesday"/>', '<s:message code="common.thursday"/>', '<s:message code="common.friday"/>', '<s:message code="common.saturday"/>' ],
-            contextButtonTitle : '<s:message code="common.msg.char_type"/>',
-            thousandsSep : ','
+            months: ['<s:message code="common.january"/>', '<s:message code="common.february"/>', '<s:message code="common.march"/>', '<s:message code="common.april"/>', '<s:message code="common.may"/>', '<s:message code="common.june"/>', '<s:message code="common.july"/>', '<s:message code="common.august"/>', '<s:message code="common.september"/>', '<s:message code="common.october"/>', '<s:message code="common.november"/>', '<s:message code="common.december"/>'],
+            shortMonths: ['<s:message code="common.january"/>', '<s:message code="common.february"/>', '<s:message code="common.march"/>', '<s:message code="common.april"/>', '<s:message code="common.may"/>', '<s:message code="common.june"/>', '<s:message code="common.july"/>', '<s:message code="common.august"/>', '<s:message code="common.september"/>', '<s:message code="common.october"/>', '<s:message code="common.november"/>', '<s:message code="common.december"/>'],
+            weekdays: ['<s:message code="common.sunday"/>', '<s:message code="common.monday"/>', '<s:message code="common.tuesday"/>', '<s:message code="common.wednesday"/>', '<s:message code="common.thursday"/>', '<s:message code="common.friday"/>', '<s:message code="common.saturday"/>'],
+            contextButtonTitle: '<s:message code="common.msg.char_type"/>',
+            thousandsSep: ','
         },
         xAxis: {
             dateTimeLabelFormats: {
@@ -39,7 +39,7 @@
         },
         yAxis: {
             gridLineColor: '#333',
-            gridLineWidth : 0.1
+            gridLineWidth: 0.1
         }
     });
 
@@ -83,14 +83,14 @@
         getTodayDriveData();
         TodayForeignerData();
         TodaySecurityData();
-	    TodayCardNumberData();
+        TodayCardNumberData();
         getExtensionModulation();
 
 
     });
 
 
-    function TodayPassportData(){
+    function TodayPassportData() {
         ui.get({
             url: 'getTodayPassportData.xcn',
             success: function (data, total) {
@@ -103,7 +103,7 @@
         });
     }
 
-    function TodayForeignerData(){
+    function TodayForeignerData() {
         ui.get({
             url: 'TodayForeignerData.xcn',
             success: function (data, total) {
@@ -117,7 +117,7 @@
         });
     }
 
-    function TodaySecurityData(){
+    function TodaySecurityData() {
         ui.get({
             url: 'TodaySecurityData.xcn',
             success: function (data, total) {
@@ -131,7 +131,7 @@
         });
     }
 
-    function TodayCardNumberData(){
+    function TodayCardNumberData() {
         ui.get({
             url: 'TodayCardNumberData.xcn',
             success: function (data, total) {
@@ -146,7 +146,7 @@
     }
 
 
-    function getTodayDriveData(){
+    function getTodayDriveData() {
         ui.get({
             url: 'getTodayDriveData.xcn',
             success: function (data, total) {
@@ -161,7 +161,7 @@
         });
     }
 
-    function getExtensionModulation(){
+    function getExtensionModulation() {
 
         ui.get({
             url: 'getExtensionModulation.xcn',
@@ -178,8 +178,7 @@
     }
 
 
-
-    function getTodayTrafficData(){
+    function getTodayTrafficData() {
         ui.get({
             url: 'getTodayTrafficData.xcn',
             success: function (data, total) {
@@ -195,7 +194,7 @@
         });
     }
 
-    function getTrafficData(){
+    function getTrafficData() {
         ui.get({
             url: 'getTrafficData.xcn',
             success: function (data, total) {
@@ -213,21 +212,21 @@
     }
 
 
-
     var chart2 = null;
     var chartxAxis2;
-    function printChartTraffic2( dat ) {
+
+    function printChartTraffic2(dat) {
         var data = [];
         var tMax = [];
         var cols = [];
         var categories = [];
 
-        if( dat.length == 0) {
-            $('#con01').html('<s:message code="common.msg.nodata"/>');
+        if (dat.length == 0) {
+            $('#con01').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px"> ');
             return false;
         } else {
             var max = 0;
-            for ( var i=0 ; i < dat.length ; i++ ) {
+            for (var i = 0; i < dat.length; i++) {
                 var items = [];
                 items.push(dat[i].date);
                 items.push(Number(dat[i].longNum));
@@ -239,16 +238,16 @@
             }
         }
 
-        var max = tMax.reduce(function(a,b){
-            return Math.max(a,b);
+        var max = tMax.reduce(function (a, b) {
+            return Math.max(a, b);
         });
         var rotation = 40;
         // if ( chartxAxis2 == 'W' ) rotation = 0;
         $('#con01').highcharts({
             chart: {
                 type: 'column',
-                marginTop : 5,
-                marginBottom : 28,
+                marginTop: 5,
+                marginBottom: 28,
                 spacingBottom: 0
             },
             title: {
@@ -277,31 +276,29 @@
                 }
 
             },
-            plotOptions: {
-            },
+            plotOptions: {},
             series: [{
-                data : data
+                data: data
             }]
         });
     }
 
 
-
-
     var chart2 = null;
     var chartxAxis2;
-    function printChartTraffic( dat ) {
+
+    function printChartTraffic(dat) {
         var data = [];
         var tMax = [];
         var cols = [];
         var categories = [];
 
-        if( dat.length == 0) {
-            $('#con02').html('<s:message code="common.msg.nodata"/>');
+        if (dat.length == 0) {
+            $('#con02').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px"> ');
             return false;
         } else {
             var max = 0;
-            for ( var i=0 ; i < dat.length ; i++ ) {
+            for (var i = 0; i < dat.length; i++) {
                 var items = [];
                 items.push(dat[i].date);
                 items.push(Number(dat[i].longNum));
@@ -313,8 +310,8 @@
             }
         }
 
-        var max = tMax.reduce(function(a,b){
-            return Math.max(a,b);
+        var max = tMax.reduce(function (a, b) {
+            return Math.max(a, b);
         });
         var rotation = 40;
         // if ( chartxAxis2 == 'W' ) rotation = 0;
@@ -357,10 +354,9 @@
                 }
 
             },
-            plotOptions: {
-            },
+            plotOptions: {},
             series: [{
-                data : data,
+                data: data,
                 dataLabels: {
                     enabled: true,
                     color: '#000',
@@ -379,8 +375,7 @@
     }
 
 
-
-    function getBodySize(){
+    function getBodySize() {
 
         ui.get({
             url: 'getBodySize.xcn',
@@ -399,30 +394,29 @@
     }
 
 
-
-    function makeTableSizeData(data){
+    function makeTableSizeData(data) {
         var str = "<table class='mainTable'><tr>"
-        str+="<th> 구분 </th>";
-        for (var i = 0; i<data.length; i++){
+        str += "<th> 구분 </th>";
+        for (var i = 0; i < data.length; i++) {
             var year = data[i].date.slice(0, 4);
             var month = data[i].date.slice(4, 6) - 1;
             var day = data[i].date.slice(6, 8);
             var dateObject = new Date(year, month, day);
             var formattedDate = dateObject.getFullYear() + "-" + padZero(dateObject.getMonth() + 1) + "-" + padZero(dateObject.getDate());
-            str+="<th>"+formattedDate+"</th>";
+            str += "<th>" + formattedDate + "</th>";
         }
-        str+="</tr><tr>";
-        str+="<td> 용량 </td>";
-        for (var i = 0; i<data.length; i++){
-            str+="<td>"+data[i].bodySizeStr+"</td>";
+        str += "</tr><tr>";
+        str += "<td> 용량 </td>";
+        for (var i = 0; i < data.length; i++) {
+            str += "<td>" + data[i].bodySizeStr + "</td>";
         }
-        str+="</tr></table></div>"
+        str += "</tr></table></div>"
 
         $('#sizeTable').html(data.length > 0 ? str : '<s:message code="common.msg.nodata"/>');
     }
 
 
-    function getLoggingData(){
+    function getLoggingData() {
         ui.get({
             url: 'getLoggingData.xcn',
             success: function (data, total) {
@@ -443,30 +437,30 @@
         return num < 10 ? "0" + num : num;
     }
 
-    function makeTableLoggingData(data){
+    function makeTableLoggingData(data) {
         var str = "<table class='mainTable'><tr>"
-        str+="<th> 구분 </th>";
-        for (var i = 0; i<data.length; i++){
+        str += "<th> 구분 </th>";
+        for (var i = 0; i < data.length; i++) {
             var year = data[i].date.slice(0, 4);
             var month = data[i].date.slice(4, 6) - 1;
             var day = data[i].date.slice(6, 8);
             var dateObject = new Date(year, month, day);
             var formattedDate = dateObject.getFullYear() + "-" + padZero(dateObject.getMonth() + 1) + "-" + padZero(dateObject.getDate());
-            str+="<th>"+formattedDate+"</th>";
+            str += "<th>" + formattedDate + "</th>";
         }
-        str+="</tr><tr>";
-        str+="<td> 로깅데이터 건수 </td>";
-        for (var i = 0; i<data.length; i++){
-            str+="<td>"+data[i].logging.comma()+"</td>";
+        str += "</tr><tr>";
+        str += "<td> 로깅데이터 건수 </td>";
+        for (var i = 0; i < data.length; i++) {
+            str += "<td>" + data[i].logging.comma() + "</td>";
         }
-        str+="</tr><tr>"
-        str+="<td> 일 사용량(첨부기준)</td>";
-        for (var i = 0; i<data.length; i++){
-            str+="<td>"+data[i].attachStr+"</td>";
+        str += "</tr><tr>"
+        str += "<td> 일 사용량(첨부기준)</td>";
+        for (var i = 0; i < data.length; i++) {
+            str += "<td>" + data[i].attachStr + "</td>";
         }
-        str+="</tr></table></div>"
+        str += "</tr></table></div>"
 
-        $('#loggingCount').html(data.length > 0 ? str : '<s:message code="common.msg.nodata"/>');
+        $('#loggingCount').html(data.length > 0 ? str : '');
     }
 
 
@@ -548,8 +542,9 @@
             success: function (data, total) {
                 let str = "";
                 if (data.total == 0) {
-                    str += "금일 파일 데이터가 존재하지 않습니다.";
+                    str += '<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px">';
                 } else {
+
                     str += "<div class='teamList'><ul>";
                     for (let i = 0; i < 4; i++) {
                         let name = getFormattedValue("size", data.facet[i]);
@@ -630,6 +625,7 @@
 
     //금일 비업무시간 건수
     var getTodayNotWorkSetTime;
+
     function getTodayNotWork() {
         if (getTodayNotWorkSetTime != null) window.clearTimeout(getTodayNotWorkSetTime);
         ui.get({
@@ -712,30 +708,30 @@
             success: function (data, total) {
                 let str = "";
                 if (data.total == 0) {
-                    str += "금일 파일 데이터가 존재하지 않습니다.";
-                }else{
-                    str+="<div><ul>";
-                    for(let i = 0; i<4; i++){
-                        let fileName = data.fileName[i].slice(0,5)+"...";
+                    str += '<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px"> ';
+                } else {
+                    str += "<div><ul>";
+                    for (let i = 0; i < 4; i++) {
+                        let fileName = data.fileName[i].slice(0, 5) + "...";
                         let filesSize = getFormattedValue("size", data.fileSize[i]);
                         let filesType = getFormattedValue("type", data.fileType[i]);
-                        str+="<li>"
-                        str+="<span class = 'num'>"+(i+1)+"</span>";
-                        str+="<p class='file blueBg'><span class='filename blue'>"+fileName+"</span><span class='Volume'>"+ filesSize +"</span></p>";
-                        str+="</li>"
+                        str += "<li>"
+                        str += "<span class = 'num'>" + (i + 1) + "</span>";
+                        str += "<p class='file blueBg'><span class='filename blue'>" + fileName + "</span><span class='Volume'>" + filesSize + "</span></p>";
+                        str += "</li>"
                     }
-                    str+="</ul></div>";
+                    str += "</ul></div>";
 
-                    str+="<div class='list'><ul>";
-                    for (let i = 4; i<10; i++){
-                        let fileName = data.fileName[i].slice(0,5)+"...";
+                    str += "<div class='list'><ul>";
+                    for (let i = 4; i < 10; i++) {
+                        let fileName = data.fileName[i].slice(0, 5) + "...";
                         let filesSize = getFormattedValue("size", data.fileSize[i]);
                         let filesType = getFormattedValue("type", data.fileType[i]);
-                        str+="<li><span class='num'>"+(i+1)+"</span>";
-                        str+="<p><span>"+fileName+"</span>"
-                        str+="<span class='righttext'>"+filesSize+"</span></p></li>"
+                        str += "<li><span class='num'>" + (i + 1) + "</span>";
+                        str += "<p><span>" + fileName + "</span>"
+                        str += "<span class='righttext'>" + filesSize + "</span></p></li>"
                     }
-                    str+="<ul><div>";
+                    str += "<ul><div>";
                 }
 
                 $('#bigFileTop').html(str);
@@ -814,8 +810,7 @@
                     }
                 }
                 $('#todayGroupWareSum').html(todayGroupWareSum + "<span>건</span>");
-                if (data.facet.length  == 0) $('#svcDataChart').html("금일 데이터가 존재하지 않습니다");
-                else printChart(data.facet);
+	            printChart(data.facet);
 
             },
             error: function (status, message) {
@@ -832,6 +827,7 @@
 
     //금일 패턴 수집 건수
     var getAllTodayPatternPrivacySetTime;
+
     function getAllTodayPatternPrivacy() {
 
         if (getAllTodayPatternPrivacySetTime != null) window.clearTimeout(getAllTodayPatternPrivacySetTime);
@@ -855,19 +851,19 @@
 
     var chart2 = null;
     var chartxAxis2;
-    function printChart3( dat )
-    {
+
+    function printChart3(dat) {
         var data = [];
         var tMax = [];
         var cols = [];
         var categories = [];
 
-        if( dat.length == 0) {
-            $('#sizeChart').html('<s:message code="common.msg.nodata"/>');
+        if (dat.length == 0) {
+            $('#sizeChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="250px;" height="250px"> ');
             return false;
         } else {
             var max = 0;
-            for ( var i=0 ; i < dat.length ; i++ ) {
+            for (var i = 0; i < dat.length; i++) {
                 var items = [];
                 var year = dat[i].date.substring(0, 4);
                 var month = dat[i].date.substring(4, 6);
@@ -884,8 +880,8 @@
             }
         }
 
-        var max = tMax.reduce(function(a,b){
-            return Math.max(a,b);
+        var max = tMax.reduce(function (a, b) {
+            return Math.max(a, b);
         });
         var rotation = 40;
         // if ( chartxAxis2 == 'W' ) rotation = 0;
@@ -928,10 +924,9 @@
                 }
 
             },
-            plotOptions: {
-            },
+            plotOptions: {},
             series: [{
-                data : data,
+                data: data,
                 dataLabels: {
                     enabled: true,
                     color: '#000',
@@ -950,11 +945,10 @@
     }
 
 
-
-
     var chart = null;
     var chartxAxis;
-    function printChart2( dat ) {
+
+    function printChart2(dat) {
         var visible = true;
         // if(systemArch == 'multiple' && adminType == 'M') visible = false;
 
@@ -962,11 +956,11 @@
         var logging = [];
         var attach = [];
         var attachStr = [];
-        if( dat.length == 0) {
-            $('#loggingChart').html('<s:message code="common.msg.nodata"/>');
+        if (dat.length == 0) {
+          $('#loggingChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="250px;" height="250px"> ');
             return false;
         } else {
-            for ( var i=0 ; i < dat.length ; i++ ) {
+            for (var i = 0; i < dat.length; i++) {
                 categories.push(getDateFormatSize(dat[i].date));
                 logging.push(Number(dat[i].logging));
                 attach.push(dat[i].attach == undefined ? 0 : Number(dat[i].attach));
@@ -975,7 +969,7 @@
         }
 
         var rotation = 40;
-        if ( chartxAxis == 'W' ) rotation = 0;
+        if (chartxAxis == 'W') rotation = 0;
         $('#loggingChart').highcharts({
             chart: {
                 zoomType: 'xy'
@@ -1018,14 +1012,13 @@
                         this.points ?
                             this.points.map(function (point) {
                                 var str = '';
-                                if( point.series.name == '<s:message code="dashboard.loggingData.count2"/>') {
+                                if (point.series.name == '<s:message code="dashboard.loggingData.count2"/>') {
                                     str += '<span style="color:' + point.series.color + '">\u25CF</span> ' + point.series.name + ': ' + point.y.comma() + '(<s:message code="common.msg.cnt"/>)<br />';
-                                }
-                                else if(point.series.name == '<s:message code="dashboard.loggingData.attach.size"/>') str += '<span style="color:' + point.series.color + '">\u25CF</span> ' + point.series.name + ': ' + convertFileSize(point.y) + '<br />';
+                                } else if (point.series.name == '<s:message code="dashboard.loggingData.attach.size"/>') str += '<span style="color:' + point.series.color + '">\u25CF</span> ' + point.series.name + ': ' + convertFileSize(point.y) + '<br />';
                                 return str;
                             }) : []
                     );
-                    if(rs != null && rs !=undefined && rs != "") return rs[0] + rs[1] + rs[2];
+                    if (rs != null && rs != undefined && rs != "") return rs[0] + rs[1] + rs[2];
                     else return [];
                 },
                 shared: true
@@ -1040,7 +1033,7 @@
                     name: '<s:message code="dashboard.loggingData.attach.size"/>',
                     type: 'spline',
                     data: attach,
-                    visible : visible,
+                    visible: visible,
                     showInLegend: visible,
                 },
 
@@ -1050,14 +1043,13 @@
     }
 
 
-
     var chart = null;
 
     function printChart(data) {
         $('#svcDataChart').html('');
 
         if (data.length == 0) {
-            $('#svcDataChart').html('<s:message code="dashboard.message.nodata.today"/>');
+            $('#svcDataChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="250px;" height="250px"> ');
             return;
         }
         $('#svcDataChart').highcharts({
@@ -1188,7 +1180,7 @@
 		<div class="m_grapha">
 			<div class="graphaBox">
 				<h3>금일 서비스별 데이터 수집 비율</h3>
-				<div class="bordd" id="svcDataChart">
+				<div class="bordd" id="svcDataChart" style="display: flex;justify-content: center; align-items: center">
 				</div>
 			</div>
 			<%--			금일 서비스별 데이터 수집 비율 끝!!--%>
@@ -1198,9 +1190,9 @@
 				<h3>금일 첨부파일 수집 현황</h3>
 				<div class="bordd">
 					<div class="main_tab">
-						<button class="tablink excel" onclick="openCity('xlsx', this, '#3770C3')" id="defaultOpen">EXEL</button>
+						<button class="tablink excel" onclick="openCity('xlsx', this, '#268770')" id="defaultOpen">EXEL</button>
 						<button class="tablink word" onclick="openCity('doc', this, '#3770C3')">DOC</button>
-						<button class="tablink pdf" onclick="openCity('pdf', this, '#3770C3')">PDF</button>
+						<button class="tablink pdf" onclick="openCity('pdf', this, '#E7443A')">PDF</button>
 						<button class="tablink jpg" onclick="openCity('jpg', this, '#9A52D2')">JPG</button>
 						<button class="tablink gif" onclick="openCity('gif', this, '#EA8323')">GIF</button>
 						<button class="tablink png" onclick="openCity('png', this, '#268770')">PNG</button>
@@ -1239,12 +1231,12 @@
 				<span class="tablinks" onclick="openCity2(event, 'con02')">최근 7일 트래픽 추이</span>
 			</div>
 
-			<div id="con01" class="text_tabcontent">
-				<div id="todayTraffic" ></div>
+			<div id="con01" class="text_tabcontent" style="display: flex;justify-content: center; align-items: center">
+				<div id="todayTraffic"></div>
 			</div>
 
-			<div id="con02" class="text_tabcontent">
-<%--				<div id="weekTraffic"></div>--%>
+			<div id="con02" class="text_tabcontent" style="display: flex;justify-content: center; align-items: center">
+				<%--				<div id="weekTraffic"></div>--%>
 			</div>
 		</div>
 		<%--			금일 트래픽 추이, 종류 끝--%>
@@ -1253,15 +1245,15 @@
 			<div class="text_tab mat32">
 				<span class="tablinks2" onclick="openCity3(event, 'con03')" id="defaultOpen3">일별 로깅 데이터 정보</span>
 				<span class="bar"></span>
-				<span class="tablinks2" onclick="openCity3(event, 'con04')" >일별 전체 용량 정보</span>
+				<span class="tablinks2" onclick="openCity3(event, 'con04')">일별 전체 용량 정보</span>
 			</div>
 			<div id="con03" class="text_tabcontent2">
-				<div class="h200" id="loggingChart"></div>
+				<div class="h200" id="loggingChart" style="display: flex;justify-content: center; align-items: center"></div>
 				<div id="loggingCount"></div>
 			</div>
 
 			<div id="con04" class="text_tabcontent2">
-				<div class="h200" id="sizeChart"></div>
+				<div class="h200" id="sizeChart" style="display: flex;justify-content: center; align-items: center"></div>
 				<div id="sizeTable"></div>
 			</div>
 		</div>
@@ -1270,15 +1262,14 @@
 		<div class="m_grapha mat32">
 			<div>
 				<h3>대용량 파일 TOP 10</h3>
-				<div class="bigtop10" id="bigFileTop">
-
+				<div class="bigtop10" id="bigFileTop" style="display: flex;justify-content: center; align-items: center">
 				</div>
 			</div>
 			<%--		대용량 파일 TOP 10 끝--%>
 			<%--			파일 다 사용자 TOP 10--%>
 			<div>
 				<h3>파일 다 사용자 TOP 10</h3>
-				<div class="filetop10" id="FilePeople">
+				<div class="filetop10" id="FilePeople" style="display: flex;justify-content: center; align-items: center">
 				</div>
 			</div>
 

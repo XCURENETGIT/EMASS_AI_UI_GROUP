@@ -506,6 +506,7 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 			}
 		}
 		result.setFacet(items);
+		result.setTotal(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));
 		return result;
 	}
 
