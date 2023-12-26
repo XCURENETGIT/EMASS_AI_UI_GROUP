@@ -961,6 +961,7 @@ function getGenerativeMessage(userid, srcip, usr_id, msgid){
         usr_id : usr_id,
         msgId : nvl(msgid),
         limit : detailLimit,
+        facet_detail:true,
         success : function(data, total) {
             if(data.groups.length > 0) {
                 $('.messenger_prev').css('display','block');
