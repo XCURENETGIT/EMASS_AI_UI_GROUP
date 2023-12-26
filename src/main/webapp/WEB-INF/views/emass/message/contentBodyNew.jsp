@@ -486,6 +486,8 @@
 			}
 			var param = JSON.stringify( parent.getIframeListObj().filterValData );
 			var dataLength = parent.$('#dataLength_select').selectpicker('val');
+
+
 			var searchType = parent.$('#searchType').val();
 			var exportFileType = $('input:radio[name=exportFileType]:input:checked').val();
 			var exportDataRange = $('input:radio[name=exportDataRange]:input:checked').val();
@@ -495,7 +497,6 @@
 			parent.$('#searchHeader').val(header);
 			parent.$('#dataLength').val(dataLength);
 			parent.$('#exportFileExt').val(exportFileType);
-
 
 			if( exportDataRange == 'A'){
 				//중복체크
@@ -521,28 +522,26 @@
 						} else {
 							$('#isBackground').val('Y');
 							if( searchType == 'B'){
-								$('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveBatchZip.xcn"/>');
-								$('#allDownForm').submit();
+								parent.$('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveBatchZip.xcn"/>');
+								parent.$('#allDownForm').submit();
 							}else if(searchType == 'A' ){
-								$('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveBatchZip.xcn"/>');
-								$('#allDownForm').submit();
+								parent.$('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveBatchZip.xcn"/>');
+								parent.$('#allDownForm').submit();
 							}else if(exportFileType == 'xlsx' || exportFileType == 'cell'){
-								$('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveBatchZip.xcn"/>');
-								$('#allDownForm').submit();
+								parent.$('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveBatchZip.xcn"/>');
+								parent.$('#allDownForm').submit();
 							}else if(exportFileType == 'csv'){
-								$('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveBatchCSV.xcn"/>');
-								$('#allDownForm').submit();
+								parent.$('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveBatchCSV.xcn"/>');
+								parent.$('#allDownForm').submit();
 							}else if(exportFileType == 'pdf'){
-								$('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveBatchPDF.xcn"/>');
-								$('#allDownForm').submit();
+								parent.$('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveBatchPDF.xcn"/>');
+								parent.$('#allDownForm').submit();
 							}
 						}
 					}
 				});
 
 			}else{
-
-				$('#isBackground').val('N');
 				if( searchType == 'B'){
 					$('.body_link_new').click();
 				}else if(searchType == 'A' ){
@@ -550,15 +549,16 @@
 				}
 				else if(searchType == 'LB' || searchType == 'LBA' ){
 					var msgids = grid.getSelectedKey('msgid');
+
 					if( msgids.length == 0 ){
 						msgids = grid.getKeyData('msgid');
 					}
 					var selected_condition = {};
 					selected_condition.msgids = msgids;
-					selected_condition.sort = $('#messageSort').val();
+					selected_condition.sort = parent.$('#messageSort').val();
 
-					$('#searchCondition').val(JSON.stringify( selected_condition ));
-					$('#searchTotal').val(msgids.length);
+					parent.$('#searchCondition').val(JSON.stringify( selected_condition ));
+					parent.$('#searchTotal').val(msgids.length);
 
 					if(exportFileType == 'xlsx' || exportFileType == 'cell'){
 						parent.$('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveZip.xcn"/>');
@@ -572,13 +572,13 @@
 					}
 				}else{
 					if(exportFileType == 'xlsx'){
-						parent.$('.excel_link_new').click();
+						$('.excel_link_new').click();
 					}else if(exportFileType == 'cell'){
-						parent.$('.cell_link_new').click();
+						$('.cell_link_new').click();
 					}else if(exportFileType == 'csv'){
-						parent.$('.csv_link_new').click();
+						$('.csv_link_new').click();
 					}else if(exportFileType == 'pdf'){
-						parent.$('.pdf_link_new').click();
+						$('.pdf_link_new').click();
 					}
 				}
 			}
@@ -587,6 +587,102 @@
 			setTimeout(function(){
 				grid.off();
 			}, 500);
+		});
+
+
+		/* 다운로드 관련 */
+		$(document).on('click', '.excel_link_new', function(){
+			var grid = parent.getIframeListObj().grid;
+			var title = $(this).attr('rel');
+			var option = $(this).attr('option');
+			grid.on();
+			setTimeout(function(){
+				parent.excelDownLoad(grid, title, null, null, option);
+			}, 200);
+		});
+		$(document).on('click', '.cell_link_new', function(){
+			var grid = parent.getIframeListObj().grid;
+			var title = $(this).attr('rel');
+			var option = $(this).attr('option');
+			grid.on();
+			setTimeout(function(){
+				parent.cellDownLoad(grid, title, null, null, option);
+			}, 200);
+		});
+
+		$(document).on('click', '.pdf_link_new', function(){
+			var grid = parent.getIframeListObj().grid;
+			var title = $(this).attr('rel');
+			var option = $(this).attr('option');
+			grid.on();
+			setTimeout(function(){
+				parent.pdfDownLoad(grid, title, null, null, option);
+			}, 200);
+		});
+		$(document).on('click', '.csv_link_new', function(){
+			var grid = parent.getIframeListObj().grid;
+			var title = $(this).attr('rel');
+			var option = $(this).attr('option');
+			grid.on();
+			setTimeout(function(){
+				parent.csvDownLoad(grid, title, null, null, option);
+			}, 200);
+		});
+
+		$(document).on('click', '.body_link_new', function(){
+			var grid = parent.getIframeListObj().grid;
+			if (grid.Rows == 0) {
+				alert('<s:message code="common.msg.nodata"/>');
+				return;
+			}
+			grid.on();
+			setTimeout(function(){
+				var msgid = grid.getSelectedKey('msgid');
+				if(msgid.length == 0) msgid = grid.getKeyData('msgid');
+				parent.$('#msgId').val('');
+				parent.$('#msgIds').val('');
+				if(msgid.length==1){
+					parent.$('#msgId').val(msgid.join(','));
+					parent.$('#downForm').attr('action', '<c:url value="/getEmassBodySave.xcn"/>');
+				} else {
+					parent.$('#msgIds').val(msgid.join(','));
+					parent.$('#downForm').attr('action', '<c:url value="/getEmassBodySaveZip.xcn"/>');
+				}
+				parent.$('#downForm').submit();
+				grid.off();
+			}, 300);
+		});
+		$(document).on('click', '.attach_link_new', function(){
+			var grid =	parent.getIframeListObj().grid;
+			if (grid.Rows == 0) {
+				alert('<s:message code="common.msg.nodata"/>');
+				return;
+			}
+			grid.on();
+			setTimeout(function(){
+				var msgid = grid.getSelectedKey('msgid');
+				if(msgid.length == 0) msgid = grid.getKeyData('msgid');
+
+				parent.$('#msgIds').val(msgid.join(','));
+				parent.$('#downForm').attr('action', '<c:url value="/downEmassAttachByMsgId.xcn"/>');
+				parent.$('#downForm').submit();
+				grid.off();
+			}, 300);
+		});
+		$(document).on('click', '.print_link_new', function(){
+			var grid = parent.getIframeListObj().grid;
+			var title = $(this).attr('rel');
+			if (grid.data.length == 0) {
+				alert('<s:message code="common.msg.nodata"/>');
+				return;
+			}
+
+			grid.print(title, pMenuId, menuId);
+		});
+
+		$(document).on('click', '.downList', function(){
+			var url    = '<c:url value="/commons/downList.do"/>';
+			fnOpenWindow(url, 'downInfoPop', 1400, 580, 'resize');
 		});
 	</script>
 </head>
@@ -698,16 +794,11 @@
 				</div>
 				<%-- 패턴 --%>
 				<div class="messageCon" id="patternDiv">
-					<div class="top grayBg03" id="">
-						<div class="panel-heading body_toggle patternFold">
-							<i class="fa fa-superpowers fa-fw"></i> <s:message code="bodyview.info.pattern"/><span id="patternCntArea"></span>
-							<div class="pull-right">
-								<span></span>
-							</div>
-						</div>
-						<div class="panel-body css-body" style="display:none;">
+					<div class="top grayBg03">
+						<h4><s:message code="bodyview.info.pattern"/><h4 id="patternCntArea"></h4></h4>
+						<div class="panel-body" style="display:none;">
 							<div>
-								<table class="table table-bordered" id="patternTable">
+								<table class="subTable mat8" id="patternTable">
 									<tr>
 										<th colspan="2"><s:message code="common.msg.separator"/></th>
 										<th colspan="2"><s:message code="bodyview.info.detect"/></th>
@@ -718,11 +809,11 @@
 					</div>
 				</div>
 				<div class="messageCon" id="detailPatternDiv" style="display:none;">
-						<div class="panel panel-default" id="">
+						<div class="top grayBg03">
 							<div class="panel-heading">
-								<i class="fa fa-superpowers fa-fw"></i> <s:message code="common.msg.detail.pattern"/>
+								 <s:message code="common.msg.detail.pattern"/>
 								<div class="pull-right" style="position:relative;top:-2px;">
-									<button class="msg_button body_selectBtn" id="hidePatternBtn" onclick="javascript:$('#detailPatternDiv').hide();"><s:message code="bodyview.hide"/></button>
+									<button class="btn05" id="hidePatternBtn" onclick="javascript:$('#detailPatternDiv').hide();"><s:message code="bodyview.hide"/></button>
 								</div>
 							</div>
 							<div class="panel-body" id="detailArea" style="overflow: auto;padding-top:10px;">

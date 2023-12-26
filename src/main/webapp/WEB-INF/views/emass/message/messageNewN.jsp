@@ -1142,102 +1142,10 @@
                 }
             });
 
-            $(document).on('click', '.print_link_new', function(){
-                var grid = getIframeListObj().grid;
-                var title = $(this).attr('rel');
-                if (grid.data.length == 0) {
-                    alert('<s:message code="common.msg.nodata"/>');
-                    return;
-                }
-
-                grid.print(title, pMenuId, menuId);
-            });
 
 
 
-            $(document).on('click', '.excel_link_new', function(){
-                var grid = getIframeListObj().grid;
-                var title = $(this).attr('rel');
-                var option = $(this).attr('option');
-                grid.on();
-                setTimeout(function(){
-                    excelDownLoad(grid, title, null, null, option);
-                }, 200);
-            });
-            $(document).on('click', '.cell_link_new', function(){
-                var grid = getIframeListObj().grid;
-                var title = $(this).attr('rel');
-                var option = $(this).attr('option');
-                grid.on();
-                setTimeout(function(){
-                    cellDownLoad(grid, title, null, null, option);
-                }, 200);
-            });
 
-            $(document).on('click', '.pdf_link_new', function(){
-                var grid = getIframeListObj().grid;
-                var title = $(this).attr('rel');
-                var option = $(this).attr('option');
-                grid.on();
-                setTimeout(function(){
-                    pdfDownLoad(grid, title, null, null, option);
-                }, 200);
-            });
-            $(document).on('click', '.csv_link_new', function(){
-                var grid = getIframeListObj().grid;
-                var title = $(this).attr('rel');
-                var option = $(this).attr('option');
-                grid.on();
-                setTimeout(function(){
-                    csvDownLoad(grid, title, null, null, option);
-                }, 200);
-            });
-            $(document).on('click', '.body_link_new', function(){
-                var grid = getIframeListObj().grid;
-                if (grid.Rows == 0) {
-                    alert('<s:message code="common.msg.nodata"/>');
-                    return;
-                }
-
-                grid.on();
-                setTimeout(function(){
-                    var msgid = grid.getSelectedKey('msgid');
-                    if(msgid.length == 0) msgid = grid.getKeyData('msgid');
-
-                    $('#msgId').val('');
-                    $('#msgIds').val('');
-                    if(msgid.length==1){
-                        $('#msgId').val(msgid.join(','));
-                        $('#downForm').attr('action', '<c:url value="/getEmassBodySave.xcn"/>');
-                    } else {
-                        $('#msgIds').val(msgid.join(','));
-                        $('#downForm').attr('action', '<c:url value="/getEmassBodySaveZip.xcn"/>');
-                    }
-                    $('#downForm').submit();
-                    grid.off();
-                }, 300);
-            });
-            $(document).on('click', '.attach_link_new', function(){
-                var grid = getIframeListObj().grid;
-                if (grid.Rows == 0) {
-                    alert('<s:message code="common.msg.nodata"/>');
-                    return;
-                }
-                grid.on();
-                setTimeout(function(){
-                    var msgid = grid.getSelectedKey('msgid');
-                    if(msgid.length == 0) msgid = grid.getKeyData('msgid');
-
-                    $('#msgIds').val(msgid.join(','));
-                    $('#downForm').attr('action', '<c:url value="/downEmassAttachByMsgId.xcn"/>');
-                    $('#downForm').submit();
-                    grid.off();
-                }, 300);
-            });
-            $(document).on('click', '.downList', function(){
-                var url    = '<c:url value="/commons/downList.do"/>';
-                fnOpenWindow(url, 'downInfoPop', 1400, 580, 'resize');
-            });
             $('.searchQueryBtn').click(function(){
                 queryMakePop();
             });
@@ -1948,37 +1856,48 @@
             <%-- content --%>
             <div class="msg_container">
                 <tiles:insertAttribute name="left" ignore="true"/>
-                <div id="searchKeywordDiv" class="searchKeywordDiv">
-                    <div class="searchKeywordTab"><s:message code="searchKeyword.management"/>
-                        <div class="rightGroup"><span class="searchKeywordCloseBtn">&times;</span></div>
+                <div id="searchKeywordDiv" class="searchKeywordDiv" style="height: 610px;">
+                    <div class="modalHead">
+                        <s:message code="searchKeyword.management"/>
+                        <div style="float:right;padding-right:8px;">
+                            <span class="glyphicon glyphicon-remove searchKeywordCloseBtn" style="cursor:pointer" ></span>
+                        </div>
                     </div>
-                    <div class="searchKeywordSearch" style="padding: 5px 5px 5px 10px;">
-                        <input class="condition_input_text" type="text" name="serch" placeholder="<s:message code="searchKeyword.search"/>" id="searchKeywordSearchStr" style="width:calc(100% - 150px);">
-                        <button class="search_btn" id="searchKeywordSearchBtn"><span><s:message code="common.search"/></span></button>
-                        <button class="msg_button" id="addSearchKeywordBtn"><span><s:message code="common.msg.add"/></span></button>
-                        <button class="msg_button" id="delSearchKeywordBtn"><span><s:message code="common.msg.delete"/></span></button>
+                    <div class="modalCon">
+                        <div>
+                            <input class="condition_input_text" type="text" name="serch" placeholder="<s:message code="searchKeyword.search"/>" id="searchKeywordSearchStr" style="width:calc(100% - 150px);">
+                            <button class="search_btn" id="searchKeywordSearchBtn"><span><s:message code="common.search"/></span></button>
+                            <button class="msg_button" id="addSearchKeywordBtn"><span><s:message code="common.msg.add"/></span></button>
+                            <button class="msg_button" id="delSearchKeywordBtn"><span><s:message code="common.msg.delete"/></span></button>
+                            <div style="padding-left: 10px;">
+                                <span style="font-weight: bold; display: inline-block; margin-right: 10px;"><i class="fa fa-caret-right"></i> <s:message code="searchKeyword.inputMode"/></span>
+                                <label class="searchKeywordInputType"><input type="radio" name="searchKeywordInputType" value="S" checked="checked"> <span><s:message code="searchKeyword.single"/></span></label>
+                                <label class="searchKeywordInputType"><input type="radio" name="searchKeywordInputType" value="A"> <span>AND</span></label>
+                                <label class="searchKeywordInputType"><input type="radio" name="searchKeywordInputType" value="O"> <span>OR</span></label>
+                            </div>
+                        </div>
+                        <div id="searchKeywordGrid" class="slickGrid gridArea"></div>
                     </div>
-                    <div style="padding-left: 10px;">
-                        <span style="font-weight: bold; display: inline-block; margin-right: 10px;"><i class="fa fa-caret-right"></i> <s:message code="searchKeyword.inputMode"/></span>
-                        <label class="searchKeywordInputType"><input type="radio" name="searchKeywordInputType" value="S" checked="checked"> <span><s:message code="searchKeyword.single"/></span></label>
-                        <label class="searchKeywordInputType"><input type="radio" name="searchKeywordInputType" value="A"> <span>AND</span></label>
-                        <label class="searchKeywordInputType"><input type="radio" name="searchKeywordInputType" value="O"> <span>OR</span></label>
-                    </div>
-                    <div id="searchKeywordGrid" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px;min-height:200px;height:calc(100% - 100px);"></div>
                 </div>
-                <div id="filterHeaderDiv" class="filterHeaderDiv">
-                    <div class="filterHeaderTab"><s:message code="common.msg.conditionBox"/>
-                        <div class="rightGroup">
-                            <span class="searchBoxSpan"><label><input type="checkbox" id="searchBox"/><span> <s:message code="common.msg.searchNow"/></span></label></span>
-                            <span class="filterCloseBtn">&times;</span></div>
-                    </div>
-                    <div class="filterSearch" style="padding: 5px 5px 5px 10px;">
-                        <input class="condition_input_text" type="text" name="serch" placeholder="<s:message code="filterInfo.search.filter"/>" id="filterSearchStr" style="width:calc(100% - 60px);">
-                        <button class="search_btn" id="filterSearchBtn"><span><s:message code="common.search"/></span></button>
-                    </div>
-                    <div class="scrollbar-inner saveFilterTab_tree">
-                        <ul id="filterTree" class="ztree scrollbar"></ul>
-                    </div>
+
+                <%-- 조건 보관함 --%>
+                <div id="filterHeaderDiv" class="filterHeaderDiv" style="display: block;position: absolute;right: 350px;display: none;text-align: left;z-index: 1040;border: 1px solid #555;background-color: white;width: 605px;height: 520px;font-size:12px;">
+                        <div class="modalHead">
+                                 <s:message code="common.msg.conditionBox"/>
+                                <div style="float:right;padding-right:8px;">
+                                    <span class="searchBoxSpan"><label><input type="checkbox" id="searchBox"/><span> <s:message code="common.msg.searchNow"/></span></label></span>
+                                    <span class="glyphicon glyphicon-remove filterCloseBtn" style="cursor:pointer;" ></span>
+                                </div>
+                        </div>
+                        <div class="modalCon">
+                                <div>
+                                    <input class="filterSearch condition_input_text" type="text" name="serch" placeholder="<s:message code="filterInfo.search.filter"/>" id="filterSearchStr" style="width:calc(100% - 60px);">
+                                    <button class="search_btn" id="filterSearchBtn"><span><s:message code="common.search"/></span></button>
+                                    <div class="scrollbar-inner saveFilterTab_tree">
+                                        <ul id="filterTree" class="ztree scrollbar"></ul>
+                                    </div>
+                                </div>
+                        </div>
                 </div>
                 <tiles:insertAttribute name="filterNew" ignore="true"/>
                 <div class="content mainBodyArea" id="mainBodyArea" style="height:100%;">
@@ -2090,9 +2009,9 @@
                                             <option value="8"><s:message code="condition.month" arguments="3"/></option>
                                         </select>
                                         <div style="display: flex; width: 260px; padding-top: 4px;">
-                                            <input type="text" id="startdatepicker" class="input-xs form-control border-radius-none" style="padding: 1px 0px 0px 3px;border-radius: 0;font-size: 11px; width: 125px;"/>
+                                            <input type="text" id="startdatepicker" class="input-xs form-control border-radius-none" style="padding: 1px 0px 0px 3px;border-radius: 0;font-size: 12px; width: 125px;"/>
                                             <span style="padding-top: 4px;">-</span>
-                                            <input type="text" id="enddatepicker" class="input-xs form-control border-radius-none"  style="padding: 1px 0px 0px 3px;border-radius: 0;font-size: 11px; width: 125px;"/>
+                                            <input type="text" id="enddatepicker" class="input-xs form-control border-radius-none"  style="padding: 1px 0px 0px 3px;border-radius: 0;font-size: 12px; width: 125px;"/>
                                         </div>
                                     </div>
                                     <div class="condition_divider"></div>

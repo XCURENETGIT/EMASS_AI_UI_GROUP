@@ -897,7 +897,7 @@ public class HomeController {
 	@RequestMapping(value = "/commons/downList.do", method = RequestMethod.GET)
 	@Description("DOWNLOADLIST")
 	public String downlist(Locale locale, Model model) {
-		return "/commons/downInfo";
+		return "/commons/downInfo.popup";
 	}
 
 	@RequestMapping(value = "/commons/queryMake.do", method = RequestMethod.GET)

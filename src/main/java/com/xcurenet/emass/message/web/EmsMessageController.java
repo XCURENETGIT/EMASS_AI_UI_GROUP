@@ -716,7 +716,7 @@ public class EmsMessageController {
 		SolrQuery sq = null;
 		if (Common.isNotEmpty(condition.get("msgids"))) {
 			sq = new SolrQuery();
-			sq.setQuery(String.format("msgid:(%s)", Common.joinj(Common.toJSONArray(condition.get("msgids")), " ")));
+			sq.setQuery(String.format("_id:(%s)", Common.joinj(Common.toJSONArray(condition.get("msgids")), " ")));
 
 			String sort = Common.nvl(condition.get("sort"));
 			if (Common.isEmpty(sort)) {
@@ -727,10 +727,10 @@ public class EmsMessageController {
 			if (sorts.length > 1 && Common.isNotEmpty(sorts[1])) {
 				if (Common.isEquals(sorts[1], "desc")) {
 					sq.setSort(SortClause.desc(sorts[0]));
-					sq.addSort(SortClause.desc("msgid"));
+					sq.addSort(SortClause.desc("_id"));
 				} else {
 					sq.setSort(SortClause.asc(sorts[0]));
-					sq.addSort(SortClause.asc("msgid"));
+					sq.addSort(SortClause.asc("_id"));
 				}
 			}
 		} else {

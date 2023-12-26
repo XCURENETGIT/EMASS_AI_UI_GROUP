@@ -1,5 +1,6 @@
-<%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
+<%@ page import="net.sf.json.JSONObject" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
 <%
 	JSONObject param = Common.getParam ( request );
 	String msgId = Common.nvl( param.get("msgId"));

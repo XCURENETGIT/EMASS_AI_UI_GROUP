@@ -320,7 +320,7 @@ input[type="text"] {
 	display: inline-block;
 	margin-left: -1px;
 	text-align: center;
-	font-size: 12px;
+	font-size: 13px;
 	color: #757575;
 	width: 100%;
 }
@@ -439,7 +439,7 @@ input[type="text"] {
 	border-top: 0px;
 }
 .condition_option {
-	padding-left: 15px;padding-top: 10px;font-size: 12px;
+	padding-left: 15px;padding-top: 10px;font-size: 13px;
 }
 .condition_title{
 	font-weight: bold;
@@ -471,7 +471,7 @@ input[type="text"] {
 	width:100%; padding-top:5px;height:20px;
 }
 .condition_save a{
-	float:right; padding-right:15px; color:#6C6C6C; cursor: pointer; font-size: 12px;
+	float:right; padding-right:15px; color:#6C6C6C; cursor: pointer; font-size: 13px;
 }
 .condition_left{
 	float:left;
@@ -553,7 +553,7 @@ input[type="text"] {
 	background-color: #7293af;
 	z-index: 2;
 	display: inline-block;
-	padding: 4px 12px;
+	padding: 4px 13px;
 	margin-bottom: 0;
 	font-size: 14px;
 	font-weight: 400;
@@ -869,7 +869,7 @@ table {
 #gnbWrap   a:hover {color:#ddd; text-decoration: underline;}
 
 
-input[type=password], input[type=text], select { vertical-align: middle;font-family: Pretendard; font-size:12px;border-radius: 2px;height:26px;line-height: 26px;border-radius: 2px;border: 1px solid #CCC;background: #FFF;padding: 0 4px;align-items: center;-webkit-border-radius: 2px;-moz-border-radius: 2px;-ms-border-radius: 2px;-o-border-radius: 2px;}
+input[type=password], input[type=text], select { vertical-align: middle;font-family: Pretendard; font-size:13px;border-radius: 2px;height:26px;line-height: 26px;border-radius: 2px;border: 1px solid #CCC;background: #FFF;padding: 0 4px;align-items: center;-webkit-border-radius: 2px;-moz-border-radius: 2px;-ms-border-radius: 2px;-o-border-radius: 2px;}
 select:disabled { background-color:#ddd; border: 1px solid #aaa;}
 input:disabled{ background-color:#eee; border: 1px solid #CCC;}
 input[type="text"].error,select.error{border:1px solid #FC5656; color:#FC5656; background-color:#fff;}

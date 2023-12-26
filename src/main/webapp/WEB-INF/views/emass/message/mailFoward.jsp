@@ -1,21 +1,16 @@
-<%@page import="com.xcurenet.common.util.SpringContextUtil"%>
-<%@page import="net.sf.json.JSONObject"%>
-<%@page import="com.xcurenet.emass.message.service.EmsKeywordVO"%>
-<%@page import="com.xcurenet.common.util.Common"%>
-<%@page import="com.xcurenet.emass.message.service.EmsMessageService"%>
-<%@page import="com.xcurenet.emass.message.service.EmsBodyVO"%>
-<%@page import="com.xcurenet.emass.message.web.EmsMessageController"%>
-<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
-<%@page import="org.springframework.web.context.WebApplicationContext"%>
-<%@page import="com.xcurenet.emass.message.service.EmsAttachTextVO"%>
-<%@page import="com.xcurenet.emass.message.service.EmsCreateMessage"%>
-<%@page import="java.util.ArrayList"%>
-<%@page import="java.util.List"%>
 <%@page import="org.jsoup.nodes.Document"%>
 <%@page import="org.jsoup.Jsoup"%>
 <%@page import="org.jsoup.select.Elements"%>
+<%@ page import="com.xcurenet.emass.message.service.EmsMessageService" %>
+<%@ page import="com.xcurenet.common.util.Common" %>
+<%@ page import="com.xcurenet.common.util.SpringContextUtil" %>
+<%@ page import="net.sf.json.JSONObject" %>
+<%@ page import="com.xcurenet.emass.message.service.EmsBodyVO" %>
+<%@ page import="com.xcurenet.emass.message.service.EmsCreateMessage" %>
+<%@ page import="com.xcurenet.emass.message.web.EmsMessageController" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
+<%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
@@ -38,10 +33,6 @@
 <html lang="ko">
 <head>
 <title>EMASS LTH - <s:message code="common.msg.forward_mail"/></title>
-<%@ include file="../../base.jsp"%>
-<link rel="stylesheet" href="<c:url value="/css/bootstrap-select.min.css"/>"/>
-
-<script type="text/javascript" src="<c:url value="/js/bootstrap-select.js"/>"></script>
 
 <style type="text/css">
 html, body{

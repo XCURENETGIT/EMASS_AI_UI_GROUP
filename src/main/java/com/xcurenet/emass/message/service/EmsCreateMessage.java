@@ -1,21 +1,5 @@
 package com.xcurenet.emass.message.service;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
-import javax.servlet.http.HttpServletRequest;
-
-import lombok.extern.log4j.Log4j2;
-import org.apache.commons.io.IOUtils;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-
 import com.xcurenet.common.image.ImageUtils;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.SpringContextUtil;
@@ -24,6 +8,19 @@ import com.xcurenet.common.util.locale.Prop;
 import com.xcurenet.config.service.ConfigAdminService;
 import com.xcurenet.config.service.ConfigAdminVO;
 import com.xcurenet.emass.message.web.EmsAttachDownload;
+import lombok.extern.log4j.Log4j2;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 @Log4j2
 public class EmsCreateMessage {
@@ -256,16 +253,16 @@ public class EmsCreateMessage {
 				header_doc.getElementById("msgUserAccount").remove();
 			}
 			else{
-				header_doc.getElementById("msgAccount").remove();
+				if(null != header_doc.getElementById("msgAccount")) header_doc.getElementById("msgAccount").remove();
 			}
 
 			if (files.isEmpty()) header_doc.getElementById("msgFiles").remove();
 			else {
-				if (Common.isEmpty(attachStr)) header_doc.getElementById("attachKwd").remove();
-				if (Common.isEmpty(fileNameStr)) header_doc.getElementById("fileNameKwd").remove();
+				if (Common.isEmpty(attachStr) && null != header_doc.getElementById("attachKwd")) header_doc.getElementById("attachKwd").remove();
+				if (Common.isEmpty(fileNameStr) && null != header_doc.getElementById("fileNameKwd")) header_doc.getElementById("fileNameKwd").remove();
 			}
 
-			if(!hasOcr) header_doc.getElementById("ocrFiles").remove();
+			if(!hasOcr && null != header_doc.getElementById("ocrFiles")) header_doc.getElementById("ocrFiles").remove();
 
 			if (Common.isEmpty(bodyStr)) header_doc.getElementById("bodyKwd").remove();
 			if (pattern.isEmpty()) header_doc.getElementById("msgPattern").remove();
