@@ -512,11 +512,68 @@ public class HomeController {
 		return "/emass/statistics/dstIpTop";
 	}
 
+
+	/**
+	 * usersStat JSP.
+	 */
+	@RequestMapping(value = "/ems/dstPortTop.do", method = RequestMethod.GET)
+	@Description("목적지 Port 통계")
+	public String dstPortTop(Locale locale, Model model) {
+		model.addAttribute("headerYn","Y");
+		return "/emass/statistics/dstPortTop";
+	}
+
+	/**
+	 * usersStat JSP.
+	 */
+	@RequestMapping(value = "/ems/srcIpTop.do", method = RequestMethod.GET)
+	@Description("출발지 IP 통계")
+	public String srcIpTop(Locale locale, Model model) {
+		model.addAttribute("headerYn","Y");
+		return "/emass/statistics/srcIpTop";
+	}
+
+	/**
+	 * usersStat JSP.
+	 */
+	@RequestMapping(value = "/ems/webUrlTop.do", method = RequestMethod.GET)
+	@Description("WEB URL TOP 통계")
+	public String webUrlTop(Locale locale, Model model) {
+		model.addAttribute("headerYn","Y");
+		return "/emass/statistics/webUrlTop";
+	}
+
+
+	/**
+	 * usersStat JSP.
+	 */
+	@RequestMapping(value = "/ems/ipNonIp.do", method = RequestMethod.GET)
+	@Description("IP / None IP 통계")
+	public String ipNonIp(Locale locale, Model model) {
+		model.addAttribute("headerYn","Y");
+		return "/emass/statistics/ipNonIp";
+	}
+
+
 	@RequestMapping(value = "/analysis/usageCompare.do", method = RequestMethod.GET)
 	@Description("사용량 즌감 분석")
 	public String userCompare(Locale locale, Model model) {
 		model.addAttribute("headerYn","Y");
 		return "/analysis/usageCompare";
+	}
+
+	@RequestMapping(value = "/analysis/userBehavior.do", method = RequestMethod.GET)
+	@Description("사용자 행위 분석")
+	public String userBehavior(Locale locale, Model model) {
+		model.addAttribute("headerYn","Y");
+		return "/analysis/userBehavior";
+	}
+
+	@RequestMapping(value = "/analysis/searchKeyword.do", method = RequestMethod.GET)
+	@Description("웹 검색어 분석")
+	public String searchKeyword(Locale locale, Model model) {
+		model.addAttribute("headerYn","Y");
+		return "/analysis/searchKeyword";
 	}
 
 
@@ -707,6 +764,25 @@ public class HomeController {
 	public String report(Locale locale, Model model) {
 		return "/emass/report/report";
 	}
+
+	/**
+	 * report JSP.
+	 */
+	@RequestMapping(value = "/report/trafficReport.do", method = RequestMethod.GET)
+	@Description("트래픽 리포트 페이지")
+	public String trafficReport(Locale locale, Model model) {
+		return "/emass/report/trafficReport";
+	}
+
+	/**
+	 * report JSP.
+	 */
+	@RequestMapping(value = "/report/deviceReport.do", method = RequestMethod.GET)
+	@Description("장비 운용 보고서 페이지")
+	public String deviceReport(Locale locale, Model model) {
+		return "/emass/report/deviceReport";
+	}
+
 
 	/**
 	 * reservationAlarm JSP.

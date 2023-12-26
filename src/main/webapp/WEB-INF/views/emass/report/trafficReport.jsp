@@ -36,40 +36,40 @@
 </style>
 
 
-	<div id="myModal" class="coach_modal">
+<div id="myModal" class="coach_modal">
 
-		<!-- Modal content -->
-		<div class="modal-content">
-			<div>
-				<div class="coach_name">
-					<span>Sysadmin</span>님 환영합니다.
-				</div>
-				<div class="coach_tit">
-					이용하고자 하는 서비스의 기능은 패킷 수집 모듈을 구매하실 경우 이용이 가능합니다.
-				</div>
-				<p style="padding-bottom:80px;">
+	<!-- Modal content -->
+	<div class="modal-content">
+		<div>
+			<div class="coach_name">
+				<span>Sysadmin</span>님 환영합니다.
+			</div>
+			<div class="coach_tit">
+				이용하고자 하는 서비스의 기능은 패킷 수집 모듈을 구매하실 경우 이용이 가능합니다.
+			</div>
+			<p style="padding-bottom:80px;">
 					<span class="coach_call"> 영업 연락처
 						<a href="mailto:salesteam@xcurenet.com" target="_top">salesteam@xcurenet.com</a>
 					</span>
-					<span class="coach_call"> 기술 연락처
+				<span class="coach_call"> 기술 연락처
 						<a href="mailto:helpdesk@xcurenet.com" target="_top">helpdesk@xcurenet.com</a>
 
 					</span>
-				</p>
-
-			</div>
-
-			<div class="coach_logo">
-				<img src="/venus/img/logo_xcurenet.png" alt="xcurenet" >
-				<p class="mat16">
-					Venus EMASS PRO, Venus/CS 3.0
-				</p>
-			</div>
-
+			</p>
 
 		</div>
 
+		<div class="coach_logo">
+			<img src="/venus/img/logo_xcurenet.png" alt="xcurenet" >
+			<p class="mat16">
+				Venus EMASS PRO, Venus/CS 3.0
+			</p>
+		</div>
+
+
 	</div>
+
+</div>
 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
@@ -144,7 +144,7 @@
 		var displayName = (rowKey.indexOf(',') > -1) ? '<s:message code="common.msg.all"/>' : rowKey.replaceAll("\\\"", "\"");
 		if(rowName!='') displayName = rowName + '&lt;' + rowKey + '&gt;';
 		var id = 'tab'+tabID;
-        $('.listChart').append($('<li style="display:inline-flex;text-align: center;z-index:1001;" idx="'+tabID+'" id="liTab'+tabID+'"><a data-toggle="tab" href="#tab'+tabID+'" id="detailTab'+tabID+'" style="display: flex; align-items: center; justify-content: center;">'+displayName+' - '+colKeyNm+'<span class="badge mal4"></span><button type="button" class="subtab_close closeBtn">	&#10006;</button></a></li>'));
+		$('.listChart').append($('<li style="display:inline-flex;text-align: center;z-index:1001;" idx="'+tabID+'" id="liTab'+tabID+'"><a data-toggle="tab" href="#tab'+tabID+'" id="detailTab'+tabID+'" style="display: flex; align-items: center; justify-content: center;">'+displayName+' - '+colKeyNm+'<span class="badge mal4"></span><button type="button" class="subtab_close closeBtn">	&#10006;</button></a></li>'));
 		$('#basicStatList').after($('<div class="tab-pane fade" id="tab' + tabID + '"><div id="grid'+tabID+'" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; height: 400px"></div></div>'));
 
 		var gid = 'grid'+tabID;
