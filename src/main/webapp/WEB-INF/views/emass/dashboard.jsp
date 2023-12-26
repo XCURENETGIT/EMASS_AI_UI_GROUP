@@ -1049,7 +1049,7 @@
         $('#svcDataChart').html('');
 
         if (data.length == 0) {
-            $('#svcDataChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="250px;" height="250px"> ');
+            $('#svcDataChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px" > ');
             return;
         }
         $('#svcDataChart').highcharts({

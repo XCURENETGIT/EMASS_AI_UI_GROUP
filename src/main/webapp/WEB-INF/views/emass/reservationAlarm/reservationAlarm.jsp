@@ -67,7 +67,79 @@
 		.nav>li>a>img {
 			max-width: none
 		}
+
+
+		.bootstrap-select {
+			width: auto;
+			min-width: 120px;
+			vertical-align: middle;
+		}
+
+		.bootstrap-select.btn-group[class*=col-] .dropdown-menu.open {
+			left: 0;
+			right: auto;
+		}
+
+		.selecBtnArea .btn {
+			padding: 2px 20px 2px 10px;
+		}
+
+		.selecBtnArea .bootstrap-select {
+			margin-top: 3px;
+			margin-bottom: 2px;
+		}
+
+		.noUi-connect {
+			background-color: #286090;
+		}
+
+		#selectedCodeTitle {
+			display: none;
+			border: 1px solid #458A45;
+			position: absolute;
+			background-color: #5CB85C;
+			color: #fff;
+			z-index: 999;
+			padding: 3px;
+			max-width: 400px;
+			word-break: break-all;
+		}
+
+		.bootstrap-select.btn-group .dropdown-menu.inner {
+			box-shadow: none !important;
+		}
+
+		.exceptOption, .exceptOption2 {
+			position: relative;
+			padding-left: 30px;
+		}
+
+		.exceptOption {
+			top: 5px;
+		}
+
+		.form-inline:not(.not-dashed) {
+
+		}
+
+		.bootstrap-select.btn-group .dropdown-toggle .filter-option {
+			padding-top: 2px;
+		}
+
+		.filterAddBtn {
+			padding: 3px 10px;
+		}
+		.c-checkbox input,
+		.c-radio input {
+			opacity: 0;
+			position: absolute;
+			margin-left: 0 !important;
+		}
+		input[type="checkbox"]:disabled {width:0; height:0; border:none;}
+
 	</style>
+
+
 	<script type="text/javascript">
 
         var searchFlag = false;
@@ -762,18 +834,104 @@
 												<div class="infotxt"><s:message code="mail.message.selectform"/></div>
 											</div>
 										</div>
+
+										<div id="mailField" class="row">
+											<div class="col-35">
+												<label for="alarmTo"><s:message
+														code="mail.recv"/></label><span class="red_dot"></span>
+											</div>
+											<div class="col-65">
+												<input type="text" class="input-sm w75" name="alarmTo"
+													   id="alarmTo" readonly="readonly"/>
+												<button class="form_btn03" type="button"
+														accesskey="T" id="alarmToBtn"><s:message
+														code="consent.select"/></button>
+											</div>
+											<div class="clear pt16"></div>
+											<div class="col-35">
+												<label for="alarmCCMail"><s:message
+														code="mail.recv.cc"/></label>
+											</div>
+											<div class="col-65">
+												<input type="text" class="w75 input-sm" name="alarmCC"
+													   id="alarmCC" readonly="readonly"/>
+												<button class="form_btn03" type="button"
+														accesskey="B" id="alarmCCBtn"><s:message
+														code="consent.select"/></button>
+											</div>
+											<div class="clear pt16"></div>
+											<div class="col-35">
+												<label for="mailFormSelBtn"><s:message
+														code="mail.form.mail"/></label><span class="red_dot"></span>
+											</div>
+											<div class="col-65">
+
+												<input type="text" class="w75 input-sm" name="formSubject"
+													   id="formSubject" readonly="readonly"/>
+												<input type="hidden" class="w75" name="alarmFormSeq"
+													   id="alarmFormSeq"/>
+												<button class="form_btn03" type="button"
+														accesskey="M" id="mailFormSelBtn"><s:message
+														code="consent.select"/></button>
+
+											</div>
+											<div class="clear pt16"></div>
+											<div class="col-35"  id="csvYnGroup">
+												<label for="csvYnVal"><s:message
+														code="mail.file_type.attach"/></label>
+											</div>
+											<div class="col-65">
+												<div class="radiotab w100">
+													<label class="w50">
+														<input type="radio" name="csvYn" value="Y" checked><span
+															class="fa fa-check"><span class="text">
+														XLSX</span></span></label><label
+														class="w50">
+
+													<input type="radio" name="csvYn" value="N"><span
+														class="fa fa-check"><span class="text">
+													    CSV</span></span></label>
+
+												</div>
+											</div>
+											<!--<div class="col-65">
+												<div>
+													<label  class="col-sm-4 radio-inline c-radio">
+														<input type="radio" name="csvYn" value="N" checked>
+														<span class="fa fa-check"></span>XLSX
+													</label>
+
+													<label class="radio-inline c-radio"><input type="radio" name="csvYn" value="Y">
+														<span class="fa fa-check"></span>CSV</label>
+												</div>
+
+												<p class="infotxt"> <s:message code="mail.max.cnt"/>
+													<input type="text" class="input-sm" id="excelMaxCnt"
+														   name="excelMaxCnt"></p>
+
+											</div>-->
+
+
+
+										</div>
+
+
+										<!-- old
 										<div id="mailField">
+
 											<div class="form-inline">
 												<label for="alarmTo" class=" col-xs-4">*<s:message
 														code="mail.recv"/></label>
-												<div class="input-group col-xs-8">
-														<span class="input-group-btn" style="width: 25px;">
-															<button class="btn btn-primary btn-sm" type="button"
-															        accesskey="T" id="alarmToBtn"><s:message
-																	code="consent.select"/></button>
-														</span>
-													<input type="text" class="form-control input-sm" name="alarmTo"
+
+												<div class="input-group col-xs-8 mab12">
+
+													<input type="text" class="input-sm w99" name="alarmTo"
 													       id="alarmTo" readonly="readonly"/>
+													<span class="input-group-btn mal16" style="width: 25px;">
+															<button class="form_btn03" type="button"
+																	accesskey="T" id="alarmToBtn"><s:message
+																	code="consent.select"/></button>
+													</span>
 												</div>
 											</div>
 											<div class="form-inline">
@@ -804,22 +962,24 @@
 													       id="alarmFormSeq"/>
 												</div>
 											</div>
+
 											<div class="form-inline" id="csvYnGroup">
-												<label for=csvYnVal class=" col-xs-4"><s:message
+												<label for="csvYnVal" class=" col-xs-4"><s:message
 														code="mail.file_type.attach"/></label>
-												<label class="radio-inline c-radio"><input type="radio" name="csvYn"
-												                                           value="N" checked><span
-														class="fa fa-check"></span>XLSX</label>
-												<label class="radio-inline c-radio"><input type="radio" name="csvYn"
-												                                           value="Y"><span
-														class="fa fa-check"></span>CSV</label>
-												<span style="margin-left:30px;"> <s:message code="mail.max.cnt"/> <input
-														type="text" class="input-sm"
-														style="width:80px; margin-left:10px;" id="excelMaxCnt"
+												<label  class="col-sm-4 radio-inline c-radio">
+													<input type="radio" name="csvYn" value="N" checked>
+													<span class="fa fa-check"></span>XLSX
+												</label>
+
+												<label class="radio-inline c-radio"><input type="radio" name="csvYn" value="Y">
+													<span class="fa fa-check"></span>CSV</label>
+												<span> <s:message code="mail.max.cnt"/>
+													<input type="text" class="input-sm" id="excelMaxCnt"
 														name="excelMaxCnt"></span>
 											</div>
 
-										</div>
+										</div>-->
+
 										<div style="display: none;" id="smsField">
 											<div class="form-inline">
 												<div class="col-xs-4">
@@ -830,6 +990,7 @@
 												</div>
 											</div>
 										</div>
+
 										<div style="display: none;" id="monitorField">
 											<div class="form-inline">
 												<label for="smsFormatBtn" class=" col-xs-4"><s:message

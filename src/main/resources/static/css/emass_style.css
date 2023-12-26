@@ -86,7 +86,7 @@ body,html {width:100%; height:100%;}
 #xcn_mainWrap .right .bigtop10 div.list ul li > p span.righttext {position:absolute; top:1px; right:0; text-align: right; color:#555; font-size:14px;}
 
 #xcn_mainWrap .right .filetop10 {overflow: auto;}
-#xcn_mainWrap .right .filetop10 { position: relative; min-width:100%; min-height:200px; background-color: #fff; border:1px solid #ddd; padding:18px 18px 16px 18px; display: grid; grid-template-columns: 1fr 1fr; column-gap: 12px;}
+#xcn_mainWrap .right .filetop10 { position: relative; min-width:100%; min-height:212px; background-color: #fff; border:1px solid #ddd; padding:18px 18px 16px 18px; display: grid; grid-template-columns: 1fr 1fr; column-gap: 12px;}
 #xcn_mainWrap .right .filetop10 .teamList {}
 #xcn_mainWrap .right .filetop10 div.teamList > ul > li { background-color:#f5f5f5; min-width:150px; display: grid;align-items: center;  grid-template-columns:24px 1fr 1fr; column-gap: 2px; height:38px; margin-bottom:8px;}
 #xcn_mainWrap .right .filetop10 div.teamList > ul > li:last-child {margin-bottom:0;}
@@ -363,6 +363,8 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .w150p {width:150px;}
 .w100p {width:100px;}
 .w90p {width:90px;}
+.w70 {width:70%;}
+.w75 {width:75%;}
 .w80 {width:80%;}
 .w90 {width:90%;}
 .w99 {width:99%;}
@@ -437,6 +439,8 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .grayBg02Border {border-color: #F8F8F8 }
 .grayBg03Border {border-color: #EEEFF2 }
 .purpleBgBorder {border-color: #FCF2FF }
+
+
 /* border */
 .bordd{border:1px solid #ddd;}
 .borbottom_dashed {border-bottom:1px dashed #ccc;}
@@ -463,6 +467,8 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .blue02{color:#1C64D3    !important}
 .blue03{color:#88B8FF    !important}
 .purple{color:#675CED !important;}
+/*
+.grayscale_img_1 { filter: grayscale(100%);}*/
 
 .red_dot { display: inline-block; vertical-align: top; background-color:#FC5656; width:4px; height:4px; border-radius:100%; -webkit-border-radius:100%; -moz-border-radius:100%; -ms-border-radius:100%; -o-border-radius:100%; }
 

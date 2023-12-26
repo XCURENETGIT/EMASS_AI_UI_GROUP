@@ -134,7 +134,7 @@ $(document).ready(function(){
 
 });
 </script>
-	<div class="searchArea">
+	<div class="searchArea" style="margin:0;">
 		<form id="frm">
 		<div class="chartArea04">
 			<!--LIST-->
@@ -158,7 +158,7 @@ $(document).ready(function(){
 				</div>
 				<div  id="columnData"></div>
 
-				<div class="zero-clipboard" style="margin-top: 30px;">
+				<div class="zero-clipboard" style="margin-top: 16px;">
 					<div id="popover-content-column" class="hide">
 						<div style="padding-left:10px;">
 							<ul>
@@ -193,7 +193,7 @@ $(document).ready(function(){
 					</span>
 				</div>
 				<div  id="dataData"></div>
-				<div class="zero-clipboard" style="margin-top: 30px;">
+				<div class="zero-clipboard" style="margin-top: 16px;">
 					<div id="popover-content-data" class="hide">
 						<div style="padding-left:10px;">
 							<ul style="padding-left:15px;">
@@ -218,8 +218,7 @@ $(document).ready(function(){
 			<!--//차트종류-->
 		</div>
 		</form>
-
-		<!-- old -->
+		<!-- old
 		<div class="boxArea">
 			<div class="content_body">
 				<div class="panel panel-default" style="min-height:600px;">
@@ -228,10 +227,18 @@ $(document).ready(function(){
 					</div>
 				</div>
 			</div>
-		</div>
+		</div>-->
 		<!-- //old -->
 	</div>
-	
+<div class="content">
+	<div class="contentSub" style="padding-bottom:16px;">
+		<div class="panel panel-default" style="min-height:600px;">
+			<div class="panel-body" style="height: 100%;padding:0px;">
+				<div id="chartDiv" style="height: 100%; padding: 30px;"><s:message code="analysis.freedom.ui.result"/></div>
+			</div>
+		</div>
+	</div>
+</div>
 	<div id="chartHtml" style="display:none;">
 		<div id="dataChart" ></div>
 	</div>
