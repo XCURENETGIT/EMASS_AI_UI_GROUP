@@ -6,8 +6,6 @@
 	<title></title>
 	<style>
 		.table-striped > tbody > tr:nth-of-type(2n+1){background-color: #fff;}
-
-
 		.checkbox-inline, .radio-inline {
 			position: relative;
 			display: inline-block;
@@ -18,6 +16,7 @@
 			appearance: none;
 			padding:0px 0;
 			color: #555;
+			font-size:14px;
 
 		}
 		.checkbox-inline+.checkbox-inline, .radio-inline+.radio-inline {margin-left:0px !important;}
@@ -387,25 +386,27 @@
 <body>
 
 <div>
+
 	<!-- 검색영역 -->
-	<div class="searchArea w100">
-		<div class="searchSub w100">
+	<div class="searchArea">
+
+		<div class="searchSub">
 			<div id="startdatepicker"><input type="date" id="startdate" style="width: 110px;">
 				<span class="hyphen">~</span></div>
 			<div id="enddatepicker"><input type="date" id="enddate" style="width: 110px;"></div>
 			<div class="infotxt mat4 blue">&nbsp<s:message code="report.message.period"/></div>
 		</div>
-
 		<div class="btnList">
-			<button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
+			<div type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
 				<span class="glyphicon glyphicon-download-alt"></span>&nbsp;<s:message code="common.msg.export"/> <span class="caret"></span>
-			</button>
+			</div>
 			<ul class="dropdown-menu dropdown-menu-right"  role="menu">
 				<li><a href="#" class="excel_link3"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="common.msg.excel"/>(xlsx)</a></li>
 				<li><a href="#" class="print_link2"><span class="glyphicon glyphicon-print"></span>&nbsp;<s:message code="common.msg.print"/></a></li>
 			</ul>
 		</div>
 	</div>
+
 	<!-- //검색영역 -->
 	<div class="content" style="min-height:730px;">
 		<div class="contentSub">

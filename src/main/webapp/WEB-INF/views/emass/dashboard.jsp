@@ -1272,7 +1272,6 @@
 				<h3>대용량 파일 TOP 10</h3>
 				<div class="bigtop10" id="bigFileTop">
 
-
 				</div>
 			</div>
 			<%--		대용량 파일 TOP 10 끝--%>
