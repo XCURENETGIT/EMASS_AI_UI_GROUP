@@ -1,342 +1,76 @@
+<style>
+
+	/* The Modal (background) */
+	.coach_modal {
+		display: block; /* Hidden by default */
+		position: fixed; /* Stay in place */
+		z-index: 1; /* Sit on top */
+		padding-top: 100px; /* Location of the box */
+		left: 40px;
+		top: 0;
+		width: 100%; /* Full width */
+		height: 100%; /* Full height */
+		overflow: auto; /* Enable scroll if needed */
+		background-color: rgb(0,0,0); /* Fallback color */
+		background-color: rgba(0,0,0,0.8); /* Black w/ opacity */
+	}
+
+	/* Modal Content */
+	.modal-content {
+		margin: auto;
+		padding: 20px;
+		width: 93%;
+		height:90%;
+		background: none;
+		border:none;
+		color:#fff;
+		font-wight:400;
+
+	}
+	.coach_logo {opacity: 0.2; font-size:12px; font-weight:300; letter-spacing:1.5px; border-top:1px solid #fff;}
+	.coach_logo img { margin-top:80px; height:32px;}
+	.coach_tit {margin-top:56px; font-size:18px; font-weight: 300;color:#fff; line-height: 1.5;}
+	.coach_name {margin-top:24px; font-size:32px; font-weight: 600;color:#fff; line-height: 1.5;}
+	.coach_name span {color:#88B8FF;font-weight: 600;}
+	.coach_call {font-size:13px;margin-right:8px; letter-spacing:0.6px;  margin-top:20px; padding:8px 12px; background: #88B8FF; color:#fff; display: inline-block; border-radius: 4px; }
+</style>
+
+
+	<div id="myModal" class="coach_modal">
+
+		<!-- Modal content -->
+		<div class="modal-content">
+			<div>
+				<div class="coach_name">
+					<span>Sysadmin</span>님 환영합니다.
+				</div>
+				<div class="coach_tit">
+					이용하고자 하는 서비스의 기능은 패킷 수집 모듈을 구매하실 경우 이용이 가능합니다.
+				</div>
+				<p style="padding-bottom:80px;">
+					<span class="coach_call"> 영업 연락처 salesteam@xcurenet.com</span>
+					<span class="coach_call"> 기술 연락처 helpdesk@xcurenet.com </span>
+				</p>
+
+			</div>
+
+			<div class="coach_logo">
+				<img src="/venus/img/logo_xcurenet.png" alt="xcurenet" >
+				<p class="mat16">
+					Venus EMASS LT, Venus EMASS DC, Venus/ContentFilter
+				</p>
+			</div>
+
+
+		</div>
+
+	</div>
+
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
 
-<script type="text/javascript" src="<c:url value="/js/messageGrid.js"/>"></script>
-<style>
-
-</style>
-<script>
-	Highcharts.setOptions({
-		chart: {
-			type: 'column',
-			marginTop : 15,
-			marginBottom : 60,
-			spacingBottom: 0
-		},
-		global : { useUTC : false },
-		gridLineColor: '#fff',
-		colors: ['#80599F', '#656C7C', '#598AD3', '#D35976', '#DDDDDD', '#bb6ecb', '#439851', '#33a0c4', '#7558cb', '#97b420'],
-		lang: {
-			months: [ '<s:message code="common.january"/>', '<s:message code="common.february"/>', '<s:message code="common.march"/>', '<s:message code="common.april"/>', '<s:message code="common.may"/>', '<s:message code="common.june"/>', '<s:message code="common.july"/>', '<s:message code="common.august"/>', '<s:message code="common.september"/>', '<s:message code="common.october"/>', '<s:message code="common.november"/>', '<s:message code="common.december"/>' ],
-			shortMonths : [ '<s:message code="common.january"/>', '<s:message code="common.february"/>', '<s:message code="common.march"/>', '<s:message code="common.april"/>', '<s:message code="common.may"/>', '<s:message code="common.june"/>', '<s:message code="common.july"/>', '<s:message code="common.august"/>', '<s:message code="common.september"/>', '<s:message code="common.october"/>', '<s:message code="common.november"/>', '<s:message code="common.december"/>' ],
-			weekdays : [ '<s:message code="common.sunday"/>', '<s:message code="common.monday"/>', '<s:message code="common.tuesday"/>', '<s:message code="common.wednesday"/>', '<s:message code="common.thursday"/>', '<s:message code="common.friday"/>', '<s:message code="common.saturday"/>' ],
-			contextButtonTitle : '<s:message code="common.msg.char_type"/>',
-			thousandsSep : ','
-		},
-		xAxis: {
-			dateTimeLabelFormats: {
-				day: '<s:message code="dashboard.display.day" arguments="%b,%d" />'
-			}
-		},
-		yAxis: {
-			gridLineColor: '#333',
-			gridLineWidth : 0.1
-		}
-	});
-
-	var searchFlag = false;
-	var detailTotal = 0;
-	var rowKey = "";
-	var rowName = "";
-	var colKey = "";
-	var detailTab = "N";
-	var chartcnt = 5;
-	var currentGrid;
-	var tabID = 1;
-	var tabNum = 0;
-	var totalChartDat;
-	var serviceList=[];
-	$(document).ready(function(){
-		getServiceList();
-		$('.optionBtn').click(function () {
-			$('.optionBtn').removeClass('active');
-			$(this).addClass('active');
-		});
-
-		$('#searchBtn').click(function(){
-			closeDetailTab();
-			getData ('Y');
-		});
-		$('#clearBtn').click(function(){
-			$('#startdate').val(new Date().format('yyyy-mm-dd'));
-			$('#enddate').val(new Date().format('yyyy-mm-dd'));
-
-			$('.optionBtn').removeClass('active');
-			$('#deptnm').addClass('active');
-		});
 
 
-		$('#chartCntDiv .dropdown-menu li a').click(function(){
-			chartcnt = $(this).text();
-			printChart(totalChartDat);
-		});
-
-		$('#startdate').val(new Date().format('yyyy-mm-dd'));
-		$('#enddate').val(new Date().format('yyyy-mm-dd'));
-
-		$(".nav-tabs").on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
-			var id = $(this).parents('li').attr('idx');
-			var hrefNm = $(this).attr('href');
-			if(hrefNm=='#basicStatList') {
-				$("#chartCntDiv").show();
-				$('#totalViewDiv').hide();
-				printChart(totalChartDat);
-			} else {
-				$("#chartCntDiv").hide();
-				$('#totalViewDiv').show();
-				var dat = chartDat[id];
-				printChart(dat);
-			}
-		})
-
-		$('.listChart').on('click','.subtab_close',function(){
-			var id = 'tab'+ Number($(this).parents('li').attr('idx'));
-			var obj = tabInfo[id];
-			obj.close();
-
-			var tabID = $(this).parents('a').attr('href');
-			$(this).parents('li').remove();
-			$(tabID).remove();
-
-			tabNum --;
-
-			var tabFirst = $('.listChart a:first');
-			tabFirst.tab('show');
-			$("#chartCntDiv").show();
-			$('#totalViewDiv').hide();
-			printChart(totalChartDat);
-		});
-
-		$('.totalView').click(function(){
-			$("#chartCntDiv").show();
-			$('#totalViewDiv').hide();
-			printChart(totalChartDat);
-		});
-	});
-
-	function getServiceList(){
-		ui.get({
-			url : 'getServiceGroupList.xcn',
-			success : function(data, total) {
-				serviceList = data;
-			},
-			error : function(status, message) {
-				ui.alertMsg(message);
-			},
-			complete : function() {
-			}
-		});
-	}
-
-	function setGrid( ){
-		currentgrid = getCurrentGrid();
-		initGrid(currentgrid, messageGridColumn);
-	}
-
-	function closeDetailTab() {
-		var tabFirst = $('.listChart a:first');
-		tabFirst.tab('show');
-	}
-
-	function viewer_open( row, bodySize){
-		var selectedTabIdx = $('.listChart').find('.active').index();
-		var grid = window.__grids[selectedTabIdx];
-		var msgid = grid.getValue(row, 'msgid');
-		var ctime = $('#searchStrInput').val();
-
-		openMessageBodyPop( grid.id, msgid, $('#searchStrInput').val(), bodySize);
-
-		var readYn = grid.getValue(row, 'readYn');
-		grid.setValue(row, grid.ColIndex('readYn'), 'Y');
-		grid.Select(row,0);
-	}
-
-	function viewer_newOpen(row, bodySize){
-		var selectedTabIdx = $('.listChart').find('.active').index();
-		var grid = window.__grids[selectedTabIdx];
-		var msgid = grid.getValue(row, 'msgid');
-		var ctime = $('#searchStrInput').val();
-		openMessageBodyPop( '', msgid, $('#searchStrInput').val(), bodySize);
-
-		var readYn = grid.getValue(row, 'readYn');
-		grid.setValue(row, grid.ColIndex('readYn'), 'Y');
-	}
-
-	function prevMsg( ) {
-		var selectedTabIdx = $('.listChart').find('.active').index();
-		var grid = window.__grids[selectedTabIdx];
-		var row = 0;
-		if( grid.Row > 0 ) {
-			row = --grid.Row;
-			viewer_open(row);
-			grid.Select(row,0);
-			return true;
-		}
-		return false;
-	}
-
-	function nextMsg( ) {
-		var selectedTabIdx = $('.listChart').find('.active').index();
-		var grid = window.__grids[selectedTabIdx];
-		var row = 0;
-		console.log("grid.Row = "+grid.Row)
-		console.log("grid.Rows = "+grid.Rows)
-		if( grid.Row < grid.Rows - 1 ) {
-			row = ++grid.Row;
-			viewer_open(row);
-			grid.Select(row,0);
-			if( grid.Row == grid.Rows - 2  ){
-				getList( true );
-			}
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Bar Chart
-	 */
-	var chart = null;
-	var chartxAxis;
-	function printChart( dat )
-	{
-		var data = [];
-		var categories = [];
-		var cols = grid1.columns;
-		var maxDat = 0;
-		if( dat == undefined ) {
-			for ( var i=0 ; i < grid1.data.length ; i++ ) {
-				if ( (i+1) > chartcnt ) break;
-				var items = [];
-				for ( var j=1 ; j < cols.length ; j++ ) {
-					if ( cols[j].id == 'total' || cols[j].id == 'NUM' || cols[j].id == 'rowKey' ) continue;
-					if ( grid1.data[i][cols[j].id] == undefined ) items.push(0);
-					else items.push( Number( grid1.data[i][cols[j].id] ) );
-					if ( i == 0 ) categories.push( cols[j].name );
-					if(Number( grid1.data[i][cols[j].id] ) > maxDat) maxDat = Number( grid1.data[i][cols[j].id] );
-				}
-				if(grid1.data[i]['NUM'] == '<s:message code="bodyview.total"/>') continue;
-				else data.push({name:grid1.data[i]['rowKey'], data:items});
-			}
-		} else {
-			var items = [];
-			for ( var j=0 ; j < cols.length ; j++ ) {
-				if ( cols[j].id == 'total' || cols[j].id == 'NUM' || cols[j].id == 'rowKey' ) continue;
-				if ( dat[cols[j].id] == undefined || dat[cols[j].id] == '' ) {
-					items.push(0);
-				} else {
-					items.push( Number( dat[cols[j].id] ) );
-				}
-				categories.push( cols[j].name );
-				if(Number( dat[cols[j].id] ) > maxDat) maxDat = Number( dat[cols[j].id] );
-			}
-			if(dat['NUM'] == '<s:message code="bodyview.total"/>') return;
-			else data.push({name:dat['rowKey'], data:items});
-		}
-
-		var rotation = 40;
-		if ( chartxAxis == 'W' ) rotation = 0;
-		$('#chartArea1').highcharts({
-			title: {
-				text: null
-			},
-			exporting: chartAPI.exporting,
-			credits: chartAPI.credits,
-			xAxis: {
-				categories: categories
-			},
-			yAxis: {
-				type: 'logarithmic',
-				custom: {
-					allowNegativeLog: true
-				},
-				allowDecimals: false,
-				title: {
-					text: '',
-					rotation: 0
-				}
-			},
-			tooltip: {
-				headerFormat: '<b>{point.key}</b><br>',
-				pointFormat: '<span style="color:{series.color}">\u25CF</span> {series.name}: {point.y} (<s:message code="common.msg.cnt"/>)'
-			},
-			series: data
-		});
-	}
-</script>
-<div>
-	<div class="searchArea w100">
-		<div class="searchSub w100">
-			<div>
-				<input type="date" id="startdate" style="width: 110px;"/>
-				<span class="hyphen">~</span>
-			</div>
-			<div>
-				<input type="date" id="enddate" style="width: 110px;"/>
-			</div>
-
-			<div class="optiotab">
-				<button class="optionBtn active" id="svc1" value="svc1">서비스타입</button>
-				<button class="optionBtn" id="direction_svc" value="direction_svc"><s:message code="condition.receive_send"/></button>
-				<button class="optionBtn" id="ctime_hh" value="ctime_hh"><s:message code="common.msg.time"/></button>
-				<button class="optionBtn" id="ctime_yyyymmdd" value="ctime_yyyymmdd" class="active"><s:message code="common.msg.day"/></button>
-				<button class="optionBtn" id="ctime_yyyymm" value="ctime_yyyymm"><s:message code="common.msg.month"/></button>
-			</div>
-			<div>
-				<button class="form_btn01" id="searchBtn"><s:message code="common.msg.search"/></button>
-				<button class="form_btn02" id="clearBtn"><s:message code="condition.reset"/></button>
-			</div>
-		</div>
-	</div>
-	<div class="content">
-		<div class="contentSub">
-			<div class="chartAreafull">
-				<div>
-					<h3>
-						TOP 통계 Chart
-						<span class="sel">
-						<div id="totalViewDiv" style="display:none;">
-							<div class="subtab">
-							<button type="button" title="<s:message code="stat.view.all"/>"><s:message code="stat.view.all"/></button>
-							</div>
-						</div>
-						<div class="panel-headings" id="chartCntDiv">
-								<button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
-									<s:message code="stat.display.count.chart"/> (<span class="dropdown-text">5</span>) <span val="5" class="caret"></span>
-								</button>
-								<ul class="dropdown-menu dropdown-menu-right" role="menu">
-									<li><a href="#">5</a></li>
-									<li><a href="#">10</a></li>
-									<li><a href="#">15</a></li>
-									<li><a href="#">20</a></li>
-								</ul>
-						</div>
-						</span>
-					</h3>
-					<div class="panel-default" id="service.logging.count">
-						<div class="inner_personaldata" style="height:180px;">
-							<div id="chartArea1" style="height: 100%"></div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="subtab">
-				<div>
-					<ul class="nav nav-tabs codeTab listChart">
-						<li class="active"><a data-toggle="tab" href="#basicStatList" id="listTab" >사용자 TOP</a></li>
-					</ul>
-				</div>
-			</div>
-			<div class="xcn_full">
-				<div class="tab-content">
-					<div id="basicStatList" class="tab-pane fade in active">
-						<div id="basicStatListGrid" class="slickGrid gridArea" style="min-height: 200px;"></div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
 <script type="text/javascript">
 	function setSublist(data) {
 		var element = document.getElementById('sub_1');
@@ -560,5 +294,33 @@
 				currentgrid.off();
 			}
 		})
+	}
+</script>
+
+<script>
+	// Get the modal
+	var modal = document.getElementById("myModal");
+
+	// Get the button that opens the modal
+	var btn = document.getElementById("myBtn");
+
+	// Get the <span> element that closes the modal
+	var span = document.getElementsByClassName("close")[0];
+
+	// When the user clicks the button, open the modal
+	btn.onclick = function() {
+		modal.style.display = "block";
+	}
+
+	// When the user clicks on <span> (x), close the modal
+	span.onclick = function() {
+		modal.style.display = "none";
+	}
+
+	// When the user clicks anywhere outside of the modal, close it
+	window.onclick = function(event) {
+		if (event.target == modal) {
+			modal.style.display = "none";
+		}
 	}
 </script>

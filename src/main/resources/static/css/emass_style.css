@@ -9,6 +9,7 @@ body,html {width:100%; height:100%;}
 #container #gnbWrap {position: fixed; z-index:99; min-width:76px; height:100%;background-color: #242330; }
 #container #contentArea {position: relative;margin-left:78px; width: calc(100% - 78px);  height:100%;}
 
+
 /* Header */
 #header .allmenu {position: relative; float:left; max-width:76px; width:76px; height:50px; background-color: #111;}
 #header .allmenu a {width:100%; text-align: center; display: inline-block; margin-top:9px;}
@@ -103,6 +104,8 @@ body,html {width:100%; height:100%;}
 #xcn_mainWrap .right .filetop10 div.list ul li > .num {text-align: center;  width:24px; height:24px; line-height:1.5;  font-weight:600; font-size:16px;  border:1px solid #ddd; background-color: #fff;}
 #xcn_mainWrap .right .filetop10 div.list ul li > p {height:24px; line-height: 1.5; color:#333;}
 #xcn_mainWrap .right .filetop10 div.list ul li > p span.righttext {position:absolute; top:1px; right:0; text-align: right; color:#555; font-size:14px;}
+
+
 
 /* Title */
 h2 {position: relative; font-size:18px; font-weight: 600; color:#111;margin-bottom:8px;}
@@ -344,6 +347,7 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .pop_btn01 {color:#333; height:36px; padding:0 20px; line-height: 32px; font-size:14px;vertical-align:middle;display: inline-block; border-radius: 2px;border: 1px solid #ccc;background: #fff;}
 .pop_btn02 {color:#fff; height:36px; padding:0 20px; line-height: 32px; font-size:14px;vertical-align:middle;display: inline-block; border-radius: 2px;border: 1px solid #1C64D3;background: #1C64D3;}
 .table_btn01 {color:#fff; font-weight:400; font-size:12px; height:24px; line-height: 24px; padding:0 6px; background-color: #1A73F9; display: inline-block; vertical-align: middle; text-align: center;   border:0; border-radius:2px ; -webkit-border-radius:2px ; -moz-border-radius:2px ; -ms-border-radius:2px ; -o-border-radius:2px ;}
+
 
 /* width/height */
 .w50 {width:50%;}
