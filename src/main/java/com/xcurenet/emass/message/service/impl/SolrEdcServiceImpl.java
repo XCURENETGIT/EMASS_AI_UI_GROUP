@@ -1,6 +1,6 @@
 package com.xcurenet.emass.message.service.impl;
 
-import co.elastic.clients.elasticsearch._types.Script;
+import co.elastic.clients.elasticsearch.core.UpdateRequest;
 import com.xcurenet.EmassproApplication;
 import com.xcurenet.admin.service.AuthorityService;
 import com.xcurenet.admin.service.AuthorityVO;
@@ -20,8 +20,8 @@ import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.SortClause;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.script.ScriptService;
 import org.elasticsearch.search.aggregations.*;
 import org.elasticsearch.search.aggregations.bucket.range.RangeAggregationBuilder;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
@@ -38,7 +38,6 @@ import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.Query;
-import org.springframework.data.elasticsearch.core.query.ScriptField;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -53,7 +52,7 @@ import java.util.stream.Collectors;
 @Log4j2
 @Service("solrEdcService")
 public class SolrEdcServiceImpl implements SolrEdcService {
-
+	private static final int COMMIT_WITH_IN_MS = 1000;
 	public static String JOIN_READ = " +{!join from=msgid fromIndex=checked to=msgid}id:%s";
 	public static String JOIN_UNREAD = " -{!join from=msgid fromIndex=checked to=msgid}id:%s";
 
@@ -226,7 +225,15 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 					} else if((null != sq.get("facet.sum") && Common.isEquals("true",sq.get("facet.sum")))) {
 						String key = sq.get("facet.field");
 						termsAggregation = termsAggregation.subAggregation(AggregationBuilders.sum(key).field(key));
-					} else {termsAggregation  = termsAggregation.subAggregation(AggregationBuilders.topHits(field).size(1));}
+					} else if((null != sq.get("facet.detail") && Common.isEquals("true",sq.get("facet.detail")))) {
+						/*그룹 디테일 검색 */
+						int offset = (!Common.isEmpty(sq.get("facet.offset"))) ? Common.nvz(sq.get("facet.offset")) : 0; // default 0;
+						int size = (!Common.isEmpty(sq.get("facet.size"))) ? Common.nvz(sq.get("facet.size")) : 1; // default 1
+						termsAggregation  = termsAggregation.subAggregation(AggregationBuilders.topHits(field).size(size).from(offset));
+					}else{
+						/* 그룹 검색 1개씩 묶음*/
+						termsAggregation  = termsAggregation.subAggregation(AggregationBuilders.topHits(field).size(1).from(0));
+					}
 					aggregations.add(termsAggregation);
 		}
 		return aggregations;
@@ -406,14 +413,21 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 	@Override
 	public void setFeedback(final String msgId, final String ml_confd_feedback) throws SolrServerException, IOException {
-//		SolrClient server = emassSolrClient.getSolrServer();
-//		SolrInputDocument doc = new SolrInputDocument();
-//		doc.addField("msgid", msgId);
-//
-//		HashMap<String, Object> value = new HashMap<>();
-//		value.put("set", Common.nvz(ml_confd_feedback, 9));
-//		doc.addField("ml_confd_feedback", value);
-//		server.add(doc, COMMIT_WITH_IN_MS);
+		Map<String, Object> jsonMap = new HashMap<>();
+		jsonMap.put("msgid",msgId);
+		Map<String, Object> value = new HashMap<>();
+		value.put("set", Common.nvz(ml_confd_feedback, 9));
+		jsonMap.put("ml_confd_feedback", value);
+	}
+
+	@Override
+	public void update(Map<String,Object> jsonMap) throws ElasticsearchException, IOException {
+		UpdateRequest.Builder updateBuilder = new UpdateRequest.Builder();
+		updateBuilder.index("index_name")
+				.id("id")
+				.doc(jsonMap);
+	//	UpdateResponse response = operation.update(updateBuilder.build());
+
 	}
 
 	//SK 하이닉스 비밀여부, 비밀 확률 solr update 로직
@@ -625,4 +639,8 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	private Map<String, List<parseJsonFile>> groupingBySecurityYn(List<parseJsonFile> ChangefeedbackList) {
 		return ChangefeedbackList.stream().collect(Collectors.groupingBy(parseJsonFile::getSecurityYn));
 	}
+
+
+
+
 }
