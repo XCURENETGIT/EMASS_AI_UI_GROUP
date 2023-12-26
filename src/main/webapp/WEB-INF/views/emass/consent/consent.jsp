@@ -482,8 +482,8 @@
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-35">
-							<div class="checkbox ">
+						<div style="margin-left:185px;">
+							<div class="checkbox">
 								<label class="fname" style="font-weight: 700;"><input type="checkbox" id="alarmSetup">
 									<s:message code="consent.alarm.setup"/></label>
 								<input type="hidden" name="alarmYn" id="alarmYn" value="N"/>
