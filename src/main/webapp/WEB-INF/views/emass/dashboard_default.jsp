@@ -37,6 +37,35 @@
     });
 
 
+        function makePeriod(dashCondition) {
+            dashCondition = JSON.parse(dashCondition);
+
+            var startDtSelect = dashCondition.startDateSelect;
+            var startTimeSelect = dashCondition.startTimeSelect;
+            var endDtSelect = dashCondition.endDateSelect;
+            var endTimeSelect = dashCondition.endTimeSelect;
+
+            if (startDtSelect == '' || startDtSelect == undefined) return JSON.stringify(dashCondition);
+
+            var startMinusDay = 0;
+            var endMinusDay = 0;
+            if (startDtSelect == 'Y') startMinusDay = 1;
+            else if (startDtSelect == 'W') startMinusDay = 7;
+
+            if (endDtSelect == 'Y') endMinusDay = 1;
+            else if (endDtSelect == 'W') endMinusDay = 7;
+
+            var dateObj = new Date();
+            var startDate = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate() - startMinusDay, startTimeSelect, 00, 00);
+            var endDate = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate() - endMinusDay, endTimeSelect, 59, 59);
+
+            dashCondition.startDt = startDate.format('yyyymmddHHnnss');
+            dashCondition.endDt = endDate.format('yyyymmddHHnnss');
+            return JSON.stringify(dashCondition);
+        }
+
+
+
         // getAllTodayPatternPrivacy();
         getTodayKeywordDetection();
         getTodayRiskBehavior();
@@ -1007,6 +1036,88 @@
         });
     }
 
+    function makePeriod2(dashCondition){
+        var startDtSelect = dashCondition.startDateSelect;
+        var startTimeSelect = dashCondition.startTimeSelect;
+        var endDtSelect = dashCondition.endDateSelect;
+        var endTimeSelect = dashCondition.endTimeSelect;
+
+        if(startDtSelect == '' || startDtSelect == undefined) return JSON.stringify(dashCondition);
+
+        var startMinusDay = 0;
+        var endMinusDay = 0;
+        if(startDtSelect == 'Y') startMinusDay = 1;
+        else if(startDtSelect == 'W') startMinusDay = 7;
+
+        if(endDtSelect == 'Y') endMinusDay = 1;
+        else if(endDtSelect == 'W') endMinusDay = 7;
+
+        var dateObj = new Date();
+        var startDate = new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()-startMinusDay, startTimeSelect, 00, 00 );
+        var endDate = new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()-endMinusDay, endTimeSelect, 59, 59 );
+
+        dashCondition.startDt = startDate.format('yyyymmddHHnnss');
+        dashCondition.endDt = endDate.format('yyyymmddHHnnss');
+        return JSON.stringify(dashCondition);
+    }
+
+
+    $(document).on('click', '.click', function(){
+        // var id = $(this).parents('.grid-stack-item').attr('data-gs-id');
+	    var dat = $(this).data('value');
+        var dashCondition = {
+            "searchStr": "",
+            "searchField": "",
+            "serviceType": "",
+            "serviceTypeNm": "서비스 전체",
+            "interGroup": "",
+            "interGroupNm": "-관심 사용자 그룹-",
+            "userGroupSeq": "",
+            "userGroupName": "-사용자 그룹-",
+            "startDateSelect": "T",
+            "startTimeSelect": "00",
+            "endDateSelect": "T",
+            "endTimeSelect": "23",
+            "senders": "",
+            "receivers": "",
+            "allOfus": "",
+            "busi": "",
+            "busiNm": "사업장 전체",
+            "dept": "",
+            "deptNm": "",
+            "receiveSend": "",
+            "ctimeWork": "",
+            "readYn": "",
+            "attachYn": "",
+            "attachVal": "",
+            "attachStr": "",
+            "keywordYn": "",
+            "keywordVal": "",
+            "keywordStr": "",
+            "regexpYn": "",
+            "regexpVal": "",
+            "regexpStr": "",
+            "drmYn": "",
+            "sctYn": "",
+            "sizeStartVal": "0",
+            "sizeEndVal": "0",
+            "sizeOption": "L",
+            "sizeType": ""
+        };
+        // alert(dat);
+        if (dat == 'reserved'){
+            dashCondition.keywordYn = "Y";
+            $('#conditionParam').val(makePeriod2(dashCondition));
+            $('#getMessageInfo').submit();
+        }else if (dat == 'groupWare'){
+            dashCondition.serviceType = "EBD,EBB,EAA,EMM,EMB,EWS,EPU,ESC,EMF,EMU";
+            dashCondition.serviceTypeNm = "게시, 게시판, 결재, 메일, 모바일, 웹서비스, 일반, 일정 명함, 파일 다운로드, 기타";
+            $('#conditionParam').val(makePeriod2(dashCondition));
+            $('#getMessageInfo').submit();
+        }
+
+    });
+
 
 </script>
 
@@ -1022,12 +1133,12 @@
 				</h3>
 				<%--				*****	여기에 select 넣기--%>
 				<div class="mainlist">
-					<div class="blueBg bornone">
+					<div class="blueBg bornone click" data-value="reserved">
 						<span class="tit01">예약어 합계</span>
 						<p id="TodayKeywordTotalCnt">-<span>건</span>
 						</p>
 					</div>
-					<div class="greenBg bornone">
+					<div class="greenBg bornone click" data-value="groupWare">
 						<span class="tit02">그룹 웨어 데이터</span>
 						<p id="todayGroupWareSum">-<span>건</span>
 					</div>
@@ -1050,6 +1161,10 @@
 				</div>
 			</div>
 		</div>
+
+			<form method="post" id="getMessageInfo" action="<c:url value="/ems/message.do"/>" target="_self" >
+				<input type="hidden" name="conditionParam" id="conditionParam" />
+			</form>
 		<%--금일 데이터 수집 건수 끝 ~~ --%>
 		<%--				금일 패턴 수집 건수--%>
 
@@ -1096,7 +1211,7 @@
 
 			<%--			금일 첨부파일 수집 현황 시작!!--%>
 			<div class="graphaBox">
-				<h3>금일 첨부파일 수집 현황</h3>
+				<h3>금일 첨부파일 유형별 수집 현황</h3>
 				<div class="bordd">
 					<div class="main_tab">
 						<button class="tablink excel" onclick="openCity('xlsx', this, '#268770')" id="defaultOpen">EXEL</button>
@@ -1170,14 +1285,14 @@
 		<%--		대용량 파일 TOP 10 시작--%>
 		<div class="m_grapha mat32">
 			<div>
-				<h3>대용량 파일 TOP 10</h3>
+				<h3>금일 첨부파일 용량 TOP10</h3>
 				<div class="bigtop10" id="bigFileTop" >
 				</div>
 			</div>
 			<%--		대용량 파일 TOP 10 끝--%>
 			<%--			파일 다 사용자 TOP 10--%>
 			<div>
-				<h3>파일 다 사용자 TOP 10</h3>
+				<h3>금일 첨부파일 전송 TOP10</h3>
 				<div class="filetop10" id="FilePeople" >
 				</div>
 			</div>
