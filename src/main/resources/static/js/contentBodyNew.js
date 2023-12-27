@@ -1036,6 +1036,7 @@ var ocrFiles = [];
 var msgData;
 function setMessage(msg) {
 	msgData = msg;
+
 	window.scrollTo(0,0);
 	if(msg == null) {
 		$('#buttonDiv').css("display", "none");
@@ -2120,7 +2121,6 @@ function focusKeyword ( type ) {
 }
 
 function setRead(msgData) {
-	return
 	var ctime = msgData.ctime.replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "");
 	var ctime_yyyymmdd = ctime.substring(0,8); 
 	var ctime_yyyymm = ctime.substring(0, 6);
