@@ -29,8 +29,8 @@ public class SolrCheckedVO {
 		@Field("readId")
 		private String readId; //메시지 개봉 운용자 아이디
 
-		@Field("readDate")
+		@Field("readTime")
 		@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-		private DateTime readDate; //메시지 개봉일
+		private DateTime readTime; //메시지 개봉일
 	}
 }
