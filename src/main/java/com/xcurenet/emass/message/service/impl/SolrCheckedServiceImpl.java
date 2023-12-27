@@ -59,9 +59,10 @@ public class SolrCheckedServiceImpl implements SolrCheckedService {
 		List<SolrCheckedVO.SolrCheckedAttr> checkedList = vo.getChecked();
 		SolrCheckedVO.SolrCheckedAttr attr = new SolrCheckedVO.SolrCheckedAttr();
 		attr.setReadId(adminId);
-		attr.setReadDate(LocalDateTime.parse(new DateTime().toString(), DATETIMEMILLISSYMBOL).toDateTime(DateTimeZone.UTC));
+		attr.setReadTime(LocalDateTime.parse(new DateTime().toString(), DATETIMEMILLISSYMBOL).toDateTime(DateTimeZone.UTC));
 		checkedList.add(attr);
 		vo.setChecked(checkedList);
+		log.info("checked : {}", vo);
 		mongo.save(vo);
 
 		String checkedTopic = "ems_ui_checked_index";
