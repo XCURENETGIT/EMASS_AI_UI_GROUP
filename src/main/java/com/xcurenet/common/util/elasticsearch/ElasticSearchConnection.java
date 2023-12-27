@@ -2,17 +2,16 @@ package com.xcurenet.common.util.elasticsearch;
 
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 @Slf4j
 @Configuration
 public class ElasticSearchConnection {
-
-    @Value("${spring.elasticsearch.uris}")
-    private String[] host;
-    @Value("${spring.elasticsearch.port}")
-    private int port;
+//
+//    @Value("${spring.elasticsearch.uris}")
+//    private String[] host;
+//    @Value("${spring.elasticsearch.port}")
+//    private int port;
 //    private RestHighLevelClient elasticSearchClient;
 //
 //    @Autowired
