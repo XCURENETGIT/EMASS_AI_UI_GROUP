@@ -438,6 +438,8 @@ public class MessengerController {
 		SolrQuery prevQuery = getMessengerMsgPrev(request, msgId);
 		MessengerEdcGroupVO result = solrEdcService.getMessengerGroupList(prevQuery, Common.getAdminId(request), true, false);
 
+
+
 		return new XcnResponseVO(XcnRspCode.OK, result);
 	}
 
@@ -448,8 +450,10 @@ public class MessengerController {
 		JSONObject param = Common.getParam(request);
 		String msgId = Common.nvl(param.get("msgId"));
 
-		SolrQuery nextQuery = getMessengerGtNext(request, msgId,false);
-		MessengerEdcGroupVO result = solrEdcService.getMessengerGroupList(nextQuery, Common.getAdminId(request), true, false);
+		SolrQuery sq = getMessengerGtNext(request, msgId,false);
+		MessengerEdcGroupVO result = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request), true, false);
+
+
 
 		return new XcnResponseVO(XcnRspCode.OK, result);
 	}
@@ -478,20 +482,26 @@ public class MessengerController {
 		String searchStr = Common.nvl(param.get("searchStr"));
 		int limit = Common.nvz(param.get("limit"), 100000);
 
+		String msgDt=msgId.substring(0,14);
+
 		SolrQuery sq = new SolrQuery();
 		String query = String.format("+ctime:[%s TO %s] +userid:\"%s\"", startDt, endDt, userid);
 
 		if(Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
 
 		if(Common.isNotEmpty(usr_id)) query += String.format(" +usr_id:\"%s\"", usr_id);
-		else query += String.format(" -usr_id:*");
+		else query += String.format(" -usr_id:* ");
 
-		//이미 출력된 동시간대 데이터 제외
+
+		query += String.format(" -msgId: %s" ,msgId );	//이미 출력된 동시간대 데이터 제외
+
+
+		//msgid의 날짜값을 출력해와 범위 지정
 		if(Common.isNotEmpty(msgId)) {
 			if(lastMsgYn) {
-				query += String.format(" +msgid:[%s TO *]", msgId);
+				query += String.format(" +ctime:[%s TO %s] ", msgDt,endDt);
 			} else {
-				query += String.format(" +msgid:{%s TO *]", msgId);
+				query += String.format(" +ctime:[%s TO %s]", msgDt,endDt);
 			}
 		}
 
@@ -503,6 +513,17 @@ public class MessengerController {
 		sq.addSort("ctime", ORDER.asc);
 		sq.addSort("msgid", ORDER.asc);
 		sq.setFields("msgid","userid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user");
+
+		/* 그룹 디테일검색 동적 들어와야 할 offset,size 값*/
+		sq.setParam("facet.offset", "0");
+		sq.setParam("facet.size", String.valueOf(limit));
+		boolean facet_detail= ("true".equals(Common.nvl(param.get("facet_detail"))))? true:false;
+		sq.setParam("facet.detail", facet_detail);
+		sq.setParam("facet.mincount", "1");
+
+		/* 일반 문서 검색은 하지않으므로 0 (그룹검색만 하므로 ) */
+		sq.setStart(Common.nvz(request.getParameter("offset"), 0));
+		sq.setRows(Common.nvz(request.getParameter("limit"), 0));
 
 		return sq;
 	}
