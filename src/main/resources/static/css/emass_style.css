@@ -168,6 +168,8 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 .inner_messenger .messengerList {}
 .inner_messenger .chatList { position: relative; background-color: #606973; }
 .inner_messenger .rightFile { background-color: #414A54;}
+.rightFileList ul li:first-child {padding-top:0; !important;}
+.rightFileList ul li {border-bottom:1px solid #656C74; padding:12px; !important;}
 
 /*
 #contentArea .content .contentSub .chartArea div ul li {border:1px solid #ddd; border-radius:2px ;  background-color:#fff ; width:32%; float:left; margin-right:1%;}*/
@@ -349,6 +351,14 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .pop_btn01 {color:#333; height:36px; padding:0 20px; line-height: 32px; font-size:14px;vertical-align:middle;display: inline-block; border-radius: 2px;border: 1px solid #ccc;background: #fff;}
 .pop_btn02 {color:#fff; height:36px; padding:0 20px; line-height: 32px; font-size:14px;vertical-align:middle;display: inline-block; border-radius: 2px;border: 1px solid #1C64D3;background: #1C64D3;}
 .table_btn01 {color:#fff; font-weight:400; font-size:12px; height:24px; line-height: 24px; padding:0 6px; background-color: #1A73F9; display: inline-block; vertical-align: middle; text-align: center;   border:0; border-radius:2px ; -webkit-border-radius:2px ; -moz-border-radius:2px ; -ms-border-radius:2px ; -o-border-radius:2px ;}
+
+.btnchatdown {width:20px;height:20px;padding:8px; background:url(../img/ico_chatdown.png) center center no-repeat; border:none; vertical-align: middle;}
+.btnchatdown:hover {opacity: 0.5;}
+.btnchatdown_w { width:20px;height:20px;padding:8px; background:url(../img/ico_w_chatdown.png) center center no-repeat; border:none; vertical-align: middle;}
+.btnchatdown_w:hover {opacity: 0.5;}
+.chatshare_w {width:20px;height:20px;padding:8px; background:url(../img/ico_w_chatshare.png) center center no-repeat; border:none; vertical-align: middle;}
+.chatshare_w:hover {opacity: 0.5;}
+
 
 
 /* width/height */

@@ -1294,6 +1294,11 @@
 			<!-- 채팅 끝! -->
 			<!-- 첨부파일 -->
 			<div class="rightFile p20">
+				<div class="subtab">
+				<button class="active">첨부파일</button>
+				</div>
+				<div class="rightFileList">
+				</div>
 			</div>
 			<%--			첨부파일 끝!!--%>
 		</div>

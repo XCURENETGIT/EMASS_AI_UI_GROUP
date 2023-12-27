@@ -100,11 +100,12 @@ var eikon2 = {
             var endDt=$('#endDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 
 
-            getGenerativeMessageTotal(userid, srcip, startDt, endDt, usr_id, '');
+        getGenerativeMessage(userid, srcip, usr_id, '');
         }
 };
 
 
+/*
 function getGenerativeMessageTotal(userid, srcip, startDt, endDt, usr_id, msgid){
     //마지막 열람 msgid
 
@@ -129,6 +130,7 @@ function getGenerativeMessageTotal(userid, srcip, startDt, endDt, usr_id, msgid)
         }
     });
 }
+*/
 
 
 /**
@@ -156,9 +158,10 @@ function getGenerativeMessageNext(userid, srcip, usr_id, msgid) {
                 $('.messenger_next').css('display', 'none');
                 return;
             }
+            $('.rightFileList').html(makeFileList(data));
 
-            if(data.groups.length < detailLimit) {
-                $('.messenger_next').css('display', 'none');
+            if(data.groups.length >= detailLimit) {
+                $('.messenger_next').css('display', 'block');
             }
             detailDataSet = data.groups;
 
@@ -368,6 +371,30 @@ function getPageNum(msgid){
 //	findList('date'+date, idx+1);
 //}
 
+function makeFileList(data) {
+    var str = '<ul>';
+
+    for (var i = 0; i < data.groups.length; i++) {
+        if (data.groups[i].attached == "Y") {
+            str += '<li><p class="fileListdown"><span class="img"></span><span>';
+            str += '<a href="#">' + data.groups[i].attachname + "." + data.groups[i].attachtype + '</a>';
+            str += '</span><span style="position: absolute; right: 0; top: 8px;" ><button class="btnchatdown_w"></button><button class="chatshare_w mal8"></button></span></p></li>';
+        }
+    }
+
+    str += '</ul>';
+    str += '<div class="top mat16"><div class="myDropdown"><span>내보내기 &#9662;</span><div class="dropdown-content">';
+    str += '<a href="#">사용자 01</a>';
+    str += '<a href="#">사용자 02</a>';
+    str += '</div></div><div class="myDropdown mal8"><span>전체파일 저장 &#9662;</span><div class="dropdown-content">';
+    str += '<a href="#">사용자 01</a>';
+    str += '<a href="#">사용자 02</a>';
+    str += '</div></div></div>';
+
+    return str;
+}
+
+
 function makeList(nextFlag){
     var dataHasFlag = false;
     var str = '<ul class="pageInfoDiv timeline">';
@@ -397,9 +424,8 @@ function makeList(nextFlag){
         str+='	<div class="timeline-panel '+(chkPati ? 'panel_right' : 'panel_left' )+'" style="width: calc(100% - 200px);">';
         str+='		<div class="list-group-item cursor-pointer readPoint">';
         str+='			<div class="timeline-heading">';
-
         var title = obj.title;
-        str+='				<h4 class="timeline-title">'+title+'<span class="timeline-date pull-xs-right">'+obj.ctime+'</span></h4>';
+        str+='				<h4 class="timeline-title">'+title+"<span class='pull-xs-right' style='border: 1px solid #ccc; font-size: 11px; padding: 2px 4px; margin-left: 3px;'>"+makeMessengerText(obj.svc)+"</span></h4>'";
         str+='			</div>';
         var addClass = '';
         if( svc3 == 'J' || svc3 == 'L' ) addClass=' text-center'
@@ -409,7 +435,7 @@ function makeList(nextFlag){
         str+='			</div>';
         str+='		</div>';
         str+='	</div>';
-
+        str+='	<div class="bubbleDate">'+obj.ctime+'</span>'
         str+='</li>';
     }
     str+='</ul>';
@@ -556,10 +582,10 @@ function checkDatePre(idx){
 
 function viewDate(dateStr){
     var str = '';
-    str+='<li class="date_li" id="date'+dateStr+'">';
+    str+='<li className="conversation-start" id="date'+dateStr+'">';
     str+='	<div class="date_li_div">';
     str+='		<div class="date_line">';
-    str+='			<span class="timeline_date">'+dateStr+'</span>';
+    str+='			<span>'+dateStr+'</span>';
     str+='		</div>';
     str+='	</div>';
     str+='</li>';
@@ -967,6 +993,8 @@ function getGenerativeMessage(userid, srcip, usr_id, msgid){
         success : function(data, total) {
             if(data.groups.length > 0) {
                 $('.messenger_prev').css('display','block');
+                $('#totalCount').css('display','block');
+                $('#groupSubResultCnt').text(data.numFound);
             }
             if(data.groups.length == 0) {
                 $("#timeline_list").html(noDataMsg());
@@ -978,7 +1006,10 @@ function getGenerativeMessage(userid, srcip, usr_id, msgid){
             detailDataSet = data.groups;
             prevDetailDataSet = data.groups;
 
-            if(detailCount > detailLimit)
+            $('.rightFileList').html(makeFileList(data));
+
+
+            if(data.numFound < detailLimit)
                 $('.messenger_next').css('display','none');
             else $('.messenger_next').css('display','block');
             $('.messenger_prev').css('display','none');
@@ -1016,6 +1047,7 @@ function rtnGenerativeGroupList(data) {
         li.setAttribute("srcip", data[i].srcip);
         li.setAttribute("usrid", data[i].usrid);
         li.setAttribute("body_snippet", data[i].body_snippet);
+        li.setAttribute("name", data[i].name);
         li.setAttribute("data-chat", "person" + (i + 1));
 
         var leftDiv = document.createElement("div");

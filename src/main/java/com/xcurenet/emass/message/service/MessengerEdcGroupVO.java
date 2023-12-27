@@ -124,6 +124,7 @@ public class MessengerEdcGroupVO {
 		if (edc.getAttachname() != null && edc.getAttachname().size() > 0) {
 			solrGroupVO.setAttachname(Common.join(edc.getAttachname(), "|"));
 			solrGroupVO.setAttachhash(Common.join(edc.getAttachhash(), "|"));
+			solrGroupVO.setAttachtype(Common.join(edc.getAttachtype(), "|"));
 		}
 		solrGroupVO.setMessage(getMessageDetail(edc, 0, original));
 		solrGroupVO.setTitle(getSender(edc));
@@ -149,6 +150,7 @@ public class MessengerEdcGroupVO {
 		solrGroupVO.setCtime(reCtime(edc.getCtime()));
 		solrGroupVO.setAttached(edc.getAttached());
 		solrGroupVO.setAttachname(Common.join(edc.getAttachname(), ","));
+		solrGroupVO.setAttachtype(Common.join(edc.getAttachtype(), ","));
 		solrGroupVO.setXrootmtr(edc.getXrootmtr());
 		if (edc.getRecvs() != null) solrGroupVO.setUser_cnt(edc.getRecvs().size() + 1);
 		else solrGroupVO.setUser_cnt(1);

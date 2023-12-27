@@ -257,8 +257,8 @@
                 $('#selectUserInfo').attr('data-usrid', '');
                 $('#selectUserInfo').html('');
                 $('#searchMsgStrInput').val('');
-                $('#startSubDt').val($('#startDt'));
-                $('#endSubDt').val($('#endDt'));
+                $('#startSubDt').val($('#startDt').val());
+                $('#endSubDt').val($('#endDt').val());
                 focusMsgId = '';
                 /*eikon2.getGenerativeDetailList($(this).attr('userid'), $(this).attr('msgid'), $(this).attr('srcip'), $(this).attr('usrid'));*/
             });
@@ -299,12 +299,14 @@
                 var usr_id = $(this).attr('usr_id');
                 var userid =  $(this).attr('userid');
                 var msgid = $(this).attr('msgid');
+                var username= $(this).attr('name');
 
                 $('#selectUserInfo').attr('data-srcip', srcip);
                 $('#selectUserInfo').attr('data-name', name);
                 $('#selectUserInfo').attr('data-usrid', usr_id);
 
-                $('#selectUserInfo').html(name);
+                $('#selectUserInfo').html(username);
+                $('#subchatid').html(":"+name);
                 $('#srcip').text(srcip);
                 $('#usr_id').text(usr_id);
                 eikon2.getGenerativeDetailList(userid, msgid, srcip, usr_id);
@@ -874,7 +876,7 @@
 					<div class="top">
 						<div style="display: flex">
 							<div style="width: 300px;">
-								<span>대화방 아이디<span class="chatid"><span id="xrootmtr"></span><span id="srcip" style="display:none;"></span><span
+								<span>대화방 아이디<span class="chatid" id="subchatid"><span id="xrootmtr"></span><span id="srcip" style="display:none;"></span><span
 										id="usr_id" style="display:none;"></span><span id="msgid" style="display:none;"></span></span></span>
 							</div>
 							<div title="" id="userButton">
@@ -883,7 +885,6 @@
 							<div title="<s:message code="condition.user"/>" id="userCntArea">
 								<div style="position: relative;display:block;padding-right: 10px;">
 									<span id="selectUserInfo" data-srcip="" data-name="" data-usrid="">-</span>
-									<span class="bs-caret"><span class="caret"></span></span>
 								</div>
 							</div>
 						</div>
@@ -970,6 +971,11 @@
 			<!-- 채팅 끝! -->
 			<!-- 첨부파일 -->
 			<div class="rightFile p20">
+				<div class="subtab">
+					<button class="active">첨부파일</button>
+				</div>
+				<div class="rightFileList">
+				</div>
 			</div>
 			<%--			첨부파일 끝!!--%>
 		</div>

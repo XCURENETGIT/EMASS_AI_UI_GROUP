@@ -126,6 +126,50 @@ public class MessengerController {
 		return new XcnResponseVO(XcnRspCode.OK, emsMessageService.getGenerativeList());
 	}
 
+/*	@RequestMapping(value = "/getGenerativeFileList.xcn")
+	@Description(" 생성형 ai 파일 목록 조회")
+	@ResponseBody
+	public XcnResponseVO getGenerativeFileList(final HttpServletRequest request, final HttpSession session) throws Exception {
+
+		JSONObject param = Common.getParam(request);
+		String userid = Common.nvl(param.get("userid"));
+		String srcip = Common.nvl(param.get("srcip"));
+		String usr_id = Common.nvl(param.get("usr_id"));
+		String msgId = Common.nvl(param.get("msgid"));
+		String startDt = Common.nvl(param.get("startDt"));
+		String endDt = Common.nvl(param.get("endDt"));
+
+
+		SolrQuery sq = new SolrQuery();
+
+
+		sq.setParam("group", true);
+		sq.setParam("group.facet", true);
+		sq.setParam("group.ngroups", true);
+		sq.setParam("group.field", "userid");
+		sq.setParam("facet", true);
+		sq.setParam("facet.field", "userid");
+
+
+
+		String query = String.format("+ctime:[%s TO %s] +userid:\"%s\"", startDt, endDt, userid);
+
+		if(Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
+
+		if(Common.isNotEmpty(usr_id)) query += String.format(" +usr_id:\"%s\"", usr_id);
+		else query += String.format(" -usr_id:*");
+
+		sq.setQuery(query+MESSENGER2);
+		sq.setRows(limit);
+		sq.addSort("ctime", ORDER.asc);
+		sq.addSort("msgid", ORDER.asc);
+		sq.setFields("msgid","userid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user");
+
+		return sq;
+
+		return new XcnResponseVO(XcnRspCode.OK, emsMessageService.getGenerativeList());
+	}*/
+
 	@RequestMapping(value = "/getGenerativeGroupList.xcn")
 	@Description("생성형 AI 그룹 조회")
 	@ResponseBody
@@ -493,7 +537,7 @@ public class MessengerController {
 		else query += String.format(" -usr_id:* ");
 
 
-		query += String.format(" -msgId: %s" ,msgId );	//이미 출력된 동시간대 데이터 제외
+		query += String.format(" -_id: %s" ,msgId );	//이미 출력된 동시간대 데이터 제외
 
 
 		//msgid의 날짜값을 출력해와 범위 지정

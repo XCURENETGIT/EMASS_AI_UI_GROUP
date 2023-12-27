@@ -29,6 +29,7 @@ public class MessengerGroupVO {
 	private String attachhash;
 	private String attachname;
 	private String attachsize;
+	private String attachtype;
 	private String deptNm;
 	private String jikgubNm;
 	private String readYn;
