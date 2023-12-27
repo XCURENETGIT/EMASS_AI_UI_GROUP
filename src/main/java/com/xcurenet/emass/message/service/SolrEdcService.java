@@ -4,7 +4,6 @@ import com.xcurenet.emass.message.service.impl.parseJsonFile;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.elasticsearch.ElasticsearchException;
 import org.springframework.data.elasticsearch.core.SearchHits;
 
 import java.io.IOException;
@@ -31,7 +30,6 @@ public interface SolrEdcService {
 
 	public void setFeedback(final String msgId, final String ml_confd_feedback) throws SolrServerException, IOException;
 
-	public void update(final Map<String,Object> jsonMap) throws ElasticsearchException, IOException;
 
 	public SolrEdcMessageVO setOverlap(SolrEdcMessageVO solrVo) throws SolrServerException, IOException;
 

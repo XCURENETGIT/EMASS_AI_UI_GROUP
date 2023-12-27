@@ -1,6 +1,5 @@
 package com.xcurenet.emass.message.service.impl;
 
-import co.elastic.clients.elasticsearch.core.UpdateRequest;
 import com.xcurenet.EmassproApplication;
 import com.xcurenet.admin.service.AuthorityService;
 import com.xcurenet.admin.service.AuthorityVO;
@@ -20,12 +19,12 @@ import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.SortClause;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.aggregations.*;
 import org.elasticsearch.search.aggregations.bucket.range.RangeAggregationBuilder;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
+import org.elasticsearch.search.sort.SortOrder;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -229,10 +228,10 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 						/*그룹 디테일 검색 */
 						int offset = (!Common.isEmpty(sq.get("facet.offset"))) ? Common.nvz(sq.get("facet.offset")) : 0; // default 0;
 						int size = (!Common.isEmpty(sq.get("facet.size"))) ? Common.nvz(sq.get("facet.size")) : 1; // default 1
-						termsAggregation  = termsAggregation.subAggregation(AggregationBuilders.topHits(field).size(size).from(offset));
+						termsAggregation  = termsAggregation.subAggregation(AggregationBuilders.topHits(field).size(size).from(offset).sort("ctime", SortOrder.DESC));
 					}else{
 						/* 그룹 검색 1개씩 묶음*/
-						termsAggregation  = termsAggregation.subAggregation(AggregationBuilders.topHits(field).size(1).from(0));
+						termsAggregation  = termsAggregation.subAggregation(AggregationBuilders.topHits(field).size(1).from(0).sort("ctime", SortOrder.DESC));
 					}
 					aggregations.add(termsAggregation);
 		}
@@ -418,17 +417,20 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		Map<String, Object> value = new HashMap<>();
 		value.put("set", Common.nvz(ml_confd_feedback, 9));
 		jsonMap.put("ml_confd_feedback", value);
+
+
+//		UpdateQuery updateQuery = new UpdateQuery();
+//		updateQuery.setQuery(new TermQueryBuilder("_id",jsonMap.get("msgid")));
+//		updateQuery.setConflicts("proceed");
+//		Object param = jsonMap.get("value");
+//		Script script = new Script(ScriptType.INLINE,"painless", "ctx._source.ml_confd_feedback = (param)", (Map<String, Object>) param);
+//		updateByQueryRequest.setScript(script);
+
+	//	operation.updateByQuery(updateByQueryRequest);
+
+		log.info("[UPDATE_RESULT] 피드백 파라미터 수정 by {}",jsonMap.get("ml_confd_feedback"));
 	}
 
-	@Override
-	public void update(Map<String,Object> jsonMap) throws ElasticsearchException, IOException {
-		UpdateRequest.Builder updateBuilder = new UpdateRequest.Builder();
-		updateBuilder.index("index_name")
-				.id("id")
-				.doc(jsonMap);
-	//	UpdateResponse response = operation.update(updateBuilder.build());
-
-	}
 
 	//SK 하이닉스 비밀여부, 비밀 확률 solr update 로직
 	@Override
