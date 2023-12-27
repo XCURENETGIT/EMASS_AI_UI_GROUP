@@ -500,3 +500,28 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 
 
 .trTitle {  text-align: center; font-weight:600; width: 200px;}
+
+
+.modal {z-index: 99999 !important;}
+#bootstrap_alert .modal-dialog .modal-content {padding: 15px !important;max-width: 500px;}
+#bootstrap_alert .modal-dialog .modal-content .modal-footer button {width: 100% !important; padding: 14px 20px !important; margin: 14px 0 8px 0; background-color: #1C64D3 !important; border: none !important; color: #fff !important; font-size: 16px; cursor: pointer;}
+#bootstrap_alert .modal-dialog .modal-content .modal-footer .bootstrap-dialog-footer-buttons {padding: 8px 0 0 0;font-size: 16px;}
+#bootstrap_alert .modal-dialog .modal-content .modal-footer button:hover{opacity: 0.8 !important;}
+#bootstrap_alert .modal-dialog .modal-content .modal-header .bootstrap-dialog-header .bootstrap-dialog-close-button .close { border: 0 !important; color: #999 !important; font-size: 28px !important; font-weight: bold !important; cursor: pointer !important; position: absolute !important; right: 20px !important; top: 8px !important; background-color: transparent;}
+#bootstrap_alert .modal-dialog .modal-content .modal-header{height: 40px !important; border-bottom: 1px solid #F5F7F7 !important; background-color: transparent !important;}
+#bootstrap_alert .modal-dialog .modal-content .modal-header .bootstrap-dialog-header .bootstrap-dialog-close-button .close:hover {color: black !important;}
+#bootstrap_alert .modal-dialog .modal-content .modal-body .bootstrap-dialog-body .bootstrap-dialog-message{ display: block; font-size: 16px; font-weight: 500; margin-top: 8px; vertical-align: middle; padding: 45px 0 0 0; background:url(../img/ico_contained.png) top center no-repeat; }
+#bootstrap_alert .bootstrap-dialog-title {display: inline-block !important;	font-size: 18px; font-weight: 600; color: #111; text-align: center; width: 100%;}
+#bootstrap_alert .bootstrap-dialog-title .auto_close {font-size: 12px; font-weight: 400; color: #111; text-align: center; width: 100%;padding-top: 5px;}
+
+#bootstrap_confirm .modal-dialog .modal-content {padding: 15px !important;max-width: 500px;}
+#bootstrap_confirm .modal-dialog .modal-content .modal-footer button {width: 50% !important; padding: 14px 20px !important; margin: 14px 0 8px 0; background-color: #1C64D3 !important; border: none !important; color: #fff !important; font-size: 16px; cursor: pointer;}
+#bootstrap_confirm .modal-dialog .modal-content .modal-footer .bootstrap-dialog-footer-buttons {padding: 8px 0 0 0;font-size: 16px;}
+#bootstrap_confirm .modal-dialog .modal-content .modal-footer button:hover{opacity: 0.8 !important;}
+#bootstrap_confirm .modal-dialog .modal-content .modal-header .bootstrap-dialog-header .bootstrap-dialog-close-button .close { border: 0 !important; color: #999 !important; font-size: 28px !important; font-weight: bold !important; cursor: pointer !important; position: absolute !important; right: 20px !important; top: 8px !important; background-color: transparent;}
+#bootstrap_confirm .modal-dialog .modal-content .modal-header{height: 40px !important; border-bottom: 1px solid #F5F7F7 !important; background-color: transparent !important;}
+#bootstrap_confirm .modal-dialog .modal-content .modal-header .bootstrap-dialog-header .bootstrap-dialog-close-button .close:hover {color: black !important;}
+#bootstrap_confirm .modal-dialog .modal-content .modal-body .bootstrap-dialog-body .bootstrap-dialog-message{ display: block; font-size: 16px; font-weight: 500; margin-top: 8px; vertical-align: middle; padding: 45px 0 0 0; background:url(../img/ico_check.png) top center no-repeat; }
+#bootstrap_confirm .bootstrap-dialog-title {display: inline-block !important;	font-size: 18px; font-weight: 600; color: #111; text-align: center; width: 100%;}
+#bootstrap_confirm .bootstrap-dialog-title .auto_close {font-size: 12px; font-weight: 400; color: #111; text-align: center; width: 100%;padding-top: 5px;}
+#bootstrap_confirm .modal-dialog .modal-content .modal-footer button.btn-default {background-color: #EEE !important;color: #111 !important;}

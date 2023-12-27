@@ -2,9 +2,9 @@ package com.xcurenet.minio;
 
 import com.xcurenet.common.crypto.CryptoCommon;
 import com.xcurenet.common.util.Common;
+import com.xcurenet.common.util.TimeUtil;
 import io.minio.*;
-import io.minio.errors.*;
-import io.minio.messages.Bucket;
+import io.minio.errors.ErrorResponseException;
 import io.minio.messages.Item;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
@@ -19,13 +19,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 
 
 @Log4j2
@@ -146,6 +139,33 @@ public class MinioFileAdapter {
 			IOUtils.closeQuietly(outputStream);
 			response.flushBuffer();
 		}
+	}
+
+
+	public boolean exists(String path) throws IOException {
+		try {
+			Iterable<Result<Item>> results = minioClient.listObjects(
+					ListObjectsArgs.builder()
+							.bucket(bucket)
+							.prefix(removeLeadingSlash(path))
+							.maxKeys(1)
+							.includeVersions(false)
+							.build());
+
+			for (Result<Item> item : results) {
+				return true;
+			}
+		} catch (Exception e) {
+			log.error("", e);
+		}
+		return false;
+	}
+
+	public static String removeLeadingSlash(String input) {
+		if (input != null && input.startsWith("/")) {
+			return input.substring(1);
+		}
+		return input;
 	}
 
 }
