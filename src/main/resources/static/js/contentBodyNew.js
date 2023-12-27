@@ -1281,6 +1281,7 @@ function userHtml(userList,tr, srcip, dstip, usrip) {
 		if(nvl(user.inSide) == 'N') outSideCnt++;
 		else inSideCnt++;
 	}
+
 	var str = '';
 	if(tr == 'userTr') str = contentBody.user;
 	else if(tr == 'fromTr') str = contentBody.from;
@@ -1475,7 +1476,7 @@ function setFileDiv(msg) {
 	
 	
 function clickFeedbackBtn(i, attachId, msgId, attachFeedbackDate, mlFeedbackYN, mlFeedbackComment, attachSecretYn, attachName, attachHash, features) {
-	var con = document.getElementById('feedbackSetting'+i);
+	var con = document.getElementById('#feedbackSetting'+i);
 	var j = null;
 	
 	//feedbackSetting'+i id값을 가진 요소가 있는지 체크

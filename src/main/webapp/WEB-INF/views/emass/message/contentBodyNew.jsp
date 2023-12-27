@@ -757,13 +757,56 @@
 						<h4 class="red02" id="subject"></h4>
 						<span class="loca" id="svc"></span>
 					</div>
-
 					<div class="conBox">
-							<div id="userTr">
-								<h5 id="userid"></h5>
-								<span class="loca" id="ctimeTd"></span>
-							</div>
+						<div id="userTr">
+							<h5 id="userid"></h5>
+							<span class="loca" id="ctimeTd"></span>
+						</div>
 						<table class="subTable mat8">
+							<%--피드백 관련 --%>
+							<tr id="infoFeedbackTr" style="display: none;">
+								<td class="topline" colspan="4" style="border-bottom: 1px solid #ccc !important;">
+									<div class="form-inline not-dashed">
+											<span style="display: inline-block; width: 140px;">
+												<span id="infoType"></span>
+												<span id="probType"></span>
+											</span>
+											<span style="margin-left: 10px;">
+												<label class="radio-inline c-radio">
+													<input type="radio" name="feedback" class="feedback" value="0">
+													<span class="fa fa-check"></span><span class="feedbackCorrect"></span><s:message code="condition.info.feedback0"/>
+												</label>
+												<label class="radio-inline c-radio">
+													<input type="radio" name="feedback" class="feedback" value="9">
+													<span class="fa fa-check"></span><span class="feedbackDefer"></span><s:message code="condition.info.feedback9"/>
+												</label>
+											</span>
+									</div>
+									<div class="form-inline not-dashed">
+										<span style="display: inline-block; width: 140px;">
+											<span id="ml_confd_userid"></span>
+										</span>
+										<span style="margin-left: 10px;">
+												<label class="radio-inline c-radio">
+													<input type="radio" name="feedback" class="feedback" value="1">
+													<span class="fa fa-check"></span><span class="feedbackInCorrect"></span><s:message code="condition.info.class1"/>
+												</label>
+												<label class="radio-inline c-radio">
+													<input type="radio" name="feedback" class="feedback" value="2">
+													<span class="fa fa-check"></span><span class="feedbackInCorrect"></span><s:message code="condition.info.class2"/>
+												</label>
+												<label class="radio-inline c-radio">
+													<input type="radio" name="feedback" class="feedback" value="3">
+													<span class="fa fa-check"></span><span class="feedbackInCorrect"></span><s:message code="condition.info.class3"/>
+												</label>
+												<label class="radio-inline c-radio">
+													<input type="radio" name="feedback" class="feedback" value="4">
+													<span class="fa fa-check"></span><span class="feedbackInCorrect"></span><s:message code="condition.info.class4"/>
+												</label>
+										</span>
+									</div>
+								</td>
+							</tr>
 							<tr>
 								<th><s:message code="bodyview.srcIp"/></th>
 								<td class="topline" id="srcipTd"></td>
@@ -779,6 +822,36 @@
 							<tr>
 								<th><s:message code="bodyview.hostPathInfo"/></th>
 								<td colspan="3" class="mal8 tableLink txt_left" id="hostDiv"></td>
+							</tr>
+
+							<%-- from to cc bcc info--%>
+							<tr id="fromTr" class="fold_clickTr">
+								<th class="fold_clickTh"><span class="fold_icon"></span><span class="trTitle"><s:message code="condition.from"/></span></th>
+								<td class="fold_clickTd" colspan="3">
+									<div id="sendUserDiv" class="fold">
+									</div>
+								</td>
+							</tr>
+							<tr id="toTr" class="fold_clickTr">
+								<th class="fold_clickTh"><span class="fold_icon"></span><span class="trTitle"><s:message code="condition.to"/></span></th>
+								<td class="fold_clickTd" colspan="3">
+									<div id="receiveUserDiv" class="fold">
+									</div>
+								</td>
+							</tr>
+							<tr id="ccTr" class="fold_clickTr">
+								<th class="fold_clickTh"><span class="fold_icon"></span><span class="trTitle"><s:message code="condition.cc"/></span></th>
+								<td class="fold_clickTd" colspan="3">
+									<div id="ccUserDiv" class="fold">
+									</div>
+								</td>
+							</tr>
+							<tr id="bccTr" class="fold_clickTr">
+								<th class="fold_clickTh"><span class="fold_icon"></span><span class="trTitle"><s:message code="condition.bcc"/></span></th>
+								<td class="fold_clickTd" colspan="3">
+									<div id="bccUserDiv" class="fold">
+									</div>
+								</td>
 							</tr>
 						</table>
 					</div>

@@ -87,11 +87,11 @@
 
 .slick-cell a {
 	font-size: 13px;
-	font-family: "Pretendard", "Gulim", "Dotum", Helvetica,"Apple SD Gothic Neo",sans-serif !important;
+/*	font-family: "Pretendard", "Gulim", "Dotum", Helvetica,"Apple SD Gothic Neo",sans-serif !important;*/
 	text-decoration: none;
 	cursor: pointer;
 	color: #00c;
-	line-height:25px;
+	line-height:16px;
 }
 
 .slick-cell a:hover{

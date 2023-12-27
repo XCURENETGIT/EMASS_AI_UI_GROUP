@@ -499,3 +499,4 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 .clearfix::after {content: "";clear: both; display: table;}
 
 
+.trTitle {  text-align: center; font-weight:600; width: 200px;}

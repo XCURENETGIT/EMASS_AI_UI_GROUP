@@ -1542,8 +1542,8 @@ public class EmsMessageController {
 		String feedback = Common.nvl(request.getParameter("feedback"));
 
 		for (int i = 0; i < msgId.length; i++) {
-			solrEdcService.setFeedback(msgId[i], feedback);
-			emsMessageService.updateEmsFeedback(msgId[i], feedback, adminId);
+			solrEdcService.setFeedback(msgId[i], feedback); // 엘라스틱 서치 문서 update
+			emsMessageService.updateEmsFeedback(msgId[i], feedback, adminId); // mongoDB 문서 update
 		}
 		return new XcnResponseVO(XcnRspCode.OK);
 	}

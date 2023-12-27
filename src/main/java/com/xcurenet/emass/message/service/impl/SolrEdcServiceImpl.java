@@ -19,6 +19,7 @@ import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.SortClause;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.aggregations.*;
 import org.elasticsearch.search.aggregations.bucket.range.RangeAggregationBuilder;
@@ -35,8 +36,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.core.AggregationsContainer;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.Query;
+import org.springframework.data.elasticsearch.core.query.UpdateQuery;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -411,24 +414,25 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	}
 
 	@Override
-	public void setFeedback(final String msgId, final String ml_confd_feedback) throws SolrServerException, IOException {
-		Map<String, Object> jsonMap = new HashMap<>();
-		jsonMap.put("msgid",msgId);
-		Map<String, Object> value = new HashMap<>();
-		value.put("set", Common.nvz(ml_confd_feedback, 9));
-		jsonMap.put("ml_confd_feedback", value);
+	public void setFeedback(final String msgId, final String ml_confd_feedback) throws ElasticsearchException, IOException {
+		int feedBack = Common.nvz(ml_confd_feedback, 9);
+		String index = "edc_"+(Common.nvl(msgId).substring(0,6));
+		Map<String, Object> params = new HashMap<>();
+		params.put("feedback",feedBack);
 
 
-//		UpdateQuery updateQuery = new UpdateQuery();
-//		updateQuery.setQuery(new TermQueryBuilder("_id",jsonMap.get("msgid")));
-//		updateQuery.setConflicts("proceed");
-//		Object param = jsonMap.get("value");
-//		Script script = new Script(ScriptType.INLINE,"painless", "ctx._source.ml_confd_feedback = (param)", (Map<String, Object>) param);
-//		updateByQueryRequest.setScript(script);
 
-	//	operation.updateByQuery(updateByQueryRequest);
-
-		log.info("[UPDATE_RESULT] 피드백 파라미터 수정 by {}",jsonMap.get("ml_confd_feedback"));
+		IndexCoordinates indexCoordinates = IndexCoordinates.of(index);
+		operation.update(
+				UpdateQuery.builder(msgId)
+						.withScriptType(org.springframework.data.elasticsearch.core.ScriptType.INLINE)
+						.withScript("ctx._source.ml_confd_feedback = params.feedback")
+						.withLang("painless")
+						.withParams(params)
+						.withAbortOnVersionConflict(true)
+						.withDocAsUpsert(false)
+						.build(),indexCoordinates
+		);
 	}
 
 

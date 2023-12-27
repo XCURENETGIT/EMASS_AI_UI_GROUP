@@ -307,8 +307,9 @@
             list-style: none;
             border: 1px solid #ccc;
             width: 150px;
+            left:0px;
             padding-left: 0px;
-            top: 21px;
+            top: 26px;
             border-radius: 4px;
             box-shadow: 0px 6px 12px rgba(0,0,0,0.175);
             background-color: #fff;
@@ -514,6 +515,7 @@
             getMsgPosition();
             getFilterSearchBox();
 
+            console.log(infoFeedbackConf)
             if( infoFeedbackConf == 'true' && infoFeedbackYn == 'Y' ) {
                 $('#infoFeedbackDiv, #feedbackBtn, #sctDiv').show();
                 $('#secretDocuDiv').hide();
@@ -2393,8 +2395,8 @@
                         <%} %>
                         <%-- 피드백 설정 --%>
                         <%-- 보기 설정 --%>
-                        <div class="viewSetup" style="position: absolute;top:32px;right:1px;z-index: 9;">
-                            <a href="javascript:;" style="padding-right:10px; color:#383838; cursor: pointer; font-size: 12px;float: right; display: none;" id="feedbackBtn"><s:message code="condition.feedback"/> <s:message code="common.msg.setting"/></a>
+                        <div class="viewSetup" style="position: absolute;top:32px;right:1px;z-index: 9;	text-align: right">
+                            <button href="javascript:;" class="btn05 dropdown-toggle" id="feedbackBtn"><s:message code="condition.feedback"/> <s:message code="common.msg.setting"/></button>
                             <div style="display: inline-block; padding-left:10px;vertical-align: bottom;">
                                 <ul id="feedbackSetting" style="display: none; z-index: 991; padding: 5px 0px;">
                                     <li><a href="javascript:void(0);" onclick="setFeedback(0);" style="padding-left: 20px;"><span class="feedbackCorrect" style="display: inline-block; position: relative; top: 0px;"></span>&nbsp;<s:message code="condition.info.feedback0"/></a></li>
@@ -2406,6 +2408,7 @@
                                 </ul>
                                 <div style="position: fixed; top: 0px; bottom: 0px; left: 0px; right: 0px; z-index: 990; display: none; width: 100%; height: 100%;" id="overlay"></div>
                             </div>
+
                             <button class="btn05 dropdown-toggle" data-toggle="dropdown" id="config_toggle">
                                 <s:message code="condition.view.setup"/><span class="caret"></span>
                             </button>
@@ -2416,8 +2419,6 @@
                                         <a id="none_btn" style="font-size: 11px; font-weight: initial; line-height: 20px; padding-right: 5px;" class="areaBtn"><img src="<c:url value="/img/message/message_none.jpg"/>"  style="padding-right: 4px;padding-bottom: 2px"><s:message code="condition.view.type1"/> </a>
                                         <a id="bottom_btn" style="font-size: 11px; font-weight: initial; line-height: 20px; padding-right: 5px;" class="areaBtn"><img src="<c:url value="/img/message/message_bottom.jpg"/>" style="padding-right: 4px;padding-bottom: 2px"><s:message code="condition.view.type2"/></a>
                                         <a id="right_btn" style="font-size: 11px; font-weight: initial; line-height: 20px; padding-right: 5px;" class="areaBtn"><img src="<c:url value="/img/message/message_right.jpg"/>" style="padding-right: 4px;padding-bottom: 2px"><s:message code="condition.view.type3"/></a>
-
-
                                     </div>
                                     <!-- <button class ="msg_button" id="config_colse" style="height: 22px; line-height: 19px; float: right; margin-top: 5px;margin-right: 10px;">닫기</button> -->
                                 </div>

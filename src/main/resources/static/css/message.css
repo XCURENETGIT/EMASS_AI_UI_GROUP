@@ -813,7 +813,7 @@ http://scripts.sil.org/OFL
 }
 
 * {margin:0; padding: 0;box-sizing:border-box;}
-html, body, div, span, applet, object, iframe,
+html, body, div,  applet, object, iframe,
 h1, h2, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
 del, dfn, em, img, ins, kbd, q, s, samp,
@@ -821,7 +821,7 @@ small, strike, strong, sub, sup, tt, var,
 b, u, i, center,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
+table, caption, tbody, tfoot,
 article, aside, canvas, details, embed,
 figure, figcaption, footer, header, hgroup,
 menu, nav, output, ruby, section, summary,
@@ -834,6 +834,7 @@ time, mark, audio, video {
 	vertical-align: baseline;
 	font-family: Pretendard;
 	font-weight:400;
+	font-size: 13px;
 	box-sizing:border-box;
 
 
@@ -894,3 +895,248 @@ input[type="checkbox"]:disabled + span {opacity: 0.7;cursor: not-allowed;}
 
 .dropdown-additionMenu {left:21.2%;}
 .dropdown-exportMenu  {left:81.2%;}
+
+
+
+
+.checkbox, .radio {
+	position: relative;
+	display: block;
+	margin-top: 10px;
+	margin-bottom: 10px
+}
+
+.checkbox label, .radio label {
+	min-height: 20px;
+	padding-left: 0;
+	margin-bottom: 0;
+	font-weight: 400;
+	cursor: pointer
+}
+
+
+.checkbox+.checkbox, .radio+.radio {
+	margin-top: -5px
+}
+
+.checkbox-inline, .radio-inline {
+	position: relative;
+	display: inline-block;
+	padding-left: 0;
+	margin-bottom: 0;
+	font-weight: 400;
+	vertical-align: middle;
+	cursor: pointer;
+}
+
+.checkbox-inline+.checkbox-inline, .radio-inline+.radio-inline {
+	margin-top: 0;
+	margin-left: 10px;
+}
+
+.c-checkbox, .c-radio {
+	margin-right: 4px ;
+	line-height: 20px;
+}
+
+.c-checkbox *, .c-radio * {
+	cursor: pointer;
+}
+
+
+.c-checkbox span, .c-radio span {
+	position: relative;
+	display: inline-block;
+	vertical-align: top;
+	margin-left: -20px;
+	width: 20px;
+	height: 20px;
+	border-radius: 2px;
+	background-color: #fff;
+	border: 1px solid #ccc;
+	margin-right: 5px;
+	text-align: center;
+
+}
+
+.radio-inline.c-radio {
+	padding-left: 0px !important;
+}
+
+.feedbackCorrect{
+	background-image:url('../img/icon/correct.png');
+}
+.feedbackInCorrect{
+	background-image:url('../img/icon/incorrect.png');
+}
+.feedbackDefer{
+	background-image:url('../img/icon/defer.png');
+}
+
+div.feedbackCorrect, div.feedbackInCorrect, div.feedbackDefer {
+	background-repeat:no-repeat;
+	width:18px;
+	height:18px;
+	position: relative;
+	top: 2px;
+	float: left;
+}
+span.feedbackCorrect, span.feedbackInCorrect, span.feedbackDefer {
+	background-repeat:no-repeat;
+	width:18px;
+	height:18px;
+	position: relative;
+	top: 2px;
+	border: 0px !important;
+	margin: 0px !important;
+	float: left;
+}
+
+#contextMenu li .feedbackCorrect,
+#contextMenu li .feedbackInCorrect,
+#contextMenu li .feedbackDefer {
+	background-repeat:no-repeat;
+	width:18px;
+	height:18px;
+	position: relative;
+	top: -2px;
+	float: left;
+}
+.c-checkbox, .c-radio {
+	margin-right: 4px;
+	line-height: 20px;
+}
+
+.c-checkbox *, .c-radio * {
+	cursor: pointer;
+}
+
+.c-checkbox input, .c-radio input {
+	opacity: 0;
+	position: absolute;
+	margin-left: 0 !important
+}
+
+.c-checkbox span, .c-radio span {
+	position: relative;
+	display: inline-block;
+	vertical-align: top;
+	margin-left: -20px;
+	width: 20px;
+	height: 20px;
+	border-radius: 2px;
+	border: 1px solid #ccc;
+	margin-right: 5px;
+	text-align: center;
+}
+
+.c-checkbox span:before, .c-radio span:before {
+	margin-left: 1px
+}
+
+.c-checkbox:hover span, .c-radio:hover span {
+	border-color: #253F56;
+}
+
+.form-inline .c-checkbox span, .form-inline .c-radio span {
+	margin-left: 0
+}
+
+.c-checkbox.c-checkbox-rounded span, .c-checkbox.c-radio-rounded span,
+.c-radio span, .c-radio.c-checkbox-rounded span, .c-radio.c-radio-rounded span {
+	border-radius: 500px;
+}
+
+.c-checkbox span:before, .c-radio span:before {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	opacity: 0;
+	text-align: center !important;
+	font-size: 12px;
+	line-height: 18px;
+	vertical-align: middle
+}
+
+.c-checkbox input[type=checkbox]:checked+span:before, .c-checkbox input[type=radio]:checked+span:before,
+.c-radio input[type=checkbox]:checked+span:before, .c-radio input[type=radio]:checked+span:before {
+	color: #fff;
+	opacity: 1;
+	transition: color .3s ease-out
+}
+
+.c-checkbox input[type=checkbox]:checked+span, .c-checkbox input[type=radio]:checked+span,
+.c-radio input[type=checkbox]:checked+span, .c-radio input[type=radio]:checked+span {
+	border-color: #253F56;
+	background-color: #253F56;
+}
+
+.c-checkbox input[type=radio]:checked+span, .c-radio input[type=radio]:checked+span {
+	background-color: #fff
+}
+
+.c-checkbox input[type=radio]:checked+span:before, .c-radio input[type=radio]:checked+span:before {
+	color: #253F56
+}
+
+.c-checkbox input[type=checkbox]:disabled+span, .c-checkbox input[type=radio]:disabled+span,
+.c-radio input[type=checkbox]:disabled+span, .c-radio input[type=radio]:disabled+span {
+	border-color: #ddd !important;
+	background-color: #ddd !important
+}
+
+.c-checkbox input[type=radio]:disabled+span, .c-radio input[type=radio]:disabled+span {
+	background-color: #fff !important
+}
+
+.c-checkbox input[type=radio]:disabled+span:before, .c-radio input[type=radio]:disabled+span:before {
+	color: #ddd
+}
+
+.c-radio.c-radio-nofont span:before {
+	content: "";
+	width: 10px;
+	height: 10px;
+	top: 50%;
+	left: 50%;
+	margin-top: -5px;
+	margin-left: -5px;
+	border-radius: 500px
+}
+
+.c-radio.c-radio-nofont input[type=radio]:checked+span:before {
+	color: #fff;
+	opacity: 1;
+	transition: color .3s ease-out
+}
+
+.c-radio.c-radio-nofont input[type=radio]:checked+span {
+	border-color: #253F56;
+	background-color: #fff
+}
+
+.c-radio.c-radio-nofont input[type=radio]:checked+span:before {
+	background-color: #253F56
+}
+
+.c-radio.c-radio-nofont input[type=radio]:disabled+span {
+	border-color: #ddd !important;
+	background-color: #fff !important
+}
+
+.c-radio.c-radio-nofont input[type=radio]:disabled+span:before {
+	background-color: #ddd
+}
+h3{margin-top: 0px; !important}
+
+.codeContent #slick_grid_more_btn {
+	line-height: 15px;
+	vertical-align: sub;
+}
+.form-inline:not(.not-dashed) {
+	margin-left: 0px;
+	border-bottom: 1px dashed #eee;
+	padding: 7px 0px;
+}
