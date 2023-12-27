@@ -9,7 +9,6 @@ body,html {width:100%; height:100%;}
 #container #gnbWrap {position: fixed; z-index:99; min-width:76px; height:100%;background-color: #242330; }
 #container #contentArea {position: relative;margin-left:78px; width: calc(100% - 78px);  height:100%;}
 
-
 /* Header */
 #header .allmenu {position: relative; float:left; max-width:76px; width:76px; height:50px; background-color: #111;}
 #header .allmenu a {width:100%; text-align: center; display: inline-block; margin-top:9px;}
@@ -21,7 +20,6 @@ body,html {width:100%; height:100%;}
 #header .headerArea .ipinfo_right {position: absolute;right:20px;top:14px; color:#fff;display: flex;align-items: center;}
 #header .headerArea .ipinfo_right p {float:left;font-size:12px;margin-left:16px;}
 #header .headerArea .ipinfo_right span {}
-
 
 /* Gnb */
 #gnb {position: relative;width:100%; background-color: #242330; margin-top:16px; }
@@ -74,6 +72,8 @@ body,html {width:100%; height:100%;}
 
 .tit01 {background:url(../img/ico_main_tit01.png) top left no-repeat; font-size:14px; font-weight: 400; color:#111;padding-left:20px;}
 
+#xcn_mainWrap_new .xcn_con_area {position: relative; display: grid; grid-template-columns: 1fr ; column-gap: 20px; }
+#xcn_mainWrap_new .xcn_con_area > div {}
 
 #xcn_mainWrap .right {position: relative; height:100%; background-color: #F8F8F8; padding:24px 20px;overflow: hidden;}
 #xcn_mainWrap .right .m_grapha {display: grid; grid-template-columns: 1fr 1fr; column-gap: 12px;}
@@ -108,7 +108,6 @@ body,html {width:100%; height:100%;}
 #xcn_mainWrap .right .filetop10 div.list ul li > .num {text-align: center;  width:24px; height:24px; line-height:1.5;  font-weight:600; font-size:16px;  border:1px solid #ddd; background-color: #fff;}
 #xcn_mainWrap .right .filetop10 div.list ul li > p {height:24px; line-height: 1.5; color:#333;}
 #xcn_mainWrap .right .filetop10 div.list ul li > p span.righttext {position:absolute; top:1px; right:0; text-align: right; color:#555; font-size:14px;}
-
 
 
 /* Title */
@@ -161,7 +160,6 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 .personaldataBox {overflow: auto;  height:342px;}
 .ico_right {position: absolute; right:0; top:8px;}
 
-#printDiv { }
 .a4 {overflow: hidden; height: 100%;}
 
 /* 메신저*/
