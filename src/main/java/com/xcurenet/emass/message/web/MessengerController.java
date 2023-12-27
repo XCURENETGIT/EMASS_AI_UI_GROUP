@@ -480,7 +480,7 @@ public class MessengerController {
 		String startDt = Common.nvl(param.get("startDt"));
 		String endDt = Common.nvl(param.get("endDt"));
 		String searchStr = Common.nvl(param.get("searchStr"));
-		int limit = Common.nvz(param.get("limit"), 100000);
+		int limit = Common.nvz(param.get("limit"), 10000); /* 최대 1만임 */
 
 		String msgDt=msgId.substring(0,14);
 
@@ -515,6 +515,13 @@ public class MessengerController {
 		sq.setFields("msgid","userid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user");
 
 		/* 그룹 디테일검색 동적 들어와야 할 offset,size 값*/
+		sq.setParam("group", true);
+		sq.setParam("group.facet", true);
+		sq.setParam("group.ngroups", true);
+		sq.setParam("group.field", "userid");
+		sq.setParam("facet", true);
+		sq.setParam("facet.field", "userid");
+
 		sq.setParam("facet.offset", "0");
 		sq.setParam("facet.size", String.valueOf(limit));
 		boolean facet_detail= ("true".equals(Common.nvl(param.get("facet_detail"))))? true:false;
