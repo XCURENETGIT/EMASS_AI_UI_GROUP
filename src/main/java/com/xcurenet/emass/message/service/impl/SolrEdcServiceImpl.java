@@ -228,10 +228,10 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 						/*그룹 디테일 검색 */
 						int offset = (!Common.isEmpty(sq.get("facet.offset"))) ? Common.nvz(sq.get("facet.offset")) : 0; // default 0;
 						int size = (!Common.isEmpty(sq.get("facet.size"))) ? Common.nvz(sq.get("facet.size")) : 1; // default 1
-						termsAggregation  = termsAggregation.subAggregation(AggregationBuilders.topHits(field).size(size).from(offset).sort("ctime", SortOrder.DESC));
+						termsAggregation  = termsAggregation.subAggregation(AggregationBuilders.topHits(field).size(size).from(offset).sort("ctime", SortOrder.ASC));
 					}else{
 						/* 그룹 검색 1개씩 묶음*/
-						termsAggregation  = termsAggregation.subAggregation(AggregationBuilders.topHits(field).size(1).from(0).sort("ctime", SortOrder.DESC));
+						termsAggregation  = termsAggregation.subAggregation(AggregationBuilders.topHits(field).size(1).from(0).sort("ctime", SortOrder.ASC));
 					}
 					aggregations.add(termsAggregation);
 		}
