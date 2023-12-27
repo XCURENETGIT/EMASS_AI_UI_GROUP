@@ -89,13 +89,22 @@
 		}
 
 		.userOutside{
-			background-color:#ffcdcd;
+			background-color:#FC5656;
+			padding:4px 16px;
+			border-radius: 50px;
+			color:#fff;
+			font-weight:600;
+		}
+		.userOutside:hover{
+			background-color:#FC5656;
+			padding:4px 16px;
+			border-radius: 50px;
+			color:#fff;
+			font-weight:600;
 		}
 		#infoTable td div {
 			word-break:break-all;
 		}
-
-
 
 
 		.cd-top {
@@ -159,9 +168,11 @@
 		.fold_on {
 			overflow:hidden;
 			height: 15px;
+
 		}
 		.fold_clickTd{
 			overflow:hidden;
+
 			text-overflow:ellipsis;
 		}
 		.fold_clickTh:hover {
@@ -178,6 +189,18 @@
 		.ellipsis {
 			white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 		}
+		.form-inline .c-checkbox span, .form-inline .c-radio span { background-color:#f8f8f8;
+			margin-left:-20px;border:none;}
+		.c-checkbox input,
+		.c-radio input {
+			opacity: 0;
+			position: absolute;
+			margin-left: 0 !important;background: #f8f8f8;
+		}
+		input[type="checkbox"]:disabled {width:0; height:0; border:none;}
+		.subTable th {text-align: center;}
+		.subTable td{ border-bottom:1px solid #ededed;}
+
 	</style>
 	<script type="text/javascript">
 		var popup_msgId = '<%=msgid%>';
@@ -686,7 +709,7 @@
 		});
 	</script>
 </head>
-<div class="grayBg02">
+<div class="p20">
 	<!-- 메시지 상세 시작 -->
 	<div class="inner_message" id="msgDiv" style="display: none">
 			<div class="messageBtn">
@@ -763,10 +786,23 @@
 							<span class="loca" id="ctimeTd"></span>
 						</div>
 						<table class="subTable mat8">
+							<colgroup>
+								<col style="width:150px;">
+								<col style="width:*">
+								<col style="width:150px;">
+								<col style="width:*">
+								<col>
+							</colgroup>
 							<%--피드백 관련 --%>
 							<tr id="infoFeedbackTr" style="display: none;">
-								<td class="topline" colspan="4" style="border-bottom: 1px solid #ccc !important;">
+								<th class="topline" colspan="1" style="border-bottom: 1px solid #ccc !important;">
 									<div class="form-inline not-dashed">
+									<span style="display: inline-block; width: 140px;">
+												<span id="infoType"></span>
+												<span id="probType"></span>
+											</span>
+										</div>
+									<!--<div class="form-inline not-dashed">
 											<span style="display: inline-block; width: 140px;">
 												<span id="infoType"></span>
 												<span id="probType"></span>
@@ -804,6 +840,41 @@
 													<span class="fa fa-check"></span><span class="feedbackInCorrect"></span><s:message code="condition.info.class4"/>
 												</label>
 										</span>
+									</div>-->
+								</th>
+								<td colspan="3"class="topline"  style="border-bottom: 1px solid #ccc !important;">
+									<div class="form-inline not-dashed">
+										<span style="margin-left: 10px;">
+												<label class="radio-inline c-radio">
+													<input type="radio" name="feedback" class="feedback" value="0">
+													<span class="fa fa-check"></span><span class="feedbackCorrect"></span><s:message code="condition.info.feedback0"/>
+												</label>
+												<label class="radio-inline c-radio">
+													<input type="radio" name="feedback" class="feedback" value="9">
+													<span class="fa fa-check"></span><span class="feedbackDefer"></span><s:message code="condition.info.feedback9"/>
+												</label>
+											</span>
+										<span>
+											<span id="ml_confd_userid"></span>
+										</span>
+										<span style="margin-left: 10px;">
+												<label class="radio-inline c-radio">
+													<input type="radio" name="feedback" class="feedback" value="1">
+													<span class="fa fa-check"></span><span class="feedbackInCorrect"></span><s:message code="condition.info.class1"/>
+												</label>
+												<label class="radio-inline c-radio">
+													<input type="radio" name="feedback" class="feedback" value="2">
+													<span class="fa fa-check"></span><span class="feedbackInCorrect"></span><s:message code="condition.info.class2"/>
+												</label>
+												<label class="radio-inline c-radio">
+													<input type="radio" name="feedback" class="feedback" value="3">
+													<span class="fa fa-check"></span><span class="feedbackInCorrect"></span><s:message code="condition.info.class3"/>
+												</label>
+												<label class="radio-inline c-radio">
+													<input type="radio" name="feedback" class="feedback" value="4">
+													<span class="fa fa-check"></span><span class="feedbackInCorrect"></span><s:message code="condition.info.class4"/>
+												</label>
+										</span>
 									</div>
 								</td>
 							</tr>
@@ -821,14 +892,14 @@
 							</tr>
 							<tr>
 								<th><s:message code="bodyview.hostPathInfo"/></th>
-								<td colspan="3" class="mal8 tableLink txt_left" id="hostDiv"></td>
+								<td colspan="3" class="mal8 tableLink" id="hostDiv"></td>
 							</tr>
 
 							<%-- from to cc bcc info--%>
 							<tr id="fromTr" class="fold_clickTr">
 								<th class="fold_clickTh"><span class="fold_icon"></span><span class="trTitle"><s:message code="condition.from"/></span></th>
 								<td class="fold_clickTd" colspan="3">
-									<div id="sendUserDiv" class="fold">
+									<div id="sendUserDiv" class="fold" style="padding:7px;">
 									</div>
 								</td>
 							</tr>
