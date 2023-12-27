@@ -729,7 +729,7 @@
 											src="<c:url value="/img/ico_main_tit10.png"/>"></button>
 									<button type="button" class="btn btn-default dashIcon" data-value="tit11"><img
 											src="<c:url value="/img/ico_main_tit11.png"/>"></button>
-									<button type="button" class="btn btn-default dashIcon" data-value="tit02"><img
+									<button type="button" class="btn btn-default dashIcon" data-value="tit12"><img
 											src="<c:url value="/img/ico_main_tit12.png"/>"></button>
 									<input type="hidden" id="dashIcon" name="dashIcon"/>
 								</div>

@@ -270,12 +270,14 @@
             $(document).on('click', '.panel-footer', function(){
                 var id = $(this).parents('.grid-stack-item').attr('data-gs-id');
                 var dashCondition;
+
                 for(var i=0; i<contentData.length; i++){
                     if(contentData[i].dashKey == id.split('_')[1]){
                         dashCondition = contentData[i].dashCondition;
                         break;
                     }
                 }
+                console.log("gg"+dashCondition);
                 if(dashCondition != undefined){
                     $('#conditionParam').val(makePeriod(dashCondition));
                     $('#getMessageInfo').submit();

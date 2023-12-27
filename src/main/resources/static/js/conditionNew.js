@@ -540,8 +540,8 @@ var con = {
 				$('#startdatepicker').data("DateTimePicker").date( new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()-condition.startDt, 00, 00, 00 ) );
 				$('#enddatepicker').data("DateTimePicker").date( new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()-condition.endDt, 23, 59, 59 ) );
 			}else if( condition.startDt != undefined && condition.startDt != ''){
-				$('#startdatepicker').data("DateTimePicker").date(condition.startDt.toDate());
-				$('#enddatepicker').data("DateTimePicker").date(condition.endDt.toDate());
+				$('#startdatepicker').data("DateTimePicker").date(condition.startDt);
+				$('#enddatepicker').data("DateTimePicker").date(condition.endDt);
 			}
 
 			$('#solrQueryText').val(condition.query);

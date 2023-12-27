@@ -72,6 +72,9 @@ body,html {width:100%; height:100%;}
 .mainlist div .tit11 {background:url(../img/ico_main_tit11.png) top left no-repeat; font-size:14px; font-weight: 400; color:#111;padding-left:20px;}
 .mainlist div .tit12 {background:url(../img/ico_main_tit12.png) top left no-repeat; font-size:14px; font-weight: 400; color:#111;padding-left:20px;}
 
+.tit01 {background:url(../img/ico_main_tit01.png) top left no-repeat; font-size:14px; font-weight: 400; color:#111;padding-left:20px;}
+
+
 #xcn_mainWrap .right {position: relative; height:100%; background-color: #F8F8F8; padding:24px 20px;overflow: hidden;}
 #xcn_mainWrap .right .m_grapha {display: grid; grid-template-columns: 1fr 1fr; column-gap: 12px;}
 #xcn_mainWrap .right .bigtop10 { position: relative; min-width:100%; min-height:212px; background-color: #fff; border:1px solid #ddd; padding:18px 18px 12px 18px; display: grid; grid-template-columns: 1fr 1fr; column-gap: 12px;}
