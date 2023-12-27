@@ -813,6 +813,7 @@ http://scripts.sil.org/OFL
 }
 
 * {margin:0; padding: 0;box-sizing:border-box;}
+
 html, body, div,  applet, object, iframe,
 h1, h2, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -826,19 +827,21 @@ article, aside, canvas, details, embed,
 figure, figcaption, footer, header, hgroup,
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
-	margin: 0;
-	padding: 0;
-	border: 0;
-	font-size: 100%;
 	font: inherit;
 	vertical-align: baseline;
 	font-family: Pretendard;
-	font-weight:400;
-	font-size: 13px;
-	box-sizing:border-box;
 
 
 }
+
+div{
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+
+
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
@@ -1139,4 +1142,25 @@ h3{margin-top: 0px; !important}
 	margin-left: 0px;
 	border-bottom: 1px dashed #eee;
 	padding: 7px 0px;
+}
+.readY{
+	background-image:url('../img/icon/receive_open_mail.png');
+	background-position: center;
+	background-repeat:no-repeat;
+	width:100%;
+	height:100%;
+}
+.readN{
+	background-image:url('../img/icon/receive_close_mail.png');
+	background-position: center;
+	background-repeat:no-repeat;
+	width:100%;
+	height:100%;
+}
+
+.subject_readN{
+	font-weight: bold;
+}
+.subject_readY{
+	font-weight: normal;
 }

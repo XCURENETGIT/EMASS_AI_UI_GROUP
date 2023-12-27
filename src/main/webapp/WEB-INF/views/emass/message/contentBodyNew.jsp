@@ -172,7 +172,6 @@
 		}
 		.fold_clickTd{
 			overflow:hidden;
-
 			text-overflow:ellipsis;
 		}
 		.fold_clickTh:hover {
@@ -709,7 +708,7 @@
 		});
 	</script>
 </head>
-<div class="p20">
+<div>
 	<!-- 메시지 상세 시작 -->
 	<div class="inner_message" id="msgDiv" style="display: none">
 			<div class="messageBtn">
@@ -880,47 +879,47 @@
 							</tr>
 							<tr>
 								<th><s:message code="bodyview.srcIp"/></th>
-								<td class="topline" id="srcipTd"></td>
+								<td class="topline txt_left" id="srcipTd"></td>
 								<th><s:message code="bodyview.dstIp"/></th>
-								<td class="topline" id="dstipTd"></td>
+								<td class="topline txt_left" id="dstipTd"></td>
 							</tr>
 							<tr>
 								<th><s:message code="bodyview.body.size"/></th>
-								<td id="bodySizeTd"></td>
+								<td class="txt_left" id="bodySizeTd"></td>
 								<th><s:message code="bodyview.userId"/></th>
-								<td id="userIdTd"></td>
+								<td class="txt_left"  id="userIdTd"></td>
 							</tr>
 							<tr>
 								<th><s:message code="bodyview.hostPathInfo"/></th>
-								<td colspan="3" class="mal8 tableLink" id="hostDiv"></td>
+								<td colspan="3" class="mal8 tableLink txt_left" id="hostDiv"></td>
 							</tr>
 
 							<%-- from to cc bcc info--%>
 							<tr id="fromTr" class="fold_clickTr">
 								<th class="fold_clickTh"><span class="fold_icon"></span><span class="trTitle"><s:message code="condition.from"/></span></th>
 								<td class="fold_clickTd" colspan="3">
-									<div id="sendUserDiv" class="fold" style="padding:7px;">
+									<div id="sendUserDiv" class="fold txt_left" style="padding:7px;">
 									</div>
 								</td>
 							</tr>
 							<tr id="toTr" class="fold_clickTr">
 								<th class="fold_clickTh"><span class="fold_icon"></span><span class="trTitle"><s:message code="condition.to"/></span></th>
 								<td class="fold_clickTd" colspan="3">
-									<div id="receiveUserDiv" class="fold">
+									<div id="receiveUserDiv" class="fold txt_left">
 									</div>
 								</td>
 							</tr>
 							<tr id="ccTr" class="fold_clickTr">
 								<th class="fold_clickTh"><span class="fold_icon"></span><span class="trTitle"><s:message code="condition.cc"/></span></th>
 								<td class="fold_clickTd" colspan="3">
-									<div id="ccUserDiv" class="fold">
+									<div id="ccUserDiv" class="fold txt_left">
 									</div>
 								</td>
 							</tr>
 							<tr id="bccTr" class="fold_clickTr">
 								<th class="fold_clickTh"><span class="fold_icon"></span><span class="trTitle"><s:message code="condition.bcc"/></span></th>
 								<td class="fold_clickTd" colspan="3">
-									<div id="bccUserDiv" class="fold">
+									<div id="bccUserDiv" class="fold txt_left">
 									</div>
 								</td>
 							</tr>
@@ -930,11 +929,13 @@
 				<div id="fileDiv" class="messageCon">
 					<div class="top grayBg03 body_toggle fileFold">
 						<h4><i class="fa fa-file-code-o fa-fw"></i> <s:message code="bodyview.file.info"/></h4><h4 id="fileCntArea"></h4> <%--뒤에 파일 갯수 표기--%>
-						<div class="messagePageBtn btnform">
+						<div class="conBtn btnform">
 							<button class="btn05" id="allDownload"><img src="<c:url value="/img/subBtn_save.png"/>"  alt="확대"> <s:message code="bodyview.file.allDownload"/></button>
 						</div>
 					</div>
-					<ul id="filelist"></ul>
+					<div class="filelist">
+						<ul id="filelist"></ul>
+					</div>
 				</div>
 				<%-- 패턴 --%>
 				<div class="messageCon" id="patternDiv">
@@ -968,7 +969,7 @@
 				<div class="messageCon" id="bodyDiv">
 					<div class="top grayBg03">
 							<h4>본문내용</h4>
-							<div class="messagePageBtn btnform">
+							<div class="conBtn btnform">
 								<button class="btn05 font_size" id="large_txt"><img src="<c:url value="/img/subBtn_add.png"/>"  alt="<s:message code="bodyview.msg.zoomIn"/>"><s:message code="bodyview.msg.zoomIn"/></button>
 								<button class="btn05 font_size" id="small_txt"><img src="<c:url value="/img/subBtn_add02.png"/>" alt="<s:message code="bodyview.msg.zoomOut"/>"><s:message code="bodyview.msg.zoomOut"/></button>
 								<button class="btn05" id="copyBodyBtn"><img src="<c:url value="/img/subBtn_copy.png"/>" alt="<s:message code="bodyview.body.contentCopy"/>"><s:message code="bodyview.body.contentCopy"/></button>
@@ -1009,7 +1010,6 @@
 		</div>
 	</div>
 <%-- 메시지 상세 끝 --%>
-
 
 	<div class="boxArea" id="notfoundmsgDiv" style="display: none;">
 		<div class="content_body">
@@ -1251,10 +1251,6 @@
 			</div>
 		</div>
 	</div>
-
-
-
-
 </div>
 
 

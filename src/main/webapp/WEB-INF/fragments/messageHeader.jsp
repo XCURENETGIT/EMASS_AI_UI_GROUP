@@ -21,7 +21,6 @@
         JSONObject menu = menus.getJSONObject(i);
         if(Common.nvl(uri).contains(Common.nvl(menu.get("menuLink")))) {
             menuName = Common.nvl(menu.get("defaultName"));
-            break;
         }
     }
 %>

@@ -116,7 +116,8 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 /*bullet*/
 .bullet01 { width:8px; height:8px;margin-right:4px; background-color:#1A73F9; display: inline-block; border-radius:50% ; -webkit-border-radius:50% ; -moz-border-radius:50% ; -ms-border-radius:50% ; -o-border-radius:50% ; }
 
-/* Content */
+
+/* message content */
 #contentArea .page {position: absolute; right:20px; top:60px; font-size:12px; color:#555;background-color: #FBFBFB} /*  메시지 페이지 header */
 #contentArea .page a { color:#555 !important;}
 #contentArea .page a.focus {color:#1A73F9!important;}
@@ -143,10 +144,9 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 .messageCon > .top { position: relative; padding:5px 12px;}
 .messageCon > .top > h4 {display: inline-block;}
 .messageCon .loca { position: absolute; right:16px; top:16px; font-size:12px; color:#555; text-align: right;}
-.messageCon .btnform { position: absolute; right:0px; top:0px; vertical-align: bottom; display:inline-block; color:#555; text-align: right;}
-.messageCon .buttons {right:0px; top:0px;  display:inline-block; color:#555; text-align: right; }
-.messageCon .btn select{vertical-align: middle;}
-.messageCon .conBox { position: relative; padding:7px;}
+.messageCon .conBtn { position: absolute; right:16px; top:6px; vertical-align: bottom; display:inline-block; color:#555; text-align: right;}
+.messageCon .conBtn select{vertical-align: middle;}
+.messageCon .conBox { position: relative; padding:16px; font-size:13px;}
 .messagePageBtn {
     display: inline-block;
     padding: 4px 12px;
@@ -171,9 +171,10 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 
 .filelist {position: relative;}
 .filelist ul li {position: relative; border-bottom:1px solid #ccc; font-size:13px;  color:#333; padding:8px;}
-.filelist ul li div {height:24px; line-height: 24px;color:#333; font-weight: 400; background-size: 16px 16px;}
-.attach_file_img a {margin-left:32px; color:#111;}
+.filelist ul li span  {height:24px; line-height: 24px;color:#333; font-weight: 400; background-size: 16px 16px;}
+.filelist ul li span a {margin-left:32px; color:#111;}
 .filelist ul li:last-child {border:none;}
+.attach_file_img a {margin-left:32px; color:#111;}
 .searchArea{position: relative; padding:0 20px; margin-bottom:12px;   display: grid; grid-template-columns: 75% 25%;  margin-right:16px;}
 
 
@@ -188,6 +189,8 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 .dropdown-content a:hover {background-color: #f5f5f5; border-radius:2px;color: #111;}
 .myDropdown:hover .dropdown-content {display: block;}
 .myDropdown:hover .dropbtn {text-decoration:underline;}
+
+
 
 /* Login */
 #login{position: relative; width:100%; height:100%;  background:#111 url(../img/bg_login.png) top center no-repeat;   background-size: 100% 100%;}
@@ -292,7 +295,8 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 .text_tab .bar {width:1px; height:12px; margin:2px 8px; background-color:#ddd;}
 
 /*Btn*/
-.btnform img {margin-top:-1px;margin-right:2px; vertical-align:middle;}
+.btnList img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
+.btnform img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .btnList button {margin-bottom:8px;}
 .btn01 {color:#375E9A; height:26px; line-height: 26px;  padding:0 8px; font-size:12px; vertical-align:middle;
     display: inline-block; border-radius: 2px;border: 1px solid #375E9A;background: #F5F8FF;}

@@ -52,6 +52,8 @@
             height:98%;border: 0px;width: 100%;border:0px;position: absolute;
         }
 
+
+
         @media screen and (max-height: 750px) {
             #mainBodyArea .bootstrap-datetimepicker-widget{ top: 200px !important; }
         }
@@ -1860,7 +1862,9 @@
             <%-- content --%>
             <div class="msg_container">
                 <tiles:insertAttribute name="left" ignore="true"/>
-                <div id="searchKeywordDiv" class="searchKeywordDiv" style="height: 610px;">
+
+                <%-- 검색어 관리 --%>
+                <div id="searchKeywordDiv" class="searchKeywordDiv" style="display: block;position: absolute;top: 130px;right: 350px;display: none;text-align: left;z-index: 1040;border: 1px solid #555;background-color: white;width: 500px;height: 420px;font-size:12px;">
                     <div class="modalHead">
                         <s:message code="searchKeyword.management"/>
                         <div style="float:right;padding-right:8px;">
@@ -2517,6 +2521,7 @@
                 </div>
             </div>
 
+            <%-- 검색 도움말--%>
             <div id="searchHelpDiv" style="display: block;position: absolute;top: 130px;right: 350px;display: none;text-align: left;z-index: 1040;border: 1px solid #555;background-color: white;width: 500px;height: 420px;font-size:12px;">
                 <div class="modalHead">
                     <i class="glyphicon glyphicon-question-sign"></i>&nbsp;<s:message code="help.msg.title"/>

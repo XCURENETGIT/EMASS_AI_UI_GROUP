@@ -1434,10 +1434,10 @@ function setFileDiv(msg) {
 					/* 제목 */
 					fileStr += '<div class="attach_' + attachExt +' attach_file_img" style="padding-left:5px;">';
 					// if(attachNameExist == "N") fileStr += '<span>['+contentBody.unknownFileName+']</span> ';
-						fileStr += '<a >';
+						fileStr += '<span>'+'<a>';
 						fileStr += '' + attachName+ ' ('+convertFileSize(file.attachSize)+ ')';
-						fileStr += '</a>';
-						fileStr += '<div class="messagePageBtn buttons">';
+						fileStr += '</a></span>';
+						fileStr += '<div class="conBtn btnform">';
 							if(nvl(file.ocrYn) == "Y") {
 								fileStr += '<img alt="" src="' + contextRoot + '/img/view.png" style="width: 15px;">';
 								fileStr += '<span class="attachOcrText" style="padding-left:5px; cursor:pointer; text-decoration: underline;">';
