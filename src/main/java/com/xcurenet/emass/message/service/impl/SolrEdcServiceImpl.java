@@ -141,27 +141,29 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 	public static void main(String[] args) throws SolrServerException, IOException {
 		ConfigurableApplicationContext context = SpringApplication.run(EmassproApplication.class, args);
-		SolrEdcServiceImpl service = context.getBean(SolrEdcServiceImpl.class);
+		SolrCheckedService service = context.getBean(SolrCheckedService.class);
+
+		service.setRead("20231227122850.XIKI2SHW6U3QNBWHSXOYI74FSEUNBZJF", "mink");
 
 
-		String query = "+ctime:[20231022000000 TO 20231222235959] -pi_total:0 +(pi_SN:[ 1 TO *] pi_CN:[ 1 TO *] pi_DN:[ 1 TO *] pi_FN:[ 1 TO *] pi_PN:[ 1 TO *])";
-
-		SolrQuery sq = new SolrQuery();
-		sq.setQuery(query);
-		sq.setStart(0);
-		sq.setRows(0);
-		sq.set("aggregation.field", "user_str");
-		sq.set("aggregation.sub.fields", "pi_SN", "pi_PN", "pi_DN", "pi_FN", "pi_CN");
-		sq.set("aggregation.limit", 100);
-		sq.setParam("piAnalysisYn", "Y");
-
-		log.info("Solr Query : {}", sq);
-		SearchHits<SolrEdcVO> hits = service.getList(sq);
-		log.info("ce.getList(sq) : {}", hits);
-		log.info("getAggregations : {} ", hits.getAggregations().aggregations() );
-		SolrEdcMessageVO vo = new SolrEdcMessageVO(hits, null);
-
-		log.info("SOLR : {}", vo);
+//		String query = "+ctime:[20231022000000 TO 20231222235959] -pi_total:0 +(pi_SN:[ 1 TO *] pi_CN:[ 1 TO *] pi_DN:[ 1 TO *] pi_FN:[ 1 TO *] pi_PN:[ 1 TO *])";
+//
+//		SolrQuery sq = new SolrQuery();
+//		sq.setQuery(query);
+//		sq.setStart(0);
+//		sq.setRows(0);
+//		sq.set("aggregation.field", "user_str");
+//		sq.set("aggregation.sub.fields", "pi_SN", "pi_PN", "pi_DN", "pi_FN", "pi_CN");
+//		sq.set("aggregation.limit", 100);
+//		sq.setParam("piAnalysisYn", "Y");
+//
+//		log.info("Solr Query : {}", sq);
+//		SearchHits<SolrEdcVO> hits = service.getList(sq);
+//		log.info("ce.getList(sq) : {}", hits);
+//		log.info("getAggregations : {} ", hits.getAggregations().aggregations() );
+//		SolrEdcMessageVO vo = new SolrEdcMessageVO(hits, null);
+//
+//		log.info("SOLR : {}", vo);
 
 		context.close();
 	}

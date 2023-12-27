@@ -1,9 +1,9 @@
 package com.xcurenet.common.util;
 
 import com.xcurenet.audit.service.AuditVO;
-import com.xcurenet.emass.message.vo.emass.mongo.EmassCheckedMgo;
-import com.xcurenet.emass.message.vo.emass.mongo.fields.CheckedVo_Mgo;
+import com.xcurenet.emass.message.service.SolrCheckedVO;
 import lombok.extern.log4j.Log4j2;
+import org.apache.poi.ss.formula.functions.T;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,7 +18,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Field;
 import java.util.*;
 
 @Log4j2
@@ -57,7 +56,6 @@ public class MongoUtil {
 	//단건조회
 	public <T> T selectOne(Query query, Class<T> vo) {
 		return mongoTemplate.findOne(query, vo);
-
 	}
 
 
@@ -120,57 +118,6 @@ public class MongoUtil {
 	}
 
 
-	/***
-	 * 개봉 (읽음) 처리
-	 * @param msgId
-	 * @param userId
-	 * @param vo
-	 * @param collectionName
-	 * @return
-	 * @param <T>
-	 */
-
-	public boolean readDoc(String msgId, CheckedVo_Mgo checkedVoMgo, String collectionName) {
-		boolean result = false; // 작업 완료 여부
-		boolean isReaded = false; // 사용자가 문서 읽었는지 여부
-		try {
-
-			Query query = new Query(Criteria.where("_id").is(msgId));
-			EmassCheckedMgo checkedVoList = mongoTemplate.findOne(query, EmassCheckedMgo.class, collectionName);
-			if (null == checkedVoList) return false;  // 몽고 db에  문서 없음
-
-			/* 사용자 문서 개봉여부 조회 */
-			List<CheckedVo_Mgo> checkedList = checkedVoList.getChecked();
-			for (CheckedVo_Mgo vo : checkedList) {
-				if (checkedVoMgo.getReadId().equals(vo.getReadId())) {
-					isReaded = true;
-					break;
-				} // 접속자 아이디 존재할시 isReaded true
-			}
-
-			/* 사용자가 문서를 개봉하지 않았을시 */
-			if (!isReaded) {
-				Map<String, Object> reqMap = new HashMap<>();
-				Field[] fields = checkedVoMgo.getClass().getDeclaredFields();
-				for (Field field : fields) {
-					field.setAccessible(true);
-					reqMap.put(field.getName(), field.get(checkedVoMgo));
-				}
-				List reqList = new ArrayList();
-				reqList.add(reqMap);
-
-				Update update = new Update();
-				update.addToSet("checked", reqMap);
-				mongoTemplate.findAndModify(query, update, EmassCheckedMgo.class, collectionName); // 문서 읽음 처리
-				result = true; // 작업 완료 처리
-			}
-		} catch (Exception e) {
-			log.error("", e);
-		}
-		return result;
-	}
-
-
 	/**
 	 * @param col        - 조건 컬럼
 	 * @param where      - 조건
@@ -215,7 +162,10 @@ public class MongoUtil {
 		query.addCriteria(Criteria.where("TABLENAME").is(tableName));
 		update.set("DATE", localDateTime);
 		mongoTemplate.updateMulti(query, update, "INFO_VERSION");
+	}
 
+	public <T> T save(T vo) {
+		return mongoTemplate.save(vo);
 	}
 
 	public List<AuditVO> selectAuditList(Map<String, Object> map) {

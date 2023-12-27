@@ -61,6 +61,8 @@ public class MessengerController {
 	@Resource(name = "solrEdcService")
 	private SolrEdcService solrEdcService;
 
+	@Autowired
+	private SolrCheckedService solrCheckedService;
 
 	@Autowired
 	private EmsMessageService emsMessageService;
@@ -823,8 +825,7 @@ public class MessengerController {
 
 	private boolean setMessengerRead(List<SolrEdcVO> emass, String adminId) {
 		if (Common.isEmpty(emass)) return false;
-		return false;
-		//return solrCheckedService.setMessengerRead(emass, adminId);
+		return solrCheckedService.setMessengerRead(emass, adminId);
 	}
 
 	@RequestMapping(value = "/updateEmassMessengerAdminXrootMtr.xcn")
