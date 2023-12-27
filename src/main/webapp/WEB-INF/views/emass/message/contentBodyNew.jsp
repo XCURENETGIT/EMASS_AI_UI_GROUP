@@ -857,8 +857,8 @@
 					</div>
 				</div>
 				<div id="fileDiv" class="messageCon">
-					<div class="top grayBg03">
-						<h4><s:message code="bodyview.file.info"/></h4><h4 id="fileCntArea"></h4> <%--뒤에 파일 갯수 표기--%>
+					<div class="top grayBg03 body_toggle fileFold">
+						<h4><i class="fa fa-file-code-o fa-fw"></i> <s:message code="bodyview.file.info"/></h4><h4 id="fileCntArea"></h4> <%--뒤에 파일 갯수 표기--%>
 						<div class="messagePageBtn btnform">
 							<button class="btn05" id="allDownload"><img src="<c:url value="/img/subBtn_save.png"/>"  alt="확대"> <s:message code="bodyview.file.allDownload"/></button>
 						</div>
@@ -867,31 +867,32 @@
 				</div>
 				<%-- 패턴 --%>
 				<div class="messageCon" id="patternDiv">
-					<div class="top grayBg03">
-						<h4><s:message code="bodyview.info.pattern"/><h4 id="patternCntArea"></h4></h4>
-						<div class="panel-body" style="display:none;">
-							<div>
-								<table class="subTable mat8" id="patternTable">
-									<tr>
-										<th colspan="2"><s:message code="common.msg.separator"/></th>
-										<th colspan="2"><s:message code="bodyview.info.detect"/></th>
-									</tr>
-								</table>
+						<div class="top grayBg03 body_toggle patternFold">
+							<h4><i class="fa fa-superpowers fa-fw"></i> <s:message code="bodyview.info.pattern"/><span id="patternCntArea"></span></h4>
+						</div>
+						<div>
+							<div class="subTable css-body" style="display:none;">
+								<div class="conBox">
+									<table class="subTable" id="patternTable">
+										<tr>
+											<th colspan="2"><s:message code="common.msg.separator"/></th>
+											<th colspan="2"><s:message code="bodyview.info.detect"/></th>
+										</tr>
+									</table>
+								</div>
 							</div>
 						</div>
-					</div>
 				</div>
 				<div class="messageCon" id="detailPatternDiv" style="display:none;">
 						<div class="top grayBg03">
-							<div class="panel-heading">
-								 <s:message code="common.msg.detail.pattern"/>
-								<div class="pull-right" style="position:relative;top:-2px;">
-									<button class="btn05" id="hidePatternBtn" onclick="javascript:$('#detailPatternDiv').hide();"><s:message code="bodyview.hide"/></button>
-								</div>
-							</div>
-							<div class="panel-body" id="detailArea" style="overflow: auto;padding-top:10px;">
+							<h4>
+								<i class="fa fa-superpowers fa-fw"></i> <s:message code="common.msg.detail.pattern"/>
+							</h4>
+							<div class="pull-right" style="position:relative;top:-2px;">
+								<button class="btn05" id="hidePatternBtn" onclick="javascript:$('#detailPatternDiv').hide();"><s:message code="bodyview.hide"/></button>
 							</div>
 						</div>
+						<div class="conbox" id="detailArea" style="overflow: auto;padding-top:10px;"></div>
 				</div>
 				<div class="messageCon" id="bodyDiv">
 					<div class="top grayBg03">
@@ -1060,7 +1061,7 @@
 	</div>
 
 	<%-- 내보내기 모달 --%>
-	<div id="exportDialog"  class="modal fade vertical_content" role="document" tabindex="-1" role="dialog" aria-labelledby="exportDialog">
+	<div class="modal fade" id="exportDialog" tabindex="-1" role="dialog" aria-labelledby="exportDialog">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -1069,35 +1070,61 @@
 					</button>
 					<h3 class="modal-title" id="exportTitle">&nbsp;</h3>
 				</div>
-				<div class="row bordd p12 clear mat8">
-					<ul>
-						<li class="pr20 pl20 pl20 grayBg02">
-							<span class="bullet02"></span><label for="fname" class="fb600">	<s:message code="download.msg.dataArea"/></label>
-							<p>
-							<div class="optiotab w99 mat8" data-toggle="buttons">
-								<label class="active tablinks w50" name="optBts"><input type="radio" name="exportDataRange" id="exportDataSelect" value="S"> <s:message code="download.msg.select.count"/></label>
-								<label class="tablinks w50" name="optBts"><input type="radio" name="exportDataRange" id="exportDataAll" value="A" > <s:message code="download.msg.search.count"/></label>
-							</div>
-							</p>
-						</li>
-						<li id="exportFileTypeArea">
-							<span class="bullet02"></span><label for="fname" class="fb600">	<s:message code="download.msg.fileType"/></label>
-							<p>
-							<div class="optiotab w99 mat8" data-toggle="buttons" >
-								<label class="active tablinks w50" name="optBts"><input type="radio" name="exportFileType" id="exportExcel" value="xlsx" > <s:message code="common.msg.excel"/>(xlsx)</label>
-								<label class="tablinks w50" name="optBts"><input type="radio" name="exportFileType" id="exportHancel" value="cell"> <s:message code="common.msg.hancel"/>(cell)</label>
-								<label class="tablinks w50" name="optBts"><input type="radio" name="exportFileType" id="exportText" value="csv"> <s:message code="common.msg.text"/>(csv)</label>
-								<label class="tablinks w50" name="optBts"><input type="radio" name="exportFileType" id="exportPdf" value="pdf"> <s:message code="selectCodeAll.list"/>(PDF)</label>
-							</div>
-							</p>
-						</li>
-						<li>
-							<span class="bullet02"></span><label for="fname" class="fb600">	<s:message code="download.msg.export.count"/></label>
-							<div class="optiotab w99 mat8">
-								<span id="exportDataSize" style="line-height:32px;">0</span>
-							</div>
-						</li>
-						<li>
+				<div class="modal-body">
+					<div class="form-inline">
+						<div class="content_body" style="height:100%;padding-top: 0;">
+							<table class="table table-bordered" style="margin-bottom:0;width:100%;">
+								<colgroup>
+									<col width="210">
+									<col width="*">
+								</colgroup>
+								<tr>
+									<th>
+										<s:message code="download.msg.dataArea"/>
+									</th>
+									<td>
+										<div class="btn-group filterBtn" data-toggle="buttons" style="margin-top:3px;">
+											<label class="btn btn-sm btn-default"><input type="radio" name="exportDataRange" id="exportDataSelect" value="S"> <s:message code="download.msg.select.count"/></label>
+											<label class="btn btn-sm btn-default active"><input type="radio" name="exportDataRange" id="exportDataAll" value="A" checked> <s:message code="download.msg.search.count"/></label>
+										</div>
+									</td>
+								</tr>
+								<tr id="exportFileTypeArea">
+									<th>
+										<s:message code="download.msg.fileType"/>
+									</th>
+									<td>
+										<div class="btn-group filterBtn" data-toggle="buttons" style="margin-top:3px;">
+											<label class="btn btn-sm btn-default active"><input type="radio" name="exportFileType" id="exportExcel" value="xlsx" checked> <s:message code="common.msg.excel"/>(xlsx)</label>
+											<label class="btn btn-sm btn-default"><input type="radio" name="exportFileType" id="exportHancel" value="cell"> <s:message code="common.msg.hancel"/>(cell)</label>
+											<label class="btn btn-sm btn-default"><input type="radio" name="exportFileType" id="exportText" value="csv"> <s:message code="common.msg.text"/>(csv)</label>
+											<label class="btn btn-sm btn-default"><input type="radio" name="exportFileType" id="exportPdf" value="pdf"> <s:message code="selectCodeAll.list"/>(PDF)</label>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<th>
+										<s:message code="download.msg.export.count"/>
+									</th>
+									<td>
+										<span id="exportDataSize" style="line-height:32px;">0</span>
+									</td>
+								</tr>
+								<tr id="bodyInExcel">
+									<th>
+										<s:message code="download.msg.body.in.excel"/>
+									</th>
+									<td>
+										<label class="condition_label"><input type="radio" name="bodyInExcel" value="Y"> <span><s:message code="common.msg.include"/></span></label>
+										<label class="condition_label"><input type="radio" name="bodyInExcel" value="N" checked="checked"> <span><s:message code="common.msg.not.include"/></span></label>
+									</td>
+								</tr>
+								<tr id="bodyInExcelMsg" style="font-weight: bold;display:none;">
+									<td colspan="2">
+										<s:message code="download.msg.body.in.excelMsg" />
+									</td>
+								</tr>
+							</table>
 							<table class="table table-bordered" style="margin-bottom:0;width:100%;margin-top:15px;display:none;" id="bodyInExcelIdx">
 								<colgroup>
 									<col width="210">
@@ -1118,35 +1145,33 @@
 									</td>
 								</tr>
 							</table>
-						</li>
-						<%--					<li>--%>
-						<%--						<table class="table table-bordered" style="margin-bottom:0;width:100%;margin-top:15px;" id="sizeWarnMsg">--%>
-						<%--							<colgroup>--%>
-						<%--								<col width="210">--%>
-						<%--								<col width="*">--%>
-						<%--							</colgroup>--%>
-						<%--							<tr style="font-weight: bold;">--%>
-						<%--								<td colspan="2">--%>
-						<%--									<s:message code="download.msg.warn" arguments="50,000" argumentSeparator="|"/>--%>
-						<%--								</td>--%>
-						<%--							</tr>--%>
-						<%--							<tr style="font-weight: bold;">--%>
-						<%--								<th>--%>
-						<%--									<label for="ruleFile" class="control-label" style="vertical-align: bottom;line-height:35px;">¤ <s:message code="download.msg.file.count"/></label>--%>
-						<%--								</th>--%>
-						<%--								<td>--%>
-						<%--									<select id="dataLength_select" class="selectpicker" data-style="btn-default">--%>
-						<%--										<option value="20000">20,000</option>--%>
-						<%--										<option value="30000">30,000</option>--%>
-						<%--										<option value="40000">40,000</option>--%>
-						<%--										<option value="50000" selected>50,000</option>--%>
-						<%--										<option value="100000">100,000</option>--%>
-						<%--									</select>--%>
-						<%--								</td>--%>
-						<%--							</tr>--%>
-						<%--						</table>--%>
-						<%--					</li>--%>
-					</ul>
+							<table class="table table-bordered" style="margin-bottom:0;width:100%;margin-top:15px;" id="sizeWarnMsg">
+								<colgroup>
+									<col width="210">
+									<col width="*">
+								</colgroup>
+								<tr style="font-weight: bold;">
+									<td colspan="2">
+										<s:message code="download.msg.warn" arguments="50,000" argumentSeparator="|"/>
+									</td>
+								</tr>
+								<tr style="font-weight: bold;">
+									<th>
+										<label for="ruleFile" class="control-label" style="vertical-align: bottom;line-height:35px;">¤ <s:message code="download.msg.file.count"/></label>
+									</th>
+									<td>
+										<select id="dataLength_select" class="selectpicker" data-style="btn-default">
+											<option value="20000">20,000</option>
+											<option value="30000">30,000</option>
+											<option value="40000">40,000</option>
+											<option value="50000" selected>50,000</option>
+											<option value="100000">100,000</option>
+										</select>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>

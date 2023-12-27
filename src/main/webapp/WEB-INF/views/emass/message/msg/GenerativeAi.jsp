@@ -257,8 +257,8 @@
                 $('#selectUserInfo').attr('data-usrid', '');
                 $('#selectUserInfo').html('');
                 $('#searchMsgStrInput').val('');
-                $('#startSubDt').val($('#startDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, ''));
-                $('#endSubDt').val($('#endDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, ''));
+                $('#startSubDt').val($('#startDt'));
+                $('#endSubDt').val($('#endDt'));
                 focusMsgId = '';
                 /*eikon2.getGenerativeDetailList($(this).attr('userid'), $(this).attr('msgid'), $(this).attr('srcip'), $(this).attr('usrid'));*/
             });
@@ -763,7 +763,6 @@
         }
 	</script>
 </head>
-<div class="container">
 	<div id="searchArea">
 		<div class="inner_messenger">
 			<%--			검색 영역--%>
@@ -975,7 +974,6 @@
 			<%--			첨부파일 끝!!--%>
 		</div>
 	</div>
-</div>
 
 
 <div style="width: 0%;height: 0px;">

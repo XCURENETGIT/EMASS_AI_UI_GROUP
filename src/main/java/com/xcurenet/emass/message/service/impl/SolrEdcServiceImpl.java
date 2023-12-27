@@ -194,7 +194,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	private List<AbstractAggregationBuilder<?>> getAggregations(SolrQuery sq) {
 		List<AbstractAggregationBuilder<?>> aggregations = new ArrayList<>();
 		if(Common.isEquals(sq.get("piAnalysisYn"), "Y"))  return getPiAnalysisAggregations(sq);
-		if (sq.getFacetFields() == null) return aggregations;
+		if ( null == sq.getFacetFields() && null == sq.get("facet.field")) return aggregations;
 
 		if((null != sq.get("group") && Common.isEquals("true",sq.get("group")))) {
 			aggregations = getGroupAggregations(sq);

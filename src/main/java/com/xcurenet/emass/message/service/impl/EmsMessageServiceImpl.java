@@ -556,10 +556,17 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 
 
 	@Override
-	public void updateEmsFeedback(String msgId, String feedback, String adminId) {
-		Query query = new Query().addCriteria(Criteria.where("_id").is(msgId));
-		Update updateDefinition = new Update().set("ml.mlConfdFeedBack", feedback).set("ml.mlConfdUserId", adminId);
-		mongo.upsertEmsMessage(msgId, query, updateDefinition);
+	public boolean updateEmsFeedback(String msgId, String feedback, String adminId) {
+		boolean result = false;
+		try {
+			Query query = new Query().addCriteria(Criteria.where("_id").is(msgId));
+			Update updateDefinition = new Update().set("ml.mlConfdFeedBack", feedback).set("ml.mlConfdUserId", adminId);
+			mongo.upsertEmsMessage(msgId, query, updateDefinition);
+			result = true;
+		} catch (Exception e) {
+			log.error("", e);
+		}
+		return result;
 	}
 
 	@Override

@@ -25,11 +25,20 @@
 			text-align: center;
 		}
 		.empty-dashboard-message{
-			margin: auto;
-			width: 700px;
-			height: 200px;
+			margin:0 auto;
+			text-align:center;
+			width:700px;
+			padding:40px;
+			overflow: hidden;
 		}
 
+		.empty-dashboard-message a{
+		color:#1C64D3;text-decoration: underline;
+		}
+		.empty-dashboard-message a:hover{
+			color:#1C64D3;text-decoration: underline;
+		}
+		.empty-dashboard-message p {line-height: 1.3;}
 		#emptyDashboard{
 			text-align: center;
 			padding-top: 25px;
@@ -117,6 +126,7 @@
 		}
 		.grid-stack-item-content .fa {
 			display: inline-block;
+
 		}
 		div#conditionViewDiv{
 			position: absolute;
@@ -1256,7 +1266,7 @@
 </div>
 
 <div id="xcn_container">
-	<div class="dashboardBtnArea" style="z-index:1000;">
+	<div class="dashboardBtnArea p20" style="z-index:1000;">
 		<div class="btn-group">
 			<button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
 				<span class="fa fa-file-text-o"></span>&nbsp;<s:message code="custom.work"/> <span class="caret"></span>
@@ -1269,12 +1279,12 @@
 			</ul>
 		</div>
 	</div>
-	<div class="dashboardHeader" style="display:none; z-index: 999; position: absolute; top: -1px; left: 0px; right: 0px;">
+	<div class="dashboardHeader p20" style="display:none; z-index: 999; position: absolute; top: -1px; left: 0px; right: 0px;">
 		<div class="col-xs-12">
-			<button type="button" class="btn btn-sm btn-primary" style="position: absolute;right:175px;top:1px;" id="saveDashboardBtn">
+			<button type="button" class="btn btn-sm btn-primary" style="position: absolute;right:137px;top:2px;" id="saveDashboardBtn">
 				<span class="fa fa-check"></span>&nbsp;<s:message code="common.msg.save"/>
 			</button>
-			<button type="button" class="btn btn-sm btn-default" style="position: absolute;right:100px;top:1px;" id="cancleDashboardBtn">
+			<button type="button" class="btn btn-sm btn-default" style="position: absolute;right:68px;top:2px;" id="cancleDashboardBtn">
 				<span class="glyphicon glyphicon-remove"></span>&nbsp;<s:message code="common.msg.close"/>
 			</button>
 		</div>
@@ -1286,20 +1296,35 @@
 			</div>
 		</div>
 	</div>
-	<div class="boxArea">
-		<div class="content_body">
-			<div id="emptyDiv" class="empty-dashboard-message" style="display:none;">
-				<h1><s:message code="custom.msg.empty"/></h1>
-				<p><s:message code="custom.msg.insertInfo"/></p>
-				<p><a href="<c:url value="/ems/dashboardSetup.do"/>"><s:message code="DATA_MONITOR.DASHBOARD_SETUP"/></a> <s:message code="custom.msg.insertInfo1"/></p>
-				<p><a class="btn customBtn" href="javascript:;" id="editDashboardBtnPop"><s:message code="custom.add"/></a></p>
-			</div>
-			<div id="xcn_mainWrap">
-				<div class="all grid-stack" id="dashboardArea" style="top: 20px;">
+	<!-- 대시보드 비었을시  -->
+	<div class="searchArea">
+		<div class="mat8">
+			<div id="emptyDiv">
+				<div class="empty-dashboard-message grayBg02">
+					<h2>
+						<img src="/venus/img/icon/ico_info.png" alt="!">
+						<span class="mat8 fb800 dis_block"><s:message code="custom.msg.empty"/></span>
+					</h2>
+					<div class="mat24">
+						<p><s:message code="custom.msg.insertInfo"/></p>
+						<p class="mat8"><a href="<c:url value="/ems/dashboardSetup.do"/>"><s:message code="DATA_MONITOR.DASHBOARD_SETUP"/></a> <s:message code="custom.msg.insertInfo1"/></p>
+						<p class="mat24"><button class="form_btn05 mat8" href="javascript:;" id="editDashboardBtnPop"><s:message code="custom.add"/></button></p>
+					</div>
 				</div>
+
 			</div>
+			<div>
+				<!-- 대시보드 -->
+				<div id="xcn_mainWrap_new">
+					<div id="dashboardArea" class="xcn_con_area" style="top: 20px; height:200px !important;">
+					</div>
+				</div>
+				<!-- //대시보드 -->
+			</div>
+
 		</div>
 	</div>
+	<!-- //대시보드 비었을시  -->
 </div>
 <a href="#0" class="back-to-top cd-top"><span class="[ fa fa-chevron-up ]"></span> <span class="[ ]">Back to the Top</span></a>
 <form method="post" id="getMessageInfo" action="<c:url value="/ems/message.do"/>" target="_self" >

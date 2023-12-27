@@ -45,7 +45,7 @@
         .messageNewGrid::-webkit-scrollbar {display: none;}
 
         .contentList{
-            height:100%;border: 0px;width: 100%;overflow: hidden;border:0px;position: absolute;
+            height:90%;border: 0px;width: 100%;overflow: hidden;border:0px;position: absolute;
         }
 
         .contentBody{
@@ -2562,7 +2562,7 @@
                 </div>
             </div>
 
-
+            <tiles:insertAttribute name="footer" ignore="true"/>
             <div style="display:none;">
                 <ul id="newTab">
                     <li class="tab_li"><div class="tab_close"></div><div class="tab_txt_top addTabDiv" style="float:left;"></div><span class="resultCntSpan" style="padding-right:15px;"></span></li>
@@ -2621,5 +2621,4 @@
     };
 </script>
 </body>
-<tiles:insertAttribute name="footer" ignore="true"/>
 </html>

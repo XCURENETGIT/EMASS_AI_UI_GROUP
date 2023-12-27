@@ -7,6 +7,7 @@ var participantDataSet = [];
 var groupId = '';
 var groupPageId = '';
 var detailId = '';
+var detailCount=0;
 
 var groupPage = 1;
 var groupPageBreak = 10;
@@ -16,7 +17,7 @@ var detailStartPage = 1;
 var detailEndPage = 1;
 var detailViewPage = 10;
 var detailPageBreak = 100;
-var detailLimit = 100;
+var detailLimit = 5;
 
 var selectedSearchData = 1;
 var searchOffset = 0;
@@ -138,7 +139,7 @@ function getGenerativeMessageNext(userid, srcip, usr_id, msgid) {
     var endDt = $('#endDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
     searchFlag = true;
     ui.get({
-        url : 'getMessengerMessageNext.xcn',
+        url : 'getGenerativeMessageNext.xcn',
         userid : userid,
         srcip : srcip,
         startDt : startDt+"000000",
@@ -146,6 +147,7 @@ function getGenerativeMessageNext(userid, srcip, usr_id, msgid) {
         usr_id : usr_id,
         msgId : msgid,
         limit : detailLimit,
+        facet_detail:true,
         success : function(data, total) {
             searchFlag = false;
             if(data.groups.length == 0) {
@@ -975,6 +977,12 @@ function getGenerativeMessage(userid, srcip, usr_id, msgid){
             }
             detailDataSet = data.groups;
             prevDetailDataSet = data.groups;
+
+            if(detailCount > detailLimit)
+                $('.messenger_next').css('display','none');
+            else $('.messenger_next').css('display','block');
+            $('.messenger_prev').css('display','none');
+
             $("#timeline_list").html(makeList(false));
             Highlight( );
         },
@@ -1033,7 +1041,7 @@ function rtnGenerativeGroupList(data) {
         // Create right div
         var rightDiv = document.createElement("div");
         rightDiv.className = "right";
-        var imageName =mainContext+"/img/ico_sns_"+ makeMessengerText(data[i].svc).toLowerCase()+".png";
+        var imageName =mainContext+"/img/icon/ico_sns_"+ data[i].svc+".png";
         var makescv = makeMessengerText(data[i].svc);
         var rightContent = "<p><span class='logo'><img src="+imageName+">"+makescv+"</span></p>";
 
