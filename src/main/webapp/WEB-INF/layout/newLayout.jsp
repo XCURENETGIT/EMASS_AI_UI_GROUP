@@ -23,9 +23,9 @@
 				<tiles:insertAttribute name="header" ignore="true"/>
 			    <tiles:insertAttribute name="content" ignore="true"/>
 <%--				<div class="tiles-inner-body"><tiles:insertAttribute name="content" ignore="true"/></div>--%>
-			<tiles:insertAttribute name="footer" ignore="true"/>
 		</div> <!--//ContentArea-->
 	</div><!--//Container-->
 </div> <!--//wrap-->
 </body>
+<tiles:insertAttribute name="footer" ignore="true"/>
 </html>
