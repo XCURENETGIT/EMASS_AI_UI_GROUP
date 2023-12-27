@@ -107,6 +107,7 @@ var eikon2 = {
 function getGenerativeMessageTotal(userid, srcip, startDt, endDt, usr_id, msgid){
     //마지막 열람 msgid
 
+
     ui.get({
         url : 'getGenerativeMessageTotal.xcn',
         userid : userid,
@@ -117,7 +118,7 @@ function getGenerativeMessageTotal(userid, srcip, startDt, endDt, usr_id, msgid)
         limit : 0,
         success : function(data, total) {
             $('#groupSubResultCnt').text(data.comma());
-            getGenerativeDetailList(userid, srcip, usr_id, msgid);
+            getGenerativeMessage(userid, srcip, usr_id, msgid);
         },
         error : function(status, message) {
             ui.alertMsg(message);
@@ -303,7 +304,7 @@ function getGenerativeGroupList (page){
         limit : groupPageBreak,
         success : function(data, total) {
             rtnGenerativeGroupList(data.groups)
-            rtnnGenerativeGroupPage(total, page);
+            rtnnGenerativeGroupPage(data.groups.length, page);
         },
         error : function(status, message) {
             ui.alertMsg(message);
@@ -402,18 +403,7 @@ function makeList(nextFlag){
         if( svc3 == 'J' || svc3 == 'L' ) addClass=' text-center'
         str+='			<div class="timeline-body'+addClass+'">';
 
-
-        if( svc3 == 'F' ){
-            var files = '';
-            var hashes = '';
-            if(obj.message != undefined) files = obj.message.split('|');
-            if(obj.attachhash != undefined) hashes = obj.attachhash.split('|');
-
-            for( var j = 0; j < files.length; j++ ){
-                str+='<a href="javascript:void(0);" class="file_link" msgid="'+obj.msgid+'" attachhash="'+nvl(hashes[j]).trim()+'">'+nvl(files[j]).trim()+'<br /></a>';
-            }
-        }
-        else str+=''+obj.body_snippet.replaceAll('\n', '<br/>')+'';
+        if(obj.body_snippet != undefined) str+=''+obj.body_snippet.replaceAll('\n', '<br/>')+'';
         str+='			</div>';
         str+='		</div>';
         str+='	</div>';
@@ -472,17 +462,7 @@ function makePrevList(){
         str+='			<div class="timeline-body'+addClass+'">';
 
 
-        if( svc3 == 'F' ){
-            var files = '';
-            var hashes = '';
-            if(obj.body_snippet != undefined) files = obj.body_snippet.split('|');
-            if(obj.attachhash != undefined) hashes = obj.attachhash.split('|');
-
-            for( var j = 0; j < files.length; j++ ){
-                str+='<a href="javascript:void(0);" class="file_link" msgid="'+obj.msgid+'" attachhash="'+nvl(hashes[j]).trim()+'">'+nvl(files[j]).trim()+'<br /></a>';
-            }
-        }
-        else str+=''+obj.body_snippet.replaceAll('\n', '<br/>')+'';
+        if(obj.body_snippet != undefined) str+=''+obj.body_snippet.replaceAll('\n', '<br/>')+'';
         str+='			</div>';
         str+='		</div>';
         str+='	</div>';
@@ -966,7 +946,7 @@ function getPage3(total, pageCount, listSize, rtnMethod){
     return str;
 }
 
-function getGenerativeDetailList(userid, srcip, usr_id, msgid){
+function getGenerativeMessage(userid, srcip, usr_id, msgid){
     $("#timeline_list").html('');
 
     var startDt=$('#startDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
@@ -979,8 +959,9 @@ function getGenerativeDetailList(userid, srcip, usr_id, msgid){
         startDt : startDt+"00000",
         endDt : endDt+"235959",
         usr_id : usr_id,
-        msgid : msgid,
+        msgId : nvl(msgid),
         limit : detailLimit,
+        facet_detail:true,
         success : function(data, total) {
             if(data.groups.length > 0) {
                 $('.messenger_prev').css('display','block');

@@ -11,9 +11,13 @@ import com.xcurenet.common.util.config.Config;
 import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.emass.customDashboard.service.*;
+import com.xcurenet.emass.message.component.SolrCreateQuery;
+import com.xcurenet.emass.message.service.FacetVO;
 import com.xcurenet.emass.message.service.SolrEdcMessageVO;
 import com.xcurenet.emass.message.service.SolrEdcService;
+import com.xcurenet.emass.service.service.ServiceGroupVO;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.springframework.stereotype.Service;
@@ -454,103 +458,36 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 		return selectList("com.xcurenet.sqlmap.mappers.mysql.customDashboard.getHdfsData");
 	}
 
-//	@Override
-//	public XcnResponseVO getDashBoardContentData(CustomDashboardVO customDashboardVo) {
-//		CustomDashboardResultVO result = new CustomDashboardResultVO();
-//
-//		JSONObject condition = Common.toJSONObject(customDashboardVo.getDashCondition());
-//		JSONArray conditions = new JSONArray();
-//		conditions.add(condition);
-//		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
-//		try {
-//			SolrQuery sq = solrCreateQuery.makeQuery(conditions, customDashboardVo.getAdminId()).setQuery();
-//
-//			if( Common.isNotEquals(customDashboardVo.getDashType(), "L") ) {
-//				sq.setRows(0);
-//			}else {
-//				sq.setRows(13);
-//			}
-//			if( Common.isEquals(customDashboardVo.getDashType(), "C") ) {
-//
-//				sq.addFacetField(customDashboardVo.getDashChartX());
-//				sq.setFacetLimit(-1);
-//				sq.setFacetMinCount(1);
-//				sq.setFacetSort("count");
-//			}else if( Common.isEquals(customDashboardVo.getDashType(), "D") ) {
-//				sq.setFacet(true);
-//				sq.setParam("facet.query", "+{!join from=msgid fromIndex=checked to=msgid}id:"+customDashboardVo.getAdminId());
-//			}
-//
-//			SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, customDashboardVo.getAdminId());
-//			if( Common.isEquals(customDashboardVo.getDashType(), "S") ) {
-//				result.setRightValue(Config.getBoolean("ui.dashboard.abbreviation") ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));
-//			}
-//			else if( Common.isEquals(customDashboardVo.getDashType(), "D") ) {
-//				long totalCnt = edc.getNumFound();
-//				long readCnt = edc.getFacetQueryData();
-//				long unreadCnt = totalCnt - readCnt;
-//
-//				if( Common.isOrEquals("unread", customDashboardVo.getDashMultiLeft(), customDashboardVo.getDashMultiLeft())){
-//					sq.setParam("facet.query", "-{!join from=msgid fromIndex=checked to=msgid}id:"+customDashboardVo.getAdminId());
-//				}
-//
-//				if(Common.isEquals(customDashboardVo.getDashMultiLeft(), "read")) {
-//					result.setLeftValue(Config.getBoolean("ui.dashboard.abbreviation") ? Common.formatNum(readCnt) : Common.numberFormatter(readCnt));
-//				}else if(Common.isEquals(customDashboardVo.getDashMultiLeft(), "unread")) {
-//					result.setLeftValue(Config.getBoolean("ui.dashboard.abbreviation") ? Common.formatNum(unreadCnt) : Common.numberFormatter(unreadCnt));
-//				}else if(Common.isEquals(customDashboardVo.getDashMultiLeft(), "total")) {
-//					result.setLeftValue(Config.getBoolean("ui.dashboard.abbreviation") ? Common.formatNum(totalCnt) : Common.numberFormatter(totalCnt));
-//				}
-//				if(Common.isEquals(customDashboardVo.getDashMultiRight(), "read")) {
-//					result.setRightValue(Config.getBoolean("ui.dashboard.abbreviation") ? Common.formatNum(readCnt) : Common.numberFormatter(readCnt));
-//				}else if(Common.isEquals(customDashboardVo.getDashMultiRight(), "unread")) {
-//					result.setRightValue(Config.getBoolean("ui.dashboard.abbreviation") ? Common.formatNum(unreadCnt) : Common.numberFormatter(unreadCnt));
-//				}else if(Common.isEquals(customDashboardVo.getDashMultiRight(), "total")) {
-//					result.setRightValue(Config.getBoolean("ui.dashboard.abbreviation") ? Common.formatNum(totalCnt) : Common.numberFormatter(totalCnt));
-//				}
-//			}else if( Common.isEquals(customDashboardVo.getDashType(), "C") ) {
-//				result = getChartData(edc, result, customDashboardVo.getDashChart());
-//			}
-//			else if( Common.isEquals(customDashboardVo.getDashType(), "L") ) result.setEdc(edc);
-//
-//
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//
-//		return new XcnResponseVO(XcnRspCode.OK, result);
-//	}
+	private CustomDashboardResultVO getChartData(SolrEdcMessageVO edc, CustomDashboardResultVO result, String dashChart) {
+		if(edc == null) return null;
+		List<FacetVO> facet = edc.getFacet();
+		List<Map<String,Object>> items = new ArrayList<>();
 
-//	private CustomDashboardResultVO getChartData(SolrEdcMessageVO edc, CustomDashboardResultVO result, String dashChart) {
-//		if(edc == null) return null;
-//		List<FacetVO> facet = edc.getFacet();
-//		List<Map<String,Object>> items = new ArrayList<>();
-//
-//		List<ServiceGroupVO> groups = Config.serviceGroups;
-//		int index = 0;
-//		for (ServiceGroupVO group : groups) {
-//			Map<String,Object> item = new HashMap<>();
-//			boolean isAdd = false;
-//			for (FacetVO vo : facet) {
-//				if (Common.isEquals(group.getGroupCd(), vo.getName())) {
-//					item.put("name", Config.getServiceGroupNm(vo.getName()));
-//					item.put("y", vo.getCount() == 0 ? (Common.isEquals(dashChart, "P") ? 0 : null) : vo.getCount());
-//					item.put("color", Config.colors[index++]);
-//					isAdd = true;
-//					break;
-//				}
-//			}
-//			if (!isAdd) {
-//				item.put("name", group.getGroupNm());
-//				item.put("color", Config.colors[index++]);
-//				item.put("y", Common.isEquals(dashChart, "P") ? 0 : null);
-//			}
-//			items.add(item);
-//		}
-//		result.setChartData(items);
-//
-//		return result;
-//	}
+		List<ServiceGroupVO> groups = Config.serviceGroups;
+		int index = 0;
+		for (ServiceGroupVO group : groups) {
+			Map<String,Object> item = new HashMap<>();
+			boolean isAdd = false;
+			for (FacetVO vo : facet) {
+				if (Common.isEquals(group.getGroupCd(), vo.getName())) {
+					item.put("name", Config.getServiceGroupNm(vo.getName()));
+					item.put("y", vo.getCount() == 0 ? (Common.isEquals(dashChart, "P") ? 0 : null) : vo.getCount());
+					item.put("color", Config.colors[index++]);
+					isAdd = true;
+					break;
+				}
+			}
+			if (!isAdd) {
+				item.put("name", group.getGroupNm());
+				item.put("color", Config.colors[index++]);
+				item.put("y", Common.isEquals(dashChart, "P") ? 0 : null);
+			}
+			items.add(item);
+		}
+		result.setChartData(items);
+
+		return result;
+	}
 
 	@Override
 	public int insertDashBoardDefaultData(CustomDashboardVO customDashboardVo) {
@@ -699,7 +636,70 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 
 	@Override
 	public XcnResponseVO getDashBoardContentData(CustomDashboardVO customDashboardVo) {
-		return null;
+		CustomDashboardResultVO result = new CustomDashboardResultVO();
+
+		JSONObject condition = Common.toJSONObject(customDashboardVo.getDashCondition());
+		JSONArray conditions = new JSONArray();
+		conditions.add(condition);
+		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+		try {
+			SolrQuery sq = solrCreateQuery.makeQuery(conditions, customDashboardVo.getAdminId()).setQuery();
+
+			if( Common.isNotEquals(customDashboardVo.getDashType(), "L") ) {
+				sq.setRows(0);
+			}else {
+				sq.setRows(13);
+			}
+			if( Common.isEquals(customDashboardVo.getDashType(), "C") ) {
+
+				sq.addFacetField(customDashboardVo.getDashChartX());
+				sq.setFacetLimit(-1);
+				sq.setFacetMinCount(1);
+				sq.setFacetSort("count");
+			}else if( Common.isEquals(customDashboardVo.getDashType(), "D") ) {
+				sq.setFacet(true);
+				sq.setParam("facet.query", "+{!join from=msgid fromIndex=checked to=msgid}id:"+customDashboardVo.getAdminId());
+			}
+
+
+			SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, customDashboardVo.getAdminId());
+			if( Common.isEquals(customDashboardVo.getDashType(), "S") ) {
+				result.setRightValue(Config.getBoolean("ui.dashboard.abbreviation") ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));
+			}
+			else if( Common.isEquals(customDashboardVo.getDashType(), "D") ) {
+				long totalCnt = edc.getNumFound();
+				long readCnt = edc.getFacetQueryData();
+				long unreadCnt = totalCnt - readCnt;
+
+				if( Common.isOrEquals("unread", customDashboardVo.getDashMultiLeft(), customDashboardVo.getDashMultiLeft())){
+					sq.setParam("facet.query", "-{!join from=msgid fromIndex=checked to=msgid}id:"+customDashboardVo.getAdminId());
+				}
+
+				if(Common.isEquals(customDashboardVo.getDashMultiLeft(), "read")) {
+					result.setLeftValue(Config.getBoolean("ui.dashboard.abbreviation") ? Common.formatNum(readCnt) : Common.numberFormatter(readCnt));
+				}else if(Common.isEquals(customDashboardVo.getDashMultiLeft(), "unread")) {
+					result.setLeftValue(Config.getBoolean("ui.dashboard.abbreviation") ? Common.formatNum(unreadCnt) : Common.numberFormatter(unreadCnt));
+				}else if(Common.isEquals(customDashboardVo.getDashMultiLeft(), "total")) {
+					result.setLeftValue(Config.getBoolean("ui.dashboard.abbreviation") ? Common.formatNum(totalCnt) : Common.numberFormatter(totalCnt));
+				}
+				if(Common.isEquals(customDashboardVo.getDashMultiRight(), "read")) {
+					result.setRightValue(Config.getBoolean("ui.dashboard.abbreviation") ? Common.formatNum(readCnt) : Common.numberFormatter(readCnt));
+				}else if(Common.isEquals(customDashboardVo.getDashMultiRight(), "unread")) {
+					result.setRightValue(Config.getBoolean("ui.dashboard.abbreviation") ? Common.formatNum(unreadCnt) : Common.numberFormatter(unreadCnt));
+				}else if(Common.isEquals(customDashboardVo.getDashMultiRight(), "total")) {
+					result.setRightValue(Config.getBoolean("ui.dashboard.abbreviation") ? Common.formatNum(totalCnt) : Common.numberFormatter(totalCnt));
+				}
+			}else if( Common.isEquals(customDashboardVo.getDashType(), "C") ) {
+				result = getChartData(edc, result, customDashboardVo.getDashChart());
+			}
+			else if( Common.isEquals(customDashboardVo.getDashType(), "L") ) result.setEdc(edc);
+
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return new XcnResponseVO(XcnRspCode.OK, result);
 	}
 
 }

@@ -2,6 +2,36 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <script type="text/javascript">
+
+    Highcharts.setOptions({
+        chart: {
+            type: 'column',
+            marginTop: 15,
+            marginBottom: 60,
+            spacingBottom: 0
+        },
+        global: {useUTC: false},
+        gridLineColor: '#fff',
+        colors: ['#80599F', '#656C7C', '#598AD3', '#D35976', '#DDDDDD', '#bb6ecb', '#439851', '#33a0c4', '#7558cb', '#97b420'],
+        lang: {
+            months: ['<s:message code="common.january"/>', '<s:message code="common.february"/>', '<s:message code="common.march"/>', '<s:message code="common.april"/>', '<s:message code="common.may"/>', '<s:message code="common.june"/>', '<s:message code="common.july"/>', '<s:message code="common.august"/>', '<s:message code="common.september"/>', '<s:message code="common.october"/>', '<s:message code="common.november"/>', '<s:message code="common.december"/>'],
+            shortMonths: ['<s:message code="common.january"/>', '<s:message code="common.february"/>', '<s:message code="common.march"/>', '<s:message code="common.april"/>', '<s:message code="common.may"/>', '<s:message code="common.june"/>', '<s:message code="common.july"/>', '<s:message code="common.august"/>', '<s:message code="common.september"/>', '<s:message code="common.october"/>', '<s:message code="common.november"/>', '<s:message code="common.december"/>'],
+            weekdays: ['<s:message code="common.sunday"/>', '<s:message code="common.monday"/>', '<s:message code="common.tuesday"/>', '<s:message code="common.wednesday"/>', '<s:message code="common.thursday"/>', '<s:message code="common.friday"/>', '<s:message code="common.saturday"/>'],
+            contextButtonTitle: '<s:message code="common.msg.char_type"/>',
+            thousandsSep: ','
+        },
+        xAxis: {
+            dateTimeLabelFormats: {
+                day: '<s:message code="dashboard.display.day" arguments="%b,%d" />'
+            }
+        },
+        yAxis: {
+            gridLineColor: '#333',
+            gridLineWidth: 0.1
+        }
+    });
+
+
     function setDashData(rightValue, leftValue) {
         if ($('#dashHtmlSample').find('.rightValue') != undefined) {
             $('#dashHtmlSample').find('.rightValue').text(rightValue);
@@ -94,7 +124,7 @@
                 type: 'logarithmic',
                 min: 1,
                 title: {
-                    text: '(<s:message code="common.msg.count"/>)',
+                    text: '',
                     rotation: 0
                 }
             },
@@ -160,45 +190,32 @@
 
 </script>
 <div style="display:none;">
+
+
 	<div id="singleDataFormat">
-		<div class="mainlist" style="width: 800px;">
+		<div class="grid-stack-item ui-draggable-handle">
 			<div style="display:none;" class="gridValues" data-dashMultiLeft="#dashMultiLeft#" data-dashMultiRight="#dashMultiRight#"></div>
-			<div class="#dashColor# bornone">
-				<span class="#dashIcon# dash-title">#dashName#</span>
-				<p>123456<span>건</span>
-				</p>
+			<div class="grid-stack-item-content">
+				<div class="panel">
+					<div class="#dashColor# panel-heading">
+						<span class="#dashIcon# dash-title">#dashName#</span>
+						<p class="rightValue">12345<span>건</span>
+						</p>
+						<div class="col-xs-9 text-right">
+							<button type="button" class="customClose">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+					</div>
+					<div class="panel-footer">
+						<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59"><s:message code="condition.today_str"/></div>
+						<div class="clearfix"></div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
 
-<%--	<div id="dualDataFormat">--%>
-<%--		<div class="grid-stack-item ui-draggable-handle">--%>
-<%--			<div style="display:none;" class="gridValues" data-dashMultiLeft="#dashMultiLeft#" data-dashMultiRight="#dashMultiRight#"></div>--%>
-<%--			<div class="grid-stack-item-content">--%>
-<%--				<div class="panel #dashColor#">--%>
-<%--					<div class="panel-heading">--%>
-<%--						<div class="row">--%>
-<%--							<div class="col-xs-3" style="padding-right:0;">--%>
-<%--								<i class="customClass #dashIcon# fa-3x"></i>--%>
-<%--							</div>--%>
-<%--							<div class="col-xs-9 text-right">--%>
-<%--								<div class="position_top35"><span class="leftValue odometerxcn"></span> / <span--%>
-<%--										class="rightValue huge odometerxcn"> </span></div>--%>
-<%--								<form method="post" action="<c:url value="/ems/message.do"/>" target="_self">--%>
-<%--									<input type="hidden" name="conditionParam"/>--%>
-<%--								</form>--%>
-<%--							</div>--%>
-<%--						</div>--%>
-<%--					</div>--%>
-<%--					<div class="panel-footer">--%>
-<%--						<span class="pull-left dash-title">#dashName#</span>--%>
-<%--						<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59"><s:message code="condition.today_str"/></div>--%>
-<%--						<div class="clearfix"></div>--%>
-<%--					</div>--%>
-<%--				</div>--%>
-<%--			</div>--%>
-<%--		</div>--%>
-<%--	</div>--%>
 
 	<div id="chartDataFormat">
 		<div class="grid-stack-item ui-draggable-handle">
@@ -208,15 +225,17 @@
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-xs-12 text-right">
+								<button type="button" class="customClose">
+									<span aria-hidden="true">&times;</span>
+								</button>
 								<div class="dashChartArea" data-chartType="#chartType#"
 								     style="min-height: 200px;height:100%; width: 100%; margin: 0 auto"></div>
 							</div>
 						</div>
 					</div>
 					<div class="panel-footer">
-						<span class="pull-left dash-title"><i class="customClass chartDash #dashIcon#"
-						                                      style="font-size:float:left;position:relative;padding-right:4px;"></i>#dashName#</span>
-<%--						<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59"><s:message code="condition.today_str"/></div>--%>
+						<span class="#dashIcon# pull-left dash-title">#dashName#</span>
+						<%--						<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59"><s:message code="condition.today_str"/></div>--%>
 						<div class="clearfix"></div>
 					</div>
 				</div>
@@ -232,35 +251,15 @@
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-xs-12 text-right">
+								<button type="button" class="customClose">
+									<span aria-hidden="true">&times;</span>
+								</button>
 								<div id="pieChart" style="min-height: 200px;height:100%; width: 100%; margin: 0 auto"></div>
 							</div>
 						</div>
 					</div>
 					<div class="panel-footer">
-						<span class="pull-left dash-title"><i class="customClass chartDash #dashIcon#"
-						                                      style="float:left;top:3px;position:relative;padding-right:4px;"></i>#dashName#</span>
-						<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59"><s:message code="condition.today_str"/></div>
-						<div class="clearfix"></div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div id="linhartDataFormat">
-		<div class="grid-stack-item ui-draggable-handle">
-			<div style="display:none;" class="gridValues" data-dashMultiLeft="#dashMultiLeft#" data-dashMultiRight="#dashMultiRight#"></div>
-			<div class="grid-stack-item-content">
-				<div class="panel #dashColor#Border">
-					<div class="panel-body">
-						<div class="row">
-							<div class="col-xs-12 text-right" style="padding-right:30px;">
-								<div id="lineChart" style="min-height: 200px;height:100%; width: 100%; margin: 0 auto"></div>
-							</div>
-						</div>
-					</div>
-					<div class="panel-footer">
-						<span class="pull-left dash-title"><i class="customClass chartDash #dashIcon#"
-						                                      style="float:left;top:3px;position:relative;padding-right:4px;"></i>#dashName#</span>
+						<span class="#dashIcon# pull-left dash-title">#dashName#</span>
 						<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59"><s:message code="condition.today_str"/></div>
 						<div class="clearfix"></div>
 					</div>
@@ -269,32 +268,23 @@
 		</div>
 	</div>
 
-	<div id="listDataFormat">
+	<div id="linhartDataFormat">
 		<div class="grid-stack-item ui-draggable-handle">
 			<div style="display:none;" class="gridValues" data-dashMultiLeft="#dashMultiLeft#" data-dashMultiRight="#dashMultiRight#"></div>
 			<div class="grid-stack-item-content">
 				<div class="panel #dashColor#Border">
 					<div class="panel-body">
 						<div class="row">
-							<div class="col-xs-12 text-right">
-								<table id="mytable" class="dashboardTable table table-bordred table-striped">
-									<thead>
-									<tr>
-										<th></th>
-										<th><s:message code="condition.date"/></th>
-										<th><s:message code="condition.service"/></th>
-										<th><s:message code="condition.subject"/></th>
-									</tr>
-									</thead>
-									<tbody class="dashTableTbody">
-									</tbody>
-								</table>
+							<div class="col-xs-12 text-right" style="padding-right:30px;">
+								<button type="button" class="customClose">
+									<span aria-hidden="true">&times;</span>
+								</button>
+								<div id="lineChart" style="min-height: 200px;height:100%; width: 100%; margin: 0 auto"></div>
 							</div>
 						</div>
 					</div>
 					<div class="panel-footer">
-						<span class="pull-left dash-title"><i class="customClass chartDash #dashIcon#"
-						                                      style="float:left;top:3px;position:relative;padding-right:4px;"></i>#dashName#</span>
+						<span class="#dashIcon# pull-left dash-title">#dashName#</span>
 						<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59"><s:message code="condition.today_str"/></div>
 						<div class="clearfix"></div>
 					</div>
@@ -302,6 +292,42 @@
 			</div>
 		</div>
 	</div>
+
+		<div id="listDataFormat">
+			<div class="grid-stack-item ui-draggable-handle">
+				<div style="display:none;" class="gridValues" data-dashMultiLeft="#dashMultiLeft#" data-dashMultiRight="#dashMultiRight#"></div>
+				<div class="grid-stack-item-content">
+					<div class="panel #dashColor#Border">
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-xs-12 text-right">
+									<button type="button" class="customClose">
+										<span aria-hidden="true">&times;</span>
+									</button>
+									<table id="mytable" class="dashboardTable table table-bordred table-striped">
+										<thead>
+										<tr>
+											<th></th>
+											<th><s:message code="condition.date"/></th>
+											<th><s:message code="condition.service"/></th>
+											<th><s:message code="condition.subject"/></th>
+										</tr>
+										</thead>
+										<tbody class="dashTableTbody">
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+						<div class="panel-footer">
+							<span class="pull-left dash-title">#dashName#</span>
+							<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59"><s:message code="condition.today_str"/></div>
+							<div class="clearfix"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
 	<div id="emptyDataFormat">
 		<div class="grid-stack-item ui-draggable-handle">
