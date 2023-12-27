@@ -198,7 +198,8 @@
   }
 
 
-  var adminLang='<%=adminLanguage%>';
+  var pwchgDt = '${_USERCREDENTIAL_.pwchgDt}';
+  var adminLang = '<%=adminLanguage%>';
   var enter = "┌";
   var stompClient;
   var adminType = '${_USERCREDENTIAL_.adminType}';
@@ -206,10 +207,11 @@
   var adminId = '${_USERCREDENTIAL_.adminId}';
   var firstAdminYn = '${_USERCREDENTIAL_.firstAdminYn}';
   var adminMenu = '${_USERCREDENTIAL_.menu}';
-  var leftSize=225;
+  var loginType = '${_USERCREDENTIAL_.loginType}';
+  var leftSize = 225;
   var menuId = "";
   var pMenuId = "";
-  var checkOpenCfWin = null;
+
 
   $(document).ready(function() {
     if( $('.content_header').css('display') == undefined ) {
@@ -404,50 +406,18 @@
       });
     });
 
-    $('#logoutBtn').click(function(){
+    $('#logoutBtn').click(function () {
       ui.get({
-        url : 'logout.xcn',
-        success : function(data, total) {
+        url: 'logout.xcn',
+        success: function (data, total) {
           closeAllPopup();
-          //document.location.href = '<c:url value="/logout.do"/>';
-          ui.get({
-            url : 'connectCf.xcn',
-            success : function(data, total) {
-              var connectCfUrl = data.cfUrl;
-              var frmPop= document.frmPopup;
-              if(connectCfUrl.length > 0) {
-                if(checkOpenCfWin && !checkOpenCfWin.closed) {
-                  frmPop.action = connectCfUrl;
-                  frmPop.method = "post";
-                  frmPop.target = 'cfPopupView';
-                  frmPop.userId.value = data.userId;
-                  frmPop.userPw.value = "noLogin";
-                  frmPop.actionType.value = "cfLogout";
-                  frmPop.submit();
-                } else {
-                  frmPop.action = connectCfUrl;
-                  frmPop.method = "post";
-                  frmPop.target = '';
-                  frmPop.userId.value = data.userId;
-                  frmPop.userPw.value = "noLogin";
-                  frmPop.actionType.value = "cfLogout";
-                  frmPop.submit();
-                }
-              }
-
-              document.location.href = '<c:url value="/logout.do"/>';
-            },
-            error : function(status, message) {
-              console.log('Audit log insert fail');
-            },
-            complete : function() {
-            }
-          });
+          if (loginType == 'S') document.location.href = '<c:url value="/logoutSSO.do"/>';
+          else document.location.href = '<c:url value="/logout.do"/>';
         },
-        error : function(status, message) {
+        error: function (status, message) {
           console.log('Audit log insert fail');
         },
-        complete : function() {
+        complete: function () {
         }
       });
     });
