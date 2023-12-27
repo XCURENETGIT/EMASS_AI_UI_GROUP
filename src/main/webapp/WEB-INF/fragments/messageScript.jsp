@@ -827,7 +827,7 @@
     var url  = '<c:url value="/ems/contentBodyNew.do?msgid='+msgId+'&searchKey='+searchKey+'"/>';
 
     if( title == '' ) title='No_Title'+ ''// makeDateTime();
-    return fnOpenWindow(url, title, 1000, 700, 'resize');
+    return fnOpenWindow(url, title, 1000, 800, 'resize');
   }
 
   function openGroupMessagePop(){

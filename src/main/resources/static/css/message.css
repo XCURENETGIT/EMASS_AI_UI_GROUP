@@ -1,6 +1,6 @@
 .msg_container{
 	position: absolute;
-	top: 64px;
+	top: 80px;
 	left: 0px;
 	right: 0px;
 	bottom: 2px;
@@ -52,61 +52,61 @@
 }
 
 .splitter_panel {
-  position: relative;
+	position: relative;
 }
 .splitter_panel .vsplitter:HOVER  {
 	background-color: #EBEBEB;
 }
 .splitter_panel .vsplitter {
-    background-color: #dbdbdb;
-    cursor: col-resize;
-    z-index:900;
-    width: 4px;
+	background-color: #dbdbdb;
+	cursor: col-resize;
+	z-index:900;
+	width: 4px;
 }
 
 .splitter_panel .hsplitter {
-    background-color: #A5ACB5;
-    cursor: row-resize;
-    z-index: 800;
-    height: 4px;
+	background-color: #A5ACB5;
+	cursor: row-resize;
+	z-index: 800;
+	height: 4px;
 }
 .splitter_panel .left_panel{
 	overflow:hidden !important;
 }
 .splitter_panel .vsplitter.splitter-invisible,
 .splitter_panel .hsplitter.splitter-invisible {
-    background: none;
+	background: none;
 }
 .splitter_panel .vsplitter, .splitter_panel .left_panel, .splitter_panel .right_panel,
 .splitter_panel .hsplitter, .splitter_panel .top_panel, .splitter_panel .bottom_panel {
-    position: absolute;
-    overflow:hidden;
+	position: absolute;
+	overflow:hidden;
 }
 .splitter_panel .vsplitter, .splitter_panel .left_panel, .splitter_panel .right_panel {
-  height: 100%;
+	height: 100%;
 }
 .splitter_panel .hsplitter, .splitter_panel .top_panel, .splitter_panel .bottom_panel {
-  width: 100%;
+	width: 100%;
 }
 .splitter_panel .top_panel, .splitter_panel .left_panel, .splitter_panel .vsplitter {
-   top: 0;
+	top: 0;
 }
 .splitter_panel .top_panel, .splitter_panel .bottom_panel, .splitter_panel .left_panel, .splitter_panel .hsplitter {
-   left: 0;
+	left: 0;
 }
 .splitter_panel .bottom_panel {
-   bottom: 0;
+	bottom: 0;
 }
 .splitter_panel .right_panel {
-   right: 0;
+	right: 0;
 }
 .splitterMask {
-  position: absolute;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 1000;
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 1000;
 }
 
 
@@ -142,15 +142,15 @@ select {
 	padding-left: 3px;*/
 }
 input[type="radio"]:checked + span {
-/*	font-weight: bold;*/
+	/*	font-weight: bold;*/
 }
 
 input[type="text"] {
-/*	height: 26px;
-	line-height: 26px;
-	!*border:1px solid #D3D3D3;*!
-	font-size: 12px;
-	padding-left: 3px;*/
+	/*	height: 26px;
+        line-height: 26px;
+        !*border:1px solid #D3D3D3;*!
+        font-size: 12px;
+        padding-left: 3px;*/
 }
 .filter-option {
 	font-size: 12px;
@@ -165,29 +165,29 @@ input[type="text"] {
 
 .footer_msg {
 	position: absolute;
-    bottom: 0px;
-    width: 100%;
-    height: 20px;
-    background: #FBFBFB;
-    z-index: 1000;
-    border-top: 1px solid #D3D3D3;
+	bottom: 0px;
+	width: 100%;
+	height: 20px;
+	background: #FBFBFB;
+	z-index: 1000;
+	border-top: 1px solid #D3D3D3;
 }
 #footer_msg_left {
 	position: absolute;
-    bottom: 2px;
-    width: 300px;
-    height: 20px;
-    background: #FBFBFB;
-    z-index: 1000;
-    border-top: 1px solid #D3D3D3;
-    border-right: 1px solid #D3D3D3;
+	bottom: 2px;
+	width: 300px;
+	height: 20px;
+	background: #FBFBFB;
+	z-index: 1000;
+	border-top: 1px solid #D3D3D3;
+	border-right: 1px solid #D3D3D3;
 }
 
 #search_top_area .search_btn:hover ,#saveFilterTab .search_btn:hover,#message_folderTab .search_btn:hover {
 	background-color: #2e6ca2;
 }
 #search_top_area .search_btn:active,#saveFilterTab .search_btn:active,#message_folderTab .search_btn:active {
-    background-color: #204d74;
+	background-color: #204d74;
 }
 
 #search_top_area .search_btn, #saveFilterTab  .search_btn {
@@ -532,16 +532,16 @@ input[type="text"] {
 	padding: 0px 7px !important;
 }
 .codeSelectedBtn:before {
-    content: "";
-    position: absolute;
-    border-style: solid;
-    border-color: rgba(136, 183, 213, 0);
-    display: block;
-    border-width: 6px;
-    border-right-color: #7293af;
-    width: 0px;
-    left: -11px;
-    top: 4px;
+	content: "";
+	position: absolute;
+	border-style: solid;
+	border-color: rgba(136, 183, 213, 0);
+	display: block;
+	border-width: 6px;
+	border-right-color: #7293af;
+	width: 0px;
+	left: -11px;
+	top: 4px;
 }
 
 .codeSelectedBtn{

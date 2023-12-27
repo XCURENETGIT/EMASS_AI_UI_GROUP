@@ -53,6 +53,8 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 	@Autowired
 	private MongoUtil mongo;
 
+	String message_prefix = "EMS_MESSAGE_";
+
 	public EmsAttachTextVO getAttachTextByHash(final String hash) {
 		Query query = new Query();
 		query.addCriteria(Criteria.where("attachHash").is(hash));

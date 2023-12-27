@@ -45,11 +45,11 @@
         .messageNewGrid::-webkit-scrollbar {display: none;}
 
         .contentList{
-            height:90%;border: 0px;width: 100%;overflow: hidden;border:0px;position: absolute;
+            height:98%;border: 0px;width: 100%;overflow: hidden;border:0px;position: absolute;
         }
 
         .contentBody{
-            height:100%;border: 0px;width: 100%;border:0px;position: absolute;
+            height:98%;border: 0px;width: 100%;border:0px;position: absolute;
         }
 
         @media screen and (max-height: 750px) {
@@ -1855,6 +1855,8 @@
     <div id="container">
         <tiles:insertAttribute name="lnb" ignore="true"/>
         <div id="contentArea">
+            <%-- header --%>
+                <tiles:insertAttribute name="header" ignore="true"/>
             <%-- content --%>
             <div class="msg_container">
                 <tiles:insertAttribute name="left" ignore="true"/>
@@ -2395,91 +2397,90 @@
                         <%} %>
                         <%-- 피드백 설정 --%>
                         <%-- 보기 설정 --%>
-                        <div class="viewSetup" style="position: absolute;top:32px;right:1px;z-index: 9;	text-align: right">
-                            <button href="javascript:;" class="btn05 dropdown-toggle" id="feedbackBtn"><s:message code="condition.feedback"/> <s:message code="common.msg.setting"/></button>
-                            <div style="display: inline-block; padding-left:10px;vertical-align: bottom;">
+                        <div class="viewSetup" style="position: absolute;top:32px;right:4px;z-index: 9;	text-align: right">
+                            <div style="display:inline-block; padding-left:10px;vertical-align: bottom;">
+                                <button href="javascript:;" class="btn05 dropdown-toggle" id="feedbackBtn"><s:message code="condition.feedback"/> <s:message code="common.msg.setting"/></button>
                                 <ul id="feedbackSetting" style="display: none; z-index: 991; padding: 5px 0px;">
-                                    <li><a href="javascript:void(0);" onclick="setFeedback(0);" style="padding-left: 20px;"><span class="feedbackCorrect" style="display: inline-block; position: relative; top: 0px;"></span>&nbsp;<s:message code="condition.info.feedback0"/></a></li>
-                                    <li><a href="javascript:void(0);" onclick="setFeedback(1);" style="padding-left: 20px;"><span class="feedbackInCorrect" style="display: inline-block; position: relative; top: 0px;"></span>&nbsp;<s:message code="condition.info.class1"/></a></li>
-                                    <li><a href="javascript:void(0);" onclick="setFeedback(2);" style="padding-left: 20px;"><span class="feedbackInCorrect" style="display: inline-block; position: relative; top: 0px;"></span>&nbsp;<s:message code="condition.info.class2"/></a></li>
-                                    <li><a href="javascript:void(0);" onclick="setFeedback(3);" style="padding-left: 20px;"><span class="feedbackInCorrect" style="display: inline-block; position: relative; top: 0px;"></span>&nbsp;<s:message code="condition.info.class3"/></a></li>
-                                    <li><a href="javascript:void(0);" onclick="setFeedback(4);" style="padding-left: 20px;"><span class="feedbackInCorrect" style="display: inline-block; position: relative; top: 0px;"></span>&nbsp;<s:message code="condition.info.class4"/></a></li>
-                                    <li><a href="javascript:void(0);" onclick="setFeedback(9);" style="padding-left: 20px;"><span class="feedbackDefer" style="display: inline-block; position: relative; top: 0px;"></span>&nbsp;<s:message code="condition.info.feedback9"/></a></li>
-                                </ul>
-                                <div style="position: fixed; top: 0px; bottom: 0px; left: 0px; right: 0px; z-index: 990; display: none; width: 100%; height: 100%;" id="overlay"></div>
-                            </div>
-
-                            <button class="btn05 dropdown-toggle" data-toggle="dropdown" id="config_toggle">
-                                <s:message code="condition.view.setup"/><span class="caret"></span>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-right"  style="min-width:180px;font-size:12px; height: 380px; padding:0;" id="additionalBtn">
-                                <div class="listRow" style="padding: 0;">
-                                    <div class="listRowLeft" style="text-align:center; font-weight: bold; background-color: #eaeaea; width: 120px; height: 34px;"><s:message code="condition.view.stype"/></div>
-                                    <div class="listRowLeft" style="height: 20px;line-height: 15px;position: relative;top: 7px;padding: 0 3px;margin-left: 5px;">
-                                        <a id="none_btn" style="font-size: 11px; font-weight: initial; line-height: 20px; padding-right: 5px;" class="areaBtn"><img src="<c:url value="/img/message/message_none.jpg"/>"  style="padding-right: 4px;padding-bottom: 2px"><s:message code="condition.view.type1"/> </a>
-                                        <a id="bottom_btn" style="font-size: 11px; font-weight: initial; line-height: 20px; padding-right: 5px;" class="areaBtn"><img src="<c:url value="/img/message/message_bottom.jpg"/>" style="padding-right: 4px;padding-bottom: 2px"><s:message code="condition.view.type2"/></a>
-                                        <a id="right_btn" style="font-size: 11px; font-weight: initial; line-height: 20px; padding-right: 5px;" class="areaBtn"><img src="<c:url value="/img/message/message_right.jpg"/>" style="padding-right: 4px;padding-bottom: 2px"><s:message code="condition.view.type3"/></a>
+                                        <li><a href="javascript:void(0);" onclick="setFeedback(0);" style="padding-left: 20px;"><span class="feedbackCorrect" style="display: inline-block; position: relative; top: 0px;"></span>&nbsp;<s:message code="condition.info.feedback0"/></a></li>
+                                        <li><a href="javascript:void(0);" onclick="setFeedback(1);" style="padding-left: 20px;"><span class="feedbackInCorrect" style="display: inline-block; position: relative; top: 0px;"></span>&nbsp;<s:message code="condition.info.class1"/></a></li>
+                                        <li><a href="javascript:void(0);" onclick="setFeedback(2);" style="padding-left: 20px;"><span class="feedbackInCorrect" style="display: inline-block; position: relative; top: 0px;"></span>&nbsp;<s:message code="condition.info.class2"/></a></li>
+                                        <li><a href="javascript:void(0);" onclick="setFeedback(3);" style="padding-left: 20px;"><span class="feedbackInCorrect" style="display: inline-block; position: relative; top: 0px;"></span>&nbsp;<s:message code="condition.info.class3"/></a></li>
+                                        <li><a href="javascript:void(0);" onclick="setFeedback(4);" style="padding-left: 20px;"><span class="feedbackInCorrect" style="display: inline-block; position: relative; top: 0px;"></span>&nbsp;<s:message code="condition.info.class4"/></a></li>
+                                        <li><a href="javascript:void(0);" onclick="setFeedback(9);" style="padding-left: 20px;"><span class="feedbackDefer" style="display: inline-block; position: relative; top: 0px;"></span>&nbsp;<s:message code="condition.info.feedback9"/></a></li>
+                                    </ul>
+                                    <div style="position: fixed; top: 0px; bottom: 0px; left: 0px; right: 0px; z-index: 990; display: none; width: 100%; height: 100%;" id="overlay"></div>
+                                <button class="btn05 dropdown-toggle" data-toggle="dropdown" id="config_toggle">
+                                    <s:message code="condition.view.setup"/><span class="caret"></span>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right"  style="min-width:180px;font-size:12px; height: 380px; padding:0;" id="additionalBtn">
+                                    <div class="listRow" style="padding: 0;">
+                                        <div class="listRowLeft" style="text-align:center; font-weight: bold; background-color: #eaeaea; width: 120px; height: 34px;"><s:message code="condition.view.stype"/></div>
+                                        <div class="listRowLeft" style="height: 20px;line-height: 15px;position: relative;top: 7px;padding: 0 3px;margin-left: 5px;">
+                                            <a id="none_btn" style="font-size: 11px; font-weight: initial; line-height: 20px; padding-right: 5px;" class="areaBtn"><img src="<c:url value="/img/message/message_none.jpg"/>"  style="padding-right: 4px;padding-bottom: 2px"><s:message code="condition.view.type1"/> </a>
+                                            <a id="bottom_btn" style="font-size: 11px; font-weight: initial; line-height: 20px; padding-right: 5px;" class="areaBtn"><img src="<c:url value="/img/message/message_bottom.jpg"/>" style="padding-right: 4px;padding-bottom: 2px"><s:message code="condition.view.type2"/></a>
+                                            <a id="right_btn" style="font-size: 11px; font-weight: initial; line-height: 20px; padding-right: 5px;" class="areaBtn"><img src="<c:url value="/img/message/message_right.jpg"/>" style="padding-right: 4px;padding-bottom: 2px"><s:message code="condition.view.type3"/></a>
+                                        </div>
+                                        <!-- <button class ="msg_button" id="config_colse" style="height: 22px; line-height: 19px; float: right; margin-top: 5px;margin-right: 10px;">닫기</button> -->
                                     </div>
-                                    <!-- <button class ="msg_button" id="config_colse" style="height: 22px; line-height: 19px; float: right; margin-top: 5px;margin-right: 10px;">닫기</button> -->
-                                </div>
-                                <div class="listRow" style="padding: 0;">
-                                    <div class="listRowLeft" style="text-align:center; font-weight: bold; background-color: #eaeaea; width: 120px; height: 34px;"><s:message code="condition.orderType"/></div>
-                                    <select id="messageSort" class="listRowLeft" style="margin-top:5px; margin-left: 5px;">
-                                        <option value="ctime desc">▼ <s:message code="condition.date"/></option>
-                                        <option value="ctime asc">▲ <s:message code="condition.date"/></option>
-                                        <option value="pi_total desc">▼ <s:message code="condition.regexp"/></option>
-                                        <option value="pi_total asc">▲ <s:message code="condition.regexp"/></option>
-                                        <option value="size desc">▼ <s:message code="condition.size.all"/></option>
-                                        <option value="size asc">▲ <s:message code="condition.size.all"/></option>
-                                        <option value="body_size desc">▼ <s:message code="condition.size.body"/></option>
-                                        <option value="body_size asc">▲ <s:message code="condition.size.body"/></option>
-                                    </select>
-                                </div>
-                                <div class="listRow" style="padding: 0;">
-                                    <div class="listRowLeft" style="text-align:center; font-weight: bold; background-color: #eaeaea; width: 120px; height: 34px;"><s:message code="condition.view.type5"/></div>
-                                    <label style="font-weight: normal; cursor: pointer;"><input type="checkbox" class="listRowLeft" style="margin-top:10px; margin-left: 5px;" name="subjectbody" />&nbsp;&nbsp;<s:message code="common.msg.use"/></label>
-                                </div>
-                                <div class="listRow" style="padding: 0;">
-                                    <div class="listRowLeft" style="text-align:center; font-weight: bold; background-color: #eaeaea; width: 120px; height: 34px;"><s:message code="condition.view.type10"/></div>
-                                    <label style="font-weight: normal; cursor: pointer;"><input type="checkbox" class="listRowLeft" style="margin-top:10px; margin-left: 5px;" name="overlapUse" />&nbsp;&nbsp;<s:message code="common.msg.use"/> <s:message code="condition.view.type11"/></label>
-                                </div>
-                                <div class="listRow" style="padding: 0;">
-                                    <div class="listRowLeft" style="text-align:center; font-weight: bold; background-color: #eaeaea; width: 120px; height: 34px;"><s:message code="condition.view.type6"/></div>
-                                    <label style="font-weight: normal; cursor: pointer;"><input type="checkbox" class="listRowLeft" style="margin-top:10px; margin-left: 5px;" name="summary" />&nbsp;&nbsp;<s:message code="common.msg.use"/> <s:message code="condition.view.type7"/></label>
-                                </div>
-                                <div class="listRow" style="padding: 0;">
-                                    <div class="listRowLeft" style="text-align:center; font-weight: bold; background-color: #eaeaea; width: 120px; height: 34px;"><s:message code="condition.view.type12"/></div>
-                                    <label style="font-weight: normal; cursor: pointer;"><input type="checkbox" class="listRowLeft" style="margin-top:10px; margin-left: 5px;" name="keywordHighlight" />&nbsp;&nbsp;<s:message code="common.msg.use"/> <s:message code="condition.view.type13"/></label>
-                                </div>
-                                <div class="listRow" style="padding: 0;">
-                                    <div class="listRowLeft" style="text-align:center; font-weight: bold; background-color: #eaeaea; width: 120px; height: 34px;"><s:message code="condition.view.type14"/></div>
-                                    <label style="font-weight: normal; cursor: pointer;"><input type="checkbox" class="listRowLeft" style="margin-top:10px; margin-left: 5px;" name="hostQuery" />&nbsp;&nbsp;<s:message code="common.msg.use"/> <s:message code="condition.view.type15"/></label>
-                                </div>
-                                <div class="listRow" style="width: 575px; border-bottom: none; padding: 0;">
-                                    <div class="listRowLeft" style="text-align:center; font-weight: bold; background-color: #eaeaea; width: 120px; height: 202px;padding-top: 70px;"><s:message code="condition.view.type4"/></div>
-                                    <div class="listRowLeft" style="padding-left: 5px;">
-                                        <span style="width: 435px; display:block;">
-                                            <input id="insaFormatInput" style="width: 330px;" type="text" value="" data-format="name,emaile,busi,dept,jikgub,ip"/>
-                                            <img src="<c:url value="/img/message/exclamation.png"/>" id="confError" style="display: none; padding-bottom:2px;" title="<s:message code="message.insa.error"/>">
-                                            <img src="<c:url value="/img/message/accept.png"/>" id="confAccept" style="display: none; padding-bottom:2px;" title="<s:message code="message.insa.ok"/>">
-                                            <span style="padding-left: 7px;" id="insaFormatOk"> <s:message code="common.msg.apply"/> </span>
-                                            <span style="padding-left: 7px;" id="insaFormatClear"> <s:message code="common.msg.remove"/> </span>
-                                        </span>
-                                        <span style="width: 435px; display:block;">
-                                            <input  id="insaFormatInputEx" style="width:435px;cursor: auto !important;" disabled type="text" value="<s:message code="message.help.example"/>)" data-format="name,emaile,busi,dept,jikgub,ip"/>
-                                        </span>
-                                        <select id="messageFormat" size="8" style="width:435px; margin-top: 10px; padding-top: 2px; height:110px;">
-                                            <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_name"/>/hong@xcurent.com/<s:message code="message.help.sample_bunm"/>/<s:message code="message.help.sample_deptnm"/>/<s:message code="message.help.sample_jikgubnm"/>/192.168.0.1" data-format="name/email/businm/deptnm/jikgubnm/ip">name/email/businm/deptnm/jikgubnm/ip</option>
-                                            <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_name"/>-hong@xcurent.com-<s:message code="message.help.sample_bunm"/>-<s:message code="message.help.sample_deptnm"/>-<s:message code="message.help.sample_jikgubnm"/>-192.168.0.1" data-format="name-email-businm-deptnm-jikgubnm-ip">name-email-businm-deptnm-jikgubnm-ip</option>
-                                            <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_name"/>,hong@xcurent.com,<s:message code="message.help.sample_bunm"/>,<s:message code="message.help.sample_deptnm"/>,<s:message code="message.help.sample_jikgubnm"/>,192.168.0.1" data-format="name,email,businm,deptnm,jikgubnm,ip">name,email,businm,deptnm,jikgubnm,ip</option>
-                                            <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_name"/>[hong@xcurent.com,<s:message code="message.help.sample_bunm"/>,<s:message code="message.help.sample_deptnm"/>,<s:message code="message.help.sample_jikgubnm"/>,192.168.0.1]" data-format="name[email,businm,deptnm,jikgubnm,ip]">name[email,businm,deptnm,jikgubnm,ip]</option>
-                                            <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_bunm"/>/<s:message code="message.help.sample_deptnm"/>/<s:message code="message.help.sample_name"/>" data-format="businm/deptnm/name">businm/deptnm/name</option>
-                                            <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_bunm"/>-<s:message code="message.help.sample_deptnm"/>-<s:message code="message.help.sample_jikgubnm"/>-<s:message code="message.help.sample_name"/>" data-format="businm-deptnm-jikgubnm-name">businm-deptnm-jikgubnm-name</option>
-                                            <option value="<s:message code="message.help.example"/>) [<s:message code="message.help.sample_bunm"/>-<s:message code="message.help.sample_deptnm"/>-<s:message code="message.help.sample_jikgubnm"/>]-<s:message code="message.help.sample_name"/>" data-format="[businm-deptnm-jikgubnm]-name">[businm-deptnm-jikgubnm]-name</option>
-                                            <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_name"/>,hong@xcurent.com,192.168.0.1" data-format="name,email,ip">name,email,ip</option>
-                                            <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_name"/>(hong@xcurent.com,192.168.0.1)" data-format="name(email,ip)">name(email,ip)</option>
-                                            <option value="" data-format=""> <s:message code="message.user.custom"/></option>
+                                    <div class="listRow" style="padding: 0;">
+                                        <div class="listRowLeft" style="text-align:center; font-weight: bold; background-color: #eaeaea; width: 120px; height: 34px;"><s:message code="condition.orderType"/></div>
+                                        <select id="messageSort" class="listRowLeft" style="margin-top:5px; margin-left: 5px;">
+                                            <option value="ctime desc">▼ <s:message code="condition.date"/></option>
+                                            <option value="ctime asc">▲ <s:message code="condition.date"/></option>
+                                            <option value="pi_total desc">▼ <s:message code="condition.regexp"/></option>
+                                            <option value="pi_total asc">▲ <s:message code="condition.regexp"/></option>
+                                            <option value="size desc">▼ <s:message code="condition.size.all"/></option>
+                                            <option value="size asc">▲ <s:message code="condition.size.all"/></option>
+                                            <option value="body_size desc">▼ <s:message code="condition.size.body"/></option>
+                                            <option value="body_size asc">▲ <s:message code="condition.size.body"/></option>
                                         </select>
+                                    </div>
+                                    <div class="listRow" style="padding: 0;">
+                                        <div class="listRowLeft" style="text-align:center; font-weight: bold; background-color: #eaeaea; width: 120px; height: 34px;"><s:message code="condition.view.type5"/></div>
+                                        <label style="font-weight: normal; cursor: pointer;"><input type="checkbox" class="listRowLeft" style="margin-top:10px; margin-left: 5px;" name="subjectbody" />&nbsp;&nbsp;<s:message code="common.msg.use"/></label>
+                                    </div>
+                                    <div class="listRow" style="padding: 0;">
+                                        <div class="listRowLeft" style="text-align:center; font-weight: bold; background-color: #eaeaea; width: 120px; height: 34px;"><s:message code="condition.view.type10"/></div>
+                                        <label style="font-weight: normal; cursor: pointer;"><input type="checkbox" class="listRowLeft" style="margin-top:10px; margin-left: 5px;" name="overlapUse" />&nbsp;&nbsp;<s:message code="common.msg.use"/> <s:message code="condition.view.type11"/></label>
+                                    </div>
+                                    <div class="listRow" style="padding: 0;">
+                                        <div class="listRowLeft" style="text-align:center; font-weight: bold; background-color: #eaeaea; width: 120px; height: 34px;"><s:message code="condition.view.type6"/></div>
+                                        <label style="font-weight: normal; cursor: pointer;"><input type="checkbox" class="listRowLeft" style="margin-top:10px; margin-left: 5px;" name="summary" />&nbsp;&nbsp;<s:message code="common.msg.use"/> <s:message code="condition.view.type7"/></label>
+                                    </div>
+                                    <div class="listRow" style="padding: 0;">
+                                        <div class="listRowLeft" style="text-align:center; font-weight: bold; background-color: #eaeaea; width: 120px; height: 34px;"><s:message code="condition.view.type12"/></div>
+                                        <label style="font-weight: normal; cursor: pointer;"><input type="checkbox" class="listRowLeft" style="margin-top:10px; margin-left: 5px;" name="keywordHighlight" />&nbsp;&nbsp;<s:message code="common.msg.use"/> <s:message code="condition.view.type13"/></label>
+                                    </div>
+                                    <div class="listRow" style="padding: 0;">
+                                        <div class="listRowLeft" style="text-align:center; font-weight: bold; background-color: #eaeaea; width: 120px; height: 34px;"><s:message code="condition.view.type14"/></div>
+                                        <label style="font-weight: normal; cursor: pointer;"><input type="checkbox" class="listRowLeft" style="margin-top:10px; margin-left: 5px;" name="hostQuery" />&nbsp;&nbsp;<s:message code="common.msg.use"/> <s:message code="condition.view.type15"/></label>
+                                    </div>
+                                    <div class="listRow" style="width: 575px; border-bottom: none; padding: 0;">
+                                        <div class="listRowLeft" style="text-align:center; font-weight: bold; background-color: #eaeaea; width: 120px; height: 202px;padding-top: 70px;"><s:message code="condition.view.type4"/></div>
+                                        <div class="listRowLeft" style="padding-left: 5px;">
+                                            <span style="width: 435px; display:block;">
+                                                <input id="insaFormatInput" style="width: 330px;" type="text" value="" data-format="name,emaile,busi,dept,jikgub,ip"/>
+                                                <img src="<c:url value="/img/message/exclamation.png"/>" id="confError" style="display: none; padding-bottom:2px;" title="<s:message code="message.insa.error"/>">
+                                                <img src="<c:url value="/img/message/accept.png"/>" id="confAccept" style="display: none; padding-bottom:2px;" title="<s:message code="message.insa.ok"/>">
+                                                <span style="padding-left: 7px;" id="insaFormatOk"> <s:message code="common.msg.apply"/> </span>
+                                                <span style="padding-left: 7px;" id="insaFormatClear"> <s:message code="common.msg.remove"/> </span>
+                                            </span>
+                                            <span style="width: 435px; display:block;">
+                                                <input  id="insaFormatInputEx" style="width:435px;cursor: auto !important;" disabled type="text" value="<s:message code="message.help.example"/>)" data-format="name,emaile,busi,dept,jikgub,ip"/>
+                                            </span>
+                                            <select id="messageFormat" size="8" style="width:435px; margin-top: 10px; padding-top: 2px; height:110px;">
+                                                <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_name"/>/hong@xcurent.com/<s:message code="message.help.sample_bunm"/>/<s:message code="message.help.sample_deptnm"/>/<s:message code="message.help.sample_jikgubnm"/>/192.168.0.1" data-format="name/email/businm/deptnm/jikgubnm/ip">name/email/businm/deptnm/jikgubnm/ip</option>
+                                                <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_name"/>-hong@xcurent.com-<s:message code="message.help.sample_bunm"/>-<s:message code="message.help.sample_deptnm"/>-<s:message code="message.help.sample_jikgubnm"/>-192.168.0.1" data-format="name-email-businm-deptnm-jikgubnm-ip">name-email-businm-deptnm-jikgubnm-ip</option>
+                                                <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_name"/>,hong@xcurent.com,<s:message code="message.help.sample_bunm"/>,<s:message code="message.help.sample_deptnm"/>,<s:message code="message.help.sample_jikgubnm"/>,192.168.0.1" data-format="name,email,businm,deptnm,jikgubnm,ip">name,email,businm,deptnm,jikgubnm,ip</option>
+                                                <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_name"/>[hong@xcurent.com,<s:message code="message.help.sample_bunm"/>,<s:message code="message.help.sample_deptnm"/>,<s:message code="message.help.sample_jikgubnm"/>,192.168.0.1]" data-format="name[email,businm,deptnm,jikgubnm,ip]">name[email,businm,deptnm,jikgubnm,ip]</option>
+                                                <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_bunm"/>/<s:message code="message.help.sample_deptnm"/>/<s:message code="message.help.sample_name"/>" data-format="businm/deptnm/name">businm/deptnm/name</option>
+                                                <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_bunm"/>-<s:message code="message.help.sample_deptnm"/>-<s:message code="message.help.sample_jikgubnm"/>-<s:message code="message.help.sample_name"/>" data-format="businm-deptnm-jikgubnm-name">businm-deptnm-jikgubnm-name</option>
+                                                <option value="<s:message code="message.help.example"/>) [<s:message code="message.help.sample_bunm"/>-<s:message code="message.help.sample_deptnm"/>-<s:message code="message.help.sample_jikgubnm"/>]-<s:message code="message.help.sample_name"/>" data-format="[businm-deptnm-jikgubnm]-name">[businm-deptnm-jikgubnm]-name</option>
+                                                <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_name"/>,hong@xcurent.com,192.168.0.1" data-format="name,email,ip">name,email,ip</option>
+                                                <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_name"/>(hong@xcurent.com,192.168.0.1)" data-format="name(email,ip)">name(email,ip)</option>
+                                                <option value="" data-format=""> <s:message code="message.user.custom"/></option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
