@@ -48,7 +48,7 @@ public interface EmsMessageService {
 
 	public List<CodeVO> getMessengerList();
 
-	public void updateEmsFeedback(final String msgId, final String feedback, final String adminId);
+	public boolean updateEmsFeedback(final String msgId, final String feedback, final String adminId);
 
 	public List<EmsSearchKeywordVO> getSearchKeywordAuto(final String adminId, final String searchKeyword);
 

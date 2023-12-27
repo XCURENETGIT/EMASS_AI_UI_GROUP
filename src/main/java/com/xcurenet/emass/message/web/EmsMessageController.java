@@ -15,6 +15,7 @@ import com.xcurenet.common.parser.mime.MimeParser;
 import com.xcurenet.common.parser.mime.MimeVo;
 import com.xcurenet.common.pdf.PdfWriterEMASS;
 import com.xcurenet.common.util.Common;
+import com.xcurenet.common.util.KafkaProducerService;
 import com.xcurenet.common.util.locale.Prop;
 import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
@@ -88,6 +89,12 @@ public class EmsMessageController {
 
 	@Autowired
 	public ConsentFileDownload consentFileDownload;
+
+	@Resource
+	private KafkaProducerService kafkaProducerService; // kafka
+
+	private String kafka_feedback_idx = "ems_ui_ml_feedback_index";
+
 
 	@RequestMapping(value = "/getEmassBody.xcn")
 	@Description("EMASS 메시지 본문 조회")
@@ -1542,9 +1549,11 @@ public class EmsMessageController {
 		String feedback = Common.nvl(request.getParameter("feedback"));
 
 		for (int i = 0; i < msgId.length; i++) {
-			solrEdcService.setFeedback(msgId[i], feedback); // 엘라스틱 서치 문서 update
-			emsMessageService.updateEmsFeedback(msgId[i], feedback, adminId); // mongoDB 문서 update
+			boolean isProc  = emsMessageService.updateEmsFeedback(msgId[i], feedback, adminId); // mongoDB 문서 update
+			if(isProc) kafkaProducerService.send(kafka_feedback_idx,"_id",msgId[i]);
 		}
+
+
 		return new XcnResponseVO(XcnRspCode.OK);
 	}
 

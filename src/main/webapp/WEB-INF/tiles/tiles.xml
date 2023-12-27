@@ -47,6 +47,7 @@
         <put-attribute name="filterNew" value="/WEB-INF/views/emass/message/filterNew.jsp" />
 
         <put-attribute name="content" value="" />
+
     </definition>
 
 
