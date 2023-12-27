@@ -569,7 +569,8 @@ function clickEvent(dataGrid) {
 </script>
 </head>
 <body class="mini-navbar">
-<div class="container">
+<div>
+	<!-- 검색 영역 -->
 	<div class="searchArea">
 		<div class="searchSub">
 			<div id="startdatepicker"><input type="date" id="startdate" style="width: 110px;"> <span
@@ -601,27 +602,29 @@ function clickEvent(dataGrid) {
 
 		<div class="panel" style="width: 100%; margin-bottom: 10px">
 			<div>
-				<textarea class="elsQueryResultText" rows="1" style="width:100%;" id="elsQueryText" placeholder="<s:message code="condition.input.detail"/>"></textarea>
+				<textarea class="elsQueryResultText" rows="1" style="width:100%; height:50px;" id="elsQueryText" placeholder="<s:message code="condition.input.detail"/>"></textarea>
 			</div>
 		</div>
+	</div>
+	<!-- //검색 영역 -->
+	<!--ContentArea-->
+	<div class="content">
 
-		<div class="content">
-
-			<div class="contentSub">
-				<div class="chartAreafull">
-					<div>
-						<h3>
-							TOP 통계 Chart
-							<span class="sel">
+		<div class="contentSub">
+			<div class="chartAreafull">
+				<div>
+					<h3>
+						<span id="chartAreaTitle">TOP <s:message code="DATA_MONITOR.STAT_LABEL"/> CHART
+						<span class="sel">
 						<div id="totalViewDiv" style="display:none;">
 							<div class="subtab">
 							<button type="button"
-							        title="<s:message code="stat.view.all"/>"><s:message code="stat.view.all"/></button>
+									title="<s:message code="stat.view.all"/>"><s:message code="stat.view.all"/></button>
 							</div>
 						</div>
 						<div class="panel-headings" id="chartCntDiv">
 								<button type="button" class="btn btn-xs btn-default dropdown-toggle"
-								        data-toggle="dropdown">
+										data-toggle="dropdown">
 									<s:message code="stat.display.count.chart"/> (<span class="dropdown-text">5</span>) <span
 										val="5" class="caret"></span>
 								</button>
@@ -631,39 +634,34 @@ function clickEvent(dataGrid) {
 								</ul>
 						</div>
 						</span>
-						</h3>
-						<div class="panel panel-default" id="service.logging.count">
-							<div class="panel-body">
-								<div id="chartArea1" style="height: 300px;"></div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!-- 탭 -->
-				<div class="row top_space2">
-					<div class="col-xs-12">
-						<ul class="nav nav-tabs codeTab listChart">
-							<li class="active"><a data-toggle="tab" href="#basicStatList" id=" ">LIST</a>
-							</li>
-						</ul>
-						</ul>
-					</div>
-				</div>
-				<!-- 테이블 -->
-				<div class="row top_space">
-					<div class="col-lg-12 tab-content">
-						<div id="basicStatList" class="tab-pane fade in active" style="background-color: white">
-							<div id="basicStatListGrid" class="slickGrid gridArea"
-							     style="position: relative; top: 0px; left: 0px; height: 400px; text-align: center; "></div>
+					</h3>
+					<div class="panel panel-default" id="service.logging.count">
+						<div class="panel-body">
+							<div id="chartArea1" style="height: 180px;"></div>
 						</div>
 					</div>
 				</div>
 			</div>
-
+			<!-- 탭 -->
+			<div class="subtab">
+				<div>
+					<ul class="nav nav-tabs codeTab listChart">
+						<li class="active"><a data-toggle="tab" href="#basicStatList" id="listTab" >LIST</a></li>
+					</ul>
+				</div>
+			</div>
+			<!-- 테이블 -->
+			<div class="xcn_full">
+				<div class="tab-content">
+					<div id="basicStatList" class="tab-pane fade in active">
+						<div id="basicStatListGrid" class="slickGrid gridArea" style="min-height: 200px;"></div>
+					</div>
+				</div>
+			</div>
 		</div>
-		<!-- content 끝-->
+
 	</div>
-	<!--ContentArea-->
+	<!-- content 끝-->
 </div>
 <!--//Container-->
 </div>

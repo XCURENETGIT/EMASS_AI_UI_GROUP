@@ -394,76 +394,57 @@ function fileInfoViewer( row ){
 	</script>
 </head>
 <body class="mini-navbar">
-<div class="container">
-	<div class="boxArea">
-		<div class="content_body">
-			<div class="row">
-				<div class="col-xs-12 text-left">
-					<div class="form-group form-inline not-dashed">
-						<div class="form-group" style="margin-left: 15px;">
-							<label for="baseType"><s:message code="deviceInfo.reftime"/>:</label>
-							<select id="baseType" name="baseType" class="input-sm form-control">
-								<option value="ctime"><s:message code="analysis.freedom.ctime"/></option>
-								<option value="date"><s:message code="analysis.freedom.readdate"/></option>
-							</select>
-						</div>
-						<div class='input-group date' id='startdatepicker'>
-							<input type='text' class="input-sm form-control" id='startdate' />
-							<span class="input-group-addon"> <span class="glyphicon glyphicon-calendar"></span>
-								</span>
-						</div>
-						~
-						<div class='input-group date' id='enddatepicker'>
-							<input type='text' class="input-sm form-control" id='enddate' />
-							<span class="input-group-addon"> <span class="glyphicon glyphicon-calendar"></span>
-								</span>
-						</div>
-						<div class="form-group" style="margin-left: 15px;">
-							<label for="adminId"><s:message code="stat.select.admin"/>:</label>
-							<select class="form-control input-sm" id="adminId" name="adminId" style="width: 205px;">
-								<option value="">- <s:message code="auditLog.select.admin"/> -</option>
-							</select>
-						</div>
-						<div class="form-group" style="margin-left: 15px;">
-							<label for="xAxis"><s:message code="stat.area.stat"/>:</label>
-							<select id="xAxis" name="xAxis" class="input-sm form-control" style="width:80px">
-								<option value="_yyyymmdd"><s:message code="common.msg.day"/></option>
-								<option value="_yyyymm"><s:message code="common.msg.month"/></option>
-								<option value="_hh"><s:message code="common.msg.time"/></option>
-							</select>
-						</div>
-						<div class="form-group form-inline not-dashed">
-							<button type="button" class="btn btn-success btn-sm" accesskey="Q" id="searchBtn" accesskey="s"><span class="glyphicon glyphicon-search"></span></button>
-						</div>
-					</div>
-				</div>
+
+<div>
+	<!-- 검색영역 -->
+	<div class="searchArea w100">
+		<div class="searchSub w100">
+			<div>
+				<select id="baseType" name="baseType" class="input-sm form-control">
+					<option value="ctime"><s:message code="analysis.freedom.ctime"/></option>
+					<option value="date"><s:message code="analysis.freedom.readdate"/></option>
+				</select>
 			</div>
-			<div class="row top_space" style="border-bottom: 1px dashed #a4c7e4;">
+			<div>
+				<input type="date" id="startdate" style="width: 110px;"/>
+				<span class="hyphen">~</span>
 			</div>
-			<div class="row top_space2">
-				<div class="col-xs-12">
-					<ul class="nav nav-tabs codeTab listChart">
-						<li class="active" style="width:100px; text-align: center"><a data-toggle="tab" href="#basicStatList" id="listTab" >LIST</a></li>
-					</ul>
-				</div>
+			<div>
+				<input type="date" id="enddate" style="width: 110px;"/>
 			</div>
-			<div class="row top_space">
-				<div class="col-lg-12 tab-content">
-					<div id="basicStatList" class="tab-pane fade in active">
-						<div id="basicStatListGrid" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; height: 400px"></div>
-					</div>
-				</div>
+			<div>
+				<select class="form-control input-sm" id="adminId" name="adminId" style="width: 205px;">
+					<option value="">- <s:message code="auditLog.select.admin"/> -</option>
+				</select>
 			</div>
-			<div class="row top_space2">
-				<div class="col-lg-12">
-					<div class="panel panel-default" id="service.logging.count">
-						<div class="panel-heading">
-							<div class="pull-right" id="totalViewDiv" style="display:none;">
-								<button class="totalView btn-info btn-xs" type="button" title="<s:message code="stat.view.all"/>"><s:message code="stat.view.all"/></button>
+			<div>
+				<select id="xAxis" name="xAxis" class="input-sm form-control" style="width:80px">
+					<option value="_yyyymmdd"><s:message code="common.msg.day"/></option>
+					<option value="_yyyymm"><s:message code="common.msg.month"/></option>
+					<option value="_hh"><s:message code="common.msg.time"/></option>
+				</select>
+			</div>
+			<div>
+				<button class="form_btn01" id="searchBtn"><s:message code="common.msg.search"/></button>
+			</div>
+		</div>
+	</div>
+	<!-- //검색영역 -->
+	<div class="content">
+		<div class="contentSub">
+			<div class="chartAreafull">
+				<div>
+					<h3>
+						<span id="chartAreaTitle">TOP <s:message code="DATA_MONITOR.STAT_LABEL"/> CHART
+						<span class="sel">
+						<div id="totalViewDiv" style="display:none;">
+							<div class="subtab">
+							<button type="button" title="<s:message code="stat.view.all"/>"><s:message code="stat.view.all"/></button>
 							</div>
-							<div class="pull-right" id="chartCntDiv">
+						</div>
+						<div class="panel-headings" id="chartCntDiv">
 								<button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
-									<span class="glyphicon glyphicon-download-alt"></span>&nbsp;<s:message code="stat.display.count.chart"/> (<span class="dropdown-text">5</span>) <span val="5" class="caret"></span>
+									<s:message code="stat.display.count.chart"/> (<span class="dropdown-text">5</span>) <span val="5" class="caret"></span>
 								</button>
 								<ul class="dropdown-menu dropdown-menu-right" role="menu">
 									<li><a href="#">5</a></li>
@@ -471,17 +452,33 @@ function fileInfoViewer( row ){
 									<li><a href="#">15</a></li>
 									<li><a href="#">20</a></li>
 								</ul>
-							</div>
-							<i class="fa fa-bar-chart-o fa-fw"></i><span id="chartAreaTitle">TOP <s:message code="DATA_MONITOR.STAT_LABEL"/> CHART </span>
 						</div>
-						<div class="panel-body">
-							<div id="chartArea1" style="height: 230px;"></div>
+						</span>
+					</h3>
+					<div class="panel-default" id="service.logging.count">
+						<div class="inner_personaldata" style="height:180px;">
+							<div id="chartArea1" style="height: 100%"></div>
 						</div>
+					</div>
+				</div>
+			</div>
+			<div class="subtab">
+				<div>
+					<ul class="nav nav-tabs codeTab listChart">
+						<li class="active"><a data-toggle="tab" href="#basicStatList" id="listTab" >LIST</a></li>
+					</ul>
+				</div>
+			</div>
+			<div class="xcn_full">
+				<div class="tab-content">
+					<div id="basicStatList" class="tab-pane fade in active">
+						<div id="basicStatListGrid" class="slickGrid gridArea" style="min-height: 200px;"></div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+
 </div>
 <!-- Back to top -->
 <a href="#0" class="back-to-top cd-top"><span class="[ fa fa-chevron-up ]"></span> <span class="[ ]">Back to the Top</span></a>

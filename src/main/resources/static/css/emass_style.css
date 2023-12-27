@@ -6,7 +6,7 @@ body,html {width:100%; height:100%;}
 #header {position:fixed; width:100%; height:50px;min-width:1200px;z-index:99999;}
 #container {position: relative; width:100%; padding-top:50px; *zoom:1;}
 #container::after {content:''; display:block; clear:both;}
-#container #gnbWrap {position: fixed; z-index:99; min-width:76px; height:100%;background-color: #242330; }
+#container #gnbWrap {position: fixed; z-index:9999; min-width:76px; height:100%;background-color: #242330; }
 #container #contentArea {position: relative;margin-left:78px; width: calc(100% - 78px);  height:100%;}
 
 /* Header */
@@ -71,7 +71,7 @@ body,html {width:100%; height:100%;}
 .mainlist div .tit12 {background:url(../img/ico_main_tit12.png) top left no-repeat; font-size:14px; font-weight: 400; color:#111;padding-left:20px;}
 
 .tit01 {background:url(../img/ico_main_tit01.png) top left no-repeat; font-size:14px; font-weight: 400; color:#111;padding-left:20px;}
-
+#chartAreaTitle {font-weight:600;}
 #xcn_mainWrap_new .xcn_con_area {position: relative; display: grid; grid-template-columns: 1fr ; column-gap: 20px; }
 #xcn_mainWrap_new .xcn_con_area > div {}
 
