@@ -7,6 +7,7 @@ import com.xcurenet.common.util.locale.Prop;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.extern.log4j.Log4j2;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.common.util.SimpleOrderedMap;
 import org.elasticsearch.search.aggregations.Aggregation;
@@ -25,6 +26,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Log4j2
 @ToString
 public class SolrEdcMessageVO {
 
@@ -62,7 +64,10 @@ public class SolrEdcMessageVO {
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	public SolrEdcMessageVO(final SearchHits<SolrEdcVO> resp, final String adminId) throws SolrServerException, IOException {
 		this.numFound = resp.getTotalHits();
-		resp.getSearchHits().stream().map(SearchHit::getContent).forEach(s -> this.emass.add(s));
+		resp.getSearchHits().stream().map(SearchHit::getContent).forEach(s -> {
+			s.setReadYn(isRead(s.getChecked(), adminId) ? "Y" : "N");
+			this.emass.add(s);
+		});
 		this.setFacet(resp);
 		this.setPivot(resp);
 //		this.setFacetQuery(resp);
@@ -70,8 +75,14 @@ public class SolrEdcMessageVO {
 //		if (resp.getAggregations() != null) {
 //			this.setFacets((SimpleOrderedMap) resp.getAggregations());
 //		}
+	}
 
-
+	private boolean isRead(final List<Map<String, Object>> checked, final String adminId) {
+		if (checked == null) return false;
+		for (Map<String, Object> item : checked) {
+			if (Common.isEquals(item.get("readId"), adminId)) return true;
+		}
+		return false;
 	}
 
 	private void setFacetQuery(final SearchHits<SolrEdcVO> resp) {

@@ -102,8 +102,9 @@ public class SolrCreateQuery {
 	public static final String BODY_SIZE = "body_size";
 	public static final String ATTACH_SIZE = "attachsize";
 
-	public static final String JOIN_READ = " +{!join from=msgid fromIndex=checked to=msgid}id:%s";
-	public static final String JOIN_UNREAD = " -{!join from=msgid fromIndex=checked to=msgid}id:%s";
+	public static final String JOIN_READ = " +checked.readId:%s";
+	public static final String JOIN_UNREAD = " -checked.readId:%s";
+
 
 	private static final String OCR_FIELD = " ocr_attach";
 	private String finalReadYn;

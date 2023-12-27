@@ -55,8 +55,8 @@ import java.util.stream.Collectors;
 @Service("solrEdcService")
 public class SolrEdcServiceImpl implements SolrEdcService {
 	private static final int COMMIT_WITH_IN_MS = 1000;
-	public static String JOIN_READ = " +{!join from=msgid fromIndex=checked to=msgid}id:%s";
-	public static String JOIN_UNREAD = " -{!join from=msgid fromIndex=checked to=msgid}id:%s";
+	public static String JOIN_READ = " +checked.readId:%s";
+	public static String JOIN_UNREAD = " -checked.readId:%s";
 
 	@Autowired
 	@Qualifier("elasticsearchTemplate")
@@ -115,15 +115,14 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		sq.setParam("wt", "json");
 
 		/* set 필터 쿼리 */
-		String filterQuery = null;
-		filterQuery =  (null != sq.getFilterQueries())? String.join(" ", sq.getFilterQueries()) : "";
+		String filterQuery =  (null != sq.getFilterQueries())? String.join(" ", sq.getFilterQueries()) : "";
 
 		log.info("page : {}  rows : {}", getPage(sq), sq.getRows());
 
 		Query searchQuery = new NativeSearchQueryBuilder()
 				.withFields(Common.toArray(sq.getFields(), ","))
-				.withQuery(QueryBuilders.queryStringQuery(sq.getQuery()))
-				.withFilter(QueryBuilders.queryStringQuery(filterQuery))
+				.withQuery(QueryBuilders.queryStringQuery(sq.getQuery() + " " + filterQuery))
+				//.withFilter(QueryBuilders.queryStringQuery(filterQuery))
 				.withPageable(PageRequest.of(getPage(sq), sq.getRows(), getSort(sq)))
 				.withAggregations(getAggregations(sq))
 				.withAggregations(getAggregationsByPivot(sq))

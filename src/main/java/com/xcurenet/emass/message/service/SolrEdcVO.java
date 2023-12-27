@@ -252,5 +252,7 @@ public class SolrEdcVO {
 
 	public List<Map<String, Object>> overlap;
 
+	public List<Map<String, Object>> checked;
+
 	public String user_str;
 }
