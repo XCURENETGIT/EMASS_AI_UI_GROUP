@@ -359,6 +359,7 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .chatshare_w {width:20px;height:20px;padding:8px; background:url(../img/ico_w_chatshare.png) center center no-repeat; border:none; vertical-align: middle;}
 .chatshare_w:hover {opacity: 0.5;}
 
+.xcn_pop_btn {position: absolute; right:20px; top:16px;}
 
 
 /* width/height */
@@ -464,7 +465,7 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .bortop_55{border-top:1px solid #555;}
 .borleft_none{border-left:none !important;}
 .borbottom_dd{border-bottom:1px solid #ddd;}
-.borleft_none{border-left:none !important;}
+.borright_none{border-right:none !important;}
 .borcc{border:1px solid #ccc;}
 .bornone {border:none !important;}
 .borradius { border-radius:12px ; -webkit-border-radius:12px ; -moz-border-radius:12px ; -ms-border-radius:12px ; -o-border-radius:12px ; }
@@ -518,6 +519,8 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .mainTable td {border-left:1px solid #ddd; text-align: center;padding:4px; color:#555;}
 .mainTable th:first-child, td:first-child {border-left: none;}
 .mainTable th, td {border-bottom:1px solid #ddd;}
+.mainTable a {color:#1A73F9;}
+
 
 .subTable {width:100%;font-size: 13px; background-color: #fff !important; }
 .subTable thead.head th{text-align: center !important;}
@@ -554,7 +557,7 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .poptxt {font-size:14px; line-height: 1.5;}
 
 
-/* POPUp */
+/* POPUp
 #popupWrap {
 	position: absolute;
 	top: 0px;
@@ -572,7 +575,7 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 #popupWrap .item:nth-child(1) { flex-grow: 1; border:1px solid #ccc;}
 #popupWrap .item:nth-child(2) { flex-grow: 32px; align-self: center; }
 #popupWrap .item:nth-child(3) { flex-grow: 1; border:1px solid #ccc;}
-.popupInner {padding:8px;}
+.popupInner {padding:8px;}*/
 
 /* Modal */
 #modalBtn {color:#375E9A; padding:8px 16px;font-size:12px;vertical-align:middle;display: inline-block; border-radius: 2px;border: 1px solid #375E9A;background: #F5F8FF; }
@@ -592,7 +595,7 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .close {position: absolute;right:20px;top:14px; color: #999;font-size: 28px;font-weight: bold;}
 .close:hover,.close:focus {color: black;text-decoration: none;cursor: pointer;}
 
-.row {overflow: hidden;margin-bottom:12px;margin-left: 0;margin-right: 0;}
+.row {position: relative; overflow: hidden;margin-bottom:12px;margin-left: 0;margin-right: 0;}
 .row ol,ul{list-style: none;}
 .row ul li {border-top:1px dashed #ddd; padding-top:12px; padding-bottom:12px !important;}
 .row ul li:first-child {border:none;}

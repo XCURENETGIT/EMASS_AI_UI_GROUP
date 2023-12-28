@@ -118,10 +118,9 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		String filterQuery =  (null != sq.getFilterQueries())? String.join(" ", sq.getFilterQueries()) : "";
 
 		log.info("page : {}  rows : {}", getPage(sq), sq.getRows());
-
 		Query searchQuery = new NativeSearchQueryBuilder()
 				.withFields(Common.toArray(sq.getFields(), ","))
-				.withQuery(QueryBuilders.queryStringQuery(sq.getQuery() + " " + filterQuery))
+				.withQuery(QueryBuilders.queryStringQuery(sq.getQuery() + " " + filterQuery).fields(getDefaultSearchField(sq)))
 				//.withFilter(QueryBuilders.queryStringQuery(filterQuery))
 				.withPageable(PageRequest.of(getPage(sq), sq.getRows(), getSort(sq)))
 				.withAggregations(getAggregations(sq))
@@ -136,6 +135,16 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			log.info("[QUERY_RESULT] TOTAL_COUNT : {}, QUERY_TIME : {}", 0, TimeUtil.print());
 		}
 		return hits;
+	}
+
+	private Map<String, Float> getDefaultSearchField(SolrQuery sq) {
+		String defaultSearchFields = Common.nvl(sq.get("qf"));
+		List<String> list = Common.toList(defaultSearchFields, " ");
+		Map<String, Float> fields = new HashMap<>();
+		for (String field : list) {
+			fields.put(field, 0.1f);
+		}
+		return fields;
 	}
 
 	public static void main(String[] args) throws SolrServerException, IOException {

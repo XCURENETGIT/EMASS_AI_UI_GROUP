@@ -44,7 +44,8 @@ function getUserGroupInfo( ){
 }
 </script>
 </head>
-<body style="width: 100%; padding: 20px;min-width:800px;min-height:300px;">
+<body>
+
 	<div class="row">
 		<div class="col-lg-12" style="height:100%;">
 			<div class="panel panel-default" style="height:100%;">

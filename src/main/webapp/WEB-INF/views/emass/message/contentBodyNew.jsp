@@ -750,11 +750,11 @@
 	<div id="userInfoDiv" style="display:none;">
 		<div>
 			<div style="float:left;">
-				<img src="<c:url value="/img/person.png"/>" width="64">
+				<img src="<c:url value="/img/person.png"/>" width="32px">
 			</div>
 			<div style="float:left;width:calc(100% - 65px);height:64px;padding-top:12px;padding-left:10px;">
 				<div class="ellipsis" id="userNamePop" style="font-weight: bold;"></div>
-				<div class="ellipsis" id="userEmailPop" style="word-break: break-word; font-size:11px;"></div>
+				<div class="ellipsis" id="userEmailPop" style="word-break: break-word; font-size:12px;"></div>
 			</div>
 			<div style="clear:both;width:100%;padding:10px 10px 10px 10px;">
 				<div>
