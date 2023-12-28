@@ -363,20 +363,3 @@ body,html {width:100%; height:100%;}
 .openbtn:hover { background-color: #444;}
 /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
 @media screen and (max-height: 450px) {#sideBar {padding-top: 15px;}#sideBar li {font-size: 18px;}}
-/*
-.c-checkbox, .c-radio {
-	margin-right: 4px;
-	line-height: 20px;
-}
-
-.c-checkbox *, .c-radio * {
-	cursor: pointer;
-}
-
-
-.c-checkbox input, .c-radio input {
-	opacity: 0;
-	position: absolute;
-	margin-left: 0 !important;
-}
-*/

@@ -55,8 +55,8 @@ import java.util.stream.Collectors;
 @Service("solrEdcService")
 public class SolrEdcServiceImpl implements SolrEdcService {
 	private static final int COMMIT_WITH_IN_MS = 1000;
-	public static String JOIN_READ = " +{!join from=msgid fromIndex=checked to=msgid}id:%s";
-	public static String JOIN_UNREAD = " -{!join from=msgid fromIndex=checked to=msgid}id:%s";
+	public static String JOIN_READ = " +checked.readId:%s";
+	public static String JOIN_UNREAD = " -checked.readId:%s";
 
 	@Autowired
 	@Qualifier("elasticsearchTemplate")
@@ -106,7 +106,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 		TimeUtil.start();
 		if (sq.getFields() == null) {
-			String defaultFields = "date_hh,date_yyyy,date_yyyymm,date_yyyymmdd,ml_confd_class,ml_confd_feedback,ml_confd_prob,msgid,cid,srcip,sport,dstip,dport,svc,svc1,svc2,svc3,ltime,ctime,ctime_yyyy,ctime_yyyymm,ctime_yyyymmdd,ctime_hh,size,body_size,usr_id,usr_ip,user,userid,name,subject,host,path,xmsgkey,sender,sname,recvs,recvs_name,to,cc,bcc,tname,cocd,conm,suborgcd,suborgnm,busicd,businm,deptcd,deptnm,jikgubcd,jikgubnm,ip_cocd,ip_conm,ip_busicd,ip_businm,ip_deptcd,ip_deptnm,allofus,attached,direction,direction_svc,kwd,kwds,inside,work,attachname,attachsize,attachhash,attachtype,attachcnt,pi_total,read_time,xrootmtr,protocol,epmsg_type,user_str,pi_SN,pi_FN,pi_DN,pi_CN,pi_EC,pi_ID,pi_EF,pi_DRM,pi_MN,pi_AN,pi_CRN,pi_SSN,pi_PN,pi_EMEI,pi_BRN,pi_CPN,pi_MCN";
+			String defaultFields = "date_hh,date_yyyy,date_yyyymm,date_yyyymmdd,ml_confd_class,ml_confd_feedback,ml_confd_prob,msgid,cid,srcip,sport,dstip,dport,svc,svc1,svc2,svc3,ltime,ctime,ctime_yyyy,ctime_yyyymm,ctime_yyyymmdd,ctime_hh,size,body_size,usr_id,usr_ip,userkey,user,userid,name,subject,host,path,xmsgkey,sender,sname,recvs,recvs_name,to,cc,bcc,tname,cocd,conm,suborgcd,suborgnm,busicd,businm,deptcd,deptnm,jikgubcd,jikgubnm,ip_cocd,ip_conm,ip_busicd,ip_businm,ip_deptcd,ip_deptnm,allofus,attached,direction,direction_svc,kwd,kwds,inside,work,attachname,attachsize,attachhash,attachtype,attachcnt,pi_total,read_time,xrootmtr,protocol,epmsg_type,user_str,pi_SN,pi_FN,pi_DN,pi_CN,pi_EC,pi_ID,pi_EF,pi_DRM,pi_MN,pi_AN,pi_CRN,pi_SSN,pi_PN,pi_EMEI,pi_BRN,pi_CPN,pi_MCN";
 			if (Config.isOCR) defaultFields = defaultFields + ",ocr_attach_cnt";
 			if (Common.isEquals(bodysnippet, "Y")) defaultFields = defaultFields + ",body_snippet";
 			sq.setFields(defaultFields);
@@ -115,15 +115,13 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		sq.setParam("wt", "json");
 
 		/* set 필터 쿼리 */
-		String filterQuery = null;
-		filterQuery =  (null != sq.getFilterQueries())? String.join(" ", sq.getFilterQueries()) : "";
+		String filterQuery =  (null != sq.getFilterQueries())? String.join(" ", sq.getFilterQueries()) : "";
 
 		log.info("page : {}  rows : {}", getPage(sq), sq.getRows());
-
 		Query searchQuery = new NativeSearchQueryBuilder()
 				.withFields(Common.toArray(sq.getFields(), ","))
-				.withQuery(QueryBuilders.queryStringQuery(sq.getQuery()))
-				.withFilter(QueryBuilders.queryStringQuery(filterQuery))
+				.withQuery(QueryBuilders.queryStringQuery(sq.getQuery() + " " + filterQuery).fields(getDefaultSearchField(sq)))
+				//.withFilter(QueryBuilders.queryStringQuery(filterQuery))
 				.withPageable(PageRequest.of(getPage(sq), sq.getRows(), getSort(sq)))
 				.withAggregations(getAggregations(sq))
 				.withAggregations(getAggregationsByPivot(sq))
@@ -139,29 +137,42 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		return hits;
 	}
 
+	private Map<String, Float> getDefaultSearchField(SolrQuery sq) {
+		String defaultSearchFields = Common.nvl(sq.get("qf"));
+		List<String> list = Common.toList(defaultSearchFields, " ");
+		Map<String, Float> fields = new HashMap<>();
+		for (String field : list) {
+			fields.put(field, 0.1f);
+		}
+		log.info("default search filter : {}", fields);
+		return fields;
+	}
+
 	public static void main(String[] args) throws SolrServerException, IOException {
 		ConfigurableApplicationContext context = SpringApplication.run(EmassproApplication.class, args);
-		SolrEdcServiceImpl service = context.getBean(SolrEdcServiceImpl.class);
+		SolrCheckedService service = context.getBean(SolrCheckedService.class);
+
+		service.setRead("20231227122850.XIKI2SHW6U3QNBWHSXOYI74FSEUNBZJF", "mink");
 
 
-		String query = "+ctime:[20231022000000 TO 20231222235959] -pi_total:0 +(pi_SN:[ 1 TO *] pi_CN:[ 1 TO *] pi_DN:[ 1 TO *] pi_FN:[ 1 TO *] pi_PN:[ 1 TO *])";
-
-		SolrQuery sq = new SolrQuery();
-		sq.setQuery(query);
-		sq.setStart(0);
-		sq.setRows(0);
-		sq.set("aggregation.field", "user_str");
-		sq.set("aggregation.sub.fields", "pi_SN", "pi_PN", "pi_DN", "pi_FN", "pi_CN");
-		sq.set("aggregation.limit", 100);
-		sq.setParam("piAnalysisYn", "Y");
-
-		log.info("Solr Query : {}", sq);
-		SearchHits<SolrEdcVO> hits = service.getList(sq);
-		log.info("ce.getList(sq) : {}", hits);
-		log.info("getAggregations : {} ", hits.getAggregations().aggregations() );
-		SolrEdcMessageVO vo = new SolrEdcMessageVO(hits, null);
-
-		log.info("SOLR : {}", vo);
+//		String query = "+ctime:[20231022000000 TO 20231222235959] -pi_total:0 +(pi_SN:[ 1 TO *] pi_CN:[ 1 TO *] pi_DN:[ 1 TO *] pi_FN:[ 1 TO *] pi_PN:[ 1 TO *])";
+//
+//		SolrQuery sq = new SolrQuery();
+//		sq.setQuery(query);
+//		sq.setStart(0);
+//		sq.setRows(0);
+//		sq.set("aggregation.field", "user_str");
+//		sq.set("aggregation.sub.fields", "pi_SN", "pi_PN", "pi_DN", "pi_FN", "pi_CN");
+//		sq.set("aggregation.limit", 100);
+//		sq.setParam("piAnalysisYn", "Y");
+//
+//		log.info("Solr Query : {}", sq);
+//		SearchHits<SolrEdcVO> hits = service.getList(sq);
+//		log.info("ce.getList(sq) : {}", hits);
+//		log.info("getAggregations : {} ", hits.getAggregations().aggregations() );
+//		SolrEdcMessageVO vo = new SolrEdcMessageVO(hits, null);
+//
+//		log.info("SOLR : {}", vo);
 
 		context.close();
 	}

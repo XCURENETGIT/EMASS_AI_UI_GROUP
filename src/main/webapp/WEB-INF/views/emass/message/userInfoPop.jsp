@@ -13,7 +13,8 @@
 <head>
 <title>EMASS LTH - <s:message code="common.msg.userinfo"/></title>
 <style type="text/css">
-html,body{height: 100%; padding: 0px; margin: 0px;overflow: auto;min-width: 650px;}
+html,body{
+	height: 100%; padding: 0px; margin: 0px;overflow: auto;min-width: 650px;}
 .attachExt{
 	cursor:pointer;
 }
@@ -68,24 +69,23 @@ function setInOutCount( data){
 }
 </script>
 </head>
-<body class="mini-navbar msgBody">
-	<header class="header">
+<body>
+	<!--<header class="header">
 		<div class="naviBack">
 			<img src="<c:url value="/img/title/home_icon.png"/>">
 			<span class="navi"><span id="code_title"></span><s:message code="common.msg.userinfo"/></span>
 		</div>
-	</header>
+	</header>-->
 
 	<div class="xcn_container" style="min-width: 650px;">
 		<div class="boxArea" style="min-height:inherit;">
 			<div class="content_body">
-				<div class="row">
-					<div class="col-xs-12 text-right">
+				<div class="row p20">
+					<h2><span class="bullet02"></span><s:message code="common.msg.userinfo"/></h2>
+					<div class="xcn_pop_btn">
 						<button type="button" class="btn btn-sm btn-default" accesskey="C" id="noSelectBtn"><span class="glyphicon glyphicon-remove"></span>&nbsp;<s:message code="common.msg.close"/></button>
 					</div>
-				</div>
-				<div class="row xcn_full top_space">
-					<div class="col-xs-12" style="height: 100%;">
+					<div class="mat16" style="height: 100%;">
 						<div id="userGrid" class="slickGrid gridArea"></div>
 					</div>
 				</div>

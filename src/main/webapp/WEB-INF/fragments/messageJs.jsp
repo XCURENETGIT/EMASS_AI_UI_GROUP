@@ -49,10 +49,11 @@
 <script type="text/javascript" src="<c:url value="/js/hotkey.js"/>"></script>
 
 <script type="text/javascript" src="<c:url value="/js/jquery.scrollbar.min.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/ztree.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/jquery.ztree.all-3.5.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/referrer-killer.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/ztreeRMenu.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/ztree.js"/>"></script>
+
 
 <script type="text/javascript" src="<c:url value="/js/filter.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/folder.js"/>"></script>

@@ -82,6 +82,9 @@ public class EmsMessageController {
 	public SolrEdcService solrEdcService;
 
 	@Autowired
+	public SolrCheckedService solrCheckedService;
+
+	@Autowired
 	public EmsAttachDownload emsAttachDownload;
 
 	@Autowired
@@ -1232,28 +1235,9 @@ public class EmsMessageController {
 	public XcnResponseVO getEmassMessageNew(final HttpServletRequest request, final HttpSession session) throws Exception {
 		String msgId = Common.nvl(request.getParameter("msgId"));
 		EmsMessageVO emass = emsMessageService.getEmassMessageNew(Common.getAdminId(request), msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
-//		if (emass != null && emass.isConsentFlag()) {
-//			SolrCheckedVO checked = new SolrCheckedVO();
-//			checked.setId(Common.getAdminId(session));
-//			checked.setMsgid(msgId);
-//
-//			String ctime = emass.getCtime().replaceAll("\\-", "").replaceAll("\\:", "").replaceAll(" ", "");
-//			String ctimeyyyymmdd = ctime.substring(0, 8);
-//			String ctimeyyyymm = ctime.substring(0, 6);
-//			String ctimeyyyy = ctime.substring(0, 4);
-//			String ctimehh = ctime.substring(8, 10);
-//
-//			checked.setCtime(ctime);
-//			checked.setCtime_yyyymmdd(ctimeyyyymmdd);
-//			checked.setCtime_yyyymm(ctimeyyyymm);
-//			checked.setCtime_yyyy(ctimeyyyy);
-//			checked.setCtime_hh(ctimehh);
-//			checked.setBusicd(emass.getBusiCd());
-//			checked.setIp_busicd(emass.getIpBusicd());
-//			checked.setSvc(emass.getSvc());
-//			solrCheckedService.setRead(checked);
-//		}
-
+		if (emass != null && emass.isConsentFlag()) {
+			solrCheckedService.setRead(msgId, Common.getAdminId(session));
+		}
 		return new XcnResponseVO(XcnRspCode.OK, emass);
 	}
 
@@ -1524,19 +1508,7 @@ public class EmsMessageController {
 	@Description("메시지 읽음 여부 처리")
 	@ResponseBody
 	public XcnResponseVO setRead(final HttpServletRequest request, final HttpSession session) throws Exception {
-//		SolrCheckedVO checked = new SolrCheckedVO();
-//		checked.setId(Common.getAdminId(session));
-//		checked.setMsgid(Common.nvl(request.getParameter("msgId")));
-//		checked.setCtime(Common.nvl(request.getParameter("ctime")));
-//		checked.setCtime_yyyymmdd(Common.nvl(request.getParameter("ctime_yyyymmdd")));
-//		checked.setCtime_yyyymm(Common.nvl(request.getParameter("ctime_yyyymm")));
-//		checked.setCtime_yyyy(Common.nvl(request.getParameter("ctime_yyyy")));
-//		checked.setCtime_hh(Common.nvl(request.getParameter("ctime_hh")));
-//		checked.setBusicd(Common.nvl(request.getParameter("busiCd")));
-//		checked.setIp_busicd(Common.nvl(request.getParameter("ipBusicd")));
-//		checked.setSvc(Common.nvl(request.getParameter("svc")));
-//
-//		solrCheckedService.setRead(checked);
+		solrCheckedService.setRead(Common.nvl(request.getParameter("msgId")), Common.getAdminId(session));
 		return new XcnResponseVO(XcnRspCode.OK);
 	}
 

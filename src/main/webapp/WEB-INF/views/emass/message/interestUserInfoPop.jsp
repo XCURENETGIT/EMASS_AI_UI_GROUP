@@ -41,30 +41,31 @@ function getInterestUserInfo( ){
 }
 </script>
 </head>
-<body class="mini-navbar msgBody">
-	<header class="header">
+<body>
+<div class="xcn_container" style="min-width: 650px;">
+	<div class="boxArea" style="min-height:inherit;">
+		<div class="content_body">
+			<div class="row p20">
+				<h2><span class="bullet02"></span><s:message code="common.msg.interestuserinfo"/></h2>
+				<div class="xcn_pop_btn">
+					<button type="button" class="btn btn-sm btn-default" accesskey="C" id="noSelectBtn"><span class="glyphicon glyphicon-remove"></span>&nbsp;<s:message code="common.msg.close"/></button>
+				</div>
+				<div class="mat16" style="height: 100%;">
+					<div id="interestuserGrid" class="slickGrid gridArea"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<header class="header">
 		<div class="naviBack">
 			<img src="<c:url value="/img/title/home_icon.png"/>">
 			<span class="navi"><span id="code_title"></span><s:message code="common.msg.interestuserinfo"/></span>
 		</div>
 	</header>
 
-	<div class="xcn_container" style="min-width: 650px;">
-		<div class="boxArea" style="min-height:inherit;">
-			<div class="content_body">
-				<div class="row">
-					<div class="col-xs-12 text-right">
-						<button type="button" class="btn btn-sm btn-default" accesskey="C" id="noSelectBtn"><span class="glyphicon glyphicon-remove"></span>&nbsp;<s:message code="common.msg.close"/></button>
-					</div>
-				</div>
-				<div class="row xcn_full top_space">
-					<div class="col-xs-12" style="height: 100%;">
-						<div id="interestuserGrid" class="slickGrid gridArea"></div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+
 	<script type="text/javascript">
 			var grid = new Xgrid('interestuserGrid', contextRoot);
 			grid.autoNumber();

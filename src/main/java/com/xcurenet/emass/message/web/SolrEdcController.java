@@ -135,13 +135,13 @@ public class SolrEdcController {
 			StringBuffer query = new StringBuffer();
 			for( int i=0; i<msgs.size(); i++) {
 				AdminFolderMessageVO fmsg = msgs.get(i);
-				query.append(Common.nvl(fmsg.getMsgId())).append(" ");
+				query.append("("+Common.nvl(fmsg.getMsgId())+")").append(" ");
 
 				if((i % queryBreak == (queryBreak-1) && i>0) || msgs.size() == (i+1)) {
 
 					SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
 					solrCreateQuery.setSort(sort).setSvc1(svc1, svc1_not);
-					SolrQuery sq = solrCreateQuery.createQuery("+msgid : ("+query.toString() + ")");
+					SolrQuery sq = solrCreateQuery.createQuery("+_id : ("+query.toString() + ")");
 					sq.setStart(0);
 					sq.setRows(queryBreak);
 					sq.setSort(SortClause.desc("ctime"));
@@ -240,13 +240,13 @@ public class SolrEdcController {
 			StringBuffer query = new StringBuffer();
 			for( int i=0; i<msgs.size(); i++) {
 				AdminFolderMessageVO fmsg = msgs.get(i);
-				query.append(Common.nvl(fmsg.getMsgId())).append(" ");
+				query.append("("+Common.nvl(fmsg.getMsgId())+")").append(" ");
 
 				if((i % queryBreak == (queryBreak-1) && i>0) || msgs.size() == (i+1)) {
 
 					SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
 					solrCreateQuery.setSort(sort).setSvc1(svc1, svc1_not);
-					SolrQuery sq = solrCreateQuery.createQuery("+msgid : ("+query.toString() + ")");
+					SolrQuery sq = solrCreateQuery.createQuery("+_id : ("+query.toString() + ")");
 					sq.setStart(0);
 					sq.setRows(queryBreak);
 					sq.setSort(SortClause.desc("ctime"));

@@ -47,6 +47,7 @@ table th {
 	padding: 8px;
 	line-height: 1.42857143;
 	vertical-align: top;
+	font-size:13px;
 }
 .differentExt{
 	background-color:#FFE8E8;
@@ -76,8 +77,9 @@ table th {
 	background-size: 120px 120px;
 }
 
+.row {padding:0; margin:0;}
+h2 {padding:0; margin:0;}
 #attachDiv table th{
-	background: linear-gradient(to bottom, #F4F6F9, #F4F6F9, #F0F3F7, #EFF2F6);
 	font-weight: normal;
 	height: 26px;
 	line-height: 26px;
@@ -85,13 +87,21 @@ table th {
 	border-top: 1px solid #a9b1c2;
 	border-bottom: 1px solid #cdc9c4;
 	border-radius: 0px;
+	font-weight: bold;
 }
 #attachDiv table td{
 	height: 26px;
 	line-height: 26px;
-	padding:1px;
+	padding:1px 8px;
 	border-right: 1px solid #ECEAE9;
 	border-bottom: 1px solid #ECEAE9;
+	vertical-align: middle;
+}
+#attachDiv table th:last-child{
+	border-right: none;
+}
+#attachDiv table td:last-child{
+	border-right: none;
 }
 #attachDiv tr:nth-child(even){
 	background-color: #FAFAFA;
@@ -288,7 +298,87 @@ function filePreviewEv( obj )
 }
 </script>
 </head>
-<body class="mini-navbar msgBody">
+<body>
+<div class="xcn_container" style="min-width: 650px;">
+	<div class="boxArea" style="min-height:inherit;">
+		<div class="content_body">
+			<div class="row p20">
+				<h2><span class="bullet02"></span><s:message code="bodyview.file_info"/></h2>
+				<div class="xcn_pop_btn">
+					<%if( consentFlag ){ %>
+					<button type="button" class="btn btn-sm btn-default" accesskey="V" id="saveAttachBtn"><span class="glyphicon glyphicon-floppy-save"></span>&nbsp;<s:message code="bodyview.attach.save"/></button>
+					<%} %>
+					<button type="button" class="btn btn-sm btn-default" accesskey="C" id="noSelectBtn"><span class="glyphicon glyphicon-remove"></span>&nbsp;<s:message code="common.msg.close"/></button>
+				</div>
+				<div class="mat16" style="height: 100%;">
+					<div class="row xcn_full top_space">
+						<div style="height: 100%;">
+							<div id="attachDiv">
+								<table class="subTable table">
+									<colgroup>
+										<col width="*">
+										<col width="15%">
+										<col width="13%">
+										<col width="20%">
+										<col width="13%">
+									</colgroup>
+									<tr>
+										<th><s:message code="bodyview.file.name"/></th>
+										<th style="text-align: center;"><s:message code="bodyview.viewerPreview"/></th>
+										<th style="text-align: center;"><s:message code="message.msg.attach_size"/></th>
+										<th style="text-align: center;"><s:message code="message.msg.pre_ext"/></th>
+										<th style="text-align: center;"><s:message code="common.msg.download"/></th>
+									</tr>
+									<%
+										for( int i=0; i < files.size(); i++){
+											EmsAttachVO file = files.get(i);
+											boolean checkExt = false;
+											String [] ext = Common.toArray(file.getAttachName(), ".");
+											if( ext.length > 1 && Common.isEquals((file.getAttachExt()).toLowerCase(), (ext[ext.length-1]).toLowerCase() )) checkExt = true;
+									%>
+									<tr id="<%=file.getAttachId()%>" size="<%=file.getAttachSize()%>" class="<%=(Common.isEmpty(file.getAttachPath())==true ? "notfound" : "found")%> <%=checkExt ? "" : "differentExt" %>" >
+										<td>
+											<span style="padding-right:5px;" class="attach_<%=file.getAttachExt() %> attach_file_img"></span>
+											<span class="<%= (file.isConsentFlag() ? "attachName" : "") %>" attachname="<%=file.getAttachName()%>">
+											<%=file.getAttachName()%>
+										</span>
+										</td>
+										<td style="text-align: center;">
+											<%if( Common.isEquals(file.getOcrYn(), "Y") && file.isConsentFlag()){ %>
+											<img src="<c:url value="/img/view.png"/>"style="width: 15px;"/>
+											<span class="attachOcrText" style="padding-left:5px; cursor:pointer; text-decoration: underline;" title="<s:message code="consent.attach"/> OCR Text Viewer">
+											<s:message code="urlIpBlock.preview"/>
+										</span>
+											<%}%>
+											<%if( Common.isNotEmpty(file.getAttachTextPath()) && file.isConsentFlag()){ %>
+											<img src="<c:url value="/img/text.png"/>"style="width: 15px;"/>
+											<span class="attachText" style="padding-left:5px; cursor:pointer; text-decoration: underline;" title="<s:message code="consent.attach"/> Text Viewer">
+											<s:message code="urlIpBlock.preview"/>
+										</span>
+											<%}%>
+										</td>
+
+										<td style="text-align: right;"><%=Common.convertFileSize(file.getAttachSize())%></td>
+										<td style="text-align: center;">
+										<span class="<%= (file.isConsentFlag() ? "attachExt" : "") %>">
+										<%if(file.isConsentFlag()){%>
+											<span class="glyphicon glyphicon-download-alt"></span>&nbsp;<%=file.getAttachExt()%><%=Common.isEquals(file.getAttachExt(), "unknown") ? "(txt)" : ""%>
+										<%}%>
+										</span>
+										</td>
+										<td style="text-align: center;"><span class="glyphicon glyphicon-download-alt <%= (file.isConsentFlag() ? "downloadIcon" : "") %>"></span></td>
+									</tr>
+									<%} %>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- old
 	<div id="imgPreviewDiv"></div>
 	<header class="header">
 		<div class="naviBack">
@@ -371,7 +461,7 @@ function filePreviewEv( obj )
 				</div>
 			</div>
 		</div>
-	</div>
+	</div>-->
 	<iframe id="AttachDown" src="about:blank;" height="0" width="0" style="display: none;" ></iframe>
 	<form name="imageForm" method="post" target="">
 		<input type="hidden" name="imgUrl">

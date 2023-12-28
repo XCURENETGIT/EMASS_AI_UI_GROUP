@@ -88,6 +88,8 @@ public class SolrEdcVO {
 
 	public String usr_ip;
 
+	public String userkey;
+
 	public String user;
 
 	public String userid;
@@ -251,6 +253,8 @@ public class SolrEdcVO {
 	public String confidence;
 
 	public List<Map<String, Object>> overlap;
+
+	public List<Map<String, Object>> checked;
 
 	public String user_str;
 }

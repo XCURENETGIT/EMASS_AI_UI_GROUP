@@ -3,13 +3,13 @@
 <%@ page import="net.sf.json.JSONObject" %>
 <%@ page import="com.xcurenet.audit.service.Operation" %>
 <%@ page import="com.xcurenet.config.service.ConfigAdminVO" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="com.xcurenet.common.util.Common" %>
 <%@ page import="com.xcurenet.common.util.config.Config" %>
 <%@ include file="/WEB-INF/fragments/messageCss.jsp"%>
 <%@ include file="/WEB-INF/fragments/messageJs.jsp"%>
 <%@ include file="/WEB-INF/fragments/messageScript.jsp"%>
 
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 	ConfigAdminService configAdminService = SpringContextUtil.getBean(ConfigAdminService.class);
 
@@ -129,7 +129,7 @@
 <div id="replace_html" style="display: none;"></div>
 <div class="msg_cont_container">
 	<div id="mail_list" class="divList unselectable" style="width: 100%; height: 100%; display: block;position: absolute;top: 0;left: 0;bottom: 0;">
-		<div style="height: 100%;">
+		<div style="height: 98%;">
 			<div id="busiCntArea" style="height: 30px; line-height: 30px; padding-left: 5px;padding-right: 15px;">
 				<span class="tab_selected noSearch"><a href="javascript:;" class="busiCounts active" data-busicd=""><i class="fa fa-angle-right" aria-hidden="true"></i> <s:message code="common.msg.all"/></a></span>
 			</div>
@@ -200,18 +200,11 @@
 // 	getOverLapUse();
 		initServiceTab();
 		setTimeout(function(){parent.ui.off();}, 1000)
-
 		if(gridInit == 'true') initGrid();
 
 		parent.setAddTabFlag(false);
 		parent.readyFlag = true;
 	});
-
-	function msgValid(msgid) {
-
-		if(undefined != msgid && msgid != '' ) return true;
-		else return false;
-	}
 
 	function saveMsgBtn(){
 		parent.$('#saveMsgData').click();
@@ -292,26 +285,23 @@
 			overlap : overlapUse,
 			success : function(data, total) {
 				searchedFlag = true;
-				console.log(data)
-				if(data.emass.length > 0) {
-					grid.appendData(data.emass);
-					if (grid.loadingPage == 0) grid.Select(-1, -1);
 
-					parent.setResultCnt(tabId, total.comma());
-					parent.changeTabName(tabId, '', researchCnt);
-					setServiceGroupCntInfo(data.facet, total);
-					$('#searchTime').val(data.searchTime);
+				grid.appendData(data.emass);
+				if ( grid.loadingPage == 0 ) grid.Select(-1,-1);
 
-					var query = filterValData.conditions[0].query;
-					if (query != '' && query != undefined) {
-						parent.$('#researchCheckbox').prop('disabled', true);
-					} else {
-						parent.$('#researchCheckbox').prop('disabled', false);
-					}
-				}else {
-					//alert('<s:message code="common.msg.noresult"/>');
-					searchFlag = false;
+				parent.setResultCnt(tabId, total.comma());
+				parent.changeTabName(tabId, '', researchCnt);
+				setServiceGroupCntInfo(data.facet, total);
+				$('#searchTime').val(data.searchTime);
+
+				var query = filterValData.conditions[0].query;
+				/* console.log("getList filterValData query1 : " + query); */
+				if( query != '' && query != undefined){
+					parent.$('#researchCheckbox').prop('disabled', true);
+				}else{
+					parent.$('#researchCheckbox').prop('disabled', false);
 				}
+
 
 				//parent.setValueById('solrQueryText', data.excuteQuery);
 
@@ -573,8 +563,7 @@
 
 		window.open("","overlapInfoPop","width=1100, height=620");
 
-		var overLapInfoUrl = contextRoot + '/ems/overlapInfoPop.do';
-		var frmObj = $('<form>',{'id': 'fm_formIO', 'action': overLapInfoUrl, 'method': 'POST', 'target': 'overlapInfoPop'});
+		var frmObj = $('<form>',{'id': 'fm_formIO', 'action': '/emass/ems/overlapInfoPop.do', 'method': 'POST', 'target': 'overlapInfoPop'});
 		var inpObj = $('<input>',{'name':'body', 'value': JSON.stringify(selectOverlapData.slice(0, 100))});
 		var inpObj2 = $('<input>',{'name':'total', 'value': selectOverlapData.length});
 
@@ -714,14 +703,14 @@
 	}
 
 	function viewer_newOpen(row, selectedGrid){
-		if(row != -1){
-			var msgid = grid.getValue(row, 'msgid');
-			var bodySize = grid.getValue(row, 'bodySizeStr');
-			var bodySizeNum = bodySize.substr(0, bodySize.indexOf(' '));
-			openMessageBodyPop('', msgid, searchKeyword(), bodySizeNum);
-			var readYn = grid.getValue(row, 'readYn');
-			grid.setValue(row, grid.ColIndex('readYn'), 'Y');
-		}else alert('<s:message code="bodyview.select.message" />');
+		var msgid = grid.getValue(row, 'msgid');
+		var bodySize = grid.getValue(row, 'bodySizeStr');
+		var bodySizeNum = bodySize.substr(0, bodySize.indexOf(' '));
+
+		openMessageBodyPop( '', msgid, searchKeyword(), bodySizeNum);
+
+		var readYn = grid.getValue(row, 'readYn');
+		grid.setValue(row, grid.ColIndex('readYn'), 'Y');
 	}
 
 	function setReadDisplayChangeRootmtr( rootmtr ){
@@ -973,10 +962,10 @@
 			e.preventDefault();
 
 			$("#contextMenu")
-				.data("row", row)
-				.css("top", e.pageY)
-				.css("left", e.pageX)
-				.show();
+					.data("row", row)
+					.css("top", e.pageY)
+					.css("left", e.pageX)
+					.show();
 		};
 		grid.onClick = function() {
 			if($('#contextMenu').css('display')=='block' || $('#contextMenu').css('display')=='inline-block') $('#contextMenu').hide();

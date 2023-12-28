@@ -30,24 +30,36 @@
     String conditionParam = Common.nvl(param.get("conditionParam"));
 
     String uri = new org.springframework.web.util.UrlPathHelper().getOriginatingRequestUri(request);
+    if (uri.contains("/index.do")) uri = "/ems/index.do";
+    if (uri.contains("/deviceInfoDetail.do")) uri = "/commons/deviceInfo.do";
+    if (uri.contains("/deviceInfoDetailHadoop.do")) uri = "/commons/deviceInfo.do";
+    if (uri.contains("/ems/dashboard.do")) uri += "?" + new org.springframework.web.util.UrlPathHelper().getOriginatingQueryString(request);
+
     MenuService menuService = SpringContextUtil.getBean(MenuService.class);
-    String menuList = menuService.getMenuList(request);
-
-
+    String menuId = "";
+    String menuName = "";
+    String headerYn = (String) request.getAttribute("headerYn");
+    String headerCloseYn = (String) request.getAttribute("headerCloseYn");
+    String menuKey = (String) request.getAttribute("menuKey");
+    String menuList = menuService.getMenuList(request); //메뉴리스트 JSON 데이터로 받아옴
+    JSONArray menus = Common.toJSONArray(menuList);
+    for(int i=0 ; i < menus.size() ; i++) {
+        JSONObject menu = menus.getJSONObject(i);
+        if(Common.nvl(uri).contains(Common.nvl(menu.get("menuLink")))) {
+            menuId = Common.nvl(menu.get("menuId"));
+            menuName = Common.nvl(menu.get("defaultName"));
+        }
+    }
 %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <title>EMASS LTH</title>
+
     <style type="text/css">
-
-        .msgBody::-webkit-scrollbar {display: none;}
-        .messageNewGrid::-webkit-scrollbar {display: none;}
-
         .contentList{
-            height:90%;border: 0px;width: 100%;overflow: hidden;border:0px;position: absolute;
+            height:100%;border: 0px;width: 100%;overflow: hidden;border:0px;position: absolute;
         }
-
         .contentBody{
             height:100%;border: 0px;width: 100%;border:0px;position: absolute;
         }
@@ -307,9 +319,8 @@
             list-style: none;
             border: 1px solid #ccc;
             width: 150px;
-            left:0px;
             padding-left: 0px;
-            top: 26px;
+            top: 21px;
             border-radius: 4px;
             box-shadow: 0px 6px 12px rgba(0,0,0,0.175);
             background-color: #fff;
@@ -342,6 +353,7 @@
         }
     </style>
     <script type="text/javascript">
+
         let menuList = <%=menuList%>;
         let mainUri = "<%=uri%>";
 
@@ -349,11 +361,11 @@
         var op_body_save = '<%=op_body_save%>';
         var op_body_print = '<%=op_body_print%>';
         var mailUseFlag = <%=mailUseFlag%>;
-        var consent = <%=consent%>;
         var firstAdminYn = '<%=firstAdminYn%>';
         var adminEmail = '${_USERCREDENTIAL_.adminEmail}';
         var msgInfoLayout;
         var addTabFlag = false;
+        var checkMsgCnt = 10000;
         var re = /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\'\"\\(\=]/gi;
 
         var filterSeq = '<%=filterSeq%>';
@@ -433,7 +445,6 @@
             }
 
 
-
             if(epmsgAttach == ""){
                 $('#KnoxAttachYN').hide();
             } else if (epmsgAttach == "" || epmsgAttach == "false"){
@@ -507,6 +518,10 @@
                 return split(term).pop();
             }
 
+            $(document).on('click','#exportMsg',function(){
+                if( $('#feedbackBtn').css('display') != 'none' ) $('.dropdown-menu.dropdown-menu-left').css('margin-left','90px');
+                else $('.dropdown-menu.dropdown-menu-left').css('margin-left','20px');
+            });
 
             ui.onBody('msgBody', 0, 0);
             con.init();
@@ -515,10 +530,14 @@
             getMsgPosition();
             getFilterSearchBox();
 
-            console.log(infoFeedbackConf)
             if( infoFeedbackConf == 'true' && infoFeedbackYn == 'Y' ) {
-                $('#infoFeedbackDiv, #feedbackBtn, #sctDiv').show();
-                $('#secretDocuDiv').hide();
+                if(infoHynixConf == 'true'){
+                    $('#infoFeedbackDiv, #feedbackBtn, #sctDiv').hide();
+                    $('#secretDocuDiv').show();
+                }else{
+                    $('#infoFeedbackDiv, #feedbackBtn, #sctDiv').show();
+                    $('#secretDocuDiv').hide();
+                }
             }
             else $('#infoFeedbackDiv, #feedbackBtn, #sctDiv').hide();
 
@@ -796,7 +815,7 @@
                         center__spacing_open:3,
                         east__paneSelector: ".inner-east",
                         east__maskContents:  true,
-                        east__size: 640,
+                        east__size: 680,
                         east__spacing_open:3,
                         north__spacing_open:0
                     },
@@ -998,7 +1017,9 @@
                 $('#periodSetupMenu').show();
             });
 
-
+            $('#saveMsgData').click(function(){
+                saveFolderDataGrid( getIframeListObj().grid );
+            });
 
             $('.searchKeywordCloseBtn').click(function(){
                 $('#searchKeywordDiv').hide();
@@ -1107,8 +1128,105 @@
                 e.stopPropagation();
             });
 
+            $(document).on('click', '.all_down_link', function(){
+                var searchType = $(this).attr('data-type');
+                $('#searchType').val(searchType);
+                var title = $(this).text();
+                $('#exportTitle').text(title+' '+'<s:message code="common.msg.export"/>');
+
+                $('#exportDialog').modal('show');
+            });
+
+            $("#exportDialog").on('show.bs.modal', function() {
+                $('input:radio[name=exportDataRange]:input:checked').prop("checked", false);
+
+                var grid = getIframeListObj().grid;
+                var rows = grid.getSelectedKey('msgid').length;
+                var total = grid.data.length;
+
+                if(total == 0){
+                    ui.alertMsg('<s:message code="common.msg.nodata"/>');
+                    return false;
+                }
+
+                var searchType = $('#searchType').val();
+                alert('dd');
+                var consentNo = grid.getValue(0, 'consentNo');
+                if( searchType != 'L'){
+                    if(isConsent( ) && consentNo == '' && '<%=adminType%>' != 'C'){
+                        alert('<s:message code="download.msg.consent"/>');
+                        return false;
+                    }
+                }
+
+                if(searchType != "L" && searchType.indexOf('L') > -1) {
+                    if($('input:radio[name=exportFileType]:input:checked').val() == "xlsx") {
+                        $("input:radio[name='bodyInExcel']:radio[value='N']").prop("checked", true);
+                        $('#bodyInExcel').show();
+                        $('#bodyInExcelMsg').hide();
+                        $('#bodyInExcelIdx').hide();
+                    }else {
+                        $('#bodyInExcel').hide();
+                        $('#bodyInExcelMsg').hide();
+                        $('#bodyInExcelIdx').hide();
+                    }
+                } else {
+                    $('#bodyInExcel').hide();
+                    $('#bodyInExcelMsg').hide();
+                    $('#bodyInExcelIdx').hide();
+                }
 
 
+                $('#searchTime').val('');
+                $('#searchCondition').val('');
+                $('#searchHeader').val('');
+                $('#searchTotal').val('');
+                $('#dataLength').val('');
+                $('#exportFileExt').val('');
+
+                if( (rows > checkMsgCnt) || (rows == 0 && grid.data.length > checkMsgCnt)){
+                    $('input:radio[name=exportDataRange]:input[value=A]').parent().click();
+                }else{
+                    $('input:radio[name=exportDataRange]:input[value=S]').parent().click();
+                }
+            });
+
+            $( 'input[name="exportDataRange"]:radio' ).change(function(){
+                var grid = getIframeListObj().grid;
+                var rows = grid.getSelectedKey('msgid').length;
+                var total = getIframeListObj().$('#busiCntArea').find('.tab_selected').find('.busiCnt').text();
+                total = total.replace(re,"")
+                var downTotal = total;
+                var exportDataRange = $(this).val();
+                if( exportDataRange == 'S'){
+                    $('#sizeWarnMsg').hide();
+
+                    if( rows > 0) downTotal = rows;
+                    else downTotal = grid.data.length;
+
+                    if( downTotal > checkMsgCnt){
+                        ui.alertMsg('<s:message code="download.message.check.total" arguments="'+addCommas(checkMsgCnt)+'" argumentSeparator="|"/>');
+                        $('input:radio[name=exportDataRange]:input[value=A]').parent().click();
+                        return;
+                    }
+                }
+
+                var searchType = $('#searchType').val();
+                if( searchType.indexOf('L') > -1){
+                    $('#exportFileTypeArea').show();
+                    if(downTotal > 50000){
+                        $('#sizeWarnMsg').show();
+                    }else{
+                        $('#sizeWarnMsg').hide();
+                    }
+                }
+                else {
+                    $('#exportFileTypeArea').hide();
+                    $('#sizeWarnMsg').hide();
+                }
+                $('#exportDataSize').text(addCommas(downTotal));
+                $('#searchTotal').val(downTotal);
+            });
 
             $('input[name="exportFileType"]:radio').change( function() {
                 var searchType = $('#searchType').val()
@@ -1144,10 +1262,214 @@
                 }
             });
 
+            $(document).on('click', '.print_link_new', function(){
+                var grid = getIframeListObj().grid;
+                var title = $(this).attr('rel');
+                if (grid.data.length == 0) {
+                    alert('<s:message code="common.msg.nodata"/>');
+                    return;
+                }
 
+                grid.print(title, pMenuId, menuId);
+            });
+            $('#allDownBtn').click(function(){
+                var grid = getIframeListObj().grid;
+                var rows = grid.getSelectedKey('msgid').length;
+                var total = getIframeListObj().$('#busiCntArea').find('.tab_selected').find('.busiCnt').text();
+                total = total.replace(re,"")
+                grid.on();
+                var bodyInExcel = $('input:radio[name=bodyInExcel]:input:checked').val();
+                var header = grid.getHeaderEXCEL();
+                if(bodyInExcel == "Y") {
+                    header = JSON.parse(header);
+                    header.splice($('#nowColIdx').val(),0,{"key":"body","title":"<s:message code='condition.body' />","width":410,"align":"left"});
+                    header = JSON.stringify(header);
+                }
+                var param = JSON.stringify( getIframeListObj().filterValData );
+                var dataLength = $('#dataLength_select').selectpicker('val');
+                var searchType = $('#searchType').val();
+                var exportFileType = $('input:radio[name=exportFileType]:input:checked').val();
+                var exportDataRange = $('input:radio[name=exportDataRange]:input:checked').val();
 
+                $('#searchTime').val(getIframeListObj().$('#searchTime').val());
+                $('#searchCondition').val(param);
+                $('#searchHeader').val(header);
+                $('#dataLength').val(dataLength);
+                $('#exportFileExt').val(exportFileType);
 
+                if( exportDataRange == 'A'){
+                    //중복체크
+                    ui.get({
+                        url : 'checkDownloadBatchExist.xcn',
+                        searchCondition : param,
+                        searchTotal : $('#searchTotal').val(),
+                        searchType : searchType,
+                        exportFileExt : exportFileType,
+                        success : function(data, total) {
+                            if(data > 0) {
+                                downloadBatchExist = true;
+                            } else {
+                                downloadBatchExist = false;
+                            }
+                        },
+                        error : function(status, message) {
+                            ui.alertMsg(message);
+                        },
+                        complete : function() {
+                            if(downloadBatchExist) {
+                                ui.alertMsg('<s:message code="download.msg.exist" />');
+                            } else {
+                                $('#isBackground').val('Y');
+                                if( searchType == 'B'){
+                                    $('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveBatchZip.xcn"/>');
+                                    $('#allDownForm').submit();
+                                }else if(searchType == 'A' ){
+                                    $('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveBatchZip.xcn"/>');
+                                    $('#allDownForm').submit();
+                                }else if(exportFileType == 'xlsx' || exportFileType == 'cell'){
+                                    $('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveBatchZip.xcn"/>');
+                                    $('#allDownForm').submit();
+                                }else if(exportFileType == 'csv'){
+                                    $('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveBatchCSV.xcn"/>');
+                                    $('#allDownForm').submit();
+                                }else if(exportFileType == 'pdf'){
+                                    $('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveBatchPDF.xcn"/>');
+                                    $('#allDownForm').submit();
+                                }
+                            }
+                        }
+                    });
 
+                }else{
+                    $('#isBackground').val('N');
+                    if( searchType == 'B'){
+                        $('.body_link_new').click();
+                    }else if(searchType == 'A' ){
+                        $('.attach_link_new').click();
+                    }
+                    else if(searchType == 'LB' || searchType == 'LBA' ){
+                        var msgids = grid.getSelectedKey('msgid');
+                        if( msgids.length == 0 ){
+                            msgids = grid.getKeyData('msgid');
+                        }
+                        var selected_condition = {};
+                        selected_condition.msgids = msgids;
+                        selected_condition.sort = $('#messageSort').val();
+
+                        $('#searchCondition').val(JSON.stringify( selected_condition ));
+                        $('#searchTotal').val(msgids.length);
+
+                        if(exportFileType == 'xlsx' || exportFileType == 'cell'){
+                            $('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveZip.xcn"/>');
+                            $('#allDownForm').submit();
+                        }else if(exportFileType == 'csv'){
+                            $('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveCSV.xcn"/>');
+                            $('#allDownForm').submit();
+                        }else if(exportFileType == 'pdf'){
+                            $('#allDownForm').attr('action', '<c:url value="/getEmassMessageSavePDF.xcn"/>');
+                            $('#allDownForm').submit();
+                        }
+                    }else{
+                        if(exportFileType == 'xlsx'){
+                            $('.excel_link_new').click();
+                        }else if(exportFileType == 'cell'){
+                            $('.cell_link_new').click();
+                        }else if(exportFileType == 'csv'){
+                            $('.csv_link_new').click();
+                        }else if(exportFileType == 'pdf'){
+                            $('.pdf_link_new').click();
+                        }
+                    }
+                }
+
+                $('#exportDialog').modal('hide');
+                setTimeout(function(){
+                    grid.off();
+                }, 500);
+            });
+            $(document).on('click', '.excel_link_new', function(){
+                var grid = getIframeListObj().grid;
+                var title = $(this).attr('rel');
+                var option = $(this).attr('option');
+                grid.on();
+                setTimeout(function(){
+                    excelDownLoad(grid, title, null, null, option);
+                }, 200);
+            });
+            $(document).on('click', '.cell_link_new', function(){
+                var grid = getIframeListObj().grid;
+                var title = $(this).attr('rel');
+                var option = $(this).attr('option');
+                grid.on();
+                setTimeout(function(){
+                    cellDownLoad(grid, title, null, null, option);
+                }, 200);
+            });
+
+            $(document).on('click', '.pdf_link_new', function(){
+                var grid = getIframeListObj().grid;
+                var title = $(this).attr('rel');
+                var option = $(this).attr('option');
+                grid.on();
+                setTimeout(function(){
+                    pdfDownLoad(grid, title, null, null, option);
+                }, 200);
+            });
+            $(document).on('click', '.csv_link_new', function(){
+                var grid = getIframeListObj().grid;
+                var title = $(this).attr('rel');
+                var option = $(this).attr('option');
+                grid.on();
+                setTimeout(function(){
+                    csvDownLoad(grid, title, null, null, option);
+                }, 200);
+            });
+            $(document).on('click', '.body_link_new', function(){
+                var grid = getIframeListObj().grid;
+                if (grid.Rows == 0) {
+                    alert('<s:message code="common.msg.nodata"/>');
+                    return;
+                }
+
+                grid.on();
+                setTimeout(function(){
+                    var msgid = grid.getSelectedKey('msgid');
+                    if(msgid.length == 0) msgid = grid.getKeyData('msgid');
+
+                    $('#msgId').val('');
+                    $('#msgIds').val('');
+                    if(msgid.length==1){
+                        $('#msgId').val(msgid.join(','));
+                        $('#downForm').attr('action', '<c:url value="/getEmassBodySave.xcn"/>');
+                    } else {
+                        $('#msgIds').val(msgid.join(','));
+                        $('#downForm').attr('action', '<c:url value="/getEmassBodySaveZip.xcn"/>');
+                    }
+                    $('#downForm').submit();
+                    grid.off();
+                }, 300);
+            });
+            $(document).on('click', '.attach_link_new', function(){
+                var grid = getIframeListObj().grid;
+                if (grid.Rows == 0) {
+                    alert('<s:message code="common.msg.nodata"/>');
+                    return;
+                }
+                grid.on();
+                setTimeout(function(){
+                    var msgid = grid.getSelectedKey('msgid');
+                    if(msgid.length == 0) msgid = grid.getKeyData('msgid');
+
+                    $('#msgIds').val(msgid.join(','));
+                    $('#downForm').attr('action', '<c:url value="/downEmassAttachByMsgId.xcn"/>');
+                    $('#downForm').submit();
+                    grid.off();
+                }, 300);
+            });
+            $(document).on('click', '.downList', function(){
+                var url    = '<c:url value="/commons/downList.do"/>';
+                fnOpenWindow(url, 'downInfoPop', 1400, 580, 'resize');
+            });
             $('.searchQueryBtn').click(function(){
                 queryMakePop();
             });
@@ -1846,19 +2168,22 @@
                 }
             });
         }
-
     </script>
 </head>
-<body class="mini-navbar msgBody">
+<body class="mini-navbar msgBody" style="overflow: auto;">
 <div id="wrap" >
     <tiles:insertAttribute name="top" ignore="true"/>
     <div id="container">
         <tiles:insertAttribute name="lnb" ignore="true"/>
         <div id="contentArea">
+            <%-- header --%>
+            <tiles:insertAttribute name="header" ignore="true"/>
             <%-- content --%>
             <div class="msg_container">
                 <tiles:insertAttribute name="left" ignore="true"/>
-                <div id="searchKeywordDiv" class="searchKeywordDiv" style="height: 610px;">
+
+                <%-- 검색어 관리 --%>
+                <div id="searchKeywordDiv" class="searchKeywordDiv" style="display: block;position: absolute;top: 130px;right: 350px;display: none;text-align: left;z-index: 1040;border: 1px solid #555;background-color: white;width: 500px;height: 420px;font-size:12px;">
                     <div class="modalHead">
                         <s:message code="searchKeyword.management"/>
                         <div style="float:right;padding-right:8px;">
@@ -1883,23 +2208,19 @@
                 </div>
 
                 <%-- 조건 보관함 --%>
-                <div id="filterHeaderDiv" class="filterHeaderDiv" style="display: block;position: absolute;right: 350px;display: none;text-align: left;z-index: 1040;border: 1px solid #555;background-color: white;width: 605px;height: 520px;font-size:12px;">
-                        <div class="modalHead">
-                                 <s:message code="common.msg.conditionBox"/>
-                                <div style="float:right;padding-right:8px;">
-                                    <span class="searchBoxSpan"><label><input type="checkbox" id="searchBox"/><span> <s:message code="common.msg.searchNow"/></span></label></span>
-                                    <span class="glyphicon glyphicon-remove filterCloseBtn" style="cursor:pointer;" ></span>
-                                </div>
-                        </div>
-                        <div class="modalCon">
-                                <div>
-                                    <input class="filterSearch condition_input_text" type="text" name="serch" placeholder="<s:message code="filterInfo.search.filter"/>" id="filterSearchStr" style="width:calc(100% - 60px);">
-                                    <button class="search_btn" id="filterSearchBtn"><span><s:message code="common.search"/></span></button>
-                                    <div class="scrollbar-inner saveFilterTab_tree">
-                                        <ul id="filterTree" class="ztree scrollbar"></ul>
-                                    </div>
-                                </div>
-                        </div>
+                <div id="filterHeaderDiv" class="filterHeaderDiv">
+                    <div class="filterHeaderTab"><s:message code="common.msg.conditionBox"/>
+                        <div class="rightGroup">
+                            <span class="searchBoxSpan"><label><input type="checkbox" id="searchBox"/><span> <s:message code="common.msg.searchNow"/></span></label></span>
+                            <span class="filterCloseBtn">&times;</span></div>
+                    </div>
+                    <div class="filterSearch" style="padding: 5px 5px 5px 10px;">
+                        <input class="condition_input_text" type="text" name="serch" placeholder="<s:message code="filterInfo.search.filter"/>" id="filterSearchStr" style="width:calc(100% - 60px);">
+                        <button class="search_btn" id="filterSearchBtn"><span><s:message code="common.search"/></span></button>
+                    </div>
+                    <div class="scrollbar-inner saveFilterTab_tree">
+                        <ul id="filterTree" class="ztree scrollbar"></ul>
+                    </div>
                 </div>
                 <tiles:insertAttribute name="filterNew" ignore="true"/>
                 <div class="content mainBodyArea" id="mainBodyArea" style="height:100%;">
@@ -1915,8 +2236,8 @@
                             <div class="searchButtonArea">
                                 <button class="search_btn" id="searchBtn"><span><s:message code="common.search1"/></span></button>
                             </div>
-                            <div class="checkbox c-checkbox" style="width:75px;position: absolute;top: 70px; left:35px;font-size:12px;">
-                                <label><input type="checkbox" name="researchCheckbox" id="researchCheckbox" disabled style="display: none;"><span class="fa fa-check"></span><s:message code="condition.research1"/></label>
+                            <div class="checkbox c-checkbox" style="width:75px;position: absolute;top: 70px; left:15px;font-size:12px;">
+                                <label><input type="checkbox" name="researchCheckbox" id="researchCheckbox" disabled><span class="fa fa-check"></span><s:message code="condition.research1"/></label>
                             </div>
 
                             <div class="condition_save">
@@ -1928,12 +2249,11 @@
                             </div>
                             <div class="condition_top_sub"></div>
                             <div class="condition_top">▲</div>
-                            <%-- 조건 검색 --%>
                             <div id="condition_detail" class="section_condition scrollbar-inner">
                                 <div class="condition_option" style="padding-top:15px;">
                                     <div class="condition_item">
                                         <div class="condition_title" style="float: left;"><i class="fa fa-caret-right"></i> <s:message code="condition.search_str"/>
-                                            <img style="width: 16px;" src="<c:url value="/img/icon/question.png"/>" class="areaBtn" id="searchHelpBtn">
+                                            <img style="width: 16px;margin-bottom: 2px;" src="<c:url value="/img/icon/question.png"/>" class="areaBtn" id="searchHelpBtn">
                                         </div>
                                         <div style="float: right; padding-right: 22px;">
                                             <a href="javascript:;" class="showSearchKeywordBtn"><i class="fa fa-cog"></i> <s:message code="searchKeyword.management"/></a>
@@ -1942,7 +2262,33 @@
                                             <input class="condition_input_text" type="text" id="searchStrInput" name="serch" placeholder="<s:message code="common.msg.searchMsg"/>" style="width: 260px;height: 35px;border: 2px solid #337AB7;padding-left: 5px;">
                                         </div>
                                         <div style="margin-top: 15px;"></div>
-
+                                        <%-- <div style="display: inline;">
+                                            <select name="searchArea" class="condition_select" style="margin-top: 5px;" id="searchField">
+                                                <option value=""><s:message code="condition.field.search.all"/></option>
+                                                <option value="subject"><s:message code="condition.subject"/></option>
+                                                <option value="body"><s:message code="condition.body"/></option>
+                                                <option value="attachname attachname_str"><s:message code="condition.attach_name"/></option>
+                                                <%if(!isOCR){ %>
+                                                <option value="attach"><s:message code="condition.attach"/></option>
+                                                <%}else{ %>
+                                                <option value="attach ocr_attach"><s:message code="condition.attach"/></option>
+                                                <option value="ocr_attach">OCR</option>
+                                                <%} %>
+                                                <option value="host host_str">Host</option>
+                                                <option value="path query">Path</option>
+                                                <option value="srcip"><s:message code="condition.source"/> IP</option>
+                                                <option value="dstip"><s:message code="condition.destination"/> IP</option>
+                                                <option value="sender_str"><s:message code="condition.sender"/></option>
+                                                <option value="sname"><s:message code="condition.sender_name"/></option>
+                                                <option value="recvs"><s:message code="condition.recv"/></option>
+                                                <option value="recvs_name"><s:message code="condition.recv_name"/></option>
+                                                <option value="to tname"><s:message code="condition.recv"/>(<s:message code="condition.to"/>)</option>
+                                                <option value="cc cname"><s:message code="condition.recv"/>(<s:message code="condition.cc"/>)</option>
+                                                <option value="bcc bname"><s:message code="condition.recv"/>(<s:message code="condition.bcc"/>)</option>
+                                                <option value="user user_str userid name"><s:message code="common.org.user"/></option>
+                                                <option value="usr_id"><s:message code="common.msg.account"/></option>
+                                            </select>
+                                        </div> --%>
                                         <div class="condition_item">
                                             <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="condition.field.search"/></div>
                                             <select id="searchField" title="<s:message code="condition.field.search.all"/>" class="selectpicker" data-style="btn-default" multiple data-show-subtext="true" data-actions-box="true" data-live-search="true">
@@ -2011,9 +2357,9 @@
                                             <option value="8"><s:message code="condition.month" arguments="3"/></option>
                                         </select>
                                         <div style="display: flex; width: 260px; padding-top: 4px;">
-                                            <input type="text" id="startdatepicker" class="input-xs form-control border-radius-none" style="padding: 1px 0px 0px 3px;border-radius: 0;font-size: 12px; width: 125px;"/>
+                                            <input type="text" id="startdatepicker" class="input-xs form-control border-radius-none" style="padding: 1px 0px 0px 3px;border-radius: 0;font-size: 11px; width: 125px;"/>
                                             <span style="padding-top: 4px;">-</span>
-                                            <input type="text" id="enddatepicker" class="input-xs form-control border-radius-none"  style="padding: 1px 0px 0px 3px;border-radius: 0;font-size: 12px; width: 125px;"/>
+                                            <input type="text" id="enddatepicker" class="input-xs form-control border-radius-none"  style="padding: 1px 0px 0px 3px;border-radius: 0;font-size: 11px; width: 125px;"/>
                                         </div>
                                     </div>
                                     <div class="condition_divider"></div>
@@ -2023,6 +2369,39 @@
                                             <label class="condition_label"><input type="radio" name="ctimeWork" value="" checked="checked"> <span><s:message code="common.msg.all"/></span></label>
                                             <label class="condition_label"><input type="radio" name="ctimeWork" value="W"> <span><s:message code="condition.work"/></span></label>
                                             <label class="condition_label"><input type="radio" name="ctimeWork" value="R"> <span><s:message code="condition.notwork"/></span></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- SK 하이닉스 비밀문서 관련 검색기능 -->
+                                <div id="secretDocuDiv" style="display: none;">
+                                    <div class="condition_group display_none">
+                                        <s:message code="common.msg.secretInformation"/><i class="fa fa-minus-square"></i>
+                                    </div>
+                                    <div class="condition_option">
+                                        <div class="condition_item">
+                                            <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="condition.itype"/></div>
+                                            <select id="skInfoType" title="<s:message code="condition.docu.all"/>" class="selectpicker" data-style="btn-default" multiple data-show-subtext="true" data-actions-box="true" data-live-search="true">
+                                                <option value="1"><s:message code="condition.info.Y"/></option>
+                                                <option value="0"><s:message code="condition.info.N"/></option>
+                                            </select>
+                                        </div>
+                                        <div class="condition_divider"></div>
+                                        <div class="condition_item">
+                                            <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="condition.feedback"/></div>
+                                            <select id="skFeedbackType" title="<s:message code="condition.feedback.all"/>" class="selectpicker" data-style="btn-default" multiple data-show-subtext="true" data-actions-box="true" data-live-search="true">
+                                                <option value="1"><s:message code="condition.info.secretFeedbackY"/></option>
+                                                <option value="9"><s:message code="condition.info.feedback9"/></option>
+                                                <option value="0"><s:message code="condition.info.secretFeedbackN"/></option>
+                                            </select>
+                                        </div>
+                                        <div class="condition_divider"></div>
+                                        <div class="condition_item">
+                                            <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="condition.sprob"/>(%)</div>
+                                            <select id="skProbType" title="<s:message code="condition.sprob.all"/>" class="selectpicker" data-style="btn-default" multiple data-show-subtext="true" data-actions-box="true" data-live-search="true">
+                                                <option value="0.5|1.1">50 ~ 100</option>
+                                                <option value="0.1|0.5">10 ~ 49</option>
+                                                <option value="0|0.1">0 ~ 9</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -2180,13 +2559,14 @@
                                         <div class="condition_not"><label><input type="checkbox" id="dept_not" disabled /><span> <s:message code="query.make.except"/></span></label></div>
                                         <div class="condition_sub_title">
                                             <span class="condition_title" style="width: 65px;display: inline-block;"><s:message code="common.org.choose.dept"/></span>
-                                                <button style="width:61px;height: 25px;position: relative;" id="deptBtn" class="button_style filterAddBtn" title="<s:message code="common.msg.select"/>">
-                                                    <span class="ui-icon ui-icon-circle-plus icon_style"></span>  <s:message code="common.msg.select"/>
-                                                    <span id="deptSelectedArea" class="codeSelectedBtn" style="display:none;">
-                                                        <span class="btn" title="">0</span>
-                                                    </span>
-                                                </button>
-                                            </span>
+                                            <span class="condition_sub_title">
+										<button style="width:61px;position: relative;" id="deptBtn" class="button_style filterAddBtn" title="<s:message code="common.msg.select"/>">
+											<span class="ui-icon ui-icon-circle-plus icon_style"></span><s:message code="common.msg.select"/>
+											<span id="deptSelectedArea" class="codeSelectedBtn" style="display:none;">
+												<span class="btn" title="">0</span>
+											</span>
+										</button>
+									</span>
                                         </div>
                                         <input type="hidden" id="deptVal" />
                                         <input type="hidden" id="deptStr" />
@@ -2226,30 +2606,30 @@
                                         <div class="condition_sub_title" style="padding-left: 10px;float:left;padding-bottom:5px;">
                                             <span class="condition_title" style="width: 65px;display: inline-block;"><s:message code="condition.select"/></span>
                                             <span class="condition_sub_title">
-                                                <button style="width:61px;position: relative;" id="attachBtn" class="button_style filterAddBtn" title="<s:message code="condition.select"/>">
-                                                    <span class="ui-icon ui-icon-circle-plus icon_style"></span><s:message code="condition.select"/>
-                                                    <span id="attachSelectedArea" class="codeSelectedBtn" style="display:none;">
-                                                        <span class="btn" title="">0</span>
-                                                    </span>
-                                                </button>
-                                            </span>
+										<button style="width:61px;position: relative;" id="attachBtn" class="button_style filterAddBtn" title="<s:message code="condition.select"/>">
+											<span class="ui-icon ui-icon-circle-plus icon_style"></span><s:message code="condition.select"/>
+											<span id="attachSelectedArea" class="codeSelectedBtn" style="display:none;">
+												<span class="btn" title="">0</span>
+											</span>
+										</button>
+									</span>
                                         </div>
                                         <div class="condition_not"><label><input type="checkbox" id="attachYn_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
                                         <div class="condition_sub_title" style="padding-left: 10px;">
                                             <span class="condition_title" style="width: 65px;display: inline-block;"> <s:message code="condition.actual.attachment"/></span>
                                             <span class="condition_sub_title">
-                                                <label class="condition_label" style="margin-right: 5px;"><input type="radio" name="realAttYn" value="" checked="checked" disabled="disabled"> <span><s:message code="common.msg.all"/></span></label>
-                                                <label class="condition_label" style="margin-right: 5px;"><input type="radio" name="realAttYn" value="Y" disabled="disabled"> <span><s:message code="condition.onemore"/></span></label>
-                                                <label class="condition_label" style="margin-right: 5px;"><input type="radio" name="realAttYn" value="N" disabled="disabled"> <span><s:message code="condition.none"/></span></label>
-                                            </span>
+										<label class="condition_label" style="margin-right: 5px;"><input type="radio" name="realAttYn" value="" checked="checked" disabled="disabled"> <span><s:message code="common.msg.all"/></span></label>
+										<label class="condition_label" style="margin-right: 5px;"><input type="radio" name="realAttYn" value="Y" disabled="disabled"> <span><s:message code="condition.onemore"/></span></label>
+										<label class="condition_label" style="margin-right: 5px;"><input type="radio" name="realAttYn" value="N" disabled="disabled"> <span><s:message code="condition.none"/></span></label>
+									</span>
                                         </div>
                                         <div class="condition_sub_title" style="padding-left: 10px;">
                                             <span class="condition_title" style="width: 65px;display: inline-block;"> DRM</span>
                                             <span class="condition_sub_title">
-                                                <label class="condition_label" style="margin-right: 5px;"><input type="radio" name="drmYn" value="" checked="checked" disabled="disabled"> <span><s:message code="common.msg.all"/></span></label>
-                                                <label class="condition_label" style="margin-right: 5px;"><input type="radio" name="drmYn" value="Y" disabled="disabled"> <span><s:message code="condition.exist"/></span></label>
-                                                <label class="condition_label" style="margin-right: 5px;"><input type="radio" name="drmYn" value="N" disabled="disabled"> <span><s:message code="condition.none"/></span></label>
-                                            </span>
+										<label class="condition_label" style="margin-right: 5px;"><input type="radio" name="drmYn" value="" checked="checked" disabled="disabled"> <span><s:message code="common.msg.all"/></span></label>
+										<label class="condition_label" style="margin-right: 5px;"><input type="radio" name="drmYn" value="Y" disabled="disabled"> <span><s:message code="condition.exist"/></span></label>
+										<label class="condition_label" style="margin-right: 5px;"><input type="radio" name="drmYn" value="N" disabled="disabled"> <span><s:message code="condition.none"/></span></label>
+									</span>
                                         </div>
                                     </div>
                                     <!-- OCR 첨부 여부  -->
@@ -2275,13 +2655,13 @@
                                         <div class="condition_sub_title">
                                             <span class="condition_title" style="width: 65px;display: inline-block;"><s:message code="condition.select"/></span>
                                             <span class="condition_sub_title">
-                                                <button style="width:61px;position: relative;" id="keywordBtn" class="button_style filterAddBtn" title="<s:message code="condition.select"/>">
-                                                    <span class="ui-icon ui-icon-circle-plus icon_style"></span><s:message code="condition.select"/>
-                                                    <span id="keywordSelectedArea" class="codeSelectedBtn" style="display:none;">
-                                                        <span class="btn" title="">0</span>
-                                                    </span>
-                                                </button>
-                                            </span>
+										<button style="width:61px;position: relative;" id="keywordBtn" class="button_style filterAddBtn" title="<s:message code="condition.select"/>">
+											<span class="ui-icon ui-icon-circle-plus icon_style"></span><s:message code="condition.select"/>
+											<span id="keywordSelectedArea" class="codeSelectedBtn" style="display:none;">
+												<span class="btn" title="">0</span>
+											</span>
+										</button>
+									</span>
                                         </div>
                                         <input type="hidden" id="keywordVal" />
                                         <input type="hidden" id="keywordStr" />
@@ -2297,13 +2677,13 @@
                                         <div class="condition_sub_title">
                                             <span class="condition_title" style="width: 65px;display: inline-block;"><s:message code="condition.select"/></span>
                                             <span class="condition_sub_title">
-                                                <button style="width:61px;position: relative;" id="regexpBtn" class="button_style filterAddBtn" title="<s:message code="condition.select"/>">
-                                                    <span class="ui-icon ui-icon-circle-plus icon_style"></span><s:message code="condition.select"/>
-                                                    <span id="regexpSelectedArea" class="codeSelectedBtn" style="display:none;">
-                                                        <span class="btn" title="">0</span>
-                                                    </span>
-                                                </button>
-                                            </span>
+										<button style="width:61px;position: relative;" id="regexpBtn" class="button_style filterAddBtn" title="<s:message code="condition.select"/>">
+											<span class="ui-icon ui-icon-circle-plus icon_style"></span><s:message code="condition.select"/>
+											<span id="regexpSelectedArea" class="codeSelectedBtn" style="display:none;">
+												<span class="btn" title="">0</span>
+											</span>
+										</button>
+									</span>
                                         </div>
                                         <input type="hidden" id="regexpVal" />
                                         <input type="hidden" id="regexpStr" />
@@ -2342,8 +2722,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        <%-- 조건 검색 끝--%>
                         <div class="in" id="saveFilterTab" style="width:100%; height:calc(100% - 66px); display: none;">
                             <div class="searchButtonArea">
                                 <button class="search_btn" id="searchQueryBtn"><span><s:message code="common.search1"/></span></button>
@@ -2393,11 +2771,39 @@
                             <input type="hidden" readonly="readonly" id="consentShortName">
                         </div>
                         <%} %>
-                        <%-- 피드백 설정 --%>
-                        <%-- 보기 설정 --%>
-                        <div class="viewSetup" style="position: absolute;top:32px;right:1px;z-index: 9;	text-align: right">
-                            <button href="javascript:;" class="btn05 dropdown-toggle" id="feedbackBtn"><s:message code="condition.feedback"/> <s:message code="common.msg.setting"/></button>
+                        <div class="viewSetup" style="position: absolute;top:40px;right:10px;z-index: 9;">
                             <div style="display: inline-block; padding-left:10px;vertical-align: bottom;">
+                                <a href="javascript:;" style="padding-right:10px; color:#383838; cursor: pointer; font-size: 12px;float: right;"data-toggle="dropdown" id="exportMsg"><s:message code="common.msg.export"/></a>
+                                <ul class="dropdown-menu dropdown-menu-left" role="menu" style="min-width:100px;font-size:13px;">
+                                    <li style="display:none;"><a href="javascript:void(0);" id="body_link_btn" class="body_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-text-o" style="font-size:16px"></span>&nbsp;<s:message code="condition.body"/></a></li>
+                                    <li style="display:none;"><a href="javascript:void(0);" id="attach_link_btn" class="attach_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-archive-o" style="font-size:16px"></span>&nbsp;<s:message code="consent.attach"/></a></li>
+                                    <li style="display:none;"><a href="javascript:void(0);" id="excel_link_btn" class="excel_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>" option="Y"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/> (<s:message code="common.msg.excel"/> xlsx)</a></li>
+                                    <li style="display:none;"><a href="javascript:void(0);" id="cell_link_btn" class="cell_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>" option="Y"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/> (<s:message code="common.msg.hancel"/> cell)</a></li>
+                                    <li style="display:none;"><a href="javascript:void(0);" id="csv_link_btn" class="csv_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>" option="Y"><span class="fa fa-file-text" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/> (<s:message code="common.msg.text"/> csv)</a></li>
+                                    <li style="display:none;"><a href="javascript:void(0);" id="pdf_link_btn" class="pdf_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>" option="Y"><span class="fa fa-file-pdf-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/> (PDF)</a></li>
+                                    <c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'LS') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
+                                        <li><a href="javascript:void(0);" class="all_down_link" data-type="L" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/></a></li>
+                                    </c:if>
+                                    <c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'BS') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
+                                        <li><a href="javascript:void(0);" class="all_down_link" data-type="B" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-text-o" style="font-size:16px"></span>&nbsp;<s:message code="condition.body"/></a></li>
+                                    </c:if>
+                                    <c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'AS') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
+                                        <li><a href="javascript:void(0);" class="all_down_link" data-type="A" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-archive-o" style="font-size:16px"></span>&nbsp;<s:message code="consent.attach"/></a></li>
+                                    </c:if>
+                                    <c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'WS') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
+                                        <li><a href="javascript:void(0);" class="all_down_link" data-type="LB" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/>+<s:message code="condition.body"/></a></li>
+                                    </c:if>
+                                    <c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'CS') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
+                                        <li><a href="javascript:void(0);" class="all_down_link" data-type="LBA" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/>+<s:message code="condition.body"/>+<s:message code="consent.attach"/></a></li>
+                                    </c:if>
+                                    <c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'LP') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
+                                        <li><a href="javascript:void(0);" class="print_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="glyphicon glyphicon-print"></span>&nbsp;<s:message code="selectCodeAll.list"/> <s:message code="common.msg.print"/></a></li>
+                                    </c:if>
+                                    <li class="dropdown-divider"></li>
+                                    <li><a href="javascript:void(0);" class="downList" data-target="tabGrid" ><span class="glyphicon glyphicon-th-list"></span>&nbsp;<s:message code="common.msg.download"/> <s:message code="mail.view.list"/></a></li>
+                                </ul>
+                                <a href="javascript:;" style="padding-right:10px; color:#383838; cursor: pointer; font-size: 12px;float: right;" id="saveMsgData"><s:message code="filterInfo.setMsgFolder1"/></a>
+                                <a href="javascript:;" style="padding-right:10px; color:#383838; cursor: pointer; font-size: 12px;float: right; display: none;" id="feedbackBtn"><s:message code="condition.feedback"/> <s:message code="common.msg.setting"/></a>
                                 <ul id="feedbackSetting" style="display: none; z-index: 991; padding: 5px 0px;">
                                     <li><a href="javascript:void(0);" onclick="setFeedback(0);" style="padding-left: 20px;"><span class="feedbackCorrect" style="display: inline-block; position: relative; top: 0px;"></span>&nbsp;<s:message code="condition.info.feedback0"/></a></li>
                                     <li><a href="javascript:void(0);" onclick="setFeedback(1);" style="padding-left: 20px;"><span class="feedbackInCorrect" style="display: inline-block; position: relative; top: 0px;"></span>&nbsp;<s:message code="condition.info.class1"/></a></li>
@@ -2408,10 +2814,9 @@
                                 </ul>
                                 <div style="position: fixed; top: 0px; bottom: 0px; left: 0px; right: 0px; z-index: 990; display: none; width: 100%; height: 100%;" id="overlay"></div>
                             </div>
-
-                            <button class="btn05 dropdown-toggle" data-toggle="dropdown" id="config_toggle">
+                            <a href="javascript:;" style="color:#383838;font-size: 12px;" class="dropdown-toggle" data-toggle="dropdown" id="config_toggle">
                                 <s:message code="condition.view.setup"/><span class="caret"></span>
-                            </button>
+                            </a>
                             <div class="dropdown-menu dropdown-menu-right"  style="min-width:180px;font-size:12px; height: 380px; padding:0;" id="additionalBtn">
                                 <div class="listRow" style="padding: 0;">
                                     <div class="listRowLeft" style="text-align:center; font-weight: bold; background-color: #eaeaea; width: 120px; height: 34px;"><s:message code="condition.view.stype"/></div>
@@ -2419,6 +2824,8 @@
                                         <a id="none_btn" style="font-size: 11px; font-weight: initial; line-height: 20px; padding-right: 5px;" class="areaBtn"><img src="<c:url value="/img/message/message_none.jpg"/>"  style="padding-right: 4px;padding-bottom: 2px"><s:message code="condition.view.type1"/> </a>
                                         <a id="bottom_btn" style="font-size: 11px; font-weight: initial; line-height: 20px; padding-right: 5px;" class="areaBtn"><img src="<c:url value="/img/message/message_bottom.jpg"/>" style="padding-right: 4px;padding-bottom: 2px"><s:message code="condition.view.type2"/></a>
                                         <a id="right_btn" style="font-size: 11px; font-weight: initial; line-height: 20px; padding-right: 5px;" class="areaBtn"><img src="<c:url value="/img/message/message_right.jpg"/>" style="padding-right: 4px;padding-bottom: 2px"><s:message code="condition.view.type3"/></a>
+
+
                                     </div>
                                     <!-- <button class ="msg_button" id="config_colse" style="height: 22px; line-height: 19px; float: right; margin-top: 5px;margin-right: 10px;">닫기</button> -->
                                 </div>
@@ -2458,16 +2865,16 @@
                                 <div class="listRow" style="width: 575px; border-bottom: none; padding: 0;">
                                     <div class="listRowLeft" style="text-align:center; font-weight: bold; background-color: #eaeaea; width: 120px; height: 202px;padding-top: 70px;"><s:message code="condition.view.type4"/></div>
                                     <div class="listRowLeft" style="padding-left: 5px;">
+								<span style="width: 435px; display:block;">
+									<input id="insaFormatInput" style="width: 330px;" type="text" value="" data-format="name,emaile,busi,dept,jikgub,ip"/>
+									<img src="<c:url value="/img/message/exclamation.png"/>" id="confError" style="display: none; padding-bottom:2px;" title="<s:message code="message.insa.error"/>">
+									<img src="<c:url value="/img/message/accept.png"/>" id="confAccept" style="display: none; padding-bottom:2px;" title="<s:message code="message.insa.ok"/>">
+									<span style="padding-left: 7px;" id="insaFormatOk"> <s:message code="common.msg.apply"/> </span>
+									<span style="padding-left: 7px;" id="insaFormatClear"> <s:message code="common.msg.remove"/> </span>
+								</span>
                                         <span style="width: 435px; display:block;">
-                                            <input id="insaFormatInput" style="width: 330px;" type="text" value="" data-format="name,emaile,busi,dept,jikgub,ip"/>
-                                            <img src="<c:url value="/img/message/exclamation.png"/>" id="confError" style="display: none; padding-bottom:2px;" title="<s:message code="message.insa.error"/>">
-                                            <img src="<c:url value="/img/message/accept.png"/>" id="confAccept" style="display: none; padding-bottom:2px;" title="<s:message code="message.insa.ok"/>">
-                                            <span style="padding-left: 7px;" id="insaFormatOk"> <s:message code="common.msg.apply"/> </span>
-                                            <span style="padding-left: 7px;" id="insaFormatClear"> <s:message code="common.msg.remove"/> </span>
-                                        </span>
-                                        <span style="width: 435px; display:block;">
-                                            <input  id="insaFormatInputEx" style="width:435px;cursor: auto !important;" disabled type="text" value="<s:message code="message.help.example"/>)" data-format="name,emaile,busi,dept,jikgub,ip"/>
-                                        </span>
+									<input  id="insaFormatInputEx" style="width:435px;cursor: auto !important;" disabled type="text" value="<s:message code="message.help.example"/>)" data-format="name,emaile,busi,dept,jikgub,ip"/>
+								</span>
                                         <select id="messageFormat" size="8" style="width:435px; margin-top: 10px; padding-top: 2px; height:110px;">
                                             <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_name"/>/hong@xcurent.com/<s:message code="message.help.sample_bunm"/>/<s:message code="message.help.sample_deptnm"/>/<s:message code="message.help.sample_jikgubnm"/>/192.168.0.1" data-format="name/email/businm/deptnm/jikgubnm/ip">name/email/businm/deptnm/jikgubnm/ip</option>
                                             <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_name"/>-hong@xcurent.com-<s:message code="message.help.sample_bunm"/>-<s:message code="message.help.sample_deptnm"/>-<s:message code="message.help.sample_jikgubnm"/>-192.168.0.1" data-format="name-email-businm-deptnm-jikgubnm-ip">name-email-businm-deptnm-jikgubnm-ip</option>
@@ -2497,7 +2904,7 @@
                                                 <span class="resultCntSpan" style="padding-right:0px;"></span>
                                             </li>
                                             <li class="tab_li" data-index="">
-                                                <div class="tab_txt_top addTabDiv" style="padding:0 10px;"><span class="glyphicon glyphicon-plus" style="cursor:pointer;color:#494949;top:7px;"></span></div>
+                                                <div class="tab_txt_top addTabDiv" style="padding:0 10px;"><span class="glyphicon glyphicon-plus" style="cursor:pointer;color:#494949;"></span></div>
                                             </li>
                                         </ul>
                                     </div>
@@ -2506,7 +2913,7 @@
                         </div>
                         <div id="contentListArea" class="inner-center">
                             <iframe src="<c:url value="/ems/contentList.do?gridInit=true"/>" id="contentList0" class="contentList"></iframe>
-                            <iframe src="<c:url value="/ems/contentList.do?gridInit="/>" id="contentList1" class="contentList" style="left:-10000px;"></iframe>
+                            <iframe src="<c:url value="/ems/contentList.do?gridInit="/>" id="contentList1" class="contentList" style="left:-10000px"></iframe>
                         </div>
                         <div id="contentBodyArea" class="inner-east">
                             <iframe src="<c:url value="/ems/contentBodyNew.do"/>" id="contentBody0" class="contentBody" name="contentBody"></iframe>
@@ -2515,67 +2922,186 @@
                     </div>
                 </div>
             </div>
-
-            <div id="searchHelpDiv" style="display: block;position: absolute;top: 130px;right: 350px;display: none;text-align: left;z-index: 1040;border: 1px solid #555;background-color: white;width: 500px;height: 420px;font-size:12px;">
-                <div class="modalHead">
-                    <i class="glyphicon glyphicon-question-sign"></i>&nbsp;<s:message code="help.msg.title"/>
-                    <div style="float:right;padding-right:8px;" class="searchHelpDivCloseArea">
-                        <span class="glyphicon glyphicon-remove" style="cursor:pointer;" id="searchHelpDivCloseBtn"></span>
-                    </div>
-                </div>
-                <div class="modalCon">
-                    <div>
-                        <div style="height:25px;">
-                            <h5 style="font-size:13px;">■ <span style="color:#FF0000;"><s:message code="help.msg.default"/></span></h5>
+                <div id="searchHelpDiv" style="display: block;position: absolute;top: 130px;right: 350px;display: none;text-align: left;z-index: 1040;border: 1px solid #555;background-color: #f4f4f4;width: 500px;height: 420px;font-size:12px;">
+                    <div class="searchHelpHeader" style="height:30px;background-color:#253f56;color:#fff;padding-left:10px;line-height:30px;font-weight: bold;cursor:move;">
+                        <div style="float:left;width:100px;">
+                            <i class="glyphicon glyphicon-question-sign"></i>&nbsp;<s:message code="help.msg.title"/>
                         </div>
+                        <div style="float:right;padding-right:8px;" class="searchHelpDivCloseArea">
+                            <span class="glyphicon glyphicon-remove" style="cursor:pointer;" id="searchHelpDivCloseBtn"></span>
+                        </div>
+                    </div>
+                    <div style="width:100%;padding:10px 10px 10px 10px;" class="searchHelpDivBody">
                         <div>
-                            <span>■ <s:message code="help.msg.all"/></span><br/>
-                            <span style="padding-left:10px;font-weight: bold;"><s:message code="help.msg.all.ex"/></span><br/>
-                            <span style="padding-left:10px;"><s:message code="help.msg.all.explain"/></span><br/>
-                        </div>
-                        <div style="padding-top:5px;">
-                            <span>■ <s:message code="help.msg.except"/></span><br/>
-                            <span style="padding-left:10px;font-weight: bold;"><s:message code="help.msg.except.ex"/></span><br/>
-                            <span style="padding-left:10px;"><s:message code="help.msg.except.explain"/> </span><br/>
-                        </div>
-                        <div style="padding-top:5px;">
-                            <span>■ <s:message code="help.msg.or"/></span><br/>
-                            <span style="padding-left:10px;font-weight: bold;"><s:message code="help.msg.or.ex"/></span><br/>
-                            <span style="padding-left:10px;"><s:message code="help.msg.or.explain"/> </span><br/>
-                        </div>
-                        <div style="padding-top:5px;">
-                            <span>■ <s:message code="help.msg.exact"/></span><br/>
-                            <span style="padding-left:10px;font-weight: bold;"><s:message code="help.msg.exact.ex"/></span><br/>
-                            <span style="padding-left:10px;"><s:message code="help.msg.exact.explain"/> </span><br/>
-                        </div>
-                        <div style="padding-top:5px;">
-                            <span>■ <s:message code="help.msg.astar"/></span><br/>
-                            <span style="padding-left:10px;font-weight: bold;"><s:message code="help.msg.astar.ex"/></span><br/>
-                            <span style="padding-left:10px;"><s:message code="help.msg.astar.explain"/> </span><br/>
-                        </div>
-                        <div style="padding-top:5px;">
-                            <span>■ <s:message code="help.msg.question"/></span><br/>
-                            <span style="padding-left:10px;font-weight: bold;"><s:message code="help.msg.question.ex"/></span><br/>
-                            <span style="padding-left:10px;"><s:message code="help.msg.question.explain"/></span><br/>
+                            <div style="height:25px;">
+                                <h5 style="font-size:13px;">■ <span style="color:#FF0000;"><s:message code="help.msg.default"/></span></h5>
+                            </div>
+                            <div>
+                                <span>■ <s:message code="help.msg.all"/></span><br/>
+                                <span style="padding-left:10px;font-weight: bold;"><s:message code="help.msg.all.ex"/></span><br/>
+                                <span style="padding-left:10px;"><s:message code="help.msg.all.explain"/></span><br/>
+                            </div>
+                            <div style="padding-top:5px;">
+                                <span>■ <s:message code="help.msg.except"/></span><br/>
+                                <span style="padding-left:10px;font-weight: bold;"><s:message code="help.msg.except.ex"/></span><br/>
+                                <span style="padding-left:10px;"><s:message code="help.msg.except.explain"/> </span><br/>
+                            </div>
+                            <div style="padding-top:5px;">
+                                <span>■ <s:message code="help.msg.or"/></span><br/>
+                                <span style="padding-left:10px;font-weight: bold;"><s:message code="help.msg.or.ex"/></span><br/>
+                                <span style="padding-left:10px;"><s:message code="help.msg.or.explain"/> </span><br/>
+                            </div>
+                            <div style="padding-top:5px;">
+                                <span>■ <s:message code="help.msg.exact"/></span><br/>
+                                <span style="padding-left:10px;font-weight: bold;"><s:message code="help.msg.exact.ex"/></span><br/>
+                                <span style="padding-left:10px;"><s:message code="help.msg.exact.explain"/> </span><br/>
+                            </div>
+                            <div style="padding-top:5px;">
+                                <span>■ <s:message code="help.msg.astar"/></span><br/>
+                                <span style="padding-left:10px;font-weight: bold;"><s:message code="help.msg.astar.ex"/></span><br/>
+                                <span style="padding-left:10px;"><s:message code="help.msg.astar.explain"/> </span><br/>
+                            </div>
+                            <div style="padding-top:5px;">
+                                <span>■ <s:message code="help.msg.question"/></span><br/>
+                                <span style="padding-left:10px;font-weight: bold;"><s:message code="help.msg.question.ex"/></span><br/>
+                                <span style="padding-left:10px;"><s:message code="help.msg.question.explain"/></span><br/>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <tiles:insertAttribute name="footer" ignore="true"/>
-            <div style="display:none;">
-                <ul id="newTab">
-                    <li class="tab_li"><div class="tab_close"></div><div class="tab_txt_top addTabDiv" style="float:left;"></div><span class="resultCntSpan" style="padding-right:15px;"></span></li>
-                </ul>
-                <ul id="addTab">
-                    <li class="tab_li addTabLi" data-index=""><div class="tab_txt_top addTabDiv" style="padding:0 10px;"><span class="fa fa-spinner fa-spin" style="cursor:pointer;color:#494949;top:7px;"></span></div></li>
-                </ul>
-            </div>
+                <div class="modal fade" id="exportDialog" tabindex="-1" role="dialog" aria-labelledby="exportDialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <h3 class="modal-title" id="exportTitle">&nbsp;</h3>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-inline">
+                                    <div class="content_body" style="height:100%;padding-top: 0;">
+                                        <table class="table table-bordered" style="margin-bottom:0;width:100%;">
+                                            <colgroup>
+                                                <col width="210">
+                                                <col width="*">
+                                            </colgroup>
+                                            <tr>
+                                                <th>
+                                                    <s:message code="download.msg.dataArea"/>
+                                                </th>
+                                                <td>
+                                                    <div class="btn-group filterBtn" data-toggle="buttons" style="margin-top:3px;">
+                                                        <label class="btn btn-sm btn-default"><input type="radio" name="exportDataRange" id="exportDataSelect" value="S"> <s:message code="download.msg.select.count"/></label>
+                                                        <label class="btn btn-sm btn-default active"><input type="radio" name="exportDataRange" id="exportDataAll" value="A" checked> <s:message code="download.msg.search.count"/></label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr id="exportFileTypeArea">
+                                                <th>
+                                                    <s:message code="download.msg.fileType"/>
+                                                </th>
+                                                <td>
+                                                    <div class="btn-group filterBtn" data-toggle="buttons" style="margin-top:3px;">
+                                                        <label class="btn btn-sm btn-default active"><input type="radio" name="exportFileType" id="exportExcel" value="xlsx" checked> <s:message code="common.msg.excel"/>(xlsx)</label>
+                                                        <label class="btn btn-sm btn-default"><input type="radio" name="exportFileType" id="exportHancel" value="cell"> <s:message code="common.msg.hancel"/>(cell)</label>
+                                                        <label class="btn btn-sm btn-default"><input type="radio" name="exportFileType" id="exportText" value="csv"> <s:message code="common.msg.text"/>(csv)</label>
+                                                        <label class="btn btn-sm btn-default"><input type="radio" name="exportFileType" id="exportPdf" value="pdf"> <s:message code="selectCodeAll.list"/>(PDF)</label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    <s:message code="download.msg.export.count"/>
+                                                </th>
+                                                <td>
+                                                    <span id="exportDataSize" style="line-height:32px;">0</span>
+                                                </td>
+                                            </tr>
+                                            <tr id="bodyInExcel">
+                                                <th>
+                                                    <s:message code="download.msg.body.in.excel"/>
+                                                </th>
+                                                <td>
+                                                    <label class="condition_label"><input type="radio" name="bodyInExcel" value="Y"> <span><s:message code="common.msg.include"/></span></label>
+                                                    <label class="condition_label"><input type="radio" name="bodyInExcel" value="N" checked="checked"> <span><s:message code="common.msg.not.include"/></span></label>
+                                                </td>
+                                            </tr>
+                                            <tr id="bodyInExcelMsg" style="font-weight: bold;display:none;">
+                                                <td colspan="2">
+                                                    <s:message code="download.msg.body.in.excelMsg" />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <table class="table table-bordered" style="margin-bottom:0;width:100%;margin-top:15px;display:none;" id="bodyInExcelIdx">
+                                            <colgroup>
+                                                <col width="210">
+                                                <col width="*">
+                                            </colgroup>
+                                            <tr>
+                                                <th style="font-weight: bold;">
+                                                    <s:message code="download.msg.now.col.order" />
+                                                </th>
+                                                <td>
+                                                    <select id="nowColIdx" data-style="btn-default">
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr style="font-weight: bold;">
+                                                <td colspan="2">
+                                                    <s:message code="download.msg.body.col.idx" />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <table class="table table-bordered" style="margin-bottom:0;width:100%;margin-top:15px;" id="sizeWarnMsg">
+                                            <colgroup>
+                                                <col width="210">
+                                                <col width="*">
+                                            </colgroup>
+                                            <tr style="font-weight: bold;">
+                                                <td colspan="2">
+                                                    <s:message code="download.msg.warn" arguments="50,000" argumentSeparator="|"/>
+                                                </td>
+                                            </tr>
+                                            <tr style="font-weight: bold;">
+                                                <th>
+                                                    <label for="ruleFile" class="control-label" style="vertical-align: bottom;line-height:35px;">¤ <s:message code="download.msg.file.count"/></label>
+                                                </th>
+                                                <td>
+                                                    <select id="dataLength_select" class="selectpicker" data-style="btn-default">
+                                                        <option value="20000">20,000</option>
+                                                        <option value="30000">30,000</option>
+                                                        <option value="40000">40,000</option>
+                                                        <option value="50000" selected>50,000</option>
+                                                        <option value="100000">100,000</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+                                <button type="button" class="btn btn-primary savePopBtn" accesskey="S" id="allDownBtn"><s:message code="common.msg.export"/></button>
+                            </div>
+                        </div>
+                    </div>
+                    <iframe id="upload_file" name="upload_file" src="" style="display: none;"></iframe>
+                </div>
+                <div style="display:none;">
+                    <ul id="newTab">
+                        <li class="tab_li"><div class="tab_close"></div><div class="tab_txt_top addTabDiv" style="float:left;"></div><span class="resultCntSpan" style="padding-right:15px;"></span></li>
+                    </ul>
+                    <ul id="addTab">
+                        <li class="tab_li addTabLi" data-index=""><div class="tab_txt_top addTabDiv" style="padding:0 10px;"><span class="fa fa-spinner fa-spin" style="cursor:pointer;color:#494949;"></span></div></li>
+                    </ul>
+                </div>
+<%--                <tiles:insertAttribute name="footer" ignore="true"/>--%>
         </div> <!--//ContentArea-->
     </div><!--//Container-->
 </div> <!--//wrap-->
 
-</body>
 <form action="<c:url value="/downEmassAttachByMsgId.xcn"/>" target="ExcelDown" method="post" id="downForm">
     <input type="hidden" name="msgIds" id="msgIds">
     <input type="hidden" name="msgId" id="msgId">
@@ -2593,9 +3119,6 @@
     <input type="hidden" name="paramFolderSeq" id="paramFolderSeq">
     <input type="hidden" name="paramFolderName" id="paramFolderName">
 </form>
-
-<input type="hidden" name="checkMsgCnt" id="checkMsgCnt" value="10000"/>
-
 <script type="text/javascript">
     var grid = new Xgrid('searchKeywordGrid', contextRoot);
     grid.onCheckBox();

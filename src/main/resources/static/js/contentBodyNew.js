@@ -17,12 +17,9 @@ var hostQuery = 'false';
 var count = 0;
 
 $(document).ready(function(){
-
-
 	$(document).click(function(){
 		$('#imgPreviewDiv').hide();
 	});
-
 
 	$('.font_size').click(function(){
 		var more = $(this).attr('id');
@@ -74,23 +71,18 @@ $(document).ready(function(){
 		alert(message.copyBodyMsg);
 	});
 
-	function msgValid() {
-		if(undefined != msgId && msgId != '' ) return true;
-		else return false;
-	}
-
 	$(document).on('click', '#usersInfoBtn', function(){
 		var url = '';
+
 //		if( isGroupMessenger( ) && detailFlag ){
 //			//url = '<c:url value="/ems/userGroupInfoPop.do?xRootMtr='+xRootMtr+'"/>';
 //			url = contextRoot + '/ems/userGroupInfoPop.do?xRootMtr=' + xRootMtr;
 //			return fnOpenWindow(url, 'userGroupInfoPop', 835, 370, 'resize');
 //		}else{
-			//url = '<c:url value="/ems/userInfoPop.do?msgId='+msgId+'&type="/>';
-		if(msgValid()) {
-			 url = contextRoot + '/ems/userInfoPop.do?msgId=' + msgId + '&type=""'
-			 return fnOpenWindow(url, 'userInfoPop', 835, 370, 'resize');
-		 }else  alert('<s:message code="bodyview.select.message" />');
+		//url = '<c:url value="/ems/userInfoPop.do?msgId='+msgId+'&type="/>';
+		url = contextRoot + '/ems/userInfoPop.do?msgId=' + msgId + '&type=""'
+		return fnOpenWindow(url, 'userInfoPop', 835, 370, 'resize');
+		//}
 
 	});
 	$(document).on('click', '.attachText', function(){
@@ -103,18 +95,14 @@ $(document).ready(function(){
 	$(document).on('click', '.attachOcrText', function(){
 		var attachId = $(this).parents('tr').attr('id');
 		//var url = '<c:url value="/ems/attachText.do?msgId='+msgId+'&attachId='+attachId+'&searchKey='+searchkey+'&ocrYn=Y"/>';
-		if(msgValid()) {
 		var url = contextRoot + '/ems/attachText.do?msgId=' + msgId+ '&attachId=' + attachId + '&searchKey=' + encodeURI(searchkey) + '&ocrYn=Y';
 		fnOpenWindow(url, 'attachText', 1050, 800, 'resize');
-		}else  alert('<s:message code="bodyview.select.message" />');
 	});
 
 	$(document).on('click', '#originalBtn', function(){
 		//var url = '<c:url value="/ems/originalText.do?type=original&msgId='+msgId+'"/>';
-		if(msgValid()) {
-			var url = contextRoot + '/ems/originalText.do?type=original&msgId=' + msgId;
-			fnOpenWindow(url, 'originalText', 1050, 800, 'resize');
-		}else  alert('<s:message code="bodyview.select.message" />');
+		var url = contextRoot + '/ems/originalText.do?type=original&msgId=' + msgId;
+		fnOpenWindow(url, 'originalText', 1050, 800, 'resize');
 	});
 
 	$(document).on('click', '#msgIdBtn', function(){
@@ -124,7 +112,7 @@ $(document).ready(function(){
 			$("#msgIdTr").css("display", "none");
 		}
 	});
-	
+
 	var dateObj = new Date();
 	$('#startdatepickerBody').datetimepicker({
 		format: 'YYYY-MM-DD HH:mm:ss',
@@ -141,10 +129,8 @@ $(document).ready(function(){
 
 	$(document).on('click', '#headerBtn', function(){
 		//var url = '<c:url value="/ems/originalText.do?type=header&msgId='+msgId+'"/>';
-		if(undefined != msgId && msgId != '' ) {
-			var url = contextRoot + '/ems/originalText.do?type=header&msgId=' + msgId;
-			fnOpenWindow(url, 'headerText', 1050, 800, 'resize');
-		}else  alert('<s:message code="bodyview.select.message" />');
+		var url = contextRoot + '/ems/originalText.do?type=header&msgId=' + msgId;
+		fnOpenWindow(url, 'headerText', 1050, 800, 'resize');
 	});
 
 	$(document).on('mouseover', '.attachName', function(){
@@ -172,11 +158,11 @@ $(document).ready(function(){
 			alert(message.authAlert);
 			return;
 		}
-		if( $(this).parents('li').hasClass('notfound')) return;
+		if( $(this).parents('tr').hasClass('notfound')) return;
 
-		var attachId = $(this).parents('li').attr('id');
+		var attachId = $(this).parents('tr').attr('id');
 		var attachName = $(this).attr('attachname');
-		var attachSize = Number( $(this).parents('li').attr('size') );
+		var attachSize = Number( $(this).parents('tr').attr('size') );
 		//var attachUrl = '<c:url value="/downEmassAttach.xcn"/>?msgId='+msgId+'&attachId='+attachId;
 		var attachUrl = contextRoot + '/downEmassAttach.xcn?msgId='+msgId+'&attachId='+attachId;
 		if ( attachSize == 0 || attachSize == 'NaN' ) attachSize = 1;
@@ -198,11 +184,11 @@ $(document).ready(function(){
 			alert(message.authAlert);
 			return;
 		}
-		if( $(this).parents('li').hasClass('notfound')) return;
+		if( $(this).parents('tr').hasClass('notfound')) return;
 		var txt = $(this).text();
-		var attachId = $(this).parents('li').attr('id');
-		var attachName = $(this).parents('li').find('.attachName').attr('attachname');
-		var attachSize = Number( $(this).parents('li').attr('size') );
+		var attachId = $(this).parents('tr').attr('id');
+		var attachName = $(this).parents('tr').find('.attachName').attr('attachname');
+		var attachSize = Number( $(this).parents('tr').attr('size') );
 		//var attachUrl = '<c:url value="/downEmassAttach.xcn"/>?msgId='+msgId+'&attachId='+attachId+'&prediction=Y';
 		var attachUrl = contextRoot + '/downEmassAttach.xcn?msgId=' + msgId + '&attachId=' + attachId + '&prediction=Y';
 		if( attachSize == 0 || attachSize == 'NaN' ) attachSize = 1;
@@ -225,14 +211,14 @@ $(document).ready(function(){
 			alert(message.authAlert);
 			return;
 		}
-		if( $(this).parents('li').hasClass('notfound')) return;
-		var attachId = $(this).parents('li').attr('id');
-		var attachName = $(this).parents('li').find('.attachName').attr('attachname');
-		var attachSize = Number( $(this).parents('li').attr('size') );
+		if( $(this).parents('tr').hasClass('notfound')) return;
+
+		var attachId = $(this).parents('tr').attr('id');
+		var attachName = $(this).parents('tr').find('.attachName').attr('attachname');
+		var attachSize = Number( $(this).parents('tr').attr('size') );
 		//var attachUrl = '<c:url value="/downEmassAttach.xcn"/>?msgId='+msgId+'&attachId='+attachId;
 		var attachUrl = contextRoot + '/downEmassAttach.xcn?msgId=' + msgId + '&attachId=' + attachId;
 		if ( attachSize == 0 || attachSize == 'NaN' ) attachSize = 1;
-
 
 		try {
 			AttachDown.location.href = attachUrl;
@@ -250,10 +236,10 @@ $(document).ready(function(){
 			alert(message.authAlert);
 			return;
 		}
-		
+
 		var fileCount = $(this).parent().parent().parent().find('#fileCntArea').text().replace(/[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi,'');
 		var notfoundCount = '';
-		$(this).parent().parent().parent().find('#filelist li.notfound').each(function(i, item) {
+		$(this).parent().parent().parent().find('#fileTable tr.notfound').each(function(i, item) {
 			notfoundCount = i;
 		})
 		if(fileCount == notfoundCount+1){
@@ -285,10 +271,10 @@ $(document).ready(function(){
 		} else {
 			parent.getIframeListObj().setGridFeedback(val);
 		}
-		
+
 		$('#ml_confd_userid').html('[ ' + adminId  + ' ]');
 	});
-	
+
 	$('#bodyEncoding').change(function(){
 		var charset = $(this).val();
 		getBody(charset);
@@ -337,24 +323,28 @@ $(document).ready(function(){
 			alert(contentBodyDivJS.noAuthority);
 			return;
 		}
-		if(msgValid()) {
-			var charset = $('#bodyEncoding').val();
-			//var url = '<c:url value="/getEmassBodySave.xcn?msgId='+msgId+'&userCharset='+charset+'&print=Y"/>';
-			//if( detailFlag ) url = '<c:url value="/getMessengerGroupAllSave.xcn?msgId='+msgId+'&xRootMtr='+xRootMtr+'&print=Y"/>';
-			var url = contextRoot + '/getEmassBodySave.xcn?msgId=' + msgId + '&userCharset=' + charset + '&print=Y';
-			if (detailFlag) {
-				var startDt = $('#startdatepickerBody').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
-				var endDt = $('#enddatepickerBody').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
+		var charset = $('#bodyEncoding').val();
+		//var url = '<c:url value="/getEmassBodySave.xcn?msgId='+msgId+'&userCharset='+charset+'&print=Y"/>';
+		//if( detailFlag ) url = '<c:url value="/getMessengerGroupAllSave.xcn?msgId='+msgId+'&xRootM
+		// tr='+xRootMtr+'&print=Y"/>';
+		var url = contextRoot + '/getEmassBodySave.xcn?msgId=' + msgId + '&userCharset=' + charset + '&print=Y';
 
-				url = contextRoot + '/getMessengerGroupAllSave.xcn?msgId=' + msgId + '&xRootMtr=' + xRootMtr + '&srcip=' + srcip + '&startDt=' + startDt + '&endDt=' + endDt + '&groupField=usr_id&print=Y&usr_id=' + usr_id;
-			}
-			fnOpenWindow(url, 'message_print', '1000', '800', 'scroll');
+		if( detailFlag ){
+			var startDt = $('#startdatepickerBody').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
+			var endDt = $('#enddatepickerBody').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
 
-			var information = '[' + message.bodyPrint + ']' + enter;
-			if (detailFlag) information += message.xrootmtr + ' : ' + xRootMtr + ' ';
-			else information += message.msgid + ' : ' + msgId + ' ';
-			insertAudit(op_body_print, information);
-		}else alert('<s:message code="bodyview.select.message" />');
+			url = contextRoot + '/getMessengerGroupAllSave.xcn?msgId=' + msgId + '&xRootMtr=' + xRootMtr + '&srcip=' + srcip+'&startDt='+startDt+'&endDt='+endDt+'&groupField=usr_id&print=Y&usr_id=' + usr_id;
+		}
+
+
+		fnOpenWindow( url, 'message_print', '1000', '800', 'scroll' );
+
+		console.log('asdf')
+
+		var information = '[' + message.bodyPrint + ']'+enter;
+		if( detailFlag ) information += message.xrootmtr + ' : ' + xRootMtr + ' ';
+		else information += message.msgid + ' : ' + msgId + ' ';
+		insertAudit(op_body_print, information);
 	});
 
 	$('#saveBtn').click ( function ( ) {
@@ -363,65 +353,30 @@ $(document).ready(function(){
 			return;
 		}
 
-		if(msgValid()) {
-			var charset = $('#bodyEncoding').val();
-			//var url = '<c:url value="/getEmassBodySave.xcn?msgId='+msgId+'&userCharset='+charset+'&print=N"/>';
-			var url = contextRoot + '/getEmassBodySave.xcn?msgId=' + msgId + '&userCharset=' + charset + '&print=N';
-			var fileName = msgId + '.html';
-			var fileSize = 1;
+		var charset = $('#bodyEncoding').val();
+		//var url = '<c:url value="/getEmassBodySave.xcn?msgId='+msgId+'&userCharset='+charset+'&print=N"/>';
+		var url = contextRoot + '/getEmassBodySave.xcn?msgId='+msgId+'&userCharset='+charset+'&print=N';
+		var fileName = msgId+'.html';
+		var fileSize = 1;
 
-			//if( detailFlag ) url = '<c:url value="/getMessengerGroupAllSave.xcn?msgId='+msgId+'&xRootMtr='+xRootMtr+'&srcip='+srcip+'"/>';
-			if (detailFlag) {
-				var startDt = $('#startdatepickerBody').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
-				var endDt = $('#enddatepickerBody').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
-				url = contextRoot + '/getMessengerGroupAllSave.xcn?msgId=' + msgId + '&xRootMtr=' + xRootMtr + '&srcip=' + srcip + '&startDt=' + startDt + '&endDt=' + endDt + '&groupField=usr_id&usr_id=' + usr_id;
-			}
-			try {
-				AttachDown.location.href = url;
-			} catch (e) {
-				AttachDown.src = url;
-			}
-			var information = '[' + message.bodyView + ']' + enter;
-			if (detailFlag) information += message.xrootmtr + ' : ' + xRootMtr + ' ';
-			else information += message.msgid + ' : ' + msgId + ' ';
-			insertAudit(op_body_save, information);
-		}else alert('<s:message code="bodyview.select.message" />')
+		//if( detailFlag ) url = '<c:url value="/getMessengerGroupAllSave.xcn?msgId='+msgId+'&xRootMtr='+xRootMtr+'&srcip='+srcip+'"/>';
+		if( detailFlag ){
+			var startDt = $('#startdatepickerBody').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
+			var endDt = $('#enddatepickerBody').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
 
-	});
-
-	$(document).on('click', '#allDownload', function(){
-		if(adminMenu != "ALL" && adminMenu.indexOf("AS") < 0 && adminMenu.indexOf("CS") < 0) {
-			alert(message.authAlert);
-			return;
+			url = contextRoot + '/getMessengerGroupAllSave.xcn?msgId=' + msgId + '&xRootMtr=' + xRootMtr + '&srcip=' + srcip+'&startDt='+startDt+'&endDt='+endDt+'&groupField=usr_id&usr_id=' + usr_id;
 		}
 
-		$(this).each(function( index, element ) {
-			console.log(element);
-		});
+		try {
+			AttachDown.location.href = url;
+		} catch (e) {
+			AttachDown.src = url;
+		}
 
-
-
-		// if( $(this).parents('li').hasClass('notfound')) return;
-		// var attachId = $(this).parents('li').attr('id');
-		// var attachName = $(this).parents('li').find('.attachName').attr('attachname');
-		// var attachSize = Number( $(this).parents('li').attr('size') );
-		// //var attachUrl = '<c:url value="/downEmassAttach.xcn"/>?msgId='+msgId+'&attachId='+attachId;
-		// var attachUrl = contextRoot + '/downEmassAttach.xcn?msgId=' + msgId + '&attachId=' + attachId;
-		// if ( attachSize == 0 || attachSize == 'NaN' ) attachSize = 1;
-		//
-		//
-		// try {
-		// 	AttachDown.location.href = attachUrl;
-		// } catch (e) {
-		// 	AttachDown.src = attachUrl;
-		// }
-		//
-		// var information = '[' + message.attachSave + ']'+enter;
-		// information += message.msgid + ' : ' + msgId + enter;
-		// information += message.fileName + ' : ' + attachName + enter
-		// insertAudit(op_attach_save, information);
-
-
+		var information = '[' + message.bodyView + ']' + enter;
+		if( detailFlag ) information += message.xrootmtr + ' : ' + xRootMtr + ' ';
+		else information += message.msgid + ' : ' + msgId + ' ';
+		insertAudit(op_body_save, information);
 	});
 
 	$('#mailFowardBtn').click(function(){
@@ -439,7 +394,7 @@ $(document).ready(function(){
 			return;
 		}
 		var charset = $('#bodyEncoding').val();
-		/* 
+		/*
 		$('.content .boxArea .content_box .content_body').contents( ).find('.appendClass').hide();
 		var emassBodyStr = $('.content .boxArea .content_box .content_body')[0].innerHTML;
 		$('#msgIdStr').val(msgId);
@@ -478,19 +433,17 @@ $(document).ready(function(){
 		if( detailFlag ) url = contextRoot + '/ems/warningMail.do?xRootMtr=' + xRootMtr + '&userCharset='+charset;
 		fnOpenWindow( url, 'message_warnmail', '700', '420', 'scroll' );
 	});
-	
+
 	$('#domainBtn').click(function(){
-		if(undefined != msgId && msgId != '' ) {
-			var url = contextRoot + '/ems/domainInfo.do?msgId=' + msgId;
-			if( detailFlag ) url = contextRoot + '/ems/domainInfo.do?xRootMtr=' + xRootMtr + '&userCharset='+charset;
-			if($('#toTr').css('display') != 'none' || $('#ccTr').css('display') != 'none' || $('#bccTr').css('display') != 'none' ) {
-				fnOpenWindow( url, 'message_domain', '700', '420', 'scroll' );
-			} else {
-				ui.alertMsg(contentBody.noRecvs);
-			}
-		}else  alert('<s:message code="bodyview.select.message" />');
+		var url = contextRoot + '/ems/domainInfo.do?msgId=' + msgId;
+		if( detailFlag ) url = contextRoot + '/ems/domainInfo.do?xRootMtr=' + xRootMtr + '&userCharset='+charset;
+		if($('#toTr').css('display') != 'none' || $('#ccTr').css('display') != 'none' || $('#bccTr').css('display') != 'none' ) {
+			fnOpenWindow( url, 'message_domain', '700', '420', 'scroll' );
+		} else {
+			ui.alertMsg(contentBody.noRecvs);
+		}
 	});
-	
+
 	$(document).on('mouseover', '.userInfoSpan', function(e){
 		var obj =  $(this);
 		userInfoFlag = true;
@@ -595,6 +548,7 @@ $(document).ready(function(){
 	});
 
 	$('.body_toggle').click(function(){
+		console.log($(this))
 		$(this).next().toggle();
 	});
 	$('.fileFold, .patternFold').click(function() {
@@ -613,8 +567,8 @@ $(document).ready(function(){
 		setConfFoldAdmin(foldVal);
 	})
 	init();
-	//getMessage('20180110104222.HVWRQWHKKC7IPWAJSJN2W2HQIB52JQM2', '');	
-});	
+	//getMessage('20180110104222.HVWRQWHKKC7IPWAJSJN2W2HQIB52JQM2', '');
+});
 
 /**
  * 이미지 전체 화면으로 보기
@@ -666,12 +620,11 @@ function setConfFoldAdmin(val){
 	});*/
 }
 function viewer_open( row, grid ){
-	if(row != -1) {
-		var msgid = grid.getValue(row, 'msgid');
-		var bodySize = grid.getValue(row, 'bodySizeStr');
-		var bodySizeNum = bodySize.substr(0, bodySize.indexOf(' '));
-		openMessageBodyPop(grid.id, msgid, '', bodySizeNum);
-	}else alert('<s:message code="bodyview.select.message" />');
+	var msgid = grid.getValue(row, 'msgid');
+	var bodySize = grid.getValue(row, 'bodySizeStr');
+	var bodySizeNum = bodySize.substr(0, bodySize.indexOf(' '));
+
+	openMessageBodyPop( grid.id, msgid, '', bodySizeNum);
 }
 function getBody(userCharset){
 	if(isGroupMessenger()){
@@ -752,10 +705,10 @@ function isGroupMessenger(){
 function selectGroupDetail(){
 	var ctime = $('#ctimeTd').text();
 	var dateObj = new Date(ctime);
-	
+
 	$('#startdatepickerBody').data("DateTimePicker").date( new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), 00, 00, 00 ) );
 	$('#enddatepickerBody').data("DateTimePicker").date( new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), 23, 59, 59 ) );
-	
+
 	showRPeriodBody(($(window).width()/2)-220, $(window).height()/2-150);
 }
 
@@ -764,12 +717,12 @@ function getGroupDetail(rootmtr, usrId){
 	if(rootmtr == undefined ) rootmtr = xRootMtr;
 	if(usrId == undefined ) usrId = usr_id;
 	searchFlag = true;
-	
+
 	var startDt = $('#startdatepickerBody').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
 	var endDt = $('#enddatepickerBody').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
-	
+
 	ui.onBody('content_body', 0, 0);
-	ui.get({ 
+	ui.get({
 		url : 'getMessengerGroupUserList.xcn',
 		xRootMtr : rootmtr,
 		startDt : startDt,
@@ -804,15 +757,15 @@ function getGroupDetail(rootmtr, usrId){
 					try{
 						opener.setReadDisplayChangeRootmtr( rootmtr, srcip );
 					}catch(e){console.log('opener.setReadDisplayChangeRootmtr : opener changed!')}
-					
+
 					if(msgId != ''){
 						//$(location).attr('href', '#'+msgId);
 						var obj = $('#'+idIndicator(msgId));
 						if(obj.length > 0){
 							obj.parent().parent().css('background-color', '#eee');
 
-							
-							
+
+
 							$("html").animate({
 								scrollTop: obj.position().top-100
 							}, 100);
@@ -861,7 +814,7 @@ function getUsersInfo( data, xrootmtr){
 	$('#fromTr').hide();
 	$('#toTr').hide();
 	$('#rootmtrDiv').text(xrootmtr);
-	
+
 	var str = '';
 	for(var i=0; i<data.length; i++){
 		if(data[i].groupName == 'sender_str') continue;
@@ -941,14 +894,12 @@ function selectText() {
 
 function init(){
 	var windowName = window.name;
-	if(windowName == 'No_Title'){
+	if(windowName == ''){
 		//$('#headerIcon').switchClass('fa-object-group', 'fa-object-ungroup');
 		//$('#headerIcon').attr('title', message.windowNew);
 		$('#prevBtn').prop('disabled', true);
 		$('#nextBtn').prop('disabled', true);
 		$('#openBigContent').hide();
-		$('#saveMsgData').hide();
-		$('#exportMsg').hide();
 	}else{
 		//$('#headerIcon').switchClass('fa-object-ungroup', 'fa-object-group');
 		//$('#headerIcon').attr('title', message.windowTab);
@@ -1002,14 +953,14 @@ function getMessage(id, search, bodySize, kHighlight, hostQueryUse){
 	if(opener) $('#openBigContent').hide();
 	else $('#openBigContent').show();
 	window.getSelection().removeAllRanges();
-	
+
 	bodySize_str = bodySize;
 	msgId = id;
 	searchkey = search;
 
 	if(kHighlight != undefined) keywordHighlight = kHighlight;
 	if(hostQueryUse != undefined) hostQuery = hostQueryUse;
-	
+
 	ui.get({
 		url : 'getEmassMessageNew.xcn',
 		msgId : msgId,
@@ -1036,6 +987,8 @@ var ocrFiles = [];
 var msgData;
 function setMessage(msg) {
 	msgData = msg;
+
+
 	window.scrollTo(0,0);
 	if(msg == null) {
 		$('#buttonDiv').css("display", "none");
@@ -1066,10 +1019,10 @@ function setMessage(msg) {
 		$('#infoType').html(str);
 		$('#probType').html('');
 		if( probPercent(pr) != '-' ) $('#probType').html('<span style="font-weight: bold;">('+probPercent(pr)+'%)</span>');
-		
+
 		if(msg.ml_confd_feedback == -1) $('[name=feedback]').prop('checked',false);
 		else $('[name=feedback][value='+msg.ml_confd_feedback+']').prop('checked',true);
-		
+
 		if( !(msg.ml_confd_userid == undefined || msg.ml_confd_userid == null || msg.ml_confd_userid == '') ) {
 			$('#ml_confd_userid').html('[ ' + msg.ml_confd_userid  + ' ]');
 		} else {
@@ -1077,12 +1030,12 @@ function setMessage(msg) {
 		}
 	}
 	svc = msg.svc;
+	console.log(msg)
 	xRootMtr = nvl(msg.xrootMtr);
-	usr_id = nvl(msg.userId);
+	usr_id = nvl(msg.usrId);
 	srcip = nvl(msg.srcIp);
 	dstip = nvl(msg.dstIp);
 	usrip = nvl(msg.usrIp);
-
 	$('#subject').html(msg.subject);
 
 
@@ -1123,9 +1076,8 @@ function setMessage(msg) {
 		$('#destTr').css("display", "none");
 		$('#userTr').css("display", "none");
 
-		$('#userTr #ctimeTd').html(msg.ctime);
-		$('#userTr #userid').html(msg.userId);
-
+		$('#usridTr #ctimeTd').html(msg.ctime);
+		$('#usridTr #userid').html(msg.usrId);
 
 	} else {
 		$('#usridTr').css("display", "none");
@@ -1134,19 +1086,13 @@ function setMessage(msg) {
 		$('#userTr').css("display", "");
 
 		$('#srcipTd').html(msg.srcIp);
-		$('#ctimeTd').html(msg.ctime);
+		$('#srcTr #ctimeTd').html(msg.ctime);
 		$('#dstipTd').html(msg.dstIp);
 		$('#bodySizeTd').html(convertFileSize(msg.bodySize));
 
 		$('#userDiv').html(userHtml(msg.userList,'userTr', srcip, dstip, usrip));
-
-		/* ip + (사업장 + 부서정보) */
-		var userinfo = msg.srcIp+' '+'('+msg.ipBusiNm+'/'+msg.ipDeptNm+')';
-		$('#userTr #userid').html(userinfo);
-		/* 서비스 정보 */
-		$('#svc').html(msg.svcNm);
-
-		$('#userIdTd').html(msg.userId);
+		$('#userTr #userIdTd').html(msg.usrId);
+		$('#userIdTd').html(msg.usrId);
 	}
 
 	$('#sendUserDiv').html(userHtml(msg.senderList,'fromTr', srcip, dstip, usrip));
@@ -1173,31 +1119,31 @@ function setMessage(msg) {
 		$('#bccTr').css("display", "");
 		$('#bccUserDiv').html(userHtml(msg.bccList,'bccTr', srcip, dstip, usrip));
 	}
-	
+
 	if( nvl(msg.ipBusiNm) == "" ) {
 		$('#ipBusiNmDiv').html();
 	} else {
 		$('#ipBusiNmDiv').html(nvl(msg.ipBusiNm));
 	}
-	
+
 	if( nvl(msg.ipDeptNm) == "" ) {
 		$('#ipDeptNmDiv').html();
 	} else {
 		$('#ipDeptNmDiv').html(nvl(msg.ipDeptNm));
 	}
-	
+
 	var docVal = "";
 	if(infoHynixConf == 'true' && files.length != 0) {
 		for(var i = 0; i < files.length;i++) {
 			var file = files[i];
-			
+
 			if(nvl(file.ml_confd_class) == 1){
 				docVal = "비밀 문서";
 				break;
 			}else if (nvl(file.ml_confd_class) == 0){
 				docVal = "대외비 문서";
 			}
-			
+
 		}
 		if( nvl(file.ml_confd_class) == "" ) {
 			$('#docTr').css("display", "none");
@@ -1207,7 +1153,7 @@ function setMessage(msg) {
 			$('#docDiv').html(docVal);
 		}
 	}
-	
+
 	if(nvl(msg.host) == "") {
 		$('#hostTr').css("display", "none");
 		$('#hostDiv').html();
@@ -1218,10 +1164,10 @@ function setMessage(msg) {
 		if(hostQuery== "true") query =  nvl(msg.query);
 		var hostDivText = nvl(msg.host) + nvl(msg.path) + query;
 		if( hostDivText.indexOf('http://') > -1) hostDivText = nvl(msg.path) + query;
-		
+
 		$('#hostDiv').html('<a style="word-break: break-all;" target="_blank" href="http://' + hostDivText + '">' + hostDivText + '</a>');
 	}
-	
+
 	//대외비
 	if(nvl(msg.epmsgType) == "") {
 		$('#epmsgTr').css("display", "none");
@@ -1262,6 +1208,7 @@ function setMessage(msg) {
 	if(bodySize_str == 0) {
 		$('#emassBody').html(message.msgNocontent);
 	}else getBody('');
+
 	if(nvl(msg.bodyStr) == "") {
 		$('#bodyStrDiv #bodyStr').html("");
 		$('#bodyStrDiv').css("display", "none");
@@ -1273,7 +1220,7 @@ function setMessage(msg) {
 
 function userHtml(userList,tr, srcip, dstip, usrip) {
 	var userDivHtml = "";
-	
+
 	var inSideCnt = 0;
 	var outSideCnt = 0;
 	for(var i = 0; i < userList.length; i++) {
@@ -1281,14 +1228,13 @@ function userHtml(userList,tr, srcip, dstip, usrip) {
 		if(nvl(user.inSide) == 'N') outSideCnt++;
 		else inSideCnt++;
 	}
-
 	var str = '';
 	if(tr == 'userTr') str = contentBody.user;
 	else if(tr == 'fromTr') str = contentBody.from;
 	else if(tr == 'toTr') str = contentBody.to;
 	else if(tr == 'ccTr') str = contentBody.cc;
 	else if(tr == 'bccTr') str = contentBody.bcc;
-	
+
 	$('#userTr > th.fold_clickTh .trTitle').html(contentBody.user);
 	$('#fromTr > th.fold_clickTh .trTitle').html(contentBody.from);
 	$('#toTr > th.fold_clickTh .trTitle').html(contentBody.to);
@@ -1297,11 +1243,11 @@ function userHtml(userList,tr, srcip, dstip, usrip) {
 	setTimeout(function(){
 		$('#'+tr + ' > th.fold_clickTh .trTitle').html(str + '(' + outSideCnt + '/' + inSideCnt + ')');
 	},1);
-	
+
 	for(var i = 0; i < userList.length; i++) {
 		var insideClass = "";
 		var user = userList[i];
-		
+
 		if(nvl(user.inSide) == 'N') insideClass = 'userOutside';
 		userDivHtml += '<span class="userInfoSpan '+insideClass+'"';
 		userDivHtml += ' recvid="' + nvl(user.recvId) + '"';
@@ -1315,9 +1261,9 @@ function userHtml(userList,tr, srcip, dstip, usrip) {
 		userDivHtml += ' recvjikgubnm="' + nvl(user.jikgubNm) + '"';
 		userDivHtml += '>';
 		userDivHtml += user.viewStr + (i != userList.length-1 ? '; ' : '');
-		userDivHtml += ' </span>';	
+		userDivHtml += ' </span>';
 	}
-	
+
 	return userDivHtml;
 }
 
@@ -1335,14 +1281,14 @@ function chkUserIp(ipList, srcip, dstip, usrip){
 function getFold(){
 	var data = getCookie('Cookie_foldAdmin');
 	var foldValarr = [];
-	
+
 	if(data == ""){
 		foldValarr = '["Y","Y"]';
 		setConfFoldAdmin(foldValarr);
 	} else {
 		foldValarr = JSON.parse(data);
 	}
-	
+
 	if(foldValarr[0]=='N'){
 		$('#attachDiv').parent().css("display", "block");
 	}else{
@@ -1356,20 +1302,17 @@ function getFold(){
 }
 
 function setFileDiv(msg) {
-	var fileRows = $('#filelist').find('li').length;
-	for(var i = fileRows; i >= 1; i--) {
-		$('#filelist  > ul > li:last').remove();
+	var fileRows = $('#fileTable tr').length;
+	for(var i = fileRows; i > 1; i--) {
+		$('#fileTable  > tbody:last > tr:last').remove();
 	}
 	var fileStr = "";
 	var extClass = "";
 	var ocrYn = false;
 	var files = msg.files;
-	var fileInfo  = '<s:message code="bodyview.file.info" />';
-
 	if(files.length != 0) {
 		$('#fileDiv').css("display", "");
-		$('#fileCntArea').html(' ('+files.length+')');
-
+		$('#fileCntArea').text(' ('+files.length+')');
 		for(var i = 0; i < files.length;i++) {
 			var file = files[i];
 			var attachName = file.attachName;
@@ -1390,26 +1333,32 @@ function setFileDiv(msg) {
 			var mlFeedbackComment = file.mlFeedbackComment;
 			var features = file.features;
 			var mlReason = null;
-			var ext = (attachName.indexOf(',') > -1) ? attachName.split(',') : '';
+			var ext = attachName.split(".");
 			var trClass = "found";
-
+			if( infoHynixConf == 'true') {
+				attachSecretYn == null;
+				attachsprob == null;
+			}
 
 			//문서 분류
-			if(attachSecretYn == 1){attachSecretYnStr = "비밀 문서";}
-			else if(attachSecretYn == 0){attachSecretYnStr = "대외비 문서";}
-			else{attachSecretYnStr = '-';}
-		
-			//비밀 확률 
-			attachsprobRounds = Math.round(attachsprob*100)/100;	
-			
+			if(attachSecretYn == 1){
+				attachSecretYnStr = "비밀 문서";
+			}else if(attachSecretYn == 0){
+				attachSecretYnStr = "대외비 문서";
+			}else{
+				attachSecretYnStr = '-';
+			}
+
+			//비밀 확률
+			attachsprobRounds = Math.round(attachsprob*100)/100;
+
 			if( attachsprobRounds == undefined || attachsprobRounds == null || attachsprobRounds == -1.0 ) attachsprobRounds =  '-';
 			else attachsprobRounds = Math.floor(attachsprobRounds * 100);
-			
-			if(attachFeedbackDate == undefined || attachFeedbackDate == null) attachFeedbackDate = '-';
-			
-			if(nvl(file.attachPath) == "") trClass = "notfound";
 
-			if('' != ext &&  ext.length > 1 && nvl(attachExt) == ext[ext.length-1]) {
+			if(attachFeedbackDate == undefined || attachFeedbackDate == null) attachFeedbackDate = '-';
+
+			if(nvl(file.attachPath) == "") trClass = "notfound";
+			if(ext.length > 1 && nvl(attachExt) == ext[ext.length-1]) {
 				extClass = "";
 			} else {
 				extClass = " differentExt";
@@ -1421,45 +1370,44 @@ function setFileDiv(msg) {
 				attachExt += "(txt)";
 			}
 
-			var noName = '';
 			if(attachNameExist == "N") {
 				extClass = " fileNameExistN";
-				 noName = '['+contentBody.unknownFileName+'] ';
 			}
 
+			fileStr += '<tr msgid="' + msg.msgId + '" id="' + file.attachId + '" size="' + file.attachSize + '" class="' + trClass + extClass +'" >';
+			fileStr += '<td>';
+			fileStr += '<span class="attach_' + attachExt +' attach_file_img" style="padding-right:5px;"></span> ';
+			if(attachNameExist == "N") fileStr += '<span>['+contentBody.unknownFileName+']</span> ';
+			fileStr += '<span class="attachName" style="text-decoration: underline;" attachname="' + attachName + '">';
+			fileStr += '' + attachName+ ' ('+convertFileSize(file.attachSize)+ ')</span> ';
+			fileStr += '<span class="glyphicon glyphicon-download-alt downloadIcon" style="cursor:pointer"></span>';
+			//fileStr += '<td style="text-align: right;">' + convertFileSize(file.attachSize) + '</td>';
+			fileStr += '<td style="text-align: center;">';
+			if(nvl(file.ocrYn) == "Y") {
+				fileStr += '<img alt="" src="' + contextRoot + '/img/view.png" style="width: 15px;">';
+				fileStr += '<span class="attachOcrText" style="padding-left:5px; cursor:pointer; text-decoration: underline;">';
+				//	fileStr += '<img alt="" src="' + contextRoot + '/img/ocr.png" style="width: 25px;">';
+				fileStr += ' '+contentBody.urlIpBlockPreview+'</span>';
+			}
+			if(nvl(file.attachTextPath) != "") {
+				fileStr += '<img alt="" src="' + contextRoot + '/img/text.png" style="width: 15px;">';
+				fileStr += '<span class="attachText" style="padding-left:5px; cursor:pointer; text-decoration:underline;"> '+contentBody.urlIpBlockPreview+'</span>';
+			}
+			fileStr += '</td>';
 
+			fileStr += '<td style="text-align: center;"><span class="attachExt"><span class="glyphicon glyphicon-download-alt"></span>&nbsp;' + attachExt +'</span></td>';
+			fileStr += '<td style="text-align: center;"><span class="attachSpace">' + (nvl(attachSpace) != "" ? 'O' : '-') +'</span></td>';
 
-			fileStr += '<li msgid="' + msg.msgId + '" id="' + file.attachId + '" size="' + file.attachSize + '" class="' + trClass + extClass +'" >';
-					/* 제목 */
-					fileStr += '<div class="attach_' + attachExt +' attach_file_img" style="padding-left:5px;">';
-					// if(attachNameExist == "N") fileStr += '<span>['+contentBody.unknownFileName+']</span> ';
-						fileStr += '<a >';
-						fileStr += '' + attachName+ ' ('+convertFileSize(file.attachSize)+ ')';
-						fileStr += '</a>';
-						fileStr += '<div class="messagePageBtn buttons">';
-							if(nvl(file.ocrYn) == "Y") {
-								fileStr += '<img alt="" src="' + contextRoot + '/img/view.png" style="width: 15px;">';
-								fileStr += '<span class="attachOcrText" style="padding-left:5px; cursor:pointer; text-decoration: underline;">';
-							//	fileStr += '<img alt="" src="' + contextRoot + '/img/ocr.png" style="width: 25px;">';
-								fileStr += ' '+contentBody.urlIpBlockPreview+'</span>';
-							}
-							fileStr += '<button class="btn03 borradius downloadIcon"><img src="' + contextRoot + '/img/subBtn_save.png" " alt="저장">저장</button>';
-							if(nvl(file.attachTextPath) != "") {
-								fileStr += '<button class="attachText btn03 borradius" style="padding-left:5px; cursor:pointer;"> '+contentBody.urlIpBlockPreview+'</button>';
-							}else{
-								fileStr += '<button class="btn03 borradius attachName"  attachname="' + attachName + '"><img src="' + contextRoot + '/img/subBtn_eye.png" alt="미리보기">미리보기</button>';
-							}
-						fileStr += '</div>';
-					fileStr += '</div>';
-			fileStr += '</li>';
-			$('#filelist').html(fileStr);
+			//	fileStr += '<td style="text-align: center;" class="downloadBtn"><span class="glyphicon glyphicon-download-alt downloadIcon"></span></td>';
+			fileStr += '</tr>';
+			$('#fileTable').append(fileStr);
 
 			if(nvl(file.ocrYn) == "Y") {
 				ocrFiles.push(file);
 				ocrYn = true;
 			}
 		}
-	
+
 		if(ocrYn) {
 			$('#bodyDiv').nextAll().remove();
 			setOcrFileDiv(ocrFiles);
@@ -1472,13 +1420,13 @@ function setFileDiv(msg) {
 		$('#fileDiv').css("display", "none");
 	}
 	getFold();
-	}
-	
-	
+}
+
+
 function clickFeedbackBtn(i, attachId, msgId, attachFeedbackDate, mlFeedbackYN, mlFeedbackComment, attachSecretYn, attachName, attachHash, features) {
-	var con = document.getElementById('#feedbackSetting'+i);
+	var con = document.getElementById('feedbackSetting'+i);
 	var j = null;
-	
+
 	//feedbackSetting'+i id값을 가진 요소가 있는지 체크
 	if(document.getElementById('feedbackSetting'+i)){
 		con.style.display = (con.style.display != 'none')?"none":"";
@@ -1487,14 +1435,14 @@ function clickFeedbackBtn(i, attachId, msgId, attachFeedbackDate, mlFeedbackYN, 
 		j = Number(i) + 1;
 		$('<tr id = "feedbackSetting'+i+'"><td colspan = "9"; id = "feedbackTd['+i+']"><div class=condition_label><label class=condition_label><input type=radio id = radio2['+i+'] name=feedbackYN'+i+' value=2><span> 분류 맞음</span></label><label class=condition_label><input type=radio id = radio9['+i+'] name=feedbackYN'+i+' value=9><span> 결정 보류</span></label><label class=condition_label><input type=radio id = radio1['+i+'] name=feedbackYN'+i+' value=1><span> 비밀 문서</span></label><label class=condition_label><input type=radio id = radio0['+i+'] name=feedbackYN'+i+' value=0> <span> 대외비 문서</span></label><textarea style=margin-left : 30px; name=feedbackComment id=feedbackComment'+i+' placeholder=커멘트를입력하세요 rows=1 cols=30></textarea><button class=save_btn; style=margin-left:10px; id=feedbackSaveBtn; onclick="clickFeedbackSaveBtn('+"\'"+i+"\'"+","+"\'"+attachId+"\'"+","+"\'"+msgId+"\'"+","+"\'"+attachFeedbackDate+"\'"+","+"\'"+mlFeedbackYN+"\'"+","+"\'"+mlFeedbackComment+"\'"+","+"\'"+attachSecretYn+"\'"+","+"\'"+attachName+"\'"+","+"\'"+attachHash+"\'"+","+"\'"+features+"\'"+","+"\'"+j+"\'"+');"><span>저장</span></button></div></td></tr>').insertAfter(document.getElementById(attachId));
 	}
-	
+
 	ui.get({
 		url : 'getMlSecretData.xcn',
 		msgId : msgId,
 		attachId : attachId,
 		success : function(data, total) {
 			var mlSecurityYN = data.mlSecurityYN;
-			
+
 			if(mlSecurityYN == 1){
 				document.getElementById('radio1['+i+']').disabled=true;
 				document.getElementById('radio0['+i+']').disabled=false;
@@ -1502,7 +1450,7 @@ function clickFeedbackBtn(i, attachId, msgId, attachFeedbackDate, mlFeedbackYN, 
 				document.getElementById('radio0['+i+']').disabled=true;
 				document.getElementById('radio1['+i+']').disabled=false;
 			}
-			
+
 			if(attachFeedbackDate != '-' ){
 				ui.get({
 					url : 'getMlFeedbackDate.xcn',
@@ -1523,18 +1471,18 @@ function clickFeedbackBtn(i, attachId, msgId, attachFeedbackDate, mlFeedbackYN, 
 								document.getElementById('radio0['+i+']').checked = true;
 							}
 							document.getElementById("feedbackComment"+i).value = mlFeedbackComment1;
-							
+
 						}else if(attachFeedbackDate1 == '-'){
-							$('input:radio[name=feedbackYN'+i+']').removeAttr("checked"); 
+							$('input:radio[name=feedbackYN'+i+']').removeAttr("checked");
 							document.getElementById("feedbackComment"+i).value='';
 						}
-						
-						},
-						error : function(status, message) {
-						},
-						complete : function() {
-						}
-					});
+
+					},
+					error : function(status, message) {
+					},
+					complete : function() {
+					}
+				});
 			}
 		},
 		error : function(status, message) {
@@ -1560,13 +1508,13 @@ function clickFeedbackSaveBtn(i, attachId,  msgId, attachFeedbackDate, mlFeedbac
 	var features = features;
 	var attachSecretYn1 = '';
 	var col = null;
-	
+
 	var rowId = i;
 	var rowNum = Number(rowId) + 1;
-	var colId = 1;		
-	var row = document.getElementById("filelist").rows;
+	var colId = 1;
+	var row = document.getElementById("fileTable").rows;
 	col = row[rowNum].cells;
-	 ui.get({
+	ui.get({
 		url : 'insertSkFeedback.xcn',
 		radioFeedback : radioFeedback,
 		feedbackcomment : feedbackcomment,
@@ -1577,20 +1525,20 @@ function clickFeedbackSaveBtn(i, attachId,  msgId, attachFeedbackDate, mlFeedbac
 		success : function(data, total) {
 			//2(분류 맞음) ,9(결정보류) , 1(비밀문서), 0(대외비 문서)
 			alert("저장되었습니다.");
-			
+
 			if(radioFeedback == '1') {
 				attachSecretYn1 = '비밀 문서';
 			}else if(radioFeedback == '0') {
 				attachSecretYn1 = '대외비 문서';
 			}
-			
+
 			if(attachFeedbackDate != undefined || attachFeedbackDate != null){
 				updateSkMlFeedback(msgId, attachId, radioFeedback, attachSecretYn);	//mlResult에 피드백 값 바꿔줌
 			}
-			getSolrFeedback(msgId, radioFeedback); 
+			getSolrFeedback(msgId, radioFeedback);
 			getFeedbackSecretData(i, msgId, attachId, attachFeedbackDate);	//라디오 버튼 누르지 못하게 하려고
 			getMlFeedbackDate(i, msgId, attachId, j);
-			
+
 			if ( typeof(attachSecretYn1) !== "undefined" && attachSecretYn1 !== null ) {
 				if(radioFeedback == '1' || radioFeedback == '0'){
 					if (attachSecretYn1 != undefined) {
@@ -1598,34 +1546,34 @@ function clickFeedbackSaveBtn(i, attachId,  msgId, attachFeedbackDate, mlFeedbac
 					}
 				}
 			}
-			
+
 		},
 		error : function(status, message) {
 		},
 		complete : function() {
 		}
 	});
-		
+
 }
 
 function getFeedbackSecretData(i, msgId, attachId, attachFeedbackDate){
-		var attachFeedbackDate = attachFeedbackDate;
-		var attachSecretYn = attachSecretYn;
-		var radioFeedback = $('input[name=feedbackYN'+i+']:checked').val();
-		
-		ui.get({
-		url : 'getFeedbackSecretData.xcn', 
+	var attachFeedbackDate = attachFeedbackDate;
+	var attachSecretYn = attachSecretYn;
+	var radioFeedback = $('input[name=feedbackYN'+i+']:checked').val();
+
+	ui.get({
+		url : 'getFeedbackSecretData.xcn',
 		msgId : msgId,
 		attachId : attachId,
 		success : function(data, total) {
-			
+
 			var updateAttachSecretYn = data.mlSecurityYN;
 
 			if(radioFeedback == '1'){
 				radioFeedback = '비밀 문서';
 			}else if(radioFeedback == '0'){
-				radioFeedback = '대외비 문서';				
-			}			
+				radioFeedback = '대외비 문서';
+			}
 			if(radioFeedback == '비밀 문서'){
 				document.getElementById("radio0["+i+"]").disabled=false;
 				document.getElementById("radio1["+i+"]").disabled=true;
@@ -1640,13 +1588,13 @@ function getFeedbackSecretData(i, msgId, attachId, attachFeedbackDate){
 		complete : function() {
 		}
 	});
-		
+
 }
 
 function getFeedbackRadio(msgId, attachId){	//피드백 이후 피드백내용 라디오버튼에 보여줄때 사용
 	var msgId = msgId;
 	var attachId = attachId;
-	
+
 	ui.get({
 		url : 'getMlFeedbackDate.xcn',
 		msgId : msgId,
@@ -1667,25 +1615,25 @@ function getFeedbackRadio(msgId, attachId){	//피드백 이후 피드백내용 �
 					document.getElementById('radio0['+i+']').checked = true;
 				}
 				document.getElementById("feedbackComment"+i).value = mlFeedbackComment1;
-				
+
 			}else if(attachFeedbackDate1 == '-'){
-				
-				$("input:radio[name='feedbackYN'+i]").removeAttr("checked"); 
+
+				$("input:radio[name='feedbackYN'+i]").removeAttr("checked");
 				document.getElementById("feedbackComment"+i).value='';
 			}
-			
+
 			if(attachSecretYn == '1'){
 				attachSecretYn = '비밀 문서'
 			}else if(attachSecretYn == '0'){
 				attachSecretYn = '대외비 문서'
 			}
-			
+
 			if(attachSecretYn == '비밀 문서'){
-			document.getElementById("radio1["+i+"]").disabled=true;
+				document.getElementById("radio1["+i+"]").disabled=true;
 			}else if(attachSecretYn == '대외비 문서'){
 				document.getElementById("radio0["+i+"]").disabled=true;
 			}
-			
+
 		},
 		error : function(status, message) {
 		},
@@ -1695,27 +1643,27 @@ function getFeedbackRadio(msgId, attachId){	//피드백 이후 피드백내용 �
 }
 
 function getMlFeedbackDate(i, msgId, attachId, j){
-	var i = i; 
+	var i = i;
 	var msgId = msgId;
 	var attachId = attachId;
-	
+
 	ui.get({
 		url : 'getMlFeedbackDate.xcn',
 		msgId : msgId,
 		attachId : attachId,
 		success : function(data, total) {
 			attachFeedbackDate = data.mlFeedbackTimeStr;
-			
+
 			var rowId = i;
 			var rowNum = Number(rowId) + 1;
-			var colId = 8;		
-			var row = document.getElementById("filelist").rows;
+			var colId = 8;
+			var row = document.getElementById("fileTable").rows;
 			col = row[rowNum].cells;
-			
+
 			if ( typeof(attachFeedbackDate) !== "undefined" && attachFeedbackDate !== null ) {
 				col[colId].textContent = attachFeedbackDate;
 			}
-			
+
 		},
 		error : function(status, message) {
 		},
@@ -1728,11 +1676,11 @@ function getMlFeedbackDate(i, msgId, attachId, j){
 function mlReason_click(i, attachId, msgId, attachFeedbackDate, mlFeedbackYN, mlFeedbackComment, attachSecretYn, attachName, attachHash, features) {
 	var features = features;
 	console.log("features : " + features)
-	
+
 	if(features == "null"){
-		features = '판단 근거 내용이 없습니다.';  
+		features = '판단 근거 내용이 없습니다.';
 	}
-	
+
 	$("#featuresValue").text(features);
 	$("#featureModal").modal('show');
 }
@@ -1740,7 +1688,7 @@ function mlReason_click(i, attachId, msgId, attachFeedbackDate, mlFeedbackYN, ml
 function getSolrFeedback(msgId, radioFeedback){
 	var msgId = msgId;
 	var radioFeedback = radioFeedback;
-	
+
 	ui.get({
 		url : 'getSolrFeedback.xcn',
 		msgId : msgId,
@@ -1759,7 +1707,7 @@ function updateSkMlFeedback(msgId, attachId, radioFeedback, attachSecretYn){
 	var attachId = attachId;
 	var radioFeedback = radioFeedback;
 	var attachSecretYn = attachSecretYn;
-	
+
 	ui.get({
 		url : 'updateSkMlFeedback.xcn',
 		msgId : msgId,
@@ -1772,26 +1720,26 @@ function updateSkMlFeedback(msgId, attachId, radioFeedback, attachSecretYn){
 		},
 		complete : function() {
 		}
-		
+
 	});
 }
 
-function setOcrFileDiv(files) {		
+function setOcrFileDiv(files) {
 	let fileStr = "";
 	let fileLength = files.length;
 	let fileSpace = "";
 	let attachView = "";
-	
+
 	for(let i = 0; i < fileLength;i++) {
 		let file = files[i];
-		let space = nvl(file.attachSpace, ""); 
+		let space = nvl(file.attachSpace, "");
 		let attachName = file.attachName;
 		let attachExt = file.attachExt;
-		
+
 		if(fileStr == "") {
 			fileSpace = nvl(file.attachSpace, "");
-			
-			fileStr +=  '<div class="row" id="">';				
+
+			fileStr +=  '<div class="row" id="">';
 			fileStr +=	'	<div class="col-lg-12">';
 			fileStr +=	'		<div class="panel panel-default">';
 			fileStr +=	'				<div class="panel-heading body_toggle" id="">';
@@ -1807,37 +1755,37 @@ function setOcrFileDiv(files) {
 			fileStr +=	'							<colgroup>';
 			fileStr +=	'								<col width="200px">';
 			fileStr +=	'								<col width="*">';
-			fileStr +=	'							</colgroup>';		
-			
+			fileStr +=	'							</colgroup>';
+
 		}
 
-		attachView += '<tr>';		
+		attachView += '<tr>';
 		attachView += '<th colspan="2">' + attachName +'</th>';
-		attachView += '</tr>';		
-		attachView += '<tr id ="' +i + '">';	
+		attachView += '</tr>';
+		attachView += '<tr id ="' +i + '">';
 		attachView += '<td>';
 		attachView += '<img " style="max-width: 200px" src="data:image/' + attachExt + ';base64, ' + file.ocrImageStr + '"/>';
-		attachView += '</td>';	
+		attachView += '</td>';
 		attachView += '<td>' + nvl(file.ocrText).replaceAll("\n", "<br>") + '</td>';
 		attachView += '</tr>';
 
 		if (i == (fileLength -1) || ((i+1) <= (fileLength -1) && nvl(files[i+1].attachSpace,"") != fileSpace)){
 			fileSpace = space;
-			fileStr += attachView;		
-			
+			fileStr += attachView;
+
 			fileStr +=	'						</table>';
 			fileStr +=	'					</div>';
 			fileStr +=	'				</div>';
-			fileStr +=	'			</div>';						
+			fileStr +=	'			</div>';
 			fileStr +=	'		</div>';
 			fileStr +=	'	</div>';
 			fileStr +=	'</div>';
-			
+
 			$('.content_body').append(fileStr);
 			fileStr = "";
 			attachView = "";
 		}
-	 }
+	}
 }
 
 function setPatternDiv(patterns) {
@@ -1888,7 +1836,7 @@ function setPatternDiv(patterns) {
 }
 function getPiName(pattern){
 	var piName = nvl(pattern.piName);
-	if( piName != '') return piName; 
+	if( piName != '') return piName;
 	return contentBody.bodyviewInfoPattern;
 }
 
@@ -1899,7 +1847,7 @@ jQuery.fn.highlight = function(pat, type) {
 		if (node.nodeType == 3) {
 			if(pat.substring(0,1) == '/' && pat.substring(pat.length - 1) == '/') {
 				//var pos = node.data.toUpperCase().indexOf(pat);
-				
+
 				var solrQueryText = pat.replaceAll('/','');
 				var re = new RegExp(solrQueryText, 'ig');
 				var matchArray;
@@ -1915,10 +1863,10 @@ jQuery.fn.highlight = function(pat, type) {
 					resultString += "<span class='mulfound'>" + matchArray[0] + "</span>";
 					first = re.lastIndex;
 					// RegExp객체의 lastIndex속성을 이용해 검색 결과의 마지막인덱스 접근 가능 */
-					
-						var pos = matchArray.index;
-						console.log('pos: ' + pos);
-						if (pos >= 0) {
+
+					var pos = matchArray.index;
+					console.log('pos: ' + pos);
+					if (pos >= 0) {
 						var spannode = document.createElement('span');
 						spannode.name='spnHighlight';
 						if ( type.indexOf('K') > -1) {
@@ -1947,7 +1895,7 @@ jQuery.fn.highlight = function(pat, type) {
 							sbit.parentNode.replaceChild(spannode, sbit);
 							skip = 1;
 						} catch(e) {
-							
+
 						}
 					}
 				}
@@ -2008,7 +1956,7 @@ function Highlight( ) {
 	var fileNameStrs = fileNameStr.split(', ');
 	var subjectStrs = subjectStr.split(', ');
 	var bodyStrs = bodyStr.split(', ');
-	
+
 	if ( fileNameStrs.length > 0 ) {
 		if(searchkey.length == 0 || keywordHighlight == 'true') setFileNameHighLight ( fileNameStrs, 'K'); //예약어 하이라이트 처리
 	}
@@ -2122,25 +2070,25 @@ function focusKeyword ( type ) {
 function setRead(msgData) {
 	return
 	var ctime = msgData.ctime.replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "");
-	var ctime_yyyymmdd = ctime.substring(0,8); 
+	var ctime_yyyymmdd = ctime.substring(0,8);
 	var ctime_yyyymm = ctime.substring(0, 6);
 	var ctime_yyyy = ctime.substring(0, 4);
 	var ctime_hh = ctime.substring(8, 10);
-	
+
 	ui.get({
 		url : 'setRead.xcn',
 		msgId : msgId,
 		ctime : ctime,
-		ctime_yyyymmdd : ctime_yyyymmdd, 
+		ctime_yyyymmdd : ctime_yyyymmdd,
 		ctime_yyyymm : ctime_yyyymm,
 		ctime_yyyy : ctime_yyyy,
 		ctime_hh : ctime_hh,
 		busiCd : msgData.busiCd,
 		ipBusicd : msgData.ipBusicd,
 		svc : msgData.svc,
-		
+
 		success : function(data, total) {
-			
+
 		},
 		error : function(status, message) {
 			ui.alertMsg(message);
@@ -2152,27 +2100,27 @@ function setRead(msgData) {
 
 function showRPeriodBody(x, y) {
 	$("#periodBodyMenu ul").css('display','');
-	
+
 	if( y+$('#periodBodyMenu').height() > $(window).height()) y-=$('#periodBodyMenu').height();
-		
+
 	$('#periodBodyMenu').css({
 		"top" : (y+50) + "px",
 		"left" : (x-$('.nav-side-menu').width()) + "px",
 		"visibility" : "visible"
 	});
-	
+
 	$('#periodBodyMenuCloseBtn').unbind("mousedown").bind("mousedown", function(){
 		$('#periodBodyMenu').css({"visibility" : "hidden"});
 	});
 }
 
-function updateEmsFeedback(feedback) {	
+function updateEmsFeedback(feedback) {
 	ui.get({
 		url : 'updateEmsFeedback.xcn',
 		msgId : msgId,
 		feedback : feedback,
 		success : function(data, total) {
-			
+
 		},
 		error : function(status, message) {
 			ui.alertMsg(message);
@@ -2182,61 +2130,3 @@ function updateEmsFeedback(feedback) {
 	});
 }
 
-
-
-/* 내보내기 & 다운로드 관련 */
-
-/* 메시지 보관 */
-$(document).on('click','#saveMsgData',function(){
-	parent.saveFolderDataGrid(parent.getIframeListObj().grid);
-})
-/* 내보내기 */
-$(document).on('click','#exportMsg',function(){
-	if( $('#feedbackBtn').css('display') != 'none' ) $('.dropdown-menu.dropdown-menu-left').css('margin-left','90px');
-	else $('.dropdown-menu.dropdown-menu-left').css('margin-left','20px');
-});
-
-
-$(document).on('click', '.body_link_new', function(){
-	var grid = parent.getIframeListObj().grid;
-	if (grid.Rows == 0) {
-		alert('<s:message code="common.msg.nodata"/>');
-		return;
-	}
-	grid.on();
-	setTimeout(function(){
-		var msgid = grid.getSelectedKey('msgid');
-		if(msgid.length == 0) msgid = grid.getKeyData('msgid');
-
-		$('#msgId').val('');
-		$('#msgIds').val('');
-		if(msgid.length==1){
-			$('#msgId').val(msgid.join(','));
-			$('#downForm').attr('action', '<c:url value="/getEmassBodySave.xcn"/>');
-		} else {
-			$('#msgIds').val(msgid.join(','));
-			$('#downForm').attr('action', '<c:url value="/getEmassBodySaveZip.xcn"/>');
-		}
-		$('#downForm').submit();
-		grid.off();
-	}, 300);
-});
-
-
-$(document).on('click', '.attach_link_new', function(){
-	var grid = parent.getIframeListObj().grid;
-	if (grid.Rows == 0) {
-		alert('<s:message code="common.msg.nodata"/>');
-		return;
-	}
-	grid.on();
-	setTimeout(function(){
-		var msgid = grid.getSelectedKey('msgid');
-		if(msgid.length == 0) msgid = grid.getKeyData('msgid');
-
-		$('#msgIds').val(msgid.join(','));
-		$('#downForm').attr('action', '<c:url value="/downEmassAttachByMsgId.xcn"/>');
-		$('#downForm').submit();
-		grid.off();
-	}, 300);
-});
