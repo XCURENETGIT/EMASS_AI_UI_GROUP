@@ -6054,10 +6054,10 @@ a.list-group-item-danger.active, a.list-group-item-danger.active:focus, a.list-g
 	font-size: 21px;
 	font-weight: 500;
 
-	/*line-height: 1;*/
-	/*text-shadow: 0 1px 0 #fff;*/
-	/*filter: alpha(opacity = 20);*/
-	/*opacity: .2*/
+	line-height: 1;
+	text-shadow: 0 1px 0 #fff;
+	filter: alpha(opacity = 20);
+	opacity: .2
 }
 
 .close:focus, .close:hover {
@@ -6069,10 +6069,10 @@ a.list-group-item-danger.active, a.list-group-item-danger.active:focus, a.list-g
 }
 
 button.close {
-	/*-webkit-appearance: none;*/
-	/*cursor: pointer;*/
-	/*background: 0 0;*/
-	/*border: 0*/
+	-webkit-appearance: none;
+	cursor: pointer;
+	background: 0 0;
+	border: 0
 }
 
 /*.modal-open {

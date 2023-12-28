@@ -593,8 +593,7 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .modalbody {padding:20px; background-color: #F5F5F5; margin-top:8px; }
 .modalfooter {border-top:1px solid #ddd; margin-top:20px; padding-top:20px; text-align: center; }
 .modal-content {position: relative;background-color: #fefefe; margin: 60px auto;border: 1px solid #ccc;width:600px; }
-.close {position: absolute;right:20px;top:14px; color: #999;font-size: 28px;font-weight: bold;}
-.close:hover,.close:focus {color: black;text-decoration: none;cursor: pointer;}
+
 
 .row {overflow: hidden;margin-bottom:12px;margin-left: 0;margin-right: 0;}
 .row ol,ul{list-style: none;}

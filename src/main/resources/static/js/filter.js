@@ -218,7 +218,7 @@ function insertAdminFilterData(){
 
 	var param = con.getFilterVal('Pop', 'N');
 
-	var url = url = '/insertAdminFilterData.xcn';
+	var url = url = 'insertAdminFilterData.xcn';
 	param.p_filter_seq = param.filter_seq;
 	param.filter_seq = '';
 

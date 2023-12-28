@@ -612,7 +612,7 @@ div.smartfilter .defbtn_sm{float:right;margin-right:12px;color:#000;}
     cursor: pointer;
 }
 
-.c-checkbox input, .c-radio input {
+.c-radio input {
     opacity: 0;
     position: absolute;
     margin-left: 0 !important
