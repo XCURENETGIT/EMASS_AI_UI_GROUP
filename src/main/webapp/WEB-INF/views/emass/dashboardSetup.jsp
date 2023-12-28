@@ -791,7 +791,7 @@
 						<div class="col-50 mal16">
 							<h3><s:message code="urlIpBlock.preview"/></h3>
 							<!-- 미리보기 -->
-							<div class="grid-stack" style="height:120px;" id="dashHtmlSample"></div>
+							<div class="grid-stack mainTable" style="height:120px;" id="dashHtmlSample"></div>
 							<!-- 미리보기 -->
 							<input type=hidden name="html" id="dashHtml"/>
 						</div>
