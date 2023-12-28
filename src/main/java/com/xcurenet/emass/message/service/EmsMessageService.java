@@ -46,6 +46,8 @@ public interface EmsMessageService {
 
 	public void updateEmassMessengerAdminXrootMtr(final String xRootMtr, final String msgId, final String adminId, final String srcip, final String usr_id);
 
+	public void updateEmassGenerativeAdminUserid(final String userid, final String msgId, final String adminId, final String srcip);
+
 	public List<CodeVO> getMessengerList();
 
 	public boolean updateEmsFeedback(final String msgId, final String feedback, final String adminId);

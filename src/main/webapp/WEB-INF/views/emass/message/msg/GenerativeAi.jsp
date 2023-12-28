@@ -29,12 +29,12 @@
 		display: none;
 	}
 	.messenger_next{
-		position: absolute;
+		position: relative;
 		width: 30px;
 		top: 93%;
 		background-color: rgba(0, 94, 193, 0.32);
 		text-align: center;
-		margin-left: 91%;
+		margin-left: 50.5%;
 		z-index: 100000;
 		-moz-border-radius: 50px;
 		-webkit-border-radius: 50px;
@@ -225,12 +225,12 @@
                 $('#deptSelectedArea').hide();
             });
 
-            $(document).on('click', '#timeline_list div.list-group-item', function (e) {
-                var xrootmtr = $('#xrootmtr').text();
-                var srcip = $('#srcip').text();
-                var usr_id = $('#usr_id').text();
-                var id = $(this).parent().parent().attr('id');
-                updateEmassMessengerAdminXrootMtr(xrootmtr, id, srcip, usr_id);
+            $(document).on('click', '.me', function (e) {
+
+                var userid = $(this).parent().attr('userid');
+                var srcip = $(this).parent().attr('srcip');
+                var id = $(this).parent().attr('id');
+                updateEmassGenerativeAdminUserid(userid, id, srcip);
 
                 moveTargetHeight(id, false);
             });
@@ -933,10 +933,11 @@
 							</div>
 						</div>
 					</div>
-					<div class="row" style="height: calc(100% - 160px);padding:0 3px 0 5px;">
+					<div class="row2" style="height: calc(100% - 160px);padding:0 3px 0 5px;">
+						<s:message code="eikon.msg.total.cnt"/> : <span id="groupSubResultCnt">0</span>
 						<div id="scrollArea" class="clusterize-scroll">
 							<div class="messenger_prev" title="<s:message code='eikon.msg.show.prev'/>">+</div>
-							<div id="timeline_list" style="padding-right:10px;">
+							<div id="timeline_list">
 								<div class="timeline-panel" style="padding-left:10px;">
 									<div class="list-group-item cursor-text">
 										<div class="timeline-body" style="text-align: center;">
@@ -945,9 +946,9 @@
 									</div>
 								</div>
 							</div>
-							<div class="messenger_next" title="<s:message code='eikon.msg.show.next'/>">+</div>
 						</div>
 					</div>
+					<div class="messenger_next" title="<s:message code='eikon.msg.show.next'/>">+</div>
 				<%--	<div class="chat active-chat" data-chat="person2">
 						<div class="conversation-start">
 							<span>Today, 5:38 PM</span>

@@ -1335,7 +1335,18 @@ public class Common {
 		}
 		return _sb.toString();
 	}
-	
+
+	public static String join_long(List<Long> collection, String separator) {
+		if (collection == null) return EMPTY;
+		StringBuffer _sb = new StringBuffer();
+		for (int i = 0; i < collection.size(); i++) {
+			if ((i + 1) >= collection.size()) _sb.append(collection.get(i));
+			else _sb.append(collection.get(i)).append(separator);
+		}
+		return _sb.toString();
+	}
+
+
 	public static String join(String [] collection, String separator) {
 		if (collection == null) return EMPTY;
 		StringBuffer _sb = new StringBuffer();

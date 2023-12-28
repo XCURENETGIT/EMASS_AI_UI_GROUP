@@ -96,12 +96,12 @@ var eikon2 = {
         $('#searchResultArea').hide();
         $('#searchResultBtnArea').hide();
 
-            var startDt=$('#startDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
-            var endDt=$('#endDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+        var startDt=$('#startDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+        var endDt=$('#endDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 
 
         getGenerativeMessage(userid, srcip, usr_id, '');
-        }
+    }
 };
 
 
@@ -158,7 +158,6 @@ function getGenerativeMessageNext(userid, srcip, usr_id, msgid) {
                 $('.messenger_next').css('display', 'none');
                 return;
             }
-            $('.rightFileList').html(makeFileList(data));
 
             if(data.groups.length >= detailLimit) {
                 $('.messenger_next').css('display', 'block');
@@ -209,6 +208,7 @@ function getGenerativeMessagePrev(userid, srcip, usr_id, msgid) {
         usr_id : usr_id,
         msgId : msgid,
         limit : detailLimit,
+        facet_detail:true,
         success : function(data, total) {
             searchFlag = false;
             if(data.groups.length == 0) {
@@ -217,14 +217,16 @@ function getGenerativeMessagePrev(userid, srcip, usr_id, msgid) {
                 $('.messenger_prev').css('display', 'none');
                 return;
             }
-            if(data.groups.length < detailLimit) {
+            if(data.numFound < detailLimit) {
                 $('.messenger_prev').css('display', 'none');
             }
             prevDetailDataSet = data.groups;
 
             if($(".pageInfoDiv").size() > detailViewPage-1){
                 $(".pageInfoDiv").last().remove();
-            }
+            };
+
+           /* $(".conversation-start").children().children()*/
 
             $("#timeline_list").prepend(makePrevList());
             $('#scrollArea').scrollTop($(".pageInfoDiv").height());
@@ -372,26 +374,32 @@ function getPageNum(msgid){
 //}
 
 function makeFileList(data) {
-    var str = '<ul>';
+    var str='';
 
-    for (var i = 0; i < data.groups.length; i++) {
-        if (data.groups[i].attached == "Y") {
-            str += '<li><p class="fileListdown"><span class="img"></span><span>';
-            str += '<a href="#">' + data.groups[i].attachname + "." + data.groups[i].attachtype + '</a>';
-            str += '</span><span style="position: absolute; right: 0; top: 8px;" ><button class="btnchatdown_w"></button><button class="chatshare_w mal8"></button></span></p></li>';
-        }
+    if(data.length==0){
+        str+='<div style="width:100%; background-color:white">첨부파일이 없습니다</div>';
     }
 
-    str += '</ul>';
-    str += '<div class="top mat16"><div class="myDropdown"><span>내보내기 &#9662;</span><div class="dropdown-content">';
-    str += '<a href="#">사용자 01</a>';
-    str += '<a href="#">사용자 02</a>';
-    str += '</div></div><div class="myDropdown mal8"><span>전체파일 저장 &#9662;</span><div class="dropdown-content">';
-    str += '<a href="#">사용자 01</a>';
-    str += '<a href="#">사용자 02</a>';
-    str += '</div></div></div>';
+    else {
+        str = '<ul>';
+        for (var i = 0; i < data.length; i++) {
+            str += '<li><p class="fileListdown"><span class="img"></span><span>';
+            str += '<a href="#">' + data[i].attachname + "." + data[i].attachtype + '</a>';
+            str += '</span><span style="position: absolute; right: 0; top: 8px;" ><button class="btnchatdown_w"></button><button class="chatshare_w mal8"></button></span></p></li>';
+        }
+
+        str += '</ul>';
+        str += '<div class="top mat16"><div class="myDropdown"><span>내보내기 &#9662;</span><div class="dropdown-content">';
+        str += '<a href="#">사용자 01</a>';
+        str += '<a href="#">사용자 02</a>';
+        str += '</div></div><div class="myDropdown mal8"><span>전체파일 저장 &#9662;</span><div class="dropdown-content">';
+        str += '<a href="#">사용자 01</a>';
+        str += '<a href="#">사용자 02</a>';
+        str += '</div></div></div>';
+    }
 
     return str;
+
 }
 
 
@@ -407,35 +415,29 @@ function makeList(nextFlag){
         if( (nvl(obj.user) != '' && obj.user == obj.sender) || usrid == obj.title || usrid == obj.sender ) chkPati = true;
         str += checkDate(i);
 
-        str+='<li class="timeline-inverted ' +(i==0 && !nextFlag ? 'lastReadLi' : '')+ '" id="'+obj.msgid+'" ctime="'+obj.ctime+'">';
+        str+='<li class="p20 bubble txt_right slide_right timeline-inverted ' +(i==0 && !nextFlag ? 'lastReadLi' : '')+ '" id="'+obj.msgid+'" ctime="'+obj.ctime+'" userid="'+obj.userid+'" srcip="'+obj.srcip+'">';
+
 
         var svc3 = obj.svc3;
-        if(!chkPati){
-            if( obj.readYn == 'Y' ) str+='	<div class="timeline-badge custom read">';
-            else str+='	<div class="timeline-badge custom unread">';
+        str+='	<div class="me timeline-panel">';
 
-            if( svc3 == 'C' ) str += '<i class="fa fa-commenting-o fa-sm" style="font-size: 20px;"></i> ';
-            else if( svc3 == 'F' ) str += '<i class="fa fa-floppy-o fa-sm"></i> ';
-            else if( svc3 == 'J' ) str += '<i class="fa fa-sign-in fa-sm"></i> ';
-            else if( svc3 == 'L' ) str += '<i class="fa fa-sign-out fa-sm"></i> ';
-            str+='	</div>';
+        if(obj.attached=="Y"){
+            str+='<p class="filedown file_link" msgid="'+obj.msgid+'"+ attachhash="'+obj.attachhash+'" +>';
+            str+='<span class="img"></span>';
+            str+='<span>'+obj.attachname+'.'+obj.attachtype+'<br/>';
+            str+=obj.attachsize+'KB</span>';
+            str+='<button class="btnchatdown"></button></p>';
         }
 
-        str+='	<div class="timeline-panel '+(chkPati ? 'panel_right' : 'panel_left' )+'" style="width: calc(100% - 200px);">';
-        str+='		<div class="list-group-item cursor-pointer readPoint">';
-        str+='			<div class="timeline-heading">';
-        var title = obj.title;
-        str+='				<h4 class="timeline-title">'+title+"<span class='pull-xs-right' style='border: 1px solid #ccc; font-size: 11px; padding: 2px 4px; margin-left: 3px;'>"+makeMessengerText(obj.svc)+"</span></h4>'";
+        else {
+            if (obj.body_snippet != undefined) str += '' + obj.body_snippet.replaceAll('\n', '<br/>') + '';
+        }
         str+='			</div>';
-        var addClass = '';
-        if( svc3 == 'J' || svc3 == 'L' ) addClass=' text-center'
-        str+='			<div class="timeline-body'+addClass+'">';
 
-        if(obj.body_snippet != undefined) str+=''+obj.body_snippet.replaceAll('\n', '<br/>')+'';
-        str+='			</div>';
-        str+='		</div>';
-        str+='	</div>';
-        str+='	<div class="bubbleDate">'+obj.ctime+'</span>'
+        str+=' <div class="bubbleDate">';
+        str+='<span>'+obj.ctime+'</span>';
+        str+='<span style="border: 1px solid #ccc;">'+makeMessengerText(obj.svc)+'</span>';
+        str+='</div></div>';
         str+='</li>';
     }
     str+='</ul>';
@@ -455,56 +457,34 @@ function makePrevList(){
     if(prevDetailDataSet.length < detailLimit) str += noPrevDataMsg();
     var usrid = $('#selectUserInfo').attr('data-usrid');
     var srcip = $('#selectUserInfo').attr('data-srcip');
-
     for(var i=prevDetailDataSet.length - 1 ; i > -1 ; i--) {
+        str += checkDatePre(i);
         dataHasFlag = true;
         var obj = prevDetailDataSet[i];
-        var chkPati = false;
         if( (nvl(obj.user) != '' && obj.user == obj.sender) || usrid == obj.title || usrid == obj.sender ) chkPati = true;
 
-        str += checkDatePre(i);
 
-        str+='<li class="timeline-inverted" id="'+obj.msgid+'" ctime="'+obj.ctime+'">';
+        str+='<li class="p20 bubble txt_right slide_right timeline-inverted" id="'+obj.msgid+'" ctime="'+obj.ctime+'">';
 
-        var svc3 = obj.svc3;
-        if(!chkPati){
-            if( obj.readYn == 'Y' ) str+='	<div class="timeline-badge custom read">';
-            else str+='	<div class="timeline-badge custom unread">';
+        str+='	<div class="me timeline-panel">';
 
-            if( svc3 == 'C' ) str += '<i class="fa fa-commenting-o fa-sm" style="font-size: 20px;"></i> ';
-            else if( svc3 == 'F' ) str += '<i class="fa fa-floppy-o fa-sm"></i> ';
-            else if( svc3 == 'J' ) str += '<i class="fa fa-sign-in fa-sm"></i> ';
-            else if( svc3 == 'L' ) str += '<i class="fa fa-sign-out fa-sm"></i> ';
-            str+='	</div>';
+        if(obj.attached=="Y"){
+            str+='<p class="filedown file_link" msgid="'+obj.msgid+'"+ attachhash="'+obj.attachhash+'" +>';
+            str+='<span class="img"></span>';
+            str+='<span>'+obj.attachname+'.'+obj.attachtype+'<br/>';
+            str+=obj.attachsize+'KB</span>';
+            str+='<button class="btnchatdown"></button></p>';
         }
 
-        str+='	<div class="timeline-panel '+(chkPati ? 'panel_right' : 'panel_left' )+'" style="width: calc(100% - 200px);">';
-        str+='		<div class="list-group-item cursor-pointer readPoint">';
-        str+='			<div class="timeline-heading">';
-
-        var title = obj.title;
-        str+='				<h4 class="timeline-title">'+title+'<span class="timeline-date pull-xs-right">'+obj.ctime+'</span></h4>';
-        str+='			</div>';
-        var addClass = '';
-        if( svc3 == 'J' || svc3 == 'L' ) addClass=' text-center'
-        str+='			<div class="timeline-body'+addClass+'">';
-
-
-        if(obj.body_snippet != undefined) str+=''+obj.body_snippet.replaceAll('\n', '<br/>')+'';
-        str+='			</div>';
-        str+='		</div>';
-        str+='	</div>';
-
-        if(chkPati){
-            if( obj.readYn == 'Y' ) str+='	<div class="timeline-badge custom custom_right read">';
-            else str+='	<div class="timeline-badge custom custom_right unread">';
-
-            if( svc3 == 'C' ) str += '<i class="fa fa-commenting-o fa-sm" style="font-size: 20px;"></i> ';
-            else if( svc3 == 'F' ) str += '<i class="fa fa-floppy-o fa-sm"></i> ';
-            else if( svc3 == 'J' ) str += '<i class="fa fa-sign-in fa-sm"></i> ';
-            else if( svc3 == 'L' ) str += '<i class="fa fa-sign-out fa-sm"></i> ';
-            str+='	</div>';
+        else {
+            if (obj.body_snippet != undefined) str += '' + obj.body_snippet.replaceAll('\n', '<br/>') + '';
         }
+        str+='			</div>';
+
+        str+=' <div class="bubbleDate">';
+        str+='<span>'+obj.ctime+'</span>';
+        str+='<span style="border: 1px solid #ccc;">'+makeMessengerText(obj.svc)+'</span>';
+        str+='</div></div>';
         str+='</li>';
     }
     str+='</ul>';
@@ -559,7 +539,9 @@ function checkDate(idx){
         return '';
     }
 
-    var str = viewDate(detailDataSet[idx].ctime.substring(0, 10));
+    var str='<div class="conversation-start">';
+    str += viewDate(detailDataSet[idx].ctime.substring(0, 10));
+    str +='</div>'
 
     return str;
 }
@@ -569,20 +551,22 @@ function checkDatePre(idx){
     var endDate = $(firstData).attr('ctime');
 
     if( idx==0 && prevDetailDataSet[idx].ctime.substring(0, 10) == endDate.substring(0, 10)) {
-        $('.timeline').children().first().remove();
+
+        $('.date_li').remove();
     }
     if( idx < (prevDetailDataSet.length-1) && prevDetailDataSet[idx].ctime.substring(0, 10) == prevDetailDataSet[idx+1].ctime.substring(0, 10) ){
         return '';
     }
 
-    var str = viewDate(prevDetailDataSet[idx].ctime.substring(0, 10));
-
+    var str='<div class="conversation-start">';
+    str += viewDate(prevDetailDataSet[idx].ctime.substring(0, 10));
+    str +='</div>'
     return str;
 }
 
 function viewDate(dateStr){
     var str = '';
-    str+='<li className="conversation-start" id="date'+dateStr+'">';
+    str+='<li class="date_li" id="date'+dateStr+'">';
     str+='	<div class="date_li_div">';
     str+='		<div class="date_line">';
     str+='			<span>'+dateStr+'</span>';
@@ -724,18 +708,14 @@ function moveTargetHeight(id, moveFlag){
     }
 }
 var readTimeFlag = false;
-function updateEmassMessengerAdminXrootMtr(xrootmtr, lastMsgId, srcip, usr_id){
-    if(srcip == undefined && usr_id == undefined) return;
-    if(readTimeFlag) return true;
-    readTimeFlag = true;
+function updateEmassGenerativeAdminUserid(userid, lastMsgId, srcip){ /*읽은위치저장*/
     moveTargetHeight(lastMsgId, false);
 
     ui.get({
-        url : 'updateEmassMessengerAdminXrootMtr.xcn',
-        xRootMtr : xrootmtr,
+        url : 'updateEmassGenerativeAdminUserid.xcn',
+        userid : userid,
         msgId : lastMsgId,
         srcip : srcip,
-        usr_id: usr_id,
         asyncFlag : false,
         success : function(data, total) {
             return true;
@@ -1006,13 +986,12 @@ function getGenerativeMessage(userid, srcip, usr_id, msgid){
             detailDataSet = data.groups;
             prevDetailDataSet = data.groups;
 
-            $('.rightFileList').html(makeFileList(data));
+            getGenerativeAllfile(userid, srcip, usr_id, msgid);
 
 
             if(data.numFound < detailLimit)
                 $('.messenger_next').css('display','none');
             else $('.messenger_next').css('display','block');
-            $('.messenger_prev').css('display','none');
 
             $("#timeline_list").html(makeList(false));
             Highlight( );
@@ -1027,6 +1006,34 @@ function getGenerativeMessage(userid, srcip, usr_id, msgid){
         }
     });
 }
+
+function getGenerativeAllfile(userid, srcip, usr_id, msgid){
+    var startDt=$('#startDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+    var endDt=$('#endDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+
+    ui.get({
+        url : 'getGenerativeGroupAttachList.xcn',
+        userid : userid,
+        srcip : srcip,
+        usr_id : usr_id,
+        startDt: startDt+"000000",
+        endDt: endDt+235959,
+        searchStr: "",
+        attachYn : 'Y',
+        success : function(data, total) {
+            $('.rightFileList').html(makeFileList(data));
+        },
+        error : function(status, message) {
+            ui.alertMsg(message);
+        },
+        complete : function() {
+
+        }
+    });
+
+
+}
+
 
 
 function rtnGenerativeGroupList(data) {

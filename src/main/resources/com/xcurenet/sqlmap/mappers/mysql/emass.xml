@@ -296,7 +296,7 @@
 
 	<select id="getEmassGenerativeAdminXrootMtr" parameterType="hashmap" resultType="emsMessengerAdminXrootMtrVO">
 		SELECT  ADMIN_ID AS adminId, userid AS userid, MSGID AS msgId
-		FROM	UI_ADMIN_USERID
+		FROM	UI_ADMIN_USERID_GENERATIVE
 		WHERE	ADMIN_ID = #{adminId}
 		AND		USERID = #{userid}
 		<if test='srcip!=null and srcip!=""'>
@@ -317,6 +317,12 @@
 	<update id="updateEmassMessengerAdminXrootMtr">
 		REPLACE INTO UI_ADMIN_XROOTMTR	SET ADMIN_ID = #{adminId}, XROOTMTR = #{xRootMtr}, MSGID = #{msgId}, SRCIP = #{srcip}
 	</update>
+
+
+	<update id="updateEmassGenerativeAdminUserid">
+		REPLACE INTO UI_ADMIN_USERID_GENERATIVE	SET ADMIN_ID = #{adminId}, userid = #{userid}, MSGID = #{msgId}, SRCIP = #{srcip}
+	</update>
+
 
 	<update id="updateEmsFeedback">
 		REPLACE	INTO EMS_MESSAGE

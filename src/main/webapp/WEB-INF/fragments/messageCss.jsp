@@ -20,7 +20,6 @@
 <link rel="stylesheet" href="<c:url value="/css/slick.grid.original.css"/>" />
 <link rel="stylesheet" href="<c:url value="/js/css/smoothness/jquery-ui-1.10.3.custom.css"/>" />
 <link rel="stylesheet" href="<c:url value="/css/animate.min.css"/>" />
-<link rel="stylesheet" href="<c:url value="/css/timeLine.css"/>"/>
 
 <link rel="stylesheet" href="<c:url value="/css/slider.css"/>" />
 <link rel="stylesheet" href="<c:url value="/css/jquery.circliful.css"/>">
