@@ -29,9 +29,6 @@
 		$('#clearBtn').click(function(){
 			$('#startdate').val(new Date().format('yyyy-mm-dd'));
 			$('#enddate').val(new Date().format('yyyy-mm-dd'));
-
-			//$('.optionBtn').removeClass('active');
-			//$('#deptnm').addClass('active');
 		});
 
 		$('#chartCntDiv .dropdown-menu li a').click(function () {
@@ -43,18 +40,6 @@
 		$('#enddate').val(new Date().format('yyyy-mm-dd'));
 
 		$(".nav-tabs").on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
-/*			var id = $(this).parents('li').attr('idx');
-			var hrefNm = $(this).attr('href');
-			if (hrefNm == '#infoStatList') {
-				$("#chartCntDiv").show();
-				$('#totalViewDiv').hide();
-				printChart(totalChartDat);
-			} else {
-				$("#chartCntDiv").hide();
-				$('#totalViewDiv').show();
-				var dat = chartDat[id];
-				printChart(dat);
-			}*/
 		})
 
 		$('.listChart').on('click', '.close', function () {
@@ -460,18 +445,18 @@
 		return date.substring(0, 4) + "-" + date.substring(4, 6) + "-" + date.substring(6, 8);
 	}
 
-	function makeNetwork(value,type,pi_total){
-		var user_str = value;
+	function makeNetwork(value, type, pi_total){
+		var userkey = value;
 		var type = type;
 		var pi_total = pi_total;
 		var piCount = $('#piCount').val();
 		ui.postJson({
 			url : 'getInfoNetwork.xcn',
-			user_str : user_str,
+			userkey : userkey,
 			type : type,
 			startDate : $('#startdate').val().replaceAll("-","")+"000000",
 			endDate : $('#enddate').val().replaceAll("-","")+"235959",
-			piCount : piCount,
+			piCount : 1,
 			offset : 0,
 			limit : -1,
 			success : function(data, total) {
@@ -753,7 +738,7 @@
 					}
 				};
 				var network = new vis.Network(container, data_, options);
-				network.on("getConnectedNodes", function(params) {
+					network.on("getConnectedNodes", function(params) {
 				});
 				network.on("click",function(params){
 					console.log(params.nodes[0]);

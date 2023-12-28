@@ -647,13 +647,11 @@ public class SolrEdcStatController {
 	@ResponseBody
 	public XcnResponseVO getInfoStatList(final HttpServletRequest request, final HttpSession session) throws IOException, SolrServerException {
 		JSONObject param = Common.getParam(request);
-		String userStr = Common.nvl(param.get("user_str"));
 		String startDate = Common.nvl(param.get("startDate"));
 		String endDate = Common.nvl(param.get("endDate"));
 		int piCount = Common.nvz(param.get("piCount"), 1);
 
 		StringBuilder query = new StringBuilder();
-		if (Common.isNotEmpty(userStr)) query.append(String.format("+user_str:" + userStr));
 		if (!(startDate.isEmpty() && endDate.isEmpty())) query.append(" +ctime:[").append(startDate).append(" TO ").append(endDate).append("] ");
 		query.append(" -pi_total:0 ");
 		query.append(" +( ");
@@ -666,7 +664,7 @@ public class SolrEdcStatController {
 		sq.setQuery(query.toString());
 		sq.setStart(0);
 		sq.setRows(0);
-		sq.set("aggregation.field", "user_str");
+		sq.set("aggregation.field", "userkey");
 		sq.set("aggregation.sub.fields", Config.PRIVATE_SVC);
 		sq.set("aggregation.limit", 100);
 		sq.setParam("piAnalysisYn", "Y");
@@ -688,14 +686,14 @@ public class SolrEdcStatController {
 	@Description("개인정보 유출 관계 분석 관계도 조회")
 	@ResponseBody
 	public XcnResponseVO getInfoNetwork(final HttpServletRequest request, final HttpSession session) throws SolrServerException, IOException {
-		String user_str = request.getParameter("user_str");
+		String userkey = request.getParameter("userkey");
 		String startDate = Common.nvl(request.getParameter("startDate"));
 		String endDate = Common.nvl(request.getParameter("endDate"));
 		String type = Common.nvl(request.getParameter("type"));
 		String piCount = Common.nvl(request.getParameter("piCount"));
 
 		StringBuilder query = new StringBuilder();
-		query.append(String.format("+user_str:" + user_str));
+		query.append(String.format("+userkey:" + userkey));
 		if (!(startDate.isEmpty() && endDate.isEmpty())) {
 			query.append(" +ctime:[").append(startDate).append(" TO ").append(endDate).append("] ");
 		}

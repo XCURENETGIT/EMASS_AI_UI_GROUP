@@ -106,14 +106,16 @@ public class SolrCreateQuery {
 	public static final String JOIN_UNREAD = " -checked.readId:%s";
 
 
-	private static final String OCR_FIELD = " ocr_attach";
+	private static final String OCR_FIELD = " ocr_attach ocr_attach.kr ocr_attach.en ocr_attach.jp";
 	private String finalReadYn;
 	private String consentNo;
 
-	public String[] SEARCH_FIELD = {"msgid", "subject", "kwds_subject", // 제목
-			"body", "kwds_body", // 본문
+	public String[] SEARCH_FIELD = {"msgid",
+			"kwds_body", "kwds_subject", "kwds_attach",
+			"subject", "subject.kr", "subject.jp", "subject.en",
+			"body", "body.kr", "body.jp", "body.en",
+			"attach", "attach.kr", "attach.jp", "attach.en",
 			"attachname", "attachname_str", "kwds_attachname", // 첨부파일명
-			"attach", "kwds_attach", // 첨부파일
 			"host", "host_str", // host
 			"path", "query", // url
 			"srcip", "dstip", // 출발지 IP, 목적지 IP
@@ -255,6 +257,23 @@ public class SolrCreateQuery {
 			StringBuilder query = new StringBuilder();
 			for (String field : fields) {
 				query.append(String.format("%s:(%s) ", field, getSearchQuery(searchStr)));
+				if(Common.isEquals(field, "body")) {
+					query.append(String.format("body.kr:(%s) ", getSearchQuery(searchStr)));
+					query.append(String.format("body.en:(%s) ", getSearchQuery(searchStr)));
+					query.append(String.format("body.jp:(%s) ", getSearchQuery(searchStr)));
+				} else if(Common.isEquals(field, "attach")) {
+					query.append(String.format("attach.kr:(%s) ", getSearchQuery(searchStr)));
+					query.append(String.format("attach.en:(%s) ", getSearchQuery(searchStr)));
+					query.append(String.format("attach.jp:(%s) ", getSearchQuery(searchStr)));
+				} else if(Common.isEquals(field, "subject")) {
+					query.append(String.format("subject.kr:(%s) ", getSearchQuery(searchStr)));
+					query.append(String.format("subject.en:(%s) ", getSearchQuery(searchStr)));
+					query.append(String.format("subject.jp:(%s) ", getSearchQuery(searchStr)));
+				} else if(Common.isEquals(field, "ocr_attach")) {
+					query.append(String.format("ocr_attach.kr:(%s) ", getSearchQuery(searchStr)));
+					query.append(String.format("ocr_attach.en:(%s) ", getSearchQuery(searchStr)));
+					query.append(String.format("ocr_attach.jp:(%s) ", getSearchQuery(searchStr)));
+				}
 			}
 			return addQuery(String.format("%s(%s)", AND_QUERY, query.toString()));
 		}
@@ -1196,32 +1215,29 @@ public class SolrCreateQuery {
 	}
 
 	private String getSearchQuery(String query) {
-		if( query.startsWith("|")) query = query.substring(1, query.length());
+		if( query.startsWith("|")) query = query.substring(1);
 
 		query = getTempQuery(query);
 		StringBuilder sb = new StringBuilder();
-		if (query.indexOf("|") < 0 && query.indexOf("+") < 0 && query.indexOf("-") < 0) {
-			String queryStr = "";
+		if (!query.contains("|") && !query.contains("+") && !query.contains("-")) {
+			StringBuilder queryStr = new StringBuilder();
 			String[] terms = query.split(" ");
-			for (int i = 0; i < terms.length; i++) {
-				queryStr += appendSpecialchar(terms[i]) + " ";
+			for (String term : terms) {
+				queryStr.append(appendSpecialchar(term)).append(" ");
 			}
-			sb.append("+").append(queryStr.trim().replaceAll(" ", " +").replaceAll("__", " "));
+			sb.append("+").append(queryStr.toString().trim().replaceAll(" ", " +").replaceAll("__", " "));
 		} else {
 			String[] terms = query.split(" ");
 			for (int i = 0; i < terms.length; i++) {
 				if (terms[i].equals("|")) {
 					terms[i] = OR_PREFIX;
-				} else if (i > 0 && terms[i - 1].equals(OR_PREFIX) || terms[i].startsWith("+") || terms[i].startsWith("-")) {
 				} else if (i < terms.length - 1 && !terms[i + 1].equals("|")) {
 					terms[i] = "+" + terms[i];
-				} else if (!terms[i].startsWith("+") && !terms[i].startsWith("-")) {
 				}
 				sb.append(appendSpecialchar(terms[i])).append(" ");
 			}
 		}
-		String result = sb.toString().replace(OR_PREFIX, "").replace("__", " ").replace("  ", " ").trim();
-		return result;
+		return sb.toString().replace(OR_PREFIX, "").replace("__", " ").replace("  ", " ").trim();
 	}
 
 	/**
@@ -1267,7 +1283,7 @@ public class SolrCreateQuery {
 		else if (str.endsWith(SPECIAL_CHAR)) return str;
 		else if (str.endsWith(OR_PREFIX)) return str;
 		else if (str.endsWith("\"")) return str;
-		else return str + SPECIAL_CHAR;
+		else return str;
 	}
 
 	private String createOrQueryAsterisk(String params) {
