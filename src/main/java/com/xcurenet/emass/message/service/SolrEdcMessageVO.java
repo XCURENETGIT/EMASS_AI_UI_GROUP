@@ -309,7 +309,7 @@ public class SolrEdcMessageVO {
 			item.put("svcLv2Nm", svcLv2Nm(bucketKey));
 		}
 		item.put("rowKey",  bucketKey);
-		if (Common.isOrEquals( svcChk, "user_str", "sender_str", "userid")) {
+		if (Common.isOrEquals( svcChk, "user_str", "sender_str", "userid", "userkey")) {
 			item.put("rowName", Config.getUserName(Common.nvl(bucketKey)));
 		}
 		item.put("name", bucketKey);
