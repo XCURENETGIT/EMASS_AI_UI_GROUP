@@ -153,6 +153,7 @@ function setCode(){
 		for(var i = 0; i < codeArr.length; i++ ) {
 			if( codeType == 'regexp') {
 				var code = codeArr[i].split('%');
+                console.log("test: "+conmArr[i]);
 				data.push({'code':code[0],'codeName':conmArr[i].substring(0,conmArr[i].indexOf('(')).rtrim(),'count':code[1]});
 			} else {
 				data.push({'code':codeArr[i],'codeName':conmArr[i].rtrim()});

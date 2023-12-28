@@ -235,7 +235,7 @@
 					</div>
 					<div class="panel-footer">
 						<span class="#dashIcon# pull-left dash-title">#dashName#</span>
-						<%--						<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59"><s:message code="condition.today_str"/></div>--%>
+						<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59"><s:message code="condition.today_str"/></div>
 						<div class="clearfix"></div>
 					</div>
 				</div>

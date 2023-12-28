@@ -478,6 +478,7 @@
                 break;
             }
         }
+
         for (const key in targetKey) {
             if (!isNaN(parseInt(key))) {
                 const numericKey = parseInt(key);
@@ -496,11 +497,10 @@
                 }
             }
         }
-
         var str = "<div class='tabcontent' id=" + rowSearchkey + ">";
         str += "<ul>";
         for (let i = 0; i < 6; i++) {
-            str += "<li><p>";
+            str += "<li class='files' data-row-key='" + rowSearchkey + "' data-value='" + arrayStr[i] + "'><p>";
             str += arrayStr[i];
             str += "<span>" + array[i] + "</span>";
             str += "</p></li>"
@@ -509,6 +509,7 @@
         str += "</div>";
         $('#dataStatus').html(str);
     }
+
 
     //금일 첨부파일 수집 현황
     function getTodayDataStatus(rowSearchkey) {
@@ -1061,6 +1062,83 @@
         return JSON.stringify(dashCondition);
     }
 
+    $(document).on('click', '.files', function(){
+        var dat = $(this).data('value'); // 범위
+        var size = parseInt(dat.replace(/[^\d]/g, ''), 10);
+        var rowKey = $(this).data('row-key').toUpperCase(); //종류
+        var dashCondition = {
+            "searchStr": "",
+            "searchField": "",
+            "serviceType": "",
+            "serviceTypeNm": "서비스 전체",
+            "interGroup": "",
+            "interGroupNm": "-관심 사용자 그룹-",
+            "userGroupSeq": "",
+            "userGroupName": "-사용자 그룹-",
+            "startDateSelect": "T",
+            "startTimeSelect": "00",
+            "endDateSelect": "T",
+            "endTimeSelect": "23",
+            "senders": "",
+            "receivers": "",
+            "allOfus": "",
+            "busi": "",
+            "busiNm": "사업장 전체",
+            "dept": "",
+            "deptNm": "",
+            "receiveSend": "",
+            "ctimeWork": "",
+            "readYn": "",
+            "attachYn": "",
+            "attachVal": "",
+            "attachStr": "",
+            "keywordYn": "",
+            "keywordVal": "",
+            "keywordStr": "",
+            "regexpYn": "",
+            "regexpVal": "",
+            "regexpStr": "",
+            "drmYn": "",
+            "sctYn": "",
+            "sizeStartVal": "0",
+            "sizeEndVal": "0",
+            "sizeOption": "L",
+            "sizeType": ""
+        };
+
+        if (rowKey == 'XLSX' || rowKey == 'DOC'){
+            dashCondition.attachStr = "MS-OFFICE";
+        } else if (rowKey == 'PDF'){
+            dashCondition.attachStr = "PDF"
+        }else if (rowKey == 'JPG' || rowKey == 'GIF' || rowKey == 'PNG'){
+            dashCondition.attachStr = "그림"
+        }
+
+
+        dashCondition.sizeEndVal = (size*1024);
+        dashCondition.sizeOption="B";
+        dashCondition.attachYn = "Y";
+        dashCondition.sizeType = "A";
+        dashCondition.attachVal = rowKey;
+
+        if (size == 10){
+            dashCondition.sizeOption="S";
+        }else if (size == 250){
+            dashCondition.sizeOption="L";
+            dashCondition.sizeStartVal = (size*1024);
+            dashCondition.sizeEndVal="";
+        }else if (size == 50){
+            dashCondition.sizeStartVal = (10*1024);
+        } else {
+            dashCondition.sizeStartVal = (size-50)*1024;
+        }
+
+        $('#conditionParam').val(makePeriod2(dashCondition));
+        $('#getMessageInfo').submit();
+
+
+    });
+
 
     $(document).on('click', '.click', function(){
         // var id = $(this).parents('.grid-stack-item').attr('data-gs-id');
@@ -1104,17 +1182,51 @@
             "sizeOption": "L",
             "sizeType": ""
         };
-        // alert(dat);
         if (dat == 'reserved'){
             dashCondition.keywordYn = "Y";
-            $('#conditionParam').val(makePeriod2(dashCondition));
-            $('#getMessageInfo').submit();
         }else if (dat == 'groupWare'){
             dashCondition.serviceType = "EBD,EBB,EAA,EMM,EMB,EWS,EPU,ESC,EMF,EMU";
             dashCondition.serviceTypeNm = "게시, 게시판, 결재, 메일, 모바일, 웹서비스, 일반, 일정 명함, 파일 다운로드, 기타";
-            $('#conditionParam').val(makePeriod2(dashCondition));
-            $('#getMessageInfo').submit();
+        }else if (dat == 'work'){
+            dashCondition.ctimeWork="R";
+        }else if (dat == 'danger'){
+            dashCondition.regexpYn = "Y";
+            dashCondition.regexpVal = "EC%L@1|EF%L@1|ID%L@1";
+            dashCondition.regexpStr = "확장자 변조 파일(1건 이상),암호화 파일(1건 이상),송수신자 동일아이디(1건 이상)";
+        }else if (dat == 'file'){
+            dashCondition.attachYn = "Y";
+        }else if (dat == 'person'){
+            dashCondition.regexpYn = "Y";
+            dashCondition.regexpVal = "MN%L@1|CN%L@1|AN%L@1|SN%L@1|CRN%L@1|DN%L@1|FN%L@1|PN%L@1|SSN%L@1|BRN%L@1|CPN%L@1|MCN%L@1";
+	        dashCondition.regexpStr = "휴대전화번호(1건 이상),카드번호(1건 이상),주소(1건 이상),주민번호(1건 이상),자동차 등록 번호(1건 이상),운전면호 번호(1건 이상),외국인 등록번호(1건 이상),여권번호(1건 이상),사회 보장번호(1건 이상),사업자 등록번호(1건 이상), 법인 등록번호(1건 이상),MAC 주소(1건 이상)";
+        }else if (dat == 'passport'){
+            dashCondition.regexpYn = "Y";
+            dashCondition.regexpVal = "PN%L@1"
+            dashCondition.regexpStr ="여권번호(1건 이상)"
+        }else if (dat == 'drive'){
+            dashCondition.regexpYn = "Y";
+            dashCondition.regexpVal = "DN%L@1"
+            dashCondition.regexpStr ="운전면허 번호(1건 이상)"
+        }else if (dat == 'foreigner'){
+            dashCondition.regexpYn = "Y";
+            dashCondition.regexpVal = "FN%L@1"
+            dashCondition.regexpStr ="외국인 등록번호(1건 이상)"
+        }else if (dat == 'social'){
+            dashCondition.regexpYn = "Y";
+            dashCondition.regexpVal = "SN%L@1"
+            dashCondition.regexpStr ="주민번호(1건 이상)"
+        }else if (dat == 'card'){
+            dashCondition.regexpYn = "Y";
+            dashCondition.regexpVal = "CN%L@1"
+            dashCondition.regexpStr ="카드번호(1건 이상)"
+        }else if (dat == 'extension'){
+            dashCondition.regexpYn = "Y";
+            dashCondition.regexpVal = "EC%L@1"
+            dashCondition.regexpStr ="확장자 변조 파일(1건 이상)"
         }
+
+        $('#conditionParam').val(makePeriod2(dashCondition));
+        $('#getMessageInfo').submit();
 
     });
 
@@ -1142,19 +1254,19 @@
 						<span class="tit02">그룹 웨어 데이터</span>
 						<p id="todayGroupWareSum">-<span>건</span>
 					</div>
-					<div class="yellowBg bornone">
+					<div class="yellowBg bornone click" data-value="work">
 						<span class="tit03">비업무시간 데이터</span>
 						<p id="todayNotWork">-<span>건</span>
 					</div>
-					<div class="redBg bornone">
+					<div class="redBg bornone click" data-value="danger">
 						<span class="tit04">위험행위 메시지</span>
 						<p id="getTodayRiskTotalCnt">-<span>건</span>
 					</div>
-					<div class="grayBg bornone">
+					<div class="grayBg bornone click" data-value="file">
 						<span class="tit05">1MB 이상 파일전송</span>
 						<p id="TodayfileSendTotalCnt">-<span>건</span>
 					</div>
-					<div class="blueBg bornone">
+					<div class="blueBg bornone click" data-value="person">
 						<span class="tit06">개인정보 메시지</span>
 						<p id="TodayPatternPrivacyTotalCnt">-<span>건</span>
 					</div>
@@ -1172,27 +1284,27 @@
 			<div>
 				<h3>금일 패턴 수집 건수</h3>
 				<div class="mainlist">
-					<div>
-						<span class="tit07">여권번호 <span class="red_dot"></span> </span>
+					<div class="click" data-value="passport">
+						<span class="tit07" >여권번호 <span class="red_dot"></span> </span>
 						<p class="blue" id="TodayPasswordTotalCnt">-<span class="text">건</span></p>
 					</div>
-					<div>
+					<div class="click" data-value="drive">
 						<span class="tit08">운전면허번호</span>
 						<p class="blue" id="TodayDriveTotalCnt">-<span class="text">건</span></p>
 					</div>
-					<div>
+					<div class="click" data-value="foreigner">
 						<span class="tit09">외국인등록번호</span>
 						<p class="blue" id="TodayForeignerTotalCnt">-<span class="text">건</span></p>
 					</div>
-					<div>
+					<div class="click" data-value="social">
 						<span class="tit10">주민번호</span>
 						<p class="blue" id="TodaySecurityTotalCnt">-<span class="text">건</span></p>
 					</div>
-					<div>
+					<div class="click" data-value="card">
 						<span class="tit11">카드번호</span>
 						<p class="blue" id="TodayCardNumberTotalCnt">-<span class="text">건</span></p>
 					</div>
-					<div>
+					<div class="click" data-value="extension">
 						<span class="tit12">확장자 변조 파일 <span class="red_dot"></span> </span>
 						<p class="blue" id="TodayExtensionModulationTotalCnt">-<span class="text">건</span></p>
 					</div>
@@ -1202,7 +1314,7 @@
 		<%--				금일 패턴 수집 건수 끝!!--%>
 		<%--			금일 서비스별 데이터 수집 비율 시작--%>
 		<div class="m_grapha">
-			<div class="graphaBox">
+			<div class="graphaBox click" data-value="service">
 				<h3>금일 서비스별 데이터 수집 비율</h3>
 				<div class="bordd" id="svcDataChart" style="display: flex;justify-content: center; align-items: center">
 				</div>
