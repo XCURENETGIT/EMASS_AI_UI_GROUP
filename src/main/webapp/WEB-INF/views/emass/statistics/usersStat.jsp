@@ -1,3 +1,4 @@
+<%@ page import="net.sf.json.JSONObject" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
 
@@ -6,6 +7,7 @@
 
 </style>
 <script>
+
 	Highcharts.setOptions({
 		chart: {
 			type: 'column',
@@ -46,6 +48,7 @@
 	var tabNum = 0;
 	var totalChartDat;
 	var serviceList=[];
+
 	$(document).ready(function(){
 		getServiceList();
 		$('.optionBtn').click(function () {
@@ -179,8 +182,6 @@
 		var selectedTabIdx = $('.listChart').find('.active').index();
 		var grid = window.__grids[selectedTabIdx];
 		var row = 0;
-		console.log("grid.Row = "+grid.Row)
-		console.log("grid.Rows = "+grid.Rows)
 		if( grid.Row < grid.Rows - 1 ) {
 			row = ++grid.Row;
 			viewer_open(row);
@@ -429,6 +430,7 @@
 	};
 
 	function getData( flag ) {
+
 		if ( searchFlag ) return;
 		var sDate = $('#startdate').val().replaceAll("-", "");
 		var eDate = $('#enddate').val().replaceAll("-", "");
@@ -516,7 +518,6 @@
 	function getDetailData( lastRow ) {
 		currentgrid = getCurrentGrid();
 		if ( searchFlag ) return;
-
 		if ( lastRow == 'Y' || lastRow == undefined ) {
 			currentgrid.data.length = 0;
 			currentgrid.rtnNextPageFunc = getDetailData;

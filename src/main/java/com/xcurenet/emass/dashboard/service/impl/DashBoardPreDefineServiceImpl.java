@@ -228,6 +228,15 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		TodayDataStatusVO result = new TodayDataStatusVO();
 		SolrQuery sq = new SolrQuery();
 
+		List<Integer> rangeValues = Arrays.stream(todayDataStatusVO.getRange().split(","))
+				.map(value -> Integer.parseInt(value))  // 수정된 부분
+				.collect(Collectors.toList());
+
+		// 결과값 계산
+		List<Integer> results = multiply1024ForList(rangeValues);
+
+		System.out.println("gg: "+todayDataStatusVO.getRange());
+
 		sq.addFacetField("attachtype");
 		sq.setParam("group", true);
 		sq.setParam("group.facet", true);
@@ -256,6 +265,13 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		result.setPivotData(edc.getPivotData());
 
 		return result;
+	}
+
+	private static List<Integer> multiply1024ForList(List<Integer> values) {
+		// 리스트에 있는 모든 값에 1024를 곱하는 계산을 수행하도록 하겠습니다.
+		return values.stream()
+				.map(value -> value * 1024)
+				.collect(Collectors.toList());
 	}
 
 	@Override
@@ -310,7 +326,7 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 	public PatternPrivacyVO getTodayPatternPrivacy(PatternPrivacyVO patternPrivacyVO) throws IOException, SolrServerException {
 		PatternPrivacyVO result = new PatternPrivacyVO();
 
-		String query = String.format("+ctime:[%s TO %s] +(pi_CN:[ 1 TO * ] pi_FN:[ 1 TO * ] pi_SN:[ 1 TO * ] pi_PN:[ 1 TO * ] pi_DN:[ 1 TO * ] pi_CN:[ 1 TO * ] pi_MN:[ 1 TO * ] pi_AN:[ 1 TO * ] pi_CRN:[ 1 TO * ] pi_SSN:[ 1 TO * ] pi_IMEI:[ 1 TO * ] pi_BRN:[ 1 TO * ] pi_CPN:[ 1 TO * ] pi_MCN:[ 1 TO * ])"
+		String query = String.format("+ctime:[%s TO %s] +(pi_MN:[ 1 TO * ] pi_CN:[ 1 TO * ] pi_AN:[ 1 TO * ] pi_SN:[ 1 TO * ] pi_CRN:[ 1 TO * ] pi_DN:[ 1 TO * ] pi_FN:[ 1 TO * ] pi_PN:[ 1 TO * ] pi_SSN:[ 1 TO * ] pi_BRN:[ 1 TO * ] pi_CPN:[ 1 TO * ] pi_MCN:[ 1 TO * ])"
 				, patternPrivacyVO.getStartDt(), patternPrivacyVO.getEndDt());
 		SolrQuery sq = new SolrQuery();
 		sq.setQuery(query);
@@ -462,15 +478,18 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		List<String> filesize = new ArrayList<>();
 		List<String> fileType = new ArrayList<>();
 		List<String> fileName = new ArrayList<>();
+		List<String> fileId = new ArrayList<>();
 
 		for (SolrEdcVO solrEdcVO : edc.getEmass()) {
 			filesize.add(solrEdcVO.getAttachSizeStr());
 			fileType.add(solrEdcVO.getAttachtype().get(0));
 			fileName.add(solrEdcVO.getAttachname().get(0));
+			fileId.add(solrEdcVO.getMsgid());
 		}
 		result.setFileSize(filesize);
 		result.setFileType(fileType);
 		result.setFileName(fileName);
+		result.setFileId(fileId);
 
 		result.setTotal(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));
 
@@ -501,6 +520,7 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 				item.add(facetVO.getName2());
 				item.add(facetVO.getDeptnm());
 				item.add(facetVO.getCount());
+				item.add(facetVO.getName());
 
 				items.add(item);
 			}

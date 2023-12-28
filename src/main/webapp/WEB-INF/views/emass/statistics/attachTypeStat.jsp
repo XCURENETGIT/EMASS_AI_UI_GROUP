@@ -145,7 +145,6 @@
         var ctime = $('#searchStrInput').val();
 
         openMessageBodyPop( grid.id, msgid, $('#searchStrInput').val(), bodySize);
-
         var readYn = grid.getValue(row, 'readYn');
         grid.setValue(row, grid.ColIndex('readYn'), 'Y');
         grid.Select(row,0);

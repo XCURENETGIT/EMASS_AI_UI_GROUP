@@ -13,6 +13,7 @@ public class FileTopVO {
 	private List<String> fileType;
 
 	private List<String> fileName;
+	private List<String> fileId;
 
 	private List<String> user;
 
