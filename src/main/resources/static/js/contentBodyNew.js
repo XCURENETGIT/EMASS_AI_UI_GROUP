@@ -328,13 +328,18 @@ $(document).ready(function(){
 		//if( detailFlag ) url = '<c:url value="/getMessengerGroupAllSave.xcn?msgId='+msgId+'&xRootM
 		// tr='+xRootMtr+'&print=Y"/>';
 		var url = contextRoot + '/getEmassBodySave.xcn?msgId=' + msgId + '&userCharset=' + charset + '&print=Y';
+
 		if( detailFlag ){
 			var startDt = $('#startdatepickerBody').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
 			var endDt = $('#enddatepickerBody').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
 
 			url = contextRoot + '/getMessengerGroupAllSave.xcn?msgId=' + msgId + '&xRootMtr=' + xRootMtr + '&srcip=' + srcip+'&startDt='+startDt+'&endDt='+endDt+'&groupField=usr_id&print=Y&usr_id=' + usr_id;
 		}
+
+
 		fnOpenWindow( url, 'message_print', '1000', '800', 'scroll' );
+
+		console.log('asdf')
 
 		var information = '[' + message.bodyPrint + ']'+enter;
 		if( detailFlag ) information += message.xrootmtr + ' : ' + xRootMtr + ' ';
