@@ -73,7 +73,7 @@ function initFolderSetup( ){
 			if(rs){
 				ui.onBody( 'smartFolderSavePop', 0, 0);
 				ui.get({
-					url : '/insertAdminFolderData.xcn',
+					url : 'insertAdminFolderData.xcn',
 					folderSeq : nodes[0].id,
 					msgIds : msgids.join(','),
 					consentNo : consentNo[0],
