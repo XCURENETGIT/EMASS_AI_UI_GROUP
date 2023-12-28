@@ -24,6 +24,7 @@
 	#emptyDiv p, #emptyDiv h1{
 		text-align: center;
 	}
+
 	.empty-dashboard-message{
 		margin:0 auto;
 		text-align:center;
@@ -38,7 +39,7 @@
 	.empty-dashboard-message a:hover{
 		color:#1C64D3;text-decoration: underline;
 	}
-	.empty-dashboard-message p {line-height: 1.3;}
+	.empty-dashboard-message p {line-height: 1.3;}*/
 	#emptyDashboard{
 		text-align: center;
 		padding-top: 25px;
@@ -49,7 +50,7 @@
 
 
 	.carousel-inner{
-		height:160px;
+
 	}
 	.item{
 		padding-top:10px;
@@ -59,17 +60,15 @@
 		text-decoration: none;
 	}
 	.card{
-		border: 1px solid #efefef;
-		border-radius: 4px;
+		border: 1px solid #ddd;
 		background: #fff;
-		box-shadow: 0 6px 10px rgba(0,0,0,.08), 0 0 6px rgba(0,0,0,.05);
-		transition: .3s transform cubic-bezier(.155,1.105,.295,1.12),.3s box-shadow,.3s -webkit-transform cubic-bezier(.155,1.105,.295,1.12);
 		padding: 14px 80px 18px 36px;
 		cursor: pointer;
 	}
 
 	.card:hover{
-		box-shadow: 0px 15px 20px rgba(0,0,0,.12), 0 5px 10px rgba(0,0,0,.06);
+		box-shadow: 0px 12px 12px rgba(0,0,0,.12), 0 5px 10px rgba(0,0,0,.06);
+
 	}
 
 	.card h4{
@@ -83,7 +82,8 @@
 	}
 
 	.card div{
-		color:#000;
+		color:#111;
+		font-size:16px;
 	}
 
 	.card img{
@@ -94,14 +94,13 @@
 	}
 
 	.card-1{
-		background-image: url(<c:url value="/resources/img/components-card.png"/>);
-		background-color: #efefef;
-		background-repeat: no-repeat;
-		background-position: left;
-		background-size: 5px;
-		height:125px;
-		border: 2px dashed #ccc;
+		height:80px;
+		background-color: #F8F8F8;
+		padding:16px;
+		border: 2px dashed #ddd;
+		margin-bottom:16px;
 	}
+	.card-1 > div {color:#1C64D3; font-weight:600;}
 
 	@media(max-width: 990px){
 		.card{
@@ -144,6 +143,7 @@
 	.Center {text-align: center;}
 	.tLeft {text-align: left;}
 	.tRight {text-align: right;}
+	.col-md-3 {padding:0 6px;}
 </style>
 <script type="text/javascript">
 	Highcharts.setOptions({
@@ -212,7 +212,7 @@
 			grid.movable('.grid-stack-item', true);
 			grid.resizable('.grid-stack-item', true);
 
-			$('#dashboardArea').css('top','200px');
+			$('#dashboardArea').css('top','140px');
 		});
 
 		$('#saveDashboardBtn').click(function(){
@@ -719,10 +719,10 @@
 			str += '			<a class="addDashboardContent" data-index="'+i+'" href="javascript:;">';
 
 			str += '<div class="card card-1">';
-			str += '	<h4><i class="'+data[i].dashIcon+'"></i>&nbsp;'+dashName+'</h4>';
+			str += '	<h4><i class="'+data[i].dashIcon+'"></i>'+dashName+'</h4>';
 			str += '	<p>'+dashComment+'</p>';
 			str += '	<div>'+dashTypeMsg+'</div>';
-			str += '	<div style="position: absolute; top: 95px; right: 20px;"><button type="button" class="btn btn-default btn-xs conditionView" ><s:message code="dashboard.conditionView"/></button></div>';
+			str += '	<div style="position: absolute; top: 16px; right: 22px;"><button type="button" class="form_btn03 conditionView" ><s:message code="dashboard.conditionView"/></button></div>';
 			str += '</div>';
 
 			str += '			</a>';
@@ -1267,9 +1267,9 @@
 </div>
 
 <div id="xcn_container">
-	<div class="dashboardBtnArea p20" style="z-index:1000;">
+	<div class="dashboardBtnArea" style="z-index:1000;">
 		<div class="btn-group">
-			<button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
+			<button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" style="margin-top:18px;">
 				<span class="fa fa-file-text-o"></span>&nbsp;<s:message code="custom.work"/> <span class="caret"></span>
 			</button>
 			<ul class="dropdown-menu dropdown-menu-right" role="menu" style="min-width:120px;">
@@ -1280,12 +1280,12 @@
 			</ul>
 		</div>
 	</div>
-	<div class="dashboardHeader p20" style="display:none; z-index: 999; position: absolute; top: -1px; left: 0px; right: 0px;">
+	<div class="dashboardHeader" style="display:none; z-index: 999; position: absolute; top: 16px; left: 0px; right: 0px;">
 		<div class="col-xs-12">
-			<button type="button" class="btn btn-sm btn-primary" style="position: absolute;right:137px;top:2px;" id="saveDashboardBtn">
+			<button type="button" class="btn btn-sm btn-primary" style="position: absolute;right:149px;top:2px;" id="saveDashboardBtn">
 				<span class="fa fa-check"></span>&nbsp;<s:message code="common.msg.save"/>
 			</button>
-			<button type="button" class="btn btn-sm btn-default" style="position: absolute;right:68px;top:2px;" id="cancleDashboardBtn">
+			<button type="button" class="btn btn-sm btn-default" style="position: absolute;right:84px;top:2px;" id="cancleDashboardBtn">
 				<span class="glyphicon glyphicon-remove"></span>&nbsp;<s:message code="common.msg.close"/>
 			</button>
 		</div>
