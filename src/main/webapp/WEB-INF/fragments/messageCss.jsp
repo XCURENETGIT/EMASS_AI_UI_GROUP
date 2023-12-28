@@ -5,12 +5,13 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <%-- 메시지 페이지 전용 --%>
-<link rel="stylesheet" href="<c:url value="/css/bootstrap.min.css"/>" />
 <link rel="stylesheet" href="<c:url value="/css/font-awesome.min.css"/>"/>
-<link rel="stylesheet" href="<c:url value="/css/emass_message_style.css"/>" />
-<link rel="stylesheet" href="<c:url value="/css/bootstrap-dialog.css"/>" />
+<link rel="stylesheet" href="<c:url value="/css/emass_message_style.css"/>">
+<link rel="stylesheet" href="<c:url value="/css/reset.css"/>"/>
 <link rel="stylesheet" href="<c:url value="/css/message.css"/>"/> <%-- message css--%>
-<link rel="stylesheet" href="<c:url value="/css/panelsTab.css"/>"/>
+<link rel="stylesheet" href="<c:url value="/css/contentBody.css"/>"/>
+<link rel="stylesheet" href="<c:url value="/css/messageContent.css"/>"/>
+
 <link rel="stylesheet" href="<c:url value="/css/bootstrap-dialog.css"/>" />
 <link rel="stylesheet" href="<c:url value="/css/non-responsive.css"/>" />
 
@@ -24,7 +25,10 @@
 
 <link rel="stylesheet" href="<c:url value="/css/slider.css"/>" />
 <link rel="stylesheet" href="<c:url value="/css/jquery.circliful.css"/>">
+<link rel="stylesheet" href="<c:url value="/css/jquery.layout.css"/>">
 <link rel="stylesheet" href="<c:url value="/css/jquery.nouislider.min.css"/>"/>
+
+<link rel="stylesheet" href="<c:url value="/css/bootstrap.min.css"/>" />
 <link rel="stylesheet" href="<c:url value="/css/bootstrap-datetimepicker.min.css"/>"/>
 <link rel="stylesheet" href="<c:url value="/css/bootstrap-select.min.css"/>"/>
 <link rel="stylesheet" href="<c:url value="/css/codemirror.css"/>"/>
@@ -36,7 +40,6 @@
 
 <link rel="stylesheet" href="<c:url value="/css/jquery.scrollbar.css"/>"/>
 <link rel="stylesheet" href="<c:url value="/css/zTreeStyle.css"/>"/>
-<link rel="stylesheet" href="<c:url value="/css/contentBody.css"/>"/>
 <link rel="stylesheet" href="<c:url value="/css/scrolltabs.css"/>"/>
 
 <link rel="stylesheet" href="<c:url value="/css/jquery.numberedtextarea.css"/>" />

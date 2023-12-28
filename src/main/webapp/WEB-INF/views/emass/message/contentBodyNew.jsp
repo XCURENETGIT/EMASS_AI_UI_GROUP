@@ -3,9 +3,6 @@
 <%@ page import="com.xcurenet.audit.service.Operation" %>
 <%@ page import="com.xcurenet.common.util.SpringContextUtil" %>
 <%@ page import="java.util.Map" %>
-<%@ page import="com.xcurenet.common.util.config.Config" %>
-<%@ page import="com.xcurenet.common.util.Common" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/fragments/messageCss.jsp"%>
 <%@ include file="/WEB-INF/fragments/messageJs.jsp"%>
@@ -31,17 +28,12 @@
 	boolean hostQuery = false;
 	ConfigAdminVO hostQueryVO = configAdminService.getConfAdmin("host.query.use", adminId);
 	if(Common.isNotEmpty(hostQueryVO)) hostQuery = Common.isEquals(Common.nvl(hostQueryVO.getVal()), "Y") ? true : false;
-
-
-	String adminType    = Common.getAdminType(session);
-
 %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
 	<title>EMASS LTH - <s:message code="OPERATION_MGMT.BODY_VIEW"/></title>
-
 	<style type="text/css">
 		html, body{
 			min-width:600px !important;}
@@ -63,7 +55,7 @@
 			top: 0px;
 			left: 0px;
 			right: 0px;
-			height: 30px;
+			height: 35px;
 			width: 100%;
 			min-width: 600px;
 		}
@@ -89,74 +81,11 @@
 		}
 
 		.userOutside{
-			background-color:#FC5656;
-			padding:4px 16px;
-			border-radius: 50px;
-			color:#fff;
-			font-weight:600;
-		}
-		.userOutside:hover{
-			background-color:#FC5656;
-			padding:4px 16px;
-			border-radius: 50px;
-			color:#fff;
-			font-weight:600;
+			background-color:#ffcdcd;
 		}
 		#infoTable td div {
 			word-break:break-all;
 		}
-
-
-		.cd-top {
-			background-color: rgb(51, 122, 183) !important;
-			bottom: 40px;
-			color: rgb(255, 255, 255) !important;
-			display: inline-block;
-			font-size: 18px;
-			line-height: 24px;
-			position: fixed;
-			opacity: 0;
-			right: -158px;
-			text-align: center;
-			text-decoration: none !important;
-			-webkit-transform: scale(2) translate(47px,-10px);
-			-moz-transform: scale(2) translate(47px,-10px);
-			-o-transform: scale(2) translate(47px,-10px);
-			-ms-transform: scale(2) translate(47px,-10px);
-			transform: scale(2) translate(47px,-10px);
-			-webkit-transition: all 0.3s ease-in-out;
-			-moz-transition: all 0.3s ease-in-out;
-			-o-transition: all 0.3s ease-in-out;
-			-ms-transition: all 0.3s ease-in-out;
-			transition: all 0.3s ease-in-out;
-			visibility: hidden;
-			white-space: nowrap;
-			width: auto;
-		}
-		.cd-top:hover{
-			text-decoration: none !important;
-			color: #333 !important;
-		}
-
-
-		.cd-top .fa {
-			padding: 16px 16px;
-			border-right: 1px solid  rgb(71, 142, 203);
-		}
-		.cd-top span:last-child {
-			padding: 13px 14px;
-		}
-
-		.cd-is-visible {
-			opacity: 0.9;
-			-webkit-transform: scale(1) translate(0px,0px);
-			-moz-transform: scale(1) translate(0px,0px);
-			-o-transform: scale(1) translate(0px,0px);
-			-ms-transform: scale(1) translate(0px,0px);
-			transform: scale(1) translate(0px,0px);
-			visibility: visible;
-		}
-
 		.fa-chevron-up {
 			background-color: #5a9ad0;
 		}
@@ -164,11 +93,9 @@
 			text-decoration: none;
 			opacity: .8;
 		}
-
 		.fold_on {
 			overflow:hidden;
 			height: 15px;
-
 		}
 		.fold_clickTd{
 			overflow:hidden;
@@ -188,18 +115,6 @@
 		.ellipsis {
 			white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 		}
-		.form-inline .c-checkbox span, .form-inline .c-radio span { background-color:#f8f8f8;
-			margin-left:-20px;border:none;}
-		.c-checkbox input,
-		.c-radio input {
-			opacity: 0;
-			position: absolute;
-			margin-left: 0 !important;background: #f8f8f8;
-		}
-		input[type="checkbox"]:disabled {width:0; height:0; border:none;}
-		.subTable th {text-align: center;}
-		.subTable td{ border-bottom:1px solid #ededed;}
-
 	</style>
 	<script type="text/javascript">
 		var popup_msgId = '<%=msgid%>';
@@ -211,10 +126,8 @@
 		var mode='';
 		var kHighlight = '<%=keywordHighlight%>';
 		var hostQueryUse = '<%=hostQuery%>';
-		var re = /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\'\"\\(\=]/gi;
 
 		$(document).ready(function(){
-
 			if(popup_msgId!= '') {
 				getMessage(popup_msgId, popup_searchKey, popup_bodySize, kHighlight,hostQueryUse);
 			}else{
@@ -237,7 +150,9 @@
 				else $(this).find('.fold').addClass('fold_on');
 			});
 
-
+			$('#testx').click(function(){
+				console.log($(this).html());
+			});
 
 			$('#recommendBtn').click(function(){
 				var d = new Date();
@@ -257,11 +172,7 @@
 					parent.openNologUrlPop(host_path);
 				}
 			});
-
-
 		});
-
-		/* grid 관련 */
 
 		var contentBody = {
 			urlIpBlockPreview:'<s:message code="urlIpBlock.preview"/>',
@@ -285,8 +196,6 @@
 			ocrAttach:'<s:message code="bodyview.ocr.preview.attach"/>',
 			noRecvs:'<s:message code="common.msg.norecvs"/>'
 		};
-
-
 
 		function getSimilarDoc(){
 			ui.get({
@@ -332,8 +241,8 @@
 			fileExt = fileExt.toLowerCase( );
 			if ( fileExt == "jpg" || fileExt == "jpeg" || fileExt == "gif" || fileExt == "png" || fileExt == "bmp" )
 			{
-				var msgId = $(obj).parents('ul').attr('msgid');
-				var attachId = $(obj).parents('ul').attr('id');
+				var msgId = $(obj).parents('tr').attr('msgid');
+				var attachId = $(obj).parents('tr').attr('id');
 				var url = contextRoot + '/downEmassAttach.xcn?msgId='+msgId+'&attachId='+attachId;
 				var u = '<c:url value="/img/loading/Loading.gif"/>';
 				var n = '<c:url value="/img/noneImage.png"/>';
@@ -345,7 +254,6 @@
 				$('#imgPreviewDiv').attr('url',url);
 				$('#imgPreviewDiv').attr('fileName',fileName);
 
-
 				var left = $(obj).offset().left;
 				if( $(obj).offset().left + $('#imgPreviewDiv').width() > $(window).width()){
 					left-=$('#imgPreviewDiv').width()-20;
@@ -355,7 +263,6 @@
 				setTimeout(function(){
 					$('#imgPreviewDiv').fadeIn();
 				}, 100);
-
 			}
 		}
 
@@ -366,586 +273,343 @@
 			var url    = '<c:url value="/ems/participantInfoPop.do?xrootmtr='+xRootMtr+'&srcip='+srcip+'&usr_id='+usr_id+'&startDt='+startDt+'&endDt='+endDt+'"/>';
 			var pop = fnOpenWindow(url, 'participant', 1015, 450, 'resize');
 		}
-		//
-		// /* 내보내기 tablinks */
-		// $(document).on('click', '.tablinks', function(){
-		// 	var children = $(this).parent().children('button') // 배열
-		// 	var _thisIdx = $(this).index(); // 선택된 idx
-		//
-		// 	$(children).each(function(index) {
-		// 		if(_thisIdx == index){
-		// 			$(this).attr('class','active tablinks w50');
-		// 			$(this).find('input:radio').prop("checked", false);
-		//
-		// 		}else{
-		// 			$(this).attr('class','tablinks w50');
-		// 			$(this).find('input:radio').prop("checked", false);
-		// 		}
-		// 	});
-		// });
 
-
-		$(document).on('click', '.all_down_link', function(){
-			var searchType = $(this).attr('data-type');
-			parent.$('#searchType').val(searchType);
-			var title = $(this).text();
-			$('#exportTitle').text(title+' '+'<s:message code="common.msg.export"/>');
-			$('#exportDialog').modal('show');
-		});
-
-
-		/* exportDialog  모달 실행 */
-		$(document).on('show.bs.modal','#exportDialog', function () {
-			$('input:radio[name=exportDataRange]:input:checked').prop("checked", false);
-
-			var grid = parent.getIframeListObj().grid;
-			var rows = grid.getSelectedKey('msgid').length;
-			var total = grid.data.length;
-
-			if(total == 0){
-				ui.alertMsg('<s:message code="common.msg.nodata"/>');
-				return false;
-			}
-
-			var searchType =  parent.$("#searchType").val();
-
-
-			var consentNo = grid.getValue(0, 'consentNo');
-			if( searchType != 'L'){
-				if(isConsent( ) && consentNo == '' && '<%=adminType%>' != 'C'){
-					alert('<s:message code="download.msg.consent"/>');
-					return false;
-				}
-			}
-
-			if(searchType != "L" && searchType.indexOf('L') > -1) {
-				if($('input:radio[name=exportFileType]:input:checked').val() == "xlsx") {
-					$("input:radio[name='bodyInExcel']:radio[value='N']").prop("checked", true);
-					$('#bodyInExcel').show();
-					$('#bodyInExcelMsg').hide();
-					$('#bodyInExcelIdx').hide();
-				}else {
-					$('#bodyInExcel').hide();
-					$('#bodyInExcelMsg').hide();
-					$('#bodyInExcelIdx').hide();
-				}
-			} else {
-				$('#bodyInExcel').hide();
-				$('#bodyInExcelMsg').hide();
-				$('#bodyInExcelIdx').hide();
-			}
-
-
-			parent.$('#searchTime').val('');
-			parent.$('#searchCondition').val('');
-			parent.$('#searchHeader').val('');
-			parent.$('#searchTotal').val('');
-			parent.$('#dataLength').val('');
-			parent.$('#exportFileExt').val('');
-
-			var checkMsgCnt = parent.$('#checkMsgCnt').val();
-			if( (rows > checkMsgCnt) || (rows == 0 && grid.data.length > checkMsgCnt)){
-				$('input:radio[name=exportDataRange]:input[value=A]').click();
-
-			}else{
-				$('input:radio[name=exportDataRange]:input[value=S]').click();
-			}
-		});
-
-
-		$(document).on('change','input[name="exportDataRange"]:radio', function () {
-			var grid = parent.getIframeListObj().grid;
-			var rows = grid.getSelectedKey('msgid').length;
-			var total = parent.getIframeListObj().$('#busiCntArea').find('.tab_selected').find('.busiCnt').text();
-			total = total.replace(re,"")
-			var downTotal = total;
-			var exportDataRange = $(this).val();
-			if( exportDataRange == 'S'){
-				$('#sizeWarnMsg').hide();
-
-				if( rows > 0) downTotal = rows;
-				else downTotal = grid.data.length;
-
-				var checkMsgCnt = parent.$('#checkMsgCnt').val();
-				if( downTotal > checkMsgCnt){
-					ui.alertMsg('<s:message code="download.message.check.total" arguments="'+addCommas(checkMsgCnt)+'" argumentSeparator="|"/>');
-					$('input:radio[name=exportDataRange]:input[value=A]').parent().click();
-					return;
-				}
-			}
-
-			var searchType = parent.$('#searchType').val();
-			if( searchType.indexOf('L') > -1){
-				$('#exportFileTypeArea').show();
-				if(downTotal > 50000){
-					$('#sizeWarnMsg').show();
-				}else{
-					$('#sizeWarnMsg').hide();
-				}
-			}
-			else {
-				$('#exportFileTypeArea').hide();
-				$('#sizeWarnMsg').hide();
-			}
-			$('#exportDataSize').text(addCommas(downTotal));
-			parent.$('#searchTotal').val(downTotal);
-		});
-
-
-		var downloadBatchExist=true;
-		$(document).on('click', '#allDownBtn', function(){
-			var grid = parent.getIframeListObj().grid;
-			var rows = grid.getSelectedKey('msgid').length;
-			var total = parent.getIframeListObj().$('#busiCntArea').find('.tab_selected').find('.busiCnt').text();
-			total = total.replace(re,"")
-			grid.on();
-			var bodyInExcel = parent.$('input:radio[name=bodyInExcel]:input:checked').val();
-			var header = grid.getHeaderEXCEL();
-			if(bodyInExcel == "Y") {
-				header = JSON.parse(header);
-				header.splice($('#nowColIdx').val(),0,{"key":"body","title":"<s:message code='condition.body' />","width":410,"align":"left"});
-				header = JSON.stringify(header);
-			}
-			var param = JSON.stringify( parent.getIframeListObj().filterValData );
-			var dataLength = parent.$('#dataLength_select').selectpicker('val');
-
-
-			var searchType = parent.$('#searchType').val();
-			var exportFileType = $('input:radio[name=exportFileType]:input:checked').val();
-			var exportDataRange = $('input:radio[name=exportDataRange]:input:checked').val();
-
-			parent.$('#searchTime').val(parent.getIframeListObj().parent.$('#searchTime').val());
-			parent.$('#searchCondition').val(param);
-			parent.$('#searchHeader').val(header);
-			parent.$('#dataLength').val(dataLength);
-			parent.$('#exportFileExt').val(exportFileType);
-
-			if( exportDataRange == 'A'){
-				//중복체크
-				ui.get({
-					url : 'checkDownloadBatchExist.xcn',
-					searchCondition : param,
-					searchTotal : parent.$('#searchTotal').val(),
-					searchType : searchType,
-					exportFileExt : exportFileType,
-					success : function(data, total) {
-						if(data > 0) {
-							downloadBatchExist = true;
-						} else {
-							downloadBatchExist = false;
-						}
-					},
-					error : function(status, message) {
-						ui.alertMsg(message);
-					},
-					complete : function() {
-						if(downloadBatchExist) {
-							ui.alertMsg('<s:message code="download.msg.exist" />');
-						} else {
-							$('#isBackground').val('Y');
-							if( searchType == 'B'){
-								parent.$('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveBatchZip.xcn"/>');
-								parent.$('#allDownForm').submit();
-							}else if(searchType == 'A' ){
-								parent.$('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveBatchZip.xcn"/>');
-								parent.$('#allDownForm').submit();
-							}else if(exportFileType == 'xlsx' || exportFileType == 'cell'){
-								parent.$('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveBatchZip.xcn"/>');
-								parent.$('#allDownForm').submit();
-							}else if(exportFileType == 'csv'){
-								parent.$('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveBatchCSV.xcn"/>');
-								parent.$('#allDownForm').submit();
-							}else if(exportFileType == 'pdf'){
-								parent.$('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveBatchPDF.xcn"/>');
-								parent.$('#allDownForm').submit();
-							}
-						}
-					}
-				});
-
-			}else{
-				if( searchType == 'B'){
-					$('.body_link_new').click();
-				}else if(searchType == 'A' ){
-					$('.attach_link_new').click();
-				}
-				else if(searchType == 'LB' || searchType == 'LBA' ){
-					var msgids = grid.getSelectedKey('msgid');
-
-					if( msgids.length == 0 ){
-						msgids = grid.getKeyData('msgid');
-					}
-					var selected_condition = {};
-					selected_condition.msgids = msgids;
-					selected_condition.sort = parent.$('#messageSort').val();
-
-					parent.$('#searchCondition').val(JSON.stringify( selected_condition ));
-					parent.$('#searchTotal').val(msgids.length);
-
-					if(exportFileType == 'xlsx' || exportFileType == 'cell'){
-						parent.$('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveZip.xcn"/>');
-						parent.$('#allDownForm').submit();
-					}else if(exportFileType == 'csv'){
-						parent.$('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveCSV.xcn"/>');
-						parent.$('#allDownForm').submit();
-					}else if(exportFileType == 'pdf'){
-						parent.$('#allDownForm').attr('action', '<c:url value="/getEmassMessageSavePDF.xcn"/>');
-						parent.$('#allDownForm').submit();
-					}
-				}else{
-					if(exportFileType == 'xlsx'){
-						$('.excel_link_new').click();
-					}else if(exportFileType == 'cell'){
-						$('.cell_link_new').click();
-					}else if(exportFileType == 'csv'){
-						$('.csv_link_new').click();
-					}else if(exportFileType == 'pdf'){
-						$('.pdf_link_new').click();
-					}
-				}
-			}
-
-			$('#exportDialog').modal('hide');
-			setTimeout(function(){
-				grid.off();
-			}, 500);
-		});
-
-
-		/* 다운로드 관련 */
-		$(document).on('click', '.excel_link_new', function(){
-			var grid = parent.getIframeListObj().grid;
-			var title = $(this).attr('rel');
-			var option = $(this).attr('option');
-			grid.on();
-			setTimeout(function(){
-				parent.excelDownLoad(grid, title, null, null, option);
-			}, 200);
-		});
-		$(document).on('click', '.cell_link_new', function(){
-			var grid = parent.getIframeListObj().grid;
-			var title = $(this).attr('rel');
-			var option = $(this).attr('option');
-			grid.on();
-			setTimeout(function(){
-				parent.cellDownLoad(grid, title, null, null, option);
-			}, 200);
-		});
-
-		$(document).on('click', '.pdf_link_new', function(){
-			var grid = parent.getIframeListObj().grid;
-			var title = $(this).attr('rel');
-			var option = $(this).attr('option');
-			grid.on();
-			setTimeout(function(){
-				parent.pdfDownLoad(grid, title, null, null, option);
-			}, 200);
-		});
-		$(document).on('click', '.csv_link_new', function(){
-			var grid = parent.getIframeListObj().grid;
-			var title = $(this).attr('rel');
-			var option = $(this).attr('option');
-			grid.on();
-			setTimeout(function(){
-				parent.csvDownLoad(grid, title, null, null, option);
-			}, 200);
-		});
-
-		$(document).on('click', '.body_link_new', function(){
-			var grid = parent.getIframeListObj().grid;
-			if (grid.Rows == 0) {
-				alert('<s:message code="common.msg.nodata"/>');
-				return;
-			}
-			grid.on();
-			setTimeout(function(){
-				var msgid = grid.getSelectedKey('msgid');
-				if(msgid.length == 0) msgid = grid.getKeyData('msgid');
-				parent.$('#msgId').val('');
-				parent.$('#msgIds').val('');
-				if(msgid.length==1){
-					parent.$('#msgId').val(msgid.join(','));
-					parent.$('#downForm').attr('action', '<c:url value="/getEmassBodySave.xcn"/>');
-				} else {
-					parent.$('#msgIds').val(msgid.join(','));
-					parent.$('#downForm').attr('action', '<c:url value="/getEmassBodySaveZip.xcn"/>');
-				}
-				parent.$('#downForm').submit();
-				grid.off();
-			}, 300);
-		});
-		$(document).on('click', '.attach_link_new', function(){
-			var grid =	parent.getIframeListObj().grid;
-			if (grid.Rows == 0) {
-				alert('<s:message code="common.msg.nodata"/>');
-				return;
-			}
-			grid.on();
-			setTimeout(function(){
-				var msgid = grid.getSelectedKey('msgid');
-				if(msgid.length == 0) msgid = grid.getKeyData('msgid');
-
-				parent.$('#msgIds').val(msgid.join(','));
-				parent.$('#downForm').attr('action', '<c:url value="/downEmassAttachByMsgId.xcn"/>');
-				parent.$('#downForm').submit();
-				grid.off();
-			}, 300);
-		});
-		$(document).on('click', '.print_link_new', function(){
-			var grid = parent.getIframeListObj().grid;
-			var title = $(this).attr('rel');
-			if (grid.data.length == 0) {
-				alert('<s:message code="common.msg.nodata"/>');
-				return;
-			}
-
-			grid.print(title, pMenuId, menuId);
-		});
-
-		$(document).on('click', '.downList', function(){
-			var url    = '<c:url value="/commons/downList.do"/>';
-			fnOpenWindow(url, 'downInfoPop', 1400, 580, 'resize');
-		});
 	</script>
 </head>
-<div>
-	<!-- 메시지 상세 시작 -->
-	<div class="inner_message" id="msgDiv" style="display: none">
-			<div class="messageBtn">
-				<div class="btnform">
-					<button class="btn01" id="prevBtn"><img src="../img/subBtn_arrow_left_12.png" alt=""></button>
-					<button class="btn01" id="nextBtn"><img src="../img/subBtn_arrow_right_12.png" alt=""></button>
-					<button class ="btn05 msg_button" id="saveBtn"><img src="../img/subBtn_save.png" alt="<s:message code="common.msg.save"/>"><s:message code="common.msg.save"/></button>
-					<button class="btn05" id="printBtn"><img src="../img/subBtn_mail.png" alt="<s:message code="common.msg.print"/>"><s:message code="common.msg.print"/></button>
-					<button class="btn05 msg_button dropdown-toggle" data-toggle="dropdown" ><img src="../img/subBtn_settings.png" data-toggle="dropdown" alt="<s:message code="common.msg.addFunctions"/>"><s:message code="common.msg.addFunctions"/><span class="caret"></span></button>
-						<ul class="dropdown-menu dropdown-additionMenu" role="menu" style="min-width:100px;font-size:13px;" id="additionalBtn">
-							<li><a href="javascript:void(0);" id="usersInfoBtn"><s:message code="common.msg.userinfo"/></a></li>
-							<li class="dropdown-divider"></li>
-							<li><a href="javascript:void(0);" id="headerBtn"><s:message code="common.msg.headerInfo"/></a></li>
-							<li class="dropdown-divider"></li>
-							<li><a href="javascript:void(0);" id="originalBtn"><s:message code="common.msg.originalInfo"/></a></li>
-							<li class="dropdown-divider"></li>
-							<li><a href="javascript:void(0);" id="domainBtn"><s:message code="common.msg.domainInfo"/></a></li>
-							<li class="dropdown-divider"></li>
-							<li><a href="javascript:void(0);" id="mailFowardBtn"><s:message code="common.msg.forward_mail"/></a></li>
-							<li class="dropdown-divider"></li>
-							<li><a href="javascript:void(0);" id="warnMailBtn"><s:message code="common.msg.warning_mail"/></a></li>
-							<li class="dropdown-divider"></li>
-							<li><a href="javascript:void(0);" id="msgIdBtn">ID</a></li>
-						</ul>
-					<button class="btn05" id="openBigContent"><img src="../img/subBtn_link.png" alt="새창"><s:message code="bodyview.window.new"/></button>
-				</div>
-				<div class="btnform txt_right">
-					<%-- 메시지 보관--%>
-					<%--saveMsgData--%>
-					<button class="btn05" id="saveMsgData"><s:message code="filterInfo.setMsgFolder1"/></button>
-					<%-- 내보내기--%>
-					<button  class="btn05" href="javascript:;" style="padding-right:10px; color:#383838; cursor: pointer; font-size: 12px;left:178px;"data-toggle="dropdown" id="exportMsg"><s:message code="common.msg.export"/> <span class="caret"></span></button>
-					<ul class="dropdown-menu dropdown-exportMenu" role="menu" style="min-width:100px;font-size:13px;">
-						<li style="display:none;"><a href="javascript:void(0);" id="body_link_btn" class="body_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-text-o" style="font-size:16px"></span>&nbsp;<s:message code="condition.body"/></a></li>
-						<li style="display:none;"><a href="javascript:void(0);" id="attach_link_btn" class="attach_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-archive-o" style="font-size:16px"></span>&nbsp;<s:message code="consent.attach"/></a></li>
-						<li style="display:none;"><a href="javascript:void(0);" id="excel_link_btn" class="excel_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>" option="Y"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/> (<s:message code="common.msg.excel"/> xlsx)</a></li>
-						<li style="display:none;"><a href="javascript:void(0);" id="cell_link_btn" class="cell_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>" option="Y"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/> (<s:message code="common.msg.hancel"/> cell)</a></li>
-						<li style="display:none;"><a href="javascript:void(0);" id="csv_link_btn" class="csv_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>" option="Y"><span class="fa fa-file-text" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/> (<s:message code="common.msg.text"/> csv)</a></li>
-						<li style="display:none;"><a href="javascript:void(0);" id="pdf_link_btn" class="pdf_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>" option="Y"><span class="fa fa-file-pdf-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/> (PDF)</a></li>
-						<c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'LS') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
-							<li><a href="javascript:void(0);" class="all_down_link" data-type="L" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/></a></li>
-						</c:if>
-						<c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'BS') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
-							<li><a href="javascript:void(0);" class="all_down_link" data-type="B" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-text-o" style="font-size:16px"></span>&nbsp;<s:message code="condition.body"/></a></li>
-						</c:if>
-						<c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'AS') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
-							<li><a href="javascript:void(0);" class="all_down_link" data-type="A" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-archive-o" style="font-size:16px"></span>&nbsp;<s:message code="consent.attach"/></a></li>
-						</c:if>
-						<c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'WS') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
-							<li><a href="javascript:void(0);" class="all_down_link" data-type="LB" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/>+<s:message code="condition.body"/></a></li>
-						</c:if>
-						<c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'CS') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
-							<li><a href="javascript:void(0);" class="all_down_link" data-type="LBA" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/>+<s:message code="condition.body"/>+<s:message code="consent.attach"/></a></li>
-						</c:if>
-						<c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'LP') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
-							<li><a href="javascript:void(0);" class="print_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="glyphicon glyphicon-print"></span>&nbsp;<s:message code="selectCodeAll.list"/> <s:message code="common.msg.print"/></a></li>
-						</c:if>
-						<li class="dropdown-divider"></li>
-						<li><a href="javascript:void(0);" class="downList" data-target="tabGrid" ><span class="glyphicon glyphicon-th-list"></span>&nbsp;<s:message code="common.msg.download"/> <s:message code="mail.view.list"/></a></li>
-					</ul>
+<body>
+<div id="periodBodyMenu">
+	<div style="height:30px;background-color:#337ab7;color:#fff;padding-left:10px;line-height:30px;font-weight: bold;cursor:default;">
+		<div style="float:left;width:200px;">
+			<i class="glyphicon glyphicon-calendar"></i>&nbsp;<s:message code="filterInfo.period.setting"/>
+		</div>
+		<div style="float:right;padding-right:8px;">
+			<span class="glyphicon glyphicon-remove" style="cursor:pointer;" id="periodBodyMenuCloseBtn"></span>
+		</div>
+	</div>
+	<div style="width:100%;padding:10px 10px 0px 10px;">
+		<div>
+			<s:message code="common.messenger.msg1"/><br/>
+			<s:message code="common.messenger.msg2"/><br/>
+			<s:message code="common.messenger.msg3"/><br/>
+		</div>
+		<div class="form-group form-inline" style="width:100%;">
+			<div class="input-group" style="width:50px;font-weight: bold;">
+				<s:message code="condition.period"/>
+			</div>
+			<div class="input-group">
+				<div class="input-group date" id="startdatepickerBody" style="width:170px;">
+					<input type="text" id="startDtAdd" class="input-sm form-control" />
+					<span class="input-group-addon" style="padding: 0px 5px;"> <span class="glyphicon glyphicon-calendar"></span></span>
 				</div>
 			</div>
-			<div class="messageCon"> <%--     condition.receive ,  condition.send--%>
-					<%--  수신 / 발신 정보 표시 --%>
-					<div id="recvOrsend" class="top ">
-						<span class="sub_flag_send" id="sub_flag_send" style="display: none"><s:message code="condition.send"/> </span>
-						<span class="sub_flag_reception" id="sub_flag_reception" style="display: none"><s:message code="condition.receive"/> </span>
-						<h4 class="red02" id="subject"></h4>
-						<span class="loca" id="svc"></span>
-					</div>
-					<div class="conBox">
-						<div id="userTr">
-							<h5 id="userid"></h5>
-							<span class="loca" id="ctimeTd"></span>
-						</div>
-						<table class="subTable mat8">
-							<colgroup>
-								<col style="width:150px;">
-								<col style="width:*">
-								<col style="width:150px;">
-								<col style="width:*">
-								<col>
-							</colgroup>
-							<%--피드백 관련 --%>
-							<tr id="infoFeedbackTr" style="display: none;">
-								<th class="topline" colspan="1" style="border-bottom: 1px solid #ccc !important;">
-									<div class="form-inline not-dashed">
-									<span style="display: inline-block; width: 140px;">
-												<span id="infoType"></span>
-												<span id="probType"></span>
-											</span>
-										</div>
-									<!--<div class="form-inline not-dashed">
-											<span style="display: inline-block; width: 140px;">
-												<span id="infoType"></span>
-												<span id="probType"></span>
-											</span>
-											<span style="margin-left: 10px;">
-												<label class="radio-inline c-radio">
-													<input type="radio" name="feedback" class="feedback" value="0">
-													<span class="fa fa-check"></span><span class="feedbackCorrect"></span><s:message code="condition.info.feedback0"/>
-												</label>
-												<label class="radio-inline c-radio">
-													<input type="radio" name="feedback" class="feedback" value="9">
-													<span class="fa fa-check"></span><span class="feedbackDefer"></span><s:message code="condition.info.feedback9"/>
-												</label>
-											</span>
-									</div>
-									<div class="form-inline not-dashed">
-										<span style="display: inline-block; width: 140px;">
-											<span id="ml_confd_userid"></span>
-										</span>
-										<span style="margin-left: 10px;">
-												<label class="radio-inline c-radio">
-													<input type="radio" name="feedback" class="feedback" value="1">
-													<span class="fa fa-check"></span><span class="feedbackInCorrect"></span><s:message code="condition.info.class1"/>
-												</label>
-												<label class="radio-inline c-radio">
-													<input type="radio" name="feedback" class="feedback" value="2">
-													<span class="fa fa-check"></span><span class="feedbackInCorrect"></span><s:message code="condition.info.class2"/>
-												</label>
-												<label class="radio-inline c-radio">
-													<input type="radio" name="feedback" class="feedback" value="3">
-													<span class="fa fa-check"></span><span class="feedbackInCorrect"></span><s:message code="condition.info.class3"/>
-												</label>
-												<label class="radio-inline c-radio">
-													<input type="radio" name="feedback" class="feedback" value="4">
-													<span class="fa fa-check"></span><span class="feedbackInCorrect"></span><s:message code="condition.info.class4"/>
-												</label>
-										</span>
-									</div>-->
-								</th>
-								<td colspan="3"class="topline"  style="border-bottom: 1px solid #ccc !important;">
-									<div class="form-inline not-dashed">
-										<span style="margin-left: 10px;">
-												<label class="radio-inline c-radio">
-													<input type="radio" name="feedback" class="feedback" value="0">
-													<span class="fa fa-check"></span><span class="feedbackCorrect"></span><s:message code="condition.info.feedback0"/>
-												</label>
-												<label class="radio-inline c-radio">
-													<input type="radio" name="feedback" class="feedback" value="9">
-													<span class="fa fa-check"></span><span class="feedbackDefer"></span><s:message code="condition.info.feedback9"/>
-												</label>
-											</span>
-										<span>
-											<span id="ml_confd_userid"></span>
-										</span>
-										<span style="margin-left: 10px;">
-												<label class="radio-inline c-radio">
-													<input type="radio" name="feedback" class="feedback" value="1">
-													<span class="fa fa-check"></span><span class="feedbackInCorrect"></span><s:message code="condition.info.class1"/>
-												</label>
-												<label class="radio-inline c-radio">
-													<input type="radio" name="feedback" class="feedback" value="2">
-													<span class="fa fa-check"></span><span class="feedbackInCorrect"></span><s:message code="condition.info.class2"/>
-												</label>
-												<label class="radio-inline c-radio">
-													<input type="radio" name="feedback" class="feedback" value="3">
-													<span class="fa fa-check"></span><span class="feedbackInCorrect"></span><s:message code="condition.info.class3"/>
-												</label>
-												<label class="radio-inline c-radio">
-													<input type="radio" name="feedback" class="feedback" value="4">
-													<span class="fa fa-check"></span><span class="feedbackInCorrect"></span><s:message code="condition.info.class4"/>
-												</label>
-										</span>
-									</div>
-								</td>
-							</tr>
-							<tr>
-								<th><s:message code="bodyview.srcIp"/></th>
-								<td class="topline txt_left" id="srcipTd"></td>
-								<th><s:message code="bodyview.dstIp"/></th>
-								<td class="topline txt_left" id="dstipTd"></td>
-							</tr>
-							<tr>
-								<th><s:message code="bodyview.body.size"/></th>
-								<td class="txt_left" id="bodySizeTd"></td>
-								<th><s:message code="bodyview.userId"/></th>
-								<td class="txt_left"  id="userIdTd"></td>
-							</tr>
-							<tr>
-								<th><s:message code="bodyview.hostPathInfo"/></th>
-								<td colspan="3" class="mal8 tableLink txt_left" id="hostDiv"></td>
-							</tr>
+			<span>~</span>
+			<div class="input-group">
+				<div class="input-group date" id="enddatepickerBody" style="width:170px;">
+					<input type="text" id="endDtAdd" class="input-sm form-control"/>
+					<span class="input-group-addon" style="padding: 0px 5px;"><span class="glyphicon glyphicon-calendar"></span></span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div style="text-align: center;padding-bottom: 15px;">
+		<button type="button" class="btn btn-sm btn-primary" accesskey="T" id="dateSearchBody" style="font-size:12px;" onclick="getGroupDetail();"><i class="glyphicon glyphicon-search"></i>&nbsp;<s:message code="common.messenger.all.view"/></button>
+	</div>
+</div>
+<div class="msgBody">
+	<div style="display: none;" id="buttonDiv">
+		<div class="form-group form-inline not-dashed" style="float:left;padding:4px 0px 0 5px;" id="buttonArea">
+			<button class ="msg_button" id="prevBtn"><s:message code="common.msg.prev"/></button>
+			<button class ="msg_button" id="nextBtn"><s:message code="common.msg.next"/></button>
+			<button class ="msg_button" id="saveBtn"><s:message code="common.msg.save"/></button>
+			<button class ="msg_button" id="printBtn"><s:message code="common.msg.print"/></button>
+			<button type="button" class="msg_button dropdown-toggle" data-toggle="dropdown">
+				<s:message code="common.msg.addFunctions"/> <span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu dropdown-menu-left" role="menu" style="min-width:100px;font-size:13px;left:178px;" id="additionalBtn">
+				<li><a href="javascript:void(0);" id="usersInfoBtn"><s:message code="common.msg.userinfo"/></a></li>
+				<li class="dropdown-divider"></li>
+				<li><a href="javascript:void(0);" id="headerBtn"><s:message code="common.msg.headerInfo"/></a></li>
+				<li class="dropdown-divider"></li>
+				<li><a href="javascript:void(0);" id="originalBtn"><s:message code="common.msg.originalInfo"/></a></li>
+				<li class="dropdown-divider"></li>
+				<li><a href="javascript:void(0);" id="domainBtn"><s:message code="common.msg.domainInfo"/></a></li>
+				<li class="dropdown-divider"></li>
+				<li><a href="javascript:void(0);" id="mailFowardBtn"><s:message code="common.msg.forward_mail"/></a></li>
+				<li class="dropdown-divider"></li>
+				<li><a href="javascript:void(0);" id="warnMailBtn"><s:message code="common.msg.warning_mail"/></a></li>
+				<li class="dropdown-divider"></li>
+				<li><a href="javascript:void(0);" id="msgIdBtn">ID</a></li>
+			</ul>
+			&nbsp;
+			<button class ="msg_button" id="openBigContent"><s:message code="bodyview.window.new"/></button>
+			<button class ="msg_button" id="recommendBtn"><s:message code="common.msg.similar"/></button>
+		</div>
+	</div>
+	<div class="contents" style="padding-top: 33px;">
+		<div class="boxArea" id="msgDiv" style="display: none;">
+			<div class="content_body" style="transform: translateZ(0);">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="panel panel-default" id="subjectDiv">
+							<div class="panel-heading" style="font-weight: bold;min-height:35px;">
+								<div id="subject" class="pull-left" style="cursor:default;width:calc(100% - 355px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;word-wrap:normal;line-height: 25px;" title="subject"></div>
+								<div class="pull-right">
+									<span class="svcnmSpan"></span>
+								</div>
+								<div id="subjectStrDiv" style="clear:both;font-size:12px;padding-top:5px;">
+									<span><s:message code="condition.subject"/> <s:message code="bodyview.find.keyword"/> : </span>
+									<span style="font-weight: bold;" id="subjectStr"></span>
+								</div>
+							</div>
+							<div class="panel-body css-body">
+								<div id="">
+									<table id="infoTable" class="table table-bordered" style="margin-bottom:0;table-layout:fixed;min-width:500px;">
+										<colgroup>
+											<col style="width: 110px;">
+											<col>
+											<col style="width: 110px;">
+											<col style="width: 160px;">
+										</colgroup>
+										<tr id="infoFeedbackTr" style="display: none;">
+											<td colspan="4" style="border-bottom: 1px solid #ccc !important;">
+												<div class="form-inline not-dashed">
+														<span style="display: inline-block; width: 140px;">
+															<span id="infoType"></span>
+															<span id="probType"></span>
+														</span>
+													<span style="margin-left: 10px;">
+															<label class="radio-inline c-radio">
+																<input type="radio" name="feedback" class="feedback" value="0">
+																<span class="fa fa-check"></span><span class="feedbackCorrect"></span><s:message code="condition.info.feedback0"/>
+															</label>
+															<label class="radio-inline c-radio">
+																<input type="radio" name="feedback" class="feedback" value="9">
+																<span class="fa fa-check"></span><span class="feedbackDefer"></span><s:message code="condition.info.feedback9"/>
+															</label>
+														</span>
+												</div>
+												<div class="form-inline not-dashed">
+														<span style="display: inline-block; width: 140px;">
+															<span id="ml_confd_userid"></span>
+														</span>
+													<span style="margin-left: 10px;">
+															<label class="radio-inline c-radio">
+																<input type="radio" name="feedback" class="feedback" value="1">
+																<span class="fa fa-check"></span><span class="feedbackInCorrect"></span><s:message code="condition.info.class1"/>
+															</label>
+															<label class="radio-inline c-radio">
+																<input type="radio" name="feedback" class="feedback" value="2">
+																<span class="fa fa-check"></span><span class="feedbackInCorrect"></span><s:message code="condition.info.class2"/>
+															</label>
+															<label class="radio-inline c-radio">
+																<input type="radio" name="feedback" class="feedback" value="3">
+																<span class="fa fa-check"></span><span class="feedbackInCorrect"></span><s:message code="condition.info.class3"/>
+															</label>
+															<label class="radio-inline c-radio">
+																<input type="radio" name="feedback" class="feedback" value="4">
+																<span class="fa fa-check"></span><span class="feedbackInCorrect"></span><s:message code="condition.info.class4"/>
+															</label>
+														</span>
+												</div>
+											</td>
+										</tr>
+										<tr id="usridTr">
+											<th><s:message code="common.msg.account"/></th>
+											<td id="userid">
+											</td>
+											<th><s:message code="condition.date"/></th>
+											<td id="ctimeTd"></td>
+										</tr>
+										<tr id="srcTr">
+											<th><s:message code="condition.source"/> IP</th>
+											<td id="srcipTd"></td>
+											<th><s:message code="condition.date"/></th>
+											<td id="ctimeTd"></td>
+										</tr>
+										<tr id="destTr">
+											<th><s:message code="condition.destination"/> IP</th>
+											<td id="dstipTd"></td>
+											<th><s:message code="filterInfo.size"/></th>
+											<td id="bodySizeTd"></td>
+										</tr>
+										<tr id="userTr" class="fold_clickTr">
+											<th class="fold_clickTh"><span class="fold_icon"></span><span class="trTitle"><s:message code="consent.user"/></span></th>
+											<td class="fold_clickTd" id="testx">
+												<div id="userDiv" class="fold">
+													<span class="userInfoSpan" recvid="revcid" recvip=""></span>
+												</div>
+											</td>
+											<th><s:message code="common.msg.account"/></th>
+											<td id="userIdTd" style="word-break: break-all;"></td>
+										</tr>
+										<tr id="fromTr" class="fold_clickTr">
+											<th class="fold_clickTh"><span class="fold_icon"></span><span class="trTitle"><s:message code="condition.from"/></span></th>
+											<td class="fold_clickTd" colspan="3">
+												<div id="sendUserDiv" class="fold">
+												</div>
+											</td>
+										</tr>
 
-							<%-- from to cc bcc info--%>
-							<tr id="fromTr" class="fold_clickTr">
-								<th class="fold_clickTh"><span class="fold_icon"></span><span class="trTitle"><s:message code="condition.from"/></span></th>
-								<td class="fold_clickTd" colspan="3">
-									<div id="sendUserDiv" class="fold txt_left" style="padding:7px;">
-									</div>
-								</td>
-							</tr>
-							<tr id="toTr" class="fold_clickTr">
-								<th class="fold_clickTh"><span class="fold_icon"></span><span class="trTitle"><s:message code="condition.to"/></span></th>
-								<td class="fold_clickTd" colspan="3">
-									<div id="receiveUserDiv" class="fold txt_left">
-									</div>
-								</td>
-							</tr>
-							<tr id="ccTr" class="fold_clickTr">
-								<th class="fold_clickTh"><span class="fold_icon"></span><span class="trTitle"><s:message code="condition.cc"/></span></th>
-								<td class="fold_clickTd" colspan="3">
-									<div id="ccUserDiv" class="fold txt_left">
-									</div>
-								</td>
-							</tr>
-							<tr id="bccTr" class="fold_clickTr">
-								<th class="fold_clickTh"><span class="fold_icon"></span><span class="trTitle"><s:message code="condition.bcc"/></span></th>
-								<td class="fold_clickTd" colspan="3">
-									<div id="bccUserDiv" class="fold txt_left">
-									</div>
-								</td>
-							</tr>
-						</table>
-					</div>
-				</div>
-				<div id="fileDiv" class="messageCon">
-					<div class="top grayBg03 body_toggle fileFold">
-						<h4><i class="fa fa-file-code-o fa-fw"></i> <s:message code="bodyview.file.info"/></h4><h4 id="fileCntArea"></h4> <%--뒤에 파일 갯수 표기--%>
-						<div class="conBtn btnform">
-							<button class="btn05" id="allDownload"><img src="<c:url value="/img/subBtn_save.png"/>"  alt="확대"> <s:message code="bodyview.file.allDownload"/></button>
+										<tr id="toTr" class="fold_clickTr">
+											<th class="fold_clickTh"><span class="fold_icon"></span><span class="trTitle"><s:message code="condition.to"/></span></th>
+											<td class="fold_clickTd" colspan="3">
+												<div id="receiveUserDiv" class="fold">
+												</div>
+											</td>
+										</tr>
+										<tr id="ccTr" class="fold_clickTr">
+											<th class="fold_clickTh"><span class="fold_icon"></span><span class="trTitle"><s:message code="condition.cc"/></span></th>
+											<td class="fold_clickTd" colspan="3">
+												<div id="ccUserDiv" class="fold">
+												</div>
+											</td>
+										</tr>
+										<tr id="bccTr" class="fold_clickTr">
+											<th class="fold_clickTh"><span class="fold_icon"></span><span class="trTitle"><s:message code="condition.bcc"/></span></th>
+											<td class="fold_clickTd" colspan="3">
+												<div id="bccUserDiv" class="fold">
+												</div>
+											</td>
+										</tr>
+										<tr id="ipBusiNmTr">
+											<th><s:message code="message.actual.business"/></th>
+											<td>
+												<div id="ipBusiNmDiv">
+												</div>
+											</td>
+											<th><s:message code="message.actual.dept"/></th>
+											<td>
+												<div id="ipDeptNmDiv">
+												</div>
+											</td>
+										</tr>
+										<tr id="hostTr">
+											<th>HOST/Path <i id="nologUrlBtn" class="fa fa-chain-broken nologUrlBtn" aria-hidden="true"></i></th>
+											<td colspan="3">
+												<div id="hostDiv">
+
+												</div>
+											</td>
+										</tr>
+										<%if(infoHynixConf){%>
+										<tr id="docTr">
+											<th><s:message code="condition.itype"/></th>
+											<td colspan="3">
+												<div id="docDiv">
+
+												</div>
+											</td>
+										</tr>
+										<%}%>
+										<tr id="epmsgTr" style="display:none;">
+											<th><s:message code="condition.epmsgType.list"/></th>
+											<td colspan="3">
+												<div id="epmsgDiv">
+												</div>
+											</td>
+										</tr>
+										<tr id="msgIdTr" style="display:none;">
+											<th><s:message code="common.msg.msgid"/></th>
+											<td colspan="3">
+												<div id="msgIdDiv">
+												</div>
+											</td>
+										</tr>
+										<tr id="participantTr" style="display:none;">
+											<th><s:message code="condition.participation"/></th>
+											<td colspan="3">
+												<div id="participantDiv">
+												</div>
+											</td>
+										</tr>
+										<tr id="rootmtrTr" style="display:none;">
+											<th><s:message code="condition.xrootmtr"/></th>
+											<td colspan="3">
+												<div id="rootmtrDiv">
+												</div>
+											</td>
+										</tr>
+									</table>
+								</div>
+							</div>
 						</div>
 					</div>
-					<div class="filelist">
-						<ul id="filelist"></ul>
+				</div>
+
+				<div id="fileDiv" class="row">
+					<div class="col-lg-12">
+						<div class="panel panel-default" id="">
+							<div class="panel-heading body_toggle fileFold" >
+								<i class="fa fa-file-code-o fa-fw"></i> <s:message code="bodyview.file_info"/><span id="fileCntArea"></span>
+								<div class="pull-right" style="position: relative; bottom:5px;">
+									<button class ="msg_button" accesskey="V" id="saveAttachBtn"><s:message code="bodyview.attach.save"/></button>
+								</div>
+								<div id="fileKwdDiv" style="font-size:12px;">
+									<div id="attachStrDiv">
+										<span><s:message code="bodyview.attach"/> <s:message code="bodyview.find.keyword"/> : </span>
+										<span style="font-weight: bold;" id="attachStr">attachStr</span>
+									</div>
+									<div id="fileNameStrDiv">
+										<span><s:message code="condition.attach_name"/> <s:message code="bodyview.find.keyword"/> : </span>
+										<span style="font-weight: bold;" id="fileNameStr">fileNameStr</span>
+									</div>
+								</div>
+							</div>
+							<div class="panel-body css-body" style="display:none;">
+								<div id="attachDiv">
+									<table class="table table-bordered" id="fileTable">
+										<colgroup>
+											<col width="*">
+											<col width="9%">
+											<col width="8%">
+										</colgroup>
+										<tr>
+											<th><s:message code="bodyview.file.name"/></th>
+											<%-- <th><s:message code="message.msg.attach_size"/></th> --%>
+											<%if(infoHynixConf){%>
+											<th><s:message code="condition.itype"/></th>
+											<th style="width:1px;"><s:message code="condition.sprob"/></th>
+											<th style="width:90px;"><s:message code="condition.mlReason"/></th>
+											<%}%>
+											<th><s:message code="bodyview.viewerPreview"/></th>
+											<th><s:message code="message.msg.pre_ext"/></th>
+											<th><s:message code="message.body.image"/></th>
+											<%if(infoHynixConf){%>
+											<th><s:message code="condition.feedback"/></th>
+											<th><s:message code="condition.feedbackDate"/></th>
+											<%} %>
+										</tr>
+										<tr id="" size="" class="found differentExt">
+											<td>
+												<span class="attachName" attachname=""><span class="glyphicon glyphicon-paperclip" style="padding-right:5px;"></span></span>
+												<span class="radioFeedback" ></span>
+												<span class="glyphicon glyphicon-search attachText" style="padding-left:5px;cursor:pointer;" title="<s:message code="consent.attach"/> Text Viewer"></span>
+												<span class="attachOcrText" style="padding-left:5px;cursor:pointer;" title="<s:message code="consent.attach"/> OCR Text Viewer">
+														<img alt="" src="<c:url value="/img/ocr.png"/>" style="width: 25px;">
+													</span>
+											</td>
+											<td style="text-align: right;">getAttachSize</td>
+											<td style="text-align: center;"><span class="attachExt"><span class="glyphicon glyphicon-download-alt"></span>&nbsp;getAttachExt</span></td>
+											<td style="text-align: center;" class="downloadBtn"><span style ="cursor"class="glyphicon glyphicon-download-alt downloadIcon"></span></td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
-				<%-- 패턴 --%>
-				<div class="messageCon" id="patternDiv">
-						<div class="top grayBg03 body_toggle patternFold">
-							<h4><i class="fa fa-superpowers fa-fw"></i> <s:message code="bodyview.info.pattern"/><span id="patternCntArea"></span></h4>
-						</div>
-						<div>
-							<div class="subTable css-body" style="display:none;">
-								<div class="conBox">
-									<table class="subTable" id="patternTable">
+				<div class="row" id="patternDiv">
+					<div class="col-lg-12">
+						<div class="panel panel-default" id="">
+							<div class="panel-heading body_toggle patternFold">
+								<i class="fa fa-superpowers fa-fw"></i> <s:message code="bodyview.info.pattern"/><span id="patternCntArea"></span>
+								<div class="pull-right">
+									<span></span>
+								</div>
+							</div>
+							<div class="panel-body css-body" style="display:none;">
+								<div>
+									<table class="table table-bordered" id="patternTable">
 										<tr>
 											<th colspan="2"><s:message code="common.msg.separator"/></th>
 											<th colspan="2"><s:message code="bodyview.info.detect"/></th>
@@ -954,137 +618,135 @@
 								</div>
 							</div>
 						</div>
+					</div>
 				</div>
-				<div class="messageCon" id="detailPatternDiv" style="display:none;">
-						<div class="top grayBg03">
-							<h4>
+				<div class="row" id="detailPatternDiv" style="display:none;">
+					<div class="col-lg-12">
+						<div class="panel panel-default" id="">
+							<div class="panel-heading">
 								<i class="fa fa-superpowers fa-fw"></i> <s:message code="common.msg.detail.pattern"/>
-							</h4>
-							<div class="pull-right" style="position:relative;top:-2px;">
-								<button class="btn05" id="hidePatternBtn" onclick="javascript:$('#detailPatternDiv').hide();"><s:message code="bodyview.hide"/></button>
+								<div class="pull-right" style="position:relative;top:-2px;">
+									<button class="msg_button body_selectBtn" id="hidePatternBtn" onclick="javascript:$('#detailPatternDiv').hide();"><s:message code="bodyview.hide"/></button>
+								</div>
+							</div>
+							<div class="panel-body" id="detailArea" style="overflow: auto;padding-top:10px;">
 							</div>
 						</div>
-						<div class="conbox" id="detailArea" style="overflow: auto;padding-top:10px;"></div>
-				</div>
-				<div class="messageCon" id="bodyDiv">
-					<div class="top grayBg03">
-							<h4>본문내용</h4>
-							<div class="conBtn btnform">
-								<button class="btn05 font_size" id="large_txt"><img src="<c:url value="/img/subBtn_add.png"/>"  alt="<s:message code="bodyview.msg.zoomIn"/>"><s:message code="bodyview.msg.zoomIn"/></button>
-								<button class="btn05 font_size" id="small_txt"><img src="<c:url value="/img/subBtn_add02.png"/>" alt="<s:message code="bodyview.msg.zoomOut"/>"><s:message code="bodyview.msg.zoomOut"/></button>
-								<button class="btn05" id="copyBodyBtn"><img src="<c:url value="/img/subBtn_copy.png"/>" alt="<s:message code="bodyview.body.contentCopy"/>"><s:message code="bodyview.body.contentCopy"/></button>
-								<select class="btn05" name="bodyEncoding" id="bodyEncoding">
-									<option value=""><s:message code="common.msg.auto"/></option>
-									<option value="utf-8">UTF-8</option>
-									<option value="euc-kr">EUC-KR</option>
-								</select>
-							</div>
-							<div class="conBox" id="bodyStrDiv">
-								<span><s:message code="condition.body"/> <s:message code="bodyview.find.keyword"/> : </span>
-								<span style="font-weight: bold;" id="bodyStr"></span>
-							</div>
 					</div>
-					<div class="conBox" id="emassBody"/>
 				</div>
-			<div id="imgPreviewDiv"></div>
-			<div id="infoDiv" style="overflow-y:auto;display:none;">
-				<div id="infoDivTextHeader">
-					<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
-					<s:message code="common.msg.textdecode"/>(unescape)
-				</div>
-				<div id="infoDivText">
+				<div class="row" id="bodyDiv">
+					<div class="col-lg-12">
+						<div class="panel panel-default" id="emassBodyDiv">
+							<div class="panel-heading">
+								<i class="fa fa-envelope-open-o fa-fw"></i> <s:message code="bodyview.body.content"/>
+								<div class="pull-right" style="position: relative;top:-3px;">
+										<span class="select-xs body_selectBtn">
+											<s:message code="common.msg.zoom"/> :
+										</span>
+									<button class="msg_button body_selectBtn font_size" id="large_txt">+</button>
+									<button class="msg_button body_selectBtn font_size" id="small_txt">-</button>
+									&nbsp;
+									<span class="body_selectBtn"> <s:message code="bodyview.charset"/> : </span>
+									<span class="select-xs">
+											<select name="bodyEncoding" id="bodyEncoding" class="body_select body_selectBtn">
+												<option value=""><s:message code="common.msg.auto"/></option>
+												<option value="utf-8">UTF-8</option>
+												<option value="euc-kr">EUC-KR</option>
+											</select>
+										</span>
+									<button class="msg_button" id="copyBodyBtn"><i class="fa fa-clone fa-fw"></i> <s:message code="message.msg.copy.body"/></button>
+								</div>
+								<div id="bodyStrDiv" style="font-size:12px;padding-top:5px;">
+									<span><s:message code="condition.body"/> <s:message code="bodyview.find.keyword"/> : </span>
+									<span style="font-weight: bold;" id="bodyStr"></span>
+								</div>
+							</div>
+							<div class="panel-body" style="padding:0;margin-bottom:70px !important;">
+								<div id="emassBody" style="min-height: 150px;overflow-x:auto;width: 100%;display:inline;">
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
-			<a href="#0" class="back-to-top cd-top" style="z-index: 99999999"><span class="[ fa fa-chevron-up ]"></span> <span class="[ ]">Back to the Top</span></a>
-			<iframe id="AttachDown" src="about:blank;" height="0" width="0" style="display: none;" ></iframe>
-			<form id="mailForwardForm" method="post">
-				<input type="hidden" name="msgId" id="msgIdStr">
-				<input type="hidden" name="xRootMtr" id="xRootMtrStr">
-				<input type="hidden" name="userCharset" id="userCharsetStr">
-				<input type="hidden" name="mailForwardStr" id="mailForwardStr">
-			</form>
-			<form name="imageForm" method="post" target="">
-				<input type="hidden" name="imgUrl">
-				<input type="hidden" name="fileName">
-			</form>
 		</div>
-	</div>
-<%-- 메시지 상세 끝 --%>
 
-	<div class="boxArea" id="notfoundmsgDiv" style="display: none;">
-		<div class="content_body">
-			<div class="row">
-				<div class="col-lg-12">
-					<div class="panel panel-default" style="height:180px;">
-						<div class="panel-heading" style="font-weight: bold;height:40px;">
-							<div class="pull-left" style="cursor:default;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;word-wrap:normal">
-								<s:message code="common.msg.information"/>
+		<div class="boxArea" id="notfoundmsgDiv" style="display: none;">
+			<div class="content_body">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="panel panel-default" style="height:180px;">
+							<div class="panel-heading" style="font-weight: bold;height:40px;">
+								<div class="pull-left" style="cursor:default;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;word-wrap:normal">
+									<s:message code="common.msg.information"/>
+								</div>
 							</div>
-						</div>
-						<div class="panel-body css-body">
-							<div style="font-size: 20px;font-weight: bold;padding-top:20px;">
-								<img src="<c:url value="/img/warn.png"/>" width="60"> <s:message code="bodyview.message.notfoundmsg"/>
+							<div class="panel-body css-body">
+								<div style="font-size: 20px;font-weight: bold;padding-top:20px;">
+									<img src="<c:url value="/img/warn.png"/>" width="60"> <s:message code="bodyview.message.notfoundmsg"/>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-	<div class="modal fade" id="featureModal"  style="z-index: 1060;">	<!-- modal -->
-		<div class="modal-dialog" role="document">
-			<div class="modal-content" style="width: 920px; height:155px;">
-				<form method="post" id="mlResultPopForm" onsubmit="return false">
-					<div class="modal-header">
-						<span>판단 근거</span>
-						<table class="table table-bordered">
-							<colgroup>
-								<col style="width: 180px;"/>
-							</colgroup>
-							<tr>
-								<td scope="row"><label class="form-check-label" id="featuresValue"></label></td>
-							</tr>
-						</table>
-					</div>
 
-				</form>
-				<div class="modal-footer" style = "height: 10px;">
-					<!-- <button type="button" class="btn btn-primary feedbackSave">피드백 저장</button>  -->
-					<button type="button" id = "closeModal" data-dismiss="modal">닫기</button>
+		<div class="modal fade" id="featureModal"  style="z-index: 1060;">	<!-- modal -->
+			<div class="modal-dialog" role="document">
+				<div class="modal-content" style="width: 920px; height:155px;">
+					<form method="post" id="mlResultPopForm" onsubmit="return false">
+						<div class="modal-header">
+							<span>판단 근거</span>
+							<table class="table table-bordered">
+								<colgroup>
+									<col style="width: 180px;"/>
+								</colgroup>
+								<tr>
+									<td scope="row"><label class="form-check-label" id="featuresValue"></label></td>
+								</tr>
+							</table>
+						</div>
+
+					</form>
+					<div class="modal-footer" style = "height: 10px;">
+						<!-- <button type="button" class="btn btn-primary feedbackSave">피드백 저장</button>  -->
+						<button type="button" id = "closeModal" data-dismiss="modal">닫기</button>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-	<div class="boxArea" id="notfoundconsentDiv" style="display: none;">
-		<div class="content_body">
-			<div class="row">
-				<div class="col-lg-12">
-					<div class="panel panel-default" style="height:180px;">
-						<div class="panel-heading" style="font-weight: bold;height:40px;">
-							<div class="pull-left" style="cursor:default;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;word-wrap:normal">
-								<s:message code="common.msg.information"/>
+
+		<div class="boxArea" id="notfoundconsentDiv" style="display: none;">
+			<div class="content_body">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="panel panel-default" style="height:180px;">
+							<div class="panel-heading" style="font-weight: bold;height:40px;">
+								<div class="pull-left" style="cursor:default;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;word-wrap:normal">
+									<s:message code="common.msg.information"/>
+								</div>
 							</div>
-						</div>
-						<div class="panel-body css-body">
-							<div style="font-size: 20px;font-weight: bold;padding-top:20px;">
-								<img src="<c:url value="/img/warn.png"/>" width="60"> <s:message code="bodyview.message.notfoundconsent"/>
+							<div class="panel-body css-body">
+								<div style="font-size: 20px;font-weight: bold;padding-top:20px;">
+									<img src="<c:url value="/img/warn.png"/>" width="60"> <s:message code="bodyview.message.notfoundconsent"/>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-	<div class="msg_body_container" id="notSelectDiv" style="display:none;">
-		<div class="boxArea" style="overflow-x:hidden;overflow-y: auto;">
-			<div id="emptyDiv" class="empty-dashboard-message">
-				<h1 style="text-align:center;font-size:100px;color:#253f56;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></h1>
-				<h2><s:message code="bodyview.select.message"/></h2>
-				<p><s:message code="bodyview.message.info"/></p>
+		<div class="msg_body_container" id="notSelectDiv" style="display:none;">
+			<div class="boxArea" style="overflow-x:hidden;overflow-y: auto;">
+				<div id="emptyDiv" class="empty-dashboard-message">
+					<h1 style="text-align:center;font-size:100px;color:#253f56;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></h1>
+					<h2><s:message code="bodyview.select.message"/></h2>
+					<p><s:message code="bodyview.message.info"/></p>
+				</div>
 			</div>
 		</div>
 	</div>
-	<%-- userInfoDiv --%>
 	<div id="userInfoDiv" style="display:none;">
 		<div>
 			<div style="float:left;">
@@ -1130,130 +792,29 @@
 			</div>
 		</div>
 	</div>
-
-	<%-- 내보내기 모달 --%>
-	<div class="modal fade" id="exportDialog" tabindex="-1" role="dialog" aria-labelledby="exportDialog">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					<h3 class="modal-title" id="exportTitle">&nbsp;</h3>
-				</div>
-				<div class="modal-body">
-					<div class="form-inline">
-						<div class="content_body" style="height:100%;padding-top: 0;">
-							<table class="table table-bordered" style="margin-bottom:0;width:100%;">
-								<colgroup>
-									<col width="210">
-									<col width="*">
-								</colgroup>
-								<tr>
-									<th>
-										<s:message code="download.msg.dataArea"/>
-									</th>
-									<td>
-										<div class="btn-group filterBtn" data-toggle="buttons" style="margin-top:3px;">
-											<label class="btn btn-sm btn-default"><input type="radio" name="exportDataRange" id="exportDataSelect" value="S"> <s:message code="download.msg.select.count"/></label>
-											<label class="btn btn-sm btn-default active"><input type="radio" name="exportDataRange" id="exportDataAll" value="A" checked> <s:message code="download.msg.search.count"/></label>
-										</div>
-									</td>
-								</tr>
-								<tr id="exportFileTypeArea">
-									<th>
-										<s:message code="download.msg.fileType"/>
-									</th>
-									<td>
-										<div class="btn-group filterBtn" data-toggle="buttons" style="margin-top:3px;">
-											<label class="btn btn-sm btn-default active"><input type="radio" name="exportFileType" id="exportExcel" value="xlsx" checked> <s:message code="common.msg.excel"/>(xlsx)</label>
-											<label class="btn btn-sm btn-default"><input type="radio" name="exportFileType" id="exportHancel" value="cell"> <s:message code="common.msg.hancel"/>(cell)</label>
-											<label class="btn btn-sm btn-default"><input type="radio" name="exportFileType" id="exportText" value="csv"> <s:message code="common.msg.text"/>(csv)</label>
-											<label class="btn btn-sm btn-default"><input type="radio" name="exportFileType" id="exportPdf" value="pdf"> <s:message code="selectCodeAll.list"/>(PDF)</label>
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<th>
-										<s:message code="download.msg.export.count"/>
-									</th>
-									<td>
-										<span id="exportDataSize" style="line-height:32px;">0</span>
-									</td>
-								</tr>
-								<tr id="bodyInExcel">
-									<th>
-										<s:message code="download.msg.body.in.excel"/>
-									</th>
-									<td>
-										<label class="condition_label"><input type="radio" name="bodyInExcel" value="Y"> <span><s:message code="common.msg.include"/></span></label>
-										<label class="condition_label"><input type="radio" name="bodyInExcel" value="N" checked="checked"> <span><s:message code="common.msg.not.include"/></span></label>
-									</td>
-								</tr>
-								<tr id="bodyInExcelMsg" style="font-weight: bold;display:none;">
-									<td colspan="2">
-										<s:message code="download.msg.body.in.excelMsg" />
-									</td>
-								</tr>
-							</table>
-							<table class="table table-bordered" style="margin-bottom:0;width:100%;margin-top:15px;display:none;" id="bodyInExcelIdx">
-								<colgroup>
-									<col width="210">
-									<col width="*">
-								</colgroup>
-								<tr>
-									<th style="font-weight: bold;">
-										<s:message code="download.msg.now.col.order" />
-									</th>
-									<td>
-										<select id="nowColIdx" data-style="btn-default">
-										</select>
-									</td>
-								</tr>
-								<tr style="font-weight: bold;">
-									<td colspan="2">
-										<s:message code="download.msg.body.col.idx" />
-									</td>
-								</tr>
-							</table>
-							<table class="table table-bordered" style="margin-bottom:0;width:100%;margin-top:15px;" id="sizeWarnMsg">
-								<colgroup>
-									<col width="210">
-									<col width="*">
-								</colgroup>
-								<tr style="font-weight: bold;">
-									<td colspan="2">
-										<s:message code="download.msg.warn" arguments="50,000" argumentSeparator="|"/>
-									</td>
-								</tr>
-								<tr style="font-weight: bold;">
-									<th>
-										<label for="ruleFile" class="control-label" style="vertical-align: bottom;line-height:35px;">¤ <s:message code="download.msg.file.count"/></label>
-									</th>
-									<td>
-										<select id="dataLength_select" class="selectpicker" data-style="btn-default">
-											<option value="20000">20,000</option>
-											<option value="30000">30,000</option>
-											<option value="40000">40,000</option>
-											<option value="50000" selected>50,000</option>
-											<option value="100000">100,000</option>
-										</select>
-									</td>
-								</tr>
-							</table>
-						</div>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
-					<button type="button" class="btn btn-primary savePopBtn" accesskey="S" id="allDownBtn"><s:message code="common.msg.export"/></button>
-				</div>
-			</div>
+	<div id="imgPreviewDiv"></div>
+	<div id="infoDiv" style="overflow-y:auto;display:none;">
+		<div id="infoDivTextHeader">
+			<i class="fa fa-stop-circle-o" aria-hidden="true"></i>
+			<s:message code="common.msg.textdecode"/>(unescape)
+		</div>
+		<div id="infoDivText">
 		</div>
 	</div>
 </div>
-
-
+<a href="#0" class="back-to-top cd-top"><span class="[ fa fa-chevron-up ]"></span> <span class="[ ]">Back to the Top</span></a>
+<iframe id="AttachDown" src="about:blank;" height="0" width="0" style="display: none;" ></iframe>
+<form id="mailForwardForm" method="post">
+	<input type="hidden" name="msgId" id="msgIdStr">
+	<input type="hidden" name="xRootMtr" id="xRootMtrStr">
+	<input type="hidden" name="userCharset" id="userCharsetStr">
+	<input type="hidden" name="mailForwardStr" id="mailForwardStr">
+</form>
+<form name="imageForm" method="post" target="">
+	<input type="hidden" name="imgUrl">
+	<input type="hidden" name="fileName">
+</form>
+</body>
 <script type="text/javascript">
 	var op_attach_save = '<%=op_attach_save%>';
 	var op_body_save = '<%=op_body_save%>';

@@ -39,9 +39,7 @@
         <put-attribute name="messageCss" value="/WEB-INF/fragments/messageCss.jsp" />
         <put-attribute name="messageJs" value="/WEB-INF/fragments/messageJs.jsp" />
 
-
         <put-attribute name="top" value="/WEB-INF/fragments/new_top.jsp" />
-        <put-attribute name="header" value="/WEB-INF/fragments/messageHeader.jsp" />
         <put-attribute name="lnb" value="/WEB-INF/fragments/new_left.jsp" />
         <put-attribute name="footer" value="/WEB-INF/fragments/footer.jsp" />
         <put-attribute name="left" value="/WEB-INF/views/emass/left.jsp" />
