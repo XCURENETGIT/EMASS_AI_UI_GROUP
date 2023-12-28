@@ -983,9 +983,6 @@ var msgData;
 function setMessage(msg) {
 	msgData = msg;
 
-	console.log("msgData");
-	console.log(msgData);
-
 
 	window.scrollTo(0,0);
 	if(msg == null) {
@@ -1028,6 +1025,7 @@ function setMessage(msg) {
 		}
 	}
 	svc = msg.svc;
+	console.log(msg)
 	xRootMtr = nvl(msg.xrootMtr);
 	usr_id = nvl(msg.usrId);
 	srcip = nvl(msg.srcIp);

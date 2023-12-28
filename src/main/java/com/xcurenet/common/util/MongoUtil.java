@@ -1,9 +1,7 @@
 package com.xcurenet.common.util;
 
 import com.xcurenet.audit.service.AuditVO;
-import com.xcurenet.emass.message.service.SolrCheckedVO;
 import lombok.extern.log4j.Log4j2;
-import org.apache.poi.ss.formula.functions.T;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,7 +16,9 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 @Log4j2
 @Component
@@ -145,7 +145,7 @@ public class MongoUtil {
 	}
 
 	public void upsertEmsMessage(final String msgId, Query query, Update update) {
-		mongoTemplate.upsert(query, update, getCollectionName(msgId, EMS_MESSAGE_COLLECTION));
+		mongoTemplate.upsert(query, update, getCollectionName(msgId,EMS_MESSAGE_COLLECTION ));
 	}
 
 	public void updateVersion(String collectionName, String table, long version) {
@@ -178,4 +178,8 @@ public class MongoUtil {
 		query.with(Sort.by(Sort.Direction.DESC, "date"));
 		return mongoTemplate.find(query, AuditVO.class);
 	}
+
+
+
+
 }
