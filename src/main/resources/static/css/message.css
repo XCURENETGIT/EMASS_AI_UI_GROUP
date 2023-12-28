@@ -1,6 +1,6 @@
 .msg_container{
 	position: absolute;
-	top: 2px;
+	top: 5px;
 	left: 0px;
 	right: 0px;
 	bottom:22px;
@@ -701,4 +701,168 @@ input[type="text"] {
 }
 
 
-button { color:#333; border: 1px solid #ddd;background: #fff; height:26px; padding:0 8px; line-height: 26px; font-size:12px;vertical-align:middle;display: inline-block; border-radius: 2px; }
+#buttonArea > button , .pull-right > button
+{ color:#333; border: 1px solid #ddd;background: #fff; height:26px; padding:0 8px; line-height: 26px; font-size:12px;vertical-align:middle;display: inline-block; border-radius: 2px; }
+
+
+
+/* reset.css 참조 */
+
+/*
+Copyright (c) 2021 Kil Hyung-jin, with Reserved Font Name Pretendard.
+https://github.com/orioncactus/pretendard
+
+This Font Software is licensed under the SIL Open Font License, Version 1.1.
+This license is copied below, and is also available with a FAQ at:
+http://scripts.sil.org/OFL
+*/
+
+@font-face {
+	font-family: 'Pretendard';
+	font-weight: 900;
+	font-display: swap;
+	src: local('Pretendard Black'), url("../fonts/woff2/Pretendard-Black.subset.woff2") format('woff2'), url("../fonts/woff/Pretendard-Black.subset.woff") format('woff');
+}
+
+@font-face {
+	font-family: 'Pretendard';
+	font-weight: 800;
+	font-display: swap;
+	src: local('Pretendard ExtraBold'), url("../fonts/woff2/Pretendard-ExtraBold.subset.woff2") format('woff2'), url("../fonts/woff/Pretendard-ExtraBold.subset.woff") format('woff');
+}
+
+@font-face {
+	font-family: 'Pretendard';
+	font-weight: 700;
+	font-display: swap;
+	src: local('Pretendard Bold'), url("../fonts/woff2/Pretendard-Bold.subset.woff2") format('woff2'), url("../fonts/woff/Pretendard-Bold.subset.woff") format('woff');
+}
+
+@font-face {
+	font-family: 'Pretendard';
+	font-weight: 600;
+	font-display: swap;
+	src: local('Pretendard SemiBold'), url("../fonts/woff2/Pretendard-SemiBold.subset.woff2") format('woff2'), url("../fonts/woff/Pretendard-SemiBold.subset.woff") format('woff');
+}
+
+@font-face {
+	font-family: 'Pretendard';
+	font-weight: 500;
+	font-display: swap;
+	src: local('Pretendard Medium'), url("../fonts/woff2/Pretendard-Medium.subset.woff2") format('woff2'), url("../fonts/woff/Pretendard-Medium.subset.woff") format('woff');
+}
+
+@font-face {
+	font-family: 'Pretendard';
+	font-weight: 400;
+	font-display: swap;
+	src: local('Pretendard Regular'), url("../fonts/woff2/Pretendard-Regular.subset.woff2") format('woff2'), url("../fonts/woff/Pretendard-Regular.subset.woff") format('woff');
+}
+
+@font-face {
+	font-family: 'Pretendard';
+	font-weight: 300;
+	font-display: swap;
+	src: local('Pretendard Light'), url("../fonts/woff2/Pretendard-Light.subset.woff2") format('woff2'), url("../fonts/woff/Pretendard-Light.subset.woff") format('woff');
+}
+
+@font-face {
+	font-family: 'Pretendard';
+	font-weight: 200;
+	font-display: swap;
+	src: local('Pretendard ExtraLight'), url("../fonts/woff2/Pretendard-ExtraLight.subset.woff2") format('woff2'), url("../fonts/woff/Pretendard-ExtraLight.subset.woff") format('woff');
+}
+
+@font-face {
+	font-family: 'Pretendard';
+	font-weight: 100;
+	font-display: swap;
+	src: local('Pretendard Thin'), url("../fonts/woff2/Pretendard-Thin.subset.woff2") format('woff2'), url("../fonts/woff/Pretendard-Thin.subset.woff") format('woff');
+}
+
+* {margin:0; padding: 0;box-sizing:border-box;}
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+	font-family: Pretendard;
+	font-weight:400;
+	box-sizing:border-box;
+}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+	display: block;
+
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+/*reset*/
+a:active {}
+a:hover {color:#ddd;}
+input[type=text], input[type=password], input[type=search], select, textarea {font-size:12px;height:26px;line-height: 26px;border: 1px solid #CCC;background: #FFF;padding: 0 4px;align-items: center;}
+/*input:disabled{ background-color:#eee; border: 1px solid #CCC;}*/
+input[type="text"].error,select.error{border:1px solid #FC5656; color:#FC5656; background-color:#fff;}
+select:disabled { background-color:#ddd; border: 1px solid #aaa;}
+select { font-size:12px; height:26px; line-height: 26px; resize: vertical;  border: 1px solid #CCC; background: #FFF; padding: 0 4px; align-items: center; }
+button {cursor: pointer;font-family: Pretendard;}
+button:hover {text-decoration: underline;}
+
+/* IE 기본 스타일 제거 */
+select::-ms-expand{display: none; /* IE 10, 11 */}
+input[type="date"]{font-size:12px;font-family: Pretendard;height:26px;line-height:26px;padding-left:8px;padding-right:4px;color: #111;border:1px solid #ccc;}
+::-webkit-calendar-picker-indicator{background-color: #ffffff;padding: 5px;cursor: pointer;}
+.txt_error {margin:4px 0; font-size:12px; color:#FC5656}
+
+
+input[type="radio"]:checked + span  {color:#1A73F9; }
+input[type="radio"]:disabled { appearance: none; border-radius: 50%; width:12px; height:12px; background-color: #eee; border: 1px solid #CCC; box-shadow: none; opacity:1; cursor: not-allowed; -webkit-border-radius: 50%; -moz-border-radius: 50%; -ms-border-radius: 50%; -o-border-radius: 50%; }
+input[type="radio"]:disabled + span {cursor: not-allowed;}
+input[type="checkbox"]:checked + span  {color:#1A73F9;}
+input[type="checkbox"]:disabled {appearance: none !important; border-radius: 2px; width:12px; height:12px; background-color: #eee; border: 1px solid #CCC; box-shadow: none;opacity:1;cursor: not-allowed;}
+input[type="checkbox"]:disabled + span {cursor: not-allowed;}
+
+input[type=file]::file-selector-button {
+	height:26px;
+	font-family: Pretendard;
+	background: #1A73F9;
+	border: #ddd;
+	vertical-align: center;
+	font-size:13px !important;
+	cursor: pointer;
+	color: #fff;
+}
+input[type=file]::file-selector-button:hover { background-color: #1C64D3;}

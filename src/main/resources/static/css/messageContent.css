@@ -33,7 +33,6 @@ footer span.item{
     color: #fff;
     background-color: #253F56;
     border-color: #253F56;
-    height: 36px;
 }
 
 .btn-primary {
@@ -110,7 +109,6 @@ input[type="radio"] {
 .panel-default>.panel-heading {
     background: linear-gradient(to bottom, #F4F6F9, #F4F6F9, #F0F3F7, #EFF2F6) !important;
     color : #000;
-    height: 36px;
 }
 
 .nav-side-menu {

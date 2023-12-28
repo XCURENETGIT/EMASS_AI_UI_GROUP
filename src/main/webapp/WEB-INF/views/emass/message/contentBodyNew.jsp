@@ -625,7 +625,7 @@
 						<div class="panel panel-default" id="">
 							<div class="panel-heading">
 								<i class="fa fa-superpowers fa-fw"></i> <s:message code="common.msg.detail.pattern"/>
-								<div class="pull-right" style="position:relative;top:-2px;">
+								<div class="pull-right" style="position:relative;top:-5px;">
 									<button class="msg_button body_selectBtn" id="hidePatternBtn" onclick="javascript:$('#detailPatternDiv').hide();"><s:message code="bodyview.hide"/></button>
 								</div>
 							</div>
@@ -639,7 +639,7 @@
 						<div class="panel panel-default" id="emassBodyDiv">
 							<div class="panel-heading">
 								<i class="fa fa-envelope-open-o fa-fw"></i> <s:message code="bodyview.body.content"/>
-								<div class="pull-right" style="position: relative;top:-3px;">
+								<div class="pull-right" style="position: relative;top:-5px;">
 										<span class="select-xs body_selectBtn">
 											<s:message code="common.msg.zoom"/> :
 										</span>

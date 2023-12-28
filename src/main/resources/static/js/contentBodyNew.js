@@ -325,7 +325,8 @@ $(document).ready(function(){
 		}
 		var charset = $('#bodyEncoding').val();
 		//var url = '<c:url value="/getEmassBodySave.xcn?msgId='+msgId+'&userCharset='+charset+'&print=Y"/>';
-		//if( detailFlag ) url = '<c:url value="/getMessengerGroupAllSave.xcn?msgId='+msgId+'&xRootMtr='+xRootMtr+'&print=Y"/>';
+		//if( detailFlag ) url = '<c:url value="/getMessengerGroupAllSave.xcn?msgId='+msgId+'&xRootM
+		// tr='+xRootMtr+'&print=Y"/>';
 		var url = contextRoot + '/getEmassBodySave.xcn?msgId=' + msgId + '&userCharset=' + charset + '&print=Y';
 		if( detailFlag ){
 			var startDt = $('#startdatepickerBody').data("DateTimePicker").date().format('YYYYMMDDHHmmss');

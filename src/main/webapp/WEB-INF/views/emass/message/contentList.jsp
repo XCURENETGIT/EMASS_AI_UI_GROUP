@@ -371,6 +371,7 @@
 	}
 
 	function setServiceGroupCntInfo(data, total){
+		if(data == null) return;
 		busiScrollTabs.clearTabs();
 		busiScrollTabs.refreshState();
 		busiScrollTabs.addTab('<span class="tab_selected"><a href="javascript:;" class="busiCounts active" data-svc1=""><i class="fa fa-angle-right" aria-hidden="true"></i> <s:message code="common.msg.all"/><span class="busiCnt">('+total.comma()+')</span></a></span>');

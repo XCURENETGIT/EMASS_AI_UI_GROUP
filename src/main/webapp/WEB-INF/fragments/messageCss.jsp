@@ -7,9 +7,8 @@
 <%-- 메시지 페이지 전용 --%>
 <link rel="stylesheet" href="<c:url value="/css/font-awesome.min.css"/>"/>
 <link rel="stylesheet" href="<c:url value="/css/emass_message_style.css"/>">
-<link rel="stylesheet" href="<c:url value="/css/reset.css"/>"/>
+<%--<link rel="stylesheet" href="<c:url value="/css/reset.css"/>"/>--%>
 <link rel="stylesheet" href="<c:url value="/css/message.css"/>"/> <%-- message css--%>
-<link rel="stylesheet" href="<c:url value="/css/contentBody.css"/>"/>
 <link rel="stylesheet" href="<c:url value="/css/messageContent.css"/>"/>
 
 <link rel="stylesheet" href="<c:url value="/css/bootstrap-dialog.css"/>" />
