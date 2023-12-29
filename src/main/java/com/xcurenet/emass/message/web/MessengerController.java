@@ -539,8 +539,10 @@ public class MessengerController {
 		else query += String.format(" -usr_id:* ");
 
 
-		query += String.format(" -_id: %s" ,msgId );	//이미 출력된 동시간대 데이터 제외
+		if(!lastMsgYn) { //맨처음 들어왔을땐 하나가 떠야함 하지만 위가 이미 있는 상태에서 다음버튼을 누르면 중복되면 안됨
+			query += String.format(" -_id: %s", msgId);    //이미 출력된 동시간대 데이터 제외
 
+		}
 
 		//msgid의 날짜값을 출력해와 범위 지정
 		if(Common.isNotEmpty(msgId)) {
@@ -893,6 +895,56 @@ public class MessengerController {
 		sq.setSort("ctime", ORDER.asc);
 		sq.setSort("msgid", ORDER.asc);
 		sq.setFields("msgid");
+
+		SolrEdcMessageVO solrVo = solrEdcService.getEmassMessage(sq, Common.getAdminId(session));
+		List<SolrEdcVO> list = solrVo.getEmass();
+		List<String> result = new ArrayList<>();
+		if (list != null) {
+			for (SolrEdcVO vo : list) {
+				result.add(vo.getMsgid());
+			}
+		}
+		return new XcnResponseVO(XcnRspCode.OK, result, solrVo.getNumFound());
+	}
+
+	@RequestMapping(value = "/getGenerativeGroupDetailSearch.xcn")
+	@Description("생성형ai 대화방 상세 검색 조회")
+	@ResponseBody
+	public XcnResponseVO getGenerativeGroupDetailSearch(final HttpServletRequest request, final HttpSession session) throws Exception {
+
+		JSONObject param = Common.getParam(request);
+		String userid = Common.nvl(param.get("userid"));
+		String srcip = Common.nvl(param.get("srcip"));
+
+		String addQuery = String.format(" +userid:\"%s\"", userid);
+		if(Common.isNotEmpty(srcip)) addQuery += String.format(" +srcip:\"%s\"", srcip);
+
+		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), Common.getAdminId(session));
+		sq.setQuery(sq.getQuery() + addQuery + MESSENGER2);
+		sq.setStart(Common.nvz(param.get("offset"), 0));
+		sq.setRows(1);
+		sq.setSort("ctime", ORDER.asc);
+		sq.setSort("msgid", ORDER.asc);
+		sq.setFields("msgid");
+
+		sq.setParam("group", true);
+		sq.setParam("group.facet", true);
+		sq.setParam("group.ngroups", true);
+		sq.setParam("group.field", "userid");
+		sq.setParam("facet", true);
+		sq.setParam("facet.field", "userid");
+
+		/* 그룹 디테일검색 동적 들어와야 할 offset,size 값*/
+		sq.setParam("facet.offset", "0");
+		sq.setParam("facet.size", "5");
+		boolean facet_detail= ("true".equals(Common.nvl(param.get("facet_detail"))))? true:false;
+		sq.setParam("facet.detail", facet_detail);
+		sq.setParam("facet.mincount", "1");
+
+		/* 일반 문서 검색은 하지않으므로 0 (그룹검색만 하므로 ) */
+		sq.setStart(Common.nvz(request.getParameter("offset"), 0));
+		sq.setRows(Common.nvz(request.getParameter("limit"), 0));
 
 		SolrEdcMessageVO solrVo = solrEdcService.getEmassMessage(sq, Common.getAdminId(session));
 		List<SolrEdcVO> list = solrVo.getEmass();

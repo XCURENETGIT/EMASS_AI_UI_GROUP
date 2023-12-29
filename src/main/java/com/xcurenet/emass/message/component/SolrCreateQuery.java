@@ -106,6 +106,7 @@ public class SolrCreateQuery {
 	public static final String JOIN_UNREAD = " -checked.readId:%s";
 
 
+
 	private static final String OCR_FIELD = " ocr_attach ocr_attach.kr ocr_attach.en ocr_attach.jp";
 	private String finalReadYn;
 	private String consentNo;
@@ -119,6 +120,7 @@ public class SolrCreateQuery {
 			"host", "host_str", // host
 			"path", "query", // url
 			"srcip", "dstip", // 출발지 IP, 목적지 IP
+			"body_snippet",
 			"sender", "sender_str", "sname", "recvs", "recvs_name", "to", "cc", "bcc", "usr_id", // 보낸사람, 받는사람
 			"xrootmtr",
 			"user", "user_str", "userid", "name" //사용자
@@ -261,6 +263,7 @@ public class SolrCreateQuery {
 					query.append(String.format("body.kr:(%s) ", getSearchQuery(searchStr)));
 					query.append(String.format("body.en:(%s) ", getSearchQuery(searchStr)));
 					query.append(String.format("body.jp:(%s) ", getSearchQuery(searchStr)));
+					query.append(String.format("body_snippet:(%s) ", getSearchQuery(searchStr)));
 				} else if(Common.isEquals(field, "attach")) {
 					query.append(String.format("attach.kr:(%s) ", getSearchQuery(searchStr)));
 					query.append(String.format("attach.en:(%s) ", getSearchQuery(searchStr)));
@@ -1109,6 +1112,8 @@ public class SolrCreateQuery {
 			String attachYn = Common.nvl(condition.get("attachYn")); // 첨부여부
 			String attachVal = Common.nvl(condition.get("attachVal")); // 첨부 확장자
 			String attachYn_not = Common.nvl(condition.get("attachYn_not")); //첨부 부정
+
+			String body_snippet = Common.nvl(condition.get("body_snippet")); //바디
 
 			//String attachStr = Common.nvl(condition.get("attachStr")); // 첨부 확장자
 			String keywordYn = Common.nvl(condition.get("keywordYn")); // 키워드 여부

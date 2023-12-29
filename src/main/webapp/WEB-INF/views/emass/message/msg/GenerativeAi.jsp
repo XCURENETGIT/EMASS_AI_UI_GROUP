@@ -48,6 +48,10 @@
 		display:none;
 
 	}
+
+	.lastReadLi .timeline-panel {
+		background-color: #D3DBDC !important;
+	}
 </style>
 
 <head>
@@ -197,6 +201,26 @@
                 hideSelect();
             });
 
+            $(document).on('click', '.downloadIcon', function(){
+                var msgId = $(this).parents('p').attr('msgid');
+                var attachHash = $(this).parents('p').attr('attachhash');
+                var attachSize = Number( $(this).parents('p').attr('attachsize') );
+                var attachUrl = '<c:url value="/downEmassAttachOne.xcn"/>?msgId='+msgId+'&attachHash='+attachHash;
+
+                if( attachHash == ''){
+                    alert('<s:message code="message.message.notfound.attach"/>');
+                    return;
+                }
+
+                if ( attachSize == 0 || attachSize == 'NaN' ) attachSize = 1;
+
+                try {
+                    AttachDown.location.href = attachUrl;
+                } catch (e) {
+                    AttachDown.src = attachUrl;
+                }
+            });
+
             $(document).on('mouseover', '.codeSelectedBtn', function (e) {
                 $('#selectedCodeTitle').show();
                 $('#selectedCodeTitle').css('left', (e.pageX + 5) + 'px');
@@ -275,24 +299,6 @@
                 participantInfoViewer($('#userid').text(), $('#usr_id').text());
             });
 
-            $(document).on('click', '.file_link', function () {
-                var msgId = $(this).attr('msgid');
-                var attachHash = $(this).attr('attachhash');
-                var attachName = $(this).text();
-
-                var attachUrl = '<c:url value="/getEmassAttachInfo4DownHash.xcn"/>?msgIds=' + msgId + '&attachHash=' + attachHash;
-
-                if (attachHash == '') {
-                    alert('<s:message code="message.message.notfound.attach"/>');
-                    return;
-                }
-                try {
-                    AttachDown.location.href = attachUrl;
-                } catch (e) {
-                    AttachDown.src = attachUrl;
-                }
-            });
-
             $(document).on('click', '.person', function () {
                 var name = $(this).attr('userid');
                 var srcip = $(this).attr('srcip');
@@ -305,8 +311,8 @@
                 $('#selectUserInfo').attr('data-name', name);
                 $('#selectUserInfo').attr('data-usrid', usr_id);
 
-                $('#selectUserInfo').html(username);
-                $('#subchatid').html(":"+name);
+                $('#selectUserInfo').html(" "+username);
+                $('#subchatid').html(": "+name);
                 $('#srcip').text(srcip);
                 $('#usr_id').text(usr_id);
                 eikon2.getGenerativeDetailList(userid, msgid, srcip, usr_id);
@@ -402,6 +408,7 @@
 
             eikon2.getMessengerGroupTextExport('<c:url value="/getMessengerGroupTextExport.xcn"/>?xRootMtr=' + xrootmtr + '&srcip=' + srcip + '&usr_id=' + usr_id + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr + '&type=' + type + '&groupField=sender_str', xrootmtr);
         }
+
 
         function searchConsentNo() {
             var url = '<c:url value="/ems/selectConsent.do"/>';
@@ -656,43 +663,6 @@
             }
         }
 
-        function fileInfoViewer(xrootmtr, srcip, usr_id) {
-            var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
-            var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
-            var searchStr = '';
-
-            var url = '<c:url value="/ems/participantFileInfoPop.do?xrootmtr='+xrootmtr+'&srcip='+srcip+'&usr_id='+usr_id+'&startDt='+startDt+'&endDt='+endDt+'&searchStr='+encodeURI(searchStr)+'"/>';
-            var pop = fnOpenWindow(url, 'fileInfoPop', 1000, 400, 'resize');
-        }
-
-        function participantInfoViewer(xrootmtr, usr_id) {
-            var srcip = $('#srcip').text();
-            var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
-            var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
-            var searchStr = '';
-
-            var url = '<c:url value="/ems/participantInfoPop.do?xrootmtr='+xrootmtr+'&srcip='+srcip+'&usr_id='+usr_id+'&startDt='+startDt+'&endDt='+endDt+'&searchStr='+searchStr+'"/>';
-            var pop = fnOpenWindow(url, 'participant', 1015, 450, 'resize');
-        }
-
-        function getParticipantFileList() {
-            var xrootmtr = $('#xrootmtr').text();
-            ui.get({
-                url: 'getMessengerGroupAttachList.xcn',
-                xRootMtr: xrootmtr,
-                success: function (data, total) {
-                    alert(JSON.stringify(data));
-                    //getFileList(data);
-                },
-                error: function (status, message) {
-                    ui.alertMsg(message);
-                },
-                complete: function () {
-
-                }
-            });
-        }
-
         function getMessengerList() {
             ui.get({
                 url: 'getMessengerList.xcn',
@@ -797,7 +767,7 @@
 						</div>
 						<h3 class="mat16">상세 검색</h3>
 						<div>
-							<input class="w45 mat8" type="date" id="startDt"  value="2023-11-20"><span class="w10 dis_inlineblock txt_center">~</span><input class="w45" type="date" id="endDt"  value="2023-11-30">
+							<input class="w45 mat8 txt_center" type="date" id="startDt"  value="2023-11-20"><span class="w10 dis_inlineblock txt_center">~</span><input class="w45 txt_center" type="date" id="endDt"  value="2023-11-30">
 
 
 							<div class="optiotab w100 mat8" data-toggle="buttons">
@@ -806,8 +776,9 @@
 							</div>
 
 							<select id="busiSelect" class="w100 mat8" data-style="btn-default btn-sm" multiple data-show-subtext="true"
-							        data-live-search="true" data-actions-box="true"></select>
+							                                                                         data-live-search="true" data-actions-box="true"></select>
 
+							<input type="text" class="w100 mat8"  placeholder="<s:message code="eikon.input.participation"/>" id="senders">
 							<div id="selectedCodeTitle"></div>
 
 							<p class="mat8 formText btnform" data-toggle="buttons">
@@ -893,7 +864,7 @@
 							<div class="searchSub" >
 
 								<div class="searchSub">
-									<input class="w35" type="date" id="startSubDt"  value="2023-11-20"> ~ <input class="w35" type="date" id="endSubDt"  value="2023-11-20">
+									<input class="w25 txt_center" type="date" id="startSubDt"  value="2023-11-20"> ~ <input class="w25 txt_center" type="date" id="endSubDt"  value="2023-11-20">
 								</div>
 							</div>
 

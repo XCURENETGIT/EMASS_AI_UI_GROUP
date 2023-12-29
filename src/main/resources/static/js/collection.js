@@ -100,15 +100,75 @@ var eikon2 = {
         var endDt=$('#endDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 
 
-        getGenerativeMessage(userid, srcip, usr_id, '');
+        getGenerativeMessageTotal(userid, srcip, startDt, endDt, usr_id, '');
+    },
+    /**
+     * 결과 내 검색
+     */
+    findMessageList : function(offset){
+        var searchStr = $('#searchMsgStrInput').val();
+        var userid = $('#selectUserInfo').attr("data-name");
+        var srcip = $('#selectUserInfo').attr("data-srcip");
+        var startDt = $('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '')+"0000000";
+        var endDt = $('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '')+"235959";
+
+        if( offset < 0 ) searchOffset = $('#searchResult').html() - 1;
+        if( offset >= $('#searchResult').html() || offset == 0 ) searchOffset = 0;
+
+        if( searchStr == '' || (userid == undefined || userid == '')){
+            $('#searchResult').html('');
+            $('#searchResultArea').hide();
+            $('#searchResultBtnArea').hide();
+            return;
+        }
+
+        var filterVal = {};
+        var conArray = [];
+        var condition = {};
+        condition.searchStr = searchStr;
+        condition.startDt = startDt;
+        condition.endDt = endDt;
+        condition.searchField = 'body attachname attachname_str attach';
+        conArray.push(condition);
+        filterVal.conditions = conArray;
+
+        detailSearchFlag = false;
+
+        ui.postJson({
+            url : 'getGenerativeGroupDetailSearch.xcn',
+            userid : userid,
+            srcip: srcip,
+            data : JSON.stringify( filterVal ),
+            offset : searchOffset,
+            facet_detail:true,
+            success : function(data, total) {
+                focusMsgId = data.toString();
+                if(total > 0){
+                    $('#searchResult').html(total);
+                    $('#searchResultArea').show();
+                    $('#searchResultBtnArea').show();
+                    checkList(searchOffset);
+                }
+                else{
+                    $('#searchResult').html('0');
+                    $('#selectCnt').html('0');
+                    $('#searchResultArea').show();
+                    $('#searchResultBtnArea').hide();
+                }
+            },
+            error : function(status, message) {
+                ui.alertMsg(message);
+            },
+            complete : function() {
+                searchFlag = false;
+            }
+        });
     }
 };
 
 
-/*
 function getGenerativeMessageTotal(userid, srcip, startDt, endDt, usr_id, msgid){
-    //마지막 열람 msgid
-
+/*총 갯수 계산하는 함수*/
 
     ui.get({
         url : 'getGenerativeMessageTotal.xcn',
@@ -119,7 +179,7 @@ function getGenerativeMessageTotal(userid, srcip, startDt, endDt, usr_id, msgid)
         usr_id : usr_id,
         limit : 0,
         success : function(data, total) {
-            $('#groupSubResultCnt').text(data.comma());
+            $('#groupSubResultCnt').text(data);
             getGenerativeMessage(userid, srcip, usr_id, msgid);
         },
         error : function(status, message) {
@@ -130,7 +190,6 @@ function getGenerativeMessageTotal(userid, srcip, startDt, endDt, usr_id, msgid)
         }
     });
 }
-*/
 
 
 /**
@@ -383,9 +442,9 @@ function makeFileList(data) {
     else {
         str = '<ul>';
         for (var i = 0; i < data.length; i++) {
-            str += '<li><p class="fileListdown"><span class="img"></span><span>';
+            str += '<li><p class="fileListdown" attachsize="'+data[i].attachsize+ '" msgid="' + data[i].msgid + '" attachhash="' + data[i].attachhash + '"><span class="img"></span><span>';
             str += '<a href="#">' + data[i].attachname + "." + data[i].attachtype + '</a>';
-            str += '</span><span style="position: absolute; right: 0; top: 8px;" ><button class="btnchatdown_w"></button><button class="chatshare_w mal8"></button></span></p></li>';
+            str += '</span><span style="position: absolute; right: 0; top: 8px;" ><button class="btnchatdown_w downloadIcon"></button><button class="chatshare_w mal8"></button></span></p></li>';
         }
 
         str += '</ul>';
@@ -419,14 +478,27 @@ function makeList(nextFlag){
 
 
         var svc3 = obj.svc3;
-        str+='	<div class="me timeline-panel">';
+        str+='	<div class="me timeline-panel" >';
 
         if(obj.attached=="Y"){
-            str+='<p class="filedown file_link" msgid="'+obj.msgid+'"+ attachhash="'+obj.attachhash+'" +>';
-            str+='<span class="img"></span>';
-            str+='<span>'+obj.attachname+'.'+obj.attachtype+'<br/>';
-            str+=obj.attachsize+'KB</span>';
-            str+='<button class="btnchatdown"></button></p>';
+            var attachhash = obj.attachhash;
+            var attachname = obj.attachname;
+            var attachsize = obj.attachsize;
+            var attachtype = obj.attachtype;
+
+            var attachhashArray = attachhash.split('|');
+            var attachnameArray = attachname.split('|');
+            var attachsizeArray = attachsize.split('|');
+            var attachtypeArray = attachtype.split('|');
+
+            for (var i = 0; i < attachhashArray.length; i++) {
+                str += '<p class="filedown file_link" msgid="' + obj.msgid + '" attachhash="' + attachhashArray[i] + '">';
+                str += '<span class="img"></span>';
+                str += '<span>' + attachnameArray[i] + '.' + attachtypeArray[i] + '<br/>';
+                str += attachsizeArray[i] + 'KB</span>';
+                str += '<button class="btnchatdown"></button></p>';
+
+            }
         }
 
         else {
@@ -464,7 +536,7 @@ function makePrevList(){
         if( (nvl(obj.user) != '' && obj.user == obj.sender) || usrid == obj.title || usrid == obj.sender ) chkPati = true;
 
 
-        str+='<li class="p20 bubble txt_right slide_right timeline-inverted" id="'+obj.msgid+'" ctime="'+obj.ctime+'">';
+        str+='<li class="p20 bubble txt_right slide_right timeline-inverted" id="'+obj.msgid+'" ctime="'+obj.ctime+'" userid="'+obj.userid+'" srcip="'+obj.srcip+'">';
 
         str+='	<div class="me timeline-panel">';
 
@@ -473,7 +545,7 @@ function makePrevList(){
             str+='<span class="img"></span>';
             str+='<span>'+obj.attachname+'.'+obj.attachtype+'<br/>';
             str+=obj.attachsize+'KB</span>';
-            str+='<button class="btnchatdown"></button></p>';
+            str+='<button class="btnchatdown downloadIcon"></button></p>';
         }
 
         else {
@@ -577,101 +649,18 @@ function viewDate(dateStr){
     return str;
 }
 
-//function appendList(){
-//	if( searchFlag ) return;
-//	console.log("append");
-//
-//	searchFlag = true;
-//	ui.onBody('timeline_list', 0, 60);
-//
-//	detailEndPage++;
-//	var str = makeList(detailEndPage);
-//	if( str == ''){
-//		detailEndPage--;
-//		searchFlag = false;
-//		ui.off('timeline_list');
-//		return;
-//	}
-//
-//	if($(".pageInfoDiv").size() > detailViewPage-1){
-//		$(".pageInfoDiv").first().remove();
-//		detailStartPage++;
-//	}
-//	setTimeout(function(){
-//		$("#timeline_list").append(str);
-//		Highlight( );
-//		ui.off('timeline_list');
-//		searchFlag = false;
-//	}, 100);
-//}
-//
-//function prependList(){
-//	if( searchFlag ) return;
-//	console.log("prepend");
-//
-//	searchFlag = true;
-//	ui.onBody('timeline_list', 0, 60);
-//
-//	detailStartPage--;
-//	var str = makeList(detailStartPage);
-//	if( str == ''){
-//		detailStartPage++;
-//		searchFlag = false;
-//		ui.off('timeline_list');
-//		return;
-//	}
-//
-//	if($(".pageInfoDiv").size() > detailViewPage-1){
-//		$(".pageInfoDiv").last().remove();
-//		detailEndPage--;
-//	}
-//	setTimeout(function(){
-//		$('#timeline_list').prepend(str);
-//		Highlight( );
-//		$('#scrollArea').scrollTop($(".pageInfoDiv").height());
-//		ui.off('timeline_list');
-//		searchFlag = false;
-//	}, 100);
-//}
 
 function checkList(cnt){
 //	selectedSearchData = cnt;
-    getMessengerMessage($('#xrootmtr').text(), $('#selectUserInfo').attr('data-srcip'), $('#selectUserInfo').attr('data-usrid'), focusMsgId);
+    getGenerativeMessage($('#selectUserInfo').attr('data-name'), $('#selectUserInfo').attr('data-srcip'), $('#selectUserInfo').attr('data-usr_id'), focusMsgId);
     $('#selectCnt').html(cnt+1);
 }
 
-//function findList(id, line){
-//	ui.onBody('timeline_list', 0, 60);
-//	var selectPage = 1
-//	var str = '';
-//
-//	if(line != -1) {
-//		selectPage = Math.ceil((line)/detailPageBreak);
-//		if( selectPage == 0 ) selectPage = 1;
-//	}
-//	if(selectPage < detailStartPage || selectPage > detailEndPage ) str = makeList(selectPage);
-//
-//	if( str == ''){
-//		searchFlag = false;
-//	}else{
-//		$("#timeline_list").html('').html(str);
-//		Highlight( );
-//	}
-//
-//	setTimeout(function(){
-//		ui.off('timeline_list');
-//
-//		detailStartPage=selectPage;
-//		detailEndPage=selectPage;
-//		moveTargetHeight(id, true);
-//		searchFlag = false;
-//	}, 50);
-//}
+
 
 function checkLastMsg(){
-    var xrootmtr = $('#xrootmtr').text();
+    var userid = $('#userid').text();
     var srcip = $('#srcip').text();
-    var usr_id = $('#usr_id').text();
     var lastMsgId = '';
     var topHeight = 200; //영역을 제외한 상단 높이
     var marginBottom = 55; //하단에 최소한으로 보여줄 픽셀 위치 (첫줄이 보이면 읽음)
@@ -679,7 +668,7 @@ function checkLastMsg(){
 
     //console.log("displayHeight = "+displayHeight);
 
-    $('#timeline_list div.list-group-item').each(function(){
+    $('#timeline_list div.me').each(function(){
         var objOffsetTop = $(this).offset().top-topHeight;
         var objHeight = $(this).height();
         //console.log("objHeight = "+objHeight)
@@ -688,7 +677,7 @@ function checkLastMsg(){
         if(objOffsetTop-(objHeight/2)-marginBottom < 0){
             lastMsgId = $(this).parent().parent().attr('id');
         }else{
-            return updateEmassMessengerAdminXrootMtr(xrootmtr, lastMsgId, srcip, usr_id);
+            return updateEmassGenerativeAdminUserid(userid, lastMsgId, srcip);
         }
     });
 }
@@ -974,7 +963,6 @@ function getGenerativeMessage(userid, srcip, usr_id, msgid){
             if(data.groups.length > 0) {
                 $('.messenger_prev').css('display','block');
                 $('#totalCount').css('display','block');
-                $('#groupSubResultCnt').text(data.numFound);
             }
             if(data.groups.length == 0) {
                 $("#timeline_list").html(noDataMsg());
