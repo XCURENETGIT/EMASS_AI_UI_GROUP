@@ -11,6 +11,7 @@
 
 <style type="text/css">
 
+	.col-xs-9 {float:none; width:none;}
 	.form_btn05:hover, .form_btn05:active{
 		color: #fff !important;
 	}
