@@ -92,18 +92,13 @@ public class DashBoardController {
 		long now = System.currentTimeMillis();
 		String adminId = Common.getAdminId(session);
 		String dashKey = "file.send";
-		DashboardVO dashboard = dashBoardService.getDashBoardConfig(adminId, dashKey);
 
 		FileSendVO vo = new FileSendVO();
 		vo.setAdminId(adminId);
 		vo.setStartDt(Common.getCurrentDate() + "000000");
 		vo.setEndDt(Common.getDateTime(now, "yyyyMMddHHmmss"));
 		vo.setTermDtStr(Prop.propFormat("condition.hour", session, "00")+" ~ " + Common.getDateTime(now, Prop.propFormat("condition.time", session, "HH", "mm", "ss")));
-		if (dashboard != null) {
-			vo.setFileSize(Common.nvn(dashboard.getDashVal(), 200));
-		} else {
-			vo.setFileSize(200);
-		}
+		vo.setFileSize(1);
 		FileSendVO rs = dashBoardService.getFileSend(vo);
 		if (rs != null) {
 			vo.setTotal(rs.getTotal());

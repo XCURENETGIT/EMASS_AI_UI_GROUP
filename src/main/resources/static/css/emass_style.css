@@ -71,6 +71,18 @@ body,html {width:100%; height:100%;}
 .mainlist div .tit12 {background:url(../img/ico_main_tit12.png) top left no-repeat; font-size:14px; font-weight: 400; color:#111;padding-left:20px;}
 
 .tit01 {background:url(../img/ico_main_tit01.png) top left no-repeat; font-size:14px; font-weight: 400; color:#111;padding-left:20px;}
+.tit02 {background:url(../img/ico_main_tit02.png) top left no-repeat; font-size:14px; font-weight: 400; color:#111;padding-left:20px;}
+.tit03 {background:url(../img/ico_main_tit03.png) top left no-repeat; font-size:14px; font-weight: 400; color:#111;padding-left:20px;}
+.tit04 {background:url(../img/ico_main_tit04.png) top left no-repeat; font-size:14px; font-weight: 400; color:#111;padding-left:20px;}
+.tit05 {background:url(../img/ico_main_tit05.png) top left no-repeat; font-size:14px; font-weight: 400; color:#111;padding-left:20px;}
+.tit06 {background:url(../img/ico_main_tit06.png) top left no-repeat; font-size:14px; font-weight: 400; color:#111;padding-left:20px;}
+.tit07 {background:url(../img/ico_main_tit07.png) top left no-repeat; font-size:14px; font-weight: 400; color:#111;padding-left:20px;}
+.tit08 {background:url(../img/ico_main_tit08.png) top left no-repeat; font-size:14px; font-weight: 400; color:#111;padding-left:20px;}
+.tit09 {background:url(../img/ico_main_tit09.png) top left no-repeat; font-size:14px; font-weight: 400; color:#111;padding-left:20px;}
+.tit10 {background:url(../img/ico_main_tit10.png) top left no-repeat; font-size:14px; font-weight: 400; color:#111;padding-left:20px;}
+.tit11 {background:url(../img/ico_main_tit11.png) top left no-repeat; font-size:14px; font-weight: 400; color:#111;padding-left:20px;}
+.tit12 {background:url(../img/ico_main_tit12.png) top left no-repeat; font-size:14px; font-weight: 400; color:#111;padding-left:20px;}
+
 #chartAreaTitle {font-weight:600;}
 #xcn_mainWrap_new .xcn_con_area {position: relative;overflow:hidden;}
 /*{display: grid; grid-template-columns: 1fr 1fr 1fr 1fr ; column-gap: 20px;grid-template-rows: 100% }*/
@@ -469,7 +481,7 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .borbottom_dd{border-bottom:1px solid #ddd;}
 .borright_none{border-right:none !important;}
 .borcc{border:1px solid #ccc;}
-.bornone {border:none !important;}
+.bornone {border:none }
 .borradius { border-radius:12px ; -webkit-border-radius:12px ; -moz-border-radius:12px ; -ms-border-radius:12px ; -o-border-radius:12px ; }
 .txtde_none {text-decoration: none !important;}
 

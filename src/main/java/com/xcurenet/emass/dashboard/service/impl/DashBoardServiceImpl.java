@@ -74,7 +74,8 @@ public class DashBoardServiceImpl extends XcnAbstractDAO implements DashBoardSer
     public FileSendVO getFileSend(FileSendVO fileSendVO) throws IOException, SolrServerException {
 	    FileSendVO result = new FileSendVO();
 	    SolrQuery sq = new SolrQuery();
-	    sq.setQuery(String.format("+attachsize:[%s TO *] +ctime:[%s TO %s]", (fileSendVO.getFileSize() * 1024 * 1024), fileSendVO.getStartDt(), fileSendVO.getEndDt()));
+
+	    sq.setQuery(String.format("+ctime:[%s TO %s]+attachsize:[%s TO *]", fileSendVO.getStartDt(), fileSendVO.getEndDt(), (fileSendVO.getFileSize() * 1024 * 1024)));
 	    sq.setRows(0);
 	    SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, fileSendVO.getAdminId());
 	    result.setTotal(Config.getBoolean("ui.dashboard.abbreviation") ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));

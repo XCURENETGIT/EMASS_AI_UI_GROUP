@@ -5,9 +5,23 @@
 	th {
 		text-align: center;
 	}
+	.click:hover{
+		border-width: 4px;
+	}
+
+	.filename:hover{
+		text-decoration: underline;
+	}
+
+	.name:hover{
+		text-decoration: underline;
+	}
 </style>
 <title>EMASS LTH - Dashboard</title>
 <script type="text/javascript">
+
+
+
     Highcharts.setOptions({
         chart: {
             type: 'column',
@@ -529,8 +543,9 @@ var dashCondition = {
                             let name = getFormattedValue("ddd", data.facet[i]);
                             let names = getFormattedValue("ddd", name[0]);
                             let count = getFormattedValue("count", name[2]);
-                            str += "<li><span class='num'>" + (i + 1) + "</span>";
-                            str += "<p><span>" + names + "</span>";
+                            let nameId = name[3];
+                            str += "<li class='click2' data-value='" + nameId + "'><span class='num'>" + (i + 1) + "</span>";
+                            str += "<p><span class='name'>" + names + "</span>";
                             str += "<span class='righttext'>" + count + "</span></p></li>";
                         }
                         str += "</ul></div>"
@@ -669,7 +684,7 @@ var dashCondition = {
                             let filesSize = getFormattedValue("size", data.fileSize[i]);
                             let filesType = getFormattedValue("type", data.fileType[i]);
                             str += "<li class='clicks' ' data-value='" + data.fileId[i] + "'><span class='num'>" + (i + 1) + "</span>";
-                            str += "<p><span>" + fileName + "</span>"
+                            str += "<p><span class='filename'>" + fileName + "</span>"
                             str += "<span class='righttext'>" + filesSize + "</span></p></li>"
                         }
                         str += "<ul><div>";
@@ -1088,7 +1103,8 @@ var dashCondition = {
                 dashCondition.regexpVal = "EC%L@1|EF%L@1|ID%L@1";
                 dashCondition.regexpStr = "확장자 변조 파일(1건 이상),암호화 파일(1건 이상),송수신자 동일아이디(1건 이상)";
             } else if (dat == 'file') {
-                dashCondition.attachYn = "Y";
+                dashCondition.sizeOption = "L";
+                dashCondition.sizeStartVal = ''+(1024*1024);
             } else if (dat == 'person') {
                 dashCondition.regexpYn = "Y";
                 dashCondition.regexpVal = "MN%L@1|CN%L@1|AN%L@1|SN%L@1|CRN%L@1|DN%L@1|FN%L@1|PN%L@1|SSN%L@1|BRN%L@1|CPN%L@1|MCN%L@1";

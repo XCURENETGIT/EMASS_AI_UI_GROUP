@@ -878,7 +878,7 @@ INSERT IGNORE INTO UI_EPMSG_TYPE VALUES ('official', '공문', 'green');
 
 
 
-INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,USEYN) values (1,'패턴(개인정보)메시지','D','unread','total','P','svc1','total','fa fa-user','panel-primary','
+INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,USEYN) values (1,'패턴(개인정보)메시지','S','unread','total','P','svc1','total','tit01','blueBg','
 		<div class="grid-stack-item ui-draggable-handle">
 			<div style="display:none;" class="gridValues" data-dashmultileft="unread" data-dashmultiright="total"></div>
 			<div class="grid-stack-item-content">

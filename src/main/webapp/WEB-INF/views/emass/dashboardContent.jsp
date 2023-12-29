@@ -296,41 +296,41 @@
 		</div>
 	</div>
 
-		<div id="listDataFormat">
-			<div class="grid-stack-item ui-draggable-handle">
-				<div style="display:none;" class="gridValues" data-dashMultiLeft="#dashMultiLeft#" data-dashMultiRight="#dashMultiRight#"></div>
-				<div class="grid-stack-item-content">
-					<div class="panel #dashColor#Border">
-						<div class="panel-body">
-							<div class="row">
-								<div class="col-xs-12 text-right">
-									<button type="button" class="customClose">
-										<span aria-hidden="true">&times;</span>
-									</button>
-									<table id="mytable" class="dashboardTable table table-bordred table-striped">
-										<thead>
-										<tr>
-											<th></th>
-											<th><s:message code="condition.date"/></th>
-											<th><s:message code="condition.service"/></th>
-											<th><s:message code="condition.subject"/></th>
-										</tr>
-										</thead>
-										<tbody class="dashTableTbody">
-										</tbody>
-									</table>
-								</div>
+	<div id="listDataFormat">
+		<div class="grid-stack-item ui-draggable-handle">
+			<div style="display:none;" class="gridValues" data-dashMultiLeft="#dashMultiLeft#" data-dashMultiRight="#dashMultiRight#"></div>
+			<div class="grid-stack-item-content">
+				<div class="panel #dashColor#Border">
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-xs-12 text-right">
+								<button type="button" class="customClose">
+									<span aria-hidden="true">&times;</span>
+								</button>
+								<table id="mytable" class="mainTable table-bordred table-striped">
+									<thead>
+									<tr>
+										<th></th>
+										<th><s:message code="condition.date"/></th>
+										<th><s:message code="condition.service"/></th>
+										<th><s:message code="condition.subject"/></th>
+									</tr>
+									</thead>
+									<tbody class="dashTableTbody">
+									</tbody>
+								</table>
 							</div>
 						</div>
-						<div class="panel-footer">
-							<span class="pull-left dash-title">#dashName#</span>
-							<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59"><s:message code="condition.today_str"/></div>
-							<div class="clearfix"></div>
-						</div>
+					</div>
+					<div class="panel-footer">
+						<span class="#dashIcon#  pull-left dash-title">#dashName#</span>
+						<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59"><s:message code="condition.today_str"/></div>
+						<div class="clearfix"></div>
 					</div>
 				</div>
 			</div>
 		</div>
+	</div>
 
 	<div id="emptyDataFormat">
 		<div class="grid-stack-item ui-draggable-handle">

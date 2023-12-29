@@ -235,7 +235,7 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		// 결과값 계산
 		List<Integer> results = multiply1024ForList(rangeValues);
 
-		System.out.println("gg: "+todayDataStatusVO.getRange());
+
 
 		sq.addFacetField("attachtype");
 		sq.setParam("group", true);
