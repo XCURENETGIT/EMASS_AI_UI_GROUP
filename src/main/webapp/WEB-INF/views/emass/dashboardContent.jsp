@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
+<%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
+
 <script type="text/javascript">
 
     Highcharts.setOptions({
@@ -197,6 +197,7 @@
 			<div style="display:none;" class="gridValues" data-dashMultiLeft="#dashMultiLeft#" data-dashMultiRight="#dashMultiRight#"></div>
 			<div class="grid-stack-item-content">
 				<div class="panel">
+					<div class="panel-heading">
 					<div class="#dashColor# panel-heading">
 						<span class="#dashIcon# dash-title">#dashName#</span>
 						<p class="rightValue">12345<span>건</span>
@@ -206,6 +207,7 @@
 								<span aria-hidden="true">&times;</span>
 							</button>
 						</div>
+					</div>
 					</div>
 					<div class="panel-footer">
 						<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59"><s:message code="condition.today_str"/></div>
@@ -234,7 +236,7 @@
 						</div>
 					</div>
 					<div class="panel-footer">
-						<span class="#dashIcon# pull-left dash-title">#dashName#</span>
+						<span class="pull-left dash-title"><span class="#dashIcon#"></span>#dashName#</span>
 						<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59"><s:message code="condition.today_str"/></div>
 						<div class="clearfix"></div>
 					</div>

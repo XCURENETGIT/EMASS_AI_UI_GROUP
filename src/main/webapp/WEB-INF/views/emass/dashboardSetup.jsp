@@ -573,7 +573,7 @@
 			</div>
 		</div>
 		<div class="modalfooter" style="display: block;">
-			<button class=" conentBatchBtn" id="deleteBatchBtn"><s:message
+			<button class="pop_btn02 conentBatchBtn" id="deleteBatchBtn"><s:message
 					code="selectAdmin.share.delete.batch"/></button>
 			<button class="pop_btn02 deleteBtn" id="deleteOneBtn"><s:message code="selectAdmin.share.delete"/></button>
 			<button class="pop_btn01" id="deleteBatchCloseBtn"><s:message code="common.msg.cancel"/></button>
@@ -802,7 +802,7 @@
 					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
 					<button type="button" class="pop_btn02 savePopBtn" accesskey="S" id="dashSaveBtn"><s:message
 							code="common.msg.save"/></button>
-					<button type="button" class="pop_btn02 savePopBtn conentBatchBtn" accesskey="D" id="dashShareSaveBtn"><s:message
+					<button type="button" class="pop_btn02 savePopBtn" accesskey="D" id="dashShareSaveBtn"><s:message
 							code="selectAdmin.share.save"/></button>
 				</div>
 			</div>
