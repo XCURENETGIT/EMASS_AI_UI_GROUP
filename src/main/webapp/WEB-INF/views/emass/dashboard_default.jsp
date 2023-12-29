@@ -1103,6 +1103,7 @@ var dashCondition = {
                 dashCondition.regexpVal = "EC%L@1|EF%L@1|ID%L@1";
                 dashCondition.regexpStr = "확장자 변조 파일(1건 이상),암호화 파일(1건 이상),송수신자 동일아이디(1건 이상)";
             } else if (dat == 'file') {
+                dashCondition.sizeType="A";
                 dashCondition.sizeOption = "L";
                 dashCondition.sizeStartVal = ''+(1024*1024);
             } else if (dat == 'person') {
