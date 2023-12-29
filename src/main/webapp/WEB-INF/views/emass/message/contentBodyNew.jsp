@@ -345,7 +345,7 @@
 			<button class ="msg_button" id="recommendBtn"><s:message code="common.msg.similar"/></button>
 		</div>
 	</div>
-	<div class="contents" style="padding-top: 33px;">
+	<div class="contents" style="padding-top: 40px;height: 100%;">
 		<div class="boxArea" id="msgDiv" style="display: none;">
 			<div class="content_body" style="transform: translateZ(0);">
 				<div class="row">

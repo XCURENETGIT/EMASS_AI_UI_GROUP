@@ -880,25 +880,25 @@ function viewer_newOpen(row, selectedGrid){
 				<div class="modal-body">
 					<div class="form-inline">
 						<div class="content_body" style="height:100%;padding-top: 0;">
-							<table class="table borderless" style="margin-bottom:0;width:100%;">
+							<table class="table table-bordered" style="margin-bottom:0;width:100%;">
 								<colgroup>
-									<col width="200">
+									<col width="210">
 									<col width="*">
 								</colgroup>
 								<tr>
 									<th>
-										¤ <s:message code="download.msg.dataArea"/>
+										<s:message code="download.msg.dataArea"/>
 									</th>
 									<td>
 										<div class="btn-group filterBtn" data-toggle="buttons" style="margin-top:3px;">
 											<label class="btn btn-sm btn-default"><input type="radio" name="exportDataRange" id="exportDataSelect" value="S"> <s:message code="download.msg.select.count"/></label>
-											<%-- <label class="btn btn-sm btn-default active"><input type="radio" name="exportDataRange" id="exportDataAll" value="A" checked> <s:message code="download.msg.search.count"/></label> --%>
+											<label class="btn btn-sm btn-default active"><input type="radio" name="exportDataRange" id="exportDataAll" value="A" checked> <s:message code="download.msg.search.count"/></label>
 										</div>
 									</td>
 								</tr>
 								<tr id="exportFileTypeArea">
 									<th>
-										¤ <s:message code="download.msg.fileType"/>
+										<s:message code="download.msg.fileType"/>
 									</th>
 									<td>
 										<div class="btn-group filterBtn" data-toggle="buttons" style="margin-top:3px;">
@@ -911,16 +911,50 @@ function viewer_newOpen(row, selectedGrid){
 								</tr>
 								<tr>
 									<th>
-										¤ <s:message code="download.msg.export.count"/>
+										<s:message code="download.msg.export.count"/>
 									</th>
 									<td>
 										<span id="exportDataSize" style="line-height:32px;">0</span>
 									</td>
 								</tr>
+								<tr id="bodyInExcel">
+									<th>
+										<s:message code="download.msg.body.in.excel"/>
+									</th>
+									<td>
+										<label class="condition_label"><input type="radio" name="bodyInExcel" value="Y"> <span><s:message code="common.msg.include"/></span></label>
+										<label class="condition_label"><input type="radio" name="bodyInExcel" value="N" checked="checked"> <span><s:message code="common.msg.not.include"/></span></label>
+									</td>
+								</tr>
+								<tr id="bodyInExcelMsg" style="font-weight: bold;display:none;">
+									<td colspan="2">
+										<s:message code="download.msg.body.in.excelMsg" />
+									</td>
+								</tr>
+							</table>
+							<table class="table table-bordered" style="margin-bottom:0;width:100%;margin-top:15px;display:none;" id="bodyInExcelIdx">
+								<colgroup>
+									<col width="210">
+									<col width="*">
+								</colgroup>
+								<tr>
+									<th style="font-weight: bold;">
+										<s:message code="download.msg.now.col.order" />
+									</th>
+									<td>
+										<select id="nowColIdx" data-style="btn-default">
+										</select>
+									</td>
+								</tr>
+								<tr style="font-weight: bold;">
+									<td colspan="2">
+										<s:message code="download.msg.body.col.idx" />
+									</td>
+								</tr>
 							</table>
 							<table class="table table-bordered" style="margin-bottom:0;width:100%;margin-top:15px;" id="sizeWarnMsg">
 								<colgroup>
-									<col width="200">
+									<col width="210">
 									<col width="*">
 								</colgroup>
 								<tr style="font-weight: bold;">
@@ -930,7 +964,7 @@ function viewer_newOpen(row, selectedGrid){
 								</tr>
 								<tr style="font-weight: bold;">
 									<th>
-										<label for="ruleFile" class="" style="vertical-align: bottom;line-height:35px;">¤ <s:message code="download.msg.file.count"/></label>
+										<label for="ruleFile" class="control-label" style="vertical-align: bottom;line-height:35px;">¤ <s:message code="download.msg.file.count"/></label>
 									</th>
 									<td>
 										<select id="dataLength_select" class="selectpicker" data-style="btn-default">
@@ -954,7 +988,8 @@ function viewer_newOpen(row, selectedGrid){
 		</div>
 		<iframe id="upload_file" name="upload_file" src="" style="display: none;"></iframe>
 	</div>
-	
+
+
 	<form action="<c:url value="/downEmassAttachByMsgId.xcn"/>" target="ExcelDown" method="post" id="downForm">
 		<input type="hidden" name="msgIds" id="msgIds">
 		<input type="hidden" name="msgId" id="msgId">
