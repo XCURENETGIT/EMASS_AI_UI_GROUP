@@ -106,7 +106,7 @@
 	}
 	.card-1 > div {color:#1C64D3; font-weight:600;}
 
-	@media(max-width: 990px){
+	/*@media(max-width: 990px){
 		.card{
 			margin: 20px;
 		}
@@ -131,7 +131,7 @@
 	.grid-stack-item-content .fa {
 		display: inline-block;
 
-	}
+	}*/
 	div#conditionViewDiv{
 		position: absolute;
 		display: none;
@@ -272,7 +272,7 @@
 			$('#conditionViewDiv').fadeIn();
 			var x = e.clientX;
 			var o = $(this).parent().parent().offset();
-			$('#conditionViewDiv').css({'top':'140px','left':o.left})
+			$('#conditionViewDiv').css({'top':'250px','left':o.left})
 
 			var index = $(this).parent().parent().parent().attr('data-index');
 
@@ -1233,7 +1233,7 @@
 </head>
 
 <div id="conditionViewDiv">
-	<div style="height:30px;background-color:black;color:#fff;padding-left:10px;line-height:30px;font-weight: bold;cursor:default;">
+	<div style="height:30px;background-color:#1576A1;color:#fff;padding-left:10px;line-height:30px;font-weight: bold;cursor:default;">
 		<div style="float:left;width:120px;">
 			<i class="glyphicon glyphicon-question-sign"></i>&nbsp;<s:message code="dashboard.conditionView"/>
 		</div>
@@ -1273,22 +1273,24 @@
 <div id="xcn_container">
 	<div class="dashboardBtnArea" style="z-index:1000;">
 		<div class="btn-group">
-			<button type="button" class="btn btn-sm form_btn05 dropdown-toggle" data-toggle="dropdown" style="margin-top:18px;">
-				<s:message code="custom.work"/> <span class="caret"></span>
+			<button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" style="margin-top:18px;">
+				<span class="fa fa-file-text-o"></span>&nbsp;<s:message code="custom.work"/> <span class="caret"></span>
 			</button>
 			<ul class="dropdown-menu dropdown-menu-right" role="menu" style="min-width:120px;">
 				<li><a href="javascript:;" id="editDashboardBtn"><span class="fa fa-file-text-o" style="font-size:16px"></span>&nbsp;<s:message code="dashboardSetup.addModify"/></a></li>
 				<li><a href="javascript:;" id="menuDefaultSetupBtn"><span class="fa fa-file-text-o" style="font-size:16px"></span>&nbsp;<s:message code="dashboardMenu.defaultMenu"/></a></li>
 				<li class="dropdown-divider"></li>
-				<li><a href="javascript:;" id="setupDashboardBtn"><span class="glyphicon glyphicon-th-list"></span>&nbsp;대시보드 관리</a></li>
+				<li><a href="javascript:;" id="setupDashboardBtn"><span class="glyphicon glyphicon-th-list"></span>&nbsp;<s:message code="DATA_MONITOR.DASHBOARD_SETUP"/></a></li>
 			</ul>
 		</div>
 	</div>
 	<div class="dashboardHeader" style="display:none; z-index: 999; position: absolute; top: 16px; left: 0px; right: 0px;">
 		<div class="col-xs-12">
-			<button type="button" class="form_btn01_02" style="position: absolute;right:162px;top:2px;" id="saveDashboardBtn">저장</button>
-			<button type="button" class="form_btn04" style="position: absolute;right:90px;top:2px;" id="cancleDashboardBtn">
-				닫기
+			<button type="button" class="btn btn-sm btn-primary" style="position: absolute;right:149px;top:2px;" id="saveDashboardBtn">
+				<span class="fa fa-check"></span>&nbsp;<s:message code="common.msg.save"/>
+			</button>
+			<button type="button" class="btn btn-sm btn-default" style="position: absolute;right:84px;top:2px;" id="cancleDashboardBtn">
+				<span class="glyphicon glyphicon-remove"></span>&nbsp;<s:message code="common.msg.close"/>
 			</button>
 		</div>
 		<div class="col-xs-12" style="margin-top: 30px;">
@@ -1310,7 +1312,7 @@
 					</h2>
 					<div class="mat24">
 						<p><s:message code="custom.msg.insertInfo"/></p>
-						<p class="mat8"><a href="<c:url value="/ems/dashboardSetup.do"/>">대시보드 관리</a> <s:message code="custom.msg.insertInfo1"/></p>
+						<p class="mat8"><a href="<c:url value="/ems/dashboardSetup.do"/>"><s:message code="DATA_MONITOR.DASHBOARD_SETUP"/></a> <s:message code="custom.msg.insertInfo1"/></p>
 						<p class="mat24"><button class="form_btn05 mat8" href="javascript:;" id="editDashboardBtnPop"><s:message code="custom.add"/></button></p>
 					</div>
 				</div>

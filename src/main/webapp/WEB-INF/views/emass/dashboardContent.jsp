@@ -197,22 +197,23 @@
 			<div style="display:none;" class="gridValues" data-dashMultiLeft="#dashMultiLeft#" data-dashMultiRight="#dashMultiRight#"></div>
 			<div class="grid-stack-item-content">
 				<div class="panel">
-					<div class="panel-heading">
+					<div>
+						<button type="button" class="customClose">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
 					<div class="#dashColor# panel-heading">
-						<span class="#dashIcon# dash-title">#dashName#</span>
-						<p class="rightValue">12345<span>건</span>
+						<div class="panel-box">
+							<span class="#dashIcon# dash-title">#dashName#</span>
+							<p class="rightValue">12345<span>건</span>
+						</div>
 						</p>
-						<div class="col-xs-9 text-right">
-							<button type="button" class="customClose">
-								<span aria-hidden="true">&times;</span>
-							</button>
+						<div class="panel-footer">
+							<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59"><s:message code="condition.today_str"/></div>
+							<div class="clearfix"></div>
 						</div>
 					</div>
-					</div>
-					<div class="panel-footer">
-						<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59"><s:message code="condition.today_str"/></div>
-						<div class="clearfix"></div>
-					</div>
+
 				</div>
 			</div>
 		</div>
@@ -236,7 +237,7 @@
 						</div>
 					</div>
 					<div class="panel-footer">
-						<span class="pull-left dash-title"><span class="#dashIcon#"></span>#dashName#</span>
+						<span class="#dashIcon# pull-left dash-title">#dashName#</span>
 						<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59"><s:message code="condition.today_str"/></div>
 						<div class="clearfix"></div>
 					</div>

@@ -10,6 +10,7 @@
 	<title></title>
 
 	<style type="text/css">
+		/*
 		.radio-inline.c-radio {
 			margin-left: 0px;
 		}
@@ -55,7 +56,7 @@
 			color: #fff;
 			background-color: #2778bf;
 			border-color: #2778bf;
-		}
+		}*/
 	</style>
 	<script type="text/javascript">
         <%--var infoFeedbackYn = '<%=infoFeedbackYn%>';--%>
