@@ -5,15 +5,22 @@
 	th {
 		text-align: center;
 	}
-	.click:hover{
-		border-width: 4px;
+	.click P:hover{
+		cursor: pointer;
+		text-decoration: underline;
 	}
 
 	.filename:hover{
+		cursor: pointer;
 		text-decoration: underline;
 	}
 
 	.name:hover{
+		cursor: pointer;
+		text-decoration: underline;
+	}
+	.righttext:hover{
+		cursor: pointer;
 		text-decoration: underline;
 	}
 </style>
@@ -1089,8 +1096,8 @@ var dashCondition = {
         });
 
 
-        $(document).on('click', '.click', function () {
-            var dat = $(this).data('value');
+        $(document).on('click', '.click P', function () {
+            var dat = $(this).parent().data('value');
             if (dat == 'reserved') {
                 dashCondition.keywordYn = "Y";
             } else if (dat == 'groupWare') {
