@@ -2,6 +2,12 @@
 <%@ include file="/WEB-INF/fragments/baseScript.jsp" %>
 <link rel="stylesheet" href="<c:url value="/css/dashboard.css"/>"/>
 <style>
+	.filename{
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+
 	th {
 		text-align: center;
 	}
@@ -674,11 +680,10 @@ var dashCondition = {
                             let filesSize = getFormattedValue("size", data.fileSize[i]);
                             let filesType = getFormattedValue("type", data.fileType[i]);
                             let leFileName = data.fileName[i];
-                            if (typeof leFileName != 'undefined' && leFileName.length > 4) leFileName = data.fileName[i].slice(0, 4) + "...";
                             let fileName = getFormattedValue("name", leFileName);
                             str += "<li class='clicks' ' data-value='" + data.fileId[i] + "'>"
                             str += "<span class = 'num'>" + (i + 1) + "</span>";
-                            str += "<p class='file blueBg'><span class='filename blue'>" + fileName + "</span><span class='Volume'>" + filesSize + "</span></p>";
+                            str += "<p class='file blueBg'><span class='filename blue'>" + leFileName + "</span><span class='Volume'>" + filesSize + "</span></p>";
                             str += "</li>"
                         }
                         str += "</ul></div>";
@@ -686,12 +691,11 @@ var dashCondition = {
                         str += "<div class='list'><ul>";
                         for (let i = 4; i < 10; i++) {
                             let leFileName = data.fileName[i];
-                            if (typeof leFileName != 'undefined' && leFileName.length > 4) leFileName = data.fileName[i].slice(0, 4) + "...";
                             let fileName = getFormattedValue("name", leFileName);
                             let filesSize = getFormattedValue("size", data.fileSize[i]);
                             let filesType = getFormattedValue("type", data.fileType[i]);
                             str += "<li class='clicks' ' data-value='" + data.fileId[i] + "'><span class='num'>" + (i + 1) + "</span>";
-                            str += "<p><span class='filename'>" + fileName + "</span>"
+                            str += "<p><span class='filename'>" + leFileName + "</span>"
                             str += "<span class='righttext'>" + filesSize + "</span></p></li>"
                         }
                         str += "<ul><div>";
