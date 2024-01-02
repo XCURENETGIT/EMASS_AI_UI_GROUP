@@ -274,9 +274,6 @@ var dashCondition = {
         }
 
 
-        var chart2 = null;
-        var chartxAxis2;
-
         function printChartTraffic2(dat) {
             var data = [];
             var tMax = [];
@@ -346,8 +343,6 @@ var dashCondition = {
         }
 
 
-        var chart2 = null;
-        var chartxAxis2;
 
         function printChartTraffic(dat) {
             var data = [];
@@ -896,10 +891,8 @@ var dashCondition = {
                     categories.push(getDateFormatSize(dat[i].date));
                     logging.push(Number(dat[i].logging));
                     attach.push(dat[i].attach == undefined ? 0 : Number(dat[i].attach));
-                    // attachStr.push(dat[i].attachStr);
                 }
             }
-
             var rotation = 40;
             if (chartxAxis == 'W') rotation = 0;
             $('#loggingChart').highcharts({
@@ -920,7 +913,7 @@ var dashCondition = {
                 }],
                 yAxis: [{
                     labels: {
-                        format: '{value}',
+                        format: Number('{value}'),
                         style: {color: Highcharts.getOptions().colors[1]}
                     },
                     title: {
@@ -933,7 +926,7 @@ var dashCondition = {
                         style: {color: Highcharts.getOptions().colors[0]}
                     },
                     labels: {
-                        format: '{value}',
+                        format: Number('{value}'),
                         style: {color: Highcharts.getOptions().colors[0]}
                     },
                     opposite: true,
