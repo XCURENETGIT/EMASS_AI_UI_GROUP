@@ -51,11 +51,9 @@ public class MessengerEdcGroupVO {
 
 	public MessengerEdcGroupVO(SearchHits<SolrEdcVO> resp, final String adminId, final boolean detail, final boolean original) throws SolrServerException, IOException {
 		this.groups = new ArrayList<>();
-
 		ObjectMapper mapper = new ObjectMapper(); //임시
 
 		ElasticsearchAggregations elasticSearchAggregations = (ElasticsearchAggregations) resp.getAggregations();
-
 		if (null != elasticSearchAggregations ) {
 			Aggregations mainAggregations = elasticSearchAggregations.aggregations();
 			if (null == mainAggregations ) return;
@@ -75,7 +73,6 @@ public class MessengerEdcGroupVO {
 				}
 			}
 
-
 			// sub Aggs에서 document 추출
 			List<TopHits> topHitsList = new ArrayList<>();
 			for(Map.Entry<String, Aggregations> groupAgg : groupAggsMap.entrySet()) {
@@ -86,7 +83,6 @@ public class MessengerEdcGroupVO {
 					topHitsList.add(groupAggs.get(gAgg.getName()));
 				}
 			}
-
 
 			for(TopHits topHits : topHitsList){
 				org.elasticsearch.search.SearchHit[] hits  = topHits.getHits().getHits();

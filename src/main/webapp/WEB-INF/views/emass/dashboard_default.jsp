@@ -2,18 +2,32 @@
 <%@ include file="/WEB-INF/fragments/baseScript.jsp" %>
 <link rel="stylesheet" href="<c:url value="/css/dashboard.css"/>"/>
 <style>
+	.filename{
+		width:90px;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+
 	th {
 		text-align: center;
 	}
-	.click:hover{
-		border-width: 4px;
+	.click P:hover{
+		cursor: pointer;
+		text-decoration: underline;
 	}
 
 	.filename:hover{
+		cursor: pointer;
 		text-decoration: underline;
 	}
 
 	.name:hover{
+		cursor: pointer;
+		text-decoration: underline;
+	}
+	.righttext:hover{
+		cursor: pointer;
 		text-decoration: underline;
 	}
 </style>
@@ -260,9 +274,6 @@ var dashCondition = {
         }
 
 
-        var chart2 = null;
-        var chartxAxis2;
-
         function printChartTraffic2(dat) {
             var data = [];
             var tMax = [];
@@ -270,7 +281,7 @@ var dashCondition = {
             var categories = [];
 
             if (dat.length == 0) {
-                $('#con01').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px"> ');
+                $('#con01').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px" style ="margin:auto; display:block;"> ');
                 return false;
             } else {
                 var max = 0;
@@ -332,8 +343,6 @@ var dashCondition = {
         }
 
 
-        var chart2 = null;
-        var chartxAxis2;
 
         function printChartTraffic(dat) {
             var data = [];
@@ -342,7 +351,7 @@ var dashCondition = {
             var categories = [];
 
             if (dat.length == 0) {
-                $('#con02').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px"> ');
+                $('#con02').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px" style="margin: auto; display: block;">');
                 return false;
             } else {
                 var max = 0;
@@ -519,9 +528,9 @@ var dashCondition = {
                 success: function (data, total) {
                     let str = "";
                     if (data.total == 0) {
-                        str += '<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px">';
+                        str += '<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px" class="xcn_nodata"style=" display: block;">';
+                        $('#FilePeople').html(str);
                     } else {
-
                         str += "<div class='teamList'><ul>";
                         for (let i = 0; i < 4; i++) {
                             let name = getFormattedValue("size", data.facet[i]);
@@ -549,8 +558,9 @@ var dashCondition = {
                             str += "<span class='righttext'>" + count + "</span></p></li>";
                         }
                         str += "</ul></div>"
+                        $('#FilePeople').html(str);
                     }
-                    $('#FilePeople').html(str);
+
 
                 },
                 error: function (status, message) {
@@ -659,7 +669,7 @@ var dashCondition = {
 
                     let str = "";
                     if (data.total == 0) {
-                        str += '<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px"> ';
+                        str += '<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" class="xcn_nodata"width="100px;" height="100px" style=" display: block;"> ';
                     } else {
 
                         str += "<div><ul>";
@@ -667,11 +677,10 @@ var dashCondition = {
                             let filesSize = getFormattedValue("size", data.fileSize[i]);
                             let filesType = getFormattedValue("type", data.fileType[i]);
                             let leFileName = data.fileName[i];
-                            if (typeof leFileName != 'undefined' && leFileName.length > 4) leFileName = data.fileName[i].slice(0, 4) + "...";
                             let fileName = getFormattedValue("name", leFileName);
                             str += "<li class='clicks' ' data-value='" + data.fileId[i] + "'>"
                             str += "<span class = 'num'>" + (i + 1) + "</span>";
-                            str += "<p class='file blueBg'><span class='filename blue'>" + fileName + "</span><span class='Volume'>" + filesSize + "</span></p>";
+                            str += "<p class='file blueBg'><span class='filename blue'>" + leFileName + "</span><span class='Volume'>" + filesSize + "</span></p>";
                             str += "</li>"
                         }
                         str += "</ul></div>";
@@ -679,12 +688,11 @@ var dashCondition = {
                         str += "<div class='list'><ul>";
                         for (let i = 4; i < 10; i++) {
                             let leFileName = data.fileName[i];
-                            if (typeof leFileName != 'undefined' && leFileName.length > 4) leFileName = data.fileName[i].slice(0, 4) + "...";
                             let fileName = getFormattedValue("name", leFileName);
                             let filesSize = getFormattedValue("size", data.fileSize[i]);
                             let filesType = getFormattedValue("type", data.fileType[i]);
                             str += "<li class='clicks' ' data-value='" + data.fileId[i] + "'><span class='num'>" + (i + 1) + "</span>";
-                            str += "<p><span class='filename'>" + fileName + "</span>"
+                            str += "<p><span class='filename'>" + leFileName + "</span>"
                             str += "<span class='righttext'>" + filesSize + "</span></p></li>"
                         }
                         str += "<ul><div>";
@@ -754,7 +762,9 @@ var dashCondition = {
                         }
                     }
                     $('#todayGroupWareSum').html(todayGroupWareSum + "<span>건</span>");
-                    printChart(data.facet);
+                    if (total == 0){
+                        $('#svcDataChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px"> ');
+                    }else printChart(data.facet);
 
                 },
                 error: function (status, message) {
@@ -776,7 +786,7 @@ var dashCondition = {
             var categories = [];
 
             if (dat.length == 0) {
-                $('#sizeChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="150px;" height="150px"> ');
+                $('#sizeChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="150px;" height="150px" style="margin: auto; display: block;"> ');
                 return false;
             } else {
                 var max = 0;
@@ -881,10 +891,8 @@ var dashCondition = {
                     categories.push(getDateFormatSize(dat[i].date));
                     logging.push(Number(dat[i].logging));
                     attach.push(dat[i].attach == undefined ? 0 : Number(dat[i].attach));
-                    // attachStr.push(dat[i].attachStr);
                 }
             }
-
             var rotation = 40;
             if (chartxAxis == 'W') rotation = 0;
             $('#loggingChart').highcharts({
@@ -905,7 +913,7 @@ var dashCondition = {
                 }],
                 yAxis: [{
                     labels: {
-                        format: '{value}',
+                        format: Number('{value}'),
                         style: {color: Highcharts.getOptions().colors[1]}
                     },
                     title: {
@@ -918,7 +926,7 @@ var dashCondition = {
                         style: {color: Highcharts.getOptions().colors[0]}
                     },
                     labels: {
-                        format: '{value}',
+                        format: Number('{value}'),
                         style: {color: Highcharts.getOptions().colors[0]}
                     },
                     opposite: true,
@@ -966,7 +974,7 @@ var dashCondition = {
             $('#svcDataChart').html('');
 
             if (data.length == 0) {
-                $('#svcDataChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="150px;" height="150px"> ');
+                $('#svcDataChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px"> ');
                 return;
             }
             $('#svcDataChart').highcharts({
@@ -1089,8 +1097,8 @@ var dashCondition = {
         });
 
 
-        $(document).on('click', '.click', function () {
-            var dat = $(this).data('value');
+        $(document).on('click', '.click P', function () {
+            var dat = $(this).parent().data('value');
             if (dat == 'reserved') {
                 dashCondition.keywordYn = "Y";
             } else if (dat == 'groupWare') {
@@ -1103,6 +1111,7 @@ var dashCondition = {
                 dashCondition.regexpVal = "EC%L@1|EF%L@1|ID%L@1";
                 dashCondition.regexpStr = "확장자 변조 파일(1건 이상),암호화 파일(1건 이상),송수신자 동일아이디(1건 이상)";
             } else if (dat == 'file') {
+                dashCondition.sizeType="A";
                 dashCondition.sizeOption = "L";
                 dashCondition.sizeStartVal = ''+(1024*1024);
             } else if (dat == 'person') {
@@ -1341,7 +1350,7 @@ var dashCondition = {
 	<%--	왼쪽 끝--
 	<%--	오른쪽 시작--%>
 	<div class="right">
-		<div>
+		<div >
 			<%--			금일 트래픽 추이, 종류 시작--%>
 			<div class="text_tab">
 				<span class="tablinks" onclick="openCity2(event, 'con01')" id="defaultOpen2">금일 트래픽</span>
@@ -1349,7 +1358,7 @@ var dashCondition = {
 				<span class="tablinks" onclick="openCity2(event, 'con02')">최근 7일 트래픽 추이</span>
 			</div>
 
-			<div id="con01" class="text_tabcontent" >
+			<div id="con01" class="text_tabcontent">
 				<div id="todayTraffic"></div>
 			</div>
 

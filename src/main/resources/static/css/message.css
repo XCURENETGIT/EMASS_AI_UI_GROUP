@@ -515,6 +515,7 @@ input[type="text"] {
 .button_style[disabled]{
 	background-color: #DDDDDD;
 }
+
 .icon_style {
 	display: inline-block;
 	vertical-align: middle;
@@ -523,10 +524,10 @@ input[type="text"] {
 	vertical-align: bottom;
 }
 
-.codeSelectedBtn .btn {
-	border-radius: 5px !important;
-	padding: 0px 7px !important;
-}
+/*.codeSelectedBtn .btn {*/
+/*	border-radius: 5px !important;*/
+/*	padding: 0px 7px !important;*/
+/*}*/
 .codeSelectedBtn:before {
 	content: "";
 	position: absolute;
@@ -536,8 +537,8 @@ input[type="text"] {
 	border-width: 6px;
 	border-right-color: #7293af;
 	width: 0px;
-	left: -11px;
-	top: 4px;
+	left: -10px;
+	top: 3px;
 }
 .count_text:after {
 	content: "";
@@ -807,6 +808,8 @@ time, mark, audio, video {
 	font-weight:400;
 	box-sizing:border-box;
 }
+
+
 
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure,

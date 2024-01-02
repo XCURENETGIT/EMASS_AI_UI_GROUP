@@ -1150,7 +1150,6 @@
                 }
 
                 var searchType = $('#searchType').val();
-                alert('dd');
                 var consentNo = grid.getValue(0, 'consentNo');
                 if( searchType != 'L'){
                     if(isConsent( ) && consentNo == '' && '<%=adminType%>' != 'C'){
@@ -1298,47 +1297,47 @@
                 $('#exportFileExt').val(exportFileType);
 
                 if( exportDataRange == 'A'){
-                    //중복체크
-                    ui.get({
-                        url : 'checkDownloadBatchExist.xcn',
-                        searchCondition : param,
-                        searchTotal : $('#searchTotal').val(),
-                        searchType : searchType,
-                        exportFileExt : exportFileType,
-                        success : function(data, total) {
-                            if(data > 0) {
-                                downloadBatchExist = true;
-                            } else {
-                                downloadBatchExist = false;
-                            }
-                        },
-                        error : function(status, message) {
-                            ui.alertMsg(message);
-                        },
-                        complete : function() {
-                            if(downloadBatchExist) {
-                                ui.alertMsg('<s:message code="download.msg.exist" />');
-                            } else {
-                                $('#isBackground').val('Y');
-                                if( searchType == 'B'){
-                                    $('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveBatchZip.xcn"/>');
-                                    $('#allDownForm').submit();
-                                }else if(searchType == 'A' ){
-                                    $('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveBatchZip.xcn"/>');
-                                    $('#allDownForm').submit();
-                                }else if(exportFileType == 'xlsx' || exportFileType == 'cell'){
-                                    $('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveBatchZip.xcn"/>');
-                                    $('#allDownForm').submit();
-                                }else if(exportFileType == 'csv'){
-                                    $('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveBatchCSV.xcn"/>');
-                                    $('#allDownForm').submit();
-                                }else if(exportFileType == 'pdf'){
-                                    $('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveBatchPDF.xcn"/>');
-                                    $('#allDownForm').submit();
+                        //중복체크
+                        ui.get({
+                            url: 'checkDownloadBatchExist.xcn',
+                            searchCondition: param,
+                            searchTotal: $('#searchTotal').val(),
+                            searchType: searchType,
+                            exportFileExt: exportFileType,
+                            success: function (data, total) {
+                                if (data > 0) {
+                                    downloadBatchExist = true;
+                                } else {
+                                    downloadBatchExist = false;
+                                }
+                            },
+                            error: function (status, message) {
+                                ui.alertMsg(message);
+                            },
+                            complete: function () {
+                                if (downloadBatchExist) {
+                                    ui.alertMsg('<s:message code="download.msg.exist" />');
+                                } else {
+                                    $('#isBackground').val('Y');
+                                    if (searchType == 'B') {
+                                        $('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveBatchZip.xcn"/>');
+                                        $('#allDownForm').submit();
+                                    } else if (searchType == 'A') {
+                                        $('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveBatchZip.xcn"/>');
+                                        $('#allDownForm').submit();
+                                    } else if (exportFileType == 'xlsx' || exportFileType == 'cell') {
+                                        $('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveBatchZip.xcn"/>');
+                                        $('#allDownForm').submit();
+                                    } else if (exportFileType == 'csv') {
+                                        $('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveBatchCSV.xcn"/>');
+                                        $('#allDownForm').submit();
+                                    } else if (exportFileType == 'pdf') {
+                                        $('#allDownForm').attr('action', '<c:url value="/getEmassMessageSaveBatchPDF.xcn"/>');
+                                        $('#allDownForm').submit();
+                                    }
                                 }
                             }
-                        }
-                    });
+                        });
 
                 }else{
                     $('#isBackground').val('N');
@@ -1451,14 +1450,25 @@
             });
             $(document).on('click', '.attach_link_new', function(){
                 var grid = getIframeListObj().grid;
-                if (grid.Rows == 0) {
+                if(grid.Rows == 0 ) return;
+                var fileExists = false;
+                 grid.getSelectedKey('attachcnt').forEach(function (e){
+                     console.log(e)
+                     if(e > 0) {
+                         fileExists = true;
+                         return true;
+                     }
+                 });
+
+                if(!fileExists) {
                     alert('<s:message code="common.msg.nodata"/>');
                     return;
                 }
                 grid.on();
-                setTimeout(function(){
+
+                setTimeout(function () {
                     var msgid = grid.getSelectedKey('msgid');
-                    if(msgid.length == 0) msgid = grid.getKeyData('msgid');
+                    if (msgid.length == 0) msgid = grid.getKeyData('msgid');
 
                     $('#msgIds').val(msgid.join(','));
                     $('#downForm').attr('action', '<c:url value="/downEmassAttachByMsgId.xcn"/>');
@@ -2561,7 +2571,7 @@
                                             <span class="condition_title" style="width: 65px;display: inline-block;"><s:message code="common.org.choose.dept"/></span>
                                             <span class="condition_sub_title">
 										<button style="width:61px;position: relative;" id="deptBtn" class="button_style filterAddBtn" title="<s:message code="common.msg.select"/>">
-											<span class="ui-icon ui-icon-circle-plus icon_style"></span><s:message code="common.msg.select"/>
+									    		<span class=""></span><s:message code="common.msg.select"/>
 											<span id="deptSelectedArea" class="codeSelectedBtn" style="display:none;">
 												<span class="btn" title="">0</span>
 											</span>
@@ -2607,7 +2617,7 @@
                                             <span class="condition_title" style="width: 65px;display: inline-block;"><s:message code="condition.select"/></span>
                                             <span class="condition_sub_title">
 										<button style="width:61px;position: relative;" id="attachBtn" class="button_style filterAddBtn" title="<s:message code="condition.select"/>">
-											<span class="ui-icon ui-icon-circle-plus icon_style"></span><s:message code="condition.select"/>
+											<span class=""></span><s:message code="condition.select"/>
 											<span id="attachSelectedArea" class="codeSelectedBtn" style="display:none;">
 												<span class="btn" title="">0</span>
 											</span>
@@ -2656,7 +2666,7 @@
                                             <span class="condition_title" style="width: 65px;display: inline-block;"><s:message code="condition.select"/></span>
                                             <span class="condition_sub_title">
 										<button style="width:61px;position: relative;" id="keywordBtn" class="button_style filterAddBtn" title="<s:message code="condition.select"/>">
-											<span class="ui-icon ui-icon-circle-plus icon_style"></span><s:message code="condition.select"/>
+											<span class=""></span><s:message code="condition.select"/>
 											<span id="keywordSelectedArea" class="codeSelectedBtn" style="display:none;">
 												<span class="btn" title="">0</span>
 											</span>
@@ -2678,7 +2688,7 @@
                                             <span class="condition_title" style="width: 65px;display: inline-block;"><s:message code="condition.select"/></span>
                                             <span class="condition_sub_title">
 										<button style="width:61px;position: relative;" id="regexpBtn" class="button_style filterAddBtn" title="<s:message code="condition.select"/>">
-											<span class="ui-icon ui-icon-circle-plus icon_style"></span><s:message code="condition.select"/>
+											<span class=""></span><s:message code="condition.select"/>
 											<span id="regexpSelectedArea" class="codeSelectedBtn" style="display:none;">
 												<span class="btn" title="">0</span>
 											</span>
@@ -2980,7 +2990,7 @@
                             </div>
                             <div class="modal-body">
                                 <div class="form-inline">
-                                    <div class="content_body" style="height:100%;padding-top: 0;">
+                                    <div class="content_body">
                                         <table class="table table-bordered" style="margin-bottom:0;width:100%;">
                                             <colgroup>
                                                 <col width="210">
@@ -3089,6 +3099,8 @@
                     </div>
                     <iframe id="upload_file" name="upload_file" src="" style="display: none;"></iframe>
                 </div>
+
+
                 <div style="display:none;">
                     <ul id="newTab">
                         <li class="tab_li"><div class="tab_close"></div><div class="tab_txt_top addTabDiv" style="float:left;"></div><span class="resultCntSpan" style="padding-right:15px;"></span></li>

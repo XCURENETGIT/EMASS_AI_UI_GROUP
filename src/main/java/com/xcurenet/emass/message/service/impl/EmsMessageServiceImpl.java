@@ -183,7 +183,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 				configAdminVO.setVal(Config.getString(Config.USER_FORMAT, "#name#/#email#/#businm#/#deptnm#/#jikgubnm#/#ip#"));
 			}
 			String formatval = configAdminVO.getVal();
-			log.info("Message : " + emsMessageVO);
+			log.debug("Message : " + emsMessageVO);
 			for (EmsRecvVO emsRecvVO : users) {
 				EmsRecvVO u = EmsReDefined.reUserIp(emsRecvVO, Common.nvl(emsMessageVO.getSrcIp()), Common.nvl(emsMessageVO.getDstIp()), Common.nvl(emsMessageVO.getUsrIp()));
 				if (Common.isEquals(u.getUType(), "U")) {

@@ -1,8 +1,7 @@
 <%@ page import="com.xcurenet.common.util.Common" %>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
+
 <%
 	String adminType = Common.getAdminType(session);
 	String firstAdminYn = Common.getFirstAdminYn(session);
@@ -633,7 +632,7 @@
 
             var dateObj = new Date();
             $('#startdatepicker').datetimepicker({
-                format: 'YYYY-MM-DD HH:mm:ss',
+                format: 'YYYY-MM-DD',
                 locale: 'ko',
                 sideBySide: true,
                 defaultDate: moment(new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate() - 1))
@@ -646,7 +645,7 @@
                 }
             });
             $('#enddatepicker').datetimepicker({
-                format: 'YYYY-MM-DD HH:mm:ss',
+                format: 'YYYY-MM-DD',
                 locale: 'ko',
                 sideBySide: true,
                 defaultDate: moment(new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), 23, 59, 59))
@@ -660,7 +659,7 @@
             });
 
             $('#startsubdatepicker').datetimepicker({
-                format: 'YYYY-MM-DD HH:mm:ss',
+                format: 'YYYY-MM-DD',
                 locale: 'ko',
                 widgetParent: '.boxArea',
                 sideBySide: true,
@@ -679,7 +678,7 @@
                 }
             });
             $('#endsubdatepicker').datetimepicker({
-                format: 'YYYY-MM-DD HH:mm:ss',
+                format: 'YYYY-MM-DD',
                 locale: 'ko',
                 widgetParent: '.boxArea',
                 sideBySide: true,
@@ -761,8 +760,10 @@
 
 
 
+
             <s:message code="common.org.dept.all"/>',
 		noneResultsText:'
+
 
 
 
@@ -801,8 +802,10 @@
 
 
 
+
             <s:message code="common.msg.select_all"/>',
 		deselectAllText:'
+
 
 
 
@@ -913,8 +916,8 @@
 			else condition.deptStr = ''; */
 
             condition.period = 1;
-            condition.startDt = $('#startdatepicker').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
-            condition.endDt = $('#enddatepicker').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
+            condition.startDt = $('#startdatepicker').data("DateTimePicker").date().format('YYYYMMDD');
+            condition.endDt = $('#enddatepicker').data("DateTimePicker").date().format('YYYYMMDD');
 
             return condition;
         }
@@ -1043,8 +1046,7 @@
         }
 	</script>
 </head>
-<div class="container">
-	<div id="contentArea" style="margin-left: 30px;">
+<div id="searchArea">
 		<div class="inner_messenger">
 			<%--			검색 영역--%>
 			<div class="leftSearch p20">
@@ -1075,37 +1077,10 @@
 						<h3 class="mat16">상세 검색</h3>
 						<div>
 							<div style="display: flex;">
-
-								<div  style="padding-right:5px;">
-									<div class="input-group">
-										<div class="input-group date" id="startdatepicker">
-											<input type="text" id="startDt" class="input-sm form-control border-radius-none" style="width: 150px;"/>
-											<span class="input-group-addon startDateBtn border-radius-none"> <span
-													class="glyphicon glyphicon-calendar"></span>
-										</span>
-										</div>
-									</div>
-									~
-									<div class="input-group">
-										<div class="input-group date" id="enddatepicker">
-											<input type="text" id="endDt" class="input-sm form-control border-radius-none" style="width: 150px;"/>
-											<span class="input-group-addon endDateBtn border-radius-none"><span
-													class="glyphicon glyphicon-calendar"></span></span>
-										</div>
-									</div>
-								</div>
+							<div id="startdatepicker"><input type="date" id="startDt" style="width: 140px;">
+								<span class="hyphen">~</span></div>
+							<div id="enddatepicker"><input type="date" id="endDt" style="width: 140px;"></div>
 							</div>
-
-							<%--								<div id="startdatepicker">--%>
-							<%--									<input type="date" id="startDt" class="w45 mat8" style="width: 140px;">--%>
-							<%--									<span class="w10 dis_inlineblock txt_center">&nbsp;~&nbsp;</span>--%>
-							<%--								</div>--%>
-
-							<%--								<div id="enddatepicker">--%>
-							<%--									<input type="date" id="endDt" class="w45 mat8" style="width: 140px;">--%>
-							<%--								</div>--%>
-
-
 							<div class="optiotab w100 mat8" data-toggle="buttons">
 								<label class="btn btn-sm btn-default active" style="width: 147px;"><input type="radio" name="attachYn" id="attachAll"
 								                                                                          value="" checked>&nbsp; <s:message
@@ -1153,15 +1128,17 @@
 						</h2>
 					</div>
 					<div class="bortop_dd pt16">
-						<div class="btn-group" data-toggle="buttons" style="float:left;width:300px;">
-							<label class="btn btn-secondary btn-sm active">
-								<input type="radio" name="searchType" value="G" checked><i class="fa fa-group fa-sm" style="font-size: 12px;"></i>
-								<s:message code="eikon.msg.chats"/>
-							</label>
-							<label class="btn btn-secondary btn-sm">
-								<input type="radio" name="searchType" value="GD"><i class="fa fa-envelope fa-sm" style="font-size: 12px;"></i>
-								<s:message code="eikon.msg.chatContents"/>
-							</label>
+						<div class="subtab pl20 pr20">
+							<button class="active">대화방</button>
+							<button class="tablinks">대화내용</button>
+<%--							<label class="btn btn-secondary btn-sm active">--%>
+<%--								<input type="radio" name="searchType" value="G" checked><i class="fa fa-group fa-sm" style="font-size: 12px;"></i>--%>
+<%--								<s:message code="eikon.msg.chats"/>--%>
+<%--							</label>--%>
+<%--							<label class="btn btn-secondary btn-sm">--%>
+<%--								<input type="radio" name="searchType" value="GD"><i class="fa fa-envelope fa-sm" style="font-size: 12px;"></i>--%>
+<%--								<s:message code="eikon.msg.chatContents"/>--%>
+<%--							</label>--%>
 						</div>
 					</div>
 
@@ -1208,25 +1185,10 @@
 
 						<div class="chatDate">
 							<div class="searchSub" style="display: flex">
-
-								<div class="form-group form-inline">
-									<div class="input-group" style="padding-left:5px;">
-										<div class="input-group date" id="startsubdatepicker">
-											<input type="text" id="startSubDt" class="input-sm form-control border-radius-none"
-											       style="width: 130px;"/>
-											<span class="input-group-addon startDateBtn border-radius-none"> <span
-													class="glyphicon glyphicon-calendar"></span>
-									</span>
-										</div>
-									</div>
-									~
-									<div class="input-group">
-										<div class="input-group date" id="endsubdatepicker">
-											<input type="text" id="endSubDt" class="input-sm form-control border-radius-none" style="width: 130px;"/>
-											<span class="input-group-addon endDateBtn border-radius-none"><span
-													class="glyphicon glyphicon-calendar"></span></span>
-										</div>
-									</div>
+								<div style="display: flex;">
+									<div id="startsubdatepicker"><input type="date" id="startDstartSubDt" style="width: 110px;">
+										<span class="hyphen">~</span></div>
+									<div id="endsubdatepicker"><input type="date" id="endSubDt" style="width: 110px;"></div>
 								</div>
 
 								<button class="form_btn01" type="button" accesskey="M" id="searchMsgQueryBtn">조회</button>
@@ -1295,7 +1257,7 @@
 			<!-- 첨부파일 -->
 			<div class="rightFile p20">
 				<div class="subtab">
-				<button class="active">첨부파일</button>
+					<button class="active">첨부파일</button>
 				</div>
 				<div class="rightFileList">
 				</div>

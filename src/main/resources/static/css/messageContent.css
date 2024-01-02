@@ -248,10 +248,10 @@ input[type="radio"] {
     height:110px;
     border-bottom: 1px solid #eee;
 }
-.content_body{
-    height: 100%;
-    padding-top: 10px;
-}
+/*.content_body{*/
+/*    height: 100%;*/
+/*    padding-top: 10px;*/
+/*}*/
 /* .content_left, .content_area{
 	height:100%;
 	transition: width .5s;
@@ -973,9 +973,11 @@ h3{margin-top: 0px; !important}
     color: #fff;
 }
 .codeSelectedBtn .btn{
-    padding:0px 5px;
+    padding:3px 8px;
+    width: 25px;
     background-color: #7293af;
     border-radius: 7px;
+    border:0px;
     font-size: 11px;
     z-index: 2;
 }

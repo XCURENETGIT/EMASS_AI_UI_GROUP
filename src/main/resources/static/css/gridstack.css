@@ -30,7 +30,7 @@
 .grid-stack > .grid-stack-item {
   min-width: 8.3333333333%;
   position: absolute;
-  padding: 0;
+  padding: 0px;
 }
 
 .grid-stack > .grid-stack-item > .grid-stack-item-content {

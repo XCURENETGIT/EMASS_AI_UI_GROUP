@@ -107,7 +107,7 @@
 	}
 	.card-1 > div {color:#1C64D3; font-weight:600;}
 
-	/*@media(max-width: 990px){
+	@media(max-width: 990px){
 		.card{
 			margin: 20px;
 		}
@@ -132,7 +132,7 @@
 	.grid-stack-item-content .fa {
 		display: inline-block;
 
-	}*/
+	}
 	div#conditionViewDiv{
 		position: absolute;
 		display: none;
