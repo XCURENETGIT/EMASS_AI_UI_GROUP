@@ -258,7 +258,8 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 .radiotab .text {white-space: normal;margin-left:4px; font-family: Pretendard !important;font-size:12px !important;}
 .radiotab label {white-space: normal;display:inline-block;vertical-align: middle; background-color: #fff; border:1px solid #ccc; margin-left:-1px !important; padding:2px 16px; text-align: center; font-size: 0; }
 .radiotab input[type="radio"] {appearance: none; border:none;white-space: normal;}
-.radiotab input[type="radio"]:checked {color:#1A73F9 !important;}
+.radiotab input[type="checkbox"] {appearance: none; border:none;white-space: normal;}
+.radiotab input[type="checkbox"]:checked {color:#1A73F9 !important;}
 
 .leftSearchTab {position: relative; width:100%; border-bottom:2px solid #1C64D3;}
 .leftSearchTab button {border:1px solid #ddd; border-bottom:none; background-color: #fff; font-size:15px; font-weight:300;color:#777; padding:8px 16px;}
@@ -570,7 +571,8 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 #popupWrap .item:nth-child(1) { flex-grow: 1; border:1px solid #ccc;}
 #popupWrap .item:nth-child(2) { flex-grow: 32px; align-self: center; }
 #popupWrap .item:nth-child(3) { flex-grow: 1; border:1px solid #ccc;}
-.popupInner {padding:8px;}
+.popupInner {padding:8px; position: relative;}
+.popupInner .right_btnBox {position: absolute; right:8px; top:8px; z-index: 9999}
 .poptxt {font-size:14px; line-height: 1.5;}
 
 

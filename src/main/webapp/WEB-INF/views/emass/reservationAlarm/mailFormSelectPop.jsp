@@ -7,9 +7,12 @@
 <style type="text/css">
 body {
 	overflow: hidden;
+
 }
+
 </style>
-<script type="text/javascript">
+<script type="text/javascript"
+>
 var searchFlag=false;
 var selectedFormSubject="";
 var selectedFormSeq="";
@@ -64,53 +67,56 @@ function getData() {
 }
 </script>
 </head>
-<div id="popupWrap" class="xcn_container">
+<div style="width: 900px; overflow: auto; margin-top:20px;">
 
-	<div class="row">
-		<div class="item" >
-			<h3 class="blue"><span class="bullet01"></span><s:message code="mail.select.form.mail"/></h3>
-			<div class="grayBg mat8 popupInner">
-				<div>
-					<input type="text" placeholder="<s:message code="common.msg.searchMsg"/>" id="searchStr">
-					<button class="form_btn01" type="button" accesskey="Q" id="searchBtn"><s:message code="common.msg.search"/></button>
+	<div>
+
+			<div class="row" >
+				<div class="col-xs-12">
+					<h3 class="blue"><span class="bullet01"></span><s:message code="mail.select.form.mail"/></h3>
+					<div class="grayBg mat8 popupInner">
+						<div>
+							<input type="text" placeholder="<s:message code="common.msg.searchMsg"/>" id="searchStr">
+							<button class="form_btn01" type="button" accesskey="Q" id="searchBtn"><s:message code="common.msg.search"/></button>
+						</div>
+					</div>
+					<div>
+						<div id="mailFormListGrid" class="slickGrid gridArea"  style="max-height:200px; overflow-y: scroll !important;"></div>
+					</div>
 				</div>
 			</div>
-			<div class="row" style="height:30%">
-				<div id="mailFormListGrid" class="slickGrid gridArea" ></div>
-			</div>
 			<div class="row">
-				<div class="col-sm-12" style="height: 100%;">
+				<div class="col-xs-12">
 					<div class="form-inline not-dashed">
-						<label for="formContent" class="control-label col-xs-4" style="padding-left: 5px;"><s:message code="mail.form.content"/></label>
+						<label for="formContent" class="control-label"><s:message code="mail.form.content"/></label>
 						<textarea class="form-control" style="width:100%; height: 300px; margin-top: 5px; background-color: #f8f6f6; margin-left: 1px;" name="formContent" id="formContent" readonly="readonly"></textarea>
 					</div>
 				</div>
 			</div>
-			</div>
-		</div>
-		</div>
-				<%--	<button type="button" class="btn btn-sm btn-primary" accesskey="S" id="chooseBtn"><span class="glyphicon glyphicon-ok"></span>&nbsp;<s:message code="consent.select"/></button>
-					<button type="button" class="btn btn-sm btn-default" accesskey="C" id="cancelBtn"><span class="glyphicon glyphicon-remove"></span>&nbsp;<s:message code="common.msg.close"/></button>
-					<h3 class="modal-title"><s:message code="mail.select.form.mail"/></h3>
-				</div>
-				<div class="modal-body" style="margin-right: 17px;">
-				<div class="row">
-					<div id="mailFormListGrid" class="slickGrid gridArea"></div>
-				</div>
-
-					<div class="row" style="margin-top: 30px;">
-						<div class="col-sm-12" style="height: 100%;">
-								<label for="formContent" class=" col-xs-4" style="padding-left: 5px;"><s:message code="mail.form.content"/></label>
-								<textarea class="form-control" style="width:100%; height: 300px; margin-top: 5px; background-color: #f8f6f6; margin-left: 1px;" name="formContent" id="formContent" readonly="readonly"></textarea>
-						</div>
-					</div>
-				</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
-				<button type="button" class="btn btn-primary" id="uploadUserPopBtn" accesskey="U"><s:message code="common.msg.save"/></button>
-			</div>--%>
+	</div>
 </div>
 
+</div>
+<%--	<button type="button" class="btn btn-sm btn-primary" accesskey="S" id="chooseBtn"><span class="glyphicon glyphicon-ok"></span>&nbsp;<s:message code="consent.select"/></button>
+                <button type="button" class="btn btn-sm btn-default" accesskey="C" id="cancelBtn"><span class="glyphicon glyphicon-remove"></span>&nbsp;<s:message code="common.msg.close"/></button>
+                <h3 class="modal-title"><s:message code="mail.select.form.mail"/></h3>
+            </div>
+            <div class="modal-body" style="margin-right: 17px;">
+            <div class="row">
+                <div id="mailFormListGrid" class="slickGrid gridArea"></div>
+            </div>
+
+                <div class="row" style="margin-top: 30px;">
+                    <div class="col-sm-12" style="height: 100%;">
+                            <label for="formContent" class=" col-xs-4" style="padding-left: 5px;"><s:message code="mail.form.content"/></label>
+                            <textarea class="form-control" style="width:100%; height: 300px; margin-top: 5px; background-color: #f8f6f6; margin-left: 1px;" name="formContent" id="formContent" readonly="readonly"></textarea>
+                    </div>
+                </div>
+            </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+            <button type="button" class="btn btn-primary" id="uploadUserPopBtn" accesskey="U"><s:message code="common.msg.save"/></button>
+        </div>--%>
 	<script type="text/javascript">
 		var grid = new Xgrid('mailFormListGrid', contextRoot);
 		grid.autoNumber();

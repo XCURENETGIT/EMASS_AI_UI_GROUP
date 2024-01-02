@@ -192,10 +192,12 @@
 <div style="display:none;">
 
 
+
+
 	<div id="singleDataFormat">
 		<div class="grid-stack-item ui-draggable-handle">
 			<div style="display:none;" class="gridValues" data-dashMultiLeft="#dashMultiLeft#" data-dashMultiRight="#dashMultiRight#"></div>
-			<div class="grid-stack-item-content">
+			<div class="grid-stack-item-content" style="width:300px; height:100px;">
 				<div class="panel">
 					<div>
 						<button type="button" class="customClose">
@@ -223,7 +225,7 @@
 	<div id="chartDataFormat">
 		<div class="grid-stack-item ui-draggable-handle">
 			<div style="display:none;" class="gridValues" data-dashMultiLeft="#dashMultiLeft#" data-dashMultiRight="#dashMultiRight#"></div>
-			<div class="grid-stack-item-content">
+			<div class="grid-stack-item-content"  style="min-width:420px; min-height:280px;">
 				<div class="panel #dashColor#Border">
 					<div class="panel-body">
 						<div class="row">
@@ -299,7 +301,7 @@
 	<div id="listDataFormat">
 		<div class="grid-stack-item ui-draggable-handle">
 			<div style="display:none;" class="gridValues" data-dashMultiLeft="#dashMultiLeft#" data-dashMultiRight="#dashMultiRight#"></div>
-			<div class="grid-stack-item-content">
+			<div class="grid-stack-item-content" style="min-width:420px; min-height:260px;">
 				<div class="panel #dashColor#Border">
 					<div class="panel-body">
 						<div class="row">
@@ -335,7 +337,7 @@
 	<div id="emptyDataFormat">
 		<div class="grid-stack-item ui-draggable-handle">
 			<div style="display:none;" class="gridValues" data-dashMultiLeft="#dashMultiLeft#" data-dashMultiRight="#dashMultiRight#"></div>
-			<div class="grid-stack-item-content grid-empty"></div>
+			<div class="grid-stack-item-content grid-empty" </div>
 		</div>
 	</div>
 </div>

@@ -121,8 +121,9 @@
 }
 
 .panel-heading, .panel-body{
-	height:calc(100% - 45px);
+	/*height:calc(100% - 45px);*/
 	min-width:296px;
+
 
 }
 .panel-body{
@@ -134,7 +135,7 @@
 	border:none;
 
 }
-.panel-box {margin-top:20px;}
+.panel-box {margin-top:10px;}
 .dashboardHeader{
 	border-bottom: 1px solid #ddd;
 }
