@@ -24,8 +24,12 @@ import lombok.extern.log4j.Log4j2;
 import net.sf.json.JSONObject;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.elasticsearch.search.aggregations.Aggregation;
+import org.elasticsearch.search.aggregations.Aggregations;
+import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
+import org.springframework.data.elasticsearch.core.ElasticsearchAggregations;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -57,6 +61,7 @@ public class SolrEdcStatController {
 
 	@Autowired
 	private AdminServiceImpl adminServiceImpl;
+
 
 	@RequestMapping(value = "/getStatList.xcn")
 	@Description("통계 리스트 조회")
@@ -580,8 +585,43 @@ public class SolrEdcStatController {
 		setAuthoritys(sq, adminId);
 
 		SearchHits<SolrEdcVO> resp = solrEdcService.getList(sq);
-		return null;
+		ElasticsearchAggregations elasticSearchAggregations = (ElasticsearchAggregations) resp.getAggregations();
+		//main aggregations key 출력
+		Aggregations mainAggregations = elasticSearchAggregations.aggregations();
+		Map<String, Aggregation> mainAggsMap = mainAggregations.getAsMap();
+		String mainKey = mainAggsMap.keySet().stream().collect(Collectors.joining());
+
+		/* main Aggregations 추출 */
+		Terms facetPivot = elasticSearchAggregations.aggregations().get(mainKey);
+		List<Terms.Bucket> bucketList = (List<Terms.Bucket>) facetPivot.getBuckets();
+		Aggregations subAggs = null;
+
+		if (null != bucketList && bucketList.size() >= 1)
+			subAggs = bucketList.get(0).getAggregations(); // sub Aggregations 존재 여부
+
+		Map<String, Object> item = new HashMap();
+		Long total = 0L;
+		if (null == subAggs || subAggs.asList().size() == 0) {
+			for (Terms.Bucket bucket : bucketList) {
+				item.put(bucket.getKeyAsString(), bucket.getDocCount());
+				total = total + bucket.getDocCount();
+			}
+			item.put("total", total);
+			if (flag == 0) {
+				item.put("rowKey", "totalOCR");
+				item.put("rowName", Prop.propFormat("stat.ocr.target"));
+			} else if (flag == 1) {
+				item.put("rowKey", "detectOCR");
+				item.put("rowName", Prop.propFormat("stat.ocr.include"));
+			} else if (flag == 2) {
+				item.put("rowKey", "noOCR");
+				item.put("rowName", Prop.propFormat("stat.ocr.notinclude"));
+			}
+		}
+		return item;
 	}
+
+
 
 	private void setAuthoritys(SolrQuery sq, String adminId) {
 		if (Common.isNotEmpty(adminId)) {
