@@ -283,7 +283,7 @@ var dashCondition = {
             var categories = [];
 
             if (dat.length == 0) {
-                $('#con01').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px"> ');
+                $('#con01').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px" style ="margin:auto; display:block;"> ');
                 return false;
             } else {
                 var max = 0;
@@ -355,7 +355,7 @@ var dashCondition = {
             var categories = [];
 
             if (dat.length == 0) {
-                $('#con02').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px"> ');
+                $('#con02').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px" style="margin: auto; display: block;">');
                 return false;
             } else {
                 var max = 0;
@@ -532,9 +532,9 @@ var dashCondition = {
                 success: function (data, total) {
                     let str = "";
                     if (data.total == 0) {
-                        str += '<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px">';
+                        str += '<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px" style="margin: auto; display: block;">';
+                        $('#FilePeople').html(str);
                     } else {
-
                         str += "<div class='teamList'><ul>";
                         for (let i = 0; i < 4; i++) {
                             let name = getFormattedValue("size", data.facet[i]);
@@ -562,8 +562,9 @@ var dashCondition = {
                             str += "<span class='righttext'>" + count + "</span></p></li>";
                         }
                         str += "</ul></div>"
+                        $('#FilePeople').html(str);
                     }
-                    $('#FilePeople').html(str);
+
 
                 },
                 error: function (status, message) {
@@ -672,7 +673,7 @@ var dashCondition = {
 
                     let str = "";
                     if (data.total == 0) {
-                        str += '<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px"> ';
+                        str += '<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px" style="margin: auto; display: block;"> ';
                     } else {
 
                         str += "<div><ul>";
@@ -765,7 +766,9 @@ var dashCondition = {
                         }
                     }
                     $('#todayGroupWareSum').html(todayGroupWareSum + "<span>건</span>");
-                    printChart(data.facet);
+                    if (total == 0){
+                        $('#svcDataChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="150px;" height="150px"> ');
+                    }else printChart(data.facet);
 
                 },
                 error: function (status, message) {
@@ -787,7 +790,7 @@ var dashCondition = {
             var categories = [];
 
             if (dat.length == 0) {
-                $('#sizeChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="150px;" height="150px"> ');
+                $('#sizeChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="150px;" height="150px" style="margin: auto; display: block;"> ');
                 return false;
             } else {
                 var max = 0;
@@ -1353,7 +1356,7 @@ var dashCondition = {
 	<%--	왼쪽 끝--
 	<%--	오른쪽 시작--%>
 	<div class="right">
-		<div>
+		<div >
 			<%--			금일 트래픽 추이, 종류 시작--%>
 			<div class="text_tab">
 				<span class="tablinks" onclick="openCity2(event, 'con01')" id="defaultOpen2">금일 트래픽</span>
@@ -1361,7 +1364,7 @@ var dashCondition = {
 				<span class="tablinks" onclick="openCity2(event, 'con02')">최근 7일 트래픽 추이</span>
 			</div>
 
-			<div id="con01" class="text_tabcontent" >
+			<div id="con01" class="text_tabcontent">
 				<div id="todayTraffic"></div>
 			</div>
 

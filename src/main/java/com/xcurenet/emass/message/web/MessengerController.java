@@ -107,10 +107,13 @@ public class MessengerController {
 		sq.setParam("group.facet", true);
 		sq.setParam("group.ngroups", true);
 		sq.setParam("group.field", "xrootmtr");
+
 		sq.setParam("facet", true);
 		sq.setParam("facet.field", "xrootmtr");
 		sq.setParam("facet.limit", "-1");
 		sq.setParam("facet.mincount", "1");
+
+
 		sq.setStart(Common.nvz(param.get("offset"), 0));
 		sq.setRows(Common.nvz(param.get("limit"), 100));
 		sq.setSort("ctime", ORDER.desc);
