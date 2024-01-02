@@ -763,7 +763,7 @@ var dashCondition = {
                     }
                     $('#todayGroupWareSum').html(todayGroupWareSum + "<span>건</span>");
                     if (total == 0){
-                        $('#svcDataChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="150px;" height="150px"> ');
+                        $('#svcDataChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px"> ');
                     }else printChart(data.facet);
 
                 },
@@ -974,7 +974,7 @@ var dashCondition = {
             $('#svcDataChart').html('');
 
             if (data.length == 0) {
-                $('#svcDataChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="150px;" height="150px"> ');
+                $('#svcDataChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px"> ');
                 return;
             }
             $('#svcDataChart').highcharts({

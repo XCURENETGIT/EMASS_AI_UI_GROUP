@@ -11,52 +11,54 @@
 
 	<style type="text/css">
 		/*
-		.radio-inline.c-radio {
-			margin-left: 0px;
-		}
+                .radio-inline.c-radio {
+                    margin-left: 0px;
 
-		.ellipsis {
-			width: 280px;
-			text-overflow: ellipsis;
-			overflow: hidden;
-			white-space: nowrap;
-		}
 
-		.modal-lg {
-			width: 1100px;
-		}
+                }
 
-		.grid-stack-item {
-			width: 100%;
-			height: 100%;
-		}
+                .ellipsis {
+                    width: 280px;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                    white-space: nowrap;
+                }
 
-		.dashIcon, .menuIcon {
-			font-size: 18px;
-			margin-bottom: 5px;
-		}
+                .modal-lg {
+                    width: 1100px;
+                }
 
-		.selected {
-			background-color: #c2daf8;
-		}
+                .grid-stack-item {
+                    width: 100%;
+                    height: 100%;
+                }
 
-		.customClass {
-			font-size: 3em !important;
-		}
+                .dashIcon, .menuIcon {
+                    font-size: 18px;
+                    margin-bottom: 5px;
+                }
 
-		.grid-stack-item-content .fa {
-			display: inline-block;
-		}
+                .selected {
+                    background-color: #c2daf8;
+                }
 
-		.chartDash {
-			font-size: 15px !important;
-		}
+                .customClass {
+                    font-size: 3em !important;
+                }
 
-		.conentBatchBtn {
-			color: #fff;
-			background-color: #2778bf;
-			border-color: #2778bf;
-		}*/
+                .grid-stack-item-content .fa {
+                    display: inline-block;
+                }
+
+                .chartDash {
+                    font-size: 15px !important;
+                }
+
+                .conentBatchBtn {
+                    color: #fff;
+                    background-color: #2778bf;
+                    border-color: #2778bf;
+                }*/
 	</style>
 	<script type="text/javascript">
         <%--var infoFeedbackYn = '<%=infoFeedbackYn%>';--%>
@@ -780,8 +782,8 @@
 
 							<br/>
 							<h3><s:message code="condition.filter_setting"/></h3>
-							<div class="form-inline not-dashed">
-								<button type="button" class="form_btn01_02" accesskey="S" id="dashConditionBtn">조건 설정</button>
+							<div class="form-inline not-dashed text-right">
+								<button type="button" class="form_btn01" accesskey="S" id="dashConditionBtn">조건 설정</button>
 							</div>
 							<div>
 								<textarea class="form-control" style="display:none" name="dashCondition" id="alarmVal"></textarea>
