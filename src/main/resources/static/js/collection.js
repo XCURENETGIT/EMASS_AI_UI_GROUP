@@ -3,6 +3,7 @@ var detailDataSet = [];
 var prevDetailDataSet = [];
 var focusMsgId = '';
 var participantDataSet = [];
+var detailMsgid=[];
 
 var groupId = '';
 var groupPageId = '';
@@ -147,7 +148,14 @@ var eikon2 = {
                     $('#searchResult').html(total);
                     $('#searchResultArea').show();
                     $('#searchResultBtnArea').show();
+
+                    detailMsgid=data;
+                    detailMsgid.sort();
+                    console.log(detailMsgid);
+                    console.log("현재 번호  "+ detailMsgid[searchOffset]);
                     checkList(searchOffset);
+
+
                 }
                 else{
                     $('#searchResult').html('0');
@@ -278,6 +286,9 @@ function getGenerativeMessagePrev(userid, srcip, usr_id, msgid) {
             }
             if(data.numFound < detailLimit) {
                 $('.messenger_prev').css('display', 'none');
+            }
+            else{
+                $('.messenger_prev').css('display', 'block');
             }
             prevDetailDataSet = data.groups;
 
@@ -444,7 +455,7 @@ function makeFileList(data) {
         for (var i = 0; i < data.length; i++) {
             str += '<li><p class="fileListdown" attachsize="'+data[i].attachsize+ '" msgid="' + data[i].msgid + '" attachhash="' + data[i].attachhash + '"><span class="img"></span><span>';
             str += '<a href="#">' + data[i].attachname + "." + data[i].attachtype + '</a>';
-            str += '</span><span style="position: absolute; right: 0; top: 8px;" ><button class="btnchatdown_w downloadIcon"></button><button class="chatshare_w mal8"></button></span></p></li>';
+            str += '</span><span style="position: absolute; right: 0; top: 8px;" ><button class="btnchatdown_w downloadIcon"></button></span></p></li>';
         }
 
         str += '</ul>';
@@ -652,7 +663,7 @@ function viewDate(dateStr){
 
 function checkList(cnt){
 //	selectedSearchData = cnt;
-    getGenerativeMessage($('#selectUserInfo').attr('data-name'), $('#selectUserInfo').attr('data-srcip'), $('#selectUserInfo').attr('data-usr_id'), focusMsgId);
+    getGenerativeMessage($('#selectUserInfo').attr('data-name'), $('#selectUserInfo').attr('data-srcip'), $('#selectUserInfo').attr('data-usr_id'), detailMsgid[cnt]);
     $('#selectCnt').html(cnt+1);
 }
 
@@ -1006,7 +1017,7 @@ function getGenerativeAllfile(userid, srcip, usr_id, msgid){
         usr_id : usr_id,
         startDt: startDt+"000000",
         endDt: endDt+235959,
-        searchStr: "",
+        searchStr: $('#searchMsgStrInput').val(),
         attachYn : 'Y',
         success : function(data, total) {
             $('.rightFileList').html(makeFileList(data));

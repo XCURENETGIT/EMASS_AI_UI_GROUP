@@ -373,7 +373,7 @@ public class MessengerController {
 		String userid = Common.nvl(param.get("userid"));
 		String srcip = Common.nvl(param.get("srcip"));
 		String usr_id = Common.nvl(param.get("usr_id"));
-		String msgId = Common.nvl(param.get("msgid"));
+		String msgId = Common.nvl(param.get("msgId"));
 		String startDt = Common.nvl(param.get("startDt"));
 		String endDt = Common.nvl(param.get("endDt"));
 

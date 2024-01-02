@@ -729,45 +729,21 @@
 												</div>
 											</div>
 										</div>
-										<div class="row" id="smsField">
-											<div class="col-35">
-												<label for="alarmType"><s:message code="mail.alarm_type"/></label>
-												<span class="red_dot"></span>
-											</div>
-											<div class="col-65">
-												<div class="radiotab w100">
-													<label class="w33">
-														<input type="radio" name="alarmType" value="Y" checked><span
-															class="fa fa-check"><span class="text">
-														<s:message code="mail.msg"/></span></span></label><label
-														class="w33">
-													<input type="radio" name="alarmType" value="N"><span
-														class="fa fa-check"><span class="text">
-														SMS</span></span></label><label class="w33">
-													<input type="radio" name="alarmType" value="N"><span
-														class="fa fa-check"><span class="text">
-														<s:message code="mail.alert_message"/></span></span></label>
-													<input type="hidden" name="alarmMailYn" id="alarmMailYn"/>
-													<input type="hidden" name="alarmSmsYn" id="alarmSmsYn"/>
-													<input type="hidden" name="alarmMonitorYn" id="alarmMonitorYn"/>
-												</div>
-											</div>
-										</div>
-										<div class="row" id="alarmCycleGroup">
+										<div class="row" id="alarmType">
 											<div class="col-35">
 												<label for="alarmType"><s:message code="mail.alarm_type"/></label>
 											</div>
 											<div class="col-65">
 												<div class="radiotab w100">
 													<label class="w33">
-														<input type="radio" name="alarmType" value="Y" checked><span
+														<input type="checkbox" name="alarmType" value="E" checked><span
 															class="fa fa-check"><span class="text">
 														<s:message code="mail.msg"/></span></span></label><label
 														class="w33">
-													<input type="radio" name="alarmType" value="N"><span
+													<input type="checkbox" name="alarmType" value="S"><span
 														class="fa fa-check"><span class="text">
 														SMS</span></span></label><label class="w33">
-													<input type="radio" name="alarmType" value="N"><span
+													<input type="checkbox" name="alarmType" value="M"><span
 														class="fa fa-check"><span class="text">
 														<s:message code="mail.alert_message"/></span></span></label>
 													<input type="hidden" name="alarmMailYn" id="alarmMailYn"/>
