@@ -5687,7 +5687,7 @@ a.list-group-item-danger.active, a.list-group-item-danger.active:focus, a.list-g
 }
 
 .panel-heading {
-	padding: 10px 15px;
+	padding: 20px 15px;
 	border-bottom: 1px solid transparent;
 	border-top-left-radius: 3px;
 	border-top-right-radius: 3px;
@@ -7098,6 +7098,8 @@ a.tag:focus, a.tag:hover {
 	float: none !important;
 }
 /*# sourceMappingURL=bootstrap.min.css.map */
+
+.slick-columnpicker { background-color:#fff; padding:12px; list-style: none; border:1px solid #ddd;}
 
 
 

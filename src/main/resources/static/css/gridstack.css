@@ -35,7 +35,7 @@
 
 .grid-stack > .grid-stack-item > .grid-stack-item-content {
  margin: 0;
-  position: relative;
+  position: absolute;
   top: 6px;
   left: 6px;
   right: 6px;
