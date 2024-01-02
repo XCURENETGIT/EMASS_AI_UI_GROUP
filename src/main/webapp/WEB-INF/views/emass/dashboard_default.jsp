@@ -3,6 +3,7 @@
 <link rel="stylesheet" href="<c:url value="/css/dashboard.css"/>"/>
 <style>
 	.filename{
+		width:90px;
 		overflow: hidden;
 		white-space: nowrap;
 		text-overflow: ellipsis;
