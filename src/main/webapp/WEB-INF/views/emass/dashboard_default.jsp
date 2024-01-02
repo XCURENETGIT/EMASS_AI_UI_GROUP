@@ -532,7 +532,7 @@ var dashCondition = {
                 success: function (data, total) {
                     let str = "";
                     if (data.total == 0) {
-                        str += '<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px" style="margin: auto; display: block;">';
+                        str += '<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px" class="xcn_nodata"style=" display: block;">';
                         $('#FilePeople').html(str);
                     } else {
                         str += "<div class='teamList'><ul>";
@@ -673,7 +673,7 @@ var dashCondition = {
 
                     let str = "";
                     if (data.total == 0) {
-                        str += '<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px" style="margin: auto; display: block;"> ';
+                        str += '<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" class="xcn_nodata"width="100px;" height="100px" style=" display: block;"> ';
                     } else {
 
                         str += "<div><ul>";
