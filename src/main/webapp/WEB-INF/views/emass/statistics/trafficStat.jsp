@@ -135,13 +135,11 @@
 	<!-- 검색 -->
 	<div class="searchArea w100">
 		<div class="searchSub w100">
-			<div>
-				<input type="date" id="startdate"  style="width: 110px;"/>
-				<span class="hyphen">~</span>
-			</div>
-			<div>
-				<input type="date" id="enddate"  style="width: 110px;"/>
-			</div>
+
+			<div id="startdatepicker"><input type="date" id="startdate" style="width: 110px;">
+				<span class="hyphen">~</span></div>
+			<div id="enddatepicker"><input type="date" id="enddate" style="width: 110px;"></div>
+
 
 
 			<div>
@@ -173,6 +171,9 @@
 						<span id="consentCount"></span>
 					</button>
 				</div>
+			</div>
+			<div style="position: absolute; top: 358px; left: 100px;">
+				[ <span style="color: red;">■ <s:message code="stat.traffic.tx"/></span>&nbsp;/&nbsp;<span style="color: blue;">■ <s:message code="stat.traffic.rx"/></span> ]&nbsp; : <s:message code="stat.traffic.unit"/>
 			</div>
 			<div id="basicStatListGrid" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; height: 400px"></div>
 		</div>

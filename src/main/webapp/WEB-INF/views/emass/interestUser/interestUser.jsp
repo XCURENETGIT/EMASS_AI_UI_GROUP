@@ -543,9 +543,6 @@
 						</div>
 					</div>
 				</div>
-				<div class="info">
-					안내 사항
-				</div>
 				<div class="modalfooter">
 					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
 					<button type="button" class="pop_btn02" accesskey="S" id="groupSavePopBtn"><s:message code="common.msg.save"/></button>

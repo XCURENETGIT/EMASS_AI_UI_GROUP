@@ -607,6 +607,7 @@
 							<div class="row">
 								<div class="col-35">
 									<label for="dashName" class="fname"><s:message code="dashboardSetup.dashname"/></label>
+									<span class="red_dot"></span>
 								</div>
 								<div class="col-65">
 									<input type="text" class="w100" name="dashName" id="dashName"
@@ -614,49 +615,32 @@
 									<input type="hidden" name="dashKey" id="dashKey">
 								</div>
 							</div>
+
 							<div class="row">
 								<div class="col-35">
 									<label for="dashType" class="fname"><s:message code="dashboardSetup.dashtype"/></label>
+									<span class="red_dot"></span>
 								</div>
 								<div class="col-65">
 									<label class="radio-inline c-radio">
-										<input type="radio" name="dashType" value="S" checked><s:message code="dashboardSetup.dashtype.single"/>
-									</label>
-									<%--								<label class="radio-inline c-radio">--%>
-									<%--									<input type="radio" name="dashType" value="D"><s:message code="dashboardSetup.dashtype.multi"/>--%>
-									<%--								</label>--%>
-									<label class="radio-inline c-radio">
-										<input type="radio" name="dashType" value="C"><s:message code="dashboardSetup.dashtype.chart"/>
+										<input type="radio" name="dashType" value="S" checked>
+										<s:message code="dashboardSetup.dashtype.single"/>
 									</label>
 									<label class="radio-inline c-radio">
-										<input type="radio" name="dashType" value="L"><s:message code="dashboardSetup.dashtype.list"/>
+										<input type="radio" name="dashType" value="C">
+										<s:message code="dashboardSetup.dashtype.chart"/>
+									</label>
+									<label class="radio-inline c-radio">
+										<input type="radio" name="dashType" value="L">
+										<s:message code="dashboardSetup.dashtype.list"/>
 									</label>
 								</div>
 							</div>
 
-							<%--							<div id="dashDoubleArea" style="display:none;">--%>
-							<%--								<div class="row">--%>
-							<%--									<div class="col-35">--%>
-							<%--								<label for="dash_x" class="fname"><s:message code="dashboardSetup.multData"/></label>--%>
-							<%--									</div>--%>
-							<%--									<div class="col-65">--%>
-							<%--								<select class="w100" id="dashMultiLeft" name="dashMultiLeft">--%>
-							<%--									<option value="read"><s:message code="dashboardSetup.readCount"/></option>--%>
-							<%--									<option value="unread" selected><s:message code="dashboardSetup.unreadCount"/></option>--%>
-							<%--									<option value="total"><s:message code="dashboardSetup.allCount"/></option>--%>
-							<%--								</select>--%>
-							<%--								<select class="w100" id="dashMultiRight" name="dashMultiRight">--%>
-							<%--									<option value="read"><s:message code="dashboardSetup.readCount"/></option>--%>
-							<%--									<option value="unread"><s:message code="dashboardSetup.unreadCount"/></option>--%>
-							<%--									<option value="total" selected><s:message code="dashboardSetup.allCount"/></option>--%>
-							<%--								</select>--%>
-							<%--							</div>--%>
-							<%--								</div>--%>
-							<%--							</div>--%>
-
 								<div class="row" id="dashChartArea" style="display:none;">
 									<div class="col-35">
 										<label for="dashChart" class="fname" style="height:60px;"><s:message code="dashboardSetup.chartType"/></label>
+										<span class="red_dot"></span>
 									</div>
 									<div class="col-65">
 										<label class="radio-inline c-radio">
@@ -687,6 +671,7 @@
 								<div class="row" id="dashXYArea" style="display:none;">
 									<div class="col-35">
 										<label for="dash_x" class="fname"><s:message code="dashboardSetup.chartXY"/></label>
+										<span class="red_dot"></span>
 									</div>
 									<div class="col-65">
 										<select class="w100" id="dashChartX" name="dashChartX">
@@ -708,6 +693,7 @@
 							<div class="row">
 								<div class="col-35">
 									<label for="dashIcon" class="fname" style="height:80px;"><s:message code="dashboardSetup.dashicon"/></label>
+									<span class="red_dot"></span>
 								</div>
 								<div class="col-65">
 									<button type="button" class="btn btn-default dashIcon" data-value="tit01"><img
@@ -741,6 +727,7 @@
 							<div class="row">
 								<div class="col-35">
 									<label for="dashColor" class="fname"><s:message code="dashboardSetup.background"/></label>
+									<span class="red_dot"></span>
 								</div>
 								<div class="col-65">
 									<button type="button" class="btn blueBg dashColor" data-value="blueBg">&nbsp;&nbsp;</button>
@@ -756,6 +743,7 @@
 							<div class="row">
 								<div class="col-35">
 									<label for="useYn" class="fname"><s:message code="common.msg.useyn"/></label>
+									<span class="red_dot"></span>
 								</div>
 								<div class="col-65">
 									<label class="radio-inline c-radio">
