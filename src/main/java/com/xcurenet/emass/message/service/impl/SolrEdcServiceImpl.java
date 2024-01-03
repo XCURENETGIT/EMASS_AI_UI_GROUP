@@ -116,6 +116,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 		/* set 필터 쿼리 */
 		String filterQuery =  (null != sq.getFilterQueries())? String.join(" ", sq.getFilterQueries()) : "";
+		System.out.println("rows: "+sq.getRows());
 
 		log.info("page : {}  rows : {}", getPage(sq), sq.getRows());
 		Query searchQuery = new NativeSearchQueryBuilder()
@@ -242,7 +243,6 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 						/*그룹 디테일 검색 */
 						int offset = (!Common.isEmpty(sq.get("facet.offset"))) ? Common.nvz(sq.get("facet.offset")) : 0; // default 0;
 						int size = (!Common.isEmpty(sq.get("facet.size"))) ? Common.nvz(sq.get("facet.size")) : 1; // default 1
-
 						if((!Common.isEmpty(sq.get("facet.sort")))){
 						termsAggregation  = termsAggregation.subAggregation(AggregationBuilders.topHits(field).size(size).from(offset).sort("ctime", SortOrder.DESC));
 						}else{

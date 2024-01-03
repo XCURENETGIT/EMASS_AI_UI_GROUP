@@ -23,240 +23,238 @@ var searchOffset = 0;
 
 var resizeTimer;
 
-var detailSearchFlag=true;
+var detailSearchFlag = true;
 
 
 var eikon = {
-	init : function() {
-		//makeSampleData();
+    init: function () {
+        //makeSampleData();
 
-		$('#scrollArea').scroll(function(){
-			if( searchFlag ) return;
-			clearTimeout(resizeTimer);
-			var obj=this;
-			resizeTimer = setTimeout(function() {
+        $('#scrollArea').scroll(function () {
+            if (searchFlag) return;
+            clearTimeout(resizeTimer);
+            var obj = this;
+            resizeTimer = setTimeout(function () {
 //				if( $('.btnCustomPosition').is(':visible') ) return;
-				if( $(obj).scrollTop() < 10) {
-					if($($('#timeline_list').children().first().children().first()).hasClass('timeline-panel') || $($('#timeline_list').children().first()).hasClass('timeline-panel')) $('.messenger_prev').css('display','none');
-					else $('.messenger_prev').css('display','block');
-					$('.messenger_next').css('display','none');
+                if ($(obj).scrollTop() < 10) {
+                    if ($($('#timeline_list').children().first().children().first()).hasClass('timeline-panel') || $($('#timeline_list').children().first()).hasClass('timeline-panel')) $('.messenger_prev').css('display', 'none');
+                    else $('.messenger_prev').css('display', 'block');
+                    $('.messenger_next').css('display', 'none');
 //					$('.messenger_prev').click();
-				}
-				else if( $('#timeline_list').height() <= $(obj).scrollTop()+$(obj).height()+10){
-					if(detailDataSet.length < detailLimit) $('.messenger_next').css('display','none');
-					else $('.messenger_next').css('display','block');
-					$('.messenger_prev').css('display','none');
+                } else if ($('#timeline_list').height() <= $(obj).scrollTop() + $(obj).height() + 10) {
+                    if (detailDataSet.length < detailLimit) $('.messenger_next').css('display', 'none');
+                    else $('.messenger_next').css('display', 'block');
+                    $('.messenger_prev').css('display', 'none');
 //					$('.messenger_next').click();
-				}else{
-					checkLastMsg(true);
-				}
-			},100);
-		});
+                } else {
+                    checkLastMsg(true);
+                }
+            }, 100);
+        });
 
-		$('.messenger_next, .messenger_prev').on('click', function() {
-			var srcip = $('#selectUserInfo').attr('data-srcip');
-			var usr_id = $('#selectUserInfo').attr('data-usrid');
-			var xrootmtr = $('#xrootmtr').text();
-			var msgIds = [];
+        $('.messenger_next, .messenger_prev').on('click', function () {
+            var srcip = $('#selectUserInfo').attr('data-srcip');
+            var usr_id = $('#selectUserInfo').attr('data-usrid');
+            var xrootmtr = $('#xrootmtr').text();
+            var msgIds = [];
 
-			if($(this).hasClass('messenger_next')) {
+            if ($(this).hasClass('messenger_next')) {
 
-				var msgid = $('.timeline').children().last().attr('id');
-				getMessengerMessageNext(xrootmtr, srcip, usr_id, msgid);
+                var msgid = $('.timeline').children().last().attr('id');
+                getMessengerMessageNext(xrootmtr, srcip, usr_id, msgid);
 
-			} else {
+            } else {
 
-				var firstData = $('.timeline').children().filter(':eq(1)');
-				var msgid = $(firstData).attr('id');
-				getMessengerMessagePrev(xrootmtr, srcip, usr_id, msgid);
+                var firstData = $('.timeline').children().filter(':eq(1)');
+                var msgid = $(firstData).attr('id');
+                getMessengerMessagePrev(xrootmtr, srcip, usr_id, msgid);
 
-			}
+            }
 
-			$(this).css('display','none');
-		});
-	},
-	getMessengerList : function(page){
-		var searchType =   $('button[name="searchType"].active').val();
-		$('#startsubdatepicker').data("DateTimePicker").date( $('#startdatepicker').data("DateTimePicker").date() );
-		$('#endsubdatepicker').data("DateTimePicker").date( $('#enddatepicker').data("DateTimePicker").date() );
-		if(searchType == "G"){
-			getMessengerGroupList(page);
-		}else if(searchType == "GD"){
-			getMessengerMessageList(page);
-		}
-	},
-	getGenerativeList : function(page){
-		var searchType =  $('button[name="searchType"]').val();
-		getGenerativeGroupList(page);
-	},
-	getMessengerDetailList : function(xRootmtr, msgid){
-		eikon.getMessengerDetailList(xRootmtr, msgid, '');
-	},
-	getMessengerDetailList : function(xRootmtr, msgid, srcip){
-		eikon.getMessengerDetailList(xRootmtr, msgid, '', '');
-	},
-	getMessengerDetailList : function(xRootmtr, msgid, srcip, usr_id){
-		if(!isDetailView()){
-			alert(condition.authAlert);
-			return;
-		}
-		if(xRootmtr == ''){
-			return;
-		}
+            $(this).css('display', 'none');
+        });
+    },
+    getMessengerList: function (page) {
+        var searchType = $('button[name="searchType"].active').val();
+        $('#startsubdatepicker').data("DateTimePicker").date($('#startdatepicker').data("DateTimePicker").date());
+        $('#endsubdatepicker').data("DateTimePicker").date($('#enddatepicker').data("DateTimePicker").date());
+        if (searchType == "G") {
+            getMessengerGroupList(page);
+        } else if (searchType == "GD") {
+            getMessengerMessageList(page);
+        }
+    },
+    getGenerativeList: function (page) {
+        var searchType = $('button[name="searchType"]').val();
+        getGenerativeGroupList(page);
+    },
+    getMessengerDetailList: function (xRootmtr, msgid) {
+        eikon.getMessengerDetailList(xRootmtr, msgid, '');
+    },
+    getMessengerDetailList: function (xRootmtr, msgid, srcip) {
+        eikon.getMessengerDetailList(xRootmtr, msgid, '', '');
+    },
+    getMessengerDetailList: function (xRootmtr, msgid, srcip, usr_id) {
+        if (!isDetailView()) {
+            alert(condition.authAlert);
+            return;
+        }
+        if (xRootmtr == '') {
+            return;
+        }
 
-		$('#searchResultArea').hide();
-		$('#searchResultBtnArea').hide();
-		detailStartPage = 1;
-		detailEndPage = 1;
-		var startDt = $('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
-		var endDt = $('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+        $('#searchResultArea').hide();
+        $('#searchResultBtnArea').hide();
+        detailStartPage = 1;
+        detailEndPage = 1;
+        var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
+        var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
 
-		//참여자 수, 참여자 정보
-		ui.get({
-			url : 'getMessengerGroupUserList.xcn',
-			xRootMtr : xRootmtr,
-			startDt : startDt,
-			endDt : endDt,
-			groupField : 'usr_id',
-			success : function(data, total) {
-				participantDataSet = data.groups;
-				userSelectBox(data.groups, srcip, usr_id);
-				//getMessengerGroupDetail(xRootmtr, msgid, srcip);
-				//$('#groupParticipantCnt').html(total.coFgemma());
-			},
-			error : function(status, message) {
-				ui.alertMsg(message);
-			},
-			complete : function() {
-			}
-		});
-	},
-	getMessengerGroupDetail : function(xRootmtr, msgid, srcip, usr_id){
-		searchFlag = true;
-		ui.onBody('timeline_list', 0, 60);
+        //참여자 수, 참여자 정보
+        ui.get({
+            url: 'getMessengerGroupUserList.xcn',
+            xRootMtr: xRootmtr,
+            startDt: startDt,
+            endDt: endDt,
+            groupField: 'usr_id',
+            success: function (data, total) {
+                participantDataSet = data.groups;
+                userSelectBox(data.groups, srcip, usr_id);
+                //getMessengerGroupDetail(xRootmtr, msgid, srcip);
+                //$('#groupParticipantCnt').html(total.coFgemma());
+            },
+            error: function (status, message) {
+                ui.alertMsg(message);
+            },
+            complete: function () {
+            }
+        });
+    },
+    getMessengerGroupDetail: function (xRootmtr, msgid, srcip, usr_id) {
+        searchFlag = true;
+        ui.onBody('timeline_list', 0, 60);
 
-		$("#timeline_list").html('');
+        $("#timeline_list").html('');
 
-		$('#searchMsgStrInput').val('');
-		$('#searchResult').html('');
-		$('#searchResultArea').hide();
-		$('#searchResultBtnArea').hide();
+        $('#searchMsgStrInput').val('');
+        $('#searchResult').html('');
+        $('#searchResultArea').hide();
+        $('#searchResultBtnArea').hide();
 
-		var startDt = $('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
-		var endDt = $('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+        var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
+        var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
 
-		var searchType = $('button[name="searchType"]').val();
-		if(searchType == null || searchType == undefined) searchType = 'G';
-		if( searchType == 'G'){
-			getMessengerMessageTotal(xRootmtr, srcip, startDt, endDt, usr_id, '');
-		} else if( searchType == 'GD') {
-			getMessengerMessageTotal(xRootmtr, srcip, startDt, endDt, usr_id, msgid);
-		}
-	},
-	/**
-	 * 결과 내 검색
-	 */
-	findMessageList : function(offset){
-		var searchStr = $('#searchMsgStrInput').val();
-		var xrootmtr = $('#xrootmtr').text();
-		var srcip = $('#srcip').text();
-		var usr_id = $('#usr_id').text();
-		var startDt = $('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
-		var endDt = $('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+        var searchType = $('button[name="searchType"]').val();
+        if (searchType == null || searchType == undefined) searchType = 'G';
+        if (searchType == 'G') {
+            getMessengerMessageTotal(xRootmtr, srcip, startDt, endDt, usr_id, '');
+        } else if (searchType == 'GD') {
+            getMessengerMessageTotal(xRootmtr, srcip, startDt, endDt, usr_id, msgid);
+        }
+    },
+    /**
+     * 결과 내 검색
+     */
+    findMessageList: function (offset) {
+        var searchStr = $('#searchMsgStrInput').val();
+        var xrootmtr = $('#xrootmtr').text();
+        var srcip = $('#srcip').text();
+        var usr_id = $('#usr_id').text();
+        var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
+        var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
 
-		if( offset < 0 ) searchOffset = $('#searchResult').html() - 1;
-		if( offset >= $('#searchResult').html() || offset == 0 ) searchOffset = 0;
+        if (offset < 0) searchOffset = $('#searchResult').html() - 1;
+        if (offset >= $('#searchResult').html() || offset == 0) searchOffset = 0;
 
-		if( searchStr == '' || (xrootmtr == undefined || xrootmtr == '')){
-			$('#searchResult').html('');
-			$('#searchResultArea').hide();
-			$('#searchResultBtnArea').hide();
-			return;
-		}
+        if (searchStr == '' || (xrootmtr == undefined || xrootmtr == '')) {
+            $('#searchResult').html('');
+            $('#searchResultArea').hide();
+            $('#searchResultBtnArea').hide();
+            return;
+        }
 
-		var filterVal = {};
-		var conArray = [];
-		var condition = {};
-		condition.searchStr = searchStr;
-		condition.startDt = startDt;
-		condition.endDt = endDt;
-		condition.searchField = 'body attachname attachname_str attach';
-		conArray.push(condition);
-		filterVal.conditions = conArray;
+        var filterVal = {};
+        var conArray = [];
+        var condition = {};
+        condition.searchStr = searchStr;
+        condition.startDt = startDt;
+        condition.endDt = endDt;
+        condition.searchField = 'body attachname attachname_str attach';
+        conArray.push(condition);
+        filterVal.conditions = conArray;
 
-		detailSearchFlag = false;
+        detailSearchFlag = false;
 
-		ui.postJson({
-			url : 'getMessengerGroupDetailSearch.xcn',
-			xRootMtr : xrootmtr,
-			srcip: srcip,
-			usr_id: usr_id,
-			data : JSON.stringify( filterVal ),
-			offset : searchOffset,
-			success : function(data, total) {
-				focusMsgId = data.toString();
-				if(total > 0){
-					$('#searchResult').html(total);
-					$('#searchResultArea').show();
-					$('#searchResultBtnArea').show();
-					checkList(searchOffset);
-				}
-				else{
-					$('#searchResult').html('0');
-					$('#selectCnt').html('0');
-					$('#searchResultArea').show();
-					$('#searchResultBtnArea').hide();
-				}
-			},
-			error : function(status, message) {
-				ui.alertMsg(message);
-			},
-			complete : function() {
-				searchFlag = false;
-			}
-		});
-	},
-	getMessengerGroupTextExport : function(attachUrl, xrootmtr){
-		if( detailDataSet.length == 0 ) return;
+        ui.postJson({
+            url: 'getMessengerGroupDetailSearch.xcn',
+            xRootMtr: xrootmtr,
+            srcip: srcip,
+            usr_id: usr_id,
+            data: JSON.stringify(filterVal),
+            offset: searchOffset,
+            success: function (data, total) {
+                focusMsgId = data.toString();
+                if (total > 0) {
+                    $('#searchResult').html(total);
+                    $('#searchResultArea').show();
+                    $('#searchResultBtnArea').show();
+                    checkList(searchOffset);
+                } else {
+                    $('#searchResult').html('0');
+                    $('#selectCnt').html('0');
+                    $('#searchResultArea').show();
+                    $('#searchResultBtnArea').hide();
+                }
+            },
+            error: function (status, message) {
+                ui.alertMsg(message);
+            },
+            complete: function () {
+                searchFlag = false;
+            }
+        });
+    },
+    getMessengerGroupTextExport: function (attachUrl, xrootmtr) {
+        if (detailDataSet.length == 0) return;
 
-		try {
-			AttachDown.location.href = attachUrl;
-		} catch (e) {
-			AttachDown.src = attachUrl;
-		}
-	},
-	getMessengerGroupAllExport : function(attachUrl){
-		if( detailDataSet.length == 0 ) return;
+        try {
+            AttachDown.location.href = attachUrl;
+        } catch (e) {
+            AttachDown.src = attachUrl;
+        }
+    },
+    getMessengerGroupAllExport: function (attachUrl) {
+        if (detailDataSet.length == 0) return;
 
-		try {
-			AttachDown.location.href = attachUrl;
-		} catch (e) {
-			AttachDown.src = attachUrl;
-		}
-	}
+        try {
+            AttachDown.location.href = attachUrl;
+        } catch (e) {
+            AttachDown.src = attachUrl;
+        }
+    }
 };
 
-function getMessengerMessageTotal(xRootmtr, srcip, startDt, endDt, usr_id, msgid){
-	//마지막 열람 msgid
-	ui.get({
-		url : 'getMessengerMessageTotal.xcn',
-		xRootMtr : xRootmtr,
-		srcip : srcip,
-		startDt : startDt,
-		endDt : endDt,
-		usr_id : usr_id, //기준이 srcip에서 usr_id로 변경되면서 마지막 데이터 기준 변경
-		limit : 0,
-		success : function(data, total) {
-			$('#groupSubResultCnt').text(data.comma());
-			getMessengerMessage(xRootmtr, srcip, usr_id, msgid);
-		},
-		error : function(status, message) {
-			ui.alertMsg(message);
-		},
-		complete : function() {
-			ui.off();
-		}
-	});
+function getMessengerMessageTotal(xRootmtr, srcip, startDt, endDt, usr_id, msgid) {
+    //마지막 열람 msgid
+    ui.get({
+        url: 'getMessengerMessageTotal.xcn',
+        xRootMtr: xRootmtr,
+        srcip: srcip,
+        startDt: startDt,
+        endDt: endDt,
+        usr_id: usr_id, //기준이 srcip에서 usr_id로 변경되면서 마지막 데이터 기준 변경
+        limit: 0,
+        success: function (data, total) {
+            $('#groupSubResultCnt').text(data.comma());
+            getMessengerMessage(xRootmtr, srcip, usr_id, msgid);
+        },
+        error: function (status, message) {
+            ui.alertMsg(message);
+        },
+        complete: function () {
+            ui.off();
+        }
+    });
 }
 
 /**
@@ -268,418 +266,441 @@ function getMessengerMessageTotal(xRootmtr, srcip, startDt, endDt, usr_id, msgid
  * @returns
  */
 function getMessengerMessage(xRootmtr, srcip, usr_id, msgid) {
-	var startDt = $('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
-	var endDt = $('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
-	$("#timeline_list").html('');
-	ui.get({
-		url : 'getMessengerMessage.xcn',
-		xRootMtr : xRootmtr,
-		srcip : srcip,
-		startDt : startDt,
-		endDt : endDt,
-		usr_id : usr_id,
-		msgId : nvl(msgid),
-		limit : detailLimit,
-		success : function(data, total) {
-			if(data.groups.length > 0) {
-				$('.messenger_prev').css('display','block');
-			}
-			if(data.groups.length == 0) {
-				$("#timeline_list").html(noDataMsg());
-				$('.messenger_prev').css('display','none');
-				$('.messenger_next').css('display','none');
-				$('#groupSubResultCnt').text(0);
-				return;
-			}
+    var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
+    var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
+    $("#timeline_list").html('');
+    ui.get({
+        url: 'getMessengerMessage.xcn',
+        xRootMtr: xRootmtr,
+        srcip: srcip,
+        startDt: startDt,
+        endDt: endDt,
+        usr_id: usr_id,
+        msgId: nvl(msgid),
+        limit: detailLimit,
+        success: function (data, total) {
+            if (data.groups.length > 0) {
+                $('.messenger_prev').css('display', 'block');
+            }
+            if (data.groups.length == 0) {
+                $("#timeline_list").html(noDataMsg());
+                $('.messenger_prev').css('display', 'none');
+                $('.messenger_next').css('display', 'none');
+                $('#groupSubResultCnt').text(0);
+                return;
+            }
 
-			detailDataSet = data.groups;
-			prevDetailDataSet = data.groups;
-			$("#timeline_list").html(makeList(false));
-			Highlight( );
+            detailDataSet = data.groups;
+            prevDetailDataSet = data.groups;
+            $("#timeline_list").html(makeList(false));
+            Highlight();
 //			updateEmassMessengerAdminXrootMtr(xrootmtr, nvl(focusMsgId, detailDataSet[0].msgid), srcip, usr_id);
-		},
-		error : function(status, message) {
-			searchFlag = false;
-			ui.alertMsg(message);
-		},
-		complete : function() {
-			ui.off('timeline_list');
-			searchFlag = false;
-			setMessengerRead();
-		}
-	});
+        },
+        error: function (status, message) {
+            searchFlag = false;
+            ui.alertMsg(message);
+        },
+        complete: function () {
+            ui.off('timeline_list');
+            searchFlag = false;
+            setMessengerRead();
+        }
+    });
 }
 
 /**
  * 다음 버튼 ( 최하단의 + 버튼 )
  */
 function getMessengerMessageNext(xRootmtr, srcip, usr_id, msgid) {
-	var startDt = $('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
-	var endDt = $('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
-	searchFlag = true;
-	ui.get({
-		url : 'getMessengerMessageNext.xcn',
-		xRootMtr : xRootmtr,
-		srcip : srcip,
-		startDt : startDt,
-		endDt : endDt,
-		usr_id : usr_id,
-		msgId : msgid,
-		limit : detailLimit,
-		success : function(data, total) {
-			searchFlag = false;
-			if(data.groups.length == 0) {
-				detailDataSet = [];
-				$("#timeline_list").prepend(noNextDataMsg());
-				$('.messenger_next').css('display', 'none');
-				return;
-			}
+    var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
+    var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
+    searchFlag = true;
+    ui.get({
+        url: 'getMessengerMessageNext.xcn',
+        xRootMtr: xRootmtr,
+        srcip: srcip,
+        startDt: startDt,
+        endDt: endDt,
+        usr_id: usr_id,
+        msgId: msgid,
+        limit: detailLimit,
+        success: function (data, total) {
+            searchFlag = false;
+            if (data.groups.length == 0) {
+                detailDataSet = [];
+                $("#timeline_list").prepend(noNextDataMsg());
+                $('.messenger_next').css('display', 'none');
+                return;
+            }
 
-			if(data.groups.length < detailLimit) {
-				$('.messenger_next').css('display', 'none');
-			}
-			detailDataSet = data.groups;
+            if (data.groups.length < detailLimit) {
+                $('.messenger_next').css('display', 'none');
+            }
+            detailDataSet = data.groups;
 
-			/**
-			 * 전체 10 페이지가 넘어갈 경우 첫번째 페이지 제거
-			 * 최상단에 날짜 출력
-			 */
-			if($(".pageInfoDiv").size() > detailViewPage-1){
-				$('.pageInfoDiv').first().remove();
-				var firstObj = $('.pageInfoDiv').first();
-				if(!firstObj.children().filter(':first').hasClass('date_li')){
-					var date = viewDate(firstObj.children().filter(':first').attr('ctime').substring(0,10));
-					firstObj.prepend(date);
-				}
-			}
+            /**
+             * 전체 10 페이지가 넘어갈 경우 첫번째 페이지 제거
+             * 최상단에 날짜 출력
+             */
+            if ($(".pageInfoDiv").size() > detailViewPage - 1) {
+                $('.pageInfoDiv').first().remove();
+                var firstObj = $('.pageInfoDiv').first();
+                if (!firstObj.children().filter(':first').hasClass('date_li')) {
+                    var date = viewDate(firstObj.children().filter(':first').attr('ctime').substring(0, 10));
+                    firstObj.prepend(date);
+                }
+            }
 
-			$("#timeline_list").append(makeList(true));
-			Highlight( );
-		},
-		error : function(status, message) {
-			searchFlag = false;
-			ui.alertMsg(message);
-		},
-		complete : function() {
-			ui.off('timeline_list');
-			setMessengerRead();
-		}
-	});
+            $("#timeline_list").append(makeList(true));
+            Highlight();
+        },
+        error: function (status, message) {
+            searchFlag = false;
+            ui.alertMsg(message);
+        },
+        complete: function () {
+            ui.off('timeline_list');
+            setMessengerRead();
+        }
+    });
 }
 
 /**
  * 이전 버튼 ( 최상단의 + 버튼 )
  */
 function getMessengerMessagePrev(xRootmtr, srcip, usr_id, msgid) {
-	var startDt = $('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
-	var endDt = $('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
-	searchFlag = true;
-	ui.get({
-		url : 'getMessengerMessagePrev.xcn',
-		xRootMtr : xRootmtr,
-		srcip : srcip,
-		startDt : startDt,
-		endDt : endDt,
-		usr_id : usr_id,
-		msgId : msgid,
-		limit : detailLimit,
-		success : function(data, total) {
-			searchFlag = false;
-			if(data.groups.length == 0) {
-				prevDetailDataSet = [];
-				$("#timeline_list").prepend(noPrevDataMsg());
-				$('.messenger_prev').css('display', 'none');
-				return;
-			}
-			if(data.groups.length < detailLimit) {
-				$('.messenger_prev').css('display', 'none');
-			}
-			prevDetailDataSet = data.groups;
+    var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
+    var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
+    searchFlag = true;
+    ui.get({
+        url: 'getMessengerMessagePrev.xcn',
+        xRootMtr: xRootmtr,
+        srcip: srcip,
+        startDt: startDt,
+        endDt: endDt,
+        usr_id: usr_id,
+        msgId: msgid,
+        limit: detailLimit,
+        success: function (data, total) {
+            searchFlag = false;
+            if (data.groups.length == 0) {
+                prevDetailDataSet = [];
+                $("#timeline_list").prepend(noPrevDataMsg());
+                $('.messenger_prev').css('display', 'none');
+                return;
+            }
+            if (data.groups.length < detailLimit) {
+                $('.messenger_prev').css('display', 'none');
+            }
+            prevDetailDataSet = data.groups;
 
-			if($(".pageInfoDiv").size() > detailViewPage-1){
-				$(".pageInfoDiv").last().remove();
-			}
+            if ($(".pageInfoDiv").size() > detailViewPage - 1) {
+                $(".pageInfoDiv").last().remove();
+            }
 
-			$("#timeline_list").prepend(makePrevList());
-			$('#scrollArea').scrollTop($(".pageInfoDiv").height());
-			Highlight( );
-			detailSearchFlag = false;
-		},
-		error : function(status, message) {
-			searchFlag = false;
-			ui.alertMsg(message);
-		},
-		complete : function() {
-			ui.off('timeline_list');
-			setMessengerRead(prevDetailDataSet);
-		}
-	});
+            $("#timeline_list").prepend(makePrevList());
+            $('#scrollArea').scrollTop($(".pageInfoDiv").height());
+            Highlight();
+            detailSearchFlag = false;
+        },
+        error: function (status, message) {
+            searchFlag = false;
+            ui.alertMsg(message);
+        },
+        complete: function () {
+            ui.off('timeline_list');
+            setMessengerRead(prevDetailDataSet);
+        }
+    });
 }
 
-function userSelectBox(data, srcip, usr_id){
-	var name = $('#selectUserInfo').attr('data-name');
-	var str = '';
+function userSelectBox(data, srcip, usr_id) {
+    var name = $('#selectUserInfo').attr('data-name');
+    var str = '';
 
-	for(var i=0; i<data.length; i++){
-		var ip = data[i].srcip == undefined ? Object.keys(data[i].srcIpList[0]).toString() : data[i].srcip;
-		var selectUserTitle = ip;
-		if( nvl(data[i].name) != '') {
-			selectUserTitle = data[i].name;
-			if( nvl(data[i].usr_id) != '') selectUserTitle += ' ('+data[i].usr_id+')';
-			else if( nvl(data[i].srcip) != '') selectUserTitle += ' ('+data[i].srcip+')';
-		}
-		else if( nvl(data[i].usr_id) != '') selectUserTitle = data[i].usr_id;
-		else if( nvl(data[i].srcip) != '') selectUserTitle = data[i].srcip;
+    for (var i = 0; i < data.length; i++) {
+        var ip = data[i].srcip == undefined ? Object.keys(data[i].srcIpList[0]).toString() : data[i].srcip;
+        var selectUserTitle = ip;
+        if (nvl(data[i].name) != '') {
+            selectUserTitle = data[i].name;
+            if (nvl(data[i].usr_id) != '') selectUserTitle += ' (' + data[i].usr_id + ')';
+            else if (nvl(data[i].srcip) != '') selectUserTitle += ' (' + data[i].srcip + ')';
+        } else if (nvl(data[i].usr_id) != '') selectUserTitle = data[i].usr_id;
+        else if (nvl(data[i].srcip) != '') selectUserTitle = data[i].srcip;
 
-		$('#selectUserInfo').attr('data-srcip', nvl(ip));
-		$('#selectUserInfo').attr('data-name', nvl(data[i].name));
-		$('#selectUserInfo').attr('data-usrid', nvl(data[i].usr_id));
-		$('#selectUserInfo').html(selectUserTitle);
+        $('#selectUserInfo').attr('data-srcip', nvl(ip));
+        $('#selectUserInfo').attr('data-name', nvl(data[i].name));
+        $('#selectUserInfo').attr('data-usrid', nvl(data[i].usr_id));
+        $('#selectUserInfo').html(selectUserTitle);
 
-		str += '<li class="selectUser" data-name="'+nvl(data[i].name)+'" data-srcip="'+nvl(ip)+'" data-usrid="'+nvl(data[i].usr_id)+'"><a href="javascript:void(0);">'+selectUserTitle+'</a></li>';
-	}
-	$('#selectUser_menu').html(str);
-	getDetailData(usr_id);
-}
-function getDetailData(usr_id){
-	if(usr_id !=''){
-		var idx = 0;
-		$('.selectUser').each(function(index){
-			var value = $(this).attr('data-usrid');
-			if(value == usr_id){
-				idx = index;
-				return false;
-			}
-		});
-		$('.selectUser:eq('+idx+')').click();
-	}else $('.selectUser').first().click();
+        str += '<li class="selectUser" data-name="' + nvl(data[i].name) + '" data-srcip="' + nvl(ip) + '" data-usrid="' + nvl(data[i].usr_id) + '"><a href="javascript:void(0);">' + selectUserTitle + '</a></li>';
+    }
+    $('#selectUser_menu').html(str);
+    getDetailData(usr_id);
 }
 
-function rtnGroupList(data, type){
-	var str = '';
-	for (var i = 0; i < data.length; i++) {
-		var user_cnt = data[i].user_cnt;
-		var svc3 = data[i].svc3;
-		var closeFlag = false;
-		if( user_cnt == 1 && svc3 == 'L') closeFlag = true;
-
-		var className='';
-		if( isConsent() && $('#consentNo').val() == '') className='cursor-default';
-		if( isConsent() && $('#consentNo').val() == '') className='cursor-default';
-		if( isConsent() && $('#consentNo').val() == '') className='cursor-default';
-		str += '<a href="#" class="list-group-item list-group-item-action '+className+'" xrootmtr="'+nvl(data[i].xrootmtr)+'" msgid="'+data[i].msgid+'" srcip="'+data[i].srcip+'" usrid="'+data[i].usr_id+'" style="min-height:60px;padding: 5px 15px;">';
-		str += '<div class="pull-xs-right" style="font-size: 12px; margin-left: 15px;">'+data[i].ctime+'</div>';
-
-		if(type == 'G'){
-			if(closeFlag) str += '<span class="tag tag-default tag-pill pull-xs-right">'+endChat+'</span>';
-			else str += '<span class="tag tag-success tag-pill pull-xs-right">'+chatting+'</span>';
-		}
-		str += '	<h5 class="list-group-item-heading" style="padding-left: 14px;">'+data[i].title.replaceAll('<', '&lt;').replaceAll('>', '&gt;')+'</h5>';
-		str += '	<p class="list-group-item-text" style="float:left;">';
-
-
-		if( svc3 == 'C' ) str += '<i class="fa fa-commenting-o fa-sm"></i> ';
-		else if( svc3 == 'F' ) str += '<i class="fa fa-floppy-o fa-sm"></i> ';
-		else if( svc3 == 'J' ) str += '<i class="fa fa-sign-in fa-sm"></i> ';
-		else if( svc3 == 'L' ) str += '<i class="fa fa-sign-out fa-sm"></i> ';
-
-		str += "<span class='maxwidth50'>"+ data[i].message + "</span>";
-		str += "<span style='position:absolute;top:30px; right: 15px;font-size: 11px; padding: 2px 4px; margin-left: 3px;'>";
-		if(type == 'G' && data[i].unread_cnt > 0) str += '	<span class="tag tag-danger tag-pill pull-xs-right" style="margin-left:2px;" title="'+unreadTitle+'">'+data[i].unread_cnt.comma()+'</span>';
-		str += "<span class='pull-xs-right' style='border: 1px solid #ccc; font-size: 11px; padding: 2px 4px; margin-left: 3px;'>"+makeMessengerText(data[i].svc)+"</span>";
-		str += "</span>";
-		str += '</p></a>';
-	}
-
-	//데이터 없을때
-	if( data.length == 0 ){
-		str += '<a href="#" class="list-group-item list-group-item-action active" style="cursor:default;height:50px;">';
-		str += '	<p class="list-group-item-text" style="line-height:30px;">';
-		str += '		<i class="fa fa-envelope fa-sm"></i> ';
-		str += nodataMsg; //common.msg.nodata
-		str += '</p></a>';
-	}
-
-	$('#group_list').html( str );
-	$('#group_list').animate({
-		scrollTop : 0
-	}, 0);
+function getDetailData(usr_id) {
+    if (usr_id != '') {
+        var idx = 0;
+        $('.selectUser').each(function (index) {
+            var value = $(this).attr('data-usrid');
+            if (value == usr_id) {
+                idx = index;
+                return false;
+            }
+        });
+        $('.selectUser:eq(' + idx + ')').click();
+    } else $('.selectUser').first().click();
 }
 
-function makeMessengerText( svc ){
-	var str = '';
-	svc = svc.substring(0, svc.length - 1);
+function rtnGroupList(data, type) {
+    var str = '';
+    var groupList = document.getElementById("group_list");
 
-	$('#serviceTypeSelect option').each(function(e){
-		if( svc == $(this).val() ) str = $(this).text();
-	});
-	return str;
+    groupList.innerHTML = "";
+
+    var ul = document.createElement("ul");
+    ul.className = "people";
+
+
+    for (var i = 0; i < data.length; i++) {
+        var li = document.createElement("li");
+        li.className = "person";
+
+        var user_cnt = data[i].user_cnt;
+        var svc3 = data[i].svc3;
+        var closeFlag = false;
+        if (user_cnt == 1 && svc3 == 'L') closeFlag = true;
+
+        var className = '';
+        if (isConsent() && $('#consentNo').val() == '') className = 'cursor-default';
+
+        var leftDiv = document.createElement("div");
+        leftDiv.className = "left";
+
+        if(data[i].body_snippet!=undefined) {
+            var bodySnippet = data[i].body_snippet.length > 40 ? data[i].body_snippet.substring(0, 40) + "..." : data[i].body_snippet;
+        }
+
+        else{
+            var bodySnippet="";
+        }
+        var leftContent = "<p><span class='chatid'>" + data[i].userid +"("+data[i].deptNm+"/"+data[i].jikgubNm+"/"+data[i].name+")"+"</span>";
+        if (data[i].attached === 'Y') {
+            leftContent += "<span class='file'></span>";
+        }
+        leftContent += "</p>" +
+            "<p><span class='name'>" + data[i].user + "</span><span class='bar'></span><span class='preview'>" + bodySnippet + "</span></p>";
+
+        leftDiv.innerHTML = leftContent;
+        li.appendChild(leftDiv);
+        // Create right div
+        var rightDiv = document.createElement("div");
+        rightDiv.className = "right";
+        var svc = data[i].svc.slice(0,3);
+        var imageName =mainContext+"/img/ico_sns_"+ svc+".png";
+        var makescv = makeMessengerText(data[i].svc);
+        var rightContent = "<p><span class='logo'><img src="+imageName+">"+makescv+"</span></p>";
+
+
+        if (data[i].unread_cnt > 0) {
+            rightContent += "<span class='new'>" + data[i].unread_cnt + "</span>";
+        }
+
+        rightContent += "</p><span class='time'>" + data[i].ctime + "</span>";
+
+        rightDiv.innerHTML = rightContent;
+        li.appendChild(rightDiv);
+
+        // Append li to ul
+        ul.appendChild(li);
+    }
+    if( data.length == 0 ){
+        str += '<a href="#" class="list-group-item list-group-item-action active" style="cursor:default;height:50px;">';
+        str += '	<p class="list-group-item-text" style="line-height:30px;">';
+        str += '		<i class="fa fa-envelope fa-sm"></i> ';
+        str += nodataMsg; //common.msg.nodata
+        str += '</p></a>';
+        $('#group_list').html( str );
+    }
+
+    groupList.appendChild(ul);
 }
 
-function getMessengerGroupList (page){
-	var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
-	groupPage = page;
-	var offset = groupPage*groupPageBreak - groupPageBreak;
-	searchFlag = true;
-	ui.onBody('timeline_list', 0, -20);
-	ui.postJson({
-		url : 'getMessengerGroupList.xcn',
-		data : JSON.stringify( getCondition( ) ),
-		readYn : readYn,
-		offset : offset,
-		limit : groupPageBreak,
-		success : function(data, total) {
-			console.log("page: "+page);
-			console.log(data.groups);
-			rtnGroupList(data.groups, 'G');
-			rtnGroupPage(total, page, 'G');
-			HighlightGroup( );
-		},
-		error : function(status, message) {
-			ui.alertMsg(message);
-		},
-		complete : function() {
-			searchFlag = false;
-			ui.off('timeline_list');
-		}
-	});
-};
-function getMessengerMessageList (page){
-	//JSON.stringify( condition )
-	var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
-	groupMessagePage = page;
-	var offset = groupMessagePage*groupMessagePageBreak - groupMessagePageBreak;
-	searchFlag = true;
-	ui.onBody('timeline_list', 0, -20);
-	ui.postJson({
-		url : 'getMessengerMessageList.xcn',
-		data : JSON.stringify( getCondition( ) ),
-		readYn : readYn,
-		offset : offset,
-		limit : groupPageBreak,
-		success : function(data, total) {
-			rtnGroupList(data.groups, 'GD');
-			rtnGroupPage(total, page, 'GD');
-			HighlightGroup( );
-		},
-		error : function(status, message) {
-			ui.alertMsg(message);
-		},
-		complete : function() {
-			searchFlag = false;
-			ui.off('timeline_list');
-		}
-	});
+function makeMessengerText(svc) {
+    var str = '';
+    svc = svc.substring(0, svc.length - 1);
+
+    $('#serviceTypeSelect option').each(function (e) {
+        if (svc == $(this).val()) str = $(this).text();
+    });
+    return str;
+}
+
+function getMessengerGroupList(page) {
+    var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
+    groupPage = page;
+    var offset = groupPage * groupPageBreak - groupPageBreak;
+    searchFlag = true;
+    ui.onBody('timeline_list', 0, -20);
+    ui.postJson({
+        url: 'getMessengerGroupList.xcn',
+        data: JSON.stringify(getCondition()),
+        readYn: readYn,
+        offset: offset,
+        limit: groupPageBreak,
+        success: function (data, total) {
+            rtnGroupList(data.groups, 'G');
+            rtnGroupPage(data.groups.length, page, 'G');
+            HighlightGroup();
+        },
+        error: function (status, message) {
+            ui.alertMsg(message);
+        },
+        complete: function () {
+            searchFlag = false;
+            ui.off('timeline_list');
+        }
+    });
 };
 
+function getMessengerMessageList(page) {
+    var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
+    groupMessagePage = page;
+    var offset = groupMessagePage * groupMessagePageBreak - groupMessagePageBreak;
+    searchFlag = true;
+    ui.onBody('timeline_list', 0, -20);
+    ui.postJson({
+        url: 'getMessengerMessageList.xcn',
+        data: JSON.stringify(getCondition()),
+        readYn: readYn,
+        offset: offset,
+        limit: groupPageBreak,
+        success: function (data, total) {
+            console.log("MessageSize: "+data.groups.length);
+            rtnGroupList(data.groups, 'GD');
+            rtnGroupPage(total, page, 'GD');
+            HighlightGroup();
+        },
+        error: function (status, message) {
+            ui.alertMsg(message);
+        },
+        complete: function () {
+            searchFlag = false;
+            ui.off('timeline_list');
+        }
+    });
+};
 
-function getGenerativeGroupList (page){
-	var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
-	groupPage = page;
-	var offset = groupPage*groupPageBreak - groupPageBreak;
-	alert(offset);
-	alert(groupPageBreak);
-	searchFlag = true;
-	ui.onBody('timeline_list', 0, -20);
-	ui.postJson({
-		url : 'getGenerativeGroupList.xcn',
-		data : JSON.stringify( getCondition( )),
-		readYn : readYn,
-		offset : offset,
-		limit : groupPageBreak,
-		success : function(data, total) {
-			rtnGenerativeGroupList(data.groups)
-			rtnnGenerativeGroupPage(total, page);
-			/*	rtnGroupList(data.groups, 'G');
+
+function getGenerativeGroupList(page) {
+    var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
+    groupPage = page;
+    var offset = groupPage * groupPageBreak - groupPageBreak;
+    alert(offset);
+    alert(groupPageBreak);
+    searchFlag = true;
+    ui.onBody('timeline_list', 0, -20);
+    ui.postJson({
+        url: 'getGenerativeGroupList.xcn',
+        data: JSON.stringify(getCondition()),
+        readYn: readYn,
+        offset: offset,
+        limit: groupPageBreak,
+        success: function (data, total) {
+            rtnGenerativeGroupList(data.groups)
+            rtnnGenerativeGroupPage(total, page);
+            /*	rtnGroupList(data.groups, 'G');
                 rtnGroupPage(total, page, 'G');
                 HighlightGroup( );*/
-		},
-		error : function(status, message) {
-			ui.alertMsg(message);
-		},
-		complete : function() {
-			searchFlag = false;
-			ui.off('timeline_list');
-		}
-	});
+        },
+        error: function (status, message) {
+            ui.alertMsg(message);
+        },
+        complete: function () {
+            searchFlag = false;
+            ui.off('timeline_list');
+        }
+    });
 }
 
-function rtnGroupPage(total, page, searchType){
-	$('#groupResultCnt').html(total.comma());
-	$('#groupPage').html(getPage3(total, page, groupPageBreak, 'eikon.getMessengerList'));
+function rtnGroupPage(total, page, searchType) {
+    $('#groupResultCnt').html(total.comma());
+    $('#groupPage').html(getPage3(total, page, groupPageBreak, 'eikon.getMessengerList'));
 
 }
-function getPage3(total, pageCount, listSize, rtnMethod){
-	var str = "";
-	var pageSizeNo = 5; // 화면에 표시할 페이지 수
-	var lastPage = Math.ceil(total / listSize); // 전체 페이지 수
-	var screenPageNo = Math.ceil(listSize / pageSizeNo); // 전체 스크린(페이지) 수 ,
-	var currentScreenPageNo = Math.ceil(pageCount / pageSizeNo); // 사용자가 현재
-	var startPageNum = (currentScreenPageNo * pageSizeNo - pageSizeNo) + 1; // 페이지
-	var endPageNum = startPageNum + pageSizeNo - 1; // 페이지 끝 넘버
-	if (endPageNum > lastPage)
-		endPageNum = lastPage;
 
-	if (lastPage == 0) {
-		return '';
-	}
-	if (screenPageNo == 0)
-		return;
+function getPage3(total, pageCount, listSize, rtnMethod) {
+    var str = "";
+    var pageSizeNo = 5; // 화면에 표시할 페이지 수
+    var lastPage = Math.ceil(total / listSize); // 전체 페이지 수
+    var screenPageNo = Math.ceil(listSize / pageSizeNo); // 전체 스크린(페이지) 수 ,
+    var currentScreenPageNo = Math.ceil(pageCount / pageSizeNo); // 사용자가 현재
+    var startPageNum = (currentScreenPageNo * pageSizeNo - pageSizeNo) + 1; // 페이지
+    var endPageNum = startPageNum + pageSizeNo - 1; // 페이지 끝 넘버
+    if (endPageNum > lastPage)
+        endPageNum = lastPage;
 
-	str += '<div class="pagination">';
+    if (lastPage == 0) {
+        return '';
+    }
+    if (screenPageNo == 0)
+        return;
 
-	if (pageCount > pageSizeNo)
-		str += '<a href="#" onclick="' + rtnMethod + '(' + (endPageNum - pageSizeNo) + ')" class="direction"><img src="../img/ico_page_left2.png" alt=""></a>';
-	else
-		str += '<a href="#" class="direction" style="cursor:default"><img src="../img/ico_page_left2.png" alt=""></a>';
+    str += '<div class="pagination">';
 
-	for (var i = startPageNum; i <= endPageNum; i++) {
-		if (i == pageCount)
-			str += '<a class="active" onclick="' + rtnMethod + '(' + i + ',' + pageCount + ')">' + i + '</a>';
-		else
-			str += '<a href="#" onclick="' + rtnMethod + '(' + i + ',' + pageCount + ')">' + i + '</a>';
-	}
+    var leftImg = mainContext + "/img/ico_page_left2.png";
+    if (pageCount > pageSizeNo)
+        str += '<a href="#" onclick="' + rtnMethod + '(' + (endPageNum - pageSizeNo) + ')" class="direction"><img src="' + leftImg + '"></a>';
+    // else
+    //     str += '<a href="#" class="direction" style="cursor:default"><img src="' + leftImg + '"></a>';
+
+    for (var i = startPageNum; i <= endPageNum; i++) {
+        if (i == pageCount)
+            str += '<a class="active" onclick="' + rtnMethod + '(' + i + ',' + pageCount + ')">' + i + '</a>';
+        else
+            str += '<a href="#" onclick="' + rtnMethod + '(' + i + ',' + pageCount + ')">' + i + '</a>';
+    }
+    var rightImg2 = mainContext + "/img/ico_page_right2.png";
+    if (startPageNum + pageSizeNo <= lastPage) {
+        str += '<a href="#" onclick="' + rtnMethod + '(' + (startPageNum + pageSizeNo) + ')" class="direction"><img src="' + rightImg2 + '"></a>';
+    }
 
 
+    str += '</div>';
 
-	if (startPageNum + pageSizeNo <= lastPage)
-		str += '<a href="#" onclick="' + rtnMethod + '(' + (startPageNum + pageSizeNo) + ')" class="direction"><img src="../img/ico_page_right2.png" alt=""></a>';
-	else
-		str += '<a href="#" class="direction" style="cursor:default"><img src="../img/ico_page_right2.png" alt=""></a>';
-
-	str += '</div>';
-
-	return str;
+    return str;
 }
 
 
+function setMessengerRead(dataSet) {
+    if (dataSet == null || dataSet == undefined) dataSet = detailDataSet;
 
-function setMessengerRead(dataSet){
-	if(dataSet == null || dataSet == undefined) dataSet = detailDataSet;
+    ui.get({
+        url: 'setMessengerRead.xcn',
+        body: JSON.stringify(dataSet),
+        success: function (data, total) {
 
-	ui.get({
-		url : 'setMessengerRead.xcn',
-		body : JSON.stringify(dataSet),
-		success : function(data, total) {
-
-		},
-		error : function(status, message) {
-			ui.alertMsg(message);
-		},
-		complete : function() {}
-	});
+        },
+        error: function (status, message) {
+            ui.alertMsg(message);
+        },
+        complete: function () {
+        }
+    });
 }
-function getPageNum(msgid){
-	var idx = -1;
-	for (var i = 0; i < detailDataSet.length; i++) {
-		if(detailDataSet[i].msgid == msgid){
-			idx = i;
-			break;
-		}
-	}
-	var rtnValue = Math.ceil((idx)/detailPageBreak);
-	if(idx != -1) return rtnValue == 0 ? 1 : rtnValue;
-	else return 1;
+
+function getPageNum(msgid) {
+    var idx = -1;
+    for (var i = 0; i < detailDataSet.length; i++) {
+        if (detailDataSet[i].msgid == msgid) {
+            idx = i;
+            break;
+        }
+    }
+    var rtnValue = Math.ceil((idx) / detailPageBreak);
+    if (idx != -1) return rtnValue == 0 ? 1 : rtnValue;
+    else return 1;
 }
 
 //function detailMessageFocus(msgid){
@@ -704,224 +725,222 @@ function getPageNum(msgid){
 //	findList('date'+date, idx+1);
 //}
 
-function makeList(nextFlag){
-	var dataHasFlag = false;
-	var str = '<ul class="pageInfoDiv timeline">';
-	var usrid = $('#selectUserInfo').attr('data-usrid');
-	var srcip = $('#selectUserInfo').attr('data-srcip');
-	for(var i=0 ; i < detailDataSet.length ; i++) {
-		dataHasFlag = true;
-		var obj = detailDataSet[i];
-		var chkPati = false;
-		if( (nvl(obj.user) != '' && obj.user == obj.sender) || usrid == obj.title || usrid == obj.sender ) chkPati = true;
-		str += checkDate(i);
+function makeList(nextFlag) {
+    var dataHasFlag = false;
+    var str = '<ul class="pageInfoDiv timeline">';
+    var usrid = $('#selectUserInfo').attr('data-usrid');
+    var srcip = $('#selectUserInfo').attr('data-srcip');
+    for (var i = 0; i < detailDataSet.length; i++) {
+        dataHasFlag = true;
+        var obj = detailDataSet[i];
+        var chkPati = false;
+        if ((nvl(obj.user) != '' && obj.user == obj.sender) || usrid == obj.title || usrid == obj.sender) chkPati = true;
+        str += checkDate(i);
 
-		str+='<li class="timeline-inverted ' +(i==0 && !nextFlag ? 'lastReadLi' : '')+ '" id="'+obj.msgid+'" ctime="'+obj.ctime+'">';
+        str += '<li class="timeline-inverted ' + (i == 0 && !nextFlag ? 'lastReadLi' : '') + '" id="' + obj.msgid + '" ctime="' + obj.ctime + '">';
 
-		var svc3 = obj.svc3;
-		if(!chkPati){
-			if( obj.readYn == 'Y' ) str+='	<div class="timeline-badge custom read">';
-			else str+='	<div class="timeline-badge custom unread">';
+        var svc3 = obj.svc3;
+        if (!chkPati) {
+            if (obj.readYn == 'Y') str += '	<div class="timeline-badge custom read">';
+            else str += '	<div class="timeline-badge custom unread">';
 
-			if( svc3 == 'C' ) str += '<i class="fa fa-commenting-o fa-sm" style="font-size: 20px;"></i> ';
-			else if( svc3 == 'F' ) str += '<i class="fa fa-floppy-o fa-sm"></i> ';
-			else if( svc3 == 'J' ) str += '<i class="fa fa-sign-in fa-sm"></i> ';
-			else if( svc3 == 'L' ) str += '<i class="fa fa-sign-out fa-sm"></i> ';
-			str+='	</div>';
-		}
+            if (svc3 == 'C') str += '<i class="fa fa-commenting-o fa-sm" style="font-size: 20px;"></i> ';
+            else if (svc3 == 'F') str += '<i class="fa fa-floppy-o fa-sm"></i> ';
+            else if (svc3 == 'J') str += '<i class="fa fa-sign-in fa-sm"></i> ';
+            else if (svc3 == 'L') str += '<i class="fa fa-sign-out fa-sm"></i> ';
+            str += '	</div>';
+        }
 
-		str+='	<div class="timeline-panel '+(chkPati ? 'panel_right' : 'panel_left' )+'" style="width: calc(100% - 200px);">';
-		str+='		<div class="list-group-item cursor-pointer readPoint">';
-		str+='			<div class="timeline-heading">';
+        str += '	<div class="timeline-panel ' + (chkPati ? 'panel_right' : 'panel_left') + '" style="width: calc(100% - 200px);">';
+        str += '		<div class="list-group-item cursor-pointer readPoint">';
+        str += '			<div class="timeline-heading">';
 
-		var title = obj.title;
-		str+='				<h4 class="timeline-title">'+title+'<span class="timeline-date pull-xs-right">'+obj.ctime+'</span></h4>';
-		str+='			</div>';
-		var addClass = '';
-		if( svc3 == 'J' || svc3 == 'L' ) addClass=' text-center'
-		str+='			<div class="timeline-body'+addClass+'">';
-
-
-		if( svc3 == 'F' ){
-			var files = '';
-			var hashes = '';
-			if(obj.message != undefined) files = obj.message.split('|');
-			if(obj.attachhash != undefined) hashes = obj.attachhash.split('|');
-
-			for( var j = 0; j < files.length; j++ ){
-				str+='<a href="javascript:void(0);" class="file_link" msgid="'+obj.msgid+'" attachhash="'+nvl(hashes[j]).trim()+'">'+nvl(files[j]).trim()+'<br /></a>';
-			}
-		}
-		else str+=''+obj.body_snippet.replaceAll('\n', '<br/>')+'';
-		str+='			</div>';
-		str+='		</div>';
-		str+='	</div>';
-
-		str+='</li>';
-	}
-	str+='</ul>';
-	if(detailDataSet.length < detailLimit) str += noNextDataMsg();
+        var title = obj.title;
+        str += '				<h4 class="timeline-title">' + title + '<span class="timeline-date pull-xs-right">' + obj.ctime + '</span></h4>';
+        str += '			</div>';
+        var addClass = '';
+        if (svc3 == 'J' || svc3 == 'L') addClass = ' text-center'
+        str += '			<div class="timeline-body' + addClass + '">';
 
 
-	if(!dataHasFlag){
-		str = noDataMsg();
-	}
+        if (svc3 == 'F') {
+            var files = '';
+            var hashes = '';
+            if (obj.message != undefined) files = obj.message.split('|');
+            if (obj.attachhash != undefined) hashes = obj.attachhash.split('|');
 
-	return str;
+            for (var j = 0; j < files.length; j++) {
+                str += '<a href="javascript:void(0);" class="file_link" msgid="' + obj.msgid + '" attachhash="' + nvl(hashes[j]).trim() + '">' + nvl(files[j]).trim() + '<br /></a>';
+            }
+        } else str += '' + obj.body_snippet.replaceAll('\n', '<br/>') + '';
+        str += '			</div>';
+        str += '		</div>';
+        str += '	</div>';
+
+        str += '</li>';
+    }
+    str += '</ul>';
+    if (detailDataSet.length < detailLimit) str += noNextDataMsg();
+
+
+    if (!dataHasFlag) {
+        str = noDataMsg();
+    }
+
+    return str;
 }
 
-function makePrevList(){
-	var dataHasFlag = false;
-	var str = '<ul class="pageInfoDiv timeline">';
-	if(prevDetailDataSet.length < detailLimit) str += noPrevDataMsg();
-	var usrid = $('#selectUserInfo').attr('data-usrid');
-	var srcip = $('#selectUserInfo').attr('data-srcip');
+function makePrevList() {
+    var dataHasFlag = false;
+    var str = '<ul class="pageInfoDiv timeline">';
+    if (prevDetailDataSet.length < detailLimit) str += noPrevDataMsg();
+    var usrid = $('#selectUserInfo').attr('data-usrid');
+    var srcip = $('#selectUserInfo').attr('data-srcip');
 
-	for(var i=prevDetailDataSet.length - 1 ; i > -1 ; i--) {
-		dataHasFlag = true;
-		var obj = prevDetailDataSet[i];
-		var chkPati = false;
-		if( (nvl(obj.user) != '' && obj.user == obj.sender) || usrid == obj.title || usrid == obj.sender ) chkPati = true;
+    for (var i = prevDetailDataSet.length - 1; i > -1; i--) {
+        dataHasFlag = true;
+        var obj = prevDetailDataSet[i];
+        var chkPati = false;
+        if ((nvl(obj.user) != '' && obj.user == obj.sender) || usrid == obj.title || usrid == obj.sender) chkPati = true;
 
-		str += checkDatePre(i);
+        str += checkDatePre(i);
 
-		str+='<li class="timeline-inverted" id="'+obj.msgid+'" ctime="'+obj.ctime+'">';
+        str += '<li class="timeline-inverted" id="' + obj.msgid + '" ctime="' + obj.ctime + '">';
 
-		var svc3 = obj.svc3;
-		if(!chkPati){
-			if( obj.readYn == 'Y' ) str+='	<div class="timeline-badge custom read">';
-			else str+='	<div class="timeline-badge custom unread">';
+        var svc3 = obj.svc3;
+        if (!chkPati) {
+            if (obj.readYn == 'Y') str += '	<div class="timeline-badge custom read">';
+            else str += '	<div class="timeline-badge custom unread">';
 
-			if( svc3 == 'C' ) str += '<i class="fa fa-commenting-o fa-sm" style="font-size: 20px;"></i> ';
-			else if( svc3 == 'F' ) str += '<i class="fa fa-floppy-o fa-sm"></i> ';
-			else if( svc3 == 'J' ) str += '<i class="fa fa-sign-in fa-sm"></i> ';
-			else if( svc3 == 'L' ) str += '<i class="fa fa-sign-out fa-sm"></i> ';
-			str+='	</div>';
-		}
+            if (svc3 == 'C') str += '<i class="fa fa-commenting-o fa-sm" style="font-size: 20px;"></i> ';
+            else if (svc3 == 'F') str += '<i class="fa fa-floppy-o fa-sm"></i> ';
+            else if (svc3 == 'J') str += '<i class="fa fa-sign-in fa-sm"></i> ';
+            else if (svc3 == 'L') str += '<i class="fa fa-sign-out fa-sm"></i> ';
+            str += '	</div>';
+        }
 
-		str+='	<div class="timeline-panel '+(chkPati ? 'panel_right' : 'panel_left' )+'" style="width: calc(100% - 200px);">';
-		str+='		<div class="list-group-item cursor-pointer readPoint">';
-		str+='			<div class="timeline-heading">';
+        str += '	<div class="timeline-panel ' + (chkPati ? 'panel_right' : 'panel_left') + '" style="width: calc(100% - 200px);">';
+        str += '		<div class="list-group-item cursor-pointer readPoint">';
+        str += '			<div class="timeline-heading">';
 
-		var title = obj.title;
-		str+='				<h4 class="timeline-title">'+title+'<span class="timeline-date pull-xs-right">'+obj.ctime+'</span></h4>';
-		str+='			</div>';
-		var addClass = '';
-		if( svc3 == 'J' || svc3 == 'L' ) addClass=' text-center'
-		str+='			<div class="timeline-body'+addClass+'">';
+        var title = obj.title;
+        str += '				<h4 class="timeline-title">' + title + '<span class="timeline-date pull-xs-right">' + obj.ctime + '</span></h4>';
+        str += '			</div>';
+        var addClass = '';
+        if (svc3 == 'J' || svc3 == 'L') addClass = ' text-center'
+        str += '			<div class="timeline-body' + addClass + '">';
 
 
-		if( svc3 == 'F' ){
-			var files = '';
-			var hashes = '';
-			if(obj.body_snippet != undefined) files = obj.body_snippet.split('|');
-			if(obj.attachhash != undefined) hashes = obj.attachhash.split('|');
+        if (svc3 == 'F') {
+            var files = '';
+            var hashes = '';
+            if (obj.body_snippet != undefined) files = obj.body_snippet.split('|');
+            if (obj.attachhash != undefined) hashes = obj.attachhash.split('|');
 
-			for( var j = 0; j < files.length; j++ ){
-				str+='<a href="javascript:void(0);" class="file_link" msgid="'+obj.msgid+'" attachhash="'+nvl(hashes[j]).trim()+'">'+nvl(files[j]).trim()+'<br /></a>';
-			}
-		}
-		else str+=''+obj.body_snippet.replaceAll('\n', '<br/>')+'';
-		str+='			</div>';
-		str+='		</div>';
-		str+='	</div>';
+            for (var j = 0; j < files.length; j++) {
+                str += '<a href="javascript:void(0);" class="file_link" msgid="' + obj.msgid + '" attachhash="' + nvl(hashes[j]).trim() + '">' + nvl(files[j]).trim() + '<br /></a>';
+            }
+        } else str += '' + obj.body_snippet.replaceAll('\n', '<br/>') + '';
+        str += '			</div>';
+        str += '		</div>';
+        str += '	</div>';
 
-		if(chkPati){
-			if( obj.readYn == 'Y' ) str+='	<div class="timeline-badge custom custom_right read">';
-			else str+='	<div class="timeline-badge custom custom_right unread">';
+        if (chkPati) {
+            if (obj.readYn == 'Y') str += '	<div class="timeline-badge custom custom_right read">';
+            else str += '	<div class="timeline-badge custom custom_right unread">';
 
-			if( svc3 == 'C' ) str += '<i class="fa fa-commenting-o fa-sm" style="font-size: 20px;"></i> ';
-			else if( svc3 == 'F' ) str += '<i class="fa fa-floppy-o fa-sm"></i> ';
-			else if( svc3 == 'J' ) str += '<i class="fa fa-sign-in fa-sm"></i> ';
-			else if( svc3 == 'L' ) str += '<i class="fa fa-sign-out fa-sm"></i> ';
-			str+='	</div>';
-		}
-		str+='</li>';
-	}
-	str+='</ul>';
+            if (svc3 == 'C') str += '<i class="fa fa-commenting-o fa-sm" style="font-size: 20px;"></i> ';
+            else if (svc3 == 'F') str += '<i class="fa fa-floppy-o fa-sm"></i> ';
+            else if (svc3 == 'J') str += '<i class="fa fa-sign-in fa-sm"></i> ';
+            else if (svc3 == 'L') str += '<i class="fa fa-sign-out fa-sm"></i> ';
+            str += '	</div>';
+        }
+        str += '</li>';
+    }
+    str += '</ul>';
 
-	if(!dataHasFlag){
-		str = noDataMsg();
-	}
+    if (!dataHasFlag) {
+        str = noDataMsg();
+    }
 
-	return str;
+    return str;
 }
 
-function noDataMsg(){
-	var str='<div class="timeline-panel" style="padding-left:10px;">';
-	str+='	<span class="list-group-item cursor-text">';
-	str+='		<div class="timeline-body" style="text-align: center;">';
-	str+=			xcnuiJS.noDataPeriod; //선택한 기간에 데이터가 없습니다.
-	str+='		</div>';
-	str+='	</span>';
-	str+='</div>';
-	return str;
+function noDataMsg() {
+    var str = '<div class="timeline-panel" style="padding-left:10px;">';
+    str += '	<span class="list-group-item cursor-text">';
+    str += '		<div class="timeline-body" style="text-align: center;">';
+    str += xcnuiJS.noDataPeriod; //선택한 기간에 데이터가 없습니다.
+    str += '		</div>';
+    str += '	</span>';
+    str += '</div>';
+    return str;
 }
 
-function noPrevDataMsg(){
-	var str='<div class="timeline-panel" style="padding-left:10px;">';
-	str+='	<span class="list-group-item cursor-text">';
-	str+='		<div class="timeline-body" style="text-align: center;">';
-	str+=			xcnuiJS.noDataPrev; //이전 데이터가 없습니다.
-	str+='		</div>';
-	str+='	</span>';
-	str+='</div>';
-	return str;
+function noPrevDataMsg() {
+    var str = '<div class="timeline-panel" style="padding-left:10px;">';
+    str += '	<span class="list-group-item cursor-text">';
+    str += '		<div class="timeline-body" style="text-align: center;">';
+    str += xcnuiJS.noDataPrev; //이전 데이터가 없습니다.
+    str += '		</div>';
+    str += '	</span>';
+    str += '</div>';
+    return str;
 }
 
-function noNextDataMsg(){
-	var str='<div class="timeline-panel" style="padding-left:10px;">';
-	str+='	<span class="list-group-item cursor-text">';
-	str+='		<div class="timeline-body" style="text-align: center;">';
-	str+=			xcnuiJS.noDataNext; //다음 데이터가 없습니다.
-	str+='		</div>';
-	str+='	</span>';
-	str+='</div>';
-	return str;
+function noNextDataMsg() {
+    var str = '<div class="timeline-panel" style="padding-left:10px;">';
+    str += '	<span class="list-group-item cursor-text">';
+    str += '		<div class="timeline-body" style="text-align: center;">';
+    str += xcnuiJS.noDataNext; //다음 데이터가 없습니다.
+    str += '		</div>';
+    str += '	</span>';
+    str += '</div>';
+    return str;
 }
 
-function checkDate(idx){
-	var lastTime = $('.timeline').children().last().attr('ctime');
+function checkDate(idx) {
+    var lastTime = $('.timeline').children().last().attr('ctime');
 
-	if( idx > 0 && detailDataSet[idx].ctime.substring(0, 10) == detailDataSet[idx-1].ctime.substring(0, 10) ){
-		return '';
-	}
-	if( lastTime != undefined && detailDataSet[idx].ctime.substring(0, 10) == lastTime.substring(0, 10) ){
-		return '';
-	}
+    if (idx > 0 && detailDataSet[idx].ctime.substring(0, 10) == detailDataSet[idx - 1].ctime.substring(0, 10)) {
+        return '';
+    }
+    if (lastTime != undefined && detailDataSet[idx].ctime.substring(0, 10) == lastTime.substring(0, 10)) {
+        return '';
+    }
 
-	var str = viewDate(detailDataSet[idx].ctime.substring(0, 10));
+    var str = viewDate(detailDataSet[idx].ctime.substring(0, 10));
 
-	return str;
+    return str;
 }
 
-function checkDatePre(idx){
-	var firstData = $('.timeline').children().filter(':eq(1)');
-	var endDate = $(firstData).attr('ctime');
+function checkDatePre(idx) {
+    var firstData = $('.timeline').children().filter(':eq(1)');
+    var endDate = $(firstData).attr('ctime');
 
-	if( idx==0 && prevDetailDataSet[idx].ctime.substring(0, 10) == endDate.substring(0, 10)) {
-		$('.timeline').children().first().remove();
-	}
-	if( idx < (prevDetailDataSet.length-1) && prevDetailDataSet[idx].ctime.substring(0, 10) == prevDetailDataSet[idx+1].ctime.substring(0, 10) ){
-		return '';
-	}
+    if (idx == 0 && prevDetailDataSet[idx].ctime.substring(0, 10) == endDate.substring(0, 10)) {
+        $('.timeline').children().first().remove();
+    }
+    if (idx < (prevDetailDataSet.length - 1) && prevDetailDataSet[idx].ctime.substring(0, 10) == prevDetailDataSet[idx + 1].ctime.substring(0, 10)) {
+        return '';
+    }
 
-	var str = viewDate(prevDetailDataSet[idx].ctime.substring(0, 10));
+    var str = viewDate(prevDetailDataSet[idx].ctime.substring(0, 10));
 
-	return str;
+    return str;
 }
 
-function viewDate(dateStr){
-	var str = '';
-	str+='<li class="date_li" id="date'+dateStr+'">';
-	str+='	<div class="date_li_div">';
-	str+='		<div class="date_line">';
-	str+='			<span class="timeline_date">'+dateStr+'</span>';
-	str+='		</div>';
-	str+='	</div>';
-	str+='</li>';
+function viewDate(dateStr) {
+    var str = '';
+    str += '<li class="date_li" id="date' + dateStr + '">';
+    str += '	<div class="date_li_div">';
+    str += '		<div class="date_line">';
+    str += '			<span class="timeline_date">' + dateStr + '</span>';
+    str += '		</div>';
+    str += '	</div>';
+    str += '</li>';
 
-	return str;
+    return str;
 }
 
 //function appendList(){
@@ -981,10 +1000,10 @@ function viewDate(dateStr){
 //	}, 100);
 //}
 
-function checkList(cnt){
+function checkList(cnt) {
 //	selectedSearchData = cnt;
-	getMessengerMessage($('#xrootmtr').text(), $('#selectUserInfo').attr('data-srcip'), $('#selectUserInfo').attr('data-usrid'), focusMsgId);
-	$('#selectCnt').html(cnt+1);
+    getMessengerMessage($('#xrootmtr').text(), $('#selectUserInfo').attr('data-srcip'), $('#selectUserInfo').attr('data-usrid'), focusMsgId);
+    $('#selectCnt').html(cnt + 1);
 }
 
 //function findList(id, line){
@@ -1015,165 +1034,167 @@ function checkList(cnt){
 //	}, 50);
 //}
 
-function checkLastMsg(){
-	var xrootmtr = $('#xrootmtr').text();
-	var srcip = $('#srcip').text();
-	var usr_id = $('#usr_id').text();
-	var lastMsgId = '';
-	var topHeight = 200; //영역을 제외한 상단 높이
-	var marginBottom = 55; //하단에 최소한으로 보여줄 픽셀 위치 (첫줄이 보이면 읽음)
-	//var displayHeight = $('#scrollArea').height(); //화면 출력 영역
+function checkLastMsg() {
+    var xrootmtr = $('#xrootmtr').text();
+    var srcip = $('#srcip').text();
+    var usr_id = $('#usr_id').text();
+    var lastMsgId = '';
+    var topHeight = 200; //영역을 제외한 상단 높이
+    var marginBottom = 55; //하단에 최소한으로 보여줄 픽셀 위치 (첫줄이 보이면 읽음)
+    //var displayHeight = $('#scrollArea').height(); //화면 출력 영역
 
-	//console.log("displayHeight = "+displayHeight);
+    //console.log("displayHeight = "+displayHeight);
 
-	$('#timeline_list div.list-group-item').each(function(){
-		var objOffsetTop = $(this).offset().top-topHeight;
-		var objHeight = $(this).height();
-		//console.log("objHeight = "+objHeight)
-		//console.log("objOffsetTop = "+objOffsetTop)
-		//console.log(objOffsetTop-(objHeight/2)-marginBottom)
-		if(objOffsetTop-(objHeight/2)-marginBottom < 0){
-			lastMsgId = $(this).parent().parent().attr('id');
-		}else{
-			return updateEmassMessengerAdminXrootMtr(xrootmtr, lastMsgId, srcip, usr_id);
-		}
-	});
+    $('#timeline_list div.list-group-item').each(function () {
+        var objOffsetTop = $(this).offset().top - topHeight;
+        var objHeight = $(this).height();
+        //console.log("objHeight = "+objHeight)
+        //console.log("objOffsetTop = "+objOffsetTop)
+        //console.log(objOffsetTop-(objHeight/2)-marginBottom)
+        if (objOffsetTop - (objHeight / 2) - marginBottom < 0) {
+            lastMsgId = $(this).parent().parent().attr('id');
+        } else {
+            return updateEmassMessengerAdminXrootMtr(xrootmtr, lastMsgId, srcip, usr_id);
+        }
+    });
 }
 
-function moveTargetHeight(id, moveFlag){
-	$('.lastReadLi').removeClass('lastReadLi');
-	var obj = $('#'+idIndicator(id));
-	if(obj.length != 0){
-		obj.addClass('lastReadLi');
+function moveTargetHeight(id, moveFlag) {
+    $('.lastReadLi').removeClass('lastReadLi');
+    var obj = $('#' + idIndicator(id));
+    if (obj.length != 0) {
+        obj.addClass('lastReadLi');
 
-		if(moveFlag){
-			//$("#scrollArea").animate({
-			//	scrollTop: obj.position().top
-			//}, 10);
-			$(location).attr('href', '#'+id);
-		}
-	}
+        if (moveFlag) {
+            //$("#scrollArea").animate({
+            //	scrollTop: obj.position().top
+            //}, 10);
+            $(location).attr('href', '#' + id);
+        }
+    }
 }
+
 var readTimeFlag = false;
-function updateEmassMessengerAdminXrootMtr(xrootmtr, lastMsgId, srcip, usr_id){
-	if(srcip == undefined && usr_id == undefined) return;
-	if(readTimeFlag) return true;
-	readTimeFlag = true;
-	moveTargetHeight(lastMsgId, false);
 
-	ui.get({
-		url : 'updateEmassMessengerAdminXrootMtr.xcn',
-		xRootMtr : xrootmtr,
-		msgId : lastMsgId,
-		srcip : srcip,
-		usr_id: usr_id,
-		asyncFlag : false,
-		success : function(data, total) {
-			return true;
-		},
-		error : function(status, message) {
-			ui.alertMsg(message);
-		},
-		complete : function() {
-			setTimeout(function(){
-				readTimeFlag = false;
-			}, 1000);
-		}
-	});
-	return false;
+function updateEmassMessengerAdminXrootMtr(xrootmtr, lastMsgId, srcip, usr_id) {
+    if (srcip == undefined && usr_id == undefined) return;
+    if (readTimeFlag) return true;
+    readTimeFlag = true;
+    moveTargetHeight(lastMsgId, false);
+
+    ui.get({
+        url: 'updateEmassMessengerAdminXrootMtr.xcn',
+        xRootMtr: xrootmtr,
+        msgId: lastMsgId,
+        srcip: srcip,
+        usr_id: usr_id,
+        asyncFlag: false,
+        success: function (data, total) {
+            return true;
+        },
+        error: function (status, message) {
+            ui.alertMsg(message);
+        },
+        complete: function () {
+            setTimeout(function () {
+                readTimeFlag = false;
+            }, 1000);
+        }
+    });
+    return false;
 }
 
 //테스트 데이터 생성
-function makeSampleData(){
-	for(var i=0 ; i < 50 ; i++) {
-		var obj = {};
-		obj.title = '김지훈 <응용개발팀>';
-		obj.time = '2016-08-06 11:45:22';
-		if(i%2 == 1) obj.content = 'Cras sit amet nibh<br>libero...Cras sit amet nibh libero..<br>.Cras sit amet nibh libero...Cras sit amet nibh liber<br><br><br>o...Cras sit amet nibh l<br>ibero...Cras sit amet nibh<br><br> libero...Cras sit amet nibh libero..<br><br><br>.Cras sit amet nibh libero...Cras sit amet nibh libero...Cras sit amet nibh libero...Cras sit amet nibh libero...Cras sit amet nibh libero...Cras sit amet nibh libero...Cras sit amet nibh libero...Cras sit amet nibh libero...Cras sit amet nibh libero...Cras sit amet nibh libero...Cras sit amet nibh libero...Cras sit amet nibh libero...Cras sit amet nibh libero...Cras sit amet nibh libero...Cras sit amet nibh libero...Cras sit amet nibh libero...Cras sit amet nibh libero...';
-		else obj.content = 'Cras sit amet nibh libero...';
-		detailDataSet.push(obj);
-	}
+function makeSampleData() {
+    for (var i = 0; i < 50; i++) {
+        var obj = {};
+        obj.title = '김지훈 <응용개발팀>';
+        obj.time = '2016-08-06 11:45:22';
+        if (i % 2 == 1) obj.content = 'Cras sit amet nibh<br>libero...Cras sit amet nibh libero..<br>.Cras sit amet nibh libero...Cras sit amet nibh liber<br><br><br>o...Cras sit amet nibh l<br>ibero...Cras sit amet nibh<br><br> libero...Cras sit amet nibh libero..<br><br><br>.Cras sit amet nibh libero...Cras sit amet nibh libero...Cras sit amet nibh libero...Cras sit amet nibh libero...Cras sit amet nibh libero...Cras sit amet nibh libero...Cras sit amet nibh libero...Cras sit amet nibh libero...Cras sit amet nibh libero...Cras sit amet nibh libero...Cras sit amet nibh libero...Cras sit amet nibh libero...Cras sit amet nibh libero...Cras sit amet nibh libero...Cras sit amet nibh libero...Cras sit amet nibh libero...Cras sit amet nibh libero...';
+        else obj.content = 'Cras sit amet nibh libero...';
+        detailDataSet.push(obj);
+    }
 }
 
-function idIndicator(id){
-	return id.fReplaceWord('.', '\\.');
+function idIndicator(id) {
+    return id.fReplaceWord('.', '\\.');
 }
 
-jQuery.fn.highlight = function(pat, type) {
-	function innerHighlight(node, pat, type) {
-		pat = pat.trim();
-		var skip = 0;
-		if (node.nodeType == 3) {
-			var pos = node.data.toUpperCase().indexOf(pat);
-			if (pos >= 0) {
-				var spannode = document.createElement('span');
-				spannode.name='spnHighlight';
-				if ( type.indexOf('K') > -1) {
-					spannode.className = 'clsHighlightKwds';
-				}
-				else {
-					spannode.className = 'clsHighlight';
-				}
-				if ( type.indexOf('B') > -1 ) {
-					if ( type.indexOf('K') > -1) {
-						spannode.style.backgroundColor = '#FFAD5B';
-						spannode.style.color = '#000000';
-						spannode.style.fontWeight = 'bold';
-					} else {
-						spannode.style.backgroundColor = '#13C7A3';
-						spannode.style.color = '#000000';
-						spannode.style.fontWeight = 'bold';
-					}
-				}
+jQuery.fn.highlight = function (pat, type) {
+    function innerHighlight(node, pat, type) {
+        pat = pat.trim();
+        var skip = 0;
+        if (node.nodeType == 3) {
+            var pos = node.data.toUpperCase().indexOf(pat);
+            if (pos >= 0) {
+                var spannode = document.createElement('span');
+                spannode.name = 'spnHighlight';
+                if (type.indexOf('K') > -1) {
+                    spannode.className = 'clsHighlightKwds';
+                } else {
+                    spannode.className = 'clsHighlight';
+                }
+                if (type.indexOf('B') > -1) {
+                    if (type.indexOf('K') > -1) {
+                        spannode.style.backgroundColor = '#FFAD5B';
+                        spannode.style.color = '#000000';
+                        spannode.style.fontWeight = 'bold';
+                    } else {
+                        spannode.style.backgroundColor = '#13C7A3';
+                        spannode.style.color = '#000000';
+                        spannode.style.fontWeight = 'bold';
+                    }
+                }
 
-				var sbit = node.splitText( pos );
-				sbit.splitText( pat.length );
-				spannode.nodeValue = sbit.data;
-				var sbitclone = sbit.cloneNode(true);
-				spannode.appendChild(sbitclone);
-				sbit.parentNode.replaceChild(spannode, sbit);
-				skip = 1;
-			}
-		} else if (node.nodeType == 1 && node.childNodes && !/(script|style)/i.test(node.tagName)) {
-			var cnt = node.childNodes.length;
-			if ( node.childNodes.length > 1000 ) cnt = 1000;
-			for ( var i = 0; i < cnt; ++i) {
-				i += innerHighlight(node.childNodes[i], pat, type);
-			}
-		}
-		return skip;
-	}
-	return this.each(function() {
-		innerHighlight(this, pat.toUpperCase(), type);
-	});
+                var sbit = node.splitText(pos);
+                sbit.splitText(pat.length);
+                spannode.nodeValue = sbit.data;
+                var sbitclone = sbit.cloneNode(true);
+                spannode.appendChild(sbitclone);
+                sbit.parentNode.replaceChild(spannode, sbit);
+                skip = 1;
+            }
+        } else if (node.nodeType == 1 && node.childNodes && !/(script|style)/i.test(node.tagName)) {
+            var cnt = node.childNodes.length;
+            if (node.childNodes.length > 1000) cnt = 1000;
+            for (var i = 0; i < cnt; ++i) {
+                i += innerHighlight(node.childNodes[i], pat, type);
+            }
+        }
+        return skip;
+    }
+
+    return this.each(function () {
+        innerHighlight(this, pat.toUpperCase(), type);
+    });
 };
 
-function HighlightGroup( ) {
-	setTimeout(function(){
-		var searchs = $('#searchStrInput').val().split(/\||\+|\s|\*|\"/);
-		if ( searchs.length > 0 ){
-			var group_list_obj = $("#group_list").find('code');
+function HighlightGroup() {
+    setTimeout(function () {
+        var searchs = $('#searchStrInput').val().split(/\||\+|\s|\*|\"/);
+        if (searchs.length > 0) {
+            var group_list_obj = $("#group_list").find('code');
 
-			for ( var i=0 ; i < searchs.length ; i++ ) {
-				if ( searchs[i] == '' ) continue;
-				$( group_list_obj ).highlight(searchs[i], 'BS');
-			}
-		}
-	}, 100);
+            for (var i = 0; i < searchs.length; i++) {
+                if (searchs[i] == '') continue;
+                $(group_list_obj).highlight(searchs[i], 'BS');
+            }
+        }
+    }, 100);
 }
 
-function Highlight( ) {
-	setTimeout(function(){
-		var searchs = $('#searchStrInput').val().split(/\||\+|\s|\*|\"/);
-		if ( searchs.length > 0 ){
-			var timeline_list_obj = $("#timeline_list").find('code');
+function Highlight() {
+    setTimeout(function () {
+        var searchs = $('#searchStrInput').val().split(/\||\+|\s|\*|\"/);
+        if (searchs.length > 0) {
+            var timeline_list_obj = $("#timeline_list").find('code');
 
-			for ( var i=0 ; i < searchs.length ; i++ ) {
-				if ( searchs[i] == '' ) continue;
-				$( timeline_list_obj ).highlight(searchs[i], 'BS');
-			}
-		}
-	}, 100);
+            for (var i = 0; i < searchs.length; i++) {
+                if (searchs[i] == '') continue;
+                $(timeline_list_obj).highlight(searchs[i], 'BS');
+            }
+        }
+    }, 100);
 }
 
 

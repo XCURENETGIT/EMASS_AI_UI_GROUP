@@ -808,8 +808,6 @@
 							<select class="w100" id="serviceTypeSelect" data-style="btn-default" multiple data-show-subtext="true"
 							        data-actions-box="true">
 							</select>
-
-
 							<input class="w100 mat8" type="text" id="searchStrInput" placeholder="<s:message code="common.msg.searchMsg"/>">
 						</div>
 						<h3 class="mat16">상세 검색</h3>

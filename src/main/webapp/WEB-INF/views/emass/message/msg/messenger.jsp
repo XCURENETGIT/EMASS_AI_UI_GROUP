@@ -716,7 +716,7 @@
             });
 
             $('#serviceTypeSelect').selectpicker({
-                container: 'body',
+                // container: 'body',
                 size: 15,
                 width: '300px',
                 noneSelectedText: condition.serviceAll,
@@ -727,7 +727,7 @@
             });
 
             $('#busiSelect').selectpicker({
-                container: 'body',
+                // container: 'body',
                 size: 15,
                 width: '300px',
                 searchLabel: true,
@@ -981,7 +981,7 @@
 	</script>
 </head>
 <div id="searchArea">
-	<div class="inner_messenger">
+	<div class="inner_messenger" >
 		<%--			검색 영역--%>
 		<div class="leftSearch p20">
 			<div class="leftSearchTab mat8">
@@ -1061,14 +1061,15 @@
 						<button class="tablinks" name="searchType" value="GD" id="GD">대화내용</button>
 					</div>
 				</div>
-				<div class="row" style="margin: 0px; margin-left: -1px; overflow: auto;">
-					<div class="list-group" id="group_list" style="margin-bottom: 0px;">
-						<a href="#" class="list-group-item list-group-item-action active" style="cursor:default;height:50px;">
-							<p class="list-group-item-text" style="line-height:30px;">
-								<i class="fa fa-envelope fa-sm"></i> <s:message code="eikon.msg.select.condition"/>
-							</p>
-						</a>
-					</div>
+				<div class="list-group" id="group_list" style="margin-bottom: 0px;">
+					<a href="#" class="list-group-item list-group-item-action active" style="cursor:default; padding:40px; margin:0 20px;">
+						<p class="list-group-item-text" style="line-height:30px; text-align: center">
+							<img src="<c:url value="/img/icon/img_nodata02.png"/>" width="72" height="72">
+						</p>
+						<p style="text-align: center">
+							<s:message code="eikon.msg.select.condition"/>
+						</p>
+					</a>
 				</div>
 			</div>
 			<%--					페이징--%>
