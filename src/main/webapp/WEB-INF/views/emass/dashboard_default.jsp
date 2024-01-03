@@ -157,7 +157,7 @@ var dashCondition = {
             ui.get({
                 url: 'getTodayPassportData.xcn',
                 success: function (data, total) {
-                    $('#TodayPasswordTotalCnt').html(data.total + "<span>건</span>");
+                    $('#TodayPasswordTotalCnt').html(data.total + "<span>건</span><span class='tit13'></span>");
                 },
                 error: function (status, message) {
                 },
@@ -170,7 +170,7 @@ var dashCondition = {
             ui.get({
                 url: 'TodayForeignerData.xcn',
                 success: function (data, total) {
-                    $('#TodayForeignerTotalCnt').html(data.total + "<span>건</span>");
+                    $('#TodayForeignerTotalCnt').html(data.total + "<span>건</span> <span class='tit13'></span>");
                 },
                 error: function (status, message) {
                 },
@@ -184,7 +184,7 @@ var dashCondition = {
             ui.get({
                 url: 'TodaySecurityData.xcn',
                 success: function (data, total) {
-                    $('#TodaySecurityTotalCnt').html(data.total + "<span>건</span>");
+                    $('#TodaySecurityTotalCnt').html(data.total + "<span>건</span> <span class='tit13'></span>");
                 },
                 error: function (status, message) {
                 },
@@ -198,7 +198,7 @@ var dashCondition = {
             ui.get({
                 url: 'TodayCardNumberData.xcn',
                 success: function (data, total) {
-                    $('#TodayCardNumberTotalCnt').html(data.total + "<span>건</span>");
+                    $('#TodayCardNumberTotalCnt').html(data.total + "<span>건</span> <span class='tit13'></span>");
                 },
                 error: function (status, message) {
                 },
@@ -213,7 +213,7 @@ var dashCondition = {
             ui.get({
                 url: 'getTodayDriveData.xcn',
                 success: function (data, total) {
-                    $('#TodayDriveTotalCnt').html(data.total + "<span>건</span>");
+                    $('#TodayDriveTotalCnt').html(data.total + "<span>건</span> <span class='tit13'></span>");
                 },
                 error: function (status, message) {
 
@@ -229,7 +229,7 @@ var dashCondition = {
             ui.get({
                 url: 'getExtensionModulation.xcn',
                 success: function (data, total) {
-                    $('#TodayExtensionModulationTotalCnt').html(data.total + "<span>건</span>");
+                    $('#TodayExtensionModulationTotalCnt').html(data.total + "<span>건</span> <span class='tit13'></span>");
                 },
                 error: function (status, message) {
 
@@ -589,7 +589,7 @@ var dashCondition = {
                 success: function (data, total) {
 
                     try {
-                        $('#TodayKeywordTotalCnt').html(data.total + "<span>건</span>");
+                        $('#TodayKeywordTotalCnt').html(data.total + "<span>건</span><span class='tit13'></span>");
                         // off('keyword.message.count');
                     } catch (e) {
                     }
@@ -610,7 +610,7 @@ var dashCondition = {
                 searchStr: '',
                 success: function (data, total) {
                     try {
-                        $('#todayNotWork').html(data.total + "<span>건</span>");
+                        $('#todayNotWork').html(data.total + "<span>건</span> <span class='tit13'></span>");
                         // off('riskBehavior.message.count');
                     } catch (e) {
                     }
@@ -630,7 +630,7 @@ var dashCondition = {
                 searchStr: '',
                 success: function (data, total) {
                     try {
-                        $('#getTodayRiskTotalCnt').html(data.total + "<span>건</span>");
+                        $('#getTodayRiskTotalCnt').html(data.total + "<span>건</span> <span class='tit13'></span>");
                         // off('riskBehavior.message.count');
                     } catch (e) {
                     }
@@ -650,7 +650,7 @@ var dashCondition = {
                 url: 'getTodayPatternPrivacy.xcn',
                 searchStr: '',
                 success: function (data, total) {
-                    $('#TodayPatternPrivacyTotalCnt').html(data.total + "<span>건</span>");
+                    $('#TodayPatternPrivacyTotalCnt').html(data.total + "<span>건</span> <span class='tit13'></span>");
                 },
                 error: function (status, message) {
                     //ui.alertMsg(message);
@@ -739,7 +739,7 @@ var dashCondition = {
             ui.get({
                 url: 'getFileSendTotal.xcn',
                 success: function (data, total) {
-                    $('#TodayfileSendTotalCnt').html(data.total + "<span>건</span>");
+                    $('#TodayfileSendTotalCnt').html(data.total + "<span>건</span> <span class='tit13'></span>");
                 },
                 error: function (status, message) {
                     //ui.alertMsg(message);
@@ -762,7 +762,7 @@ var dashCondition = {
                         }
                     }
                     console.log("serviceData: "+data)
-                    $('#todayGroupWareSum').html(todayGroupWareSum + "<span>건</span>");
+                    $('#todayGroupWareSum').html(todayGroupWareSum + "<span>건</span> <span class='tit13'></span>");
 	                printChart(data.facet);
 
                 },

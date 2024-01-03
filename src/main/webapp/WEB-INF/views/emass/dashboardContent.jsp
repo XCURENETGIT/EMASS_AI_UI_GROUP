@@ -200,7 +200,7 @@
 					</button>
 					<div class="#dashColor# bornone panel-heading click xcn_maincon_box" data-value="reserved">
 						<span class="#dashIcon#">#dashName#</span>
-						<p class="rightValue">-<span>건</span></p>
+						<p class="rightValue">-<span>건</span><span class='tit13'></span></p>
 					</div>
 					<div class="panel-footer #dashColor#">
 						<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59"><s:message code="condition.today_str"/></div>

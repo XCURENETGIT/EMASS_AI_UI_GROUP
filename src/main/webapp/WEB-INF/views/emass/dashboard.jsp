@@ -1045,7 +1045,7 @@
 
     function rtnGetSearchData(data, obj){
         if(obj.dashType == 'S'){
-            $('[data-gs-id='+obj.id+']').find('.rightValue').text(nvn(data.rightValue)+"건");
+            $('[data-gs-id=' + obj.id + ']').find('.rightValue').text(nvn(data.rightValue) + '건').append("<span class='tit13'></span>");
         }else if(obj.dashType == 'D'){
             $('[data-gs-id='+obj.id+']').find('.rightValue').text(nvn(data.rightValue));
             $('[data-gs-id='+obj.id+']').find('.leftValue').text(nvn(data.leftValue));

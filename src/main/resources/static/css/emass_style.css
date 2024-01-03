@@ -77,6 +77,9 @@ body,html {width:100%; height:100%;}
 .tit11 {background:url(../img/ico_main_tit11.png) top left no-repeat; font-size:14px; font-weight: 400; color:#111;padding-left:20px;}
 .tit12 {background:url(../img/ico_main_tit12.png) top left no-repeat; font-size:14px; font-weight: 400; color:#111;padding-left:20px;}
 
+
+.tit13 {background:url(../img/ico_page_right.png) top left no-repeat; font-size:14px; font-weight: 400; color:#111;padding-left:20px;}
+
 #chartAreaTitle {font-weight:600;}
 #xcn_mainWrap_new .xcn_con_area {position: relative;overflow:hidden;}
 /*#xcn_mainWrap_new .xcn_con_area {display: grid; grid-template-columns: 1fr 1fr 1fr 1fr ; column-gap: 20px;grid-template-rows: 100% }*/
@@ -671,8 +674,8 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .clearfix::after {content: "";clear: both; display: table;}
 
 /*메신저*/
-.sns_slack {background:url(../img/ico_sns_slack.png) left top no-repeat;}
-.sns_facebook {background:url(../img/ico_sns_facebook.png) left top no-repeat;}
+.sns_slack {background:url(../img/ico_sns_QSL.png) left top no-repeat;}
+.sns_facebook {background:url(../img/ico_sns_QFB.png) left top no-repeat;}
 .sns_line {background:url(../img/ico_sns_line.png) left top no-repeat;}
 .sns_chatGPT{background:url(../img/ico_sns_chatgpt.png) left top no-repeat;}
 

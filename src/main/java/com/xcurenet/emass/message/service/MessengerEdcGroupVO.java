@@ -54,8 +54,7 @@ public class MessengerEdcGroupVO {
 		ObjectMapper mapper = new ObjectMapper(); //임시
 
 		ElasticsearchAggregations elasticSearchAggregations = (ElasticsearchAggregations) resp.getAggregations();
-		System.out.println(detail);
-		/* 디테일 검색이 아닐 경우 어그리 게이션이 존재 하거나 또는 detail 이 false 일 경우 */
+		/* 집계쿼리 사용할때  */
 		if (null != elasticSearchAggregations) {
 			Aggregations mainAggregations = elasticSearchAggregations.aggregations();
 			if (null == mainAggregations ) return;
@@ -100,8 +99,7 @@ public class MessengerEdcGroupVO {
 			}
 
 			this.numFound = total;
-
-		} else {
+		} else { //집계쿼리 사용하지 않을때
 			if (detail) {
 				resp.getSearchHits().stream().map(org.springframework.data.elasticsearch.core.SearchHit::getContent).forEach(s -> {
 					this.groups.add(reDefinedDetail(s, adminId, original));
@@ -113,7 +111,6 @@ public class MessengerEdcGroupVO {
 			}
 			this.numFound = resp.getTotalHits();
 		}
-
 	}
 
 	/**

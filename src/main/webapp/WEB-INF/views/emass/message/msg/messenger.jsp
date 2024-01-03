@@ -1061,7 +1061,7 @@
 						<button class="tablinks" name="searchType" value="GD" id="GD">대화내용</button>
 					</div>
 				</div>
-				<div class="row" style="margin: 0px; margin-left: -1px; overflow: auto; height: calc(100% - 220px);">
+				<div class="row" style="margin: 0px; margin-left: -1px; overflow: auto;">
 					<div class="list-group" id="group_list" style="margin-bottom: 0px;">
 						<a href="#" class="list-group-item list-group-item-action active" style="cursor:default;height:50px;">
 							<p class="list-group-item-text" style="line-height:30px;">
@@ -1152,7 +1152,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="row" style="height: calc(100% - 160px);padding:0 3px 0 5px;">
+				<div class="row" style="margin: 0px; margin-left: -1px; overflow: auto;">
 					<div id="scrollArea" class="clusterize-scroll">
 						<div class="messenger_prev" title="<s:message code='eikon.msg.show.prev'/>">+</div>
 						<div id="timeline_list" style="padding-right:10px;">
