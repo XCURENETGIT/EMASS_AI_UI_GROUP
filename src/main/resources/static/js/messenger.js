@@ -551,7 +551,7 @@ function getMessengerGroupList(page) {
         limit: groupPageBreak,
         success: function (data, total) {
             rtnGroupList(data.groups, 'G');
-            rtnGroupPage(data.groups.length, page, 'G');
+            rtnGroupPage(total, page, 'G');
             HighlightGroup();
         },
         error: function (status, message) {

@@ -10,6 +10,7 @@ import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
+import org.elasticsearch.search.aggregations.metrics.ParsedCardinality;
 import org.elasticsearch.search.aggregations.metrics.TopHits;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -62,15 +63,20 @@ public class MessengerEdcGroupVO {
 			Map<String, Aggregation> mainAggsMap = mainAggregations.getAsMap();
 			Map<String,Aggregations> groupAggsMap = new HashMap<>();  // 추출할 그룹 aggs
 
-
 			long total = 0;
 			//메인 Aggs의 sub Aggs 추출
 			for(Map.Entry<String, Aggregation> map : mainAggsMap.entrySet()) {
 				Aggregation agg =  map.getValue();
-				Terms terms = mainAggregations.get(agg.getName());
-				for(Terms.Bucket bucket : terms.getBuckets()){
-					total = total + bucket.getDocCount();
-					groupAggsMap.put(bucket.getKeyAsString(),bucket.getAggregations());
+				Aggregation mainAgg = mainAggregations.get(agg.getName());
+				if (mainAgg instanceof ParsedCardinality) {
+					ParsedCardinality cardinality = mainAggregations.get(agg.getName());
+					total = cardinality.getValue();
+				} else if (mainAgg instanceof Terms) {
+					Terms terms = mainAggregations.get(agg.getName());
+					for (Terms.Bucket bucket : terms.getBuckets()) {
+						total = total + bucket.getDocCount();
+						groupAggsMap.put(bucket.getKeyAsString(), bucket.getAggregations());
+					}
 				}
 			}
 
@@ -89,7 +95,7 @@ public class MessengerEdcGroupVO {
 				org.elasticsearch.search.SearchHit[] hits  = topHits.getHits().getHits();
 				for (SearchHit hit : hits) {
 					Map<String, Object> map = hit.getSourceAsMap();
-					if (map.size() > 0) {
+					if (!map.isEmpty()) {
 						map.put("msgid",hit.getId());
 						SolrEdcVO solrEdcVO = mapper.convertValue(map, SolrEdcVO.class);
 						if(detail) this.groups.add(reDefinedDetail(solrEdcVO,  adminId, original));
