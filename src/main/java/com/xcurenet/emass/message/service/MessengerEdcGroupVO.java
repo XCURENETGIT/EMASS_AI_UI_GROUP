@@ -54,7 +54,9 @@ public class MessengerEdcGroupVO {
 		ObjectMapper mapper = new ObjectMapper(); //임시
 
 		ElasticsearchAggregations elasticSearchAggregations = (ElasticsearchAggregations) resp.getAggregations();
-		if (null != elasticSearchAggregations ) {
+
+		/* 디테일 검색이 아닐 경우 */
+		if (null != elasticSearchAggregations || !detail ) {
 			Aggregations mainAggregations = elasticSearchAggregations.aggregations();
 			if (null == mainAggregations ) return;
 
@@ -91,14 +93,18 @@ public class MessengerEdcGroupVO {
 					if (map.size() > 0) {
 						map.put("msgid",hit.getId());
 						SolrEdcVO solrEdcVO = mapper.convertValue(map, SolrEdcVO.class);
-						if(detail) this.groups.add(reDefinedDetail(solrEdcVO,  adminId, original));
-						else  this.groups.add(reDefined(solrEdcVO, adminId,0L));
+						this.groups.add(reDefined(solrEdcVO, adminId,0L));
 					}
 				}
 			}
 
-			this.numFound = total;
+		}else if(detail){
+			/* 메신저 디테일 검색*/
+			resp.getSearchHits().stream().map(org.springframework.data.elasticsearch.core.SearchHit::getContent).forEach(s -> {
+				this.groups.add(reDefinedDetail(s,  adminId, original));
+			});
 
+			this.numFound = resp.getTotalHits();
 		}
 
 
