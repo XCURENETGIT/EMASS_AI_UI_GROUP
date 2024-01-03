@@ -369,11 +369,11 @@ public class HomeController {
 		return "/emass/message/msg/messenger";
 	}
 
-	@RequestMapping(value = "/ems/msg/messenger_test.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/ems/msg/messengerdo", method = RequestMethod.GET)
 	@Description("메시징")
 	public String messenger_test(Locale locale, Model model) {
 		model.addAttribute("headerYn","N");
-		return "/emass/message/msg/messenger_test";
+		return "/emass/message/msg/messenger";
 	}
 
 	@RequestMapping(value = "/ems/msg/generativeAi.do", method = RequestMethod.GET)

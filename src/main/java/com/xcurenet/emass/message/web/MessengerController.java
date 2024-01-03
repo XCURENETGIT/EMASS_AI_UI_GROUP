@@ -107,19 +107,21 @@ public class MessengerController {
 		sq.setParam("group.facet", true);
 		sq.setParam("group.ngroups", true);
 		sq.setParam("group.field", "xrootmtr");
-
 		sq.setParam("facet", true);
 		sq.setParam("facet.field", "xrootmtr");
 		sq.setParam("facet.limit", "-1");
 		sq.setParam("facet.mincount", "1");
 
-
 		sq.setStart(Common.nvz(param.get("offset"), 0));
 		sq.setRows(Common.nvz(param.get("limit"), 100));
+
+
 		sq.setSort("ctime", ORDER.desc);
 		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id");
 
 		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request));
+		System.out.println("total: "+solrEdcGroupVO.getNumFound());
+		System.out.println("groupTotal: "+solrEdcGroupVO.getGroups().size());
 		solrEdcGroupVO.setGroups(setCount(solrEdcGroupVO.getGroups(), Common.getAdminId(request)));
 		return new XcnResponseVO(XcnRspCode.OK, solrEdcGroupVO, solrEdcGroupVO.getNumFound());
 	}
@@ -369,7 +371,7 @@ public class MessengerController {
 
 	@RequestMapping(value = "/getGenerativeMessage.xcn")
 	@Description("생성형ai 대화내용 목록 조회")
-/*	@AuditOperation(Operation.SEARCH)*/
+	/*	@AuditOperation(Operation.SEARCH)*/
 	@ResponseBody
 	public XcnResponseVO getGenerativeMessage(final HttpServletRequest request, final HttpSession session) throws Exception {
 		JSONObject param = Common.getParam(request);

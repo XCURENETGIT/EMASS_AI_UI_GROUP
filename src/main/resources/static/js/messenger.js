@@ -25,6 +25,7 @@ var resizeTimer;
 
 var detailSearchFlag=true;
 
+
 var eikon = {
 	init : function() {
 		//makeSampleData();
@@ -75,7 +76,7 @@ var eikon = {
 		});
 	},
 	getMessengerList : function(page){
-		var searchType = $('input:radio[name=searchType]:input:checked').val();
+		var searchType =  $('[name="searchType"]').val();
 		$('#startsubdatepicker').data("DateTimePicker").date( $('#startdatepicker').data("DateTimePicker").date() );
 		$('#endsubdatepicker').data("DateTimePicker").date( $('#enddatepicker').data("DateTimePicker").date() );
 		if( searchType == 'G'){
@@ -85,7 +86,7 @@ var eikon = {
 		}
 	},
 	getGenerativeList : function(page){
-		var searchType = $('input:radio[name=searchType]:input:checked').val();
+		var searchType =  $('[name="searchType"]').val();
 		getGenerativeGroupList(page);
 	},
 	getMessengerDetailList : function(xRootmtr, msgid){
@@ -144,7 +145,7 @@ var eikon = {
 		var startDt = $('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 		var endDt = $('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 
-		var searchType = $('input:radio[name=searchType]:input:checked').val();
+		var searchType = $('[name="searchType"]').val();
 		if(searchType == null || searchType == undefined) searchType = 'G';
 		if( searchType == 'G'){
 			getMessengerMessageTotal(xRootmtr, srcip, startDt, endDt, usr_id, '');
@@ -464,6 +465,8 @@ function rtnGroupList(data, type){
 
 		var className='';
 		if( isConsent() && $('#consentNo').val() == '') className='cursor-default';
+		if( isConsent() && $('#consentNo').val() == '') className='cursor-default';
+		if( isConsent() && $('#consentNo').val() == '') className='cursor-default';
 		str += '<a href="#" class="list-group-item list-group-item-action '+className+'" xrootmtr="'+nvl(data[i].xrootmtr)+'" msgid="'+data[i].msgid+'" srcip="'+data[i].srcip+'" usrid="'+data[i].usr_id+'" style="min-height:60px;padding: 5px 15px;">';
 		str += '<div class="pull-xs-right" style="font-size: 12px; margin-left: 15px;">'+data[i].ctime+'</div>';
 
@@ -487,6 +490,8 @@ function rtnGroupList(data, type){
 		str += "</span>";
 		str += '</p></a>';
 	}
+
+	//데이터 없을때
 	if( data.length == 0 ){
 		str += '<a href="#" class="list-group-item list-group-item-action active" style="cursor:default;height:50px;">';
 		str += '	<p class="list-group-item-text" style="line-height:30px;">';
@@ -524,6 +529,8 @@ function getMessengerGroupList (page){
 		offset : offset,
 		limit : groupPageBreak,
 		success : function(data, total) {
+			console.log("page: "+page);
+			console.log(data.groups);
 			rtnGroupList(data.groups, 'G');
 			rtnGroupPage(total, page, 'G');
 			HighlightGroup( );
@@ -599,15 +606,50 @@ function getGenerativeGroupList (page){
 
 function rtnGroupPage(total, page, searchType){
 	$('#groupResultCnt').html(total.comma());
-	$('#groupPage').html(getPage2(total, page, groupPageBreak, 'eikon.getMessengerList'));
+	$('#groupPage').html(getPage3(total, page, groupPageBreak, 'eikon.getMessengerList'));
 
-	$('#groupPage a').addClass('btn');
-	$('#groupPage a').addClass('btn-sm');
-	$('#groupPage a').addClass('btn-primary');
-	$('#groupPage a').attr('role','button');
-	$('#groupPage .direction').css('margin-right','4px');
-	$('#groupPage strong').css('padding-left','10px');
-	$('#groupPage strong').css('padding-right','10px');
+}
+function getPage3(total, pageCount, listSize, rtnMethod){
+	var str = "";
+	var pageSizeNo = 5; // 화면에 표시할 페이지 수
+	var lastPage = Math.ceil(total / listSize); // 전체 페이지 수
+	var screenPageNo = Math.ceil(listSize / pageSizeNo); // 전체 스크린(페이지) 수 ,
+	var currentScreenPageNo = Math.ceil(pageCount / pageSizeNo); // 사용자가 현재
+	var startPageNum = (currentScreenPageNo * pageSizeNo - pageSizeNo) + 1; // 페이지
+	var endPageNum = startPageNum + pageSizeNo - 1; // 페이지 끝 넘버
+	if (endPageNum > lastPage)
+		endPageNum = lastPage;
+
+	if (lastPage == 0) {
+		return '';
+	}
+	if (screenPageNo == 0)
+		return;
+
+	str += '<div class="pagination">';
+
+	if (pageCount > pageSizeNo)
+		str += '<a href="#" onclick="' + rtnMethod + '(' + (endPageNum - pageSizeNo) + ')" class="direction"><img src="../img/ico_page_left2.png" alt=""></a>';
+	else
+		str += '<a href="#" class="direction" style="cursor:default"><img src="../img/ico_page_left2.png" alt=""></a>';
+
+	for (var i = startPageNum; i <= endPageNum; i++) {
+		if (i == pageCount)
+			str += '<a class="active" onclick="' + rtnMethod + '(' + i + ',' + pageCount + ')">' + i + '</a>';
+		else
+			str += '<a href="#" onclick="' + rtnMethod + '(' + i + ',' + pageCount + ')">' + i + '</a>';
+	}
+
+
+
+	if (startPageNum + pageSizeNo <= lastPage)
+		str += '<a href="#" onclick="' + rtnMethod + '(' + (startPageNum + pageSizeNo) + ')" class="direction"><img src="../img/ico_page_right2.png" alt=""></a>';
+	else
+		str += '<a href="#" class="direction" style="cursor:default"><img src="../img/ico_page_right2.png" alt=""></a>';
+
+	str += '</div>';
+
+	return str;
 }
 
 

@@ -190,42 +190,105 @@
 
 </script>
 <div style="display:none;">
-
-
-
-
 	<div id="singleDataFormat">
 		<div class="grid-stack-item ui-draggable-handle">
 			<div style="display:none;" class="gridValues" data-dashMultiLeft="#dashMultiLeft#" data-dashMultiRight="#dashMultiRight#"></div>
-			<div class="grid-stack-item-content" style="width:300px; height:100px;">
-				<div class="panel">
-					<div>
-						<button type="button" class="customClose">
-							<span aria-hidden="true">&times;</span>
-						</button>
+			<div class="grid-stack-item-content">
+				<div class="xcn_maincon panel">
+					<button type="button" class="customClose">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="#dashColor# bornone panel-heading click" data-value="reserved">
+						<span class="#dashIcon#">#dashName#</span>
+						<p class="rightValue">-<span>건</span></p>
 					</div>
-					<div class="#dashColor# panel-heading">
-						<div class="panel-box">
-							<span class="#dashIcon# dash-title">#dashName#</span>
-							<p class="rightValue">12345<span>건</span>
-						</div>
-						</p>
-						<div class="panel-footer">
-							<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59"><s:message code="condition.today_str"/></div>
-							<div class="clearfix"></div>
-						</div>
+					<div class="panel-footer bornone">
+						<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59"><s:message code="condition.today_str"/></div>
+						<div class="clearfix"></div>
 					</div>
-
 				</div>
 			</div>
 		</div>
 	</div>
 
 
+	<%--	<div id="singleDataFormat">--%>
+	<%--		<div class="grid-stack-item ui-draggable-handle">--%>
+	<%--			<div style="display:none;" class="gridValues" data-dashMultiLeft="#dashMultiLeft#" data-dashMultiRight="#dashMultiRight#"></div>--%>
+	<%--			<div class="grid-stack-item-content">--%>
+	<%--				<div class="panel">--%>
+	<%--					<div>--%>
+	<%--						<button type="button" class="customClose">--%>
+	<%--							<span aria-hidden="true">&times;</span>--%>
+	<%--						</button>--%>
+	<%--					</div>--%>
+	<%--					<div class="#dashColor# panel-heading">--%>
+	<%--						<div class="panel-box">--%>
+	<%--							<span class="#dashIcon# dash-title">#dashName#</span>--%>
+	<%--							<p class="rightValue">12345<span>건</span>--%>
+	<%--						</div>--%>
+	<%--						</p>--%>
+	<%--						<div class="panel-footer">--%>
+	<%--							<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59"><s:message code="condition.today_str"/></div>--%>
+	<%--							<div class="clearfix"></div>--%>
+	<%--						</div>--%>
+	<%--					</div>--%>
+
+	<%--				</div>--%>
+	<%--			</div>--%>
+	<%--		</div>--%>
+	<%--	</div>--%>
+
+	<%--	<div id="singleDataFormat">--%>
+	<%--		<div class="grid-stack-item ui-draggable-handle">--%>
+	<%--			<div style="display:none;" class="gridValues" data-dashMultiLeft="#dashMultiLeft#" data-dashMultiRight="#dashMultiRight#"></div>--%>
+	<%--			<div class="grid-stack-item-content" style="width:300px; height:100px;">--%>
+	<%--				<!--<div class="panel">--%>
+	<%--					<div>--%>
+	<%--						<button type="button" class="customClose">--%>
+	<%--							<span aria-hidden="true">&times;</span>--%>
+	<%--						</button>--%>
+	<%--					</div>--%>
+	<%--					<div class="#dashColor# panel-heading">--%>
+	<%--						<div class="panel-box">--%>
+	<%--							<span class="#dashIcon# dash-title">#dashName#</span>--%>
+	<%--							<p class="rightValue">12345<span>건</span>--%>
+	<%--						</div>--%>
+	<%--						</p>--%>
+	<%--						<div class="panel-footer">--%>
+	<%--							<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59"><s:message code="condition.today_str"/></div>--%>
+	<%--							<div class="clearfix"></div>--%>
+	<%--						</div>--%>
+	<%--					</div>-->--%>
+	<%--				<div class="xcn_maincon panel">--%>
+	<%--					<button type="button" class="customClose">--%>
+	<%--						<span aria-hidden="true">&times;</span>--%>
+	<%--					</button>--%>
+
+	<%--					<div class="#dashColor# panel-heading bornone click" data-value="reserved">--%>
+	<%--						<span class="#dashIcon#">#dashName#</span>--%>
+	<%--						<p class="rightValue">-<span>건</span></p>--%>
+	<%--&lt;%&ndash;						<div class="maincon_flag01" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59"><s:message code="condition.today_str"/></div>&ndash;%&gt;--%>
+	<%--					</div>--%>
+
+	<%--					<div class="panel-footer">--%>
+	<%--						<div class="maincon_flag01" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59"><s:message code="condition.today_str"/></div>--%>
+	<%--&lt;%&ndash;						<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59"><s:message code="condition.today_str"/></div>&ndash;%&gt;--%>
+	<%--&lt;%&ndash;						<div class="clearfix"></div>&ndash;%&gt;--%>
+	<%--					</div>--%>
+
+	<%--				</div>--%>
+
+	<%--				</div>--%>
+	<%--			</div>--%>
+	<%--		</div>--%>
+	<%--	</div>--%>
+
+
 	<div id="chartDataFormat">
 		<div class="grid-stack-item ui-draggable-handle">
 			<div style="display:none;" class="gridValues" data-dashMultiLeft="#dashMultiLeft#" data-dashMultiRight="#dashMultiRight#"></div>
-			<div class="grid-stack-item-content"  style="min-width:420px; min-height:280px;">
+			<div class="grid-stack-item-content" style="min-width:420px; min-height:280px;">
 				<div class="panel #dashColor#Border">
 					<div class="panel-body">
 						<div class="row">
@@ -337,7 +400,8 @@
 	<div id="emptyDataFormat">
 		<div class="grid-stack-item ui-draggable-handle">
 			<div style="display:none;" class="gridValues" data-dashMultiLeft="#dashMultiLeft#" data-dashMultiRight="#dashMultiRight#"></div>
-			<div class="grid-stack-item-content grid-empty" </div>
+			<div class="grid-stack-item-content grid-empty"
 		</div>
 	</div>
+</div>
 </div>
