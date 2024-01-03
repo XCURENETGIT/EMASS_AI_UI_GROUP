@@ -57,18 +57,12 @@ body,html {width:100%; height:100%;}
 .mainlist div { min-height:82px;  border:1px solid #ddd; background-color: #fff;padding:16px;margin-bottom:12px;}
 .mainlist p {min-width:150px; font-size:30px; font-weight:700; color:#1A73F9;margin-top:4px; text-align: right;}
 .mainlist p span {font-size:14px; color:#555;margin-left:4px;}
-.mainlist div .tit01 {background:url(../img/ico_main_tit01.png) top left no-repeat; font-size:14px; font-weight: 400; color:#111;padding-left:20px;}
-.mainlist div .tit02 {background:url(../img/ico_main_tit02.png) top left no-repeat; font-size:14px; font-weight: 400; color:#111;padding-left:20px;}
-.mainlist div .tit03 {background:url(../img/ico_main_tit03.png) top left no-repeat; font-size:14px; font-weight: 400; color:#111;padding-left:20px;}
-.mainlist div .tit04 {background:url(../img/ico_main_tit04.png) top left no-repeat; font-size:14px; font-weight: 400; color:#111;padding-left:20px;}
-.mainlist div .tit05 {background:url(../img/ico_main_tit05.png) top left no-repeat; font-size:14px; font-weight: 400; color:#111;padding-left:20px;}
-.mainlist div .tit06 {background:url(../img/ico_main_tit06.png) top left no-repeat; font-size:14px; font-weight: 400; color:#111;padding-left:20px;}
-.mainlist div .tit07 {background:url(../img/ico_main_tit07.png) top left no-repeat; font-size:14px; font-weight: 400; color:#111;padding-left:20px;}
-.mainlist div .tit08 {background:url(../img/ico_main_tit08.png) top left no-repeat; font-size:14px; font-weight: 400; color:#111;padding-left:20px;}
-.mainlist div .tit09 {background:url(../img/ico_main_tit09.png) top left no-repeat; font-size:14px; font-weight: 400; color:#111;padding-left:20px;}
-.mainlist div .tit10 {background:url(../img/ico_main_tit10.png) top left no-repeat; font-size:14px; font-weight: 400; color:#111;padding-left:20px;}
-.mainlist div .tit11 {background:url(../img/ico_main_tit11.png) top left no-repeat; font-size:14px; font-weight: 400; color:#111;padding-left:20px;}
-.mainlist div .tit12 {background:url(../img/ico_main_tit12.png) top left no-repeat; font-size:14px; font-weight: 400; color:#111;padding-left:20px;}
+
+.xcn_maincon {position: relative; margin-bottom:24px; }
+.xcn_maincon > div { position: relative; border:1px solid #ff0000; text-align: left; min-height:100px;  border:1px solid #ddd; background-color: #fff;padding:16px;}
+.xcn_maincon > div> p {min-width:150px; font-size:28px; font-weight:700; color:#1A73F9;margin-top:16px; text-align: right;}
+.xcn_maincon > div> p > span {font-size:14px; color:#555;margin-left:4px;}
+.maincon_flag01 {position: absolute; bottom: 24px; left:16px; display:inline-block; background-color:#777; color:#fff; font-size:12px; padding:2px;}
 
 .tit01 {background:url(../img/ico_main_tit01.png) top left no-repeat; font-size:14px; font-weight: 400; color:#111;padding-left:20px;}
 .tit02 {background:url(../img/ico_main_tit02.png) top left no-repeat; font-size:14px; font-weight: 400; color:#111;padding-left:20px;}

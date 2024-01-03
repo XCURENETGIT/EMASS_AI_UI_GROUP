@@ -191,14 +191,20 @@
 </script>
 <div style="display:none;">
 
-
+<!-- <div class="mainlist">
+		<div class="blueBg bornone click" data-value="reserved">
+			<span class="tit01">예약어 합계</span>
+			<p id="TodayKeywordTotalCnt">-<span>건</span>
+			</p>
+		</div>
+	</div>-->
 
 
 	<div id="singleDataFormat">
 		<div class="grid-stack-item ui-draggable-handle">
 			<div style="display:none;" class="gridValues" data-dashMultiLeft="#dashMultiLeft#" data-dashMultiRight="#dashMultiRight#"></div>
 			<div class="grid-stack-item-content" style="width:300px; height:100px;">
-				<div class="panel">
+				<!--<div class="panel">
 					<div>
 						<button type="button" class="customClose">
 							<span aria-hidden="true">&times;</span>
@@ -214,7 +220,19 @@
 							<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59"><s:message code="condition.today_str"/></div>
 							<div class="clearfix"></div>
 						</div>
+					</div>-->
+				<div class="xcn_maincon panel">
+					<button type="button" class="customClose">
+						<span aria-hidden="true">&times;</span>
+					</button>
+
+					<div class="#dashColor# panel-heading bornone click" data-value="reserved">
+						<span class="#dashIcon#">예약어 합계</span>
+						<p class="rightValue">-<span>건</span></p>
+						<div class="maincon_flag01" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59"><s:message code="condition.today_str"/></div>
 					</div>
+
+				</div>
 
 				</div>
 			</div>

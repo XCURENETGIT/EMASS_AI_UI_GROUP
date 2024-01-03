@@ -294,13 +294,14 @@ button.customClose {
 	cursor: pointer;
 	background: 0 0;
 	border: 0;
+	z-index:9999;
 	/*position: absolute;
 	top:-50px; right:-64px;*/
 
 }
 .customClose {
 position: absolute;
-	top: 8px;
+	top: 16px;
 	right:16px;
 	font-size: 21px;
 	font-weight: 700;
