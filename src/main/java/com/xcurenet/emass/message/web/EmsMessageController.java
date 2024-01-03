@@ -1539,6 +1539,17 @@ public class EmsMessageController {
 		return new XcnResponseVO(XcnRspCode.OK, emsMessageService.getSearchKeywordAuto(adminId, searchKeyword));
 	}
 
+
+	@RequestMapping(value = "/getRelationKeywordList.xcn")
+	@Description("연관검색어 자동완성 조회")
+	@ResponseBody
+	public XcnResponseVO getRelationKeywordList(final HttpServletRequest request, final HttpSession session) throws Exception {
+		String searchKeyword = Common.nvl(request.getParameter("searchKeyword"));
+
+		return new XcnResponseVO(XcnRspCode.OK, emsMessageService.getRelationKeywordList(searchKeyword));
+	}
+
+
 	@RequestMapping(value = "/getSearchKeywordList.xcn")
 	@Description("운용자별 검색어 조회")
 	@ResponseBody

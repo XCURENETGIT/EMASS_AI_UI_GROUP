@@ -142,6 +142,20 @@
             display:none;
             height:500px;
         }
+
+        /*연관 검색어 */
+        .relationKeywordDiv{
+            position: absolute;
+            top: 120px;
+            background-color: #f4f4f4;
+            z-index: 999;
+            left: 305px;
+            border: 1px solid #ccc;
+            width: 400px;
+            display:none;
+            height:500px;
+        }
+
         #searchKeywordGrid_statusbar {
             background-color: #fff;
         }
@@ -474,8 +488,10 @@
             $('#addSearchKeywordBtn').click(function(){insertSearchKeywordList( );});
             $('#delSearchKeywordBtn').click(function(){deleteSearchKeywordList( );});
 
+
             $('#searchStrInput').autocomplete({ delay : 0,
                 source : function(request, response) {
+                    /* 자동 완성 */
                     ui.get({
                         url : 'getSearchKeywordAuto.xcn',
                         searchKeyword : extractLast(request.term),
@@ -492,6 +508,13 @@
                         complete : function() {
                         }
                     });
+
+                    /* 연관 검색어 */
+                    if($(".relationKeywordBtn").is(":checked")) {
+                        getRelationKeywordList();
+                    };
+
+
                 },
                 search : function() {
                     var term = extractLast(this.value);
@@ -952,9 +975,28 @@
                 clickHeader($(this));
             });
 
+
+            /* 검색어 관리 */
             $('.showSearchKeywordBtn').click(function(){
                 $('#searchKeywordDiv').show();
             });
+
+
+            /* 연관 검색어 */
+            $(".relationKeywordBtn").change(function(){
+                if($(".relationKeywordBtn").is(":checked")){
+                    getRelationKeywordList();
+                    $('#relationKeywordDiv').show();
+                }else{
+                    $('#relationKeywordDiv').hide();
+                }
+            });
+
+            $('.relationKeywordCloseBtn').click(function(){
+                $('#relationKeywordDiv').hide();
+            });
+
+
 
             $('.showFilterBtn').click(function(){
                 $('#periodSetupMenu').hide();
@@ -1046,7 +1088,22 @@
                 }
             });
 
-            $("#filterHeaderDiv").draggable({
+
+            $("#searchKeywordDiv").draggable({
+                scroll: false,
+                containment: "#mainBodyArea",
+                start: function( event, ui ) {
+                    $('#contentListArea').css({pointerEvents:'none', 'user-select':'none'});
+                    $('#contentBodyArea').css({pointerEvents:'none', 'user-select':'none'});
+                },
+                stop: function( event, ui ) {
+                    $('#contentListArea').css({pointerEvents:'', 'user-select':''});
+                    $('#contentBodyArea').css({pointerEvents:'', 'user-select':''});
+                }
+            });
+
+
+            $("#relationKeywordDiv").draggable({
                 cancel: ".filterSearch, .saveFilterTab_tree",
                 scroll: false,
                 containment: "#mainBodyArea",
@@ -2178,6 +2235,23 @@
                 }
             });
         }
+
+
+        function getRelationKeywordList(){
+            ui.get({
+                url: 'getRelationKeywordList.xcn',
+                searchKeyword:  $('#searchStrInput').val(),
+                success: function (data, total) {
+                    relationKeywordGrid.setData(data);
+                },
+                error: function (status, message) {
+                    ui.alertMsg(message);
+                },
+                complete: function () {
+                }
+            });
+        }
+
     </script>
 </head>
 <body class="mini-navbar msgBody" style="overflow: auto;">
@@ -2192,32 +2266,38 @@
             <div class="msg_container">
                 <tiles:insertAttribute name="left" ignore="true"/>
 
+
                 <%-- 검색어 관리 --%>
-                <div id="searchKeywordDiv" class="searchKeywordDiv" style="display: block;position: absolute;top: 130px;right: 350px;display: none;text-align: left;z-index: 1040;border: 1px solid #555;background-color: white;width: 500px;height: 420px;font-size:12px;">
-                    <div class="modalHead">
-                        <s:message code="searchKeyword.management"/>
-                        <div style="float:right;padding-right:8px;">
-                            <span class="glyphicon glyphicon-remove searchKeywordCloseBtn" style="cursor:pointer" ></span>
-                        </div>
+                <div id="searchKeywordDiv" class="searchKeywordDiv">
+                    <div class="searchKeywordTab"><s:message code="searchKeyword.management"/>
+                        <div class="rightGroup"><span class="searchKeywordCloseBtn">&times;</span></div>
                     </div>
-                    <div class="modalCon">
-                        <div>
-                            <input class="condition_input_text" type="text" name="serch" placeholder="<s:message code="searchKeyword.search"/>" id="searchKeywordSearchStr" style="width:calc(100% - 150px);">
-                            <button class="search_btn" id="searchKeywordSearchBtn"><span><s:message code="common.search"/></span></button>
-                            <button class="msg_button" id="addSearchKeywordBtn"><span><s:message code="common.msg.add"/></span></button>
-                            <button class="msg_button" id="delSearchKeywordBtn"><span><s:message code="common.msg.delete"/></span></button>
-                            <div style="padding-left: 10px;">
-                                <span style="font-weight: bold; display: inline-block; margin-right: 10px;"><i class="fa fa-caret-right"></i> <s:message code="searchKeyword.inputMode"/></span>
-                                <label class="searchKeywordInputType"><input type="radio" name="searchKeywordInputType" value="S" checked="checked"> <span><s:message code="searchKeyword.single"/></span></label>
-                                <label class="searchKeywordInputType"><input type="radio" name="searchKeywordInputType" value="A"> <span>AND</span></label>
-                                <label class="searchKeywordInputType"><input type="radio" name="searchKeywordInputType" value="O"> <span>OR</span></label>
-                            </div>
-                        </div>
-                        <div id="searchKeywordGrid" class="slickGrid gridArea"></div>
+                    <div class="searchKeywordSearch" style="padding: 5px 5px 5px 10px;">
+                        <input class="condition_input_text" type="text" name="serch" placeholder="<s:message code="searchKeyword.search"/>" id="searchKeywordSearchStr" style="width:calc(100% - 150px);">
+                        <button class="search_btn" id="searchKeywordSearchBtn"><span><s:message code="common.search"/></span></button>
+                        <button class="msg_button" id="addSearchKeywordBtn"><span><s:message code="common.msg.add"/></span></button>
+                        <button class="msg_button" id="delSearchKeywordBtn"><span><s:message code="common.msg.delete"/></span></button>
                     </div>
+                    <div style="padding-left: 10px;">
+                        <span style="font-weight: bold; display: inline-block; margin-right: 10px;"><i class="fa fa-caret-right"></i> <s:message code="searchKeyword.inputMode"/></span>
+                        <label class="searchKeywordInputType"><input type="radio" name="searchKeywordInputType" value="S" checked="checked"> <span><s:message code="searchKeyword.single"/></span></label>
+                        <label class="searchKeywordInputType"><input type="radio" name="searchKeywordInputType" value="A"> <span>AND</span></label>
+                        <label class="searchKeywordInputType"><input type="radio" name="searchKeywordInputType" value="O"> <span>OR</span></label>
+                    </div>
+                    <div id="searchKeywordGrid" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px;min-height:200px;height:calc(100% - 100px);"></div>
                 </div>
 
-                <%-- 조건 보관함 --%>
+                <%-- 연관 검색어 리스트 --%>
+                <div id="relationKeywordDiv" class="relationKeywordDiv">
+                    <div class="searchKeywordTab"><s:message code="condition.relationKeyword"/>
+                        <div class="rightGroup"><span class="relationKeywordCloseBtn">&times;</span></div>
+                    </div>
+                    <div id="relationKeywordGrid" class="slickGrid gridArea"></div>
+                </div>
+
+
+
+            <%-- 조건 보관함 --%>
                 <div id="filterHeaderDiv" class="filterHeaderDiv">
                     <div class="filterHeaderTab"><s:message code="common.msg.conditionBox"/>
                         <div class="rightGroup">
@@ -2260,14 +2340,23 @@
                             <div class="condition_top_sub"></div>
                             <div class="condition_top">▲</div>
                             <div id="condition_detail" class="section_condition scrollbar-inner">
+                                <%-- 연관 검색어 표기--%>
+                                <div style="margin-top:8px;widht:100%;height:8px;">
+                                    <label style="float: left; padding-left: 14px; cursor: pointer">
+                                        <input class="relationKeywordBtn" type="checkbox"/>
+                                        <span><s:message code="condition.relationKeyword.view"/></span>
+                                    </label>
+                                    <div  style="float: right; padding-right: 22px;">
+                                        <a href="javascript:;" class="showSearchKeywordBtn"><i class="fa fa-cog"></i> <s:message code="searchKeyword.management"/></a>
+                                    </div>
+                                </div>
+
                                 <div class="condition_option" style="padding-top:15px;">
                                     <div class="condition_item">
                                         <div class="condition_title" style="float: left;"><i class="fa fa-caret-right"></i> <s:message code="condition.search_str"/>
                                             <img style="width: 16px;margin-bottom: 2px;" src="<c:url value="/img/icon/question.png"/>" class="areaBtn" id="searchHelpBtn">
                                         </div>
-                                        <div style="float: right; padding-right: 22px;">
-                                            <a href="javascript:;" class="showSearchKeywordBtn"><i class="fa fa-cog"></i> <s:message code="searchKeyword.management"/></a>
-                                        </div>
+
                                         <div style="margin-top: 5px;">
                                             <input class="condition_input_text" type="text" id="searchStrInput" name="serch" placeholder="<s:message code="common.msg.searchMsg"/>" style="width: 260px;height: 35px;border: 2px solid #337AB7;padding-left: 5px;">
                                         </div>
@@ -3154,6 +3243,31 @@
             }
         }
     };
+
+
+
+    /* 연관 검색어 */
+    var relationKeywordGrid = new Xgrid('relationKeywordGrid', contextRoot);
+    relationKeywordGrid.colAdd('keyword', '<s:message code="condition.relationKeyword.view"/>', 300, 'left', false, 'link');
+    relationKeywordGrid.loadHeader(true);
+    relationKeywordGrid.initData('<s:message code="common.msg.search.click"/>');
+    relationKeywordGrid.onClick = function () {
+        if (relationKeywordGrid.Col == relationKeywordGrid.ColIndex('keyword')) {
+            var inputType = $('[name=searchKeywordInputType]:checked').val();
+            var data = relationKeywordGrid.getRowData(relationKeywordGrid.Row);
+            if(inputType == 'S') {
+                $('#searchStrInput').val(data.keyword);
+            } else if(inputType == 'A') {
+                if($('#searchStrInput').val() != '') $('#searchStrInput').val($('#searchStrInput').val().trim() + ' ' + data.keyword);
+                else $('#searchStrInput').val(data.keyword);
+            } else {
+                if($('#searchStrInput').val() != '') $('#searchStrInput').val($('#searchStrInput').val().trim() + '|' + data.keyword);
+                else $('#searchStrInput').val(data.keyword);
+            }
+        }
+    };
+
+
 </script>
 </body>
 </html>

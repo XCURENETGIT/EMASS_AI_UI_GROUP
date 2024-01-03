@@ -18,6 +18,7 @@ import com.xcurenet.emass.message.service.vo.EmassKeywordData;
 import com.xcurenet.emass.message.service.vo.EmassMessageData;
 import com.xcurenet.emass.message.web.EmsAttachDownload;
 import com.xcurenet.minio.MinioFileAdapter;
+import com.xcurenet.searchWord.service.RelationKeywordVO;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -570,6 +571,13 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 	@Override
 	public List<CodeVO> getGenerativeList() {
 		return selectList("com.xcurenet.sqlmap.mappers.mysql.code.getGenerativeList");
+	}
+
+	@Override
+	public List<RelationKeywordVO> getRelationKeywordList(String searchKeyword) {
+		Map<String, String> param = new HashMap<>();
+		param.put("searchKeyword", searchKeyword);
+		return selectList("com.xcurenet.sqlmap.mappers.mysql.searchWord.getRelationKeywordList", param);
 	}
 
 

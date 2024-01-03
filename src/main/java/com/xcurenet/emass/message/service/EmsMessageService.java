@@ -1,6 +1,7 @@
 package com.xcurenet.emass.message.service;
 
 import com.xcurenet.code.service.CodeVO;
+import com.xcurenet.searchWord.service.RelationKeywordVO;
 
 import java.util.List;
 import java.util.Map;
@@ -70,4 +71,5 @@ public interface EmsMessageService {
 
 	public List<CodeVO> getGenerativeList();
 
+	List<RelationKeywordVO>  getRelationKeywordList(String searchKeyword);
 }
