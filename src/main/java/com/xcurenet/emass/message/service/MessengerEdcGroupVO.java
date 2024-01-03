@@ -97,6 +97,7 @@ public class MessengerEdcGroupVO {
 					}
 				}
 			}
+			this.numFound = total;
 
 		} else {
 			if (detail) {

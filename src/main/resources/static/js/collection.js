@@ -487,9 +487,7 @@ function makeFileList(data) {
         str += '<a href="#" onclick="downloadList(\'txt\')" class="txt_down">텍스트(txt)</a>';
         str += '<a href="#" onclick="downloadList(\'html\')" class="html_down">하이퍼텍스트(html)</a>';
         str += '<a href="#" class="excel_file_down">액셀(xlsx)+첨부파일</a>';
-        str += '</div></div><div class="myDropdown mal8"><span>전체파일 저장 &#9662;</span><div class="dropdown-content">';
-        str += '<a href="#">사용자 01</a>';
-        str += '<a href="#">사용자 02</a>';
+        str += '</div></div><div class="myDropdown mal8 downAllFile"><span>전체파일 저장 </span><div class="dropdown-content">';
         str += '</div></div></div>';
     }
 

@@ -201,6 +201,34 @@
                 hideSelect();
             });
 
+            $(document).on('click', '.downAllFile', function(){
+                var downloadFlag = false;
+                $('.downloadIcon').each ( function ( i, item ) {
+                    var attachHash = $(this).parents('p').attr('msgid');
+                    if( attachHash != ''){
+                        downloadFlag = true;
+                    }
+                });
+                if( !downloadFlag){
+                    alert('<s:message code="message.message.notfound.attach"/>');
+                    return;
+                }
+
+                var msgIds=[];
+                $('.downloadIcon').each ( function ( i, item ) {
+                    var msgId = $(this).parents('p').attr('msgid');
+                    msgIds.push(msgId);
+                });
+
+                var attachUrl = '<c:url value="/getEmassAttachInfo4DownHash.xcn"/>?msgIds='+msgIds.join(',');
+                try {
+                    AttachDown.location.href = attachUrl;
+                } catch (e) {
+                    AttachDown.src = attachUrl;
+                }
+            });
+
+
             $(document).on('click', '.downloadIcon', function(){
                 var msgId = $(this).parents('p').attr('msgid');
                 var attachHash = $(this).parents('p').attr('attachhash');

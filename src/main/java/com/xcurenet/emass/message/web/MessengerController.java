@@ -1427,6 +1427,7 @@ public class MessengerController {
 		if (list != null) {
 			EmsAttachDownload attachDown = new EmsAttachDownload();
 			for (MessengerGroupVO item : list) {
+
 				List<EmsAttachVO> attachs = emsMessageService.getEmassAttachInfo4Down(item.getMsgid(), null);
 				for (EmsAttachVO attach : attachs) {
 					InputStream in = null;
