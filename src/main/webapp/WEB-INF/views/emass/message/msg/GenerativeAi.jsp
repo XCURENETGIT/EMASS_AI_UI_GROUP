@@ -6,15 +6,32 @@
 	String firstAdminYn = Common.getFirstAdminYn(session);
 %>
 
+<script>
+	$(function() {
+		$("#xcn_toggleBtn").on("click", function() {
+			$("#xcn_Search").toggle("show");
+		})
+	})
 
-<script type="text/javascript" src="<c:url value="/js/collecton.js"/>"></script>
+	$(function() {
+		$("#showBtn").on("click", function() {
+			$("#xcn_Search2").show();
+		})
+		$("#xcn_toggleBtn2").on("click", function() {
+			$("#xcn_Search2").hide();
+		})
+	})
+</script>
 
+
+
+</script>
 <style>
-	/*
+
 	.messenger_prev{
 		position: relative;
 		width: 30px;
-		background-color: rgba(0, 94, 193, 0.32);
+		background: rgba(35, 36, 48, .3);
 		text-align: center;
 		margin-left: 50.5%;
 		z-index: 100000;
@@ -33,7 +50,7 @@
 		position: relative;
 		width: 30px;
 		top: 93%;
-		background-color: rgba(0, 94, 193, 0.32);
+		background: rgba(35, 36, 48, .3);
 		text-align: center;
 		margin-left: 50.5%;
 		z-index: 100000;
@@ -49,7 +66,7 @@
 		display:none;
 
 	}
-
+/*
 	.lastReadLi .timeline-panel {
 		background-color: #D3DBDC !important;
 	}*/
@@ -769,7 +786,7 @@
 	<div id="searchArea">
 		<div class="inner_messenger">
 			<%--			검색 영역--%>
-			<div class="leftSearch p20">
+			<div class="leftSearch p20" id="xcn_Search">
 				<div class="leftSearchTab mat8">
 					<button class="active" onclick="openCity('Tab01')">메시지 검색</button>
 					<!--<button onclick="openCity('Tab02')">탭 비활성</button>-->
@@ -809,51 +826,52 @@
 							<select id="busiSelect" class="w100 mat8" data-style="btn-default btn-sm" multiple data-show-subtext="true"
 							                                                                         data-live-search="true" data-actions-box="true"></select>
 
-							<div id="selectedCodeTitle"></div>
-
 							<p class="mat8 formText btnform" data-toggle="buttons">
 								<span class="tit">부서 선택</span>
 								<button type="button" class="btn01" id="dept"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
 										code="common.org.choose.dept"/></button>
 								<span id="deptSelectedArea" class="codeSelectedBtn">
-										<button type="button" class="btn"  style="z-index: 2;">0</button>
+										<button type="button" class="btn num_add bornone"  style="z-index: 2;">0</button>
 									</span>
 								<input type="hidden" id="deptStr" class="selectedTitle">
 								<input type="hidden" id="deptVal">
 							</p>
+							<div id="selectedCodeTitle" class="infotxt"></div>
 							<input type="text" class="w100 mat8"  placeholder="<s:message code="eikon.input.participation"/>" id="senders">
 						</div>
 					</div>
 
 					<div class="fixBtn">
-						<div class="checkbox">
-							<label><input type="checkbox" name="readYn" id="readYn"><s:message code="eikon.msg.notRead"/></label>
+						<div class="xcn_checkbox">
+							<input type="checkbox" name="readYn" id="readYn"><label><s:message code="eikon.msg.notRead"/></label>
 						</div>
 						<button class="fullbtn" type="button" accesskey="Q" id="searchBtn">검색</button>
 					</div>
 				</div>
 			</div>
 			<%--			검색 끝!--%>
+
 			<%--			검색 결과 영역--%>
-			<div class="messengerList">
+			<div class="messengerList" >
 				<div class="messengerBox">
-					<div class="subTit">
-						<h2 class="ma_none">
-							<span class="xcnTooltip" style="font-weight: 700; font-size: 24px;">
-								<s:message code="DATA_MONITOR.GENERATIVEAI_SERVICE"/>
-                                    </span>
+					<div class="subTit p12">
+						<h2 class="ma_none pb4">
+							<button id="xcn_toggleBtn"><i class="fa fa-bars"></i></button> <s:message code="DATA_MONITOR.GENERATIVEAI_SERVICE"/>
 						</h2>
 					</div>
-					<div class="bortop_dd  borbottom_dd pt16">
-						<div class="subtab pl20 pr20 ">
+					<div class="bortop_dd pt16 pl20 pr20">
+						<div class="subtab">
 							<button class="active">대화방</button>
 						</div>
 					</div>
-					<div class="row" style="margin: 0px; margin-left: -1px; overflow: auto; height: calc(100% - 220px);">
+					<div>
 						<div class="list-group" id="group_list" style="margin-bottom: 0px;">
-							<a href="#" class="list-group-item list-group-item-action active" style="cursor:default;height:50px;">
-								<p class="list-group-item-text" style="line-height:30px;">
-									<i class="fa fa-envelope fa-sm"></i> <s:message code="eikon.msg.select.condition"/>
+							<a href="#" class="list-group-item list-group-item-action active" style="cursor:default; padding:40px; margin:0 20px;">
+								<p class="list-group-item-text" style="line-height:30px; text-align: center">
+									<img src="<c:url value="/img/icon/img_nodata02.png"/>" width="72" height="72">
+								</p>
+								<p style="text-align: center">
+									<s:message code="eikon.msg.select.condition"/>
 								</p>
 							</a>
 						</div>
@@ -876,19 +894,17 @@
 			<div class="chatList">
 				<div class="chatBox">
 					<div class="top">
-						<div style="display: flex">
-							<div style="width: 300px;">
-								<span id="selectUserInfo"  data-srcip="" data-name="" data-usrid=""><s:message code="condition.user"/></span>
-							</div>
+						<div >
+							<span id="selectUserInfo"  class="chatid" data-srcip="" data-name="" data-usrid=""><s:message code="condition.user"/></span>
 						</div>
 
 						<div class="chatDate">
 							<div class="searchSub" >
-									<input class="w30 txt_center" type="date" id="startSubDt"  value="2023-11-20"> ~ <input class="w30 txt_center" type="date" id="endSubDt"  value="2023-11-20">
+									<input class="w40 txt_center" type="date" id="startSubDt"  value="2023-11-20"> ~ <input class="w40 txt_center" type="date" id="endSubDt"  value="2023-11-20">
 							</div>
 
 							<div class="searchSub txt_right">
-								<input type="text" class="w60" placeholder="<s:message code="condition.research"/>" id="searchMsgStrInput">
+								<input type="text" class="w70" placeholder="<s:message code="condition.research"/>" id="searchMsgStrInput">
 								<button class="form_btn01 blackBg" type="button" accesskey="M" id="searchMsgBtn">검색</button>
 							</div>
 						</div>
@@ -898,7 +914,7 @@
 					<%--					채팅 검색 부분 끝!--%>
 
 					<%--					채팅 본문 내용 보이는 구간 시작  -> ***** 아직 안함 --%>
-					<div style="padding-bottom: 10px;">
+					<div style="margin-top:-20px;">
 						<div class="form-group form-inline">
 
 
@@ -924,15 +940,12 @@
 							</div>
 						</div>
 					</div>
-					<div class="row2" style="height: calc(100% - 160px);padding:0 3px 0 5px;">
-						<s:message code="eikon.msg.total.cnt"/> : <span id="groupSubResultCnt">0</span>
-
-
+					<div class="row2" style="height: calc(100% - 160px);">
 						<div id="scrollArea" class="clusterize-scroll">
-							<div class="messenger_prev" title="<s:message code='eikon.msg.show.prev'/>">+</div>
+							<div class="messenger_prev" style="margin-bottom:16px" title="<s:message code='eikon.msg.show.prev'/>">+</div>
 							<div id="timeline_list">
-								<div class="timeline-panel" style="padding-left:10px;">
-									<div class="list-group-item cursor-text">
+								<div class="timeline-panel">
+									<div class="list-group-item02 cursor-text">
 										<div class="timeline-body" style="text-align: center;">
 											<s:message code="eikon.select.data"/>
 										</div>
@@ -942,6 +955,9 @@
 						</div>
 					</div>
 					<div class="messenger_next" title="<s:message code='eikon.msg.show.next'/>">+</div>
+					<div class="p16 white">
+						<s:message code="eikon.msg.total.cnt"/> : <span id="groupSubResultCnt" class="blue03">0</span>
+					</div>
 				<%--	<div class="chat active-chat" data-chat="person2">
 						<div class="conversation-start">
 							<span>Today, 5:38 PM</span>
@@ -964,12 +980,18 @@
 				</div>
 			<!-- 채팅 끝! -->
 			<!-- 첨부파일 -->
-			<div class="rightFile p20">
+			<div class="rightFile p20" id="xcn_Search2">
 				<div class="subtab">
-					<button class="active">첨부파일</button>
+					<button class="active">첨부파일
+						<span id="xcn_toggleBtn2" style="font-size:16px; opacity: 0.7; padding:4px;">x</span>
+					</button>
+
 				</div>
-				<div class="rightFileList">
+				<div class="rightFileList" >
 				</div>
+			</div>
+			<div style="position:absolute; top:20px; right:16px; z-index: 999999">
+				<button id="showBtn" class="table_btn02">&#8636;</button>
 			</div>
 			<%--			첨부파일 끝!!--%>
 		</div>
@@ -989,3 +1011,40 @@
 	<input type="hidden" name="oldCode" id="oldCode"></input>
 	<input type="hidden" name="oldConm" id="oldConm"></input>
 </form>
+
+<script>
+	document.querySelector(".chat[data-chat=person2]").classList.add("active-chat");
+	document.querySelector(".person[data-chat=person2]").classList.add("active");
+
+	let friends = {
+				list: document.querySelector("ul.people"),
+				all: document.querySelectorAll(".messengerBox .person"),
+				name: ""
+			},
+			chat = {
+				container: document.querySelector(".chatList .chatBox"),
+				current: null,
+				person: null,
+				name: document.querySelector(".chatList .chatBox .top .chatid")
+			};
+
+	friends.all.forEach((f) => {
+		f.addEventListener("mousedown", () => {
+			f.classList.contains("active") || setAciveChat(f);
+		});
+	});
+
+	function setAciveChat(f) {
+		friends.list.querySelector(".active").classList.remove("active");
+		f.classList.add("active");
+		chat.current = chat.container.querySelector(".active-chat");
+		chat.person = f.getAttribute("data-chat");
+		chat.current.classList.remove("active-chat");
+		chat.container
+				.querySelector('[data-chat="' + chat.person + '"]')
+				.classList.add("active-chat");
+		friends.name = f.querySelector(".chatid").innerText;
+		chat.name.innerHTML = friends.name;
+	}
+
+</script>

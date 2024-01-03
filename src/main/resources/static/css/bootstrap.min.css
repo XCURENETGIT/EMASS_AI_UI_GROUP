@@ -5504,12 +5504,20 @@ keyframes progress-bar-stripes {
 .list-group-item {
 	position: relative;
 	display: block;
+
 	padding: 10px 15px;
 	margin-bottom: -1px;
-	background-color: #fff;
-	border: 1px solid #ddd
+	background-color: #f8f8f8;
+	/*border: 1px solid #ddd*/
 }
 
+.list-group-item02 {
+	margin:0 16px;
+	color:#fff;
+	background: rgba(1, 1, 1, .1);
+	padding:20px;
+	margin-top:-24px;
+}
 .list-group-item:first-child {
 	border-top-left-radius: 4px;
 	border-top-right-radius: 4px
@@ -5556,9 +5564,7 @@ button.list-group-item {
 
 .list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover {
 	z-index: 2;
-	color: #fff;
-	background-color: #337ab7;
-	border-color: #337ab7
+	color: #555;
 }
 
 .list-group-item.active .list-group-item-heading, .list-group-item.active .list-group-item-heading>.small, .list-group-item.active .list-group-item-heading>small, .list-group-item.active:focus .list-group-item-heading, .list-group-item.active:focus .list-group-item-heading>.small, .list-group-item.active:focus .list-group-item-heading>small, .list-group-item.active:hover .list-group-item-heading, .list-group-item.active:hover .list-group-item-heading>.small, .list-group-item.active:hover .list-group-item-heading>small {
@@ -5566,7 +5572,7 @@ button.list-group-item {
 }
 
 .list-group-item.active .list-group-item-text, .list-group-item.active:focus .list-group-item-text, .list-group-item.active:hover .list-group-item-text {
-	color: #c7ddef
+	color: #555
 }
 
 .list-group-item-success {
