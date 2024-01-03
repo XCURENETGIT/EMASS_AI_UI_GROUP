@@ -10,6 +10,10 @@
 	<title></title>
 
 	<style type="text/css">
+		.grid-stack-item {
+			width: 100%;
+			height: 100%;
+		}
 		/*
                 .radio-inline.c-radio {
                     margin-left: 0px;
@@ -28,10 +32,7 @@
                     width: 1100px;
                 }
 
-                .grid-stack-item {
-                    width: 100%;
-                    height: 100%;
-                }
+
 
                 .dashIcon, .menuIcon {
                     font-size: 18px;
