@@ -58,45 +58,47 @@ public class MessengerEdcGroupVO {
 		/* 디테일 검색이 아닐 경우 어그리 게이션이 존재 하거나 또는 detail 이 false 일 경우 */
 		if (null != elasticSearchAggregations) {
 			Aggregations mainAggregations = elasticSearchAggregations.aggregations();
-			if (null == mainAggregations) return;
+			if (null == mainAggregations ) return;
 
 			Map<String, Aggregation> mainAggsMap = mainAggregations.getAsMap();
-			Map<String, Aggregations> groupAggsMap = new HashMap<>();  // 추출할 그룹 aggs
+			Map<String,Aggregations> groupAggsMap = new HashMap<>();  // 추출할 그룹 aggs
 
 
 			long total = 0;
 			//메인 Aggs의 sub Aggs 추출
-			for (Map.Entry<String, Aggregation> map : mainAggsMap.entrySet()) {
-				Aggregation agg = map.getValue();
+			for(Map.Entry<String, Aggregation> map : mainAggsMap.entrySet()) {
+				Aggregation agg =  map.getValue();
 				Terms terms = mainAggregations.get(agg.getName());
-				for (Terms.Bucket bucket : terms.getBuckets()) {
+				for(Terms.Bucket bucket : terms.getBuckets()){
 					total = total + bucket.getDocCount();
-					groupAggsMap.put(bucket.getKeyAsString(), bucket.getAggregations());
+					groupAggsMap.put(bucket.getKeyAsString(),bucket.getAggregations());
 				}
 			}
 
 			// sub Aggs에서 document 추출
 			List<TopHits> topHitsList = new ArrayList<>();
-			for (Map.Entry<String, Aggregations> groupAgg : groupAggsMap.entrySet()) {
+			for(Map.Entry<String, Aggregations> groupAgg : groupAggsMap.entrySet()) {
 				Aggregations groupAggs = groupAggsMap.get(groupAgg.getKey());
 				Map<String, Aggregation> groupAggMap = groupAggs.getAsMap();
-				for (Map.Entry<String, Aggregation> gMap : groupAggMap.entrySet()) {
-					Aggregation gAgg = gMap.getValue();
+				for (Map.Entry<String, Aggregation> gMap  : groupAggMap.entrySet()) {
+					Aggregation gAgg =  gMap.getValue();
 					topHitsList.add(groupAggs.get(gAgg.getName()));
 				}
 			}
 
-			for (TopHits topHits : topHitsList) {
-				org.elasticsearch.search.SearchHit[] hits = topHits.getHits().getHits();
+			for(TopHits topHits : topHitsList){
+				org.elasticsearch.search.SearchHit[] hits  = topHits.getHits().getHits();
 				for (SearchHit hit : hits) {
 					Map<String, Object> map = hit.getSourceAsMap();
 					if (map.size() > 0) {
-						map.put("msgid", hit.getId());
+						map.put("msgid",hit.getId());
 						SolrEdcVO solrEdcVO = mapper.convertValue(map, SolrEdcVO.class);
-						this.groups.add(reDefined(solrEdcVO, adminId, 0L));
+						if(detail) this.groups.add(reDefinedDetail(solrEdcVO,  adminId, original));
+						else  this.groups.add(reDefined(solrEdcVO, adminId,0L));
 					}
 				}
 			}
+
 			this.numFound = total;
 
 		} else {

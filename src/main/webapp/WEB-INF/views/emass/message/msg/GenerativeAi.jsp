@@ -202,6 +202,7 @@
             });
 
             $(document).on('click', '.downAllFile', function(){
+                alert("클릭");
                 var downloadFlag = false;
                 $('.downloadIcon').each ( function ( i, item ) {
                     var attachHash = $(this).parents('p').attr('msgid');
