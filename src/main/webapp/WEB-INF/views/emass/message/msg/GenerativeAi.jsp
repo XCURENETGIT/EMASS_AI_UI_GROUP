@@ -10,6 +10,7 @@
 <script type="text/javascript" src="<c:url value="/js/collecton.js"/>"></script>
 
 <style>
+	/*
 	.messenger_prev{
 		position: relative;
 		width: 30px;
@@ -51,7 +52,7 @@
 
 	.lastReadLi .timeline-panel {
 		background-color: #D3DBDC !important;
-	}
+	}*/
 </style>
 
 <head>

@@ -193,7 +193,7 @@
 	<div id="singleDataFormat">
 		<div class="grid-stack-item ui-draggable-handle">
 			<div style="display:none;" class="gridValues" data-dashMultiLeft="#dashMultiLeft#" data-dashMultiRight="#dashMultiRight#"></div>
-			<div class="grid-stack-item-content " style="position:relative">
+			<div class="grid-stack-item-content ">
 				<div class="xcn_maincon panel">
 					<button type="button" class="customClose">
 						<span aria-hidden="true">&times;</span>
@@ -214,7 +214,7 @@
 	<div id="chartDataFormat">
 		<div class="grid-stack-item ui-draggable-handle">
 			<div style="display:none;" class="gridValues" data-dashMultiLeft="#dashMultiLeft#" data-dashMultiRight="#dashMultiRight#"></div>
-			<div class="grid-stack-item-content" style="min-width:420px; min-height:280px;">
+			<div class="grid-stack-item-content">
 				<div class="panel #dashColor#Border">
 					<div class="panel-body">
 						<div class="row">

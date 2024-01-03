@@ -37,8 +37,8 @@
  margin: 0;
   position: absolute;
   top: 6px;
-  left: 6px;
-  right: 6px;
+  left: 12px;
+  right: 12px;
   bottom: 6px;
   width: auto;
   z-index: 0 !important;
