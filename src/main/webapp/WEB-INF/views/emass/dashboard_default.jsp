@@ -761,10 +761,9 @@ var dashCondition = {
                             break;
                         }
                     }
+                    console.log("serviceData: "+data)
                     $('#todayGroupWareSum').html(todayGroupWareSum + "<span>건</span>");
-                    if (total == 0){
-                        $('#svcDataChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px"> ');
-                    }else printChart(data.facet);
+	                printChart(data.facet);
 
                 },
                 error: function (status, message) {
