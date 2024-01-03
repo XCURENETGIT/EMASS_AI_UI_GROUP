@@ -7,7 +7,66 @@
 <script type="text/javascript" src="<c:url value="/js/messageGrid.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/vis.min.js"/>"></script>
 <%@ include file="../../analysis/analysisBase.jsp" %>
+<style>
+	#loadingBar {
+		position: absolute;
+		top: 5px;
+		left: 11px;
+		right: 11px;
+		height: 545px;
+		transition: all 0.5s ease;
+		opacity: 1;
+	}
+	#text {
+		position: absolute;
+		top: 4px;
+		left: 530px;
+		width: 30px;
+		height: 50px;
+		font-size: 16px;
+		color: #5a5a5a;
+		font-weight: bold;
+		z-index: 9999;
+	}
+	#text_loading {
+		position: absolute;
+		top: -45px;
+		left: 8px;
+		height: 50px;
+		font-size: 24px;
+		color: #5a5a5a;
+		font-weight: bold;
+	}
 
+	div.outerBorder {
+		position:relative;
+		top: 0;
+		left : 0;
+		right : 0;
+		height:44px;
+	}
+
+	#border {
+		position: absolute;
+		top: 3px;
+		left: 10px;
+		right: 10px;
+		height: 22px;
+	}
+
+	#bar {
+		position:absolute;
+		top:1px;
+		left:0;
+		right: 0;
+		width:20px;
+		height:20px;
+		border-radius:11px;
+		border:2px solid rgba(30,30,30,0.05);
+		background: rgb(0, 173, 246); /* Old browsers */
+		box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+	}
+</style>
 <script>
 	var searchFlag = false;
 	var detailTotal = 0;
@@ -229,7 +288,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="content">
+	<div class="content" style="padding-bottom: 50px;">
 		<div class="contentSub">
 			<div class="chartAreafull">
 				<h3>개인정보 유출 관계 분석</h3>
@@ -246,10 +305,12 @@
 				</div>
 			</div>
 			<div>
-				<div class="tab-content">
-					<div id="privateChart" class="tab-pane fade in active">
-						<div class="slickGrid gridArea" style="min-height: 200px;">
-							<div id="mynetwork" style="border:1px solid lightgray;min-height: 516px;height: 516px;"></div>
+				<div class="tab-content" style="min-height: 800px;height: 800px;">
+					<div id="privateChart" class="tab-pane fade in active" style="min-height: 800px;height: 800px;">
+						<div class="slickGrid gridArea" style="min-height: 800px;height: 800px;">
+							<div id="mynetwork" style="display: grid; border:1px solid lightgray;min-height: 800px;height: 800px;">
+								<img src="<c:url value='/img/icon/img_nodata.png'/>" alt="No Data" width="100px;" height="100px" style ="margin:auto; display:block;">
+							</div>
 							<div id="loadingBar" style="display: none;">
 								<div class="outerBorder">
 									<div id="text">0%</div>
@@ -261,13 +322,14 @@
 						</div>
 					</div>
 					<div id="privateDetail" class="tab-pane fade in">
-						<div id="selectGrid" class="slickGrid gridArea" style="min-height: 200px;"></div>
+						<div id="selectGrid" class="slickGrid gridArea" style="min-height: 800px;height: 800px;"></div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
+<i class="fa fa-calendar" aria-hidden="true" style="display: none"></i><!-- 유출 관계도에서 사용되는 font-->
 
 <script type="text/javascript">
 	function getCurrentGrid() {
@@ -277,7 +339,7 @@
 
 	var grid1 = new Xgrid('infoStatListGrid', contextRoot);
 	grid1.autoNumber();
-	grid1.colAdd('rowKey', '<s:message code="consent.user"/>', 350, 'left', false, 'link', function (row, cell, value, columnDef, dataContext) {
+	grid1.colAdd('rowKey', '<s:message code="consent.user"/>', 350, 'left', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
 		if (grid1.getValue(row, 'rowName') != '') return grid1.getValue(row, 'rowName') + '/' + grid1.getValue(row, 'jikgubnm') + '/' + grid1.getValue(row, 'deptnm') + '&lt;' + value + '&gt;';
 		return value;
 	});
@@ -346,6 +408,7 @@
 		getData('Y');
 	};
 	grid1.onClick = function () {
+		if (grid1.Col === grid1.ColIndex('rowKey')) return;
 		initProgressbar();
 		makeNetwork(grid1.getValue(grid1.Row, 'rowKey'), grid1.ColKey(grid1.Col), grid1.getValue(grid1.Row, grid1.Col));
 	};
@@ -394,6 +457,28 @@
 		});
 	}
 
+	function getNodeByUser(data) {
+		const result = [];
+		const gridData = grid1.getRowData(grid1.Row);
+		let title = '';
+		if (gridData.rowName !== '') title = gridData.rowName + '/' + gridData.jikgubnm + '/' + gridData.deptnm + '<' + gridData.rowKey + '>';
+		else title = gridData.rowKey;
+
+		result.push({id:gridData.rowKey, title:title});
+		return result;
+	}
+
+	function getNodeBySvc(data) {
+		var result = [];
+		for (var i = 0; i < data.length; i++) {
+			var svc1 = data[i]['svc1'];
+			var id = data[i]['svcNm'];
+			if(svc1 === 'X' || svc1 === 'U') id = data[i]['host'];
+			result.push(id);
+		}
+		return result.unique();
+	}
+
 	function getNodeByField(field, data) {
 		var result = [];
 		for (var i = 0; i < data.length; i++) {
@@ -403,18 +488,18 @@
 		return result.unique();
 	}
 
-	function getNodeByFieldNoneUnique(field, data) {
+	function getNodeByFieldNoneUnique(data) {
 		var result = [];
 		for (var i = 0; i < data.length; i++) {
-			var val = data[i][field];
+			var val = data[i]['svcNm'];
 			result.push(val);
 		}
 		return result;
 	}
 
-	var piArr = ['pi_FN', 'pi_SN', 'pi_DN', 'pi_CN', 'pi_PN'];
-	var piNmArr = ['<s:message code="bodyview.fn"/>', '<s:message code="bodyview.sn"/>', '<s:message code="bodyview.dn"/>', '<s:message code="bodyview.cn"/>', '<s:message code="bodyview.pn"/>'];
-	var piGroupArr = ['pattern_FN', 'pattern_SN', 'pattern_DN', 'pattern_CN', 'pattern_PN'];
+	var piArr = ['pi_FN', 'pi_SN', 'pi_DN', 'pi_CN', 'pi_PN', 'pi_MN', 'pi_AN', 'pi_CRN', 'pi_SSN', 'pi_IMEI', 'pi_BRN', 'pi_CPN', 'pi_MCN'];
+	var piNmArr = ['<s:message code="bodyview.fn"/>', '<s:message code="bodyview.sn"/>', '<s:message code="bodyview.dn"/>', '<s:message code="bodyview.cn"/>', '<s:message code="bodyview.pn"/>', '<s:message code="bodyview.mn"/>', '<s:message code="bodyview.an"/>', '<s:message code="bodyview.crn"/>', '<s:message code="bodyview.ssn"/>', '<s:message code="bodyview.imei"/>', '<s:message code="bodyview.brn"/>', '<s:message code="bodyview.cpn"/>', '<s:message code="bodyview.mcn"/>'];
+	var piGroupArr = ['pattern_FN', 'pattern_SN', 'pattern_DN', 'pattern_CN', 'pattern_PN', 'pattern_MN', 'pattern_AN', 'pattern_CRN', 'pattern_SSN', 'pattern_IMEI', 'pattern_BRN', 'pattern_CPN', 'pattern_MCN'];
 
 	function getNodeByPI(data) {
 		var result = [];
@@ -461,86 +546,73 @@
 			limit : -1,
 			success : function(data, total) {
 				grid2.setData(data);
-				var nodes= [];
+				var nodes = [];
 				var edges = [];
-				if(pi_total==0){
-					nodes.push({ id: 'noneData', font: { multi: 'html'}, title: '<s:message code="analysis.infostat.notleak"/>', label: '<s:message code="analysis.infostat.notleak"/>',group:'noneData'});
-				}
-				var nodeLv1 = getNodeByField('user_str', data);
-				var nodeLv2 = getNodeByPI(data);
-				/* 					var nodeLv3 = getNodeByField('svc', data); */
-				var nodeLv3 = getNodeByField('ctime_yyyymmdd', data);
-				var nodeLv4 = getNodeByField('ctime', data);
-				var nodeLv5 = getNodeByField('msgid', data);
-				var nodeLv6 = getNodeByFieldNoneUnique('subject', data);
-				var nodeUnion = nodeLv1.concat(nodeLv2).concat(nodeLv3).concat(nodeLv4).concat(nodeLv5);
-				var height = 35;
-				var width = 140;
-				var idx=0;
-				for(var i=0 ; i < nodeLv1.length ; i++) {
-					nodes.push({ id: nodeLv1[i], font: { multi: 'html'}, title: nodeLv1[i], label: nodeLv1[i],group:'user'});
-				}
-				for(var i=0 ; i < nodeLv2.length ; i++) {
-					var pi= getPatternInfo(nodeLv2[i]);
-					nodes.push({ id: nodeLv2[i], font: { multi: 'html'}, title: pi.pi_Nm, label: pi.pi_Nm,group:pi.pattern_group});
-				}
-				for(var i=0 ; i < nodeLv3.length ; i++) {
-					nodes.push({ id: nodeLv3[i], font: { multi: 'html'}, title: getDateFormat(nodeLv3[i]), label: getDateFormat(nodeLv3[i]),group:'date'});
-				}
-				for(var i=0 ; i < nodeLv4.length ; i++) {
-					nodes.push({ id: nodeLv4[i], font: { multi: 'html'}, title: getTimeFormat(nodeLv4[i]), label: getTimeFormat(nodeLv4[i]),group:'time'});
-				}
-				for(var i=0 ; i < nodeLv5.length ; i++) {
-					nodes.push({ id: nodeLv5[i], font: { multi: 'html'}, title: nodeLv6[i],group:'msg'});
-				}
+				if (pi_total === 0) {
+					nodes.push({
+						id: 'noneData',
+						font: {multi: 'html'},
+						title: '<s:message code="analysis.infostat.notleak"/>',
+						label: '<s:message code="analysis.infostat.notleak"/>',
+						group: 'noneData'
+					});
+				} else {
+					var nodeLv1 = getNodeByUser(data);
+					var nodeLv2 = type === 'pi_total' ? getNodeByPI(data) : [type];
+					var nodeLv3 = getNodeByField('ctime_yyyymmdd', data);
+					var nodeLv4 = getNodeBySvc(data);
 
-
-				for(var i=0 ; i < nodeLv1.length ; i++) {
-					for(var j=0 ; j < nodeLv2.length ; j++) {
-						var sum = 0;
-						for(var x=0 ; x < data.length ; x++) {
-							if(nodeLv1[i] == data[x].user_str && data[x][nodeLv2[j]] > 0) sum += data[x][nodeLv2[j]];
-						}
-						if(sum > 0) edges.push({from: nodeLv1[i], to: nodeLv2[j],value:(sum)/(pi_total*4) ,arrows:'to',color:{color:'#3FB168'}, font: { multi: true }, label: sum});
+					for (var i = 0; i < nodeLv1.length; i++) {
+						nodes.push({id: nodeLv1[i].id, font: {multi: 'html'}, title: nodeLv1[i].title, label: nodeLv1[i].title, group: 'user'});
 					}
-				}
-				console.log(edges)
-
-				for(var i=0 ; i < nodeLv2.length ; i++) {
-					for(var j=0 ; j < nodeLv3.length ; j++) {
-						var sum = 0;
-						for(var x=0 ; x < data.length ; x++) {
-							if(data[x][nodeLv2[i]] > 0 && data[x].ctime_yyyymmdd == nodeLv3[j]) sum += data[x][nodeLv2[i]];
+					for (var i = 0; i < nodeLv2.length; i++) {
+						if (type === nodeLv2[i] || type === 'pi_total') {
+							var pi = getPatternInfo(nodeLv2[i]);
+							nodes.push({id: nodeLv2[i], font: {multi: 'html'}, title: pi.pi_Nm, label: pi.pi_Nm, group: pi.pattern_group});
 						}
-						if(sum > 0) edges.push({from: nodeLv2[i], to: nodeLv3[j],arrows:'to',value:(sum)/(pi_total*4), color:{color:'#2A6727'},font: { multi: true}, label: sum});
 					}
-				}
+					for (var i = 0; i < nodeLv3.length; i++) {
+						nodes.push({id: nodeLv3[i], font: {multi: 'html'}, title: getDateFormat(nodeLv3[i]), label: getDateFormat(nodeLv3[i]), group: 'date'});
+					}
+					for (var i = 0; i < nodeLv4.length; i++) {
+						nodes.push({id: nodeLv4[i], font: {multi: 'html'}, title: nodeLv4[i], label: nodeLv4[i], group: 'msg'});
+					}
 
-				for(var i=0 ; i < nodeLv3.length ; i++) {
-					for(var j=0 ; j < nodeLv4.length ; j++) {
-						var sum = 0;
-						for(var x=0 ; x < data.length ; x++) {
-							if(data[x].ctime_yyyymmdd == nodeLv3[i] && data[x].ctime == nodeLv4[j]) {
-								for(var z=0 ; z < piArr.length ; z++) {
-									sum += data[x][piArr[z]];
+
+					for (var i = 0; i < nodeLv1.length; i++) {
+						for (var j = 0; j < nodeLv2.length; j++) {
+							var sum = 0;
+							for (var x = 0; x < data.length; x++) {
+								if (nodeLv1[i].id === data[x].userkey && data[x][nodeLv2[j]] > 0) sum += data[x][nodeLv2[j]];
+							}
+							if (sum > 0) edges.push({from: nodeLv1[i].id, to: nodeLv2[j], arrows: 'to', color: {color: '#3FB168'}, font: {multi: true}, label: sum.comma()});
+						}
+					}
+					for (var i = 0; i < nodeLv2.length; i++) {
+						for (var j = 0; j < nodeLv3.length; j++) {
+							var sum = 0;
+							for (var x = 0; x < data.length; x++) {
+								if (data[x][nodeLv2[i]] > 0 && data[x].ctime_yyyymmdd === nodeLv3[j]) sum += data[x][nodeLv2[i]];
+							}
+							if (sum > 0) edges.push({from: nodeLv2[i], to: nodeLv3[j], arrows: 'to', color: {color: '#2A6727'}, font: {multi: true}, label: sum.comma()});
+						}
+					}
+
+					for (var i = 0; i < nodeLv3.length; i++) {
+						for (var j = 0; j < nodeLv4.length; j++) {
+							var sum = 0;
+							for (var x = 0; x < data.length; x++) {
+								var svc1 = data[x].svc1;
+								var id = data[x]['svcNm'];
+								if(svc1 === 'X' || svc1 === 'U') id = data[x]['host'];
+								if (data[x].ctime_yyyymmdd === nodeLv3[i] && id === nodeLv4[j]) {
+									for (var y = 0; y < nodeLv2.length; y++) {
+										if(data[x][nodeLv2[y]] > 0) sum += data[x][nodeLv2[y]];
+									}
 								}
 							}
+							if (sum > 0) edges.push({from: nodeLv3[i], to: nodeLv4[j], arrows: 'to', color: {color: '#2A6727'}, font: {multi: true}, label: sum.comma()});
 						}
-						if(sum > 0) edges.push({from: nodeLv3[i], to: nodeLv4[j],arrows:'to',value:(sum)/(pi_total*4), font: { multi: true },color:{color:'#808000'}, label: sum});
-					}
-				}
-
-				for(var i=0 ; i < nodeLv4.length ; i++) {
-					for(var j=0 ; j < nodeLv5.length ; j++) {
-						var sum = 0;
-						for(var x=0 ; x < data.length ; x++) {
-							if(data[x].ctime == nodeLv4[i] && data[x].msgid == nodeLv5[j]) {
-								for(var z=0 ; z < piArr.length ; z++) {
-									sum += data[x][piArr[z]];
-								}
-							}
-						}
-						if(sum > 0) edges.push({from: nodeLv4[i], to: nodeLv5[j],arrows:'to',value:(sum)/(pi_total*4), font: { multi: true },color:{color:'#FFC000'}, label: sum});
 					}
 				}
 
@@ -556,17 +628,43 @@
 							icon: {
 								face: 'FontAwesome',
 								code: '\uf06a',
-								size: 50,
-								color: '#337ab7'
+								size: 30,
+								color: '#222222'
 							},
+						},
+						msg: {
+							shape: 'icon',
+							icon: {
+								face: 'FontAwesome',
+								code: '\uf26b',
+								size: 30,
+								color: '#238AE6'
+							},
+							nodeDistance: 10,
+							hierarchicalRepulsion: {
+								nodeDistance: 10,
+							}
+						},
+						date : {
+							shape: 'icon',
+							icon: {
+								face: 'FontAwesome',
+								code: '\uf073',
+								size: 30,
+								color: '#222222'
+							},
+							nodeDistance: 10,
+							hierarchicalRepulsion: {
+								nodeDistance: 10,
+							}
 						},
 						user: {
 							shape: 'icon',
 							icon: {
 								face: 'FontAwesome',
-								code: '\uf007',
-								size: 50,
-								color: '#337ab7'
+								code: '\uf2bd',
+								size: 30,
+								color: '#222222'
 							},
 						},
 						pattern_CN: {
@@ -574,8 +672,8 @@
 							icon: {
 								face: 'FontAwesome',
 								code: '\uf09d',
-								size: 50,
-								color: '#717171'
+								size: 30,
+								color: '#222222'
 							},
 						},
 						pattern_SN: {
@@ -583,26 +681,26 @@
 							icon: {
 								face: 'FontAwesome',
 								code: '\uf2bb',
-								size: 50,
-								color: '#D8A90A'
+								size: 30,
+								color: '#222222'
 							},
 						},
 						pattern_PN: {
 							shape: 'icon',
 							icon: {
 								face: 'FontAwesome',
-								code: '\uf298',
-								size: 50,
-								color: '#F4A75D'
+								code: '\uf072',
+								size: 30,
+								color: '#222222'
 							},
 						},
 						pattern_DN: {
 							shape: 'icon',
 							icon: {
 								face: 'FontAwesome',
-								code: '\uf5de',
-								size: 50,
-								color: '#B2B2B2'
+								code: '\uf1b9',
+								size: 30,
+								color: '#222222'
 							},
 						},
 						pattern_FN: {
@@ -610,35 +708,35 @@
 							icon: {
 								face: 'FontAwesome',
 								code: '\uf2c2',
-								size: 50,
-								color: '#414141'
+								size: 30,
+								color: '#222222'
 							},
 						},
 						pattern_MN: {
 							shape: 'icon',
 							icon: {
 								face: 'FontAwesome',
-								code: '\uf2c2',
-								size: 50,
-								color: '#414141'
+								code: '\uf10b',
+								size: 30,
+								color: '#222222'
 							},
 						},
 						pattern_AN: {
 							shape: 'icon',
 							icon: {
 								face: 'FontAwesome',
-								code: '\uf2c2',
-								size: 50,
-								color: '#414141'
+								code: '\uf041',
+								size: 30,
+								color: '#222222'
 							},
 						},
 						pattern_CRN: {
 							shape: 'icon',
 							icon: {
 								face: 'FontAwesome',
-								code: '\uf2c2',
-								size: 50,
-								color: '#414141'
+								code: '\uf207',
+								size: 30,
+								color: '#222222'
 							},
 						},
 						pattern_SSN: {
@@ -646,60 +744,46 @@
 							icon: {
 								face: 'FontAwesome',
 								code: '\uf2c2',
-								size: 50,
-								color: '#414141'
+								size: 30,
+								color: '#222222'
 							},
 						},
 						pattern_IMEI: {
 							shape: 'icon',
 							icon: {
 								face: 'FontAwesome',
-								code: '\uf2c2',
-								size: 50,
-								color: '#414141'
+								code: '\uf2c1',
+								size: 30,
+								color: '#222222'
 							},
 						},
 						pattern_BRN: {
 							shape: 'icon',
 							icon: {
 								face: 'FontAwesome',
-								code: '\uf2c2',
-								size: 50,
-								color: '#414141'
+								code: '\uf298',
+								size: 30,
+								color: '#222222'
 							},
 						},
 						pattern_CPN: {
 							shape: 'icon',
 							icon: {
 								face: 'FontAwesome',
-								code: '\uf2c2',
-								size: 50,
-								color: '#414141'
+								code: '\uf022',
+								size: 30,
+								color: '#222222'
 							},
 						},
 						pattern_MCN: {
 							shape: 'icon',
 							icon: {
 								face: 'FontAwesome',
-								code: '\uf2c2',
-								size: 50,
-								color: '#414141'
+								code: '\uf233',
+								size: 30,
+								color: '#222222'
 							},
-						},
-						msg: {
-							shape: 'icon',
-							icon: {
-								face: 'FontAwesome',
-								code: '\uf199',
-								size: 50,
-								color: '#A9D539'
-							},
-							nodeDistance: 10,
-							hierarchicalRepulsion: {
-								nodeDistance: 10,
-							}
 						}
-
 					},
 					edges: {
 						color:'#FF0000',
@@ -715,7 +799,7 @@
 					layout: {
 						hierarchical: {
 							enabled: true,
-							levelSeparation:300,
+							levelSeparation: 300,
 							direction: 'LR',
 							sortMethod: 'directed'
 						}
@@ -723,8 +807,8 @@
 					physics: {
 						stabilization: {
 							enabled:true,
-							iterations:1000,
-							updateInterval:10
+							iterations: 1000,
+							updateInterval: 10
 						},
 						hierarchicalRepulsion: {
 							nodeDistance: 100
@@ -768,7 +852,7 @@
 				});
 				network.once("stabilizationIterationsDone", function() {
 					document.getElementById('text').innerHTML = '100%';
-					document.getElementById('bar').style.width = '496px';
+					document.getElementById('bar').style.width = '100%';
 					document.getElementById('loadingBar').style.opacity = 0;
 					// really clean the dom element
 					setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
