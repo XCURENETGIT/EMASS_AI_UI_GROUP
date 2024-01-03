@@ -11,6 +11,18 @@
 
 <style type="text/css">
 
+	.rightValue:hover{
+		cursor: pointer;
+		text-decoration: underline;
+	}
+
+	.dash-title:hover{
+		cursor: pointer;
+		text-decoration: underline;
+	}
+
+
+
 	.col-xs-9 {float:none; width:none;}
 	.form_btn05:hover, .form_btn05:active{
 		color: #fff !important;
@@ -286,6 +298,7 @@
         $(document).on('click', '.panel-footer', function(){
             var id = $(this).parents('.grid-stack-item').attr('data-gs-id');
             var dashCondition;
+            alert(id);
 
             for(var i=0; i<contentData.length; i++){
                 if(contentData[i].dashKey == id.split('_')[1]){
@@ -293,7 +306,22 @@
                     break;
                 }
             }
-            console.log("gg"+dashCondition);
+            if(dashCondition != undefined){
+                $('#conditionParam').val(makePeriod(dashCondition));
+                $('#getMessageInfo').submit();
+            }
+        });
+
+        $(document).on('click', '.rightValue', function(){
+            var id = $(this).parents('.grid-stack-item').attr('data-gs-id');
+            var dashCondition;
+
+            for(var i=0; i<contentData.length; i++){
+                if(contentData[i].dashKey == id.split('_')[1]){
+                    dashCondition = contentData[i].dashCondition;
+                    break;
+                }
+            }
             if(dashCondition != undefined){
                 $('#conditionParam').val(makePeriod(dashCondition));
                 $('#getMessageInfo').submit();
