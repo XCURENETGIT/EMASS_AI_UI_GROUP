@@ -76,17 +76,17 @@ var eikon = {
 		});
 	},
 	getMessengerList : function(page){
-		var searchType =  $('[name="searchType"]').val();
+		var searchType =   $('button[name="searchType"].active').val();
 		$('#startsubdatepicker').data("DateTimePicker").date( $('#startdatepicker').data("DateTimePicker").date() );
 		$('#endsubdatepicker').data("DateTimePicker").date( $('#enddatepicker').data("DateTimePicker").date() );
-		if( searchType == 'G'){
+		if(searchType == "G"){
 			getMessengerGroupList(page);
-		}else if( searchType == 'GD'){
+		}else if(searchType == "GD"){
 			getMessengerMessageList(page);
 		}
 	},
 	getGenerativeList : function(page){
-		var searchType =  $('[name="searchType"]').val();
+		var searchType =  $('button[name="searchType"]').val();
 		getGenerativeGroupList(page);
 	},
 	getMessengerDetailList : function(xRootmtr, msgid){
@@ -145,7 +145,7 @@ var eikon = {
 		var startDt = $('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 		var endDt = $('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 
-		var searchType = $('[name="searchType"]').val();
+		var searchType = $('button[name="searchType"]').val();
 		if(searchType == null || searchType == undefined) searchType = 'G';
 		if( searchType == 'G'){
 			getMessengerMessageTotal(xRootmtr, srcip, startDt, endDt, usr_id, '');
