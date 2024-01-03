@@ -790,6 +790,7 @@
 		grid.colAdd('msgid', '<s:message code="common.msg.msgid"/>', 100, 'left', false, 'nomal');
 		grid.colAdd('epmsg_type', '<s:message code="condition.epmsgType.list"/>', 100, 'center', true, 'nomal');
 		grid.colAdd('xrootmtr', '<s:message code="common.msg.xrootmtr"/>', 100, 'left', true, 'nomal');
+
 		if(overlapUse == 'Y') {
 			grid.colAdd('overlap', '<s:message code="common.overlap.count"/>', 80, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
 				var overlapData = value;

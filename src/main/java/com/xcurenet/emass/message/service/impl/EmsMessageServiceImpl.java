@@ -430,6 +430,10 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		List<EmsPiDetailVO> result = new ArrayList<>();
 		EmsMessageVO emsMessageVO = getEmassMessageData(msgId);
 		List<EmsPiVO> emsPis = emsMessageVO.getPatterns();
+
+		/* 주민번호 & 외국인등록번호 마스킹 */
+		if(Common.isEquals(piId,"SN") || Common.isEquals(piId,"FN")) emsPis.forEach(m ->  m.setKwds(m.getKwds().replaceAll("([0-9]{6})([1-4]{1})([0-9]{6})", "$1$2******")));
+
 		for (EmsPiVO pi : emsPis) {
 			if ((Common.isEmpty(piId) || Common.isEquals(piId, pi.getPiid())) && (Common.isEmpty(type) || Common.isEquals(type, pi.getType())) && (Common.isEmpty(attachName) || Common.isEquals(attachName, pi.getAttachName()))) {
 				EmsPiDetailVO vo = new EmsPiDetailVO();
@@ -441,6 +445,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		}
 		return result;
 	}
+
 
 	@Override
 	public List<Integer> findKeywordPages(String msgId, String attachId, String ocrYn, int limit, final String searchkey) {
@@ -646,4 +651,6 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		return objectMapper.convertValue(recvs, new TypeReference<>() {
 		});
 	}
+
+
 }
