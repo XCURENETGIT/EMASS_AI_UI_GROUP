@@ -460,12 +460,12 @@ function makeFileList(data) {
 
         str += '</ul>';
         str += '<div class="top mat16"><div class="myDropdown"><span>내보내기 &#9662;</span><div class="dropdown-content">';
-        str += '<a href="#">사용자 01</a>';
-        str += '<a href="#">사용자 02</a>';
-        str += '</div></div><div class="myDropdown mal8"><span>전체파일 저장 &#9662;</span><div class="dropdown-content">';
-        str += '<a href="#">사용자 01</a>';
-        str += '<a href="#">사용자 02</a>';
-        str += '</div></div></div>';
+        str += '<a href="#" class="excel_down"><s:message code="common.msg.excel"/>(xlsx)</a>';
+        str += '<a href="#" class="txt_down"><s:message code="common.msg.text"/>(txt)</a>';
+        str += '<a href="#" class="html_down"><s:message code="eikon.msg.html"/>(html)</a>';
+        str+= '<a class="excel_file_down"><s:message code="common.msg.excel"/>(xlsx)+<s:message code="consent.attach"/></a>'
+        str += '</div></div><div class="myDropdown mal8"><span>전체파일 저장 &#9662;</span>';
+        str += '</div></div>';
     }
 
     return str;

@@ -1024,18 +1024,28 @@
 	</div>
 </div>
 
-<div class="modal" id="resvAlarmLogPop" tabindex="-1" role="dialog" aria-labelledby="resvAlarmLogPop"
-     data-backdrop="static">
+<div class="modal" id="resvAlarmLogPop" aria-labelledby="resvAlarmLogPop" data-backdrop="static">
 	<div class="modal-content">
 		<div class="modalHead">
 			<h2><s:message code="mail.excute.list.alarm"/></h2>
-			<span class="close" data-dismiss="modal">x</span>
+			<span class="close" data-dismiss="modal">&times;</span>
 		</div>
-			<div class="pop_tableArea mat16">
-				<div id="alarmLogListGrid" class="slickGrid gridArea"></div>
+		<div class="modalCon">
+			<div class="modalbody">
+				<div class="contentSub" style="padding: 0px;">
+					<div id="alarmLogListGrid" class="slickGrid gridArea"  style="height: 400px;">
+					</div>
+				</div>
 			</div>
+			<div class="modalfooter">
+				<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal">
+					<s:message code="common.msg.close"/></button>
+			</div>
+		</div>
 	</div>
 </div>
+
+
 
 
 <div>

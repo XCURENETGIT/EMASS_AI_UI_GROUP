@@ -32,7 +32,7 @@ $(document).ready(function(){
 		closeDetailTab();
 		getData ('Y');
 	});
-	
+
 	$('#chartCntDiv .dropdown-menu li a').click(function(){
 		chartcnt = $(this).text();
 		var fgrid = getCurrentGrid();
@@ -42,35 +42,35 @@ $(document).ready(function(){
 			printChart(totalChartDat , fgrid);
 		}
 	});
-	
+
 	$('#startdatepicker').datetimepicker({
 		format: 'YYYY-MM-DD',
 		locale: 'ko',
 		defaultDate: moment(new Date())
 	});
-	
+
 	$('#enddatepicker').datetimepicker({
 		format: 'YYYY-MM-DD',
 		locale: 'ko',
 		defaultDate: moment(new Date())
 	});
-	
+
 	$(".nav-tabs").on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
 		currentgrid = getCurrentGrid();
 		var id = $(this).parents('li').attr('idx');
 		var hrefNm = $(this).attr('href');
 		var liTab = $(this).parents('li').attr('id');
 		var text = $(this).text();
-	
+
 		var targetText = '<s:message code="stat.ocr.target"/>' ;
 		var includeText = '<s:message code="stat.ocr.include"/>';
 		var notIncludeText = '<s:message code="stat.ocr.notinclude"/>';
-		
+
 		if(hrefNm=='#basicStatList') {
 			$("#chartCntDiv").show();
 			$('#totalViewDiv').hide();
 			getData ('Y');
-		}else if(liTab.includes("D")){	
+		}else if(liTab.includes("D")){
 			if(text.includes(targetText)){
 				colRowKey = 'totalOCR'
 			}else if(text.includes(includeText)){
@@ -78,11 +78,11 @@ $(document).ready(function(){
 			}else if(text.includes(notIncludeText)){
 				colRowKey = 'noOCR'
 			}
-			
+
 			$("#chartCntDiv").show();
 			$('#totalViewDiv').hide();
 			parentGrid = currentgrid;
-			printChart( totalChartDat , currentgrid);	
+			printChart( totalChartDat , currentgrid);
 		}else {
 			if(text.includes(targetText)){
 				colRowKey = 'totalOCR'
@@ -97,29 +97,29 @@ $(document).ready(function(){
 			printChart( dat , parentGrid);
 		}
 	})
-	
+
 	$('.listChart').on('click','.closeBtn',function(){
 		currentgrid = getCurrentGrid();
 		var id = 'tab'+ Number($(this).parents('li').attr('idx'));
 		var obj = tabInfo[id];
 		obj.close();
-		
+
 		var tabID = $(this).parents('a').attr('href');
 		$(this).parents('li').remove();
 		$(tabID).remove();
 		tabNum --;
-		
+
 		if(tabFlag == false){
 			var tabFirst = $('.listChart a:first');
 			tabFirst.tab('show');
-			
+
 			$("#chartCntDiv").show();
 			$('#totalViewDiv').hide();
 		}else if (tabFlag == true){
 			tabFlag = false;
 		}
 	});
-	
+
 	$('.print_stat').click(function() {
 		var gridDetail = getCurrentGrid();
 		if(gridDetail != undefined) {
@@ -136,7 +136,7 @@ $(document).ready(function(){
 			grid1.print('<s:message code="DATA_MONITOR.STAT_USER"/>', pMenuId, menuId);
 		}
 	});
-	
+
 	$('.excel_stat').click(function() {
 		var gridDetail = getCurrentGrid();
 		if(gridDetail != undefined) {
@@ -147,7 +147,7 @@ $(document).ready(function(){
 			excelDownLoad(grid1,'<s:message code="DATA_MONITOR.STAT_USER"/>', svg);
 		}
 	});
-	
+
 	$('.cell_stat').click(function() {
 		var gridDetail = getCurrentGrid();
 		if(gridDetail != undefined) {
@@ -156,7 +156,7 @@ $(document).ready(function(){
 			cellDownLoad(grid1,'<s:message code="DATA_MONITOR.STAT_USER"/>');
 		}
 	});
-	
+
 	$('.pdf_stat').click(function() {
 		var gridDetail = getCurrentGrid();
 		if(gridDetail != undefined) {
@@ -165,7 +165,7 @@ $(document).ready(function(){
 			pdfDownLoad(grid1,'<s:message code="DATA_MONITOR.STAT_USER"/>');
 		}
 	});
-	
+
 	$('.csv_stat').click(function() {
 		var gridDetail = getCurrentGrid();
 		if(gridDetail != undefined) {
@@ -174,20 +174,20 @@ $(document).ready(function(){
 			csvDownLoad(grid1,'<s:message code="DATA_MONITOR.STAT_USER"/>');
 		}
 	});
-	
+
 	$('.totalView').click(function(){
 		$("#chartCntDiv").show();
 		$('#totalViewDiv').hide();
 		totalViewSig = true;
 		printChart(totalChartDat , grid1);
 	});
-	
+
 	$('.searchQueryBtn').click(function(){
 		queryMakePop();
 	});
-	
+
 //	getData ('Y');
-	
+
 });
 
 function setGrid( ){
@@ -207,7 +207,7 @@ function regexpInfoViewer(row){
 	var grid = window.__grids[selectedTabIdx];
 	var msgid = grid.getValue(row, 'msgid');
 	if(grid.getValue(row, 'pi_total') == '') return;
-	
+
 	var url    = '<c:url value="/ems/regexpInfoPop.do?msgId='+msgid+'"/>';
 	return fnOpenWindow(url, 'regexpInfoPop', 1100, 370, 'resize');
 }
@@ -216,7 +216,7 @@ function userInfoViewer(row, type){
 	var grid = window.__grids[selectedTabIdx];
 	var msgid = grid.getValue(row, 'msgid');
 	if(grid.getValue(row, type) == '') return;
-	
+
 	var url    = '<c:url value="/ems/userInfoPop.do?msgId='+msgid+'&type='+type+'"/>';
 	return fnOpenWindow(url, type+'InfoPop', 835, 370, 'resize');
 }
@@ -226,7 +226,7 @@ function fileInfoViewer( row ){
 	var grid = window.__grids[selectedTabIdx];
 	var msgid = grid.getValue(row, 'msgid');
 	if(grid.getValue(row, 'attachcnt') == '') return;
-	
+
 	var url    = '<c:url value="/ems/fileInfoPop.do?msgId='+msgid+'"/>';
 	return fnOpenWindow(url, 'fileInfoPop', 1015, 400, 'resize');
 }
@@ -239,7 +239,7 @@ function viewer_open( row, bodySize ){
 	var ctime = $('#searchStrInput').val();
 
 	openMessageBodyPop( grid.id, msgid, $('#searchStrInput').val(), bodySize);
-	
+
 	var readYn = grid.getValue(row, 'readYn');
 	grid.setValue(row, grid.ColIndex('readYn'), 'Y');
 	grid.Select(row,0);
@@ -251,7 +251,7 @@ function viewer_newOpen(row, bodySize){
 	var msgid = grid.getValue(row, 'msgid');
 	var ctime = $('#searchStrInput').val();
 	openMessageBodyPop( '', msgid, $('#searchStrInput').val(), bodySize);
-	
+
 	var readYn = grid.getValue(row, 'readYn');
 	grid.setValue(row, grid.ColIndex('readYn'), 'Y');
 }
@@ -307,7 +307,7 @@ function printChart( dat , dataGrid )
 				if ( grid1.data[i][cols[j].id] == undefined ) items.push(0);
 				else items.push( Number( grid1.data[i][cols[j].id] ) );
 				if ( i == 0 ) categories.push( cols[j].name );
-				if(Number( grid1.data[i][cols[j].id] ) > maxDat) maxDat = Number( grid1.data[i][cols[j].id] );  
+				if(Number( grid1.data[i][cols[j].id] ) > maxDat) maxDat = Number( grid1.data[i][cols[j].id] );
 			}
 			if(grid1.id == 'basicStatListGrid') {
 				data.push({name:grid1.data[i]['rowName'], data:items});
@@ -339,7 +339,7 @@ function printChart( dat , dataGrid )
 			else data.push({name:dat['svcLv12Nm'], data:items});
 		}
 	}
-	
+
 	var rotation = 40;
 	if ( chartxAxis == 'W' ) rotation = 0;
 	$('#chartArea1').highcharts({
@@ -423,12 +423,12 @@ function queryMakePop(  ){
 }
 
 function getSearchQuery() {
-	
+
 }
 
 var pColKey = "";
 var pDisplayName = "";
-function clickEvent(dataGrid) {	
+function clickEvent(dataGrid) {
 	if(dataGrid.getData().length == 0) return;
 	var grid1 = dataGrid;
 	var valChk = grid1.getValue(grid1.Row, grid1.Col);
@@ -444,9 +444,9 @@ function clickEvent(dataGrid) {
 	}else {
 		rowKey = grid1.getValue(grid1.Row, 'rowKey');
 	}
-		
+
 	rowName = grid1.getValue(grid1.Row, 'rowName');
-	
+
 	colKey = grid1.ColKey(grid1.Col);
 
 	var colKeyNm = colKey;
@@ -455,7 +455,7 @@ function clickEvent(dataGrid) {
 			colKey = "";
 		}
 		colKeyNm = '<s:message code="bodyview.total"/>';
-		
+
 		if(rowKey == 'totalOCR' || rowKey == 'noOCR' || rowKey == 'detectOCR'){
 			pColKey = "";
 		}
@@ -468,9 +468,9 @@ function clickEvent(dataGrid) {
 		var xAxis = $('select[name=xAxis]').val();
 		if (xAxis == "ctime_hh") colKeyNm = colKey + '<s:message code="common.msg.hour"/>';
 	}
-	
+
 	var name ="";
-	
+
 	if(colRowKey == 'totalOCR'){
 		name='<s:message code="stat.ocr.target"/>';
 	}else if(colRowKey == 'detectOCR'){
@@ -478,19 +478,19 @@ function clickEvent(dataGrid) {
 	}else if(colRowKey == 'noOCR'){
 		name= '<s:message code="stat.ocr.notinclude"/>';
 	}
-	
+
 	tabID++;
 	tabNum ++;
-	
+
 	if( tabNum > 8) {
 		tabFlag = true;
 		var delid = $( ".listChart li:nth-child(2)" ).attr('idx');
 		$('#detailTab'+delid+' .close').click();
 	}
-	
+
 	var rowKeys = rowKey.split(",");
 	svcNm = rowKeys.length > 1 ? '<s:message code="common.msg.all"/>' : grid1.getValue(grid1.Row, 'svcLv12Nm');
-	
+
 	var displayName = rowKey;
 	var tabName="";
 	if(rowName!=''){
@@ -502,7 +502,7 @@ function clickEvent(dataGrid) {
 			displayName= grid1.getValue(grid1.Row, 'svcNm')
 		}
 	}
-	
+
 	var id = 'tab'+tabID;
 	var liTab = "";
 	pDisplayName = "";
@@ -521,7 +521,7 @@ function clickEvent(dataGrid) {
 		pDisplayName = "";
 // 		tabName = ' - ' + '<s:message code="userInfo.all"/>';
 	}
-	else{ 
+	else{
 		liTab ="liTabT"
 		tabName = ' - ' + (displayName == "" ? '<s:message code="userInfo.all"/>' : displayName);
 // 		tabName = ' - ' + displayName;
@@ -530,7 +530,7 @@ function clickEvent(dataGrid) {
     $('.listChart').append($('<li style="display:inline-flex;text-align: center;z-index:1001;" idx="'+tabID+'" id="liTab'+tabID+'"><a data-toggle="tab" href="#tab'+tabID+'" id="detailTab'+tabID+'" >'+displayName+' - '+colKeyNm+'<span class="badge"></span><button type="button" class="closeBtn" style="float:right"><img src="<c:url value="/img/ico_closed.png"/>" alt="닫기"></button></a></li>'));
 
 	$('#basicStatList').after($('<div class="tab-pane fade" id="tab' + tabID + '"><div id="detail_cnt'+tabID+'" style="margin-top:0px; color: #f25643; font-weight: bold; font-size: 13px;"></div><div id="grid'+tabID+'" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; height: 380px"></div></div>'));
-	
+
 	var gid = 'grid'+tabID;
 	var gridObj = new Xgrid(gid, contextRoot);
 	tabInfo[id] = gridObj;
@@ -538,7 +538,7 @@ function clickEvent(dataGrid) {
 	setGrid( );
 	$("#chartCntDiv").hide();
 	$('#totalViewDiv').show();
-	
+
 	var dat = grid1.getRowData( grid1.Row );
 	chartDat[tabID] = dat;
 	gridObj.loadExportMenu('<s:message code="stat.detail.ocr.list"/> ( ' + name + tabName + ' )');
@@ -546,7 +546,7 @@ function clickEvent(dataGrid) {
 	gridObj.changePageSize = function(cnt){
 		if(rowKey == 'totalOCR' || rowKey == 'noOCR' || rowKey == 'detectOCR'|| liTab.includes("D") ){
 			rowKey = rowKey.substr(0,3);
-			getDetailOcrData('Y');		
+			getDetailOcrData('Y');
 			gridObj.onClick = function(){
 				clickEvent(gridObj);
 			};
@@ -554,11 +554,11 @@ function clickEvent(dataGrid) {
 			rowKey = dat.rowKey;
 			printChart(dat , grid1);
 			getDetailData('Y');
-		}		
+		}
 	};
 	if(rowKey == 'totalOCR' || rowKey == 'noOCR' || rowKey == 'detectOCR' || rowKey.length == 3){
-		getDetailOcrData('Y');		
-		gridObj.onClick = function(){	
+		getDetailOcrData('Y');
+		gridObj.onClick = function(){
 			clickEvent(gridObj);
 		};
 	}else {
@@ -669,15 +669,15 @@ function clickEvent(dataGrid) {
 <a href="#0" class="back-to-top cd-top"><span class="[ fa fa-chevron-up ]"></span> <span class="[ ]">Back to the Top</span></a>
 
 	<script type="text/javascript">
-	
+
 		function getCurrentGrid(){
 			var id = Number($('.listChart .active').attr('idx'));
 			return tabInfo['tab'+id];
 		}
-		
+
 		var grid1 = new Xgrid('basicStatListGrid', contextRoot);
 		grid1.autoNumber();
-		grid1.colAdd( "rowKey", '<s:message code="consent.user"/>', 230, "left", false, 'link' );	
+		grid1.colAdd( "rowKey", '<s:message code="consent.user"/>', 230, "left", false, 'link' );
 		grid1.colAdd("total", '<s:message code="bodyview.total"/>', 130, "right", false, 'nomal' );
 		grid1.loadExportMenu('<s:message code="DATA_ANALYSIS.STAT_OCR"/>');
 		grid1.loadPageSize();
@@ -686,7 +686,7 @@ function clickEvent(dataGrid) {
 		grid1.changePageSize = function(cnt){
 			getData ('Y');
 		};
-		
+
 		var tabInfo={};
 		var chartDat={};
 
@@ -703,7 +703,7 @@ function clickEvent(dataGrid) {
 			}
 			clickEvent(grid1);
 		};
-		
+
 		function getData( flag ) {
 			if ( searchFlag ) return;
             var xAxis = $('select[name=xAxis]').val();
@@ -772,7 +772,7 @@ function clickEvent(dataGrid) {
 		function getDetailOcrData( lastRow ) {
 			currentgrid = getCurrentGrid();
 			if ( searchFlag ) return;
-			
+
 			if ( lastRow == 'Y' || lastRow == undefined ) {
 				currentgrid.data.length = 0;
 				currentgrid.rtnNextPageFunc = getDetailData;
@@ -787,7 +787,7 @@ function clickEvent(dataGrid) {
             var eDate = $('#enddate').val().replaceAll("-", "");
             var xAxis = $('#optionHidden').val();
             var xAxis_str = $('#optionHiddenName').val();
-			
+
 			searchFlag = true;
 			currentgrid.on();
 			ui.get({
@@ -811,7 +811,7 @@ function clickEvent(dataGrid) {
 					}else{
 						currentgrid.colAdd('svcLv12Nm', '<s:message code="condition.service"/>', 320, 'left', false, 'link');
 					}
-					
+
 					currentgrid.colAdd('total', '<s:message code="bodyview.total"/>', 130, 'right', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
 						if ( value != undefined ) return value.comma();
 						else return '';
@@ -835,7 +835,7 @@ function clickEvent(dataGrid) {
 					data.facetData=data.pivotData;
 					currentgrid.loadHeader(false);
 					currentgrid.setData(data.pivotData);
-					
+
 					$('#statlist_cnt').html('<s:message code="common.msg.finish_query"/>:'+currentgrid.data.length);
 					$('#detailTab'+Number($('.listChart .active').attr('idx'))+' .badge').text('[' + data.numFound.comma() + ']');
 					if ( currentgrid.loadingPage == 0 ) currentgrid.Select(-1,-1);
@@ -850,11 +850,11 @@ function clickEvent(dataGrid) {
 				}
 			});
 		}
-		
+
 		function getDetailData( lastRow ) {
 			currentgrid = getCurrentGrid();
 			if ( searchFlag ) return;
-			
+
 			if ( lastRow == 'Y' || lastRow == undefined ) {
 				currentgrid.data.length = 0;
 				currentgrid.rtnNextPageFunc = getDetailData;
@@ -862,10 +862,10 @@ function clickEvent(dataGrid) {
 			} else {
 				currentgrid.loadingPage++;
 			}
-			
+
 			var xAxis = $('select[name=xAxis]').val();
 			var xAxis_str = $('select[name=xAxis] option:selected').text();
-			
+
 			var startDate = $('#startdate').val().replaceAll("-","");
 			var endDate = $('#enddate').val().replaceAll("-","");
 			searchFlag = true;
@@ -888,10 +888,10 @@ function clickEvent(dataGrid) {
 					if ( lastRow == 'Y' || lastRow == undefined ) detailTotal = total;
 					currentgrid.appendData(data.emass);
 					if ( currentgrid.loadingPage == 0 ) currentgrid.Select(-1,-1);
-					
+
 					$('#detailTab'+Number($('.listChart .active').attr('idx'))+' .badge').text('[' + total.comma() + ']');
 					$('#detail_cnt'+Number($('.listChart .active').attr('idx'))).html('<s:message code="common.msg.finish_query"/>: '+currentgrid.data.length);
-					
+
 					searchFlag = false;
 				},
 				error : function(status, message) {
@@ -902,7 +902,7 @@ function clickEvent(dataGrid) {
 				}
 			});
 		}
-		
+
 	function pivotDataF( data , dataGrid ,value){
 		totalChartDat = "";
 		var grid1 = dataGrid;
@@ -912,7 +912,7 @@ function clickEvent(dataGrid) {
 					if ( i <= 4 ) selected = true;
 					else if ( i >= 10 ) break;
 					addOption( 'chartListCount', (i+1), (i+1), selected );
-				}		
+				}
 				var dat = grid1.getRowData( grid1.Row );
 				totalChartDat = dat;
 				printChart( dat , grid1 );
@@ -920,7 +920,7 @@ function clickEvent(dataGrid) {
 				$('#chartArea1').html('<s:message code="common.msg.nodata"/>');
 				$('#space').height('7px');
 			}
-	}			
+	}
 	</script>
 </body>
 </html>

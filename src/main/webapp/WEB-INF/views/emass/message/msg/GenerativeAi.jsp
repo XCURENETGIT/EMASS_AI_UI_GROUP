@@ -311,7 +311,7 @@
                 $('#selectUserInfo').attr('data-name', name);
                 $('#selectUserInfo').attr('data-usrid', usr_id);
 
-                $('#selectUserInfo').html(" "+username);
+                $('#selectUserInfo').html(userid+"("+username+")");
                 $('#subchatid').html(": "+name);
                 $('#srcip').text(srcip);
                 $('#usr_id').text(usr_id);
@@ -778,7 +778,6 @@
 							<select id="busiSelect" class="w100 mat8" data-style="btn-default btn-sm" multiple data-show-subtext="true"
 							                                                                         data-live-search="true" data-actions-box="true"></select>
 
-							<input type="text" class="w100 mat8"  placeholder="<s:message code="eikon.input.participation"/>" id="senders">
 							<div id="selectedCodeTitle"></div>
 
 							<p class="mat8 formText btnform" data-toggle="buttons">
@@ -791,6 +790,7 @@
 								<input type="hidden" id="deptStr" class="selectedTitle">
 								<input type="hidden" id="deptVal">
 							</p>
+							<input type="text" class="w100 mat8"  placeholder="<s:message code="eikon.input.participation"/>" id="senders">
 						</div>
 					</div>
 
@@ -847,29 +847,17 @@
 					<div class="top">
 						<div style="display: flex">
 							<div style="width: 300px;">
-								<span>대화방 아이디<span class="chatid" id="subchatid"><span id="xrootmtr"></span><span id="srcip" style="display:none;"></span><span
-										id="usr_id" style="display:none;"></span><span id="msgid" style="display:none;"></span></span></span>
-							</div>
-							<div title="" id="userButton">
-								<span><i class="glyphicon glyphicon-user"></i> <s:message code="condition.user"/> : </span>
-							</div>
-							<div title="<s:message code="condition.user"/>" id="userCntArea">
-								<div style="position: relative;display:block;padding-right: 10px;">
-									<span id="selectUserInfo" data-srcip="" data-name="" data-usrid="">-</span>
-								</div>
+								<span id="selectUserInfo"  data-srcip="" data-name="" data-usrid=""><s:message code="condition.user"/></span>
 							</div>
 						</div>
 
 						<div class="chatDate">
 							<div class="searchSub" >
-
-								<div class="searchSub">
-									<input class="w25 txt_center" type="date" id="startSubDt"  value="2023-11-20"> ~ <input class="w25 txt_center" type="date" id="endSubDt"  value="2023-11-20">
-								</div>
+									<input class="w30 txt_center" type="date" id="startSubDt"  value="2023-11-20"> ~ <input class="w30 txt_center" type="date" id="endSubDt"  value="2023-11-20">
 							</div>
 
 							<div class="searchSub txt_right">
-								<input type="text" class="w50" placeholder="<s:message code="condition.research"/>" id="searchMsgStrInput">
+								<input type="text" class="w60" placeholder="<s:message code="condition.research"/>" id="searchMsgStrInput">
 								<button class="form_btn01 blackBg" type="button" accesskey="M" id="searchMsgBtn">검색</button>
 							</div>
 						</div>
@@ -895,6 +883,7 @@
 									<span id="selectCnt" style="color:#fff;">0</span><span style="color:#fff;">/</span><span id="searchResult"
 									                                                                                         style="width:50px;color:#fff;">0 &nbsp;</span>
 								</div>
+						
 							</div>
 							<div class="input-group btnCustomPosition" id="searchResultBtnArea" style="display:none;">
 								<button class="btn btn-md btn-warning" type="button" accesskey="U" id="searchMsgUp" style="padding:6px"><i
@@ -906,6 +895,8 @@
 					</div>
 					<div class="row2" style="height: calc(100% - 160px);padding:0 3px 0 5px;">
 						<s:message code="eikon.msg.total.cnt"/> : <span id="groupSubResultCnt">0</span>
+
+
 						<div id="scrollArea" class="clusterize-scroll">
 							<div class="messenger_prev" title="<s:message code='eikon.msg.show.prev'/>">+</div>
 							<div id="timeline_list">

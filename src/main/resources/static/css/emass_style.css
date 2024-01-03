@@ -707,7 +707,7 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .chatList { position: relative; min-width: 400px;  overflow-x: hidden; overflow-y: auto;}
 .chatList::-webkit-scrollbar {display: none; /* Chrome, Safari, Opera*/}
 .chatList .chatBox {position: relative; min-width: 100%; padding-bottom:20px;}
-.chatList .chatBox .top { position: sticky; top:0; left:0; bottom:0; right:0; min-width: 400px; background-color: #606973; color:#fff; font-size:14px; padding:20px 16px; z-index: 99999;}
+.chatList .chatBox .top { position: sticky; top:0; left:0; bottom:0; right:0; min-width: 400px; background-color: #404040; color:#fff; font-size:14px; padding:20px 16px; z-index: 99999;}
 .chatDate { position: relative; display: grid; grid-template-columns: 70% 30%; padding-top:12px;}
 .chatList .chatBox .top span {position: relative; font-weight: 300; }
 .chatList .chatBox .top span .chatid {font-weight: 600; margin-left:8px;}
