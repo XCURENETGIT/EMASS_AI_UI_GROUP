@@ -17,6 +17,7 @@ var hostQuery = 'false';
 var count = 0;
 
 $(document).ready(function(){
+
 	$(document).click(function(){
 		$('#imgPreviewDiv').hide();
 	});
@@ -339,7 +340,6 @@ $(document).ready(function(){
 
 		fnOpenWindow( url, 'message_print', '1000', '800', 'scroll' );
 
-		console.log('asdf')
 
 		var information = '[' + message.bodyPrint + ']'+enter;
 		if( detailFlag ) information += message.xrootmtr + ' : ' + xRootMtr + ' ';
@@ -1020,6 +1020,8 @@ function setMessage(msg) {
 		$('#probType').html('');
 		if( probPercent(pr) != '-' ) $('#probType').html('<span style="font-weight: bold;">('+probPercent(pr)+'%)</span>');
 
+		console.log(msg.ml_confd_feedback)
+
 		if(msg.ml_confd_feedback == -1) $('[name=feedback]').prop('checked',false);
 		else $('[name=feedback][value='+msg.ml_confd_feedback+']').prop('checked',true);
 
@@ -1030,7 +1032,6 @@ function setMessage(msg) {
 		}
 	}
 	svc = msg.svc;
-	console.log(msg)
 	xRootMtr = nvl(msg.xrootMtr);
 	usr_id = nvl(msg.usrId);
 	srcip = nvl(msg.srcIp);

@@ -5,10 +5,12 @@ import com.xcurenet.emass.message.service.*;
 import com.xcurenet.emass.message.service.vo.EmassAttachData;
 import com.xcurenet.emass.message.service.vo.EmassMessageData;
 import com.xcurenet.emass.message.service.vo.EmassPiData;
+import org.joda.time.DateTime;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 @Component
@@ -27,8 +29,18 @@ public class EmsMessageConvert {
 			vo.setProtocol(data.getNetworkInfo().getProtocol());
 		}
 		vo.setSvc(data.getSvc());
-		vo.setLtime(Common.yyyy_MM_dd_HH_mm_ss.print(data.getLTime()));
-		vo.setCtime(Common.yyyy_MM_dd_HH_mm_ss.print(data.getCTime()));
+
+		DateTime ltime = data.getLTime();
+		DateTime ctime = data.getCTime();
+
+		/* GMT 를 사용하는 서버시간대의 경우 */
+		if("GMT+09:00".equals(TimeZone.getDefault().getID())){
+			ltime = ltime.minusHours(9);
+			ctime = ctime.minusHours(9);
+		}
+
+		vo.setLtime(Common.yyyy_MM_dd_HH_mm_ss.print(ltime));
+		vo.setCtime(Common.yyyy_MM_dd_HH_mm_ss.print(ctime));
 		vo.setSize(data.getSize());
 		if (data.getBodyInfo() != null) {
 			vo.setBodySize(data.getBodyInfo().getBodySize());
@@ -122,6 +134,13 @@ public class EmsMessageConvert {
 		if (data.getPrivateInfo() != null && !data.getPrivateInfo().isEmpty()) {
 			vo.setPatterns(getPIInfo(data));
 		}
+		if (data.getMlInfo() != null) {
+			vo.setMl_confd_class(Common.nvz(data.getMlInfo().getMlConfdClass()));
+			vo.setMl_confd_prob(Common.nvz(data.getMlInfo().getMlConfdProb()));
+			vo.setMl_confd_userid(Common.nvl(data.getMlInfo().getMlConfdUserId()));
+			vo.setMl_confd_feedback(Common.nvz(data.getMlInfo().getMlConfdFeedBack()));
+		}
+
 		vo.setEpmsgType(data.getEpmsgType());
 		vo.setKeywordInfo(data.getKeywordInfo());
 		return vo;
