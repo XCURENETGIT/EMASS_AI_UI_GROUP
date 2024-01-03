@@ -190,15 +190,14 @@
                 downloadList('html');
                 hideSelect();
             });
-            $('.excel_file_down').click(function () {
-                var xrootmtr = $('#xrootmtr').text();
-                var srcip = $('#srcip').text();
-                var usr_id = $('#usr_id').text();
-                var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
-                var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
+            $(document).on('click', '.excel_file_down', function () {
+                var userid = $('#selectUserInfo').attr('data-name');
+                var srcip = $('#selectUserInfo').attr('data-srcip');
+                var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '')+"0000000";
+                var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '')+"235959";
                 var searchStr = '';
-                if (xrootmtr == '') return;
-                eikon2.getMessengerGroupAllExport('<c:url value="/getMessengerGroupAllExport.xcn"/>?xRootMtr=' + xrootmtr + '&srcip=' + srcip + '&usr_id=' + usr_id + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr);
+                if (userid == '') return;
+                eikon2.getCollectionGroupTextExport('<c:url value="/getCollectionGroupAllExport.xcn"/>?userid=' + userid + '&srcip=' + srcip + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr+'&limit=1000&facet_detail=true');
                 hideSelect();
             });
 
@@ -399,15 +398,17 @@
 
 
         function downloadList(type) {
-            var xrootmtr = $('#xrootmtr').text();
-            var srcip = $('#srcip').text();
-            var usr_id = $('#usr_id').text();
-            if (xrootmtr == '') return;
-            var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
-            var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
+
+            var userid = $('#selectUserInfo').attr('data-name');
+            var srcip = $('#selectUserInfo').attr('data-srcip');
+            var usr_id = $('#selectUserInfo').attr('usr_id');
+
+            if (userid == '') return;
+            var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '')+"000000";
+            var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '')+"235959";
             var searchStr = '';
 
-            eikon2.getMessengerGroupTextExport('<c:url value="/getMessengerGroupTextExport.xcn"/>?xRootMtr=' + xrootmtr + '&srcip=' + srcip + '&usr_id=' + usr_id + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr + '&type=' + type + '&groupField=sender_str', xrootmtr);
+            eikon2.getCollectionGroupTextExport('<c:url value="/getCollectionrGroupTextExport.xcn"/>?userid=' + userid + '&srcip=' + srcip + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr + '&type=' + type + '&groupField=sender_str&limit=1000&facet_detail=true', userid);
         }
 
 

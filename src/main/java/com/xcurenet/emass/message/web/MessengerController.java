@@ -713,8 +713,8 @@ public class MessengerController {
 
 		if(Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
 
-		if(Common.isNotEmpty(usr_id)) query += String.format(" +usr_id:\"%s\"", usr_id);
-		else query += String.format(" -usr_id:*");
+	/*	if(Common.isNotEmpty(usr_id)) query += String.format(" +usr_id:\"%s\"", usr_id);
+		else query += String.format(" -usr_id:*");*/
 
 		sq.setQuery(query+MESSENGER2);
 		sq.setRows(limit);
@@ -1124,6 +1124,16 @@ public class MessengerController {
 		return new XcnResponseVO(XcnRspCode.OK, solrEdcGroupVO.getNumFoundUser(), solrEdcGroupVO.getNumFoundUser());
 	}
 
+
+	@RequestMapping(value = "/getGenerativeGroupUserCnt.xcn")
+	@Description("서비스 대화방 참여자 건수 조회")
+	@ResponseBody
+	public XcnResponseVO getGenerativeGroupUserCnt(final HttpServletRequest request, final HttpSession session) throws Exception {
+		MessengerGroupUserVO solrEdcGroupVO = getGenerativeGroupUserList(request, 0);
+		return new XcnResponseVO(XcnRspCode.OK, solrEdcGroupVO.getNumFoundUser(), solrEdcGroupVO.getNumFoundUser());
+	}
+
+
 	@RequestMapping(value = "/getMessengerGroupUserList.xcn")
 	@Description("메신저 대화방 참여자 리스트 조회")
 	@ResponseBody
@@ -1132,6 +1142,45 @@ public class MessengerController {
 		return new XcnResponseVO(XcnRspCode.OK, solrEdcGroupVO, solrEdcGroupVO.getNumFoundUser());
 	}
 
+	public MessengerGroupUserVO getGenerativeGroupUserList(final HttpServletRequest request, final int rows) throws IOException, SolrServerException {
+		JSONObject param = Common.getParam(request);
+		String userid = Common.nvl(param.get("userid"));
+		String groupField = Common.nvl(param.get("groupField"), "usr_id");
+		String srcip = Common.nvl(param.get("srcip"));
+		String usr_id = Common.nvl(param.get("usr_id"));
+		String startDt = Common.nvl(param.get("startDt"));
+		String endDt = Common.nvl(param.get("endDt"));
+		String searchStr = Common.nvl(param.get("searchStr"));
+
+		SolrQuery sq = new SolrQuery();
+
+		String query = "";
+		if(Common.isNotEmpty(startDt) && Common.isNotEmpty(endDt)) query += String.format("+ctime:[%s TO %s] ", startDt, endDt);
+
+		query += String.format("+userid:\"%s\" ", userid) + MESSENGER2;
+
+		if(Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
+		if(Common.isNotEmpty(usr_id)) query += String.format(" +usr_id:\"%s\"", usr_id);
+		if(Common.isNotEmpty(searchStr)) query += String.format(" +body:(*%s*) ", searchStr);
+
+		sq.setQuery(query);
+		sq.setSort("ctime", ORDER.desc);
+		sq.setStart(0);
+		sq.setRows(rows);
+		sq.setFields("usr_id", "srcip", "name", "conm", "businm", "deptnm", "jikgubnm", "suborgnm", "sname", "sender", "srcip", "sname", "user");
+		sq.setParam("group", true);
+		sq.setParam("group.field", groupField);
+		sq.setParam("facet", true);
+		sq.setFacetLimit(rows);
+		//	sq.setParam("facet.pivot", groupField+"srcip");  // "{!stats=usr_id}"+groupField=",srcip"  내용
+		if(Common.isEquals(groupField, "usr_id")) sq.setParam("facet.query", "-usr_id:*");
+		sq.setParam("facet.field", "srcip");
+		sq.setFacetMinCount(1);
+		//group=true&group.field=usr_id&facet=true&facet.pivot={!stats=usr_id}usr_id,srcip&facet.query=-usr_id:*&facet.field=srcip
+
+		MessengerGroupUserVO solrEdcGroupVO = solrEdcService.getGenerativeGroupUserList(sq, Common.getAdminId(request));
+		return solrEdcGroupVO;
+	}
 
 	public MessengerGroupUserVO getMessengerGroupUserList(final HttpServletRequest request, final int rows) throws IOException, SolrServerException {
 		JSONObject param = Common.getParam(request);
@@ -1278,6 +1327,42 @@ public class MessengerController {
 		}
 	}
 
+	@RequestMapping(value = "/getCollectionGroupAllExport.xcn")
+	@Description("서비스 대화내용 압축 내보내기")
+	@ResponseBody
+	public void getCollectionGroupAllExport(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+
+		JSONObject param = Common.getParam(request);
+		String userid = Common.nvl(param.get("userid"));
+
+		response.setCharacterEncoding(Common.UTF8);
+		response.setHeader("Cache-control", "no-store");
+		response.setHeader("Pragma", "no-cache");
+		response.setDateHeader("Expires", 0);
+		response.setContentType("application/octet-stream");
+		response.setHeader("Content-Transfer-Encoding", "binary");
+		response.setHeader("Connection", "close");
+
+		ServletOutputStream out = null;
+		ArchiveOutputStream os = null;
+		try {
+			response.setHeader("Content-Disposition", "attachment; filename=\"" + Common.getDateTimeFormat() + "_message.zip\"");
+
+			out = response.getOutputStream();
+			os = new ArchiveStreamFactory().createArchiveOutputStream("zip", out);
+			MessengerEdcGroupVO groups = getGenerativeMessageTotal(request, true);
+			inputAttach(os, groups);
+			inputCollectionZipExcel(os, groups, userid, Common.getLocale(request.getSession()));
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			IOUtils.closeQuietly(os);
+			IOUtils.closeQuietly(out);
+			response.flushBuffer();
+		}
+	}
+
 	public String getGroupBody(List<MessengerGroupVO> data, String rootmtr, Locale locale) throws Exception {
 		StringBuffer _sb = new StringBuffer();
 		_sb.append("<table class=\"g_request\"><colgroup><col width=\"120\"><col width=\"*\"><col width=\"70\"></colgroup><tbody>").append(EMPTY_LINE);
@@ -1304,6 +1389,27 @@ public class MessengerController {
 			os.putArchiveEntry(new ZipArchiveEntry(name + ".xlsx"));
 
 			xlsxExport(xRootMtr, groups, xOut, true, locale);
+
+			bIn = new ByteArrayInputStream(xOut.toByteArray());
+			IOUtils.copy(bIn, os);
+			os.closeArchiveEntry();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			IOUtils.closeQuietly(bIn);
+			IOUtils.closeQuietly(xOut);
+		}
+	}
+
+	private void inputCollectionZipExcel(ArchiveOutputStream os, MessengerEdcGroupVO groups, String userid, Locale locale) throws IOException, Exception {
+
+		ByteArrayOutputStream xOut = new ByteArrayOutputStream();
+		ByteArrayInputStream bIn = null;
+		try {
+			String name = userid;
+			os.putArchiveEntry(new ZipArchiveEntry(name + ".xlsx"));
+
+			xlsxCollectionExport(userid, groups, xOut, true, locale);
 
 			bIn = new ByteArrayInputStream(xOut.toByteArray());
 			IOUtils.copy(bIn, os);
@@ -1427,6 +1533,104 @@ public class MessengerController {
 		} finally {
 			IOUtils.closeQuietly(out);
 		}
+	}
+
+
+	@RequestMapping(value = "/getCollectionrGroupTextExport.xcn")
+	@Description("서비스 대화내용 내보내기")
+	@ResponseBody
+	public void getCollectionrGroupTextExport(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+
+		JSONObject param = Common.getParam(request);
+		String userid = Common.nvl(param.get("userid"));
+		String print = Common.nvl(param.get("print"));
+		String usr_id="";
+		String type = Common.nvl(param.get("type"), "html").toLowerCase();
+		if (!Common.isOrEquals(type, "html", "txt", "xlsx")) type = "html";
+
+		response.setCharacterEncoding(Common.UTF8);
+		response.setHeader("Cache-control", "no-store");
+		response.setHeader("Pragma", "no-cache");
+		response.setDateHeader("Expires", 0);
+		response.setHeader("Content-Disposition", "inline");
+		if (Common.isEmpty(userid)) {
+			response.setContentType("application/octet-stream");
+			response.setHeader("Content-Transfer-Encoding", "binary");
+			response.setHeader("Content-Disposition", "attachment; filename=notfound.txt\"");
+			return;
+		}
+
+		Locale locale = Common.getLocale(request.getSession());
+
+		ServletOutputStream out = null;
+		try {
+			out = response.getOutputStream();
+			MessengerEdcGroupVO groups =getGenerativeMessageTotal(request,true);
+
+			if (Common.isEquals(type, "xlsx")) {
+				response.setContentType("application/octet-stream");
+				response.setHeader("Content-Transfer-Encoding", "binary");
+				response.setHeader("Content-Disposition", "attachment; filename=\"" + userid + "." + type + "\"");
+				xlsxCollectionExport(userid, groups, out, false, Common.getLocale(request.getSession()));
+			} else {
+				if (Common.isNotEquals(print, "Y")) {
+					response.setContentType("application/octet-stream");
+					response.setHeader("Content-Transfer-Encoding", "binary");
+				}
+				StringBuffer _sb = new StringBuffer();
+				if (Common.isEquals(type, "html")) {
+					_sb.append("<html><body><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /></head><pre>");
+				}
+				_sb.append("<" + Prop.propFormat("condition.xrootmtr", locale) + ">").append(Common.EMPTY_LINE);
+				_sb.append(userid).append(Common.EMPTY_LINE).append(Common.EMPTY_LINE);
+				_sb.append("<" + Prop.propFormat("condition.participation", locale) + ">").append(Common.EMPTY_LINE);
+
+				_sb.append(Common.EMPTY_LINE);
+				_sb.append("<" + Prop.propFormat("eikon.msg.chatContents", locale) + ">").append(Common.EMPTY_LINE);
+				List<MessengerGroupVO> list = groups.getGroups();
+				if (list != null) {
+					for (MessengerGroupVO item : list) {
+						_sb.append(String.format("[%s] [%s] %s", item.getTitle(), item.getCtime(), item.getBody_snippet())).append(Common.EMPTY_LINE);
+					}
+				}
+				if (Common.isEquals(type, "html")) {
+					_sb.append("</pre></body></html>");
+				}
+				if (Common.isNotEquals(print, "Y")) {
+					response.setContentLength(_sb.toString().getBytes().length);
+					response.setHeader("Content-Disposition", "attachment; filename=\"" + userid + "." + type + "\"");
+				}
+				out.write(_sb.toString().getBytes());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			IOUtils.closeQuietly(out);
+		}
+	}
+
+	private void xlsxCollectionExport(String userid, MessengerEdcGroupVO groups, OutputStream out, boolean link, Locale locale) throws Exception {
+		JSONArray header = new JSONArray();
+		header.add(getXlsxHeader("sender", Prop.propFormat("eikon.msg.sender", locale), "130", "center"));
+		header.add(getXlsxHeader("ctime", Prop.propFormat("eikon.msg.send.time"), "130", "center"));
+		header.add(getXlsxHeader("content", Prop.propFormat("eikon.msg.chatContents", locale), "750", "left", "LINK"));
+
+		JSONArray data = new JSONArray();
+		List<MessengerGroupVO> list = groups.getGroups();
+		if (list != null) {
+			for (MessengerGroupVO item : list) {
+				JSONObject dataObj = new JSONObject();
+				dataObj.put("sender", item.getTitle());
+				dataObj.put("ctime", item.getCtime());
+				dataObj.put("content", item.getBody_snippet());
+				if (link && Common.isEquals(item.getAttached(), "Y")) {
+					dataObj.put("content_LINK", Common.makeFilepath("attachs", item.getMsgid()));
+				}
+				data.add(dataObj);
+			}
+		}
+		XLSXWriter xlsx = new XLSXWriter(Prop.propFormat("eikon.msg.export.chat", locale) + " : " + userid, header, data, out);
+		xlsx.execute();
 	}
 
 	@RequestMapping(value = "/getMessengerList.xcn")

@@ -103,6 +103,24 @@ var eikon2 = {
 
         getGenerativeMessageTotal(userid, srcip, startDt, endDt, usr_id, '');
     },
+    getCollectionGroupTextExport : function(attachUrl, userid){
+        if( detailDataSet.length == 0 ) return;
+
+        try {
+            AttachDown.location.href = attachUrl;
+        } catch (e) {
+            AttachDown.src = attachUrl;
+        }
+    },
+    getCollectionGroupTextExport : function(attachUrl){
+        if( detailDataSet.length == 0 ) return;
+
+        try {
+            AttachDown.location.href = attachUrl;
+        } catch (e) {
+            AttachDown.src = attachUrl;
+        }
+    },
     /**
      * 결과 내 검색
      */
@@ -444,33 +462,40 @@ function getPageNum(msgid){
 //}
 
 function makeFileList(data) {
-    var str='';
+    var str = '';
 
-    if(data.length==0){
-        str+='<div style="width:100%; background-color:white">첨부파일이 없습니다</div>';
-    }
+    if (data.length === 0) {
+        str += '<div style="width:100%; background-color:white">첨부파일이 없습니다</div>';
+        str += '<div class="top mat16"><div class="myDropdown"><span>내보내기 &#9662;</span><div class="dropdown-content">';
+        str += '<a href="#" onclick="downloadList(\'xlsx\')" class="excel_down">엑셀(xlsx)</a>';
+        str += '<a href="#" onclick="downloadList(\'txt\')" class="txt_down">텍스트(txt)</a>';
+        str += '<a href="#" onclick="downloadList(\'html\')" class="html_down">하이퍼텍스트(html)</a>';
+        str += '<a href="#" class="excel_file_down">액셀(xlsx)+첨부파일</a>';
 
-    else {
+        str += '</div></div></div>';
+    } else {
         str = '<ul>';
         for (var i = 0; i < data.length; i++) {
-            str += '<li><p class="fileListdown" attachsize="'+data[i].attachsize+ '" msgid="' + data[i].msgid + '" attachhash="' + data[i].attachhash + '"><span class="img"></span><span>';
+            str += '<li><p class="fileListdown" attachsize="' + data[i].attachsize + '" msgid="' + data[i].msgid + '" attachhash="' + data[i].attachhash + '"><span class="img"></span><span>';
             str += '<a href="#">' + data[i].attachname + "." + data[i].attachtype + '</a>';
             str += '</span><span style="position: absolute; right: 0; top: 8px;" ><button class="btnchatdown_w downloadIcon"></button></span></p></li>';
         }
 
         str += '</ul>';
         str += '<div class="top mat16"><div class="myDropdown"><span>내보내기 &#9662;</span><div class="dropdown-content">';
-        str += '<a href="#" class="excel_down"><s:message code="common.msg.excel"/>(xlsx)</a>';
-        str += '<a href="#" class="txt_down"><s:message code="common.msg.text"/>(txt)</a>';
-        str += '<a href="#" class="html_down"><s:message code="eikon.msg.html"/>(html)</a>';
-        str+= '<a class="excel_file_down"><s:message code="common.msg.excel"/>(xlsx)+<s:message code="consent.attach"/></a>'
-        str += '</div></div><div class="myDropdown mal8"><span>전체파일 저장 &#9662;</span>';
-        str += '</div></div>';
+        str += '<a href="#" onclick="downloadList(\'xlsx\')" class="excel_down">엑셀(xlsx)</a>';
+        str += '<a href="#" onclick="downloadList(\'txt\')" class="txt_down">텍스트(txt)</a>';
+        str += '<a href="#" onclick="downloadList(\'html\')" class="html_down">하이퍼텍스트(html)</a>';
+        str += '<a href="#" class="excel_file_down">액셀(xlsx)+첨부파일</a>';
+        str += '</div></div><div class="myDropdown mal8"><span>전체파일 저장 &#9662;</span><div class="dropdown-content">';
+        str += '<a href="#">사용자 01</a>';
+        str += '<a href="#">사용자 02</a>';
+        str += '</div></div></div>';
     }
 
     return str;
-
 }
+
 
 
 function makeList(nextFlag){
@@ -507,7 +532,7 @@ function makeList(nextFlag){
                 str += '<span class="img"></span>';
                 str += '<span>' + attachnameArray[i] + '.' + attachtypeArray[i] + '<br/>';
                 str += attachsizeArray[i] + 'KB</span>';
-                str += '<button class="btnchatdown"></button></p>';
+                str += '<button class="btnchatdown downlodadBtn"></button></p>';
 
             }
         }

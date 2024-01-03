@@ -352,7 +352,9 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		EmsMessageVO emsMessageVO = getEmassMessageData(msgId);
 		List<EmsAttachVO> result = new ArrayList<>();
 		for (EmsAttachVO vo : emsMessageVO.getFiles()) {
-			if (null == attachId || ("").equals(attachId)  || Common.isEquals(attachId, vo.getAttachId())) result.add(vo);
+			if (null == attachId || ("").equals(attachId)  ||
+					Common.isEquals(attachId, vo.getAttachId()))
+				result.add(vo);
 		}
 		return result;
 	}

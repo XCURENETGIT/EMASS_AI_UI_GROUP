@@ -393,6 +393,14 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	}
 
 	@Override
+	public MessengerGroupUserVO getGenerativeGroupUserList(SolrQuery sq, String adminId) throws IOException, SolrServerException {
+		setAuthoritys(sq, adminId);
+		SearchHits<SolrEdcVO> resp = getList(sq);
+		sq.clear();
+		return new MessengerGroupUserVO(resp);
+	}
+
+	@Override
 	public SolrEdcMessageVO getEmassMessage(SolrQuery sq, String adminId, String readYn, String consentNo) throws IOException, SolrServerException {
 		if (Common.isNotEmpty(readYn) && Common.isNotEmpty(adminId)) {
 			if (Common.isEquals(readYn, "Y")) {
