@@ -290,7 +290,7 @@
 	<div id="listDataFormat">
 		<div class="grid-stack-item ui-draggable-handle">
 			<div style="display:none;" class="gridValues" data-dashMultiLeft="#dashMultiLeft#" data-dashMultiRight="#dashMultiRight#"></div>
-			<div class="grid-stack-item-content" style="min-width:420px; min-height:260px;">
+			<div class="grid-stack-item-content">
 				<div class="panel #dashColor#Border">
 					<div class="panel-body">
 						<div class="row">
