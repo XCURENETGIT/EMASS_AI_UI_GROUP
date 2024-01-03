@@ -54,59 +54,62 @@ public class MessengerEdcGroupVO {
 		ObjectMapper mapper = new ObjectMapper(); //임시
 
 		ElasticsearchAggregations elasticSearchAggregations = (ElasticsearchAggregations) resp.getAggregations();
-
-		/* 디테일 검색이 아닐 경우 */
-		if (null != elasticSearchAggregations || !detail ) {
+		System.out.println(detail);
+		/* 디테일 검색이 아닐 경우 어그리 게이션이 존재 하거나 또는 detail 이 false 일 경우 */
+		if (null != elasticSearchAggregations) {
 			Aggregations mainAggregations = elasticSearchAggregations.aggregations();
-			if (null == mainAggregations ) return;
+			if (null == mainAggregations) return;
 
 			Map<String, Aggregation> mainAggsMap = mainAggregations.getAsMap();
-			Map<String,Aggregations> groupAggsMap = new HashMap<>();  // 추출할 그룹 aggs
+			Map<String, Aggregations> groupAggsMap = new HashMap<>();  // 추출할 그룹 aggs
 
 
 			long total = 0;
 			//메인 Aggs의 sub Aggs 추출
-			for(Map.Entry<String, Aggregation> map : mainAggsMap.entrySet()) {
-				Aggregation agg =  map.getValue();
+			for (Map.Entry<String, Aggregation> map : mainAggsMap.entrySet()) {
+				Aggregation agg = map.getValue();
 				Terms terms = mainAggregations.get(agg.getName());
-				for(Terms.Bucket bucket : terms.getBuckets()){
+				for (Terms.Bucket bucket : terms.getBuckets()) {
 					total = total + bucket.getDocCount();
-					groupAggsMap.put(bucket.getKeyAsString(),bucket.getAggregations());
+					groupAggsMap.put(bucket.getKeyAsString(), bucket.getAggregations());
 				}
 			}
 
 			// sub Aggs에서 document 추출
 			List<TopHits> topHitsList = new ArrayList<>();
-			for(Map.Entry<String, Aggregations> groupAgg : groupAggsMap.entrySet()) {
+			for (Map.Entry<String, Aggregations> groupAgg : groupAggsMap.entrySet()) {
 				Aggregations groupAggs = groupAggsMap.get(groupAgg.getKey());
 				Map<String, Aggregation> groupAggMap = groupAggs.getAsMap();
-				for (Map.Entry<String, Aggregation> gMap  : groupAggMap.entrySet()) {
-					Aggregation gAgg =  gMap.getValue();
+				for (Map.Entry<String, Aggregation> gMap : groupAggMap.entrySet()) {
+					Aggregation gAgg = gMap.getValue();
 					topHitsList.add(groupAggs.get(gAgg.getName()));
 				}
 			}
 
-			for(TopHits topHits : topHitsList){
-				org.elasticsearch.search.SearchHit[] hits  = topHits.getHits().getHits();
+			for (TopHits topHits : topHitsList) {
+				org.elasticsearch.search.SearchHit[] hits = topHits.getHits().getHits();
 				for (SearchHit hit : hits) {
 					Map<String, Object> map = hit.getSourceAsMap();
 					if (map.size() > 0) {
-						map.put("msgid",hit.getId());
+						map.put("msgid", hit.getId());
 						SolrEdcVO solrEdcVO = mapper.convertValue(map, SolrEdcVO.class);
-						this.groups.add(reDefined(solrEdcVO, adminId,0L));
+						this.groups.add(reDefined(solrEdcVO, adminId, 0L));
 					}
 				}
 			}
 
-		}else if(detail){
-			/* 메신저 디테일 검색*/
-			resp.getSearchHits().stream().map(org.springframework.data.elasticsearch.core.SearchHit::getContent).forEach(s -> {
-				this.groups.add(reDefinedDetail(s,  adminId, original));
-			});
-
+		} else {
+			if (detail) {
+				resp.getSearchHits().stream().map(org.springframework.data.elasticsearch.core.SearchHit::getContent).forEach(s -> {
+					this.groups.add(reDefinedDetail(s, adminId, original));
+				});
+			} else {
+				resp.getSearchHits().stream().map(org.springframework.data.elasticsearch.core.SearchHit::getContent).forEach(s -> {
+					this.groups.add(reDefined(s, adminId, 0));
+				});
+			}
 			this.numFound = resp.getTotalHits();
 		}
-
 
 	}
 
@@ -205,14 +208,13 @@ public class MessengerEdcGroupVO {
 		String result = Common.EMPTY;
 		if (Common.isOrEquals(edc.getSvc3(), "C", "M")) {
 			String body = Common.nvl(edc.getBody_snippet());
-			if( cutLength > 0 && body.length() > cutLength) body = body.substring(0, cutLength);
+			if (cutLength > 0 && body.length() > cutLength) body = body.substring(0, cutLength);
 			result = body;
-		}
-		else if (Common.isEquals(edc.getSvc3(), "F")) {
+		} else if (Common.isEquals(edc.getSvc3(), "F")) {
 			result = Common.join(edc.getAttachname(), "\n");
 			//if (Common.isNotEmpty(edc.getBody_snippet())) result += "\n" + edc.getBody_snippet();
-		} else if (Common.isEquals(edc.getSvc3(), "J")) result = "["+Prop.propFormat("common.messenger.join")+"]";
-		else if (Common.isEquals(edc.getSvc3(), "L")) result = "["+Prop.propFormat("common.messenger.leave")+"]";
+		} else if (Common.isEquals(edc.getSvc3(), "J")) result = "[" + Prop.propFormat("common.messenger.join") + "]";
+		else if (Common.isEquals(edc.getSvc3(), "L")) result = "[" + Prop.propFormat("common.messenger.leave") + "]";
 		return original ? result : textParser(result);
 	}
 
@@ -251,7 +253,7 @@ public class MessengerEdcGroupVO {
 	}
 
 	private int getMessengerGroupCnt(QueryResponse resp) {
-		if(Common.isNotEmpty(resp.getFacetField("xrootmtr"))) {
+		if (Common.isNotEmpty(resp.getFacetField("xrootmtr"))) {
 			return resp.getFacetField("xrootmtr").getValueCount();
 		}
 		return 0;
