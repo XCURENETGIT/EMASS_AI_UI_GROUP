@@ -193,7 +193,7 @@
 	<div id="singleDataFormat">
 		<div class="grid-stack-item ui-draggable-handle">
 			<div style="display:none;" class="gridValues" data-dashMultiLeft="#dashMultiLeft#" data-dashMultiRight="#dashMultiRight#"></div>
-			<div class="grid-stack-item-content " style="width:300px; height:114px;">
+			<div class="grid-stack-item-content " style="position:relative">
 				<div class="xcn_maincon panel">
 					<button type="button" class="customClose">
 						<span aria-hidden="true">&times;</span>
