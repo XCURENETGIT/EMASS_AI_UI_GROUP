@@ -214,15 +214,14 @@
                 var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '')+"235959";
                 var searchStr = '';
                 if (userid == '') return;
-                eikon2.getCollectionGroupTextExport('<c:url value="/getCollectionGroupAllExport.xcn"/>?userid=' + userid + '&srcip=' + srcip + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr+'&limit=1000&facet_detail=true');
+                eikon2.getCollectionGroupTextExport('<c:url value="/getCollectionGroupAllExport.xcn"/>?userid=' + userid + '&srcip=' + srcip + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr+'&limit=1000&facet_detail=true&export=true');
                 hideSelect();
             });
 
             $(document).on('click', '.downAllFile', function(){
-                alert("클릭");
                 var downloadFlag = false;
                 $('.downloadIcon').each ( function ( i, item ) {
-                    var attachHash = $(this).parents('p').attr('msgid');
+                    var attachHash = $(this).parents('p').attr('attachhash');
                     if( attachHash != ''){
                         downloadFlag = true;
                     }

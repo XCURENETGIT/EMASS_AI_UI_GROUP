@@ -298,7 +298,7 @@ public class HTMLtoXLSXWriter {
 		int tableCount = 0;
 		Document doc = Jsoup.parse(html);
 
-		for (Element table : doc.select(".table")) {
+		for (Element table : doc.select(".subTable")) {
 			tableCount++;
 			if(tableCount==1) tableRow = ST.createRow(ST.getLastRowNum() + 1);
 			else tableRow = ST.createRow(ST.getLastRowNum() + 2);

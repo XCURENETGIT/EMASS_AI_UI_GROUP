@@ -699,7 +699,8 @@ public class MessengerController {
 
 		/* 그룹 디테일검색 동적 들어와야 할 offset,size 값*/
 		sq.setParam("facet.offset", "0");
-		sq.setParam("facet.size", "5");
+
+		sq.setParam("facet.size", "100");
 		boolean facet_detail= ("true".equals(Common.nvl(param.get("facet_detail"))))? true:false;
 		sq.setParam("facet.detail", facet_detail);
 		sq.setParam("facet.mincount", "1");
@@ -1327,7 +1328,7 @@ public class MessengerController {
 		}
 	}
 
-	@RequestMapping(value = "/getCollectionGroupAllExport.xcn")
+	@RequestMapping(value = "/.xcn")
 	@Description("서비스 대화내용 압축 내보내기")
 	@ResponseBody
 	public void getCollectionGroupAllExport(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
