@@ -58,10 +58,10 @@ body,html {width:100%; height:100%;}
 .mainlist p {min-width:150px; font-size:30px; font-weight:700; color:#1A73F9;margin-top:4px; text-align: right;}
 .mainlist p span {font-size:14px; color:#555;margin-left:4px;}
 
-.xcn_maincon {position: relative; margin-bottom:24px; }
-.xcn_maincon > div { position: relative; border:1px solid #ff0000; text-align: left;  border:1px solid #ddd; background-color: #fff;padding:16px;}
-.xcn_maincon > div> p {min-width:150px; font-size:28px; font-weight:700; color:#1A73F9; text-align: right;}
-.xcn_maincon > div> p > span {font-size:14px; color:#555;margin-left:4px;}
+.xcn_maincon {position: relative; margin-bottom:24px;  }
+.xcn_maincon .xcn_maincon_box { position: relative;  text-align: left; }
+.xcn_maincon .xcn_maincon_box > p {min-width:150px; font-size:28px; font-weight:700; color:#1A73F9; margin-top:12px; margin-right:8px; text-align: right;}
+.xcn_maincon .xcn_maincon_box > p > span {font-size:14px; color:#555;margin-left:4px;}
 .maincon_flag01 {position: absolute; bottom: 24px; left:16px; display:inline-block; background-color:#777; color:#fff; font-size:12px; padding:2px;}
 
 .tit01 {background:url(../img/ico_main_tit01.png) top left no-repeat; font-size:14px; font-weight: 400; color:#111;padding-left:20px;}
@@ -458,17 +458,16 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .purpleBg {background-color:#FCF2FF !important;}
 
 /*borderColor*/
-.whiteBgBorder {border-color: #fff }
-.blueBgBorder {border-color: #F2F6FF }
-.greenBgBorder {border-color: #E4F4F1 }
-.yellowBgBorder {border-color: #FFF8E3 }
-.blackBgBorder {border-color: #FFF8E3 }
-.redBgBorder {border-color: #FFF1F1 }
-.grayBgBorder {border-color: #EEF1F6 }
-.grayBg02Border {border-color: #F8F8F8 }
-.grayBg03Border {border-color: #EEEFF2 }
-.purpleBgBorder {border-color: #FCF2FF }
-
+.whiteBgBorder {border-color: #fff; border-width: 2px;}
+.blueBgBorder {border-color: #F2F6FF; border-width: 2px; }
+.greenBgBorder {border-color: #E4F4F1; border-width: 2px; }
+.yellowBgBorder {border-color: #FFF8E3; border-width: 2px; }
+.blackBgBorder {border-color: #FFF8E3; border-width: 2px; }
+.redBgBorder {border-color: #FFF1F1; border-width: 2px; }
+.grayBgBorder {border-color: #EEF1F6; border-width: 2px; }
+.grayBg02Border {border-color: #F8F8F8; border-width: 2px; }
+.grayBg03Border {border-color: #EEEFF2; border-width: 2px; }
+.purpleBgBorder {border-color: #FCF2FF; border-width: 2px;}
 
 /* border */
 .bordd{border:1px solid #ddd;}

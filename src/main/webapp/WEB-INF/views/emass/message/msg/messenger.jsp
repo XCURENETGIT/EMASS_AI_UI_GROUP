@@ -330,7 +330,6 @@
                     ui.alertMsg('<s:message code="eikon.msg.select.date"/>');
                     return;
                 }
-
                 eikon.getMessengerList(1);
             });
             $("#searchStrInput").keypress(function (e) {
@@ -516,7 +515,6 @@
 
             initCondition();
             eikon.init();
-// 	$('#searchBtn').click();
 
         });
 
