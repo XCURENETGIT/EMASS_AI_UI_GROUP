@@ -644,8 +644,8 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .clearfix::after {content: "";clear: both; display: table;}
 
 /*메신저*/
-.sns_slack {background:url(../img/ico_sns_slack.png) left top no-repeat;}
-.sns_facebook {background:url(../img/ico_sns_facebook.png) left top no-repeat;}
+.sns_slack {background:url(../img/ico_sns_QSL.png) left top no-repeat;}
+.sns_facebook {background:url(../img/ico_sns_QFB.png) left top no-repeat;}
 .sns_line {background:url(../img/ico_sns_line.png) left top no-repeat;}
 .sns_chatGPT{background:url(../img/ico_sns_chatgpt.png) left top no-repeat;}
 
