@@ -364,7 +364,6 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		String[] msgIdArr = msgIds.split(",");
 		for (String msgId : msgIdArr) {
 			EmsMessageVO emsMessageVO = getEmassMessageData(msgId);
-			System.out.println(emsMessageVO.getFiles().size());
 			for (int i = 0; i < msgIdArr.length; i++) {
 				List<EmsAttachVO> files = emsMessageVO.getFiles();
 				if (files != null && i < files.size()) {

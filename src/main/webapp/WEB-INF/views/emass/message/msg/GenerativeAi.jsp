@@ -239,7 +239,7 @@
                     msgIds.push(msgId);
                 });
 
-                var attachUrl = '<c:url value="/getEmassAttachInfo4DownHash.xcn"/>?msgIds='+msgIds.join(',');
+                var attachUrl = '<c:url value="/downEmassAttachByMsgId.xcn"/>?msgIds='+msgIds.join(',');
                 try {
                     AttachDown.location.href = attachUrl;
                 } catch (e) {
