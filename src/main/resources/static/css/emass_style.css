@@ -198,7 +198,7 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 #contentArea .searchArea .btnList {position: relative; text-align:right; float:right; width:20%;z-index:9999;}
 #contentArea .searchArea .textarea {min-height:56px;}
 .myDropdown { position: relative; display: inline-block; cursor: pointer; color: #fff; font-size: 13px;z-index: 9999;}
-.dropdown-content {z-index: 9999; margin-top:1px; display: none; position: absolute; left:50%; margin-left:-70px; background-color: #fff; min-width: 140px; border-radius:2px; box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);}
+.dropdown-content {z-index: 9999; margin-top:1px; display: none; position: absolute; left:50%; margin-left:-70px; background-color: #fff; min-width: 150px; border-radius:2px; box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);}
 .dropdown-content a {color: #111;padding: 12px 16px;display:block; vertical-align: middle; font-size:13px; font-weight: 400;}
 .dropdown-content a img {width:20px; height:16px; border:1px solid #fff; vertical-align: middle; margin-bottom:4px; margin-right:4px;}
 .dropdown-content a:hover {background-color: #f5f5f5; border-radius:2px;color: #111; font-weight: 600; }
@@ -719,13 +719,14 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .messengerList .messengerBox .people .person.active, .messengerList .messengerBox .people .person:hover {background-color: var(--bluebg);}
 .messengerList .messengerBox .people .person.active span, .messengerList .messengerBox .people .person:hover span {}
 .messengerList .messengerBox .people .person.active:after, .messengerList .messengerBox .people .person:hover:after {display: none;}
-.chatList { position: relative; min-width: 400px; /* overflow-x: hidden; overflow-y: scroll;*/}
+.chatList { position: relative; min-width: 400px;  overflow-x: hidden;/* overflow-y: scroll;*/  -ms-overflow-style: none;}
 .chatList::-webkit-scrollbar {display: none; /* Chrome, Safari, Opera*/}
 .chatList .chatBox {position: relative; min-width: 100%; padding-bottom:20px;}
 .chatList .chatBox .top { position: sticky; top:0; left:0; bottom:0; right:0; min-width: 400px; color:#fff; font-size:14px; padding:20px 16px; z-index: 99; background-color: #606973}
 .chatDate { position: relative; display: grid; grid-template-columns: 50% 50%; padding-top:12px;}
 .chatList .chatBox .top span {position: relative; font-weight: 300; }
 .chatList .chatBox .top span.chatid {font-weight: 600;}
+.file_myDropdown {position: absolute; right:10px; top:20px; z-index:99999;}
 .chatList .chatBox .top .myDropdown {float:right; z-index: 99999;}
 .chatList .chatBox .chat {position: relative;display: none;flex-direction: column; z-index: 1;padding:0 16px;}
 .chatList .chatBox .chat.active-chat {display: block;display: flex;overflow: hidden;}

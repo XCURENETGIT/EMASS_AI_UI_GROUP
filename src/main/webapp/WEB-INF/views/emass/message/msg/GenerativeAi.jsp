@@ -221,7 +221,6 @@
             });
 
             $(document).on('click', '.downAllFile', function(){
-                alert("dfada");
                 var downloadFlag = false;
                 $('.downloadIcon').each ( function ( i, item ) {
                     var attachHash = $(this).parents('p').attr('attachhash');
