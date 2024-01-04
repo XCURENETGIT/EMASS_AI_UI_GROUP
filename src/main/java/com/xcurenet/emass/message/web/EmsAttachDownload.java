@@ -105,8 +105,6 @@ public class EmsAttachDownload {
 	}
 
 
-
-
 	public InputStream getAttach(String path, String harPath) {
 		SFTPUtil ftp = null;
 		CryptoCommon crypto = new CryptoCommon();

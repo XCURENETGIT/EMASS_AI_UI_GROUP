@@ -26,5 +26,9 @@ public class EmassBodyData {
 	@Field("hash")
 	private String bodyHash;
 
-	private String body_snippet;
+//	private String body_snippet;
+
+	@Field("bodyType")
+	private String bodyType;
+
 }

@@ -1,20 +1,13 @@
 package com.xcurenet.emass.message.service;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.xcurenet.common.types.IP;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.config.Config;
-
 import com.xcurenet.emass.message.service.vo.EmassKeywordData;
 import lombok.Data;
-import org.joda.time.DateTime;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Field;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class EmsMessageVO {
@@ -36,6 +29,8 @@ public class EmsMessageVO {
 	private String bodyTextPath;
 	private String bodyType;
 	private String bodyText;
+	private int bodyImgCnt;
+
 
 	private String usrIp;
 	private String usrId;
@@ -105,6 +100,7 @@ public class EmsMessageVO {
 	private EmassKeywordData keywordInfo;
 	private String header;
 
+
 	public void setSvc(String svc) {
 		if (Common.isNotEmpty(svc)) {
 			this.svcNm = Config.getServiceNm(svc);
@@ -141,4 +137,6 @@ public class EmsMessageVO {
 		result.addAll(bccList);
 		return result;
 	}
+
+
 }

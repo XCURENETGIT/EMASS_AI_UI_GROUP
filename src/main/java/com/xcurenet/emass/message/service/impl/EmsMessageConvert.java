@@ -45,10 +45,13 @@ public class EmsMessageConvert {
 		if (data.getBodyInfo() != null) {
 			vo.setBodySize(data.getBodyInfo().getBodySize());
 			vo.setBodyHash(data.getBodyInfo().getBodyHash());
-			vo.setBody_snippet(data.getBodyInfo().getBody_snippet());
+//			vo.setBody_snippet(data.getBodyInfo().getBody_snippet());
 			vo.setBodyCharset(data.getBodyInfo().getBodyCharset());
 			vo.setBodyPath(data.getBodyInfo().getBodyPath());
 			vo.setBodyTextPath(data.getBodyInfo().getBodyTextPath());
+			vo.setBodyImgCnt(Common.nvz(data.getBodyInfo().getBodyImageCnt()));
+			vo.setBodyType(Common.nvl(data.getBodyInfo().getBodyType()));
+
 		}
 		vo.setUsrIp(data.getUsrIp());
 		vo.setUsrId(data.getUsrId());
@@ -140,6 +143,8 @@ public class EmsMessageConvert {
 			vo.setMl_confd_userid(Common.nvl(data.getMlInfo().getMlConfdUserId()));
 			vo.setMl_confd_feedback(Common.nvz(data.getMlInfo().getMlConfdFeedBack()));
 		}
+
+
 
 		vo.setEpmsgType(data.getEpmsgType());
 		vo.setKeywordInfo(data.getKeywordInfo());

@@ -23,6 +23,7 @@ import com.xcurenet.emass.consent.web.ConsentFileDownload;
 import com.xcurenet.emass.consent.web.ConsentFileVO;
 import com.xcurenet.emass.message.component.SolrCreateQuery;
 import com.xcurenet.emass.message.service.*;
+import com.xcurenet.minio.MinioFileAdapter;
 import lombok.extern.log4j.Log4j2;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -58,8 +59,10 @@ import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Controller
@@ -97,6 +100,10 @@ public class EmsMessageController {
 	private KafkaProducerService kafkaProducerService; // kafka
 
 	private String kafka_feedback_idx = "ems_ui_ml_feedback_index";
+
+
+	@Autowired
+	public MinioFileAdapter minioFileAdapter;
 
 
 	@RequestMapping(value = "/getEmassBody.xcn")
@@ -726,7 +733,9 @@ public class EmsMessageController {
 		SolrQuery sq = null;
 		if (Common.isNotEmpty(condition.get("msgids"))) {
 			sq = new SolrQuery();
-			sq.setQuery(String.format("_id:(%s)", Common.joinj(Common.toJSONArray(condition.get("msgids")), " ")));
+			String query = Common.joinj(Common.toJSONArray(condition.get("msgids")), " ");
+			String[] querys = query.split(" ");
+			sq.setQuery(String.format("+_id:(%s)",Arrays.stream(querys).map(s -> "("+s+")").collect(Collectors.joining(" "))));
 
 			String sort = Common.nvl(condition.get("sort"));
 			if (Common.isEmpty(sort)) {
@@ -758,7 +767,7 @@ public class EmsMessageController {
 		for (EmsAttachVO attach : attachs) {
 			InputStream in = null;
 			try {
-				in = attachDown.getAttach(attach.getAttachPath(), attach.getAttachHarPath());
+				in = minioFileAdapter.findFile(attach.getAttachPath());
 				//파일이 실제로 없는 경우를 대비해서 attach 폴더를 우선 생성
 				String filePath = Common.makeFilepath("messages", edc.getMsgid(), "attachs", Common.removeInvalidName(attach.getAttachName()));
 				if (in == null) continue;
@@ -1588,4 +1597,6 @@ public class EmsMessageController {
 		String recvsType = Common.nvl(request.getParameter("recvsType"));
 		return new XcnResponseVO(XcnRspCode.OK, emsMessageService.getRecvDomainInfo(msgId, inside, recvsType));
 	}
+
+
 }
