@@ -329,7 +329,7 @@
 		</div>
 	</div>
 </div>
-<i class="fa fa-calendar" aria-hidden="true" style="display: none"></i><!-- 유출 관계도에서 사용되는 font-->
+<i class="fa fa-calendar" aria-hidden="true" style="font-size: 1px;position: absolute;top: -100px"></i><!-- 유출 관계도에서 사용되는 font-->
 
 <script type="text/javascript">
 	function getCurrentGrid() {
