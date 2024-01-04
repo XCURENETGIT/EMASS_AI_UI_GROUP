@@ -571,7 +571,6 @@
             });
 
             $('#serviceTypeSelect').selectpicker({
-                container: 'body',
                 size: 15,
                 width: '300px',
                 noneSelectedText: condition.serviceAll,
@@ -582,7 +581,6 @@
             });
 
             $('#busiSelect').selectpicker({
-                container: 'body',
                 size: 15,
                 width: '300px',
                 searchLabel: true,
@@ -593,7 +591,6 @@
             });
 
             $('#searchField').selectpicker({
-                container: 'body',
                 width: '100px',
                 noneSelectedText: '<s:message code="common.msg.all"/>'
             });
