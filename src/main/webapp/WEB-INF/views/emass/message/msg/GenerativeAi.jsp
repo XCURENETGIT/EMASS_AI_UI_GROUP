@@ -362,7 +362,7 @@
                 $('#subchatid').html(": "+name);
                 $('#srcip').text(srcip);
                 $('#usr_id').text(usr_id);
-                eikon2.getGenerativeDetailList(userid, msgid, srcip, usr_id);
+                eikon2.getCollectionDetailList(userid, msgid, srcip, usr_id);
                 hideUserSelect();
             });
 
@@ -913,7 +913,7 @@
 			<!-- 첨부파일 -->
 			<div class="rightFile p20" id="xcn_Search2">
 				<div class="subtab">
-					<button class="active">첨부파일ffffffffffffffffffffffffffffffffffffff
+					<button class="active">첨부파일
 						<span id="xcn_toggleBtn2" style="font-size:16px; opacity: 0.7; padding:4px;">x</span>
 					</button>
 				</div>
@@ -923,6 +923,19 @@
 			<div style="position:absolute; top:20px; right:16px; z-index: 999999">
 
 				<button id="showBtn" class="table_btn02">&#8636;</button>
+
+				<div class="top mat16">
+					<div class="myDropdown">
+						<span>내보내기 &#9662;</span>
+						<div class="dropdown-content">
+							<a href="#" onclick="downloadList('xlsx')" class="excel_down">엑셀(xlsx)</a>
+							<a href="#" onclick="downloadList('txt')" class="txt_down">텍스트(txt)</a>
+							<a href="#" onclick="downloadList('html')" class="html_down">하이퍼텍스트(html)</a>
+							<a href="#" class="excel_file_down">액셀(xlsx)+첨부파일</a>
+						</div>
+					</div>
+				</div>
+
 			</div>
 			<%--			첨부파일 끝!!--%>
 		</div>

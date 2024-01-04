@@ -80,13 +80,7 @@ var eikon2 = {
         var searchType = $('input:radio[name=searchType]:input:checked').val();
         getCollectionGroupList(page);
     },
-    getMessengerDetailList : function(userid, msgid){
-        eikon2.getMessengerDetailList(userid, msgid, '');
-    },
-    getMessengerDetailList : function(userid, msgid, srcip){
-        eikon2.getMessengerDetailList(userid, msgid, '', '');
-    },
-    getGenerativeDetailList : function(userid, msgid, srcip, usr_id){
+    getCollectionDetailList : function(userid, msgid, srcip, usr_id,type){
         searchFlag = true;
         ui.onBody('timeline_list', 0, 60);
 
@@ -101,7 +95,7 @@ var eikon2 = {
         var endDt=$('#endDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 
 
-        getGenerativeMessageTotal(userid, srcip, startDt, endDt, usr_id, '');
+        getCollectionMessageTotal(userid, srcip, startDt, endDt, usr_id, '',type);
     },
     getCollectionGroupTextExport : function(attachUrl, userid){
         if( detailDataSet.length == 0 ) return;
@@ -192,19 +186,20 @@ var eikon2 = {
 };
 
 
-function getGenerativeMessageTotal(userid, srcip, startDt, endDt, usr_id, msgid){
+function getCollectionMessageTotal(userid, srcip, startDt, endDt, usr_id, msgid,type){
 /*총 갯수 계산하는 함수*/
     ui.get({
-        url : 'getGenerativeMessageTotal.xcn',
+        url : 'getCollectionMessageTotal.xcn',
         userid : userid,
         srcip : srcip,
         startDt : startDt+"000000",
         endDt : endDt+"235959",
         usr_id : usr_id,
         limit : 0,
+        type:type,
         success : function(data, total) {
             $('#groupSubResultCnt').text(data);
-            getGenerativeMessage(userid, srcip, usr_id, msgid);
+            getCollectionMessage(userid, srcip, usr_id, msgid,type);
         },
         error : function(status, message) {
             ui.alertMsg(message);
@@ -462,13 +457,7 @@ function makeFileList(data) {
 
     if (data.length === 0) {
         str += '<div class="list-group-item02 ma_none">첨부파일이 없습니다</div>';
-        str += '<div class="top mat16"><div class="myDropdown"><span>내보내기 &#9662;</span><div class="dropdown-content">';
-        str += '<a href="#" onclick="downloadList(\'xlsx\')" class="excel_down">엑셀(xlsx)</a>';
-        str += '<a href="#" onclick="downloadList(\'txt\')" class="txt_down">텍스트(txt)</a>';
-        str += '<a href="#" onclick="downloadList(\'html\')" class="html_down">하이퍼텍스트(html)</a>';
-        str += '<a href="#" class="excel_file_down">액셀(xlsx)+첨부파일</a>';
 
-        str += '</div></div></div>';
     } else {
         str = '<ul>';
         for (var i = 0; i < data.length; i++) {
@@ -478,13 +467,7 @@ function makeFileList(data) {
         }
 
         str += '</ul>';
-        str += '<div class="top mat16"><div class="myDropdown"><span>내보내기 &#9662;</span><div class="dropdown-content">';
-        str += '<a href="#" onclick="downloadList(\'xlsx\')" class="excel_down">엑셀(xlsx)</a>';
-        str += '<a href="#" onclick="downloadList(\'txt\')" class="txt_down">텍스트(txt)</a>';
-        str += '<a href="#" onclick="downloadList(\'html\')" class="html_down">하이퍼텍스트(html)</a>';
-        str += '<a href="#" class="excel_file_down">액셀(xlsx)+첨부파일</a>';
-        str += '</div></div><div class="myDropdown mal8 downAllFile"><span>전체파일 저장 </span><div class="dropdown-content">';
-        str += '</div></div></div>';
+        str += '<div class="top mat16"><div class="myDropdown mal8 downAllFile"><span>전체파일 저장 </span><div class="dropdown-content"></div></div></div>';
     }
 
     return str;
@@ -973,7 +956,7 @@ function getPage3(total, pageCount, listSize, rtnMethod){
     return str;
 }
 
-function getGenerativeMessage(userid, srcip, usr_id, msgid){
+function getCollectionMessage(userid, srcip, usr_id, msgid,type){
     $("#timeline_list").html('');
 
     var startDt=$('#startDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
@@ -988,6 +971,7 @@ function getGenerativeMessage(userid, srcip, usr_id, msgid){
         usr_id : usr_id,
         msgId : nvl(msgid),
         limit : detailLimit,
+        type:type,
         success : function(data, total) {
             if(data.groups.length > 0) {
                 $('.messenger_prev').css('display','block');

@@ -222,7 +222,7 @@ public class CollectionController {
 		}
 
 		if (Common.isEmpty(msgId) || (startRange < 0) || (endRange > 0)) {
-			sq = getGenerativeMessageTotalQuery(request);
+			sq = getCollectionMessageTotalQuery(request);
 		} else {
 			sq = getMessengerGtNext(request, msgId, true);
 		}
@@ -233,11 +233,11 @@ public class CollectionController {
 		return new XcnResponseVO(XcnRspCode.OK, result);
 	}
 
-	@RequestMapping(value = "/getGenerativeMessageTotal.xcn")
-	@Description("생성형ai 대화방 대화 내용 전체 건수 조회")
+	@RequestMapping(value = "/getCollectionMessageTotal.xcn")
+	@Description("서비스 대화방 대화 내용 전체 건수 조회")
 	@ResponseBody
 	public XcnResponseVO getGenerativeMessageTotal(final HttpServletRequest request, final HttpSession session) throws Exception {
-		MessengerEdcGroupVO result = getGenerativeMessageTotal(request);
+		MessengerEdcGroupVO result = getCollectionMessageTotal(request);
 		return new XcnResponseVO(XcnRspCode.OK, result.getNumFound());
 	}
 
@@ -307,7 +307,8 @@ public class CollectionController {
 
 		if (Common.isNotEmpty(searchStr)) query += String.format(" +body:(*%s*) ", searchStr);
 
-		sq.setQuery(query + MESSENGER2);
+		sq.setQuery(query + (Common.isEmpty(param.get("type")) ? MESSENGER2 : MESSENGER3));
+
 		sq.setStart(Common.nvz(param.get("offset"), 0));
 		sq.setRows(limit);
 		sq.addSort("ctime", ORDER.asc);
@@ -365,7 +366,8 @@ public class CollectionController {
 
 		if (Common.isNotEmpty(searchStr)) query += String.format(" +body:(*%s*) ", searchStr);
 
-		sq.setQuery(query + MESSENGER2);
+		sq.setQuery(query + (Common.isEmpty(param.get("type")) ? MESSENGER2 : MESSENGER3));
+
 		sq.setStart(Common.nvz(param.get("offset"), 0));
 		sq.setRows(limit);
 		sq.addSort("ctime", ORDER.asc);
@@ -394,18 +396,18 @@ public class CollectionController {
 		return sq;
 	}
 
-	public MessengerEdcGroupVO getGenerativeMessageTotal(final HttpServletRequest request) throws Exception {
-		return getGenerativeMessageTotal(request, false);
+	public MessengerEdcGroupVO getCollectionMessageTotal(final HttpServletRequest request) throws Exception {
+		return getCollectionMessageTotal(request, false);
 	}
 
-	public MessengerEdcGroupVO getGenerativeMessageTotal(final HttpServletRequest request, boolean original) throws Exception {
-		SolrQuery totalQuery = getGenerativeMessageTotalQuery(request);
+	public MessengerEdcGroupVO getCollectionMessageTotal(final HttpServletRequest request, boolean original) throws Exception {
+		SolrQuery totalQuery = getCollectionMessageTotalQuery(request);
 		MessengerEdcGroupVO result = solrEdcService.getMessengerGroupList(totalQuery, Common.getAdminId(request), true, original);
 		return result;
 	}
 
 
-	public SolrQuery getGenerativeMessageTotalQuery(final HttpServletRequest request) throws Exception {
+	public SolrQuery getCollectionMessageTotalQuery(final HttpServletRequest request) throws Exception {
 
 		JSONObject param = Common.getParam(request);
 		String userid = Common.nvl(param.get("userid"));
@@ -442,7 +444,9 @@ public class CollectionController {
 	/*	if(Common.isNotEmpty(usr_id)) query += String.format(" +usr_id:\"%s\"", usr_id);
 		else query += String.format(" -usr_id:*");*/
 
-		sq.setQuery(query + MESSENGER2);
+		System.out.println("Dfadf"+Common.nvz(param.get("type")));
+
+		sq.setQuery(query + ("N".equals(Common.nvz(param.get("type"))) ? MESSENGER3 : MESSENGER2));
 		sq.setRows(limit);
 		sq.addSort("ctime", ORDER.asc);
 		sq.addSort("msgid", ORDER.asc);
@@ -484,7 +488,8 @@ public class CollectionController {
 
 		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
 		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), Common.getAdminId(session));
-		sq.setQuery(sq.getQuery() + addQuery + MESSENGER2);
+		sq.setQuery(sq.getQuery() + addQuery + (Common.isEmpty(param.get("type")) ? MESSENGER2 : MESSENGER3));
+
 		sq.setStart(Common.nvz(param.get("offset"), 0));
 		sq.setRows(1);
 		sq.setSort("ctime", ORDER.asc);
@@ -540,7 +545,7 @@ public class CollectionController {
 		if (Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
 		if (Common.isNotEmpty(searchStr)) query += String.format(" +body:(*%s*) ", searchStr);
 
-		sq.setQuery(query + MESSENGER2);
+		sq.setQuery(query + (Common.isEmpty(param.get("type")) ? MESSENGER2 : MESSENGER3));
 		sq.setStart(0);
 		sq.setRows(10000);
 
@@ -612,7 +617,7 @@ public class CollectionController {
 		if (Common.isNotEmpty(startDt) && Common.isNotEmpty(endDt))
 			query += String.format("+ctime:[%s TO %s] ", startDt, endDt);
 
-		query += String.format("+userid:\"%s\" ", userid) + MESSENGER2;
+		query += String.format("+userid:\"%s\" ", userid) + (Common.isEmpty(param.get("type")) ? MESSENGER2 : MESSENGER3);
 
 		if (Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
 		if (Common.isNotEmpty(usr_id)) query += String.format(" +usr_id:\"%s\"", usr_id);
@@ -729,7 +734,7 @@ public class CollectionController {
 
 			out = response.getOutputStream();
 			os = new ArchiveStreamFactory().createArchiveOutputStream("zip", out);
-			MessengerEdcGroupVO groups = getGenerativeMessageTotal(request, true);
+			MessengerEdcGroupVO groups = getCollectionMessageTotal(request, true);
 			inputAttach(os, groups);
 			inputCollectionZipExcel(os, groups, userid, Common.getLocale(request.getSession()));
 
@@ -861,7 +866,7 @@ public class CollectionController {
 		ServletOutputStream out = null;
 		try {
 			out = response.getOutputStream();
-			MessengerEdcGroupVO groups = getGenerativeMessageTotal(request, true);
+			MessengerEdcGroupVO groups = getCollectionMessageTotal(request, true);
 
 			if (Common.isEquals(type, "xlsx")) {
 				response.setContentType("application/octet-stream");
