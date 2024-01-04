@@ -59,7 +59,6 @@ var eikon = {
             var msgIds = [];
 
             if ($(this).hasClass('messenger_next')) {
-
                 var msgid = $('.timeline').children().last().attr('id');
                 getMessengerMessageNext(xrootmtr, srcip, usr_id, msgid);
 
@@ -139,8 +138,8 @@ var eikon = {
     findMessageList: function (offset) {
         var searchStr = $('#searchMsgStrInput').val();
         var xrootmtr = $('#xrootmtr').text();
-        var srcip = $('#srcip').text();
-        var usr_id = $('#usr_id').text();
+        var srcip = $('#selectUserInfo').attr("data-srcip");
+        var userid = $('#selectUserInfo').attr("data-name");
         var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
         var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
 
@@ -297,8 +296,11 @@ function getMessengerMessage(xRootmtr, srcip, usr_id, msgid) {
                 return;
             }
 
+            getMessengerAllfile(xRootmtr, srcip, usr_id, msgid);
+
             detailDataSet = data.groups;
             prevDetailDataSet = data.groups;
+
 
             if (data.numFound < detailLimit)
                 $('.messenger_next').css('display', 'none');
@@ -354,11 +356,11 @@ function getMessengerMessageNext(xRootmtr, srcip, usr_id, msgid) {
              * 전체 10 페이지가 넘어갈 경우 첫번째 페이지 제거
              * 최상단에 날짜 출력
              */
-            if ($(".pageInfoDiv").size() > detailViewPage - 1) {
+            if($(".pageInfoDiv").size() > detailViewPage-1){
                 $('.pageInfoDiv').first().remove();
                 var firstObj = $('.pageInfoDiv').first();
-                if (!firstObj.children().filter(':first').hasClass('date_li')) {
-                    var date = viewDate(firstObj.children().filter(':first').attr('ctime').substring(0, 10));
+                if(!firstObj.children().filter(':first').hasClass('date_li')){
+                    var date = viewDate(firstObj.children().filter(':first').attr('ctime').substring(0,10));
                     firstObj.prepend(date);
                 }
             }
@@ -376,6 +378,35 @@ function getMessengerMessageNext(xRootmtr, srcip, usr_id, msgid) {
         }
     });
 }
+
+function getMessengerAllfile(xrootmtr, srcip, usr_id, msgid){
+    var startDt=$('#startDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+    var endDt=$('#endDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+
+    ui.get({
+        url : 'getMessengerGroupAttachList.xcn',
+        xRootMtr : xrootmtr,
+        srcip : srcip,
+        usr_id : usr_id,
+        startDt: startDt+"000000",
+        endDt: endDt+235959,
+        searchStr: $('#searchMsgStrInput').val(),
+        attachYn : 'Y',
+        success : function(data, total) {
+
+            $('.rightFileList').html(makeFileList(data));
+        },
+        error : function(status, message) {
+            ui.alertMsg(message);
+        },
+        complete : function() {
+
+        }
+    });
+
+
+}
+
 
 /**
  * 이전 버튼 ( 최상단의 + 버튼 )
@@ -425,6 +456,28 @@ function getMessengerMessagePrev(xRootmtr, srcip, usr_id, msgid) {
         }
     });
 }
+
+function makeFileList(data) {
+    var str = '';
+
+    if (data.length === 0) {
+        str += '<div class="list-group-item02 ma_none">첨부파일이 없습니다</div>';
+
+    } else {
+        str = '<div class="scrollable-div" style="max-height: 800px; overflow-y: auto;"><ul>';
+        for (var i = 0; i < data.length; i++) {
+            str += '<li><p class="fileListdown" attachsize="' + data[i].attachsize + '" msgid="' + data[i].msgid + '" attachhash="' + data[i].attachhash + '"><span class="img"></span><span>';
+            str += '<a href="#">' + data[i].attachname + "." + data[i].attachtype + '</a>';
+            str += '</span><span style="position: absolute; right: 0; top: 8px;" ><button class="btnchatdown_w downloadIcon"></button></span></p></li>';
+        }
+
+        str += '</div></ul>';
+        str += '<div class="top mat16"><div class="myDropdown mal8 downAllFile"><span>전체파일 저장 </span><div class="dropdown-content"></div></div></div>';
+    }
+
+    return str;
+}
+
 
 function userSelectBox(data, srcip, usr_id) {
     var name = $('#selectUserInfo').attr('data-name');
@@ -595,10 +648,10 @@ function getMessengerMessageList(page) {
         offset: offset,
         limit: groupPageBreak,
         success: function (data, total) {
-            console.log("MessageSize: " + data.groups.length);
             rtnGroupList(data.groups, 'GD');
             rtnGroupPage(total, page, 'GD');
             HighlightGroup();
+
         },
         error: function (status, message) {
             ui.alertMsg(message);
@@ -751,13 +804,12 @@ function makeList(nextFlag) {
     for (var i = 0; i < detailDataSet.length; i++) {
         dataHasFlag = true;
         var obj = detailDataSet[i];
-        console.log("obj: "+obj.user);
         var chkPati = false;
         if ((nvl(obj.user) != '' && obj.user == obj.sender) || usrid == obj.title || usrid == obj.sender) chkPati = true;
         str += checkDate(i);
 
-        str += '<li class="p20 bubble txt_right slide_right timeline-inverted ' + (i == 0 && !nextFlag ? 'lastReadLi' : '') + '" id="' + obj.msgid + '" ctime="' + obj.ctime + '" userid="' + obj.userid + '" srcip="' + obj.srcip + '">';
-
+        str += '<li class="p20 bubble txt_right slide_right timeline-inverted ' + (i == 0 && !nextFlag ? 'lastReadLi' : '') + '" id="' + obj.msgid + '" ctime="' + obj.ctime + '" userid="' + obj.userid + '" srcip="' + obj.srcip + '" + " xrootmtr="' + obj.xrootmtr + '">';
+        str += '<span id="xrootmtr" style="display: none;">' + obj.xrootmtr + '</span>';
 
         var svc3 = obj.svc3;
         str += '	<div class="me timeline-panel" >';
@@ -779,7 +831,7 @@ function makeList(nextFlag) {
             str += attachsizeArray[i] + 'KB</span>';
             str += '<button class="btnchatdown downlodadBtn"></button></p>';
 
-        } else {
+        }  else {
             if (obj.body_snippet != undefined) str += '' + obj.body_snippet.replaceAll('\n', '<br/>') + '';
         }
         str += '</div>';
@@ -794,7 +846,6 @@ function makeList(nextFlag) {
     str += '</ul>';
     if (detailDataSet.length < detailLimit) str += noNextDataMsg();
 
-
     if (!dataHasFlag) {
         str = noDataMsg();
     }
@@ -805,73 +856,42 @@ function makeList(nextFlag) {
 function makePrevList() {
     var dataHasFlag = false;
     var str = '<ul class="pageInfoDiv timeline">';
-    if (prevDetailDataSet.length < detailLimit) str += noPrevDataMsg();
+    if(prevDetailDataSet.length < detailLimit) str += noPrevDataMsg();
     var usrid = $('#selectUserInfo').attr('data-usrid');
     var srcip = $('#selectUserInfo').attr('data-srcip');
-
-    for (var i = prevDetailDataSet.length - 1; i > -1; i--) {
+    for(var i=prevDetailDataSet.length - 1 ; i > -1 ; i--) {
+        str += checkDatePre(i);
         dataHasFlag = true;
         var obj = prevDetailDataSet[i];
-        var chkPati = false;
-        if ((nvl(obj.user) != '' && obj.user == obj.sender) || usrid == obj.title || usrid == obj.sender) chkPati = true;
+        if( (nvl(obj.user) != '' && obj.user == obj.sender) || usrid == obj.title || usrid == obj.sender ) chkPati = true;
 
-        str += checkDatePre(i);
 
-        str += '<li class="timeline-inverted" id="' + obj.msgid + '" ctime="' + obj.ctime + '">';
+        str+='<li class="p20 bubble txt_right slide_right timeline-inverted" id="'+obj.msgid+'" ctime="'+obj.ctime+'" userid="'+obj.userid+'" srcip="'+obj.srcip+'" xrootmtr="'+obj.xrootmtr+'" >';
 
-        var svc3 = obj.svc3;
-        if (!chkPati) {
-            if (obj.readYn == 'Y') str += '	<div class="timeline-badge custom read">';
-            else str += '	<div class="timeline-badge custom unread">';
+        str+='	<div class="me timeline-panel">';
 
-            if (svc3 == 'C') str += '<i class="fa fa-commenting-o fa-sm" style="font-size: 20px;"></i> ';
-            else if (svc3 == 'F') str += '<i class="fa fa-floppy-o fa-sm"></i> ';
-            else if (svc3 == 'J') str += '<i class="fa fa-sign-in fa-sm"></i> ';
-            else if (svc3 == 'L') str += '<i class="fa fa-sign-out fa-sm"></i> ';
-            str += '	</div>';
+        if(obj.attached=="Y"){
+            str+='<p class="filedown file_link" msgid="'+obj.msgid+'"+ attachhash="'+obj.attachhash+'" +>';
+            str+='<span class="img"></span>';
+            str+='<span>'+obj.attachname+'.'+obj.attachtype+'<br/>';
+            str+=obj.attachsize+'KB</span>';
+            str+='<button class="btnchatdown downloadIcon"></button></p>';
         }
 
-        str += '	<div class="timeline-panel ' + (chkPati ? 'panel_right' : 'panel_left') + '" style="width: calc(100% - 200px);">';
-        str += '		<div class="list-group-item cursor-pointer readPoint">';
-        str += '			<div class="timeline-heading">';
-
-        var title = obj.title;
-        str += '				<h4 class="timeline-title">' + title + '<span class="timeline-date pull-xs-right">' + obj.ctime + '</span></h4>';
-        str += '			</div>';
-        var addClass = '';
-        if (svc3 == 'J' || svc3 == 'L') addClass = ' text-center'
-        str += '			<div class="timeline-body' + addClass + '">';
-
-
-        if (svc3 == 'F') {
-            var files = '';
-            var hashes = '';
-            if (obj.body_snippet != undefined) files = obj.body_snippet.split('|');
-            if (obj.attachhash != undefined) hashes = obj.attachhash.split('|');
-
-            for (var j = 0; j < files.length; j++) {
-                str += '<a href="javascript:void(0);" class="file_link" msgid="' + obj.msgid + '" attachhash="' + nvl(hashes[j]).trim() + '">' + nvl(files[j]).trim() + '<br /></a>';
-            }
-        } else str += '' + obj.body_snippet.replaceAll('\n', '<br/>') + '';
-        str += '			</div>';
-        str += '		</div>';
-        str += '	</div>';
-
-        if (chkPati) {
-            if (obj.readYn == 'Y') str += '	<div class="timeline-badge custom custom_right read">';
-            else str += '	<div class="timeline-badge custom custom_right unread">';
-
-            if (svc3 == 'C') str += '<i class="fa fa-commenting-o fa-sm" style="font-size: 20px;"></i> ';
-            else if (svc3 == 'F') str += '<i class="fa fa-floppy-o fa-sm"></i> ';
-            else if (svc3 == 'J') str += '<i class="fa fa-sign-in fa-sm"></i> ';
-            else if (svc3 == 'L') str += '<i class="fa fa-sign-out fa-sm"></i> ';
-            str += '	</div>';
+        else {
+            if (obj.body_snippet != undefined) str += '' + obj.body_snippet.replaceAll('\n', '<br/>') + '';
         }
-        str += '</li>';
+        str+='			</div>';
+
+        str+=' <div class="bubbleDate">';
+        str+='<span>'+obj.ctime+'</span>';
+        str+='<span style="border: 1px solid #ccc;">'+makeMessengerText(obj.svc)+'</span>';
+        str+='</div></div>';
+        str+='</li>';
     }
-    str += '</ul>';
+    str+='</ul>';
 
-    if (!dataHasFlag) {
+    if(!dataHasFlag){
         str = noDataMsg();
     }
 
@@ -1057,7 +1077,7 @@ function checkLastMsg() {
 
     //console.log("displayHeight = "+displayHeight);
 
-    $('#timeline_list div.list-group-item').each(function () {
+    $('#timeline_list div.me').each(function () {
         var objOffsetTop = $(this).offset().top - topHeight;
         var objHeight = $(this).height();
         //console.log("objHeight = "+objHeight)

@@ -311,16 +311,18 @@
                 var xrootmtr = $(this).attr('xrootmtr');
                 var srcip = $(this).attr('srcip');
                 var usr_id = $(this).attr('usr_id');
-                var userid =  $(this).attr('userid');
+                var userid = $(this).attr('userid');
                 var msgid = $(this).attr('msgid');
-                var username= $(this).attr('name');
+                var username = $(this).attr('name');
+
+                $('#xrootmtr').text(xrootmtr);
 
                 $('#selectUserInfo').attr('data-srcip', srcip);
                 $('#selectUserInfo').attr('data-name', name);
                 $('#selectUserInfo').attr('data-usrid', usr_id);
 
-                $('#selectUserInfo').html(userid+"("+username+")");
-                $('#subchatid').html(": "+name);
+                $('#selectUserInfo').html(userid + "(" + username + ")");
+                $('#subchatid').html(": " + name);
                 $('#srcip').text(srcip);
                 $('#usr_id').text(usr_id);
                 eikon.getMessengerDetailList(xrootmtr, msgid, srcip, usr_id);
@@ -393,6 +395,63 @@
                 var code = $(this).attr('id');
                 openCodeWindow(code, $('#' + code + 'Val').val(), $('#' + code + 'Str').val());
             });
+
+            $(document).on('click', '.me', function (e) {
+                var xrootmtr = $(this).parent().attr('xrootmtr');
+                var srcip = $(this).parent().attr('srcip');
+                var id = $(this).parent().attr('id');
+                updateEmassMessengerAdminXrootMtr(xrootmtr, id, srcip);
+
+                moveTargetHeight(id, false);
+            });
+
+            $(document).on('click', '.downAllFile', function(){
+                var downloadFlag = false;
+                $('.downloadIcon').each ( function ( i, item ) {
+                    var attachHash = $(this).parents('p').attr('attachhash');
+                    if( attachHash != ''){
+                        downloadFlag = true;
+                    }
+                });
+                if( !downloadFlag){
+                    alert('<s:message code="message.message.notfound.attach"/>');
+                    return;
+                }
+
+                var msgIds=[];
+                $('.downloadIcon').each ( function ( i, item ) {
+                    var msgId = $(this).parents('p').attr('msgid');
+                    msgIds.push(msgId);
+                });
+
+                var attachUrl = '<c:url value="/getEmassAttachInfo4DownHash.xcn"/>?msgIds='+msgIds.join(',');
+                try {
+                    AttachDown.location.href = attachUrl;
+                } catch (e) {
+                    AttachDown.src = attachUrl;
+                }
+            });
+
+            $(document).on('click', '.downloadIcon', function(){
+                var msgId = $(this).parents('p').attr('msgid');
+                var attachHash = $(this).parents('p').attr('attachhash');
+                var attachSize = Number( $(this).parents('p').attr('attachsize') );
+                var attachUrl = '<c:url value="/downEmassAttachOne.xcn"/>?msgId='+msgId+'&attachHash='+attachHash;
+
+                if( attachHash == ''){
+                    alert('<s:message code="message.message.notfound.attach"/>');
+                    return;
+                }
+
+                if ( attachSize == 0 || attachSize == 'NaN' ) attachSize = 1;
+
+                try {
+                    AttachDown.location.href = attachUrl;
+                } catch (e) {
+                    AttachDown.src = attachUrl;
+                }
+            });
+
 
             $('.txt_down').click(function () {
                 downloadList('txt');
@@ -614,12 +673,13 @@
             var xrootmtr = $('#xrootmtr').text();
             var srcip = $('#srcip').text();
             var usr_id = $('#usr_id').text();
+
             if (xrootmtr == '') return;
             var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
             var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
             var searchStr = '';
-
-            eikon.getMessengerGroupTextExport('<c:url value="/getMessengerGroupTextExport.xcn"/>?xRootMtr=' + xrootmtr + '&srcip=' + srcip + '&usr_id=' + usr_id + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr + '&type=' + type + '&groupField=sender_str', xrootmtr);
+            eikon.getMessengerGroupTextExport('<c:url value="/getMessengerGroupTextExport.xcn"/>?xRootMtr=' + xrootmtr + '&srcip=' + srcip + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr + '&type=' + type + '&groupField=sender_str&limit=1000&', xrootmtr);
+            //eikon.getMessengerGroupTextExport('<c:url value="/getMessengerGroupTextExport.xcn"/>?xRootMtr=' + xrootmtr + '&srcip=' + srcip + '&usr_id=' + usr_id + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr + '&type=' + type + '&groupField=sender_str', xrootmtr);
         }
 
         function searchConsentNo() {
@@ -763,12 +823,20 @@
 				searchLabel:true,
 				noneSelectedText:'
 
+
+
             <s:message code="common.org.dept.all"/>',
 		noneResultsText:'
+
+
             <s:message code="common.msg.noresult"/>'+' ',
 		selectAllText:'
+
+
             <s:message code="common.msg.select_all"/>',
 		deselectAllText:'
+
+
             <s:message code="common.msg.unselect_all"/>'
 	}); */
 
@@ -1001,7 +1069,7 @@
 	</script>
 </head>
 <div id="searchArea">
-	<div class="inner_messenger" >
+	<div class="inner_messenger">
 		<%--			검색 영역--%>
 		<div class="leftSearch p20">
 			<div class="leftSearchTab mat8">
@@ -1023,7 +1091,8 @@
 					</div>
 					<%} %>
 					<div>
-						<select class="w100" id="serviceTypeSelect" data-style="btn-default" multiple data-show-subtext="true" data-actions-box="true">
+						<select class="w100" id="serviceTypeSelect" data-style="btn-default" multiple data-show-subtext="true"
+						        data-actions-box="true">
 						</select>
 						<input class="w100 mat8" type="text" id="searchStrInput" placeholder="<s:message code="common.msg.searchMsg"/>">
 					</div>
@@ -1068,9 +1137,10 @@
 			<div class="messengerBox">
 				<div class="subTit">
 					<h2 class="ma_none">
-						<button class="menu"></button> 메신저
+						<button class="menu"></button>
+						메신저
 						<span class="xcnTooltip">
-                                        <a ><img src="<c:url value="/img/ico_info.png"/>" alt="allmenu"></a>
+                                        <a><img src="<c:url value="/img/ico_info.png"/>" alt="allmenu"></a>
                                         <span class="tooltiptext">메신저 모아보기</span>
                                     </span>
 					</h2>
@@ -1110,6 +1180,7 @@
 		<div class="chatList">
 			<div class="chatBox">
 				<div class="top">
+
 					<div style="display: flex">
 						<div style="width: 300px;">
 								<span>대화방 아이디<span class="chatid"><span id="xrootmtr"></span><span id="srcip" style="display:none;"></span><span
@@ -1138,7 +1209,7 @@
 						</div>
 
 						<div class="searchSub txt_right">
-							<input type="text" class="w50" placeholder="<s:message code="condition.research"/>" id="searchMsgStrInput">
+							<input type="text" class="w70" placeholder="<s:message code="condition.research"/>" id="searchMsgStrInput">
 							<button class="form_btn01 blackBg" type="button" accesskey="M" id="searchMsgBtn">검색</button>
 						</div>
 					</div>
@@ -1173,25 +1244,23 @@
 						</div>
 					</div>
 				</div>
-				<div class="row" style="margin: 0px; margin-left: -1px; overflow: auto;">
+				<div class="row2" style="height: calc(100% - 160px);">
 					<div id="scrollArea" class="clusterize-scroll">
-						<div class="messenger_prev" title="<s:message code='eikon.msg.show.prev'/>">+</div>
-						<div id="timeline_list" style="padding-right:10px;">
-							<div class="timeline-panel" style="padding-left:10px;">
-								<div class="list-group-item cursor-text">
+						<div class="messenger_prev" style="margin-bottom:16px" title="<s:message code='eikon.msg.show.prev'/>">+</div>
+						<div id="timeline_list">
+							<div class="timeline-panel">
+								<div class="list-group-item02 cursor-text">
 									<div class="timeline-body" style="text-align: center;">
 										<s:message code="eikon.select.data"/>
 									</div>
 								</div>
 							</div>
 						</div>
-						<div class="messenger_next" title="<s:message code='eikon.msg.show.next'/>">+</div>
 					</div>
 				</div>
-				<div class="row" style="height: 30px;padding:0 3px 0 5px;">
-					<div style="line-height:25px;padding-top:5px;color: #f25643; font-weight: bold; font-size: 13px;">
-						<s:message code="eikon.msg.total.cnt"/> : <span id="groupSubResultCnt">0</span>
-					</div>
+				<div class="messenger_next" title="<s:message code='eikon.msg.show.next'/>">+</div>
+				<div class="p16 white">
+					<s:message code="eikon.msg.total.cnt"/> : <span id="groupSubResultCnt" class="blue03">0</span>
 				</div>
 			</div>
 		</div>
