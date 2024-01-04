@@ -5,6 +5,9 @@
 	String oldCode = Common.nvl( request.getParameter("oldCode") );
 	String oldConm = Common.nvl( request.getParameter("oldConm") );
 %>
+<style>
+	input[type="checkbox"]{margin-top:5px;}
+</style>
 <script>
 var codeType = '<%=codeType%>';
 var coCd = '<%=coCd%>';

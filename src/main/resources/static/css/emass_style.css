@@ -189,27 +189,29 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 .rightFileList ul li {border-bottom:1px solid #656C74; padding:12px 0; !important;}
 .messenger_prev{
 	position: relative;
-	width: 30px;
-	background: rgba(35, 36, 48, .3);
-	text-align: center;
+	width: 32px;
+	height: 32px;
+	top: 93%;
 	left:50%;
 	margin-left:-15px;
-	z-index: 100000;
+	background: rgba(35, 36, 48, .3);
+	text-align: center;
+	z-index: 9;
 	-moz-border-radius: 50px;
 	-webkit-border-radius: 50px;
 	border-radius: 50px;
-	height: 30px;
-	line-height: 30px;
+	line-height: 40px;
 	font-size: 10px;
 	font-weight: bold;
 	cursor: pointer;
-	color: #fff;
-	display: none;
-	z-index:9
+	color:#fff;
+	display:none;
+	fill: #fff;
 }
 .messenger_next{
 	position: relative;
-	width: 30px;
+	width: 32px;
+	height: 32px;
 	top: 93%;
 	left:50%;
 	margin-left:-15px;
@@ -219,15 +221,18 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 	-moz-border-radius: 50px;
 	-webkit-border-radius: 50px;
 	border-radius: 50px;
-	height: 30px;
-	line-height: 30px;
+	line-height: 40px;
 	font-size: 10px;
 	font-weight: bold;
 	cursor: pointer;
 	color:#fff;
 	display:none;
+	fill: #fff;
 
 }
+
+.messenger_next:hover, .messenger_prev:hover{background: rgba(35, 36, 48, .6); }
+
 /*
 #contentArea .content .contentSub .chartArea div ul li {border:1px solid #ddd; border-radius:2px ;  background-color:#fff ; width:32%; float:left; margin-right:1%;}*/
 #contentArea .searchArea{ position: relative;padding:0 20px;margin-bottom:12px;clear: both; }
@@ -410,6 +415,8 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .form_btn06 { color:#fff; font-weight:600; font-size:13px; height:26px; line-height: 28px; display: inline-block;padding:0 12px 0 32px;vertical-align: middle; text-align: center;  background:#FC5656 url(../img/ico_lightning.svg) 12px center no-repeat; border:0; border-radius:2px ; -webkit-border-radius:2px ; -moz-border-radius:2px ; -ms-border-radius:2px ; -o-border-radius:2px ; }
 .pop_btn01 {color:#333; height:36px; padding:0 20px; line-height: 32px; font-size:14px;vertical-align:middle;display: inline-block; border-radius: 2px;border: 1px solid #ccc;background: #fff;}
 .pop_btn02 {color:#fff; height:36px; padding:0 20px; line-height: 32px; font-size:14px;vertical-align:middle;display: inline-block; border-radius: 2px;border: 1px solid #1C64D3;background: #1C64D3;}
+.pop_btn03 {color:#fff; width:32px; height:32px; font-size:14px;vertical-align:middle;display: inline-block; border-radius: 2px; background: #1C64D3; border:0;}
+.pop_btn03:hover {background-color:#375E9A;}
 .table_btn01 {color:#fff; font-weight:400; font-size:12px; height:24px; line-height: 24px; padding:0 6px; background-color: #1A73F9; display: inline-block; vertical-align: middle; text-align: center;   border:0; border-radius:2px ; -webkit-border-radius:2px ; -moz-border-radius:2px ; -ms-border-radius:2px ; -o-border-radius:2px ;}
 .table_btn02 {color:#fff; font-weight:400; font-size:12px; height:24px; line-height: 24px; padding:0 6px; background-color: #1C64D3; display: inline-block; vertical-align: middle; text-align: center;   border:0; border-radius:2px ; -webkit-border-radius:2px ; -moz-border-radius:2px ; -ms-border-radius:2px ; -o-border-radius:2px ;}
 #xcn_toggleBtn {background-color:transparent; border:none; margin-right:4px; color:#777 !important;}
@@ -765,6 +772,7 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .chatList .chatBox {position: relative; min-width: 100%; padding-bottom:20px; }
 .chatList .chatBox .top { position: sticky; top:0; left:0; bottom:0; right:0; min-width: 400px; color:#fff; font-size:14px; padding:20px 16px; z-index: 99; background-color: #606973}
 .chatDate { position: relative; display: grid; grid-template-columns: 50% 50%; padding-top:12px;}
+.chatDate input[type="date"], .chatDate input[type="text"] {border:none;}
 .chatList .chatBox .top span {position: relative; font-weight: 300; }
 .chatList .chatBox .top span.chatid {font-weight: 600;}
 .file_myDropdown {position: absolute; right:10px; top:20px; z-index:99999;}
