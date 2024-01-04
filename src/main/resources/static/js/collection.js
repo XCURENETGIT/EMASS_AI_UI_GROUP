@@ -198,7 +198,7 @@ function getCollectionMessageTotal(userid, srcip, startDt, endDt, usr_id, msgid,
         limit : 0,
         type:type,
         success : function(data, total) {
-            $('#groupSubResultCnt').text(data);
+            $('#groupSubResultCnt').text(data.comma());
             getCollectionMessage(userid, srcip, usr_id, msgid,type);
         },
         error : function(status, message) {
@@ -987,7 +987,7 @@ function getCollectionMessage(userid, srcip, usr_id, msgid,type){
             detailDataSet = data.groups;
             prevDetailDataSet = data.groups;
 
-            getGenerativeAllfile(userid, srcip, usr_id, msgid);
+            getCollectionAllfile(userid, srcip, usr_id, msgid,type);
 
 
             if(data.numFound < detailLimit)
@@ -1008,12 +1008,12 @@ function getCollectionMessage(userid, srcip, usr_id, msgid,type){
     });
 }
 
-function getGenerativeAllfile(userid, srcip, usr_id, msgid){
+function getCollectionAllfile(userid, srcip, usr_id, msgid,type){
     var startDt=$('#startDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
     var endDt=$('#endDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 
     ui.get({
-        url : 'getGenerativeGroupAttachList.xcn',
+        url : 'getCollectionGroupAttachList.xcn',
         userid : userid,
         srcip : srcip,
         usr_id : usr_id,
@@ -1021,6 +1021,7 @@ function getGenerativeAllfile(userid, srcip, usr_id, msgid){
         endDt: endDt+235959,
         searchStr: $('#searchMsgStrInput').val(),
         attachYn : 'Y',
+        type:type,
         success : function(data, total) {
             $('.rightFileList').html(makeFileList(data));
         },
@@ -1103,7 +1104,7 @@ function rtnGenerativeGroupList(data) {
         str += '	<div class="pl20 pr20">';
         str += '    <a href="#" class="list-group-item list-group-item-action active" style="cursor:default;">';
         str += '	    <p class="list-group-item-text" style="line-height:30px; text-align: center">';
-        str += '	         <img src="<c:url value="/img/icon/img_nodata02.png"/>" width="72" height="72"> ';
+        str += '<img src="' + mainContext + '/img/icon/img_nodata02.png" width="72" height="72">';
         str += '	    <BR/>';
         str += nodataMsg; //common.msg.nodata
         str += '</p></a></div>';

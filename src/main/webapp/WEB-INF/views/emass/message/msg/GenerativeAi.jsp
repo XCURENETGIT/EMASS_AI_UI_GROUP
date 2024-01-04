@@ -221,6 +221,7 @@
             });
 
             $(document).on('click', '.downAllFile', function(){
+                alert("dfada");
                 var downloadFlag = false;
                 $('.downloadIcon').each ( function ( i, item ) {
                     var attachHash = $(this).parents('p').attr('attachhash');
@@ -830,15 +831,6 @@
 						<!-- 내보내기 -->
 						<div class="myDropdown mal16">
 							<span>내보내기 &#9662;</span>
-							<div class="dropdown-content">
-								<a href="#" onclick="downloadList('xlsx')" class="excel_down">엑셀(xlsx)</a>
-								<a href="#" onclick="downloadList('txt')" class="txt_down">텍스트(txt)</a>
-								<a href="#" onclick="downloadList('html')" class="html_down">하이퍼텍스트(html)</a>
-								<a href="#" class="excel_file_down">액셀(xlsx)+첨부파일</a>
-							</div>
-						</div>
-						<div class="myDropdown">
-							<span>첨부파일 전체 저장 &#9662;</span>
 							<div class="dropdown-content">
 								<a href="#" onclick="downloadList('xlsx')" class="excel_down">엑셀(xlsx)</a>
 								<a href="#" onclick="downloadList('txt')" class="txt_down">텍스트(txt)</a>
