@@ -883,7 +883,7 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .fileListdown span  { display: inline-block; margin-right:8px; text-align: left; vertical-align: middle;font-weight:300; font-size:13px; color:#ddd;}
 .fileListdown span a {  overflow: hidden; max-width:130px;white-space: nowrap;text-overflow: ellipsis;word-break: break-all; font-size:13px; display: block; margin-bottom:4px; }
 .fileListdown span.btn {position: absolute; right:0; top:8px; }
-
+.xcn_showbtn{position:absolute; top:16px; right:0; z-index:99;}
 .chatList .chatBox .bubble .me:before { right: -3px;background-color: #FAE100;}
 .chatList .chatBox .conversation-start {position: relative;width: 100%;margin-bottom: 27px;text-align: center;}
 .chatList .chatBox .conversation-start span {font-weight: 600; font-size: 14px;display: inline-block;color: #fff;}

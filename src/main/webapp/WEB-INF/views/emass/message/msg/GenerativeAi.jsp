@@ -888,7 +888,7 @@
 				<div class="rightFileList" >
 				</div>
 			</div>
-			<div style="position:absolute; top:20px; right:16px; z-index: 999999">
+			<div class="xcn_showbtn">
 
 				<button id="showBtn" class="table_btn02">&#8636;</button>
 
