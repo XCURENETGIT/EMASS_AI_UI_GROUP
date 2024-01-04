@@ -2292,6 +2292,12 @@
                     <div class="searchKeywordTab"><s:message code="condition.relationKeyword"/>
                         <div class="rightGroup"><span class="relationKeywordCloseBtn">&times;</span></div>
                     </div>
+                    <div style="padding-left: 10px;">
+                        <span style="font-weight: bold; display: inline-block; margin-right: 10px;"><i class="fa fa-caret-right"></i> <s:message code="searchKeyword.inputMode"/></span>
+                        <label class="relationKeywordInputType"><input type="radio" name="relationKeywordInputType" value="S" checked="checked"> <span><s:message code="searchKeyword.single"/></span></label>
+                        <label class="relationKeywordInputType"><input type="radio" name="relationKeywordInputType" value="A"> <span>AND</span></label>
+                        <label class="relationKeywordInputType"><input type="radio" name="relationKeywordInputType" value="O"> <span>OR</span></label>
+                    </div>
                     <div id="relationKeywordGrid" class="slickGrid gridArea"></div>
                 </div>
 
@@ -3253,12 +3259,12 @@
     relationKeywordGrid.initData('<s:message code="common.msg.search.click"/>');
     relationKeywordGrid.onClick = function () {
         if (relationKeywordGrid.Col == relationKeywordGrid.ColIndex('keyword')) {
-            var inputType = $('[name=searchKeywordInputType]:checked').val();
+            var inputType = $('[name=relationKeywordInputType]:checked').val();
             var data = relationKeywordGrid.getRowData(relationKeywordGrid.Row);
             if(inputType == 'S') {
                 $('#searchStrInput').val(data.keyword);
             } else if(inputType == 'A') {
-                if($('#searchStrInput').val() != '') $('#searchStrInput').val($('#searchStrInput').val().trim() + ' ' + data.keyword);
+                if($('#searchStrInput').val() != '') $('#searchStrInput').val($('#searchStrInput').val().trim() + ' +' + data.keyword);
                 else $('#searchStrInput').val(data.keyword);
             } else {
                 if($('#searchStrInput').val() != '') $('#searchStrInput').val($('#searchStrInput').val().trim() + '|' + data.keyword);

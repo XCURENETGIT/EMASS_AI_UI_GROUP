@@ -29,9 +29,8 @@
 	<select id = "getRelationKeywordList" resultType="com.xcurenet.searchWord.service.RelationKeywordVO" parameterType="hashMap">
 		SELECT
 			KEYWORD_REL as keyword
-			,WEIGHT as weight
 		FROM XCN_KEYWORD_REL
-		WHERE KEYWORD_ID = (
+		WHERE KEYWORD_ID in (
 			SELECT  KEYWORD_ID
 			FROM	XCN_KEYWORD
 			WHERE	KEYWORD = #{searchKeyword}

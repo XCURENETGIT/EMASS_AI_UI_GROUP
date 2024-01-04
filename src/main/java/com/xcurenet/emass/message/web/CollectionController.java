@@ -290,19 +290,19 @@ public class CollectionController {
 		if(Common.isNotEmpty(usr_id)) query += String.format(" +usr_id:\"%s\"", usr_id);
 		else query += String.format(" -usr_id:*");
 
-		if (!lastMsgYn) { //맨처음 들어왔을땐 하나가 떠야함 하지만 위가 이미 있는 상태에서 다음버튼을 누르면 중복되면 안됨
-			query += String.format(" -_id: %s", msgId);    //이미 출력된 동시간대 데이터 제외
-
-		}
-		String msgDt = msgId.substring(0, 14);
-		//이미 출력된 동시간대 데이터 제외
-		if(Common.isNotEmpty(msgId)) {
-			if (lastMsgYn) {
-				query += String.format(" +ctime:[%s TO %s] ", msgDt, endDt);
-			} else {
-				query += String.format(" +ctime:[%s TO %s]", msgDt, endDt);
-			}
-		}
+//		if (!lastMsgYn) { //맨처음 들어왔을땐 하나가 떠야함 하지만 위가 이미 있는 상태에서 다음버튼을 누르면 중복되면 안됨
+//			query += String.format(" -_id: %s", msgId);    //이미 출력된 동시간대 데이터 제외
+//
+//		}
+//		String msgDt = msgId.substring(0, 14);
+//		//이미 출력된 동시간대 데이터 제외
+//		if(Common.isNotEmpty(msgId)) {
+//			if (lastMsgYn) {
+//				query += String.format(" +ctime:[%s TO %s] ", msgDt, endDt);
+//			} else {
+//				query += String.format(" +ctime:[%s TO %s]", msgDt, endDt);
+//			}
+//		}
 
 		if(Common.isNotEmpty(searchStr)) query += String.format(" +body:(*%s*) ", searchStr);
 

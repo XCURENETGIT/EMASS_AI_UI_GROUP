@@ -14,7 +14,6 @@ import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.emass.message.component.SolrCreateQuery;
 import com.xcurenet.emass.message.service.*;
-import com.xcurenet.emass.message.service.impl.SolrEdcServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -344,7 +343,7 @@ public class MessengerController {
 		String startDt = Common.nvl(param.get("startDt"));
 		String endDt = Common.nvl(param.get("endDt"));
 		String searchStr = Common.nvl(param.get("searchStr"));
-		int limit = Common.nvz(param.get("limit"), 100000);
+		int limit = Common.nvz(param.get("limit"), 10000);
 
 		SolrQuery sq = new SolrQuery();
 		String query = String.format("+ctime:[%s TO %s] +xrootmtr:\"%s\"", startDt, endDt, xRootMtr);
@@ -352,22 +351,26 @@ public class MessengerController {
 		if(Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
 
 		if(Common.isNotEmpty(usr_id)) query += String.format(" +usr_id:\"%s\"", usr_id);
-		else query += String.format(" -usr_id:*");
 
-		//이미 출력된 동시간대 데이터 제외
-		if(Common.isNotEmpty(msgId)) {
-			if(lastMsgYn) {
-				query += String.format(" +msgid:[%s TO *]", msgId);
-			} else {
-				query += String.format(" +msgid:{%s TO *]", msgId);
-			}
-		}
+//		else query += String.format(" -usr_id:*");
+//
+//		//이미 출력된 동시간대 데이터 제외
+//		if(Common.isNotEmpty(msgId)) {
+//			if(lastMsgYn) {
+//				query += String.format(" +msgid:[%s TO *]", msgId);
+//			} else {
+//				query += String.format(" +msgid:{%s TO *]", msgId);
+//			}
+//		}
 
 		if(Common.isNotEmpty(searchStr)) query += String.format(" +body:(*%s*) ", searchStr);
 
 		sq.setQuery(query + MESSENGER);
+
 		sq.setStart(Common.nvz(param.get("offset"), 0));
 		sq.setRows(limit);
+
+
 		sq.addSort("ctime", ORDER.asc);
 		sq.addSort("msgid", ORDER.asc);
 		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user");

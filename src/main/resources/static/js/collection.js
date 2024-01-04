@@ -18,6 +18,7 @@ var detailStartPage = 1;
 var detailEndPage = 1;
 var detailViewPage = 10;
 var detailPageBreak = 100;
+
 var detailLimit = 5;
 
 var selectedSearchData = 1;
@@ -218,6 +219,8 @@ function getGenerativeMessageNext(userid, srcip, usr_id, msgid) {
     var startDt = $('#startDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
     var endDt = $('#endDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
     searchFlag = true;
+
+    searchOffset = searchOffset + 5; //테스트용도
     ui.get({
         url : 'getGenerativeMessageNext.xcn',
         userid : userid,
@@ -226,6 +229,7 @@ function getGenerativeMessageNext(userid, srcip, usr_id, msgid) {
         endDt : endDt+"235959",
         usr_id : usr_id,
         msgId : msgid,
+        offset :searchOffset,
         limit : detailLimit,
         success : function(data, total) {
             searchFlag = false;
