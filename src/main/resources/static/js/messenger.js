@@ -95,40 +95,21 @@ var eikon = {
         eikon.getMessengerDetailList(xRootmtr, msgid, '', '');
     },
     getMessengerDetailList: function (xRootmtr, msgid, srcip, usr_id) {
-        if (!isDetailView()) {
-            alert(condition.authAlert);
-            return;
-        }
-        if (xRootmtr == '') {
-            return;
-        }
+        searchFlag = true;
+        ui.onBody('timeline_list', 0, 60);
 
+        $("#timeline_list").html('');
+
+        $('#searchMsgStrInput').val('');
+        $('#searchResult').html('');
         $('#searchResultArea').hide();
         $('#searchResultBtnArea').hide();
-        detailStartPage = 1;
-        detailEndPage = 1;
-        var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
-        var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
 
-        //참여자 수, 참여자 정보
-        ui.get({
-            url: 'getMessengerGroupUserList.xcn',
-            xRootMtr: xRootmtr,
-            startDt: startDt,
-            endDt: endDt,
-            groupField: 'usr_id',
-            success: function (data, total) {
-                participantDataSet = data.groups;
-                userSelectBox(data.groups, srcip, usr_id);
-                //getMessengerGroupDetail(xRootmtr, msgid, srcip);
-                //$('#groupParticipantCnt').html(total.coFgemma());
-            },
-            error: function (status, message) {
-                ui.alertMsg(message);
-            },
-            complete: function () {
-            }
-        });
+        var startDt = $('#startDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
+        var endDt = $('#endDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
+
+
+        getMessengerMessageTotal(xRootmtr, srcip, startDt, endDt, usr_id, '');
     },
     getMessengerGroupDetail: function (xRootmtr, msgid, srcip, usr_id) {
         searchFlag = true;
@@ -234,6 +215,31 @@ var eikon = {
     }
 };
 
+//총 개수 계산하는 함수
+function getMessengerMessageTotal(userid, srcip, startDt, endDt, usr_id, msgid) {
+    /*총 갯수 계산하는 함수*/
+
+    ui.get({
+        url: 'getMessengerMessageTotal.xcn',
+        userid: userid,
+        srcip: srcip,
+        startDt: startDt + "000000",
+        endDt: endDt + "235959",
+        usr_id: usr_id,
+        limit: 0,
+        success: function (data, total) {
+            $('#groupSubResultCnt').text(data);
+            getGenerativeMessage(userid, srcip, usr_id, msgid);
+        },
+        error: function (status, message) {
+            ui.alertMsg(message);
+        },
+        complete: function () {
+            ui.off();
+        }
+    });
+}
+
 function getMessengerMessageTotal(xRootmtr, srcip, startDt, endDt, usr_id, msgid) {
     //마지막 열람 msgid
     ui.get({
@@ -268,6 +274,7 @@ function getMessengerMessageTotal(xRootmtr, srcip, startDt, endDt, usr_id, msgid
 function getMessengerMessage(xRootmtr, srcip, usr_id, msgid) {
     var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
     var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
+
     $("#timeline_list").html('');
     ui.get({
         url: 'getMessengerMessage.xcn',
@@ -292,6 +299,11 @@ function getMessengerMessage(xRootmtr, srcip, usr_id, msgid) {
 
             detailDataSet = data.groups;
             prevDetailDataSet = data.groups;
+
+            if (data.numFound < detailLimit)
+                $('.messenger_next').css('display', 'none');
+            else $('.messenger_next').css('display', 'block');
+
             $("#timeline_list").html(makeList(false));
             Highlight();
 //			updateEmassMessengerAdminXrootMtr(xrootmtr, nvl(focusMsgId, detailDataSet[0].msgid), srcip, usr_id);
@@ -466,6 +478,14 @@ function rtnGroupList(data, type) {
     for (var i = 0; i < data.length; i++) {
         var li = document.createElement("li");
         li.className = "person";
+        li.setAttribute("userid", data[i].userid);
+        li.setAttribute("xrootmtr", data[i].xrootmtr);
+        li.setAttribute("msgid", data[i].msgid);
+        li.setAttribute("srcip", data[i].srcip);
+        li.setAttribute("usrid", data[i].usrid);
+        li.setAttribute("body_snippet", data[i].body_snippet);
+        li.setAttribute("name", data[i].name);
+        li.setAttribute("data-chat", "person" + (i + 1));
 
         var user_cnt = data[i].user_cnt;
         var svc3 = data[i].svc3;
@@ -478,14 +498,12 @@ function rtnGroupList(data, type) {
         var leftDiv = document.createElement("div");
         leftDiv.className = "left";
 
-        if(data[i].body_snippet!=undefined) {
+        if (data[i].body_snippet != undefined) {
             var bodySnippet = data[i].body_snippet.length > 40 ? data[i].body_snippet.substring(0, 40) + "..." : data[i].body_snippet;
+        } else {
+            var bodySnippet = "";
         }
-
-        else{
-            var bodySnippet="";
-        }
-        var leftContent = "<p><span class='chatid'>" + data[i].userid +"("+data[i].deptNm+"/"+data[i].jikgubNm+"/"+data[i].name+")"+"</span>";
+        var leftContent = "<p><span class='chatid'>" + data[i].xrootmtr + "</span>";
         if (data[i].attached === 'Y') {
             leftContent += "<span class='file'></span>";
         }
@@ -497,10 +515,10 @@ function rtnGroupList(data, type) {
         // Create right div
         var rightDiv = document.createElement("div");
         rightDiv.className = "right";
-        var svc = data[i].svc.slice(0,3);
-        var imageName =mainContext+"/img/ico_sns_"+ svc+".png";
+        var svc = data[i].svc.slice(0, 3);
+        var imageName = mainContext + "/img/ico_sns_" + svc + ".png";
         var makescv = makeMessengerText(data[i].svc);
-        var rightContent = "<p><span class='logo'><img src="+imageName+">"+makescv+"</span></p>";
+        var rightContent = "<p><span class='logo'><img src=" + imageName + ">" + makescv + "</span></p>";
 
 
         if (data[i].unread_cnt > 0) {
@@ -515,13 +533,13 @@ function rtnGroupList(data, type) {
         // Append li to ul
         ul.appendChild(li);
     }
-    if( data.length == 0 ){
+    if (data.length == 0) {
         str += '<a href="#" class="list-group-item list-group-item-action active" style="cursor:default;height:50px;">';
         str += '	<p class="list-group-item-text" style="line-height:30px;">';
         str += '		<i class="fa fa-envelope fa-sm"></i> ';
         str += nodataMsg; //common.msg.nodata
         str += '</p></a>';
-        $('#group_list').html( str );
+        $('#group_list').html(str);
     }
 
     groupList.appendChild(ul);
@@ -577,7 +595,7 @@ function getMessengerMessageList(page) {
         offset: offset,
         limit: groupPageBreak,
         success: function (data, total) {
-            console.log("MessageSize: "+data.groups.length);
+            console.log("MessageSize: " + data.groups.length);
             rtnGroupList(data.groups, 'GD');
             rtnGroupPage(total, page, 'GD');
             HighlightGroup();
@@ -632,7 +650,7 @@ function rtnGroupPage(total, page, searchType) {
 
 function getPage3(total, pageCount, listSize, rtnMethod) {
     var str = "";
-    var pageSizeNo = 5; // 화면에 표시할 페이지 수
+    var pageSizeNo = 10; // 화면에 표시할 페이지 수
     var lastPage = Math.ceil(total / listSize); // 전체 페이지 수
     var screenPageNo = Math.ceil(listSize / pageSizeNo); // 전체 스크린(페이지) 수 ,
     var currentScreenPageNo = Math.ceil(pageCount / pageSizeNo); // 사용자가 현재
@@ -733,50 +751,44 @@ function makeList(nextFlag) {
     for (var i = 0; i < detailDataSet.length; i++) {
         dataHasFlag = true;
         var obj = detailDataSet[i];
+        console.log("obj: "+obj.user);
         var chkPati = false;
         if ((nvl(obj.user) != '' && obj.user == obj.sender) || usrid == obj.title || usrid == obj.sender) chkPati = true;
         str += checkDate(i);
 
-        str += '<li class="timeline-inverted ' + (i == 0 && !nextFlag ? 'lastReadLi' : '') + '" id="' + obj.msgid + '" ctime="' + obj.ctime + '">';
+        str += '<li class="p20 bubble txt_right slide_right timeline-inverted ' + (i == 0 && !nextFlag ? 'lastReadLi' : '') + '" id="' + obj.msgid + '" ctime="' + obj.ctime + '" userid="' + obj.userid + '" srcip="' + obj.srcip + '">';
+
 
         var svc3 = obj.svc3;
-        if (!chkPati) {
-            if (obj.readYn == 'Y') str += '	<div class="timeline-badge custom read">';
-            else str += '	<div class="timeline-badge custom unread">';
+        str += '	<div class="me timeline-panel" >';
 
-            if (svc3 == 'C') str += '<i class="fa fa-commenting-o fa-sm" style="font-size: 20px;"></i> ';
-            else if (svc3 == 'F') str += '<i class="fa fa-floppy-o fa-sm"></i> ';
-            else if (svc3 == 'J') str += '<i class="fa fa-sign-in fa-sm"></i> ';
-            else if (svc3 == 'L') str += '<i class="fa fa-sign-out fa-sm"></i> ';
-            str += '	</div>';
+        if (obj.attached == "Y") {
+            var attachhash = obj.attachhash;
+            var attachname = obj.attachname;
+            var attachsize = obj.attachsize;
+            var attachtype = obj.attachtype;
+
+            var attachhashArray = attachhash.split('|');
+            var attachnameArray = attachname.split('|');
+            var attachsizeArray = attachsize.split('|');
+            var attachtypeArray = attachtype.split('|');
+
+            str += '<p class="filedown file_link" msgid="' + obj.msgid + '" attachhash="' + attachhashArray[i] + '">';
+            str += '<span class="img"></span>';
+            str += '<span>' + attachnameArray[i] + '.' + attachtypeArray[i] + '<br/>';
+            str += attachsizeArray[i] + 'KB</span>';
+            str += '<button class="btnchatdown downlodadBtn"></button></p>';
+
+        } else {
+            if (obj.body_snippet != undefined) str += '' + obj.body_snippet.replaceAll('\n', '<br/>') + '';
         }
+        str += '</div>';
 
-        str += '	<div class="timeline-panel ' + (chkPati ? 'panel_right' : 'panel_left') + '" style="width: calc(100% - 200px);">';
-        str += '		<div class="list-group-item cursor-pointer readPoint">';
-        str += '			<div class="timeline-heading">';
-
-        var title = obj.title;
-        str += '				<h4 class="timeline-title">' + title + '<span class="timeline-date pull-xs-right">' + obj.ctime + '</span></h4>';
-        str += '			</div>';
-        var addClass = '';
-        if (svc3 == 'J' || svc3 == 'L') addClass = ' text-center'
-        str += '			<div class="timeline-body' + addClass + '">';
-
-
-        if (svc3 == 'F') {
-            var files = '';
-            var hashes = '';
-            if (obj.message != undefined) files = obj.message.split('|');
-            if (obj.attachhash != undefined) hashes = obj.attachhash.split('|');
-
-            for (var j = 0; j < files.length; j++) {
-                str += '<a href="javascript:void(0);" class="file_link" msgid="' + obj.msgid + '" attachhash="' + nvl(hashes[j]).trim() + '">' + nvl(files[j]).trim() + '<br /></a>';
-            }
-        } else str += '' + obj.body_snippet.replaceAll('\n', '<br/>') + '';
-        str += '			</div>';
-        str += '		</div>';
-        str += '	</div>';
-
+        str += ' <div class="bubbleDate">';
+        str += '<span>' + obj.user + '</span> &nbsp';
+        str += '<span>' + obj.ctime + '</span> &nbsp';
+        str += '<span style="border: 1px solid #ccc;">' + makeMessengerText(obj.svc) + '</span>';
+        str += '</div></div>';
         str += '</li>';
     }
     str += '</ul>';

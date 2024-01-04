@@ -120,7 +120,6 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 		/* set 필터 쿼리 */
 		String filterQuery =  (null != sq.getFilterQueries())? String.join(" ", sq.getFilterQueries()) : "";
-		System.out.println("rows: "+sq.getRows());
 
 		log.info("page : {}  rows : {}", getPage(sq), sq.getRows());
 		Query searchQuery = new NativeSearchQueryBuilder()

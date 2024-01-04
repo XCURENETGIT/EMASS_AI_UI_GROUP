@@ -307,6 +307,26 @@
                 }
             });
 
+            $(document).on('click', '.person', function () {
+                var xrootmtr = $(this).attr('xrootmtr');
+                var srcip = $(this).attr('srcip');
+                var usr_id = $(this).attr('usr_id');
+                var userid =  $(this).attr('userid');
+                var msgid = $(this).attr('msgid');
+                var username= $(this).attr('name');
+
+                $('#selectUserInfo').attr('data-srcip', srcip);
+                $('#selectUserInfo').attr('data-name', name);
+                $('#selectUserInfo').attr('data-usrid', usr_id);
+
+                $('#selectUserInfo').html(userid+"("+username+")");
+                $('#subchatid').html(": "+name);
+                $('#srcip').text(srcip);
+                $('#usr_id').text(usr_id);
+                eikon.getMessengerDetailList(xrootmtr, msgid, srcip, usr_id);
+                hideUserSelect();
+            });
+
             $('#searchBtn').click(function () {
                 if (messengerListCnt == 0) {
                     ui.alertMsg('<s:message code="eikon.noList"/>');
@@ -326,10 +346,10 @@
                     ui.alertMsg('<s:message code="consent.msg.timecheck"/>');
                     return;
                 }
-                if (getDayInterval(startDt, endDt) > 31) {
-                    ui.alertMsg('<s:message code="eikon.msg.select.date"/>');
-                    return;
-                }
+                <%--if (getDayInterval(startDt, endDt) > 31) {--%>
+                <%--    ui.alertMsg('<s:message code="eikon.msg.select.date"/>');--%>
+                <%--    return;--%>
+                <%--}--%>
                 eikon.getMessengerList(1);
             });
             $("#searchStrInput").keypress(function (e) {
@@ -1109,7 +1129,7 @@
 					<div class="chatDate">
 						<div class="searchSub" style="display: flex">
 							<div style="display: flex;">
-								<div id="startsubdatepicker"><input type="date" id="startDstartSubDt" style="width: 110px;">
+								<div id="startsubdatepicker"><input type="date" id="startSubDt" style="width: 110px;">
 									<span class="hyphen">~</span></div>
 								<div id="endsubdatepicker"><input type="date" id="endSubDt" style="width: 110px;"></div>
 							</div>
@@ -1204,3 +1224,40 @@
 	<input type="hidden" name="oldCode" id="oldCode"></input>
 	<input type="hidden" name="oldConm" id="oldConm"></input>
 </form>
+
+<script>
+    document.querySelector(".chat[data-chat=person2]").classList.add("active-chat");
+    document.querySelector(".person[data-chat=person2]").classList.add("active");
+
+    let friends = {
+            list: document.querySelector("ul.people"),
+            all: document.querySelectorAll(".messengerBox .person"),
+            name: ""
+        },
+        chat = {
+            container: document.querySelector(".chatList .chatBox"),
+            current: null,
+            person: null,
+            name: document.querySelector(".chatList .chatBox .top .chatid")
+        };
+
+    friends.all.forEach((f) => {
+        f.addEventListener("mousedown", () => {
+            f.classList.contains("active") || setAciveChat(f);
+        });
+    });
+
+    function setAciveChat(f) {
+        friends.list.querySelector(".active").classList.remove("active");
+        f.classList.add("active");
+        chat.current = chat.container.querySelector(".active-chat");
+        chat.person = f.getAttribute("data-chat");
+        chat.current.classList.remove("active-chat");
+        chat.container
+            .querySelector('[data-chat="' + chat.person + '"]')
+            .classList.add("active-chat");
+        friends.name = f.querySelector(".chatid").innerText;
+        chat.name.innerHTML = friends.name;
+    }
+
+</script>
