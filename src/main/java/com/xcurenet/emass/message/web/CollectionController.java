@@ -52,6 +52,8 @@ import java.util.*;
 public class CollectionController {
 
 	private static final String MESSENGER2 = " +svc1: I ";
+
+	private static final String MESSENGER3 = " +svc1: N ";
 	private static final String EMPTY_LINE = "\n";
 	private final static DateTimeFormatter yyyyMMddHHmmss2 = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 	private final static DateTimeFormatter yyyyMMdd = DateTimeFormat.forPattern("yyyy-MM-dd");
@@ -66,6 +68,12 @@ public class CollectionController {
 	@Autowired
 	private EmsMessageService emsMessageService;
 
+	@RequestMapping(value = "/getNoteList.xcn")
+	@Description("노트 서비스 목록 조회")
+	@ResponseBody
+	public XcnResponseVO getNoteList(final HttpServletRequest request, final HttpSession session) throws Exception {
+		return new XcnResponseVO(XcnRspCode.OK, emsMessageService.getNoteList());
+	}
 
 	@RequestMapping(value = "/getGenerativeList.xcn")
 	@Description(" 생성형 ai 서비스 목록 조회")
@@ -73,10 +81,10 @@ public class CollectionController {
 	public XcnResponseVO getGenerativeList(final HttpServletRequest request, final HttpSession session) throws Exception {
 		return new XcnResponseVO(XcnRspCode.OK, emsMessageService.getGenerativeList());
 	}
-	@RequestMapping(value = "/getGenerativeGroupList.xcn")
-	@Description("생성형 AI 그룹 조회")
+	@RequestMapping(value = "/getCollectionGroupList.xcn")
+	@Description("서비스 그룹 조회")
 	@ResponseBody
-	public XcnResponseVO getMessengerGenertiveList(final HttpServletRequest request, final HttpSession session) throws Exception {
+	public XcnResponseVO getCollectionGroupList(final HttpServletRequest request, final HttpSession session) throws Exception {
 
 		JSONObject param = Common.getParam(request);
 		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
@@ -90,9 +98,9 @@ public class CollectionController {
 		sq.setParam("facet.field", "userid");
 
 		/* 그룹 디테일검색 동적 들어와야 할 offset,size 값*/
-		sq.setParam("facet.offset", "0");
-		sq.setParam("facet.group", "100");
-		sq.setParam("facet.detail", false);
+		sq.setParam("facet.offset", String.valueOf(Common.nvz(param.get("offset"), 0)));
+		sq.setParam("facet.group", String.valueOf(Common.nvz(param.get("limit"), 100)));
+		sq.setParam("facet.detail", true);
 		sq.setParam("facet.mincount", "1");
 
 		/* 일반 문서 검색은 하지않으므로 0 (그룹검색만 하므로 ) */
@@ -103,7 +111,7 @@ public class CollectionController {
 		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id", "userid");
 
 		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request));
-		solrEdcGroupVO.setGroups(setCount_temp(solrEdcGroupVO.getGroups(), Common.getAdminId(request)));
+	/*	solrEdcGroupVO.setGroups(setCount_temp(solrEdcGroupVO.getGroups(), Common.getAdminId(request)));*/
 		return new XcnResponseVO(XcnRspCode.OK, solrEdcGroupVO, solrEdcGroupVO.getNumFound());
 	}
 
@@ -316,8 +324,7 @@ public class CollectionController {
 
 		sq.setParam("facet.offset", "0");
 		sq.setParam("facet.size", String.valueOf(limit));
-		boolean facet_detail = ("true".equals(Common.nvl(param.get("facet_detail")))) ? true : false;
-		sq.setParam("facet.detail", facet_detail);
+		sq.setParam("facet.detail", true);
 		sq.setParam("facet.mincount", "1");
 
 		/* 일반 문서 검색은 하지않으므로 0 (그룹검색만 하므로 ) */
@@ -377,8 +384,7 @@ public class CollectionController {
 
 		sq.setParam("facet.offset", "0");
 		sq.setParam("facet.size", String.valueOf(limit));
-		boolean facet_detail = ("true".equals(Common.nvl(param.get("facet_detail")))) ? true : false;
-		sq.setParam("facet.detail", facet_detail);
+		sq.setParam("facet.detail", true);
 		sq.setParam("facet.mincount", "1");
 
 		/* 일반 문서 검색은 하지않으므로 0 (그룹검색만 하므로 ) */
@@ -411,7 +417,6 @@ public class CollectionController {
 
 		SolrQuery sq = new SolrQuery();
 
-
 		sq.setParam("group", true);
 		sq.setParam("group.facet", true);
 		sq.setParam("group.ngroups", true);
@@ -422,8 +427,7 @@ public class CollectionController {
 		/* 그룹 디테일검색 동적 들어와야 할 offset,size 값*/
 		sq.setParam("facet.offset", "0");
 		sq.setParam("facet.size", "100");
-		boolean facet_detail = ("true".equals(Common.nvl(param.get("facet_detail")))) ? true : false;
-		sq.setParam("facet.detail", facet_detail);
+		sq.setParam("facet.detail", true);
 		sq.setParam("facet.mincount", "1");
 
 		/* 일반 문서 검색은 하지않으므로 0 (그룹검색만 하므로 ) */
@@ -497,8 +501,7 @@ public class CollectionController {
 		/* 그룹 디테일검색 동적 들어와야 할 offset,size 값*/
 		sq.setParam("facet.offset", "0");
 		sq.setParam("facet.size", "5");
-		boolean facet_detail = ("true".equals(Common.nvl(param.get("facet_detail")))) ? true : false;
-		sq.setParam("facet.detail", facet_detail);
+		sq.setParam("facet.detail", true);
 		sq.setParam("facet.mincount", "1");
 
 		/* 일반 문서 검색은 하지않으므로 0 (그룹검색만 하므로 ) */

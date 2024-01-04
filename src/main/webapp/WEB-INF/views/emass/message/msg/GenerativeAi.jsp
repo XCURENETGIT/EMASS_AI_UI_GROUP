@@ -151,7 +151,7 @@
                     return;
                 }*/
 
-                eikon2.getGenerativeList(1);
+                eikon2.getCollectionList(1);
             });
             $("#searchStrInput").keypress(function (e) {
                 if (e.keyCode == 13) $('#searchBtn').click();
@@ -333,7 +333,7 @@
             });
 
             $('input[name="searchType"]:radio').change(function () {
-                eikon2.getGenerativeList(1);
+                eikon2.getCollectionList(1);
             });
 
             $('#groupFileCnt').click(function () {
@@ -453,7 +453,7 @@
             var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '')+"235959";
             var searchStr = '';
 
-            eikon2.getCollectionGroupTextExport('<c:url value="/getCollectionrGroupTextExport.xcn"/>?userid=' + userid + '&srcip=' + srcip + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr + '&type=' + type + '&groupField=sender_str&limit=1000&facet_detail=true', userid);
+            eikon2.getCollectionGroupTextExport('<c:url value="/getCollectionrGroupTextExport.xcn"/>?userid=' + userid + '&srcip=' + srcip + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr + '&type=' + type + '&groupField=sender_str&limit=1000&', userid);
         }
 
 
@@ -486,73 +486,8 @@
             getCodeList('dept');
 
             var dateObj = new Date();
-            $('#startdatepicker').datetimepicker({
-                format: 'YYYY-MM-DD HH:mm:ss',
-                locale: 'ko',
-                sideBySide: true,
-                defaultDate: moment(new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate() - 1))
-            }).on("dp.change", function (e) {
-                if (easyDateStartFlag) {
-                    easyDateStartFlag = false;
-                    return;
-                } else {
-                    $('#easyDate').val('');
-                }
-            });
-            $('#enddatepicker').datetimepicker({
-                format: 'YYYY-MM-DD HH:mm:ss',
-                locale: 'ko',
-                sideBySide: true,
-                defaultDate: moment(new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), 23, 59, 59))
-            }).on("dp.change", function (e) {
-                if (easyDateEndFlag) {
-                    easyDateEndFlag = false;
-                    return;
-                } else {
-                    $('#easyDate').val('');
-                }
-            });
 
-            $('#startsubdatepicker').datetimepicker({
-                format: 'YYYY-MM-DD HH:mm:ss',
-                locale: 'ko',
-                widgetParent: '.boxArea',
-                sideBySide: true,
-                defaultDate: moment(new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate() - 1))
-            }).on("dp.change", function (e) {
-            }).on('dp.show', function () {
-                var datepicker = $("body").find('.bootstrap-datetimepicker-widget:last');
-                if (datepicker.hasClass('bottom')) {
-                    var top = $(this).offset().top + $(this).outerHeight();
-                    var left = $(this).offset().left;
-                    datepicker.css({
-                        'top': (top - 80) + 'px',
-                        'bottom': 'auto',
-                        'left': left + 'px'
-                    });
-                }
-            });
-            $('#endsubdatepicker').datetimepicker({
-                format: 'YYYY-MM-DD HH:mm:ss',
-                locale: 'ko',
-                widgetParent: '.boxArea',
-                sideBySide: true,
-                defaultDate: moment(new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), 23, 59, 59))
-            }).on("dp.change", function (e) {
-            }).on('dp.show', function () {
-                var datepicker = $("body").find('.bootstrap-datetimepicker-widget:last');
-                if (datepicker.hasClass('bottom')) {
-                    var top = $(this).offset().top + $(this).outerHeight();
-                    var left = $(this).offset().left;
-                    var rightDivWidth = $('#rightDiv').width();
-                    if (rightDivWidth < 640) left = left - 280;
-                    datepicker.css({
-                        'top': (top - 80) + 'px',
-                        'bottom': 'auto',
-                        'left': (left) + 'px'
-                    });
-                }
-            });
+
             $('#easyDate').change(function () {
                 changeDate($(this).val());
             });

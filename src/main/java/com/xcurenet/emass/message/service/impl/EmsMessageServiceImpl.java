@@ -581,6 +581,11 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 	}
 
 	@Override
+	public List<CodeVO> getNoteList() {
+		return selectList("com.xcurenet.sqlmap.mappers.mysql.code.getNoteList");
+	}
+
+	@Override
 	public List<RelationKeywordVO> getRelationKeywordList(String searchKeyword) {
 		Map<String, String> param = new HashMap<>();
 		param.put("searchKeyword", searchKeyword);

@@ -76,9 +76,9 @@ var eikon2 = {
             $(this).css('display','none');
         });
     },
-    getGenerativeList : function(page){
+    getCollectionList : function(page){
         var searchType = $('input:radio[name=searchType]:input:checked').val();
-        getGenerativeGroupList(page);
+        getCollectionGroupList(page);
     },
     getMessengerDetailList : function(userid, msgid){
         eikon2.getMessengerDetailList(userid, msgid, '');
@@ -159,7 +159,6 @@ var eikon2 = {
             srcip: srcip,
             data : JSON.stringify( filterVal ),
             offset : searchOffset,
-            facet_detail:true,
             success : function(data, total) {
                 focusMsgId = data.toString();
                 if(total > 0){
@@ -234,7 +233,6 @@ function getGenerativeMessageNext(userid, srcip, usr_id, msgid) {
         usr_id : usr_id,
         msgId : msgid,
         limit : detailLimit,
-        facet_detail:true,
         success : function(data, total) {
             searchFlag = false;
             if(data.groups.length == 0) {
@@ -293,7 +291,6 @@ function getGenerativeMessagePrev(userid, srcip, usr_id, msgid) {
         usr_id : usr_id,
         msgId : msgid,
         limit : detailLimit,
-        facet_detail:true,
         success : function(data, total) {
             searchFlag = false;
             if(data.groups.length == 0) {
@@ -384,7 +381,7 @@ function makeMessengerText( svc ){
 
 
 
-function getGenerativeGroupList (page){
+function getCollectionGroupList (page){
     var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
     groupPage = page;
     var offset = groupPage*groupPageBreak - groupPageBreak;
@@ -392,14 +389,14 @@ function getGenerativeGroupList (page){
     searchFlag = true;
     ui.onBody('timeline_list', 0, -20);
     ui.postJson({
-        url : 'getGenerativeGroupList.xcn',
+        url : 'getCollectionGroupList.xcn',
         data : JSON.stringify( getCondition( )),
         readYn : readYn,
         offset : offset,
         limit : groupPageBreak,
         success : function(data, total) {
             rtnGenerativeGroupList(data.groups)
-            rtnnGenerativeGroupPage(data.groups.length, page);
+            rtnnGenerativeGroupPage(total, page);
         },
         error : function(status, message) {
             ui.alertMsg(message);
@@ -992,7 +989,6 @@ function getGenerativeMessage(userid, srcip, usr_id, msgid){
         usr_id : usr_id,
         msgId : nvl(msgid),
         limit : detailLimit,
-        facet_detail:true,
         success : function(data, total) {
             if(data.groups.length > 0) {
                 $('.messenger_prev').css('display','block');
