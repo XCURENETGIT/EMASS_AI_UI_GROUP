@@ -823,9 +823,31 @@
 			<!-- 대화방 끝!! -->
 			<!-- 채팅 -->
 			<div class="chatList">
+
 				<div class="chatBox">
+
 					<div class="top">
-						<div >
+						<!-- 내보내기 -->
+						<div class="myDropdown mal16">
+							<span>내보내기 &#9662;</span>
+							<div class="dropdown-content">
+								<a href="#" onclick="downloadList('xlsx')" class="excel_down">엑셀(xlsx)</a>
+								<a href="#" onclick="downloadList('txt')" class="txt_down">텍스트(txt)</a>
+								<a href="#" onclick="downloadList('html')" class="html_down">하이퍼텍스트(html)</a>
+								<a href="#" class="excel_file_down">액셀(xlsx)+첨부파일</a>
+							</div>
+						</div>
+						<div class="myDropdown">
+							<span>첨부파일 전체 저장 &#9662;</span>
+							<div class="dropdown-content">
+								<a href="#" onclick="downloadList('xlsx')" class="excel_down">엑셀(xlsx)</a>
+								<a href="#" onclick="downloadList('txt')" class="txt_down">텍스트(txt)</a>
+								<a href="#" onclick="downloadList('html')" class="html_down">하이퍼텍스트(html)</a>
+								<a href="#" class="excel_file_down">액셀(xlsx)+첨부파일</a>
+							</div>
+						</div>
+						<!-- //내보내기 -->
+						<div>
 							<span id="selectUserInfo"  class="chatid" data-srcip="" data-name="" data-usrid=""><s:message code="condition.user"/></span>
 						</div>
 
@@ -923,18 +945,6 @@
 			<div style="position:absolute; top:20px; right:16px; z-index: 999999">
 
 				<button id="showBtn" class="table_btn02">&#8636;</button>
-
-				<div class="top mat16">
-					<div class="myDropdown">
-						<span>내보내기 &#9662;</span>
-						<div class="dropdown-content">
-							<a href="#" onclick="downloadList('xlsx')" class="excel_down">엑셀(xlsx)</a>
-							<a href="#" onclick="downloadList('txt')" class="txt_down">텍스트(txt)</a>
-							<a href="#" onclick="downloadList('html')" class="html_down">하이퍼텍스트(html)</a>
-							<a href="#" class="excel_file_down">액셀(xlsx)+첨부파일</a>
-						</div>
-					</div>
-				</div>
 
 			</div>
 			<%--			첨부파일 끝!!--%>

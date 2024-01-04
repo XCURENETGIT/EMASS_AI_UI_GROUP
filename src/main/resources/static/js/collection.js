@@ -519,9 +519,9 @@ function makeList(nextFlag){
         }
         str+='			</div>';
 
-        str+=' <div class="bubbleDate">';
+        str+=' <div class="bubbleDate mat4">';
         str+='<span>'+obj.ctime+'</span>';
-        str+='<span class="mat4">'+makeMessengerText(obj.svc)+'</span>';
+        str+='<span class="mal4">'+makeMessengerText(obj.svc)+'</span>';
         str+='</div></div>';
         str+='</li>';
     }
@@ -566,9 +566,9 @@ function makePrevList(){
         }
         str+='			</div>';
 
-        str+=' <div class="bubbleDate">';
+        str+=' <div class="bubbleDate mat4">';
         str+='<span>'+obj.ctime+'</span>';
-        str+='<span class="mat4">'+makeMessengerText(obj.svc)+'</span>';
+        str+='<span class="mal4">'+makeMessengerText(obj.svc)+'</span>';
         str+='</div></div>';
         str+='</li>';
     }
@@ -1100,11 +1100,13 @@ function rtnGenerativeGroupList(data) {
 
     }
     if( data.length == 0 ){
-        str += '<a href="#" class="list-group-item list-group-item-action active" style="cursor:default;height:50px;">';
-        str += '	<p class="list-group-item-text" style="line-height:30px;">';
-        str += '		<i class="fa fa-envelope fa-sm"></i> ';
+        str += '	<div class="pl20 pr20">';
+        str += '    <a href="#" class="list-group-item list-group-item-action active" style="cursor:default;">';
+        str += '	    <p class="list-group-item-text" style="line-height:30px; text-align: center">';
+        str += '	         <img src="<c:url value="/img/icon/img_nodata02.png"/>" width="72" height="72"> ';
+        str += '	    <BR/>';
         str += nodataMsg; //common.msg.nodata
-        str += '</p></a>';
+        str += '</p></a></div>';
         $('#group_list').html( str );
     }
 

@@ -176,15 +176,15 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 .a4 {overflow: hidden; height: 100%;}
 
 /* 메신저*/
-.inner_messenger {position: relative; /*height: 100vh;*/height: calc(100vh - 50px); display: flex; /*grid-template-columns: 340px 1fr 1fr 300px;*/
+.inner_messenger { position: relative; /*height: 100vh;*/height: calc(100vh - 50px); display: flex; /*grid-template-columns: 340px 1fr 1fr 300px;*/
 
 }
 .inner_messenger .leftSearch:nth-child(1) { width:340px; position: relative; background-color: #f8f8f8;}
 .inner_messenger .messengerList:nth-child(2) {flex-basis:400px; flex-grow: 1; align-self:top; margin-top:6px; }
-.inner_messenger .chatList:nth-child(3) { flex-basis:450px; flex-grow: 1; position: relative; background-color: #606973; }
-.inner_messenger .rightFile:nth-child(4) { width:300px;background-color: #414A54;}
+.inner_messenger .chatList:nth-child(3) { z-index:99; flex-basis:450px; flex-grow: 1; position: relative; background-color: #606973; }
+.inner_messenger .rightFile:nth-child(4) { width:300px;background-color: #414A54; z-index:9;}
 .rightFileList ul li:first-child {padding-top:0; !important;}
-.rightFileList ul li {border-bottom:1px solid #656C74; padding:12px; !important;}
+.rightFileList ul li {border-bottom:1px solid #656C74; padding:12px 0; !important;}
 
 /*
 #contentArea .content .contentSub .chartArea div ul li {border:1px solid #ddd; border-radius:2px ;  background-color:#fff ; width:32%; float:left; margin-right:1%;}*/
@@ -198,7 +198,7 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 #contentArea .searchArea .btnList {position: relative; text-align:right; float:right; width:20%;z-index:9999;}
 #contentArea .searchArea .textarea {min-height:56px;}
 .myDropdown { position: relative; display: inline-block; cursor: pointer; color: #fff; font-size: 13px;z-index: 9999;}
-.dropdown-content {margin-top:1px; display: none; position: absolute; left:50%; margin-left:-70px; background-color: #fff; min-width: 140px; border-radius:2px; box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);}
+.dropdown-content {z-index: 9999; margin-top:1px; display: none; position: absolute; left:50%; margin-left:-70px; background-color: #fff; min-width: 140px; border-radius:2px; box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);}
 .dropdown-content a {color: #111;padding: 12px 16px;display:block; vertical-align: middle; font-size:13px; font-weight: 400;}
 .dropdown-content a img {width:20px; height:16px; border:1px solid #fff; vertical-align: middle; margin-bottom:4px; margin-right:4px;}
 .dropdown-content a:hover {background-color: #f5f5f5; border-radius:2px;color: #111; font-weight: 600; }
@@ -219,7 +219,7 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 #loginWrap { width:500px; height:420px; margin:0 auto; padding:48px; background:#fff; border-radius:2px ; -webkit-border-radius:2px ; -moz-border-radius:2px ; -ms-border-radius:2px ; -o-border-radius:2px ; }
 #loginWrap label {font-size:14px;}
 .checkbox_align { margin:-2px 0 0 0; vertical-align:middle; }
-#loginWrap #userIdInput, #userPwInput { border-radius:2px ; font-size:16px; color:#999;width: 100%; height:54px; line-height:54px; padding: 12px 20px;margin: 8px 0;display: inline-block;border: 1px solid #ddd;box-sizing: border-box;}
+#loginWrap #userIdInput, #userPwInput { border-radius:2px ; font-size:16px; color:#333;width: 100%; height:54px; line-height:54px; padding: 12px 20px;margin: 8px 0;display: inline-block;border: 1px solid #ddd;box-sizing: border-box;}
 #loginWrap button { border-radius:2px ; font-size:18px; font-weight:600; background-color: #1A73F9;color: white;padding: 14px 20px;margin: 32px 0 16px;border: none;cursor: pointer;width: 100%;}
 #loginWrap button:hover {text-decoration: underline; }
 #loginWrap .imgcontainer {text-align: left; margin-top:8px; margin-bottom:32px;}
@@ -680,7 +680,7 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .sns_chatGPT{background:url(../img/ico_sns_chatgpt.png) left top no-repeat;}
 
 :root {--black: #111;--white: #fff;--bg: #f8f8f8;--bluebg: #F2F6FF;--light:#ededed;}
-.messengerList .messengerBox {width: 100%; height:800px; overflow-y: auto;}
+.messengerList .messengerBox {width: 100%; height:800px; /*overflow-y: auto;*/}
 .messengerList .messengerBox .people { margin-left: -1px; }
 .messengerList .messengerBox .people .person { position: relative;padding:10px 20px 10px;cursor: pointer;overflow: hidden; }
 .messengerList .messengerBox .people .person:after {
@@ -719,7 +719,7 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .messengerList .messengerBox .people .person.active, .messengerList .messengerBox .people .person:hover {background-color: var(--bluebg);}
 .messengerList .messengerBox .people .person.active span, .messengerList .messengerBox .people .person:hover span {}
 .messengerList .messengerBox .people .person.active:after, .messengerList .messengerBox .people .person:hover:after {display: none;}
-.chatList { position: relative; min-width: 400px;  overflow-x: hidden; overflow-y: auto;}
+.chatList { position: relative; min-width: 400px; /* overflow-x: hidden; overflow-y: scroll;*/}
 .chatList::-webkit-scrollbar {display: none; /* Chrome, Safari, Opera*/}
 .chatList .chatBox {position: relative; min-width: 100%; padding-bottom:20px;}
 .chatList .chatBox .top { position: sticky; top:0; left:0; bottom:0; right:0; min-width: 400px; color:#fff; font-size:14px; padding:20px 16px; z-index: 99; background-color: #606973}
