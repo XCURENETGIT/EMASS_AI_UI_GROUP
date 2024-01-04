@@ -145,6 +145,7 @@ public class MessengerEdcGroupVO {
 		solrGroupVO.setSrcip(edc.getSrcip());
 		solrGroupVO.setName(edc.getName());
 		solrGroupVO.setReadYn("Y");
+		solrGroupVO.setXrootmtr(edc.getXrootmtr());
 		solrGroupVO.setUser(edc.getUser());
 		solrGroupVO.setSender(edc.getSender());
 		solrGroupVO.setUsr_id(edc.getUsr_id());
