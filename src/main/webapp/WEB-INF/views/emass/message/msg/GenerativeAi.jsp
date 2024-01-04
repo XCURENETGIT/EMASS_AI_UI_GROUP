@@ -33,7 +33,8 @@
 		width: 30px;
 		background: rgba(35, 36, 48, .3);
 		text-align: center;
-		margin-left: 50.5%;
+		left:50%;
+		margin-left:-15px;
 		z-index: 100000;
 		-moz-border-radius: 50px;
 		-webkit-border-radius: 50px;
@@ -50,9 +51,10 @@
 		position: relative;
 		width: 30px;
 		top: 93%;
+		left:50%;
+		margin-left:-15px;
 		background: rgba(35, 36, 48, .3);
 		text-align: center;
-		margin-left: 50.5%;
 		z-index: 100000;
 		-moz-border-radius: 50px;
 		-webkit-border-radius: 50px;
@@ -914,7 +916,6 @@
 					<button class="active">첨부파일
 						<span id="xcn_toggleBtn2" style="font-size:16px; opacity: 0.7; padding:4px;">x</span>
 					</button>
-
 				</div>
 				<div class="rightFileList" >
 				</div>

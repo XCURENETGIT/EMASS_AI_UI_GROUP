@@ -462,7 +462,7 @@ function makeFileList(data) {
     var str = '';
 
     if (data.length === 0) {
-        str += '<div style="width:100%; background-color:white">첨부파일이 없습니다</div>';
+        str += '<div class="list-group-item02 ma_none">첨부파일이 없습니다</div>';
         str += '<div class="top mat16"><div class="myDropdown"><span>내보내기 &#9662;</span><div class="dropdown-content">';
         str += '<a href="#" onclick="downloadList(\'xlsx\')" class="excel_down">엑셀(xlsx)</a>';
         str += '<a href="#" onclick="downloadList(\'txt\')" class="txt_down">텍스트(txt)</a>';
@@ -539,7 +539,7 @@ function makeList(nextFlag){
 
         str+=' <div class="bubbleDate">';
         str+='<span>'+obj.ctime+'</span>';
-        str+='<span style="border: 1px solid #ccc;">'+makeMessengerText(obj.svc)+'</span>';
+        str+='<span>'+makeMessengerText(obj.svc)+'</span>';
         str+='</div></div>';
         str+='</li>';
     }
@@ -586,7 +586,7 @@ function makePrevList(){
 
         str+=' <div class="bubbleDate">';
         str+='<span>'+obj.ctime+'</span>';
-        str+='<span style="border: 1px solid #ccc;">'+makeMessengerText(obj.svc)+'</span>';
+        str+='<span class="mat4">'+makeMessengerText(obj.svc)+'</span>';
         str+='</div></div>';
         str+='</li>';
     }
@@ -601,7 +601,7 @@ function makePrevList(){
 
 function noDataMsg(){
     var str='<div class="timeline-panel" style="padding-left:10px;">';
-    str+='	<span class="list-group-item cursor-text">';
+    str+='	<span class="list-group-item02 cursor-text">';
     str+='		<div class="timeline-body" style="text-align: center;">';
     str+=			xcnuiJS.noDataPeriod; //선택한 기간에 데이터가 없습니다.
     str+='		</div>';
@@ -611,8 +611,8 @@ function noDataMsg(){
 }
 
 function noPrevDataMsg(){
-    var str='<div class="timeline-panel" style="padding-left:10px;">';
-    str+='	<span class="list-group-item cursor-text">';
+    var str='<div class="timeline-panel">';
+    str+='	<span class="list-group-item02 cursor-text">';
     str+='		<div class="timeline-body" style="text-align: center;">';
     str+=			xcnuiJS.noDataPrev; //이전 데이터가 없습니다.
     str+='		</div>';
@@ -622,8 +622,8 @@ function noPrevDataMsg(){
 }
 
 function noNextDataMsg(){
-    var str='<div class="timeline-panel" style="padding-left:10px;">';
-    str+='	<span class="list-group-item cursor-text">';
+    var str='<div class="timeline-panel">';
+    str+='	<span class="list-group-item02 cursor-text">';
     str+='		<div class="timeline-body" style="text-align: center;">';
     str+=			xcnuiJS.noDataNext; //다음 데이터가 없습니다.
     str+='		</div>';

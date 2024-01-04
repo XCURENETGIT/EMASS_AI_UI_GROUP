@@ -682,7 +682,7 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 :root {--black: #111;--white: #fff;--bg: #f8f8f8;--bluebg: #F2F6FF;--light:#ededed;}
 .messengerList .messengerBox {width: 100%; height:800px; overflow-y: auto;}
 .messengerList .messengerBox .people { margin-left: -1px; }
-.messengerList .messengerBox .people .person {position: relative;padding:10px 20px 10px;cursor: pointer;overflow: hidden; }
+.messengerList .messengerBox .people .person { position: relative;padding:10px 20px 10px;cursor: pointer;overflow: hidden; }
 .messengerList .messengerBox .people .person:after {
 	position: absolute;
 	bottom: 0;
@@ -698,6 +698,9 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 	-moz-transform: translate(-50%, 0);
 	-ms-transform: translate(-50%, 0);
 	-o-transform: translate(-50%, 0);
+
+
+
 }
 .messengerList .messengerBox .people .person span {display: inline-block;}
 .messengerList .messengerBox .people .person p {margin:4px;}
