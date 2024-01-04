@@ -861,7 +861,7 @@
 									<span id="selectCnt" style="color:#fff;">0</span><span style="color:#fff;">/</span><span id="searchResult"
 									                                                                                         style="width:50px;color:#fff;">0 &nbsp;</span>
 								</div>
-						
+
 							</div>
 							<div class="input-group btnCustomPosition" id="searchResultBtnArea" style="display:none;">
 								<button class="btn btn-md btn-warning" type="button" accesskey="U" id="searchMsgUp" style="padding:6px"><i
@@ -913,7 +913,7 @@
 			<!-- 첨부파일 -->
 			<div class="rightFile p20" id="xcn_Search2">
 				<div class="subtab">
-					<button class="active">첨부파일
+					<button class="active">첨부파일ffffffffffffffffffffffffffffffffffffff
 						<span id="xcn_toggleBtn2" style="font-size:16px; opacity: 0.7; padding:4px;">x</span>
 					</button>
 				</div>
@@ -921,6 +921,7 @@
 				</div>
 			</div>
 			<div style="position:absolute; top:20px; right:16px; z-index: 999999">
+
 				<button id="showBtn" class="table_btn02">&#8636;</button>
 			</div>
 			<%--			첨부파일 끝!!--%>

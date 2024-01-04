@@ -194,7 +194,6 @@ var eikon2 = {
 
 function getGenerativeMessageTotal(userid, srcip, startDt, endDt, usr_id, msgid){
 /*총 갯수 계산하는 함수*/
-
     ui.get({
         url : 'getGenerativeMessageTotal.xcn',
         userid : userid,
@@ -539,7 +538,7 @@ function makeList(nextFlag){
 
         str+=' <div class="bubbleDate">';
         str+='<span>'+obj.ctime+'</span>';
-        str+='<span>'+makeMessengerText(obj.svc)+'</span>';
+        str+='<span class="mat4">'+makeMessengerText(obj.svc)+'</span>';
         str+='</div></div>';
         str+='</li>';
     }
