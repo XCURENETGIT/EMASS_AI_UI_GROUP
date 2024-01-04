@@ -25,51 +25,9 @@
 
 
 
-</script>
 <style>
 
-	.messenger_prev{
-		position: relative;
-		width: 30px;
-		background: rgba(35, 36, 48, .3);
-		text-align: center;
-		margin-left: 50.5%;
-		z-index: 100000;
-		-moz-border-radius: 50px;
-		-webkit-border-radius: 50px;
-		border-radius: 50px;
-		height: 30px;
-		line-height: 30px;
-		font-size: 10px;
-		font-weight: bold;
-		cursor: pointer;
-		color: #fff;
-		display: none;
-	}
-	.messenger_next{
-		position: relative;
-		width: 30px;
-		top: 93%;
-		background: rgba(35, 36, 48, .3);
-		text-align: center;
-		margin-left: 50.5%;
-		z-index: 100000;
-		-moz-border-radius: 50px;
-		-webkit-border-radius: 50px;
-		border-radius: 50px;
-		height: 30px;
-		line-height: 30px;
-		font-size: 10px;
-		font-weight: bold;
-		cursor: pointer;
-		color:#fff;
-		display:none;
-
-	}
-	/*
-		.lastReadLi .timeline-panel {
-			background-color: #D3DBDC !important;
-		}*/
+	#wrap {overflow:hidden;}
 </style>
 
 <head>

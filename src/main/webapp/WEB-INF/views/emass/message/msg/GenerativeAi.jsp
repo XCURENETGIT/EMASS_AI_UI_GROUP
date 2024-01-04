@@ -23,55 +23,10 @@
 	})
 </script>
 
-
-
-</script>
 <style>
 
-	.messenger_prev{
-		position: relative;
-		width: 30px;
-		background: rgba(35, 36, 48, .3);
-		text-align: center;
-		left:50%;
-		margin-left:-15px;
-		z-index: 100000;
-		-moz-border-radius: 50px;
-		-webkit-border-radius: 50px;
-		border-radius: 50px;
-		height: 30px;
-		line-height: 30px;
-		font-size: 10px;
-		font-weight: bold;
-		cursor: pointer;
-		color: #fff;
-		display: none;
-	}
-	.messenger_next{
-		position: relative;
-		width: 30px;
-		top: 93%;
-		left:50%;
-		margin-left:-15px;
-		background: rgba(35, 36, 48, .3);
-		text-align: center;
-		z-index: 100000;
-		-moz-border-radius: 50px;
-		-webkit-border-radius: 50px;
-		border-radius: 50px;
-		height: 30px;
-		line-height: 30px;
-		font-size: 10px;
-		font-weight: bold;
-		cursor: pointer;
-		color:#fff;
-		display:none;
+	#wrap {overflow:hidden;}
 
-	}
-/*
-	.lastReadLi .timeline-panel {
-		background-color: #D3DBDC !important;
-	}*/
 </style>
 
 <head>
@@ -858,7 +813,7 @@
 					<%--					채팅 검색 부분 끝!--%>
 
 					<%--					채팅 본문 내용 보이는 구간 시작  -> ***** 아직 안함 --%>
-					<div style="margin-top:-20px;">
+					<div style="margin-top:-10px;">
 						<div class="form-group form-inline">
 
 
@@ -885,7 +840,7 @@
 						</div>
 					</div>
 					<div class="row2" style="height: calc(100% - 160px);">
-						<div id="scrollArea" class="clusterize-scroll">
+						<div>
 							<div class="messenger_prev" style="margin-bottom:16px" title="<s:message code='eikon.msg.show.prev'/>">+</div>
 							<div id="timeline_list">
 								<div class="timeline-panel">
@@ -899,7 +854,7 @@
 						</div>
 					</div>
 					<div class="messenger_next" title="<s:message code='eikon.msg.show.next'/>">+</div>
-					<div class="p16 white">
+					<div class="p16 white" style="position: fixed; bottom:0;">
 						<s:message code="eikon.msg.total.cnt"/> : <span id="groupSubResultCnt" class="blue03">0</span>
 					</div>
 				<%--	<div class="chat active-chat" data-chat="person2">

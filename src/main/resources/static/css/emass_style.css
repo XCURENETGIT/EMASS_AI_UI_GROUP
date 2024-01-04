@@ -2,7 +2,7 @@
 body,html {width:100%; height:100%;}
 
 /* Layout */
-#wrap { position: relative;width:100%; height:100%; min-width:1200px;}
+#wrap {position: relative;width:100%; height:100%; min-width:1200px;}
 #header {position:fixed; width:100%; height:50px;min-width:1200px;z-index:99999;}
 #container {position: relative; width:100%; padding-top:50px; *zoom:1;}
 #container::after {content:''; display:block; clear:both;}
@@ -183,9 +183,51 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 .inner_messenger .messengerList:nth-child(2) {flex-basis:400px; flex-grow: 1; align-self:top; margin-top:6px; }
 .inner_messenger .chatList:nth-child(3) { z-index:99; flex-basis:450px; flex-grow: 1; position: relative; background-color: #606973; }
 .inner_messenger .rightFile:nth-child(4) { width:300px;background-color: #414A54; z-index:9;}
+.rightFileList {overflow-x: hidden; overflow-y:scroll; height:800px;}
+.rightFileList ul {}
 .rightFileList ul li:first-child {padding-top:0; !important;}
 .rightFileList ul li {border-bottom:1px solid #656C74; padding:12px 0; !important;}
+.messenger_prev{
+	position: relative;
+	width: 30px;
+	background: rgba(35, 36, 48, .3);
+	text-align: center;
+	left:50%;
+	margin-left:-15px;
+	z-index: 100000;
+	-moz-border-radius: 50px;
+	-webkit-border-radius: 50px;
+	border-radius: 50px;
+	height: 30px;
+	line-height: 30px;
+	font-size: 10px;
+	font-weight: bold;
+	cursor: pointer;
+	color: #fff;
+	display: none;
+	z-index:9
+}
+.messenger_next{
+	position: relative;
+	width: 30px;
+	top: 93%;
+	left:50%;
+	margin-left:-15px;
+	background: rgba(35, 36, 48, .3);
+	text-align: center;
+	z-index: 100000;
+	-moz-border-radius: 50px;
+	-webkit-border-radius: 50px;
+	border-radius: 50px;
+	height: 30px;
+	line-height: 30px;
+	font-size: 10px;
+	font-weight: bold;
+	cursor: pointer;
+	color:#fff;
+	display:none;
 
+}
 /*
 #contentArea .content .contentSub .chartArea div ul li {border:1px solid #ddd; border-radius:2px ;  background-color:#fff ; width:32%; float:left; margin-right:1%;}*/
 #contentArea .searchArea{ position: relative;padding:0 20px;margin-bottom:12px;clear: both; }
@@ -198,13 +240,13 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 #contentArea .searchArea .btnList {position: relative; text-align:right; float:right; width:20%;z-index:9999;}
 #contentArea .searchArea .textarea {min-height:56px;}
 .myDropdown { position: relative; display: inline-block; cursor: pointer; color: #fff; font-size: 13px;z-index: 9999;}
-.dropdown-content {z-index: 9999; margin-top:1px; display: none; position: absolute; left:50%; margin-left:-70px; background-color: #fff; min-width: 150px; border-radius:2px; box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);}
+.dropdown-content {z-index: 9999; margin-top:1px;  display: none;position: absolute; left:50%; margin-left:-70px; background-color: #fff; min-width: 150px; border-radius:2px; box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);}
 .dropdown-content a {color: #111;padding: 12px 16px;display:block; vertical-align: middle; font-size:13px; font-weight: 400;}
 .dropdown-content a img {width:20px; height:16px; border:1px solid #fff; vertical-align: middle; margin-bottom:4px; margin-right:4px;}
 .dropdown-content a:hover {background-color: #f5f5f5; border-radius:2px;color: #111; font-weight: 600; }
 .myDropdown:hover .dropdown-content {display: block; z-index: 9999;}
 .myDropdown:hover .dropbtn {text-decoration:underline;}
-
+.chatList > .chatBox > .top > .myDropdown > .dropdown-content {z-index: 9999; margin-top:1px; position: absolute;left:0; margin-left:-90px; background-color: #fff; min-width: 150px; border-radius:2px; box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);}
 /*
 .sublist ul li {padding:16px;margin-bottom:12px;}
 .sublist ul li .tit {background:url(../img/ico_tit01.png) top left no-repeat; font-size:14px; color:#111;padding-left:20px;}
@@ -680,7 +722,7 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .sns_chatGPT{background:url(../img/ico_sns_chatgpt.png) left top no-repeat;}
 
 :root {--black: #111;--white: #fff;--bg: #f8f8f8;--bluebg: #F2F6FF;--light:#ededed;}
-.messengerList .messengerBox {width: 100%; height:800px; /*overflow-y: auto;*/}
+.messengerList .messengerBox {width: 100%; height:800px;}
 .messengerList .messengerBox .people { margin-left: -1px; }
 .messengerList .messengerBox .people .person { position: relative;padding:10px 20px 10px;cursor: pointer;overflow: hidden; }
 .messengerList .messengerBox .people .person:after {
@@ -719,15 +761,14 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .messengerList .messengerBox .people .person.active, .messengerList .messengerBox .people .person:hover {background-color: var(--bluebg);}
 .messengerList .messengerBox .people .person.active span, .messengerList .messengerBox .people .person:hover span {}
 .messengerList .messengerBox .people .person.active:after, .messengerList .messengerBox .people .person:hover:after {display: none;}
-.chatList { position: relative; min-width: 400px;  overflow-x: hidden;/* overflow-y: scroll;*/  -ms-overflow-style: none;}
-.chatList::-webkit-scrollbar {display: none; /* Chrome, Safari, Opera*/}
-.chatList .chatBox {position: relative; min-width: 100%; padding-bottom:20px;}
+.chatList { position: relative; min-width: 400px;  overflow-x: hidden; overflow-y: scroll;}
+.chatList .chatBox {position: relative; min-width: 100%; padding-bottom:20px; }
 .chatList .chatBox .top { position: sticky; top:0; left:0; bottom:0; right:0; min-width: 400px; color:#fff; font-size:14px; padding:20px 16px; z-index: 99; background-color: #606973}
 .chatDate { position: relative; display: grid; grid-template-columns: 50% 50%; padding-top:12px;}
 .chatList .chatBox .top span {position: relative; font-weight: 300; }
 .chatList .chatBox .top span.chatid {font-weight: 600;}
 .file_myDropdown {position: absolute; right:10px; top:20px; z-index:99999;}
-.chatList .chatBox .top .myDropdown {float:right; z-index: 99999;}
+.chatList .chatBox .top .myDropdown {float:right; z-index:99999;}
 .chatList .chatBox .chat {position: relative;display: none;flex-direction: column; z-index: 1;padding:0 16px;}
 .chatList .chatBox .chat.active-chat {display: block;display: flex;overflow: hidden;}
 .chatList .chatBox .chat.active-chat .bubble {transition-timing-function: cubic-bezier(0.4, -0.04, 1, 1);}
