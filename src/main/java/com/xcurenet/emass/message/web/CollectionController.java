@@ -1,10 +1,8 @@
 package com.xcurenet.emass.message.web;
 
 import com.xcurenet.annotations.AuditMenu;
-import com.xcurenet.annotations.AuditOperation;
 import com.xcurenet.annotations.AuditParentMenu;
 import com.xcurenet.audit.service.Menu;
-import com.xcurenet.audit.service.Operation;
 import com.xcurenet.audit.service.ParentMenu;
 import com.xcurenet.common.excel.XLSXWriter;
 import com.xcurenet.common.util.Common;
@@ -14,7 +12,7 @@ import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.emass.message.component.SolrCreateQuery;
 import com.xcurenet.emass.message.service.*;
-import com.xcurenet.emass.message.service.impl.SolrEdcServiceImpl;
+import com.xcurenet.minio.MinioFileAdapter;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -67,6 +65,10 @@ public class CollectionController {
 
 	@Autowired
 	private EmsMessageService emsMessageService;
+
+	@Autowired
+	public MinioFileAdapter minioFileAdapter;
+
 
 	@RequestMapping(value = "/getNoteList.xcn")
 	@Description("노트 서비스 목록 조회")
@@ -407,6 +409,7 @@ public class CollectionController {
 			sq.addSort("msgid", ORDER.asc);
 			sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user");
 
+			log.info("query: 	" +   sq.getQuery());
 			return sq;
 
 	}
@@ -671,7 +674,6 @@ public class CollectionController {
 	@Description("서비스 대화내용 압축 내보내기")
 	@ResponseBody
 	public void getCollectionGroupAllExport(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
-
 		JSONObject param = Common.getParam(request);
 		String userid = Common.nvl(param.get("userid"));
 
@@ -720,26 +722,6 @@ public class CollectionController {
 		return _sb.toString();
 	}
 
-	private void inputZipExcel(ArchiveOutputStream os, MessengerEdcGroupVO groups, MessengerGroupUserVO users, String xRootMtr, Locale locale) throws IOException, Exception {
-
-		ByteArrayOutputStream xOut = new ByteArrayOutputStream();
-		ByteArrayInputStream bIn = null;
-		try {
-			String name = getFileName(xRootMtr, users, locale);
-			os.putArchiveEntry(new ZipArchiveEntry(name + ".xlsx"));
-
-			xlsxExport(xRootMtr, groups, xOut, true, locale);
-
-			bIn = new ByteArrayInputStream(xOut.toByteArray());
-			IOUtils.copy(bIn, os);
-			os.closeArchiveEntry();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			IOUtils.closeQuietly(bIn);
-			IOUtils.closeQuietly(xOut);
-		}
-	}
 
 	private void inputCollectionZipExcel(ArchiveOutputStream os, MessengerEdcGroupVO groups, String userid, Locale locale) throws IOException, Exception {
 
@@ -748,7 +730,6 @@ public class CollectionController {
 		try {
 			String name = userid;
 			os.putArchiveEntry(new ZipArchiveEntry(name + ".xlsx"));
-
 			xlsxCollectionExport(userid, groups, xOut, true, locale);
 
 			bIn = new ByteArrayInputStream(xOut.toByteArray());
@@ -761,6 +742,7 @@ public class CollectionController {
 			IOUtils.closeQuietly(xOut);
 		}
 	}
+
 
 	private void inputAttach(ArchiveOutputStream os, MessengerEdcGroupVO groups) throws Exception {
 		List<MessengerGroupVO> list = groups.getGroups();
@@ -775,7 +757,7 @@ public class CollectionController {
 						String path = attach.getAttachPath();
 						String harPath = attach.getAttachHarPath();
 						log.info("path:{}, harPath:{}", path, harPath);
-						in = attachDown.getAttach(path, harPath);
+						in = minioFileAdapter.findFile(attach.getAttachPath());
 						if (in == null) continue;
 						os.putArchiveEntry(new ZipArchiveEntry(Common.makeFilepath("attachs", item.getMsgid(), attach.getAttachName())));
 						IOUtils.copy(in, os);
@@ -791,7 +773,6 @@ public class CollectionController {
 			}
 		}
 	}
-
 
 	@RequestMapping(value = "/getCollectionrGroupTextExport.xcn")
 	@Description("서비스 대화내용 내보내기")
