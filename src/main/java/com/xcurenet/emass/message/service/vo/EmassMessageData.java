@@ -39,7 +39,7 @@ public class EmassMessageData {
 	private int attachCnt;
 
 	@Field("size")
-	private int size;
+	private long size;
 
 	@Field("allOfUs")
 	private String allOfUs;
