@@ -1,5 +1,6 @@
 package com.xcurenet.emass.message.web;
 
+import com.sun.tools.jconsole.JConsoleContext;
 import com.xcurenet.annotations.AuditMenu;
 import com.xcurenet.annotations.AuditOperation;
 import com.xcurenet.annotations.AuditParentMenu;
@@ -14,6 +15,7 @@ import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.emass.message.component.SolrCreateQuery;
 import com.xcurenet.emass.message.service.*;
+import com.xcurenet.emass.message.service.impl.SolrEdcServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -96,9 +98,9 @@ public class MessengerController {
 		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
 		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), Common.getAdminId(session));
 		sq.setQuery(sq.getQuery() + MESSENGER + " +xrootmtr:*");
-//		if (Common.isEquals(param.get("readYn"), "N")) {
-//			sq.addFilterQuery(String.format(SolrEdcServiceImpl.JOIN_UNREAD, Common.getAdminId(session)));
-//		}
+		if (Common.isEquals(param.get("readYn"), "N")) {
+			sq.addFilterQuery(String.format(SolrEdcServiceImpl.JOIN_UNREAD, Common.getAdminId(session)));
+		}
 		sq.setStart(Common.nvz(param.get("offset"), 0));
 		sq.setRows(Common.nvz(param.get("limit"), 100));
 		sq.setSort("ctime", ORDER.desc);
@@ -118,6 +120,7 @@ public class MessengerController {
 		JSONObject param = Common.getParam(request);
 		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
 		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), Common.getAdminId(session));
+		sq.setQuery(sq.getQuery() + MESSENGER + " +xrootmtr:*");
 
 		sq.setParam("group", true);
 		sq.setParam("group.facet", true);
@@ -130,8 +133,9 @@ public class MessengerController {
 		/* 그룹 디테일검색 동적 들어와야 할 offset,size 값*/
 		sq.setParam("facet.offset", String.valueOf(Common.nvz(param.get("offset"), 0)));
 		sq.setParam("facet.group", String.valueOf(Common.nvz(param.get("limit"), 100)));
-		sq.setParam("facet.detail", true);
+		sq.setParam("facet.list", true);
 		sq.setParam("facet.mincount", "1");
+
 
 		/* 일반 문서 검색은 하지않으므로 0 (그룹검색만 하므로 ) */
 		sq.setStart(Common.nvz(param.get("offset"), 0));
@@ -248,9 +252,7 @@ public class MessengerController {
 
 		SolrQuery sq = new SolrQuery();
 		if(Common.isEmpty(msgId)) {
-
 			EmsMessengerAdminXrootMtrVO emaxm = emsMessageService.getEmassMessengerAdminXrootMtr(xRootMtr, Common.getAdminId(request), srcip, usr_id);
-
 			if(Common.isNotEmpty(emaxm)) {
 				msgId = Common.nvl(emaxm.getMsgId());
 				startRange = Common.diffOfDate(startDt.substring(0,8), msgId.substring(0,8));
@@ -258,15 +260,12 @@ public class MessengerController {
 			}
 
 		}
-
 		if(Common.isEmpty(msgId) || (startRange < 0) || (endRange > 0)) {
 			sq = getMessengerMsgTotalQuery(request);
 		} else {
 			sq = getMessengerMsgNext(request, msgId, true);
 		}
-
 		MessengerEdcGroupVO result = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request), true, false);
-
 		return new XcnResponseVO(XcnRspCode.OK, result);
 	}
 
@@ -377,6 +376,7 @@ public class MessengerController {
 
 		return sq;
 	}
+
 
 
 	public SolrQuery getMessengerMsgPrev(final HttpServletRequest request, final String msgId) throws Exception {
@@ -534,8 +534,15 @@ public class MessengerController {
 
 		sq.setQuery(query + MESSENGER);
 		sq.setStart(0);
-		sq.setRows(30000);
-		sq.setSort("ctime", ORDER.asc);
+		sq.setRows(10000);
+
+		sq.setParam("group", true);
+		sq.setParam("group.facet", true);
+		sq.setParam("group.ngroups", true);
+		sq.setParam("group.field", "xrootmtr");
+		sq.setParam("facet", true);
+		sq.setParam("facet.field", "xrootmtr");
+//		sq.setSort("ctime", ORDER.asc);
 		SolrEdcMessageVO edcVO = solrEdcService.getEmassMessage(sq, Common.getAdminId(request));
 
 		List<Map<String, String>> result = new ArrayList<>();
@@ -724,7 +731,8 @@ public class MessengerController {
 			out = response.getOutputStream();
 			os = new ArchiveStreamFactory().createArchiveOutputStream("zip", out);
 			MessengerEdcGroupVO groups = getMessengerMsgTotal(request, true);
-			MessengerGroupUserVO users = getMessengerGroupUserList(request, 30000);
+			//MessengerGroupUserVO users = getMessengerGroupUserList(request, 30000);
+			MessengerGroupUserVO users = null;
 			inputAttach(os, groups);
 			inputZipExcel(os, groups, users, xRootMtr, Common.getLocale(request.getSession()));
 
@@ -837,12 +845,12 @@ public class MessengerController {
 			out = response.getOutputStream();
 
 			MessengerEdcGroupVO groups = getMessengerMsgTotal(request, true);
-			MessengerGroupUserVO users = getMessengerGroupUserList(request, 30000);
+//			MessengerGroupUserVO users = getMessengerGroupUserList(request, 30000);
 
 			if (Common.isEquals(type, "xlsx")) {
 				response.setContentType("application/octet-stream");
 				response.setHeader("Content-Transfer-Encoding", "binary");
-				response.setHeader("Content-Disposition", "attachment; filename=\"" + new String(getFileName(xRootMtr, users, Common.getLocale(request.getSession())).getBytes("KSC5601"), "ISO8859_1") + "." + type + "\"");
+				response.setHeader("Content-Disposition", "attachment; filename=\"" + xRootMtr + "." + type + "\"");
 				xlsxExport(xRootMtr, groups, out, false, Common.getLocale(request.getSession()));
 			} else {
 				if (Common.isNotEquals(print, "Y")) {
@@ -857,15 +865,6 @@ public class MessengerController {
 				_sb.append(xRootMtr).append(Common.EMPTY_LINE).append(Common.EMPTY_LINE);
 				_sb.append("<" + Prop.propFormat("condition.participation", locale) + ">").append(Common.EMPTY_LINE);
 
-				if (users != null) {
-					for (SolrEdcVO user : users.getGroups()) {
-						String name = Common.nvl(Common.isEmpty(user.getSname()) ? user.getSender() : user.getSname(), Common.nvl(user.getSrcip())) ;
-						_sb.append(String.format("[%s] ["+Prop.propFormat("common.org.co", locale)+":%s, "+Prop.propFormat("common.org.busi", locale)+":%s, "+Prop.propFormat("common.org.dept", locale)+":%s, "+Prop.propFormat("common.org.jikgub", locale)+":%s]", name, Common.nvl(user.getConm()), Common.nvl(user.getBusinm()), Common.nvl(user.getDeptnm()), Common.nvl(user.getJikgubnm()))).append(Common.EMPTY_LINE);
-						if(Common.isNotEmpty(user.getSname())) _sb.append(String.format("%s(%s)", name, Common.nvl(user.getSender())) + Common.EMPTY_LINE);
-						else _sb.append(String.format("%s", name) + Common.EMPTY_LINE);
-					}
-				}
-
 				_sb.append(Common.EMPTY_LINE);
 				_sb.append("<" + Prop.propFormat("eikon.msg.chatContents", locale) + ">").append(Common.EMPTY_LINE);
 				List<MessengerGroupVO> list = groups.getGroups();
@@ -879,7 +878,7 @@ public class MessengerController {
 				}
 				if (Common.isNotEquals(print, "Y")) {
 					response.setContentLength(_sb.toString().getBytes().length);
-					response.setHeader("Content-Disposition", "attachment; filename=\"" + new String(getFileName(xRootMtr, users, Common.getLocale(request.getSession())).getBytes("KSC5601"), "ISO8859_1") + "." + type + "\"");
+					response.setHeader("Content-Disposition", "attachment; filename=\"" + xRootMtr + "." + type + "\"");
 				}
 				out.write(_sb.toString().getBytes());
 			}

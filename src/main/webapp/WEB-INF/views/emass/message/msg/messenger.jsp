@@ -13,258 +13,7 @@
 	<title>EMASS LT - <s:message code="DATA_MONITOR.MESSAGE_SERVICE"/></title>
 
 	<style>
-		.clusterize-scroll {
-			overflow: auto;
-			height: 100%;
-		}
 
-		@keyframes ddd {
-			from {
-				left: -5px
-			}
-			to {
-				left: 5px
-			}
-		}
-
-		.lastReadLi .timeline-panel .list-group-item {
-			background-color: #D3DBDC !important;
-		}
-
-		.lastReadLi .timeline-title, .lastReadLi .timeline-body {
-
-		}
-
-		.lastReadLi .panel_left:after {
-			position: absolute !important;
-			left: -14px !important;
-			border-top: 7px solid transparent !important;
-			border-left: 0 solid #D3DBDC !important;
-			border-right: 14px solid #D3DBDC !important;
-			border-bottom: 7px solid transparent !important;
-		}
-
-		.lastReadLi .panel_left:before {
-			position: absolute !important;
-			left: -13px !important;
-			border-top: 8px solid transparent !important;
-			border-left: 0px solid #D3DBDC !important;
-			border-right: 13px solid #D3DBDC !important;
-			border-bottom: 8px solid transparent !important;
-		}
-
-		.lastReadLi .panel_right:after {
-			position: absolute !important;
-			right: -14px !important;
-			border-top: 7px solid transparent !important;
-			border-left: 14px solid #D3DBDC !important;
-			border-right: 0 solid #D3DBDC !important;
-			border-bottom: 7px solid transparent !important;
-		}
-
-		.lastReadLi .panel_right:before {
-			position: absolute !important;
-			right: -13px !important;
-			border-top: 8px solid transparent !important;
-			border-left: 13px solid #D3DBDC !important;
-			border-right: 0 solid #D3DBDC !important;
-			border-bottom: 8px solid transparent !important;
-		}
-
-		:first-child.list-group-item, :last-child.list-group-item {
-			border-radius: 0px !important;
-		}
-
-		#rightDiv {
-
-		}
-
-		.list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover {
-			z-index: 2;
-			color: #fff;
-			background-color: #90abc3;
-			opacity: .9;
-			border-color: #ccc;
-		}
-
-		.list-group-item.active .list-group-item-text, .list-group-item.active:focus .list-group-item-text, .list-group-item.active:hover .list-group-item-text {
-			color: #fff;
-		}
-
-		#groupPage a:hover {
-			text-decoration: none;
-		}
-
-		#groupPage a:focus {
-			text-decoration: none;
-		}
-
-		a.list-group-item, button.list-group-item {
-			font-weight: normal;
-			color: #999;
-		}
-
-		.list-group-item-text i {
-			font-size: 16px;
-		}
-
-		#tab .active.btn, #tab .btn:active {
-			background-color: #253f56;
-			color: #fff;
-			border-bottom-left-radius: 0px;
-			border-bottom-right-radius: 0px;;
-		}
-
-		.bootstrap-datetimepicker-widget table td.disabled, .bootstrap-datetimepicker-widget table td.disabled:hover {
-			color: #E4E4E4;
-		}
-
-		.cursor-text {
-			cursor: text;
-		}
-
-		.cursor-pointer {
-			cursor: pointer;
-		}
-
-		.maxwidth50 {
-			width: calc(100% - 50px);
-		}
-
-		.cursor-default {
-			cursor: default;
-		}
-
-		.buttonArea {
-			padding: 7px;
-		}
-
-		.buttonArea:hover {
-			background-color: #d4d4d4;
-			border: 1px solid # #adadad;
-		}
-
-		.buttonArea:active {
-			color: #333;
-			background-color: #d4d4d4;
-			border: 1px solid #adadad;
-			-webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
-			box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
-		}
-
-		.input-group-addon:hover {
-			background-color: #d4d4d4;
-		}
-
-		.clicked {
-			background-color: #d4d4d4 !important;
-			-webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
-			box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
-		}
-
-		.file_link, .file_link > pre, .file_link > pre > code {
-			text-decoration: underline;
-			color: blue;
-		}
-
-		.file_link > pre {
-			display: inline-block;
-		}
-
-		.bootstrap-select [data-id=serviceTypeSelect],
-		.bootstrap-select [data-id=serviceTypeSelect] {
-			width: 300px;
-		}
-
-		.bootstrap-select [data-id=deptSelect] {
-			width: 150px;
-		}
-
-		#selectedCodeTitle {
-			display: none;
-			border: 1px solid #458A45;
-			position: absolute;
-			background-color: #5CB85C;
-			color: #fff;
-			z-index: 999;
-			font-size: 15px;
-			padding: 3px;
-			max-width: 400px;
-			word-break: break-all;
-		}
-
-		.tag {
-			font-size: 100%;
-			border: 1px solid #ccc;
-			padding-top: 5px !important;
-		}
-
-		.tag-pill {
-			border-radius: 0px !important;
-		}
-
-		.btn-primary {
-			color: #fff !important;
-			background-color: #253f56 !important;
-			border-color: #253f56 !important;
-		}
-
-		.loading_div_grid {
-			background-color: transparent !important;
-		}
-
-		.btnCustomPosition {
-			position: inherit;
-			top: 125px;
-			right: 30px;
-			z-index: 999;
-		}
-
-		.input-group .show-tick {
-			display: inline-block;
-		}
-
-		#group_list .ignoreHtmlPre {
-			width: 72%;
-		}
-
-		.messenger_prev {
-			position: relative;
-			width: 30px;
-			background-color: rgba(0, 94, 193, 0.32);
-			text-align: center;
-			margin-left: 50.5%;
-			z-index: 100000;
-			-moz-border-radius: 50px;
-			-webkit-border-radius: 50px;
-			border-radius: 50px;
-			height: 30px;
-			line-height: 30px;
-			font-size: 10px;
-			font-weight: bold;
-			cursor: pointer;
-			color: #fff;
-			display: none;
-		}
-
-		.messenger_next {
-			position: relative;
-			width: 30px;
-			background-color: rgba(0, 94, 193, 0.32);
-			text-align: center;
-			margin-left: 50.5%;
-			z-index: 100000;
-			-moz-border-radius: 50px;
-			-webkit-border-radius: 50px;
-			border-radius: 50px;
-			height: 30px;
-			line-height: 30px;
-			font-size: 10px;
-			font-weight: bold;
-			cursor: pointer;
-			color: #fff;
-			display: none;
-		}
 	</style>
 	<script>
         var messengerListCnt = 0;
@@ -358,13 +107,12 @@
                 if (e.keyCode == 13) $('#searchBtn').click();
             }); //통합 검색 엔터키
 
-            $('#searchMsgBtn').click(function () {
-                if ($('#searchMsgStrInput').val() == "") $('#searchMsgQueryBtn').click();
+            $('#searchMsgBtn').click(function(){
+                if($('#searchMsgStrInput').val() == "") $('#searchMsgQueryBtn').click();
                 else eikon.findMessageList(0);
-                //eikon.getMessengerDetailList($('#xrootmtr').text(),$('#msgid').text(), $('#srcip').text());
             });
             $('#searchMsgQueryBtn').click(function () {
-                var selectedUsrId = $('#selectUserInfo').attr('data-usrid');
+                var selectedUsrId = $('#selectUserInfo').attr('data-name');
                 getDetailData(selectedUsrId);
             });
             $("#searchMsgStrInput").keypress(function (e) {
@@ -405,6 +153,54 @@
                 moveTargetHeight(id, false);
             });
 
+            $(document).on('click', '.downAllFile', function () {
+                var downloadFlag = false;
+                $('.downloadIcon').each(function (i, item) {
+                    var attachHash = $(this).parents('p').attr('attachhash');
+                    if (attachHash != '') {
+                        downloadFlag = true;
+                    }
+                });
+                if (!downloadFlag) {
+                    alert('<s:message code="message.message.notfound.attach"/>');
+                    return;
+                }
+
+                var msgIds = [];
+                $('.downloadIcon').each(function (i, item) {
+                    var msgId = $(this).parents('p').attr('msgid');
+                    msgIds.push(msgId);
+                });
+
+                var attachUrl = '<c:url value="/getEmassAttachInfo4DownHash.xcn"/>?msgIds=' + msgIds.join(',');
+                try {
+                    AttachDown.location.href = attachUrl;
+                } catch (e) {
+                    AttachDown.src = attachUrl;
+                }
+            });
+
+            $(document).on('click', '.downloadIcon', function () {
+                var msgId = $(this).parents('p').attr('msgid');
+                var attachHash = $(this).parents('p').attr('attachhash');
+                var attachSize = Number($(this).parents('p').attr('attachsize'));
+                var attachUrl = '<c:url value="/downEmassAttachOne.xcn"/>?msgId=' + msgId + '&attachHash=' + attachHash;
+
+                if (attachHash == '') {
+                    alert('<s:message code="message.message.notfound.attach"/>');
+                    return;
+                }
+
+                if (attachSize == 0 || attachSize == 'NaN') attachSize = 1;
+
+                try {
+                    AttachDown.location.href = attachUrl;
+                } catch (e) {
+                    AttachDown.src = attachUrl;
+                }
+            });
+
+
             $(document).on('click', '.downAllFile', function(){
                 var downloadFlag = false;
                 $('.downloadIcon').each ( function ( i, item ) {
@@ -424,27 +220,7 @@
                     msgIds.push(msgId);
                 });
 
-                var attachUrl = '<c:url value="/getEmassAttachInfo4DownHash.xcn"/>?msgIds='+msgIds.join(',');
-                try {
-                    AttachDown.location.href = attachUrl;
-                } catch (e) {
-                    AttachDown.src = attachUrl;
-                }
-            });
-
-            $(document).on('click', '.downloadIcon', function(){
-                var msgId = $(this).parents('p').attr('msgid');
-                var attachHash = $(this).parents('p').attr('attachhash');
-                var attachSize = Number( $(this).parents('p').attr('attachsize') );
-                var attachUrl = '<c:url value="/downEmassAttachOne.xcn"/>?msgId='+msgId+'&attachHash='+attachHash;
-
-                if( attachHash == ''){
-                    alert('<s:message code="message.message.notfound.attach"/>');
-                    return;
-                }
-
-                if ( attachSize == 0 || attachSize == 'NaN' ) attachSize = 1;
-
+                var attachUrl = '<c:url value="/downEmassAttachByMsgId.xcn"/>?msgIds='+msgIds.join(',');
                 try {
                     AttachDown.location.href = attachUrl;
                 } catch (e) {
@@ -466,14 +242,14 @@
                 hideSelect();
             });
             $('.excel_file_down').click(function () {
-                var xrootmtr = $('#xrootmtr').text();
+                var xRootMtr = $('#xrootmtr').text();
                 var srcip = $('#srcip').text();
-                var usr_id = $('#usr_id').text();
-                var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
-                var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
+                var usr_id = $('#selectUserInfo').attr('data-name');
+                var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '')+"0000000";
+                var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '')+"235959";
                 var searchStr = '';
                 if (xrootmtr == '') return;
-                eikon.getMessengerGroupAllExport('<c:url value="/getMessengerGroupAllExport.xcn"/>?xRootMtr=' + xrootmtr + '&srcip=' + srcip + '&usr_id=' + usr_id + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr);
+                eikon.getMessengerGroupAllExport('<c:url value="/getMessengerGroupAllExport.xcn"/>?xRootMtr=' + xRootMtr + '&srcip=' + srcip + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr+'&limit=1000&facet_detail=true&export=true');
                 hideSelect();
             });
 
@@ -670,16 +446,16 @@
 
 
         function downloadList(type) {
-            var xrootmtr = $('#xrootmtr').text();
+            var xRootMtr = $('#xrootmtr').text();
             var srcip = $('#srcip').text();
-            var usr_id = $('#usr_id').text();
+            var usr_id = $('#selectUserInfo').attr('data-name');
+            console.log("user_id: "+usr_id);
 
             if (xrootmtr == '') return;
             var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
             var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
             var searchStr = '';
-            eikon.getMessengerGroupTextExport('<c:url value="/getMessengerGroupTextExport.xcn"/>?xRootMtr=' + xrootmtr + '&srcip=' + srcip + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr + '&type=' + type + '&groupField=sender_str&limit=1000&', xrootmtr);
-            //eikon.getMessengerGroupTextExport('<c:url value="/getMessengerGroupTextExport.xcn"/>?xRootMtr=' + xrootmtr + '&srcip=' + srcip + '&usr_id=' + usr_id + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr + '&type=' + type + '&groupField=sender_str', xrootmtr);
+            eikon.getMessengerGroupTextExport('<c:url value="/getMessengerGroupTextExport.xcn"/>?xRootMtr=' + xRootMtr + '&srcip=' + srcip + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr + '&type=' + type + '&groupField=sender_str&limit=1000&', xRootMtr);
         }
 
         function searchConsentNo() {
@@ -691,8 +467,6 @@
             if (obj == '') {
                 $('#consentNo').val('');
                 $('#consentName').text('');
-                /* $('#consentIp').val('');
-				$('#consentEmail').val(''); */
                 $('#consentUserId').val('');
                 $('#consentBtn').removeClass('active');
             } else {
@@ -825,16 +599,24 @@
 
 
 
+
+
             <s:message code="common.org.dept.all"/>',
 		noneResultsText:'
+
+
 
 
             <s:message code="common.msg.noresult"/>'+' ',
 		selectAllText:'
 
 
+
+
             <s:message code="common.msg.select_all"/>',
 		deselectAllText:'
+
+
 
 
             <s:message code="common.msg.unselect_all"/>'
@@ -1180,10 +962,20 @@
 		<div class="chatList">
 			<div class="chatBox">
 				<div class="top">
+					<%--					내보내기--%>
+					<div class="myDropdown mal16">
+						<span>내보내기 &#9662;</span>
+						<div class="dropdown-content">
+							<a href="#" onclick="downloadList('xlsx')" class="excel_down">엑셀(xlsx)</a>
+							<a href="#" onclick="downloadList('txt')" class="txt_down">텍스트(txt)</a>
+							<a href="#" onclick="downloadList('html')" class="html_down">하이퍼텍스트(html)</a>
+							<a href="#" class="excel_file_down">액셀(xlsx)+첨부파일</a>
+						</div>
+					</div>
 
 					<div style="display: flex">
-						<div style="width: 300px;">
-								<span>대화방 아이디<span class="chatid"><span id="xrootmtr"></span><span id="srcip" style="display:none;"></span><span
+						<div style="width: 500px;">
+								<span>대화방 아이디: <span class="chatid"><span id="xrootmtr"></span><span id="srcip" style="display:none;"></span><span
 										id="usr_id" style="display:none;"></span><span id="msgid" style="display:none;"></span></span></span>
 						</div>
 						<div title="" id="userButton">
@@ -1219,7 +1011,7 @@
 				<%--					채팅 검색 부분 끝!--%>
 
 				<%--					채팅 본문 내용 보이는 구간 시작  -> ***** 아직 안함 --%>
-				<div style="padding-bottom: 10px;">
+				<div style="margin-top:-10px;">
 					<div class="form-group form-inline">
 
 
@@ -1235,6 +1027,7 @@
 								<span id="selectCnt" style="color:#fff;">0</span><span style="color:#fff;">/</span><span id="searchResult"
 								                                                                                         style="width:50px;color:#fff;">0 &nbsp;</span>
 							</div>
+
 						</div>
 						<div class="input-group btnCustomPosition" id="searchResultBtnArea" style="display:none;">
 							<button class="btn btn-md btn-warning" type="button" accesskey="U" id="searchMsgUp" style="padding:6px"><i
@@ -1245,8 +1038,13 @@
 					</div>
 				</div>
 				<div class="row2" style="height: calc(100% - 160px);">
-					<div id="scrollArea" class="clusterize-scroll">
-						<div class="messenger_prev" style="margin-bottom:16px" title="<s:message code='eikon.msg.show.prev'/>">+</div>
+					<div>
+						<div class="messenger_prev" style="margin-bottom:16px" title="<s:message code='eikon.msg.show.prev'/>">
+							<svg xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512">
+								<!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+								<path d="M246.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L224 109.3 361.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160zm160 352l-160-160c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L224 301.3 361.4 438.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3z"/>
+							</svg>
+						</div>
 						<div id="timeline_list">
 							<div class="timeline-panel">
 								<div class="list-group-item02 cursor-text">
@@ -1258,25 +1056,53 @@
 						</div>
 					</div>
 				</div>
-				<div class="messenger_next" title="<s:message code='eikon.msg.show.next'/>">+</div>
-				<div class="p16 white">
+				<div class="messenger_next" title="<s:message code='eikon.msg.show.next'/>">
+					<svg xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512">
+						<!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+						<path d="M246.6 470.6c-12.5 12.5-32.8 12.5-45.3 0l-160-160c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L224 402.7 361.4 265.4c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3l-160 160zm160-352l-160 160c-12.5 12.5-32.8 12.5-45.3 0l-160-160c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L224 210.7 361.4 73.4c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3z"/>
+					</svg>
+				</div>
+				<div class="p16 white" style="position: fixed; bottom:0;">
 					<s:message code="eikon.msg.total.cnt"/> : <span id="groupSubResultCnt" class="blue03">0</span>
 				</div>
+				<%--	<div class="chat active-chat" data-chat="person2">
+						<div class="conversation-start">
+							<span>Today, 5:38 PM</span>
+						</div>
+						<div class="bubble slide_left">
+							<div class="you">출근</div>
+							<div class="bubbleDate">
+								<span>U066A8MA3NJ</span>
+								<span>2023.11.19  08:00:00</span>
+							</div>
+						</div>
+						<div class="bubble txt_right slide_right">
+							<div class="me">출근</div>
+							<div class="bubbleDate">
+								<span>U066A8MA3NJ</span>
+								<span>2023.11.19  08:00:00</span>
+							</div>
+						</div>--%>
 			</div>
 		</div>
-
 		<!-- 채팅 끝! -->
 		<!-- 첨부파일 -->
-		<div class="rightFile p20">
+		<div class="rightFile p20" id="xcn_Search2">
 			<div class="subtab">
-				<button class="active">첨부파일</button>
+				<button class="active">첨부파일
+					<span id="xcn_toggleBtn2" style="font-size:16px; opacity: 0.7; padding:4px;">x</span>
+				</button>
 			</div>
 			<div class="rightFileList">
 			</div>
 		</div>
+		<div class="xcn_showbtn">
+
+			<button id="showBtn" class="table_btn02">&#8636;</button>
+
+		</div>
 		<%--			첨부파일 끝!!--%>
 	</div>
-</div>
 </div>
 
 
@@ -1295,8 +1121,8 @@
 </form>
 
 <script>
-    document.querySelector(".chat[data-chat=person2]").classList.add("active-chat");
-    document.querySelector(".person[data-chat=person2]").classList.add("active");
+    // document.querySelector(".chat[data-chat=person2]").classList.add("active-chat");
+    // document.querySelector(".person[data-chat=person2]").classList.add("active");
 
     let friends = {
             list: document.querySelector("ul.people"),

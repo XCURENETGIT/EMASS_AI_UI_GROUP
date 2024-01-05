@@ -187,25 +187,6 @@ public class MessengerEdcGroupVO {
 	private static String getTitle(SolrEdcVO edc) {
 		return edc.getXrootmtr();
 
-		/*List<String> recvs = edc.getRecvs();
-		List<String> recvNames = edc.getRecvs_name();
-		if (recvNames == null) recvNames = new ArrayList<>();
-		for (int i = 0; i < recvNames.size(); i++) {
-			if (Common.isEmpty(recvNames.get(i))) recvNames.set(i, recvs.get(i));
-		}
-		recvNames.add(getSender(edc));
-		Collections.sort(recvNames);
-		List<String> tmp = new ArrayList<>();
-		for (int i = 0; i < recvNames.size(); i++) {
-			if (i > 1) break;
-			tmp.add(recvNames.get(i));
-		}
-		String result = Common.join(tmp, ", ");
-		if (recvNames.size() > 2) {
-			result += "...";
-		}
-		result += " (" + recvNames.size() + Prop.propFormat("eikon.msg.person")+")";
-		return result;*/
 	}
 
 	private static String getMessage(SolrEdcVO edc) {

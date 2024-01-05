@@ -16,7 +16,8 @@ var detailStartPage = 1;
 var detailEndPage = 1;
 var detailViewPage = 10;
 var detailPageBreak = 100;
-var detailLimit = 100;
+
+var detailLimit = 5;
 
 var selectedSearchData = 1;
 var searchOffset = 0;
@@ -30,27 +31,29 @@ var eikon = {
     init: function () {
         //makeSampleData();
 
-        $('#scrollArea').scroll(function () {
-            if (searchFlag) return;
+        $('#scrollArea').scroll(function(){
+            if( searchFlag ) return;
             clearTimeout(resizeTimer);
-            var obj = this;
-            resizeTimer = setTimeout(function () {
+            var obj=this;
+            resizeTimer = setTimeout(function() {
 //				if( $('.btnCustomPosition').is(':visible') ) return;
-                if ($(obj).scrollTop() < 10) {
-                    if ($($('#timeline_list').children().first().children().first()).hasClass('timeline-panel') || $($('#timeline_list').children().first()).hasClass('timeline-panel')) $('.messenger_prev').css('display', 'none');
-                    else $('.messenger_prev').css('display', 'block');
-                    $('.messenger_next').css('display', 'none');
+                if( $(obj).scrollTop() < 10) {
+                    if($($('#timeline_list').children().first().children().first()).hasClass('timeline-panel') || $($('#timeline_list').children().first()).hasClass('timeline-panel')) $('.messenger_prev').css('display','none');
+                    else $('.messenger_prev').css('display','block');
+                    $('.messenger_next').css('display','none');
 //					$('.messenger_prev').click();
-                } else if ($('#timeline_list').height() <= $(obj).scrollTop() + $(obj).height() + 10) {
-                    if (detailDataSet.length < detailLimit) $('.messenger_next').css('display', 'none');
-                    else $('.messenger_next').css('display', 'block');
-                    $('.messenger_prev').css('display', 'none');
+                }
+                else if( $('#timeline_list').height() <= $(obj).scrollTop()+$(obj).height()+10){
+                    if(detailDataSet.length < detailLimit) $('.messenger_next').css('display','none');
+                    else $('.messenger_next').css('display','block');
+                    $('.messenger_prev').css('display','none');
 //					$('.messenger_next').click();
-                } else {
+                }else{
                     checkLastMsg(true);
                 }
-            }, 100);
+            },100);
         });
+
 
         $('.messenger_next, .messenger_prev').on('click', function () {
             var srcip = $('#selectUserInfo').attr('data-srcip');
@@ -94,6 +97,41 @@ var eikon = {
         eikon.getMessengerDetailList(xRootmtr, msgid, '', '');
     },
     getMessengerDetailList: function (xRootmtr, msgid, srcip, usr_id) {
+
+
+        if(!isDetailView()){
+            alert(condition.authAlert);
+            return;
+        }
+        if(xRootmtr == ''){
+            return;
+        }
+
+        $('#searchResultArea').hide();
+        $('#searchResultBtnArea').hide();
+        detailStartPage = 1;
+        detailEndPage = 1;
+        var startDt = $('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+        var endDt = $('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+
+        //참여자 수, 참여자 정보
+        // ui.get({
+        //     url : 'getMessengerGroupUserList.xcn',
+        //     xRootMtr : xRootmtr,
+        //     startDt : startDt,
+        //     endDt : endDt,
+        //     groupField : 'usr_id',
+        //     success : function(data, total) {
+        //         participantDataSet = data.groups;
+        //         userSelectBox(data.groups, srcip, usr_id);
+        //     },
+        //     error : function(status, message) {
+        //         ui.alertMsg(message);
+        //     },
+        //     complete : function() {
+        //     }
+        // });
+
         searchFlag = true;
         ui.onBody('timeline_list', 0, 60);
 
@@ -140,8 +178,9 @@ var eikon = {
         var xrootmtr = $('#xrootmtr').text();
         var srcip = $('#selectUserInfo').attr("data-srcip");
         var userid = $('#selectUserInfo').attr("data-name");
-        var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
-        var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
+        var startDt = $('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '')+"0000000";
+        var endDt = $('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '')+"235959";
+
 
         if (offset < 0) searchOffset = $('#searchResult').html() - 1;
         if (offset >= $('#searchResult').html() || offset == 0) searchOffset = 0;
@@ -164,13 +203,12 @@ var eikon = {
         filterVal.conditions = conArray;
 
         detailSearchFlag = false;
-
         ui.postJson({
             url: 'getMessengerGroupDetailSearch.xcn',
             xRootMtr: xrootmtr,
             srcip: srcip,
-            usr_id: usr_id,
-            data: JSON.stringify(filterVal),
+            usr_id: userid,
+            data : JSON.stringify( filterVal ),
             offset: searchOffset,
             success: function (data, total) {
                 focusMsgId = data.toString();
@@ -214,30 +252,6 @@ var eikon = {
     }
 };
 
-//총 개수 계산하는 함수
-function getMessengerMessageTotal(userid, srcip, startDt, endDt, usr_id, msgid) {
-    /*총 갯수 계산하는 함수*/
-
-    ui.get({
-        url: 'getMessengerMessageTotal.xcn',
-        userid: userid,
-        srcip: srcip,
-        startDt: startDt + "000000",
-        endDt: endDt + "235959",
-        usr_id: usr_id,
-        limit: 0,
-        success: function (data, total) {
-            $('#groupSubResultCnt').text(data);
-            getGenerativeMessage(userid, srcip, usr_id, msgid);
-        },
-        error: function (status, message) {
-            ui.alertMsg(message);
-        },
-        complete: function () {
-            ui.off();
-        }
-    });
-}
 
 function getMessengerMessageTotal(xRootmtr, srcip, startDt, endDt, usr_id, msgid) {
     //마지막 열람 msgid
@@ -329,6 +343,7 @@ function getMessengerMessageNext(xRootmtr, srcip, usr_id, msgid) {
     var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
     var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
     searchFlag = true;
+    searchOffset = searchOffset + detailLimit;
     ui.get({
         url: 'getMessengerMessageNext.xcn',
         xRootMtr: xRootmtr,
@@ -337,6 +352,7 @@ function getMessengerMessageNext(xRootmtr, srcip, usr_id, msgid) {
         endDt: endDt,
         usr_id: usr_id,
         msgId: msgid,
+        offset:searchOffset,
         limit: detailLimit,
         success: function (data, total) {
             searchFlag = false;
@@ -481,6 +497,9 @@ function makeFileList(data) {
 
 function userSelectBox(data, srcip, usr_id) {
     var name = $('#selectUserInfo').attr('data-name');
+    $('#selectUserInfo').attr('data-srcip', nvl(data[i].srcip));
+    $('#selectUserInfo').attr('data-name', nvl(data[i].name));
+    $('#selectUserInfo').attr('data-usrid', nvl(data[i].usr_id));
     var str = '';
 
     for (var i = 0; i < data.length; i++) {
@@ -493,9 +512,6 @@ function userSelectBox(data, srcip, usr_id) {
         } else if (nvl(data[i].usr_id) != '') selectUserTitle = data[i].usr_id;
         else if (nvl(data[i].srcip) != '') selectUserTitle = data[i].srcip;
 
-        $('#selectUserInfo').attr('data-srcip', nvl(ip));
-        $('#selectUserInfo').attr('data-name', nvl(data[i].name));
-        $('#selectUserInfo').attr('data-usrid', nvl(data[i].usr_id));
         $('#selectUserInfo').html(selectUserTitle);
 
         str += '<li class="selectUser" data-name="' + nvl(data[i].name) + '" data-srcip="' + nvl(ip) + '" data-usrid="' + nvl(data[i].usr_id) + '"><a href="javascript:void(0);">' + selectUserTitle + '</a></li>';
@@ -836,13 +852,14 @@ function makeList(nextFlag) {
         }
         str += '</div>';
 
-        str += ' <div class="bubbleDate">';
+        str += ' <div class="bubbleDate mat4">';
         str += '<span>' + obj.user + '</span> &nbsp';
         str += '<span>' + obj.ctime + '</span> &nbsp';
         str += '<span style="border: 1px solid #ccc;">' + makeMessengerText(obj.svc) + '</span>';
         str += '</div></div>';
         str += '</li>';
     }
+
     str += '</ul>';
     if (detailDataSet.length < detailLimit) str += noNextDataMsg();
 
@@ -964,13 +981,13 @@ function checkDatePre(idx) {
 
 function viewDate(dateStr) {
     var str = '';
-    str += '<li class="date_li" id="date' + dateStr + '">';
-    str += '	<div class="date_li_div">';
-    str += '		<div class="date_line">';
-    str += '			<span class="timeline_date">' + dateStr + '</span>';
-    str += '		</div>';
-    str += '	</div>';
-    str += '</li>';
+    str+='<li class="date_li" id="date'+dateStr+'">';
+    str+='	<div class="date_li_div">';
+    str+='		<div class="date_line">';
+    str+='			<span>'+dateStr+'</span>';
+    str+='		</div>';
+    str+='	</div>';
+    str+='</li>';
 
     return str;
 }
@@ -1152,7 +1169,7 @@ function idIndicator(id) {
     return id.fReplaceWord('.', '\\.');
 }
 
-jQuery.fn.highlight = function (pat, type) {
+jQuery.fn.highlight = function(pat, type) {
     function innerHighlight(node, pat, type) {
         pat = pat.trim();
         var skip = 0;
@@ -1160,14 +1177,15 @@ jQuery.fn.highlight = function (pat, type) {
             var pos = node.data.toUpperCase().indexOf(pat);
             if (pos >= 0) {
                 var spannode = document.createElement('span');
-                spannode.name = 'spnHighlight';
-                if (type.indexOf('K') > -1) {
+                spannode.name='spnHighlight';
+                if ( type.indexOf('K') > -1) {
                     spannode.className = 'clsHighlightKwds';
-                } else {
+                }
+                else {
                     spannode.className = 'clsHighlight';
                 }
-                if (type.indexOf('B') > -1) {
-                    if (type.indexOf('K') > -1) {
+                if ( type.indexOf('B') > -1 ) {
+                    if ( type.indexOf('K') > -1) {
                         spannode.style.backgroundColor = '#FFAD5B';
                         spannode.style.color = '#000000';
                         spannode.style.fontWeight = 'bold';
@@ -1178,8 +1196,8 @@ jQuery.fn.highlight = function (pat, type) {
                     }
                 }
 
-                var sbit = node.splitText(pos);
-                sbit.splitText(pat.length);
+                var sbit = node.splitText( pos );
+                sbit.splitText( pat.length );
                 spannode.nodeValue = sbit.data;
                 var sbitclone = sbit.cloneNode(true);
                 spannode.appendChild(sbitclone);
@@ -1188,15 +1206,14 @@ jQuery.fn.highlight = function (pat, type) {
             }
         } else if (node.nodeType == 1 && node.childNodes && !/(script|style)/i.test(node.tagName)) {
             var cnt = node.childNodes.length;
-            if (node.childNodes.length > 1000) cnt = 1000;
-            for (var i = 0; i < cnt; ++i) {
+            if ( node.childNodes.length > 1000 ) cnt = 1000;
+            for ( var i = 0; i < cnt; ++i) {
                 i += innerHighlight(node.childNodes[i], pat, type);
             }
         }
         return skip;
     }
-
-    return this.each(function () {
+    return this.each(function() {
         innerHighlight(this, pat.toUpperCase(), type);
     });
 };
@@ -1205,7 +1222,7 @@ function HighlightGroup() {
     setTimeout(function () {
         var searchs = $('#searchStrInput').val().split(/\||\+|\s|\*|\"/);
         if (searchs.length > 0) {
-            var group_list_obj = $("#group_list").find('code');
+            var group_list_obj = $("#group_list").find('span');
 
             for (var i = 0; i < searchs.length; i++) {
                 if (searchs[i] == '') continue;
@@ -1219,7 +1236,7 @@ function Highlight() {
     setTimeout(function () {
         var searchs = $('#searchStrInput').val().split(/\||\+|\s|\*|\"/);
         if (searchs.length > 0) {
-            var timeline_list_obj = $("#timeline_list").find('code');
+            var timeline_list_obj = $("#timeline_list").find('span');
 
             for (var i = 0; i < searchs.length; i++) {
                 if (searchs[i] == '') continue;
