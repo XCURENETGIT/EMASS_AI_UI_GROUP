@@ -824,8 +824,8 @@ body .ui-tooltip {
 	vertical-align: middle;
 }
  .ui-widget-content {
-	 border: 1px solid #7D7D7D;
-	 border-top : 0px;
+	 /*border: 1px solid #7D7D7D;*/
+	 border : 0;
 	 background-color: #FFF;
 	 color: #222222;
  }
