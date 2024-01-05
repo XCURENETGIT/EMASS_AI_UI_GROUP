@@ -242,7 +242,19 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			} else if ((null != sq.get("facet.sum") && Common.isEquals("true", sq.get("facet.sum")))) {
 				String key = sq.get("facet.field");
 				termsAggregation.subAggregation(AggregationBuilders.sum(key).field(key));
-			} else if (Common.isEquals("true", sq.get("facet.message"))) {
+			} else if (Common.isEquals("true", sq.get("facet.list"))) {
+				/* 대화방 목록 (그룹) */
+				int offset = Common.nvz(sq.get("facet.offset"), 0);
+				int limit = Common.nvz(sq.get("facet.group"), 100);
+				SortOrder order = Common.isEmpty(sq.get("facet.sort")) ? SortOrder.ASC : SortOrder.DESC;
+				termsAggregation.subAggregation(AggregationBuilders.topHits(field).size(1).from(0).sort("ctime", order));
+				BucketSortPipelineAggregationBuilder paging = PipelineAggregatorBuilders.bucketSort("paging", null).from(offset).size(limit);
+
+				termsAggregation.subAggregation(paging);
+
+				aggregations.add(AggregationBuilders.cardinality("bucket_total").field(mainField));
+			}else if (Common.isEquals("true", sq.get("facet.detail"))) {
+				/* 대화 상세 내역 */
 				int offset = Common.nvz(sq.get("facet.offset"), 0);
 				int limit = Common.nvz(sq.get("facet.group"), 100);
 				SortOrder order = Common.isEmpty(sq.get("facet.sort")) ? SortOrder.ASC : SortOrder.DESC;
@@ -253,17 +265,10 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 				aggregations.add(AggregationBuilders.cardinality("bucket_total").field(mainField));
 
-			}else if (Common.isEquals("true", sq.get("facet.detail"))) {
-				int offset = Common.nvz(sq.get("facet.offset"), 0);
-				int limit = Common.nvz(sq.get("facet.group"), 100);
-				SortOrder order = Common.isEmpty(sq.get("facet.sort")) ? SortOrder.ASC : SortOrder.DESC;
-				termsAggregation.subAggregation(AggregationBuilders.topHits(field).size(1).from(0).sort("ctime", order));
-				BucketSortPipelineAggregationBuilder paging = PipelineAggregatorBuilders.bucketSort("paging", null).from(offset).size(limit);
+			}
 
-				termsAggregation.subAggregation(paging);
 
-				aggregations.add(AggregationBuilders.cardinality("bucket_total").field(mainField));
-			} else {
+			else {
 				/* 그룹 검색 1개씩 묶음*/
 				termsAggregation.subAggregation(AggregationBuilders.topHits(field).size(1).from(0).sort("ctime", SortOrder.ASC));
 			}
