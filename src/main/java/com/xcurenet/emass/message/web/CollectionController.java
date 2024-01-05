@@ -102,8 +102,8 @@ public class CollectionController {
 		/* 그룹 디테일검색 동적 들어와야 할 offset,size 값*/
 		sq.setParam("facet.offset", String.valueOf(Common.nvz(param.get("offset"), 0)));
 		sq.setParam("facet.group", String.valueOf(Common.nvz(param.get("limit"), 100)));
-		sq.setParam("facet.detail", true);
-		sq.setParam("facet.message", false);
+		sq.setParam("facet.detail", false);
+		sq.setParam("facet.list", true);
 		sq.setParam("facet.mincount", "1");
 
 		/* 일반 문서 검색은 하지않으므로 0 (그룹검색만 하므로 ) */
@@ -114,7 +114,7 @@ public class CollectionController {
 		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id", "userid");
 
 		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request));
-	/*	solrEdcGroupVO.setGroups(setCount_temp(solrEdcGroupVO.getGroups(), Common.getAdminId(request)));*/
+		/*	solrEdcGroupVO.setGroups(setCount_temp(solrEdcGroupVO.getGroups(), Common.getAdminId(request)));*/
 		return new XcnResponseVO(XcnRspCode.OK, solrEdcGroupVO, solrEdcGroupVO.getNumFound());
 	}
 
@@ -283,28 +283,22 @@ public class CollectionController {
 		String endDt = Common.nvl(param.get("endDt"));
 		String searchStr = Common.nvl(param.get("searchStr"));
 		int limit = Common.nvz(param.get("limit"), 100000);
+		String msgDt = msgId.substring(0, 14);
 
 		SolrQuery sq = new SolrQuery();
-		String query = String.format("+ctime:[%s TO %s] +userid:\"%s\"", startDt, endDt, userid);
+		String query = String.format("( _id:%s )",msgId);
+		 query += String.format("+ctime:[%s TO %s] +userid:\"%s\"", msgDt, endDt, userid);
 
 		if(Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
 
 		if(Common.isNotEmpty(usr_id)) query += String.format(" +usr_id:\"%s\"", usr_id);
 		else query += String.format(" -usr_id:*");
 
-//		if (!lastMsgYn) { //맨처음 들어왔을땐 하나가 떠야함 하지만 위가 이미 있는 상태에서 다음버튼을 누르면 중복되면 안됨
-//			query += String.format(" -_id: %s", msgId);    //이미 출력된 동시간대 데이터 제외
-//
-//		}
-//		String msgDt = msgId.substring(0, 14);
-//		//이미 출력된 동시간대 데이터 제외
-//		if(Common.isNotEmpty(msgId)) {
-//			if (lastMsgYn) {
-//				query += String.format(" +ctime:[%s TO %s] ", msgDt, endDt);
-//			} else {
-//				query += String.format(" +ctime:[%s TO %s]", msgDt, endDt);
-//			}
-//		}
+		if (!lastMsgYn) { //맨처음 들어왔을땐 하나가 떠야함 하지만 위가 이미 있는 상태에서 다음버튼을 누르면 중복되면 안됨
+			query += String.format(" -_id: %s", msgId);    //이미 출력된 동시간대 데이터 제외
+
+		}
+
 
 		sq.setParam("group", true);
 		sq.setParam("group.facet", true);
@@ -316,11 +310,12 @@ public class CollectionController {
 		/* 그룹 디테일검색 동적 들어와야 할 offset,size 값*/
 		sq.setParam("facet.offset", "0");
 		sq.setParam("facet.size", "5");
-		sq.setParam("facet.detail", false);
-		sq.setParam("facet.message", true);
+		sq.setParam("facet.detail", true);
+		sq.setParam("facet.list", false);
 		sq.setParam("facet.mincount", "1");
 
 		/* 일반 문서 검색은 하지않으므로 0 (그룹검색만 하므로 ) */
+
 		sq.setStart(Common.nvz(request.getParameter("offset"), 0));
 		sq.setRows(Common.nvz(request.getParameter("limit"), 0));
 
@@ -328,6 +323,8 @@ public class CollectionController {
 
 		sq.setQuery(query + (Common.nvl(param.get("type")).equals("N") ? MESSENGER3 : MESSENGER2));
 		sq.setRows(limit);
+		sq.addSort("ctime", ORDER.asc);
+		sq.addSort("msgid", ORDER.asc);
 		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user");
 
 		return sq;
@@ -346,25 +343,20 @@ public class CollectionController {
 		String msgDt = msgId.substring(0, 14);
 
 		SolrQuery sq = new SolrQuery();
-		String query = String.format("+ctime:[%s TO %s] +userid:\"%s\"", startDt, endDt, userid);
+		String query = String.format("( _id:%s) ",msgId);
+		query+= String.format("+ctime:[%s TO %s] +userid:\"%s\"", startDt, msgDt, userid);
 
 		if (Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
 
 		if (Common.isNotEmpty(usr_id)) query += String.format(" +usr_id:\"%s\"", usr_id);
 		else query += String.format(" -usr_id:* ");
 
+		query += String.format(" -_id: %s", msgId);
 
-		query += String.format(" -_id: %s", msgId);    //이미 출력된 동시간대 데이터 제외
-
-
-		//msgid의 날짜값을 출력해와 범위 지정
-		if (Common.isNotEmpty(msgId)) {
-			query += String.format(" +ctime:[%s TO %s] ", startDt, msgDt);
-		}
 
 		if (Common.isNotEmpty(searchStr)) query += String.format(" +body:(*%s*) ", searchStr);
 
-		sq.setQuery(query + MESSENGER2);
+		sq.setQuery(query + (Common.nvl(param.get("type")).equals("N") ? MESSENGER3 : MESSENGER2));
 		sq.setStart(Common.nvz(param.get("offset"), 0));
 		sq.setRows(limit);
 		sq.addSort("ctime", ORDER.asc);
@@ -426,29 +418,31 @@ public class CollectionController {
 
 		/* 그룹 디테일검색 동적 들어와야 할 offset,size 값*/
 		sq.setParam("facet.offset", "0");
-		sq.setParam("facet.size", "100");
-		sq.setParam("facet.detail", false);
-		sq.setParam("facet.message", true);
+		sq.setParam("facet.size", "5");
+		sq.setParam("facet.detail", true);
+		sq.setParam("facet.list", false);
 		sq.setParam("facet.mincount", "1");
+
 
 		/* 일반 문서 검색은 하지않으므로 0 (그룹검색만 하므로 ) */
 		sq.setStart(Common.nvz(request.getParameter("offset"), 0));
 		sq.setRows(Common.nvz(request.getParameter("limit"), 0));
 
 
+
+
 		String query = String.format("+ctime:[%s TO %s] +userid:\"%s\"", startDt, endDt, userid);
 
 		if (Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
 
-	/*	if(Common.isNotEmpty(usr_id)) query += String.format(" +usr_id:\"%s\"", usr_id);
-		else query += String.format(" -usr_id:*");*/
 
-		sq.setQuery(query + MESSENGER2);
+		sq.setQuery(query + (Common.nvl(param.get("type")).equals("N") ? MESSENGER3 : MESSENGER2));
 		sq.setRows(limit);
 		sq.addSort("ctime", ORDER.asc);
 		sq.addSort("msgid", ORDER.asc);
 		sq.setFields("msgid", "userid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user");
 
+		log.info("query: 	" +   sq.getQuery());
 		return sq;
 
 	}
@@ -468,6 +462,8 @@ public class CollectionController {
 		String msgId = Common.nvl(param.get("msgId"));
 		String srcip = Common.nvl(param.get("srcip"));
 		String type = Common.nvl(param.get("type"));
+
+
 		emsMessageService.updateEmassGenerativeAdminUserid(userid, msgId, Common.getAdminId(request), srcip,type);
 		return new XcnResponseVO(XcnRspCode.OK);
 	}
@@ -505,8 +501,8 @@ public class CollectionController {
 		/* 그룹 디테일검색 동적 들어와야 할 offset,size 값*/
 		sq.setParam("facet.offset", "0");
 		sq.setParam("facet.size", "5");
-		sq.setParam("facet.detail", false);
-		sq.setParam("facet.message", true);
+		sq.setParam("facet.detail", true);
+		sq.setParam("facet.list", false);
 		sq.setParam("facet.mincount", "1");
 
 		/* 일반 문서 검색은 하지않으므로 0 (그룹검색만 하므로 ) */

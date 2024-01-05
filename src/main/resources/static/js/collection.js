@@ -18,7 +18,6 @@ var detailStartPage = 1;
 var detailEndPage = 1;
 var detailViewPage = 10;
 var detailPageBreak = 100;
-
 var detailLimit = 5;
 
 var selectedSearchData = 1;
@@ -191,7 +190,7 @@ var eikon2 = {
 
 
 function getCollectionMessageTotal(userid, srcip, startDt, endDt, usr_id, msgid,type){
-/*총 갯수 계산하는 함수*/
+    /*총 갯수 계산하는 함수*/
     ui.get({
         url : 'getCollectionMessageTotal.xcn',
         userid : userid,
@@ -223,7 +222,6 @@ function getGenerativeMessageNext(userid, srcip, usr_id, msgid,type) {
     var endDt = $('#endDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
     searchFlag = true;
 
-    searchOffset = searchOffset + 5; //테스트용도
     ui.get({
         url : 'getGenerativeMessageNext.xcn',
         userid : userid,
@@ -232,8 +230,8 @@ function getGenerativeMessageNext(userid, srcip, usr_id, msgid,type) {
         endDt : endDt+"235959",
         usr_id : usr_id,
         msgId : msgid,
-        offset :searchOffset,
         limit : detailLimit,
+        type:type,
         success : function(data, total) {
             searchFlag = false;
             if(data.groups.length == 0) {
@@ -293,7 +291,6 @@ function getGenerativeMessagePrev(userid, srcip, usr_id, msgid,type) {
         msgId : msgid,
         type:type,
         limit : detailLimit,
-        type:type,
         success : function(data, total) {
             searchFlag = false;
             if(data.groups.length == 0) {
@@ -314,7 +311,7 @@ function getGenerativeMessagePrev(userid, srcip, usr_id, msgid,type) {
                 $(".pageInfoDiv").last().remove();
             };
 
-           /* $(".conversation-start").children().children()*/
+            /* $(".conversation-start").children().children()*/
 
             $("#timeline_list").prepend(makePrevList());
             $('#scrollArea').scrollTop($(".pageInfoDiv").height());
@@ -513,11 +510,13 @@ function makeList(nextFlag){
             var attachsizeArray = attachsize.split('|');
             var attachtypeArray = attachtype.split('|');
 
-            str += '<p class="filedown file_link" msgid="' + obj.msgid + '" attachhash="' + attachhashArray[i] + '">';
-            str += '<span class="img"></span>';
-            str += '<span>' + attachnameArray[i] + '.' + attachtypeArray[i] + '<br/>';
-            str += attachsizeArray[i] + 'KB</span>';
-            str += '<button class="btnchatdown downlodadBtn"></button></p>';
+                str += '<p class="filedown file_link" msgid="' + obj.msgid + '" attachhash="' + attachhashArray[i] + '">';
+                str += '<span class="img"></span>';
+                str += '<span>' + attachnameArray[i] + '.' + attachtypeArray[i] + '<br/>';
+                str += attachsizeArray[i] + 'KB</span>';
+                str += '<button class="btnchatdown downlodadBtn"></button></p>';
+
+
         }
 
         else {
@@ -818,7 +817,7 @@ function HighlightGroup( ) {
     setTimeout(function(){
         var searchs = $('#searchStrInput').val().split(/\||\+|\s|\*|\"/);
         if ( searchs.length > 0 ){
-            var group_list_obj = $("#group_list").find('code');
+            var group_list_obj = $("#group_list").find('span');
 
             for ( var i=0 ; i < searchs.length ; i++ ) {
                 if ( searchs[i] == '' ) continue;
@@ -832,7 +831,7 @@ function Highlight( ) {
     setTimeout(function(){
         var searchs = $('#searchStrInput').val().split(/\||\+|\s|\*|\"/);
         if ( searchs.length > 0 ){
-            var timeline_list_obj = $("#timeline_list").find('code');
+            var timeline_list_obj = $("#timeline_list").find('span');
 
             for ( var i=0 ; i < searchs.length ; i++ ) {
                 if ( searchs[i] == '' ) continue;
@@ -1010,7 +1009,7 @@ function getCollectionMessage(userid, srcip, usr_id, msgid,type){
             else $('.messenger_next').css('display','block');
 
             $("#timeline_list").html(makeList(false));
-            Highlight( );
+            HighlightGroup();
         },
         error : function(status, message) {
             searchFlag = false;

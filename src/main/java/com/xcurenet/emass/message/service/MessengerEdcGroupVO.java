@@ -105,7 +105,6 @@ public class MessengerEdcGroupVO {
 					}
 				}
 			}
-
 			this.numFound = total;
 		} else { //집계쿼리 사용하지 않을때
 			if (detail) {

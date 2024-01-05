@@ -255,18 +255,15 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 				aggregations.add(AggregationBuilders.cardinality("bucket_total").field(mainField));
 			}else if (Common.isEquals("true", sq.get("facet.detail"))) {
 				/* 대화 상세 내역 */
-				int offset = Common.nvz(sq.get("facet.offset"), 0);
-				int limit = Common.nvz(sq.get("facet.group"), 100);
-				SortOrder order = Common.isEmpty(sq.get("facet.sort")) ? SortOrder.ASC : SortOrder.DESC;
-				termsAggregation.subAggregation(AggregationBuilders.topHits(field).sort("ctime", order));
-				BucketSortPipelineAggregationBuilder paging = PipelineAggregatorBuilders.bucketSort("paging", null).from(offset).size(limit);
+				int offset = (!Common.isEmpty(sq.get("facet.offset"))) ? Common.nvz(sq.get("facet.offset")) : 0; // default 0;
+				int size = (!Common.isEmpty(sq.get("facet.size"))) ? Common.nvz(sq.get("facet.size")) : 1; // default 1
 
-				termsAggregation.subAggregation(paging);
-
-				aggregations.add(AggregationBuilders.cardinality("bucket_total").field(mainField));
-
+				if((!Common.isEmpty(sq.get("facet.sort")))){
+					termsAggregation  = termsAggregation.subAggregation(AggregationBuilders.topHits(field).size(size).from(offset).sort("ctime", SortOrder.DESC));
+				}else{
+					termsAggregation  = termsAggregation.subAggregation(AggregationBuilders.topHits(field).size(size).from(offset).sort("ctime", SortOrder.ASC));
+				}
 			}
-
 
 			else {
 				/* 그룹 검색 1개씩 묶음*/
