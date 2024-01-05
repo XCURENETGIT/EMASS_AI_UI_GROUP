@@ -61,6 +61,7 @@ var defaultCondition = {
 	"regexpYn": "",
 	"regexpVal": "",
 	"regexpStr": "",
+	"regexPattern": "",
 	"drmYn": "",
 	"realAttYn": "",
 	"sctYn": "",
@@ -484,6 +485,7 @@ var con = {
 		condition.regexpYn = $('input:radio[name=regexpYn]:input:checked').val();
 		condition.regexpVal = $('#regexpVal').val();
 		condition.regexpStr = $('#regexpStr').val();
+		condition.regexPattern = $('#regexPattern').val();
 		condition.drmYn = $('input:radio[name=drmYn]:input:checked').val();
 		condition.realAttYn = $('input:radio[name=realAttYn]:input:checked').val();
 		condition.sctYn = $('input:radio[name=sctYn]:input:checked').val();

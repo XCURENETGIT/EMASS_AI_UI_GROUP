@@ -156,6 +156,20 @@
             height:500px;
         }
 
+        /*정규 표현식 */
+        .regexSearchDiv{
+            position: absolute;
+            top: 120px;
+            background-color: #f4f4f4;
+            z-index: 999;
+            left: 305px;
+            border: 1px solid #ccc;
+            width: 400px;
+            display:none;
+            height:500px;
+        }
+
+
         #searchKeywordGrid_statusbar {
             background-color: #fff;
         }
@@ -179,6 +193,24 @@
             font-size: 15px;
             cursor:pointer;
         }
+
+        .relationKeywordCloseBtn{
+            float: right;
+            padding-right: 10px;
+            padding-left: 10px;
+            font-size: 15px;
+            cursor:pointer;
+        }
+        .regexSearchCloseBtn{
+            float: right;
+            padding-right: 10px;
+            padding-left: 10px;
+            font-size: 15px;
+            cursor:pointer;
+        }
+
+
+
         .searchKeywordCloseBtn:hover{
             opacity: 0.5;
         }
@@ -996,6 +1028,19 @@
                 $('#relationKeywordDiv').hide();
             });
 
+            /* 정규식 검색 */
+            $('.regexSearchBtn').click(function(){
+                 getRegexList();
+                $('#regexSearchDiv').show();
+            });
+            $('.regexSearchCloseBtn').click(function(){
+                $('#regexSearchDiv').hide();
+            });
+
+            $('#regexSearchStrBtn').click(function(){
+                getRegexList();
+            });
+
 
 
             $('.showFilterBtn').click(function(){
@@ -1075,6 +1120,9 @@
                 $('#periodSetupMenu').hide();
             });
 
+
+
+            /* 검색어 관리 */
             $("#searchKeywordDiv").draggable({
                 scroll: false,
                 containment: "#mainBodyArea",
@@ -1088,21 +1136,7 @@
                 }
             });
 
-
-            $("#searchKeywordDiv").draggable({
-                scroll: false,
-                containment: "#mainBodyArea",
-                start: function( event, ui ) {
-                    $('#contentListArea').css({pointerEvents:'none', 'user-select':'none'});
-                    $('#contentBodyArea').css({pointerEvents:'none', 'user-select':'none'});
-                },
-                stop: function( event, ui ) {
-                    $('#contentListArea').css({pointerEvents:'', 'user-select':''});
-                    $('#contentBodyArea').css({pointerEvents:'', 'user-select':''});
-                }
-            });
-
-
+            /* 연관 키워드 */
             $("#relationKeywordDiv").draggable({
                 cancel: ".filterSearch, .saveFilterTab_tree",
                 scroll: false,
@@ -1116,6 +1150,22 @@
                     $('#contentBodyArea').css({pointerEvents:'', 'user-select':''});
                 }
             });
+
+            /* 정규 표현식 */
+            $("#regexSearchDiv").draggable({
+                // cancel: ".filterSearch, .saveFilterTab_tree",
+                // scroll: false,
+                // containment: "#mainBodyArea",
+                // start: function( event, ui ) {
+                //     $('#contentListArea').css({pointerEvents:'none', 'user-select':'none'});
+                //     $('#contentBodyArea').css({pointerEvents:'none', 'user-select':'none'});
+                // },
+                // stop: function( event, ui ) {
+                //     $('#contentListArea').css({pointerEvents:'', 'user-select':''});
+                //     $('#contentBodyArea').css({pointerEvents:'', 'user-select':''});
+                // }
+            });
+
 
             $("#searchHelpDiv").draggable({
                 cancel: ".searchHelpDivBody, .searchHelpDivCloseArea",
@@ -2252,6 +2302,25 @@
             });
         }
 
+
+        function getRegexList(){
+            var searchKeyword = $('#regexSearchStr').val();
+            ui.get({
+                url : 'getRegexPattern.xcn',
+                searchStr : searchKeyword,
+                success : function(data, total) {
+                    regexSearchGrid.setData(data);
+                },
+                error : function(status, message) {
+                    ui.alertMsg(message);
+                },
+                complete : function() {
+                }
+            });
+        }
+
+
+
     </script>
 </head>
 <body class="mini-navbar msgBody" style="overflow: auto;">
@@ -2265,7 +2334,6 @@
             <%-- content --%>
             <div class="msg_container">
                 <tiles:insertAttribute name="left" ignore="true"/>
-
 
                 <%-- 검색어 관리 --%>
                 <div id="searchKeywordDiv" class="searchKeywordDiv">
@@ -2302,8 +2370,20 @@
                 </div>
 
 
+                <%-- 정규 표현식 모달 --%>
+                <div id="regexSearchDiv" class="regexSearchDiv">
+                    <div class="searchKeywordTab"><s:message code="condition.regex.appo"/>
+                        <div class="rightGroup"><span class="regexSearchCloseBtn">&times;</span></div>
+                    </div>
+                    <div style="padding: 5px 5px 5px 10px;">
+                        <input  type="text" placeholder="<s:message code="searchKeyword.search"/>" id="regexSearchStr" style="width:calc(100% - 150px);">
+                        <button class="search_btn" id="regexSearchStrBtn"><span><s:message code="common.search"/></span></button>
+                    </div>
+                    <div id="regexSearchGrid" class="slickGrid gridArea"></div>
+                </div>
 
-            <%-- 조건 보관함 --%>
+
+                 <%-- 조건 보관함 --%>
                 <div id="filterHeaderDiv" class="filterHeaderDiv">
                     <div class="filterHeaderTab"><s:message code="common.msg.conditionBox"/>
                         <div class="rightGroup">
@@ -2689,6 +2769,23 @@
                                         <div class="condition_not"><label><input type="checkbox" id="url_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
                                         <textarea id=url class="condition_input_text" style="resize: none"></textarea>
                                     </div>
+                                    <div class="condition_divider"></div>
+
+                                    <%-- 정규 표현식 검색 --%>
+                                    <div style="margin-top:12px;margin-bottom:6px;widht:100%;height:8px;">
+                                        <div  style="float: right; padding-right: 22px;">
+                                            <a href="javascript:;" class="regexSearchBtn"><i class="fa fa-cog"></i> <s:message code="condition.regex.appo"/></a>
+                                        </div>
+                                    </div>
+                                    <div class="condition_item">
+                                        <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.regex.search"/>
+                                        </div>
+                                        <textarea id=regexPattern class="condition_input_text" style="resize: none"></textarea>
+                                    </div>
+
+
+
+
                                     <div class="condition_divider"></div>
                                     <div class="condition_item">
                                         <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="condition.isread"/></div>
@@ -3250,8 +3347,6 @@
         }
     };
 
-
-
     /* 연관 검색어 */
     var relationKeywordGrid = new Xgrid('relationKeywordGrid', contextRoot);
     relationKeywordGrid.colAdd('keyword', '<s:message code="condition.relationKeyword.view"/>', 300, 'left', false, 'link');
@@ -3270,6 +3365,20 @@
                 if($('#searchStrInput').val() != '') $('#searchStrInput').val($('#searchStrInput').val().trim() + '|' + data.keyword);
                 else $('#searchStrInput').val(data.keyword);
             }
+        }
+    };
+
+
+    /* 정규 표현식 */
+    var regexSearchGrid = new Xgrid('regexSearchGrid', contextRoot);
+    regexSearchGrid.colAdd('regexPatternName', '<s:message code="condition.regex"/>', 300, 'left', false, 'link');
+    regexSearchGrid.colAdd('regexPattern', '<s:message code="condition.regex"/>', 300, 'left', true, 'link');
+    regexSearchGrid.loadHeader(true);
+    regexSearchGrid.initData('<s:message code="common.msg.search.click"/>');
+    regexSearchGrid.onClick = function () {
+        if (regexSearchGrid.Col == regexSearchGrid.ColIndex('regexPatternName')) {
+            var data = regexSearchGrid.getRowData(regexSearchGrid.Row);
+            $('#regexPattern').val(data.regexPattern);
         }
     };
 

@@ -20,15 +20,13 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.SortClause;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.elasticsearch.ElasticsearchException;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.aggregations.*;
 import org.elasticsearch.search.aggregations.bucket.range.RangeAggregationBuilder;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
-import org.elasticsearch.search.aggregations.metrics.Cardinality;
-import org.elasticsearch.search.aggregations.metrics.CardinalityAggregationBuilder;
 import org.elasticsearch.search.aggregations.pipeline.BucketSortPipelineAggregationBuilder;
-import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,9 +119,20 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		/* set 필터 쿼리 */
 		String filterQuery =  (null != sq.getFilterQueries())? String.join(" ", sq.getFilterQueries()) : "";
 
+		/* 정규식 패턴 필드 설정 */
+		BoolQueryBuilder regexQuery = QueryBuilders.boolQuery();
+		if(!Common.isEmpty(sq.get("regexPattern"))) {
+			List<String> list = getSearchField(sq);
+			for (String s : list) {
+				regexQuery.should(QueryBuilders.regexpQuery(s, sq.get("regexPattern")));
+			}
+		}
+
+
 		log.info("page : {}  rows : {}", getPage(sq), sq.getRows());
 		Query searchQuery = new NativeSearchQueryBuilder()
 				.withFields(Common.toArray(sq.getFields(), ","))
+				.withFilter(QueryBuilders.boolQuery().must(regexQuery))
 				.withQuery(QueryBuilders.queryStringQuery(sq.getQuery() + " " + filterQuery).fields(getDefaultSearchField(sq)))
 				//.withFilter(QueryBuilders.queryStringQuery(filterQuery))
 				.withPageable(PageRequest.of(getPage(sq), sq.getRows(), getSort(sq)))
@@ -152,6 +161,12 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		return fields;
 	}
 
+	public List<String> getSearchField(SolrQuery sq){
+		String defaultSearchFields = Common.nvl(sq.get("qf"));
+		return Common.toList(defaultSearchFields, " ");
+	}
+
+	
 	public static void main(String[] args) throws SolrServerException, IOException {
 		ConfigurableApplicationContext context = SpringApplication.run(EmassproApplication.class, args);
 		SolrCheckedService service = context.getBean(SolrCheckedService.class);

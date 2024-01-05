@@ -111,6 +111,8 @@ public class SolrCreateQuery {
 	private String finalReadYn;
 	private String consentNo;
 
+	private String regexPattern;
+
 	public String[] SEARCH_FIELD = {"msgid",
 			"kwds_body", "kwds_subject", "kwds_attach",
 			"subject", "subject.kr", "subject.jp", "subject.en",
@@ -135,6 +137,8 @@ public class SolrCreateQuery {
 	public SolrQuery setQuery() {
 		sq.setQuery(periodQueryBuffer.toString().trim() + SPACE + queryBuffer.toString().trim());
 		sq.setParam("defType", "edismax");
+		sq.setParam("regexPattern",getRegexPattern());
+
 		//sq.setSort(SortClause.desc("ctime"));
 		queryBuffer = new StringBuilder();
 		return sq;
@@ -1013,6 +1017,8 @@ public class SolrCreateQuery {
 		consentNo = Common.nvl(param.get("consentNo"));
 		JSONArray conditions = Common.toJSONArray(param.get("conditions"));
 
+
+
 		// JSONArray conditions = param.getJSONArray("conditions");
 		return makeQuery(conditions, consentUserId, adminId, searchTime).setServiceGroup(addSvcGroup).setQuery();
 	}
@@ -1142,6 +1148,8 @@ public class SolrCreateQuery {
 
 			String epmsg_type =Common.nvl(condition.get("epmsgType")); //대외비
 
+			String regexPattern = Common.nvl(condition.get("regexPattern")); //정규패턴식 검색
+
 			if( Common.isNotEmpty(query)) {
 				finalReadYn = "";
 				setSearchField(searchField);
@@ -1189,6 +1197,7 @@ public class SolrCreateQuery {
 			setOcr(OCRYn);
 			//setDrmYn(drmYn);
 			setSctYn(sctYn);
+			setRegexPattern(regexPattern);
 
 			finalReadYn = readYn;
 		}

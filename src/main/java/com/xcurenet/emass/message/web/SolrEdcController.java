@@ -110,6 +110,9 @@ public class SolrEdcController {
 
 		JSONObject data = Common.toJSONObject(param.get("data"));
 		String pageType = Common.nvl(param.get("pageType"));
+
+
+
 		if(Common.isNotEmpty(data.get("folderSeq"))) {
 			String folder_seq = Common.nvl(data.get("folderSeq"));
 			//String folder_name = Common.nvl(data.get("folderName"));
@@ -131,6 +134,7 @@ public class SolrEdcController {
 
 			String svc1 = Common.nvl(conditions.getJSONObject(0).get("svc1")); //서비스 그룹
 			String svc1_not = Common.nvl(conditions.getJSONObject(0).get("svc1_not")); //서비스 제외 그룹
+
 
 			StringBuffer query = new StringBuffer();
 			for( int i=0; i<msgs.size(); i++) {
@@ -183,6 +187,8 @@ public class SolrEdcController {
 			SolrQuery sq = solrCreateQuery.createQuery(data, Common.getAdminId(session), Common.nvl(data.get("searchTime")));
 			sq.setStart(Common.nvz(param.get("offset"), 0));
 			sq.setRows(Common.nvz(param.get("limit"), 100));
+
+
 
 			if(Common.isEmpty(data.get("searchTime"))) {
 				sq.setFacet(true);
