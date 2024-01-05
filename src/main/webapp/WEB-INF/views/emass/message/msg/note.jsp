@@ -714,7 +714,7 @@
 			<div class="messengerBox">
 				<div class="subTit p12">
 					<h2 class="ma_none pb4">
-						<button id="xcn_toggleBtn"><i class="fa fa-bars"></i></button> <s:message code="DATA_MONITOR.NOTE_SERVICE"/>
+						<button id="xcn_toggleBtn" class="menu"></button><s:message code="DATA_MONITOR.NOTE_SERVICE"/>
 					</h2>
 				</div>
 				<div class="bortop_dd pt16 pl20 pr20">
