@@ -147,7 +147,7 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 #contentArea .page a { color:#555 !important;}
 #contentArea .page a.focus {color:#1A73F9!important;}
 #contentArea .content {position: relative;width:100%;  height:100%;  clear: both;background-color: #f5f5f5; }
-.contentSub {position: relative; padding:20px 20px 0 20px;  *zoom:1; }
+.contentSub {position: relative; padding:20px 20px 1px 20px;  *zoom:1; }
 .contentSub::after {content:''; display:block; clear:both;}
 .contentSub .sel {position:absolute; right:0; top:-8px;}
 .chartArea {display: grid; grid-template-columns: 1fr 1fr; margin-bottom:12px;column-gap: 12px;}
@@ -182,6 +182,7 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 .inner_messenger .leftSearch:nth-child(1) { width:340px; position: relative; background-color: #f8f8f8;}
 .inner_messenger .messengerList:nth-child(2) {flex-basis:400px; flex-grow: 1; align-self:top; margin-top:6px; }
 .inner_messenger .chatList:nth-child(3) { z-index:99; flex-basis:450px; flex-grow: 1; position: relative; background-color: #606973; }
+.inner_messenger .fileGroupList:nth-child(3) { z-index:99; flex-basis:450px; flex-grow: 1; position: relative; background-color: #f8f8f8; }
 .inner_messenger .rightFile:nth-child(4) { width:300px;background-color: #414A54; z-index:9;}
 .rightFileList {overflow-x: hidden; overflow-y:scroll; height:800px;}
 .rightFileList ul {}
@@ -308,7 +309,7 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 .radiotab input[type="checkbox"]:checked {color:#1A73F9 !important;}
 
 .leftSearchTab {position: relative; width:100%; border-bottom:2px solid #1C64D3;}
-.leftSearchTab button {border:1px solid #ddd; border-bottom:none; background-color: #fff; font-size:15px; font-weight:300;color:#777; padding:8px 16px;}
+.leftSearchTab button {border:1px solid #ddd; border-bottom:none; background-color: #fff; font-size:15px; font-weight:300;color:#777; padding:11px 16px 8px;}
 .leftSearchTab button.active {background-color: #1C64D3; color: #fff; font-weight:600; border:none;}
 .fixBtn {position:fixed; bottom:12px; width:300px; border-top:1px solid #ddd;}
 .fixBtn > div { width:100%; text-align: right !important;  margin:16px 0 8px;}
@@ -399,12 +400,15 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 /*
 .btnList img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .btnform img {margin-top:-3px;margin-right:2px; vertical-align:middle;}*/
+.xcn_file_btn button{ margin:4px 3px;}
 .btnList button {margin-bottom:8px;}
 .btn01 {color:#375E9A; height:26px; line-height: 26px;  padding:0 8px; font-size:12px; vertical-align:middle;display: inline-block; border-radius: 2px;border: 1px solid #375E9A;background: #F5F8FF;}
 .btn02 {color:#D64D4D;  height:26px;line-height: 26px; border: 1px solid #ED8D8D;  background: #FFF8F8;  padding:0 8px;  font-size:12px;vertical-align:middle; display: inline-block; border-radius: 2px; }
 .btn03 { color:#333; border: 1px solid #ddd;background: #f5f5f5; height:26px; padding:0 8px; line-height: 26px; font-size:12px;vertical-align:middle;display: inline-block; border-radius: 2px; }
 .btn04 {font-size:13px; line-height:13px; padding:4px 8px; border:1px solid #375E9A; color:#375E9A; background:#fff url(../img/ico_page_down.png) 95.5% no-repeat;padding-right:20px;}
 .btn05 { color:#333; border: 1px solid #ddd;background: #fff; height:26px; padding:0 8px; line-height: 26px; font-size:12px;vertical-align:middle;display: inline-block; border-radius: 2px; }
+.btn06 { color:#333; border: 1px solid #999;background: #fff; height:26px; padding:0 8px; line-height: 26px; font-size:12px;vertical-align:middle;display: inline-block; border-radius: 2px; }
+.btn07 { color:#333; border: 1px solid #CCC;background: #fff; height:26px; padding:0 8px; line-height: 26px; font-size:12px;vertical-align:middle;display: inline-block;}
 /*.pop_btn01:hover, .pop_btn02:hover, .form_btn01:hover ,.form_btn02:hover{text-decoration: underline;}*/
 .form_btn01 { color:#fff; font-weight:600; font-size:13px; height:26px; line-height: 28px;  display: inline-block;padding:0 12px 0 32px; vertical-align: middle; text-align: center;  background:#1A73F9 url(../img/icon/ico_search.svg) 12px center no-repeat; border:0; border-radius:2px ; -webkit-border-radius:2px ; -moz-border-radius:2px ; -ms-border-radius:2px ; -o-border-radius:2px ; }
 .form_btn01_02 { color:#fff; font-weight:600; font-size:13px; height:26px; line-height: 28px; display: inline-block;padding:0 12px 0 32px;vertical-align: middle; text-align: center;  background:#1A73F9 url(../img/ico_check_w.svg) 12px center no-repeat; border:0; border-radius:2px ; -webkit-border-radius:2px ; -moz-border-radius:2px ; -ms-border-radius:2px ; -o-border-radius:2px ; }
@@ -481,6 +485,7 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .mal20 {margin-left:20px;}
 .mar20 {margin-right:20px;}
 .mar8 {margin-right:8px;}
+.mat20_minus{margin-top:-20px;}
 .mat24{margin-top:24px;}
 .mat32{margin-top:32px;}
 .mab12 {margin-bottom:12px;}
@@ -732,6 +737,7 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .messengerList .messengerBox {width: 100%; height:800px;}
 .messengerList .messengerBox .people { margin-left: -1px; }
 .messengerList .messengerBox .people .person { position: relative;padding:10px 20px 10px;cursor: pointer;overflow: hidden; }
+.messengerList .messengerBox .people li:first-child{height:1px !important;}
 .messengerList .messengerBox .people .person:after {
 	position: absolute;
 	bottom: 0;
@@ -747,10 +753,9 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 	-moz-transform: translate(-50%, 0);
 	-ms-transform: translate(-50%, 0);
 	-o-transform: translate(-50%, 0);
-
-
-
+	border-top:1px solid #ddd;
 }
+
 .messengerList .messengerBox .people .person span {display: inline-block;}
 .messengerList .messengerBox .people .person p {margin:4px;}
 .messengerList .messengerBox .people .person .left{position: relative; float:left; width:70%; }
@@ -761,13 +766,14 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .messengerList .messengerBox .people .person .file { width:16px; height:16px; vertical-align: top;
 	background:url(../img/ico_link_angled.png) left center no-repeat;}
 .messengerList .messengerBox .people .person .name {font-size: 14px; color:#555; font-weight:200 !important;}
-.messengerList .messengerBox .people .person .bar {width:1px; height:10px; background-color: #ddd; margin:0 4px;}
+.messengerList .messengerBox .people .person .bar {width:1px; height:10px; background-color: #999; margin:0 4px;}
 .messengerList .messengerBox .people .person .preview {font-size: 14px;color:#555; font-weight:200 !important; width: 60%;white-space: nowrap;text-overflow: ellipsis;}
 .messengerList .messengerBox .people .person .time {font-size: 14px; color:#777; font-weight:300 !important;}
 .messengerList .messengerBox .people .person .new {margin-left:4px; background-color:#1A73F9; color:#fff; padding:4px 8px; font-weight:600; font-size:14px; border-radius:16px ; -webkit-border-radius:16px ; -moz-border-radius:16px ; -ms-border-radius:16px ; -o-border-radius:16px ; }
 .messengerList .messengerBox .people .person.active, .messengerList .messengerBox .people .person:hover {background-color: var(--bluebg);}
+.messengerList .messengerBox .people .person.active, .messengerList .messengerBox .people .person2:hover {background-color:#fff;}
 .messengerList .messengerBox .people .person.active span, .messengerList .messengerBox .people .person:hover span {}
-.messengerList .messengerBox .people .person.active:after, .messengerList .messengerBox .people .person:hover:after {display: none;}
+.messengerList .messengerBox .people .person.active:after, .messengerList .messengerBox .people .person:hover:after {}
 .chatList { position: relative; min-width: 400px;  overflow-x: hidden; overflow-y: scroll;}
 .chatList .chatBox {position: relative; min-width: 100%; padding-bottom:20px; }
 .chatList .chatBox .top { position: sticky; top:0; left:0; bottom:0; right:0; min-width: 400px; color:#fff; font-size:14px; padding:20px 16px; z-index: 99; background-color: #606973}

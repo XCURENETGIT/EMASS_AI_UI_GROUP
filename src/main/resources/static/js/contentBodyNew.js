@@ -1089,7 +1089,7 @@ function setMessage(msg) {
 		$('#srcipTd').html(msg.srcIp);
 		$('#srcTr #ctimeTd').html(msg.ctime);
 		$('#dstipTd').html(msg.dstIp);
-		$('#bodySizeTd').html(convertFileSize(msg.bodySize));
+		$('#bodySizeTd').html(convertFileSize(msg.size));
 
 		$('#userDiv').html(userHtml(msg.userList,'userTr', srcip, dstip, usrip));
 		$('#userTr #userIdTd').html(msg.usrId);

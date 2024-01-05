@@ -1,81 +1,114 @@
-<style>
-
-	/* The Modal (background) */
-	.coach_modal {
-		display: block; /* Hidden by default */
-		position: fixed; /* Stay in place */
-		z-index: 1; /* Sit on top */
-		padding-top: 100px; /* Location of the box */
-		left: 40px;
-		top: 0;
-		width: 100%; /* Full width */
-		height: 100%; /* Full height */
-		overflow: auto; /* Enable scroll if needed */
-		background-color: rgb(0,0,0); /* Fallback color */
-		background-color: rgba(0,0,0,0.8); /* Black w/ opacity */
-	}
-
-	/* Modal Content */
-	.modal-content {
-		margin: auto;
-		padding: 20px;
-		width: 93%;
-		height:90%;
-		background: none;
-		border:none;
-		color:#fff;
-		font-wight:400;
-
-	}
-	.coach_logo {opacity: 0.2; font-size:12px; font-weight:300; letter-spacing:1.5px; border-top:1px solid #fff;}
-	.coach_logo img { margin-top:80px; height:32px;}
-	.coach_tit {margin-top:56px; font-size:18px; font-weight: 300;color:#fff; line-height: 1.5;}
-	.coach_name {margin-top:24px; font-size:32px; font-weight: 600;color:#fff; line-height: 1.5;}
-	.coach_name span {color:#88B8FF;font-weight: 600;}
-	.coach_call {font-size:13px;margin-right:8px; letter-spacing:0.6px;  margin-top:20px; padding:8px 12px; background: #88B8FF; color:#fff; display: inline-block; border-radius: 4px; }
-</style>
-
-
-	<div id="myModal" class="coach_modal">
-
-		<!-- Modal content -->
-		<div class="modal-content">
-			<div>
-				<div class="coach_name">
-					<span>Sysadmin</span>님 환영합니다.
-				</div>
-				<div class="coach_tit">
-					이용하고자 하는 서비스의 기능은 패킷 수집 모듈을 구매하실 경우 이용이 가능합니다.
-				</div>
-				<p style="padding-bottom:80px;">
-					<span class="coach_call"> 영업 연락처
-						<a href="mailto:salesteam@xcurenet.com" target="_top">salesteam@xcurenet.com</a>
-					</span>
-					<span class="coach_call"> 기술 연락처
-						<a href="mailto:helpdesk@xcurenet.com" target="_top">helpdesk@xcurenet.com</a>
-
-					</span>
-				</p>
-
-			</div>
-
-			<div class="coach_logo">
-				<img src="/venus/img/logo_xcurenet.png" alt="xcurenet" >
-				<p class="mat16">
-					Venus EMASS PRO, Venus/CS 3.0
-				</p>
-			</div>
-
-
-		</div>
-
-	</div>
-
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
+<style>
+	.coach_modal {display: none;position: fixed;z-index: 99999;padding-top: 100px;left: 76px;top: 0;width: 100%;height: 100%;overflow: auto;background-color: rgb(0,0,0);background-color: rgba(0,0,0,0.8); /* Black w/ opacity */}
+	.coach_modal .modal-content {margin: auto;padding: 20px;width: 93%;height:90%;background: none;border:none;color:#fff;font-wight:400;z-index: 999999;}
+	.coach_modal .coach_logo {font-size:12px; font-weight:300; letter-spacing:1.5px; border-top:1px solid #fff;}
+	.coach_modal .coach_logo img { margin-top:80px; height:32px;}
+	.coach_modal .coach_tit {margin-top:56px; font-size:18px; font-weight: 300;color:#fff; line-height: 1.5;}
+	.coach_modal .coach_name {margin-top:24px; font-size:32px; font-weight: 600;color:#fff; line-height: 1.5;}
+	.coach_modal .coach_name span {color:#88B8FF;font-weight: 600;}
+	.coach_modal .coach_call {font-size:13px;margin-right:8px; letter-spacing:0.6px;  margin-top:20px; padding:8px 12px; background: #88B8FF; color:#fff; display: inline-block; border-radius: 4px; }
+</style>
+<div class="coach_modal">
+	<div class="modal-content">
+		<div>
+			<div class="coach_name"><span>${_USERCREDENTIAL_.adminName}</span>님 환영합니다.</div>
+			<div class="coach_tit">이용하고자 하는 서비스의 기능은 추가 패키지를 구매하실 경우 이용이 가능합니다.</div>
+			<p style="padding-bottom:80px;">
+				<span class="coach_call"> 영업 연락처<a href="mailto:salesteam@xcurenet.com" target="_top">salesteam@xcurenet.com</a></span>
+				<span class="coach_call"> 기술 연락처<a href="mailto:helpdesk@xcurenet.com" target="_top">helpdesk@xcurenet.com</a></span>
+			</p>
+		</div>
+		<div class="coach_logo">
+			<img src="/venus/img/logo_xcurenet.png" alt="xcurenet" >
+			<p class="mat16">Venus EMASS PRO, Venus/CS 3.0</p>
+		</div>
+	</div>
+</div>
 
 
+<div class="searchArea w100">
+	<div class="searchSub w100">
+		<div>
+			<input type="date" id="startdate" style="width: 110px;"/>
+			<span class="hyphen">~</span>
+		</div>
+		<div>
+			<input type="date" id="enddate" style="width: 110px;"/>
+		</div>
 
+		<div class="optiotab">
+			<button class="optionBtn active" id="svc1" value="svc1">서비스타입</button>
+			<button class="optionBtn" id="direction_svc" value="direction_svc"><s:message code="condition.receive_send"/></button>
+			<button class="optionBtn" id="ctime_hh" value="ctime_hh"><s:message code="common.msg.time"/></button>
+			<button class="optionBtn" id="ctime_yyyymmdd" value="ctime_yyyymmdd" class="active"><s:message code="common.msg.day"/></button>
+			<button class="optionBtn" id="ctime_yyyymm" value="ctime_yyyymm"><s:message code="common.msg.month"/></button>
+		</div>
+		<div>
+			<button class="form_btn01" id="searchBtn"><s:message code="common.msg.search"/></button>
+			<button class="form_btn02" id="clearBtn"><s:message code="condition.reset"/></button>
+		</div>
+	</div>
+</div>
+<div class="content">
+	<div class="contentSub">
+		<div class="chartArea02">
+			<div>
+				<h3>
+					웹 검색어
+					<span class="sel">
+						<select id="year">
+							<option value="">- <s:message code="holidayBusiness.select.year"/> -</option>
+						</select>
+						<button type="button" class="btn07" accesskey="S" id="saveBtn">
+							<img src="<c:url value="/img/subBtn_save.png"/>" alt="저장"><s:message code="common.msg.save"/>
+						</button>
+
+					</span>
+				</h3>
+				<div class="panel-default" id="service.logging.count">
+					<div class="inner_personaldata" style="height:676px;">
+						<div id="chartArea1" style="height: 100%"></div>
+					</div>
+				</div>
+			</div>
+			<div>
+				<h3>
+					웹 검색 트렌드
+				</h3>
+				<div class="panel-default" id="service.logging.count">
+					<div class="inner_personaldata" style="height:280px;">
+						<div id="chartArea1" style="height: 100%"></div>
+					</div>
+				</div>
+
+				<h3 class="mat32">
+					웹 검색어 사용자
+					<span class="sel">
+						<button type="button" class="btn07" accesskey="S" id="saveBtn">
+							<img src="<c:url value="/img/subBtn_save.png"/>" alt="저장"><s:message code="common.msg.save"/>
+						</button>
+					</span>
+				</h3>
+				<div class="panel-default" id="service.logging.count">
+					<div class="inner_personaldata" style="height:340px;">
+						<div id="chartArea1" style="height: 100%"></div>
+					</div>
+				</div>
+				<!--
+				<div class="xcn_full">
+					<div class="tab-content">
+						<div id="basicStatList" class="tab-pane fade in active">
+							<div id="basicStatListGrid" class="slickGrid gridArea" style="min-height: 200px;"></div>
+						</div>
+					</div>
+				</div>-->
+			</div>
+		</div>
+	</div>
+</div>
+</div>
 <script type="text/javascript">
 	function setSublist(data) {
 		var element = document.getElementById('sub_1');
@@ -144,7 +177,7 @@
 		var displayName = (rowKey.indexOf(',') > -1) ? '<s:message code="common.msg.all"/>' : rowKey.replaceAll("\\\"", "\"");
 		if(rowName!='') displayName = rowName + '&lt;' + rowKey + '&gt;';
 		var id = 'tab'+tabID;
-        $('.listChart').append($('<li style="display:inline-flex;text-align: center;z-index:1001;" idx="'+tabID+'" id="liTab'+tabID+'"><a data-toggle="tab" href="#tab'+tabID+'" id="detailTab'+tabID+'" style="display: flex; align-items: center; justify-content: center;">'+displayName+' - '+colKeyNm+'<span class="badge mal4"></span><button type="button" class="subtab_close closeBtn">	&#10006;</button></a></li>'));
+		$('.listChart').append($('<li style="display:inline-flex;text-align: center;z-index:1001;" idx="'+tabID+'" id="liTab'+tabID+'"><a data-toggle="tab" href="#tab'+tabID+'" id="detailTab'+tabID+'" style="display: flex; align-items: center; justify-content: center;">'+displayName+' - '+colKeyNm+'<span class="badge mal4"></span><button type="button" class="subtab_close closeBtn">	&#10006;</button></a></li>'));
 		$('#basicStatList').after($('<div class="tab-pane fade" id="tab' + tabID + '"><div id="grid'+tabID+'" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; height: 400px"></div></div>'));
 
 		var gid = 'grid'+tabID;
@@ -168,6 +201,7 @@
 	};
 
 	function getData( flag ) {
+
 		if ( searchFlag ) return;
 		var sDate = $('#startdate').val().replaceAll("-", "");
 		var eDate = $('#enddate').val().replaceAll("-", "");
@@ -255,7 +289,6 @@
 	function getDetailData( lastRow ) {
 		currentgrid = getCurrentGrid();
 		if ( searchFlag ) return;
-
 		if ( lastRow == 'Y' || lastRow == undefined ) {
 			currentgrid.data.length = 0;
 			currentgrid.rtnNextPageFunc = getDetailData;
@@ -299,33 +332,5 @@
 				currentgrid.off();
 			}
 		})
-	}
-</script>
-
-<script>
-	// Get the modal
-	var modal = document.getElementById("myModal");
-
-	// Get the button that opens the modal
-	var btn = document.getElementById("myBtn");
-
-	// Get the <span> element that closes the modal
-	var span = document.getElementsByClassName("close")[0];
-
-	// When the user clicks the button, open the modal
-	btn.onclick = function() {
-		modal.style.display = "block";
-	}
-
-	// When the user clicks on <span> (x), close the modal
-	span.onclick = function() {
-		modal.style.display = "none";
-	}
-
-	// When the user clicks anywhere outside of the modal, close it
-	window.onclick = function(event) {
-		if (event.target == modal) {
-			modal.style.display = "none";
-		}
 	}
 </script>

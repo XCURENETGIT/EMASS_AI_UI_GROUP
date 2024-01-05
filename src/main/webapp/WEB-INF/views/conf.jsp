@@ -9,7 +9,7 @@
 	<title>EMASS PRO - <s:message code="common.msg.setting"/></title>
 
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-
+	<link rel="shortcut icon" href="<c:url value="/img/favicon.ico"/>">
 	<style type="text/css">
 		.vertical_content{
 			display: none;
