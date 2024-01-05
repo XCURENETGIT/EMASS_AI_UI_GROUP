@@ -256,7 +256,7 @@
                 var userid = $(this).parent().attr('userid');
                 var srcip = $(this).parent().attr('srcip');
                 var id = $(this).parent().attr('id');
-                updateEmassGenerativeAdminUserid(userid, id, srcip);
+                updateEmassGenerativeAdminUserid(userid, id, srcip,"G");
 
                 moveTargetHeight(id, false);
             });
@@ -317,7 +317,7 @@
                 $('#subchatid').html(": "+name);
                 $('#srcip').text(srcip);
                 $('#usr_id').text(usr_id);
-                eikon2.getCollectionDetailList(userid, msgid, srcip, usr_id);
+                eikon2.getCollectionDetailList(userid, msgid, srcip, usr_id,"G");
                 hideUserSelect();
             });
 

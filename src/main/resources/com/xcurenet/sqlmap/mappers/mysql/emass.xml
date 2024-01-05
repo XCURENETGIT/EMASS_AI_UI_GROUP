@@ -299,6 +299,7 @@
 		FROM	UI_ADMIN_USERID_GENERATIVE
 		WHERE	ADMIN_ID = #{adminId}
 		AND		USERID = #{userid}
+		AND		TYPE = #{type}
 		<if test='srcip!=null and srcip!=""'>
 		AND		SRCIP = #{srcip}
 		</if>
@@ -315,12 +316,12 @@
 	</select>
 
 	<update id="updateEmassMessengerAdminXrootMtr">
-		REPLACE INTO UI_ADMIN_XROOTMTR	SET ADMIN_ID = #{adminId}, XROOTMTR = #{xRootMtr}, MSGID = #{msgId}, SRCIP = #{srcip}
+		REPLACE INTO UI_ADMIN_XROOTMTR	SET ADMIN_ID = #{adminId}, XROOTMTR = #{xRootMtr}, MSGID = #{msgId}, SRCIP = #{srcip},
 	</update>
 
 
 	<update id="updateEmassGenerativeAdminUserid">
-		REPLACE INTO UI_ADMIN_USERID_GENERATIVE	SET ADMIN_ID = #{adminId}, userid = #{userid}, MSGID = #{msgId}, SRCIP = #{srcip}
+		REPLACE INTO UI_ADMIN_USERID_GENERATIVE	SET ADMIN_ID = #{adminId}, userid = #{userid}, MSGID = #{msgId}, SRCIP = #{srcip},TYPE = #{type}
 	</update>
 
 

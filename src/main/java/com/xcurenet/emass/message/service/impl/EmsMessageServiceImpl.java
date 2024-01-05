@@ -536,12 +536,13 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 	}
 
 	@Override
-	public EmsMessengerAdminXrootMtrVO getEmassGenerativeAdminXrootMtr(String userid, String adminId, String srcip, String usr_id) {
+	public EmsMessengerAdminXrootMtrVO getEmassGenerativeAdminXrootMtr(String userid, String adminId, String srcip, String usr_id,String type) {
 		Map<String, String> param = new HashMap<>();
 		param.put("adminId", adminId);
 		param.put("userid", userid);
 		param.put("srcip", srcip);
 		param.put("usr_id", usr_id);
+		param.put("type", type);
 		return selectOne("com.xcurenet.sqlmap.mappers.mysql.emass.getEmassGenerativeAdminXrootMtr", param);
 	}
 
@@ -558,12 +559,13 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 	}
 
 	@Override
-	public void updateEmassGenerativeAdminUserid(String userid, String msgId, String adminId, String srcip) {
+	public void updateEmassGenerativeAdminUserid(String userid, String msgId, String adminId, String srcip, String type) {
 		Map<String, String> param = new HashMap<>();
 		param.put("adminId", adminId);
 		param.put("userid", userid);
 		param.put("msgId", msgId);
 		param.put("srcip", srcip);
+		param.put("type", type);
 		update("com.xcurenet.sqlmap.mappers.mysql.emass.updateEmassGenerativeAdminUserid", param);
 	}
 

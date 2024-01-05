@@ -64,13 +64,16 @@ var eikon2 = {
             if($(this).hasClass('messenger_next')) {
 
                 var msgid = $('.timeline').children().last().attr('id');
-                getGenerativeMessageNext(userid, srcip, usr_id, msgid);
+                var type = isNoteJSPUrl() ? 'N' : 'G';
+
+                getGenerativeMessageNext(userid, srcip, usr_id, msgid,type);
 
             } else {
 
                 var firstData = $('.timeline').children().filter(':eq(1)');
+                var type = isNoteJSPUrl() ? 'N' : 'G';
                 var msgid = $(firstData).attr('id');
-                getGenerativeMessagePrev(userid, srcip, usr_id, msgid);
+                getGenerativeMessagePrev(userid, srcip, usr_id, msgid,type);
 
             }
 
@@ -215,7 +218,7 @@ function getCollectionMessageTotal(userid, srcip, startDt, endDt, usr_id, msgid,
 /**
  * 다음 버튼 ( 최하단의 + 버튼 )
  */
-function getGenerativeMessageNext(userid, srcip, usr_id, msgid) {
+function getGenerativeMessageNext(userid, srcip, usr_id, msgid,type) {
     var startDt = $('#startDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
     var endDt = $('#endDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
     searchFlag = true;
@@ -275,7 +278,7 @@ function getGenerativeMessageNext(userid, srcip, usr_id, msgid) {
 /**
  * 이전 버튼 ( 최상단의 + 버튼 )
  */
-function getGenerativeMessagePrev(userid, srcip, usr_id, msgid) {
+function getGenerativeMessagePrev(userid, srcip, usr_id, msgid,type) {
 
     var startDt = $('#startDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
     var endDt = $('#endDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
@@ -288,7 +291,9 @@ function getGenerativeMessagePrev(userid, srcip, usr_id, msgid) {
         endDt : endDt+"235959",
         usr_id : usr_id,
         msgId : msgid,
+        type:type,
         limit : detailLimit,
+        type:type,
         success : function(data, total) {
             searchFlag = false;
             if(data.groups.length == 0) {
@@ -508,14 +513,11 @@ function makeList(nextFlag){
             var attachsizeArray = attachsize.split('|');
             var attachtypeArray = attachtype.split('|');
 
-            for (var i = 0; i < attachhashArray.length; i++) {
-                str += '<p class="filedown file_link" msgid="' + obj.msgid + '" attachhash="' + attachhashArray[i] + '">';
-                str += '<span class="img"></span>';
-                str += '<span>' + attachnameArray[i] + '.' + attachtypeArray[i] + '<br/>';
-                str += attachsizeArray[i] + 'KB</span>';
-                str += '<button class="btnchatdown downlodadBtn"></button></p>';
-
-            }
+            str += '<p class="filedown file_link" msgid="' + obj.msgid + '" attachhash="' + attachhashArray[i] + '">';
+            str += '<span class="img"></span>';
+            str += '<span>' + attachnameArray[i] + '.' + attachtypeArray[i] + '<br/>';
+            str += attachsizeArray[i] + 'KB</span>';
+            str += '<button class="btnchatdown downlodadBtn"></button></p>';
         }
 
         else {
@@ -688,15 +690,23 @@ function checkLastMsg(){
     $('#timeline_list div.me').each(function(){
         var objOffsetTop = $(this).offset().top-topHeight;
         var objHeight = $(this).height();
+        var currentPage;
         //console.log("objHeight = "+objHeight)
         //console.log("objOffsetTop = "+objOffsetTop)
         //console.log(objOffsetTop-(objHeight/2)-marginBottom)
         if(objOffsetTop-(objHeight/2)-marginBottom < 0){
             lastMsgId = $(this).parent().parent().attr('id');
         }else{
-            return updateEmassGenerativeAdminUserid(userid, lastMsgId, srcip);
+            var type = isNoteJSPUrl() ? 'N' : 'G';
+            return updateEmassGenerativeAdminUserid(userid, lastMsgId, srcip,type);
+
         }
     });
+}
+function isNoteJSPUrl() {
+    var currentPageUrl = window.location.href;
+    console.log("currentPageUrl: ", currentPageUrl);
+    return currentPageUrl.includes('note.do');
 }
 
 function moveTargetHeight(id, moveFlag){
@@ -714,7 +724,7 @@ function moveTargetHeight(id, moveFlag){
     }
 }
 var readTimeFlag = false;
-function updateEmassGenerativeAdminUserid(userid, lastMsgId, srcip){ /*읽은위치저장*/
+function updateEmassGenerativeAdminUserid(userid, lastMsgId, srcip,type){ /*읽은위치저장*/
     moveTargetHeight(lastMsgId, false);
 
     ui.get({
@@ -722,6 +732,7 @@ function updateEmassGenerativeAdminUserid(userid, lastMsgId, srcip){ /*읽은위
         userid : userid,
         msgId : lastMsgId,
         srcip : srcip,
+        type:type,
         asyncFlag : false,
         success : function(data, total) {
             return true;

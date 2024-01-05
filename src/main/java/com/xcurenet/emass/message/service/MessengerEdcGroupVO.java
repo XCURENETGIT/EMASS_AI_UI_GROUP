@@ -32,6 +32,8 @@ public class MessengerEdcGroupVO {
 
 	private long numFound;
 
+	private long offset;
+
 	private List<MessengerGroupVO> groups;
 
 	public MessengerEdcGroupVO(final List<MessengerGroupVO> groups) {

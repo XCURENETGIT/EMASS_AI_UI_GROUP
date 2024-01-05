@@ -43,11 +43,11 @@ public interface EmsMessageService {
 	public String getEmassAttachText(final String msgId, final String attachId, final String ocrYn, final int offset, final int limit);
 
 	public EmsMessengerAdminXrootMtrVO getEmassMessengerAdminXrootMtr (final String xRootMtr, final String adminId, final String srcip, final String usr_id);
-	public EmsMessengerAdminXrootMtrVO getEmassGenerativeAdminXrootMtr (final String userid, final String adminId, final String srcip, final String usr_id);
+	public EmsMessengerAdminXrootMtrVO getEmassGenerativeAdminXrootMtr (final String userid, final String adminId, final String srcip, final String usr_id,final String type);
 
 	public void updateEmassMessengerAdminXrootMtr(final String xRootMtr, final String msgId, final String adminId, final String srcip, final String usr_id);
 
-	public void updateEmassGenerativeAdminUserid(final String userid, final String msgId, final String adminId, final String srcip);
+	public void updateEmassGenerativeAdminUserid(final String userid, final String msgId, final String adminId, final String srcip,final String type);
 
 	public List<CodeVO> getMessengerList();
 

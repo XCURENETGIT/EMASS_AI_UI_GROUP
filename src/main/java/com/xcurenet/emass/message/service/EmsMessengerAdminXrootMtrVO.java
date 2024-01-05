@@ -8,4 +8,5 @@ public class EmsMessengerAdminXrootMtrVO {
 	private String xRootMtr;
 	private String msgId;
 	private String userid;
+	private String type;
 }
