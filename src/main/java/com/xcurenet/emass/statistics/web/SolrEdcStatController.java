@@ -605,6 +605,7 @@ public class SolrEdcStatController {
 			for (Terms.Bucket bucket : bucketList) {
 				item.put(bucket.getKeyAsString(), bucket.getDocCount());
 				total = total + bucket.getDocCount();
+				list.add(bucket.getKeyAsString());
 			}
 			item.put("total", total);
 			if (flag == 0) {
