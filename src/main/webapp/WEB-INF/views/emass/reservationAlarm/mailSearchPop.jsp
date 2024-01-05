@@ -7,9 +7,9 @@
 <html lang="ko">
 <head>
 <%if(type.equals("to")) { %>
-<title>EMASS LTH - <s:message code="mail.select.recv"/></title>
+<title>EMASS PRO - <s:message code="mail.select.recv"/></title>
 <%} else if(type.equals("cc")){ %>
-<title>EMASS LTH - <s:message code="mail.select.recv.cc"/></title>
+<title>EMASS PRO - <s:message code="mail.select.recv.cc"/></title>
 <%} %>
 <style type="text/css">
 html,body{height: 100%; padding: 0px; margin: 0px;overflow: auto;min-width: 650px;min-height: 500px;}

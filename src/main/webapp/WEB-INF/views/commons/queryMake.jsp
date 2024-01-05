@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-	<title>EMASS LTH - <s:message code="query.make.title"/></title>
+	<title>EMASS PRO - <s:message code="query.make.title"/></title>
 	<style type="text/css">
 		html, body, .row{
 			height:100%;

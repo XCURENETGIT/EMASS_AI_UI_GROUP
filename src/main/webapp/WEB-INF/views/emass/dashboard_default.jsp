@@ -31,7 +31,7 @@
 		text-decoration: underline;
 	}
 </style>
-<title>EMASS LTH - Dashboard</title>
+<title>EMASS PRO - Dashboard</title>
 <script type="text/javascript">
 
 

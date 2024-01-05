@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<title>EMASS LTH - <s:message code="DATA_MONITOR.STAT_LABEL"/></title>
+<title>EMASS PRO - <s:message code="DATA_MONITOR.STAT_LABEL"/></title>
 <style type="text/css">
 .panel-heading .dropdown-menu {
 	right: 31px;

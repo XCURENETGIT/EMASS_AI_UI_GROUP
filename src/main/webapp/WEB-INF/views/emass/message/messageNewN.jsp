@@ -54,7 +54,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <title>EMASS LTH</title>
+    <title>EMASS PRO</title>
 
     <style type="text/css">
         .contentList{

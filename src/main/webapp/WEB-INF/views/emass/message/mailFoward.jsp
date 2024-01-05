@@ -32,7 +32,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<title>EMASS LTH - <s:message code="common.msg.forward_mail"/></title>
+<title>EMASS PRO - <s:message code="common.msg.forward_mail"/></title>
 
 <style type="text/css">
 html, body{

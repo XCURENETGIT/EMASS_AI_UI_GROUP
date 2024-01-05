@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<title>EMASS LTH - <s:message code="interest.select.user"/></title>
+<title>EMASS PRO - <s:message code="interest.select.user"/></title>
 <style>
 html,body{height: 100%; padding: 0px; margin: 0px;overflow: auto;min-width: 650px;}
 </style>

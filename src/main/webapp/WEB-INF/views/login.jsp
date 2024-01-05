@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>VENUS / EMASS LTH</title>
+	<title>VENUS / EMASS PRO</title>
 	<meta charset="utf-8">
 	<%
 		String loginMsg = Config.getString("system.login.msg");

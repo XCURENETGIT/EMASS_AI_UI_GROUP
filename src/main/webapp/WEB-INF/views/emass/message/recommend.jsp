@@ -9,7 +9,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<title>EMASS LTH - 유사 문서 추천</title>
+<title>EMASS PRO - 유사 문서 추천</title>
 <style>
 .modal-body {
 	padding-top: 5px;

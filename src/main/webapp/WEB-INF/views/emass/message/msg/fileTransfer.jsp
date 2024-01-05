@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-	<title>EMASS LTH - <s:message code="DATA_MONITOR.GENERATIVEAI_SERVICE"/></title>
+	<title>EMASS PRO - <s:message code="DATA_MONITOR.GENERATIVEAI_SERVICE"/></title>
 	<script type="text/javascript" src="<c:url value="/js/messenger.js"/>"></script>
 	<script type="text/javascript" src="<c:url value="/js/collection.js"/>"></script>
 	<style>

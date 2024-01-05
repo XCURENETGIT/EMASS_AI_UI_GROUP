@@ -23,7 +23,7 @@ String conditionParam = Common.nvl(param.get("conditionParam"));
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<title>EMASS LTH</title>
+<title>EMASS PRO</title>
 <%@ include file="../../base.jsp"%>
 
 <link rel="stylesheet" href="<c:url value="/css/message.css"/>"/>

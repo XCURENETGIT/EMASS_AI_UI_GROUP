@@ -14,7 +14,7 @@ String op_body_print = Operation.BODY_PRINT.getOperation();
 <html lang="ko">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-<title>EMASS LTH - <s:message code="OPERATION_MGMT.BODY_VIEW"/></title>
+<title>EMASS PRO - <s:message code="OPERATION_MGMT.BODY_VIEW"/></title>
 
 
 

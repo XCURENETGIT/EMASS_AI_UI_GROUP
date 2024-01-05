@@ -52,7 +52,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<title>EMASS LTH - <%=title %> <s:message code="message.msg"/> Viewer</title>
+<title>EMASS PRO - <%=title %> <s:message code="message.msg"/> Viewer</title>
 <style type="text/css">
 html,body{height: 100%; padding: 0px; margin: 0px;overflow: auto;min-width: 650px;}
 xmp {

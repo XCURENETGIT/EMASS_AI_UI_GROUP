@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<title>EMASS LTH - <s:message code="mail.mgnt.form.mail"/></title>
+<title>EMASS PRO - <s:message code="mail.mgnt.form.mail"/></title>
 <style>
 	body {
 		overflow: hidden;

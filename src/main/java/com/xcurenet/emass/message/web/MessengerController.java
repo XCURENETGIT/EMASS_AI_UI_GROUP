@@ -1,6 +1,5 @@
 package com.xcurenet.emass.message.web;
 
-import com.sun.tools.jconsole.JConsoleContext;
 import com.xcurenet.annotations.AuditMenu;
 import com.xcurenet.annotations.AuditOperation;
 import com.xcurenet.annotations.AuditParentMenu;
@@ -15,7 +14,6 @@ import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.emass.message.component.SolrCreateQuery;
 import com.xcurenet.emass.message.service.*;
-import com.xcurenet.emass.message.service.impl.SolrEdcServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -135,7 +133,6 @@ public class MessengerController {
 		sq.setParam("facet.detail", true);
 		sq.setParam("facet.mincount", "1");
 
-
 		/* 일반 문서 검색은 하지않으므로 0 (그룹검색만 하므로 ) */
 		sq.setStart(Common.nvz(param.get("offset"), 0));
 		sq.setRows(Common.nvz(param.get("limit"), 0));
@@ -251,7 +248,9 @@ public class MessengerController {
 
 		SolrQuery sq = new SolrQuery();
 		if(Common.isEmpty(msgId)) {
+
 			EmsMessengerAdminXrootMtrVO emaxm = emsMessageService.getEmassMessengerAdminXrootMtr(xRootMtr, Common.getAdminId(request), srcip, usr_id);
+
 			if(Common.isNotEmpty(emaxm)) {
 				msgId = Common.nvl(emaxm.getMsgId());
 				startRange = Common.diffOfDate(startDt.substring(0,8), msgId.substring(0,8));
@@ -259,12 +258,15 @@ public class MessengerController {
 			}
 
 		}
+
 		if(Common.isEmpty(msgId) || (startRange < 0) || (endRange > 0)) {
 			sq = getMessengerMsgTotalQuery(request);
 		} else {
 			sq = getMessengerMsgNext(request, msgId, true);
 		}
+
 		MessengerEdcGroupVO result = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request), true, false);
+
 		return new XcnResponseVO(XcnRspCode.OK, result);
 	}
 
@@ -341,8 +343,7 @@ public class MessengerController {
 		String startDt = Common.nvl(param.get("startDt"));
 		String endDt = Common.nvl(param.get("endDt"));
 		String searchStr = Common.nvl(param.get("searchStr"));
-		int limit = Common.nvz(param.get("limit"), 100000);
-
+		int limit = Common.nvz(param.get("limit"), 10000);
 
 		SolrQuery sq = new SolrQuery();
 		String query = String.format("+ctime:[%s TO %s] +xrootmtr:\"%s\"", startDt, endDt, xRootMtr);
@@ -350,28 +351,26 @@ public class MessengerController {
 		if(Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
 
 		if(Common.isNotEmpty(usr_id)) query += String.format(" +usr_id:\"%s\"", usr_id);
-		else query += String.format(" -usr_id:*");
 
-		if (!lastMsgYn) { //맨처음 들어왔을땐 하나가 떠야함 하지만 위가 이미 있는 상태에서 다음버튼을 누르면 중복되면 안됨
-			query += String.format(" -_id: %s", msgId);    //이미 출력된 동시간대 데이터 제외
-
-		}
-
-		String msgDt = msgId.substring(0, 14);
-		//이미 출력된 동시간대 데이터 제외
-		if(Common.isNotEmpty(msgId)) {
-			if (lastMsgYn) {
-				query += String.format(" +ctime:[%s TO %s] ", msgDt, endDt);
-			} else {
-				query += String.format(" +ctime:[%s TO %s]", msgDt, endDt);
-			}
-		}
+//		else query += String.format(" -usr_id:*");
+//
+//		//이미 출력된 동시간대 데이터 제외
+//		if(Common.isNotEmpty(msgId)) {
+//			if(lastMsgYn) {
+//				query += String.format(" +msgid:[%s TO *]", msgId);
+//			} else {
+//				query += String.format(" +msgid:{%s TO *]", msgId);
+//			}
+//		}
 
 		if(Common.isNotEmpty(searchStr)) query += String.format(" +body:(*%s*) ", searchStr);
 
 		sq.setQuery(query + MESSENGER);
-//		sq.setStart(Common.nvz(param.get("offset"), 0));
+
+		sq.setStart(Common.nvz(param.get("offset"), 0));
 		sq.setRows(limit);
+
+
 		sq.addSort("ctime", ORDER.asc);
 		sq.addSort("msgid", ORDER.asc);
 		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user");
@@ -535,15 +534,8 @@ public class MessengerController {
 
 		sq.setQuery(query + MESSENGER);
 		sq.setStart(0);
-		sq.setRows(10000);
-
-		sq.setParam("group", true);
-		sq.setParam("group.facet", true);
-		sq.setParam("group.ngroups", true);
-		sq.setParam("group.field", "xrootmtr");
-		sq.setParam("facet", true);
-		sq.setParam("facet.field", "xrootmtr");
-//		sq.setSort("ctime", ORDER.asc);
+		sq.setRows(30000);
+		sq.setSort("ctime", ORDER.asc);
 		SolrEdcMessageVO edcVO = solrEdcService.getEmassMessage(sq, Common.getAdminId(request));
 
 		List<Map<String, String>> result = new ArrayList<>();

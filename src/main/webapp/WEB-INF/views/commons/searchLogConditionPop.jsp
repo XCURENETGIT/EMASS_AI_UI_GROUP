@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/fragments/popupScript.jsp" %>
 <head>
-	<title>EMASS LTH - <s:message code="condition.select.condition"/></title>
+	<title>EMASS PRO - <s:message code="condition.select.condition"/></title>
 	<style type="text/css">
 		.bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {
 			width: 100px;

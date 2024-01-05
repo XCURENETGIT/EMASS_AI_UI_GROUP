@@ -19,7 +19,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<title>EMASS LTH - 모니터링 실행 결과</title>
+<title>EMASS PRO - 모니터링 실행 결과</title>
 <style>
 .modal-body {
 	padding-top: 5px;

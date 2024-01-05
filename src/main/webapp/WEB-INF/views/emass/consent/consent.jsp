@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp" %>
 <head>
-	<title>EMASS LTH - <s:message code="DATA_MONITOR.CONSENT_MGMT"/></title>
+	<title>EMASS PRO - <s:message code="DATA_MONITOR.CONSENT_MGMT"/></title>
 	<style type="text/css">
 		.ellipsis {
 			text-overflow: ellipsis;

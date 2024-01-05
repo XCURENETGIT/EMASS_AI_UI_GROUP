@@ -10,7 +10,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<title>EMASS LTH - <s:message code="common.msg.warning_mail"/></title>
+<title>EMASS PRO - <s:message code="common.msg.warning_mail"/></title>
 <style type="text/css">
 html, body{
 	min-width:600px !important;

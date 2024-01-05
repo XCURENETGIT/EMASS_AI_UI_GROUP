@@ -35,7 +35,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-	<title>EMASS LTH - <s:message code="DATA_MONITOR.MESSAGE_INFO"/></title>
+	<title>EMASS PRO - <s:message code="DATA_MONITOR.MESSAGE_INFO"/></title>
 	<style type="text/css">
 		html, body {
 			min-width: 100px !important;

@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<title>EMASS LTH PRO- <s:message code="DATA_MONITOR.STAT_LABEL"/></title>
+<title>EMASS PRO - <s:message code="DATA_MONITOR.STAT_LABEL"/></title>
 <style type="text/css">
 .panel-heading .dropdown-menu {
 	right: 31px;
@@ -85,6 +85,11 @@ $(document).ready(function(){
     $('#startdate').val(new Date().format('yyyy-mm-dd'));
     $('#enddate').val(new Date().format('yyyy-mm-dd'));
 
+	$('#enddatepicker').datetimepicker({
+		format: 'YYYY-MM-DD',
+		locale: 'ko',
+		defaultDate: moment(new Date())
+	});
 
 	$(".nav-tabs").on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
 		currentgrid = getCurrentGrid();
@@ -231,6 +236,37 @@ function closeDetailTab()
 	var tabFirst = $('.listChart a:first');
 	tabFirst.tab('show');
 }
+
+/*
+function regexpInfoViewer(row){
+	var selectedTabIdx = $('.listChart').find('.active').index();
+	var grid = window.__grids[selectedTabIdx];
+	var msgid = grid.getValue(row, 'msgid');
+	if(grid.getValue(row, 'pi_total') == '') return;
+
+	var url    = '<c:url value="/ems/regexpInfoPop.do?msgId='+msgid+'"/>';
+	return fnOpenWindow(url, 'regexpInfoPop', 1100, 370, 'resize');
+}
+function userInfoViewer(row, type){
+	var selectedTabIdx = $('.listChart').find('.active').index();
+	var grid = window.__grids[selectedTabIdx];
+	var msgid = grid.getValue(row, 'msgid');
+	if(grid.getValue(row, type) == '') return;
+
+	var url    = '<c:url value="/ems/userInfoPop.do?msgId='+msgid+'&type='+type+'"/>';
+	return fnOpenWindow(url, type+'InfoPop', 835, 370, 'resize');
+}
+
+function fileInfoViewer( row ){
+	var selectedTabIdx = $('.listChart').find('.active').index();
+	var grid = window.__grids[selectedTabIdx];
+	var msgid = grid.getValue(row, 'msgid');
+	if(grid.getValue(row, 'attachcnt') == '') return;
+
+	var url    = '<c:url value="/ems/fileInfoPop.do?msgId='+msgid+'"/>';
+	return fnOpenWindow(url, 'fileInfoPop', 1015, 400, 'resize');
+}
+*/
 
 function viewer_open( row, bodySize ){
 	var selectedTabIdx = $('.listChart').find('.active').index();
@@ -784,6 +820,7 @@ function clickEvent(dataGrid) {
 				url : 'getStatList.xcn',
 				startDate:  $('#startdate').val().replaceAll("-","")+"000000",
 				endDate:  $('#enddate').val().replaceAll("-","")+"235959",
+				detailQuery:$('#solrQueryText').val(),
 				xAxis : xAxis,
 				yAxis : 'ocr_attach_cnt',
 				offset : currentgrid.data.length,
@@ -881,6 +918,7 @@ function clickEvent(dataGrid) {
 				colKey : pColKey,
 				startDate : startDate+"000000",
 				endDate : endDate+"235959",
+				detailQuery:$('#solrQueryText').val(),
 				xAxis : xAxis,
 				xAxis_str : xAxis_str,
 				yAxis : 'ocr_attach_cnt',

@@ -33,7 +33,7 @@
 <html lang="ko">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-	<title>EMASS LTH - <s:message code="OPERATION_MGMT.BODY_VIEW"/></title>
+	<title>EMASS PRO - <s:message code="OPERATION_MGMT.BODY_VIEW"/></title>
 	<style type="text/css">
 		html, body{
 			min-width:600px !important;}

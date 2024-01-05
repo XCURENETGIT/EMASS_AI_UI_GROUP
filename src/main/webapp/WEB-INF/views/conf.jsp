@@ -6,7 +6,7 @@
 
 <head>
 
-	<title>EMASS LTH - <s:message code="common.msg.setting"/></title>
+	<title>EMASS PRO - <s:message code="common.msg.setting"/></title>
 
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 
