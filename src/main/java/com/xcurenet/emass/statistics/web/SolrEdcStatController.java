@@ -603,21 +603,26 @@ public class SolrEdcStatController {
 		Long total = 0L;
 		if (null == subAggs || subAggs.asList().size() == 0) {
 			for (Terms.Bucket bucket : bucketList) {
-				item.put(bucket.getKeyAsString(), bucket.getDocCount());
-				total = total + bucket.getDocCount();
-				list.add(bucket.getKeyAsString());
+				if(bucket.getDocCount() > 0) {
+					item.put(bucket.getKeyAsString(), bucket.getDocCount());
+					total = total + bucket.getDocCount();
+					list.add(bucket.getKeyAsString());
+
+
+					item.put("total", total);
+					if (flag == 0) {
+						item.put("rowKey", "totalOCR");
+						item.put("rowName", Prop.propFormat("stat.ocr.target"));
+					} else if (flag == 1) {
+						item.put("rowKey", "detectOCR");
+						item.put("rowName", Prop.propFormat("stat.ocr.include"));
+					} else if (flag == 2) {
+						item.put("rowKey", "noOCR");
+						item.put("rowName", Prop.propFormat("stat.ocr.notinclude"));
+					}
+				}
 			}
-			item.put("total", total);
-			if (flag == 0) {
-				item.put("rowKey", "totalOCR");
-				item.put("rowName", Prop.propFormat("stat.ocr.target"));
-			} else if (flag == 1) {
-				item.put("rowKey", "detectOCR");
-				item.put("rowName", Prop.propFormat("stat.ocr.include"));
-			} else if (flag == 2) {
-				item.put("rowKey", "noOCR");
-				item.put("rowName", Prop.propFormat("stat.ocr.notinclude"));
-			}
+
 		}
 		return item;
 	}
