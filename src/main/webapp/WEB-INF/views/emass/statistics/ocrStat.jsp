@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<title>EMASS LTH - <s:message code="DATA_MONITOR.STAT_LABEL"/></title>
+<title>EMASS LTH PRO- <s:message code="DATA_MONITOR.STAT_LABEL"/></title>
 <style type="text/css">
 .panel-heading .dropdown-menu {
 	right: 31px;
@@ -12,6 +12,33 @@
 }
 </style>
 <script>
+    Highcharts.setOptions({
+        chart: {
+            type: 'column',
+            marginTop : 15,
+            marginBottom : 60,
+            spacingBottom: 0
+        },
+        global : { useUTC : false },
+        gridLineColor: '#fff',
+        colors: ['#80599F', '#656C7C', '#598AD3', '#D35976', '#DDDDDD', '#bb6ecb', '#439851', '#33a0c4', '#7558cb', '#97b420'],
+        lang: {
+            months: [ '<s:message code="common.january"/>', '<s:message code="common.february"/>', '<s:message code="common.march"/>', '<s:message code="common.april"/>', '<s:message code="common.may"/>', '<s:message code="common.june"/>', '<s:message code="common.july"/>', '<s:message code="common.august"/>', '<s:message code="common.september"/>', '<s:message code="common.october"/>', '<s:message code="common.november"/>', '<s:message code="common.december"/>' ],
+            shortMonths : [ '<s:message code="common.january"/>', '<s:message code="common.february"/>', '<s:message code="common.march"/>', '<s:message code="common.april"/>', '<s:message code="common.may"/>', '<s:message code="common.june"/>', '<s:message code="common.july"/>', '<s:message code="common.august"/>', '<s:message code="common.september"/>', '<s:message code="common.october"/>', '<s:message code="common.november"/>', '<s:message code="common.december"/>' ],
+            weekdays : [ '<s:message code="common.sunday"/>', '<s:message code="common.monday"/>', '<s:message code="common.tuesday"/>', '<s:message code="common.wednesday"/>', '<s:message code="common.thursday"/>', '<s:message code="common.friday"/>', '<s:message code="common.saturday"/>' ],
+            contextButtonTitle : '<s:message code="common.msg.char_type"/>',
+            thousandsSep : ','
+        },
+        xAxis: {
+            dateTimeLabelFormats: {
+                day: '<s:message code="dashboard.display.day" arguments="%b,%d" />'
+            }
+        },
+        yAxis: {
+            gridLineColor: '#333',
+            gridLineWidth : 0.1
+        }
+    });
 var searchFlag = false;
 var detailTotal = 0;
 var rowKey = "";
@@ -32,6 +59,18 @@ $(document).ready(function(){
 		closeDetailTab();
 		getData ('Y');
 	});
+    $('.optionBtn').click(function () {
+        $('.optionBtn').removeClass('active');
+        $(this).addClass('active');
+    });
+
+    $('#clearBtn').click(function(){
+        $('#startdate').val(new Date().format('yyyy-mm-dd'));
+        $('#enddate').val(new Date().format('yyyy-mm-dd'));
+
+        $('.optionBtn').removeClass('active');
+        $('#deptnm').addClass('active');
+    });
 
 	$('#chartCntDiv .dropdown-menu li a').click(function(){
 		chartcnt = $(this).text();
@@ -43,17 +82,9 @@ $(document).ready(function(){
 		}
 	});
 
-	$('#startdatepicker').datetimepicker({
-		format: 'YYYY-MM-DD',
-		locale: 'ko',
-		defaultDate: moment(new Date())
-	});
+    $('#startdate').val(new Date().format('yyyy-mm-dd'));
+    $('#enddate').val(new Date().format('yyyy-mm-dd'));
 
-	$('#enddatepicker').datetimepicker({
-		format: 'YYYY-MM-DD',
-		locale: 'ko',
-		defaultDate: moment(new Date())
-	});
 
 	$(".nav-tabs").on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
 		currentgrid = getCurrentGrid();
@@ -201,37 +232,6 @@ function closeDetailTab()
 	tabFirst.tab('show');
 }
 
-/*
-function regexpInfoViewer(row){
-	var selectedTabIdx = $('.listChart').find('.active').index();
-	var grid = window.__grids[selectedTabIdx];
-	var msgid = grid.getValue(row, 'msgid');
-	if(grid.getValue(row, 'pi_total') == '') return;
-
-	var url    = '<c:url value="/ems/regexpInfoPop.do?msgId='+msgid+'"/>';
-	return fnOpenWindow(url, 'regexpInfoPop', 1100, 370, 'resize');
-}
-function userInfoViewer(row, type){
-	var selectedTabIdx = $('.listChart').find('.active').index();
-	var grid = window.__grids[selectedTabIdx];
-	var msgid = grid.getValue(row, 'msgid');
-	if(grid.getValue(row, type) == '') return;
-
-	var url    = '<c:url value="/ems/userInfoPop.do?msgId='+msgid+'&type='+type+'"/>';
-	return fnOpenWindow(url, type+'InfoPop', 835, 370, 'resize');
-}
-
-function fileInfoViewer( row ){
-	var selectedTabIdx = $('.listChart').find('.active').index();
-	var grid = window.__grids[selectedTabIdx];
-	var msgid = grid.getValue(row, 'msgid');
-	if(grid.getValue(row, 'attachcnt') == '') return;
-
-	var url    = '<c:url value="/ems/fileInfoPop.do?msgId='+msgid+'"/>';
-	return fnOpenWindow(url, 'fileInfoPop', 1015, 400, 'resize');
-}
-*/
-
 function viewer_open( row, bodySize ){
 	var selectedTabIdx = $('.listChart').find('.active').index();
 	var grid = window.__grids[selectedTabIdx];
@@ -289,102 +289,82 @@ function nextMsg( ) {
  * Bar Chart
  */
 var chart = null;
-var chartxAxis;
-function printChart( dat , dataGrid )
-{
+    var chartxAxis;
+    function printChart( dat,dataGrid )
+    {
+        var grid1 =dataGrid;
+        var data = [];
+        var categories = [];
+        var cols = grid1.columns;
+        var maxDat = 0;
+        if( dat == undefined ) {
+            for ( var i=0 ; i < grid1.data.length ; i++ ) {
+                if ( (i+1) > chartcnt ) break;
+                var items = [];
+                for ( var j=1 ; j < cols.length ; j++ ) {
+                    if ( cols[j].id == 'total' || cols[j].id == 'NUM' || cols[j].id == 'rowKey' ) continue;
+                    if ( grid1.data[i][cols[j].id] == undefined ) items.push(0);
+                    else items.push( Number( grid1.data[i][cols[j].id] ) );
+                    if ( i == 0 ) categories.push( cols[j].name );
+                    if(Number( grid1.data[i][cols[j].id] ) > maxDat) maxDat = Number( grid1.data[i][cols[j].id] );
+                }
+                if(grid1.id == 'basicStatListGrid') {
+                    data.push({name:getClassStr(grid1.data[i]['rowKey']), data:items});
+                } else {
+                    if(dat['NUM'] == '<s:message code="bodyview.total"/>') return;
+                    else data.push({name:dat['svcLv12Nm'], data:items});
+                }
+            }
+        } else {
+            var items = [];
+            for ( var j=0 ; j < cols.length ; j++ ) {
+                if ( cols[j].id == 'total' || cols[j].id == 'NUM' || cols[j].id == 'rowKey' ) continue;
+                if ( dat[cols[j].id] == undefined || dat[cols[j].id] == '' ) {
+                    items.push(0);
+                } else {
+                    items.push( Number( dat[cols[j].id] ) );
+                }
+                categories.push( cols[j].name );
+                if(Number( dat[cols[j].id] ) > maxDat) maxDat = Number( dat[cols[j].id] );
+            }
+            if(grid1.id == 'basicStatListGrid') {
+                data.push({name:getClassStr(grid1.data[i]['rowKey']), data:items});
+            } else {
+                if(dat['NUM'] == '<s:message code="bodyview.total"/>') return;
+                else data.push({name:dat['svcLv12Nm'], data:items});
+            }
+        }
 
-	var grid1 =dataGrid;
-	var data = [];
-	var categories = [];
-	var cols = grid1.columns;
-	var maxDat = 0;
-	if( dat == undefined ) {
-		for ( var i=0 ; i < grid1.data.length ; i++ ) {
-			if ( (i+1) > chartcnt ) break;
-			var items = [];
-			for ( var j=1 ; j < cols.length ; j++ ) {
-				if ( cols[j].id == 'total' || cols[j].id == 'NUM' || cols[j].id == 'rowKey' || cols[j].id == 'svcNm' || cols[j].id == 'svcLv1Nm' || cols[j].id == 'svcLv2Nm' || cols[j].id == 'svcLv12Nm' ) continue;
-				if ( grid1.data[i][cols[j].id] == undefined ) items.push(0);
-				else items.push( Number( grid1.data[i][cols[j].id] ) );
-				if ( i == 0 ) categories.push( cols[j].name );
-				if(Number( grid1.data[i][cols[j].id] ) > maxDat) maxDat = Number( grid1.data[i][cols[j].id] );
-			}
-			if(grid1.id == 'basicStatListGrid') {
-				data.push({name:grid1.data[i]['rowName'], data:items});
-			} else {
-				if(grid1.data[i]['NUM'] == '<s:message code="bodyview.total"/>') continue;
-				else if(grid1.data[i].rowKey.length == '3') {
-					data.push({name:grid1.data[i]['svcLv12Nm'], data:items});
-				}else {
-					data.push({name:grid1.data[i]['svcNm'], data:items});
-				}
-			}
-		}
-	} else {
-		var items = [];
-		for ( var j=0 ; j < cols.length ; j++ ) {
-			if ( cols[j].id == 'total' || cols[j].id == 'NUM' || cols[j].id == 'rowKey' || cols[j].id == 'svcNm' || cols[j].id == 'svcLv1Nm' || cols[j].id == 'svcLv2Nm' || cols[j].id == 'svcLv12Nm') continue;
-			if ( dat[cols[j].id] == undefined || dat[cols[j].id] == '' ) {
-				items.push(0);
-			} else {
-				items.push( Number( dat[cols[j].id] ) );
-			}
-			categories.push( cols[j].name );
-			if(Number( dat[cols[j].id] ) > maxDat) maxDat = Number( dat[cols[j].id] );
-		}
-		if(grid1.id == 'basicStatListGrid') {
-			data.push({name:grid1.data[i]['rowName'], data:items});
-		} else {
-			if(dat['NUM'] == '<s:message code="bodyview.total"/>') return;
-			else data.push({name:dat['svcLv12Nm'], data:items});
-		}
-	}
+        var rotation = 40;
+        if ( chartxAxis == 'W' ) rotation = 0;
+        $('#chartArea1').highcharts({
+            title: {
+                text: null
+            },
+            exporting: chartAPI.exporting,
+            credits: chartAPI.credits,
+            xAxis: {
+                categories: categories
+            },
+            yAxis: {
+                type: 'logarithmic',
+                custom: {
+                    allowNegativeLog: true
+                },
+                allowDecimals: false,
+                title: {
+                    text: '',
+                    rotation: 0
+                }
+            },
+            tooltip: {
+                headerFormat: '<b>{point.key}</b><br>',
+                pointFormat: '<span style="color:{series.color}">\u25CF</span> {series.name}: {point.y} (<s:message code="common.msg.cnt"/>)'
+            },
+            series: data
+        });
 
-	var rotation = 40;
-	if ( chartxAxis == 'W' ) rotation = 0;
-	$('#chartArea1').highcharts({
-		chart: {
-			type: 'column',
-			options3d: {
-				enabled: true,
-				alpha: 0,
-				beta: 0,
-				viewDistance: 15,
-				depth: 40
-			},
-			marginTop: 25,
-			marginRight: 45
-		},
-		title: {
-			text: null
-		},
-		exporting: chartAPI.exporting,
-		credits: chartAPI.credits,
-		xAxis: {
-			categories: categories,
-			labels : {
-				y: 35,
-				rotation : rotation
-			}
-		},
-		yAxis: {
-			allowDecimals: false,
-			min: 0,
-			max: maxDat,
-			title: {
-				text: '(<s:message code="common.msg.count"/>)',
-				rotation: 0
-			}
-		},
-		tooltip: {
-			headerFormat: '<b>{point.key}</b><br>',
-			pointFormat: '<span style="color:{series.color}">\u25CF</span> {series.name}: {point.y} (<s:message code="common.msg.cnt"/>)'
-		},
-		plotOptions: {
-		},
-		series: data
-	});
-}
+    }
 
 function excelDownLoad(grid, title, svg) {
 	if (grid.Rows == 0) {
@@ -426,7 +406,14 @@ function getSearchQuery() {
 
 }
 
-var pColKey = "";
+function getClassStr(value) {
+    if(value == 'totalOCR') return '<s:message code="stat.ocr.target"/>';
+    else if(value == 'detectOCR') return '<s:message code="stat.ocr.include"/>';
+    else if(value == 'noOCR') return '<s:message code="stat.ocr.notinclude"/>';
+    }
+
+
+    var pColKey = "";
 var pDisplayName = "";
 function clickEvent(dataGrid) {
 	if(dataGrid.getData().length == 0) return;
@@ -573,9 +560,13 @@ function clickEvent(dataGrid) {
 	<!-- 검색 영역 -->
 	<div class="searchArea">
 		<div class="searchSub">
-			<div id="startdatepicker"><input type="date" id="startdate" style="width: 110px;"> <span
-					class="hyphen">~</span></div>
-			<div id="enddatepicker"><input type="date" id="enddate" style="width: 110px;"></div>
+			<div>
+				<input type="date" id="startdate" style="width: 110px;"/>
+				<span class="hyphen">~</span>
+			</div>
+			<div>
+				<input type="date" id="enddate" style="width: 110px;"/>
+			</div>
 			<div class="optiotab">
 				<button class="optionBtn active" id="ctime_hh" value="ctime_hh"><s:message
 						code="common.msg.time"/></button>
@@ -595,16 +586,10 @@ function clickEvent(dataGrid) {
 			</div>
 			<div>
 				<button class="form_btn01" accesskey="Q" id="searchBtn" accesskey="s">조회</button>
-				<button class="form_btn02">조건 초기화</button>
-				<button type="button" class="form_btn05 searchQueryBtn"><s:message code="query.make.inputer"/></button>
+				<button class="form_btn02" id="clearBtn"><s:message code="condition.reset"/></button>
 			</div>
 		</div>
 
-		<div class="panel" style="width: 100%; margin-bottom: 10px">
-			<div>
-				<textarea class="elsQueryResultText" rows="1" style="width:100%; height:50px;" id="elsQueryText" placeholder="<s:message code="condition.input.detail"/>"></textarea>
-			</div>
-		</div>
 	</div>
 	<!-- //검색 영역 -->
 	<!--ContentArea-->
@@ -670,7 +655,13 @@ function clickEvent(dataGrid) {
 
 	<script type="text/javascript">
 
-		function getCurrentGrid(){
+        var element = document.getElementById('sub_1');
+        if (element && data && data.length > 0 && data[0].rowKey) {
+            var firstRowkey = data[0].rowKey;
+            element.innerHTML = '<span>' + firstRowkey + '</span>';
+        }
+
+        function getCurrentGrid(){
 			var id = Number($('.listChart .active').attr('idx'));
 			return tabInfo['tab'+id];
 		}
@@ -719,7 +710,6 @@ function clickEvent(dataGrid) {
 				url : 'getOcrStatList.xcn',
 				startDate: sDate+"000000",
 				endDate: eDate+"235959",
-				detailQuery:$('#elsQueryText').val(),
 				xAxis : xAxis,
 				yAxis : 'ocr_attach_cnt',
 				offset : grid1.data.length,
@@ -758,7 +748,7 @@ function clickEvent(dataGrid) {
 					$('#statlist_cnt').html('<s:message code="common.msg.finish_query"/>:'+grid1.data.length);
 					if ( grid1.loadingPage == 0 ) grid1.Select(-1,-1);
 					searchFlag = false;
-					pivotDataF(data , grid1 , "Grid");
+                    pivotDataF(data , grid1 , "Grid");
 				},
 				error : function(status, message) {
 					ui.alertMsg(message);
@@ -794,7 +784,6 @@ function clickEvent(dataGrid) {
 				url : 'getStatList.xcn',
 				startDate:  $('#startdate').val().replaceAll("-","")+"000000",
 				endDate:  $('#enddate').val().replaceAll("-","")+"235959",
-				detailQuery:$('#solrQueryText').val(),
 				xAxis : xAxis,
 				yAxis : 'ocr_attach_cnt',
 				offset : currentgrid.data.length,
@@ -840,7 +829,22 @@ function clickEvent(dataGrid) {
 					$('#detailTab'+Number($('.listChart .active').attr('idx'))+' .badge').text('[' + data.numFound.comma() + ']');
 					if ( currentgrid.loadingPage == 0 ) currentgrid.Select(-1,-1);
 					searchFlag = false;
-					pivotDataF(data , currentgrid , "Detail");
+
+                    if( data.pivotData.length > 0 ) {
+                        for ( var i=0 ; i < data.length ; i++ ) {
+                            var selected = false;
+                            if ( i <= 4 ) selected = true;
+                            else if ( i >= 10 ) break;
+                            addOption( 'chartListCount', (i+1), (i+1), selected );
+                        }
+
+                        var dat = grid1.getRowData( grid1.Row );
+                        totalChartDat = dat;
+                        printChart( dat );
+                    } else {
+                        $('#chartArea1').html('<s:message code="common.msg.nodata"/>');
+                        $('#space').height('7px');
+                    }
 				},
 				error : function(status, message) {
 					ui.alertMsg(message);
@@ -877,7 +881,6 @@ function clickEvent(dataGrid) {
 				colKey : pColKey,
 				startDate : startDate+"000000",
 				endDate : endDate+"235959",
-				detailQuery:$('#solrQueryText').val(),
 				xAxis : xAxis,
 				xAxis_str : xAxis_str,
 				yAxis : 'ocr_attach_cnt',
@@ -903,24 +906,24 @@ function clickEvent(dataGrid) {
 			});
 		}
 
-	function pivotDataF( data , dataGrid ,value){
-		totalChartDat = "";
-		var grid1 = dataGrid;
-			if( data.facetData.length > 0 ) {
-				for ( var i=0 ; i < data.length ; i++ ) {
-					var selected = false;
-					if ( i <= 4 ) selected = true;
-					else if ( i >= 10 ) break;
-					addOption( 'chartListCount', (i+1), (i+1), selected );
-				}
-				var dat = grid1.getRowData( grid1.Row );
-				totalChartDat = dat;
-				printChart( dat , grid1 );
-			} else {
-				$('#chartArea1').html('<s:message code="common.msg.nodata"/>');
-				$('#space').height('7px');
-			}
-	}
-	</script>
+    function pivotDataF( data , dataGrid ,value){
+        totalChartDat = "";
+        var grid1 = dataGrid;
+        if( data.facetData.length > 0 ) {
+            for ( var i=0 ; i < data.length ; i++ ) {
+                var selected = false;
+                if ( i <= 4 ) selected = true;
+                else if ( i >= 10 ) break;
+                addOption( 'chartListCount', (i+1), (i+1), selected );
+            }
+            var dat = grid1.getRowData( grid1.Row );
+            totalChartDat = dat;
+            printChart( dat , grid1 );
+        } else {
+            $('#chartArea1').html('<s:message code="common.msg.nodata"/>');
+            $('#space').height('7px');
+        }
+    }
+</script>
 </body>
 </html>

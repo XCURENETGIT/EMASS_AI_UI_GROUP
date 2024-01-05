@@ -229,7 +229,7 @@
                 var userid = $(this).parent().attr('userid');
                 var srcip = $(this).parent().attr('srcip');
                 var id = $(this).parent().attr('id');
-                updateEmassGenerativeAdminUserid(userid, id, srcip);
+                updateEmassGenerativeAdminUserid(userid, id, srcip,"N");
 
                 moveTargetHeight(id, false);
             });
@@ -752,6 +752,15 @@
 		<div class="chatList">
 			<div class="chatBox">
 				<div class="top">
+					<div class="myDropdown mal16">
+						<span>내보내기 &#9662;</span>
+						<div class="dropdown-content">
+							<a href="#" onclick="downloadList('xlsx')" class="excel_down">엑셀(xlsx)</a>
+							<a href="#" onclick="downloadList('txt')" class="txt_down">텍스트(txt)</a>
+							<a href="#" onclick="downloadList('html')" class="html_down">하이퍼텍스트(html)</a>
+							<a href="#" class="excel_file_down">액셀(xlsx)+첨부파일</a>
+						</div>
+					</div>
 					<div >
 						<span id="selectUserInfo"  class="chatid" data-srcip="" data-name="" data-usrid=""><s:message code="condition.user"/></span>
 					</div>
