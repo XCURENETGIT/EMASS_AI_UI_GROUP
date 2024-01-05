@@ -56,51 +56,54 @@
 		<div class="chartArea02">
 			<div>
 				<h3>
-					웹 검색어 TOP 100
+					웹 검색어
 					<span class="sel">
-						<div id="totalViewDiv" style="display:none;">
-							<div class="subtab">
-							<button type="button" title="<s:message code="stat.view.all"/>"><s:message code="stat.view.all"/></button>
-							</div>
-						</div>
+						<select id="year">
+							<option value="">- <s:message code="holidayBusiness.select.year"/> -</option>
+						</select>
+						<button type="button" class="btn07" accesskey="S" id="saveBtn">
+							<img src="<c:url value="/img/subBtn_save.png"/>" alt="저장"><s:message code="common.msg.save"/>
+						</button>
+
 					</span>
 				</h3>
 				<div class="panel-default" id="service.logging.count">
-					<div class="inner_personaldata" style="height:380px;">
+					<div class="inner_personaldata" style="height:676px;">
 						<div id="chartArea1" style="height: 100%"></div>
 					</div>
 				</div>
 			</div>
 			<div>
 				<h3>
-					웹 검색어 TOP 100
-					<span class="sel">
-						<div id="totalViewDiv" style="display:none;">
-							<div class="subtab">
-							<button type="button" title="<s:message code="stat.view.all"/>"><s:message code="stat.view.all"/></button>
-							</div>
-						</div>
-					</span>
+					웹 검색 트렌드
 				</h3>
 				<div class="panel-default" id="service.logging.count">
-					<div class="inner_personaldata" style="height:380px;">
+					<div class="inner_personaldata" style="height:280px;">
 						<div id="chartArea1" style="height: 100%"></div>
 					</div>
 				</div>
-			</div>
-		</div>
-		<div class="subtab">
-			<div>
-				<ul class="nav nav-tabs codeTab listChart">
-					<li class="active"><a data-toggle="tab" href="#basicStatList" id="listTab" >사용자 TOP</a></li>
-				</ul>
-			</div>
-		</div>
-		<div class="xcn_full">
-			<div class="tab-content">
-				<div id="basicStatList" class="tab-pane fade in active">
-					<div id="basicStatListGrid" class="slickGrid gridArea" style="min-height: 200px;"></div>
+
+				<h3 class="mat32">
+					웹 검색어 사용자
+					<span class="sel">
+						<button type="button" class="btn07" accesskey="S" id="saveBtn">
+							<img src="<c:url value="/img/subBtn_save.png"/>" alt="저장"><s:message code="common.msg.save"/>
+						</button>
+					</span>
+				</h3>
+				<div class="panel-default" id="service.logging.count">
+					<div class="inner_personaldata" style="height:340px;">
+						<div id="chartArea1" style="height: 100%"></div>
+					</div>
 				</div>
+				<!--
+				<div class="xcn_full">
+					<div class="tab-content">
+						<div id="basicStatList" class="tab-pane fade in active">
+							<div id="basicStatListGrid" class="slickGrid gridArea" style="min-height: 200px;"></div>
+						</div>
+					</div>
+				</div>-->
 			</div>
 		</div>
 	</div>
