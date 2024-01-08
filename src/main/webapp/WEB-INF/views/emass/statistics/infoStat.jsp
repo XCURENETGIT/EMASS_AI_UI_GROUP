@@ -80,6 +80,14 @@
 	var tabNum = 0;
 	var totalChartDat;
 	$(document).ready(function () {
+        initCondition();
+
+        $('#dept').click(function () {
+            var code = $(this).attr('id');
+            openCodeWindow(code, $('#' + code + 'Val').val(), $('#' + code + 'Str').val());
+        });
+
+
 		$('#searchBtn').click(function () {
 			closeDetailTab();
 			getData('Y');
@@ -283,9 +291,30 @@
 				</select>
 			</div>
 			<div>
+			<%--	<div>
+					<select id="busiSelect" name="busiSelect">
+					</select>
+				</div>
+				<button class="btn01" id="dept"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
+						code="common.org.choose.dept"/></button>
+				<input type="hidden" id="deptStr" class="selectedTitle">
+				<input type="hidden" id="deptVal">--%>
+				<input type="text"  placeholder="<s:message code="eikon.input.participation"/>" id="senders">
+
+			<%--	<span id="deptSelectedArea" class="codeSelectedBtn">
+										<button type="button" class="btn num_add bornone"  style="z-index: 2;">0</button>
+									</span>
+				<input type="hidden" id="deptStr" class="selectedTitle">
+				<input type="hidden" id="deptVal">
+				<input type="text" class="w100 mat8"  placeholder="<s:message code="eikon.input.participation"/>" id="senders">--%>
+
+			</div>
+
+			<div>
 				<button class="form_btn01" id="searchBtn"><s:message code="common.msg.search"/></button>
 				<button class="form_btn02" id="clearBtn"><s:message code="condition.reset"/></button>
 			</div>
+
 		</div>
 	</div>
 	<div class="content" style="padding-bottom: 50px;">
@@ -430,6 +459,12 @@
 		var piCount_str = $('select[name=piCount] option:selected').text();
 		var sDate = $('#startdate').val().replaceAll("-", "");
 		var eDate = $('#enddate').val().replaceAll("-", "");
+		var busi= $('#busiSelect').selectpicker('val');
+        var senders= $('#senders').val();
+        var dv= $('#deptVal').val().split('|');
+        var dept=dv.join(',');
+
+
 		if (sDate > eDate) ui.alertMsg('<s:message code="consent.msg.timecheck"/>');
 		$('#listTab b').remove();
 		searchFlag = true;
@@ -443,6 +478,9 @@
 			piCount: piCount,
 			pMenuId: pMenuId,
 			menuId: menuId,
+			busi:busi,
+			senders:senders,
+			dept:dept,
 			success: function (data, total) {
 				grid1.setData(data);
 				if (grid1.loadingPage == 0) grid1.Select(-1, -1);
@@ -488,14 +526,84 @@
 		return result.unique();
 	}
 
-	function getNodeByFieldNoneUnique(data) {
-		var result = [];
-		for (var i = 0; i < data.length; i++) {
-			var val = data[i]['svcNm'];
-			result.push(val);
-		}
-		return result;
-	}
+
+    function openCodeWindow(id, oldCode, oldConm) {
+        $('#oldCode').val(oldCode);
+        $('#oldConm').val(oldConm);
+
+        var url = '<c:url value="/commons/selectCode.do?codeType='+id+'"/>';
+        var pop = fnOpenWindow('', 'selectCodeWinPopup', 1200, 700, 'resize');
+
+        $('#codeParam').attr('target', 'selectCodeWinPopup');
+        $('#codeParam').attr('action', url);
+        $('#codeParam').attr('method', 'post');
+        $('#codeParam').submit();
+    }
+
+
+    function getCodeList(codeType) {
+        ui.get({
+            url: 'getCodeList.xcn',
+            codeType: codeType,
+            success: function (data, total) {
+                $('#' + codeType + 'Select').html(getSelectOption(data));
+                $('#' + codeType + 'Select').selectpicker('refresh');
+                $('#' + codeType + 'SelectPop').html(getSelectOption(data));
+                $('#' + codeType + 'SelectPop').selectpicker('refresh');
+            },
+            error: function (status, message) {
+                ui.alertMsg('error:' + status);
+            },
+            complete: function () {
+                searchFlag = false;
+            }
+        });
+    }
+
+    function getSelectOption(data) {
+        var str = '';
+        for (var i = 0; i < data.length; i++) {
+            str += '<option value="' + data[i].code + '">' + data[i].codeName + '</option>';
+        }
+        return str;
+    }
+
+
+    function getCodeList(codeType) {
+        ui.get({
+            url: 'getCodeList.xcn',
+            codeType: codeType,
+            success: function (data, total) {
+                $('#' + codeType + 'Select').html(getSelectOption(data));
+                $('#' + codeType + 'Select').selectpicker('refresh');
+                $('#' + codeType + 'SelectPop').html(getSelectOption(data));
+                $('#' + codeType + 'SelectPop').selectpicker('refresh');
+            },
+            error: function (status, message) {
+                ui.alertMsg('error:' + status);
+            },
+            complete: function () {
+                searchFlag = false;
+            }
+        });
+    }
+
+    function initCondition(){
+        getCodeList('busi');
+        getCodeList('dept');
+
+        $('#busiSelect').selectpicker({
+            size: 15,
+            width: '300px',
+            searchLabel: true,
+            noneSelectedText: '<s:message code="common.org.busi.all"/>',
+            noneResultsText: '<s:message code="common.msg.noresult"/>' + ' ',
+            selectAllText: '<s:message code="common.msg.select_all"/>',
+            deselectAllText: '<s:message code="common.msg.unselect_all"/>'
+        });
+
+    }
+
 
 	var piArr = ['pi_FN', 'pi_SN', 'pi_DN', 'pi_CN', 'pi_PN', 'pi_MN', 'pi_AN', 'pi_CRN', 'pi_SSN', 'pi_IMEI', 'pi_BRN', 'pi_CPN', 'pi_MCN'];
 	var piNmArr = ['<s:message code="bodyview.fn"/>', '<s:message code="bodyview.sn"/>', '<s:message code="bodyview.dn"/>', '<s:message code="bodyview.cn"/>', '<s:message code="bodyview.pn"/>', '<s:message code="bodyview.mn"/>', '<s:message code="bodyview.an"/>', '<s:message code="bodyview.crn"/>', '<s:message code="bodyview.ssn"/>', '<s:message code="bodyview.imei"/>', '<s:message code="bodyview.brn"/>', '<s:message code="bodyview.cpn"/>', '<s:message code="bodyview.mcn"/>'];

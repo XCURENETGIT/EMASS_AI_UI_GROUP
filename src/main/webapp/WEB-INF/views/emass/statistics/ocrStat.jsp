@@ -1,15 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-<title>EMASS PRO - <s:message code="DATA_MONITOR.STAT_LABEL"/></title>
-<style type="text/css">
-.panel-heading .dropdown-menu {
-	right: 31px;
-	top: 42px;
-	left: initial;
-}
+
+<script type="text/javascript" src="<c:url value="/js/messageGrid.js"/>"></script>
+<style>
 </style>
 <script>
     Highcharts.setOptions({
@@ -39,57 +32,57 @@
             gridLineWidth : 0.1
         }
     });
-var searchFlag = false;
-var detailTotal = 0;
-var rowKey = "";
-var rowName = "";
-var colKey = "";
-var colRowKey ="";
-var detailTab = "N";
-var chartcnt = 5;
-var currentGrid;
-var tabID = 1;
-var tabNum = 0;
-var totalChartDat;
-var parentGrid;
-var totalViewSig=false;
-var tabFlag =false;
-$(document).ready(function(){
-	$('#searchBtn').click(function(){
-		closeDetailTab();
-		getData ('Y');
-	});
-    $('.optionBtn').click(function () {
-        $('.optionBtn').removeClass('active');
-        $(this).addClass('active');
-    });
 
-    $('#clearBtn').click(function(){
+    var searchFlag = false;
+    var detailTotal = 0;
+    var rowKey = "";
+    var rowName = "";
+    var colKey = "";
+    var colRowKey ="";
+    var detailTab = "N";
+    var chartcnt = 5;
+    var currentGrid;
+    var tabID = 1;
+    var tabNum = 0;
+    var totalChartDat;
+    var parentGrid;
+    var totalViewSig=false;
+    var tabFlag = false;
+
+
+    $(document).ready(function(){
         $('#startdate').val(new Date().format('yyyy-mm-dd'));
         $('#enddate').val(new Date().format('yyyy-mm-dd'));
 
-        $('.optionBtn').removeClass('active');
-        $('#deptnm').addClass('active');
+        getServiceList();
+        $('.optionBtn').click(function () {
+            $('.optionBtn').removeClass('active');
+            $(this).addClass('active');
+        });
+
+        $('#searchBtn').click(function(){
+            closeDetailTab();
+            getData ('Y');
+        });
+        $('#clearBtn').click(function(){
+            $('#startdate').val(new Date().format('yyyy-mm-dd'));
+            $('#enddate').val(new Date().format('yyyy-mm-dd'));
+
+            $('.optionBtn').removeClass('active');
+            $('#deptnm').addClass('active');
+        });
+
+        $('#chartCntDiv .dropdown-menu li a').click(function(){
+            chartcnt = $(this).text();
+            var fgrid = getCurrentGrid();
+            if(fgrid == undefined || fgrid == null || totalViewSig) {
+                printChart(totalChartDat , grid1);
+            } else {
+                printChart(totalChartDat , fgrid);
+            }
+        });
+
     });
-
-	$('#chartCntDiv .dropdown-menu li a').click(function(){
-		chartcnt = $(this).text();
-		var fgrid = getCurrentGrid();
-		if(fgrid == undefined || fgrid == null || totalViewSig) {
-			printChart(totalChartDat , grid1);
-		} else {
-			printChart(totalChartDat , fgrid);
-		}
-	});
-
-    $('#startdate').val(new Date().format('yyyy-mm-dd'));
-    $('#enddate').val(new Date().format('yyyy-mm-dd'));
-
-	$('#enddatepicker').datetimepicker({
-		format: 'YYYY-MM-DD',
-		locale: 'ko',
-		defaultDate: moment(new Date())
-	});
 
 	$(".nav-tabs").on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
 		currentgrid = getCurrentGrid();
@@ -127,6 +120,7 @@ $(document).ready(function(){
 			}else if(text.includes(notIncludeText)){
 				colRowKey = 'noOCR'
 			}
+
 			$("#chartCntDiv").hide();
 			$('#totalViewDiv').show();
 			var dat = chartDat[id];
@@ -134,199 +128,120 @@ $(document).ready(function(){
 		}
 	})
 
-	$('.listChart').on('click','.closeBtn',function(){
-		currentgrid = getCurrentGrid();
-		var id = 'tab'+ Number($(this).parents('li').attr('idx'));
-		var obj = tabInfo[id];
-		obj.close();
+    $('.listChart').on('click','.subtab_close',function(){
+        currentgrid = getCurrentGrid();
+        var id = 'tab'+ Number($(this).parents('li').attr('idx'));
+        var obj = tabInfo[id];
+        obj.close();
 
-		var tabID = $(this).parents('a').attr('href');
-		$(this).parents('li').remove();
-		$(tabID).remove();
-		tabNum --;
+        var tabID = $(this).parents('a').attr('href');
+        $(this).parents('li').remove();
+        $(tabID).remove();
+        tabNum --;
 
-		if(tabFlag == false){
-			var tabFirst = $('.listChart a:first');
-			tabFirst.tab('show');
+        if(tabFlag == false){
+            var tabFirst = $('.listChart a:first');
+            tabFirst.tab('show');
 
-			$("#chartCntDiv").show();
-			$('#totalViewDiv').hide();
-		}else if (tabFlag == true){
-			tabFlag = false;
-		}
-	});
+            $("#chartCntDiv").show();
+            $('#totalViewDiv').hide();
+        }else if (tabFlag == true){
+            tabFlag = false;
+        }
+    });
 
-	$('.print_stat').click(function() {
-		var gridDetail = getCurrentGrid();
-		if(gridDetail != undefined) {
-			if (gridDetail.Rows == 0) {
-				alert('<s:message code="common.msg.nodata"/>');
-				return;
-			}
-			gridDetail.print('<s:message code="stat.detail.user.list"/>', pMenuId, menuId);
-		} else {
-			if (grid1.Rows == 0) {
-				alert('<s:message code="common.msg.nodata"/>');
-				return;
-			}
-			grid1.print('<s:message code="DATA_MONITOR.STAT_USER"/>', pMenuId, menuId);
-		}
-	});
+    $('.totalView').click(function(){
+        $("#chartCntDiv").show();
+        $('#totalViewDiv').hide();
+        totalViewSig = true;
+        printChart(totalChartDat);
+    });
 
-	$('.excel_stat').click(function() {
-		var gridDetail = getCurrentGrid();
-		if(gridDetail != undefined) {
-			excelDownLoad(gridDetail,'<s:message code="stat.detail.user.list"/>');
-		} else {
-			chart = $('#chartArea1').highcharts();
-			var svg = chart.getSVG();
-			excelDownLoad(grid1,'<s:message code="DATA_MONITOR.STAT_USER"/>', svg);
-		}
-	});
+    function getServiceList(){
+        ui.get({
+            url : 'getServiceGroupList.xcn',
+            success : function(data, total) {
+                serviceList = data;
+            },
+            error : function(status, message) {
+                ui.alertMsg(message);
+            },
+            complete : function() {
+            }
+        });
+    }
 
-	$('.cell_stat').click(function() {
-		var gridDetail = getCurrentGrid();
-		if(gridDetail != undefined) {
-			cellDownLoad(gridDetail,'<s:message code="stat.detail.user.list"/>');
-		} else {
-			cellDownLoad(grid1,'<s:message code="DATA_MONITOR.STAT_USER"/>');
-		}
-	});
+    function setGrid( ){
+        currentgrid = getCurrentGrid();
+        initGrid(currentgrid, messageGridColumn);
+    }
 
-	$('.pdf_stat').click(function() {
-		var gridDetail = getCurrentGrid();
-		if(gridDetail != undefined) {
-			pdfDownLoad(gridDetail,'<s:message code="stat.detail.user.list"/>');
-		} else {
-			pdfDownLoad(grid1,'<s:message code="DATA_MONITOR.STAT_USER"/>');
-		}
-	});
+    function closeDetailTab() {
+        var tabFirst = $('.listChart a:first');
+        tabFirst.tab('show');
+    }
 
-	$('.csv_stat').click(function() {
-		var gridDetail = getCurrentGrid();
-		if(gridDetail != undefined) {
-			csvDownLoad(gridDetail,'<s:message code="stat.detail.user.list"/>');
-		} else {
-			csvDownLoad(grid1,'<s:message code="DATA_MONITOR.STAT_USER"/>');
-		}
-	});
+    function viewer_open( row, bodySize){
+        var selectedTabIdx = $('.listChart').find('.active').index();
+        var grid = window.__grids[selectedTabIdx];
+        var msgid = grid.getValue(row, 'msgid');
+        var ctime = $('#searchStrInput').val();
 
-	$('.totalView').click(function(){
-		$("#chartCntDiv").show();
-		$('#totalViewDiv').hide();
-		totalViewSig = true;
-		printChart(totalChartDat , grid1);
-	});
+        openMessageBodyPop( grid.id, msgid, $('#searchStrInput').val(), bodySize);
 
-	$('.searchQueryBtn').click(function(){
-		queryMakePop();
-	});
+        var readYn = grid.getValue(row, 'readYn');
+        grid.setValue(row, grid.ColIndex('readYn'), 'Y');
+        grid.Select(row,0);
+    }
 
-//	getData ('Y');
+    function viewer_newOpen(row, bodySize){
+        var selectedTabIdx = $('.listChart').find('.active').index();
+        var grid = window.__grids[selectedTabIdx];
+        var msgid = grid.getValue(row, 'msgid');
+        var ctime = $('#searchStrInput').val();
+        openMessageBodyPop( '', msgid, $('#searchStrInput').val(), bodySize);
 
-});
+        var readYn = grid.getValue(row, 'readYn');
+        grid.setValue(row, grid.ColIndex('readYn'), 'Y');
+    }
 
-function setGrid( ){
-	currentgrid = getCurrentGrid();
-	initGrid(currentgrid, messageGridColumn);
-}
+    function prevMsg( ) {
+        var selectedTabIdx = $('.listChart').find('.active').index();
+        var grid = window.__grids[selectedTabIdx];
+        var row = 0;
+        if( grid.Row > 0 ) {
+            row = --grid.Row;
+            viewer_open(row);
+            grid.Select(row,0);
+            return true;
+        }
+        return false;
+    }
 
-function closeDetailTab()
-{
-	var tabFirst = $('.listChart a:first');
-	tabFirst.tab('show');
-}
+    function nextMsg( ) {
+        var selectedTabIdx = $('.listChart').find('.active').index();
+        var grid = window.__grids[selectedTabIdx];
+        var row = 0;
+        console.log("grid.Row = "+grid.Row)
+        console.log("grid.Rows = "+grid.Rows)
+        if( grid.Row < grid.Rows - 1 ) {
+            row = ++grid.Row;
+            viewer_open(row);
+            grid.Select(row,0);
+            if( grid.Row == grid.Rows - 2  ){
+                getList( true );
+            }
+            return true;
+        }
+        return false;
+    }
 
-/*
-function regexpInfoViewer(row){
-	var selectedTabIdx = $('.listChart').find('.active').index();
-	var grid = window.__grids[selectedTabIdx];
-	var msgid = grid.getValue(row, 'msgid');
-	if(grid.getValue(row, 'pi_total') == '') return;
-
-	var url    = '<c:url value="/ems/regexpInfoPop.do?msgId='+msgid+'"/>';
-	return fnOpenWindow(url, 'regexpInfoPop', 1100, 370, 'resize');
-}
-function userInfoViewer(row, type){
-	var selectedTabIdx = $('.listChart').find('.active').index();
-	var grid = window.__grids[selectedTabIdx];
-	var msgid = grid.getValue(row, 'msgid');
-	if(grid.getValue(row, type) == '') return;
-
-	var url    = '<c:url value="/ems/userInfoPop.do?msgId='+msgid+'&type='+type+'"/>';
-	return fnOpenWindow(url, type+'InfoPop', 835, 370, 'resize');
-}
-
-function fileInfoViewer( row ){
-	var selectedTabIdx = $('.listChart').find('.active').index();
-	var grid = window.__grids[selectedTabIdx];
-	var msgid = grid.getValue(row, 'msgid');
-	if(grid.getValue(row, 'attachcnt') == '') return;
-
-	var url    = '<c:url value="/ems/fileInfoPop.do?msgId='+msgid+'"/>';
-	return fnOpenWindow(url, 'fileInfoPop', 1015, 400, 'resize');
-}
-*/
-
-function viewer_open( row, bodySize ){
-	var selectedTabIdx = $('.listChart').find('.active').index();
-	var grid = window.__grids[selectedTabIdx];
-	var msgid = grid.getValue(row, 'msgid');
-	var ctime = $('#searchStrInput').val();
-
-	openMessageBodyPop( grid.id, msgid, $('#searchStrInput').val(), bodySize);
-
-	var readYn = grid.getValue(row, 'readYn');
-	grid.setValue(row, grid.ColIndex('readYn'), 'Y');
-	grid.Select(row,0);
-}
-
-function viewer_newOpen(row, bodySize){
-	var selectedTabIdx = $('.listChart').find('.active').index();
-	var grid = window.__grids[selectedTabIdx];
-	var msgid = grid.getValue(row, 'msgid');
-	var ctime = $('#searchStrInput').val();
-	openMessageBodyPop( '', msgid, $('#searchStrInput').val(), bodySize);
-
-	var readYn = grid.getValue(row, 'readYn');
-	grid.setValue(row, grid.ColIndex('readYn'), 'Y');
-}
-
-function prevMsg( ) {
-	var selectedTabIdx = $('.listChart').find('.active').index();
-	var grid = window.__grids[selectedTabIdx];
-	var row = 0;
-	if( grid.Row > 0 ) {
-		row = --grid.Row;
-		viewer_open(row);
-		grid.Select(row,0);
-		return true;
-	}
-	return false;
-}
-
-function nextMsg( ) {
-	var selectedTabIdx = $('.listChart').find('.active').index();
-	var grid = window.__grids[selectedTabIdx];
-	var row = 0;
-	if( grid.Row < grid.Rows - 1 ) {
-		row = ++grid.Row;
-		viewer_open(row);
-		grid.Select(row,0);
-		if( grid.Row == grid.Rows - 2  ){
-			getList( true );
-		}
-		return true;
-	}
-	return false;
-}
-
-/**
- * Bar Chart
- */
-var chart = null;
+    /**
+     * Bar Chart
+     */
+    var chart = null;
     var chartxAxis;
-    function printChart( dat,dataGrid )
+    function printChart( dat ,dataGrid )
     {
         var grid1 =dataGrid;
         var data = [];
@@ -338,7 +253,7 @@ var chart = null;
                 if ( (i+1) > chartcnt ) break;
                 var items = [];
                 for ( var j=1 ; j < cols.length ; j++ ) {
-                    if ( cols[j].id == 'total' || cols[j].id == 'NUM' || cols[j].id == 'rowKey' ) continue;
+                    if (  cols[j].id == 'total' || cols[j].id == 'NUM' || cols[j].id == 'rowKey' || cols[j].id == 'svcNm' || cols[j].id == 'svcLv1Nm' || cols[j].id == 'svcLv2Nm' || cols[j].id == 'svcLv12Nm' ) continue;
                     if ( grid1.data[i][cols[j].id] == undefined ) items.push(0);
                     else items.push( Number( grid1.data[i][cols[j].id] ) );
                     if ( i == 0 ) categories.push( cols[j].name );
@@ -347,14 +262,18 @@ var chart = null;
                 if(grid1.id == 'basicStatListGrid') {
                     data.push({name:getClassStr(grid1.data[i]['rowKey']), data:items});
                 } else {
-                    if(dat['NUM'] == '<s:message code="bodyview.total"/>') return;
-                    else data.push({name:dat['svcLv12Nm'], data:items});
+                    if(grid1.data[i]['NUM'] == '<s:message code="bodyview.total"/>') continue;
+                    else if(grid1.data[i].rowKey.length == '3') {
+                        data.push({name:grid1.data[i]['svcLv12Nm'], data:items});
+                    }else {
+                        data.push({name:grid1.data[i]['svcNm'], data:items});
+                    }
                 }
             }
         } else {
             var items = [];
             for ( var j=0 ; j < cols.length ; j++ ) {
-                if ( cols[j].id == 'total' || cols[j].id == 'NUM' || cols[j].id == 'rowKey' ) continue;
+                if ( cols[j].id == 'total' || cols[j].id == 'NUM' || cols[j].id == 'rowKey' || cols[j].id == 'svcNm' || cols[j].id == 'svcLv1Nm' || cols[j].id == 'svcLv2Nm' || cols[j].id == 'svcLv12Nm'  ) continue;
                 if ( dat[cols[j].id] == undefined || dat[cols[j].id] == '' ) {
                     items.push(0);
                 } else {
@@ -399,203 +318,157 @@ var chart = null;
             },
             series: data
         });
-
     }
-
-function excelDownLoad(grid, title, svg) {
-	if (grid.Rows == 0) {
-		alert('<s:message code="common.msg.nodata"/>');
-		return;
-	}
-	var header = grid.getHeaderEXCEL();
-	var body = grid.getBodyEXCEL();
-	grid.on();
-	ui.postJson({
-		url : 'utils/xlsxWriter.do',
-		title : title,
-		header : header,
-		body : body,
-		pMenuId : pMenuId,
-		menuId: menuId,
-		svg : svg,
-		success : function(data, total) {
-			try {
-				ExcelDown.location.href = '<c:url value="/utils/xlsxDown.do"/>?path=' + encodeURI(data);
-			} catch (e) {
-				ExcelDown.src = '<c:url value="/utils/xlsxDown.do"/>?path=' + encodeURI(data);
-			}
-		},
-		error : function(status, message) {
-			ui.alertMsg(message);
-		},
-		complete : function() {
-			grid.off();
-		}
-	});
-}
-function queryMakePop(  ){
-	var url    = '<c:url value="/commons/queryMake.do?statType=XXXXXX"/>';
-	fnOpenWindow(url, 'queryMakePop', 1400, 870, 'resize');
-}
-
-function getSearchQuery() {
-
-}
-
-function getClassStr(value) {
-    if(value == 'totalOCR') return '<s:message code="stat.ocr.target"/>';
-    else if(value == 'detectOCR') return '<s:message code="stat.ocr.include"/>';
-    else if(value == 'noOCR') return '<s:message code="stat.ocr.notinclude"/>';
+    function getClassStr(value) {
+        if(value == 'totalOCR') return '<s:message code="stat.ocr.target"/>';
+        else if(value == 'detectOCR') return '<s:message code="stat.ocr.include"/>';
+        else if(value == 'noOCR') return '<s:message code="stat.ocr.notinclude"/>';
     }
-
 
     var pColKey = "";
-var pDisplayName = "";
-function clickEvent(dataGrid) {
-	if(dataGrid.getData().length == 0) return;
-	var grid1 = dataGrid;
-	var valChk = grid1.getValue(grid1.Row, grid1.Col);
-	if(valChk == "" || valChk == "-") return;
+    var pDisplayName = "";
+    function clickEvent(dataGrid) {
+        if(dataGrid.getData().length == 0) return;
+        var grid1 = dataGrid;
+        var valChk = grid1.getValue(grid1.Row, grid1.Col);
+        if(valChk == "" || valChk == "-") return;
 
-	if(grid1.getValue(grid1.Row, 'NUM') == '<s:message code="bodyview.total"/>') {
-		var key = "";
-		for(var i=0; i<grid1.Rows; i++) {
-			if(grid1.getValue(i, 'rowKey') == "" || grid1.getValue(i, 'rowKey') == "-") continue;
-			else key += grid1.getValue(i, 'rowKey').replaceAll("\"", "\\\"") + ",";
-		}
-		rowKey = key;
-	}else {
-		rowKey = grid1.getValue(grid1.Row, 'rowKey');
-	}
+        if(grid1.getValue(grid1.Row, 'NUM') == '<s:message code="bodyview.total"/>') {
+            var key = "";
+            for(var i=0; i<grid1.Rows; i++) {
+                if(grid1.getValue(i, 'rowKey') == "" || grid1.getValue(i, 'rowKey') == "-") continue;
+                else key += grid1.getValue(i, 'rowKey').replaceAll("\"", "\\\"") + ",";
+            }
+            rowKey = key;
+        }else {
+            rowKey = grid1.getValue(grid1.Row, 'rowKey');
+        }
 
-	rowName = grid1.getValue(grid1.Row, 'rowName');
+        rowName = grid1.getValue(grid1.Row, 'rowName');
 
-	colKey = grid1.ColKey(grid1.Col);
+        colKey = grid1.ColKey(grid1.Col);
 
-	var colKeyNm = colKey;
-	if (colKey == 'rowKey' || colKey == 'total' || colKey == 'NUM' || colKey == 'svcNm' || colKey == 'svcLv1Nm' || colKey == 'svcLv2Nm' || colKey == 'svcLv12Nm') {
-		if(pColKey != "") {
-			colKey = "";
-		}
-		colKeyNm = '<s:message code="bodyview.total"/>';
+        var colKeyNm = colKey;
+        if (colKey == 'rowKey' || colKey == 'total' || colKey == 'NUM' || colKey == 'svcNm' || colKey == 'svcLv1Nm' || colKey == 'svcLv2Nm' || colKey == 'svcLv12Nm') {
+            if(pColKey != "") {
+                colKey = "";
+            }
+            colKeyNm = '<s:message code="bodyview.total"/>';
 
-		if(rowKey == 'totalOCR' || rowKey == 'noOCR' || rowKey == 'detectOCR'){
-			pColKey = "";
-		}
-	} else if (colKey == "I") {
-		colKeyNm = '<s:message code="condition.receive"/>';
-	} else if (colKey == "O") {
-		colKeyNm = '<s:message code="condition.send"/>';
-	} else {
-		pColKey = colKey;
-		var xAxis = $('select[name=xAxis]').val();
-		if (xAxis == "ctime_hh") colKeyNm = colKey + '<s:message code="common.msg.hour"/>';
-	}
+            if(rowKey == 'totalOCR' || rowKey == 'noOCR' || rowKey == 'detectOCR'){
+                pColKey = "";
+            }
+        } else if (colKey == "I") {
+            colKeyNm = '<s:message code="condition.receive"/>';
+        } else if (colKey == "O") {
+            colKeyNm = '<s:message code="condition.send"/>';
+        } else {
+            pColKey = colKey;
+            var xAxis = $('select[name=xAxis]').val();
+            if (xAxis == "ctime_hh") colKeyNm = colKey + '<s:message code="common.msg.hour"/>';
+        }
 
-	var name ="";
+        var name ="";
 
-	if(colRowKey == 'totalOCR'){
-		name='<s:message code="stat.ocr.target"/>';
-	}else if(colRowKey == 'detectOCR'){
-		name='<s:message code="stat.ocr.include"/>';
-	}else if(colRowKey == 'noOCR'){
-		name= '<s:message code="stat.ocr.notinclude"/>';
-	}
+        if(colRowKey == 'totalOCR'){
+            name='<s:message code="stat.ocr.target"/>';
+        }else if(colRowKey == 'detectOCR'){
+            name='<s:message code="stat.ocr.include"/>';
+        }else if(colRowKey == 'noOCR'){
+            name= '<s:message code="stat.ocr.notinclude"/>';
+        }
 
-	tabID++;
-	tabNum ++;
+        tabID++;
+        tabNum ++;
 
-	if( tabNum > 8) {
-		tabFlag = true;
-		var delid = $( ".listChart li:nth-child(2)" ).attr('idx');
-		$('#detailTab'+delid+' .close').click();
-	}
+        if( tabNum > 8) {
+            tabFlag = true;
+            var delid = $( ".listChart li:nth-child(2)" ).attr('idx');
+            $('#detailTab'+delid+' .close').click();
+        }
 
-	var rowKeys = rowKey.split(",");
-	svcNm = rowKeys.length > 1 ? '<s:message code="common.msg.all"/>' : grid1.getValue(grid1.Row, 'svcLv12Nm');
+        var rowKeys = rowKey.split(",");
+        svcNm = rowKeys.length > 1 ? '<s:message code="common.msg.all"/>' : grid1.getValue(grid1.Row, 'svcLv12Nm');
 
-	var displayName = rowKey;
-	var tabName="";
-	if(rowName!=''){
-		displayName = rowName;
-	}else {
-		if(rowKey.length == 3 ){
-			displayName= grid1.getValue(grid1.Row, 'svcLv12Nm')
-		}else {
-			displayName= grid1.getValue(grid1.Row, 'svcNm')
-		}
-	}
+        var displayName = rowKey;
+        var tabName="";
+        if(rowName!=''){
+            displayName = rowName;
+        }else {
+            if(rowKey.length == 3 ){
+                displayName= grid1.getValue(grid1.Row, 'svcLv12Nm')
+            }else {
+                displayName= grid1.getValue(grid1.Row, 'svcNm')
+            }
+        }
 
-	var id = 'tab'+tabID;
-	var liTab = "";
-	pDisplayName = "";
-	if(rowKey.length == 3){
-		liTab ="liTabD"
-		displayName= grid1.getValue(grid1.Row, 'svcLv12Nm')
-		pDisplayName = displayName;
-		tabName = ' - ' + displayName;
-	}else if(rowKey == 'totalOCR' || rowKey == 'noOCR' || rowKey == 'detectOCR' || colKey == 'total'){
-		liTab ="liTabD"
-		if(pDisplayName != "") {
-			tabName = ' - ' + pDisplayName + ' <s:message code="userInfo.all"/>';
-		} else {
-			tabName = ' - <s:message code="userInfo.all"/>';
-		}
-		pDisplayName = "";
+        var id = 'tab'+tabID;
+        var liTab = "";
+        pDisplayName = "";
+        if(rowKey.length == 3){
+            liTab ="liTabD"
+            displayName= grid1.getValue(grid1.Row, 'svcLv12Nm')
+            pDisplayName = displayName;
+            tabName = ' - ' + displayName;
+        }else if(rowKey == 'totalOCR' || rowKey == 'noOCR' || rowKey == 'detectOCR' || colKey == 'total'){
+            liTab ="liTabD"
+            if(pDisplayName != "") {
+                tabName = ' - ' + pDisplayName + ' <s:message code="userInfo.all"/>';
+            } else {
+                tabName = ' - <s:message code="userInfo.all"/>';
+            }
+            pDisplayName = "";
 // 		tabName = ' - ' + '<s:message code="userInfo.all"/>';
-	}
-	else{
-		liTab ="liTabT"
-		tabName = ' - ' + (displayName == "" ? '<s:message code="userInfo.all"/>' : displayName);
+        }
+        else{
+            liTab ="liTabT"
+            tabName = ' - ' + (displayName == "" ? '<s:message code="userInfo.all"/>' : displayName);
 // 		tabName = ' - ' + displayName;
-		colKeyNm += ' <s:message code="analysis.usagecompare.ui.detaillist"/>';
-	}
-    $('.listChart').append($('<li style="display:inline-flex;text-align: center;z-index:1001;" idx="'+tabID+'" id="liTab'+tabID+'"><a data-toggle="tab" href="#tab'+tabID+'" id="detailTab'+tabID+'" >'+displayName+' - '+colKeyNm+'<span class="badge"></span><button type="button" class="closeBtn" style="float:right"><img src="<c:url value="/img/ico_closed.png"/>" alt="닫기"></button></a></li>'));
+            colKeyNm += ' <s:message code="analysis.usagecompare.ui.detaillist"/>';
+        }
 
-	$('#basicStatList').after($('<div class="tab-pane fade" id="tab' + tabID + '"><div id="detail_cnt'+tabID+'" style="margin-top:0px; color: #f25643; font-weight: bold; font-size: 13px;"></div><div id="grid'+tabID+'" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; height: 380px"></div></div>'));
+        $('.listChart').append($('<li style="display:inline-flex;text-align: center;z-index:1001;" idx="'+tabID+'" id="'+liTab+tabID+'"><a data-toggle="tab" href="#tab'+tabID+'" id="detailTab'+tabID+'" >'+ name + tabName+' - '+colKeyNm+'<span class="badge"></span><button class="close" type="button" title="<s:message code="stat.delete.tab"/>">×</button></a></li>'));
+        $('#basicStatList').after($('<div class="tab-pane fade" id="tab' + tabID + '"><div id="detail_cnt'+tabID+'" style="margin-top:0px; color: #f25643; font-weight: bold; font-size: 13px;"></div><div id="grid'+tabID+'" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; height: 380px"></div></div>'));
 
-	var gid = 'grid'+tabID;
-	var gridObj = new Xgrid(gid, contextRoot);
-	tabInfo[id] = gridObj;
-	$('.nav-tabs a[href="#tab'+tabID+'"]').tab('show');
-	setGrid( );
-	$("#chartCntDiv").hide();
-	$('#totalViewDiv').show();
+        var gid = 'grid'+tabID;
+        var gridObj = new Xgrid(gid, contextRoot);
+        tabInfo[id] = gridObj;
+        $('.nav-tabs a[href="#tab'+tabID+'"]').tab('show');
+        setGrid( );
+        $("#chartCntDiv").hide();
+        $('#totalViewDiv').show();
 
-	var dat = grid1.getRowData( grid1.Row );
-	chartDat[tabID] = dat;
-	gridObj.loadExportMenu('<s:message code="stat.detail.ocr.list"/> ( ' + name + tabName + ' )');
-	gridObj.loadPageSize();
-	gridObj.changePageSize = function(cnt){
-		if(rowKey == 'totalOCR' || rowKey == 'noOCR' || rowKey == 'detectOCR'|| liTab.includes("D") ){
-			rowKey = rowKey.substr(0,3);
-			getDetailOcrData('Y');
-			gridObj.onClick = function(){
-				clickEvent(gridObj);
-			};
-		}else {
-			rowKey = dat.rowKey;
-			printChart(dat , grid1);
-			getDetailData('Y');
-		}
-	};
-	if(rowKey == 'totalOCR' || rowKey == 'noOCR' || rowKey == 'detectOCR' || rowKey.length == 3){
-		getDetailOcrData('Y');
-		gridObj.onClick = function(){
-			clickEvent(gridObj);
-		};
-	}else {
-		printChart(dat , grid1);
-		getDetailData('Y');
-	}
-}
+        var dat = grid1.getRowData( grid1.Row );
+        chartDat[tabID] = dat;
+        gridObj.loadExportMenu('<s:message code="stat.detail.ocr.list"/> ( ' + name + tabName + ' )');
+        gridObj.loadPageSize();
+        gridObj.changePageSize = function(cnt){
+            if(rowKey == 'totalOCR' || rowKey == 'noOCR' || rowKey == 'detectOCR'|| liTab.includes("D") ){
+                rowKey = rowKey.substr(0,3);
+                getDetailOcrData('Y');
+                gridObj.onClick = function(){
+                    clickEvent(gridObj);
+                };
+            }else {
+                rowKey = dat.rowKey;
+                printChart(dat , grid1);
+                getDetailData('Y');
+            }
+        };
+        if(rowKey == 'totalOCR' || rowKey == 'noOCR' || rowKey == 'detectOCR' || rowKey.length == 3){
+            getDetailOcrData('Y');
+            gridObj.onClick = function(){
+                clickEvent(gridObj);
+            };
+        }else {
+            printChart(dat , grid1);
+            getDetailData('Y');
+        }
+    }
 </script>
-</head>
-<body class="mini-navbar">
 <div>
-	<!-- 검색 영역 -->
-	<div class="searchArea">
-		<div class="searchSub">
+	<div class="searchArea w100">
+		<div class="searchSub w100">
 			<div>
 				<input type="date" id="startdate" style="width: 110px;"/>
 				<span class="hyphen">~</span>
@@ -603,75 +476,63 @@ function clickEvent(dataGrid) {
 			<div>
 				<input type="date" id="enddate" style="width: 110px;"/>
 			</div>
+
 			<div class="optiotab">
-				<button class="optionBtn active" id="ctime_hh" value="ctime_hh"><s:message
-						code="common.msg.time"/></button>
-				<button class="optionBtn" id="ctime_yyyymmdd" value="ctime_yyyymmdd" class="active"><s:message
-						code="common.msg.day"/></button>
-				<button class="optionBtn" id="ctime_yyyymm" value="ctime_yyyymm"><s:message
-						code="common.msg.month"/></button>
+				<button class="optionBtn active" id="svc1" value="svc1"><s:message code="common.msg.svc"/></button>
+				<button class="optionBtn" id="direction_svc" value="direction_svc"><s:message code="condition.receive_send"/></button>
+				<button class="optionBtn" id="ctime_hh" value="ctime_hh"><s:message code="common.msg.time"/></button>
+				<button class="optionBtn" id="ctime_yyyymmdd" value="ctime_yyyymmdd" class="active"><s:message code="common.msg.day"/></button>
+				<button class="optionBtn" id="ctime_yyyymm" value="ctime_yyyymm"><s:message code="common.msg.month"/></button>
 				<button class="optionBtn" id="businm" value="businm"><s:message code="common.org.busi"/></button>
 				<button class="optionBtn" id="conm" value="conm"><s:message code="common.org.co"/></button>
 				<button class="optionBtn" id="deptnm" value="deptnm"><s:message code="common.org.dept"/></button>
-				<button class="optionBtn" id="direction_svc" value="direction_svc"><s:message
-						code="condition.receive_send"/></button>
-				<button class="optionBtn" id="jikgubnm" value="jikgubnm"><s:message
-						code="common.org.jikgub"/></button>
-				<input type="hidden" value="ctime_hh" id="optionHidden">
-				<input type="hidden" value="시간" id="optionHiddenName">
+				<button class="optionBtn" id="jikgubnm" value="jikgubnm"><s:message code="common.org.jikgub"/></button>
 			</div>
 			<div>
-				<button class="form_btn01" accesskey="Q" id="searchBtn" accesskey="s">조회</button>
+				<button class="form_btn01" id="searchBtn"><s:message code="common.msg.search"/></button>
 				<button class="form_btn02" id="clearBtn"><s:message code="condition.reset"/></button>
 			</div>
 		</div>
-
 	</div>
-	<!-- //검색 영역 -->
-	<!--ContentArea-->
 	<div class="content">
-
 		<div class="contentSub">
 			<div class="chartAreafull">
 				<div>
 					<h3>
-						<span id="chartAreaTitle">TOP <s:message code="DATA_MONITOR.STAT_LABEL"/> CHART
+						TOP 통계 Chart
 						<span class="sel">
 						<div id="totalViewDiv" style="display:none;">
 							<div class="subtab">
-							<button type="button"
-									title="<s:message code="stat.view.all"/>"><s:message code="stat.view.all"/></button>
+							<button type="button" title="<s:message code="stat.view.all"/>"><s:message code="stat.view.all"/></button>
 							</div>
 						</div>
 						<div class="panel-headings" id="chartCntDiv">
-								<button type="button" class="btn btn-xs btn-default dropdown-toggle"
-										data-toggle="dropdown">
-									<s:message code="stat.display.count.chart"/> (<span class="dropdown-text">5</span>) <span
-										val="5" class="caret"></span>
+								<button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
+									<s:message code="stat.display.count.chart"/> (<span class="dropdown-text">5</span>) <span val="5" class="caret"></span>
 								</button>
 								<ul class="dropdown-menu dropdown-menu-right" role="menu">
 									<li><a href="#">5</a></li>
 									<li><a href="#">10</a></li>
+									<li><a href="#">15</a></li>
+									<li><a href="#">20</a></li>
 								</ul>
 						</div>
 						</span>
 					</h3>
-					<div class="panel panel-default" id="service.logging.count">
-						<div class="panel-body">
-							<div id="chartArea1" style="height: 180px;"></div>
+					<div class="panel-default" id="service.logging.count">
+						<div class="inner_personaldata" style="height:180px;">
+							<div id="chartArea1" style="height: 100%"></div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<!-- 탭 -->
 			<div class="subtab">
 				<div>
 					<ul class="nav nav-tabs codeTab listChart">
-						<li class="active"><a data-toggle="tab" href="#basicStatList" id="listTab" >LIST</a></li>
+						<li class="active"><a data-toggle="tab" href="#basicStatList" id="listTab" >InfoType TOP</a></li>
 					</ul>
 				</div>
 			</div>
-			<!-- 테이블 -->
 			<div class="xcn_full">
 				<div class="tab-content">
 					<div id="basicStatList" class="tab-pane fade in active">
@@ -680,22 +541,19 @@ function clickEvent(dataGrid) {
 				</div>
 			</div>
 		</div>
-
 	</div>
-	<!-- content 끝-->
-</div>
-<!--//Container-->
 </div>
 <!-- Back to top -->
 <a href="#0" class="back-to-top cd-top"><span class="[ fa fa-chevron-up ]"></span> <span class="[ ]">Back to the Top</span></a>
 
-	<script type="text/javascript">
-
+<script type="text/javascript">
+    function setSublist(data) {
         var element = document.getElementById('sub_1');
         if (element && data && data.length > 0 && data[0].rowKey) {
             var firstRowkey = data[0].rowKey;
             element.innerHTML = '<span>' + firstRowkey + '</span>';
         }
+    }
 
         function getCurrentGrid(){
 			var id = Number($('.listChart .active').attr('idx'));
@@ -714,34 +572,31 @@ function clickEvent(dataGrid) {
 			getData ('Y');
 		};
 
-		var tabInfo={};
-		var chartDat={};
-
-		grid1.onClick = function() {
-			if(grid1.getValue(grid1.Row, 'NUM') == '<s:message code="bodyview.total"/>') {
-				var key = "";
-				for(var i=0; i<grid1.Rows; i++) {
-					if(grid1.getValue(i, 'rowKey') == "" || grid1.getValue(i, 'rowKey') == "-") continue;
-					else key += grid1.getValue(i, 'rowKey').replaceAll("\"", "\\\"") + ",";
-				}
-				colRowKey = key;
-			}else {
-				colRowKey = grid1.getValue(grid1.Row, 'rowKey');
-			}
-			clickEvent(grid1);
-		};
+    var tabInfo={};
+    var chartDat={};
+    grid1.onClick = function() {
+        if(grid1.getValue(grid1.Row, 'NUM') == '<s:message code="bodyview.total"/>') {
+            var key = "";
+            for(var i=0; i<grid1.Rows; i++) {
+                if(grid1.getValue(i, 'rowKey') == "" || grid1.getValue(i, 'rowKey') == "-") continue;
+                else key += grid1.getValue(i, 'rowKey').replaceAll("\"", "\\\"") + ",";
+            }
+            colRowKey = key;
+        }else {
+            colRowKey = grid1.getValue(grid1.Row, 'rowKey');
+        }
+        pColKey="";
+        clickEvent(grid1);
+    };
 
 		function getData( flag ) {
 			if ( searchFlag ) return;
-            var xAxis = $('select[name=xAxis]').val();
-            var xAxis_str = $('select[name=xAxis] option:selected').text();
+            var xAxis = $('button.optionBtn.active').val();
+            var xAxis_str = $('button.optionBtn.active').text();
             var sDate = $('#startdate').val().replaceAll("-", "");
             var eDate = $('#enddate').val().replaceAll("-", "");
-            var xAxis = $('#optionHidden').val();
-            var xAxis_str = $('#optionHiddenName').val();
 			if(sDate > eDate) ui.alertMsg('<s:message code="consent.msg.timecheck"/>');
 			searchFlag = true;
-			grid1.on();
 			ui.get({
 				url : 'getOcrStatList.xcn',
 				startDate: sDate+"000000",
@@ -784,7 +639,22 @@ function clickEvent(dataGrid) {
 					$('#statlist_cnt').html('<s:message code="common.msg.finish_query"/>:'+grid1.data.length);
 					if ( grid1.loadingPage == 0 ) grid1.Select(-1,-1);
 					searchFlag = false;
-                    pivotDataF(data , grid1 , "Grid");
+
+                    if( data.facetData.length > 0 ) {
+                        totalChartDat = "";
+                        for ( var i=0 ; i < data.length ; i++ ) {
+                            var selected = false;
+                            if ( i <= 4 ) selected = true;
+                            else if ( i >= 10 ) break;
+                            addOption( 'chartListCount', (i+1), (i+1), selected );
+                        }
+                        var dat = grid1.getRowData( grid1.Row );
+                        totalChartDat = dat;
+                        printChart( dat , grid1 );
+                    } else {
+                        $('#chartArea1').html('<s:message code="common.msg.nodata"/>');
+                        $('#space').height('7px');
+                    }
 				},
 				error : function(status, message) {
 					ui.alertMsg(message);
@@ -795,173 +665,146 @@ function clickEvent(dataGrid) {
 			});
 		}
 
-		function getDetailOcrData( lastRow ) {
-			currentgrid = getCurrentGrid();
-			if ( searchFlag ) return;
+    function getDetailOcrData( lastRow ) {
+        currentgrid = getCurrentGrid();
+     /*   if ( searchFlag ) return;
 
-			if ( lastRow == 'Y' || lastRow == undefined ) {
-				currentgrid.data.length = 0;
-				currentgrid.rtnNextPageFunc = getDetailData;
-				currentgrid.loadingPage = 0;
-			} else {
-				currentgrid.loadingPage++;
-			}
-
-            var xAxis = $('select[name=xAxis]').val();
-            var xAxis_str = $('select[name=xAxis] option:selected').text();
-            var sDate = $('#startdate').val().replaceAll("-", "");
-            var eDate = $('#enddate').val().replaceAll("-", "");
-            var xAxis = $('#optionHidden').val();
-            var xAxis_str = $('#optionHiddenName').val();
-
-			searchFlag = true;
-			currentgrid.on();
-			ui.get({
-				url : 'getStatList.xcn',
-				startDate:  $('#startdate').val().replaceAll("-","")+"000000",
-				endDate:  $('#enddate').val().replaceAll("-","")+"235959",
-				detailQuery:$('#solrQueryText').val(),
-				xAxis : xAxis,
-				yAxis : 'ocr_attach_cnt',
-				offset : currentgrid.data.length,
-				limit : currentgrid.pageSize,
-				xAxis_str : xAxis_str,
-				rowKey : rowKey,
-				colKey : pColKey,
-				colRowKey :colRowKey,
-				success : function(data, total) {
-					currentgrid.colInit();
-					currentgrid.autoNumber();
-					if(rowKey.length == 3){
-						currentgrid.colAdd('svcNm', '<s:message code="condition.service"/>', 320, 'left', false, 'link');
-					}else{
-						currentgrid.colAdd('svcLv12Nm', '<s:message code="condition.service"/>', 320, 'left', false, 'link');
-					}
-
-					currentgrid.colAdd('total', '<s:message code="bodyview.total"/>', 130, 'right', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
-						if ( value != undefined ) return value.comma();
-						else return '';
-					});
-					for ( var i=0 ; i < data.pivotHeader.length ; i++ ) {
-						var Header = data.pivotHeader[i];
-						var HeaderNm = "";
-						if ( xAxis == "ctime_yyyymmdd") HeaderNm = Header.substr(0,4)+"-"+Header.substr(4,2)+"-"+Header.substr(6,2);
-						else if ( xAxis == "ctime_yyyymm") HeaderNm = Header.substr(0,4)+"-"+Header.substr(4,2);
-						else if ( xAxis == "direction_svc") {
-							if(Header == "I") HeaderNm = '<s:message code="condition.receive"/>';
-							else HeaderNm = '<s:message code="condition.send"/>';
-						} else if ( xAxis == "ctime_hh") HeaderNm = Header+'<s:message code="common.msg.hour"/>';
-						else HeaderNm = Header;
-						currentgrid.colAdd( Header, HeaderNm, 90, "right", false, 'link', function ( row, cell, value, columnDef, dataContext ) {
-							if ( value != undefined ) return value.comma();
-							else return '';
-						});
-
-					}
-					data.facetData=data.pivotData;
-					currentgrid.loadHeader(false);
-					currentgrid.setData(data.pivotData);
-
-					$('#statlist_cnt').html('<s:message code="common.msg.finish_query"/>:'+currentgrid.data.length);
-					$('#detailTab'+Number($('.listChart .active').attr('idx'))+' .badge').text('[' + data.numFound.comma() + ']');
-					if ( currentgrid.loadingPage == 0 ) currentgrid.Select(-1,-1);
-					searchFlag = false;
-
-                    if( data.pivotData.length > 0 ) {
-                        for ( var i=0 ; i < data.length ; i++ ) {
-                            var selected = false;
-                            if ( i <= 4 ) selected = true;
-                            else if ( i >= 10 ) break;
-                            addOption( 'chartListCount', (i+1), (i+1), selected );
-                        }
-
-                        var dat = grid1.getRowData( grid1.Row );
-                        totalChartDat = dat;
-                        printChart( dat );
-                    } else {
-                        $('#chartArea1').html('<s:message code="common.msg.nodata"/>');
-                        $('#space').height('7px');
-                    }
-				},
-				error : function(status, message) {
-					ui.alertMsg(message);
-				},
-				complete : function() {
-					currentgrid.off();
-				}
-			});
-		}
-
-		function getDetailData( lastRow ) {
-			currentgrid = getCurrentGrid();
-			if ( searchFlag ) return;
-
-			if ( lastRow == 'Y' || lastRow == undefined ) {
-				currentgrid.data.length = 0;
-				currentgrid.rtnNextPageFunc = getDetailData;
-				currentgrid.loadingPage = 0;
-			} else {
-				currentgrid.loadingPage++;
-			}
-
-			var xAxis = $('select[name=xAxis]').val();
-			var xAxis_str = $('select[name=xAxis] option:selected').text();
-
-			var startDate = $('#startdate').val().replaceAll("-","");
-			var endDate = $('#enddate').val().replaceAll("-","");
-			searchFlag = true;
-			currentgrid.on();
-
-			ui.get({
-				url : 'getOcrStatDetailList.xcn',
-				rowKey : rowKey,
-				colKey : pColKey,
-				startDate : startDate+"000000",
-				endDate : endDate+"235959",
-				detailQuery:$('#solrQueryText').val(),
-				xAxis : xAxis,
-				xAxis_str : xAxis_str,
-				yAxis : 'ocr_attach_cnt',
-				offset : currentgrid.data.length,
-				limit : currentgrid.pageSize,
-				colRowKey : colRowKey,
-				success : function(data, total) {
-					if ( lastRow == 'Y' || lastRow == undefined ) detailTotal = total;
-					currentgrid.appendData(data.emass);
-					if ( currentgrid.loadingPage == 0 ) currentgrid.Select(-1,-1);
-
-					$('#detailTab'+Number($('.listChart .active').attr('idx'))+' .badge').text('[' + total.comma() + ']');
-					$('#detail_cnt'+Number($('.listChart .active').attr('idx'))).html('<s:message code="common.msg.finish_query"/>: '+currentgrid.data.length);
-
-					searchFlag = false;
-				},
-				error : function(status, message) {
-					ui.alertMsg(message);
-				},
-				complete : function() {
-					currentgrid.off();
-				}
-			});
-		}
-
-    function pivotDataF( data , dataGrid ,value){
-        totalChartDat = "";
-        var grid1 = dataGrid;
-        if( data.facetData.length > 0 ) {
-            for ( var i=0 ; i < data.length ; i++ ) {
-                var selected = false;
-                if ( i <= 4 ) selected = true;
-                else if ( i >= 10 ) break;
-                addOption( 'chartListCount', (i+1), (i+1), selected );
-            }
-            var dat = grid1.getRowData( grid1.Row );
-            totalChartDat = dat;
-            printChart( dat , grid1 );
+        if ( lastRow == 'Y' || lastRow == undefined ) {
+            currentgrid.data.length = 0;
+            currentgrid.rtnNextPageFunc = getDetailData;
+            currentgrid.loadingPage = 0;
         } else {
-            $('#chartArea1').html('<s:message code="common.msg.nodata"/>');
-            $('#space').height('7px');
+            currentgrid.loadingPage++;
+        }*/
+
+        var xAxis = $('button.optionBtn.active').val();
+        var xAxis_str = $('button.optionBtn.active').text();
+        var sDate = $('#startdate').val().replaceAll("-","");
+        var eDate = $('#enddate').val().replaceAll("-","");
+        searchFlag = true;
+        currentgrid.on();
+        ui.get({
+            url : 'getStatList.xcn',
+            startDate: sDate+"000000",
+            endDate: eDate+"235959",
+            xAxis : xAxis,
+            yAxis : 'ocr_attach_cnt',
+            offset : currentgrid.data.length,
+            limit : currentgrid.pageSize,
+            xAxis_str : xAxis_str,
+            rowKey : rowKey,
+            colKey : pColKey,
+            colRowKey : colRowKey,
+            success : function(data, total) {
+                currentgrid.colInit();
+                currentgrid.autoNumber();
+                if(rowKey.length == 3){
+                    currentgrid.colAdd('svcNm', '<s:message code="condition.service"/>', 320, 'left', false, 'link');
+                }else{
+                    currentgrid.colAdd('svcLv12Nm', '<s:message code="condition.service"/>', 320, 'left', false, 'link');
+                }
+                currentgrid.colAdd('total', '<s:message code="bodyview.total"/>', 130, 'right', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
+                    if ( value != undefined ) return value.comma();
+                    else return '';
+                });
+                for ( var i=0 ; i < data.pivotHeader.length ; i++ ) {
+                    var Header = data.pivotHeader[i];
+                    var HeaderNm = "";
+                    if ( xAxis == "ctime_yyyymmdd") HeaderNm = Header.substr(0,4)+"-"+Header.substr(4,2)+"-"+Header.substr(6,2);
+                    else if ( xAxis == "ctime_yyyymm") HeaderNm = Header.substr(0,4)+"-"+Header.substr(4,2);
+                    else if ( xAxis == "direction_svc") {
+                        if(Header == "I") HeaderNm = '<s:message code="condition.receive"/>';
+                        else HeaderNm = '<s:message code="condition.send"/>';
+                    } else if ( xAxis == "ctime_hh") HeaderNm = Header+'<s:message code="common.msg.hour"/>';
+                    else if(xAxis === 'svc1') HeaderNm = serviceList.search(Header, 'groupCd', 'groupNm');
+                    else HeaderNm = Header;
+                    currentgrid.colAdd( Header, HeaderNm, 90, "right", false, 'link', function ( row, cell, value, columnDef, dataContext ) {
+                        if ( value != undefined ) return value.comma();
+                        else return '';
+                    });
+                }
+                currentgrid.loadHeader(false);
+                currentgrid.setData(data.pivotData);
+
+                $('#statlist_cnt').html('<s:message code="common.msg.finish_query"/>:'+currentgrid.data.length);
+                $('#detailTab'+Number($('.listChart .active').attr('idx'))+' .badge').text('[' + data.numFound.comma() + ']');
+                if ( currentgrid.loadingPage == 0 ) currentgrid.Select(-1,-1);
+                searchFlag = false;
+
+                var grid1 = currentgrid;
+                if( data.pivotData.length > 0 ) {
+                    for ( var i=0 ; i < data.length ; i++ ) {
+                        var selected = false;
+                        if ( i <= 4 ) selected = true;
+                        else if ( i >= 10 ) break;
+                        addOption( 'chartListCount', (i+1), (i+1), selected );
+                    }
+
+                    var dat = grid1.getRowData( grid1.Row );
+                    totalChartDat = dat;
+                    printChart( dat,grid1 );
+                } else {
+                    $('#chartArea1').html('<s:message code="common.msg.nodata"/>');
+                    $('#space').height('7px');
+                }
+            },
+            error : function(status, message) {
+                ui.alertMsg(message);
+            },
+            complete : function() {
+                currentgrid.off();
+            }
+        });
+    }
+
+    function getDetailData( lastRow ) {
+        currentgrid = getCurrentGrid();
+        if ( searchFlag ) return;
+
+        if ( lastRow == 'Y' || lastRow == undefined ) {
+            currentgrid.data.length = 0;
+            currentgrid.rtnNextPageFunc = getDetailData;
+            currentgrid.loadingPage = 0;
+        } else {
+            currentgrid.loadingPage++;
         }
+
+        var xAxis = $('button.optionBtn.active').val();
+        var xAxis_str = $('button.optionBtn.active').text();
+        var sDate = $('#startdate').val().replaceAll("-","");
+        var eDate = $('#enddate').val().replaceAll("-","");
+        searchFlag = true;
+        currentgrid.on();
+
+        ui.get({
+            url : 'getOcrStatDetailList.xcn',
+            rowKey : rowKey,
+            colKey : pColKey,
+            startDate : sDate+"000000",
+            endDate : eDate+"235959",
+            detailQuery:$('#solrQueryText').val(),
+            xAxis : xAxis,
+            xAxis_str : xAxis_str,
+            yAxis : 'ocr_attach_cnt',
+            offset : currentgrid.data.length,
+            limit : currentgrid.pageSize,
+            colRowKey : colRowKey,
+            success : function(data, total) {
+                if ( lastRow == 'Y' || lastRow == undefined ) detailTotal = total;
+                currentgrid.appendData(data.emass);
+                if ( currentgrid.loadingPage == 0 ) currentgrid.Select(-1,-1);
+
+                $('#detailTab'+Number($('.listChart .active').attr('idx'))+' .badge').text('[' + total.comma() + ']');
+                $('#detail_cnt'+Number($('.listChart .active').attr('idx'))).html('<s:message code="common.msg.finish_query"/>: '+currentgrid.data.length);
+
+                searchFlag = false;
+            },
+            error : function(status, message) {
+                ui.alertMsg(message);
+            },
+            complete : function() {
+                currentgrid.off();
+            }
+        });
     }
 </script>
-</body>
-</html>

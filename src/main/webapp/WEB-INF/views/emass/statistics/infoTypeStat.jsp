@@ -1,637 +1,518 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-<title>EMASS PRO - <s:message code="DATA_MONITOR.STAT_LABEL"/></title>
-<style type="text/css">
-.panel-heading .dropdown-menu {
-	right: 31px;
-	top: 42px;
-	left: initial;
-}
+
+<script type="text/javascript" src="<c:url value="/js/messageGrid.js"/>"></script>
+<style>
 </style>
 <script>
-var searchFlag = false;
-var detailTotal = 0;
-var rowKey = "";
-var rowName = "";
-var colKey = "";
-var colRowKey ="";
-var detailTab = "N";
-var chartcnt = 5;
-var currentGrid;
-var tabID = 1;
-var tabNum = 0;
-var totalChartDat;
-var parentGrid;
-var totalViewSig=false;
-var tabFlag = false;
-$(document).ready(function(){
-	$('#searchBtn').click(function(){
-		closeDetailTab();
-		getData ('Y');
-	});
+    Highcharts.setOptions({
+        chart: {
+            type: 'column',
+            marginTop : 15,
+            marginBottom : 60,
+            spacingBottom: 0
+        },
+        global : { useUTC : false },
+        gridLineColor: '#fff',
+        colors: ['#80599F', '#656C7C', '#598AD3', '#D35976', '#DDDDDD', '#bb6ecb', '#439851', '#33a0c4', '#7558cb', '#97b420'],
+        lang: {
+            months: [ '<s:message code="common.january"/>', '<s:message code="common.february"/>', '<s:message code="common.march"/>', '<s:message code="common.april"/>', '<s:message code="common.may"/>', '<s:message code="common.june"/>', '<s:message code="common.july"/>', '<s:message code="common.august"/>', '<s:message code="common.september"/>', '<s:message code="common.october"/>', '<s:message code="common.november"/>', '<s:message code="common.december"/>' ],
+            shortMonths : [ '<s:message code="common.january"/>', '<s:message code="common.february"/>', '<s:message code="common.march"/>', '<s:message code="common.april"/>', '<s:message code="common.may"/>', '<s:message code="common.june"/>', '<s:message code="common.july"/>', '<s:message code="common.august"/>', '<s:message code="common.september"/>', '<s:message code="common.october"/>', '<s:message code="common.november"/>', '<s:message code="common.december"/>' ],
+            weekdays : [ '<s:message code="common.sunday"/>', '<s:message code="common.monday"/>', '<s:message code="common.tuesday"/>', '<s:message code="common.wednesday"/>', '<s:message code="common.thursday"/>', '<s:message code="common.friday"/>', '<s:message code="common.saturday"/>' ],
+            contextButtonTitle : '<s:message code="common.msg.char_type"/>',
+            thousandsSep : ','
+        },
+        xAxis: {
+            dateTimeLabelFormats: {
+                day: '<s:message code="dashboard.display.day" arguments="%b,%d" />'
+            }
+        },
+        yAxis: {
+            gridLineColor: '#333',
+            gridLineWidth : 0.1
+        }
+    });
 
-	
-	$('#chartCntDiv .dropdown-menu li a').click(function(){
-		chartcnt = $(this).text();
-		var fgrid = getCurrentGrid();
-		if(fgrid == undefined || fgrid == null || totalViewSig) {
-			printChart(totalChartDat , grid1);
-		} else {
-			printChart(totalChartDat , fgrid);
-		}
-	});
-	
-	$('#startdatepicker').datetimepicker({
-		format: 'YYYY-MM-DD',
-		locale: 'ko',
-		defaultDate: moment(new Date())
-	});
-	
-	$('#enddatepicker').datetimepicker({
-		format: 'YYYY-MM-DD',
-		locale: 'ko',
-		defaultDate: moment(new Date())
-	});
-	
-	$(".nav-tabs").on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
-		currentgrid = getCurrentGrid();
-		var id = $(this).parents('li').attr('idx');
-		var hrefNm = $(this).attr('href');
-		var liTab = $(this).parents('li').attr('id');
-		var text = $(this).text();
+    var searchFlag = false;
+    var detailTotal = 0;
+    var rowKey = "";
+    var rowName = "";
+    var colKey = "";
+    var colRowKey ="";
+    var detailTab = "N";
+    var chartcnt = 5;
+    var currentGrid;
+    var tabID = 1;
+    var tabNum = 0;
+    var totalChartDat;
+    var parentGrid;
+    var totalViewSig=false;
+    var tabFlag = false;
 
-		var textClass4 = '<s:message code="condition.info.class4"/>';
-		var textClass3='<s:message code="condition.info.class3"/>';
-		var textClass2='<s:message code="condition.info.class2"/>';
-		var textClass1='<s:message code="condition.info.class1"/>';
-		var textClass0='<s:message code="common.msg.noinfo"/>';
-		
-		if(hrefNm=='#basicStatList') {
-			$("#chartCntDiv").show();
-			$('#totalViewDiv').hide();
-			printChart(totalChartDat , grid1);
-		} else if(liTab.includes("D")){
-			if(text.includes(textClass4)){
-				colRowKey = '4' ;
-			}else if(text.includes(textClass2)){
-				colRowKey = '2' ;
-			}else if(text.includes(textClass3)){
-				colRowKey = '3' ;
-			}else if(text.includes(textClass1)){
-				colRowKey = '1' ;
-			}else if (text.includes(textClass0)){
-				colRowKey = '-1';
-			}
-			
-			$("#chartCntDiv").show();
-			$('#totalViewDiv').hide();
-			parentGrid = currentgrid;
-			printChart( totalChartDat , currentgrid);	
-		}else {
-			if(text.includes(textClass4)){
-				colRowKey = '4' ;
-			}else if(text.includes(textClass2)){
-				colRowKey = '2' ;
-			}else if(text.includes(textClass3)){
-				colRowKey = '3' ;
-			}else if(text.includes(textClass1)){
-				colRowKey = '1' ;
-			}else if (text.includes(textClass0)){
-				colRowKey = '-1';
-			}
-			$("#chartCntDiv").hide();
-			$('#totalViewDiv').show();
-			var dat = chartDat[id];
-			printChart( dat , parentGrid);
-		}
-	})
-	
 
-	$('.listChart').on('click','.close',function(){
-		currentgrid = getCurrentGrid();
-		var id = 'tab'+ Number($(this).parents('li').attr('idx'));
-		var obj = tabInfo[id];
-		obj.close();
-		
-		var tabID = $(this).parents('a').attr('href');
-		$(this).parents('li').remove();
-		$(tabID).remove();
-		tabNum --;
-		
-		if(tabFlag == false){
-			var tabFirst = $('.listChart a:first');
-			tabFirst.tab('show');
-			
-			$("#chartCntDiv").show();
-			$('#totalViewDiv').hide();
-		}else if (tabFlag == true){
-			tabFlag = false;
-		}
-	});
-	
-	$('.print_stat').click(function() {
-		var gridDetail = getCurrentGrid();
-		if(gridDetail != undefined) {
-			if (gridDetail.Rows == 0) {
-				alert('<s:message code="common.msg.nodata"/>');
-				return;
-			}
-			gridDetail.print('<s:message code="stat.detail.user.list"/>', pMenuId, menuId);
-		} else {
-			if (grid1.Rows == 0) {
-				alert('<s:message code="common.msg.nodata"/>');
-				return;
-			}
-			grid1.print('<s:message code="DATA_MONITOR.STAT_USER"/>', pMenuId, menuId);
-		}
-	});
-	
-	$('.excel_stat').click(function() {
-		var gridDetail = getCurrentGrid();
-		if(gridDetail != undefined) {
-			excelDownLoad(gridDetail,'<s:message code="stat.detail.user.list"/>');
-		} else {
-			chart = $('#chartArea1').highcharts();
-			var svg = chart.getSVG();
-			excelDownLoad(grid1,'<s:message code="DATA_MONITOR.STAT_USER"/>', svg);
-		}
-	});
-	
-	$('.cell_stat').click(function() {
-		var gridDetail = getCurrentGrid();
-		if(gridDetail != undefined) {
-			cellDownLoad(gridDetail,'<s:message code="stat.detail.user.list"/>');
-		} else {
-			cellDownLoad(grid1,'<s:message code="DATA_MONITOR.STAT_USER"/>');
-		}
-	});
-	
-	$('.pdf_stat').click(function() {
-		var gridDetail = getCurrentGrid();
-		if(gridDetail != undefined) {
-			pdfDownLoad(gridDetail,'<s:message code="stat.detail.user.list"/>');
-		} else {
-			pdfDownLoad(grid1,'<s:message code="DATA_MONITOR.STAT_USER"/>');
-		}
-	});
-	
-	$('.csv_stat').click(function() {
-		var gridDetail = getCurrentGrid();
-		if(gridDetail != undefined) {
-			csvDownLoad(gridDetail,'<s:message code="stat.detail.user.list"/>');
-		} else {
-			csvDownLoad(grid1,'<s:message code="DATA_MONITOR.STAT_USER"/>');
-		}
-	});
-	
-	$('.totalView').click(function(){
-		$("#chartCntDiv").show();
-		$('#totalViewDiv').hide();
-		totalViewSig = true;
-		printChart(totalChartDat , grid1);
-	});
-	
-	$('.searchQueryBtn').click(function(){
-		queryMakePop();
-	});	
-	
-//	getData ('Y');
-	
-});
+    $(document).ready(function(){
+        $('#startdate').val(new Date().format('yyyy-mm-dd'));
+        $('#enddate').val(new Date().format('yyyy-mm-dd'));
 
-function setGrid( ){
-	currentgrid = getCurrentGrid();
-	initGrid(currentgrid, messageGridColumn);
-}
+        getServiceList();
+        $('.optionBtn').click(function () {
+            $('.optionBtn').removeClass('active');
+            $(this).addClass('active');
+        });
 
-function closeDetailTab()
-{
-	var tabFirst = $('.listChart a:first');
-	tabFirst.tab('show');
-}
+        $('#searchBtn').click(function(){
+            closeDetailTab();
+            getData ('Y');
+        });
+        $('#clearBtn').click(function(){
+            $('#startdate').val(new Date().format('yyyy-mm-dd'));
+            $('#enddate').val(new Date().format('yyyy-mm-dd'));
 
-/*
-function regexpInfoViewer(row){
-	var selectedTabIdx = $('.listChart').find('.active').index();
-	var grid = window.__grids[selectedTabIdx];
-	var msgid = grid.getValue(row, 'msgid');
-	if(grid.getValue(row, 'pi_total') == '') return;
-	
-	var url    = '<c:url value="/ems/regexpInfoPop.do?msgId='+msgid+'"/>';
-	return fnOpenWindow(url, 'regexpInfoPop', 1100, 370, 'resize');
-}
-function userInfoViewer(row, type){
-	var selectedTabIdx = $('.listChart').find('.active').index();
-	var grid = window.__grids[selectedTabIdx];
-	var msgid = grid.getValue(row, 'msgid');
-	if(grid.getValue(row, type) == '') return;
-	
-	var url    = '<c:url value="/ems/userInfoPop.do?msgId='+msgid+'&type='+type+'"/>';
-	return fnOpenWindow(url, type+'InfoPop', 835, 370, 'resize');
-}
+            $('.optionBtn').removeClass('active');
+            $('#deptnm').addClass('active');
+        });
 
-function fileInfoViewer( row ){
-	var selectedTabIdx = $('.listChart').find('.active').index();
-	var grid = window.__grids[selectedTabIdx];
-	var msgid = grid.getValue(row, 'msgid');
-	if(grid.getValue(row, 'attachcnt') == '') return;
-	
-	var url    = '<c:url value="/ems/fileInfoPop.do?msgId='+msgid+'"/>';
-	return fnOpenWindow(url, 'fileInfoPop', 1015, 400, 'resize');
-}
-*/
+        $('#chartCntDiv .dropdown-menu li a').click(function(){
+            chartcnt = $(this).text();
+            var fgrid = getCurrentGrid();
+            if(fgrid == undefined || fgrid == null || totalViewSig) {
+                printChart(totalChartDat , grid1);
+            } else {
+                printChart(totalChartDat , fgrid);
+            }
+        });
 
-function viewer_open( row, bodySize ){
-	var selectedTabIdx = $('.listChart').find('.active').index();
-	var grid = window.__grids[selectedTabIdx];
-	var msgid = grid.getValue(row, 'msgid');
-	var ctime = $('#searchStrInput').val();
+    });
 
-	openMessageBodyPop( grid.id, msgid, $('#searchStrInput').val(), bodySize);
-	
-	var readYn = grid.getValue(row, 'readYn');
-	grid.setValue(row, grid.ColIndex('readYn'), 'Y');
-	grid.Select(row,0);
-}
+        $(".nav-tabs").on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
 
-function viewer_newOpen(row, bodySize){
-	var selectedTabIdx = $('.listChart').find('.active').index();
-	var grid = window.__grids[selectedTabIdx];
-	var msgid = grid.getValue(row, 'msgid');
-	var ctime = $('#searchStrInput').val();
-	openMessageBodyPop( '', msgid, $('#searchStrInput').val(), bodySize);
 
-	var readYn = grid.getValue(row, 'readYn');
-	grid.setValue(row, grid.ColIndex('readYn'), 'Y');
-}
+            currentgrid = getCurrentGrid();
+            var id = $(this).parents('li').attr('idx');
+            var hrefNm = $(this).attr('href');
+            var liTab = $(this).parents('li').attr('id');
+            var text = $(this).text();
 
-function prevMsg( ) {
-	var selectedTabIdx = $('.listChart').find('.active').index();
-	var grid = window.__grids[selectedTabIdx];
-	var row = 0;
-	if( grid.Row > 0 ) {
-		row = --grid.Row;
-		viewer_open(row);
-		grid.Select(row,0);
-		return true;
-	}
-	return false;
-}
+            var textClass4 = '<s:message code="condition.info.class4"/>';
+            var textClass3='<s:message code="condition.info.class3"/>';
+            var textClass2='<s:message code="condition.info.class2"/>';
+            var textClass1='<s:message code="condition.info.class1"/>';
+            var textClass0='<s:message code="common.msg.noinfo"/>';
 
-function nextMsg( ) {
-	var selectedTabIdx = $('.listChart').find('.active').index();
-	var grid = window.__grids[selectedTabIdx];
-	var row = 0;
-	console.log("grid.Row = "+grid.Row)
-	console.log("grid.Rows = "+grid.Rows)
-	if( grid.Row < grid.Rows - 1 ) {
-		row = ++grid.Row;
-		viewer_open(row);
-		grid.Select(row,0);
-		if( grid.Row == grid.Rows - 2  ){
-			getList( true );
-		}
-		return true;
-	}
-	return false;
-}
+            if(hrefNm=='#basicStatList') {
+                $("#chartCntDiv").show();
+                $('#totalViewDiv').hide();
+                printChart(totalChartDat , grid1);
+                console.log("3")
+            } else if(liTab.includes("D")){
+                if(text.includes(textClass4)){
+                    colRowKey = '4' ;
+                }else if(text.includes(textClass2)){
+                    colRowKey = '2' ;
+                }else if(text.includes(textClass3)){
+                    colRowKey = '3' ;
+                }else if(text.includes(textClass1)){
+                    colRowKey = '1' ;
+                }else if (text.includes(textClass0)){
+                    colRowKey = '-1';
+                }
 
-/**
- * Bar Chart
- */
-var chart = null;
-var chartxAxis;
-function printChart( dat , dataGrid )
-{
-	var grid1 =dataGrid;
-	var data = [];
-	var categories = [];
-	var cols = grid1.columns;
-	var maxDat = 0;
-	if( dat == undefined ) {
-		for ( var i=0 ; i < grid1.data.length ; i++ ) {
-			if ( (i+1) > chartcnt ) break;
-			var items = [];
-			for ( var j=1 ; j < cols.length ; j++ ) {
-				if (  cols[j].id == 'total' || cols[j].id == 'NUM' || cols[j].id == 'rowKey' || cols[j].id == 'svcNm' || cols[j].id == 'svcLv1Nm' || cols[j].id == 'svcLv2Nm' || cols[j].id == 'svcLv12Nm' ) continue;
-				if ( grid1.data[i][cols[j].id] == undefined ) items.push(0);
-				else items.push( Number( grid1.data[i][cols[j].id] ) );
-				if ( i == 0 ) categories.push( cols[j].name );
-				if(Number( grid1.data[i][cols[j].id] ) > maxDat) maxDat = Number( grid1.data[i][cols[j].id] );  
-			}
-			if(grid1.id == 'basicStatListGrid') {
-				data.push({name:getClassStr(grid1.data[i]['rowKey']), data:items});
-			} else {
-				if(grid1.data[i]['NUM'] == '<s:message code="bodyview.total"/>') continue;
-				else if(grid1.data[i].rowKey.length == '3') {
-					data.push({name:grid1.data[i]['svcLv12Nm'], data:items});
-				}else {
-					data.push({name:grid1.data[i]['svcNm'], data:items});
-				}
-			}
-		}
-	} else {
-		var items = [];
-		for ( var j=0 ; j < cols.length ; j++ ) {
-			if ( cols[j].id == 'total' || cols[j].id == 'NUM' || cols[j].id == 'rowKey' || cols[j].id == 'svcNm' || cols[j].id == 'svcLv1Nm' || cols[j].id == 'svcLv2Nm' || cols[j].id == 'svcLv12Nm'  ) continue;
-			if ( dat[cols[j].id] == undefined || dat[cols[j].id] == '' ) {
-				items.push(0);
-			} else {
-				items.push( Number( dat[cols[j].id] ) );
-			}
-			categories.push( cols[j].name );
-			if(Number( dat[cols[j].id] ) > maxDat) maxDat = Number( dat[cols[j].id] );
-		}
-		if(grid1.id == 'basicStatListGrid') {
-			data.push({name:getClassStr(grid1.data[i]['rowKey']), data:items});
-		} else {
-			if(dat['NUM'] == '<s:message code="bodyview.total"/>') return;
-			else data.push({name:dat['svcLv12Nm'], data:items});
-		}
-	}
-	
-	var rotation = 40;
-	if ( chartxAxis == 'W' ) rotation = 0;
-	$('#chartArea1').highcharts({
-		chart: {
-			type: 'column',
-			options3d: {
-				enabled: true,
-				alpha: 0,
-				beta: 0,
-				viewDistance: 15,
-				depth: 40
-			},
-			marginTop: 25,
-			marginRight: 45
-		},
-		title: {
-			text: null
-		},
-		exporting: chartAPI.exporting,
-		credits: chartAPI.credits,
-		xAxis: {
-			categories: categories,
-			labels : {
-				y: 35,
-				rotation : rotation
-			}
-		},
-		yAxis: {
-			allowDecimals: false,
-			min: 0,
-			max: maxDat,
-			title: {
-				text: '(<s:message code="common.msg.count"/>)',
-				rotation: 0
-			}
-		},
-		tooltip: {
-			headerFormat: '<b>{point.key}</b><br>',
-			pointFormat: '<span style="color:{series.color}">\u25CF</span> {series.name}: {point.y} (<s:message code="common.msg.cnt"/>)'
-		},
-		plotOptions: {
-		},
-		series: data
-	});
-}
+                $("#chartCntDiv").show();
+                $('#totalViewDiv').hide();
+                parentGrid = currentgrid;
+                printChart( totalChartDat , currentgrid);
+                console.log("4")
+            }else {
+                if(text.includes(textClass4)){
+                    colRowKey = '4' ;
+                }else if(text.includes(textClass2)){
+                    colRowKey = '2' ;
+                }else if(text.includes(textClass3)){
+                    colRowKey = '3' ;
+                }else if(text.includes(textClass1)){
+                    colRowKey = '1' ;
+                }else if (text.includes(textClass0)){
+                    colRowKey = '-1';
+                }
+                $("#chartCntDiv").hide();
+                $('#totalViewDiv').show();
+                var dat = chartDat[id];
+                printChart( dat , parentGrid);
+                console.log("5")
+            }
+        })
 
-function getClassStr(value) {
-	if (value == '4') return '<s:message code="condition.info.class4"/>';
-	else if (value == '3') return '<s:message code="condition.info.class3"/>';
-	else if (value == '2') return '<s:message code="condition.info.class2"/>';
-	else if (value == '1') return '<s:message code="condition.info.class1"/>';
-	else return '<s:message code="common.msg.noinfo"/>';
-} 
+        $('.listChart').on('click','.subtab_close',function(){
+            currentgrid = getCurrentGrid();
+            var id = 'tab'+ Number($(this).parents('li').attr('idx'));
+            var obj = tabInfo[id];
+            obj.close();
 
-function excelDownLoad(grid, title, svg) {
-	if (grid.Rows == 0) {
-		alert('<s:message code="common.msg.nodata"/>');
-		return;
-	}
-	var header = grid.getHeaderEXCEL();
-	var body = grid.getBodyEXCEL();
-	grid.on();
-	ui.postJson({
-		url : 'utils/xlsxWriter.do',
-		title : title,
-		header : header,
-		body : body,
-		pMenuId : pMenuId,
-		menuId: menuId,
-		svg : svg,
-		success : function(data, total) {
-			try {
-				ExcelDown.location.href = '<c:url value="/utils/xlsxDown.do"/>?path=' + encodeURI(data);
-			} catch (e) {
-				ExcelDown.src = '<c:url value="/utils/xlsxDown.do"/>?path=' + encodeURI(data);
-			}
-		},
-		error : function(status, message) {
-			ui.alertMsg(message);
-		},
-		complete : function() {
-			grid.off();
-		}
-	});
-}
+            var tabID = $(this).parents('a').attr('href');
+            $(this).parents('li').remove();
+            $(tabID).remove();
+            tabNum --;
 
-function queryMakePop(  ){
-	var url    = '<c:url value="/commons/queryMake.do?statType=users"/>';
-	fnOpenWindow(url, 'queryMakePop', 1400, 870, 'resize');
-}
+            if(tabFlag == false){
+                var tabFirst = $('.listChart a:first');
+                tabFirst.tab('show');
 
-function getSearchQuery() {
-	
-}
+                $("#chartCntDiv").show();
+                $('#totalViewDiv').hide();
+            }else if (tabFlag == true){
+                tabFlag = false;
+            }
+        });
 
-var pColKey = "";
-var pDisplayName = ""
+        $('.totalView').click(function(){
+            $("#chartCntDiv").show();
+            $('#totalViewDiv').hide();
+            totalViewSig = true;
+            printChart(totalChartDat);
+    });
 
-function clickEvent(dataGrid){
-	if(dataGrid.getData().length == 0) return;
-	var grid1 = dataGrid;
-	var valChk = grid1.getValue(grid1.Row, grid1.Col);
-	var name = "";
+    function getServiceList(){
+        ui.get({
+            url : 'getServiceGroupList.xcn',
+            success : function(data, total) {
+                serviceList = data;
+            },
+            error : function(status, message) {
+                ui.alertMsg(message);
+            },
+            complete : function() {
+            }
+        });
+    }
 
-	if (colRowKey == '4') {
-		name = '<s:message code="condition.info.class4"/> -';
-	}
-	else if (colRowKey == '3'){
-		name = '<s:message code="condition.info.class3"/> -';
-	}
-	else if (colRowKey == '2') {
-		name = '<s:message code="condition.info.class2"/> -';
-	}
-	else if (colRowKey == '1') {
-		name = '<s:message code="condition.info.class1"/> -';
-	}
-	else {
-		name = '<s:message code="common.msg.noinfo"/> -';
-	}
-	
-	if(valChk == "" || valChk == "-") return;
-	
-	if(grid1.getValue(grid1.Row, 'NUM') == '<s:message code="bodyview.total"/>') {
-		var key = "";
-		for(var i=0; i<grid1.Rows; i++) {
-			if(grid1.getValue(i, 'rowKey') == "" || grid1.getValue(i, 'rowKey') == "-") continue;
-			else key += grid1.getValue(i, 'rowKey').replaceAll("\"", "\\\"") + ",";
-		}
-		rowKey = key;
-	}else {
-		rowKey = grid1.getValue(grid1.Row, 'rowKey');
-	}
+    function setGrid( ){
+        currentgrid = getCurrentGrid();
+        initGrid(currentgrid, messageGridColumn);
+    }
 
- 	rowName = getClassStr(grid1.getValue(grid1.Row, 'rowKey'));
-	colKey = grid1.ColKey(grid1.Col);
-	var colKeyNm = colKey;
-	if (colKey == 'rowKey' || colKey == 'total' || colKey == 'NUM' || colKey == 'svcNm' || colKey == 'svcLv1Nm' || colKey == 'svcLv2Nm' || colKey == 'svcLv12Nm') {
-		if(pColKey != "") {
-			colKey = "";
-		}
-		colKeyNm = '<s:message code="bodyview.total"/>';
-		
-		if(rowKey == 'totalOCR' || rowKey == 'noOCR' || rowKey == 'detectOCR'){
-			pColKey = "";
-		}
-	} else if (colKey == "I") {
-		pColKey = colKey;
-		colKeyNm = '<s:message code="condition.receive"/>';
-	} else if (colKey == "O") {
-		pColKey = colKey;
-		colKeyNm = '<s:message code="condition.send"/>';
-	} else {
-		pColKey = colKey;
-		var xAxis = $('select[name=xAxis]').val();
-		if (xAxis == "ctime_hh") colKeyNm = colKey + '<s:message code="common.msg.hour"/>';
-	}
+    function closeDetailTab() {
+        var tabFirst = $('.listChart a:first');
+        tabFirst.tab('show');
+    }
 
-	tabID++;
-	tabNum++;
-	
-	if( tabNum > 8) {
-		tabFlag = true;
-		var delid = $( ".listChart li:nth-child(2)" ).attr('idx');
-		$('#detailTab'+delid+' .close').click();	
-	}
-	
-	var displayName = rowName;
-	var id = 'tab'+tabID;
-	var liTab = " "
+    function viewer_open( row, bodySize){
+        var selectedTabIdx = $('.listChart').find('.active').index();
+        var grid = window.__grids[selectedTabIdx];
+        var msgid = grid.getValue(row, 'msgid');
+        var ctime = $('#searchStrInput').val();
 
-	if( rowKey.length > 3 ){
-		if (rowKey.length == 4  ){
-			displayName = grid1.getValue(grid1.Row, 'svcNm');
-		}	else{
-			displayName = grid1.data[0].svcLv12Nm;
-		}
-		liTab ="liTabT"
-	}else if( rowKey.length == 3 ){
-		colKeyNm = '<s:message code="analysis.usagecompare.ui.detaillist"/>';
-		displayName = grid1.getValue(grid1.Row, 'svcLv12Nm');
-		liTab ="liTabD"
-	}else if (rowKey == '-1'|| rowKey == '1'||rowKey == '2'||rowKey == '3'|| rowKey == '4'){ 
-		displayName = colKeyNm;
-		colKeyNm = '<s:message code="analysis.usagecompare.ui.detaillist"/>';
-		liTab ="liTabD"
-	}else if (rowKey == '-1'){ 
-		displayName = colKeyNm;
-		colKeyNm = '<s:message code="analysis.usagecompare.ui.detaillist"/>';
-		liTab ="liTabD"
-		
-	}else{
-		colKeyNm = '<s:message code="analysis.usagecompare.ui.detaillist"/>';
-		liTab ="liTabD"
-	}
+        openMessageBodyPop( grid.id, msgid, $('#searchStrInput').val(), bodySize);
 
-	$('.listChart').append($('<li style="display:inline-flex; text-align: center" idx="'+tabID+'" id="'+liTab+tabID+'"><a data-toggle="tab" href="#tab'+tabID+'" id="detailTab'+tabID+'" >' + name + displayName + ' - '+colKeyNm + '<span class="badge"></span><button class="close" type="button" title="<s:message code="stat.delete.tab"/>"> ×</button></a></li>'));
-	$('#basicStatList').after($('<div class="tab-pane fade" id="tab' + tabID + '"><div id="grid'+tabID+'" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; height: 400px"></div></div>'));
-	
-	var gid = 'grid'+tabID;
-	var gridObj = new Xgrid(gid, contextRoot);
-	tabInfo[id] = gridObj;
+        var readYn = grid.getValue(row, 'readYn');
+        grid.setValue(row, grid.ColIndex('readYn'), 'Y');
+        grid.Select(row,0);
+    }
 
-	$('.nav-tabs a[href="#tab'+tabID+'"]').tab('show');
+    function viewer_newOpen(row, bodySize){
+        var selectedTabIdx = $('.listChart').find('.active').index();
+        var grid = window.__grids[selectedTabIdx];
+        var msgid = grid.getValue(row, 'msgid');
+        var ctime = $('#searchStrInput').val();
+        openMessageBodyPop( '', msgid, $('#searchStrInput').val(), bodySize);
 
-	setGrid( );
-	
-	$("#chartCntDiv").hide();
-	$('#totalViewDiv').show();
+        var readYn = grid.getValue(row, 'readYn');
+        grid.setValue(row, grid.ColIndex('readYn'), 'Y');
+    }
 
-	var dat = grid1.getRowData( grid1.Row );
-	chartDat[tabID] = dat;
-	gridObj.loadExportMenu('<s:message code="stat.detail.user.list"/> ( ' + name + displayName + ' )');
-	gridObj.loadPageSize();
-	gridObj.changePageSize = function(cnt){
-		if((rowKey > -2 && rowKey < 5) || liTab.includes("D")){
-			rowKey = rowKey.substr(0,3);
-			getInfoData('Y');
-		}else {
-			rowKey = dat.rowKey;
-			printChart(dat , dataGrid);
-			getDetailData('Y');
-		}
-	};
+    function prevMsg( ) {
+        var selectedTabIdx = $('.listChart').find('.active').index();
+        var grid = window.__grids[selectedTabIdx];
+        var row = 0;
+        if( grid.Row > 0 ) {
+            row = --grid.Row;
+            viewer_open(row);
+            grid.Select(row,0);
+            return true;
+        }
+        return false;
+    }
 
-	if((rowKey > -2 && rowKey < 5) || rowKey.length == 3){
-		getInfoData('Y');
-		gridObj.onClick = function(){
-			clickEvent(gridObj);
-		};
-	}else {
-		printChart(dat , dataGrid);
-		getDetailData('Y');
-	}
-	
-}
+    function nextMsg( ) {
+        var selectedTabIdx = $('.listChart').find('.active').index();
+        var grid = window.__grids[selectedTabIdx];
+        var row = 0;
+        console.log("grid.Row = "+grid.Row)
+        console.log("grid.Rows = "+grid.Rows)
+        if( grid.Row < grid.Rows - 1 ) {
+            row = ++grid.Row;
+            viewer_open(row);
+            grid.Select(row,0);
+            if( grid.Row == grid.Rows - 2  ){
+                getList( true );
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Bar Chart
+     */
+    var chart = null;
+    var chartxAxis;
+    function printChart( dat ,dataGrid )
+    {
+        var grid1 =dataGrid;
+        var data = [];
+        var categories = [];
+        var cols = grid1.columns;
+        var maxDat = 0;
+        if( dat == undefined ) {
+            for ( var i=0 ; i < grid1.data.length ; i++ ) {
+                if ( (i+1) > chartcnt ) break;
+                var items = [];
+                for ( var j=1 ; j < cols.length ; j++ ) {
+                    if (  cols[j].id == 'total' || cols[j].id == 'NUM' || cols[j].id == 'rowKey' || cols[j].id == 'svcNm' || cols[j].id == 'svcLv1Nm' || cols[j].id == 'svcLv2Nm' || cols[j].id == 'svcLv12Nm' ) continue;
+                    if ( grid1.data[i][cols[j].id] == undefined ) items.push(0);
+                    else items.push( Number( grid1.data[i][cols[j].id] ) );
+                    if ( i == 0 ) categories.push( cols[j].name );
+                    if(Number( grid1.data[i][cols[j].id] ) > maxDat) maxDat = Number( grid1.data[i][cols[j].id] );
+                }
+                if(grid1.id == 'basicStatListGrid') {
+                    data.push({name:getClassStr(grid1.data[i]['rowKey']), data:items});
+                } else {
+                    if(grid1.data[i]['NUM'] == '<s:message code="bodyview.total"/>') continue;
+                    else if(grid1.data[i].rowKey.length == '3') {
+                        data.push({name:grid1.data[i]['svcLv12Nm'], data:items});
+                    }else {
+                        data.push({name:grid1.data[i]['svcNm'], data:items});
+                    }
+                }
+            }
+        } else {
+            var items = [];
+            for ( var j=0 ; j < cols.length ; j++ ) {
+                if ( cols[j].id == 'total' || cols[j].id == 'NUM' || cols[j].id == 'rowKey' || cols[j].id == 'svcNm' || cols[j].id == 'svcLv1Nm' || cols[j].id == 'svcLv2Nm' || cols[j].id == 'svcLv12Nm'  ) continue;
+                if ( dat[cols[j].id] == undefined || dat[cols[j].id] == '' ) {
+                    items.push(0);
+                } else {
+                    items.push( Number( dat[cols[j].id] ) );
+                }
+                categories.push( cols[j].name );
+                if(Number( dat[cols[j].id] ) > maxDat) maxDat = Number( dat[cols[j].id] );
+            }
+            if(grid1.id == 'basicStatListGrid') {
+                data.push({name:getClassStr(grid1.data[i]['rowKey']), data:items});
+            } else {
+                if(dat['NUM'] == '<s:message code="bodyview.total"/>') return;
+                else data.push({name:dat['svcLv12Nm'], data:items});
+            }
+        }
+
+        var rotation = 40;
+        if ( chartxAxis == 'W' ) rotation = 0;
+        $('#chartArea1').highcharts({
+            title: {
+                text: null
+            },
+            exporting: chartAPI.exporting,
+            credits: chartAPI.credits,
+            xAxis: {
+                categories: categories
+            },
+            yAxis: {
+                type: 'logarithmic',
+                custom: {
+                    allowNegativeLog: true
+                },
+                allowDecimals: false,
+                title: {
+                    text: '',
+                    rotation: 0
+                }
+            },
+            tooltip: {
+                headerFormat: '<b>{point.key}</b><br>',
+                pointFormat: '<span style="color:{series.color}">\u25CF</span> {series.name}: {point.y} (<s:message code="common.msg.cnt"/>)'
+            },
+            series: data
+        });
+    }
+    function getClassStr(value) {
+        if (value == '4') return '<s:message code="condition.info.class4"/>';
+        else if (value == '3') return '<s:message code="condition.info.class3"/>';
+        else if (value == '2') return '<s:message code="condition.info.class2"/>';
+        else if (value == '1') return '<s:message code="condition.info.class1"/>';
+        else return '<s:message code="common.msg.noinfo"/>';
+    }
+
+    function clickEvent(dataGrid){
+        if(dataGrid.getData().length == 0) return;
+        var grid1 = dataGrid;
+        var valChk = grid1.getValue(grid1.Row, grid1.Col);
+        var name = "";
+
+        if (colRowKey == '4') {
+            name = '<s:message code="condition.info.class4"/> -';
+        }
+        else if (colRowKey == '3'){
+            name = '<s:message code="condition.info.class3"/> -';
+        }
+        else if (colRowKey == '2') {
+            name = '<s:message code="condition.info.class2"/> -';
+        }
+        else if (colRowKey == '1') {
+            name = '<s:message code="condition.info.class1"/> -';
+        }
+        else {
+            name = '<s:message code="common.msg.noinfo"/> -';
+        }
+
+        if(valChk == "" || valChk == "-") return;
+
+        if(grid1.getValue(grid1.Row, 'NUM') == '<s:message code="bodyview.total"/>') {
+            var key = "";
+            for(var i=0; i<grid1.Rows; i++) {
+                if(grid1.getValue(i, 'rowKey') == "" || grid1.getValue(i, 'rowKey') == "-") continue;
+                else key += grid1.getValue(i, 'rowKey').replaceAll("\"", "\\\"") + ",";
+            }
+            rowKey = key;
+        }else {
+            rowKey = grid1.getValue(grid1.Row, 'rowKey');
+        }
+
+        rowName = getClassStr(grid1.getValue(grid1.Row, 'rowKey'));
+        colKey = grid1.ColKey(grid1.Col);
+        var colKeyNm = colKey;
+        if (colKey == 'rowKey' || colKey == 'total' || colKey == 'NUM' || colKey == 'svcNm' || colKey == 'svcLv1Nm' || colKey == 'svcLv2Nm' || colKey == 'svcLv12Nm') {
+            if(pColKey != "") {
+                colKey = "";
+            }
+            colKeyNm = '<s:message code="bodyview.total"/>';
+
+            if(rowKey == 'totalOCR' || rowKey == 'noOCR' || rowKey == 'detectOCR'){
+                pColKey = "";
+            }
+        } else if (colKey == "I") {
+            pColKey = colKey;
+            colKeyNm = '<s:message code="condition.receive"/>';
+        } else if (colKey == "O") {
+            pColKey = colKey;
+            colKeyNm = '<s:message code="condition.send"/>';
+        } else {
+            pColKey = colKey;
+            var xAxis = $('select[name=xAxis]').val();
+            if (xAxis == "ctime_hh") colKeyNm = colKey + '<s:message code="common.msg.hour"/>';
+        }
+
+        tabID++;
+        tabNum++;
+
+        if( tabNum > 8) {
+            tabFlag = true;
+            var delid = $( ".listChart li:nth-child(2)" ).attr('idx');
+            $('#detailTab'+delid+' .close').click();
+        }
+
+        var displayName = rowName;
+        var id = 'tab'+tabID;
+        var liTab = " "
+
+        if( rowKey.length > 3 ){
+            if (rowKey.length == 4  ){
+                displayName = grid1.getValue(grid1.Row, 'svcNm');
+            }	else{
+                displayName = grid1.data[0].svcLv12Nm;
+            }
+            liTab ="liTabT"
+        }else if( rowKey.length == 3 ){
+            colKeyNm = '<s:message code="analysis.usagecompare.ui.detaillist"/>';
+            displayName = grid1.getValue(grid1.Row, 'svcLv12Nm');
+            liTab ="liTabD"
+        }else if (rowKey == '-1'|| rowKey == '1'||rowKey == '2'||rowKey == '3'|| rowKey == '4'){
+            displayName = colKeyNm;
+            colKeyNm = '<s:message code="analysis.usagecompare.ui.detaillist"/>';
+            liTab ="liTabD"
+        }else if (rowKey == '-1'){
+            displayName = colKeyNm;
+            colKeyNm = '<s:message code="analysis.usagecompare.ui.detaillist"/>';
+            liTab ="liTabD"
+
+        }else{
+            colKeyNm = '<s:message code="analysis.usagecompare.ui.detaillist"/>';
+            liTab ="liTabD"
+        }
+        $('.listChart').append($('<li style="display:inline-flex;text-align: center;z-index:1001;" idx="'+tabID+'" id="liTab'+tabID+'"><a data-toggle="tab" href="#tab'+tabID+'" id="detailTab'+tabID+'" style="display: flex; align-items: center; justify-content: center;">'+displayName+' - '+colKeyNm+'<span class="badge mal4"></span><button type="button" class="subtab_close closeBtn">	&#10006;</button></a></li>'));
+        $('#basicStatList').after($('<div class="tab-pane fade" id="tab' + tabID + '"><div id="grid'+tabID+'" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; height: 400px"></div></div>'));
+
+        var gid = 'grid'+tabID;
+        var gridObj = new Xgrid(gid, contextRoot);
+        tabInfo[id] = gridObj;
+
+        $('.nav-tabs a[href="#tab'+tabID+'"]').tab('show');
+
+        setGrid( );
+
+        $("#chartCntDiv").hide();
+        $('#totalViewDiv').show();
+
+        var dat = grid1.getRowData( grid1.Row );
+        chartDat[tabID] = dat;
+        gridObj.loadExportMenu('<s:message code="stat.detail.user.list"/> ( ' + name + displayName + ' )');
+        gridObj.loadPageSize();
+        gridObj.changePageSize = function(cnt){
+            if((rowKey > -2 && rowKey < 5) || liTab.includes("D")){
+                rowKey = rowKey.substr(0,3);
+                getInfoData('Y');
+            }else {
+                rowKey = dat.rowKey;
+                printChart(dat ,dataGrid);
+                getDetailData('Y');
+            }
+        };
+
+        if((rowKey > -2 && rowKey < 5) || rowKey.length == 3){
+            getInfoData('Y');
+            gridObj.onClick = function(){
+                clickEvent(gridObj);
+            };
+        }else {
+            printChart(dat ,dataGrid);
+            getDetailData('Y');
+        }
+
+    }
+
 </script>
-</head>
-<body class="mini-navbar">
-	<div>
-		<!-- 검색영역 -->
-		<div class="searchArea w100">
-			<div class="searchSub w100">
-				<div>
-					<input type="date" id="startdate" style="width: 110px;"/>
-					<span class="hyphen">~</span>
-				</div>
-				<div>
-					<input type="date" id="enddate" style="width: 110px;"/>
-				</div>
-				<div>
-					<select id="xAxis" name="xAxis" class="input-sm form-control">
-						<option value="ctime_hh"><s:message code="common.msg.time"/></option>
-						<option value="ctime_yyyymmdd"><s:message code="common.msg.day"/></option>
-						<option value="ctime_yyyymm"><s:message code="common.msg.month"/></option>
-						<option value="businm"><s:message code="common.org.busi"/></option>
-						<option value="conm"><s:message code="common.org.co"/></option>
-						<option value="deptnm"><s:message code="common.org.dept"/></option>
-						<option value="direction_svc"><s:message code="condition.receive_send"/></option>
-						<option value="jikgubnm"><s:message code="common.org.jikgub"/></option>
-					</select>
-				</div>
-				<div>
-					<button class="form_btn01" id="searchBtn"><s:message code="common.msg.search"/></button>
-					<button type="button" class="form_btn05 searchQueryBtn"><s:message code="query.make.inputer"/></button>
-				</div>
+<div>
+	<div class="searchArea w100">
+		<div class="searchSub w100">
+			<div>
+				<input type="date" id="startdate" style="width: 110px;"/>
+				<span class="hyphen">~</span>
 			</div>
-			<div class="panel" style="width: 100%; margin-bottom: 10px">
-				<div>
-					<textarea class="elsQueryResultText" rows="1" style="width:100%; height:50px;" id="elsQueryText" placeholder="<s:message code="condition.input.detail"/>"></textarea>
-				</div>
+			<div>
+				<input type="date" id="enddate" style="width: 110px;"/>
+			</div>
+
+			<div class="optiotab">
+				<button class="optionBtn active" id="svc1" value="svc1"><s:message code="common.msg.svc"/></button>
+				<button class="optionBtn" id="direction_svc" value="direction_svc"><s:message code="condition.receive_send"/></button>
+				<button class="optionBtn" id="ctime_hh" value="ctime_hh"><s:message code="common.msg.time"/></button>
+				<button class="optionBtn" id="ctime_yyyymmdd" value="ctime_yyyymmdd" class="active"><s:message code="common.msg.day"/></button>
+				<button class="optionBtn" id="ctime_yyyymm" value="ctime_yyyymm"><s:message code="common.msg.month"/></button>
+				<button class="optionBtn" id="businm" value="businm"><s:message code="common.org.busi"/></button>
+				<button class="optionBtn" id="conm" value="conm"><s:message code="common.org.co"/></button>
+				<button class="optionBtn" id="deptnm" value="deptnm"><s:message code="common.org.dept"/></button>
+				<button class="optionBtn" id="jikgubnm" value="jikgubnm"><s:message code="common.org.jikgub"/></button>
+			</div>
+			<div>
+				<button class="form_btn01" id="searchBtn"><s:message code="common.msg.search"/></button>
+				<button class="form_btn02" id="clearBtn"><s:message code="condition.reset"/></button>
 			</div>
 		</div>
-		<!-- //검색영역 -->
-		<div class="content">
-			<div class="contentSub">
-				<div class="chartAreafull">
-					<div>
-						<h3>
-						<span id="chartAreaTitle">TOP <s:message code="DATA_MONITOR.STAT_LABEL"/> CHART
+	</div>
+	<div class="content">
+		<div class="contentSub">
+			<div class="chartAreafull">
+				<div>
+					<h3>
+						TOP 통계 Chart
 						<span class="sel">
 						<div id="totalViewDiv" style="display:none;">
 							<div class="subtab">
@@ -650,286 +531,301 @@ function clickEvent(dataGrid){
 								</ul>
 						</div>
 						</span>
-						</h3>
-						<div class="panel-default" id="service.logging.count">
-							<div class="inner_personaldata" style="height:180px;">
-								<div id="chartArea1" style="height: 100%"></div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="subtab">
-					<div>
-						<ul class="nav nav-tabs codeTab listChart">
-							<li class="active"><a data-toggle="tab" href="#basicStatList" id="listTab" >LIST</a></li>
-						</ul>
-					</div>
-				</div>
-				<div class="xcn_full">
-					<div class="tab-content">
-						<div id="basicStatList" class="tab-pane fade in active">
-							<div id="basicStatListGrid" class="slickGrid gridArea" style="min-height: 200px;"></div>
+					</h3>
+					<div class="panel-default" id="service.logging.count">
+						<div class="inner_personaldata" style="height:180px;">
+							<div id="chartArea1" style="height: 100%"></div>
 						</div>
 					</div>
 				</div>
 			</div>
+			<div class="subtab">
+				<div>
+					<ul class="nav nav-tabs codeTab listChart">
+						<li class="active"><a data-toggle="tab" href="#basicStatList" id="listTab" >InfoType TOP</a></li>
+					</ul>
+				</div>
+			</div>
+			<div class="xcn_full">
+				<div class="tab-content">
+					<div id="basicStatList" class="tab-pane fade in active">
+						<div id="basicStatListGrid" class="slickGrid gridArea" style="min-height: 200px;"></div>
+					</div>
+				</div>
+			</div>
 		</div>
-
-		<!-- old -->
-
 	</div>
-	<!-- Back to top -->
-	<a href="#0" class="back-to-top cd-top"><span class="[ fa fa-chevron-up ]"></span> <span class="[ ]">Back to the Top</span></a>
-	
-	<script type="text/javascript">
-	
-		function getCurrentGrid(){
-			var id = Number($('.listChart .active').attr('idx'));
-			return tabInfo['tab'+id];
-		}
+</div>
+<!-- Back to top -->
+<a href="#0" class="back-to-top cd-top"><span class="[ fa fa-chevron-up ]"></span> <span class="[ ]">Back to the Top</span></a>
 
-		var grid1 = new Xgrid('basicStatListGrid', contextRoot);
-		grid1.autoNumber();
-		grid1.colAdd( "rowKey", '<s:message code="consent.user"/>', 230, "left", false, 'link' );
-		grid1.colAdd("total", '<s:message code="bodyview.total"/>', 130, "right", false, 'nomal' );
-		grid1.loadExportMenu('<s:message code="DATA_ANALYSIS.STAT_INFOTYPE"/>');
-		grid1.loadPageSize();
-		grid1.loadHeader(false);
-		grid1.initData('<s:message code="common.msg.search.click"/>');
-		grid1.changePageSize = function(cnt){
-			getData ('Y');
-		};
-		
-		var tabInfo={};
-		var chartDat={};
-		grid1.onClick = function() {
-			if(grid1.getValue(grid1.Row, 'NUM') == '<s:message code="bodyview.total"/>') {
-				var key = "";
-				for(var i=0; i<grid1.Rows; i++) {
-					if(grid1.getValue(i, 'rowKey') == "" || grid1.getValue(i, 'rowKey') == "-") continue;
-					else key += grid1.getValue(i, 'rowKey').replaceAll("\"", "\\\"") + ",";
-				}
-				colRowKey = key;
-			}else {
-				colRowKey = grid1.getValue(grid1.Row, 'rowKey');
-			}
-			pColKey="";
-			clickEvent(grid1);	
-		};
-		
-		function getData( flag ) {
-			if ( searchFlag ) return;
-			var xAxis = $('select[name=xAxis]').val();
-			var xAxis_str = $('select[name=xAxis] option:selected').text();
-			var sDate = $('#startdate').val().replaceAll("-","");
-			var eDate = $('#enddate').val().replaceAll("-","");
-			if(sDate > eDate) ui.alertMsg('<s:message code="consent.msg.timecheck"/>');
-			
-			searchFlag = true;
-			grid1.on();
-			ui.get({
-				url : 'getStatList.xcn',
-				startDate: sDate+"000000",
-				endDate: eDate+"235959",
-				detailQuery:$('#solrQueryText').val(),
-				xAxis : xAxis,
-				yAxis : 'ml_confd_class',
-				offset : grid1.data.length,
-				limit : grid1.pageSize,
-				xAxis_str : xAxis_str,
-				success : function(data, total) {
-					grid1.colInit();
-					grid1.autoNumber();
-					grid1.colAdd('rowKey', '<s:message code="condition.infotype"/>', 230, 'left', false, 'link', function(row, cell, value, columnDef, dataContext) {
-						if (value == '4') return '<s:message code="condition.info.class4"/>';
-						else if (value == '3') return '<s:message code="condition.info.class3"/>';
-						else if (value == '2') return '<s:message code="condition.info.class2"/>';
-						else if (value == '1') return '<s:message code="condition.info.class1"/>';
-						else return '<s:message code="common.msg.noinfo"/>';
-					});
-					grid1.colAdd('total', '<s:message code="bodyview.total"/>', 130, 'right', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
-						if ( value != undefined ) return value.comma();
-						else return '';
-					});
-					for ( var i=0 ; i < data.pivotHeader.length ; i++ ) {
-						var Header = data.pivotHeader[i];
-						var HeaderNm = "";
-						if ( xAxis == "ctime_yyyymmdd") HeaderNm = Header.substr(0,4)+"-"+Header.substr(4,2)+"-"+Header.substr(6,2);
-						else if ( xAxis == "ctime_yyyymm") HeaderNm = Header.substr(0,4)+"-"+Header.substr(4,2);
-						else if ( xAxis == "direction_svc") {
-							if(Header == "I") HeaderNm = '<s:message code="condition.receive"/>';
-							else HeaderNm = '<s:message code="condition.send"/>';
-						} else if ( xAxis == "ctime_hh") HeaderNm = Header+'<s:message code="common.msg.hour"/>';
-						else HeaderNm = Header;
-						grid1.colAdd( Header, HeaderNm, 90, "right", false, 'link', function ( row, cell, value, columnDef, dataContext ) {
-							if ( value != undefined ) return value.comma();
-							else return '';
-						});
-					}
-					grid1.loadHeader(false);
-					grid1.setData(data.pivotData);
-					
-					$('#statlist_cnt').html('<s:message code="common.msg.finish_query"/>:'+grid1.data.length);
-					if ( grid1.loadingPage == 0 ) grid1.Select(-1,-1);
-					searchFlag = false;
-					pivotData(data , grid1 ,"Grid");
-				},
-				error : function(status, message) {
-					ui.alertMsg(message);
-				},
-				complete : function() {
-					grid1.off();
-				}
-			});
-		}
+<script type="text/javascript">
+    function setSublist(data) {
+        var element = document.getElementById('sub_1');
+        if (element && data && data.length > 0 && data[0].rowKey) {
+            var firstRowkey = data[0].rowKey;
+            element.innerHTML = '<span>' + firstRowkey + '</span>';
+        }
+    }
 
-		function getDetailData( lastRow ) {
-			currentgrid = getCurrentGrid();
-			if ( searchFlag ) return;
-			
-			if ( lastRow == 'Y' || lastRow == undefined ) {
-				currentgrid.data.length = 0;
-				currentgrid.rtnNextPageFunc = getDetailData;
-				currentgrid.loadingPage = 0;
-			} else {
-				currentgrid.loadingPage++;
-			}
-			
-			var xAxis = $('select[name=xAxis]').val();
-			var xAxis_str = $('select[name=xAxis] option:selected').text();
+    function getCurrentGrid(){
+        var id = Number($('.listChart .active').attr('idx'));
+        return tabInfo['tab'+id];
+    }
 
-			if(colKey == '' && pColKey == ''){
-				pColKey = "";
-			}
-			searchFlag = true;
-			currentgrid.on();
+    var grid1 = new Xgrid('basicStatListGrid', contextRoot);
+    grid1.autoNumber();
+    grid1.colAdd( "rowKey", '<s:message code="consent.user"/>', 230, "left", false, 'link' );
+    grid1.colAdd("total", '<s:message code="bodyview.total"/>', 130, "right", false, 'nomal' );
+    grid1.loadExportMenu('<s:message code="DATA_ANALYSIS.STAT_INFOTYPE"/>');
+    grid1.loadPageSize();
+    grid1.loadHeader(false);
+    grid1.initData('<s:message code="common.msg.search.click"/>');
+    grid1.changePageSize = function(cnt){
+        getData ('Y');
+    };
 
-			ui.get({
-				url : 'getStatDetailList.xcn',
-				rowKey : rowKey,
-				colKey : pColKey,
-				startDate : $('#startdate').val().replaceAll("-","")+"000000",
-				endDate : $('#enddate').val().replaceAll("-","")+"235959",
-				detailQuery:$('#solrQueryText').val(),
-				xAxis : xAxis,
-				xAxis_str : xAxis_str,
-				yAxis : 'ml_confd_class',
-				offset : currentgrid.data.length,
-				limit : currentgrid.pageSize,
-				colRowKey : colRowKey,
-				success : function(data, total) {
-					if ( lastRow == 'Y' || lastRow == undefined ) detailTotal = total;
-					currentgrid.appendData(data.emass);
-					if ( currentgrid.loadingPage == 0 ) currentgrid.Select(-1,-1);
-					
-					$('#detailTab'+Number($('.listChart .active').attr('idx'))+' .badge').text('[' + total.comma() + ']');
-					$('#detail_cnt'+Number($('.listChart .active').attr('idx'))).html('<s:message code="common.msg.finish_query"/>: '+currentgrid.data.length);
-					
-					searchFlag = false;
-				},
-				error : function(status, message) {
-					ui.alertMsg(message);
-				},
-				complete : function() {
-					currentgrid.off();
-				}
-			});
-		}
-		
-		function getInfoData( lastRow ) {
-			currentgrid = getCurrentGrid();
-			if ( searchFlag ) return;
-			
-			if ( lastRow == 'Y' || lastRow == undefined ) {
-				currentgrid.data.length = 0;
-				currentgrid.rtnNextPageFunc = getDetailData;
-				currentgrid.loadingPage = 0;
-			} else {
-				currentgrid.loadingPage++;
-			}
-			
-			var xAxis = $('select[name=xAxis]').val();
-			var xAxis_str = $('select[name=xAxis] option:selected').text();
-			var startDate = $('#startdate').val().replaceAll("-","");
-			var endDate = $('#enddate').val().replaceAll("-","");
-			searchFlag = true;
-			currentgrid.on();
-			ui.get({
-				url : 'getStatList.xcn',
-				startDate: startDate+"000000",
-				endDate: endDate+"235959",
-				detailQuery:$('#solrQueryText').val(),
-				xAxis : xAxis,
-				yAxis : 'ml_confd_class',
-				offset : currentgrid.data.length,
-				limit : currentgrid.pageSize,
-				xAxis_str : xAxis_str,
-				rowKey : rowKey,
-				colKey : pColKey,
-				colRowKey : colRowKey,
-				success : function(data, total) {
-					currentgrid.colInit();
-					currentgrid.autoNumber();
-					if(rowKey.length == 3){
-						currentgrid.colAdd('svcNm', '<s:message code="condition.service"/>', 320, 'left', false, 'link');
-					}else{
-						currentgrid.colAdd('svcLv12Nm', '<s:message code="condition.service"/>', 320, 'left', false, 'link');
-					}
-					currentgrid.colAdd('total', '<s:message code="bodyview.total"/>', 130, 'right', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
-						if ( value != undefined ) return value.comma();
-						else return '';
-					});
-					for ( var i=0 ; i < data.pivotHeader.length ; i++ ) {
-						var Header = data.pivotHeader[i];
-						var HeaderNm = "";
-						if ( xAxis == "ctime_yyyymmdd") HeaderNm = Header.substr(0,4)+"-"+Header.substr(4,2)+"-"+Header.substr(6,2);
-						else if ( xAxis == "ctime_yyyymm") HeaderNm = Header.substr(0,4)+"-"+Header.substr(4,2);
-						else if ( xAxis == "direction_svc") {
-							if(Header == "I") HeaderNm = '<s:message code="condition.receive"/>';
-							else HeaderNm = '<s:message code="condition.send"/>';
-						} else if ( xAxis == "ctime_hh") HeaderNm = Header+'<s:message code="common.msg.hour"/>';
-						else HeaderNm = Header;
-						currentgrid.colAdd( Header, HeaderNm, 90, "right", false, 'link', function ( row, cell, value, columnDef, dataContext ) {
-							if ( value != undefined ) return value.comma();
-							else return '';
-						});
-					}
-					currentgrid.loadHeader(false);
-					currentgrid.setData(data.pivotData);
-					
-					$('#statlist_cnt').html('<s:message code="common.msg.finish_query"/>:'+currentgrid.data.length);
-					$('#detailTab'+Number($('.listChart .active').attr('idx'))+' .badge').text('[' + data.numFound.comma() + ']');
-					if ( currentgrid.loadingPage == 0 ) currentgrid.Select(-1,-1);
-					searchFlag = false;
-					pivotData(data , currentgrid ,"Detail");
-				},
-				error : function(status, message) {
-					ui.alertMsg(message);
-				},
-				complete : function() {
-					currentgrid.off();
-				}
-			});
-		}
+    var tabInfo={};
+    var chartDat={};
+    grid1.onClick = function() {
+        if(grid1.getValue(grid1.Row, 'NUM') == '<s:message code="bodyview.total"/>') {
+            var key = "";
+            for(var i=0; i<grid1.Rows; i++) {
+                if(grid1.getValue(i, 'rowKey') == "" || grid1.getValue(i, 'rowKey') == "-") continue;
+                else key += grid1.getValue(i, 'rowKey').replaceAll("\"", "\\\"") + ",";
+            }
+            colRowKey = key;
+        }else {
+            colRowKey = grid1.getValue(grid1.Row, 'rowKey');
+        }
+        pColKey="";
+        clickEvent(grid1);
+    };
 
-		function pivotData (data , dataGrid ,value){
-			totalChartDat = "";
-			var grid1 = dataGrid;
-				if( data.pivotData.length > 0 ) {
-				for ( var i=0 ; i < data.length ; i++ ) {
-					var selected = false;
-					if ( i <= 4 ) selected = true;
-					else if ( i >= 10 ) break;
-					addOption( 'chartListCount', (i+1), (i+1), selected );
-				}		
-				var dat = grid1.getRowData( grid1.Row );
-				totalChartDat = dat;
-				printChart( dat , grid1);
-			} else {
-				$('#chartArea1').html('<s:message code="common.msg.nodata"/>');
-				$('#space').height('7px');
-			}
-	}		
-	</script>
-</body>
-</html>
+    function getData( flag ) {
+        if ( searchFlag ) return;
+        var sDate = $('#startdate').val().replaceAll("-", "");
+        var eDate = $('#enddate').val().replaceAll("-", "");
+        var xAxis = $('button.optionBtn.active').val();
+        var xAxis_str = $('button.optionBtn.active').text();
+        if (sDate > eDate) ui.alertMsg('<s:message code="consent.msg.timecheck"/>');
+        if(sDate === '' || eDate === '') {
+            alert('<s:message code="holidayBusiness.msg.enter.date"/>');
+            return;
+        }
+
+        searchFlag = true;
+        grid1.on();
+        ui.get({
+            url : 'getStatList.xcn',
+            startDate: sDate+"000000",
+            endDate: eDate+"235959",
+            xAxis : xAxis,
+            yAxis : 'ml_confd_class',
+            offset : grid1.data.length,
+            limit : grid1.pageSize,
+            xAxis_str : xAxis_str,
+            success : function(data, total) {
+                grid1.colInit();
+                grid1.autoNumber();
+                grid1.colAdd('rowKey', '<s:message code="condition.infotype"/>', 230, 'left', false, 'link', function(row, cell, value, columnDef, dataContext) {
+                    if (value == '4') return '<s:message code="condition.info.class4"/>';
+                    else if (value == '3') return '<s:message code="condition.info.class3"/>';
+                    else if (value == '2') return '<s:message code="condition.info.class2"/>';
+                    else if (value == '1') return '<s:message code="condition.info.class1"/>';
+                    else return '<s:message code="common.msg.noinfo"/>';
+                });
+                grid1.colAdd('total', '<s:message code="bodyview.total"/>', 130, 'right', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
+                    if ( value != undefined ) return value.comma();
+                    else return '';
+                });
+                for ( var i=0 ; i < data.pivotHeader.length ; i++ ) {
+                    var Header = data.pivotHeader[i];
+                    var HeaderNm = "";
+                    if ( xAxis == "ctime_yyyymmdd") HeaderNm = Header.substr(0,4)+"-"+Header.substr(4,2)+"-"+Header.substr(6,2);
+                    else if ( xAxis == "ctime_yyyymm") HeaderNm = Header.substr(0,4)+"-"+Header.substr(4,2);
+                    else if ( xAxis == "direction_svc") {
+                        if(Header == "I") HeaderNm = '<s:message code="condition.receive"/>';
+                        else HeaderNm = '<s:message code="condition.send"/>';
+                    } else if ( xAxis == "ctime_hh") HeaderNm = Header+'<s:message code="common.msg.hour"/>';
+                    else if(xAxis === 'svc1') HeaderNm = serviceList.search(Header, 'groupCd', 'groupNm');
+                    else HeaderNm = Header;
+                    grid1.colAdd( Header, HeaderNm, 90, "right", false, 'link', function ( row, cell, value, columnDef, dataContext ) {
+                        if ( value != undefined ) return value.comma();
+                        else return '';
+                    });
+                }
+                grid1.loadHeader(false);
+                grid1.setData(data.pivotData);
+
+                $('#statlist_cnt').html('<s:message code="common.msg.finish_query"/>:'+grid1.data.length);
+                if ( grid1.loadingPage == 0 ) grid1.Select(-1,-1);
+                searchFlag = false;
+
+                if( data.pivotData.length > 0 ) {
+                    for ( var i=0 ; i < data.length ; i++ ) {
+                        var selected = false;
+                        if ( i <= 4 ) selected = true;
+                        else if ( i >= 10 ) break;
+                        addOption( 'chartListCount', (i+1), (i+1), selected );
+                    }
+
+                    var dat = grid1.getRowData( grid1.Row );
+                    totalChartDat = dat;
+                    printChart( dat ,grid1);
+                } else {
+                    $('#chartArea1').html('<s:message code="common.msg.nodata"/>');
+                    $('#space').height('7px');
+                }
+            },
+            error : function(status, message) {
+                ui.alertMsg(message);
+            },
+            complete : function() {
+                grid1.off();
+            }
+        });
+    }
+
+    function getDetailData( lastRow ) {
+
+        currentgrid = getCurrentGrid();
+        if ( searchFlag ) return;
+
+        if ( lastRow == 'Y' || lastRow == undefined ) {
+            currentgrid.data.length = 0;
+            currentgrid.rtnNextPageFunc = getDetailData;
+            currentgrid.loadingPage = 0;
+        } else {
+            currentgrid.loadingPage++;
+        }
+
+        var xAxis = $('button.optionBtn.active').val();
+        var xAxis_str = $('button.optionBtn.active').text();
+        var sDate = $('#startdate').val().replaceAll("-", "");
+        var eDate = $('#enddate').val().replaceAll("-", "");
+        searchFlag = true;
+        currentgrid.on();
+
+        ui.get({
+            url : 'getStatDetailList.xcn',
+            rowKey : rowKey,
+            colKey : pColKey,
+            startDate : sDate+"000000",
+            endDate : eDate+"235959",
+            xAxis : xAxis,
+            xAxis_str : xAxis_str,
+            yAxis : 'ml_confd_class',
+            offset : currentgrid.data.length,
+            limit : currentgrid.pageSize,
+            colRowKey : colRowKey,
+            success : function(data, total) {
+                if ( lastRow == 'Y' || lastRow == undefined ) detailTotal = total;
+                currentgrid.appendData(data.emass);
+                if ( currentgrid.loadingPage == 0 ) currentgrid.Select(-1,-1);
+
+                $('#detailTab'+tabID+' .badge').html('&nbsp;[' + total.comma() + ']');
+                $('#detail_cnt'+tabID).html('<s:message code="common.msg.finish_query"/>: '+currentgrid.data.length);
+
+                searchFlag = false;
+            },
+            error : function(status, message) {
+                ui.alertMsg(message);
+            },
+            complete : function() {
+                currentgrid.off();
+            }
+        })
+    }
+    function getInfoData( lastRow ) {
+        currentgrid = getCurrentGrid();
+        if ( searchFlag ) return;
+
+        if ( lastRow == 'Y' || lastRow == undefined ) {
+            currentgrid.data.length = 0;
+            currentgrid.rtnNextPageFunc = getDetailData;
+            currentgrid.loadingPage = 0;
+        } else {
+            currentgrid.loadingPage++;
+        }
+
+        var xAxis = $('button.optionBtn.active').val();
+        var xAxis_str = $('button.optionBtn.active').text();
+        var sDate = $('#startdate').val().replaceAll("-","");
+        var eDate = $('#enddate').val().replaceAll("-","");
+        searchFlag = true;
+        currentgrid.on();
+        ui.get({
+            url : 'getStatList.xcn',
+            startDate: sDate+"000000",
+            endDate: eDate+"235959",
+            xAxis : xAxis,
+            yAxis : 'ml_confd_class',
+            offset : currentgrid.data.length,
+            limit : currentgrid.pageSize,
+            xAxis_str : xAxis_str,
+            rowKey : rowKey,
+            colKey : pColKey,
+            colRowKey : colRowKey,
+            success : function(data, total) {
+                currentgrid.colInit();
+                currentgrid.autoNumber();
+                if(rowKey.length == 3){
+                    currentgrid.colAdd('svcNm', '<s:message code="condition.service"/>', 320, 'left', false, 'link');
+                }else{
+                    currentgrid.colAdd('svcLv12Nm', '<s:message code="condition.service"/>', 320, 'left', false, 'link');
+                }
+                currentgrid.colAdd('total', '<s:message code="bodyview.total"/>', 130, 'right', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
+                    if ( value != undefined ) return value.comma();
+                    else return '';
+                });
+                for ( var i=0 ; i < data.pivotHeader.length ; i++ ) {
+                    var Header = data.pivotHeader[i];
+                    var HeaderNm = "";
+                    if ( xAxis == "ctime_yyyymmdd") HeaderNm = Header.substr(0,4)+"-"+Header.substr(4,2)+"-"+Header.substr(6,2);
+                    else if ( xAxis == "ctime_yyyymm") HeaderNm = Header.substr(0,4)+"-"+Header.substr(4,2);
+                    else if ( xAxis == "direction_svc") {
+                        if(Header == "I") HeaderNm = '<s:message code="condition.receive"/>';
+                        else HeaderNm = '<s:message code="condition.send"/>';
+                    } else if ( xAxis == "ctime_hh") HeaderNm = Header+'<s:message code="common.msg.hour"/>';
+                    else if(xAxis === 'svc1') HeaderNm = serviceList.search(Header, 'groupCd', 'groupNm');
+                    else HeaderNm = Header;
+                    currentgrid.colAdd( Header, HeaderNm, 90, "right", false, 'link', function ( row, cell, value, columnDef, dataContext ) {
+                        if ( value != undefined ) return value.comma();
+                        else return '';
+                    });
+                }
+                currentgrid.loadHeader(false);
+                currentgrid.setData(data.pivotData);
+
+                $('#statlist_cnt').html('<s:message code="common.msg.finish_query"/>:'+currentgrid.data.length);
+                $('#detailTab'+Number($('.listChart .active').attr('idx'))+' .badge').text('[' + data.numFound.comma() + ']');
+                if ( currentgrid.loadingPage == 0 ) currentgrid.Select(-1,-1);
+                searchFlag = false;
+
+                var grid1 = currentgrid;
+                if( data.pivotData.length > 0 ) {
+                    for ( var i=0 ; i < data.length ; i++ ) {
+                        var selected = false;
+                        if ( i <= 4 ) selected = true;
+                        else if ( i >= 10 ) break;
+                        addOption( 'chartListCount', (i+1), (i+1), selected );
+                    }
+
+                    var dat = grid1.getRowData( grid1.Row );
+                    totalChartDat = dat;
+                    printChart( dat,grid1 );
+                } else {
+                    $('#chartArea1').html('<s:message code="common.msg.nodata"/>');
+                    $('#space').height('7px');
+                }
+            },
+            error : function(status, message) {
+                ui.alertMsg(message);
+            },
+            complete : function() {
+                currentgrid.off();
+            }
+        });
+    }
+</script>

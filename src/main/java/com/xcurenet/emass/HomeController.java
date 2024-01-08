@@ -699,6 +699,7 @@ public class HomeController {
 	@RequestMapping(value = "/ems/infoTypeStat.do", method = RequestMethod.GET)
 	@Description("정보 분류 통계 페이지")
 	public String infoTypeStat(Locale locale, Model model) {
+		model.addAttribute("headerYn","Y");
 		return "/emass/statistics/infoTypeStat";
 	}
 

@@ -721,9 +721,17 @@ public class SolrEdcStatController {
 		String startDate = Common.nvl(param.get("startDate"));
 		String endDate = Common.nvl(param.get("endDate"));
 		int piCount = Common.nvz(param.get("piCount"), 1);
+		String name = Common.nvl(param.get("senders"));
+		String busi = Common.nvl(param.get("busi"));
+		String busi_not = Common.nvl(param.get("busi_not"));
+		String dept = Common.nvl(param.get("dept")).replaceAll("\\|", ",");
+		String dept_not = Common.nvl(param.get("dept_not"));
+
 
 		StringBuilder query = new StringBuilder();
 		if (!(startDate.isEmpty() && endDate.isEmpty())) query.append(" +ctime:[").append(startDate).append(" TO ").append(endDate).append("] ");
+
+		if (!name.isEmpty()) query.append(" +name:").append(name);
 		query.append(" -pi_total:0 ");
 		query.append(" +( ");
 		for (String field : Config.PRIVATE_SVC) {
@@ -732,6 +740,7 @@ public class SolrEdcStatController {
 		query.append(" ) ");
 
 		SolrQuery sq = new SolrQuery();
+
 		sq.setQuery(query.toString());
 		sq.setStart(0);
 		sq.setRows(0);
