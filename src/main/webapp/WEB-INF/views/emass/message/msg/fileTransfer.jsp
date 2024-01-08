@@ -753,7 +753,8 @@
 										<span class="file_flag_reception"><img src="<c:url value="/img/ico_w_chatshare_fill.png"/>" alt="외부" height="12px">외부</span>
 										<span class="chatid">2024_사업계획_v1.0_엑스큐어넷 4층 연구소_데이터응용팀.pdf</span>
 									</p>
-									<p><span class="name">새절사업장</span> <span class="bar"></span>
+									<p>
+										<span class="name">새절사업장</span> <span class="bar"></span>
 										<span class="name">데이터 코어팀</span> <span class="bar"></span>
 										<span class="name">수석</span> <span class="bar"></span>
 										<span class="name">홍길동</span><span class="bar"></span>

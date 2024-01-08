@@ -185,7 +185,7 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 .messageCon .messageCon_btn { position: absolute; right:16px; top:6px; vertical-align: bottom; display:inline-block; color:#555; text-align: right;}
 .messageCon .messageCon_btn select{vertical-align: middle;}
 .messageCon .conBox { position: relative; padding:16px; font-size:13px;}
-.messageCon .conBox .right_deta { position: absolute; top:16px; right:16px;}
+.messageCon .conBox .rightBox { position: absolute; top:16px; right:16px;}
 
 /* 메신저*/
 .inner_messenger { position: relative; /*height: 100vh;*/height: calc(100vh - 50px); display: flex; /*grid-template-columns: 340px 1fr 1fr 300px;*/
