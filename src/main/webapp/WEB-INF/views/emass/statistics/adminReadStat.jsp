@@ -405,13 +405,10 @@ function fileInfoViewer( row ){
 					<option value="date"><s:message code="analysis.freedom.readdate"/></option>
 				</select>
 			</div>
-			<div>
-				<input type="date" id="startdate" style="width: 110px;"/>
-				<span class="hyphen">~</span>
-			</div>
-			<div>
-				<input type="date" id="enddate" style="width: 110px;"/>
-			</div>
+			<div id="startdatepicker"><input type="date" id="startdate" style="width: 110px;">
+				<span class="hyphen">~</span></div>
+			<div id="enddatepicker"><input type="date" id="enddate" style="width: 110px;"></div>
+
 			<div>
 				<select class="form-control input-sm" id="adminId" name="adminId" style="width: 205px;">
 					<option value="">- <s:message code="auditLog.select.admin"/> -</option>
@@ -587,13 +584,14 @@ function fileInfoViewer( row ){
     function getReadTimeData(sDate, eDate, xAxis, xAxis_str, dateType, adminId) {
         searchFlag = true;
         grid1.on();
+        var xAxis = $('select[name=xAxis]').val();
         ui.get({
             url : 'getCheckedStatList.xcn',
             startDate: sDate+"000000",
             endDate: eDate+"235959",
-            detailQuery:$('#solrQueryText').val(),
-            xAxis : 'date' + xAxis,
-            yAxis : 'ctime' + xAxis,
+            detailQuery:'',
+            xAxis : xAxis,
+            yAxis : 'ctime',
             dateType : dateType,
             adminId : adminId,
             offset : grid1.data.length,

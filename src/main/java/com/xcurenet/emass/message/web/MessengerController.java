@@ -345,7 +345,13 @@ public class MessengerController {
 		int limit = Common.nvz(param.get("limit"), 10000);
 
 		SolrQuery sq = new SolrQuery();
-		String query = String.format("+ctime:[%s TO %s] +xrootmtr:\"%s\"", startDt, endDt, xRootMtr);
+
+		String msgDt = msgId.substring(0, 14);
+
+		String query = String.format(" _id:%s ",msgId);
+		query += String.format("+ctime:[%s TO %s] +xrootmtr:\"%s\"", msgDt, endDt, xRootMtr);
+
+
 
 		if(Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
 

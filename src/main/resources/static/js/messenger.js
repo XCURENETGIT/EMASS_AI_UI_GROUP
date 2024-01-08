@@ -352,7 +352,6 @@ function getMessengerMessageNext(xRootmtr, srcip, usr_id, msgid) {
         endDt: endDt,
         usr_id: usr_id,
         msgId: msgid,
-        offset:searchOffset,
         limit: detailLimit,
         success: function (data, total) {
             searchFlag = false;

@@ -324,22 +324,30 @@ public class SolrEdcStatController {
 		String query = "";
 
 		SolrQuery sq = new SolrQuery();
-		query += String.format(CHECKED_QUERY, adminId);
-		query += String.format(" +id:%s", adminId);
-		query += String.format(" +ctime:[%s TO %s]", startDate, endDate);
-		query += " +date_hh:*";
 
+		if (adminId == null) adminId = "*";
+
+		if (Common.isEquals(dateType,"date"))query += String.format(" +checked.readTime:[%s TO %s]", startDate, endDate);
+		else query +=String.format(" +ctime:[%s TO %s]", startDate, endDate);
+		query += String.format("+checked.readId:%s", adminId);
+
+//		query += " +" + yAxis + ":";
 		log.info("query : {}", query);
+		query += " +" + yAxis + ":*";
 
 		sq.setQuery(query);
 		sq.setStart(0);
 		sq.setRows(0);
 		sq.setFacet(true);
-		sq.setFacetLimit(limit);
 		sq.setFacetMinCount(1);
 		sq.setFacetSort("count");
+
 		sq.setParam("facet.pivot", yAxis + "," + xAxis);
-		return null;
+
+//		SolrEdcMessageVO solrCheckedStatVo = solrCheckedService.getCheckedStatList(sq);
+
+		SolrEdcMessageVO solrStatVo = setAlltotal(solrEdcService.getEmassMessage(sq, Common.getAdminId(request)));
+		return new XcnResponseVO(XcnRspCode.OK, solrStatVo, solrStatVo.getPivotData().size());
 	}
 
 
@@ -423,8 +431,10 @@ public class SolrEdcStatController {
 		sq.setRows(limit);
 		sq.setSort("ctime", SolrQuery.ORDER.desc);
 
-		SolrEdcMessageVO solrStatVo = solrEdcService.getEmassMessage(sq, adminId, "", null);
-		return new XcnResponseVO(XcnRspCode.OK, solrStatVo, solrStatVo.getNumFound());
+
+		SolrEdcMessageVO solrStatVo = setAlltotal(solrEdcService.getEmassMessage(sq, Common.getAdminId(request)));
+		return new XcnResponseVO(XcnRspCode.OK, solrStatVo, solrStatVo.getPivotData().size());
+
 	}
 
 	@RequestMapping(value = "/getOcrStatList.xcn")
@@ -440,20 +450,21 @@ public class SolrEdcStatController {
 		String rowKey = Common.nvl(request.getParameter("rowKey"));
 		int limit = Common.nvz(request.getParameter("limit"));
 
+
 		SolrEdcMessageVO solrStatVo = getFacetResult(startDate, endDate, detailQuery, xAxis, limit, Common.getAdminId(request), rowKey);
 		return new XcnResponseVO(XcnRspCode.OK, solrStatVo, solrStatVo.getFacetData().size());
 	}
 
-	@RequestMapping(value = "/getCheckedReadStatList.xcn")
-	@Description("관리자 열람 통계 리스트 조회")
-	//@AuditOperation(Operation.SEARCH)
-	@ResponseBody
-	public XcnResponseVO getCheckedReadStatList(final HttpServletRequest request, final HttpSession session) throws SolrServerException, IOException {
-		String xAxis = Common.nvl(request.getParameter("xAxis"));
-		String startDate = Common.nvl(request.getParameter("startDate"));
-		String endDate = Common.nvl(request.getParameter("endDate"));
-		return new XcnResponseVO(XcnRspCode.OK, checkedReadStatService.getCheckedReadStatList(xAxis, startDate, endDate, Common.getAdminType(session), Common.getAdminId(session)));
-	}
+//	@RequestMapping(value = "/getCheckedReadStatList.xcn")
+//	@Description("관리자 열람 통계 리스트 조회")
+//	//@AuditOperation(Operation.SEARCH)
+//	@ResponseBody
+//	public XcnResponseVO getCheckedReadStatList(final HttpServletRequest request, final HttpSession session) throws SolrServerException, IOException {
+//		String xAxis = Common.nvl(request.getParameter("xAxis"));
+//		String startDate = Common.nvl(request.getParameter("startDate"));
+//		String endDate = Common.nvl(request.getParameter("endDate"));
+//		return new XcnResponseVO(XcnRspCode.OK, checkedReadStatService.getCheckedReadStatList(xAxis, startDate, endDate, Common.getAdminType(session), Common.getAdminId(session)));
+//	}
 
 
 	@RequestMapping(value = "/getOcrStatDetailList.xcn")
