@@ -38,13 +38,31 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 		if (searchVO.getUnit().equals("mailid") || searchVO.getUnit().equals("messenger")) {
 			field = "sender_str";
 		}
-		sq.setQuery(query.toString());
-		sq.setRows(searchVO.getLimit());
-		String facetQuery = new StringBuilder().append("{result:{type : terms, offset: ").append(searchVO.getOffset()).append(",limit : ").append(searchVO.getLimit()).append(",field : ").append(field).append(",sort:\"size desc\", facet:{size : \"sum(size)\"}} }").toString();
-		sq.setParam("json.facet", facetQuery);
-		log.info("json.facet= " + facetQuery);
+
+
+		/* 문서 결과 표시 X */
+		sq.setStart(0);
+		sq.setRows(1);
+
+		//{result:{type : terms, offset: 0,limit : 100,field : attachname_str,sort:"size desc", facet:{size : "sum(size)"}} }
+		sq.setSort("size",ORDER.desc);
+
+		/* main aggregations field */
+		sq.setParam("group",true);
+		sq.setParam("group.field",field);
+		/* sub aggregations field */
+		sq.setParam("facet.field","size");
+		sq.setParam("facet.offset","0");
+		sq.setParam("facet.limit","100");
+		sq.setFacetMinCount(1);
+		sq.setParam("facet.sum",true);
+
+
 		sq.addFilterQuery("-svc:(X* U*)");
+		sq.setQuery(query.toString());
+
 		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, searchVO.getAdminId());
+
 		AnalysisRelationListVO list = new AnalysisRelationListVO(edc);
 		return list;
 	}

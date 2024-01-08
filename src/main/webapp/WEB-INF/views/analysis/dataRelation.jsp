@@ -13,6 +13,7 @@
 <script type="text/javascript" src="<c:url value="/js/d3.v3.min.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/vis.min.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/timeline.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/messageGrid.js"/>"></script>
 
 <%
 	String[] confColor = Config.colors;
@@ -197,8 +198,8 @@ function eventEnterSearch(event) {
 							<input type="text" id="fileSize" name="fileSize"  style="width: 80px;"placeholder="<s:message code="analysis.relation.attachsize"/>" maxlength="8" /><span class="fs12 mal4">(MByte <s:message code="filterInfo.rangeL"/>)</span>
 						</div>
 						<div class="btnform">
-							<button type="button" accesskey="Q" class="form_btn01" id="searchBtn"><s:message code="common.msg.search"/></button>
-							<button type="button" accesskey="Q" class="form_btn02" id="searchBtn"><s:message code="condition.reset"/></button>
+							<button type="button" accesskey="Q" class="form_btn01" id="btnSearch"><s:message code="common.msg.search"/></button>
+							<button type="button" accesskey="Q" class="form_btn02" id="btnReset"><s:message code="condition.reset"/></button>
 						</div>
 					</div>
 				</form>
@@ -366,6 +367,10 @@ function eventEnterSearch(event) {
 				offset : grid.data.length,
 				limit : grid.pageSize,
 				success : function(data, total) {
+
+					console.log(data);
+
+
 					if ( flag == 'Y' || flag == undefined ) resultTotal = total;
 					grid.autoNumber();
 					colInit();

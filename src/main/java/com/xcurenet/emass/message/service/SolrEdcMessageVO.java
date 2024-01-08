@@ -9,7 +9,6 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.common.util.SimpleOrderedMap;
 import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.range.ParsedRange;
@@ -44,7 +43,7 @@ public class SolrEdcMessageVO {
 
 	@Getter
 	@Setter
-	private SimpleOrderedMap<Object> facets;
+	private ElasticsearchAggregations facets;
 
 	@Getter
 	@Setter
@@ -53,6 +52,15 @@ public class SolrEdcMessageVO {
 	@Getter
 	@Setter
 	private String searchTime;
+
+	private String facetChkSvc;
+	
+	private String pivotChkSvc;
+
+	private List<String> headerList = new ArrayList<>();
+	Map<String, Object> pivotItem = new HashMap<>();
+	Map<String, Object> pivotKeys = new HashMap<>();
+
 
 	public SolrEdcMessageVO() throws SolrServerException, IOException {
 	}
@@ -70,11 +78,23 @@ public class SolrEdcMessageVO {
 		});
 		this.setFacet(resp);
 		this.setPivot(resp);
+
+		tempDataClear();
+//
 //		this.setFacetQuery(resp);
-//		if (resp.getAggregations() != null) {
-//		if (resp.getAggregations() != null) {
-//			this.setFacets((SimpleOrderedMap) resp.getAggregations());
-//		}
+
+		if (resp.getAggregations() != null) {
+			this.setFacets((ElasticsearchAggregations) resp.getAggregations());
+		}
+
+	}
+
+	private void tempDataClear(){
+		this.facetChkSvc = null;
+		this.pivotChkSvc = null;
+		this.headerList =  new ArrayList<>();
+		this.pivotItem =  new HashMap<>();
+		this.pivotKeys =  new HashMap<>();
 	}
 
 	private boolean isRead(final List<Map<String, Object>> checked, final String adminId) {
@@ -98,17 +118,19 @@ public class SolrEdcMessageVO {
 		ElasticsearchAggregations elasticSearchAggregations = (ElasticsearchAggregations) resp.getAggregations();
 		if (elasticSearchAggregations == null) return;
 
+		headerList = new ArrayList();
+
 		//main aggregations key 출력
 		Aggregations mainAggregations = elasticSearchAggregations.aggregations();
 		Map<String, Aggregation> mainAggsMap = mainAggregations.getAsMap();
 		String mainKey = mainAggsMap.keySet().stream().collect(Collectors.joining());
+		facetChkSvc = mainKey;
 
 		long total = 0;
 		Terms facetPivot = elasticSearchAggregations.aggregations().get(mainKey); // aggregations main Key
 
 		if (null == facetPivot) return;
 			 // sub aggregations 1개이상경우 return (통계 검색)
-			String chkSvc = mainKey;
 			List<String> list = new ArrayList<String>();
 			List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
 			Map<String, Object> item = new HashMap<String, Object>();
@@ -126,7 +148,7 @@ public class SolrEdcMessageVO {
 					long docCount = bucket.getDocCount();
 					item.put(bucketKey, docCount);
 					list.add(bucketKey);
-					facetParse(chkSvc, bucketKey, docCount);
+					facetParse(bucketKey, docCount);
 				}
 			} else {
 				// subAggregations 존재 (통계)
@@ -134,44 +156,7 @@ public class SolrEdcMessageVO {
 					Aggregations aggs = bucket.getAggregations();
 					List<Aggregation> aggsList = aggs.asList();
 					for (Aggregation subaggs : aggsList) {
-
-						if (subaggs instanceof ParsedStringTerms) {
-							String headerKey = bucket.getKeyAsString();
-							long docCount = bucket.getDocCount();
-							ParsedStringTerms bucketArgments = (ParsedStringTerms) subaggs;
-							for (Terms.Bucket arg : bucketArgments.getBuckets()) {
-								String buckeyKey = arg.getKeyAsString();
-								list.add(headerKey);
-								facetParse(chkSvc, buckeyKey, docCount);
-							}
-						} else if (subaggs instanceof ParsedLongTerms) {
-							String headerKey = bucket.getKeyAsString();
-							long docCount = bucket.getDocCount();
-							ParsedLongTerms bucketArgments = (ParsedLongTerms) subaggs;
-							for (Terms.Bucket arg : bucketArgments.getBuckets()) {
-								String buckeyKey = arg.getKeyAsString();
-								list.add(headerKey);
-								facetParse(chkSvc, buckeyKey, docCount);
-							}
-						} else if (subaggs instanceof ParsedRange) {
-							ParsedRange bucketArgments = (ParsedRange) subaggs;
-							String headerKey = bucket.getKeyAsString();
-							long docCount = bucket.getDocCount();
-							for (Range.Bucket arg : bucketArgments.getBuckets()) {
-								String buckeyKey = arg.getKeyAsString();
-								list.add(headerKey);
-								facetParse(chkSvc, buckeyKey, docCount);
-							}
-						} else if (subaggs instanceof ParsedSum) {
-							ParsedSum bucketArgments = (ParsedSum) subaggs;
-							String headerKey = bucket.getKeyAsString();
-							long docCount = bucket.getDocCount();
-							String buckeyKey = bucketArgments.getName();
-							list.add(headerKey);
-							facetParse(chkSvc, buckeyKey, docCount);
-						}
-
-
+						parseFacetAggs(subaggs,bucket.getKeyAsString(),bucket.getDocCount());
 					}
 				  }
 			   }
@@ -179,23 +164,23 @@ public class SolrEdcMessageVO {
 		item.put("total",total);
 		result.add(item);
 
-		Collections.sort(list);
+		Collections.sort(headerList);
 		Collections.sort(result, new Comparator<Map<String, Object>>() {
 			@Override
 			public int compare(Map<String, Object> first, Map<String, Object> second) {
 				return ((String) first.get("rowKey")).compareTo((String) second.get("rowKey"));
 			}
 		});
-		this.facetHeader = list;
+		this.facetHeader = headerList;
 		this.facetData = result;
 	}
 
-	public void facetParse(String chkSvc,String bucketKey,long docCount){
+	public void facetParse(String bucketKey,long docCount){
 		FacetVO facetVo = new FacetVO();
-		if (chkSvc.equals("svc12")) {
+		if (facetChkSvc.equals("svc12")) {
 			facetVo.setName(Config.getServiceLv12Nm(bucketKey));
 			facetVo.setName2(bucketKey);
-		} else {
+		}else{
 			facetVo.setName(bucketKey);
 			facetVo.setUserId(Common.nvl(Config.getUserId(bucketKey)));
 			facetVo.setName2(Common.nvl(Config.getUserName(bucketKey)));
@@ -214,19 +199,21 @@ public class SolrEdcMessageVO {
 		ElasticsearchAggregations elasticSearchAggregations = (ElasticsearchAggregations) resp.getAggregations();
 		if(elasticSearchAggregations == null) return;
 
+		headerList = new ArrayList();
 
 		//main aggregations key 출력
 		Aggregations mainAggregations = elasticSearchAggregations.aggregations();
 		Map<String, Aggregation> mainAggsMap = mainAggregations.getAsMap();
 		String mainKey = mainAggsMap.keySet().stream().collect(Collectors.joining());
-
+		pivotChkSvc = mainKey;
 		Terms facetPivot = elasticSearchAggregations.aggregations().get(mainKey); // aggregations main Key
 		if (null == facetPivot ) return;
-		Map<String, Object> keys = new HashMap<String, Object>();
+	 	 pivotKeys = new HashMap();
+
 		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
 		if(facetPivot.getBuckets().size() >= 1 ) {
 			if (facetPivot.getBuckets().get(0).getAggregations().asList().size() == 0) return; // sub aggregations 0개인경우 return (메시지 검색)
-			String svcChk = mainKey;
+
 			List<Terms.Bucket> bucketList = (List<Terms.Bucket>) facetPivot.getBuckets();
 			Aggregations subAggs = null;
 			if (null != bucketList && bucketList.size() >= 1)
@@ -235,73 +222,35 @@ public class SolrEdcMessageVO {
 				for (Terms.Bucket bucket : bucketList) {
 					String bucketKey = bucket.getKeyAsString();
 					long docCount = bucket.getDocCount();
-					keys.put(Common.nvl(bucketKey), 0);
-					result.add(pivotParse(svcChk, bucketKey, docCount));
+					pivotKeys.put(Common.nvl(bucketKey), 0);
+					result.add(pivotParse( bucketKey, docCount));
 				}
 			} else {
 				// subAggregations 존재 (통계)
 				for (Terms.Bucket bucket : bucketList) {
-					Map<String, Object> item = new HashMap<String, Object>();
+					pivotItem = new HashMap();
 					Aggregations aggs = bucket.getAggregations();
 					List<Aggregation> aggsList = aggs.asList();
 					for (Aggregation subaggs : aggsList) {
-						if(subaggs instanceof ParsedStringTerms) {
-							ParsedStringTerms bucketArgments = (ParsedStringTerms) subaggs;
-							String buckeyKey = bucket.getKeyAsString();
-							long docCount = bucket.getDocCount();
-							for (Terms.Bucket arg : bucketArgments.getBuckets()) {
-								item.put(Common.nvl(arg.getKeyAsString()), arg.getDocCount());
-								keys.put(Common.nvl(arg.getKey()), 0);
-								item.putAll(pivotParse(svcChk, buckeyKey, docCount));
-							}
-						}
-						else if(subaggs instanceof ParsedLongTerms){
-							ParsedLongTerms bucketArgments = (ParsedLongTerms) subaggs;
-							String buckeyKey = bucket.getKeyAsString();
-							long docCount = bucket.getDocCount();
-							for (Terms.Bucket arg : bucketArgments.getBuckets()) {
-								item.put(Common.nvl(arg.getKeyAsString()), arg.getDocCount());
-								keys.put(Common.nvl(arg.getKey()), 0);
-								item.putAll(pivotParse(svcChk, buckeyKey, docCount));
-							}
-						}
-						else if(subaggs instanceof ParsedRange){
-							ParsedRange bucketArgments = (ParsedRange) subaggs;
-							String buckeyKey = bucket.getKeyAsString();
-							long docCount = bucket.getDocCount();
-							for (Range.Bucket arg : bucketArgments.getBuckets()) {
-								item.put(Common.nvl(arg.getKeyAsString()), arg.getDocCount());
-								keys.put(Common.nvl(arg.getKey()), 0);
-								item.putAll(pivotParse(svcChk, buckeyKey, docCount));
-							}
-						}
-						else if(subaggs instanceof ParsedSum){
-							ParsedSum bucketArgments = (ParsedSum) subaggs;
-							String buckeyKey = bucket.getKeyAsString();
-							long docCount = bucket.getDocCount();
-							item.put(Common.nvl(bucketArgments.getName()), bucketArgments.getValue());
-							keys.put(Common.nvl(bucketArgments.getName()), 0);
-							item.putAll(pivotParse(svcChk, buckeyKey, docCount));
-						}
-
+						parsePivotAggs(subaggs,bucket.getKeyAsString(),bucket.getDocCount());
 					}
-					result.add(item);
+					result.add(pivotItem);
 				}
 
 			}
 		}
-		List<String> list = new ArrayList<String>(keys.keySet());
-		Collections.sort(list);
-		this.pivotHeader = list;
+		headerList = new ArrayList<String>(pivotKeys.keySet());
+		Collections.sort(headerList);
+		this.pivotHeader = headerList;
 		this.pivotData = result;
 
 	}
 
 
 
-	public Map<String, Object> pivotParse(String svcChk,String bucketKey,long docCount){
+	public Map<String, Object> pivotParse(String bucketKey,long docCount){
 		Map<String, Object> item = new HashMap<String, Object>();
-		if (svcChk.equals("svc12") || svcChk.equals("svc")) {
+		if (pivotChkSvc.equals("svc12") || pivotChkSvc.equals("svc")) {
 			item.put("svc", bucketKey);
 			item.put("svcNm", svcDeepNm(bucketKey));
 			item.put("svcLv12Nm", svcLv12GroupNm(bucketKey));
@@ -309,7 +258,7 @@ public class SolrEdcMessageVO {
 			item.put("svcLv2Nm", svcLv2Nm(bucketKey));
 		}
 		item.put("rowKey",  bucketKey);
-		if (Common.isOrEquals( svcChk, "user_str", "sender_str", "userid", "userkey")) {
+		if (Common.isOrEquals( pivotChkSvc, "user_str", "sender_str", "userid", "userkey")) {
 			item.put("rowName", Config.getUserName(Common.nvl(bucketKey)));
 		}
 		item.put("name", bucketKey);
@@ -444,110 +393,102 @@ public class SolrEdcMessageVO {
 	}
 
 
+	/* facet aggregations 계산 전용 start */
 
-//	private void pivotCalculator(SearchResponse searchResponse, ElasticSearchParam searchParam){
-//		/* 통계 검색인 경우 pivot 계산 */
-//		Aggregations aggregations = searchResponse.getAggregations();
-//		if(null == aggregations || aggregations.getAsMap().size() == 0) return;
-//
-//		this.search_xAxis = Common.nvl(searchParam.getXAxis());
-//		this.search_yAxis = Common.nvl(searchParam.getYAxis());
-//		this.search_startDate = Common.nvl(searchParam.getStartDate());
-//		this.search_endDate = Common.nvl(searchParam.getEndDate());
-//		this.convertedXField = Config.getElsConvertField(search_xAxis);
-//		this.convertedYField = Config.getElsConvertField(search_yAxis);
-//		this.rowkey = Common.nvl(searchParam.getSearchParameters().get("rowKey"));
-//
-//		this.setPivot(aggregations);
-//
-//	}
+	public void parseFacetAggs(Aggregation aggs,String headerKey,long docCount){
+		if (aggs instanceof ParsedStringTerms) parsedStringTerms(aggs,headerKey,docCount);
+		else if (aggs instanceof ParsedLongTerms) parsedLongTerms(aggs,headerKey,docCount);
+		else if (aggs instanceof ParsedRange) parsedRange(aggs,headerKey,docCount);
+		else if (aggs instanceof ParsedSum) parsedSum(aggs,headerKey,docCount);
+	}
 
-//
-//	private void dateCalculator(Terms results){
-//		/* 시간 분류  */
-//		List<Terms.Bucket> bucketList = (List<Terms.Bucket>) results.getBuckets();
-//		for (Terms.Bucket bucket : bucketList) {
-//			Aggregations aggs = bucket.getAggregations();
-//			List<Aggregation> aggsList = aggs.asList();
-//			ParsedDateHistogram bucketArgments = (ParsedDateHistogram) aggsList.get(0); //subAggregations를 하나만 주고있어서 인덱스 0만 가져옴
-//
-//			/* data 관련 */
-//			Map<String, Object> item = new HashMap();
-//			for(Histogram.Bucket args : bucketArgments.getBuckets()){
-//				String headerKey = convertTimeStr(args.getKeyAsString(),search_xAxis,true);
-//				String headerStr = convertTimeStr(args.getKeyAsString(),search_xAxis,false);
-//				item.put("rowKey", bucket.getKeyAsString());
-//				item.put(headerStr, args.getDocCount());
-//				headerKeys.put(headerStr,!Common.isEmpty(headerKey) ? Integer.parseInt(headerKey) : 0 );
-//			}
-//			item.put("total",bucket.getDocCount());
-//			pivotResult.add(item);
-//		}
-//		List<Map.Entry<String,Integer>> keyList = new LinkedList<>(headerKeys.entrySet());
-//		keyList.sort(Map.Entry.comparingByValue());
-//		sortedHeaderList = keyList.stream().map( k -> k.getKey()).collect(Collectors.toList());
-//
-//	}
-//
-//	private void etcCalculator(Terms results){
-//		/* 시간 분류 외 (회사,사업장,부서,직급,서비스) */
-//		List<Terms.Bucket> bucketList = (List<Terms.Bucket>) results.getBuckets();
-//
-//		for (Terms.Bucket bucket : bucketList) {
-//			Aggregations aggs = bucket.getAggregations();
-//			List<Aggregation> aggsList = aggs.asList();
-//			ParsedStringTerms bucketArgments = (ParsedStringTerms) aggsList.get(0);
-//			Map<String, Object> item = new HashMap();
-//			for (Terms.Bucket arg : bucketArgments.getBuckets()) {
-//				headerKeys.put(arg.getKeyAsString(), 0); // pivot header 추가
-//				item.put("rowKey", bucket.getKeyAsString());
-//				item.put(arg.getKeyAsString(), arg.getDocCount());
-//			}
-//			item.put("total",bucket.getDocCount());
-//			pivotResult.add(item);
-//
-//		}
-//		List<Map.Entry<String,Integer>> keyList = new LinkedList<>(headerKeys.entrySet());
-//		sortedHeaderList = keyList.stream().map( k -> k.getKey()).collect(Collectors.toList());
-//
-//	}
-//
-//	public List reCalculator(){
-//		List<Map<String, Object>> pivotDataList = new ArrayList<>();  // 최종 pivot 데이터
-//		int idx = 0;
-//		for (Map<String, Object> tempPivot : pivotResult) {
-//			Map<String, Object> tempMap = new HashMap<>();
-//			for (String header : sortedHeaderList) {
-//				/* header 세팅*/
-//				String headerKey = header;
-//				if (!Common.isEmpty(tempPivot.get(header))) {
-//					Long Value = Common.nvn(tempPivot.get(header));
-//					tempMap.put(headerKey, Value);
-//				} else {
-//					tempMap.put(headerKey, 0L);
-//				}
-//			}
-//			/* 중복 rowKey 체크  #############################################################*/
-//			Map<String, Object> oldMap = null;
-//			if ((oldMap = checkRowKey(pivotDataList, Common.nvl(tempPivot.get("rowKey")))) != null) {
-//				int target = Common.nvz(oldMap.get("idx"));
-//				tempMap.putAll(summaryMap(oldMap, tempMap));
-//				/* total 계산 */
-//				pivotDataList.get(target).putAll(tempMap);
-//				continue;
-//			}
-//			/* 중복 아닐시  #############################################################*/
-//			tempMap.put("rowKey", Common.nvl(tempPivot.get("rowKey")));  // rowKey
-//			tempMap.put("rowName", Config.analysisFlag(convertedYField,Common.nvl(tempPivot.get("rowKey")))); // rowName
-//			tempMap.put("total", Common.nvl(tempPivot.get("total")));
-//			pivotDataList.add(tempMap);
-//			idx++;
-//		}
-//
-//		List resultList = pivotDataList.stream().sorted(Comparator.comparingInt(m -> Integer.parseInt(m.get("total").toString()))).collect(Collectors.toList());
-//		Collections.reverse(resultList);
-//		return resultList;
-//	}
+	public void parsedStringTerms(Aggregation aggs,String headerKey,long docCount){
+		ParsedStringTerms bucketArgments = (ParsedStringTerms) aggs;
+		for (Terms.Bucket arg : bucketArgments.getBuckets()) {
+			String buckeyKey = arg.getKeyAsString();
+			headerList.add(headerKey);
+			facetParse(buckeyKey, docCount);
+		}
+	}
+
+
+	public void parsedLongTerms(Aggregation aggs,String headerKey,long docCount){
+		ParsedLongTerms bucketArgments = (ParsedLongTerms) aggs;
+		for (Terms.Bucket arg : bucketArgments.getBuckets()) {
+			String buckeyKey = arg.getKeyAsString();
+			headerList.add(headerKey);
+			facetParse(buckeyKey, docCount);
+		}
+	}
+
+	public void parsedRange(Aggregation aggs,String headerKey,long docCount){
+		ParsedRange bucketArgments = (ParsedRange) aggs;
+		for (Range.Bucket arg : bucketArgments.getBuckets()) {
+			String buckeyKey = arg.getKeyAsString();
+			headerList.add(headerKey);
+			facetParse(buckeyKey, docCount);
+		}
+	}
+
+	public void parsedSum(Aggregation aggs,String headerKey,long docCount){
+		ParsedSum bucketArgments = (ParsedSum) aggs;
+		String buckeyKey = bucketArgments.getName();
+		headerList.add(headerKey);
+		facetParse( buckeyKey, docCount);
+	}
+
+	/* facet aggregations 계산 전용 END */
+
+
+
+	/* pivot aggregations 계산 전용 start */
+
+	public void parsePivotAggs(Aggregation aggs,String headerKey,long docCount){
+		if (aggs instanceof ParsedStringTerms) parsedStringTermsPivot(aggs,headerKey,docCount);
+		else if (aggs instanceof ParsedLongTerms) parsedLongTermsPivot(aggs,headerKey,docCount);
+		else if (aggs instanceof ParsedRange) parsedRangePivot(aggs,headerKey,docCount);
+		else if (aggs instanceof ParsedSum) parsedSumPivot(aggs,headerKey,docCount);
+	}
+
+	public void parsedStringTermsPivot(Aggregation aggs,String buckeyKey,long docCount){
+		ParsedStringTerms bucketArgments = (ParsedStringTerms) aggs;
+		for (Terms.Bucket arg : bucketArgments.getBuckets()) {
+			pivotItem.put(Common.nvl(arg.getKeyAsString()), arg.getDocCount());
+			pivotKeys.put(Common.nvl(arg.getKey()), 0);
+			pivotItem.putAll(pivotParse( buckeyKey, docCount));
+		}
+	}
+
+
+	public void parsedLongTermsPivot(Aggregation aggs,String buckeyKey,long docCount){
+		ParsedLongTerms bucketArgments = (ParsedLongTerms) aggs;
+		for (Terms.Bucket arg : bucketArgments.getBuckets()) {
+			pivotItem.put(Common.nvl(arg.getKeyAsString()), arg.getDocCount());
+			pivotKeys.put(Common.nvl(arg.getKey()), 0);
+			pivotItem.putAll(pivotParse( buckeyKey, docCount));
+		}
+	}
+
+	public void parsedRangePivot(Aggregation aggs,String buckeyKey,long docCount){
+		ParsedRange bucketArgments = (ParsedRange) aggs;
+		for (Range.Bucket arg : bucketArgments.getBuckets()) {
+			pivotItem.put(Common.nvl(arg.getKeyAsString()), arg.getDocCount());
+			pivotKeys.put(Common.nvl(arg.getKey()), 0);
+			pivotItem.putAll(pivotParse( buckeyKey, docCount));
+		}
+	}
+
+	public void parsedSumPivot(Aggregation aggs,String buckeyKey,long docCount){
+		ParsedSum bucketArgments = (ParsedSum) aggs;
+		pivotItem.put(Common.nvl(bucketArgments.getName()), bucketArgments.getValue());
+		pivotKeys.put(Common.nvl(bucketArgments.getName()), 0);
+		pivotItem.putAll(pivotParse( buckeyKey, docCount));
+	}
+
+	/* pivot aggregations 계산 전용 END */
+
+
+
 
 
 

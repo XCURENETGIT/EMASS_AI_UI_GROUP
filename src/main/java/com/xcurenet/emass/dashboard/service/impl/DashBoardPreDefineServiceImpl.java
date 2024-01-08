@@ -13,7 +13,6 @@ import com.xcurenet.emass.message.service.SolrEdcVO;
 import com.xcurenet.emass.service.service.ServiceGroupVO;
 import com.xcurenet.minio.MinioFileAdapter;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.collections.map.HashedMap;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.springframework.stereotype.Service;
@@ -22,8 +21,6 @@ import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static org.apache.solr.common.params.FacetParams.FACET_QUERY;
 
 @Log4j2
 @Service("dashBoardPreDefineService")
@@ -548,7 +545,7 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		sq.setParam("facet.sum", true);
 		sq.setParam("facet.field", "size");
 
-		sq.setParam("facet.limit", "-1");
+		sq.setParam("facet.limit", "100");
 		sq.setParam("facet.mincount", "-1");
 		sq.setFacetSort("ctime_yyyymmdd");
 

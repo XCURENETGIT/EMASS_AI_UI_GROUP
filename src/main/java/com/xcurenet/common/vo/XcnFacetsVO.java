@@ -1,25 +1,32 @@
 package com.xcurenet.common.vo;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.google.gson.Gson;
-
-
 import com.xcurenet.emass.message.service.SolrEdcMessageVO;
 import lombok.Data;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.apache.solr.common.util.SimpleOrderedMap;
+import org.elasticsearch.search.aggregations.Aggregation;
+import org.elasticsearch.search.aggregations.Aggregations;
+import org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms;
+import org.elasticsearch.search.aggregations.bucket.terms.Terms;
+import org.springframework.data.elasticsearch.core.ElasticsearchAggregations;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class XcnFacetsVO {
 	private JSONArray jArray = new JSONArray();
 	private List<String> column = new ArrayList<>();
+
+	private int facetSize = 0;
+	private int facetIdx = 0;
+
+
 
 	public XcnFacetsVO(SolrEdcMessageVO edc) {
 		this(edc, 0);
@@ -31,15 +38,19 @@ public class XcnFacetsVO {
 
 	@SuppressWarnings("unchecked")
 	public XcnFacetsVO(SolrEdcMessageVO edc, String name, int columnCount) {
-		setColumn(columnCount);
+		facetSize = edc.getFacets().aggregations().asList().size();
 
-		SimpleOrderedMap<Object> facets = edc.getFacets();
+		ElasticsearchAggregations facets = edc.getFacets();
 		if(facets != null) {
-			SimpleOrderedMap<Object> map = (SimpleOrderedMap<Object>)facets.get(name);
-			if(map != null) {
-				List<SimpleOrderedMap<Object>> simpleOrderedMapList = (List<SimpleOrderedMap<Object>>)map.get("buckets");
-				for (SimpleOrderedMap<Object> simpleOrderedMap : simpleOrderedMapList) {
-					jArray.add(bucketsSetting(simpleOrderedMap));
+			Aggregations mainAggregations = facets.aggregations();
+			Map<String, Aggregation> mainAggsMap = mainAggregations.getAsMap();
+			String mainKey = mainAggsMap.keySet().stream().collect(Collectors.joining());
+
+			Terms facetPivot = facets.aggregations().get(mainKey);
+			if(facetPivot != null) {
+				List<Terms.Bucket> bucketList = (List<Terms.Bucket>) facetPivot.getBuckets();
+				for (Terms.Bucket bucket  : bucketList) {
+					jArray.add(bucketsSetting(bucket));
 				}
 			}
 		}
@@ -69,28 +80,72 @@ public class XcnFacetsVO {
 	}
 
 
+
+//	public void parsedLongTerms(Aggregation aggs,String headerKey,long docCount){
+//		ParsedLongTerms bucketArgments = (ParsedLongTerms) aggs;
+//		for (Terms.Bucket arg : bucketArgments.getBuckets()) {
+//			String buckeyKey = arg.getKeyAsString();
+//			headerList.add(headerKey);
+//			facetParse(buckeyKey, docCount);
+//		}
+//	}
+//
+//	public void parsedRange(Aggregation aggs,String headerKey,long docCount){
+//		ParsedRange bucketArgments = (ParsedRange) aggs;
+//		for (Range.Bucket arg : bucketArgments.getBuckets()) {
+//			String buckeyKey = arg.getKeyAsString();
+//			headerList.add(headerKey);
+//			facetParse(buckeyKey, docCount);
+//		}
+//	}
+//
+//	public void parsedSum(Aggregation aggs,String headerKey,long docCount){
+//		ParsedSum bucketArgments = (ParsedSum) aggs;
+//		String buckeyKey = bucketArgments.getName();
+//		headerList.add(headerKey);
+//		facetParse( buckeyKey, docCount);
+//	}
+
+
 	@SuppressWarnings({"rawtypes", "unchecked"})
-	private JSONObject bucketsSetting(SimpleOrderedMap<Object> simpleOrderedMap) {
+	private JSONObject bucketsSetting(Terms.Bucket bucket) {
+		if(null == bucket.getAggregations()) return null;
 		JSONObject json = new JSONObject();
-		for(Map.Entry e : simpleOrderedMap) {
-			Object value = e.getValue();
-			if(this.column.contains(e.getKey())) {
-				json.put("buckets", bucketsSetting((SimpleOrderedMap<Object>)e.getValue()).get("buckets"));
-			} else if(value instanceof List) {
-				List<SimpleOrderedMap<Object>> simpleOrderedMapList = (List)value;
-				JSONArray jsonArray = new JSONArray();
-				for (SimpleOrderedMap<Object> simpleOrderedMap2 : simpleOrderedMapList) {
-					jsonArray.add(bucketsSetting(simpleOrderedMap2));
-				}
-				json.put(e.getKey(), jsonArray);
-			} else {
-				if(value instanceof String || value instanceof Long || value instanceof Integer) {
-					json.put(e.getKey(), value);
-				} else {
-					json.put(e.getKey(), Math.round((Double)value));
-				}
+
+		Aggregations aggs = bucket.getAggregations();
+		List<Aggregation> aggsList = aggs.asList();
+
+		JSONArray jsonArray = new JSONArray();
+
+		if(this.facetSize == this.facetIdx) {
+
+		}else {
+			for (Aggregation subaggs : aggsList) {
+				jsonArray.add(parseFacetAggs(subaggs, bucket.getKeyAsString(), bucket.getDocCount()));
+				facetIdx = facetIdx + 1;
 			}
+			json.put(bucket.getKey(), jsonArray);
+		}
+
+		return json;
+	}
+
+
+	public JSONObject parseFacetAggs(Aggregation aggs,String headerKey,long docCount){
+		if (aggs instanceof ParsedStringTerms) return parsedStringTerms(aggs,headerKey,docCount);
+		else return null;
+	}
+
+
+	public JSONObject parsedStringTerms(Aggregation aggs,String headerKey,long docCount){
+		JSONObject json = new JSONObject();
+		ParsedStringTerms bucketArgments = (ParsedStringTerms) aggs;
+		for (Terms.Bucket arg : bucketArgments.getBuckets()) {
+			String buckeyKey = arg.getKeyAsString();
+			json.put(buckeyKey, docCount);
 		}
 		return json;
 	}
+
+
 }

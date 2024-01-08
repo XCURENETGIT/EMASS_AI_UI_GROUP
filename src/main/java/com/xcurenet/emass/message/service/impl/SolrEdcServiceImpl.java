@@ -289,9 +289,15 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			if (!Common.isEmpty(sq.get("facet.ranges"))) {
 				List<String> ranges = Common.toList(sq.get("facet.ranges"), ",");
 				termsAggregation.subAggregation(addRanges(field, ranges));
-			} else if ((null != sq.get("facet.sum") && Common.isEquals("true", sq.get("facet.sum")))) {
+			} else if ( Common.isEquals("true", sq.get("facet.sum"))) {
 				String key = sq.get("facet.field");
+				int offset = Common.nvz(sq.get("facet.offset"), 0);
+				int limit = Common.nvz(sq.get("facet.limit"), 100);
+
 				termsAggregation.subAggregation(AggregationBuilders.sum(key).field(key));
+				BucketSortPipelineAggregationBuilder paging = PipelineAggregatorBuilders.bucketSort("paging", null).from(offset).size(limit);
+				termsAggregation.subAggregation(paging);
+
 			} else if (Common.isEquals("true", sq.get("facet.list"))) {
 				/* 대화방 목록 (그룹) */
 				int offset = Common.nvz(sq.get("facet.offset"), 0);
@@ -305,14 +311,8 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 				aggregations.add(AggregationBuilders.cardinality("bucket_total").field(mainField));
 			}else if (Common.isEquals("true", sq.get("facet.detail"))) {
 				/* 대화 상세 내역 */
-				int offset = (!Common.isEmpty(sq.get("facet.offset"))) ? Common.nvz(sq.get("facet.offset")) : 0; // default 0;
 				int size = (!Common.isEmpty(sq.get("facet.size"))) ? Common.nvz(sq.get("facet.size")) : 1; // default 1
-
-				if((!Common.isEmpty(sq.get("facet.sort")))){
-					termsAggregation  = termsAggregation.subAggregation(AggregationBuilders.topHits(field).size(size).from(offset).sort("ctime", SortOrder.DESC));
-				}else{
-					termsAggregation  = termsAggregation.subAggregation(AggregationBuilders.topHits(field).size(size).from(offset).sort("ctime", SortOrder.ASC));
-				}
+				termsAggregation  = termsAggregation.subAggregation(AggregationBuilders.topHits(field).size(size).from(0).sort("ctime", SortOrder.ASC));
 			}
 
 			else {
