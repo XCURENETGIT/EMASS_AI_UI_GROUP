@@ -510,10 +510,10 @@ function makeList(nextFlag){
             var attachsizeArray = attachsize.split('|');
             var attachtypeArray = attachtype.split('|');
 
-                str += '<p class="filedown file_link" msgid="' + obj.msgid + '" attachhash="' + attachhashArray[i] + '">';
+                str += '<p class="filedown file_link" msgid="' + obj.msgid + '" attachhash="' + attachhashArray[0] + '">';
                 str += '<span class="img"></span>';
-                str += '<span>' + attachnameArray[i] + '.' + attachtypeArray[i] + '<br/>';
-                str += attachsizeArray[i] + 'KB</span>';
+                str += '<span>' + attachnameArray[0] + '.' + attachtypeArray[0] + '<br/>';
+                str += attachsizeArray[0] + 'KB</span>';
                 str += '<button class="btnchatdown downlodadBtn"></button></p>';
 
 
