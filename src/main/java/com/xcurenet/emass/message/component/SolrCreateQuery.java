@@ -185,12 +185,12 @@ public class SolrCreateQuery {
 	 * 검색 영역을 설정한다.(field 설정)
 	 */
 	@Deprecated
-	public SolrCreateQuery setSearchFields(String... search_fields) {
+	public SolrCreateQuery setSelectSearchFields(String... search_fields) {
 
 		if (search_fields.length <= 1 && Common.isEmpty(search_fields[0])) {
-			sq.setParam("qf", StringUtils.join(this.SEARCH_FIELD, " "));
+			sq.setParam("sqf", StringUtils.join(this.SEARCH_FIELD, " "));
 		} else {
-			sq.setParam("qf", StringUtils.join(search_fields, " "));
+			sq.setParam("sqf", StringUtils.join(search_fields, " "));
 		}
 		return this;
 	}
@@ -1168,7 +1168,10 @@ public class SolrCreateQuery {
 				setSort(sort);
 			}
 			setSearchStr(searchStr, searchField);
-			setSearchField(searchField);
+
+			setSearchField(searchField); // default 검색 영역
+			setSelectSearchFields(searchField); //선택한 검색 영역
+
 			setService(serviceType);
 			setInfoType(infoTypes);
 			setFeedback(feedbacks);

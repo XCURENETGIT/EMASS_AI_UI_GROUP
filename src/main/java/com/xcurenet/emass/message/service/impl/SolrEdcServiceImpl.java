@@ -122,12 +122,11 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		/* 정규식 패턴 필드 설정 */
 		BoolQueryBuilder regexQuery = QueryBuilders.boolQuery();
 		if(!Common.isEmpty(sq.get("regexPattern"))) {
-			List<String> list = getSearchField(sq);
+			List<String> list = getselectSearchField(sq);
 			for (String s : list) {
 				regexQuery.should(QueryBuilders.regexpQuery(s, sq.get("regexPattern")));
 			}
 		}
-
 
 		log.info("page : {}  rows : {}", getPage(sq), sq.getRows());
 		Query searchQuery = new NativeSearchQueryBuilder()
@@ -161,9 +160,9 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		return fields;
 	}
 
-	public List<String> getSearchField(SolrQuery sq){
-		String defaultSearchFields = Common.nvl(sq.get("qf"));
-		return Common.toList(defaultSearchFields, " ");
+	public List<String> getselectSearchField(SolrQuery sq){
+		String selectSearchField = Common.nvl(sq.get("sqf"));
+		return Common.toList(selectSearchField, " ");
 	}
 
 	
