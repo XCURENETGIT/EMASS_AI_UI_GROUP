@@ -56,7 +56,7 @@
 	.empty-dashboard-message a:hover{
 		color:#1C64D3;text-decoration: underline;
 	}
-	.empty-dashboard-message p {line-height: 1.3;}*/
+	.empty-dashboard-message p {line-height: 1.3;}
 	#emptyDashboard{
 		text-align: center;
 		padding-top: 25px;
@@ -151,7 +151,7 @@
 		text-align: left;
 		z-index: 1000;
 		border: 1px solid #555;
-		background-color: #DCE7F3;
+		background-color: #f8f8f8;
 		width:400px;
 		overflow: auto;
 		word-break: break-all;
@@ -285,7 +285,7 @@
             $('#conditionViewDiv').fadeIn();
             var x = e.clientX;
             var o = $(this).parent().parent().offset();
-            $('#conditionViewDiv').css({'top':'160px','left':o.left})
+            $('#conditionViewDiv').css({'top':'100px','left':o.left})
 
             var index = $(this).parent().parent().parent().attr('data-index');
 
@@ -1262,9 +1262,9 @@
 </head>
 
 <div id="conditionViewDiv">
-	<div style="height:30px;background-color:black;color:#fff;padding-left:10px;line-height:30px;font-weight: bold;cursor:default;">
+	<div style="height:30px;background-color:#1C64D3;color:#fff;padding-left:10px;line-height:30px;font-weight: bold;cursor:default;">
 		<div style="float:left;width:120px;">
-			<i class="glyphicon glyphicon-question-sign"></i>&nbsp;<s:message code="dashboard.conditionView"/>
+			<s:message code="dashboard.conditionView"/>
 		</div>
 	</div>
 	<div style="width:100%;padding:10px 10px 10px 10px;">
@@ -1323,8 +1323,8 @@
 		<div class="col-xs-12" style="margin-top: 30px;">
 			<div class="carousel slide media-carousel" id="selectDashMenu">
 				<div class="carousel-inner" id="dashboardHeaderArea"></div>
-				<a data-slide="prev" href="#selectDashMenu" class="left carousel-control" style="display:none; font-size: 24px; color: #fff;">‹</a>
-				<a data-slide="next" href="#selectDashMenu" class="right carousel-control" style="display:none; font-size: 24px; color: #fff;">›</a>
+				<a data-slide="prev" href="#selectDashMenu" class="left carousel-control" style="display:none; font-size: 16px; color: #fff;">&#10094;</a>
+				<a data-slide="next" href="#selectDashMenu" class="right carousel-control" style="display:none; font-size: 16px; color: #fff;">&#10095;</a>
 			</div>
 		</div>
 	</div>

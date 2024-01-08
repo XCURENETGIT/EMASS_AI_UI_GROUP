@@ -317,13 +317,13 @@ position: absolute;
 .media-carousel {margin-bottom: 0; }
 /* Previous button  */
 .media-carousel .carousel-control.left {
-	left: -12px;background-image: none;background: none repeat scroll 0 0 #222222;border: 4px solid #FFFFFF;
-	border-radius: 23px 23px 23px 23px;height: 40px;width : 40px;margin-top: 50px
+	left: -12px;background-image: none;background: none repeat scroll 0 0 #222222;
+	border-radius: 23px 23px 23px 23px;height: 40px;width : 40px;margin-top: 30px; line-height:38px;
 }
 /* Next button  */
 .media-carousel .carousel-control.right {
-	right: -12px !important;background-image: none;background: none repeat scroll 0 0 #222222;border: 4px solid #FFFFFF;
-	border-radius: 23px 23px 23px 23px;height: 40px;width : 40px;margin-top: 50px
+	right: -12px !important;background-image: none;background: none repeat scroll 0 0 #222222;
+	border-radius: 23px 23px 23px 23px;height: 40px;width : 40px;margin-top: 30px;line-height:38px;
 }
 /* Changes the position of the indicators */
 .media-carousel .carousel-indicators {
