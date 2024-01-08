@@ -14,6 +14,13 @@
 			width: 100%;
 			height: 100%;
 		}
+		.col-65 button {margin-bottom:8px;}
+		.col-65 label img {vertical-align: middle; margin-left:4px;margin-bottom:8px;}
+		.radio-inline.c-radio {
+			margin-left: 0px;
+
+
+		}
 		/*
                 .radio-inline.c-radio {
                     margin-left: 0px;
@@ -595,7 +602,7 @@
 			</div>
 			<div class="modalCon">
 				<div class="modalTop">
-					<h3>Dashboard 추가/수정</h3>
+					<h3>추가/수정</h3>
 					<p>
 						<span class="red_dot veralign_middle"></span>
 						필수 입력 사항입니다.
@@ -610,7 +617,7 @@
 									<label for="dashName" class="fname"><s:message code="dashboardSetup.dashname"/></label>
 									<span class="red_dot"></span>
 								</div>
-								<div class="col-65">
+								<div class="col-65 mab12">
 									<input type="text" class="w100" name="dashName" id="dashName"
 									       placeholder="<s:message code="dashboardSetup.dashname"/>" style="width: 250px;" maxlength="20">
 									<input type="hidden" name="dashKey" id="dashKey">
@@ -644,22 +651,22 @@
 										<span class="red_dot"></span>
 									</div>
 									<div class="col-65">
-										<label class="radio-inline c-radio">
+										<label class="radio-inline c-radio mar8">
 											<input type="radio" name="dashChart" value="P" checked>
 											<s:message code="dashboardSetup.dashchart.pie"/>
 											<img src="<c:url value="/img/icon/chart_pie.png"/>" width="24" height="24">
 										</label>
-										<label class="radio-inline c-radio">
+										<label class="radio-inline c-radio mar8">
 											<input type="radio" name="dashChart" value="L">
 											<s:message code="dashboardSetup.dashchart.line"/>
 											<img src="<c:url value="/img/icon/line.bmp"/>" width="24" height="24">
 										</label>
-										<label class="radio-inline c-radio">
+										<label class="radio-inline c-radio mar8">
 											<input type="radio" name="dashChart" value="A">
 											<s:message code="dashboardSetup.dashchart.area"/>
 											<img src="<c:url value="/img/icon/area.bmp"/>" width="24" height="24">
 										</label>
-										<label class="radio-inline c-radio">
+										<label class="radio-inline c-radio mar8">
 											<input type="radio" name="dashChart" value="B">
 											<s:message code="dashboardSetup.dashchart.bar"/>
 											<img src="<c:url value="/img/icon/bar.bmp"/>" width="24" height="24">
@@ -684,7 +691,7 @@
 											<option value="ip_businm"><s:message code="dashboardSetup.stardardBusiIp"/></option>
 											<option value="deptnm"><s:message code="common.org.dept"/></option>
 										</select>
-										<select class="w100" id="dashChartY" name="dashChartY">
+										<select class="w100 mat8" id="dashChartY" name="dashChartY">
 											<option value="total"><s:message code="common.msg.count"/></option>
 										</select>
 									</div>
@@ -697,7 +704,7 @@
 									<span class="red_dot"></span>
 								</div>
 								<div class="col-65">
-									<button type="button" class="btn btn-default dashIcon" data-value="tit01"><img
+									<button type="button" class="btn btn-default dashIcon " data-value="tit01"><img
 											src="<c:url value="/img/ico_main_tit01.png"/>"></button>
 									<button type="button" class="btn btn-default dashIcon" data-value="tit02"><img
 											src="<c:url value="/img/ico_main_tit02.png"/>"></button>
@@ -760,10 +767,10 @@
 							</div>
 
 							<div class="row" style="border-bottom: 1px solid #e5e5e5;">
-								<div class="col-35">
-									<label for="dashComment" class="fname"><s:message code="common.msg.comment"/></label>
+								<div class="col-35 mab12">
+									<label for="dashComment " class="fname"><s:message code="common.msg.comment"/></label>
 								</div>
-								<div class="col-65">
+								<div class="col-65 mab12">
 									<input type="text" class="w100" name="dashComment" id="dashComment"
 									       placeholder='<s:message code="filterInfo.comment"/>' style="width: 250px;" maxlength="50">
 								</div>
@@ -771,8 +778,8 @@
 
 							<br/>
 							<h3><s:message code="condition.filter_setting"/></h3>
-							<div class="form-inline not-dashed text-right">
-								<button type="button" class="form_btn01" accesskey="S" id="dashConditionBtn">조건 설정</button>
+							<div class="form-inline not-dashed text-right" style="margin-top:-20px;">
+								<button type="button" class="form_btn01 mab12" accesskey="S" id="dashConditionBtn">조건 설정</button>
 							</div>
 							<div>
 								<textarea class="form-control" style="display:none" name="dashCondition" id="alarmVal"></textarea>

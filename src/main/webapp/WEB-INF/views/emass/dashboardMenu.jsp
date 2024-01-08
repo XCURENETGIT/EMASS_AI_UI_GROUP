@@ -33,6 +33,7 @@
 		.selected {
 			background-color: #c2daf8;
 		}
+		.btn {width:44px; height:30px;}
 	</style>
 	<script type="text/javascript">
         var menuMaxCnt = 5;
@@ -340,7 +341,7 @@
     gridMenu.onCheckBox();
     gridMenu.autoNumber();
     gridMenu.colAdd('menuIcon', '<s:message code="dashboardMenu.icon"/>', 60, 'center', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
-        return '<i class="customClass ' + value + '" style="font-size:20px;"></i>';
+        return '<i class="customClass ' + value + '" style="font-size:16px;"></i>';
     });
     gridMenu.colAdd('menuName', 'Dashboard <s:message code="dashboardMenu.menuname"/>', 183, 'left', false, 'link');
     gridMenu.colAdd('useYn', '<s:message code="common.msg.useyn"/>', 100, 'center', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
