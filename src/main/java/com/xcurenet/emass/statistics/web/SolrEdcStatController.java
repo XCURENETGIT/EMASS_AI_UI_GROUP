@@ -49,7 +49,7 @@ import java.util.stream.Collectors;
 @AuditMenu(Menu.STAT_USER)
 public class SolrEdcStatController {
 
-	private final static String CHECKED_QUERY = "+{!join from=msgid fromIndex=checked to=msgid}id:%s ";
+//	private final static String CHECKED_QUERY = "+{!join from=msgid fromIndex=checked to=msgid}id:%s ";
 
 	@Resource(name = "solrEdcService")
 	private SolrEdcService solrEdcService;
@@ -335,7 +335,7 @@ public class SolrEdcStatController {
 		else query +=String.format(" +ctime:[%s TO %s]", startDate, endDate);
 		query += String.format("+checked.readId:%s", adminId);
 
-//		query += " +" + yAxis + ":";
+
 		log.info("query : {}", query);
 		query += " +" + yAxis + ":*";
 
@@ -347,14 +347,10 @@ public class SolrEdcStatController {
 		sq.setFacetSort("count");
 
 		sq.setParam("facet.pivot", yAxis + "," + xAxis);
-
 		SolrEdcMessageVO solrCheckedStatVo = solrCheckedService.getCheckedStatList(sq);
-		/* 임시주석*/
-	//	appendEmassTotal(solrCheckedStatVo, yAxis, Common.getAdminId(request));  
-	//	SolrEdcMessageVO solrStatVo = setAlltotal(solrEdcService.getEmassMessage(sq, Common.getAdminId(request)));
+			appendEmassTotal(solrCheckedStatVo, yAxis, Common.getAdminId(request));
 		return new XcnResponseVO(XcnRspCode.OK, solrCheckedStatVo, solrCheckedStatVo.getPivotData().size());
 	}
-
 
 	private void appendEmassTotal(SolrEdcMessageVO solrCheckedStatVo, String yAxis, String adminId) throws IOException, SolrServerException {
 		List<String> rowKey = new ArrayList<>();
@@ -402,43 +398,56 @@ public class SolrEdcStatController {
 	@ResponseBody
 	public XcnResponseVO getCheckedDetailList(final HttpServletRequest request, final HttpSession session) throws SolrServerException, IOException {
 		String xAxis = Common.nvl(request.getParameter("xAxis"));
+		String yAxis = Common.nvl(request.getParameter("yAxis"));
 		String rowKey = Common.nvl(request.getParameter("rowKey")).replaceAll("-", "");
 		String colKey = Common.nvl(request.getParameter("colKey")).replaceAll("-", "");
 		String startDate = Common.nvl(request.getParameter("startDate"));
+		String dateType = Common.nvl(request.getParameter("dateType"));
 		String endDate = Common.nvl(request.getParameter("endDate"));
 		int offset = Common.nvz(request.getParameter("offset"));
 		int limit = Common.nvz(request.getParameter("limit"));
+		String query = "";
+		int cnt = rowKey.length();
 
 		String adminId = Common.nvl(request.getParameter("adminId"));
 		if (Common.isEmpty(adminId)) adminId = "*";
 
-		StringBuilder solrQuery = new StringBuilder();
-		solrQuery.append(String.format(" +{!join from=msgid fromIndex=checked to=msgid}id:%s ", adminId));
-		String[] t = rowKey.split(",");
-		if (t.length > 1) {
-			StringBuilder values = new StringBuilder();
-			for (String value : t) {
-				values.append("\"").append(value.replaceAll("시", "")).append("\" ");
+		String Yflag = "Y";
+		if (!rowKey.isEmpty()) {
+			String[] t = rowKey.split(",");
+			if (t.length > 0) {
+				String values = "";
+				for (String value : t) {
+
+					values += "\"" + value + "\" ";
+				}
+				if (Yflag.equals("N")) {
+					yAxis = "svc12";
+				}
+				query += "+" + yAxis + ":" + "(" + values + ") ";
+			} else {
+				if (rowKey.contains(",")) {
+					rowKey = rowKey.replaceAll(",", "");
+					query += "+" + yAxis + ":" + "\"" + rowKey.replaceAll(",", "") + "\" ";
+				} else {
+					query += "+" + yAxis + ":" + rowKey + " ";
+				}
+
 			}
-			solrQuery.append(String.format(" +ctime%s:(%s) ", xAxis, values.toString()));
-		} else solrQuery.append(String.format(" +ctime%s:%s ", xAxis, rowKey.replaceAll("시", "")));
-
-		solrQuery.append(String.format(" +ctime:[%s TO %s] ", startDate, endDate));
-
-		if (Common.isNotEmpty(colKey)) {
-			solrQuery.append(String.format(" +{!join from=msgid fromIndex=checked to=msgid}date%s:%s ", xAxis, colKey));
 		}
-		solrQuery.append(" +{!join from=msgid fromIndex=checked to=msgid}date_hh:* ");
+
+		if (Common.isEquals(dateType,"date"))query += String.format(" +checked.readTime:[%s TO %s]", startDate, endDate);
+		else query +=String.format(" +ctime:[%s TO %s]", startDate, endDate);
+		query += String.format("+checked.readId:%s", adminId);
 
 		SolrQuery sq = new SolrQuery();
-		sq.setQuery(solrQuery.toString());
+		sq.setQuery(query);
 		sq.setStart(offset);
 		sq.setRows(limit);
 		sq.setSort("ctime", SolrQuery.ORDER.desc);
 
-
-		SolrEdcMessageVO solrStatVo = setAlltotal(solrEdcService.getEmassMessage(sq, Common.getAdminId(request)));
-		return new XcnResponseVO(XcnRspCode.OK, solrStatVo, solrStatVo.getPivotData().size());
+		SolrEdcMessageVO solrStatVo = solrEdcService.getEmassMessage(sq, Common.getAdminId(request), "", null);
+		return new XcnResponseVO(XcnRspCode.OK, solrStatVo, solrStatVo.getNumFound());
 
 	}
 
