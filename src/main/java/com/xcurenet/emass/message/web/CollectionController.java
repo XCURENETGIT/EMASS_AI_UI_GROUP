@@ -309,7 +309,7 @@ public class CollectionController {
 
 		/* 그룹 디테일검색 동적 들어와야 할 offset,size 값*/
 		sq.setParam("facet.offset", "0");
-		sq.setParam("facet.size", "5");
+		sq.setParam("facet.size", "10");
 		sq.setParam("facet.detail", true);
 		sq.setParam("facet.list", false);
 		sq.setParam("facet.mincount", "1");
@@ -374,7 +374,7 @@ public class CollectionController {
 		sq.setParam("facet.sort", true);
 
 		sq.setParam("facet.offset", "0");
-		sq.setParam("facet.size", String.valueOf(limit));
+		sq.setParam("facet.size", "10");
 		sq.setParam("facet.detail", false);
 		sq.setParam("facet.message", true);
 		sq.setParam("facet.mincount", "1");
@@ -418,7 +418,7 @@ public class CollectionController {
 
 		/* 그룹 디테일검색 동적 들어와야 할 offset,size 값*/
 		sq.setParam("facet.offset", "0");
-		sq.setParam("facet.size", "5");
+		sq.setParam("facet.size", "10");
 		sq.setParam("facet.detail", true);
 		sq.setParam("facet.list", false);
 		sq.setParam("facet.mincount", "1");
