@@ -15,6 +15,7 @@ import com.xcurenet.common.util.locale.Prop;
 import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.emass.message.component.SolrCreateQuery;
+import com.xcurenet.emass.message.service.SolrCheckedService;
 import com.xcurenet.emass.message.service.SolrEdcMessageVO;
 import com.xcurenet.emass.message.service.SolrEdcService;
 import com.xcurenet.emass.message.service.SolrEdcVO;
@@ -52,6 +53,9 @@ public class SolrEdcStatController {
 
 	@Resource(name = "solrEdcService")
 	private SolrEdcService solrEdcService;
+
+	@Resource(name = "solrCheckedService")
+	private SolrCheckedService solrCheckedService;
 
 	@Resource(name = "checkedReadStatService")
 	private CheckedReadStatService checkedReadStatService;
@@ -344,10 +348,11 @@ public class SolrEdcStatController {
 
 		sq.setParam("facet.pivot", yAxis + "," + xAxis);
 
-//		SolrEdcMessageVO solrCheckedStatVo = solrCheckedService.getCheckedStatList(sq);
-
-		SolrEdcMessageVO solrStatVo = setAlltotal(solrEdcService.getEmassMessage(sq, Common.getAdminId(request)));
-		return new XcnResponseVO(XcnRspCode.OK, solrStatVo, solrStatVo.getPivotData().size());
+		SolrEdcMessageVO solrCheckedStatVo = solrCheckedService.getCheckedStatList(sq);
+		/* 임시주석*/
+	//	appendEmassTotal(solrCheckedStatVo, yAxis, Common.getAdminId(request));  
+	//	SolrEdcMessageVO solrStatVo = setAlltotal(solrEdcService.getEmassMessage(sq, Common.getAdminId(request)));
+		return new XcnResponseVO(XcnRspCode.OK, solrCheckedStatVo, solrCheckedStatVo.getPivotData().size());
 	}
 
 

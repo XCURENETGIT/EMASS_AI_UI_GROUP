@@ -3,10 +3,7 @@ package com.xcurenet.emass.message.service.impl;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.KafkaProducerService;
 import com.xcurenet.common.util.MongoUtil;
-import com.xcurenet.emass.message.service.SolrCheckedService;
-import com.xcurenet.emass.message.service.SolrCheckedVO;
-import com.xcurenet.emass.message.service.SolrEdcMessageVO;
-import com.xcurenet.emass.message.service.SolrEdcVO;
+import com.xcurenet.emass.message.service.*;
 import lombok.extern.log4j.Log4j2;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -16,9 +13,9 @@ import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -34,6 +31,9 @@ public class SolrCheckedServiceImpl implements SolrCheckedService {
 	private MongoUtil mongo;
 
 	public static final DateTimeFormatter DATETIMEMILLISSYMBOL = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+
+	@Resource(name = "solrEdcService")
+	private SolrEdcService solrEdcService;
 
 	@Resource
 	private KafkaProducerService kafkaProducerService; // kafka
@@ -72,10 +72,8 @@ public class SolrCheckedServiceImpl implements SolrCheckedService {
 
 	@Override
 	public SolrEdcMessageVO getCheckedStatList(SolrQuery sq) throws SolrServerException, IOException {
-//		QueryResponse resp = getList(sq);
-//		return new SolrEdcMessageVO(resp);
-
-		return null;
+		SearchHits<SolrEdcVO> resp = solrEdcService.getList(sq);
+		return new SolrEdcMessageVO(resp);
 	}
 
 	@Override
