@@ -10,6 +10,8 @@ import com.xcurenet.common.util.config.Config;
 import com.xcurenet.config.service.ConfigAdminService;
 import com.xcurenet.config.service.ConfigAdminVO;
 import com.xcurenet.emass.message.service.*;
+import com.xcurenet.emass.searchHistory.vo.SearchHistoryGroupVO;
+import com.xcurenet.emass.searchHistory.vo.SearchHistoryVO;
 import com.xcurenet.interestUser.service.AdminUserGroupService;
 import edu.emory.mathcs.backport.java.util.Collections;
 import lombok.extern.log4j.Log4j2;
@@ -79,6 +81,40 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	@Override
 	public SolrClient getSolrServer() {
 		return null;
+	}
+
+	@Override
+	public SearchHistoryGroupVO getSearchHistoryList(SolrQuery sq) throws SolrServerException, IOException {
+		try {
+			String sort = sq.getSortField();
+			if (Common.isEmpty(sort)) {
+				sq.setSort(SortClause.desc("ctime"));
+				sq.addSort(SortClause.desc("msgid"));
+			}
+			log.debug("[SORT] : {}", sq.getSortField());
+			log.debug("[QUERY] {}", sq.getQuery());
+			log.info("[QUERY] {}", sq.getQuery());
+			if (Common.isNotEmpty(sq.getFilterQueries())) log.debug("[FILTER_QUERY] {}", StringUtils.join(sq.getFilterQueries(), ' '));
+		} catch (Exception e) {
+		}
+
+		TimeUtil.start();
+		log.debug("[Fields] {}", sq.getFields());
+		sq.setParam("wt", "json");
+
+		/* set 필터 쿼리 */
+		String filterQuery = (null != sq.getFilterQueries()) ? String.join(" ", sq.getFilterQueries()) : "";
+		Query searchQuery = new NativeSearchQueryBuilder()
+				.withFields(Common.toArray(sq.getFields(), ","))
+				.withQuery(QueryBuilders.queryStringQuery(sq.getQuery() + " " + filterQuery).fields(getDefaultSearchField(sq)))
+				.withPageable(PageRequest.of(getPage(sq), sq.getRows(), getSort(sq)))
+				.withAggregations(getAggregations(sq))
+				.withAggregations(getAggregationsByPivot(sq))
+				.withTrackTotalHits(true)
+				.build();
+
+		SearchHits<SearchHistoryVO> hits = operation.search(searchQuery, SearchHistoryVO.class);
+		return new SearchHistoryGroupVO(hits);
 	}
 
 	@Override
