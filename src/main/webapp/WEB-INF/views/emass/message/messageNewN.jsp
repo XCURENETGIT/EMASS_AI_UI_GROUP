@@ -58,6 +58,7 @@
 
     <style type="text/css">
         #wrap {overflow:hidden;}
+        .scroll_tabs_container div.scroll_tab_inner {height:32px !important; padding:0;}
         .contentList{
             height:100%;border: 0px;width: 100%;overflow: hidden;border:0px;position: absolute;
         }
@@ -3117,7 +3118,7 @@
                                                 <span class="resultCntSpan" style="padding-right:0px;"></span>
                                             </li>
                                             <li class="tab_li" data-index="">
-                                                <div class="tab_txt_top addTabDiv" style="padding:10px;"><span class="glyphicon glyphicon-plus" style="cursor:pointer;color:#494949;"></span></div>
+                                                <div class="tab_txt_top addTabDiv" style="padding:10px;"><span class="glyphicon glyphicon-plus" style="cursor:pointer;color:#494949; back"></span></div>
                                             </li>
                                         </ul>
                                     </div>
@@ -3309,7 +3310,7 @@
                         <li class="tab_li"><div class="tab_close"></div><div class="tab_txt_top addTabDiv" style="float:left;"></div><span class="resultCntSpan" style="padding-right:15px;"></span></li>
                     </ul>
                     <ul id="addTab">
-                        <li class="tab_li addTabLi" data-index=""><div class="tab_txt_top addTabDiv" style="padding:0 10px;"><span class="fa fa-spinner fa-spin" style="cursor:pointer;color:#494949;"></span></div></li>
+                        <li class="tab_li addTabLi" data-index=""><div class="tab_txt_top addTabDiv" style="padding:10px;"><span class="fa fa-spinner fa-spin" style="cursor:pointer;color:#494949;"></span></div></li>
                     </ul>
                 </div>
 <%--                <tiles:insertAttribute name="footer" ignore="true"/>--%>

@@ -345,7 +345,7 @@ input[type="text"] {
 }
 
 .mail_header{
-	position: relative;height: 60px;border-bottom: 1px solid #CBCBCB;background-color: #FBFBFB;padding-top:25px;
+	position: relative;height: 60px;border-bottom: 1px solid #CBCBCB;background-color: #FBFBFB;padding-top:12px;
 }
 
 .leftHideBtn{
@@ -360,20 +360,22 @@ input[type="text"] {
 
 .tabWrap .listTab_div li {
 	margin-left: 3px;
-	border: 1px solid #ccc !important;
 	white-space: nowrap;
-	height: 35px !important;
-	border-bottom: 0px !important;
 	cursor: pointer;
-	padding: 1px 10px 1px 10px !important;
+	/*padding: 1px 10px 1px 10px !important;*/
+
 	position: relative;
+	background-color: #ddd;
+	color:#111;
 }
 
 .tabWrap .listTab_div li.select {
-	background-color: #fff;
-	border: 1px solid #ccc !important;
+	background-color: #242330;
+	color:#fff;
+
+	/*border: 1px solid #ccc !important;
 	border-bottom: 0px !important;
-	border-left-width: 1px !important;
+	border-left-width: 1px !important;*/
 }
 
 .tabWrap .listTab_div li p {
@@ -402,6 +404,7 @@ input[type="text"] {
 	overflow: hidden;
 	height: 100%;
 	line-height: 32px;
+	padding:0 8px;
 }
 
 .tabWrap .listTab_div li.select p {
@@ -416,13 +419,14 @@ input[type="text"] {
 .tab_close {
 	position: absolute;
 	z-index: 1;
-	background-image: url('../img/icon/x.png');
+	background:url('../img/icon/x.png');
+	/*background-color: rgba( 36, 35, 48, 0.5 );*/
 	width: 16px;
-	height: 13px;
+	height: 16px;
 	display: inline-block;
 	background-repeat: no-repeat;
 	top: 8px;
-	right: 3px;
+	right: 5px;
 }
 
 .tab_close:hover {
