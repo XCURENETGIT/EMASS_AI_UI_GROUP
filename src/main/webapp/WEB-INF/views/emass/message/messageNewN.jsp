@@ -1808,6 +1808,7 @@
             var liObj = obj.find('.tab_li');
             liObj.attr('id', 'result'+idx);
             liObj.attr('data-index', idx);
+            /* 첫 tab 생성시 white색상 close class 고정 */
             obj.find('.tab_close').attr('id', 'result_close'+idx);
             obj.find('.addTabDiv').text('<s:message code="message.msg.newtab"/>');
 
