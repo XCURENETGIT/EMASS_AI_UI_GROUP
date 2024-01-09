@@ -326,7 +326,7 @@ input[type="text"] {
 }
 
 .section_menu .filter_menu {
-	height: 60px;
+	/*height: 60px;*/
 	cursor: pointer;
 	width: 91px;
 }
@@ -804,7 +804,7 @@ time, mark, audio, video {
 	font-size: 100%;
 	font: inherit;
 	vertical-align: baseline;
-	font-family: Pretendard;
+	font-family: Pretendard !important;
 	font-weight:400;
 	box-sizing:border-box;
 }

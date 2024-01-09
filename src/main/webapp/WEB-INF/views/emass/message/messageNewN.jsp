@@ -2323,7 +2323,7 @@
 
     </script>
 </head>
-<body class="mini-navbar msgBody" style="overflow: auto;">
+<body> <!--class="mini-navbar msgBody" style="overflow: auto;"-->
 <div id="wrap" >
     <tiles:insertAttribute name="top" ignore="true"/>
     <div id="container">
