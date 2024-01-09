@@ -57,6 +57,7 @@
     <title>EMASS PRO</title>
 
     <style type="text/css">
+        #wrap {overflow:hidden;}
         .contentList{
             height:100%;border: 0px;width: 100%;overflow: hidden;border:0px;position: absolute;
         }
@@ -288,6 +289,7 @@
         .searchBoxSpan label{
             cursor:pointer;
         }
+        /*
         .condition_group {
             text-align: center;
             border-top: 2px solid #ddd;
@@ -297,9 +299,9 @@
             color: #333;
             font-weight: bold;
             cursor: pointer;
-            /* background-color: #ebe6e5; */
+             background-color: #ebe6e5;
             background: linear-gradient(to bottom, rgba(249,249,249,1) 0%,rgba(229,229,229,1) 100%);
-        }
+        }*/
         .condition_group > i {
             font-size: 14px;
             position: relative;
@@ -307,6 +309,7 @@
             float: right;
             font-weight: normal;
             color: #333;
+            margin-right:10px;
         }
         #filterNamePopInput {line-height: 14px;}
 
@@ -325,7 +328,7 @@
         .condition_top{
             position: fixed;
             width: 25px;
-            background-color: rgba(0, 94, 193, 0.56);
+            background-color: rgba(0, 94, 193, 0.8);
             text-align: center;
             margin-left: 260px;
             z-index: 100000;
@@ -340,6 +343,7 @@
             cursor: pointer;
             color:#fff;
             display: none;
+            margin-top:-32px;
         }
         .dropdown-menu {
             max-height: 344px !important;
@@ -2340,7 +2344,7 @@
                     <div class="searchKeywordTab"><s:message code="searchKeyword.management"/>
                         <div class="rightGroup"><span class="searchKeywordCloseBtn">&times;</span></div>
                     </div>
-                    <div class="searchKeywordSearch" style="padding: 5px 5px 5px 10px;">
+                    <div class="searchKeywordSearch" style="padding: 5px 5px 5px 10px; margin-bottom:8px;">
                         <input class="condition_input_text" type="text" name="serch" placeholder="<s:message code="searchKeyword.search"/>" id="searchKeywordSearchStr" style="width:calc(100% - 150px);">
                         <button class="search_btn" id="searchKeywordSearchBtn"><span><s:message code="common.search"/></span></button>
                         <button class="msg_button" id="addSearchKeywordBtn"><span><s:message code="common.msg.add"/></span></button>
@@ -2401,31 +2405,23 @@
                 <tiles:insertAttribute name="filterNew" ignore="true"/>
                 <div class="content mainBodyArea" id="mainBodyArea" style="height:100%;">
                     <div id="content_left" class="ui-layout-west" style="overflow-y:hidden">
-                        <div class="section_menu" style="min-width:299px;">
+                        <div class="section_menu p12">
                             <div style=" display:flex;">
                                 <div id="msg_condition_menu" class="filter_menu" style="width: 33.3%;"><div class="filter_icon"><span class="filter_icon_text"><s:message code="condition.select.search1"/></span></div></div>
-                                <div id="msg_condition_saver" class="filter_menu condition_menu_unselected" style="width: 33.3%;border-left: 1px solid #cbcbcb;"><div class="filter_folder_icon"><span class="filter_icon_text"><s:message code="condition.advance_search1"/></span></div></div>
-                                <div id="msg_folder" class="filter_menu condition_menu_unselected" style="width: 33.3%;border-left: 1px solid #cbcbcb;"><div class="msg_folder_icon"><span class="filter_icon_text"><s:message code="filterInfo.messageFolder1"/></span></div></div>
+                                <div id="msg_condition_saver" class="filter_menu condition_menu_unselected" style="width: 33.3%;"><div class="filter_folder_icon"><span class="filter_icon_text"><s:message code="condition.advance_search1"/></span></div></div>
+                                <div id="msg_folder" class="filter_menu condition_menu_unselected" style="width: 33.3%;"><div class="msg_folder_icon"><span class="filter_icon_text"><s:message code="filterInfo.messageFolder1"/></span></div></div>
                             </div>
                         </div>
-                        <div id="search_top_area" style="height: calc(100% - 55px);min-width:299px;">
-                            <div class="searchButtonArea">
-                                <button class="search_btn" id="searchBtn"><span><s:message code="common.search1"/></span></button>
-                            </div>
-                            <div class="checkbox c-checkbox" style="width:75px;position: absolute;top: 70px; left:15px;font-size:12px;">
-                                <label><input type="checkbox" name="researchCheckbox" id="researchCheckbox" disabled><span class="fa fa-check"></span><s:message code="condition.research1"/></label>
-                            </div>
+                        <div id="search_top_area" style="height: calc(100% - 100px);min-width:299px; margin-top:-10px;">
 
                             <div class="condition_save">
                                 <a href="javascript:;" class="resetCondition" style="float:left;padding-left:15px;"><i class="fa fa-refresh"></i> <s:message code="condition.reset1"/></a>
                                 <a href="javascript:;" class="showFilterBtn"><i class="fa fa-folder-open-o"></i> <s:message code="filterInfo.box"/></a>
-                                <span class="filterIcon hide" data-id=""><i class="fa fa-filter" aria-hidden="true"></i></span>
-                                <span style="float:right;">&nbsp;|&nbsp;</span>
-                                <a href="javascript:;" class="saveCondition" style="padding-right:0;"><i class="fa fa-floppy-o"></i> <s:message code="condition.save"/></a>
+                                <span class="filterIcon hide" data-id="" ><i class="fa fa-filter" aria-hidden="true"></i></span>
+                                <a href="javascript:;" class="saveCondition" style="padding-right:15px;"><i class="fa fa-floppy-o"></i> <s:message code="condition.save"/></a>
                             </div>
-                            <div class="condition_top_sub"></div>
-                            <div class="condition_top">▲</div>
-                            <div id="condition_detail" class="section_condition scrollbar-inner">
+                            <div id="condition_detail" class="section_condition scrollbar-inner" style="margin-top:-10px;">
+
                                 <%-- 연관 검색어 표기--%>
                                 <div style="margin-top:8px;widht:100%;height:8px;">
                                     <label style="float: left; padding-left: 14px; cursor: pointer">
@@ -2433,7 +2429,7 @@
                                         <span><s:message code="condition.relationKeyword.view"/></span>
                                     </label>
                                     <div  style="float: right; padding-right: 22px;">
-                                        <a href="javascript:;" class="showSearchKeywordBtn"><i class="fa fa-cog"></i> <s:message code="searchKeyword.management"/></a>
+                                        <a href="javascript:;" class="showSearchKeywordBtn" style="color:#111;"><i class="fa fa-cog"></i> <s:message code="searchKeyword.management"/></a>
                                     </div>
                                 </div>
 
@@ -2444,7 +2440,7 @@
                                         </div>
 
                                         <div style="margin-top: 5px;">
-                                            <input class="condition_input_text" type="text" id="searchStrInput" name="serch" placeholder="<s:message code="common.msg.searchMsg"/>" style="width: 260px;height: 35px;border: 2px solid #337AB7;padding-left: 5px;">
+                                            <input class="condition_input_text" type="text" id="searchStrInput" name="serch" placeholder="<s:message code="common.msg.searchMsg"/>" style="width: 260px;height: 35px;border: 2px solid #1C64D3;padding-left: 5px;">
                                         </div>
                                         <div style="margin-top: 15px;"></div>
                                         <%-- <div style="display: inline;">
@@ -2543,7 +2539,7 @@
                                         </select>
                                         <div style="display: flex; width: 260px; padding-top: 4px;">
                                             <input type="text" id="startdatepicker" class="input-xs form-control border-radius-none" style="padding: 1px 0px 0px 3px;border-radius: 0;font-size: 11px; width: 125px;"/>
-                                            <span style="padding-top: 4px;">-</span>
+                                            <span style="padding:0 2px; padding-top: 4px;">-</span>
                                             <input type="text" id="enddatepicker" class="input-xs form-control border-radius-none"  style="padding: 1px 0px 0px 3px;border-radius: 0;font-size: 11px; width: 125px;"/>
                                         </div>
                                     </div>
@@ -2923,17 +2919,29 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="in" id="saveFilterTab" style="width:100%; height:calc(100% - 66px); display: none;">
-                            <div class="searchButtonArea">
-                                <button class="search_btn" id="searchQueryBtn"><span><s:message code="common.search1"/></span></button>
+
+                            <!-- 검색 버튼 고정 -->
+                            <div style="border-top:1px solid #ddd; position: relative; background: #fff;">
+
+                                <div class="condition_top_sub"></div>
+                                <div class="condition_top">▲</div>
+
+                                <div class="searchButtonArea p12" style="position: relative;">
+                                    <div class="text-right">
+                                        <input type="checkbox" name="researchCheckbox" id="researchCheckbox" disabled><label><s:message code="condition.research1"/></label>
+                                    </div>
+                                    <button class="fullbtn" id="searchBtn"><span><s:message code="common.search1"/></span></button>
+                                </div>
                             </div>
+                            <!-- //검색 버튼 고정 -->
+                        </div>
+                        <div class="in" id="saveFilterTab" style="width:100%; height:calc(100% - 90px); margin-top: -10px; display: none;">
+
                             <div class="condition_save">
                                 <a href="javascript:;" class="resetCondition" style="float:left;padding-left:15px;"><i class="fa fa-refresh"></i> <s:message code="condition.reset1"/></a>
                                 <a href="javascript:;" class="showFilterBtn"><i class="fa fa-folder-open-o"></i> <s:message code="filterInfo.box"/></a>
                                 <span class="queryIcon hide" data-id=""><i class="fa fa-filter" aria-hidden="true"></i></span>
-                                <span style="float:right;">&nbsp;|&nbsp;</span>
-                                <a href="javascript:;" class="saveCondition" style="padding-right:0;"><i class="fa fa-floppy-o"></i> <s:message code="condition.save"/></a>
+                                <a href="javascript:;" class="saveCondition" style="padding-right:15px;"><i class="fa fa-floppy-o"></i> <s:message code="condition.save"/></a>
                             </div>
                             <div id="query_detail" class="section_condition scrollbar-inner">
                                 <div class="condition_option" style="padding-top:0;height:500px;">
@@ -2949,9 +2957,12 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="searchButtonArea p12">
+                                <button class="fullbtn" id="searchQueryBtn"><span><s:message code="common.search1"/></span></button>
+                            </div>
                         </div>
                         <div class="in" id="message_folderTab" style="width:100%; height:calc(100% - 66px); display: none;">
-                            <div style="display: flex;padding: 5px 5px 5px 10px;">
+                            <div style="display: flex;padding: 5px 11px 5px 11px;">
                                 <input class="condition_input_text" type="text" name="serch" placeholder="<s:message code="filterInfo.folder.search"/>" id="folderSearchStr" style="width: 250px;">
                                 <button class="search_btn" id="folderSearchBtn"><span><s:message code="common.search"/></span></button>
                             </div>
@@ -3106,7 +3117,7 @@
                                                 <span class="resultCntSpan" style="padding-right:0px;"></span>
                                             </li>
                                             <li class="tab_li" data-index="">
-                                                <div class="tab_txt_top addTabDiv" style="padding:0 10px;"><span class="glyphicon glyphicon-plus" style="cursor:pointer;color:#494949;"></span></div>
+                                                <div class="tab_txt_top addTabDiv" style="padding:10px;"><span class="glyphicon glyphicon-plus" style="cursor:pointer;color:#494949;"></span></div>
                                             </li>
                                         </ul>
                                     </div>

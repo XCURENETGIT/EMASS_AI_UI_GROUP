@@ -675,7 +675,7 @@
 		<div class="inner_messenger">
 			<%--			검색 영역--%>
 			<div class="leftSearch p20" id="xcn_Search">
-				<div class="leftSearchTab mat8">
+				<div class="leftSearchTab">
 					<button class="active" onclick="openCity('Tab01')">메시지 검색</button>
 					<!--<button onclick="openCity('Tab02')">탭 비활성</button>-->
 				</div>

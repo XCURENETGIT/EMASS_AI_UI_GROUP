@@ -28,11 +28,12 @@
 	bottom: 0px;
 	left: 0;
 	float: none;
+
 	width: 300px;
 	border-right: 1px solid #B4B4B4;
-	font-family: dotum, Verdana, arial, sans-serif;
 	overflow: hidden;
 	user-select: none;
+	background-color: #fff;
 }
 
 .gutter {
@@ -207,10 +208,13 @@ input[type="text"] {
 	height:50px;
 	padding-top:10px;
 }
+.searchButtonArea label {font-weight: 300; margin-left:4px;}
 
+.searchButtonArea button  {height:44px; font-size:16px;}
 .search_btn{
 	width: 50px;
-	height: 23px;
+	height: 26px;
+
 	background-color: #253f56;
 	color: white;
 	font-weight: bold;
@@ -251,8 +255,8 @@ input[type="text"] {
 
 .list_icon {
 	position: relative;
-	top: 1px;
-	left: 3px;
+	top: 5px;
+	left: 8px;
 	display: inline-block;
 	font-size:20px;
 	border:0 !important;
@@ -292,8 +296,9 @@ input[type="text"] {
 	cursor: pointer;
 }
 
+.section_menu {min-width:299px; width:299px;}
 .section_menu .filter_icon {
-	background-image: url(../img/icon/filter.png);
+	/*background-image: url(../img/icon/filter.png);*/
 	height: 35px;
 	background-repeat: no-repeat;
 	background-position: center;
@@ -301,14 +306,14 @@ input[type="text"] {
 }
 
 .section_menu .filter_folder_icon {
-	background-image: url(../img/icon/filter_folder.png);
+	/*background-image: url(../img/icon/filter_folder.png);*/
 	height: 35px;
 	background-repeat: no-repeat;
 	background-position: center;
 }
 
 .section_menu .msg_folder_icon {
-	background-image: url(../img/icon/msg_folder.png);
+	/*background-image: url(../img/icon/msg_folder.png);*/
 	height: 35px;
 	background-repeat: no-repeat;
 	background-position: center;
@@ -316,12 +321,11 @@ input[type="text"] {
 
 .section_menu .filter_icon_text {
 	position: relative;
-	top: 35px;
+	top: 10px;
 	display: inline-block;
 	margin-left: -1px;
 	text-align: center;
-	font-size: 12px;
-	color: #757575;
+	font-size:15px !important;
 	width: 100%;
 }
 
@@ -329,11 +333,15 @@ input[type="text"] {
 	/*height: 60px;*/
 	cursor: pointer;
 	width: 91px;
+	background-color: #1C64D3;
+	color:#fff;
+
+
 }
 
 .section_menu .filter_menu:hover {
 	z-index: 100001;
-	background-color: #d8d8d8;
+	text-decoration: underline;
 }
 
 .mail_header{
@@ -422,7 +430,11 @@ input[type="text"] {
 }
 
 .condition_group {
-	width: 292px; border-top: 0px solid #DCDCDC;margin-top: 7px;
+	margin-top: 12px;
+	padding:8px; background-color: #f5f5f5;
+	color:#111; text-align: center; font-weight:600;
+	border-top:1px solid #ddd;
+	font-family: Pretendard;
 }
 .condition_group .expand-one  {
 	height: 22px;
@@ -441,15 +453,18 @@ input[type="text"] {
 	padding-left: 15px;padding-top: 10px;
 }
 .condition_title{
+	font-size:13px;
+	font-family: Pretendard;
 	font-weight: bold;
 	line-height: 18px !important;
 }
 .condition_sub_title {
 	line-height: 20px !important;
-	padding-left: 15px;
+	padding-left: 0px;
 	font-weight: normal;
 	clear:both;
 }
+
 .condition_label{
 	margin-right: 10px;
 	font-weight: normal;
@@ -466,17 +481,21 @@ input[type="text"] {
 	cursor: pointer;
 }
 .condition_save {
-	width:100%; padding-top:5px;height:20px;
+	padding-top:0; overflow: hidden;
+	background-color: #f8f8f8;
+	vertical-align: middle;
+	margin:12px;
+	padding:8px 0 6px;
 }
 .condition_save a{
-	float:right; padding-right:15px; color:#6C6C6C; cursor: pointer; font-size: 12px;
+	float:right; padding-right:15px; color:#333; cursor: pointer; font-size: 12px;
 }
 .condition_left{
 	float:left;
 }
 .condition_not{
 	float:right;
-	padding-right:20px;
+	padding-right:23px;
 }
 .condition_not span {
 	position: relative;
@@ -593,9 +612,10 @@ input[type="text"] {
 	line-height: 19px;
 }
 .condition_menu_unselected{
-	background-color: #fff;
-	border-bottom: 1px solid #cbcbcb;
-	border-left: 1px solid #cbcbcb;
+	background-color: #fff !important;
+	border-bottom: 2px solid #1C64D3;
+	color:#555 !important;
+	font-weight: 300 !important;
 }
 .attach_file_img {
 	background-size: contain;
@@ -804,7 +824,7 @@ time, mark, audio, video {
 	font-size: 100%;
 	font: inherit;
 	vertical-align: baseline;
-	font-family: Pretendard !important;
+	font-family: Pretendard;
 	font-weight:400;
 	box-sizing:border-box;
 }
