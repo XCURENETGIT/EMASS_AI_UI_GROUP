@@ -151,6 +151,8 @@ public class MessengerEdcGroupVO {
 		solrGroupVO.setSender(edc.getSender());
 		solrGroupVO.setUsr_id(edc.getUsr_id());
 		solrGroupVO.setUserid(edc.getUserid());
+		solrGroupVO.setInside(edc.getInside());
+		solrGroupVO.setDirection_svc(edc.getDirection_svc());
 		solrGroupVO.setBody_snippet(edc.getBody_snippet());
 		return solrGroupVO;
 	}
@@ -178,7 +180,8 @@ public class MessengerEdcGroupVO {
 		solrGroupVO.setUser(edc.getUser());
 		solrGroupVO.setSender(edc.getSender());
 		solrGroupVO.setUsr_id(edc.getUsr_id());
-		solrGroupVO.setBody_snippet(edc.getBody_snippet());
+		solrGroupVO.setDirection_svc(edc.getDirection_svc());
+		solrGroupVO.setInside(edc.getInside());
 		solrGroupVO.setUserid(edc.getUserid());
 		return solrGroupVO;
 	}
