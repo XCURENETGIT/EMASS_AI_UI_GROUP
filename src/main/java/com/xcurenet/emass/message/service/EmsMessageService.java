@@ -72,6 +72,7 @@ public interface EmsMessageService {
 	public List<CodeVO> getGenerativeList();
 
 	public List<CodeVO> getNoteList();
+	public List<CodeVO> getFileServiceList();
 
 	List<RelationKeywordVO>  getRelationKeywordList(String searchKeyword);
 }

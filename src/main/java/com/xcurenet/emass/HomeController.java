@@ -854,7 +854,7 @@ public class HomeController {
 
 	@RequestMapping(value = "/ems/alarmLogPop.do", method = RequestMethod.GET)
 	public String alarmLogPop(Locale locale, Model model) {
-		return "/emass/message/alarmLogPop";
+		return "/emass/message/alarmLogPop.popup";
 	}
 
 	@RequestMapping(value = "/uacs/filterInfo.do", method = RequestMethod.GET)

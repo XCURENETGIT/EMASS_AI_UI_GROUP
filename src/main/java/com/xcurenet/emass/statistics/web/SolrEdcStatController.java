@@ -139,7 +139,8 @@ public class SolrEdcStatController {
 				}
 			}
 		} else if (yAxis.equals("ocr_attach_cnt")) {
-			query += " +(attachtype:(tiff tif png gif bmp jpg jpeg pcx dcx jb2 jfif jp2 jpc j2k pdf) attachspace:BODY)";
+			query += "  +(attachtype:((tiff) (tif) (png) (gif) (bmp) (jpg) (jpeg) (pcx) (dcx) (jb2) (jfif) (jp2) (jpc) (j2k) (pdf)) attachspace:BODY)  ";
+
 			if (colRowKey.equals("noOCR")) {
 				query += " -" + yAxis + ":[1 TO *]";
 				if (rowKeyCnt == 3) {
@@ -506,7 +507,7 @@ public class SolrEdcStatController {
 			query += " " + detailQuery;
 		}
 
-		query += " +(attachtype:(tiff tif png gif bmp jpg jpeg pcx dcx jb2 jfif jp2 jpc j2k pdf) attachspace:BODY) ";
+		query += "  +(attachtype:((tiff) (tif) (png) (gif) (bmp) (jpg) (jpeg) (pcx) (dcx) (jb2) (jfif) (jp2) (jpc) (j2k) (pdf)) attachspace:BODY)  ";
 		if (colRowKey.equals("detectOCR")) {
 			query += "+ocr_attach_cnt:[1 TO *] ";
 		} else if (colRowKey.equals("noOCR")) {

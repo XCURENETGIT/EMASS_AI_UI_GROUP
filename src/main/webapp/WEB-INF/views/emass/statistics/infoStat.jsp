@@ -461,8 +461,8 @@
 		var eDate = $('#enddate').val().replaceAll("-", "");
 		var busi= $('#busiSelect').selectpicker('val');
         var senders= $('#senders').val();
-        var dv= $('#deptVal').val().split('|');
-        var dept=dv.join(',');
+        /*var dv= $('#deptVal').val().split('|');
+        var dept=dv.join(',');*/
 
 
 		if (sDate > eDate) ui.alertMsg('<s:message code="consent.msg.timecheck"/>');
@@ -478,9 +478,9 @@
 			piCount: piCount,
 			pMenuId: pMenuId,
 			menuId: menuId,
-			busi:busi,
+		/*	busi:busi,*/
 			senders:senders,
-			dept:dept,
+		/*	dept:dept,*/
 			success: function (data, total) {
 				grid1.setData(data);
 				if (grid1.loadingPage == 0) grid1.Select(-1, -1);

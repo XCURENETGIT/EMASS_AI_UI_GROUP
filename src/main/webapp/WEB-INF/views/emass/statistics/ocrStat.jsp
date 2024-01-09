@@ -529,7 +529,7 @@
 			<div class="subtab">
 				<div>
 					<ul class="nav nav-tabs codeTab listChart">
-						<li class="active"><a data-toggle="tab" href="#basicStatList" id="listTab" >InfoType TOP</a></li>
+						<li class="active"><a data-toggle="tab" href="#basicStatList" id="listTab" >OCR TOP</a></li>
 					</ul>
 				</div>
 			</div>
@@ -628,7 +628,8 @@
 							if(Header == "I") HeaderNm = '<s:message code="condition.receive"/>';
 							else HeaderNm = '<s:message code="condition.send"/>';
 						} else if ( xAxis == "ctime_hh") HeaderNm = Header+'<s:message code="common.msg.hour"/>';
-						else HeaderNm = Header;
+                        else if(xAxis === 'svc1') HeaderNm = serviceList.search(Header, 'groupCd', 'groupNm');
+                        else HeaderNm = Header;
 						grid1.colAdd( Header, HeaderNm, 90, "right", false, 'link', function ( row, cell, value, columnDef, dataContext ) {
 							if ( value != undefined ) return value.comma();
 							else return '';

@@ -63,14 +63,14 @@ var eikon2 = {
             if($(this).hasClass('messenger_next')) {
 
                 var msgid = $('.timeline').children().last().attr('id');
-                var type = isNoteJSPUrl() ? 'N' : 'G';
+                var type = getPageType();
 
                 getGenerativeMessageNext(userid, srcip, usr_id, msgid,type);
 
             } else {
 
                 var firstData = $('.timeline').children().filter(':eq(1)');
-                var type = isNoteJSPUrl() ? 'N' : 'G';
+                var type = getPageType();
                 var msgid = $(firstData).attr('id');
                 getGenerativeMessagePrev(userid, srcip, usr_id, msgid,type);
 
@@ -479,6 +479,68 @@ function makeFileList(data) {
     return str;
 }
 
+function makeFileServiceList(){
+
+    var str='';
+
+    for(var i=0 ; i < detailDataSet.length ; i++) {
+        var obj = detailDataSet[i];
+        str += '<div class="messageCon">';
+        if(obj.inside=="N"){
+        str += '<div class="top redBg">';
+        }else{
+            str += '<div class="top grayBg03">';
+        }
+        str += '<h4 class="ma_none">';
+        if(obj.inside === "N") {
+            str += '<span class="file_flag_reception">';
+            str += '<img src="'+mainContext+'/img/ico_w_chatshare_fill.png" alt="외부" height="12px">';
+            str += '외부</span>';
+        }
+        str+= obj.attachname+'</h4>';
+        str += '</div>';
+        str += '<div class="conBox">';
+        str += '<div class="borbottom_dashed pb16">';
+        str += '<p>';
+        str += '<span class="name">'+obj.deptNm+'</span> <span class="xcn_bar"></span>';
+        str += '<span class="name">'+obj.jikgubNm+'</span> <span class="xcn_bar"></span>';
+        str += '<span class="name">'+obj.name+'</span><span class="xcn_bar"></span>';
+        str += '<span class="name">'+obj.attachsize+'KB</span>';
+        str += '</p>';
+        str += '<p class="rightBox">';
+        str += '<span>'+obj.ctime+'</span>';
+        str += '</p>';
+        str += '</div>';
+        if(obj.attached=='Y') {
+            str += '<table class="subTable mat8" msgid='+obj.msgid+'attachhash='+obj.attachhash+'>';
+            str += '<colgroup>';
+            str += '<col width="*">';
+            str += '<col width="*">';
+            str += '<col width="10%">';
+            str += '</colgroup>';
+            str += '<tr><th>파일명</th><th>해쉬값</th><th>예상 확장자</th><th>파일크기</th></tr>';
+            var attachhashArray = obj.attachhash.split('|');
+            var attachnameArray = obj.attachname.split('|');
+            var attachsizeArray = obj.attachsize.split('|');
+            var attachtypeArray = obj.attachtype.split('|');
+
+            for (var j = 0; j < attachtypeArray.length; j++){
+                str += '<tr>';
+                str += '<td>'+attachnameArray[j]+'<button class="btnchatdown downlodadBtn"></button></td>';
+                str += '<td>'+attachhashArray[j]+'</td>';
+                str += '<td>'+attachtypeArray[j]+'</td>';
+                str += '<td>'+attachsizeArray[j]+'</td>';
+                str += '</tr>';
+            }
+            str += '</table>';
+        }
+        str += '</div>';
+        str += '</div>';
+    }
+    return str;
+}
+
+
 
 
 function makeList(nextFlag){
@@ -696,16 +758,24 @@ function checkLastMsg(){
         if(objOffsetTop-(objHeight/2)-marginBottom < 0){
             lastMsgId = $(this).parent().parent().attr('id');
         }else{
-            var type = isNoteJSPUrl() ? 'N' : 'G';
+            var type = getPageType();
             return updateEmassGenerativeAdminUserid(userid, lastMsgId, srcip,type);
 
         }
     });
 }
-function isNoteJSPUrl() {
+function getPageType() {
     var currentPageUrl = window.location.href;
-    console.log("currentPageUrl: ", currentPageUrl);
-    return currentPageUrl.includes('note.do');
+
+    if (currentPageUrl.includes('fileTransfer.do')) {
+        return 'F';
+    } else if (currentPageUrl.includes('note.do')) {
+        return 'N';
+    } else if (currentPageUrl.includes('generativeAi.do')) {
+        return 'G';
+    } else {
+        return 'U'; // Unknown
+    }
 }
 
 function moveTargetHeight(id, moveFlag){
@@ -883,9 +953,9 @@ function getNoteServiceList(){
 
 
 /* 파일전송 드롭박스 구성*/
-function getFileList(){
+function getFileServiceList(){
     ui.get({
-        url : 'getFileList.xcn',
+        url : 'getFileServiceList.xcn',
         asyncFlag : false,
         success : function(data, total) {
             messengerListCnt = data.length;
@@ -987,29 +1057,36 @@ function getCollectionMessage(userid, srcip, usr_id, msgid,type){
         limit : detailLimit,
         type:type,
         success : function(data, total) {
-            if(data.groups.length > 0) {
-                $('.messenger_prev').css('display','block');
-                $('#totalCount').css('display','block');
-            }
-            if(data.groups.length == 0) {
-                $("#timeline_list").html(noDataMsg());
-                $('.messenger_prev').css('display','none');
-                $('.messenger_next').css('display','none');
-                $('#groupSubResultCnt').text(0);
-                return;
-            }
             detailDataSet = data.groups;
             prevDetailDataSet = data.groups;
 
-            getCollectionAllfile(userid, srcip, usr_id, msgid,type);
+            if(type!='F') {
+                if (data.groups.length > 0) {
+                    $('.messenger_prev').css('display', 'block');
+                    $('#totalCount').css('display', 'block');
+                }
+                if (data.groups.length == 0) {
+                    $("#timeline_list").html(noDataMsg());
+                    $('.messenger_prev').css('display', 'none');
+                    $('.messenger_next').css('display', 'none');
+                    $('#groupSubResultCnt').text(0);
+                    return;
+                }
+
+                getCollectionAllfile(userid, srcip, usr_id, msgid, type);
 
 
-            if(data.numFound < detailLimit)
-                $('.messenger_next').css('display','none');
-            else $('.messenger_next').css('display','block');
+                if (data.numFound < detailLimit)
+                    $('.messenger_next').css('display', 'none');
+                else $('.messenger_next').css('display', 'block');
 
-            $("#timeline_list").html(makeList(false));
-            HighlightGroup();
+                $("#timeline_list").html(makeList(false));
+                HighlightGroup();
+            }
+            else{
+
+                $(".inner_fileList").html(makeFileServiceList());
+            }
         },
         error : function(status, message) {
             searchFlag = false;
