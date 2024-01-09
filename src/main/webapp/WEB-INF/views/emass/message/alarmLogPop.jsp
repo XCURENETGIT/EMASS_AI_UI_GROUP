@@ -223,43 +223,36 @@ function regexpInfoViewer(row, selectedGrid){
 }
 </script>
 </head>
-<body class="mini-navbar msgBody">
-	<header class="header">
-		<div class="naviBack">
-			<img src="<c:url value="/img/title/home_icon.png"/>">
-			<span class="navi"><span id="code_title"></span><s:message code="mail.reservation_alarm.result"/></span>
-		</div>
-	</header>
-	<div class="xcn_container"> 
-		<div class="boxArea">
-			<div class="content_body">
-				<div class="row xcn_full top_space">
-					<div class="col-xs-12" style="height: 100%;">
-						<div id="recommendListGrid" class="slickGrid gridArea"></div>
-					</div>
-				</div>
+<div id="popupWrap" class="xcn_container">
+	<!-- left -->
+	<div class="row">
+			<h3 class="blue"><span class="bullet01"></span><s:message code="mail.reservation_alarm.result"/></h3>
+			<!-- 테s이블 -->
+			<div class="pop_tableArea mat16">
+				<div id="recommendListGrid"  class="subTable slickGrid gridArea" style="height: calc(100% - 150px)"></div>
 			</div>
 		</div>
 	</div>
-	<% if(infoFeedbackYn.equals("Y") && infoFeedbackConf) {%>
-	<div id="contextMenu" style="display:none;position:absolute">
-		<ul>
-			<li style="background-color:#1576A1;color:#fff;font-weight: bold;cursor:default;"><s:message code="condition.feedback"/> <s:message code="common.msg.setting"/>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close" style="font-size:15px;color:#fff;text-shadow:0 1px 0 #000; opacity:0.7;" id="contextMenuCloseBtn">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</li>
-		</ul>
-		<ul>
-			<li onclick="setFeedback(0);" style="padding-left: 5px;"><div class="feedbackCorrect"></div>&nbsp;<s:message code="condition.info.feedback0"/></li>
-			<li onclick="setFeedback(1);" style="padding-left: 5px;"><div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.class1"/></li>
-			<li onclick="setFeedback(2);" style="padding-left: 5px;"><div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.class2"/></li>
-			<li onclick="setFeedback(3);" style="padding-left: 5px;"><div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.class3"/></li>
-			<li onclick="setFeedback(4);" style="padding-left: 5px;"><div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.class4"/></li>
-			<li onclick="setFeedback(9);" style="padding-left: 5px;"><div class="feedbackDefer"></div>&nbsp;<s:message code="condition.info.feedback9"/></li>
-		</ul>
-	</div>
-	<%} %>
+</div>
+<% if(infoFeedbackYn.equals("Y") && infoFeedbackConf) {%>sys
+<div id="contextMenu" style="display:none;position:absolute">
+	<ul>
+		<li style="background-color:#1576A1;color:#fff;font-weight: bold;cursor:default;"><s:message code="condition.feedback"/> <s:message code="common.msg.setting"/>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close" style="font-size:15px;color:#fff;text-shadow:0 1px 0 #000; opacity:0.7;" id="contextMenuCloseBtn">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</li>
+	</ul>
+	<ul>
+		<li onclick="setFeedback(0);" style="padding-left: 5px;"><div class="feedbackCorrect"></div>&nbsp;<s:message code="condition.info.feedback0"/></li>
+		<li onclick="setFeedback(1);" style="padding-left: 5px;"><div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.class1"/></li>
+		<li onclick="setFeedback(2);" style="padding-left: 5px;"><div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.class2"/></li>
+		<li onclick="setFeedback(3);" style="padding-left: 5px;"><div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.class3"/></li>
+		<li onclick="setFeedback(4);" style="padding-left: 5px;"><div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.class4"/></li>
+		<li onclick="setFeedback(9);" style="padding-left: 5px;"><div class="feedbackDefer"></div>&nbsp;<s:message code="condition.info.feedback9"/></li>
+	</ul>
+</div>
+<%} %>
 	<script type="text/javascript">
 		var grid = new Xgrid('recommendListGrid', contextRoot);
 		grid.onCheckBox();

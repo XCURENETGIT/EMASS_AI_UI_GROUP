@@ -616,7 +616,7 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 
 .subTable {width:100%;font-size: 13px; background-color: #fff !important; }
 .subTable thead.head th{text-align: center !important;}
-.subTable th {border-left:1px solid #ddd; border-top:1px solid #111;background-color:#EEEFF2;font-weight:600;padding:4px; }
+.subTable th {border-left:1px solid #ddd; border-top:1px solid #111;background-color:#EEEFF2;font-weight:600;padding:4px; text-align: center; }
 .subTable td {border-left:1px solid #ddd; text-align: center;padding:4px; color:#555;}
 .subTable td.topline {border-top:1px solid #111;}
 .subTable th:first-child, td:first-child {border-left: none;}

@@ -159,42 +159,46 @@ function getData() {
 </head>
 <body class="mini-navbar msgBody">
 <!--모달 -->
-	<div class="modal fade" id="mailFormPop" tabindex="-1" role="dialog" aria-labelledby="mailFormPop">
-		<div class="modal-dialog modal-lg" role="document">
-			<div class="modal-content">
-				<form method="post" id="mailPopForm">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-						<h3 class="modal-title"><s:message code="mail.form.setting"/> - <s:message code="common.msg.addmodify"/></h3>
-					</div>
-					<div class="modal-body">
-						<div class="row form-inline">
-							<div class="col-xs-12 text-left">
-								<label for="formSubjectSel" class=" col-xs-3" style="padding-left: 0px;"><s:message code="mail.form.subject"/></label>
-							</div>
+<div class="modal" id="mailFormPop" tabindex="-1" role="dialog" aria-labelledby="mailFormPop" data-backdrop="static">
+	<div class="modal-content">
+		<form method="post" id="ipRangePopForm">
+			<div class="modalHead">
+				<h2><s:message code="mail.form.setting"/></h2>
+				<span class="close" data-dismiss="modal">&times;</span>
+			</div>
+			<div class="modalCon">
+				<div class="modalTop">
+					<h3><s:message code="common.msg.addmodify"/></h3>
+					<p>
+						<span class="red_dot veralign_middle"></span>
+						필수 입력 사항입니다.
+					</p>
+				</div>
+				<div class="modalbody">
+					<div class="row">
+						<div class="col-35">
+							<label for="formSubjectSel" class="fname"><s:message code="mail.form.subject"/></label>
+							<span class="red_dot"></span>
 						</div>
-						<div class="form-inline top_space not-dashed">
-							<select class='form-control input-sm' id='formSubjectSel'>
+						<div class="col-65">
+							<select id='formSubjectSel'>
 								<option value="" selected>========= <s:message code="mail.form.sel.text"/> =========</option>
 								<option value="<s:message code="mail.reservation.name"/> : #SUBJECT#"><s:message code="mail.reservation.name"/></option>
 								<option value="<s:message code="mail.send.time"/> : #SEND_DATE#"><s:message code="mail.send.time"/></option>
 								<option value="<s:message code="mail.excute.result"/> : #RESULTCOUNT#"><s:message code="mail.excute.result"/></option>
 								<option value="<s:message code="condition.period"/> : #PERIOD#"><s:message code="condition.period"/></option>
 							</select>
-						</div>
-						<div class="form-inline" style="padding-top: 5px;">
-							<input type="text" class="form-control input-sm" style="width:94%;" name="formSubject" id="formSubject">(250)
+							<input type="text" class="form-control input-sm" style="width:94%;" name="formSubject" id="formSubject">
 							<input type="hidden" class="form-control" name="formSeq" id="formSeq">
 						</div>
-						<div class="row form-inline" style="margin-top: 10px;">
-							<div class="col-xs-12 text-left">
-								<label for="formContentSel" class=" col-xs-3" style="padding-left: 0px;"><s:message code="mail.form.content"/></label>
-							</div>
+					</div>
+					<div class="row">
+						<div class="col-35">
+							<label for="formContentSel" class="fname"><s:message code="mail.form.content"/></label>
+							<span class="red_dot"></span>
 						</div>
-						<div class="form-inline top_space not-dashed">
-							<select class='form-control input-sm' id='formContentSel'>
+						<div class="col-65">
+							<select id='formContentSel'>
 								<option value="" selected>========= <s:message code="mail.form.sel.text"/> =========</option>
 								<option value="<s:message code="mail.reservation.name"/> : #SUBJECT#"><s:message code="mail.reservation.name"/></option>
 								<option value="<s:message code="mail.send.time"/> : #SEND_DATE#"><s:message code="mail.send.time"/></option>
@@ -224,27 +228,32 @@ function getData() {
 									<option value="<s:message code="interest.user"/>: #INTERGROUP#"><s:message code="interest.user"/></option>
 								</optgroup>
 							</select>
-						</div>
-						<div class="form-inline">
 							<textarea class="form-control" style="width:100%; height: 170px;" name="formContent" id="formContent"></textarea>
 						</div>
-						<div class="row form-inline" style="margin-top: 10px;">
-							<div class="col-xs-12 text-left">
-								<label for="formComment" class=" col-xs-3" style="padding-left: 0px;"><s:message code="mail.form.comment"/></label>
-							</div>
+					</div>
+
+					<div class="row">
+						<div class="col-35">
+							<label for="formComment" class="fname"><s:message code="mail.form.comment"/></label>
+							<span class="red_dot"></span>
 						</div>
-						<div class="form-inline top_space not-dashed">
-							<input type="text" class="form-control input-sm" style="width:100%;" name="formComment" id="formComment">
+						<div class="col-65">
+							<input type="text" class="w100" name="formComment" id="formComment">
 						</div>
 					</div>
-				</form>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
-					<button type="button" class="btn btn-primary savePopBtn" accesskey="S"><s:message code="common.msg.save"/></button>
+
+				</div>
+				<div class="modalfooter">
+					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message
+							code="common.msg.close"/></button>
+					<button type="button" class="pop_btn02" accesskey="S" id="savePopBtn"><s:message
+							code="common.msg.save"/></button>
 				</div>
 			</div>
-		</div>
+		</form>
 	</div>
+</div>
+
 <!-- //모달 -->
 	<div class="p12" style="width: 900px; overflow: auto;">
 		<h3 class="blue"><span class="bullet01"></span><s:message code="mail.mgnt.form.mail"/></h3>

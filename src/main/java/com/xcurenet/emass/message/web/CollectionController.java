@@ -52,6 +52,8 @@ public class CollectionController {
 	private static final String MESSENGER2 = " +svc1: I ";
 
 	private static final String MESSENGER3 = " +svc1: N ";
+	private static final String MESSENGER4 = " +svc1: F ";
+
 	private static final String EMPTY_LINE = "\n";
 	private final static DateTimeFormatter yyyyMMddHHmmss2 = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 	private final static DateTimeFormatter yyyyMMdd = DateTimeFormat.forPattern("yyyy-MM-dd");
@@ -83,6 +85,15 @@ public class CollectionController {
 	public XcnResponseVO getGenerativeList(final HttpServletRequest request, final HttpSession session) throws Exception {
 		return new XcnResponseVO(XcnRspCode.OK, emsMessageService.getGenerativeList());
 	}
+
+	@RequestMapping(value = "/getFileServiceList.xcn")
+	@Description(" 파일전송 서비스 목록 조회")
+	@ResponseBody
+	public XcnResponseVO getFileServiceList(final HttpServletRequest request, final HttpSession session) throws Exception {
+		return new XcnResponseVO(XcnRspCode.OK, emsMessageService.getFileServiceList());
+	} 
+	
+	
 	@RequestMapping(value = "/getCollectionGroupList.xcn")
 	@Description("서비스 그룹 조회")
 	@ResponseBody
@@ -321,7 +332,8 @@ public class CollectionController {
 
 		if(Common.isNotEmpty(searchStr)) query += String.format(" +body:(*%s*) ", searchStr);
 
-		sq.setQuery(query + (Common.nvl(param.get("type")).equals("N") ? MESSENGER3 : MESSENGER2));
+		sq.setQuery(query + (Common.nvl(param.get("type")).equals("N") ? MESSENGER3 : (Common.nvl(param.get("type")).equals("G") ? MESSENGER2 : (Common.nvl(param.get("type")).equals("F") ? MESSENGER4 : ""))));
+
 		sq.setRows(limit);
 		sq.addSort("ctime", ORDER.asc);
 		sq.addSort("msgid", ORDER.asc);
@@ -356,7 +368,8 @@ public class CollectionController {
 
 		if (Common.isNotEmpty(searchStr)) query += String.format(" +body:(*%s*) ", searchStr);
 
-		sq.setQuery(query + (Common.nvl(param.get("type")).equals("N") ? MESSENGER3 : MESSENGER2));
+		sq.setQuery(query + (Common.nvl(param.get("type")).equals("N") ? MESSENGER3 : (Common.nvl(param.get("type")).equals("G") ? MESSENGER2 : (Common.nvl(param.get("type")).equals("F") ? MESSENGER4 : ""))));
+
 		sq.setStart(Common.nvz(param.get("offset"), 0));
 		sq.setRows(limit);
 		sq.addSort("ctime", ORDER.asc);
@@ -436,11 +449,12 @@ public class CollectionController {
 		if (Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
 
 
-		sq.setQuery(query + (Common.nvl(param.get("type")).equals("N") ? MESSENGER3 : MESSENGER2));
+		sq.setQuery(query + (Common.nvl(param.get("type")).equals("N") ? MESSENGER3 : (Common.nvl(param.get("type")).equals("G") ? MESSENGER2 : (Common.nvl(param.get("type")).equals("F") ? MESSENGER4 : ""))));
+
 		sq.setRows(limit);
 		sq.addSort("ctime", ORDER.asc);
 		sq.addSort("msgid", ORDER.asc);
-		sq.setFields("msgid", "userid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user");
+		sq.setFields("msgid", "userid", "srcip","inside","userkey", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user");
 
 		log.info("query: 	" +   sq.getQuery());
 		return sq;
@@ -483,7 +497,8 @@ public class CollectionController {
 
 		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
 		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), Common.getAdminId(session));
-		sq.setQuery(sq.getQuery() + addQuery + (Common.nvl(param.get("type")).equals("N") ? MESSENGER3 : MESSENGER2));
+		sq.setQuery(sq.getQuery() + addQuery + (Common.nvl(param.get("type")).equals("N") ? MESSENGER3 : (Common.nvl(param.get("type")).equals("G") ? MESSENGER2 : (Common.nvl(param.get("type")).equals("F") ? MESSENGER4 : ""))));
+
 
 		sq.setStart(Common.nvz(param.get("offset"), 0));
 		sq.setRows(1);
@@ -541,7 +556,8 @@ public class CollectionController {
 		if (Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
 		if (Common.isNotEmpty(searchStr)) query += String.format(" +body:(*%s*) ", searchStr);
 
-		sq.setQuery(query + (Common.nvl(param.get("type")).equals("N") ? MESSENGER3 : MESSENGER2));
+		sq.setQuery(query + (Common.nvl(param.get("type")).equals("N") ? MESSENGER3 : (Common.nvl(param.get("type")).equals("G") ? MESSENGER2 : (Common.nvl(param.get("type")).equals("F") ? MESSENGER4 : ""))));
+
 		sq.setStart(0);
 		sq.setRows(10000);
 
@@ -613,7 +629,8 @@ public class CollectionController {
 		if (Common.isNotEmpty(startDt) && Common.isNotEmpty(endDt))
 			query += String.format("+ctime:[%s TO %s] ", startDt, endDt);
 
-		query += String.format("+userid:\"%s\" ", userid) + (Common.nvl(param.get("type")).equals("N") ? MESSENGER3 : MESSENGER2);
+		query += String.format("+userid:\"%s\" ", userid) + (Common.nvl(param.get("type")).equals("N") ? MESSENGER3 : (Common.nvl(param.get("type")).equals("G") ? MESSENGER2 : (Common.nvl(param.get("type")).equals("F") ? MESSENGER4 : "")));
+
 
 		if (Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
 		if (Common.isNotEmpty(usr_id)) query += String.format(" +usr_id:\"%s\"", usr_id);
@@ -820,7 +837,7 @@ public class CollectionController {
 		String userid = Common.nvl(param.get("userid"));
 		String print = Common.nvl(param.get("print"));
 		String usr_id = "";
-		String type = Common.nvl(param.get("type"), "html").toLowerCase();
+		String type = Common.nvl(param.get("export_type"), "html").toLowerCase();
 		if (!Common.isOrEquals(type, "html", "txt", "xlsx")) type = "html";
 
 		response.setCharacterEncoding(Common.UTF8);

@@ -39,5 +39,8 @@ public class MessengerGroupVO {
 	private String user;
 	private String sender;
 	private String body_snippet;
+	private String direction_svc;
+	private String inside;
+
 
 }

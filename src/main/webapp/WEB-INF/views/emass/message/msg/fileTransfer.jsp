@@ -75,14 +75,14 @@
 				}
 			});
 
-			var today = new Date();
+	/*		var today = new Date();
 			today.setDate(today.getDate() - 2);
 
 			document.getElementById("startDt").valueAsDate = today;
 			document.getElementById("endDt").valueAsDate = new Date();
 
 			document.getElementById("startSubDt").valueAsDate = today;
-			document.getElementById("endSubDt").valueAsDate = new Date();
+			document.getElementById("endSubDt").valueAsDate = new Date();*/
 
 			$('#searchBtn').click(function () {
 				if (messengerListCnt == 0) {
@@ -204,9 +204,11 @@
 
 
 			$(document).on('click', '.downloadIcon', function(){
-				var msgId = $(this).parents('p').attr('msgid');
-				var attachHash = $(this).parents('p').attr('attachhash');
-				var attachSize = Number( $(this).parents('p').attr('attachsize') );
+				var msgId = $(this).parents('table').attr('msgid');
+				var attachHash = $(this).parents('table').attr('attachhash');
+				var attachSize = Number( $(this).parents('table').attr('attachsize') );
+
+                alert(attachHash);
 				var attachUrl = '<c:url value="/downEmassAttachOne.xcn"/>?msgId='+msgId+'&attachHash='+attachHash;
 
 				if( attachHash == ''){
@@ -256,7 +258,7 @@
 				var userid = $(this).parent().attr('userid');
 				var srcip = $(this).parent().attr('srcip');
 				var id = $(this).parent().attr('id');
-				updateEmassGenerativeAdminUserid(userid, id, srcip,"G");
+				updateEmassGenerativeAdminUserid(userid, id, srcip,"F");
 
 				moveTargetHeight(id, false);
 			});
@@ -317,7 +319,7 @@
 				$('#subchatid').html(": "+name);
 				$('#srcip').text(srcip);
 				$('#usr_id').text(usr_id);
-				eikon2.getCollectionDetailList(userid, msgid, srcip, usr_id,"G");
+				eikon2.getCollectionDetailList(userid, msgid, srcip, usr_id,"F");
 				hideUserSelect();
 			});
 
@@ -399,18 +401,17 @@
 		}
 
 
-		function downloadList(type) {
+		function downloadList(export_type) {
 
 			var userid = $('#selectUserInfo').attr('data-name');
 			var srcip = $('#selectUserInfo').attr('data-srcip');
-			var usr_id = $('#selectUserInfo').attr('usr_id');
 
 			if (userid == '') return;
 			var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '')+"000000";
 			var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '')+"235959";
 			var searchStr = '';
 
-			eikon2.getCollectionGroupTextExport('<c:url value="/getCollectionrGroupTextExport.xcn"/>?userid=' + userid + '&srcip=' + srcip + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr + '&type=' + type + '&groupField=sender_str&limit=1000&', userid);
+			eikon2.getCollectionGroupTextExport('<c:url value="/getCollectionrGroupTextExport.xcn"/>?userid=' + userid + '&srcip=' + srcip + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr + '&export_type=' + export_type + '&groupField=sender_str&limit=1000&type=F', userid);
 		}
 
 
@@ -438,7 +439,9 @@
 		}
 
 		function initCondition() {
-			getGenerativeList();
+            $('#startDt').val(new Date().format('yyyy-mm-dd'));
+            $('#endDt').val(new Date().format('yyyy-mm-dd'));
+			getFileServiceList();
 			getCodeList('busi');
 			getCodeList('dept');
 
@@ -675,7 +678,7 @@
 	<div class="inner_messenger">
 		<%--			검색 영역--%>
 		<div class="leftSearch p20" id="xcn_Search">
-			<div class="leftSearchTab mat8">
+			<div class="leftSearchTab">
 				<button class="active" onclick="openCity('Tab01')">파일전송 검색</button>
 				<!--<button onclick="openCity('Tab02')">탭 비활성</button>-->
 			</div>
@@ -694,32 +697,37 @@
 					</div>
 					<%} %>
 					<div>
-						<input class="w100" type="text" id="searchStrInput" placeholder="회사명을 입력하세요">
-						<input class="w100 mat8" type="text" id="searchStrInput" placeholder="사용자명을 입력하세요">
-					</div>
-					<div class="optiotab w100 mat8" data-toggle="buttons">
-						<button class="active w50" name="attachYn" id="attachAll" value=""><s:message code="condition.isattached.all"/></button>
-						<button class="w50" name="attachYn" id="attachY" value="Y"><s:message code="eikon.attach.exist"/></button>
+						<select class="w100" id="serviceTypeSelect" data-style="btn-default" multiple data-show-subtext="true"
+						        data-actions-box="true">
+						</select>
+						<input class="w100 mat8" type="text" id="searchStrInput" placeholder="<s:message code="common.msg.searchMsg"/>">
 					</div>
 					<h3 class="mat16">상세 검색</h3>
 					<div>
 
-						<input class="w45 txt_center" type="date" id="startDt"  value="2023-11-20"><span class="w10 dis_inlineblock txt_center">~</span><input class="w45 txt_center" type="date" id="endDt"  value="2023-11-30">
-						<input type="text" class="w100 mat8"  placeholder="사업장을 선택하세요" id="senders">
-						<input type="text" class="w100 mat8"  placeholder="부서명을 입력하세요" id="senders">
+						<input class="w45 mat8 txt_center" type="date" id="startDt"  value="2023-11-20"><span class="w10 dis_inlineblock txt_center">~</span><input class="w45 txt_center" type="date" id="endDt"  value="2023-11-30">
+
+
+						<div class="optiotab w100 mat8" data-toggle="buttons">
+							<button class="active w50" name="attachYn" id="attachAll" value=""><s:message code="condition.isattached.all"/></button>
+							<button class="w50" name="attachYn" id="attachY" value="Y"><s:message code="eikon.attach.exist"/></button>
+						</div>
+
+						<select id="busiSelect" class="w100 mat8" data-style="btn-default btn-sm" multiple data-show-subtext="true"
+						        data-live-search="true" data-actions-box="true"></select>
+
+						<p class="mat8 formText btnform" data-toggle="buttons">
+							<span class="tit">부서 선택</span>
+							<button type="button" class="btn01" id="dept"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
+									code="common.org.choose.dept"/></button>
+							<span id="deptSelectedArea" class="codeSelectedBtn">
+										<button type="button" class="btn num_add bornone"  style="z-index: 2;">0</button>
+									</span>
+							<input type="hidden" id="deptStr" class="selectedTitle">
+							<input type="hidden" id="deptVal">
+						</p>
 						<div id="selectedCodeTitle" class="infotxt"></div>
-						<h5 class="mat16">패턴</h5>
-						<div class="optiotab w100 mat4" data-toggle="buttons">
-							<button class="active w33" name="attachYn" id="attachAll" value="">전체</button>
-							<button class="w33" name="attachYn" id="attachY" value="Y">있음</button>
-							<button class="w33" name="attachYn" id="attachY" value="Y">없음</button>
-						</div>
-						<h5 class="mat8">예약어</h5>
-						<div class="optiotab w100 mat4" data-toggle="buttons">
-							<button class="active w33" name="attachYn" id="attachAll" value="">전체</button>
-							<button class="w33" name="attachYn" id="attachY" value="Y">있음</button>
-							<button class="w33" name="attachYn" id="attachY" value="Y">없음</button>
-						</div>
+						<input type="text" class="w100 mat8"  placeholder="<s:message code="eikon.input.participation"/>" id="senders">
 
 					</div>
 				</div>
@@ -744,238 +752,29 @@
 				</div>
 				<div class="bortop_dd pt16 pl20 pr20">
 				</div>
-				<div style="height:740px; overflow: auto;">
+				<div>
 					<div class="list-group" id="group_list" style="margin-bottom: 0px;">
-						<ul class="people">
-							<li class="person">
-								<div class="left">
-									<p>
-										<span class="file_flag_reception"><img src="<c:url value="/img/ico_w_chatshare_fill.png"/>" alt="외부" height="12px">외부</span>
-										<span class="chatid">2024_사업계획_v1.0_엑스큐어넷 4층 연구소_데이터응용팀.pdf</span>
-									</p>
-									<p>
-										<span class="name">새절사업장</span> <span class="bar"></span>
-										<span class="name">데이터 코어팀</span> <span class="bar"></span>
-										<span class="name">수석</span> <span class="bar"></span>
-										<span class="name">홍길동</span><span class="bar"></span>
-										<span class="name">233KB</span>
-									</p>
-								</div>
-								<div class="right">
-									<p><span class="logo"><img src="/venus/img/icon/ico_sns_IGPS.png">OneDrive</span></p>
-									<p><span class="time">2023-12-04 10:20:12</span></p>
-								</div>
-								<div style="clear: both; overflow: hidden;">
-
-									<p class="xcn_file_btn ">
-
-
-										<button class="btn06 mat32" id="mouse-over-label"><img src="<c:url value="/img/subBtn_eye.png"/>" alt="미리보기">미리보기</button><button class="btn06"><img src="<c:url value="/img/subBtn_file_open.png"/>" alt="열기">열기
-										</button><button class="btn06"><img src="<c:url value="/img/subBtn_folder_open.png"/>" alt="폴더">폴더열기</button><button class="btn06"><img src="<c:url value="/img/subBtn_share.png"/>" alt="전달">전달
-										</button><button class="btn02"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제">삭제</button><button class="btn01"><img src="<c:url value="/img/subBtn_save_b.png"/>" alt="저장">저장
-										</button><!--<button class="btn01"><img src="<c:url value="/img/subBtn_save_b.png"/>" alt="다른이름">다름이름으로 저장</button>-->
-
-									</p>
-								</div>
-							</li>
-							<li class="person">
-								<div class="left">
-									<p>
-
-										<span class="chatid">2024_사업계획_v1.0_엑스큐어넷 4층 연구소_데이터응용팀.pdf</span>
-									</p>
-									<p><span class="name">새절사업장</span> <span class="bar"></span>
-										<span class="name">데이터 코어팀</span> <span class="bar"></span>
-										<span class="name">수석</span> <span class="bar"></span>
-										<span class="name">홍길동</span><span class="bar"></span>
-										<span class="name">233KB</span>
-									</p>
-								</div>
-								<div class="right">
-									<p><span class="logo"><img src="/venus/img/icon/ico_sns_IGPS.png">OneDrive</span></p>
-									<p><span class="time">2023-12-04 10:20:12</span></p>
-								</div>
-								<div style="clear: both; overflow: hidden;">
-									<p class="xcn_file_btn">
-										<button class="btn06 mat32"><img src="<c:url value="/img/subBtn_eye.png"/>" alt="미리보기">미리보기</button><button class="btn06"><img src="<c:url value="/img/subBtn_file_open.png"/>" alt="열기">열기
-									</button><button class="btn06"><img src="<c:url value="/img/subBtn_folder_open.png"/>" alt="폴더">폴더열기</button><button class="btn06"><img src="<c:url value="/img/subBtn_share.png"/>" alt="전달">전달
-									</button><button class="btn02"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제">삭제</button><button class="btn01"><img src="<c:url value="/img/subBtn_save_b.png"/>" alt="저장">저장
-									</button><!--<button class="btn01"><img src="<c:url value="/img/subBtn_save_b.png"/>" alt="다른이름">다름이름으로 저장</button>-->
-									</p>
-								</div>
-							</li>
-							<li class="person">
-								<div class="left">
-									<p>
-
-										<span class="chatid">2024_사업계획_v1.0_엑스큐어넷 4층 연구소_데이터응용팀.pdf</span>
-									</p>
-									<p><span class="name">새절사업장</span> <span class="bar"></span>
-										<span class="name">데이터 코어팀</span> <span class="bar"></span>
-										<span class="name">수석</span> <span class="bar"></span>
-										<span class="name">홍길동</span><span class="bar"></span>
-										<span class="name">233KB</span>
-									</p>
-								</div>
-								<div class="right">
-									<p><span class="logo"><img src="/venus/img/icon/ico_sns_IGPS.png">OneDrive</span></p>
-									<p><span class="time">2023-12-04 10:20:12</span></p>
-								</div>
-								<div style="clear: both; overflow: hidden;">
-									<p class="xcn_file_btn">
-										<button class="btn06 mat32"><img src="<c:url value="/img/subBtn_eye.png"/>" alt="미리보기">미리보기</button><button class="btn06"><img src="<c:url value="/img/subBtn_file_open.png"/>" alt="열기">열기
-									</button><button class="btn06"><img src="<c:url value="/img/subBtn_folder_open.png"/>" alt="폴더">폴더열기</button><button class="btn06"><img src="<c:url value="/img/subBtn_share.png"/>" alt="전달">전달
-									</button><button class="btn02"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제">삭제</button><button class="btn01"><img src="<c:url value="/img/subBtn_save_b.png"/>" alt="저장">저장
-									</button><!--<button class="btn01"><img src="<c:url value="/img/subBtn_save_b.png"/>" alt="다른이름">다름이름으로 저장</button>-->
-									</p>
-								</div>
-							</li>
-							<li class="person">
-								<div class="left">
-									<p>
-										<span class="file_flag_reception"><img src="<c:url value="/img/ico_w_chatshare_fill.png"/>" alt="외부" height="12px">외부</span>
-										<span class="chatid">2024_사업계획_v1.0_엑스큐어넷 4층 연구소_데이터응용팀.pdf</span>
-									</p>
-									<p><span class="name">새절사업장</span> <span class="bar"></span>
-										<span class="name">데이터 코어팀</span> <span class="bar"></span>
-										<span class="name">수석</span> <span class="bar"></span>
-										<span class="name">홍길동</span><span class="bar"></span>
-										<span class="name">233KB</span>
-									</p>
-								</div>
-								<div class="right">
-									<p><span class="logo"><img src="/venus/img/icon/ico_sns_IGPS.png">OneDrive</span></p>
-									<p><span class="time">2023-12-04 10:20:12</span></p>
-								</div>
-								<div style="clear: both; overflow: hidden;">
-									<p class="xcn_file_btn">
-										<button class="btn06 mat32"><img src="<c:url value="/img/subBtn_eye.png"/>" alt="미리보기">미리보기</button><button class="btn06"><img src="<c:url value="/img/subBtn_file_open.png"/>" alt="열기">열기
-									</button><button class="btn06"><img src="<c:url value="/img/subBtn_folder_open.png"/>" alt="폴더">폴더열기</button><button class="btn06"><img src="<c:url value="/img/subBtn_share.png"/>" alt="전달">전달
-									</button><button class="btn02"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제">삭제</button><button class="btn01"><img src="<c:url value="/img/subBtn_save_b.png"/>" alt="저장">저장
-									</button><!--<button class="btn01"><img src="<c:url value="/img/subBtn_save_b.png"/>" alt="다른이름">다름이름으로 저장</button>-->
-									</p>
-								</div>
-							</li>
-							<li class="person">
-								<div class="left">
-									<p>
-										<span class="file_flag_reception"><img src="<c:url value="/img/ico_w_chatshare_fill.png"/>" alt="외부" height="12px">외부</span>
-										<span class="chatid">2024_사업계획_v1.0_엑스큐어넷 4층 연구소_데이터응용팀.pdf</span>
-									</p>
-									<p><span class="name">새절사업장</span> <span class="bar"></span>
-										<span class="name">데이터 코어팀</span> <span class="bar"></span>
-										<span class="name">수석</span> <span class="bar"></span>
-										<span class="name">홍길동</span><span class="bar"></span>
-										<span class="name">233KB</span>
-									</p>
-								</div>
-								<div class="right">
-									<p><span class="logo"><img src="/venus/img/icon/ico_sns_IGPS.png">OneDrive</span></p>
-									<p><span class="time">2023-12-04 10:20:12</span></p>
-								</div>
-								<div style="clear: both; overflow: hidden;">
-									<p class="xcn_file_btn">
-										<button class="btn06 mat32"><img src="<c:url value="/img/subBtn_eye.png"/>" alt="미리보기">미리보기</button><button class="btn06"><img src="<c:url value="/img/subBtn_file_open.png"/>" alt="열기">열기
-									</button><button class="btn06"><img src="<c:url value="/img/subBtn_folder_open.png"/>" alt="폴더">폴더열기</button><button class="btn06"><img src="<c:url value="/img/subBtn_share.png"/>" alt="전달">전달
-									</button><button class="btn02"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제">삭제</button><button class="btn01"><img src="<c:url value="/img/subBtn_save_b.png"/>" alt="저장">저장
-									</button><!--<button class="btn01"><img src="<c:url value="/img/subBtn_save_b.png"/>" alt="다른이름">다름이름으로 저장</button>-->
-									</p>
-								</div>
-							</li>
-							<li class="person">
-								<div class="left">
-									<p>
-										<span class="file_flag_reception"><img src="<c:url value="/img/ico_w_chatshare_fill.png"/>" alt="외부" height="12px">외부</span>
-										<span class="chatid">2024_사업계획_v1.0_엑스큐어넷 4층 연구소_데이터응용팀.pdf</span>
-									</p>
-									<p><span class="name">새절사업장</span> <span class="bar"></span>
-										<span class="name">데이터 코어팀</span> <span class="bar"></span>
-										<span class="name">수석</span> <span class="bar"></span>
-										<span class="name">홍길동</span><span class="bar"></span>
-										<span class="name">233KB</span>
-									</p>
-								</div>
-								<div class="right">
-									<p><span class="logo"><img src="/venus/img/icon/ico_sns_IGPS.png">OneDrive</span></p>
-									<p><span class="time">2023-12-04 10:20:12</span></p>
-								</div>
-								<div style="clear: both; overflow: hidden;">
-									<p class="xcn_file_btn">
-										<button class="btn06 mat32"><img src="<c:url value="/img/subBtn_eye.png"/>" alt="미리보기">미리보기</button><button class="btn06"><img src="<c:url value="/img/subBtn_file_open.png"/>" alt="열기">열기
-									</button><button class="btn06"><img src="<c:url value="/img/subBtn_folder_open.png"/>" alt="폴더">폴더열기</button><button class="btn06"><img src="<c:url value="/img/subBtn_share.png"/>" alt="전달">전달
-									</button><button class="btn02"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제">삭제</button><button class="btn01"><img src="<c:url value="/img/subBtn_save_b.png"/>" alt="저장">저장
-									</button><!--<button class="btn01"><img src="<c:url value="/img/subBtn_save_b.png"/>" alt="다른이름">다름이름으로 저장</button>-->
-									</p>
-								</div>
-							</li>
-							<li class="person">
-								<div class="left">
-									<p>
-										<span class="file_flag_reception"><img src="<c:url value="/img/ico_w_chatshare_fill.png"/>" alt="외부" height="12px">외부</span>
-										<span class="chatid">2024_사업계획_v1.0_엑스큐어넷 4층 연구소_데이터응용팀.pdf</span>
-									</p>
-									<p><span class="name">새절사업장</span> <span class="bar"></span>
-										<span class="name">데이터 코어팀</span> <span class="bar"></span>
-										<span class="name">수석</span> <span class="bar"></span>
-										<span class="name">홍길동</span><span class="bar"></span>
-										<span class="name">233KB</span>
-									</p>
-								</div>
-								<div class="right">
-									<p><span class="logo"><img src="/venus/img/icon/ico_sns_IGPS.png">OneDrive</span></p>
-									<p><span class="time">2023-12-04 10:20:12</span></p>
-								</div>
-								<div style="clear: both; overflow: hidden;">
-									<p class="xcn_file_btn">
-										<button class="btn06 mat32"><img src="<c:url value="/img/subBtn_eye.png"/>" alt="미리보기">미리보기</button><button class="btn06"><img src="<c:url value="/img/subBtn_file_open.png"/>" alt="열기">열기
-									</button><button class="btn06"><img src="<c:url value="/img/subBtn_folder_open.png"/>" alt="폴더">폴더열기</button><button class="btn06"><img src="<c:url value="/img/subBtn_share.png"/>" alt="전달">전달
-									</button><button class="btn02"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제">삭제</button><button class="btn01"><img src="<c:url value="/img/subBtn_save_b.png"/>" alt="저장">저장
-									</button><!--<button class="btn01"><img src="<c:url value="/img/subBtn_save_b.png"/>" alt="다른이름">다름이름으로 저장</button>-->
-									</p>
-								</div>
-							</li>
-							<li class="person">
-								<div class="left">
-									<p>
-										<span class="file_flag_reception"><img src="<c:url value="/img/ico_w_chatshare_fill.png"/>" alt="외부" height="12px">외부</span>
-										<span class="chatid">2024_사업계획_v1.0_엑스큐어넷 4층 연구소_데이터응용팀.pdf</span>
-									</p>
-									<p><span class="name">새절사업장</span> <span class="bar"></span>
-										<span class="name">데이터 코어팀</span> <span class="bar"></span>
-										<span class="name">수석</span> <span class="bar"></span>
-										<span class="name">홍길동</span><span class="bar"></span>
-										<span class="name">233KB</span>
-									</p>
-								</div>
-								<div class="right">
-									<p><span class="logo"><img src="/venus/img/icon/ico_sns_IGPS.png">OneDrive</span></p>
-									<p><span class="time">2023-12-04 10:20:12</span></p>
-								</div>
-								<div style="clear: both; overflow: hidden;">
-									<p class="xcn_file_btn">
-										<button class="btn06 mat32"><img src="<c:url value="/img/subBtn_eye.png"/>" alt="미리보기">미리보기</button><button class="btn06"><img src="<c:url value="/img/subBtn_file_open.png"/>" alt="열기">열기
-									</button><button class="btn06"><img src="<c:url value="/img/subBtn_folder_open.png"/>" alt="폴더">폴더열기</button><button class="btn06"><img src="<c:url value="/img/subBtn_share.png"/>" alt="전달">전달
-									</button><button class="btn02"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제">삭제</button><button class="btn01"><img src="<c:url value="/img/subBtn_save_b.png"/>" alt="저장">저장
-									</button><!--<button class="btn01"><img src="<c:url value="/img/subBtn_save_b.png"/>" alt="다른이름">다름이름으로 저장</button>-->
-									</p>
-								</div>
-							</li>
-						</ul>
+						<a href="#" class="list-group-item list-group-item-action active" style="cursor:default; padding:40px; margin:0 20px;">
+							<p class="list-group-item-text" style="line-height:30px; text-align: center">
+								<img src="<c:url value="/img/icon/img_nodata02.png"/>" width="72" height="72">
+							</p>
+							<p style="text-align: center">
+								<s:message code="eikon.msg.select.condition"/>
+							</p>
+						</a>
 					</div>
 				</div>
-
-				<!-- pagination -->
-				<div class="pl20 pr20">
-					<div class="pageArea bornone" id="groupPage">
-						<div class="total fb600">
-
-						</div>
-					</div>
-					<s:message code="common.msg.finish_query"/> : <span id="groupResultCnt" class="red fb600">0</span>
-				</div>
-				<!-- //pagination -->
 			</div>
 
+			<!-- pagination -->
+			<div class="pl20 pr20">
+				<div class="pageArea bornone" id="groupPage">
+					<div class="total fb600">
+					</div>
+				</div>
+				<s:message code="common.msg.finish_query"/> : <span id="groupResultCnt" class="red fb600">0</span>
+			</div>
+			<!-- //pagination -->
 		</div>
 
 		<!-- 대화방 끝!! -->
@@ -985,141 +784,19 @@
 
 				<div class="messageBtn">
 					<div class="btnform">
-						<button class="btn01"><img src="<c:url value="/img/subBtn_arrow_left_12.png"/>" alt=""></button>
-						<button class="btn01"><img src="<c:url value="/img/subBtn_arrow_right_12.png"/>" alt=""></button>
-						<button class="btn05"><img src="<c:url value="/img/subBtn_save.png"/>" alt="저장">저장</button>
-						<button class="btn05"><img src="<c:url value="/img/subBtn_mail.png"/>" alt="인쇄">인쇄</button>
-						<button class="btn05"><img src="<c:url value="/img/subBtn_settings.png"/>" alt="추가기능">추가기능</button>
-						<button class="btn05"><img src="<c:url value="/img/subBtn_link.png"/>" alt="새창">새창</button>
 					</div>
 					<div class="btnform txt_right">
-						<button class="btn05"><img src="<c:url value="/img/subBtn_notification.png"/>" alt="메시지보관">메시지보관</button>
-						<select id="" name="">
-							<option value="">내보내기</option>
-							<option value="">옵션2</option>
-							<option value="">옵션3</option>
-						</select>
+						<span>내보내기 &#9662;</span>
+						<div class="dropdown-content">
+							<a href="#" onclick="downloadList('xlsx')" class="excel_down">엑셀(xlsx)</a>
+							<a href="#" onclick="downloadList('txt')" class="txt_down">텍스트(txt)</a>
+							<a href="#" onclick="downloadList('html')" class="html_down">하이퍼텍스트(html)</a>
+							<a href="#" class="excel_file_down">액셀(xlsx)+첨부파일</a>
+						</div>
 					</div>
 				</div>
-				<!-- 외부 -->
-				<div class="messageCon">
-					<div class="top redBg">
-						<h4 class="ma_none">
-							<span class="file_flag_reception"><img src="<c:url value="/img/ico_w_chatshare_fill.png"/>" alt="외부" height="12px">외부</span>
-							2024_사업계획_v1.0_엑스큐어넷 4층 연구소_데이터응용팀.pdf
-						</h4>
-					</div>
-					<div class="conBox">
-
-						<div class="borbottom_dashed pb16 ">
-							<p>
-								<span class="name">새절사업장</span> <span class="xcn_bar"></span>
-								<span class="name">데이터 코어팀</span> <span class="xcn_bar"></span>
-								<span class="name">수석</span> <span class="xcn_bar"></span>
-								<span class="name">홍길동</span><span class="xcn_bar"></span>
-								<span class="name">233KB</span>
-							</p>
-							<p class="rightBox">
-								<span >2023-12-04 10:00:20</span>
-							</p>
-						</div>
-						<div class="pt16">
-							내용내용<br/>
-							내용 들이갑니다.
-						</div>
-						<table class="subTable mat8">
-							<colgroup>
-								<col width="*">
-								<col width="*">
-								<col width="10%">
-							</colgroup>
-							<tr>
-								<th colspan="3"> 2023.12.04</th>
-							</tr>
-							<tr>
-								<td>ID</td>
-								<td class="txt_left">일단 주석처리</td>
-								<td class="borleft_none">10:12:32</td>
-							</tr>
-							<tr>
-								<td>ID</td>
-								<td class="txt_left">알겠습니다</td>
-								<td class="borleft_none">10:12:32</td>
-							</tr>
-							<tr>
-								<td>ID</td>
-								<td class="txt_left">일단 주석처리</td>
-								<td class="borleft_none">10:12:32</td>
-							</tr>
-							<tr class="tableActive">
-								<td>ID</td>
-								<td class="txt_left">알겠습니다</td>
-								<td class="borleft_none">10:12:32</td>
-							</tr>
-						</table>
-					</div>
-
-				</div>
-
-				<!-- 내부-->
-				<div class="messageCon">
-					<div class="top grayBg03">
-						<h4 class="ma_none">
-							내부 일 때 - 2024_사업계획_v1.0_엑스큐어넷 4층 연구소_데이터응용팀.pdf
-						</h4>
-
-					</div>
-					<div class="conBox">
-
-						<div class="borbottom_dashed pb16">
-							<p>
-								<span class="name">새절사업장</span> <span class="xcn_bar"></span>
-								<span class="name">데이터 코어팀</span> <span class="xcn_bar"></span>
-								<span class="name">수석</span> <span class="xcn_bar"></span>
-								<span class="name">홍길동</span><span class="xcn_bar"></span>
-								<span class="name">233KB</span>
-							</p>
-							<p class="rightBox">
-								<span >2023-12-04 10:00:20</span>
-							</p>
-						</div>
-						<div class="pt16">
-							내용내용<br/>
-							내용 들이갑니다.
-						</div>
-						<table class="subTable mat8">
-							<colgroup>
-								<col width="*">
-								<col width="*">
-								<col width="10%">
-							</colgroup>
-							<tr>
-								<th colspan="3"> 2023.12.04</th>
-							</tr>
-							<tr>
-								<td>ID</td>
-								<td class="txt_left">일단 주석처리</td>
-								<td class="borleft_none">10:12:32</td>
-							</tr>
-							<tr>
-								<td>ID</td>
-								<td class="txt_left">알겠습니다</td>
-								<td class="borleft_none">10:12:32</td>
-							</tr>
-							<tr>
-								<td>ID</td>
-								<td class="txt_left">일단 주석처리</td>
-								<td class="borleft_none">10:12:32</td>
-							</tr>
-							<tr class="tableActive">
-								<td>ID</td>
-								<td class="txt_left">알겠습니다</td>
-								<td class="borleft_none">10:12:32</td>
-							</tr>
-						</table>
-					</div>
-
-				</div>
+			</div>
+			<div class="inner_fileList">
 			</div>
 
 		</div>

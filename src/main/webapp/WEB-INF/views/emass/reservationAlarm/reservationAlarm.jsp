@@ -190,7 +190,7 @@
                     }
                 },
                 onTabShow: function (tab, navigation, index) {
-                    var total = navigation.find('li').length;
+                    var total = 3;
                     var current = index + 1;
                     if (current >= total) {
                         $('#rootwizard').find('.pager .next').hide();
@@ -1007,11 +1007,8 @@
 										<li class="previous"><a href="#"><img src="../img/subBtn_arrow_left_12.png"
 										                                      class="mar8" alt=""> <s:message
 												code="common.msg.prev"/></a></li>
-										<li class="next"><a href="#"><s:message code="common.msg.next"/><img
-												src="../img/subBtn_arrow_right_12.png" class="mal8" alt=""></a></li>
-										<li class="next finish" style="display:none;"><a href="javascript:;"
-										                                                 id="finish"><s:message
-												code="mail.complete"/></a></li>
+										<li class="next"><a href="#" ><s:message code="common.msg.next"/><img src="../img/subBtn_arrow_right_12.png" class="mal8" alt=""></a></li>
+										<li class="next finish"><a href="javascript:;" id="finish"><s:message code="mail.complete"/><img src="../img/subBtn_arrow_right_12.png" class="mal8" alt=""></a></li>
 									</ul>
 								</div>
 								<!-- //탭 -->
