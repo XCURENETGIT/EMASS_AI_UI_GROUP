@@ -519,7 +519,7 @@
                 else if (xAxis == '_yyyymm') str = '<s:message code="stat.ctime.yyyymm"/>';
                 else if (xAxis == '_hh') str = '<s:message code="stat.ctime.hh"/>';
 
-                grid1.colAdd("rowKey", str, 180, "center", false, 'link');
+                grid1.colAdd("rowKey", str, 180, "center", false, 'link')
                 grid1.colAdd("edcTotal", '<s:message code="stat.ctime.total"/>', 130, "right", false, 'nomal', function (row, cell, value, columnDef, dataContext) {
                     if (value != undefined) return value.comma();
                     else return '';

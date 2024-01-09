@@ -9,7 +9,13 @@
 
 <style>
 
-	#wrap {overflow:hidden;}
+	#userCntArea:hover {
+		cursor: pointer;
+	}
+
+	#wrap {
+		overflow: hidden;
+	}
 
 </style>
 
@@ -73,11 +79,11 @@
 
                 $('#xrootmtr').text(xrootmtr);
 
-                $('#selectUserInfo').attr('data-srcip', srcip);
-                $('#selectUserInfo').attr('data-name', name);
-                $('#selectUserInfo').attr('data-usrid', usr_id);
-
-                $('#selectUserInfo').html(userid + "(" + username + ")");
+                // $('#selectUserInfo').attr('data-srcip', srcip);
+                // $('#selectUserInfo').attr('data-name', name);
+                // $('#selectUserInfo').attr('data-usrid', usr_id);
+                //
+                // $('#selectUserInfo').html(userid + "(" + username + ")");
                 $('#subchatid').html(": " + name);
                 $('#srcip').text(srcip);
                 $('#usr_id').text(usr_id);
@@ -86,7 +92,7 @@
             });
 
             $(document).on('.clickUser', '.click', function () {
-               alert("gg");
+                alert("gg");
             });
 
             $('#searchBtn').click(function () {
@@ -118,8 +124,8 @@
                 if (e.keyCode == 13) $('#searchBtn').click();
             }); //통합 검색 엔터키
 
-            $('#searchMsgBtn').click(function(){
-                if($('#searchMsgStrInput').val() == "") $('#searchMsgQueryBtn').click();
+            $('#searchMsgBtn').click(function () {
+                if ($('#searchMsgStrInput').val() == "") $('#searchMsgQueryBtn').click();
                 else eikon.findMessageList(0);
             });
             $('#searchMsgQueryBtn').click(function () {
@@ -211,46 +217,46 @@
                 }
             });
 
-            $(document).on('click','.selectUser',function(){
+            $(document).on('click', '.selectUser', function () {
                 var name = $(this).attr('data-name');
                 var srcip = $(this).attr('data-srcip');
                 var usr_id = $(this).attr('data-usrid');
                 var xrootmtr = $('#xrootmtr').text();
                 var msgid = $('#msgid').text();
+
                 $('#selectUserInfo').attr('data-srcip', srcip);
                 $('#selectUserInfo').attr('data-name', name);
                 $('#selectUserInfo').attr('data-usrid', usr_id);
 
+
                 $('#selectUserInfo').html($(this).text());
                 $('#srcip').text(srcip);
                 $('#usr_id').text(usr_id);
-                console.log("srcip: "+srcip);
-                console.log("usr_id: "+usr_id);
                 eikon.getMessengerGroupDetail(xrootmtr, msgid, srcip, usr_id);
                 hideUserSelect();
             });
 
 
-            $(document).on('click', '.downAllFile', function(){
+            $(document).on('click', '.downAllFile', function () {
                 var downloadFlag = false;
-                $('.downloadIcon').each ( function ( i, item ) {
+                $('.downloadIcon').each(function (i, item) {
                     var attachHash = $(this).parents('p').attr('attachhash');
-                    if( attachHash != ''){
+                    if (attachHash != '') {
                         downloadFlag = true;
                     }
                 });
-                if( !downloadFlag){
+                if (!downloadFlag) {
                     alert('<s:message code="message.message.notfound.attach"/>');
                     return;
                 }
 
-                var msgIds=[];
-                $('.downloadIcon').each ( function ( i, item ) {
+                var msgIds = [];
+                $('.downloadIcon').each(function (i, item) {
                     var msgId = $(this).parents('p').attr('msgid');
                     msgIds.push(msgId);
                 });
 
-                var attachUrl = '<c:url value="/downEmassAttachByMsgId.xcn"/>?msgIds='+msgIds.join(',');
+                var attachUrl = '<c:url value="/downEmassAttachByMsgId.xcn"/>?msgIds=' + msgIds.join(',');
                 try {
                     AttachDown.location.href = attachUrl;
                 } catch (e) {
@@ -275,11 +281,11 @@
                 var xRootMtr = $('#xrootmtr').text();
                 var srcip = $('#srcip').text();
                 var usr_id = $('#selectUserInfo').attr('data-name');
-                var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '')+"0000000";
-                var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '')+"235959";
+                var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '') + "0000000";
+                var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '') + "235959";
                 var searchStr = '';
                 if (xrootmtr == '') return;
-                eikon.getMessengerGroupAllExport('<c:url value="/getMessengerGroupAllExport.xcn"/>?xRootMtr=' + xRootMtr + '&srcip=' + srcip + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr+'&limit=1000&facet_detail=true&export=true');
+                eikon.getMessengerGroupAllExport('<c:url value="/getMessengerGroupAllExport.xcn"/>?xRootMtr=' + xRootMtr + '&srcip=' + srcip + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr + '&limit=1000&facet_detail=true&export=true');
                 hideSelect();
             });
 
@@ -475,13 +481,11 @@
         }
 
 
-
-
         function downloadList(type) {
             var xRootMtr = $('#xrootmtr').text();
             var srcip = $('#srcip').text();
             var usr_id = $('#selectUserInfo').attr('data-name');
-            console.log("user_id: "+usr_id);
+            console.log("user_id: " + usr_id);
 
             if (xrootmtr == '') return;
             var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
@@ -521,7 +525,7 @@
                 format: 'YYYY-MM-DD',
                 locale: 'ko',
                 sideBySide: true,
-                defaultDate: moment(new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate() - 1))
+                defaultDate: moment(new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate() - 7))
             }).on("dp.change", function (e) {
                 if (easyDateStartFlag) {
                     easyDateStartFlag = false;
@@ -633,8 +637,14 @@
 
 
 
+
+
+
             <s:message code="common.org.dept.all"/>',
 		noneResultsText:'
+
+
+
 
 
 
@@ -645,8 +655,14 @@
 
 
 
+
+
+
             <s:message code="common.msg.select_all"/>',
 		deselectAllText:'
+
+
+
 
 
 
@@ -931,6 +947,9 @@
 							<span class="tit">부서 선택</span>
 							<button type="button" class="btn01" id="dept"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
 									code="common.org.choose.dept"/></button>
+							<span id="deptSelectedArea" class="codeSelectedBtn">
+										<button type="button" class="btn num_add bornone" style="z-index: 2;">0</button>
+									</span>
 							<input type="hidden" id="deptStr" class="selectedTitle">
 							<input type="hidden" id="deptVal">
 						</p>
@@ -1005,28 +1024,23 @@
 						</div>
 					</div>
 
-					<div style="display: flex">
-						<div style="width: 500px;">
+					<div style="display: flex;">
+						<div style="width: 450px;">
 								<span>대화방 아이디: <span class="chatid"><span id="xrootmtr"></span><span id="srcip" style="display:none;"></span><span
 										id="usr_id" style="display:none;"></span><span id="msgid" style="display:none;"></span></span></span>
 						</div>
-<%--						<div class="myDropdown">--%>
-<%--							<span id="usrName">- &#9662;</span>--%>
-<%--							<div class="dropdown-content">--%>
-<%--&lt;%&ndash;								<a href="#">사용자 01</a>&ndash;%&gt;--%>
-<%--&lt;%&ndash;								<a href="#">사용자 02</a>&ndash;%&gt;--%>
-<%--							</div>--%>
-<%--						</div>--%>
-						<div>
-							<span><i class="glyphicon glyphicon-user"></i> <s:message code="condition.user"/> : </span>
-						</div>
-						<div title="<s:message code="condition.user"/>" id="userCntArea">
-							<div style="position: relative;display:block;padding-right: 10px;">
-								<span id="selectUserInfo" data-srcip="" data-name="" data-usrid="">-</span>
-								<span class="bs-caret"><span class="caret"></span></span>
+
+						<div style="display: flex;">
+							<span> <s:message code="condition.user"/> : </span>
+							<div title="<s:message code="condition.user"/>" id="userCntArea">
+								<div style="position: relative;display:block;padding-right: 10px;">
+									<span id="selectUserInfo" data-srcip="" data-name="" data-usrid="">-</span>
+									<span class="bs-caret"><span class="caret"></span></span>
+								</div>
 							</div>
+							<ul class="dropdown-menu" role="menu" style="min-width: 150px;position: absolute;left:500px; top:35px;"
+							    id="selectUser_menu"></ul>
 						</div>
-						<ul class="dropdown-menu" role="menu" style="min-width: 150px;position: absolute;left:500px;" id="selectUser_menu"></ul>
 					</div>
 
 					<div class="chatDate">
@@ -1079,7 +1093,12 @@
 				</div>
 				<div class="row2" style="height: calc(100% - 160px);">
 					<div>
-						<div class="messenger_prev" style="margin-bottom:16px" title="<s:message code='eikon.msg.show.prev'/>"><svg xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M246.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L224 109.3 361.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160zm160 352l-160-160c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L224 301.3 361.4 438.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3z"/></svg></div>
+						<div class="messenger_prev" style="margin-bottom:16px" title="<s:message code='eikon.msg.show.prev'/>">
+							<svg xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512">
+								<!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+								<path d="M246.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L224 109.3 361.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160zm160 352l-160-160c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L224 301.3 361.4 438.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3z"/>
+							</svg>
+						</div>
 						<div id="timeline_list">
 							<div class="timeline-panel">
 								<div class="list-group-item02 cursor-text">
@@ -1091,7 +1110,12 @@
 						</div>
 					</div>
 				</div>
-				<div class="messenger_next" title="<s:message code='eikon.msg.show.next'/>"><svg xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M246.6 470.6c-12.5 12.5-32.8 12.5-45.3 0l-160-160c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L224 402.7 361.4 265.4c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3l-160 160zm160-352l-160 160c-12.5 12.5-32.8 12.5-45.3 0l-160-160c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L224 210.7 361.4 73.4c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3z"/></svg></div>
+				<div class="messenger_next" title="<s:message code='eikon.msg.show.next'/>">
+					<svg xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512">
+						<!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+						<path d="M246.6 470.6c-12.5 12.5-32.8 12.5-45.3 0l-160-160c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L224 402.7 361.4 265.4c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3l-160 160zm160-352l-160 160c-12.5 12.5-32.8 12.5-45.3 0l-160-160c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L224 210.7 361.4 73.4c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3z"/>
+					</svg>
+				</div>
 				<div class="p16 white" style="position: fixed; bottom:0;">
 					<s:message code="eikon.msg.total.cnt"/> : <span id="groupSubResultCnt" class="blue03">0</span>
 				</div>

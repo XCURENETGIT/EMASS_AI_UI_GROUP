@@ -671,7 +671,8 @@
 								</div>
 								<div class="col-65">
 									<label class="radio-inline c-radio">
-										<input type="radio" name="adminType" class="adminType" value="M" checked><s:message code="admin.monitoring.admin"/>
+										<input type="radio" name="adminType" class="adminType" value="M">
+										<s:message code="admin.monitoring.admin"/>
 									</label>
 									<label class="radio-inline c-radio">
 										<input type="radio" name="adminType" class="adminType adminTypeSys" value="S">

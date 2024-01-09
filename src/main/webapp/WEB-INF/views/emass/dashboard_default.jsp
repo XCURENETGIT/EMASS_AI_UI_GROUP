@@ -9,6 +9,11 @@
 		text-overflow: ellipsis;
 	}
 
+	.files :hover{
+		cursor: pointer;
+		text-decoration: underline;
+	}
+
 	th {
 		text-align: center;
 	}
@@ -1208,9 +1213,9 @@ var dashCondition = {
         var str = "<div class='tabcontent'>";
         str += "<ul>";
         for (let i = 0; i < 6; i++) {
-            str += "<li li class='files' data-row-key='" + rowSearchkey + "' data-value='" + arrays[i] + "'><p>";
-            str += arrayStr[i];
-            str += "<span>" + array[i] + "</span>";
+            str += "<li class='files' data-row-key='" + rowSearchkey + "' data-value='" + arrays[i] + "'><p>";
+            str += arrayStr[i]
+            str += "<span>" + array[i].comma() + "</span>";
             str += "</p></li>"
         }
         str += "</ul>";

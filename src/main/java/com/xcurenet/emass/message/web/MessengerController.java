@@ -249,6 +249,7 @@ public class MessengerController {
 		int startRange = 0;
 		int endRange = 0;
 
+
 		SolrQuery sq = new SolrQuery();
 		if(Common.isEmpty(msgId)) {
 			EmsMessengerAdminXrootMtrVO emaxm = emsMessageService.getEmassMessengerAdminXrootMtr(xRootMtr, Common.getAdminId(request), srcip, usr_id);
@@ -287,11 +288,8 @@ public class MessengerController {
 	public XcnResponseVO getMessengerMessagePrev(final HttpServletRequest request, final HttpSession session) throws Exception {
 		JSONObject param = Common.getParam(request);
 		String msgId = Common.nvl(param.get("msgId"));
-
 		SolrQuery prevQuery = getMessengerMsgPrev(request, msgId);
 		MessengerEdcGroupVO result = solrEdcService.getMessengerGroupList(prevQuery, Common.getAdminId(request), true, false);
-
-
 
 		return new XcnResponseVO(XcnRspCode.OK, result);
 	}
@@ -340,40 +338,26 @@ public class MessengerController {
 		String startDt = Common.nvl(param.get("startDt"));
 		String endDt = Common.nvl(param.get("endDt"));
 		String searchStr = Common.nvl(param.get("searchStr"));
-		int limit = Common.nvz(param.get("limit"), 10000);
+		int limit = Common.nvz(param.get("limit"), 100000);
 
 		SolrQuery sq = new SolrQuery();
+		String query = String.format("+ctime:[%s TO %s] +xrootmtr:\"%s\"", startDt, endDt, xRootMtr);
 
-		String msgDt = msgId.substring(0, 14);
-
-		String query = String.format(" _id:%s ",msgId);
-		query += String.format("+ctime:[%s TO %s] +xrootmtr:\"%s\"", msgDt, endDt, xRootMtr);
-
-
-
-//		if(Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
+		if(Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
 
 		if(Common.isNotEmpty(usr_id)) query += String.format(" +userkey:\"%s\"", usr_id);
-
 //		else query += String.format(" -usr_id:*");
-//
-//		//이미 출력된 동시간대 데이터 제외
-//		if(Common.isNotEmpty(msgId)) {
-//			if(lastMsgYn) {
-//				query += String.format(" +msgid:[%s TO *]", msgId);
-//			} else {
-//				query += String.format(" +msgid:{%s TO *]", msgId);
-//			}
-//		}
+
+		//이미 출력된 동시간대 데이터 제외
+		if(Common.isNotEmpty(msgId)) {
+			query += String.format(" +msgid:[* TO %s}", msgId);
+		}
 
 		if(Common.isNotEmpty(searchStr)) query += String.format(" +body:(*%s*) ", searchStr);
 
 		sq.setQuery(query + MESSENGER);
-
 		sq.setStart(Common.nvz(param.get("offset"), 0));
 		sq.setRows(limit);
-
-
 		sq.addSort("ctime", ORDER.asc);
 		sq.addSort("msgid", ORDER.asc);
 		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user");
@@ -398,8 +382,8 @@ public class MessengerController {
 
 //		if(Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
 
-		if(Common.isNotEmpty(usr_id)) query += String.format(" +usr_id:\"%s\"", usr_id);
-//		else query += String.format(" -usr_id:*");
+		if(Common.isNotEmpty(usr_id)) query += String.format(" +userkey:\"%s\"", usr_id);
+//		else query += String.format(" -userkey:*");
 
 		//이미 출력된 동시간대 데이터 제외
 		if(Common.isNotEmpty(msgId)) {
@@ -521,7 +505,6 @@ public class MessengerController {
 	public XcnResponseVO getMessengerGroupAttachList(final HttpServletRequest request, final HttpSession session) throws Exception {
 		JSONObject param = Common.getParam(request);
 		String xRootMtr = Common.nvl(param.get("xRootMtr"));
-		String srcip = Common.nvl(param.get("srcip"));
 		String usr_id = Common.nvl(param.get("usr_id"));
 		String startDt = Common.nvl(param.get("startDt"));
 		String endDt = Common.nvl(param.get("endDt"));
@@ -531,9 +514,7 @@ public class MessengerController {
 		String query = "";
 		if(Common.isNotEmpty(startDt) && Common.isNotEmpty(endDt)) query += String.format("+ctime:[%s TO %s] ", startDt, endDt);
 		query += String.format("+xrootmtr:\"%s\" +attached:Y", xRootMtr);
-		if(Common.isNotEmpty(usr_id)) query += String.format(" +usr_id:\"%s\"", usr_id);
-//		else query += " -usr_id:*";
-//		if(Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
+		if(Common.isNotEmpty(usr_id)) query += String.format(" +userkey:\"%s\"", usr_id);
 		if(Common.isNotEmpty(searchStr)) query += String.format(" +body:(*%s*) ", searchStr);
 
 		sq.setQuery(query + MESSENGER);

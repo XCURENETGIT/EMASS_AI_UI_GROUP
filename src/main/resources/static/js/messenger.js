@@ -57,15 +57,18 @@ var eikon = {
         $('.messenger_next, .messenger_prev').on('click', function () {
             var srcip = $('#selectUserInfo').attr('data-srcip');
             var usr_id = $('#selectUserInfo').attr('data-usrid');
+            console.log("usr_id: "+usr_id);
             var xrootmtr = $('#xrootmtr').text();
             var msgIds = [];
+            console.log("gg: "+$(this).hasClass());
 
             if ($(this).hasClass('messenger_next')) {
+                console.log("다음 데이터")
                 var msgid = $('.timeline').children().last().attr('id');
                 getMessengerMessageNext(xrootmtr, srcip, usr_id, msgid);
 
             } else {
-
+                console.log("이전 데이터")
                 var firstData = $('.timeline').children().filter(':eq(1)');
                 var msgid = $(firstData).attr('id');
                 getMessengerMessagePrev(xrootmtr, srcip, usr_id, msgid);
@@ -131,21 +134,21 @@ var eikon = {
             }
         });
 
-        searchFlag = true;
-        ui.onBody('timeline_list', 0, 60);
-
-        $("#timeline_list").html('');
-
-        $('#searchMsgStrInput').val('');
-        $('#searchResult').html('');
-        $('#searchResultArea').hide();
-        $('#searchResultBtnArea').hide();
-
-        var startDt = $('#startDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
-        var endDt = $('#endDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
-
-
-        getMessengerMessageTotal(xRootmtr, srcip, startDt, endDt, usr_id, '');
+        // searchFlag = true;
+        // ui.onBody('timeline_list', 0, 60);
+        //
+        // $("#timeline_list").html('');
+        //
+        // $('#searchMsgStrInput').val('');
+        // $('#searchResult').html('');
+        // $('#searchResultArea').hide();
+        // $('#searchResultBtnArea').hide();
+        //
+        // var startDt = $('#startDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
+        // var endDt = $('#endDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
+        //
+        //
+        // getMessengerMessageTotal(xRootmtr, srcip, startDt, endDt, usr_id, '');
     },
     getMessengerGroupDetail: function (xRootmtr, msgid, srcip, usr_id) {
         searchFlag = true;
@@ -291,7 +294,7 @@ function getMessengerMessage(xRootmtr, srcip, usr_id, msgid) {
     ui.get({
         url: 'getMessengerMessage.xcn',
         xRootMtr: xRootmtr,
-        // srcip: srcip,
+        srcip: srcip,
         startDt: startDt,
         endDt: endDt,
         usr_id: usr_id,
@@ -496,7 +499,6 @@ function makeFileList(data) {
 function userSelectBox(data, srcip, usr_id){
     var name = $('#selectUserInfo').attr('data-name');
     var str = '';
-    str += '<li class="selectUser clickUser"><a href="javascript:void(0);">전체</a></li>';
     for(var i=0; i<data.length; i++){
         var ip = data[i].srcip == undefined ? Object.keys(data[i].srcIpList[0]).toString() : data[i].srcip;
         var selectUserTitle = ip;
@@ -600,13 +602,15 @@ function rtnGroupList(data, type) {
         // Append li to ul
         ul.appendChild(li);
     }
-    if (data.length == 0) {
-        str += '<a href="#" class="list-group-item list-group-item-action active" style="cursor:default;height:50px;">';
-        str += '	<p class="list-group-item-text" style="line-height:30px;">';
-        str += '		<i class="fa fa-envelope fa-sm"></i> ';
+    if( data.length == 0 ){
+        str += '	<div class="pl20 pr20">';
+        str += '    <a href="#" class="list-group-item list-group-item-action active" style="cursor:default;">';
+        str += '	    <p class="list-group-item-text" style="line-height:30px; text-align: center">';
+        str += '<img src="' + mainContext + '/img/icon/img_nodata02.png" width="72" height="72">';
+        str += '	    <BR/>';
         str += nodataMsg; //common.msg.nodata
-        str += '</p></a>';
-        $('#group_list').html(str);
+        str += '</p></a></div>';
+        $('#group_list').html( str );
     }
 
     groupList.appendChild(ul);
@@ -635,7 +639,6 @@ function getMessengerGroupList(page) {
         offset: offset,
         limit: groupPageBreak,
         success: function (data, total) {
-            console.log(data.groups);
             rtnGroupList(data.groups, 'G');
             rtnGroupPage(total, page, 'G');
             HighlightGroup();
@@ -696,9 +699,7 @@ function getGenerativeGroupList(page) {
         success: function (data, total) {
             rtnGenerativeGroupList(data.groups)
             rtnnGenerativeGroupPage(total, page);
-            /*	rtnGroupList(data.groups, 'G');
-                rtnGroupPage(total, page, 'G');
-                HighlightGroup( );*/
+
         },
         error: function (status, message) {
             ui.alertMsg(message);
@@ -789,33 +790,13 @@ function getPageNum(msgid) {
     else return 1;
 }
 
-//function detailMessageFocus(msgid){
-//	var idx = -1;
-//	for (var i = 0; i < detailDataSet.length; i++) {
-//		if(detailDataSet[i].msgid == msgid){
-//			idx = i;
-//			break;
-//		}
-//	}
-//	findList(msgid, idx+1);
-//}
-//
-//function detailDateFocus(date){
-//	var idx = -1;
-//	for (var i = 0; i < detailDataSet.length; i++) {
-//		if(detailDataSet[i].ctime.substring(0, 10) == date){
-//			idx = i;
-//			break;
-//		}
-//	}
-//	findList('date'+date, idx+1);
-//}
+
 
 function makeList(nextFlag) {
     var dataHasFlag = false;
     var str = '<ul class="pageInfoDiv timeline">';
     var usrid = $('#selectUserInfo').attr('data-usrid');
-    var srcip = $('#selectUserInfo').attr('data-srcip');
+    // var srcip = $('#selectUserInfo').attr('data-srcip');
     for (var i = 0; i < detailDataSet.length; i++) {
         dataHasFlag = true;
         var obj = detailDataSet[i];
@@ -823,7 +804,11 @@ function makeList(nextFlag) {
         if ((nvl(obj.user) != '' && obj.user == obj.sender) || usrid == obj.title || usrid == obj.sender) chkPati = true;
         str += checkDate(i);
 
-        str += '<li class="p20 bubble txt_right slide_right' + (i == 0 && !nextFlag ? 'lastReadLi' : '') + '" id="' + obj.msgid + '" ctime="' + obj.ctime + '" userid="' + obj.userid + '" srcip="' + obj.srcip + '" + " xrootmtr="' + obj.xrootmtr + '">';
+        if (chkPati == true) {
+            str += '<li class="p20 bubble txt_right slide_right' + (i == 0 && !nextFlag ? 'lastReadLi' : '') + '" id="' + obj.msgid + '" ctime="' + obj.ctime + '" userid="' + obj.userid + '" srcip="' + obj.srcip + '" + " xrootmtr="' + obj.xrootmtr + '">';
+        }else{
+            str += '<li class="p20 bubble txt_right slide_left' + (i == 0 && !nextFlag ? 'lastReadLi' : '') + '" id="' + obj.msgid + '" ctime="' + obj.ctime + '" userid="' + obj.userid + '" srcip="' + obj.srcip + '" + " xrootmtr="' + obj.xrootmtr + '">';
+        }
         str += '<span id="xrootmtr" style="display: none;">' + obj.xrootmtr + '</span>';
 
         var svc3 = obj.svc3;
@@ -897,9 +882,9 @@ function makePrevList() {
         }
         str += '			</div>';
 
-        str += ' <div class="bubbleDate">';
+        str += ' <div class="bubbleDate mat4">';
         str += '<span>' + obj.ctime + '</span>';
-        str += '<span style="border: 1px solid #ccc;">' + makeMessengerText(obj.svc) + '</span>';
+        str+='<span class="mal4">'+makeMessengerText(obj.svc)+'</span>';
         str += '</div></div>';
         str += '</li>';
     }
@@ -945,17 +930,19 @@ function noNextDataMsg() {
     return str;
 }
 
-function checkDate(idx) {
+function checkDate(idx){
     var lastTime = $('.timeline').children().last().attr('ctime');
 
-    if (idx > 0 && detailDataSet[idx].ctime.substring(0, 10) == detailDataSet[idx - 1].ctime.substring(0, 10)) {
+    if( idx > 0 && detailDataSet[idx].ctime.substring(0, 10) == detailDataSet[idx-1].ctime.substring(0, 10) ){
         return '';
     }
-    if (lastTime != undefined && detailDataSet[idx].ctime.substring(0, 10) == lastTime.substring(0, 10)) {
+    if( lastTime != undefined && detailDataSet[idx].ctime.substring(0, 10) == lastTime.substring(0, 10) ){
         return '';
     }
 
-    var str = viewDate(detailDataSet[idx].ctime.substring(0, 10));
+    var str='<div class="conversation-start">';
+    str += viewDate(detailDataSet[idx].ctime.substring(0, 10));
+    str +='</div>'
 
     return str;
 }
@@ -971,7 +958,9 @@ function checkDatePre(idx) {
         return '';
     }
 
-    var str = viewDate(prevDetailDataSet[idx].ctime.substring(0, 10));
+    var str='<div class="conversation-start">';
+    str += viewDate(prevDetailDataSet[idx].ctime.substring(0, 10));
+    str +='</div>'
 
     return str;
 }
@@ -1094,9 +1083,6 @@ function checkLastMsg() {
     $('#timeline_list div.me').each(function () {
         var objOffsetTop = $(this).offset().top - topHeight;
         var objHeight = $(this).height();
-        //console.log("objHeight = "+objHeight)
-        //console.log("objOffsetTop = "+objOffsetTop)
-        //console.log(objOffsetTop-(objHeight/2)-marginBottom)
         if (objOffsetTop - (objHeight / 2) - marginBottom < 0) {
             lastMsgId = $(this).parent().parent().attr('id');
         } else {
