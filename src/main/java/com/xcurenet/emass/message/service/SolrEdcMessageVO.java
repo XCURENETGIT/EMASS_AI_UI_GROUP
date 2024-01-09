@@ -83,9 +83,9 @@ public class SolrEdcMessageVO {
 //
 //		this.setFacetQuery(resp);
 
-		if (resp.getAggregations() != null) {
-			this.setFacets((ElasticsearchAggregations) resp.getAggregations());
-		}
+//		if (resp.getAggregations() != null) {
+//			this.setFacets((ElasticsearchAggregations) resp.getAggregations());
+//		}
 
 	}
 
