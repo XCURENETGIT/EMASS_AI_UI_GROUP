@@ -9,6 +9,6 @@ public class EmsMessengerAdminXrootMtrVO {
 	private String msgId;
 	private String userid;
 	private String type;
-	private String offset;
-	private String temp_offset;
+//	private String offset;
+//	private String temp_offset;
 }

@@ -7,7 +7,14 @@
 	String firstAdminYn = Common.getFirstAdminYn(session);
 %>
 
+<style>
+
+	#wrap {overflow:hidden;}
+
+</style>
+
 <script type="text/javascript" src="<c:url value="/js/messenger.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/messageGrid.js"/>"></script>
 
 <head>
 	<title>EMASS LT - <s:message code="DATA_MONITOR.MESSAGE_SERVICE"/></title>
@@ -74,8 +81,12 @@
                 $('#subchatid').html(": " + name);
                 $('#srcip').text(srcip);
                 $('#usr_id').text(usr_id);
-                eikon.getMessengerDetailList(xrootmtr, msgid, srcip, usr_id);
+                eikon.getMessengerDetailList(xrootmtr, msgid, null, null);
                 hideUserSelect();
+            });
+
+            $(document).on('.clickUser', '.click', function () {
+               alert("gg");
             });
 
             $('#searchBtn').click(function () {
@@ -198,6 +209,25 @@
                 } catch (e) {
                     AttachDown.src = attachUrl;
                 }
+            });
+
+            $(document).on('click','.selectUser',function(){
+                var name = $(this).attr('data-name');
+                var srcip = $(this).attr('data-srcip');
+                var usr_id = $(this).attr('data-usrid');
+                var xrootmtr = $('#xrootmtr').text();
+                var msgid = $('#msgid').text();
+                $('#selectUserInfo').attr('data-srcip', srcip);
+                $('#selectUserInfo').attr('data-name', name);
+                $('#selectUserInfo').attr('data-usrid', usr_id);
+
+                $('#selectUserInfo').html($(this).text());
+                $('#srcip').text(srcip);
+                $('#usr_id').text(usr_id);
+                console.log("srcip: "+srcip);
+                console.log("usr_id: "+usr_id);
+                eikon.getMessengerGroupDetail(xrootmtr, msgid, srcip, usr_id);
+                hideUserSelect();
             });
 
 
@@ -443,6 +473,8 @@
                 hideSelect();
             }
         }
+
+
 
 
         function downloadList(type) {
@@ -978,7 +1010,14 @@
 								<span>대화방 아이디: <span class="chatid"><span id="xrootmtr"></span><span id="srcip" style="display:none;"></span><span
 										id="usr_id" style="display:none;"></span><span id="msgid" style="display:none;"></span></span></span>
 						</div>
-						<div title="" id="userButton">
+<%--						<div class="myDropdown">--%>
+<%--							<span id="usrName">- &#9662;</span>--%>
+<%--							<div class="dropdown-content">--%>
+<%--&lt;%&ndash;								<a href="#">사용자 01</a>&ndash;%&gt;--%>
+<%--&lt;%&ndash;								<a href="#">사용자 02</a>&ndash;%&gt;--%>
+<%--							</div>--%>
+<%--						</div>--%>
+						<div>
 							<span><i class="glyphicon glyphicon-user"></i> <s:message code="condition.user"/> : </span>
 						</div>
 						<div title="<s:message code="condition.user"/>" id="userCntArea">
@@ -987,6 +1026,7 @@
 								<span class="bs-caret"><span class="caret"></span></span>
 							</div>
 						</div>
+						<ul class="dropdown-menu" role="menu" style="min-width: 150px;position: absolute;left:500px;" id="selectUser_menu"></ul>
 					</div>
 
 					<div class="chatDate">
@@ -1039,12 +1079,7 @@
 				</div>
 				<div class="row2" style="height: calc(100% - 160px);">
 					<div>
-						<div class="messenger_prev" style="margin-bottom:16px" title="<s:message code='eikon.msg.show.prev'/>">
-							<svg xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512">
-								<!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-								<path d="M246.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L224 109.3 361.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160zm160 352l-160-160c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L224 301.3 361.4 438.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3z"/>
-							</svg>
-						</div>
+						<div class="messenger_prev" style="margin-bottom:16px" title="<s:message code='eikon.msg.show.prev'/>"><svg xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M246.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L224 109.3 361.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160zm160 352l-160-160c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L224 301.3 361.4 438.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3z"/></svg></div>
 						<div id="timeline_list">
 							<div class="timeline-panel">
 								<div class="list-group-item02 cursor-text">
@@ -1056,12 +1091,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="messenger_next" title="<s:message code='eikon.msg.show.next'/>">
-					<svg xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512">
-						<!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-						<path d="M246.6 470.6c-12.5 12.5-32.8 12.5-45.3 0l-160-160c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L224 402.7 361.4 265.4c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3l-160 160zm160-352l-160 160c-12.5 12.5-32.8 12.5-45.3 0l-160-160c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L224 210.7 361.4 73.4c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3z"/>
-					</svg>
-				</div>
+				<div class="messenger_next" title="<s:message code='eikon.msg.show.next'/>"><svg xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M246.6 470.6c-12.5 12.5-32.8 12.5-45.3 0l-160-160c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L224 402.7 361.4 265.4c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3l-160 160zm160-352l-160 160c-12.5 12.5-32.8 12.5-45.3 0l-160-160c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L224 210.7 361.4 73.4c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3z"/></svg></div>
 				<div class="p16 white" style="position: fixed; bottom:0;">
 					<s:message code="eikon.msg.total.cnt"/> : <span id="groupSubResultCnt" class="blue03">0</span>
 				</div>

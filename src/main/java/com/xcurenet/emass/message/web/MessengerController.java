@@ -145,7 +145,6 @@ public class MessengerController {
 		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id","userid");
 
 		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request));
-		//solrEdcGroupVO.setGroups(setCount_temp(solrEdcGroupVO.getGroups(), Common.getAdminId(request)));
 		return new XcnResponseVO(XcnRspCode.OK, solrEdcGroupVO, solrEdcGroupVO.getNumFound());
 	}
 
@@ -319,11 +318,10 @@ public class MessengerController {
 
 		SolrQuery sq = new SolrQuery();
 		String query = String.format("+ctime:[%s TO %s] +xrootmtr:\"%s\"", startDt, endDt, xRootMtr);
-
-		if(Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
-
-		if(Common.isNotEmpty(usr_id)) query += String.format(" +usr_id:\"%s\"", usr_id);
-		else query += String.format(" -usr_id:*");
+//
+//		if(Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
+//
+		if(Common.isNotEmpty(usr_id)) query += String.format(" +userkey:\"%s\"", usr_id);
 
 		sq.setQuery(query + MESSENGER);
 		sq.setRows(limit);
@@ -353,9 +351,9 @@ public class MessengerController {
 
 
 
-		if(Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
+//		if(Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
 
-		if(Common.isNotEmpty(usr_id)) query += String.format(" +usr_id:\"%s\"", usr_id);
+		if(Common.isNotEmpty(usr_id)) query += String.format(" +userkey:\"%s\"", usr_id);
 
 //		else query += String.format(" -usr_id:*");
 //
@@ -398,10 +396,10 @@ public class MessengerController {
 		SolrQuery sq = new SolrQuery();
 		String query = String.format("+ctime:[%s TO %s] +xrootmtr:\"%s\"", startDt, endDt, xRootMtr);
 
-		if(Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
+//		if(Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
 
 		if(Common.isNotEmpty(usr_id)) query += String.format(" +usr_id:\"%s\"", usr_id);
-		else query += String.format(" -usr_id:*");
+//		else query += String.format(" -usr_id:*");
 
 		//이미 출력된 동시간대 데이터 제외
 		if(Common.isNotEmpty(msgId)) {
@@ -478,8 +476,8 @@ public class MessengerController {
 
 		String addQuery = String.format(" +xrootmtr:\"%s\"", xRootMtr);
 		if(Common.isNotEmpty(usr_id)) addQuery += String.format(" +usr_id:\"%s\"", usr_id);
-		else addQuery += " -usr_id:*";
-		if(Common.isNotEmpty(srcip)) addQuery += String.format(" +srcip:\"%s\"", srcip);
+//		else addQuery += " -usr_id:*";
+//		if(Common.isNotEmpty(srcip)) addQuery += String.format(" +srcip:\"%s\"", srcip);
 
 		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
 		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), Common.getAdminId(session));
@@ -510,7 +508,7 @@ public class MessengerController {
 		String xRootMtr = Common.nvl(param.get("xRootMtr"));
 		String srcip = Common.nvl(param.get("srcip"));
 		SolrQuery sq = new SolrQuery();
-		sq.setQuery(String.format("+xrootmtr:\"%s\" +srcip:\"%s\" +attached:Y", xRootMtr, srcip) + MESSENGER);
+		sq.setQuery(String.format("+xrootmtr:\"%s\" +attached:Y", xRootMtr, srcip) + MESSENGER);
 		sq.setStart(Common.nvz(param.get("offset"), 0));
 		sq.setRows(Common.nvz(param.get("limit"), 0));
 		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request), true);
@@ -534,8 +532,8 @@ public class MessengerController {
 		if(Common.isNotEmpty(startDt) && Common.isNotEmpty(endDt)) query += String.format("+ctime:[%s TO %s] ", startDt, endDt);
 		query += String.format("+xrootmtr:\"%s\" +attached:Y", xRootMtr);
 		if(Common.isNotEmpty(usr_id)) query += String.format(" +usr_id:\"%s\"", usr_id);
-		else query += " -usr_id:*";
-		if(Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
+//		else query += " -usr_id:*";
+//		if(Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
 		if(Common.isNotEmpty(searchStr)) query += String.format(" +body:(*%s*) ", searchStr);
 
 		sq.setQuery(query + MESSENGER);
@@ -608,9 +606,9 @@ public class MessengerController {
 	public MessengerGroupUserVO getMessengerGroupUserList(final HttpServletRequest request, final int rows) throws IOException, SolrServerException {
 		JSONObject param = Common.getParam(request);
 		String xRootMtr = Common.nvl(param.get("xRootMtr"));
-		String groupField = Common.nvl(param.get("groupField"), "usr_id");
+		String groupField = Common.nvl(param.get("groupField"), "userkey");
 		String srcip = Common.nvl(param.get("srcip"));
-		String usr_id = Common.nvl(param.get("usr_id"));
+		String usr_id = Common.nvl(param.get("userid"));
 		String startDt = Common.nvl(param.get("startDt"));
 		String endDt = Common.nvl(param.get("endDt"));
 		String searchStr = Common.nvl(param.get("searchStr"));
@@ -635,15 +633,13 @@ public class MessengerController {
 		sq.setParam("group.field", groupField);
 		sq.setParam("facet", true);
 		sq.setFacetLimit(rows);
-		//	sq.setParam("facet.pivot", groupField+"srcip");  // "{!stats=usr_id}"+groupField=",srcip"  내용
-		if(Common.isEquals(groupField, "usr_id")) sq.setParam("facet.query", "-usr_id:*");
+		//if(Common.isEquals(groupField, "usr_id")) sq.setParam("facet.query", "-usr_id:*");
 		sq.setParam("facet.field", "srcip");
 		sq.setFacetMinCount(1);
-		//group=true&group.field=usr_id&facet=true&facet.pivot={!stats=usr_id}usr_id,srcip&facet.query=-usr_id:*&facet.field=srcip
-
 		MessengerGroupUserVO solrEdcGroupVO = solrEdcService.getMessengerGroupUserList(sq, Common.getAdminId(request));
 		return solrEdcGroupVO;
 	}
+
 
 	private JSONObject getXlsxHeader(String key, String title, String width, String align, String type) {
 		JSONObject headerObj = new JSONObject();

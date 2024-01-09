@@ -118,7 +118,6 @@ public class MessengerGroupUserVO {
 					}
 				}
 		}
-
 		this.numFoundUser = groups.size();
 
 	}

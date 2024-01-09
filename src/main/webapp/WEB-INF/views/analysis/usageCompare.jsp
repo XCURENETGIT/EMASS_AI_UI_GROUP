@@ -1,9 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-<title></title>
 <style>
 
 .btn-popover {
@@ -37,6 +33,15 @@ var detailTotal = 0;
 var rowKey = "";
 var colKey = "";
 $(document).ready(function(){
+
+    $('#searchBtn').click(function () {
+        getData('Y');
+    });
+
+    $('#clearBtn').click(function(){
+        $('#startDate').val(new Date().format('yyyy-mm-dd'));
+        $('#endDate').val(new Date().format('yyyy-mm-dd'));
+    });
 	
 	$('#dateYesterday').click(function(){
 		$("select option[value='t']").show();
@@ -83,7 +88,7 @@ $(document).ready(function(){
 		$('#endDate').val(addDay(0));
 	});
 
-	$('#startdatepicker').datetimepicker({
+	$('#startDatePicker').datetimepicker({
 		format: 'YYYY-MM-DD',
 		locale: 'ko',
 		defaultDate: moment(new Date())
@@ -173,7 +178,7 @@ function eventEnterSearch(event) {
 				<div class="searchSub_Box">
 					<div id="startDatePicker"><input type="date" id="startDate" name='startDate' style="width: 110px;">
 						<span class="hyphen">~</span></div>
-					<div id="endDatePicker"><input type="date" id="endDate" name='endDate' style="width: 110px;"></div>
+					<div id="enddatepicker"><input type="date" id="endDate" name='endDate' style="width: 110px;"></div>
 
 					<div class="form-group optiotab">
 						<button type="button" id="dateYesterday" accesskey="Y" style="width:72px;"><s:message code="condition.yesterday"/></button>
@@ -201,7 +206,7 @@ function eventEnterSearch(event) {
 					</div>
 					<div class="btnform">
 						<button type="button" accesskey="Q" class="form_btn01" id="searchBtn"><s:message code="common.msg.search"/></button>
-						<button type="button" accesskey="Q" class="form_btn02" id="searchBtn"><s:message code="condition.reset"/></button>
+						<button type="button" accesskey="Q" class="form_btn02" id="clearBtn"><s:message code="condition.reset"/></button>
 					</div>
 				</div>
 			</form>

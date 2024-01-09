@@ -316,7 +316,7 @@
 	</select>
 
 	<update id="updateEmassMessengerAdminXrootMtr">
-		REPLACE INTO UI_ADMIN_XROOTMTR	SET ADMIN_ID = #{adminId}, XROOTMTR = #{xRootMtr}, MSGID = #{msgId}, SRCIP = #{srcip},
+		REPLACE INTO UI_ADMIN_XROOTMTR	SET ADMIN_ID = #{adminId}, XROOTMTR = #{xRootMtr}, MSGID = #{msgId}, SRCIP = #{srcip}
 	</update>
 
 

@@ -31,27 +31,26 @@ var eikon = {
     init: function () {
         //makeSampleData();
 
-        $('#scrollArea').scroll(function(){
-            if( searchFlag ) return;
+        $('#scrollArea').scroll(function () {
+            if (searchFlag) return;
             clearTimeout(resizeTimer);
-            var obj=this;
-            resizeTimer = setTimeout(function() {
+            var obj = this;
+            resizeTimer = setTimeout(function () {
 //				if( $('.btnCustomPosition').is(':visible') ) return;
-                if( $(obj).scrollTop() < 10) {
-                    if($($('#timeline_list').children().first().children().first()).hasClass('timeline-panel') || $($('#timeline_list').children().first()).hasClass('timeline-panel')) $('.messenger_prev').css('display','none');
-                    else $('.messenger_prev').css('display','block');
-                    $('.messenger_next').css('display','none');
+                if ($(obj).scrollTop() < 10) {
+                    if ($($('#timeline_list').children().first().children().first()).hasClass('timeline-panel') || $($('#timeline_list').children().first()).hasClass('timeline-panel')) $('.messenger_prev').css('display', 'none');
+                    else $('.messenger_prev').css('display', 'block');
+                    $('.messenger_next').css('display', 'none');
 //					$('.messenger_prev').click();
-                }
-                else if( $('#timeline_list').height() <= $(obj).scrollTop()+$(obj).height()+10){
-                    if(detailDataSet.length < detailLimit) $('.messenger_next').css('display','none');
-                    else $('.messenger_next').css('display','block');
-                    $('.messenger_prev').css('display','none');
+                } else if ($('#timeline_list').height() <= $(obj).scrollTop() + $(obj).height() + 10) {
+                    if (detailDataSet.length < detailLimit) $('.messenger_next').css('display', 'none');
+                    else $('.messenger_next').css('display', 'block');
+                    $('.messenger_prev').css('display', 'none');
 //					$('.messenger_next').click();
-                }else{
+                } else {
                     checkLastMsg(true);
                 }
-            },100);
+            }, 100);
         });
 
 
@@ -99,11 +98,11 @@ var eikon = {
     getMessengerDetailList: function (xRootmtr, msgid, srcip, usr_id) {
 
 
-        if(!isDetailView()){
+        if (!isDetailView()) {
             alert(condition.authAlert);
             return;
         }
-        if(xRootmtr == ''){
+        if (xRootmtr == '') {
             return;
         }
 
@@ -111,26 +110,26 @@ var eikon = {
         $('#searchResultBtnArea').hide();
         detailStartPage = 1;
         detailEndPage = 1;
-        var startDt = $('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
-        var endDt = $('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+        var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
+        var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
 
-        //참여자 수, 참여자 정보
-        // ui.get({
-        //     url : 'getMessengerGroupUserList.xcn',
-        //     xRootMtr : xRootmtr,
-        //     startDt : startDt,
-        //     endDt : endDt,
-        //     groupField : 'usr_id',
-        //     success : function(data, total) {
-        //         participantDataSet = data.groups;
-        //         userSelectBox(data.groups, srcip, usr_id);
-        //     },
-        //     error : function(status, message) {
-        //         ui.alertMsg(message);
-        //     },
-        //     complete : function() {
-        //     }
-        // });
+        // 참여자 수, 참여자 정보
+        ui.get({
+            url : 'getMessengerGroupUserList.xcn',
+            xRootMtr : xRootmtr,
+            startDt : startDt,
+            endDt : endDt,
+            groupField : 'userkey',
+            success : function(data, total) {
+                participantDataSet = data.groups;
+                userSelectBox(data. groups, srcip, usr_id);
+            },
+            error : function(status, message) {
+                ui.alertMsg(message);
+            },
+            complete : function() {
+            }
+        });
 
         searchFlag = true;
         ui.onBody('timeline_list', 0, 60);
@@ -178,8 +177,8 @@ var eikon = {
         var xrootmtr = $('#xrootmtr').text();
         var srcip = $('#selectUserInfo').attr("data-srcip");
         var userid = $('#selectUserInfo').attr("data-name");
-        var startDt = $('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '')+"0000000";
-        var endDt = $('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '')+"235959";
+        var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '') + "0000000";
+        var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '') + "235959";
 
 
         if (offset < 0) searchOffset = $('#searchResult').html() - 1;
@@ -208,7 +207,7 @@ var eikon = {
             xRootMtr: xrootmtr,
             srcip: srcip,
             usr_id: userid,
-            data : JSON.stringify( filterVal ),
+            data: JSON.stringify(filterVal),
             offset: searchOffset,
             success: function (data, total) {
                 focusMsgId = data.toString();
@@ -258,7 +257,7 @@ function getMessengerMessageTotal(xRootmtr, srcip, startDt, endDt, usr_id, msgid
     ui.get({
         url: 'getMessengerMessageTotal.xcn',
         xRootMtr: xRootmtr,
-        srcip: srcip,
+        // srcip: srcip,
         startDt: startDt,
         endDt: endDt,
         usr_id: usr_id, //기준이 srcip에서 usr_id로 변경되면서 마지막 데이터 기준 변경
@@ -292,7 +291,7 @@ function getMessengerMessage(xRootmtr, srcip, usr_id, msgid) {
     ui.get({
         url: 'getMessengerMessage.xcn',
         xRootMtr: xRootmtr,
-        srcip: srcip,
+        // srcip: srcip,
         startDt: startDt,
         endDt: endDt,
         usr_id: usr_id,
@@ -371,11 +370,11 @@ function getMessengerMessageNext(xRootmtr, srcip, usr_id, msgid) {
              * 전체 10 페이지가 넘어갈 경우 첫번째 페이지 제거
              * 최상단에 날짜 출력
              */
-            if($(".pageInfoDiv").size() > detailViewPage-1){
+            if ($(".pageInfoDiv").size() > detailViewPage - 1) {
                 $('.pageInfoDiv').first().remove();
                 var firstObj = $('.pageInfoDiv').first();
-                if(!firstObj.children().filter(':first').hasClass('date_li')){
-                    var date = viewDate(firstObj.children().filter(':first').attr('ctime').substring(0,10));
+                if (!firstObj.children().filter(':first').hasClass('date_li')) {
+                    var date = viewDate(firstObj.children().filter(':first').attr('ctime').substring(0, 10));
                     firstObj.prepend(date);
                 }
             }
@@ -394,27 +393,27 @@ function getMessengerMessageNext(xRootmtr, srcip, usr_id, msgid) {
     });
 }
 
-function getMessengerAllfile(xrootmtr, srcip, usr_id, msgid){
-    var startDt=$('#startDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
-    var endDt=$('#endDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+function getMessengerAllfile(xrootmtr, srcip, usr_id, msgid) {
+    var startDt = $('#startDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
+    var endDt = $('#endDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
 
     ui.get({
-        url : 'getMessengerGroupAttachList.xcn',
-        xRootMtr : xrootmtr,
-        srcip : srcip,
-        usr_id : usr_id,
-        startDt: startDt+"000000",
-        endDt: endDt+235959,
+        url: 'getMessengerGroupAttachList.xcn',
+        xRootMtr: xrootmtr,
+        srcip: srcip,
+        usr_id: usr_id,
+        startDt: startDt + "000000",
+        endDt: endDt + 235959,
         searchStr: $('#searchMsgStrInput').val(),
-        attachYn : 'Y',
-        success : function(data, total) {
+        attachYn: 'Y',
+        success: function (data, total) {
 
             $('.rightFileList').html(makeFileList(data));
         },
-        error : function(status, message) {
+        error: function (status, message) {
             ui.alertMsg(message);
         },
-        complete : function() {
+        complete: function () {
 
         }
     });
@@ -494,43 +493,43 @@ function makeFileList(data) {
 }
 
 
-function userSelectBox(data, srcip, usr_id) {
+function userSelectBox(data, srcip, usr_id){
     var name = $('#selectUserInfo').attr('data-name');
-    $('#selectUserInfo').attr('data-srcip', nvl(data[i].srcip));
-    $('#selectUserInfo').attr('data-name', nvl(data[i].name));
-    $('#selectUserInfo').attr('data-usrid', nvl(data[i].usr_id));
     var str = '';
-
-    for (var i = 0; i < data.length; i++) {
+    str += '<li class="selectUser clickUser"><a href="javascript:void(0);">전체</a></li>';
+    for(var i=0; i<data.length; i++){
         var ip = data[i].srcip == undefined ? Object.keys(data[i].srcIpList[0]).toString() : data[i].srcip;
         var selectUserTitle = ip;
-        if (nvl(data[i].name) != '') {
+        if( nvl(data[i].name) != '') {
             selectUserTitle = data[i].name;
-            if (nvl(data[i].usr_id) != '') selectUserTitle += ' (' + data[i].usr_id + ')';
-            else if (nvl(data[i].srcip) != '') selectUserTitle += ' (' + data[i].srcip + ')';
-        } else if (nvl(data[i].usr_id) != '') selectUserTitle = data[i].usr_id;
-        else if (nvl(data[i].srcip) != '') selectUserTitle = data[i].srcip;
+            if( nvl(data[i].usr_id) != '') selectUserTitle += ' ('+data[i].usr_id+')';
+            else if( nvl(data[i].srcip) != '') selectUserTitle += ' ('+data[i].srcip+')';
+        }
+        else if( nvl(data[i].usr_id) != '') selectUserTitle = data[i].usr_id;
+        else if( nvl(data[i].srcip) != '') selectUserTitle = data[i].srcip;
 
+        $('#selectUserInfo').attr('data-srcip', nvl(ip));
+        $('#selectUserInfo').attr('data-name', nvl(data[i].name));
+        $('#selectUserInfo').attr('data-usrid', nvl(data[i].usr_id));
         $('#selectUserInfo').html(selectUserTitle);
 
-        str += '<li class="selectUser" data-name="' + nvl(data[i].name) + '" data-srcip="' + nvl(ip) + '" data-usrid="' + nvl(data[i].usr_id) + '"><a href="javascript:void(0);">' + selectUserTitle + '</a></li>';
+        str += '<li class="selectUser clickUser" data-name="'+nvl(data[i].name)+'" data-srcip="'+nvl(ip)+'" data-usrid="'+nvl(data[i].usr_id)+'"><a href="javascript:void(0);">'+selectUserTitle+'</a></li>';
     }
     $('#selectUser_menu').html(str);
-    getDetailData(usr_id);
+    getDetailData();
+
 }
 
+
+
 function getDetailData(usr_id) {
-    if (usr_id != '') {
+    if(usr_id !=''){
         var idx = 0;
-        $('.selectUser').each(function (index) {
+        $('.selectUser').each(function(index){
             var value = $(this).attr('data-usrid');
-            if (value == usr_id) {
-                idx = index;
-                return false;
-            }
         });
-        $('.selectUser:eq(' + idx + ')').click();
-    } else $('.selectUser').first().click();
+        $('.selectUser:eq('+idx+')').click();
+    }else $('.selectUser').first().click();
 }
 
 function rtnGroupList(data, type) {
@@ -636,6 +635,7 @@ function getMessengerGroupList(page) {
         offset: offset,
         limit: groupPageBreak,
         success: function (data, total) {
+            console.log(data.groups);
             rtnGroupList(data.groups, 'G');
             rtnGroupPage(total, page, 'G');
             HighlightGroup();
@@ -823,7 +823,7 @@ function makeList(nextFlag) {
         if ((nvl(obj.user) != '' && obj.user == obj.sender) || usrid == obj.title || usrid == obj.sender) chkPati = true;
         str += checkDate(i);
 
-        str += '<li class="p20 bubble txt_right slide_right timeline-inverted ' + (i == 0 && !nextFlag ? 'lastReadLi' : '') + '" id="' + obj.msgid + '" ctime="' + obj.ctime + '" userid="' + obj.userid + '" srcip="' + obj.srcip + '" + " xrootmtr="' + obj.xrootmtr + '">';
+        str += '<li class="p20 bubble txt_right slide_right' + (i == 0 && !nextFlag ? 'lastReadLi' : '') + '" id="' + obj.msgid + '" ctime="' + obj.ctime + '" userid="' + obj.userid + '" srcip="' + obj.srcip + '" + " xrootmtr="' + obj.xrootmtr + '">';
         str += '<span id="xrootmtr" style="display: none;">' + obj.xrootmtr + '</span>';
 
         var svc3 = obj.svc3;
@@ -846,7 +846,7 @@ function makeList(nextFlag) {
             str += attachsizeArray[i] + 'KB</span>';
             str += '<button class="btnchatdown downlodadBtn"></button></p>';
 
-        }  else {
+        } else {
             if (obj.body_snippet != undefined) str += '' + obj.body_snippet.replaceAll('\n', '<br/>') + '';
         }
         str += '</div>';
@@ -872,42 +872,40 @@ function makeList(nextFlag) {
 function makePrevList() {
     var dataHasFlag = false;
     var str = '<ul class="pageInfoDiv timeline">';
-    if(prevDetailDataSet.length < detailLimit) str += noPrevDataMsg();
+    if (prevDetailDataSet.length < detailLimit) str += noPrevDataMsg();
     var usrid = $('#selectUserInfo').attr('data-usrid');
     var srcip = $('#selectUserInfo').attr('data-srcip');
-    for(var i=prevDetailDataSet.length - 1 ; i > -1 ; i--) {
+    for (var i = prevDetailDataSet.length - 1; i > -1; i--) {
         str += checkDatePre(i);
         dataHasFlag = true;
         var obj = prevDetailDataSet[i];
-        if( (nvl(obj.user) != '' && obj.user == obj.sender) || usrid == obj.title || usrid == obj.sender ) chkPati = true;
+        if ((nvl(obj.user) != '' && obj.user == obj.sender) || usrid == obj.title || usrid == obj.sender) chkPati = true;
 
 
-        str+='<li class="p20 bubble txt_right slide_right timeline-inverted" id="'+obj.msgid+'" ctime="'+obj.ctime+'" userid="'+obj.userid+'" srcip="'+obj.srcip+'" xrootmtr="'+obj.xrootmtr+'" >';
+        str += '<li class="p20 bubble txt_right slide_right timeline-inverted" id="' + obj.msgid + '" ctime="' + obj.ctime + '" userid="' + obj.userid + '" srcip="' + obj.srcip + '" xrootmtr="' + obj.xrootmtr + '" >';
 
-        str+='	<div class="me timeline-panel">';
+        str += '	<div class="me timeline-panel">';
 
-        if(obj.attached=="Y"){
-            str+='<p class="filedown file_link" msgid="'+obj.msgid+'"+ attachhash="'+obj.attachhash+'" +>';
-            str+='<span class="img"></span>';
-            str+='<span>'+obj.attachname+'.'+obj.attachtype+'<br/>';
-            str+=obj.attachsize+'KB</span>';
-            str+='<button class="btnchatdown downloadIcon"></button></p>';
-        }
-
-        else {
+        if (obj.attached == "Y") {
+            str += '<p class="filedown file_link" msgid="' + obj.msgid + '"+ attachhash="' + obj.attachhash + '" +>';
+            str += '<span class="img"></span>';
+            str += '<span>' + obj.attachname + '.' + obj.attachtype + '<br/>';
+            str += obj.attachsize + 'KB</span>';
+            str += '<button class="btnchatdown downloadIcon"></button></p>';
+        } else {
             if (obj.body_snippet != undefined) str += '' + obj.body_snippet.replaceAll('\n', '<br/>') + '';
         }
-        str+='			</div>';
+        str += '			</div>';
 
-        str+=' <div class="bubbleDate">';
-        str+='<span>'+obj.ctime+'</span>';
-        str+='<span style="border: 1px solid #ccc;">'+makeMessengerText(obj.svc)+'</span>';
-        str+='</div></div>';
-        str+='</li>';
+        str += ' <div class="bubbleDate">';
+        str += '<span>' + obj.ctime + '</span>';
+        str += '<span style="border: 1px solid #ccc;">' + makeMessengerText(obj.svc) + '</span>';
+        str += '</div></div>';
+        str += '</li>';
     }
-    str+='</ul>';
+    str += '</ul>';
 
-    if(!dataHasFlag){
+    if (!dataHasFlag) {
         str = noDataMsg();
     }
 
@@ -980,13 +978,13 @@ function checkDatePre(idx) {
 
 function viewDate(dateStr) {
     var str = '';
-    str+='<li class="date_li" id="date'+dateStr+'">';
-    str+='	<div class="date_li_div">';
-    str+='		<div class="date_line">';
-    str+='			<span>'+dateStr+'</span>';
-    str+='		</div>';
-    str+='	</div>';
-    str+='</li>';
+    str += '<li class="date_li" id="date' + dateStr + '">';
+    str += '	<div class="date_li_div">';
+    str += '		<div class="date_line">';
+    str += '			<span>' + dateStr + '</span>';
+    str += '		</div>';
+    str += '	</div>';
+    str += '</li>';
 
     return str;
 }
@@ -1168,7 +1166,7 @@ function idIndicator(id) {
     return id.fReplaceWord('.', '\\.');
 }
 
-jQuery.fn.highlight = function(pat, type) {
+jQuery.fn.highlight = function (pat, type) {
     function innerHighlight(node, pat, type) {
         pat = pat.trim();
         var skip = 0;
@@ -1176,15 +1174,14 @@ jQuery.fn.highlight = function(pat, type) {
             var pos = node.data.toUpperCase().indexOf(pat);
             if (pos >= 0) {
                 var spannode = document.createElement('span');
-                spannode.name='spnHighlight';
-                if ( type.indexOf('K') > -1) {
+                spannode.name = 'spnHighlight';
+                if (type.indexOf('K') > -1) {
                     spannode.className = 'clsHighlightKwds';
-                }
-                else {
+                } else {
                     spannode.className = 'clsHighlight';
                 }
-                if ( type.indexOf('B') > -1 ) {
-                    if ( type.indexOf('K') > -1) {
+                if (type.indexOf('B') > -1) {
+                    if (type.indexOf('K') > -1) {
                         spannode.style.backgroundColor = '#FFAD5B';
                         spannode.style.color = '#000000';
                         spannode.style.fontWeight = 'bold';
@@ -1195,8 +1192,8 @@ jQuery.fn.highlight = function(pat, type) {
                     }
                 }
 
-                var sbit = node.splitText( pos );
-                sbit.splitText( pat.length );
+                var sbit = node.splitText(pos);
+                sbit.splitText(pat.length);
                 spannode.nodeValue = sbit.data;
                 var sbitclone = sbit.cloneNode(true);
                 spannode.appendChild(sbitclone);
@@ -1205,14 +1202,15 @@ jQuery.fn.highlight = function(pat, type) {
             }
         } else if (node.nodeType == 1 && node.childNodes && !/(script|style)/i.test(node.tagName)) {
             var cnt = node.childNodes.length;
-            if ( node.childNodes.length > 1000 ) cnt = 1000;
-            for ( var i = 0; i < cnt; ++i) {
+            if (node.childNodes.length > 1000) cnt = 1000;
+            for (var i = 0; i < cnt; ++i) {
                 i += innerHighlight(node.childNodes[i], pat, type);
             }
         }
         return skip;
     }
-    return this.each(function() {
+
+    return this.each(function () {
         innerHighlight(this, pat.toUpperCase(), type);
     });
 };
