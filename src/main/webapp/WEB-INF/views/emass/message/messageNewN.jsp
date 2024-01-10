@@ -241,14 +241,14 @@
             padding-left: 10px;
             font-family: Pretendard;
         }
-        .filterCloseBtn{
-            float: right;
-            padding-right: 10px;
-            padding-left: 10px;
-            font-size: 14px;
-            cursor:pointer;
-        }
-        .filterCloseBtn:hover{
+        /*.filterDateCloseBtn{*/
+        /*    float: right;*/
+        /*    padding-right: 10px;*/
+        /*    padding-left: 10px;*/
+        /*    font-size: 14px;*/
+        /*    cursor:pointer;*/
+        /*}*/
+        .filterDateCloseBtn:hover{
             opacity: 0.5;
         }
 
@@ -1125,7 +1125,7 @@
                 $('#searchKeywordDiv').hide();
             });
 
-            $('.filterCloseBtn').click(function(){
+            $('.filterDateCloseBtn').click(function(){
                 $('#filterHeaderDiv').hide();
             });
 
