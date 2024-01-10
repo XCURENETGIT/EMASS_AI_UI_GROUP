@@ -87,10 +87,26 @@
             openCodeWindow(code, $('#' + code + 'Val').val(), $('#' + code + 'Str').val());
         });
 
+        $('#user').click(function () {
+            var code = $(this).attr('id');
+            openCodeWindow(code, $('#' + code + 'Val').val(), $('#' + code + 'Str').val());
+        });
 
-		$('#searchBtn').click(function () {
+
+        $(document).on('click', '.codeSelectedBtn', function (e) {
+            $('#deptVal, #deptStr').val('');
+            $('#deptSelectedArea').hide();
+        });
+
+
+
+        $('#searchBtn').click(function () {
 			closeDetailTab();
 			getData('Y');
+            if (codeType == 'deptByCo') $('#deptByCoStrSpan').html('');
+            $('#' + codeType + 'Val').val('');
+            $('#' + codeType + 'Str').val('');
+            $('#' + codeType + 'SelectedArea').hide();
 		});
 
 		$('#clearBtn').click(function(){
@@ -138,7 +154,21 @@
 
 	});
 
-	function setGrid() {
+    function openCodeWindow(id, oldCode, oldConm) {
+        $('#oldCode').val(oldCode);
+        $('#oldConm').val(oldConm);
+
+        var url = '<c:url value="/commons/selectCode.do?codeType='+id+'"/>';
+        var pop = fnOpenWindow('', 'selectCodeWinPopup', 1200, 700, 'resize');
+
+        $('#codeParam').attr('target', 'selectCodeWinPopup');
+        $('#codeParam').attr('action', url);
+        $('#codeParam').attr('method', 'post');
+        $('#codeParam').submit();
+    }
+
+
+    function setGrid() {
 		currentgrid = getCurrentGrid();
 		initGrid(currentgrid, messageGridColumn);
 	}
@@ -305,7 +335,15 @@
 									</span>
 				<input type="hidden" id="deptStr" class="selectedTitle">
 				<input type="hidden" id="deptVal">
-				<input type="text"  placeholder="<s:message code="eikon.input.participation"/>" id="senders">
+
+
+				<button class="btn01" id="user"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
+						code="common.org.choose.user"/></button>
+				<span id="useSelectedArea" class="codeSelectedBtn">
+										<button type="button" class="btn num_add bornone"  style="z-index: 2;">0</button>
+									</span>
+				<input type="hidden" id="userStr" class="selectedTitle">
+				<input type="hidden" id="userVal">
 
 
 			</div>
@@ -359,6 +397,11 @@
 	</div>
 </div>
 <i class="fa fa-calendar" aria-hidden="true" style="font-size: 1px;position: absolute;top: -100px"></i><!-- 유출 관계도에서 사용되는 font-->
+<form method="post" id="codeParam">
+	<input type="hidden" name="oldCode" id="oldCode"></input>
+	<input type="hidden" name="oldConm" id="oldConm"></input>
+</form>
+
 
 <script type="text/javascript">
 	function getCurrentGrid() {
