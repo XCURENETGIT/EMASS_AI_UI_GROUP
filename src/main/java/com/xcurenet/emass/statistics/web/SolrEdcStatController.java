@@ -101,24 +101,6 @@ public class SolrEdcStatController {
 			query = sq.getQuery();
 		}
 
-		if (!busi.isEmpty()) {
-			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
-			solrCreateQuery.setBusicd(busi);
-			sq = solrCreateQuery.setQuery();
-			query = sq.getQuery();
-		}
-		if (!dept.isEmpty()) {
-			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
-			solrCreateQuery.setDeptcd(dept);
-			sq = solrCreateQuery.setQuery();
-			query = sq.getQuery();
-		}
-		if (!name.isEmpty()) {
-			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
-			solrCreateQuery.setName(name);
-			sq = solrCreateQuery.setQuery();
-			query = sq.getQuery();
-		}
 
 		if (!serviceTypes.isEmpty()) {
 			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
@@ -200,6 +182,25 @@ public class SolrEdcStatController {
 
 		if (Common.isNotEmpty(detailQuery)) {
 			query += " " + detailQuery;
+		}
+
+		if (!name.isEmpty()) {
+			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+			solrCreateQuery.setName(name);
+			sq = solrCreateQuery.setQuery();
+			query += sq.getQuery();
+		}
+		if (!busi.isEmpty()) {
+			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+			solrCreateQuery.setBusicd(busi);
+			sq = solrCreateQuery.setQuery();
+			query += sq.getQuery();
+		}
+		if (!dept.isEmpty()) {
+			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+			solrCreateQuery.setDeptcd(dept);
+			sq = solrCreateQuery.setQuery();
+			query += sq.getQuery();
 		}
 
 		query += String.format(" +ctime:[%s TO %s]", startDate, endDate);
@@ -501,6 +502,12 @@ public class SolrEdcStatController {
 
 		SolrQuery sq = new SolrQuery();
 
+		if (!name.isEmpty()|| !name.equals(" ")) {
+			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+			solrCreateQuery.setName(name);
+			sq = solrCreateQuery.setQuery();
+			detailQuery += sq.getQuery();
+		}
 		if (!busi.isEmpty()) {
 			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
 			solrCreateQuery.setBusicd(busi);
@@ -510,12 +517,6 @@ public class SolrEdcStatController {
 		if (!dept.isEmpty()) {
 			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
 			solrCreateQuery.setDeptcd(dept);
-			sq = solrCreateQuery.setQuery();
-			detailQuery += sq.getQuery();
-		}
-		if (!name.isEmpty()) {
-			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
-			solrCreateQuery.setName(name);
 			sq = solrCreateQuery.setQuery();
 			detailQuery += sq.getQuery();
 		}
@@ -784,14 +785,10 @@ public class SolrEdcStatController {
 		StringBuilder query = new StringBuilder();
 		if (!(startDate.isEmpty() && endDate.isEmpty())) query.append(" +ctime:[").append(startDate).append(" TO ").append(endDate).append("] ");
 
-		System.out.println("name"+name);
-		System.out.println("busi"+busi);
-		System.out.println("dept"+dept);
-
 
 		if (!name.isEmpty()) {
 			String[] nameArray = name.split(",");
-			query.append(" +name:((");
+			query.append(" +userid:((");
 
 			for (int i = 0; i < nameArray.length; i++) {
 				if (i > 0) {

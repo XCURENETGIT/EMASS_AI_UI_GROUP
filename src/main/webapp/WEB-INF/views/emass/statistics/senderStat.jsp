@@ -85,6 +85,11 @@
         $('#clearBtn').click(function(){
             $('#startdate').val(new Date().format('yyyy-mm-dd'));
             $('#enddate').val(new Date().format('yyyy-mm-dd'));
+            $('#deptVal, #deptStr').val('');
+            $('#deptSelectedArea').hide();
+            $('#userVal, #userVal').val('');
+            $('#userSelectedArea').hide();
+
 
             $('.optionBtn').removeClass('active');
             $('#deptnm').addClass('active');
@@ -356,6 +361,8 @@
 				<button class="optionBtn" id="ctime_yyyymmdd" value="ctime_yyyymmdd" class="active"><s:message code="common.msg.day"/></button>
 				<button class="optionBtn" id="ctime_yyyymm" value="ctime_yyyymm"><s:message code="common.msg.month"/></button>
 			</div>
+		</div>
+		<div class="searchSub w100">
 			<div>
 				<div>
 					<select id="busiSelect" class="selectpicker col-xs" data-style="btn-default btn-sm" multiple
@@ -546,19 +553,19 @@
         }
 
 
-        var busi= arrayToString($('#busiSelect').selectpicker('val'));
+        var busiStr= arrayToString($('#busiSelect').selectpicker('val'));
         var dv = $('#deptVal').val().split('|');
         var dept = dv.join(',');
+
         var deptStr='';
-        if (dept != '') deptStr = $('#deptStr').val();
+        if (dept != '') deptStr = dept;
         else deptStr = '';
 
         var uv = $('#userVal').val().split('|');
         var user = uv.join(',');
 
-
         var userStr='';
-        if (user != '') userStr = $('#userStr').val();
+        if (user != '') userStr = user;
         else userStr = '';
 
         searchFlag = true;
@@ -569,8 +576,8 @@
             endDate: eDate+"235959",
             detailQuery:'',
             xAxis : xAxis,
-            deptStr:dept,
-            busiStr:busi,
+            deptStr:deptStr,
+            busiStr:busiStr,
             userStr:userStr,
             yAxis : 'sender_str',
             offset : grid1.data.length,
@@ -651,19 +658,19 @@
 
         var xAxis = $('button.optionBtn.active').val();
         var xAxis_str = $('button.optionBtn.active').text();
-        var busi= arrayToString($('#busiSelect').selectpicker('val'));
+        var busiStr= arrayToString($('#busiSelect').selectpicker('val'));
         var dv = $('#deptVal').val().split('|');
         var dept = dv.join(',');
+
         var deptStr='';
-        if (dept != '') deptStr = $('#deptStr').val();
+        if (dept != '') deptStr = dept;
         else deptStr = '';
 
         var uv = $('#userVal').val().split('|');
         var user = uv.join(',');
 
-
         var userStr='';
-        if (user != '') userStr = $('#userStr').val();
+        if (user != '') userStr = user;
         else userStr = '';
 
         searchFlag = true;

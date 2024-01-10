@@ -117,7 +117,12 @@
 		$('#clearBtn').click(function(){
 			$('#startdate').val(new Date().format('yyyy-mm-dd'));
 			$('#enddate').val(new Date().format('yyyy-mm-dd'));
-		});
+            $('#deptVal, #deptStr').val('');
+            $('#deptSelectedArea').hide();
+            $('#userVal, #userVal').val('');
+            $('#userSelectedArea').hide();
+
+        });
 
 		$('#chartCntDiv .dropdown-menu li a').click(function () {
 			chartcnt = $(this).text();
@@ -507,20 +512,22 @@
 		var piCount_str = $('select[name=piCount] option:selected').text();
 		var sDate = $('#startdate').val().replaceAll("-", "");
 		var eDate = $('#enddate').val().replaceAll("-", "");
-		var busi= arrayToString($('#busiSelect').selectpicker('val'));
+
+        var busiStr= arrayToString($('#busiSelect').selectpicker('val'));
         var dv = $('#deptVal').val().split('|');
         var dept = dv.join(',');
+
         var deptStr='';
-        if (dept != '') deptStr = $('#deptStr').val();
+        if (dept != '') deptStr = dept;
         else deptStr = '';
 
         var uv = $('#userVal').val().split('|');
         var user = uv.join(',');
 
-
         var userStr='';
-        if (user != '') userStr = $('#userStr').val();
+        if (user != '') userStr = user;
         else userStr = '';
+
 
 
 		if (sDate > eDate) ui.alertMsg('<s:message code="consent.msg.timecheck"/>');
@@ -536,8 +543,8 @@
 			piCount: piCount,
 			pMenuId: pMenuId,
 			menuId: menuId,
-			deptStr:dept,
-			busiStr:busi,
+            deptStr:deptStr,
+            busiStr:busiStr,
             userStr:userStr,
 
 			success: function (data, total) {
