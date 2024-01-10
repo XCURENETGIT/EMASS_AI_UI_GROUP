@@ -1724,7 +1724,7 @@
         function tabIsSelected(obj){
             var result = false;
             if($(obj).parents('li').hasClass('select')){
-                 $(obj).parents('li').find('.tab_close').attr('class', '.SAMPLE'); //선택한 tab의 tab close 클래스 지정
+                 $(obj).parents('li').find('.tab_close').attr('class', 'tab_close_2'); //선택한 tab의 tab close 클래스 지정
                 result = true;
             }
             return result;

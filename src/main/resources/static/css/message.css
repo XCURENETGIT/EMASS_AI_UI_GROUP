@@ -434,8 +434,24 @@ input[type="text"] {
 	right: 5px;
 }
 
+.tab_close_2 {
+	position: absolute;
+	z-index: 1;
+	background:url('../img/icon/x2.png');
+	/*background-color: rgba( 36, 35, 48, 0.5 );*/
+	width: 16px;
+	height: 16px;
+	display: inline-block;
+	background-repeat: no-repeat;
+	top: 8px;
+	right: 5px;
+}
+
 .tab_close:hover {
 	background-image: url('../img/icon/x_over.png');
+}
+.tab_close:hover {
+	background-image: url('../img/icon/x_over2.png');
 }
 
 .condition_group {
