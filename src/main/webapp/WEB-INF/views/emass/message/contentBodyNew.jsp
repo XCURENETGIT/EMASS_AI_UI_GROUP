@@ -318,7 +318,7 @@
 <div class="msgBody">
 	<div style="display: none;" id="buttonDiv">
 		<div class="form-group form-inline not-dashed" style="float:left;padding:4px 0px 0 5px;" id="buttonArea">
-			<button class ="msg_button" id="prevBtn"><s:message code="common.msg.prev"/></button>
+			<button class ="msg_button btn01" id="prevBtn"><s:message code="common.msg.prev"/></button>
 			<button class ="msg_button" id="nextBtn"><s:message code="common.msg.next"/></button>
 			<button class ="msg_button" id="saveBtn"><s:message code="common.msg.save"/></button>
 			<button class ="msg_button" id="printBtn"><s:message code="common.msg.print"/></button>
@@ -351,7 +351,7 @@
 				<div class="row">
 					<div class="col-lg-12">
 						<div class="panel panel-default" id="subjectDiv">
-							<div class="panel-heading" style="font-weight: bold;min-height:35px;">
+							<div class="panel-heading" style="font-weight: bold;min-height:35px; border:1px solid #ff0000;">
 								<div id="subject" class="pull-left" style="cursor:default;width:calc(100% - 355px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;word-wrap:normal;line-height: 25px;" title="subject"></div>
 								<div class="pull-right">
 									<span class="svcnmSpan"></span>
@@ -738,11 +738,14 @@
 			</div>
 		</div>
 		<div class="msg_body_container" id="notSelectDiv" style="display:none;">
-			<div class="boxArea" style="overflow-x:hidden;overflow-y: auto;">
-				<div id="emptyDiv" class="empty-dashboard-message">
-					<h1 style="text-align:center;font-size:100px;color:#253f56;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></h1>
+			<div class="boxArea" style="overflow-x:hidden;overflow-y: auto; background-color:#f8f8f8;">
+				<div id="emptyDiv" class="empty-dashboard-message subTit borradius" style=" padding: 16px; height:280px;">
+					<h1 style="text-align:center;font-size:100px;color:#253f56;">
+						<!--<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>-->
+						<img src="<c:url value="/img/icon/img_nodata02.png"/>" width="100" height="100">
+					</h1>
 					<h2><s:message code="bodyview.select.message"/></h2>
-					<p><s:message code="bodyview.message.info"/></p>
+					<p class="txt_center bornone"><s:message code="bodyview.message.info"/></p>
 				</div>
 			</div>
 		</div>

@@ -120,7 +120,7 @@ div#rMenu ul li:HOVER {
 
 div#periodMenu {position:absolute; visibility:hidden; top:0;text-align: left;z-index: 999;border: 1px solid #555;background-color: #DCE7F3;height:150px;}
 
-div#periodSetupMenu {position:absolute; display:none; top:110px;left:300px;text-align: left;z-index: 999;border: 1px solid #555;background-color: #DCE7F3;height:230px;}
+div#periodSetupMenu {position:absolute; display:none; top:100px;left:150px;text-align: left;z-index: 999;border: 1px solid #ccc;background-color: #fff;min-height:230px;}
 
 
 .ztree ul,.ztree li,.ztree div {margin: 0;padding: 0;border: 0;outline: 0;font-weight: normal; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; font-style: inherit;font-size: 14px;vertical-align: baseline;}

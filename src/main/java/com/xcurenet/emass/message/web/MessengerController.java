@@ -617,6 +617,7 @@ public class MessengerController {
 		//if(Common.isEquals(groupField, "usr_id")) sq.setParam("facet.query", "-usr_id:*");
 		sq.setParam("facet.field", "srcip");
 		sq.setFacetMinCount(1);
+
 		MessengerGroupUserVO solrEdcGroupVO = solrEdcService.getMessengerGroupUserList(sq, Common.getAdminId(request));
 		return solrEdcGroupVO;
 	}
@@ -647,7 +648,7 @@ public class MessengerController {
 		if (list != null) {
 			for (MessengerGroupVO item : list) {
 				JSONObject dataObj = new JSONObject();
-				dataObj.put("sender", item.getTitle());
+				dataObj.put("sender", item.getUser());
 				dataObj.put("ctime", item.getCtime());
 				dataObj.put("content", item.getMessage());
 				if (link && Common.isEquals(item.getAttached(), "Y")) {
@@ -829,6 +830,7 @@ public class MessengerController {
 
 			MessengerEdcGroupVO groups = getMessengerMsgTotal(request, true);
 //			MessengerGroupUserVO users = getMessengerGroupUserList(request, 30000);
+//			System.out.println("users: "+users);
 
 			if (Common.isEquals(type, "xlsx")) {
 				response.setContentType("application/octet-stream");

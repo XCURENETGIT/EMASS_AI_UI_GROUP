@@ -822,6 +822,7 @@ body .ui-tooltip {
 	/*font-family: "돋움", Dotum, "굴림", Gulim, Helvetica, Sans-serif;
 	font-size: 1em;*/
 	vertical-align: middle;
+	margin-top:6px;
 }
  .ui-widget-content {
 	 /*border: 1px solid #7D7D7D;*/

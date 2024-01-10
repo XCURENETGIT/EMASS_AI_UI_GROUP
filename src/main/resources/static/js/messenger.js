@@ -290,7 +290,7 @@ function getMessengerMessage(xRootmtr, srcip, usr_id, msgid) {
     var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
     var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
 
-    $("#timeline_list").html('');
+    $("#timeline_list").html('');;
     ui.get({
         url: 'getMessengerMessage.xcn',
         xRootMtr: xRootmtr,
@@ -545,6 +545,7 @@ function rtnGroupList(data, type) {
 
 
     for (var i = 0; i < data.length; i++) {
+        // if (data[i].xrootmtr == "")continue;
         var li = document.createElement("li");
         li.className = "person";
         li.setAttribute("userid", data[i].userid);

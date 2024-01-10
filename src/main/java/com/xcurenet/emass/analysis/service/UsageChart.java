@@ -48,7 +48,7 @@ public class UsageChart {
 
 		for (UsageChartSchedulerVO usageChartSchedulerVO : usageChartSchedulerVOList) {
 			UsageChartVO usageChartVO = new UsageChartVO();
-			usageChartVO.setKey(Common.formatDate(usageChartSchedulerVO.getCtime().substring(0, 8)) + " " + usageChartSchedulerVO.getDateTime() + "H");
+			usageChartVO.setKey(new StringBuilder().append(Common.formatDate(usageChartSchedulerVO.getCtime().substring(0, 8))).append(" ").append(usageChartSchedulerVO.getDateTime()).append("Hour").toString());
 			usageChartVO.setDate(usageChartSchedulerVO.getCtime());
 			usageChartVO.setValue(ServiceCodeCheck.getUnitValue(usageChartSchedulerVO, searchVO.getItem()));
 			usageChartVO.setDayOfWeek(usageChartSchedulerVO.getDateDayOfWeek());
@@ -79,7 +79,7 @@ public class UsageChart {
 
 		for (UsageChartSchedulerVO usageChartSchedulerVO : usageChartSchedulerVOList) {
 			UsageChartVO usageChartVO = new UsageChartVO();
-			String date = Common.formatDate(usageChartSchedulerVO.getDateMonth() + usageChartSchedulerVO.getDateDay());
+			String date = Common.formatDate(new StringBuilder().append(usageChartSchedulerVO.getDateMonth()).append(usageChartSchedulerVO.getDateDay()).toString());
 			usageChartVO.setKey(date);
 			usageChartVO.setDate(date);
 			usageChartVO.setValue(ServiceCodeCheck.getUnitValue(usageChartSchedulerVO, searchVO.getItem()));
@@ -90,7 +90,7 @@ public class UsageChart {
 			int resultCount = 0;
 			long searchDate = Common.getTime(Common.plusDays(usageChartVO.getDate(), -1 * diff));
 			for (UsageChartSchedulerVO usageChartSchedulerVO : averageList) {
-				long averageDate = Common.getTime(usageChartSchedulerVO.getDateMonth() + usageChartSchedulerVO.getDateDay());
+				long averageDate = Common.getTime(new StringBuilder().append(usageChartSchedulerVO.getDateMonth()).append(usageChartSchedulerVO.getDateDay()).toString());
 				if (usageChartVO.getDayOfWeek() == usageChartSchedulerVO.getDateDayOfWeek() && searchDate > averageDate) {
 					usageChartVO.setAverage(usageChartVO.getAverage() + ServiceCodeCheck.getUnitValue(usageChartSchedulerVO, searchVO.getItem()));
 					resultCount++;
@@ -111,7 +111,7 @@ public class UsageChart {
 
 		for (UsageChartSchedulerVO usageChartSchedulerVO : usageChartSchedulerVOList) {
 			UsageChartVO usageChartVO = new UsageChartVO();
-			usageChartVO.setKey(Common.formatMonth(usageChartSchedulerVO.getDateMonth()) + " " + usageChartSchedulerVO.getDateWeekOfMonth() + "Week");
+			usageChartVO.setKey(new StringBuilder().append(Common.formatMonth(usageChartSchedulerVO.getDateMonth())).append(" ").append(usageChartSchedulerVO.getDateWeekOfMonth()).append("Week").toString());
 			usageChartVO.setDate(firstDateOfWeek(usageChartSchedulerVO.getCtime().substring(0, 8)));
 			usageChartVO.setValue(ServiceCodeCheck.getUnitValue(usageChartSchedulerVO, searchVO.getItem()));
 			usageChartVO.setWeekOfMonth(usageChartSchedulerVO.getDateDayOfWeek());
@@ -142,7 +142,7 @@ public class UsageChart {
 
 		for (UsageChartSchedulerVO usageChartSchedulerVO : usageChartSchedulerVOList) {
 			UsageChartVO usageChartVO = new UsageChartVO();
-			usageChartVO.setKey(Common.formatMonth(usageChartSchedulerVO.getDateMonth()));
+			usageChartVO.setKey(usageChartSchedulerVO.getDateMonth());
 			usageChartVO.setDate(usageChartSchedulerVO.getDateMonth());
 			usageChartVO.setValue(ServiceCodeCheck.getUnitValue(usageChartSchedulerVO, searchVO.getItem()));
 			list.add(usageChartVO);
@@ -169,7 +169,7 @@ public class UsageChart {
 
 		for (SolrEdcVO edc : edcList) {
 			UsageChartVO usageChartVO = new UsageChartVO();
-			usageChartVO.setKey(Common.formatDate(edc.getCtime_yyyymmdd()) + " " + edc.getCtime_hh() + "Hour");
+			usageChartVO.setKey(new StringBuilder().append(Common.formatDate(edc.getCtime_yyyymmdd())).append(" ").append(edc.getCtime_hh()).append("Hour").toString());
 			usageChartVO.setValue(ServiceCodeCheck.getUnitValue(edc, item));
 		}
 		return list;
@@ -239,7 +239,7 @@ public class UsageChart {
 			if (objectList instanceof UsageChartVO) {
 				for (int i = 0; i < this.size(); i++) {
 					if (((UsageChartVO) objectList).getDate().equals(((UsageChartVO) this.get(i)).getDate())) {
-						(((UsageChartVO) this.get(i))).setValue(((UsageChartVO) this.get(i)).getValue() + ((UsageChartVO) objectList).getValue());
+						((UsageChartVO) objectList).setValue(((UsageChartVO) this.get(i)).getValue() + ((UsageChartVO) objectList).getValue());
 						add = false;
 						break;
 					}
