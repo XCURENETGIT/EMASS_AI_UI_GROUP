@@ -78,9 +78,6 @@
             $('#userVal, #userVal').val('');
             $('#userSelectedArea').hide();
         });
-
-
-
         $('#searchBtn').click(function(){
 			closeDetailTab();
 			getData ('Y');
@@ -88,8 +85,12 @@
 		$('#clearBtn').click(function(){
 			$('#startdate').val(new Date().format('yyyy-mm-dd'));
 			$('#enddate').val(new Date().format('yyyy-mm-dd'));
+            $('#deptVal, #deptStr').val('');
+            $('#deptSelectedArea').hide();
+            $('#userVal, #userVal').val('');
+            $('#userSelectedArea').hide();
 
-			$('.optionBtn').removeClass('active');
+            $('.optionBtn').removeClass('active');
 			$('#deptnm').addClass('active');
 		});
 
@@ -342,6 +343,8 @@
 				<button class="optionBtn" id="ctime_yyyymmdd" value="ctime_yyyymmdd" class="active"><s:message code="common.msg.day"/></button>
 				<button class="optionBtn" id="ctime_yyyymm" value="ctime_yyyymm"><s:message code="common.msg.month"/></button>
 			</div>
+		</div>
+		<div class="searchSub w100">
 			<div>
 				<div>
 					<select id="busiSelect" class="selectpicker col-xs" data-style="btn-default btn-sm" multiple
@@ -543,21 +546,20 @@
 			return;
 		}
 
-        var busi= arrayToString($('#busiSelect').selectpicker('val'));
+        var busiStr= arrayToString($('#busiSelect').selectpicker('val'));
         var dv = $('#deptVal').val().split('|');
         var dept = dv.join(',');
+
         var deptStr='';
-        if (dept != '') deptStr = $('#deptStr').val();
+        if (dept != '') deptStr = dept;
         else deptStr = '';
 
         var uv = $('#userVal').val().split('|');
         var user = uv.join(',');
 
-
         var userStr='';
-        if (user != '') userStr = $('#userStr').val();
+        if (user != '') userStr = user;
         else userStr = '';
-
 
 		searchFlag = true;
 		grid1.on();
@@ -569,8 +571,8 @@
 			yAxis : 'userid',
 			offset : grid1.data.length,
 			limit : grid1.pageSize,
-            deptStr:dept,
-            busiStr:busi,
+            deptStr:deptStr,
+            busiStr:busiStr,
             userStr:userStr,
 			xAxis_str : xAxis_str,
 			success : function(data, total) {

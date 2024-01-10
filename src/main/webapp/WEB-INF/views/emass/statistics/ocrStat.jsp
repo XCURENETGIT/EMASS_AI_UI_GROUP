@@ -91,6 +91,11 @@
         $('#clearBtn').click(function(){
             $('#startdate').val(new Date().format('yyyy-mm-dd'));
             $('#enddate').val(new Date().format('yyyy-mm-dd'));
+            $('#deptVal, #deptStr').val('');
+            $('#deptSelectedArea').hide();
+            $('#userVal, #userVal').val('');
+            $('#userSelectedArea').hide();
+
 
             $('.optionBtn').removeClass('active');
             $('#deptnm').addClass('active');
@@ -560,6 +565,8 @@
 				<button class="optionBtn" id="deptnm" value="deptnm"><s:message code="common.org.dept"/></button>
 				<button class="optionBtn" id="jikgubnm" value="jikgubnm"><s:message code="common.org.jikgub"/></button>
 			</div>
+		</div>
+		<div class="searchSub w100">
 			<div>
 				<div>
 					<select id="busiSelect" class="selectpicker col-xs" data-style="btn-default btn-sm" multiple
@@ -699,19 +706,19 @@
             var eDate = $('#enddate').val().replaceAll("-", "");
 			if(sDate > eDate) ui.alertMsg('<s:message code="consent.msg.timecheck"/>');
 
-            var busi= arrayToString($('#busiSelect').selectpicker('val'));
+            var busiStr= arrayToString($('#busiSelect').selectpicker('val'));
             var dv = $('#deptVal').val().split('|');
             var dept = dv.join(',');
+
             var deptStr='';
-            if (dept != '') deptStr = $('#deptStr').val();
+            if (dept != '') deptStr = dept;
             else deptStr = '';
 
             var uv = $('#userVal').val().split('|');
             var user = uv.join(',');
 
-
             var userStr='';
-            if (user != '') userStr = $('#userStr').val();
+            if (user != '') userStr = user;
             else userStr = '';
 
 			searchFlag = true;
@@ -721,8 +728,8 @@
 				endDate: eDate+"235959",
 				xAxis : xAxis,
 				yAxis : 'ocr_attach_cnt',
-                deptStr:dept,
-                busiStr:busi,
+                deptStr:deptStr,
+                busiStr:busiStr,
                 userStr:userStr,
                 offset : grid1.data.length,
 				limit : grid1.pageSize,
@@ -803,20 +810,22 @@
         var xAxis_str = $('button.optionBtn.active').text();
         var sDate = $('#startdate').val().replaceAll("-","");
         var eDate = $('#enddate').val().replaceAll("-","");
-        var busi= arrayToString($('#busiSelect').selectpicker('val'));
+
+        var busiStr= arrayToString($('#busiSelect').selectpicker('val'));
         var dv = $('#deptVal').val().split('|');
         var dept = dv.join(',');
+
         var deptStr='';
-        if (dept != '') deptStr = $('#deptStr').val();
+        if (dept != '') deptStr = dept;
         else deptStr = '';
 
         var uv = $('#userVal').val().split('|');
         var user = uv.join(',');
 
-
         var userStr='';
-        if (user != '') userStr = $('#userStr').val();
+        if (user != '') userStr = user;
         else userStr = '';
+
         searchFlag = true;
         currentgrid.on();
         ui.get({
@@ -829,8 +838,8 @@
             limit : currentgrid.pageSize,
             xAxis_str : xAxis_str,
             rowKey : rowKey,
-            deptStr:dept,
-            busiStr:busi,
+            deptStr:deptStr,
+            busiStr:busiStr,
             userStr:userStr,
             colKey : pColKey,
             colRowKey : colRowKey,
@@ -938,7 +947,6 @@
             busiStr:busi,
             userStr:userStr,
             endDate : eDate+"235959",
-            detailQuery:$('#solrQueryText').val(),
             xAxis : xAxis,
             xAxis_str : xAxis_str,
             yAxis : 'ocr_attach_cnt',

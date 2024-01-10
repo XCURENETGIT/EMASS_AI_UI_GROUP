@@ -83,6 +83,10 @@ var eikon2 = {
         var searchType = $('input:radio[name=searchType]:input:checked').val();
         getCollectionGroupList(page);
     },
+    getFileGroupList : function(page){
+        var searchType = $('input:radio[name=searchType]:input:checked').val();
+        getFileMessageList(page);
+    },
     getCollectionDetailList : function(userid, msgid, srcip, usr_id,type){
         searchFlag = true;
         ui.onBody('timeline_list', 0, 60);
@@ -379,6 +383,32 @@ function makeMessengerText( svc ){
     return str;
 }
 
+function getFileMessageList  (page){
+    var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
+    groupPage = page;
+    var offset = groupPage*groupPageBreak - groupPageBreak;
+
+    searchFlag = true;
+    ui.onBody('timeline_list', 0, -20);
+    ui.postJson({
+        url : 'getFileMessageList.xcn',
+        data : JSON.stringify( getCondition( )),
+        readYn : readYn,
+        offset : offset,
+        limit : groupPageBreak,
+        success : function(data, total) {
+            rtnFileGroupList(data.groups)
+            rtnFilePage(total, page);
+        },
+        error : function(status, message) {
+            ui.alertMsg(message);
+        },
+        complete : function() {
+            searchFlag = false;
+            ui.off('timeline_list');
+        }
+    });
+}
 
 
 function getCollectionGroupList (page){
@@ -479,64 +509,54 @@ function makeFileList(data) {
     return str;
 }
 
-function makeFileServiceList(){
+function makeFileServiceList(data){ /*파일화면 구성 */
 
     var str='';
 
-    for(var i=0 ; i < detailDataSet.length ; i++) {
-        var obj = detailDataSet[i];
         str += '<div class="messageCon">';
-        if(obj.inside=="N"){
+        if(data.inSide=="N"){
         str += '<div class="top redBg">';
         }else{
             str += '<div class="top grayBg03">';
         }
         str += '<h4 class="ma_none">';
-        if(obj.inside === "N") {
+        if(data.inside === "N") {
             str += '<span class="file_flag_reception">';
             str += '<img src="'+mainContext+'/img/ico_w_chatshare_fill.png" alt="외부" height="12px">';
             str += '외부</span>';
         }
-        str+= obj.attachname+'</h4>';
+        str+= data.attachname+'</h4>';
         str += '</div>';
         str += '<div class="conBox">';
         str += '<div class="borbottom_dashed pb16">';
         str += '<p>';
-        str += '<span class="name">'+obj.deptNm+'</span> <span class="xcn_bar"></span>';
-        str += '<span class="name">'+obj.jikgubNm+'</span> <span class="xcn_bar"></span>';
-        str += '<span class="name">'+obj.name+'</span><span class="xcn_bar"></span>';
-        str += '<span class="name">'+obj.attachsize+'KB</span>';
+        str += '<span class="name">'+data.deptNm+'</span> <span class="xcn_bar"></span>';
+        str += '<span class="name">'+data.jikgubNm+'</span> <span class="xcn_bar"></span>';
+        str += '<span class="name">'+data.name+'</span><span class="xcn_bar"></span>';
+        str += '<span class="name">'+data.attachsize+'KB</span>';
         str += '</p>';
         str += '<p class="rightBox">';
-        str += '<span>'+obj.ctime+'</span>';
+        str += '<span>'+data.ctime+'</span>';
         str += '</p>';
         str += '</div>';
-        if(obj.attached=='Y') {
-            str += '<table class="subTable mat8" msgid='+obj.msgid+'attachhash='+obj.attachhash+'>';
+            str += '<table class="subTable mat8" msgid='+data.msgid+'attachhash='+data.attachhash+'>';
             str += '<colgroup>';
             str += '<col width="*">';
             str += '<col width="*">';
             str += '<col width="10%">';
             str += '</colgroup>';
             str += '<tr><th>파일명</th><th>해쉬값</th><th>예상 확장자</th><th>파일크기</th></tr>';
-            var attachhashArray = obj.attachhash.split('|');
-            var attachnameArray = obj.attachname.split('|');
-            var attachsizeArray = obj.attachsize.split('|');
-            var attachtypeArray = obj.attachtype.split('|');
 
-            for (var j = 0; j < attachtypeArray.length; j++){
                 str += '<tr>';
-                str += '<td>'+attachnameArray[j]+'<button class="btnchatdown downlodadBtn"></button></td>';
-                str += '<td>'+attachhashArray[j]+'</td>';
-                str += '<td>'+attachtypeArray[j]+'</td>';
-                str += '<td>'+attachsizeArray[j]+'</td>';
+                str += '<td>'+"임시"+'<button class="btnchatdown downlodadBtn"></button></td>';
+                str += '<td>'+"임시"+'</td>';
+                str += '<td>'+"임시"+'</td>';
+                str += '<td>'+"임시"+'</td>';
                 str += '</tr>';
-            }
             str += '</table>';
-        }
         str += '</div>';
         str += '</div>';
-    }
+
     return str;
 }
 
@@ -818,6 +838,26 @@ function updateEmassGenerativeAdminUserid(userid, lastMsgId, srcip,type){ /*읽�
     return false;
 }
 
+function getFileDetailMessage(msgid){
+
+    ui.get({
+        url : 'getEmassMessageNew.xcn',
+        msgId : msgid,
+        success : function(data, total) {
+            $(".inner_fileList").html(makeFileServiceList(data));
+        },
+        error : function(status, message) {
+            ui.alertMsg(message);
+        },
+        complete : function() {
+            setTimeout(function(){
+                readTimeFlag = false;
+            }, 1000);
+        }
+    });
+
+}
+
 //테스트 데이터 생성
 function makeSampleData(){
     for(var i=0 ; i < 50 ; i++) {
@@ -994,12 +1034,18 @@ function getCondition( ){
 
 function rtnnGenerativeGroupPage(total, page){
     $('#groupResultCnt').html(total.comma());
-    $('#groupPage').html(getPage3(total, page, groupPageBreak, 'eikon2.getGenerativeList'));
+    $('#groupPage').html(getPage3(total, page, groupPageBreak, 'eikon2.getCollectionList'));
 }
+
+function rtnFilePage(total, page){
+    $('#groupResultCnt').html(total.comma());
+    $('#groupPage').html(getPage3(total, page, groupPageBreak, 'eikon2.getFileGroupList'));
+}
+
 
 function getPage3(total, pageCount, listSize, rtnMethod){
     var str = "";
-    var pageSizeNo = 5; // 화면에 표시할 페이지 수
+    var pageSizeNo = 10; // 화면에 표시할 페이지 수
     var lastPage = Math.ceil(total / listSize); // 전체 페이지 수
     var screenPageNo = Math.ceil(listSize / pageSizeNo); // 전체 스크린(페이지) 수 ,
     var currentScreenPageNo = Math.ceil(pageCount / pageSizeNo); // 사용자가 현재
@@ -1016,10 +1062,11 @@ function getPage3(total, pageCount, listSize, rtnMethod){
 
     str += '<div class="pagination">';
 
+    var leftImg = mainContext + "/img/ico_page_left2.png";
     if (pageCount > pageSizeNo)
-        str += '<a href="#" onclick="' + rtnMethod + '(' + (endPageNum - pageSizeNo) + ')" class="direction"><img src="../img/ico_page_left2.png" alt=""></a>';
-    else
-        str += '<a href="#" class="direction" style="cursor:default"><img src="../img/ico_page_left2.png" alt=""></a>';
+        str += '<a href="#" onclick="' + rtnMethod + '(' + (endPageNum - pageSizeNo) + ')" class="direction"><img src="' + leftImg + '"></a>';
+    // else
+    //     str += '<a href="#" class="direction" style="cursor:default"><img src="' + leftImg + '"></a>';
 
     for (var i = startPageNum; i <= endPageNum; i++) {
         if (i == pageCount)
@@ -1027,13 +1074,11 @@ function getPage3(total, pageCount, listSize, rtnMethod){
         else
             str += '<a href="#" onclick="' + rtnMethod + '(' + i + ',' + pageCount + ')">' + i + '</a>';
     }
+    var rightImg2 = mainContext + "/img/ico_page_right2.png";
+    if (startPageNum + pageSizeNo <= lastPage) {
+        str += '<a href="#" onclick="' + rtnMethod + '(' + (startPageNum + pageSizeNo) + ')" class="direction"><img src="' + rightImg2 + '"></a>';
+    }
 
-
-
-    if (startPageNum + pageSizeNo <= lastPage)
-        str += '<a href="#" onclick="' + rtnMethod + '(' + (startPageNum + pageSizeNo) + ')" class="direction"><img src="../img/ico_page_right2.png" alt=""></a>';
-    else
-        str += '<a href="#" class="direction" style="cursor:default"><img src="../img/ico_page_right2.png" alt=""></a>';
 
     str += '</div>';
 
@@ -1060,7 +1105,6 @@ function getCollectionMessage(userid, srcip, usr_id, msgid,type){
             detailDataSet = data.groups;
             prevDetailDataSet = data.groups;
 
-            if(type!='F') {
                 if (data.groups.length > 0) {
                     $('.messenger_prev').css('display', 'block');
                     $('#totalCount').css('display', 'block');
@@ -1082,11 +1126,7 @@ function getCollectionMessage(userid, srcip, usr_id, msgid,type){
 
                 $("#timeline_list").html(makeList(false));
                 HighlightGroup();
-            }
-            else{
 
-                $(".inner_fileList").html(makeFileServiceList());
-            }
         },
         error : function(status, message) {
             searchFlag = false;
@@ -1123,6 +1163,74 @@ function getCollectionAllfile(userid, srcip, usr_id, msgid,type){
 
         }
     });
+
+
+}
+
+function rtnFileGroupList (data) {
+
+    var str = '';
+    var groupList = document.getElementById("group_list");
+
+    groupList.innerHTML = "";
+
+    var ul = document.createElement("ul");
+    ul.className = "people";
+
+    for (var i = 0; i < data.length; i++) {
+        var li = document.createElement("li");
+        li.className = "person";
+        li.setAttribute("userid", data[i].userid);
+        li.setAttribute("msgid", data[i].msgid);
+        li.setAttribute("srcip", data[i].srcip);
+        li.setAttribute("usrid", data[i].usrid);
+        li.setAttribute("body_snippet", data[i].body_snippet);
+        li.setAttribute("name", data[i].name);
+        li.setAttribute("data-chat", "person" + (i + 1));
+
+        var leftDiv = document.createElement("div");
+        leftDiv.className = "left";
+
+        var leftContent = "<p><span class='chatid'>" + data[i].attachname +"</span>";
+        leftContent += "</p>" +
+            "<p><span class='name'>" + data[i].busiNm + "</span><span class='bar'></span><span class='name'>" + data[i].deptNm + "</span><span class='bar'></span><span class='name'>" + data[i].jikgubNm + "</span><span class='bar'></span><span class='name'>" + data[i].name + "</span><span class='bar'></span><span class='name'>" + data[i].attachsize + "KB</span></p>";
+
+        leftDiv.innerHTML = leftContent;
+        li.appendChild(leftDiv);
+
+        // Create right div
+        var rightDiv = document.createElement("div");
+        rightDiv.className = "right";
+        var imageName =mainContext+"/img/icon/ico_sns_"+ data[i].svc+".png";
+        var makescv = makeMessengerText(data[i].svc);
+        var rightContent = "<p><span class='logo'><img src="+imageName+">"+makescv+"</span></p>";
+
+
+        if (data[i].unread_cnt > 0) {
+            rightContent += "<span class='new'>" + data[i].unread_cnt + "</span>";
+        }
+
+        rightContent += "</p><span class='time'>" + data[i].ctime + "</span>";
+
+        rightDiv.innerHTML = rightContent;
+        li.appendChild(rightDiv);
+
+        // Append li to ul
+        ul.appendChild(li);
+
+    }
+    if( data.length == 0 ){
+        str += '	<div class="pl20 pr20">';
+        str += '    <a href="#" class="list-group-item list-group-item-action active" style="cursor:default;">';
+        str += '	    <p class="list-group-item-text" style="line-height:30px; text-align: center">';
+        str += '<img src="' + mainContext + '/img/icon/img_nodata02.png" width="72" height="72">';
+        str += '	    <BR/>';
+        str += nodataMsg; //common.msg.nodata
+        str += '</p></a></div>';
+        $('#group_list').html( str );
+    }
+
+    groupList.appendChild(ul);
 
 
 }

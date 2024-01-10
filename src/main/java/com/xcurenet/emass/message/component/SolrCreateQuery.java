@@ -291,7 +291,7 @@ public class SolrCreateQuery {
 
 	public SolrCreateQuery setName(String name) {
 		if (Common.isEmpty(name)) return this;
-		return addQuery(String.format("%s%s:%s", AND_QUERY, NAME, createOrQuery(name)));
+		return addQuery(String.format("%s%s:%s", AND_QUERY, USER_ID, createOrQuery(name)));
 	}
 
 	public SolrCreateQuery setDeptcd(String deptcd) {

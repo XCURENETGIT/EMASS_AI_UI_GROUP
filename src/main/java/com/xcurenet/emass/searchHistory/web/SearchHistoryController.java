@@ -52,15 +52,35 @@ public class SearchHistoryController {
 		JSONObject param = Common.getParam(request);
 		String startDt = Common.nvl(param.get("startDt"));
 		String endDt = Common.nvl(param.get("endDt"));
-		String userName = Common.nvl(param.get("userName"));
+		String busi = Common.nvl(request.getParameter("busiStr"));
+		String dept = Common.nvl(request.getParameter("deptStr"));
+		String name = Common.nvl(request.getParameter("userStr"));
 
 		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+		String query = String.format("+ctimeYYYYMMDD : [ %s TO %s ] ", startDt, endDt);
 		SolrQuery sq = new SolrQuery();
-		if(Common.isEmpty(userName)) {
-			sq.setQuery(String.format("+ctimeYYYYMMDD : [ %s TO %s ] ", startDt, endDt));
-		} else {
-			sq.setQuery(String.format("+ctimeYYYYMMDD : [ %s TO %s ] +(user.name:\"%s\" network.srcIp:\"%s\")", startDt, endDt, userName, userName));
+
+		if (!name.isEmpty()) {
+			solrCreateQuery.setName(name);
+			sq = solrCreateQuery.setQuery();
+			query += sq.getQuery();
 		}
+		if (!busi.isEmpty()) {
+			solrCreateQuery.setBusicd(busi);
+			sq = solrCreateQuery.setQuery();
+			query += sq.getQuery();
+		}
+		if (!dept.isEmpty()) {
+			solrCreateQuery.setDeptcd(dept);
+			sq = solrCreateQuery.setQuery();
+			query += sq.getQuery();
+		}
+
+
+		sq.setQuery(query);
+
+		System.out.println(sq.getQuery());
+
 
 		sq.setParam("group", true);
 		sq.setParam("group.facet", true);

@@ -108,7 +108,7 @@
                     return;
                 }*/
 
-				eikon2.getCollectionList(1);
+				eikon2.getFileGroupList(1);
 			});
 			$("#searchStrInput").keypress(function (e) {
 				if (e.keyCode == 13) $('#searchBtn').click();
@@ -304,22 +304,9 @@
 			});
 
 			$(document).on('click', '.person', function () {
-				var name = $(this).attr('userid');
-				var srcip = $(this).attr('srcip');
-				var usr_id = $(this).attr('usr_id');
-				var userid =  $(this).attr('userid');
 				var msgid = $(this).attr('msgid');
-				var username= $(this).attr('name');
 
-				$('#selectUserInfo').attr('data-srcip', srcip);
-				$('#selectUserInfo').attr('data-name', name);
-				$('#selectUserInfo').attr('data-usrid', usr_id);
-
-				$('#selectUserInfo').html(userid+"("+username+")");
-				$('#subchatid').html(": "+name);
-				$('#srcip').text(srcip);
-				$('#usr_id').text(usr_id);
-				eikon2.getCollectionDetailList(userid, msgid, srcip, usr_id,"F");
+				getFileDetailMessage(msgid);
 				hideUserSelect();
 			});
 
@@ -784,25 +771,24 @@
 
 				<div class="messageBtn">
 					<div class="btnform">
+						<button class="btn01"><img src="<c:url value="/img/subBtn_arrow_left_12.png"/>" alt=""></button>
+						<button class="btn01"><img src="<c:url value="/img/subBtn_arrow_right_12.png"/>" alt=""></button>
+						<button class="btn05"><img src="<c:url value="/img/subBtn_save.png"/>" alt="저장">저장</button>
+						<button class="btn05"><img src="<c:url value="/img/subBtn_mail.png"/>" alt="인쇄">인쇄</button>
+						<button class="btn05"><img src="<c:url value="/img/subBtn_settings.png"/>" alt="추가기능">추가기능</button>
+						<button class="btn05"><img src="<c:url value="/img/subBtn_link.png"/>" alt="새창">새창</button>
 					</div>
 					<div class="btnform txt_right">
-						<span>내보내기 &#9662;</span>
-						<div class="dropdown-content">
-							<a href="#" onclick="downloadList('xlsx')" class="excel_down">엑셀(xlsx)</a>
-							<a href="#" onclick="downloadList('txt')" class="txt_down">텍스트(txt)</a>
-							<a href="#" onclick="downloadList('html')" class="html_down">하이퍼텍스트(html)</a>
-							<a href="#" class="excel_file_down">액셀(xlsx)+첨부파일</a>
-						</div>
+						<button class="btn05"><img src="<c:url value="/img/subBtn_notification.png"/>" alt="메시지보관">메시지보관</button>
+						<select id="" name="">
+							<option value="">내보내기</option>
+							<option value="">옵션2</option>
+							<option value="">옵션3</option>
+						</select>
 					</div>
 				</div>
 			</div>
 			<div class="inner_fileList">
-			</div>
-			<div class="pl20 pr20">
-				<div class="pageArea bornone" id="filegroupPage">
-					<div class="total fb600">
-					</div>
-				</div>
 			</div>
 
 		</div>

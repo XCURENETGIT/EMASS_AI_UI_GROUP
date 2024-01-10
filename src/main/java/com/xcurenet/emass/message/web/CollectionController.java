@@ -1,8 +1,10 @@
 package com.xcurenet.emass.message.web;
 
 import com.xcurenet.annotations.AuditMenu;
+import com.xcurenet.annotations.AuditOperation;
 import com.xcurenet.annotations.AuditParentMenu;
 import com.xcurenet.audit.service.Menu;
+import com.xcurenet.audit.service.Operation;
 import com.xcurenet.audit.service.ParentMenu;
 import com.xcurenet.common.excel.XLSXWriter;
 import com.xcurenet.common.util.Common;
@@ -12,6 +14,7 @@ import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.emass.message.component.SolrCreateQuery;
 import com.xcurenet.emass.message.service.*;
+import com.xcurenet.emass.message.service.impl.SolrEdcServiceImpl;
 import com.xcurenet.minio.MinioFileAdapter;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
@@ -127,6 +130,30 @@ public class CollectionController {
 		/*	solrEdcGroupVO.setGroups(setCount_temp(solrEdcGroupVO.getGroups(), Common.getAdminId(request)));*/
 		return new XcnResponseVO(XcnRspCode.OK, solrEdcGroupVO, solrEdcGroupVO.getNumFound());
 	}
+
+	@RequestMapping(value = "/getFileMessageList.xcn")
+	@Description("파일전송 목록 조회")
+	@AuditOperation(Operation.SEARCH)
+	@ResponseBody
+	public XcnResponseVO getFileMessageList(final HttpServletRequest request, final HttpSession session) throws Exception {
+
+		JSONObject param = Common.getParam(request);
+		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), Common.getAdminId(session));
+		sq.setQuery(sq.getQuery() + MESSENGER4 + " +userid:* +attached:Y");
+		if (Common.isEquals(param.get("readYn"), "N")) {
+			sq.addFilterQuery(String.format(SolrEdcServiceImpl.JOIN_UNREAD, Common.getAdminId(session)));
+		}
+		sq.setStart(Common.nvz(param.get("offset"), 0));
+		sq.setRows(Common.nvz(param.get("limit"), 100));
+		sq.setSort("ctime", ORDER.desc);
+		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "deptnm","businm", "jikgubnm", "usr_id");
+
+		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request));
+		return new XcnResponseVO(XcnRspCode.OK, solrEdcGroupVO, solrEdcGroupVO.getNumFound());
+	}
+
+
 
 
 	public List<MessengerGroupVO> setCount_temp(List<MessengerGroupVO> groups, String adminId) throws IOException, SolrServerException {

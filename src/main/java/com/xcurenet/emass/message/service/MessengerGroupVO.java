@@ -30,6 +30,7 @@ public class MessengerGroupVO {
 	private String attachname;
 	private String attachsize;
 	private String attachtype;
+	private String busiNm;
 	private String deptNm;
 	private String jikgubNm;
 	private String readYn;
