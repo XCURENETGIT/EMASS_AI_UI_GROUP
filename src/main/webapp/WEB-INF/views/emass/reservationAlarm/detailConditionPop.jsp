@@ -146,7 +146,7 @@
                 if (str != undefined) str = str.replaceAll('\\|', ',');
                 $('#selectedCodeTitle').html(str);
             });
-
+            busiSelect
             $(document).on('mouseout', '.codeSelectedBtn', function (e) {
                 $('#selectedCodeTitle').hide();
             });
@@ -771,7 +771,6 @@
             });
 
             $('#searchField').selectpicker({
-                container: 'body',
                 width: '200px',
                 noneSelectedText: '<s:message code="common.msg.all"/>'
             });
@@ -779,7 +778,6 @@
             var width = '200px';
 
             $('#serviceTypeSelect').selectpicker({
-                container: 'body',
                 size: 15,
                 width: width,
                 searchLabel: true,
@@ -790,7 +788,6 @@
             });
 
             $('#infoTypeSelect').selectpicker({
-                container: 'body',
                 size: 15,
                 width: width,
                 searchLabel: true,
@@ -801,7 +798,7 @@
             });
 
             $('#feedbackTypeSelect').selectpicker({
-                container: 'body',
+
                 size: 15,
                 width: width,
                 searchLabel: true,
@@ -812,7 +809,6 @@
             });
 
             $('#probTypeSelect').selectpicker({
-                container: 'body',
                 size: 15,
                 width: width,
                 searchLabel: true,
@@ -823,11 +819,9 @@
             });
 
             $('#sizeFilterSelect').selectpicker({
-                container: 'body'
             });
 
             $('#busiSelect').selectpicker({
-                container: 'body',
                 size: 15,
                 width: width,
                 searchLabel: true,
@@ -856,7 +850,6 @@
             }
 
             $('#allOfus').selectpicker({
-                container: 'body',
                 width: width
             });
         }
