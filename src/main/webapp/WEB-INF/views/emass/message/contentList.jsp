@@ -37,8 +37,32 @@
 <head>
 	<title>EMASS PRO - <s:message code="DATA_MONITOR.MESSAGE_INFO"/></title>
 	<style type="text/css">
+		.scroll_tab_left_button, .scroll_tab_right_button {margin-top:4px!important;}
+		.scroll_tabs_container .scroll_tab_left_button_disabled {margin-top:4px!important;}
+		.scroll_tabs_container .scroll_tab_right_button_disabled {margin-top:4px !important;}
+		.slick-column-name input[type=checkbox], slick-cell input[type=checkbox] {margin-top:6px;}
+		#messageNewGrid_statusbar {padding:0 12px;}
+		.status_rownum {margin-top:10px;}
 		html, body {
 			min-width: 100px !important;
+		}
+
+		::-webkit-scrollbar {
+			width: 8px;  /* 세로축 스크롤바 폭 너비 */
+			height: 6px;  /* 가로축 스크롤바 폭 너비 */
+		}
+
+		::-webkit-scrollbar-thumb {
+			background: #999; /* 스크롤바 막대 색상 */
+			border-radius: 12px 12px 12px 12px;
+		}
+
+		::-webkit-scrollbar-thumb:hover {
+			background-color:#999;
+		}
+
+		::-webkit-scrollbar-track {
+			/*background-color:transparent;  스크롤바 뒷 배경 색상 */
 		}
 		.slick-cell {line-height: 18px;}
 		.slick-cell input[type=checkbox] {
@@ -55,10 +79,14 @@
 			margin-top: 0px;
 		}
 		.busiCounts{
-			display: inline-block;color:#000;
+			display: inline-block; color:#333;
+			border:1px solid #ddd;
+			padding:3px 8px;
+			border-radius: 20px;
+			margin-left:-4px;
 		}
 		.busiCounts:hover{
-			color: #000 !important;
+			color:#333;
 			text-decoration: underline !important;
 		}
 		.busiCounts:hover > i, .busiCounts:hover > span{
@@ -71,13 +99,24 @@
 
 		.tab_selected > a{
 			font-weight: bold;
+			color:#fff;
+			background-color: #1C64D3;
+			padding:4px 12px 3px;
+			border-radius: 16px;
+			isolation: isolate;
+			margin-top:5px;
+			border:none;
 		}
+
+		.tab_selected > a:hover {color:#fff;}
 
 		.tab_selected > a > i{
 			color:#5cb85c;
 		}
 		a:hover, a:focus{
 			text-decoration: none;
+
+
 		}
 
 		.noSearch{
@@ -130,8 +169,8 @@
 <div class="msg_cont_container">
 	<div id="mail_list" class="divList unselectable" style="width: 100%; height: 100%; display: block;position: absolute;top: 0;left: 0;bottom: 0;">
 		<div style="height: 98%;">
-			<div id="busiCntArea" style="height: 30px; line-height: 30px; padding-left: 5px;padding-right: 15px;">
-				<span class="tab_selected noSearch"><a href="javascript:;" class="busiCounts active" data-busicd=""><i class="fa fa-angle-right" aria-hidden="true"></i> <s:message code="common.msg.all"/></a></span>
+			<div id="busiCntArea" style=" padding-left: 5px;padding-right: 15px; margin-left:12px; height:36px;">
+				<span class="tab_selected noSearch"><a href="javascript:;" class="busiCounts active" data-busicd=""><!--<i class="fa fa-angle-right" aria-hidden="true"></i> --><s:message code="common.msg.all"/></a></span>
 			</div>
 			<div id="messageNewGrid" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px;min-height:200px;height:calc(100% - 60px);"></div>
 			<input type="hidden" id="searchTime" />
@@ -373,9 +412,9 @@
 	function setServiceGroupCntInfo(data, total){
 		busiScrollTabs.clearTabs();
 		busiScrollTabs.refreshState();
-		busiScrollTabs.addTab('<span class="tab_selected"><a href="javascript:;" class="busiCounts active" data-svc1=""><i class="fa fa-angle-right" aria-hidden="true"></i> <s:message code="common.msg.all"/><span class="busiCnt">('+total.comma()+')</span></a></span>');
+		busiScrollTabs.addTab('<span class="tab_selected"><a href="javascript:;" class="busiCounts active" data-svc1=""> <s:message code="common.msg.all"/><span class="busiCnt">('+total.comma()+')</span></a></span>');
 		for(var i=0; i<data.length; i++){
-			busiScrollTabs.addTab('<span><a href="javascript:;" class="busiCounts" data-svc1="'+data[i].name+'"><i class="fa fa-angle-right" aria-hidden="true"></i> '+parent.getSvc1Nm(data[i].name)+'<span class="busiCnt">('+data[i].count.comma()+')</span></a></span>');
+			busiScrollTabs.addTab('<span><a href="javascript:;" class="busiCounts" data-svc1="'+data[i].name+'"><!--<i class="fa fa-angle-right" aria-hidden="true"></i>--> '+parent.getSvc1Nm(data[i].name)+'<span class="busiCnt">('+data[i].count.comma()+')</span></a></span>');
 		}
 	}
 
