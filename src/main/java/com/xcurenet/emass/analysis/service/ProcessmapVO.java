@@ -1,19 +1,14 @@
 package com.xcurenet.emass.analysis.service;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.config.Config;
 import com.xcurenet.emass.message.service.SolrEdcVO;
-
 import lombok.Data;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+
+import java.io.Serializable;
+import java.util.*;
 
 public @Data class ProcessmapVO implements Serializable {
 
@@ -99,7 +94,7 @@ public @Data class ProcessmapVO implements Serializable {
 			if (model.getSvc().startsWith("Q")) {
 				svcNm = Config.getServiceLv2Nm(model.getSvc());
 			} else {
-				svcNm = model.getSvcLv1Nm();
+				svcNm =  model.getSvc();
 			}
 			if (!typeList.contains(svcNm)) {
 				typeList.add(svcNm);

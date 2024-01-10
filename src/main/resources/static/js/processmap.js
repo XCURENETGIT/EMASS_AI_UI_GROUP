@@ -19,9 +19,10 @@ var yScale = null;
     	var jData = eval("("+JSON.stringify(data)+")");
         processmap_graph.data = eval("("+jData.links+")");
         processmap_config = eval("("+jData.config+")");
-        
+
         var dataSize = Object.keys(processmap_graph.data);
-        
+
+
         drawGraph(id);
         resize(dataSize);
         if(Object.keys(processmap_graph.data) > 100) {

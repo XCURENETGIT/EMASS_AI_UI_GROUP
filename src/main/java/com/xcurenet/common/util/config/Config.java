@@ -21,7 +21,6 @@ import com.xcurenet.user.service.UserService;
 import lombok.Data;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
-import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -154,6 +153,7 @@ public class Config {
 	public static String DBMS_NAME = "mysql";
 
 	public static Map<String, String> elsFields = new HashMap<>();
+
 
 	public static ServiceGroupVO getServiceGroup(final String groupCd) {
 		for (ServiceGroupVO service : serviceGroups) {

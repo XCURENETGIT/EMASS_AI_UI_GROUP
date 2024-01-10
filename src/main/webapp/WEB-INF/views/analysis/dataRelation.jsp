@@ -32,6 +32,7 @@
 	};
 %>
 <style type="text/css">
+.tab-content {padding:10px; background-color: #fff !important;}
 .btn-popover {
 	position: absolute;
 	top: 0;
@@ -84,6 +85,8 @@ var confColor = [<%=colorCode%>];
 var confGroup = [<%=groupName%>];
 $(document).ready(function(){
 
+	dateDefault();
+
 	$('#dateYesterday').click(function(){
 		$('#startDate').val(addDay(-1));
 		$('#endDate').val(addDay(-1));
@@ -124,8 +127,7 @@ $(document).ready(function(){
 		$("#frm").each(function(){
 			this.reset();
 		});
-		$('#startDate').val(addDay(0));
-		$('#endDate').val(addDay(0));
+		dateDefault();
 	});
 
 	$("#startDate, #endDate, #title, #sendUser, #receiveUser, #keyword, #fileSize").keyup(function(event){
@@ -138,15 +140,28 @@ $(document).ready(function(){
 	
 	initGrid(tabGrid, messageGridColumn);
 
+	$('#chartPopover [data-toggle="popover"]').popover({
+		html: true,
+		content: function() {
+			return $('#popover-content-chart').html();
+		}
+	});
+
 	$('#chartFull').click(function(){
 		chartFullView();
 	});
+
 });
 
 function eventEnterSearch(event) {
 	if(event.keyCode == 13){
 		$("#btnSearch").click();
 	}
+}
+
+function dateDefault() {
+	$('#startDate').val(addDay(0));
+	$('#endDate').val(addDay(0));
 }
 
 </script>
@@ -210,17 +225,35 @@ function eventEnterSearch(event) {
 				<div class="chartArea02">
 					<!-- 리스트-->
 					<div>
-						<h3>List</h3>
-						<div class="inner_personaldata p20" style="height: 542px; overflow-y: scroll;">
-							<div id="basicStatListGrid" class="slickGrid gridArea"></div>
+						<h3><i class="fa fa-file-text-o fa-fw"></i> List</h3>
+						<div class="inner_personaldata p20" style="height: 542px;"style="overflow-y: scroll;" >
+							<div id="basicStatListGrid" class="slickGrid gridArea" style="min-height: 280px;max-height: 450px;"></div>
 						</div>
 					</div>
 					<!-- //리스트-->
 					<!-- 관계도 -->
-					<div id="relation_div">
-						<h3><s:message code="analysis.relation.ui.relationships"/></h3>
-						<div class="inner_personaldata p20">
-							<div id="graph-container" style="height: 500px; overflow:hidden"></div>
+					<div>
+						<h3> <i class="fa fa-share-alt fa-fw"></i> <s:message code="analysis.relation.ui.relationships"/></h3>
+						<span id="chartPopover" class="btn-popover">
+							<a tabindex="0" class="btn btn-xs" role="button" data-toggle="popover" data-trigger="focus" data-container="#chartPopover" data-html="true" data-placement="bottom" ><span class="glyphicon glyphicon-question-sign" style="font-size:20px;"></span></a>
+						</span>
+						<div id="popover-content-chart" class="hide">
+							<div style="padding-left:10px;">
+								<ul style="padding-left:15px;">
+									<li style="margin-bottom:7px;"><s:message code="analysis.relation.ui.msg1"/></li>
+								</ul>
+							</div>
+						</div>
+						<span id="chartFull" class="btn-full" style="display:none">
+							<a tabindex="0" class="btn btn-xs" role="button" data-trigger="focus" data-container="#chartFull" title="<s:message code="analysis.relation.ui.enlarge"/>"><span class="glyphicon glyphicon glyphicon-fullscreen" style="font-size:20px;"></span></a>
+						</span>
+
+						<div id="relation_div">
+							<div class="inner_personaldata p20">
+								<div id="graph-container" style="height: 500px; overflow:hidden">
+									<div id="graph"></div>
+								</div>
+							</div>
 						</div>
 					</div>
 					<!-- //관계도 -->
@@ -234,15 +267,15 @@ function eventEnterSearch(event) {
 				</div>
 				<!-- //탭 -->
 				<div>
-					<div class="tab-content" style="height:100%;" id="resultData">
+					<div class="tab-content" style="height:100%"; id="resultData">
 						<div role="tabpanel" class="tab-pane fade active in" id="result0">
-							<div id="timeline" style="min-height:400px;">
+							<div id="timeline" style="min-height:340px;">
 								<div style="padding: 5px;"><s:message code="analysis.relation.ui.notimeline"/></div>
 							</div>
 						</div>
 						<div role="tabpanel" class="tab-pane fade in" id="result1">
 							<div id="selectList">
-								<div style="min-height:400px;height: 400px;">
+								<div style="min-height:340px;height: 340px;">
 									<div id="selectGrid" class="slickGrid gridArea" style="height: 100%;"></div>
 								</div>
 							</div>
@@ -488,7 +521,7 @@ function eventEnterSearch(event) {
 				url : 'getAdminUserGroupList.xcn',
 				success : function(data, total) {
 					 var result = '';
-					result+='<option value=""><s:message code="analysis.ui.all"/></option>';
+					result+='<option value=""><s:message code="condition.select.interest"/></option>';
 					for(var i=0 ; i<data.length; i++){
 						result+='<option value="' + data[i].groupSeq + '">' +  data[i].groupName + '</option>';
 					}

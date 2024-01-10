@@ -87,7 +87,7 @@ public class XcnFacetsVO {
 		JSONObject json = new JSONObject();
 		json.put("val",headerKey);
 		json.put("count",(int) docCount);
-		json.put("key",bucketArgments.getName());
+		json.put("key",null);
 		json.put("size",((long) bucketArgments.getValue()));
 		return json;
 	}

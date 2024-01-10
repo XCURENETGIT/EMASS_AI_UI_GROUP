@@ -29,6 +29,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 	@Autowired
 	private SolrEdcService solrEdcService;
 
+
 	@Override
 	public AnalysisRelationListVO dataRelationList(SearchVO searchVO) throws IOException, SolrServerException {
 
@@ -52,8 +53,8 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 		sq.setParam("group.field",field);
 		/* sub aggregations field */
 		sq.setParam("facet.field","size");
-		sq.setParam("facet.offset","0");
-		sq.setParam("facet.limit","100");
+		sq.setParam("facet.offset", String.valueOf(searchVO.getOffset()));
+		sq.setParam("facet.limit", String.valueOf(searchVO.getLimit()));
 		sq.setFacetMinCount(1);
 		sq.setParam("facet.sum",true);
 
@@ -76,14 +77,13 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 				.add(new String[] {"sender_str", "sname", "recvs", "recvs_name", "cc", "cname", "bcc"}, searchVO.getObservePersonnel())
 				.add(new String[] {"sender_str", "sname", "recvs", "recvs_name", "cc", "cname", "bcc"}, searchVO.getKeyPersonnel())
 				.add("kwds", searchVO.getKeyword());
-
 		switch (searchVO.getUnit()) {
 			case "file":
 				query.addRange("attachsize", (Common.isEmpty(searchVO.getFileSize()) ? 0 : searchVO.getFileSize() * 1024 * 1024), "*");
 				query.add("attachname_str", searchVO.getListData());
 				break;
 			case "messenger":
-				query.add(new String[] {"sender_str", "sname", "recvs", "recvs_name", "cc", "cname", "bcc"}, searchVO.getListData());
+				query.add(new String[] {"sender_str", "sname", "recvs", "recvs_name", "cc", "cname", "bcc"},searchVO.getListData());
 				query.add("svc1", "Q");
 				break;
 			case "mailid":
@@ -733,4 +733,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 		param.put("end", end);
 		return selectOne("com.xcurenet.sqlmap.mappers.mysql.analysis.plusHour", param);
 	}
+
+
+
 }
