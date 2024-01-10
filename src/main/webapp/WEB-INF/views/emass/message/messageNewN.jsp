@@ -58,10 +58,12 @@
 
     <style type="text/css">
         #wrap {overflow:hidden;}
+
         .scroll_tabs_container div.scroll_tab_inner {height:32px !important; padding:0;}
         .contentList{
             height:100%;border: 0px;width: 100%;overflow: hidden;border:0px;position: absolute;
         }
+
         .contentBody{
             height:100%;border: 0px;width: 100%;border:0px;position: absolute;
         }
@@ -90,11 +92,14 @@
         }
 
         .areaBtn {
-            opacity:0.5;cursor:pointer;
+            opacity:0.8;cursor:pointer;
         }
+
 
         .areaSelected{
             opacity:1.5 !important;
+            border:1px solid #1C64D3;
+            background-color: #F2F6FF;
         }
 
         .selectedCnt{
@@ -171,7 +176,6 @@
             height:500px;
         }
 
-
         #searchKeywordGrid_statusbar {
             background-color: #fff;
         }
@@ -181,11 +185,11 @@
             margin-right: 5px;
         }
         .searchKeywordTab{
-            height: 25px;
-            background-color: #253f56;
+            height: 40px;
+            background-color: #242330;
             cursor: move;
             color:#fff;
-            line-height: 25px;
+            line-height: 40px;
             padding-left: 10px;
         }
         .searchKeywordCloseBtn{
@@ -220,7 +224,7 @@
         .filterHeaderDiv{
             position: absolute;
             top: 120px;
-            background-color: #f4f4f4;
+            background-color: #fff;
             z-index: 999;
             left: 305px;
             border: 1px solid #ccc;
@@ -229,18 +233,19 @@
             height:500px;
         }
         .filterHeaderTab{
-            height: 25px;
-            background-color: #253f56;
+            height: 40px;
+            background-color: #242330;
             cursor: move;
             color:#fff;
-            line-height: 25px;
+            line-height: 40px;
             padding-left: 10px;
+            font-family: Pretendard;
         }
         .filterCloseBtn{
             float: right;
             padding-right: 10px;
             padding-left: 10px;
-            font-size: 15px;
+            font-size: 14px;
             cursor:pointer;
         }
         .filterCloseBtn:hover{
@@ -1065,7 +1070,7 @@
                 if(!$('#msg_condition_menu').hasClass('condition_menu_unselected')){
                     $('#periodSetupPop').show();
                     $('#periodSetupDatePop').show();
-                    $('#periodSetupMenu').css('height', '230px');
+                    $('#periodSetupMenu').css('height', '260px');
                 }
                 else if(!$('#msg_condition_saver').hasClass('condition_menu_unselected')){
                     if($('#solrQueryText').val()==''){
@@ -2405,9 +2410,12 @@
                 <%-- 조건 보관함 --%>
                 <div id="filterHeaderDiv" class="filterHeaderDiv">
                     <div class="filterHeaderTab"><s:message code="common.msg.conditionBox"/>
-                        <div class="rightGroup">
-                            <span class="searchBoxSpan"><label><input type="checkbox" id="searchBox"/><span> <s:message code="common.msg.searchNow"/></span></label></span>
-                            <span class="filterCloseBtn">&times;</span></div>
+                        <div class="filterDateCloseBtn" style="position:absolute;top:10px; right:16px;">
+                            <span class="glyphicon glyphicon-remove" style="cursor:pointer;"></span>
+                        </div>
+                    </div>
+                    <div class="rightGroup" style="margin-right:14px; margin-top:4px;">
+                        <span class="searchBoxSpan"><label><input type="checkbox" id="searchBox"/><span> <s:message code="common.msg.searchNow"/></span></label></span>
                     </div>
                     <div class="filterSearch" style="padding: 5px 5px 5px 10px;">
                         <input class="condition_input_text" type="text" name="serch" placeholder="<s:message code="filterInfo.search.filter"/>" id="filterSearchStr" style="width:calc(100% - 60px);">
@@ -2418,8 +2426,8 @@
                     </div>
                 </div>
                 <tiles:insertAttribute name="filterNew" ignore="true"/>
-                <div class="content mainBodyArea" id="mainBodyArea" style="height:100%;">
-                    <div id="content_left" class="ui-layout-west" style="overflow-y:hidden">
+                <div class="content mainBodyArea" id="mainBodyArea" style="height:100%; ">
+                    <div id="content_left" class="ui-layout-west" style="overflow-y:hidden; z-index:9999;">
                         <div class="section_menu p12">
                             <div style=" display:flex;">
                                 <div id="msg_condition_menu" class="filter_menu" style="width: 33.3%;"><div class="filter_icon"><span class="filter_icon_text"><s:message code="condition.select.search1"/></span></div></div>
@@ -2986,7 +2994,7 @@
                             </div>
                         </div>
                     </div>
-                    <div id="section_cen" style="" class="ui-layout-center">
+                    <div id="section_cen" style=" width:100px; float:right; z-index:999;" class="ui-layout-center">
                         <%if( consent && Common.isEquals(firstAdminYn, "N") && Common.isNotEquals(adminType, "C")){ %>
                         <div style="position: absolute;z-index: 1;padding-top: 1px;padding-left: 5px;">
                             <button class="search_btn" style="width:150px;" accesskey="O" id="consentBtn" onclick="searchConsentNo();"><span class="glyphicon glyphicon-tags"></span>&nbsp;<s:message code="consent.select.consent"/></button>
@@ -2999,9 +3007,10 @@
                             <input type="hidden" readonly="readonly" id="consentShortName">
                         </div>
                         <%} %>
-                        <div class="viewSetup" style="position: absolute;top:40px;right:10px;z-index: 9;">
+                        <div class="viewSetup" style="position: absolute;top:7px;right:10px;z-index: 9;">
+
                             <div style="display: inline-block; padding-left:10px;vertical-align: bottom;">
-                                <a href="javascript:;" style="padding-right:10px; color:#383838; cursor: pointer; font-size: 12px;float: right;"data-toggle="dropdown" id="exportMsg"><s:message code="common.msg.export"/></a>
+                                <a href="javascript:;" class="btn05" style="padding-right:10px; color:#383838; cursor: pointer; font-size: 12px;float: right; margin-right:4px;"data-toggle="dropdown" id="exportMsg"><s:message code="common.msg.export"/><span class="caret"></span></a>
                                 <ul class="dropdown-menu dropdown-menu-left" role="menu" style="min-width:100px;font-size:13px;">
                                     <li style="display:none;"><a href="javascript:void(0);" id="body_link_btn" class="body_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-text-o" style="font-size:16px"></span>&nbsp;<s:message code="condition.body"/></a></li>
                                     <li style="display:none;"><a href="javascript:void(0);" id="attach_link_btn" class="attach_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-archive-o" style="font-size:16px"></span>&nbsp;<s:message code="consent.attach"/></a></li>
@@ -3030,8 +3039,8 @@
                                     <li class="dropdown-divider"></li>
                                     <li><a href="javascript:void(0);" class="downList" data-target="tabGrid" ><span class="glyphicon glyphicon-th-list"></span>&nbsp;<s:message code="common.msg.download"/> <s:message code="mail.view.list"/></a></li>
                                 </ul>
-                                <a href="javascript:;" style="padding-right:10px; color:#383838; cursor: pointer; font-size: 12px;float: right;" id="saveMsgData"><s:message code="filterInfo.setMsgFolder1"/></a>
-                                <a href="javascript:;" style="padding-right:10px; color:#383838; cursor: pointer; font-size: 12px;float: right; display: none;" id="feedbackBtn"><s:message code="condition.feedback"/> <s:message code="common.msg.setting"/></a>
+                                <a href="javascript:;" style="padding-right:10px; color:#383838; cursor: pointer; font-size: 12px;float: right;margin-right:4px;" id="saveMsgData" class="btn05"><s:message code="filterInfo.setMsgFolder1"/></a>
+                                <a href="javascript:;" style="padding-right:10px; color:#383838; cursor: pointer; font-size: 12px;float: right;margin-right:4px; display: none;" id="feedbackBtn" class="btn05"><s:message code="condition.feedback"/> <s:message code="common.msg.setting"/><span class="caret"></span></a>
                                 <ul id="feedbackSetting" style="display: none; z-index: 991; padding: 5px 0px;">
                                     <li><a href="javascript:void(0);" onclick="setFeedback(0);" style="padding-left: 20px;"><span class="feedbackCorrect" style="display: inline-block; position: relative; top: 0px;"></span>&nbsp;<s:message code="condition.info.feedback0"/></a></li>
                                     <li><a href="javascript:void(0);" onclick="setFeedback(1);" style="padding-left: 20px;"><span class="feedbackInCorrect" style="display: inline-block; position: relative; top: 0px;"></span>&nbsp;<s:message code="condition.info.class1"/></a></li>
@@ -3042,18 +3051,21 @@
                                 </ul>
                                 <div style="position: fixed; top: 0px; bottom: 0px; left: 0px; right: 0px; z-index: 990; display: none; width: 100%; height: 100%;" id="overlay"></div>
                             </div>
-                            <a href="javascript:;" style="color:#383838;font-size: 12px;" class="dropdown-toggle" data-toggle="dropdown" id="config_toggle">
+                            <a href="javascript:;" class="btn05" style="color:#383838;font-size: 12px; margin-left:-4px;" class="dropdown-toggle" data-toggle="dropdown" id="config_toggle">
                                 <s:message code="condition.view.setup"/><span class="caret"></span>
                             </a>
+                            <div style="display:inline-block;">
+                                <button id="none_btn" style="font-size: 11px; font-weight: initial; line-height: 20px; padding-right: 2px;" class="areaBtn btn05"><img src="<c:url value="/img/message/message_none.png"/>"  style="padding-right: 4px;"></button>
+                                <button id="bottom_btn" style="font-size: 11px; font-weight: initial; line-height: 20px; padding-right: 2px;" class="areaBtn btn05"><img src="<c:url value="/img/message/message_bottom.png"/>" style="padding-right: 4px;"></button>
+                                <button id="right_btn" style="font-size: 11px; font-weight: initial; line-height: 20px; padding-right: 2px;" class="areaBtn btn05"><img src="<c:url value="/img/message/message_right.png"/>" style="padding-right: 4px;"></button>
+                            </div>
                             <div class="dropdown-menu dropdown-menu-right"  style="min-width:180px;font-size:12px; height: 380px; padding:0;" id="additionalBtn">
                                 <div class="listRow" style="padding: 0;">
                                     <div class="listRowLeft" style="text-align:center; font-weight: bold; background-color: #eaeaea; width: 120px; height: 34px;"><s:message code="condition.view.stype"/></div>
                                     <div class="listRowLeft" style="height: 20px;line-height: 15px;position: relative;top: 7px;padding: 0 3px;margin-left: 5px;">
-                                        <a id="none_btn" style="font-size: 11px; font-weight: initial; line-height: 20px; padding-right: 5px;" class="areaBtn"><img src="<c:url value="/img/message/message_none.jpg"/>"  style="padding-right: 4px;padding-bottom: 2px"><s:message code="condition.view.type1"/> </a>
-                                        <a id="bottom_btn" style="font-size: 11px; font-weight: initial; line-height: 20px; padding-right: 5px;" class="areaBtn"><img src="<c:url value="/img/message/message_bottom.jpg"/>" style="padding-right: 4px;padding-bottom: 2px"><s:message code="condition.view.type2"/></a>
-                                        <a id="right_btn" style="font-size: 11px; font-weight: initial; line-height: 20px; padding-right: 5px;" class="areaBtn"><img src="<c:url value="/img/message/message_right.jpg"/>" style="padding-right: 4px;padding-bottom: 2px"><s:message code="condition.view.type3"/></a>
-
-
+                                        <a id="none_btn" style="font-size: 11px; font-weight: initial; line-height: 20px; padding-right: 5px;" class="areaBtn"><img src="<c:url value="/img/message/message_none.png"/>"  style="padding-right: 4px;padding-bottom: 2px"><s:message code="condition.view.type1"/> </a>
+                                        <a id="bottom_btn" style="font-size: 11px; font-weight: initial; line-height: 20px; padding-right: 5px;" class="areaBtn"><img src="<c:url value="/img/message/message_bottom.png"/>" style="padding-right: 4px;padding-bottom: 2px"><s:message code="condition.view.type2"/></a>
+                                        <a id="right_btn" style="font-size: 11px; font-weight: initial; line-height: 20px; padding-right: 5px;" class="areaBtn"><img src="<c:url value="/img/message/message_right.png"/>" style="padding-right: 4px;padding-bottom: 2px"><s:message code="condition.view.type3"/></a>
                                     </div>
                                     <!-- <button class ="msg_button" id="config_colse" style="height: 22px; line-height: 19px; float: right; margin-top: 5px;margin-right: 10px;">닫기</button> -->
                                 </div>
@@ -3118,7 +3130,9 @@
                                     </div>
                                 </div>
                             </div>
+
                         </div>
+
                         <div id="content" class="ui-layout-north" style="position: absolute;left: 0px;right: 0px;bottom: 0px;top: 0px;font-family: 돋움,Dotum;">
                             <div style="position: relative;zoom: 1;z-index: 20;overflow: hidden;">
                                 <div class="mail_header">

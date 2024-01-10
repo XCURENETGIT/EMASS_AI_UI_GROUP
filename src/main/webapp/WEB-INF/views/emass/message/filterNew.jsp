@@ -444,12 +444,12 @@
 		<button type="button" class="btn btn-sm btn-primary" accesskey="T" id="dateSearch" style="font-size:12px;"><i class="glyphicon glyphicon-search"></i>&nbsp;<s:message code="filterInfo.period.apply"/></button>
 	</div>
 </div>
-<div id="periodSetupMenu">
-	<div style="height:30px;background-color:#253f56;color:#fff;padding-left:10px;line-height:30px;font-weight: bold;cursor:move;">
+<div id="periodSetupMenu" style="height:270px !important;">
+	<div style="height:40px;background-color:#242330;color:#fff;padding-left:10px;line-height:40px;font-weight: bold;cursor:move;position: relative;">
 		<div style="float:left;width:205px;">
-			<i class="glyphicon glyphicon-calendar"></i>&nbsp;<s:message code="filterInfo.newTitle"/>
+			<!--<i class="glyphicon glyphicon-calendar"></i>&nbsp;--><s:message code="filterInfo.newTitle"/>
 		</div>
-		<div class="filterDateCloseBtn" style="float:right;padding-right:8px;">
+		<div class="filterDateCloseBtn" style="position:absolute;top:10px; right:16px;">
 			<span class="glyphicon glyphicon-remove" style="cursor:pointer;" id="periodSetupMenuCloseBtn"></span>
 		</div>
 	</div>
@@ -496,7 +496,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="filterDateBtnPopArea" style="text-align: center;">
+	<div class="filterDateBtnPopArea" style="text-align: center;padding:10px 10px 0px 10px">
 		<button type="button" class="btn btn-sm btn-primary" accesskey="T" id="saveFilterSetup" style="font-size:12px;"><i class="glyphicon glyphicon-search"></i>&nbsp;<s:message code="condition.save"/></button>
 	</div>
 </div>

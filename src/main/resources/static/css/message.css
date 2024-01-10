@@ -9,7 +9,7 @@
 }
 .msg_cont_container {
 	position: absolute;
-	top: 0px;
+	top: -1px;
 	left: 0px;
 	right: 0px;
 	bottom:0px;
@@ -346,8 +346,8 @@ input[type="text"] {
 }
 
 .mail_header{
-	position: relative;height: 50px;
-	border-bottom: 1px solid #CBCBCB;background-color: #FBFBFB;
+	position: relative;height: 45px;
+	border-bottom: 1px solid #CBCBCB;
 	padding-top:12px;
 }
 
@@ -362,14 +362,16 @@ input[type="text"] {
 }
 
 .tabWrap .listTab_div li {
+
 	margin-left: 3px;
 	white-space: nowrap;
 	cursor: pointer;
 	/*padding: 1px 10px 1px 10px !important;*/
 
 	position: relative;
-	background-color: #ddd;
+	background-color: #ededed;
 	color:#111;
+	z-index:9;
 }
 
 .tabWrap .listTab_div li.select {
