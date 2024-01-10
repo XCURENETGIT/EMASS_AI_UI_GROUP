@@ -1,5 +1,6 @@
 package com.xcurenet.emass.analysis.service.impl;
 
+import com.sun.tools.jconsole.JConsoleContext;
 import com.xcurenet.common.dao.XcnAbstractDAO;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.SolrQueryString;
@@ -147,6 +148,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 		return solrVo;
 	}
 
+
 	@Override
 	public List<UsageChartVO> selectUsageChart(SearchVO searchVO) throws Exception {
 		searchVO.setStartDate(searchVO.getStartDate().replaceAll("-", "") + "00");
@@ -182,21 +184,28 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 		return usageChartList;
 	}
 
+
 	@Override
 	public AnalysisRelationListVO selectUsageList(SearchVO searchVO) throws Exception {
 
 		log.info(searchVO.toString());
 		SolrQueryString query = new SolrQueryString();
 		SolrQuery sq = new SolrQuery();
-		String facetQuery = "";
 		String date = searchVO.getDate().replaceAll("-", "").replaceAll(" ", "").replaceAll("시", "").replaceAll("Hour", "");
 
+		/* 문서 결과 표시 X */
+		sq.setStart(0);
+		sq.setRows(1);
+		sq.setSort("size",ORDER.desc);
+
+		//시간으로 분류
 		switch (searchVO.getUnit()) {
 			case "t":
-				query.add("ctime_yyyymmdd", date.substring(0, 8), false).add("ctime_hh", date.substring(8, 10));
+				query.add("ctime_yyyymmdd", date.substring(0, 8));
+				query.add("ctime_hh", date.substring(8, 10));
 				break;
 			case "d":
-				query.add("ctime_yyyymmdd", date, false);
+				query.add("ctime_yyyymmdd", date);
 				break;
 			case "w":
 				Calendar calendar = Calendar.getInstance();
@@ -213,60 +222,77 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 				break;
 		}
 
-		String resultStr = "{result:{type : terms, offset:";
-		String limitStr = ", limit:";
+		sq.setParam("group", true);
+		sq.setParam("group.facet", true);
+		sq.setParam("facet", true);
+		sq.setParam("facet.sum", true);
+		sq.setParam("facet.offset","0");
+		sq.setParam("facet.limit","100");
+		sq.setFacetMinCount(1);
+
+
 		switch (searchVO.getItem()) {
 			case "fileSize":
 				query.add("attached", "Y");
-				facetQuery = resultStr + searchVO.getOffset() + limitStr + searchVO.getLimit() + ", field : attachname_str,sort:\"size desc\", facet:{size : \"sum(size)\"}} }";
+				sq.setParam("group.field", "attachname_str");
+				sq.setParam("facet.field", "attachsize");
+				sq.setFacetSort("attachcnt");
+				sq.setFields("attachname_str");
 				break;
+				//웹 메일 수
 			case "outMail":
 				query.add("svc", "W*", true);
-				facetQuery = resultStr + searchVO.getOffset() + limitStr + searchVO.getLimit() + ", field : sender_str,sort:\"size desc\", facet:{size : \"sum(size)\"}} }";
+				sq.setParam("group.field", "sender_str");
+				sq.setParam("facet.field", "size");
+				sq.setFacetSort("size");
+				sq.setFields("sender_str");
 				break;
+				//메일수
 			case "inMail":
 				query.and().beforeParen().add("svc", "M*", false).or().add("svc", "EMM*", false).afterParen();
-				facetQuery = resultStr + searchVO.getOffset() + limitStr + searchVO.getLimit() + ", field : sender_str,sort:\"size desc\", facet:{size : \"sum(size)\"}} }";
+				sq.setParam("group.field", "sender_str");
+				sq.setParam("facet.field", "size");
+				sq.setFacetSort("size");
+				sq.setFields("sender_str");
 				break;
 			case "ftp":
-				query.add("svc", "FFT*", true);
-				facetQuery = resultStr + searchVO.getOffset() + limitStr + searchVO.getLimit() + ", field : srcip,sort:\"size desc\", facet:{size : \"sum(size)\"}} }";
+				query.add("svc", "F*", true);
+				sq.setParam("group.field", "srcip");
+				sq.setParam("facet.field", "size");
+				sq.setFacetSort("size");
+				sq.setFields("srcip");
 				break;
 			case "totalSize":
-				facetQuery = resultStr + searchVO.getOffset() + limitStr + searchVO.getLimit() + ", field : srcip,sort:\"size desc\", facet:{size : \"sum(size)\"}} }";
+				sq.setParam("group.field", "srcip");
+				sq.setParam("facet.field", "size");
+				sq.setFacetSort("size");
+				sq.setFields("srcip");
 				break;
 		}
-		sq.setParam("json.facet", facetQuery);
-
-		log.info("json.facet={}", facetQuery);
-		sq.setQuery(query.toString());
-		sq.setRows(searchVO.getLimit());
+		sq.setQuery(String.valueOf(query));
 
 		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, searchVO.getAdminId());
 		AnalysisRelationListVO list = new AnalysisRelationListVO(edc);
-		//		log.info("{}", list);
 		return list;
 	}
 
 	@Override
 	public JSONObject selectDetailList(SearchVO searchVO, String chartName) throws Exception {
-
-		log.info(searchVO.toString());
 		SolrQueryString query = new SolrQueryString();
 		SolrQuery sq = new SolrQuery();
-		//		SolrQuery sqList = new SolrQuery();
-		String facetQuery = "";
-		String field = "";
+
 		String date = searchVO.getDate();
+
+		sq.setRows(0);
+		sq.setSort("size",ORDER.desc);
 
 		switch (searchVO.getUnit()) {
 			case "t":
 				query.add("ctime_yyyymmdd", date.substring(0, 8), false).add("ctime_hh", date.substring(8, 10));
-				field = "ctime_hh";
+
 				break;
 			case "d":
 				query.add("ctime_yyyymmdd", date, false);
-				field = "ctime_yyyymmdd";
 				break;
 			case "w":
 				Calendar calendar = Calendar.getInstance();
@@ -277,54 +303,49 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 				UsageChart usageChart = new UsageChart();
 				String startDate = usageChart.firstDateOfWeek(d);
 				query.addRange("ctime_yyyymmdd", startDate, Common.plusDays(startDate, 6), false);
-				field = "ctime_yyyymmdd";
+
 				break;
 			case "m":
 				query.add("ctime_yyyymm", date, false);
-				field = "ctime_yyyymm";
+
 				break;
 		}
 
-		facetQuery = "{result:{type : terms, offset:" + searchVO.getOffset() + ", limit:" + searchVO.getLimit() + ", field : " + field + ",sort:\"size desc\", facet:{size : \"sum(size)\"}} }";
 
 		switch (searchVO.getItem()) {
 			case "fileSize":
 				query.add("attached", "Y");
 				query.add("attachname_str", searchVO.getKeyword());
+
 				break;
 			case "outMail":
 				query.and().beforeParen().add("svc", "PM*", false).or().add("svc", "W*", false).afterParen();
 				query.add("sender_str", searchVO.getKeyword());
+
 				break;
 			case "inMail":
 				query.and().beforeParen().add("svc", "PM*", false).or().add("svc", "M*", false).or().add("svc", "EMM*", false).afterParen();
 				query.add("sender_str", searchVO.getKeyword());
+
 				break;
 			case "ftp":
-				query.add("svc", "FFT*", true);
+				query.add("svc", "F*", true);
 				query.add("srcip", searchVO.getKeyword());
+
 				break;
 			case "totalSize":
 				query.add("srcip", searchVO.getKeyword());
 				break;
 		}
 
-		log.info(query.toString());
 		sq.setQuery(query.toString());
-		sq.setStart(searchVO.getOffset());
-		sq.setRows(searchVO.getLimit());
-		sq.setParam("json.facet", facetQuery);
-		//		sq.setFields("msgid", "srcip", "sport", "dstip", "dport", "svc", "svcNm", "ctime", "size", "subject", "sender", "sname", "recvs", "recvs_name", "attachname", "attachtype", "host");
 
-		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, searchVO.getAdminId(), "", null);
-		UsageColumnChartVO list = new UsageColumnChartVO(edc, searchVO.getItem(), searchVO.getUnit());
-		list.setName(chartName);
-		log.info("json.facet={}", facetQuery);
-
+		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, searchVO.getAdminId());
 		JSONObject json = new JSONObject();
 		json.put("list", edc.getEmass());
-		json.put("chart", list);
+		json.put("chart", null);
 		json.put("total", edc.getNumFound());
+
 
 		return json;
 	}

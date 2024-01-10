@@ -535,6 +535,9 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 
 		SolrQuery sq = new SolrQuery();
 
+		sq.setStart(0);
+		sq.setRows(1);
+
 		sq.setParam("group", true);
 		sq.setParam("group.facet", true);
 		sq.setParam("group.ngroups", true);
@@ -544,12 +547,12 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 		sq.setParam("facet.sum", true);
 		sq.setParam("facet.field", "attachsize");
 
-		sq.setParam("facet.limit", "-1");
-		sq.setParam("facet.mincount", "-1");
+		sq.setParam("facet.limit", "100");
+		sq.setParam("facet.mincount", "0");
 		sq.setFacetSort("ctime_yyyymmdd");
 
 		sq.setFacetMinCount(1);
-		sq.setQuery("*:*");
+//		sq.setQuery("*:*");
 		sq.setStart(Common.nvz(0));
 		sq.setRows(Common.nvz(1));
 		sq.setSort("ctime_yyyymmdd", SolrQuery.ORDER.desc);

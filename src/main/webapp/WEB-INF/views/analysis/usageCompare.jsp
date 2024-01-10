@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
+<script type="text/javascript" src="<c:url value="/js/messageGrid.js"/>"></script>
 <style>
 
 .btn-popover {
@@ -32,10 +33,41 @@ var resultTotal = 0;
 var detailTotal = 0;
 var rowKey = "";
 var colKey = "";
+
+Highcharts.setOptions({
+    chart: {
+        type: 'column',
+        marginTop: 15,
+        marginBottom: 60,
+        spacingBottom: 0
+    },
+    global: {useUTC: false},
+    gridLineColor: '#fff',
+    colors: ['#80599F', '#656C7C', '#598AD3', '#D35976', '#DDDDDD', '#bb6ecb', '#439851', '#33a0c4', '#7558cb', '#97b420'],
+    lang: {
+        months: ['<s:message code="common.january"/>', '<s:message code="common.february"/>', '<s:message code="common.march"/>', '<s:message code="common.april"/>', '<s:message code="common.may"/>', '<s:message code="common.june"/>', '<s:message code="common.july"/>', '<s:message code="common.august"/>', '<s:message code="common.september"/>', '<s:message code="common.october"/>', '<s:message code="common.november"/>', '<s:message code="common.december"/>'],
+        shortMonths: ['<s:message code="common.january"/>', '<s:message code="common.february"/>', '<s:message code="common.march"/>', '<s:message code="common.april"/>', '<s:message code="common.may"/>', '<s:message code="common.june"/>', '<s:message code="common.july"/>', '<s:message code="common.august"/>', '<s:message code="common.september"/>', '<s:message code="common.october"/>', '<s:message code="common.november"/>', '<s:message code="common.december"/>'],
+        weekdays: ['<s:message code="common.sunday"/>', '<s:message code="common.monday"/>', '<s:message code="common.tuesday"/>', '<s:message code="common.wednesday"/>', '<s:message code="common.thursday"/>', '<s:message code="common.friday"/>', '<s:message code="common.saturday"/>'],
+        contextButtonTitle: '<s:message code="common.msg.char_type"/>',
+        thousandsSep: ','
+    },
+    xAxis: {
+        dateTimeLabelFormats: {
+            day: '<s:message code="dashboard.display.day" arguments="%b,%d" />'
+        }
+    },
+    yAxis: {
+        gridLineColor: '#333',
+        gridLineWidth: 0.1
+    }
+});
+
+
+
 $(document).ready(function(){
 
     $('#searchBtn').click(function () {
-        getData('Y');
+        getUsageChart();
     });
 
     $('#clearBtn').click(function(){
@@ -49,7 +81,7 @@ $(document).ready(function(){
 		$("select option[value='w']").prop("selected", false); 
 		
 		$('#startDate').val(addDay(-1));
-		$('#endDate').val(addDay(-1));
+		$('#endDate').val(addDay(0));
 	});
 
 	$('#dateToday').click(function(e){
@@ -231,10 +263,13 @@ function eventEnterSearch(event) {
 						</ul>
 					</div>
 				</div>
-				<div class="inner_personaldata p20" style="height: 200px;">
-					<div class="panel-body">
-						<div id="compareChart" style="height: 250px;"><s:message code="analysis.usagecompare.search"/></div>
+				<div class="panel-default">
+					<div class="inner_personaldata" style="height:180px;">
+						<div id="compareChart" style="height: 100%"><s:message code="analysis.usagecompare.search"/></div>
 					</div>
+<%--					<div class="panel-body">--%>
+<%--						<div id="compareChart" style="height: 100%"><s:message code="analysis.usagecompare.search"/></div>--%>
+<%--					</div>--%>
 				</div>
 			</div>
 			<!-- //차트-->
@@ -287,16 +322,6 @@ function eventEnterSearch(event) {
 	</div>
 </div>
 
-
-
-
-
-
-
-
-	<!-- Back to top -->
-	<a href="#0" class="back-to-top cd-top"><span class="[ fa fa-chevron-up ]"></span> <span class="[ ]">Back to the Top</span></a>
-	
 	<script type="text/javascript">
 
 		var unit = "";
@@ -305,7 +330,9 @@ function eventEnterSearch(event) {
 		var seletDate = "";
 
 		var grid1 = new Xgrid('usageListGrid', contextRoot, 26, {status_cnt_id:'#usageCnt'});
+
 		colInit();
+        grid1.loadHeader(false);
 
 		function colInit() {
 			var itemVal = $("#item option:selected").val();
@@ -325,18 +352,21 @@ function eventEnterSearch(event) {
 
 			grid1.colInit();
 			grid1.autoNumber();
-			grid1.colAdd('val', name, 130, 'left', false, 'link' );
-			grid1.colAdd('count', '<s:message code="analysis.relation.ui.collectcount"/>', 100, 'center', false, 'nomal' , function ( row, cell, value, columnDef, dataContext ) {
+			grid1.colAdd('val', name, 150, 'left', false, 'link' );
+			grid1.colAdd('count', '<s:message code="analysis.relation.ui.collectcount"/>', 150, 'center', false, 'nomal' , function ( row, cell, value, columnDef, dataContext ) {
 				if ( value != undefined ) return value.comma();
 				else return '';
 			} );
-			grid1.colAdd('size', '<s:message code="analysis.relation.ui.packetsize"/>', 120, 'right', false, 'nomal', function ( row, cell, value, columnDef, dataContext ) {
+			grid1.colAdd('size', '<s:message code="analysis.relation.ui.packetsize"/>', 250, 'right', false, 'nomal', function ( row, cell, value, columnDef, dataContext ) {
 				if ( value != undefined ) return convertFileSize(value);
 				else return '';
 			} );
 			grid1.loadHeader(false);
 			grid1.initData('<s:message code="common.msg.search.click"/>');
+
 		}
+
+
 		var grid2 = new Xgrid('detailListGrid', contextRoot, 26, {commonId:'selectTotalList', status_cnt_id:'#detailCnt', more_btn:'slick_grid_more_btn'});
 
 		function colInit2(reloadYN) {
@@ -345,7 +375,6 @@ function eventEnterSearch(event) {
 			if(reloadYN != 'Y') {
 				grid2.loadExportMenu('<s:message code="analysis.usagecompare.ui.datacompareanalysis"/>');
 				grid2.loadPageSize();
-				//writeExportMenu('export_menu', 'detailListGrid', '<s:message code="analysis.usagecompare.ui.datacompareanalysis"/> - <s:message code="analysis.freedom.ui.msglist"/>');
 			}
 		}
 
@@ -485,98 +514,92 @@ function eventEnterSearch(event) {
 			});
 		}
 
-		var lineChart = new function () {
+        var lineChart = new function () {
 
-			this.titleName = "";
-			this.title = function (titleName) {
-				this.titleName = titleName;
-			}
-			this.yAxisTtitleName = '<s:message code="analysis.usagecompare.ui.mailcount"/>';
-			this.yAxisTitle = function (yAxisTtitleName) {
-				this.yAxisTtitleName = yAxisTtitleName;
-			}
+            this.titleName = "";
+            this.title = function (titleName) {
+                this.titleName = titleName;
+            }
+            this.yAxisTtitleName = '<s:message code="analysis.usagecompare.ui.mailcount"/>';
+            this.yAxisTitle = function (yAxisTtitleName) {
+                this.yAxisTtitleName = yAxisTtitleName;
+            }
 
-			this.chart = function (id, data, column) {
+            this.chart = function (id, data, column) {
 
-				return $(id).highcharts({
-					chart: {
-						type: column,
-						events: {
-							selection: function (event) {
-								var text,
-									label;
-								if (event.xAxis) {
-									text = 'min: ' + Highcharts.numberFormat(event.xAxis[0].min, 2) + ', max: ' + Highcharts.numberFormat(event.xAxis[0].max, 2);
-								} else {
-									text = 'Selection reset';
-								}
-								label = this.renderer.label(text, 100, 120).attr({
-									fill: Highcharts.getOptions().colors[0],
-									padding: 10,
-									r: 5,
-									zIndex: 8
-								}).css({
-									color: '#FFFFFF'
-								}).add();
+                return $(id).highcharts({
+                    chart: {
+                        type: column,
+                        events: {
+                            selection: function (event) {
+                                var text,
+                                    label;
+                                if (event.xAxis) {
+                                    text = 'min: ' + Highcharts.numberFormat(event.xAxis[0].min, 2) + ', max: ' + Highcharts.numberFormat(event.xAxis[0].max, 2);
+                                } else {
+                                    text = 'Selection reset';
+                                }
+                                label = this.renderer.label(text, 100, 120).attr({
+                                    fill: Highcharts.getOptions().colors[0],
+                                    padding: 10,
+                                    r: 5,
+                                    zIndex: 8
+                                }).css({
+                                    color: '#FFFFFF'
+                                }).add();
 
-								setTimeout(function () {
-									label.fadeOut();
-								}, 1000);
-							}
-						},
-						/* zoomType: 'x' */
-					},
-					exporting: chartAPI.exporting,
-					credits: chartAPI.credits,
-					title: {
-						text: this.titleName
-					},
-					xAxis: {
-						categories: data.categories
-					},
-					yAxis: {
-						title: {
-							text: this.yAxisTtitleName
-						},
-						labels: {
-							formatter: function() {
-								var item = $("#item option:selected").val();
-								if(item == "fileSize" || item == "ftp" || item == "totalSize") {
-									if(this.value < 1001) {
-										return this.value + "byte";
-									} else if(this.value > 1000 && this.value < 1000001) {
-										return Math.round(this.value / 1000) + "Kb";
-									} else if(this.value > 1000000 && this.value < 1000000001) {
-										return Math.round(this.value / 1000 / 1000) + "Mb";
-									} else {
-										return Math.round(this.value / 1000 / 1000 / 1000) + "Gb";
-									}
-								} else {
-									return this.value;
-								}
-							}
-						}
-					},
-					plotOptions: {
-						series: {
-							cursor: 'pointer',
-							events: {
-								click: function (event) {
-									selectUsageList(event.point.category);
-								}
-							}
-						}
-					},
-					legend: {
-						layout: 'vertical',
-						align: 'right',
-						verticalAlign: 'middle',
-						borderWidth: 0
-					},
-					series: data.series
-				});
-			};
-		};
+                                setTimeout(function () {
+                                    label.fadeOut();
+                                }, 1000);
+                            }
+                        },
+                        /* zoomType: 'x' */
+                    },
+                    exporting: chartAPI.exporting,
+                    credits: chartAPI.credits,
+                    title: {
+                        text: ""
+                    },
+                    xAxis: {
+                        categories: data.categories
+                    },
+                    yAxis: {
+                        title: {
+                            text: ""
+                        },
+                        labels: {
+                            formatter: function() {
+                                var item = $("#item option:selected").val();
+                                if(item == "fileSize" || item == "ftp" || item == "totalSize") {
+                                    if(this.value < 1001) {
+                                        return this.value + "byte";
+                                    } else if(this.value > 1000 && this.value < 1000001) {
+                                        return Math.round(this.value / 1000) + "Kb";
+                                    } else if(this.value > 1000000 && this.value < 1000000001) {
+                                        return Math.round(this.value / 1000 / 1000) + "Mb";
+                                    } else {
+                                        return Math.round(this.value / 1000 / 1000 / 1000) + "Gb";
+                                    }
+                                } else {
+                                    return this.value;
+                                }
+                            }
+                        }
+                    },
+                    plotOptions: {
+                        series: {
+                            cursor: 'pointer',
+                            events: {
+                                click: function (event) {
+                                    selectUsageList(event.point.category);
+                                }
+                            }
+                        }
+                    },
+                    series: data.series
+                });
+            };
+        };
 
 		var barChart = new function () {
 
@@ -588,6 +611,7 @@ function eventEnterSearch(event) {
 			this.yAxisTitle = function (yAxisTtitleName) {
 				this.yAxisTtitleName = yAxisTtitleName;
 			}
+
 
 			this.chart = function (id, data, column) {
 
@@ -633,7 +657,7 @@ function eventEnterSearch(event) {
 					yAxis: {
 						min: 0,
 						title: {
-							text: this.yAxisTtitleName
+							text: ""
 						},
 						labels: {
 							formatter: function() {
