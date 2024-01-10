@@ -442,6 +442,8 @@
             getCodeList('busi');
             getCodeList('dept');
 
+            $("#xcn_Search2").hide();
+
             var dateObj = new Date();
 
 

@@ -265,6 +265,9 @@
 		document.getElementById('bar').style.width = '0px';
 		document.getElementById('text').innerHTML = '0%';
 	}
+
+
+
 </script>
 
 <div>
@@ -291,22 +294,19 @@
 				</select>
 			</div>
 			<div>
-			<%--	<div>
-					<select id="busiSelect" name="busiSelect">
-					</select>
+				<div>
+					<select id="busiSelect" class="selectpicker col-xs" data-style="btn-default btn-sm" multiple
+					        data-show-subtext="true" data-actions-box="true"></select>
 				</div>
 				<button class="btn01" id="dept"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
 						code="common.org.choose.dept"/></button>
-				<input type="hidden" id="deptStr" class="selectedTitle">
-				<input type="hidden" id="deptVal">--%>
-				<input type="text"  placeholder="<s:message code="eikon.input.participation"/>" id="senders">
-
-			<%--	<span id="deptSelectedArea" class="codeSelectedBtn">
+				<span id="deptSelectedArea" class="codeSelectedBtn">
 										<button type="button" class="btn num_add bornone"  style="z-index: 2;">0</button>
 									</span>
 				<input type="hidden" id="deptStr" class="selectedTitle">
 				<input type="hidden" id="deptVal">
-				<input type="text" class="w100 mat8"  placeholder="<s:message code="eikon.input.participation"/>" id="senders">--%>
+				<input type="text"  placeholder="<s:message code="eikon.input.participation"/>" id="senders">
+
 
 			</div>
 
@@ -601,6 +601,8 @@
             selectAllText: '<s:message code="common.msg.select_all"/>',
             deselectAllText: '<s:message code="common.msg.unselect_all"/>'
         });
+
+
 
     }
 
