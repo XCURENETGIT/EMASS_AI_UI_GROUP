@@ -273,7 +273,8 @@
             float: right;
             height: 100%;
             padding-top: 8px;
-            padding-right:15px;
+            padding-right:20px;
+            margin-left:-10px;
         }
 
         .ui-layout-west{
@@ -290,6 +291,8 @@
         .searchBoxSpan label{
             cursor:pointer;
         }
+
+
         /*
         .condition_group {
             text-align: center;
@@ -3126,7 +3129,7 @@
                                                 <div class="tab_txt_top addTabDiv" id="result_tab0" style="float:left;">
                                                     <s:message code="message.msg.newtab"/>
                                                 </div>
-                                                <span class="resultCntSpan" style="padding-right:0px;"></span>
+                                                <span class="resultCntSpan"></span>
                                             </li>
                                             <li class="tab_li" data-index="">
                                                 <div class="tab_txt_top addTabDiv" style="padding:10px;"><span class="glyphicon glyphicon-plus" style="cursor:pointer;color:#494949; back"></span></div>
