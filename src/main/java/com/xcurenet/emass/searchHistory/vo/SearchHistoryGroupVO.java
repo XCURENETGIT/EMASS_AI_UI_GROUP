@@ -6,6 +6,7 @@ import lombok.ToString;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.metrics.ParsedCardinality;
 import org.springframework.data.elasticsearch.core.ElasticsearchAggregations;
+import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
 
 import java.util.ArrayList;
@@ -23,6 +24,8 @@ public class SearchHistoryGroupVO {
 	private final List<Bucket> buckets = new ArrayList<>();
 
 	public SearchHistoryGroupVO(final SearchHits<SearchHistoryVO> resp) {
+		resp.getSearchHits().stream().map(SearchHit::getContent).forEach(this.hits::add);
+
 		ElasticsearchAggregations elasticSearchAggregations = (ElasticsearchAggregations) resp.getAggregations();
 		if (elasticSearchAggregations != null) {
 			elasticSearchAggregations.aggregations().forEach(aggregation -> {

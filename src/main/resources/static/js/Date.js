@@ -5,7 +5,8 @@
 * YYYYMMDDHHMI 형식의 String => 'Time'으로 칭함
 *
 * 주로 YYYYMMDD 까지만 쓰인다면 아래 함수들을
-* YYYYMMDD 형식의 String => 'Date'로 하여 적당히
+* YYYYMMDD 형식의 String => 'Date'로 하여 적당히
+
 * 수정하시거나 아니면 함수를, 예를들어 isValidDate()처럼,
 * 추가하시기 바랍니다.
 *
@@ -88,7 +89,8 @@ function isValidTime(time)
 }
 
 /**
-* Time 스트링을 자바스크립트 Date 객체로 변환* parameter time: Time 형식의 String
+* Time 스트링을 자바스크립트 Date 객체로 변환
+* parameter time: Time 형식의 String
 */
 function toTimeObject(time)
 { //parseTime(time)
@@ -102,7 +104,8 @@ function toTimeObject(time)
 }
 
 /**
-* 자바스크립트 Date 객체를 Time 스트링으로 변환
+* 자바스크립트 Date 객체를 Time 스트링으로 변환
+
 * parameter date: JavaScript Date Object
 */
 function toTimeString(date)
@@ -294,13 +297,18 @@ function differenceTime ( time1 )
 }
 
 //"20020101" 형태의 일자값을 "2002-01-01" 형태로 리턴
-function fCompleteDateFormat(pDate)
-{
-	var vDate = pDate.replaceAll(" ","");
-	if ( vDate.length != 8 ) return "";
-	if ( !isValidDay(vDate.substring(0,4), vDate.substring(4,6), vDate.substring(6,8) ) ) return "";
-    vDate = vDate.substring(0,4) + "-" + vDate.substring(4,6) + "-" + vDate.substring(6,8);
-	return vDate;
+function fCompleteDateFormat(pDate) {
+	var vDate = pDate.replaceAll(" ", "");
+	if (vDate.length === 8) {
+		if (!isValidDay(vDate.substring(0, 4), vDate.substring(4, 6), vDate.substring(6, 8))) return "";
+		vDate = vDate.substring(0, 4) + "-" + vDate.substring(4, 6) + "-" + vDate.substring(6, 8);
+		return vDate;
+	} else if(vDate.length === 14) {
+		if (!isValidDay(vDate.substring(0, 4), vDate.substring(4, 6), vDate.substring(6, 8))) return "";
+		vDate = vDate.substring(0, 4) + "-" + vDate.substring(4, 6) + "-" + vDate.substring(6, 8) + " " + vDate.substring(8, 10) + ":" + vDate.substring(10, 12) + ":" + vDate.substring(12, 14);
+		return vDate;
+	}
+	return '';
 }
 
 //"20020101" 형태의 일자값을 "2002-01-01" 형태로 리턴

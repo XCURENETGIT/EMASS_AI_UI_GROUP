@@ -10,6 +10,7 @@ import com.xcurenet.common.util.config.Config;
 import com.xcurenet.common.util.locale.Prop;
 import com.xcurenet.emass.message.component.AttachFile;
 import com.xcurenet.emass.message.service.EmsReDefined;
+import com.xcurenet.emass.searchHistory.vo.SearchHistoryGroupVO;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSON;
 import net.sf.json.JSONArray;
@@ -1758,7 +1759,7 @@ public class Common {
 		return UUID.randomUUID().toString();
 	}
 
-	public static JSONArray make24HourResult(JSONArray list, String startDate, String endDate) throws Exception {
+	public static JSONArray make24HourResult(List<SearchHistoryGroupVO.Bucket> buckets, String startDate, String endDate) throws Exception {
 		JSONArray result = new JSONArray();
 		int diff = diffOfDate(startDate, endDate);
 		for (int i = 0; i <= diff; i++) {
@@ -1767,11 +1768,10 @@ public class Common {
 				String v_hour = lpad(String.valueOf(t), 2, "0");
 				String v_dt = v_date + v_hour;
 				boolean addFlag = false;
-				for (int j = 0; j < list.size(); j++) {
-					JSONObject item = list.getJSONObject(j);
-					String p_dt = item.getString("P_DT");
+				for (SearchHistoryGroupVO.Bucket item : buckets) {
+					String p_dt = item.getKey();
 					if (v_dt.equals(p_dt)) {
-						result.add(item.getLong("TOTAL"));
+						result.add(item.getCount());
 						addFlag = true;
 						break;
 					}

@@ -85,24 +85,6 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 	@Override
 	public SearchHistoryGroupVO getSearchHistoryList(SolrQuery sq) throws SolrServerException, IOException {
-		try {
-			String sort = sq.getSortField();
-			if (Common.isEmpty(sort)) {
-				sq.setSort(SortClause.desc("ctime"));
-				sq.addSort(SortClause.desc("msgid"));
-			}
-			log.debug("[SORT] : {}", sq.getSortField());
-			log.debug("[QUERY] {}", sq.getQuery());
-			log.info("[QUERY] {}", sq.getQuery());
-			if (Common.isNotEmpty(sq.getFilterQueries())) log.debug("[FILTER_QUERY] {}", StringUtils.join(sq.getFilterQueries(), ' '));
-		} catch (Exception e) {
-		}
-
-		TimeUtil.start();
-		log.debug("[Fields] {}", sq.getFields());
-		sq.setParam("wt", "json");
-
-		/* set 필터 쿼리 */
 		String filterQuery = (null != sq.getFilterQueries()) ? String.join(" ", sq.getFilterQueries()) : "";
 		Query searchQuery = new NativeSearchQueryBuilder()
 				.withFields(Common.toArray(sq.getFields(), ","))
