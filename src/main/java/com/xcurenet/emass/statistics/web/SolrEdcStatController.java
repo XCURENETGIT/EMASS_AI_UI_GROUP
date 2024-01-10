@@ -85,6 +85,11 @@ public class SolrEdcStatController {
 		String colKey = Common.nvl(request.getParameter("colKey"));
 		String detailQuery = Common.nvl(request.getParameter("detailQuery"));
 		String colRowKey = Common.nvl(request.getParameter("colRowKey"));
+
+		String busi = Common.nvl(request.getParameter("busiStr"));
+		String dept = Common.nvl(request.getParameter("deptStr"));
+		String name = Common.nvl(request.getParameter("userStr"));
+
 		String query = "";
 		int rowKeyCnt = rowKey.length();
 
@@ -92,6 +97,25 @@ public class SolrEdcStatController {
 		if (!interGroup.isEmpty()) {
 			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
 			solrCreateQuery.setInterestUserGroup(interGroup, "N");
+			sq = solrCreateQuery.setQuery();
+			query = sq.getQuery();
+		}
+
+		if (!busi.isEmpty()) {
+			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+			solrCreateQuery.setBusicd(busi);
+			sq = solrCreateQuery.setQuery();
+			query = sq.getQuery();
+		}
+		if (!dept.isEmpty()) {
+			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+			solrCreateQuery.setDeptcd(dept);
+			sq = solrCreateQuery.setQuery();
+			query = sq.getQuery();
+		}
+		if (!name.isEmpty()) {
+			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+			solrCreateQuery.setName(name);
 			sq = solrCreateQuery.setQuery();
 			query = sq.getQuery();
 		}
@@ -221,6 +245,13 @@ public class SolrEdcStatController {
 
 		SolrQuery sq = new SolrQuery();
 		int cnt = rowKey.length();
+
+		if (!interGroup.isEmpty()) {
+			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+			solrCreateQuery.setInterestUserGroup(interGroup, "N");
+			sq = solrCreateQuery.setQuery();
+			query = sq.getQuery();
+		}
 
 		if (!interGroup.isEmpty()) {
 			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
@@ -464,6 +495,30 @@ public class SolrEdcStatController {
 		String detailQuery = Common.nvl(request.getParameter("detailQuery"));
 		String rowKey = Common.nvl(request.getParameter("rowKey"));
 		int limit = Common.nvz(request.getParameter("limit"));
+		String busi = Common.nvl(request.getParameter("busiStr"));
+		String dept = Common.nvl(request.getParameter("deptStr"));
+		String name = Common.nvl(request.getParameter("userStr"));
+
+		SolrQuery sq = new SolrQuery();
+
+		if (!busi.isEmpty()) {
+			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+			solrCreateQuery.setBusicd(busi);
+			sq = solrCreateQuery.setQuery();
+			detailQuery += sq.getQuery();
+		}
+		if (!dept.isEmpty()) {
+			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+			solrCreateQuery.setDeptcd(dept);
+			sq = solrCreateQuery.setQuery();
+			detailQuery += sq.getQuery();
+		}
+		if (!name.isEmpty()) {
+			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+			solrCreateQuery.setName(name);
+			sq = solrCreateQuery.setQuery();
+			detailQuery += sq.getQuery();
+		}
 
 
 		SolrEdcMessageVO solrStatVo = getFacetResult(startDate, endDate, detailQuery, xAxis, limit, Common.getAdminId(request), rowKey);
@@ -722,17 +777,60 @@ public class SolrEdcStatController {
 		String startDate = Common.nvl(param.get("startDate"));
 		String endDate = Common.nvl(param.get("endDate"));
 		int piCount = Common.nvz(param.get("piCount"), 1);
-		String name = Common.nvl(param.get("senders"));
-		String busi = Common.nvl(param.get("busi"));
-		String busi_not = Common.nvl(param.get("busi_not"));
-		String dept = Common.nvl(param.get("dept")).replaceAll("\\|", ",");
-		String dept_not = Common.nvl(param.get("dept_not"));
-
+		String busi = Common.nvl(param.get("busiStr"));
+		String dept = Common.nvl(param.get("deptStr")).replaceAll("\\|", ",");
+		String name = Common.nvl(param.get("userStr")).replaceAll("\\|", ",");
 
 		StringBuilder query = new StringBuilder();
 		if (!(startDate.isEmpty() && endDate.isEmpty())) query.append(" +ctime:[").append(startDate).append(" TO ").append(endDate).append("] ");
 
-		if (!name.isEmpty()) query.append(" +name:").append(name);
+		System.out.println("name"+name);
+		System.out.println("busi"+busi);
+		System.out.println("dept"+dept);
+
+
+		if (!name.isEmpty()) {
+			String[] nameArray = name.split(",");
+			query.append(" +name:((");
+
+			for (int i = 0; i < nameArray.length; i++) {
+				if (i > 0) {
+					query.append(") (");
+				}
+				query.append(nameArray[i]);
+			}
+
+			query.append("))");
+		}
+
+		if (!busi.isEmpty()) {
+			String[] busiArray = busi.split(",");
+			query.append(" +busicd:((");
+
+			for (int i = 0; i < busiArray.length; i++) {
+				if (i > 0) {
+					query.append(") (");
+				}
+				query.append(busiArray[i]);
+			}
+
+			query.append("))");
+		}
+
+		if (!dept.isEmpty()) {
+			String[] deptArray = dept.split(",");
+			query.append(" +deptcd:((");
+
+			for (int i = 0; i < deptArray.length; i++) {
+				if (i > 0) {
+					query.append(") (");
+				}
+				query.append(deptArray[i]);
+			}
+
+			query.append("))");
+		}
+
 		query.append(" -pi_total:0 ");
 		query.append(" +( ");
 		for (String field : Config.PRIVATE_SVC) {

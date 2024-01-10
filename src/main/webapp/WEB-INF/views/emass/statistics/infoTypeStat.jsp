@@ -54,6 +54,32 @@
         $('#startdate').val(new Date().format('yyyy-mm-dd'));
         $('#enddate').val(new Date().format('yyyy-mm-dd'));
 
+
+        initCondition();
+        $('#dept').click(function () {
+            var code = $(this).attr('id');
+            openCodeWindow(code, $('#' + code + 'Val').val(), $('#' + code + 'Str').val());
+        });
+
+        $('#user').click(function () {
+            var code = $(this).attr('id');
+            openCodeWindow(code, $('#' + code + 'Val').val(), $('#' + code + 'Str').val());
+        });
+
+
+        $(document).on('click', '#userSelectedArea', function (e) {
+            $('#userVal, #userVal').val('');
+            $('#userSelectedArea').hide();
+        });
+
+
+        $(document).on('click', '#deptSelectedArea', function (e) {
+            $('#deptVal, #deptStr').val('');
+            $('#deptSelectedArea').hide();
+        });
+
+
+
         getServiceList();
         $('.optionBtn').click(function () {
             $('.optionBtn').removeClass('active');
@@ -170,6 +196,55 @@
             totalViewSig = true;
             printChart(totalChartDat);
     });
+
+
+    function openCodeWindow(id, oldCode, oldConm) {
+        $('#oldCode').val(oldCode);
+        $('#oldConm').val(oldConm);
+
+        var url = '<c:url value="/commons/selectCode.do?codeType='+id+'"/>';
+        var pop = fnOpenWindow('', 'selectCodeWinPopup', 1200, 700, 'resize');
+
+        $('#codeParam').attr('target', 'selectCodeWinPopup');
+        $('#codeParam').attr('action', url);
+        $('#codeParam').attr('method', 'post');
+        $('#codeParam').submit();
+    }
+
+
+    function initCondition(){
+        getCodeList('busi');
+        getCodeList('dept');
+
+        $('#busiSelect').selectpicker({
+            size: 15,
+            width: '300px',
+            searchLabel: true,
+            noneSelectedText: '<s:message code="common.org.busi.all"/>',
+            noneResultsText: '<s:message code="common.msg.noresult"/>' + ' ',
+            selectAllText: '<s:message code="common.msg.select_all"/>',
+            deselectAllText: '<s:message code="common.msg.unselect_all"/>',
+        });
+
+        function getCodeList(codeType) {
+            ui.get({
+                url: 'getCodeList.xcn',
+                codeType: codeType,
+                success: function (data, total) {
+                    $('#' + codeType + 'Select').html(getSelectOption(data));
+                    $('#' + codeType + 'Select').selectpicker('refresh');
+                    $('#' + codeType + 'SelectPop').html(getSelectOption(data));
+                    $('#' + codeType + 'SelectPop').selectpicker('refresh');
+                },
+                error: function (status, message) {
+                    ui.alertMsg('error:' + status);
+                },
+                complete: function () {
+                    searchFlag = false;
+                }
+            });
+        }
+    }
 
     function getServiceList(){
         ui.get({
@@ -502,6 +577,30 @@
 				<button class="optionBtn" id="jikgubnm" value="jikgubnm"><s:message code="common.org.jikgub"/></button>
 			</div>
 			<div>
+				<div>
+					<select id="busiSelect" class="selectpicker col-xs" data-style="btn-default btn-sm" multiple
+					        data-show-subtext="true" data-actions-box="true"></select>
+				</div>
+				<button class="btn01" id="dept"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
+						code="common.org.choose.dept"/></button>
+				<span id="deptSelectedArea" class="codeSelectedBtn">
+										<button type="button" class="btn num_add bornone"  style="z-index: 2;">0</button>
+									</span>
+				<input type="hidden" id="deptStr" class="selectedTitle">
+				<input type="hidden" id="deptVal">
+
+
+				<button class="btn01" id="user"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
+						code="common.org.choose.user"/></button>
+				<span id="userSelectedArea" class="codeSelectedBtn">
+										<button type="button" class="btn num_add bornone"  style="z-index: 2;">0</button>
+									</span>
+				<input type="hidden" id="userStr" class="selectedTitle">
+				<input type="hidden" id="userVal">
+
+
+			</div>
+			<div>
 				<button class="form_btn01" id="searchBtn"><s:message code="common.msg.search"/></button>
 				<button class="form_btn02" id="clearBtn"><s:message code="condition.reset"/></button>
 			</div>
@@ -542,7 +641,7 @@
 			<div class="subtab">
 				<div>
 					<ul class="nav nav-tabs codeTab listChart">
-						<li class="active"><a data-toggle="tab" href="#basicStatList" id="listTab" >InfoType TOP</a></li>
+						<li class="active"><a data-toggle="tab" href="#basicStatList" id="listTab" >정보분류 TOP</a></li>
 					</ul>
 				</div>
 			</div>
@@ -558,6 +657,12 @@
 </div>
 <!-- Back to top -->
 <a href="#0" class="back-to-top cd-top"><span class="[ fa fa-chevron-up ]"></span> <span class="[ ]">Back to the Top</span></a>
+
+<form method="post" id="codeParam">
+	<input type="hidden" name="oldCode" id="oldCode"></input>
+	<input type="hidden" name="oldConm" id="oldConm"></input>
+</form>
+
 
 <script type="text/javascript">
     function setSublist(data) {
@@ -602,6 +707,7 @@
         clickEvent(grid1);
     };
 
+
     function getData( flag ) {
         if ( searchFlag ) return;
         var sDate = $('#startdate').val().replaceAll("-", "");
@@ -613,6 +719,20 @@
             alert('<s:message code="holidayBusiness.msg.enter.date"/>');
             return;
         }
+        var busi= arrayToString($('#busiSelect').selectpicker('val'));
+        var dv = $('#deptVal').val().split('|');
+        var dept = dv.join(',');
+        var deptStr='';
+        if (dept != '') deptStr = $('#deptStr').val();
+        else deptStr = '';
+
+        var uv = $('#userVal').val().split('|');
+        var user = uv.join(',');
+
+
+        var userStr='';
+        if (user != '') userStr = $('#userStr').val();
+        else userStr = '';
 
         searchFlag = true;
         grid1.on();
@@ -620,6 +740,9 @@
             url : 'getStatList.xcn',
             startDate: sDate+"000000",
             endDate: eDate+"235959",
+            deptStr:dept,
+            busiStr:busi,
+            userStr:userStr,
             xAxis : xAxis,
             yAxis : 'ml_confd_class',
             offset : grid1.data.length,
@@ -704,6 +827,21 @@
         var xAxis_str = $('button.optionBtn.active').text();
         var sDate = $('#startdate').val().replaceAll("-", "");
         var eDate = $('#enddate').val().replaceAll("-", "");
+        var busi= arrayToString($('#busiSelect').selectpicker('val'));
+        var dv = $('#deptVal').val().split('|');
+        var dept = dv.join(',');
+        var deptStr='';
+        if (dept != '') deptStr = $('#deptStr').val();
+        else deptStr = '';
+
+        var uv = $('#userVal').val().split('|');
+        var user = uv.join(',');
+
+
+        var userStr='';
+        if (user != '') userStr = $('#userStr').val();
+        else userStr = '';
+
         searchFlag = true;
         currentgrid.on();
 
@@ -716,6 +854,9 @@
             xAxis : xAxis,
             xAxis_str : xAxis_str,
             yAxis : 'ml_confd_class',
+            deptStr:dept,
+            busiStr:busi,
+            userStr:userStr,
             offset : currentgrid.data.length,
             limit : currentgrid.pageSize,
             colRowKey : colRowKey,
@@ -753,6 +894,21 @@
         var xAxis_str = $('button.optionBtn.active').text();
         var sDate = $('#startdate').val().replaceAll("-","");
         var eDate = $('#enddate').val().replaceAll("-","");
+        var busi= arrayToString($('#busiSelect').selectpicker('val'));
+        var dv = $('#deptVal').val().split('|');
+        var dept = dv.join(',');
+        var deptStr='';
+        if (dept != '') deptStr = $('#deptStr').val();
+        else deptStr = '';
+
+        var uv = $('#userVal').val().split('|');
+        var user = uv.join(',');
+
+
+        var userStr='';
+        if (user != '') userStr = $('#userStr').val();
+        else userStr = '';
+
         searchFlag = true;
         currentgrid.on();
         ui.get({
@@ -764,6 +920,9 @@
             offset : currentgrid.data.length,
             limit : currentgrid.pageSize,
             xAxis_str : xAxis_str,
+            deptStr:dept,
+            busiStr:busi,
+            userStr:userStr,
             rowKey : rowKey,
             colKey : pColKey,
             colRowKey : colRowKey,

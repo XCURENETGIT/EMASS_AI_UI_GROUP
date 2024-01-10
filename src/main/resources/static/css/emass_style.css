@@ -251,7 +251,7 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 #contentArea .searchArea{ position: relative;padding:0 20px;margin-bottom:12px;clear: both; }
 #contentArea .searchArea:after {content:''; display:block; clear:both;}
 #contentArea .searchArea .searchSub {position: relative; width:80%; float:left;  }
-#contentArea .searchArea .searchSub div {float:left; display: inline-block;margin-bottom:8px;margin-right:8px; }
+#contentArea .searchArea .searchSub div {float:left; margin-bottom:8px;margin-right:8px; }
 #contentArea .searchArea .searchSub_full  {position: relative; width:100%;}
 #contentArea .searchArea .searchSub_full .searchSub_Box {  width:100%; overflow: hidden; }
 #contentArea .searchArea .searchSub_full .searchSub_Box div {float:left; display: inline-block; overflow: hidden;margin-bottom:8px;margin-right:8px;}

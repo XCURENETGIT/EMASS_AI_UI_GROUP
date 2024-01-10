@@ -779,7 +779,7 @@
 
 		<!-- 대화방 끝!! -->
 		<!-- 상세보기 -->
-		<div class="fileGroupList">
+		<div class="fileGroupList" style="height: 900px;">
 			<div class="inner_message">
 
 				<div class="messageBtn">
@@ -798,9 +798,16 @@
 			</div>
 			<div class="inner_fileList">
 			</div>
+			<div class="pl20 pr20">
+				<div class="pageArea bornone" id="filegroupPage">
+					<div class="total fb600">
+					</div>
+				</div>
+			</div>
 
 		</div>
 		<!-- //상세보기 -->
+
 
 	</div>
 </div>

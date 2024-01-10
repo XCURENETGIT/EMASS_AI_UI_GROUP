@@ -47,6 +47,28 @@
     var totalChartDat;
     var serviceList=[];
     $(document).ready(function(){
+        initCondition();
+        $('#dept').click(function () {
+            var code = $(this).attr('id');
+            openCodeWindow(code, $('#' + code + 'Val').val(), $('#' + code + 'Str').val());
+        });
+
+        $('#user').click(function () {
+            var code = $(this).attr('id');
+            openCodeWindow(code, $('#' + code + 'Val').val(), $('#' + code + 'Str').val());
+        });
+
+
+        $(document).on('click', '#userSelectedArea', function (e) {
+            $('#userVal, #userVal').val('');
+            $('#userSelectedArea').hide();
+        });
+
+
+        $(document).on('click', '#deptSelectedArea', function (e) {
+            $('#deptVal, #deptStr').val('');
+            $('#deptSelectedArea').hide();
+        });
         getServiceList();
         $('.optionBtn').click(function () {
             $('.optionBtn').removeClass('active');
@@ -264,6 +286,54 @@
             series: data
         });
     }
+
+    function openCodeWindow(id, oldCode, oldConm) {
+        $('#oldCode').val(oldCode);
+        $('#oldConm').val(oldConm);
+
+        var url = '<c:url value="/commons/selectCode.do?codeType='+id+'"/>';
+        var pop = fnOpenWindow('', 'selectCodeWinPopup', 1200, 700, 'resize');
+
+        $('#codeParam').attr('target', 'selectCodeWinPopup');
+        $('#codeParam').attr('action', url);
+        $('#codeParam').attr('method', 'post');
+        $('#codeParam').submit();
+    }
+
+
+    function initCondition(){
+        getCodeList('busi');
+        getCodeList('dept');
+
+        $('#busiSelect').selectpicker({
+            size: 15,
+            width: '300px',
+            searchLabel: true,
+            noneSelectedText: '<s:message code="common.org.busi.all"/>',
+            noneResultsText: '<s:message code="common.msg.noresult"/>' + ' ',
+            selectAllText: '<s:message code="common.msg.select_all"/>',
+            deselectAllText: '<s:message code="common.msg.unselect_all"/>',
+        });
+
+        function getCodeList(codeType) {
+            ui.get({
+                url: 'getCodeList.xcn',
+                codeType: codeType,
+                success: function (data, total) {
+                    $('#' + codeType + 'Select').html(getSelectOption(data));
+                    $('#' + codeType + 'Select').selectpicker('refresh');
+                    $('#' + codeType + 'SelectPop').html(getSelectOption(data));
+                    $('#' + codeType + 'SelectPop').selectpicker('refresh');
+                },
+                error: function (status, message) {
+                    ui.alertMsg('error:' + status);
+                },
+                complete: function () {
+                    searchFlag = false;
+                }
+            });
+        }
+    }
 </script>
 <div>
 	<div class="searchArea w100">
@@ -285,6 +355,30 @@
 				<button class="optionBtn" id="conm" value="conm"><s:message code="common.org.co"/></button>
 				<button class="optionBtn" id="deptnm" value="deptnm"><s:message code="common.org.dept"/></button>
 				<button class="optionBtn" id="jikgubnm" value="jikgubnm"><s:message code="common.org.jikgub"/></button>
+			</div>
+			<div>
+				<div>
+					<select id="busiSelect" class="selectpicker col-xs" data-style="btn-default btn-sm" multiple
+					        data-show-subtext="true" data-actions-box="true"></select>
+				</div>
+				<button class="btn01" id="dept"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
+						code="common.org.choose.dept"/></button>
+				<span id="deptSelectedArea" class="codeSelectedBtn">
+										<button type="button" class="btn num_add bornone"  style="z-index: 2;">0</button>
+									</span>
+				<input type="hidden" id="deptStr" class="selectedTitle">
+				<input type="hidden" id="deptVal">
+
+
+				<button class="btn01" id="user"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
+						code="common.org.choose.user"/></button>
+				<span id="userSelectedArea" class="codeSelectedBtn">
+										<button type="button" class="btn num_add bornone"  style="z-index: 2;">0</button>
+									</span>
+				<input type="hidden" id="userStr" class="selectedTitle">
+				<input type="hidden" id="userVal">
+
+
 			</div>
 			<div>
 				<button class="form_btn01" id="searchBtn"><s:message code="common.msg.search"/></button>
@@ -327,7 +421,7 @@
 			<div class="subtab">
 				<div>
 					<ul class="nav nav-tabs codeTab listChart">
-						<li class="active"><a data-toggle="tab" href="#basicStatList" id="listTab" >SERVICE TOP</a></li>
+						<li class="active"><a data-toggle="tab" href="#basicStatList" id="listTab" >서비스 TOP</a></li>
 					</ul>
 				</div>
 			</div>
@@ -341,6 +435,12 @@
 		</div>
 	</div>
 </div>
+
+<form method="post" id="codeParam">
+	<input type="hidden" name="oldCode" id="oldCode"></input>
+	<input type="hidden" name="oldConm" id="oldConm"></input>
+</form>
+
 <script type="text/javascript">
     function setSublist(data) {
         var element = document.getElementById('sub_1');
@@ -475,6 +575,21 @@
             return;
         }
 
+    var busi= arrayToString($('#busiSelect').selectpicker('val'));
+    var dv = $('#deptVal').val().split('|');
+    var dept = dv.join(',');
+    var deptStr='';
+    if (dept != '') deptStr = $('#deptStr').val();
+    else deptStr = '';
+
+    var uv = $('#userVal').val().split('|');
+    var user = uv.join(',');
+
+
+    var userStr='';
+    if (user != '') userStr = $('#userStr').val();
+    else userStr = '';
+
         searchFlag = true;
         grid1.on();
         ui.get({
@@ -484,6 +599,9 @@
             detailQuery:$('#elsQueryText').val(),
             xAxis : xAxis,
             yAxis : 'svc12',
+            deptStr:dept,
+            busiStr:busi,
+            userStr:userStr,
             offset : grid1.data.length,
             limit : grid1.pageSize,
             xAxis_str : xAxis_str,
@@ -562,6 +680,22 @@
         var eDate = $('#enddate').val().replaceAll("-", "");
         var xAxis = $('button.optionBtn.active').val();
         var xAxis_str = $('button.optionBtn.active').text();
+
+        var busi= arrayToString($('#busiSelect').selectpicker('val'));
+        var dv = $('#deptVal').val().split('|');
+        var dept = dv.join(',');
+        var deptStr='';
+        if (dept != '') deptStr = $('#deptStr').val();
+        else deptStr = '';
+
+        var uv = $('#userVal').val().split('|');
+        var user = uv.join(',');
+
+
+        var userStr='';
+        if (user != '') userStr = $('#userStr').val();
+        else userStr = '';
+
         searchFlag = true;
         currentgrid.on();
 
@@ -574,6 +708,9 @@
             xAxis : xAxis,
             xAxis_str : xAxis_str,
             yAxis : 'svc12',
+            deptStr:dept,
+            busiStr:busi,
+            userStr:userStr,
             offset : currentgrid.data.length,
             limit : currentgrid.pageSize,
             success : function(data, total) {

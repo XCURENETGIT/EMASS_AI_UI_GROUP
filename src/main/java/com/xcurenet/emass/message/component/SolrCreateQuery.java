@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
+import org.apache.cxf.Bus;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.SortClause;
 import org.joda.time.DateTime;
@@ -30,6 +31,7 @@ public class SolrCreateQuery {
 
 	private AdminUserGroupService adminUserGroupService;
 	private UserService userService;
+
 
 	private AdminFilterService adminFilterService;
 
@@ -88,6 +90,7 @@ public class SolrCreateQuery {
 	public static final String PI = "pi";
 	public static final String USER_ID = "userid";
 	public static final String USER_STR = "user_str";
+	public static final String NAME = "name";
 	public static final String DIRECTION_SVC = "direction_svc";
 	public static final String WORK = "work";
 	public static final String DRM = "pi_DRM";
@@ -285,6 +288,24 @@ public class SolrCreateQuery {
 			return addQuery(String.format("%s(%s)", AND_QUERY, query.toString()));
 		}
 	}
+
+	public SolrCreateQuery setName(String name) {
+		if (Common.isEmpty(name)) return this;
+		return addQuery(String.format("%s%s:%s", AND_QUERY, NAME, createOrQuery(name)));
+	}
+
+	public SolrCreateQuery setDeptcd(String deptcd) {
+		if (Common.isEmpty(deptcd)) return this;
+		return addQuery(String.format("%s%s:%s", AND_QUERY, DEPTCD, createOrQuery(deptcd)));
+	}
+
+
+	public SolrCreateQuery setBusicd(String busicd) {
+		if (Common.isEmpty(busicd)) return this;
+		return addQuery(String.format("%s%s:%s", AND_QUERY, BUSICD, createOrQuery(busicd)));
+	}
+
+
 
 	/**
 	 * 서비스 그룹 쿼리

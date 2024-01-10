@@ -51,6 +51,30 @@
 
 
     $(document).ready(function(){
+
+        initCondition();
+        $('#dept').click(function () {
+            var code = $(this).attr('id');
+            openCodeWindow(code, $('#' + code + 'Val').val(), $('#' + code + 'Str').val());
+        });
+
+        $('#user').click(function () {
+            var code = $(this).attr('id');
+            openCodeWindow(code, $('#' + code + 'Val').val(), $('#' + code + 'Str').val());
+        });
+
+
+        $(document).on('click', '#userSelectedArea', function (e) {
+            $('#userVal, #userVal').val('');
+            $('#userSelectedArea').hide();
+        });
+
+
+        $(document).on('click', '#deptSelectedArea', function (e) {
+            $('#deptVal, #deptStr').val('');
+            $('#deptSelectedArea').hide();
+        });
+
         $('#startdate').val(new Date().format('yyyy-mm-dd'));
         $('#enddate').val(new Date().format('yyyy-mm-dd'));
 
@@ -174,6 +198,55 @@
     function setGrid( ){
         currentgrid = getCurrentGrid();
         initGrid(currentgrid, messageGridColumn);
+    }
+
+
+    function openCodeWindow(id, oldCode, oldConm) {
+        $('#oldCode').val(oldCode);
+        $('#oldConm').val(oldConm);
+
+        var url = '<c:url value="/commons/selectCode.do?codeType='+id+'"/>';
+        var pop = fnOpenWindow('', 'selectCodeWinPopup', 1200, 700, 'resize');
+
+        $('#codeParam').attr('target', 'selectCodeWinPopup');
+        $('#codeParam').attr('action', url);
+        $('#codeParam').attr('method', 'post');
+        $('#codeParam').submit();
+    }
+
+
+    function initCondition(){
+        getCodeList('busi');
+        getCodeList('dept');
+
+        $('#busiSelect').selectpicker({
+            size: 15,
+            width: '300px',
+            searchLabel: true,
+            noneSelectedText: '<s:message code="common.org.busi.all"/>',
+            noneResultsText: '<s:message code="common.msg.noresult"/>' + ' ',
+            selectAllText: '<s:message code="common.msg.select_all"/>',
+            deselectAllText: '<s:message code="common.msg.unselect_all"/>',
+        });
+
+        function getCodeList(codeType) {
+            ui.get({
+                url: 'getCodeList.xcn',
+                codeType: codeType,
+                success: function (data, total) {
+                    $('#' + codeType + 'Select').html(getSelectOption(data));
+                    $('#' + codeType + 'Select').selectpicker('refresh');
+                    $('#' + codeType + 'SelectPop').html(getSelectOption(data));
+                    $('#' + codeType + 'SelectPop').selectpicker('refresh');
+                },
+                error: function (status, message) {
+                    ui.alertMsg('error:' + status);
+                },
+                complete: function () {
+                    searchFlag = false;
+                }
+            });
+        }
     }
 
     function closeDetailTab() {
@@ -426,8 +499,7 @@
 // 		tabName = ' - ' + displayName;
             colKeyNm += ' <s:message code="analysis.usagecompare.ui.detaillist"/>';
         }
-
-        $('.listChart').append($('<li style="display:inline-flex;text-align: center;z-index:1001;" idx="'+tabID+'" id="'+liTab+tabID+'"><a data-toggle="tab" href="#tab'+tabID+'" id="detailTab'+tabID+'" >'+ name + tabName+' - '+colKeyNm+'<span class="badge"></span><button class="close" type="button" title="<s:message code="stat.delete.tab"/>">×</button></a></li>'));
+        $('.listChart').append($('<li style="display:inline-flex;text-align: center;z-index:1001;" idx="'+tabID+'" id="liTab'+tabID+'"><a data-toggle="tab" href="#tab'+tabID+'" id="detailTab'+tabID+'" style="display: flex; align-items: center; justify-content: center;">'+displayName+' - '+colKeyNm+'<span class="badge mal4"></span><button type="button" class="subtab_close">	&#10006;</button></a></li>'));
         $('#basicStatList').after($('<div class="tab-pane fade" id="tab' + tabID + '"><div id="detail_cnt'+tabID+'" style="margin-top:0px; color: #f25643; font-weight: bold; font-size: 13px;"></div><div id="grid'+tabID+'" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; height: 380px"></div></div>'));
 
         var gid = 'grid'+tabID;
@@ -489,6 +561,30 @@
 				<button class="optionBtn" id="jikgubnm" value="jikgubnm"><s:message code="common.org.jikgub"/></button>
 			</div>
 			<div>
+				<div>
+					<select id="busiSelect" class="selectpicker col-xs" data-style="btn-default btn-sm" multiple
+					        data-show-subtext="true" data-actions-box="true"></select>
+				</div>
+				<button class="btn01" id="dept"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
+						code="common.org.choose.dept"/></button>
+				<span id="deptSelectedArea" class="codeSelectedBtn">
+										<button type="button" class="btn num_add bornone"  style="z-index: 2;">0</button>
+									</span>
+				<input type="hidden" id="deptStr" class="selectedTitle">
+				<input type="hidden" id="deptVal">
+
+
+				<button class="btn01" id="user"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
+						code="common.org.choose.user"/></button>
+				<span id="userSelectedArea" class="codeSelectedBtn">
+										<button type="button" class="btn num_add bornone"  style="z-index: 2;">0</button>
+									</span>
+				<input type="hidden" id="userStr" class="selectedTitle">
+				<input type="hidden" id="userVal">
+
+
+			</div>
+			<div>
 				<button class="form_btn01" id="searchBtn"><s:message code="common.msg.search"/></button>
 				<button class="form_btn02" id="clearBtn"><s:message code="condition.reset"/></button>
 			</div>
@@ -546,6 +642,12 @@
 <!-- Back to top -->
 <a href="#0" class="back-to-top cd-top"><span class="[ fa fa-chevron-up ]"></span> <span class="[ ]">Back to the Top</span></a>
 
+<form method="post" id="codeParam">
+	<input type="hidden" name="oldCode" id="oldCode"></input>
+	<input type="hidden" name="oldConm" id="oldConm"></input>
+</form>
+
+
 <script type="text/javascript">
     function setSublist(data) {
         var element = document.getElementById('sub_1');
@@ -596,6 +698,22 @@
             var sDate = $('#startdate').val().replaceAll("-", "");
             var eDate = $('#enddate').val().replaceAll("-", "");
 			if(sDate > eDate) ui.alertMsg('<s:message code="consent.msg.timecheck"/>');
+
+            var busi= arrayToString($('#busiSelect').selectpicker('val'));
+            var dv = $('#deptVal').val().split('|');
+            var dept = dv.join(',');
+            var deptStr='';
+            if (dept != '') deptStr = $('#deptStr').val();
+            else deptStr = '';
+
+            var uv = $('#userVal').val().split('|');
+            var user = uv.join(',');
+
+
+            var userStr='';
+            if (user != '') userStr = $('#userStr').val();
+            else userStr = '';
+
 			searchFlag = true;
 			ui.get({
 				url : 'getOcrStatList.xcn',
@@ -603,7 +721,10 @@
 				endDate: eDate+"235959",
 				xAxis : xAxis,
 				yAxis : 'ocr_attach_cnt',
-				offset : grid1.data.length,
+                deptStr:dept,
+                busiStr:busi,
+                userStr:userStr,
+                offset : grid1.data.length,
 				limit : grid1.pageSize,
 				xAxis_str : xAxis_str,
 				success : function(data, total) {
@@ -682,6 +803,20 @@
         var xAxis_str = $('button.optionBtn.active').text();
         var sDate = $('#startdate').val().replaceAll("-","");
         var eDate = $('#enddate').val().replaceAll("-","");
+        var busi= arrayToString($('#busiSelect').selectpicker('val'));
+        var dv = $('#deptVal').val().split('|');
+        var dept = dv.join(',');
+        var deptStr='';
+        if (dept != '') deptStr = $('#deptStr').val();
+        else deptStr = '';
+
+        var uv = $('#userVal').val().split('|');
+        var user = uv.join(',');
+
+
+        var userStr='';
+        if (user != '') userStr = $('#userStr').val();
+        else userStr = '';
         searchFlag = true;
         currentgrid.on();
         ui.get({
@@ -694,6 +829,9 @@
             limit : currentgrid.pageSize,
             xAxis_str : xAxis_str,
             rowKey : rowKey,
+            deptStr:dept,
+            busiStr:busi,
+            userStr:userStr,
             colKey : pColKey,
             colRowKey : colRowKey,
             success : function(data, total) {
@@ -774,6 +912,20 @@
         var xAxis_str = $('button.optionBtn.active').text();
         var sDate = $('#startdate').val().replaceAll("-","");
         var eDate = $('#enddate').val().replaceAll("-","");
+        var busi= arrayToString($('#busiSelect').selectpicker('val'));
+        var dv = $('#deptVal').val().split('|');
+        var dept = dv.join(',');
+        var deptStr='';
+        if (dept != '') deptStr = $('#deptStr').val();
+        else deptStr = '';
+
+        var uv = $('#userVal').val().split('|');
+        var user = uv.join(',');
+
+
+        var userStr='';
+        if (user != '') userStr = $('#userStr').val();
+        else userStr = '';
         searchFlag = true;
         currentgrid.on();
 
@@ -782,6 +934,9 @@
             rowKey : rowKey,
             colKey : pColKey,
             startDate : sDate+"000000",
+            deptStr:dept,
+            busiStr:busi,
+            userStr:userStr,
             endDate : eDate+"235959",
             detailQuery:$('#solrQueryText').val(),
             xAxis : xAxis,

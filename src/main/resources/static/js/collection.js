@@ -18,7 +18,7 @@ var detailStartPage = 1;
 var detailEndPage = 1;
 var detailViewPage = 10;
 var detailPageBreak = 100;
-var detailLimit = 5;
+var detailLimit = 10;
 
 var selectedSearchData = 1;
 var searchOffset = 0;

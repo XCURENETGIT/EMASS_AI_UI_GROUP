@@ -93,9 +93,14 @@
         });
 
 
-        $(document).on('click', '.codeSelectedBtn', function (e) {
+        $(document).on('click', '#deptSelectedArea', function (e) {
             $('#deptVal, #deptStr').val('');
             $('#deptSelectedArea').hide();
+        });
+
+        $(document).on('click', '#userSelectedArea', function (e) {
+            $('#userVal, #userVal').val('');
+            $('#userSelectedArea').hide();
         });
 
 
@@ -339,7 +344,7 @@
 
 				<button class="btn01" id="user"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
 						code="common.org.choose.user"/></button>
-				<span id="useSelectedArea" class="codeSelectedBtn">
+				<span id="userSelectedArea" class="codeSelectedBtn">
 										<button type="button" class="btn num_add bornone"  style="z-index: 2;">0</button>
 									</span>
 				<input type="hidden" id="userStr" class="selectedTitle">
@@ -502,10 +507,20 @@
 		var piCount_str = $('select[name=piCount] option:selected').text();
 		var sDate = $('#startdate').val().replaceAll("-", "");
 		var eDate = $('#enddate').val().replaceAll("-", "");
-		var busi= $('#busiSelect').selectpicker('val');
-        var senders= $('#senders').val();
-        /*var dv= $('#deptVal').val().split('|');
-        var dept=dv.join(',');*/
+		var busi= arrayToString($('#busiSelect').selectpicker('val'));
+        var dv = $('#deptVal').val().split('|');
+        var dept = dv.join(',');
+        var deptStr='';
+        if (dept != '') deptStr = $('#deptStr').val();
+        else deptStr = '';
+
+        var uv = $('#userVal').val().split('|');
+        var user = uv.join(',');
+
+
+        var userStr='';
+        if (user != '') userStr = $('#userStr').val();
+        else userStr = '';
 
 
 		if (sDate > eDate) ui.alertMsg('<s:message code="consent.msg.timecheck"/>');
@@ -521,9 +536,10 @@
 			piCount: piCount,
 			pMenuId: pMenuId,
 			menuId: menuId,
-		/*	busi:busi,*/
-			senders:senders,
-		/*	dept:dept,*/
+			deptStr:dept,
+			busiStr:busi,
+            userStr:userStr,
+
 			success: function (data, total) {
 				grid1.setData(data);
 				if (grid1.loadingPage == 0) grid1.Select(-1, -1);
@@ -642,7 +658,7 @@
             noneSelectedText: '<s:message code="common.org.busi.all"/>',
             noneResultsText: '<s:message code="common.msg.noresult"/>' + ' ',
             selectAllText: '<s:message code="common.msg.select_all"/>',
-            deselectAllText: '<s:message code="common.msg.unselect_all"/>'
+            deselectAllText: '<s:message code="common.msg.unselect_all"/>',
         });
 
 

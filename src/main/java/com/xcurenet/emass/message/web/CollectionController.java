@@ -50,7 +50,6 @@ import java.util.*;
 public class CollectionController {
 
 	private static final String MESSENGER2 = " +svc1: I ";
-
 	private static final String MESSENGER3 = " +svc1: N ";
 	private static final String MESSENGER4 = " +svc1: F ";
 
@@ -206,7 +205,7 @@ public class CollectionController {
 	}
 
 	@RequestMapping(value = "/getGenerativeMessage.xcn")
-	@Description("생성형ai 대화내용 목록 조회")
+	@Description("생성형ai/노트 대화내용 목록 조회")
 	/*	@AuditOperation(Operation.SEARCH)*/
 	@ResponseBody
 	public XcnResponseVO getGenerativeMessage(final HttpServletRequest request, final HttpSession session) throws Exception {
@@ -294,46 +293,28 @@ public class CollectionController {
 		String endDt = Common.nvl(param.get("endDt"));
 		String searchStr = Common.nvl(param.get("searchStr"));
 		int limit = Common.nvz(param.get("limit"), 100000);
-		String msgDt = msgId.substring(0, 14);
 
 		SolrQuery sq = new SolrQuery();
-		String query = String.format("( _id:%s )",msgId);
-		 query += String.format("+ctime:[%s TO %s] +userid:\"%s\"", msgDt, endDt, userid);
+		String query = String.format("+ctime:[%s TO %s] +userid:\"%s\"", startDt, endDt, userid);
 
 		if(Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
 
 		if(Common.isNotEmpty(usr_id)) query += String.format(" +usr_id:\"%s\"", usr_id);
 		else query += String.format(" -usr_id:*");
 
-		if (!lastMsgYn) { //맨처음 들어왔을땐 하나가 떠야함 하지만 위가 이미 있는 상태에서 다음버튼을 누르면 중복되면 안됨
-			query += String.format(" -_id: %s", msgId);    //이미 출력된 동시간대 데이터 제외
-
+		//이미 출력된 동시간대 데이터 제외
+		if(Common.isNotEmpty(msgId)) {
+			if(lastMsgYn) {
+				query += String.format(" +msgid:[%s TO *]", msgId);
+			} else {
+				query += String.format(" +msgid:{%s TO *]", msgId);
+			}
 		}
-
-
-		sq.setParam("group", true);
-		sq.setParam("group.facet", true);
-		sq.setParam("group.ngroups", true);
-		sq.setParam("group.field", "userid");
-		sq.setParam("facet", true);
-		sq.setParam("facet.field", "userid");
-
-		/* 그룹 디테일검색 동적 들어와야 할 offset,size 값*/
-		sq.setParam("facet.offset", "0");
-		sq.setParam("facet.size", "10");
-		sq.setParam("facet.detail", true);
-		sq.setParam("facet.list", false);
-		sq.setParam("facet.mincount", "1");
-
-		/* 일반 문서 검색은 하지않으므로 0 (그룹검색만 하므로 ) */
-
-		sq.setStart(Common.nvz(request.getParameter("offset"), 0));
-		sq.setRows(Common.nvz(request.getParameter("limit"), 0));
 
 		if(Common.isNotEmpty(searchStr)) query += String.format(" +body:(*%s*) ", searchStr);
 
 		sq.setQuery(query + (Common.nvl(param.get("type")).equals("N") ? MESSENGER3 : (Common.nvl(param.get("type")).equals("G") ? MESSENGER2 : (Common.nvl(param.get("type")).equals("F") ? MESSENGER4 : ""))));
-
+		sq.setStart(Common.nvz(param.get("offset"), 0));
 		sq.setRows(limit);
 		sq.addSort("ctime", ORDER.asc);
 		sq.addSort("msgid", ORDER.asc);
@@ -350,51 +331,29 @@ public class CollectionController {
 		String startDt = Common.nvl(param.get("startDt"));
 		String endDt = Common.nvl(param.get("endDt"));
 		String searchStr = Common.nvl(param.get("searchStr"));
-		int limit = Common.nvz(param.get("limit"), 10000); /* 최대 1만임 */
-
-		String msgDt = msgId.substring(0, 14);
+		int limit = Common.nvz(param.get("limit"), 100000);
 
 		SolrQuery sq = new SolrQuery();
-		String query = String.format("( _id:%s) ",msgId);
-		query+= String.format("+ctime:[%s TO %s] +userid:\"%s\"", startDt, msgDt, userid);
+		String query = String.format("+ctime:[%s TO %s] +userid:\"%s\"", startDt, endDt, userid);
 
-		if (Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
+		if(Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
 
-		if (Common.isNotEmpty(usr_id)) query += String.format(" +usr_id:\"%s\"", usr_id);
-		else query += String.format(" -usr_id:* ");
+		if(Common.isNotEmpty(usr_id)) query += String.format(" +usr_id:\"%s\"", usr_id);
+		else query += String.format(" -usr_id:*");
 
-		query += String.format(" -_id: %s", msgId);
+		//이미 출력된 동시간대 데이터 제외
+		if(Common.isNotEmpty(msgId)) {
+			query += String.format(" +msgid:[* TO %s}", msgId);
+		}
 
-
-		if (Common.isNotEmpty(searchStr)) query += String.format(" +body:(*%s*) ", searchStr);
+		if(Common.isNotEmpty(searchStr)) query += String.format(" +body:(*%s*) ", searchStr);
 
 		sq.setQuery(query + (Common.nvl(param.get("type")).equals("N") ? MESSENGER3 : (Common.nvl(param.get("type")).equals("G") ? MESSENGER2 : (Common.nvl(param.get("type")).equals("F") ? MESSENGER4 : ""))));
-
 		sq.setStart(Common.nvz(param.get("offset"), 0));
 		sq.setRows(limit);
-		sq.addSort("ctime", ORDER.asc);
-		sq.addSort("msgid", ORDER.asc);
-		sq.setFields("msgid", "userid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user");
-
-		/* 그룹 디테일검색 동적 들어와야 할 offset,size 값*/
-		sq.setParam("group", true);
-		sq.setParam("group.facet", true);
-		sq.setParam("group.ngroups", true);
-		sq.setParam("group.field", "userid");
-		sq.setParam("facet", true);
-		sq.setParam("facet.field", "userid");
-
-		sq.setParam("facet.sort", true);
-
-		sq.setParam("facet.offset", "0");
-		sq.setParam("facet.size", "10");
-		sq.setParam("facet.detail", false);
-		sq.setParam("facet.message", true);
-		sq.setParam("facet.mincount", "1");
-
-		/* 일반 문서 검색은 하지않으므로 0 (그룹검색만 하므로 ) */
-		sq.setStart(Common.nvz(request.getParameter("offset"), 0));
-		sq.setRows(Common.nvz(request.getParameter("limit"), 0));
+		sq.addSort("ctime", ORDER.desc);
+		sq.addSort("msgid", ORDER.desc);
+		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user");
 
 		return sq;
 	}
@@ -420,43 +379,19 @@ public class CollectionController {
 		int limit = Common.nvz(param.get("limit"), 100000);
 
 		SolrQuery sq = new SolrQuery();
-
-
-		sq.setParam("group", true);
-		sq.setParam("group.facet", true);
-		sq.setParam("group.ngroups", true);
-		sq.setParam("group.field", "userid");
-		sq.setParam("facet", true);
-		sq.setParam("facet.field", "userid");
-
-		/* 그룹 디테일검색 동적 들어와야 할 offset,size 값*/
-		sq.setParam("facet.offset", "0");
-		sq.setParam("facet.size", "10");
-		sq.setParam("facet.detail", true);
-		sq.setParam("facet.list", false);
-		sq.setParam("facet.mincount", "1");
-
-
-		/* 일반 문서 검색은 하지않으므로 0 (그룹검색만 하므로 ) */
-		sq.setStart(Common.nvz(request.getParameter("offset"), 0));
-		sq.setRows(Common.nvz(request.getParameter("limit"), 0));
-
-
-
-
 		String query = String.format("+ctime:[%s TO %s] +userid:\"%s\"", startDt, endDt, userid);
 
-		if (Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
+		if(Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
 
+		if(Common.isNotEmpty(usr_id)) query += String.format(" +usr_id:\"%s\"", usr_id);
+		else query += String.format(" -usr_id:*");
 
 		sq.setQuery(query + (Common.nvl(param.get("type")).equals("N") ? MESSENGER3 : (Common.nvl(param.get("type")).equals("G") ? MESSENGER2 : (Common.nvl(param.get("type")).equals("F") ? MESSENGER4 : ""))));
-
 		sq.setRows(limit);
 		sq.addSort("ctime", ORDER.asc);
 		sq.addSort("msgid", ORDER.asc);
-		sq.setFields("msgid", "userid", "srcip","inside","userkey", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user");
+		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user");
 
-		log.info("query: 	" +   sq.getQuery());
 		return sq;
 
 	}
@@ -468,7 +403,7 @@ public class CollectionController {
 	}
 
 	@RequestMapping(value = "/updateEmassGenerativeAdminUserid.xcn")
-	@Description("생성형ai 대화방 운용자 최종 위치 저장")
+	@Description("생성형ai/노트 대화방 운용자 최종 위치 저장")
 	@ResponseBody
 	public XcnResponseVO updateEmassGenerativeAdminUserid(final HttpServletRequest request, final HttpSession session) throws Exception {
 		JSONObject param = Common.getParam(request);
@@ -484,7 +419,7 @@ public class CollectionController {
 
 
 	@RequestMapping(value = "/getGenerativeGroupDetailSearch.xcn")
-	@Description("생성형ai 대화방 상세 검색 조회")
+	@Description("생성형ai/노트 대화방 상세 검색 조회")
 	@ResponseBody
 	public XcnResponseVO getGenerativeGroupDetailSearch(final HttpServletRequest request, final HttpSession session) throws Exception {
 
@@ -537,7 +472,7 @@ public class CollectionController {
 
 
 	@RequestMapping(value = "/getCollectionGroupAttachList.xcn")
-	@Description("생성형ai 대화방 첨부 전송 리스트 조회")
+	@Description("생성형ai/노트 대화방 첨부 전송 리스트 조회")
 	@ResponseBody
 	public XcnResponseVO getGenerativeGroupAttachList(final HttpServletRequest request, final HttpSession session) throws Exception {
 		JSONObject param = Common.getParam(request);
