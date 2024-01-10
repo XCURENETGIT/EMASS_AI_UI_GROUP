@@ -39,7 +39,6 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 			field = "sender_str";
 		}
 
-
 		/* 문서 결과 표시 X */
 		sq.setStart(0);
 		sq.setRows(1);

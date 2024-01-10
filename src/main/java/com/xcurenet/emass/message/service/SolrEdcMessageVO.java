@@ -1,5 +1,6 @@
 package com.xcurenet.emass.message.service;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.config.Config;
 import com.xcurenet.common.util.elasticsearch.ElasticSearchCommon;
@@ -43,6 +44,7 @@ public class SolrEdcMessageVO {
 
 	@Getter
 	@Setter
+	@JsonIgnore
 	private ElasticsearchAggregations facets;
 
 	@Getter
@@ -53,13 +55,13 @@ public class SolrEdcMessageVO {
 	@Setter
 	private String searchTime;
 
-	private String facetChkSvc;
-	
-	private String pivotChkSvc;
 
-	private List<String> headerList = new ArrayList<>();
-	Map<String, Object> pivotItem = new HashMap<>();
-	Map<String, Object> pivotKeys = new HashMap<>();
+	@JsonIgnore private String facetChkSvc;
+	@JsonIgnore private String pivotChkSvc;
+
+	@JsonIgnore private List<String> headerList = new ArrayList<>();
+	@JsonIgnore Map<String, Object> pivotItem = new HashMap<>();
+	@JsonIgnore Map<String, Object> pivotKeys = new HashMap<>();
 
 
 	public SolrEdcMessageVO() throws SolrServerException, IOException {
@@ -82,10 +84,9 @@ public class SolrEdcMessageVO {
 		tempDataClear();
 //
 //		this.setFacetQuery(resp);
-
-//		if (resp.getAggregations() != null) {
-//			this.setFacets((ElasticsearchAggregations) resp.getAggregations());
-//		}
+		if (resp.getAggregations() != null) {
+			this.setFacets((ElasticsearchAggregations) resp.getAggregations());
+		}
 
 	}
 

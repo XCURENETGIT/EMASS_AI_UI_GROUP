@@ -158,7 +158,6 @@ function eventEnterSearch(event) {
 					<div class="searchSub_Box">
 						<div>
 							<select id="unit" name="unit">
-								<option value=""><s:message code="analysis.relation.unit"/>:</option>
 								<option value="file"><s:message code="consent.attach"/></option>
 								<option value="mailid"><s:message code="analysis.relation.mailid"/></option>
 								<option value="messenger"><s:message code="analysis.relation.messenger"/></option>
@@ -212,16 +211,16 @@ function eventEnterSearch(event) {
 					<!-- 리스트-->
 					<div>
 						<h3>List</h3>
-						<div class="inner_personaldata p20" style="height: 340px; overflow-y: scroll;">
+						<div class="inner_personaldata p20" style="height: 542px; overflow-y: scroll;">
 							<div id="basicStatListGrid" class="slickGrid gridArea"></div>
 						</div>
 					</div>
 					<!-- //리스트-->
 					<!-- 관계도 -->
-					<div>
+					<div id="relation_div">
 						<h3><s:message code="analysis.relation.ui.relationships"/></h3>
 						<div class="inner_personaldata p20">
-							<div id="graph-container" style="height: 300px; overflow:hidden"></div>
+							<div id="graph-container" style="height: 500px; overflow:hidden"></div>
 						</div>
 					</div>
 					<!-- //관계도 -->
@@ -367,10 +366,6 @@ function eventEnterSearch(event) {
 				offset : grid.data.length,
 				limit : grid.pageSize,
 				success : function(data, total) {
-
-					console.log(data);
-
-
 					if ( flag == 'Y' || flag == undefined ) resultTotal = total;
 					grid.autoNumber();
 					colInit();
@@ -401,6 +396,7 @@ function eventEnterSearch(event) {
 		}
 		var listData = '';
 		function getDetailData(data) {
+
 			listData = data;
 			$("#relation_div").show();
 			ui.on("relation_div");
@@ -421,8 +417,6 @@ function eventEnterSearch(event) {
 					if(data.processmap.isOver) {
 						alert('<s:message code="analysis.relation.ui.msg4"/>')
 					}
-					
-
 					// 차트 확장의 위한 준비
 					processMapData = data.processmap;
 					$("#chartFull").show();

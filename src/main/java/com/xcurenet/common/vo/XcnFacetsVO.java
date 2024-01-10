@@ -9,8 +9,8 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.Aggregations;
-import org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
+import org.elasticsearch.search.aggregations.metrics.ParsedSum;
 import org.springframework.data.elasticsearch.core.ElasticsearchAggregations;
 
 import java.io.IOException;
@@ -20,11 +20,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class XcnFacetsVO {
+
 	private JSONArray jArray = new JSONArray();
 	private List<String> column = new ArrayList<>();
-
-	private int facetSize = 0;
-	private int facetIdx = 0;
 
 
 
@@ -32,26 +30,18 @@ public class XcnFacetsVO {
 		this(edc, 0);
 	}
 
-	public XcnFacetsVO(SolrEdcMessageVO edc, int columnCount) {
-		this(edc, "result", columnCount);
-	}
 
 	@SuppressWarnings("unchecked")
-	public XcnFacetsVO(SolrEdcMessageVO edc, String name, int columnCount) {
-		facetSize = edc.getFacets().aggregations().asList().size();
+	public XcnFacetsVO(SolrEdcMessageVO edc,int columnCount) {
+		setColumn(columnCount);
 
+		String mainKey = getMainKey(edc.getFacets());
 		ElasticsearchAggregations facets = edc.getFacets();
 		if(facets != null) {
-			Aggregations mainAggregations = facets.aggregations();
-			Map<String, Aggregation> mainAggsMap = mainAggregations.getAsMap();
-			String mainKey = mainAggsMap.keySet().stream().collect(Collectors.joining());
-
 			Terms facetPivot = facets.aggregations().get(mainKey);
 			if(facetPivot != null) {
 				List<Terms.Bucket> bucketList = (List<Terms.Bucket>) facetPivot.getBuckets();
-				for (Terms.Bucket bucket  : bucketList) {
-					jArray.add(bucketsSetting(bucket));
-				}
+				bucketList.stream().forEach(m -> bucketsSetting(m));
 			}
 		}
 	}
@@ -66,7 +56,8 @@ public class XcnFacetsVO {
 		return list;
 	}
 
-    protected static @Data class Buckets {
+
+	protected static @Data class Buckets {
     	private String val;
     	private String key;
     	private int count;
@@ -80,72 +71,33 @@ public class XcnFacetsVO {
 	}
 
 
-
-//	public void parsedLongTerms(Aggregation aggs,String headerKey,long docCount){
-//		ParsedLongTerms bucketArgments = (ParsedLongTerms) aggs;
-//		for (Terms.Bucket arg : bucketArgments.getBuckets()) {
-//			String buckeyKey = arg.getKeyAsString();
-//			headerList.add(headerKey);
-//			facetParse(buckeyKey, docCount);
-//		}
-//	}
-//
-//	public void parsedRange(Aggregation aggs,String headerKey,long docCount){
-//		ParsedRange bucketArgments = (ParsedRange) aggs;
-//		for (Range.Bucket arg : bucketArgments.getBuckets()) {
-//			String buckeyKey = arg.getKeyAsString();
-//			headerList.add(headerKey);
-//			facetParse(buckeyKey, docCount);
-//		}
-//	}
-//
-//	public void parsedSum(Aggregation aggs,String headerKey,long docCount){
-//		ParsedSum bucketArgments = (ParsedSum) aggs;
-//		String buckeyKey = bucketArgments.getName();
-//		headerList.add(headerKey);
-//		facetParse( buckeyKey, docCount);
-//	}
-
-
 	@SuppressWarnings({"rawtypes", "unchecked"})
-	private JSONObject bucketsSetting(Terms.Bucket bucket) {
-		if(null == bucket.getAggregations()) return null;
-		JSONObject json = new JSONObject();
-
-		Aggregations aggs = bucket.getAggregations();
-		List<Aggregation> aggsList = aggs.asList();
-
-		JSONArray jsonArray = new JSONArray();
-
-		if(this.facetSize == this.facetIdx) {
-
-		}else {
+	private void bucketsSetting(Terms.Bucket bucket) {
+		if(bucket.getAggregations() != null) {
+			Aggregations aggs = bucket.getAggregations();
+			List<Aggregation> aggsList = aggs.asList();
 			for (Aggregation subaggs : aggsList) {
-				jsonArray.add(parseFacetAggs(subaggs, bucket.getKeyAsString(), bucket.getDocCount()));
-				facetIdx = facetIdx + 1;
+				jArray.add(parsedSum(subaggs, bucket.getKeyAsString(), bucket.getDocCount()));
 			}
-			json.put(bucket.getKey(), jsonArray);
 		}
-
-		return json;
 	}
 
-
-	public JSONObject parseFacetAggs(Aggregation aggs,String headerKey,long docCount){
-		if (aggs instanceof ParsedStringTerms) return parsedStringTerms(aggs,headerKey,docCount);
-		else return null;
-	}
-
-
-	public JSONObject parsedStringTerms(Aggregation aggs,String headerKey,long docCount){
+	public JSONObject parsedSum(Aggregation aggs,String headerKey,long docCount){
+		ParsedSum bucketArgments = (ParsedSum) aggs;
 		JSONObject json = new JSONObject();
-		ParsedStringTerms bucketArgments = (ParsedStringTerms) aggs;
-		for (Terms.Bucket arg : bucketArgments.getBuckets()) {
-			String buckeyKey = arg.getKeyAsString();
-			json.put(buckeyKey, docCount);
-		}
+		json.put("val",headerKey);
+		json.put("count",(int) docCount);
+		json.put("key",bucketArgments.getName());
+		json.put("size",((long) bucketArgments.getValue()));
 		return json;
 	}
 
+	public String getMainKey(ElasticsearchAggregations elasticsearchAggregations){
+		if(elasticsearchAggregations == null) return "";
+		Aggregations mainAggregations = elasticsearchAggregations.aggregations();
+		Map<String, Aggregation> mainAggsMap = mainAggregations.getAsMap();
+		String mainKey = mainAggsMap.keySet().stream().collect(Collectors.joining());
+		return mainKey;
+	}
 
 }

@@ -9,7 +9,6 @@ import lombok.Data;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 public @Data class AnalysisRelationListVO extends XcnFacetsVO {
 
@@ -22,14 +21,11 @@ public @Data class AnalysisRelationListVO extends XcnFacetsVO {
 
 	public AnalysisRelationListVO(SolrEdcMessageVO edc, int columnCount) throws JsonParseException, JsonMappingException, IOException {
 		super(edc, columnCount);
-		totalCount = 0;
 
-		if(!Common.isEmpty(edc.getPivotData())){
-			List<Map<String, Object>>  resultList  = edc.getPivotData();
+		if(!Common.isEmpty(edc.getFacetData())) {
 			buckets = getList(new AnalysisRelationListVO.Buckets());
-
+			totalCount = buckets.size();
 		}
-
 
 	}
 
