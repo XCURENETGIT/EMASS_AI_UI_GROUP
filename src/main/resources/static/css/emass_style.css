@@ -204,10 +204,6 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 .filelist ul li p {height:24px; line-height: 24px;color:#333; font-weight: 400; background-size: 16px 16px;}
 .filelist ul li p a {margin-left:25px; color:#111;}
 .filelist ul li:last-child {border:none;}
-.searchArea{position: relative; padding:0 20px; margin-bottom:12px; display: grid; grid-template-columns: 75% 25%;  margin-right:16px;}
-.searchSub {position: relative; overflow: hidden; }
-.searchSub > div {display: inline-block; float:left; margin-bottom:8px;margin-right:8px;}
-.btnList {text-align:right;}
 
 
 /* 메신저*/

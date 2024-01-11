@@ -18,7 +18,7 @@ var detailStartPage = 1;
 var detailEndPage = 1;
 var detailViewPage = 10;
 var detailPageBreak = 100;
-var detailLimit = 10;
+var detailLimit = 5;
 
 var selectedSearchData = 1;
 var searchOffset = 0;
@@ -884,6 +884,7 @@ function getFileDetailMessage(msgid){
             setTimeout(function(){
                 readTimeFlag = false;
             }, 1000);
+            setMessengerRead();
         }
     });
 
@@ -1158,6 +1159,7 @@ function getCollectionMessage(userid, srcip, usr_id, msgid,type){
                 $("#timeline_list").html(makeList(false));
                 HighlightGroup();
 
+
         },
         error : function(status, message) {
             searchFlag = false;
@@ -1165,6 +1167,7 @@ function getCollectionMessage(userid, srcip, usr_id, msgid,type){
         },
         complete : function() {
             ui.off('timeline_list');
+            setMessengerRead();
             searchFlag = false;
         }
     });

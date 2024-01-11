@@ -74,6 +74,7 @@ public class CollectionController {
 	public MinioFileAdapter minioFileAdapter;
 
 
+
 	@RequestMapping(value = "/getNoteList.xcn")
 	@Description("노트 서비스 목록 조회")
 	@ResponseBody
@@ -104,6 +105,10 @@ public class CollectionController {
 		JSONObject param = Common.getParam(request);
 		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
 		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), Common.getAdminId(session));
+
+		if (Common.isEquals(param.get("readYn"), "N")) {
+			sq.setQuery(sq.getQuery() + " -checked.readId:" + Common.getAdminId(session));
+		}
 
 		sq.setParam("group", true);
 		sq.setParam("group.facet", true);
@@ -142,7 +147,7 @@ public class CollectionController {
 		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), Common.getAdminId(session));
 		sq.setQuery(sq.getQuery() + MESSENGER4 + " +userid:* +attached:Y");
 		if (Common.isEquals(param.get("readYn"), "N")) {
-			sq.addFilterQuery(String.format(SolrEdcServiceImpl.JOIN_UNREAD, Common.getAdminId(session)));
+			sq.setQuery(sq.getQuery() + " -checked.readId:" + Common.getAdminId(session));
 		}
 		sq.setStart(Common.nvz(param.get("offset"), 0));
 		sq.setRows(Common.nvz(param.get("limit"), 100));

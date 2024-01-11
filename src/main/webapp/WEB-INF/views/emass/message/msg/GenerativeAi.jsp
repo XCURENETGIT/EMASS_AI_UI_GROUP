@@ -171,7 +171,7 @@
                 var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '')+"235959";
                 var searchStr = '';
                 if (userid == '') return;
-                eikon2.getCollectionGroupTextExport('<c:url value="/getCollectionGroupAllExport.xcn"/>?userid=' + userid + '&srcip=' + srcip + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr+'&limit=1000&facet_detail=true&export=true');
+                eikon2.getCollectionGroupTextExport('<c:url value="/getCollectionGroupAllExport.xcn"/>?userid=' + userid + '&srcip=' + srcip + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr+'&limit=1000&facet_detail=true&export=true&type=G');
                 hideSelect();
             });
 
@@ -191,7 +191,7 @@
                 var msgIds=[];
                 $('.downloadIcon').each ( function ( i, item ) {
                     var msgId = $(this).parents('p').attr('msgid');
-                    msgIds.push(msgId);
+                    if(!msgIds.includes(msgId)){ msgIds.push(msgId);}
                 });
 
                 var attachUrl = '<c:url value="/downEmassAttachByMsgId.xcn"/>?msgIds='+msgIds.join(',');
@@ -410,7 +410,7 @@
             var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '')+"235959";
             var searchStr = '';
 
-            eikon2.getCollectionGroupTextExport('<c:url value="/getCollectionrGroupTextExport.xcn"/>?userid=' + userid + '&srcip=' + srcip + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr + '&type=' + type + '&groupField=sender_str&limit=1000&', userid);
+            eikon2.getCollectionGroupTextExport('<c:url value="/getCollectionrGroupTextExport.xcn"/>?userid=' + userid + '&srcip=' + srcip + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr + '&type=G' +'&export_type='+type + '&groupField=sender_str&limit=1000&', userid);
         }
 
 

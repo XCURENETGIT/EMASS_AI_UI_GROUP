@@ -820,14 +820,6 @@
 						<button class="btn05" id="saveBtn"><img src="<c:url value="/img/subBtn_save.png"/>" alt="저장">저장</button>
 						<button class="btn05" id="printBtn"><img src="<c:url value="/img/subBtn_mail.png"/>" alt="인쇄">인쇄</button>
 					</div>
-					<div class="btnform txt_right">
-						<button class="btn05"><img src="<c:url value="/img/subBtn_notification.png"/>" alt="메시지보관">메시지보관</button>
-						<select id="" name="">
-							<option value="">내보내기</option>
-							<option value="">옵션2</option>
-							<option value="">옵션3</option>
-						</select>
-					</div>
 				</div>
 			</div>
 			<div class="inner_fileList pl16 pr16">
