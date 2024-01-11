@@ -85,6 +85,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 	@Override
 	public SearchHistoryGroupVO getSearchHistoryList(SolrQuery sq) throws SolrServerException, IOException {
+		log.info("[QUERY] {}", sq.getQuery());
 		String filterQuery = (null != sq.getFilterQueries()) ? String.join(" ", sq.getFilterQueries()) : "";
 		Query searchQuery = new NativeSearchQueryBuilder()
 				.withFields(Common.toArray(sq.getFields(), ","))

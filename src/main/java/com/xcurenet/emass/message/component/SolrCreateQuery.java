@@ -89,6 +89,10 @@ public class SolrCreateQuery {
 	public static final String PI_TOTAL = "pi_total";
 	public static final String PI = "pi";
 	public static final String USER_ID = "userid";
+	public static final String SEARCH_HISTORY_USER_ID = "user.id";
+	public static final String SEARCH_HISTORY_KEYWORD_STR = "keyword_str";
+	public static final String SEARCH_HISTORY_DEPTCD = "user.deptCd";
+	public static final String SEARCH_HISTORY_BUSICD = "user.busiCd";
 	public static final String USER_STR = "user_str";
 	public static final String NAME = "name";
 	public static final String DIRECTION_SVC = "direction_svc";
@@ -289,6 +293,16 @@ public class SolrCreateQuery {
 		}
 	}
 
+	public SolrCreateQuery setSearchHistoryUserStr(String userStr) {
+		if (Common.isEmpty(userStr)) return this;
+		return addQuery(String.format("%s%s:%s", AND_QUERY, SEARCH_HISTORY_USER_ID, createOrQuery(userStr)));
+	}
+
+	public SolrCreateQuery setSearchHistoryKeywordStr(String keyword) {
+		if (Common.isEmpty(keyword)) return this;
+		return addQuery(String.format("%s%s:\"%s\"", AND_QUERY, SEARCH_HISTORY_KEYWORD_STR, keyword));
+	}
+
 	public SolrCreateQuery setName(String name) {
 		if (Common.isEmpty(name)) return this;
 		return addQuery(String.format("%s%s:%s", AND_QUERY, USER_ID, createOrQuery(name)));
@@ -299,6 +313,15 @@ public class SolrCreateQuery {
 		return addQuery(String.format("%s%s:%s", AND_QUERY, DEPTCD, createOrQuery(deptcd)));
 	}
 
+	public SolrCreateQuery setSearchHistoryDeptcd(String deptcd) {
+		if (Common.isEmpty(deptcd)) return this;
+		return addQuery(String.format("%s%s:%s", AND_QUERY, SEARCH_HISTORY_DEPTCD, createOrQuery(deptcd)));
+	}
+
+	public SolrCreateQuery setSearchHistoryBusicd(String busicd) {
+		if (Common.isEmpty(busicd)) return this;
+		return addQuery(String.format("%s%s:%s", AND_QUERY, SEARCH_HISTORY_BUSICD, createOrQuery(busicd)));
+	}
 
 	public SolrCreateQuery setBusicd(String busicd) {
 		if (Common.isEmpty(busicd)) return this;
@@ -1263,7 +1286,7 @@ public class SolrCreateQuery {
 			for (String term : terms) {
 				queryStr.append(appendSpecialchar(term)).append(" ");
 			}
-			sb.append("+").append(queryStr.toString().trim().replaceAll(" ", " +").replaceAll("__", " "));
+			sb.append("*").append(queryStr.toString().trim().replaceAll(" ", " +").replaceAll("__", " ")).append("*");
 		} else {
 			String[] terms = query.split(" ");
 			for (int i = 0; i < terms.length; i++) {

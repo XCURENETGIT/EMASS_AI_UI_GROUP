@@ -30,18 +30,21 @@ public class SearchHistoryController {
 	private SolrEdcService solrEdcService;
 
 
-	private SolrQuery createQuery(JSONObject param) {
+	private SolrQuery createQuery(JSONObject param) throws Exception {
 		String startDt = Common.nvl(param.get("startDt"));
 		String endDt = Common.nvl(param.get("endDt"));
-		String userName = Common.nvl(param.get("userName"));
+		String busi = Common.nvl(param.get("busiStr"));
+		String dept = Common.nvl(param.get("deptStr"));
+		String userStr = Common.nvl(param.get("userStr"));
+		String keyword = Common.nvl(param.get("keyword"));
 
-		SolrQuery sq = new SolrQuery();
-		StringBuilder sb = new StringBuilder();
-		if (Common.isNotEmpty(startDt) && Common.isNotEmpty(endDt)) sb.append(String.format(" +ctimeYYYYMMDD : [ %s TO %s ] ", startDt, endDt));
-		if (Common.isNotEmpty(userName)) sb.append(String.format(" +user.name : \"%s\" ", userName));
-
-		sq.setQuery(sb.toString());
-		return sq;
+		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+		if (Common.isNotEmpty(startDt) && Common.isNotEmpty(endDt)) solrCreateQuery.addDateQuery("", startDt + "000000", endDt + "235959");
+		if (Common.isNotEmpty(busi)) solrCreateQuery.setSearchHistoryBusicd(busi);
+		if (Common.isNotEmpty(dept)) solrCreateQuery.setSearchHistoryDeptcd(dept);
+		if (Common.isNotEmpty(userStr)) solrCreateQuery.setSearchHistoryUserStr(userStr);
+		if (Common.isNotEmpty(keyword)) solrCreateQuery.setSearchHistoryKeywordStr(keyword);
+		return solrCreateQuery.setQuery();
 	}
 
 	@RequestMapping(value = "/getSearchHistoryList.xcn")
@@ -50,38 +53,9 @@ public class SearchHistoryController {
 	@ResponseBody
 	public XcnResponseVO getSearchHistoryList(final HttpServletRequest request, final HttpSession session) throws Exception {
 		JSONObject param = Common.getParam(request);
-		String startDt = Common.nvl(param.get("startDt"));
-		String endDt = Common.nvl(param.get("endDt"));
-		String busi = Common.nvl(request.getParameter("busiStr"));
-		String dept = Common.nvl(request.getParameter("deptStr"));
-		String name = Common.nvl(request.getParameter("userStr"));
 
-		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
-		String query = String.format("+ctimeYYYYMMDD : [ %s TO %s ] ", startDt, endDt);
-		SolrQuery sq = new SolrQuery();
-
-		if (!name.isEmpty()) {
-			solrCreateQuery.setName(name);
-			sq = solrCreateQuery.setQuery();
-			query += sq.getQuery();
-		}
-		if (!busi.isEmpty()) {
-			solrCreateQuery.setBusicd(busi);
-			sq = solrCreateQuery.setQuery();
-			query += sq.getQuery();
-		}
-		if (!dept.isEmpty()) {
-			solrCreateQuery.setDeptcd(dept);
-			sq = solrCreateQuery.setQuery();
-			query += sq.getQuery();
-		}
-
-
-		sq.setQuery(query);
-
-		System.out.println(sq.getQuery());
-
-
+		SolrQuery sq = createQuery(param);
+		sq.setQuery(sq.getQuery());
 		sq.setParam("group", true);
 		sq.setParam("group.facet", true);
 		sq.setParam("group.ngroups", true);
@@ -89,17 +63,13 @@ public class SearchHistoryController {
 		sq.setParam("facet", true);
 		sq.setParam("facet.field", "keyword_str");
 
-		/* 그룹 디테일검색 동적 들어와야 할 offset,size 값*/
 		sq.setParam("facet.offset", String.valueOf(Common.nvz(param.get("offset"), 0)));
 		sq.setParam("facet.group", String.valueOf(Common.nvz(param.get("limit"), 100)));
 		sq.setParam("facet.list", true);
 		sq.setParam("facet.mincount", "1");
-
 		sq.setStart(Common.nvz(param.get("offset"), 0));
 		sq.setRows(Common.nvz(param.get("limit"), 0));
-
 		sq.setSort("ctime", SolrQuery.ORDER.desc);
-		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id", "userid");
 
 		SearchHistoryGroupVO vo = solrEdcService.getSearchHistoryList(sq);
 		return new XcnResponseVO(XcnRspCode.OK, vo);
@@ -116,9 +86,8 @@ public class SearchHistoryController {
 		String startDt = Common.nvl(param.get("startDt"));
 		String endDt = Common.nvl(param.get("endDt"));
 
-		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
-		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), Common.getAdminId(session));
-		sq.setQuery(String.format("+ctimeYYYYMMDD : [ %s TO %s ] +keyword_str:\"%s\"", startDt, endDt, keyword));
+		SolrQuery sq = createQuery(param);
+		sq.setQuery(sq.getQuery());
 		sq.setParam("group", true);
 		sq.setParam("group.facet", true);
 		sq.setParam("group.ngroups", true);
@@ -130,12 +99,9 @@ public class SearchHistoryController {
 		sq.setParam("facet.group", String.valueOf(Common.nvz(param.get("limit"), 100000)));
 		sq.setParam("facet.list", true);
 		sq.setParam("facet.mincount", "1");
-
 		sq.setStart(Common.nvz(param.get("offset"), 0));
 		sq.setRows(Common.nvz(param.get("limit"), 0));
-
 		sq.setSort("ctime", SolrQuery.ORDER.desc);
-		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id", "userid");
 
 		SearchHistoryGroupVO vo = solrEdcService.getSearchHistoryList(sq);
 		List<Map<String, Object>> data = new ArrayList<>();
@@ -157,13 +123,9 @@ public class SearchHistoryController {
 	@ResponseBody
 	public XcnResponseVO getSearchHistoryDetailList(final HttpServletRequest request, final HttpSession session) throws Exception {
 		JSONObject param = Common.getParam(request);
-		String keyword = Common.nvl(param.get("keyword"));
-		String startDt = Common.nvl(param.get("startDt"));
-		String endDt = Common.nvl(param.get("endDt"));
 
-		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
-		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), Common.getAdminId(session));
-		sq.setQuery(String.format("+ctimeYYYYMMDD : [ %s TO %s ] +keyword_str:\"%s\"", startDt, endDt, keyword));
+		SolrQuery sq = createQuery(param);
+		sq.setQuery(sq.getQuery());
 		sq.setStart(Common.nvz(param.get("offset"), 0));
 		sq.setRows(Common.nvz(param.get("limit"), 100));
 		sq.setSort("ctime", SolrQuery.ORDER.desc);

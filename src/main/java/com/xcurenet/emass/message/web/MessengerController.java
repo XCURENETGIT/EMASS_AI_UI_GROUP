@@ -349,12 +349,17 @@ public class MessengerController {
 		if(Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
 
 		if(Common.isNotEmpty(usr_id)) query += String.format(" +userkey:\"%s\"", usr_id);
-//		else query += String.format(" -usr_id:*");
+		else query += String.format(" -userkey:*");
 
 		//이미 출력된 동시간대 데이터 제외
 		if(Common.isNotEmpty(msgId)) {
-			query += String.format(" +msgid:[* TO %s}", msgId);
+			if(lastMsgYn) {
+				query += String.format(" +msgid:[%s TO *]", msgId);
+			} else {
+				query += String.format(" +msgid:{%s TO *]", msgId);
+			}
 		}
+
 
 		if(Common.isNotEmpty(searchStr)) query += String.format(" +body:(*%s*) ", searchStr);
 
@@ -463,8 +468,8 @@ public class MessengerController {
 
 		String addQuery = String.format(" +xrootmtr:\"%s\"", xRootMtr);
 		if(Common.isNotEmpty(usr_id)) addQuery += String.format(" +usr_id:\"%s\"", usr_id);
-//		else addQuery += " -usr_id:*";
-//		if(Common.isNotEmpty(srcip)) addQuery += String.format(" +srcip:\"%s\"", srcip);
+		else addQuery += " -usr_id:*";
+		if(Common.isNotEmpty(srcip)) addQuery += String.format(" +srcip:\"%s\"", srcip);
 
 		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
 		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), Common.getAdminId(session));
