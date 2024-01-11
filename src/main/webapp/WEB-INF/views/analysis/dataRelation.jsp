@@ -75,6 +75,11 @@
 
 </style>
 <s:message code="common.datescript" var="ko"/>
+<form method="post" id="codeParam">
+	<input type="hidden" name="oldCode" id="oldCode"></input>
+	<input type="hidden" name="oldConm" id="oldConm"></input>
+</form>
+
 <script>
 var searchFlag = false;
 var resultTotal = 0;
@@ -83,9 +88,37 @@ var rowKey = "";
 var colKey = "";
 var confColor = [<%=colorCode%>];
 var confGroup = [<%=groupName%>];
-$(document).ready(function(){
 
-	dateDefault();
+$(document).ready(function(){
+	initCondition();
+	searchReset();
+
+	/* 보낸사람 */
+	$('#sendUser').click(function () {
+		var id = $(this).attr('id');
+	    openCodeWindow("senders", $('#' + id + 'Val').val(), $('#' + id + 'Str').val(),id);
+	});
+
+	/* 받는사람 */
+	$('#receiveUser').click(function () {
+		var id = $(this).attr('id');
+		openCodeWindow("user", $('#' + id + 'Val').val(), $('#' + id + 'Str').val(),id);
+	});
+
+
+
+
+	$(document).on('click', '#sendUserSelectedArea', function (e) {
+		$('#sendUserVal, #sendUserVal').val('');
+		$('#sendUserSelectedArea').hide();
+	});
+
+	$(document).on('click', '#receiveUserSelectedArea', function (e) {
+		$('#receiveUserVal, #receiveUserVal').val('');
+		$('#receiveUserSelectedArea').hide();
+	});
+
+
 
 	$('#dateYesterday').click(function(){
 		$('#startDate').val(addDay(-1));
@@ -124,13 +157,10 @@ $(document).ready(function(){
 	});
 
 	$('#btnReset').click(function(){
-		$("#frm").each(function(){
-			this.reset();
-		});
-		dateDefault();
+		searchReset();
 	});
 
-	$("#startDate, #endDate, #title, #sendUser, #receiveUser, #keyword, #fileSize").keyup(function(event){
+	$("#startDate, #endDate, #dynamicSearch, #sendUser, #receiveUser, #keyword, #fileSize").keyup(function(event){
 		eventEnterSearch(event);
 	});
 	
@@ -151,7 +181,17 @@ $(document).ready(function(){
 		chartFullView();
 	});
 
+
 });
+
+
+
+function searchReset() {
+	dateDefault();
+	$('#interGroup,#dynamicSearch, #sendUserVal,#sendUserStr,#receiveUserVal,#receiveUserStr,#keyword,#fileSize ').val('');
+	$('#sendUserSelectedArea').hide();
+	$('#receiveUserSelectedArea').hide();
+}
 
 function eventEnterSearch(event) {
 	if(event.keyCode == 13){
@@ -164,20 +204,42 @@ function dateDefault() {
 	$('#endDate').val(addDay(0));
 }
 
+function initCondition(){
+	getCodeList('busi');
+	getCodeList('dept');
+
+	$('#busiSelect').selectpicker({
+		size: 15,
+		width: '300px',
+		searchLabel: true,
+		noneSelectedText: '<s:message code="common.org.busi.all"/>',
+		noneResultsText: '<s:message code="common.msg.noresult"/>' + ' ',
+		selectAllText: '<s:message code="common.msg.select_all"/>',
+		deselectAllText: '<s:message code="common.msg.unselect_all"/>',
+	});
+
+}
+
+function openCodeWindow(codetype,oldCode, oldConm,id) {
+	$('#oldCode').val(oldCode);
+	$('#oldConm').val(oldConm);
+
+	var url = '<c:url value="/commons/selectCode.do?codeType='+codetype+'&id='+id+'"/>';
+	var pop = fnOpenWindow('', 'selectCodeWinPopup', 1200, 700, 'resize');
+
+	$('#codeParam').attr('target', 'selectCodeWinPopup');
+	$('#codeParam').attr('action', url);
+	$('#codeParam').attr('method', 'post');
+	$('#codeParam').submit();
+}
+
+
 </script>
 	<div>
 		<!-- 검색 -->
 		<div class="searchArea">
 			<div class="searchSub_full">
-				<form id="frm">
 					<div class="searchSub_Box">
-						<div>
-							<select id="unit" name="unit">
-								<option value="file"><s:message code="consent.attach"/></option>
-								<option value="mailid"><s:message code="analysis.relation.mailid"/></option>
-								<option value="messenger"><s:message code="analysis.relation.messenger"/></option>
-							</select>
-						</div>
 						<div id="startDatePicker"><input type="date" id="startDate" name='startDate' style="width: 110px;">
 							<span class="hyphen">~</span></div>
 						<div id="endDatePicker"><input type="date" id="endDate" name='endDate' style="width: 110px;"></div>
@@ -187,37 +249,67 @@ function dateDefault() {
 							<button type="button" id="dateWeek" accesskey="W" ><s:message code="condition.week" arguments="1" argumentSeparator="|"/></button>
 							<button type="button" id="dateMonth" accesskey="M" ><s:message code="condition.month" arguments="1" argumentSeparator="|"/></button>
 						</div>
+					</div>
+					<div class="searchSub_Box">
+
+						<%-- searchType --%>
+						<div>
+							<select id="unit" name="unit">
+								<option value="file"><s:message code="consent.attach"/></option>
+								<option value="mailid"><s:message code="analysis.relation.mailid"/></option>
+								<option value="messenger"><s:message code="analysis.relation.messenger"/></option>
+							</select>
+						</div>
+
+						<%-- 동적 검색 내용--%>
+						<div>
+							<input type="text" id="dynamicSearch" placeholder="<s:message code="common.search"/>" name="dynamicSearch" style="width: 325px;">
+						</div>
+						<%-- 첨부파일 크기--%>
+						<div>
+							<input type="text" id="fileSize" name="fileSize"  style="width: 80px;"placeholder="<s:message code="analysis.relation.attachsize"/>" maxlength="8" /><span class="fs12 mal4">(MByte <s:message code="filterInfo.rangeL"/>)</span>
+						</div>
+						<%-- 예약어 --%>
+						<div>
+							<input type="text" id="keyword" name="keyword" placeholder="<s:message code="condition.keyword"/>" style="width: 160px;" class="input-sm form-control" />
+						</div>
+
+
+
+						<%-- 관심 사용자 선택 --%>
 						<div>
 							<select id="interGroup" name="interGroup" class="input-sm form-control">
 								<option value=""><s:message code="interest.user"/></option>
 							</select>
 						</div>
+						<%-- 보낸사람 --%>
 						<div>
-							<input type="text" placeholder="<s:message code="condition.subject"/>" id="title" name="title"style="width: 325px;">
-						</div>
-					</div>
-					<div class="searchSub_Box">
-
-						<div>
-							<input type="text" placeholder="<s:message code="condition.from"/>" id="sendUser" name="sendUser" style="width: 160px;">
-						</div>
-						<div>
-							<input type="text" placeholder="<s:message code="condition.to"/>" id="receiveUser" name="receiveUser"  style="width: 160px;">
-						</div>
-						<div>
-							<input type="text" id="keyword" name="keyword" placeholder="<s:message code="condition.keyword"/>" style="width: 160px;" class="input-sm form-control" />
+							<button class="btn01" id="sendUser"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
+									code="common.org.choose.sendUser"/></button>
+							<span id="sendUserSelectedArea" class="codeSelectedBtn" style="display: none">
+							<button type="button" class="btn num_add bornone"  style="z-index: 2;">0</button>
+							</span>
+							<input type="hidden" id="sendUserStr" class="selectedTitle"/>
+							<input type="hidden" id="sendUserVal"/>
 						</div>
 
+						<%-- 받는사람 --%>
 						<div>
-							<input type="text" id="fileSize" name="fileSize"  style="width: 80px;"placeholder="<s:message code="analysis.relation.attachsize"/>" maxlength="8" /><span class="fs12 mal4">(MByte <s:message code="filterInfo.rangeL"/>)</span>
+							<button class="btn01" id="receiveUser"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
+									code="common.org.choose.receiveUser"/></button>
+							<span id="receiveUserSelectedArea" class="codeSelectedBtn" style="display: none">
+							<button type="button" class="btn num_add bornone"  style="z-index: 2;">0</button>
+							</span>
+							<input type="hidden" id="receiveUserStr" class="selectedTitle"/>
+							<input type="hidden" id="receiveUserVal"/>
 						</div>
+
+
 						<div class="btnform">
 							<button type="button" accesskey="Q" class="form_btn01" id="btnSearch"><s:message code="common.msg.search"/></button>
 							<button type="button" accesskey="Q" class="form_btn02" id="btnReset"><s:message code="condition.reset"/></button>
 						</div>
 					</div>
-				</form>
-			</div>
 		</div>
 		<!-- //검색 -->
 		<div class="content">
@@ -297,7 +389,7 @@ function dateDefault() {
 		var unit = '';
 		var startDate = '';
 		var endDate = '';
-		var title = '';
+		var listData = '';
 		var sendUser = '';
 		var receiveUser = '';
 		var keyword = '';
@@ -354,7 +446,7 @@ function dateDefault() {
 			//grid.pageSize = 100;
 		}
 
-		var unit, startDate, endDate, title, sendUser, receiveUser, keyword, fileSize, processMapData;
+		var unit, startDate, endDate, dynamicSearch, sendUser, receiveUser, keyword, fileSize, processMapData;
 
 		function getData( flag ) {
 			listData = '';
@@ -363,17 +455,33 @@ function dateDefault() {
 				return;
 			}
 			if ( searchFlag ) return;
+
+			/* 보낸 사람 , 받는 사람 */
+
+			var sendUv = $('#sendUserVal').val().split('|');
+			var sendUser = sendUv.join(',');
+			var sendUserStr ='';
+			if (sendUser != '') sendUserStr = sendUser;
+			else sendUserStr = '';
+
+			var receiveUv = $('#receiveUserVal').val().split('|');
+			var receiveUser = receiveUv.join(',');
+			var receiveUserStr ='';
+			if (receiveUser != '') receiveUserStr = receiveUser;
+			else receiveUserStr = '';
+
+
+
 			if ( flag == 'Y' || flag == undefined ) {
 				grid.data.length = 0;
 				grid.loadingPage = 0;
 				grid.rtnNextPageFunc = getData;
-
 				unit = $('#unit').val();
 				startDate = $('#startDate').val();
 				endDate = $('#endDate').val();
-				title = $('#title').val();
-				sendUser = $('#sendUser').val();
-				receiveUser = $('#receiveUser').val();
+				listData = $('#listData').val();
+				sendUser = sendUserStr;
+				receiveUser = receiveUserStr;
 				keyword = $('#keyword').val();
 				fileSize = $('#fileSize').val();
 				interGroup = $("#interGroup option:selected").val();
@@ -389,7 +497,7 @@ function dateDefault() {
 				unit : unit,
 				startDate : startDate,
 				endDate : endDate,
-				title : title,
+				listData : $('#dynamicSearch').val(),
 				sendUser : sendUser,
 				receiveUser : receiveUser,
 				keyword : keyword,
@@ -439,7 +547,6 @@ function dateDefault() {
 				unit : unit,
 				startDate : startDate,
 				endDate : endDate,
-				title : title,
 				sendUser : sendUser,
 				receiveUser : receiveUser,
 				keyword : keyword,
@@ -488,7 +595,6 @@ function dateDefault() {
 				unit : unit,
 				startDate : startDate,
 				endDate : endDate,
-				title : title,
 				sendUser : sendUser,
 				receiveUser : receiveUser,
 				keyword : keyword,

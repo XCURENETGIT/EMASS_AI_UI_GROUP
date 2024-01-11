@@ -29,6 +29,7 @@ import org.elasticsearch.search.aggregations.bucket.range.RangeAggregationBuilde
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.elasticsearch.search.aggregations.pipeline.BucketSortPipelineAggregationBuilder;
+import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -263,6 +264,8 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	private List<AbstractAggregationBuilder<?>> getGroupAggregations(SolrQuery sq) {
 		List<AbstractAggregationBuilder<?>> aggregations = new ArrayList<>();
 		String mainField = Common.nvl(sq.get("group.field"));
+		SortOrder order = Common.isEmpty(sq.get("facet.sort")) ? SortOrder.ASC : SortOrder.DESC;
+
 		for (String field : sq.getFacetFields()) {
 			AbstractAggregationBuilder<TermsAggregationBuilder> termsAggregation = AggregationBuilders.terms(mainField)
 					.field(mainField)
@@ -278,14 +281,13 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 				int limit = Common.nvz(sq.get("facet.limit"), 100);
 
 				termsAggregation.subAggregation(AggregationBuilders.sum(key).field(key));
-				BucketSortPipelineAggregationBuilder paging = PipelineAggregatorBuilders.bucketSort("paging", null).from(offset).size(limit);
+				BucketSortPipelineAggregationBuilder paging = PipelineAggregatorBuilders.bucketSort("paging", List.of(new FieldSortBuilder(key).order(order))).from(offset).size(limit);
 				termsAggregation.subAggregation(paging);
 
 			} else if (sq.get("facet.list") != null &&  Common.isEquals("true", sq.get("facet.list"))) {
 				/* 대화방 목록 (그룹) */
 				int offset = Common.nvz(sq.get("facet.offset"), 0);
 				int limit = Common.nvz(sq.get("facet.group"), 100);
-				SortOrder order = Common.isEmpty(sq.get("facet.sort")) ? SortOrder.ASC : SortOrder.DESC;
 				termsAggregation.subAggregation(AggregationBuilders.topHits(field).size(1).from(0).sort("ctime", order));
 				BucketSortPipelineAggregationBuilder paging = PipelineAggregatorBuilders.bucketSort("paging", null).from(offset).size(limit);
 

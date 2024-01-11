@@ -1,6 +1,5 @@
 package com.xcurenet.emass.analysis.service.impl;
 
-import com.sun.tools.jconsole.JConsoleContext;
 import com.xcurenet.common.dao.XcnAbstractDAO;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.SolrQueryString;
@@ -57,7 +56,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 		sq.setParam("facet.limit", String.valueOf(searchVO.getLimit()));
 		sq.setFacetMinCount(1);
 		sq.setParam("facet.sum",true);
-
+		sq.setParam("facet.sort",true);
 
 		sq.addFilterQuery("-svc:(X* U*)");
 		sq.setQuery(query.toString());

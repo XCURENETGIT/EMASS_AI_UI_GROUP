@@ -1,5 +1,6 @@
 <%@ include file="/WEB-INF/fragments/popupScript.jsp"%>
 <%
+	String id = Common.nvl( request.getParameter("id") );
 	String codeType = Common.nvl( request.getParameter("codeType") );
 	String coCd = Common.nvl( request.getParameter("coCd") );
 	String oldCode = Common.nvl( request.getParameter("oldCode") );
@@ -9,6 +10,7 @@
 	input[type="checkbox"]{margin-top:5px;}
 </style>
 <script>
+var id = '<%=id%>';
 var codeType = '<%=codeType%>';
 var coCd = '<%=coCd%>';
 var oldCode = '<%=oldCode%>';
@@ -67,6 +69,12 @@ $(document).ready(function(){
 			alert('<s:message code="common.msg.noselect"/>');
 			return;
 		}
+		if(id != null && id != '') codeType = id; //조건 추가
+		if(id != null && id == 'sendUser' && grid2.getData().length > 1) {
+			alert('<s:message code="common.warn.sendUser"/>');
+			return;
+		}
+
 		opener.getSelectedCodeData( codeType, grid2.getData());
 		if( codeType == 'co' ){
 			opener.resetCode( 'busi' );
