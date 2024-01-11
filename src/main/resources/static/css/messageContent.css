@@ -527,12 +527,15 @@ input[type="radio"] {
 
 div.feedbackCorrect, div.feedbackInCorrect, div.feedbackDefer, div.feedbackInNotOpen, div.feedbackInOpen, div.feedbackcommon {
     background-repeat:no-repeat;
-    width:18px;
-    height:18px;
+    width:20px;
+    height:20px;
     position: relative;
-    top: 2px;
+    top: 0px;
     float: left;
+    background-size:80%;
+
 }
+.feedbackInCorrect img {width:100%; height:100%;}
 span.feedbackCorrect, span.feedbackInCorrect, span.feedbackDefer, span.feedbackInNotOpen, span.feedbackInOpen, span.feedbackcommon {
     background-repeat:no-repeat;
     background-position: center center !important;
@@ -555,14 +558,18 @@ span.feedbackCorrect, span.feedbackInCorrect, span.feedbackDefer, span.feedbackI
 .feedbackCorrectBg  {padding:4px 10px 4px 2px; background-color:#EBF9ED;  color:#2EBD3D !important; font-weight:600; border-radius: 10px; }
 
 .feedbackcommonBg img, .feedbackCorrectBg img, .feedbackInNotOpenBg img,.feedbackInOpenBg img, .feedbackInCorrectBg img, .feedbackDeferBg img {margin-top:-2px; margin-right: 4px;}
-#contextMenu li .feedbackCorrect,
+
+#contextMenu li .feedbackcommonBg,
+#contextMenu li .feedbackInNotOpenBg,
+#contextMenu li .feedbackInOpenBg,
+#contextMenu li .feedbackInCorrectBg,
 #contextMenu li .feedbackInCorrect,
 #contextMenu li .feedbackDefer {
     background-repeat:no-repeat;
-    width:18px;
-    height:18px;
+    width:20px;
+    height:20px;
     position: relative;
-    top: -2px;
+    top: 0px;
     float: left;
 }
 .font-normal{

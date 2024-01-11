@@ -523,11 +523,42 @@
 <textarea style="display: none;" id="message"><%=loginMsg%></textarea>
 
 <div id="login">
+	<div id="loginWrap">
+		<!-- 로그인-->
+		<form method="post">
+			<div class="imgcontainer">
+				<img src="<c:url value="/img/login_bi.png"/>" alt="EmassPro" class="emass">
+				<img src="<c:url value="/img/logo_emass.png"/>" alt="EmassPro" class="emass">
+			</div>
+
+			<div id="login_container">
+				<div>
+					<input type="text" placeholder="ID" id="userIdInput" required>
+					<input class="mat12" type="password" placeholder="Password" id="userPwInput" autocomplete="off" required>
+				</div>
+				<div>
+					<button id="loginBtn" type="button">로그인</button>
+				</div>
+			</div>
+			<div id="login_switch">
+				<label class="switch">
+					<input type="checkbox" checked="checked" id="saveLoginId" class="checkbox_align">
+					<span class="slider round"></span>
+				</label>
+				<span class="switchText"><%= Common.isEquals(locale, "ko") ? "로그인 ID 저장" : "Save Login ID" %></span>
+			</div>
+		</form>
+		<!--//로그인-->
+	</div>
+
+</div>
+<!-- OLD
+<div id="login">
 	<div class="logo">
 		<img src="<c:url value="/img/logo_login.png"/>" alt="EmassPro" class="emass">
 	</div>
 	<div id="loginWrap">
-		<!-- 로그인-->
+
 		<form method="post">
 			<div class="imgcontainer">
 				<img src="<c:url value="/img/logo_emass.png"/>" alt="EmassPro" class="emass">
@@ -542,12 +573,76 @@
 						<%= Common.isEquals(locale, "ko") ? "로그인 ID 저장" : "Save Login ID" %>
 			</div>
 		</form>
-		<!--//로그인-->
+
 	</div>
 	<div id="loginText">
 		<h3>Enterprise MessAge Scanning System</h3>
-		<%--<p>온라인(네트워크) 정보유출을 방지하기 위하여<br/>사용자의 전달 메시지 내용에 대하여 로깅 감시하는 시스템입니다.</p>--%>
 	</div>
-</div>
+</div>-->
+
+<style>
+	/* The switch - the box around the slider */
+	.switch {
+		position: relative;
+		display: inline-block;
+		width: 40px;
+		height: 24px;
+	}
+
+	/* Hide default HTML checkbox */
+	.switch input {
+		opacity: 0;
+		width: 0;
+		height: 0;
+	}
+
+	/* The slider */
+	.slider {
+		position: absolute;
+		cursor: pointer;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: #ccc;
+		-webkit-transition: .4s;
+		transition: .4s;
+	}
+
+	.slider:before {
+		position: absolute;
+		content: "";
+		height: 17px;
+		width: 17px;
+		left: 3px;
+		bottom: 3px;
+		background-color: white;
+		-webkit-transition: .4s;
+		transition: .4s;
+	}
+
+	input:checked + .slider {
+		background-color: #2196F3;
+	}
+
+	input:focus + .slider {
+		box-shadow: 0 0 1px #2196F3;
+	}
+
+	input:checked + .slider:before {
+		-webkit-transform: translateX(16px);
+		-ms-transform: translateX(16px);
+		transform: translateX(16px);
+	}
+
+	/* Rounded sliders */
+	.slider.round {
+		border-radius: 34px;
+	}
+
+	.slider.round:before {
+		border-radius: 50%;
+	}
+</style>
 </body>
 </html>
