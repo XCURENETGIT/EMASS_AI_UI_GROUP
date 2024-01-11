@@ -31,26 +31,29 @@ var eikon = {
     init: function () {
         //makeSampleData();
 
-        $('#scrollArea').scroll(function () {
-            if (searchFlag) return;
+        $('#scrollArea').scroll(function(){
+            if( searchFlag ) return;
             clearTimeout(resizeTimer);
-            var obj = this;
-            resizeTimer = setTimeout(function () {
+            var obj=this;
+            resizeTimer = setTimeout(function() {
 //				if( $('.btnCustomPosition').is(':visible') ) return;
-                if ($(obj).scrollTop() < 10) {
-                    if ($($('#timeline_list').children().first().children().first()).hasClass('timeline-panel') || $($('#timeline_list').children().first()).hasClass('timeline-panel')) $('.messenger_prev').css('display', 'none');
-                    else $('.messenger_prev').css('display', 'block');
-                    $('.messenger_next').css('display', 'none');
+                if( $(obj).scrollTop() < 10) {
+                    if($($('#timeline_list').children().first().children().first()).hasClass('timeline-panel') || $($('#timeline_list').children().first()).hasClass('timeline-panel')) $('.messenger_prev').css('display','none');
+                    else $('.messenger_prev').css('display','block');
+                    console.log("3");
+                    $('.messenger_next').css('display','none');
 //					$('.messenger_prev').click();
-                } else if ($('#timeline_list').height() <= $(obj).scrollTop() + $(obj).height() + 10) {
-                    if (detailDataSet.length < detailLimit) $('.messenger_next').css('display', 'none');
-                    else $('.messenger_next').css('display', 'block');
-                    $('.messenger_prev').css('display', 'none');
+                }
+                else if( $('#timeline_list').height() <= $(obj).scrollTop()+$(obj).height()+10){
+                    if(detailDataSet.length < detailLimit) $('.messenger_next').css('display','none');
+                    else $('.messenger_next').css('display','block');
+                    console.log("4");
+                    $('.messenger_prev').css('display','none');
 //					$('.messenger_next').click();
-                } else {
+                }else{
                     checkLastMsg(true);
                 }
-            }, 100);
+            },100);
         });
 
 
@@ -307,6 +310,7 @@ function getMessengerMessage(xRootmtr, srcip, usr_id, msgid) {
         success: function (data, total) {
             if (data.groups.length > 0) {
                 $('.messenger_prev').css('display', 'block');
+                $('#totalCount').css('display', 'block');
             }
             if (data.groups.length == 0) {
                 $("#timeline_list").html(noDataMsg());
@@ -321,14 +325,12 @@ function getMessengerMessage(xRootmtr, srcip, usr_id, msgid) {
             detailDataSet = data.groups;
             prevDetailDataSet = data.groups;
 
-
             if (data.numFound < detailLimit)
                 $('.messenger_next').css('display', 'none');
             else $('.messenger_next').css('display', 'block');
 
             $("#timeline_list").html(makeList(false));
             Highlight();
-//			updateEmassMessengerAdminXrootMtr(xrootmtr, nvl(focusMsgId, detailDataSet[0].msgid), srcip, usr_id);
         },
         error: function (status, message) {
             searchFlag = false;
@@ -913,25 +915,26 @@ function noDataMsg() {
     return str;
 }
 
-function noPrevDataMsg() {
-    var str = '<div class="timeline-panel" style="padding-left:10px;">';
-    str += '	<span class="list-group-item cursor-text">';
-    str += '		<div class="timeline-body" style="text-align: center;">';
-    str += xcnuiJS.noDataPrev; //이전 데이터가 없습니다.
-    str += '		</div>';
-    str += '	</span>';
-    str += '</div>';
+function noPrevDataMsg(){
+    var str='<div class="timeline-panel">';
+    str+='	<span class="list-group-item02 cursor-text">';
+    str+='		<div class="timeline-body" style="text-align: center;">';
+    str+=			xcnuiJS.noDataPrev; //이전 데이터가 없습니다.
+    str+='		</div>';
+    str+='	</span>';
+    str+='</div>';
     return str;
 }
 
-function noNextDataMsg() {
-    var str = '<div class="timeline-panel" style="padding-left:10px;">';
-    str += '	<span class="list-group-item cursor-text">';
-    str += '		<div class="timeline-body" style="text-align: center;">';
-    str += xcnuiJS.noDataNext; //다음 데이터가 없습니다.
-    str += '		</div>';
-    str += '	</span>';
-    str += '</div>';
+
+function noNextDataMsg(){
+    var str='<div class="timeline-panel">';
+    str+='	<span class="list-group-item02 cursor-text">';
+    str+='		<div class="timeline-body" style="text-align: center;">';
+    str+=			xcnuiJS.noDataNext; //다음 데이터가 없습니다.
+    str+='		</div>';
+    str+='	</span>';
+    str+='</div>';
     return str;
 }
 

@@ -1,5 +1,6 @@
 package com.xcurenet.emass.message.web;
 
+import com.sun.tools.jconsole.JConsoleContext;
 import com.xcurenet.annotations.AuditMenu;
 import com.xcurenet.annotations.AuditOperation;
 import com.xcurenet.annotations.AuditParentMenu;
@@ -14,6 +15,7 @@ import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.emass.message.component.SolrCreateQuery;
 import com.xcurenet.emass.message.service.*;
+import com.xcurenet.emass.message.service.impl.SolrEdcServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -95,7 +97,8 @@ public class MessengerController {
 		JSONObject param = Common.getParam(request);
 		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
 		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), Common.getAdminId(session));
-		sq.setQuery(sq.getQuery() + MESSENGER + " +xrootmtr:*");
+		String space = "\"\")";
+		sq.setQuery(sq.getQuery() + MESSENGER + " +xrootmtr:* -xrootmtr:(".concat(space));
 		if (Common.isEquals(param.get("readYn"), "N")) {
 			sq.setQuery(sq.getQuery() + " -checked.readId:" + Common.getAdminId(session));
 		}
@@ -151,46 +154,6 @@ public class MessengerController {
 		return new XcnResponseVO(XcnRspCode.OK, solrEdcGroupVO, solrEdcGroupVO.getNumFound());
 	}
 
-	public List<MessengerGroupVO> setCount(List<MessengerGroupVO> groups, String adminId) throws IOException, SolrServerException {
-		List<String> xrootmtrs = new ArrayList<>();
-		for (MessengerGroupVO group : groups) {
-			xrootmtrs.add("\"" + group.getXrootmtr() + "\"");
-		}
-		if (xrootmtrs.size() == 0) return groups;
-
-		/* 임시 주석*/
-		Map<String, Long> allCount = getAllCount(xrootmtrs);
-		/*	Map<String, Long> unReadCount = getUnReadCount_temp(xrootmtrs, adminId);*/
-
-		for (MessengerGroupVO group : groups) {
-			group.setMsg_cnt(Common.nvn(allCount.get(group.getXrootmtr())));
-			/*	group.setUnread_cnt(Common.nvn(unReadCount.get(group.getXrootmtr())));*/
-		}
-		return groups;
-	}
-
-	// 읽음 메시지
-	private Map<String, Long> getAllCount(List<String> xrootmtrs) throws IOException, SolrServerException {
-		SolrQuery sq = new SolrQuery();
-		sq.setQuery(String.format("+xrootmtr:( %s ) %s",makeParentheses( Common.join(xrootmtrs, " ")), MESSENGER));
-		sq.setRows(0);
-		sq.addFacetField("xrootmtr");
-		sq.setFacetLimit(-1);
-		sq.setFacetMinCount(1);
-		sq.setFacetSort("index");
-		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, null);
-
-		Map<String, Long> cnt = new HashMap<>();
-		List<FacetVO> facet = edc.getFacet();
-		if (facet != null) {
-			for (FacetVO vo : facet) {
-				cnt.put(vo.getName(), vo.getCount());
-			}
-		}
-		return cnt;
-	}
-
-
 
 	/**
 	 * 괄호 생성
@@ -204,30 +167,6 @@ public class MessengerController {
 		tempSb.append(ElasticSearchCommon.CLOSE_PARENTHESES);
 		return tempSb.toString();
 	}
-
-	//안읽음 메시지
-	private Map<String, Long> getUnReadCount(List<String> xrootmtrs, String adminId) throws IOException, SolrServerException {
-		SolrQuery sq = new SolrQuery();
-		sq.setQuery(String.format(" +xrootmtr:( %s ) %s ",makeParentheses(  Common.join(xrootmtrs, " ")), MESSENGER));
-		//	sq.setQuery(sq.getQuery() + String.format(SolrEdcServiceImpl.JOIN_UNREAD, adminId)); // 추후 안읽음 쿼리 추가해야함
-
-		sq.setParam("group", true);
-		sq.setParam("group.facet", true);
-		sq.setParam("group.ngroups", true);
-		sq.setParam("group.field", "xrootmtr");
-		sq.setStart(0);
-		sq.setRows(Common.MAX_VALUE);
-		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr");
-
-		Map<String, Long> cnt = new HashMap<>();
-		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, adminId);
-		List<MessengerGroupVO> groups = solrEdcGroupVO.getGroups();
-		for (MessengerGroupVO group : groups) {
-			cnt.put(group.getXrootmtr(), group.getMsg_cnt());
-		}
-		return cnt;
-	}
-
 
 
 	@RequestMapping(value = "/getMessengerMessageTotal.xcn")
@@ -346,7 +285,7 @@ public class MessengerController {
 		SolrQuery sq = new SolrQuery();
 		String query = String.format("+ctime:[%s TO %s] +xrootmtr:\"%s\"", startDt, endDt, xRootMtr);
 
-		if(Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
+//		if(Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
 
 		if(Common.isNotEmpty(usr_id)) query += String.format(" +userkey:\"%s\"", usr_id);
 		else query += String.format(" -userkey:*");
@@ -391,7 +330,7 @@ public class MessengerController {
 //		if(Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
 
 		if(Common.isNotEmpty(usr_id)) query += String.format(" +userkey:\"%s\"", usr_id);
-//		else query += String.format(" -userkey:*");
+		else query += String.format(" -userkey:*");
 
 		//이미 출력된 동시간대 데이터 제외
 		if(Common.isNotEmpty(msgId)) {

@@ -23,7 +23,6 @@
 <script type="text/javascript" src="<c:url value="/js/messageGrid.js"/>"></script>
 
 <head>
-	<title>EMASS LT - <s:message code="DATA_MONITOR.MESSAGE_SERVICE"/></title>
 
 	<style>
 
@@ -1059,7 +1058,6 @@
 							<button class="form_btn01 blackBg" type="button" accesskey="M" id="searchMsgBtn">검색</button>
 						</div>
 					</div>
-					<%--							<div class="col-lg-12"><span style="font-size: 12px; background-color: #444; color: #fff; display: block; padding-left: 3px; padding-right: 3px;border-top-left-radius:4px;border-top-right-radius:4px;height:20px;padding-top:3px;">&nbsp;<s:message code="condition.xrootmtr"/> : <span id="xrootmtr"></span><span id="srcip" style="display:none;"></span><span id="usr_id" style="display:none;"></span><span id="msgid" style="display:none;"></span></span></div>--%>
 				</div>
 
 				<%--					채팅 검색 부분 끝!--%>
@@ -1067,8 +1065,6 @@
 				<%--					채팅 본문 내용 보이는 구간 시작  -> ***** 아직 안함 --%>
 				<div style="margin-top:-10px;">
 					<div class="form-group form-inline">
-
-
 						<div class="input-group date" id="timedatepicker" style="margin-left: 5px;display:none;">
 							<input type="text" id="timeDt" class="input-sm form-control border-radius-none" style="display:none;"/>
 							<span class="input-group-addon startDateBtn border-radius-none">
@@ -1091,14 +1087,10 @@
 						</div>
 					</div>
 				</div>
+
 				<div class="row2" style="height: calc(100% - 160px);">
 					<div>
-						<div class="messenger_prev" style="margin-bottom:16px" title="<s:message code='eikon.msg.show.prev'/>">
-							<svg xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512">
-								<!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-								<path d="M246.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L224 109.3 361.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160zm160 352l-160-160c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L224 301.3 361.4 438.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3z"/>
-							</svg>
-						</div>
+						<div class="messenger_prev" style="margin-bottom:16px" title="<s:message code='eikon.msg.show.prev'/>"><svg xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M246.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L224 109.3 361.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160zm160 352l-160-160c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L224 301.3 361.4 438.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3z"/></svg></div>
 						<div id="timeline_list">
 							<div class="timeline-panel">
 								<div class="list-group-item02 cursor-text">
@@ -1110,15 +1102,11 @@
 						</div>
 					</div>
 				</div>
-				<div class="messenger_next" title="<s:message code='eikon.msg.show.next'/>">
-					<svg xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512">
-						<!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-						<path d="M246.6 470.6c-12.5 12.5-32.8 12.5-45.3 0l-160-160c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L224 402.7 361.4 265.4c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3l-160 160zm160-352l-160 160c-12.5 12.5-32.8 12.5-45.3 0l-160-160c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L224 210.7 361.4 73.4c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3z"/>
-					</svg>
-				</div>
+				<div class="messenger_next" title="<s:message code='eikon.msg.show.next'/>"><svg xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M246.6 470.6c-12.5 12.5-32.8 12.5-45.3 0l-160-160c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L224 402.7 361.4 265.4c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3l-160 160zm160-352l-160 160c-12.5 12.5-32.8 12.5-45.3 0l-160-160c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L224 210.7 361.4 73.4c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3z"/></svg></div>
 				<div class="p16 white" style="position: fixed; bottom:0;">
 					<s:message code="eikon.msg.total.cnt"/> : <span id="groupSubResultCnt" class="blue03">0</span>
 				</div>
+
 				<%--	<div class="chat active-chat" data-chat="person2">
 						<div class="conversation-start">
 							<span>Today, 5:38 PM</span>
@@ -1161,9 +1149,6 @@
 
 
 <div style="width: 0%;height: 0px;">
-	<script type="text/javascript">
-        LoadInnoFD(1, 1);
-	</script>
 </div>
 <iframe id="AttachDown" src="about:blank;" height="0" width="0" style="display: none;"></iframe>
 <!-- Back to top -->
