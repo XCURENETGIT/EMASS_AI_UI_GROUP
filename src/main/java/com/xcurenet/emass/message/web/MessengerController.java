@@ -99,7 +99,7 @@ public class MessengerController {
 		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), Common.getAdminId(session));
 		sq.setQuery(sq.getQuery() + MESSENGER + " +xrootmtr:*");
 		if (Common.isEquals(param.get("readYn"), "N")) {
-			sq.addFilterQuery(String.format(SolrEdcServiceImpl.JOIN_UNREAD, Common.getAdminId(session)));
+			sq.setQuery(sq.getQuery() + " -checked.readId:" + Common.getAdminId(session));
 		}
 		sq.setStart(Common.nvz(param.get("offset"), 0));
 		sq.setRows(Common.nvz(param.get("limit"), 100));
@@ -121,6 +121,9 @@ public class MessengerController {
 		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
 		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), Common.getAdminId(session));
 		sq.setQuery(sq.getQuery() + MESSENGER + " +xrootmtr:*");
+		if (Common.isEquals(param.get("readYn"), "N")) {
+			sq.setQuery(sq.getQuery() + " -checked.readId:" + Common.getAdminId(session));
+		}
 
 		sq.setParam("group", true);
 		sq.setParam("group.facet", true);
