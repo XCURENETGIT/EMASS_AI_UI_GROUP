@@ -187,6 +187,18 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 .messageCon .messageCon_btn select{vertical-align: middle;}
 .messageCon .conBox { position: relative; padding:16px; font-size:13px;}
 .messageCon .conBox .rightBox { position: absolute; top:16px; right:16px;}
+.messageCon .btn { position: absolute; right:16px; top:6px; vertical-align: bottom; display:inline-block; color:#555; text-align: right;}
+.messageCon .btn select{vertical-align: middle;}
+.filelist {position: relative;}
+.filelist ul li {position: relative; border-bottom:1px solid #ccc; font-size:13px;  color:#333; padding:8px;}
+.filelist ul li p {height:24px; line-height: 24px;color:#333; font-weight: 400; background-size: 16px 16px;}
+.filelist ul li p a {margin-left:25px; color:#111;}
+.filelist ul li:last-child {border:none;}
+.searchArea{position: relative; padding:0 20px; margin-bottom:12px; display: grid; grid-template-columns: 75% 25%;  margin-right:16px;}
+.searchSub {position: relative; overflow: hidden; }
+.searchSub > div {display: inline-block; float:left; margin-bottom:8px;margin-right:8px;}
+.btnList {text-align:right;}
+
 
 /* 메신저*/
 .inner_messenger { position: relative; /*height: 100vh;*/height: calc(100vh - 50px); display: flex; /*grid-template-columns: 340px 1fr 1fr 300px;*/
@@ -992,4 +1004,106 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 #bootstrap_confirm .bootstrap-dialog-title {display: inline-block !important;	font-size: 18px; font-weight: 600; color: #111; text-align: center; width: 100%;}
 #bootstrap_confirm .bootstrap-dialog-title .auto_close {font-size: 12px; font-weight: 400; color: #111; text-align: center; width: 100%;padding-top: 5px;}
 #bootstrap_confirm .modal-dialog .modal-content .modal-footer button.btn-default {background-color: #EEE !important;color: #111 !important;}
+
+
+
+.attach_file_img {
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-image: url(../img/file/none.png);
+}
+
+.attach_png {
+	background-image: url(../img/file/png.png);
+}
+.attach_cab {
+	background-image: url(../img/file/cab.png);
+}
+.attach_jpg {
+	background-image: url(../img/file/jpg.png);
+}
+.attach_jpeg {
+	background-image: url(../img/file/jpeg.png);
+}
+.attach_asf {
+	background-image: url(../img/file/asf.png);
+}
+.attach_avi {
+	background-image: url(../img/file/avi.png);
+}
+.attach_bmp {
+	background-image: url(../img/file/bmp.png);
+}
+.attach_doc {
+	background-image: url(../img/file/doc.png);
+}
+.attach_docx {
+	background-image: url(../img/file/docx.png);
+}
+.attach_DRM {
+	background-image: url(../img/file/DRM.png);
+}
+.attach_gif {
+	background-image: url(../img/file/gif.png);
+}
+.attach_gul {
+	background-image: url(../img/file/gul.png);
+}
+.attach_htm {
+	background-image: url(../img/file/htm.png);
+}
+.attach_html {
+	background-image: url(../img/file/html.png);
+}
+.attach_hwp {
+	background-image: url(../img/file/hwp.png);
+}
+.attach_link {
+	background-image: url(../img/file/link.png);
+}
+.attach_mp3 {
+	background-image: url(../img/file/mp3.png);
+}
+.attach_mp4 {
+	background-image: url(../img/file/mp4.png);
+}
+.attach_unknown {
+	background-image: url(../img/file/none.png);
+}
+.attach_office {
+	background-image: url(../img/file/office.png);
+}
+.attach_pdf {
+	background-image: url(../img/file/pdf.png);
+}
+.attach_ppt{
+	background-image: url(../img/file/ppt.png);
+}
+.attach_pptx {
+	background-image: url(../img/file/pptx.png);
+}
+.attach_rar {
+	background-image: url(../img/file/rar.png);
+}
+.attach_text {
+	background-image: url(../img/file/text.png);
+}
+.attach_txt {
+	background-image: url(../img/file/txt.png);
+}
+.attach_wav {
+	background-image: url(../img/file/wav.png);
+}
+.attach_xls {
+	background-image: url(../img/file/xls.png);
+}
+.attach_xlsx {
+	background-image: url(../img/file/xlsx.png);
+}
+.attach_xml {
+	background-image: url(../img/file/xml.png);
+}
+.attach_zip {
+	background-image: url(../img/file/zip.png);
+}
 

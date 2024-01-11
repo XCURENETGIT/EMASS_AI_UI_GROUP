@@ -30,7 +30,7 @@
 </style>
 
 <head>
-	<title>EMASS LT - <s:message code="DATA_MONITOR.MESSAGE_SERVICE"/></title>
+	<title>EMASS LTH PRO - <s:message code="DATA_MONITOR.MESSAGE_SERVICE"/></title>
 	<script type="text/javascript" src="<c:url value="/js/messageGrid.js"/>"></script>
 	<script type="text/javascript" src="<c:url value="/js/collection.js"/>"></script>
 
@@ -75,14 +75,67 @@
 				}
 			});
 
-	/*		var today = new Date();
-			today.setDate(today.getDate() - 2);
+            $(document).on('click', '#attachText', function(){
 
-			document.getElementById("startDt").valueAsDate = today;
-			document.getElementById("endDt").valueAsDate = new Date();
+               var searchkey=$('#searchStrInput').val();
 
-			document.getElementById("startSubDt").valueAsDate = today;
-			document.getElementById("endSubDt").valueAsDate = new Date();*/
+                var msgId = $(this).parents('li').attr('msgid');
+                var attachId = $(this).parents('li').attr('attachhash');
+                var url = contextRoot + '/ems/attachText.do?msgId='+msgId+'&attachId='+attachId+'&searchKey='+encodeURI(searchkey);
+                fnOpenWindow(url, 'attachText', 1050, 800, 'resize');
+            });
+
+            $(document).on('click', '#attachOcrText', function(){
+               var searchkey=$('#searchStrInput').val();
+                var msgId = $(this).parents('li').attr('msgid');
+                var attachId = $(this).parents('li').attr('attachhash');
+                var url = contextRoot + '/ems/attachText.do?msgId=' + msgId+ '&attachId=' + attachId + '&searchKey=' + encodeURI(searchkey) + '&ocrYn=Y';
+                fnOpenWindow(url, 'attachText', 1050, 800, 'resize');
+            });
+
+
+            $('#saveBtn').click ( function ( ) {
+
+                var msgId = $('#conmsg').attr('msgid');
+                var charset = $('#bodyEncoding').val();
+                var url = contextRoot + '/getEmassBodySave.xcn?msgId='+msgId+'&userCharset='+charset+'&print=N';
+                var fileName = msgId+'.html';
+                var fileSize = 1;
+
+
+                try {
+                    AttachDown.location.href = url;
+                } catch (e) {
+                    AttachDown.src = url;
+                }
+
+         /*       var information = '[' + message.bodyView + ']' + enter;
+                if( detailFlag ) information += message.xrootmtr + ' : ' + xRootMtr + ' ';
+                else information += message.msgid + ' : ' + msgId + ' ';
+                insertAudit(op_body_save, information);*/
+            });
+
+            $('#printBtn').click ( function ( ) {
+                var msgId = $('#conmsg').attr('msgid');
+                var charset = $('#bodyEncoding').val();
+
+                var url = contextRoot + '/getEmassBodySave.xcn?msgId=' + msgId + '&userCharset=' + charset + '&print=Y';
+
+                    var startDt = $('#startDt').val()+"000000";
+                    var endDt = $('#endDt').val()+"235959"
+
+
+                fnOpenWindow( url, 'message_print', '1000', '800', 'scroll' );
+
+
+/*                var information = '[' + message.bodyPrint + ']'+enter;
+                if( detailFlag ) information += message.xrootmtr + ' : ' + xRootMtr + ' ';
+                else information += message.msgid + ' : ' + msgId + ' ';
+                insertAudit(op_body_print, information);*/
+            });
+
+
+
 
 			$('#searchBtn').click(function () {
 				if (messengerListCnt == 0) {
@@ -164,25 +217,16 @@
 				downloadList('html');
 				hideSelect();
 			});
-			$(document).on('click', '.excel_file_down', function () {
-				var userid = $('#selectUserInfo').attr('data-name');
-				var srcip = $('#selectUserInfo').attr('data-srcip');
-				var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '')+"0000000";
-				var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '')+"235959";
-				var searchStr = '';
-				if (userid == '') return;
-				eikon2.getCollectionGroupTextExport('<c:url value="/getCollectionGroupAllExport.xcn"/>?userid=' + userid + '&srcip=' + srcip + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr+'&limit=1000&facet_detail=true&export=true');
-				hideSelect();
-			});
 
 			$(document).on('click', '.downAllFile', function(){
 				var downloadFlag = false;
 				$('.downloadIcon').each ( function ( i, item ) {
-					var attachHash = $(this).parents('p').attr('attachhash');
+					var attachHash = $(this).parents('li').attr('attachhash');
 					if( attachHash != ''){
 						downloadFlag = true;
 					}
 				});
+
 				if( !downloadFlag){
 					alert('<s:message code="message.message.notfound.attach"/>');
 					return;
@@ -190,8 +234,9 @@
 
 				var msgIds=[];
 				$('.downloadIcon').each ( function ( i, item ) {
-					var msgId = $(this).parents('p').attr('msgid');
-					msgIds.push(msgId);
+					var msgId = $(this).parents('li').attr('msgid');
+
+                    if(!msgIds.includes(msgId)){ msgIds.push(msgId);}
 				});
 
 				var attachUrl = '<c:url value="/downEmassAttachByMsgId.xcn"/>?msgIds='+msgIds.join(',');
@@ -204,11 +249,10 @@
 
 
 			$(document).on('click', '.downloadIcon', function(){
-				var msgId = $(this).parents('table').attr('msgid');
-				var attachHash = $(this).parents('table').attr('attachhash');
-				var attachSize = Number( $(this).parents('table').attr('attachsize') );
+				var msgId = $(this).parents('li').attr('msgid');
+				var attachHash = $(this).parents('li').attr('attachhash');
+				var attachSize = Number( $(this).parents('li').attr('attachsize') );
 
-                alert(attachHash);
 				var attachUrl = '<c:url value="/downEmassAttachOne.xcn"/>?msgId='+msgId+'&attachHash='+attachHash;
 
 				if( attachHash == ''){
@@ -771,12 +815,10 @@
 
 				<div class="messageBtn">
 					<div class="btnform">
-						<button class="btn01"><img src="<c:url value="/img/subBtn_arrow_left_12.png"/>" alt=""></button>
-						<button class="btn01"><img src="<c:url value="/img/subBtn_arrow_right_12.png"/>" alt=""></button>
-						<button class="btn05"><img src="<c:url value="/img/subBtn_save.png"/>" alt="저장">저장</button>
-						<button class="btn05"><img src="<c:url value="/img/subBtn_mail.png"/>" alt="인쇄">인쇄</button>
-						<button class="btn05"><img src="<c:url value="/img/subBtn_settings.png"/>" alt="추가기능">추가기능</button>
-						<button class="btn05"><img src="<c:url value="/img/subBtn_link.png"/>" alt="새창">새창</button>
+				<%--		<button class="btn01"><img src="<c:url value="/img/subBtn_arrow_left_12.png"/>" alt=""></button>
+						<button class="btn01"><img src="<c:url value="/img/subBtn_arrow_right_12.png"/>" alt=""></button>--%>
+						<button class="btn05" id="saveBtn"><img src="<c:url value="/img/subBtn_save.png"/>" alt="저장">저장</button>
+						<button class="btn05" id="printBtn"><img src="<c:url value="/img/subBtn_mail.png"/>" alt="인쇄">인쇄</button>
 					</div>
 					<div class="btnform txt_right">
 						<button class="btn05"><img src="<c:url value="/img/subBtn_notification.png"/>" alt="메시지보관">메시지보관</button>
@@ -798,12 +840,6 @@
 	</div>
 </div>
 
-
-<div style="width: 0%;height: 0px;">
-	<script type="text/javascript">
-		LoadInnoFD(1, 1);
-	</script>
-</div>
 <iframe id="AttachDown" src="about:blank;" height="0" width="0" style="display: none;"></iframe>
 <!-- Back to top -->
 <a href="#0" class="back-to-top cd-top"><span class="[ fa fa-chevron-up ]"></span> <span class="[ ]">Back to the Top</span></a>

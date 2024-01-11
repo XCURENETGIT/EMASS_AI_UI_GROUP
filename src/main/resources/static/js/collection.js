@@ -27,6 +27,7 @@ var resizeTimer;
 
 var detailSearchFlag=true;
 
+
 var eikon2 = {
     init : function() {
         //makeSampleData();
@@ -509,55 +510,85 @@ function makeFileList(data) {
     return str;
 }
 
-function makeFileServiceList(data){ /*파일화면 구성 */
+function makeFileServiceList(data) {
+    var files = data.files;
+    var str = '';
 
-    var str='';
-
-        str += '<div class="messageCon">';
-        if(data.inSide=="N"){
-        str += '<div class="top redBg">';
-        }else{
-            str += '<div class="top grayBg03">';
-        }
-        str += '<h4 class="ma_none">';
-        if(data.inside === "N") {
-            str += '<span class="file_flag_reception">';
-            str += '<img src="'+mainContext+'/img/ico_w_chatshare_fill.png" alt="외부" height="12px">';
-            str += '외부</span>';
-        }
-        str+= data.attachname+'</h4>';
-        str += '</div>';
-        str += '<div class="conBox">';
-        str += '<div class="borbottom_dashed pb16">';
-        str += '<p>';
-        str += '<span class="name">'+data.deptNm+'</span> <span class="xcn_bar"></span>';
-        str += '<span class="name">'+data.jikgubNm+'</span> <span class="xcn_bar"></span>';
-        str += '<span class="name">'+data.name+'</span><span class="xcn_bar"></span>';
-        str += '<span class="name">'+data.attachsize+'KB</span>';
-        str += '</p>';
-        str += '<p class="rightBox">';
-        str += '<span>'+data.ctime+'</span>';
-        str += '</p>';
-        str += '</div>';
-            str += '<table class="subTable mat8" msgid='+data.msgid+'attachhash='+data.attachhash+'>';
-            str += '<colgroup>';
-            str += '<col width="*">';
-            str += '<col width="*">';
-            str += '<col width="10%">';
-            str += '</colgroup>';
-            str += '<tr><th>파일명</th><th>해쉬값</th><th>예상 확장자</th><th>파일크기</th></tr>';
-
-                str += '<tr>';
-                str += '<td>'+"임시"+'<button class="btnchatdown downlodadBtn"></button></td>';
-                str += '<td>'+"임시"+'</td>';
-                str += '<td>'+"임시"+'</td>';
-                str += '<td>'+"임시"+'</td>';
-                str += '</tr>';
-            str += '</table>';
-        str += '</div>';
-        str += '</div>';
+    str += '<div class="messageCon">';
+    if (data.inSide == "N") {
+        str += '<div id="conmsg" class="top redBg" msgid="' + data.msgId + '">';
+    } else {
+        str += '<div id="conmsg" class="top grayBg03" msgid="' + data.msgId + '">';
+    }
+    str += '<h4 class="ma_none">';
+    if (data.inSide === "N") {
+        str += '<span class="file_flag_reception">';
+        str += '<img src="' + mainContext + '/img/ico_w_chatshare_fill.png" alt="외부" height="12px">';
+        str += '외부</span>';
+    }
+    str += data.attachname + '</h4>';
+    str += '<div class="loca">' + data.svcNm + '</div>';
+    str += '</div>';
+    str += '<div class="conBox">';
+    str += '<div class="borbottom_dashed pb16">';
+    str += '<p>';
+    str += '<span class="name">' + data.ipBusiNm + '</span> <span class="xcn_bar"></span>';
+    str += '<span class="name">' + data.ipDeptNm + '</span> <span class="xcn_bar"></span>';
+    str += '<span class="name">' + data.name + '</span>';
+    str += '</p>';
+    str += '<p class="rightBox">';
+    str += '<span>' + data.ctime + '</span>';
+    str += '</p>';
+    str += '<table class="subTable mat8"><tr><th>출발지 IP</th><td class="topline">' + data.srcIp + '</td><th>목적지 IP</th><td class="topline">' + data.dstIp + '</td>';
+    str += '<tr xmlns="http://www.w3.org/1999/html"><th>크기</th><td>' + data.bodySize + '</td><th>접속계정</th><td>' + data.userId + '</td></tr>';
+    str += '<tr><th>HOST/PATH</th><td colspan="3" class="mal8 tableLink txt_left">' + data.host + data.path + '</td><tr></table>';
+    str += '</div>';
+    str += '<div class="messageCon"> <div class="top grayBg03"><h4 class="fileCntArea">파일정보(' + files.length + ')</h4><div class="btn btnform" style="padding: 0px; border: none;"><button accesskey="V" class="btn05 downAllFile"><img src="'+mainContext+'/img/subBtn_save.png" alt="전체 저장">전체저장</buttonaccesskey></div></div><div class="filelist"><ul>';
+    str +=  filediv(data) + '</ul>';
+    str += '</div>';
+    str += '</div>';
 
     return str;
+}
+var extClass = "";
+function filediv(data) {
+    var files = data.files;
+    var fileStr = '';
+    for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+        var attachName = file.attachName;
+        var attachExt = file.attachExt;
+        var attachNameExist = file.attachNameExist;
+        var ext = attachName.split(".");
+        var trClass = "found";
+
+        if(nvl(file.attachPath) == "") trClass = "notfound";
+        if(ext.length > 1 && nvl(attachExt) == ext[ext.length-1]) {
+            extClass = "";
+        } else {
+            extClass = " differentExt";
+        }
+
+
+        fileStr += '<li msgid="' + data.msgId + '" id="' + file.attachId + '" size="' + file.attachSize  + '" attachHash="' + file.attachHash + '" class="' + trClass + extClass +'" >';
+
+        fileStr +=  '<p class="attach_'+attachExt+' attach_file_img">';
+        if (attachNameExist == "N") fileStr += '<a href="#"> 파일명 알수없음</a>';
+       else{ fileStr += '<a href="#"  style="text-decoration: underline;" attachname="' + attachName + '">';
+            fileStr += '' + attachName;
+       };
+        fileStr+='(' + convertFileSize(file.attachSize) + ')</a></p>';
+        fileStr += '<div class="btn btnform" style="padding: 0px; border: none;">';
+        fileStr += '<button class="btn03 borradius downloadIcon"><img src="'+mainContext+'/img/subBtn_save.png">저장</button>';
+        if (nvl(file.ocrYn) == "Y") {
+            fileStr += '<button class="btn03 borradius" id="attachOcrText"><img src="'+mainContext+'/img/subBtn_eye.png">미리보기</button>';
+        }
+        if(nvl(file.attachTextPath) != "") {
+            fileStr += '<button class="btn03 borradius" id="attachText"><img src="'+mainContext+'/img/subBtn_eye.png">미리보기</button>';
+        }
+        fileStr += '</div></li>';
+    }
+    return fileStr;
 }
 
 
