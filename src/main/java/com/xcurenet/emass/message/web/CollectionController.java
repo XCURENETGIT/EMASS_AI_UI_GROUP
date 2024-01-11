@@ -94,9 +94,9 @@ public class CollectionController {
 	@ResponseBody
 	public XcnResponseVO getFileServiceList(final HttpServletRequest request, final HttpSession session) throws Exception {
 		return new XcnResponseVO(XcnRspCode.OK, emsMessageService.getFileServiceList());
-	} 
-	
-	
+	}
+
+
 	@RequestMapping(value = "/getCollectionGroupList.xcn")
 	@Description("서비스 그룹 조회")
 	@ResponseBody
