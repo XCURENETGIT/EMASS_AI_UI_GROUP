@@ -7,6 +7,24 @@
 	String firstAdminYn = Common.getFirstAdminYn(session);
 %>
 
+
+<script>
+    $(function() {
+        $("#xcn_toggleBtn").on("click", function() {
+            $("#xcn_Search").toggle("show");
+        })
+    })
+
+    $(function() {
+        $("#showBtn").on("click", function() {
+            $("#xcn_Search2").show();
+        })
+        $("#xcn_toggleBtn2").on("click", function() {
+            $("#xcn_Search2").hide();
+        })
+    })
+</script>
+
 <style>
 
 	#userCntArea:hover {
@@ -482,15 +500,15 @@
 
         function downloadList(type) {
             var xRootMtr = $('#xrootmtr').text();
-            var srcip = $('#srcip').text();
-            var usr_id = $('#selectUserInfo').attr('data-name');
-            console.log("user_id: " + usr_id);
+            //var srcip = $('#selectUserInfo').attr('data-srcip');
+            // var srcip = null;
+            var usr_id = $('#selectUserInfo').attr('data-usrid');
 
             if (xrootmtr == '') return;
             var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
             var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
             var searchStr = '';
-            eikon.getMessengerGroupTextExport('<c:url value="/getMessengerGroupTextExport.xcn"/>?xRootMtr=' + xRootMtr + '&srcip=' + srcip + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr + '&type=' + type + '&groupField=sender_str&limit=1000&', xRootMtr);
+            eikon.getMessengerGroupTextExport('<c:url value="/getMessengerGroupTextExport.xcn"/>?xRootMtr=' + xRootMtr +'&usr_id='+usr_id+ '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr + '&type=' + type + '&groupField=userkey&limit=1000&', xRootMtr);
         }
 
         function searchConsentNo() {
@@ -507,8 +525,6 @@
             } else {
                 $('#consentNo').val(obj.no);
                 $('#consentName').text(obj.name + "[" + obj.userId + ", " + (obj.deptNm == '' ? '<s:message code="consent.select.consentDept"/>' : obj.deptNm) + "]");
-                /* $('#consentIp').val(obj.userIp);
-				$('#consentEmail').val(obj.userEmail); */
                 $('#consentUserId').val(obj.userId);
                 $('#consentBtn').addClass('active');
             }
@@ -952,12 +968,13 @@
 							<input type="hidden" id="deptStr" class="selectedTitle">
 							<input type="hidden" id="deptVal">
 						</p>
+						<input type="text" class="w100 mat8"  placeholder="<s:message code="eikon.input.participation"/>" id="senders">
 					</div>
 				</div>
 
 				<div class="fixBtn">
 					<div class="checkbox">
-						<label><input type="checkbox" name="readYn" id="readYn"><s:message code="eikon.msg.notRead"/></label>
+					<input type="checkbox" name="readYn" id="readYn"><s:message code="eikon.msg.notRead"/>
 					</div>
 					<button class="fullbtn" type="button" accesskey="Q" id="searchBtn">검색</button>
 				</div>
@@ -1063,7 +1080,7 @@
 				<%--					채팅 검색 부분 끝!--%>
 
 				<%--					채팅 본문 내용 보이는 구간 시작  -> ***** 아직 안함 --%>
-				<div style="margin-top:-10px;">
+				<div>
 					<div class="form-group form-inline">
 						<div class="input-group date" id="timedatepicker" style="margin-left: 5px;display:none;">
 							<input type="text" id="timeDt" class="input-sm form-control border-radius-none" style="display:none;"/>
@@ -1080,9 +1097,9 @@
 
 						</div>
 						<div class="input-group btnCustomPosition" id="searchResultBtnArea" style="display:none;">
-							<button class="btn btn-md btn-warning" type="button" accesskey="U" id="searchMsgUp" style="padding:6px"><i
+							<button class="pop_btn03" type="button" accesskey="U" id="searchMsgUp" style="padding:6px"><i
 									class="glyphicon glyphicon-chevron-up"></i></button>
-							<button class="btn btn-md btn-warning" type="button" accesskey="D" id="searchMsgDn" style="padding:6px"><i
+							<button class="pop_btn03" type="button" accesskey="D" id="searchMsgDn" style="padding:6px"><i
 									class="glyphicon glyphicon-chevron-down"></i></button>
 						</div>
 					</div>
@@ -1129,7 +1146,7 @@
 		</div>
 		<!-- 채팅 끝! -->
 		<!-- 첨부파일 -->
-		<div class="rightFile p20" id="xcn_Search2">
+		<div class="rightFile p20" id="xcn_Search2" style="display: none;">
 			<div class="subtab">
 				<button class="active">첨부파일
 					<span id="xcn_toggleBtn2" style="font-size:16px; opacity: 0.7; padding:4px;">x</span>

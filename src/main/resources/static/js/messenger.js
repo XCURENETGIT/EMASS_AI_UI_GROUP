@@ -17,7 +17,7 @@ var detailEndPage = 1;
 var detailViewPage = 10;
 var detailPageBreak = 100;
 
-var detailLimit = 5;
+var detailLimit = 100;
 
 var selectedSearchData = 1;
 var searchOffset = 0;
@@ -39,15 +39,13 @@ var eikon = {
 //				if( $('.btnCustomPosition').is(':visible') ) return;
                 if( $(obj).scrollTop() < 10) {
                     if($($('#timeline_list').children().first().children().first()).hasClass('timeline-panel') || $($('#timeline_list').children().first()).hasClass('timeline-panel')) $('.messenger_prev').css('display','none');
-                    else $('.messenger_prev').css('display','block');
-                    console.log("3");
+                    else $('.messenger_prev').css('display','block');;
                     $('.messenger_next').css('display','none');
 //					$('.messenger_prev').click();
                 }
                 else if( $('#timeline_list').height() <= $(obj).scrollTop()+$(obj).height()+10){
                     if(detailDataSet.length < detailLimit) $('.messenger_next').css('display','none');
                     else $('.messenger_next').css('display','block');
-                    console.log("4");
                     $('.messenger_prev').css('display','none');
 //					$('.messenger_next').click();
                 }else{
@@ -220,11 +218,7 @@ var eikon = {
 
                     detailMsgid=data;
                     detailMsgid.sort();
-                    console.log(detailMsgid);
-                    console.log("현재 번호  "+ detailMsgid[searchOffset]);
                     checkList(searchOffset);
-
-
                 }
                 else{
                     $('#searchResult').html('0');
@@ -356,22 +350,22 @@ function getMessengerMessageNext(xRootmtr, srcip, usr_id, msgid) {
         url: 'getMessengerMessageNext.xcn',
         xRootMtr: xRootmtr,
         srcip: srcip,
-        startDt: startDt,
-        endDt: endDt,
+        startDt:  startDt+"000000",
+        endDt:  endDt+"235959",
         usr_id: usr_id,
         msgId: msgid,
         limit: detailLimit,
         success: function (data, total) {
             searchFlag = false;
-            if (data.groups.length == 0) {
+            if(data.groups.length == 0) {
                 detailDataSet = [];
                 $("#timeline_list").prepend(noNextDataMsg());
                 $('.messenger_next').css('display', 'none');
                 return;
             }
 
-            if (data.groups.length < detailLimit) {
-                $('.messenger_next').css('display', 'none');
+            if(data.groups.length >= detailLimit) {
+                $('.messenger_next').css('display', 'block');
             }
             detailDataSet = data.groups;
 
@@ -379,23 +373,23 @@ function getMessengerMessageNext(xRootmtr, srcip, usr_id, msgid) {
              * 전체 10 페이지가 넘어갈 경우 첫번째 페이지 제거
              * 최상단에 날짜 출력
              */
-            if ($(".pageInfoDiv").size() > detailViewPage - 1) {
+            if($(".pageInfoDiv").size() > detailViewPage-1){
                 $('.pageInfoDiv').first().remove();
                 var firstObj = $('.pageInfoDiv').first();
-                if (!firstObj.children().filter(':first').hasClass('date_li')) {
-                    var date = viewDate(firstObj.children().filter(':first').attr('ctime').substring(0, 10));
+                if(!firstObj.children().filter(':first').hasClass('date_li')){
+                    var date = viewDate(firstObj.children().filter(':first').attr('ctime').substring(0,10));
                     firstObj.prepend(date);
                 }
             }
 
             $("#timeline_list").append(makeList(true));
-            Highlight();
+            Highlight( );
         },
-        error: function (status, message) {
+        error : function(status, message) {
             searchFlag = false;
             ui.alertMsg(message);
         },
-        complete: function () {
+        complete : function() {
             ui.off('timeline_list');
             setMessengerRead();
         }
@@ -803,7 +797,7 @@ function makeList(nextFlag) {
     var dataHasFlag = false;
     var str = '<ul class="pageInfoDiv timeline">';
     var usrid = $('#selectUserInfo').attr('data-usrid');
-    // var srcip = $('#selectUserInfo').attr('data-srcip');
+    var srcip = $('#selectUserInfo').attr('data-srcip');
     for (var i = 0; i < detailDataSet.length; i++) {
         dataHasFlag = true;
         var obj = detailDataSet[i];
@@ -811,15 +805,12 @@ function makeList(nextFlag) {
         if ((nvl(obj.user) != '' && obj.user == obj.sender) || usrid == obj.title || usrid == obj.sender) chkPati = true;
         str += checkDate(i);
 
-        if (chkPati == true) {
-            str += '<li class="p20 bubble txt_right slide_right' + (i == 0 && !nextFlag ? 'lastReadLi' : '') + '" id="' + obj.msgid + '" ctime="' + obj.ctime + '" userid="' + obj.userid + '" srcip="' + obj.srcip + '" + " xrootmtr="' + obj.xrootmtr + '">';
-        }else{
-            str += '<li class="p20 bubble txt_right slide_left' + (i == 0 && !nextFlag ? 'lastReadLi' : '') + '" id="' + obj.msgid + '" ctime="' + obj.ctime + '" userid="' + obj.userid + '" srcip="' + obj.srcip + '" + " xrootmtr="' + obj.xrootmtr + '">';
-        }
+        str += '<li class="p20 bubble ' + (chkPati ? 'txt_right slide_right' : 'txt_left slide_left') + (i == 0 && !nextFlag ? ' lastReadLi' : '') + '" id="' + obj.msgid + '" ctime="' + obj.ctime + '" userid="' + obj.userid + '" srcip="' + obj.srcip + '" xrootmtr="' + obj.xrootmtr + '">';
         str += '<span id="xrootmtr" style="display: none;">' + obj.xrootmtr + '</span>';
 
         var svc3 = obj.svc3;
-        str += '	<div class="me timeline-panel" >';
+        str += '<div class="' + (chkPati ? 'me' : 'you') + ' timeline-panel" >';
+
 
         if (obj.attached == "Y") {
             var attachhash = obj.attachhash;
@@ -986,96 +977,12 @@ function viewDate(dateStr) {
     return str;
 }
 
-//function appendList(){
-//	if( searchFlag ) return;
-//	console.log("append");
-//
-//	searchFlag = true;
-//	ui.onBody('timeline_list', 0, 60);
-//
-//	detailEndPage++;
-//	var str = makeList(detailEndPage);
-//	if( str == ''){
-//		detailEndPage--;
-//		searchFlag = false;
-//		ui.off('timeline_list');
-//		return;
-//	}
-//
-//	if($(".pageInfoDiv").size() > detailViewPage-1){
-//		$(".pageInfoDiv").first().remove();
-//		detailStartPage++;
-//	}
-//	setTimeout(function(){
-//		$("#timeline_list").append(str);
-//		Highlight( );
-//		ui.off('timeline_list');
-//		searchFlag = false;
-//	}, 100);
-//}
-//
-//function prependList(){
-//	if( searchFlag ) return;
-//	console.log("prepend");
-//
-//	searchFlag = true;
-//	ui.onBody('timeline_list', 0, 60);
-//
-//	detailStartPage--;
-//	var str = makeList(detailStartPage);
-//	if( str == ''){
-//		detailStartPage++;
-//		searchFlag = false;
-//		ui.off('timeline_list');
-//		return;
-//	}
-//
-//	if($(".pageInfoDiv").size() > detailViewPage-1){
-//		$(".pageInfoDiv").last().remove();
-//		detailEndPage--;
-//	}
-//	setTimeout(function(){
-//		$('#timeline_list').prepend(str);
-//		Highlight( );
-//		$('#scrollArea').scrollTop($(".pageInfoDiv").height());
-//		ui.off('timeline_list');
-//		searchFlag = false;
-//	}, 100);
-//}
 
 function checkList(cnt) {
 //	selectedSearchData = cnt;
     getMessengerMessage($('#xrootmtr').text(), $('#selectUserInfo').attr('data-srcip'), $('#selectUserInfo').attr('data-usrid'), focusMsgId);
     $('#selectCnt').html(cnt + 1);
 }
-
-//function findList(id, line){
-//	ui.onBody('timeline_list', 0, 60);
-//	var selectPage = 1
-//	var str = '';
-//
-//	if(line != -1) {
-//		selectPage = Math.ceil((line)/detailPageBreak);
-//		if( selectPage == 0 ) selectPage = 1;
-//	}
-//	if(selectPage < detailStartPage || selectPage > detailEndPage ) str = makeList(selectPage);
-//
-//	if( str == ''){
-//		searchFlag = false;
-//	}else{
-//		$("#timeline_list").html('').html(str);
-//		Highlight( );
-//	}
-//
-//	setTimeout(function(){
-//		ui.off('timeline_list');
-//
-//		detailStartPage=selectPage;
-//		detailEndPage=selectPage;
-//		moveTargetHeight(id, true);
-//		searchFlag = false;
-//	}, 50);
-//}
 
 function checkLastMsg() {
     var xrootmtr = $('#xrootmtr').text();
@@ -1084,9 +991,7 @@ function checkLastMsg() {
     var lastMsgId = '';
     var topHeight = 200; //영역을 제외한 상단 높이
     var marginBottom = 55; //하단에 최소한으로 보여줄 픽셀 위치 (첫줄이 보이면 읽음)
-    //var displayHeight = $('#scrollArea').height(); //화면 출력 영역
 
-    //console.log("displayHeight = "+displayHeight);
 
     $('#timeline_list div.me').each(function () {
         var objOffsetTop = $(this).offset().top - topHeight;

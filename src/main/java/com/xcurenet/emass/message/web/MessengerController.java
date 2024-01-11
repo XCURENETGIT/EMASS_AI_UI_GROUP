@@ -16,6 +16,7 @@ import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.emass.message.component.SolrCreateQuery;
 import com.xcurenet.emass.message.service.*;
 import com.xcurenet.emass.message.service.impl.SolrEdcServiceImpl;
+import com.xcurenet.minio.MinioFileAdapter;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -66,6 +67,10 @@ public class MessengerController {
 
 	@Autowired
 	private EmsMessageService emsMessageService;
+
+
+	@Autowired
+	public MinioFileAdapter minioFileAdapter;
 
 	@RequestMapping(value = "/setMessengerRead.xcn")
 	@Description("메신저 읽음 여부 처리")
@@ -662,8 +667,7 @@ public class MessengerController {
 			out = response.getOutputStream();
 			os = new ArchiveStreamFactory().createArchiveOutputStream("zip", out);
 			MessengerEdcGroupVO groups = getMessengerMsgTotal(request, true);
-			//MessengerGroupUserVO users = getMessengerGroupUserList(request, 30000);
-			MessengerGroupUserVO users = null;
+			MessengerGroupUserVO users = getMessengerGroupUserList(request, 1000);
 			inputAttach(os, groups);
 			inputZipExcel(os, groups, users, xRootMtr, Common.getLocale(request.getSession()));
 
@@ -700,7 +704,6 @@ public class MessengerController {
 		try {
 			String name = getFileName(xRootMtr, users, locale);
 			os.putArchiveEntry(new ZipArchiveEntry(name + ".xlsx"));
-
 			xlsxExport(xRootMtr, groups, xOut, true, locale);
 
 			bIn = new ByteArrayInputStream(xOut.toByteArray());
@@ -713,6 +716,7 @@ public class MessengerController {
 			IOUtils.closeQuietly(xOut);
 		}
 	}
+
 
 
 	private void inputAttach(ArchiveOutputStream os, MessengerEdcGroupVO groups) throws Exception {
@@ -728,7 +732,7 @@ public class MessengerController {
 						String path = attach.getAttachPath();
 						String harPath = attach.getAttachHarPath();
 						log.info("path:{}, harPath:{}", path, harPath);
-						in = attachDown.getAttach(path, harPath);
+						in = minioFileAdapter.findFile(attach.getAttachPath());
 						if (in == null) continue;
 						os.putArchiveEntry(new ZipArchiveEntry(Common.makeFilepath("attachs", item.getMsgid(), attach.getAttachName())));
 						IOUtils.copy(in, os);
@@ -749,7 +753,7 @@ public class MessengerController {
 	@Description("메신저 대화내용 내보내기")
 	@AuditOperation(Operation.DOWNLOAD)
 	@ResponseBody
-	public void getMessengerGroupTextExport(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+	public void getMessengerGroupTextExport(final HttpServletRequest request, final HttpServletResponse response){
 
 		JSONObject param = Common.getParam(request);
 		String xRootMtr = Common.nvl(param.get("xRootMtr"));
@@ -774,10 +778,8 @@ public class MessengerController {
 		ServletOutputStream out = null;
 		try {
 			out = response.getOutputStream();
-
 			MessengerEdcGroupVO groups = getMessengerMsgTotal(request, true);
-//			MessengerGroupUserVO users = getMessengerGroupUserList(request, 30000);
-//			System.out.println("users: "+users);
+			MessengerGroupUserVO users = getMessengerGroupUserList(request, 10000);
 
 			if (Common.isEquals(type, "xlsx")) {
 				response.setContentType("application/octet-stream");
@@ -796,6 +798,14 @@ public class MessengerController {
 				_sb.append("<" + Prop.propFormat("condition.xrootmtr", locale) + ">").append(Common.EMPTY_LINE);
 				_sb.append(xRootMtr).append(Common.EMPTY_LINE).append(Common.EMPTY_LINE);
 				_sb.append("<" + Prop.propFormat("condition.participation", locale) + ">").append(Common.EMPTY_LINE);
+				if (users != null) {
+					for (SolrEdcVO user : users.getGroups()) {
+						String name = Common.nvl(Common.isEmpty(user.getSname()) ? user.getSender() : user.getSname(), Common.nvl(user.getSrcip())) ;
+						_sb.append(String.format("[%s] ["+Prop.propFormat("common.org.co", locale)+":%s, "+Prop.propFormat("common.org.busi", locale)+":%s, "+Prop.propFormat("common.org.dept", locale)+":%s, "+Prop.propFormat("common.org.jikgub", locale)+":%s]", name, Common.nvl(user.getConm()), Common.nvl(user.getBusinm()), Common.nvl(user.getDeptnm()), Common.nvl(user.getJikgubnm()))).append(Common.EMPTY_LINE);
+						if(Common.isNotEmpty(user.getSname())) _sb.append(String.format("%s(%s)", name, Common.nvl(user.getSender())) + Common.EMPTY_LINE);
+						else _sb.append(String.format("%s", name) + Common.EMPTY_LINE);
+					}
+				}
 
 				_sb.append(Common.EMPTY_LINE);
 				_sb.append("<" + Prop.propFormat("eikon.msg.chatContents", locale) + ">").append(Common.EMPTY_LINE);
