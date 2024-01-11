@@ -1,6 +1,5 @@
 package com.xcurenet.emass.message.web;
 
-import com.sun.tools.jconsole.JConsoleContext;
 import com.xcurenet.annotations.AuditMenu;
 import com.xcurenet.annotations.AuditOperation;
 import com.xcurenet.annotations.AuditParentMenu;
@@ -15,7 +14,6 @@ import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.emass.message.component.SolrCreateQuery;
 import com.xcurenet.emass.message.service.*;
-import com.xcurenet.emass.message.service.impl.SolrEdcServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -120,7 +118,9 @@ public class MessengerController {
 		JSONObject param = Common.getParam(request);
 		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
 		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), Common.getAdminId(session));
-		sq.setQuery(sq.getQuery() + MESSENGER + " +xrootmtr:*");
+
+		String space = "\"\")";
+		sq.setQuery(sq.getQuery() + MESSENGER + " +xrootmtr:* -xrootmtr:(".concat(space));
 		if (Common.isEquals(param.get("readYn"), "N")) {
 			sq.setQuery(sq.getQuery() + " -checked.readId:" + Common.getAdminId(session));
 		}
