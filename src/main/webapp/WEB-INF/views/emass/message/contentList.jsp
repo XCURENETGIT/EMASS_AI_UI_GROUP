@@ -199,10 +199,10 @@
 	</ul>
 	<ul>
 		<li onclick="setFeedback(0);" style="padding-left: 5px;"><div class="feedbackCorrect"></div>&nbsp;<s:message code="condition.info.feedback0"/></li>
-		<li onclick="setFeedback(1);" style="padding-left: 5px;"><div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.class1"/></li>
-		<li onclick="setFeedback(2);" style="padding-left: 5px;"><div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.class2"/></li>
-		<li onclick="setFeedback(3);" style="padding-left: 5px;"><div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.class3"/></li>
-		<li onclick="setFeedback(4);" style="padding-left: 5px;"><div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.class4"/></li>
+		<li onclick="setFeedback(1);" style="padding-left: 5px;"><div class="feedbackInCorrect"></div><s:message code="condition.info.class1"/></li>
+		<li onclick="setFeedback(2);" style="padding-left: 5px;"><div class="feedbackInCorrect"></div><s:message code="condition.info.class2"/></li>
+		<li onclick="setFeedback(3);" style="padding-left: 5px;"><div class="feedbackInCorrect"></div><s:message code="condition.info.class3"/></li>
+		<li onclick="setFeedback(4);" style="padding-left: 5px;"><div class="feedbackInCorrect"></div><s:message code="condition.info.class4"/></li>
 		<li onclick="setFeedback(9);" style="padding-left: 5px;"><div class="feedbackDefer"></div>&nbsp;<s:message code="condition.info.feedback9"/></li>
 	</ul>
 	<%} %>

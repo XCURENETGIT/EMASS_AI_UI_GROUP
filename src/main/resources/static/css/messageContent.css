@@ -107,7 +107,7 @@ input[type="radio"] {
 }
 
 .panel-default>.panel-heading {
-    background: linear-gradient(to bottom, #F4F6F9, #F4F6F9, #F0F3F7, #EFF2F6) !important;
+    background-color:#f8f8f8;
     color : #000;
 }
 
@@ -550,14 +550,14 @@ span.feedbackCorrect, span.feedbackInCorrect, span.feedbackDefer, span.feedbackI
 }
 
 
-.feedbackcommonBg  {padding:4px 10px 4px 2px; background-color:#E9F6F9;  color:#24A9C6 !important; font-weight:600; border-radius: 10px; }
-.feedbackInNotOpenBg  {padding:4px 10px 4px 2px; background-color:#FFF4E7;  color:#FF910F !important; font-weight:600; border-radius: 10px; }
-.feedbackInOpenBg  {padding:4px 10px 4px 2px; background-color:#E8F1FE;  color:#1A73F9 !important;font-weight:600; border-radius: 10px; }
-.feedbackInCorrectBg  {padding:4px 10px 4px 2px; background-color:#FFEEEE;  color:#FC5656 !important; font-weight:600;border-radius: 10px; }
-.feedbackDeferBg  {padding:4px 10px 4px 2px; background-color:#EEEEEE; color:#555 !important; font-weight:600; border-radius: 10px; }
-.feedbackCorrectBg  {padding:4px 10px 4px 2px; background-color:#EBF9ED;  color:#2EBD3D !important; font-weight:600; border-radius: 10px; }
+.feedbackcommonBg  {padding:4px 2px 4px 3px; background-color:#E9F6F9;  color:#24A9C6 !important; font-weight:600; border-radius: 10px; }
+.feedbackInNotOpenBg  {padding:4px 2px 4px 3px; background-color:#FFF4E7;  color:#FF910F !important; font-weight:600; border-radius: 10px; }
+.feedbackInOpenBg  {padding:4px 2px 4px 3px; background-color:#E8F1FE;  color:#1A73F9 !important;font-weight:600; border-radius: 10px; }
+.feedbackInCorrectBg  {padding:4px 2px 4px 3px; background-color:#FFEEEE;  color:#FC5656 !important; font-weight:600;border-radius: 10px; }
+.feedbackDeferBg  {padding:4px 2px 4px 3px; background-color:#EEEEEE; color:#555 !important; font-weight:600; border-radius: 10px; }
+.feedbackCorrectBg  {padding:4px 2px 4px 3px; background-color:#EBF9ED;  color:#2EBD3D !important; font-weight:600; border-radius: 10px; }
 
-.feedbackcommonBg img, .feedbackCorrectBg img, .feedbackInNotOpenBg img,.feedbackInOpenBg img, .feedbackInCorrectBg img, .feedbackDeferBg img {margin-top:-2px; margin-right: 4px;}
+.feedbackcommonBg img, .feedbackCorrectBg img, .feedbackInNotOpenBg img,.feedbackInOpenBg img, .feedbackInCorrectBg img, .feedbackDeferBg img {margin-top:-2px; left: 1px;}
 
 #contextMenu li .feedbackcommonBg,
 #contextMenu li .feedbackInNotOpenBg,
@@ -1208,8 +1208,8 @@ pre {
 }
 
 .css-body .table>tbody>tr>td, .css-body .table>tbody>tr>th {
-    padding : 5px !important;
-    line-height: 15px !important;
+  /*  padding : 5px !important;
+    line-height: 15px !important;*/
 }
 
 .css-body .table th {

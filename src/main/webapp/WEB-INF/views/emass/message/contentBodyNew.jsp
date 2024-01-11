@@ -371,7 +371,7 @@
 				<div class="row">
 					<div class="col-lg-12 mat8">
 						<div class="panel panel-default" id="subjectDiv">
-							<div class="panel-heading" style="font-weight: bold;min-height:35px; border:1px solid #ff0000;">
+							<div class="panel-heading" style="font-weight: bold;min-height:35px;">
 								<div id="subject" class="pull-left" style="cursor:default;width:calc(100% - 355px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;word-wrap:normal;line-height: 25px;" title="subject"></div>
 								<div class="pull-right">
 									<span class="svcnmSpan"></span>
@@ -381,62 +381,60 @@
 									<span style="font-weight: bold;" id="subjectStr"></span>
 								</div>
 							</div>
-							<div class="panel-body p12 css-body">
+							<div class="panel-body">
+								<div id="infoFeedbackTr"  class="pb12" style="display: none;">
+									<div class="form-inline not-dashed">
+														<span style="display: inline-block; width: 120px;">
+															<span id="infoType"></span>
+															<span id="probType"></span>
+														</span>
+										<span>
+															<label class="radio-inline c-radio">
+																<input type="radio" name="feedback" class="feedback" value="0">
+																<span class="fa fa-check"></span>
+																<i class="feedbackCorrectBg"><img src="../img/icon/correct.png/" ><s:message code="condition.info.feedback0"/></i>
+
+															</label>
+															<label class="radio-inline c-radio">
+																<input type="radio" name="feedback" class="feedback" value="9">
+																<span class="fa fa-check"></span>
+																<i class="feedbackDeferBg"><img src="../img/icon/defer.png/" ><s:message code="condition.info.feedback9"/></i>
+															</label>
+														</span>
+									</div>
+									<div class="form-inline not-dashed">
+														<span style="display: inline-block; width: 120px;">
+															<span id="ml_confd_userid"></span>
+														</span>
+										<span>
+															<label class="radio-inline c-radio">
+																<input type="radio" name="feedback" class="feedback" value="1">
+																<span class="fa fa-check"></span><i class="feedbackcommonBg"><s:message code="condition.info.class1"/><img src="../img/icon/common.png/" ></i>
+															</label>
+															<label class="radio-inline c-radio">
+																<input type="radio" name="feedback" class="feedback" value="2">
+																<span class="fa fa-check"></span><i class="feedbackInNotOpenBg"><s:message code="condition.info.class2"/><img src="../img/icon/notopen.png/"></i>
+															</label>
+															<label class="radio-inline c-radio">
+																<input type="radio" name="feedback" class="feedback" value="3">
+																<span class="fa fa-check"></span><i class="feedbackInOpenBg"><s:message code="condition.info.class3"/><img src="../img/icon/open.png/"></i>
+
+															</label>
+															<label class="radio-inline c-radio">
+																<input type="radio" name="feedback" class="feedback" value="4">
+																<span class="fa fa-check"></span><i class="feedbackInCorrectBg"><s:message code="condition.info.class4"/><img src="../img/icon/incorrect.png/"></i>
+															</label>
+														</span>
+									</div>
+								</div>
 								<div id="">
-									<table id="infoTable" class="table table-bordered" style="margin-bottom:0;table-layout:fixed;min-width:500px;">
+									<table id="infoTable" class="subTable" style="margin-bottom:0;table-layout:fixed;min-width:500px;">
 										<colgroup>
 											<col style="width: 110px;">
 											<col>
 											<col style="width: 110px;">
 											<col style="width: 160px;">
 										</colgroup>
-										<tr id="infoFeedbackTr" style="display: none;">
-											<td colspan="4" style="border-bottom: 1px solid #ccc !important;">
-												<div class="form-inline not-dashed">
-														<span style="display: inline-block; width: 140px;">
-															<span id="infoType"></span>
-															<span id="probType"></span>
-														</span>
-													<span style="margin-left: 10px;">
-															<label class="radio-inline c-radio">
-																<input type="radio" name="feedback" class="feedback" value="0">
-																<span class="fa fa-check"></span>
-																<i class="feedbackCorrectBg"> <img src="../img/icon/correct.png/" ><s:message code="condition.info.feedback0"/></i>
-
-															</label>
-															<label class="radio-inline c-radio">
-																<input type="radio" name="feedback" class="feedback" value="9">
-																<span class="fa fa-check"></span>
-																<i class="feedbackDeferBg"> <img src="../img/icon/defer.png/" ><s:message code="condition.info.feedback9"/></i>
-															</label>
-														</span>
-												</div>
-												<div class="form-inline not-dashed">
-														<span style="display: inline-block; width: 140px;">
-															<span id="ml_confd_userid"></span>
-														</span>
-													<span style="margin-left: 10px;">
-															<label class="radio-inline c-radio">
-																<input type="radio" name="feedback" class="feedback" value="1">
-																<span class="fa fa-check"></span><i class="feedbackcommonBg"> <img src="../img/icon/common.png/" ><s:message code="condition.info.class1"/></i>
-															</label>
-															<label class="radio-inline c-radio">
-																<input type="radio" name="feedback" class="feedback" value="2">
-																<span class="fa fa-check"></span><i class="feedbackInNotOpenBg"> <img src="../img/icon/notopen.png/"><s:message code="condition.info.class2"/></i>
-															</label>
-															<label class="radio-inline c-radio">
-																<input type="radio" name="feedback" class="feedback" value="3">
-																<span class="fa fa-check"></span><i class="feedbackInOpenBg"> <img src="../img/icon/open.png/"><s:message code="condition.info.class3"/></i>
-
-															</label>
-															<label class="radio-inline c-radio">
-																<input type="radio" name="feedback" class="feedback" value="4">
-																<span class="fa fa-check"></span><i class="feedbackInCorrectBg"> <img src="../img/icon/incorrect.png/"><s:message code="condition.info.class4"/></i>
-															</label>
-														</span>
-												</div>
-											</td>
-										</tr>
 										<tr id="usridTr">
 											<th><s:message code="common.msg.account"/></th>
 											<td id="userid">
@@ -446,9 +444,9 @@
 										</tr>
 										<tr id="srcTr">
 											<th><s:message code="condition.source"/> IP</th>
-											<td id="srcipTd"></td>
+											<td id="srcipTd"  class="topline"></td>
 											<th><s:message code="condition.date"/></th>
-											<td id="ctimeTd"></td>
+											<td id="ctimeTd"  class="topline"></td>
 										</tr>
 										<tr id="destTr">
 											<th><s:message code="condition.destination"/> IP</th>
