@@ -515,7 +515,17 @@ input[type="radio"] {
 .feedbackDefer{
     background-image:url('../img/icon/defer.png');
 }
-div.feedbackCorrect, div.feedbackInCorrect, div.feedbackDefer {
+.feedbackcommon{
+    background-image:url('../img/icon/common.png');
+}
+.feedbackInOpen{
+    background-image:url('../img/icon/open.png');
+}
+.feedbackInNotOpen{
+    background-image:url('../img/icon/notopen.png');
+}
+
+div.feedbackCorrect, div.feedbackInCorrect, div.feedbackDefer, div.feedbackInNotOpen, div.feedbackInOpen, div.feedbackcommon {
     background-repeat:no-repeat;
     width:18px;
     height:18px;
@@ -523,16 +533,28 @@ div.feedbackCorrect, div.feedbackInCorrect, div.feedbackDefer {
     top: 2px;
     float: left;
 }
-span.feedbackCorrect, span.feedbackInCorrect, span.feedbackDefer {
+span.feedbackCorrect, span.feedbackInCorrect, span.feedbackDefer, span.feedbackInNotOpen, span.feedbackInOpen, span.feedbackcommon {
     background-repeat:no-repeat;
-    width:18px;
-    height:18px;
+    background-position: center center !important;
+    width:18px !important;
+    height:18px!important;
     position: relative;
-    top: 2px;
+    top: 1px;
     border: 0px !important;
     margin: 0px !important;
-    float: left;
+
+    /*float: left;*/
 }
+
+
+.feedbackcommonBg  {padding:4px 10px 4px 2px; background-color:#E9F6F9;  color:#24A9C6 !important; font-weight:600; border-radius: 10px; }
+.feedbackInNotOpenBg  {padding:4px 10px 4px 2px; background-color:#FFF4E7;  color:#FF910F !important; font-weight:600; border-radius: 10px; }
+.feedbackInOpenBg  {padding:4px 10px 4px 2px; background-color:#E8F1FE;  color:#1A73F9 !important;font-weight:600; border-radius: 10px; }
+.feedbackInCorrectBg  {padding:4px 10px 4px 2px; background-color:#FFEEEE;  color:#FC5656 !important; font-weight:600;border-radius: 10px; }
+.feedbackDeferBg  {padding:4px 10px 4px 2px; background-color:#EEEEEE; color:#555 !important; font-weight:600; border-radius: 10px; }
+.feedbackCorrectBg  {padding:4px 10px 4px 2px; background-color:#EBF9ED;  color:#2EBD3D !important; font-weight:600; border-radius: 10px; }
+
+.feedbackcommonBg img, .feedbackCorrectBg img, .feedbackInNotOpenBg img,.feedbackInOpenBg img, .feedbackInCorrectBg img, .feedbackDeferBg img {margin-top:-2px; margin-right: 4px;}
 #contextMenu li .feedbackCorrect,
 #contextMenu li .feedbackInCorrect,
 #contextMenu li .feedbackDefer {

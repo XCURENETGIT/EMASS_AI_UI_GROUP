@@ -176,12 +176,22 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 
 .keywordArea{ position: relative; padding:0 0; padding-bottom:12px; overflow-x: auto; overflow-y: hidden; }
 .inner_keyword {position: relative;  display: grid; grid-template-columns: 500px 1fr; column-gap: 16px;  padding:0 20px;  }
-.inner_message {min-width:600px; background-color:#f8f8f8; padding:20px;}
+.inner_message {min-width:600px; background-color:#f8f8f8; padding:16px 16px 0 16px;}
 
 .messageBtn {position: relative; display: grid; grid-template-columns: 65% 35%;}
 .messageCon {margin-top:16px; border:1px solid #ccc; background-color:#fff;}
-.messageCon > .top { position: relative; padding:8px 12px;}
-.messageCon > .top > h4 {display: inline-block;}
+.messageCon > .top { position: relative; padding:8px 12px; }
+.messageCon > .top > h4 {display: inline-block;
+ flex-direction: row;
+	flex-wrap: wrap;
+	white-space: normal;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-line-clamp: 4;
+	-webkit-box-orient: vertical;
+	max-width:550px;
+	word-break: break-all;
+}
 .messageCon .loca { position: absolute; right:16px; top:16px; font-size:12px; color:#555; text-align: right;}
 .messageCon .messageCon_btn { position: absolute; right:16px; top:6px; vertical-align: bottom; display:inline-block; color:#555; text-align: right;}
 .messageCon .messageCon_btn select{vertical-align: middle;}
@@ -201,10 +211,9 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 
 
 /* 메신저*/
-.inner_messenger { position: relative; /*height: 100vh;*/height: calc(100vh - 50px); display: flex; /*grid-template-columns: 340px 1fr 1fr 300px;*/
-}
+.inner_messenger { position: relative; /*height: 100vh;*/height: calc(100vh - 50px); display: flex; /* flex-direction: row;flex-wrap: wrap;grid-template-columns: 340px 1fr 1fr 300px;*/}
 .inner_messenger .leftSearch:nth-child(1) { width:340px; position: relative; background-color: #f8f8f8;}
-.inner_messenger .messengerList:nth-child(2) {flex-basis:400px; flex-grow: 1; align-self:top; margin-top:6px; }
+.inner_messenger .messengerList:nth-child(2) {flex-basis:400px; flex-grow: 1; align-self:top; margin-top:6px;}
 .inner_messenger .chatList:nth-child(3) { z-index:99; flex-basis:450px; flex-grow: 1; position: relative; background-color: #606973; }
 .inner_messenger .fileGroupList:nth-child(3) { z-index:99; flex-basis:450px; flex-grow: 1; position: relative; background-color: #f8f8f8; }
 .inner_messenger .rightFile:nth-child(4) { width:300px;background-color: #414A54; z-index:9;}
@@ -528,6 +537,8 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .pb16 {padding-bottom:16px;}
 .pl20 {padding-left:20px;}
 .pr20 {padding-right:20px;}
+.pl16 {padding-left:16px;}
+.pr16 {padding-right:16px;}
 
 /* overflow-y: auto; */
 .y_scroll { overflow-y:scroll; }
@@ -582,6 +593,8 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .black {color:#111 !important;}
 .blue{color:#1A73F9 !important;}
 .red{color:#FC5656 !important;}
+.green {color:#3CC74A !important;}
+.green02 {color:#24A9C6 !important;}
 .blue02{color:#1C64D3    !important}
 .blue03{color:#88B8FF    !important}
 .purple{color:#675CED !important;}
@@ -761,6 +774,12 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .sns_chatGPT{background:url(../img/ico_sns_chatgpt.png) left top no-repeat;}
 
 :root {--black: #111;--white: #fff;--bg: #f8f8f8;--bluebg: #F2F6FF;--light:#ededed;}
+/*.messengerList { white-space: normal;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	word-break: keep-all;}*/
 .messengerList .messengerBox {width: 100%; height:800px;}
 .messengerList .messengerBox .people { margin-left: -1px; }
 .messengerList .messengerBox .people .person { position: relative;padding:10px 20px 10px;cursor: pointer;overflow: auto; }
@@ -789,7 +808,13 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .messengerList .messengerBox .people .person .right{position: relative; float:right; width:30%; text-align: right;}
 .messengerList .messengerBox .people .person .logo{font-size:16px; font-weight:400; color:#111;}
 .messengerList .messengerBox .people .person .logo img{margin-right:4px; vertical-align:bottom;}
-.messengerList .messengerBox .people .person .chatid {height:16px;line-height: 16px; font-size: 16PX; font-weight: 600;}
+.messengerList .messengerBox .people .person .chatid {height:16px;line-height: 16px; font-size: 16PX; font-weight: 600;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	word-break: break-all;
+	max-width:550px;
+}
 .messengerList .messengerBox .people .person .file { width:16px; height:16px; vertical-align: top;
 	background:url(../img/ico_link_angled.png) left center no-repeat;}
 .messengerList .messengerBox .people .person .name {font-size: 14px; color:#555; font-weight:200 !important;}

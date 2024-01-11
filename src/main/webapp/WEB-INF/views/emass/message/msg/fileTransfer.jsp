@@ -830,7 +830,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="inner_fileList">
+			<div class="inner_fileList pl16 pr16">
 			</div>
 
 		</div>

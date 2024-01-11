@@ -115,6 +115,26 @@
 		.ellipsis {
 			white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 		}
+		.bootstrap-select.btn-group .dropdown-menu.inner {
+			box-shadow: none !important;
+		}
+/*
+		.exceptOption, .exceptOption2 {
+			position: relative;
+			padding-left: 30px;
+		}
+
+		.exceptOption {
+			top: 5px;
+		}
+
+		.c-checkbox input,
+		.c-radio input {
+			opacity: 0;
+			position: absolute;
+			margin-left: 0 !important;
+		}
+		input[type="checkbox"]:disabled {width:0; height:0; border:none;}*/
 	</style>
 	<script type="text/javascript">
 		var popup_msgId = '<%=msgid%>';
@@ -380,11 +400,14 @@
 													<span style="margin-left: 10px;">
 															<label class="radio-inline c-radio">
 																<input type="radio" name="feedback" class="feedback" value="0">
-																<span class="fa fa-check"></span><span class="feedbackCorrect"></span><s:message code="condition.info.feedback0"/>
+																<span class="fa fa-check"></span>
+																<i class="feedbackCorrectBg"> <img src="../img/icon/correct.png/" ><s:message code="condition.info.feedback0"/></i>
+
 															</label>
 															<label class="radio-inline c-radio">
 																<input type="radio" name="feedback" class="feedback" value="9">
-																<span class="fa fa-check"></span><span class="feedbackDefer"></span><s:message code="condition.info.feedback9"/>
+																<span class="fa fa-check"></span>
+																<i class="feedbackDeferBg"> <img src="../img/icon/defer.png/" ><s:message code="condition.info.feedback9"/></i>
 															</label>
 														</span>
 												</div>
@@ -395,19 +418,20 @@
 													<span style="margin-left: 10px;">
 															<label class="radio-inline c-radio">
 																<input type="radio" name="feedback" class="feedback" value="1">
-																<span class="fa fa-check"></span><span class="feedbackInCorrect"></span><s:message code="condition.info.class1"/>
+																<span class="fa fa-check"></span><i class="feedbackcommonBg"> <img src="../img/icon/common.png/" ><s:message code="condition.info.class1"/></i>
 															</label>
 															<label class="radio-inline c-radio">
 																<input type="radio" name="feedback" class="feedback" value="2">
-																<span class="fa fa-check"></span><span class="feedbackInCorrect"></span><s:message code="condition.info.class2"/>
+																<span class="fa fa-check"></span><i class="feedbackInNotOpenBg"> <img src="../img/icon/notopen.png/"><s:message code="condition.info.class2"/></i>
 															</label>
 															<label class="radio-inline c-radio">
 																<input type="radio" name="feedback" class="feedback" value="3">
-																<span class="fa fa-check"></span><span class="feedbackInCorrect"></span><s:message code="condition.info.class3"/>
+																<span class="fa fa-check"></span><i class="feedbackInOpenBg"> <img src="../img/icon/open.png/"><s:message code="condition.info.class3"/></i>
+
 															</label>
 															<label class="radio-inline c-radio">
 																<input type="radio" name="feedback" class="feedback" value="4">
-																<span class="fa fa-check"></span><span class="feedbackInCorrect"></span><s:message code="condition.info.class4"/>
+																<span class="fa fa-check"></span><i class="feedbackInCorrectBg"> <img src="../img/icon/incorrect.png/"><s:message code="condition.info.class4"/></i>
 															</label>
 														</span>
 												</div>

@@ -481,9 +481,13 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .black {color:#111 !important;}
 .blue{color:#1A73F9 !important;}
 .red{color:#FC5656 !important;}
+.green {color:#3CC74A !important;}
+.green02 {color:#24A9C6 !important;}
 .blue02{color:#1C64D3    !important}
 .blue03{color:#88B8FF    !important}
 .purple{color:#675CED !important;}
+.white{color:#fff !important;}
+/*
 /*
 .grayscale_img_1 { filter: grayscale(100%);}*/
 
