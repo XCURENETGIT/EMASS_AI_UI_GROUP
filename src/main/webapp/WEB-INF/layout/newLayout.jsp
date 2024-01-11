@@ -28,5 +28,4 @@
 	</div><!--//Container-->
 </div> <!--//wrap-->
 </body>
-<tiles:insertAttribute name="footer" ignore="true"/>
 </html>

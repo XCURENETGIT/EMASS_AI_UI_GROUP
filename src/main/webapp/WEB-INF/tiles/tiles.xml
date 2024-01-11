@@ -27,7 +27,6 @@
         <put-attribute name="top" value="/WEB-INF/fragments/new_top.jsp" />
         <put-attribute name="header" value="/WEB-INF/fragments/header.jsp" />
         <put-attribute name="lnb" value="/WEB-INF/fragments/new_left.jsp" />
-        <put-attribute name="footer" value="/WEB-INF/fragments/footer.jsp" />
 
         <put-attribute name="content" value="" />
     </definition>
