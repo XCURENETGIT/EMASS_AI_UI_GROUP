@@ -57,18 +57,14 @@ var eikon = {
         $('.messenger_next, .messenger_prev').on('click', function () {
             var srcip = $('#selectUserInfo').attr('data-srcip');
             var usr_id = $('#selectUserInfo').attr('data-usrid');
-            console.log("usr_id: "+usr_id);
             var xrootmtr = $('#xrootmtr').text();
             var msgIds = [];
-            console.log("gg: "+$(this).hasClass());
 
             if ($(this).hasClass('messenger_next')) {
-                console.log("다음 데이터")
                 var msgid = $('.timeline').children().last().attr('id');
                 getMessengerMessageNext(xrootmtr, srcip, usr_id, msgid);
 
             } else {
-                console.log("이전 데이터")
                 var firstData = $('.timeline').children().filter(':eq(1)');
                 var msgid = $(firstData).attr('id');
                 getMessengerMessagePrev(xrootmtr, srcip, usr_id, msgid);
@@ -212,14 +208,22 @@ var eikon = {
             usr_id: userid,
             data: JSON.stringify(filterVal),
             offset: searchOffset,
-            success: function (data, total) {
+            success : function(data, total) {
                 focusMsgId = data.toString();
-                if (total > 0) {
+                if(total > 0){
                     $('#searchResult').html(total);
                     $('#searchResultArea').show();
                     $('#searchResultBtnArea').show();
+
+                    detailMsgid=data;
+                    detailMsgid.sort();
+                    console.log(detailMsgid);
+                    console.log("현재 번호  "+ detailMsgid[searchOffset]);
                     checkList(searchOffset);
-                } else {
+
+
+                }
+                else{
                     $('#searchResult').html('0');
                     $('#selectCnt').html('0');
                     $('#searchResultArea').show();

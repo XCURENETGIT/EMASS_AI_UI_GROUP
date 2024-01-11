@@ -1286,7 +1286,7 @@ public class SolrCreateQuery {
 			for (String term : terms) {
 				queryStr.append(appendSpecialchar(term)).append(" ");
 			}
-			sb.append("+").append(queryStr.toString().trim().replaceAll(" ", " +").replaceAll("__", " "));
+			sb.append("*").append(queryStr.toString().trim().replaceAll(" ", " +").replaceAll("__", " ")).append("*");
 		} else {
 			String[] terms = query.split(" ");
 			for (int i = 0; i < terms.length; i++) {
