@@ -135,7 +135,7 @@
 		}
 
 		#contextMenu {
-			background: #DCE7F3;
+			background: #242330;
 			border: 1px solid gray;
 			display: inline-block;
 			min-width: 100px;
@@ -151,7 +151,7 @@
 			padding: 3px 5px;
 			cursor: pointer;
 			list-style: none outside none;
-			background-color: #DCE7F3;
+			background-color: #fff;
 			font-size: 11px;
 			color: #000;
 			width: 130px;
@@ -181,7 +181,7 @@
 <input type="hidden" id="searchStrInput" />
 <div id="contextMenu" style="display:none;position:absolute">
 	<ul>
-		<li style="background-color:#1576A1;color:#fff;font-weight: bold;cursor:default;"><s:message code="common.msg.menu"/>
+		<li style="background-color:#242330;color:#fff;font-weight: bold;cursor:default;"><s:message code="common.msg.menu"/>
 			<button type="button" class="close" data-dismiss="modal" aria-label="Close" style="font-size:15px;color:#fff;text-shadow:0 1px 0 #000; opacity:0.7;" id="contextMenuCloseBtn">
 				<span aria-hidden="true">&times;</span>
 			</button>

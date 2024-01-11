@@ -349,7 +349,7 @@
 		<div class="boxArea" id="msgDiv" style="display: none;">
 			<div class="content_body" style="transform: translateZ(0);">
 				<div class="row">
-					<div class="col-lg-12">
+					<div class="col-lg-12 mat8">
 						<div class="panel panel-default" id="subjectDiv">
 							<div class="panel-heading" style="font-weight: bold;min-height:35px; border:1px solid #ff0000;">
 								<div id="subject" class="pull-left" style="cursor:default;width:calc(100% - 355px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;word-wrap:normal;line-height: 25px;" title="subject"></div>
@@ -361,7 +361,7 @@
 									<span style="font-weight: bold;" id="subjectStr"></span>
 								</div>
 							</div>
-							<div class="panel-body css-body">
+							<div class="panel-body p12 css-body">
 								<div id="">
 									<table id="infoTable" class="table table-bordered" style="margin-bottom:0;table-layout:fixed;min-width:500px;">
 										<colgroup>

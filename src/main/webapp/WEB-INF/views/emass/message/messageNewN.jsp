@@ -2367,8 +2367,8 @@
                     <div class="searchKeywordSearch" style="padding: 5px 5px 5px 10px; margin-bottom:8px;">
                         <input class="condition_input_text" type="text" name="serch" placeholder="<s:message code="searchKeyword.search"/>" id="searchKeywordSearchStr" style="width:calc(100% - 150px);">
                         <button class="search_btn" id="searchKeywordSearchBtn"><span><s:message code="common.search"/></span></button>
-                        <button class="msg_button" id="addSearchKeywordBtn"><span><s:message code="common.msg.add"/></span></button>
-                        <button class="msg_button" id="delSearchKeywordBtn"><span><s:message code="common.msg.delete"/></span></button>
+                        <button class="msg_button btn01" id="addSearchKeywordBtn"><span><s:message code="common.msg.add"/></span></button>
+                        <button class="msg_button btn02"  id="delSearchKeywordBtn"><span><s:message code="common.msg.delete"/></span></button>
                     </div>
                     <div style="padding-left: 10px;">
                         <span style="font-weight: bold; display: inline-block; margin-right: 10px;"><i class="fa fa-caret-right"></i> <s:message code="searchKeyword.inputMode"/></span>
@@ -2376,7 +2376,7 @@
                         <label class="searchKeywordInputType"><input type="radio" name="searchKeywordInputType" value="A"> <span>AND</span></label>
                         <label class="searchKeywordInputType"><input type="radio" name="searchKeywordInputType" value="O"> <span>OR</span></label>
                     </div>
-                    <div id="searchKeywordGrid" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px;min-height:200px;height:calc(100% - 100px);"></div>
+                    <div id="searchKeywordGrid" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px;min-height:200px;height:calc(100% - 110px);"></div>
                 </div>
 
                 <%-- 연관 검색어 리스트 --%>
@@ -2411,7 +2411,7 @@
                 <div id="filterHeaderDiv" class="filterHeaderDiv">
                     <div class="filterHeaderTab"><s:message code="common.msg.conditionBox"/>
                         <div class="filterDateCloseBtn" style="position:absolute;top:10px; right:16px;">
-                            <span class="glyphicon glyphicon-remove" style="cursor:pointer;"></span>
+                            <span class="glyphicon glyphicon-remove" style="cursor:pointer;" aria-hidden="true"></span>
                         </div>
                     </div>
                     <div class="rightGroup" style="margin-right:14px; margin-top:4px;">
@@ -3109,8 +3109,8 @@
 									<input id="insaFormatInput" style="width: 330px;" type="text" value="" data-format="name,emaile,busi,dept,jikgub,ip"/>
 									<img src="<c:url value="/img/message/exclamation.png"/>" id="confError" style="display: none; padding-bottom:2px;" title="<s:message code="message.insa.error"/>">
 									<img src="<c:url value="/img/message/accept.png"/>" id="confAccept" style="display: none; padding-bottom:2px;" title="<s:message code="message.insa.ok"/>">
-									<span style="padding-left: 7px;" id="insaFormatOk"> <s:message code="common.msg.apply"/> </span>
-									<span style="padding-left: 7px;" id="insaFormatClear"> <s:message code="common.msg.remove"/> </span>
+									<span style="padding-left: 7px; margin-top:-1px; id="insaFormatOk" class="btn01"> <s:message code="common.msg.apply"/> </span>
+									<span style="padding-left: 7px; margin-top:-1px;" id="insaFormatClear" class="btn02"> <s:message code="common.msg.remove"/> </span>
 								</span>
                                         <span style="width: 435px; display:block;">
 									<input  id="insaFormatInputEx" style="width:435px;cursor: auto !important;" disabled type="text" value="<s:message code="message.help.example"/>)" data-format="name,emaile,busi,dept,jikgub,ip"/>
