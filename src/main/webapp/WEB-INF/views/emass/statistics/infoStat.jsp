@@ -80,49 +80,48 @@
 	var tabNum = 0;
 	var totalChartDat;
 	$(document).ready(function () {
-        initCondition();
+		initCondition();
 
-        $('#dept').click(function () {
-            var code = $(this).attr('id');
-            openCodeWindow(code, $('#' + code + 'Val').val(), $('#' + code + 'Str').val());
-        });
-
-        $('#user').click(function () {
-            var code = $(this).attr('id');
-            openCodeWindow(code, $('#' + code + 'Val').val(), $('#' + code + 'Str').val());
-        });
-
-
-        $(document).on('click', '#deptSelectedArea', function (e) {
-            $('#deptVal, #deptStr').val('');
-            $('#deptSelectedArea').hide();
-        });
-
-        $(document).on('click', '#userSelectedArea', function (e) {
-            $('#userVal, #userVal').val('');
-            $('#userSelectedArea').hide();
-        });
-
-
-
-        $('#searchBtn').click(function () {
-			closeDetailTab();
-			getData('Y');
-            if (codeType == 'deptByCo') $('#deptByCoStrSpan').html('');
-            $('#' + codeType + 'Val').val('');
-            $('#' + codeType + 'Str').val('');
-            $('#' + codeType + 'SelectedArea').hide();
+		$('#dept').click(function () {
+			var code = $(this).attr('id');
+			openCodeWindow(code, $('#' + code + 'Val').val(), $('#' + code + 'Str').val());
 		});
 
-		$('#clearBtn').click(function(){
+		$('#user').click(function () {
+			var code = $(this).attr('id');
+			openCodeWindow(code, $('#' + code + 'Val').val(), $('#' + code + 'Str').val());
+		});
+
+
+		$(document).on('click', '#deptSelectedArea', function (e) {
+			$('#deptVal, #deptStr').val('');
+			$('#deptSelectedArea').hide();
+		});
+
+		$(document).on('click', '#userSelectedArea', function (e) {
+			$('#userVal, #userVal').val('');
+			$('#userSelectedArea').hide();
+		});
+
+
+		$('#searchBtn').click(function () {
+			closeDetailTab();
+			getData('Y');
+			if (codeType == 'deptByCo') $('#deptByCoStrSpan').html('');
+			$('#' + codeType + 'Val').val('');
+			$('#' + codeType + 'Str').val('');
+			$('#' + codeType + 'SelectedArea').hide();
+		});
+
+		$('#clearBtn').click(function () {
 			$('#startdate').val(new Date().format('yyyy-mm-dd'));
 			$('#enddate').val(new Date().format('yyyy-mm-dd'));
-            $('#deptVal, #deptStr').val('');
-            $('#deptSelectedArea').hide();
-            $('#userVal, #userVal').val('');
-            $('#userSelectedArea').hide();
-
-        });
+			$('#deptVal, #deptStr').val('');
+			$('#deptSelectedArea').hide();
+			$('#userVal, #userVal').val('');
+			$('#userSelectedArea').hide();
+			$('#busiSelect').selectpicker('val', '');
+		});
 
 		$('#chartCntDiv .dropdown-menu li a').click(function () {
 			chartcnt = $(this).text();
@@ -164,21 +163,21 @@
 
 	});
 
-    function openCodeWindow(id, oldCode, oldConm) {
-        $('#oldCode').val(oldCode);
-        $('#oldConm').val(oldConm);
+	function openCodeWindow(id, oldCode, oldConm) {
+		$('#oldCode').val(oldCode);
+		$('#oldConm').val(oldConm);
 
-        var url = '<c:url value="/commons/selectCode.do?codeType='+id+'"/>';
-        var pop = fnOpenWindow('', 'selectCodeWinPopup', 1200, 700, 'resize');
+		var url = '<c:url value="/commons/selectCode.do?codeType='+id+'"/>';
+		var pop = fnOpenWindow('', 'selectCodeWinPopup', 1200, 700, 'resize');
 
-        $('#codeParam').attr('target', 'selectCodeWinPopup');
-        $('#codeParam').attr('action', url);
-        $('#codeParam').attr('method', 'post');
-        $('#codeParam').submit();
-    }
+		$('#codeParam').attr('target', 'selectCodeWinPopup');
+		$('#codeParam').attr('action', url);
+		$('#codeParam').attr('method', 'post');
+		$('#codeParam').submit();
+	}
 
 
-    function setGrid() {
+	function setGrid() {
 		currentgrid = getCurrentGrid();
 		initGrid(currentgrid, messageGridColumn);
 	}
@@ -305,9 +304,6 @@
 		document.getElementById('bar').style.width = '0px';
 		document.getElementById('text').innerHTML = '0%';
 	}
-
-
-
 </script>
 
 <div>
@@ -334,35 +330,28 @@
 				</select>
 			</div>
 			<div>
-				<div>
-					<select id="busiSelect" class="selectpicker col-xs" data-style="btn-default btn-sm" multiple
-					        data-show-subtext="true" data-actions-box="true"></select>
-				</div>
-				<button class="btn01" id="dept"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
-						code="common.org.choose.dept"/></button>
-				<span id="deptSelectedArea" class="codeSelectedBtn">
-										<button type="button" class="btn num_add bornone"  style="z-index: 2;">0</button>
-									</span>
-				<input type="hidden" id="deptStr" class="selectedTitle">
-				<input type="hidden" id="deptVal">
-
-
-				<button class="btn01" id="user"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
-						code="common.org.choose.user"/></button>
-				<span id="userSelectedArea" class="codeSelectedBtn">
-										<button type="button" class="btn num_add bornone"  style="z-index: 2;">0</button>
-									</span>
-				<input type="hidden" id="userStr" class="selectedTitle">
-				<input type="hidden" id="userVal">
-
-
-			</div>
-
-			<div>
 				<button class="form_btn01" id="searchBtn"><s:message code="common.msg.search"/></button>
 				<button class="form_btn02" id="clearBtn"><s:message code="condition.reset"/></button>
 			</div>
+		</div>
+		<div class="searchSub w100">
+			<div>
+				<select id="busiSelect" class="selectpicker col-xs" data-style="btn-default btn-sm" multiple data-show-subtext="true" data-actions-box="true"></select>
+			</div>
+			<button class="btn01" id="dept"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
+					code="common.org.choose.dept"/></button>
+			<span id="deptSelectedArea" class="codeSelectedBtn">
+				<button type="button" class="btn num_add bornone"  style="z-index: 2;">0</button>
+			</span>
+			<input type="hidden" id="deptStr" class="selectedTitle">
+			<input type="hidden" id="deptVal">
 
+			<button class="btn01" id="user"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message code="common.org.choose.user"/></button>
+			<span id="userSelectedArea" class="codeSelectedBtn">
+				<button type="button" class="btn num_add bornone"  style="z-index: 2;">0</button>
+			</span>
+			<input type="hidden" id="userStr" class="selectedTitle">
+			<input type="hidden" id="userVal">
 		</div>
 	</div>
 	<div class="content" style="padding-bottom: 50px;">
@@ -406,12 +395,11 @@
 		</div>
 	</div>
 </div>
-<i class="fa fa-calendar" aria-hidden="true" style="font-size: 1px;position: absolute;top: -100px"></i><!-- 유출 관계도에서 사용되는 font-->
+<i class="fa fa-calendar" aria-hidden="true" style="font-size: 1px;position: absolute;top: -100px"></i>
 <form method="post" id="codeParam">
 	<input type="hidden" name="oldCode" id="oldCode"></input>
 	<input type="hidden" name="oldConm" id="oldConm"></input>
 </form>
-
 
 <script type="text/javascript">
 	function getCurrentGrid() {
@@ -498,8 +486,7 @@
 	var grid2 = new Xgrid('selectGrid', contextRoot);
 	initGrid(grid2, messageGridColumn);
 
-
-	function viewer_open(row, bodySize ){
+	function viewer_open(row, bodySize) {
 		var msgid = grid2.getValue(row, 'msgid');
 		openMessageBodyPop(grid2.id, msgid, '', bodySize);
 		grid.setValue(row, grid2.ColIndex('readYn'), 'Y');
@@ -512,23 +499,20 @@
 		var piCount_str = $('select[name=piCount] option:selected').text();
 		var sDate = $('#startdate').val().replaceAll("-", "");
 		var eDate = $('#enddate').val().replaceAll("-", "");
+		var busiStr = arrayToString($('#busiSelect').selectpicker('val'));
+		var dv = $('#deptVal').val().split('|');
+		var dept = dv.join(',');
 
-        var busiStr= arrayToString($('#busiSelect').selectpicker('val'));
-        var dv = $('#deptVal').val().split('|');
-        var dept = dv.join(',');
+		var deptStr = '';
+		if (dept != '') deptStr = dept;
+		else deptStr = '';
 
-        var deptStr='';
-        if (dept != '') deptStr = dept;
-        else deptStr = '';
+		var uv = $('#userVal').val().split('|');
+		var user = uv.join(',');
 
-        var uv = $('#userVal').val().split('|');
-        var user = uv.join(',');
-
-        var userStr='';
-        if (user != '') userStr = user;
-        else userStr = '';
-
-
+		var userStr = '';
+		if (user != '') userStr = user;
+		else userStr = '';
 
 		if (sDate > eDate) ui.alertMsg('<s:message code="consent.msg.timecheck"/>');
 		$('#listTab b').remove();
@@ -543,9 +527,9 @@
 			piCount: piCount,
 			pMenuId: pMenuId,
 			menuId: menuId,
-            deptStr:deptStr,
-            busiStr:busiStr,
-            userStr:userStr,
+			deptStr: deptStr,
+			busiStr: busiStr,
+			userStr: userStr,
 
 			success: function (data, total) {
 				grid1.setData(data);
@@ -568,7 +552,7 @@
 		if (gridData.rowName !== '') title = gridData.rowName + '/' + gridData.jikgubnm + '/' + gridData.deptnm + '<' + gridData.rowKey + '>';
 		else title = gridData.rowKey;
 
-		result.push({id:gridData.rowKey, title:title});
+		result.push({id: gridData.rowKey, title: title});
 		return result;
 	}
 
@@ -577,7 +561,7 @@
 		for (var i = 0; i < data.length; i++) {
 			var svc1 = data[i]['svc1'];
 			var id = data[i]['svcNm'];
-			if(svc1 === 'X' || svc1 === 'U') id = data[i]['host'];
+			if (svc1 === 'X' || svc1 === 'U') id = data[i]['host'];
 			result.push(id);
 		}
 		return result.unique();
@@ -593,84 +577,83 @@
 	}
 
 
-    function openCodeWindow(id, oldCode, oldConm) {
-        $('#oldCode').val(oldCode);
-        $('#oldConm').val(oldConm);
+	function openCodeWindow(id, oldCode, oldConm) {
+		$('#oldCode').val(oldCode);
+		$('#oldConm').val(oldConm);
 
-        var url = '<c:url value="/commons/selectCode.do?codeType='+id+'"/>';
-        var pop = fnOpenWindow('', 'selectCodeWinPopup', 1200, 700, 'resize');
+		var url = '<c:url value="/commons/selectCode.do?codeType='+id+'"/>';
+		var pop = fnOpenWindow('', 'selectCodeWinPopup', 1200, 700, 'resize');
 
-        $('#codeParam').attr('target', 'selectCodeWinPopup');
-        $('#codeParam').attr('action', url);
-        $('#codeParam').attr('method', 'post');
-        $('#codeParam').submit();
-    }
-
-
-    function getCodeList(codeType) {
-        ui.get({
-            url: 'getCodeList.xcn',
-            codeType: codeType,
-            success: function (data, total) {
-                $('#' + codeType + 'Select').html(getSelectOption(data));
-                $('#' + codeType + 'Select').selectpicker('refresh');
-                $('#' + codeType + 'SelectPop').html(getSelectOption(data));
-                $('#' + codeType + 'SelectPop').selectpicker('refresh');
-            },
-            error: function (status, message) {
-                ui.alertMsg('error:' + status);
-            },
-            complete: function () {
-                searchFlag = false;
-            }
-        });
-    }
-
-    function getSelectOption(data) {
-        var str = '';
-        for (var i = 0; i < data.length; i++) {
-            str += '<option value="' + data[i].code + '">' + data[i].codeName + '</option>';
-        }
-        return str;
-    }
+		$('#codeParam').attr('target', 'selectCodeWinPopup');
+		$('#codeParam').attr('action', url);
+		$('#codeParam').attr('method', 'post');
+		$('#codeParam').submit();
+	}
 
 
-    function getCodeList(codeType) {
-        ui.get({
-            url: 'getCodeList.xcn',
-            codeType: codeType,
-            success: function (data, total) {
-                $('#' + codeType + 'Select').html(getSelectOption(data));
-                $('#' + codeType + 'Select').selectpicker('refresh');
-                $('#' + codeType + 'SelectPop').html(getSelectOption(data));
-                $('#' + codeType + 'SelectPop').selectpicker('refresh');
-            },
-            error: function (status, message) {
-                ui.alertMsg('error:' + status);
-            },
-            complete: function () {
-                searchFlag = false;
-            }
-        });
-    }
+	function getCodeList(codeType) {
+		ui.get({
+			url: 'getCodeList.xcn',
+			codeType: codeType,
+			success: function (data, total) {
+				$('#' + codeType + 'Select').html(getSelectOption(data));
+				$('#' + codeType + 'Select').selectpicker('refresh');
+				$('#' + codeType + 'SelectPop').html(getSelectOption(data));
+				$('#' + codeType + 'SelectPop').selectpicker('refresh');
+			},
+			error: function (status, message) {
+				ui.alertMsg('error:' + status);
+			},
+			complete: function () {
+				searchFlag = false;
+			}
+		});
+	}
 
-    function initCondition(){
-        getCodeList('busi');
-        getCodeList('dept');
-
-        $('#busiSelect').selectpicker({
-            size: 15,
-            width: '300px',
-            searchLabel: true,
-            noneSelectedText: '<s:message code="common.org.busi.all"/>',
-            noneResultsText: '<s:message code="common.msg.noresult"/>' + ' ',
-            selectAllText: '<s:message code="common.msg.select_all"/>',
-            deselectAllText: '<s:message code="common.msg.unselect_all"/>',
-        });
+	function getSelectOption(data) {
+		var str = '';
+		for (var i = 0; i < data.length; i++) {
+			str += '<option value="' + data[i].code + '">' + data[i].codeName + '</option>';
+		}
+		return str;
+	}
 
 
+	function getCodeList(codeType) {
+		ui.get({
+			url: 'getCodeList.xcn',
+			codeType: codeType,
+			success: function (data, total) {
+				$('#' + codeType + 'Select').html(getSelectOption(data));
+				$('#' + codeType + 'Select').selectpicker('refresh');
+				$('#' + codeType + 'SelectPop').html(getSelectOption(data));
+				$('#' + codeType + 'SelectPop').selectpicker('refresh');
+			},
+			error: function (status, message) {
+				ui.alertMsg('error:' + status);
+			},
+			complete: function () {
+				searchFlag = false;
+			}
+		});
+	}
 
-    }
+	function initCondition() {
+		getCodeList('busi');
+		getCodeList('dept');
+
+		$('#busiSelect').selectpicker({
+			size: 15,
+			width: '300px',
+			searchLabel: true,
+			noneSelectedText: '<s:message code="common.org.busi.all"/>',
+			noneResultsText: '<s:message code="common.msg.noresult"/>' + ' ',
+			selectAllText: '<s:message code="common.msg.select_all"/>',
+			deselectAllText: '<s:message code="common.msg.unselect_all"/>',
+		});
+
+
+	}
 
 
 	var piArr = ['pi_FN', 'pi_SN', 'pi_DN', 'pi_CN', 'pi_PN', 'pi_MN', 'pi_AN', 'pi_CRN', 'pi_SSN', 'pi_IMEI', 'pi_BRN', 'pi_CPN', 'pi_MCN'];
@@ -706,21 +689,21 @@
 		return date.substring(0, 4) + "-" + date.substring(4, 6) + "-" + date.substring(6, 8);
 	}
 
-	function makeNetwork(value, type, pi_total){
+	function makeNetwork(value, type, pi_total) {
 		var userkey = value;
 		var type = type;
 		var pi_total = pi_total;
 		var piCount = $('#piCount').val();
 		ui.postJson({
-			url : 'getInfoNetwork.xcn',
-			userkey : userkey,
-			type : type,
-			startDate : $('#startdate').val().replaceAll("-","")+"000000",
-			endDate : $('#enddate').val().replaceAll("-","")+"235959",
-			piCount : 1,
-			offset : 0,
-			limit : -1,
-			success : function(data, total) {
+			url: 'getInfoNetwork.xcn',
+			userkey: userkey,
+			type: type,
+			startDate: $('#startdate').val().replaceAll("-", "") + "000000",
+			endDate: $('#enddate').val().replaceAll("-", "") + "235959",
+			piCount: 1,
+			offset: 0,
+			limit: -1,
+			success: function (data, total) {
 				grid2.setData(data);
 				var nodes = [];
 				var edges = [];
@@ -780,10 +763,10 @@
 							for (var x = 0; x < data.length; x++) {
 								var svc1 = data[x].svc1;
 								var id = data[x]['svcNm'];
-								if(svc1 === 'X' || svc1 === 'U') id = data[x]['host'];
+								if (svc1 === 'X' || svc1 === 'U') id = data[x]['host'];
 								if (data[x].ctime_yyyymmdd === nodeLv3[i] && id === nodeLv4[j]) {
 									for (var y = 0; y < nodeLv2.length; y++) {
-										if(data[x][nodeLv2[y]] > 0) sum += data[x][nodeLv2[y]];
+										if (data[x][nodeLv2[y]] > 0) sum += data[x][nodeLv2[y]];
 									}
 								}
 							}
@@ -821,7 +804,7 @@
 								nodeDistance: 10,
 							}
 						},
-						date : {
+						date: {
 							shape: 'icon',
 							icon: {
 								face: 'FontAwesome',
@@ -962,7 +945,7 @@
 						}
 					},
 					edges: {
-						color:'#FF0000',
+						color: '#FF0000',
 						font: {
 							size: 13
 						},
@@ -982,7 +965,7 @@
 					},
 					physics: {
 						stabilization: {
-							enabled:true,
+							enabled: true,
 							iterations: 1000,
 							updateInterval: 10
 						},
@@ -998,46 +981,50 @@
 					}
 				};
 				var network = new vis.Network(container, data_, options);
-					network.on("getConnectedNodes", function(params) {
+				network.on("getConnectedNodes", function (params) {
 				});
-				network.on("click",function(params){
+				network.on("click", function (params) {
 					console.log(params.nodes[0]);
 				});
 				//현재 선택된 노드의 아이디를 가지고 옴
 				var mySelectionOrder = [];
 				var previouslySelected = {};
-				network.on('select', function(params) {
+				network.on('select', function (params) {
 					var selected = {};
-					params.nodes.forEach(function(n) {
-						if ( ! previouslySelected[n]) {
+					params.nodes.forEach(function (n) {
+						if (!previouslySelected[n]) {
 							mySelectionOrder.push(n);
 						}
 						selected[n] = true;
 					});
 					mySelectionOrder = mySelectionOrder.filter(
-						function(e, i, a) { return selected[e]; });
+						function (e, i, a) {
+							return selected[e];
+						});
 					previouslySelected = selected;
 				});
-				network.on("stabilizationProgress", function(params) {
+				network.on("stabilizationProgress", function (params) {
 					var maxWidth = 496;
 					var minWidth = 20;
-					var widthFactor = params.iterations/params.total;
-					var width = Math.max(minWidth,maxWidth * widthFactor);
+					var widthFactor = params.iterations / params.total;
+					var width = Math.max(minWidth, maxWidth * widthFactor);
 					document.getElementById('bar').style.width = width + 'px';
-					document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+					document.getElementById('text').innerHTML = Math.round(widthFactor * 100) + '%';
 				});
-				network.once("stabilizationIterationsDone", function() {
+				network.once("stabilizationIterationsDone", function () {
 					document.getElementById('text').innerHTML = '100%';
 					document.getElementById('bar').style.width = '100%';
 					document.getElementById('loadingBar').style.opacity = 0;
 					// really clean the dom element
-					setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+					setTimeout(function () {
+						document.getElementById('loadingBar').style.display = 'none';
+					}, 500);
 				});
 			},
-			error : function(status, message) {
+			error: function (status, message) {
 				alert(message);
 			},
-			complete : function() {
+			complete: function () {
 			}
 		});
 	}
