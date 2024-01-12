@@ -58,7 +58,17 @@
 
     <style type="text/css">
         #wrap {overflow:hidden;}
-
+        .caret {
+            display: inline-block;
+            width: 0;
+            height: 0;
+            margin-left: 4px;
+            margin-bottom: 3px;
+            vertical-align: middle;
+            border-top: 4px dashed;
+            border-top: 4px solid\9;
+            border-right: 4px solid transparent;
+            border-left: 4px solid transparent;}
         .scroll_tabs_container div.scroll_tab_inner {height:32px !important; padding:0;}
         .contentList{
             height:100%;border: 0px;width: 100%;overflow: hidden;border:0px;position: absolute;
@@ -3042,12 +3052,12 @@
                                 <a href="javascript:;" style="padding-right:10px; color:#383838; cursor: pointer; font-size: 12px;float: right;margin-right:4px;" id="saveMsgData" class="btn05"><s:message code="filterInfo.setMsgFolder1"/></a>
                                 <a href="javascript:;" style="padding-right:10px; color:#383838; cursor: pointer; font-size: 12px;float: right;margin-right:4px; display: none;" id="feedbackBtn" class="btn05"><s:message code="condition.feedback"/> <s:message code="common.msg.setting"/><span class="caret"></span></a>
                                 <ul id="feedbackSetting" style="display: none; z-index: 991; padding: 5px 0px;">
-                                    <li><a href="javascript:void(0);" onclick="setFeedback(0);" style="padding-left: 20px;"><span class="feedbackCorrect" style="display: inline-block; position: relative; top: 0px;"></span>&nbsp;<s:message code="condition.info.feedback0"/></a></li>
-                                    <li><a href="javascript:void(0);" onclick="setFeedback(1);" style="padding-left: 20px;"><span class="feedbackInCorrect" style="display: inline-block; position: relative; top: 0px;"></span>&nbsp;<s:message code="condition.info.class1"/></a></li>
-                                    <li><a href="javascript:void(0);" onclick="setFeedback(2);" style="padding-left: 20px;"><span class="feedbackInCorrect" style="display: inline-block; position: relative; top: 0px;"></span>&nbsp;<s:message code="condition.info.class2"/></a></li>
-                                    <li><a href="javascript:void(0);" onclick="setFeedback(3);" style="padding-left: 20px;"><span class="feedbackInCorrect" style="display: inline-block; position: relative; top: 0px;"></span>&nbsp;<s:message code="condition.info.class3"/></a></li>
-                                    <li><a href="javascript:void(0);" onclick="setFeedback(4);" style="padding-left: 20px;"><span class="feedbackInCorrect" style="display: inline-block; position: relative; top: 0px;"></span>&nbsp;<s:message code="condition.info.class4"/></a></li>
-                                    <li><a href="javascript:void(0);" onclick="setFeedback(9);" style="padding-left: 20px;"><span class="feedbackDefer" style="display: inline-block; position: relative; top: 0px;"></span>&nbsp;<s:message code="condition.info.feedback9"/></a></li>
+                                    <li><a href="javascript:void(0);" onclick="setFeedback(0);" style="padding-left: 20px;"><span class="feedbackCorrect" style="display: inline-block; position: relative; top: 4px;"></span>&nbsp;<s:message code="condition.info.feedback0"/></a></li>
+                                    <li><a href="javascript:void(0);" onclick="setFeedback(1);" style="padding-left: 20px;"><span class="feedbackcommon" style="display: inline-block; position: relative; top: 4px;"></span>&nbsp;<s:message code="condition.info.class1"/></a></li>
+                                    <li><a href="javascript:void(0);" onclick="setFeedback(2);" style="padding-left: 20px;"><span class="feedbackInNotOpen" style="display: inline-block; position: relative; top: 4px;"></span>&nbsp;<s:message code="condition.info.class2"/></a></li>
+                                    <li><a href="javascript:void(0);" onclick="setFeedback(3);" style="padding-left: 20px;"><span class="feedbackInOpen" style="display: inline-block; position: relative; top: 4px;"></span>&nbsp;<s:message code="condition.info.class3"/></a></li>
+                                    <li><a href="javascript:void(0);" onclick="setFeedback(4);" style="padding-left: 20px;"><span class="feedbackInCorrect" style="display: inline-block; position: relative; top: 4px;"></span>&nbsp;<s:message code="condition.info.class4"/></a></li>
+                                    <li><a href="javascript:void(0);" onclick="setFeedback(9);" style="padding-left: 20px;"><span class="feedbackDefer" style="display: inline-block; position: relative; top: 4px;"></span>&nbsp;<s:message code="condition.info.feedback9"/></a></li>
                                 </ul>
                                 <div style="position: fixed; top: 0px; bottom: 0px; left: 0px; right: 0px; z-index: 990; display: none; width: 100%; height: 100%;" id="overlay"></div>
                             </div>

@@ -198,12 +198,12 @@
 		<li style="background-color:#999;color:#fff;font-weight: bold;cursor:default; padding-left: 5px;"><s:message code="condition.feedback"/> <s:message code="common.msg.setting"/></li>
 	</ul>
 	<ul>
-		<li onclick="setFeedback(0);" style="padding-left: 5px;"><div class="feedbackCorrect"></div>&nbsp;<s:message code="condition.info.feedback0"/></li>
-		<li onclick="setFeedback(1);" style="padding-left: 5px;"><div class="feedbackInCorrect"></div><s:message code="condition.info.class1"/></li>
-		<li onclick="setFeedback(2);" style="padding-left: 5px;"><div class="feedbackInCorrect"></div><s:message code="condition.info.class2"/></li>
-		<li onclick="setFeedback(3);" style="padding-left: 5px;"><div class="feedbackInCorrect"></div><s:message code="condition.info.class3"/></li>
+		<li onclick="setFeedback(0);" style="padding-left: 3px;"><div class="feedbackCorrect"></div>&nbsp;<s:message code="condition.info.feedback0"/></li>
+		<li onclick="setFeedback(1);" style="padding-left: 5px;"><div class="feedbackcommon"></div><s:message code="condition.info.class1"/></li>
+		<li onclick="setFeedback(2);" style="padding-left: 5px;"><div class="feedbackInNotOpen"></div><s:message code="condition.info.class2"/></li>
+		<li onclick="setFeedback(3);" style="padding-left: 5px;"><div class="feedbackInOpen"></div><s:message code="condition.info.class3"/></li>
 		<li onclick="setFeedback(4);" style="padding-left: 5px;"><div class="feedbackInCorrect"></div><s:message code="condition.info.class4"/></li>
-		<li onclick="setFeedback(9);" style="padding-left: 5px;"><div class="feedbackDefer"></div>&nbsp;<s:message code="condition.info.feedback9"/></li>
+		<li onclick="setFeedback(9);" style="padding-left: 3px;"><div class="feedbackDefer"></div>&nbsp;<s:message code="condition.info.feedback9"/></li>
 	</ul>
 	<%} %>
 </div>
@@ -871,11 +871,11 @@
 				else return '<s:message code="common.msg.noinfo"/>';
 			});
 			grid.colAdd('ml_confd_feedback', ml_confd_feedback_str, 110, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-				if (value == '1') return infoHynixConf == 'true' ? '<div class="feedbackCorrect"></div>&nbsp;<s:message code="condition.info.secretFeedbackY"/>' : '<div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.class1"/>';
-				else if (value == '2') return '<div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.class2"/>';
-				else if (value == '3') return '<div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.class3"/>';
+				if (value == '1') return infoHynixConf == 'true' ? '<div class="feedbackcommon"></div>&nbsp;<s:message code="condition.info.secretFeedbackY"/>' : '<div class="feedbackcommon"></div>&nbsp;<s:message code="condition.info.class1"/>';
+				else if (value == '2') return '<div class="feedbackInNotOpen"></div>&nbsp;<s:message code="condition.info.class2"/>';
+				else if (value == '3') return '<div class="feedbackInOpen"></div>&nbsp;<s:message code="condition.info.class3"/>';
 				else if (value == '4') return '<div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.class4"/>';
-				else if (value == '0') return infoHynixConf == 'true' ?'<div class="feedbackInCorrect"></div>&nbsp;<s:message code="condition.info.secretFeedbackN"/>':'<div class="feedbackCorrect"></div>&nbsp;<s:message code="condition.info.feedback0"/>';
+				else if (value == '0') return infoHynixConf == 'true' ?'<div class="feedbackCorrect"></div>&nbsp;<s:message code="condition.info.secretFeedbackN"/>':'<div class="feedbackCorrect"></div>&nbsp;<s:message code="condition.info.feedback0"/>';
 				else if (value == '9') return '<div class="feedbackDefer"></div>&nbsp;<s:message code="condition.info.feedback9"/>';
 				else if (value == '-1') return '-';
 			});

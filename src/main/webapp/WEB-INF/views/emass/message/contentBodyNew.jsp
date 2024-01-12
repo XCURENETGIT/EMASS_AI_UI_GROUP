@@ -44,21 +44,23 @@
 			height: 100% !important;
 			min-height: 0px !important;
 		}
-
+		button {font-family: Pretendard !important; font-weight:400; color:#383838;}
 		#buttonDiv {
 			position: fixed;
 			width: 100%;
 			z-index: 9;
 			background-color: #fff;
 			padding-bottom: 5px;
-			border-bottom: 1px solid #ccc;
+			/*border-bottom: 1px solid #ccc;*/
 			top: 0px;
-			left: 0px;
+			left: 4px;
 			right: 0px;
 			height: 35px;
 			width: 100%;
 			min-width: 600px;
 		}
+
+		#buttonDiv .btnright{position: absolute; right:20px; top:12px;}
 
 		.empty-dashboard-message{
 			position: absolute;
@@ -81,13 +83,23 @@
 		}
 
 		.userOutside{
-			background-color:#ffcdcd;
+			display: inline-block;
+			padding: 2px 8px 2px 8px;
+			padding-left: 28px;
+			background: #FC5656 url(../img/flag_phone_01.png) 8px center no-repeat;
+			background-image: 100%;
+			background-image: 100%;
+			color: #fff;
+			font-size: 12px;
+			font-weight: 600;
+			border-radius: 4px;
 		}
+		.userOutside:hover {color:#fff;}
 		#infoTable td div {
 			word-break:break-all;
 		}
 		.fa-chevron-up {
-			background-color: #5a9ad0;
+			background-color: #333;
 		}
 		.fa-chevron-up:hover {
 			text-decoration: none;
@@ -118,6 +130,7 @@
 		.bootstrap-select.btn-group .dropdown-menu.inner {
 			box-shadow: none !important;
 		}
+		.checkbox-inline+.checkbox-inline, .radio-inline+.radio-inline {margin-left:4px;}
 /*
 		.exceptOption, .exceptOption2 {
 			position: relative;
@@ -337,32 +350,33 @@
 </div>
 <div class="msgBody">
 	<div style="display: none;" id="buttonDiv">
-		<div class="form-group form-inline not-dashed" style="float:left;padding:4px 0px 0 5px;" id="buttonArea">
-			<button class ="msg_button btn01" id="prevBtn"><s:message code="common.msg.prev"/></button>
-			<button class ="msg_button" id="nextBtn"><s:message code="common.msg.next"/></button>
-			<button class ="msg_button" id="saveBtn"><s:message code="common.msg.save"/></button>
-			<button class ="msg_button" id="printBtn"><s:message code="common.msg.print"/></button>
-			<button type="button" class="msg_button dropdown-toggle" data-toggle="dropdown">
-				<s:message code="common.msg.addFunctions"/> <span class="caret"></span>
-			</button>
-			<ul class="dropdown-menu dropdown-menu-left" role="menu" style="min-width:100px;font-size:13px;left:178px;" id="additionalBtn">
-				<li><a href="javascript:void(0);" id="usersInfoBtn"><s:message code="common.msg.userinfo"/></a></li>
-				<li class="dropdown-divider"></li>
-				<li><a href="javascript:void(0);" id="headerBtn"><s:message code="common.msg.headerInfo"/></a></li>
-				<li class="dropdown-divider"></li>
-				<li><a href="javascript:void(0);" id="originalBtn"><s:message code="common.msg.originalInfo"/></a></li>
-				<li class="dropdown-divider"></li>
-				<li><a href="javascript:void(0);" id="domainBtn"><s:message code="common.msg.domainInfo"/></a></li>
-				<li class="dropdown-divider"></li>
-				<li><a href="javascript:void(0);" id="mailFowardBtn"><s:message code="common.msg.forward_mail"/></a></li>
-				<li class="dropdown-divider"></li>
-				<li><a href="javascript:void(0);" id="warnMailBtn"><s:message code="common.msg.warning_mail"/></a></li>
-				<li class="dropdown-divider"></li>
-				<li><a href="javascript:void(0);" id="msgIdBtn">ID</a></li>
-			</ul>
-			&nbsp;
-			<button class ="msg_button" id="openBigContent"><s:message code="bodyview.window.new"/></button>
-			<button class ="msg_button" id="recommendBtn"><s:message code="common.msg.similar"/></button>
+		<div class="form-group p12" style="float:left;padding:4px 0px 0 5px;" id="buttonArea">
+			<button class ="btn01" id="prevBtn"><img src="../img/icon/ico_arrow_left_b.png/" ></button>
+			<button class ="btn01" id="nextBtn"><img src="../img/icon/ico_arrow_right_b.png/" ></button>
+			<div class="btnright">
+				<button class ="btn05" id="saveBtn"><img src="../img/subBtn_save.png/" ><s:message code="common.msg.save"/></button>
+				<button class ="btn05" id="printBtn"><img src="../img/subBtn_mail.png/" ><s:message code="common.msg.print"/></button>
+				<ul class="dropdown-menu dropdown-menu-left" role="menu" style="min-width:100px;font-size:13px;left:250px;" id="additionalBtn">
+					<li><a href="javascript:void(0);" id="usersInfoBtn"><s:message code="common.msg.userinfo"/></a></li>
+					<li class="dropdown-divider"></li>
+					<li><a href="javascript:void(0);" id="headerBtn"><s:message code="common.msg.headerInfo"/></a></li>
+					<li class="dropdown-divider"></li>
+					<li><a href="javascript:void(0);" id="originalBtn"><s:message code="common.msg.originalInfo"/></a></li>
+					<li class="dropdown-divider"></li>
+					<li><a href="javascript:void(0);" id="domainBtn"><s:message code="common.msg.domainInfo"/></a></li>
+					<li class="dropdown-divider"></li>
+					<li><a href="javascript:void(0);" id="mailFowardBtn"><s:message code="common.msg.forward_mail"/></a></li>
+					<li class="dropdown-divider"></li>
+					<li><a href="javascript:void(0);" id="warnMailBtn"><s:message code="common.msg.warning_mail"/></a></li>
+					<li class="dropdown-divider"></li>
+					<li><a href="javascript:void(0);" id="msgIdBtn">ID</a></li>
+				</ul>
+				<button class ="btn05" id="openBigContent"><img src="../img/subBtn_link.png/" ><s:message code="bodyview.window.new"/></button>
+				<button class ="btn05" id="recommendBtn"><img src="../img/ico_main_tit12.png/" ><s:message code="common.msg.similar"/></button>
+				<button type="button" class="btn05 dropdown-toggle" data-toggle="dropdown">
+					<s:message code="common.msg.addFunctions"/> <span class="caret"></span>
+				</button>
+			</div>
 		</div>
 	</div>
 	<div class="contents" style="padding-top: 40px;height: 100%;">
@@ -382,53 +396,54 @@
 								</div>
 							</div>
 							<div class="panel-body">
-								<div id="infoFeedbackTr"  class="pb12" style="display: none;">
+								<div id="infoFeedbackTr" class="pb12" style="display: none;">
 									<div class="form-inline not-dashed">
-														<span style="display: inline-block; width: 120px;">
+														<span style="display: inline-block;">
 															<span id="infoType"></span>
 															<span id="probType"></span>
 														</span>
-										<span>
-															<label class="radio-inline c-radio">
-																<input type="radio" name="feedback" class="feedback" value="0">
-																<span class="fa fa-check"></span>
-																<i class="feedbackCorrectBg"><img src="../img/icon/correct.png/" ><s:message code="condition.info.feedback0"/></i>
-
-															</label>
-															<label class="radio-inline c-radio">
-																<input type="radio" name="feedback" class="feedback" value="9">
-																<span class="fa fa-check"></span>
-																<i class="feedbackDeferBg"><img src="../img/icon/defer.png/" ><s:message code="condition.info.feedback9"/></i>
-															</label>
-														</span>
-									</div>
-									<div class="form-inline not-dashed">
-														<span style="display: inline-block; width: 120px;">
+														<span style="display: inline-block;">
 															<span id="ml_confd_userid"></span>
 														</span>
-										<span>
-															<label class="radio-inline c-radio">
-																<input type="radio" name="feedback" class="feedback" value="1">
-																<span class="fa fa-check"></span><i class="feedbackcommonBg"><s:message code="condition.info.class1"/><img src="../img/icon/common.png/" ></i>
-															</label>
-															<label class="radio-inline c-radio">
-																<input type="radio" name="feedback" class="feedback" value="2">
-																<span class="fa fa-check"></span><i class="feedbackInNotOpenBg"><s:message code="condition.info.class2"/><img src="../img/icon/notopen.png/"></i>
-															</label>
-															<label class="radio-inline c-radio">
-																<input type="radio" name="feedback" class="feedback" value="3">
-																<span class="fa fa-check"></span><i class="feedbackInOpenBg"><s:message code="condition.info.class3"/><img src="../img/icon/open.png/"></i>
+									</div>
+									<div class="form-inline not-dashed mat8 mab12">
 
-															</label>
-															<label class="radio-inline c-radio">
-																<input type="radio" name="feedback" class="feedback" value="4">
-																<span class="fa fa-check"></span><i class="feedbackInCorrectBg"><s:message code="condition.info.class4"/><img src="../img/icon/incorrect.png/"></i>
-															</label>
-														</span>
+										<label class="radio-inline c-radio">
+											<input type="radio" name="feedback" class="feedback" value="0">
+											<span class="fa fa-check"></span>
+											<i class="feedbackCorrectBg"><img src="../img/icon/correct.png/" ><s:message code="condition.info.feedback0"/></i>
+
+										</label>
+										<label class="radio-inline c-radio">
+											<input type="radio" name="feedback" class="feedback" value="9">
+											<span class="fa fa-check"></span>
+											<i class="feedbackDeferBg"><img src="../img/icon/defer.png/" ><s:message code="condition.info.feedback9"/></i>
+										</label>
+										<label class="radio-inline c-radio">
+											<input type="radio" name="feedback" class="feedback" value="1">
+											<span class="fa fa-check"></span>
+											<i class="feedbackcommonBg"><img src="../img/icon/common.png/" ><s:message code="condition.info.class1"/></i>
+										</label>
+										<label class="radio-inline c-radio">
+											<input type="radio" name="feedback" class="feedback" value="2">
+											<span class="fa fa-check"></span>
+											<i class="feedbackInNotOpenBg"><img src="../img/icon/notopen.png/"><s:message code="condition.info.class2"/></i>
+										</label>
+										<label class="radio-inline c-radio">
+											<input type="radio" name="feedback" class="feedback" value="3">
+											<span class="fa fa-check"></span>
+											<i class="feedbackInOpenBg"><img src="../img/icon/open.png/"><s:message code="condition.info.class3"/></i>
+
+										</label>
+										<label class="radio-inline c-radio">
+											<input type="radio" name="feedback" class="feedback" value="4">
+											<span class="fa fa-check"></span>
+											<i class="feedbackInCorrectBg"><img src="../img/icon/incorrect.png/"><s:message code="condition.info.class4"/></i>
+										</label>
 									</div>
 								</div>
 								<div id="">
-									<table id="infoTable" class="subTable" style="margin-bottom:0;table-layout:fixed;min-width:500px;">
+									<table id="infoTable" class="subTable02" style="margin-bottom:0;table-layout:fixed;min-width:500px;">
 										<colgroup>
 											<col style="width: 110px;">
 											<col>
@@ -455,7 +470,7 @@
 											<td id="bodySizeTd"></td>
 										</tr>
 										<tr id="userTr" class="fold_clickTr">
-											<th class="fold_clickTh"><span class="fold_icon"></span><span class="trTitle"><s:message code="consent.user"/></span></th>
+											<th class="fold_clickTh"><span class="fold_icon"></span><span class="trTitle fb600"><s:message code="consent.user"/></span></th>
 											<td class="fold_clickTd" id="testx">
 												<div id="userDiv" class="fold">
 													<span class="userInfoSpan" recvid="revcid" recvip=""></span>
@@ -465,7 +480,7 @@
 											<td id="userIdTd" style="word-break: break-all;"></td>
 										</tr>
 										<tr id="fromTr" class="fold_clickTr">
-											<th class="fold_clickTh"><span class="fold_icon"></span><span class="trTitle"><s:message code="condition.from"/></span></th>
+											<th class="fold_clickTh"><span class="fold_icon"></span><span class="trTitle fb600"><s:message code="condition.from"/></span></th>
 											<td class="fold_clickTd" colspan="3">
 												<div id="sendUserDiv" class="fold">
 												</div>
@@ -499,7 +514,7 @@
 												<div id="ipBusiNmDiv">
 												</div>
 											</td>
-											<th><s:message code="message.actual.dept"/></th>
+											<th class="topline"><s:message code="message.actual.dept"/></th>
 											<td>
 												<div id="ipDeptNmDiv">
 												</div>
@@ -557,14 +572,14 @@
 						</div>
 					</div>
 				</div>
-
+				<!-- 파일정보 -->
 				<div id="fileDiv" class="row">
 					<div class="col-lg-12">
 						<div class="panel panel-default" id="">
-							<div class="panel-heading body_toggle fileFold" >
-								<i class="fa fa-file-code-o fa-fw"></i> <s:message code="bodyview.file_info"/><span id="fileCntArea"></span>
-								<div class="pull-right" style="position: relative; bottom:5px;">
-									<button class ="msg_button" accesskey="V" id="saveAttachBtn"><s:message code="bodyview.attach.save"/></button>
+							<div class="panel-heading body_toggle fileFold" style="padding:10px 12px 9px;">
+								<s:message code="bodyview.file_info"/><span id="fileCntArea" class="blue02 fb600"></span>
+								<div class="pull-right" style="position: relative; margin-top:-4px;margin-right:2px;">
+									<button class ="btn05" accesskey="V" id="saveAttachBtn"><img src="../img/subBtn_save.png/"><s:message code="bodyview.attach.save"/></button>
 								</div>
 								<div id="fileKwdDiv" style="font-size:12px;">
 									<div id="attachStrDiv">
@@ -577,13 +592,13 @@
 									</div>
 								</div>
 							</div>
-							<div class="panel-body css-body" style="display:none;">
+							<div class="panel-body " style="display:none;">
 								<div id="attachDiv">
-									<table class="table table-bordered" id="fileTable">
+									<table class="subTable02 table-bordered" id="fileTable">
 										<colgroup>
 											<col width="*">
-											<col width="9%">
-											<col width="8%">
+											<col width="15%">
+											<col width="12%">
 										</colgroup>
 										<tr>
 											<th><s:message code="bodyview.file.name"/></th>
@@ -620,18 +635,20 @@
 						</div>
 					</div>
 				</div>
+				<!-- //파일정보 -->
+				<!-- 패턴정보 -->
 				<div class="row" id="patternDiv">
 					<div class="col-lg-12">
 						<div class="panel panel-default" id="">
-							<div class="panel-heading body_toggle patternFold">
-								<i class="fa fa-superpowers fa-fw"></i> <s:message code="bodyview.info.pattern"/><span id="patternCntArea"></span>
+							<div class="panel-heading body_toggle patternFold" style="padding:10px 12px 9px;">
+								<s:message code="bodyview.info.pattern"/><span id="patternCntArea" class="blue02 fb600"></span>
 								<div class="pull-right">
 									<span></span>
 								</div>
 							</div>
-							<div class="panel-body css-body" style="display:none;">
+							<div class="panel-body" style="display:none;">
 								<div>
-									<table class="table table-bordered" id="patternTable">
+									<table class="subTable02 table-bordered" id="patternTable">
 										<tr>
 											<th colspan="2"><s:message code="common.msg.separator"/></th>
 											<th colspan="2"><s:message code="bodyview.info.detect"/></th>
@@ -642,13 +659,15 @@
 						</div>
 					</div>
 				</div>
+				<!-- //패턴정보 -->
+
 				<div class="row" id="detailPatternDiv" style="display:none;">
 					<div class="col-lg-12">
 						<div class="panel panel-default" id="">
 							<div class="panel-heading">
-								<i class="fa fa-superpowers fa-fw"></i> <s:message code="common.msg.detail.pattern"/>
+								<s:message code="common.msg.detail.pattern"/>
 								<div class="pull-right" style="position:relative;top:-5px;">
-									<button class="msg_button body_selectBtn" id="hidePatternBtn" onclick="javascript:$('#detailPatternDiv').hide();"><s:message code="bodyview.hide"/></button>
+									<button class="btn05 body_selectBtn" id="hidePatternBtn" onclick="javascript:$('#detailPatternDiv').hide();"><s:message code="bodyview.hide"/></button>
 								</div>
 							</div>
 							<div class="panel-body" id="detailArea" style="overflow: auto;padding-top:10px;">
@@ -656,40 +675,40 @@
 						</div>
 					</div>
 				</div>
+				<!-- 본문내용 -->
 				<div class="row" id="bodyDiv">
 					<div class="col-lg-12">
 						<div class="panel panel-default" id="emassBodyDiv">
-							<div class="panel-heading">
-								<i class="fa fa-envelope-open-o fa-fw"></i> <s:message code="bodyview.body.content"/>
+							<div class="panel-heading body_toggle" style="padding:10px 12px 9px;">
+								<s:message code="bodyview.body.content"/>
 								<div class="pull-right" style="position: relative;top:-5px;">
-										<span class="select-xs body_selectBtn">
-											<s:message code="common.msg.zoom"/> :
-										</span>
-									<button class="msg_button body_selectBtn font_size" id="large_txt">+</button>
-									<button class="msg_button body_selectBtn font_size" id="small_txt">-</button>
+
+									<button class="btn05 body_selectBtn font_size" id="large_txt">+ 확대</button>
+									<button class="btn05 body_selectBtn font_size" id="small_txt">- 축소</button>
 									&nbsp;
 									<span class="body_selectBtn"> <s:message code="bodyview.charset"/> : </span>
 									<span class="select-xs">
-											<select name="bodyEncoding" id="bodyEncoding" class="body_select body_selectBtn">
+											<select name="bodyEncoding" id="bodyEncoding" class="btn05">
 												<option value=""><s:message code="common.msg.auto"/></option>
 												<option value="utf-8">UTF-8</option>
 												<option value="euc-kr">EUC-KR</option>
 											</select>
 										</span>
-									<button class="msg_button" id="copyBodyBtn"><i class="fa fa-clone fa-fw"></i> <s:message code="message.msg.copy.body"/></button>
+									<button class="btn05" id="copyBodyBtn"><i class="fa fa-clone fa-fw"></i> <s:message code="message.msg.copy.body"/></button>
 								</div>
-								<div id="bodyStrDiv" style="font-size:12px;padding-top:5px;">
+								<div id="bodyStrDiv" style="font-size:13px;padding-top:5px;">
 									<span><s:message code="condition.body"/> <s:message code="bodyview.find.keyword"/> : </span>
-									<span style="font-weight: bold;" id="bodyStr"></span>
+									<span style="font-weight: bold;" class="blue02" id="bodyStr"></span>
 								</div>
 							</div>
-							<div class="panel-body" style="padding:0;margin-bottom:70px !important;">
+							<div class="panel-body p12" style="padding:0;margin-bottom:70px !important;">
 								<div id="emassBody" style="min-height: 150px;overflow-x:auto;width: 100%;display:inline;">
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
+				<!-- //본문내용 -->
 			</div>
 		</div>
 
@@ -772,25 +791,26 @@
 			</div>
 		</div>
 	</div>
-	<div id="userInfoDiv" style="display:none;">
+	<!-- 사용자 정보-->
+	<div id="userInfoDiv" style="">
 		<div>
-			<div style="float:left;">
+			<div style="float:left; margin-top:14px; margin-left:16px;">
 				<img src="<c:url value="/img/person.png"/>" width="32px">
 			</div>
-			<div style="float:left;width:calc(100% - 65px);height:64px;padding-top:12px;padding-left:10px;">
+			<div style="float:left;width:calc(100% - 65px);height:56px;padding-top:12px;padding-left:10px;">
 				<div class="ellipsis" id="userNamePop" style="font-weight: bold;"></div>
 				<div class="ellipsis" id="userEmailPop" style="word-break: break-word; font-size:12px;"></div>
 			</div>
-			<div style="clear:both;width:100%;padding:10px 10px 10px 10px;">
+			<div style="clear:both;width:100%;padding:0px 10px 10px 10px; margin-top:-10px;">
 				<div>
-					<table style="table-layout: fixed;width:100%;">
+					<table style="table-layout: fixed;width:100%;" class="subTable02">
 						<colgroup>
 							<col width="70px">
 							<col width="*">
 						</colgroup>
 						<tr>
 							<th><s:message code="common.org.co"/></th>
-							<td><div class="ellipsis" id="userCoNmPop"></div></td>
+							<td class="topline"><div class="ellipsis" id="userCoNmPop"></div></td>
 						</tr>
 						<tr>
 							<th><s:message code="common.org.busi"/></th>
@@ -817,6 +837,7 @@
 			</div>
 		</div>
 	</div>
+	<!-- //사용자 정보-->
 	<div id="imgPreviewDiv"></div>
 	<div id="infoDiv" style="overflow-y:auto;display:none;">
 		<div id="infoDivTextHeader">

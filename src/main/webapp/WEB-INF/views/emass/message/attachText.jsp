@@ -78,7 +78,7 @@ xmp {
     word-break: break-all;
     word-wrap: break-word;
     background-color: #f5f5f5;
-    border: 1px solid #ccc;
+    border: 1px solid #ddd;
     border-radius: 4px;
 }
 .pageNum {
@@ -87,6 +87,11 @@ xmp {
 	text-align: center;
 	cursor: pointer;
 	color: #999;
+}
+
+.panel-body {
+	height: 600px;
+	padding: 10px;
 }
 </style>
 
@@ -166,12 +171,13 @@ function makePageNum(data){
 function pageLoad(num){
 
 	$('.totalPage').html(getPage2(attachTextTotalLine, num, limit, 'pageLoad'));
-	$('.totalPage a').addClass('btn');
+	$('.totalPage a').addClass('btn05');
 	$('.totalPage a').addClass('btn-info');
 	$('.totalPage a').attr('role','button');
 	$('.totalPage .direction').css('margin-right','4px');
 	$('.totalPage strong').addClass('btn');
-	$('.totalPage strong').css('background-color','#46b8da');
+	$('.totalPage strong').css('color','#1A73F9');
+	$('.totalPage strong').css('border','none');
 	$('.totalPage strong').css('font-weight','bold');
 	$('.totalPage strong').css('padding-left','10px');
 	$('.totalPage strong').css('padding-right','10px');
@@ -343,33 +349,33 @@ jQuery.fn.highlight = function(pat, type) {
 </script>
 </head>
 <body class="mini-navbar" style="overflow: auto;">
-	<header class="header">
+	<!--<header class="header">
 		<div class="naviBack">
-			<img src="<c:url value="/img/title/home_icon.png"/>">
 			<span class="navi"><span id="code_title"></span><s:message code="consent.attach"/> Text Viewer</span>
 		</div>
-	</header>
-	<div class="msg_body_container" style="overflow: hidden; padding: 5px 10px;">
-		<div class="content">
+	</header>-->
+	<div class="msg_body_container" style="overflow: hidden; ">
+		<div class="content_body">
 			<%if(vo != null){ %>
-			<div class="row">
+			<div class="row p20">
+				<h2><span class="bullet02"></span><s:message code="consent.attach"/></h2>
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						<div class="row">
-							<div id="attachName" style="font-weight: bold;"><%=vo.getAttachName()%></div>
-							<div><s:message code="message.msg.pre_ext"/> : <span id="attachExt"><%=vo.getAttachExt()%></span></div>
-							<div><s:message code="message.msg.attach_size"/> : <span id="attachSize"><%=vo.getAttachSize()%></span></div>
+						<div class="row p12 grayBg02">
+							<div id="attachName" style="font-weight: bold; font-size:20px;"><%=vo.getAttachName()%></div>
+							<div class="mat8"><s:message code="message.msg.pre_ext"/> : <span id="attachExt"><%=vo.getAttachExt()%></span></div>
+							<div class="mat8"><s:message code="message.msg.attach_size"/> : <span id="attachSize"><%=vo.getAttachSize()%></span></div>
 						</div>
 					</div>
 					<div class="panel-body" style="padding: 5px;">
-						<div class="row">
+						<div class="row mat8">
 							<div class="col-sm-6">
 								<div class="totalPage">
 								</div>
 							</div>
 							<div class="col-sm-6 text-right">
 								<div class="btn-group">
-									<select id="textLine" class="form-control btn-success btn-sm">
+									<select id="textLine" class="form-control btn-success btn-sm btn05">
 										<option value="30">&nbsp;<s:message code="message.line.view" arguments="30" argumentSeparator="|"/></option>
 										<option value="50">&nbsp;<s:message code="message.line.view" arguments="50" argumentSeparator="|"/></option>
 										<option value="100">&nbsp;<s:message code="message.line.view" arguments="100" argumentSeparator="|"/></option>
@@ -378,7 +384,7 @@ jQuery.fn.highlight = function(pat, type) {
 									</select>
 								</div>
 								<div class="btn-group">
-									<select id="textSize" class="form-control btn-success btn-sm" >
+									<select id="textSize" class="form-control btn-success btn-sm btn05" >
 										<option value="11px">&nbsp;<s:message code="message.msg.font_size"/> (<s:message code="message.msg.smaller"/>) </option>
 										<option value="13px" selected>&nbsp;<s:message code="message.msg.font_size"/> (<s:message code="message.msg.small"/>) </option>
 										<option value="14px">&nbsp;<s:message code="message.msg.font_size"/> (<s:message code="message.msg.normal"/>) </option>
@@ -390,18 +396,18 @@ jQuery.fn.highlight = function(pat, type) {
 						</div>
 						<div class="row top_space">
 							<div id="attachTextBody" class="col-sm-11">
-								<xmp id="attachText" style="min-height:500px;padding: 20px 20px 15px 20px; background-color:#f5f5f5;font-size: 12px; word-wrap: break-word;white-space: pre-wrap;white-space: -moz-pre-wrap;white-space: -pre-wrap;white-space: -o-pre-wrap;word-break:break-all;"></xmp>
+								<xmp id="attachText" style="min-height:500px; background-color:#f8f8f8;font-size: 12px; word-wrap: break-word;white-space: pre-wrap;white-space: -moz-pre-wrap;white-space: -pre-wrap;white-space: -o-pre-wrap;word-break:break-all;"></xmp>
 							</div>
 							<div id="pageNavi" class="col-sm-1" style="width: 70px; padding: 0px;">
 								<div style="padding-left: 5px; border-bottom: 2px solid #333; font-weight: bold; maring-bottom: 5px;">Page No.</div>
 								<div id="pageNaviBody" style="height:300px; overflow: auto; padding-top: 2px;"></div>
 							</div>
 						</div>
-						<div class="row">
+						<!--<div class="row">
 							<div class="col-sm-12">
 								<div class="totalPage"></div>
 							</div>
-						</div>
+						</div>-->
 					</div>
 				</div>
 			</div>

@@ -37,6 +37,7 @@ html,body{height: 100%; padding: 0px; margin: 0px;overflow: auto;min-width: 650p
 .attachExt{
 	cursor:pointer;
 }
+/*
 .boxArea {
 	min-height: 0px;
 }
@@ -112,6 +113,8 @@ h2 {padding:0; margin:0;}
 	border-bottom: 1px solid #ECEAE9;
 }
 div#imgPreviewDiv{position:absolute; display:none; text-align: left;z-index: 99999;border: 1px solid #555;background-color: #fff;}
+
+*/
 </style>
 <script type="text/JavaScript">
 var searchkey = '<%=searchKey%>';
@@ -299,6 +302,7 @@ function filePreviewEv( obj )
 </script>
 </head>
 <body>
+
 <div class="xcn_container" style="min-width: 650px;">
 	<div class="boxArea" style="min-height:inherit;">
 		<div class="content_body">
@@ -311,67 +315,63 @@ function filePreviewEv( obj )
 					<button type="button" class="btn btn-sm btn-default" accesskey="C" id="noSelectBtn"><span class="glyphicon glyphicon-remove"></span>&nbsp;<s:message code="common.msg.close"/></button>
 				</div>
 				<div class="mat16" style="height: 100%;">
-					<div class="row xcn_full top_space">
-						<div style="height: 100%;">
-							<div id="attachDiv">
-								<table class="subTable table">
-									<colgroup>
-										<col width="*">
-										<col width="15%">
-										<col width="13%">
-										<col width="20%">
-										<col width="13%">
-									</colgroup>
-									<tr>
-										<th><s:message code="bodyview.file.name"/></th>
-										<th style="text-align: center;"><s:message code="bodyview.viewerPreview"/></th>
-										<th style="text-align: center;"><s:message code="message.msg.attach_size"/></th>
-										<th style="text-align: center;"><s:message code="message.msg.pre_ext"/></th>
-										<th style="text-align: center;"><s:message code="common.msg.download"/></th>
-									</tr>
-									<%
-										for( int i=0; i < files.size(); i++){
-											EmsAttachVO file = files.get(i);
-											boolean checkExt = false;
-											String [] ext = Common.toArray(file.getAttachName(), ".");
-											if( ext.length > 1 && Common.isEquals((file.getAttachExt()).toLowerCase(), (ext[ext.length-1]).toLowerCase() )) checkExt = true;
-									%>
-									<tr id="<%=file.getAttachId()%>" size="<%=file.getAttachSize()%>" class="<%=(Common.isEmpty(file.getAttachPath())==true ? "notfound" : "found")%> <%=checkExt ? "" : "differentExt" %>" >
-										<td>
-											<span style="padding-right:5px;" class="attach_<%=file.getAttachExt() %> attach_file_img"></span>
-											<span class="<%= (file.isConsentFlag() ? "attachName" : "") %>" attachname="<%=file.getAttachName()%>">
+					<div id="attachDiv">
+						<table class="subTable table">
+							<colgroup>
+								<col width="*">
+								<col width="15%">
+								<col width="13%">
+								<col width="20%">
+								<col width="13%">
+							</colgroup>
+							<tr>
+								<th><s:message code="bodyview.file.name"/></th>
+								<th style="text-align: center;"><s:message code="bodyview.viewerPreview"/></th>
+								<th style="text-align: center;"><s:message code="message.msg.attach_size"/></th>
+								<th style="text-align: center;"><s:message code="message.msg.pre_ext"/></th>
+								<th style="text-align: center;"><s:message code="common.msg.download"/></th>
+							</tr>
+							<%
+								for( int i=0; i < files.size(); i++){
+									EmsAttachVO file = files.get(i);
+									boolean checkExt = false;
+									String [] ext = Common.toArray(file.getAttachName(), ".");
+									if( ext.length > 1 && Common.isEquals((file.getAttachExt()).toLowerCase(), (ext[ext.length-1]).toLowerCase() )) checkExt = true;
+							%>
+							<tr id="<%=file.getAttachId()%>" size="<%=file.getAttachSize()%>" class="<%=(Common.isEmpty(file.getAttachPath())==true ? "notfound" : "found")%> <%=checkExt ? "" : "differentExt" %>" >
+								<td>
+									<span style="padding-right:5px;" class="attach_<%=file.getAttachExt() %> attach_file_img"></span>
+									<span class="<%= (file.isConsentFlag() ? "attachName" : "") %>" attachname="<%=file.getAttachName()%>">
 											<%=file.getAttachName()%>
 										</span>
-										</td>
-										<td style="text-align: center;">
-											<%if( Common.isEquals(file.getOcrYn(), "Y") && file.isConsentFlag()){ %>
-											<img src="<c:url value="/img/view.png"/>"style="width: 15px;"/>
-											<span class="attachOcrText" style="padding-left:5px; cursor:pointer; text-decoration: underline;" title="<s:message code="consent.attach"/> OCR Text Viewer">
+								</td>
+								<td style="text-align: center;">
+									<%if( Common.isEquals(file.getOcrYn(), "Y") && file.isConsentFlag()){ %>
+									<img src="<c:url value="/img/view.png"/>"style="width: 15px;"/>
+									<span class="attachOcrText" style="padding-left:5px; cursor:pointer; text-decoration: underline;" title="<s:message code="consent.attach"/> OCR Text Viewer">
 											<s:message code="urlIpBlock.preview"/>
 										</span>
-											<%}%>
-											<%if( Common.isNotEmpty(file.getAttachTextPath()) && file.isConsentFlag()){ %>
-											<img src="<c:url value="/img/text.png"/>"style="width: 15px;"/>
-											<span class="attachText" style="padding-left:5px; cursor:pointer; text-decoration: underline;" title="<s:message code="consent.attach"/> Text Viewer">
+									<%}%>
+									<%if( Common.isNotEmpty(file.getAttachTextPath()) && file.isConsentFlag()){ %>
+									<img src="<c:url value="/img/text.png"/>"style="width: 15px;"/>
+									<span class="attachText" style="padding-left:5px; cursor:pointer; text-decoration: underline;" title="<s:message code="consent.attach"/> Text Viewer">
 											<s:message code="urlIpBlock.preview"/>
 										</span>
-											<%}%>
-										</td>
+									<%}%>
+								</td>
 
-										<td style="text-align: right;"><%=Common.convertFileSize(file.getAttachSize())%></td>
-										<td style="text-align: center;">
+								<td style="text-align: right;"><%=Common.convertFileSize(file.getAttachSize())%></td>
+								<td style="text-align: center;">
 										<span class="<%= (file.isConsentFlag() ? "attachExt" : "") %>">
 										<%if(file.isConsentFlag()){%>
 											<span class="glyphicon glyphicon-download-alt"></span>&nbsp;<%=file.getAttachExt()%><%=Common.isEquals(file.getAttachExt(), "unknown") ? "(txt)" : ""%>
 										<%}%>
 										</span>
-										</td>
-										<td style="text-align: center;"><span class="glyphicon glyphicon-download-alt <%= (file.isConsentFlag() ? "downloadIcon" : "") %>"></span></td>
-									</tr>
-									<%} %>
-								</table>
-							</div>
-						</div>
+								</td>
+								<td style="text-align: center;"><span class="glyphicon glyphicon-download-alt <%= (file.isConsentFlag() ? "downloadIcon" : "") %>"></span></td>
+							</tr>
+							<%} %>
+						</table>
 					</div>
 				</div>
 			</div>
