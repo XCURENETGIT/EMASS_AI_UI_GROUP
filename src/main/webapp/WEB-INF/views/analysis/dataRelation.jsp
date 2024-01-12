@@ -49,9 +49,9 @@
 	right: 0;
 	text-align: center;
 	font-size: 14px;
-	padding:3px;
-	margin-top:5px;
-	margin-right:20px;
+	/*padding:3px;*/
+	/*margin-top:5px;*/
+	margin-right:4px;
 }
 
 .chartFull {
@@ -67,11 +67,22 @@
 #relation_divFull {
 	width:100%; 
 	height:750px;
-} 
+}
+
 
 /*
  * tabGrid 관련 css
  */
+
+.chartAread1 {display: grid; grid-template-columns: 700px 1fr; margin-bottom:24px; column-gap: 12px;}
+.chartAread1 > div {position: relative;}
+
+a {color:black; text-decoration: none; padding:0;margin:0;}
+a:active {}
+a:hover {text-decoration:underline;color:black; }
+
+
+.subtab {display:inline-block; overflow: hidden; margin-left:20px}
 
 </style>
 <s:message code="common.datescript" var="ko"/>
@@ -104,8 +115,6 @@ $(document).ready(function(){
 		var id = $(this).attr('id');
 		openCodeWindow("user", $('#' + id + 'Val').val(), $('#' + id + 'Str').val(),id);
 	});
-
-
 
 
 	$(document).on('click', '#sendUserSelectedArea', function (e) {
@@ -314,10 +323,10 @@ function openCodeWindow(codetype,oldCode, oldConm,id) {
 		<!-- //검색 -->
 		<div class="content">
 			<div class="contentSub">
-				<div class="chartArea02">
+				<div class="chartAread1">
 					<!-- 리스트-->
 					<div>
-						<h3><i class="fa fa-file-text-o fa-fw"></i> List</h3>
+						<h3 style="margin-bottom: 9px"><i class="fa fa-file-text-o fa-fw"></i> List</h3>
 						<div class="inner_personaldata p20" style="height: 542px;"style="overflow-y: scroll;" >
 							<div id="basicStatListGrid" class="slickGrid gridArea" style="min-height: 280px;max-height: 450px;"></div>
 						</div>
@@ -325,27 +334,27 @@ function openCodeWindow(codetype,oldCode, oldConm,id) {
 					<!-- //리스트-->
 					<!-- 관계도 -->
 					<div>
-						<h3> <i class="fa fa-share-alt fa-fw"></i> <s:message code="analysis.relation.ui.relationships"/></h3>
-						<span id="chartPopover" class="btn-popover">
-							<a tabindex="0" class="btn btn-xs" role="button" data-toggle="popover" data-trigger="focus" data-container="#chartPopover" data-html="true" data-placement="bottom" ><span class="glyphicon glyphicon-question-sign" style="font-size:20px;"></span></a>
-						</span>
-						<div id="popover-content-chart" class="hide">
-							<div style="padding-left:10px;">
-								<ul style="padding-left:15px;">
-									<li style="margin-bottom:7px;"><s:message code="analysis.relation.ui.msg1"/></li>
-								</ul>
+						<div class="panel-heading">
+							<h3><i class="fa fa-share-alt fa-fw"></i> <span><s:message code="analysis.relation.ui.relationships"/></span></h3>
+							<%-- 확대 --%>
+							<span id="chartFull" class="btn-full" style="display:none">
+								<span class="glyphicon glyphicon glyphicon-fullscreen"  data-trigger="focus" data-container="#chartFull" style="font-size:20px; cursor: pointer"></span>
+							</span>
+							<div id="popover-content-chart" class="hide">
+								<div style="padding-left:10px;">
+									<ul style="padding-left:15px;">
+										<li style="margin-bottom:7px;"><s:message code="analysis.relation.ui.msg1"/></li>
+									</ul>
+								</div>
 							</div>
 						</div>
-						<span id="chartFull" class="btn-full" style="display:none">
-							<a tabindex="0" class="btn btn-xs" role="button" data-trigger="focus" data-container="#chartFull" title="<s:message code="analysis.relation.ui.enlarge"/>"><span class="glyphicon glyphicon glyphicon-fullscreen" style="font-size:20px;"></span></a>
-						</span>
-
-						<div id="relation_div">
-							<div class="inner_personaldata p20">
+						<div class="inner_personaldata p20">
+							<div id="relation_div" >
 								<div id="graph-container" style="height: 500px; overflow:hidden">
 									<div id="graph"></div>
 								</div>
 							</div>
+						</div>
 						</div>
 					</div>
 					<!-- //관계도 -->
@@ -353,8 +362,8 @@ function openCodeWindow(codetype,oldCode, oldConm,id) {
 				<!-- 탭 -->
 				<div class="subtab">
 					<ul class="nav nav-tabs codeTab" id="codeTab">
-						<li class="active" ><a data-target="#result0" aria-controls="result0" role="tab" data-toggle="tab">Timeline</a></li>
-						<li><a data-target="#result1" aria-controls="result1" role="tab" data-toggle="tab"><s:message code="analysis.relation.ui.selectlist"/> <span class="resultCnt"></span></a></li>
+						<li class="active" ><a data-target="#result0" aria-controls="result0" role="tab" data-toggle="tab" style="cursor: pointer">Timeline</a></li>
+						<li><a data-target="#result1" aria-controls="result1" role="tab" data-toggle="tab" style="cursor: pointer"><s:message code="analysis.relation.ui.selectlist"/> <span class="resultCnt"></span></a></li>
 					</ul>
 				</div>
 				<!-- //탭 -->
@@ -378,9 +387,25 @@ function openCodeWindow(codetype,oldCode, oldConm,id) {
 		</div>
 	</div>
 
-
+	<div id="chartFullDiv" class="chartFull" style="display:none">
+		<div class="panel panel-default" style="min-height:800px; height:800px;">
+			<div class="panel-heading" style="padding: 9px 15px 1px;">
+				<h3><i class="fa fa-share-alt fa-fw"></i> <span><s:message code="analysis.relation.ui.relationships"/></span></h3>
+				<span class="btn-popover" style="top:1px;">
+						<span class="glyphicon glyphicon-remove" style="font-size:20px; cursor: pointer" onclick="javascript:chartFullClose();"/>
+				</span>
+			</div>
+			<div class="panel-body" style="height: 100%;padding:0px;">
+				<div id="relation_divFull" >
+					<div id="graph-containerFull">
+						<div id="graphFull" ></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 	<!-- Back to top -->
-	<a href="#0" class="back-to-top cd-top"><span class="[ fa fa-chevron-up ]"></span> <span class="[ ]">Back to the Top</span></a>
+<%--	<a href="#0" class="back-to-top cd-top"><span class="[ fa fa-chevron-up ]"></span> <span class="[ ]">Back to the Top</span></a>--%>
 	
 	<script type="text/javascript" src="<c:url value="/js/bihisankey.js"/>"></script>
 	<script type="text/javascript" src="<c:url value="/js/usersankey.js"/>"></script>
@@ -560,6 +585,7 @@ function openCodeWindow(codetype,oldCode, oldConm,id) {
 					// 차트 확장의 위한 준비
 					processMapData = data.processmap;
 					$("#chartFull").show();
+
 
 					processmap('graph', data.processmap, 1000, 900);
 					timeline.chart('timeline', data.timeline);

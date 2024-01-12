@@ -71,7 +71,7 @@ public @Data class ProcessmapVO implements Serializable {
 		JSONObject jsonGraph = new JSONObject();
 		jsonGraph.put("linkDistance", linkDistance);
 		jsonGraph.put("charge", -400);
-		jsonGraph.put("height", 900);
+		jsonGraph.put("height", 500);
 		jsonGraph.put("width", 1100);
 		jsonGraph.put("numColors", 180);
 		jsonGraph.put("labelPadding", jsonLabelPadding);

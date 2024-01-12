@@ -22,7 +22,6 @@ var yScale = null;
 
         var dataSize = Object.keys(processmap_graph.data);
 
-
         drawGraph(id);
         resize(dataSize);
         if(Object.keys(processmap_graph.data) > 100) {
@@ -47,6 +46,7 @@ function drawGraph(id) {
         bottom : 20,
         left   : 20
     };
+
 
     var display = $('#'+id).css('display');
     $('#'+id)
