@@ -77,9 +77,9 @@
 .chartAread1 {display: grid; grid-template-columns: 700px 1fr; margin-bottom:24px; column-gap: 12px;}
 .chartAread1 > div {position: relative;}
 
-a {color:black; text-decoration: none; padding:0;margin:0;}
-a:active {}
-a:hover {text-decoration:underline;color:black; }
+.vis-item-content > a {color:black; text-decoration: none; padding:0;margin:0;}
+.vis-item-content > a:active {}
+.vis-item-content > a:hover {text-decoration:underline;color:black; }
 
 
 .subtab {display:inline-block; overflow: hidden; margin-left:20px}
