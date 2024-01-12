@@ -84,6 +84,8 @@ a:hover {text-decoration:underline;color:black; }
 
 .subtab {display:inline-block; overflow: hidden; margin-left:20px}
 
+.contentSub {position: relative; padding:20px 20px 28px 20px;  *zoom:1; }
+
 </style>
 <s:message code="common.datescript" var="ko"/>
 <form method="post" id="codeParam">
