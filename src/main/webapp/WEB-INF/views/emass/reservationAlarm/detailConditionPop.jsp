@@ -78,16 +78,18 @@
         }
 
         .filterAddBtn {
-            padding: 3px 10px;
+
         }
         .c-checkbox input,
         .c-radio input {
             opacity: 0;
             position: absolute;
-            margin-left: 0 !important;
+            margin-left: 2px !important;
+            margin-top: 1px;
         }
         input[type="checkbox"]:disabled {width:0; height:0; border:none;}
-
+        .col-xs-3 {font-weight:600 !important; color:#111;}
+        #time_msg {font-size:14px!important;}
     </style>
     <script type="text/javascript">
         var infoFeedbackYn = '<%=infoFeedbackYn%>';
@@ -1157,8 +1159,7 @@
         }
     </script>
 </head>
-<bodyclass
-="modal-content">
+<body>
 <div class="modalHead">
     <h2 class="ma_none"><s:message code="condition.select.condition.search"/></h2>
     <div class="btnBox">
@@ -1168,12 +1169,12 @@
                 code="condition.select"/></button>
     </div>
 </div>
-<div class="modalCon">
+<div class="modalCon" style="padding:12px; background-color:#f8f8f8;">
     <div>
         <div class="content_body">
             <div id="selectedCodeTitle"></div><!-- selectedCodeTitle: 선택된 코드 개수표시용 -->
             <div class="row">
-                <ul class="col-sm-12">
+                <ul>
                     <li>
                         <label for="searchField" class="col-xs-3"><s:message code="condition.field.search"/></label>
                         <select id="searchField" title="<s:message code="condition.field.search.all"/>"
@@ -1334,7 +1335,7 @@
                             </select>
                         </div>
 
-                        <div>
+                        <div class="mat8">
                             <label for="feedbackTypeSelect" class=" col-xs-3"><s:message
                                     code="condition.feedback"/></label>
                             <select id="feedbackTypeSelect" class="selectpicker col-xs" data-style="btn-default btn-sm"
@@ -1349,7 +1350,7 @@
                             </select>
                         </div>
 
-                        <div>
+                        <div class="mat8">
                             <label for="probTypeSelect" class=" col-xs-3"><s:message
                                     code="condition.prob"/></label>
                             <select id="probTypeSelect" class="selectpicker col-xs" data-style="btn-default btn-sm"
@@ -1524,7 +1525,7 @@
                                 <input type="hidden" id="deptStr" class="selectedTitle">
                                 <input type="hidden" id="deptVal">
                             </div>
-                            <label class="checkbox-inline c-checkbox exceptOption">
+                            <label class="checkbox-inline c-checkbox exceptOption mat4">
                                 <input type="checkbox" name="dept_not" disabled="disabled">
                                 <span class="fa fa-check"></span><s:message code="query.make.except"/>
                             </label>
@@ -1572,10 +1573,14 @@
                                 <input type="hidden" name="attachYn" id="attachYn">
 
                                 <span id="attachBtnArea" style="display:none;">
-										<button type="button" class="btn btn-sm btn-default btn-open filterAddBtn"
+                                     <button type="button" class="btn-open filterAddBtn btn01" accesskey="A" id="attachBtn" style="border-radius: 0;">
+                                    <img src="../img/subBtn_plus.png" alt="선택"><s:message
+                                             code="condition.select"/></button>
+
+										<!--<button type="button" class="btn btn-sm btn-default btn-open filterAddBtn"
                                                 accesskey="A" id="attachBtn"><span
                                                 class="glyphicon glyphicon-plus-sign"><s:message
-                                                code="condition.select"/></span></button>
+                                                code="condition.select"/></span></button>-->
 									</span>
                                 <span id="attachSelectedArea" class="codeSelectedBtn">
 										<button type="button" class="btn">0</button>
@@ -1688,7 +1693,7 @@
                         <div style="width:110px;float: left;">
                             <h5><s:message code="filterInfo.size"/></h5>
                         </div>
-                        <div class="selecBtnArea" style="width:calc(100% - 140px); text-align: right;float: left;">
+                        <div class="selecBtnArea" style="width:calc(100% - 116px); text-align: right;float: left;">
                             <select class="selectpicker col-xs" data-style="btn-primary" id="sizeFilterType">
                                 <option value=""><s:message code="condition.size.all"/></option>
                                 <option value="B"><s:message code="condition.size.body"/></option>
