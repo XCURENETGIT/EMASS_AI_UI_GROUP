@@ -76,6 +76,7 @@ public class XcnFacetsVO {
 		if(bucket.getAggregations() != null) {
 			Aggregations aggs = bucket.getAggregations();
 			List<Aggregation> aggsList = aggs.asList();
+			System.out.println("getName: "+aggsList.get(0).getName());
 			for (Aggregation subaggs : aggsList) {
 				jArray.add(parsedSum(subaggs, bucket.getKeyAsString(), bucket.getDocCount()));
 			}
@@ -83,6 +84,7 @@ public class XcnFacetsVO {
 	}
 
 	public JSONObject parsedSum(Aggregation aggs,String headerKey,long docCount){
+		System.out.println(aggs.getName());
 		ParsedSum bucketArgments = (ParsedSum) aggs;
 		JSONObject json = new JSONObject();
 		json.put("val",headerKey);

@@ -45,6 +45,7 @@ import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.data.elasticsearch.core.query.UpdateQuery;
+import org.springframework.kafka.support.serializer.DelegatingSerializer;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -283,8 +284,24 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 				termsAggregation.subAggregation(AggregationBuilders.sum(key).field(key));
 				BucketSortPipelineAggregationBuilder paging = PipelineAggregatorBuilders.bucketSort("paging", List.of(new FieldSortBuilder(key).order(order))).from(offset).size(limit);
 				termsAggregation.subAggregation(paging);
+			}
+			else if (sq.get("facet.avg") != null && Common.isEquals("true", sq.get("facet.avg"))) {
+				String key = sq.get("facet.field");
+				int offset = Common.nvz(sq.get("facet.offset"), 0);
+				int limit = Common.nvz(sq.get("facet.limit"), 100);
 
-			} else if (sq.get("facet.list") != null &&  Common.isEquals("true", sq.get("facet.list"))) {
+				termsAggregation.subAggregation(AggregationBuilders.avg(key).field(key));
+				BucketSortPipelineAggregationBuilder paging = PipelineAggregatorBuilders.bucketSort("paging", List.of(new FieldSortBuilder(key).order(order))).from(offset).size(limit);
+				termsAggregation.subAggregation(paging);
+			}
+
+
+			else if (sq.get("facet.Group") != null &&  Common.isEquals("true", sq.get("facet.Group"))) {
+				String key = sq.get("facetGroup.field");
+				termsAggregation.subAggregation(AggregationBuilders.terms(key).field(key));
+			}
+
+			else if (sq.get("facet.list") != null &&  Common.isEquals("true", sq.get("facet.list"))) {
 				/* 대화방 목록 (그룹) */
 				int offset = Common.nvz(sq.get("facet.offset"), 0);
 				int limit = Common.nvz(sq.get("facet.group"), 100);

@@ -292,8 +292,8 @@
 			<option value="size"><s:message code="analysis.freedom.ui.size"/>(MB<s:message code="filterInfo.rangeL"/>)</option>
 			<option value="host_str">URL</option>
 			<option value="sender"><s:message code="condition.sender"/></option>
-			<option value="to"><s:message code="condition.recv"/></option>
-			<option value="body"><s:message code="bodyview.body.content"/></option>
+			<option value="recvs"><s:message code="condition.recv"/></option>
+			<option value="body_snippet"><s:message code="bodyview.body.content"/></option>
 			<option value="subject"><s:message code="analysis.freedom.ui.mailtitle"/></option>
 			<option value="conm"><s:message code="common.org.conm"/></option>
 			<option value="suborgcd"><s:message code="common.org.suborg"/></option>
@@ -759,6 +759,7 @@
             url: 'analysis/selectFreedomMessageList.xcn',
             data: $("#frm").serialize() + "&tabIdx=" + tabIdx + "&query=" + selectQuery + "&offset=" + grid.data.length + "&limit=" + grid.pageSize,
             success: function (data, total) {
+                console.log("data: "+data);
                 resultTotal = total;
                 grid.autoNumber();
                 grid.loadHeader(false);

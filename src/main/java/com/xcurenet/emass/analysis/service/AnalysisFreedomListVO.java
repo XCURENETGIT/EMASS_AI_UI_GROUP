@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.xcurenet.common.util.Common;
 import com.xcurenet.common.vo.XcnFacetsVO;
 import com.xcurenet.emass.message.service.SolrEdcMessageVO;
 
@@ -21,8 +22,11 @@ public @Data class AnalysisFreedomListVO extends XcnFacetsVO {
 
 	public AnalysisFreedomListVO(SolrEdcMessageVO edc, int columnCount) throws JsonParseException, JsonMappingException, IOException {
 		super(edc, columnCount);
-		totalCount = edc.getNumFound();
-		buckets = getList(new AnalysisFreedomListVO.Buckets());
+
+		if(!Common.isEmpty(edc.getFacetData())) {
+			buckets = getList(new AnalysisFreedomListVO.Buckets());
+			totalCount = buckets.size();
+		}
 	}
 
 	public static @Data class Buckets extends XcnFacetsVO.Buckets {

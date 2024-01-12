@@ -3,6 +3,7 @@ package com.xcurenet.emass.analysis.service.impl;
 import com.xcurenet.common.dao.XcnAbstractDAO;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.SolrQueryString;
+import com.xcurenet.common.util.config.Config;
 import com.xcurenet.emass.analysis.service.*;
 import com.xcurenet.emass.message.component.SolrCreateQuery;
 import com.xcurenet.emass.message.service.SolrEdcMessageVO;
@@ -445,15 +446,14 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 	public AnalysisFreedomListVO freedomView(FreedomSearchVO freedomSearchVO) throws IOException, SolrServerException {
 
 		String[] column = freedomSearchVO.getColumn();
-		String[] groupBy = freedomSearchVO.getGroupBy();
-		String[] groupData = freedomSearchVO.getGroupData();
-		StringBuilder sb = new StringBuilder();
+		String[] groupBy = freedomSearchVO.getGroupBy(); // 평균, 총합, .. 데이터
+		String[] groupData = freedomSearchVO.getGroupData(); // 전체 용량.. 데이터
 		SolrQuery sq = new SolrQuery();
 
+		//젤 첫번째 애들
 		String freddDomQuery = changeQuery(getFreedomQuery(freedomSearchVO));
 
 		sq.setQuery(freddDomQuery);
-		sq.setRows(0);
 
 		// column 중복 제거.
 		List<String> columnList = new ArrayList<>();
@@ -462,14 +462,54 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 				columnList.add(column[i]);
 			}
 		}
+		sq.setQuery(freddDomQuery);
 
-		int asciiForLowerA = 97; // ascii a
-		sb.append("{result:").append(bucketsSetting(0, columnList, groupBy, groupData, asciiForLowerA)).append("}");
+		/* 문서 결과 표시 X */
+		sq.setStart(0);
+		sq.setRows(1);
 
-		sq.setParam("json.facet", sb.toString());
-		log.info("json.facet = {}", sb.toString());
+
+		sq.setParam("group",true);
+		sq.setParam("group.facet", true);
+		sq.setParam("group.ngroups", true);
+		sq.setParam("group.field",columnList.get(0));
+
+		sq.setParam("facet", true);
+
+		sq.setParam("facet.list", true);
+
+		if (columnList.size()>1) {
+			sq.setParam("facet.Group", true);
+			sq.setParam("facetGroup.field", columnList.get(1));
+		}
+
+		sq.setParam("facet.mincount", "0");
+
+//		sq.setParam("facet.sum", true);
+//		sq.setParam("facet.field","size");
+
+
+
+		for (int i = 0; i<groupBy.length; i++){
+			switch (groupBy[i]){
+				case "sum":
+					System.out.println("sum 들어옴");
+					sq.setParam("facet.sum", true);
+					sq.setParam("facet.field","size");
+				case "avg":
+					System.out.println("avg 들어옴");
+					sq.setParam("facet.avg", true);
+					sq.setParam("facet.field","size");
+				}
+			}
+
+		sq.setFacetMinCount(1);
+
+		sq.setStart(Common.nvz(0));
+		sq.setRows(Common.nvz(1));
+
+
 		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, freedomSearchVO.getAdminId());
-
 		return new AnalysisFreedomListVO(edc, columnList.size());
 	}
 
@@ -569,7 +609,6 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 		SolrQuery sq = new SolrQuery();
 		log.info(query.toString());
 		sq.setQuery(query.toString());
-		//		sq.setFields("msgid", "subject", "kwds_subject", "body", "kwds_body", "attachname_str", "kwds_attachname", "attach", "kwds_attach", "host_str", "path", "srcip", "dstip", "sender_str", "recvs", "to", "bcc", "usr_id");
 
 		sq.setStart(Common.nvz(freedomSearchVO.getOffset(), 0));
 		sq.setRows(Common.nvz(freedomSearchVO.getLimit(), 100));
