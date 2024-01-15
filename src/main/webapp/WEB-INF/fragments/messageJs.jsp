@@ -57,6 +57,7 @@
 
 <script type="text/javascript" src="<c:url value="/js/filter.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/folder.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/date.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/conditionNew.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/jquery.layout.js"/>"></script>
 

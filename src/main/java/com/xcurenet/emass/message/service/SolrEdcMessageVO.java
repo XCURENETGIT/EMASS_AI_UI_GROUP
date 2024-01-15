@@ -31,6 +31,10 @@ import java.util.stream.Collectors;
 public class SolrEdcMessageVO {
 
 	private long numFound;
+
+	@Getter
+	private float maxScore;
+
 	private List<SolrEdcVO> emass = new ArrayList<>();
 	private List<String> pivotHeader;
 	private List<Map<String, Object>> pivotData;
@@ -74,10 +78,14 @@ public class SolrEdcMessageVO {
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	public SolrEdcMessageVO(final SearchHits<SolrEdcVO> resp, final String adminId) throws SolrServerException, IOException {
 		this.numFound = resp.getTotalHits();
-		resp.getSearchHits().stream().map(SearchHit::getContent).forEach(s -> {
-			s.setReadYn(isRead(s.getChecked(), adminId) ? "Y" : "N");
-			this.emass.add(s);
-		});
+		this.maxScore = resp.getMaxScore();
+		for (SearchHit<SolrEdcVO> solrEdcVO : resp.getSearchHits()) {
+			SolrEdcVO edcVO = solrEdcVO.getContent();
+			edcVO.setReadYn(isRead(solrEdcVO.getContent().getChecked(), adminId) ? "Y" : "N");
+			edcVO.setConfidence( (maxScore > 0) ? String.valueOf((solrEdcVO.getScore() / maxScore ) * 100) : "0"); //유사도 계산
+			this.emass.add(edcVO);
+		}
+
 		this.setFacet(resp);
 		this.setPivot(resp);
 
@@ -105,6 +113,14 @@ public class SolrEdcMessageVO {
 		}
 		return false;
 	}
+
+	private Object getScore(final List<Map<String, Object>> items, final String adminId) {
+		for (Map<String, Object> item : items) {
+			if (!Common.isEmpty(item.get("_score"))) return item.get("_score");
+		}
+		return null;
+	}
+
 
 	private void setFacetQuery(final SearchHits<SolrEdcVO> resp) {
 //		Map<String, Integer> facetQuery = resp.getFacetQuery();

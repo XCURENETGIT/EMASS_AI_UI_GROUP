@@ -476,7 +476,7 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .chatshare_w {width:20px;height:20px;padding:8px; background:url(../img/ico_w_chatshare.png) center center no-repeat; border:none; vertical-align: middle;}
 .chatshare_w:hover {opacity: 0.5;}
 
-.xcn_pop_btn {position: absolute; right:20px; top:16px;}
+.xcn_pop_btn {position: absolute; right:20px; top:20px;}
 .xcn_nodata {position: absolute; top:50%; left:50%; margin-left: -50px; margin-top:-50px;}
 
 .xcn_bar {width:1px; height:10px; background-color: #999; margin:0 4px; display: inline-block}
