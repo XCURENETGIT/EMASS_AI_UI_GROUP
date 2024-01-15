@@ -849,7 +849,7 @@ public class HomeController {
 
 	@RequestMapping(value = "/ems/recommend.do", method = RequestMethod.GET)
 	public String recommend(Locale locale, Model model) {
-		return "/emass/message/recommend";
+		return "/emass/message/recommend.popup";
 	}
 
 	@RequestMapping(value = "/ems/alarmLogPop.do", method = RequestMethod.GET)

@@ -45,7 +45,6 @@ import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.data.elasticsearch.core.query.UpdateQuery;
-import org.springframework.kafka.support.serializer.DelegatingSerializer;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -129,7 +128,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 		TimeUtil.start();
 		if (sq.getFields() == null) {
-			String defaultFields = "date_hh,date_yyyy,date_yyyymm,date_yyyymmdd,ml_confd_class,ml_confd_feedback,ml_confd_prob,msgid,cid,srcip,sport,dstip,dport,svc,svc1,svc2,svc3,ltime,ctime,ctime_yyyy,ctime_yyyymm,ctime_yyyymmdd,ctime_hh,size,body_size,usr_id,usr_ip,userkey,user,userid,name,subject,host,path,xmsgkey,sender,sname,recvs,recvs_name,to,cc,bcc,tname,cocd,conm,suborgcd,suborgnm,busicd,businm,deptcd,deptnm,jikgubcd,jikgubnm,ip_cocd,ip_conm,ip_busicd,ip_businm,ip_deptcd,ip_deptnm,allofus,attached,direction,direction_svc,kwd,kwds,inside,work,attachname,attachsize,attachhash,attachtype,attachcnt,pi_total,read_time,xrootmtr,protocol,epmsg_type,user_str,pi_SN,pi_FN,pi_DN,pi_CN,pi_EC,pi_ID,pi_EF,pi_DRM,pi_MN,pi_AN,pi_CRN,pi_SSN,pi_PN,pi_EMEI,pi_BRN,pi_CPN,pi_MCN";
+			String defaultFields = "_score,date_hh,date_yyyy,date_yyyymm,date_yyyymmdd,ml_confd_class,ml_confd_feedback,ml_confd_prob,msgid,cid,srcip,sport,dstip,dport,svc,svc1,svc2,svc3,ltime,ctime,ctime_yyyy,ctime_yyyymm,ctime_yyyymmdd,ctime_hh,size,body_size,usr_id,usr_ip,userkey,user,userid,name,subject,host,path,xmsgkey,sender,sname,recvs,recvs_name,to,cc,bcc,tname,cocd,conm,suborgcd,suborgnm,busicd,businm,deptcd,deptnm,jikgubcd,jikgubnm,ip_cocd,ip_conm,ip_busicd,ip_businm,ip_deptcd,ip_deptnm,allofus,attached,direction,direction_svc,kwd,kwds,inside,work,attachname,attachsize,attachhash,attachtype,attachcnt,pi_total,read_time,xrootmtr,protocol,epmsg_type,user_str,pi_SN,pi_FN,pi_DN,pi_CN,pi_EC,pi_ID,pi_EF,pi_DRM,pi_MN,pi_AN,pi_CRN,pi_SSN,pi_PN,pi_EMEI,pi_BRN,pi_CPN,pi_MCN";
 			if (Config.isOCR) defaultFields = defaultFields + ",ocr_attach_cnt";
 			if (Common.isEquals(bodysnippet, "Y")) defaultFields = defaultFields + ",body_snippet";
 			sq.setFields(defaultFields);
@@ -159,6 +158,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 				.withAggregations(getAggregations(sq))
 				.withAggregations(getAggregationsByPivot(sq))
 				.withTrackTotalHits(true)
+				.withTrackScores((Common.isEquals(sq.get("track_scores"),"true")) ? true : false )
 				.build();
 
 		SearchHits<SolrEdcVO> hits = operation.search(searchQuery, SolrEdcVO.class);

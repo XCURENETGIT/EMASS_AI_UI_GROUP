@@ -257,4 +257,6 @@ public class SolrEdcVO {
 	public List<Map<String, Object>> checked;
 
 	public String user_str;
+
+	public float score; // 연관도
 }

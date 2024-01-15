@@ -80,12 +80,12 @@ function setInOutCount( data){
 	<div class="xcn_container" style="min-width: 650px;">
 		<div class="boxArea" style="min-height:inherit;">
 			<div class="content_body">
-				<div class="row p20">
+				<div class="p20">
 					<h2><span class="bullet02"></span><s:message code="common.msg.userinfo"/></h2>
 					<div class="xcn_pop_btn">
 						<button type="button" class="btn btn-sm btn-default" accesskey="C" id="noSelectBtn"><span class="glyphicon glyphicon-remove"></span>&nbsp;<s:message code="common.msg.close"/></button>
 					</div>
-					<div class="mat16" style="height: 100%;">
+					<div class="mat16" style="height: 70%;">
 						<div id="userGrid" class="slickGrid gridArea"></div>
 					</div>
 				</div>

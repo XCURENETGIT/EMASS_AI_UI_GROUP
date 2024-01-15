@@ -1,6 +1,7 @@
 <%@page import="net.sf.json.JSONObject"%>
+<%@ page import="com.xcurenet.common.util.Common" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
+<%@ include file="/WEB-INF/fragments/popupScript.jsp"%>
 <%
 	JSONObject param = Common.getParam(request);
 	String msgId = Common.nvl(param.get("msgId"));
@@ -42,30 +43,32 @@
 	color: #fff;
 	font-weight: bold;
 }
+
+
+
 </style>
 <script type="text/javascript">
 var searchFlag=false;
 var msgId = '<%=msgId%>';
 var targetDate = '<%=targetDate%>';
 $(document).ready(function(){
-	$('#startdatepicker').datetimepicker({
-		format: 'YYYY-MM-DD',
-		defaultDate: moment(new Date()).subtract(1,'days')
-	}).on('dp.change',function(){
-		targetDate = $('#startdate').val().replaceAll('-','');
-		getData();
-	});
-	
+	// $('#startdatepicker').datetimepicker({
+	// 	format: 'YYYY-MM-DD',
+	// 	defaultDate: moment(new Date()).subtract(1,'days')
+	// }).on('dp.change',function(){
+	// 	targetDate = $('#startdate').val().replaceAll('-','');
+	// 	getData();
+	// });
+
 	$('#contextMenuCloseBtn').click(function(){
 		$('#contextMenu').hide();
 	});
-	
+
+	$('#noSelectBtn').click(function(){ self.close();  });
 	getData();
 });
 
-/*
- * 알람 메일 서식 목록 조회
- */
+
 function getData() {
 	if(searchFlag) return;
 	
@@ -74,7 +77,7 @@ function getData() {
 	ui.get({
 		url 		: 'getRecommendData.xcn',
 		msgId		: msgId,
-		targetDate	: targetDate,
+	//	targetDate	: targetDate,
 		success 	: function(data, total) {
 			grid.setData(data.emass);
 		},
@@ -183,29 +186,19 @@ function regexpInfoViewer(row, selectedGrid){
 }
 </script>
 </head>
-<body class="mini-navbar msgBody">
-	<header class="header">
-		<div class="naviBack">
-			<img src="<c:url value="/img/title/home_icon.png"/>">
-			<span class="navi"><span id="code_title"></span><s:message code="common.msg.similar"/></span>
-		</div>
-	</header>
-	<div class="xcn_container"> 
-		<div class="boxArea">
+<body>
+	<div class="xcn_container" style="min-width: 650px;">
+		<div class="boxArea" style="min-height:inherit;">
 			<div class="content_body">
-				<div class="row">
-					<div class="col-xs-8 text-left">
-						<div class="form-group form-inline not-dashed">
-							<div class='input-group date' id='startdatepicker'>
-								<input type='text' class="input-sm form-control" id='startdate' />
-								<span class="input-group-addon"> <span class="glyphicon glyphicon-calendar"></span>
-								</span>
-							</div>
-						</div>
+				<div class="p20">
+					<h2><span class="bullet02"></span><s:message code="common.msg.similar"/></h2>
+<%--					<div>--%>
+<%--						<div id="startdatepicker"><input type="date" id="startDate" name='startDate' style="width: 110px;">--%>
+<%--					</div>--%>
+					<div class="xcn_pop_btn">
+						<button type="button" class="btn btn-sm btn-default" accesskey="C" id="noSelectBtn"><span class="glyphicon glyphicon-remove"></span>&nbsp;<s:message code="common.msg.close"/></button>
 					</div>
-				</div>
-				<div class="row xcn_full top_space">
-					<div class="col-xs-12" style="height: 100%;">
+					<div class="mat16" style="height: 70%;">
 						<div id="recommendListGrid" class="slickGrid gridArea"></div>
 					</div>
 				</div>
@@ -231,7 +224,6 @@ function regexpInfoViewer(row, selectedGrid){
 	</div>
 	<script type="text/javascript">
 		var grid = new Xgrid('recommendListGrid', contextRoot);
-		grid.onCheckBox();
 		grid.autoNumber();
 		grid.colAdd('msgid', '<s:message code="common.msg.msgid"/>', 100, 'left', false, 'nomal');
  		grid.colAdd('epmsg_type', '<s:message code="condition.epmsgType.list"/>', 100, 'center', true, 'nomal');
@@ -273,18 +265,18 @@ function regexpInfoViewer(row, selectedGrid){
 		grid.colAdd('subject', '<s:message code="condition.subject"/>', 410, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 			var body_snippet = grid.getValue(row, 'body_snippet').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '\'');
 			if(body_snippet.length > 100) body_snippet = body_snippet.substring(0, 1024)+'...';
-			
+
 			if(value.length > 1024) value = value.substring(0, 1024)+'...';
 			value = value.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '\'');
-			
+
 			//예약어 Highlight 처리
 			var kwds = grid.getValue(row, 'kwds');
 			value = value, kwds;
 			value = value;
-			
+
 			var rtnVal = '<span title="'+body_snippet+'" onclick="" class="subject_read'+grid.getValue(row, 'readYn')+'">'+value+'</span>&nbsp;<a href="javascript:void(0);" onclick="viewer_newOpen('+row+')" class="glyphicon glyphicon-new-window new-window"></a>';
 			if( (isConsent( ) && grid.getValue(row, 'consentNo') == '') || !isDetailView() ) rtnVal = '<span>'+value+'</span>';
-			
+
 			return rtnVal;
 		});
 		grid.colAdd('content', '<s:message code="condition.info.feedback.content"/>', 400, 'left', false, 'nomal');
@@ -313,7 +305,7 @@ function regexpInfoViewer(row, selectedGrid){
 		});
 		grid.colAdd('allofus', '<s:message code="condition.allofus"/>', 150, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 			if( value == undefined || value.length == 0) return '';
-			
+
 			for( var i=0; i<value.length; i++){
 				if(value[i] == 'IA') value[i] = '<s:message code="condition.allofus1"/>';
 				else if(value[i] == 'ET') value[i] = '<s:message code="condition.allofus8"/>';
@@ -336,7 +328,7 @@ function regexpInfoViewer(row, selectedGrid){
 		});
 		grid.colAdd('cc', '<s:message code="condition.cc"/>', 150, 'left', true, 'link', function(row, cell, value, columnDef, dataContext) {
 			var innOutInfo = grid.getValue(row, 'ccInOutInfo');
-			
+
 			var rtnVal = arrayToString(value);
 			return innOutInfo+rtnVal;
 		});
@@ -370,6 +362,19 @@ function regexpInfoViewer(row, selectedGrid){
 				else return value.comma();
 			});
 		}
+
+
+
+
+
+
+
+
+
+
+
+
+
 		grid.loadHeader(true);
 		grid.initData('<s:message code="common.msg.search.click"/>');
 		grid.onContextMenu = function(row, col, e){
