@@ -61,7 +61,7 @@
 		}
 
 		#buttonDiv .btnright{position: absolute; right:20px; top:12px;}
-
+		.userOutside  {margin:2px;}
 		.empty-dashboard-message{
 			position: absolute;
 			top: 35px;

@@ -73,15 +73,18 @@
 
 		<div class="row" >
 			<div class="col-xs-12">
-				<h3 class="blue"><span class="bullet01"></span><s:message code="mail.select.form.mail"/></h3>
-				<div class="grayBg mat8 popupInner">
+				<h3 class="blue"><span class="bullet01"></span><s:message code="mail.select.form.mail"/>
+					<button type="button" class="form_btn04 cencel_right" accesskey="C" id="cancelBtn"><s:message code="common.msg.close"/></button>
+				</h3>
+
+				<div class="grayBg mat16 popupInner">
 					<div>
 						<input type="text" placeholder="<s:message code="common.msg.searchMsg"/>" id="searchStr">
 						<button class="form_btn01" type="button" accesskey="Q" id="searchBtn"><s:message code="common.msg.search"/></button>
-						<button type="button" class="form_btn03" accesskey="S" id="chooseBtn"></span>&nbsp;<s:message code="consent.select"/></button>
+						<button type="button" class="form_btn03 cencel_right mat8 mar12" accesskey="S" id="chooseBtn"></span>&nbsp;<s:message code="consent.select"/></button>
 					</div>
 				</div>
-				<div>
+				<div class="mat8">
 					<div id="mailFormListGrid" class="slickGrid gridArea"  style="max-height:200px; overflow-y: scroll !important;"></div>
 				</div>
 			</div>

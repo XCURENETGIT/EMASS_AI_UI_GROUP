@@ -132,7 +132,7 @@ function getData() {
 </script>
 </head>
 <body class="mini-navbar msgBody">
-	<header class="header">
+	<!--<header class="header">
 		<div class="naviBack">
 			<img src="<c:url value="/img/title/home_icon.png"/>">
 			<%if(type.equals("to")) { %>
@@ -141,25 +141,40 @@ function getData() {
 			<span class="navi"><span id="code_title"></span><s:message code="mail.select.recv.cc"/></span>
 			<%} %>
 		</div>
-	</header>
+	</header>-->
 	<div class="xcn_container"> 
-		<div class="boxArea">
-			<div class="content_body">
+		<div style="width: 900px; overflow: auto; margin-top:20px;">
+			<div >
 				<div class="row">
-					<div class="col-xs-8 text-left">
-						<div class="form-group form-inline not-dashed">
+					<div class="col-xs-12">
+						<h3 class="blue"><span class="bullet01"></span>
+							<%if(type.equals("to")) { %>
+							<span class="navi"><span id="code_title"></span><s:message code="mail.select.recv"/></span>
+							<%} else if(type.equals("cc")){ %>
+							<span class="navi"><span id="code_title"></span><s:message code="mail.select.recv.cc"/></span>
+							<%} %>
+							<button type="button" class="form_btn04 cencel_right" accesskey="C" id="cancelBtn"><s:message code="common.msg.close"/></button>
+						</h3>
+						<div class="grayBg mat16 popupInner">
+							<div>
+								<input type="text" class=" input-sm" placeholder="<s:message code="mail.message.input.id_name_email"/>" id="searchStr" style="width: 250px;">
+								<button class="form_btn01" type="button" accesskey="Q" id="searchBtn"><s:message code="common.msg.search"/></button>
+								<button type="button" class="form_btn03 cencel_right mat8 mar12" accesskey="S" id="addToCCBtn"></span><s:message code="consent.select"/></button>
+							</div>
+						</div>
+						<!--<div class="form-group form-inline not-dashed">
 							<div class="input-group">
 								<input type="text" class="form-control input-sm" placeholder="<s:message code="mail.message.input.id_name_email"/>" id="searchStr" style="width: 250px;">
 								<div class="input-group-btn">
 									<button class="btn btn-sm btn-success" type="button" accesskey="Q" id="searchBtn"><i class="glyphicon glyphicon-search"></i></button>
 								</div>
 							</div>
-						</div>
+						</div>-->
 					</div>
-					<div class="col-xs-4 text-right">
+					<!--<div class="col-xs-4 text-right">
 						<button type="button" class="btn btn-sm btn-primary" accesskey="S" id="addToCCBtn"><span class="glyphicon glyphicon-ok"></span>&nbsp;<s:message code="consent.select"/></button>
 						<button type="button" class="btn btn-sm btn-default" accesskey="C" id="cancelBtn"><span class="glyphicon glyphicon-remove"></span>&nbsp;<s:message code="common.msg.close"/></button>
-					</div>
+					</div>-->
 				</div>
 				<div class="row top_space" style="height: calc(100% - 220px);">
 					<div class="col-xs-12" style="height: 100%;">
@@ -169,22 +184,29 @@ function getData() {
 				<div class="row" style="margin-top: 30px;">
 					<div class="col-sm-12">
 						<div class= "row form-inline" style="line-height: 0px;">
-							<div class="col-xs-3">
-								<button type="button" class="btn btn-sm btn-primary" accesskey="T" id="toBtn"><s:message code="mail.recv"/></button>
+							<div class="col-xs-2">
+								<h4 accesskey="T" id="toBtn" style="margin-top:12px;"><s:message code="mail.recv"/></h4>
 							</div>
-							<div class="col-xs-9">
-								<input type="text" class="form-control input-sm" style="width:100%; margin-left:-50px;" id="toMailAddr" readonly="readonly"/>
-								<a href="#" style="color: black;"><span class="glyphicon glyphicon-remove" id="toMailInit"></span></a>
+							<div class="col-xs-10">
+								<input type="text" class="form-control input-sm" style="width:98%; margin-left:-50px;" id="toMailAddr" readonly="readonly"/>
+								<button type="button" class="btn02" accesskey="S" id="toMailInit"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
 							</div>
 						</div>
-						<div class= "row form-inline" style="line-height: 0px; margin-top:5px;">
-							<div class="col-xs-3">
+						<div class= "row form-inline" style="line-height: 0px;">
+							<div class="col-xs-2">
+								<h4 accesskey="T" id="toBtn" style="margin-top:12px;"><s:message code="mail.recv.cc"/></h4>
+							</div>
+							<div class="col-xs-10">
+								<input type="text" class="form-control input-sm" style="width:98%; margin-left:-50px;" id="ccMailAddr" readonly="readonly"/>
+								<button type="button" class="btn02"  id="ccMailInit"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
+							</div>
+							<!--<div class="col-xs-3">
 								<button type="button" class="btn btn-sm btn-primary" accesskey="B" id="ccBtn"><s:message code="mail.recv.cc"/></button>
 							</div>
 							<div class="col-xs-9">
 								<input type="text" class="form-control input-sm" style="width:100%; margin-left:-50px;" id="ccMailAddr" readonly="readonly"/>
 								<a href="#" style="color: black;"><span class="glyphicon glyphicon-remove" id="ccMailInit"></span></a>
-							</div>
+							</div>-->
 						</div>
 					</div>
 				</div>

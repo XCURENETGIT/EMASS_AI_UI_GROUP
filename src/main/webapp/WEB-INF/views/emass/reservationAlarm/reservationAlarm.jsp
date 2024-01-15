@@ -955,25 +955,39 @@
 											</div>
 
 										</div>-->
-
 										<div style="display: none;" id="smsField">
-											<div class="form-inline">
+
+											<div class="col-35 fs14 pt8" >
+												<label class="">SMS <s:message code="mail.msg.form"/></label>
+											</div>
+											<div class="col-65 fs14 pt8">
+												<p><s:message code="mail.message.setup.sms"/></p>
+											</div>
+
+											<!--<div class="form-inline">
 												<div class="col-xs-4">
 													<label class="">SMS <s:message code="mail.msg.form"/></label>
 												</div>
 												<div>
 													<p><s:message code="mail.message.setup.sms"/></p>
 												</div>
-											</div>
+											</div>-->
 										</div>
-
 										<div style="display: none;" id="monitorField">
-											<div class="form-inline">
+											<div class="col-35 fs14 pt8" >
+												<label class=""><s:message
+														code="mail.alert_message"/></label>
+											</div>
+											<div class="col-65 fs14 pt8">
+												<p><s:message code="mail.message.executed.alert_message"/></p>
+											</div>
+											<!--<div class="form-inline">
 												<label for="smsFormatBtn" class=" col-xs-4"><s:message
 														code="mail.alert_message"/></label>
 												<p><s:message code="mail.message.executed.alert_message"/></p>
-											</div>
+											</div>-->
 										</div>
+										<div class="clear pt8"></div>
 										<!--<div class="form-inline" style="text-align: right; font-weight: bold; font-size: 13px;">
 											<s:message code="mail.input.item"/>
 										</div>-->

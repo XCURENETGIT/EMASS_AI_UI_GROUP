@@ -58,6 +58,7 @@
 
     <style type="text/css">
         #wrap {overflow:hidden;}
+        .ui-widget input {margin-top:4px;}
         .caret {
             display: inline-block;
             width: 0;
@@ -151,7 +152,7 @@
         .searchKeywordDiv{
             position: absolute;
             top: 120px;
-            background-color: #f4f4f4;
+            background-color: #fff;
             z-index: 999;
             left: 305px;
             border: 1px solid #ccc;
@@ -2377,8 +2378,8 @@
                     <div class="searchKeywordSearch" style="padding: 5px 5px 5px 10px; margin-bottom:8px;">
                         <input class="condition_input_text" type="text" name="serch" placeholder="<s:message code="searchKeyword.search"/>" id="searchKeywordSearchStr" style="width:calc(100% - 150px);">
                         <button class="search_btn" id="searchKeywordSearchBtn"><span><s:message code="common.search"/></span></button>
-                        <button class="msg_button btn01" id="addSearchKeywordBtn"><span><s:message code="common.msg.add"/></span></button>
-                        <button class="msg_button btn02"  id="delSearchKeywordBtn"><span><s:message code="common.msg.delete"/></span></button>
+                        <button class="btn01" id="addSearchKeywordBtn"><span><s:message code="common.msg.add"/></span></button>
+                        <button class="btn02"  id="delSearchKeywordBtn"><span><s:message code="common.msg.delete"/></span></button>
                     </div>
                     <div style="padding-left: 10px;">
                         <span style="font-weight: bold; display: inline-block; margin-right: 10px;"><i class="fa fa-caret-right"></i> <s:message code="searchKeyword.inputMode"/></span>
@@ -2386,7 +2387,7 @@
                         <label class="searchKeywordInputType"><input type="radio" name="searchKeywordInputType" value="A"> <span>AND</span></label>
                         <label class="searchKeywordInputType"><input type="radio" name="searchKeywordInputType" value="O"> <span>OR</span></label>
                     </div>
-                    <div id="searchKeywordGrid" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px;min-height:200px;height:calc(100% - 110px);"></div>
+                    <div id="searchKeywordGrid" class="slickGrid gridArea p12" style="position: relative; top: 0px; left: 0px;min-height:200px;height:calc(100% - 130px);"></div>
                 </div>
 
                 <%-- 연관 검색어 리스트 --%>

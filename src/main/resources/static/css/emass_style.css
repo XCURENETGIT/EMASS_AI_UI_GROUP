@@ -171,6 +171,7 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 .inner_emass { padding:16px; overflow: hidden;}
 .personaldataBox {overflow: auto;  height:342px;}
 .ico_right {position: absolute; right:0; top:8px;}
+.cencel_right {position: absolute; right:0; top:0px;}
 
 .a4 {overflow: hidden; height: 100%;}
 
@@ -527,6 +528,7 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .mal8 {margin-left:8px;}
 .mal16 {margin-left:16px;}
 .mal20 {margin-left:20px;}
+.mar12 {margin-right:12px;}
 .mar20 {margin-right:20px;}
 .mar8 {margin-right:8px;}
 .mat14_minus{margin-top:-14px;}
