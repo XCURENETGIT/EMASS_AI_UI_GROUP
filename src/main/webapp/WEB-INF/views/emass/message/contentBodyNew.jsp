@@ -488,21 +488,21 @@
 										</tr>
 
 										<tr id="toTr" class="fold_clickTr">
-											<th class="fold_clickTh"><span class="fold_icon"></span><span class="trTitle"><s:message code="condition.to"/></span></th>
+											<th class="fold_clickTh"><span class="fold_icon"></span><span class="trTitle fb600"><s:message code="condition.to"/></span></th>
 											<td class="fold_clickTd" colspan="3">
 												<div id="receiveUserDiv" class="fold">
 												</div>
 											</td>
 										</tr>
 										<tr id="ccTr" class="fold_clickTr">
-											<th class="fold_clickTh"><span class="fold_icon"></span><span class="trTitle"><s:message code="condition.cc"/></span></th>
+											<th class="fold_clickTh"><span class="fold_icon"></span><span class="trTitle fb600"><s:message code="condition.cc"/></span></th>
 											<td class="fold_clickTd" colspan="3">
 												<div id="ccUserDiv" class="fold">
 												</div>
 											</td>
 										</tr>
 										<tr id="bccTr" class="fold_clickTr">
-											<th class="fold_clickTh"><span class="fold_icon"></span><span class="trTitle"><s:message code="condition.bcc"/></span></th>
+											<th class="fold_clickTh"><span class="fold_icon"></span><span class="trTitle fb600"><s:message code="condition.bcc"/></span></th>
 											<td class="fold_clickTd" colspan="3">
 												<div id="bccUserDiv" class="fold">
 												</div>
