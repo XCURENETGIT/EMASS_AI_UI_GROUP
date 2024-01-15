@@ -152,23 +152,26 @@ function saveOriginalText( )
 </script>
 </head>
 <body class="mini-navbar msgBody">
-	<header class="header">
+	<!--<header class="header p20">
 		<div class="naviBack">
 			<img src="<c:url value="/img/title/home_icon.png"/>">
 			<span class="navi"><span id="code_title"></span><s:message code="common.msg.view.original"/></span>
 		</div>
-	</header>
+	</header>-->
 
 	<div class="xcn_container" style="min-width: 650px;">
 		<div class="boxArea">
-			<div class="content_body">
-				<div class="row">
-					<div class="col-xs-12 text-right">
+			<div class="content_body ">
+				<div class="row p20 grayBg" style="margin:0;">
+					<div class="col-xs-10">
+						<h2 class="navi"><span id="code_title"></span><s:message code="common.msg.view.original"/></h2>
+					</div>
+					<div class="col-xs-2 text-right">
 						<button type="button" class="btn btn-sm btn-default" id="saveBtn"><span class="glyphicon glyphicon-floppy-save"></span>&nbsp;<s:message code="common.msg.save"/></button>
 						<button type="button" class="btn btn-sm btn-default" accesskey="C" id="noSelectBtn"><span class="glyphicon glyphicon-remove"></span>&nbsp;<s:message code="common.msg.close"/></button>
 					</div>
 				</div>
-				<div class="row" style="border-top: 1px solid #ddd;margin-top: 5px; height: calc(100% - 40px);">
+				<div class="row" style="border-top: 1px solid #ddd; height: calc(100% - 40px);">
 					<div class="col-xs-12" style="height: 100%;">
 						<div class="panel-body text-md" style="min-height:500px;white-space: pre-wrap; -ms-word-break: break-all; -ms-word-wrap: break-word;"><xmp><%=body%></xmp></div>
 						<iframe id="MessageDown" src="about:blank;" height="0" width="0" style="display: none;" ></iframe>

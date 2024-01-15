@@ -3225,15 +3225,15 @@
             <div class="modal fade" id="exportDialog" tabindex="-1" role="dialog" aria-labelledby="exportDialog">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
+                        <div class="modal-header ">
+                            <button type="button" class="close " data-dismiss="modal" aria-label="Close">
+                                <span class="glyphicon glyphicon-remove" style="cursor:pointer;"></span>
                             </button>
-                            <h3 class="modal-title" id="exportTitle">&nbsp;</h3>
+                            <h3 class="modal-title mal16" id="exportTitle">&nbsp;</h3>
                         </div>
                         <div class="modal-body">
                             <div class="form-inline">
-                                <div class="content_body">
+                                <div class="content_body p20">
                                     <table class="table table-bordered" style="margin-bottom:0;width:100%;">
                                         <colgroup>
                                             <col width="210">
@@ -3334,9 +3334,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
-                            <button type="button" class="btn btn-primary savePopBtn" accesskey="S" id="allDownBtn"><s:message code="common.msg.export"/></button>
+                        <div class="modal-footer p20 txt_center">
+                            <button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+                            <button type="button" class="pop_btn02 savePopBtn" accesskey="S" id="allDownBtn"><s:message code="common.msg.export"/></button>
                         </div>
                     </div>
                 </div>

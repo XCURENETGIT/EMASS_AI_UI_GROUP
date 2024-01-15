@@ -90,16 +90,21 @@ function init(){
 </script>
 </head>
 <body class="mini-navbar msgBody" style="overflow: auto;">
-	<header class="header">
+	<!--<header class="header">
 		<div class="naviBack">
 			<img src="<c:url value="/img/title/home_icon.png"/>">
 			<span class="navi"><span id="code_title"></span><s:message code="common.msg.warning_mail"/></span>
 		</div>
-	</header>
-	<div class="row top_space" style="margin:0;">
+	</header>-->
+	<div class="row p8 grayBg" style="margin:0;">
+		<div class="col-xs-10">
+			<h2><s:message code="common.msg.warning_mail"/></h2>
+		</div>
+	</div>
+	<div class="row top_space mat16" style="margin:0;">
 		<div class="col-lg-12">
-			<div class="panel panel-default">
-				<div class="panel-heading">
+			<div class="panel panel-default mat16">
+				<div class="panel-heading p12">
 					<div style="height: 20px;">
 						<i class="fa fa-envelope" aria-hidden="true"></i> <s:message code="common.msg.warning_mail"/>
 					</div>

@@ -49,6 +49,8 @@ table td{
 .well.content_box {
 	background-color: #fff;
 }
+.panel {border-radius: 0 !important;}
+.panel-default>.panel-heading {background: #EEEFF2 !important;}
 </style>
 
 <script type="text/javascript">
@@ -123,13 +125,18 @@ function init(){
 </script>
 </head>
 <body class="mini-navbar msgBody" style="overflow-x: hidden; overflow-y: auto;">
-	<header class="header">
+	<!--<header class="header">
 		<div class="naviBack">
 			<img src="<c:url value="/img/title/home_icon.png"/>">
 			<span class="navi"><span id="code_title"></span><s:message code="common.msg.forward_mail"/></span>
 		</div>
-	</header>
-	<div class="row top_space">
+	</header>-->
+	<div class="row p8 grayBg" style="margin:0;">
+		<div class="col-xs-10">
+			<h2><s:message code="common.msg.forward_mail"/></h2>
+		</div>
+	</div>
+	<div class="row top_space mat16">
 		<div class="col-lg-12">
 			<div class="panel panel-default">
 				<div class="panel-heading">

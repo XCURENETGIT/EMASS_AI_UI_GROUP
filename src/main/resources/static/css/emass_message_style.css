@@ -594,11 +594,11 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
     background-color: rgb(0,0,0); /* Fallback color */background-color: rgba(0,0,0,0.4);}
 .modalHead {position: relative; padding:20px;border-bottom:1px solid #ddd;}
 .modalHead .btnBox {position: absolute; right:20px; top:16px;}
-.modalHead h2 {font-size:18px; font-weight:700;}
+.modalHead h2 {font-size:18px; font-weight:700; margin:0;}
 .modalHead .text {font-size:16px; font-weight:400; color:#555;}
 .modalCon {position: relative; padding:20px;}
 .modalTop {position: relative;}
-.modalTop h3 {font-size:16px; font-weight:500 !important;color:#111;}
+.modalTop h3 {font-size:16px; font-weight:500 !important;color:#111; margin:0 !important;}
 .modalTop p {position:absolute; top:0; right:0; font-size:14px; color:#555;}
 .modalbody {padding:20px; background-color: #F5F5F5; margin-top:8px; }
 .modalfooter {border-top:1px solid #ddd; margin-top:20px; padding-top:20px; text-align: center; }
@@ -896,3 +896,7 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 #bootstrap_confirm .bootstrap-dialog-title .auto_close {font-size: 12px; font-weight: 400; color: #111; text-align: center; width: 100%;padding-top: 5px;}
 #bootstrap_confirm .modal-dialog .modal-content .modal-footer button.btn-default {background-color: #EEE !important;color: #111 !important;}
 
+/* Modal */
+
+.close {position: absolute;right:20px;top:14px; color: #999;font-size: 28px;font-weight: bold;    cursor: pointer !important;}
+.close:hover,.close:focus {color: black;text-decoration: none;    cursor: pointer !important;}

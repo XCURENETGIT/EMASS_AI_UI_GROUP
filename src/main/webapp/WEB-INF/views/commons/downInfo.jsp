@@ -9,6 +9,7 @@ html,body{height: 100%; padding: 0px; margin: 0px;overflow: auto;min-width: 650p
 .attachExt{
 	cursor:pointer;
 }
+.slick-cell input[type="checkbox"], .slick-column-name input[type="checkbox"] {margin-top:4px;}
 .deleteText{
 	text-decoration:line-through;
 }
@@ -129,7 +130,7 @@ function removeDownInfoData(data) {
 }
 </script>
 </head>
-<body class="mini-navbar">
+<body class="mini-navbar" style="overflow-y: hidden">
 
 	<div class="modal fade" id="downValPop" tabindex="-1" role="dialog" aria-labelledby="downValPop">
 		<div class="modal-dialog" role="document">
@@ -150,18 +151,19 @@ function removeDownInfoData(data) {
 			</div>
 		</div>
 	</div>
-	
+	<!--
 	<header class="header">
 		<div class="naviBack">
 			<img src="<c:url value="/img/title/home_icon.png"/>">
 			<span class="navi"><span id="code_title"></span><s:message code="mail.view.list"/></span>
 		</div>
-	</header>
+	</header>-->
 	<div class="xcn_container" style="min-width: 650px;">
 		<div class="boxArea">
 			<div class="content_body">
-				<div class="row">
-					<div class="col-xs-10">
+				<div class="row p20">
+					<h2><span class="bullet02"></span><s:message code="mail.view.list"/></h2>
+					<div class="col-xs-12 grayBg p20 ">
 						<div class="form-inline not-dashed">
 							<div class="form-group">
 								<select class="form-control input-sm" id="exportTypeSel" style="max-width: 200px;">
@@ -194,17 +196,19 @@ function removeDownInfoData(data) {
 								</select>
 							</div>
 							<div class="btn-group">
-								<button type="button" class="btn btn-success btn-sm" accesskey="Q" id="searchBtn"><span title="refresh" class="glyphicon glyphicon-repeat"></span> REFRESH</button>
-								<button type="button" class="btn btn-warning btn-sm" accesskey="R" id="removeBtn" style="margin-left:5px;"><span title="remove" class="glyphicon glyphicon-trash"></span> 삭제</button>
+								<button type="button" class="form_btn02 btn-sm" accesskey="Q" id="searchBtn">REFRESH</button>
+								<button type="button" class="btn02 btn-sm" accesskey="R" id="removeBtn" style="margin-left:5px;"><img
+										src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
+
+								<span class="inner_emass">
+									<label><input type="checkbox" id="autoRefresh" name="autoRefresh" checked="checked"> Auto Refresh</label>
+								</span>
 							</div>
 						</div>
 					</div>
-					<div class="col-xs-2 text-right">
-						<label><input type="checkbox" id="autoRefresh" name="autoRefresh" checked="checked"> Auto Refresh</label>
-					</div>
 				</div>
-				<div class="row xcn_full top_space">
-					<div class="col-xs-12" style="height: 100%;">
+				<div class="row xcn_full top_space" style="margin-top:-40px;">
+					<div class="col-xs-12 p20" style="height: 100%;">
 						<div id="downInfoGrid" class="slickGrid gridArea"></div>
 					</div>
 				</div>
