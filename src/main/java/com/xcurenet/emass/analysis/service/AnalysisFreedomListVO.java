@@ -16,6 +16,8 @@ public @Data class AnalysisFreedomListVO extends XcnFacetsVO {
 	private List<Buckets> buckets;
 	private long totalCount;
 
+
+
 	public AnalysisFreedomListVO(SolrEdcMessageVO edc) throws JsonParseException, JsonMappingException, IOException {
 		this(edc, 1);
 	}

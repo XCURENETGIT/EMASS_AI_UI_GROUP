@@ -880,292 +880,319 @@ INSERT IGNORE INTO UI_EPMSG_TYPE VALUES ('official', '공문', 'green');
 
 INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,USEYN) values (1,'패턴(개인정보)메시지','S','unread','total','P','svc1','total','tit01','blueBg','
 		<div class="grid-stack-item ui-draggable-handle">
-			<div style="display:none;" class="gridValues" data-dashmultileft="unread" data-dashmultiright="total"></div>
-			<div class="grid-stack-item-content">
-				<div class="panel panel-primary">
-					<div class="panel-heading">
-						<div class="row">
-							<div class="col-xs-3" style="padding-right:0;">
-								<i class="customClass fa fa-user fa-3x"></i>
-							</div>
-							<div class="col-xs-9 text-right">
-								<button type="button" class="customClose">
-									<span aria-hidden="true">×</span>
-								</button>
-								<div class="position_top35"><span class="leftValue odometerxcn"></span> / <span class="rightValue huge odometerxcn"> </span></div>
-								<form method="post" action="/emass/ems/message.do" target="_self">
-									<input type="hidden" name="conditionParam">
-								</form>
-							</div>
-						</div>
+			<div style="display:none;" class="gridValues" data-dashMultiLeft="total" data-dashMultiRight="unread"></div>
+			<div class="grid-stack-item-content ">
+				<div class="xcn_maincon panel singleBorder">
+					<button type="button" class="customClose">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="blueBg bornone panel-heading click xcn_maincon_box" data-value="reserved">
+						<span class="tit01">패턴(개인정보)메시지</span>
+						<p class="rightValue">-<span>건</span><span class="tit13"></span></p>
 					</div>
-					<div class="panel-footer">
-						<span class="pull-left dash-title">패턴(개인정보)메시지</span>
-						<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59">당일</div>
+					<div class="panel-footer blueBg">
+						<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59">금일</div>
 						<div class="clearfix"></div>
 					</div>
 				</div>
 			</div>
 		</div>
 	','{"searchStr":"","searchField":"","serviceType":"","serviceTypeNm":"서비스 전체","interGroup":"","interGroupNm":"-관심 사용자 그룹-","userGroupSeq":"","userGroupName":"-사용자 그룹-","startDateSelect":"T","startTimeSelect":"00","endDateSelect":"T","endTimeSelect":"23","senders":"","receivers":"","allOfus":"","busi":"","busiNm":"사업장 전체","dept":"","deptNm":"","readYn":"","receiveSend":"","ctimeWork":"","attachYn":"","attachVal":"","attachStr":"","keywordYn":"","keywordVal":"","keywordStr":"","regexpYn":"Y","regexpVal":"PN%L@1|FN%L@1|DN%L@1|SN%L@1|CN%L@1","regexpStr":"여권번호(1건 이상), 외국인 등록번호(1건 이상), 운전면허번호(1건 이상), 주민번호(1건 이상), 카드번호(1건 이상)","drmYn":"","sizeStartVal":"0","sizeEndVal":"0","sizeOption":"L","sizeType":""}','미열람/전체','Y');
-INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,USEYN) values (2,'패턴(위험행위)메시지','D','unread','total','P','svc1','total','fa fa-warning','panel-red','
+INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,USEYN) values (2,'패턴(위험행위)메시지','S','unread','total','P','svc1','total','tit02','grayBg','
 		<div class="grid-stack-item ui-draggable-handle">
-			<div class="gridValues" style="display: none;" data-dashmultiright="total" data-dashmultileft="unread"></div>
-			<div class="grid-stack-item-content">
-				<div class="panel panel-red">
-					<div class="panel-heading">
-						<div class="row">
-							<div class="col-xs-3" style="padding-right: 0px;">
-								<i class="customClass fa fa-warning fa-3x"></i>
-							</div>
-							<div class="col-xs-9 text-right">
-								<button class="customClose" type="button">
-									<span aria-hidden="true">×</span>
-								</button>
-								<div class="position_top35"><span class="leftValue odometerxcn"></span> / <span class="rightValue huge odometerxcn"> </span></div>
-								<form action="/emass/ems/message.do" method="post" target="_self">
-									<input name="conditionParam" type="hidden">
-								</form>
-							</div>
-						</div>
+			<div style="display:none;" class="gridValues" data-dashMultiLeft="total" data-dashMultiRight="unread"></div>
+			<div class="grid-stack-item-content ">
+				<div class="xcn_maincon panel singleBorder">
+					<button type="button" class="customClose">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="grayBg bornone panel-heading click xcn_maincon_box" data-value="reserved">
+						<span class="tit02">패턴(위험행위)메시지</span>
+						<p class="rightValue">-<span>건</span><span class="tit13"></span></p>
 					</div>
-					<div class="panel-footer">
-						<span class="pull-left dash-title">패턴(위험행위)메시지</span>
-						<div title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59" class="termDtStr">당일</div>
+					<div class="panel-footer grayBg">
+						<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59">금일</div>
 						<div class="clearfix"></div>
 					</div>
 				</div>
 			</div>
 		</div>
 	','{"searchStr":"","searchField":"","serviceType":"","serviceTypeNm":"서비스 전체","interGroup":"","interGroupNm":"-관심 사용자 그룹-","userGroupSeq":"","userGroupName":"-사용자 그룹-","startDateSelect":"T","startTimeSelect":"00","endDateSelect":"T","endTimeSelect":"23","senders":"","receivers":"","allOfus":"","busi":"","busiNm":"사업장 전체","dept":"","deptNm":"","receiveSend":"","ctimeWork":"","readYn":"","attachYn":"","attachVal":"","attachStr":"","keywordYn":"","keywordVal":"","keywordStr":"","regexpYn":"Y","regexpVal":"EC%L@1|EF%L@1|ID%L@1","regexpStr":"확장자 변조 파일(1건 이상),   암호화 파일(1건 이상),   송수신자 동일아이디(1건 이상)","drmYn":"","sctYn":"","sizeStartVal":"0","sizeEndVal":"0","sizeOption":"L","sizeType":""}','','Y');
-INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,USEYN) values (3,'키워드(예약어)','D','unread','total','P','svc1','total','fa fa-font','panel-red','
+INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,USEYN) values (3,'키워드(예약어)','S','unread','total','P','svc1','total','tit03','purpleBg','
 		<div class="grid-stack-item ui-draggable-handle">
-			<div class="gridValues" style="display: none;" data-dashmultiright="total" data-dashmultileft="unread"></div>
-			<div class="grid-stack-item-content">
-				<div class="panel panel-red">
-					<div class="panel-heading">
-						<div class="row">
-							<div class="col-xs-3" style="padding-right: 0px;">
-								<i class="customClass fa fa-font fa-3x"></i>
-							</div>
-							<div class="col-xs-9 text-right">
-								<button class="customClose" type="button">
-									<span aria-hidden="true">×</span>
-								</button>
-								<div class="position_top35"><span class="leftValue odometerxcn"></span> / <span class="rightValue huge odometerxcn"> </span></div>
-								<form action="/emass/ems/message.do" method="post" target="_self">
-									<input name="conditionParam" type="hidden">
-								</form>
-							</div>
-						</div>
+			<div style="display:none;" class="gridValues" data-dashMultiLeft="total" data-dashMultiRight="unread"></div>
+			<div class="grid-stack-item-content ">
+				<div class="xcn_maincon panel singleBorder">
+					<button type="button" class="customClose">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="purpleBg bornone panel-heading click xcn_maincon_box" data-value="reserved">
+						<span class="tit03">키워드(예약어)</span>
+						<p class="rightValue">-<span>건</span><span class="tit13"></span></p>
 					</div>
-					<div class="panel-footer">
-						<span class="pull-left dash-title">키워드(예약어)</span>
-						<div title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59" class="termDtStr">당일</div>
+					<div class="panel-footer purpleBg">
+						<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59">금일</div>
 						<div class="clearfix"></div>
 					</div>
 				</div>
 			</div>
 		</div>
 	','{"searchStr":"","searchField":"","serviceType":"","serviceTypeNm":"서비스 전체","interGroup":"","interGroupNm":"-관심 사용자 그룹-","userGroupSeq":"","userGroupName":"-사용자 그룹-","startDateSelect":"T","startTimeSelect":"00","endDateSelect":"T","endTimeSelect":"23","senders":"","receivers":"","allOfus":"","busi":"","busiNm":"사업장 전체","dept":"","deptNm":"","receiveSend":"","ctimeWork":"","readYn":"","attachYn":"","attachVal":"","attachStr":"","keywordYn":"Y","keywordVal":"","keywordStr":"","regexpYn":"","regexpVal":"","regexpStr":"","drmYn":"","sctYn":"","sizeStartVal":"0","sizeEndVal":"0","sizeOption":"L","sizeType":""}','','Y');
-INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,USEYN) values (4,'서비스별 데이터 수집건수','C','unread','total','B','svc1','total','fa fa-bar-chart','panel-white','
+INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,USEYN) values (4,'서비스별 데이터 수집건수','C','unread','total','B','svc1','total','tit04','greenBg','
 		<div class="grid-stack-item ui-draggable-handle">
-			<div class="gridValues" style="display: none;" data-dashmultiright="total" data-dashmultileft="unread"></div>
+			<div style="display:none;" class="gridValues" data-dashMultiLeft="total" data-dashMultiRight="unread"></div>
 			<div class="grid-stack-item-content">
-				<div class="panel panel-white">
+				<div class="panel greenBgBorder">
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-xs-12 text-right">
-								<button class="customClose" type="button">
-									<span aria-hidden="true">×</span>
+								<button type="button" class="customClose">
+									<span aria-hidden="true">&times;</span>
 								</button>
-								<div class="dashChartArea" style="margin: 0px auto; width: 100%; height: 100%; min-height: 200px;" data-charttype="B"></div>
+								<div class="dashChartArea" data-chartType="B"
+								     style="min-height: 200px;height:100%; width: 100%; margin: 0 auto"></div>
 							</div>
 						</div>
 					</div>
 					<div class="panel-footer">
-						<span class="pull-left dash-title"><i class="customClass chartDash fa fa-bar-chart" style="padding-right: 4px; position: relative;"></i>서비스별 데이터 수집건수</span>
-						<div title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59" class="termDtStr">당일</div>
+						<span class="tit04 pull-left dash-title">서비스별 데이터 수집건수</span>
+						<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59">금일</div>
 						<div class="clearfix"></div>
 					</div>
 				</div>
 			</div>
 		</div>
 	','{"searchStr":"","searchField":"","serviceType":"","serviceTypeNm":"서비스 전체","interGroup":"","interGroupNm":"-관심 사용자 그룹-","userGroupSeq":"","userGroupName":"-사용자 그룹-","startDateSelect":"T","startTimeSelect":"00","endDateSelect":"T","endTimeSelect":"23","senders":"","receivers":"","allOfus":"","busi":"","busiNm":"사업장 전체","dept":"","deptNm":"","readYn":"","receiveSend":"","ctimeWork":"","attachYn":"","attachVal":"","attachStr":"","keywordYn":"","keywordVal":"","keywordStr":"","regexpYn":"","regexpVal":"","regexpStr":"","drmYn":"","sctYn":"","sizeStartVal":"0","sizeEndVal":"0","sizeOption":"L","sizeType":""}','','Y');
-INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,USEYN) values (5,'외부 메일 발신 서비스 비율','C','unread','total','P','svc1','total','fa fa-pie-chart','panel-white','
+INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,USEYN) values (5,'외부 메일 발신 서비스 비율','C','unread','total','P','svc1','total','tit05','redBg','
 		<div class="grid-stack-item ui-draggable-handle">
-			<div class="gridValues" style="display: none;" data-dashmultiright="total" data-dashmultileft="unread"></div>
+			<div style="display:none;" class="gridValues" data-dashMultiLeft="total" data-dashMultiRight="unread"></div>
 			<div class="grid-stack-item-content">
-				<div class="panel panel-white">
+				<div class="panel redBgBorder">
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-xs-12 text-right">
-								<button class="customClose" type="button">
-									<span aria-hidden="true">×</span>
+								<button type="button" class="customClose">
+									<span aria-hidden="true">&times;</span>
 								</button>
-								<div class="dashChartArea" style="margin: 0px auto; width: 100%; height: 100%; min-height: 200px;" data-charttype="P"></div>
+								<div class="dashChartArea" data-chartType="P"
+								     style="min-height: 200px;height:100%; width: 100%; margin: 0 auto"></div>
 							</div>
 						</div>
 					</div>
 					<div class="panel-footer">
-						<span class="pull-left dash-title"><i class="customClass chartDash fa fa-pie-chart" style="padding-right: 4px; position: relative;"></i>외부 메일 발신 서비스 비율</span>
-						<div title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59" class="termDtStr">당일</div>
+						<span class="tit05 pull-left dash-title">외부 메일 발신 서비스 비율</span>
+						<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59">금일</div>
 						<div class="clearfix"></div>
 					</div>
 				</div>
 			</div>
 		</div>
 	','{"searchStr":"","searchField":"","serviceType":"MP3,MSM,MIM,WNV,WDU,WCL,WNT,WKR,WUT,WNA,WYA,WSN,WSU,WDW,WYH,WGG,WYI,WLV,WQQ,WOS,WOT,WUK,WBM,WPO,EBD,EBB,EAA,EMM,EMB,EWS,EPU,ESC,EMF,EMU","serviceTypeNm":"POP3, SMTP, IMAP, 네이버, 다음, 천리안, 네이트, 코리아, 유니텔, 네띠앙, Yeah, SINA, SOHU, 야후, 구글, 용인시, Live.com, QQ, 163, 126, 기타, KT비즈메카, 우체국, 게시, 게시판, 결재, 메일, 모바일, 웹서비스, 일반, 일정 명함, 파일 다운로드, 기타","infoType":"","infoTypeNm":"정보 분류 전체","feedbackType":"","feedbackTypeNm":"피드백 전체","interGroup":"","interGroupNm":"-관심 사용자 선택-","userGroupSeq":"","userGroupName":"-사용자 그룹-","startDateSelect":"Y","startTimeSelect":"00","endDateSelect":"Y","endTimeSelect":"23","senders":"","receivers":"","allOfus":"ET|EA","busi":"","busiNm":"사업장 전체","dept":"","deptNm":"","receiveSend":"O","ctimeWork":"","readYn":"","attachYn":"","attachVal":"","attachStr":"","keywordYn":"","keywordVal":"","keywordStr":"","regexpYn":"","regexpVal":"","regexpStr":"","drmYn":"","sctYn":"","sizeStartVal":0,"sizeEndVal":0,"sizeOption":"L","sizeType":""}','','Y');
-INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,USEYN) values (6,'1MB 이상 파일 전송','S','unread','total','P','svc1','total','fa fa-save','panel-primary','
-		<div class="grid-stack-item ui-draggable-handle">
-			<div class="gridValues" style="display: none;" data-dashmultiright="total" data-dashmultileft="unread"></div>
-			<div class="grid-stack-item-content">
-				<div class="panel panel-primary">
-					<div class="panel-heading">
-						<div class="row">
-							<div class="col-xs-2" style="padding-right: 0px;">
-								<i class="customClass fa fa-save" style="font-size: 35px;"></i>
-							</div>
-							<div class="col-xs-10 text-right" style="padding-left: 0px;">
-								<button class="customClose" type="button">
-									<span aria-hidden="true">×</span>
-								</button>
-								<div class="position_top35"><span class="rightValue huge odometerxcn"></span></div>
-								<form action="/emass/ems/message.do" method="post" target="_self">
-									<input name="conditionParam" type="hidden">
-								</form>
-							</div>
-						</div>
+INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,USEYN) values (6,'1MB 이상 파일 전송','S','unread','total','P','svc1','total','tit06','yellowBg','
+	    <div class="grid-stack-item ui-draggable-handle">
+			<div style="display:none;" class="gridValues" data-dashMultiLeft="total" data-dashMultiRight="unread"></div>
+			<div class="grid-stack-item-content ">
+				<div class="xcn_maincon panel singleBorder">
+					<button type="button" class="customClose">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="yellowBg bornone panel-heading click xcn_maincon_box" data-value="reserved">
+						<span class="tit06">1MB 이상 파일 전송</span>
+						<p class="rightValue">-<span>건</span><span class="tit13"></span></p>
 					</div>
-					<div class="panel-footer">
-						<span class="pull-left dash-title">1MB 이상 파일 전송</span>
-						<div title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59" class="termDtStr">당일</div>
+					<div class="panel-footer yellowBg">
+						<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59">금일</div>
 						<div class="clearfix"></div>
 					</div>
 				</div>
 			</div>
 		</div>
 	','{"searchStr":"","searchField":"","serviceType":"","serviceTypeNm":"서비스 전체","interGroup":"","interGroupNm":"-관심 사용자 그룹-","userGroupSeq":"","userGroupName":"-사용자 그룹-","startDateSelect":"T","startTimeSelect":"00","endDateSelect":"T","endTimeSelect":"23","senders":"","receivers":"","allOfus":"","busi":"","busiNm":"사업장 전체","dept":"","deptNm":"","receiveSend":"","ctimeWork":"","readYn":"","attachYn":"","attachVal":"","attachStr":"","keywordYn":"","keywordVal":"","keywordStr":"","regexpYn":"","regexpVal":"","regexpStr":"","drmYn":"","sctYn":"","sizeStartVal":"1048576","sizeEndVal":"0","sizeOption":"L","sizeType":""}','','Y');
-INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,USEYN) values (7,'외부 발신 데이터','D','unread','total','P','svc1','total','fa fa-envelope','panel-yellow','
+INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,USEYN) values (7,'외부 발신 데이터','S','unread','total','P','svc1','total','tit07','blueBg','
 		<div class="grid-stack-item ui-draggable-handle">
-			<div class="gridValues" style="display: none;" data-dashmultiright="total" data-dashmultileft="unread"></div>
-			<div class="grid-stack-item-content">
-				<div class="panel panel-yellow">
-					<div class="panel-heading">
-						<div class="row">
-							<div class="col-xs-3" style="padding-right: 0px;">
-								<i class="customClass fa fa-envelope fa-3x"></i>
-							</div>
-							<div class="col-xs-9 text-right">
-								<button class="customClose" type="button">
-									<span aria-hidden="true">×</span>
-								</button>
-								<div class="position_top35"><span class="leftValue odometerxcn"></span> / <span class="rightValue huge odometerxcn"> </span></div>
-								<form action="/emass/ems/message.do" method="post" target="_self">
-									<input name="conditionParam" type="hidden">
-								</form>
-							</div>
-						</div>
+			<div style="display:none;" class="gridValues" data-dashMultiLeft="total" data-dashMultiRight="unread"></div>
+			<div class="grid-stack-item-content ">
+				<div class="xcn_maincon panel singleBorder">
+					<button type="button" class="customClose">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="blueBg bornone panel-heading click xcn_maincon_box" data-value="reserved">
+						<span class="tit07">외부 발신 데이터</span>
+						<p class="rightValue">-<span>건</span><span class="tit13"></span></p>
 					</div>
-					<div class="panel-footer">
-						<span class="pull-left dash-title">외부 발신 데이터</span>
-						<div title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59" class="termDtStr">당일</div>
+					<div class="panel-footer blueBg">
+						<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59">금일</div>
 						<div class="clearfix"></div>
 					</div>
 				</div>
 			</div>
 		</div>
 	','{"searchStr":"","searchField":"","serviceType":"","serviceTypeNm":"서비스 전체","interGroup":"","interGroupNm":"-관심 사용자 그룹-","userGroupSeq":"","userGroupName":"-사용자 그룹-","startDateSelect":"T","startTimeSelect":"00","endDateSelect":"T","endTimeSelect":"23","senders":"","receivers":"","allOfus":"","busi":"","busiNm":"사업장 전체","dept":"","deptNm":"","readYn":"","receiveSend":"O","ctimeWork":"","attachYn":"","attachVal":"","attachStr":"","keywordYn":"","keywordVal":"","keywordStr":"","regexpYn":"","regexpVal":"","regexpStr":"","drmYn":"","sctYn":"","sizeStartVal":"0","sizeEndVal":"0","sizeOption":"L","sizeType":""}','','Y');
-INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,USEYN) values (8,'비업무시간 데이터','D','unread','total','P','svc1','total','fa fa-users','panel-green','
+INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,USEYN) values (8,'비업무시간 데이터','S','unread','total','P','svc1','total','tit08','grayBg','
 		<div class="grid-stack-item ui-draggable-handle">
-			<div class="gridValues" style="display: none;" data-dashmultiright="total" data-dashmultileft="unread"></div>
-			<div class="grid-stack-item-content">
-				<div class="panel panel-green">
-					<div class="panel-heading">
-						<div class="row">
-							<div class="col-xs-3" style="padding-right: 0px;">
-								<i class="customClass fa fa-users fa-3x"></i>
-							</div>
-							<div class="col-xs-9 text-right">
-								<button class="customClose" type="button">
-									<span aria-hidden="true">×</span>
-								</button>
-								<div class="position_top35"><span class="leftValue odometerxcn"></span> / <span class="rightValue huge odometerxcn"> </span></div>
-								<form action="/emass/ems/message.do" method="post" target="_self">
-									<input name="conditionParam" type="hidden">
-								</form>
-							</div>
-						</div>
+			<div style="display:none;" class="gridValues" data-dashMultiLeft="total" data-dashMultiRight="unread"></div>
+			<div class="grid-stack-item-content ">
+				<div class="xcn_maincon panel singleBorder">
+					<button type="button" class="customClose">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="grayBg bornone panel-heading click xcn_maincon_box" data-value="reserved">
+						<span class="tit08">비업무시간 데이터</span>
+						<p class="rightValue">-<span>건</span><span class="tit13"></span></p>
 					</div>
-					<div class="panel-footer">
-						<span class="pull-left dash-title">비업무시간 데이터</span>
-						<div title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59" class="termDtStr">당일</div>
+					<div class="panel-footer grayBg">
+						<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59">금일</div>
 						<div class="clearfix"></div>
 					</div>
 				</div>
 			</div>
 		</div>
 	','{"searchStr":"","searchField":"","serviceType":"","serviceTypeNm":"서비스 전체","interGroup":"","interGroupNm":"-관심 사용자 그룹-","userGroupSeq":"","userGroupName":"-사용자 그룹-","startDateSelect":"T","startTimeSelect":"00","endDateSelect":"T","endTimeSelect":"23","senders":"","receivers":"","allOfus":"","busi":"","busiNm":"사업장 전체","dept":"","deptNm":"","receiveSend":"","ctimeWork":"R","readYn":"","attachYn":"","attachVal":"","attachStr":"","keywordYn":"","keywordVal":"","keywordStr":"","regexpYn":"","regexpVal":"","regexpStr":"","drmYn":"","sctYn":"","sizeStartVal":"0","sizeEndVal":"0","sizeOption":"L","sizeType":""}','','Y');
-INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,USEYN) values (9,'그룹웨어 데이터','D','unread','total','P','svc1','total','fa fa-area-chart','panel-green','
+INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,USEYN) values (9,'그룹웨어 데이터','S','unread','total','P','svc1','total','tit09','purpleBg','
 		<div class="grid-stack-item ui-draggable-handle">
-			<div style="display:none;" class="gridValues" data-dashmultileft="unread" data-dashmultiright="total"></div>
-			<div class="grid-stack-item-content">
-				<div class="panel panel-green">
-					<div class="panel-heading">
-						<div class="row">
-							<div class="col-xs-3" style="padding-right:0;">
-								<i class="customClass fa fa-area-chart fa-3x"></i>
-							</div>
-							<div class="col-xs-9 text-right">
-								<button type="button" class="customClose">
-									<span aria-hidden="true">×</span>
-								</button>
-								<div class="position_top35"><span class="leftValue odometerxcn"></span> / <span class="rightValue huge odometerxcn"> </span></div>
-								<form method="post" action="/emass/ems/message.do" target="_self">
-									<input type="hidden" name="conditionParam">
-								</form>
-							</div>
-						</div>
+			<div style="display:none;" class="gridValues" data-dashMultiLeft="total" data-dashMultiRight="unread"></div>
+			<div class="grid-stack-item-content ">
+				<div class="xcn_maincon panel singleBorder">
+					<button type="button" class="customClose">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="purpleBg bornone panel-heading click xcn_maincon_box" data-value="reserved">
+						<span class="tit09">그룹웨어 데이터</span>
+						<p class="rightValue">-<span>건</span><span class="tit13"></span></p>
 					</div>
-					<div class="panel-footer">
-						<span class="pull-left dash-title">그룹웨어 데이터</span>
-						<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59">당일</div>
+					<div class="panel-footer purpleBg">
+						<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59">금일</div>
 						<div class="clearfix"></div>
 					</div>
 				</div>
 			</div>
 		</div>
 	','{"searchStr":"","searchField":"","serviceType":"EBD,EBB,EAA,EMM,EMB,EWS,EPU,ESC,EMF,EMU","serviceTypeNm":"게시, 게시판, 결재, 메일, 모바일, 웹서비스, 일반, 일정 명함, 파일 다운로드, 기타","interGroup":"","interGroupNm":"-관심 사용자 그룹-","userGroupSeq":"","userGroupName":"-사용자 그룹-","startDateSelect":"T","startTimeSelect":"00","endDateSelect":"T","endTimeSelect":"23","senders":"","receivers":"","allOfus":"","busi":"","busiNm":"사업장 전체","dept":"","deptNm":"","readYn":"","receiveSend":"","ctimeWork":"","attachYn":"","attachVal":"","attachStr":"","keywordYn":"","keywordVal":"","keywordStr":"","regexpYn":"","regexpVal":"","regexpStr":"","drmYn":"","sctYn":"","sizeStartVal":"0","sizeEndVal":"0","sizeOption":"L","sizeType":""}','미열람/전체','Y');
-INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,USEYN) values (10,'금일 수집 데이터','S','unread','total','P','svc1','total','fa fa-envelope','panel-primary','
+INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,USEYN) values (10,'금일 수집 데이터','S','unread','total','P','svc1','total','tit10','greenBg','
 		<div class="grid-stack-item ui-draggable-handle">
-			<div style="display:none;" class="gridValues" data-dashmultileft="unread" data-dashmultiright="total"></div>
-			<div class="grid-stack-item-content">
-				<div class="panel panel-primary">
-					<div class="panel-heading">
-						<div class="row">
-							<div class="col-xs-2" style="padding-right:0;">
-								<i class="customClass fa fa-envelope" style="font-size:35px;"></i>
-							</div>
-							<div class="col-xs-10 text-right" style="padding-left:0;">
-								<button type="button" class="customClose">
-									<span aria-hidden="true">×</span>
-								</button>
-								<div class="position_top35"><span class="rightValue huge odometerxcn"></span></div>
-								<form method="post" action="/emass/ems/message.do" target="_self">
-									<input type="hidden" name="conditionParam">
-								</form>
-							</div>
-						</div>
+			<div style="display:none;" class="gridValues" data-dashMultiLeft="total" data-dashMultiRight="unread"></div>
+			<div class="grid-stack-item-content ">
+				<div class="xcn_maincon panel singleBorder">
+					<button type="button" class="customClose">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="greenBg bornone panel-heading click xcn_maincon_box" data-value="reserved">
+						<span class="tit10">금일 수집 데이터</span>
+						<p class="rightValue">-<span>건</span><span class="tit13"></span></p>
 					</div>
-					<div class="panel-footer">
-						<span class="pull-left dash-title">금일 수집 데이터</span>
-						<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59">당일</div>
+					<div class="panel-footer greenBg">
+						<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59">금일</div>
 						<div class="clearfix"></div>
 					</div>
 				</div>
 			</div>
 		</div>
 	','{"searchStr":"","searchField":"","serviceType":"","serviceTypeNm":"서비스 전체","interGroup":"","interGroupNm":"-관심 사용자 그룹-","userGroupSeq":"","userGroupName":"-사용자 그룹-","startDateSelect":"T","startTimeSelect":"00","endDateSelect":"T","endTimeSelect":"23","senders":"","receivers":"","allOfus":"","busi":"","busiNm":"사업장 전체","dept":"","deptNm":"","receiveSend":"","ctimeWork":"","readYn":"","attachYn":"","attachVal":"","attachStr":"","keywordYn":"","keywordVal":"","keywordStr":"","regexpYn":"","regexpVal":"","regexpStr":"","drmYn":"","sctYn":"","sizeStartVal":"0","sizeEndVal":"0","sizeOption":"L","sizeType":""}','','Y');
+INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,USEYN) values (11,'수신자 발신자 동일 데이터','S','unread','total','P','svc1','total','tit11','redBg','
+		<div class="grid-stack-item ui-draggable-handle">
+			<div style="display:none;" class="gridValues" data-dashMultiLeft="total" data-dashMultiRight="unread"></div>
+			<div class="grid-stack-item-content ">
+				<div class="xcn_maincon panel singleBorder">
+					<button type="button" class="customClose">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="redBg bornone panel-heading click xcn_maincon_box" data-value="reserved">
+						<span class="tit11">수신자 발신자 동일 데이터</span>
+						<p class="rightValue">-<span>건</span><span class="tit13"></span></p>
+					</div>
+					<div class="panel-footer redBg">
+						<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59">금일</div>
+						<div class="clearfix"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	','{"searchStr":"","searchField":"","serviceFieldNm":"검색 영역 전체","serviceType":"","serviceTypeNm":"서비스 전체","infoType":"","infoTypeNm":"정보 분류 전체","feedbackType":"","feedbackTypeNm":"피드백 전체","probType":"","probTypeNm":"판정 확률 전체","interGroup":"","interGroupNm":"-관심 사용자 선택-","userGroupSeq_not":"","userGroupSeq":"","userGroupName":"-사용자 그룹-","interGroup_not":"","epmsgType":"","startDateSelect":"T","endDateSelect":"T","startTimeSelect":"00","endTimeSelect":"23","senders":"","senders_not":"","receive_option":"","receivers":"","receivers_not":"","allOfus":"SO","busi":"","busiNm":"사업장 전체","busi_not":"","dept":"","deptNm":"","dept_not":"","url":"","url_not":"","receiveSend":"","ctimeWork":"","readYn":"","attachYn":"","attachVal":"","attachStr":"","attachYn_not":"","keywordYn":"","keywordVal":"","keywordStr":"","keywordYn_not":"","regexpYn":"","regexpVal":"","regexpStr":"","drmYn":"","realAttYn":"","sctYn":"","sizeStartVal":0,"sizeEndVal":0,"sizeOption":"L","sizeType":""}','','Y');
+INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,USEYN) values (12,'첨부파일(MS-OFFICE) 데이터','S','unread','total','P','svc1','total','tit12','yellowBg','
+		<div class="grid-stack-item ui-draggable-handle">
+			<div style="display:none;" class="gridValues" data-dashMultiLeft="total" data-dashMultiRight="unread"></div>
+			<div class="grid-stack-item-content ">
+				<div class="xcn_maincon panel singleBorder">
+					<button type="button" class="customClose">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="yellowBg bornone panel-heading click xcn_maincon_box" data-value="reserved">
+						<span class="tit12">첨부파일(MS-OFFICE) 데이터</span>
+						<p class="rightValue">-<span>건</span><span class="tit13"></span></p>
+					</div>
+					<div class="panel-footer yellowBg">
+						<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59">금일</div>
+						<div class="clearfix"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	','{"searchStr":"","searchField":"","serviceFieldNm":"검색 영역 전체","serviceType":"","serviceTypeNm":"서비스 전체","infoType":"","infoTypeNm":"정보 분류 전체","feedbackType":"","feedbackTypeNm":"피드백 전체","probType":"","probTypeNm":"판정 확률 전체","interGroup":"","interGroupNm":"-관심 사용자 선택-","userGroupSeq_not":"","userGroupSeq":"","userGroupName":"-사용자 그룹-","interGroup_not":"","epmsgType":"","startDateSelect":"T","endDateSelect":"T","startTimeSelect":"00","endTimeSelect":"23","senders":"","senders_not":"","receive_option":"","receivers":"","receivers_not":"","allOfus":"","busi":"","busiNm":"사업장 전체","busi_not":"","dept":"","deptNm":"","dept_not":"","url":"","url_not":"","receiveSend":"","ctimeWork":"","readYn":"","attachYn":"Y","attachVal":"DB|ADE|ADP|DBF|DOC|DOT|MDA|MDB|MDE|ODC|ODP|ODS|ODT|PDB|POT|PPS|PPT|PRN|PTF|PWZ|RTF|XLA|XLM|XLR|XLS|XLT|XLW|DOCM|DOCX|DOTM|DOTX|POTM|POTX|PPSM|PPSX|PPTM|PPTX|UXDC|XLAM|XLSB|XLSM|XLSX|XLTM|ACCDA|ACCDB|ACCDE|ACCDT","attachStr":"MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE","attachYn_not":"","keywordYn":"","keywordVal":"","keywordStr":"","keywordYn_not":"","regexpYn":"","regexpVal":"","regexpStr":"","drmYn":"","realAttYn":"","sctYn":"","sizeStartVal":0,"sizeEndVal":0,"sizeOption":"L","sizeType":""}','','Y');
+INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,USEYN) values (13,'500GB 이상 파일 크기','C','unread','total','B','svc1','total','tit01','blueBg','
+<div class="grid-stack-item ui-draggable-handle">
+			<div style="display:none;" class="gridValues" data-dashMultiLeft="total" data-dashMultiRight="unread"></div>
+			<div class="grid-stack-item-content">
+				<div class="panel blueBgBorder">
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-xs-12 text-right">
+								<button type="button" class="customClose">
+									<span aria-hidden="true">&times;</span>
+								</button>
+								<div class="dashChartArea" data-chartType="B"
+								     style="min-height: 200px;height:100%; width: 100%; margin: 0 auto"></div>
+							</div>
+						</div>
+					</div>
+					<div class="panel-footer">
+						<span class="tit01 pull-left dash-title">500GB 이상 파일 크기</span>
+						<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59">금일</div>
+						<div class="clearfix"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	','{"searchStr":"","searchField":"","serviceFieldNm":"검색 영역 전체","serviceType":"","serviceTypeNm":"서비스 전체","infoType":"","infoTypeNm":"정보 분류 전체","feedbackType":"","feedbackTypeNm":"피드백 전체","probType":"","probTypeNm":"판정 확률 전체","interGroup":"","interGroupNm":"-관심 사용자 선택-","userGroupSeq_not":"","userGroupSeq":"","userGroupName":"-사용자 그룹-","interGroup_not":"","epmsgType":"","startDateSelect":"Y","endDateSelect":"Y","startTimeSelect":"00","endTimeSelect":"23","senders":"","senders_not":"","receive_option":"","receivers":"","receivers_not":"","allOfus":"","busi":"","busiNm":"사업장 전체","busi_not":"","dept":"","deptNm":"","dept_not":"","url":"","url_not":"","receiveSend":"","ctimeWork":"","readYn":"","attachYn":"","attachVal":"","attachStr":"","attachYn_not":"","keywordYn":"","keywordVal":"","keywordStr":"","keywordYn_not":"","regexpYn":"","regexpVal":"","regexpStr":"","drmYn":"","realAttYn":"","sctYn":"","sizeStartVal":537096999936,"sizeEndVal":0,"sizeOption":"L","sizeType":"A"}','','Y');
+INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,USEYN) values (14,'메일 수집 건수 데이터','S','unread','total','P','svc1','total','tit02','grayBg','
+		<div class="grid-stack-item ui-draggable-handle">
+			<div style="display:none;" class="gridValues" data-dashMultiLeft="total" data-dashMultiRight="unread"></div>
+			<div class="grid-stack-item-content ">
+				<div class="xcn_maincon panel singleBorder">
+					<button type="button" class="customClose">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="grayBg bornone panel-heading click xcn_maincon_box" data-value="reserved">
+						<span class="tit02">메일 수집 건수 데이터</span>
+						<p class="rightValue">-<span>건</span><span class="tit13"></span></p>
+					</div>
+					<div class="panel-footer grayBg">
+						<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59">금일</div>
+						<div class="clearfix"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	','{"searchStr":"","searchField":"","serviceFieldNm":"검색 영역 전체","serviceType":"MP3,MSM,MIM","serviceTypeNm":"POP3, SMTP, IMAP","infoType":"","infoTypeNm":"정보 분류 전체","feedbackType":"","feedbackTypeNm":"피드백 전체","probType":"","probTypeNm":"판정 확률 전체","interGroup":"","interGroupNm":"-관심 사용자 선택-","userGroupSeq_not":"","userGroupSeq":"","userGroupName":"-사용자 그룹-","interGroup_not":"","epmsgType":"","startDateSelect":"T","endDateSelect":"T","startTimeSelect":"00","endTimeSelect":"23","senders":"","senders_not":"","receive_option":"","receivers":"","receivers_not":"","allOfus":"","busi":"","busiNm":"사업장 전체","busi_not":"","dept":"","deptNm":"","dept_not":"","url":"","url_not":"","receiveSend":"","ctimeWork":"","readYn":"","attachYn":"","attachVal":"","attachStr":"","attachYn_not":"","keywordYn":"","keywordVal":"","keywordStr":"","keywordYn_not":"","regexpYn":"","regexpVal":"","regexpStr":"","drmYn":"","realAttYn":"","sctYn":"","sizeStartVal":0,"sizeEndVal":0,"sizeOption":"L","sizeType":""}','','Y');
+INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,USEYN) values (15,'메신저 수집 건수 데이터','S','unread','total','P','svc1','total','tit03','purpleBg','
+		<div class="grid-stack-item ui-draggable-handle">
+			<div style="display:none;" class="gridValues" data-dashMultiLeft="total" data-dashMultiRight="unread"></div>
+			<div class="grid-stack-item-content ">
+				<div class="xcn_maincon panel singleBorder">
+					<button type="button" class="customClose">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="purpleBg bornone panel-heading click xcn_maincon_box" data-value="reserved">
+						<span class="tit03">메신저 수집 건수 데이터</span>
+						<p class="rightValue">-<span>건</span><span class="tit13"></span></p>
+					</div>
+					<div class="panel-footer purpleBg">
+						<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59">금일</div>
+						<div class="clearfix"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	','{"searchStr":"","searchField":"","serviceFieldNm":"검색 영역 전체","serviceType":"QNV,QNM,QDS,QSH,QDI,QDF,QDG,QFM,QMC,QMS,QNT,QSS,QSF,QSP,QSB,QWJ,QGP,QDA,QCL,QKB,QEK,QSL,QSY,QFB,QKM,QGH,QGG,QGM,QGB,QBI,QWT,QIS,QZA,QUK","serviceTypeNm":"네이버, 네이버 쪽지, 대신, 삼홍사, 동부생명, 동부금융, 동국제강, 프리본드, M-채널, 미쓰리, 네이트, 삼성증권, 삼성화재, SK 프라이든, SK 비즈, 웅진, chatGPT, Dall-E, 쿨, k-bond, 아이콘, Slack, 신영자산운용, 페이스북, 삼성KnoxMessenger, 구글 Hangout, 구글 chat, 구글 Meet, 구글 Bard, Microsoft BingAI Chat, wrtn, 인스타그램 DM, Zalo, 기타","infoType":"","infoTypeNm":"정보 분류 전체","feedbackType":"","feedbackTypeNm":"피드백 전체","probType":"","probTypeNm":"판정 확률 전체","interGroup":"","interGroupNm":"-관심 사용자 선택-","userGroupSeq_not":"","userGroupSeq":"","userGroupName":"-사용자 그룹-","interGroup_not":"","epmsgType":"","startDateSelect":"T","endDateSelect":"T","startTimeSelect":"00","endTimeSelect":"23","senders":"","senders_not":"","receive_option":"","receivers":"","receivers_not":"","allOfus":"","busi":"","busiNm":"사업장 전체","busi_not":"","dept":"","deptNm":"","dept_not":"","url":"","url_not":"","receiveSend":"","ctimeWork":"","readYn":"","attachYn":"","attachVal":"","attachStr":"","attachYn_not":"","keywordYn":"","keywordVal":"","keywordStr":"","keywordYn_not":"","regexpYn":"","regexpVal":"","regexpStr":"","drmYn":"","realAttYn":"","sctYn":"","sizeStartVal":0,"sizeEndVal":0,"sizeOption":"L","sizeType":""}','','Y');
 
 INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_MENU (MENU_KEY,MENU_NAME,MENU_ICON,ADMIN_ID,USEYN,DEFAULT_MENU,UPDATE_DT) VALUES (0,'Default Dashboard','fa fa-th','sysadmin','Y','Y',NOW());
 

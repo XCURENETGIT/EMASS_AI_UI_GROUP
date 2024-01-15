@@ -194,7 +194,7 @@
 		<div class="grid-stack-item ui-draggable-handle">
 			<div style="display:none;" class="gridValues" data-dashMultiLeft="#dashMultiLeft#" data-dashMultiRight="#dashMultiRight#"></div>
 			<div class="grid-stack-item-content ">
-				<div class="xcn_maincon panel">
+				<div class="xcn_maincon panel singleBorder">
 					<button type="button" class="customClose">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -329,5 +329,4 @@
 			<div class="grid-stack-item-content grid-empty"
 		</div>
 	</div>
-</div>
 </div>

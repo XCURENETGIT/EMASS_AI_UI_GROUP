@@ -212,6 +212,7 @@ public class SolrEdcMessageVO {
 
 
 
+
 	private void setPivot(final SearchHits<SolrEdcVO> resp) {
 		ElasticsearchAggregations elasticSearchAggregations = (ElasticsearchAggregations) resp.getAggregations();
 		if(elasticSearchAggregations == null) return;

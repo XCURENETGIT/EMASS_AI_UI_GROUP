@@ -739,7 +739,7 @@
 								</div>
 								<div class="col-65">
 									<button type="button" class="btn blueBg dashColor" data-value="blueBg">&nbsp;&nbsp;</button>
-									<button type="button" class="btn btn-default dashColor" data-value="panel-white">&nbsp;&nbsp;</button>
+									<button type="button" class="btn grayBg dashColor" data-value="grayBg">&nbsp;&nbsp;</button>
 									<button type="button" class="btn purpleBg dashColor" data-value="purpleBg">&nbsp;&nbsp;</button>
 									<button type="button" class="btn greenBg dashColor" data-value="greenBg">&nbsp;&nbsp;</button>
 									<button type="button" class="btn redBg dashColor" data-value="redBg">&nbsp;&nbsp;</button>

@@ -86,6 +86,8 @@
                 }
             });
 
+
+
             $(document).on('click', '.person', function () {
                 var xrootmtr = $(this).attr('xrootmtr');
                 var srcip = $(this).attr('srcip');
@@ -108,9 +110,6 @@
                 hideUserSelect();
             });
 
-            $(document).on('.clickUser', '.click', function () {
-                alert("gg");
-            });
 
             $('#searchBtn').click(function () {
                 if (messengerListCnt == 0) {
@@ -306,32 +305,47 @@
                 hideSelect();
             });
 
-            $(document).on('mouseover', '.codeSelectedBtn', function (e) {
-                $('#selectedCodeTitle').show();
-                $('#selectedCodeTitle').css('left', (e.pageX + 5) + 'px');
-                $('#selectedCodeTitle').css('top', (e.pageY - 120) + 'px');
+            // $(document).on('mouseover', '.codeSelectedBtn', function (e) {
+            //     $('#selectedCodeTitle').show();
+            //     $('#selectedCodeTitle').css('left', (e.pageX + 5) + 'px');
+            //     $('#selectedCodeTitle').css('top', (e.pageY - 120) + 'px');
+			//
+            //     var str = $(this).parent().find('.selectedTitle').val();
+            //     if (str != undefined) str = str.replaceAll('\\|', ',');
+            //     $('#selectedCodeTitle').html(str);
+            // });
 
-                var str = $(this).parent().find('.selectedTitle').val();
-                if (str != undefined) str = str.replaceAll('\\|', ',');
-                $('#selectedCodeTitle').html(str);
+            // $(document).on('mousemove', '.codeSelectedBtn', function (e) {
+            //     $('#selectedCodeTitle').css('left', (e.pageX + 5) + 'px');
+            //     $('#selectedCodeTitle').css('top', (e.pageY - 120) + 'px');
+			//
+            //     var str = $(this).parent().find('.selectedTitle').val();
+            //     if (str != undefined) str = str.replaceAll('\\|', ',');
+            //     $('#selectedCodeTitle').html(str);
+            // });
+
+            // $(document).on('mouseout', '.codeSelectedBtn', function (e) {
+            //     $('#selectedCodeTitle').hide();
+            // });
+
+            $(document).on('click', '#userSelectedArea', function (e) {
+                $('#userVal, #userVal').val('');
+                $('#userSelectedArea').hide();
             });
 
-            $(document).on('mousemove', '.codeSelectedBtn', function (e) {
-                $('#selectedCodeTitle').css('left', (e.pageX + 5) + 'px');
-                $('#selectedCodeTitle').css('top', (e.pageY - 120) + 'px');
-
-                var str = $(this).parent().find('.selectedTitle').val();
-                if (str != undefined) str = str.replaceAll('\\|', ',');
-                $('#selectedCodeTitle').html(str);
+            $('#user').click(function () {
+                var code = $(this).attr('id');
+                openCodeWindow(code, $('#' + code + 'Val').val(), $('#' + code + 'Str').val());
             });
 
-            $(document).on('mouseout', '.codeSelectedBtn', function (e) {
-                $('#selectedCodeTitle').hide();
-            });
-
-            $(document).on('click', '.codeSelectedBtn', function (e) {
+            $(document).on('click', '#deptSelectedArea', function (e) {
                 $('#deptVal, #deptStr').val('');
                 $('#deptSelectedArea').hide();
+            });
+
+            $(document).on('click', '#userSelectedArea', function (e) {
+                $('#userStr, #userVal').val('');
+                $('#userSelectedArea').hide();
             });
 
             $(document).on('click', '#timeline_list div.list-group-item', function (e) {
@@ -648,39 +662,14 @@
 				searchLabel:true,
 				noneSelectedText:'
 
-
-
-
-
-
-
-
             <s:message code="common.org.dept.all"/>',
 		noneResultsText:'
-
-
-
-
-
-
 
             <s:message code="common.msg.noresult"/>'+' ',
 		selectAllText:'
 
-
-
-
-
-
-
             <s:message code="common.msg.select_all"/>',
 		deselectAllText:'
-
-
-
-
-
-
 
             <s:message code="common.msg.unselect_all"/>'
 	}); */
@@ -767,7 +756,12 @@
                 condition.serviceType = arrayToString($('#serviceTypeSelect').selectpicker('val'));
             }
             condition.searchStr = $('#searchStrInput').val();
-            condition.senders = $('#senders').val();
+            // condition.senders = $('#senders').val();
+
+            var dv = $('#userVal').val().split('|');
+            condition.senders = dv.join(',');
+            if (condition.senders != '') condition.sendersStr = $('#userStr').val();
+
             condition.attachYn = $('button[name=attachYn].active').val();
             condition.busi = arrayToString($('#busiSelect').selectpicker('val'));
 
@@ -968,7 +962,17 @@
 							<input type="hidden" id="deptStr" class="selectedTitle">
 							<input type="hidden" id="deptVal">
 						</p>
-						<input type="text" class="w100 mat8"  placeholder="<s:message code="eikon.input.participation"/>" id="senders">
+						<p class="mat8 formText btnform" data-toggle="buttons">
+							<span class="tit"><s:message code="common.org.choose.user"/></span>
+							<button type="button" class="btn01" id="user"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
+									code="common.org.choose.user"/></button>
+							<span id="userSelectedArea" class="codeSelectedBtn">
+										<button type="button" class="btn num_add bornone" style="z-index: 2;">0</button>
+									</span>
+							<input type="hidden" id="userStr" class="selectedTitle">
+							<input type="hidden" id="userVal">
+						</p>
+<%--						<input type="text" class="w100 mat8"  placeholder="<s:message code="eikon.input.participation"/>" id="senders">--%>
 					</div>
 				</div>
 

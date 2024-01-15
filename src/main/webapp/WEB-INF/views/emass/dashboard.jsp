@@ -298,7 +298,6 @@
         $(document).on('click', '.panel-footer', function(){
             var id = $(this).parents('.grid-stack-item').attr('data-gs-id');
             var dashCondition;
-            alert(id);
 
             for(var i=0; i<contentData.length; i++){
                 if(contentData[i].dashKey == id.split('_')[1]){
@@ -307,8 +306,9 @@
                 }
             }
             if(dashCondition != undefined){
+                console.log(dashCondition);
                 $('#conditionParam').val(makePeriod(dashCondition));
-                $('#getMessageInfo').submit();
+                // $('#getMessageInfo').submit();
             }
         });
 

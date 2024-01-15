@@ -94,6 +94,34 @@
 <s:message code="common.datescript" var="ko"/>
 <%@ include file="./analysisBase.jsp" %>
 <script>
+    Highcharts.setOptions({
+        chart: {
+            type: 'column',
+            marginTop : 15,
+            marginBottom : 60,
+            spacingBottom: 0
+        },
+        global : { useUTC : false },
+        gridLineColor: '#fff',
+        colors: ['#80599F', '#656C7C', '#598AD3', '#D35976', '#DDDDDD', '#bb6ecb', '#439851', '#33a0c4', '#7558cb', '#97b420'],
+        lang: {
+            months: [ '<s:message code="common.january"/>', '<s:message code="common.february"/>', '<s:message code="common.march"/>', '<s:message code="common.april"/>', '<s:message code="common.may"/>', '<s:message code="common.june"/>', '<s:message code="common.july"/>', '<s:message code="common.august"/>', '<s:message code="common.september"/>', '<s:message code="common.october"/>', '<s:message code="common.november"/>', '<s:message code="common.december"/>' ],
+            shortMonths : [ '<s:message code="common.january"/>', '<s:message code="common.february"/>', '<s:message code="common.march"/>', '<s:message code="common.april"/>', '<s:message code="common.may"/>', '<s:message code="common.june"/>', '<s:message code="common.july"/>', '<s:message code="common.august"/>', '<s:message code="common.september"/>', '<s:message code="common.october"/>', '<s:message code="common.november"/>', '<s:message code="common.december"/>' ],
+            weekdays : [ '<s:message code="common.sunday"/>', '<s:message code="common.monday"/>', '<s:message code="common.tuesday"/>', '<s:message code="common.wednesday"/>', '<s:message code="common.thursday"/>', '<s:message code="common.friday"/>', '<s:message code="common.saturday"/>' ],
+            contextButtonTitle : '<s:message code="common.msg.char_type"/>',
+            thousandsSep : ','
+        },
+        xAxis: {
+            dateTimeLabelFormats: {
+                day: '<s:message code="dashboard.display.day" arguments="%b,%d" />'
+            }
+        },
+        yAxis: {
+            gridLineColor: '#333',
+            gridLineWidth : 0.1
+        }
+    });
+
     $(document).ready(function () {
         serviceTypeMap = new HashMap();
         getServiceType(terms);
@@ -509,7 +537,7 @@
             url: 'analysis/freedomView.xcn',
             data: $("#frm").serialize() + "&tabIdx=" + tabIdx,
             success: function (data, total) {
-                if (data.length == 0) {
+                if (data== null) {
                     ui.alertMsg("<s:message code="analysis.freedom.ui.msg3"/>");
                 }
                 chartData = nameDataTrans(data);
@@ -1453,7 +1481,7 @@
                     text: this.title
                 },
                 subtitle: {
-                    text: this.subtitle
+                    text: ""
                 },
                 xAxis: {
                     categories: data.categories
@@ -1461,7 +1489,7 @@
                 yAxis: {
                     min: 0,
                     title: {
-                        text: this.yAxisTtitle
+                        text: ""
                     },
                     labels: {
                         formatter: function () {
@@ -1475,18 +1503,9 @@
                         events: {
                             click: function (event) {
                                 setQuery(event.point.category, this.name, event.point.y, false);
-                                <%-- 			                    	console.log(event.point.category);
-																	console.log(this.name);
-																	console.log(event.point.y); --%>
                             }
                         }
                     }
-                },
-                legend: {
-                    layout: 'vertical',
-                    align: 'right',
-                    verticalAlign: 'middle',
-                    borderWidth: 0
                 },
                 series: data.series
             });
@@ -1529,7 +1548,7 @@
                     text: this.title
                 },
                 subtitle: {
-                    text: this.subtitle
+                    text: ""
                 },
                 xAxis: {
                     categories: data.categories
@@ -1537,32 +1556,22 @@
                 yAxis: {
                     min: 0,
                     title: {
-                        text: this.yAxisTtitle
+                        text: ""
                     },
                     labels: {
                         formatter: function () {
                             return parent.setCountKind(objValue, this.value);
                         }
                     },
-                    stackLabels: {
-                        enabled: true,
-                        style: {
-                            fontWeight: 'bold',
-                            color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
-                        }
-                    }
+                    // stackLabels: {
+                    //     enabled: true,
+                    //     style: {
+                    //         fontWeight: 'bold',
+                    //         color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                    //     }
+                    // }
                 },
-                legend: {
-                    align: 'right',
-                    x: -30,
-                    verticalAlign: 'top',
-                    y: 25,
-                    floating: true,
-                    backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
-                    borderColor: '#CCC',
-                    borderWidth: 1,
-                    shadow: false
-                },
+
                 tooltip: {
                     headerFormat: '<b>{point.x}</b><br/>',
                     pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
@@ -1597,7 +1606,7 @@
                     text: this.title
                 },
                 subtitle: {
-                    text: this.subtitle
+                    text: ""
                 },
                 tooltip: {
                     pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -1641,11 +1650,11 @@
                     text: this.title
                 },
                 subtitle: {
-                    text: this.subtitle
+                    text: ""
                 },
                 yAxis: {
                     title: {
-                        text: this.yAxisTtitle
+                        text: ""
                     }
                 },
                 tooltip: {

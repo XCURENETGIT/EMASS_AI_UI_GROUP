@@ -46,18 +46,18 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 		sq.setRows(1);
 
 		//{result:{type : terms, offset: 0,limit : 100,field : attachname_str,sort:"size desc", facet:{size : "sum(size)"}} }
-		sq.setSort("size",ORDER.desc);
+		sq.setSort("size", ORDER.desc);
 
 		/* main aggregations field */
-		sq.setParam("group",true);
-		sq.setParam("group.field",field);
+		sq.setParam("group", true);
+		sq.setParam("group.field", field);
 		/* sub aggregations field */
-		sq.setParam("facet.field","size");
+		sq.setParam("facet.field", "size");
 		sq.setParam("facet.offset", String.valueOf(searchVO.getOffset()));
 		sq.setParam("facet.limit", String.valueOf(searchVO.getLimit()));
 		sq.setFacetMinCount(1);
-		sq.setParam("facet.sum",true);
-		sq.setParam("facet.sort",true);
+		sq.setParam("facet.sum", true);
+		sq.setParam("facet.sort", true);
 
 		sq.addFilterQuery("-svc:(X* U*)");
 		sq.setQuery(query.toString());
@@ -72,10 +72,10 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 		SolrQueryString query = new SolrQueryString();
 		query.addRange("ctime_yyyymmdd", searchVO.getStartDate().replaceAll("-", ""), searchVO.getEndDate().replaceAll("-", ""), false)
 				.add("subject", searchVO.getTitle(), true, true)
-				.add(new String[] {"sender_str", "sname"}, searchVO.getSendUser())
-				.add(new String[] {"recvs", "recvs_name", "cc", "cname", "bcc"}, searchVO.getReceiveUser())
-				.add(new String[] {"sender_str", "sname", "recvs", "recvs_name", "cc", "cname", "bcc"}, searchVO.getObservePersonnel())
-				.add(new String[] {"sender_str", "sname", "recvs", "recvs_name", "cc", "cname", "bcc"}, searchVO.getKeyPersonnel())
+				.add(new String[]{"sender_str", "sname"}, searchVO.getSendUser())
+				.add(new String[]{"recvs", "recvs_name", "cc", "cname", "bcc"}, searchVO.getReceiveUser())
+				.add(new String[]{"sender_str", "sname", "recvs", "recvs_name", "cc", "cname", "bcc"}, searchVO.getObservePersonnel())
+				.add(new String[]{"sender_str", "sname", "recvs", "recvs_name", "cc", "cname", "bcc"}, searchVO.getKeyPersonnel())
 				.add("kwds", searchVO.getKeyword());
 		switch (searchVO.getUnit()) {
 			case "file":
@@ -83,11 +83,11 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 				query.add("attachname_str", searchVO.getListData());
 				break;
 			case "messenger":
-				query.add(new String[] {"sender_str", "sname", "recvs", "recvs_name", "cc", "cname", "bcc"},searchVO.getListData());
+				query.add(new String[]{"sender_str", "sname", "recvs", "recvs_name", "cc", "cname", "bcc"}, searchVO.getListData());
 				query.add("svc1", "Q");
 				break;
 			case "mailid":
-				query.add(new String[] {"sender_str", "sname", "recvs", "recvs_name", "cc", "cname", "bcc"}, searchVO.getListData());
+				query.add(new String[]{"sender_str", "sname", "recvs", "recvs_name", "cc", "cname", "bcc"}, searchVO.getListData());
 				query.and().beforeParen().add("svc1", "W", false).or().add("svc1", "M", false).or().add("svc12", "EMM", false).afterParen();
 				break;
 		}
@@ -133,7 +133,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 		SolrQueryString query = dataRelationQuery(searchVO);
 		String name = Common.nvl(searchVO.getName());
 		if (name.indexOf(":") > -1) name = "\"" + name + "\"";
-		query.add(new String[] {"sender_str", "recvs", "srcip", "dstip"}, name);
+		query.add(new String[]{"sender_str", "recvs", "srcip", "dstip"}, name);
 
 		SolrQuery sq = new SolrQuery();
 		log.info(query.toString());
@@ -196,7 +196,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 		/* 문서 결과 표시 X */
 		sq.setStart(0);
 		sq.setRows(1);
-		sq.setSort("size",ORDER.desc);
+		sq.setSort("size", ORDER.desc);
 
 		//시간으로 분류
 		switch (searchVO.getUnit()) {
@@ -226,8 +226,8 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 		sq.setParam("group.facet", true);
 		sq.setParam("facet", true);
 		sq.setParam("facet.sum", true);
-		sq.setParam("facet.offset","0");
-		sq.setParam("facet.limit","100");
+		sq.setParam("facet.offset", "0");
+		sq.setParam("facet.limit", "100");
 		sq.setFacetMinCount(1);
 
 
@@ -239,7 +239,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 				sq.setFacetSort("attachcnt");
 				sq.setFields("attachname_str");
 				break;
-				//웹 메일 수
+			//웹 메일 수
 			case "outMail":
 				query.add("svc", "W*", true);
 				sq.setParam("group.field", "sender_str");
@@ -247,7 +247,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 				sq.setFacetSort("size");
 				sq.setFields("sender_str");
 				break;
-				//메일수
+			//메일수
 			case "inMail":
 				query.and().beforeParen().add("svc", "M*", false).or().add("svc", "EMM*", false).afterParen();
 				sq.setParam("group.field", "sender_str");
@@ -284,7 +284,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 		String date = searchVO.getDate();
 
 		sq.setRows(0);
-		sq.setSort("size",ORDER.desc);
+		sq.setSort("size", ORDER.desc);
 
 		switch (searchVO.getUnit()) {
 			case "t":
@@ -469,119 +469,119 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 		sq.setRows(1);
 
 
-		sq.setParam("group",true);
+		sq.setParam("group", true);
 		sq.setParam("group.facet", true);
-		sq.setParam("group.ngroups", true);
-		sq.setParam("group.field",columnList.get(0));
+		sq.setParam("group.field", columnList.get(0));
 
 		sq.setParam("facet", true);
 
-		sq.setParam("facet.list", true);
 
-		if (columnList.size()>1) {
+		if (columnList.size() > 1) {
 			sq.setParam("facet.Group", true);
 			sq.setParam("facetGroup.field", columnList.get(1));
 		}
 
 		sq.setParam("facet.mincount", "0");
 
-//		sq.setParam("facet.sum", true);
-//		sq.setParam("facet.field","size");
-
-
-
-		for (int i = 0; i<groupBy.length; i++){
-			switch (groupBy[i]){
+		for (int i = 0; i < groupBy.length; i++) {
+			switch (groupBy[i]) {
 				case "sum":
-					System.out.println("sum 들어옴");
 					sq.setParam("facet.sum", true);
-					sq.setParam("facet.field","size");
+					sq.setParam("facet.field", "size");
+					break;
 				case "avg":
-					System.out.println("avg 들어옴");
 					sq.setParam("facet.avg", true);
-					sq.setParam("facet.field","size");
-				}
+					sq.setParam("facet.field", "size");
+					break;
+				case "max":
+					sq.setParam("facet.max", true);
+					sq.setParam("facet.field", "size");
+					break;
+				case "min":
+					sq.setParam("facet.min", true);
+					sq.setParam("facet.field", "size");
+					break;
+
 			}
+		}
 
 		sq.setFacetMinCount(1);
-
 		sq.setStart(Common.nvz(0));
 		sq.setRows(Common.nvz(1));
-
-
 		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, freedomSearchVO.getAdminId());
+
 		return new AnalysisFreedomListVO(edc, columnList.size());
 	}
 
-	public String changeQuery (String freddDomQuery) {
+	public String changeQuery(String freddDomQuery) {
 		String result = "";
 
 		//괄호가 있는 경우
-		if(freddDomQuery.contains("(")) {
+		if (freddDomQuery.contains("(")) {
 			List<Integer> bracketSttInd = new ArrayList<>();
 			List<Integer> bracketEndInd = new ArrayList<>();
 
 			//괄호 index 체크
-			for(int i=0; i<freddDomQuery.length();i++) {
+			for (int i = 0; i < freddDomQuery.length(); i++) {
 				char query = freddDomQuery.charAt(i);
-				if(Common.isEquals('(', query)) bracketSttInd.add(i);
-				else if(Common.isEquals(')', query)) bracketEndInd.add(i);
+				if (Common.isEquals('(', query)) bracketSttInd.add(i);
+				else if (Common.isEquals(')', query)) bracketEndInd.add(i);
 			}
 
-			if(freddDomQuery.contains("-") && !freddDomQuery.contains("&&")) {
+			if (freddDomQuery.contains("-") && !freddDomQuery.contains("&&")) {
 				result = splitQuery(freddDomQuery.replaceAll("[(]", "").replaceAll("[)]", ""));
-			}else if(bracketSttInd.size()==1) {
+			} else if (bracketSttInd.size() == 1) {
 				result = freddDomQuery;
 
-				String query = freddDomQuery.substring(bracketSttInd.get(0)+1, bracketEndInd.get(0)); // 괄호안의 내용
-				if(query.contains("-") && query.contains("||")) {
-					if(bracketSttInd.get(0)==0) {
-						result = splitQuery(query)+freddDomQuery.substring(bracketEndInd.get(0) +1);
-					}else {
-						result = freddDomQuery.substring(0,bracketSttInd.get(0)) +splitQuery(query);
+				String query = freddDomQuery.substring(bracketSttInd.get(0) + 1, bracketEndInd.get(0)); // 괄호안의 내용
+				if (query.contains("-") && query.contains("||")) {
+					if (bracketSttInd.get(0) == 0) {
+						result = splitQuery(query) + freddDomQuery.substring(bracketEndInd.get(0) + 1);
+					} else {
+						result = freddDomQuery.substring(0, bracketSttInd.get(0)) + splitQuery(query);
 					}
 				}
 
-			}else if(bracketSttInd.size()>1) {
-				for(int i=0; i<bracketSttInd.size();i++) {
-					String query = freddDomQuery.substring(bracketSttInd.get(i)+1,bracketEndInd.get(i));
+			} else if (bracketSttInd.size() > 1) {
+				for (int i = 0; i < bracketSttInd.size(); i++) {
+					String query = freddDomQuery.substring(bracketSttInd.get(i) + 1, bracketEndInd.get(i));
 					String seprator = "";
-					if(i!= bracketSttInd.size()-1) {
-						seprator = freddDomQuery.substring(bracketEndInd.get(i)+1,bracketSttInd.get(i+1));
+					if (i != bracketSttInd.size() - 1) {
+						seprator = freddDomQuery.substring(bracketEndInd.get(i) + 1, bracketSttInd.get(i + 1));
 					}
 
 					query = splitQuery(query);
-					if(!query.contains("(")) {
-						result += "("+splitQuery(query)+")"+seprator;
-					}else {
-						result += splitQuery(query)+seprator;
+					if (!query.contains("(")) {
+						result += "(" + splitQuery(query) + ")" + seprator;
+					} else {
+						result += splitQuery(query) + seprator;
 					}
 				}
 			}
-		}else { //괄호가 없는 경우
+		} else { //괄호가 없는 경우
 			result = splitQuery(freddDomQuery);
 		}
 
 		//IN절인경우 원복
-		if(result.contains("<")) result = result.replaceAll("<", "(").replaceAll(">", ")");
+		if (result.contains("<")) result = result.replaceAll("<", "(").replaceAll(">", ")");
 		return result;
 	}
 
 	private String splitQuery(String freddDomQuery) {
 		String result = "";
 		String[] querys = freddDomQuery.split("&&");
-		for(int i=0; i < querys.length; i++) {
+		for (int i = 0; i < querys.length; i++) {
 			String query = querys[i];
-			if(query.contains("-") && query.contains("||")) {
+			if (query.contains("-") && query.contains("||")) {
 				List<String> q = Arrays.asList(query.split("\\|\\|"));
 				result += "-(";
 				List<String> tmpq = new ArrayList<>();
 
-				for(int j=0; j < q.size(); j++) {
+				for (int j = 0; j < q.size(); j++) {
 					String fv = q.get(j).trim();
-					if(fv.startsWith("-")) {
+					if (fv.startsWith("-")) {
 						tmpq.add(fv.replace('-', ' '));
-					} else if(fv.startsWith("+")) {
+					} else if (fv.startsWith("+")) {
 						tmpq.add(fv.replace('+', '-'));
 					} else {
 						tmpq.add("-" + fv);
@@ -589,10 +589,10 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 				}
 
 				result += String.join(" && ", tmpq) + ")";
-			}else {
+			} else {
 //				result += String.join(" && ", query);
-				if(querys.length-1==0 || i == querys.length-1) result += query;
-				else if(i!= querys.length-1) result += query + " && ";
+				if (querys.length - 1 == 0 || i == querys.length - 1) result += query;
+				else if (i != querys.length - 1) result += query + " && ";
 			}
 		}
 		return result;
@@ -771,7 +771,6 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 		param.put("end", end);
 		return selectOne("com.xcurenet.sqlmap.mappers.mysql.analysis.plusHour", param);
 	}
-
 
 
 }
