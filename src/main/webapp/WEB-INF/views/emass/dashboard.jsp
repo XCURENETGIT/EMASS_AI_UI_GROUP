@@ -306,9 +306,8 @@
                 }
             }
             if(dashCondition != undefined){
-                console.log(dashCondition);
                 $('#conditionParam').val(makePeriod(dashCondition));
-                // $('#getMessageInfo').submit();
+                $('#getMessageInfo').submit();
             }
         });
 
@@ -1120,7 +1119,6 @@
         });
     }
     function setChart(obj, data, type){
-        console.log("obj: "+data);
         if($(obj).highcharts() != undefined){
             $(obj).html('');
         }
