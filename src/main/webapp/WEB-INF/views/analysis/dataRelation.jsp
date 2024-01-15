@@ -77,7 +77,7 @@
 .chartAread1 {display: grid; grid-template-columns: 700px 1fr; margin-bottom:24px; column-gap: 12px;}
 .chartAread1 > div {position: relative;}
 
-.vis-item-content > a {color:black; text-decoration: none; padding:0;margin:0;}
+.vis-item-content > a {color:black; text-decoration: none; padding:0;margin:0;font-size:12px;}
 .vis-item-content > a:active {}
 .vis-item-content > a:hover {text-decoration:underline;color:black; }
 
@@ -566,6 +566,7 @@ function openCodeWindow(codetype,oldCode, oldConm,id) {
 		function getDetailData(data) {
 
 			listData = data;
+
 			$("#relation_div").show();
 			ui.on("relation_div");
 			ui.get({
@@ -629,7 +630,7 @@ function openCodeWindow(codetype,oldCode, oldConm,id) {
 				fileSize : fileSize,
 				interGroup : interGroup,
 				interGroupName : interGroupName,
-				name : selectName,
+				ip : selectName,
 				offset : tabGrid.data.length,
 				limit : tabGrid.pageSize,
 				success : function(data, total) {

@@ -3,7 +3,6 @@ package com.xcurenet.emass.analysis.service.impl;
 import com.xcurenet.common.dao.XcnAbstractDAO;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.SolrQueryString;
-import com.xcurenet.common.util.config.Config;
 import com.xcurenet.emass.analysis.service.*;
 import com.xcurenet.emass.message.component.SolrCreateQuery;
 import com.xcurenet.emass.message.service.SolrEdcMessageVO;
@@ -131,7 +130,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 		log.info(searchVO.toString());
 
 		SolrQueryString query = dataRelationQuery(searchVO);
-		String name = Common.nvl(searchVO.getName());
+		String name = Common.nvl(searchVO.getIp());
 		if (name.indexOf(":") > -1) name = "\"" + name + "\"";
 		query.add(new String[]{"sender_str", "recvs", "srcip", "dstip"}, name);
 

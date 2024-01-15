@@ -553,15 +553,15 @@ public class Config {
 		ipRange = ipRangeService.getIpRangeAllList();
 	}
 
-	public static String analysisFlag(final String field, final String code) {
-		if (ElasticSearchCommon.USER_USERID.equals(field)) return getUserName(code);
-		else if (ElasticSearchCommon.USER_COCD.equals(field)) return getCompName(code);
-		else if (ElasticSearchCommon.USER_BUSICD.equals(field)) return getBusiName(code);
-		else if (ElasticSearchCommon.USER_DEPTCD.equals(field)) return getDeptName(code);
-		else if (ElasticSearchCommon.USER_JIKGUBCD.equals(field)) return getJikgubName(code);
-		else if (ElasticSearchCommon.SERVICE_SVC.equals(field)) return getServiceName(code);
-		else return code;
-	}
+//	public static String analysisFlag(final String field, final String code) {
+//		if (ElasticSearchCommon.USER_USERID.equals(field)) return getUserName(code);
+//		else if (ElasticSearchCommon.USER_COCD.equals(field)) return getCompName(code);
+//		else if (ElasticSearchCommon.USER_BUSICD.equals(field)) return getBusiName(code);
+//		else if (ElasticSearchCommon.USER_DEPTCD.equals(field)) return getDeptName(code);
+//		else if (ElasticSearchCommon.USER_JIKGUBCD.equals(field)) return getJikgubName(code);
+//		else if (ElasticSearchCommon.SERVICE_SVC.equals(field)) return getServiceName(code);
+//		else return code;
+//	}
 
 	public static String getCompName(final String code) {
 		String result = compInfo.stream().filter(m -> Common.isEquals(code, m.getCode())).map(m -> m.getName()).collect(Collectors.joining());

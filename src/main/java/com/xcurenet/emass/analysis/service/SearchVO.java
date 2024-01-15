@@ -23,4 +23,5 @@ public @Data class SearchVO {
 	private Integer fileSize;
 	private Integer offset;
 	private Integer limit;
+	private String ip;
 }

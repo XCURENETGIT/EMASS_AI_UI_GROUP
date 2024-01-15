@@ -21,7 +21,6 @@ var yScale = null;
         processmap_config = eval("("+jData.config+")");
 
         var dataSize = Object.keys(processmap_graph.data);
-
         drawGraph(id);
         resize(dataSize);
         if(Object.keys(processmap_graph.data) > 100) {
@@ -56,6 +55,7 @@ function drawGraph(id) {
     processmap_graph.height = $('#'+id).height() - processmap_graph.margin.top  - processmap_graph.margin.bottom;
     $('#'+id).css('display', display);
 
+    console.log( processmap_graph.data);
     for (var name in processmap_graph.data) {
         var obj = processmap_graph.data[name];
         obj.positionConstraints = [];
@@ -624,12 +624,11 @@ function selectObject(obj, el) {
         el  : el
     };
 
-
     highlightObject(obj);
 
     node.classed('selected', true);
-    
-    getSelectList(obj.name);
+
+    getSelectList(obj.ip);
 }
 
 function deselectObject(doResize) {
