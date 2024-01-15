@@ -84,9 +84,9 @@
 
 		.userOutside{
 			display: inline-block;
-			padding: 2px 8px 2px 8px;
-			padding-left: 28px;
-			background: #FC5656 url(../img/flag_phone_01.png) 8px center no-repeat;
+			padding: 2px 6px 2px 0px;
+			padding-left: 20px;
+			background: #FC5656 url(../img/flag_img_01.png) 5px center no-repeat;
 			background-image: 100%;
 			background-image: 100%;
 			color: #fff;
@@ -107,7 +107,7 @@
 		}
 		.fold_on {
 			overflow:hidden;
-			height: 15px;
+			height: 26px;
 		}
 		.fold_clickTd{
 			overflow:hidden;

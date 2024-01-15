@@ -540,9 +540,9 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .subTable tr:nth-child(even) {background-color: #f8f8f8; }
 
 .subTable02 {width:100%;font-size: 13px; background-color: #fff !important; }
-.subTable02 thead.head th{text-align: center !important;}
+.subTable02 thead.head th{text-align: left !important;}
 .subTable02 th {vertical-align: middle; border-left:1px solid #ddd; border-top:1px solid #111;background-color:#EEEFF2;font-weight:600;padding:4px; text-align: center; }
-.subTable02 td {border-left:1px solid #ddd; border-top:1px solid #ddd; text-align: center;padding:4px; color:#555;}
+.subTable02 td {border-left:1px solid #ddd; border-top:1px solid #ddd; text-align: left; padding:4px; color:#555;}
 .subTable02 td.topline {border-top:1px solid #111 !important;}
 .subTable02 th.topline {border-top:1px solid #ddd !important;}
 .subTable02 th:first-child, subTable02 td:first-child {border-left: none; vertical-align: middle}
