@@ -3,10 +3,11 @@
 <link rel="stylesheet" href="<c:url value="/css/dashboard.css"/>"/>
 <style>
 	.filename{
-		width:90px;
+		display: block;
 		overflow: hidden;
 		white-space: nowrap;
 		text-overflow: ellipsis;
+		max-width: 8em;
 	}
 
 	.files :hover{
@@ -511,12 +512,12 @@ var dashCondition = {
                 str += "<th>" + formattedDate + "</th>";
             }
             str += "</tr><tr>";
-            str += "<td> 로깅데이터 건수 </td>";
+            str += "<td><s:message code="dashboard.loggingData.count2"/></td>";
             for (var i = 0; i < data.length; i++) {
                 str += "<td>" + data[i].logging.comma() + "</td>";
             }
             str += "</tr><tr>"
-            str += "<td> 일 사용량(첨부기준)</td>";
+            str += "<td><s:message code="dashboard.loggingData.attach.size"/></td>";
             for (var i = 0; i < data.length; i++) {
                 str += "<td>" + data[i].attachStr + "</td>";
             }
@@ -1240,29 +1241,29 @@ var dashCondition = {
 				<%--				*****	여기에 select 넣기--%>
 				<div class="mainlist">
 					<div class="blueBg bornone click" data-value="reserved">
-						<span class="tit01">예약어 합계</span>
-						<p id="TodayKeywordTotalCnt">-<span>건</span>
+						<span class="tit01"><s:message code="dashboard.keywordSum"/></span>
+						<p id="TodayKeywordTotalCnt">-<span><s:message code="common.msg.cnt"/></span>
 						</p>
 					</div>
 					<div class="greenBg bornone click" data-value="groupWare">
-						<span class="tit02">그룹 웨어 데이터</span>
-						<p id="todayGroupWareSum">-<span>건</span>
+						<span class="tit02"><s:message code="common.svc.groupware"/> <s:message code="analysis.freedom.ui.data"/> </span>
+						<p id="todayGroupWareSum">-<span><s:message code="common.msg.cnt"/></span>
 					</div>
 					<div class="yellowBg bornone click" data-value="work">
-						<span class="tit03">비업무시간 데이터</span>
-						<p id="todayNotWork">-<span>건</span>
+						<span class="tit03"><s:message code="condition.notwork"/> <s:message code="analysis.freedom.ui.data"/></span>
+						<p id="todayNotWork">-<span><s:message code="common.msg.cnt"/></span>
 					</div>
 					<div class="redBg bornone click" data-value="danger">
-						<span class="tit04">위험행위 메시지</span>
-						<p id="getTodayRiskTotalCnt">-<span>건</span>
+						<span class="tit04"><s:message code="dashboard.msg.regexp_count.danger"/> <s:message code="analysis.freedom.ui.data"/></span>
+						<p id="getTodayRiskTotalCnt">-<span><s:message code="common.msg.cnt"/></span>
 					</div>
 					<div class="grayBg bornone click" data-value="file">
-						<span class="tit05">1MB 이상 파일전송</span>
-						<p id="TodayfileSendTotalCnt">-<span>건</span>
+						<span class="tit05"><s:message code="dashboard.msg.over_msg" arguments="1"/></span>
+						<p id="TodayfileSendTotalCnt">-<span><s:message code="common.msg.cnt"/></span>
 					</div>
 					<div class="blueBg bornone click" data-value="person">
-						<span class="tit06">개인정보 메시지</span>
-						<p id="TodayPatternPrivacyTotalCnt">-<span>건</span>
+						<span class="tit06"><s:message code="dashboard.msg.regexp_count"/></span>
+						<p id="TodayPatternPrivacyTotalCnt">-<span><s:message code="common.msg.cnt"/></span>
 					</div>
 				</div>
 			</div>
@@ -1277,31 +1278,31 @@ var dashCondition = {
 
 		<div class="m_chartArea">
 			<div>
-				<h3>금일 패턴 수집 건수</h3>
+				<h3><s:message code="dashboard.todaayPatternCount"/></h3>
 				<div class="mainlist">
 					<div class="click" data-value="passport">
-						<span class="tit07" >여권번호 <span class="red_dot"></span> </span>
-						<p class="blue" id="TodayPasswordTotalCnt">-<span class="text">건</span></p>
+						<span class="tit07" ><s:message code="bodyview.pn"/> <span class="red_dot"></span> </span>
+						<p class="blue" id="TodayPasswordTotalCnt">-<span class="text"><s:message code="common.msg.cnt"/></span></p>
 					</div>
 					<div class="click" data-value="drive">
-						<span class="tit08">운전면허번호</span>
-						<p class="blue" id="TodayDriveTotalCnt">-<span class="text">건</span></p>
+						<span class="tit08"><s:message code="bodyview.dn"/></span>
+						<p class="blue" id="TodayDriveTotalCnt">-<span class="text"><s:message code="common.msg.cnt"/></span></p>
 					</div>
 					<div class="click" data-value="foreigner">
-						<span class="tit09">외국인등록번호</span>
-						<p class="blue" id="TodayForeignerTotalCnt">-<span class="text">건</span></p>
+						<span class="tit09"><s:message code="bodyview.fn"/></span>
+						<p class="blue" id="TodayForeignerTotalCnt">-<span class="text"><s:message code="common.msg.cnt"/></span></p>
 					</div>
 					<div class="click" data-value="social">
-						<span class="tit10">주민번호</span>
-						<p class="blue" id="TodaySecurityTotalCnt">-<span class="text">건</span></p>
+						<span class="tit10"><s:message code="bodyview.sn"/></span>
+						<p class="blue" id="TodaySecurityTotalCnt">-<span class="text"><s:message code="common.msg.cnt"/></span></p>
 					</div>
 					<div class="click" data-value="card">
-						<span class="tit11">카드번호</span>
-						<p class="blue" id="TodayCardNumberTotalCnt">-<span class="text">건</span></p>
+						<span class="tit11"><s:message code="bodyview.cn"/></span>
+						<p class="blue" id="TodayCardNumberTotalCnt">-<span class="text"><s:message code="common.msg.cnt"/></span></p>
 					</div>
 					<div class="click" data-value="extension">
-						<span class="tit12">확장자 변조 파일 <span class="red_dot"></span> </span>
-						<p class="blue" id="TodayExtensionModulationTotalCnt">-<span class="text">건</span></p>
+						<span class="tit12"><s:message code="bodyview.ec"/><span class="red_dot"></span> </span>
+						<p class="blue" id="TodayExtensionModulationTotalCnt">-<span class="text"><s:message code="common.msg.cnt"/></span></p>
 					</div>
 				</div>
 			</div>
@@ -1310,7 +1311,7 @@ var dashCondition = {
 		<%--			금일 서비스별 데이터 수집 비율 시작--%>
 		<div class="m_grapha">
 			<div class="graphaBox click" data-value="service">
-				<h3>금일 서비스별 데이터 수집 비율</h3>
+				<h3><s:message code="dashboard.msg.serviceRate"/></h3>
 				<div class="bordd" id="svcDataChart" style="display: flex;justify-content: center; align-items: center">
 				</div>
 			</div>
@@ -1318,7 +1319,7 @@ var dashCondition = {
 
 			<%--			금일 첨부파일 수집 현황 시작!!--%>
 			<div class="graphaBox">
-				<h3>금일 첨부파일 유형별 수집 현황</h3>
+				<h3><s:message code="dashboard.msg.todayFileType"/></h3>
 				<div class="bordd">
 					<div class="main_tab">
 						<button class="tablink excel" onclick="openCity('xlsx', this, '#268770')" id="defaultOpen">EXEL</button>
@@ -1357,9 +1358,9 @@ var dashCondition = {
 		<div >
 			<%--			금일 트래픽 추이, 종류 시작--%>
 			<div class="text_tab">
-				<span class="tablinks" onclick="openCity2(event, 'con01')" id="defaultOpen2">금일 트래픽</span>
+				<span class="tablinks" onclick="openCity2(event, 'con01')" id="defaultOpen2"><s:message code="dashboard.msg.todayTraffic"/></span>
 				<span class="bar"></span>
-				<span class="tablinks" onclick="openCity2(event, 'con02')">최근 7일 트래픽 추이</span>
+				<span class="tablinks" onclick="openCity2(event, 'con02')"><s:message code="dashboard.msg.weekTraffic"/></span>
 			</div>
 
 			<div id="con01" class="text_tabcontent">
@@ -1374,9 +1375,9 @@ var dashCondition = {
 		<%--		일별 용량, 로컬 데이터 정보 시작--%>
 		<div>
 			<div class="text_tab mat32">
-				<span class="tablinks2" onclick="openCity3(event, 'con03')" id="defaultOpen3">일별 로깅 데이터 정보</span>
+				<span class="tablinks2" onclick="openCity3(event, 'con03')" id="defaultOpen3"><s:message code="dashboard.loggingData.count"/></span>
 				<span class="bar"></span>
-				<span class="tablinks2" onclick="openCity3(event, 'con04')">일별 전체 용량 정보</span>
+				<span class="tablinks2" onclick="openCity3(event, 'con04')"><s:message code="dashboard.Data.size"/></span>
 			</div>
 			<div id="con03" class="text_tabcontent2">
 				<div class="h200" id="loggingChart" ></div>
@@ -1392,14 +1393,14 @@ var dashCondition = {
 		<%--		대용량 파일 TOP 10 시작--%>
 		<div class="m_grapha mat32">
 			<div>
-				<h3>금일 첨부파일 용량 TOP10</h3>
+				<h3><s:message code="dashboard.fileSizeTop"/></h3>
 				<div class="bigtop10" id="bigFileTop" >
 				</div>
 			</div>
 			<%--		대용량 파일 TOP 10 끝--%>
 			<%--			파일 다 사용자 TOP 10--%>
 			<div>
-				<h3>금일 첨부파일 전송 TOP10</h3>
+				<h3><s:message code="dashboard.fileSendTop"/></h3>
 				<div class="filetop10" id="FilePeople" >
 				</div>
 			</div>

@@ -352,13 +352,13 @@
 		                            style="width: 250px;height:26px;" placeholder="<s:message code="analysis.freedom.ui.exam26"/>"
 		                            data-toggle="tooltip" data-placement="top" title="<s:message code="analysis.freedom.ui.exam26"/>"/></span>
 		<span id="inputDate" style="display:none;">
-				<div id="sdatepicker"><input type="date" id="startDate" name="startDate" style="width: 110px;">
-				<span class="hyphen">~</span></div>
-			<div id="edatepicker"><input type="date" id="endDate" name="endDate" style="width: 110px;"></div>
+				<span id="sdatepicker"><input type="date" id="startDate" name="startDate" style="width: 110px;">
+				<span class="hyphen">~</span></span>
+			<span id="edatepicker"><input type="date" id="endDate" name="endDate" style="width: 110px;"></span>
 
 			</span>
 		<span id="inputServiceType" style="display:none;">
-				<select class="form-control input-sm" id="serviceCd" name="serviceCd"
+				<select class="" id="serviceCd" name="serviceCd"
 				        style="width:250px; height:26px;padding-top:0px;padding-bottom:0px;" onchange="javascirpt:SearchTrue();">
 				</select>
 			</span>

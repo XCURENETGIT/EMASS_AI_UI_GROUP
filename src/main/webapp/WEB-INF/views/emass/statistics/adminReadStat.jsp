@@ -529,6 +529,7 @@
                     else return '';
                 });
                 for (var i = 0; i < data.pivotHeader.length; i++) {
+                    console
                     var Header = data.pivotHeader[i];
                     var HeaderNm = "";
                     if (xAxis == "_yyyymmdd") HeaderNm = Header.substr(0, 4) + "-" + Header.substr(4, 2) + "-" + Header.substr(6, 2);
@@ -543,6 +544,7 @@
                 for (var i = 0; i < data.pivotData.length; i++) {
                     var rowKey = data.pivotData[i].rowKey;
                     var dataNm = "";
+
                     if (xAxis == "_yyyymmdd") dataNm = nvl(rowKey, " ").substr(0, 4) + "-" + nvl(rowKey, " ").substr(4, 2) + "-" + nvl(rowKey, " ").substr(6, 2);
                     else if (xAxis == "_yyyymm") dataNm = nvl(rowKey, " ").substr(0, 4) + "-" + nvl(rowKey, " ").substr(4, 2);
                     else if (xAxis == "_hh") dataNm = nvl(rowKey, " ") + '<s:message code="common.msg.hour"/>';

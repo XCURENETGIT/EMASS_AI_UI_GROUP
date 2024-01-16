@@ -303,7 +303,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 				BucketSortPipelineAggregationBuilder paging = PipelineAggregatorBuilders.bucketSort("paging", List.of(new FieldSortBuilder(key).order(order))).from(offset).size(limit);
 				termsAggregation.subAggregation(paging);
 			}
-			else if (sq.get("facet.min") != null && Common.isEquals("true", sq.get("facet.max"))) {
+			else if (sq.get("facet.min") != null && Common.isEquals("true", sq.get("facet.min"))) {
 				String key = sq.get("facet.field");
 				int offset = Common.nvz(sq.get("facet.offset"), 0);
 				int limit = Common.nvz(sq.get("facet.limit"), 100);

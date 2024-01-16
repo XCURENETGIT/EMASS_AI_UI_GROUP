@@ -573,7 +573,7 @@
 <div class="modal" role="dialog" aria-hidden="true" id="deleteDashBatchPop" aria-labelledby="bootstrap_confirm_title" tabindex="-1">
 	<div class="modal-content">
 		<div class="modalHead">
-			<h2>대시보드 삭제</h2>
+			<h2><s:message code="DASHBOARD"/><s:message code="common.msg.delete"/></h2>
 			<span class="close" data-dismiss="modal">&times;</span>
 		</div>
 		<div class="modalbody">
@@ -602,10 +602,10 @@
 			</div>
 			<div class="modalCon">
 				<div class="modalTop">
-					<h3>추가/수정</h3>
+					<h3><s:message code="dashboardSetup.addModify"/></h3>
 					<p>
 						<span class="red_dot veralign_middle"></span>
-						필수 입력 사항입니다.
+						<s:message code="common.required.msg"/>
 					</p>
 				</div>
 				<div class="modalbody">
@@ -779,7 +779,7 @@
 							<br/>
 							<h3><s:message code="condition.filter_setting"/></h3>
 							<div class="form-inline not-dashed text-right" style="margin-top:-20px;">
-								<button type="button" class="form_btn01 mab12" accesskey="S" id="dashConditionBtn">조건 설정</button>
+								<button type="button" class="form_btn01 mab12" accesskey="S" id="dashConditionBtn"><s:message code="condition.filter_setting"/></button>
 							</div>
 							<div>
 								<textarea class="form-control" style="display:none" name="dashCondition" id="alarmVal"></textarea>
@@ -817,7 +817,7 @@
 			       style="width: 200px;">
 		</div>
 
-		<button class="form_btn01" type="button" accesskey="K" id="searchStrDashboardBtn">조회</button>
+		<button class="form_btn01" type="button" accesskey="K" id="searchStrDashboardBtn"><s:message code="common.msg.search"/></button>
 		<button type="button" class="btn01" accesskey="A" id="dashboardInsertBtn"><img src="<c:url value="/img/subBtn_plus.png"/>"
 		                                                                               alt="추가"><s:message
 				code="common.msg.add"/></button>
@@ -834,7 +834,7 @@
 	<div class="contentSub">
 		<div class="subtab">
 			<button class="active">
-				대시보드 관리 목록
+				<s:message code="DASHBOARD.DASHBOARD_SETUP"/> <s:message code="selectCodeAll.list"/>
 				<span id="dashboardSetupCount"></span>
 			</button>
 		</div>

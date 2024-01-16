@@ -10,6 +10,9 @@ import net.sf.json.JSONObject;
 import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
+import org.elasticsearch.search.aggregations.metrics.ParsedAvg;
+import org.elasticsearch.search.aggregations.metrics.ParsedMax;
+import org.elasticsearch.search.aggregations.metrics.ParsedMin;
 import org.elasticsearch.search.aggregations.metrics.ParsedSum;
 import org.springframework.data.elasticsearch.core.ElasticsearchAggregations;
 
@@ -77,9 +80,40 @@ public class XcnFacetsVO {
 			Aggregations aggs = bucket.getAggregations();
 			List<Aggregation> aggsList = aggs.asList();
 			for (Aggregation subaggs : aggsList) {
-				jArray.add(parsedSum(subaggs, bucket.getKeyAsString(), bucket.getDocCount()));
+				if (subaggs instanceof ParsedSum) jArray.add(parsedSum(subaggs, bucket.getKeyAsString(), bucket.getDocCount()));
+				if (subaggs instanceof ParsedMax) jArray.add(parsedMax(subaggs, bucket.getKeyAsString(), bucket.getDocCount()));
+				if (subaggs instanceof ParsedMin) jArray.add(parsedMin(subaggs, bucket.getKeyAsString(), bucket.getDocCount()));
+				if (subaggs instanceof ParsedAvg) jArray.add(parsedAvg(subaggs, bucket.getKeyAsString(), bucket.getDocCount()));
 			}
 		}
+	}
+	private JSONObject parsedAvg(Aggregation aggs, String headerKey, long docCount) {
+		ParsedAvg bucketArgments = (ParsedAvg) aggs;
+		JSONObject json = new JSONObject();
+		json.put("val",headerKey);
+		json.put("avg", (int) docCount);
+		json.put("key",null);
+		json.put("size",((long) bucketArgments.getValue()));
+		return json;
+	}
+	private JSONObject parsedMin(Aggregation aggs, String headerKey, long docCount) {
+		ParsedMin bucketArgments = (ParsedMin) aggs;
+		JSONObject json = new JSONObject();
+		json.put("val",headerKey);
+		json.put("min",(int) docCount);
+		json.put("key",null);
+		json.put("size",((long) bucketArgments.getValue()));
+		return json;
+	}
+
+	private JSONObject parsedMax(Aggregation aggs, String headerKey, long docCount) {
+		ParsedMax bucketArgments = (ParsedMax) aggs;
+		JSONObject json = new JSONObject();
+		json.put("val",headerKey);
+		json.put("max",(int) docCount);
+		json.put("key",null);
+		json.put("size",((long) bucketArgments.getValue()));
+		return json;
 	}
 
 	public JSONObject parsedSum(Aggregation aggs,String headerKey,long docCount){
@@ -87,10 +121,12 @@ public class XcnFacetsVO {
 		JSONObject json = new JSONObject();
 		json.put("val",headerKey);
 		json.put("count",(int) docCount);
+		json.put("sum",(int) docCount);
 		json.put("key",null);
 		json.put("size",((long) bucketArgments.getValue()));
 		return json;
 	}
+
 
 	public String getMainKey(ElasticsearchAggregations elasticsearchAggregations){
 		if(elasticsearchAggregations == null) return "";
