@@ -35,7 +35,7 @@ public class PdfController {
 	private AuditService auditService;
 
 	private static final String ENTER = "┌";
-	
+
 	@RequestMapping(value = "/utils/pdfWriter.do")
 	@Description("PDF Writer 호출")
 	@ResponseBody
@@ -59,8 +59,8 @@ public class PdfController {
 				auditVo.setMenuId(menuId);
 				auditVo.setOperation(Operation.DOWNLOAD.getOperation());
 				StringBuffer info = new StringBuffer();
-				info.append("["+Prop.propFormat("common.msg.export")+"]").append(ENTER);
-				info.append(Prop.propFormat("selectCodeAll.list")+" (pdf)");
+				info.append("[" + Prop.propFormat("common.msg.export") + "]").append(ENTER);
+				info.append(Prop.propFormat("selectCodeAll.list") + " (pdf)");
 
 				auditVo.setInformation(info.toString());
 				auditService.insertAudit(request, auditVo);
@@ -107,4 +107,5 @@ public class PdfController {
 			if (file != null && file.exists()) file.delete();
 		}
 	}
+
 }

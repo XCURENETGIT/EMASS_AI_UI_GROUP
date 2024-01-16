@@ -308,7 +308,6 @@
                        /* alert("인증코드 발송");*/
                     },
                     error: function (request,status,error,data) {
-                        alert("R: "+request+"S: "+status+" E: "+error+" D: "+data);
                         if (error=='MAILNOCHECK') {
                             alert("메일서버가 비활성화 상태 입니다. 관리자에게 문의하시길 바랍니다");
                         } else {
@@ -322,8 +321,13 @@
         }
 
         function confirmNumber(){
+
             var userIdInput = $('#userIdInput').val().ltrim().rtrim();
-            var number1 = $("#number").val().ltrim().rtrim();;
+            var number1 = $("#number_confirm").val().ltrim().rtrim();
+            if (!number1.trim()) {
+                alert("입력 후 확인을 눌러주세요.");
+                return;
+            }
 
             ui.get({
                 url: 'updateStatus.xcn',
@@ -331,10 +335,14 @@
                 number1 :number1,
                 success:function (data,message){
                     $("#unuseAdminPop").modal('hide');
+                    $("#unusePop").modal('hide');
                     $('#unusetime').css("display", "none");
                     $('#number').val('');
                     alert("잠금이 해제되었습니다. 다시 로그인하세요");
-
+                    $('#confirmBtn').attr('class', 'form_btn01_02');
+                    $('#confirmBtn').attr('onclick', 'sendMail()');
+                    $('#number_confirm').html('');
+                    $('#confirmBtn').text('인증하기');
                 },
                 error: function (data,message){
                     alert("코드 입력이 잘못되었습니다");
@@ -377,6 +385,7 @@
                         // 버튼 속성 재설정
                         $('#confirmBtn').attr('class', 'form_btn01_02');
                         $('#confirmBtn').attr('onclick', 'sendMail()');
+                        $('#number_confirm').html('');
                         $('#confirmBtn').text('인증하기');
                     }
                 });
@@ -420,7 +429,7 @@
 			<div class="modalbody">
 				<h4 class="blue02" style="font-weight: 600;"> 이메일 인증</h4>
 
-				<div class="row bortop_dd pt8">
+				<div class="row pt8">
 					<input type="text" name="number" id="number_confirm" style="width:250px; margin-top: -10px; position: relative;"
 					       placeholder="인증코드 입력">
 					<button type="button" class="form_btn01_02" name="confirmBtn" id="confirmBtn" onclick="sendMail()">메일 보내기</button>

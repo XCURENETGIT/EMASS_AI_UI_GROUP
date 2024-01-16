@@ -767,12 +767,15 @@
 			menuId: menu_id,
 			success: function (data, total) {
 				try {
+                    console.log("Try 블록 진입");
 					ExcelDown.location.href = '<c:url value="/utils/xlsxDown.do"/>?path=' + encodeURI(data);
 				} catch (e) {
+                    console.error("Catch 블록에서 오류 발생:", e);
 					ExcelDown.src = '<c:url value="/utils/xlsxDown.do"/>?path=' + encodeURI(data);
 				}
 			},
 			error: function (status, message) {
+                 console.error("Error 블록에서 오류 발생:", message);
 				ui.alertMsg(message);
 			},
 			complete: function () {

@@ -173,8 +173,7 @@ public class LoginController {
 
 		session.setAttribute(Common.SESSION_CREDENTIAL, admin);
 
-		System.out.println(number1.equals(Common.nvl(session.getAttribute("number"))));
-		if (number1.equals(Common.nvl(session.getAttribute("number")))) {
+		if (number1 != null&&number1.equals(Common.nvl(session.getAttribute("number")))) {
 			adminService.updateAdminStatusOK(login.getUserId()); //인증에 성공한 경우
 			//return setLoginEnv(request, session, admin, audit);
 			return new XcnResponseVO(XcnRspCode.OK,"SUCCESS").setMessage(Prop.propFormat("인증에 성공했습니다."));

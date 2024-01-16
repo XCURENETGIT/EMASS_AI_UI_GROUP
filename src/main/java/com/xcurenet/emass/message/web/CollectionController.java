@@ -105,10 +105,28 @@ public class CollectionController {
 		JSONObject param = Common.getParam(request);
 		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
 		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), Common.getAdminId(session));
+		String name = Common.nvl(request.getParameter("userStr"));
+
+		StringBuilder query = new StringBuilder();
 
 		if (Common.isEquals(param.get("readYn"), "N")) {
-			sq.setQuery(sq.getQuery() + " -checked.readId:" + Common.getAdminId(session));
+			query.append(" -checked.readId:").append(Common.getAdminId(session));
 		}
+			if (!name.isEmpty()) {
+				String[] nameArray = name.split(",");
+				query.append(" +userid:((");
+
+				for (int i = 0; i < nameArray.length; i++) {
+					if (i > 0) {
+						query.append(") (");
+					}
+					query.append(nameArray[i]);
+				}
+
+				query.append("))");
+			}
+
+		sq.setQuery(sq.getQuery()+query);
 
 		sq.setParam("group", true);
 		sq.setParam("group.facet", true);
@@ -145,10 +163,28 @@ public class CollectionController {
 		JSONObject param = Common.getParam(request);
 		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
 		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), Common.getAdminId(session));
-		sq.setQuery(sq.getQuery() + MESSENGER4 + " +userid:* +attached:Y");
+		String name = Common.nvl(request.getParameter("userStr"));
+
+		StringBuilder query = new StringBuilder();
+
 		if (Common.isEquals(param.get("readYn"), "N")) {
-			sq.setQuery(sq.getQuery() + " -checked.readId:" + Common.getAdminId(session));
+			query.append(" -checked.readId:").append(Common.getAdminId(session));
 		}
+		if (!name.isEmpty()) {
+			String[] nameArray = name.split(",");
+			query.append(" +userid:((");
+
+			for (int i = 0; i < nameArray.length; i++) {
+				if (i > 0) {
+					query.append(") (");
+				}
+				query.append(nameArray[i]);
+			}
+
+			query.append("))");
+		}
+
+		sq.setQuery(sq.getQuery()+query+ MESSENGER4 + " +userid:* +attached:Y");
 		sq.setStart(Common.nvz(param.get("offset"), 0));
 		sq.setRows(Common.nvz(param.get("limit"), 100));
 		sq.setSort("ctime", ORDER.desc);
@@ -458,38 +494,19 @@ public class CollectionController {
 		JSONObject param = Common.getParam(request);
 		String userid = Common.nvl(param.get("userid"));
 		String srcip = Common.nvl(param.get("srcip"));
+		String usr_id = Common.nvl(param.get("usr_id"));
 
 		String addQuery = String.format(" +userid:\"%s\"", userid);
-		if (Common.isNotEmpty(srcip)) addQuery += String.format(" +srcip:\"%s\"", srcip);
+		if(Common.isNotEmpty(srcip)) addQuery += String.format(" +srcip:\"%s\"", srcip);
 
 		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
 		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), Common.getAdminId(session));
 		sq.setQuery(sq.getQuery() + addQuery + (Common.nvl(param.get("type")).equals("N") ? MESSENGER3 : (Common.nvl(param.get("type")).equals("G") ? MESSENGER2 : (Common.nvl(param.get("type")).equals("F") ? MESSENGER4 : ""))));
-
-
 		sq.setStart(Common.nvz(param.get("offset"), 0));
 		sq.setRows(1);
 		sq.setSort("ctime", ORDER.asc);
 		sq.setSort("msgid", ORDER.asc);
 		sq.setFields("msgid");
-
-		sq.setParam("group", true);
-		sq.setParam("group.facet", true);
-		sq.setParam("group.ngroups", true);
-		sq.setParam("group.field", "userid");
-		sq.setParam("facet", true);
-		sq.setParam("facet.field", "userid");
-
-		/* 그룹 디테일검색 동적 들어와야 할 offset,size 값*/
-		sq.setParam("facet.offset", "0");
-		sq.setParam("facet.size", "5");
-		sq.setParam("facet.detail", true);
-		sq.setParam("facet.list", false);
-		sq.setParam("facet.mincount", "1");
-
-		/* 일반 문서 검색은 하지않으므로 0 (그룹검색만 하므로 ) */
-		sq.setStart(Common.nvz(request.getParameter("offset"), 0));
-		sq.setRows(Common.nvz(request.getParameter("limit"), 0));
 
 		SolrEdcMessageVO solrVo = solrEdcService.getEmassMessage(sq, Common.getAdminId(session));
 		List<SolrEdcVO> list = solrVo.getEmass();

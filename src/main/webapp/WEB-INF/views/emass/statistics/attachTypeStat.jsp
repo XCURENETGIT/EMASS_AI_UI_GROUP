@@ -91,7 +91,8 @@
 
 
             $('.optionBtn').removeClass('active');
-            $('#deptnm').addClass('active');
+            $('#svc1').addClass('active');
+            $('#busiSelect').selectpicker('val', '');
         });
 
 
@@ -363,6 +364,10 @@
 				<button class="optionBtn" id="deptnm" value="deptnm"><s:message code="common.org.dept"/></button>
 				<button class="optionBtn" id="jikgubnm" value="jikgubnm"><s:message code="common.org.jikgub"/></button>
 			</div>
+			<div>
+				<button class="form_btn01" id="searchBtn"><s:message code="common.msg.search"/></button>
+				<button class="form_btn02" id="clearBtn"><s:message code="condition.reset"/></button>
+			</div>
 		</div>
 		<div class="searchSub w100">
 			<div>
@@ -388,10 +393,6 @@
 				<input type="hidden" id="userVal">
 
 
-			</div>
-			<div>
-				<button class="form_btn01" id="searchBtn"><s:message code="common.msg.search"/></button>
-				<button class="form_btn02" id="clearBtn"><s:message code="condition.reset"/></button>
 			</div>
 		</div>
 

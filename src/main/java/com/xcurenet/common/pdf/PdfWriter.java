@@ -1,17 +1,15 @@
 package com.xcurenet.common.pdf;
 
+import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
 
+import com.itextpdf.text.*;
+import com.itextpdf.text.Font;
 import org.apache.commons.io.IOUtils;
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
@@ -20,6 +18,12 @@ import com.xcurenet.common.util.locale.Prop;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.jsoup.Jsoup;
+
+import javax.lang.model.util.Elements;
 
 public class PdfWriter {
 
@@ -33,7 +37,14 @@ public class PdfWriter {
 
 	private FileOutputStream out;
 
+	private OutputStream out2;
+
 	private PdfPTable table;
+
+	private String reportDate;
+	private String searchDate;
+	private String html;
+	private String check;
 
 	private BaseFont baseFont = BaseFont.createFont(this.getClass().getResource("").getPath() + "../../files/font/dotum.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
 
@@ -54,6 +65,65 @@ public class PdfWriter {
 		}
 	}
 
+
+	public PdfWriter(String title, String reportDate, String searchDate, String html, String check, OutputStream out) throws Exception {
+
+		this.title = title;
+		this.reportDate = reportDate;
+		this.searchDate = searchDate;
+		this.html = html;
+		this.check = check;
+		this.out2 = out;
+
+		try {
+			open();
+			writeHeader();
+			//writeDataPdf(html);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+	}
+
+/*	private static void createTable(Document document, String html) throws DocumentException {
+		int tableCount = 0;
+		org.jsoup.nodes.Document doc = Jsoup.parse(html);
+
+		for (Element table : doc.select(".subTable")) {
+			tableCount++;
+			if (tableCount == 1) {
+				document.add(new Phrase(tableCount + ". " + table.attr("name"), new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD)));
+			} else {
+				document.add(new Phrase("\n" + tableCount + ". " + table.attr("name"), new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD)));
+			}
+
+			PdfPTable pdfPTable = new PdfPTable(3); // Adjust the number of columns as needed
+			pdfPTable.setWidthPercentage(100);
+
+			for (Element row : table.select("tr")) {
+				Elements ths = row.select("th");
+				for (Element element : ths) {
+					PdfPCell cell = new PdfPCell(new Phrase(element.text(), new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD)));
+					cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell.setBackgroundColor(BaseColor.LIGHT_GRAY); // Adjust the color as needed
+					pdfPTable.addCell(cell);
+				}
+
+				Elements tds = row.select("td");
+				for (Element element : tds) {
+					PdfPCell cell = new PdfPCell(new Phrase(element.text(), new Font(Font.FontFamily.HELVETICA, 10)));
+					cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					pdfPTable.addCell(cell);
+				}
+			}
+			document.add(pdfPTable);
+		}
+	}*/
+
+
 	private void writeData() {
 		Font f2 = new Font(baseFont, 6);
 		for (int i = 0; i < data.size(); i++) {
@@ -66,6 +136,9 @@ public class PdfWriter {
 			}
 		}
 	}
+
+
+
 
 	private void close() throws DocumentException {
 		doc.add(table);
@@ -82,6 +155,8 @@ public class PdfWriter {
 		com.itextpdf.text.pdf.PdfWriter.getInstance(doc, out);
 		doc.open();
 	}
+
+
 
 	private void writeHeader() throws Exception {
 		Paragraph p = new Paragraph(title, new Font(baseFont, 12, Font.BOLD));

@@ -842,7 +842,7 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .messengerList .messengerBox .people .person.active:after, .messengerList .messengerBox .people .person:hover:after {}
 .chatList { position: relative; min-width: 400px;  overflow-x: hidden; overflow-y: scroll;}
 .chatList .chatBox {position: relative; min-width: 100%; padding-bottom:20px; }
-.chatList .chatBox .top { position: sticky; top:0; left:0; bottom:0; right:0; min-width: 400px; color:#fff; font-size:14px; padding:20px 16px; z-index: 99; background-color: #606973}
+.chatList .chatBox .top {top:0; left:0; bottom:0; right:0; min-width: 400px; color:#fff; font-size:14px; padding:20px 16px; z-index: 99; background-color: #606973}
 .chatDate { position: relative; display: grid; grid-template-columns: 50% 50%; padding-top:12px;}
 .chatDate input[type="date"], .chatDate input[type="text"] {border:none;}
 .chatList .chatBox .top span {position: relative; font-weight: 300; }

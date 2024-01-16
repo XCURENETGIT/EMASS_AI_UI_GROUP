@@ -76,7 +76,7 @@
             });
 
             var today = new Date();
-            today.setDate(today.getDate() - 2);
+            today.setDate(today.getDate() - 7);
 
             document.getElementById("startDt").valueAsDate = today;
             document.getElementById("endDt").valueAsDate = new Date();
@@ -116,12 +116,14 @@
 
             $('#searchMsgBtn').click(function () {
                 if ($('#searchMsgStrInput').val() == "") $('#searchMsgQueryBtn').click();
-                else eikon2.findMessageList(0);
+                else eikon2.findMessageList(0,"N");
                 //eikon.getMessengerDetailList($('#xrootmtr').text(),$('#msgid').text(), $('#srcip').text());
             });
             $('#searchMsgQueryBtn').click(function () {
-                var selectedUsrId = $('#selectUserInfo').attr('data-usrid');
-                getDetailData(selectedUsrId);
+                var srcip = $('#selectUserInfo').attr('data-srcip');
+                var userid = $('#selectUserInfo').attr('data-name');
+
+                eikon2.getCollectionDetailList(userid, '', srcip, '',"N");
             });
             $("#searchMsgStrInput").keypress(function (e) {
                 if (e.keyCode == 13) {
@@ -131,12 +133,12 @@
             });
 
             $('#searchMsgUp').click(function () {
-                eikon2.findMessageList(--searchOffset);
+                eikon2.findMessageList(--searchOffset,"N");
 // 		checkList(--searchOffset);
             });
             $('#searchMsgDn').click(function () {
 // 		checkList(++searchOffset);
-                eikon2.findMessageList(++searchOffset);
+                eikon2.findMessageList(++searchOffset,"N");
             });
             $('#listCntArea').click(function () {
                 //if( $('#messageTotalCnt').html() == 0 || $('#messageTotalCnt').html() == '') return;
@@ -148,6 +150,11 @@
             });
 
             $('#dept').click(function () {
+                var code = $(this).attr('id');
+                openCodeWindow(code, $('#' + code + 'Val').val(), $('#' + code + 'Str').val());
+            });
+
+            $('#user').click(function () {
                 var code = $(this).attr('id');
                 openCodeWindow(code, $('#' + code + 'Val').val(), $('#' + code + 'Str').val());
             });
@@ -724,7 +731,17 @@
 							<input type="hidden" id="deptVal">
 						</p>
 						<div id="selectedCodeTitle" class="infotxt"></div>
-						<input type="text" class="w100 mat8"  placeholder="<s:message code="eikon.input.participation"/>" id="senders">
+						<p class="mat8 formText btnform" data-toggle="buttons">
+							<span class="tit">사용자 선택</span>
+
+							<button class="btn01" id="user"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
+									code="common.org.choose.user"/></button>
+							<span id="userSelectedArea" class="codeSelectedBtn">
+										<button type="button" class="btn num_add bornone"  style="z-index: 2;">0</button>
+									</span>
+							<input type="hidden" id="userStr" class="selectedTitle">
+							<input type="hidden" id="userVal">
+						</p>
 					</div>
 				</div>
 
@@ -795,8 +812,14 @@
 					</div>
 
 					<div class="chatDate">
-						<div class="searchSub" >
-							<input class="w40 txt_center" type="date" id="startSubDt"  value="2023-11-20"> ~ <input class="w40 txt_center" type="date" id="endSubDt"  value="2023-11-20">
+						<div class="searchSub" style="display: flex">
+							<div style="display: flex;">
+								<div id="startsubdatepicker"><input type="date" id="startSubDt" style="width: 110px;">
+									<span class="hyphen">~</span></div>
+								<div id="endsubdatepicker"><input type="date" id="endSubDt" style="width: 110px;"></div>
+							</div>
+
+							<button class="form_btn01" type="button" accesskey="M" id="searchMsgQueryBtn">조회</button>
 						</div>
 
 						<div class="searchSub txt_right">

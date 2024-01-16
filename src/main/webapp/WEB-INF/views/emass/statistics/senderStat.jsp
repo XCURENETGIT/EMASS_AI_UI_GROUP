@@ -92,7 +92,8 @@
 
 
             $('.optionBtn').removeClass('active');
-            $('#deptnm').addClass('active');
+            $('#svc1').addClass('active');
+            $('#busiSelect').selectpicker('val', '');
         });
 
 
@@ -361,6 +362,10 @@
 				<button class="optionBtn" id="ctime_yyyymmdd" value="ctime_yyyymmdd" class="active"><s:message code="common.msg.day"/></button>
 				<button class="optionBtn" id="ctime_yyyymm" value="ctime_yyyymm"><s:message code="common.msg.month"/></button>
 			</div>
+			<div>
+				<button class="form_btn01" id="searchBtn"><s:message code="common.msg.search"/></button>
+				<button class="form_btn02" id="clearBtn"><s:message code="condition.reset"/></button>
+			</div>
 		</div>
 		<div class="searchSub w100">
 			<div>
@@ -386,10 +391,6 @@
 				<input type="hidden" id="userVal">
 
 
-			</div>
-			<div>
-				<button class="form_btn01" id="searchBtn"><s:message code="common.msg.search"/></button>
-				<button class="form_btn02" id="clearBtn"><s:message code="condition.reset"/></button>
 			</div>
 		</div>
 	</div>

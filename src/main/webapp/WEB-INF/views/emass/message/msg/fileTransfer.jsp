@@ -30,7 +30,7 @@
 </style>
 
 <head>
-	<title>EMASS LTH PRO - <s:message code="DATA_MONITOR.MESSAGE_SERVICE"/></title>
+	<title>EMASS PRO - <s:message code="DATA_MONITOR.MESSAGE_SERVICE"/></title>
 	<script type="text/javascript" src="<c:url value="/js/messageGrid.js"/>"></script>
 	<script type="text/javascript" src="<c:url value="/js/collection.js"/>"></script>
 
@@ -204,6 +204,11 @@
 				var code = $(this).attr('id');
 				openCodeWindow(code, $('#' + code + 'Val').val(), $('#' + code + 'Str').val());
 			});
+
+            $('#user').click(function () {
+                var code = $(this).attr('id');
+                openCodeWindow(code, $('#' + code + 'Val').val(), $('#' + code + 'Str').val());
+            });
 
 			$('.txt_down').click(function () {
 				downloadList('txt');
@@ -757,9 +762,19 @@
 							<input type="hidden" id="deptStr" class="selectedTitle">
 							<input type="hidden" id="deptVal">
 						</p>
-						<div id="selectedCodeTitle" class="infotxt"></div>
-						<input type="text" class="w100 mat8"  placeholder="<s:message code="eikon.input.participation"/>" id="senders">
 
+						<p class="mat8 formText btnform" data-toggle="buttons">
+							<span class="tit">사용자 선택</span>
+
+							<button class="btn01" id="user"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
+									code="common.org.choose.user"/></button>
+							<span id="userSelectedArea" class="codeSelectedBtn">
+										<button type="button" class="btn num_add bornone"  style="z-index: 2;">0</button>
+									</span>
+							<input type="hidden" id="userStr" class="selectedTitle">
+							<input type="hidden" id="userVal">
+						</p>
+						<div id="selectedCodeTitle" class="infotxt"></div>
 					</div>
 				</div>
 
@@ -810,7 +825,7 @@
 
 		<!-- 대화방 끝!! -->
 		<!-- 상세보기 -->
-		<div class="fileGroupList" style="height: 900px;">
+		<div class="fileGroupList">
 			<div class="inner_message">
 
 				<div class="messageBtn">

@@ -99,8 +99,8 @@ var eikon2 = {
         $('#searchResultArea').hide();
         $('#searchResultBtnArea').hide();
 
-        var startDt=$('#startDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
-        var endDt=$('#endDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+        var startDt=$('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+        var endDt=$('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 
 
         getCollectionMessageTotal(userid, srcip, startDt, endDt, usr_id, '',type);
@@ -126,7 +126,7 @@ var eikon2 = {
     /**
      * 결과 내 검색
      */
-    findMessageList : function(offset){
+    findMessageList : function(offset,type){
         var searchStr = $('#searchMsgStrInput').val();
         var userid = $('#selectUserInfo').attr("data-name");
         var srcip = $('#selectUserInfo').attr("data-srcip");
@@ -161,6 +161,7 @@ var eikon2 = {
             srcip: srcip,
             data : JSON.stringify( filterVal ),
             offset : searchOffset,
+            type:type,
             success : function(data, total) {
                 focusMsgId = data.toString();
                 if(total > 0){
@@ -389,6 +390,13 @@ function getFileMessageList  (page){
     groupPage = page;
     var offset = groupPage*groupPageBreak - groupPageBreak;
 
+    var uv = $('#userVal').val().split('|');
+    var user = uv.join(',');
+
+    var userStr='';
+    if (user != '') userStr = user;
+    else userStr = '';
+
     searchFlag = true;
     ui.onBody('timeline_list', 0, -20);
     ui.postJson({
@@ -396,10 +404,12 @@ function getFileMessageList  (page){
         data : JSON.stringify( getCondition( )),
         readYn : readYn,
         offset : offset,
+        userStr:userStr,
         limit : groupPageBreak,
         success : function(data, total) {
             rtnFileGroupList(data.groups)
             rtnFilePage(total, page);
+            HighlightGroup();
         },
         error : function(status, message) {
             ui.alertMsg(message);
@@ -416,6 +426,12 @@ function getCollectionGroupList (page){
     var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
     groupPage = page;
     var offset = groupPage*groupPageBreak - groupPageBreak;
+    var uv = $('#userVal').val().split('|');
+    var user = uv.join(',');
+
+    var userStr='';
+    if (user != '') userStr = user;
+    else userStr = '';
 
     searchFlag = true;
     ui.onBody('timeline_list', 0, -20);
@@ -424,6 +440,7 @@ function getCollectionGroupList (page){
         data : JSON.stringify( getCondition( )),
         readYn : readYn,
         offset : offset,
+        userStr:userStr,
         limit : groupPageBreak,
         success : function(data, total) {
             rtnGenerativeGroupList(data.groups)
@@ -431,6 +448,7 @@ function getCollectionGroupList (page){
         },
         error : function(status, message) {
             ui.alertMsg(message);
+            HighlightGroup();
         },
         complete : function() {
             searchFlag = false;
@@ -783,7 +801,7 @@ function viewDate(dateStr){
 
 function checkList(cnt){
 //	selectedSearchData = cnt;
-    getGenerativeMessage($('#selectUserInfo').attr('data-name'), $('#selectUserInfo').attr('data-srcip'), $('#selectUserInfo').attr('data-usr_id'), detailMsgid[cnt]);
+    getCollectionMessage($('#selectUserInfo').attr('data-name'), $('#selectUserInfo').attr('data-srcip'), $('#selectUserInfo').attr('data-usr_id'), detailMsgid[cnt]);
     $('#selectCnt').html(cnt+1);
 }
 
@@ -1120,8 +1138,8 @@ function getPage3(total, pageCount, listSize, rtnMethod){
 function getCollectionMessage(userid, srcip, usr_id, msgid,type){
     $("#timeline_list").html('');
 
-    var startDt=$('#startDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
-    var endDt=$('#endDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+    var startDt=$('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+    var endDt=$('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 
     ui.get({
         url : 'getGenerativeMessage.xcn',
@@ -1174,8 +1192,8 @@ function getCollectionMessage(userid, srcip, usr_id, msgid,type){
 }
 
 function getCollectionAllfile(userid, srcip, usr_id, msgid,type){
-    var startDt=$('#startDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
-    var endDt=$('#endDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+    var startDt=$('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+    var endDt=$('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 
     ui.get({
         url : 'getCollectionGroupAttachList.xcn',

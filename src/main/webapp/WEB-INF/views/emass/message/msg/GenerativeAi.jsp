@@ -30,7 +30,7 @@
 </style>
 
 <head>
-	<title>EMASS LT - <s:message code="DATA_MONITOR.MESSAGE_SERVICE"/></title>
+	<title>EMASS PRO - <s:message code="DATA_MONITOR.MESSAGE_SERVICE"/></title>
 	<script type="text/javascript" src="<c:url value="/js/messageGrid.js"/>"></script>
 	<script type="text/javascript" src="<c:url value="/js/collection.js"/>"></script>
 
@@ -76,7 +76,7 @@
             });
 
             var today = new Date();
-            today.setDate(today.getDate() - 2);
+            today.setDate(today.getDate() - 7);
 
             document.getElementById("startDt").valueAsDate = today;
             document.getElementById("endDt").valueAsDate = new Date();
@@ -116,12 +116,15 @@
 
             $('#searchMsgBtn').click(function () {
                 if ($('#searchMsgStrInput').val() == "") $('#searchMsgQueryBtn').click();
-                else eikon2.findMessageList(0);
+                else eikon2.findMessageList(0,"G");
                 //eikon.getMessengerDetailList($('#xrootmtr').text(),$('#msgid').text(), $('#srcip').text());
             });
             $('#searchMsgQueryBtn').click(function () {
-                var selectedUsrId = $('#selectUserInfo').attr('data-usrid');
-                getDetailData(selectedUsrId);
+
+                var srcip = $('#selectUserInfo').attr('data-srcip');
+                var userid = $('#selectUserInfo').attr('data-name');
+
+                eikon2.getCollectionDetailList(userid, '', srcip, '',"G");
             });
             $("#searchMsgStrInput").keypress(function (e) {
                 if (e.keyCode == 13) {
@@ -131,12 +134,12 @@
             });
 
             $('#searchMsgUp').click(function () {
-                eikon2.findMessageList(--searchOffset);
+                eikon2.findMessageList(--searchOffset,"G");
 // 		checkList(--searchOffset);
             });
             $('#searchMsgDn').click(function () {
 // 		checkList(++searchOffset);
-                eikon2.findMessageList(++searchOffset);
+                eikon2.findMessageList(++searchOffset,"G");
             });
             $('#listCntArea').click(function () {
                 //if( $('#messageTotalCnt').html() == 0 || $('#messageTotalCnt').html() == '') return;
@@ -150,6 +153,16 @@
             $('#dept').click(function () {
                 var code = $(this).attr('id');
                 openCodeWindow(code, $('#' + code + 'Val').val(), $('#' + code + 'Str').val());
+            });
+
+            $('#user').click(function () {
+                var code = $(this).attr('id');
+                openCodeWindow(code, $('#' + code + 'Val').val(), $('#' + code + 'Str').val());
+            });
+
+            $(document).on('click', '#userSelectedArea', function (e) {
+                $('#userVal, #userVal').val('');
+                $('#userSelectedArea').hide();
             });
 
             $('.txt_down').click(function () {
@@ -447,6 +460,7 @@
             var dateObj = new Date();
 
 
+
             $('#easyDate').change(function () {
                 changeDate($(this).val());
             });
@@ -705,7 +719,6 @@
 						<div>
 							<input class="w45 mat8 txt_center" type="date" id="startDt"  value="2023-11-20"><span class="w10 dis_inlineblock txt_center">~</span><input class="w45 txt_center" type="date" id="endDt"  value="2023-11-30">
 
-
 							<div class="optiotab w100 mat8" data-toggle="buttons">
 								<button class="active w50" name="attachYn" id="attachAll" value=""><s:message code="condition.isattached.all"/></button>
 								<button class="w50" name="attachYn" id="attachY" value="Y"><s:message code="eikon.attach.exist"/></button>
@@ -725,7 +738,18 @@
 								<input type="hidden" id="deptVal">
 							</p>
 							<div id="selectedCodeTitle" class="infotxt"></div>
-							<input type="text" class="w100 mat8"  placeholder="<s:message code="eikon.input.participation"/>" id="senders">
+
+							<p class="mat8 formText btnform" data-toggle="buttons">
+								<span class="tit">사용자 선택</span>
+
+							<button class="btn01" id="user"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
+									code="common.org.choose.user"/></button>
+							<span id="userSelectedArea" class="codeSelectedBtn">
+										<button type="button" class="btn num_add bornone"  style="z-index: 2;">0</button>
+									</span>
+							<input type="hidden" id="userStr" class="selectedTitle">
+							<input type="hidden" id="userVal">
+							</p>
 						</div>
 					</div>
 
@@ -798,10 +822,15 @@
 						<div>
 							<span id="selectUserInfo"  class="chatid" data-srcip="" data-name="" data-usrid=""><s:message code="condition.user"/></span>
 						</div>
-
 						<div class="chatDate">
-							<div class="searchSub" >
-									<input class="w40 txt_center" type="date" id="startSubDt"  value="2023-11-20"> ~ <input class="w40 txt_center" type="date" id="endSubDt"  value="2023-11-20">
+							<div class="searchSub" style="display: flex">
+								<div style="display: flex;">
+									<div id="startsubdatepicker"><input type="date" id="startSubDt" style="width: 110px;">
+										<span class="hyphen">~</span></div>
+									<div id="endsubdatepicker"><input type="date" id="endSubDt" style="width: 110px;"></div>
+								</div>
+
+								<button class="form_btn01" type="button" accesskey="M" id="searchMsgQueryBtn">조회</button>
 							</div>
 
 							<div class="searchSub txt_right">
@@ -834,9 +863,9 @@
 
 							</div>
 							<div class="input-group btnCustomPosition" id="searchResultBtnArea" style="display:none;">
-								<button class="btn btn-md btn-warning" type="button" accesskey="U" id="searchMsgUp" style="padding:6px"><i
+								<button class="pop_btn03" type="button" accesskey="U" id="searchMsgUp" style="padding:6px"><i
 										class="glyphicon glyphicon-chevron-up"></i></button>
-								<button class="btn btn-md btn-warning" type="button" accesskey="D" id="searchMsgDn" style="padding:6px"><i
+								<button class="pop_btn03" type="button" accesskey="D" id="searchMsgDn" style="padding:6px"><i
 										class="glyphicon glyphicon-chevron-down"></i></button>
 							</div>
 						</div>

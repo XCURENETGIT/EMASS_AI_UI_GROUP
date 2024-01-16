@@ -217,6 +217,33 @@
             });
         }
 
+        function sendMail(){
+
+            var htmlData = '<html><head><title></title></head><body>'+$('#printDiv').html().replaceAll("\t", "")+'</body></html>';
+            var title = $('#repTitle').text();
+            ui.postJson({
+                url : 'utils/pdfWriter.do',
+                check : true,
+                title: title,
+                header: header,
+                body: htmlData,
+                pMenuId: pmenu_id,
+                menuId: menu_id,
+                success : function(data, total) {
+                    try {
+                        ExcelDown.location.href = '<c:url value="/utils/xlsxDown.do"/>?path=' + data;
+                    } catch (e) {
+                        ExcelDown.src = '<c:url value="/utils/xlsxDown.do"/>?path=' + data;
+                    }
+                },
+                error : function(status, message) {
+                    ui.alertMsg(message);
+                },
+                complete : function() {
+                }
+            });
+        }
+
         function getReportDevice() {
             var sDate = $('#startdate').val().replaceAll("-","");
             var eDate = $('#enddate').val().replaceAll("-","");
@@ -404,6 +431,7 @@
 				<li><a href="#" class="excel_link3"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="common.msg.excel"/>(xlsx)</a></li>
 				<li><a href="#" class="print_link2"><span class="glyphicon glyphicon-print"></span>&nbsp;<s:message code="common.msg.print"/></a></li>
 			</ul>
+			<button class="btn01" id="sendMail" onclick="sendMail()"><img src="<c:url value="/img/subBtn_plus.png"/>">메일 예약알림</button>
 		</div>
 	</div>
 

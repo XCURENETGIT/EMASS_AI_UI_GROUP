@@ -15,7 +15,6 @@
 	String lo = Common.getLocale(session).toString();
 	JSONObject ntpInfo = NtpScheduler.ntpStatus;
 %>
-
 <div class="modal" id="changePasswordPop" data-backdrop="static">
 	<div class="modal-content">
 		<div class="modalHead">
