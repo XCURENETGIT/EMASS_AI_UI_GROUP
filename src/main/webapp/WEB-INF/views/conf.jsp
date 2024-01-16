@@ -769,7 +769,7 @@
 					<p  class="mat4">
 						<input class="w50" type="text" id="sms.token" placeholder="SMS Certification Key">
 					</p>
-					<p class="info">보내는 사람 메일 주소를 입력하세요.(ex:user01@xcurenet.com)</p>
+					<p class="info"><s:message code="setup.message.mail.account"/></p>
 				</li>
 				<li class="pr20 pl20  grayBg02">
 					<span class="bullet02"></span><label for="fname" class="fb600"><s:message code="setup.sms.test"/></label>
@@ -777,7 +777,7 @@
 						<input class="w60" type="text"  name="testPhoneNo" id="testPhoneNo" placeholder="<s:message code="admin.hp"/>" maxlength="50">
 						<button class="num_add btnform" accesskey="S" id="smsSendBtn"><s:message code="setup.send.test"/></button>
 					</p>
-					<p class="info">("-"를 빼고 입력)</p>
+					<p class="info"><s:message code="admin.enter.minus"/></p>
 					<p class="indenttxt mat4">
 						<s:message code="setup.message.sms.test"/>
 					</p>

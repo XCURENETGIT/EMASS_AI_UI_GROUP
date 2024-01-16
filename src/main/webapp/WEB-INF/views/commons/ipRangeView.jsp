@@ -62,7 +62,7 @@ function getData(lastRow) {
 		<div class="contentSub">
 			<div class="subtab">
 				<button class="active">
-					사업장 내부 ip 확인
+					<s:message code="DATA_MONITOR.BUSI_IPRANGE_VIEW"/>
 					<span id="relationKeywordCount"></span>
 				</button>
 			</div>

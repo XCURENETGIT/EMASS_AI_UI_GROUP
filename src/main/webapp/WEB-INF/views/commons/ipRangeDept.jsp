@@ -575,10 +575,10 @@ function getDeptSchedule(){
 			</div>
 			<div class="modalCon">
 				<div class="modalTop">
-					<h3>부서 내부 IP 추가</h3>
+					<h3><s:message code="deptIpRange.iprangepop.title"/></h3>
 					<p>
 						<span class="red_dot veralign_middle"></span>
-						필수 입력 사항입니다.
+						<s:message code="common.required.msg"/>
 					</p>
 				</div>
 				<div class="modalbody">
@@ -588,7 +588,7 @@ function getDeptSchedule(){
 							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
-							<button class="btn01" id="dept"><img src="../img/subBtn_plus.png" alt="추가">부서 추가</button>
+							<button class="btn01" id="dept"><img src="../img/subBtn_plus.png" alt="추가"><s:message code="common.org.choose.dept"/></button>
 							<span id="deptByCoSelectedArea" class="codeSelectedBtn">
 									<button type="button" class="btn">0</button>
 							</span>
@@ -755,7 +755,7 @@ function getDeptSchedule(){
 						</div>
 					</div>
 				</div>
-				<div class="info"> 안내 사항
+				<div class="info"> <s:message code="common.guidance"/>
 					<div class="form-inline" style="padding-left: 10px;">1) <s:message code="interest.message.upload.info1"/></div>
 					<div class="form-inline" style="padding-left: 10px;">2) <s:message code="interest.message.upload.info2"/></div>
 					<div class="form-inline" style="padding-left: 10px;">3) <s:message code="interest.message.upload.info3"/></div>
@@ -786,7 +786,7 @@ function getDeptSchedule(){
 					<h3><s:message code="deptIpRange.method.insa"/></h3>
 					<p>
 						<span class="red_dot veralign_middle"></span>
-						필수 입력 사항입니다.
+						<s:message code="common.required.msg"/>
 					</p>
 					<fieldset>
 						<div>
@@ -942,7 +942,7 @@ function getDeptSchedule(){
 			<div class="contentSub">
 				<div class="subtab">
 					<button class="active">
-						부서 내부 ip 설정 목록
+						<s:message code="POLICY_SETUP.DEPT_IPRANGE"/>
 						<span id="relationKeywordCount"></span>
 					</button>
 				</div>

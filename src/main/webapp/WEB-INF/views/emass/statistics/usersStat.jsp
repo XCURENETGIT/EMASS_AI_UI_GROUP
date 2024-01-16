@@ -338,7 +338,7 @@
 			</div>
 
 			<div class="optiotab">
-				<button class="optionBtn active" id="svc1" value="svc1">서비스타입</button>
+				<button class="optionBtn active" id="svc1" value="svc1"><s:message code="common.msg.svc"/></button>
 				<button class="optionBtn" id="direction_svc" value="direction_svc"><s:message code="condition.receive_send"/></button>
 				<button class="optionBtn" id="ctime_hh" value="ctime_hh"><s:message code="common.msg.time"/></button>
 				<button class="optionBtn" id="ctime_yyyymmdd" value="ctime_yyyymmdd" class="active"><s:message code="common.msg.day"/></button>
@@ -404,7 +404,7 @@
 			<div class="subtab">
 				<div>
 					<ul class="nav nav-tabs codeTab listChart">
-						<li class="active"><a data-toggle="tab" href="#basicStatList" id="listTab" >사용자 TOP</a></li>
+						<li class="active"><a data-toggle="tab" href="#basicStatList" id="listTab" ><s:message code="stat.display.user.title"/></a></li>
 					</ul>
 				</div>
 			</div>

@@ -289,10 +289,10 @@ function fileExtCheck(obj){
 			</div>
 			<div class="modalCon">
 				<div class="modalTop">
-					<h3>사업장 내부 IP 추가</h3>
+					<h3><s:message code="ipRange.iprangepop.title"/></h3>
 					<p>
 						<span class="red_dot veralign_middle"></span>
-						필수 입력 사항입니다.
+						<s:message code="common.required.msg"/>
 					</p>
 				</div>
 				<div class="modalbody">
@@ -464,7 +464,7 @@ function fileExtCheck(obj){
 							</div>
 						</div>
 					</div>
-					<div class="info"> 안내 사항
+					<div class="info"> <s:message code="common.guidance"/>
 						<div class="form-inline mat4">1) <s:message code="interest.message.upload.info1"/></div>
 						<div class="form-inline">2) <s:message code="interest.message.upload.info2"/></div>
 						<div class="form-inline">3) <s:message code="interest.message.upload.info3"/></div>
@@ -497,7 +497,7 @@ function fileExtCheck(obj){
 		<div class="contentSub">
 			<div class="subtab">
 				<button class="active">
-					사업장 내부 ip 설정 목록
+					<s:message code="DATA_MONITOR.BUSI_IPRANGE_VIEW"/>
 					<span id="relationKeywordCount"></span>
 				</button>
 			</div>

@@ -516,10 +516,10 @@
 			</div>
 			<div class="modalCon">
 				<div class="modalTop">
-					<h3>관심사용자 추가</h3>
+					<h3><s:message code="userGroup.grouppop.title"/></h3>
 					<p>
 						<span class="red_dot veralign_middle"></span>
-						필수 입력 사항입니다.
+						<s:message code="common.required.msg"/>
 					</p>
 				</div>
 				<div class="modalbody">
@@ -630,7 +630,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="info"> 안내 사항
+				<div class="info"> <s:message code="common.guidance"/>
 					<div class="form-inline" style="padding-left: 10px;">1) <s:message code="interest.message.upload.info1"/></div>
 					<div class="form-inline" style="padding-left: 10px;">2) <s:message code="interest.message.upload.info2"/></div>
 					<div class="form-inline" style="padding-left: 10px;">3) <s:message code="interest.message.upload.info3"/></div>
@@ -678,8 +678,8 @@
 		<div style="width:470px; float: left">
 			<div class="searchSub" style="width: 470px;">
 				<div>
-					<input type="text" placeholder="관심사용자 그룹을 입력하세요" id="searchStrGroup" style="width: 220px;">
-					<button class="form_btn01" type="button" accesskey="G" id="searchGroupBtn">조회</button>
+					<input type="text" placeholder="<s:message code="common.msg.searchMsg"/>" id="searchStrGroup" style="width: 220px;">
+					<button class="form_btn01" type="button" accesskey="G" id="searchGroupBtn"><s:message code="common.search"/></button>
 				</div>
 				<button type="button" class="btn01" accesskey="I" id="groupInsertBtn"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
 				<button type="button" class="btn02" accesskey="D" id="groupDeleteBtn"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
@@ -695,7 +695,7 @@
 			<div class="searchSub" style="width:calc(100% - 470px) ">
 				<div>
 					<input type="text" placeholder="<s:message code="common.msg.searchMsg"/>" id="searchStrItem" style="width: 280px;">
-					<button class="form_btn01" type="button" accesskey="K" id="searchStrItemBtn">조회</button>
+					<button class="form_btn01" type="button" accesskey="K" id="searchStrItemBtn"><s:message code="common.search"/></button>
 				</div>
 				<button type="button" class="btn01" accesskey="A" id="itemInsertBtn"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
 				<button type="button" class="btn02" accesskey="E" id="itemDeleteBtn"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>

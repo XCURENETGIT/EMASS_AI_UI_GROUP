@@ -96,7 +96,7 @@ public class CollectionController {
 		return new XcnResponseVO(XcnRspCode.OK, emsMessageService.getFileServiceList());
 	}
 
-
+	@AuditOperation(Operation.SEARCH)
 	@RequestMapping(value = "/getCollectionGroupList.xcn")
 	@Description("서비스 그룹 조회")
 	@ResponseBody
