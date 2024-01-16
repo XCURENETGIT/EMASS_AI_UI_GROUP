@@ -5,14 +5,12 @@ import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.emass.message.service.SolrEdcMessageVO;
 import com.xcurenet.emass.message.service.SolrEdcService;
-import com.xcurenet.emass.message.service.SolrEdcVO;
 import com.xcurenet.emass.searchLog.service.SearchLogService;
 import com.xcurenet.owlnest.service.OwlnestService;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.springframework.context.annotation.Description;
-import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -41,32 +39,10 @@ public class OwlnestController {
 	public XcnResponseVO getRecommendData(final HttpServletRequest request, final HttpServletResponse response, final HttpSession session) throws Exception {
 		JSONObject param = Common.getParam(request);
 
-
 		String msgId = Common.nvl(param.get("msgId"));
 		String targetDate = Common.nvl(param.get("targetDate"));
 
-
-		SolrQuery sq = new SolrQuery();
-		sq.setStart(Common.nvz(param.get("offset"), 0));
-		sq.setRows(Common.nvz(param.get("limit"), 1));
-		sq.setQuery(String.format("+_id:%s",msgId));
-		SearchHits<SolrEdcVO> document = solrEdcService.getList(sq);
-		SolrEdcVO solrEdcVO = null;
-		if(document.getSearchHits().size() > 0) solrEdcVO = document.getSearchHits().get(0).getContent();
-		SolrEdcMessageVO solrVo = null;
-		if(!("").equals(Common.nvl(solrEdcVO.getSubject())) && !("").equals(Common.nvl(solrEdcVO.getBody_snippet()))) {
-
-			/*  선택문서의 subject , body_snippet 추출*/
-			String subject = Common.nvl(solrEdcVO.getSubject());
-			subject = String.format("*\"%s\"*", subject);
-
-			String body_snippet = Common.nvl(solrEdcVO.getBody_snippet());
-			if (body_snippet.length() > 30) body_snippet = body_snippet.substring(0, 20);
-			body_snippet = String.format("*\"%s\"*", body_snippet);
-
-
-			String query = String.format("+( +(subject:%s) +(body_snippet:%s) ) -msgid:%s", subject, body_snippet, msgId);
-			solrVo = getSolrEdcMessage(query, Common.getAdminId(request));
+		SolrEdcMessageVO solrVo = getSolrEdcMessage(msgId, Common.getAdminId(request));
 //			List<SolrEdcVO> emassList = solrVo.getEmass();
 //		emassList.sort(new Comparator<SolrEdcVO>() {
 //			@Override
@@ -79,21 +55,18 @@ public class OwlnestController {
 //				return 0;
 //			}
 //		});
-		}else { solrVo = new SolrEdcMessageVO();}
 		return new XcnResponseVO(XcnRspCode.OK, solrVo, solrVo.getNumFound());
 	}
 
-	private SolrEdcMessageVO getSolrEdcMessage(String query, String adminId) throws Exception {
+	private SolrEdcMessageVO getSolrEdcMessage(String msgid, String adminId) throws Exception {
+
 		SolrQuery sq = new SolrQuery();
-		sq.setQuery(query);
 		sq.setStart(0);
 		sq.setRows(100);
-
+		sq.setMoreLikeThis(true);
+		sq.setMoreLikeThisFields("subject","body_snippet");
 		sq.setSort("_score", SolrQuery.ORDER.desc);
-		sq.setParam("track_scores",true);
-//		sq.setFacet(true);
-//		sq.addFacetField("svc1");
-//		sq.setFacetMinCount(1);
+		sq.setParam("id",msgid);
 
 		return solrEdcService.getEmassMessage(sq, adminId);
 	}

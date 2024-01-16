@@ -24,6 +24,7 @@ import org.apache.solr.client.solrj.SolrQuery.SortClause;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.MoreLikeThisQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.aggregations.*;
 import org.elasticsearch.search.aggregations.bucket.range.RangeAggregationBuilder;
@@ -150,13 +151,16 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			}
 		}
 
+
 		log.info("page : {}  rows : {}", getPage(sq), sq.getRows());
 		Query searchQuery = new NativeSearchQueryBuilder()
 				.withFields(Common.toArray(sq.getFields(), ","))
 				.withFilter(QueryBuilders.boolQuery().must(regexQuery))
 				.withQuery(QueryBuilders.queryStringQuery(sq.getQuery() + " " + filterQuery).fields(getDefaultSearchField(sq)))
-				//.withFilter(QueryBuilders.queryStringQuery(filterQuery))
-				.withPageable(PageRequest.of(getPage(sq), sq.getRows(), getSort(sq)))
+				/* 유사 문서 쿼리 설정 moreLikeThis */
+				.withQuery(
+					(!Common.isEmpty(sq.getMoreLikeThisFields()) && !Common.isEmpty(sq.get("id")) ? QueryBuilders.moreLikeThisQuery(sq.getMoreLikeThisFields(), null, new MoreLikeThisQueryBuilder.Item[]{new MoreLikeThisQueryBuilder.Item(("edc_").concat(sq.get("id").substring(0, 6)), sq.get("id"))}).minTermFreq(1).minDocFreq(0).maxQueryTerms(20).minimumShouldMatch("50%") : null
+				)).withPageable(PageRequest.of(getPage(sq), sq.getRows(), getSort(sq)))
 				.withAggregations(getAggregations(sq))
 				.withAggregations(getAggregationsByPivot(sq))
 				.withTrackTotalHits(true)
