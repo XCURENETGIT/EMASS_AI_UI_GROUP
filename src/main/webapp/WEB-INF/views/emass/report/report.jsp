@@ -222,13 +222,14 @@
             var htmlData = '<html><head><title></title></head><body>'+$('#printDiv').html().replaceAll("\t", "")+'</body></html>';
             var title = $('#repTitle').text();
             ui.postJson({
-                url : 'utils/pdfWriter.do',
+                url : 'utils/ReportpdfWriter.do',
+                reportDate : $('#reportDate').text(),
+                searchDate : $('#searchDate').text(),
+                title : title,
+                html : htmlData,
                 check : true,
-                title: title,
-                header: header,
-                body: htmlData,
-                pMenuId: pmenu_id,
-                menuId: menu_id,
+                pMenuId : pMenuId,
+                menuId : menuId,
                 success : function(data, total) {
                     try {
                         ExcelDown.location.href = '<c:url value="/utils/xlsxDown.do"/>?path=' + data;

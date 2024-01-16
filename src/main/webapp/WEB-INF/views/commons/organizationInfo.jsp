@@ -679,10 +679,10 @@
 			</div>
 			<div class="modalCon">
 				<div class="modalTop">
-					<h3>회사 추가</h3>
+					<h3><s:message code="common.org.co"/>-<s:message code="common.msg.addmodify"/></h3>
 					<p>
 						<span class="red_dot veralign_middle"></span>
-						필수 입력 사항입니다.
+						<s:message code="common.required.msg"/>
 					</p>
 				</div>
 				<div class="modalbody">
@@ -723,10 +723,10 @@
 			</div>
 			<div class="modalCon">
 				<div class="modalTop">
-					<h3>사업장 추가</h3>
+					<h3><s:message code="common.org.busi"/>-<s:message code="common.msg.addmodify"/></h3>
 					<p>
 						<span class="red_dot veralign_middle"></span>
-						필수 입력 사항입니다.
+						<s:message code="common.required.msg"/>
 					</p>
 				</div>
 				<div class="modalbody">
@@ -780,10 +780,10 @@
 			</div>
 			<div class="modalCon">
 				<div class="modalTop">
-					<h3>총괄 추가</h3>
+					<h3><s:message code="common.org.general"/>-<s:message code="common.msg.addmodify"/></h3>
 					<p>
 						<span class="red_dot veralign_middle"></span>
-						필수 입력 사항입니다.
+						<s:message code="common.required.msg"/>
 					</p>
 				</div>
 				<div class="modalbody">
@@ -835,10 +835,10 @@
 			</div>
 			<div class="modalCon">
 				<div class="modalTop">
-					<h3>부서 추가</h3>
+					<h3><s:message code="common.org.dept"/>-<s:message code="common.msg.addmodify"/></h3>
 					<p>
 						<span class="red_dot veralign_middle"></span>
-						필수 입력 사항입니다.
+						<s:message code="common.required.msg"/>
 					</p>
 				</div>
 				<div class="modalbody">
@@ -902,10 +902,10 @@
 			</div>
 			<div class="modalCon">
 				<div class="modalTop">
-					<h3>직급 추가</h3>
+					<h3><s:message code="common.org.jikgub"/>-<s:message code="common.msg.addmodify"/></h3>
 					<p>
 						<span class="red_dot veralign_middle"></span>
-						필수 입력 사항입니다.
+						<s:message code="common.required.msg"/>
 					</p>
 				</div>
 				<div class="modalbody">
@@ -949,10 +949,10 @@
 			</div>
 			<div class="modalCon">
 				<div class="modalTop">
-					<h3>재직 추가</h3>
+					<h3><s:message code="common.org.jikin"/>-<s:message code="common.msg.addmodify"/></h3>
 					<p>
 						<span class="red_dot veralign_middle"></span>
-						필수 입력 사항입니다.
+						<s:message code="common.required.msg"/>
 					</p>
 				</div>
 				<div class="modalbody">
@@ -1006,20 +1006,20 @@
 			<div class="subtab">
 				<ul class="nav nav-tabs codeTab" id="codeTab">
 					<li class="active" style=" text-align: center"><a data-toggle="tab" href="#coList"
-																	  id="coTab"><s:message
+					                                                  id="coTab"><s:message
 							code="common.org.co"/></a></li>
 					<li style=" text-align: center"><a data-toggle="tab" href="#busiList"
-													   id="busiTab"><s:message code="common.org.busi"/></a></li>
+					                                   id="busiTab"><s:message code="common.org.busi"/></a></li>
 					<li style=" text-align: center"><a data-toggle="tab" href="#generalList"
-													   id="generalTab"><s:message
+					                                   id="generalTab"><s:message
 							code="common.org.general"/></a></li>
 					<li style=" text-align: center"><a data-toggle="tab" href="#deptList"
-													   id="deptTab"><s:message code="common.org.dept"/></a></li>
+					                                   id="deptTab"><s:message code="common.org.dept"/></a></li>
 					<li style=" text-align: center"><a data-toggle="tab" href="#jikgubList"
-													   id="jikgubTab"><s:message code="common.org.jikgub"/></a>
+					                                   id="jikgubTab"><s:message code="common.org.jikgub"/></a>
 					</li>
 					<li style=" text-align: center"><a data-toggle="tab" href="#jikinList"
-													   id="jikinTab"><s:message code="common.org.jikin"/></a>
+					                                   id="jikinTab"><s:message code="common.org.jikin"/></a>
 					</li>
 				</ul>
 			</div>

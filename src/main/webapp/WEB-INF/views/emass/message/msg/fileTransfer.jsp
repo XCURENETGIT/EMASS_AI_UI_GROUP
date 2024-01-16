@@ -715,12 +715,13 @@
 		<%--			검색 영역--%>
 		<div class="leftSearch p20" id="xcn_Search">
 			<div class="leftSearchTab">
-				<button class="active" onclick="openCity('Tab01')">파일전송 검색</button>
+				<button class="active" onclick="openCity('Tab01')"><s:message code="DATA_MONITOR.FILETRANSFER_SERVICE"/></button>
+
 				<!--<button onclick="openCity('Tab02')">탭 비활성</button>-->
 			</div>
 			<div id="Tab01">
 				<div>
-					<h3 class="mat16">기본 검색</h3>
+					<h3 class="mat16"><s:message code="message.msg.default.search"/></h3>
 					<%if (consent && Common.isEquals(firstAdminYn, "N") && Common.isNotEquals(adminType, "C")) { %>
 					<div class="form-group form-inline not-dashed" style="padding-left: 10px; width: 100%; margin-bottom: 3px;">
 						<button type="button" class="btn btn-sm btn-default" accesskey="C" id="consentBtn" onclick="searchConsentNo();"><span
@@ -738,7 +739,7 @@
 						</select>
 						<input class="w100 mat8" type="text" id="searchStrInput" placeholder="<s:message code="common.msg.searchMsg"/>">
 					</div>
-					<h3 class="mat16">상세 검색</h3>
+					<h3 class="mat16"><s:message code="message.msg.deepsearch"/></h3>
 					<div>
 
 						<input class="w45 mat8 txt_center" type="date" id="startDt"  value="2023-11-20"><span class="w10 dis_inlineblock txt_center">~</span><input class="w45 txt_center" type="date" id="endDt"  value="2023-11-30">
@@ -753,7 +754,7 @@
 						        data-live-search="true" data-actions-box="true"></select>
 
 						<p class="mat8 formText btnform" data-toggle="buttons">
-							<span class="tit">부서 선택</span>
+							<span class="tit"><s:message code="common.org.choose.dept"/></span>
 							<button type="button" class="btn01" id="dept"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
 									code="common.org.choose.dept"/></button>
 							<span id="deptSelectedArea" class="codeSelectedBtn">
@@ -764,7 +765,7 @@
 						</p>
 
 						<p class="mat8 formText btnform" data-toggle="buttons">
-							<span class="tit">사용자 선택</span>
+							<span class="tit"><s:message code="common.org.choose.user"/></span>
 
 							<button class="btn01" id="user"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
 									code="common.org.choose.user"/></button>
@@ -793,7 +794,7 @@
 			<div class="messengerBox">
 				<div class="subTit p12">
 					<h2 class="ma_none pb4">
-						<button id="xcn_toggleBtn" class="menu"></button>파일 모아보기
+						<button id="xcn_toggleBtn" class="menu"></button><s:message code="DATA_MONITOR.FILETRANSFER_SERVICE"/>
 					</h2>
 				</div>
 				<div class="bortop_dd pt16 pl20 pr20">
@@ -832,8 +833,8 @@
 					<div class="btnform">
 				<%--		<button class="btn01"><img src="<c:url value="/img/subBtn_arrow_left_12.png"/>" alt=""></button>
 						<button class="btn01"><img src="<c:url value="/img/subBtn_arrow_right_12.png"/>" alt=""></button>--%>
-						<button class="btn05" id="saveBtn"><img src="<c:url value="/img/subBtn_save.png"/>" alt="저장">저장</button>
-						<button class="btn05" id="printBtn"><img src="<c:url value="/img/subBtn_mail.png"/>" alt="인쇄">인쇄</button>
+						<button class="btn05" id="saveBtn"><img src="<c:url value="/img/subBtn_save.png"/>" alt="저장"><s:message code="common.msg.save"/></button>
+						<button class="btn05" id="printBtn"><img src="<c:url value="/img/subBtn_mail.png"/>" alt="인쇄"><s:message code="common.msg.print"/></button>
 					</div>
 				</div>
 			</div>

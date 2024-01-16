@@ -184,36 +184,4 @@ public class XLSXController {
 			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("java.error.create.excel", request));
 		}
 	}
-
-	@RequestMapping(value = "/utils/ReportPdfWriter_test.do", method = RequestMethod.POST)
-	@Description("XLSX Writer 호출")
-	@ResponseBody
-	public XcnResponseVO ReportPdfWriter_test(final HttpServletRequest request, final HttpSession session) {
-		String title = Common.nvl(request.getParameter("title"));
-		String html = Common.nvl(request.getParameter("html"));
-		String check = Common.nvl(request.getParameter("check"));
-		String reportDate = Common.nvl(request.getParameter("reportDate"));
-		String searchDate = Common.nvl(request.getParameter("searchDate"));
-		String pMenuId = Common.nvl(request.getParameter("pMenuId"));
-		String menuId = Common.nvl(request.getParameter("menuId"));
-		try {
-			String dt = Common.getCurrentDate();
-			Common.mkdirs(Common.TMP_PATH + dt);
-			File file = new FileRenamePolicy().rename(new File(Common.TMP_PATH + dt + "/export_pdf_" + Common.getCurrentTime("yyyyMMdd_HHmmss") + ".pdf"));
-			PdfWriter pdf = new PdfWriter(title, reportDate, searchDate, html, check, new FileOutputStream(file));
-			if (Common.isNotEmpty(menuId)) {
-				AuditRequestVO auditVo = new AuditRequestVO();
-				auditVo.setPMenuId(pMenuId);
-				auditVo.setMenuId(menuId);
-				auditVo.setOperation(Operation.DOWNLOAD.getOperation());
-				auditVo.setInformation(Prop.propFormat("java.download.excel"));
-				auditService.insertAudit(request, auditVo);
-			}
-			return new XcnResponseVO(XcnRspCode.OK, file.getAbsolutePath());
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("java.error.create.excel", request));
-		}
-	}
-
 }

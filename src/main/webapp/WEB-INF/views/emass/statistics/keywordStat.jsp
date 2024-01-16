@@ -433,7 +433,7 @@
 			<div class="subtab">
 				<div>
 					<ul class="nav nav-tabs codeTab listChart">
-						<li class="active"><a data-toggle="tab" href="#basicStatList" id="listTab" >키워드 TOP</a></li>
+						<li class="active"><a data-toggle="tab" href="#basicStatList" id="listTab" ><s:message code="stat.display.keyword.title"/></a></li>
 					</ul>
 				</div>
 			</div>

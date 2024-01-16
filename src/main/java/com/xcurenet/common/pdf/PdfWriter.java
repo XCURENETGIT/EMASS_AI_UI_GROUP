@@ -8,6 +8,7 @@ import java.io.OutputStream;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.Font;
+import com.itextpdf.text.Image;
 import org.apache.commons.io.IOUtils;
 
 import com.itextpdf.text.pdf.BaseFont;
@@ -22,8 +23,8 @@ import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.jsoup.Jsoup;
-
-import javax.lang.model.util.Elements;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 public class PdfWriter {
 
@@ -66,23 +67,26 @@ public class PdfWriter {
 	}
 
 
-	public PdfWriter(String title, String reportDate, String searchDate, String html, String check, OutputStream out) throws Exception {
+	public PdfWriter(final String title,final  String reportDate,final String searchDate, final String html, final String check, final FileOutputStream out) throws Exception {
 
 		this.title = title;
 		this.reportDate = reportDate;
 		this.searchDate = searchDate;
 		this.html = html;
 		this.check = check;
-		this.out2 = out;
+		this.out = out;
 
 		try {
-			open();
-			writeHeader();
-			//writeDataPdf(html);
+		/*	Document doc = new Document(PageSize.A4);*/
+			open_re();
+			writePage();
+			doc.newPage();
+			write_reData();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			close();
+			doc.close();
+			IOUtils.closeQuietly(out);
 		}
 	}
 
@@ -124,6 +128,7 @@ public class PdfWriter {
 	}*/
 
 
+
 	private void writeData() {
 		Font f2 = new Font(baseFont, 6);
 		for (int i = 0; i < data.size(); i++) {
@@ -139,11 +144,59 @@ public class PdfWriter {
 
 
 
+	private void write_reData() {
+		org.jsoup.nodes.Document jsoupDoc = Jsoup.parse(html);
 
+		Elements tables = jsoupDoc.select(".subTable");
+
+		for (Element table : tables) {
+			try {
+				// Extract title from h3 tag
+				String title = table.parent().select("h3").text();
+				if (!title.isEmpty()) {
+					doc.add(new Paragraph(title));
+				}
+
+				PdfPTable pdfTable = new PdfPTable(table.select("tr").first().select("th, td").size());
+
+				// Populate the PdfPTable with content from the HTML table
+				for (Element row : table.select("tr")) {
+					for (Element cell : row.select("th")) {
+						PdfPCell pdfCell = new PdfPCell(new Paragraph(cell.text()));
+						pdfTable.addCell(pdfCell);
+					}
+
+					for (Element cell : row.select("td")) {
+						PdfPCell pdfCell = new PdfPCell(new Paragraph(cell.text()));
+						pdfTable.addCell(pdfCell);
+					}
+				}
+
+				// Add the PdfPTable to the PDF document
+				doc.add(pdfTable);
+
+				// 페이지 간격
+				doc.newPage();
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 	private void close() throws DocumentException {
 		doc.add(table);
 		doc.close();
 		IOUtils.closeQuietly(out);
+	}
+
+	private void open_re() throws DocumentException {
+		doc = new Document(PageSize.A4);
+		doc.addTitle("Xcurenet PDF Writer " + title);
+		doc.addSubject(title);
+		doc.addAuthor("Xcurenet All Right Reserved");
+
+		com.itextpdf.text.pdf.PdfWriter.getInstance(doc, out);
+		doc.open();
 	}
 
 	private void open() throws DocumentException {
@@ -155,6 +208,42 @@ public class PdfWriter {
 		com.itextpdf.text.pdf.PdfWriter.getInstance(doc, out);
 		doc.open();
 	}
+
+	private void writePage() throws Exception {
+		Paragraph reportDate2 = new Paragraph(reportDate, new Font(baseFont, 12, Font.BOLD));
+		reportDate2.setSpacingAfter(160);
+		doc.add(reportDate2);
+
+		Image img2 = Image.getInstance("src/main/resources/static/img/login_bi.png");
+		/*img1.scaleAbsolute(30, 30);*/
+		img2.scaleAbsolute(40, 40);
+		Paragraph emassPro  = new Paragraph();
+		emassPro.add(new Chunk(img2, 0, 0));
+		emassPro.add(new Chunk("EMASSPRO", new Font(baseFont, 15, Font.NORMAL)));
+
+		doc.add(emassPro);
+
+
+		// subTitle과 title을 각각의 Paragraph로 묶음
+
+		Paragraph title = new Paragraph("컨텐츠 현황보고서", new Font(baseFont, 50, Font.BOLDITALIC, new BaseColor(0, 102, 204)));
+		title.setAlignment(com.itextpdf.text.Element.ALIGN_CENTER);
+		title.setSpacingAfter(20);
+		doc.add(title);
+
+		// A4 용지 맨 아래에 기간과 searchDate 추가
+		Paragraph period = new Paragraph( searchDate, new Font(baseFont, 12, Font.NORMAL));
+		period.setAlignment(com.itextpdf.text.Element.ALIGN_CENTER);
+		period.setSpacingBefore(doc.getPageSize().getHeight() * 0.02f ); // 적절한 간격 조절
+		doc.add(period);
+
+		Paragraph company= new Paragraph("엑스큐어넷",new Font(baseFont, 12, Font.BOLD));
+		company.setAlignment(com.itextpdf.text.Element.ALIGN_CENTER);
+		doc.add(company);
+	}
+
+
+
 
 
 

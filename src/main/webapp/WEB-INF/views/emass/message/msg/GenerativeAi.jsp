@@ -692,12 +692,12 @@
 			<%--			검색 영역--%>
 			<div class="leftSearch p20" id="xcn_Search">
 				<div class="leftSearchTab">
-					<button class="active" onclick="openCity('Tab01')">메시지 검색</button>
+					<button class="active" onclick="openCity('Tab01')"><s:message code="DATA_MONITOR.GENERATIVEAI_SERVICE"/></button>
 					<!--<button onclick="openCity('Tab02')">탭 비활성</button>-->
 				</div>
 				<div id="Tab01">
 					<div>
-						<h3 class="mat16">기본 검색</h3>
+						<h3 class="mat16"><s:message code="message.msg.default.search"/></h3>
 						<%if (consent && Common.isEquals(firstAdminYn, "N") && Common.isNotEquals(adminType, "C")) { %>
 						<div class="form-group form-inline not-dashed" style="padding-left: 10px; width: 100%; margin-bottom: 3px;">
 							<button type="button" class="btn btn-sm btn-default" accesskey="C" id="consentBtn" onclick="searchConsentNo();"><span
@@ -715,7 +715,7 @@
 							</select>
 							<input class="w100 mat8" type="text" id="searchStrInput" placeholder="<s:message code="common.msg.searchMsg"/>">
 						</div>
-						<h3 class="mat16">상세 검색</h3>
+						<h3 class="mat16"><s:message code="message.msg.deepsearch"/></h3>
 						<div>
 							<input class="w45 mat8 txt_center" type="date" id="startDt"  value="2023-11-20"><span class="w10 dis_inlineblock txt_center">~</span><input class="w45 txt_center" type="date" id="endDt"  value="2023-11-30">
 
@@ -728,7 +728,7 @@
 							                                                                         data-live-search="true" data-actions-box="true"></select>
 
 							<p class="mat8 formText btnform" data-toggle="buttons">
-								<span class="tit">부서 선택</span>
+								<span class="tit"><s:message code="common.org.choose.dept"/></span>
 								<button type="button" class="btn01" id="dept"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
 										code="common.org.choose.dept"/></button>
 								<span id="deptSelectedArea" class="codeSelectedBtn">
@@ -740,7 +740,7 @@
 							<div id="selectedCodeTitle" class="infotxt"></div>
 
 							<p class="mat8 formText btnform" data-toggle="buttons">
-								<span class="tit">사용자 선택</span>
+								<span class="tit"><s:message code="common.org.choose.user"/></span>
 
 							<button class="btn01" id="user"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
 									code="common.org.choose.user"/></button>
@@ -773,7 +773,7 @@
 					</div>
 					<div class="bortop_dd pt16 pl20 pr20">
 						<div class="subtab">
-							<button class="active">대화방</button>
+							<button class="active"><s:message code="eikon.msg.chats"/></button>
 						</div>
 					</div>
 					<div>
@@ -810,12 +810,12 @@
 					<div class="top">
 						<!-- 내보내기 -->
 						<div class="myDropdown mal16">
-							<span>내보내기 &#9662;</span>
+							<span><s:message code="analysis.relation.ui.export"/>&#9662;</span>
 							<div class="dropdown-content">
-								<a href="#" onclick="downloadList('xlsx')" class="excel_down">엑셀(xlsx)</a>
-								<a href="#" onclick="downloadList('txt')" class="txt_down">텍스트(txt)</a>
-								<a href="#" onclick="downloadList('html')" class="html_down">하이퍼텍스트(html)</a>
-								<a href="#" class="excel_file_down">액셀(xlsx)+첨부파일</a>
+								<a href="#" onclick="downloadList('xlsx')" class="excel_down"><s:message code="common.msg.excel"/></a>
+								<a href="#" onclick="downloadList('txt')" class="txt_down"><s:message code="common.msg.text"/></a>
+								<a href="#" onclick="downloadList('html')" class="html_down"><s:message code="eikon.msg.html"/></a>
+								<a href="#" class="excel_file_down"><s:message code="common.msg.excel"/>+<s:message code="consent.attach"/></a>
 							</div>
 						</div>
 						<!-- //내보내기 -->
@@ -830,12 +830,12 @@
 									<div id="endsubdatepicker"><input type="date" id="endSubDt" style="width: 110px;"></div>
 								</div>
 
-								<button class="form_btn01" type="button" accesskey="M" id="searchMsgQueryBtn">조회</button>
+								<button class="form_btn01" type="button" accesskey="M" id="searchMsgQueryBtn"><s:message code="common.msg.search"/></button>
 							</div>
 
 							<div class="searchSub txt_right">
 								<input type="text" class="w70" placeholder="<s:message code="condition.research"/>" id="searchMsgStrInput">
-								<button class="form_btn01 blackBg" type="button" accesskey="M" id="searchMsgBtn">검색</button>
+								<button class="form_btn01 blackBg" type="button" accesskey="M" id="searchMsgBtn"><s:message code="common.msg.search"/></button>
 							</div>
 						</div>
 						<%--							<div class="col-lg-12"><span style="font-size: 12px; background-color: #444; color: #fff; display: block; padding-left: 3px; padding-right: 3px;border-top-left-radius:4px;border-top-right-radius:4px;height:20px;padding-top:3px;">&nbsp;<s:message code="condition.xrootmtr"/> : <span id="xrootmtr"></span><span id="srcip" style="display:none;"></span><span id="usr_id" style="display:none;"></span><span id="msgid" style="display:none;"></span></span></div>--%>
@@ -912,7 +912,7 @@
 			<!-- 첨부파일 -->
 			<div class="rightFile p20" id="xcn_Search2">
 				<div class="subtab">
-					<button class="active">첨부파일
+					<button class="active"><s:message code="consent.attach"/>
 						<span id="xcn_toggleBtn2" style="font-size:16px; opacity: 0.7; padding:4px;">x</span>
 					</button>
 				</div>
@@ -929,11 +929,6 @@
 	</div>
 
 
-<div style="width: 0%;height: 0px;">
-	<script type="text/javascript">
-        LoadInnoFD(1, 1);
-	</script>
-</div>
 <iframe id="AttachDown" src="about:blank;" height="0" width="0" style="display: none;"></iframe>
 <!-- Back to top -->
 <a href="#0" class="back-to-top cd-top"><span class="[ fa fa-chevron-up ]"></span> <span class="[ ]">Back to the Top</span></a>

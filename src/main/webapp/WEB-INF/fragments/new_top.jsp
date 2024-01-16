@@ -15,6 +15,8 @@
 	String lo = Common.getLocale(session).toString();
 	JSONObject ntpInfo = NtpScheduler.ntpStatus;
 %>
+<iframe id="ExcelDown" name="ExcelDown" src="about:blank;" style="display: none;" height="0" width="0" ></iframe>
+
 <div class="modal" id="changePasswordPop" data-backdrop="static">
 	<div class="modal-content">
 		<div class="modalHead">

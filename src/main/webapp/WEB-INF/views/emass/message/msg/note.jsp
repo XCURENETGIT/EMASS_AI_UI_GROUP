@@ -721,7 +721,7 @@
 						        data-live-search="true" data-actions-box="true"></select>
 
 						<p class="mat8 formText btnform" data-toggle="buttons">
-							<span class="tit">부서 선택</span>
+							<span class="tit"><s:message code="common.org.choose.dept"/></span>
 							<button type="button" class="btn01" id="dept"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
 									code="common.org.choose.dept"/></button>
 							<span id="deptSelectedArea" class="codeSelectedBtn">
@@ -732,7 +732,7 @@
 						</p>
 						<div id="selectedCodeTitle" class="infotxt"></div>
 						<p class="mat8 formText btnform" data-toggle="buttons">
-							<span class="tit">사용자 선택</span>
+							<span class="tit"><s:message code="common.org.choose.user"/></span>
 
 							<button class="btn01" id="user"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
 									code="common.org.choose.user"/></button>
@@ -799,12 +799,12 @@
 			<div class="chatBox">
 				<div class="top">
 					<div class="myDropdown mal16">
-						<span>내보내기 &#9662;</span>
+						<span><s:message code="analysis.relation.ui.export"/> &#9662;</span>
 						<div class="dropdown-content">
-							<a href="#" onclick="downloadList('xlsx')" class="excel_down">엑셀(xlsx)</a>
-							<a href="#" onclick="downloadList('txt')" class="txt_down">텍스트(txt)</a>
-							<a href="#" onclick="downloadList('html')" class="html_down">하이퍼텍스트(html)</a>
-							<a href="#" class="excel_file_down">액셀(xlsx)+첨부파일</a>
+							<a href="#" onclick="downloadList('xlsx')" class="excel_down"><s:message code="common.msg.excel"/></a>
+							<a href="#" onclick="downloadList('txt')" class="txt_down"><s:message code="common.msg.text"/></a>
+							<a href="#" onclick="downloadList('html')" class="html_down"><s:message code="eikon.msg.html"/></a>
+							<a href="#" class="excel_file_down"><s:message code="common.msg.excel"/>+<s:message code="consent.attach"/></a>
 						</div>
 					</div>
 					<div >
@@ -819,12 +819,12 @@
 								<div id="endsubdatepicker"><input type="date" id="endSubDt" style="width: 110px;"></div>
 							</div>
 
-							<button class="form_btn01" type="button" accesskey="M" id="searchMsgQueryBtn">조회</button>
+							<button class="form_btn01" type="button" accesskey="M" id="searchMsgQueryBtn"><s:message code="common.msg.search"/></button>
 						</div>
 
 						<div class="searchSub txt_right">
 							<input type="text" class="w70" placeholder="<s:message code="condition.research"/>" id="searchMsgStrInput">
-							<button class="form_btn01 blackBg" type="button" accesskey="M" id="searchMsgBtn">검색</button>
+							<button class="form_btn01 blackBg" type="button" accesskey="M" id="searchMsgBtn"><s:message code="common.msg.search"/></button>
 						</div>
 					</div>
 					<%--							<div class="col-lg-12"><span style="font-size: 12px; background-color: #444; color: #fff; display: block; padding-left: 3px; padding-right: 3px;border-top-left-radius:4px;border-top-right-radius:4px;height:20px;padding-top:3px;">&nbsp;<s:message code="condition.xrootmtr"/> : <span id="xrootmtr"></span><span id="srcip" style="display:none;"></span><span id="usr_id" style="display:none;"></span><span id="msgid" style="display:none;"></span></span></div>--%>
@@ -901,7 +901,7 @@
 		<!-- 첨부파일 -->
 		<div class="rightFile p20" id="xcn_Search2">
 			<div class="subtab">
-				<button class="active">첨부파일
+				<button class="active"><s:message code="consent.attach"/>
 					<span id="xcn_toggleBtn2" style="font-size:16px; opacity: 0.7; padding:4px;">x</span>
 				</button>
 

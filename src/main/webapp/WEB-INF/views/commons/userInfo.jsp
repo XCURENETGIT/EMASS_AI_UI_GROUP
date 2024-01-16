@@ -1189,7 +1189,7 @@
 		</div>
 		<div class="modalCon">
 			<div class="modalTop">
-				<h3>인사 정보 관리 방법</h3>
+				<h3><s:message code="userInfo.method.insa"/></h3>
 				<div class="optiotab w100 mat8">
 					<button class="tablinks w50" value="N" name="insa.auto"><s:message code="userInfo.directlink"/></button>
 					<button class="tablinks w50"  value="Y" name="insa.auto"><s:message code="userInfo.autolink"/></button>
@@ -1378,10 +1378,10 @@
 			</div>
 			<div class="modalCon">
 				<div class="modalTop">
-					<h3>사용자 추가 및 수정</h3>
+					<h3><s:message code="userInfo.userPop.title"/></h3>
 					<p>
 						<span class="red_dot veralign_middle"></span>
-						필수 입력 사항입니다.
+						<s:message code="common.required.msg"/>
 					</p>
 				</div>
 				<div class="modalbody">

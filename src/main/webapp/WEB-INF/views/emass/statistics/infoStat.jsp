@@ -319,14 +319,14 @@
 
 			<div>
 				<select id="piCount" name="piCount">
-					<option value="">기준 유출 건수</option>
-					<option value="1" selected="">1건 이상</option>
-					<option value="2">2건 이상</option>
-					<option value="5">5건 이상</option>
-					<option value="10">10건 이상</option>
-					<option value="20">20건 이상</option>
-					<option value="50">50건 이상</option>
-					<option value="100">100건 이상</option>
+					<option value=""><s:message code="condition.infoStat.cnt"/></option>
+					<option value="1" selected=""><s:message code="condition.infoStat.cnt1"/></option>
+					<option value="2"><s:message code="condition.infoStat.cnt2"/></option>
+					<option value="5"><s:message code="condition.infoStat.cnt5"/></option>
+					<option value="10"><s:message code="condition.infoStat.cnt10"/></option>
+					<option value="20"><s:message code="condition.infoStat.cnt20"/></option>
+					<option value="50"><s:message code="condition.infoStat.cnt50"/></option>
+					<option value="100"><s:message code="condition.infoStat.cnt100"/></option>
 				</select>
 			</div>
 			<div>
@@ -437,19 +437,19 @@
 		if (value != undefined) return value.comma();
 		else return '';
 	});
-	grid1.colAdd('pi_MN', '휴대전화번호', 100, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
+	grid1.colAdd('pi_MN', '<s:message code="bodyview.mn"/>', 100, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
 		if (value != undefined) return value.comma();
 		else return '';
 	});
-	grid1.colAdd('pi_AN', '주소(도로명, 지번)', 110, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
+	grid1.colAdd('pi_AN', '<s:message code="bodyview.an"/>', 110, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
 		if (value != undefined) return value.comma();
 		else return '';
 	});
-	grid1.colAdd('pi_CRN', '자동차 등록번호', 100, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
+	grid1.colAdd('pi_CRN', '<s:message code="bodyview.crn"/>', 100, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
 		if (value != undefined) return value.comma();
 		else return '';
 	});
-	grid1.colAdd('pi_SSN', '사회 보장번호', 100, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
+	grid1.colAdd('pi_SSN', '<s:message code="bodyview.ssn"/>', 100, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
 		if (value != undefined) return value.comma();
 		else return '';
 	});
@@ -457,15 +457,15 @@
 		if (value != undefined) return value.comma();
 		else return '';
 	});
-	grid1.colAdd('pi_BRN', '사업자 등록번호', 100, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
+	grid1.colAdd('pi_BRN', '<s:message code="bodyview.brn"/>', 100, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
 		if (value != undefined) return value.comma();
 		else return '';
 	});
-	grid1.colAdd('pi_CPN', '법인 등록번호', 100, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
+	grid1.colAdd('pi_CPN', '<s:message code="bodyview.cpn"/>', 100, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
 		if (value != undefined) return value.comma();
 		else return '';
 	});
-	grid1.colAdd('pi_MCN', 'MAC 주소', 70, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
+	grid1.colAdd('pi_MCN', '<s:message code="bodyview.mcn"/>', 70, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
 		if (value != undefined) return value.comma();
 		else return '';
 	});

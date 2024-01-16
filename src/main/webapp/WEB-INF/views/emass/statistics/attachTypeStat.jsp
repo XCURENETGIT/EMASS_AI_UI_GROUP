@@ -432,7 +432,7 @@
 			<div class="subtab">
 				<div>
 					<ul class="nav nav-tabs codeTab listChart">
-						<li class="active"><a data-toggle="tab" href="#basicStatList" id="listTab" >첨부파일타입 TOP</a></li>
+						<li class="active"><a data-toggle="tab" href="#basicStatList" id="listTab" ><s:message code="stat.display.attachment.title"/></a></li>
 					</ul>
 				</div>
 			</div>
