@@ -1,5 +1,6 @@
 package com.xcurenet.emass.message.service.impl;
 
+
 import com.xcurenet.EmassproApplication;
 import com.xcurenet.admin.service.AuthorityService;
 import com.xcurenet.admin.service.AuthorityVO;
@@ -78,6 +79,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 	@Autowired
 	private AdminServiceImpl adminServiceImpl;
+	private AbstractAggregationBuilder<TermsAggregationBuilder> termsAggregation;
 
 	@Override
 	public SolrClient getSolrServer() {
@@ -186,7 +188,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		return Common.toList(selectSearchField, " ");
 	}
 
-	
+
 	public static void main(String[] args) throws SolrServerException, IOException {
 		ConfigurableApplicationContext context = SpringApplication.run(EmassproApplication.class, args);
 		SolrCheckedService service = context.getBean(SolrCheckedService.class);
@@ -255,7 +257,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 						.order(BucketOrder.count(false))
 						.size(maxCount(sq.getFacetLimit()))
 						.minDocCount(sq.getFacetMinCount());
-						 aggregations.add(termsAggregation);
+				aggregations.add(termsAggregation);
 			}
 		}
 		return aggregations;
@@ -264,79 +266,57 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 	private List<AbstractAggregationBuilder<?>> getGroupAggregations(SolrQuery sq) {
 		List<AbstractAggregationBuilder<?>> aggregations = new ArrayList<>();
+
+		/* main */
 		String mainField = Common.nvl(sq.get("group.field"));
+		int mainFacetLimit = sq.getFacetLimit();
+		int mainFacetMinCount = sq.getFacetMinCount();
+
+		/* sub */
 		SortOrder order = Common.isEmpty(sq.get("facet.sort")) ? SortOrder.ASC : SortOrder.DESC;
+		String key = sq.get("facet.field");
+		int offset = Common.nvz(sq.get("facet.offset"), 0);
+		int limit = Common.nvz(sq.get("facet.limit"), 100);
+
+		String[] fields = mainField.split(",");
 
 		for (String field : sq.getFacetFields()) {
-			AbstractAggregationBuilder<TermsAggregationBuilder> termsAggregation = AggregationBuilders.terms(mainField)
-					.field(mainField)
+			AbstractAggregationBuilder<TermsAggregationBuilder> termsAggregation = AggregationBuilders
+					.terms(fields[0])
+					.field(fields[0])
 					.order(BucketOrder.count(false))
-					.size(maxCount(sq.getFacetLimit()))
-					.minDocCount(sq.getFacetMinCount());
+					.size(maxCount(limit))
+					.minDocCount(mainFacetMinCount);
+
+			/* sub terms 필드는 1개만*/
+			if(fields.length > 1 &&  !Common.isEmpty(sq.get("facet.stats"))) 	termsAggregation.subAggregation(AggregationBuilders.terms(fields[1]).field(fields[1]).subAggregation(AggregationBuilders.stats(sq.get("facet.stats")).field(sq.get("facet.stats"))));
+			else if(fields.length > 1)  termsAggregation.subAggregation(AggregationBuilders.terms(fields[1]).field(fields[1]));
+
 			if (!Common.isEmpty(sq.get("facet.ranges"))) {
 				List<String> ranges = Common.toList(sq.get("facet.ranges"), ",");
 				termsAggregation.subAggregation(addRanges(field, ranges));
 			} else if (sq.get("facet.sum") != null && Common.isEquals("true", sq.get("facet.sum"))) {
-				String key = sq.get("facet.field");
-				int offset = Common.nvz(sq.get("facet.offset"), 0);
-				int limit = Common.nvz(sq.get("facet.limit"), 100);
-
 				termsAggregation.subAggregation(AggregationBuilders.sum(key).field(key));
 				BucketSortPipelineAggregationBuilder paging = PipelineAggregatorBuilders.bucketSort("paging", List.of(new FieldSortBuilder(key).order(order))).from(offset).size(limit);
 				termsAggregation.subAggregation(paging);
 			}
-			else if (sq.get("facet.avg") != null && Common.isEquals("true", sq.get("facet.avg"))) {
-				String key = sq.get("facet.field");
-				int offset = Common.nvz(sq.get("facet.offset"), 0);
-				int limit = Common.nvz(sq.get("facet.limit"), 100);
-
-				termsAggregation.subAggregation(AggregationBuilders.avg(key).field(key));
-				BucketSortPipelineAggregationBuilder paging = PipelineAggregatorBuilders.bucketSort("paging", List.of(new FieldSortBuilder(key).order(order))).from(offset).size(limit);
-				termsAggregation.subAggregation(paging);
-			}
-			else if (sq.get("facet.max") != null && Common.isEquals("true", sq.get("facet.max"))) {
-				String key = sq.get("facet.field");
-				int offset = Common.nvz(sq.get("facet.offset"), 0);
-				int limit = Common.nvz(sq.get("facet.limit"), 100);
-
-				termsAggregation.subAggregation(AggregationBuilders.max(key).field(key));
-				BucketSortPipelineAggregationBuilder paging = PipelineAggregatorBuilders.bucketSort("paging", List.of(new FieldSortBuilder(key).order(order))).from(offset).size(limit);
-				termsAggregation.subAggregation(paging);
-			}
-			else if (sq.get("facet.min") != null && Common.isEquals("true", sq.get("facet.min"))) {
-				String key = sq.get("facet.field");
-				int offset = Common.nvz(sq.get("facet.offset"), 0);
-				int limit = Common.nvz(sq.get("facet.limit"), 100);
-
-				termsAggregation.subAggregation(AggregationBuilders.min(key).field(key));
-				BucketSortPipelineAggregationBuilder paging = PipelineAggregatorBuilders.bucketSort("paging", List.of(new FieldSortBuilder(key).order(order))).from(offset).size(limit);
-				termsAggregation.subAggregation(paging);
-			}
-			else if (sq.get("facet.Group") != null &&  Common.isEquals("true", sq.get("facet.Group"))) {
-				String key = sq.get("facetGroup.field");
-				termsAggregation.subAggregation(AggregationBuilders.terms(key).field(key));
-			}
-
 			else if (sq.get("facet.list") != null &&  Common.isEquals("true", sq.get("facet.list"))) {
 				/* 대화방 목록 (그룹) */
-				int offset = Common.nvz(sq.get("facet.offset"), 0);
-				int limit = Common.nvz(sq.get("facet.group"), 100);
 				termsAggregation.subAggregation(AggregationBuilders.topHits(field).size(1).from(0).sort("ctime", order));
 				BucketSortPipelineAggregationBuilder paging = PipelineAggregatorBuilders.bucketSort("paging", null).from(offset).size(limit);
-
 				termsAggregation.subAggregation(paging);
-
 				aggregations.add(AggregationBuilders.cardinality("bucket_total").field(mainField));
 			}else if (sq.get("facet.detail") != null &&  Common.isEquals("true", sq.get("facet.detail"))) {
 				/* 대화 상세 내역 */
 				int size = (!Common.isEmpty(sq.get("facet.size"))) ? Common.nvz(sq.get("facet.size")) : 1; // default 1
 				termsAggregation  = termsAggregation.subAggregation(AggregationBuilders.topHits(field).size(size).from(0).sort("ctime", SortOrder.ASC));
 			}
+//			else {
+//				 BucketSortPipelineAggregationBuilder paging = PipelineAggregatorBuilders.bucketSort("paging", List.of(new FieldSortBuilder(key).order(order))).from(offset).size(limit);
+//				 termsAggregation.subAggregation(paging);
+//			}
 
-			else {
-				/* 그룹 검색 1개씩 묶음*/
-				termsAggregation.subAggregation(AggregationBuilders.topHits(field).size(1).from(0).sort("ctime", SortOrder.ASC));
-			}
+
 			aggregations.add(termsAggregation);
 		}
 		return aggregations;

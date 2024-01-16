@@ -9,12 +9,15 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.Aggregations;
+import org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
-import org.elasticsearch.search.aggregations.metrics.*;
+import org.elasticsearch.search.aggregations.metrics.ParsedStats;
+import org.elasticsearch.search.aggregations.metrics.ParsedSum;
 import org.springframework.data.elasticsearch.core.ElasticsearchAggregations;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -58,10 +61,10 @@ public class XcnFacetsVO {
 
 
 	protected static @Data class Buckets {
-    	private String val;
-    	private String key;
-    	private int count;
-    }
+		private String val;
+		private String key;
+		private int count;
+	}
 
 	private void setColumn(int columnCount) {
 		int asciiForLowerA = 97;
@@ -77,86 +80,82 @@ public class XcnFacetsVO {
 			Aggregations aggs = bucket.getAggregations();
 			List<Aggregation> aggsList = aggs.asList();
 			for (Aggregation subaggs : aggsList) {
-				if (subaggs instanceof NumericMetricsAggregation.SingleValue) {
-					jArray.add(parsedAggregation(subaggs, bucket.getKeyAsString(), bucket.getDocCount()));
-				}
+				jArray.add(parseFacetAggs(subaggs, bucket.getKeyAsString(), bucket.getDocCount()));
 			}
 		}
 	}
 
-	private JSONObject parsedAggregation(Aggregation aggs, String headerKey, long docCount) {
-		JSONObject json = new JSONObject();
-		json.put("val", headerKey);
-		json.put("count", (int) docCount);
-		json.put("key", null);
 
-		if (aggs instanceof NumericMetricsAggregation.SingleValue) {
-			double value = ((NumericMetricsAggregation.SingleValue) aggs).value();
-			// 각 Aggregation 유형에 따라 필드 채우기
-			if (aggs instanceof ParsedSum) {
-				json.put("sum", value);
-				json.put("avg", value);
-				json.put("max", value);
-				json.put("min", value);
-			} else if (aggs instanceof ParsedMax) {
-				json.put("max", value);
-				json.put("min", value);
-				json.put("avg", value);
-				json.put("sum", value);
-			} else if (aggs instanceof ParsedMin) {
-				json.put("min", value);
-				json.put("max", value);
-				json.put("avg", value);
-				json.put("sum", value);
-			} else if (aggs instanceof ParsedAvg) {
-				json.put("avg", value);
-				json.put("max", value);
-				json.put("min", value);
-				json.put("sum", value);
-			}
+
+	public JSONObject parseFacetAggs(Aggregation aggs,String headerKey,long docCount){
+		JSONObject json = new JSONObject();
+		if (aggs instanceof ParsedStringTerms) return   parsedStringTerms(aggs,headerKey,docCount);
+		else if (aggs instanceof ParsedStats) return parsedStats(aggs,headerKey);
+		else if (aggs instanceof ParsedSum)  return parsedSum(aggs,headerKey,docCount);
+		else return json;
+	}
+
+	List<Long> totalMax = new ArrayList<>();
+	List<Long> totalSum = new ArrayList<>();
+	List<Long> totalMin = new ArrayList<>();
+
+	public JSONObject parseFacetAggs(Terms.Bucket bucket,String headerKey){
+		Aggregations aggregations =	bucket.getAggregations();
+		for(Aggregation aggs : aggregations) {
+			if (aggs instanceof ParsedStats) return parsedStats(aggs,headerKey);
 		}
-		return json;
+		return null;
 	}
-	private JSONObject parsedAvg(Aggregation aggs, String headerKey, long docCount) {
-		ParsedAvg bucketArgments = (ParsedAvg) aggs;
+
+	public JSONObject parsedStringTerms(Aggregation aggs,String headerKey,long docCount){
+		/* 자유분석 */
+		ParsedStringTerms bucketArgments = (ParsedStringTerms) aggs;
+		JSONArray jsonArray = new JSONArray();
 		JSONObject json = new JSONObject();
+		for (Terms.Bucket arg : bucketArgments.getBuckets()) {
+			jsonArray.add(parseFacetAggs(arg,arg.getKeyAsString()));
+		}
 		json.put("val",headerKey);
-		json.put("avg", (int) docCount);
-		json.put("key",null);
-		json.put("size",((long) bucketArgments.getValue()));
-		return json;
-	}
-	private JSONObject parsedMin(Aggregation aggs, String headerKey, long docCount) {
-		ParsedMin bucketArgments = (ParsedMin) aggs;
-		JSONObject json = new JSONObject();
-		json.put("val",headerKey);
-		json.put("min",(int) docCount);
-		json.put("key",null);
-		json.put("size",((long) bucketArgments.getValue()));
+		json.put("count",docCount);
+
+		long tSum = totalSum.stream().mapToLong(m->m).sum();
+
+		json.put("sum",totalSum.stream().mapToLong(m->m).sum());
+		json.put("avg",(tSum / totalSum.size()));
+		json.put("max", Collections.max(totalMax));
+		json.put("min",Collections.max(totalMin));
+		json.put("buckets",jsonArray);
+
 		return json;
 	}
 
-	private JSONObject parsedMax(Aggregation aggs, String headerKey, long docCount) {
-		ParsedMax bucketArgments = (ParsedMax) aggs;
+	public JSONObject parsedStats(Aggregation aggs,String headerKey){
+		ParsedStats bucketArgments = (ParsedStats) aggs;
 		JSONObject json = new JSONObject();
 		json.put("val",headerKey);
-		json.put("max",(int) docCount);
-		json.put("key",null);
-		json.put("size",((long) bucketArgments.getValue()));
+		json.put("count",bucketArgments.getCount());
+
+		totalMax.add((long) bucketArgments.getMax());
+		totalSum.add((long) bucketArgments.getSum());
+		totalMin.add((long) bucketArgments.getMin());
+
+		json.put("sum",(long)bucketArgments.getSum());
+		json.put("avg",(long) bucketArgments.getAvg());
+		json.put("max",(long)bucketArgments.getMax());
+		json.put("min",(long)bucketArgments.getMin());
 		return json;
 	}
+
 
 	public JSONObject parsedSum(Aggregation aggs,String headerKey,long docCount){
 		ParsedSum bucketArgments = (ParsedSum) aggs;
 		JSONObject json = new JSONObject();
 		json.put("val",headerKey);
 		json.put("count",(int) docCount);
-		json.put("sum",(int) docCount);
 		json.put("key",null);
 		json.put("size",((long) bucketArgments.getValue()));
 		return json;
 	}
-
 
 	public String getMainKey(ElasticsearchAggregations elasticsearchAggregations){
 		if(elasticsearchAggregations == null) return "";

@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -443,15 +444,13 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 
 	@Override
 	public AnalysisFreedomListVO freedomView(FreedomSearchVO freedomSearchVO) throws IOException, SolrServerException {
-
 		String[] column = freedomSearchVO.getColumn();
-		String[] groupBy = freedomSearchVO.getGroupBy(); // 평균, 총합, .. 데이터
-		String[] groupData = freedomSearchVO.getGroupData(); // 전체 용량.. 데이터
+		String[] groupData = freedomSearchVO.getGroupData();
+
 		SolrQuery sq = new SolrQuery();
 
 		//젤 첫번째 애들
 		String freddDomQuery = changeQuery(getFreedomQuery(freedomSearchVO));
-
 		sq.setQuery(freddDomQuery);
 
 		// column 중복 제거.
@@ -461,48 +460,29 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 				columnList.add(column[i]);
 			}
 		}
-		sq.setQuery(freddDomQuery);
 
 		/* 문서 결과 표시 X */
 		sq.setStart(0);
 		sq.setRows(1);
 
-
+		/* 컬럼 */
+		/* Main Aggregations param  */
 		sq.setParam("group", true);
 		sq.setParam("group.facet", true);
-		sq.setParam("group.field", columnList.get(0));
-
+		sq.setParam("group.field", columnList.stream().collect(Collectors.joining(",")));
+		sq.setParam("facet.mincount", "0");
+		sq.setParam("facet.field", groupData[0]);
+		sq.setParam("facet.stats", groupData[0]);
 		sq.setParam("facet", true);
 
-
-		if (columnList.size() > 1) {
-			sq.setParam("facet.Group", true);
-			sq.setParam("facetGroup.field", columnList.get(1));
-		}
-
-		sq.setParam("facet.mincount", "0");
-
-		for (int i = 0; i < groupBy.length; i++) {
-			switch (groupBy[i]) {
-				case "sum":
-					sq.setParam("facet.sum", true);
-					sq.setParam("facet.field", "size");
-					break;
-				case "avg":
-					sq.setParam("facet.avg", true);
-					sq.setParam("facet.field", "size");
-					break;
-				case "max":
-					sq.setParam("facet.max", true);
-					sq.setParam("facet.field", "size");
-					break;
-				case "min":
-					sq.setParam("facet.min", true);
-					sq.setParam("facet.field", "size");
-					break;
-
-			}
-		}
+		/* 데이터 */
+//		for(String group  : groupBy) {
+//			if (("sum").equals(group)) sq.setParam("facet.sum", true);
+//			if (("avg").equals(group)) sq.setParam("facet.avg", true);
+//			if (("min").equals(group)) sq.setParam("facet.min", true);
+//			if (("max").equals(group)) sq.setParam("facet.max", true);
+//			if (("count").equals(group)) sq.setParam("facet.count", true);
+//		}
 
 		sq.setFacetMinCount(1);
 		sq.setStart(Common.nvz(0));
