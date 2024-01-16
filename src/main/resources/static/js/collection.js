@@ -557,7 +557,7 @@ function makeFileServiceList(data) {
     str += '<p class="rightBox">';
     str += '<span>' + data.ctime + '</span>';
     str += '</p>';
-    str += '<table class="subTable mat8"><tr><th>출발지 IP</th><td class="topline">' + data.srcIp + '</td><th>목적지 IP</th><td class="topline">' + data.dstIp + '</td>';
+    str += '<table class="subTable2 mat8"><tr><th>출발지 IP</th><td class="topline">' + data.srcIp + '</td><th>목적지 IP</th><td class="topline">' + data.dstIp + '</td>';
     str += '<tr xmlns="http://www.w3.org/1999/html"><th>크기</th><td>' + data.bodySize + '</td><th>접속계정</th><td>' + data.userId + '</td></tr>';
     str += '<tr><th>HOST/PATH</th><td colspan="3" class="mal8 tableLink txt_left">' + data.host + data.path + '</td><tr></table>';
     str += '</div>';

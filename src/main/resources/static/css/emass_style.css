@@ -662,12 +662,13 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .subTable th, td {border-bottom:1px solid #ddd;}
 .subTable tr:nth-child(even) {background-color: #f8f8f8; }
 
-.subTable2 {position: relative;  width:100%; font-size: 13px; background-color: #fff;table-layout: fixed;}
-.subTable2 th {border-left:1px solid #ddd; border-top:1px solid #111;background-color:#EEEFF2;font-weight:600;padding:4px; }
+.subTable2 {position: relative;  width:100%; font-size: 13px; background-color: #fff;table-layout: fixed; word-wrap: break-word;}
+.subTable2 th {border-left:1px solid #ddd; border-top:1px solid #111;background-color:#EEEFF2;font-weight:600;padding:8px; }
 .subTable2 td {border-left:1px solid #ddd; text-align: center;padding:4px; color:#555;}
 .subTable2 th:first-child, td:first-child {border-left: none;}
 .subTable2 th, td {border-bottom:1px solid #ddd; vertical-align: middle;}
 .subTable2 tr:nth-child(even){background-color: #f8f8f8}
+.subTable2 td.topline {border-top:1px solid #111 !important;}
 
 .xcnTooltip {position: relative;display: inline-block;}
 .xcnTooltip .tooltiptext {visibility: hidden;width: 120px;background-color: #555;color: #fff;

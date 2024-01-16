@@ -15,7 +15,6 @@
 		}
 
 		html, body {
-			height: 100px;
 			padding: 0px;
 			margin: 0px;
 			overflow: auto;
