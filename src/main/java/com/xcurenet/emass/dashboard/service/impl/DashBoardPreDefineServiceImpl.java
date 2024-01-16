@@ -635,7 +635,6 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 			}
 		}
 		transformedData = transformedData.stream().sorted((o1, o2) -> o1.get("date").toString().compareTo(o2.get("date").toString()) ).collect(Collectors.toList());
-		System.out.println(transformedData);
 
 		return transformedData;
 	}

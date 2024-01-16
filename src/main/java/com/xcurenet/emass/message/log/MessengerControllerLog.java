@@ -28,11 +28,11 @@ public class MessengerControllerLog {
 
 	@Autowired
 	private EmsMessageService emsMessageService;
-	
+
 	private static final String ENTER = "┌";
 
 	public void getMessengerGroupList(final HttpServletRequest request, AuditRequestVO auditVo) {
-		
+
 		JSONObject param = Common.getParam(request);
 		JSONObject filterVal = Common.toJSONObject(param.get("data"));
 		StringBuffer info = new StringBuffer();
@@ -43,11 +43,11 @@ public class MessengerControllerLog {
 				JSONObject condition = conditions.getJSONObject(i);
 
 				if(Common.isNotEmpty(condition.get("serviceType"))){
-					
+
 					List<CodeVO> messenger= emsMessageService.getMessengerList();
-					
+
 					String [] serviceTypes = Common.toArray(Common.nvl(condition.get("serviceType")), ",");
-					
+
 					if(messenger.size() != serviceTypes.length) {
 						String serviceNm  = Config.getServiceLv12Nm(serviceTypes[0]);
 						String addInfo = "";
@@ -55,11 +55,11 @@ public class MessengerControllerLog {
 						info.append(Prop.propFormat("condition.service")+" : ").append(serviceNm).append(addInfo).append(ENTER);
 					}
 				}
-				
+
 				if (Common.isNotEmpty(condition.get("searchStr"))) info.append(Prop.propFormat("condition.search_str") + " : ").append(Common.nvl(condition.get("searchStr"))).append(ENTER);
 
-				String startDt = Common.formatDate3(Common.nvl(condition.get("startDt")));
-				String endDt = Common.formatDate3(Common.nvl(condition.get("endDt")));
+				String startDt = Common.formatDate3(Common.nvl(condition.get("startDt")+"000000"));
+				String endDt = Common.formatDate3(Common.nvl(condition.get("endDt")+"235959"));
 				info.append(Prop.propFormat("condition.period") + " : ").append(startDt).append(" ~ ").append(endDt).append(ENTER);
 
 				if (Common.isNotEmpty(condition.get("senders"))) info.append(Prop.propFormat("condition.participation") + " : ").append(Common.nvl(condition.get("senders"))).append(ENTER);
@@ -143,13 +143,13 @@ public class MessengerControllerLog {
 
 	public void getMessengerGroupDetailSearch(final HttpServletRequest request, AuditRequestVO auditVo) {
 		JSONObject param = Common.getParam(request);
-		JSONObject filterVal = Common.toJSONObject(param.get("searchParam"));
+		JSONObject filterVal = Common.toJSONObject(param.get("data"));
 		String xRootMtr = Common.nvl(param.get("xRootMtr"));
 		StringBuffer info = new StringBuffer();
 		info.append("[" + Prop.propFormat("java.log.messenger.group.msg.search") + "]").append(ENTER);
 		info.append(Prop.propFormat("condition.xrootmtr") + " : ").append(xRootMtr).append(ENTER);
 		try {
-			JSONArray conditions = filterVal.getJSONArray("condition");
+			JSONArray conditions = filterVal.getJSONArray("conditions");
 			for (int i = 0; i < conditions.size(); i++) {
 				JSONObject condition = conditions.getJSONObject(i);
 

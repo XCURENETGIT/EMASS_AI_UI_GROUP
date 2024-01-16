@@ -39,7 +39,6 @@ public class RegexPatternServiceImpl extends XcnAbstractDAO implements RegexPatt
 
 	@Override
 	public int updateRegexPattern(RegexPatternVO regexPattern) {
-		System.out.println(regexPattern.getRegexSeq());
 		return update("com.xcurenet.sqlmap.mappers.mysql.regexPattern.updateRegex", regexPattern);
 	}
 
