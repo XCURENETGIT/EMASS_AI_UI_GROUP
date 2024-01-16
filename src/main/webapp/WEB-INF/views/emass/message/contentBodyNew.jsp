@@ -683,8 +683,8 @@
 								<s:message code="bodyview.body.content"/>
 								<div class="pull-right" style="position: relative;top:-5px;">
 
-									<button class="btn05 body_selectBtn font_size" id="large_txt">+ 확대</button>
-									<button class="btn05 body_selectBtn font_size" id="small_txt">- 축소</button>
+									<button class="btn05 body_selectBtn font_size" id="large_txt">+ <s:message code="bodyview.msg.zoomIn"/></button>
+									<button class="btn05 body_selectBtn font_size" id="small_txt">- <s:message code="bodyview.msg.zoomOut"/></button>
 									&nbsp;
 									<span class="body_selectBtn"> <s:message code="bodyview.charset"/> : </span>
 									<span class="select-xs">

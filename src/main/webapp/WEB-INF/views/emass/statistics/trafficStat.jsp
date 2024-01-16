@@ -167,7 +167,7 @@
 			<div class="mat32">
 				<div class="subtab">
 					<button class="active mt32">
-						LIST
+						<s:message code="deviceInfo.navi.title2"/> <s:message code="selectCodeAll.list"/>
 						<span id="consentCount"></span>
 					</button>
 				</div>

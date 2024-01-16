@@ -430,7 +430,7 @@
 <div class="xcn_container" id="popupWrap" data-backdrop="static">
 	<div class="item grayBg02" style="height:900px;">
 		<h3 class="grayBg02 borbottom_dashed p12"><span class="bullet02"></span></span>검색 조건</h3>
-		<div class="dis popupInner">
+		<div class="dis mat8 popupInner">
 			<div class="form-group form-inline filterDiv condition consent">
 				<div class="row borbottom_dashed pb8">
 					<div class="col-35">

@@ -10,10 +10,7 @@ import net.sf.json.JSONObject;
 import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
-import org.elasticsearch.search.aggregations.metrics.ParsedAvg;
-import org.elasticsearch.search.aggregations.metrics.ParsedMax;
-import org.elasticsearch.search.aggregations.metrics.ParsedMin;
-import org.elasticsearch.search.aggregations.metrics.ParsedSum;
+import org.elasticsearch.search.aggregations.metrics.*;
 import org.springframework.data.elasticsearch.core.ElasticsearchAggregations;
 
 import java.io.IOException;
@@ -80,12 +77,45 @@ public class XcnFacetsVO {
 			Aggregations aggs = bucket.getAggregations();
 			List<Aggregation> aggsList = aggs.asList();
 			for (Aggregation subaggs : aggsList) {
-				if (subaggs instanceof ParsedSum) jArray.add(parsedSum(subaggs, bucket.getKeyAsString(), bucket.getDocCount()));
-				if (subaggs instanceof ParsedMax) jArray.add(parsedMax(subaggs, bucket.getKeyAsString(), bucket.getDocCount()));
-				if (subaggs instanceof ParsedMin) jArray.add(parsedMin(subaggs, bucket.getKeyAsString(), bucket.getDocCount()));
-				if (subaggs instanceof ParsedAvg) jArray.add(parsedAvg(subaggs, bucket.getKeyAsString(), bucket.getDocCount()));
+				if (subaggs instanceof NumericMetricsAggregation.SingleValue) {
+					jArray.add(parsedAggregation(subaggs, bucket.getKeyAsString(), bucket.getDocCount()));
+				}
 			}
 		}
+	}
+
+	private JSONObject parsedAggregation(Aggregation aggs, String headerKey, long docCount) {
+		JSONObject json = new JSONObject();
+		json.put("val", headerKey);
+		json.put("count", (int) docCount);
+		json.put("key", null);
+
+		if (aggs instanceof NumericMetricsAggregation.SingleValue) {
+			double value = ((NumericMetricsAggregation.SingleValue) aggs).value();
+			// 각 Aggregation 유형에 따라 필드 채우기
+			if (aggs instanceof ParsedSum) {
+				json.put("sum", value);
+				json.put("avg", value);
+				json.put("max", value);
+				json.put("min", value);
+			} else if (aggs instanceof ParsedMax) {
+				json.put("max", value);
+				json.put("min", value);
+				json.put("avg", value);
+				json.put("sum", value);
+			} else if (aggs instanceof ParsedMin) {
+				json.put("min", value);
+				json.put("max", value);
+				json.put("avg", value);
+				json.put("sum", value);
+			} else if (aggs instanceof ParsedAvg) {
+				json.put("avg", value);
+				json.put("max", value);
+				json.put("min", value);
+				json.put("sum", value);
+			}
+		}
+		return json;
 	}
 	private JSONObject parsedAvg(Aggregation aggs, String headerKey, long docCount) {
 		ParsedAvg bucketArgments = (ParsedAvg) aggs;

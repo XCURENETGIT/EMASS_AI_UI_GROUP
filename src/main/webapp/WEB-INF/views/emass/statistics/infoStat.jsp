@@ -357,7 +357,7 @@
 	<div class="content" style="padding-bottom: 50px;">
 		<div class="contentSub">
 			<div class="chartAreafull">
-				<h3>개인정보 유출 관계 분석</h3>
+				<h3><s:message code="DATA_ANALYSIS.ANALYSIS_INFO"/></h3>
 				<div class="chartBox" style="height: 350px;">
 					<div id="infoStatListGrid" class="slickGrid gridArea" style="min-height: 280px;max-height: 280px;display: grid"></div>
 				</div>
@@ -365,8 +365,8 @@
 			<div class="subtab">
 				<div>
 					<ul class="nav nav-tabs codeTab listChart">
-						<li class="active"><a data-toggle="tab" href="#privateChart">개인정보 유출 관계도</a></li>
-						<li class=""><a data-toggle="tab" href="#privateDetail">개인정보 유출 내역</a></li>
+						<li class="active"><a data-toggle="tab" href="#privateChart"><s:message code="analysis.infostat.chart"/></a></li>
+						<li class=""><a data-toggle="tab" href="#privateDetail"><s:message code="analysis.infostat.list"/></a></li>
 					</ul>
 				</div>
 			</div>

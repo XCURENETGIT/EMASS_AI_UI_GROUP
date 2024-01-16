@@ -269,7 +269,7 @@
 					<h3><s:message code="filterInfo.service"/> <s:message code="common.msg.useyn"/>-<s:message code="common.msg.modify"/></h3>
 					<p>
 						<span class="red_dot veralign_middle"></span>
-						필수 입력 사항입니다.
+						<s:message code="common.required.msg"/>
 					</p>
 				</div>
 				<div class="modalbody">
@@ -390,7 +390,7 @@
 				</select>
 			</div>
 			<input type="text" placeholder="<s:message code="codeInfo.msg.enter.svc"/>" id="searchStrInput" style="width: 250px;">
-			<button class="form_btn01" type="button" accesskey="Q" id="searchBtn">조회</button>
+			<button class="form_btn01" type="button" accesskey="Q" id="searchBtn"><s:message code="common.search"/></button>
 			<div>
 				<button type="button" class="btn01" accesskey="I" id="insertBtn" style="display: none;"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
 				<button type="button" class="btn02" accesskey="D" id="deleteBtn" style="display: none;"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>

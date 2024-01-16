@@ -585,7 +585,7 @@
 					<h3><s:message code="admin.adminpop.title"/></h3>
 					<p>
 						<span class="red_dot veralign_middle"></span>
-						필수 입력 사항입니다.
+						<s:message code="common.required.msg"/>
 					</p>
 				</div>
 				<div class="modalbody">
@@ -918,7 +918,7 @@
 
 							</div>
 							<div class="info" style="background-color: transparent">
-								안내 사항
+								<s:message code="common.guidance"/>
 								<div id="msgAuthComment" class="form-inline">
 									<div style="padding-left: 15px;"><s:message code="admin.add.msgAuthComment"/></div>
 								</div>
@@ -1029,7 +1029,7 @@
 			</div>
 			<div>
 				<input type="text" placeholder="<s:message code="admin.msg.idname"/>" id="searchStr" style="width: 250px;">
-				<button class="form_btn01" type="button" accesskey="Q" id="searchBtn">조회</button>
+				<button class="form_btn01" type="button" accesskey="Q" id="searchBtn"><s:message code="common.search"/></button>
 				<button type="button" class="btn01" accesskey="I" id="insertBtn"><s:message code="common.msg.add"/>
 				</button>
 			</div>
@@ -1039,7 +1039,7 @@
 		<div class="contentSub">
 			<div class="subtab">
 				<button class="active">
-					운용자 관리 목록
+					<s:message code="admin.navi.title2"/> <s:message code="dashboardSetup.dashtype.list"/>
 					<span id="adminCount"></span>
 				</button>
 			</div>

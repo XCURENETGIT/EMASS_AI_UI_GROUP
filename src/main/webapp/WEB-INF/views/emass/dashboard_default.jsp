@@ -1236,7 +1236,7 @@ var dashCondition = {
 		<%--				금일 데이터 수집 건수--%>
 		<div class="m_chartArea">
 			<div>
-				<h3>금일 데이터 수집 건수
+				<h3><s:message code="dashboard.todayData_count"/>
 				</h3>
 				<%--				*****	여기에 select 넣기--%>
 				<div class="mainlist">

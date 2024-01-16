@@ -148,7 +148,7 @@
 				</select>
 			</div>
 			<div>
-				<button type="button" accesskey="Q" class="form_btn01" id="searchBtn">조회</button>
+				<button type="button" accesskey="Q" class="form_btn01" id="searchBtn"><s:message code="common.search"/></button>
 			</div>
 		</div>
 	</div>
@@ -156,7 +156,7 @@
 		<div class="contentSub">
 			<div class="subtab">
 				<button class="active">
-					조회 이력 목록
+					<s:message code="auditLog.select.admin"/> <s:message code="selectCodeAll.list"/>
 					<span id="saerchLogCount"></span>
 				</button>
 			</div>

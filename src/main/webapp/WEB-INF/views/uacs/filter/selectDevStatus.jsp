@@ -81,12 +81,12 @@
 </head>
 <div class="xcn_container" id="popupWrap">
 	<div class="item">
-		<h3 class="blue"><span class="bullet01"></span></span>장비 현황</h3>
+		<h3 class="blue"><span class="bullet01"></span></span><s:message code="selectDevStatus.device.status"/></h3>
 		<div class="grayBg mat8 popupInner">
 			<div>
 				<input type="text" placeholder="<s:message code="common.msg.searchMsg"/>" id="searchStr"
 				       style="width: 250px;">
-				<button class="form_btn01" type="button" accesskey="Q" id="searchBtn">조회</button>
+				<button class="form_btn01" type="button" accesskey="Q" id="searchBtn"><s:message code="common.search"/></button>
 				<button type="button" class="form_btn06" accesskey="R" id="devStatusBtn"><s:message
 						code="selectDevStatus.ruleapply"/>
 				</button>

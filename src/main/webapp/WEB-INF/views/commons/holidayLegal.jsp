@@ -157,7 +157,7 @@
 					<h3><s:message code="holidayLegal.holidaylegal"/></h3>
 					<p>
 						<span class="red_dot veralign_middle"></span>
-						필수 입력 사항입니다.
+						<s:message code="common.required.msg"/>
 					</p>
 				</div>
 				<div class="modalbody">
@@ -209,7 +209,7 @@
 		<div class="contentSub">
 			<div class="subtab">
 				<button class="active">
-					법정 공휴일 목록
+					<s:message code="holidayLegal.holidaylegal"/> <s:message code="dashboardSetup.dashtype.list"/>
 					<span id="holidayLegalCount"></span>
 				</button>
 			</div>

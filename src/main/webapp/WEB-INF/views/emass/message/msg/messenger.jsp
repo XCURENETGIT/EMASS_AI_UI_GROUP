@@ -912,12 +912,12 @@
 		<%--			검색 영역--%>
 		<div class="leftSearch p20">
 			<div class="leftSearchTab mat8">
-				<button class="active" onclick="openCity('Tab01')">메시지 검색</button>
+				<button class="active" onclick="openCity('Tab01')"><s:message code="condition.search.messenger"/></button>
 				<!--<button onclick="openCity('Tab02')">탭 비활성</button>-->
 			</div>
 			<div id="Tab01">
 				<div>
-					<h3 class="mat16">기본 검색</h3>
+					<h3 class="mat16"><s:message code="message.msg.default.search"/></h3>
 					<%if (consent && Common.isEquals(firstAdminYn, "N") && Common.isNotEquals(adminType, "C")) { %>
 					<div class="form-group form-inline not-dashed" style="padding-left: 10px; width: 100%; margin-bottom: 3px;">
 						<button type="button" class="btn btn-sm btn-default" accesskey="C" id="consentBtn" onclick="searchConsentNo();"><span
@@ -935,7 +935,7 @@
 						</select>
 						<input class="w100 mat8" type="text" id="searchStrInput" placeholder="<s:message code="common.msg.searchMsg"/>">
 					</div>
-					<h3 class="mat16">상세 검색</h3>
+					<h3 class="mat16"><s:message code="message.msg.deepsearch"/></h3>
 					<div>
 						<div style="display: flex;">
 							<div id="startdatepicker"><input type="date" id="startDt" style="width: 140px;">
@@ -943,8 +943,8 @@
 							<div id="enddatepicker"><input type="date" id="endDt" style="width: 140px;"></div>
 						</div>
 						<div class="optiotab w100 mat8">
-							<button class="active w50" name="attachYn" id="attachAll" value="">첨부 전체</button>
-							<button class="w50" name="attachYn" id="attachY" value="Y">첨부 있음</button>
+							<button class="active w50" name="attachYn" id="attachAll" value=""><s:message code="condition.isattached.all"/></button>
+							<button class="w50" name="attachYn" id="attachY" value="Y"><s:message code="eikon.attach.exist"/></button>
 						</div>
 
 						<select id="busiSelect" class="w100 mat8" data-style="btn-default btn-sm" multiple data-show-subtext="true"
@@ -953,7 +953,7 @@
 						<div id="selectedCodeTitle"></div>
 
 						<p class="mat8 formText btnform" data-toggle="buttons">
-							<span class="tit">부서 선택</span>
+							<span class="tit"><s:message code="common.org.choose.dept"/></span>
 							<button type="button" class="btn01" id="dept"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
 									code="common.org.choose.dept"/></button>
 							<span id="deptSelectedArea" class="codeSelectedBtn">
@@ -991,17 +991,17 @@
 				<div class="subTit">
 					<h2 class="ma_none">
 						<button class="menu"></button>
-						메신저
+						<s:message code="DATA_MONITOR.MESSAGE_SERVICE"/>
 						<span class="xcnTooltip">
                                         <a><img src="<c:url value="/img/ico_info.png"/>" alt="allmenu"></a>
-                                        <span class="tooltiptext">메신저 모아보기</span>
+                                        <span class="tooltiptext"><s:message code="DATA_MONITOR.MESSAGE_SERVICE"/></span>
                                     </span>
 					</h2>
 				</div>
 				<div class="bortop_dd  borbottom_dd pt16">
 					<div class="subtab pl20 pr20">
-						<button class="active" name="searchType" value="G" id="G">대화방</button>
-						<button class="tablinks" name="searchType" value="GD" id="GD">대화내용</button>
+						<button class="active" name="searchType" value="G" id="G"><s:message code="eikon.msg.chats"/></button>
+						<button class="tablinks" name="searchType" value="GD" id="GD"><s:message code="eikon.msg.chatContents"/></button>
 					</div>
 				</div>
 				<div class="list-group" id="group_list" style="margin-bottom: 0px;">
@@ -1035,18 +1035,18 @@
 				<div class="top">
 					<%--					내보내기--%>
 					<div class="myDropdown mal16">
-						<span>내보내기 &#9662;</span>
+						<span><s:message code="analysis.relation.ui.export"/> &#9662;</span>
 						<div class="dropdown-content">
-							<a href="#" onclick="downloadList('xlsx')" class="excel_down">엑셀(xlsx)</a>
-							<a href="#" onclick="downloadList('txt')" class="txt_down">텍스트(txt)</a>
-							<a href="#" onclick="downloadList('html')" class="html_down">하이퍼텍스트(html)</a>
-							<a href="#" class="excel_file_down">액셀(xlsx)+첨부파일</a>
+							<a href="#" onclick="downloadList('xlsx')" class="excel_down"><s:message code="common.msg.excel"/></a>
+							<a href="#" onclick="downloadList('txt')" class="txt_down"><s:message code="common.msg.text"/></a>
+							<a href="#" onclick="downloadList('html')" class="html_down"><s:message code="eikon.msg.html"/></a>
+							<a href="#" class="excel_file_down"><s:message code="common.msg.excel"/>+<s:message code="consent.attach"/></a>
 						</div>
 					</div>
 
 					<div style="display: flex;">
 						<div style="width: 450px;">
-								<span>대화방 아이디: <span class="chatid"><span id="xrootmtr"></span><span id="srcip" style="display:none;"></span><span
+								<span><s:message code="condition.xrootmtr"/>: <span class="chatid"><span id="xrootmtr"></span><span id="srcip" style="display:none;"></span><span
 										id="usr_id" style="display:none;"></span><span id="msgid" style="display:none;"></span></span></span>
 						</div>
 
@@ -1071,12 +1071,12 @@
 								<div id="endsubdatepicker"><input type="date" id="endSubDt" style="width: 110px;"></div>
 							</div>
 
-							<button class="form_btn01" type="button" accesskey="M" id="searchMsgQueryBtn">조회</button>
+							<button class="form_btn01" type="button" accesskey="M" id="searchMsgQueryBtn"><s:message code="common.search"/></button>
 						</div>
 
 						<div class="searchSub txt_right">
 							<input type="text" class="w70" placeholder="<s:message code="condition.research"/>" id="searchMsgStrInput">
-							<button class="form_btn01 blackBg" type="button" accesskey="M" id="searchMsgBtn">검색</button>
+							<button class="form_btn01 blackBg" type="button" accesskey="M" id="searchMsgBtn"><s:message code="common.search"/></button>
 						</div>
 					</div>
 				</div>
@@ -1152,7 +1152,7 @@
 		<!-- 첨부파일 -->
 		<div class="rightFile p20" id="xcn_Search2" style="display: none;">
 			<div class="subtab">
-				<button class="active">첨부파일
+				<button class="active"><s:message code="consent.attach"/>
 					<span id="xcn_toggleBtn2" style="font-size:16px; opacity: 0.7; padding:4px;">x</span>
 				</button>
 			</div>

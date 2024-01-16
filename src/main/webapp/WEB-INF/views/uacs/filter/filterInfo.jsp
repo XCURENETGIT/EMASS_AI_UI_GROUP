@@ -648,10 +648,10 @@
 			</div>
 			<div class="modalCon">
 				<div class="modalTop">
-					<h3>ID 데이터 미로깅 추가 및 수정</h3>
+					<h3><s:message code="filterInfo.idpop.title"/></h3>
 					<p>
 						<span class="red_dot veralign_middle"></span>
-						필수 입력 사항입니다.
+						<s:message code="common.required.msg"/>
 					</p>
 				</div>
 				<div class="modalbody">
@@ -700,7 +700,7 @@
 					<h3><s:message code="filterInfo.ippop.title"/></h3>
 					<p>
 						<span class="red_dot veralign_middle"></span>
-						필수 입력 사항입니다.
+						<s:message code="common.required.msg"/>
 					</p>
 				</div>
 				<div class="modalbody">
@@ -958,10 +958,10 @@
 			</div>
 			<div class="modalCon">
 				<div class="modalTop">
-					<h3>Domain 데이터 미로깅 추가 및 수정</h3>
+					<h3><s:message code="filterInfo.domainpop.title"/></h3>
 					<p>
 						<span class="red_dot veralign_middle"></span>
-						필수 입력 사항입니다.
+						<s:message code="common.required.msg"/>
 					</p>
 				</div>
 				<div class="modalbody">
@@ -1007,10 +1007,10 @@
 			</div>
 			<div class="modalCon">
 				<div class="modalTop">
-					<h3>URL 데이터 미로깅 추가 및 수정</h3>
+					<h3><s:message code="filterInfo.urlPop.title"/></h3>
 					<p>
 						<span class="red_dot veralign_middle"></span>
-						필수 입력 사항입니다.
+						<s:message code="common.required.msg"/>
 					</p>
 				</div>
 				<div class="modalbody">
@@ -1028,7 +1028,7 @@
 				<input type="hidden" name="tabId"/>
 				<input type="hidden" name="tab"/>
 				<div class="info">
-					안내 사항
+					<s:message code="common.guidance"/>
 					<br>
 					<s:message code="filterInfo.msg.exceptHttp"/>
 				</div>
@@ -1049,10 +1049,10 @@
 			</div>
 			<div class="modalCon">
 				<div class="modalTop">
-					<h2>제목 데이터 미로깅 추가 및 수정</h2>
+					<h2><s:message code="filterInfo.subjectPop.title"/></h2>
 					<p>
 						<span class="red_dot veralign_middle"></span>
-						필수 입력 사항입니다.
+						<s:message code="common.required.msg"/>
 					</p>
 				</div>
 				<div class="modalbody">
@@ -1082,7 +1082,7 @@
 					</div>
 				</div>
 				<div class="info">
-					안내 사항
+					<s:message code="common.guidance"/>
 					<div class="form-inline" style="padding-left: 10px;">1) <s:message code="filterInfo.exam.text1"/></div>
 					<div class="form-inline" style="padding-left: 10px;">2) <s:message code="filterInfo.exam.text2"/></div>
 					<div class="form-inline" style="padding-left: 10px;">3) <s:message code="filterInfo.exam.text3"/></div>
@@ -1107,10 +1107,10 @@
 			</div>
 			<div class="modalCon">
 				<div class="modalTop">
-					크기 데이터 미로깅 추가 및 수정
+					<s:message code="filterInfo.sizePop.title"/>
 					<p>
 						<span class="red_dot veralign_middle"></span>
-						필수 입력 사항입니다.
+						<s:message code="common.required.msg"/>
 					</p>
 				</div>
 				<div class="modalbody">
@@ -1145,7 +1145,7 @@
 					</div>
 				</div>
 				<div class="info">
-					안내 사항
+					<s:message code="common.guidance"/>
 					<div class="form-inline" style="padding-left: 10px;">※ <s:message code="filterInfo.unit"/>: Byte
 					</div>
 					<div class="form-inline" style="padding-left: 10px;">※ <s:message code="filterInfo.range"/> : 1 ~ 1,073,741,824 Byte(1,024 MB)
@@ -1172,7 +1172,7 @@
 					<h3><s:message code="filterInfo.attachPop.title"/></h3>
 					<p>
 						<span class="red_dot veralign_middle"></span>
-						필수 입력 사항입니다.
+						<s:message code="common.required.msg"/>
 					</p>
 				</div>
 				<div class="modalbody">
@@ -1229,7 +1229,7 @@
 					<option value="">-<s:message code="filterInfo.msg.select.service"/>-</option>
 				</select>
 				<input type="text"  id="searchStr" style="width: 210px;">
-				<button class="form_btn01" type="button" accesskey="Q" id="searchBtn">조회</button>
+				<button class="form_btn01" type="button" accesskey="Q" id="searchBtn"><s:message code="common.search"/></button>
 				<button type="button" class="btn01" accesskey="I" id="insertBtn"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
 				<button type="button" class="btn02" accesskey="D" id="deleteBtn"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
 				<button type="button" class="form_btn06" accesskey="R" id="devStatusBtn" style="display: none;"><s:message code="filterInfo.ruleapply"/></button>
