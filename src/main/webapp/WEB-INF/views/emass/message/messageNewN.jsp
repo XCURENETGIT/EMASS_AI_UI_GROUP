@@ -334,7 +334,7 @@
         #filterNamePopInput {line-height: 14px;}
 
         .queryTextarea{
-            width: 260px;height:100%;border: 2px solid #337AB7;padding: 5px 0 0 5px;resize:none;font-size:12px;line-height: 23px;
+            width: 260px;height:100%;border: 2px solid #337AB7;padding: 5px 0 0 5px;resize:none;font-size:14px;line-height: 23px;
         }
 
         #insaFormatClear:hover,#insaFormatOk:hover{
@@ -2572,9 +2572,9 @@
                                             <option value="8"><s:message code="condition.month" arguments="3"/></option>
                                         </select>
                                         <div style="display: flex; width: 260px; padding-top: 4px;">
-                                            <input type="text" id="startdatepicker" class="input-xs form-control border-radius-none" style="padding: 1px 0px 0px 3px;border-radius: 0;font-size: 11px; width: 125px;"/>
+                                            <input type="text" id="startdatepicker" class="input-xs form-control border-radius-none" style="padding: 1px 0px 0px 3px;border-radius: 0;font-size: 12px; width: 125px;"/>
                                             <span style="padding:0 2px; padding-top: 4px;">-</span>
-                                            <input type="text" id="enddatepicker" class="input-xs form-control border-radius-none"  style="padding: 1px 0px 0px 3px;border-radius: 0;font-size: 11px; width: 125px;"/>
+                                            <input type="text" id="enddatepicker" class="input-xs form-control border-radius-none"  style="padding: 1px 0px 0px 3px;border-radius: 0;font-size: 12px; width: 125px;"/>
                                         </div>
                                     </div>
                                     <div class="condition_divider"></div>
@@ -2987,7 +2987,7 @@
                                 </div>
                                 <div class="condition_option">
                                     <div class="condition_item">
-                                        <button type="button" class="btn btn-sm btn-primary searchQueryBtn"><span class="glyphicon glyphicon-check"></span>&nbsp;<s:message code="query.make.inputer"/></button>
+                                        <button type="button" class="btn btn-sm btn-primary searchQueryBtn"><span class="glyphicon glyphicon-check"></span>&nbsp; <span><s:message code="query.make.inputer"/></span></button>
                                     </div>
                                 </div>
                             </div>

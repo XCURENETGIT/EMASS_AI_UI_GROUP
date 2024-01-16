@@ -155,13 +155,14 @@ input[type="text"] {
         padding-left: 3px;*/
 }
 .filter-option {
-	font-size: 12px;
+	font-size: 14px;
 }
 .bootstrap-select.btn-group .dropdown-toggle .filter-option  {
 	top: 0px;
 	position: absolute;
 	left: 0px;
 	padding-left: 6px;
+	font-size: 12px;
 	width: calc(100% - 25px);
 }
 
@@ -219,7 +220,7 @@ input[type="text"] {
 	background-color: #253f56;
 	color: white;
 	font-weight: bold;
-	font-size: 12px;
+	font-size: 14px;
 	border: 0px;
 	line-height: 19px;
 }
@@ -326,7 +327,7 @@ input[type="text"] {
 	display: inline-block;
 	margin-left: -1px;
 	text-align: center;
-	font-size:15px !important;
+	font-size:14px !important;
 	width: 100%;
 }
 
@@ -424,7 +425,7 @@ input[type="text"] {
 .tab_close {
 	position: absolute;
 	z-index: 1;
-	background:url('../img/icon/x.png');
+	background:url('../img/icon/x1.png');
 	/*background-color: rgba( 36, 35, 48, 0.5 );*/
 	width: 16px;
 	height: 16px;
@@ -447,11 +448,11 @@ input[type="text"] {
 	right: 5px;
 }
 
-.tab_close:hover {
-	background-image: url('../img/icon/x_over.png');
+.tab_close_2:hover {
+	background-image: url('../img/icon/x_over2.png');
 }
 .tab_close:hover {
-	background-image: url('../img/icon/x_over2.png');
+	background-image: url('../img/icon/x_over1.png');
 }
 
 .condition_group {
@@ -490,8 +491,14 @@ input[type="text"] {
 	clear:both;
 }
 
+.searchSelect {
+	font-size:13px;
+	font-family: Pretendard;
+}
+
 .condition_label{
 	margin-right: 10px;
+	font-size: 13px;
 	font-weight: normal;
 	margin-bottom: 0px;
 	padding: 2px 0px;
@@ -503,6 +510,7 @@ input[type="text"] {
 }
 .condition_select{
 	width:260px;
+	font-size:12px;
 	cursor: pointer;
 }
 .condition_save {
@@ -513,7 +521,12 @@ input[type="text"] {
 	padding:8px 0 6px;
 }
 .condition_save a{
-	float:right; padding-right:15px; color:#333; cursor: pointer; font-size: 12px;
+	float:right;
+	/*padding-right:15px; */
+	color:#333;
+	cursor: pointer;
+	font-size: 14px;
+
 }
 .condition_left{
 	float:left;
@@ -836,7 +849,7 @@ h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
 del, dfn, em, img, ins, kbd, q, s, samp,
 small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
+b, u, i, center,option,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td,
@@ -890,19 +903,19 @@ table {
 
 a:active {}
 a:hover {color:#ddd;}
-input[type=text], input[type=password], input[type=search], select, textarea {font-size:12px;height:26px;line-height: 26px;border: 1px solid #CCC;background: #FFF;padding: 0 4px;align-items: center;}
+input[type=text], input[type=password], input[type=search], textarea {font-size:12px;height:26px;line-height: 26px;border: 1px solid #CCC;background: #FFF;padding: 0 4px;align-items: center;}
 /*input:disabled{ background-color:#eee; border: 1px solid #CCC;}*/
 input[type="text"].error,select.error{border:1px solid #FC5656; color:#FC5656; background-color:#fff;}
 select:disabled { background-color:#ddd; border: 1px solid #aaa;}
-select { font-size:12px; height:26px; line-height: 26px; resize: vertical;  border: 1px solid #CCC; background: #FFF; padding: 0 4px; align-items: center; }
+select { font-size:14px; height:26px; line-height: 26px; resize: vertical;  border: 1px solid #CCC; background: #FFF; padding: 0 4px; align-items: center; }
 button {cursor: pointer;font-family: Pretendard;}
 button:hover {text-decoration: underline;}
 
 /* IE 기본 스타일 제거 */
 select::-ms-expand{display: none; /* IE 10, 11 */}
-input[type="date"]{font-size:12px;font-family: Pretendard;height:26px;line-height:26px;padding-left:8px;padding-right:4px;color: #111;border:1px solid #ccc;}
+input[type="date"]{font-size:14px;font-family: Pretendard;height:26px;line-height:26px;padding-left:8px;padding-right:4px;color: #111;border:1px solid #ccc;}
 ::-webkit-calendar-picker-indicator{background-color: #ffffff;padding: 5px;cursor: pointer;}
-.txt_error {margin:4px 0; font-size:12px; color:#FC5656}
+.txt_error {margin:4px 0; font-size:14px; color:#FC5656}
 
 
 input[type="radio"]:checked + span  {color:#1A73F9; }
