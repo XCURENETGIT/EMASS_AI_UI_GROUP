@@ -767,7 +767,6 @@ var dashCondition = {
                             break;
                         }
                     }
-                    console.log("serviceData: "+data)
                     $('#todayGroupWareSum').html(todayGroupWareSum + "<span>건</span> <span class='tit13'></span>");
 	                printChart(data.facet);
 
@@ -1181,7 +1180,6 @@ var dashCondition = {
         let array = [0, 0, 0, 0, 0, 0];
         let arrayStr = ["~10MB", "~50MB", "~100MB", "~150MB", "~200MB", "201MB~"]
 	    let arrays = ["0","11","51","101","151","201"];
-        console.log(data.pivotData);
 
          // 여기에 쿼리 쓰기
         let targetKey;
@@ -1357,11 +1355,11 @@ var dashCondition = {
 	<div class="right">
 		<div >
 			<%--			금일 트래픽 추이, 종류 시작--%>
-			<div class="text_tab">
-				<span class="tablinks" onclick="openCity2(event, 'con01')" id="defaultOpen2"><s:message code="dashboard.msg.todayTraffic"/></span>
-				<span class="bar"></span>
-				<span class="tablinks" onclick="openCity2(event, 'con02')"><s:message code="dashboard.msg.weekTraffic"/></span>
-			</div>
+				<div class="text_tab">
+					<span class="tablinks" onclick="openCity2(event, 'con01')" id="defaultOpen2"><s:message code="dashboard.msg.todayTraffic"/></span>
+					<span class="bar"></span>
+					<span class="tablinks" onclick="openCity2(event, 'con02')"><s:message code="dashboard.msg.weekTraffic"/></span>
+				</div>
 
 			<div id="con01" class="text_tabcontent">
 				<div id="todayTraffic"></div>
@@ -1411,7 +1409,6 @@ var dashCondition = {
 </div>
 
 
-<%--<%@ include file="./dashboardContent.jsp" %>--%>
 <script>
     function openCity(cityName, elmnt, color) {
         var i, tabcontent, tablink;
@@ -1424,52 +1421,57 @@ var dashCondition = {
             tablinks[i].style.backgroundColor = "#f5f5f5";
             tablinks[i].style.color = "black";
         }
-        // document.getElementById(cityName).style.display = "block";
         elmnt.style.backgroundColor = color;
         elmnt.style.color = "white";
         getTodayDataStatus(cityName);
-
     }
 
-    // Get the element with id="defaultOpen" and click on it
+    document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("defaultOpen").click();
+    });
 </script>
 
 <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("defaultOpen2").click();
+    });
+
     function openCity2(evt, cityName) {
         var i, tabcontent, tablinks;
+
         tabcontent = document.getElementsByClassName("text_tabcontent");
         for (i = 0; i < tabcontent.length; i++) {
             tabcontent[i].style.display = "none";
         }
+
         tablinks = document.getElementsByClassName("tablinks");
         for (i = 0; i < tablinks.length; i++) {
-            tablinks[i].className = tablinks[i].className.replace(" active", "");
+            tablinks[i].classList.remove("active");
         }
+
         document.getElementById(cityName).style.display = "block";
-        evt.currentTarget.className += " active";
+        evt.currentTarget.classList.add("active");
     }
-
-    document.getElementById("defaultOpen2").click();
-
 </script>
 
 <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("defaultOpen3").click();
+    });
+
     function openCity3(evt, cityName) {
         var i, tabcontent, tablinks;
+
         tabcontent = document.getElementsByClassName("text_tabcontent2");
         for (i = 0; i < tabcontent.length; i++) {
             tabcontent[i].style.display = "none";
         }
+
         tablinks = document.getElementsByClassName("tablinks2");
         for (i = 0; i < tablinks.length; i++) {
-            tablinks[i].className = tablinks[i].className.replace(" active", "");
+            tablinks[i].classList.remove("active");
         }
         document.getElementById(cityName).style.display = "block";
-        evt.currentTarget.className += " active";
+        evt.currentTarget.classList.add("active");
     }
-
-    document.getElementById("defaultOpen3").click();
-
-
 </script>

@@ -32,13 +32,13 @@
         $('#regexSaveButton').click(function () {
             var regexPatternName = $('#regexPatternName').val().ltrim().rtrim();
             if (regexPatternName == '') {
-                ui.alertMsg("패턴 정규식 이름을 입력해주세요");
+                ui.alertMsg('<s:message code="regexPattern.name.input"/>');
                 $('#regexPatternName').focus();
                 return false;
             }
             var regexPattern = $('#regexPattern').val().ltrim().rtrim();
             if (regexPattern == '') {
-                ui.alertMsg("패턴 정규식을 입력해주세요");
+                ui.alertMsg('<s:message code="regexPattern.pattern.input"/>');
                 $('#regexPattern').focus();
             }
             var mode = $('#regexPatternPop').attr('mode');
@@ -73,7 +73,7 @@
                 return false;
             }
 
-            ui.confirmMsg('삭제 하겠습니까?', '', '', function (rs) {
+            ui.confirmMsg('<s:message code="common.msg.confirm.delete"/>', '', '', function (rs) {
                 if (rs) {
                     gridRegexPattern.on();
                     ui.get({
@@ -137,16 +137,16 @@
 			</div>
 			<div class="modalCon">
 				<div class="modalTop">
-					<h3>정규식 패턴 수정</h3>
+					<h3><s:message code="regexPattern.update"/></h3>
 					<p>
 						<span class="red_dot veralign_middle"></span>
-						필수 입력 사항입니다.
+						<s:message code="common.required.msg"/>
 					</p>
 				</div>
 				<div class="modalbody">
 					<div class="row">
 						<div class="col-35">
-							<label for="regexPatternName" class="fname">정규식패턴 이름</label>
+							<label for="regexPatternName" class="fname"><s:message code="regexPattern.name"/></label>
 							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
@@ -156,16 +156,13 @@
 					</div>
 					<div class="row">
 						<div class="col-35">
-							<label for="regexPattern" class="fname">정규식 패턴</label>
+							<label for="regexPattern" class="fname"><s:message code="regexPattern.pattern"/></label>
 							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
 							<input type="text" class="w100" name="regexPattern" id="regexPattern">
 						</div>
 					</div>
-				</div>
-				<div class="info">
-					안내 사항
 				</div>
 				<div class="modalfooter">
 					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message
@@ -182,8 +179,8 @@
 	<div class="searchArea">
 		<div class="searchSub">
 			<div>
-				<input type="text" placeholder="정규식 패턴 이름을 입력하세요" id="searchregexName" style="width: 300px;">
-				<button class="form_btn01" type="button" accesskey="K" id="searchregexNameBtn">조회</button>
+				<input type="text" placeholder='<s:message code="regexPattern.name.input"/>' id="searchregexName" style="width: 300px;">
+				<button class="form_btn01" type="button" accesskey="K" id="searchregexNameBtn"><s:message code="auditLog.oper.SEARCH"/></button>
 			</div>
 			<button type="button" class="btn01" accesskey="A" id="regexPatternInsertBtn"><img
 					src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
@@ -195,7 +192,7 @@
 		<div class="contentSub">
 			<div class="subtab">
 				<button class="active">
-					정규식 패턴 관리
+					<s:message code="regexPattern.setting"/>
 					<span id="regexPatternCount"></span>
 				</button>
 			</div>
@@ -208,10 +205,10 @@
     var gridRegexPattern = new Xgrid('regexPatternListGrid', contextRoot);
     gridRegexPattern.onCheckBox();
     gridRegexPattern.autoNumber();
-    gridRegexPattern.colAdd('regexPatternName', "정규식 패턴 이름", 200, 'left', false, 'link');
-    gridRegexPattern.colAdd('regexPattern', "정규식 패턴", 500, 'left', false, 'nomal');
-    gridRegexPattern.colAdd('regexUser', "사용자", 200, 'left', false, 'nomal');
-    gridRegexPattern.colAdd('regexDt', "등록일", 200, 'left', false, 'nomal');
+    gridRegexPattern.colAdd('regexPatternName', '<s:message code="regexPattern.name"/>', 200, 'left', false, 'link');
+    gridRegexPattern.colAdd('regexPattern', '<s:message code="regexPattern.pattern"/>', 500, 'left', false, 'nomal');
+    gridRegexPattern.colAdd('regexUser', '<s:message code="condition.user"/>', 200, 'left', false, 'nomal');
+    gridRegexPattern.colAdd('regexDt', '<s:message code="consent.registered.date"/>', 200, 'left', false, 'nomal');
     gridRegexPattern.loadPageSize();
     gridRegexPattern.loadHeader(true);
 

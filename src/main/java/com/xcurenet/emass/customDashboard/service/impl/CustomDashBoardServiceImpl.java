@@ -398,60 +398,6 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 		return new HashMap<>();
 	}
 
-//	@Override
-//	public XcnResponseVO getLoggingData(final HttpServletRequest request, final HttpSession session) throws Exception {
-//		JSONObject param = Common.getParam(request);
-//		String systemArch = Common.nvl(param.get("systemArch"));
-//		String date = Common.nvl(param.get("date")).replace("-", "");
-//		String startDate = Common.plusDays(date, -7);
-//		String endDate = Common.plusDays(date, -1);
-//
-//		SolrQuery sq = new SolrQuery();
-//		sq.setQuery(String.format("+ctime_yyyymmdd:[ %s TO %s ]", startDate, endDate));
-//		sq.setRows(0);
-//		sq.setGetFieldStatistics(true);
-//		sq.addGetFieldStatistics("attachsize");
-//		sq.addStatsFieldFacets("attachsize","ctime_yyyymmdd");
-//		sq.addFacetField("ctime_yyyymmdd");
-//		sq.setFacetLimit(7);
-//		sq.setFacetSort("ctime_yyyymmdd");
-//		sq.setFacetMinCount(1);
-//
-//		setAuthoritys(sq, systemArch, session);
-//
-//		log.info("query : {}", sq.getQuery());
-//
-//		QueryResponse res = solrEdcService.getSolrServer().query(sq);
-//		List<Map<String, String>> result = new ArrayList<>();
-//		List<FacetField> loggingCounts = res.getFacetFields();
-//		for(FacetField field : loggingCounts) {
-//			List<Count> values = field.getValues();
-//			for(Count count : values) {
-//				Map<String, String> item = findItem(result, count.getName());
-//				item.put("logging", count.getCount() + "");
-//				if (item.get("date") == null) {
-//					item.put("date", count.getName());
-//					result.add(item);
-//				}
-//			}
-//		}
-//
-//		param.put("startDate", startDate);
-//		param.put("endDate", endDate);
-//		List<Object> objs = selectList("com.xcurenet.sqlmap.mappers.mysql.customDashboard.getHdfsDirSize", param);
-////		System.out.println("objs: " + objs);
-//
-//		for(Object obj : objs) {
-//			JSONObject json = Common.toJSONObject(obj);
-//			Map<String, String> item = findItem(result, json.getString("date"));
-//			item.put("attach", json.getString("total"));
-//			if (item.get("date") == null) {
-//				item.put("date", json.getString("date"));
-//				result.add(item);
-//			}
-//		}
-//		return new XcnResponseVO(XcnRspCode.OK, result);
-//	}
 
 	@Override
 	public List<HdfsVO> getHdfsData(final HttpServletRequest request, final HttpSession session) {
@@ -547,7 +493,7 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 		sq.setParam("facet.sum", true);
 		sq.setParam("facet.field", "attachsize");
 
-		sq.setParam("facet.limit", "100");
+		sq.setParam("facet.limit", "7");
 		sq.setParam("facet.mincount", "0");
 		sq.setFacetSort("ctime_yyyymmdd");
 

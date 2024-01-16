@@ -629,8 +629,8 @@ function makeMessengerText(svc) {
 
 function getMessengerGroupList(page) {
     var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
-    groupPage = page;
-    var offset = groupPage * groupPageBreak - groupPageBreak;
+    groupMessagePage = page;
+    var offset = groupMessagePage * groupMessagePageBreak - groupMessagePageBreak;
     searchFlag = true;
     ui.onBody('timeline_list', 0, -20);
     ui.postJson({

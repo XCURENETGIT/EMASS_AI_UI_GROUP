@@ -893,7 +893,6 @@
 						break;
 					case "ml_confd_prob":
 						var prob = $('#probTypeSelect').selectpicker('val');
-						console.log(prob);
 						if(prob) {
 							addQueryText = queryAddMinus + els_open_parentheses;
 							for(var i = 0; i < prob.length; i++) {

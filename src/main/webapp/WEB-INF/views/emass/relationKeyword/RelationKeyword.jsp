@@ -40,7 +40,7 @@
         $('#relationKeywordUpdateBtn').click(function () {
             var searchWord = $('#searchWordUpdateName').val().ltrim().rtrim();
             if (searchWord == '') {
-                ui.alertMsg("수정할 키워드를 입력해주세요");
+                ui.alertMsg('<s:message code="condition.relationKeyword.updateKeyword.input"/>');
                 $('#searchWordUpdateName').focus();
                 return false;
             }
@@ -50,7 +50,7 @@
                 keywordId: keywordId
             };
 
-            ui.confirmMsg('수정 하시겠습니까?', '', '', function (rs) {
+            ui.confirmMsg('<s:message code="common.msg.confirm.modify"/>', '', '', function (rs) {
                 if (rs) {
                     gridSearchWordPattern.on();
                     ui.post({

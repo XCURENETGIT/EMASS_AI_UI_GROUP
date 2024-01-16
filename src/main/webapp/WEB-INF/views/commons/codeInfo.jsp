@@ -391,10 +391,8 @@
 			</div>
 			<input type="text" placeholder="<s:message code="codeInfo.msg.enter.svc"/>" id="searchStrInput" style="width: 250px;">
 			<button class="form_btn01" type="button" accesskey="Q" id="searchBtn"><s:message code="common.search"/></button>
-			<div>
 				<button type="button" class="btn01" accesskey="I" id="insertBtn" style="display: none;"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
 				<button type="button" class="btn02" accesskey="D" id="deleteBtn" style="display: none;"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
-			</div>
 			</div>
 	</div>
 	<div class="content xcn_full">
