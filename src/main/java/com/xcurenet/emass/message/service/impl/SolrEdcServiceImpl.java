@@ -289,7 +289,8 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 					.minDocCount(mainFacetMinCount);
 
 			/* sub terms 필드는 1개만*/
-			if(fields.length > 1 &&  !Common.isEmpty(sq.get("facet.stats"))) 	termsAggregation.subAggregation(AggregationBuilders.terms(fields[1]).field(fields[1]).subAggregation(AggregationBuilders.stats(sq.get("facet.stats")).field(sq.get("facet.stats"))));
+			if(fields.length == 1 &&  !Common.isEmpty(sq.get("facet.stats"))) 	termsAggregation.subAggregation(AggregationBuilders.terms(fields[0]).field(fields[0]).subAggregation(AggregationBuilders.stats(sq.get("facet.stats")).field(sq.get("facet.stats"))));
+			else if(fields.length > 1  &&  !Common.isEmpty(sq.get("facet.stats"))) 	termsAggregation.subAggregation(AggregationBuilders.terms(fields[1]).field(fields[1]).subAggregation(AggregationBuilders.stats(sq.get("facet.stats")).field(sq.get("facet.stats"))));
 			else if(fields.length > 1)  termsAggregation.subAggregation(AggregationBuilders.terms(fields[1]).field(fields[1]));
 
 			if (!Common.isEmpty(sq.get("facet.ranges"))) {

@@ -41,6 +41,7 @@ public class XcnFacetsVO {
 		String mainKey = getMainKey(edc.getFacets());
 		ElasticsearchAggregations facets = edc.getFacets();
 		if(facets != null) {
+
 			Terms facetPivot = facets.aggregations().get(mainKey);
 			if(facetPivot != null) {
 				List<Terms.Bucket> bucketList = (List<Terms.Bucket>) facetPivot.getBuckets();
@@ -110,21 +111,30 @@ public class XcnFacetsVO {
 	public JSONObject parsedStringTerms(Aggregation aggs,String headerKey,long docCount){
 		/* 자유분석 */
 		ParsedStringTerms bucketArgments = (ParsedStringTerms) aggs;
+		if(bucketArgments.getBuckets().size() < 1) return null;
 		JSONArray jsonArray = new JSONArray();
 		JSONObject json = new JSONObject();
-		for (Terms.Bucket arg : bucketArgments.getBuckets()) {
-			jsonArray.add(parseFacetAggs(arg,arg.getKeyAsString()));
+		if(!bucketArgments.getBuckets().get(0).getKeyAsString().equals(headerKey)) {
+
+
+			totalMax = new ArrayList<>();
+			totalSum = new ArrayList<>();
+			totalMin = new ArrayList<>();
+			for (Terms.Bucket arg : bucketArgments.getBuckets()) {
+				jsonArray.add(parseFacetAggs(arg, arg.getKeyAsString()));
+			}
+			json.put("val", headerKey);
+			json.put("count", docCount);
+
+			long tSum = totalSum.stream().mapToLong(m -> m).sum();
+			json.put("sum", totalSum.stream().mapToLong(m -> m).sum());
+			json.put("avg", (tSum / totalSum.size()));
+			json.put("max", Collections.max(totalMax));
+			json.put("min", Collections.max(totalMin));
+			json.put("buckets", jsonArray);
+		}else{
+			return parseFacetAggs(bucketArgments.getBuckets().get(0), bucketArgments.getBuckets().get(0).getKeyAsString());
 		}
-		json.put("val",headerKey);
-		json.put("count",docCount);
-
-		long tSum = totalSum.stream().mapToLong(m->m).sum();
-
-		json.put("sum",totalSum.stream().mapToLong(m->m).sum());
-		json.put("avg",(tSum / totalSum.size()));
-		json.put("max", Collections.max(totalMax));
-		json.put("min",Collections.max(totalMin));
-		json.put("buckets",jsonArray);
 
 		return json;
 	}
