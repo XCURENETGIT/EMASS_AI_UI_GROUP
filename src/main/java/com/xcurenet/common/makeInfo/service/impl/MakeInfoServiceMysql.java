@@ -222,15 +222,16 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 
 
 	public int addInfoRegExp() {
+		int result = 0;
+		log.info("[MAKE INFO] private information apply start");
+
 		long version = getTableCurrentVersion("INFO_PRIVATE") + 1;
-		appendData("getInfoRegExp", "INFO_PRIVATE", version);
-//		appendData( version, "getInfoRegExp", "addInfoRegExp","INFO_PRIVATE" );
 		LocalDateTime localDateTime = LocalDateTime.now();
-		Map<String, Long> map = new HashMap<>();
-		map.put("VERSION", version);
-		int result = mongoUtil.insert(map, "INFO_PRIVATE").size();
+		appendData("getInfoRegExp", "INFO_PRIVATE", version);
 		addVersion("INFO_PRIVATE", version);
+
 		mongoUtil.updateDate("INFO_PRIVATE", localDateTime);
+		log.info("[MAKE INFO] private information apply end");
 		return result;
 	}
 
