@@ -536,7 +536,6 @@
 		<!-- 로그인-->
 		<form method="post">
 			<div class="imgcontainer">
-				<img src="<c:url value="/img/login_bi.png"/>" alt="EmassPro" class="emass">
 				<img src="<c:url value="/img/logo_emass.png"/>" alt="EmassPro" class="emass">
 			</div>
 
