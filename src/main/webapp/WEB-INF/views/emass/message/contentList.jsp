@@ -1,15 +1,23 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="com.xcurenet.config.service.ConfigAdminService" %>
 <%@ page import="com.xcurenet.common.util.SpringContextUtil" %>
 <%@ page import="net.sf.json.JSONObject" %>
 <%@ page import="com.xcurenet.audit.service.Operation" %>
 <%@ page import="com.xcurenet.config.service.ConfigAdminVO" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="com.xcurenet.common.util.Common" %>
 <%@ page import="com.xcurenet.common.util.config.Config" %>
-<%@ include file="/WEB-INF/fragments/messageCss.jsp"%>
-<%@ include file="/WEB-INF/fragments/messageJs.jsp"%>
+<%@ page import="java.util.Locale" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ include file="/WEB-INF/fragments/messageScript.jsp"%>
+<link rel="stylesheet" href="<c:url value="/css/scrolltabs.css"/>"/>
+<link rel="stylesheet" href="<c:url value="/css/message.css"/>"/>
+<link rel="stylesheet" href="<c:url value="/css/messageContent.css"/>"/>
 
+
+<script type="text/javascript" src="<c:url value="/js/jquery.scrolltabs.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/jquery.mousewheel.js"/>"></script>
 <%
 	ConfigAdminService configAdminService = SpringContextUtil.getBean(ConfigAdminService.class);
 
@@ -35,7 +43,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-	<title>EMASS PRO - <s:message code="DATA_MONITOR.MESSAGE_INFO"/></title>
+	<title>EMASS AI - <s:message code="DATA_MONITOR.MESSAGE_INFO"/></title>
 	<style type="text/css">
 		.scroll_tab_left_button, .scroll_tab_right_button {margin-top:4px!important;}
 		.scroll_tabs_container .scroll_tab_left_button_disabled {margin-top:4px!important;}

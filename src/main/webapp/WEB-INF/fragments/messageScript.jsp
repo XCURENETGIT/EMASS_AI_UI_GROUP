@@ -1,13 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="org.springframework.web.servlet.i18n.SessionLocaleResolver" %>
 <%@ page import="com.xcurenet.common.util.Common" %>
+<%@ page import="com.xcurenet.menu.service.MenuService" %>
 <%@ page import="com.xcurenet.common.util.config.Config"%>
 <%@ page import="java.util.Locale" %>
-<%@ page import="net.sf.json.JSONArray" %>
-<%@ page import="com.xcurenet.menu.service.MenuService" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
+
 <%
   String contentPath = request.getContextPath();
   boolean isIPv6 = Config.isIPv6;
@@ -18,7 +19,67 @@
   if(request.getRequestURI().toString().indexOf("login.jsp") == -1) adminLanguage = Common.nvl(session.getAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME), "ko");
 
 %>
+
+<link rel="stylesheet" href="<c:url value="/js/css/smoothness/jquery-ui-1.10.3.custom.css"/>" />
+<link rel="stylesheet" href="<c:url value="/css/bootstrap.min.css"/>" />
+<link rel="stylesheet" href="<c:url value="/css/bootstrap-dialog.css"/>" />
+<link rel="stylesheet" href="<c:url value="/css/non-responsive.css"/>" />
+<link rel="stylesheet" href="<c:url value="/css/font-awesome.min.css"/>" />
+<link rel="stylesheet" href="<c:url value="/css/slick.grid.original.css"/>" />
+<link rel="stylesheet" href="<c:url value="/css/slick.columnpicker.css"/>" />
+<link rel="stylesheet" href="<c:url value="/css/emass_message_style.css"/>" />
+<link rel="stylesheet" href="<c:url value="/css/custom.css"/>" />
+<link rel="stylesheet" href="<c:url value="/css/animate.min.css"/>" />
+<script>
+  var contextRoot = '<%=contentPath%>';
+  var consent = <%=consent%>;
+  var isIPv6 = <%=isIPv6%>;
+  var isOCR = <%=isOCR%>;
+</script>
+<% if( Common.isEquals(adminLanguage, "ko")){%>
+<script type="text/javascript" src="<c:url value="/js/xcnui_ko.js"/>"></script>
+<%}else{%>
+<script type="text/javascript" src="<c:url value="/js/xcnui_en.js"/>"></script>
+<%}%>
+
+<script type="text/javascript" src="<c:url value="/js/jquery.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/jquery.ui.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/jquery.form.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/jquery.fileDownload.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/jquery.event.drag-2.2.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/jquery.event.drop-2.2.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/jquery.bootstrap-growl.min.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/bootstrap.min.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/bootstrap-dialog.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/bootstrap-notify.min.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/slick.core.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/slick.grid.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/slick.groupitemmetadataprovider.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/slick.dataview.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/slick.grid.ui_2.0.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/sortUtil.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/slick.columnpicker.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/slickgrid-print-plugin.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/slick.rowmovemanager.js"/>"></script>
+
+<script type="text/javascript" src="<c:url value="/js/xcnui_2.0.js"/>"></script>
+
+<script type="text/javascript" src="<c:url value="/js/highcharts.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/highcharts-3d.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/exporting.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/chartAPI.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/sockjs-0.3.4.min.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/stomp.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/sha256.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/password.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/Date.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/hotkey.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/ipaddr.min.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/ipv6Check.js"/>"></script>
+
+
 <style>
+
   <!--
   .menu-content a {
     word-break:break-all;

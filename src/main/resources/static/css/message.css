@@ -777,69 +777,6 @@ This license is copied below, and is also available with a FAQ at:
 http://scripts.sil.org/OFL
 */
 
-@font-face {
-	font-family: 'Pretendard';
-	font-weight: 900;
-	font-display: swap;
-	src: local('Pretendard Black'), url("../fonts/woff2/Pretendard-Black.subset.woff2") format('woff2'), url("../fonts/woff/Pretendard-Black.subset.woff") format('woff');
-}
-
-@font-face {
-	font-family: 'Pretendard';
-	font-weight: 800;
-	font-display: swap;
-	src: local('Pretendard ExtraBold'), url("../fonts/woff2/Pretendard-ExtraBold.subset.woff2") format('woff2'), url("../fonts/woff/Pretendard-ExtraBold.subset.woff") format('woff');
-}
-
-@font-face {
-	font-family: 'Pretendard';
-	font-weight: 700;
-	font-display: swap;
-	src: local('Pretendard Bold'), url("../fonts/woff2/Pretendard-Bold.subset.woff2") format('woff2'), url("../fonts/woff/Pretendard-Bold.subset.woff") format('woff');
-}
-
-@font-face {
-	font-family: 'Pretendard';
-	font-weight: 600;
-	font-display: swap;
-	src: local('Pretendard SemiBold'), url("../fonts/woff2/Pretendard-SemiBold.subset.woff2") format('woff2'), url("../fonts/woff/Pretendard-SemiBold.subset.woff") format('woff');
-}
-
-@font-face {
-	font-family: 'Pretendard';
-	font-weight: 500;
-	font-display: swap;
-	src: local('Pretendard Medium'), url("../fonts/woff2/Pretendard-Medium.subset.woff2") format('woff2'), url("../fonts/woff/Pretendard-Medium.subset.woff") format('woff');
-}
-
-@font-face {
-	font-family: 'Pretendard';
-	font-weight: 400;
-	font-display: swap;
-	src: local('Pretendard Regular'), url("../fonts/woff2/Pretendard-Regular.subset.woff2") format('woff2'), url("../fonts/woff/Pretendard-Regular.subset.woff") format('woff');
-}
-
-@font-face {
-	font-family: 'Pretendard';
-	font-weight: 300;
-	font-display: swap;
-	src: local('Pretendard Light'), url("../fonts/woff2/Pretendard-Light.subset.woff2") format('woff2'), url("../fonts/woff/Pretendard-Light.subset.woff") format('woff');
-}
-
-@font-face {
-	font-family: 'Pretendard';
-	font-weight: 200;
-	font-display: swap;
-	src: local('Pretendard ExtraLight'), url("../fonts/woff2/Pretendard-ExtraLight.subset.woff2") format('woff2'), url("../fonts/woff/Pretendard-ExtraLight.subset.woff") format('woff');
-}
-
-@font-face {
-	font-family: 'Pretendard';
-	font-weight: 100;
-	font-display: swap;
-	src: local('Pretendard Thin'), url("../fonts/woff2/Pretendard-Thin.subset.woff2") format('woff2'), url("../fonts/woff/Pretendard-Thin.subset.woff") format('woff');
-}
-
 
 
 /*reset*/
@@ -936,5 +873,7 @@ input[type=file]::file-selector-button {
 	color: #fff;
 }
 input[type=file]::file-selector-button:hover { background-color: #1C64D3;}
+
+
 
 

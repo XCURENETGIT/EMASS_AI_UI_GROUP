@@ -37,8 +37,6 @@
     <!-- messageLayout  -->
     <definition name="messageLayout" template="/WEB-INF/views/emass/message/messageNewN.jsp">
         <!-- 페이지 기본 CSS/JSS-->
-        <put-attribute name="messageCss" value="/WEB-INF/fragments/messageCss.jsp" />
-        <put-attribute name="messageJs" value="/WEB-INF/fragments/messageJs.jsp" />
 
         <put-attribute name="top" value="/WEB-INF/fragments/new_top.jsp" />
         <put-attribute name="lnb" value="/WEB-INF/fragments/new_left.jsp" />
