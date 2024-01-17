@@ -128,6 +128,7 @@ public class MessengerController {
 		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), Common.getAdminId(session));
 
 		String space = "\"\")";
+//		sq.setQuery(sq.getQuery() + MESSENGER + " +xrootmtr:* -xrootmtr:(".concat(space));
 		sq.setQuery(sq.getQuery() + MESSENGER + " +xrootmtr:* -xrootmtr:(".concat(space));
 		if (Common.isEquals(param.get("readYn"), "N")) {
 			sq.setQuery(sq.getQuery() + " -checked.readId:" + Common.getAdminId(session));
@@ -144,13 +145,14 @@ public class MessengerController {
 		/* 그룹 디테일검색 동적 들어와야 할 offset,size 값*/
 		sq.setParam("facet.offset", String.valueOf(Common.nvz(param.get("offset"), 0)));
 		sq.setParam("facet.group", String.valueOf(Common.nvz(param.get("limit"), 100)));
+		sq.setParam("facet.detail", false);
 		sq.setParam("facet.list", true);
 		sq.setParam("facet.mincount", "1");
 
-
-		/* 일반 문서 검색은 하지않으므로 0 (그룹검색만 하므로 ) */
-		sq.setStart(Common.nvz(param.get("offset"), 0));
-		sq.setRows(Common.nvz(param.get("limit"), 0));
+//
+//		/* 일반 문서 검색은 하지않으므로 0 (그룹검색만 하므로 ) */
+		sq.setStart(Common.nvz(request.getParameter("offset"), 0));
+		sq.setRows(Common.nvz(request.getParameter("limit"), 0));
 
 		sq.setSort("ctime", ORDER.desc);
 		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id","userid");

@@ -135,7 +135,6 @@
                 $("#chartCntDiv").show();
                 $('#totalViewDiv').hide();
                 printChart(totalChartDat , grid1);
-                console.log("3")
             } else if(liTab.includes("D")){
                 if(text.includes(textClass4)){
                     colRowKey = '4' ;
@@ -153,7 +152,7 @@
                 $('#totalViewDiv').hide();
                 parentGrid = currentgrid;
                 printChart( totalChartDat , currentgrid);
-                console.log("4")
+
             }else {
                 if(text.includes(textClass4)){
                     colRowKey = '4' ;
@@ -170,7 +169,7 @@
                 $('#totalViewDiv').show();
                 var dat = chartDat[id];
                 printChart( dat , parentGrid);
-                console.log("5")
+
             }
         })
 

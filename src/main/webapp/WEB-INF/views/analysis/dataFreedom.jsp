@@ -286,9 +286,9 @@
 		</div>-->
 	<!-- //old -->
 </div>
-<div class="content">
-	<div class="contentSub" style="padding-bottom:16px;">
-		<div class="panel panel-default" style="min-height:600px;">
+<div class="boxArea">
+	<div class="content_body" style="padding-bottom:16px;">
+		<div class="panel panel-default" style="min-height:550px;">
 			<div class="panel-body" style="height: 100%;padding:0px;">
 				<div id="chartDiv" style="height: 100%; padding: 30px;"><s:message code="analysis.freedom.ui.result"/></div>
 			</div>
@@ -658,7 +658,6 @@
     }
 
     function setQuery(col1, col2, value, isPie) {
-        console.log(value);
         if (isPie) {
             messagePageLinkPie(col1, col2, value);
         } else {
@@ -1363,14 +1362,14 @@
                 this.firstData.push({
                     name: name,
                     y: data / this.totalCount * 100,
-                    color: this.colors[count]
+                    // color: this.colors[count]
                 });
             },
             secondDataPush: function (name, data, count, brightness) {
                 this.secondData.push({
                     name: name,
                     y: data / this.totalCount * 100,
-                    color: Highcharts.Color(this.colors[count]).brighten(brightness).get()
+                    // color: Highcharts.Color(this.colors[count]).brighten(brightness).get()
                 });
             },
             init: function (data, depth, objValue, parent) {

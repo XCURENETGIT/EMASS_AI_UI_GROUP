@@ -606,7 +606,6 @@
     function printAlarmValStr( alarmCycle, alarmVal, rtnType )
     {
         var searchStr  = '';
-        console.log('알람: '+JSON.stringify(alarmVal));
         var searchDateStr = '';
         if ( alarmVal.startDateSelect == 'Y' ) searchDateStr += '<s:message code="condition.yesterday_str"/> ';
         else if ( alarmVal.startDateSelect == 'T' ) searchDateStr += '<s:message code="condition.today_str"/> ';

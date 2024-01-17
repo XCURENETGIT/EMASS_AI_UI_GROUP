@@ -545,7 +545,7 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		sq.setParam("facet.sum", true);
 		sq.setParam("facet.field", "size");
 
-		sq.setParam("facet.limit", "100");
+		sq.setParam("facet.limit", "7");
 		sq.setParam("facet.mincount", "-1");
 		sq.setFacetSort("ctime_yyyymmdd");
 

@@ -365,7 +365,7 @@
 			<div><input type="date" id="endDt" style="width: 110px;"></div>
 			<div>
 				<input type="text"  placeholder="<s:message code="common.msg.searchMsg"/>" id="searchStr" style="width: 300px;">
-				<button class="form_btn01" accesskey="Q" id="searchBtn" accesskey="s">조회</button>
+				<button class="form_btn01" accesskey="Q" id="searchBtn" accesskey="s"><s:message code="common.search"/></button>
 			</div>
 		</div>
 		<div class="searchSub">
