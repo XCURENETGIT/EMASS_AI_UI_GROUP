@@ -158,7 +158,7 @@
 <%--<nav class="navbar navbar-default navbar-fixed-top unselectable">--%>
 <%--    <div class="top_container" style="width:100%;">--%>
 <%--        <div class="navbar-header" style="width: 160px;">--%>
-<%--            <a class="navbar-brand" href="javascript:;" id="menuMainBtn" onclick="goMainPage();">EMASS PRO</a>--%>
+<%--            <a class="navbar-brand" href="javascript:;" id="menuMainBtn" onclick="goMainPage();">EMASS AI</a>--%>
 <%--        </div>--%>
 <%--        <div id="navbar">--%>
 <%--            <ul class="nav navbar-nav">--%>
@@ -328,7 +328,7 @@
 <%--    $('.navbar-nav a[menuid="'+pMenuId+'"]').parent().addClass('on');--%>
 <%--    $('#full_menu a[menuid="'+pMenuId+'"]').parent().addClass('on');--%>
 
-<%--    document.title = "EMASS PRO - <%=menuName%>";--%>
+<%--    document.title = "EMASS AI - <%=menuName%>";--%>
 
 <%--    function goMainPage(){--%>
 <%--        document.location.href = $('.topMenuLi:eq(0) .topMenu').attr('href');--%>

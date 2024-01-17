@@ -15,7 +15,7 @@
 	<artifactId>emasspro</artifactId>
 	<version>1.0.0</version>
 	<name>emasspro</name>
-	<description>EMASS PRO</description>
+	<description>EMASS AI</description>
 
 	<properties>
 		<maven.compiler.source>11</maven.compiler.source>

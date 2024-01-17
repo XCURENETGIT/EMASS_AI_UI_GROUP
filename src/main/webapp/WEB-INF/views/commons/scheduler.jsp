@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<title>EMASS PRO - Scheduler</title>
+<title>EMASS AI - Scheduler</title>
 <style type="text/css">
 </style>
 <script type="text/javascript">

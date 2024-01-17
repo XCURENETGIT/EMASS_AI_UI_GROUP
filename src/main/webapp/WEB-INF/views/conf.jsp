@@ -6,7 +6,7 @@
 
 <head>
 
-	<title>EMASS PRO - <s:message code="common.msg.setting"/></title>
+	<title>EMASS AI - <s:message code="common.msg.setting"/></title>
 
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<link rel="shortcut icon" href="<c:url value="/img/favicon.ico"/>">

@@ -13,7 +13,7 @@ public class MailInfo {
 
 	public final static String MAIL_MULTI_PREFIX = ";";
 
-	public final static String HEADER = "<html><head><title>EMASS PRO</title><meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/></head><body>";
+	public final static String HEADER = "<html><head><title>EMASS AI</title><meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/></head><body>";
 
 	public final static String FOOTER = "</body></html>";
 

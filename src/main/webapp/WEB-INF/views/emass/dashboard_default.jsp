@@ -37,7 +37,7 @@
 		text-decoration: underline;
 	}
 </style>
-<title>EMASS PRO - Dashboard</title>
+<title>EMASS AI - Dashboard</title>
 <script type="text/javascript">
 
 

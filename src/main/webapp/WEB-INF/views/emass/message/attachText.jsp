@@ -46,7 +46,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<title>EMASS PRO - <s:message code="consent.attach"/> Text Viewer</title>
+<title>EMASS AI - <s:message code="consent.attach"/> Text Viewer</title>
 <style type="text/css">
 html, body{
 	min-width:600px !important;

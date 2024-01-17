@@ -22,7 +22,7 @@
 		</div>
 		<div class="coach_logo">
 			<img src="/venus/img/logo_xcurenet.png" alt="xcurenet" >
-			<p class="mat16">Venus EMASS PRO, Venus/CS 3.0</p>
+			<p class="mat16">Venus EMASS AI, Venus/CS 3.0</p>
 		</div>
 	</div>
 </div>

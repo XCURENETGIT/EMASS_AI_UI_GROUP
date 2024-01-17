@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<title>EMASS PRO - 시스템 로그</title>
+<title>EMASS AI - 시스템 로그</title>
 <style type="text/css">
 </style>
 <script type="text/javascript">

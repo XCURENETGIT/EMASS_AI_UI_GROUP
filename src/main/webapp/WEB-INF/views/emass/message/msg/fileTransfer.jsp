@@ -30,7 +30,7 @@
 </style>
 
 <head>
-	<title>EMASS PRO - <s:message code="DATA_MONITOR.MESSAGE_SERVICE"/></title>
+	<title>EMASS AI - <s:message code="DATA_MONITOR.MESSAGE_SERVICE"/></title>
 	<script type="text/javascript" src="<c:url value="/js/messageGrid.js"/>"></script>
 	<script type="text/javascript" src="<c:url value="/js/collection.js"/>"></script>
 

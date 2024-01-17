@@ -11,7 +11,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<title>EMASS PRO - <s:message code="common.msg.domainInfo"/></title>
+<title>EMASS AI - <s:message code="common.msg.domainInfo"/></title>
 <style type="text/css">
 html,body{height: 100%; padding: 0px; margin: 0px;overflow: auto;min-width: 650px;}
 .attachExt{

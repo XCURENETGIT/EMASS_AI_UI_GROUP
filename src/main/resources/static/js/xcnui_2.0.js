@@ -329,7 +329,7 @@ var ui = {
 	alertMsg : function(msg, callBack, timeOut) {
 		var dialogInstance = BootstrapDialog.alert({
 			id : 'bootstrap_alert',
-			title : 'EMASS PRO',
+			title : 'EMASS AI',
 			message: msg,
 			closable: true,
 			draggable: true,
@@ -409,7 +409,7 @@ var ui = {
 		BootstrapDialog.confirm({
 			//size : dialogSize,
 			id : 'bootstrap_confirm',
-			title : (title == undefined || title == '') ? 'EMASS PRO' : title,
+			title : (title == undefined || title == '') ? 'EMASS AI' : title,
 			message : msg,
 			draggable : true,
 			btnOKLabel : xcnuiJS.confirm,

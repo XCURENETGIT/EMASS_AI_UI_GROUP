@@ -7,7 +7,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>VENUS / EMASS PRO</title>
+	<title>VENUS / EMASS AI</title>
 	<meta charset="utf-8">
 	<%
 		String loginMsg = Config.getString("system.login.msg");

@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-	<title>EMASS PRO - <s:message code="consent.select.consent"/></title>
+	<title>EMASS AI - <s:message code="consent.select.consent"/></title>
 
 	<style>
 		html,body{height: 100%; padding: 0px; margin: 0px; min-width: 800px;}

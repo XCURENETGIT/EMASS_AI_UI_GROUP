@@ -19,7 +19,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<title>EMASS PRO - <s:message code="DATA_MONITOR.MESSAGE_INFO"/></title>
+<title>EMASS AI - <s:message code="DATA_MONITOR.MESSAGE_INFO"/></title>
 
 
 <style type="text/css">

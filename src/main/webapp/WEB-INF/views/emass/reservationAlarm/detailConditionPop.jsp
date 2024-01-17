@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <title>EMASS PRO - <s:message code="condition.select.condition"/></title>
+    <title>EMASS AI - <s:message code="condition.select.condition"/></title>
     <style>
         * {
             font-size: 12px;

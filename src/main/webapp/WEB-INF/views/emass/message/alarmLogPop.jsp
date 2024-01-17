@@ -9,7 +9,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<title>EMASS PRO - 예약 알림 실행 결과</title>
+<title>EMASS AI - 예약 알림 실행 결과</title>
 <style>
 .modal-body {
 	padding-top: 5px;

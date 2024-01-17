@@ -425,7 +425,7 @@
 //		_sb.append(" <!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\"> ");
 //		_sb.append(" <html> ");
 //		_sb.append(" <head> ");
-//		_sb.append(" <title>EMASS PRO</title> ");
+//		_sb.append(" <title>EMASS AI</title> ");
 //		_sb.append(" <meta http-equiv='Content-Type' content='text/html; charset=utf-8' /> ");
 //		_sb.append(" <base target='_blank' /> ");
 //		_sb.append(" <style type='text/css'> ");
@@ -442,7 +442,7 @@
 //		_sb.append(" <table style='width: 800px;' border='0' cellspacing='0' cellpadding='0'> ");
 //		_sb.append("	<tr> ");
 //		_sb.append("		<td> ");
-//		_sb.append("			<span style='color:#3565BD;font-weight: bold;'>▒ EMASS PRO "+Prop.propFormat("DATA_MONITOR.RESERVATION_ALARM", locale)+" </span> ");
+//		_sb.append("			<span style='color:#3565BD;font-weight: bold;'>▒ EMASS AI "+Prop.propFormat("DATA_MONITOR.RESERVATION_ALARM", locale)+" </span> ");
 //		_sb.append("		</td> ");
 //		_sb.append("	</tr> ");
 //		_sb.append("	<tr> ");
@@ -704,7 +704,7 @@
 //		_sb.append(" <!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\"> ");
 //		_sb.append(" <html> ");
 //		_sb.append(" <head> ");
-//		_sb.append(" <title>EMASS PRO</title> ");
+//		_sb.append(" <title>EMASS AI</title> ");
 //		_sb.append(" <meta http-equiv='Content-Type' content='text/html; charset=utf-8' /> ");
 //		_sb.append(" <base target='_blank' /> ");
 //		_sb.append(" <style type='text/css'> ");
@@ -727,7 +727,7 @@
 //		_sb.append("	<tr> ");
 //		_sb.append("	<tr> ");
 //		_sb.append("		<td> ");
-//		_sb.append("			<span style='color:#3565BD;font-weight: bold;'>▒ EMASS PRO "+Prop.propFormat("DATA_MONITOR.RESERVATION_ALARM", locale)+" </span> ");
+//		_sb.append("			<span style='color:#3565BD;font-weight: bold;'>▒ EMASS AI "+Prop.propFormat("DATA_MONITOR.RESERVATION_ALARM", locale)+" </span> ");
 //		_sb.append("		</td> ");
 //		_sb.append("	</tr> ");
 //		_sb.append("	<tr> ");

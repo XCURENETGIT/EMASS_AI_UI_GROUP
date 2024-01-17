@@ -9,7 +9,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<title>EMASS PRO - <s:message code="common.msg.userinfo"/></title>
+<title>EMASS AI - <s:message code="common.msg.userinfo"/></title>
 <style type="text/css">
 html, body, .row{
 	height:100%;

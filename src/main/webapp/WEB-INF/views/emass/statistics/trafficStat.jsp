@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-	<title>EMASS PRO - <s:message code="DATA_MONITOR.STAT_LABEL"/></title>
+	<title>EMASS AI - <s:message code="DATA_MONITOR.STAT_LABEL"/></title>
 	<script>
         var searchFlag = false;
         var detailTotal = 0;

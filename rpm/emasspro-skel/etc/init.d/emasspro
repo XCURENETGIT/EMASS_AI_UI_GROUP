@@ -1,12 +1,12 @@
 #!/bin/sh
 
 ### BEGIN INIT INFO
-# Provides:          EMASS PRO v2 UI
+# Provides:          EMASS AI v2 UI
 # Required-Start:    $remote_fs $syslog
 # Required-Stop:     $remote_fs $syslog
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Description:       Controls EMASS PRO UI as a Service
+# Description:       Controls EMASS AI UI as a Service
 ### END INIT INFO
 
 INSTALL_DIR="/users/emasspro"
