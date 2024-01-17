@@ -26,6 +26,7 @@ import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MoreLikeThisQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.QueryStringQueryBuilder;
 import org.elasticsearch.search.aggregations.*;
 import org.elasticsearch.search.aggregations.bucket.range.RangeAggregationBuilder;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
@@ -139,8 +140,16 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		log.debug("[Fields] {}", sq.getFields());
 		sq.setParam("wt", "json");
 
+
+
+		BoolQueryBuilder complateQuery = new BoolQueryBuilder();
+
 		/* set 필터 쿼리 */
 		String filterQuery =  (null != sq.getFilterQueries())? String.join(" ", sq.getFilterQueries()) : "";
+
+
+		/* 일반 검색 쿼리 */
+		QueryStringQueryBuilder queryBuilder = QueryBuilders.queryStringQuery(sq.getQuery() + " " + filterQuery).fields(getDefaultSearchField(sq));
 
 		/* 정규식 패턴 필드 설정 */
 		BoolQueryBuilder regexQuery = QueryBuilders.boolQuery();
@@ -149,23 +158,29 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			for (String s : list) {
 				regexQuery.should(QueryBuilders.regexpQuery(s, sq.get("regexPattern")));
 			}
+			complateQuery.should(regexQuery);
 		}
+
+		/* 유사 문서 쿼리 설정 moreLikeThis */
+		BoolQueryBuilder recommendQuery = QueryBuilders.boolQuery();
+		if(!Common.isEmpty(sq.getMoreLikeThisFields()) && !Common.isEmpty(sq.get("id"))){
+			recommendQuery.should(QueryBuilders.moreLikeThisQuery(sq.getMoreLikeThisFields(), null, new MoreLikeThisQueryBuilder.Item[]{new MoreLikeThisQueryBuilder.Item(("edc_").concat(sq.get("id").substring(0, 6)), sq.get("id"))}).minTermFreq(1).minDocFreq(0).maxQueryTerms(20).minimumShouldMatch("0%"));
+			complateQuery.should(recommendQuery);
+		}
+		complateQuery.should(queryBuilder);
 
 
 		log.info("page : {}  rows : {}", getPage(sq), sq.getRows());
 		Query searchQuery = new NativeSearchQueryBuilder()
 				.withFields(Common.toArray(sq.getFields(), ","))
-				.withFilter(QueryBuilders.boolQuery().must(regexQuery))
-				.withQuery(QueryBuilders.queryStringQuery(sq.getQuery() + " " + filterQuery).fields(getDefaultSearchField(sq)))
-				/* 유사 문서 쿼리 설정 moreLikeThis */
-				.withQuery(
-					(!Common.isEmpty(sq.getMoreLikeThisFields()) && !Common.isEmpty(sq.get("id")) ? QueryBuilders.moreLikeThisQuery(sq.getMoreLikeThisFields(), null, new MoreLikeThisQueryBuilder.Item[]{new MoreLikeThisQueryBuilder.Item(("edc_").concat(sq.get("id").substring(0, 6)), sq.get("id"))}).minTermFreq(1).minDocFreq(0).maxQueryTerms(20).minimumShouldMatch("50%") : null
-				)).withPageable(PageRequest.of(getPage(sq), sq.getRows(), getSort(sq)))
+				.withQuery(QueryBuilders.boolQuery().must(complateQuery))
+				.withPageable(PageRequest.of(getPage(sq), sq.getRows(), getSort(sq)))
 				.withAggregations(getAggregations(sq))
 				.withAggregations(getAggregationsByPivot(sq))
 				.withTrackTotalHits(true)
 				.withTrackScores((Common.isEquals(sq.get("track_scores"),"true")) ? true : false )
 				.build();
+
 
 		SearchHits<SolrEdcVO> hits = operation.search(searchQuery, SolrEdcVO.class);
 		try {
