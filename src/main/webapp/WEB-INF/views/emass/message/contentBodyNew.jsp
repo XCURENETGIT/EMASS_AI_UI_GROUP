@@ -11,9 +11,11 @@
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ include file="/WEB-INF/fragments/messageScript.jsp"%>
+
 <link rel="stylesheet" href="<c:url value="/css/bootstrap-datetimepicker.min.css"/>"/>
 <link rel="stylesheet" href="<c:url value="/css/bootstrap-select.min.css"/>"/>
 <link rel="stylesheet" href="<c:url value="/css/message.css"/>"/>
+<link rel="stylesheet" href="<c:url value="/css/messageContent.css"/>"/>
 <link rel="stylesheet" href="<c:url value="/css/contentBody.css"/>"/>
 
 <script type="text/javascript" src="<c:url value="/js/moment.js"/>"></script>
@@ -695,7 +697,7 @@
 				<div class="row" id="bodyDiv">
 					<div class="col-lg-12">
 						<div class="panel panel-default" id="emassBodyDiv">
-							<div class="panel-heading body_toggle" style="padding:10px 12px 9px;">
+							<div class="panel-heading " style="padding:10px 12px 9px;">
 								<s:message code="bodyview.body.content"/>
 								<div class="pull-right" style="position: relative;top:-5px;">
 
@@ -876,6 +878,8 @@
 	<input type="hidden" name="imgUrl">
 	<input type="hidden" name="fileName">
 </form>
+
+
 </body>
 <script type="text/javascript">
 	var op_attach_save = '<%=op_attach_save%>';

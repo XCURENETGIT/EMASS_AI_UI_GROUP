@@ -1831,9 +1831,9 @@
         /* tab close class 지정 */
         function tabIsSelected(obj){
             var result = false;
+
             if($(obj).parents('li').hasClass('select')){
-                 $(obj).parents('li').find('.tab_close_2').attr('class', 'tab_close'); //선택한 tab의 tab close 클래스 지정
-                 $(obj).parents('li').find('div').find('.tab_close').attr('class', 'tab_close_2');
+                $(obj).parents('li').find('.select').find('div').find('.tab_close_2').attr('class', 'tab_close'); //선택한 tab의 tab close 클래스 지정
                 result = true;
             }
 
@@ -1966,7 +1966,9 @@
             var objLi = $('#'+parentObjId);
             var index = objLi.attr('data-index');
 
+
             $('.addTabDiv').parents('li').removeClass('select');
+
 
             objLi.addClass('select');
 
@@ -3465,6 +3467,7 @@
     <input type="hidden" name="paramFolderSeq" id="paramFolderSeq">
     <input type="hidden" name="paramFolderName" id="paramFolderName">
 </form>
+
 <script type="text/javascript">
     var grid = new Xgrid('searchKeywordGrid', contextRoot);
     grid.onCheckBox();

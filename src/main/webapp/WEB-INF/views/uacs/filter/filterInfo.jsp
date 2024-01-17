@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ include file="/WEB-INF/fragments/baseScript.jsp" %>
-
+<%@ include file="/WEB-INF/fragments/messageScript.jsp" %>
 <style type="text/css">
 	.radio-inline {
 		padding-left: 0px;

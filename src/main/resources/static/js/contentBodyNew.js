@@ -28,12 +28,13 @@ $(document).ready(function(){
 		if(more == 'small_txt') fontSize -= fontZoom;
 		else fontSize += fontZoom;
 		$('#emassBody').css({'font-size':fontSize+'px'});
-		$('#emassBody *').each(function(){
-			var fontSize = parseInt($(this).css("font-size"));
-			if(more == 'small_txt') fontSize -= fontZoom;
-			else fontSize += fontZoom;
-			$(this).css({'font-size':fontSize+'px'});
-		});
+
+		// $('#emassBody *').each(function(){
+		// 	var fontSize = parseInt($(this).css("font-size"));
+		// 	if(more == 'small_txt') fontSize -= fontZoom;
+		// 	else fontSize += fontZoom;
+		// 	$(this).css({'font-size':fontSize+'px'});
+		// });
 	});
 	//ui.onBody( 'content_body', 0, 0);
 	//getBody('');
@@ -1249,8 +1250,11 @@ function userHtml(userList,tr, srcip, dstip, usrip) {
 		var insideClass = "";
 		var user = userList[i];
 
+
+
 		if(nvl(user.inSide) == 'N') insideClass = 'userOutside';
-		userDivHtml += '<span class="userInfoSpan '+insideClass+'"';
+		if(''!=nvl(user.name)) userDivHtml += '<span class="userInfoSpan '+insideClass+'"';
+		else  userDivHtml += '<span class=""';
 		userDivHtml += ' recvid="' + nvl(user.recvId) + '"';
 		userDivHtml += ' recvip="' + chkUserIp(nvl(user.ip), srcip, dstip, usrip) + '"';
 		userDivHtml += ' recvemail="' + nvl(user.email) + '"';

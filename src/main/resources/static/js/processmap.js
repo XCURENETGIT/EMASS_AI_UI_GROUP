@@ -55,7 +55,6 @@ function drawGraph(id) {
     processmap_graph.height = $('#'+id).height() - processmap_graph.margin.top  - processmap_graph.margin.bottom;
     $('#'+id).css('display', display);
 
-    console.log( processmap_graph.data);
     for (var name in processmap_graph.data) {
         var obj = processmap_graph.data[name];
         obj.positionConstraints = [];
@@ -280,7 +279,7 @@ function drawGraph(id) {
     processmap_graph.legend.append('text') //카테고리 명 text
         .attr('x', processmap_graph.legendConfig.xOffsetText)
         .attr('y', function(d, i) {
-            return processmap_graph.legendConfig.yOffsetText + i * processmap_graph.legendConfig.lineHeight;
+            return processmap_graph.legendConfig.yOffsetText + i * processmap_graph.legendConfig.lineHeight ;
         })
         .text(function(d) {
             return d.typeName + (d.group ? ': ' + d.group : '');
@@ -451,9 +450,12 @@ function drawGraph(id) {
             bounds.x2 += padding.left + padding.right;
             bounds.y2 += padding.top  + padding.bottom;
 
+            var y = bounds.y1;
+            if(!first) y = y + 30;
+
             node.select('rect')
 		        .attr('x', bounds.x1)
-		        .attr('y', bounds.y1)
+                .attr('y', y)
 		        .attr('width' , bounds.x2 - bounds.x1)
 		        .attr('height', bounds.y2 - bounds.y1);
 

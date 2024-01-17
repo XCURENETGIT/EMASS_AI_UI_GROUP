@@ -30,12 +30,15 @@
 <link rel="stylesheet" href="<c:url value="/css/emass_message_style.css"/>" />
 <link rel="stylesheet" href="<c:url value="/css/custom.css"/>" />
 <link rel="stylesheet" href="<c:url value="/css/animate.min.css"/>" />
+<link rel="stylesheet" href="<c:url value="/css/panelsTab.css"/>" />
 <script>
   var contextRoot = '<%=contentPath%>';
   var consent = <%=consent%>;
   var isIPv6 = <%=isIPv6%>;
   var isOCR = <%=isOCR%>;
 </script>
+
+
 <% if( Common.isEquals(adminLanguage, "ko")){%>
 <script type="text/javascript" src="<c:url value="/js/xcnui_ko.js"/>"></script>
 <%}else{%>
@@ -47,7 +50,6 @@
 <script type="text/javascript" src="<c:url value="/js/jquery.form.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/jquery.fileDownload.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/jquery.event.drag-2.2.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/jquery.event.drop-2.2.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/jquery.bootstrap-growl.min.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/bootstrap.min.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/bootstrap-dialog.js"/>"></script>
@@ -1128,6 +1130,48 @@
     return Math.floor(val * 100);
   }
 
+
+  $(document).on('click', '.saveNoLogUrlPopBtn', function () {
+    $('.saveNoLogUrlPopBtn').prop('disabled', true);
+    saveNoLogUrlData();
+  });
+
+
+  function saveNoLogUrlData() {
+    $('#noLogurl').val($.trim($('#noLogurl').val()));
+    if ($('#noLogurl').val() == '') {
+      alert('<s:message code="filterInfo.msg.enter.url"/>');
+      $('.saveNoLogUrlPopBtn').prop('disabled', false);
+      return false;
+    }
+    var url = mode == 'insert' ? 'insertUrlFilter.xcn' : 'updateUrlFilter.xcn';
+    var message = mode == 'insert' ? '<s:message code="common.msg.confirm.add"/>' : '<s:message code="common.msg.confirm.modify"/>';
+    ui.confirmMsg(message, '', '', function (rs) {
+      if (rs) {
+        ui.onBody('content_body', 0, 0);
+        ui.post({
+          url: url,
+          data: $('#urlPopForm').serializeAll(),
+          success: function (data, total) {
+            ui.alertMsg('<s:message code="common.msg.saved"/>');
+            $('#urlPop').modal('hide');
+          },
+          error: function (status, message) {
+            ui.alertMsg(message);
+          },
+          complete: function () {
+            ui.off('content_body');
+            $('.saveNoLogUrlPopBtn').prop('disabled', false);
+            getTabInfo();
+            getData();
+          }
+        });
+      } else {
+        $('.saveNoLogUrlPopBtn').prop('disabled', false);
+      }
+    });
+  }
+
 </script>
 
 <div class="modal fade" id="TheFirstChangePw" tabindex="-1" role="dialog" aria-labelledby="TheFirstChangePwModal" data-backdrop="static" data-keyboard="false">
@@ -1185,3 +1229,33 @@
   </div>
 </div>
 
+
+
+<div class="modal fade" id="urlPop" tabindex="-1" role="dialog" aria-labelledby="urlPop">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form method="post" id="urlPopForm" onsubmit="return false;">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h3 class="modal-title"><s:message code="filterInfo.urlPop.title.add"/></h3>
+        </div>
+        <div class="modal-body">
+          <div class="form-inline">
+            <label for="url" class="control-label col-xs-2">URL</label>
+            http://<input type="text" class="form-control" name="url" id="noLogurl" placeholder="URL" style="width: 350px;" maxlength="128">
+            <input type="hidden" id="urlLogSeq" name="urlLogSeq">
+          </div>
+          <div class="form-inline" style="padding-left: 10px; color: #f25643;"><s:message code="filterInfo.msg.exceptHttp"/></div>
+        </div>
+        <input type="hidden" name="tabId"/>
+        <input type="hidden" name="tab" />
+      </form>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+        <button type="button" class="btn btn-primary saveNoLogUrlPopBtn" accesskey="S" id="saveNoLogUrlPopBtn"><s:message code="common.msg.save"/></button>
+      </div>
+    </div>
+  </div>
+</div>
