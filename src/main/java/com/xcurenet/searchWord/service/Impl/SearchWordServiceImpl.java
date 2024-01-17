@@ -13,7 +13,7 @@ import java.util.Map;
 @Service("searchWordService")
 public class SearchWordServiceImpl extends XcnAbstractDAO implements SearchWordService {
 	@Override
-	public List<SearchWordVO> getSearchWordList(int offset, int limit, String searchStr) {
+	public List<SearchWordVO> getSearchWord(int offset, int limit, String searchStr) {
 		Map<String, Object> param = new HashMap();
 		param.put("limit", limit);
 		param.put("offset", offset);

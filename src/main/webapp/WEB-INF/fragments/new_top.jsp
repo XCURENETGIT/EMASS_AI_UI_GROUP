@@ -78,7 +78,7 @@
 		<a href="#"> <img src="<c:url value="/img/icon_top_menu.png"/>" alt="allmenu"></a>
 	</div>
 	<div class="headerArea">
-		<h1><a href="<c:url value="/ems/dashboard.do?menuKey=0"/>" id="menuMainBtn" onclick="goMainPage();"><img
+		<h1><a href="<c:url value="/ems/dashboard.do"/>" id="menuMainBtn" onclick="goMainPage();"><img
 				src="<c:url value="/img/logo.png"/>" height="24px" alt="EMASS AI"></a></h1>
 		<div class="my_left">
 			<span><a href="#"><img src="<c:url value="/img/icon_top_user.png"/>" alt="mypage"></a></span>
@@ -139,7 +139,7 @@
 <script type="text/javascript">
 
     function goMainPage() {
-        document.location.href = $('.topMenuLi:eq(0) .topMenu').attr('href');
+        // document.location.href = $('.topMenuLi:eq(0) .topMenu').attr('href');
     }
 
     function changeMainMenu(val) {

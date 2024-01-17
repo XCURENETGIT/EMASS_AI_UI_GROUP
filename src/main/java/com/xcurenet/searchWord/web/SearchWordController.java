@@ -1,7 +1,9 @@
 package com.xcurenet.searchWord.web;
 
+import com.xcurenet.annotations.AuditMenu;
 import com.xcurenet.annotations.AuditOperation;
 import com.xcurenet.annotations.AuditParentMenu;
+import com.xcurenet.audit.service.Menu;
 import com.xcurenet.audit.service.Operation;
 import com.xcurenet.audit.service.ParentMenu;
 import com.xcurenet.common.util.Common;
@@ -25,6 +27,7 @@ import java.util.List;
 
 @Controller
 @AuditParentMenu(ParentMenu.DATA_MONITOR)
+@AuditMenu(Menu.RELATION_KEYWORD)
 @Slf4j
 public class SearchWordController {
 
@@ -39,7 +42,7 @@ public class SearchWordController {
 		String searchStr = Common.nvl(request.getParameter("searchStr"));
 		int offset = Common.nvz(request.getParameter("offset"));
 		int limit = Common.nvz(request.getParameter("limit"));
-		return new XcnResponseVO(XcnRspCode.OK, searchWordService.getSearchWordList(offset, limit, searchStr));
+		return new XcnResponseVO(XcnRspCode.OK, searchWordService.getSearchWord(offset, limit, searchStr));
 	}
 
 	@RequestMapping(value = "/insertSearchWord.xcn")

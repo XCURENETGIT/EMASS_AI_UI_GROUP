@@ -6,7 +6,7 @@ import java.util.List;
 
 @Service
 public interface SearchWordService {
-	public List<SearchWordVO> getSearchWordList(int offset, int limit, String searchStr);
+	public List<SearchWordVO> getSearchWord(int offset, int limit, String searchStr);
 
 	int insertSearchWord(SearchWordVO searchWordVO);
 
