@@ -8,6 +8,7 @@ body,html {width:100%; height:100%;}
 #container::after {content:''; display:block; clear:both;}
 #container #gnbWrap {position: fixed; z-index:9999; min-width:76px; height:100%;background-color: #242330; }
 #container #contentArea {position: relative;margin-left:78px; width: calc(100% - 78px);  height:100%;}
+#xcn_container {background-color: #f8f8f8;}
 
 /* Header */
 #header .allmenu {position: relative; float:left; max-width:76px; width:76px; height:50px; background-color: #111;}
