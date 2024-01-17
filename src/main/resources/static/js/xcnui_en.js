@@ -155,3 +155,16 @@ var contentBodyDivJS={
 		participantInfo:'Participants Information',
 		noAuthority:'You do not have the authority.'
 }
+
+var filelist = {
+	srcIp:'Departure IP',
+	dstIp:'Destination IP',
+	bodySize:'Size',
+	userId:'Access account',
+	fileinfo:'File Information',
+	allSave:'Full save',
+	noname:'Name unknown',
+	save:'save',
+	preview:'preview',
+	allfileSave:'전체파일저장'
+};
