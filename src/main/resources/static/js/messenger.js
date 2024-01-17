@@ -802,7 +802,7 @@ function makeList(nextFlag) {
         dataHasFlag = true;
         var obj = detailDataSet[i];
         var chkPati = false;
-        if ((nvl(obj.user) != '' && obj.user == obj.sender) || usrid == obj.title || usrid == obj.sender) chkPati = true;
+        if (nvl(obj.user) != '' && (srcip == nvl(obj.userid) || srcip == nvl(obj.user))) chkPati = true;
         str += checkDate(i);
 
         str += '<li class="p20 bubble ' + (chkPati ? 'txt_right slide_right' : 'txt_left slide_left') + (i == 0 && !nextFlag ? ' lastReadLi' : '') + '" id="' + obj.msgid + '" ctime="' + obj.ctime + '" userid="' + obj.userid + '" srcip="' + obj.srcip + '" xrootmtr="' + obj.xrootmtr + '">';
