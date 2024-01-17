@@ -30,6 +30,6 @@ public interface IpRangeService {
 	
 	public int deleteIpRange(BusiVO busi);
 
-	public JSONObject importIpRange(JSONArray ipRangeList);
+	public JSONObject importIpRange(JSONArray ipRangeList, final String adminId);
 
 }

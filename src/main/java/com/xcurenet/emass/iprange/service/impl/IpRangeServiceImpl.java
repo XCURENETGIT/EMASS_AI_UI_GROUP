@@ -111,10 +111,10 @@ public class IpRangeServiceImpl extends XcnAbstractDAO implements IpRangeService
 	}
 
 	@Override
-	public JSONObject importIpRange(JSONArray ipRangeList) {
+	public JSONObject importIpRange(JSONArray ipRangeList, final String adminId) {
 		JSONObject result = new JSONObject();
 		Map<String, String> ipMap = ipRangeMap();
-		
+
 		int errorIdx  = 0;
 		int insertCnt = 0;
 		boolean duplicate = false;
@@ -123,23 +123,23 @@ public class IpRangeServiceImpl extends XcnAbstractDAO implements IpRangeService
 			tx.start();
 			for(int i=0; i<ipRangeList.size(); i++) {
 				errorIdx = i+1;
-				
+
 				JSONObject ipRangeItem = ipRangeList.getJSONObject(i);
 				String coNm    = removeUTF8BOM(Common.nvl(ipRangeItem.get("COL0")));
 				String busiNm  = removeUTF8BOM(Common.nvl(ipRangeItem.get("COL1")));
-				String startIp = Common.nvl(ipRangeItem.get("COL2")); 
+				String startIp = Common.nvl(ipRangeItem.get("COL2"));
 				String endIp   = Common.nvl(ipRangeItem.get("COL3"));
 				String ipDesc  = Common.nvl(ipRangeItem.get("COL4"));
 
 				IP startIpchk = new IP(startIp);
 				IP endIpchk   = new IP(endIp);
-				
+
 				if(Common.isEmpty(coNm) && Common.isEmpty(busiNm) && Common.isEmpty(startIp) & Common.isEmpty(endIp) && Common.isEmpty(ipDesc)) {
 					continue;
 				}
-				
+
 				log.info("coNm : {} busiNm:{}  startIp:{}  endIp:{} ipDesc: {}", coNm, busiNm, startIp, endIp,ipDesc);
-				
+
 				if(Common.isEmpty(coNm) || Common.isEmpty(busiNm) || Common.isEmpty(startIp) || Common.isEmpty(endIp)) {
 					throw new XCNException(Prop.propFormat("keyword.upload.fail") + " <br />" + Prop.propFormat("ipRange.upload.must") + " " + Prop.propFormat("keyword.upload.errline") + " : " + errorIdx);
 				}else if(coNm.length() > 20) {
@@ -155,14 +155,16 @@ public class IpRangeServiceImpl extends XcnAbstractDAO implements IpRangeService
 				}else if(startIpchk.toLong() > endIpchk.toLong()) {
 					throw new XCNException(Prop.propFormat("keyword.upload.fail") + " <br />" + Prop.propFormat("ipRange.msg.enter.iprange") + " " + Prop.propFormat("keyword.upload.errline") + " : " + errorIdx);
 				}
-				
+
 				IpRangeVO ipVo = new IpRangeVO();
 				ipVo.setCoNm(coNm);
 				ipVo.setBusiNm(busiNm);
 				ipVo.setStartIp(startIp);
 				ipVo.setEndIp(endIp);
 				ipVo.setComment(ipDesc);
-				
+				ipVo.setCreateId(adminId);
+				ipVo.setUpdateId(adminId);
+
 				if(isBusiIpRangeExist(ipVo)) {
 					duplicate = true;
 					log.info("[Upload Ip] Duplicate Data Line :{}", errorIdx);
@@ -178,10 +180,10 @@ public class IpRangeServiceImpl extends XcnAbstractDAO implements IpRangeService
 				}else {
 					ipVo.setCoCd(coCode.get(0).getCode());
 				}
-				
+
 				param.clear();
 				param.put("codeName",  ipVo.getBusiNm());
-				
+
 				List<CodeVO> code = selectList("com.xcurenet.sqlmap.mappers.mysql.code.getCodeBusiListAll", param);
 				if(code.size() == 0) {
 					//사업장 등록
@@ -191,25 +193,25 @@ public class IpRangeServiceImpl extends XcnAbstractDAO implements IpRangeService
 					vo.setBusiNm(ipVo.getBusiNm());
 					vo.setCoCd(ipVo.getCoCd());
 					busiService.insertBusi(vo);
-					
+
 				}else {
 					ipVo.setBusiCd(code.get(0).getCode());
 				}
-				
+
 				if(ipMap.get(ipVo.getBusiCd() + "@@"+ipVo.getStartIp() + "@@" + ipVo.getEndIp()) == null) {
 					insert("com.xcurenet.sqlmap.mappers.mysql.iprange.insertIpRange", ipVo);
 					ipMap.put(ipVo.getBusiCd() + "@@"+ipVo.getStartIp() + "@@" + ipVo.getEndIp(),ipVo.getStartIp() + "@@" + ipVo.getEndIp());
-					
+
 					insertCnt++;
 				}
 			}
-			
+
 			if(insertCnt == 0 && duplicate == false) {
 				throw new XCNException(Prop.propFormat("keyword.upload.fail") + " <br />" + Prop.propFormat("keyword.upload.nocontent"));
 			}else if(insertCnt ==0 && duplicate == true) {
 				throw new XCNException(Prop.propFormat("keyword.upload.duplicate"));
 			}
-			
+
 			tx.commit();
 			result.put("success", true);
 		}catch(XCNException e) {
@@ -224,7 +226,7 @@ public class IpRangeServiceImpl extends XcnAbstractDAO implements IpRangeService
 		}
 		return result;
 	}
-	
+
 	private String getBusiCdTmp() {
 		String result = "";
 		String busiCdTmp = "B-" + Common.lPad(busiIdx++, 6, "0");
@@ -240,7 +242,7 @@ public class IpRangeServiceImpl extends XcnAbstractDAO implements IpRangeService
 
 	private Map<String, String> ipRangeMap(){
 		List<IpRangeVO> ipList = selectList("com.xcurenet.sqlmap.mappers.mysql.iprange.getIpRangeList");
-		
+
 		if(ipList == null) {
 			return new HashMap<>();
 		}
@@ -250,7 +252,7 @@ public class IpRangeServiceImpl extends XcnAbstractDAO implements IpRangeService
 		}
 		return map;
 	}
-	
+
 	private static String removeUTF8BOM(String s) {
 		if (s.startsWith(UTF8_BOM)) {
 			s = s.substring(1);

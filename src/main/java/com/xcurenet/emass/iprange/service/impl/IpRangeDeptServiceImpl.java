@@ -111,10 +111,10 @@ public class IpRangeDeptServiceImpl extends XcnAbstractDAO implements IpRangeDep
 	}
 
 	@Override
-	public JSONObject importIpRangeDept(JSONArray ipRangeList) {
+	public JSONObject importIpRangeDept(JSONArray ipRangeList, final String adminId) {
 		JSONObject result = new JSONObject();
 		Map<String, String> ipMap = ipRangeMap();
-		
+
 		int errorIdx  = 0;
 		int insertCnt = 0;
 		boolean duplicate = false;
@@ -123,24 +123,24 @@ public class IpRangeDeptServiceImpl extends XcnAbstractDAO implements IpRangeDep
 			tx.start();
 			for(int i=0; i<ipRangeList.size(); i++) {
 				errorIdx = i+1;
-				
+
 				JSONObject ipRangeItem = ipRangeList.getJSONObject(i);
 				String coNm    = removeUTF8BOM(Common.nvl(ipRangeItem.get("COL0")));
 				String pdeptNm  = removeUTF8BOM(Common.nvl(ipRangeItem.get("COL1")));
 				String deptNm  = removeUTF8BOM(Common.nvl(ipRangeItem.get("COL2")));
-				String startIp = Common.nvl(ipRangeItem.get("COL3")); 
+				String startIp = Common.nvl(ipRangeItem.get("COL3"));
 				String endIp   = Common.nvl(ipRangeItem.get("COL4"));
 				String ipDesc  = Common.nvl(ipRangeItem.get("COL5"));
 
 				IP startIpchk = new IP(startIp);
 				IP endIpchk   = new IP(endIp);
-				
+
 				if(Common.isEmpty(coNm) && Common.isEmpty(deptNm) && Common.isEmpty(startIp) & Common.isEmpty(endIp) && Common.isEmpty(ipDesc)) {
 					continue;
 				}
-				
+
 				log.info("coNm: {}  pdeptNm: {}  deptNm: {}  startIp: {}  endIp: {}  ipDesc: {}", coNm, pdeptNm, deptNm, startIp, endIp,ipDesc);
-				
+
 				if(Common.isEmpty(coNm) || Common.isEmpty(deptNm) || Common.isEmpty(startIp) || Common.isEmpty(endIp)) {
 					throw new XCNException(Prop.propFormat("keyword.upload.fail") + " <br />" + Prop.propFormat("deptIpRange.upload.must") + " " + Prop.propFormat("keyword.upload.errline") + " : " + errorIdx);
 				}else if(coNm.length() > 20) {
@@ -156,7 +156,7 @@ public class IpRangeDeptServiceImpl extends XcnAbstractDAO implements IpRangeDep
 				}else if(startIpchk.toLong() > endIpchk.toLong()) {
 					throw new XCNException(Prop.propFormat("keyword.upload.fail") + " <br />" + Prop.propFormat("ipRange.msg.enter.iprange") + " " + Prop.propFormat("keyword.upload.errline") + " : " + errorIdx);
 				}
-				
+
 				IpRangeVO ipVo = new IpRangeVO();
 				ipVo.setCoNm(coNm);
 				ipVo.setPdeptNm(pdeptNm);
@@ -164,7 +164,9 @@ public class IpRangeDeptServiceImpl extends XcnAbstractDAO implements IpRangeDep
 				ipVo.setStartIp(startIp);
 				ipVo.setEndIp(endIp);
 				ipVo.setComment(ipDesc);
-				
+				ipVo.setCreateId(adminId);
+				ipVo.setUpdateId(adminId);
+
 				if(isDeptIpRangeDeptExist(ipVo)) {
 					duplicate = true;
 					log.info("[Upload Ip] Duplicate Data Line :{}", errorIdx);
@@ -180,7 +182,7 @@ public class IpRangeDeptServiceImpl extends XcnAbstractDAO implements IpRangeDep
 				}else {
 					ipVo.setCoCd(coCode.get(0).getCode());
 				}
-				
+
 				if(Common.isEmpty(ipVo.getPdeptNm())) { // 파일에 상위부서가 없는 경우 => 상위부서인 경우
 					ipVo.setPdeptCd("");
 				}else {
@@ -188,7 +190,7 @@ public class IpRangeDeptServiceImpl extends XcnAbstractDAO implements IpRangeDep
 					param.clear();
 					param.put("codeName",  ipVo.getPdeptNm());
 					List<CodeVO> pDeptCode = selectList("com.xcurenet.sqlmap.mappers.mysql.code.getCodeDeptListAll", param);
-					
+
 					if(pDeptCode.size() == 0) {
 						ipVo.setPdeptCd(getDeptCdTmp());
 						//상위 부서 등록
@@ -201,18 +203,18 @@ public class IpRangeDeptServiceImpl extends XcnAbstractDAO implements IpRangeDep
 						ipVo.setPdeptCd(pDeptCode.get(0).getCode());
 					}
 				}
-				
+
 				//부서 등록
 				param.clear();
 				param.put("codeName",  ipVo.getDeptNm());
 				List<CodeVO> deptCode = selectList("com.xcurenet.sqlmap.mappers.mysql.code.getCodeDeptListAll", param);
-				
+
 				if(deptCode.size() == 0) {
 					ipVo.setDeptCd(getDeptCdTmp());
 				}else {
 					ipVo.setDeptCd(deptCode.get(0).getCode());
 				}
-				
+
 				DeptVO deptVo = new DeptVO();
 				deptVo.setPDeptCd(ipVo.getPdeptCd());
 				deptVo.setPDeptNm(ipVo.getPdeptNm());
@@ -220,21 +222,21 @@ public class IpRangeDeptServiceImpl extends XcnAbstractDAO implements IpRangeDep
 				deptVo.setDeptNm(ipVo.getDeptNm());
 				deptVo.setCoCd(ipVo.getCoCd());
 				deptService.insertDept(deptVo);
-				
+
 				if(ipMap.get(ipVo.getDeptCd() + "@@"+ipVo.getStartIp() + "@@" + ipVo.getEndIp()) == null) {
 					insert("com.xcurenet.sqlmap.mappers.mysql.iprange.insertIpRangeDept", ipVo);
 					ipMap.put(ipVo.getDeptCd() + "@@"+ipVo.getStartIp() + "@@" + ipVo.getEndIp(),ipVo.getStartIp() + "@@" + ipVo.getEndIp());
-					
+
 					insertCnt++;
 				}
 			}
-			
+
 			if(insertCnt == 0 && duplicate == false) {
 				throw new XCNException(Prop.propFormat("keyword.upload.fail") + " <br />" + Prop.propFormat("keyword.upload.nocontent"));
 			}else if(insertCnt ==0 && duplicate == true) {
 				throw new XCNException(Prop.propFormat("keyword.upload.duplicate"));
 			}
-			
+
 			tx.commit();
 			result.put("success", true);
 		}catch(XCNException e) {
@@ -249,7 +251,7 @@ public class IpRangeDeptServiceImpl extends XcnAbstractDAO implements IpRangeDep
 		}
 		return result;
 	}
-	
+
 	private String getDeptCdTmp() {
 		String result = "";
 		String deptCdTmp = "D-" + Common.lPad(deptIdx++, 6, "0");
@@ -262,11 +264,11 @@ public class IpRangeDeptServiceImpl extends XcnAbstractDAO implements IpRangeDep
 		}
 		return result;
 	}
-	
+
 	@Override
 	public Map<String, String> ipRangeMap(){
 		List<IpRangeVO> ipList = selectList("com.xcurenet.sqlmap.mappers.mysql.iprange.getIpRangeList");
-		
+
 		if(ipList == null) {
 			return new HashMap<>();
 		}
@@ -276,7 +278,7 @@ public class IpRangeDeptServiceImpl extends XcnAbstractDAO implements IpRangeDep
 		}
 		return map;
 	}
-	
+
 	private static String removeUTF8BOM(String s) {
 		if (s.startsWith(UTF8_BOM)) {
 			s = s.substring(1);

@@ -31,7 +31,7 @@ public interface IpRangeDeptService {
 	
 	public int deleteIpRangeDept(DeptVO dept);
 
-	public JSONObject importIpRangeDept(JSONArray ipRangeList);
+	public JSONObject importIpRangeDept(JSONArray ipRangeList, final String adminId);
 	
 	public Map<String, String> ipRangeMap();
 

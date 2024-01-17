@@ -194,7 +194,6 @@ public class SolrEdcStatControllerLog {
 
 	public void getInfoStatList(final HttpServletRequest request, AuditRequestVO auditVo) {
 		JSONObject param = Common.getParam(request);
-		System.out.println("getInfoStatList: " + auditVo.getMenuId());
 		String piCount = Common.nvl(param.get("piCount"));
 		String startDate = Common.nvl(param.get("startDate"));
 		String endDate = Common.nvl(param.get("endDate"));

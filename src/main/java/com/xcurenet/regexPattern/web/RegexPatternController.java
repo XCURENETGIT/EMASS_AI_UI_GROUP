@@ -1,7 +1,9 @@
 package com.xcurenet.regexPattern.web;
 
+import com.xcurenet.annotations.AuditMenu;
 import com.xcurenet.annotations.AuditOperation;
 import com.xcurenet.annotations.AuditParentMenu;
+import com.xcurenet.audit.service.Menu;
 import com.xcurenet.audit.service.Operation;
 import com.xcurenet.audit.service.ParentMenu;
 import com.xcurenet.common.util.Common;
@@ -27,6 +29,7 @@ import java.util.List;
 
 @Controller
 @AuditParentMenu(ParentMenu.DATA_MONITOR)
+@AuditMenu(Menu.RELATION_PATTERN)
 @Slf4j
 public class RegexPatternController {
 

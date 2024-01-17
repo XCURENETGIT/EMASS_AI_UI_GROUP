@@ -132,7 +132,6 @@ public class LoginController {
 		String mail = adminService.getAdmin(admin.getAdminId()).getAdminEmail();
 
 
-		System.out.println(mail);
 
 		int number = mailService.sendMail(mail);
 

@@ -51,7 +51,7 @@ public class DeptRangeJob implements Job {
 			JSONArray insas = readerDept(insaFile.getAbsolutePath(), delimiter);
 			
 			IpRangeDeptService ipRangeDept = SpringContextUtil.getBean(IpRangeDeptService.class);
-			JSONObject result = ipRangeDept.importIpRangeDept(insas);
+			JSONObject result = ipRangeDept.importIpRangeDept(insas, null);
 			
 			if (result.getBoolean("success")) {
 				String backup = insaFile.getParent() + File.separator + "backup" + File.separator;
