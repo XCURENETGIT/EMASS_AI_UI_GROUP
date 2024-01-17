@@ -80,9 +80,9 @@ var eikon2 = {
             $(this).css('display','none');
         });
     },
-    getCollectionList : function(page){
+    getCollectionList : function(page,type){
         var searchType = $('input:radio[name=searchType]:input:checked').val();
-        getCollectionGroupList(page);
+        getCollectionGroupList(page,type);
     },
     getFileGroupList : function(page){
         var searchType = $('input:radio[name=searchType]:input:checked').val();
@@ -422,7 +422,7 @@ function getFileMessageList  (page){
 }
 
 
-function getCollectionGroupList (page){
+function getCollectionGroupList (page,type){
     var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
     groupPage = page;
     var offset = groupPage*groupPageBreak - groupPageBreak;
@@ -441,6 +441,7 @@ function getCollectionGroupList (page){
         readYn : readYn,
         offset : offset,
         userStr:userStr,
+        type:type,
         limit : groupPageBreak,
         success : function(data, total) {
             rtnGenerativeGroupList(data.groups)
@@ -646,8 +647,6 @@ function makeList(nextFlag){
                 str += '<span>' + attachnameArray[0] + '.' + attachtypeArray[0] + '<br/>';
                 str += attachsizeArray[0] + 'KB</span>';
                 str += '<button class="btnchatdown downlodadBtn"></button></p>';
-
-
         }
 
         else {

@@ -52,6 +52,23 @@
                 print($('#printDiv').html());
             });
 
+            $('.pdf_link3').click(function() {
+
+                if ($('input:checkbox[name="reportMenu"]:checked').length == 0) {
+                    alert('<s:message code="report.msg.select.statitem"/>');
+                    return;
+                }
+
+                var check = 'false';
+                $('input:checkbox[name="reportMenu"]:checked').each(function () {
+                    if ($(this).attr('id') == 'user_str' || $(this).attr('id') == 'sender_str') check = 'true';
+                });
+
+                var htmlData = '<html><head><title></title></head><body>' + $('#printDiv').html().replaceAll("\t", "") + '</body></html>';
+                var title = $('#repTitle').text();
+                reportPdfDownLoad(title, htmlData, check);
+            });
+
             $('.excel_link3').click(function() {
                 if( $('input:checkbox[name="reportMenu"]:checked').length == 0 ) {
                     alert('<s:message code="report.msg.select.statitem"/>');
@@ -217,10 +234,8 @@
             });
         }
 
-        function sendMail(){
+        function reportPdfDownLoad(title, htmlData, check ){
 
-            var htmlData = '<html><head><title></title></head><body>'+$('#printDiv').html().replaceAll("\t", "")+'</body></html>';
-            var title = $('#repTitle').text();
             ui.postJson({
                 url : 'utils/ReportpdfWriter.do',
                 reportDate : $('#reportDate').text(),
@@ -430,9 +445,9 @@
 			</div>
 			<ul class="dropdown-menu dropdown-menu-right"  role="menu">
 				<li><a href="#" class="excel_link3"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="common.msg.excel"/>(xlsx)</a></li>
+				<li><a href="#" class="pdf_link3"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;(pdf)</a></li>
 				<li><a href="#" class="print_link2"><span class="glyphicon glyphicon-print"></span>&nbsp;<s:message code="common.msg.print"/></a></li>
 			</ul>
-			<button class="btn01" id="sendMail" onclick="sendMail()"><img src="<c:url value="/img/subBtn_plus.png"/>">메일 예약알림</button>
 		</div>
 	</div>
 

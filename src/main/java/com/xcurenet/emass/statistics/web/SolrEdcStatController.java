@@ -773,6 +773,7 @@ public class SolrEdcStatController {
 	@RequestMapping(value = "/getInfoStatList.xcn")
 	@Description("개인정보 유출 관계 분석 조회")
 	@ResponseBody
+	@AuditOperation(Operation.SEARCH)
 	public XcnResponseVO getInfoStatList(final HttpServletRequest request, final HttpSession session) throws IOException, SolrServerException {
 		JSONObject param = Common.getParam(request);
 		String startDate = Common.nvl(param.get("startDate"));

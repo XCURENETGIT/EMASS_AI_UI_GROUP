@@ -108,8 +108,29 @@
                     return;
                 }*/
 
-                eikon2.getCollectionList(1);
+                eikon2.getCollectionList(1,"N");
             });
+
+
+            $(document).on('click', '.file_link', function () {
+                var msgId = $(this).attr('msgid');
+                var attachHash = $(this).attr('attachhash');
+                var attachName = $(this).text();
+
+                var attachUrl = '<c:url value="/getEmassAttachInfo4DownHash.xcn"/>?msgIds=' + msgId + '&attachHash=' + attachHash;
+
+                if (attachHash == '') {
+                    alert('<s:message code="message.message.notfound.attach"/>');
+                    return;
+                }
+                try {
+                    AttachDown.location.href = attachUrl;
+                } catch (e) {
+                    AttachDown.src = attachUrl;
+                }
+            });
+
+
             $("#searchStrInput").keypress(function (e) {
                 if (e.keyCode == 13) $('#searchBtn').click();
             }); //통합 검색 엔터키

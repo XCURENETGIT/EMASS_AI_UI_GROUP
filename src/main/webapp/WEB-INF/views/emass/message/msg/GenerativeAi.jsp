@@ -108,7 +108,7 @@
                     return;
                 }*/
 
-                eikon2.getCollectionList(1);
+                eikon2.getCollectionList(1,"G");
             });
             $("#searchStrInput").keypress(function (e) {
                 if (e.keyCode == 13) $('#searchBtn').click();
@@ -187,6 +187,25 @@
                 eikon2.getCollectionGroupTextExport('<c:url value="/getCollectionGroupAllExport.xcn"/>?userid=' + userid + '&srcip=' + srcip + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr+'&limit=1000&facet_detail=true&export=true&type=G');
                 hideSelect();
             });
+
+            $(document).on('click', '.file_link', function () {
+                var msgId = $(this).attr('msgid');
+                var attachHash = $(this).attr('attachhash');
+                var attachName = $(this).text();
+
+                var attachUrl = '<c:url value="/getEmassAttachInfo4DownHash.xcn"/>?msgIds=' + msgId + '&attachHash=' + attachHash;
+
+                if (attachHash == '') {
+                    alert('<s:message code="message.message.notfound.attach"/>');
+                    return;
+                }
+                try {
+                    AttachDown.location.href = attachUrl;
+                } catch (e) {
+                    AttachDown.src = attachUrl;
+                }
+            });
+
 
             $(document).on('click', '.downAllFile', function(){
                 var downloadFlag = false;
