@@ -295,7 +295,7 @@ public class MessengerController {
 //		if(Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
 
 		if(Common.isNotEmpty(usr_id)) query += String.format(" +userkey:\"%s\"", usr_id);
-		else query += String.format(" -userkey:*");
+//		else query += String.format(" -userkey:*");
 
 		//이미 출력된 동시간대 데이터 제외
 		if(Common.isNotEmpty(msgId)) {
@@ -337,7 +337,7 @@ public class MessengerController {
 //		if(Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
 
 		if(Common.isNotEmpty(usr_id)) query += String.format(" +userkey:\"%s\"", usr_id);
-		else query += String.format(" -userkey:*");
+//		else query += String.format(" -userkey:*");
 
 		//이미 출력된 동시간대 데이터 제외
 		if(Common.isNotEmpty(msgId)) {
@@ -541,7 +541,7 @@ public class MessengerController {
 	public MessengerGroupUserVO getMessengerGroupUserList(final HttpServletRequest request, final int rows) throws IOException, SolrServerException {
 		JSONObject param = Common.getParam(request);
 		String xRootMtr = Common.nvl(param.get("xRootMtr"));
-		String groupField = Common.nvl(param.get("groupField"), "userkey");
+		String groupField = Common.nvl(param.get("groupField"), "userid");
 		String srcip = Common.nvl(param.get("srcip"));
 		String usr_id = Common.nvl(param.get("userid"));
 		String startDt = Common.nvl(param.get("startDt"));
@@ -568,7 +568,6 @@ public class MessengerController {
 		sq.setParam("group.field", groupField);
 		sq.setParam("facet", true);
 		sq.setFacetLimit(rows);
-		//if(Common.isEquals(groupField, "usr_id")) sq.setParam("facet.query", "-usr_id:*");
 		sq.setParam("facet.field", "srcip");
 		sq.setFacetMinCount(1);
 

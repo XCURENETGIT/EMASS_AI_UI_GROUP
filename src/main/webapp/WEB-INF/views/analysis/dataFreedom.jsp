@@ -8,24 +8,10 @@
 <script type="text/javascript" src="<c:url value="/js/messageGrid.js"/>"></script>
 
 <style>
-
-
 	.zero-clipboard {
 		position: relative;
 	}
 
-	.btn-clipboard {
-		position: absolute;
-		top: -27px;
-		left: -1px;
-		display: block;
-		color: #ffffff;
-		border-radius: 4px 0px 4px 0px;
-		background-color: #3D84C1;
-		font-size: 14px;
-		text-align: center;
-		padding: 3px;
-	}
 
 	.btn-popover {
 		z-index: 999999999;
@@ -42,17 +28,10 @@
 		right: 0;
 		text-align: center;
 		font-size: 14px;
-		padding: 3px;
-		margin-top: 5px;
 		margin-right: 20px;
 	}
 
-	.wrapper {
-	}
 
-	.popover {
-		z-index: 998;
-	}
 
 	#termsPopover .popover {
 		min-width: 700px;
@@ -440,13 +419,12 @@
 </div>
 
 <div id="messageListDiv" class="messageList" style="display:none">
-	<div class="panel panel-default" style=min-height:350px;margin:0px;">
+	<div class="panel panel-default " style=min-height:350px;margin:0px;">
 		<div class="panel-heading">
 			<i class="fa fa-file-text-o fa-fw"></i> <span><s:message code="analysis.freedom.ui.msglist"/><span class="resultCnt"></span> - <span
 				class="selectChartData"></span></span>
 			<span class="btn--message-popover">
-					<a tabindex="0" class="btn btn-xs" role="button" onclick="javascript:messageListClose();"><span class="glyphicon glyphicon-remove"
-					                                                                                                style="font-size:20px;"></span></a>
+					<a tabindex="0" class="btn btn-xs" role="button" onclick="javascript:messageListClose();"><span class="glyphicon glyphicon-remove" style="font-size:15px;"></span></a>
 				</span>
 		</div>
 		<div class="panel-body" style="height: 100%;padding:0px;">

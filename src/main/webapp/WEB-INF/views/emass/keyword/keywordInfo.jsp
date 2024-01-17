@@ -365,10 +365,10 @@ function fileExtCheck(obj) {
 			</div>
 			<div class="modalCon">
 				<div class="modalTop">
-					<h3>예약어 그룹 추가</h3>
+					<h3><s:message code="keyword.msg.part_mgnt"/>-<s:message code="common.msg.addmodify"/></h3>
 					<p>
 						<span class="red_dot veralign_middle"></span>
-						필수 입력 사항입니다.
+						<s:message code="common.required.msg"/>
 					</p>
 				</div>
 				<div class="modalbody">
@@ -415,10 +415,10 @@ function fileExtCheck(obj) {
 			</div>
 			<div class="modalCon">
 				<div class="modalTop">
-					<h3>예약어 그룹 추가</h3>
+					<h3><s:message code="DATA_MONITOR.KEYWORD_MGMT"/>-<s:message code="common.msg.addmodify"/></h3>
 					<p>
 						<span class="red_dot veralign_middle"></span>
-						필수 입력 사항입니다.
+						<s:message code="common.required.msg"/>
 					</p>
 				</div>
 				<div class="modalbody">
@@ -493,7 +493,7 @@ function fileExtCheck(obj) {
 						</div>
 					</div>
 				</div>
-				<div class="info"> 안내 사항
+				<div class="info"> <s:message code="common.guidance"/>
 					<div class="form-inline" style="padding-left: 10px;">1) <s:message code="interest.message.upload.info1"/></div>
 					<div class="form-inline" style="padding-left: 10px;">2) <s:message code="interest.message.upload.info2"/></div>
 					<div class="form-inline" style="padding-left: 10px;">3) <s:message code="interest.message.upload.info3"/></div>
