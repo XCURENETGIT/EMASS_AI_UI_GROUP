@@ -76,26 +76,26 @@
         $('#RelationKeywordSaveBtn').click(function () {
             var searchWord = $('#searchWordName').val().ltrim().rtrim();
             if (searchWord == '') {
-                ui.alertMsg("키워드를 입력해주세요");
+                ui.alertMsg('<s:message code="condition.searchWord.input"/>');
                 $('#searchWordName').focus();
                 return false;
             }
             var relationWord = $('#searchWordRelaName').val().ltrim().rtrim();
             if (relationWord == '') {
-                ui.alertMsg("연관 키워드를 입력해주세요");
+                ui.alertMsg('<s:message code="condition.relationSearchWord.input"/>');
                 $('#regexPattern').focus();
                 return false;
             }
 
             var searchWordRelaNumber = $('#searchWordRelaNumber').val().ltrim().rtrim();
             if (searchWordRelaNumber >= 1) {
-                ui.alertMsg("가중치는 1 이하로 입력해주세요")
+                ui.alertMsg('<s:message code="condition.searchWordWeightdown.input"/>')
                 $('#searchWordRelaNumber').focus();
                 return false;
             }
 
             if (searchWordRelaNumber == '') {
-                ui.alertMsg("가중치를 입력해주세요")
+                ui.alertMsg('<s:message code="condition.searchWordWeight.input"/>')
                 $('#searchWordRelaNumber').focus();
                 return false;
             }
@@ -106,7 +106,7 @@
                 searchWordRelaNumber: searchWordRelaNumber
             }
 
-            ui.confirmMsg('추가하시겠습니까?', '', '', function (rs) {
+            ui.confirmMsg('<s:message code="common.msg.confirm.add"/>', '', '', function (rs) {
                 if (rs) {
                     gridSearchWordPattern.on();
                     ui.post({
@@ -163,7 +163,7 @@
                 ui.alertMsg('<s:message code="common.msg.choose.deleteitem"/>');
                 return false;
             }
-            ui.confirmMsg('삭제 하겠습니까?', '', '', function (rs) {
+            ui.confirmMsg('<s:message code="searchKeyword.msg.confirm.delete"/>', '', '', function (rs) {
                 if (rs) {
                     relaGrid.on();
                     ui.get({
@@ -224,15 +224,15 @@
 	<div class="modal-content">
 		<form method="post" id="searchWordPopForm">
 			<div class="modalHead">
-				<h2>키워드 관리 - 추가</h2>
+				<h2><s:message code="DATA_MONITOR.RELATION_KEYWORD"/> - <s:message code="common.msg.add"/></h2>
 				<span class="close" data-dismiss="modal">&times;</span>
 			</div>
 			<div class="modalCon">
 				<div class="modalTop">
-					<h3>키워드 추가</h3>
+					<h3><s:message code="DATA_MONITOR.RELATION_KEYWORD"/> <s:message code="common.msg.add"/></h3>
 					<p>
 						<span class="red_dot veralign_middle"></span>
-						필수 입력 사항입니다.
+						<s:message code="common.required.msg"/>
 					</p>
 				</div>
 				<div class="modalbody">
@@ -285,15 +285,15 @@
 	<div class="modal-content">
 		<form method="post" id="searchWordUpdatePopForm">
 			<div class="modalHead">
-				<h2>키워드 관리 - 수정</h2>
+				<h2><s:message code="DATA_MONITOR.RELATION_KEYWORD"/> - <s:message code="common.msg.modify"/></h2>
 				<span class="close" data-dismiss="modal">&times;</span>
 			</div>
 			<div class="modalCon">
 				<div class="modalTop">
-					<h3>키워드 수정</h3>
+					<h3><s:message code="DATA_MONITOR.RELATION_KEYWORD"/> <s:message code="common.msg.modify"/></h3>
 					<p>
 						<span class="red_dot veralign_middle"></span>
-						필수 입력 사항입니다.
+						<s:message code="common.required.msg"/>
 					</p>
 				</div>
 				<div class="modalbody">
@@ -307,9 +307,6 @@
 							<input type="hidden" class="w100" name="keywordId" id="keywordUpdateId">
 						</div>
 					</div>
-				</div>
-				<div class="info">
-					안내 사항
 				</div>
 				<div class="modalfooter">
 					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message
@@ -326,7 +323,7 @@
 <div class="modal" id="searchWordUpdatPop" aria-labelledby="searchWordUpdatPop" data-backdrop="static">
 	<div class="modal-content">
 		<div class="modalHead">
-			<h2>연관 키워드 관리 - 삭제</h2>
+			<h2><s:message code="DATA_MONITOR.RELATION_KEYWORD"/> - <s:message code="common.msg.delete"/></h2>
 			<span class="close" data-dismiss="modal">&times;</span>
 		</div>
 		<div class="modalCon">
@@ -374,7 +371,7 @@
 		<div class="contentSub">
 			<div class="subtab">
 				<button class="active">
-					연관 키워드 목록
+					<s:message code="DATA_MONITOR.RELATION_KEYWORD"/> <s:message code="selectCodeAll.list"/>
 					<span id="relationKeywordCount"></span>
 				</button>
 			</div>

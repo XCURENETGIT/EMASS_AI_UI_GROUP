@@ -1306,7 +1306,7 @@
 				<li><a href="javascript:;" id="editDashboardBtn"><span class="fa fa-file-text-o" style="font-size:16px"></span>&nbsp;<s:message code="dashboardSetup.addModify"/></a></li>
 				<li><a href="javascript:;" id="menuDefaultSetupBtn"><span class="fa fa-file-text-o" style="font-size:16px"></span>&nbsp;<s:message code="dashboardMenu.defaultMenu"/></a></li>
 				<li class="dropdown-divider"></li>
-				<li><a href="javascript:;" id="setupDashboardBtn"><span class="glyphicon glyphicon-th-list"></span>&nbsp;대시보드 관리</a></li>
+				<li><a href="javascript:;" id="setupDashboardBtn"><span class="glyphicon glyphicon-th-list"></span>&nbsp;<s:message code="DATA_MONITOR.DASHBOARD_SETUP"/></a></li>
 			</ul>
 		</div>
 	</div>

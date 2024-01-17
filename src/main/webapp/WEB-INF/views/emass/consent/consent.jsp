@@ -571,7 +571,7 @@
 				</select>
 				<input type="text" placeholder="<s:message code="consent.name.input"/>" id="searchStr"
 				       style="width: 200px;">
-				<button class="form_btn01" type="button" accesskey="Q" id="searchBtn">조회</button>
+				<button class="form_btn01" type="button" accesskey="Q" id="searchBtn"><s:message code="common.msg.search"/></button>
 				<button type="button" class="btn01" accesskey="I" id="insertBtn"><img
 						src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
 			</div>
@@ -581,7 +581,7 @@
 		<div class="contentSub">
 			<div class="subtab">
 				<button class="active">
-					동의서 관리 목록
+					<s:message code="DATA_MONITOR.CONSENT_MGMT"/> <s:message code="selectCodeAll.list"/>
 					<span id="consentCount"></span>
 				</button>
 			</div>

@@ -151,3 +151,17 @@ var contentBodyDivJS={
 var mul = {
 		aaa:'물가마 가마도리'
 }
+
+var filelist = {
+	srcIp:'출발지 IP',
+	dstIp:'목적지 IP',
+	bodySize:'크기',
+	userId:'접속계정',
+	fileinfo:'파일정보',
+	allSave:'전체저장',
+	noname:'파일명 알수없음',
+	save:'저장',
+	preview:'미리보기',
+	allfileSave:'Save the entire file'
+}
+

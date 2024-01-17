@@ -184,7 +184,7 @@ public class IpRangeDeptController {
 			}
 			
 			log.info("jsonList : {} ",jsonList);
-			item = ipRangeDeptService.importIpRangeDept(jsonList);
+			item = ipRangeDeptService.importIpRangeDept(jsonList, Common.getAdminId(request));
 			makeInfoService.addInfoIpRangeDept();
 			
 			AuditRequestVO auditVo = new AuditRequestVO();

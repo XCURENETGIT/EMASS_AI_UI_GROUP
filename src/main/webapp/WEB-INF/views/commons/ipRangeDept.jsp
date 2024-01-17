@@ -596,6 +596,8 @@ function getDeptSchedule(){
 							<input type="hidden" id="deptNm" class="selectedTitle" name="deptNm">
 							<input type="hidden" id="deptByCoStr" class="selectedTitle" name="deptNm">
 							<input type="hidden" id="deptByCoVal" name="deptCd">
+							<input type="hidden" name="createId" id="hiddenCreateId" value="${_USERCREDENTIAL_.adminId}">
+							<input type="hidden" name="updateId" id="hiddenUpdateId" value="${_USERCREDENTIAL_.adminId}">
 						</div>
 					</div>
 
@@ -963,6 +965,9 @@ function getDeptSchedule(){
 		grid.colAdd('endIp', '<s:message code="didBlock.endip"/>', 150, 'center', false, 'nomal');
 		grid.colAdd('comment', '<s:message code="common.msg.comment"/>', 250, 'left', false, 'nomal');
 		grid.colAdd('createDt', '<s:message code="filterInfo.createDt"/>', 140, 'center', false, 'nomal');
+        grid.colAdd('createId', '<s:message code="filterInfo.createId"/>', 140, 'center', false, 'nomal');
+        grid.colAdd('updateDt', '<s:message code="filterInfo.updateDt"/>', 140, 'center', false, 'nomal');
+        grid.colAdd('updateId', '<s:message code="filterInfo.updateId"/>', 140, 'center', false, 'nomal');
 		grid.onClick = function() {
 			if (grid.Col == grid.ColIndex('deptNm')) {
 				$("#ipRangePop").modal('show');

@@ -191,4 +191,24 @@ public class SolrEdcStatControllerLog {
 		auditVo.setInformation(information);
 		auditService.insertAudit(request, auditVo);
 	}
+
+	public void getInfoStatList(final HttpServletRequest request, AuditRequestVO auditVo) {
+		JSONObject param = Common.getParam(request);
+		String piCount = Common.nvl(param.get("piCount"));
+		String startDate = Common.nvl(param.get("startDate"));
+		String endDate = Common.nvl(param.get("endDate"));
+		String pMenuId = Common.nvl(param.get("pMenuId"));
+		String menuId = Common.nvl(param.get("menuId"));
+		auditVo.setPMenuId(pMenuId);
+		auditVo.setMenuId(menuId);
+
+		String information = "";
+
+		information += "["+Prop.propFormat("common.msg.search")+"]";
+		if( Common.isNotEmpty(startDate)) information += "┌"+Prop.propFormat("condition.period")+": " + startDate + " ~ " + endDate;
+		if( Common.isNotEmpty(piCount)) information += "┌"+Prop.propFormat("condition.infoStat.cnt")+": " + piCount;
+
+		auditVo.setInformation(information);
+		auditService.insertAudit(request, auditVo);
+	}
 }

@@ -48,6 +48,16 @@ public class PdfWriter {
 	private String check;
 
 	private BaseFont baseFont = BaseFont.createFont(this.getClass().getResource("").getPath() + "../../files/font/dotum.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+	private BaseFont baseFont9 = BaseFont.createFont(this.getClass().getResource("").getPath() + "../../files/font/Pretendard-Black.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+	private BaseFont baseFont8 = BaseFont.createFont(this.getClass().getResource("").getPath() + "../../files/font/Pretendard-Bold.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+	private BaseFont baseFont7 = BaseFont.createFont(this.getClass().getResource("").getPath() + "../../files/font/Pretendard-Medium.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+	private BaseFont baseFont6 = BaseFont.createFont(this.getClass().getResource("").getPath() + "../../files/font/Pretendard-Regular.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+	private BaseFont baseFont5 = BaseFont.createFont(this.getClass().getResource("").getPath() + "../../files/font/Pretendard-SemiBold.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+	private BaseFont baseFont4 = BaseFont.createFont(this.getClass().getResource("").getPath() + "../../files/font/Pretendard-Light.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+	private BaseFont baseFont3 = BaseFont.createFont(this.getClass().getResource("").getPath() + "../../files/font/Pretendard-ExtraLight.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+	private BaseFont baseFont2 = BaseFont.createFont(this.getClass().getResource("").getPath() + "../../files/font/Pretendard-Thin.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+
+	Font font2 = FontFactory.getFont("path/to/Pretendard-Black.subset.woff2", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
 
 	public PdfWriter(final String title, final JSONArray header, final JSONArray data, final FileOutputStream out) throws Exception {
 		this.title = title;
@@ -90,42 +100,6 @@ public class PdfWriter {
 		}
 	}
 
-/*	private static void createTable(Document document, String html) throws DocumentException {
-		int tableCount = 0;
-		org.jsoup.nodes.Document doc = Jsoup.parse(html);
-
-		for (Element table : doc.select(".subTable")) {
-			tableCount++;
-			if (tableCount == 1) {
-				document.add(new Phrase(tableCount + ". " + table.attr("name"), new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD)));
-			} else {
-				document.add(new Phrase("\n" + tableCount + ". " + table.attr("name"), new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD)));
-			}
-
-			PdfPTable pdfPTable = new PdfPTable(3); // Adjust the number of columns as needed
-			pdfPTable.setWidthPercentage(100);
-
-			for (Element row : table.select("tr")) {
-				Elements ths = row.select("th");
-				for (Element element : ths) {
-					PdfPCell cell = new PdfPCell(new Phrase(element.text(), new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD)));
-					cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-					cell.setBackgroundColor(BaseColor.LIGHT_GRAY); // Adjust the color as needed
-					pdfPTable.addCell(cell);
-				}
-
-				Elements tds = row.select("td");
-				for (Element element : tds) {
-					PdfPCell cell = new PdfPCell(new Phrase(element.text(), new Font(Font.FontFamily.HELVETICA, 10)));
-					cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-					pdfPTable.addCell(cell);
-				}
-			}
-			document.add(pdfPTable);
-		}
-	}*/
 
 
 
@@ -148,41 +122,71 @@ public class PdfWriter {
 		org.jsoup.nodes.Document jsoupDoc = Jsoup.parse(html);
 
 		Elements tables = jsoupDoc.select(".subTable");
+		Font font = new Font(baseFont3, Font.DEFAULTSIZE, Font.NORMAL);
+		Font font2 = new Font(baseFont4, Font.DEFAULTSIZE, Font.NORMAL);
 
 		for (Element table : tables) {
 			try {
-				// Extract title from h3 tag
-				String title = table.parent().select("h3").text();
-				if (!title.isEmpty()) {
-					doc.add(new Paragraph(title));
-				}
+				String title = table.attr("name");
+				PdfPCell titleCell = new PdfPCell(new Phrase(title, new Font(baseFont3, 15, Font.BOLD, BaseColor.BLACK)));
+				titleCell.setColspan(table.select("tr").first().select("th, td").size());
+				titleCell.setBackgroundColor(new BaseColor(238, 239, 242));
+				float cellHeight = 30f;
+				titleCell.setFixedHeight(cellHeight);
+
+				PdfPTable titleTable = new PdfPTable(1);
+				titleTable.setWidthPercentage(100);
+				titleTable.addCell(titleCell);
+
+				doc.add(titleTable);
+				doc.add(Chunk.NEWLINE);
 
 				PdfPTable pdfTable = new PdfPTable(table.select("tr").first().select("th, td").size());
+				pdfTable.setWidthPercentage(100);
 
-				// Populate the PdfPTable with content from the HTML table
+				boolean isEvenRow = false;
+
 				for (Element row : table.select("tr")) {
-					for (Element cell : row.select("th")) {
-						PdfPCell pdfCell = new PdfPCell(new Paragraph(cell.text()));
+					Elements headerCells = row.select("th");
+					Elements dataCells = row.select("td");
+
+					for (Element headerCell : headerCells) {
+						PdfPCell pdfCell = new PdfPCell(new Phrase(headerCell.text(), font2));
+
+						// Set background color for all th cells
+						pdfCell.setBackgroundColor(new BaseColor(238, 239, 242)); // #EEEFF2
+
 						pdfTable.addCell(pdfCell);
 					}
 
-					for (Element cell : row.select("td")) {
-						PdfPCell pdfCell = new PdfPCell(new Paragraph(cell.text()));
+					for (Element dataCell : dataCells) {
+						PdfPCell pdfCell = new PdfPCell(new Phrase(dataCell.text(), font));
+
+						// Set background color for even rows
+						if (isEvenRow) {
+							pdfCell.setBackgroundColor(new BaseColor(248, 248, 248)); // #f8f8f8
+						}
+
 						pdfTable.addCell(pdfCell);
 					}
+
+					// Toggle the flag for even rows
+					isEvenRow = !isEvenRow;
 				}
 
 				// Add the PdfPTable to the PDF document
 				doc.add(pdfTable);
 
-				// 페이지 간격
-				doc.newPage();
+				// Add space between tables
+				doc.add(Chunk.NEWLINE);
+				doc.add(Chunk.NEWLINE);
 
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 	}
+
 	private void close() throws DocumentException {
 		doc.add(table);
 		doc.close();
@@ -210,7 +214,7 @@ public class PdfWriter {
 	}
 
 	private void writePage() throws Exception {
-		Paragraph reportDate2 = new Paragraph(reportDate, new Font(baseFont, 12, Font.BOLD));
+		Paragraph reportDate2 = new Paragraph(reportDate, new Font(baseFont2, 12, Font.BOLD));
 		reportDate2.setSpacingAfter(160);
 		doc.add(reportDate2);
 
@@ -219,29 +223,33 @@ public class PdfWriter {
 		img2.scaleAbsolute(40, 40);
 		Paragraph emassPro  = new Paragraph();
 		emassPro.add(new Chunk(img2, 0, 0));
-		emassPro.add(new Chunk("EMASSPRO", new Font(baseFont, 15, Font.NORMAL)));
+		emassPro.add(new Chunk("EMASS AI", new Font(baseFont5, 15, Font.NORMAL)));
 
 		doc.add(emassPro);
 
-
-		// subTitle과 title을 각각의 Paragraph로 묶음
-
-		Paragraph title = new Paragraph("컨텐츠 현황보고서", new Font(baseFont, 50, Font.BOLDITALIC, new BaseColor(0, 102, 204)));
+		Paragraph title = new Paragraph("컨텐츠 현황보고서", new Font(baseFont8, 50, Font.BOLD, new BaseColor(0, 102, 204)));
 		title.setAlignment(com.itextpdf.text.Element.ALIGN_CENTER);
 		title.setSpacingAfter(20);
 		doc.add(title);
 
 		// A4 용지 맨 아래에 기간과 searchDate 추가
-		Paragraph period = new Paragraph( searchDate, new Font(baseFont, 12, Font.NORMAL));
+		Paragraph period = new Paragraph( searchDate, new Font(baseFont6, 12, Font.NORMAL));
 		period.setAlignment(com.itextpdf.text.Element.ALIGN_CENTER);
 		period.setSpacingBefore(doc.getPageSize().getHeight() * 0.02f ); // 적절한 간격 조절
 		doc.add(period);
 
-		Paragraph company= new Paragraph("엑스큐어넷",new Font(baseFont, 12, Font.BOLD));
+		emptyLine(20);
+
+		Paragraph company = new Paragraph("COPYRIGHT© XCURENET. ALL RIGHTS RESERVED.", new Font(baseFont3, 10, Font.BOLD));
 		company.setAlignment(com.itextpdf.text.Element.ALIGN_CENTER);
 		doc.add(company);
 	}
 
+	private void emptyLine(int rine) throws DocumentException {
+		for (int i = 0; i < rine; i++) {
+			doc.add(new Paragraph(" ", new Font(baseFont2, 12, Font.BOLD)));
+		}
+	}
 
 
 

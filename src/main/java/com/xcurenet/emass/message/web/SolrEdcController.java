@@ -68,7 +68,7 @@ public class SolrEdcController {
 		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
 		solrCreateQuery.setDateQuery("", Common.nvl(param.get("startDt")), Common.nvl(param.get("endDt")));
 
-		System.out.println( "searchFields[i]:" + solrCreateQuery.getPeriodQueryBuffer().toString() );
+//		System.out.println( "searchFields[i]:" + solrCreateQuery.getPeriodQueryBuffer().toString() );
 
 		SolrQuery sq = new SolrQuery();
 		sq.setQuery(solrCreateQuery.getPeriodQueryBuffer().toString());
@@ -82,7 +82,6 @@ public class SolrEdcController {
 		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, null);
 
 		List<FacetVO> facet = edc.getFacet();
-		System.out.println("facet:" + facet);
 		return new XcnResponseVO(XcnRspCode.OK, facet, facet.size());
 	}
 

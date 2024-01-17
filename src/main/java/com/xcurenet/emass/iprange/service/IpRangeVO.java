@@ -20,6 +20,9 @@ public class IpRangeVO {
 	private String orgEndIp;
 	private String comment;
 	private String createDt;
+	private String createId;
+	private String updateDt;
+	private String updateId;
 	
 	private MultipartFile attach;
 	private String encoding;

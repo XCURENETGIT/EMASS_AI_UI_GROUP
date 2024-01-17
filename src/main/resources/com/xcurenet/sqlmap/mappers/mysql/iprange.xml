@@ -6,65 +6,71 @@
 	<!-- 사업장별 IP Range 조회 -->
 	<select id="getIpRangeList" resultType="ipRangeVO" parameterType="hashmap">
 		SELECT  A.BUSICD AS busiCd,
-				B.BUSINM AS busiNm,
-				A.START_IP AS startIp,
-				A.END_IP AS endIp,
-				A.COMMENT AS comment,
-				DATE_FORMAT(A.CREATE_DT, '%Y-%m-%d %T' ) AS createDt
+		B.BUSINM AS busiNm,
+		A.START_IP AS startIp,
+		A.END_IP AS endIp,
+		A.COMMENT AS comment,
+		DATE_FORMAT(A.CREATE_DT, '%Y-%m-%d %T' ) AS createDt,
+		(SELECT X.ADMIN_NAME FROM UI_ADMIN X WHERE X.ADMIN_ID = A.CREATE_ID LIMIT 1) AS createId,
+		DATE_FORMAT(A.UPDATE_DT, '%Y-%m-%d %T' ) AS updateDt,
+		(SELECT X.ADMIN_NAME FROM UI_ADMIN X WHERE X.ADMIN_ID = A.UPDATE_ID LIMIT 1) AS updateId
 		FROM	UI_BUSI_IPRANGE A, UI_BUSI B
 		WHERE	A.BUSICD = B.BUSICD
 		<if test='searchStr!=null and searchStr!=""'>
-		AND		(
-				B.BUSINM LIKE CONCAT('%', #{searchStr}, '%')
-				OR 
-				A.COMMENT LIKE CONCAT('%', #{searchStr}, '%')
-				<if test='ipSig=="true"'>
+			AND		(
+			B.BUSINM LIKE CONCAT('%', #{searchStr}, '%')
+			OR
+			A.COMMENT LIKE CONCAT('%', #{searchStr}, '%')
+			<if test='ipSig=="true"'>
 				OR
 				INET6_ATON( #{searchStr} ) BETWEEN INET6_ATON(A.START_IP) AND INET6_ATON(A.END_IP)
-				</if>
-				OR
-				A.START_IP LIKE CONCAT('%', #{searchStr}, '%')
-				OR
-				A.END_IP LIKE CONCAT('%', #{searchStr}, '%')
-				)
+			</if>
+			OR
+			A.START_IP LIKE CONCAT('%', #{searchStr}, '%')
+			OR
+			A.END_IP LIKE CONCAT('%', #{searchStr}, '%')
+			)
 		</if>
 		ORDER	BY A.BUSICD, A.START_IP, A.END_IP
 		<if test='offset!=null and limit > 0'>
-		LIMIT	${offset}, ${limit}
+			LIMIT	${offset}, ${limit}
 		</if>
 	</select>
 	
 	<!-- 운용자별 사업장 권한에 따른 IP Range 조회 -->
 	<select id="getIpRangeListByBusicd" resultType="ipRangeVO" parameterType="hashmap">
 		SELECT  A.BUSICD AS busiCd,
-				B.BUSINM AS busiNm,
-				A.START_IP AS startIp,
-				A.END_IP AS endIp,
-				A.COMMENT AS comment,
-				DATE_FORMAT(A.CREATE_DT, '%Y-%m-%d %T' ) AS createDt
+		B.BUSINM AS busiNm,
+		A.START_IP AS startIp,
+		A.END_IP AS endIp,
+		A.COMMENT AS comment,
+		DATE_FORMAT(A.CREATE_DT, '%Y-%m-%d %T' ) AS createDt,
+		(SELECT X.ADMIN_NAME FROM UI_ADMIN X WHERE X.ADMIN_ID = A.CREATE_ID LIMIT 1) AS createId,
+		DATE_FORMAT(A.UPDATE_DT, '%Y-%m-%d %T' ) AS updateDt,
+		(SELECT X.ADMIN_NAME FROM UI_ADMIN X WHERE X.ADMIN_ID = A.UPDATE_ID LIMIT 1) AS updateId
 		FROM	UI_BUSI_IPRANGE A, UI_BUSI B
 		WHERE	A.BUSICD = B.BUSICD
 		<if test='adminId!="sysadmin" and (busiCd!=null and busiCd!="")'>
-		AND		A.BUSICD IN (${busiCd})
+			AND		A.BUSICD IN (${busiCd})
 		</if>
 		<if test='searchStr!=null and searchStr!=""'>
-		AND		( 
-				B.BUSINM LIKE CONCAT('%', #{searchStr}, '%') 
-				OR 
-				A.COMMENT LIKE CONCAT('%', #{searchStr}, '%')
-				<if test='ipSig=="true"'>
+			AND		(
+			B.BUSINM LIKE CONCAT('%', #{searchStr}, '%')
+			OR
+			A.COMMENT LIKE CONCAT('%', #{searchStr}, '%')
+			<if test='ipSig=="true"'>
 				OR
 				INET6_ATON( #{searchStr} ) BETWEEN INET6_ATON(A.START_IP) AND INET6_ATON(A.END_IP)
-				</if>
-				OR
-				A.START_IP LIKE CONCAT('%', #{searchStr}, '%')
-				OR
-				A.END_IP LIKE CONCAT('%', #{searchStr}, '%')
-				)
+			</if>
+			OR
+			A.START_IP LIKE CONCAT('%', #{searchStr}, '%')
+			OR
+			A.END_IP LIKE CONCAT('%', #{searchStr}, '%')
+			)
 		</if>
 		ORDER	BY A.BUSICD, A.START_IP, A.END_IP
 		<if test='offset!=null and limit > 0'>
-		LIMIT	${offset}, ${limit}
+			LIMIT	${offset}, ${limit}
 		</if>
 	</select>
 	
@@ -90,21 +96,22 @@
 	</select>
 
 	<insert id="insertIpRange" parameterType="ipRangeVO">
-		INSERT INTO UI_BUSI_IPRANGE (BUSICD, START_IP, END_IP, COMMENT, CREATE_DT) 
-		VALUES (#{busiCd}, #{startIp}, #{endIp}, #{comment}, now())
+		INSERT INTO UI_BUSI_IPRANGE (BUSICD, START_IP, END_IP, COMMENT, CREATE_DT, CREATE_ID, UPDATE_DT, UPDATE_ID)
+		VALUES (#{busiCd}, #{startIp}, #{endIp}, #{comment}, now(), #{createId}, now(), #{updateId})
 	</insert>
-	
+
 	<update id="updateIpRange" parameterType="ipRangeVO">
 		UPDATE	UI_BUSI_IPRANGE
 		SET		COMMENT	= #{comment},
-				<if test='startIp != orgStartIp'>
-				START_IP	= #{startIp},
-				</if>
-				<if test='endIp != orgEndIp'>
-				END_IP	= #{endIp},
-				</if>
-				CREATE_DT	= NOW()
-		WHERE	BUSICD	= #{busiCd} 
+		<if test='startIp != orgStartIp'>
+			START_IP	= #{startIp},
+		</if>
+		<if test='endIp != orgEndIp'>
+			END_IP	= #{endIp},
+		</if>
+		UPDATE_DT	= NOW(),
+		UPDATE_ID	= #{updateId}
+		WHERE	BUSICD	= #{busiCd}
 		AND		START_IP	= #{orgStartIp}
 		AND		END_IP	= #{orgEndIp}
 	</update>
@@ -135,54 +142,58 @@
 	<!-- 부서별 IP Range 조회 -->
 	<select id="getIpRangeDeptList" resultType="ipRangeVO" parameterType="hashmap">
 		SELECT  A.DEPTCD AS deptCd,
-				B.DEPTNM AS deptNm,
-				B.PDEPTCD AS pdeptCd,
-		        (SELECT DEPTNM FROM UI_DEPT C WHERE B.PDEPTCD = C.DEPTCD) AS pdeptNm,
-				A.START_IP AS startIp,
-				A.END_IP AS endIp,
-				A.COMMENT AS comment,
-				DATE_FORMAT(A.CREATE_DT, '%Y-%m-%d %T' ) AS createDt
+		B.DEPTNM AS deptNm,
+		B.PDEPTCD AS pdeptCd,
+		(SELECT DEPTNM FROM UI_DEPT C WHERE B.PDEPTCD = C.DEPTCD) AS pdeptNm,
+		A.START_IP AS startIp,
+		A.END_IP AS endIp,
+		A.COMMENT AS comment,
+		DATE_FORMAT(A.CREATE_DT, '%Y-%m-%d %T' ) AS createDt,
+		(SELECT X.ADMIN_NAME FROM UI_ADMIN X WHERE X.ADMIN_ID = A.CREATE_ID LIMIT 1) AS createId,
+		DATE_FORMAT(A.UPDATE_DT, '%Y-%m-%d %T' ) AS updateDt,
+		(SELECT X.ADMIN_NAME FROM UI_ADMIN X WHERE X.ADMIN_ID = A.UPDATE_ID LIMIT 1) AS updateId
 		FROM	UI_DEPT_IPRANGE A, UI_DEPT B
 		WHERE	A.DEPTCD = B.DEPTCD
 		<if test='searchStr!=null and searchStr!=""'>
-		AND		(
-				B.DEPTNM LIKE CONCAT('%', #{searchStr}, '%')
-				OR 
-				A.COMMENT LIKE CONCAT('%', #{searchStr}, '%')
-				<if test='ipSig=="true"'>
+			AND		(
+			B.DEPTNM LIKE CONCAT('%', #{searchStr}, '%')
+			OR
+			A.COMMENT LIKE CONCAT('%', #{searchStr}, '%')
+			<if test='ipSig=="true"'>
 				OR
 				INET6_ATON( #{searchStr} ) BETWEEN INET6_ATON(A.START_IP) AND INET6_ATON(A.END_IP)
-				</if>
-				OR
-				A.START_IP LIKE CONCAT('%', #{searchStr}, '%')
-				OR
-				A.END_IP LIKE CONCAT('%', #{searchStr}, '%')
-				)
+			</if>
+			OR
+			A.START_IP LIKE CONCAT('%', #{searchStr}, '%')
+			OR
+			A.END_IP LIKE CONCAT('%', #{searchStr}, '%')
+			)
 		</if>
 		ORDER	BY A.DEPTCD, A.START_IP, A.END_IP
 		<if test='offset!=null and limit > 0'>
-		LIMIT	${offset}, ${limit}
+			LIMIT	${offset}, ${limit}
 		</if>
 	</select>
-	
+
 	<update id="updateIpRangeDept" parameterType="ipRangeVO">
 		UPDATE	UI_DEPT_IPRANGE
 		SET		COMMENT	= #{comment},
-				<if test='startIp != orgStartIp'>
-				START_IP	= #{startIp},
-				</if>
-				<if test='endIp != orgEndIp'>
-				END_IP	= #{endIp},
-				</if>
-				CREATE_DT	= NOW()
-		WHERE	DEPTCD	 = #{deptCd} 
+		<if test='startIp != orgStartIp'>
+			START_IP	= #{startIp},
+		</if>
+		<if test='endIp != orgEndIp'>
+			END_IP	= #{endIp},
+		</if>
+		UPDATE_DT	= NOW(),
+		UPDATE_ID	= #{updateId}
+		WHERE	DEPTCD	 = #{deptCd}
 		AND		START_IP = #{orgStartIp}
 		AND		END_IP	 = #{orgEndIp}
 	</update>
-	
+
 	<insert id="insertIpRangeDept" parameterType="ipRangeVO">
-		INSERT INTO UI_DEPT_IPRANGE (DEPTCD, START_IP, END_IP, COMMENT, CREATE_DT) 
-		VALUES (#{deptCd}, #{startIp}, #{endIp}, #{comment}, now())
+		INSERT INTO UI_DEPT_IPRANGE (DEPTCD, START_IP, END_IP, COMMENT, CREATE_DT, CREATE_ID, UPDATE_DT, UPDATE_ID)
+		VALUES (#{deptCd}, #{startIp}, #{endIp}, #{comment}, now(), #{createId}, now(), #{updateId})
 	</insert>
 	
 	<delete id="deleteIpRangeDept" parameterType="ipRangeVO">
@@ -220,35 +231,38 @@
 	<!-- 운용자별 부서 권한에 따른 IP Range 조회 -->
 	<select id="getIpRangeListByDeptcd" resultType="ipRangeVO" parameterType="hashmap">
 		SELECT  A.DEPTCD AS deptCd,
-				B.DEPTNM AS deptNm,
-				(SELECT DEPTNM FROM UI_DEPT C WHERE B.PDEPTCD = C.DEPTCD) AS pdeptNm,
-				A.START_IP AS startIp,
-				A.END_IP AS endIp,
-				A.COMMENT AS comment,
-				DATE_FORMAT(A.CREATE_DT, '%Y-%m-%d %T' ) AS createDt
+		B.DEPTNM AS deptNm,
+		(SELECT DEPTNM FROM UI_DEPT C WHERE B.PDEPTCD = C.DEPTCD) AS pdeptNm,
+		A.START_IP AS startIp,
+		A.END_IP AS endIp,
+		A.COMMENT AS comment,
+		DATE_FORMAT(A.CREATE_DT, '%Y-%m-%d %T' ) AS createDt,
+		(SELECT X.ADMIN_NAME FROM UI_ADMIN X WHERE X.ADMIN_ID = A.CREATE_ID LIMIT 1) AS createId,
+		DATE_FORMAT(A.UPDATE_DT, '%Y-%m-%d %T' ) AS updateDt,
+		(SELECT X.ADMIN_NAME FROM UI_ADMIN X WHERE X.ADMIN_ID = A.UPDATE_ID LIMIT 1) AS updateId
 		FROM	UI_DEPT_IPRANGE A, UI_DEPT B
 		WHERE	A.DEPTCD = B.DEPTCD
 		<if test='adminId!="sysadmin" and (deptCd!=null and deptCd!="")'>
-		AND		A.DEPTCD IN (${deptCd})
+			AND		A.DEPTCD IN (${deptCd})
 		</if>
 		<if test='searchStr!=null and searchStr!=""'>
-		AND		( 
-				B.DEPTNM LIKE CONCAT('%', #{searchStr}, '%') 
-				OR 
-				A.COMMENT LIKE CONCAT('%', #{searchStr}, '%')
-				<if test='ipSig=="true"'>
+			AND		(
+			B.DEPTNM LIKE CONCAT('%', #{searchStr}, '%')
+			OR
+			A.COMMENT LIKE CONCAT('%', #{searchStr}, '%')
+			<if test='ipSig=="true"'>
 				OR
 				INET6_ATON( #{searchStr} ) BETWEEN INET6_ATON(A.START_IP) AND INET6_ATON(A.END_IP)
-				</if>
-				OR
-				A.START_IP LIKE CONCAT('%', #{searchStr}, '%')
-				OR
-				A.END_IP LIKE CONCAT('%', #{searchStr}, '%')
-				)
+			</if>
+			OR
+			A.START_IP LIKE CONCAT('%', #{searchStr}, '%')
+			OR
+			A.END_IP LIKE CONCAT('%', #{searchStr}, '%')
+			)
 		</if>
 		ORDER	BY A.DEPTCD, A.START_IP, A.END_IP
 		<if test='offset!=null and limit > 0'>
-		LIMIT	${offset}, ${limit}
+			LIMIT	${offset}, ${limit}
 		</if>
 	</select>
 </mapper>

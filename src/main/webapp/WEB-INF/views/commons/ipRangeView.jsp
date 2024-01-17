@@ -79,6 +79,9 @@ function getData(lastRow) {
 		grid.colAdd('endIp', '<s:message code="didBlock.endip"/>', 150, 'center', false, 'nomal');
 		grid.colAdd('comment', '<s:message code="common.msg.comment"/>', 250, 'left', false, 'nomal');
 		grid.colAdd('createDt', '<s:message code="filterInfo.createDt"/>', 140, 'center', false, 'nomal');
+        grid.colAdd('createId', '<s:message code="filterInfo.createId"/>', 140, 'center', false, 'nomal');
+        grid.colAdd('updateDt', '<s:message code="filterInfo.updateDt"/>', 140, 'center', false, 'nomal');
+        grid.colAdd('updateId', '<s:message code="filterInfo.updateId"/>', 140, 'center', false, 'nomal');
 		grid.onClick = function() {
 			if (grid.Col == grid.ColIndex('busiNm')) {
 			}

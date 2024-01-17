@@ -306,6 +306,8 @@ function fileExtCheck(obj){
 								<option value="">- <s:message code="common.org.choose.busi"/> -</option>
 							</select>
 							<input type="hidden" name="busiNm" id="hiddenBusiNm">
+							<input type="hidden" name="createId" id="hiddenCreateId" value="${_USERCREDENTIAL_.adminId}">
+							<input type="hidden" name="updateId" id="hiddenUpdateId" value="${_USERCREDENTIAL_.adminId}">
 						</div>
 					</div>
 
@@ -508,14 +510,18 @@ function fileExtCheck(obj){
 
 	<script type="text/javascript">
 		var grid = new Xgrid('ipRangeListGrid', contextRoot);
-		grid.onCheckBox();
-		grid.autoNumber();
-		grid.colAdd('busiNm', '<s:message code="common.org.busi"/>', 200, 'left', false, 'link');
-		grid.colAdd('startIp', '<s:message code="didBlock.startip"/>', 150, 'center', false, 'nomal');
-		grid.colAdd('endIp', '<s:message code="didBlock.endip"/>', 150, 'center', false, 'nomal');
-		grid.colAdd('comment', '<s:message code="common.msg.comment"/>', 250, 'left', false, 'nomal');
-		grid.colAdd('createDt', '<s:message code="filterInfo.createDt"/>', 140, 'center', false, 'nomal');
-		grid.onClick = function() {
+        grid.onCheckBox();
+        grid.autoNumber();
+        grid.colAdd('busiNm', '<s:message code="common.org.busi"/>', 200, 'left', false, 'link');
+        grid.colAdd('startIp', '<s:message code="didBlock.startip"/>', 150, 'center', false, 'nomal');
+        grid.colAdd('endIp', '<s:message code="didBlock.endip"/>', 150, 'center', false, 'nomal');
+        grid.colAdd('comment', '<s:message code="common.msg.comment"/>', 250, 'left', false, 'nomal');
+        grid.colAdd('createDt', '<s:message code="filterInfo.createDt"/>', 140, 'center', false, 'nomal');
+        grid.colAdd('createId', '<s:message code="filterInfo.createId"/>', 140, 'center', false, 'nomal');
+        grid.colAdd('updateDt', '<s:message code="filterInfo.updateDt"/>', 140, 'center', false, 'nomal');
+        grid.colAdd('updateId', '<s:message code="filterInfo.updateId"/>', 140, 'center', false, 'nomal');
+
+        grid.onClick = function() {
 			if (grid.Col == grid.ColIndex('busiNm')) {
 				$("#ipRangePop").modal('show');
 				var data = grid.getRowData(grid.Row);

@@ -80,9 +80,9 @@ var eikon2 = {
             $(this).css('display','none');
         });
     },
-    getCollectionList : function(page){
+    getCollectionList : function(page,type){
         var searchType = $('input:radio[name=searchType]:input:checked').val();
-        getCollectionGroupList(page);
+        getCollectionGroupList(page,type);
     },
     getFileGroupList : function(page){
         var searchType = $('input:radio[name=searchType]:input:checked').val();
@@ -422,7 +422,7 @@ function getFileMessageList  (page){
 }
 
 
-function getCollectionGroupList (page){
+function getCollectionGroupList (page,type){
     var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
     groupPage = page;
     var offset = groupPage*groupPageBreak - groupPageBreak;
@@ -441,6 +441,7 @@ function getCollectionGroupList (page){
         readYn : readYn,
         offset : offset,
         userStr:userStr,
+        type:type,
         limit : groupPageBreak,
         success : function(data, total) {
             rtnGenerativeGroupList(data.groups)
@@ -522,7 +523,7 @@ function makeFileList(data) {
         }
 
         str += '</ul>';
-        str += '<div class="top mat16"><div class="myDropdown mal8 downAllFile"><span>전체파일 저장 </span><div class="dropdown-content"></div></div></div>';
+        str += '<div class="top mat16"><div class="myDropdown mal8 downAllFile"><span>'+filelist.allfileSave+'</span><div class="dropdown-content"></div></div></div>';
     }
 
     return str;
@@ -557,11 +558,12 @@ function makeFileServiceList(data) {
     str += '<p class="rightBox">';
     str += '<span>' + data.ctime + '</span>';
     str += '</p>';
-    str += '<table class="subTable2 mat8"><tr><th>출발지 IP</th><td class="topline">' + data.srcIp + '</td><th>목적지 IP</th><td class="topline">' + data.dstIp + '</td>';
-    str += '<tr xmlns="http://www.w3.org/1999/html"><th>크기</th><td>' + data.bodySize + '</td><th>접속계정</th><td>' + data.userId + '</td></tr>';
+    str += '<table class="subTable2 mat8"><tr><th>';
+    str+=   filelist.srcIp +'</th><td class="topline">' + data.srcIp + '</td><th>'+filelist.dstIp+'</th><td class="topline">' + data.dstIp + '</td>';
+    str += '<tr xmlns="http://www.w3.org/1999/html"><th>'+filelist.bodySize+'</th><td>' + data.bodySize + '</td><th>'+filelist.userId+'</th><td>' + '</td></tr>';
     str += '<tr><th>HOST/PATH</th><td colspan="3" class="mal8 tableLink txt_left">' + data.host + data.path + '</td><tr></table>';
     str += '</div>';
-    str += '<div class="messageCon"> <div class="top grayBg03"><h4 class="fileCntArea">파일정보(' + files.length + ')</h4><div class="btn btnform" style="padding: 0px; border: none;"><button accesskey="V" class="btn05 downAllFile"><img src="'+mainContext+'/img/subBtn_save.png" alt="전체 저장">전체저장</buttonaccesskey></div></div><div class="filelist"><ul>';
+    str += '<div class="messageCon"> <div class="top grayBg03"><h4 class="fileCntArea">'+filelist.fileinfo+'(' + files.length + ')</h4><div class="btn btnform" style="padding: 0px; border: none;"><button accesskey="V" class="btn05 downAllFile"><img src="'+mainContext+'/img/subBtn_save.png" alt="전체 저장">'+filelist.allSave+'</buttonaccesskey></div></div><div class="filelist"><ul>';
     str +=  filediv(data) + '</ul>';
     str += '</div>';
     str += '</div>';
@@ -591,18 +593,18 @@ function filediv(data) {
         fileStr += '<li msgid="' + data.msgId + '" id="' + file.attachId + '" size="' + file.attachSize  + '" attachHash="' + file.attachHash + '" class="' + trClass + extClass +'" >';
 
         fileStr +=  '<p class="attach_'+attachExt+' attach_file_img">';
-        if (attachNameExist == "N") fileStr += '<a href="#"> 파일명 알수없음</a>';
+        if (attachNameExist == "N") fileStr += '<a href="#">'+filelist.noname +'</a>';
        else{ fileStr += '<a href="#"  style="text-decoration: underline;" attachname="' + attachName + '">';
             fileStr += '' + attachName;
        };
         fileStr+='(' + convertFileSize(file.attachSize) + ')</a></p>';
         fileStr += '<div class="btn btnform" style="padding: 0px; border: none;">';
-        fileStr += '<button class="btn03 borradius downloadIcon"><img src="'+mainContext+'/img/subBtn_save.png">저장</button>';
+        fileStr += '<button class="btn03 borradius downloadIcon"><img src="'+mainContext+'/img/subBtn_save.png">'+filelist.save+'</button>';
         if (nvl(file.ocrYn) == "Y") {
-            fileStr += '<button class="btn03 borradius" id="attachOcrText"><img src="'+mainContext+'/img/subBtn_eye.png">미리보기</button>';
+            fileStr += '<button class="btn03 borradius" id="attachOcrText"><img src="'+mainContext+'/img/subBtn_eye.png">'+filelist.preview+'</button>';
         }
         if(nvl(file.attachTextPath) != "") {
-            fileStr += '<button class="btn03 borradius" id="attachText"><img src="'+mainContext+'/img/subBtn_eye.png">미리보기</button>';
+            fileStr += '<button class="btn03 borradius" id="attachText"><img src="'+mainContext+'/img/subBtn_eye.png">'+filelist.preview+'</button>';
         }
         fileStr += '</div></li>';
     }
@@ -646,8 +648,6 @@ function makeList(nextFlag){
                 str += '<span>' + attachnameArray[0] + '.' + attachtypeArray[0] + '<br/>';
                 str += attachsizeArray[0] + 'KB</span>';
                 str += '<button class="btnchatdown downlodadBtn"></button></p>';
-
-
         }
 
         else {

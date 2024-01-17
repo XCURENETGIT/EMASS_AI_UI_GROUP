@@ -289,29 +289,36 @@
 
         let timeOut=true;
 
+
+
         function sendMail(){
             var userIdInput = $('#userIdInput').val().ltrim().rtrim();
+            var msg='<s:message code="login.mail.notyet"/>';
+            var msg2='<s:message code="login.mail.confirmlast"/>';
 
             if(timeOut!=true){
-                alert("아직 유효 메일이 남아있습니다");
+                alert(msg);
             }
             else {
-                confirmTimeOut();
-                // 버튼 텍스트 변경
-                $('#confirmBtn').text('확인하기');
-                $('#confirmBtn').attr('onclick', 'confirmNumber()');
+                var msg3 = '<s:message code="login.MAILNOCHECK.access"/>';
+                var msg4 = '<s:message code="login.fial.access"/>';
 
                 ui.get({
                     url: 'mailSend.xcn',
                     userId: rsa.encrypt(userIdInput),
                     success: function (data) {
                        /* alert("인증코드 발송");*/
+                        confirmTimeOut();
+                        // 버튼 텍스트 변경
+                        $('#confirmBtn').text(msg2);
+                        $('#confirmBtn').attr('onclick', 'confirmNumber()');
+
                     },
                     error: function (request,status,error,data) {
                         if (error=='MAILNOCHECK') {
-                            alert("메일서버가 비활성화 상태 입니다. 관리자에게 문의하시길 바랍니다");
+                            alert(msg3);
                         } else {
-                            alert("인증코드 발송에 실패하였습니다 관리자에게 문의하시길 바랍니다");
+                            alert(msg4);
                         }
                         timeOut=true;
                         $('#unuseAdminPop').modal('hide');
@@ -322,10 +329,15 @@
 
         function confirmNumber(){
 
+            var msg = '<s:message code="login.mail.nodata"/>';
+            var msg2 = '<s:message code="login.mail.lock"/>';
+            var msg3 = '<s:message code="login.mail.authenticate"/>';
+            var msg4 = '<s:message code="login.mail.invalid"/>';
+
             var userIdInput = $('#userIdInput').val().ltrim().rtrim();
             var number1 = $("#number_confirm").val().ltrim().rtrim();
             if (!number1.trim()) {
-                alert("입력 후 확인을 눌러주세요.");
+                alert(msg);
                 return;
             }
 
@@ -338,14 +350,14 @@
                     $("#unusePop").modal('hide');
                     $('#unusetime').css("display", "none");
                     $('#number').val('');
-                    alert("잠금이 해제되었습니다. 다시 로그인하세요");
+                    alert(msg2);
                     $('#confirmBtn').attr('class', 'form_btn01_02');
                     $('#confirmBtn').attr('onclick', 'sendMail()');
                     $('#number_confirm').html('');
-                    $('#confirmBtn').text('인증하기');
+                    $('#confirmBtn').text(msg4);
                 },
                 error: function (data,message){
-                    alert("코드 입력이 잘못되었습니다");
+                    alert(msg3);
                 }
             });
         }
@@ -354,6 +366,7 @@
             timeOut = false;
             var t = (90000 / 1000) - 1;
             var numberConfirmInput = document.getElementById('number_confirm');
+            var msg3 = '<s:message code="login.mail.authenticate"/>';
 
             // 부모 요소에 div 추가
             var displayText = document.createElement('div');
@@ -386,7 +399,7 @@
                         $('#confirmBtn').attr('class', 'form_btn01_02');
                         $('#confirmBtn').attr('onclick', 'sendMail()');
                         $('#number_confirm').html('');
-                        $('#confirmBtn').text('인증하기');
+                        $('#confirmBtn').text(msg3);
                     }
                 });
             }, 90000);
@@ -422,20 +435,20 @@
      data-backdrop="static">
 	<div class="modal-content">
 		<div class="modalHead">
-			<h2>운용자 계정 잠금</h2>
+			<h2><s:message code="login.mail.unuse"/></h2>
 			<span class="close" data-dismiss="modal">&times;</span>
 		</div>
 		<div class="modalCon">
 			<div class="modalbody">
-				<h4 class="blue02" style="font-weight: 600;"> 이메일 인증</h4>
+				<h4 class="blue02" style="font-weight: 600;"> <s:message code="login.mail.confirm"/></h4>
 
 				<div class="row pt8">
 					<input type="text" name="number" id="number_confirm" style="width:250px; margin-top: -10px; position: relative;"
-					       placeholder="인증코드 입력">
-					<button type="button" class="form_btn01_02" name="confirmBtn" id="confirmBtn" onclick="sendMail()">메일 보내기</button>
+					       placeholder="<s:message code="login.mail.code"/>">
+					<button type="button" class="form_btn01_02" name="confirmBtn" id="confirmBtn" onclick="sendMail()"><s:message code="login.mail.send"/></button>
 					<%--<span id="unusetime"></span>--%>
 				</div>
-				<div style="font-size: 13px;">메일은 가입 시 작성하셨던 주소로 전송됩니다. 인증코드는 90초간 유효합니다.</div>
+				<div style="font-size: 13px;"><s:message code="login.mail.info"/></div>
 			</div>
 		</div>
 	</div>
@@ -545,7 +558,7 @@
 					<input class="mat12" type="password" placeholder="Password" id="userPwInput" autocomplete="off" required>
 				</div>
 				<div>
-					<button id="loginBtn" type="button">로그인</button>
+					<button id="loginBtn" type="button"><s:message code="auditLog.oper.LOGIN"/></button>
 				</div>
 			</div>
 			<div id="login_switch">
