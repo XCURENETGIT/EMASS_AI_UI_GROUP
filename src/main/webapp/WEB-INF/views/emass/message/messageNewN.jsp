@@ -3,14 +3,43 @@
 <%@ page import="com.xcurenet.common.util.Common" %>
 <%@ page import="com.xcurenet.common.util.config.Config" %>
 <%@ page import="com.xcurenet.common.util.SpringContextUtil" %>
+<%@ page import="net.sf.json.JSONArray" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<tiles:insertAttribute name="messageCss" ignore="true"/>
-<tiles:insertAttribute name="messageJs" ignore="true"/>
+
+<%-- 메시지 페이지 전용 --%>
 <%@ include file="/WEB-INF/fragments/messageScript.jsp"%>
+<link rel="stylesheet" href="<c:url value="/css/message.css"/>"/>
+<link rel="stylesheet" href="<c:url value="/css/jquery.scrollbar.css"/>"/>
+<link rel="stylesheet" href="<c:url value="/css/bootstrap-datetimepicker.min.css"/>"/>
+<link rel="stylesheet" href="<c:url value="/css/zTreeStyle.css"/>"/>
+<link rel="stylesheet" href="<c:url value="/css/bootstrap-select.min.css"/>"/>
+
+<link rel="stylesheet" href="<c:url value="/css/jquery.layout.css"/>"/>
+<link rel="stylesheet" href="<c:url value="/css/scrolltabs.css"/>"/>
+
+<script type="text/javascript" src="<c:url value="/js/jquery.scrolltabs.js"/>"></script>
+
+<script type="text/javascript" src="<c:url value="/js/moment.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/ko.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/transition.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/bootstrap-datetimepicker.min.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/bootstrap-select.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/dropdowns-enhancement.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/jquery.scrollbar.min.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/jquery.ztree.all-3.5.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/referrer-killer.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/conditionNew.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/ztreeRMenu.js"/>"></script>
+
+<script type="text/javascript" src="<c:url value="/js/ztree.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/filter.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/folder.js"/>"></script>
+
+<script type="text/javascript" src="<c:url value="/js/jquery.layout.js"/>"></script>
 
 <%
     boolean mailUseFlag = Config.getBoolean("mail.forward.flag");
@@ -51,10 +80,78 @@
         }
     }
 %>
+
+<style>
+
+    @font-face {
+        font-family: 'Pretendard';
+        font-weight: 900;
+        font-display: swap;
+        src: local('Pretendard Black'), url("../fonts/woff2/Pretendard-Black.subset.woff2") format('woff2'), url("../fonts/woff/Pretendard-Black.subset.woff") format('woff');
+    }
+
+    @font-face {
+        font-family: 'Pretendard';
+        font-weight: 800;
+        font-display: swap;
+        src: local('Pretendard ExtraBold'), url("../fonts/woff2/Pretendard-ExtraBold.subset.woff2") format('woff2'), url("../fonts/woff/Pretendard-ExtraBold.subset.woff") format('woff');
+    }
+
+    @font-face {
+        font-family: 'Pretendard';
+        font-weight: 700;
+        font-display: swap;
+        src: local('Pretendard Bold'), url("../fonts/woff2/Pretendard-Bold.subset.woff2") format('woff2'), url("../fonts/woff/Pretendard-Bold.subset.woff") format('woff');
+    }
+
+    @font-face {
+        font-family: 'Pretendard';
+        font-weight: 600;
+        font-display: swap;
+        src: local('Pretendard SemiBold'), url("../fonts/woff2/Pretendard-SemiBold.subset.woff2") format('woff2'), url("../fonts/woff/Pretendard-SemiBold.subset.woff") format('woff');
+    }
+
+    @font-face {
+        font-family: 'Pretendard';
+        font-weight: 500;
+        font-display: swap;
+        src: local('Pretendard Medium'), url("../fonts/woff2/Pretendard-Medium.subset.woff2") format('woff2'), url("../fonts/woff/Pretendard-Medium.subset.woff") format('woff');
+    }
+
+    @font-face {
+        font-family: 'Pretendard';
+        font-weight: 400;
+        font-display: swap;
+        src: local('Pretendard Regular'), url("../fonts/woff2/Pretendard-Regular.subset.woff2") format('woff2'), url("../fonts/woff/Pretendard-Regular.subset.woff") format('woff');
+    }
+
+    @font-face {
+        font-family: 'Pretendard';
+        font-weight: 300;
+        font-display: swap;
+        src: local('Pretendard Light'), url("../fonts/woff2/Pretendard-Light.subset.woff2") format('woff2'), url("../fonts/woff/Pretendard-Light.subset.woff") format('woff');
+    }
+
+    @font-face {
+        font-family: 'Pretendard';
+        font-weight: 200;
+        font-display: swap;
+        src: local('Pretendard ExtraLight'), url("../fonts/woff2/Pretendard-ExtraLight.subset.woff2") format('woff2'), url("../fonts/woff/Pretendard-ExtraLight.subset.woff") format('woff');
+    }
+
+    @font-face {
+        font-family: 'Pretendard';
+        font-weight: 100;
+        font-display: swap;
+        src: local('Pretendard Thin'), url("../fonts/woff2/Pretendard-Thin.subset.woff2") format('woff2'), url("../fonts/woff/Pretendard-Thin.subset.woff") format('woff');
+    }
+
+</style>
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <title>EMASS PRO</title>
+    <title>EMASS AI</title>
 
     <style type="text/css">
         #wrap {overflow:hidden;}
@@ -366,7 +463,7 @@
             margin-top:-32px;
         }
         .dropdown-menu {
-            max-height: 344px !important;
+            /*max-height: 344px !important;*/
         }
         .condition_top_sub{
             position: fixed;
@@ -1735,9 +1832,12 @@
         function tabIsSelected(obj){
             var result = false;
             if($(obj).parents('li').hasClass('select')){
-                 $(obj).parents('li').find('.tab_close').attr('class', 'tab_close_2'); //선택한 tab의 tab close 클래스 지정
+                 $(obj).parents('li').find('.tab_close_2').attr('class', 'tab_close'); //선택한 tab의 tab close 클래스 지정
+                 $(obj).parents('li').find('div').find('.tab_close').attr('class', 'tab_close_2');
                 result = true;
             }
+
+
             return result;
         }
 
@@ -3070,16 +3170,7 @@
                                 <button id="bottom_btn" style="font-size: 11px; font-weight: initial; line-height: 20px; padding-right: 2px;" class="areaBtn btn05"><img src="<c:url value="/img/message/message_bottom.png"/>" style="padding-right: 4px;"></button>
                                 <button id="right_btn" style="font-size: 11px; font-weight: initial; line-height: 20px; padding-right: 2px;" class="areaBtn btn05"><img src="<c:url value="/img/message/message_right.png"/>" style="padding-right: 4px;"></button>
                             </div>
-                            <div class="dropdown-menu dropdown-menu-right"  style="min-width:180px;font-size:12px; height: 380px; padding:0;" id="additionalBtn">
-                                <div class="listRow" style="padding: 0;">
-                                    <div class="listRowLeft" style="text-align:center; font-weight: bold; background-color: #eaeaea; width: 120px; height: 34px;"><s:message code="condition.view.stype"/></div>
-                                    <div class="listRowLeft" style="height: 20px;line-height: 15px;position: relative;top: 7px;padding: 0 3px;margin-left: 5px;">
-                                        <a id="none_btn" style="font-size: 11px; font-weight: initial; line-height: 20px; padding-right: 5px;" class="areaBtn"><img src="<c:url value="/img/message/message_none.png"/>"  style="padding-right: 4px;padding-bottom: 2px"><s:message code="condition.view.type1"/> </a>
-                                        <a id="bottom_btn" style="font-size: 11px; font-weight: initial; line-height: 20px; padding-right: 5px;" class="areaBtn"><img src="<c:url value="/img/message/message_bottom.png"/>" style="padding-right: 4px;padding-bottom: 2px"><s:message code="condition.view.type2"/></a>
-                                        <a id="right_btn" style="font-size: 11px; font-weight: initial; line-height: 20px; padding-right: 5px;" class="areaBtn"><img src="<c:url value="/img/message/message_right.png"/>" style="padding-right: 4px;padding-bottom: 2px"><s:message code="condition.view.type3"/></a>
-                                    </div>
-                                    <!-- <button class ="msg_button" id="config_colse" style="height: 22px; line-height: 19px; float: right; margin-top: 5px;margin-right: 10px;">닫기</button> -->
-                                </div>
+                            <div class="dropdown-menu dropdown-menu-right"  style="min-width:180px;font-size:12px; padding:0;" id="additionalBtn">
                                 <div class="listRow" style="padding: 0;">
                                     <div class="listRowLeft" style="text-align:center; font-weight: bold; background-color: #eaeaea; width: 120px; height: 34px;"><s:message code="condition.orderType"/></div>
                                     <select id="messageSort" class="listRowLeft" style="margin-top:5px; margin-left: 5px;">

@@ -1,12 +1,28 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="com.xcurenet.config.service.ConfigAdminService" %>
 <%@ page import="com.xcurenet.config.service.ConfigAdminVO" %>
 <%@ page import="com.xcurenet.audit.service.Operation" %>
 <%@ page import="com.xcurenet.common.util.SpringContextUtil" %>
 <%@ page import="java.util.Map" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ include file="/WEB-INF/fragments/messageCss.jsp"%>
-<%@ include file="/WEB-INF/fragments/messageJs.jsp"%>
+<%@ page import="com.xcurenet.config.service.ConfigAdminService" %>
+<%@ page import="com.xcurenet.common.util.Common" %>
+<%@ page import="com.xcurenet.common.util.config.Config" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ include file="/WEB-INF/fragments/messageScript.jsp"%>
+<link rel="stylesheet" href="<c:url value="/css/bootstrap-datetimepicker.min.css"/>"/>
+<link rel="stylesheet" href="<c:url value="/css/bootstrap-select.min.css"/>"/>
+<link rel="stylesheet" href="<c:url value="/css/message.css"/>"/>
+<link rel="stylesheet" href="<c:url value="/css/contentBody.css"/>"/>
+
+<script type="text/javascript" src="<c:url value="/js/moment.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/Date.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/ko.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/transition.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/bootstrap-datetimepicker.min.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/bootstrap-select.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/referrer-killer.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/contentBodyNew.js"/>"></script>
 <%
 	ConfigAdminService configAdminService = SpringContextUtil.getBean(ConfigAdminService.class);
@@ -33,7 +49,7 @@
 <html lang="ko">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-	<title>EMASS PRO - <s:message code="OPERATION_MGMT.BODY_VIEW"/></title>
+	<title>EMASS AI - <s:message code="OPERATION_MGMT.BODY_VIEW"/></title>
 	<style type="text/css">
 		html, body{
 			min-width:600px !important;}
