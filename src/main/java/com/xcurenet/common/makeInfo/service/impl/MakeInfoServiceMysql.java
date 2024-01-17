@@ -223,6 +223,8 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 
 	public int addInfoRegExp() {
 		long version = getTableCurrentVersion("INFO_PRIVATE") + 1;
+		appendData("getInfoRegExp", "INFO_PRIVATE", version);
+//		appendData( version, "getInfoRegExp", "addInfoRegExp","INFO_PRIVATE" );
 		LocalDateTime localDateTime = LocalDateTime.now();
 		Map<String, Long> map = new HashMap<>();
 		map.put("VERSION", version);
@@ -460,6 +462,14 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 							.DOMAIN((String) obj.get("DOMAIN"))
 							.build();
 					mongoUtil.insert(infoNologDomainVO, collectionName);
+
+				} else if (Common.isEquals(collectionName, "INFO_PRIVATE")) {
+					InfoPrivateVO infoPrivateVO = InfoPrivateVO.builder()
+							.VERSION((int) obj.get("VERSION"))
+							.CODE((String) obj.get("CODE"))
+							.REGEX((String) obj.get("REGEX"))
+							.build();
+					mongoUtil.insert(infoPrivateVO, collectionName);
 
 				}
 

@@ -1318,7 +1318,7 @@
             }
         },
         pieChartData: {
-            colors: colorbrewer.Set3[180],
+            colors: Highcharts.colors,
             firstName: '',
             secondName: '',
             firstData: new Array(),
@@ -1347,7 +1347,6 @@
                 this.secondData.push({
                     name: name,
                     y: data / this.totalCount * 100,
-                    // color: Highcharts.Color(this.colors[count]).brighten(brightness).get()
                 });
             },
             init: function (data, depth, objValue, parent) {
@@ -1540,13 +1539,6 @@
                             return parent.setCountKind(objValue, this.value);
                         }
                     },
-                    // stackLabels: {
-                    //     enabled: true,
-                    //     style: {
-                    //         fontWeight: 'bold',
-                    //         color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
-                    //     }
-                    // }
                 },
 
                 tooltip: {
@@ -1604,7 +1596,7 @@
                             enabled: true,
                             format: '<b>{point.name}</b>: {point.percentage:.1f} %',
                             style: {
-                                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                                color: (Highcharts.colors) || 'black'
                             }
                         }
                     }
@@ -1673,7 +1665,6 @@
                     dataLabels: {
                         format: '<b>{point.name}</b>: {point.percentage:.1f} %',
                         formatter: function () {
-                            // display only if larger than 1
                             return this.y > 1 ? '<b>' + this.point.name + ':</b> ' + this.y + '%' : null;
                         }
                     }
