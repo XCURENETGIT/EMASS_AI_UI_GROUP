@@ -35,6 +35,7 @@ public class SnmpStat implements Callable<List<DeviceTrafficStatVO>> {
 		List<DeviceTrafficStatVO> traffics = new ArrayList<>();
 		GetSnmp snmp = this.context.getBean(GetSnmp.class);
 		JSONArray tables = snmp.getIifTrafficTable(device.getDeviceIp());
+		log.info("tables: {}"+tables);
 		for (int i = 0; i < tables.size(); i++) {
 			JSONObject obj = tables.getJSONObject(i);
 			DeviceTrafficStatVO vo = new DeviceTrafficStatVO();

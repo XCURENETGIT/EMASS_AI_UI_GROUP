@@ -265,7 +265,7 @@
             return false;
         }
         if ($('#groupColor').val().ltrim().rtrim() == '') {
-            ui.alertMsg("색상을 선택해주세요.");
+            ui.alertMsg("<s:message code="userGroup.msg.enter.groupcolor"/>");
             $('#groupColor').focus();
             return false;
         }
@@ -581,7 +581,7 @@
 					</div>
 					<div class="input-group">
 						<input type="text" class="w100" placeholder="<s:message code="common.msg.searchMsg"/>" id="popSearchStr" style="width: 150px;">
-						<button class="form_btn01" type="button" accesskey="Q" id="popSearchBtn">조회
+						<button class="form_btn01" type="button" accesskey="Q" id="popSearchBtn"><s:message code="common.msg.search"/>
 						</button>
 						<div>
 						</div>
@@ -593,7 +593,7 @@
 			</div>
 			<div class="modalfooter">
 				<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal" id="userSave"><s:message code="common.msg.close"/></button>
-				<button type="button" class="pop_btn02" accesskey="S" id="saveUserBtn">선택데이터 저장</button>
+				<button type="button" class="pop_btn02" accesskey="S" id="saveUserBtn"><s:message code="common.msg.select.save"/></button>
 			</div>
 		</div>
 	</div>

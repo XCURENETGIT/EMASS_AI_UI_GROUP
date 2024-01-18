@@ -308,7 +308,7 @@
                     url: 'mailSend.xcn',
                     userId: rsa.encrypt(userIdInput),
                     success: function (data) {
-                       /* alert("인증코드 발송");*/
+                        /* alert("인증코드 발송");*/
                         confirmTimeOut();
                         // 버튼 텍스트 변경
                         $('#confirmBtn').text(msg2);

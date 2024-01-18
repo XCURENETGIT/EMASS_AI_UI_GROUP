@@ -478,7 +478,7 @@ function makeFileList(data) {
     var str = '';
 
     if (data.length === 0) {
-        str += '<div class="list-group-item02 ma_none">첨부파일이 없습니다</div>';
+        str += '<div class="list-group-item02 ma_none"><s:message code="message.message.notfound.attach"/></div>';
 
     } else {
         str = '<div class="scrollable-div" style="max-height: 800px; overflow-y: auto;"><ul>';
@@ -489,7 +489,7 @@ function makeFileList(data) {
         }
 
         str += '</div></ul>';
-        str += '<div class="top mat16"><div class="myDropdown mal8 downAllFile"><span>전체파일 저장 </span><div class="dropdown-content"></div></div></div>';
+        str += '<div class="top mat16"><div class="myDropdown mal8 downAllFile"><span><s:message code="didBlock.all"/><s:message code="consent.attach"/> <s:message code="auditLog.oper.SAVE"/> </span><div class="dropdown-content"></div></div></div>';
     }
 
     return str;

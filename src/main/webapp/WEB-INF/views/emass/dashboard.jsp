@@ -211,8 +211,10 @@
     var menuKey;
     $(document).ready(function() {
         menuKey = $.urlParam('menuKey');
+        console.log("dashboardKey: "+menuKey);
         if(menuKey) dashboardInit();
         else getDefaultMenuKey();
+
 
 
 

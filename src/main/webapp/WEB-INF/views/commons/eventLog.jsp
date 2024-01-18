@@ -121,7 +121,7 @@
 				</select>
 			</div>
 			<div>
-				<button type="button" class="form_btn01" accesskey="Q" id="searchBtn" accesskey="s">조회</button>
+				<button type="button" class="form_btn01" accesskey="Q" id="searchBtn" accesskey="s"><s:message code="auditLog.oper.SEARCH"/></button>
 			</div>
 		</div>
 	</div>
@@ -129,7 +129,7 @@
 		<div class="contentSub">
 			<div class="subtab">
 				<button class="active">
-					장비 이벤트 목록
+					<s:message code="OPERATION_MGMT.DEV_EVENTLOG"/> <s:message code="custom.list"/>
 					<span id="eventLogCount"></span>
 				</button>
 			</div>

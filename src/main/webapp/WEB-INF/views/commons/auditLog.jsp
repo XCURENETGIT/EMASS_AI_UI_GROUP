@@ -101,31 +101,31 @@
 	    name: '<s:message code="DATA_ANALYSIS.STAT_INTEREST"/>',
 	    p_id: 'DATA_ANALYSIS'
 	}); //관심 사용자 통계
-	menuArr.push({id: 'STAT_SENDER', name: '<s:message code="DATA_ANALYSIS.STAT_SENDER"/>', p_id: 'DATA_ANALYSIS'}); //발신자 통계
-	menuArr.push({id: 'STAT_SVC', name: '<s:message code="DATA_ANALYSIS.STAT_SVC"/>', p_id: 'DATA_ANALYSIS'}); //서비스타입 통계
-	menuArr.push({id: 'STAT_KWD', name: '<s:message code="DATA_ANALYSIS.STAT_KWD"/>', p_id: 'DATA_ANALYSIS'}); //예약어 통계
+	menuArr.push({id: 'STAT_SENDER', name: '<s:message code="DATA_STAT.STAT_SENDER"/>', p_id: 'DATA_ANALYSIS'}); //발신자 통계
+	menuArr.push({id: 'STAT_SVC', name: '<s:message code="DATA_STAT.STAT_SVC"/>', p_id: 'DATA_ANALYSIS'}); //서비스타입 통계
+	menuArr.push({id: 'STAT_KWD', name: '<s:message code="DATA_STAT.STAT_KWD"/>', p_id: 'DATA_ANALYSIS'}); //예약어 통계
 	menuArr.push({
 	    id: 'STAT_ATTACHTYPE',
-	    name: '<s:message code="DATA_ANALYSIS.STAT_ATTACHTYPE"/>',
+	    name: '<s:message code="DATA_STAT.STAT_ATTACHTYPE"/>',
 	    p_id: 'DATA_ANALYSIS'
 	}); //첨부파일 통계
 	menuArr.push({
 	    id: 'STAT_ATTACHNAME',
-	    name: '<s:message code="DATA_ANALYSIS.STAT_ATTACHNAME"/>',
+	    name: '<s:message code="DATA_STAT.STAT_ATTACHNAME"/>',
 	    p_id: 'DATA_ANALYSIS'
 	}); //첨부파일명 통계
-	menuArr.push({id: 'STAT_URL', name: '<s:message code="DATA_ANALYSIS.STAT_URL"/>', p_id: 'DATA_ANALYSIS'}); //URL 통계
+	menuArr.push({id: 'STAT_URL', name: '<s:message code="DATA_STAT.STAT_URL"/>', p_id: 'DATA_ANALYSIS'}); //URL 통계
 	menuArr.push({
 	    id: 'STAT_ADMINREAD',
-	    name: '<s:message code="DATA_ANALYSIS.STAT_ADMINREAD"/>',
+	    name: '<s:message code="DATA_STAT.STAT_ADMINREAD"/>',
 	    p_id: 'DATA_ANALYSIS'
 	}); //운용자 열람 통계
 	menuArr.push({
 	    id: 'STAT_DEVTRAFFIC',
-	    name: '<s:message code="DATA_ANALYSIS.STAT_DEVTRAFFIC"/>',
+	    name: '<s:message code="DATA_STAT.STAT_DEVTRAFFIC"/>',
 	    p_id: 'DATA_ANALYSIS'
 	}); //장비 트래픽 통계
-	menuArr.push({id: 'STAT_OCR', name: '<s:message code="DATA_ANALYSIS.STAT_OCR"/>', p_id: 'DATA_ANALYSIS'}); //OCR 통계
+	menuArr.push({id: 'STAT_OCR', name: '<s:message code="DATA_STAT.STAT_OCR"/>', p_id: 'DATA_ANALYSIS'}); //OCR 통계
 	menuArr.push({id: 'POLICY_NOLOG', name: '<s:message code="POLICY_SETUP.POLICY_NOLOG"/>', p_id: 'POLICY_SETUP'}); //데이터 미로깅 정책
 	menuArr.push({id: 'DEV_INFO', name: '<s:message code="OPERATION_MGMT.DEV_INFO"/>', p_id: 'OPERATION_MGMT'}); //장비 정보
 	menuArr.push({

@@ -27,6 +27,10 @@
 
 <style>
 
+	.timeline-panel:hover{
+		cursor: pointer;
+	}
+
 	#userCntArea:hover {
 		cursor: pointer;
 	}

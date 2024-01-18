@@ -238,7 +238,7 @@
 				<div class="modalbody">
 					<div class="row">
 						<div class="col-35">
-							<label for="searchWordName" class="fname">키워드</label>
+							<label for="searchWordName" class="fname"><s:message code="common.keyword"/></label>
 							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
@@ -248,7 +248,7 @@
 					</div>
 					<div class="row">
 						<div class="col-35">
-							<label for="searchWordRelaName" class="fname">연관 키워드</label>
+							<label for="searchWordRelaName" class="fname"><s:message code="common.relationKeyword"/></label>
 							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
@@ -257,7 +257,7 @@
 					</div>
 					<div class="row">
 						<div class="col-35">
-							<label for="searchWordRelaNumber" class="fname">가중치</label>
+							<label for="searchWordRelaNumber" class="fname"><s:message code="common.weight"/></label>
 							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
@@ -265,9 +265,6 @@
 							       id="searchWordRelaNumber">
 						</div>
 					</div>
-				</div>
-				<div class="info">
-					안내 사항
 				</div>
 				<div class="modalfooter">
 					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message
@@ -299,7 +296,7 @@
 				<div class="modalbody">
 					<div class="row">
 						<div class="col-35">
-							<label for="searchWordUpdateName" class="fname">키워드</label>
+							<label for="searchWordUpdateName" class="fname"><s:message code="common.keyword"/></label>
 							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
@@ -311,7 +308,7 @@
 				<div class="modalfooter">
 					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message
 							code="common.msg.close"/></button>
-					<button type="button" class="pop_btn02" accesskey="S" id="relationKeywordUpdateBtn">수정</button>
+					<button type="button" class="pop_btn02" accesskey="S" id="relationKeywordUpdateBtn"><s:message code="common.msg.modify"/></button>
 				</div>
 			</div>
 		</form>
@@ -328,15 +325,15 @@
 		</div>
 		<div class="modalCon">
 			<div class="modalTop">
-				<button type="button" class="pop_btn01" accesskey="A" id="searchRelWordInsertBtn">연관키워드 추가</button>
-				<button type="button" class="pop_btn02" accesskey="S" id="DeleteRelBtn">삭제</button>
+				<button type="button" class="pop_btn01" accesskey="A" id="searchRelWordInsertBtn"><s:message code="common.relationKeyword"/> <s:message code="common.msg.add"/></button>
+				<button type="button" class="pop_btn02" accesskey="S" id="DeleteRelBtn"><s:message code="common.msg.delete"/></button>
 			</div>
 			<div class="modalbody">
 				<div class="row" style="float: right">
 				</div>
 				<div class="row">
 					<div class="col-35">
-						<label for="searchWordName" class="fname">키워드</label>
+						<label for="searchWordName" class="fname"><s:message code="common.keyword"/></label>
 					</div>
 					<div class="col-65">
 						<input type="text" class="w100" name="searchUpdateName" id="searchUpdateName" readonly="readonly">
@@ -360,8 +357,8 @@
 	<div class="searchArea">
 		<div class="searchSub">
 			<div>
-				<input type="text" placeholder="키워드를 입력하세요" id="searchWordKeyword" style="width: 300px;">
-				<button class="form_btn01" type="button" accesskey="K" id="searchWordSearchBtn">조회</button>
+				<input type="text" placeholder="<s:message code="condition.searchWord.input"/>" id="searchWordKeyword" style="width: 300px;">
+				<button class="form_btn01" type="button" accesskey="K" id="searchWordSearchBtn"><s:message code="auditLog.oper.SEARCH"/></button>
 			</div>
 			<button type="button" class="btn01" accesskey="A" id="searchWordInsertBtn"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
 			<button type="button" class="btn02" accesskey="E" id="searchWordDeleteBtn"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
@@ -384,9 +381,9 @@
     var gridSearchWordPattern = new Xgrid('searchWordListGrid', contextRoot);
     gridSearchWordPattern.onCheckBox();
     gridSearchWordPattern.autoNumber();
-    gridSearchWordPattern.colAdd('searchWord', "키워드", 200, 'left', false, 'link');
-    gridSearchWordPattern.colAdd('relationWord', "연관 키워드", 1300, 'left', false, 'link');
-    gridSearchWordPattern.loadExportMenu('연관 키워드 목록');
+    gridSearchWordPattern.colAdd('searchWord', '<s:message code="common.keyword"/>', 200, 'left', false, 'link');
+    gridSearchWordPattern.colAdd('relationWord', '<s:message code="common.relationKeyword"/>', 1300, 'left', false, 'link');
+    gridSearchWordPattern.loadExportMenu('<s:message code="common.relationKeyword"/><s:message code="selectCodeAll.list"/>');
     gridSearchWordPattern.loadPageSize();
     gridSearchWordPattern.loadHeader(true);
 
@@ -421,6 +418,6 @@
     var relaGrid = new Xgrid('relaGrid', contextRoot);
     relaGrid.onCheckBox();
     relaGrid.autoNumber();
-    relaGrid.colAdd('relationWord', "연관 키워드", 400, 'left', false, 'nomal');
+    relaGrid.colAdd('relationWord', "<s:message code="common.relationKeyword"/>", 400, 'left', false, 'nomal');
     relaGrid.loadHeader(true);
 </script>

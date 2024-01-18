@@ -117,12 +117,12 @@ Date			1분			경고
 				return;
 			}
 			if( $('#sshId').val() === '' ) {
-				ui.alertMsg('SSH 아이디를 입력하세요.');
+				ui.alertMsg('<s:message code="deviceInfo.ssh.id.input"/>');
 				$('#sshId').focus();
 				return;
 			}
 			if( $('#sshPw').val() === '' ) {
-				ui.alertMsg('SSH 비밀번호를 입력하세요.');
+				ui.alertMsg('<s:message code="deviceInfo.ssh.password.input"/>');
 				$('#sshPw').focus();
 				return;
 			}
@@ -149,7 +149,7 @@ Date			1분			경고
 					deviceInfo(data.devices);
 				} else {
 					$("#deviceCount").html(' [0건]');
-					$('#deviceBody').html('<tr><td colspan="19">데이터가 존재하지 않습니다.</td></tr>');
+					$('#deviceBody').html('<tr><td colspan="19"><s:message code="common.msg.nodata"/></td></tr>');
 				}
 			},
 			error: function (status, message) {
@@ -224,18 +224,18 @@ Date			1분			경고
 	}
 
 	function getStatusName(code){
-		if(code === 'S') return '정상';
-		else if(code === 'W') return '주의';
-		else if(code === 'E') return '경고';
-		else if(code === 'C') return '심각';
-		else if(code === 'N') return '연결실패';
+		if(code === 'S') return '<s:message code="trap.message.tra.status1"/>';
+		else if(code === 'W') return '<s:message code="deviceInfo.caution"/>';
+		else if(code === 'E') return '<s:message code="dashboard.warning"/>';
+		else if(code === 'C') return '<s:message code="deviceInfo.critical"/>';
+		else if(code === 'N') return '<s:message code="common.msg.connect_fail"/>';
 		else return '';
 	}
 
 	function getDeviceTypeName(code) {
-		if(code === 'C') return '패킷 수집 장비';
-		else if(code === 'A') return '패킷 분석 장비';
-		else if(code === 'L') return '로깅 장비';
+		if(code === 'C') return '<s:message code="selectDevStatus.dev.logging"/>';
+		else if(code === 'A') return '<s:message code="selectDevStatus.dev.integrated"/>';
+		else if(code === 'L') return '<s:message code="selectDevStatus.dev.analysis"/>';
 		else return '';
 	}
 
@@ -341,37 +341,37 @@ Date			1분			경고
 			</div>
 			<div class="modalCon">
 				<div class="modalTop">
-					<h3>장비 정보 입력</h3>
+					<h3><s:message code="deviceInfo.addDevPop.title"/><</h3>
 					<p>
 						<span class="red_dot veralign_middle"></span>
-						필수 입력 사항입니다.
+						<s:message code="common.required.msg"/>
 					</p>
 				</div>
 				<div class="modalbody">
 					<form method="post" id="addDevPopForm">
 					<div class="row">
 						<div class="col-35">
-							<label for="deviceName" class="fname">장비 유형</label>
+							<label for="deviceName" class="fname"><s:message code="common.msg.device"/> <s:message code="common.msg.type"/></label>
 							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
 							<div class="radio">
 								<input type="radio" value="C" name="deviceType" checked>
-								<span>패킷 수집 장비</span>
+								<span><s:message code="selectDevStatus.dev.logging"/></span>
 							</div>
 							<div class="radio">
 								<input type="radio" value="A" name="deviceType">
-								<span>패킷 분석 장비</span>
+								<span><s:message code="selectDevStatus.dev.integrated"/></span>
 							</div>
 							<div class="radio">
 								<input type="radio" value="L" name="deviceType">
-								<span>로깅 장비</span>
+								<span><s:message code="selectDevStatus.dev.analysis"/></span>
 							</div>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-35">
-							<label for="deviceName" class="fname">장비 이름</label>
+							<label for="deviceName" class="fname"><s:message code="selectCodeAll.devnm"/></label>
 							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
@@ -389,7 +389,7 @@ Date			1분			경고
 					</div>
 					<div class="row">
 						<div class="col-35">
-							<label for="deviceSSHId" class="fname">SSH 아이디</label>
+							<label for="deviceSSHId" class="fname"><s:message code="device.msg.ssh_id"/></label>
 							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
@@ -398,7 +398,7 @@ Date			1분			경고
 					</div>
 					<div class="row">
 						<div class="col-35">
-							<label for="deviceSSHPassword" class="fname">SSH 비밀번호</label>
+							<label for="deviceSSHPassword" class="fname"><s:message code="device.msg.ssh_password"/></label>
 							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
@@ -422,13 +422,13 @@ Date			1분			경고
 		<div class="searchSub">
 			<div>
 				<select id="deviceType" style="display: inline;margin-right: 4px">
-					<option value="">- 장비 유형 -</option>
-					<option value="C">패킷 수집 장비</option>
-					<option value="A">패킷 분석 장비</option>
-					<option value="L">로깅 장비</option>
+					<option value="">- <s:message code="selectCodeAll.device"/> <s:message code="common.msg.type"/> -</option>
+					<option value="C"><s:message code="selectDevStatus.dev.logging"/></option>
+					<option value="A"><s:message code="selectDevStatus.dev.integrated"/></option>
+					<option value="L"><s:message code="selectDevStatus.dev.analysis"/></option>
 				</select>
 				<input type="text" placeholder="장비 이름 / IP를 입력하세요." id="searchStr" style="width: 220px;">
-				<button class="form_btn01" accesskey="Q" id="searchBtn" accesskey="s">조회</button>
+				<button class="form_btn01" accesskey="Q" id="searchBtn" accesskey="s"><s:message code="auditLog.oper.SEARCH"/></button>
 			</div>
 			<div class="btnform">
 				<button type="button" class="btn01" accesskey="I" id="deviceInsert"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
@@ -440,7 +440,7 @@ Date			1분			경고
 		<div class="contentSub">
 			<div class="subtab">
 				<button class="active">
-					장비 목록
+					<s:message code="selectCodeAll.device"/> <s:message code="selectCodeAll.list"/>
 					<span id="deviceCount"></span>
 				</button>
 			</div>
@@ -474,20 +474,20 @@ Date			1분			경고
 					<tr>
 						<th rowspan="2"><input type="checkbox" id="checkAll"/></th>
 						<th  rowspan="2">No.</th>
-						<th rowspan="2">상태</th>
-						<th rowspan="2">장비 이름</th>
-						<th rowspan="2">IP</th>
-						<th rowspan="2">장비 유형</th>
-						<th rowspan="2">로드평균</th>
-						<th rowspan="2">메모리 사용량</th>
-						<th rowspan="2">Date</th>
-						<th colspan="2" class="subTable_bottom">디스크 사용량</th>
-						<th colspan="8" class="subTable_bottom">네트워크 인터페이스</th>
+						<th rowspan="2"><s:message code="common.msg.device_status"/></th>
+						<th rowspan="2"><s:message code="deviceInfo.dev.name"/></th>
+						<th rowspan="2"><s:message code="deviceInfo.dev.ip"/></th>
+						<th rowspan="2"><s:message code="common.msg.device_type"/></th>
+						<th rowspan="2"><s:message code="deviceInfo.dev.loadAvg"/></th>
+						<th rowspan="2"><s:message code="common.msg.device_memory"/></th>
+						<th rowspan="2"><s:message code="selectCodeAll.date"/></th>
+						<th colspan="2" class="subTable_bottom"><s:message code="common.disk"/><s:message code="common.msg.amountuse"/>/th>
+						<th colspan="8" class="subTable_bottom"><s:message code="eventLog.networkInterface"/></th>
 					</tr>
 					<tr class="subTable_tr">
-						<th>파티션</th>
-						<th>사용량</th>
-						<th>장치</th>
+						<th><s:message code="deviceInfo.partition"/></th>
+						<th><s:message code="common.msg.amountuse"/></th>
+						<th><s:message code="deviceInfo.dev"/></th>
 						<th>IP</th>
 						<th>Subnet Mask</th>
 						<th>BROADCAST</th>
