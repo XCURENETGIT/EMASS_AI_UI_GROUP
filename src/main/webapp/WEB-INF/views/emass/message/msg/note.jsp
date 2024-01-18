@@ -786,7 +786,7 @@
 				</div>
 				<div class="bortop_dd pt16 pl20 pr20">
 					<div class="subtab">
-						<button class="active">대화방</button>
+						<button class="active"><s:message code="consent.attach"/>
 					</div>
 				</div>
 				<div>

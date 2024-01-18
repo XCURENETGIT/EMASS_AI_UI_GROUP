@@ -16,7 +16,9 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.stereotype.Service;
@@ -32,7 +34,10 @@ import com.xcurenet.config.service.ConfigVO;
 
 @Service("configService")
 public class ConfigServiceImpl extends XcnAbstractDAO implements ConfigService {
-	
+
+	@Autowired
+	private DataSource dataSource;
+
 	@Override
 	public List<ConfigVO> getConfList() {
 		return selectList("com.xcurenet.sqlmap.mappers.mysql.config.getConfigList");
@@ -74,11 +79,13 @@ public class ConfigServiceImpl extends XcnAbstractDAO implements ConfigService {
 
 	@Override
 	public boolean execute(ConfigVO conf) {
+
+
 		String filePath = String.format("/sqlmap/mappers/sql/Update_Query_%s.sql", conf.getVal());
 		filePath = new File(new File(ConfigServiceImpl.class.getResource("").getPath()).getParentFile().getParentFile().getParent() + filePath).getAbsolutePath();
 		Connection _con = null;
 		try {
-			_con = DataSourceUtils.getConnection((DataSource) SpringContextUtil.getBean("mysqlDataSourceSpied"));
+			 _con = DataSourceUtils.getConnection(dataSource);
 			_con.setAutoCommit(false);
 			ScriptUtils.executeSqlScript(_con, new FileSystemResource(filePath));
 			_con.commit();

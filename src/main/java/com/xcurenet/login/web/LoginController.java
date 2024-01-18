@@ -343,7 +343,7 @@ public class LoginController {
 		admin.setLoginType(login.getLoginType());
 
 		if (Common.isEquals(admin.getStatus(), "L")) {
-			msg = Prop.propFormat("login.longterm.unuse") + "(" + login.getUserId() + ")";
+			msg = Prop.propFormat("login.longterm.unuse");
 			audit.setInformation(msg);
 			auditService.insertAudit(audit);
 			return new XcnResponseVO(XcnRspCode.OK_CUSTOM, "USER_LOCK").setMessage(msg);

@@ -18,6 +18,7 @@
 		} catch (Exception e){
 		}
 		String locale = Config.getString("default.lang");
+		System.out.println(locale+"Dfsadfa");
 	%>
 
 
@@ -573,33 +574,7 @@
 	</div>
 
 </div>
-<!-- OLD
-<div id="login">
-	<div class="logo">
-		<img src="<c:url value="/img/logo_login.png"/>" alt="EmassPro" class="emass">
-	</div>
-	<div id="loginWrap">
 
-		<form method="post">
-			<div class="imgcontainer">
-				<img src="<c:url value="/img/logo_emass.png"/>" alt="EmassPro" class="emass">
-			</div>
-
-			<div class="container">
-				<input type="text" placeholder="ID" id="userIdInput" required>
-				<input type="password" placeholder="Password" id="userPwInput" autocomplete="off" required>
-				<button id="loginBtn" type="button">로그인</button>
-				<label>
-					<input type="checkbox" checked="checked" id="saveLoginId" class="checkbox_align">
-						<%= Common.isEquals(locale, "ko") ? "로그인 ID 저장" : "Save Login ID" %>
-			</div>
-		</form>
-
-	</div>
-	<div id="loginText">
-		<h3>Enterprise MessAge Scanning System</h3>
-	</div>
-</div>-->
 
 <style>
 	/* The switch - the box around the slider */
