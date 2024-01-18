@@ -226,6 +226,16 @@ $(document).ready(function() {
 
 });
 
+function loginCheck(firstAdmin){
+    adminId = $('#first_adminId').val().trim();
+    if(firstAdminYn == '') firstAdminYn = firstAdmin;
+    if( ( pwchgDt == '' || pwchgDt == null ) ) {
+        $('#first_adminId').prop("disabled",true);
+        $('#first_accessIp_div').hide();
+        $('#TheFirstChangePw').modal('show');
+    }
+}
+
 function validationPassword( uid, upw, bpw )
 {
     var com_msg = passwordJS.pwMix + '\n';
@@ -256,6 +266,7 @@ function validationPassword( uid, upw, bpw )
     }
 
     if ( password.length > num_length[1] ){
+        alert(password.length);
         alert( com_msg + passwordJS.notDown );
         return false;
     }
@@ -369,94 +380,80 @@ function validationPassword( uid, upw, bpw )
 		</div>
 	</div>
 </div>
-<div class="modal fade" id="TheFirstChangePw" tabindex="-1" role="dialog" aria-labelledby="TheFirstChangePwModal" data-backdrop="static" data-keyboard="false">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<%if(Common.isEquals(adminLanguage, "ko")) {%>
-			<div class="modal-header" style="background-color: #253f56;color: white;">
-				<h3 class="modal-title">최초 접속 설정</h3>
-			</div>
-			<div class="modal-body">
-				<h5 style="font-weight:900; color:#000; border-bottom: 2px solid #656565; padding: 0 0 9px 14px;">※ 최초 접속시 운용자 정보를 반드시 설정하시기 바랍니다.</h5>
-				<div class="form-inline" style="border-bottom: 1px dashed #eee;padding: 7px 0px;">
-					<label for="first_adminId" style="padding-top: 8px;" class="control-label col-xs-4">운용자 아이디</label>
-					<input type="text" class="form-control" name="first_adminId" id="first_adminId" placeholder="운용자 아이디" required>
-					<input type="hidden" class="form-control" name="first_cur_adminPw" id="first_cur_adminPw">
+
+<div class="modal" id="TheFirstChangePw" tabindex="-1" role="dialog" aria-labelledby="TheFirstChangePwModa"  data-backdrop="static" data-keyboard="false">
+	<div class="modal-content">
+		<div class="modalHead">
+			<h2><s:message code="setup.firstsetting.subject"/></h2>
+			<span class="close" data-dismiss="modal">&times;</span>
+		</div>
+		<div class="modalCon">
+			<div class="modalbody">
+				<div class="row">
+					<div class="col-35">
+						<label for="first_adminId" class="fname"><s:message code="setup.firstsetting.adminid"/></label>
+					</div>
+					<div class="col-65">
+						<input type="text" class="w100" name="first_adminId" id="first_adminId" placeholder="<s:message code="setup.firstsetting.adminid"/>" required>
+						<input type="hidden" class="w100" name="first_cur_adminPw" id="first_cur_adminPw">
+					</div>
 				</div>
-				<div class="form-inline" style="border-bottom: 1px dashed #eee;padding: 7px 0px;">
-					<label for="first_adminPw" style="padding-top: 8px;" class="control-label col-xs-4">비밀번호</label>
-					<input type="password" class="form-control" name="first_adminPw" id="first_adminPw" placeholder="비밀번호" required>
+				<div class="row">
+					<div class="col-35">
+						<label for="first_adminPw" class="fname"><s:message code="admin.pw"/></label>
+					</div>
+					<div class="col-65">
+						<input type="password" class="w100" name="first_adminPw" id="first_adminPw" placeholder="<s:message code="admin.pw"/>" required>
+					</div>
 				</div>
-				<div class="form-inline" style="border-bottom: 1px dashed #eee;padding: 7px 0px;">
-					<label for="first_c_adminPw" style="padding-top: 8px;" class="control-label col-xs-4">비밀번호 확인</label>
-					<input type="password" class="form-control" name="first_c_adminPw" id="first_c_adminPw" placeholder="비밀번호 확인" required>
+				<div class="row">
+					<div class="col-35">
+						<label for="first_c_adminPw" class="fname"><s:message code="admin.cpw"/></label>
+					</div>
+					<div class="col-65">
+						<input type="password" class="w100" name="first_c_adminPw" id="first_c_adminPw" placeholder="<s:message code="admin.cpw"/>" required>
+					</div>
 				</div>
-				<div class="form-inline" style="border-bottom: 1px dashed #eee;padding: 7px 0px;" id="first_accessIp_div">
-					<label for="first_accessIp" style="padding-top: 8px;" class="control-label col-xs-4">운용자 접속 IP</label>
-					<input type="text" class="form-control" name="first_accessIp" id="first_accessIp" placeholder="운용자 접속 IP" required>
-				</div>
-			</div>
-			<div class="modal-body" style="display: none;">
-				<h5 style="font-weight:900; color:#000; border-bottom:2px solid #656565; padding: 0 0 9px 14px;">※ 최초 접속시 데이터베이스 정보를 반드시 설정하시기 바랍니다.</h5>
-				<div class="form-inline" style="border-bottom: 1px dashed #eee;padding: 7px 0px;">
-					<label for="first_deviceId" style="padding-top: 8px;" class="control-label col-xs-4">데이터베이스 아이디</label>
-					<input type="text" class="form-control" name="first_deviceId" id="first_deviceId" placeholder="데이터베이스 아이디" required>
-				</div>
-				<div class="form-inline" style="border-bottom: 1px dashed #eee;padding: 7px 0px;">
-					<label for="first_devicePw" style="padding-top: 8px;" class="control-label col-xs-4">비밀번호</label>
-					<input type="password" class="form-control" name="first_devicePw" id="first_devicePw" placeholder="비밀번호" required>
-				</div>
-				<div class="form-inline" style="border-bottom: 1px dashed #eee;padding: 7px 0px;">
-					<label for="first_c_devicePw" style="padding-top: 8px;" class="control-label col-xs-4">비밀번호 확인</label>
-					<input type="password" class="form-control" name="first_c_devicePw" id="first_c_devicePw" placeholder="비밀번호 확인" required>
-				</div>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-primary" accesskey="S" id="TheFirstSaveBtn">변경</button>
-			</div>
-			<%}else{ %>
-			<div class="modal-header" style="background-color: #253f56;color: white;">
-				<h3 class="modal-title">First access setting</h3>
-			</div>
-			<div class="modal-body">
-				<h5 style="font-weight:900; color:#000; border-bottom: 2px solid #656565; padding: 0 0 9px 14px;">※ Make sure set up the administrator information when you access first time.</h5>
-				<div class="form-inline" style="border-bottom: 1px dashed #eee;padding: 7px 0px;">
-					<label for="first_adminId" style="padding-top: 8px;" class="control-label col-xs-4">Administrator ID</label>
-					<input type="text" class="form-control" name="first_adminId" id="first_adminId" placeholder="Administrator ID" required>
-					<input type="hidden" class="form-control" name="first_cur_adminPw" id="first_cur_adminPw">
-				</div>
-				<div class="form-inline" style="border-bottom: 1px dashed #eee;padding: 7px 0px;">
-					<label for="first_adminPw" style="padding-top: 8px;" class="control-label col-xs-4">Password</label>
-					<input type="password" class="form-control" name="first_adminPw" id="first_adminPw" placeholder="Password" required>
-				</div>
-				<div class="form-inline" style="border-bottom: 1px dashed #eee;padding: 7px 0px;">
-					<label for="first_c_adminPw" style="padding-top: 8px;" class="control-label col-xs-4">Check password</label>
-					<input type="password" class="form-control" name="first_c_adminPw" id="first_c_adminPw" placeholder="Check password" required>
-				</div>
-				<div class="form-inline" style="border-bottom: 1px dashed #eee;padding: 7px 0px;" id="first_accessIp_div">
-					<label for="first_accessIp" style="padding-top: 8px;" class="control-label col-xs-4">Administrator access IP address</label>
-					<input type="text" class="form-control" name="first_accessIp" id="first_accessIp" placeholder="Administrator access IP address" required>
+				<div class="row" id="first_accessIp_div">
+					<div class="col-35">
+						<label for="first_accessIp" class="fname"><s:message code="setup.firstsetting.adminip"/></label>
+					</div>
+					<div class="col-65">
+						<input type="text" class="w100" name="first_accessIp" id="first_accessIp" placeholder="<s:message code="setup.firstsetting.adminip"/>" required>
+					</div>
 				</div>
 			</div>
-			<div class="modal-body" style="display: none;">
-				<h5 style="font-weight:900; color:#000; border-bottom:2px solid #656565; padding: 0 0 9px 14px;">※ Make sure set up the database information when you access first time.</h5>
-				<div class="form-inline" style="border-bottom: 1px dashed #eee;padding: 7px 0px;">
-					<label for="first_deviceId" style="padding-top: 8px;" class="control-label col-xs-4">database ID</label>
-					<input type="text" class="form-control" name="first_deviceId" id="first_deviceId" placeholder="database ID" required>
+
+			<div class="modalbody" style="display: none;">
+				<div class="row">
+					<div class="col-35">
+						<label for="first_deviceId" class="fname"><s:message code="setup.firstsetting.databaseid"/></label>
+					</div>
+					<div class="col-65">
+						<input type="text" class="w100" name="first_deviceId" id="first_deviceId" placeholder="<s:message code="setup.firstsetting.databaseid"/>" required>
+						<input type="hidden" class="w100" name="first_cur_adminPw" id="first_cur_adminPw">
+					</div>
 				</div>
-				<div class="form-inline" style="border-bottom: 1px dashed #eee;padding: 7px 0px;">
-					<label for="first_devicePw" style="padding-top: 8px;" class="control-label col-xs-4">Password</label>
-					<input type="password" class="form-control" name="first_devicePw" id="first_devicePw" placeholder="Password" required>
+				<div class="row">
+					<div class="col-35">
+						<label for="first_devicePw" class="fname"><s:message code="admin.pw"/></label>
+					</div>
+					<div class="col-65">
+						<input type="password" class="w100" name="first_devicePw" id="first_devicePw" placeholder="<s:message code="admin.pw"/>" required>
+					</div>
 				</div>
-				<div class="form-inline" style="border-bottom: 1px dashed #eee;padding: 7px 0px;">
-					<label for="first_c_devicePw" style="padding-top: 8px;" class="control-label col-xs-4">Check password</label>
-					<input type="password" class="form-control" name="first_c_devicePw" id="first_c_devicePw" placeholder="Check password" required>
+				<div class="row">
+					<div class="col-35">
+						<label for="first_c_devicePw" class="fname"><s:message code="admin.cpw"/></label>
+					</div>
+					<div class="col-65">
+						<input type="password" class="w100" name="first_c_devicePw" id="first_c_adminPw" placeholder="<s:message code="admin.cpw"/>" required>
+					</div>
 				</div>
 			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-primary" accesskey="S" id="TheFirstSaveBtn">Change</button>
+			<div class="modalfooter">
+				<button type="button" class="pop_btn02" accesskey="S" id="TheFirstSaveBtn"><s:message code="common.msg.change"/></button>
 			</div>
-			<%} %>
 		</div>
 	</div>
 </div>

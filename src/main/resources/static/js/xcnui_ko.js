@@ -162,6 +162,7 @@ var filelist = {
 	noname:'파일명 알수없음',
 	save:'저장',
 	preview:'미리보기',
-	allfileSave:'Save the entire file'
+	allfileSave:'전체파일 저장',
+	Outside:'외부'
 }
 

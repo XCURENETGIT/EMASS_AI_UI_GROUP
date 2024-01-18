@@ -330,7 +330,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 				offset = Common.nvz(sq.get("facet.offset"), 0);
 				limit = Common.nvz(sq.get("facet.group"), 100);
 				/* 대화방 목록 (그룹) */
-				termsAggregation.subAggregation(AggregationBuilders.topHits(field).size(1).from(0).sort("ctime", order));
+				termsAggregation.subAggregation(AggregationBuilders.topHits(field).size(1).from(0).sort("ctime", SortOrder.DESC));
 				BucketSortPipelineAggregationBuilder paging = PipelineAggregatorBuilders.bucketSort("paging", null).from(offset).size(limit);
 				termsAggregation.subAggregation(paging);
 				aggregations.add(AggregationBuilders.cardinality("bucket_total").field(mainField));

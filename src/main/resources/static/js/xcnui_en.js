@@ -166,5 +166,7 @@ var filelist = {
 	noname:'Name unknown',
 	save:'save',
 	preview:'preview',
-	allfileSave:'전체파일저장'
+	allfileSave:'Save the entire file',
+	Outside:'Outside'
+
 };

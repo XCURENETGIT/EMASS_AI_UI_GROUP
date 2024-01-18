@@ -18,7 +18,7 @@ var detailStartPage = 1;
 var detailEndPage = 1;
 var detailViewPage = 10;
 var detailPageBreak = 100;
-var detailLimit = 5;
+var detailLimit = 100;
 
 var selectedSearchData = 1;
 var searchOffset = 0;
@@ -433,6 +433,9 @@ function getCollectionGroupList (page,type){
     if (user != '') userStr = user;
     else userStr = '';
 
+    var startTotalDate=$('#startDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+    var endTotalDate=$('#endDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+
     searchFlag = true;
     ui.onBody('timeline_list', 0, -20);
     ui.postJson({
@@ -441,6 +444,8 @@ function getCollectionGroupList (page,type){
         readYn : readYn,
         offset : offset,
         userStr:userStr,
+        startTotalDate:startTotalDate+"00000",
+        endTotalDate:endTotalDate+"235959",
         type:type,
         limit : groupPageBreak,
         success : function(data, total) {
@@ -543,7 +548,7 @@ function makeFileServiceList(data) {
     if (data.inSide === "N") {
         str += '<span class="file_flag_reception">';
         str += '<img src="' + mainContext + '/img/ico_w_chatshare_fill.png" alt="외부" height="12px">';
-        str += '외부</span>';
+        str += filelist.Outside+'</span>';
     }
     str += data.attachname + '</h4>';
     str += '<div class="loca">' + data.svcNm + '</div>';
@@ -692,7 +697,7 @@ function makePrevList(){
         if(obj.attached=="Y"){
             str+='<p class="filedown file_link" msgid="'+obj.msgid+'"+ attachhash="'+obj.attachhash+'" +>';
             str+='<span class="img"></span>';
-            str+='<span>'+obj.attachname+'.'+obj.attachtype+'<br/>';
+            str+='<span>'+obj.attachname+'<br/>';
             str+=obj.attachsize+'KB</span>';
             str+='<button class="btnchatdown downloadIcon"></button></p>';
         }
@@ -1255,8 +1260,9 @@ function rtnFileGroupList (data) {
         rightDiv.className = "right";
         var imageName =mainContext+"/img/icon/ico_sns_"+ data[i].svc+".png";
         var makescv = makeMessengerText(data[i].svc);
-        var rightContent = "<p><span class='logo'><img src="+imageName+">"+makescv+"</span></p>";
-
+        var defaultImageName = mainContext + "/img/icon/ico_sns_FUKR.png";
+        var rightContent;
+        rightContent = "<p><span class='logo'><img src='" + imageName + "' onerror=\"this.src='" + defaultImageName + "'\">" + makescv + "</span></p>";
 
         if (data[i].unread_cnt > 0) {
             rightContent += "<span class='new'>" + data[i].unread_cnt + "</span>";
