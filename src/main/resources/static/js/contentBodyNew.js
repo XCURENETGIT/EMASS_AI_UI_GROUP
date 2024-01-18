@@ -27,6 +27,7 @@ $(document).ready(function(){
 		var fontSize = parseInt($('#emassBody').css("font-size"));
 		if(more == 'small_txt') fontSize -= fontZoom;
 		else fontSize += fontZoom;
+		alert(fontSize)
 		$('#emassBody').css({'font-size':fontSize+'px'});
 
 		// $('#emassBody *').each(function(){

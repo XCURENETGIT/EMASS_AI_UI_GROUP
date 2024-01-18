@@ -13,6 +13,7 @@
 <%-- 메시지 페이지 전용 --%>
 <%@ include file="/WEB-INF/fragments/messageScript.jsp"%>
 <link rel="stylesheet" href="<c:url value="/css/message.css"/>"/>
+<link rel="stylesheet" href="<c:url value="/css/messageContent.css"/>"/>
 <link rel="stylesheet" href="<c:url value="/css/jquery.scrollbar.css"/>"/>
 <link rel="stylesheet" href="<c:url value="/css/bootstrap-datetimepicker.min.css"/>"/>
 <link rel="stylesheet" href="<c:url value="/css/zTreeStyle.css"/>"/>
@@ -154,6 +155,11 @@
     <title>EMASS AI</title>
 
     <style type="text/css">
+
+        body{
+            font-size:13px;
+        }
+
         #wrap {overflow:hidden;}
         .ui-widget input {margin-top:4px;}
         .caret {
@@ -385,7 +391,7 @@
         .resultCntSpan{
             float: right;
             height: 100%;
-            padding-top: 8px;
+            padding-top: 9px;
             padding-right:20px;
             margin-left:-10px;
         }
@@ -406,23 +412,19 @@
         }
 
 
-        /*
+
         .condition_group {
-            text-align: center;
-            border-top: 2px solid #ddd;
-            border-bottom: 1px solid #e5e5e5;
-            padding: 5px 10px;
+            margin-top: 12px;
             font-size: 13px;
-            color: #333;
-            font-weight: bold;
-            cursor: pointer;
-             background-color: #ebe6e5;
-            background: linear-gradient(to bottom, rgba(249,249,249,1) 0%,rgba(229,229,229,1) 100%);
-        }*/
+            padding:8px; background-color: #f5f5f5;
+            color:#111; text-align: center; font-weight:600;
+            border-top:1px solid #ddd;
+            font-family: Pretendard;
+        }
         .condition_group > i {
             font-size: 14px;
             position: relative;
-            top: 2px;
+            top: 0px;
             float: right;
             font-weight: normal;
             color: #333;
@@ -499,6 +501,7 @@
             width: 100%;
             height: 100%;
             padding: 1px 17px;
+            font-size:13px;
             font-weight: 400;
             line-height: 1.4285;
             color: #333;
@@ -2559,7 +2562,7 @@
                             <div id="condition_detail" class="section_condition scrollbar-inner" style="margin-top:-10px;">
 
                                 <%-- 연관 검색어 표기--%>
-                                <div style="margin-top:8px;widht:100%;height:8px;">
+                                <div style="margin-top:10px;widht:100%;height:8px;">
                                     <label style="float: left; padding-left: 14px; cursor: pointer">
                                         <input class="relationKeywordBtn" type="checkbox"/>
                                         <span><s:message code="condition.relationKeyword.view"/></span>
@@ -2572,7 +2575,7 @@
                                 <div class="condition_option" style="padding-top:15px;">
                                     <div class="condition_item">
                                         <div class="condition_title" style="float: left;"><i class="fa fa-caret-right"></i> <s:message code="condition.search_str"/>
-                                            <img style="width: 16px;margin-bottom: 2px;" src="<c:url value="/img/icon/question.png"/>" class="areaBtn" id="searchHelpBtn">
+                                            <img style="width: 16px;margin-bottom: 3px;" src="<c:url value="/img/icon/question.png"/>" class="areaBtn" id="searchHelpBtn">
                                         </div>
 
                                         <div style="margin-top: 5px;">
@@ -2896,7 +2899,7 @@
                                 <div class="condition_option">
                                     <div class="condition_item">
                                         <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> URL
-                                            <img style="cursor:help; width: 16px;margin-bottom: 2px;" src="<c:url value="/img/icon/icon_help.png"/>" class="areaBtn" title="http:// <s:message code="query.make.except"/>">
+                                            <img style="cursor:help; width: 16px;margin-bottom: 3px;" src="<c:url value="/img/icon/icon_help.png"/>" class="areaBtn" title="http:// <s:message code="query.make.except"/>">
                                         </div>
                                         <div class="condition_not"><label><input type="checkbox" id="url_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
                                         <textarea id=url class="condition_input_text" style="resize: none"></textarea>
@@ -3036,7 +3039,7 @@
                                     <div class="condition_divider"></div>
                                     <div class="condition_item">
                                         <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="condition.size"/>
-                                            <img style="cursor:help; width: 16px;margin-bottom: 2px;" src="<c:url value="/img/icon/icon_help.png"/>" class="areaBtn" title="<s:message code="filterInfo.unit"/> : KByte">
+                                            <img style="cursor:help; width: 16px;margin-bottom: 3px;" src="<c:url value="/img/icon/icon_help.png"/>" class="areaBtn" title="<s:message code="filterInfo.unit"/> : KByte">
                                         </div>
                                         <div class="condition_sub_title">
                                             <label class="condition_label"><input type="radio" name="sizeType" value="" checked="checked"> <span><s:message code="common.msg.all"/></span></label>
@@ -3123,28 +3126,28 @@
                         <div class="viewSetup" style="position: absolute;top:7px;right:10px;z-index: 9;">
 
                             <div style="display: inline-block; padding-left:10px;vertical-align: bottom;">
-                                <a href="javascript:;" class="btn05" style="padding-right:10px; color:#383838; cursor: pointer; font-size: 12px;float: right; margin-right:4px;"data-toggle="dropdown" id="exportMsg"><s:message code="common.msg.export"/><span class="caret"></span></a>
+                                <a href="javascript:;" class="btn05" style="padding-right:10px; color:#383838; cursor: pointer; font-size: 13px;float: right; margin-right:4px;"data-toggle="dropdown" id="exportMsg"><s:message code="common.msg.export"/><span class="caret"></span></a>
                                 <ul class="dropdown-menu dropdown-menu-left" role="menu" style="min-width:100px;font-size:13px;">
-                                    <li style="display:none;"><a href="javascript:void(0);" id="body_link_btn" class="body_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-text-o" style="font-size:16px"></span>&nbsp;<s:message code="condition.body"/></a></li>
-                                    <li style="display:none;"><a href="javascript:void(0);" id="attach_link_btn" class="attach_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-archive-o" style="font-size:16px"></span>&nbsp;<s:message code="consent.attach"/></a></li>
-                                    <li style="display:none;"><a href="javascript:void(0);" id="excel_link_btn" class="excel_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>" option="Y"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/> (<s:message code="common.msg.excel"/> xlsx)</a></li>
-                                    <li style="display:none;"><a href="javascript:void(0);" id="cell_link_btn" class="cell_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>" option="Y"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/> (<s:message code="common.msg.hancel"/> cell)</a></li>
-                                    <li style="display:none;"><a href="javascript:void(0);" id="csv_link_btn" class="csv_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>" option="Y"><span class="fa fa-file-text" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/> (<s:message code="common.msg.text"/> csv)</a></li>
-                                    <li style="display:none;"><a href="javascript:void(0);" id="pdf_link_btn" class="pdf_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>" option="Y"><span class="fa fa-file-pdf-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/> (PDF)</a></li>
+                                    <li style="display:none;"><a href="javascript:void(0);" id="body_link_btn" class="body_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-text-o"></span>&nbsp;<s:message code="condition.body"/></a></li>
+                                    <li style="display:none;"><a href="javascript:void(0);" id="attach_link_btn" class="attach_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-archive-o"></span>&nbsp;<s:message code="consent.attach"/></a></li>
+                                    <li style="display:none;"><a href="javascript:void(0);" id="excel_link_btn" class="excel_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>" option="Y"><span class="fa fa-file-excel-o"></span>&nbsp;<s:message code="selectCodeAll.list"/> (<s:message code="common.msg.excel"/> xlsx)</a></li>
+                                    <li style="display:none;"><a href="javascript:void(0);" id="cell_link_btn" class="cell_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>" option="Y"><span class="fa fa-file-excel-o"></span>&nbsp;<s:message code="selectCodeAll.list"/> (<s:message code="common.msg.hancel"/> cell)</a></li>
+                                    <li style="display:none;"><a href="javascript:void(0);" id="csv_link_btn" class="csv_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>" option="Y"><span class="fa fa-file-text"></span>&nbsp;<s:message code="selectCodeAll.list"/> (<s:message code="common.msg.text"/> csv)</a></li>
+                                    <li style="display:none;"><a href="javascript:void(0);" id="pdf_link_btn" class="pdf_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>" option="Y"><span class="fa fa-file-pdf-o"></span>&nbsp;<s:message code="selectCodeAll.list"/> (PDF)</a></li>
                                     <c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'LS') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
-                                        <li><a href="javascript:void(0);" class="all_down_link" data-type="L" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/></a></li>
+                                        <li><a href="javascript:void(0);" class="all_down_link" data-type="L" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-excel-o"></span>&nbsp;<s:message code="selectCodeAll.list"/></a></li>
                                     </c:if>
                                     <c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'BS') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
-                                        <li><a href="javascript:void(0);" class="all_down_link" data-type="B" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-text-o" style="font-size:16px"></span>&nbsp;<s:message code="condition.body"/></a></li>
+                                        <li><a href="javascript:void(0);" class="all_down_link" data-type="B" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-text-o"></span>&nbsp;<s:message code="condition.body"/></a></li>
                                     </c:if>
                                     <c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'AS') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
-                                        <li><a href="javascript:void(0);" class="all_down_link" data-type="A" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-archive-o" style="font-size:16px"></span>&nbsp;<s:message code="consent.attach"/></a></li>
+                                        <li><a href="javascript:void(0);" class="all_down_link" data-type="A" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-archive-o"></span>&nbsp;<s:message code="consent.attach"/></a></li>
                                     </c:if>
                                     <c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'WS') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
-                                        <li><a href="javascript:void(0);" class="all_down_link" data-type="LB" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/>+<s:message code="condition.body"/></a></li>
+                                        <li><a href="javascript:void(0);" class="all_down_link" data-type="LB" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-excel-o"></span>&nbsp;<s:message code="selectCodeAll.list"/>+<s:message code="condition.body"/></a></li>
                                     </c:if>
                                     <c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'CS') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
-                                        <li><a href="javascript:void(0);" class="all_down_link" data-type="LBA" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="selectCodeAll.list"/>+<s:message code="condition.body"/>+<s:message code="consent.attach"/></a></li>
+                                        <li><a href="javascript:void(0);" class="all_down_link" data-type="LBA" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-excel-o"></span>&nbsp;<s:message code="selectCodeAll.list"/>+<s:message code="condition.body"/>+<s:message code="consent.attach"/></a></li>
                                     </c:if>
                                     <c:if test="${fn:indexOf(_USERCREDENTIAL_.menu, 'LP') > -1 || _USERCREDENTIAL_.menu eq 'ALL'}">
                                         <li><a href="javascript:void(0);" class="print_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="glyphicon glyphicon-print"></span>&nbsp;<s:message code="selectCodeAll.list"/> <s:message code="common.msg.print"/></a></li>
@@ -3152,8 +3155,8 @@
                                     <li class="dropdown-divider"></li>
                                     <li><a href="javascript:void(0);" class="downList" data-target="tabGrid" ><span class="glyphicon glyphicon-th-list"></span>&nbsp;<s:message code="common.msg.download"/> <s:message code="mail.view.list"/></a></li>
                                 </ul>
-                                <a href="javascript:;" style="padding-right:10px; color:#383838; cursor: pointer; font-size: 12px;float: right;margin-right:4px;" id="saveMsgData" class="btn05"><s:message code="filterInfo.setMsgFolder1"/></a>
-                                <a href="javascript:;" style="padding-right:10px; color:#383838; cursor: pointer; font-size: 12px;float: right;margin-right:4px; display: none;" id="feedbackBtn" class="btn05"><s:message code="condition.feedback"/> <s:message code="common.msg.setting"/><span class="caret"></span></a>
+                                <a href="javascript:;" style="padding-right:10px; color:#383838; cursor: pointer; font-size: 13px;float: right;margin-right:4px;" id="saveMsgData" class="btn05"><s:message code="filterInfo.setMsgFolder1"/></a>
+                                <a href="javascript:;" style="padding-right:10px; color:#383838; cursor: pointer; font-size: 13px;float: right;margin-right:4px; display: none;" id="feedbackBtn" class="btn05"><s:message code="condition.feedback"/> <s:message code="common.msg.setting"/><span class="caret"></span></a>
                                 <ul id="feedbackSetting" style="display: none; z-index: 991; padding: 5px 0px;">
                                     <li><a href="javascript:void(0);" onclick="setFeedback(0);" style="padding-left: 20px;"><span class="feedbackCorrect" style="display: inline-block; position: relative; top: 4px;"></span>&nbsp;<s:message code="condition.info.feedback0"/></a></li>
                                     <li><a href="javascript:void(0);" onclick="setFeedback(1);" style="padding-left: 20px;"><span class="feedbackcommon" style="display: inline-block; position: relative; top: 4px;"></span>&nbsp;<s:message code="condition.info.class1"/></a></li>
@@ -3164,7 +3167,7 @@
                                 </ul>
                                 <div style="position: fixed; top: 0px; bottom: 0px; left: 0px; right: 0px; z-index: 990; display: none; width: 100%; height: 100%;" id="overlay"></div>
                             </div>
-                            <a href="javascript:;" class="btn05" style="color:#383838;font-size: 12px; margin-left:-4px;" class="dropdown-toggle" data-toggle="dropdown" id="config_toggle">
+                            <a href="javascript:;" class="btn05" style="color:#383838;font-size: 13px; margin-left:-4px;" class="dropdown-toggle" data-toggle="dropdown" id="config_toggle">
                                 <s:message code="condition.view.setup"/><span class="caret"></span>
                             </a>
                             <div style="display:inline-block;">
@@ -3172,7 +3175,7 @@
                                 <button id="bottom_btn" style="font-size: 11px; font-weight: initial; line-height: 20px; padding-right: 2px;" class="areaBtn btn05"><img src="<c:url value="/img/message/message_bottom.png"/>" style="padding-right: 4px;"></button>
                                 <button id="right_btn" style="font-size: 11px; font-weight: initial; line-height: 20px; padding-right: 2px;" class="areaBtn btn05"><img src="<c:url value="/img/message/message_right.png"/>" style="padding-right: 4px;"></button>
                             </div>
-                            <div class="dropdown-menu dropdown-menu-right"  style="min-width:180px;font-size:12px; padding:0;" id="additionalBtn">
+                            <div class="dropdown-menu dropdown-menu-right"  style="min-width:180px;font-size:13px; padding:0;" id="additionalBtn">
                                 <div class="listRow" style="padding: 0;">
                                     <div class="listRowLeft" style="text-align:center; font-weight: bold; background-color: #eaeaea; width: 120px; height: 34px;"><s:message code="condition.orderType"/></div>
                                     <select id="messageSort" class="listRowLeft" style="margin-top:5px; margin-left: 5px;">

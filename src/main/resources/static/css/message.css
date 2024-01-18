@@ -245,7 +245,7 @@ input[type="text"] {
 }
 .bootstrap-select > button > span {
 	line-height: 23px;
-	font-family: dotum, Verdana, arial, sans-serif;
+	font-family: Pretendard;
 }
 
 .listTab_div {
@@ -455,13 +455,6 @@ input[type="text"] {
 	background-image: url('../img/icon/x_over1.png');
 }
 
-.condition_group {
-	margin-top: 12px;
-	padding:8px; background-color: #f5f5f5;
-	color:#111; text-align: center; font-weight:600;
-	border-top:1px solid #ddd;
-	font-family: Pretendard;
-}
 .condition_group .expand-one  {
 	height: 22px;
 	line-height: 23px;
@@ -517,7 +510,7 @@ input[type="text"] {
 	padding-top:0; overflow: hidden;
 	background-color: #f8f8f8;
 	vertical-align: middle;
-	margin:12px;
+	margin:13px;
 	padding:8px 0 6px;
 }
 .condition_save a{
@@ -525,7 +518,7 @@ input[type="text"] {
 	/*padding-right:15px; */
 	color:#333;
 	cursor: pointer;
-	font-size: 14px;
+	font-size: 12px;
 
 }
 .condition_left{
@@ -784,10 +777,10 @@ http://scripts.sil.org/OFL
 html, body,  span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
+del, dfn, em, ins, kbd, q, s, samp,
 small, strike, strong, sub, sup, tt, var,
 b, u, i, center,option,
-dl, dt, dd, ol, ul, li,
+dl, dt, dd, ol, ul, li,img,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td,
 article, aside, canvas, details, embed,
@@ -844,7 +837,7 @@ input[type=text], input[type=password], input[type=search], textarea {font-size:
 /*input:disabled{ background-color:#eee; border: 1px solid #CCC;}*/
 input[type="text"].error,select.error{border:1px solid #FC5656; color:#FC5656; background-color:#fff;}
 select:disabled { background-color:#ddd; border: 1px solid #aaa;}
-select { font-size:14px; height:26px; line-height: 26px; resize: vertical;  border: 1px solid #CCC; background: #FFF; padding: 0 4px; align-items: center; }
+select { font-size:13px; height:26px; line-height: 26px; resize: vertical;  border: 1px solid #CCC; background: #FFF; padding: 0 4px; align-items: center; }
 button {cursor: pointer;font-family: Pretendard;}
 button:hover {text-decoration: underline;}
 

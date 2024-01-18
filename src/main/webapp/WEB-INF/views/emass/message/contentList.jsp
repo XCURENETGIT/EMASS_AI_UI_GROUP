@@ -45,6 +45,9 @@
 <head>
 	<title>EMASS AI - <s:message code="DATA_MONITOR.MESSAGE_INFO"/></title>
 	<style type="text/css">
+
+
+
 		.scroll_tab_left_button, .scroll_tab_right_button {margin-top:4px!important;}
 		.scroll_tabs_container .scroll_tab_left_button_disabled {margin-top:4px!important;}
 		.scroll_tabs_container .scroll_tab_right_button_disabled {margin-top:4px !important;}

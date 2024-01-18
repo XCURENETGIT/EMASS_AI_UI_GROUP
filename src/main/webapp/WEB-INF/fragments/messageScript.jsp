@@ -794,10 +794,10 @@
   }
   function writeExportMenu(target, gridName, title){
     var str = '';
-    str += '<li><a href="javascript:void(0);" class="excel_link" data-target="'+gridName+'" rel="'+title+'"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="common.msg.excel"/>(xlsx)</a></li>';
-    str += '<li><a href="javascript:void(0);" class="cell_link" data-target="'+gridName+'" rel="'+title+'"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="common.msg.hancel"/>(cell)</a></li>';
-    str += '<li><a href="javascript:void(0);" class="csv_link" data-target="'+gridName+'" rel="'+title+'"><span class="fa fa-file-text" style="font-size:16px"></span>&nbsp;<s:message code="common.msg.text"/>(csv)</a></li>';
-    str += '<li><a href="javascript:void(0);" class="pdf_link" data-target="'+gridName+'" rel="'+title+'"><span class="fa fa-file-pdf-o" style="font-size:16px"></span>&nbsp;PDF</a></li>';
+    str += '<li><a href="javascript:void(0);" class="excel_link" data-target="'+gridName+'" rel="'+title+'"><span class="fa fa-file-excel-o" style="font-size:13px"></span>&nbsp;<s:message code="common.msg.excel"/>(xlsx)</a></li>';
+    str += '<li><a href="javascript:void(0);" class="cell_link" data-target="'+gridName+'" rel="'+title+'"><span class="fa fa-file-excel-o" style="font-size:13px"></span>&nbsp;<s:message code="common.msg.hancel"/>(cell)</a></li>';
+    str += '<li><a href="javascript:void(0);" class="csv_link" data-target="'+gridName+'" rel="'+title+'"><span class="fa fa-file-text" style="font-size:13px"></span>&nbsp;<s:message code="common.msg.text"/>(csv)</a></li>';
+    str += '<li><a href="javascript:void(0);" class="pdf_link" data-target="'+gridName+'" rel="'+title+'"><span class="fa fa-file-pdf-o" style="font-size:13px"></span>&nbsp;PDF</a></li>';
     str += '<li><a href="javascript:void(0);" class="print_link" data-target="'+gridName+'" rel="'+title+'"><span class="glyphicon glyphicon-print"></span>&nbsp;<s:message code="common.msg.print"/></a></li>';
     $('#'+target).append(str);
   }
