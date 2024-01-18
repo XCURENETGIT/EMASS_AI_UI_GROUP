@@ -1,9 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="com.xcurenet.common.util.Common"%>
 <%@ page import="java.util.Locale" %>
+
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
+<%
+	String lo = Common.getLocale(session).toString();
+%>
+
 
 <script type="text/javascript" src="<c:url value="/js/jquery.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/jquery.ui.js"/>"></script>
@@ -30,7 +36,7 @@
 
 <%@ include file="/WEB-INF/fragments/common.jsp"%>
 
-<% if( Common.isEquals(Common.nvl(Locale.getDefault(), "ko"), "ko")){%>
+<%if (Common.isEquals(lo, "ko")) {%>
 <script type="text/javascript" src="<c:url value="/js/xcnui_ko.js"/>"></script>
 <%}else{%>
 <script type="text/javascript" src="<c:url value="/js/xcnui_en.js"/>"></script>
