@@ -5,6 +5,7 @@ import com.xcurenet.EmassproApplication;
 import com.xcurenet.admin.service.AuthorityService;
 import com.xcurenet.admin.service.AuthorityVO;
 import com.xcurenet.admin.service.impl.AdminServiceImpl;
+import com.xcurenet.common.snmp.get.GetSnmp;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.TimeUtil;
 import com.xcurenet.common.util.config.Config;
@@ -16,6 +17,7 @@ import com.xcurenet.emass.searchHistory.vo.SearchHistoryVO;
 import com.xcurenet.interestUser.service.AdminUserGroupService;
 import edu.emory.mathcs.backport.java.util.Collections;
 import lombok.extern.log4j.Log4j2;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrClient;
@@ -210,9 +212,13 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 	public static void main(String[] args) throws SolrServerException, IOException {
 		ConfigurableApplicationContext context = SpringApplication.run(EmassproApplication.class, args);
-		SolrCheckedService service = context.getBean(SolrCheckedService.class);
+		GetSnmp service = context.getBean(GetSnmp.class);
+		JSONArray array = service.getIifTrafficTable("10.200.10.67");
+		log.info("SNMP Result : {}", array);
 
-		service.setRead("20231227122850.XIKI2SHW6U3QNBWHSXOYI74FSEUNBZJF", "mink");
+//		SolrCheckedService service = context.getBean(SolrCheckedService.class);
+//
+//		service.setRead("20231227122850.XIKI2SHW6U3QNBWHSXOYI74FSEUNBZJF", "mink");
 
 
 //		String query = "+ctime:[20231022000000 TO 20231222235959] -pi_total:0 +(pi_SN:[ 1 TO *] pi_CN:[ 1 TO *] pi_DN:[ 1 TO *] pi_FN:[ 1 TO *] pi_PN:[ 1 TO *])";
