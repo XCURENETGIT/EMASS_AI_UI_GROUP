@@ -123,7 +123,7 @@ public class SnmpPolling {
 			es.shutdownNow();
 		}
 		for (DeviceVO device : devices) {
-			log.info("DeviceVO {}", device);
+			log.debug("DeviceVO {}", device);
 		}
 	}
 
