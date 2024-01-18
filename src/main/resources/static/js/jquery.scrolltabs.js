@@ -52,7 +52,7 @@
         'text-overflow': 'clip',
         'font-size': '0px',
         'position': 'absolute',
-        'top': '0px',
+        'top': '3px',
         'left': opts.left_arrow_size + 'px',
         'right': opts.right_arrow_size + 'px'
       });

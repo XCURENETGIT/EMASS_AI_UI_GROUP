@@ -350,7 +350,7 @@ function Xgrid ( target, contextRoot, rowHeight, options, dataview ) {
 		if ( msg == undefined ) msg = slickGridJS.searching;
 		this.data = [];
 		this.render( );
-		$(this.target + ' .grid-canvas' ).html ( '<div class="ui-widget-content slick-row even nodata_msg"><div class="slick-cell l0 r'+(this.columns.length-1)+' slick-init-msg">'+msg+'</div></div>' );
+		$(this.target + ' .grid-canvas' ).html ( '<div class="ui-widget-content slick-row even nodata_msg"><div class="slick-cell l0 r'+(this.columns.length-1)+' slick-init-msg" style="height: 16px;">'+msg+'</div></div>' );
 	};
 
 	/**

@@ -173,7 +173,6 @@
 			color: #fff;
 			font-weight: bold;
 		}
-
 	</style>
 </head>
 <body class="mini-navbar msgBody">
@@ -181,7 +180,7 @@
 <div class="msg_cont_container">
 	<div id="mail_list" class="divList unselectable" style="width: 100%; height: 100%; display: block;position: absolute;top: 0;left: 0;bottom: 0;">
 		<div style="height: 98%;">
-			<div id="busiCntArea" style=" padding-left: 5px;padding-right: 15px; margin-left:6px; height:36px;">
+			<div id="busiCntArea" style="padding-left: 5px;padding-right: 15px; margin-left:6px; height:36px;">
 				<span class="tab_selected noSearch"><a href="javascript:;" class="busiCounts active" data-busicd=""><!--<i class="fa fa-angle-right" aria-hidden="true"></i> --><s:message code="common.msg.all"/></a></span>
 			</div>
 			<div id="messageNewGrid" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px;min-height:200px;height:calc(100% - 60px);"></div>

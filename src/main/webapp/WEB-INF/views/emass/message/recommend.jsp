@@ -6,6 +6,7 @@
 	JSONObject param = Common.getParam(request);
 	String msgId = Common.nvl(param.get("msgId"));
 	String targetDate = Common.nvl(param.get("targetDate"));
+	String subjectIsEmpty = Common.nvl(param.get("subjectIsEmpty"));
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -51,6 +52,8 @@
 var searchFlag=false;
 var msgId = '<%=msgId%>';
 var targetDate = '<%=targetDate%>';
+var subjectIsEmpty = '<%=subjectIsEmpty%>';
+
 $(document).ready(function(){
 	// $('#startdatepicker').datetimepicker({
 	// 	format: 'YYYY-MM-DD',
@@ -77,6 +80,7 @@ function getData() {
 	ui.get({
 		url 		: 'getRecommendData.xcn',
 		msgId		: msgId,
+		subjectIsEmpty	: subjectIsEmpty,
 	//	targetDate	: targetDate,
 		success 	: function(data, total) {
 			grid.setData(data.emass);
@@ -258,10 +262,12 @@ function regexpInfoViewer(row, selectedGrid){
 			else if (value == '9') return '<div class="feedbackDefer"></div>&nbsp;<s:message code="condition.info.feedback9"/>';
 			else return '-';
 		});
-		grid.colAdd('ml_confd_prob', '<s:message code="condition.prob"/>(%)', 90, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-			return probPercent(value);
+		<%--grid.colAdd('ml_confd_prob', '<s:message code="condition.prob"/>(%)', 90, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {--%>
+		<%--	return probPercent(value);--%>
+		<%--});--%>
+		grid.colAdd('confidence', '<s:message code="condition.info.feedback.confidence"/>(%)', 100, 'right', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+			return	Math.floor(parseInt(value));
 		});
-		grid.colAdd('confidence', '<s:message code="condition.info.feedback.confidence"/>', 100, 'right', false, 'nomal');
 		grid.colAdd('subject', '<s:message code="condition.subject"/>', 410, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 			var body_snippet = grid.getValue(row, 'body_snippet').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '\'');
 			if(body_snippet.length > 100) body_snippet = body_snippet.substring(0, 1024)+'...';
@@ -367,14 +373,6 @@ function regexpInfoViewer(row, selectedGrid){
 
 
 
-
-
-
-
-
-
-
-
 		grid.loadHeader(true);
 		grid.initData('<s:message code="common.msg.search.click"/>');
 		grid.onContextMenu = function(row, col, e){
@@ -437,6 +435,7 @@ function regexpInfoViewer(row, selectedGrid){
 				viewer_newOpen( grid.Row );
 			}
 		};
+
 	</script>
 </body>
 </html>

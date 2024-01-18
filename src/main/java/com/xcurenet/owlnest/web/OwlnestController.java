@@ -40,9 +40,11 @@ public class OwlnestController {
 		JSONObject param = Common.getParam(request);
 
 		String msgId = Common.nvl(param.get("msgId"));
-		String targetDate = Common.nvl(param.get("targetDate"));
+//		String targetDate = Common.nvl(param.get("targetDate"));
+		boolean subjectIsEmpty = Boolean.parseBoolean(Common.nvl(param.get("subjectIsEmpty")));
 
-		SolrEdcMessageVO solrVo = getSolrEdcMessage(msgId, Common.getAdminId(request));
+
+		SolrEdcMessageVO solrVo = getSolrEdcMessage(msgId,subjectIsEmpty, Common.getAdminId(request));
 //			List<SolrEdcVO> emassList = solrVo.getEmass();
 //		emassList.sort(new Comparator<SolrEdcVO>() {
 //			@Override
@@ -58,13 +60,20 @@ public class OwlnestController {
 		return new XcnResponseVO(XcnRspCode.OK, solrVo, solrVo.getNumFound());
 	}
 
-	private SolrEdcMessageVO getSolrEdcMessage(String msgid, String adminId) throws Exception {
+	private SolrEdcMessageVO getSolrEdcMessage(String msgid,boolean subjectIsEmpty, String adminId) throws Exception {
 
 		SolrQuery sq = new SolrQuery();
 		sq.setStart(0);
 		sq.setRows(100);
 		sq.setMoreLikeThis(true);
-		sq.setMoreLikeThisFields("subject","body_snippet");
+		sq.setMoreLikeThisFields("body_snippet");
+		sq.setQuery("");
+		if(!subjectIsEmpty)sq.addMoreLikeThisField("subject");
+		else {
+			sq.addMoreLikeThisField("host");
+			sq.addMoreLikeThisField("path");
+		}
+
 		sq.setSort("_score", SolrQuery.ORDER.desc);
 		sq.setParam("id",msgid);
 

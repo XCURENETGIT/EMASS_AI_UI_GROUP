@@ -592,7 +592,7 @@ classes should alter those!
 } */
 
 .slick-row.odd {
-	border-bottom: 1px solid #ddd;
+	/*border-bottom: 1px solid #ddd;*/
 }
 
 .slick-row.even {

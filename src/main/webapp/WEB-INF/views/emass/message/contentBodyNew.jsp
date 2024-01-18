@@ -209,7 +209,9 @@
 				var d = new Date();
 				d.setDate(d.getDate() - 1);
 				var targetDate = d.format('yyyymmdd');
-				fnOpenWindow('<c:url value="/ems/recommend.do" />?msgId='+msgId+'&targetDate='+targetDate, 'recommend', 1300, 800, 'fix');
+				var subjectIsEmpty = false;
+				if($('#subjectIsEmpty').length > 0) subjectIsEmpty = true;
+				fnOpenWindow('<c:url value="/ems/recommend.do" />?msgId='+msgId+'&targetDate='+targetDate+'&subjectIsEmpty='+subjectIsEmpty, 'recommend', 1300, 800, 'fix');
 			});
 
 			$(document).on('click', '#nologUrlBtn', function(){

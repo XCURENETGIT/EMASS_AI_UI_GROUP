@@ -1039,7 +1039,14 @@ function setMessage(msg) {
 	srcip = nvl(msg.srcIp);
 	dstip = nvl(msg.dstIp);
 	usrip = nvl(msg.usrIp);
+
+
 	$('#subject').html(msg.subject);
+	/* 문서 원문에 제목이 없을 경우 */
+	if(msg.subjectIsEmpty){
+		var html = '<div id="subjectIsEmpty" type="hidden"></div>';
+		$('#subject').append(html);
+	}
 
 
 	/* 수신 */

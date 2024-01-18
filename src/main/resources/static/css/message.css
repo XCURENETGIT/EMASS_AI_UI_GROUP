@@ -30,7 +30,6 @@
 	bottom: 0px;
 	left: 0;
 	float: none;
-
 	width: 300px;
 	border-right: 1px solid #B4B4B4;
 	overflow: hidden;
@@ -891,7 +890,5 @@ input[type=file]::file-selector-button {
 	color: #fff;
 }
 input[type=file]::file-selector-button:hover { background-color: #1C64D3;}
-
-
 
 

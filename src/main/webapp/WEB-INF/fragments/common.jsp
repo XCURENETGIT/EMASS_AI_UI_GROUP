@@ -916,7 +916,7 @@
 
 	function probPercent(val) {
 		if (val == undefined || val == null || val == -1.0) return '-';
-		return Math.floor(val * 100);
+		return Math.floor(parseInt(val) * 100);
 	}
 
 	function saveNoLogUrlData() {

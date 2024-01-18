@@ -99,6 +99,10 @@ public class EmsMessageVO {
 	private String epmsgType;
 	private EmassKeywordData keywordInfo;
 	private String header;
+	
+	
+	/*오리지널 제목 존재 여부*/
+	private boolean subjectIsEmpty;
 
 
 	public void setSvc(String svc) {

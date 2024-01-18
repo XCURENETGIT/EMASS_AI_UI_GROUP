@@ -147,6 +147,8 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 			log.info("[Message Not Found] msgid:{}", msgId);
 			return null;
 		} else {
+			emsMessageVO.setSubjectIsEmpty(false);
+
 			// 예약어
 			if (Common.isEquals(emsMessageVO.getKwd(), "Y")) {
 				List<EmsKeywordVO> emsKeywordVOList = this.getEmassKeyword(msgId);
@@ -167,6 +169,11 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 						else emsMessageVO.setBodyStr(emsMessageVO.getBodyStr() + ", " + keyword);
 					}
 				}
+			}
+
+			/* 제목이 공백인지 확인*/
+			if(("").equals(emsMessageVO.getSubject())){
+				emsMessageVO.setSubjectIsEmpty(true);
 			}
 			emsMessageVO.setSubject(EmsReDefined.reSubject(emsMessageVO));
 

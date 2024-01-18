@@ -337,7 +337,7 @@
 
         .filterHeaderDiv{
             position: absolute;
-            top: 120px;
+            top: 64px;
             background-color: #fff;
             z-index: 999;
             left: 305px;
@@ -2522,8 +2522,8 @@
                         <div class="rightGroup"><span class="regexSearchCloseBtn">&times;</span></div>
                     </div>
                     <div style="padding: 5px 5px 5px 10px;">
-                        <input  type="text" placeholder="<s:message code="searchKeyword.search"/>" id="regexSearchStr" style="width:calc(100% - 150px);">
-                        <button class="search_btn" id="regexSearchStrBtn"><span><s:message code="common.search"/></span></button>
+                        <input  type="text" placeholder="<s:message code="searchKeyword.search"/>" id="regexSearchStr" style="width:calc(100% - 150px);"/>
+                        <button class="form_btn01" id="regexSearchStrBtn"><span><s:message code="common.search"/></span></button>
                     </div>
                     <div id="regexSearchGrid" class="slickGrid gridArea"></div>
                 </div>
@@ -2560,7 +2560,7 @@
                         <div id="search_top_area" style="height: calc(100% - 100px);min-width:299px; margin-top:-10px;">
 
                             <div class="condition_save">
-                                <a href="javascript:;" class="resetCondition" style="float:left;padding-left:2px;"><i class="fa fa-refresh"></i> <s:message code="condition.reset1"/></a>
+                                <a href="javascript:;" class="resetCondition" style="float:left;padding-left:15px;"><i class="fa fa-refresh"></i> <s:message code="condition.reset1"/></a>
                                 <a href="javascript:;" class="showFilterBtn"><i class="fa fa-folder-open-o"></i> <s:message code="filterInfo.box"/></a>
                                 <span class="filterIcon hide" data-id="" ><i class="fa fa-filter" aria-hidden="true"></i></span>
                                 <a href="javascript:;" class="saveCondition" style="padding-right:15px;"><i class="fa fa-floppy-o" aria-hidden="true"></i> <s:message code="condition.save"/></a>

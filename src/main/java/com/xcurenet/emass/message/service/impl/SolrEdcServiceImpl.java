@@ -107,6 +107,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		return new SearchHistoryGroupVO(hits);
 	}
 
+	/* util_getList */
 	@Override
 	public SearchHits<SolrEdcVO> getList(SolrQuery sq) throws SolrServerException, IOException {
 		String bodysnippet = "N";
@@ -166,8 +167,9 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		/* 유사 문서 쿼리 설정 moreLikeThis */
 		BoolQueryBuilder recommendQuery = QueryBuilders.boolQuery();
 		if(!Common.isEmpty(sq.getMoreLikeThisFields()) && !Common.isEmpty(sq.get("id"))){
-			recommendQuery.should(QueryBuilders.moreLikeThisQuery(sq.getMoreLikeThisFields(), null, new MoreLikeThisQueryBuilder.Item[]{new MoreLikeThisQueryBuilder.Item(("edc_").concat(sq.get("id").substring(0, 6)), sq.get("id"))}).minTermFreq(1).minDocFreq(0).maxQueryTerms(20).minimumShouldMatch("0%"));
-			complateQuery.should(recommendQuery);
+			recommendQuery.should(QueryBuilders.moreLikeThisQuery(sq.getMoreLikeThisFields(), null, new MoreLikeThisQueryBuilder.Item[]{new MoreLikeThisQueryBuilder.Item(null, sq.get("id"))}).minTermFreq(1).minDocFreq(0).maxQueryTerms(20));
+			complateQuery.should(recommendQuery).minimumShouldMatch("0<-3%");
+
 		}
 		complateQuery.should(queryBuilder);
 
