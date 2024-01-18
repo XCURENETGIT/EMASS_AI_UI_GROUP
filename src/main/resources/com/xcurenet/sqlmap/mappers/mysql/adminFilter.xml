@@ -8,18 +8,18 @@
 		SELECT 	FILTER_SEQ AS id, '' AS adminId, P_FILTER_SEQ AS pId, FILTER_NM AS name, FILTER_TYPE AS filterType, FILTER_ORDER AS filterOrder, 
 				USER_DT_CD AS userDtCd, START_DT AS startDt, END_DT AS endDt, CONDITIONS AS conditions, 'true' AS open, 'false' AS drag, null AS dashboard,
 				CASE FILTER_TYPE 
-				WHEN 'R' THEN CONCAT(#{contextPath}, '/resources/img/ztree/8.png')
-				WHEN 'U' THEN CONCAT(#{contextPath}, '/resources/img/ztree/mouse_right.png')
-				WHEN 'D' THEN CONCAT(#{contextPath}, '/resources/img/ztree/filter.png')
-				WHEN 'Q' THEN CONCAT(#{contextPath}, '/resources/img/ztree/query.png')
+				WHEN 'R' THEN CONCAT(#{contextPath}, '/img/ztree/8.png')
+				WHEN 'U' THEN CONCAT(#{contextPath}, '/img/ztree/mouse_right.png')
+				WHEN 'D' THEN CONCAT(#{contextPath}, '/img/ztree/filter.png')
+				WHEN 'Q' THEN CONCAT(#{contextPath}, '/img/ztree/query.png')
 				END AS icon
 		FROM 	UI_FILTER
 		UNION ALL
 		SELECT 	FILTER_SEQ AS id, A.ADMIN_ID AS adminId, P_FILTER_SEQ AS pId, FILTER_NM AS name, FILTER_TYPE AS filterType, FILTER_ORDER AS filterOrder, 
 				USER_DT_CD AS userDtCd, START_DT AS startDt, END_DT AS endDt, CONDITIONS AS conditions, IFNULL(FILTER_OPEN, 'false') AS open, 'true' AS drag, B.DASH_KEY AS dashboard,
 				CASE FILTER_TYPE
-				WHEN 'D' THEN CONCAT(#{contextPath}, '/resources/img/ztree/filter.png')
-				WHEN 'Q' THEN CONCAT(#{contextPath}, '/resources/img/ztree/query.png')
+				WHEN 'D' THEN CONCAT(#{contextPath}, '/img/ztree/filter.png')
+				WHEN 'Q' THEN CONCAT(#{contextPath}, '/img/ztree/query.png')
 				WHEN 'F' THEN ''
 				END AS icon
 		FROM 	UI_FILTER_ADMIN A LEFT JOIN UI_DASHBOARD_ADMIN B ON A.FILTER_SEQ = B.DASH_VAL

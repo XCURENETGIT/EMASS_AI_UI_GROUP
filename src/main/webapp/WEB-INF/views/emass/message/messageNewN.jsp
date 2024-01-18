@@ -409,6 +409,7 @@
         }
         .searchBoxSpan label{
             cursor:pointer;
+            margin-bottom: 5px;
         }
 
 
@@ -2478,15 +2479,17 @@
                 <%-- 검색어 관리 --%>
                 <div id="searchKeywordDiv" class="searchKeywordDiv">
                     <div class="searchKeywordTab"><s:message code="searchKeyword.management"/>
-                        <div class="rightGroup"><span class="searchKeywordCloseBtn">&times;</span></div>
+                        <div class="searchKeywordCloseBtn" style="position:absolute;top:12px; right:8px;">
+                            <span class="glyphicon glyphicon-remove" style="cursor:pointer;font-size:13px;" aria-hidden="true"></span>
+                        </div>
                     </div>
                     <div class="searchKeywordSearch" style="padding: 5px 5px 5px 10px; margin-bottom:8px;">
-                        <input class="condition_input_text" type="text" name="serch" placeholder="<s:message code="searchKeyword.search"/>" id="searchKeywordSearchStr" style="width:calc(100% - 150px);">
-                        <button class="search_btn" id="searchKeywordSearchBtn"><span><s:message code="common.search"/></span></button>
-                        <button class="btn01" id="addSearchKeywordBtn"><span><s:message code="common.msg.add"/></span></button>
-                        <button class="btn02"  id="delSearchKeywordBtn"><span><s:message code="common.msg.delete"/></span></button>
+                        <input class="condition_input_text" type="text" name="serch" placeholder="<s:message code="searchKeyword.search"/>" id="searchKeywordSearchStr" style="width:calc(90% - 150px);">
+                        <button class="form_btn01" id="searchKeywordSearchBtn"><span><s:message code="common.search"/></span></button>
+                        <button class="btn01" id="addSearchKeywordBtn"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="<s:message code="common.msg.add"/>"><span><s:message code="common.msg.add"/></span></button>
+                        <button class="btn02"  id="delSearchKeywordBtn"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="<s:message code="common.msg.delete"/>"><span><s:message code="common.msg.delete"/></span></button>
                     </div>
-                    <div style="padding-left: 10px;">
+                    <div style="padding-left: 10px;padding-bottom: 10px;">
                         <span style="font-weight: bold; display: inline-block; margin-right: 10px;"><i class="fa fa-caret-right"></i> <s:message code="searchKeyword.inputMode"/></span>
                         <label class="searchKeywordInputType"><input type="radio" name="searchKeywordInputType" value="S" checked="checked"> <span><s:message code="searchKeyword.single"/></span></label>
                         <label class="searchKeywordInputType"><input type="radio" name="searchKeywordInputType" value="A"> <span>AND</span></label>
@@ -2498,9 +2501,12 @@
                 <%-- 연관 검색어 리스트 --%>
                 <div id="relationKeywordDiv" class="relationKeywordDiv">
                     <div class="searchKeywordTab"><s:message code="condition.relationKeyword"/>
-                        <div class="rightGroup"><span class="relationKeywordCloseBtn">&times;</span></div>
+                        <div class="relationKeywordCloseBtn" style="position:absolute;top:12px; right:8px;">
+                            <span class="glyphicon glyphicon-remove" style="cursor:pointer;font-size:13px;" aria-hidden="true"></span>
+                        </div>
+
                     </div>
-                    <div style="padding-left: 10px;">
+                    <div style="padding-left: 10px; padding-top:10px;padding-bottom: 10px;">
                         <span style="font-weight: bold; display: inline-block; margin-right: 10px;"><i class="fa fa-caret-right"></i> <s:message code="searchKeyword.inputMode"/></span>
                         <label class="relationKeywordInputType"><input type="radio" name="relationKeywordInputType" value="S" checked="checked"> <span><s:message code="searchKeyword.single"/></span></label>
                         <label class="relationKeywordInputType"><input type="radio" name="relationKeywordInputType" value="A"> <span>AND</span></label>
@@ -2526,7 +2532,7 @@
                 <%-- 조건 보관함 --%>
                 <div id="filterHeaderDiv" class="filterHeaderDiv">
                     <div class="filterHeaderTab"><s:message code="common.msg.conditionBox"/>
-                        <div class="filterDateCloseBtn" style="position:absolute;top:10px; right:16px;">
+                        <div class="filterDateCloseBtn" style="position:absolute;top:12px; right:16px;">
                             <span class="glyphicon glyphicon-remove" style="cursor:pointer;" aria-hidden="true"></span>
                         </div>
                     </div>
@@ -2554,20 +2560,21 @@
                         <div id="search_top_area" style="height: calc(100% - 100px);min-width:299px; margin-top:-10px;">
 
                             <div class="condition_save">
-                                <a href="javascript:;" class="resetCondition" style="float:left;padding-left:15px;"><i class="fa fa-refresh"></i> <s:message code="condition.reset1"/></a>
+                                <a href="javascript:;" class="resetCondition" style="float:left;padding-left:2px;"><i class="fa fa-refresh"></i> <s:message code="condition.reset1"/></a>
                                 <a href="javascript:;" class="showFilterBtn"><i class="fa fa-folder-open-o"></i> <s:message code="filterInfo.box"/></a>
                                 <span class="filterIcon hide" data-id="" ><i class="fa fa-filter" aria-hidden="true"></i></span>
-                                <a href="javascript:;" class="saveCondition" style="padding-right:15px;"><i class="fa fa-floppy-o"></i> <s:message code="condition.save"/></a>
+                                <a href="javascript:;" class="saveCondition" style="padding-right:15px;"><i class="fa fa-floppy-o" aria-hidden="true"></i> <s:message code="condition.save"/></a>
                             </div>
                             <div id="condition_detail" class="section_condition scrollbar-inner" style="margin-top:-10px;">
 
                                 <%-- 연관 검색어 표기--%>
-                                <div style="margin-top:10px;widht:100%;height:8px;">
+                                <div class="condition_opt" style="margin-top:10px;widht:100%;height:8px;">
                                     <label style="float: left; padding-left: 14px; cursor: pointer">
                                         <input class="relationKeywordBtn" type="checkbox"/>
                                         <span><s:message code="condition.relationKeyword.view"/></span>
                                     </label>
-                                    <div  style="float: right; padding-right: 22px;">
+
+                                    <div  style="float: right;padding-right: 4px;margin-top:0px;">
                                         <a href="javascript:;" class="showSearchKeywordBtn" style="color:#111;"><i class="fa fa-cog"></i> <s:message code="searchKeyword.management"/></a>
                                     </div>
                                 </div>
@@ -2907,9 +2914,9 @@
                                     <div class="condition_divider"></div>
 
                                     <%-- 정규 표현식 검색 --%>
-                                    <div style="margin-top:12px;margin-bottom:6px;widht:100%;height:8px;">
-                                        <div  style="float: right; padding-right: 22px;">
-                                            <a href="javascript:;" class="regexSearchBtn"><i class="fa fa-cog"></i> <s:message code="condition.regex.appo"/></a>
+                                    <div class="condition_opt"  style="margin-top:12px;margin-bottom:6px;widht:100%;height:8px;">
+                                        <div  style="float: right;padding-right: 4px;margin-top:6px;">
+                                            <a href="javascript:;" class="regexSearchBtn"  style="color:#111;"><i class="fa fa-cog"></i> <s:message code="condition.regex.appo"/></a>
                                         </div>
                                     </div>
                                     <div class="condition_item">
@@ -3039,7 +3046,7 @@
                                     <div class="condition_divider"></div>
                                     <div class="condition_item">
                                         <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="condition.size"/>
-                                            <img style="cursor:help; width: 16px;margin-bottom: 3px;" src="<c:url value="/img/icon/icon_help.png"/>" class="areaBtn" title="<s:message code="filterInfo.unit"/> : KByte">
+                                            <img style="cursor:help; width: 16px;margin-bottom: 2px;" src="<c:url value="/img/icon/icon_help.png"/>" class="areaBtn" title="<s:message code="filterInfo.unit"/> : KByte">
                                         </div>
                                         <div class="condition_sub_title">
                                             <label class="condition_label"><input type="radio" name="sizeType" value="" checked="checked"> <span><s:message code="common.msg.all"/></span></label>
@@ -3066,8 +3073,13 @@
                                 <div class="condition_top">▲</div>
 
                                 <div class="searchButtonArea p12" style="position: relative;">
-                                    <div class="text-right">
-                                        <input type="checkbox" name="researchCheckbox" id="researchCheckbox" disabled><label><s:message code="condition.research1"/></label>
+                                    <div class="condition_item">
+                                        <div style="float: right;margin-bottom: 4px;" >
+                                            <label>
+                                                <input type="checkbox" name="researchCheckbox" id="researchCheckbox" style="margin-right: 2px;" disabled/>
+                                                <span><s:message code="condition.research1"/></span>
+                                            </label>
+                                        </div>
                                     </div>
                                     <button class="fullbtn" id="searchBtn"><span><s:message code="common.search1"/></span></button>
                                 </div>

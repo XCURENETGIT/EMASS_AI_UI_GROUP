@@ -78,6 +78,7 @@
 <script type="text/javascript" src="<c:url value="/js/hotkey.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/ipaddr.min.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/ipv6Check.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/filter.js"/>"></script>
 
 
 <style>

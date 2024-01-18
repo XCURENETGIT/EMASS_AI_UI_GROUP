@@ -7,13 +7,13 @@
 	<select id="getAdminFolderList" resultType="adminFolderVO" parameterType="hashmap">
 		SELECT	'0' AS id, '' AS adminId, '-1' AS pId, #{headerName} AS name, null AS msgCnt, 'U' AS folderType, 
 				0 AS folderOrder, 'true' AS open,
-				CONCAT(#{contextPath}, '/resources/img/ztree/mouse_right.png') AS icon
+				CONCAT(#{contextPath}, '/img/ztree/mouse_right.png') AS icon
  		UNION ALL
  		SELECT 	A.FOLDER_SEQ AS id, A.ADMIN_ID AS adminId, A.P_FOLDER_SEQ AS pId, A.FOLDER_NM AS name, B.CNT AS msgCnt,
 				A.FOLDER_TYPE AS folderType, A.FOLDER_ORDER AS folderOrder, A.FOLDER_OPEN AS open,
 				CASE
-				WHEN FOLDER_TYPE='D' AND B.CNT > 0 THEN CONCAT(#{contextPath}, '/resources/img/ztree/msgFolder.png')
-				WHEN FOLDER_TYPE='D' THEN CONCAT(#{contextPath}, '/resources/img/ztree/msgFolder_empty.png')
+				WHEN FOLDER_TYPE='D' AND B.CNT > 0 THEN CONCAT(#{contextPath}, '/img/ztree/msgFolder.png')
+				WHEN FOLDER_TYPE='D' THEN CONCAT(#{contextPath}, '/img/ztree/msgFolder_empty.png')
 				WHEN FOLDER_TYPE='F' THEN ''
 				END AS icon
  		FROM 	UI_FOLDER_ADMIN A LEFT JOIN 

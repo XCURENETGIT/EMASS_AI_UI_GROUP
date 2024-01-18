@@ -1,3 +1,4 @@
+
 .msg_container{
 	position: absolute;
 	top: 5px;
@@ -220,7 +221,7 @@ input[type="text"] {
 	background-color: #253f56;
 	color: white;
 	font-weight: bold;
-	font-size: 14px;
+	font-size: 13px;
 	border: 0px;
 	line-height: 19px;
 }
@@ -477,9 +478,14 @@ input[type="text"] {
 	font-weight: bold;
 	line-height: 18px !important;
 }
+
+.condition_title > img{
+	vertical-align:middle;
+}
+
 .condition_sub_title {
 	line-height: 20px !important;
-	padding-left: 0px;
+	padding-left: 15px;
 	font-weight: normal;
 	clear:both;
 }
@@ -515,7 +521,7 @@ input[type="text"] {
 }
 .condition_save a{
 	float:right;
-	/*padding-right:15px; */
+	padding-right:12px;
 	color:#333;
 	cursor: pointer;
 	font-size: 12px;
@@ -539,6 +545,25 @@ input[type="text"] {
 .condition_not label{
 	margin-bottom:0;
 }
+
+.condition_opt{
+	padding-right:23px;
+}
+
+.condition_opt span {
+	position: relative;
+	top: -2px;
+	font-weight: normal;
+}
+.condition_opt input{
+	margin-top:0;
+}
+.condition_opt label{
+	margin-bottom:0;
+}
+
+
+
 .condition_divider{
 	height: 1px;
 	border-top: 1px solid #eee;
@@ -833,7 +858,7 @@ table {
 
 a:active {}
 a:hover {color:#ddd;}
-input[type=text], input[type=password], input[type=search], textarea {font-size:12px;height:26px;line-height: 26px;border: 1px solid #CCC;background: #FFF;padding: 0 4px;align-items: center;}
+input[type=text], input[type=password], input[type=search] {font-size:12px;height:26px;line-height: 26px;border: 1px solid #CCC;padding: 0 4px;align-items: center;}
 /*input:disabled{ background-color:#eee; border: 1px solid #CCC;}*/
 input[type="text"].error,select.error{border:1px solid #FC5656; color:#FC5656; background-color:#fff;}
 select:disabled { background-color:#ddd; border: 1px solid #aaa;}
