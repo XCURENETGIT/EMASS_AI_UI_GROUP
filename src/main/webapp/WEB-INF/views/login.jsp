@@ -18,7 +18,6 @@
 		} catch (Exception e){
 		}
 		String locale = Config.getString("default.lang");
-		System.out.println(locale+"Dfsadfa");
 	%>
 
 
@@ -261,7 +260,7 @@
                 if( data.menuKey != undefined && data.menuKey != ''){
                     document.location.href = '<c:url value="/ems/dashboard.do?menuKey="/>'+data.menuKey;
                 }else{
-                    document.location.href = '<c:url value="/ems/index.do"/>';
+                    document.location.href = '<c:url value="/ems/dashboard.do"/>';
                 }
             }, 3000);
         }
@@ -290,36 +289,29 @@
 
         let timeOut=true;
 
-
-
         function sendMail(){
             var userIdInput = $('#userIdInput').val().ltrim().rtrim();
-            var msg='<s:message code="login.mail.notyet"/>';
-            var msg2='<s:message code="login.mail.confirmlast"/>';
 
             if(timeOut!=true){
-                alert(msg);
+                alert("아직 유효 메일이 남아있습니다");
             }
             else {
-                var msg3 = '<s:message code="login.MAILNOCHECK.access"/>';
-                var msg4 = '<s:message code="login.fial.access"/>';
+                confirmTimeOut();
+                // 버튼 텍스트 변경
+                $('#confirmBtn').text('확인하기');
+                $('#confirmBtn').attr('onclick', 'confirmNumber()');
 
                 ui.get({
                     url: 'mailSend.xcn',
                     userId: rsa.encrypt(userIdInput),
                     success: function (data) {
-                        /* alert("인증코드 발송");*/
-                        confirmTimeOut();
-                        // 버튼 텍스트 변경
-                        $('#confirmBtn').text(msg2);
-                        $('#confirmBtn').attr('onclick', 'confirmNumber()');
-
+                       /* alert("인증코드 발송");*/
                     },
                     error: function (request,status,error,data) {
                         if (error=='MAILNOCHECK') {
-                            alert(msg3);
+                            alert("메일서버가 비활성화 상태 입니다. 관리자에게 문의하시길 바랍니다");
                         } else {
-                            alert(msg4);
+                            alert("인증코드 발송에 실패하였습니다 관리자에게 문의하시길 바랍니다");
                         }
                         timeOut=true;
                         $('#unuseAdminPop').modal('hide');
@@ -330,15 +322,10 @@
 
         function confirmNumber(){
 
-            var msg = '<s:message code="login.mail.nodata"/>';
-            var msg2 = '<s:message code="login.mail.lock"/>';
-            var msg3 = '<s:message code="login.mail.authenticate"/>';
-            var msg4 = '<s:message code="login.mail.invalid"/>';
-
             var userIdInput = $('#userIdInput').val().ltrim().rtrim();
             var number1 = $("#number_confirm").val().ltrim().rtrim();
             if (!number1.trim()) {
-                alert(msg);
+                alert("입력 후 확인을 눌러주세요.");
                 return;
             }
 
@@ -351,14 +338,14 @@
                     $("#unusePop").modal('hide');
                     $('#unusetime').css("display", "none");
                     $('#number').val('');
-                    alert(msg2);
+                    alert("잠금이 해제되었습니다. 다시 로그인하세요");
                     $('#confirmBtn').attr('class', 'form_btn01_02');
                     $('#confirmBtn').attr('onclick', 'sendMail()');
                     $('#number_confirm').html('');
-                    $('#confirmBtn').text(msg4);
+                    $('#confirmBtn').text('인증하기');
                 },
                 error: function (data,message){
-                    alert(msg3);
+                    alert("코드 입력이 잘못되었습니다");
                 }
             });
         }
@@ -367,7 +354,6 @@
             timeOut = false;
             var t = (90000 / 1000) - 1;
             var numberConfirmInput = document.getElementById('number_confirm');
-            var msg3 = '<s:message code="login.mail.authenticate"/>';
 
             // 부모 요소에 div 추가
             var displayText = document.createElement('div');
@@ -400,7 +386,7 @@
                         $('#confirmBtn').attr('class', 'form_btn01_02');
                         $('#confirmBtn').attr('onclick', 'sendMail()');
                         $('#number_confirm').html('');
-                        $('#confirmBtn').text(msg3);
+                        $('#confirmBtn').text('인증하기');
                     }
                 });
             }, 90000);
@@ -436,20 +422,20 @@
      data-backdrop="static">
 	<div class="modal-content">
 		<div class="modalHead">
-			<h2><s:message code="login.mail.unuse"/></h2>
+			<h2>운용자 계정 잠금</h2>
 			<span class="close" data-dismiss="modal">&times;</span>
 		</div>
 		<div class="modalCon">
 			<div class="modalbody">
-				<h4 class="blue02" style="font-weight: 600;"> <s:message code="login.mail.confirm"/></h4>
+				<h4 class="blue02" style="font-weight: 600;"> 이메일 인증</h4>
 
 				<div class="row pt8">
 					<input type="text" name="number" id="number_confirm" style="width:250px; margin-top: -10px; position: relative;"
-					       placeholder="<s:message code="login.mail.code"/>">
-					<button type="button" class="form_btn01_02" name="confirmBtn" id="confirmBtn" onclick="sendMail()"><s:message code="login.mail.send"/></button>
+					       placeholder="인증코드 입력">
+					<button type="button" class="form_btn01_02" name="confirmBtn" id="confirmBtn" onclick="sendMail()">메일 보내기</button>
 					<%--<span id="unusetime"></span>--%>
 				</div>
-				<div style="font-size: 13px;"><s:message code="login.mail.info"/></div>
+				<div style="font-size: 13px;">메일은 가입 시 작성하셨던 주소로 전송됩니다. 인증코드는 90초간 유효합니다.</div>
 			</div>
 		</div>
 	</div>
@@ -559,7 +545,7 @@
 					<input class="mat12" type="password" placeholder="Password" id="userPwInput" autocomplete="off" required>
 				</div>
 				<div>
-					<button id="loginBtn" type="button"><s:message code="auditLog.oper.LOGIN"/></button>
+					<button id="loginBtn" type="button">로그인</button>
 				</div>
 			</div>
 			<div id="login_switch">
@@ -574,7 +560,33 @@
 	</div>
 
 </div>
+<!-- OLD
+<div id="login">
+	<div class="logo">
+		<img src="<c:url value="/img/logo_login.png"/>" alt="EmassPro" class="emass">
+	</div>
+	<div id="loginWrap">
 
+		<form method="post">
+			<div class="imgcontainer">
+				<img src="<c:url value="/img/logo_emass.png"/>" alt="EmassPro" class="emass">
+			</div>
+
+			<div class="container">
+				<input type="text" placeholder="ID" id="userIdInput" required>
+				<input type="password" placeholder="Password" id="userPwInput" autocomplete="off" required>
+				<button id="loginBtn" type="button">로그인</button>
+				<label>
+					<input type="checkbox" checked="checked" id="saveLoginId" class="checkbox_align">
+						<%= Common.isEquals(locale, "ko") ? "로그인 ID 저장" : "Save Login ID" %>
+			</div>
+		</form>
+
+	</div>
+	<div id="loginText">
+		<h3>Enterprise MessAge Scanning System</h3>
+	</div>
+</div>-->
 
 <style>
 	/* The switch - the box around the slider */

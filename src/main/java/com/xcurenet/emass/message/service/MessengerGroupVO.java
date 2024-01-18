@@ -12,6 +12,9 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 @JsonInclude(Include.NON_NULL)
 public class MessengerGroupVO {
 	private String title;
+
+	private String userKey;
+
 	private String message;
 	private long user_cnt;
 	private long msg_cnt;

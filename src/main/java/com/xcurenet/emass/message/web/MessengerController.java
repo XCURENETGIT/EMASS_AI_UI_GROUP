@@ -160,8 +160,84 @@ public class MessengerController {
 		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id","userid");
 
 		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request));
-		return new XcnResponseVO(XcnRspCode.OK, solrEdcGroupVO, solrEdcGroupVO.getNumFound());
+		long NumFound= solrEdcGroupVO.getNumFound();
+		solrEdcGroupVO.setGroups(setCount_temp(solrEdcGroupVO.getGroups(), Common.getAdminId(request),param));
+
+		return new XcnResponseVO(XcnRspCode.OK, solrEdcGroupVO, NumFound);
 	}
+
+	public List<MessengerGroupVO> setCount_temp(List<MessengerGroupVO> groups, String adminId, JSONObject param) throws IOException, SolrServerException {
+		List<String> xrootmtrs = new ArrayList<>();
+		for (MessengerGroupVO group : groups) {
+			xrootmtrs.add("\"" + group.getXrootmtr() + "\"");
+		}
+		if (xrootmtrs.size() == 0) return groups;
+
+		//* 임시 주석*//*
+		Map<String, Long> unReadCount = getUnReadCount_temp(xrootmtrs, adminId,param);
+
+		for (MessengerGroupVO group : groups) {
+			group.setUnread_cnt(Common.nvn(unReadCount.get(group.getXrootmtr())));
+		}
+		return groups;
+	}
+
+	private Map<String, Long> getUnReadCount_temp(List<String> xrootmtrs, String adminId, JSONObject param) throws IOException, SolrServerException {
+
+		SolrQuery sq = new SolrQuery();
+		String query="";
+
+		if (!xrootmtrs.isEmpty()) {
+			query +=" +xrootmtr:((";
+
+			for (int i = 0; i < xrootmtrs.size(); i++) {
+				if (i > 0) {
+					query+=") (";
+				}
+				query+=xrootmtrs.get(i);
+			}
+
+			query+="))";
+		}
+
+		query += String.format("+ctime:[%s TO %s] ",
+				Common.nvl(param.get("startTotalDate"), "defaultStartDate"),
+				Common.nvl(param.get("endTotalDate"), "defaultEndDate")
+		);
+
+		sq.setQuery(query +MESSENGER);
+		sq.addFilterQuery(String.format(SolrEdcServiceImpl.JOIN_UNREAD, adminId));
+
+		sq.setParam("group", true);
+		sq.setParam("group.facet", true);
+		sq.setParam("group.ngroups", true);
+		sq.setParam("facet.detail", true);
+		sq.setParam("facet.list", false);
+		sq.setParam("group.field", "xrootmtr");
+		sq.setStart(0);
+		sq.setRows(Common.MAX_VALUE);
+		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr");
+
+		Map<String, Long> cnt = new HashMap<>();
+		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, adminId);
+		List<MessengerGroupVO> groups = solrEdcGroupVO.getGroups();
+		for (MessengerGroupVO group : groups) {
+			if (group.getReadYn().equals("N")) {
+				int cnt2 = 0;
+				if (cnt.containsKey(group.getXrootmtr())) {
+					// 이미 해당 키가 존재하는 경우, 중복 방지를 위해 값을 더하지 않고 새로운 값을 설정
+					cnt2 = cnt.get(group.getXrootmtr()).intValue() + 1;
+				} else {
+					// 해당 키가 존재하지 않는 경우, 값을 설정
+					cnt2 = 1;
+				}
+				cnt.put(group.getXrootmtr(), (long) cnt2);
+			}
+		}
+		return cnt;
+
+	}
+
 
 
 	/**

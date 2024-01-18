@@ -59,6 +59,18 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 	}
 
 	@Override
+	public String isDefaultDashboard(CustomDashboardMenuVO customDashboardMenuVO) {
+		System.out.println("custonDvo: "+customDashboardMenuVO);
+		Integer result = selectOne("com.xcurenet.sqlmap.mappers.mysql.customDashboard.isDefaultDashboard", customDashboardMenuVO);
+		if (result != null) {
+			return "true";
+			// 결과값 사용
+		} else {
+			return "false";
+		}
+//		return selectOne("com.xcurenet.sqlmap.mappers.mysql.customDashboard.isDefaultDashboard", customDashboardVo);
+	}
+	@Override
 	public int deleteDashBoardMenu(List<CustomDashboardMenuVO> customDashboardMenuVos) {
 		int result = 0;
 		TransactionManager tx = getTransactionManager();
@@ -543,6 +555,8 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 	public int checkMonitorDB() {
 		return Common.nvz(selectOne("com.xcurenet.sqlmap.mappers.mysql.menu.checkMonitoring"));
 	}
+
+
 
 	private void setAuthoritys(SolrQuery sq, String systemArch, HttpSession session) {
 		String adminId = Common.getAdminId(session);

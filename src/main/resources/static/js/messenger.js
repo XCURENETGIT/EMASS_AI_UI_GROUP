@@ -590,6 +590,10 @@ function rtnGroupList(data, type) {
         var makescv = makeMessengerText(data[i].svc);
         var rightContent = "<p><span class='logo'><img src=" + imageName + ">" + makescv + "</span></p>";
 
+        var defaultImageName = mainContext + "/img/icon/ico_sns_FUKR.png";
+        var rightContent;
+        rightContent = "<span class='logo'><img src='" + imageName + "' onerror=\"this.src='" + defaultImageName + "'\">" + makescv + "</span>";
+
 
         if (data[i].unread_cnt > 0) {
             rightContent += "<span class='new'>" + data[i].unread_cnt + "</span>";
@@ -632,12 +636,19 @@ function getMessengerGroupList(page) {
     groupMessagePage = page;
     var offset = groupMessagePage * groupMessagePageBreak - groupMessagePageBreak;
     searchFlag = true;
+
+
+    var startTotalDate=$('#startDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+    var endTotalDate=$('#endDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+
     ui.onBody('timeline_list', 0, -20);
     ui.postJson({
         url: 'getMessengerGroupList.xcn',
         data: JSON.stringify(getCondition()),
         readYn: readYn,
         offset: offset,
+        startTotalDate:startTotalDate+"00000",
+        endTotalDate:endTotalDate+"235959",
         limit: groupPageBreak,
         success: function (data, total) {
             rtnGroupList(data.groups, 'G');

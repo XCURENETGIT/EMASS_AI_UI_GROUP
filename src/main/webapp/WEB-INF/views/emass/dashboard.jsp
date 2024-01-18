@@ -212,10 +212,28 @@
     $(document).ready(function() {
         menuKey = $.urlParam('menuKey');
         console.log("dashboardKey: "+menuKey);
-        if(menuKey) dashboardInit();
-        else getDefaultMenuKey();
+        if (menuKey) isDefaultDashboard(menuKey);
+        // if(menuKey) dashboardInit();
+        // else getDefaultMenuKey();
 
-
+        function isDefaultDashboard(menuKey){
+            ui.get({
+	            menuKey:menuKey,
+                url : 'isDefaultDashboard.xcn',
+                success : function ( data, total ) {
+                    if (data === "false") {
+                        dashboardInit();
+                    } else {
+                        document.location.href = '<c:url value="/ems/dashboard.do"/>';
+                    }
+                },
+                error : function (status, message) {
+                    ui.alertMsg(message);
+                },
+                complete : function (){
+                }
+            });
+        }
 
 
 

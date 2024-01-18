@@ -54,4 +54,6 @@ public interface CustomDashBoardService {
 	public List<FileDataVO> getFileCount(HttpServletRequest request, HttpSession session) throws Exception;
 	
 	public int checkMonitorDB();
+
+	public String isDefaultDashboard(CustomDashboardMenuVO customDashboardMenuVO);
 }

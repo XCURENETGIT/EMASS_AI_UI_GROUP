@@ -11,4 +11,5 @@ public class CustomDashboardMenuVO {
 	private String useYn;
 	private String defaultMenu;
 	private String updateDt;
+	private String defaultDashboard;
 }

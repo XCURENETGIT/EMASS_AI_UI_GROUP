@@ -152,6 +152,7 @@ public class MessengerEdcGroupVO {
 		solrGroupVO.setReadYn("Y");
 		solrGroupVO.setXrootmtr(edc.getXrootmtr());
 		solrGroupVO.setUser(edc.getUser());
+		solrGroupVO.setUserKey(edc.getUserkey());
 		solrGroupVO.setSender(edc.getSender());
 		solrGroupVO.setUsr_id(edc.getUsr_id());
 		solrGroupVO.setUserid(edc.getUserid());
@@ -184,6 +185,7 @@ public class MessengerEdcGroupVO {
 		solrGroupVO.setSrcip(edc.getSrcip());
 		solrGroupVO.setName(edc.getName());
 		solrGroupVO.setUser(edc.getUser());
+		solrGroupVO.setUserKey(edc.getUserkey());
 		solrGroupVO.setSender(edc.getSender());
 		solrGroupVO.setUsr_id(edc.getUsr_id());
 		solrGroupVO.setDirection_svc(edc.getDirection_svc());

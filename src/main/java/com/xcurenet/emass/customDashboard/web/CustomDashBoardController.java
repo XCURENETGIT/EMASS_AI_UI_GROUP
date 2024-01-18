@@ -11,6 +11,7 @@ import com.xcurenet.common.util.Common;
 import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.emass.customDashboard.service.CustomDashBoardService;
+import com.xcurenet.emass.customDashboard.service.CustomDashboardMenuVO;
 import com.xcurenet.emass.customDashboard.service.CustomDashboardVO;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -109,6 +110,19 @@ public class CustomDashBoardController {
 		customDashboardVo.setAdminId(Common.getAdminId(session));
 		return new XcnResponseVO(XcnRspCode.OK, customDashBoardService.insertDashBoardDefaultData(customDashboardVo));
 	}
+
+
+	@RequestMapping(value = "/isDefaultDashboard.xcn")
+	@Description("Dashboard - 디폴트 대시보드 구분")
+	@ResponseBody
+	public XcnResponseVO isDefaultDashboard(CustomDashboardMenuVO customDashboardMenuVO, final HttpSession session,final HttpServletRequest request) throws Exception {
+		JSONObject param = Common.getParam(request);
+		customDashboardMenuVO.setAdminId(Common.getAdminId(session));
+		customDashboardMenuVO.setMenuKey(Common.nvl(request.getParameter("menuKey")));
+		return new XcnResponseVO(XcnRspCode.OK, customDashBoardService.isDefaultDashboard(customDashboardMenuVO));
+	}
+
+
 	
 	@RequestMapping(value = "/saveLoggingData.xcn")
 	@Description("Dashboard - default 셋 등록")

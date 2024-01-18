@@ -24,10 +24,16 @@
 		SELECT 	IFNULL(MAX(MENU_KEY)+1, 0) AS menuKey 
 		FROM 	UI_CUSTOM_DASHBOARD_MENU
 	</select>
+
+	<select id="isDefaultDashboard" resultType="int">
+		SELECT MENU_KEY
+		FROM UI_CUSTOM_DASHBOARD_MENU
+		WHERE MENU_KEY = #{menuKey} AND DEFAULT_DASHBOARD = 'Y';
+	</select>
 	
 	<insert id="saveDashBoardMenu" parameterType="customDashboardMenuVO">
-		REPLACE INTO UI_CUSTOM_DASHBOARD_MENU (MENU_KEY, MENU_NAME, MENU_ICON, ADMIN_ID, USEYN, DEFAULT_MENU, UPDATE_DT) 
-		VALUES (${menuKey}, #{menuName}, #{menuIcon}, #{adminId}, #{useYn}, #{defaultMenu}, NOW())
+		REPLACE INTO UI_CUSTOM_DASHBOARD_MENU (MENU_KEY, MENU_NAME, MENU_ICON, ADMIN_ID, USEYN, DEFAULT_MENU, UPDATE_DT,DEFAULT_DASHBOARD)
+		VALUES (${menuKey}, #{menuName}, #{menuIcon}, #{adminId}, #{useYn}, #{defaultMenu}, NOW(),#{defaultDashboard})
 	</insert>
 	
 	<update id="changeDashBoardDefaultMenu" parameterType="customDashboardMenuVO">

@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.xcurenet.emass.customDashboard.service.CustomDashboardVO;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
@@ -42,10 +43,12 @@ public class CustomDashBoardMenuController {
 	public String dashboard(final CustomDashboardMenuVO customDashboardMenuVo, final HttpSession session) {
 		customDashboardMenuVo.setAdminId(Common.getAdminId(session));
 		List<CustomDashboardMenuVO> result = customDashBoardService.getDashBoardMenuList(customDashboardMenuVo);
-
 		if(CollectionUtils.isNotEmpty(result)) {
-			if (Common.isEquals("0", result.get(0).getMenuKey())) return "/emass/dashboard_default";
-			else return "/emass/dashboard";
+			if (Common.isEquals(customDashBoardService.isDefaultDashboard(customDashboardMenuVo),"true")){ //디폴트 일때
+				return "/emass/dashboard_default";
+			}else{ //디폴트 아닐때
+				return "/emass/dashboard";
+			}
 		}
 		else {
 			return "/error/403";
