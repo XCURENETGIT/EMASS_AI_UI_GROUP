@@ -594,9 +594,9 @@ function filediv(data) {
 
         fileStr +=  '<p class="attach_'+attachExt+' attach_file_img">';
         if (attachNameExist == "N") fileStr += '<a href="#">'+filelist.noname +'</a>';
-       else{ fileStr += '<a href="#"  style="text-decoration: underline;" attachname="' + attachName + '">';
+        else{ fileStr += '<a href="#"  style="text-decoration: underline;" attachname="' + attachName + '">';
             fileStr += '' + attachName;
-       };
+        };
         fileStr+='(' + convertFileSize(file.attachSize) + ')</a></p>';
         fileStr += '<div class="btn btnform" style="padding: 0px; border: none;">';
         fileStr += '<button class="btn03 borradius downloadIcon"><img src="'+mainContext+'/img/subBtn_save.png">'+filelist.save+'</button>';
@@ -643,11 +643,11 @@ function makeList(nextFlag){
             var attachsizeArray = attachsize.split('|');
             var attachtypeArray = attachtype.split('|');
 
-                str += '<p class="filedown file_link" msgid="' + obj.msgid + '" attachhash="' + attachhashArray[0] + '">';
-                str += '<span class="img"></span>';
-                str += '<span>' + attachnameArray[0] + '.' + attachtypeArray[0] + '<br/>';
-                str += attachsizeArray[0] + 'KB</span>';
-                str += '<button class="btnchatdown downlodadBtn"></button></p>';
+            str += '<p class="filedown file_link" msgid="' + obj.msgid + '" attachhash="' + attachhashArray[0] + '">';
+            str += '<span class="img"></span>';
+            str += '<span>' + attachnameArray[0] + '.' + attachtypeArray[0] + '<br/>';
+            str += attachsizeArray[0] + 'KB</span>';
+            str += '<button class="btnchatdown downlodadBtn"></button></p>';
         }
 
         else {
@@ -1155,27 +1155,27 @@ function getCollectionMessage(userid, srcip, usr_id, msgid,type){
             detailDataSet = data.groups;
             prevDetailDataSet = data.groups;
 
-                if (data.groups.length > 0) {
-                    $('.messenger_prev').css('display', 'block');
-                    $('#totalCount').css('display', 'block');
-                }
-                if (data.groups.length == 0) {
-                    $("#timeline_list").html(noDataMsg());
-                    $('.messenger_prev').css('display', 'none');
-                    $('.messenger_next').css('display', 'none');
-                    $('#groupSubResultCnt').text(0);
-                    return;
-                }
+            if (data.groups.length > 0) {
+                $('.messenger_prev').css('display', 'block');
+                $('#totalCount').css('display', 'block');
+            }
+            if (data.groups.length == 0) {
+                $("#timeline_list").html(noDataMsg());
+                $('.messenger_prev').css('display', 'none');
+                $('.messenger_next').css('display', 'none');
+                $('#groupSubResultCnt').text(0);
+                return;
+            }
 
-                getCollectionAllfile(userid, srcip, usr_id, msgid, type);
+            getCollectionAllfile(userid, srcip, usr_id, msgid, type);
 
 
-                if (data.numFound < detailLimit)
-                    $('.messenger_next').css('display', 'none');
-                else $('.messenger_next').css('display', 'block');
+            if (data.numFound < detailLimit)
+                $('.messenger_next').css('display', 'none');
+            else $('.messenger_next').css('display', 'block');
 
-                $("#timeline_list").html(makeList(false));
-                HighlightGroup();
+            $("#timeline_list").html(makeList(false));
+            HighlightGroup();
 
 
         },
