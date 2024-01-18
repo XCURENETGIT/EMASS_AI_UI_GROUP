@@ -96,63 +96,6 @@ public class CollectionController {
 		return new XcnResponseVO(XcnRspCode.OK, emsMessageService.getFileServiceList());
 	}
 
-	@AuditOperation(Operation.SEARCH)
-	@RequestMapping(value = "/getCollectionGroupList.xcn")
-	@Description("서비스 그룹 조회")
-	@ResponseBody
-	public XcnResponseVO getCollectionGroupList(final HttpServletRequest request, final HttpSession session) throws Exception {
-
-		JSONObject param = Common.getParam(request);
-		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
-		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), Common.getAdminId(session));
-		String name = Common.nvl(request.getParameter("userStr"));
-
-		StringBuilder query = new StringBuilder();
-
-		if (Common.isEquals(param.get("readYn"), "N")) {
-			query.append(" -checked.readId:").append(Common.getAdminId(session));
-		}
-			if (!name.isEmpty()) {
-				String[] nameArray = name.split(",");
-				query.append(" +userid:((");
-
-				for (int i = 0; i < nameArray.length; i++) {
-					if (i > 0) {
-						query.append(") (");
-					}
-					query.append(nameArray[i]);
-				}
-
-				query.append("))");
-			}
-
-		sq.setQuery(sq.getQuery()+query);
-
-		sq.setParam("group", true);
-		sq.setParam("group.facet", true);
-		sq.setParam("group.ngroups", true);
-		sq.setParam("group.field", "userid");
-		sq.setParam("facet", true);
-		sq.setParam("facet.field", "userid");
-
-		/* 그룹 디테일검색 동적 들어와야 할 offset,size 값*/
-		sq.setParam("facet.offset", String.valueOf(Common.nvz(param.get("offset"), 0)));
-		sq.setParam("facet.group", String.valueOf(Common.nvz(param.get("limit"), 100)));
-		sq.setParam("facet.detail", false);
-		sq.setParam("facet.list", true);
-		sq.setParam("facet.mincount", "1");
-
-		/* 일반 문서 검색은 하지않으므로 0 (그룹검색만 하므로 ) */
-		sq.setStart(Common.nvz(request.getParameter("offset"), 0));
-		sq.setRows(Common.nvz(request.getParameter("limit"), 0));
-
-		sq.setSort("ctime", ORDER.desc);
-		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id", "userid");
-
-		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request));
-		/*	solrEdcGroupVO.setGroups(setCount_temp(solrEdcGroupVO.getGroups(), Common.getAdminId(request)));*/
-		return new XcnResponseVO(XcnRspCode.OK, solrEdcGroupVO, solrEdcGroupVO.getNumFound());
-	}
 
 	@RequestMapping(value = "/getFileMessageList.xcn")
 	@Description("파일전송 목록 조회")
@@ -194,67 +137,138 @@ public class CollectionController {
 		return new XcnResponseVO(XcnRspCode.OK, solrEdcGroupVO, solrEdcGroupVO.getNumFound());
 	}
 
+	@AuditOperation(Operation.SEARCH)
+	@RequestMapping(value = "/getCollectionGroupList.xcn")
+	@Description("서비스 그룹 조회")
+	@ResponseBody
+	public XcnResponseVO getCollectionGroupList(final HttpServletRequest request, final HttpSession session) throws Exception {
+
+		JSONObject param = Common.getParam(request);
+		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), Common.getAdminId(session));
+		String name = Common.nvl(request.getParameter("userStr"));
+
+		StringBuilder query = new StringBuilder();
+
+		if (Common.isEquals(param.get("readYn"), "N")) {
+			query.append(" -checked.readId:").append(Common.getAdminId(session));
+		}
+		if (!name.isEmpty()) {
+			String[] nameArray = name.split(",");
+			query.append(" +userid:((");
+
+			for (int i = 0; i < nameArray.length; i++) {
+				if (i > 0) {
+					query.append(") (");
+				}
+				query.append(nameArray[i]);
+			}
+
+			query.append("))");
+		}
+
+		sq.setQuery(sq.getQuery()+query);
+
+		sq.setParam("group", true);
+		sq.setParam("group.facet", true);
+		sq.setParam("group.ngroups", true);
+		sq.setParam("group.field", "userid");
+		sq.setParam("facet", true);
+		sq.setParam("facet.field", "userid");
+
+		/* 그룹 디테일검색 동적 들어와야 할 offset,size 값*/
+		sq.setParam("facet.offset", String.valueOf(Common.nvz(param.get("offset"), 0)));
+		sq.setParam("facet.group", String.valueOf(Common.nvz(param.get("limit"), 100)));
+		sq.setParam("facet.detail", false);
+		sq.setParam("facet.list", true);
+		sq.setParam("facet.mincount", "1");
+		sq.setParam("facet.sort", "DESC");
+
+		/* 일반 문서 검색은 하지않으므로 0 (그룹검색만 하므로 ) */
+		sq.setStart(Common.nvz(request.getParameter("offset"), 0));
+		sq.setRows(Common.nvz(request.getParameter("limit"), 0));
+
+		sq.setSort("ctime", ORDER.desc);
+		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id", "userid");
+
+		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request));
+		long NumFound= solrEdcGroupVO.getNumFound();
+		solrEdcGroupVO.setGroups(setCount_temp(solrEdcGroupVO.getGroups(), Common.getAdminId(request),param));
+		return new XcnResponseVO(XcnRspCode.OK, solrEdcGroupVO, NumFound);
+	}
 
 
 
-	public List<MessengerGroupVO> setCount_temp(List<MessengerGroupVO> groups, String adminId) throws IOException, SolrServerException {
+	public List<MessengerGroupVO> setCount_temp(List<MessengerGroupVO> groups, String adminId, JSONObject param) throws IOException, SolrServerException {
 		List<String> userids = new ArrayList<>();
 		for (MessengerGroupVO group : groups) {
 			userids.add("\"" + group.getUserid() + "\"");
 		}
 		if (userids.size() == 0) return groups;
 
-		/* 임시 주석*/
-		Map<String, Long> allCount = getAllCount_temp(userids);
-		Map<String, Long> unReadCount = getUnReadCount_temp(userids, adminId);
+		//* 임시 주석*//*
+		Map<String, Long> unReadCount = getUnReadCount_temp(userids, adminId,param);
 
 		for (MessengerGroupVO group : groups) {
-			group.setMsg_cnt(Common.nvn(allCount.get(group.getUserid())));
 			group.setUnread_cnt(Common.nvn(unReadCount.get(group.getUserid())));
 		}
 		return groups;
 	}
 
-	private Map<String, Long> getUnReadCount_temp(List<String> userids, String adminId) throws IOException, SolrServerException {
+	private Map<String, Long> getUnReadCount_temp(List<String> userids, String adminId, JSONObject param) throws IOException, SolrServerException {
+
 		SolrQuery sq = new SolrQuery();
-		sq.setQuery(String.format(" +userid:( %s ) %s ", makeParentheses(Common.join(userids, " ")), MESSENGER2));
-		//	sq.setQuery(sq.getQuery() + String.format(SolrEdcServiceImpl.JOIN_UNREAD, adminId)); // 추후 안읽음 쿼리 추가해야함
+		String query="";
+
+		if (!userids.isEmpty()) {
+			query +=" +userid:((";
+
+			for (int i = 0; i < userids.size(); i++) {
+				if (i > 0) {
+					query+=") (";
+				}
+				query+=userids.get(i);
+			}
+
+			query+="))";
+		}
+
+		query += String.format("+ctime:[%s TO %s] ",
+				Common.nvl(param.get("startTotalDate"), "defaultStartDate"),
+				Common.nvl(param.get("endTotalDate"), "defaultEndDate")
+		);
+
+		sq.setQuery(query  + (Common.nvl(param.get("type")).equals("N") ? MESSENGER3 : (Common.nvl(param.get("type")).equals("G") ? MESSENGER2 : (Common.nvl(param.get("type")).equals("F") ? MESSENGER4 : ""))));
+		sq.addFilterQuery(String.format(SolrEdcServiceImpl.JOIN_UNREAD, adminId));
 
 		sq.setParam("group", true);
 		sq.setParam("group.facet", true);
 		sq.setParam("group.ngroups", true);
+		sq.setParam("facet.detail", true);
+		sq.setParam("facet.list", false);
 		sq.setParam("group.field", "userid");
 		sq.setStart(0);
 		sq.setRows(Common.MAX_VALUE);
-		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "userid");
+		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr");
 
 		Map<String, Long> cnt = new HashMap<>();
 		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, adminId);
 		List<MessengerGroupVO> groups = solrEdcGroupVO.getGroups();
 		for (MessengerGroupVO group : groups) {
-			cnt.put(group.getUserid(), group.getMsg_cnt());
-		}
-		return cnt;
-	}
-
-	private Map<String, Long> getAllCount_temp(List<String> userids) throws IOException, SolrServerException {
-		SolrQuery sq = new SolrQuery();
-		sq.setQuery(String.format("+userid:( %s ) %s", makeParentheses(Common.join(userids, " ")), MESSENGER2));
-		sq.setRows(0);
-		sq.addFacetField("userid");
-		sq.setFacetLimit(-1);
-		sq.setFacetMinCount(1);
-		sq.setFacetSort("index");
-		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, null);
-
-		Map<String, Long> cnt = new HashMap<>();
-		List<FacetVO> facet = edc.getFacet();
-		if (facet != null) {
-			for (FacetVO vo : facet) {
-				cnt.put(vo.getName(), vo.getCount());
+			if (group.getReadYn().equals("N")) {
+				int cnt2 = 0;
+				if (cnt.containsKey(group.getUserid())) {
+					// 이미 해당 키가 존재하는 경우, 중복 방지를 위해 값을 더하지 않고 새로운 값을 설정
+					cnt2 = cnt.get(group.getUserid()).intValue() + 1;
+				} else {
+					// 해당 키가 존재하지 않는 경우, 값을 설정
+					cnt2 = 1;
+				}
+				cnt.put(group.getUserid(), (long) cnt2);
 			}
 		}
 		return cnt;
+
 	}
 
 

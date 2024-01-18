@@ -88,8 +88,10 @@ public class MessengerController {
 			edc.setCtime_yyyymm(datas.getJSONObject(i).getString("ctime").substring(0,7).replaceAll("-", ""));
 			edc.setCtime_yyyymmdd(datas.getJSONObject(i).getString("ctime").substring(0,10).replaceAll("-", ""));
 			emass.add(edc);
+			solrCheckedService.setRead(Common.nvl(edc.getMsgid()), Common.getAdminId(session));
 		}
-		return new XcnResponseVO(XcnRspCode.OK, setMessengerRead(emass, Common.getAdminId(session)));
+
+		return new XcnResponseVO(XcnRspCode.OK);
 
 	}
 

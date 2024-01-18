@@ -30,7 +30,7 @@ public class MessengerEdcGroupVO {
 	private final static DateTimeFormatter yyyyMMddHHmmss = DateTimeFormat.forPattern("yyyyMMddHHmmss");
 	private final static DateTimeFormatter yyyyMMddHHmmss2 = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 
-	private long numFound;
+	private static long numFound;
 
 	private long offset;
 
@@ -60,15 +60,15 @@ public class MessengerEdcGroupVO {
 		/* 집계쿼리 사용할때  */
 		if (null != elasticSearchAggregations) {
 			Aggregations mainAggregations = elasticSearchAggregations.aggregations();
-			if (null == mainAggregations ) return;
+			if (null == mainAggregations) return;
 
 			Map<String, Aggregation> mainAggsMap = mainAggregations.getAsMap();
-			Map<String,Aggregations> groupAggsMap = new HashMap<>();  // 추출할 그룹 aggs
+			Map<String, Aggregations> groupAggsMap = new HashMap<>();  // 추출할 그룹 aggs
 
 			long total = 0;
 			//메인 Aggs의 sub Aggs 추출
-			for(Map.Entry<String, Aggregation> map : mainAggsMap.entrySet()) {
-				Aggregation agg =  map.getValue();
+			for (Map.Entry<String, Aggregation> map : mainAggsMap.entrySet()) {
+				Aggregation agg = map.getValue();
 				Aggregation mainAgg = mainAggregations.get(agg.getName());
 				if (mainAgg instanceof ParsedCardinality) {
 					ParsedCardinality cardinality = mainAggregations.get(agg.getName());
@@ -84,24 +84,24 @@ public class MessengerEdcGroupVO {
 
 			// sub Aggs에서 document 추출
 			List<TopHits> topHitsList = new ArrayList<>();
-			for(Map.Entry<String, Aggregations> groupAgg : groupAggsMap.entrySet()) {
+			for (Map.Entry<String, Aggregations> groupAgg : groupAggsMap.entrySet()) {
 				Aggregations groupAggs = groupAggsMap.get(groupAgg.getKey());
 				Map<String, Aggregation> groupAggMap = groupAggs.getAsMap();
-				for (Map.Entry<String, Aggregation> gMap  : groupAggMap.entrySet()) {
-					Aggregation gAgg =  gMap.getValue();
+				for (Map.Entry<String, Aggregation> gMap : groupAggMap.entrySet()) {
+					Aggregation gAgg = gMap.getValue();
 					topHitsList.add(groupAggs.get(gAgg.getName()));
 				}
 			}
 
-			for(TopHits topHits : topHitsList){
-				org.elasticsearch.search.SearchHit[] hits  = topHits.getHits().getHits();
+			for (TopHits topHits : topHitsList) {
+				org.elasticsearch.search.SearchHit[] hits = topHits.getHits().getHits();
 				for (SearchHit hit : hits) {
 					Map<String, Object> map = hit.getSourceAsMap();
 					if (!map.isEmpty()) {
-						map.put("msgid",hit.getId());
+						map.put("msgid", hit.getId());
 						SolrEdcVO solrEdcVO = mapper.convertValue(map, SolrEdcVO.class);
-						if(detail) this.groups.add(reDefinedDetail(solrEdcVO,  adminId, original));
-						else  this.groups.add(reDefined(solrEdcVO, adminId,0L));
+						if (detail) this.groups.add(reDefinedDetail(solrEdcVO, adminId, original));
+						else this.groups.add(reDefined(solrEdcVO, adminId, 0L));
 					}
 				}
 			}
@@ -130,6 +130,8 @@ public class MessengerEdcGroupVO {
 		MessengerGroupVO solrGroupVO = new MessengerGroupVO();
 		solrGroupVO.setMsgid(edc.getMsgid());
 		solrGroupVO.setSvc(edc.getSvc());
+		solrGroupVO.setReadYn(isRead(edc.getChecked(), adminId) ? "Y" : "N");
+		solrGroupVO.setReadYn(edc.getReadYn());
 		solrGroupVO.setSvc3(edc.getSvc3());
 		solrGroupVO.setCtime(reCtime(edc.getCtime()));
 		solrGroupVO.setAttached(edc.getAttached());
@@ -161,10 +163,10 @@ public class MessengerEdcGroupVO {
 
 	public static MessengerGroupVO reDefined(SolrEdcVO edc, String adminId, long msg_cnt) {
 		MessengerGroupVO solrGroupVO = new MessengerGroupVO();
-		solrGroupVO.setMsg_cnt(msg_cnt);
 		solrGroupVO.setMsgid(edc.getMsgid());
 		solrGroupVO.setSvc(edc.getSvc());
 		solrGroupVO.setSvc3(edc.getSvc3());
+		solrGroupVO.setReadYn(isRead(edc.getChecked(), adminId) ? "Y" : "N");
 		solrGroupVO.setCtime(reCtime(edc.getCtime()));
 		solrGroupVO.setAttached(edc.getAttached());
 		solrGroupVO.setBody_snippet(edc.getBody_snippet());
@@ -254,4 +256,14 @@ public class MessengerEdcGroupVO {
 		}
 		return 0;
 	}
+
+	private static boolean isRead(final List<Map<String, Object>> checked, final String adminId) {
+		if (checked == null) return false;
+		for (Map<String, Object> item : checked) {
+			if (Common.isEquals(item.get("readId"), adminId)) return true;
+		}
+		return false;
+	}
+
 }
+

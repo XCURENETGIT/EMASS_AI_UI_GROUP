@@ -1262,13 +1262,10 @@ function rtnFileGroupList (data) {
         var makescv = makeMessengerText(data[i].svc);
         var defaultImageName = mainContext + "/img/icon/ico_sns_FUKR.png";
         var rightContent;
-        rightContent = "<p><span class='logo'><img src='" + imageName + "' onerror=\"this.src='" + defaultImageName + "'\">" + makescv + "</span></p>";
+        rightContent = "<span class='logo'><img src='" + imageName + "' onerror=\"this.src='" + defaultImageName + "'\">" + makescv + "</span>";
 
-        if (data[i].unread_cnt > 0) {
-            rightContent += "<span class='new'>" + data[i].unread_cnt + "</span>";
-        }
 
-        rightContent += "</p><span class='time'>" + data[i].ctime + "</span>";
+        rightContent += "<span class='time'>" + data[i].ctime + "</span>";
 
         rightDiv.innerHTML = rightContent;
         li.appendChild(rightDiv);
@@ -1341,8 +1338,9 @@ function rtnGenerativeGroupList(data) {
         rightDiv.className = "right";
         var imageName =mainContext+"/img/icon/ico_sns_"+ data[i].svc+".png";
         var makescv = makeMessengerText(data[i].svc);
-        var rightContent = "<p><span class='logo'><img src="+imageName+">"+makescv+"</span></p>";
-
+        var defaultImageName = mainContext + "/img/icon/ico_sns_FUKR.png";
+        var rightContent;
+        rightContent = "<span class='logo'><img src='" + imageName + "' onerror=\"this.src='" + defaultImageName + "'\">" + makescv + "</span>";
 
         if (data[i].unread_cnt > 0) {
             rightContent += "<span class='new'>" + data[i].unread_cnt + "</span>";
