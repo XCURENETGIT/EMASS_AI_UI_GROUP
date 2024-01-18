@@ -70,10 +70,17 @@ public class MessengerEdcGroupVO {
 			for (Map.Entry<String, Aggregation> map : mainAggsMap.entrySet()) {
 				Aggregation agg = map.getValue();
 				Aggregation mainAgg = mainAggregations.get(agg.getName());
-				if (mainAgg instanceof ParsedCardinality) {
-					ParsedCardinality cardinality = mainAggregations.get(agg.getName());
+				ParsedCardinality cardinality = mainAggregations.get("bucket_total");
+				if (!Common.isEmpty(cardinality)) {
+					/* 그룹 파싱만*/
 					total = cardinality.getValue();
+					Terms terms = mainAggregations.get(agg.getName());
+					for (Terms.Bucket bucket : terms.getBuckets()) {
+						groupAggsMap.put(bucket.getKeyAsString(), bucket.getAggregations());
+					}
+					break;
 				} else if (mainAgg instanceof Terms) {
+					/* 대화방 파싱*/
 					Terms terms = mainAggregations.get(agg.getName());
 					for (Terms.Bucket bucket : terms.getBuckets()) {
 						total = total + bucket.getDocCount();
