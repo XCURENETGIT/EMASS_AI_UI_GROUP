@@ -103,7 +103,6 @@ public class AdminServiceImpl extends XcnAbstractDAO implements AdminService {
 			insert("com.xcurenet.sqlmap.mappers.mysql.admin.insertAdminSvc", admin);
 			insert("com.xcurenet.sqlmap.mappers.mysql.admin.insertAdminPattern", admin);
 			insert("com.xcurenet.sqlmap.mappers.mysql.admin.insertAdminCeoAuth", admin);
-			System.out.println("gg: "+getCustomMenuVo(admin));
 			CustomDashboardMenuVO customDashboardMenuVO = getCustomMenuVo(admin);
 			customDashboardMenuVO.setDefaultDashboard("Y");
 			customDashBoardService.saveDashBoardMenu(customDashboardMenuVO);

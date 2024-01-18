@@ -139,7 +139,7 @@
 <script type="text/javascript">
 
     function goMainPage() {
-        // document.location.href = $('.topMenuLi:eq(0) .topMenu').attr('href');
+        document.location.href = $('.topMenuLi:eq(0) .topMenu').attr('href');
     }
 
     function changeMainMenu(val) {

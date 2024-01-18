@@ -213,8 +213,7 @@
         menuKey = $.urlParam('menuKey');
         console.log("dashboardKey: "+menuKey);
         if (menuKey) isDefaultDashboard(menuKey);
-        // if(menuKey) dashboardInit();
-        // else getDefaultMenuKey();
+        else getDefaultMenuKey();
 
         function isDefaultDashboard(menuKey){
             ui.get({

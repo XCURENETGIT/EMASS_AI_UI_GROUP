@@ -60,7 +60,6 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 
 	@Override
 	public String isDefaultDashboard(CustomDashboardMenuVO customDashboardMenuVO) {
-		System.out.println("custonDvo: "+customDashboardMenuVO);
 		Integer result = selectOne("com.xcurenet.sqlmap.mappers.mysql.customDashboard.isDefaultDashboard", customDashboardMenuVO);
 		if (result != null) {
 			return "true";
