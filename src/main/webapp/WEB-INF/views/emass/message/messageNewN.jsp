@@ -1837,6 +1837,7 @@
             var result = false;
 
             if($(obj).parents('li').hasClass('select')){
+
                 $(obj).parents('li').find('.select').find('div').find('.tab_close_2').attr('class', 'tab_close'); //선택한 tab의 tab close 클래스 지정
                 result = true;
             }
@@ -1916,7 +1917,6 @@
             tabIdx++;
             addTabHeader(tabIdx);
             addTabBody(tabIdx);
-
             changeTab($('#result'+tabIdx + ' .addTabDiv'));
         }
 
@@ -1972,7 +1972,7 @@
 
 
             $('.addTabDiv').parents('li').removeClass('select');
-
+            $('#resultTabs').find('li').find('.tab_close').attr('class', 'tab_close_2');
 
             objLi.addClass('select');
 

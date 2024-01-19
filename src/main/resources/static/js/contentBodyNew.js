@@ -895,7 +895,7 @@ function selectText() {
 
 function init(){
 	var windowName = window.name;
-	if(windowName == ''){
+	if(windowName == 'No_Title'){
 		//$('#headerIcon').switchClass('fa-object-group', 'fa-object-ungroup');
 		//$('#headerIcon').attr('title', message.windowNew);
 		$('#prevBtn').prop('disabled', true);
