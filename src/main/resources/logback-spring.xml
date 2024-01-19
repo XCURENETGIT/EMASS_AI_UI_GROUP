@@ -89,7 +89,7 @@
 		<appender-ref ref="sql_log" />
 	</logger>
 
-	<root level="info">
+	<root level="INFO">
 		<appender-ref ref="console" />
 	</root>
 

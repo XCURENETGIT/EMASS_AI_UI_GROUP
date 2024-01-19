@@ -80,9 +80,11 @@ public class ConfigServiceImpl extends XcnAbstractDAO implements ConfigService {
 	@Override
 	public boolean execute(ConfigVO conf) {
 
+		String sqlPath = "/sqlmap/mappers/sql/";
+		if (!Common.isWindow()) sqlPath = "/users/emassai/conf/";
 
-		String filePath = String.format("/sqlmap/mappers/sql/Update_Query_%s.sql", conf.getVal());
-		filePath = new File(new File(ConfigServiceImpl.class.getResource("").getPath()).getParentFile().getParentFile().getParent() + filePath).getAbsolutePath();
+		String filePath = String.format(sqlPath + "Update_Query_%s.sql", conf.getVal());
+		if (Common.isWindow()) filePath = new File(new File(ConfigServiceImpl.class.getResource("").getPath()).getParentFile().getParentFile().getParent() + filePath).getAbsolutePath();
 		Connection _con = null;
 		try {
 			 _con = DataSourceUtils.getConnection(dataSource);

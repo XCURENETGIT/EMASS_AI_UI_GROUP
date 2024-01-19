@@ -616,6 +616,12 @@
 								<copy file="${project.basedir}\src\main\resources\com/xcurenet/files/css/pdf.css" tofile="${project.basedir}\target\dist\conf\regexes.yaml" />
 								<copy file="${project.basedir}\src\main\resources\com/xcurenet/files/font/dotum.ttf" tofile="${project.basedir}\target\dist\conf\regexes.yaml" />
 
+								<copy file="${project.basedir}\src\main\resources\com/xcurenet/sqlmap/mappers/sql/create_table.sql" tofile="${project.basedir}\target\dist\conf\create_table.sql" />
+								<copy file="${project.basedir}\src\main\resources\com/xcurenet/sqlmap/mappers/sql/insert_data.sql" tofile="${project.basedir}\target\dist\conf\insert_data.sql" />
+								<copy file="${project.basedir}\src\main\resources\com/xcurenet/sqlmap/mappers/sql/patch_data.sql" tofile="${project.basedir}\target\dist\conf\patch_data.sql" />
+								<copy file="${project.basedir}\src\main\resources\com/xcurenet/sqlmap/mappers/sql/procedure.sql" tofile="${project.basedir}\target\dist\conf\procedure.sql" />
+								<copy file="${project.basedir}\src\main\resources\com/xcurenet/sqlmap/mappers/sql/Update_Query_en.sql" tofile="${project.basedir}\target\dist\conf\Update_Query_en.sql" />
+								<copy file="${project.basedir}\src\main\resources\com/xcurenet/sqlmap/mappers/sql/Update_Query_ko.sql" tofile="${project.basedir}\target\dist\conf\Update_Query_ko.sql" />
 
 								<echo message=""/>
 								<echo message="Step 3. Remove remote old files"/>
