@@ -69,25 +69,33 @@ public class MessengerEdcGroupVO {
 			//메인 Aggs의 sub Aggs 추출
 			for (Map.Entry<String, Aggregation> map : mainAggsMap.entrySet()) {
 				Aggregation agg = map.getValue();
-				Aggregation mainAgg = mainAggregations.get(agg.getName());
+				String currentKey = map.getKey();
+
+				if ("bucket_total".equals(currentKey)) {
+					continue;
+				}
+
 				ParsedCardinality cardinality = mainAggregations.get("bucket_total");
 				if (!Common.isEmpty(cardinality)) {
-					/* 그룹 파싱만*/
+					/* 그룹 파싱만 */
 					total = cardinality.getValue();
-					Terms terms = mainAggregations.get(agg.getName());
-					for (Terms.Bucket bucket : terms.getBuckets()) {
-						groupAggsMap.put(bucket.getKeyAsString(), bucket.getAggregations());
+					if (agg instanceof Terms) {
+						Terms terms = (Terms) agg;
+						for (Terms.Bucket bucket : terms.getBuckets()) {
+							groupAggsMap.put(bucket.getKeyAsString(), bucket.getAggregations());
+						}
 					}
 					break;
-				} else if (mainAgg instanceof Terms) {
-					/* 대화방 파싱*/
-					Terms terms = mainAggregations.get(agg.getName());
+				} else if (agg instanceof Terms) {
+					/* 대화방 파싱 */
+					Terms terms = (Terms) agg;
 					for (Terms.Bucket bucket : terms.getBuckets()) {
 						total = total + bucket.getDocCount();
 						groupAggsMap.put(bucket.getKeyAsString(), bucket.getAggregations());
 					}
 				}
 			}
+
 
 			// sub Aggs에서 document 추출
 			List<TopHits> topHitsList = new ArrayList<>();
@@ -159,7 +167,7 @@ public class MessengerEdcGroupVO {
 		solrGroupVO.setReadYn("Y");
 		solrGroupVO.setXrootmtr(edc.getXrootmtr());
 		solrGroupVO.setUser(edc.getUser());
-		solrGroupVO.setUserKey(edc.getUserkey());
+		solrGroupVO.setUserkey(edc.getUserkey());
 		solrGroupVO.setSender(edc.getSender());
 		solrGroupVO.setUsr_id(edc.getUsr_id());
 		solrGroupVO.setUserid(edc.getUserid());
@@ -192,7 +200,7 @@ public class MessengerEdcGroupVO {
 		solrGroupVO.setSrcip(edc.getSrcip());
 		solrGroupVO.setName(edc.getName());
 		solrGroupVO.setUser(edc.getUser());
-		solrGroupVO.setUserKey(edc.getUserkey());
+		solrGroupVO.setUserkey(edc.getUserkey());
 		solrGroupVO.setSender(edc.getSender());
 		solrGroupVO.setUsr_id(edc.getUsr_id());
 		solrGroupVO.setDirection_svc(edc.getDirection_svc());

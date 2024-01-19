@@ -127,7 +127,7 @@ public class CollectionController {
 			query.append("))");
 		}
 
-		sq.setQuery(sq.getQuery()+query+ MESSENGER4 + " +userid:* +attached:Y");
+		sq.setQuery(sq.getQuery()+query+ MESSENGER4 + " +userkey:* +attached:Y");
 		sq.setStart(Common.nvz(param.get("offset"), 0));
 		sq.setRows(Common.nvz(param.get("limit"), 100));
 		sq.setSort("ctime", ORDER.desc);
@@ -169,12 +169,14 @@ public class CollectionController {
 
 		sq.setQuery(sq.getQuery()+query);
 
+
 		sq.setParam("group", true);
 		sq.setParam("group.facet", true);
 		sq.setParam("group.ngroups", true);
-		sq.setParam("group.field", "userid");
+		sq.setParam("group.field", "userkey");
 		sq.setParam("facet", true);
-		sq.setParam("facet.field", "userid");
+		sq.setParam("facet.field", "userkey");
+
 
 		/* 그룹 디테일검색 동적 들어와야 할 offset,size 값*/
 		sq.setParam("facet.offset", String.valueOf(Common.nvz(param.get("offset"), 0)));
@@ -189,7 +191,7 @@ public class CollectionController {
 		sq.setRows(Common.nvz(request.getParameter("limit"), 0));
 
 		sq.setSort("ctime", ORDER.desc);
-		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id", "userid");
+		sq.setFields("msgid", "srcip", "svc", "svc3","userkey", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id", "userkey");
 
 		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request));
 		long NumFound= solrEdcGroupVO.getNumFound();
@@ -221,7 +223,7 @@ public class CollectionController {
 		String query="";
 
 		if (!userids.isEmpty()) {
-			query +=" +userid:((";
+			query +=" +userkey:((";
 
 			for (int i = 0; i < userids.size(); i++) {
 				if (i > 0) {
@@ -246,7 +248,7 @@ public class CollectionController {
 		sq.setParam("group.ngroups", true);
 		sq.setParam("facet.detail", true);
 		sq.setParam("facet.list", false);
-		sq.setParam("group.field", "userid");
+		sq.setParam("group.field", "userkey");
 		sq.setStart(0);
 		sq.setRows(Common.MAX_VALUE);
 		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr");
@@ -292,7 +294,7 @@ public class CollectionController {
 	@ResponseBody
 	public XcnResponseVO getGenerativeMessage(final HttpServletRequest request, final HttpSession session) throws Exception {
 		JSONObject param = Common.getParam(request);
-		String userid = Common.nvl(param.get("userid"));
+		String userkey = Common.nvl(param.get("userkey"));
 		String srcip = Common.nvl(param.get("srcip"));
 		String usr_id = Common.nvl(param.get("usr_id"));
 		String msgId = Common.nvl(param.get("msgId"));
@@ -307,7 +309,7 @@ public class CollectionController {
 		SolrQuery sq = new SolrQuery();
 		if (Common.isEmpty(msgId)) {
 
-			EmsMessengerAdminXrootMtrVO emaxm = emsMessageService.getEmassGenerativeAdminXrootMtr(userid, Common.getAdminId(request), srcip, usr_id,type);
+			EmsMessengerAdminXrootMtrVO emaxm = emsMessageService.getEmassGenerativeAdminXrootMtr(userkey, Common.getAdminId(request), srcip, usr_id,type);
 
 			if (Common.isNotEmpty(emaxm)) {
 				msgId = Common.nvl(emaxm.getMsgId());
@@ -368,7 +370,7 @@ public class CollectionController {
 
 	public SolrQuery getMessengerGtNext(final HttpServletRequest request, final String msgId, final boolean lastMsgYn) throws Exception {
 		JSONObject param = Common.getParam(request);
-		String userid = Common.nvl(param.get("userid"));
+		String userkey = Common.nvl(param.get("userkey"));
 		String srcip = Common.nvl(param.get("srcip"));
 		String usr_id = Common.nvl(param.get("usr_id"));
 		String startDt = Common.nvl(param.get("startDt"));
@@ -377,7 +379,7 @@ public class CollectionController {
 		int limit = Common.nvz(param.get("limit"), 100000);
 
 		SolrQuery sq = new SolrQuery();
-		String query = String.format("+ctime:[%s TO %s] +userid:\"%s\"", startDt, endDt, userid);
+		String query = String.format("+ctime:[%s TO %s] +userkey:\"%s\"", startDt, endDt, userkey);
 
 		if(Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
 
@@ -407,7 +409,7 @@ public class CollectionController {
 
 	public SolrQuery getMessengerGtPrev(final HttpServletRequest request, final String msgId) throws Exception {
 		JSONObject param = Common.getParam(request);
-		String userid = Common.nvl(param.get("userid"));
+		String userkey = Common.nvl(param.get("userkey"));
 		String srcip = Common.nvl(param.get("srcip"));
 		String usr_id = Common.nvl(param.get("usr_id"));
 		String startDt = Common.nvl(param.get("startDt"));
@@ -416,7 +418,7 @@ public class CollectionController {
 		int limit = Common.nvz(param.get("limit"), 100000);
 
 		SolrQuery sq = new SolrQuery();
-		String query = String.format("+ctime:[%s TO %s] +userid:\"%s\"", startDt, endDt, userid);
+		String query = String.format("+ctime:[%s TO %s] +userkey:\"%s\"", startDt, endDt, userkey);
 
 		if(Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
 
@@ -453,7 +455,7 @@ public class CollectionController {
 
 	public SolrQuery getCollectionMessageTotalQuery(final HttpServletRequest request) throws Exception {
 		JSONObject param = Common.getParam(request);
-		String userid = Common.nvl(param.get("userid"));
+		String userkey = Common.nvl(param.get("userkey"));
 		String srcip = Common.nvl(param.get("srcip"));
 		String usr_id = Common.nvl(param.get("usr_id"));
 		String startDt = Common.nvl(param.get("startDt"));
@@ -461,7 +463,7 @@ public class CollectionController {
 		int limit = Common.nvz(param.get("limit"), 100000);
 
 		SolrQuery sq = new SolrQuery();
-		String query = String.format("+ctime:[%s TO %s] +userid:\"%s\"", startDt, endDt, userid);
+		String query = String.format("+ctime:[%s TO %s] +userkey:\"%s\"", startDt, endDt, userkey);
 
 		if(Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
 
@@ -489,13 +491,13 @@ public class CollectionController {
 	@ResponseBody
 	public XcnResponseVO updateEmassGenerativeAdminUserid(final HttpServletRequest request, final HttpSession session) throws Exception {
 		JSONObject param = Common.getParam(request);
-		String userid = Common.nvl(param.get("userid"));
+		String userkey = Common.nvl(param.get("userkey"));
 		String msgId = Common.nvl(param.get("msgId"));
 		String srcip = Common.nvl(param.get("srcip"));
 		String type = Common.nvl(param.get("type"));
 
 
-		emsMessageService.updateEmassGenerativeAdminUserid(userid, msgId, Common.getAdminId(request), srcip,type);
+		emsMessageService.updateEmassGenerativeAdminUserid(userkey, msgId, Common.getAdminId(request), srcip,type);
 		return new XcnResponseVO(XcnRspCode.OK);
 	}
 
@@ -506,11 +508,11 @@ public class CollectionController {
 	public XcnResponseVO getGenerativeGroupDetailSearch(final HttpServletRequest request, final HttpSession session) throws Exception {
 
 		JSONObject param = Common.getParam(request);
-		String userid = Common.nvl(param.get("userid"));
+		String userkey = Common.nvl(param.get("userkey"));
 		String srcip = Common.nvl(param.get("srcip"));
 		String usr_id = Common.nvl(param.get("usr_id"));
 
-		String addQuery = String.format(" +userid:\"%s\"", userid);
+		String addQuery = String.format(" +userkey:\"%s\"", userkey);
 		if(Common.isNotEmpty(srcip)) addQuery += String.format(" +srcip:\"%s\"", srcip);
 
 		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
@@ -539,7 +541,7 @@ public class CollectionController {
 	@ResponseBody
 	public XcnResponseVO getGenerativeGroupAttachList(final HttpServletRequest request, final HttpSession session) throws Exception {
 		JSONObject param = Common.getParam(request);
-		String userid = Common.nvl(param.get("userid"));
+		String userkey = Common.nvl(param.get("userkey"));
 		String srcip = Common.nvl(param.get("srcip"));
 		String usr_id = Common.nvl(param.get("usr_id"));
 		String startDt = Common.nvl(param.get("startDt"));
@@ -550,7 +552,7 @@ public class CollectionController {
 		String query = "";
 		if (Common.isNotEmpty(startDt) && Common.isNotEmpty(endDt))
 			query += String.format("+ctime:[%s TO %s] ", startDt, endDt);
-		query += String.format("+userid:\"%s\" +attached:Y", userid);
+		query += String.format("+userkey:\"%s\" +attached:Y", userkey);
 		if (Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
 		if (Common.isNotEmpty(searchStr)) query += String.format(" +body:(*%s*) ", searchStr);
 
@@ -562,9 +564,9 @@ public class CollectionController {
 		sq.setParam("group", true);
 		sq.setParam("group.facet", true);
 		sq.setParam("group.ngroups", true);
-		sq.setParam("group.field", "userid");
+		sq.setParam("group.field", "userkey");
 		sq.setParam("facet", true);
-		sq.setParam("facet.field", "userid");
+		sq.setParam("facet.field", "userkey");
 		SolrEdcMessageVO edcVO = solrEdcService.getEmassMessage(sq, Common.getAdminId(request));
 
 		List<Map<String, String>> result = new ArrayList<>();
@@ -613,7 +615,7 @@ public class CollectionController {
 
 	public MessengerGroupUserVO getGenerativeGroupUserList(final HttpServletRequest request, final int rows) throws IOException, SolrServerException {
 		JSONObject param = Common.getParam(request);
-		String userid = Common.nvl(param.get("userid"));
+		String userkey = Common.nvl(param.get("userkey"));
 		String groupField = Common.nvl(param.get("groupField"), "usr_id");
 		String srcip = Common.nvl(param.get("srcip"));
 		String usr_id = Common.nvl(param.get("usr_id"));
@@ -627,7 +629,7 @@ public class CollectionController {
 		if (Common.isNotEmpty(startDt) && Common.isNotEmpty(endDt))
 			query += String.format("+ctime:[%s TO %s] ", startDt, endDt);
 
-		query += String.format("+userid:\"%s\" ", userid) + (Common.nvl(param.get("type")).equals("N") ? MESSENGER3 : (Common.nvl(param.get("type")).equals("G") ? MESSENGER2 : (Common.nvl(param.get("type")).equals("F") ? MESSENGER4 : "")));
+		query += String.format("+userkey:\"%s\" ", userkey) + (Common.nvl(param.get("type")).equals("N") ? MESSENGER3 : (Common.nvl(param.get("type")).equals("G") ? MESSENGER2 : (Common.nvl(param.get("type")).equals("F") ? MESSENGER4 : "")));
 
 
 		if (Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
@@ -727,7 +729,7 @@ public class CollectionController {
 	@ResponseBody
 	public void getCollectionGroupAllExport(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
 		JSONObject param = Common.getParam(request);
-		String userid = Common.nvl(param.get("userid"));
+		String userkey = Common.nvl(param.get("userkey"));
 
 		response.setCharacterEncoding(Common.UTF8);
 		response.setHeader("Cache-control", "no-store");
@@ -746,7 +748,7 @@ public class CollectionController {
 			os = new ArchiveStreamFactory().createArchiveOutputStream("zip", out);
 			MessengerEdcGroupVO groups = getCollectionMessageTotal(request, true);
 			inputAttach(os, groups);
-			inputCollectionZipExcel(os, groups, userid, Common.getLocale(request.getSession()));
+			inputCollectionZipExcel(os, groups, userkey, Common.getLocale(request.getSession()));
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -775,14 +777,14 @@ public class CollectionController {
 	}
 
 
-	private void inputCollectionZipExcel(ArchiveOutputStream os, MessengerEdcGroupVO groups, String userid, Locale locale) throws IOException, Exception {
+	private void inputCollectionZipExcel(ArchiveOutputStream os, MessengerEdcGroupVO groups, String userkey, Locale locale) throws IOException, Exception {
 
 		ByteArrayOutputStream xOut = new ByteArrayOutputStream();
 		ByteArrayInputStream bIn = null;
 		try {
-			String name = userid;
+			String name = userkey;
 			os.putArchiveEntry(new ZipArchiveEntry(name + ".xlsx"));
-			xlsxCollectionExport(userid, groups, xOut, true, locale);
+			xlsxCollectionExport(userkey, groups, xOut, true, locale);
 
 			bIn = new ByteArrayInputStream(xOut.toByteArray());
 			IOUtils.copy(bIn, os);
@@ -832,7 +834,7 @@ public class CollectionController {
 	public void getCollectionrGroupTextExport(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
 
 		JSONObject param = Common.getParam(request);
-		String userid = Common.nvl(param.get("userid"));
+		String userkey = Common.nvl(param.get("userkey"));
 		String print = Common.nvl(param.get("print"));
 		String usr_id = "";
 		String type = Common.nvl(param.get("export_type"), "html").toLowerCase();
@@ -843,7 +845,7 @@ public class CollectionController {
 		response.setHeader("Pragma", "no-cache");
 		response.setDateHeader("Expires", 0);
 		response.setHeader("Content-Disposition", "inline");
-		if (Common.isEmpty(userid)) {
+		if (Common.isEmpty(userkey)) {
 			response.setContentType("application/octet-stream");
 			response.setHeader("Content-Transfer-Encoding", "binary");
 			response.setHeader("Content-Disposition", "attachment; filename=notfound.txt\"");
@@ -860,8 +862,8 @@ public class CollectionController {
 			if (Common.isEquals(type, "xlsx")) {
 				response.setContentType("application/octet-stream");
 				response.setHeader("Content-Transfer-Encoding", "binary");
-				response.setHeader("Content-Disposition", "attachment; filename=\"" + userid + "." + type + "\"");
-				xlsxCollectionExport(userid, groups, out, false, Common.getLocale(request.getSession()));
+				response.setHeader("Content-Disposition", "attachment; filename=\"" + userkey + "." + type + "\"");
+				xlsxCollectionExport(userkey, groups, out, false, Common.getLocale(request.getSession()));
 			} else {
 				if (Common.isNotEquals(print, "Y")) {
 					response.setContentType("application/octet-stream");
@@ -872,7 +874,7 @@ public class CollectionController {
 					_sb.append("<html><body><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /></head><pre>");
 				}
 				_sb.append("<" + Prop.propFormat("condition.xrootmtr", locale) + ">").append(Common.EMPTY_LINE);
-				_sb.append(userid).append(Common.EMPTY_LINE).append(Common.EMPTY_LINE);
+				_sb.append(userkey).append(Common.EMPTY_LINE).append(Common.EMPTY_LINE);
 				_sb.append("<" + Prop.propFormat("condition.participation", locale) + ">").append(Common.EMPTY_LINE);
 
 				_sb.append(Common.EMPTY_LINE);
@@ -888,7 +890,7 @@ public class CollectionController {
 				}
 				if (Common.isNotEquals(print, "Y")) {
 					response.setContentLength(_sb.toString().getBytes().length);
-					response.setHeader("Content-Disposition", "attachment; filename=\"" + userid + "." + type + "\"");
+					response.setHeader("Content-Disposition", "attachment; filename=\"" + userkey + "." + type + "\"");
 				}
 				out.write(_sb.toString().getBytes());
 			}
@@ -899,7 +901,7 @@ public class CollectionController {
 		}
 	}
 
-	private void xlsxCollectionExport(String userid, MessengerEdcGroupVO groups, OutputStream out, boolean link, Locale locale) throws Exception {
+	private void xlsxCollectionExport(String userkey, MessengerEdcGroupVO groups, OutputStream out, boolean link, Locale locale) throws Exception {
 		JSONArray header = new JSONArray();
 		header.add(getXlsxHeader("sender", Prop.propFormat("eikon.msg.sender", locale), "130", "center"));
 		header.add(getXlsxHeader("ctime", Prop.propFormat("eikon.msg.send.time"), "130", "center"));
@@ -919,7 +921,7 @@ public class CollectionController {
 				data.add(dataObj);
 			}
 		}
-		XLSXWriter xlsx = new XLSXWriter(Prop.propFormat("eikon.msg.export.chat", locale) + " : " + userid, header, data, out);
+		XLSXWriter xlsx = new XLSXWriter(Prop.propFormat("eikon.msg.export.chat", locale) + " : " + userkey, header, data, out);
 		xlsx.execute();
 	}
 }

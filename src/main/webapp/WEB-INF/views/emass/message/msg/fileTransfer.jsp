@@ -304,17 +304,17 @@
 
 			$(document).on('click', '.me', function (e) {
 
-				var userid = $(this).parent().attr('userid');
+				var userkey = $(this).parent().attr('userkey');
 				var srcip = $(this).parent().attr('srcip');
 				var id = $(this).parent().attr('id');
-				updateEmassGenerativeAdminUserid(userid, id, srcip,"F");
+				updateEmassGenerativeAdminUserid(userkey, id, srcip,"F");
 
 				moveTargetHeight(id, false);
 			});
 
 			$(document).on('click', '.person', function () {
 
-				if ((isConsent() && $('#consentNo').val() == '') || $(this).attr('userid') == '') {
+				if ((isConsent() && $('#consentNo').val() == '') || $(this).attr('userkey') == '') {
 					return;
 				}
 				//if($(this).hasClass('active')) return;
@@ -323,7 +323,7 @@
 				});
 
 				$(this).addClass('active');
-				$('#userid').text($(this).attr('userid'));
+				$('#userkey').text($(this).attr('userkey'));
 
 				$('#srcip').text($(this).attr('srcip'));
 				$('#msgid').text($(this).attr('msgid'));
@@ -337,7 +337,7 @@
 				$('#startSubDt').val($('#startDt').val());
 				$('#endSubDt').val($('#endDt').val());
 				focusMsgId = '';
-				/*eikon2.getGenerativeDetailList($(this).attr('userid'), $(this).attr('msgid'), $(this).attr('srcip'), $(this).attr('usrid'));*/
+				/*eikon2.getGenerativeDetailList($(this).attr('userkey'), $(this).attr('msgid'), $(this).attr('srcip'), $(this).attr('usrid'));*/
 			});
 
 			$('input[name="searchType"]:radio').change(function () {
@@ -345,11 +345,11 @@
 			});
 
 			$('#groupFileCnt').click(function () {
-				fileInfoViewer($('#userid').text(), $('#srcip').text(), $('#usr_id').text());
+				fileInfoViewer($('#userkey').text(), $('#srcip').text(), $('#usr_id').text());
 			});
 
 			$('#groupParticipant').click(function () {
-				participantInfoViewer($('#userid').text(), $('#usr_id').text());
+				participantInfoViewer($('#userkey').text(), $('#usr_id').text());
 			});
 
 			$(document).on('click', '.person', function () {
@@ -439,15 +439,15 @@
 
 		function downloadList(export_type) {
 
-			var userid = $('#selectUserInfo').attr('data-name');
+			var userkey = $('#selectUserInfo').attr('data-name');
 			var srcip = $('#selectUserInfo').attr('data-srcip');
 
-			if (userid == '') return;
+			if (userkey == '') return;
 			var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '')+"000000";
 			var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '')+"235959";
 			var searchStr = '';
 
-			eikon2.getCollectionGroupTextExport('<c:url value="/getCollectionrGroupTextExport.xcn"/>?userid=' + userid + '&srcip=' + srcip + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr + '&export_type=' + export_type + '&groupField=sender_str&limit=1000&type=F', userid);
+			eikon2.getCollectionGroupTextExport('<c:url value="/getCollectionrGroupTextExport.xcn"/>?userkey=' + userkey + '&srcip=' + srcip + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr + '&export_type=' + export_type + '&groupField=sender_str&limit=1000&type=F', userkey);
 		}
 
 
@@ -466,10 +466,10 @@
 				$('#consentBtn').removeClass('active');
 			} else {
 				$('#consentNo').val(obj.no);
-				$('#consentName').text(obj.name + "[" + obj.userId + ", " + (obj.deptNm == '' ? '<s:message code="consent.select.consentDept"/>' : obj.deptNm) + "]");
+				$('#consentName').text(obj.name + "[" + obj.userkey + ", " + (obj.deptNm == '' ? '<s:message code="consent.select.consentDept"/>' : obj.deptNm) + "]");
 				/* $('#consentIp').val(obj.userIp);
                 $('#consentEmail').val(obj.userEmail); */
-				$('#consentUserId').val(obj.userId);
+				$('#consentUserId').val(obj.userkey);
 				$('#consentBtn').addClass('active');
 			}
 		}
@@ -783,7 +783,7 @@
 					<div class="xcn_checkbox">
 						<input type="checkbox" name="readYn" id="readYn"><label><s:message code="eikon.msg.notRead"/></label>
 					</div>
-					<button class="fullbtn" type="button" accesskey="Q" id="searchBtn">검색</button>
+					<button class="fullbtn" type="button" accesskey="Q" id="searchBtn"><s:message code="common.msg.search"/></button>
 				</div>
 			</div>
 		</div>

@@ -13,7 +13,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 public class MessengerGroupVO {
 	private String title;
 
-	private String userKey;
+	private String userkey;
 
 	private String message;
 	private long user_cnt;
