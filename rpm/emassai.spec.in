@@ -7,7 +7,7 @@
 %define _sourcedir @FAKEROOT@/..
 %define debug_package %{nil}
 
-Summary: XCN EMASS AI v2 UI package
+Summary: XCN EMASS AI v1 UI package
 Vendor: XCURENET
 #Packager: TODO. PLEASE EDIT ME!
 License: Xcurenet Commercial License. Copyright (c) 2018 XCURENET. All rights reserved.
@@ -112,9 +112,9 @@ true END Pre-installation script
 true BEG Post-installation script
 if test "$1" = "1"; then # Install
 	#Place your script post-install script
-	if [ -f /users/emasspro/conf/application.properties.rpmnew ];then
-		mv /users/emasspro/conf/application.properties /users/emasspro/conf/application.properties.org
-		java -jar /users/emasspro/lib/updateProperty.jar /users/emasspro/conf/application.properties.rpmnew /users/emasspro/conf/application.properties.org /users/emasspro/conf/application.properties
+	if [ -f /users/emassai/conf/application.properties.rpmnew ];then
+		mv /users/emassai/conf/application.properties /users/emassai/conf/application.properties.org
+		java -jar /users/emassai/lib/updateProperty.jar /users/emassai/conf/application.properties.rpmnew /users/emassai/conf/application.properties.org /users/emassai/conf/application.properties
 	fi
 
 	echo "Post-install script version:" %{version}>> /tmp/%{name}.log
@@ -124,9 +124,9 @@ if test "$1" = "1"; then # Install
 	:
 else # Update ($1 = "2")
 	#Place your script post-update script
-	if [ -f /users/emasspro/conf/application.properties.rpmnew ];then
-		mv /users/emasspro/conf/application.properties /users/emasspro/conf/application.properties.org
-		java -jar /users/emasspro/lib/updateProperty.jar /users/emasspro/conf/application.properties.rpmnew /users/emasspro/conf/application.properties.org /users/emasspro/conf/application.properties
+	if [ -f /users/emassai/conf/application.properties.rpmnew ];then
+		mv /users/emassai/conf/application.properties /users/emassai/conf/application.properties.org
+		java -jar /users/emassai/lib/updateProperty.jar /users/emassai/conf/application.properties.rpmnew /users/emassai/conf/application.properties.org /users/emassai/conf/application.properties
 	fi
 
 	echo "Post-update script of new version:" %{version}>> /tmp/%{name}.log
@@ -136,7 +136,7 @@ else # Update ($1 = "2")
 	:
 fi
 
-/sbin/chkconfig --add emasspro
+/sbin/chkconfig --add emassai
 
 true END Post-installation script
 

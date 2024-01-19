@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ### BEGIN INIT INFO
-# Provides:          EMASS AI v2 UI
+# Provides:          EMASS AI v1 UI
 # Required-Start:    $remote_fs $syslog
 # Required-Stop:     $remote_fs $syslog
 # Default-Start:     2 3 4 5
@@ -9,7 +9,7 @@
 # Description:       Controls EMASS AI UI as a Service
 ### END INIT INFO
 
-INSTALL_DIR="/users/emasspro"
+INSTALL_DIR="/users/emassai"
 
 if [ ! -d "$INSTALL_DIR" ]; then
   echo "$INSTALL_DIR not found! Please check the INSTALL_DIR setting in your $0 script."
@@ -25,5 +25,5 @@ case "$1" in
     exit
 esac
 
-"$INSTALL_DIR/bin/emasspro" "$SOLR_CMD"
+"$INSTALL_DIR/bin/emassai" "$SOLR_CMD"
 
