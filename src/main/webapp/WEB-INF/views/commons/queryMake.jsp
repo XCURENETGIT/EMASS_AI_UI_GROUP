@@ -1,12 +1,39 @@
+<%@page import="com.xcurenet.common.util.Common"%>
+<%@ page import="com.xcurenet.common.util.config.Config" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ include file="/WEB-INF/fragments/popupScript.jsp"%>
-<link rel="stylesheet" href="<c:url value="/css/message.css"/>"/> <%-- message css--%>
-<link rel="stylesheet" href="<c:url value="/css/messageContent.css"/>"/> <%-- message css--%>
+<%
+	String firstAdminYn = Common.getFirstAdminYn(session);
+	String statType = Common.nvl(request.getParameter("statType"));
 
+	String recvsJikgub = Config.getString("recvs.jikgub.use");
+%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
 	<title>EMASS AI - <s:message code="query.make.title"/></title>
+	<%@ include file="/WEB-INF/fragments/messageScript.jsp"%>
+
+	<link rel="stylesheet" href="<c:url value="/css/messageContent.css"/>"/>
+	<link rel="stylesheet" href="<c:url value="/css/jquery.nouislider.min.css"/>"/>
+	<link rel="stylesheet" href="<c:url value="/css/bootstrap-datetimepicker.min.css"/>"/>
+	<link rel="stylesheet" href="<c:url value="/css/bootstrap-select.min.css"/>"/>
+	<link rel="stylesheet" href="<c:url value="/css/codemirror.css"/>"/>
+	<link rel="stylesheet" href="<c:url value="/css/show-hint.css"/>"/>
+
+	<script type="text/javascript" src="<c:url value="/js/moment.js"/>"></script>
+	<script type="text/javascript" src="<c:url value="/js/Date.js"/>"></script>
+	<script type="text/javascript" src="<c:url value="/js/ko.js"/>"></script>
+	<script type="text/javascript" src="<c:url value="/js/transition.js"/>"></script>
+	<script type="text/javascript" src="<c:url value="/js/bootstrap-datetimepicker.min.js"/>"></script>
+	<script type="text/javascript" src="<c:url value="/js/bootstrap-select.js"/>"></script>
+	<script type="text/javascript" src="<c:url value="/js/codemirror.js"/>"></script>
+	<script type="text/javascript" src="<c:url value="/js/sql.js"/>"></script>
+	<script type="text/javascript" src="<c:url value="/js/show-hint.js"/>"></script>
+	<script type="text/javascript" src="<c:url value="/js/sql-hint.js"/>"></script>
+
+
 	<style type="text/css">
 		html, body, .row{
 			height:100%;
@@ -113,21 +140,27 @@
 			line-height:23px;
 		}
 	</style>
-	<script type="text/javaScript">
+	<script type="text/JavaScript">
 		var isConsent = false;
 		var erroColumn = "";
 
 		var statType = "<%=statType%>";
 		var isOCR = <%=isOCR%>;
-		var infoFeedbackYn = '<%=infoFeedbackYn%>';
-		var infoFeedbackConf = '<%=infoFeedbackConf%>';
-		var epmsgType = '<%=epmsgType%>';
+
 		var recvsJikgub = '<%=recvsJikgub%>';
-		var infoHynixConf = '<%=infoHynixConf%>';
-		var fieldArr = ["service.svc","directionSvc","day.work","user.businm","user.deptnm","http.host","mail.sender.name","network.srcIp"
-			,"mail.to.name","network.dstIp","mail.cc.name","mail.bcc.name","allofus","attached","attachExistCnt","attach.drm","kwd.kwd","kwd.kwds"
-			,"pi.id","pi.type","pi.attachNm","pi.kwds","pi.amount","user.id","user.name","user.id","size","body.size","attach.size","xmsgattr"
-		];
+		var fieldArr = ["date_hh", "date_yyyy", "date_yyyymm", "date_yyyymmdd", "allofus",
+			"attach", "attachcnt", "attached", "attachname", "attachhash", "attachsize", "attachtype", "attachexistcnt",
+			"bcc", "bname", "body", "body_size", "body_snippet", "busicd", "businm", "cc", "ceo", "cid", "cname",
+			"cocd", "conm", "ctime", "ctime_yyyy", "ctime_yyyymm", "ctime_yyyymmdd", "ctime_yyyymmddhh", "ctime_hh",
+			"deptcd", "deptnm", "direction", "direction_svc", "dport", "dstip", "host", "inside", "ip_busicd", "ip_businm",
+			"ip_cocd", "ip_conm", "jikgubcd", "jikgubnm", "kwd", "kwds", "kwds_attach", "kwds_attachname", "kwds_body",
+			"kwds_subject", "ltime", "msgid", "name", "opinion", "password", "path", "pi", "work", "query", "recvs_poid",
+			"sender", "siteattr", "sitecode", "size", "sname", "sport", "srcip", "subject", "suborgcd", "suborgnm", "svc",
+			"svc1", "svc2", "svc3", "svc12", "tname", "to", "user", "userid", "usr_id", "usr_ip", "xmsgkey", "xparentmtr",
+			"xrootmtr", "week", "ocr_attach", "ocr_attach_cnt", "favorite_id", "read_key", "read_time",
+			"user_str", "user", "host_str", "host", "attachname_str", "attachname", "sender_str", "sender", "recvs",
+			"to", "cc", "bcc", "recvs_name", "tname", "cname", "bname", "ocr_attach", "pi_DRM",
+			"pi_total", "pi_ID", "pi_EF", "pi_PN", "pi_FN", "pi_DN", "pi_SN", "pi_CN", "pi_EC"];
 
 		<%if( consent && Common.isEquals(firstAdminYn, "N") ){ %>
 		isConsent = true;
@@ -135,81 +168,6 @@
 
 		var easyDateStartFlag = false;
 		var easyDateEndFlag = false;
-
-
-		/* elastic search 관련 */
-
-		/* ----- 쿼리 ----- */
-		var els_all_search = "*:*";
-
-		var els_open_bracket = "[";
-		var els_close_bracket = "]";
-		var els_open_parentheses = "(";
-		var els_close_parentheses = ")";
-
-		var els_backslash = "\\";
-		var els_quotes = "\"";
-		var els_space = " ";
-		var els_comma = ",";
-		var els_colon = ":";
-		var els_special_char = "*";
-		var els_or_query = " ";
-		var els_and_query = "+";
-		var els_except_query = "-";
-
-		/* ----- 필드 ----- */
-
-		/*서비스*/
-		var fld_service = "service.svc";
-		/*수/발신*/
-		var fld_directionSvc = "directionSvc";
-		/*업무시간구분*/
-		var fld_day = "day.work";
-		/*사업장명*/
-		var fld_businm= "user.businm";
-		/*부서명*/
-		var fld_deptnm = "user.deptnm";
-		/*URL*/
-		var fld_url = "http.host";
-		/*발신자*/
-		var fld_sender = ["mail.sender.name","network.srcIp"];
-		/*수신자*/
-		var fld_recvs = ["mail.to.name","network.dstIp"];
-		/*수신자 2*/
-		var fld_ccSender = ["mail.cc.name","mail.bcc.name"];
-		/*OCR*/
-		/*수신자 구분*/
-		var fld_allofus = "allOfUs";
-
-		/*첨부 여부*/
-		var fld_attached = "attached";
-
-		/* 첨부 파일 실제 존재*/
-		var fld_attachexistcnt = "attachExistCnt";
-
-		/*DRM*/
-		var fld_drm = "attach.drm";
-		/*예약어*/
-		var fld_kwd = ["kwd.kwd","kwd.kwds"];
-		/*패턴*/
-		var fld_pi = ["pi.id","pi.type","pi.attachNm","pi.kwds","pi.amount"];
-		/*사용자*/
-		var fld_user = ["user.id","user.name"];
-
-		/*사용자 그룹*/ /*관심 사용자 그룹*/
-
-		var fld_userGroup = "user.id";
-
-		/*크기 (전체,본문,첨부파일)  */
-		var fld_size = ["size","body.size","attach.size"];
-
-		/*KNOX 메일 종류*/
-		var fld_mailType = "xmsgattr";
-
-		/* ml */
-		var fld_ml = ["ml.mlConfdClass","ml.mlConfdFeedback","ml.mlConfdProb"];
-
-
 		$(document).ready(function(){
 			initServiceTypeList( );
 			initUserGroupList();
@@ -221,23 +179,7 @@
 				$('#recvs_poidTr').hide();
 			}
 			initSetDisplay();
-			initEpmsg();
 
-			if( infoFeedbackConf == 'true' && infoFeedbackYn == 'Y' ) {
-				if(infoHynixConf == 'true'){
-					$('#skInfoTypeTr, #skFeedbackTypeTr, #skProbTypeTr, #sctTr').show();
-				}else{
-					$('#infoTypeTr, #feedbackTypeTr, #probTypeTr, #sctTr').show();
-				}
-
-			}
-			else $('#infoTypeTr, #feedbackTypeTr, #probTypeTr, #sctTr').hide();
-
-			if(epmsgType == "" ){
-				$('#epmsgTypeTr').hide();
-			}else{
-				$('#epmsgTypeTr').show();
-			}
 			var dateObj = new Date();
 			$('#startdate').datetimepicker({
 				format: 'YYYY-MM-DD HH:mm:ss',
@@ -265,64 +207,10 @@
 				liveSearchPlaceholder:'<s:message code="condition.search.service"/>'
 			});
 
-			$('#infoTypeSelect').selectpicker({
-				container:'body',
-				size: 15,
-				width:'205px',
-				searchLabel:true,
-				style:'btn-xs btn-default',
-				noneSelectedText:'<s:message code="condition.infotype.all"/>',
-				noneResultsText:'<s:message code="common.msg.noresult"/>'+' ',
-				selectAllText:'<s:message code="common.msg.select_all"/>',
-				deselectAllText:'<s:message code="common.msg.unselect_all"/>',
-				liveSearchPlaceholder:'<s:message code="condition.search.infoType"/>'
-			});
-
-			$('#feedbackTypeSelect').selectpicker({
-				container:'body',
-				size: 15,
-				width:'205px',
-				searchLabel:true,
-				style:'btn-xs btn-default',
-				noneSelectedText:'<s:message code="condition.feedback.all"/>',
-				noneResultsText:'<s:message code="common.msg.noresult"/>'+' ',
-				selectAllText:'<s:message code="common.msg.select_all"/>',
-				deselectAllText:'<s:message code="common.msg.unselect_all"/>',
-				liveSearchPlaceholder:'<s:message code="condition.search.feedback"/>'
-			});
-
-			$('#probTypeSelect').selectpicker({
-				container:'body',
-				size: 15,
-				width:'205px',
-				searchLabel:true,
-				style:'btn-xs btn-default',
-				noneSelectedText:'<s:message code="condition.prob.all"/>',
-				noneResultsText:'<s:message code="common.msg.noresult"/>'+' ',
-				selectAllText:'<s:message code="common.msg.select_all"/>',
-				deselectAllText:'<s:message code="common.msg.unselect_all"/>',
-				liveSearchPlaceholder:'<s:message code="condition.search.prob"/>'
-			});
-
 			$('#allOfus').selectpicker({
 				container:'body',
 				size: 15,
 				style:'btn-xs btn-default',
-				noneSelectedText:'<s:message code="condition.allofus.all"/>'
-			});
-
-			$('#epmsgTypeSelect').selectpicker({
-				container:'body',
-				size: 15,
-				style:'btn-xs btn-default',
-				noneSelectedText:'<s:message code="condition.epmsgType.all"/>'
-			});
-
-			$('#recvs_poid').selectpicker({
-				container:'body',
-				size: 15,
-				style:'btn-xs btn-default',
-				noneSelectedText:'<s:message code="condition.recv_jikgub.all"/>'
 			});
 
 			$(document).on('mouseover', '.queryHelp', function(e){
@@ -337,28 +225,19 @@
 				$('#queryHelpPop').hide();
 			});
 
-			var Querytext=$("#solrQueryText", opener.document).val();
-
-			setQueryMakeCondition(Querytext.split(" "));
-
-			if(Querytext != ''){
-				var queryType="Querytext";
-				queryMake(queryType, "");
-			}
-
 			$('.queryAdd').click(function () {
 				var queryType = $(this).attr("data-queryType");
-				queryMake (queryType, els_space+els_and_query+els_space);
+				queryMake (queryType, "+");
 			});
 
 			$('.queryOr').click(function () {
 				var queryType = $(this).attr("data-queryType");
-				queryMake (queryType, els_space+els_or_query+els_space);
+				queryMake (queryType, "");
 			});
 
 			$('.queryMinus').click(function () {
 				var queryType = $(this).attr("data-queryType");
-				queryMake (queryType, els_space+els_except_query+els_space);
+				queryMake (queryType, "-");
 			});
 
 			$(document).on('click', '.filterAddBtn', function(){
@@ -394,30 +273,19 @@
 			});
 
 			$('[name=attachYn]').change(function(){
-				if($(this).val() == "Y") $('#attachBtn').prop('disabled',false);
-				else {
-					$('#attachBtn').prop('disabled',true);
-					resetCode('attach');
-				}
-			});
-
-			$('[name=keywordYn]').change(function(){
-				if($(this).val() == "Y") $('#keywordBtn').prop('disabled',false);
-				else {
-					$('#keywordBtn').prop('disabled',true);
-					resetCode('keyword');
-				}
-			});
-
-			$('[name=regexpYn]').change(function(){
-				if($(this).val() == "Y") $('#regexpBtn').prop('disabled',false);
-				else {
-					$('#regexpBtn').prop('disabled',true);
-					resetCode('regexp');
+				if(($(this).prop("checked"))) {
+					if($(this).val() == "Y") {
+						$('[name=attachYn][value="N"]').prop("checked", false);
+						$('[name=attachYn][value="N"]').closest("label").removeClass("active");
+					} else {
+						$('[name=attachYn][value="Y"]').prop("checked", false);
+						$('[name=attachYn][value="Y"]').closest("label").removeClass("active");
+					}
 				}
 			});
 
 			$('#queryExecuteBtn').click(function () {
+				//opener.$('#solrQueryText').val($('#solrQueryText').val());
 
 				var solrQueryText = editor.getValue();
 				if(solrQueryText.trim() == "") {
@@ -485,7 +353,6 @@
 					$('#highcount').prop('disabled', true).focus();
 				}
 			});
-			setTimeout(function() { setDisplayCondtion(queryCon); },300);
 		});
 
 		function initSetDisplay() {
@@ -571,6 +438,7 @@
 			}
 			return str;
 		}
+
 		function getServiceOptionChildren(serviceType) {
 			var result = '<option value="'+serviceType.serviceCd+'">'+serviceType.serviceNm+'</option>';
 			for (var i = 0; i < specialService.length; i++) {
@@ -583,6 +451,7 @@
 
 			return result;
 		}
+
 		function getServiceOptionLiveSearch(code) {
 			var searchWord = "";
 
@@ -597,9 +466,39 @@
 				searchWord = "";
 			}
 		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		function initUserGroupList(){
 			ui.get({
-				url : 'getConUserGroupList.xcn',
+				url : 'getUserGroupList.xcn',
 				logYn : 'Y',
 				success : function(data, total) {
 					getUserGroupListOptions(data);
@@ -626,9 +525,10 @@
 			$("#userGroupSeq").html(result);
 			$("#userGroupSeq").selectpicker('refresh');
 		}
+
 		function initInterUserGroupList(){
 			ui.get({
-				url : 'getConAdminUserGroupList.xcn',
+				url : 'getInterUserGroupList.xcn',
 				logYn : 'Y',
 				success : function(data, total) {
 					getInterUserGroupListOptions(data);
@@ -679,6 +579,7 @@
 			$("#recvs_poid").html(result);
 			$("#recvs_poid").selectpicker('refresh');
 		}
+
 		/*
         function validateParentheses(queryText) {
 
@@ -725,6 +626,7 @@
 			//Field 뒤 blank 제거 (msgid    :XXXXXX ==> msgid:XXXXXX)
 			queryText = queryBlankRemove(queryText);
 
+			console.log(queryText)
 			for(var i = 0; i < queryText.length; i++) {
 				var chr = queryText.charAt(i);
 
@@ -789,7 +691,16 @@
 			return rtn;
 		}
 
-
+		/*
+        function queryBlankRemove(queryText) {
+            //queryText = queryText.replaceAll(" :", ":");
+            queryText = queryText.replaceAll(/ :/gi, ":");
+            if(queryText.match(/ :/gi) != null) {
+                queryText = queryBlankRemove(queryText)
+            }
+            return queryText;
+        }
+        */
 		function queryBlankRemove(queryText) {
 			var preChr = "";
 			var rtn = "";
@@ -803,14 +714,18 @@
 						else {isQuote = true;}
 					}
 				}
+
 				if(isQuote) {
 					if((preChr == ' ' && chr == ' ') || (preChr == ' ' && chr == ':') ) {
+
 					} else {
 						rtn += preChr;
 					}
 				} else {
 					rtn += preChr;
 				}
+
+
 				preChr = chr;
 			}
 			rtn += preChr;
@@ -818,6 +733,7 @@
 		}
 
 		function queryMake (queryType, queryAddMinus) {
+
 			if(queryType == "userGroup") {
 				queryMakeUserGroup(queryAddMinus);
 			} else if(queryType == "interUserGroup") {
@@ -826,89 +742,38 @@
 				var solrQueryText = editor.getValue();
 				var addQueryText = "";
 				switch (queryType) {
-
-					case "Querytext":
-						addQueryText=$("#solrQueryText", opener.document).val();
-						break;
-					case "ctime": // 시간
+					case "ctime":
 						var startDt = $('#startdate').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
 						var endDt = $('#enddate').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
 						addQueryText = queryAddMinus + "ctime:[" + startDt + " TO " + endDt + "]";
 						break;
-					case "svc":  // 서비스
+					case "svc":
 						var service = $('#serviceTypeSelect').selectpicker('val');
 						if(service) {
-							addQueryText = queryAddMinus +  "service.svc"+els_colon+els_open_parentheses;
+							addQueryText = queryAddMinus + "svc:(";
 							for(var i = 0; i < service.length; i++) {
 								if(i > 0) {
 									addQueryText += " "
 								}
-								if( service[i] == 'EMMAX' ) {
-// 							addQueryText += "EMMR* EMMS* EMMG* EMMP* EMMD* EMMU* EMML* EMM1* EMM2* EMM3* EMM4* EMMT* EMMO* EMMB* EMMK*";
-									continue;
-								}
-								else addQueryText += service[i] + "*";
-							}
-							if(service.indexOf("EMMAX") > -1) {
-								addQueryText += els_except_query+els_space+"service.svc"+els_colon+els_open_parentheses+"EMMA"+els_close_parentheses;
-							}
-							addQueryText += els_close_parentheses;
-						}
-						break;
-					case "direction_svc":
-						if($('#receiveSend:checked').length > 0) {
-							addQueryText = queryAddMinus + "directionSvc"+els_colon + $('#receiveSend:checked').val();
-						}
-						break;
-					case "work":
-						if($('[name=work]:checked').length > 0) {
-							addQueryText = queryAddMinus + "day.work"+els_colon + $('[name=work]:checked').val();
-						}
-						break;
-					case "ml_confd_class":
-						var infoType = $('#infoTypeSelect').selectpicker('val');
-						if(infoType) {
-							addQueryText = queryAddMinus + "ml.mlConfdClass"+els_colon+els_open_parentheses;
-							for(var i = 0; i < infoType.length; i++) {
-								if(i > 0) {
-									addQueryText += " "
-								}
-								addQueryText += '"' + infoType[i] + '"';
+								addQueryText += service[i] + "*";
 							}
 							addQueryText += ")";
 						}
 						break;
-					case "ml_confd_feedback":
-						var feedback = $('#feedbackTypeSelect').selectpicker('val');
-						if(feedback) {
-							addQueryText = queryAddMinus + "ml.mlConfdFeedback"+els_colon+els_open_parentheses;
-							for(var i = 0; i < feedback.length; i++) {
-								if(i > 0) {
-									addQueryText += " "
-								}
-								addQueryText += '"' + feedback[i] + '"';
-							}
-							addQueryText += els_close_parentheses;
+					case "direction_svc":
+						if($('#receiveSend:checked').length > 0) {
+							addQueryText=queryAddMinus + "direction_svc:" + $('#receiveSend:checked').val();
 						}
 						break;
-					case "ml_confd_prob":
-						var prob = $('#probTypeSelect').selectpicker('val');
-						if(prob) {
-							addQueryText = queryAddMinus + els_open_parentheses;
-							for(var i = 0; i < prob.length; i++) {
-								if(i > 0) {
-									addQueryText += " "
-								}
-								var sp = prob[i].split('|');
-								addQueryText += 'mlConfdProb'+els_colon+els_open_bracket + sp[0] + ' TO ' + sp[1] + els_close_bracket;
-							}
-							addQueryText += els_close_parentheses;
+					case "work":
+						if($('#work:checked').length > 0) {
+							addQueryText=queryAddMinus + "work:" + $('#work:checked').val();
 						}
 						break;
 					case "busi":
 						var busiNm = $('#busi').val();
 						if(busiNm != "") {
-							addQueryText = queryAddMinus + "user.businm"+els_colon+els_open_parentheses;
+							addQueryText = queryAddMinus + "businm:(";
 
 							var busiNmNmArr = busiNm.split("|");
 
@@ -919,13 +784,13 @@
 								addQueryText += busiNmNmArr[i].ltrim().rtrim() + "*";
 							}
 
-							addQueryText += els_close_parentheses;
+							addQueryText += ")";
 						}
 						break;
 					case "dept":
 						var deptNm = $('#dept').val();
 						if(deptNm != "") {
-							addQueryText = queryAddMinus + "user.deptnm"+els_colon+els_open_parentheses;
+							addQueryText = queryAddMinus + "deptnm:(";
 
 							var deptNmArr = deptNm.split("|");
 
@@ -936,13 +801,13 @@
 								addQueryText += deptNmArr[i].ltrim().rtrim() + "*";
 							}
 
-							addQueryText += els_close_parentheses;
+							addQueryText += ")";
 						}
 						break;
 					case "host":
 						var host = $('#host').val();
 						if(host != "") {
-							addQueryText = queryAddMinus + els_open_parentheses;
+							addQueryText = queryAddMinus + "(";
 
 							var hostArr = host.split("|");
 							var hostStr = "";
@@ -953,14 +818,15 @@
 								}
 								hostStr += hostArr[i].ltrim().rtrim() + "*";
 							}
-							addQueryText += " http.host"+els_colon+els_open_parentheses + hostStr + els_close_parentheses;
-							addQueryText += els_close_parentheses;
+							addQueryText += " host:(" + hostStr +")";
+							addQueryText += " host_str:(" + hostStr +")";
+							addQueryText += ")";
 						}
 						break;
 					case "sender":
 						var sender = $('#sender').val();
 						if(sender != "") {
-							addQueryText = queryAddMinus  + els_open_parentheses;
+							addQueryText = queryAddMinus + "(";
 
 							var senderArr = sender.split("|");
 							var senderStr = "";
@@ -971,9 +837,10 @@
 								}
 								senderStr += senderArr[i].ltrim().rtrim() + "*";
 							}
-							addQueryText += "mail.sender.name"+els_colon+els_open_parentheses + senderStr + els_close_parentheses;
-							addQueryText += "network.srcIp"+els_colon+els_open_parentheses + senderStr + els_close_parentheses;
-							addQueryText += els_close_parentheses;
+							addQueryText += "sender_str:(" + senderStr +")";
+							addQueryText += " sname:(" + senderStr +")";
+							addQueryText += " srcip:(" + senderStr +")";
+							addQueryText += ")";
 						}
 						break;
 					case "receive":
@@ -989,43 +856,49 @@
 								if(i > 0) {
 									receiveStr += " "
 								}
-								receiveStr += "*" + receiveArr[i].ltrim().rtrim() + "*";
+								receiveStr += receiveArr[i].ltrim().rtrim() + "*";
 							}
 
-							addQueryText += "mail.to.name"+els_colon+els_open_parentheses + receiveStr + els_close_parentheses;
-							addQueryText += "network.dstIp"+els_colon+els_open_parentheses + receiveStr + els_close_parentheses;
-							addQueryText += els_close_parentheses;
+							addQueryText += "recvs:(" + receiveStr +")";
+							addQueryText += " recvs_name:(" + receiveStr +")";
+							addQueryText += " dstip:(" + receiveStr +")";
+							addQueryText += ")";
 						}
 						break;
 					case "receiveEtc":
 						var receiveEtcObj = $('input:checkbox[name=receiveEtc]:checked');
+
 						var receiveEtcArr = $('#receiveEctVal').val().split("|");
 						var receiveEtcStr = "";
 						if(receiveEtcObj.length > 0 && receiveEtcArr.length > 0) {
-							addQueryText = queryAddMinus + els_open_parentheses;
+
+							addQueryText = queryAddMinus + "(";
 						}
+
 						for(var i = 0; i < receiveEtcArr.length; i++) {
 							if(i > 0) {
 								receiveEtcStr += " "
 							}
-							receiveEtcStr += "*" + receiveEtcArr[i].ltrim().rtrim() + "*"
+							receiveEtcStr += receiveEtcArr[i].ltrim().rtrim() + "*"
 						}
+
 						for(var i = 0; i < receiveEtcObj.length; i++) {
 							if(i > 0) {
 								addQueryText += " "
 							}
-							addQueryText += receiveEtcObj[i].value + els_colon+els_open_parentheses + receiveEtcStr + els_close_parentheses;
+
+							addQueryText += receiveEtcObj[i].value + ":(" + receiveEtcStr + ")" ;
 						}
 
 						if(receiveEtcObj.length > 0 && receiveEtcArr.length > 0) {
-							addQueryText += els_close_parentheses;
+							addQueryText += ")";
 						}
 						break;
 
 					case "ocr":
 						var ocrStr = $('#ocr').val();
 						if(ocrStr != "") {
-							addQueryText = queryAddMinus + "ocr.attach"+els_colon+els_open_parentheses;
+							addQueryText = queryAddMinus + "ocr_attach:(";
 
 							var ocrStrArr = ocrStr.split("|");
 
@@ -1036,38 +909,38 @@
 								addQueryText += ocrStrArr[i].ltrim().rtrim() + "*";
 							}
 
-							addQueryText += els_close_parentheses;
+							addQueryText += ")";
 						}
 						break;
 
 					case "allofus":
 						var allOfus = $('#allOfus').val();
 						if(allOfus != "") {
-							addQueryText = queryAddMinus + "allofus"+ els_colon + els_open_parentheses + $('#allOfus').val() + els_close_parentheses;
+							addQueryText = queryAddMinus + "allofus:(" + $('#allOfus').val() + ")";
 						}
 						break;
 					case "attach":
 						if($('#attachYn:checked').length > 0) {
-							addQueryText = queryAddMinus + "attached"+ els_colon + els_open_parentheses + $('#attachYn:checked').val() + els_close_parentheses;
+							addQueryText = queryAddMinus + "attached:" + $('#attachYn:checked').val();
 						}
 
-						/*				if($('#attachVal').val() != "") {  //선택
-                                            if($('#attachYn:checked').length > 0) {
-                                                addQueryText += " ";
-                                            }
+						if($('#attachVal').val() != "") {
+							if($('#attachYn:checked').length > 0) {
+								addQueryText += " ";
+							}
 
-                                            addQueryText += queryAddMinus + "attachtype:(";
+							addQueryText += queryAddMinus + "attachtype:(";
 
-                                            var valArr = $('#attachVal').val().split("|");
+							var valArr = $('#attachVal').val().split("|");
 
-                                            for(var i = 0; i < valArr.length; i++) {
-                                                if(i > 0) {
-                                                    addQueryText += " "
-                                                }
-                                                addQueryText += valArr[i].toLowerCase();
-                                            }
-                                            addQueryText += ")";
-                                        }*/
+							for(var i = 0; i < valArr.length; i++) {
+								if(i > 0) {
+									addQueryText += " "
+								}
+								addQueryText += valArr[i];
+							}
+							addQueryText += ")";
+						}
 
 						resetCode('attach');
 
@@ -1075,8 +948,8 @@
 						break;
 
 					case "attachexistcnt":
-						if(queryAddMinus == '+') addQueryText = els_and_query+els_space+"attachExistCnt"+els_colon+els_open_bracket+'1 TO * '+els_close_bracket;
-						else addQueryText = els_and_query+els_space+"attachExistCnt"+els_colon+els_open_bracket;
+						if(queryAddMinus == '+') addQueryText = "+attachexistcnt: [ 1 TO * ]";
+						else addQueryText = "+attachexistcnt:0";
 						break;
 					case "recvs_poid":
 						var jikgubcd = $('#recvs_poid').selectpicker('val');
@@ -1088,23 +961,25 @@
 								if(i > 0) {
 									addQueryText += " "
 								}
+
 								addQueryText += '' + jikgubcd[i] + '*';
 							}
+
 							addQueryText += ")";
 						}
 						break;
 					case "keyword":
 						if($('#keywordYn:checked').length > 0) {
-							addQueryText = queryAddMinus + "kwd.kwd"+els_colon + $('#keywordYn:checked').val();
+							addQueryText = queryAddMinus + "kwd:" + $('#keywordYn:checked').val();
 						}
 
 						if($('#keywordVal').val() != "") {
 							if($('#keywordYn:checked').length > 0) {
 								addQueryText += " ";
 							}
-							addQueryText += queryAddMinus + "kwds"+els_colon+els_open_parentheses;
+							addQueryText += queryAddMinus + "kwds:(";
 
-							var valArr = $('#keywordStr').val().split(", ");
+							var valArr = $('#keywordStr').val().split("|");
 
 							for(var i = 0; i < valArr.length; i++) {
 								if(i > 0) {
@@ -1112,7 +987,7 @@
 								}
 								addQueryText += valArr[i];
 							}
-							addQueryText += els_close_parentheses;
+							addQueryText += ")";
 						}
 
 						resetCode('keyword');
@@ -1120,63 +995,57 @@
 					case "regexp":
 						if($('#regexpYn:checked').length > 0) {
 							if($('#regexpYn:checked').val() == "Y") {
-								addQueryText = queryAddMinus + "pi.amount"+els_colon+els_open_bracket+'1 TO * '+els_close_bracket;
+								addQueryText = queryAddMinus + "pi_total:[1 TO *]";
 							} else {
-								addQueryText = queryAddMinus + "pi.amount"+els_colon+"0";
+								addQueryText = queryAddMinus + "pi_total:0";
 							}
 
 						}
 
-						// if($('#regexpVal').val() != "") {
-						// 	if($('#regexpYn:checked').length > 0) {
-						// 		addQueryText += " ";
-						// 	}
-						// 	addQueryText += queryAddMinus + els_open_bracket;
-						//
-						// 	var valArr = $('#regexpVal').val().split("|");
-						//
-						// 	for(var i = 0; i < valArr.length; i++) {
-						// 		if(i > 0) {
-						// 			addQueryText += " "
-						// 		}
-						//
-						// 		var valIdArr = valArr[i].split("%");
-						//
-						// 		if(!fieldArr.includes("pi_" + valIdArr[0])) fieldArr.push("pi_" + valIdArr[0]);
-						//
-						// 		addQueryText += "pi_" + valIdArr[0] + ":[";
-						//
-						// 		var valCntArr = valIdArr[1].split("@");
-						//
-						// 		if( valCntArr[0] == 'B' ) {
-						// 			addQueryText += valCntArr[1] + " TO " + valCntArr[2] + "]";
-						// 		} else if( valCntArr[0] == 'L' ) {
-						// 			addQueryText += valCntArr[1] + " TO *]";
-						// 		} else {
-						// 			addQueryText += "* TO " + valCntArr[1] + "]";
-						// 		}
-						//
-						// 	}
-						// 	addQueryText += ")";
-						// }
-						//
+						if($('#regexpVal').val() != "") {
+							if($('#regexpYn:checked').length > 0) {
+								addQueryText += " ";
+							}
+							addQueryText += queryAddMinus + "(";
+
+							var valArr = $('#regexpVal').val().split("|");
+
+							for(var i = 0; i < valArr.length; i++) {
+								if(i > 0) {
+									addQueryText += " "
+								}
+
+								var valIdArr = valArr[i].split("%");
+
+								addQueryText += "pi_" + valIdArr[0] + ":[ ";
+
+								var valCntArr = valIdArr[1].split("@");
+
+								if( valCntArr[0] == 'B' ) {
+									addQueryText += valCntArr[1] + " TO " + valCntArr[2] + " ]";
+								} else if( valCntArr[0] == 'L' ) {
+									addQueryText += valCntArr[1] + " TO * ]";
+								} else {
+									addQueryText += "* TO " + valCntArr[1] + " ]";
+								}
+
+							}
+							addQueryText += ")";
+						}
+
 						resetCode('regexp');
 
 
 						break;
 
 					case "drm":
-						addQueryText = queryAddMinus + "attach.drm"+els_colon+"*";
-						break;
-
-					case "sct":
-						addQueryText = queryAddMinus + "pi_sct:*";
+						addQueryText = queryAddMinus + "pi_DRM:*";
 						break;
 
 					case "user":
 						var user = $('#user').val();
 						if(user != "") {
-							addQueryText = queryAddMinus + els_open_parentheses;
+							addQueryText = queryAddMinus + "(";
 
 							var userArr = user.split("|");
 							var userStr = "";
@@ -1187,10 +1056,10 @@
 								}
 								userStr += userArr[i].ltrim().rtrim() + "*";
 							}
-							//els_colon+els_open_bracket
-							addQueryText += "user.id"+els_colon+els_open_parentheses + userStr + els_close_parentheses
-									+"user.name"+els_colon+els_open_parentheses + userStr + els_close_parentheses
-							addQueryText += els_close_parentheses;
+
+							addQueryText += "user:(" + userStr + ") user_str:(" + userStr + ") userid:(" + userStr + ") name:(" + userStr + ")";
+
+							addQueryText += ")";
 						}
 						break;
 
@@ -1205,38 +1074,21 @@
 						if(lowcount != "" || (sizeFilterSelect == "B" && (lowcount != "" || highcount != ""))) {
 							addQueryText = queryAddMinus;
 							if(sizeFilterType == "B") {
-								addQueryText += "body.size"+els_colon+els_open_bracket;
+								addQueryText += "body_size:[";
 							} else if(sizeFilterType == "A") {
-								addQueryText += "attach.size"+els_colon+els_open_bracket;
+								addQueryText += "attachsize:[";
 							} else {
-								addQueryText += "size"+els_colon+els_open_bracket;
+								addQueryText += "size:[";
 							}
 
 							if(sizeFilterSelect == "B") {
-								addQueryText += lowcount + " TO " +  highcount + els_close_bracket;
+								addQueryText += lowcount + " TO " +  highcount + " ]";
 							} else if(sizeFilterSelect == "L") {
-								addQueryText += lowcount + " TO *"+ els_close_bracket;
+								addQueryText += lowcount + " TO * ]";
 							} if(sizeFilterSelect == "S") {
-								addQueryText += "* TO " +  lowcount + els_close_bracket;
+								addQueryText += "* TO " +  lowcount + " ]";
 							}
 						}
-						break;
-
-					case "epmsg_type":
-						var epmsgType = $('#epmsgTypeSelect').selectpicker('val');
-
-						if(epmsgType){
-							addQueryText = queryAddMinus + "xmsgattr"+els_colon+els_open_bracket;
-
-							for(var i = 0; i < epmsgType.length; i++) {
-								if(i > 0) {
-									addQueryText += " "
-								}
-								addQueryText += '' + epmsgType[i] + '*';
-							}
-							addQueryText += els_close_bracket;
-						}
-
 						break;
 
 					case "attachtypeexcept":
@@ -1248,7 +1100,6 @@
 						addQueryText = queryAddMinus;
 						addQueryText += "attachname_str:noname";
 						break;
-
 				}
 
 				if(addQueryText == "") return;
@@ -1259,6 +1110,7 @@
 					solrQueryText += " " + addQueryText;
 				}
 
+				//$('#solrQueryText').val(solrQueryText);
 				editor.setValue(solrQueryText);
 			}
 		}
@@ -1458,24 +1310,6 @@
 				$('#consentBtn').addClass('active');
 			}
 		}
-
-		function initEpmsg(){
-			$('#epmsgTypeSelect').selectpicker({
-				container:'body',
-				size: 15,
-				style:'btn-xs btn-default',
-				noneSelectedText:'<s:message code="condition.epmsgType.all"/>'
-			});
-
-			var epmsg_type = epmsgType.split(',');
-			var result='';
-			for(var i=0 ; i<epmsg_type.length; i++){
-				result+='<option value="' + epmsg_type[i]+ '">' +  epmsg_type[i] + '</option>';
-			}
-			$("#epmsgTypeSelect").html(result);
-			$("#epmsgTypeSelect").selectpicker('refresh');
-
-		}
 	</script>
 </head>
 <body style="overflow: auto;">
@@ -1488,10 +1322,10 @@
 						<i class="fa fa-bar-chart-o fa-fw"></i> <s:message code="query.make.title"/>
 					</div>
 					<div class="panel-body" style="height:calc(100% - 30px);">
-						<div style="float: left;height:100%;width:800px;overflow-y: auto;" >
+						<div style="float: left;height:100%;width:790px;overflow-y: auto;" >
 							<div id="queryHelpPop"></div>
 							<div id="selectedCodeTitle"></div>
-							<%if( consent && Common.isEquals(firstAdminYn, "N") && Common.isNotEquals(adminType, "C") ){ %>
+							<%if( consent && Common.isEquals(firstAdminYn, "N") ){ %>
 							<div style="padding-left:10px;padding-bottom:3px;">
 								<button type="button" class="btn btn-xs btn-default" accesskey="O" id="consentBtn" style="position: relative;top:-1px;" onclick="searchConsentNo();"><span class="glyphicon glyphicon-tags"></span>&nbsp;<s:message code="consent.select.consent"/></button>
 								<input type="text" class="border-radius-none" style="width:120px;height:28px;display:none;" readonly="readonly" id="consentNo">
@@ -1525,7 +1359,7 @@
 								<tr id="ctimeTr">
 									<th><s:message code="condition.period"/></th>
 									<td>
-										<div  style="float:left;width:320px;">
+										<div class="form-group form-inline" style="float:left;width:320px;">
 											<div class="input-group">
 												<div class="input-group date" id="startdate" style="width:150px;">
 													<input type="text" id="queryStartDt" class="input-xs form-control border-radius-none" />
@@ -1577,8 +1411,8 @@
 									<th><s:message code="condition.ctimework"/></th>
 									<td>
 										<div class="btn-group filterBtn" data-toggle="buttons">
-											<label class="btn btn-xs btn-default active"><input type="radio" class="border-radius-none" name="work" id="work" value="W" checked> <s:message code="condition.work"/></label>
-											<label class="btn btn-xs btn-default"><input type="radio" class="border-radius-none" name="work" id="nonwork" value="R"> <s:message code="condition.notwork"/></label>
+											<label class="btn btn-xs btn-default active"><input type="radio" class="border-radius-none" id="work" value="W" checked> <s:message code="condition.work"/></label>
+											<label class="btn btn-xs btn-default"><input type="radio" class="border-radius-none" id="work" value="R"> <s:message code="condition.notwork"/></label>
 										</div>
 									</td>
 									<td><button type="button" class="btn btn-xs btn-success queryAdd" data-queryType="work">AND</button></td>
@@ -1586,103 +1420,6 @@
 									<td><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="work"><i class="glyphicon glyphicon-minus"></i></button></td>
 									<td>work</td>
 									<td><span class="fa fa-question queryHelp" data-helptext="<s:message code="condition.work"/>:W <s:message code="condition.notwork"/>:R"></span></td>
-								</tr>
-								<tr id="infoTypeTr" style="display: none;">
-									<th><s:message code="condition.infotype"/></th>
-									<td>
-										<select id="infoTypeSelect" class="selectpicker small border-radius-none border-radius-none" data-style="btn-default" multiple data-show-subtext="true" data-live-search="true" data-actions-box="true">
-											<option value="4"><s:message code="condition.info.class4"/></option>
-											<option value="3"><s:message code="condition.info.class3"/></option>
-											<option value="2"><s:message code="condition.info.class2"/></option>
-											<option value="1"><s:message code="condition.info.class1"/></option>
-										</select>
-									</td>
-									<td><button type="button" class="btn btn-xs btn-success queryAdd" data-queryType="ml_confd_class">AND</button></td>
-									<td style="text-align: center;"><button type="button" class="btn btn-xs btn-info queryOr" data-queryType="ml_confd_class">OR</button></td>
-									<td><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="ml_confd_class"><i class="glyphicon glyphicon-minus"></i></button></td>
-									<td>ml_confd_class</td>
-									<td></td>
-								</tr>
-								<tr id="feedbackTypeTr" style="display: none;">
-									<th><s:message code="condition.feedback"/></th>
-									<td>
-										<select id="feedbackTypeSelect" class="selectpicker small border-radius-none border-radius-none" data-style="btn-default" multiple data-show-subtext="true" data-live-search="true" data-actions-box="true">
-											<option value="0"><s:message code="condition.info.feedback0"/></option>
-											<option value="1"><s:message code="condition.info.feedback1"/></option>
-											<option value="2"><s:message code="condition.info.feedback2"/></option>
-											<option value="3"><s:message code="condition.info.feedback3"/></option>
-											<option value="4"><s:message code="condition.info.feedback4"/></option>
-											<option value="9"><s:message code="condition.info.feedback9"/></option>
-											<option value="-1"><s:message code="condition.info.feedback-1"/></option>
-										</select>
-									</td>
-									<td><button type="button" class="btn btn-xs btn-success queryAdd" data-queryType="ml_confd_feedback">AND</button></td>
-									<td style="text-align: center;"><button type="button" class="btn btn-xs btn-info queryOr" data-queryType="ml_confd_feedback">OR</button></td>
-									<td><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="ml_confd_feedback"><i class="glyphicon glyphicon-minus"></i></button></td>
-									<td>ml_confd_feedback</td>
-									<td></td>
-								</tr>
-								<tr id="probTypeTr" style="display: none;">
-									<th><s:message code="condition.prob"/></th>
-									<td>
-										<select id="probTypeSelect" class="selectpicker small border-radius-none border-radius-none" data-style="btn-default" multiple data-show-subtext="true" data-live-search="true" data-actions-box="true">
-											<option value="0.5|1.0">50 ~ 100</option>
-											<option value="0.1|0.49">10 ~ 49</option>
-											<option value="0|0.09">0 ~ 9</option>
-										</select>
-									</td>
-									<td><button type="button" class="btn btn-xs btn-success queryAdd" data-queryType="ml_confd_prob">AND</button></td>
-									<td style="text-align: center;"><button type="button" class="btn btn-xs btn-info queryOr" data-queryType="ml_confd_prob">OR</button></td>
-									<td><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="ml_confd_prob"><i class="glyphicon glyphicon-minus"></i></button></td>
-									<td>ml_confd_prob</td>
-									<td></td>
-								</tr>
-								<!-- sk 하이닉스  -->
-								<tr id="skInfoTypeTr" style="display: none;">
-									<th><s:message code="condition.infotype"/></th>
-									<td>
-										<select id="infoTypeSelect" class="selectpicker small border-radius-none border-radius-none" data-style="btn-default" multiple data-show-subtext="true" data-live-search="true" data-actions-box="true">
-											<option value="1"><s:message code="condition.info.Y"/></option>
-											<option value="0"><s:message code="condition.info.N"/></option>
-										</select>
-									</td>
-									<td><button type="button" class="btn btn-xs btn-success queryAdd" data-queryType="ml_confd_class">AND</button></td>
-									<td style="text-align: center;"><button type="button" class="btn btn-xs btn-info queryOr" data-queryType="ml_confd_class">OR</button></td>
-									<td><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="ml_confd_class"><i class="glyphicon glyphicon-minus"></i></button></td>
-									<td>ml_confd_class</td>
-									<td></td>
-								</tr>
-								<tr id="skFeedbackTypeTr" style="display: none;">
-									<th><s:message code="condition.feedback"/></th>
-									<td>
-										<select id="feedbackTypeSelect" class="selectpicker small border-radius-none border-radius-none" data-style="btn-default" multiple data-show-subtext="true" data-live-search="true" data-actions-box="true">
-											<%-- <option value="1"><s:message code="condition.info.secretFeedbackY"/></option> --%>
-											<option value="1"><s:message code="condition.info.feedback10"/></option>
-											<option value="9"><s:message code="condition.info.feedback9"/></option>
-											<option value="0"><s:message code="condition.info.feedback-1"/></option>
-											<%-- <option value="0"><s:message code="condition.info.secretFeedbackN"/></option> --%>
-										</select>
-									</td>
-									<td><button type="button" class="btn btn-xs btn-success queryAdd" data-queryType="ml_confd_feedback">AND</button></td>
-									<td style="text-align: center;"><button type="button" class="btn btn-xs btn-info queryOr" data-queryType="ml_confd_feedback">OR</button></td>
-									<td><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="ml_confd_feedback"><i class="glyphicon glyphicon-minus"></i></button></td>
-									<td>ml_confd_feedback</td>
-									<td></td>
-								</tr>
-								<tr id="skProbTypeTr" style="display: none;">
-									<th><s:message code="condition.prob"/></th>
-									<td>
-										<select id="probTypeSelect" class="selectpicker small border-radius-none border-radius-none" data-style="btn-default" multiple data-show-subtext="true" data-live-search="true" data-actions-box="true">
-											<option value="0.5|1.0">50 ~ 100</option>
-											<option value="0.1|0.49">10 ~ 49</option>
-											<option value="0|0.09">0 ~ 9</option>
-										</select>
-									</td>
-									<td><button type="button" class="btn btn-xs btn-success queryAdd" data-queryType="ml_confd_prob">AND</button></td>
-									<td style="text-align: center;"><button type="button" class="btn btn-xs btn-info queryOr" data-queryType="ml_confd_prob">OR</button></td>
-									<td><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="ml_confd_prob"><i class="glyphicon glyphicon-minus"></i></button></td>
-									<td>ml_confd_prob</td>
-									<td></td>
 								</tr>
 								<tr>
 									<th><s:message code="common.org.businm"/></th>
@@ -1693,7 +1430,7 @@
 									<td style="text-align: center;"><button type="button" class="btn btn-xs btn-info queryOr" data-queryType="busi">OR</button></td>
 									<td><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="busi"><i class="glyphicon glyphicon-minus"></i></button></td>
 									<td>businm</td>
-									<td><span class="fa fa-question queryHelp" data-helptext="<s:message code="query.make.multi.message"/><br><s:message code="query.make.impossible.unknown"/>"></span></td>
+									<td><span class="fa fa-question queryHelp" data-helptext="<s:message code="query.make.multi.message"/>"></span></td>
 								</tr>
 								<tr>
 									<th><s:message code="common.org.deptnm"/></th>
@@ -1704,7 +1441,7 @@
 									<td style="text-align: center;"><button type="button" class="btn btn-xs btn-info queryOr" data-queryType="dept">OR</button></td>
 									<td><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="dept"><i class="glyphicon glyphicon-minus"></i></button></td>
 									<td>deptnm</td>
-									<td><span class="fa fa-question queryHelp" data-helptext="<s:message code="query.make.multi.message"/><br><s:message code="query.make.impossible.unknown"/>"></span></td>
+									<td><span class="fa fa-question queryHelp" data-helptext="<s:message code="query.make.multi.message"/>"></span></td>
 								</tr>
 								<tr>
 									<th>URL</th>
@@ -1742,16 +1479,16 @@
 								<tr>
 									<th><s:message code="condition.recv"/><br>(TO, CC, BCC)</th>
 									<td>
-										<label class="checkbox-inline  input-xs" style="padding-left: 20px">
-											<input type="checkbox" class="border-radius-none" name="receiveEtc" value="mail.to.name">
+										<label class="checkbox-inline c-checkbox input-xs" style="padding-left: 20px">
+											<input type="checkbox" class="border-radius-none" name="receiveEtc" value="to">
 											<span class="fa fa-check"></span><s:message code="condition.to"/>
 										</label>
-										<label class="checkbox-inline  input-xs">
-											<input type="checkbox" class="border-radius-none" name="receiveEtc" value="mail.cc.name">
+										<label class="checkbox-inline c-checkbox input-xs">
+											<input type="checkbox" class="border-radius-none" name="receiveEtc" value="cc">
 											<span class="fa fa-check"></span><s:message code="condition.cc"/>
 										</label>
-										<label class="checkbox-inline  input-xs">
-											<input type="checkbox" class="border-radius-none" name="receiveEtc" value="mail.bcc.name">
+										<label class="checkbox-inline c-checkbox input-xs">
+											<input type="checkbox" class="border-radius-none" name="receiveEtc" value="bcc">
 											<span class="fa fa-check"></span><s:message code="condition.bcc"/>
 										</label>
 										<input type="text" class="form-control input-xs border-radius-none" id="receiveEctVal" placeholder="<s:message code="condition.recv"/>" style="width: 313px;">
@@ -1792,8 +1529,6 @@
 											<option value="IA ET IT EA">10) <s:message code="condition.allofus10"/></option>
 											<option value="IA IT PT PA">11) <s:message code="condition.allofus11"/></option>
 											<option value="ET EA PT PA">12) <s:message code="condition.allofus12"/></option>
-											<option value="SO">13) <s:message code="condition.allofus13"/></option>
-											<option value="SI">14) <s:message code="condition.allofus14"/></option>
 										</select>
 									</td>
 									<td><button type="button" class="btn btn-xs btn-success queryAdd" data-queryType="allofus">AND</button></td>
@@ -1811,7 +1546,7 @@
 												<label class="btn btn-xs btn-default"><input type="radio" class="border-radius-none" name="attachYn" id="attachYn" value="N"> <s:message code="condition.none"/></label>
 											</div>
 											<span id="attachBtnArea">
-													<button type="button" class="btn btn-xs btn-default btn-open filterAddBtn" id="attachBtn" disabled="disabled"><span class="glyphicon glyphicon-plus-sign"><s:message code="condition.select"/></span></button>
+													<button type="button" class="btn btn-xs btn-default btn-open filterAddBtn" id="attachBtn"><span class="glyphicon glyphicon-plus-sign"><s:message code="condition.select"/></span></button>
 												</span>
 											<span id="attachSelectedArea" class="codeSelectedBtn">
 													<button type="button" class="btn" style="z-index: 2">0</button>
@@ -1860,7 +1595,7 @@
 												<label class="btn btn-xs btn-default"><input type="radio" class="border-radius-none" name="keywordYn" id="keywordYn" value="N"> <s:message code="condition.none"/></label>
 											</div>
 											<span id="attachBtnArea">
-													<button type="button" class="btn btn-xs btn-default btn-open filterAddBtn" id="keywordBtn" disabled="disabled"><span class="glyphicon glyphicon-plus-sign"><s:message code="condition.select"/></span></button>
+													<button type="button" class="btn btn-xs btn-default btn-open filterAddBtn" id="keywordBtn"><span class="glyphicon glyphicon-plus-sign"><s:message code="condition.select"/></span></button>
 												</span>
 											<span id="keywordSelectedArea" class="codeSelectedBtn">
 													<button type="button" class="btn">0</button>
@@ -1885,7 +1620,7 @@
 												<label class="btn btn-xs btn-default"><input type="radio" class="border-radius-none" name="regexpYn" id="regexpYn" value="N"> <s:message code="condition.none"/></label>
 											</div>
 											<span id="attachBtnArea">
-													<button type="button" class="btn btn-xs btn-default btn-open filterAddBtn" id="regexpBtn" disabled="disabled"><span class="glyphicon glyphicon-plus-sign"><s:message code="condition.select"/></span></button>
+													<button type="button" class="btn btn-xs btn-default btn-open filterAddBtn" id="regexpBtn"><span class="glyphicon glyphicon-plus-sign"><s:message code="condition.select"/></span></button>
 												</span>
 											<span id="regexpSelectedArea" class="codeSelectedBtn">
 													<button type="button" class="btn">0</button>
@@ -1899,18 +1634,6 @@
 									<td><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="regexp"><i class="glyphicon glyphicon-minus"></i></button></td>
 									<td>pi_total, pi_XX</td>
 									<td><span class="fa fa-question queryHelp" data-helptext="pi_total:pi_total:[1 TO *] / pi_total:0<br>pi_XX:pi_<s:message code="common.msg.regexp"/><s:message code="filterInfo.serviceCode"/> <s:message code="message.msg.example"/>)pi_EF:[ 1 TO * ]"></span></td>
-								</tr>
-
-								<tr id="sctTr" style="display: none;">
-									<th><s:message code="condition.sct"/></th>
-									<td>
-										<s:message code="condition.exist"/>:AND / <s:message code="condition.none"/>:<s:message code="query.make.except"/>(-)
-									</td>
-									<td><button type="button" class="btn btn-xs btn-success queryAdd" data-queryType="sct">AND</button></td>
-									<td style="text-align: center;"></td>
-									<td><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="sct"><i class="glyphicon glyphicon-minus"></i></button></td>
-									<td>pi_sct</td>
-									<td></td>
 								</tr>
 
 								<tr id="userTr">
@@ -1934,8 +1657,8 @@
 									<td><button type="button" class="btn btn-xs btn-success queryAdd" data-queryType="userGroup">AND</button></td>
 									<td style="text-align: center;"><button type="button" class="btn btn-xs btn-info queryOr" data-queryType="userGroup">OR</button></td>
 									<td><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="userGroup"><i class="glyphicon glyphicon-minus"></i></button></td>
-									<td>userid</td>
-									<td><span class="fa fa-question queryHelp" data-helptext="userid:<s:message code="common.org.user"/>ID"></span></td>
+									<td>userid, sender_str, recvs<br>user_str, srcip, dstip</td>
+									<td><span class="fa fa-question queryHelp" data-helptext="userid:<s:message code="common.org.user"/>ID<br>sender_str:<s:message code="condition.sender"/><br>recvs:<s:message code="condition.recv"/><br>user_str:<s:message code="query.make.user_str"/><br>srcip:srcip:<s:message code="condition.source"/>IP<br>dstip:<s:message code="condition.destination"/>IP<br>"></span></td>
 								</tr>
 
 								<tr id="interUserGroupTr">
@@ -1950,7 +1673,6 @@
 									<td>userid</td>
 									<td><span class="fa fa-question queryHelp" data-helptext="userid:<s:message code="common.org.user"/>ID"></span></td>
 								</tr>
-
 								<tr id="recvs_poidTr" display="none">
 									<th><s:message code="condition.recv_jikgub"/></th>
 									<td>
@@ -1963,11 +1685,10 @@
 									<td>recvs_poid</td>
 									<td><span class="fa fa-question queryHelp" data-helptext="recvs_poid:<s:message code="common.org.jikgubcd"/>"></span></td>
 								</tr>
-
 								<tr>
 									<th><s:message code="filterInfo.size"/></th>
 									<td>
-										<div  style="float:left;width:320px;">
+										<div class="form-group form-inline" style="float:left;width:320px;">
 											<select class="input-xs border-radius-none" id="sizeFilterType" style="padding: 0px;">
 												<option value=""><s:message code="condition.size.all"/></option>
 												<option value="B"><s:message code="condition.size.body"/></option>
@@ -1986,24 +1707,12 @@
 									<td style="text-align: center;"><button type="button" class="btn btn-xs btn-info queryOr" data-queryType="size">OR</button></td>
 									<td><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="size"><i class="glyphicon glyphicon-minus"></i></button></td>
 									<td>size, body_size, attachsize</td>
-									<td><span class="fa fa-question queryHelp" data-helptext="<s:message code="filterInfo.unit"/> : bytes<br>size : <s:message code="condition.size.all"/><br>body_size : <s:message code="condition.size.body"/><br>attachsize : <s:message code="condition.size.attach"/>"></span></td>
-								</tr>
-								<tr id="epmsgTypeTr">
-									<th><s:message code="condition.epmsgType.list"/></th>
-									<td>
-										<select class="selectpicker small border-radius-none border-radius-none" data-style="btn-default" id="epmsgTypeSelect" multiple>
-										</select>
-									</td>
-									<td><button type="button" class="btn btn-xs btn-success queryAdd" data-queryType="epmsg_type">AND</button></td>
-									<td style="text-align: center;"><button type="button" class="btn btn-xs btn-info queryOr" data-queryType="epmsg_type">OR</button></td>
-									<td><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="epmsg_type"><i class="glyphicon glyphicon-minus"></i></button></td>
-									<td>epmsg_type</td>
-									<td><span class="fa fa-question queryHelp" data-helptext="epmsg_type:<s:message code="condition.epmsgType.list"/>"></span></td>
+									<td><span class="fa fa-question queryHelp" data-helptext="size : <s:message code="condition.size.all"/><br>body_size : <s:message code="condition.size.body"/><br>attachsize : <s:message code="condition.size.attach"/>"></span></td>
 								</tr>
 								<tr id="attachtypeexceptTr" style="display: none;">
-									<th><s:message code="query.make.except"/></th>
+									<th>제외</th>
 									<td>
-										<s:message code="query.make.except.unknown"/>
+										첨부 파일에서 unknown 제외
 									</td>
 									<td></td>
 									<td style="text-align: center;"></td>
@@ -2012,9 +1721,9 @@
 									<td></td>
 								</tr>
 								<tr id="attachstrexceptTr" style="display: none;">
-									<th><s:message code="query.make.except"/></th>
+									<th>제외</th>
 									<td>
-										<s:message code="query.make.except.noname"/>
+										첨부 파일명에서 noname 제외
 									</td>
 									<td></td>
 									<td style="text-align: center;"></td>
@@ -2096,8 +1805,9 @@
 		mode: 'text/x-solr',
 		lineWrapping:true
 	});
+
 	editor.setSize("100%", "75px");
 
-</script>
 
+</script>
 </html>

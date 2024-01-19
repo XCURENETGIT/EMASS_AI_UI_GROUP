@@ -48,6 +48,15 @@
 
     </definition>
 
+    <!-- message popup layout-->
+    <definition name="messagePopupLayout" template="/WEB-INF/layout/messagePopupLayout.jsp">
+        <put-attribute name="body" value="" />
+    </definition>
+
+
+    <definition name="/*/*.msg_poppup" extends="messagePopupLayout">
+        <put-attribute name="body" value="/WEB-INF/views/{1}/{2}.jsp" />
+    </definition>
 
 
 
@@ -132,8 +141,7 @@
         <put-attribute name="body" value="/WEB-INF/views/emass/message/contentBodyNew.jsp" />
     </definition>
 
+
     <!--###########################-->
-
-
 
 </tiles-definitions>

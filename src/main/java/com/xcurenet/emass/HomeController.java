@@ -989,7 +989,7 @@ public class HomeController {
 	@RequestMapping(value = "/commons/queryMake.do", method = RequestMethod.GET)
 	@Description("MAKE QUERY")
 	public String queryMake(Locale locale, Model model) {
-		return "/commons/queryMake.popup";
+		return "/commons/queryMake.msg_poppup";
 	}
 
 	@RequestMapping(value = "/ems/messageNew.do")

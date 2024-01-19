@@ -4,37 +4,37 @@ var processmap_graph       = {},
     selected    = {},
     highlighted = null,
     isIE        = false;
-	var dataSize = 0;
+var dataSize = 0;
 
-    isIE = $.browser.msie;
+isIE = $.browser.msie;
 var maxX = 1000, maxY = 900;
 
 var xScale = null;
 var yScale = null;
 
-    function processmap(id, data, inputX, inputY) {
-    	maxX = inputX;
-    	maxY = inputY;
-    	$('#chart_tab a:first').tab('show');
-    	var jData = eval("("+JSON.stringify(data)+")");
-        processmap_graph.data = eval("("+jData.links+")");
-        processmap_config = eval("("+jData.config+")");
+function processmap(id, data, inputX, inputY) {
+    maxX = inputX;
+    maxY = inputY;
+    $('#chart_tab a:first').tab('show');
+    var jData = eval("("+JSON.stringify(data)+")");
+    processmap_graph.data = eval("("+jData.links+")");
+    processmap_config = eval("("+jData.config+")");
 
-        var dataSize = Object.keys(processmap_graph.data);
-        drawGraph(id);
-        resize(dataSize);
-        if(Object.keys(processmap_graph.data) > 100) {
-        	alert(baseMsg1 + dataSize + baseMsg2 + ")");
-        }
+    var dataSize = Object.keys(processmap_graph.data);
+    drawGraph(id);
+    resize(dataSize);
+    if(Object.keys(processmap_graph.data) > 100) {
+        alert(baseMsg1 + dataSize + baseMsg2 + ")");
     }
+}
 
-    $(document).on('click', '.select-object', function() {
-        var obj = processmap_graph.data[$(this).data('name')];
-        if (obj) {
-            selectObject(obj);
-        }
-        return false;
-    });
+$(document).on('click', '.select-object', function() {
+    var obj = processmap_graph.data[$(this).data('name')];
+    if (obj) {
+        selectObject(obj);
+    }
+    return false;
+});
 
 function drawGraph(id) {
     $('#'+id).empty();
@@ -55,6 +55,7 @@ function drawGraph(id) {
     processmap_graph.height = $('#'+id).height() - processmap_graph.margin.top  - processmap_graph.margin.bottom;
     $('#'+id).css('display', display);
 
+    console.log( processmap_graph.data);
     for (var name in processmap_graph.data) {
         var obj = processmap_graph.data[name];
         obj.positionConstraints = [];
@@ -82,12 +83,12 @@ function drawGraph(id) {
             }
         });
     }
-    
+
     processmap_graph.links = [];
-    
+
     for (var name in processmap_graph.data) {
         var obj = processmap_graph.data[name];
-        
+
         for (var depIndex = 0; depIndex < obj.depends.length; depIndex++) {
             var link = {
                 source : processmap_graph.data[obj.depends[depIndex]],
@@ -95,7 +96,7 @@ function drawGraph(id) {
             };
 
             link.strength = (link.source.linkStrength || 1)
-                          * (link.target.linkStrength || 1);
+                * (link.target.linkStrength || 1);
             processmap_graph.links.push(link);
         }
     }
@@ -112,61 +113,61 @@ function drawGraph(id) {
                 key      : key,
                 type     : obj.type,
                 typeName : (processmap_config.types[obj.type]
-                            ? processmap_config.types[obj.type].short
-                            : obj.type),
+                    ? processmap_config.types[obj.type].short
+                    : obj.type),
                 group    : obj.group,
                 count    : 0
             };
         }
         cat.count++;
     }
-    
+
     processmap_graph.categoryKeys = d3.keys(processmap_graph.categories);
 
     processmap_graph.colors = confColor; //서비스별 색상
-    
+
     function getColor(group) {
-    	for(var i = 0; i < confGroup.length; i++) {
-    		if(group == confGroup[i]) return processmap_graph.colors[i];
-    	}
+        for(var i = 0; i < confGroup.length; i++) {
+            if(group == confGroup[i]) return processmap_graph.colors[i];
+        }
     }
-    
+
     processmap_graph.nodeValues = d3.values(processmap_graph.data); //data set
-    
+
     processmap_graph.force = d3.layout.force() //Force Layout set
         .nodes(processmap_graph.nodeValues) //노드 값
         .links(processmap_graph.links) //노드 간 연결 선
         .linkStrength(0.9)
         .size([processmap_graph.width, processmap_graph.height]) //크기
-        .linkDistance(200) 
+        .linkDistance(200)
         .charge(processmap_config.graph.charge)
         .on('tick', tick);
 
     xScale = d3.scale.linear() //줌을 위한 x축 set
-	    .domain([0, processmap_graph.width])
-	    .range([0, processmap_graph.width]);
+        .domain([0, processmap_graph.width])
+        .range([0, processmap_graph.width]);
 
-	yScale = d3.scale.linear() //줌을 위한 y축 set
-			.domain([0, processmap_graph.height])
-			.range([0, processmap_graph.height]);
-	
-	var zoomer = d3.behavior.zoom().x(xScale).y(yScale).scaleExtent([0.3, 8]).on("zoom", zoom); //zoom 이벤트 저장
-	
-	function zoom(d) { //첫 차트 출력 시 zoom 오류로 인해 tick 호출
-		tick(d);
-	};
+    yScale = d3.scale.linear() //줌을 위한 y축 set
+        .domain([0, processmap_graph.height])
+        .range([0, processmap_graph.height]);
 
-	processmap_graph.svg = d3.select('#'+id).append('svg') //전체 차트 레이아웃 설정
+    var zoomer = d3.behavior.zoom().x(xScale).y(yScale).scaleExtent([0.3, 8]).on("zoom", zoom); //zoom 이벤트 저장
+
+    function zoom(d) { //첫 차트 출력 시 zoom 오류로 인해 tick 호출
+        tick(d);
+    };
+
+    processmap_graph.svg = d3.select('#'+id).append('svg') //전체 차트 레이아웃 설정
         .attr('width' , processmap_graph.width  + processmap_graph.margin.left + processmap_graph.margin.right)
         .attr('height', processmap_graph.height + processmap_graph.margin.top  + processmap_graph.margin.bottom)
         .call(zoomer)
         .on('dblclick.zoom', null)
-      .append('g')
+        .append('g')
         .attr('transform', 'translate(' + processmap_graph.margin.left + ',' + processmap_graph.margin.top + ')');
-	
+
     processmap_graph.svg.append('defs').selectAll('marker') //끝선 처리 (화살표)
         .data(['end'])
-      .enter().append('marker')
+        .enter().append('marker')
         .attr('id'          , String)
         .attr('viewBox'     , '0 -5 10 10')
         .attr('refX'        , 10)
@@ -174,7 +175,7 @@ function drawGraph(id) {
         .attr('markerWidth' , 6)
         .attr('markerHeight', 6)
         .attr('orient'      , 'auto')
-      .append('path')
+        .append('path')
         .attr('d', 'M0,-5L10,0L0,5');
 
     var glow = processmap_graph.svg.append('filter') //노드 선택 시 노드 속성
@@ -187,9 +188,9 @@ function drawGraph(id) {
     glow.append('feColorMatrix') //노드 선택 시 그림자 색상 행렬 형식 설정
         .attr('type'  , 'matrix')
         .attr('values', '0 0 0 0  0 '
-                      + '0 0 0 0  0 '
-                      + '0 0 0 0  .7 '
-                      + '0 0 0 1  0 ');
+            + '0 0 0 0  0 '
+            + '0 0 0 0  .7 '
+            + '0 0 0 1  0 ');
 
     glow.append('feGaussianBlur')
         .attr('stdDeviation', 3) //노드 선택 시 그림자 크기
@@ -197,16 +198,16 @@ function drawGraph(id) {
 
     glow.append('feMerge').selectAll('feMergeNode') //생성
         .data(['coloredBlur', 'SourceGraphic'])
-      .enter().append('feMergeNode')
+        .enter().append('feMergeNode')
         .attr('in', String);
 
     processmap_graph.legend = processmap_graph.svg.append('g') //카데고리 표기 초기 set
         .attr('class', 'legend')
         .attr('x', 0)
         .attr('y', 0)
-      .selectAll('.category')
+        .selectAll('.category')
         .data(d3.values(processmap_graph.categories))
-      .enter().append('g')
+        .enter().append('g')
         .attr('class', 'category');
 
     processmap_graph.legendConfig = { //카데고리 표기 설정 값
@@ -235,58 +236,58 @@ function drawGraph(id) {
             return getColor(d.type) == undefined ? '#b0f2be' : getColor(d.type);
         })
         .on('mouseover', function(d) {
-        	var cursor = d3.select(this);
-        	cursor.style('cursor', 'pointer');
+            var cursor = d3.select(this);
+            cursor.style('cursor', 'pointer');
         })
         .on('click', nodeHidden);
-    
+
     function nodeHidden(d) {
-    	var typeName = d.typeName;
-    	
-    	if(this.innerHTML != "") var legendRect = d3.select(this.previousElementSibling);
-    	else var legendRect = d3.select(this);
-    	
-     	processmap_graph.node.each(function(d) {
-           if((d.type == typeName) && (d.depends.length > 0)) {
-     		  var node  = d3.select(this);
-     		  if(node.attr('visibility') == 'hidden') {
-     			  node.attr('visibility', 'visible');
-     			  legendRect.attr('fill-opacity', '1');
-     		  }
-     		  else { 
-     			  node.attr('visibility', 'hidden');
-     			  legendRect.attr('fill-opacity', '0.5');
-     		  }
-     		  
-     		  spliceLinksForNode(d);
-           } 
-     	});
+        var typeName = d.typeName;
+
+        if(this.innerHTML != "") var legendRect = d3.select(this.previousElementSibling);
+        else var legendRect = d3.select(this);
+
+        processmap_graph.node.each(function(d) {
+            if((d.type == typeName) && (d.depends.length > 0)) {
+                var node  = d3.select(this);
+                if(node.attr('visibility') == 'hidden') {
+                    node.attr('visibility', 'visible');
+                    legendRect.attr('fill-opacity', '1');
+                }
+                else {
+                    node.attr('visibility', 'hidden');
+                    legendRect.attr('fill-opacity', '0.5');
+                }
+
+                spliceLinksForNode(d);
+            }
+        });
     }
-    
+
     function spliceLinksForNode(node) {
-		var toSplice = processmap_graph.links.filter(function(l) { return (l.target === node); });
-    	processmap_graph.line.each(function(d) {
-    		var link = d3.select(this);
-    		for(var i = 0; i < toSplice.length; i++) {
-    			if(d == toSplice[i]) {
-    				if(link.attr('visibility') == 'visible' || link.attr('visibility') == null) link.attr('visibility', 'hidden');
-    				else link.attr('visibility', 'visible');
-    			}
-    		}
-    	});
-	};
-    
+        var toSplice = processmap_graph.links.filter(function(l) { return (l.target === node); });
+        processmap_graph.line.each(function(d) {
+            var link = d3.select(this);
+            for(var i = 0; i < toSplice.length; i++) {
+                if(d == toSplice[i]) {
+                    if(link.attr('visibility') == 'visible' || link.attr('visibility') == null) link.attr('visibility', 'hidden');
+                    else link.attr('visibility', 'visible');
+                }
+            }
+        });
+    };
+
     processmap_graph.legend.append('text') //카테고리 명 text
         .attr('x', processmap_graph.legendConfig.xOffsetText)
         .attr('y', function(d, i) {
-            return processmap_graph.legendConfig.yOffsetText + i * processmap_graph.legendConfig.lineHeight ;
+            return processmap_graph.legendConfig.yOffsetText + i * processmap_graph.legendConfig.lineHeight;
         })
         .text(function(d) {
             return d.typeName + (d.group ? ': ' + d.group : '');
         })
         .on('mouseover', function(d) {
-        	var cursor = d3.select(this);
-        	cursor.style('cursor', 'pointer');
+            var cursor = d3.select(this);
+            cursor.style('cursor', 'pointer');
         })
         .on('click', nodeHidden);
 
@@ -298,7 +299,7 @@ function drawGraph(id) {
     //노드간 연결 선
     processmap_graph.line = processmap_graph.svg.append('g').selectAll('.link')
         .data(processmap_graph.force.links())
-      .enter().append('line')
+        .enter().append('line')
         .attr('class', 'link');
 
     //드래그 이벤트 관련
@@ -306,7 +307,7 @@ function drawGraph(id) {
         .domain([0, 0.1])
         .range([5, 20])
         .clamp(true);
-    
+
     //현재 드래그 상태 확인
     function dragged(d) {
         var threshold = processmap_graph.draggedThreshold(processmap_graph.force.alpha()),
@@ -322,40 +323,40 @@ function drawGraph(id) {
     processmap_graph.screenDrag = d3.behavior.drag()
         .origin(function(d) { return d; }) //원점 설정
         .on('dragstart', function(d) {
-        	d3.event.sourceEvent.stopPropagation();
-        	d.oldX    = d.x;
+            d3.event.sourceEvent.stopPropagation();
+            d.oldX    = d.x;
             d.oldY    = d.y;
             d.dragged = false;
             d.fixed |= 2;
         })
         .on('drag', function(d) {
-        	var mouse = d3.mouse(processmap_graph.svg.node());
-    		d.x = xScale.invert(mouse[0]);
-    		d.y = yScale.invert(mouse[1]);
-            d.px = d.x;         
+            var mouse = d3.mouse(processmap_graph.svg.node());
+            d.x = xScale.invert(mouse[0]);
+            d.y = yScale.invert(mouse[1]);
+            d.px = d.x;
             d.py = d.y;
             if (dragged(d)) {
-	            if (!processmap_graph.force.alpha()) {
-	                processmap_graph.force.alpha(.025);
-	            }
-	        }
+                if (!processmap_graph.force.alpha()) {
+                    processmap_graph.force.alpha(.025);
+                }
+            }
         })
         .on('dragend', function(d) {
-        	if (!dragged(d)) {
+            if (!dragged(d)) {
                 selectObject(d, this);
             }
             d.fixed &= ~6;
         });
-    
+
     $('#graph-container').on('click', function(e) {
-    	if (!$(e.target).closest('.node').length) {
-        	deselectObject();
+        if (!$(e.target).closest('.node').length) {
+            deselectObject();
         }
     });
 
     processmap_graph.node = processmap_graph.svg.selectAll('.node') //노드 설정
         .data(processmap_graph.force.nodes())
-      .enter().append('g')
+        .enter().append('g')
         .attr('class', 'node')
         .call(processmap_graph.screenDrag)
         .on('mouseover', function(d) {
@@ -378,12 +379,12 @@ function drawGraph(id) {
                 }, 300);
             }
         });
-    
+
     processmap_graph.nodeRect = processmap_graph.node.append('rect') //노드의 박스 설정
         .attr('rx', 5)
         .attr('ry', 5)
         .attr('stroke', function(d) {
-        	if(d.depends.length == 0) return 'rgb(0, 0, 214)';
+            if(d.depends.length == 0) return 'rgb(0, 0, 214)';
             return getColor(d.type) == undefined ? '#b0f2be' : getColor(d.type);
         })
         .attr('fill', function(d) {
@@ -429,15 +430,15 @@ function drawGraph(id) {
                 }
                 first = false;
             })
-            .attr('style', function(d){
-            	if(d.mySelf == 'Y') {
-            		return 'font-weight:bold;fill:#980000;';
-            	} else {
-            		return '';
-            	}
-            })
-            .attr('text-anchor', 'middle');
-            
+                .attr('style', function(d){
+                    if(d.mySelf == 'Y') {
+                        return 'font-weight:bold;fill:#980000;';
+                    } else {
+                        return '';
+                    }
+                })
+                .attr('text-anchor', 'middle');
+
             var padding  = processmap_config.graph.labelPadding,
                 margin   = processmap_config.graph.labelMargin,
                 oldWidth = bounds.x2 - bounds.x1;
@@ -450,14 +451,11 @@ function drawGraph(id) {
             bounds.x2 += padding.left + padding.right;
             bounds.y2 += padding.top  + padding.bottom;
 
-            var y = bounds.y1;
-            if(!first) y = y + 30;
-
             node.select('rect')
-		        .attr('x', bounds.x1)
-                .attr('y', y)
-		        .attr('width' , bounds.x2 - bounds.x1)
-		        .attr('height', bounds.y2 - bounds.y1);
+                .attr('x', bounds.x1)
+                .attr('y', bounds.y1)
+                .attr('width' , bounds.x2 - bounds.x1)
+                .attr('height', bounds.y2 - bounds.y1);
 
             d.extent = {
                 left   : bounds.x1 - margin.left,
@@ -483,7 +481,7 @@ function drawGraph(id) {
         processmap_graph.preventCollisions = true;
         $('#graph-container').css('visibility', 'visible');
     });
-    
+
     for (var name in processmap_graph.data) {
         var obj = processmap_graph.data[name];
         obj = outCheck(obj);
@@ -519,14 +517,14 @@ function preventCollisions() {
 
         if(obj.extent == undefined) {
             ox1 = obj.x + -30,
-            ox2 = obj.x + 30,
-            oy1 = obj.y + -10,
-            oy2 = obj.y + 10;
+                ox2 = obj.x + 30,
+                oy1 = obj.y + -10,
+                oy2 = obj.y + 10;
         } else {
-        	ox1 = obj.x + obj.extent.left,
-        	ox2 = obj.x + obj.extent.right,
-        	oy1 = obj.y + obj.extent.top,
-        	oy2 = obj.y + obj.extent.bottom;
+            ox1 = obj.x + obj.extent.left,
+                ox2 = obj.x + obj.extent.right,
+                oy1 = obj.y + obj.extent.top,
+                oy2 = obj.y + obj.extent.bottom;
         }
 
         quadtree.visit(function(quad, x1, y1, x2, y2) {
@@ -566,40 +564,40 @@ function preventCollisions() {
 }
 
 function tick(e) {
-	if(e == undefined) {
-		e = {
-				type: "tick",
-				alpha: 0
-		};
-	}
-	
-	processmap_graph.line.attr("x1", function (d) { return  xScale(d.source.x); })
-	    .attr("y1", function (d) { return yScale(d.source.y);  })
-	    .attr("x2", function (d) { return xScale(d.target.x); })
-	    .attr("y2", function (d) { return yScale(d.target.y); });
-    
+    if(e == undefined) {
+        e = {
+            type: "tick",
+            alpha: 0
+        };
+    }
+
+    processmap_graph.line.attr("x1", function (d) { return  xScale(d.source.x); })
+        .attr("y1", function (d) { return yScale(d.source.y);  })
+        .attr("x2", function (d) { return xScale(d.target.x); })
+        .attr("y2", function (d) { return yScale(d.target.y); });
+
     processmap_graph.node.attr("transform", function (d) {
-    	return "translate(" + xScale(d.x) + "," + yScale(d.y) + ")";
+        return "translate(" + xScale(d.x) + "," + yScale(d.y) + ")";
     });
-	processmap_graph.numTicks++;
-	
-	for (var name in processmap_graph.data) {
-		var obj = processmap_graph.data[name];
-		
-		obj.positionConstraints.forEach(function(c) {
-			var w = c.weight * e.alpha;
-			if (!isNaN(c.x)) {
-				obj.x = (c.x * w + obj.x * (1 - w));
-			}
-			if (!isNaN(c.y)) {
-				obj.y = (c.y * w + obj.y * (1 - w));
-			}
-		});
-	}
-	
-	if (processmap_graph.preventCollisions) {
-		preventCollisions();
-	}
+    processmap_graph.numTicks++;
+
+    for (var name in processmap_graph.data) {
+        var obj = processmap_graph.data[name];
+
+        obj.positionConstraints.forEach(function(c) {
+            var w = c.weight * e.alpha;
+            if (!isNaN(c.x)) {
+                obj.x = (c.x * w + obj.x * (1 - w));
+            }
+            if (!isNaN(c.y)) {
+                obj.y = (c.y * w + obj.y * (1 - w));
+            }
+        });
+    }
+
+    if (processmap_graph.preventCollisions) {
+        preventCollisions();
+    }
 }
 
 function selectObject(obj, el) {
@@ -644,8 +642,8 @@ function highlightObject(obj) {
         if (obj !== highlighted) {
             processmap_graph.node.classed('inactive', function(d) {
                 return (obj !== d
-                     && d.depends.indexOf(obj.name) == -1
-                     && d.dependedOnBy.indexOf(obj.name) == -1);
+                    && d.depends.indexOf(obj.name) == -1
+                    && d.dependedOnBy.indexOf(obj.name) == -1);
             });
             processmap_graph.line.classed('inactive', function(d) {
                 return (obj !== d.source && obj !== d.target);
@@ -667,7 +665,7 @@ function resize(dataSize) {
 
     var graphWidth = 500;
     if(dataSize < 50) {
-    	graphWidth = dataSize * 10;
+        graphWidth = dataSize * 10;
     }
     graphHeight = graphHeight + graphWidth;
 
@@ -678,18 +676,18 @@ function resize(dataSize) {
 
 // 화면에서 벗어나지 않도록 설정
 function outCheck(obj) {
-	if(obj.x < 30) {
-		obj.x = 30;
-	}
-	if(obj.x > maxX) {
-		obj.x = maxX;
-	}
-	if(obj.y < 10) {
-		obj.y = 10;
-	}
-	if(obj.y > maxY) {
-		obj.y = maxY;
-	}
-	
-	return obj;
+    if(obj.x < 30) {
+        obj.x = 30;
+    }
+    if(obj.x > maxX) {
+        obj.x = maxX;
+    }
+    if(obj.y < 10) {
+        obj.y = 10;
+    }
+    if(obj.y > maxY) {
+        obj.y = maxY;
+    }
+
+    return obj;
 }

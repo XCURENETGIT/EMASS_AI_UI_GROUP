@@ -290,7 +290,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		return aggregations;
 	}
 
-
+	/* group facet */
 	private List<AbstractAggregationBuilder<?>> getGroupAggregations(SolrQuery sq) {
 		List<AbstractAggregationBuilder<?>> aggregations = new ArrayList<>();
 
@@ -329,8 +329,6 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 				termsAggregation.subAggregation(paging);
 			}
 			else if (sq.get("facet.list") != null &&  Common.isEquals("true", sq.get("facet.list"))) {
-				offset = Common.nvz(sq.get("facet.offset"), 0);
-				limit = Common.nvz(sq.get("facet.group"), 100);
 				/* 대화방 목록 (그룹) */
 				termsAggregation.subAggregation(AggregationBuilders.topHits(field).size(1).from(0).sort("ctime", SortOrder.DESC));
 				BucketSortPipelineAggregationBuilder paging = PipelineAggregatorBuilders.bucketSort("paging", null).from(offset).size(limit);
