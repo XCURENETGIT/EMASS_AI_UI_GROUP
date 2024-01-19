@@ -54,18 +54,66 @@ public class DeviceController {
 	@RequestMapping(value = "/getDeviceList.xcn")
 	@Description("장비 리스트 조회")
 	@ResponseBody
-	public XcnResponseVO getDeviceList(final HttpServletRequest request) throws Exception {
+	public XcnResponseVO getDeviceList(final HttpServletRequest request,final HttpSession session) throws Exception {
 		String searchStr = Common.nvl(request.getParameter("searchStr"));
 		String deviceType = Common.nvl(request.getParameter("deviceType"));
 		int offset = Common.nvz(request.getParameter("offset"));
 		int limit = Common.nvz(request.getParameter("limit"));
 
+		String adminId = Common.getAdminId(session);
 		Map<String, Object> result = new HashMap<>();
 		List<DeviceVO> devices = deviceService.getDeviceList(searchStr, deviceType, offset, limit);
+
+		for(int i=0; i<devices.size(); i++){
+			DeviceVO device = devices.get(i);
+
+			ConfigAdminVO hddSms = configAdminService.getConfAdmin("device.hdd.sms." + device.getDeviceSeq(), adminId);
+			ConfigAdminVO hddNotify = configAdminService.getConfAdmin("device.hdd.notify." + device.getDeviceSeq(), adminId);
+			ConfigAdminVO cpuSms = configAdminService.getConfAdmin("device.cpu.sms." + device.getDeviceSeq(), adminId);
+			ConfigAdminVO cpuNotify = configAdminService.getConfAdmin("device.cpu.notify." + device.getDeviceSeq(), adminId);
+			ConfigAdminVO memSms = configAdminService.getConfAdmin("device.mem.sms." + device.getDeviceSeq(), adminId);
+			ConfigAdminVO memNotify = configAdminService.getConfAdmin("device.mem.notify." + device.getDeviceSeq(), adminId);
+			ConfigAdminVO processSms = configAdminService.getConfAdmin("device.process.sms." + device.getDeviceSeq(), adminId);
+			ConfigAdminVO processNofity = configAdminService.getConfAdmin("device.process.notify." + device.getDeviceSeq(), adminId);
+			ConfigAdminVO interfaceSms = configAdminService.getConfAdmin("device.interface.sms." + device.getDeviceSeq(), adminId);
+			ConfigAdminVO interfaceNofity = configAdminService.getConfAdmin("device.interface.notify." + device.getDeviceSeq(), adminId);
+
+			device.setHddSmsUseYn("N");
+			device.setHddNotifyUseYn("N");
+
+			device.setCpuSmsUseYn("N");
+			device.setCpuNotifyUseYn("N");
+			device.setMemSmsUseYn("N");
+			device.setMemNotifyUseYn("N");
+
+			device.setProcessSmsUseYn("N");
+			device.setProcessNotifyUseYn("N");
+			device.setInterfaceSmsUseYn("N");
+			device.setInterfaceNotifyUseYn("N");
+
+			if (hddSms != null) device.setHddSmsUseYn(Common.nvl(hddSms.getVal(), "N"));
+			if (hddNotify != null) device.setHddNotifyUseYn(Common.nvl(hddNotify.getVal(), "N"));
+
+			if (cpuSms != null) device.setCpuSmsUseYn(Common.nvl(cpuSms.getVal(), "N"));
+			if (cpuNotify != null) device.setCpuNotifyUseYn(Common.nvl(cpuNotify.getVal(), "N"));
+			if (memSms != null) device.setMemSmsUseYn(Common.nvl(memSms.getVal(), "N"));
+			if (memNotify != null) device.setMemNotifyUseYn(Common.nvl(memNotify.getVal(), "N"));
+
+			if (processSms != null) device.setProcessSmsUseYn(Common.nvl(processSms.getVal(), "N"));
+			if (processNofity != null) device.setProcessNotifyUseYn(Common.nvl(processNofity.getVal(), "N"));
+			if (interfaceSms != null) device.setInterfaceSmsUseYn(Common.nvl(interfaceSms.getVal(), "N"));
+			if (interfaceNofity != null) device.setInterfaceNotifyUseYn(Common.nvl(interfaceNofity.getVal(), "N"));
+
+		}
+
+
 		for (int i = 0; i < devices.size(); i++) {
 			DeviceVO device = devices.get(i);
 			device.setCurrentDevice(deviceScheduler.getDeviceStatus(device.getDeviceSeq()));
 			devices.set(i, device);
+
+
+
 		}
 		result.put("currentTime", Common.getCurrentTime("HH" + Prop.propFormat("common.msg.hour", request) + " mm" + Prop.propFormat("common.msg.min", request) + " ss" + Prop.propFormat("common.msg.sec", request)));
 		result.put("devices", devices);
