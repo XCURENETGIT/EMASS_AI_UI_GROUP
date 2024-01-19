@@ -4,6 +4,11 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.xcurenet.common.util.config.Config;
+import com.xcurenet.common.util.locale.Prop;
+import com.xcurenet.config.service.ConfigVO;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,7 +60,25 @@ public class ConfigAdminController {
 		conf.setAdminId(adminId);
 		return new XcnResponseVO(XcnRspCode.OK, configAdminService.setConfAdmin(conf));
 	}
-	
+
+	@RequestMapping(value = "/setConfAdmin_list.xcn")
+	@Description("운용자 환경 설정 수정")
+	@AuditOperation(Operation.UPDATE)
+	@ResponseBody
+	public XcnResponseVO setConfAdmin_list(final HttpServletRequest request) throws Exception {
+		String adminId = Common.getAdminId(request);
+		JSONObject param = Common.getParam(request);
+		JSONArray confs = Common.toJSONArray(param.get("data"));
+		for (int i = 0; i < confs.size(); i++) {
+			ConfigAdminVO conf = (ConfigAdminVO) JSONObject.toBean(confs.getJSONObject(i), ConfigAdminVO.class);
+			conf.setAdminId(adminId);
+			configAdminService.setConfAdmin(conf);
+		}
+		return new XcnResponseVO(XcnRspCode.OK);
+	}
+
+
+
 	@RequestMapping(value = "/getConfAdminOption.xcn")
 	@Description("운용자 환경 설정 리스트 조회")
 	@ResponseBody
@@ -73,4 +96,8 @@ public class ConfigAdminController {
 		String val = Common.nvl(Common.getParam(request).get("val"));
 		return new XcnResponseVO(XcnRspCode.OK, configAdminService.setConfAdminOption(confId, val, adminId));
 	}
+
+
 }
+
+

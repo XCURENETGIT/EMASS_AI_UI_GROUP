@@ -547,6 +547,7 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .ptb12 {padding:12px 0 !important;}
 .pt16 {padding-top:16px;}
 .pt8 {padding-top:8px;}
+.pl8 {padding-left:8px;}
 .pb4 {padding-bottom:4px;}
 .pb8 {padding-bottom:8px;}
 .pb16 {padding-bottom:16px;}
@@ -554,6 +555,7 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .pr20 {padding-right:20px;}
 .pl16 {padding-left:16px;}
 .pr16 {padding-right:16px;}
+
 
 /* overflow-y: auto; */
 .y_scroll { overflow-y:scroll; }
