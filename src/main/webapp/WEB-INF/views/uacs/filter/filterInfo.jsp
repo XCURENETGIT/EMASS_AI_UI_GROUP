@@ -663,6 +663,8 @@
 						<div class="col-65">
 							<input type="text" class="w100" name="userId" id="userId" placeholder="ID">
 							<input type="hidden" class="w100" id="idLogSeq" name="idLogSeq">
+							<input type="hidden" name="createId" value="${_USERCREDENTIAL_.adminId}">
+							<input type="hidden" name="updateId" value="${_USERCREDENTIAL_.adminId}">
 						</div>
 					</div>
 					<div class="row">
@@ -940,6 +942,8 @@
 				</div>
 				<%} %>
 				<input type="hidden" name="tabId"/>
+				<input type="hidden" name="createId" value="${_USERCREDENTIAL_.adminId}">
+				<input type="hidden" name="updateId" value="${_USERCREDENTIAL_.adminId}">
 				<div class="modalfooter">
 					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
 					<button type="button" class="pop_btn02 savePopBtn" accesskey="S" id="savePopBtn">
@@ -986,6 +990,8 @@
 							</select>
 							<input type="hidden" name="serviceNm"/>
 							<input type="hidden" name="tab"/>
+							<input type="hidden" name="createId" value="${_USERCREDENTIAL_.adminId}">
+							<input type="hidden" name="updateId" value="${_USERCREDENTIAL_.adminId}">
 						</div>
 					</div>
 					<input type="hidden" name="tabId"/>
@@ -1022,6 +1028,8 @@
 						<div class="col-65">
 							<span>http://</span><input type="text" class="w100" name="url" id="url" placeholder="URL" style="width: 280px">
 							<input type="hidden" id="urlLogSeq" name="urlLogSeq">
+							<input type="hidden" name="createId" value="${_USERCREDENTIAL_.adminId}">
+							<input type="hidden" name="updateId" value="${_USERCREDENTIAL_.adminId}">
 						</div>
 					</div>
 				</div>
@@ -1078,6 +1086,8 @@
 							<input type="hidden" name="serviceNm"/>
 							<input type="hidden" name="tab"/>
 							<input type="hidden" name="tabId"/>
+							<input type="hidden" name="createId" value="${_USERCREDENTIAL_.adminId}">
+							<input type="hidden" name="updateId" value="${_USERCREDENTIAL_.adminId}">
 						</div>
 					</div>
 				</div>
@@ -1152,6 +1162,8 @@
 					</div>
 				</div>
 				<input type="hidden" name="tabId"/>
+				<input type="hidden" name="createId" value="${_USERCREDENTIAL_.adminId}">
+				<input type="hidden" name="updateId" value="${_USERCREDENTIAL_.adminId}">
 				<div class="modalfooter">
 					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
 					<button type="button" class="pop_btn02 savePopBtn" accesskey="S"><s:message code="common.msg.save"/></button>
@@ -1212,6 +1224,8 @@
 						</div>
 					</div>
 					<input type="hidden" name="tabId"/>
+					<input type="hidden" name="createId" value="${_USERCREDENTIAL_.adminId}">
+					<input type="hidden" name="updateId" value="${_USERCREDENTIAL_.adminId}">
 				</div>
 				<div class="modalfooter">
 					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
@@ -1283,6 +1297,9 @@
     gridId.colAdd('serviceNm', '<s:message code="filterInfo.service"/>', 150, 'center', false, 'nomal');
     gridId.colAdd('serviceCd', '<s:message code="filterInfo.serviceCode"/>', 100, 'center', false, 'nomal');
     gridId.colAdd('createDt', '<s:message code="filterInfo.createDt"/>', 180, 'center', false, 'nomal');
+    gridId.colAdd('createId', '<s:message code="filterInfo.createId"/>', 140, 'center', false, 'nomal');
+    gridId.colAdd('updateDt', '<s:message code="filterInfo.updateDt"/>', 140, 'center', false, 'nomal');
+    gridId.colAdd('updateId', '<s:message code="filterInfo.updateId"/>', 140, 'center', false, 'nomal');
     gridId.loadExportMenu('<s:message code="POLICY_SETUP.POLICY_NOLOG"/>-ID');
     gridId.onClick = function () {
         if (gridId.Col == gridId.ColIndex('userId')) {
@@ -1319,6 +1336,10 @@
     gridIp.colAdd('deviceNm', '<s:message code="filterInfo.applydevice"/>', 150, 'center', false, 'nomal');
     gridIp.colAdd('comment', '<s:message code="filterInfo.comment"/>', 150, 'center', false, 'nomal');
     gridIp.colAdd('createDt', '<s:message code="filterInfo.createDt"/>', 150, 'center', false, 'nomal');
+    gridIp.colAdd('createId', '<s:message code="filterInfo.createId"/>', 140, 'center', false, 'nomal');
+    gridIp.colAdd('updateDt', '<s:message code="filterInfo.updateDt"/>', 140, 'center', false, 'nomal');
+    gridIp.colAdd('updateId', '<s:message code="filterInfo.updateId"/>', 140, 'center', false, 'nomal');
+
     gridIp.loadExportMenu('<s:message code="POLICY_SETUP.POLICY_NOLOG"/>-IP');
     gridIp.onClick = function () {
         if (gridIp.Col == gridIp.ColIndex('userIpDesc')) {
@@ -1396,6 +1417,9 @@
     gridDomain.colAdd('serviceNm', '<s:message code="filterInfo.service"/>', 150, 'center', false, 'nomal');
     gridDomain.colAdd('serviceCd', '<s:message code="filterInfo.serviceCode"/>', 100, 'center', false, 'nomal');
     gridDomain.colAdd('createDt', '<s:message code="filterInfo.createDt"/>', 180, 'center', false, 'nomal');
+    gridDomain.colAdd('createId', '<s:message code="filterInfo.createId"/>', 140, 'center', false, 'nomal');
+    gridDomain.colAdd('updateDt', '<s:message code="filterInfo.updateDt"/>', 140, 'center', false, 'nomal');
+    gridDomain.colAdd('updateId', '<s:message code="filterInfo.updateId"/>', 140, 'center', false, 'nomal');
     gridDomain.loadExportMenu('<s:message code="POLICY_SETUP.POLICY_NOLOG"/>-Domain');
     gridDomain.onClick = function () {
         if (gridDomain.Col == gridDomain.ColIndex('domain')) {
@@ -1416,6 +1440,9 @@
     gridUrl.autoNumber();
     gridUrl.colAdd('url', 'URL', 300, 'left', false, 'link');
     gridUrl.colAdd('createDt', '<s:message code="filterInfo.createDt"/>', 180, 'center', false, 'nomal');
+    gridUrl.colAdd('createId', '<s:message code="filterInfo.createId"/>', 140, 'center', false, 'nomal');
+    gridUrl.colAdd('updateDt', '<s:message code="filterInfo.updateDt"/>', 140, 'center', false, 'nomal');
+    gridUrl.colAdd('updateId', '<s:message code="filterInfo.updateId"/>', 140, 'center', false, 'nomal');
     gridUrl.loadExportMenu('<s:message code="POLICY_SETUP.POLICY_NOLOG"/>-URL');
     gridUrl.onClick = function () {
         if (gridUrl.Col == gridUrl.ColIndex('url')) {
@@ -1438,6 +1465,10 @@
     gridSubject.colAdd('serviceNm', '<s:message code="filterInfo.service"/>', 150, 'center', false, 'nomal');
     gridSubject.colAdd('serviceCd', '<s:message code="filterInfo.serviceCode"/>', 100, 'center', false, 'nomal');
     gridSubject.colAdd('createDt', '<s:message code="filterInfo.createDt"/>', 180, 'center', false, 'nomal');
+    gridSubject.colAdd('createId', '<s:message code="filterInfo.createId"/>', 140, 'center', false, 'nomal');
+    gridSubject.colAdd('updateDt', '<s:message code="filterInfo.updateDt"/>', 140, 'center', false, 'nomal');
+    gridSubject.colAdd('updateId', '<s:message code="filterInfo.updateId"/>', 140, 'center', false, 'nomal');
+
     gridSubject.loadExportMenu('<s:message code="POLICY_SETUP.POLICY_NOLOG"/>-<s:message code="filterInfo.subject"/>');
     gridSubject.onClick = function () {
         if (gridSubject.Col == gridSubject.ColIndex('subject')) {
@@ -1469,6 +1500,9 @@
         else return '-';
     });
     gridSize.colAdd('createDt', '<s:message code="filterInfo.createDt"/>', 180, 'center', false, 'nomal');
+    gridSize.colAdd('createId', '<s:message code="filterInfo.createId"/>', 140, 'center', false, 'nomal');
+    gridSize.colAdd('updateDt', '<s:message code="filterInfo.updateDt"/>', 140, 'center', false, 'nomal');
+    gridSize.colAdd('updateId', '<s:message code="filterInfo.updateId"/>', 140, 'center', false, 'nomal');
     gridSize.loadExportMenu('<s:message code="POLICY_SETUP.POLICY_NOLOG"/>-<s:message code="filterInfo.size"/>');
     gridSize.onClick = function () {
         if (gridSize.Col == gridSize.ColIndex('serviceNm')) {
@@ -1495,6 +1529,9 @@
     gridAttach.colAdd('serviceNm', '<s:message code="filterInfo.service"/>', 150, 'center', false, 'nomal');
     gridAttach.colAdd('serviceCd', '<s:message code="filterInfo.serviceCode"/>', 100, 'center', false, 'nomal');
     gridAttach.colAdd('createDt', '<s:message code="filterInfo.createDt"/>', 180, 'center', false, 'nomal');
+    gridAttach.colAdd('createId', '<s:message code="filterInfo.createId"/>', 140, 'center', false, 'nomal');
+    gridAttach.colAdd('updateDt', '<s:message code="filterInfo.updateDt"/>', 140, 'center', false, 'nomal');
+    gridAttach.colAdd('updateId', '<s:message code="filterInfo.updateId"/>', 140, 'center', false, 'nomal');
     gridAttach.loadExportMenu('<s:message code="POLICY_SETUP.POLICY_NOLOG"/>-<s:message code="filterInfo.subject"/>');
     gridAttach.onClick = function () {
         if (gridAttach.Col == gridAttach.ColIndex('attach')) {

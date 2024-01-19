@@ -371,6 +371,8 @@ function validationPassword( uid, upw, bpw )
 				</div>
 				<input type="hidden" name="tabId"/>
 				<input type="hidden" name="tab" />
+				<input type="hidden" name="createId" value="${_USERCREDENTIAL_.adminId}">
+				<input type="hidden" name="updateId" value="${_USERCREDENTIAL_.adminId}">
 			</form>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>

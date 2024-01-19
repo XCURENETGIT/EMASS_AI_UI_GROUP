@@ -11,5 +11,8 @@ public class DomainFilterVO {
 	private String serviceNm;
 	private String domain;
 	private String createDt;
+	private String createId;
+	private String updateDt;
+	private String updateId;
 	private String useYn;
 }

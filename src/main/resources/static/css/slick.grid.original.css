@@ -87,7 +87,7 @@
 
 .slick-cell a {
 	font-size: 13px;
-/*	font-family: "Pretendard", "Gulim", "Dotum", Helvetica,"Apple SD Gothic Neo",sans-serif !important;*/
+	/*	font-family: "Pretendard", "Gulim", "Dotum", Helvetica,"Apple SD Gothic Neo",sans-serif !important;*/
 	text-decoration: none;
 	cursor: pointer;
 	color: #00c;
@@ -592,7 +592,7 @@ classes should alter those!
 } */
 
 .slick-row.odd {
-	/*border-bottom: 1px solid #ddd;*/
+	border-bottom: 1px solid #ddd;
 }
 
 .slick-row.even {

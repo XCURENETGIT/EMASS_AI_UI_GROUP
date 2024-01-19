@@ -813,7 +813,7 @@ menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
 	margin: 0;
 	padding: 0;
-	border: 0;
+	border: 1;
 	font-size: 100%;
 	font: inherit;
 	vertical-align: baseline;
@@ -890,5 +890,3 @@ input[type=file]::file-selector-button {
 	color: #fff;
 }
 input[type=file]::file-selector-button:hover { background-color: #1C64D3;}
-
-
