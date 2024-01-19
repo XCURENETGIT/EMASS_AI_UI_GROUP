@@ -157,7 +157,7 @@
 		}
 	})
 
-    $('.listChart').on('click','.subtab_close',function(){
+    $(document).on('click', '.subtab_close', function(){
         currentgrid = getCurrentGrid();
         var id = 'tab'+ Number($(this).parents('li').attr('idx'));
         var obj = tabInfo[id];
@@ -178,6 +178,7 @@
             tabFlag = false;
         }
     });
+
 
     $('.totalView').click(function(){
         $("#chartCntDiv").show();
@@ -462,7 +463,7 @@
         if( tabNum > 8) {
             tabFlag = true;
             var delid = $( ".listChart li:nth-child(2)" ).attr('idx');
-            $('#detailTab'+delid+' .close').click();
+            $('#detailTab'+delid+' .subtab_close ').click();
         }
 
         var rowKeys = rowKey.split(",");
@@ -504,8 +505,8 @@
 // 		tabName = ' - ' + displayName;
             colKeyNm += ' <s:message code="analysis.usagecompare.ui.detaillist"/>';
         }
-        $('.listChart').append($('<li style="display:inline-flex;text-align: center;z-index:1001;" idx="'+tabID+'" id="liTab'+tabID+'"><a data-toggle="tab" href="#tab'+tabID+'" id="detailTab'+tabID+'" style="display: flex; align-items: center; justify-content: center;">'+displayName+' - '+colKeyNm+'<span class="badge mal4"></span><button type="button" class="subtab_close">	&#10006;</button></a></li>'));
-        $('#basicStatList').after($('<div class="tab-pane fade" id="tab' + tabID + '"><div id="detail_cnt'+tabID+'" style="margin-top:0px; color: #f25643; font-weight: bold; font-size: 13px;"></div><div id="grid'+tabID+'" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; height: 380px"></div></div>'));
+        $('.listChart').append($('<li style="display:inline-flex;text-align: center;z-index:1001;" idx="' + tabID + '" id="liTab' + tabID + '"><a data-toggle="tab" href="#tab' + tabID + '" id="detailTab' + tabID + '" style="display: flex; align-items: center; justify-content: center;">' + displayName + ' - ' + colKeyNm + '<span class="badge mal4"></span><button type="button" class="subtab_close closeBtn">	&#10006;</button></a></li>'));
+        $('#basicStatList').after($('<div class="tab-pane fade" id="tab' + tabID + '"><div id="grid' + tabID + '" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; height: 400px"></div></div>'));
 
         var gid = 'grid'+tabID;
         var gridObj = new Xgrid(gid, contextRoot);

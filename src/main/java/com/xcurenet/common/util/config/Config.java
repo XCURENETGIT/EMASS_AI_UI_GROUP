@@ -10,6 +10,7 @@ import com.xcurenet.common.util.SpringContextUtil;
 import com.xcurenet.common.util.elasticsearch.ElasticSearchCommon;
 import com.xcurenet.config.service.ConfigService;
 import com.xcurenet.config.service.ConfigVO;
+import com.xcurenet.config.service.impl.ConfigServiceImpl;
 import com.xcurenet.emass.iprange.service.IpRangeService;
 import com.xcurenet.emass.iprange.service.IpRangeVO;
 import com.xcurenet.emass.service.service.ServiceGroupService;
@@ -25,10 +26,18 @@ import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.Order;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.support.EncodedResource;
+import org.springframework.jdbc.datasource.DataSourceUtils;
+import org.springframework.jdbc.datasource.init.ScriptUtils;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import javax.sql.DataSource;
+import java.io.File;
+import java.sql.Connection;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -60,6 +69,9 @@ public class Config {
 
 	@Autowired
 	public UserService userService;
+
+	@Autowired
+	private DataSource dataSource;
 
 	private static List<ConfigVO> configs;
 
@@ -261,10 +273,52 @@ public class Config {
 		return fieldStr;
 	}
 
+	public boolean execute(String filePath, boolean all) {
+		filePath = new File(new File(ConfigServiceImpl.class.getResource("").getPath()).getParentFile().getParentFile().getParent() + filePath).getAbsolutePath();
+		Connection _con = null;
+		try {
+			_con = DataSourceUtils.getConnection(dataSource);
+			_con.setAutoCommit(false);
+			if (all) ScriptUtils.executeSqlScript(_con, new EncodedResource(new FileSystemResource(filePath)), false, false, "--", "^^^ END OF SCRIPT ^^^", "/*", "*/");
+			else ScriptUtils.executeSqlScript(_con, new FileSystemResource(filePath));
+			_con.commit();
+			return true;
+		} catch (Exception e) {
+			rollback(_con);
+			e.printStackTrace();
+		} finally {
+			close(_con);
+		}
+		return false;
+	}
+	public void close(Connection con){
+		if (con != null) {
+			try {
+				con.close();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+	}
+	public void rollback(Connection con){
+		if (con != null) {
+			try {
+				con.rollback();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+	}
+
 	@Order(1)
 	@PostConstruct
 	public void init() {
 		springContextUtil.setApplicationContext(applicationContext);
+
+		execute("/sqlmap/mappers/sql/procedure.sql", true);
+		execute("/sqlmap/mappers/sql/create_table.sql", false);
+		execute("/sqlmap/mappers/sql/patch_data.sql", false);
+		execute("/sqlmap/mappers/sql/insert_data.sql", false);
 
 		log.info("[CONFIG] LOAD START..");
 

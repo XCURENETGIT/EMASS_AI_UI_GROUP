@@ -143,6 +143,7 @@ var eikon2 = {
             return;
         }
 
+
         var filterVal = {};
         var conArray = [];
         var condition = {};
@@ -173,7 +174,11 @@ var eikon2 = {
                     detailMsgid.sort();
                     console.log(detailMsgid);
                     console.log("현재 번호  "+ detailMsgid[searchOffset]);
-                    checkList(searchOffset);
+                    console.log("현재 번호:"+searchOffset );
+                    console.log("fdad"+detailMsgid[0]);
+
+
+                    checkList(searchOffset,type);
 
 
                 }
@@ -451,10 +456,11 @@ function getCollectionGroupList (page,type){
         success : function(data, total) {
             rtnGenerativeGroupList(data.groups)
             rtnnGenerativeGroupPage(total, page);
+            HighlightGroup();
         },
         error : function(status, message) {
             ui.alertMsg(message);
-            HighlightGroup();
+
         },
         complete : function() {
             searchFlag = false;
@@ -804,9 +810,9 @@ function viewDate(dateStr){
 }
 
 
-function checkList(cnt){
+function checkList(cnt,type){
 //	selectedSearchData = cnt;
-    getCollectionMessage($('#selectUserInfo').attr('data-name'), $('#selectUserInfo').attr('data-srcip'), $('#selectUserInfo').attr('data-usr_id'), detailMsgid[cnt]);
+    getCollectionMessage($('#selectUserInfo').attr('data-name'), $('#selectUserInfo').attr('data-srcip'), $('#selectUserInfo').attr('data-usr_id'), detailMsgid[0],type);
     $('#selectCnt').html(cnt+1);
 }
 
@@ -978,19 +984,20 @@ jQuery.fn.highlight = function(pat, type) {
     });
 };
 
-function HighlightGroup( ) {
-    setTimeout(function(){
+function HighlightGroup() {
+    setTimeout(function () {
         var searchs = $('#searchStrInput').val().split(/\||\+|\s|\*|\"/);
-        if ( searchs.length > 0 ){
+        if (searchs.length > 0) {
             var group_list_obj = $("#group_list").find('span');
 
-            for ( var i=0 ; i < searchs.length ; i++ ) {
-                if ( searchs[i] == '' ) continue;
-                $( group_list_obj ).highlight(searchs[i], 'BS');
+            for (var i = 0; i < searchs.length; i++) {
+                if (searchs[i] == '') continue;
+                $(group_list_obj).highlight(searchs[i], 'BS');
             }
         }
     }, 100);
 }
+
 
 function Highlight( ) {
     setTimeout(function(){
@@ -1249,9 +1256,18 @@ function rtnFileGroupList (data) {
         var leftDiv = document.createElement("div");
         leftDiv.className = "left";
 
-        var leftContent = "<p><span class='chatid'>" + data[i].attachname +"</span>";
-        leftContent += "</p>" +
-            "<p><span class='name'>" + data[i].busiNm + "</span><span class='bar'></span><span class='name'>" + data[i].deptNm + "</span><span class='bar'></span><span class='name'>" + data[i].jikgubNm + "</span><span class='bar'></span><span class='name'>" + data[i].name + "</span><span class='bar'></span><span class='name'>" + data[i].attachsize + "KB</span></p>";
+        var leftContent = "<p><span class='chatid'>" + data[i].attachname + "</span></p>" +
+            "<p><span class='name'>" + data[i].busiNm + "</span>";
+
+        leftContent += data[i].deptNm ? "<span class='bar'></span><span class='name'>" + data[i].deptNm + "</span>" : "<span class='bar'></span><span class='name'>-</span>";
+        leftContent += data[i].jikgubNm ? "<span class='bar'></span><span class='name'>" + data[i].jikgubNm + "</span>" : "<span class='bar'></span><span class='name'>-</span>";
+        if (data[i].name != null) {
+            leftContent += "<span class='bar'></span><span class='name'>" + data[i].name + "</span>";
+        } else {
+            leftContent += "<span class='bar'></span><span class='name'>" + data[i].userkey + "</span>";
+        }
+
+        leftContent += "<span class='bar'></span><span class='name'>" + data[i].attachsize + "KB</span></p>";
 
         leftDiv.innerHTML = leftContent;
         li.appendChild(leftDiv);
@@ -1322,7 +1338,13 @@ function rtnGenerativeGroupList(data) {
         else{
             var bodySnippet="";
         }
-        var leftContent = "<p><span class='chatid'>" + data[i].userkey +"("+data[i].deptNm+"/"+data[i].jikgubNm+"/"+data[i].name+")"+"</span>";
+        var leftContent = "<p><span class='chatid'>";
+        var deptNm = data[i].deptNm || "-";
+        var jikgubNm = data[i].jikgubNm || "-";
+        var name = data[i].name || "-";
+
+        leftContent += data[i].userkey + "(" + deptNm + "/" + jikgubNm + "/" + name + ")" + "</span>";
+
         if (data[i].attached === 'Y') {
             leftContent += "<span class='file'></span>";
         }

@@ -731,7 +731,7 @@ function getDeptSchedule(){
 	<div class="modal-content">
 		<form method="post" id="uploadForm" enctype="multipart/form-data" target="upload_file">
 			<div class="modalHead">
-				<h2><s:message code="DATA_MONITOR.KEYWORD_MGMT"/>-<s:message code="keyword.msg.upload"/></h2>
+				<h2><s:message code="deptIpRange.set.iprange"/>-<s:message code="keyword.msg.upload"/></h2>
 				<span class="close" data-dismiss="modal">&times;</span>
 			</div>
 			<div class="modalCon">
@@ -834,22 +834,22 @@ function getDeptSchedule(){
 							<label class="fname"><s:message code="userInfo.set.day"/></label>
 						</div>
 						<div class="col-65">
-							<div class="checkbox"><input type="checkbox" value="A" id="allWeek"></span><s:message
-									code="userInfo.all"/></div>
-							<div class="checkbox"><input type="checkbox" name="dept.week" value="sun"><s:message
-									code="common.sun"/></div>
-							<div class="checkbox"><input type="checkbox" name="dept.week" class="dept.week" value="mon"><s:message
-									code="common.mon"/></div>
-							<div class="checkbox"><input type="checkbox" name="dept.week" class="dept.week" value="tue"><s:message
-									code="common.tue"/></div>
-							<div class="checkbox"><input type="checkbox" name="dept.week" class="dept.week" value="wed"><s:message
-									code="common.wed"/></div>
-							<div class="checkbox"><input type="checkbox" name="dept.week" class="dept.week" value="thu"><s:message
-									code="common.thu"/></div>
-							<div class="checkbox"><input type="checkbox" name="dept.week" class="dept.week" value="fri"><s:message
-									code="common.fri"/></div>
-							<div class="checkbox"><input type="checkbox" name="dept.week" class="dept.week" value="sat"><s:message
-									code="common.sat"/></div>
+							<div class="checkbox"><input type="checkbox" value="A" id="allWeek"></span><label for="allWeek" style="margin-left:3px;" ><span class= "checktit"><s:message
+									code="userInfo.all"/></span></label></div>
+							<div class="checkbox"><input type="checkbox" name="dept.week" value="sun" id="sun" ><label for="sun" style="margin-left:3px;" ><span class= "checktit"><s:message
+									code="common.sun"/></span></label></div>
+							<div class="checkbox"><input type="checkbox" name="dept.week" class="dept.week" value="mon"  id="mon"><label for="mon" style="margin-left:3px;"  ><span class= "checktit"><s:message
+									code="common.mon"/></span></label></div>
+							<div class="checkbox"><input type="checkbox" name="dept.week" class="dept.week" value="tue"  id="tue"><label for="tue" style="margin-left:3px;" ><span class= "checktit"><s:message
+									code="common.tue"/></span></label></div>
+							<div class="checkbox"><input type="checkbox" name="dept.week" class="dept.week" value="wed"  id="wed"><label for="wed" style="margin-left:3px;" ><span class= "checktit"><s:message
+									code="common.wed"/></span></label></div>
+							<div class="checkbox"><input type="checkbox" name="dept.week" class="dept.week" value="thu" id="thu"><label for="thu" style="margin-left:3px;" ><span class= "checktit"><s:message
+									code="common.thu"/></span></label></div>
+							<div class="checkbox"><input type="checkbox" name="dept.week" class="dept.week" value="fri"  id="fri"><label for="fri" style="margin-left:3px;" ><span class= "checktit"><s:message
+									code="common.fri"/></span></label></div>
+							<div class="checkbox"><input type="checkbox" name="dept.week" class="dept.week" value="sat"  id="sat"><label for="sat"style="margin-left:3px;"  ><span class= "checktit"><s:message
+									code="common.sat"/></span></label></div>
 						</div>
 					</div>
 						<div class="row">
@@ -913,6 +913,10 @@ function getDeptSchedule(){
 						<div class="col-65">
 							<button id="directExecuteBtn" type="button" accesskey="D" class="form_btn01_02" style="margin-left: 84px"><span><s:message code="userInfo.direct.execute"/></span></button>
 						</div>
+					</div>
+					<div class="modalfooter">
+						<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+						<button type="button" class="pop_btn02" id="setDeptPopBtn" accesskey="S"><s:message code="common.msg.save"/></button>
 					</div>
 
 				</div>

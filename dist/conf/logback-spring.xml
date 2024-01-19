@@ -3,14 +3,14 @@
 <configuration scan="true" scanPeriod="30 seconds">
 
 	<property name="time" value="[%date{yyyy-MM-dd HH:mm:ss.SSS, Asia/Seoul}]"/>
-	<property name="log_dir" value="/users/emasspro/logs/"/>
+	<property name="log_dir" value="/users/emassai/logs/"/>
 	<property name="pattern" value="${time} %-5level %20.-20logger{0}.%-4line [%-25.-25X{adminIp}- %-12X{adminId}] %msg%n"/>
 
 	<appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${log_dir}emasspro.log</file>
+		<file>${log_dir}ui.log</file>
 		<append>true</append>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${log_dir}lthui.%d{yyyy-MM-dd}.log%i.gz</fileNamePattern>
+			<fileNamePattern>${log_dir}ui.%d{yyyy-MM-dd}.log%i.gz</fileNamePattern>
 			<maxHistory>30</maxHistory>
 			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
 				<maxFileSize>2GB</maxFileSize>
@@ -39,9 +39,9 @@
 	</appender>
 
 	<appender name="sql_log" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${log_dir}sql_edc3.0.log</file>
+		<file>${log_dir}sql.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${log_dir}emass_sql.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<fileNamePattern>${log_dir}sql.%d{yyyy-MM-dd}.log</fileNamePattern>
 			<maxHistory>10</maxHistory>
 		</rollingPolicy>
 		<encoder>

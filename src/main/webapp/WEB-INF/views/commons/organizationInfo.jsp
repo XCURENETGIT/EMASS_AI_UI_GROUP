@@ -990,7 +990,7 @@
 <div>
 	<div class="searchArea">
 		<div class="searchSub">
-			<input type="text" placeholder="<s:message code="ipRange.msg.enter.busicomment"/>" id="searchStrInput" class="w40">
+			<input type="text" placeholder="<s:message code="ipRange.msg.enter.busicomment"/>" id="searchStrInput" style="width: 280px">
 			<button class="form_btn01" type="button" accesskey="Q" id="searchBtn"><s:message
 					code="common.msg.search"/></button>
 

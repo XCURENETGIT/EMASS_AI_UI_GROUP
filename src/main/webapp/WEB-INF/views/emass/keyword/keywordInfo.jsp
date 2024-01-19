@@ -440,7 +440,7 @@ function fileExtCheck(obj) {
 						</div>
 						<div class="col-65">
 							<input type="text" class="w100" name="keywordName" id="keywordName" maxlength="60">
-							<input type="text" class="w100" name="keywordSeq" id="keywordSeq">
+							<input type="hidden" class="w100" name="keywordSeq" id="keywordSeq">
 						</div>
 					</div>
 
@@ -516,7 +516,7 @@ function fileExtCheck(obj) {
 			<div class="searchSub" style="width: 470px;">
 				<div>
 					<input type="text" placeholder="<s:message code="keyword.message.part_name"/>" id="searchStrGroup" style="width: 220px;">
-					<button class="form_btn01" type="button" accesskey="G" id="searchGroupBtn"><s:message code="common.search"/></button>
+					<button class="form_btn01" type="button" accesskey="G" id="searchStrGroupBtn"><s:message code="common.search"/></button>
 				</div>
 				<div class="btnform">
 				<button type="button" class="btn01" accesskey="I" id="groupInsertBtn"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>

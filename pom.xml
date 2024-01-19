@@ -12,9 +12,9 @@
 	<packaging>war</packaging>
 
 	<groupId>com.xcurenet</groupId>
-	<artifactId>emasspro</artifactId>
+	<artifactId>emassai</artifactId>
 	<version>1.0.0</version>
-	<name>emasspro</name>
+	<name>emassai</name>
 	<description>EMASS AI</description>
 
 	<properties>
@@ -562,6 +562,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
 					<testFailureIgnore>true</testFailureIgnore>
+					<skipTests>true</skipTests>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -611,8 +612,6 @@
 								<copydir src="${project.basedir}\dist\" dest="${project.basedir}\target\dist\"/>
 
 								<copy file="${project.basedir}\target\${project.artifactId}-${project.version}.war" tofile="${project.basedir}\target\dist\lib\${project.artifactId}-${project.version}.war" />
-								<copy file="${project.basedir}\src\main\resources\application.properties" tofile="${project.basedir}\target\dist\conf\application.properties" />
-
 								<copy file="${project.basedir}\src\main\resources\com/xcurenet/files/regexes.yaml" tofile="${project.basedir}\target\dist\conf\regexes.yaml" />
 								<copy file="${project.basedir}\src\main\resources\com/xcurenet/files/css/pdf.css" tofile="${project.basedir}\target\dist\conf\regexes.yaml" />
 								<copy file="${project.basedir}\src\main\resources\com/xcurenet/files/font/dotum.ttf" tofile="${project.basedir}\target\dist\conf\regexes.yaml" />

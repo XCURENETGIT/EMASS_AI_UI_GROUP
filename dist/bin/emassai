@@ -2,14 +2,14 @@
 
 export LANG=en_US.UTF-8
 
-PROGRAM_NAME="Xcurenet_EMASS_PRO_v2"
+PROGRAM_NAME="Xcurenet_EMASS_AI_v1"
 PROGRAM_SCRIPT="$0"
 PROGRAM_HOME=`dirname "$PROGRAM_SCRIPT"`/..
 PROGRAM_HOME=`cd "$PROGRAM_HOME"; pwd`
 PROGRAM_LOG_CONF="$PROGRAM_HOME/conf/logback-spring.xml"
 PROGRAM_CLASSPATHS="$PROGRAM_HOME/lib/*.war"
 
-JAVA_OPTS="-server -Xms2g -Xmx4g -XX:MetaspaceSize=512M -XX:MaxMetaspaceSize=512M -XX:NewRatio=3 -XX:SurvivorRatio=4 -XX:TargetSurvivorRatio=90 -XX:MaxTenuringThreshold=8 -XX:+UseG1GC -XX:ConcGCThreads=4 -XX:ParallelGCThreads=4 -XX:+CMSScavengeBeforeRemark -XX:PretenureSizeThreshold=64m -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=50 -XX:CMSMaxAbortablePrecleanTime=6000 -XX:+CMSParallelRemarkEnabled -XX:+ParallelRefProcEnabled -Djava.net.preferIPv4Stack=true -XX:OnOutOfMemoryError=$PROGRAM_HOME/bin/oom_proc -Dlogging.config=$PROGRAM_LOG_CONF -Dprogram.name=$PROGRAM_NAME -Dspring.cloud.bootstrap.location=$PROGRAM_HOME/conf/bootstrap.properties"
+JAVA_OPTS="-server -Xms2g -Xmx4g -XX:MetaspaceSize=512M -XX:MaxMetaspaceSize=512M -XX:NewRatio=3 -XX:SurvivorRatio=4 -XX:TargetSurvivorRatio=90 -XX:MaxTenuringThreshold=8 -XX:+UseG1GC -XX:ConcGCThreads=4 -XX:ParallelGCThreads=4 -XX:+CMSScavengeBeforeRemark -XX:PretenureSizeThreshold=64m -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=50 -XX:CMSMaxAbortablePrecleanTime=6000 -XX:+CMSParallelRemarkEnabled -XX:+ParallelRefProcEnabled -Djava.net.preferIPv4Stack=true -XX:OnOutOfMemoryError=$PROGRAM_HOME/bin/oom_proc -Dlogging.config=$PROGRAM_LOG_CONF -Dprogram.name=$PROGRAM_NAME -Dfile.encoding=UTF-8"
 PROGRAM_OPTS="--spring.config.location=file:$PROGRAM_HOME/conf/application.properties"
 
 if [ -n "$JAVA_HOME" ]; then

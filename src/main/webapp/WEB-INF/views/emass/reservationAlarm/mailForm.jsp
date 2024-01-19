@@ -11,7 +11,19 @@
 	}
 .modal-body {
 	padding-top: 5px;
-} 
+}
+
+/*	#mailPopForm{
+		position: absolute;
+		top: 120px;
+		z-index: 999;
+		left: 305px;
+		border: 1px solid #ccc;
+		width: 400px;
+		height:500px;
+	}*/
+
+
 </style>
 <script type="text/javascript">
 var searchFlag=false;
@@ -161,7 +173,7 @@ function getData() {
 <!--모달 -->
 <div class="modal" id="mailFormPop" tabindex="-1" role="dialog" aria-labelledby="mailFormPop" data-backdrop="static">
 	<div class="modal-content">
-		<form method="post" id="ipRangePopForm">
+		<form method="post" id="mailPopForm">
 			<div class="modalHead">
 				<h2><s:message code="mail.form.setting"/></h2>
 				<span class="close" data-dismiss="modal">&times;</span>
@@ -246,7 +258,7 @@ function getData() {
 				<div class="modalfooter">
 					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message
 							code="common.msg.close"/></button>
-					<button type="button" class="pop_btn02" accesskey="S" id="savePopBtn"><s:message
+					<button type="button" class="pop_btn02 savePopBtn" accesskey="S" id="savePopBtn"><s:message
 							code="common.msg.save"/></button>
 				</div>
 			</div>
