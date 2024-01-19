@@ -23,6 +23,9 @@ public class IpFilterVO {
 	private String serverEPort;
 	private String comment;
 	private String createDt;
+	private String createId;
+	private String updateDt;
+	private String updateId;
 	private String useYn;
 	private String deviceInfo;
 	private String deviceSeq;

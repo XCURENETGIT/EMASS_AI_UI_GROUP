@@ -13,5 +13,8 @@ public class SizeFilterVO {
 	private String highSize;
 	private String sizeCondition;
 	private String createDt;
+	private String createId;
+	private String updateDt;
+	private String updateId;
 	private String useYn;
 }

@@ -11,5 +11,8 @@ public class SubjectFilterVO {
 	private String serviceNm;
 	private String subject;
 	private String createDt;
+	private String createId;
+	private String updateDt;
+	private String updateId;
 	private String useYn;
 }
