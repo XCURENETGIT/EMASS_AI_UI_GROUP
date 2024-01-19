@@ -607,8 +607,8 @@ Date 1분 경고
 							</div>
 							<div class="col-65">
 								<div class="checkbox">
-									<input type="checkbox"  class="mar8" id="sms_file_cpu"><span class= "checktit">SMS</span>
-									<input type="checkbox" class="mar8" style="margin-left: 8px;" id="notify_file_cpu"><span class="checktit"><s:message code="deviceInfo.alarm"/></span>
+									<input type="checkbox"  class="mar8" id="sms_file_cpu"><label for="sms_file_cpu" ><span class= "checktit">SMS</span></label>
+									<input type="checkbox" class="mar8" style="margin-left: 8px;" id="notify_file_cpu"><label for="notify_file_cpu" ><span class="checktit"><s:message code="deviceInfo.alarm"/></span></label>
 									(<s:message code="deviceInfo.set.alarm.critical"/>)
 								</div>
 							</div>
@@ -619,8 +619,8 @@ Date 1분 경고
 							</div>
 							<div class="col-65">
 								<div class="checkbox">
-									<input type="checkbox" class="mar8" id="sms_file_mem"><span class= "checktit">SMS</span>
-									<input type="checkbox" class="mar8" style="margin-left: 8px;" id="notify_file_mem"><span class="checktit"><s:message code="deviceInfo.alarm"/></span>
+									<input type="checkbox" class="mar8" id="sms_file_mem"><label for="sms_file_mem" ><span class= "checktit">SMS</span>
+									<input type="checkbox" class="mar8" style="margin-left: 8px;" id="notify_file_mem"><label for="notify_file_mem" ><span class="checktit"><s:message code="deviceInfo.alarm"/></span></label>
 									(<s:message code="deviceInfo.set.alarm.critical"/>)
 								</div>
 							</div>
@@ -633,8 +633,8 @@ Date 1분 경고
 							</div>
 							<div class="col-65">
 									<div class="checkbox">
-										<input type="checkbox" class="mar8" id="sms_file"><span class= "checktit">SMS</span>
-										<input type="checkbox" class="mar8" style="margin-left: 8px;" id="notify_file"><span class="checktit"><s:message code="deviceInfo.alarm"/></span>
+										<input type="checkbox" class="mar8" id="sms_file"><label for="sms_file" ><span class= "checktit">SMS</span></label>
+										<input type="checkbox" class="mar8" style="margin-left: 8px;" id="notify_file"><label for="notify_file" ><span class="checktit"><s:message code="deviceInfo.alarm"/></span></label>
 										(<s:message code="deviceInfo.set.alarm.critical"/>)
 									</div>
 							</div>
@@ -646,8 +646,8 @@ Date 1분 경고
 							</div>
 							<div class="col-65">
 								<div class="checkbox">
-										<input type="checkbox" class="mar8" id="sms_proc"><span class= "checktit">SMS</span>
-										<input type="checkbox" class="mar8"  style="margin-left: 8px;" id="notify_proc"><span class="checktit"><s:message code="deviceInfo.alarm"/></span>
+									<input type="checkbox" class="mar8" id="sms_proc"><label for="sms_proc" ><span class= "checktit">SMS</span></label>
+									<input type="checkbox" class="mar8"  style="margin-left: 8px;" id="notify_proc"><label for="notify_proc" ><span class="checktit"><s:message code="deviceInfo.alarm"/></span></label>
 										(<s:message code="deviceInfo.set.alarm.status"/>)
 								</div>
 							</div>
@@ -659,8 +659,8 @@ Date 1분 경고
 							</div>
 							<div class="col-65">
 								<div class="checkbox">
-									<input type="checkbox" class="mar8" id="sms_inter"><span class= "checktit">SMS</span>
-									<input type="checkbox"  class="mar8" style="margin-left: 8px;" id="notify_inter"><span class="checktit"><s:message code="deviceInfo.alarm"/></span>
+									<input type="checkbox" class="mar8" id="sms_inter"><label for="sms_inter" ><span class= "checktit">SMS</span></label>
+									<input type="checkbox"  class="mar8" style="margin-left: 8px;" id="notify_inter"><label for="notify_inter" ><span class="checktit"><s:message code="deviceInfo.alarm"/></span></label>
 								(<s:message code="deviceInfo.set.alarm.status"/>)
 								</div>
 							</div>

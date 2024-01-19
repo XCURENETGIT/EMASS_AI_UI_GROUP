@@ -173,7 +173,7 @@
             }
         })
 
-        $('.listChart').on('click','.subtab_close',function(){
+        $(document).on('click', '.subtab_close', function(){
             currentgrid = getCurrentGrid();
             var id = 'tab'+ Number($(this).parents('li').attr('idx'));
             var obj = tabInfo[id];

@@ -478,6 +478,7 @@
 		getData('Y');
 	};
 	grid1.onClick = function () {
+        console.log(grid1.Col)
 		if (grid1.Col === grid1.ColIndex('rowKey')) return;
 		initProgressbar();
 		makeNetwork(grid1.getValue(grid1.Row, 'rowKey'), grid1.ColKey(grid1.Col), grid1.getValue(grid1.Row, grid1.Col));

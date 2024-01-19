@@ -512,8 +512,8 @@
         var displayName = (rowKey.indexOf(',') > -1) ? '<s:message code="common.msg.all"/>' : rowKey.replaceAll("\\\"", "\"");
         if(rowName!='') displayName = rowName + '&lt;' + rowKey + '&gt;';
         var id = 'tab'+tabID;
-        $('.listChart').append($('<li style="display:inline-flex;text-align: center;z-index:1001;" idx="'+tabID+'" id="liTab'+tabID+'"><a data-toggle="tab" href="#tab'+tabID+'" id="detailTab'+tabID+'" style="display: flex; align-items: center; justify-content: center;">'+displayName+' - '+colKeyNm+'<span class="badge mal4"></span><button type="button" class="subtab_close close">	&#10006;</button></a></li>'));
-        $('#basicStatList').after($('<div class="tab-pane fade" id="tab' + tabID + '"><div id="grid'+tabID+'" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; height: 400px"></div></div>'));
+        $('.listChart').append($('<li style="display:inline-flex;text-align: center;z-index:1001;" idx="' + tabID + '" id="liTab' + tabID + '"><a data-toggle="tab" href="#tab' + tabID + '" id="detailTab' + tabID + '" style="display: flex; align-items: center; justify-content: center;">' + displayName + ' - ' + colKeyNm + '<span class="badge mal4"></span><button type="button" class="subtab_close closeBtn">	&#10006;</button></a></li>'));
+        $('#basicStatList').after($('<div class="tab-pane fade" id="tab' + tabID + '"><div id="grid' + tabID + '" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; height: 400px"></div></div>'));
 
         var gid = 'grid'+tabID;
         var gridObj = new Xgrid(gid, contextRoot);

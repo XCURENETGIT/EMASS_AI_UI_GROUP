@@ -657,23 +657,24 @@
             currentgrid.loadingPage++;
         }
 
-        var xAxis = $('button.optionBtn.active').val();
-        var xAxis_str = $('button.optionBtn.active').text();
-        var busiStr= arrayToString($('#busiSelect').selectpicker('val'));
+        var busi= arrayToString($('#busiSelect').selectpicker('val'));
         var dv = $('#deptVal').val().split('|');
         var dept = dv.join(',');
-
         var deptStr='';
-        if (dept != '') deptStr = dept;
+        if (dept != '') deptStr = $('#deptStr').val();
         else deptStr = '';
 
         var uv = $('#userVal').val().split('|');
         var user = uv.join(',');
 
+
         var userStr='';
-        if (user != '') userStr = user;
+        if (user != '') userStr = $('#userStr').val();
         else userStr = '';
 
+
+        var xAxis = $('button.optionBtn.active').val();
+        var xAxis_str = $('button.optionBtn.active').text();
         searchFlag = true;
         currentgrid.on();
 
@@ -683,13 +684,12 @@
             colKey : colKey,
             startDate : $('#startdate').val().replaceAll("-","")+"000000",
             endDate : $('#enddate').val().replaceAll("-","")+"235959",
-            detailQuery: '',
             xAxis : xAxis,
+            xAxis_str : xAxis_str,
+            yAxis : 'sender_str',
             deptStr:dept,
             busiStr:busi,
             userStr:userStr,
-            xAxis_str : xAxis_str,
-            yAxis : 'sender_str',
             offset : currentgrid.data.length,
             limit : currentgrid.pageSize,
             success : function(data, total) {
