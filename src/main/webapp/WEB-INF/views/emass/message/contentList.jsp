@@ -337,7 +337,6 @@
 			overlap : overlapUse,
 			success : function(data, total) {
 				searchedFlag = true;
-
 				grid.appendData(data.emass);
 				if ( grid.loadingPage == 0 ) grid.Select(-1,-1);
 
@@ -426,8 +425,10 @@
 		busiScrollTabs.clearTabs();
 		busiScrollTabs.refreshState();
 		busiScrollTabs.addTab('<span class="tab_selected"><a href="javascript:;" class="busiCounts active" data-svc1=""> <s:message code="common.msg.all"/><span class="busiCnt">('+total.comma()+')</span></a></span>');
-		for(var i=0; i<data.length; i++){
-			busiScrollTabs.addTab('<span><a href="javascript:;" class="busiCounts" data-svc1="'+data[i].name+'"><!--<i class="fa fa-angle-right" aria-hidden="true"></i>--> '+parent.getSvc1Nm(data[i].name)+'<span class="busiCnt">('+data[i].count.comma()+')</span></a></span>');
+		if(data != null) {
+			for (var i = 0; i < data.length; i++) {
+				busiScrollTabs.addTab('<span><a href="javascript:;" class="busiCounts" data-svc1="' + data[i].name + '"><!--<i class="fa fa-angle-right" aria-hidden="true"></i>--> ' + parent.getSvc1Nm(data[i].name) + '<span class="busiCnt">(' + data[i].count.comma() + ')</span></a></span>');
+			}
 		}
 	}
 
