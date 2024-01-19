@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ include file="/WEB-INF/fragments/messageScript.jsp" %>
+<%@ include file="/WEB-INF/fragments/baseScript.jsp" %>
 <style type="text/css">
 	.radio-inline {
 		padding-left: 0px;
@@ -156,6 +156,7 @@
             } else if (currentTab == 'domainTab') {
                 $("#domainPop").modal('show');
             } else if (currentTab == 'urlTab') {
+                $("#url").val("");
                 $("#urlPop").modal('show');
             } else if (currentTab == 'subjectTab') {
                 $("#subjectPop").modal('show');
