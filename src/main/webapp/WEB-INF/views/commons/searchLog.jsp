@@ -143,7 +143,7 @@
 				</select>
 			</div>
 			<div>
-				<select style="width: 200px;">
+				<select style="width: 200px;"  id="adminId">
 					<option value="">- <s:message code="auditLog.select.admin"/> -</option>
 				</select>
 			</div>

@@ -3,13 +3,9 @@
 
 <head>
 	<style>
-		/*html, body, .xcn_container {*/
-		/*	height: 100%;*/
-		/*	padding: 0px;*/
-		/*	margin: 0px;*/
-		/*	overflow: auto;*/
-		/*	min-width: 650px;*/
-		/*}*/
+		input[type="checkbox"] {
+			margin-top: 5px;
+		}
 	</style>
 	<script>
         $(document).ready(function () {

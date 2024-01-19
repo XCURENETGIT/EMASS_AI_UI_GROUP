@@ -118,7 +118,6 @@
 
     function importKeyword() {
         $('#uploadForm').attr('action', '<c:url value="/importAdminGroupUser.xcn"/>');
-
         var attach = $('[name=attach]').val();
         if (attach == "") {
             ui.alertMsg('<s:message code="keyword.msg.upload.file"/>', function () {
@@ -363,7 +362,9 @@
 
     function saveTextUploadItem() {
         var value = $('#textUploadTextArea').val();
+        console.log("value: "+value);
         var vs = value.split('\n');
+        console.log("zz: "+value.replaceAll('\n', '').trimAll());
 
         if (value.replaceAll('\n', '').trimAll() == '') {
             ui.alertMsg('<s:message code="common.msg.input.contents"/>');
@@ -539,7 +540,7 @@
 							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
-							<input type="color" name="groupColor" id="groupColor" value="#e66465" />
+							<input type="color" name="groupColor" id="groupColor" value="" />
 						</div>
 					</div>
 				</div>
@@ -639,7 +640,7 @@
 				</div>
 				<div class="modalfooter">
 					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
-					<button type="button" class="pop_btn02" accesskey="S"><s:message code="common.msg.save"/></button>
+					<button type="button" class="pop_btn02 uploadPopBtn" accesskey="S"><s:message code="common.msg.save"/></button>
 				</div>
 			</div>
 		</form>
@@ -741,6 +742,7 @@
             var data = gridGroup.getRowData(gridGroup.Row);
             $('#groupSeq').val(data.groupSeq);
             $('#groupName').val(data.groupName);
+            $('#groupColor').val(data.groupColor);
             $('#userGroupPop').attr('mode', 'modify');
             $("#groupName").focus();
             $('.color-cue-name').hide();
