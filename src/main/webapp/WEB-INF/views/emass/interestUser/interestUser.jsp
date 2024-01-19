@@ -779,9 +779,6 @@
     var gridSelectUser = new Xgrid('userSelectGrid', contextRoot);
     gridSelectUser.onCheckBox();
     gridSelectUser.autoNumber();
-    gridSelectUser.colAdd('add', '<s:message code="common.msg.add"/>', 80, 'center', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
-        return "<input type='button' value='<s:message code="common.msg.add"/>' class='btn' style='line-height: 0px; background-color: #337ab7;height: 20px; color:white; vertical-align: middle; font-weight:bold'/>";
-    });
     gridSelectUser.colAdd('userId', '<s:message code="common.msg.id"/>', 120, 'center', false, 'nomal');
     gridSelectUser.colAdd('userNm', '<s:message code="common.msg.name"/>', 150, 'left', false, 'nomal');
     gridSelectUser.colAdd('userEmail', 'E-Mail', 250, 'left', false, 'nomal');

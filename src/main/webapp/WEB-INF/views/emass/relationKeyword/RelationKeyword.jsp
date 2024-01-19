@@ -31,6 +31,7 @@
             $('#searchWordPop input[type=text]').val('');
             $('#searchWordName').attr('readonly', false);
             $('#searchWordPop').attr('mode', 'insert');
+            $('#searchWordRelaNumber').val('');
             $('#searchWordPop').modal('show');
             setTimeout(function () {
                 $("#searchWordName").focus();

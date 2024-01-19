@@ -478,18 +478,18 @@ function makeFileList(data) {
     var str = '';
 
     if (data.length === 0) {
-        str += '<div class="list-group-item02 ma_none"><s:message code="message.message.notfound.attach"/></div>';
+        str += '<div class="list-group-item02 ma_none">첨부파일이 없습니다</div>';
 
     } else {
-        str = '<div class="scrollable-div" style="max-height: 800px; overflow-y: auto;"><ul>';
+        str = '<ul>';
         for (var i = 0; i < data.length; i++) {
             str += '<li><p class="fileListdown" attachsize="' + data[i].attachsize + '" msgid="' + data[i].msgid + '" attachhash="' + data[i].attachhash + '"><span class="img"></span><span>';
             str += '<a href="#">' + data[i].attachname + "." + data[i].attachtype + '</a>';
             str += '</span><span style="position: absolute; right: 0; top: 8px;" ><button class="btnchatdown_w downloadIcon"></button></span></p></li>';
         }
 
-        str += '</div></ul>';
-        str += '<div class="top mat16"><div class="myDropdown mal8 downAllFile"><span><s:message code="didBlock.all"/><s:message code="consent.attach"/> <s:message code="auditLog.oper.SAVE"/> </span><div class="dropdown-content"></div></div></div>';
+        str += '</ul>';
+        str += '<div class="top mat16"><div class="myDropdown mal8 downAllFile"><span>'+filelist.allfileSave+'</span><div class="dropdown-content"></div></div></div>';
     }
 
     return str;
