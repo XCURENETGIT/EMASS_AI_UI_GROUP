@@ -122,9 +122,9 @@
             $('#searchMsgQueryBtn').click(function () {
 
                 var srcip = $('#selectUserInfo').attr('data-srcip');
-                var userid = $('#selectUserInfo').attr('data-name');
+                var userkey = $('#selectUserInfo').attr('data-name');
 
-                eikon2.getCollectionDetailList(userid, '', srcip, '',"G");
+                eikon2.getCollectionDetailList(userkey, '', srcip, '',"G");
             });
             $("#searchMsgStrInput").keypress(function (e) {
                 if (e.keyCode == 13) {
@@ -178,13 +178,13 @@
                 hideSelect();
             });
             $(document).on('click', '.excel_file_down', function () {
-                var userid = $('#selectUserInfo').attr('data-name');
+                var userkey = $('#selectUserInfo').attr('data-name');
                 var srcip = $('#selectUserInfo').attr('data-srcip');
                 var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '')+"0000000";
                 var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '')+"235959";
                 var searchStr = '';
-                if (userid == '') return;
-                eikon2.getCollectionGroupTextExport('<c:url value="/getCollectionGroupAllExport.xcn"/>?userid=' + userid + '&srcip=' + srcip + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr+'&limit=1000&facet_detail=true&export=true&type=G');
+                if (userkey == '') return;
+                eikon2.getCollectionGroupTextExport('<c:url value="/getCollectionGroupAllExport.xcn"/>?userkey=' + userkey + '&srcip=' + srcip + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr+'&limit=1000&facet_detail=true&export=true&type=G');
                 hideSelect();
             });
 
@@ -285,17 +285,17 @@
 
             $(document).on('click', '.me', function (e) {
 
-                var userid = $(this).parent().attr('userid');
+                var userkey = $(this).parent().attr('userkey');
                 var srcip = $(this).parent().attr('srcip');
                 var id = $(this).parent().attr('id');
-                updateEmassGenerativeAdminUserid(userid, id, srcip,"G");
+                updateEmassGenerativeAdminUserid(userkey, id, srcip,"G");
 
                 moveTargetHeight(id, false);
             });
 
             $(document).on('click', '.person', function () {
 
-                if ((isConsent() && $('#consentNo').val() == '') || $(this).attr('userid') == '') {
+                if ((isConsent() && $('#consentNo').val() == '') || $(this).attr('userkey') == '') {
                     return;
                 }
                 //if($(this).hasClass('active')) return;
@@ -304,7 +304,7 @@
                 });
 
                 $(this).addClass('active');
-                $('#userid').text($(this).attr('userid'));
+                $('#userkey').text($(this).attr('userkey'));
 
                 $('#srcip').text($(this).attr('srcip'));
                 $('#msgid').text($(this).attr('msgid'));
@@ -318,7 +318,7 @@
                 $('#startSubDt').val($('#startDt').val());
                 $('#endSubDt').val($('#endDt').val());
                 focusMsgId = '';
-                /*eikon2.getGenerativeDetailList($(this).attr('userid'), $(this).attr('msgid'), $(this).attr('srcip'), $(this).attr('usrid'));*/
+                /*eikon2.getGenerativeDetailList($(this).attr('userkey'), $(this).attr('msgid'), $(this).attr('srcip'), $(this).attr('usrid'));*/
             });
 
             $('input[name="searchType"]:radio').change(function () {
@@ -326,18 +326,18 @@
             });
 
             $('#groupFileCnt').click(function () {
-                fileInfoViewer($('#userid').text(), $('#srcip').text(), $('#usr_id').text());
+                fileInfoViewer($('#userkey').text(), $('#srcip').text(), $('#usr_id').text());
             });
 
             $('#groupParticipant').click(function () {
-                participantInfoViewer($('#userid').text(), $('#usr_id').text());
+                participantInfoViewer($('#userkey').text(), $('#usr_id').text());
             });
 
             $(document).on('click', '.person', function () {
-                var name = $(this).attr('userid');
+                var name = $(this).attr('userkey');
                 var srcip = $(this).attr('srcip');
                 var usr_id = $(this).attr('usr_id');
-                var userid =  $(this).attr('userid');
+                var userkey =  $(this).attr('userkey');
                 var msgid = $(this).attr('msgid');
                 var username= $(this).attr('name');
 
@@ -345,11 +345,11 @@
                 $('#selectUserInfo').attr('data-name', name);
                 $('#selectUserInfo').attr('data-usrid', usr_id);
 
-                $('#selectUserInfo').html(userid+"("+username+")");
+                $('#selectUserInfo').html(userkey+"("+username+")");
                 $('#subchatid').html(": "+name);
                 $('#srcip').text(srcip);
                 $('#usr_id').text(usr_id);
-                eikon2.getCollectionDetailList(userid, msgid, srcip, usr_id,"G");
+                eikon2.getCollectionDetailList(userkey, msgid, srcip, usr_id,"G");
                 hideUserSelect();
             });
 
@@ -433,16 +433,16 @@
 
         function downloadList(type) {
 
-            var userid = $('#selectUserInfo').attr('data-name');
+            var userkey = $('#selectUserInfo').attr('data-name');
             var srcip = $('#selectUserInfo').attr('data-srcip');
             var usr_id = $('#selectUserInfo').attr('usr_id');
 
-            if (userid == '') return;
+            if (userkey == '') return;
             var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '')+"000000";
             var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '')+"235959";
             var searchStr = '';
 
-            eikon2.getCollectionGroupTextExport('<c:url value="/getCollectionrGroupTextExport.xcn"/>?userid=' + userid + '&srcip=' + srcip + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr + '&type=G' +'&export_type='+type + '&groupField=sender_str&limit=1000&', userid);
+            eikon2.getCollectionGroupTextExport('<c:url value="/getCollectionrGroupTextExport.xcn"/>?userkey=' + userkey + '&srcip=' + srcip + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr + '&type=G' +'&export_type='+type + '&groupField=sender_str&limit=1000&', userkey);
         }
 
 
@@ -461,10 +461,10 @@
                 $('#consentBtn').removeClass('active');
             } else {
                 $('#consentNo').val(obj.no);
-                $('#consentName').text(obj.name + "[" + obj.userId + ", " + (obj.deptNm == '' ? '<s:message code="consent.select.consentDept"/>' : obj.deptNm) + "]");
+                $('#consentName').text(obj.name + "[" + obj.userkey + ", " + (obj.deptNm == '' ? '<s:message code="consent.select.consentDept"/>' : obj.deptNm) + "]");
                 /* $('#consentIp').val(obj.userIp);
 				$('#consentEmail').val(obj.userEmail); */
-                $('#consentUserId').val(obj.userId);
+                $('#consentUserId').val(obj.userkey);
                 $('#consentBtn').addClass('active');
             }
         }

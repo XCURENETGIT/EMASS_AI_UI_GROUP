@@ -58,7 +58,7 @@ var eikon2 = {
         $('.messenger_next, .messenger_prev').on('click', function() {
             var srcip = $('#selectUserInfo').attr('data-srcip');
             var usr_id = $('#selectUserInfo').attr('data-usrid');
-            var userid = $('#selectUserInfo').attr('data-name');
+            var userkey = $('#selectUserInfo').attr('data-name');
             var msgIds = [];
 
             if($(this).hasClass('messenger_next')) {
@@ -66,14 +66,14 @@ var eikon2 = {
                 var msgid = $('.timeline').children().last().attr('id');
                 var type = getPageType();
 
-                getGenerativeMessageNext(userid, srcip, usr_id, msgid,type);
+                getGenerativeMessageNext(userkey, srcip, usr_id, msgid,type);
 
             } else {
 
                 var firstData = $('.timeline').children().filter(':eq(1)');
                 var type = getPageType();
                 var msgid = $(firstData).attr('id');
-                getGenerativeMessagePrev(userid, srcip, usr_id, msgid,type);
+                getGenerativeMessagePrev(userkey, srcip, usr_id, msgid,type);
 
             }
 
@@ -88,7 +88,7 @@ var eikon2 = {
         var searchType = $('input:radio[name=searchType]:input:checked').val();
         getFileMessageList(page);
     },
-    getCollectionDetailList : function(userid, msgid, srcip, usr_id,type){
+    getCollectionDetailList : function(userkey, msgid, srcip, usr_id,type){
         searchFlag = true;
         ui.onBody('timeline_list', 0, 60);
 
@@ -103,9 +103,9 @@ var eikon2 = {
         var endDt=$('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 
 
-        getCollectionMessageTotal(userid, srcip, startDt, endDt, usr_id, '',type);
+        getCollectionMessageTotal(userkey, srcip, startDt, endDt, usr_id, '',type);
     },
-    getCollectionGroupTextExport : function(attachUrl, userid){
+    getCollectionGroupTextExport : function(attachUrl, userkey){
         if( detailDataSet.length == 0 ) return;
 
         try {
@@ -128,7 +128,7 @@ var eikon2 = {
      */
     findMessageList : function(offset,type){
         var searchStr = $('#searchMsgStrInput').val();
-        var userid = $('#selectUserInfo').attr("data-name");
+        var userkey = $('#selectUserInfo').attr("data-name");
         var srcip = $('#selectUserInfo').attr("data-srcip");
         var startDt = $('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '')+"0000000";
         var endDt = $('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '')+"235959";
@@ -136,7 +136,7 @@ var eikon2 = {
         if( offset < 0 ) searchOffset = $('#searchResult').html() - 1;
         if( offset >= $('#searchResult').html() || offset == 0 ) searchOffset = 0;
 
-        if( searchStr == '' || (userid == undefined || userid == '')){
+        if( searchStr == '' || (userkey == undefined || userkey == '')){
             $('#searchResult').html('');
             $('#searchResultArea').hide();
             $('#searchResultBtnArea').hide();
@@ -157,7 +157,7 @@ var eikon2 = {
 
         ui.postJson({
             url : 'getGenerativeGroupDetailSearch.xcn',
-            userid : userid,
+            userkey : userkey,
             srcip: srcip,
             data : JSON.stringify( filterVal ),
             offset : searchOffset,
@@ -195,11 +195,11 @@ var eikon2 = {
 };
 
 
-function getCollectionMessageTotal(userid, srcip, startDt, endDt, usr_id, msgid,type){
+function getCollectionMessageTotal(userkey, srcip, startDt, endDt, usr_id, msgid,type){
     /*총 갯수 계산하는 함수*/
     ui.get({
         url : 'getCollectionMessageTotal.xcn',
-        userid : userid,
+        userkey : userkey,
         srcip : srcip,
         startDt : startDt+"000000",
         endDt : endDt+"235959",
@@ -208,7 +208,7 @@ function getCollectionMessageTotal(userid, srcip, startDt, endDt, usr_id, msgid,
         type:type,
         success : function(data, total) {
             $('#groupSubResultCnt').text(data.comma());
-            getCollectionMessage(userid, srcip, usr_id, msgid,type);
+            getCollectionMessage(userkey, srcip, usr_id, msgid,type);
         },
         error : function(status, message) {
             ui.alertMsg(message);
@@ -223,14 +223,14 @@ function getCollectionMessageTotal(userid, srcip, startDt, endDt, usr_id, msgid,
 /**
  * 다음 버튼 ( 최하단의 + 버튼 )
  */
-function getGenerativeMessageNext(userid, srcip, usr_id, msgid,type) {
+function getGenerativeMessageNext(userkey, srcip, usr_id, msgid,type) {
     var startDt = $('#startDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
     var endDt = $('#endDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
     searchFlag = true;
 
     ui.get({
         url : 'getGenerativeMessageNext.xcn',
-        userid : userid,
+        userkey : userkey,
         srcip : srcip,
         startDt : startDt+"000000",
         endDt : endDt+"235959",
@@ -282,14 +282,14 @@ function getGenerativeMessageNext(userid, srcip, usr_id, msgid,type) {
 /**
  * 이전 버튼 ( 최상단의 + 버튼 )
  */
-function getGenerativeMessagePrev(userid, srcip, usr_id, msgid,type) {
+function getGenerativeMessagePrev(userkey, srcip, usr_id, msgid,type) {
 
     var startDt = $('#startDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
     var endDt = $('#endDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
     searchFlag = true;
     ui.get({
         url : 'getGenerativeMessagePrev.xcn',
-        userid : userid,
+        userkey : userkey,
         srcip : srcip,
         startDt : startDt+"000000",
         endDt : endDt+"235959",
@@ -565,7 +565,7 @@ function makeFileServiceList(data) {
     str += '</p>';
     str += '<table class="subTable2 mat8"><tr><th>';
     str+=   filelist.srcIp +'</th><td class="topline">' + data.srcIp + '</td><th>'+filelist.dstIp+'</th><td class="topline">' + data.dstIp + '</td>';
-    str += '<tr xmlns="http://www.w3.org/1999/html"><th>'+filelist.bodySize+'</th><td>' + data.bodySize + '</td><th>'+filelist.userId+'</th><td>' + '</td></tr>';
+    str += '<tr xmlns="http://www.w3.org/1999/html"><th>'+filelist.bodySize+'</th><td>' + data.bodySize + '</td><th>'+filelist.userkey+'</th><td>' + '</td></tr>';
     str += '<tr><th>HOST/PATH</th><td colspan="3" class="mal8 tableLink txt_left">' + data.host + data.path + '</td><tr></table>';
     str += '</div>';
     str += '<div class="messageCon"> <div class="top grayBg03"><h4 class="fileCntArea">'+filelist.fileinfo+'(' + files.length + ')</h4><div class="btn btnform" style="padding: 0px; border: none;"><button accesskey="V" class="btn05 downAllFile"><img src="'+mainContext+'/img/subBtn_save.png" alt="전체 저장">'+filelist.allSave+'</buttonaccesskey></div></div><div class="filelist"><ul>';
@@ -631,7 +631,7 @@ function makeList(nextFlag){
         if( (nvl(obj.user) != '' && obj.user == obj.sender) || usrid == obj.title || usrid == obj.sender ) chkPati = true;
         str += checkDate(i);
 
-        str+='<li class="p20 bubble txt_right slide_right timeline-inverted ' +(i==0 && !nextFlag ? 'lastReadLi' : '')+ '" id="'+obj.msgid+'" ctime="'+obj.ctime+'" userid="'+obj.userid+'" srcip="'+obj.srcip+'">';
+        str+='<li class="p20 bubble txt_right slide_right timeline-inverted ' +(i==0 && !nextFlag ? 'lastReadLi' : '')+ '" id="'+obj.msgid+'" ctime="'+obj.ctime+'" userkey="'+obj.userkey+'" srcip="'+obj.srcip+'">';
 
 
         var svc3 = obj.svc3;
@@ -690,7 +690,7 @@ function makePrevList(){
         if( (nvl(obj.user) != '' && obj.user == obj.sender) || usrid == obj.title || usrid == obj.sender ) chkPati = true;
 
 
-        str+='<li class="p20 bubble txt_right slide_right timeline-inverted" id="'+obj.msgid+'" ctime="'+obj.ctime+'" userid="'+obj.userid+'" srcip="'+obj.srcip+'">';
+        str+='<li class="p20 bubble txt_right slide_right timeline-inverted" id="'+obj.msgid+'" ctime="'+obj.ctime+'" userkey="'+obj.userkey+'" srcip="'+obj.srcip+'">';
 
         str+='	<div class="me timeline-panel">';
 
@@ -813,7 +813,7 @@ function checkList(cnt){
 
 
 function checkLastMsg(){
-    var userid = $('#userid').text();
+    var userkey = $('#userkey').text();
     var srcip = $('#srcip').text();
     var lastMsgId = '';
     var topHeight = 200; //영역을 제외한 상단 높이
@@ -833,7 +833,7 @@ function checkLastMsg(){
             lastMsgId = $(this).parent().parent().attr('id');
         }else{
             var type = getPageType();
-            return updateEmassGenerativeAdminUserid(userid, lastMsgId, srcip,type);
+            return updateEmassGenerativeAdminUserid(userkey, lastMsgId, srcip,type);
 
         }
     });
@@ -867,12 +867,12 @@ function moveTargetHeight(id, moveFlag){
     }
 }
 var readTimeFlag = false;
-function updateEmassGenerativeAdminUserid(userid, lastMsgId, srcip,type){ /*읽은위치저장*/
+function updateEmassGenerativeAdminUserid(userkey, lastMsgId, srcip,type){ /*읽은위치저장*/
     moveTargetHeight(lastMsgId, false);
 
     ui.get({
         url : 'updateEmassGenerativeAdminUserid.xcn',
-        userid : userid,
+        userkey : userkey,
         msgId : lastMsgId,
         srcip : srcip,
         type:type,
@@ -1140,7 +1140,7 @@ function getPage3(total, pageCount, listSize, rtnMethod){
     return str;
 }
 
-function getCollectionMessage(userid, srcip, usr_id, msgid,type){
+function getCollectionMessage(userkey, srcip, usr_id, msgid,type){
     $("#timeline_list").html('');
 
     var startDt=$('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
@@ -1148,7 +1148,7 @@ function getCollectionMessage(userid, srcip, usr_id, msgid,type){
 
     ui.get({
         url : 'getGenerativeMessage.xcn',
-        userid : userid,
+        userkey : userkey,
         srcip : srcip,
         startDt : startDt+"00000",
         endDt : endDt+"235959",
@@ -1172,7 +1172,7 @@ function getCollectionMessage(userid, srcip, usr_id, msgid,type){
                 return;
             }
 
-            getCollectionAllfile(userid, srcip, usr_id, msgid, type);
+            getCollectionAllfile(userkey, srcip, usr_id, msgid, type);
 
 
             if (data.numFound < detailLimit)
@@ -1196,13 +1196,13 @@ function getCollectionMessage(userid, srcip, usr_id, msgid,type){
     });
 }
 
-function getCollectionAllfile(userid, srcip, usr_id, msgid,type){
+function getCollectionAllfile(userkey, srcip, usr_id, msgid,type){
     var startDt=$('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
     var endDt=$('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 
     ui.get({
         url : 'getCollectionGroupAttachList.xcn',
-        userid : userid,
+        userkey : userkey,
         srcip : srcip,
         usr_id : usr_id,
         startDt: startDt+"000000",
@@ -1223,6 +1223,7 @@ function getCollectionAllfile(userid, srcip, usr_id, msgid,type){
 
 
 }
+
 
 function rtnFileGroupList (data) {
 
@@ -1260,12 +1261,9 @@ function rtnFileGroupList (data) {
         rightDiv.className = "right";
         var imageName =mainContext+"/img/icon/ico_sns_"+ data[i].svc+".png";
         var makescv = makeMessengerText(data[i].svc);
-        var defaultImageName = mainContext + "/img/icon/ico_sns_FUKR.png";
-        var rightContent;
-        rightContent = "<span class='logo'><img src='" + imageName + "' onerror=\"this.src='" + defaultImageName + "'\">" + makescv + "</span>";
+        var rightContent = "<p><span class='logo'><img src="+imageName+">"+makescv+"</span></p>";
 
-
-        rightContent += "<span class='time'>" + data[i].ctime + "</span>";
+        rightContent += "</p><span class='time'>" + data[i].ctime + "</span>";
 
         rightDiv.innerHTML = rightContent;
         li.appendChild(rightDiv);
@@ -1292,6 +1290,7 @@ function rtnFileGroupList (data) {
 
 
 
+
 function rtnGenerativeGroupList(data) {
 
     var str = '';
@@ -1305,7 +1304,7 @@ function rtnGenerativeGroupList(data) {
     for (var i = 0; i < data.length; i++) {
         var li = document.createElement("li");
         li.className = "person";
-        li.setAttribute("userid", data[i].userid);
+        li.setAttribute("userkey", data[i].userkey);
         li.setAttribute("msgid", data[i].msgid);
         li.setAttribute("srcip", data[i].srcip);
         li.setAttribute("usrid", data[i].usrid);
@@ -1323,7 +1322,7 @@ function rtnGenerativeGroupList(data) {
         else{
             var bodySnippet="";
         }
-        var leftContent = "<p><span class='chatid'>" + data[i].userid +"("+data[i].deptNm+"/"+data[i].jikgubNm+"/"+data[i].name+")"+"</span>";
+        var leftContent = "<p><span class='chatid'>" + data[i].userkey +"("+data[i].deptNm+"/"+data[i].jikgubNm+"/"+data[i].name+")"+"</span>";
         if (data[i].attached === 'Y') {
             leftContent += "<span class='file'></span>";
         }

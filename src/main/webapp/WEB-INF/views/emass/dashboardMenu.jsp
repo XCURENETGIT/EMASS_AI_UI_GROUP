@@ -228,7 +228,7 @@
 					<h3><s:message code="dashboardMenu.addModify"/></h3>
 					<p>
 						<span class="red_dot veralign_middle"></span>
-						필수 입력 사항입니다.
+						<s:message code="common.required.msg"/>
 					</p>
 				</div>
 				<div class="modalbody">
@@ -294,7 +294,7 @@
 					</div>
 				</div>
 				<div class="info">
-					안내 사항
+					<s:message code="common.guidance"/>
 					<div class="form-inline" style="padding-left: 10px;">※ <s:message code="dashboardMenu.msg.saveRefresh"/>
 					</div>
 				</div>
@@ -303,9 +303,7 @@
 					<button type="button" class="pop_btn02 savePopBtn" accesskey="S" id="menuSaveBtn"><s:message
 							code="common.msg.save"/></button>
 				</div>
-
 			</div>
-
 		</form>
 	</div>
 </div>
@@ -327,7 +325,7 @@
 		<div class="contentSub">
 			<div class="subtab">
 				<button class="active">
-					대시보드 메뉴 목록
+					<s:message code="DATA_MONITOR.DASHBOARD_MENU"/> <s:message code="selectCodeAll.list"/>
 					<span id="dashboardMenuCount"></span>
 				</button>
 			</div>

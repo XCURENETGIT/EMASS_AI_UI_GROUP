@@ -11,6 +11,8 @@
 
 <style type="text/css">
 
+
+
 	.rightValue:hover{
 		cursor: pointer;
 		text-decoration: underline;
@@ -22,9 +24,10 @@
 	}
 
 
-
-	.col-xs-9 {float:none; width:none;}
-	.form_btn05:hover, .form_btn05:active{
+	.form_btn05:hover{
+		color: #fff !important;
+	}
+	.form_btn05:active{
 		color: #fff !important;
 	}
 	.panel-body {
@@ -211,9 +214,10 @@
     var menuKey;
     $(document).ready(function() {
         menuKey = $.urlParam('menuKey');
-        console.log("dashboardKey: "+menuKey);
-        if (menuKey) isDefaultDashboard(menuKey);
+        if(menuKey) dashboardInit();
         else getDefaultMenuKey();
+        // if (menuKey) isDefaultDashboard(menuKey);
+        // else getDefaultMenuKey();
 
         function isDefaultDashboard(menuKey){
             ui.get({

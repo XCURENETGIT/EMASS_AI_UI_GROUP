@@ -266,7 +266,6 @@ function validationPassword( uid, upw, bpw )
     }
 
     if ( password.length > num_length[1] ){
-        alert(password.length);
         alert( com_msg + passwordJS.notDown );
         return false;
     }
