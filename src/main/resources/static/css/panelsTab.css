@@ -37,7 +37,7 @@
     border-color: #ddd;
 }
 .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > li > a {
-    color: #777;   
+    color: #777;
 }
 .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > li > a:hover,
 .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > li > a:focus {
@@ -78,7 +78,7 @@
     border-color: #3071a9;
 }
 .with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu > li > a {
-    color: #fff;   
+    color: #fff;
 }
 .with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu > li > a:hover,
 .with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu > li > a:focus {
@@ -118,7 +118,7 @@
     border-color: #d6e9c6;
 }
 .with-nav-tabs.panel-success .nav-tabs > li.dropdown .dropdown-menu > li > a {
-    color: #3c763d;   
+    color: #3c763d;
 }
 .with-nav-tabs.panel-success .nav-tabs > li.dropdown .dropdown-menu > li > a:hover,
 .with-nav-tabs.panel-success .nav-tabs > li.dropdown .dropdown-menu > li > a:focus {
@@ -159,7 +159,7 @@
     border-color: #bce8f1;
 }
 .with-nav-tabs.panel-info .nav-tabs > li.dropdown .dropdown-menu > li > a {
-    color: #31708f;   
+    color: #31708f;
 }
 .with-nav-tabs.panel-info .nav-tabs > li.dropdown .dropdown-menu > li > a:hover,
 .with-nav-tabs.panel-info .nav-tabs > li.dropdown .dropdown-menu > li > a:focus {
@@ -200,7 +200,7 @@
     border-color: #faebcc;
 }
 .with-nav-tabs.panel-warning .nav-tabs > li.dropdown .dropdown-menu > li > a {
-    color: #8a6d3b; 
+    color: #8a6d3b;
 }
 .with-nav-tabs.panel-warning .nav-tabs > li.dropdown .dropdown-menu > li > a:hover,
 .with-nav-tabs.panel-warning .nav-tabs > li.dropdown .dropdown-menu > li > a:focus {
@@ -241,7 +241,7 @@
     border-color: #ebccd1; /* border color */
 }
 .with-nav-tabs.panel-danger .nav-tabs > li.dropdown .dropdown-menu > li > a {
-    color: #a94442; /* normal text color */  
+    color: #a94442; /* normal text color */
 }
 .with-nav-tabs.panel-danger .nav-tabs > li.dropdown .dropdown-menu > li > a:hover,
 .with-nav-tabs.panel-danger .nav-tabs > li.dropdown .dropdown-menu > li > a:focus {
@@ -254,14 +254,14 @@
     background-color: #a94442; /* active bg color */
 }
 
-.panel-body{
-	height:calc(100% - 38px);
-	padding:10px;
-}
+/*.panel-body{*/
+/*	height:calc(100% - 38px);*/
+/*	padding:10px;*/
+/*}*/
 .nav>li>a{
 }
 .tab-content .tab-pane{
-	
+
 }
 .checkbox, .radio{
 	margin-top:7px;

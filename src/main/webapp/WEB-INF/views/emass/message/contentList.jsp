@@ -75,7 +75,9 @@
 		::-webkit-scrollbar-track {
 			/*background-color:transparent;  스크롤바 뒷 배경 색상 */
 		}
-		.slick-cell {line-height: 18px;}
+		.slick-cell {
+			line-height: 18px;
+		}
 		.slick-cell input[type=checkbox] {
 			margin-top: 2px;
 		}
