@@ -597,7 +597,7 @@ classes should alter those!
 
 .slick-row.even {
 	background-color: #f8f8f8;
-	border-bottom: 1px solid #ddd;
+	/*border-bottom: 1px solid #ddd;*/
 }
 
 
