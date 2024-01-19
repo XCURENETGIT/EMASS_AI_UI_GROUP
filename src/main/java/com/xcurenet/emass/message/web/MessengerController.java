@@ -130,7 +130,6 @@ public class MessengerController {
 		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), Common.getAdminId(session));
 
 		String space = "\"\")";
-//		sq.setQuery(sq.getQuery() + MESSENGER + " +xrootmtr:* -xrootmtr:(".concat(space));
 		sq.setQuery(sq.getQuery() + MESSENGER + " +xrootmtr:* -xrootmtr:(".concat(space));
 		if (Common.isEquals(param.get("readYn"), "N")) {
 			sq.setQuery(sq.getQuery() + " -checked.readId:" + Common.getAdminId(session));
