@@ -282,7 +282,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 				AbstractAggregationBuilder<TermsAggregationBuilder> termsAggregation = AggregationBuilders.terms(field)
 						.field(field)
 						.order(BucketOrder.count(false))
-						.size(maxCount(sq.getFacetLimit()))
+						.size(10000)
 						.minDocCount(sq.getFacetMinCount());
 				aggregations.add(termsAggregation);
 			}
@@ -312,7 +312,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 					.terms(fields[0])
 					.field(fields[0])
 					.order(BucketOrder.count(false))
-					.size(maxCount(limit))
+					.size(maxCount(10000))
 					.minDocCount(mainFacetMinCount);
 
 			/* sub terms 필드는 1개만*/
