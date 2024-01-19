@@ -16,6 +16,8 @@ import java.util.stream.Collectors;
 @Component
 public class EmsMessageConvert {
 
+
+	/*util mongo convert */
 	public EmsMessageVO convertData(EmassMessageData data) {
 		if(null == data) {data = new EmassMessageData();} // null err방지
 		EmsMessageVO vo = new EmsMessageVO();

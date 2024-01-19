@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
-import org.apache.cxf.Bus;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.SortClause;
 import org.joda.time.DateTime;
@@ -44,7 +43,7 @@ public class SolrCreateQuery {
 	private static final String SPACE = " ";
 	//private static final String COMMA = ", ";
 	private static final String SPECIAL_CHAR = "*";
-	private static final String OR_PREFIX = "#";
+	private static final String OR_PREFIX = " ";
 
 	public static final String AND_QUERY = "+";
 	public static final String EXCEPT_QUERY = "-";
@@ -276,17 +275,17 @@ public class SolrCreateQuery {
 					query.append(String.format("body.jp:(%s) ", getSearchQuery(searchStr)));
 					query.append(String.format("body_snippet:(%s) ", getSearchQuery(searchStr)));
 				} else if(Common.isEquals(field, "attach")) {
-					query.append(String.format("attach.kr:(%s) ", getSearchQuery(searchStr)));
-					query.append(String.format("attach.en:(%s) ", getSearchQuery(searchStr)));
-					query.append(String.format("attach.jp:(%s) ", getSearchQuery(searchStr)));
+					query.append(String.format("attach.kr:(*%s*) ", getSearchQuery(searchStr)));
+					query.append(String.format("attach.en:(*%s*) ", getSearchQuery(searchStr)));
+					query.append(String.format("attach.jp:(*%s*) ", getSearchQuery(searchStr)));
 				} else if(Common.isEquals(field, "subject")) {
-					query.append(String.format("subject.kr:(%s) ", getSearchQuery(searchStr)));
-					query.append(String.format("subject.en:(%s) ", getSearchQuery(searchStr)));
-					query.append(String.format("subject.jp:(%s) ", getSearchQuery(searchStr)));
+					query.append(String.format("subject.kr:(*%s*) ", getSearchQuery(searchStr)));
+					query.append(String.format("subject.en:(*%s*) ", getSearchQuery(searchStr)));
+					query.append(String.format("subject.jp:(*%s*) ", getSearchQuery(searchStr)));
 				} else if(Common.isEquals(field, "ocr_attach")) {
-					query.append(String.format("ocr_attach.kr:(%s) ", getSearchQuery(searchStr)));
-					query.append(String.format("ocr_attach.en:(%s) ", getSearchQuery(searchStr)));
-					query.append(String.format("ocr_attach.jp:(%s) ", getSearchQuery(searchStr)));
+					query.append(String.format("ocr_attach.kr:(*%s*) ", getSearchQuery(searchStr)));
+					query.append(String.format("ocr_attach.en:(*%s*) ", getSearchQuery(searchStr)));
+					query.append(String.format("ocr_attach.jp:(*%s*) ", getSearchQuery(searchStr)));
 				}
 			}
 			return addQuery(String.format("%s(%s)", AND_QUERY, query.toString()));
@@ -1284,9 +1283,9 @@ public class SolrCreateQuery {
 			StringBuilder queryStr = new StringBuilder();
 			String[] terms = query.split(" ");
 			for (String term : terms) {
-				queryStr.append(appendSpecialchar(term)).append(" ");
+				queryStr.append("(".concat(appendSpecialchar(term)).concat(")")).append(" ");
 			}
-			sb.append("*").append(queryStr.toString().trim().replaceAll(" ", " +").replaceAll("__", " ")).append("*");
+			sb.append("+").append(queryStr.toString().trim().replaceAll(" ", " +").replaceAll("__", " "));
 		} else {
 			String[] terms = query.split(" ");
 			for (int i = 0; i < terms.length; i++) {

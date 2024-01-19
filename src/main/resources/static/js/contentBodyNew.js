@@ -27,15 +27,14 @@ $(document).ready(function(){
 		var fontSize = parseInt($('#emassBody').css("font-size"));
 		if(more == 'small_txt') fontSize -= fontZoom;
 		else fontSize += fontZoom;
-		alert(fontSize)
 		$('#emassBody').css({'font-size':fontSize+'px'});
 
-		// $('#emassBody *').each(function(){
-		// 	var fontSize = parseInt($(this).css("font-size"));
-		// 	if(more == 'small_txt') fontSize -= fontZoom;
-		// 	else fontSize += fontZoom;
-		// 	$(this).css({'font-size':fontSize+'px'});
-		// });
+		$('#emassBody *').each(function(){
+			var fontSize = parseInt($(this).css("font-size"));
+			if(more == 'small_txt') fontSize -= fontZoom;
+			else fontSize += fontZoom;
+			$(this).css({'font-size':fontSize+'px'});
+		});
 	});
 	//ui.onBody( 'content_body', 0, 0);
 	//getBody('');
@@ -990,7 +989,6 @@ var msgData;
 function setMessage(msg) {
 	msgData = msg;
 
-
 	window.scrollTo(0,0);
 	if(msg == null) {
 		$('#buttonDiv').css("display", "none");
@@ -1049,19 +1047,19 @@ function setMessage(msg) {
 	}
 
 
-	/* 수신 */
-	if(msg.direction == 'I') {
-		$('#recvOrsend').attr('class', 'top blueBg');
-		$('#recvOrsend').find('#sub_flag_reception').attr("style","display:none");
-		$('#recvOrsend').find('#sub_flag_send').show();
-		$('#recvOrsend').find('#subject').attr('class','blue02');
-	}/* 발신 */
-	else if(msg.direction == 'O'){
-		$('#recvOrsend').attr('class', 'top redBg');
-		$('#recvOrsend').find('#sub_flag_send').attr("style","display:none");
-		$('#recvOrsend').find('#sub_flag_reception').show();
-		$('#recvOrsend').find('#subject').attr('class','red');
-	}
+	// /* 수신 */
+	// if(msg.direction == 'I') {
+	// 	$('#recvOrsend').attr('class', 'top blueBg');
+	// 	$('#recvOrsend').find('#sub_flag_reception').attr("style","display:none");
+	// 	$('#recvOrsend').find('#sub_flag_send').show();
+	// 	$('#recvOrsend').find('#subject').attr('class','blue02');
+	// }/* 발신 */
+	// else if(msg.direction == 'O'){
+	// 	$('#recvOrsend').attr('class', 'top redBg');
+	// 	$('#recvOrsend').find('#sub_flag_send').attr("style","display:none");
+	// 	$('#recvOrsend').find('#sub_flag_reception').show();
+	// 	$('#recvOrsend').find('#subject').attr('class','red');
+	// }
 
 
 	if(nvl(msg.svcNm) == "") {
@@ -1215,10 +1213,15 @@ function setMessage(msg) {
 	setFileDiv(msg);			//file 및 OCR 처리
 
 	setPatternDiv(msg.patterns);
-	if(bodySize_str == 0) {
-		$('#emassBody').html(message.msgNocontent);
-	}else getBody('');
 
+	// alert(bodySize_str)
+	// if(bodySize_str == 0) {
+	// 	$('#emassBody').html(message.msgNocontent);
+	// }else getBody('');
+
+
+
+	getBody('');
 	if(nvl(msg.bodyStr) == "") {
 		$('#bodyStrDiv #bodyStr').html("");
 		$('#bodyStrDiv').css("display", "none");
@@ -1259,10 +1262,13 @@ function userHtml(userList,tr, srcip, dstip, usrip) {
 		var user = userList[i];
 
 
-
 		if(nvl(user.inSide) == 'N') insideClass = 'userOutside';
-		if(''!=nvl(user.name)) userDivHtml += '<span class="userInfoSpan '+insideClass+'"';
-		else  userDivHtml += '<span class=""';
+		else insideClass = 'userInside';
+
+
+	 	if(''!=nvl(user.name))  userDivHtml += '<span class="userInfoSpan '+insideClass+'"';
+	 	else  userDivHtml += '<span class="userInfoSpan notuser';
+
 		userDivHtml += ' recvid="' + nvl(user.recvId) + '"';
 		userDivHtml += ' recvip="' + chkUserIp(nvl(user.ip), srcip, dstip, usrip) + '"';
 		userDivHtml += ' recvemail="' + nvl(user.email) + '"';

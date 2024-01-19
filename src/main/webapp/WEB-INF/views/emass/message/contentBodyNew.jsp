@@ -79,7 +79,6 @@
 		}
 
 		#buttonDiv .btnright{position: absolute; right:20px; top:12px;}
-		.userOutside  {margin:2px;}
 		.empty-dashboard-message{
 			position: absolute;
 			top: 35px;
@@ -100,12 +99,13 @@
 			margin : 0px !important;
 		}
 
+
+		.userOutside  {margin:2px;}
 		.userOutside{
 			display: inline-block;
 			padding: 2px 6px 2px 0px;
 			padding-left: 20px;
 			background: #FC5656 url(../img/flag_img_01.png) 5px center no-repeat;
-			background-image: 100%;
 			background-image: 100%;
 			color: #fff;
 			font-size: 12px;
@@ -113,6 +113,35 @@
 			border-radius: 4px;
 		}
 		.userOutside:hover {color:#fff;}
+
+		.userInside  {margin:2px;}
+		.userInside{
+			display: inline-block;
+			padding: 2px 6px 2px 0px;
+			padding-left: 20px;
+			background: #1C64D3  url(../img/flag_img_01.png) 5px center no-repeat;
+			background-image: 100%;
+			color: #fff;
+			font-size: 12px;
+			font-weight: 600;
+			border-radius: 4px;
+		}
+		.userInside:hover {color:#fff;}
+
+
+
+		.notuser{
+			display: inline-block;
+			padding: 2px 6px 2px 0px;
+			padding-left: 20px;
+			background: gray;
+			color: #fff;
+			font-size: 12px;
+			font-weight: 600;
+			border-radius: 4px;
+		}
+		.notuser:hover {color:#fff;}
+
 		#infoTable td div {
 			word-break:break-all;
 		}
@@ -125,7 +154,7 @@
 		}
 		.fold_on {
 			overflow:hidden;
-			height: 26px;
+			height: 19.98px;
 		}
 		.fold_clickTd{
 			overflow:hidden;
@@ -598,7 +627,7 @@
 						<div class="panel panel-default" id="">
 							<div class="panel-heading body_toggle fileFold" style="padding:10px 12px 9px;">
 								<s:message code="bodyview.file_info"/><span id="fileCntArea" class="blue02 fb600"></span>
-								<div class="pull-right" style="position: relative; margin-top:-4px;margin-right:2px;">
+								<div class="pull-right" style="position: relative; margin-top:-7px;margin-right:2px;">
 									<button class ="btn05" accesskey="V" id="saveAttachBtn"><img src="../img/subBtn_save.png/"><s:message code="bodyview.attach.save"/></button>
 								</div>
 								<div id="fileKwdDiv" style="font-size:12px;">
@@ -684,9 +713,9 @@
 				<div class="row" id="detailPatternDiv" style="display:none;">
 					<div class="col-lg-12">
 						<div class="panel panel-default" id="">
-							<div class="panel-heading">
+							<div class="panel-heading" style="padding:10px 12px 9px;">
 								<s:message code="common.msg.detail.pattern"/>
-								<div class="pull-right" style="position:relative;top:-5px;">
+								<div class="pull-right" style="position:relative;top:-7px;">
 									<button class="btn05 body_selectBtn" id="hidePatternBtn" onclick="javascript:$('#detailPatternDiv').hide();"><s:message code="bodyview.hide"/></button>
 								</div>
 							</div>
@@ -701,7 +730,7 @@
 						<div class="panel panel-default" id="emassBodyDiv">
 							<div class="panel-heading " style="padding:10px 12px 9px;">
 								<s:message code="bodyview.body.content"/>
-								<div class="pull-right" style="position: relative;top:-5px;">
+								<div class="pull-right" style="position: relative;top:-7px;">
 
 									<button class="btn05 body_selectBtn font_size" id="large_txt">+ <s:message code="bodyview.msg.zoomIn"/></button>
 									<button class="btn05 body_selectBtn font_size" id="small_txt">- <s:message code="bodyview.msg.zoomOut"/></button>

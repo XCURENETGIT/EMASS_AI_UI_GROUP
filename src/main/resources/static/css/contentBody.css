@@ -31,7 +31,6 @@ pre {
 .panel-body {
 	padding: 20px;
 	background-color: #fff;
-	height: 360px;
 	/*padding : 12px 8px 12px 8px !important;*/
 }
 
@@ -86,7 +85,7 @@ pre {
 	background-color: #bbb;
 	color:#fff;
 	position: relative;
-	top: 3px;
+	top: 7px;
 }
 /*.differentExt{*/
 /*	background-color:#FFE8E8;*/
