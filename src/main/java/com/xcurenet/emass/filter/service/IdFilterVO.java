@@ -11,5 +11,8 @@ public class IdFilterVO {
 	private String serviceNm;
 	private String userId;
 	private String createDt;
+	private String createId;
+	private String updateDt;
+	private String updateId;
 	private String useYn;
 }

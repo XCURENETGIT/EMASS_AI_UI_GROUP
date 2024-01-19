@@ -7,5 +7,8 @@ public class UrlFilterVO {
 	private String urlLogSeq;
 	private String url;
 	private String createDt;
+	private String createId;
+	private String updateDt;
+	private String updateId;
 	private String useYn;
 }
