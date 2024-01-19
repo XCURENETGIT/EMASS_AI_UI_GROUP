@@ -17,6 +17,8 @@ import com.xcurenet.emass.service.service.ServiceGroupService;
 import com.xcurenet.emass.service.service.ServiceGroupVO;
 import com.xcurenet.emass.service.service.ServiceTypeService;
 import com.xcurenet.emass.service.service.ServiceTypeVO;
+import com.xcurenet.searchWord.service.SearchWordService;
+import com.xcurenet.searchWord.service.SearchWordVO;
 import com.xcurenet.user.service.PersCodeInfo;
 import com.xcurenet.user.service.UserService;
 import lombok.Data;
@@ -37,6 +39,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.io.File;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -72,6 +75,9 @@ public class Config {
 
 	@Autowired
 	private DataSource dataSource;
+
+	@Autowired
+	private SearchWordService searchWordService;
 
 	private static List<ConfigVO> configs;
 
@@ -274,7 +280,8 @@ public class Config {
 	}
 
 	public boolean execute(String filePath, boolean all) {
-		filePath = new File(new File(ConfigServiceImpl.class.getResource("").getPath()).getParentFile().getParentFile().getParent() + filePath).getAbsolutePath();
+		log.info("SQL : {}", filePath);
+		if (Common.isWindow()) filePath = new File(new File(ConfigServiceImpl.class.getResource("").getPath()).getParentFile().getParentFile().getParent() + filePath).getAbsolutePath();
 		Connection _con = null;
 		try {
 			_con = DataSourceUtils.getConnection(dataSource);
@@ -315,10 +322,19 @@ public class Config {
 	public void init() {
 		springContextUtil.setApplicationContext(applicationContext);
 
-		execute("/sqlmap/mappers/sql/procedure.sql", true);
-		execute("/sqlmap/mappers/sql/create_table.sql", false);
-		execute("/sqlmap/mappers/sql/patch_data.sql", false);
-		execute("/sqlmap/mappers/sql/insert_data.sql", false);
+		String sqlPath = "/sqlmap/mappers/sql/";
+		if (!Common.isWindow()) sqlPath = "/users/emassai/conf/";
+		execute(sqlPath + "procedure.sql", true);
+		execute(sqlPath + "create_table.sql", false);
+		execute(sqlPath + "patch_data.sql", false);
+		execute(sqlPath + "insert_data.sql", false);
+		execute(sqlPath + "insert_data.sql", false);
+
+		List<SearchWordVO> searchWords = searchWordService.getSearchWord(0, 1, "");
+		if (searchWords.isEmpty()) {
+			execute(sqlPath + "xcn_keyword.sql", false);
+			execute(sqlPath + "xcn_keyword_rel.sql", false);
+		}
 
 		log.info("[CONFIG] LOAD START..");
 

@@ -8,32 +8,9 @@
 			margin-left: 10px;
 			margin-bottom: 10px;
 		}
-
-		.ellipsis {
-			width: 280px;
-			text-overflow: ellipsis;
-			overflow: hidden;
-			white-space: nowrap;
-		}
-
-		.modal-lg {
-			width: 1100px;
-		}
-
-		.grid-stack-item {
-			width: 100%;
-			height: 100%;
-		}
-
-		.dashIcon, .menuIcon {
-			font-size: 18px;
-			margin-bottom: 5px;
-		}
-
 		.selected {
 			background-color: #c2daf8;
 		}
-		.btn {width:44px; height:30px;}
 	</style>
 	<script type="text/javascript">
         var menuMaxCnt = 5;

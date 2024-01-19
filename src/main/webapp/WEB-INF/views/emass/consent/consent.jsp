@@ -66,8 +66,8 @@
                     ui.alertMsg('<s:message code="consent.select.alarm.type"/>');
                     return;
                 }
-                var sdate = $('#sdate').val().replace(/[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi, '');
-                var edate = $('#edate').val().replace(/[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi, '');
+                var sdate = $('#sdate').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
+                var edate = $('#edate').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
                 if (sdate > edate) {
                     ui.alertMsg('<s:message code="consent.wrong.date"/>');
                     return;
@@ -436,7 +436,7 @@
 							<div style="display: flex;">
 								<div id="sdateDiv"><input type="date" id="sdate" style="width: 110px;">
 									<span class="hyphen">~</span></div>&nbsp;
-								<div id="edateDiv"><input type="date" id="edate" style="width: 110px;"></div>
+								<div id="edateDiv"><input type="date" id="edate"  name="edate" style="width: 110px;"></div>
 							</div>
 						</div>
 					</div>

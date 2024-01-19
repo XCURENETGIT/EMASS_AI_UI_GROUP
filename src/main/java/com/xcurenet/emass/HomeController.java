@@ -742,7 +742,7 @@ public class HomeController {
 	@RequestMapping(value = "/ems/selectInterestUser.do")
 	@Description("관심 사용자 관리 페이지")
 	public String selectInterestUser(Locale locale, Model model) {
-		return "/emass/interestUser/selectInterestUser";
+		return "/emass/interestUser/selectInterestUser.popup";
 	}
 
 	/**

@@ -890,7 +890,7 @@ public class MessengerController {
 				List<MessengerGroupVO> list = groups.getGroups();
 				if (list != null) {
 					for (MessengerGroupVO item : list) {
-						_sb.append(String.format("[%s] [%s] %s", item.getTitle(), item.getCtime(), item.getMessage())).append(Common.EMPTY_LINE);
+						_sb.append(String.format("[%s] [%s] %s", item.getUserkey(), item.getCtime(), item.getMessage())).append(Common.EMPTY_LINE);
 					}
 				}
 				if (Common.isEquals(type, "html")) {

@@ -7,14 +7,10 @@
 	String oldCode = Common.nvl(request.getParameter("oldCode"));
 	String oldConm = Common.nvl(request.getParameter("oldConm"));
 %>
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-<title><s:message code="selectCodeAll.title"/></title>
 <style>
-html,body{height: 100%; padding: 0px; margin: 0px;overflow: auto;min-width: 650px;}
-.deleteText{text-decoration:line-through;}
-.panel {margin-bottom: 0px !important;}
+	input[type="checkbox"] {
+		margin-top: 5px;
+	}
 </style>
 <script>
 var codeType = '<%=codeType%>';
@@ -136,250 +132,267 @@ function getCodeList() {
 }
 </script>
 
-</head>
-<body class="mini-navbar msgBody">
-	<div class="modal fade" id="holidayPop" tabindex="-1" role="dialog" aria-labelledby="holidayModal">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<form method="post" id="holidayPopForm">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-						<h3 class="modal-title"><s:message code="selectCodeAll.select.co"/></h3>
+	<div class="modal" id="countPop" tabindex="-1" role="dialog" aria-labelledby="countPop">
+		<div class="modal-content" style="width: 520px;">
+			<form method="post" id="countPopForm">
+				<div class="modalHead">
+					<h2><s:message code="common.msg.regexp_count_setting"/></h2>
+					<span class="close" data-dismiss="modal">&times;</span>
+				</div>
+				<div class="modalCon">
+					<div class="modalTop">
+						<h3><s:message code="common.msg.regexp_count_setting"/></h3>
+						<p>
+							<span class="red_dot veralign_middle"></span>
+							<s:message code="common.required.msg"/>
+						</p>
 					</div>
 					<div class="modal-body">
-						<div class="form-group">
-							<label for="attachTypePopInput" class=""><s:message code="selectCodeAll.date"/></label>
-							<div class='input-group date' id='datePicker'>
-								<input type='text' class="input-sm form-control" id='date' />
-								<span class="input-group-addon"> <span class="glyphicon glyphicon-calendar"></span>
-								</span>
+						<div class="row">
+							<div class="col-35">
+								<label for="lowcount" class="fname"><s:message code="common.msg.regexp_count_setting"/></label>
+								<span class="red_dot"></span>
+							</div>
+							<div class="col-65">
+								<input style="width: 70px;" type="text" class="w100" name="lowcount" id="lowcount"/>
+								<select style="width: 70px;" class="w100" id="count_condition" name="count_condition">
+									<option value="B"><s:message code="condition.range"/></option>
+									<option value="L" selected="selected"><s:message code="condition.over"/></option>
+									<option value="S"><s:message code="condition.below"/></option>
+								</select>
+								<input style="width: 70px;" type="text" class="w100" name="highcount" id="highcount"/>
 							</div>
 						</div>
-						<div class="form-group">
-							<label for="attachDescPopInput" class=""><s:message code="common.msg.comment"/></label>
-							<input type="text" class="form-control" name="comment" id="comment" placeholder="<s:message code="common.msg.comment"/>" required>
-						</div>
 					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
-						<button type="button" class="btn btn-primary savePopBtn" accesskey="S" id="savePopBtn"><s:message code="common.msg.save"/></button>
+					<div class="modalfooter">
+						<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+						<button type="button" class="pop_btn02" id="saveCountBtn" accesskey="S"><s:message code="common.msg.save"/></button>
 					</div>
-				</form>
-			</div>
+				</div>
+			</form>
 		</div>
 	</div>
-	
-	<header class="header">
-		<div class="naviBack">
-			<img src="<c:url value="/img/title/home_icon.png"/>">
-			<span class="navi"><span id="code_title"></span><s:message code="common.msg.select"/></span>
-		</div>
-	</header>
+	</div>
 
-	<div class="xcn_container" style="min-width: 650px">
-		<div class="boxArea">
-			<div class="content_body">
-				<div style="width: calc(50% - 25px); float: left;height:100%">
-					<div class="panel with-nav-tabs panel-primary" style="height: 100%;">
-						<div class="panel-heading">
-							<ul class="nav nav-tabs">
-								<li class="active"><a href="#result1" data-toggle="tab" style="width: 70px; font-weight: bold;"><s:message code="selectCodeAll.list"/></a></li>
-							</ul>
+
+<div class="modal fade" id="holidayPop" tabindex="-1" role="dialog" aria-labelledby="holidayModal">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<form method="post" id="holidayPopForm">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h3 class="modal-title"><s:message code="common.org.choose.co"/></h3>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="attachTypePopInput" class=""><s:message code="selectCodeAll.date"/></label>
+						<div class='input-group date' id='datePicker'>
+							<input type='text' class="input-sm form-control" id='date'/>
+							<span class="input-group-addon"> <span class="glyphicon glyphicon-calendar"></span>
+								</span>
 						</div>
-						<div class="panel-body">
-							<div class="tab-content" style="height:calc(100% - 40px);">
-								<div class="tab-pane fade in active" id="result1">
-									<div class="resultHeader">
-										<div class="form-inline not-dashed">
-											<select class="form-control input-sm" id="busiCd" name="busiCd" style="display: none;">
-												<option value="">- <s:message code="selectCodeAll.select.type.service"/> -</option>
-											</select>
-											<div class="input-group">
-												<input type="text" class="form-control input-sm" placeholder="<s:message code="common.msg.searchMsg"/>" id="searchStr" style="width: 180px;">
-												<div class="input-group-btn">
-													<button class="btn btn-sm btn-success" type="button" accesskey="Q" id="searchBtn"><i class="glyphicon glyphicon-search"></i></button>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="resultBody top_space" style="height: 100%;">
-										<div id="coCdGrid" class="slickGrid gridArea"></div>
-									</div>
-								</div>
-							</div>
-						</div>
+					</div>
+					<div class="form-group">
+						<label for="attachDescPopInput" class=""><s:message code="common.msg.comment"/></label>
+						<input type="text" class="form-control" name="comment" id="comment" placeholder="<s:message code="common.msg.comment"/>"
+						       required>
 					</div>
 				</div>
-				<div style="width: 40px; float: left; height: 100%">
-					<div style="position: relative; top: 45%; left: 3px;">
-						<button class="btn btn-sm btn-primary" type="button" accesskey="I" id="addBtn"><i class="glyphicon glyphicon-arrow-right"></i></button><br /><br />
-						<button class="btn btn-sm btn-primary" type="button" accesskey="D" id="removeBtn"><i class="glyphicon glyphicon-arrow-left"></i></button>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+					<button type="button" class="btn btn-primary savePopBtn" accesskey="S" id="savePopBtn"><s:message
+							code="common.msg.save"/></button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+	<div id="popupWrap" class="xcn_container">
+		<!-- left -->
+		<div class="row">
+			<div class="item" style="width: calc(50% - 30px);float: left;">
+				<h3 class="blue"><span class="bullet01"></span><s:message code="selectCodeAll.list"/></h3>
+				<div class="grayBg mat8 popupInner">
+					<div>
+						<input type="text" placeholder="<s:message code="common.msg.searchMsg"/>" id="searchStr">
+						<button class="form_btn01" type="button" accesskey="Q" id="searchBtn"><s:message code="common.msg.search"/></button>
 					</div>
 				</div>
-				<div style="width: calc(50% - 25px); float: left; height: 100%">
-					<div class="panel with-nav-tabs panel-primary" style="height: 100%;">
-						<div class="panel-heading">
-							<ul class="nav nav-tabs">
-								<li class="active"><a href="#result1" data-toggle="tab" style="width: 110px; font-weight: bold;"><s:message code="selectCodeAll.selected.list"/></a></li>
-							</ul>
-						</div>
-						<div class="panel-body">
-							<div class="tab-content" style="height:calc(100% - 40px);">
-								<div class="tab-pane fade in active" id="result1">
-									<div class="resultHeader">
-										<div class="form-inline text-right not-dashed">
-											<div class="input-group">
-												<button type="button" class="btn btn-sm btn-primary" accesskey="Y" id="selectBtn"><span class="glyphicon glyphicon-ok"></span>&nbsp;<s:message code="common.msg.select"/></button>
-											</div>
-											<div class="input-group">
-												<button type="button" class="btn btn-sm btn-default" accesskey="N" id="noSelectBtn"><span class="glyphicon glyphicon-remove"></span>&nbsp;<s:message code="selectCodeAll.noselect"/></button>
-											</div>
-										</div>
-									</div>
-									<div class="resultBody top_space" style="height: 100%;">
-										<div id="coCdGrid2" class="slickGrid gridArea"></div>
-									</div>
-								</div>
-							</div>
-						</div>
+				<!-- 테이블 -->
+				<div class="pop_tableArea mat16">
+					<!-- 테이블 -->
+					<div id="coCdGrid" class="subTable slickGrid gridArea" style="height: calc(100% - 150px)"></div>
+				</div>
+			</div>
+			<div class="item" style="width: 60px;float: left;height: 100%;padding-top: 20%;">
+				<button class="pop_btn03 dis_block" type="button" accesskey="I" id="addBtn">
+					<img src="<c:url value="/img/ico_double_left.png"/>" alt=">>">
+				</button>
+				<button class="pop_btn03 dis_block mat8" type="button" accesskey="D" id="removeBtn">
+					<img src="<c:url value="/img/ico_double_right.png"/>" alt="<<">
+				</button>
+			</div>
+			<div class="item" style="width: calc(50% - 30px);float: left;">
+				<h3 class="blue"><span class="bullet01"></span><s:message code="selectCodeAll.selected.list"/></h3>
+				<div class="grayBg mat8 popupInner">
+					<div class="txt_right">
+						<button class="form_btn03" accesskey="Y" id="selectBtn"><s:message code="common.msg.select"/></button>
+						<button class="form_btn04" accesskey="N" id="noSelectBtn"><s:message code="selectCodeAll.noselect"/></button>
 					</div>
+				</div>
+				<!-- 테이블 -->
+				<div class="pop_tableArea mat16">
+					<div id="coCdGrid2" class="subTable slickGrid gridArea" style="height: calc(100% - 150px)"></div>
 				</div>
 			</div>
 		</div>
 	</div>
+
+
 	
 	<script type="text/javascript">
-		var grid = new Xgrid('coCdGrid', contextRoot);
-			grid.setDrag(true);
-			grid.onCheckBox();
-			grid.autoNumber();
-			if( codeType == 'co' ){
-				grid.colAdd('code', '<s:message code="common.org.cocd"/>', 100, 'center', false, 'link');
-				grid.colAdd('codeName', '<s:message code="common.org.conm"/>', 160, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-					var useYn = grid.getValue(row, 'useYn');
-					if(useYn =='N') return '<span class="deleteText">'+value+'</span>';
-					else return value;
-				});
-			} else if( codeType == 'busi' ){
-				grid.colAdd('code', '<s:message code="common.org.busicd"/>', 100, 'center', false, 'link');
-				grid.colAdd('codeName', '<s:message code="common.org.businm"/>', 160, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-					var useYn = grid.getValue(row, 'useYn');
-					if(useYn =='N') return '<span class="deleteText">'+value+'</span>';
-					else return value;
-				});
-			} else if( codeType == 'service' ){
-				grid.colAdd('code', '<s:message code="filterInfo.serviceCode"/>', 100, 'center', false, 'link');
-				grid.colAdd('codeName', '<s:message code="filterInfo.service"/>', 160, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-					var useYn = grid.getValue(row, 'useYn');
-					if(useYn =='N') return '<span class="deleteText">'+value+'</span>';
-					else return value;
-				});
-			} else if( codeType == 'regexp' ){
-				grid.colAdd('code', '<s:message code="selectCodeAll.code"/>', 100, 'center', false, 'link');
-				grid.colAdd('codeName', '<s:message code="common.msg.regexp"/>', 160, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-					var useYn = grid.getValue(row, 'useYn');
-					if(useYn =='N') return '<span class="deleteText">'+value+'</span>';
-					else return value;
-				});
-			}else if( codeType == 'user' || codeType == 'senders' || codeType == 'receivers' ) {
-				grid.colAdd('code', '<s:message code="common.msg.id"/>', 100, 'center', false, 'link');
-				grid.colAdd('codeName', '<s:message code="common.msg.name"/>', 100, 'left', false, 'nomal');
-				grid.colAdd('tempNm1', '<s:message code="common.org.dept"/>', 100, 'center', false, 'nomal');
-				grid.colAdd('tempNm2', '<s:message code="common.org.jikgub"/>', 160, 'left', false, 'nomal');
-			} else if( codeType == 'device' ) { 
-				grid.colAdd('code', '<s:message code="selectCodeAll.devip"/>', 130, 'left', false, 'link');
-				grid.colAdd('codeName', '<s:message code="selectCodeAll.devnm"/>', 160, 'left', false, 'nomal');
-			} else if( codeType == 'readAuth'){
-				grid.colAdd('code', '<s:message code="userGroup.header.groupcode"/>', 130, 'left', false, 'link');
-				grid.colAdd('codeName', '<s:message code="userGroup.groupname"/>', 160, 'left', false, 'nomal');
-			} else {
-				grid.colAdd('code', '<s:message code="selectCodeAll.code"/>', 100, 'center', false, 'link');
-				grid.colAdd('codeName', '<s:message code="selectCodeAll.codenm"/>', 160, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-					var useYn = grid.getValue(row, 'useYn');
-					if(useYn =='N') return '<span class="deleteText">'+value+'</span>';
-					else return value;
-				});
-			}
-			grid.onClick = function() {
-			if (grid.Col == grid.ColIndex('code')) {
-				setSelectedData();
-			}
-		};
-		grid.loadHeader(false);
-		grid.initData('<s:message code="selectCodeAll.select.code"/>')
-		grid.onDragStart = function(e,dd){
-			$('#coCdGrid2').css({'border':'2px solid #FFA040'});
-		};
-		grid.onDragEnd = function(e,dd){
-			if ($(e.target).parent().parent().attr('id') == 'coCdGrid2') {
-				setSelectedData();
-			}
-			$('#coCdGrid2').css('border','border: 1px solid #EFEFEF;border-top: 2px solid #7A7A7A;');
-		};
+        var grid = new Xgrid('coCdGrid', contextRoot);
+        grid.setDrag(true);
+        grid.onCheckBox();
+        grid.autoNumber();
+        if (codeType == 'co') {
+            grid.colAdd('code', '<s:message code="common.org.cocd"/>', 100, 'center', false, 'link');
+            grid.colAdd('codeName', '<s:message code="common.org.conm"/>', 260, 'left', false, 'nomal');
+        } else if (codeType == 'busi') {
+            grid.colAdd('code', '<s:message code="common.org.busicd"/>', 100, 'center', false, 'link');
+            grid.colAdd('codeName', '<s:message code="common.org.businm"/>', 260, 'left', false, 'nomal');
+        } else if (codeType == 'dept' || codeType == 'deptByCo') {
+            grid.colAdd('code', '<s:message code="common.org.deptcd"/>', 100, 'center', false, 'link');
+            grid.colAdd('codeName', '<s:message code="common.org.deptnm"/>', 260, 'left', false, 'nomal');
+        } else if (codeType == 'attach') {
+            grid.colAdd('code', '<s:message code="common.msg.ext"/>', 100, 'center', false, 'link');
+            grid.colAdd('codeName', '<s:message code="condition.attach_type"/>', 260, 'left', false, 'nomal');
+        } else if (codeType == 'service') {
+            grid.colAdd('code', '<s:message code="filterInfo.serviceCode"/>', 100, 'center', false, 'link');
+            grid.colAdd('codeName', '<s:message code="filterInfo.service"/>', 260, 'left', false, 'nomal');
+        } else if (codeType == 'regexp') {
+            grid.colAdd('code', '<s:message code="selectCodeAll.code"/>', 100, 'center', false, 'link');
+            grid.colAdd('codeName', '<s:message code="common.msg.regexp"/>', 260, 'left', false, 'nomal');
+        } else if (codeType == 'user' || codeType == 'senders' || codeType == 'receivers') {
+            grid.colAdd('code', '<s:message code="common.msg.id"/>', 100, 'center', false, 'link');
+            grid.colAdd('codeName', '<s:message code="common.msg.name"/>', 100, 'left', false, 'nomal');
+            grid.colAdd('tempNm1', '<s:message code="common.org.dept"/>', 100, 'center', false, 'nomal');
+            grid.colAdd('tempNm2', '<s:message code="common.org.jikgub"/>', 260, 'left', false, 'nomal');
+        } else if (codeType == 'keyword') {
+            grid.colAdd('tempNm1', '<s:message code="keyword.msg.partnm"/>', 120, 'left', false, 'nomal');
+            grid.colAdd('codeName', '<s:message code="keyword.msg.keyword"/>', 230, 'left', false, 'link');
+        } else {
+            grid.colAdd('code', '<s:message code="selectCodeAll.code"/>', 100, 'center', false, 'link');
+            grid.colAdd('codeName', '<s:message code="selectCodeAll.codenm"/>', 260, 'left', false, 'nomal');
+        }
 
-		var options={};
-		options.status_cnt_id='#total_cnt2';
-		options.status_cnt_ing_name='<s:message code="selectCodeAll.cnt.select"/>';
-		options.status_cnt_end_name='<s:message code="selectCodeAll.cnt.select"/>';
-		var grid2 = new Xgrid('coCdGrid2', contextRoot, 26, options);
-		grid2.onCheckBox();
-		grid2.autoNumber();
-		if( codeType == 'co' ){
-			grid2.colAdd('code', '<s:message code="common.org.cocd"/>', 100, 'center', false, 'link');
-			grid2.colAdd('codeName', '<s:message code="common.org.conm"/>', 160, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-				var useYn = grid.getValue(row, 'useYn');
-				if(useYn =='N') return '<span class="deleteText">'+value+'</span>';
-				else return value;
-			});
-		} else if( codeType == 'busi' ){
-			grid2.colAdd('code', '<s:message code="common.org.busicd"/>', 100, 'center', false, 'link');
-			grid2.colAdd('codeName', '<s:message code="common.org.businm"/>', 160, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-				var useYn = grid.getValue(row, 'useYn');
-				if(useYn =='N') return '<span class="deleteText">'+value+'</span>';
-				else return value;
-			});
-		} else if( codeType == 'service' ){
-			grid2.colAdd('code', '<s:message code="filterInfo.serviceCode"/>', 100, 'center', false, 'link');
-			grid2.colAdd('codeName', '<s:message code="filterInfo.service"/>', 160, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-				var useYn = grid.getValue(row, 'useYn');
-				if(useYn =='N') return '<span class="deleteText">'+value+'</span>';
-				else return value;
-			});
-		} else if( codeType == 'regexp' ){
-			grid2.colAdd('code', '<s:message code="selectCodeAll.code"/>', 100, 'center', false, 'link');
-			grid2.colAdd('codeName', '<s:message code="common.msg.regexp"/>', 160, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-				var useYn = grid.getValue(row, 'useYn');
-				if(useYn =='N') return '<span class="deleteText">'+value+'</span>';
-				else return value;
-			});
-		} else if( codeType == 'user' || codeType == 'senders' || codeType == 'receivers' ) {
-			grid2.colAdd('code', '<s:message code="common.msg.id"/>', 100, 'center', false, 'link');
-			grid2.colAdd('codeName', '<s:message code="common.msg.name"/>', 100, 'left', false, 'nomal');
-			grid2.colAdd('tempNm1', '<s:message code="common.org.dept"/>', 100, 'center', false, 'nomal');
-			grid2.colAdd('tempNm2', '<s:message code="common.org.jikgub"/>', 160, 'left', false, 'nomal');
-		} else if( codeType == 'device' ) { 
-			grid2.colAdd('code', '<s:message code="selectCodeAll.devip"/>', 130, 'left', false, 'link');
-			grid2.colAdd('codeName', '<s:message code="selectCodeAll.devnm"/>', 160, 'left', false, 'nomal');
-		} else if( codeType == 'readAuth'){
-			grid2.colAdd('code', '<s:message code="userGroup.header.groupcode"/>', 130, 'left', false, 'link');
-			grid2.colAdd('codeName', '<s:message code="userGroup.groupname"/>', 160, 'left', false, 'nomal');
-		} else {
-			grid2.colAdd('code', '<s:message code="selectCodeAll.code"/>', 100, 'center', false, 'link');
-			grid2.colAdd('codeName', '<s:message code="selectCodeAll.codenm"/>', 160, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-				var useYn = grid2.getValue(row, 'useYn');
-				if(useYn =='N') return '<span class="deleteText">'+value+'</span>';
-				else return value;
-			});
-		}
-		grid2.onClick = function() {
-			if (grid2.Col == grid2.ColIndex('code')) {
-				grid2.deleteSelectedRows();
-			}
-		};
-		grid2.loadHeader(false);
-		grid2.initData('<s:message code="selectCodeAll.msg.select.data"/>');
+        grid.onClick = function () {
+            if (grid.Col == grid.ColIndex('code')) {
+                setSelectedData();
+            }
+            if (codeType == 'keyword') {
+                if (grid.Col == grid.ColIndex('codeName')) {
+                    setSelectedData();
+                }
+            }
+        };
+        grid.onContextMenu = function () {
+            setSelectedData();
+        };
+
+        grid.loadHeader(false);
+        grid.initData('<s:message code="selectCodeAll.select.code"/>')
+        /*
+				grid.onDragStart = function(e,dd){
+					$('#coCdGrid2').css('border', '2px solid #FFA040');
+				};
+				grid.onDragEnd = function(e,dd){
+					if ($(e.target).parent().parent().attr('id') == 'coCdGrid2') {
+						setSelectedData();
+					}
+					$('#coCdGrid2').css('border','border: 1px solid #EFEFEF;border-top: 2px solid #7A7A7A;');
+				};
+		*/
+
+        var options = {};
+        options.status_cnt_id = '#total_cnt2';
+        options.status_cnt_ing_name = '<s:message code="selectCodeAll.cnt.select"/>';
+        options.status_cnt_end_name = '<s:message code="selectCodeAll.cnt.select"/>';
+        var grid2 = new Xgrid('coCdGrid2', contextRoot, 26, options);
+        grid2.onCheckBox();
+        //grid2.autoNumber();
+
+        if (codeType == 'co') {
+            grid2.colAdd('code', '<s:message code="common.org.cocd"/>', 100, 'center', false, 'link');
+            grid2.colAdd('codeName', '<s:message code="common.org.conm"/>', 260, 'left', false, 'nomal');
+        } else if (codeType == 'busi') {
+            grid2.colAdd('code', '<s:message code="common.org.busicd"/>', 100, 'center', false, 'link');
+            grid2.colAdd('codeName', '<s:message code="common.org.businm"/>', 260, 'left', false, 'nomal');
+        } else if (codeType == 'dept' || codeType == 'deptByCo') {
+            grid2.colAdd('code', '<s:message code="common.org.deptcd"/>', 100, 'center', false, 'link');
+            grid2.colAdd('codeName', '<s:message code="common.org.deptnm"/>', 260, 'left', false, 'nomal');
+        } else if (codeType == 'attach') {
+            grid2.colAdd('code', '<s:message code="common.msg.ext"/>', 100, 'center', false, 'link');
+            grid2.colAdd('codeName', '<s:message code="condition.attach_type"/>', 260, 'left', false, 'nomal');
+        } else if (codeType == 'service') {
+            grid2.colAdd('code', '<s:message code="filterInfo.serviceCode"/>', 100, 'center', false, 'link');
+            grid2.colAdd('codeName', '<s:message code="filterInfo.service"/>', 260, 'left', false, 'nomal');
+        } else if (codeType == 'regexp') {
+            grid2.colAdd('code', '<s:message code="selectCodeAll.code"/>', 100, 'center', false, 'link');
+            grid2.colAdd('codeName', '<s:message code="common.msg.regexp"/>', 160, 'left', false, 'nomal');
+            grid2.colAdd('count', '<s:message code="common.msg.regexp_count"/>', 160, 'center', false, 'link', function (row, cell, value, columnDef, dataContext) {
+                var str = '';
+                if (value != undefined && value != '') {
+                    str = value.split('@');
+                    if (str[0] == 'B') return str[1] + '<s:message code="selectCodeAll.items"/> ~ ' + str[2] + '<s:message code="selectCodeAll.items"/>';
+                    else if (str[0] == 'L') return str[1] + '<s:message code="selectCodeAll.items"/> <s:message code="selectCodeAll.over"/>';
+                    else return str[1] + '<s:message code="selectCodeAll.items"/> <s:message code="selectCodeAll.below"/>';
+                } else return '';
+            });
+        } else if (codeType == 'user' || codeType == 'senders' || codeType == 'receivers') {
+            grid2.colAdd('code', '<s:message code="common.msg.id"/>', 100, 'center', false, 'link');
+            grid2.colAdd('codeName', '<s:message code="common.msg.name"/>', 100, 'left', false, 'nomal');
+            grid2.colAdd('tempNm1', '<s:message code="common.org.dept"/>', 100, 'center', false, 'nomal');
+            grid2.colAdd('tempNm2', '<s:message code="common.org.jikgub"/>', 160, 'left', false, 'nomal');
+        } else if (codeType == 'keyword') {
+            grid2.colAdd('codeName', '<s:message code="keyword.msg.keyword"/>', 260, 'left', false, 'link');
+        } else {
+            grid2.colAdd('code', '<s:message code="selectCodeAll.code"/>', 100, 'center', false, 'link');
+            grid2.colAdd('codeName', '<s:message code="selectCodeAll.codenm"/>', 260, 'left', false, 'nomal');
+        }
+        grid2.onContextMenu = function () {
+            grid2.deleteSelectedRows();
+        };
+        grid2.onClick = function () {
+            if (codeType == 'keyword' && grid2.Col == grid2.ColIndex('codeName')) {
+                grid2.deleteSelectedRows();
+            } else if (grid2.Col == grid2.ColIndex('code')) {
+                grid2.deleteSelectedRows();
+            } else if (grid2.Col == grid2.ColIndex('count')) {
+                $('#countPop').modal();
+
+                var val = grid2.getValue(grid2.Row, 'count').split('@');
+                if (val[0] == 'B') {
+                    $('#lowcount, #highcount').prop('disabled', false);
+                    $('#count_condition').val(val[0]);
+                    $('#lowcount').val(val[1]);
+                    $('#highcount').val(val[2]);
+                } else {
+                    $('#highcount').prop('disabled', true).val('');
+                    $('#count_condition').val(val[0]);
+                    $('#lowcount').val(val[1]);
+                }
+
+                setTimeout(function () {
+                    $('#lowcount').focus();
+                }, 500);
+            }
+        };
+        grid2.loadHeader(false);
+        grid2.initData('<s:message code="selectCodeAll.select.code"/>');
 	</script>
 </body>
 </html>

@@ -137,7 +137,6 @@ public class AdminUserGroupController {
 	public void importAdminGroupUser(AdminUserGroupImportVO vo, HttpServletResponse response, HttpServletRequest request) throws Exception {
 		response.setCharacterEncoding(Common.UTF8);
 		response.setHeader("Content-Type", "application/json");
-
 		String adminId = Common.getAdminId(request);
 
 		JSONObject item = new JSONObject();
