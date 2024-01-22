@@ -848,6 +848,7 @@ public class SolrEdcStatController {
 
 		SolrEdcMessageVO solrVo = solrEdcService.getEmassMessage(sq, Common.getAdminId(request), "", null);
 		List<Map<String, Object>> list = solrVo.getPivotData();
+
 		for (Map<String, Object> item : list) {
 			double total = 0;
 			for (String field : Config.PRIVATE_SVC) {

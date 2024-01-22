@@ -19,10 +19,7 @@ import org.springframework.data.elasticsearch.core.ElasticsearchAggregations;
 import org.springframework.data.elasticsearch.core.SearchHits;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @ToString
 public class MessengerEdcGroupVO {
@@ -116,7 +113,11 @@ public class MessengerEdcGroupVO {
 						map.put("msgid", hit.getId());
 						SolrEdcVO solrEdcVO = mapper.convertValue(map, SolrEdcVO.class);
 						if (detail) this.groups.add(reDefinedDetail(solrEdcVO, adminId, original));
-						else this.groups.add(reDefined(solrEdcVO, adminId, 0L));
+						else {
+							this.groups.add(reDefined(solrEdcVO, adminId, 0L));
+							Collections.sort(this.groups);
+						}
+
 					}
 				}
 			}

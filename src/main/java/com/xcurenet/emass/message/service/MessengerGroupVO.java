@@ -10,7 +10,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 
 @Data
 @JsonInclude(Include.NON_NULL)
-public class MessengerGroupVO {
+public class MessengerGroupVO  implements Comparable<MessengerGroupVO> {
 	private String title;
 
 	private String userkey;
@@ -45,6 +45,11 @@ public class MessengerGroupVO {
 	private String body_snippet;
 	private String direction_svc;
 	private String inside;
+
+	@Override
+	public int compareTo(MessengerGroupVO other) {
+		return other.getCtime().compareTo(this.getCtime());
+	}
 
 
 }
