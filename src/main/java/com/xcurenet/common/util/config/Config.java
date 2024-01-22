@@ -32,14 +32,12 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.support.EncodedResource;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.io.File;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -321,19 +319,19 @@ public class Config {
 	@PostConstruct
 	public void init() {
 		springContextUtil.setApplicationContext(applicationContext);
+		if(!Common.isEquals(System.getProperty("spring.profiles.active"),"local")) {
+			String sqlPath = "/sqlmap/mappers/sql/";
+			if (!Common.isWindow()) sqlPath = "/users/emassai/conf/";
+			execute(sqlPath + "procedure.sql", true);
+			execute(sqlPath + "create_table.sql", false);
+			execute(sqlPath + "patch_data.sql", false);
+			execute(sqlPath + "insert_data.sql", false);
 
-		String sqlPath = "/sqlmap/mappers/sql/";
-		if (!Common.isWindow()) sqlPath = "/users/emassai/conf/";
-		execute(sqlPath + "procedure.sql", true);
-		execute(sqlPath + "create_table.sql", false);
-		execute(sqlPath + "patch_data.sql", false);
-		execute(sqlPath + "insert_data.sql", false);
-		execute(sqlPath + "insert_data.sql", false);
-
-		List<SearchWordVO> searchWords = searchWordService.getSearchWord(0, 1, "");
-		if (searchWords.isEmpty()) {
-			execute(sqlPath + "xcn_keyword.sql", false);
-			execute(sqlPath + "xcn_keyword_rel.sql", false);
+			List<SearchWordVO> searchWords = searchWordService.getSearchWord(0, 1, "");
+			if (searchWords.isEmpty()) {
+				execute(sqlPath + "xcn_keyword.sql", false);
+				execute(sqlPath + "xcn_keyword_rel.sql", false);
+			}
 		}
 
 		log.info("[CONFIG] LOAD START..");
