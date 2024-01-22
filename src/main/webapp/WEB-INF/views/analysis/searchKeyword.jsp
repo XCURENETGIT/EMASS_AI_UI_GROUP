@@ -59,8 +59,6 @@
 </style>
 <script type="text/javascript">
 
-	var version_up=false;
-
 	Highcharts.setOptions({
 		chart: {
 			type: 'column',
@@ -175,31 +173,29 @@
 		const eDate = $('#enddate').val().replaceAll("-", "");
 		if (sDate > eDate) ui.alertMsg('<s:message code="blockHistoryNonBusi.msg.cannot.startendtime"/>');
 
-        if(version_up) {
-            grid1.on();
-            searchFlag = true;
-            ui.get({
-                url: 'getSearchHistoryList.xcn',
-                startDt: sDate,
-                endDt: eDate,
-                deptStr: getSelectedDept(),
-                busiStr: getSelectedBusi(),
-                userStr: getSelectedUser(),
-                offset: grid1.data.length,
-                limit: grid1.pageSize,
-                success: function (data, total) {
-                    $("#keywordCount").html(' [' + data['numFound'].comma() + '건]');
-                    grid1.appendData(data.buckets);
-                },
-                error: function (status, message) {
-                    ui.alertMsg(message);
-                },
-                complete: function () {
-                    searchFlag = false;
-                    grid1.off();
-                }
-            });
-        }
+		grid1.on();
+		searchFlag = true;
+		ui.get({
+			url: 'getSearchHistoryList.xcn',
+			startDt: sDate,
+			endDt: eDate,
+			deptStr: getSelectedDept(),
+			busiStr: getSelectedBusi(),
+			userStr: getSelectedUser(),
+			offset: grid1.data.length,
+			limit: grid1.pageSize,
+			success: function (data, total) {
+				$("#keywordCount").html(' [' + data['numFound'].comma() + '건]');
+				grid1.appendData(data.buckets);
+			},
+			error: function (status, message) {
+				ui.alertMsg(message);
+			},
+			complete: function () {
+				searchFlag = false;
+				grid1.off();
+			}
+		});
 	}
 
 	var currentKeyword = '';
