@@ -9,8 +9,36 @@
 	.coach_modal .coach_name {margin-top:24px; font-size:32px; font-weight: 600;color:#fff; line-height: 1.5;}
 	.coach_modal .coach_name span {color:#88B8FF;font-weight: 600;}
 	.coach_modal .coach_call {font-size:13px;margin-right:8px; letter-spacing:0.6px;  margin-top:20px; padding:8px 12px; background: #88B8FF; color:#fff; display: inline-block; border-radius: 4px; }
+	/* The Modal (background) */
+	.coach_modal {
+		display: block; /* Hidden by default */
+		position: fixed; /* Stay in place */
+		padding-top: 100px; /* Location of the box */
+		left: 40px;
+		top: 0;
+		z-index: 55;
+		width: 100%; /* Full width */
+		height: 100%; /* Full height */
+		overflow: auto; /* Enable scroll if needed */
+		background-color: rgb(0,0,0); /* Fallback color */
+		background-color: rgba(0,0,0,0.8); /* Black w/ opacity */
+	}
+
+	/* Modal Content */
+	.modal-content {
+		margin: auto;
+		padding: 20px;
+		width: 93%;
+		height:90%;
+		background: none;
+		border:none;
+		color:#fff;
+		font-wight:400;
+
+	}
+
 </style>
-<div class="coach_modal">
+<div id="myModal" class="coach_modal">
 	<div class="modal-content">
 		<div>
 			<div class="coach_name"><span>${_USERCREDENTIAL_.adminName}</span>님 환영합니다.</div>
@@ -30,6 +58,8 @@
 	.table_btn01 {cursor: pointer}
 </style>
 <script type="text/javascript">
+
+	var version_up=false;
 
 	Highcharts.setOptions({
 		chart: {
@@ -145,29 +175,31 @@
 		const eDate = $('#enddate').val().replaceAll("-", "");
 		if (sDate > eDate) ui.alertMsg('<s:message code="blockHistoryNonBusi.msg.cannot.startendtime"/>');
 
-		grid1.on();
-		searchFlag = true;
-		ui.get({
-			url: 'getSearchHistoryList.xcn',
-			startDt: sDate,
-			endDt: eDate,
-			deptStr: getSelectedDept(),
-			busiStr: getSelectedBusi(),
-			userStr: getSelectedUser(),
-			offset: grid1.data.length,
-			limit: grid1.pageSize,
-			success: function (data, total) {
-				$("#keywordCount").html(' [' + data['numFound'].comma() + '건]');
-				grid1.appendData(data.buckets);
-			},
-			error: function (status, message) {
-				ui.alertMsg(message);
-			},
-			complete: function () {
-				searchFlag = false;
-				grid1.off();
-			}
-		});
+        if(version_up) {
+            grid1.on();
+            searchFlag = true;
+            ui.get({
+                url: 'getSearchHistoryList.xcn',
+                startDt: sDate,
+                endDt: eDate,
+                deptStr: getSelectedDept(),
+                busiStr: getSelectedBusi(),
+                userStr: getSelectedUser(),
+                offset: grid1.data.length,
+                limit: grid1.pageSize,
+                success: function (data, total) {
+                    $("#keywordCount").html(' [' + data['numFound'].comma() + '건]');
+                    grid1.appendData(data.buckets);
+                },
+                error: function (status, message) {
+                    ui.alertMsg(message);
+                },
+                complete: function () {
+                    searchFlag = false;
+                    grid1.off();
+                }
+            });
+        }
 	}
 
 	var currentKeyword = '';
