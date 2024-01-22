@@ -38,11 +38,18 @@
                 }
                 var names = gridMenu.getSelectedKey('menuName');
                 var defaultMenu = gridMenu.getSelectedKey('defaultMenu');
+                var defaultDashboard = gridMenu.getSelectedKey('defaultDashboard');
 
                 if (defaultMenu.indexOf('Y') > -1) {
                     ui.alertMsg('<s:message code="dashboardMenu.msg.cannotDel"/>');
                     return false;
                 }
+
+                if (defaultDashboard.indexOf('Y') > -1) {
+                    ui.alertMsg('<s:message code="condition.message.select.defaultDashboard"/>');
+                    return false;
+                }
+
 
                 var defaultMenuFlag = false;
                 for (var i = 0; i < defaultMenu.length; i++) {
@@ -218,6 +225,7 @@
 							<input type="text" class="w100" name="menuName" id="menuName" maxlength="60">
 							<input type="hidden" class="w100" name="menuKey" id="menuKey">
 							<input type="hidden" class="w100" name="defaultMenu" id="defaultMenu">
+							<input type="hidden" class="w100" name="defaultDashboard" id="defaultDashboard">
 						</div>
 					</div>
 					<div class="row">
@@ -328,6 +336,10 @@
         if (value == 'Y') return '<i class="fa fa-star" style="font-size:15px;"></i>';
         else return '-';
     });
+    gridMenu.colAdd('defaultDashboard', 'defaultDashboard', 183, 'left', false, 'hidden');
+
+
+    gridMenu.loadHeader(false);
     gridMenu.loadHeader(false);
     gridMenu.initData('<s:message code="common.msg.search.click"/>');
 
@@ -343,6 +355,7 @@
             }).addClass('selected');
             $('[name=useYn][value=' + data.useYn + ']').prop('checked', true);
             $('#defaultMenu').val(data.defaultMenu);
+            $('#defaultDashboard').val(data.defaultDashboard);
             $("#setupDashboardMenuPop").modal('show');
 
         }

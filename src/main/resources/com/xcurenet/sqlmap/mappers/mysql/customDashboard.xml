@@ -5,7 +5,7 @@
 
 	<select id="getDashBoardMenuList" resultType="customDashboardMenuVO" parameterType="customDashboardMenuVO">
 		SELECT	MENU_KEY AS menuKey, MENU_NAME AS menuName, MENU_ICON AS menuIcon, ADMIN_ID AS adminId, USEYN AS useYn,
-				DEFAULT_MENU AS defaultMenu, DATE_FORMAT(UPDATE_DT, '%Y-%m-%d %T' ) AS updateDt
+				DEFAULT_MENU AS defaultMenu,DEFAULT_DASHBOARD AS defaultDashboard, DATE_FORMAT(UPDATE_DT, '%Y-%m-%d %T' ) AS updateDt
 		FROM	UI_CUSTOM_DASHBOARD_MENU
 		WHERE	ADMIN_ID = #{adminId}
 		<if test='useYn!=null and useYn!=""'>
