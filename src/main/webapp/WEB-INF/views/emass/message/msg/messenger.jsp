@@ -1,6 +1,50 @@
 <%@ page import="com.xcurenet.common.util.Common" %>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<style>
+	/*.lastReadLI {*/
+	/*	background-color:#D3DBDC !important;*/
+	/*}*/
+	/*.lastReadLi .timeline-panel :after {*/
+	/*	background-color:#D3DBDC !important;*/
+	/*	!*position: absolute !important;*!*/
+	/*	!*left: -14px !important;*!*/
+	/*	!*border-top: 7px solid transparent !important;*!*/
+	/*	!*border-left: 0 solid #D3DBDC !important;*!*/
+	/*	!*border-right: 14px solid #D3DBDC !important;*!*/
+	/*	!*border-bottom: 7px solid transparent !important;*!*/
+	/*}*/
+
+	/*.lastReadLi .timeline-panel :before {*/
+	/*	background-color:#D3DBDC !important;*/
+	/*	!*position: absolute !important;*!*/
+	/*	!*left: -13px !important;*!*/
+	/*	!*border-top: 8px solid transparent !important;*!*/
+	/*	!*border-left: 0px solid #D3DBDC !important;*!*/
+	/*	!*border-right: 13px solid #D3DBDC !important;*!*/
+	/*	!*border-bottom: 8px solid transparent !important;*!*/
+	/*}*/
+	/*.lastReadLi .timeline-panel :after {*/
+	/*	background-color:#D3DBDC !important;*/
+	/*	!*position: absolute !important;*!*/
+	/*	!*right: -14px !important;*!*/
+	/*	!*border-top: 7px solid transparent !important;*!*/
+	/*	!*border-left: 14px solid #D3DBDC !important;*!*/
+	/*	!*border-right: 0 solid #D3DBDC !important;*!*/
+	/*	!*border-bottom: 7px solid transparent !important;*!*/
+	/*}*/
+
+	/*.lastReadLi .timeline-panel :before {*/
+	/*	background-color:#D3DBDC !important;*/
+	/*	!*position: absolute !important;*!*/
+	/*	!*right: -13px !important;*!*/
+	/*	!*border-top: 8px solid transparent !important;*!*/
+	/*	!*border-left: 13px solid #D3DBDC !important;*!*/
+	/*	!*border-right: 0 solid #D3DBDC !important;*!*/
+	/*	!*border-bottom: 8px solid transparent !important;*!*/
+	/*}*/
+</style>
+
 
 <%
 	String adminType = Common.getAdminType(session);
@@ -182,6 +226,15 @@
             });
 
             $(document).on('click', '.me', function (e) {
+                var xrootmtr = $(this).parent().attr('xrootmtr');
+                var srcip = $(this).parent().attr('srcip');
+                var id = $(this).parent().attr('id');
+                updateEmassMessengerAdminXrootMtr(xrootmtr, id, srcip);
+
+                moveTargetHeight(id, false);
+            });
+
+            $(document).on('click', '.you', function (e) {
                 var xrootmtr = $(this).parent().attr('xrootmtr');
                 var srcip = $(this).parent().attr('srcip');
                 var id = $(this).parent().attr('id');

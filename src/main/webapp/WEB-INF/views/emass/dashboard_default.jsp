@@ -136,7 +136,6 @@ var dashCondition = {
         }
 
 
-        // getAllTodayPatternPrivacy();
         getTodayKeywordDetection();
         getTodayRiskBehavior();
         getTodayPatternPrivacy();
@@ -543,10 +542,13 @@ var dashCondition = {
                             let names = getFormattedValue("size", name[0]);
                             let bu = getFormattedValue("size", name[1]);
                             let count = getFormattedValue("count", name[2]);
+                            let noName = getFormattedValue("size",name[3]);
                             let nameId = name[3];
 
+
                             str += "<li class='click2' data-value='" + nameId + "'><p class='num'>" + (i + 1) + "</p>";
-                            str += "<p><span class='name blue'>" + names + "</span>";
+                            if (names=='') str+="<p><span class='name blue'>" + noName + "</span>";
+                            else str += "<p><span class='name blue'>" + names + "</span>";
                             str += "<span class='team'>" + bu + "</span></p>";
                             str += "<p class='teamnum'>";
                             str += "<span class='name'>" + count + "</span>";
@@ -560,7 +562,8 @@ var dashCondition = {
                             let count = getFormattedValue("count", name[2]);
                             let nameId = name[3];
                             str += "<li class='click2' data-value='" + nameId + "'><span class='num'>" + (i + 1) + "</span>";
-                            str += "<p><span class='name'>" + names + "</span>";
+                            if (names=='') str += "<p><span class='name'>" + nameId + "</span>";
+                            else str += "<p><span class='name'>" + names + "</span>";
                             str += "<span class='righttext'>" + count + "</span></p></li>";
                         }
                         str += "</ul></div>"
@@ -686,7 +689,7 @@ var dashCondition = {
                             let fileName = getFormattedValue("name", leFileName);
                             str += "<li class='clicks' ' data-value='" + data.fileId[i] + "'>"
                             str += "<span class = 'num'>" + (i + 1) + "</span>";
-                            str += "<p class='file blueBg'><span class='filename blue'>" + leFileName + "</span><span class='Volume'>" + filesSize + "</span></p>";
+                            str += "<p class='file blueBg'><span class='filename blue'>" + fileName + "</span><span class='Volume'>" + filesSize + "</span></p>";
                             str += "</li>"
                         }
                         str += "</ul></div>";

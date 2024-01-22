@@ -128,22 +128,6 @@ public class DashBoardPreDefineController {
 	}
 
 
-//	@RequestMapping(value = "/getAllTodayPatternPrivacy.xcn")
-//	@Description("Dashboard - 전체 패턴(개인정보)")
-//	@ResponseBody
-//	public XcnResponseVO getAllTodayPatternPrivacy(final HttpSession session) throws Exception {
-//		long now = System.currentTimeMillis();
-//		PatternPrivacyVO vo = new PatternPrivacyVO();
-//		vo.setAdminId(Common.getAdminId(session));
-//		vo.setStartDt(Common.getCurrentDate() + "000000");
-//		vo.setEndDt(Common.getDateTime(now, "yyyyMMddHHmmss"));
-//		vo.setTermDtStr(Prop.propFormat("condition.hour", session, "00")+" ~ " + Common.getDateTime(now, Prop.propFormat("condition.time", session, "HH", "mm", "ss")));
-//
-//		PatternPrivacyVO result = dashBoardPreDefineService.getAllTodayPatternPrivacy(vo);
-//
-//		return new XcnResponseVO(XcnRspCode.OK, null,0);
-//	}
-
 	@RequestMapping(value = "/getTodayPassportData.xcn")
 	@Description("Dashboard - 여권번호 수집 건수")
 	@ResponseBody
