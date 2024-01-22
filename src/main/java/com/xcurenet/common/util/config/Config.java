@@ -141,19 +141,19 @@ public class Config {
 	public static boolean isIPv6 = false;
 	public static boolean isOCR = false;
 
-	public static final String RULE_PATH = "/users/emasslth/uacs/rule/rule.dat";
-	public static final String RULE_BACKUP_PATH = "/users/emasslth/uacs/rule/backup/";
+	public static final String RULE_PATH = "/users/emassai/uacs/rule/rule.dat";
+	public static final String RULE_BACKUP_PATH = "/users/emassai/uacs/rule/backup/";
 
-	public static final String URL_PATH = "/users/emasslth/makeinfo/nolog_url.json";
-	public static final String URL_BACKUP_PATH = "/users/emasslth/makeinfo/backup/";
+	public static final String URL_PATH = "/users/emassai/makeinfo/nolog_url.json";
+	public static final String URL_BACKUP_PATH = "/users/emassai/makeinfo/backup/";
 
-	public static final String DID_PATH = "/users/emasslth/uacs/did/";
-	public static final String DID_TMP = "/users/emasslth/uacs/did/tmp/";
-	public static final String ADMIN_FILTER_TMP = "/users/emasslth/filter/tmp/";
-	public static final String DID_BACKUP = "/users/emasslth/uacs/did/backup/";
-	public static final String KEYWORD_TMP = "/users/emasslth/keyword/tmp/";
-	public static final String IPRANGE_TMP = "/users/emasslth/iprange/tmp/";
-	public static final String IPRANGE_DEPT_TMP = "/users/emasslth/iprangeDept/tmp/";
+	public static final String DID_PATH = "/users/emassai/uacs/did/";
+	public static final String DID_TMP = "/users/emassai/uacs/did/tmp/";
+	public static final String ADMIN_FILTER_TMP = "/users/emassai/filter/tmp/";
+	public static final String DID_BACKUP = "/users/emassai/uacs/did/backup/";
+	public static final String KEYWORD_TMP = "/users/emassai/keyword/tmp/";
+	public static final String IPRANGE_TMP = "/users/emassai/iprange/tmp/";
+	public static final String IPRANGE_DEPT_TMP = "/users/emassai/iprangeDept/tmp/";
 	public static final String DID_XML = "did.xml";
 	public static final String DID_DAT = "did_pattern.dat";
 
@@ -162,7 +162,7 @@ public class Config {
 
 	public static final String DECODER_CONF_PATH = "/users/las/conf";
 
-	public static final String MESSAGE_EXPORT_PATH = "/users/emasslth/message/";
+	public static final String MESSAGE_EXPORT_PATH = "/users/emassai/message/";
 
 	public static final int MESSAGE_EXPORT_USED_RATE = 2;
 

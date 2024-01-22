@@ -864,7 +864,6 @@ function Xgrid ( target, contextRoot, rowHeight, options, dataview ) {
 	$(this.target).sizeChanged( function(element){
 		for ( var i=0 ; i < window.__grids.length ; i++ ) {
 			if( $(element).attr('id') == window.__grids[i].id) {
-				console.log('resize : ' + $(element).attr('id') );
 				window.__grids[i].grid.resizeCanvas( );
 			}
 		}
