@@ -32,7 +32,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 @Controller
-@AuditParentMenu(ParentMenu.DATA_MONITOR)
+@AuditParentMenu(ParentMenu.DASHBOARD)
 @AuditMenu(Menu.DASHBOARD_SETUP)
 public class CustomDashBoardSetupController {
 

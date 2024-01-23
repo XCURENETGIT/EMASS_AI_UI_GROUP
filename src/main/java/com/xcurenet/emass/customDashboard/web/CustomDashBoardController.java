@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@AuditParentMenu(ParentMenu.DATA_MONITOR)
+@AuditParentMenu(ParentMenu.DASHBOARD)
 @AuditMenu(Menu.DASHBOARD)
 public class CustomDashBoardController {
 

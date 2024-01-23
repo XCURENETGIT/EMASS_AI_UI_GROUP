@@ -33,7 +33,7 @@ import com.xcurenet.emass.dashboard.service.DeviceStatusService;
 import com.xcurenet.emass.dashboard.service.FileSendVO;
 
 @Controller
-@AuditParentMenu(ParentMenu.DATA_MONITOR)
+@AuditParentMenu(ParentMenu.DASHBOARD)
 @AuditMenu(Menu.DASHBOARD)
 public class DashBoardController {
 

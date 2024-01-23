@@ -9,6 +9,7 @@ import net.sf.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public @Data class ProcessmapVO implements Serializable {
 
@@ -19,7 +20,6 @@ public @Data class ProcessmapVO implements Serializable {
 	private static final String TYPE = "type";
 	private static final String NAME = "name";
 	private static final String TIME = "time";
-	private static final String IP = "ip";
 	private static final String SVC_NONAME = "unknown";
 
 	private int linkSize;
@@ -36,10 +36,37 @@ public @Data class ProcessmapVO implements Serializable {
 		for (SolrEdcVO solrEdcVO : modelList) {
 			solrEdcVO.setSvcLv1Nm(Common.isEmpty(solrEdcVO.getSvcLv1Nm()) ? SVC_NONAME : solrEdcVO.getSvcLv1Nm());
 		}
-		setLinks(setLink(modelList).toString());
+		JSONObject links = setLink(modelList);
+		JSONArray arr = links.toJSONArray(links.names());
+		List<String> linkKeys = (List<String>) links.keySet().stream().collect(Collectors.toList());
+
+		JSONArray reArr = new JSONArray(); //이름작업
+		JSONObject reJson = new JSONObject();
+		for (int i = 0; i < arr.size(); i++) {
+			reArr = new JSONArray();
+			JSONObject tempJson = (JSONObject) arr.get(i);
+			String name = nameMake((String) tempJson.get("name"));
+			tempJson.put("name",(!Common.isEmpty(name) ? name : tempJson.get("type")));
+			reJson.put(linkKeys.get(i),tempJson);
+		}
+		setLinks(reJson.toString());
 		JSONObject json = getDefaultData();
 		setConfig(setNode(json, modelList).toString());
+
 	}
+
+	private String nameMake(String ip) {
+		String result = "";
+		String id =  Config.getUserId(ip);
+		if(!("").equals(id)) {
+			String name = Config.getUserName(id);
+			String jikgubnm = Config.getUserJikgubnm(id);
+			String deptnm = Config.getUserDeptnm(id);
+			result = name.concat("/").concat(jikgubnm).concat("/").concat(deptnm).concat("<").concat(id).concat(">");
+		}
+		return result;
+	}
+
 
 	private JSONObject getDefaultData() {
 
@@ -179,8 +206,7 @@ public @Data class ProcessmapVO implements Serializable {
 			SolrEdcVO model = modelList.get(i);
 
 			if (model.getSvc().startsWith("M") || model.getSvc().startsWith("W") || model.getSvc().startsWith("EMM")) {
-
-				addJsonLinks(jsonLinks, model.getSrcip(), model.getSvcLv1Nm(), nameMake(model.getSrcip()), model.getCtime(), null, null, model.getRecvs());
+				addJsonLinks(jsonLinks, model.getSenderOrig(), model.getSvcLv1Nm(), model.getSenderOrig(), model.getCtime(), null, null, model.getRecvs());
 				if (model.getRecvs() != null) {
 					for (String recvs : model.getRecvs()) {
 						addJsonLinks(jsonLinks, recvs, model.getSvcLv1Nm(), recvs, model.getCtime(), model.getSenderOrig(), null, null);
@@ -191,15 +217,15 @@ public @Data class ProcessmapVO implements Serializable {
 				if (Common.isEmpty(svc2Nm)) {
 					svc2Nm = SVC_NONAME;
 				}
-				addJsonLinks(jsonLinks, model.getSrcip(), svc2Nm, nameMake(model.getSrcip()), model.getCtime(), null, null, model.getRecvs());
+				addJsonLinks(jsonLinks, model.getSenderOrig(), svc2Nm, model.getSenderOrig(), model.getCtime(), null, null, model.getRecvs());
 				if (model.getRecvs() != null) {
 					for (String recvs : model.getRecvs()) {
 						addJsonLinks(jsonLinks, recvs, svc2Nm, recvs, model.getCtime(), model.getSenderOrig(), null, null);
 					}
 				}
 			} else {
-				addJsonLinks(jsonLinks, model.getSrcip(), model.getSvcLv1Nm(),nameMake(model.getSrcip()), model.getCtime(), null, model.getDstip(), null);
-				addJsonLinks(jsonLinks, model.getDstip(), model.getSvcLv1Nm(), (!("").equals(Config.getUserId(model.getDstip())) ? nameMake(model.getDstip()) : model.getSvcNm()), model.getCtime(), model.getSrcip(), null, null);
+				addJsonLinks(jsonLinks, model.getSrcip(), model.getSvcLv1Nm(), model.getSrcip(), model.getCtime(), null, model.getDstip(), null);
+				addJsonLinks(jsonLinks, model.getDstip(), model.getSvcLv1Nm(), model.getDstip(), model.getCtime(), model.getSrcip(), null, null);
 			}
 			// 100개까지 제한.
 			if (jsonLinks.size() >= 100) {
@@ -213,24 +239,12 @@ public @Data class ProcessmapVO implements Serializable {
 		return setLinkDocs(jsonLinks);
 	}
 
-	private String nameMake(String ip) {
-		String result = "";
-		String id =  Config.getUserId(ip);
-		if(!("").equals(id)) {
-			String name = Config.getUserName(id);
-			String jikgubnm = Config.getUserJikgubnm(id);
-			String deptnm = Config.getUserDeptnm(id);
-		    result = name.concat("/").concat(jikgubnm).concat("/").concat(deptnm).concat("<").concat(id).concat(">");
-		}
-		return result;
-	}
-
 	private JSONObject addJsonLinks(JSONObject jsonLinks, String key, String type, String name, String time, String depend, String dependOnByDstIp, List<String> dependOnByRecvs) {
 		if (jsonLinks.has(key)) {
 			addDepend(jsonLinks, key, DEPENDS, depend);
 			addDepend(jsonLinks, key, DEPENDED_ON_BY, dependOnByDstIp);
 		} else {
-			jsonLinks.put(key, setData(type, name, time, depend, dependOnByDstIp,key));
+			jsonLinks.put(key, setData(type, name, time, depend, dependOnByDstIp));
 		}
 
 		if (dependOnByRecvs != null) {
@@ -300,17 +314,15 @@ public @Data class ProcessmapVO implements Serializable {
 	}
 
 	public JSONObject setData(String type, String name, String time) {
-		return setData(type, name, time, null, null,null);
+		return setData(type, name, time, null, null);
 	}
 
-	private JSONObject setData(String type, String name, String time, String depend, String dependedOnBy,String ip) {
+	private JSONObject setData(String type, String name, String time, String depend, String dependedOnBy) {
 		JSONObject json = new JSONObject();
 
 		json.put(TYPE, type);
 		json.put(NAME, name);
 		json.put(TIME, time);
-		json.put(IP, ip);
-
 		if (Common.isEquals(name, depend)) {
 			json.put(DEPENDS, new ArrayList<String>());
 		} else {
