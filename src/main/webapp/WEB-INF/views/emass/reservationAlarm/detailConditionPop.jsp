@@ -1007,7 +1007,6 @@
          */
         function initEpmsg() {
             $('#epmsgTypeSelect').selectpicker({
-                container: 'body',
                 size: 15,
                 width: '415px',
                 noneSelectedText: '<s:message code="condition.epmsgType.all"/>',
