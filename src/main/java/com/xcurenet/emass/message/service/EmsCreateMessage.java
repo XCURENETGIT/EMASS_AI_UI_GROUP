@@ -87,6 +87,10 @@ public class EmsCreateMessage {
 			List<EmsRecvVO> cc = new ArrayList<>();
 			List<EmsRecvVO> bcc = new ArrayList<>();
 
+
+
+			sender=msg.getSenderList();
+
 			String svcnm = Common.nvl(Config.getServiceNm(msg.getSvc()));
 			String protocolNm = Config.getProtocolNm(msg.getProtocol());
 			if( Common.isNotEmpty(protocolNm)) svcnm += " [" + protocolNm+"]";
@@ -136,6 +140,7 @@ public class EmsCreateMessage {
 						bcc.add(u);
 					}
 				}
+
 			}else{
 				for (SolrEdcVO participant : participants.getGroups()) {
 					String name = Common.isEmpty(participant.getName()) ? participant.getUsr_id() : participant.getName();
@@ -378,7 +383,7 @@ public class EmsCreateMessage {
 
 	private String getPatternHtml(List<EmsPiVO> pattern, Locale locale) {
 		String resultStr = "";
-		resultStr += "<table class=\"table table-bordered\"> ";
+		resultStr += "<table class=\"subTable02 table-bordered\"> ";
 		resultStr += "	<tr> ";
 		resultStr += "		<th colspan=\"2\">" + Prop.propFormat("common.msg.separator", locale) + "</th> ";
 		resultStr += "		<th colspan=\"2\">"+Prop.propFormat("bodyview.info.detect", locale)+"</th>";
@@ -430,7 +435,7 @@ public class EmsCreateMessage {
 		String resultStr = "";
 		EmsAttachDownload attachDown = new EmsAttachDownload();
 		if(hasOcr) {
-			resultStr += "<table class=\"table table-bordered\"> ";
+			resultStr += "<table class=\"subTable02 table-bordered\"> ";
 			resultStr += "	<colgroup> ";
 			resultStr += "		<col width=\"200px\"> ";
 			resultStr += "		<col width=\"*\"> ";

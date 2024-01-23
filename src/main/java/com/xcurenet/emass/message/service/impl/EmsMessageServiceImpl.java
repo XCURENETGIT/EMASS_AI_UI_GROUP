@@ -78,6 +78,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		bodyVo.setBodyText(data.getBodyText());
 		bodyVo.setSubject(data.getSubject());
 		bodyVo.setSvc(data.getSvc());
+		bodyVo.setSender(data.getSender());
 		bodyVo.setSrcIp(data.getSrcIp());
 		bodyVo.setDstIp(data.getDstIp());
 		bodyVo.setHost(data.getHost());

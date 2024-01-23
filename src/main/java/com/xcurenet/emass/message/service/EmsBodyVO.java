@@ -23,7 +23,7 @@ public class EmsBodyVO {
 	private byte[] body;
 	private String bodyType;
 	private String bodyText;
-
+	private String sender;
 	private String subject;
 	private String svc;
 	private String srcIp;

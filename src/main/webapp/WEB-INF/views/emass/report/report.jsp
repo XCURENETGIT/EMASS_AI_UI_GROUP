@@ -533,8 +533,7 @@
 								<div class ="a4" id="reportDiv">
 									<div class="grayBg02 p12 txt_center">
 										<h3 class="fs20 ma_none">
-											<a href="#" class="fb600" id="repTitle">EMASS AI Report</a>
-											<button onclick="titlechange();" class="btn05 mal8"><img src="../img/subBtn_textupload.png" alt=""><s:message code="report.msg.rename_subject"/></button>
+											<a href="#" class="fb600" id="repTitle" onclick="titlechange();">EMASS AI Report</a>
 										</h3>
 										<div class="form-inline hidden-print mat8" style="display: none;" id="divTitle">
 											<input type="text" class="input-sm form-control" style="width: 250px;" id="inputTitle" maxlength="16">

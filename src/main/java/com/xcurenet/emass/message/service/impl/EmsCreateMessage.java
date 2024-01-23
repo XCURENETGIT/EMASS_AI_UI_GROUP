@@ -407,7 +407,7 @@ public class EmsCreateMessage {
 
 	private String getPatternHtml(List<EmsPiVO> pattern, Locale locale) {
 		String resultStr = "";
-		resultStr += "<table class=\"table table-bordered\"> ";
+		resultStr += "<table class=\"subtable table-bordered\"> ";
 		resultStr += "	<tr> ";
 		resultStr += "		<th colspan=\"2\">" + Prop.propFormat("common.msg.separator", locale) + "</th> ";
 		resultStr += "		<th colspan=\"2\">"+Prop.propFormat("bodyview.info.detect", locale)+"</th>";
@@ -459,7 +459,7 @@ public class EmsCreateMessage {
 		String resultStr = "";
 		EmsAttachDownload attachDown = new EmsAttachDownload();
 		if(hasOcr) {
-			resultStr += "<table class=\"table table-bordered\"> ";
+			resultStr += "<table class=\"subtable table-bordered\"> ";
 			resultStr += "	<colgroup> ";
 			resultStr += "		<col width=\"200px\"> ";
 			resultStr += "		<col width=\"*\"> ";
