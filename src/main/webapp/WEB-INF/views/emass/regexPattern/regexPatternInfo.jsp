@@ -29,6 +29,14 @@
             }, 500);
         });
 
+        function isValidRegexPattern(pattern) {
+            //  정규식 패턴은 특수문자 중 최소 1개, 그리고 영어, 한글, 숫자 중 최소 1개 이상을 포함되어야 합니다.
+            var regex = /(?=.*[\W_])(?=.*[a-zA-Z가-힣0-9]).+/;
+            return regex.test(pattern);
+        }
+
+
+
         $('#regexSaveButton').click(function () {
             var regexPatternName = $('#regexPatternName').val().ltrim().rtrim();
             if (regexPatternName == '') {
@@ -41,6 +49,12 @@
                 ui.alertMsg('<s:message code="regexPattern.pattern.input"/>');
                 $('#regexPattern').focus();
             }
+         if (!isValidRegexPattern(regexPattern)){
+             ui.alertMsg('<s:message code="regexPattern.patter_valid"/>');
+             return  false;
+         }
+
+
             var mode = $('#regexPatternPop').attr('mode');
             var confirmMessage = mode == 'insert' ? '<s:message code="common.msg.confirm.add"/>' : '<s:message code="common.msg.confirm.modify"/>';
 

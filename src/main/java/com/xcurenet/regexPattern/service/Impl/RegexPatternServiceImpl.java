@@ -1,5 +1,6 @@
 package com.xcurenet.regexPattern.service.Impl;
 
+import com.ctc.wstx.shaded.msv_core.datatype.xsd.regex.RegExp;
 import com.xcurenet.common.dao.TransactionManager;
 import com.xcurenet.common.dao.XcnAbstractDAO;
 import com.xcurenet.emass.keyword.service.KeywordVO;
@@ -10,9 +11,15 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 @Service("regexPatternService")
 public class RegexPatternServiceImpl extends XcnAbstractDAO implements RegexPatternService {
+
+
+
+
 	@Override
 	public int insertRegexPattern(RegexPatternVO regexPattern) {
 		return insert("com.xcurenet.sqlmap.mappers.mysql.regexPattern.insertRegexPattern", regexPattern);

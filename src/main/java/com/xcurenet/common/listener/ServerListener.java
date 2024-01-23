@@ -43,7 +43,7 @@ public class ServerListener implements ApplicationListener<ContextRefreshedEvent
 					RequestMappingInfo key = elem.getKey();
 					HandlerMethod method = elem.getValue();
 					// if (Common.isNotEquals(method.getMethod().getReturnType().getSimpleName(),"XcnResponseVO")) continue;
-					if (key.getPathPatternsCondition() == null) continue;
+					if (key.getPatternsCondition() == null) continue;
 
 					AuditParentMenu pMenu = method.getMethod().getDeclaringClass().getAnnotation(AuditParentMenu.class);
 					AuditMenu menu = method.getMethod().getDeclaringClass().getAnnotation(AuditMenu.class);
@@ -52,7 +52,7 @@ public class ServerListener implements ApplicationListener<ContextRefreshedEvent
 					if (menu == null || pMenu == null) continue;
 					String className = method.getMethod().getDeclaringClass().getSimpleName();
 					AuditRequestVO vo = new AuditRequestVO();
-					vo.setPath(Common.nvl(key.getPathPatternsCondition().getPatterns().toArray()[0]));
+					vo.setPath(Common.nvl(key.getPatternsCondition().getPatterns().toArray()[0]));
 					vo.setClassName(className.substring(0, 1).toLowerCase() + className.substring(1));
 					vo.setMethod(method.getMethod().getName());
 					vo.setMenuId(menu.value().getMenuId());

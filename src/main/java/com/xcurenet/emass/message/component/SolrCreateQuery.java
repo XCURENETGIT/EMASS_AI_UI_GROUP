@@ -65,7 +65,7 @@ public class SolrCreateQuery {
 	public static final String DEPTCD = "deptcd";
 	public static final String IP_DEPTCD = "ip_deptcd";
 	public static final String EPMSG_TYPE = "epmsg_type";
-	public static final String[] SENDER = {"sender_str", "sname", "srcip"};
+	public static final String[] SENDER = {"sender_str", "sname", "srcip","userkey"};
 	public static final String SENDER_UPPER = "sender_str";
 	public static final String[] SENDER_NOTUPPER = {"sender", "sname", "srcip"};
 	public static final String[] RECEIVER = {"recvs", "recvs_name", "dstip"};

@@ -128,6 +128,7 @@ public class MessengerController {
 		JSONObject param = Common.getParam(request);
 		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
 		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), Common.getAdminId(session));
+		String name = Common.nvl(request.getParameter("userStr"));
 
 		String space = "\"\")";
 		sq.setQuery(sq.getQuery() + MESSENGER + " +xrootmtr:* -xrootmtr:(".concat(space));

@@ -60,7 +60,7 @@ body,html {width:100%; height:100%;}
 .mainlist p {min-width:150px; font-size:30px; font-weight:700; color:#1A73F9;margin-top:4px; text-align: right;}
 .mainlist p span {font-size:14px; color:#555;margin-left:4px;}
 
-.singleBorder {border-color: #F8F8F8; border-width: 2px;}
+.singleBorder {border-color: #eee; border-width: 2px;}
 .xcn_maincon {position: relative; margin-bottom:24px;  }
 .xcn_maincon .xcn_maincon_box { position: relative;  text-align: left; }
 .xcn_maincon .xcn_maincon_box > p {min-width:150px; font-size:28px; font-weight:700; color:#1A73F9; margin-top:12px; margin-right:8px; text-align: right;}
@@ -305,7 +305,7 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 #loginWrap .imgcontainer {text-align: left; margin-top:8px; margin-bottom:32px;}
 #login #loginText {width:500px; margin:0 auto; margin-top:56px; color:#fff;opacity: 0.3;}
 #login #loginText h3 {font-size:18px; font-weight: 600; text-align: center;}
-#login #loginText p {text-align: center;font-size:13px;font-weight: 100; margin-top:16px;line-height:1.5;}
+
 */
 
 /* Login */
@@ -577,15 +577,15 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 
 /*borderColor*/
 .whiteBgBorder {border-color: #fff; border-width: 2px;}
-.blueBgBorder {border-color: #F2F6FF; border-width: 2px; }
-.greenBgBorder {border-color: #E4F4F1; border-width: 2px; }
-.yellowBgBorder {border-color: #FFF8E3; border-width: 2px; }
-.blackBgBorder {border-color: #FFF8E3; border-width: 2px; }
-.redBgBorder {border-color: #FFF1F1; border-width: 2px; }
+.blueBgBorder {border-color: #D0DDFB; border-width: 2px; }
+.greenBgBorder {border-color: #C0E4DE ; border-width: 2px; }
+.yellowBgBorder {border-color: #F6E6B5; border-width: 2px; }
+.blackBgBorder {border-color: #ddd; border-width: 2px; }
+.redBgBorder {border-color: #FCD7D7; border-width: 2px; }
 .grayBgBorder {border-color: #EEF1F6; border-width: 2px; }
 .grayBg02Border {border-color: #F8F8F8; border-width: 2px; }
 .grayBg03Border {border-color: #EEEFF2; border-width: 2px; }
-.purpleBgBorder {border-color: #FCF2FF; border-width: 2px;}
+.purpleBgBorder {border-color: #F0D9F6; border-width: 2px;}
 
 /* border */
 .bordd{border:1px solid #ddd;}

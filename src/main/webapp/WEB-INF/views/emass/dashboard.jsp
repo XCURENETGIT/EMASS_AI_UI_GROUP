@@ -11,7 +11,7 @@
 
 <style type="text/css">
 
-
+  #contentArea {}
 
 	.rightValue:hover{
 		cursor: pointer;
