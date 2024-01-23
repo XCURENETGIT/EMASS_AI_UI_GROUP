@@ -45,9 +45,12 @@ public @Data class ProcessmapVO implements Serializable {
 		for (int i = 0; i < arr.size(); i++) {
 			reArr = new JSONArray();
 			JSONObject tempJson = (JSONObject) arr.get(i);
-			String name = nameMake((String) tempJson.get("name"));
-			tempJson.put("name",(!Common.isEmpty(name) ? name : tempJson.get("type")));
-			reJson.put(linkKeys.get(i),tempJson);
+			String name = (String) tempJson.get("name");
+			if(name.indexOf("@") == -1) {
+				 name = nameMake((String) tempJson.get("name"));
+			}
+			tempJson.put("name", (!Common.isEmpty(name) ? name : tempJson.get("type")));
+			reJson.put(linkKeys.get(i), tempJson);
 		}
 		setLinks(reJson.toString());
 		JSONObject json = getDefaultData();
@@ -206,10 +209,10 @@ public @Data class ProcessmapVO implements Serializable {
 			SolrEdcVO model = modelList.get(i);
 
 			if (model.getSvc().startsWith("M") || model.getSvc().startsWith("W") || model.getSvc().startsWith("EMM")) {
-				addJsonLinks(jsonLinks, model.getSenderOrig(), model.getSvcLv1Nm(), model.getSenderOrig(), model.getCtime(), null, null, model.getRecvs());
+				addJsonLinks(jsonLinks, model.getSenderOrig(), model.getSvcNm(), model.getSenderOrig(), model.getCtime(), null, null, model.getRecvs());
 				if (model.getRecvs() != null) {
 					for (String recvs : model.getRecvs()) {
-						addJsonLinks(jsonLinks, recvs, model.getSvcLv1Nm(), recvs, model.getCtime(), model.getSenderOrig(), null, null);
+						addJsonLinks(jsonLinks, recvs, model.getSvcNm(), recvs, model.getCtime(), model.getSenderOrig(), null, null);
 					}
 				}
 			} else if (model.getSvc().startsWith("Q")) {
@@ -224,8 +227,8 @@ public @Data class ProcessmapVO implements Serializable {
 					}
 				}
 			} else {
-				addJsonLinks(jsonLinks, model.getSrcip(), model.getSvcLv1Nm(), model.getSrcip(), model.getCtime(), null, model.getDstip(), null);
-				addJsonLinks(jsonLinks, model.getDstip(), model.getSvcLv1Nm(), model.getDstip(), model.getCtime(), model.getSrcip(), null, null);
+				addJsonLinks(jsonLinks, model.getSrcip(), model.getSvcNm(), model.getSrcip(), model.getCtime(), null, model.getDstip(), null);
+				addJsonLinks(jsonLinks, model.getDstip(), model.getSvcNm(), model.getDstip(), model.getCtime(), model.getSrcip(), null, null);
 			}
 			// 100개까지 제한.
 			if (jsonLinks.size() >= 100) {
