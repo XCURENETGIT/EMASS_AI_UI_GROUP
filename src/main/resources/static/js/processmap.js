@@ -55,7 +55,10 @@ function drawGraph(id) {
     processmap_graph.height = $('#'+id).height() - processmap_graph.margin.top  - processmap_graph.margin.bottom;
     $('#'+id).css('display', display);
 
+    console.log( "processmap_graph");
     console.log( processmap_graph.data);
+
+
     for (var name in processmap_graph.data) {
         var obj = processmap_graph.data[name];
         obj.positionConstraints = [];
@@ -94,6 +97,10 @@ function drawGraph(id) {
                 source : processmap_graph.data[obj.depends[depIndex]],
                 target : obj
             };
+
+
+            console.log("link")
+            console.log(link)
 
             link.strength = (link.source.linkStrength || 1)
                 * (link.target.linkStrength || 1);
