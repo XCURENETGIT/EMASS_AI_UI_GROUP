@@ -305,6 +305,28 @@
 
     //$('button').easyHotkey();
 
+
+    //언어 설정
+    $('#korLan').click(function (){
+      var adminLang = (this).getAttribute('data-value');
+      ui.confirmMsg('<s:message code="common.msg.change.apply"/>', '', '', function(rs){
+        if(rs){
+          document.location.href = '<c:url value="/changeLocale?locale='+encodeURI(adminLang)+'"/>';
+        }
+      });
+    })
+
+    $('#EnLan').click(function (){
+      var adminLang = (this).getAttribute('data-value');
+      ui.confirmMsg('<s:message code="common.msg.change.apply"/>', '', '', function(rs){
+        if(rs){
+          document.location.href = '<c:url value="/changeLocale?locale='+encodeURI(adminLang)+'"/>';
+        }
+      });
+    })
+
+
+
     $('#TheFirstSaveBtn').click(function(){
       $('#TheFirstSaveBtn').prop('disabled', true);
       var first_adminId = $('#first_adminId').val().trim();
