@@ -195,6 +195,8 @@
 			margin-left: 0 !important;
 		}
 		input[type="checkbox"]:disabled {width:0; height:0; border:none;}*/
+
+		#emassBody table {table-layout: fixed; }
 	</style>
 	<script type="text/javascript">
 		var popup_msgId = '<%=msgid%>';
