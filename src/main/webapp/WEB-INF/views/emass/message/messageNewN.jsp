@@ -2312,7 +2312,7 @@
 
         function queryMakePop(  ){
             var url    = '<c:url value="/commons/queryMake.do?statType=users"/>';
-            fnOpenWindow(url, 'queryMakePop', 1400, 870, 'resize');
+            fnOpenWindow(url, 'queryMakePop', 1500, 950, 'resize');
         }
 
         function getSearchQuery() {
