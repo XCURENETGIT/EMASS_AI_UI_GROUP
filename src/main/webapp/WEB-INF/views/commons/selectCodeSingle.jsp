@@ -92,43 +92,25 @@ function getCodeList() {
 </script>
 
 </head>
-<body class="mini-navbar msgBody">
-	<header class="header">
-		<div class="naviBack">
-			<img src="<c:url value="/img/title/home_icon.png"/>">
-			<span class="navi"><span id="code_title"></span><s:message code="selectCodeSingle.selectitem"/></span>
-		</div>
-	</header>
-	<div class="xcn_container" style="min-width: 500px;">
-		<div class="boxArea">
-			<div class="content_body">
-				<div class="row">
-					<div class="col-xs-10">
-						<div class="form-inline not-dashed">
-							<select class="form-control input-sm" id="busiCd" name="busiCd" style="display: none;">
-								<option value="">- <s:message code="common.org.choose.svctype"/> -</option>
-							</select>
-							<div class="input-group">
-		      					<input type="text" class="form-control input-sm" placeholder="<s:message code="common.msg.searchMsg"/>" id="searchStr" style="width: 180px;">
-								<div class="input-group-btn">
-									<button class="btn btn-sm btn-success" type="button" accesskey="Q" id="searchBtn"><i class="glyphicon glyphicon-search"></i></button>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-xs-2 text-right">
-						<button type="button" class="btn btn-sm btn-default" accesskey="C" id="noSelectBtn"><span class="glyphicon glyphicon-remove"></span>&nbsp;<s:message code="common.msg.close"/></button>
-					</div>
+<div class="xcn_container" style="padding: 10px; overflow: auto;">
+	<!-- left -->
+	<div class="row">
+			<h3 class="blue"><span class="bullet01"></span><s:message code="selectCodeSingle.selectitem"/></h3>
+			<div class="grayBg mat8 popupInner">
+				<div>
+					<input type="text" placeholder="<s:message code="common.msg.searchMsg"/>" id="searchStr">
+					<button class="form_btn01" type="button" accesskey="Q" id="searchBtn"><s:message code="common.msg.search"/></button>
 				</div>
-				<div class="row xcn_full top_space">
-					<div class="col-xs-12" style="height: 100%;">
-						<div id="coCdGrid" class="slickGrid gridArea"></div>
-					</div>
-				</div>
+			</div>
+			<!-- 테이블 -->
+			<div class="pop_tableArea mat16">
+				<!-- 테이블 -->
+				<div id="coCdGrid" class="slickGrid gridArea"></div>
 			</div>
 		</div>
 	</div>
-	
+</div>
+
 	<script type="text/javascript">
 		var grid = new Xgrid('coCdGrid', contextRoot);
 		grid.autoNumber();
