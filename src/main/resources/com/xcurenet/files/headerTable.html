@@ -9,6 +9,85 @@
 
 	<style type="text/css">
 
+		.userOutside {
+			display: inline-block;
+			padding: 2px 6px 2px 0px;
+			background-image: 100%;
+			color: #fff;
+			font-size: 12px;
+			font-weight: 600;
+			border-radius: 4px;
+		}
+		* {margin:0; padding: 0;box-sizing:border-box;}
+		html, body, div, span, applet, object, iframe,
+		h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+		a, abbr, acronym, address, big, cite, code,
+		del, dfn, em, img, ins, kbd, q, s, samp,
+		small, strike, strong, sub, sup, tt, var,
+		b, u, i, center,
+		dl, dt, dd, ol, ul, li,
+		fieldset, form, label, legend,
+		table, caption, tbody, tfoot, thead, tr, th, td,
+		article, aside, canvas, details, embed,
+		figure, figcaption, footer, header, hgroup,
+		menu, nav, output, ruby, section, summary,
+		time, mark, audio, video {
+			margin: 0;
+			padding: 0;
+			border: 0;
+			font-size: 100%;
+			font: inherit;
+			vertical-align: baseline;
+			font-family: Pretendard;
+			font-weight:400;
+			box-sizing:border-box;
+		}
+
+		/* HTML5 display-role reset for older browsers */
+		article, aside, details, figcaption, figure,
+		footer, header, hgroup, menu, nav, section {
+			display: block;
+
+		}
+		body {
+			line-height: 1;
+		}
+		ol, ul {
+			list-style: none;
+		}
+		blockquote, q {
+			quotes: none;
+		}
+		blockquote:before, blockquote:after,
+		q:before, q:after {
+			content: '';
+			content: none;
+		}
+		table {
+			border-collapse: collapse;
+			border-spacing: 0;
+		}
+
+		.svcnmSpan {
+			padding: 4px 10px;
+			border: 1px solid #bbb;
+			border-radius: 7px;
+			-moz-border-radius: 7px;
+			-webkit-border-radius: 7px;
+			-o-border-radius: 7px;
+			background-color: #bbb;
+			color: #fff;
+			position: absolute;
+			top: 12px;
+			right: 12px;
+			font-size: 13px;
+		}
+		.pull-left {
+			float: left !important;
+		}
+		.pull-right {
+			float: right !important;
+		}
 		html, body, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, option, dl, dt, dd, ol, ul, li, img, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
 			margin: 0;
 			padding: 0;
@@ -22,13 +101,11 @@
 		}
 
 		.panel-default>.panel-heading {
-			background-color: #f8f8f8;
-			color: #000;
-		}
-		.panel-default>.panel-heading {
 			color: #333;
 			background-color: #EEEFF2;
 			border-color: #ddd;
+			padding: 10px 12px 9px;
+			font-weight:600;
 		}
 
 		#emassBody table {
@@ -58,7 +135,8 @@
 		.p12{
 			padding: 12px !important;
 		}
-		}
+
+
 
 
 		.svcnmSpan {
@@ -73,16 +151,18 @@
 			font-family: Pretendard;
 		}
 
+		.panel-body {
+			padding: 20px;
+			background-color: #fff;}
 
-
-		.subTable02 {width:100%;font-size: 13px; background-color: #fff !important; }
+		.subTable02 {width:100%;font-size: 13px; background-color: #fff !important;border-bottom:1px solid #ddd; }
 		.subTable02 thead.head th{text-align: left !important;}
 		.subTable02 th {vertical-align: middle; border-left:1px solid #ddd; border-top:1px solid #111;background-color:#EEEFF2;font-weight:600;padding:4px; text-align: center; }
 		.subTable02 td {border-left:1px solid #ddd; border-top:1px solid #ddd; text-align: left; padding:4px; color:#555;}
 		.subTable02 td.topline {border-top:1px solid #111 !important;}
 		.subTable02 th.topline {border-top:1px solid #ddd !important;}
-		.subTable02 th:first-child, subTable02 td:first-child {border-left: none; vertical-align: middle}
-		.subTable02 th, .subTable td {border-bottom:1px solid #ddd;}
+		.subTable02 th, .subTable02 td {border-bottom:1px solid #ddd;}
+		.subTable02 th:first-child, .subTable02 td:first-child {border-left:none !important; vertical-align: middle;}
 
 	</style>
 
@@ -99,7 +179,7 @@
 <body class="mini-navbar msgBody" onload="init();">
 <div class="container">
 	<div class="content">
-		<div style="height:23px;" id="print_area">
+		<div id="print_area">
 			<span style="font-size: 15px;position: relative;top:7px;"> </span>
 			<div class="form-group form-inline" style="float:right;padding:3px 15px 0 0;" id="button_area">
 				<button type="button" class="btn btn-sm btn-default" id="printBtn" onclick="window.print();">Print</button>
@@ -109,8 +189,8 @@
 			<div class="well content_box">
 				<div class="row">
 					<div class="panel panel-default">
-						<div class="panel-heading" style="font-weight: bold;min-height:20px;">
-							<div id="subject" class="pull-left">
+						<div class="panel-heading" style="font-weight: bold;min-height:20px; padding:12px; overflow: hidden">
+							<div id="subject" class="pull-left" style="cursor:default;width:calc(100% - 355px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;word-wrap:normal;line-height: 25px;">
 								#emass_subject#
 							</div>
 							<div class="pull-right" id="svcnm" style="text-align:right;">
@@ -123,6 +203,14 @@
 						</div>
 						<div class="panel-body css-body">
 							<div>
+								<div id="msgInfoFeedback">
+									<div class="form-inline not-dashed" style="font-size:13px; padding-bottom:12px; ">
+										<span style="display: inline-block; color: #fff; background-color: #ml_confd_class_bg_color#; padding: 3px 5px;">#ml_confd_class#</span>
+										<span style="margin-left: 10px;">#ml_confd_prob#</span>
+										<span style="margin-left: 10px;">#ml_confd_feedback#</span>
+										<span style="margin-left: 10px;">#ml_confd_userid#</span>
+									</div>
+								</div>
 								<table class="subTable02" style="margin-bottom:0;table-layout:fixed;word-break: break-word;">
 									<colgroup>
 										<col style="width: 130px;">
@@ -130,16 +218,6 @@
 										<col style="width: 130px;">
 										<col style="width: 200px;">
 									</colgroup>
-									<tr id="msgInfoFeedback">
-										<td colspan="4" style="border-bottom: 1px solid #ccc !important;">
-											<div class="form-inline not-dashed">
-												<span style="display: inline-block; color: #fff; background-color: #ml_confd_class_bg_color#; padding: 3px 5px; border-radius: 3px;">#ml_confd_class#</span>
-												<span style="margin-left: 10px;">#ml_confd_prob#</span>
-												<span style="margin-left: 10px;">#ml_confd_feedback#</span>
-												<span style="margin-left: 10px;">#ml_confd_userid#</span>
-											</div>
-										</td>
-									</tr>
 									<tr id="msgSrcIp">
 										<th>#emass_title_srcip#</th>
 										<td class="topline">#emass_src_ip#</td>
@@ -211,7 +289,7 @@
 												#emass_ipBusiNm#
 											</div>
 										</td>
-										<th>#emass_title_ipDeptNm#</th>
+										<th style="border:1px solid #ddd;">#emass_title_ipDeptNm#</th>
 										<td>
 											<div>
 												#emass_ipDeptNm#
@@ -258,7 +336,7 @@
 				<div class="row" id="msgFiles">
 					<div class="col-lg-12">
 						<div class="panel panel-default" id="">
-							<div class="panel-heading">
+							<div class="panel-heading" style="padding:12px 12px 8px; margin-top:32px; font-weight:600;">
 								<i class="fa fa-bar-chart-o fa-fw"></i> #emass_title_fileinfo#
 								<div class="pull-right" style="position: relative;top:-6px;">
 								</div>
