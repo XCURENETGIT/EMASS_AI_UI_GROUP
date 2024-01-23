@@ -422,7 +422,7 @@ input[type="text"] {
 	min-width: 80px;
 }
 
-.tab_close {
+.tab_1 {
 	position: absolute;
 	z-index: 1;
 	background:url('../img/icon/x1.png');
@@ -435,7 +435,7 @@ input[type="text"] {
 	right: 5px;
 }
 
-.tab_close_2 {
+.tab_2 {
 	position: absolute;
 	z-index: 1;
 	background:url('../img/icon/x2.png');
@@ -448,11 +448,11 @@ input[type="text"] {
 	right: 5px;
 }
 
-.tab_close_2:hover {
-	background-image: url('../img/icon/x_over2.png');
-}
-.tab_close:hover {
+.tab_1:hover {
 	background-image: url('../img/icon/x_over1.png');
+}
+.tab_2:hover {
+	background-image: url('../img/icon/x_over2.png');
 }
 
 .condition_group .expand-one  {
