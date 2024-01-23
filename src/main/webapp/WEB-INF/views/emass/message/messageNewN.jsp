@@ -424,8 +424,6 @@
             margin-bottom: 5px;
         }
 
-
-
         .condition_group {
             margin-top: 12px;
             font-size: 13px;
@@ -534,6 +532,10 @@
             top:4px !important;
             background-color:#fbfbfb !important;
         }
+        .ui-widget-content a  {
+            border: 1px solid #7D7D7D;
+        }
+
     </style>
     <script type="text/javascript">
 
