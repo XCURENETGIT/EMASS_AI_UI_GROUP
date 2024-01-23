@@ -111,6 +111,7 @@
 			font-size: 12px;
 			font-weight: 600;
 			border-radius: 4px;
+			margin:4px;
 		}
 		.userOutside:hover {color:#fff;}
 
@@ -125,15 +126,16 @@
 			font-size: 12px;
 			font-weight: 600;
 			border-radius: 4px;
+			margin:4px;
 		}
 		.userInside:hover {color:#fff;}
 
 
 
 		.notuser{
+			margin:4px;
 			display: inline-block;
-			padding: 2px 6px 2px 0px;
-			padding-left: 20px;
+			padding: 2px 6px 2px 6px;
 			background: gray;
 			color: #fff;
 			font-size: 12px;
@@ -195,6 +197,9 @@
 			margin-left: 0 !important;
 		}
 		input[type="checkbox"]:disabled {width:0; height:0; border:none;}*/
+
+		#emassBody table {table-layout: fixed; }
+		#emassBody img { width:100%;}
 	</style>
 	<script type="text/javascript">
 		var popup_msgId = '<%=msgid%>';
