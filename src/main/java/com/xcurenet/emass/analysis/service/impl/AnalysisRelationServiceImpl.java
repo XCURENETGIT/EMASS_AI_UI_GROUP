@@ -52,7 +52,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 		sq.setParam("group", true);
 		sq.setParam("group.field", field);
 		/* sub aggregations field */
-		sq.setParam("facet.field", "size");
+		sq.setParam("facet.field", "attachsize");
 		sq.setParam("facet.offset", String.valueOf(searchVO.getOffset()));
 		sq.setParam("facet.limit", String.valueOf(searchVO.getLimit()));
 		sq.setFacetMinCount(1);
@@ -80,7 +80,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 		switch (searchVO.getUnit()) {
 			case "file":
 				query.addRange("attachsize", (Common.isEmpty(searchVO.getFileSize()) ? 0 : searchVO.getFileSize() * 1024 * 1024), "*");
-				query.add("attachname_str", searchVO.getListData());
+				query.add("attachname_str",searchVO.getListData());
 				break;
 			case "messenger":
 				query.add(new String[]{"sender_str", "sname", "recvs", "recvs_name", "cc", "cname", "bcc"}, searchVO.getListData());
@@ -93,7 +93,6 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 		}
 
 		query.add(setInterestGroupQuery(searchVO.getInterGroup()));
-
 		return query;
 	}
 
@@ -105,6 +104,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 		SolrQuery sq = new SolrQuery();
 		sq.setQuery(query.toString());
 		sq.setRows(Common.MAX_VALUE);
+		sq.addFilterQuery("-svc:(X* U*)");
 		sq.setFields("msgid", "svc", "srcip", "sport", "dstip", "dport", "ctime", "body_size", "host", "path", "subject", "body_snippet", "sender", "sname", "recvs", "recvs_name", "attached", "attachname", "attachhash");
 
 		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, searchVO.getAdminId());
@@ -142,6 +142,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 
 		sq.setStart(Common.nvz(searchVO.getOffset(), 0));
 		sq.setRows(Common.nvz(searchVO.getLimit(), 100));
+		sq.addFilterQuery("-svc:(X* U*)");
 
 		SolrEdcMessageVO solrVo = solrEdcService.getEmassMessage(sq, searchVO.getAdminId(), "", null);
 

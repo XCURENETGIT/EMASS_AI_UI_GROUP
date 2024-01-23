@@ -582,6 +582,7 @@ function openCodeWindow(codetype,oldCode, oldConm,id) {
 				interGroup : interGroup,
 				interGroupName : interGroupName,
 				success : function(data, total) {
+					console.log(data)
 					if(data.processmap.isOver) {
 						alert('<s:message code="analysis.relation.ui.msg4"/>')
 					}
