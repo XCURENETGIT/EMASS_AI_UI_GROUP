@@ -264,6 +264,18 @@
             height:500px;
         }
 
+        .searchHelpDiv{
+            position: absolute;
+            top: 100px;
+            background-color: #fff;
+            z-index: 999;
+            left: 305px;
+            border: 1px solid #ccc;
+            width: 500px;
+            display:none;
+            height:500px;
+        }
+
         /*연관 검색어 */
         .relationKeywordDiv{
             position: absolute;
@@ -1155,6 +1167,7 @@
                 $('#relationKeywordDiv').hide();
             });
 
+
             /* 정규식 검색 */
             $('.regexSearchBtn').click(function(){
                 getRegexList();
@@ -1168,7 +1181,13 @@
                 getRegexList();
             });
 
-
+            /* 검색 도움말 */
+            $('#searchHelpBtn').click(function(e){
+                $('#searchHelpDiv').show();
+            });
+            $('.searchHelpDivCloseBtn').click(function(){
+                $('#searchHelpDiv').hide();
+            });
 
             $('.showFilterBtn').click(function(){
                 $('#periodSetupMenu').hide();
@@ -1719,14 +1738,6 @@
             });
             $("#config_colse").click(function(){
                 $("#config_toggle").click();
-            });
-            $('#searchHelpBtn').click(function(e){
-                $('#searchHelpDiv').css('left', '305px');
-                $('#searchHelpDiv').css('top', '230px');
-                $('#searchHelpDiv').show();
-            });
-            $('#searchHelpDivCloseBtn').click(function(){
-                $('#searchHelpDiv').hide();
             });
 
             readyCheckParam();
@@ -3298,16 +3309,15 @@
                     </div>
                 </div>
             </div>
-            <div id="searchHelpDiv" style="display: block;position: absolute;top: 130px;right: 350px;display: none;text-align: left;z-index: 1040;border: 1px solid #555;background-color: #f4f4f4;width: 500px;height: 420px;font-size:12px;">
-                <div class="searchHelpHeader" style="height:30px;background-color:#253f56;color:#fff;padding-left:10px;line-height:30px;font-weight: bold;cursor:move;">
-                    <div style="float:left;width:100px;">
-                        <i class="glyphicon glyphicon-question-sign"></i>&nbsp;<s:message code="help.msg.title"/>
-                    </div>
-                    <div style="float:right;padding-right:8px;" class="searchHelpDivCloseArea">
-                        <span class="glyphicon glyphicon-remove" style="cursor:pointer;" id="searchHelpDivCloseBtn"></span>
+
+             <%--  검색어 도움말  --%>
+            <div id="searchHelpDiv" class="searchHelpDiv">
+                <div class="searchKeywordTab"> <i class="glyphicon glyphicon-question-sign"></i>&nbsp;&nbsp;<s:message code="help.msg.title"/>
+                    <div class="searchHelpDivCloseBtn" style="position:absolute;top:12px; right:10px;">
+                        <span class="glyphicon glyphicon-remove" style="cursor:pointer;font-size:13px;" aria-hidden="true"></span>
                     </div>
                 </div>
-                <div style="width:100%;padding:10px 10px 10px 10px;" class="searchHelpDivBody">
+                <div style="width:100%;padding:5px 5px 5px 10px; margin-bottom:8px;" class="searchHelpDivBody">
                     <div>
                         <div style="height:25px;">
                             <h5 style="font-size:13px;">■ <span style="color:#FF0000;"><s:message code="help.msg.default"/></span></h5>
@@ -3345,6 +3355,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="modal fade" id="exportDialog" tabindex="-1" role="dialog" aria-labelledby="exportDialog">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
