@@ -477,6 +477,10 @@ function fileExtCheck(obj) {
 							<label for="encoding" class="fname"><s:message code="bodyview.charset"/></label>
 						</div>
 						<div class="col-65">
+							<select class="optiotab" id="separator" name="separator">
+								<option value=",">,</option>
+								<option value="|">|</option>
+							</select>
 							<select class="optiotab" id="encoding" name="encoding">
 								<option value="utf-8">UTF-8</option>
 								<option value="euc-kr">EUC-KR</option>
@@ -502,7 +506,7 @@ function fileExtCheck(obj) {
 				</div>
 				<div class="modalfooter">
 					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
-					<button type="button" class="pop_btn02" accesskey="S"><s:message code="common.msg.save"/></button>
+					<button type="button" class="pop_btn02 uploadPopBtn" accesskey="S"><s:message code="common.msg.save"/></button>
 				</div>
 			</div>
 		</form>

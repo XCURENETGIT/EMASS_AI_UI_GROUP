@@ -571,7 +571,7 @@ function makeFileServiceList(data) {
     str += '</p>';
     str += '<table class="subTable2 mat8"><tr><th>';
     str+=   filelist.srcIp +'</th><td class="topline">' + data.srcIp + '</td><th>'+filelist.dstIp+'</th><td class="topline">' + data.dstIp + '</td>';
-    str += '<tr xmlns="http://www.w3.org/1999/html"><th>'+filelist.bodySize+'</th><td>' + data.bodySize + '</td><th>'+filelist.userkey+'</th><td>' + '</td></tr>';
+    str += '<tr xmlns="http://www.w3.org/1999/html"><th>'+filelist.bodySize+'</th><td>' + data.bodySize + '</td><th>'+filelist.userId+'</th><td>' + '</td></tr>';
     str += '<tr><th>HOST/PATH</th><td colspan="3" class="mal8 tableLink txt_left">' + data.host + data.path + '</td><tr></table>';
     str += '</div>';
     str += '<div class="messageCon"> <div class="top grayBg03"><h4 class="fileCntArea">'+filelist.fileinfo+'(' + files.length + ')</h4><div class="btn btnform" style="padding: 0px; border: none;"><button accesskey="V" class="btn05 downAllFile"><img src="'+mainContext+'/img/subBtn_save.png" alt="전체 저장">'+filelist.allSave+'</buttonaccesskey></div></div><div class="filelist"><ul>';
