@@ -33,19 +33,19 @@ public class SearchWordControllerLog {
 		auditService.insertAudit(request, auditVo);
 	}
 
-	public void insertSearchWord(final HttpServletRequest request,  AuditRequestVO auditVo){
-		JSONObject param = Common.getParam(request);
-		String searchWord = Common.nvl(param.get("searchWord"));
-		String relationSearchWord = Common.nvl(param.get("relationWord"));
-		String information = "";
-		information += "["+Prop.propFormat("common.msg.add")+"]";
-		if(Common.isNotEmpty(searchWord))information += "┌"+Prop.propFormat("searchKeyword.searchKeyword")+": " + searchWord;
-		if(Common.isNotEmpty(relationSearchWord))information += "┌"+Prop.propFormat("condition.relationKeyword")+": " + relationSearchWord;
-		auditService.insertAudit(request, auditVo);
-
-		auditVo.setInformation(information);
-		auditService.insertAudit(request, auditVo);
-	}
+//	public void insertSearchWord(final HttpServletRequest request,  AuditRequestVO auditVo){
+//		JSONObject param = Common.getParam(request);
+//		String searchWord = Common.nvl(param.get("searchWord"));
+//		String relationSearchWord = Common.nvl(param.get("relationWord"));
+//		String information = "";
+//		information += "["+Prop.propFormat("common.msg.add")+"]";
+//		if(Common.isNotEmpty(searchWord))information += "┌"+Prop.propFormat("searchKeyword.searchKeyword")+": " + searchWord;
+//		if(Common.isNotEmpty(relationSearchWord))information += "┌"+Prop.propFormat("condition.relationKeyword")+": " + relationSearchWord;
+//		auditService.insertAudit(request, auditVo);
+//
+//		auditVo.setInformation(information);
+//		auditService.insertAudit(request, auditVo);
+//	}
 
 	public void updateSearchWord(final HttpServletRequest request,  AuditRequestVO auditVo){
 		JSONObject param = Common.getParam(request);

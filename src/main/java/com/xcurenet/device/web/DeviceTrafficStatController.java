@@ -34,7 +34,7 @@ import net.sf.json.JSONObject;
  * Handles requests for the application home page.
  */
 @Controller
-@AuditParentMenu(ParentMenu.DATA_MONITOR)
+@AuditParentMenu(ParentMenu.DATA_STAT)
 @AuditMenu(Menu.STAT_DEVTRAFFIC)
 public class DeviceTrafficStatController {
 	

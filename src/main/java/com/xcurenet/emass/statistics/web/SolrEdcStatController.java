@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
 
 @Log4j2
 @Controller
-@AuditParentMenu(ParentMenu.DATA_ANALYSIS)
+@AuditParentMenu(ParentMenu.DATA_STAT)
 @AuditMenu(Menu.STAT_USER)
 public class SolrEdcStatController {
 

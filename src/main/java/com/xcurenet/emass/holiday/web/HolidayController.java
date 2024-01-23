@@ -26,7 +26,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 @Controller
-@AuditParentMenu(ParentMenu.OPERATION_MGMT)
+@AuditParentMenu(ParentMenu.POLICY_SETUP)
 @AuditMenu(Menu.HOLIDAY_BUSI)
 public class HolidayController {
 

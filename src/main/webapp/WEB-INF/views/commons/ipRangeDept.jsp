@@ -872,15 +872,15 @@ function getDeptSchedule(){
 						<div class="col-65">
 							<select  class="w100" id="dept.time" name="time">
 								<option value="*"><s:message code="userInfo.clock.time"/></option>
-								<option value="1"><s:message code="common.time.1"/></option>
-								<option value="2"><s:message code="common.time.2"/></option>
-								<option value="3"><s:message code="common.time.3"/></option>
-								<option value="4"><s:message code="common.time.4"/></option>
-								<option value="5"><s:message code="common.time.5"/></option>
-								<option value="6"><s:message code="common.time.6"/></option>
-								<option value="7"><s:message code="common.time.7"/></option>
-								<option value="8"><s:message code="common.time.8"/></option>
-								<option value="9"><s:message code="common.time.9"/></option>
+								<option value="1"><s:message code="common.time.01"/></option>
+								<option value="2"><s:message code="common.time.02"/></option>
+								<option value="3"><s:message code="common.time.03"/></option>
+								<option value="4"><s:message code="common.time.04"/></option>
+								<option value="5"><s:message code="common.time.05"/></option>
+								<option value="6"><s:message code="common.time.06"/></option>
+								<option value="7"><s:message code="common.time.07"/></option>
+								<option value="8"><s:message code="common.time.08"/></option>
+								<option value="9"><s:message code="common.time.09"/></option>
 								<option value="10"><s:message code="common.time.10"/></option>
 								<option value="11"><s:message code="common.time.11"/></option>
 								<option value="12"><s:message code="common.time.12"/></option>
