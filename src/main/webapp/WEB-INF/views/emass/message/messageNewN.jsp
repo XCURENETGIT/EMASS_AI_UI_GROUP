@@ -606,6 +606,7 @@
 
 
         $(document).ready(function() {
+
             if(consent && firstAdminYn != 'Y'){
 
             }
@@ -637,6 +638,7 @@
             }else{
                 $('.recvs_jikgub').hide();
             }
+
 
             $(document).keydown(function(e){if( e.keyCode == 27) hideRMenu();});
 
@@ -1972,21 +1974,21 @@
             $('.addTabDiv').parents('li').removeClass('select');
             objLi.addClass('select');
 
-            //
-            // var tabLength = $('#resultTabs').find('li').length;
-            // var selectIdx = $('#resultTabs').find('li').find('.tab_close').parent('.select').index();
-            //
-            // $.each($('#resultTabs').find('li'), function (index, item) {
-            //     if (index == selectIdx && selectIdx > 1 && tabLength-1 > selectIdx) {
-            //         var selected = $('#resultTabs').find('li')[selectIdx];
-            //         var selectedTab = $(selected).find('div')[0]
-            //         $(selectedTab).attr('class', 'tab_close');
-            //     } else if (index > 0 && tabLength-1 > index) {
-            //         var selected = $('#resultTabs').find('li')[index];
-            //         var selectedTab = $(selected).find('div')[0]
-            //    //    $(selectedTab).attr('class', 'tab_close_2');
-            //     }
-            // });
+            var tabLength = $('#resultTabs').find('li').length-1;
+            var selectIdx = $('#resultTabs').find('li').find('.tab_close').parent('.select').index()-1;
+            $.each($('#resultTabs').find('li'), function (index, item) {
+                if(index == 0 | index == tabLength ) return;
+
+                if (index == selectIdx) {
+                    var selected = $('#resultTabs').find('li')[selectIdx];
+                    var selectedTab = $(selected).find('div')[0]
+                    $(selectedTab).attr('class','tab_close tab_1')
+                } else {
+                    var selected = $('#resultTabs').find('li')[index];
+                    var selectedTab = $(selected).find('div')[0]
+                    $(selectedTab).attr('class','tab_close tab_2')
+                }
+            });
 
 
             $('.contentList').css('left', '-10000px');
