@@ -840,8 +840,9 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 .messengerList .messengerBox .people .person .preview {font-size: 14px;color:#555; font-weight:200 !important; width: 60%;white-space: nowrap;text-overflow: ellipsis;}
 .messengerList .messengerBox .people .person .time {font-size: 14px; color:#777; font-weight:300 !important;}
 .messengerList .messengerBox .people .person .new {margin-left:4px; background-color:#1A73F9; color:#fff; padding:4px 8px; font-weight:600; font-size:14px; border-radius:16px ; -webkit-border-radius:16px ; -moz-border-radius:16px ; -ms-border-radius:16px ; -o-border-radius:16px ; }
-.messengerList .messengerBox .people .person.active, .messengerList .messengerBox .people .person:hover {background-color: var(--bluebg);}
-.messengerList .messengerBox .people .person.active, .messengerList .messengerBox .people .person2:hover {background-color:#fff;}
+.messengerList .messengerBox .people .person .active, .messengerList .messengerBox .people .person:hover {background-color: var(--bluebg);}
+/*.messengerList .messengerBox .people .person.active, {background-color: var(--bluebg);}*/
+.messengerList .messengerBox .people .person.active, .messengerList .messengerBox .people .person2:hover {background-color:var(--bluebg);}
 .messengerList .messengerBox .people .person.active span, .messengerList .messengerBox .people .person:hover span {}
 .messengerList .messengerBox .people .person.active:after, .messengerList .messengerBox .people .person:hover:after {}
 .chatList { position: relative; min-width: 400px;  overflow-x: hidden; overflow-y: scroll;}

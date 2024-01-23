@@ -136,13 +136,20 @@
 
 
 
-            $(document).on('click', '.person', function () {
+            $(document).on('click', '.person', function (){
                 var xrootmtr = $(this).attr('xrootmtr');
                 var srcip = $(this).attr('srcip');
                 var usr_id = $(this).attr('usr_id');
                 var userid = $(this).attr('userid');
                 var msgid = $(this).attr('msgid');
                 var username = $(this).attr('name');
+
+                $('.person').each(function () {
+                    $(this).removeClass('active');
+                });
+
+                $(this).addClass('active');
+
 
                 $('#xrootmtr').text(xrootmtr);
 
