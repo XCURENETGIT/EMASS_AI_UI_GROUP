@@ -338,7 +338,7 @@ Date 1분 경고
     }
 
     function deviceInfo(data) {
-        $("#deviceCount").html(' [' + data.length.comma() + '건]');
+        $("#deviceCount").html(' [' + data.length.comma() + '<s:message code="selectCodeAll.items"/>]');
         let str = '';
         for (let i = 0; i < data.length; i++) {
             let device = nvJson(data[i].currentDevice);

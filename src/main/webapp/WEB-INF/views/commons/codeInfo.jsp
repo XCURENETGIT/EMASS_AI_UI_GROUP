@@ -382,7 +382,7 @@
 <div>
 	<div class="searchArea">
 		<div class="searchSub">
-			<div id="useYnDiv" class="ma_none mat4">
+			<div id="useYnDiv">
 				<select id="useYnSelect">
 					<option value=""><s:message code="common.msg.all"/></option>
 					<option value="Y" selected><s:message code="common.msg.use"/></option>

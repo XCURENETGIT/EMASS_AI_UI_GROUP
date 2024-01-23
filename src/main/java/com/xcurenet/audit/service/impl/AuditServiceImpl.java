@@ -40,7 +40,7 @@ public class AuditServiceImpl extends XcnAbstractDAO implements AuditService {
 		this.mongoUtil = mongoUtil;
 	}
 
-	public static final String PRODUCT = "EMASSLTH";
+	public static final String PRODUCT = "EMASSAI";
 
 	private int getNextSeq() {
 		SEQ.compareAndSet(0, 9999);

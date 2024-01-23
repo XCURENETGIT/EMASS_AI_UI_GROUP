@@ -29,7 +29,7 @@ import java.util.List;
 
 @Controller
 @AuditParentMenu(ParentMenu.DATA_MONITOR)
-@AuditMenu(Menu.RELATION_PATTERN)
+@AuditMenu(Menu.REGEX_PATTERN)
 @Slf4j
 public class RegexPatternController {
 
