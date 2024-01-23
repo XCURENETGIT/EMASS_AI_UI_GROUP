@@ -349,7 +349,7 @@ public class EmsCreateMessage {
 
 	private String getFileHtml(List<EmsAttachVO> files) {
 		String resultStr = "";
-		resultStr += "<table class=\"table table-bordered\"> ";
+		resultStr += "<table class=\"subTable02 table-bordered\"> ";
 		resultStr += "	<colgroup> ";
 		resultStr += "		<col width=\"*\"> ";
 		resultStr += "		<col width=\"13%\"> ";
