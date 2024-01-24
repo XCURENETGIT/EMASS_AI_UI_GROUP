@@ -9,8 +9,11 @@
 			margin-bottom: 10px;
 		}
 		.selected {
-			background-color: #c2daf8;
+			background-color: #1C64D3;
+			color:#fff;
 		}
+
+		.btn {width:44px; margin-bottom:4px;}
 	</style>
 	<script type="text/javascript">
         var menuMaxCnt = 5;
@@ -230,7 +233,7 @@
 					</div>
 					<div class="row">
 						<div class="col-35">
-							<label for="menuIcon" class="fname" style="height:80px;"><s:message
+							<label for="menuIcon" class="fname" style="height:40px;"><s:message
 									code="dashboardMenu.icon"/></label>
 							<span class="red_dot"></span>
 						</div>

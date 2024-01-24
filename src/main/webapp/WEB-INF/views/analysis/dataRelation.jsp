@@ -32,7 +32,7 @@
 	};
 %>
 <style type="text/css">
-.tab-content {padding:10px; background-color: #fff !important;}
+.tab-content {padding:10px; background-color: #fff !important; border:1px solid #ddd;}
 .btn-popover {
 	position: absolute;
 	top: 0;
@@ -82,7 +82,7 @@
 .vis-item-content > a:hover {text-decoration:underline;color:black; }
 
 
-.subtab {display:inline-block; overflow: hidden; margin-left:20px}
+.subtab {display:inline-block; overflow: hidden; padding:0 !important;}
 
 .contentSub {position: relative; padding:20px 20px 28px 20px;  *zoom:1; }
 
@@ -249,7 +249,7 @@ function openCodeWindow(codetype,oldCode, oldConm,id) {
 	<div>
 		<!-- 검색 -->
 		<div class="searchArea">
-			<div class="searchSub_full">
+			<div class="searchSub">
 					<div class="searchSub_Box">
 						<div id="startDatePicker"><input type="date" id="startDate" name='startDate' style="width: 110px;">
 							<span class="hyphen">~</span></div>
@@ -323,25 +323,26 @@ function openCodeWindow(codetype,oldCode, oldConm,id) {
 					</div>
 		</div>
 		<!-- //검색 -->
+		</div>
 		<div class="content">
 			<div class="contentSub">
 				<div class="chartAread1">
 					<!-- 리스트-->
 					<div>
-						<h3 style="margin-bottom: 9px"><i class="fa fa-file-text-o fa-fw"></i> List</h3>
+						<h3 style="margin-bottom: 9px"> List</h3>
 						<div class="inner_personaldata p20" style="height: 542px;"style="overflow-y: scroll;" >
-							<div id="basicStatListGrid" class="slickGrid gridArea" style="min-height: 280px;max-height: 450px;"></div>
+							<div id="basicStatListGrid" class="slickGrid gridArea" style="min-height: 280px;max-height: 480px;"></div>
 						</div>
 					</div>
 					<!-- //리스트-->
 					<!-- 관계도 -->
 					<div>
 						<div class="panel-heading">
-							<h3><i class="fa fa-share-alt fa-fw"></i> <span><s:message code="analysis.relation.ui.relationships"/></span></h3>
+							<h3><span><s:message code="analysis.relation.ui.relationships"/></span></h3>
 							<%-- 확대 --%>
 							<span id="chartFull" class="btn-full" style="display:none">
-								<span class="glyphicon glyphicon glyphicon-fullscreen"  data-trigger="focus" data-container="#chartFull" style="font-size:20px; cursor: pointer"></span>
-							</span>
+									<span class="glyphicon glyphicon glyphicon-fullscreen"  data-trigger="focus" data-container="#chartFull" style="font-size:20px; cursor: pointer"></span>
+								</span>
 							<div id="popover-content-chart" class="hide">
 								<div style="padding-left:10px;">
 									<ul style="padding-left:15px;">
@@ -357,10 +358,9 @@ function openCodeWindow(codetype,oldCode, oldConm,id) {
 								</div>
 							</div>
 						</div>
-						</div>
 					</div>
-					<!-- //관계도 -->
 				</div>
+				<!-- //관계도 -->
 				<!-- 탭 -->
 				<div class="subtab">
 					<ul class="nav nav-tabs codeTab" id="codeTab">
@@ -379,20 +379,20 @@ function openCodeWindow(codetype,oldCode, oldConm,id) {
 						<div role="tabpanel" class="tab-pane fade in" id="result1">
 							<div id="selectList">
 								<div style="min-height:340px;height: 340px;">
-									<div id="selectGrid" class="slickGrid gridArea" style="height: 100%;"></div>
+									<div id="selectGrid" class="slickGrid gridArea" style="height: 100%; min-height:305px;"></div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-	</div>
 
-	<div id="chartFullDiv" class="chartFull" style="display:none">
-		<div class="panel panel-default" style="min-height:800px; height:800px;">
+		</div>
+
+		<div id="chartFullDiv" class="chartFull" style="display:none">
+				<div class="panel panel-default" style="min-height:800px; height:800px;">
 			<div class="panel-heading" style="padding: 9px 15px 1px;">
-				<h3><i class="fa fa-share-alt fa-fw"></i> <span><s:message code="analysis.relation.ui.relationships"/></span></h3>
+				<h3><span><s:message code="analysis.relation.ui.relationships"/></span></h3>
 				<span class="btn-popover" style="top:1px;">
 						<span class="glyphicon glyphicon-remove" style="font-size:20px; cursor: pointer" onclick="javascript:chartFullClose();"/>
 				</span>
@@ -405,6 +405,8 @@ function openCodeWindow(codetype,oldCode, oldConm,id) {
 				</div>
 			</div>
 		</div>
+			</div>
+
 	</div>
 	<!-- Back to top -->
 <%--	<a href="#0" class="back-to-top cd-top"><span class="[ fa fa-chevron-up ]"></span> <span class="[ ]">Back to the Top</span></a>--%>

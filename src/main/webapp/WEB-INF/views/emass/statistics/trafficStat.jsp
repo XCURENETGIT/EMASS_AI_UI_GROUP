@@ -172,7 +172,7 @@
 					</button>
 				</div>
 				<span style="position:absolute; top: 355px;">
-					[ <span style="color: red;">■ <s:message code="stat.traffic.tx"/></span>&nbsp;/&nbsp;<span style="color: blue;">■ <s:message
+					[ <span style="color: red;">● <s:message code="stat.traffic.tx"/></span>&nbsp;/&nbsp;<span style="color: blue;">● <s:message
 						code="stat.traffic.rx"/></span> ]&nbsp; : <s:message code="stat.traffic.unit"/>
 				</span>
 				<div id="basicStatListGrid" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; height: 400px"></div>
@@ -234,7 +234,7 @@
                 grid1.loadHeader(false);
                 grid1.setData(data.data);
 
-                $('#statlist_cnt').html('<s:message code="common.msg.finish_query"/>: ' + grid1.data.length + '<span style="color: red;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #000;">[</span> ■ <s:message code="stat.traffic.tx"/></span>&nbsp;/&nbsp;<span style="color: blue;">■ <s:message code="stat.traffic.rx"/></span>&nbsp;<span style="color: #000;">] : <s:message code="stat.traffic.unit"/></span>');
+                $('#statlist_cnt').html('<s:message code="common.msg.finish_query"/>: ' + grid1.data.length + '<span style="color: red;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #000;">[</span> ● <s:message code="stat.traffic.tx"/></span>&nbsp;/&nbsp;<span style="color: blue;">● <s:message code="stat.traffic.rx"/></span>&nbsp;<span style="color: #000;">] : <s:message code="stat.traffic.unit"/></span>');
                 if (grid1.loadingPage == 0) grid1.Select(-1, -1);
                 searchFlag = false;
                 var data = data.data;
