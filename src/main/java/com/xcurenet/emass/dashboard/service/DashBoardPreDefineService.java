@@ -20,15 +20,10 @@ public interface DashBoardPreDefineService {
 
 	public ServiceDataLoggingVO getServiceDataLogging(final ServiceDataLoggingVO serviceDataLoggingVO) throws IOException, SolrServerException;
 
-	public InterestUserMailVO getInterestUserMail(final InterestUserMailVO interestUserMailVO) throws IOException ;
-
-	public InterestUserServiceVO getInterestUserService(final InterestUserServiceVO interestUserServiceVO) throws IOException ;
 
 	public FileTopVO getTodayFileTop(FileTopVO vo) throws SolrServerException, IOException;
 
 	public FileTopVO getTodayFilePerson(FileTopVO vo) throws SolrServerException, IOException;
-
-	public PatternPrivacyVO getAllTodayPatternPrivacy(PatternPrivacyVO vo) throws SolrServerException, IOException;
 
 	public TodayNotWorkVO getTodayNotWork(TodayNotWorkVO vo) throws SolrServerException, IOException;
 
@@ -46,7 +41,4 @@ public interface DashBoardPreDefineService {
 	public PatternPrivacyVO TodayCardNumberData(PatternPrivacyVO vo) throws SolrServerException, IOException;
 	public PatternPrivacyVO getExtensionModulation(PatternPrivacyVO vo) throws SolrServerException, IOException;
 
-
-	// public DashboardVO getDashboard(final DashboardVO dashboardVO) throws
-	// IOException;
 }

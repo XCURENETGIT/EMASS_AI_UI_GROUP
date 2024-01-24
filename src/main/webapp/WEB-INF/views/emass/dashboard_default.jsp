@@ -109,32 +109,6 @@ var dashCondition = {
         "sizeType": ""
     };
     $(document).ready(function() {
-        function makePeriod(dashCondition) {
-            dashCondition = JSON.parse(dashCondition);
-            var startDtSelect = dashCondition.startDateSelect;
-            var startTimeSelect = dashCondition.startTimeSelect;
-            var endDtSelect = dashCondition.endDateSelect;
-            var endTimeSelect = dashCondition.endTimeSelect;
-
-            if (startDtSelect == '' || startDtSelect == undefined) return JSON.stringify(dashCondition);
-
-            var startMinusDay = 0;
-            var endMinusDay = 0;
-            if (startDtSelect == 'Y') startMinusDay = 1;
-            else if (startDtSelect == 'W') startMinusDay = 7;
-
-            if (endDtSelect == 'Y') endMinusDay = 1;
-            else if (endDtSelect == 'W') endMinusDay = 7;
-
-            var dateObj = new Date();
-            var startDate = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate() - startMinusDay, startTimeSelect, 00, 00);
-            var endDate = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate() - endMinusDay, endTimeSelect, 59, 59);
-
-            dashCondition.startDt = startDate.format('yyyymmddHHnnss');
-            dashCondition.endDt = endDate.format('yyyymmddHHnnss');
-            return JSON.stringify(dashCondition);
-        }
-
 
         getTodayKeywordDetection();
         getTodayRiskBehavior();
@@ -758,6 +732,15 @@ var dashCondition = {
             });
         }
 
+        function areAllValuesZero(arr) {
+            for (const item of arr) {
+                if (item[1] !== 0) {
+                    return false; // 만약 0이 아닌 값이 있다면 false 반환
+                }
+            }
+            return true; // 모든 값이 0일 경우 true 반환
+        }
+
         //서비스 타입 별 수집 건수(그룹웨어), 금일 서비스별 데이터 수집 비율
         function getServiceDataLogging() {
             ui.get({
@@ -771,7 +754,9 @@ var dashCondition = {
                         }
                     }
                     $('#todayGroupWareSum').html(todayGroupWareSum + "<span>건</span> <span class='tit13'></span>");
-	                printChart(data.facet);
+
+                    if (areAllValuesZero(data.facet))  $('#svcDataChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="150px;" height="150px" style="margin: auto; display: block;"> ');
+	                else printChart(data.facet);
 
                 },
                 error: function (status, message) {

@@ -55,7 +55,7 @@
 		width: 100%;
 		height: 350px;
 		left: 0px;
-		top: 50px;
+		top: 1px;
 	}
 
 	/*
@@ -420,7 +420,7 @@
 
 <div id="messageListDiv" class="messageList" style="display:none">
 	<div class="panel panel-default " style=min-height:350px;margin:0px;">
-		<div class="panel-heading">
+		<div class="panel-heading" style="height: 25px;">
 			<i class="fa fa-file-text-o fa-fw"></i> <span><s:message code="analysis.freedom.ui.msglist"/><span class="resultCnt"></span> - <span
 				class="selectChartData"></span></span>
 			<span class="btn--message-popover">

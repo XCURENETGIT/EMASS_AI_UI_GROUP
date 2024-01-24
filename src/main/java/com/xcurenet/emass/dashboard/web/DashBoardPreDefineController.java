@@ -345,44 +345,4 @@ public class DashBoardPreDefineController {
 		FileTopVO todayFileVO = dashBoardPreDefineService.getTodayFilePerson(vo);
 		return new XcnResponseVO(XcnRspCode.OK, todayFileVO);
 	}
-
-
-
-
-	@RequestMapping(value = "/getInterestUserMail.xcn")
-	@Description("Dashboard - 관심 사용자 발신 메일 수집 건수")
-	@ResponseBody
-	public XcnResponseVO getInterestUserMail(final HttpServletRequest request, final HttpSession session) throws Exception {
-		long now = System.currentTimeMillis();
-		InterestUserMailVO vo = new InterestUserMailVO();
-		vo.setAdminId(Common.getAdminId(session));
-		vo.setStartDt(Common.getCurrentDate() + "000000");
-		vo.setEndDt(Common.getDateTime(now, "yyyyMMddHHmmss"));
-		vo.setTermDtStr(Prop.propFormat("condition.hour", session, "00")+" ~ " + Common.getDateTime(now, Prop.propFormat("condition.time", session, "HH", "mm", "ss")));
-		vo.setUserSeq(Common.getParam(request).getString("userSeq"));
-		InterestUserMailVO interestUserServiceVO = dashBoardPreDefineService.getInterestUserMail(vo);
-		if (interestUserServiceVO != null) {
-			vo.setTotal(interestUserServiceVO.getTotal());
-		}
-		return new XcnResponseVO(XcnRspCode.OK, vo);
-	}
-
-	@RequestMapping(value = "/getInterestUserService.xcn")
-	@Description("Dashboard - 관심 사용자 서비스 사용률")
-	@ResponseBody
-	public XcnResponseVO getInterestUserService(final HttpServletRequest request, final HttpSession session) throws Exception {
-		long now = System.currentTimeMillis();
-		InterestUserServiceVO vo = new InterestUserServiceVO();
-		vo.setAdminId(Common.getAdminId(session));
-		vo.setStartDt(Common.getCurrentDate() + "000000");
-		vo.setEndDt(Common.getDateTime(now, "yyyyMMddHHmmss"));
-		vo.setTermDtStr(Prop.propFormat("condition.hour", session, "00")+" ~ " + Common.getDateTime(now, Prop.propFormat("condition.time", session, "HH", "mm", "ss")));
-		vo.setUserSeq(Common.getParam(request).getString("userSeq"));
-
-		InterestUserServiceVO interestUserServiceVO = dashBoardPreDefineService.getInterestUserService(vo);
-		if (interestUserServiceVO != null) {
-			vo.setFacet(interestUserServiceVO.getFacet());
-		}
-		return new XcnResponseVO(XcnRspCode.OK, vo);
-	}
 }

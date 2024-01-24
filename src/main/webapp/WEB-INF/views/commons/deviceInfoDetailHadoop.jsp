@@ -135,7 +135,7 @@ button[data-id=deviceSelect] {
 }
 .panel-default > .panel-heading > .dropdown {
 	float: right;
-	margin-top: -22px;
+	margin-top: -10px;
 }
 .work-progress-table td .progress {
 	background: none repeat scroll 0 0 #e8e8e8;
