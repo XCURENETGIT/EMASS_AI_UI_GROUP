@@ -349,7 +349,7 @@ input[type="text"] {
 .mail_header{
 	position: relative;height: 45px;
 	border-bottom: 1px solid #CBCBCB;
-	padding-top:12px;
+	padding-top:9px;
 }
 
 .leftHideBtn{
@@ -816,7 +816,8 @@ time, mark, audio, video {
 	border: 1;
 	font-size: 100%;
 	font: inherit;
-	vertical-align: baseline;
+	vertical-align: middle;
+	/*vertical-align: baseline;*/
 	font-family: Pretendard;
 	font-weight:400;
 	box-sizing:border-box;

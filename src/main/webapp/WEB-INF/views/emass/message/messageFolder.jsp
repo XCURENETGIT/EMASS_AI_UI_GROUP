@@ -44,6 +44,7 @@ html,body{height: 100%; padding: 0px; margin: 0px;overflow: auto;min-width: 650p
 	color: #fff;
 	font-weight: bold;
 }
+input[type=checkbox] {margin-top:4px;}
 </style>
 <script>
 var folderSeq = '<%=folderSeq%>';
@@ -841,20 +842,23 @@ function viewer_newOpen(row, selectedGrid){
 </script>
 </head>
 <body class="mini-navbar msgBody">
-	<header class="header">
+	<!--<header class="header">
 		<div class="naviBack">
 			<img src="<c:url value="/img/title/home_icon.png"/>">
 			<span class="navi"><span id="code_title"></span><s:message code="filterInfo.messageFolder"/></span>
 		</div>
-	</header>
+	</header>-->
 	<div class="xcn_container" style="min-width: 650px;">
 		<div class="boxArea">
 			<div class="content_body">
 				<div class="row">
-					<div class="col-xs-12 text-right">
-						<button type="button" class="btn btn-sm btn-default" onclick="moveMsgBtn();"><span class="glyphicon glyphicon-transfer"></span>&nbsp;<s:message code="filterInfo.moveMsgFolder"/></button>
-						<button type="button" class="btn btn-sm btn-default deleteUserFolderMsg" onclick="deleteFolderData('<s:message code="common.msg.choose.deleteitem"/>');"><span class="glyphicon glyphicon-minus"></span>&nbsp;<s:message code="filterInfo.delMsgFolder"/></button>
-						<button type="button" class="btn btn-sm btn-default" accesskey="C" id="noSelectBtn"><span class="glyphicon glyphicon-remove"></span>&nbsp;<s:message code="common.msg.close"/></button>
+					<div class="col-xs-4" style="margin-top:20px;">
+						<span class="bullet01"></span><span id="code_title"><s:message code="filterInfo.messageFolder"/></span>
+					</div>
+					<div class="col-xs-8 text-right" style="margin-top:16px;">
+						<button type="button" class="btn btn-sm btn-default btn01 " onclick="moveMsgBtn();"><span class="glyphicon glyphicon-transfer"></span>&nbsp;<s:message code="filterInfo.moveMsgFolder"/></button>
+						<button type="button" class="btn btn-sm btn-default btn02 deleteUserFolderMsg" onclick="deleteFolderData('<s:message code="common.msg.choose.deleteitem"/>');"><span class="glyphicon glyphicon-minus"></span>&nbsp;<s:message code="filterInfo.delMsgFolder"/></button>
+						<button type="button" class="btn btn-sm btn-default btn05 " accesskey="C" id="noSelectBtn"><span class="glyphicon glyphicon-remove"></span>&nbsp;<s:message code="common.msg.close"/></button>
 					</div>
 				</div>
 				<div class="row xcn_full top_space">

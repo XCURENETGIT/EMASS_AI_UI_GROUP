@@ -155,7 +155,7 @@
     <title>EMASS AI</title>
 
     <style type="text/css">
-
+        img {    vertical-align: middle !important;}
         body{
             font-size:13px;
         }

@@ -97,6 +97,7 @@
 			padding:3px 8px;
 			border-radius: 20px;
 			margin-left:-4px;
+			margin-top:4px;
 		}
 		.busiCounts:hover{
 			color:#333;
@@ -117,7 +118,7 @@
 			padding:4px 12px 3px;
 			border-radius: 16px;
 			isolation: isolate;
-			margin-top:5px;
+			margin-top:4px;
 			border:none;
 		}
 
