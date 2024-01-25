@@ -1068,7 +1068,7 @@
 						<button class="tablinks" name="searchType" value="GD" id="GD"><s:message code="eikon.msg.chatContents"/></button>
 					</div>
 				</div>
-				<div class="list-group" id="group_list" style="margin-bottom: 0px;">
+				<div class="list-group" id="group_list" style="margin-bottom: 0px; margin-top:20px;">
 					<a href="#" class="list-group-item list-group-item-action active" style="cursor:default; padding:40px; margin:0 20px;">
 						<p class="list-group-item-text" style="line-height:30px; text-align: center">
 							<img src="<c:url value="/img/icon/img_nodata02.png"/>" width="72" height="72">
@@ -1188,7 +1188,7 @@
 					</div>
 				</div>
 				<div class="messenger_next" title="<s:message code='eikon.msg.show.next'/>"><svg xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M246.6 470.6c-12.5 12.5-32.8 12.5-45.3 0l-160-160c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L224 402.7 361.4 265.4c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3l-160 160zm160-352l-160 160c-12.5 12.5-32.8 12.5-45.3 0l-160-160c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L224 210.7 361.4 73.4c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3z"/></svg></div>
-				<div class="p16 white" style="position: fixed; bottom:0;">
+				<div class="p16 white" style="position: fixed; bottom:0; background-color:#606973; width:100%;">
 					<s:message code="eikon.msg.total.cnt"/> : <span id="groupSubResultCnt" class="blue03">0</span>
 				</div>
 

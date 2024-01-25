@@ -181,7 +181,6 @@
         .contentBody{
             height:100%;border: 0px;width: 100%;border:0px;position: absolute;
         }
-
         @media screen and (max-height: 750px) {
             #mainBodyArea .bootstrap-datetimepicker-widget{ top: 200px !important; }
         }

@@ -572,6 +572,8 @@ span.feedbackCorrect, span.feedbackInCorrect, span.feedbackDefer, span.feedbackI
     top: 0px;
     float: left;
 }
+
+#contextMenu ul li {overflow: hidden;}
 .font-normal{
     font-weight: normal !important;
 }

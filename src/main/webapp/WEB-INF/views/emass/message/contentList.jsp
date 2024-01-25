@@ -216,7 +216,7 @@
 		<li onclick="setFeedback(2);" style="padding-left: 5px;"><div class="feedbackInNotOpen"></div><s:message code="condition.info.class2"/></li>
 		<li onclick="setFeedback(3);" style="padding-left: 5px;"><div class="feedbackInOpen"></div><s:message code="condition.info.class3"/></li>
 		<li onclick="setFeedback(4);" style="padding-left: 5px;"><div class="feedbackInCorrect"></div><s:message code="condition.info.class4"/></li>
-		<li onclick="setFeedback(9);" style="padding-left: 3px;"><div class="feedbackDefer"></div>&nbsp;<s:message code="condition.info.feedback9"/></li>
+		<li onclick="setFeedback(9);" style="padding-left: 5px;"><div class="feedbackDefer"></div>&nbsp;<s:message code="condition.info.feedback9"/></li>
 	</ul>
 	<%} %>
 </div>
