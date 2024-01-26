@@ -856,6 +856,8 @@ public class SolrEdcStatController {
 			}
 			item.put("pi_total", total);
 		}
+
+		Collections.sort(list, new PiTotalComparator());
 		return new XcnResponseVO(XcnRspCode.OK, list);
 	}
 
@@ -893,5 +895,18 @@ public class SolrEdcStatController {
 
 		SolrEdcMessageVO solrVo = solrEdcService.getEmassMessage(sq, Common.getAdminId(request), "", null);
 		return new XcnResponseVO(XcnRspCode.OK, solrVo.getEmass(), solrVo.getNumFound());
+	}
+
+
+	// "pi_total" 기준으로 정렬하는 Comparator 클래스
+	class PiTotalComparator implements Comparator<Map<String, Object>> {
+		@Override
+		public int compare(Map<String, Object> item1, Map<String, Object> item2) {
+			double piTotal1 = (double) item1.get("pi_total");
+			double piTotal2 = (double) item2.get("pi_total");
+
+			// 내림차순 정렬을 원한다면
+			return Double.compare(piTotal2, piTotal1);
+		}
 	}
 }

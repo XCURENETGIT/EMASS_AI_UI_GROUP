@@ -9,6 +9,10 @@ $(document).ready(function(){
 	$('#searchBtn').click(function(){
 		getData();
 	});
+
+    $('#dept').click(function(){
+        openCodeWindow('deptByCo', $('#coCd_inUser option:selected').val(), $('#deptByCoVal').val(), $('#deptNm').val());
+    });
 	$('#searchStrInput').enter(function(){
 		getData();
 	});
@@ -216,7 +220,7 @@ $(document).ready(function(){
 		fileExtCheck($(this));
 	});
 	
-	$('#savePopBtn').click(function(){
+	$('.savePopBtn').click(function(){
 		var deptCd = $('#deptByCoVal').val().ltrim().rtrim();
 		var startIp = $('#startIp').val().ltrim().rtrim();
 		var endIp = $('#endIp').val().ltrim().rtrim();
@@ -286,10 +290,6 @@ $(document).ready(function(){
 				$('.savePopBtn').prop("disabled", false);
 			}
 		});
-	});
-	
-	$('#dept').click(function(){
-		openCodeWindow('deptByCo', $('#coCd_inUser option:selected').val(), $('#deptByCoVal').val(), $('#deptNm').val());
 	});
 	
 	getDeptConfig();
@@ -588,7 +588,7 @@ function getDeptSchedule(){
 							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
-							<button class="btn01" id="dept"><img src="../img/subBtn_plus.png" alt="추가"><s:message code="common.org.choose.dept"/></button>
+							<button class="btn01" type="button"  id="dept"><img src="../img/subBtn_plus.png" alt="추가"><s:message code="common.org.choose.dept"/></button>
 							<span id="deptByCoSelectedArea" class="codeSelectedBtn">
 									<button type="button" class="btn">0</button>
 							</span>
@@ -596,8 +596,6 @@ function getDeptSchedule(){
 							<input type="hidden" id="deptNm" class="selectedTitle" name="deptNm">
 							<input type="hidden" id="deptByCoStr" class="selectedTitle" name="deptNm">
 							<input type="hidden" id="deptByCoVal" name="deptCd">
-							<input type="hidden" name="createId" id="hiddenCreateId" value="${_USERCREDENTIAL_.adminId}">
-							<input type="hidden" name="updateId" id="hiddenUpdateId" value="${_USERCREDENTIAL_.adminId}">
 						</div>
 					</div>
 
@@ -718,7 +716,7 @@ function getDeptSchedule(){
 				<div class="modalfooter">
 					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message
 							code="common.msg.close"/></button>
-					<button type="button" class="pop_btn02" accesskey="S" id="savePopBtn"><s:message
+					<button type="button" class="pop_btn02 savePopBtn" accesskey="S"><s:message
 							code="common.msg.save"/></button>
 				</div>
 			</div>

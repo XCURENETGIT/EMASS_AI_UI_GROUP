@@ -93,7 +93,6 @@
             });
 
             $('#dept').click(function(){
-                alert("dfadfa");
                 openCodeWindow('deptByCo', $('#coCd_inUser option:selected').val(), $('#deptByCoVal').val(), $('#deptByCoStr').val());
             });
 
@@ -1203,12 +1202,12 @@
 							<div class="radio w100 mat8">
 								<label for="fname"><s:message code="userInfo.basepoint"/></label>
 								<div class="radio w100 mat4">
-									<input type="radio"  value="F" name="insa.basepoint" checked="checked">
-									<span><s:message code="userInfo.basepoint.file"/></span>
+									<input type="radio"  value="F" id="insa.basepoint01" name="insa.basepoint" checked="checked">
+									<label for="insa.basepoint01"><span><s:message code="userInfo.basepoint.file"/></span></label>
 								</div>
 								<div class="radio w100 mat4">
-									<input type="radio" value="I" name="insa.basepoint">
-									<span><s:message code="userInfo.basepoint.ip"/></span>
+									<input type="radio" value="I" name="insa.basepoint" id="insa.basepoint02">
+									<label for="insa.basepoint02"><span><s:message code="userInfo.basepoint.ip"/></span></label>
 								</div>
 							</div>
 							<div class="mat16">
@@ -1233,13 +1232,13 @@
 									</div>
 								</div>
 								<div class="clear">
-									<div class="checkbox"><input type="checkbox" name="insa.week" value="sun"><span><s:message code="common.sun"/></span></div>
-									<div class="checkbox"><input type="checkbox" name="insa.week"value="mon"><span><s:message code="common.mon"/></span></div>
-									<div class="checkbox"><input type="checkbox" name="insa.week" value="tue"><span><s:message code="common.tue"/></span></div>
-									<div class="checkbox"><input type="checkbox" name="insa.week" value="wed"><span><s:message code="common.wed"/></span></div>
-									<div class="checkbox"><input type="checkbox" name="insa.week" value="thu"><span><s:message code="common.thu"/></span></div>
-									<div class="checkbox"><input type="checkbox" name="insa.week" value="fri"><span><s:message code="common.fri"/></span></div>
-									<div class="checkbox"><input type="checkbox" name="insa.week" value="sat"><span><s:message code="common.sat"/></span></div>
+									<div class="checkbox" style="margin-left: 5px;"><label for="sun"><input type="checkbox" name="insa.week" value="sun" id="sun"><span><s:message code="common.sun"/></span></label></div>
+									<div class="checkbox" style="margin-right: 10px;"><label for="mon"><input type="checkbox" name="insa.week"value="mon" id="mon"><span><s:message code="common.mon"/></span></label></div>
+									<div class="checkbox" style="margin-right: 10px;"><label for="tue"><input type="checkbox" name="insa.week" value="tue" id="tue"><span><s:message code="common.tue"/></span></label></div>
+									<div class="checkbox" style="margin-right: 10px;"><label for="wed"><input type="checkbox" name="insa.week" value="wed" id="wed">><span><s:message code="common.wed"/></span></label></div>
+									<div class="checkbox" style="margin-right: 10px;"><label for="thu"><input type="checkbox" name="insa.week" value="thu" id="thu">><span><s:message code="common.thu"/></span></label></div>
+									<div class="checkbox" style="margin-right: 10px;"><label for="fri"><input type="checkbox" name="insa.week" value="fri" id="fri">><span><s:message code="common.fri"/></span></label></div>
+									<div class="checkbox" style="margin-right: 10px;"><label for="sat"><input type="checkbox" name="insa.week" value="sat" id="sat">><span><s:message code="common.sat"/></span></label></div>
 								</div>
 							</div>
 							<div class="mat16">
@@ -1285,12 +1284,12 @@
 							<label for="fname"><s:message code="userInfo.dept.basepoint"/></label>
 							<div class="radio mat4 w100">
 								<div class="radio w100 mat4">
-									<input type="radio" value="F" name="insa.dept.basepoint" checked="checked">
-									<span ><s:message code="userInfo.basepoint.file"/></span>
+									<input type="radio" value="F" name="insa.dept.basepoint" checked="checked" id="insa.dept.basepoint01">
+									<label for="insa.dept.basepoint01"><span ><s:message code="userInfo.basepoint.file"/></span></label>
 								</div>
 								<div class="radio w100 mat4">
-									<input type="radio" value="I" name="insa.dept.basepoint">
-									<span ><s:message code="userInfo.dept.basepoint.ip"/></span>
+									<input type="radio" value="I" name="insa.dept.basepoint" id="insa.dept.basepoint02">
+									<label for="insa.dept.basepoint02"><span ><s:message code="userInfo.dept.basepoint.ip"/></span></label>
 								</div>
 							</div>
 							<div class="mat16">

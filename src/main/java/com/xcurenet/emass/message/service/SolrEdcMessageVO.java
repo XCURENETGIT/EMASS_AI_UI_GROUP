@@ -259,6 +259,7 @@ public class SolrEdcMessageVO {
 			}
 		}
 		headerList = new ArrayList<String>(pivotKeys.keySet());
+
 		Collections.sort(headerList);
 		this.pivotHeader = headerList;
 		this.pivotData = result;
@@ -518,8 +519,6 @@ public class SolrEdcMessageVO {
 		else if(ElasticSearchCommon.CTIME_YYYYMMDD.equals(flag))  return (key) ? str.substring(0, 8) : Common.formatDate(str.substring(0, 8));
 		else return str;
 	}
-
-
 
 
 }
