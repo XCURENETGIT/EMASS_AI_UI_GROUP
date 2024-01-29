@@ -510,8 +510,6 @@ public class SolrEdcMessageVO {
 
 
 
-
-
 	public  String convertTimeStr(String str,String flag,boolean key){
 		if(Common.isEmpty(str)) return str;
 		if (ElasticSearchCommon.CTIME_HH.equals(flag))  return  (key) ? str.substring(8, 10) : Prop.msg(ElasticSearchCommon.TIME_FORMAT.concat(str.substring(8, 10)));

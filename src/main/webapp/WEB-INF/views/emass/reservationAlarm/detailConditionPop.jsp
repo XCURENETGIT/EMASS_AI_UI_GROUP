@@ -106,6 +106,18 @@
             loadCondition();
             initEpmsg();
 
+            document.getElementById('addUrlBtn').addEventListener('click', function() {
+                // Create a new input field
+                var newInput = document.createElement('input');
+                newInput.type = 'text';
+                newInput.className = 'form-control input-sm condition_input_text';
+                newInput.placeholder = 'URL';
+                newInput.style.width = '372px';
+
+                // Append the new input field to the additionalUrlFields div
+                document.getElementById('additionalUrlFields').appendChild(newInput);
+            });
+
             if (infoFeedbackConf == 'true' && infoFeedbackYn == 'Y') $('#infoFeedbackDiv, #feedbackBtn, #sctDiv').show();
             else $('#infoFeedbackDiv, #feedbackBtn, #sctDiv').hide();
 
@@ -1541,6 +1553,8 @@
                                 <input type="checkbox" name="url_not" disabled="disabled">
                                 <span class="fa fa-check"></span><s:message code="query.make.except"/>
                             </label>
+                            <button type="button" class="btn01" accesskey="A" id="addUrlBtn">url추가</button>
+                            <div id="additionalUrlFields"></div>
                         </div>
                     </li>
                     <li class="form-inline" id="readYnGroup">

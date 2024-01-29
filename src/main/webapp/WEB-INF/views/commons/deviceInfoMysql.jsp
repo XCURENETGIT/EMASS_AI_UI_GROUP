@@ -139,6 +139,7 @@ Date 1분 경고
 <script type="text/javascript">
     $(document).ready(function () {
         $('#deviceInsert').click(function () {
+            $('#deviceAddPop').attr('mode', 'insert');
             $('#deviceAddPop').modal('show');
             $('.reserveConf').css('display', 'none');
 
@@ -204,6 +205,7 @@ Date 1분 경고
 
             $('#deviceAddPop').modal('show');
             $('.reserveConf').css('display', 'block');
+            $('#deviceAddPop').attr('mode', 'modify');
         });
 
         $('#deviceType').change(function () {
@@ -253,10 +255,8 @@ Date 1분 경고
             }
 
             let id = $('#deviceAddPop').attr('mode');
-            if (id === 'insert')
+                if(id === 'insert')
                 insertDevice();
-            else if (id === 'modify')
-                modifyDevice();
         });
         getDevice();
 
@@ -440,6 +440,7 @@ Date 1분 경고
 
     //장비 추가
     function insertDevice() {
+        console.log("들어옴");
 
         $('#deviceInfoSaveBtn').prop('disabled', true);
         ui.confirmMsg('<s:message code="common.msg.confirm.save"/>', '', '', function (rs) {
@@ -473,7 +474,6 @@ Date 1분 경고
     }
 
     function modifyDevice() {
-        console.log("dfsad");
         $('#deviceInfoSaveBtn').prop('disabled', true);
         ui.confirmMsg('<s:message code="common.msg.confirm.modify"/>', '', '', function (rs) {
             if (rs) {
@@ -522,7 +522,7 @@ Date 1분 경고
 
 </script>
 
-<div class="modal" id="deviceAddPop" aria-labelledby="keywordGroupPop" tabindex="-1" role="dialog"
+<div class="modal" id="deviceAddPop" aria-labelledby="addDevPopModal" tabindex="-1" role="dialog"
      data-backdrop="static">
 	<div class="modal-content">
 		<form method="post" id="deviceAddPopForm" onsubmit="return false;">
@@ -671,7 +671,7 @@ Date 1분 경고
 				<div class="modalfooter">
 					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message
 							code="common.msg.close"/></button>
-					<button type="button" class="pop_btn02" accesskey="S" id="deviceInfoSaveBtn"><s:message
+					<button type="button" class="pop_btn02 savePopBtn" accesskey="S" id="deviceInfoSaveBtn"><s:message
 							code="common.msg.save"/></button>
 
 				</div>

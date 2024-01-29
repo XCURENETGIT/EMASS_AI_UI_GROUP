@@ -67,40 +67,35 @@
         }
 	</script>
 </head>
-<div style="width: 900px; overflow: auto; margin-top:20px;">
+<div class="popup-container" id="popup">
+	<div class="row">
+		<div class="col-xs-12">
+			<h3 class="blue"><span class="bullet01"></span><s:message code="mail.select.form.mail"/>
+				<button type="button" class="form_btn04 cencel_right" accesskey="C" onclick="closePopup()"><s:message code="common.msg.close"/></button>
+			</h3>
 
-	<div>
-
-		<div class="row" >
-			<div class="col-xs-12">
-				<h3 class="blue"><span class="bullet01"></span><s:message code="mail.select.form.mail"/>
-					<button type="button" class="form_btn04 cencel_right" accesskey="C" id="cancelBtn"><s:message code="common.msg.close"/></button>
-				</h3>
-
-				<div class="grayBg mat16 popupInner">
-					<div>
-						<input type="text" placeholder="<s:message code="common.msg.searchMsg"/>" id="searchStr">
-						<button class="form_btn01" type="button" accesskey="Q" id="searchBtn"><s:message code="common.msg.search"/></button>
-						<button type="button" class="form_btn03 cencel_right mat8 mar12" accesskey="S" id="chooseBtn"></span>&nbsp;<s:message code="consent.select"/></button>
-					</div>
-				</div>
-				<div class="mat8">
-					<div id="mailFormListGrid" class="slickGrid gridArea"  style="max-height:200px; overflow-y: scroll !important;"></div>
+			<div class="grayBg mat16 popupInner">
+				<div>
+					<input type="text" placeholder="<s:message code="common.msg.searchMsg"/>" id="searchStr">
+					<button class="form_btn01" type="button" accesskey="Q" id="searchBtn"><s:message code="common.msg.search"/></button>
+					<button type="button" class="form_btn03 cencel_right mat8 mar12" accesskey="S" id="chooseBtn"></span>&nbsp;<s:message code="consent.select"/></button>
 				</div>
 			</div>
+			<div class="mat8">
+				<div id="mailFormListGrid" class="slickGrid gridArea" style="max-height:200px; overflow-y: scroll !important;"></div>
+			</div>
 		</div>
-		<div class="row">
-			<div class="col-xs-12">
-				<div class="form-inline not-dashed">
-					<label for="formContent" class="control-label"><s:message code="mail.form.content"/></label>
-					<textarea class="form-control" style="width:100%; height: 300px; margin-top: 5px; background-color: #f8f6f6; margin-left: 1px;" name="formContent" id="formContent" readonly="readonly"></textarea>
-				</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="form-inline not-dashed">
+				<label for="formContent" class="control-label"><s:message code="mail.form.content"/></label>
+				<textarea class="form-control" style="width:100%; height: 300px; margin-top: 5px; background-color: #f8f6f6; margin-left: 1px;" name="formContent" id="formContent" readonly="readonly"></textarea>
 			</div>
 		</div>
 	</div>
 </div>
 
-</div>
 <%--	<button type="button" class="btn btn-sm btn-primary" accesskey="S" id="chooseBtn"><span class="glyphicon glyphicon-ok"></span>&nbsp;<s:message code="consent.select"/></button>
                 <button type="button" class="btn btn-sm btn-default" accesskey="C" id="cancelBtn"><span class="glyphicon glyphicon-remove"></span>&nbsp;<s:message code="common.msg.close"/></button>
                 <h3 class="modal-title"><s:message code="mail.select.form.mail"/></h3>

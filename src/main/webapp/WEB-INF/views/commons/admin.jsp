@@ -84,7 +84,7 @@
             });
 
             $('#insertBtn').click(function () {
-                $('#otpResetBtn').css('display', 'none');
+                $('otpRowDiv').css('display', 'none');
                 $("#adminPop").modal('show');
                 $('#adminPop').attr('mode', 'insert');
                 $('#adminPop input[type=text], #adminPop input[type=password]').val('').prop('disabled', false);
@@ -640,7 +640,7 @@
 								</div>
 								<div class="col-65">
 									<input type="text" class="w100" name="adminHp" id="adminHp" placeholder="<s:message code="admin.hp"/>" maxlength="50">
-									<s:message code="admin.enter.minus"/> <span style="padding-left:15px;"><s:message code="admin.msg.hp"/></span>
+									<label><s:message code="admin.enter.minus"/> <span style="padding-left:15px;"><s:message code="admin.msg.hp"/></span></label>
 								</div>
 							</div>
 							<div class="row">
@@ -742,6 +742,7 @@
 								</div>
 							</div>
 
+							<div class="otpRowDiv" style="display: none">
 							<%--OTP재설정--%>
 							<br>
 							<span style="font-size: 25px;"><s:message code="common.msg.otpReset"/></span>
@@ -751,9 +752,10 @@
 									<label for="accessIp" class="fname"><s:message code="common.msg.otpReset"/></label>
 								</div>
 								<div class="col-65">
-									<button type="button" class="form_btn01_02" accesskey="I" id="otpResetBtn" style="display: none"><s:message code="common.msg.otpReset"/></button>
+									<button type="button" class="form_btn01_02" accesskey="I" id="otpResetBtn"><s:message code="common.msg.otpReset"/></button>
 								</div>
 							</div>
+						</div>
 						</div>
 						<div class="col-50 mal16">
 							<span style="font-size: 25px;"><s:message code="admin.search.auth"/></span>
@@ -1086,7 +1088,7 @@
         if (grid.Col == grid.ColIndex('adminId')) {
             $("#adminPop").modal('show');
             $('#adminPop').attr('mode', 'modify');
-            $('#otpResetBtn').css('display', '');
+            $('.otpRowDiv').css('display', '');
 
             var data = grid.getRowData(grid.Row);
 
