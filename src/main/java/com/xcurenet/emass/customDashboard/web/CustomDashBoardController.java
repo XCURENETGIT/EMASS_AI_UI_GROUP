@@ -53,7 +53,7 @@ public class CustomDashBoardController {
 	@Description("Dashboard - 항목 추가 및 수정 저장")
 	@AuditOperation(Operation.SAVE)
 	@ResponseBody
-	public XcnResponseVO saveDashBoard(final HttpServletRequest request) throws Exception {
+	public XcnResponseVO saveDashBoard(final HttpServletRequest request) throws Exception{
 		JSONObject param = Common.getParam(request);
 		List<CustomDashboardVO> customDashboardVos = new ArrayList<>();
 		JSONArray list = JSONArray.fromObject(Common.nvl(request.getParameter("data")));

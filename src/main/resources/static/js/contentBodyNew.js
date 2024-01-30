@@ -1078,6 +1078,7 @@ function setMessage(msg) {
 		$('#subjectStrDiv').css("display", "");
 	}
 
+
 	if(svc.startsWith("Q") && nvl(msg.xrootMtr) != "") {
 		$('#usridTr').css("display", "");
 		$('#srcTr').css("display", "none");

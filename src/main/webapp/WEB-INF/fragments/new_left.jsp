@@ -7,10 +7,12 @@
 <%@ page import="com.xcurenet.common.util.config.Config" %>
 <%@ page import="com.xcurenet.common.ntp.NtpScheduler" %>
 <%@ page import="net.sf.json.JSONObject" %>
+<%@page import="com.xcurenet.common.util.config.Config"%>
 
 <%
 	String context = request.getContextPath();
 	boolean infoFeedbackConf = Config.getBoolean("info.feedback.used");
+	boolean consentMenuEnable = Config.getBoolean("onsent.menu.enable");
 	boolean infoHynixConf = Config.getBoolean("info.hynix.used");
 	String infoFeedbackYn = Common.getInfoFeedbackYn(session);
 	JSONObject ntpInfo = NtpScheduler.ntpStatus;
@@ -19,6 +21,7 @@
 	let infoFeedbackConf = '<%=infoFeedbackConf%>';
 	let infoHynixConf = '<%=infoHynixConf%>';
 	let infoFeedbackYn = '<%=infoFeedbackYn%>';
+	let consentMenuEnable = '<%=consentMenuEnable%>';
 
 	if ($(window).height() < 510) {
 		document.write('<style>.container{top: 75px;} #titleClose{display: none;} #titleOpen{display: block;} .content_header{display: none;}</style>');
@@ -92,10 +95,12 @@
 			let html = '';
 			for (let k in menuList) {
 				if (menuList[k].pid == currentMenuId && menuList[k].pid != null) {
+                    if ((menuList[k].menuId == "SEARCH_LOG") && (consentMenuEnable == "false")) continue;
 					html += '<li><span>-</span>';
 					html += '<a menuClick id=' + menuList[k].menuLink + ' href="#">' + menuList[k].defaultName + '</a>';
 					html += '<ul  id="' + menuList[k].menuId + '"  lastMenuUl>';
 					for (let l in menuList) {
+                        if ((menuList[l].menuId == "CONSENT_MGMT") && (consentMenuEnable == "false")) continue;
 						if (menuList[l].pid == null || menuList[l].pid != menuList[k].menuId) continue;
 						html += '<li><span>-</span>';
 						html += '<a lastChildMenu href="' + mainContext + '/' + menuList[l].menuLink + '"class="topMenu ' + menuList[l].menuId + ' menuList"' + 'menuid=' + menuList[l].menuId + '>';

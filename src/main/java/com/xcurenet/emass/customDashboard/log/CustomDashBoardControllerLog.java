@@ -20,6 +20,7 @@ public class CustomDashBoardControllerLog {
 	
 	public void saveDashBoard(final HttpServletRequest request, AuditRequestVO auditVo){
 		JSONObject param = Common.getParam(request);
+//		String menuName = Common.nvl(param.get("menuName"));
 		String menuName = Common.nvl(param.get("menuName"));
 		String allLog = "";
 		allLog += "["+Prop.propFormat("common.msg.save")+"]";
