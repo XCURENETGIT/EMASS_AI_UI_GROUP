@@ -275,17 +275,17 @@ public class SolrCreateQuery {
 					query.append(String.format("body.jp:(%s) ", getSearchQuery(searchStr)));
 					query.append(String.format("body_snippet:(%s) ", getSearchQuery(searchStr)));
 				} else if(Common.isEquals(field, "attach")) {
-					query.append(String.format("attach.kr:(*%s*) ", getSearchQuery(searchStr)));
-					query.append(String.format("attach.en:(*%s*) ", getSearchQuery(searchStr)));
-					query.append(String.format("attach.jp:(*%s*) ", getSearchQuery(searchStr)));
+					query.append(String.format("attach.kr:(%s) ", getSearchQuery(searchStr)));
+					query.append(String.format("attach.en:(%s) ", getSearchQuery(searchStr)));
+					query.append(String.format("attach.jp:(%s) ", getSearchQuery(searchStr)));
 				} else if(Common.isEquals(field, "subject")) {
-					query.append(String.format("subject.kr:(*%s*) ", getSearchQuery(searchStr)));
-					query.append(String.format("subject.en:(*%s*) ", getSearchQuery(searchStr)));
-					query.append(String.format("subject.jp:(*%s*) ", getSearchQuery(searchStr)));
+					query.append(String.format("subject.kr:(%s) ", getSearchQuery(searchStr)));
+					query.append(String.format("subject.en:(%s) ", getSearchQuery(searchStr)));
+					query.append(String.format("subject.jp:(%s) ", getSearchQuery(searchStr)));
 				} else if(Common.isEquals(field, "ocr_attach")) {
-					query.append(String.format("ocr_attach.kr:(*%s*) ", getSearchQuery(searchStr)));
-					query.append(String.format("ocr_attach.en:(*%s*) ", getSearchQuery(searchStr)));
-					query.append(String.format("ocr_attach.jp:(*%s*) ", getSearchQuery(searchStr)));
+					query.append(String.format("ocr_attach.kr:(%s) ", getSearchQuery(searchStr)));
+					query.append(String.format("ocr_attach.en:(%s) ", getSearchQuery(searchStr)));
+					query.append(String.format("ocr_attach.jp:(%s) ", getSearchQuery(searchStr)));
 				}
 			}
 			return addQuery(String.format("%s(%s)", AND_QUERY, query.toString()));
@@ -1285,19 +1285,21 @@ public class SolrCreateQuery {
 			for (String term : terms) {
 				queryStr.append("(".concat(appendSpecialchar(term)).concat(")")).append(" ");
 			}
-			sb.append("+").append(queryStr.toString().trim().replaceAll(" ", " +").replaceAll("__", " "));
+			sb.append("+").append(queryStr.toString().trim().replaceAll(" ", " ").replaceAll("__", " "));
 		} else {
+			StringBuilder querySb = new StringBuilder();
 			String[] terms = query.split(" ");
 			for (int i = 0; i < terms.length; i++) {
 				if (terms[i].equals("|")) {
 					terms[i] = OR_PREFIX;
 				} else if (i < terms.length - 1 && !terms[i + 1].equals("|")) {
 					terms[i] = "+" + terms[i];
-				}
-				sb.append(appendSpecialchar(terms[i])).append(" ");
+				}else {
+					querySb.append("(".concat(appendSpecialchar(terms[i])).concat(")")).append(" ");				}
 			}
+			sb.append("+").append(querySb.toString().trim().replaceAll(" ", " ").replaceAll("__", " "));
 		}
-		return sb.toString().replace(OR_PREFIX, "").replace("__", " ").replace("  ", " ").trim();
+		return sb.toString().replace(OR_PREFIX, " ").replace("__", " ").replace("  ", " ").trim();
 	}
 
 	/**
