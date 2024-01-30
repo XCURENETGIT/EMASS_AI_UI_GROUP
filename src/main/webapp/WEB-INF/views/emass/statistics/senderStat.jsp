@@ -468,7 +468,7 @@
     grid1.autoNumber();
     grid1.colAdd( "rowKey", '<s:message code="consent.user"/>', 230, "left", false, 'link' );
     grid1.colAdd("total", '<s:message code="bodyview.total"/>', 130, "right", false, 'nomal' );
-    grid1.loadExportMenu('<s:message code="DATA_MONITOR.STAT_USER"/>');
+    grid1.loadExportMenu('<s:message code="DATA_STAT.STAT_SENDER"/>');
     grid1.loadPageSize();
     grid1.loadHeader(false);
     grid1.initData('<s:message code="common.msg.search.click"/>');

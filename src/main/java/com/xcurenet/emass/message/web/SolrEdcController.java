@@ -179,8 +179,6 @@ public class SolrEdcController {
 
 			return new XcnResponseVO(XcnRspCode.OK, rtnSolrVo, total);
 
-
-
 		}else {
 			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
 			SolrQuery sq = solrCreateQuery.createQuery(data, Common.getAdminId(session), Common.nvl(data.get("searchTime")));
@@ -206,7 +204,6 @@ public class SolrEdcController {
 			if(Config.getBoolean("consent.menu.enable") && Common.isEquals(Common.nvz(param.get("offset"), 0), 0)) {
 				searchLogService.insertSearchLog(param);
 			}
-
 			return new XcnResponseVO(XcnRspCode.OK, solrVo, solrVo.getNumFound());
 		}
 	}

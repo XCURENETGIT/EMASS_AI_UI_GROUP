@@ -447,19 +447,22 @@ function fileExtCheck(obj){
 					<div class="modalbody">
 						<div class="row">
 							<div class="col-35">
-								<label for="encoding" class="fname"><s:message code="bodyview.charset"/></label>
+								<label for="encoding" class="fname"><s:message code="keyword.msg.colseparator"/></label>
 							</div>
 							<div class="col-65">
+								<select class="optiotab" id="separator" name="separator">
+									<option value=",">,</option>
+									<option value="|">|</option>
+								</select>
 								<select class="optiotab" id="encoding" name="encoding">
 									<option value="utf-8">UTF-8</option>
 									<option value="euc-kr">EUC-KR</option>
 								</select>
-								<input type="hidden" class="" name="importGroupSeq" id="importGroupSeq" maxlength="300">
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-35">
-								<label for="keywordDesc" class="fname"><s:message code="keyword.select.file"/></label>
+								<label for="comment" class="fname"><s:message code="keyword.select.file"/></label>
 							</div>
 							<div class="col-65">
 								<span id="attachSpan"><input type="file" class="form-control" name="attach" id="attach" style="width: 100%; border: 0px; padding: 0px;"></span>

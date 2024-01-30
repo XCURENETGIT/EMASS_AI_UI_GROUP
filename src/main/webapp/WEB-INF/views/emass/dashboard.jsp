@@ -1354,7 +1354,7 @@
 			<div id="emptyDiv">
 				<div class="empty-dashboard-message grayBg02">
 					<h2>
-						<img src="/venus/img/icon/ico_info.png" alt="!">
+						<img src="<c:url value="/img/icon/ico_info.png"/>" alt="!">
 						<span class="mat8 fb800 dis_block"><s:message code="custom.msg.empty"/></span>
 					</h2>
 					<div class="mat24">

@@ -474,7 +474,7 @@
     grid1.autoNumber();
     grid1.colAdd("rowKey", '<s:message code="condition.attach_name"/>', 230, "left", false, 'link');
     grid1.colAdd("total", '<s:message code="bodyview.total"/>', 130, "right", false, 'nomal');
-    grid1.loadExportMenu('<s:message code="DATA_MONITOR.STAT_ATTACHNAME"/>');
+    grid1.loadExportMenu('<s:message code="DATA_STAT.STAT_ATTACHNAME"/>');
     grid1.loadPageSize();
     grid1.loadHeader(false);
     grid1.initData('<s:message code="common.msg.search.click"/>');
@@ -510,7 +510,7 @@
         } else if (colKey == "O") {
             colKeyNm = '<s:message code="condition.send"/>';
         } else {
-            var xAxis = $('select[name=xAxis]').val();
+            var xAxis = $('button.optionBtn.active').val();
             if (xAxis == "ctime_hh") colKeyNm = colKey + '<s:message code="common.msg.hour"/>';
         }
 
