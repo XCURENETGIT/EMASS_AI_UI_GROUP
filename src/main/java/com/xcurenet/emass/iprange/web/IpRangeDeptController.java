@@ -144,10 +144,12 @@ public class IpRangeDeptController {
 	public void importIprange(IpRangeVO vo, HttpServletResponse response, HttpServletRequest request) throws Exception {
 		response.setCharacterEncoding(Common.UTF8);
 		response.setHeader("Content-Type", "application/json");
+		log.info("Received request. Vo: {}", vo);
 		
 		JSONObject item    = new JSONObject();
 		PrintWriter pw     = response.getWriter();
 		MultipartFile file = vo.getAttach();
+		log.info("file:"+file);
 		
 		if(file == null || file.isEmpty()) {
 			item.put("success", false);

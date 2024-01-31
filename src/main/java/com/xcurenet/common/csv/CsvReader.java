@@ -33,6 +33,7 @@ public class CsvReader {
 			CSVFormat f = CSVFormat.newFormat(this.delimiter).withQuote(Character.valueOf('"')).withIgnoreEmptyLines(false).withAllowMissingColumnNames();
 
 			parser = CSVParser.parse(new File(this.path), Charset.forName(this.encoding), f);
+
 			for (final CSVRecord record : parser) {
 				JSONObject item = new JSONObject();
 				for (int i = 0; i < record.size(); i++) {
@@ -45,6 +46,7 @@ public class CsvReader {
 		} finally {
 			IOUtils.closeQuietly(parser);
 		}
+
 		return result;
 	}
 }
