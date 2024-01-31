@@ -565,6 +565,7 @@
                                 ui.alertMsg(message);
                             },
                             complete : function() {
+                                ui.off('setUserPopBtn');
                             }
                         });
                     }

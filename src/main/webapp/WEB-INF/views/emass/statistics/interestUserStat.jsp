@@ -485,7 +485,11 @@
                     if(grid1.getValue(row, 'rowName') != '') {
                         return grid1.getValue(row, 'rowName') + '&lt;' + value + '&gt;';
                     }
-                    return value;
+                    if(grid1.getValue(row, 'rowKey') == '') {
+                        return '';
+                    }else {
+                        return value;
+                    }
                 });
                 grid1.colAdd('total', '<s:message code="bodyview.total"/>', 130, 'right', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
                     if ( value != undefined ) return value.comma();

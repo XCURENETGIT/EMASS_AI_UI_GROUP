@@ -148,19 +148,20 @@ $(document).ready(function(){
 		ui.confirmMsg('<s:message code="common.msg.confirm.apply"/>', '', '', function(rs){
 			if(rs) {
 				ui.on('setDeptPopBtn');
-					ui.get({
-						url : 'runJob.xcn',
-						jobId : "SCHEDULE_DEPT_LOAD",
-						success : function(data, total) {
-							ui.alertMsg('<s:message code="common.msg.applied"/>');
-						},
-						error : function(status, message) {
-							ui.alertMsg(message);
-						},
-						complete : function() {
-						}
-					});
-				}
+				ui.get({
+					url : 'runJob.xcn',
+					jobId : "SCHEDULE_DEPT_LOAD",
+					success : function(data, total) {
+						ui.alertMsg('<s:message code="common.msg.applied"/>');
+                        ui.off('setDeptPopBtn');
+					},
+					error : function(status, message) {
+						ui.alertMsg(message);
+					},
+					complete : function() {
+					}
+				});
+			}
 		});
 	});
 	

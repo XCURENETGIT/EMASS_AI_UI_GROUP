@@ -572,12 +572,16 @@
 			success: function (data, total) {
 				grid1.colInit();
 				grid1.autoNumber();
-				grid1.colAdd('rowKey', '<s:message code="consent.user"/>', 230, 'left', false, 'link', function (row, cell, value, columnDef, dataContext) {
-					if (grid1.getValue(row, 'rowName') != '') {
-						return grid1.getValue(row, 'rowName') + '&lt;' + value + '&gt;';
-					}
-					return value;
-				});
+                grid1.colAdd('rowKey', '<s:message code="consent.user"/>', 230, 'left', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
+                    if(grid1.getValue(row, 'rowName') != '') {
+                        return grid1.getValue(row, 'rowName') + '&lt;' + value + '&gt;';
+                    }
+                    if(grid1.getValue(row, 'rowKey') == '') {
+                        return '';
+                    }else {
+                        return value;
+                    }
+                });
 				grid1.colAdd('total', '<s:message code="bodyview.total"/>', 130, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
 					if (value != undefined) return value.comma();
 					else return '';
