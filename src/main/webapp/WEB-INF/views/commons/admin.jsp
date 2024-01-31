@@ -1098,13 +1098,13 @@
             if (googleOtp == "false") $('.otpRowDiv').css('display', 'none');
             else $('.otpRowDiv').css('display', '');
 
+            var data = grid.getRowData(grid.Row);
 
             if (data.adminType == "C") {
                 $("#readAuthDiv").css('display', '');
             } else {
                 $("#readAuthDiv").css('display', 'none');
             }
-            $('.otpRowDiv').css('display', '');
 
 
             //setTimeout(function(){
