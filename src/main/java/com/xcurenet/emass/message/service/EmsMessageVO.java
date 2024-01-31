@@ -55,6 +55,7 @@ public class EmsMessageVO {
 	private String ipCocd;
 	private String subOrgCd;
 	private String busiCd;
+	private String busiNm;
 	private String ipBusicd;
 	private String ipBusiNm;
 	private String ipDeptcd;

@@ -86,6 +86,7 @@ public class EmsMessageConvert {
 			vo.setIpCocd(data.getUserInfo().getIpCoCd());
 			vo.setSubOrgCd(data.getUserInfo().getSuborgCd());
 			vo.setBusiCd(data.getUserInfo().getBusiCd());
+			vo.setBusiNm(data.getUserInfo().getBusiNm());
 			vo.setIpBusicd(data.getUserInfo().getIpBusiCd());
 			vo.setIpBusiNm(data.getUserInfo().getIpBusiNm());
 			vo.setIpDeptcd(data.getUserInfo().getIpDeptCd());
@@ -246,6 +247,7 @@ public class EmsMessageConvert {
 		vo.setSubOrgCd(data.getSuborgCd());
 		vo.setSubOrgNm(data.getSuborgNm());
 		vo.setBusiCd(data.getBusiCd());
+		vo.setBusiNm(data.getBusiNm());
 		vo.setDeptCd(data.getDeptCd());
 		vo.setDeptNm(data.getDeptNm());
 		vo.setJikgubCd(data.getJikgubCd());
