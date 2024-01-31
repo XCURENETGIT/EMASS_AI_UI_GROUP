@@ -677,13 +677,14 @@ function Xgrid ( target, contextRoot, rowHeight, options, dataview ) {
 		var data = [];//this.getSelectedRows();
 		if(selectOption=="Y") data = this.getSelectedRows();
 		if(data.length==0) data = this.grid.getData( );
+		console.log(data)
 		var result = JSON.parse(JSON.stringify(data));
 		for ( var j=0 ; j < data.length ; j++ ) {
 			for ( var i=0 ; i < this.columns.length ; i++ ) {
 				if($.isArray(data[j][this.columns[i].id])) {
 					if ( this.columns[i].formatter == undefined ) result[j][this.columns[i].id] = result[j][this.columns[i].id].join(', ');
 					else{
-						var org = this.columns[i].formatter( j, i, data[j][this.columns[i].id] );
+						var org = this.columns[i].formatter( j, i, nvl(data[j][this.columns[i].id]) );
 						var str = $("#replace_html").html(org).text().trim();
 						if(str == '') continue;
 						result[j][this.columns[i].id] = str;
@@ -691,7 +692,7 @@ function Xgrid ( target, contextRoot, rowHeight, options, dataview ) {
 				}
 				else {
 					if ( this.columns[i].formatter == undefined ) continue;
-					var org = this.columns[i].formatter( j, i, data[j][this.columns[i].id] );
+					var org = this.columns[i].formatter( j, i, nvl(data[j][this.columns[i].id]));
 					var str = $("#replace_html").html(org).text().trim();
 					if(str == '') continue;
 					result[j][this.columns[i].id] = str;
