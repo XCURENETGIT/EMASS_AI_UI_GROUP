@@ -78,6 +78,8 @@
 			min-width: 600px;
 		}
 
+
+
 		#buttonDiv .btnright{position: absolute; right:20px; top:12px;}
 		.empty-dashboard-message{
 			position: absolute;
@@ -410,7 +412,7 @@
 			<div class="btnright">
 				<button class ="btn05" id="saveBtn"><img src="../img/subBtn_save.png/" ><s:message code="common.msg.save"/></button>
 				<button class ="btn05" id="printBtn"><img src="../img/subBtn_mail.png/" ><s:message code="common.msg.print"/></button>
-				<ul class="dropdown-menu dropdown-menu-left" role="menu" style="min-width:100px;font-size:13px;left:250px;" id="additionalBtn">
+				<ul class="dropdown-menu dropdown-menu-left" role="menu" style="left:calc(80% - 102px);right:-1px"  id="additionalBtn">
 					<li><a href="javascript:void(0);" id="usersInfoBtn"><s:message code="common.msg.userinfo"/></a></li>
 					<li class="dropdown-divider"></li>
 					<li><a href="javascript:void(0);" id="headerBtn"><s:message code="common.msg.headerInfo"/></a></li>
