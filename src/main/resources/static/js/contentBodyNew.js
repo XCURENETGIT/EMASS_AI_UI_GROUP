@@ -1020,7 +1020,6 @@ function setMessage(msg) {
 		$('#probType').html('');
 		if( probPercent(pr) != '-' ) $('#probType').html('<span style="font-weight: bold;">('+probPercent(pr)+'%)</span>');
 
-		console.log(msg.ml_confd_feedback)
 
 		if(msg.ml_confd_feedback == -1) $('[name=feedback]').prop('checked',false);
 		else $('[name=feedback][value='+msg.ml_confd_feedback+']').prop('checked',true);

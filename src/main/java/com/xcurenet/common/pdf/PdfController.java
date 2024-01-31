@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
@@ -29,6 +30,7 @@ import com.xcurenet.common.vo.XcnRspCode;
 import net.sf.json.JSONArray;
 
 @Controller
+@Slf4j
 public class PdfController {
 
 	@Autowired
@@ -52,15 +54,17 @@ public class PdfController {
 			String dt = Common.getCurrentDate();
 			Common.mkdirs(Common.TMP_PATH + dt);
 			File file = new FileRenamePolicy().rename(new File(Common.TMP_PATH + dt + "/export_pdf_" + Common.getCurrentTime("yyyyMMdd_HHmmss") + ".pdf"));
-			new PdfWriter(title, headerArray, bodyArray, new FileOutputStream(file));
+			PdfWriter pdfWriter = new PdfWriter(title, headerArray, bodyArray, new FileOutputStream(file));
+			log.info("pdfWriter: "+pdfWriter);
 			if (Common.isNotEmpty(menuId)) {
 				AuditRequestVO auditVo = new AuditRequestVO();
+				log.info("auditVo: "+auditVo);
 				auditVo.setPMenuId(pMenuId);
 				auditVo.setMenuId(menuId);
 				auditVo.setOperation(Operation.DOWNLOAD.getOperation());
 				StringBuffer info = new StringBuffer();
-				info.append("[" + Prop.propFormat("common.msg.export") + "]").append(ENTER);
-				info.append(Prop.propFormat("selectCodeAll.list") + " (pdf)");
+				info.append("["+Prop.propFormat("common.msg.export")+"]").append(ENTER);
+				info.append(Prop.propFormat("selectCodeAll.list")+" (pdf)");
 
 				auditVo.setInformation(info.toString());
 				auditService.insertAudit(request, auditVo);
