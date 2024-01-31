@@ -537,7 +537,7 @@
                 if(current_select_count<20){
                     var options = makeInsaOptions;
                     var str = '';
-                    str += '<span class="num_list mat8">'+(current_select_count+1)+'</span><select class="w90"id="COL'+current_select_count+'" name="insa.select">';
+                    str += '<span class="num_list mat8">'+(current_select_count+1)+'</span><select class="w90 insaSelctClass"id="COL'+current_select_count+'" name="insa.select">';
                     str += options;
                     str += '</select>';
                     $("#insaSelect").append(str);
@@ -1020,14 +1020,14 @@
             if(arr==''){
                 for(var i=0 ; i<current_select_count; i++){
                     str += '<span class="num_list mat8">'+(i+1)+'</span>';
-                    str += '<select class="w90" id="COL'+i+'" name="insa.select">';
+                    str += '<select class="w90 insaSelctClass" id="COL'+i+'" name="insa.select">';
                     str += options;
                     str += '</select>';
                 }
             }else{
                 for(var i=0 ; i<arr2.length; i++){
                     str += '<span class="num_list mat8">'+(i+1)+'</span>';
-                    str += '<select class="w90" id="COL'+i+'" name="insa.select">';
+                    str += '<select class="w90 insaSelctClass" id="COL'+i+'" name="insa.select">';
                     str += options;
                     str += '</select>';
                 }

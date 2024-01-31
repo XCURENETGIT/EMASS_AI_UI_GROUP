@@ -73,7 +73,7 @@ $(document).ready(function(){
 		fileExtCheck($(this));
 	});
 
-	$('#savePopBtn').click(function(){
+	$('.savePopBtn').click(function(){
 		var busiCd = $('#busiCd').val().ltrim().rtrim();
 		var startIp = $('#startIp').val().ltrim().rtrim();
 		var endIp = $('#endIp').val().ltrim().rtrim();
@@ -284,7 +284,7 @@ function fileExtCheck(obj){
 	<div class="modal-content">
 		<form method="post" id="ipRangePopForm">
 			<div class="modalHead">
-				<h2><s:message code="DATA_MONITOR.KEYWORD_MGMT"/>-<s:message code="common.msg.addmodify"/></h2>
+				<h2><s:message code="ipRange.iprangepop.title"/>
 				<span class="close" data-dismiss="modal">&times;</span>
 			</div>
 			<div class="modalCon">
@@ -428,7 +428,7 @@ function fileExtCheck(obj){
 				<div class="modalfooter">
 					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message
 							code="common.msg.close"/></button>
-					<button type="button" class="pop_btn02" accesskey="S" id="savePopBtn"><s:message
+					<button type="button" class="pop_btn02 savePopBtn" accesskey="S" id="savePopBtn"><s:message
 							code="common.msg.save"/></button>
 				</div>
 			</div>
@@ -440,7 +440,7 @@ function fileExtCheck(obj){
 		<div class="modal-content">
 			<form method="post" id="uploadForm" enctype="multipart/form-data" target="upload_file">
 				<div class="modalHead">
-					<h2><s:message code="DATA_MONITOR.KEYWORD_MGMT"/>-<s:message code="keyword.msg.upload"/></h2>
+					<h2><s:message code="ipRange.set.iprange"/>-<s:message code="keyword.msg.upload"/></h2>
 					<span class="close" data-dismiss="modal">&times;</span>
 				</div>
 				<div class="modalCon">
@@ -470,15 +470,14 @@ function fileExtCheck(obj){
 						</div>
 					</div>
 					<div class="info"> <s:message code="common.guidance"/>
-						<div class="form-inline mat4">1) <s:message code="interest.message.upload.info1"/></div>
-						<div class="form-inline">2) <s:message code="interest.message.upload.info2"/></div>
-						<div class="form-inline">3) <s:message code="interest.message.upload.info3"/></div>
-						<div class="form-inline">4) <s:message code="interest.message.upload.info4"/></div>
-						<div >5) <s:message code="interest.message.upload.info5"/></div>
+						<div class="form-inline" style="margin-top:20px;padding-left:10px;"> 1) <s:message code="keyword.message.upload.info1"/></div>
+						<div class="form-inline" style="padding-left:10px;"> 2) <s:message code="ipRange.msg.upload.info"/></div>
+						<div class="form-inline" style="padding-left: 10px;"> 3) <s:message code="keyword.message.upload.info3"/></div>
+						<div class="form-inline" style="padding-left: 10px;"> 4) <s:message code="ipRange.msg.upload.info1"/></div>
 					</div>
 					<div class="modalfooter">
 						<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
-						<button type="button" class="pop_btn02" accesskey="S"><s:message code="common.msg.save"/></button>
+						<button type="button" class="pop_btn02 uploadPopBtn" accesskey="S"><s:message code="common.msg.save"/></button>
 					</div>
 				</div>
 			</form>
