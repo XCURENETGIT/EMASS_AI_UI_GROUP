@@ -436,7 +436,7 @@ function fileExtCheck(obj){
 	</div>
 </div>
 	<div id="upload_file"></div>
-	<div class="modal" id="uploadPop" aria-labelledby="uploadPop">
+	<div class="modal" id="uploadPop" role="dialog" aria-labelledby="uplaodPop">
 		<div class="modal-content">
 			<form method="post" id="uploadForm" enctype="multipart/form-data" target="upload_file">
 				<div class="modalHead">
@@ -470,10 +470,11 @@ function fileExtCheck(obj){
 						</div>
 					</div>
 					<div class="info"> <s:message code="common.guidance"/>
-						<div class="form-inline" style="margin-top:20px;padding-left:10px;"> 1) <s:message code="keyword.message.upload.info1"/></div>
+						<div class="form-inline" style="margin-top:10px;padding-left:10px;"> 1) <s:message code="keyword.message.upload.info1"/></div>
 						<div class="form-inline" style="padding-left:10px;"> 2) <s:message code="ipRange.msg.upload.info"/></div>
 						<div class="form-inline" style="padding-left: 10px;"> 3) <s:message code="keyword.message.upload.info3"/></div>
 						<div class="form-inline" style="padding-left: 10px;"> 4) <s:message code="ipRange.msg.upload.info1"/></div>
+						<div class="form-inline" style="padding-left: 10px;"> 5) <s:message code="keyword.message.upload.info4"/></div>
 					</div>
 					<div class="modalfooter">
 						<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>

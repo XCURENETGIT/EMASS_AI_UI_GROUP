@@ -115,6 +115,8 @@ public class IpRangeDeptServiceImpl extends XcnAbstractDAO implements IpRangeDep
 		JSONObject result = new JSONObject();
 		Map<String, String> ipMap = ipRangeMap();
 
+		log.info(String.valueOf(ipRangeList));
+
 		int errorIdx  = 0;
 		int insertCnt = 0;
 		boolean duplicate = false;

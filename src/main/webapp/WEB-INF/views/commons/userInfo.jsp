@@ -39,10 +39,15 @@
         var current_select_count = 11;
         $(document).ready(function(){
 
+            $('#dept').click(function(){
+                openCodeWindow('deptByCo', $('#coCd_inUser option:selected').val(), $('#deptByCoVal').val(), $('#deptByCoStr').val());
+            });
+
             $('#uploadUserPop').on('shown.bs.modal', function() {
                 $( "#uploadSortableColumn" ).sortable();
                 $( "#uploadSortableColumn" ).disableSelection();
             });
+
             $('#setUserPop').on('show.bs.modal', function() {//shown은 모달이 뜨고 나서 불러와서 변경되는게 보여서 show로 바꿈
                 ui.get({
                     url : 'getConfList.xcn',
@@ -92,9 +97,7 @@
                 getInsaConfig()
             });
 
-            $('#dept').click(function(){
-                openCodeWindow('deptByCo', $('#coCd_inUser option:selected').val(), $('#deptByCoVal').val(), $('#deptByCoStr').val());
-            });
+
 
             $(document).on('mouseover', '.codeSelectedBtn', function(e){
                 $('#selectedCodeTitle').show();
@@ -299,7 +302,7 @@
                 getData();
             });
 
-            $('#savePopBtn').click(function(){
+            $('.savePopBtn').click(function(){
                 var mode = $('#userPop').attr('mode');
                 if( $('#userId').val() == '' ){
                     ui.alertMsg('<s:message code="userInfo.msg.enter.id"/>');
@@ -699,7 +702,13 @@
         function setInsaButtonVal(data, id) {
             for (var i = 0; i < data.length; i++) {
                 if (data[i].confId == id) {
-                    $('button[name=' + idIndicator(id) + '][value=' + data[i].val + ']').addClass("active");
+                    if(data[i].val=="N"){
+                        $('button[name=' + idIndicator('insa.auto') + '][value=N]').addClass("active");
+                        $('button[name=' + idIndicator('insa.auto') + '][value=Y]').removeClass("active");
+                    }else{
+                        $('button[name=' + idIndicator('insa.auto') + '][value=Y]').addClass("active");
+                        $('button[name=' + idIndicator('insa.auto') + '][value=N]').removeClass("active");
+                    }
                     return;
                 }
             }
@@ -1232,7 +1241,7 @@
 									</div>
 								</div>
 								<div class="clear">
-									<div class="checkbox" style="margin-left: 5px;"><label for="sun"><input type="checkbox" name="insa.week" value="sun" id="sun"><span><s:message code="common.sun"/></span></label></div>
+									<div class="checkbox" style="margin-left: 4px;"><label for="sun"><input type="checkbox" name="insa.week" value="sun" id="sun"><span><s:message code="common.sun"/></span></label></div>
 									<div class="checkbox" style="margin-right: 10px;"><label for="mon"><input type="checkbox" name="insa.week"value="mon" id="mon"><span><s:message code="common.mon"/></span></label></div>
 									<div class="checkbox" style="margin-right: 10px;"><label for="tue"><input type="checkbox" name="insa.week" value="tue" id="tue"><span><s:message code="common.tue"/></span></label></div>
 									<div class="checkbox" style="margin-right: 10px;"><label for="wed"><input type="checkbox" name="insa.week" value="wed" id="wed"><span><s:message code="common.wed"/></span></label></div>
@@ -1245,15 +1254,15 @@
 								<label for="fname"><s:message code="userInfo.set.time"/></label>
 								<select class="w100" id="insa.time" name="time">
 									<option value="*"><s:message code="userInfo.clock.time"/></option>
-									<option value="1"><s:message code="common.time.1"/></option>
-									<option value="2"><s:message code="common.time.2"/></option>
-									<option value="3"><s:message code="common.time.3"/></option>
-									<option value="4"><s:message code="common.time.4"/></option>
-									<option value="5"><s:message code="common.time.5"/></option>
-									<option value="6"><s:message code="common.time.6"/></option>
-									<option value="7"><s:message code="common.time.7"/></option>
-									<option value="8"><s:message code="common.time.8"/></option>
-									<option value="9"><s:message code="common.time.9"/></option>
+									<option value="1"><s:message code="common.time.01"/></option>
+									<option value="2"><s:message code="common.time.02"/></option>
+									<option value="3"><s:message code="common.time.03"/></option>
+									<option value="4"><s:message code="common.time.04"/></option>
+									<option value="5"><s:message code="common.time.05"/></option>
+									<option value="6"><s:message code="common.time.06"/></option>
+									<option value="7"><s:message code="common.time.07"/></option>
+									<option value="8"><s:message code="common.time.08"/></option>
+									<option value="9"><s:message code="common.time.09"/></option>
 									<option value="10"><s:message code="common.time.10"/></option>
 									<option value="11"><s:message code="common.time.11"/></option>
 									<option value="12"><s:message code="common.time.12"/></option>
@@ -1439,6 +1448,21 @@
 
 					<div class="row">
 						<div class="col-35">
+							<label for="deptSelect_inUser" class="fname"><s:message code="common.org.dept"/></label>
+						</div>
+						<div class="col-65">
+						<button class="btn01" type="button"  id="dept"><img src="../img/subBtn_plus.png" alt="추가"><s:message code="common.org.choose.dept"/></button>
+						<span id="deptByCoSelectedArea" class="codeSelectedBtn">
+									<button type="button" class="btn">0</button>
+							</span>
+						<span id="deptByCoStrSpan"></span>
+							<input type="hidden" id="deptByCoStr" class="selectedTitle" name="deptNm">
+							<input type="hidden" id="deptByCoVal" name="deptCd">
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-35">
 							<label for="jikgubSelect_inUser" class="fname"><s:message code="common.org.jikgub"/></label>
 						</div>
 						<div class="col-65">
@@ -1492,7 +1516,7 @@
 				<div class="modalfooter">
 					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message
 							code="common.msg.close"/></button>
-					<button type="button" class="pop_btn02" accesskey="S" id="savePopBtn"><s:message
+					<button type="button" class="pop_btn02 savePopBtn" accesskey="S" id="savePopBtn"><s:message
 							code="common.msg.save"/></button>
 				</div>
 			</div>

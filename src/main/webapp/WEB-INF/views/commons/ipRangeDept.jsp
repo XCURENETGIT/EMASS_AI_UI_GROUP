@@ -762,6 +762,7 @@ function getDeptSchedule(){
 					<div class="form-inline" style="margin-top:10px;padding-left:10px;"> 1) <s:message code="keyword.message.upload.info1"/></div>
 					<div class="form-inline" style="padding-left:10px;"> 2) <s:message code="deptIpRange.msg.upload.info"/></div>
 					<div class="form-inline" style="padding-left: 10px;"> 3) <s:message code="keyword.message.upload.info3"/></div>
+					<div class="form-inline" style="padding-left: 10px;"> 4) <s:message code="keyword.message.upload.info4"/></div>
 				</div>
 				<div class="modalfooter">
 					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
