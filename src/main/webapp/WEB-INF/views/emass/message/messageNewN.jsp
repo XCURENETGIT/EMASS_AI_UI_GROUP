@@ -230,7 +230,7 @@
         }
 
         .bootstrap-select.btn-group .dropdown-menu.inner {
-            padding-top: 10px;
+            padding-top: 2px;
         }
         .bootstrap-select .dropdown-backdrop {
             pointer-events: none;
