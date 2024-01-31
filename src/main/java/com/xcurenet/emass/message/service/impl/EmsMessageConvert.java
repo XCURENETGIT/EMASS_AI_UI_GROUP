@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 @Component
@@ -35,11 +34,11 @@ public class EmsMessageConvert {
 		DateTime ltime = data.getLTime();
 		DateTime ctime = data.getCTime();
 
-		/* GMT 를 사용하는 서버시간대의 경우 */
-		if("GMT+09:00".equals(TimeZone.getDefault().getID())){
+//		/* GMT 를 사용하는 서버시간대의 경우 */
+//		if("GMT+09:00".equals(TimeZone.getDefault().getID())){
 			ltime = ltime.minusHours(9);
 			ctime = ctime.minusHours(9);
-		}
+//		}
 
 		vo.setLtime(Common.yyyy_MM_dd_HH_mm_ss.print(ltime));
 		vo.setCtime(Common.yyyy_MM_dd_HH_mm_ss.print(ctime));
