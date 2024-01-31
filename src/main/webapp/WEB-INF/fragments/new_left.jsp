@@ -4,7 +4,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%@ page import="com.xcurenet.common.util.Common" %>
-<%@ page import="com.xcurenet.common.util.config.Config" %>
+<%@ page import="com.xcurenet.common.util.config.Config"%>
 <%@ page import="com.xcurenet.common.ntp.NtpScheduler" %>
 <%@ page import="net.sf.json.JSONObject" %>
 <%@page import="com.xcurenet.common.util.config.Config"%>
