@@ -356,12 +356,17 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		return emsAttachVOList;
 	}
 
+
+
 	@Override
 	public List<EmsAttachVO> getEmassAttachInfo4Down(String msgId, String attachId) {
 		EmsMessageVO emsMessageVO = getEmassMessageData(msgId);
 		List<EmsAttachVO> result = new ArrayList<>();
 		for (EmsAttachVO vo : emsMessageVO.getFiles()) {
+			if(vo.getAttachId().equals(attachId)){
 				result.add(vo);
+				break;
+			}
 		}
 		return result;
 	}

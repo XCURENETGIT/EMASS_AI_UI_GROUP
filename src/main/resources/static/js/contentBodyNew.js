@@ -219,8 +219,9 @@ $(document).ready(function(){
 		var attachName = $(this).parents('tr').find('.attachName').attr('attachname');
 		var attachSize = Number( $(this).parents('tr').attr('size') );
 		//var attachUrl = '<c:url value="/downEmassAttach.xcn"/>?msgId='+msgId+'&attachId='+attachId;
-		var attachUrl = contextRoot + '/downEmassAttach.xcn?msgId=' + msgId + '&attachId=' + attachId;
+		var attachUrl = contextRoot + '/downEmassAttachOne.xcn?msgId=' + msgId + '&attachId=' + attachId;
 		if ( attachSize == 0 || attachSize == 'NaN' ) attachSize = 1;
+
 
 		try {
 			AttachDown.location.href = attachUrl;
@@ -1392,7 +1393,7 @@ function setFileDiv(msg) {
 			if(attachNameExist == "N") {
 				extClass = " fileNameExistN";
 			}
-
+			fileStr = '';
 			fileStr += '<tr msgid="' + msg.msgId + '" id="' + file.attachId + '" size="' + file.attachSize + '" class="' + trClass + extClass +'" >';
 			fileStr += '<td>';
 			fileStr += '<span class="attach_' + attachExt +' attach_file_img" style="padding-right:5px;"></span> ';
