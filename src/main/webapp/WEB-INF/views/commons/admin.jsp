@@ -1,8 +1,10 @@
+<%@ page import="com.xcurenet.common.util.config.Config" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp" %>
 <%
 	String certType = Config.getString("cert.type");
 	String sso_type = Config.getString("sso_type");
+	String googleOtp = Config.getString("google.otp.used");
 %>
 <head>
 	<style type="text/css">
@@ -25,7 +27,9 @@
         var searchFlag = false;
         var certType = '<%=certType%>';
         var sso_type = '<%=sso_type%>';
+        var googleOtp = '<%=googleOtp%>';
         $(document).ready(function () {
+            console.log(googleOtp);
             if (certType != '' || sso_type == 'S') $('#certTypeDiv').show();
             else $('#certTypeDiv').hide();
 
@@ -1086,9 +1090,13 @@
     grid.initData('<s:message code="common.msg.search.click"/>');
     grid.onClick = function () {
         if (grid.Col == grid.ColIndex('adminId')) {
+
+
             $("#adminPop").modal('show');
             $('#adminPop').attr('mode', 'modify');
-            $('.otpRowDiv').css('display', '');
+
+            if (googleOtp == "false") $('.otpRowDiv').css('display', 'none');
+            else $('.otpRowDiv').css('display', '');
 
             var data = grid.getRowData(grid.Row);
 
@@ -1097,6 +1105,7 @@
             } else {
                 $("#readAuthDiv").css('display', 'none');
             }
+
 
             //setTimeout(function(){
             $('#adminId').val(data.adminId).prop('disabled', true);
