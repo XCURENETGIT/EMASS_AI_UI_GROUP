@@ -12,7 +12,7 @@
 <%
 	String context = request.getContextPath();
 	boolean infoFeedbackConf = Config.getBoolean("info.feedback.used");
-	boolean consentMenuEnable = Config.getBoolean("onsent.menu.enable");
+	boolean consentMenuEnable = Config.getBoolean("consent.menu.enable");
 	boolean infoHynixConf = Config.getBoolean("info.hynix.used");
 	String infoFeedbackYn = Common.getInfoFeedbackYn(session);
 	JSONObject ntpInfo = NtpScheduler.ntpStatus;
@@ -92,6 +92,7 @@
 			}
 			$('#gnb').find('#topMenu').html(html);
 		} else {
+            console.log(consentMenuEnable);
 			let html = '';
 			for (let k in menuList) {
 				if (menuList[k].pid == currentMenuId && menuList[k].pid != null) {
