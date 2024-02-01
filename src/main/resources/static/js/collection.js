@@ -155,6 +155,7 @@ var eikon2 = {
         filterVal.conditions = conArray;
 
         detailSearchFlag = false;
+        ui.onBody('timeline-panel', 0, 60);
 
         ui.postJson({
             url : 'getGenerativeGroupDetailSearch.xcn',
@@ -172,17 +173,13 @@ var eikon2 = {
 
                     detailMsgid=data;
                     detailMsgid.sort();
-                    console.log(detailMsgid);
-                    console.log("현재 번호  "+ detailMsgid[searchOffset]);
-                    console.log("현재 번호:"+searchOffset );
-                    console.log("fdad"+detailMsgid[0]);
-
 
                     checkList(searchOffset,type);
 
 
                 }
                 else{
+                    alert(nodataMsg)
                     $('#searchResult').html('0');
                     $('#selectCnt').html('0');
                     $('#searchResultArea').show();
@@ -194,6 +191,8 @@ var eikon2 = {
             },
             complete : function() {
                 searchFlag = false;
+                HighSerarchlight();
+                ui.off('timeline-panel');
             }
         });
     }
@@ -999,19 +998,20 @@ function HighlightGroup() {
 }
 
 
-function Highlight( ) {
+function HighSerarchlight( ) {
     setTimeout(function(){
-        var searchs = $('#searchStrInput').val().split(/\||\+|\s|\*|\"/);
-        if ( searchs.length > 0 ){
-            var timeline_list_obj = $("#timeline_list").find('span');
+        var searchs = $('#searchMsgStrInput').val().split(/\||\+|\s|\*|\"/);
 
-            for ( var i=0 ; i < searchs.length ; i++ ) {
+        if ( searchs.length > 0 ){
+            var timeline_list_obj =  $("#timeline_list").find('div');
+            for ( var i=0 ; i < searchs.lsength ; i++ ) {
                 if ( searchs[i] == '' ) continue;
                 $( timeline_list_obj ).highlight(searchs[i], 'BS');
             }
         }
     }, 100);
 }
+
 
 
 
@@ -1198,6 +1198,7 @@ function getCollectionMessage(userkey, srcip, usr_id, msgid,type){
         complete : function() {
             ui.off('timeline_list');
             setMessengerRead();
+            HighSerarchlight();
             searchFlag = false;
         }
     });

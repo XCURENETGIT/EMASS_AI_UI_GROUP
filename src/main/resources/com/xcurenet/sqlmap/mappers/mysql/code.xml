@@ -842,14 +842,18 @@
 
 	<!-- 파일전송 목록 -->
 	<select id="getFileServiceList" resultType="codeVO" parameterType="codeVO">
-		SELECT SUBSTRING(SERVICECD, 1, 3) AS code, SERVICENM_LV2 AS codeName FROM UI_SERVICE WHERE SUBSTRING(SERVICECD, 1, 1) = 'F'
+		SELECT DISTINCT SUBSTRING(SERVICECD, 1, 3) AS code, SERVICENM_LV2 AS codeName
+		FROM UI_SERVICE
+		WHERE SUBSTRING(SERVICECD, 1, 1) = 'F'
 	</select>
 
 	<!-- 노트 목록 -->
 	<select id="getNoteList" resultType="codeVO" parameterType="codeVO">
-		SELECT SUBSTRING(SERVICECD, 1, 3) AS code, SERVICENM_LV2 AS codeName FROM UI_SERVICE WHERE SUBSTRING(SERVICECD, 1, 1) = 'N'
+		SELECT DISTINCT SUBSTRING(SERVICECD, 1, 3) AS code, SERVICENM_LV2 AS codeName
+		FROM UI_SERVICE
+		WHERE SUBSTRING(SERVICECD, 1, 1) = 'N'
 	</select>
-	
+
 	<!-- 운용자 메뉴 -->
 	<select id="getAdminCodeMenuList" resultType="codeVO" parameterType="codeVO">
 		SELECT	AUTH_ID AS code
