@@ -1,5 +1,6 @@
 <%@page import="com.xcurenet.audit.service.Operation"%>
 <%@page import="net.sf.json.JSONObject"%>
+<%@ page import="com.xcurenet.common.util.Common" %>
 <%@ include file="/WEB-INF/fragments/popupScript.jsp"%>
 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>

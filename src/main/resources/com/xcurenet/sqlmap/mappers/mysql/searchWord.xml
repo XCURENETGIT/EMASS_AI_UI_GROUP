@@ -74,8 +74,7 @@
 		WHERE	KEYWORD_ID 	= #{keywordId}
 	</update>
 
-	<!--	키워드 중복 체크-->
-	<select id="isSearchWordExist" resultType="int" parameterType="com.xcurenet.searchWord.service.SearchWordVO">
+	<!--	키워드 중복 체크--><select id="isSearchWordExist" resultType="int" parameterType="com.xcurenet.searchWord.service.SearchWordVO">
 		SELECT COUNT(*) AS CNT
 		FROM XCN_KEYWORD
 		WHERE BINARY KEYWORD = BINARY #{searchWord}

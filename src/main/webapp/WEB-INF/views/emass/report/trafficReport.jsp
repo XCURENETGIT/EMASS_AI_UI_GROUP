@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <style>
 
 	/* The Modal (background) */
@@ -60,7 +61,7 @@
 		</div>
 
 		<div class="coach_logo">
-			<img src="/venus/img/logo_xcurenet.png" alt="xcurenet" >
+			<img src="<c:url value="/img/logo_xcurenet.png"/>" alt="xcurenet">
 			<p class="mat16">
 				Venus EMASS AI, Venus/CS 3.0
 			</p>
