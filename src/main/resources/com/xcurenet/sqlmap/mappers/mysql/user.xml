@@ -439,66 +439,73 @@
 		FROM	UI_USER_GROUP
 		WHERE	GROUP_CODE = #{groupCode}
 	</delete>
-	
+
 	<!-- 사용자 그룹 아이템 목록 -->
 	<select id="getUserGroupItemList" parameterType="hashmap" resultType="userGroupVO">
 		SELECT	X.LIST_SEQ AS listSeq
-				, X.GROUP_CODE AS groupCode
-				, A.USER_ID AS userId
-				, A.USER_NM AS userNm
-				, A.COCD AS coCd
-				, B.CONM AS coNm
-				, A.GENERALCD AS generalCd
-				, C.GENERALNM AS generalNm
-				, A.BUSICD AS busiCd
-				, D.BUSINM AS busiNm
-				, A.DEPTCD AS deptCd
-				, E.DEPTNM AS deptNm
-				, A.JIKINCD AS jikinCd
-				, F.JIKINNM AS jikinNm
-				, A.JIKGUBCD AS jikgubCd
-				, G.JIKGUBNM AS jikgubNm
-				, CASE WHEN IFNULL(J.USER_ID,'N') != 'N' THEN 'Y' ELSE 'N' END AS ceo
-				, GROUP_CONCAT( DISTINCT 
-				<if test='encryptUseYN == "Y"'>
-				CAST(if(H.USER_EMAIL  is null, null, xcndec(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, H.USER_EMAIL )) AS CHAR)
-				</if>
-				<if test='encryptUseYN != "Y"'>
-				H.USER_EMAIL
-				</if> 
-				ORDER BY H.USER_EMAIL SEPARATOR ', ') AS userEmail
-				, GROUP_CONCAT( DISTINCT (I.USER_IP) ORDER BY INET6_ATON(I.USER_IP) SEPARATOR ', ') AS userIp
-		FROM	UI_USER_GROUP_LIST X, UI_USERS A
-				LEFT OUTER JOIN UI_CEO J ON A.USER_ID = J.USER_ID
-				LEFT OUTER JOIN UI_CO B ON A.COCD = B.COCD
-				LEFT OUTER JOIN UI_GENERAL C ON A.GENERALCD = C.GENERALCD
-				LEFT OUTER JOIN UI_BUSI D ON A.BUSICD = D.BUSICD
-				LEFT OUTER JOIN UI_DEPT E ON A.DEPTCD = E.DEPTCD
-				LEFT OUTER JOIN UI_JIKIN F ON A.JIKINCD = F.JIKINCD
-				LEFT OUTER JOIN UI_JIKGUB G ON A.JIKGUBCD = G.JIKGUBCD
-				LEFT OUTER JOIN UI_USER_EMAIL H ON A.USER_ID = H.USER_ID
-				LEFT OUTER JOIN UI_USER_IP I ON A.USER_ID = I.USER_ID
-		WHERE	X.GROUP_CODE = #{groupCode}
-		<if test='searchStr!=null and searchStr!=""'>
-			AND		(
-							X.USER_ID LIKE CONCAT('%', #{searchStr}, '%')
-						OR	A.USER_NM LIKE CONCAT('%', #{searchStr}, '%')
-						OR	
-							<if test='encryptUseYN == "Y"'>
-							if(H.USER_EMAIL  is null, null, xcndec(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, H.USER_EMAIL ))
-							</if>
-							<if test='encryptUseYN != "Y"'>
-							H.USER_EMAIL 
-							</if> 
-							LIKE CONCAT('%', #{searchStr}, '%')
-						OR	I.USER_IP LIKE CONCAT('%', #{searchStr}, '%')
-					)
+		, X.GROUP_CODE AS groupCode
+		, A.USER_ID AS userId
+		, A.USER_NM AS userNm
+		, A.COCD AS coCd
+		, B.CONM AS coNm
+		, A.GENERALCD AS generalCd
+		, C.GENERALNM AS generalNm
+		, A.BUSICD AS busiCd
+		, D.BUSINM AS busiNm
+		, A.DEPTCD AS deptCd
+		, E.DEPTNM AS deptNm
+		, A.JIKINCD AS jikinCd
+		, F.JIKINNM AS jikinNm
+		, A.JIKGUBCD AS jikgubCd
+		, G.JIKGUBNM AS jikgubNm
+		, CASE WHEN IFNULL(J.USER_ID,'N') != 'N' THEN 'Y' ELSE 'N' END AS ceo
+		, GROUP_CONCAT( DISTINCT
+		<if test='encryptUseYN == "Y"'>
+			CAST(if(H.USER_EMAIL  is null, null, xcndec(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, H.USER_EMAIL )) AS CHAR)
 		</if>
-		AND		X.USER_ID = A.USER_ID
-		GROUP	BY X.LIST_SEQ, X.GROUP_CODE, A.USER_ID, A.USER_NM, A.COCD, B.CONM, A.GENERALCD, C.GENERALNM, A.BUSICD, D.BUSINM, A.DEPTCD, E.DEPTNM, A.JIKINCD, F.JIKINNM, A.JIKGUBCD, G.JIKGUBNM, ceo
-    	ORDER BY X.LIST_SEQ
+		<if test='encryptUseYN != "Y"'>
+			H.USER_EMAIL
+		</if>
+		ORDER BY H.USER_EMAIL SEPARATOR ', ') AS userEmail
+		, GROUP_CONCAT( DISTINCT (I.USER_IP) ORDER BY INET6_ATON(I.USER_IP) SEPARATOR ', ') AS userIp
+		FROM UI_USER_GROUP_LIST X, UI_USERS A
+		LEFT OUTER JOIN UI_CEO J ON A.USER_ID = J.USER_ID
+		LEFT OUTER JOIN UI_CO B ON A.COCD = B.COCD
+		LEFT OUTER JOIN UI_GENERAL C ON A.GENERALCD = C.GENERALCD
+		LEFT OUTER JOIN UI_BUSI D ON A.BUSICD = D.BUSICD
+		LEFT OUTER JOIN UI_DEPT E ON A.DEPTCD = E.DEPTCD
+		LEFT OUTER JOIN UI_JIKIN F ON A.JIKINCD = F.JIKINCD
+		LEFT OUTER JOIN UI_JIKGUB G ON A.JIKGUBCD = G.JIKGUBCD
+		LEFT OUTER JOIN UI_USER_EMAIL H ON A.USER_ID = H.USER_ID
+		LEFT OUTER JOIN UI_USER_IP I ON A.USER_ID = I.USER_ID
+		WHERE X.GROUP_CODE = #{groupCode}
+		<if test='searchStr!=null and searchStr!=""'>
+			AND (
+			X.USER_ID LIKE CONCAT('%', #{searchStr}, '%')
+			OR A.USER_NM LIKE CONCAT('%', #{searchStr}, '%')
+			OR (
+			<if test='encryptUseYN == "Y"'>
+				if(H.USER_EMAIL  is null, null, xcndec(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, H.USER_EMAIL ))
+			</if>
+			<if test='encryptUseYN != "Y"'>
+				H.USER_EMAIL
+			</if>
+			LIKE CONCAT('%', #{searchStr}, '%')
+			)
+			OR I.USER_IP LIKE CONCAT('%', #{searchStr}, '%')
+			OR B.CONM LIKE CONCAT('%', #{searchStr}, '%') -- 추가적인 칼럼들을 필요에 따라 추가
+			OR C.GENERALNM LIKE CONCAT('%', #{searchStr}, '%')
+			OR D.BUSINM LIKE CONCAT('%', #{searchStr}, '%')
+			OR E.DEPTNM LIKE CONCAT('%', #{searchStr}, '%')
+			OR F.JIKINNM LIKE CONCAT('%', #{searchStr}, '%')
+			OR G.JIKGUBNM LIKE CONCAT('%', #{searchStr}, '%')
+			)
+		</if>
+		AND X.USER_ID = A.USER_ID
+		GROUP BY X.LIST_SEQ, X.GROUP_CODE, A.USER_ID, A.USER_NM, A.COCD, B.CONM, A.GENERALCD, C.GENERALNM, A.BUSICD, D.BUSINM, A.DEPTCD, E.DEPTNM, A.JIKINCD, F.JIKINNM, A.JIKGUBCD, G.JIKGUBNM, ceo
+		ORDER BY X.LIST_SEQ
 	</select>
-	
+
 	<!-- 사용자 그룹 아이템 목록 -->
 	<select id="getUserGroupUserList" parameterType="hashmap" resultType="userGroupVO">
 		SELECT 	A.USER_ID AS userId, 

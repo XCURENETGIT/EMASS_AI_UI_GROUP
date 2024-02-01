@@ -202,6 +202,7 @@ var eikon = {
         filterVal.conditions = conArray;
 
         detailSearchFlag = false;
+        ui.onBody('timeline-panel', 0, 60);
         ui.postJson({
             url: 'getMessengerGroupDetailSearch.xcn',
             xRootMtr: xrootmtr,
@@ -221,6 +222,7 @@ var eikon = {
                     checkList(searchOffset);
                 }
                 else{
+                    alert(nodataMsg)
                     $('#searchResult').html('0');
                     $('#selectCnt').html('0');
                     $('#searchResultArea').show();
@@ -229,9 +231,12 @@ var eikon = {
             },
             error: function (status, message) {
                 ui.alertMsg(message);
+
             },
             complete: function () {
                 searchFlag = false;
+                ui.off('timeline-panel');
+                HighSerarchlight();
             }
         });
     },
@@ -332,6 +337,7 @@ function getMessengerMessage(xRootmtr, srcip, usr_id, msgid) {
         },
         complete: function () {
             ui.off('timeline_list');
+            HighSerarchlight();
             searchFlag = false;
             setMessengerRead();
         }
@@ -1076,7 +1082,7 @@ function idIndicator(id) {
     return id.fReplaceWord('.', '\\.');
 }
 
-jQuery.fn.highlight = function (pat, type) {
+jQuery.fn.highlight2 = function(pat, type) {
     function innerHighlight(node, pat, type) {
         pat = pat.trim();
         var skip = 0;
@@ -1084,14 +1090,15 @@ jQuery.fn.highlight = function (pat, type) {
             var pos = node.data.toUpperCase().indexOf(pat);
             if (pos >= 0) {
                 var spannode = document.createElement('span');
-                spannode.name = 'spnHighlight';
-                if (type.indexOf('K') > -1) {
+                spannode.name='spnHighlight';
+                if ( type.indexOf('K') > -1) {
                     spannode.className = 'clsHighlightKwds';
-                } else {
+                }
+                else {
                     spannode.className = 'clsHighlight';
                 }
-                if (type.indexOf('B') > -1) {
-                    if (type.indexOf('K') > -1) {
+                if ( type.indexOf('B') > -1 ) {
+                    if ( type.indexOf('K') > -1) {
                         spannode.style.backgroundColor = '#FFAD5B';
                         spannode.style.color = '#000000';
                         spannode.style.fontWeight = 'bold';
@@ -1102,8 +1109,8 @@ jQuery.fn.highlight = function (pat, type) {
                     }
                 }
 
-                var sbit = node.splitText(pos);
-                sbit.splitText(pat.length);
+                var sbit = node.splitText( pos );
+                sbit.splitText( pat.length );
                 spannode.nodeValue = sbit.data;
                 var sbitclone = sbit.cloneNode(true);
                 spannode.appendChild(sbitclone);
@@ -1112,15 +1119,14 @@ jQuery.fn.highlight = function (pat, type) {
             }
         } else if (node.nodeType == 1 && node.childNodes && !/(script|style)/i.test(node.tagName)) {
             var cnt = node.childNodes.length;
-            if (node.childNodes.length > 1000) cnt = 1000;
-            for (var i = 0; i < cnt; ++i) {
+            if ( node.childNodes.length > 1000 ) cnt = 1000;
+            for ( var i = 0; i < cnt; ++i) {
                 i += innerHighlight(node.childNodes[i], pat, type);
             }
         }
         return skip;
     }
-
-    return this.each(function () {
+    return this.each(function() {
         innerHighlight(this, pat.toUpperCase(), type);
     });
 };
@@ -1133,7 +1139,7 @@ function HighlightGroup() {
 
             for (var i = 0; i < searchs.length; i++) {
                 if (searchs[i] == '') continue;
-                $(group_list_obj).highlight(searchs[i], 'BS');
+                $(group_list_obj).highlight2(searchs[i], 'BS');
             }
         }
     }, 100);
@@ -1147,7 +1153,23 @@ function Highlight() {
 
             for (var i = 0; i < searchs.length; i++) {
                 if (searchs[i] == '') continue;
-                $(timeline_list_obj).highlight(searchs[i], 'BS');
+                $(timeline_list_obj).highlight2(searchs[i], 'BS');
+            }
+        }
+    }, 100);
+}
+
+
+function HighSerarchlight( ) {
+    setTimeout(function(){
+        var searchs = $('#searchMsgStrInput').val().split(/\||\+|\s|\*|\"/);
+
+        if ( searchs.length > 0 ){
+            var timeline_list_obj =  $("#timeline_list").find('div');
+            console.log(timeline_list_obj)
+            for ( var i=0 ; i < searchs.length ; i++ ) {
+                if ( searchs[i] == '' ) continue;
+                $( timeline_list_obj ).highlight2(searchs[i], 'BS');
             }
         }
     }, 100);
