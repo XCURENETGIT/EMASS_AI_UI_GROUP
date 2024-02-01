@@ -385,7 +385,7 @@ public class CollectionController {
 		String startDt = Common.nvl(param.get("startDt"));
 		String endDt = Common.nvl(param.get("endDt"));
 		String searchStr = Common.nvl(param.get("searchStr"));
-		int limit = Common.nvz(param.get("limit"), 100000);
+		int limit = Common.nvz(param.get("limit"), 10000);
 
 		SolrQuery sq = new SolrQuery();
 		String query = String.format("+ctime:[%s TO %s] +userkey:\"%s\"", startDt, endDt, userkey);
@@ -424,7 +424,7 @@ public class CollectionController {
 		String startDt = Common.nvl(param.get("startDt"));
 		String endDt = Common.nvl(param.get("endDt"));
 		String searchStr = Common.nvl(param.get("searchStr"));
-		int limit = Common.nvz(param.get("limit"), 100000);
+		int limit = Common.nvz(param.get("limit"), 10000);
 
 		SolrQuery sq = new SolrQuery();
 		String query = String.format("+ctime:[%s TO %s] +userkey:\"%s\"", startDt, endDt, userkey);
@@ -469,7 +469,7 @@ public class CollectionController {
 		String usr_id = Common.nvl(param.get("usr_id"));
 		String startDt = Common.nvl(param.get("startDt"));
 		String endDt = Common.nvl(param.get("endDt"));
-		int limit = Common.nvz(param.get("limit"), 100000);
+		int limit = Common.nvz(param.get("limit"), 10000);
 
 		SolrQuery sq = new SolrQuery();
 		String query = String.format("+ctime:[%s TO %s] +userkey:\"%s\"", startDt, endDt, userkey);

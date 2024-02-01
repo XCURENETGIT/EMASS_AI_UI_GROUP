@@ -1,9 +1,6 @@
 package com.xcurenet.common.pdf;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.util.List;
 
@@ -36,6 +33,7 @@ public class PdfWriterEMASS {
 	private OutputStream out;
 
 	private PdfPTable table;
+
 
 	private BaseFont baseFont = BaseFont.createFont(this.getClass().getResource("").getPath() + "../../files/font/dotum.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
 

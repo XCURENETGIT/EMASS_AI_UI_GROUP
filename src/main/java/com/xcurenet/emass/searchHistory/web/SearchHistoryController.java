@@ -96,7 +96,7 @@ public class SearchHistoryController {
 		sq.setParam("facet.field", "ctimeYYYYMMDDHH");
 
 		sq.setParam("facet.offset", String.valueOf(Common.nvz(param.get("offset"), 0)));
-		sq.setParam("facet.group", String.valueOf(Common.nvz(param.get("limit"), 100000)));
+		sq.setParam("facet.group", String.valueOf(Common.nvz(param.get("limit"), 10000)));
 		sq.setParam("facet.list", true);
 		sq.setParam("facet.mincount", "1");
 		sq.setStart(Common.nvz(param.get("offset"), 0));

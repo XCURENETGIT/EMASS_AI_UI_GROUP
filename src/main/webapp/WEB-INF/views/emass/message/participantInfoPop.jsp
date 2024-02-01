@@ -43,19 +43,22 @@ function getParticipantInfo( flag ){
 	}
 	grid.on();
     var data = {
-        xRootMtr : xrootmtr,
+        xrootmtr : xrootmtr,
         srcip: srcip,
         usr_id: usr_id,
         startDt: startDt,
         endDt: endDt,
         searchStr: searchStr,
-        groupField: 'sender_str'
+        groupField: ''
     };
 	ui.get({
 		url : 'getMessengerGroupUserList.xcn',
-        searchParam : JSON.stringify(data),
+        xrootmtr : data.xrootmtr,
+        startDt : data.startDt+"000000",
+        endDt : data.endDt+"235959",
+        groupField : 'userkey',
 		success : function(data, total) {
-			grid.setData(data.emass);
+			grid.setData(data.groups);
 		},
 		error : function(status, message) {
 			ui.alertMsg(message);

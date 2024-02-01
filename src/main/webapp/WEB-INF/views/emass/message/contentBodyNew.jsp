@@ -356,10 +356,10 @@
 		}
 
 		function getParticipantInfo(){
-			var startDt = $('#startdatepickerBody').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
-			var endDt = $('#enddatepickerBody').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
+			var startDt = $('#startdatepickerBody').data("DateTimePicker").date().format('YYYYMMDD');
+			var endDt = $('#enddatepickerBody').data("DateTimePicker").date().format('YYYYMMDD');
 
-			var url    = '<c:url value="/ems/participantInfoPop.do?xrootmtr='+xRootMtr+'&srcip='+srcip+'&usr_id='+usr_id+'&startDt='+startDt+'&endDt='+endDt+'"/>';
+            var url    = '<c:url value="/ems/participantInfoPop.do?xrootmtr='+xRootMtr+'&srcip='+srcip+'&usr_id='+usr_id+'&startDt='+startDt+'&endDt='+endDt+'"/>';
 			var pop = fnOpenWindow(url, 'participant', 1015, 450, 'resize');
 		}
 
@@ -385,17 +385,23 @@
 			<div class="input-group" style="width:50px;font-weight: bold;">
 				<s:message code="condition.period"/>
 			</div>
+<%--			<div style="display: flex;">--%>
+<%--			<div id="startdatepickerBody"><input type="date" id="startDtAdd" style="width: 110px;">--%>
+<%--				<span class="hyphen">~</span></div>--%>
+<%--			<div id="enddatepickerBody"><input type="date" id="endDtAdd" style="width: 110px;"></div>--%>
+<%--			</div>--%>
+
 			<div class="input-group">
 				<div class="input-group date" id="startdatepickerBody" style="width:170px;">
 					<input type="text" id="startDtAdd" class="input-sm form-control" />
-					<span class="input-group-addon" style="padding: 0px 5px;"> <span class="glyphicon glyphicon-calendar"></span></span>
+					<span class="input-group-addon" style="padding: 0px 5px;"></span>
 				</div>
 			</div>
 			<span>~</span>
 			<div class="input-group">
 				<div class="input-group date" id="enddatepickerBody" style="width:170px;">
 					<input type="text" id="endDtAdd" class="input-sm form-control"/>
-					<span class="input-group-addon" style="padding: 0px 5px;"><span class="glyphicon glyphicon-calendar"></span></span>
+					<span class="input-group-addon" style="padding: 0px 5px;"></span></span>
 				</div>
 			</div>
 		</div>

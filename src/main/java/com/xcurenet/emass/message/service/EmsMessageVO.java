@@ -50,6 +50,7 @@ public class EmsMessageVO {
 	private String siteAttr;
 	private String siteCode;
 	private String userId;
+	private String userkey;
 	private String name;
 	private String coCd;
 	private String ipCocd;

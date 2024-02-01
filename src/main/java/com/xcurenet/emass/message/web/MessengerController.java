@@ -328,6 +328,8 @@ public class MessengerController {
 
 	public MessengerEdcGroupVO getMessengerMsgTotal(final HttpServletRequest request, boolean original) throws Exception {
 		SolrQuery totalQuery = getMessengerMsgTotalQuery(request);
+		System.out.println("totalquery: "+totalQuery);
+		System.out.println("orginal: "+original);
 		MessengerEdcGroupVO result = solrEdcService.getMessengerGroupList(totalQuery, Common.getAdminId(request), true, original);
 		return result;
 	}
@@ -337,9 +339,10 @@ public class MessengerController {
 		String xRootMtr = Common.nvl(param.get("xRootMtr"));
 		String srcip = Common.nvl(param.get("srcip"));
 		String usr_id = Common.nvl(param.get("usr_id"));
+		String usrId = Common.nvl(param.get("usrId"));
 		String startDt = Common.nvl(param.get("startDt"));
 		String endDt = Common.nvl(param.get("endDt"));
-		int limit = Common.nvz(param.get("limit"), 100000);
+		int limit = Common.nvz(param.get("limit"), 10000);
 
 		SolrQuery sq = new SolrQuery();
 		String query = String.format("+ctime:[%s TO %s] +xrootmtr:\"%s\"", startDt, endDt, xRootMtr);
@@ -347,6 +350,7 @@ public class MessengerController {
 //		if(Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
 //
 		if(Common.isNotEmpty(usr_id)) query += String.format(" +userkey:\"%s\"", usr_id);
+		if(Common.isNotEmpty(usrId)) query += String.format(" +usrId:\"%s\"", usrId);
 
 		sq.setQuery(query + MESSENGER);
 		sq.setRows(limit);
@@ -365,7 +369,7 @@ public class MessengerController {
 		String startDt = Common.nvl(param.get("startDt"));
 		String endDt = Common.nvl(param.get("endDt"));
 		String searchStr = Common.nvl(param.get("searchStr"));
-		int limit = Common.nvz(param.get("limit"), 100000);
+		int limit = Common.nvz(param.get("limit"), 10000);
 
 		SolrQuery sq = new SolrQuery();
 		String query = String.format("+ctime:[%s TO %s] +xrootmtr:\"%s\"", startDt, endDt, xRootMtr);
@@ -407,7 +411,7 @@ public class MessengerController {
 		String startDt = Common.nvl(param.get("startDt"));
 		String endDt = Common.nvl(param.get("endDt"));
 		String searchStr = Common.nvl(param.get("searchStr"));
-		int limit = Common.nvz(param.get("limit"), 100000);
+		int limit = Common.nvz(param.get("limit"), 10000);
 
 		SolrQuery sq = new SolrQuery();
 		String query = String.format("+ctime:[%s TO %s] +xrootmtr:\"%s\"", startDt, endDt, xRootMtr);
@@ -618,10 +622,11 @@ public class MessengerController {
 
 	public MessengerGroupUserVO getMessengerGroupUserList(final HttpServletRequest request, final int rows) throws IOException, SolrServerException {
 		JSONObject param = Common.getParam(request);
-		String xRootMtr = Common.nvl(param.get("xRootMtr"));
-		String groupField = Common.nvl(param.get("groupField"), "userid");
+		String xrootmtr = Common.nvl(param.get("xrootmtr"));
+		String groupField = Common.nvl(param.get("groupField"), "userkey");
 		String srcip = Common.nvl(param.get("srcip"));
-		String usr_id = Common.nvl(param.get("userid"));
+		String userid = Common.nvl(param.get("userid"));
+		String userkey = Common.nvl(param.get("usr_id"));
 		String startDt = Common.nvl(param.get("startDt"));
 		String endDt = Common.nvl(param.get("endDt"));
 		String searchStr = Common.nvl(param.get("searchStr"));
@@ -631,10 +636,11 @@ public class MessengerController {
 		String query = "";
 		if(Common.isNotEmpty(startDt) && Common.isNotEmpty(endDt)) query += String.format("+ctime:[%s TO %s] ", startDt, endDt);
 
-		query += String.format("+xrootmtr:\"%s\" ", xRootMtr) + MESSENGER;
+		query += String.format("+xrootmtr:\"%s\" ", xrootmtr) + MESSENGER;
 
 		if(Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
-		if(Common.isNotEmpty(usr_id)) query += String.format(" +usr_id:\"%s\"", usr_id);
+		if(Common.isNotEmpty(userid)) query += String.format(" +usr_id:\"%s\"", userid);
+		if(Common.isNotEmpty(userkey)) query += String.format(" +userkey:\"%s\"", userkey);
 		if(Common.isNotEmpty(searchStr)) query += String.format(" +body:(*%s*) ", searchStr);
 
 		sq.setQuery(query);

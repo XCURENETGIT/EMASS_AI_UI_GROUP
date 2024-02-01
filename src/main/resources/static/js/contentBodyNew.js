@@ -720,17 +720,17 @@ function getGroupDetail(rootmtr, usrId){
 	if(usrId == undefined ) usrId = usr_id;
 	searchFlag = true;
 
-	var startDt = $('#startdatepickerBody').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
-	var endDt = $('#enddatepickerBody').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
+	var startDt = $('#startdatepickerBody').data("DateTimePicker").date().format('YYYYMMDD');
+	var endDt = $('#enddatepickerBody').data("DateTimePicker").date().format('YYYYMMDD');
 
 	ui.onBody('content_body', 0, 0);
 	ui.get({
 		url : 'getMessengerGroupUserList.xcn',
-		xRootMtr : rootmtr,
-		startDt : startDt,
-		endDt : endDt,
-		usr_id : usr_id,
-		groupField : 'usr_id',
+		xrootmtr : rootmtr,
+		startDt : startDt+"000000",
+		endDt : endDt+"235959",
+		userkey : usr_id,
+		groupField : 'userkey',
 		success : function(groupData, total) {
 			getUsersInfo( groupData.groups, rootmtr );
 
@@ -740,9 +740,9 @@ function getGroupDetail(rootmtr, usrId){
 				xRootMtr : rootmtr,
 				groupField : 'usr_id',
 				srcip : srcip,
-				startDt:startDt,
-				endDt:endDt,
-				usr_id : usrId,
+				startDt:startDt+"000000",
+				endDt:endDt+"235959",
+				usrId : usrId,
 				readYn : 'Y',
 				success : function(data, total) {
 					//$('#small_txt').prop('disabled', true);

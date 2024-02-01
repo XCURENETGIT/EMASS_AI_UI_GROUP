@@ -54,11 +54,9 @@ public class PdfController {
 			String dt = Common.getCurrentDate();
 			Common.mkdirs(Common.TMP_PATH + dt);
 			File file = new FileRenamePolicy().rename(new File(Common.TMP_PATH + dt + "/export_pdf_" + Common.getCurrentTime("yyyyMMdd_HHmmss") + ".pdf"));
-			PdfWriter pdfWriter = new PdfWriter(title, headerArray, bodyArray, new FileOutputStream(file));
-			log.info("pdfWriter: "+pdfWriter);
+			new PdfWriter(title, headerArray, bodyArray, new FileOutputStream(file));
 			if (Common.isNotEmpty(menuId)) {
 				AuditRequestVO auditVo = new AuditRequestVO();
-				log.info("auditVo: "+auditVo);
 				auditVo.setPMenuId(pMenuId);
 				auditVo.setMenuId(menuId);
 				auditVo.setOperation(Operation.DOWNLOAD.getOperation());
@@ -71,10 +69,12 @@ public class PdfController {
 			}
 			return new XcnResponseVO(XcnRspCode.OK, file.getAbsolutePath());
 		} catch (Exception e) {
+			log.error("pdf 업로드 오류  {}", e.getMessage());
 			e.printStackTrace();
 			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("java.error.create.pdf", request));
 		}
 	}
+
 
 
 	@RequestMapping(value = "/utils/ReportpdfWriter.do")
