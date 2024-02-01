@@ -80,7 +80,7 @@ public class PdfWriter {
 		this.out = out;
 
 		try {
-		/*	Document doc = new Document(PageSize.A4);*/
+			/*	Document doc = new Document(PageSize.A4);*/
 			open_re();
 			writePage();
 			doc.newPage();

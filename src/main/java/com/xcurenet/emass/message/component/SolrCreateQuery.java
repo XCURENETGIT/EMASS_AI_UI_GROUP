@@ -23,6 +23,8 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Slf4j
 @Data
@@ -638,14 +640,21 @@ public class SolrCreateQuery {
 
 	public SolrCreateQuery setUrl(String url, String url_not) {
 		if (Common.isEmpty(url)) return this;
-
+		url = removeSpecialCharacters(url);
 		StringBuffer queryStr = new StringBuffer();
-		queryStr.append(String.format("%s:%s", HOST, createOrQueryAsterisk(url))).append(SPACE);
-		queryStr.append(String.format("%s:%s", HOST_STR, createOrQueryAsterisk(url))).append(SPACE);
+
+		queryStr.append(String.format("%s:%s", HOST, createOrQueryAsteriskAll(url))).append(SPACE);
+		queryStr.append(String.format("%s:%s", HOST_STR, createOrQueryAsteriskAll(url))).append(SPACE);
 
 		if(Common.isEquals(url_not, "Y")) return addQuery(String.format("%s(%s)", EXCEPT_QUERY, queryStr.toString()));
 		else return addQuery(String.format("%s(%s)", AND_QUERY, queryStr.toString()));
 	}
+
+	public static String removeSpecialCharacters(String input) {
+		String regex = "([+\\-\\&\\|!\\(\\)\\{\\}\\[\\]\\^\"~\\*\\?:\\/\\\\])";
+		return input.replaceAll(regex, "");
+	}
+
 
 	public SolrCreateQuery setAttach(String attachYn, String attachs) {
 		return setAttach(attachYn, attachs, "");
