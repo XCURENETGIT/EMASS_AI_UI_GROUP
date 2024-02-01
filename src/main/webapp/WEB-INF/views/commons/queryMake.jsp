@@ -1,12 +1,13 @@
 <%@page import="com.xcurenet.common.util.Common"%>
 <%@ page import="com.xcurenet.common.util.config.Config" %>
+<%@ page import="static com.xcurenet.common.util.config.Config.isOCR" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 	String firstAdminYn = Common.getFirstAdminYn(session);
 	String statType = Common.nvl(request.getParameter("statType"));
-
+	boolean consent = Config.getBoolean("consent.menu.enable");
 	String recvsJikgub = Config.getString("recvs.jikgub.use");
 %>
 <!DOCTYPE html>
@@ -162,9 +163,9 @@
 			"to", "cc", "bcc", "recvs_name", "tname", "cname", "bname", "ocr_attach", "pi_DRM",
 			"pi_total", "pi_ID", "pi_EF", "pi_PN", "pi_FN", "pi_DN", "pi_SN", "pi_CN", "pi_EC"];
 
-		<%if( consent && Common.isEquals(firstAdminYn, "N") ){ %>
-		isConsent = true;
-		<%}%>
+        <%if( consent && Common.isEquals(firstAdminYn, "N") ){ %>
+        isConsent = true;
+        <%}%>
 
 		var easyDateStartFlag = false;
 		var easyDateEndFlag = false;
@@ -325,6 +326,7 @@
 				opener.getSearchQuery();
 
 				if(isConsent) {
+                    onsole.log("4: "+consent);
 					if( $('#consentNo').val() == ''){
 
 						opener.$('#consentNo').val('');

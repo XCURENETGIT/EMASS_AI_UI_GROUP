@@ -1406,7 +1406,9 @@
                 var searchType = $('#searchType').val();
                 var consentNo = grid.getValue(0, 'consentNo');
                 if( searchType != 'L'){
-                    if(isConsent( ) && consentNo == '' && '<%=adminType%>' != 'C'){
+                    console.log(isConsent());
+
+                    if(isConsent() && consentNo == '' && '<%=adminType%>' != 'C'){
                         alert('<s:message code="download.msg.consent"/>');
                         return false;
                     }
