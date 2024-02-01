@@ -3255,7 +3255,7 @@
 									<input id="insaFormatInput" style="width: 330px;" type="text" value="" data-format="name,emaile,busi,dept,jikgub,ip"/>
 									<img src="<c:url value="/img/message/exclamation.png"/>" id="confError" style="display: none; padding-bottom:2px;" title="<s:message code="message.insa.error"/>">
 									<img src="<c:url value="/img/message/accept.png"/>" id="confAccept" style="display: none; padding-bottom:2px;" title="<s:message code="message.insa.ok"/>">
-									<span style="padding-left: 7px; margin-top:-1px; id="insaFormatOk" class="btn01"> <s:message code="common.msg.apply"/> </span>
+									<span style="padding-left: 7px; margin-top:-1px;" id="insaFormatOk" class="btn01"> <s:message code="common.msg.apply"/> </span>
 									<span style="padding-left: 7px; margin-top:-1px;" id="insaFormatClear" class="btn02"> <s:message code="common.msg.remove"/> </span>
 								</span>
                                         <span style="width: 435px; display:block;">
