@@ -174,7 +174,7 @@
 			cursor: pointer;
 		}
 
-		div#periodBodyMenu {position:absolute; visibility:hidden; top:0;text-align: left;z-index: 999;border: 1px solid #555;background-color: #DCE7F3;}
+		div#periodBodyMenu {position:absolute; visibility:hidden; top:0;text-align: left;z-index: 999;border: 1px solid #555;background-color: #fff; font-size: 14px;}
 		.ellipsis {
 			white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 		}
@@ -367,11 +367,11 @@
 </head>
 <body>
 <div id="periodBodyMenu">
-	<div style="height:30px;background-color:#337ab7;color:#fff;padding-left:10px;line-height:30px;font-weight: bold;cursor:default;">
+	<div style="height:30px;background-color:black;color:#fff;padding-left:10px;line-height:30px;font-weight: bold;cursor:default;">
 		<div style="float:left;width:200px;">
 			<i class="glyphicon glyphicon-calendar"></i>&nbsp;<s:message code="filterInfo.period.setting"/>
 		</div>
-		<div style="float:right;padding-right:8px;">
+		<div style="float:right;padding-right:8px; padding-top:5px;">
 			<span class="glyphicon glyphicon-remove" style="cursor:pointer;" id="periodBodyMenuCloseBtn"></span>
 		</div>
 	</div>
@@ -383,31 +383,14 @@
 		</div>
 		<div class="form-group form-inline" style="width:100%;">
 			<div class="input-group" style="width:50px;font-weight: bold;">
-				<s:message code="condition.period"/>
-			</div>
-<%--			<div style="display: flex;">--%>
-<%--			<div id="startdatepickerBody"><input type="date" id="startDtAdd" style="width: 110px;">--%>
-<%--				<span class="hyphen">~</span></div>--%>
-<%--			<div id="enddatepickerBody"><input type="date" id="endDtAdd" style="width: 110px;"></div>--%>
-<%--			</div>--%>
-
-			<div class="input-group">
-				<div class="input-group date" id="startdatepickerBody" style="width:170px;">
-					<input type="text" id="startDtAdd" class="input-sm form-control" />
-					<span class="input-group-addon" style="padding: 0px 5px;"></span>
-				</div>
-			</div>
-			<span>~</span>
-			<div class="input-group">
-				<div class="input-group date" id="enddatepickerBody" style="width:170px;">
-					<input type="text" id="endDtAdd" class="input-sm form-control"/>
-					<span class="input-group-addon" style="padding: 0px 5px;"></span></span>
-				</div>
-			</div>
+				<s:message code="condition.period"/></div>
+			<div id="startdatepickerBody" style="display: inline-block"><input type="date" id="startDtAdd" style="width: 140px;">
+				<span class="hyphen">~</span></div>
+			<div id="enddatepickerBody" style="display: inline-block"><input type="date" id="endDtAdd" style="width: 140px;"></div>
 		</div>
 	</div>
 	<div style="text-align: center;padding-bottom: 15px;">
-		<button type="button" class="btn btn-sm btn-primary" accesskey="T" id="dateSearchBody" style="font-size:12px;" onclick="getGroupDetail();"><i class="glyphicon glyphicon-search"></i>&nbsp;<s:message code="common.messenger.all.view"/></button>
+		<button type="button" class="btn01" accesskey="T" id="dateSearchBody" style="font-size:12px;" onclick="getGroupDetail();"><i class="glyphicon glyphicon-search"></i>&nbsp;<s:message code="common.messenger.all.view"/></button>
 	</div>
 </div>
 <div class="msgBody">

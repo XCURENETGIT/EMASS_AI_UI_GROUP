@@ -117,16 +117,16 @@ $(document).ready(function(){
 
 	var dateObj = new Date();
 	$('#startdatepickerBody').datetimepicker({
-		format: 'YYYY-MM-DD HH:mm:ss',
+		format: 'YYYY-MM-DD',
 		locale: 'ko',
 		sideBySide: true,
 		defaultDate: moment(new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()-7 ) )
 	});
 	$('#enddatepickerBody').datetimepicker({
-		format: 'YYYY-MM-DD HH:mm:ss',
+		format: 'YYYY-MM-DD',
 		locale: 'ko',
 		sideBySide: true,
-		defaultDate: moment(new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), 23, 59, 59 ) )
+		defaultDate: moment(new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate() ) )
 	});
 
 	$(document).on('click', '#headerBtn', function(){
@@ -333,8 +333,8 @@ $(document).ready(function(){
 		var url = contextRoot + '/getEmassBodySave.xcn?msgId=' + msgId + '&userCharset=' + charset + '&print=Y';
 
 		if( detailFlag ){
-			var startDt = $('#startdatepickerBody').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
-			var endDt = $('#enddatepickerBody').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
+			var startDt = $('#startdatepickerBody').data("DateTimePicker").date().format('YYYYMMDD');
+			var endDt = $('#enddatepickerBody').data("DateTimePicker").date().format('YYYYMMDD');
 
 			url = contextRoot + '/getMessengerGroupAllSave.xcn?msgId=' + msgId + '&xRootMtr=' + xRootMtr + '&srcip=' + srcip+'&startDt='+startDt+'&endDt='+endDt+'&groupField=usr_id&print=Y&usr_id=' + usr_id;
 		}
@@ -363,8 +363,8 @@ $(document).ready(function(){
 
 		//if( detailFlag ) url = '<c:url value="/getMessengerGroupAllSave.xcn?msgId='+msgId+'&xRootMtr='+xRootMtr+'&srcip='+srcip+'"/>';
 		if( detailFlag ){
-			var startDt = $('#startdatepickerBody').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
-			var endDt = $('#enddatepickerBody').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
+			var startDt = $('#startdatepickerBody').data("DateTimePicker").date().format('YYYYMMDD');
+			var endDt = $('#enddatepickerBody').data("DateTimePicker").date().format('YYYYMMDD');
 
 			url = contextRoot + '/getMessengerGroupAllSave.xcn?msgId=' + msgId + '&xRootMtr=' + xRootMtr + '&srcip=' + srcip+'&startDt='+startDt+'&endDt='+endDt+'&groupField=usr_id&usr_id=' + usr_id;
 		}
@@ -677,13 +677,16 @@ function getAppendGroupBody(){
 	if( !isGroupMessenger()) return '';
 
 	var str = '<br/><br/><br/><br/>';
-	str+='<div class="appendClass" style="width:100%;text-align: center;font-size:13px;">';
-	str+='<img src="' + contextRoot + '/img/paper.png" width="64px" height="64px"><br/>';
-	str+='	<span style="line-height:25px;">'+contentBodyDivJS.thisMsgAllChat+'</span><br/>';
-	str+='	<span style="line-height:25px;">'+contentBodyDivJS.inputDate+'</span><br/>';
-	str+='	<a href="javascript:void(0);" target="_self" onclick="selectGroupDetail();">'+contentBodyDivJS.allMsgView+'</a>';
-	str+='</div>';
-
+	str += '<div class="appendClass" style="width:100%; text-align: center; font-size:13px;">';
+	str += '<div style="width:100%; text-align: center; font-size:13px; display: inline-block;">';
+	str += '<div style="display: inline-block;">';
+	str += '<img src="' + contextRoot + '/img/paper.png" width="64px" height="64px"><br/>';
+	str += '</div>';
+	str += '</div>';
+	str += '<span style="line-height:25px;">' + contentBodyDivJS.thisMsgAllChat + '</span><br/>';
+	str += '<span style="line-height:25px;">' + contentBodyDivJS.inputDate + '</span><br/>';
+	str += '<a href="javascript:void(0);" target="_self" onclick="selectGroupDetail();">' + contentBodyDivJS.allMsgView + '</a>';
+	str += '</div>';
 	var appendMsg = '';
 	if(svc.indexOf('J') == 3 ){
 		appendMsg = contentBodyDivJS.chatJoin;
@@ -708,8 +711,8 @@ function selectGroupDetail(){
 	var ctime = $('#ctimeTd').text();
 	var dateObj = new Date(ctime);
 
-	$('#startdatepickerBody').data("DateTimePicker").date( new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), 00, 00, 00 ) );
-	$('#enddatepickerBody').data("DateTimePicker").date( new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), 23, 59, 59 ) );
+	$('#startdatepickerBody').data("DateTimePicker").date( new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()) );
+	$('#enddatepickerBody').data("DateTimePicker").date( new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()) );
 
 	showRPeriodBody(($(window).width()/2)-220, $(window).height()/2-150);
 }
@@ -820,16 +823,17 @@ function getUsersInfo( data, xrootmtr){
 	var str = '';
 	for(var i=0; i<data.length; i++){
 		if(data[i].groupName == 'sender_str') continue;
+		console.log(data)
 		str +='<span class="userInfoSpan" sname="'+nvl(data[i].sname)+'" sender="'+nvl(data[i].sender)+'" srcip="'+nvl(data[i].srcip)+'" recvid="'+nvl(data[i].usr_id)+'" recvip="" recvemail="" recvname="'+nvl(data[i].name)+'" ';
-		str +='recvconm="'+nvl(data[i].conm)+'" recvbusinm="'+nvl(data[i].businm)+'" recvsuborgnm="'+nvl(data[i].suborgnm)+'" recvdeptnm="'+nvl(data[i].deptnm)+'" recvjikgubnm="'+nvl(data[i].jikgubnm)+'" >'+nvl(data[i].name, data[i].usr_id)+'; </span>';
+		str +='recvconm="'+nvl(data[i].conm)+'" recvbusinm="'+nvl(data[i].businm)+'" recvsuborgnm="'+nvl(data[i].suborgnm)+'" recvdeptnm="'+nvl(data[i].deptnm)+'" recvjikgubnm="'+nvl(data[i].jikgubnm)+'" >'+nvl(data[i].srcip)+'; </span>';
 	}
 	$('#participantDiv').html(str);
 }
 
 function printGroupList(detailDataSet, users){
 	var str = '<div class="appendClass" style="width:100%;text-align:right;font-size:12px;padding-bottom:2px;">';
-	str += '<button class="msg_button" style="margin-right: 5px;" title='+contentBodyDivJS.participantInfo+' id="participantInfo" target="_parent" onclick="getParticipantInfo(\'\');"><i class="fa fa-users"></i> '+contentBodyDivJS.participantInfo+'</button>';
-	str += '<button class="msg_button" title='+contentBodyDivJS.backView+' id="returnMsg" target="_parent" class="fullSizeIco" onclick="getBody(\'\');"><i class="fa fa-undo"></i> '+contentBodyDivJS.backView+'</button>';
+	str += '<button class="btn01" style="margin-right: 5px;" title='+contentBodyDivJS.participantInfo+' id="participantInfo" target="_parent" onclick="getParticipantInfo(\'\');"><i class="fa fa-users"></i> '+contentBodyDivJS.participantInfo+'</button>';
+	str += '<button class="btn01" title='+contentBodyDivJS.backView+' id="returnMsg" target="_parent" class="fullSizeIco" onclick="getBody(\'\');"><i class="fa fa-undo"></i> '+contentBodyDivJS.backView+'</button>';
 	str += '</div>';
 	str += '<table class="g_request">';
 	str += '	<colgroup>';
