@@ -338,7 +338,6 @@
 			overlap : overlapUse,
 			success : function(data, total) {
 				searchedFlag = true;
-                console.log(data.emass);
 				grid.appendData(data.emass);
 				if ( grid.loadingPage == 0 ) grid.Select(-1,-1);
 
@@ -942,7 +941,7 @@
 		});
 		grid.colAdd('ctimeFormat', '<s:message code="condition.date"/>', 130, 'center', false, 'nomal');
 		grid.colAdd('user', '<s:message code="consent.user"/>', 120, 'center', false, 'link');
-		grid.colAdd('usr_id', '<s:message code="common.msg.account"/>', 110, 'center', false, 'nomal');
+		grid.colAdd('usrId', '<s:message code="common.msg.account"/>', 110, 'center', false, 'nomal');
 		grid.colAdd('businm', '<s:message code="common.org.busi"/>', 120, 'center', true, 'nomal');
 		grid.colAdd('ip_businm', '<s:message code="message.actual.business"/>', 120, 'center', true, 'nomal');
 		grid.colAdd('deptnm', '<s:message code="common.org.dept"/>', 120, 'center', false, 'nomal');

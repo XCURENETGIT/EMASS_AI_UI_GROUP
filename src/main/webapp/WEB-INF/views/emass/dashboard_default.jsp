@@ -40,22 +40,24 @@
 <title>EMASS AI - Dashboard</title>
 <script type="text/javascript">
 
+
+
     Highcharts.setOptions({
         chart: {
             type: 'column',
-            marginTop : 15,
-            marginBottom : 60,
+            marginTop: 15,
+            marginBottom: 60,
             spacingBottom: 0
         },
-        global : { useUTC : false },
+        global: {useUTC: false},
         gridLineColor: '#fff',
         colors: ['#80599F', '#656C7C', '#598AD3', '#D35976', '#DDDDDD', '#bb6ecb', '#439851', '#33a0c4', '#7558cb', '#97b420'],
         lang: {
-            months: [ '<s:message code="common.january"/>', '<s:message code="common.february"/>', '<s:message code="common.march"/>', '<s:message code="common.april"/>', '<s:message code="common.may"/>', '<s:message code="common.june"/>', '<s:message code="common.july"/>', '<s:message code="common.august"/>', '<s:message code="common.september"/>', '<s:message code="common.october"/>', '<s:message code="common.november"/>', '<s:message code="common.december"/>' ],
-            shortMonths : [ '<s:message code="common.january"/>', '<s:message code="common.february"/>', '<s:message code="common.march"/>', '<s:message code="common.april"/>', '<s:message code="common.may"/>', '<s:message code="common.june"/>', '<s:message code="common.july"/>', '<s:message code="common.august"/>', '<s:message code="common.september"/>', '<s:message code="common.october"/>', '<s:message code="common.november"/>', '<s:message code="common.december"/>' ],
-            weekdays : [ '<s:message code="common.sunday"/>', '<s:message code="common.monday"/>', '<s:message code="common.tuesday"/>', '<s:message code="common.wednesday"/>', '<s:message code="common.thursday"/>', '<s:message code="common.friday"/>', '<s:message code="common.saturday"/>' ],
-            contextButtonTitle : '<s:message code="common.msg.char_type"/>',
-            thousandsSep : ','
+            months: ['<s:message code="common.january"/>', '<s:message code="common.february"/>', '<s:message code="common.march"/>', '<s:message code="common.april"/>', '<s:message code="common.may"/>', '<s:message code="common.june"/>', '<s:message code="common.july"/>', '<s:message code="common.august"/>', '<s:message code="common.september"/>', '<s:message code="common.october"/>', '<s:message code="common.november"/>', '<s:message code="common.december"/>'],
+            shortMonths: ['<s:message code="common.january"/>', '<s:message code="common.february"/>', '<s:message code="common.march"/>', '<s:message code="common.april"/>', '<s:message code="common.may"/>', '<s:message code="common.june"/>', '<s:message code="common.july"/>', '<s:message code="common.august"/>', '<s:message code="common.september"/>', '<s:message code="common.october"/>', '<s:message code="common.november"/>', '<s:message code="common.december"/>'],
+            weekdays: ['<s:message code="common.sunday"/>', '<s:message code="common.monday"/>', '<s:message code="common.tuesday"/>', '<s:message code="common.wednesday"/>', '<s:message code="common.thursday"/>', '<s:message code="common.friday"/>', '<s:message code="common.saturday"/>'],
+            contextButtonTitle: '<s:message code="common.msg.char_type"/>',
+            thousandsSep: ','
         },
         xAxis: {
             dateTimeLabelFormats: {
@@ -64,10 +66,10 @@
         },
         yAxis: {
             gridLineColor: '#333',
-            gridLineWidth : 0.1
+            gridLineWidth: 0.1
         }
     });
-var dashCondition = {
+    var dashCondition = {
         "searchStr": "",
         "searchField": "",
         "serviceType": "",
@@ -107,6 +109,32 @@ var dashCondition = {
         "sizeType": ""
     };
     $(document).ready(function() {
+        function makePeriod(dashCondition) {
+            dashCondition = JSON.parse(dashCondition);
+            var startDtSelect = dashCondition.startDateSelect;
+            var startTimeSelect = dashCondition.startTimeSelect;
+            var endDtSelect = dashCondition.endDateSelect;
+            var endTimeSelect = dashCondition.endTimeSelect;
+
+            if (startDtSelect == '' || startDtSelect == undefined) return JSON.stringify(dashCondition);
+
+            var startMinusDay = 0;
+            var endMinusDay = 0;
+            if (startDtSelect == 'Y') startMinusDay = 1;
+            else if (startDtSelect == 'W') startMinusDay = 7;
+
+            if (endDtSelect == 'Y') endMinusDay = 1;
+            else if (endDtSelect == 'W') endMinusDay = 7;
+
+            var dateObj = new Date();
+            var startDate = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate() - startMinusDay, startTimeSelect, 00, 00);
+            var endDate = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate() - endMinusDay, endTimeSelect, 59, 59);
+
+            dashCondition.startDt = startDate.format('yyyymmddHHnnss');
+            dashCondition.endDt = endDate.format('yyyymmddHHnnss');
+            return JSON.stringify(dashCondition);
+        }
+
 
         getTodayKeywordDetection();
         getTodayRiskBehavior();
@@ -280,6 +308,12 @@ var dashCondition = {
             var rotation = 40;
             // if ( chartxAxis2 == 'W' ) rotation = 0;
             $('#con01').highcharts({
+                chart: {
+                    type: 'column',
+                    marginTop: 5,
+                    marginBottom: 28,
+                    spacingBottom: 0
+                },
                 title: {
                     text: null
                 },
@@ -297,13 +331,19 @@ var dashCondition = {
                         rotation: 0
                     }
                 },
+                legend: {
+                    enabled: false
+                },
                 tooltip: {
                     formatter: function () {
                         return '<span style="color:' + this.series.color + '">\u25CF</span> ' + convertFileSize(this.point.y);
                     }
 
                 },
-                series: data
+                plotOptions: {},
+                series: [{
+                    data: data
+                }]
             });
         }
 
@@ -742,7 +782,7 @@ var dashCondition = {
                     $('#todayGroupWareSum').html(todayGroupWareSum + "<span>건</span> <span class='tit13'></span>");
 
                     if (areAllValuesZero(data.facet))  $('#svcDataChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="150px;" height="150px" style="margin: auto; display: block;"> ');
-	                else printChart(data.facet);
+                    else printChart(data.facet);
 
                 },
                 error: function (status, message) {
@@ -752,6 +792,7 @@ var dashCondition = {
                 }
             });
         }
+
 
 
         var chart2 = null;
@@ -1153,9 +1194,9 @@ var dashCondition = {
     function getTodayFileList(data, rowSearchkey) {
         let array = [0, 0, 0, 0, 0, 0];
         let arrayStr = ["~10MB", "~50MB", "~100MB", "~150MB", "~200MB", "201MB~"]
-	    let arrays = ["0","11","51","101","151","201"];
+        let arrays = ["0","11","51","101","151","201"];
 
-         // 여기에 쿼리 쓰기
+        // 여기에 쿼리 쓰기
         let targetKey;
         for (var i = 0; i < data.pivotData.length; i++) {
             if (data.pivotData[i].rowKey == rowSearchkey) {
@@ -1241,9 +1282,9 @@ var dashCondition = {
 			</div>
 		</div>
 
-			<form method="post" id="getMessageInfo" action="<c:url value="/ems/message.do"/>" target="_self" >
-				<input type="hidden" name="conditionParam" id="conditionParam" />
-			</form>
+		<form method="post" id="getMessageInfo" action="<c:url value="/ems/message.do"/>" target="_self" >
+			<input type="hidden" name="conditionParam" id="conditionParam" />
+		</form>
 
 		<%--금일 데이터 수집 건수 끝 ~~ --%>
 		<%--				금일 패턴 수집 건수--%>
@@ -1329,11 +1370,11 @@ var dashCondition = {
 	<div class="right">
 		<div >
 			<%--			금일 트래픽 추이, 종류 시작--%>
-				<div class="text_tab">
-					<span class="tablinks" onclick="openCity2(event, 'con01')" id="defaultOpen2"><s:message code="dashboard.msg.todayTraffic"/></span>
-					<span class="bar"></span>
-					<span class="tablinks" onclick="openCity2(event, 'con02')"><s:message code="dashboard.msg.weekTraffic"/></span>
-				</div>
+			<div class="text_tab">
+				<span class="tablinks" onclick="openCity2(event, 'con01')" id="defaultOpen2"><s:message code="dashboard.msg.todayTraffic"/></span>
+				<span class="bar"></span>
+				<span class="tablinks" onclick="openCity2(event, 'con02')"><s:message code="dashboard.msg.weekTraffic"/></span>
+			</div>
 
 			<div id="con01" class="text_tabcontent">
 				<div id="todayTraffic"></div>
@@ -1401,7 +1442,7 @@ var dashCondition = {
     }
 
     document.addEventListener("DOMContentLoaded", function () {
-    document.getElementById("defaultOpen").click();
+        document.getElementById("defaultOpen").click();
     });
 </script>
 

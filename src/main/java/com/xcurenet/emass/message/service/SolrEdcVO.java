@@ -86,6 +86,8 @@ public class SolrEdcVO {
 
 	public String usr_id;
 
+	public String usrId;
+
 	public String usr_ip;
 
 	public String userkey;

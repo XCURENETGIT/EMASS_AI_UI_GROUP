@@ -157,7 +157,7 @@
 			"ip_cocd", "ip_conm", "jikgubcd", "jikgubnm", "kwd", "kwds", "kwds_attach", "kwds_attachname", "kwds_body",
 			"kwds_subject", "ltime", "msgid", "name", "opinion", "password", "path", "pi", "work", "query", "recvs_poid",
 			"sender", "siteattr", "sitecode", "size", "sname", "sport", "srcip", "subject", "suborgcd", "suborgnm", "svc",
-			"svc1", "svc2", "svc3", "svc12", "tname", "to", "user", "userid", "usr_id", "usr_ip", "xmsgkey", "xparentmtr",
+			"svc1", "svc2", "svc3", "svc12", "tname", "to", "user", "userid", "usr_id", "usr_ip","usrId", "xmsgkey", "xparentmtr",
 			"xrootmtr", "week", "ocr_attach", "ocr_attach_cnt", "favorite_id", "read_key", "read_time",
 			"user_str", "user", "host_str", "host", "attachname_str", "attachname", "sender_str", "sender", "recvs",
 			"to", "cc", "bcc", "recvs_name", "tname", "cname", "bname", "ocr_attach", "pi_DRM",
