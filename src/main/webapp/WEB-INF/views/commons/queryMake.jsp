@@ -7,7 +7,6 @@
 <%
 	String firstAdminYn = Common.getFirstAdminYn(session);
 	String statType = Common.nvl(request.getParameter("statType"));
-	boolean consent = Config.getBoolean("consent.menu.enable");
 	String recvsJikgub = Config.getString("recvs.jikgub.use");
 %>
 <!DOCTYPE html>
@@ -326,7 +325,6 @@
 				opener.getSearchQuery();
 
 				if(isConsent) {
-                    onsole.log("4: "+consent);
 					if( $('#consentNo').val() == ''){
 
 						opener.$('#consentNo').val('');
@@ -939,7 +937,7 @@
 								if(i > 0) {
 									addQueryText += " "
 								}
-								addQueryText += valArr[i];
+								addQueryText += valArr[i].toLowerCase();
 							}
 							addQueryText += ")";
 						}
