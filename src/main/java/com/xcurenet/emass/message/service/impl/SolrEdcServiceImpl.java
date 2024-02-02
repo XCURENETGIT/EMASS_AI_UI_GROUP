@@ -135,7 +135,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 		TimeUtil.start();
 		if (sq.getFields() == null) {
-			String defaultFields = "_score,date_hh,date_yyyy,date_yyyymm,date_yyyymmdd,ml_confd_class,ml_confd_feedback,ml_confd_prob,msgid,cid,srcip,sport,dstip,dport,svc,svc1,svc2,svc3,ltime,ctime,ctime_yyyy,ctime_yyyymm,ctime_yyyymmdd,ctime_hh,size,body_size,usr_id,usr_ip,userkey,user,userid,name,subject,host,path,xmsgkey,sender,sname,recvs,recvs_name,to,cc,bcc,tname,cocd,conm,suborgcd,suborgnm,busicd,businm,deptcd,deptnm,jikgubcd,jikgubnm,ip_cocd,ip_conm,ip_busicd,ip_businm,ip_deptcd,ip_deptnm,allofus,attached,direction,direction_svc,kwd,kwds,inside,work,attachname,attachsize,attachhash,attachtype,attachcnt,pi_total,read_time,xrootmtr,protocol,epmsg_type,user_str,pi_SN,pi_FN,pi_DN,pi_CN,pi_EC,pi_ID,pi_EF,pi_DRM,pi_MN,pi_AN,pi_CRN,pi_SSN,pi_PN,pi_EMEI,pi_BRN,pi_CPN,pi_MCN";
+			String defaultFields = "_score,date_hh,date_yyyy,date_yyyymm,date_yyyymmdd,ml_confd_class,ml_confd_feedback,ml_confd_prob,msgid,cid,srcip,sport,dstip,dport,svc,svc1,svc2,svc3,ltime,ctime,ctime_yyyy,ctime_yyyymm,ctime_yyyymmdd,ctime_hh,size,body_size,usr_id,usr_ip,userkey,user,userid,name,subject,host,path,xmsgkey,sender,sname,recvs,recvs_name,to,cc,bcc,tname,cocd,conm,suborgcd,suborgnm,busicd,businm,deptcd,deptnm,jikgubcd,jikgubnm,ip_cocd,ip_conm,ip_busicd,ip_businm,ip_deptcd,ip_deptnm,allofus,attached,direction,direction_svc,kwd,kwds,inside,work,attachname,attachsize,attachhash,attachtype,attachcnt,pi_total,read_time,xrootmtr,protocol,epmsg_type,user_str,pi_SN,pi_FN,pi_DN,pi_CN,pi_EC,pi_ID,pi_EF,pi_DRM,pi_MN,pi_AN,pi_CRN,pi_SSN,pi_PN,pi_EMEI,pi_BRN,pi_CPN,pi_MCN,svc12";
 			if (Config.isOCR) defaultFields = defaultFields + ",ocr_attach_cnt";
 			if (Common.isEquals(bodysnippet, "Y")) defaultFields = defaultFields + ",body_snippet";
 			sq.setFields(defaultFields);
@@ -605,6 +605,22 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		}
 		return null;
 	}
+	private static String modifyQuery(String inputQuery) {
+		StringBuilder modifiedQuery = new StringBuilder();
+
+		String[] tokens = inputQuery.split("\\s+");
+
+		modifiedQuery.append(tokens[0]);
+		for (int i = 1; i < tokens.length; i++) {
+			String token = tokens[i];
+			String modifiedToken = "(" + token + ")";
+
+			modifiedQuery.append(" ");
+			modifiedQuery.append(modifiedToken);
+		}
+		return modifiedQuery.toString();
+	}
+
 
 	private void setAuthoritys(SolrQuery sq, String adminId) {
 		if (Common.isNotEmpty(adminId)) {
@@ -627,7 +643,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			List<AuthorityVO> authoritys = authorityService.getAdminAuthority(param);
 			for (AuthorityVO authority : authoritys) {
 				if (authority.getCnt() > 0) {
-					sq.addFilterQuery(authority.getQuery());
+					sq.addFilterQuery(modifyQuery(authority.getQuery()));
 				}
 			}
 			if (log.isInfoEnabled()) {

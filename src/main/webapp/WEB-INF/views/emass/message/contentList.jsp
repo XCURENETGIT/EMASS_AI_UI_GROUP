@@ -338,6 +338,7 @@
 			overlap : overlapUse,
 			success : function(data, total) {
 				searchedFlag = true;
+                console.log(data.emass);
 				grid.appendData(data.emass);
 				if ( grid.loadingPage == 0 ) grid.Select(-1,-1);
 
