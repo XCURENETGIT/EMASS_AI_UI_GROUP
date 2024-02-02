@@ -262,7 +262,7 @@ public class SolrCreateQuery {
 	public SolrCreateQuery setSearchStr(String searchStr, String searchField) {
 		if (Common.isEmpty(searchStr)) return this;
 
-		if (Common.isEmpty(searchField)) return addQuery(getSearchQuery(searchStr));
+		if (Common.isEmpty(searchField)) return addQuery(String.format("%s(%s)", AND_QUERY, getSearchQuery(searchStr)));
 		else {
 			searchField = searchField.replaceAll(",", " ");
 			String[] fields = searchField.split(" ");
@@ -288,7 +288,7 @@ public class SolrCreateQuery {
 					query.append(String.format("ocr_attach.jp:(%s) ", getSearchQuery(searchStr)));
 				}
 			}
-			return addQuery(query.toString());
+			return addQuery(String.format("%s(%s)", AND_QUERY, query.toString()));
 		}
 	}
 
