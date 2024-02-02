@@ -23,8 +23,6 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Slf4j
 @Data
@@ -986,13 +984,16 @@ public class SolrCreateQuery {
 
 		String queryStr = "";
 		if (size_condition.equals("B") || size_condition.equals("")) {
-			queryStr = "[" + minMsgsize + " TO " + maxMsgsize + "]";
-		} else if (size_condition.equals("L")) queryStr = "[" + minMsgsize + " TO * ]";
-		else if (size_condition.equals("S")) queryStr = "[ * TO " + minMsgsize + "]";
+			queryStr = String.format("%s(%s#FILED:<=%s  %s#FILED:<%s)", AND_QUERY,AND_QUERY,minMsgsize,AND_QUERY,maxMsgsize);	   // queryStr = "[" + minMsgsize + " TO " + maxMsgsize + "]";
+		} else if (size_condition.equals("L"))  queryStr = String.format("%s(%s#FILED:<=0  %s#FILED:<*)", AND_QUERY,AND_QUERY,minMsgsize,AND_QUERY);   //  queryStr = "[" + minMsgsize + " TO * ]";
+		else if (size_condition.equals("S")) queryStr = String.format("%s(%s#FILED:<=0  %s#FILED:<%s)", AND_QUERY,AND_QUERY,AND_QUERY,minMsgsize);  //queryStr = "[ * TO " + minMsgsize + "]";
 
-		if(Common.isEquals(sizeType, "B")) return addQuery(String.format("%s%s:%s", AND_QUERY, BODY_SIZE, queryStr));
-		else if(Common.isEquals(sizeType, "A")) return addQuery(String.format("%s%s:%s", AND_QUERY, ATTACH_SIZE, queryStr));
-		else return addQuery(String.format("%s%s:%s", AND_QUERY, SIZE, queryStr));
+
+		//+(+attachsize:<=0  +attachsize:<20480)
+
+		if(Common.isEquals(sizeType, "B")) return addQuery(queryStr.replaceAll("#FILED",BODY_SIZE));
+		else if(Common.isEquals(sizeType, "A")) return addQuery(queryStr.replaceAll("#FILED",ATTACH_SIZE));
+		else return  addQuery(queryStr.replaceAll("#FILED",SIZE));
 	}
 
 	/**
