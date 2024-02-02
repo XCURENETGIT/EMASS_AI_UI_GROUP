@@ -1214,7 +1214,7 @@
                                     code="condition.bcc"/>)
                             </option>
                             <option value="user user_str userid name"><s:message code="common.org.user"/></option>
-                            <option value="usr_id"><s:message code="common.msg.account"/></option>
+                            <option value="usrId"><s:message code="common.msg.account"/></option>
                         </select>
                         <input type="search" class="" id="searchStrInput"
                                placeholder="<s:message code="condition.search_str"/>"/>

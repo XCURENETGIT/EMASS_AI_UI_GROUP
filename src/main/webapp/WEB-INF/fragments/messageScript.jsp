@@ -854,9 +854,9 @@
     }
     return null;
   }
-  //동의서 사용 대상자 여부
+  // 동의서 사용 대상자 여부
   function isConsent( ){
-    if( consent && firstAdminYn != 'Y' ) return true;
+    if( consent=="true" && firstAdminYn != 'Y' ) return true;
     else return false;
   }
 

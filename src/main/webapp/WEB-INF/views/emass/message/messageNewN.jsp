@@ -1406,7 +1406,9 @@
                 var searchType = $('#searchType').val();
                 var consentNo = grid.getValue(0, 'consentNo');
                 if( searchType != 'L'){
-                    if(isConsent( ) && consentNo == '' && '<%=adminType%>' != 'C'){
+                    console.log(isConsent());
+
+                    if(isConsent() && consentNo == '' && '<%=adminType%>' != 'C'){
                         alert('<s:message code="download.msg.consent"/>');
                         return false;
                     }
@@ -2667,7 +2669,7 @@
                                                 <option value="cc cname"><s:message code="condition.recv"/>(<s:message code="condition.cc"/>)</option>
                                                 <option value="bcc bname"><s:message code="condition.recv"/>(<s:message code="condition.bcc"/>)</option>
                                                 <option value="user user_str userid name"><s:message code="common.org.user"/></option>
-                                                <option value="usr_id"><s:message code="common.msg.account"/></option>
+                                                <option value="usrId"><s:message code="common.msg.account"/></option>
                                             </select>
                                         </div>
                                     </div>

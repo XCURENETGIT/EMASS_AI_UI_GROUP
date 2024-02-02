@@ -328,8 +328,6 @@ public class MessengerController {
 
 	public MessengerEdcGroupVO getMessengerMsgTotal(final HttpServletRequest request, boolean original) throws Exception {
 		SolrQuery totalQuery = getMessengerMsgTotalQuery(request);
-		System.out.println("totalquery: "+totalQuery);
-		System.out.println("orginal: "+original);
 		MessengerEdcGroupVO result = solrEdcService.getMessengerGroupList(totalQuery, Common.getAdminId(request), true, original);
 		return result;
 	}

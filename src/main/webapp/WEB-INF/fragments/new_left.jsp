@@ -92,7 +92,6 @@
 			}
 			$('#gnb').find('#topMenu').html(html);
 		} else {
-            console.log(consentMenuEnable);
 			let html = '';
 			for (let k in menuList) {
 				if (menuList[k].pid == currentMenuId && menuList[k].pid != null) {

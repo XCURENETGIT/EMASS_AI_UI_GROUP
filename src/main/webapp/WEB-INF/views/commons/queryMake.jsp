@@ -1,12 +1,12 @@
 <%@page import="com.xcurenet.common.util.Common"%>
 <%@ page import="com.xcurenet.common.util.config.Config" %>
+<%@ page import="static com.xcurenet.common.util.config.Config.isOCR" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 	String firstAdminYn = Common.getFirstAdminYn(session);
 	String statType = Common.nvl(request.getParameter("statType"));
-
 	String recvsJikgub = Config.getString("recvs.jikgub.use");
 %>
 <!DOCTYPE html>
@@ -156,15 +156,15 @@
 			"ip_cocd", "ip_conm", "jikgubcd", "jikgubnm", "kwd", "kwds", "kwds_attach", "kwds_attachname", "kwds_body",
 			"kwds_subject", "ltime", "msgid", "name", "opinion", "password", "path", "pi", "work", "query", "recvs_poid",
 			"sender", "siteattr", "sitecode", "size", "sname", "sport", "srcip", "subject", "suborgcd", "suborgnm", "svc",
-			"svc1", "svc2", "svc3", "svc12", "tname", "to", "user", "userid", "usr_id", "usr_ip", "xmsgkey", "xparentmtr",
+			"svc1", "svc2", "svc3", "svc12", "tname", "to", "user", "userid", "usr_id", "usr_ip","usrId", "xmsgkey", "xparentmtr",
 			"xrootmtr", "week", "ocr_attach", "ocr_attach_cnt", "favorite_id", "read_key", "read_time",
 			"user_str", "user", "host_str", "host", "attachname_str", "attachname", "sender_str", "sender", "recvs",
 			"to", "cc", "bcc", "recvs_name", "tname", "cname", "bname", "ocr_attach", "pi_DRM",
 			"pi_total", "pi_ID", "pi_EF", "pi_PN", "pi_FN", "pi_DN", "pi_SN", "pi_CN", "pi_EC"];
 
-		<%if( consent && Common.isEquals(firstAdminYn, "N") ){ %>
-		isConsent = true;
-		<%}%>
+        <%if( consent && Common.isEquals(firstAdminYn, "N") ){ %>
+        isConsent = true;
+        <%}%>
 
 		var easyDateStartFlag = false;
 		var easyDateEndFlag = false;
@@ -937,7 +937,7 @@
 								if(i > 0) {
 									addQueryText += " "
 								}
-								addQueryText += valArr[i];
+								addQueryText += valArr[i].toLowerCase();
 							}
 							addQueryText += ")";
 						}
