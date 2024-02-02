@@ -62,6 +62,11 @@
             var userId = getCookie('Cookie_userId');
             $('#userIdInput').val(userId);
 
+
+            $(".clearBtn").click(function() {
+                $("#number_confirm").val('');
+            });
+
             if($('#userIdInput').val() != '') {
                 $('#saveLoginId').prop('checked', true);
                 $('#userPwInput').focus();
@@ -423,7 +428,7 @@
 	<div class="modal-content">
 		<div class="modalHead">
 			<h2>운용자 계정 잠금</h2>
-			<span class="close" data-dismiss="modal">&times;</span>
+			<span class="close clearBtn" data-dismiss="modal">&times;</span>
 		</div>
 		<div class="modalCon">
 			<div class="modalbody">
