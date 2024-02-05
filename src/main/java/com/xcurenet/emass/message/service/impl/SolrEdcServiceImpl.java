@@ -279,7 +279,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 				AbstractAggregationBuilder<TermsAggregationBuilder> termsAggregation = AggregationBuilders.terms(field)
 						.field(field)
 						.order(BucketOrder.count(false))
-						.size(10000)
+						.size(maxCount(sq.getFacetLimit()))
 						.minDocCount(sq.getFacetMinCount());
 				aggregations.add(termsAggregation);
 			}
