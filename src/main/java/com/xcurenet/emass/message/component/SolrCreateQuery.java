@@ -82,6 +82,7 @@ public class SolrCreateQuery {
 	public static final String HOST_STR = "host_str";
 	public static final String ATTACH_YN = "attached";
 	public static final String ATTACHNAME = "attachname";
+	public static final String KWDS_ATTACHNAME = "kwds_attachname";
 	public static final String ATTACHTYPE = "attachtype";
 	public static final String KEYWORD_YN = "kwd";
 	public static final String KEYWORD = "kwds";
@@ -262,7 +263,7 @@ public class SolrCreateQuery {
 	public SolrCreateQuery setSearchStr(String searchStr, String searchField) {
 		if (Common.isEmpty(searchStr)) return this;
 
-		if (Common.isEmpty(searchField)) return addQuery(String.format("%s(%s)", AND_QUERY, getSearchQuery(searchStr)));
+		if (Common.isEmpty(searchField)) return addQuery(getSearchQuery(searchStr));
 		else {
 			searchField = searchField.replaceAll(",", " ");
 			String[] fields = searchField.split(" ");
@@ -288,7 +289,7 @@ public class SolrCreateQuery {
 					query.append(String.format("ocr_attach.jp:(%s) ", getSearchQuery(searchStr)));
 				}
 			}
-			return addQuery(String.format("%s(%s)", AND_QUERY, query.toString()));
+			return addQuery(query.toString());
 		}
 	}
 
@@ -700,10 +701,17 @@ public class SolrCreateQuery {
 
 		StringBuffer queryStr = new StringBuffer();
 		queryStr.append(String.format("%s%s:%s ", AND_QUERY, KEYWORD_YN, kwdYn));
+		kwds = removeSpecialCharacters(kwds);
 
 		if (Common.isNotEmpty(kwds)) {
-			if(Common.isEquals(keywordYn_not, "Y")) queryStr.append(String.format("%s%s:%s", EXCEPT_QUERY, KEYWORD, createOrQuery(kwds, ", ")));
-			else queryStr.append(String.format("%s%s:%s", AND_QUERY, KEYWORD, createOrQuery(kwds, ", ")));
+			if(Common.isEquals(keywordYn_not, "Y")){
+				queryStr.append(String.format("%s%s:%s", EXCEPT_QUERY, KEYWORD, createOrQuery(kwds, ", ")));
+				queryStr.append(String.format("%s%s:%s", EXCEPT_QUERY, KWDS_ATTACHNAME, createOrQuery(kwds, ", ")));
+			}
+			else{
+				queryStr.append(String.format("%s%s:%s", AND_QUERY, KEYWORD, createOrQuery(kwds, ", ")));
+				queryStr.append(String.format("%s%s:%s", AND_QUERY, KWDS_ATTACHNAME, createOrQuery(kwds, ", ")));
+			}
 		}
 		return addQuery(queryStr.toString());
 	}

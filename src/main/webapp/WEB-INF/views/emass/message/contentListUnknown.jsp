@@ -359,9 +359,12 @@ function setServiceGroupCntInfo(data, total){
 	busiScrollTabs.clearTabs();
 	busiScrollTabs.refreshState();
 	busiScrollTabs.addTab('<span class="tab_selected"><a href="javascript:;" class="busiCounts active" data-svc12=""><i class="fa fa-angle-right" aria-hidden="true"></i> <s:message code="common.msg.all"/><span class="busiCnt">('+total.comma()+')</span></a></span>');
-	for(var i=0; i<data.length; i++){
-		busiScrollTabs.addTab('<span><a href="javascript:;" class="busiCounts" data-svc12="'+data[i].name2+'"><i class="fa fa-angle-right" aria-hidden="true"></i> '+parent.getSvc12Nm(data[i].name2)+'<span class="busiCnt">('+data[i].count.comma()+')</span></a></span>'); 
-	}
+    for(var i=0; i<data.length; i++){
+        busiScrollTabs.addTab('<span><a href="javascript:;" class="busiCounts" data-svc1="'+data[i].name+'"><i class="fa fa-angle-right" aria-hidden="true"></i> '+parent.getSvc1Nm(data[i].name)+'<span class="busiCnt">('+data[i].count.comma()+')</span></a></span>');
+    }
+    // for(var i=0; i<data.length; i++){
+	// 	busiScrollTabs.addTab('<span><a href="javascript:;" class="busiCounts" data-svc12="'+data[i].name2+'"><i class="fa fa-angle-right" aria-hidden="true"></i> '+parent.getSvc12Nm(data[i].name2)+'<span class="busiCnt">('+data[i].count.comma()+')</span></a></span>');
+	// }
 }
 
 function arrayToString( array ){
