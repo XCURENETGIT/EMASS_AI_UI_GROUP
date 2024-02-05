@@ -62,6 +62,7 @@
 				offset 		: grid.data.length,
 				limit 		: grid.pageSize,
 				success 	: function(data, total) {
+					console.log(data)
 					grid.appendData(data);
 					if($('input[name="autoRefresh"]').is(":checked")) {
 						window.setTimeout(function(){
