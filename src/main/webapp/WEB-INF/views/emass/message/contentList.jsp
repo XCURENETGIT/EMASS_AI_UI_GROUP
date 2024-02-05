@@ -804,9 +804,12 @@
 			else viewer_open(row); */
 
 			grid.Select(row, grid.Col);
-			if( grid.Row == grid.Rows - 2  ){
-				getList( true );
-			}
+
+			/* 문서상세보기 next button으로 목록 이동시 재검색 방지 */
+			// if( grid.Row == grid.Rows - 2  ){
+			// 	getList( true );
+			// }
+
 			return true;
 		}
 		return false;
