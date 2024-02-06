@@ -368,7 +368,7 @@
 			<option value="svc12"><s:message code="condition.service"/></option>
 			<option value="host_str">HOST</option>
 			<option value="sender_str"><s:message code="condition.sender"/></option>
-			<option value="to"><s:message code="condition.recv"/></option>
+			<option value="recvs"><s:message code="condition.recv"/></option>
 			<option value="conm"><s:message code="common.org.conm"/></option>
 			<option value="suborgcd"><s:message code="common.org.suborg"/></option>
 			<option value="businm"><s:message code="common.org.busi"/></option>
@@ -764,7 +764,6 @@
             url: 'analysis/selectFreedomMessageList.xcn',
             data: $("#frm").serialize() + "&tabIdx=" + tabIdx + "&query=" + selectQuery + "&offset=" + grid.data.length + "&limit=" + grid.pageSize,
             success: function (data, total) {
-                console.log("data: "+data);
                 resultTotal = total;
                 grid.autoNumber();
                 grid.loadHeader(false);
