@@ -299,6 +299,12 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		return emsMessageVO.getUserList();
 	}
 
+	@Override
+	public List<EmsRecvVO> getEmassUserAllInfo(String msgId) {
+		EmsMessageVO emsMessageVO = getEmassMessageData(msgId);
+		return emsMessageVO.getRecvsList();
+	}
+
 
 	@Override
 	public List<EmsRecvVO> getEmassUserInfo(String msgId, String uType) {
@@ -363,13 +369,9 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		EmsMessageVO emsMessageVO = getEmassMessageData(msgId);
 		List<EmsAttachVO> result = new ArrayList<>();
 		for (EmsAttachVO vo : emsMessageVO.getFiles()) {
-			if (attachId != null) {
-				if (vo.getAttachId().equals(attachId)) {
-					result.add(vo);
-					break;
-				}
-			}else{
+			if(vo.getAttachId().equals(attachId)){
 				result.add(vo);
+				break;
 			}
 		}
 		return result;
@@ -677,22 +679,28 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		}
 		return result;
 	}
-
 	@Override
 	public List<Map<String, Object>> getRecvDomainInfo(String msgId, String inside, String recvsType) {
-		List<EmsRecvVO> recvs = getEmassUserInfo(msgId);
-		for (int i = 0; i < recvs.size(); i++) {
-			EmsRecvVO recv = recvs.get(i);
-			if (Common.isEquals(inside, recv.getInSide())) {
-				String domain = recv.getDomain().substring(recv.getDomain().indexOf("@") + 1, recv.getDomain().length() - 1);
-				recv.setDomain(domain);
-				recvs.set(i, recv);
+		List<EmsRecvVO> recvs = getEmassUserAllInfo(msgId);
+		List<EmsRecvVO> result = new ArrayList<>(recvs);
+
+		if (!inside.isEmpty() || !recvsType.isEmpty()) {
+			Iterator<EmsRecvVO> iterator = result.iterator();
+			while (iterator.hasNext()) {
+				EmsRecvVO emsRecvVO = iterator.next();
+				if (!recvsType.isEmpty() && !Common.isEquals(recvsType, emsRecvVO.getUType())) {
+					iterator.remove();
+				}
+				if (!inside.isEmpty() && !Common.isEquals(inside, emsRecvVO.getInSide())) {
+					iterator.remove();
+				}
 			}
 		}
+
 		final ObjectMapper objectMapper = new ObjectMapper();
-		return objectMapper.convertValue(recvs, new TypeReference<>() {
-		});
+		return objectMapper.convertValue(result, new TypeReference<>() {});
 	}
+
 
 
 }

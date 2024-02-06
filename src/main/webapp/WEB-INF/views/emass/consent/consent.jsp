@@ -632,6 +632,8 @@
             ui.get({
                 url: 'getApprobator.xcn',
                 success: function (data, total) {
+                    console.log(data);
+                    console.log(obj.appCd);
                     if (data == 'N') {
                         $('#approveBtn, #returnBtn, #cancelApproveBtn').hide();
                     } else {

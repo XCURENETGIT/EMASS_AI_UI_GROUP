@@ -21,6 +21,7 @@ public interface EmsMessageService {
 	public EmsMessageVO getEmassMessageNew(final String adminId, final String msgId, final String firstAdminYn, final String adminType);
 
 	public List<EmsRecvVO> getEmassUserInfo(final String msgId);
+	public List<EmsRecvVO> getEmassUserAllInfo(final String msgId);
 
 	public List<EmsRecvVO> getEmassUserInfo(final String msgId, final String uType);
 
