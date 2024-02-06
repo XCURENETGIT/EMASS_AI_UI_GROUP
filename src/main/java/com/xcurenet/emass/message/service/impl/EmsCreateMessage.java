@@ -126,21 +126,21 @@ public class EmsCreateMessage {
 				for (int i = 0; i < users.size(); i++) {
 					EmsRecvVO u = EmsReDefined.reUserIp(users.get(i), Common.nvl(msg.getSrcIp()), Common.nvl(msg.getDstIp()), Common.nvl(msg.getUsrIp()));
 					if (Common.isEquals(u.getUType(), "U")) {
-						u.setEMail(EmsReDefined.reUserEmail(users.get(i), Common.nvl(msg.getUser())));
+						u.setEmail(EmsReDefined.reUserEmail(users.get(i), Common.nvl(msg.getUser())));
 						user.add(u);
 					} else if (Common.isEquals(u.getUType(), "F")) {
-						u.setEMail(EmsReDefined.reUserEmail(users.get(i), Common.nvl(msg.getSender())));
+						u.setEmail(EmsReDefined.reUserEmail(users.get(i), Common.nvl(msg.getSender())));
 						sender.add(u);
 					} else if (Common.isEquals(u.getUType(), "T")) {
-						u.setEMail(EmsReDefined.reUserEmail(users.get(i)));
+						u.setEmail(EmsReDefined.reUserEmail(users.get(i)));
 						recvs.add(u);
 						to.add(u);
 					} else if (Common.isEquals(u.getUType(), "C")) {
-						u.setEMail(EmsReDefined.reUserEmail(users.get(i)));
+						u.setEmail(EmsReDefined.reUserEmail(users.get(i)));
 						recvs.add(u);
 						cc.add(u);
 					} else if (Common.isEquals(u.getUType(), "B")) {
-						u.setEMail(EmsReDefined.reUserEmail(users.get(i)));
+						u.setEmail(EmsReDefined.reUserEmail(users.get(i)));
 						recvs.add(u);
 						bcc.add(u);
 					}

@@ -668,7 +668,6 @@ public class EmsMessageDownloadBatchController {
 
 	private void inserDB(DownloadBatchVO vo, JSONObject param, String searchType, String exportFileExt, String adminId, long total, String exporFileName) {
 		param.put("callType", "D");
-		System.out.println("**vo: "+vo);
 
 		vo.setDownSeq(downloadBatchService.getMaxDownSeq());
 		vo.setExportType(searchType);
