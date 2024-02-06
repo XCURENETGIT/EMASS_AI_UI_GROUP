@@ -957,7 +957,7 @@ public class HomeController {
 	@RequestMapping(value = "/ems/selectConsent.do", method = RequestMethod.GET)
 	@Description("동의서 선택")
 	public String consentPop(Locale locale, Model model) {
-		return "/emass/consent/selectConsent";
+		return "/emass/consent/selectConsent.popup";
 	}
 
 	@RequestMapping(value = "/uacs/didUpload.do", method = RequestMethod.GET)
