@@ -122,7 +122,8 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		try {
 			String sort = sq.getSortField();
 			if (Common.isEmpty(sort)) {
-				sq.setSort(SortClause.desc("ctime"));
+				sq.setSort(SortClause.desc("_score"));
+				sq.addSort(SortClause.desc("ctime"));
 				sq.addSort(SortClause.desc("msgid"));
 			}
 			log.debug("[SORT] : {}", sq.getSortField());
@@ -131,6 +132,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			if (Common.isNotEmpty(sq.getFilterQueries())) log.debug("[FILTER_QUERY] {}", StringUtils.join(sq.getFilterQueries(), ' '));
 		} catch (Exception e) {
 		}
+
 
 		TimeUtil.start();
 		if (sq.getFields() == null) {
@@ -149,7 +151,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		/* set 필터 쿼리 */
 		String filterQuery =  (null != sq.getFilterQueries())? String.join(" ", sq.getFilterQueries()) : "";
 		/* 일반 검색 쿼리 */
-		QueryStringQueryBuilder queryBuilder = QueryBuilders.queryStringQuery(sq.getQuery() + " " + filterQuery).fields(getDefaultSearchField(sq));
+		QueryStringQueryBuilder queryBuilder = QueryBuilders.queryStringQuery(sq.getQuery() + " " + filterQuery).fields(getDefaultSearchField(sq)).defaultOperator(Operator.AND);
 
 		/* 정규식 패턴 필드 설정 */
 		BoolQueryBuilder regexQuery = QueryBuilders.boolQuery();
