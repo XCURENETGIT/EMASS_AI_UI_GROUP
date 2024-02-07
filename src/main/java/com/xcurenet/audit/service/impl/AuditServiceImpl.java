@@ -13,6 +13,7 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.mvel2.ast.Instance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -21,9 +22,14 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.Map;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.*;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.apache.http.client.utils.DateUtils.parseDate;
 
 @Log4j2
 @Service("auditService")
@@ -72,10 +78,24 @@ public class AuditServiceImpl extends XcnAbstractDAO implements AuditService {
 		if (Common.isNotEmpty(adminId)) query.addCriteria(Criteria.where("adminId").is(adminId));
 		if (Common.isNotEmpty(pMenuId)) query.addCriteria(Criteria.where("pMenuId").is(pMenuId));
 		if (Common.isNotEmpty(menuId)) query.addCriteria(Criteria.where("menuId").is(menuId));
+
 		if (Common.isNotEmpty(startDt) && Common.isNotEmpty(endDt)) {
-			LocalDateTime s = LocalDateTime.parse(startDt + "000000000", DateTimeFormat.forPattern("yyyyMMddHHmmssSSS"));
-			LocalDateTime e = LocalDateTime.parse(endDt + "235959999", DateTimeFormat.forPattern("yyyyMMddHHmmssSSS"));
-			query.addCriteria(Criteria.where("date").gte(s).lt(e));
+			try {
+				String startDtFormatted = startDt.substring(0, 4) + "-" + startDt.substring(4, 6) + "-" + startDt.substring(6);
+				String endDtFormatted = endDt.substring(0, 4) + "-" + endDt.substring(4, 6) + "-" + endDt.substring(6);
+
+				startDtFormatted = startDtFormatted + "T00:00:00.000Z";
+				endDtFormatted = endDtFormatted + "T23:59:59.999Z";
+
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+				dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+				Date sd = dateFormat.parse(startDtFormatted);
+				Date ed = dateFormat.parse(endDtFormatted);
+
+				query.addCriteria(Criteria.where("date").gte(sd).lte(ed));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
 		}
 		query.with(Sort.by(Sort.Direction.DESC, "date"));
 		if (page) query.with(PageRequest.of((offset / limit), limit));
