@@ -31,11 +31,14 @@
 		margin-right: 20px;
 	}
 
-
+	.popover {
+		z-index: 998;
+	}
 
 	#termsPopover .popover {
 		min-width: 700px;
 		width: 700px;
+		z-index: 99999;
 	}
 
 	#columnPopover .popover {
@@ -174,6 +177,102 @@
 						   data-placement="bottom" title="<s:message code="analysis.freedom.ui.columnexam"/>"><span
 								class="glyphicon glyphicon-question-sign"></span></a>
 					</span>
+					<div id="popover-content-terms" class="hide">
+						<div style="padding-left:10px;">
+							<div>1. <s:message code="analysis.freedom.ui.exam18"/></div>
+							<div class="form-inline">
+								<select class="form-control"><option value=""></option></select>
+								<select class="form-control"><option value=""></option></select>
+								<select class="form-control"><option value=""><s:message code="common.org.user"/></option></select>
+								<select class="form-control"><option value="">=</option></select>
+								<span><input type="text" class="form-control" style="width: 250px;" value="<s:message code="analysis.freedom.ui.man1"/>" /></span>
+								<select class="form-control"><option value=""></option></select>
+							</div>
+						</div>
+						<div style="padding-top:10px;padding-left:10px;">
+							<div>2. <s:message code="analysis.freedom.ui.exam19"/></div>
+							<div class="form-inline">
+								<select class="form-control"><option value=""></option></select>
+								<select class="form-control"><option value=""></option></select>
+								<select class="form-control"><option value=""><s:message code="common.org.user"/></option></select>
+								<select class="form-control"><option value="">IN</option></select>
+								<span><input type="text" class="form-control" style="width: 250px;" value="<s:message code="analysis.freedom.ui.man1"/>,<s:message code="analysis.freedom.ui.man2"/>" /></span>
+								<select class="form-control"><option value=""></option></select>
+							</div>
+						</div>
+						<div style="padding-top:10px;padding-left:10px;">
+							<div>3. <s:message code="analysis.freedom.ui.exam20"/></div>
+							<div class="form-inline">
+								<select class="form-control"><option value=""></option></select>
+								<select class="form-control"><option value=""></option></select>
+								<select class="form-control"><option value=""><s:message code="analysis.freedom.ui.mailtitle"/></option></select>
+								<select class="form-control"><option value="">IN</option></select>
+								<span><input type="text" class="form-control" style="width: 250px;" value="<s:message code="analysis.freedom.ui.exam2"/>" /></span>
+								<select class="form-control"><option value=""></option></select>
+							</div>
+						</div>
+						<div style="padding-top:10px;padding-left:10px;">
+							<div>4. <s:message code="analysis.freedom.ui.exam21"/></div>
+							<div class="form-inline">
+								<select class="form-control"><option value=""></option></select>
+								<select class="form-control"><option value=""></option></select>
+								<select class="form-control"><option value=""><s:message code="analysis.freedom.ui.isattach"/></option></select>
+								<select class="form-control"><option value="">=</option></select>
+								<span><input type="text" class="form-control" style="width: 250px;" value="Y" /></span>
+								<select class="form-control"><option value=""></option></select>
+							</div>
+						</div>
+						<div style="padding-top:10px;padding-left:10px;">
+							<div>5. <s:message code="analysis.freedom.ui.exam22"/></div>
+							<div class="form-inline">
+								<select class="form-control"><option value=""></option></select>
+								<select class="form-control"><option value=""></option></select>
+								<select class="form-control"><option value=""><s:message code="analysis.freedom.ui.size"/></option></select>
+								<select class="form-control"><option value="">>=</option></select>
+								<span><input type="text" class="form-control" style="width: 250px;" value="1000000" /></span>
+								<select class="form-control"><option value=""></option></select>
+							</div>
+						</div>
+						<div style="padding-top:10px;padding-left:10px;">
+							<div>6. <s:message code="analysis.freedom.ui.exam23"/></div>
+							<div class="form-inline">
+								<select class="form-control"><option value=""></option></select>
+								<select class="form-control"><option value="">(</option></select>
+								<select class="form-control"><option value=""><s:message code="analysis.freedom.ui.size"/></option></select>
+								<select class="form-control"><option value="">>=</option></select>
+								<span><input type="text" class="form-control" style="width: 250px;" value="1000000" /></span>
+								<select class="form-control"><option value=""></option></select>
+							</div>
+							<div class="form-inline">
+								<select class="form-control"><option value="">OR</option></select>
+								<select class="form-control"><option value=""></option></select>
+								<select class="form-control"><option value=""><s:message code="analysis.freedom.ui.size"/></option></select>
+								<select class="form-control"><option value=""><=</option></select>
+								<span><input type="text" class="form-control" style="width: 250px;" value="1000000000" /></span>
+								<select class="form-control"><option value="">)</option></select>
+							</div>
+							<div class="form-inline">
+								<select class="form-control"><option value="">AND</option></select>
+								<select class="form-control"><option value=""></option></select>
+								<select class="form-control"><option value=""><s:message code="analysis.freedom.ui.mailto"/></option></select>
+								<select class="form-control"><option value=""><=</option></select>
+								<span><input type="text" class="form-control" style="width: 250px;" value="user@test.com" /></span>
+								<select class="form-control"><option value=""></option></select>
+							</div>
+						</div>
+						<div style="padding-top:10px;padding-left:10px;">
+							<div>7. <s:message code="analysis.freedom.ui.exam24"/></div>
+							<div class="form-inline">
+								<select class="form-control"><option value=""></option></select>
+								<select class="form-control"><option value=""></option></select>
+								<select class="form-control"><option value=""><s:message code="condition.date"/></option></select>
+								<select class="form-control"><option value="">=</option></select>
+								<span><input type="text" class="form-control" style="width: 100px;" value="2016-06-01" /> ~ <input type="text" class="form-control" style="width: 100px;" value="2016-06-15" /></span>
+								<select class="form-control"><option value=""></option></select>
+							</div>
+						</div>
+					</div>
+
 				</div>
 				<div id="columnData"></div>
 
