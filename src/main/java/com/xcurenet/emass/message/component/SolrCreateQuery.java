@@ -135,6 +135,12 @@ public class SolrCreateQuery {
 			"user", "user_str", "userid", "name" //사용자
 	};
 
+
+	//public String[] SPECIALCHARS = {"!", "\"", "#", "$", "%", "&", "(", ")", "{", "}", "@", "`", "*", ":", "+", ";", "-", ".", "<", ">", ",", "^", "~", "|", "'", "[", "]"};
+
+
+
+
 	public SolrCreateQuery() {
 		sq = new SolrQuery();
 		queryBuffer = new StringBuilder();
@@ -990,15 +996,33 @@ public class SolrCreateQuery {
 		if (Common.isOrEquals(minMsgsize, "", "0") && Common.isOrEquals(maxMsgsize, "", "0") && Common.isEquals(size_condition, "B")) return this;
 		if (Common.isOrEquals(minMsgsize, "", "0") && Common.isEquals(size_condition, "S")) return this;
 
-		String queryStr = "";
-		if (size_condition.equals("B") || size_condition.equals("")) {
-			queryStr = "[" + minMsgsize + " TO " + maxMsgsize + "]";
-		} else if (size_condition.equals("L")) queryStr = "[" + minMsgsize + " TO * ]";
-		else if (size_condition.equals("S")) queryStr = "[ * TO " + minMsgsize + "]";
+		String queryStr = ""; //
+		String sizeFilter = ""; // array 값 검색 size search filter 용
 
-		if(Common.isEquals(sizeType, "B")) return addQuery(String.format("%s%s:%s", AND_QUERY, BODY_SIZE, queryStr));
-		else if(Common.isEquals(sizeType, "A")) return addQuery(String.format("%s%s:%s", AND_QUERY, ATTACH_SIZE, queryStr));
-		else return addQuery(String.format("%s%s:%s", AND_QUERY, SIZE, queryStr));
+		if (size_condition.equals("B") || size_condition.equals("")) {
+			queryStr = String.format("%s(%s#FILED:>=%s  %s#FILED:<%s)", AND_QUERY,AND_QUERY,minMsgsize,AND_QUERY,maxMsgsize);
+			sizeFilter =  String.format("doc['#FILED'].stream().max(Long::compare).orElse(-1) >= %s && doc['#FILED'].stream().max(Long::compare).orElse(-1) <%s", minMsgsize,maxMsgsize);
+		} else if (size_condition.equals("L")) {
+			queryStr = String.format("%s(%s#FILED:>=0  %s#FILED:<2147483000)", AND_QUERY, AND_QUERY,AND_QUERY, minMsgsize);
+			sizeFilter =  String.format("doc['#FILED'].stream().max(Long::compare).orElse(-1) >= %s && doc['#FILED'].stream().max(Long::compare).orElse(-1) < 2147483000", minMsgsize);
+		}
+		else if (size_condition.equals("S")) {
+			queryStr = String.format("%s(%s#FILED:>=0  %s#FILED:<%s)", AND_QUERY, AND_QUERY, AND_QUERY, minMsgsize);
+			sizeFilter =  String.format("doc['#FILED'].stream().max(Long::compare).orElse(-1) >= 0 && doc['#FILED'].stream().max(Long::compare).orElse(-1) < %s", minMsgsize);
+		}
+
+
+		if(Common.isEquals(sizeType, "B")) {
+			sq.setParam("sizeFilter",sizeFilter.replaceAll("#FILED",BODY_SIZE));
+			return addQuery(queryStr.replaceAll("#FILED",BODY_SIZE));
+		}
+		else if(Common.isEquals(sizeType, "A")){
+			sq.setParam("sizeFilter",sizeFilter.replaceAll("#FILED",ATTACH_SIZE));
+			return addQuery(queryStr.replaceAll("#FILED",ATTACH_SIZE));
+		} else{
+			sq.setParam("sizeFilter",sizeFilter.replaceAll("#FILED",SIZE));
+			return   addQuery(queryStr.replaceAll("#FILED",SIZE));
+		}
 	}
 
 	/**
@@ -1307,9 +1331,11 @@ public class SolrCreateQuery {
 			for (int i = 0; i < terms.length; i++) {
 				if (terms[i].equals("|")) {
 					terms[i] = OR_PREFIX;
-				} else if (i < terms.length - 1 && !terms[i + 1].equals("|")) {
-					terms[i] = "+" + terms[i];
-				}else {
+				}
+//				else if (i < terms.length - 1 && !terms[i + 1].equals("|")) {
+//					terms[i] = "+" + terms[i];
+//				}
+				else {
 					querySb.append("(".concat(appendSpecialchar(terms[i])).concat(")")).append(" ");				}
 			}
 			sb.append("+").append(querySb.toString().trim().replaceAll(" ", " ").replaceAll("__", " "));
@@ -1360,7 +1386,7 @@ public class SolrCreateQuery {
 		else if (str.endsWith(SPECIAL_CHAR)) return str;
 		else if (str.endsWith(OR_PREFIX)) return str;
 		else if (str.endsWith("\"")) return str;
-		else return str;
+		else return  ("\"").concat(str).concat( "\"");
 	}
 
 	private String createOrQueryAsterisk(String params) {
