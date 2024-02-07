@@ -297,7 +297,7 @@
 	        endDt: endDt,
 	        adminId: adminId,
 	        pMenuId: pMenuId,
-	        menuId: menuId,
+	        menuId: menuIdmenuclick
 	        operation: operation,
 	        searchStr: searchStr,
 	        offset: grid.data.length,

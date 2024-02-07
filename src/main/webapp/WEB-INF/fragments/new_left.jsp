@@ -97,8 +97,8 @@
 				if (menuList[k].pid == currentMenuId && menuList[k].pid != null) {
                     if ((menuList[k].menuId == "SEARCH_LOG") && (consentMenuEnable == "false")) continue;
 					html += '<li><span>-</span>';
-					html += '<a menuClick id=' + menuList[k].menuLink + ' href="#">' + menuList[k].defaultName + '</a>';
-					html += '<ul  id="' + menuList[k].menuId + '"  lastMenuUl>';
+                    html += '<a menuClick id="' + menuList[k].menuLink + '" href="' + mainContext + '/' + menuList[k].menuLink + '">' + menuList[k].defaultName + '</a>';
+                    html += '<ul  id="' + menuList[k].menuId + '"  lastMenuUl>';
 					for (let l in menuList) {
                         if ((menuList[l].menuId == "CONSENT_MGMT") && (consentMenuEnable == "false")) continue;
 						if (menuList[l].pid == null || menuList[l].pid != menuList[k].menuId) continue;
