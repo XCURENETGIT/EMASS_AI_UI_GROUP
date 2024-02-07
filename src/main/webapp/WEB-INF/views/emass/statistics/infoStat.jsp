@@ -695,6 +695,20 @@
 		var type = type;
 		var pi_total = pi_total;
 		var piCount = $('#piCount').val();
+        var busiStr = arrayToString($('#busiSelect').selectpicker('val'));
+        var dv = $('#deptVal').val().split('|');
+        var dept = dv.join(',');
+
+        var deptStr = '';
+        if (dept != '') deptStr = dept;
+        else deptStr = '';
+
+        var uv = $('#userVal').val().split('|');
+        var user = uv.join(',');
+
+        var userStr = '';
+        if (user != '') userStr = user;
+        else userStr = '';
 		ui.postJson({
 			url: 'getInfoNetwork.xcn',
 			userkey: userkey,
@@ -704,7 +718,10 @@
 			piCount: 1,
 			offset: 0,
 			limit: -1,
-			success: function (data, total) {
+            deptStr: deptStr,
+            busiStr: busiStr,
+            userStr: userStr,
+            success: function (data, total) {
 				grid2.setData(data);
 				var nodes = [];
 				var edges = [];

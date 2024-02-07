@@ -25,7 +25,7 @@ import java.util.concurrent.*;
 @Service
 public class SnmpPolling {
 
-	protected final List<DeviceVO> devices = Collections.synchronizedList(new ArrayList<>());
+	private List<DeviceVO> devices;
 
 	private List<SnmpThread> deviceStatusTask;
 
@@ -40,28 +40,21 @@ public class SnmpPolling {
 	@Autowired
 	private ApplicationContext context;
 
-	public List<DeviceVO> getDevices() {
-		synchronized (devices) {
-			return devices;
-		}
-	}
 
 	@PostConstruct
 	public void init() {
 		log.info("[장비정보] LOAD START..");
-		synchronized (devices) {
-			devices.clear();
-			devices.addAll(deviceService.getDeviceList(null, null, 0, 0));
-		}
+		devices = deviceService.getDeviceList(null,null, 0, 0);
 		log.info("[장비정보] LOAD END..");
 	}
+
 
 	public void reload() {
 		init();
 	}
 
 	public String getDeviceStatus(String deviceSeq) {
-		if (devices.isEmpty()) return Common.EMPTY;
+		if (devices == null || devices.size() == 0) return Common.EMPTY;
 		for (DeviceVO device : devices) {
 			if (Common.isEquals(device.getDeviceSeq(), deviceSeq)) {
 				return device.getCurrentDeviceStatus();
@@ -72,7 +65,7 @@ public class SnmpPolling {
 
 	@Scheduled(fixedDelay = 300000, initialDelay = 10000)
 	@Description("장비 정보 Reload")
-	public void deviceReload() {
+	public void deviceReload() throws Exception {
 		log.info("장비 정보 Reload");
 		init();
 	}
@@ -111,66 +104,64 @@ public class SnmpPolling {
 	@Description("장비 상태 모니터링 스케쥴러")
 	public void deviceStatus() throws Exception {
 		log.info("장비 상태 모니터링 스케쥴러 START device.size : {}", devices.size());
-		if (devices.isEmpty()) return;
+		if (devices == null || devices.size() == 0) return;
 		ExecutorService es = Executors.newFixedThreadPool(devices.size());
 		try {
 			List<SnmpThread> tasks = deviceStatusTask();
-			List<Future<DeviceVO>> future = es.invokeAll(tasks, 4, TimeUnit.SECONDS);
+			List<Future<DeviceVO>> future = es.invokeAll(tasks, 10, TimeUnit.SECONDS);
 			statusChange(future, tasks);
 		} catch (Exception e) {
-			log.error("", e);
+			log.error("deviceStatus check error : {}", e);
 		} finally {
 			es.shutdownNow();
 		}
-		for (DeviceVO device : devices) {
-			log.info("DeviceVO {}", device);
-		}
 	}
 
+
 	public void statusChange(List<Future<DeviceVO>> futures, List<SnmpThread> tasks) throws InterruptedException, ExecutionException {
-		synchronized (devices) {
-			try {
-				for (int i = 0; i < futures.size(); i++) {
-					final Future<DeviceVO> future = futures.get(i);
-					try {
-						DeviceVO device = future.isCancelled() ? tasks.get(i).getDevice() : future.get();
-						for (int j = 0; j < devices.size(); j++) {
-							if (Common.isEquals(devices.get(j).getDeviceIp(), device.getDeviceIp())) {
-								log.debug("모니터링 : {}", device);
-								devices.set(j, device);
-								break;
-							}
-						}
-					} catch (Exception e) {
-						log.error("", e);
+		try {
+			for (int i = 0; i < futures.size(); i++) {
+				final Future<DeviceVO> future = futures.get(i);
+				try {
+					DeviceVO device = null;
+					if (future.isCancelled()) {
+						device = tasks.get(i).getDevice();
+					} else {
+						device = future.get();
 					}
+					for (int j = 0; j < devices.size(); j++) {
+						if (Common.isEquals(devices.get(j).getDeviceIp(), device.getDeviceIp())) {
+							log.debug("모니터링 : {}", device);
+							devices.set(j, device);
+							break;
+						}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-			} catch (Exception e) {
-				log.error("", e);
+
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
 	private List<SnmpThread> deviceStatusTask() {
 		deviceStatusTask = new ArrayList<>();
-		synchronized (devices) {
-			for (DeviceVO device : devices) {
-				SnmpThread st = this.context.getBean(SnmpThread.class);
-				st.setDevice(device);
-				deviceStatusTask.add(st);
-			}
+		for (DeviceVO device : devices) {
+			SnmpThread st = this.context.getBean(SnmpThread.class);
+			st.setDevice(device);
+			deviceStatusTask.add(st);
 		}
 		return deviceStatusTask;
 	}
 
 	private List<SnmpStat> trafficStatTask() {
 		trafficStatTask = new ArrayList<>();
-		synchronized (devices) {
-			for (DeviceVO device : devices) {
-				SnmpStat st = this.context.getBean(SnmpStat.class);
-				st.setDevice(device);
-				trafficStatTask.add(st);
-			}
+		for (DeviceVO device : devices) {
+			SnmpStat st = this.context.getBean(SnmpStat.class);
+			st.setDevice(device);
+			trafficStatTask.add(st);
 		}
 		return trafficStatTask;
 	}

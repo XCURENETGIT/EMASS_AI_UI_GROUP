@@ -79,6 +79,11 @@ public class UserGroupController {
 	public XcnResponseVO getUserGroupItemList(final HttpServletRequest request, final HttpSession session) throws Exception {
 		String groupCode = Common.nvl(request.getParameter("groupCode"));
 		String searchStr = Common.nvl(request.getParameter("searchStr"));
+
+		if (searchStr != null && searchStr.equalsIgnoreCase("CEO")) {
+			searchStr="CEOY";
+		}
+
 		return new XcnResponseVO(XcnRspCode.OK, userService.getUserGroupItemList(groupCode, searchStr));
 	}
 	

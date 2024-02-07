@@ -13,7 +13,7 @@
 	<delete id="deleteAllUserIps">
 		DELETE FROM UI_USER_IP
 	</delete>
-	
+
 	<delete id="deleteUserGroupByInsaAuto">
 		DELETE FROM UI_USER_GROUP_LIST WHERE USER_ID IN (
 		SELECT  USER_ID
@@ -28,18 +28,18 @@
 				) AS R
 		)
 	</delete>
-	
+
 	<insert id="replaceUser" parameterType="userVO">
 		INSERT IGNORE INTO UI_USERS (USER_ID, USER_NM, COCD, GENERALCD, BUSICD, DEPTCD, JIKINCD, JIKGUBCD)
 		VALUES ( #{userId}, #{userNm}, #{coCd}, #{generalCd}, #{busiCd}, #{deptCd}, #{jikinCd}, #{jikgubCd} )
 	</insert>
 	<!-- 인사 정보 자동 연동 -->
-	
+
 	<select id="getUserIds" resultType="hashmap" parameterType="hashmap">
 	    SELECT	B.USER_IP AS hash_key, IFNULL(A.USER_ID,'-') AS value
 	    FROM	UI_USERS A JOIN	UI_USER_IP B ON A.USER_ID = B.USER_ID
 	    UNION
-	    SELECT	
+	    SELECT
 			    <if test='encryptUseYN == "Y"'>
 				LOWER(CAST(if(B.USER_EMAIL is null, null, xcndec(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, B.USER_EMAIL)) AS CHAR)) AS userEmail,
 				</if>
@@ -49,11 +49,11 @@
 			    IFNULL(A.USER_ID,'-')
 	    FROM	UI_USERS A JOIN	UI_USER_EMAIL B ON A.USER_ID = B.USER_ID
 	</select>
-	
+
 	<select id="getUserNames" resultType="hashmap" parameterType="hashmap">
 		SELECT  LOWER(USER_ID) AS hash_key, IFNULL(USER_NM,'-') AS value FROM UI_USERS
 		UNION
-		SELECT  
+		SELECT
 				<if test='encryptUseYN == "Y"'>
 				LOWER(CAST(if(A.USER_EMAIL is null, null, xcndec(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, A.USER_EMAIL)) AS CHAR)) AS userEmail,
 				</if>
@@ -64,7 +64,7 @@
 		UNION
 		SELECT  A.USER_IP, IFNULL(B.USER_NM,'-') FROM UI_USER_IP A JOIN UI_USERS B WHERE A.USER_ID = B.USER_ID
 	</select>
-	
+
 	<select id="getUserCoNms" resultType="hashmap" parameterType="hashmap">
 	    SELECT	LOWER(USER_ID) AS hash_key, IFNULL(CONM,'-') AS value
 	    FROM	UI_USERS A
@@ -76,7 +76,7 @@
 	    JOIN	UI_USER_IP B ON A.USER_ID = B.USER_ID
 	    JOIN	UI_CO C ON A.COCD = C.COCD
 	    UNION
-	    SELECT	
+	    SELECT
 	    		<if test='encryptUseYN == "Y"'>
 				LOWER(CAST(if(B.USER_EMAIL is null, null, xcndec(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, B.USER_EMAIL)) AS CHAR)) AS userEmail,
 				</if>
@@ -113,7 +113,7 @@
 		JOIN	UI_BUSI C ON A.BUSICD = C.BUSICD
 	</select>
 
-	
+
 	<select id="getUserDepts" resultType="hashmap" parameterType="hashmap">
 		SELECT	LOWER(USER_ID) AS hash_key, IFNULL(DEPTNM,'-') AS value
     	FROM	UI_USERS A
@@ -125,7 +125,7 @@
 	    JOIN	UI_USER_IP B ON A.USER_ID = B.USER_ID
 	    JOIN	UI_DEPT C ON A.DEPTCD = C.DEPTCD
 	    UNION
-	    SELECT	
+	    SELECT
 	    		<if test='encryptUseYN == "Y"'>
 				LOWER(CAST(if(B.USER_EMAIL is null, null, xcndec(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, B.USER_EMAIL)) AS CHAR)) AS userEmail,
 				</if>
@@ -137,7 +137,7 @@
 	    JOIN	UI_USER_EMAIL B ON A.USER_ID = B.USER_ID
 	    JOIN	UI_DEPT C ON A.DEPTCD = C.DEPTCD
 	</select>
-	
+
 	<select id="getUserJikgubs" resultType="hashmap" parameterType="hashmap">
 		SELECT	LOWER(USER_ID) AS hash_key, IFNULL(JIKGUBNM,'-') AS value
     	FROM	UI_USERS A
@@ -149,7 +149,7 @@
 	    JOIN	UI_USER_IP B ON A.USER_ID = B.USER_ID
 	    JOIN	UI_JIKGUB C ON A.JIKGUBCD = C.JIKGUBCD
 	    UNION
-	    SELECT	
+	    SELECT
 	    		<if test='encryptUseYN == "Y"'>
 				LOWER(CAST(if(B.USER_EMAIL is null, null, xcndec(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, B.USER_EMAIL)) AS CHAR)) AS userEmail,
 				</if>
@@ -161,9 +161,9 @@
 	    JOIN	UI_USER_EMAIL B ON A.USER_ID = B.USER_ID
 	    JOIN	UI_JIKGUB C ON A.JIKGUBCD = C.JIKGUBCD
 	</select>
-	
+
 	<select id="getUserEmails" resultType="hashmap" parameterType="hashmap">
-	    SELECT	A.USER_IP AS hash_key, 
+	    SELECT	A.USER_IP AS hash_key,
 	    		<if test='encryptUseYN == "Y"'>
 				CAST(if(B.USER_EMAIL is null, '-', xcndec(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, B.USER_EMAIL)) AS CHAR) AS value
 				</if>
@@ -174,7 +174,7 @@
 		JOIN	UI_USER_EMAIL B
 		ON		A.USER_ID = B.USER_ID
 		UNION
-		SELECT	
+		SELECT
 				<if test='encryptUseYN == "Y"'>
 				LOWER(CAST(if(USER_EMAIL is null, null, xcndec(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, USER_EMAIL)) AS CHAR)) AS userEmail,
 				if(USER_EMAIL is null, '-', xcndec(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, USER_EMAIL)) AS value
@@ -184,7 +184,7 @@
 				</if>
 		FROM	UI_USER_EMAIL
 	</select>
-	
+
 	<select id="getUserNamebyEmail" resultType="hashmap" parameterType="hashmap">
 	    SELECT 	IFNULL(B.USER_NM,'-') AS hash_name, LOWER(B.USER_ID) AS hash_id,
 	   			<if test='encryptUseYN == "Y"'>
@@ -192,17 +192,17 @@
 				</if>
 				<if test='encryptUseYN != "Y"'>
 				LOWER(IFNULL(A.USER_EMAIL,'-')) AS hash_key
-				</if> 
-  		FROM 	UI_USER_EMAIL A JOIN UI_USERS B 
+				</if>
+  		FROM 	UI_USER_EMAIL A JOIN UI_USERS B
   		WHERE 	A.USER_ID = B.USER_ID
 	</select>
-	
+
 	<!-- CEO 등록 -->
 	<insert id="insertUserCeo" parameterType="userVO">
-		REPLACE	INTO UI_CEO (USER_ID) 
+		REPLACE	INTO UI_CEO (USER_ID)
 		VALUES	(#{userId})
 	</insert>
-	
+
 	<!-- 사용자 IP 삭제 -->
 	<delete id="deleteUserCeo" parameterType="userVO">
 		DELETE FROM UI_CEO WHERE USER_ID = #{userId}
@@ -210,13 +210,13 @@
 
 	<!-- 사용자 등록 -->
 	<insert id="insertUser" parameterType="userVO">
-		INSERT INTO UI_USERS (USER_ID, USER_NM, COCD, GENERALCD, BUSICD, DEPTCD, JIKINCD, JIKGUBCD) 
+		INSERT INTO UI_USERS (USER_ID, USER_NM, COCD, GENERALCD, BUSICD, DEPTCD, JIKINCD, JIKGUBCD)
 		VALUES (#{userId}, #{userNm}, #{coCd}, #{generalCd}, #{busiCd}, #{deptCd}, #{jikinCd}, #{jikgubCd})
 	</insert>
-	
+
 	<!-- 사용자 수정 -->
 	<update id="updateUser" parameterType="userVO">
-		UPDATE	UI_USERS 
+		UPDATE	UI_USERS
 		SET		USER_NM 	= #{userNm},
 				COCD 		= #{coCd},
 				GENERALCD 	= #{generalCd},
@@ -226,7 +226,7 @@
 				JIKGUBCD	= #{jikgubCd}
 		WHERE	USER_ID 	= #{userId}
 	</update>
-	
+
 	<!-- 사용자 IP 등록 -->
 	<insert id="insertUserIp" parameterType="userVO">
 		INSERT IGNORE INTO UI_USER_IP (USER_ID, USER_IP )
@@ -236,21 +236,21 @@
 	<!-- 사용자 EMAIL 등록 -->
 	<insert id="insertUserEmail" parameterType="userVO">
 		INSERT IGNORE INTO UI_USER_EMAIL (USER_ID, USER_EMAIL )
-		VALUES ( #{userId}, 
+		VALUES ( #{userId},
 				<if test='encryptUseYN == "Y"'>
 				xcnenc(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, #{userEmail} )
 				</if>
 				<if test='encryptUseYN != "Y"'>
-				#{userEmail} 
+				#{userEmail}
 				</if>
 				)
 	</insert>
-	
+
 	<!-- 사용자 삭제 시 사용자그룹에서도 해당 사용자 삭제 -->
 	<delete id="deleteUserGroupWithDelUser" parameterType="userVO">
 		DELETE	FROM UI_USER_GROUP_LIST WHERE	FIND_IN_SET(USER_ID, #{userId})
 	</delete>
-	
+
 	<!-- 사용자 삭제 시 관심사용자그룹 전체적으로 정리(사용자 목록에 없는데 관심사용자에 남아있는 데이터 삭제) -->
 	<delete id="updateAdminUserGroupList">
 		DELETE	FROM UI_ADMIN_USER_GROUP_LIST
@@ -264,12 +264,12 @@
 									) X
 							)
 	</delete>
-	
+
 	<!-- 사용자 IP 삭제 -->
 	<delete id="deleteUserIp" parameterType="userVO">
 		DELETE FROM UI_USER_IP WHERE FIND_IN_SET(USER_ID, #{userId})
 	</delete>
-	
+
 	<!-- 사용자 EMAIL 삭제 -->
 	<delete id="deleteUserEmail" parameterType="userVO">
 		DELETE FROM UI_USER_EMAIL WHERE FIND_IN_SET(USER_ID, #{userId})
@@ -304,15 +304,15 @@
 		FROM	(
 				SELECT  A.USER_ID, A.USER_NM, A.COCD, A.GENERALCD, A.BUSICD, A.DEPTCD, A.JIKINCD, A.JIKGUBCD,
 						(SELECT  GROUP_CONCAT( DISTINCT (B.USER_IP) ORDER BY INET_ATON(B.USER_IP) SEPARATOR ', ') FROM UI_USER_IP B WHERE A.USER_ID = B.USER_ID) AS userIp,
-						(SELECT  GROUP_CONCAT( DISTINCT 
+						(SELECT  GROUP_CONCAT( DISTINCT
 						<if test='encryptUseYN == "Y"'>
 						(if(B.USER_EMAIL is null, null, xcndec(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, B.USER_EMAIL)))
 						</if>
 						<if test='encryptUseYN != "Y"'>
 						B.USER_EMAIL
 						</if>
-						ORDER BY B.USER_EMAIL SEPARATOR ', ') 
-						 FROM UI_USER_EMAIL B 
+						ORDER BY B.USER_EMAIL SEPARATOR ', ')
+						 FROM UI_USER_EMAIL B
 						 WHERE A.USER_ID = B.USER_ID) AS userEmail,
 						(SELECT CASE WHEN IFNULL(MAX(B.USER_ID),'N') != 'N' THEN 'Y' ELSE 'N' END FROM UI_CEO B WHERE A.USER_ID = B.USER_ID) AS ceo,
 						(SELECT B.DEPTNM FROM UI_DEPT B WHERE A.DEPTCD = B.DEPTCD) AS deptNm
@@ -335,13 +335,13 @@
 						AND		USER_NM LIKE CONCAT('%', #{searchStr}, '%')
 					</if>
 					<if test='searchType=="userEmail"'>
-						AND		EXISTS ( SELECT USER_ID FROM UI_USER_EMAIL B WHERE 
+						AND		EXISTS ( SELECT USER_ID FROM UI_USER_EMAIL B WHERE
 								<if test='encryptUseYN == "Y"'>
 								if(USER_EMAIL is null, null, xcndec(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, USER_EMAIL))
 								</if>
 								<if test='encryptUseYN != "Y"'>
 								USER_EMAIL
-								</if> 
+								</if>
 								LIKE CONCAT('%', #{searchStr}, '%') AND A.USER_ID = B.USER_ID )
 					</if>
 					<if test='searchType=="userIp"'>
@@ -361,13 +361,13 @@
 			AND		(
 							USER_ID LIKE CONCAT('%', #{searchStr}, '%')
 						OR	USER_NM LIKE CONCAT('%', #{searchStr}, '%')
-						OR	
+						OR
 						<if test='encryptUseYN == "Y"'>
 						if(userEmail is null, null, xcndec(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, userEmail))
 						</if>
 						<if test='encryptUseYN != "Y"'>
 						userEmail
-						</if> 
+						</if>
 						LIKE CONCAT('%', #{searchStr}, '%')
 						OR	userIp LIKE CONCAT('%', #{searchStr}, '%')
 						OR	deptNm LIKE CONCAT('%', #{searchStr}, '%')
@@ -379,60 +379,60 @@
 		LIMIT	${offset}, ${limit}
 		</if>
 	</select>
-	
+
 	<delete id="deleteUser" parameterType="userVO">
 		DELETE	FROM UI_USERS WHERE	FIND_IN_SET(USER_ID, #{userId})
 	</delete>
-	
+
 	<!-- 회사 코드가 삭제 된 경우 사용자 코드 정보 Empty 처리 -->
 	<update id="updateUserCo" parameterType="coVO">
-		UPDATE	UI_USERS 
+		UPDATE	UI_USERS
 		SET		COCD 		= '',
 				GENERALCD 	= '',
 				BUSICD 		= '',
 				DEPTCD 		= ''
 		WHERE	FIND_IN_SET	(COCD, #{coCd} )
 	</update>
-	
+
 	<!-- 사용자 그룹 저장 -->
 	<insert id="insertUserGroup" parameterType="userGroupVO">
 		INSERT INTO UI_USER_GROUP(GROUP_CODE, GROUP_NAME)
 		VALUES (#{groupCode}, #{groupName})
 	</insert>
-	
+
 	<!-- 사용자 그룹이 이미 등록 되어있는지 조회 -->
 	<select id="isUserGroupExist" resultType="int" parameterType="userGroupVO">
 		SELECT	COUNT(*) AS CNT
 		FROM	UI_USER_GROUP
 		WHERE	GROUP_CODE	= #{groupCode}
 	</select>
-	
+
 	<!-- 사용자 그룹 수정 -->
 	<update id="updateUserGroup" parameterType="userGroupVO">
 		UPDATE	UI_USER_GROUP
 		SET		GROUP_NAME = #{groupName}
 		WHERE	GROUP_CODE = #{groupCode}
 	</update>
-	
+
 	<!-- 사용자 그룹 목록 -->
 	<select id="getUserGroupList" parameterType="hashmap" resultType="userGroupVO">
 		SELECT  A.GROUP_CODE AS groupCode
 			  , A.GROUP_NAME AS groupName
-		FROM	UI_USER_GROUP A 
-    	LEFT  JOIN UI_ADMIN_CEO_GROUP B 
+		FROM	UI_USER_GROUP A
+    	LEFT  JOIN UI_ADMIN_CEO_GROUP B
     	ON A.GROUP_CODE = B.GROUP_CODE
 		WHERE	1 = 1
 		<if test='searchStr!=null and searchStr!=""'>
 		AND		(A.GROUP_CODE LIKE CONCAT('%', #{searchStr}, '%')
 					OR A.GROUP_NAME LIKE CONCAT('%', #{searchStr}, '%'))
-		</if>	
+		</if>
 		<if test='ceoReadAuth!=null and ceoReadAuth!=""'>
 		AND B.ADMIN_ID = #{ceoReadAuth}
 		 </if>
 		GROUP BY A.GROUP_CODE, A.GROUP_NAME
 		ORDER	BY groupName
 	</select>
-	
+
 	<!-- 사용자 그룹 삭제 -->
 	<delete id="deleteUserGroup"  parameterType="userGroupVO">
 		DELETE
@@ -493,12 +493,16 @@
 			LIKE CONCAT('%', #{searchStr}, '%')
 			)
 			OR I.USER_IP LIKE CONCAT('%', #{searchStr}, '%')
-			OR B.CONM LIKE CONCAT('%', #{searchStr}, '%') -- 추가적인 칼럼들을 필요에 따라 추가
+			OR B.CONM LIKE CONCAT('%', #{searchStr}, '%')
 			OR C.GENERALNM LIKE CONCAT('%', #{searchStr}, '%')
 			OR D.BUSINM LIKE CONCAT('%', #{searchStr}, '%')
 			OR E.DEPTNM LIKE CONCAT('%', #{searchStr}, '%')
 			OR F.JIKINNM LIKE CONCAT('%', #{searchStr}, '%')
 			OR G.JIKGUBNM LIKE CONCAT('%', #{searchStr}, '%')
+			OR G.JIKGUBNM LIKE CONCAT('%', #{searchStr}, '%')
+		<if test='searchStr == "CEOY"'>
+			OR J.USER_ID IS NOT NULL
+		</if>
 			)
 		</if>
 		AND X.USER_ID = A.USER_ID
@@ -508,47 +512,47 @@
 
 	<!-- 사용자 그룹 아이템 목록 -->
 	<select id="getUserGroupUserList" parameterType="hashmap" resultType="userGroupVO">
-		SELECT 	A.USER_ID AS userId, 
-				GROUP_CONCAT( DISTINCT 
+		SELECT 	A.USER_ID AS userId,
+				GROUP_CONCAT( DISTINCT
 				<if test='encryptUseYN == "Y"'>
 				CAST(if(B.USER_EMAIL is null, null, xcndec(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, B.USER_EMAIL )) AS CHAR)
 				</if>
 				<if test='encryptUseYN != "Y"'>
-				B.USER_EMAIL 
-				</if> 
+				B.USER_EMAIL
+				</if>
 				ORDER BY B.USER_EMAIL SEPARATOR ', ') AS userEmail,
 				GROUP_CONCAT( DISTINCT (C.USER_IP) ORDER BY INET6_ATON(C.USER_IP) SEPARATOR ', ') AS userIp
-		FROM 	UI_USER_GROUP_LIST A 
+		FROM 	UI_USER_GROUP_LIST A
 				LEFT OUTER JOIN UI_USER_EMAIL B ON A.USER_ID = B.USER_ID
 				LEFT OUTER JOIN UI_USER_IP C ON A.USER_ID = C.USER_ID
 		WHERE	FIND_IN_SET(A.GROUP_CODE, #{groupCodes})
 		GROUP BY A.USER_ID
 	</select>
-	
+
 	<!-- 룰 구성 요소 사용자 그룹 등록 여부 확인 -->
 	<select id="isUserGroupItemExist" resultType="int" parameterType="userGroupVO">
 		SELECT	COUNT(*) AS CNT
-		FROM	UI_USER_GROUP_LIST 
+		FROM	UI_USER_GROUP_LIST
 		WHERE	GROUP_CODE = #{groupCode}
 		AND		USER_ID = #{userId}
 	</select>
-	
+
 	<!-- 사용자 그룹 아이템 저장 -->
 	<insert id="insertUserGroupItem" parameterType="userGroupVO">
 		INSERT	INTO UI_USER_GROUP_LIST (GROUP_CODE, LIST_SEQ, USER_ID)
 		SELECT	#{groupCode}, IFNULL(MAX(LIST_SEQ),0)+1, #{userId} FROM UI_USER_GROUP_LIST
 	</insert>
-	
+
 	<!-- 사용자 그룹 아이템 삭제 -->
 	<delete id="deleteUserGroupItem" parameterType="userGroupVO">
-		DELETE	
+		DELETE
 		FROM	UI_USER_GROUP_LIST
 		WHERE	GROUP_CODE = #{groupCode}
 		<if test='listSeq!=null and listSeq!=""'>
 		AND		LIST_SEQ = #{listSeq}
 		</if>
 	</delete>
-	
+
 	<select id="getBusiNmByIpRange" resultType="userVO" parameterType="hashMap">
 		SELECT	B.BUSICD AS busiCd, B.BUSINM AS busiNm
 		FROM	UI_BUSI_IPRANGE A, UI_BUSI B
@@ -556,7 +560,7 @@
 		AND		INET_ATON(#{userIp}) BETWEEN INET_ATON(START_IP) AND INET_ATON(END_IP)
 		LIMIT	1
 	</select>
-	
+
 	<select id="getDeptNmByIpRange" resultType="userVO" parameterType="hashMap">
 		SELECT	B.DEPTCD AS deptCd, B.DEPTNM AS deptNm
 		FROM	UI_DEPT_IPRANGE A, UI_DEPT B
@@ -564,7 +568,7 @@
 		AND		INET_ATON(#{userIp}) BETWEEN INET_ATON(START_IP) AND INET_ATON(END_IP)
 		LIMIT	1
 	</select>
-	
+
 	<select id="getConUserGroupList" resultType="userGroupVO">
 		SELECT	DISTINCT A.GROUP_CODE AS groupCode
 				, B.GROUP_NAME AS groupName

@@ -147,6 +147,52 @@ Date 1분 경고
 
         });
 
+        $("#alertChangeMemoryPop").on('shown.bs.modal', function() {
+            $('#alarmMemoryLv2Critical').slider('setValue', $(this).attr('memInfoLimit'));
+
+            $('#alarmMemoryLv2Text').html($(this).attr('memInfoLimit'));
+            if( $(this).attr('memInfoLimit') == '0' ) {
+                $('#alarmMemoryUsed').prop('checked', false);
+                $('#alarmMemoryModal').show();
+
+            } else {
+                $('#alarmMemoryUsed').prop('checked', true);
+                $('#alarmMemoryModal').hide();
+            }
+        });
+
+        $('#alarmMemoryLv2Critical').slider().on('slide', function(ev){
+            $('#alarmMemoryLv2Text').text(ev.value);
+        });
+
+        $('#alarmMemoryUsed').click(function(){
+            var checked = $('#alarmMemoryUsed:checked').length;
+            if( checked == 0) { $('#alarmMemoryModal').show(); }
+            else { $('#alarmMemoryModal').hide(); }
+
+            var lv2 = $('#alarmMemoryLv2Text').text( );
+            if( lv2 == 0 ) {
+                $('#alarmMemoryLv2Text').html('1');
+            }
+        });
+
+
+
+        $(document).on('click', '.alertChangeCpu', function(){
+            $('#alertChangeCpuPop').attr('mode', 'insert');
+            $('#alertChangeCpuPop').modal('show');
+            $('#alertChangeCpuPop').attr('idx', $('.alertChangeCpu').index(this));
+            $('#alertChangeCpuPop').attr('cpuLoadLimit', $(this).attr('cpuLoadLimit'));
+        });
+
+        $(document).on('click', '.alertChangeMemory', function(){
+            $('#alertChangeMemoryPop').attr('mode', 'insert');
+            $('#alertChangeMemoryPop').modal('show');
+            $('#alertChangeMemoryPop').attr('idx', $('.alertChangeMemory').index(this));
+            $('#alertChangeMemoryPop').attr('memInfoLimit', $(this).attr('memInfoLimit'));
+        });
+
+
         $('#deviceDelete').click(function () {
             let deviceSeqs = [];
             $("input[name='checkDevice']:checked").each(function () {
@@ -198,8 +244,6 @@ Date 1분 경고
             $('#notify_file_mem').prop('checked', device.memNotifyUseYn === 'Y');
             $('#sms_file').prop('checked', device.hddSmsUseYn === 'Y');
             $('#notify_file').prop('checked', device.hddNotifyUseYn === 'Y');
-            $('#sms_proc').prop('checked', device.processSmsUseYn === 'Y');
-            $('#notify_proc').prop('checked', device.processNotifyUseYn === 'Y');
             $('#sms_inter').prop('checked', device.interfaceSmsUseYn === 'Y');
             $('#notify_inter').prop('checked', device.interfaceNotifyUseYn === 'Y');
 
@@ -274,7 +318,6 @@ Date 1분 경고
         data.push({confId: 'device.cpu.notify.' + deviceSeq, val: $('#notify_file_cpu').prop('checked') ? 'Y' : 'N'});
         data.push({confId: 'device.mem.sms.' + deviceSeq, val: $('#sms_file_mem').prop('checked') ? 'Y' : 'N'});
         data.push({confId: 'device.mem.notify.' + deviceSeq, val: $('#notify_file_mem').prop('checked') ? 'Y' : 'N'});
-        data.push({confId: 'device.process.sms.' + deviceSeq, val: $('#sms_proc').prop('checked') ? 'Y' : 'N'});
         data.push({confId: 'device.process.notify.' + deviceSeq, val: $('#notify_proc').prop('checked') ? 'Y' : 'N'});
         data.push({confId: 'device.interface.sms.' + deviceSeq, val: $('#sms_inter').prop('checked') ? 'Y' : 'N'});
         data.push({
@@ -356,7 +399,7 @@ Date 1분 경고
             str += '    <span class="usage_rate">' + nvl(device.usedRate) + '</span>';
             str += '    <span>';
             str += '        <div class="usage">';
-            str += '            <span class="usage-reading">' + nvn(device.used) + ' / ' + nvn(device.total) + '</span>';
+            str += '           <span class="usage-reading">' + nvn(device.used) + ' / ' + nvn(device.total) + '<a href="javascript:void(0)" style="position: relative; top: 3px; left: 5px; font-size: 18px;" class="alertChangeMemory"><span class="glyphicon glyphicon-bell" title="" style="color: black;"></span></a></span>';
             str += '            <span class="usage-bar usage-low" style="width: ' + device.usedRate + '"></span>';
             str += '            <span class="usage-bar-rest"></span>';
             str += '        </div>';
@@ -440,7 +483,6 @@ Date 1분 경고
 
     //장비 추가
     function insertDevice() {
-        console.log("들어옴");
 
         $('#deviceInfoSaveBtn').prop('disabled', true);
         ui.confirmMsg('<s:message code="common.msg.confirm.save"/>', '', '', function (rs) {
@@ -641,19 +683,6 @@ Date 1분 경고
 						</div>
 						<div class="row" >
 							<div class="col-35">
-								<label for="deviceSSHPassword" class="fname"> <s:message
-										code="deviceInfo.process"/></label>
-							</div>
-							<div class="col-65">
-								<div class="checkbox">
-									<input type="checkbox" class="mar8" id="sms_proc"><label for="sms_proc" ><span class= "checktit">SMS</span></label>
-									<input type="checkbox" class="mar8"  style="margin-left: 8px;" id="notify_proc"><label for="notify_proc" ><span class="checktit"><s:message code="deviceInfo.alarm"/></span></label>
-										(<s:message code="deviceInfo.set.alarm.status"/>)
-								</div>
-							</div>
-						</div>
-						<div class="row" >
-							<div class="col-35">
 								<label for="deviceSSHPassword" class="fname"><s:message
 										code="deviceInfo.interface"/></label>
 							</div>
@@ -778,3 +807,42 @@ Date 1분 경고
 		</div>
 	</div>
 </div>
+
+
+<div class="modal" id="alertChangeMemoryPop" aria-labelledby="alertChangeMemoryModal" tabindex="-1" role="dialog"
+     data-backdrop="static">
+	<div class="modal-content">
+		<form method="post" id="alertChangeMemoryForm">
+			<div class="modalHead">
+				<h2><s:message code="deviceInfo.set.critical"/></h2>
+				<span class="close" data-dismiss="modal">&times;</span>
+			</div>
+			<div class="modalCon">
+				<div class="modalTop">
+					<input type="checkbox" class="mar8" id="alarmMemoryUsed"><label class="fname"><s:message code="deviceInfo.use.critical"/>
+				</div>
+				<div class="modalbody">
+					<div style="background-color: #000; opacity: .2; position: absolute; top: 44px; left: 19px; right: 19px; bottom: 95px; z-index: 999;" id="alarmMemoryModal"></div>
+					<div class="row">
+						<div class="col-35">
+							<label class="fname"><s:message code="deviceInfo.caution"/></label>
+						</div>
+						<div class="col-65">
+							<input style="width: 200px;" type="text" id="alarmMemoryLv2Critical" class="span2" value="" data-slider-min="10" data-slider-max="99" data-slider-step="1" data-slider-orientation="horizontal" data-slider-selection="before"data-slider-tooltip="hide" data-slider-id="saturationCri">
+							<label><s:message code="deviceInfo.msg.over.mem.log"/></label>
+						</div>
+					</div>
+				</div>
+				<div class="modalfooter">
+					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message
+							code="common.msg.close"/></button>
+					<button type="button" class="pop_btn02 saveAlarmMemoryPopBtnv" accesskey="S"><s:message
+							code="common.msg.save"/></button>
+				</div>
+			</div>
+
+	</div>
+	</form>
+</div>
+</div>
+

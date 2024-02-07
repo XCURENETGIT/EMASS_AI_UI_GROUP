@@ -711,9 +711,9 @@
 											</div>
 										</div>
 
-										<div class="row" id="useYn">
+										<div class="row" id="">
 											<div class="col-35">
-												<label for="useYnVal"><s:message code="common.msg.useyn"/></label>
+												<label for=""><s:message code="common.msg.useyn"/></label>
 											</div>
 											<div class="col-65">
 												<div class="radiotab w100">
@@ -725,7 +725,7 @@
 													<input type="radio" name="useYnVal" value="N"><span
 														class="fa fa-check"><span class="text">
 													    <s:message code="common.msg.unuse"/></span></span></label>
-													<input type="hidden" name="useYnVal" id="useYn">
+													<input type="hidden" name="useYn" id="useYn">
 												</div>
 											</div>
 										</div>
