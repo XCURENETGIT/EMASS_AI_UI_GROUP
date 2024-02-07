@@ -13,10 +13,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
+import java.io.*;
+import java.util.Objects;
 
 public class PdfWriter {
 
@@ -40,17 +38,16 @@ public class PdfWriter {
 	private String html;
 	private String check;
 
-	private BaseFont baseFont = BaseFont.createFont(this.getClass().getResource("").getPath() + pathReplace("../../files/font/dotum.ttf"), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-	private BaseFont baseFont9 = BaseFont.createFont(this.getClass().getResource("").getPath() + pathReplace("../../files/font/Pretendard-Black.ttf"), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-	private BaseFont baseFont8 = BaseFont.createFont(this.getClass().getResource("").getPath() + pathReplace("../../files/font/Pretendard-Bold.ttf"), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-	private BaseFont baseFont7 = BaseFont.createFont(this.getClass().getResource("").getPath() + pathReplace("../../files/font/Pretendard-Medium.ttf"), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-	private BaseFont baseFont6 = BaseFont.createFont(this.getClass().getResource("").getPath() + pathReplace("../../files/font/Pretendard-Regular.ttf"), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-	private BaseFont baseFont5 = BaseFont.createFont(this.getClass().getResource("").getPath() + pathReplace("../../files/font/Pretendard-SemiBold.ttf"), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-	private BaseFont baseFont4 = BaseFont.createFont(this.getClass().getResource("").getPath() + pathReplace("../../files/font/Pretendard-Light.ttf"), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-	private BaseFont baseFont3 = BaseFont.createFont(this.getClass().getResource("").getPath() + pathReplace("../../files/font/Pretendard-ExtraLight.ttf"), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-	private BaseFont baseFont2 = BaseFont.createFont(this.getClass().getResource("").getPath() + pathReplace("../../files/font/Pretendard-Thin.ttf"), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-
-	Font font2 = FontFactory.getFont(pathReplace("path/to/Pretendard-Black.subset.woff2"), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+	private final BaseFont baseFont = getFontPath("dotum.ttf");
+	private BaseFont baseFont9 = getFontPath("Pretendard-Black.ttf");
+	private BaseFont baseFont8 = getFontPath("Pretendard-Bold.ttf");
+	private BaseFont baseFont7 = getFontPath("Pretendard-Medium.ttf");
+	private BaseFont baseFont6 = getFontPath("Pretendard-Regular.ttf");
+	private BaseFont baseFont5 = getFontPath("Pretendard-SemiBold.ttf");
+	private BaseFont baseFont4 = getFontPath("Pretendard-Light.ttf");
+	private BaseFont baseFont3 = getFontPath("Pretendard-ExtraLight.ttf");
+	private BaseFont baseFont2 = getFontPath("Pretendard-Thin.ttf");
+	private Font font2 = getFont("Pretendard-Black.subset.woff2");
 
 	public PdfWriter(final String title, final JSONArray header, final JSONArray data, final FileOutputStream out) throws Exception {
 		this.title = title;
@@ -70,7 +67,7 @@ public class PdfWriter {
 	}
 
 
-	public PdfWriter(final String title,final  String reportDate,final String searchDate, final String html, final String check, final FileOutputStream out) throws Exception {
+	public PdfWriter(final String title, final String reportDate, final String searchDate, final String html, final String check, final FileOutputStream out) throws Exception {
 
 		this.title = title;
 		this.reportDate = reportDate;
@@ -94,8 +91,6 @@ public class PdfWriter {
 	}
 
 
-
-
 	private void writeData() {
 		Font f2 = new Font(baseFont, 6);
 		for (int i = 0; i < data.size(); i++) {
@@ -108,7 +103,6 @@ public class PdfWriter {
 			}
 		}
 	}
-
 
 
 	private void write_reData() {
@@ -214,7 +208,7 @@ public class PdfWriter {
 		Image img2 = Image.getInstance(pathReplace("src/main/resources/static/img/login_bi.png"));
 		/*img1.scaleAbsolute(30, 30);*/
 		img2.scaleAbsolute(40, 40);
-		Paragraph emassPro  = new Paragraph();
+		Paragraph emassPro = new Paragraph();
 		emassPro.add(new Chunk(img2, 0, 0));
 		emassPro.add(new Chunk("EMASS AI", new Font(baseFont5, 15, Font.NORMAL)));
 
@@ -226,9 +220,9 @@ public class PdfWriter {
 		doc.add(title);
 
 		// A4 용지 맨 아래에 기간과 searchDate 추가
-		Paragraph period = new Paragraph( searchDate, new Font(baseFont6, 12, Font.NORMAL));
+		Paragraph period = new Paragraph(searchDate, new Font(baseFont6, 12, Font.NORMAL));
 		period.setAlignment(com.itextpdf.text.Element.ALIGN_CENTER);
-		period.setSpacingBefore(doc.getPageSize().getHeight() * 0.02f ); // 적절한 간격 조절
+		period.setSpacingBefore(doc.getPageSize().getHeight() * 0.02f); // 적절한 간격 조절
 		doc.add(period);
 
 		emptyLine(20);
@@ -243,9 +237,6 @@ public class PdfWriter {
 			doc.add(new Paragraph(" ", new Font(baseFont2, 12, Font.BOLD)));
 		}
 	}
-
-
-
 
 
 	private void writeHeader() throws Exception {
@@ -276,7 +267,18 @@ public class PdfWriter {
 		new PdfWriter("개별 통신 내역", null, null, new FileOutputStream(new File("d://aaaa.pdf")));
 	}
 
-	public String pathReplace(String str){
-		return str.replaceAll("//",File.separator);
+	public BaseFont getFontPath(String fontName) throws DocumentException, IOException {
+		if (Common.isWindow())
+			return BaseFont.createFont(Objects.requireNonNull(this.getClass().getResource("")).getPath() + pathReplace("../../files/font/" + fontName), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+		else return BaseFont.createFont("../conf/font/" + fontName, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+	}
+
+	public Font getFont(String fontName) throws DocumentException, IOException {
+		if (Common.isWindow()) return FontFactory.getFont(pathReplace("path/to/" + fontName), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+		else return FontFactory.getFont("../conf/font/" + fontName, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+	}
+
+	public String pathReplace(String str) {
+		return str.replaceAll("//", File.separator);
 	}
 }
