@@ -217,7 +217,8 @@
                     'code': selectData[i].code,
                     'codeName': selectData[i].codeName,
                     'tempNm1': selectData[i].tempNm1,
-                    'tempNm2': selectData[i].tempNm2
+                    'tempNm2': selectData[i].tempNm2,
+                    'email': selectData[i].email
                 });
             }
         }
@@ -408,6 +409,7 @@
         grid.colAdd('codeName', '<s:message code="common.msg.name"/>', 100, 'left', false, 'nomal');
         grid.colAdd('tempNm1', '<s:message code="common.org.dept"/>', 100, 'center', false, 'nomal');
         grid.colAdd('tempNm2', '<s:message code="common.org.jikgub"/>', 260, 'left', false, 'nomal');
+        grid.colAdd('email', '<s:message code="common.org.email"/>', 260, 'left', false, 'nomal');
     } else if (codeType == 'keyword') {
         grid.colAdd('tempNm1', '<s:message code="keyword.msg.partnm"/>', 120, 'left', false, 'nomal');
         grid.colAdd('codeName', '<s:message code="keyword.msg.keyword"/>', 230, 'left', false, 'link');
@@ -484,6 +486,7 @@
         grid2.colAdd('codeName', '<s:message code="common.msg.name"/>', 100, 'left', false, 'nomal');
         grid2.colAdd('tempNm1', '<s:message code="common.org.dept"/>', 100, 'center', false, 'nomal');
         grid2.colAdd('tempNm2', '<s:message code="common.org.jikgub"/>', 160, 'left', false, 'nomal');
+        grid2.colAdd('email', '<s:message code="common.org.email"/>', 260, 'left', false, 'nomal');
     } else if (codeType == 'keyword') {
         grid2.colAdd('codeName', '<s:message code="keyword.msg.keyword"/>', 260, 'left', false, 'link');
     } else {

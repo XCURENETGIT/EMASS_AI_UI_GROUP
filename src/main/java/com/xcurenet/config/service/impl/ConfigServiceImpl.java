@@ -10,6 +10,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -33,6 +34,7 @@ import com.xcurenet.config.service.ConfigService;
 import com.xcurenet.config.service.ConfigVO;
 
 @Service("configService")
+@Slf4j
 public class ConfigServiceImpl extends XcnAbstractDAO implements ConfigService {
 
 	@Autowired
@@ -83,17 +85,23 @@ public class ConfigServiceImpl extends XcnAbstractDAO implements ConfigService {
 		String sqlPath = "/sqlmap/mappers/sql/";
 		if (!Common.isWindow()) sqlPath = "/users/emassai/conf/";
 
+		log.info("주소"+String.format(sqlPath+"Update_Query_%s.sql", conf.getVal()));
+
 		String filePath = String.format(sqlPath + "Update_Query_%s.sql", conf.getVal());
 		if (Common.isWindow()) filePath = new File(new File(ConfigServiceImpl.class.getResource("").getPath()).getParentFile().getParentFile().getParent() + filePath).getAbsolutePath();
+
+		log.info(filePath);
 		Connection _con = null;
 		try {
 			 _con = DataSourceUtils.getConnection(dataSource);
 			_con.setAutoCommit(false);
 			ScriptUtils.executeSqlScript(_con, new FileSystemResource(filePath));
 			_con.commit();
+			log.info("Query execution successful.");
 			return true;
 		} catch (Exception e) {
 			rollback(_con);
+			log.info("Query execution failed. Reason: " + e.getMessage());
 			e.printStackTrace();
 		} finally {
 			close(_con);

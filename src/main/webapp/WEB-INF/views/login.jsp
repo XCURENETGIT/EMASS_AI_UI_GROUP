@@ -288,6 +288,7 @@
                 clearInterval(otpInterval);
                 clearTimeout(otpDelay);
                 if(!firstOTP) $('#googleOTPPop').modal('hide');
+                $('#pinCode').val('');
             }, 30000);
         }
 

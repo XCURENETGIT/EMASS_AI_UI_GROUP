@@ -722,5 +722,57 @@ function openCodeWindow(codetype,oldCode, oldConm,id) {
 			}
 			return false;
 		}
+        function getSelectedCodeData(codeType, data) {
+            var str = '';
+            var val = '';
+            for (var i = 0; i < data.length; i++) {
+                str += data[i].email;
+                val += data[i].email;
+
+                console.log(str);
+                if (codeType == 'regexp') {
+                    var arr = data[i].count.split('@');
+                    if (arr[0] == 'B') str += '(' + arr[1] + '<s:message code="selectCodeAll.items"/> ~ ' + arr[2] + '<s:message code="selectCodeAll.items"/>)';
+                    else if (arr[0] == 'L') str += '(' + arr[1] + '<s:message code="selectCodeAll.items"/> <s:message code="selectCodeAll.over"/>)';
+                    else str += '(' + arr[1] + '<s:message code="selectCodeAll.items"/> <s:message code="selectCodeAll.below"/>)';
+                    val += '%' + data[i].count;
+                }
+
+                if (i != data.length - 1) {
+                    str += ', ';
+                    val += '|';
+                }
+            }
+            if (data.length == 0) {
+                if (codeType == 'dept') {
+                    $('[name=dept_not]').prop('disabled', true);
+                    $('[name=dept_not]').prop('checked', false);
+                } else {
+                    $('[name=' + codeType + '_not]').prop('disabled', true);
+                    $('[name=' + codeType + '_not]').prop('checked', false);
+                }
+            } else {
+                if (codeType == 'dept') {
+                    $('[name=dept_not]').prop('disabled', false);
+                } else {
+                    $('[name=' + codeType + '_not]').prop('disabled', false);
+                }
+            }
+
+            if (val != '') {
+                str = str.rtrim();
+                val = val.trimAll();
+            }
+            $('#' + codeType + 'Str').val(str);
+            $('#' + codeType + 'Val').val(val);
+
+            if ($('#' + codeType + 'Str').val() != '') {
+                $('#' + codeType + 'SelectedArea').find('.btn').text(data.length);
+                $('#' + codeType + 'SelectedArea').show();
+            } else {
+                $('#' + codeType + 'SelectedArea').find('.btn').text(0);
+                $('#' + codeType + 'SelectedArea').hide();
+            }
+        }
 
 	</script>

@@ -111,22 +111,32 @@ public class DeviceController {
 		if (device != null) {
 			ConfigAdminVO hddSms = configAdminService.getConfAdmin("device.hdd.sms." + deviceSeq, adminId);
 			ConfigAdminVO hddNotify = configAdminService.getConfAdmin("device.hdd.notify." + deviceSeq, adminId);
-			ConfigAdminVO processSms = configAdminService.getConfAdmin("device.process.sms." + deviceSeq, adminId);
-			ConfigAdminVO processNofity = configAdminService.getConfAdmin("device.process.notify." + deviceSeq, adminId);
+			ConfigAdminVO cpuSms = configAdminService.getConfAdmin("device.cpu.sms." + deviceSeq, adminId);
+			ConfigAdminVO cpuNotify = configAdminService.getConfAdmin("device.cpu.notify." + deviceSeq, adminId);
+			ConfigAdminVO memSms = configAdminService.getConfAdmin("device.mem.sms." + deviceSeq, adminId);
+			ConfigAdminVO memNotify = configAdminService.getConfAdmin("device.mem.notify." + deviceSeq, adminId);
 			ConfigAdminVO interfaceSms = configAdminService.getConfAdmin("device.interface.sms." + deviceSeq, adminId);
 			ConfigAdminVO interfaceNofity = configAdminService.getConfAdmin("device.interface.notify." + deviceSeq, adminId);
 
 			device.setHddSmsUseYn("N");
 			device.setHddNotifyUseYn("N");
-			device.setProcessSmsUseYn("N");
-			device.setProcessNotifyUseYn("N");
+
+			device.setCpuSmsUseYn("N");
+			device.setCpuNotifyUseYn("N");
+			device.setMemSmsUseYn("N");
+			device.setMemNotifyUseYn("N");
+
 			device.setInterfaceSmsUseYn("N");
 			device.setInterfaceNotifyUseYn("N");
 
 			if (hddSms != null) device.setHddSmsUseYn(Common.nvl(hddSms.getVal(), "N"));
 			if (hddNotify != null) device.setHddNotifyUseYn(Common.nvl(hddNotify.getVal(), "N"));
-			if (processSms != null) device.setProcessSmsUseYn(Common.nvl(processSms.getVal(), "N"));
-			if (processNofity != null) device.setProcessNotifyUseYn(Common.nvl(processNofity.getVal(), "N"));
+
+			if (cpuSms != null) device.setCpuSmsUseYn(Common.nvl(cpuSms.getVal(), "N"));
+			if (cpuNotify != null) device.setCpuNotifyUseYn(Common.nvl(cpuNotify.getVal(), "N"));
+			if (memSms != null) device.setMemSmsUseYn(Common.nvl(memSms.getVal(), "N"));
+			if (memNotify != null) device.setMemNotifyUseYn(Common.nvl(memNotify.getVal(), "N"));
+
 			if (interfaceSms != null) device.setInterfaceSmsUseYn(Common.nvl(interfaceSms.getVal(), "N"));
 			if (interfaceNofity != null) device.setInterfaceNotifyUseYn(Common.nvl(interfaceNofity.getVal(), "N"));
 		}
