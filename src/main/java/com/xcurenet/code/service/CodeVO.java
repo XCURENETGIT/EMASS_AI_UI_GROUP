@@ -21,4 +21,5 @@ public class CodeVO {
 	private String tempNm2;
 	private String useYn;
 	private String ceoReadAuth;
+	private String email;
 }

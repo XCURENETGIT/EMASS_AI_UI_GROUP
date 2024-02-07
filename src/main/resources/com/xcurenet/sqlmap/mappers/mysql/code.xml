@@ -805,27 +805,30 @@
 		</if>
 		ORDER	BY codeName
 	</select>
-	
+
 	<!-- 사용자 -->
 	<select id="getCodeUserList" resultType="codeVO" parameterType="codeVO">
-		SELECT  code, codeName, tempCode1, tempNm1, tempCode2, tempNm2
-		FROM	(
-				SELECT  USER_ID AS code, USER_NM AS codeName, A.DEPTCD AS tempCode1, B.DEPTNM AS tempNm1, A.JIKGUBCD AS tempCode2, C.JIKGUBNM AS tempNm2, CEO
-				FROM UI_USERS A
-				LEFT JOIN UI_DEPT B ON A.DEPTCD = B.DEPTCD
-				LEFT JOIN UI_JIKGUB C ON A.JIKGUBCD = C.JIKGUBCD
-				) AS RS
-		WHERE	1=1
+		SELECT  RS.code, RS.codeName, RS.tempCode1, RS.tempNm1, RS.tempCode2, RS.tempNm2, UE.USER_EMAIL as email
+		FROM (
+		SELECT  A.USER_ID AS code, A.USER_NM AS codeName, A.DEPTCD AS tempCode1, B.DEPTNM AS tempNm1, A.JIKGUBCD AS tempCode2, C.JIKGUBNM AS tempNm2, A.CEO
+		FROM UI_USERS A
+		LEFT JOIN UI_DEPT B ON A.DEPTCD = B.DEPTCD
+		LEFT JOIN UI_JIKGUB C ON A.JIKGUBCD = C.JIKGUBCD
+		) AS RS
+		LEFT JOIN UI_USER_EMAIL UE ON RS.code = UE.USER_ID
+		WHERE   1=1
 		<if test='searchStr!=null and searchStr!=""'>
-		AND		( 
-					code LIKE CONCAT('%', #{searchStr}, '%') 
-				OR 	codeName LIKE CONCAT('%', #{searchStr}, '%') 
-				OR 	tempNm1 LIKE CONCAT('%', #{searchStr}, '%')
-				OR 	tempNm2 LIKE CONCAT('%', #{searchStr}, '%')
-				)
+			AND (
+			RS.code LIKE CONCAT('%', #{searchStr}, '%')
+			OR RS.codeName LIKE CONCAT('%', #{searchStr}, '%')
+			OR RS.tempNm1 LIKE CONCAT('%', #{searchStr}, '%')
+			OR RS.tempNm2 LIKE CONCAT('%', #{searchStr}, '%')
+			)
 		</if>
-		ORDER	BY codeName
+		ORDER BY RS.codeName
 	</select>
+
+
 	
 	<!-- 메신저 목록 -->
 	<select id="getMessengerList" resultType="codeVO" parameterType="codeVO">

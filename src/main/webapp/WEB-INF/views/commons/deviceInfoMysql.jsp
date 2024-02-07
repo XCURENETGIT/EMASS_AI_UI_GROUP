@@ -840,8 +840,6 @@ Date 1분 경고
 							code="common.msg.save"/></button>
 				</div>
 			</div>
-
-	</div>
 	</form>
 </div>
 </div>
