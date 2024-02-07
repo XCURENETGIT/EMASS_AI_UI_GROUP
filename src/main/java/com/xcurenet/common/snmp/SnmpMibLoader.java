@@ -125,23 +125,41 @@ public class SnmpMibLoader {
 		Mib[] result = null;
 		MibLoader loader = new MibLoader();
 		File file = new File(MIBPATH);
-		if (file.isDirectory()) {
-			String[] list = file.list(new FilenameFilter() {
-				@Override
-				public boolean accept(File dir, String name) {
-					return name.endsWith(".mib");
+
+		if (file != null) {
+			if (file.isDirectory()) {
+				String[] list = file.list(new FilenameFilter() {
+					@Override
+					public boolean accept(File dir, String name) {
+						return name.endsWith(".mib");
+					}
+				});
+
+				loader.addDir(file);
+
+				try {
+					for (int j = 0; j < list.length; j++) {
+						loader.load(new File(file.getAbsolutePath() + File.separator + list[j]));
+						System.out.println("Loaded MIB: " + list[j]);
+					}
+				} catch (MibLoaderException e) {
+					MibLoaderLog log = e.getLog();
+					log.printTo(System.out);
+					e.printStackTrace();
 				}
-			});
-			loader.addDir(file);
-			try {
-				for (String s : list) {
-					loader.load(new File(file.getAbsolutePath() + File.separator + s));
-				}
-			} catch (MibLoaderException e) {
-				log.error("", e);
+			}
+
+			result = loader.getAllMibs();
+
+			// Check if MIBs are loaded
+			if (result != null && result.length > 0) {
+				System.out.println("MIBs loaded successfully.");
+			} else {
+				System.out.println("No MIBs loaded.");
 			}
 		}
-		result = loader.getAllMibs();
+
 		return result;
 	}
+
 }

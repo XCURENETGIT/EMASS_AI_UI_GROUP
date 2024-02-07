@@ -14,7 +14,7 @@
 		SELECT REGEX_NAME AS regexPatternName, REGEX_PATTERN AS regexPattern,REGEX_USER AS regexUser, REGEX_DT AS regexDt, REGEX_SEQ AS regexSeq
 		FROM UI_REGEX_PATTERN
 		<if test='searchStr!=null and searchStr!=""'>
-			WHERE REGEX_NAME LIKE CONCAT(#{searchStr}, '%')
+			WHERE REGEX_NAME  LIKE CONCAT('%', #{searchStr}, '%')
 		</if>
 		ORDER BY REGEX_SEQ
 		<if test='offset!=null and limit > 0'>

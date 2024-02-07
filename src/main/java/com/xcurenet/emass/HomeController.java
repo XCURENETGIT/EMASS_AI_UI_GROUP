@@ -175,18 +175,13 @@ public class HomeController {
 	@RequestMapping(value = "/commons/deviceInfo.do", method = RequestMethod.GET)
 	@Description("장비 정보 페이지")
 	public String deviceInfo(Locale locale, Model model) {
-		return "/commons/deviceInfoMysql";
+		return "/commons/deviceInfo";
 	}
 
 	@RequestMapping(value = "/commons/deviceInfoDetail.do", method = RequestMethod.GET)
 	@Description("장비 정보 상세보기 페이지")
 	public String hadoopDeviceInfo(Locale locale, Model model) {
-		if (Common.isOrEquals(Common.getAdminType(httpSession), "S", "M", "C")) {
-			model.addAttribute("headerYn","N");
-			return "/commons/deviceInfoDetailMysql";
-		} else {
-			return "/emass/dashboard";
-		}
+			return "/commons/deviceInfoDetail";
 	}
 
 	@RequestMapping(value = "/commons/deviceInfoDetailHadoop.do", method = RequestMethod.GET)

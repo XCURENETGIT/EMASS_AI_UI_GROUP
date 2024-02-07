@@ -242,6 +242,9 @@ public class SolrEdcStatController {
 		String detailQuery = Common.nvl(request.getParameter("detailQuery"));
 		String colRowKey = Common.nvl(request.getParameter("colRowKey"));
 		String nameStat = Common.nvl(request.getParameter("nameStat"));
+		String busi = Common.nvl(request.getParameter("busiStr"));
+		String dept = Common.nvl(request.getParameter("deptStr"));
+		String name = Common.nvl(request.getParameter("userStr"));
 		String query = "";
 
 		SolrQuery sq = new SolrQuery();
@@ -335,6 +338,26 @@ public class SolrEdcStatController {
 			sq = solrCreateQuery.setQuery();
 			query += sq.getQuery();
 		}
+
+		if (!name.isEmpty()) {
+			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+			solrCreateQuery.setName(name);
+			sq = solrCreateQuery.setQuery();
+			query += sq.getQuery();
+		}
+		if (!busi.isEmpty()) {
+			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+			solrCreateQuery.setBusicd(busi);
+			sq = solrCreateQuery.setQuery();
+			query += sq.getQuery();
+		}
+		if (!dept.isEmpty()) {
+			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+			solrCreateQuery.setDeptcd(dept);
+			sq = solrCreateQuery.setQuery();
+			query += sq.getQuery();
+		}
+
 
 		sq.setQuery(query);
 		sq.setStart(offset);
@@ -871,6 +894,10 @@ public class SolrEdcStatController {
 		String endDate = Common.nvl(request.getParameter("endDate"));
 		String type = Common.nvl(request.getParameter("type"));
 		String piCount = Common.nvl(request.getParameter("piCount"));
+		String busi = Common.nvl(request.getParameter("busiStr"));
+		String dept = Common.nvl(request.getParameter("deptStr")).replaceAll("\\|", ",");
+		String name = Common.nvl(request.getParameter("userStr")).replaceAll("\\|", ",");
+
 
 		StringBuilder query = new StringBuilder();
 		query.append(String.format("+userkey:" + userkey));
@@ -886,6 +913,48 @@ public class SolrEdcStatController {
 			query.append(" ) ");
 		} else {
 			query.append(" +(").append(type).append(":[").append(piCount).append(" TO *]) ");
+		}
+
+		if (!name.isEmpty()) {
+			String[] nameArray = name.split(",");
+			query.append(" +userid:((");
+
+			for (int i = 0; i < nameArray.length; i++) {
+				if (i > 0) {
+					query.append(") (");
+				}
+				query.append(nameArray[i]);
+			}
+
+			query.append("))");
+		}
+
+		if (!busi.isEmpty()) {
+			String[] busiArray = busi.split(",");
+			query.append(" +busicd:((");
+
+			for (int i = 0; i < busiArray.length; i++) {
+				if (i > 0) {
+					query.append(") (");
+				}
+				query.append(busiArray[i]);
+			}
+
+			query.append("))");
+		}
+
+		if (!dept.isEmpty()) {
+			String[] deptArray = dept.split(",");
+			query.append(" +deptcd:((");
+
+			for (int i = 0; i < deptArray.length; i++) {
+				if (i > 0) {
+					query.append(") (");
+				}
+				query.append(deptArray[i]);
+			}
+
+			query.append("))");
 		}
 
 		SolrQuery sq = new SolrQuery();

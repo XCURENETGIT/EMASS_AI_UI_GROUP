@@ -3,6 +3,9 @@ package com.xcurenet.interestUser.web;
 import java.io.File;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -150,6 +153,9 @@ public class AdminUserGroupController {
 			IOUtils.closeQuietly(pw);
 			return;
 		}
+
+		Path path = Paths.get(Config.KEYWORD_TMP);
+		System.out.println("keyword:"+ Files.isDirectory(path));
 
 		String tmp = Config.KEYWORD_TMP;
 		Common.mkdirs(tmp);

@@ -30,7 +30,7 @@ import java.util.List;
 
 
 @Controller
-@AuditParentMenu(ParentMenu.DATA_MONITOR)
+@AuditParentMenu(ParentMenu.DATA_REPORT)
 @AuditMenu(Menu.STAT_REPORT)
 public class ReportController {
 

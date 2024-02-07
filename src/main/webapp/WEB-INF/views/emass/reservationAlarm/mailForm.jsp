@@ -275,8 +275,8 @@ function getData() {
 				<button class="form_btn01" type="button" accesskey="Q" id="searchBtn"><s:message code="common.msg.search"/></button>
 			</div>
 			<div class="right_btnBox">
-				<button type="button" class="btn01" accesskey="I" id="insertBtn"><img src="/venus/img/subBtn_plus.png" alt="추가"><s:message code="common.msg.add"/></button>
-				<button type="button" class="btn02" accesskey="D" id="deleteBtn"><img src="/venus/img/subBtn_trash.png" alt="삭제"><s:message code="common.msg.delete"/></button>
+				<button type="button" class="btn01" id="insertBtn" accesskey="I"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
+				<button type="button" class="btn02" id="deleteBtn" accesskey="D"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
 			</div>
 		</div>
 	</div>

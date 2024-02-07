@@ -37,9 +37,7 @@ var colKey = "";
 Highcharts.setOptions({
     chart: {
         type: 'column',
-        marginTop: 15,
-        marginBottom: 60,
-        spacingBottom: 0
+        marginTop: 25
     },
     global: {useUTC: false},
     gridLineColor: '#fff',
@@ -264,8 +262,8 @@ function eventEnterSearch(event) {
 					</div>
 				</div>
 				<div class="panel-default">
-					<div class="inner_personaldata" style="height:180px;">
-						<div id="compareChart" style="height: 100%"><s:message code="analysis.usagecompare.search"/></div>
+					<div class="inner_personaldata" style="height:300px;">
+						<div id="compareChart" style="height: 100%; margin-left: 15px;"><s:message code="analysis.usagecompare.search"/></div>
 					</div>
 <%--					<div class="panel-body">--%>
 <%--						<div id="compareChart" style="height: 100%"><s:message code="analysis.usagecompare.search"/></div>--%>

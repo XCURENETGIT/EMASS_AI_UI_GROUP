@@ -152,7 +152,8 @@
 		border-radius:0;
 	}
 	.dropdown-menu {
-		max-height: 500px;
+		max-height: 344px !important;
+		/*max-height: 500px;*/
 		overflow-y: auto;
 	}
 </style>

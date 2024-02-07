@@ -39,7 +39,7 @@ public class SnmpUtil {
 	private String host;
 	private int port = 7791;
 	private int retries = 0;
-	private int timeout = 5000;
+	private int timeout = 10000;
 	private String community = Config.getString("snmpa.community");
 	//	private String community = "";
 	private int snmpVersion = SnmpConstants.version2c;

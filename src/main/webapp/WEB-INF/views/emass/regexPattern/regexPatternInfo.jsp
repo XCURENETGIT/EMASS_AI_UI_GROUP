@@ -240,5 +240,7 @@
             $('#regexPatternPop').modal('show');
         }
     }
+    gridRegexPattern.loadExportMenu('<s:message code="DATA_MONITOR.REGEX_PATTERN"/>');
+    gridRegexPattern.loadHeader(false);
 </script>
 

@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -92,6 +95,7 @@ public class PdfController {
 		try {
 			String dt = Common.getCurrentDate();
 			Common.mkdirs(Common.TMP_PATH + dt);
+			Path path = Paths.get(Common.TMP_PATH);
 			File file = new FileRenamePolicy().rename(new File(Common.TMP_PATH + dt + "/export_pdf_" + Common.getCurrentTime("yyyyMMdd_HHmmss") + ".pdf"));
 			new PdfWriter(title, reportDate, searchDate, html, check, new FileOutputStream(file));
 			if (Common.isNotEmpty(menuId)) {
