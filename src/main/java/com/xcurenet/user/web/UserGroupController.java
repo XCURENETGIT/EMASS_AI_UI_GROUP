@@ -26,7 +26,7 @@ import com.xcurenet.user.service.UserService;
  * Handles requests for the application home page.
  */
 @Controller
-@AuditParentMenu(ParentMenu.OPERATION_MGMT)
+@AuditParentMenu(ParentMenu.POLICY_SETUP)
 @AuditMenu(Menu.USER_GROUP_MGMT)
 public class UserGroupController {
 
