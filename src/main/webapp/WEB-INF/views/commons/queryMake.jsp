@@ -160,7 +160,9 @@
 			"xrootmtr", "week", "ocr_attach", "ocr_attach_cnt", "favorite_id", "read_key", "read_time",
 			"user_str", "user", "host_str", "host", "attachname_str", "attachname", "sender_str", "sender", "recvs",
 			"to", "cc", "bcc", "recvs_name", "tname", "cname", "bname", "ocr_attach", "pi_DRM",
-			"pi_total", "pi_ID", "pi_EF", "pi_PN", "pi_FN", "pi_DN", "pi_SN", "pi_CN", "pi_EC"];
+			"pi_total", "pi_ID", "pi_EF", "pi_PN", "pi_FN", "pi_DN", "pi_SN", "pi_CN", "pi_EC",
+			"pi_IMEI","pi_MCN","pi_CPN","pi_BRN","pi_SSN","pi_CRN","pi_AN","pi_MN",
+		];
 
         <%if( consent && Common.isEquals(firstAdminYn, "N") ){ %>
         isConsent = true;

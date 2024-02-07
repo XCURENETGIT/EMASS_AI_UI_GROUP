@@ -151,7 +151,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		/* set 필터 쿼리 */
 		String filterQuery =  (null != sq.getFilterQueries())? String.join(" ", sq.getFilterQueries()) : "";
 		/* 일반 검색 쿼리 */
-		QueryStringQueryBuilder queryBuilder = QueryBuilders.queryStringQuery(sq.getQuery() + " " + filterQuery).fields(getDefaultSearchField(sq)).defaultOperator(Operator.AND);
+		QueryStringQueryBuilder queryBuilder = QueryBuilders.queryStringQuery(sq.getQuery() + " " + filterQuery).fields(getDefaultSearchField(sq));
 
 		/* 정규식 패턴 필드 설정 */
 		BoolQueryBuilder regexQuery = QueryBuilders.boolQuery();
@@ -169,7 +169,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			recommendQuery.should(QueryBuilders.moreLikeThisQuery(sq.getMoreLikeThisFields(), null, new MoreLikeThisQueryBuilder.Item[]{new MoreLikeThisQueryBuilder.Item(null, sq.get("id"))}).minTermFreq(1).minDocFreq(0).maxQueryTerms(20));
 			boolQuery.should(recommendQuery).minimumShouldMatch("0<-3%"); // 유사도 0%는 제외
 		}
-		boolQuery.should(queryBuilder);
+		boolQuery.should(queryBuilder).minimumShouldMatch("0<-3%");
 
 
 
