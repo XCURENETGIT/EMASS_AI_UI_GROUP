@@ -8,8 +8,7 @@ import org.apache.solr.client.solrj.SolrServerException;
 
 import com.xcurenet.emass.message.service.SolrEdcMessageVO;
 import com.xcurenet.emass.message.service.SolrEdcVO;
-
-import net.sf.json.JSONObject;
+import org.json.simple.JSONObject;
 
 public interface AnalysisRelationService {
 
