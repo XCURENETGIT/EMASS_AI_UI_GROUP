@@ -54,6 +54,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.sql.Date;
+import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -193,10 +194,10 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 				.withAggregations(getAggregationsByPivot(sq))
 				.withTrackTotalHits(true)
 				.withTrackScores((Common.isEquals(sq.get("track_scores"),"true")) ? true : false )
+			//	.withTimeout(Duration.ofSeconds(60))
 				.build();
 
-
-		SearchHits<SolrEdcVO> hits = operation.search(searchQuery, SolrEdcVO.class);
+		SearchHits<SolrEdcVO>  hits = operation.search(searchQuery, SolrEdcVO.class);
 		try {
 			printQueryLog(sq, hits);
 		} catch (Exception e) {
