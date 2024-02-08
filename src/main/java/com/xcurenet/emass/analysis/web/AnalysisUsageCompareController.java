@@ -110,6 +110,7 @@ public class AnalysisUsageCompareController {
 				break;
 		}
 
+
 		return new XcnResponseVO(XcnRspCode.OK, analysisRelationService.selectDetailList(searchVO, chartName));
 	}
 
