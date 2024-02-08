@@ -1880,8 +1880,14 @@
             var endSize = $('#sizeEndVal').val();
 
             if(type != 'Q') {
+
                 if((!$.isNumeric(startSize) && startSize != '') || (!$.isNumeric(endSize) && endSize) ) {
                     alert('<s:message code="message.msg.filesize.validity"/>');
+                    return;
+                }
+
+                if(startSize.length > 12 || endSize.length > 12){
+                    alert('<s:message code="message.msg.filesize.validity2"/>');
                     return;
                 }
 

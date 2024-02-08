@@ -1000,15 +1000,18 @@ public class SolrCreateQuery {
 		String sizeFilter = ""; // array 값 검색 size search filter 용
 
 		if (size_condition.equals("B") || size_condition.equals("")) {
+			/* from ~ to */
 			queryStr = String.format("%s(%s#FILED:>=%s  %s#FILED:<%s)", AND_QUERY,AND_QUERY,minMsgsize,AND_QUERY,maxMsgsize);
-			sizeFilter =  String.format("doc['#FILED'].stream().max(Long::compare).orElse(-1) >= %s && doc['#FILED'].stream().max(Long::compare).orElse(-1) <%s", minMsgsize,maxMsgsize);
+			sizeFilter =  String.format("doc['#FILED'].stream().max(Long::compare).orElse(-1) >= %sL && doc['#FILED'].stream().max(Long::compare).orElse(-1) <%sL", minMsgsize,maxMsgsize);
 		} else if (size_condition.equals("L")) {
-			queryStr = String.format("%s(%s#FILED:>=0  %s#FILED:<2147483000)", AND_QUERY, AND_QUERY,AND_QUERY, minMsgsize);
-			sizeFilter =  String.format("doc['#FILED'].stream().max(Long::compare).orElse(-1) >= %s && doc['#FILED'].stream().max(Long::compare).orElse(-1) < 2147483000", minMsgsize);
+			/* 이상 */
+			queryStr = String.format("%s(%s#FILED:>=%s  %s#FILED:<2147483000)", AND_QUERY, AND_QUERY,minMsgsize,AND_QUERY);
+			sizeFilter =  String.format("doc['#FILED'].stream().max(Long::compare).orElse(-1) >= %sL && doc['#FILED'].stream().max(Long::compare).orElse(-1) < 2147483000L", minMsgsize);
 		}
 		else if (size_condition.equals("S")) {
+			/* 이하 */
 			queryStr = String.format("%s(%s#FILED:>=0  %s#FILED:<%s)", AND_QUERY, AND_QUERY, AND_QUERY, minMsgsize);
-			sizeFilter =  String.format("doc['#FILED'].stream().max(Long::compare).orElse(-1) >= 0 && doc['#FILED'].stream().max(Long::compare).orElse(-1) < %s", minMsgsize);
+			sizeFilter =  String.format("doc['#FILED'].stream().max(Long::compare).orElse(-1) >= 0L && doc['#FILED'].stream().max(Long::compare).orElse(-1) < %sL", minMsgsize);
 		}
 
 
