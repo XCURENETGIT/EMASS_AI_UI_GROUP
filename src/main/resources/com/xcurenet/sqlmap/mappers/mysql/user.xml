@@ -223,7 +223,8 @@
 				BUSICD 		= #{busiCd},
 				DEPTCD 		= #{deptCd},
 				JIKINCD 	= #{jikinCd},
-				JIKGUBCD	= #{jikgubCd}
+				JIKGUBCD	= #{jikgubCd},
+				CEO         = #{ceo}
 		WHERE	USER_ID 	= #{userId}
 	</update>
 

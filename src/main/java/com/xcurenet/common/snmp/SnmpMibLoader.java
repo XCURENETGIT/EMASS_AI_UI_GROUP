@@ -24,7 +24,7 @@ public class SnmpMibLoader {
 
 	private static List<TreeMap<String, String>> xcurenetMib;
 
-	private static final String MIBPATH = "/users/emasspro/conf/mibs/";
+	private static final String MIBPATH = "/users/emassai/mibs/";
 
 	@PostConstruct
 	public void load() throws Exception {

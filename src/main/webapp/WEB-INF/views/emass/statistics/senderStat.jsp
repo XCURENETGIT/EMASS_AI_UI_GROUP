@@ -419,7 +419,7 @@
 						</span>
 					</h3>
 					<div class="panel-default" id="service.logging.count">
-						<div class="inner_personaldata" style="height:180px;">
+						<div class="inner_personaldata" style="height:300px;">
 							<div id="chartArea1" style="height: 100%"></div>
 						</div>
 					</div>

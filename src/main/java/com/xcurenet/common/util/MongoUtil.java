@@ -99,6 +99,10 @@ public class MongoUtil {
 	public <T> T insert(T object, String collectionName) {
 		return mongoTemplate.insert(object, collectionName);
 	}
+	public <T> T update(T object, String collectionName) {
+		return mongoTemplate.save(object, collectionName);
+	}
+
 
 	//단건등록
 	public <T> T insert(T object) {
