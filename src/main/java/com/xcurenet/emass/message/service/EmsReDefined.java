@@ -65,6 +65,7 @@ public class EmsReDefined {
 			edc.setSvcLv1Nm(reSvcLv1Nm(edc.getSvc()));
 			edc.setSvcLv2Nm(reSvcLv2Nm(edc.getSvc()));
 			edc.setDirection_svc(edc.getDirection_svc());
+			edc.setSrcip(edc.getSrcip());
 			if(bodysnippetVal.equals("Y")) edc.setBody_snippet(reBodySnippet(edc.getBody_snippet()));
 			else edc.setBody_snippet("");
 			edc.setUser(reUser(Common.nvl(edc.getUserid()), Common.nvl(edc.getName())));
