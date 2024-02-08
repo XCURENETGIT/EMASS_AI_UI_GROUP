@@ -283,8 +283,8 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 		SolrQuery sq = new SolrQuery();
 
 		String date = searchVO.getDate();
-
-		sq.setRows(0);
+		sq.setStart(Common.nvz(searchVO.getOffset()));
+		sq.setRows(Common.nvz(searchVO.getLimit()));
 		sq.setSort("size", ORDER.desc);
 
 		switch (searchVO.getUnit()) {

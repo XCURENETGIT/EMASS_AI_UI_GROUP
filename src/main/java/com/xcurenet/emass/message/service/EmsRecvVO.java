@@ -11,7 +11,7 @@ public class EmsRecvVO {
 	private String msgId;
 	private String recvId;
 	private String uType;
-	private String email;
+	private String eMail;
 	private String name;
 	private String ip;
 	private String coCd;

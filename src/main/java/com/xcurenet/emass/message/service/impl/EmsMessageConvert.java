@@ -69,7 +69,7 @@ public class EmsMessageConvert {
 		}
 		if (data.getSenderInfo() != null) {
 			vo.setSender(data.getSenderInfo().getId());
-			vo.setSenderList(getUserInfo(data, data.getMsgId(), "F"));
+			vo.setSenderList(getUserInfo(data.getSenderInfo(), data.getMsgId(), "F"));
 		}
 		vo.setOpinion(data.getOpinion());
 		vo.setDevWriter(data.getDevWriter());
@@ -83,7 +83,6 @@ public class EmsMessageConvert {
 			vo.setName(data.getUserInfo().getName());
 			vo.setCoCd(data.getUserInfo().getCoCd());
 			vo.setIpCocd(data.getUserInfo().getIpCoCd());
-			vo.setSrcIp(data.getUserInfo().getIp());
 			vo.setSubOrgCd(data.getUserInfo().getSuborgCd());
 			vo.setBusiCd(data.getUserInfo().getBusiCd());
 			vo.setBusiNm(data.getUserInfo().getBusiNm());
@@ -95,7 +94,7 @@ public class EmsMessageConvert {
 			vo.setJikgubCd(data.getUserInfo().getJikgubCd());
 			vo.setInSide(data.getUserInfo().getInside());
 			vo.setCeo(data.getUserInfo().getCeo());
-			vo.setUserList(getUserInfo(data, data.getMsgId(), "U"));
+			vo.setUserList(getUserInfo(data.getUserInfo(), data.getMsgId(), "U"));
 		}
 
 		vo.setAllOfUs(data.getAllOfUs());
@@ -215,7 +214,7 @@ public class EmsMessageConvert {
 			vo.setMsgId(msgId);
 			vo.setRecvId(recv.getId());
 			vo.setUType(uType);
-			vo.setEmail(recv.getEmail());
+			vo.setEMail(recv.getEmail());
 			vo.setName(recv.getName());
 			vo.setIp(recv.getIp());
 			vo.setCoCd(recv.getCoCd());
@@ -233,27 +232,26 @@ public class EmsMessageConvert {
 		return result;
 	}
 
-	private List<EmsRecvVO> getUserInfo(EmassMessageData data, final String msgId, final String uType) {
+	private List<EmsRecvVO> getUserInfo(EmassUserData data, final String msgId, final String uType) {
 		List<EmsRecvVO> result = new ArrayList<>();
-
 		EmsRecvVO vo = new EmsRecvVO();
 		vo.setMsgId(msgId);
-		vo.setRecvId(data.getUserInfo().getId());
+		vo.setRecvId(data.getId());
 		vo.setUType(uType);
-		vo.setIp(data.getUsrIp());
-		vo.setEmail(data.getUserInfo().getId());
-		vo.setName(data.getUserInfo().getName());
-		vo.setCoCd(data.getUserInfo().getCoCd());
-		vo.setCoNm(data.getUserInfo().getCoNm());
-		vo.setSubOrgCd(data.getUserInfo().getSuborgCd());
-		vo.setSubOrgNm(data.getUserInfo().getSuborgNm());
-		vo.setBusiCd(data.getUserInfo().getBusiCd());
-		vo.setBusiNm(data.getUserInfo().getBusiNm());
-		vo.setDeptCd(data.getUserInfo().getDeptCd());
-		vo.setDeptNm(data.getUserInfo().getDeptNm());
-		vo.setJikgubCd(data.getUserInfo().getJikgubCd());
-		vo.setJikgubNm(data.getUserInfo().getJikgubNm());
-		vo.setInSide(data.getUserInfo().getInside());
+		vo.setEMail(data.getEmail());
+		vo.setName(data.getName());
+		vo.setIp(data.getIp());
+		vo.setCoCd(data.getCoCd());
+		vo.setCoNm(data.getCoNm());
+		vo.setSubOrgCd(data.getSuborgCd());
+		vo.setSubOrgNm(data.getSuborgNm());
+		vo.setBusiCd(data.getBusiCd());
+		vo.setBusiNm(data.getBusiNm());
+		vo.setDeptCd(data.getDeptCd());
+		vo.setDeptNm(data.getDeptNm());
+		vo.setJikgubCd(data.getJikgubCd());
+		vo.setJikgubNm(data.getJikgubNm());
+		vo.setInSide(data.getInside());
 		result.add(vo);
 		return result;
 	}

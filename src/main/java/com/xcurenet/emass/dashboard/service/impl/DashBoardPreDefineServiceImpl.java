@@ -305,6 +305,8 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 				item.add(facetVO.getDeptnm());
 				item.add(facetVO.getCount());
 				item.add(facetVO.getName());
+				item.add(facetVO.getUserId());
+				item.add(facetVO.getEmail());
 
 				items.add(item);
 			}

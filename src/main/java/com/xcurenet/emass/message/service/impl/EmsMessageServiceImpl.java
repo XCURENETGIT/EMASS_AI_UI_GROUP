@@ -196,25 +196,25 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 			for (EmsRecvVO emsRecvVO : users) {
 				EmsRecvVO u = EmsReDefined.reUserIp(emsRecvVO, Common.nvl(emsMessageVO.getSrcIp()), Common.nvl(emsMessageVO.getDstIp()), Common.nvl(emsMessageVO.getUsrIp()));
 				if (Common.isEquals(u.getUType(), "U")) {
-					u.setEmail(EmsReDefined.reUserEmail(emsRecvVO, Common.nvl(emsMessageVO.getUser())));
+					u.setEMail(EmsReDefined.reUserEmail(emsRecvVO, Common.nvl(emsMessageVO.getUser())));
 					u.setViewStr(EmsReDefined.reUser(u, formatval));
 					user.add(u);
 				} else if (Common.isEquals(u.getUType(), "F")) {
-					u.setEmail(EmsReDefined.reUserEmail(emsRecvVO, Common.nvl(emsMessageVO.getSender())));
+					u.setEMail(EmsReDefined.reUserEmail(emsRecvVO, Common.nvl(emsMessageVO.getSender())));
 					u.setViewStr(EmsReDefined.reUser(u, formatval));
 					sender.add(u);
 				} else if (Common.isEquals(u.getUType(), "T")) {
-					u.setEmail(EmsReDefined.reUserEmail(emsRecvVO));
+					u.setEMail(EmsReDefined.reUserEmail(emsRecvVO));
 					u.setViewStr(EmsReDefined.reUser(u, formatval));
 					recvs.add(u);
 					to.add(u);
 				} else if (Common.isEquals(u.getUType(), "C")) {
-					u.setEmail(EmsReDefined.reUserEmail(emsRecvVO));
+					u.setEMail(EmsReDefined.reUserEmail(emsRecvVO));
 					u.setViewStr(EmsReDefined.reUser(u, formatval));
 					recvs.add(u);
 					cc.add(u);
 				} else if (Common.isEquals(u.getUType(), "B")) {
-					u.setEmail(EmsReDefined.reUserEmail(emsRecvVO));
+					u.setEMail(EmsReDefined.reUserEmail(emsRecvVO));
 					u.setViewStr(EmsReDefined.reUser(u, formatval));
 					recvs.add(u);
 					bcc.add(u);

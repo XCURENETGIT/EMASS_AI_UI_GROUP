@@ -443,7 +443,7 @@ public class EmsReDefined {
 	}
 	
 	public static String reUserEmail(EmsRecvVO u, String userEmail) {
-		String recvEmail = u.getEmail();
+		String recvEmail = u.getEMail();
 		if(Common.isEmpty(recvEmail)) return recvEmail;
 		
 		List<String> emailList = new ArrayList<String>();
@@ -559,8 +559,8 @@ public class EmsReDefined {
 		else if(Common.isEquals(key, "jikgubnm")) return Common.nvl(u.getJikgubNm());
 		else if(Common.isEquals(key, "email")) {
 			if(isValidEmail(u.getRecvId()) && Common.isNotEmpty(u.getName())) {
-				return Common.nvl(u.getEmail(), u.getRecvId());
-			}else return Common.nvl(u.getEmail());
+				return Common.nvl(u.getEMail(), u.getRecvId());
+			}else return Common.nvl(u.getEMail());
 		}
 		else if(Common.isEquals(key, "businm")) return Common.nvl(u.getBusiNm());
 		else if(Common.isEquals(key, "ip")) return Common.nvl(u.getIp());

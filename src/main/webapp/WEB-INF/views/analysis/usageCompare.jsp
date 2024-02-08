@@ -164,7 +164,7 @@ $(document).ready(function(){
 	
 	$('#detailListCount .caret').change(function(){ 
 		grid2.pageSize = Number( $('#detailListCount .caret').attr('val') );
-		selectDetailList('Y');
+		selectDetailList('N');
 	});
 	
 	colInit2('N');
@@ -469,7 +469,7 @@ function eventEnterSearch(event) {
 		var selectKey = '';
 		function selectDetail( key ) {
 			selectKey = key;
-			selectDetailList('Y');
+			selectDetailList('N');
 		}
 
 		function selectDetailList( flag ) {
@@ -734,6 +734,8 @@ function eventEnterSearch(event) {
 			}
 			return false;
 		}
+
+
 
 	</script>
 </body>
