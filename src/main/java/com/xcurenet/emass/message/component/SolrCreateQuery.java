@@ -136,8 +136,6 @@ public class SolrCreateQuery {
 	};
 
 
-	public String[] SPECIALCHARS = {"!", "\"", "#", "$", "%", "&", "{", "}", "@", "`",  ":", "+", ";", "-", ".", ",", "^", "~", "|", "'", "[", "]"};
-
 
 
 
@@ -1333,6 +1331,7 @@ public class SolrCreateQuery {
 		} else {
 			StringBuilder querySb = new StringBuilder();
 			String[] terms = query.split(" ");
+//			querySb.append("\"");
 			for (int i = 0; i < terms.length; i++) {
 				if (terms[i].equals("|")) {
 					terms[i] = OR_PREFIX;
@@ -1341,9 +1340,12 @@ public class SolrCreateQuery {
 //					terms[i] = "+" + terms[i];
 //				}
 				else {
+					terms[i] =  ("\"").concat(terms[i]).concat( "\"");
 					querySb.append(appendSpecialchar(terms[i])).append(" ");
 				}
 			}
+//			querySb.append("\"");
+
 			sb.append("+").append(querySb.toString().trim().replaceAll(" ", " ").replaceAll("__", " "));
 		}
 		return sb.toString().replace(OR_PREFIX, " ").replace("__", " ").replace("  ", " ").trim();
@@ -1393,11 +1395,11 @@ public class SolrCreateQuery {
 		else if (str.endsWith(OR_PREFIX)) return str;
 		else if (str.endsWith("\"")) return str;
 		else {
-			for (String item : SPECIALCHARS) {
-				if (str.contains(item)) {
-					str = str.replaceAll(item, "");
-				}
-			}
+//			for (String item : SPECIALCHARS) {
+//				if (str.contains(item)) {
+//					str = str.replaceAll(item, "");
+//				}
+//			}
 			return str;
 		}
 	}
