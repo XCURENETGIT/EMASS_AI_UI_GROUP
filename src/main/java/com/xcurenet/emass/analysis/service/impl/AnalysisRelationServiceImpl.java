@@ -72,7 +72,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 		SolrQueryString query = new SolrQueryString();
 		query.addRange("ctime_yyyymmdd", searchVO.getStartDate().replaceAll("-", ""), searchVO.getEndDate().replaceAll("-", ""), false)
 				.add("subject", searchVO.getTitle(), true, true)
-				.add(new String[]{"sender_str", "sname"}, searchVO.getSendUser())
+				.add(new String[]{"sender_str", "sname","sender"}, searchVO.getSendUser())
 				.add(new String[]{"recvs", "recvs_name", "cc", "cname", "bcc"}, searchVO.getReceiveUser())
 				.add(new String[]{"sender_str", "sname", "recvs", "recvs_name", "cc", "cname", "bcc"}, searchVO.getObservePersonnel())
 				.add(new String[]{"sender_str", "sname", "recvs", "recvs_name", "cc", "cname", "bcc"}, searchVO.getKeyPersonnel())
