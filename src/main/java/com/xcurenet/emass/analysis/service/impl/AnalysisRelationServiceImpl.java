@@ -652,12 +652,36 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 				int size = 0;
 				if (Common.isNotEmpty(sizeNum[i])) {
 					try {
+
 						size = Integer.parseInt(sizeNum[i]) * 1024 * 1024;
+						boolean startIncludeYN = true;
+						boolean endIncludeYN = true;
+						switch (compare[i]) {
+							case "=":
+							case "!=":
+								query.add(column, size, false);
+								break;
+							case ">":
+								query.addRange(column, size, "*", false, false, true);
+								break;
+							case ">=":
+								query.addRange(column, size, "*", false, true, true);
+								break;
+						case "<":
+							query.addRange(column, "*", size, false, true, false);
+							case "<=":
+								query.addRange(column, "*", size, false, true, true);
+								break;
+							case "IN":
+								String sizeString = sizeNum[i];
+								List<Object> textList = new ArrayList<>(Arrays.asList(sizeString.split("\\s*,\\s*")));
+								query.add(column, size, false);
+								break;
+						}
 					} catch (NumberFormatException e) {
 						log.warn("데이터 자유 분석 조건에서 용량에 숫자가 아닌 데이터가 들어왔습니다.", e);
 					}
 				}
-				query.addRange(column, size, "*", false, true, true);
 			} else {
 				String tmpContext = Common.nvl(context[i]);
 				if (Common.isNotEmpty(tmpContext)) {
@@ -671,6 +695,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 							query.add(column, tmpContext, false);
 							break;
 						case ">":
+							System.out.println(">");
 							startIncludeYN = false;
 						case ">=":
 							start = tmpContext;
@@ -685,7 +710,6 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 						case "IN":
 							List<Object> textList = new ArrayList<>(Arrays.asList(tmpContext.split("\\s*,\\s*")));
 							query.add(column, textList, false);
-							//query.add(column, textList, false);
 							break;
 					}
 				}
