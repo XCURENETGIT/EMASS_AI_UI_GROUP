@@ -469,6 +469,7 @@ $(document).ready(function(){
 					if(obj.attr('recvemail')!= '') $('#userEmailPop').text(obj.attr('recvemail'));
 					else $('#userEmailPop').text(nvl(obj.attr('recvid'), nvl(obj.attr('srcip'))));
 				}
+				console.log(obj);
 				if(obj.attr('recvconm') != '') $('#userCoNmPop').text(obj.attr('recvconm'));
 				else $('#userCoNmPop').text('');
 				if(obj.attr('recvbusinm') != '') $('#userBusiNmPop').text(obj.attr('recvbusinm'));
@@ -1273,6 +1274,7 @@ function userHtml(userList,tr, srcip, dstip, usrip) {
 
 	 	if(''!=nvl(user.name))  userDivHtml += '<span class="userInfoSpan '+insideClass+'"';
 	 	else  userDivHtml += '<span class="userInfoSpan notuser';
+
 
 		userDivHtml += ' recvid="' + nvl(user.recvId) + '"';
 		userDivHtml += ' recvip="' + chkUserIp(nvl(user.ip), srcip, dstip, usrip) + '"';

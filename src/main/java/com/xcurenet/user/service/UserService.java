@@ -91,7 +91,6 @@ public interface UserService {
 	public List<PersCodeInfo>  getJikgubInfo();
 	/* 서비스 코드맵핑정보 */
 	public List<PersCodeInfo>  getServiceInfo();
-
-
+	public UserVO getUseridbyEmailIp(String usrid);
 
 }

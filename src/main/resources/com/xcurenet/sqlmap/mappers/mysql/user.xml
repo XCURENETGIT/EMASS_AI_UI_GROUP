@@ -252,6 +252,7 @@
 		DELETE	FROM UI_USER_GROUP_LIST WHERE	FIND_IN_SET(USER_ID, #{userId})
 	</delete>
 
+
 	<!-- 사용자 삭제 시 관심사용자그룹 전체적으로 정리(사용자 목록에 없는데 관심사용자에 남아있는 데이터 삭제) -->
 	<delete id="updateAdminUserGroupList">
 		DELETE	FROM UI_ADMIN_USER_GROUP_LIST
@@ -529,6 +530,14 @@
 		WHERE	FIND_IN_SET(A.GROUP_CODE, #{groupCodes})
 		GROUP BY A.USER_ID
 	</select>
+
+	<select id="getUseridbyEmailIp" resultType="UserVO" parameterType="hashmap">
+		SELECT  USER_EMAIL AS userEmail, USER_IP AS userIp
+		FROM  UI_USER_EMAIL
+		JOIN UI_USER_IP ON UI_USER_EMAIL.USER_ID = UI_USER_IP.USER_ID
+		WHERE  UI_USER_EMAIL.USER_ID = #{userid}
+	</select>
+
 
 	<!-- 룰 구성 요소 사용자 그룹 등록 여부 확인 -->
 	<select id="isUserGroupItemExist" resultType="int" parameterType="userGroupVO">

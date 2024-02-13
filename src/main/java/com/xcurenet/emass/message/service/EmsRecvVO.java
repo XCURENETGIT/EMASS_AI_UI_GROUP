@@ -28,6 +28,7 @@ public class EmsRecvVO {
 	private String domain;
 	private String viewStr;
 	private String formatStr;
+	private String userEmail;
 
 
 	public static Map<String, Object> toMap(EmsRecvVO person) {
