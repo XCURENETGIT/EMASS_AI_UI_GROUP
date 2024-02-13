@@ -196,7 +196,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		Query searchQuery = new NativeSearchQueryBuilder()
 				.withFields(Common.toArray(sq.getFields(), ","))
 				.withQuery(complateQuery)
-		    	.withPageable(PageRequest.ofSize(100))
+		    	.withPageable(PageRequest.ofSize(rows))
 				.withSort(getSort(sq))
 				.withAggregations(getAggregations(sq))
 				.withAggregations(getAggregationsByPivot(sq))
@@ -206,13 +206,13 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 				.withTimeout(Duration.ofSeconds(60))
 				.build();
 
-		int range = ((rows + offset) / 100); // for문 횟수
+		int range = Math.round((rows + offset) / rows); // for문 횟수
 
 		int idx = 0;
 		SearchHits<SolrEdcVO> searchHits = null;
 		do {
 			searchQuery.setSearchAfter(searchAfter);
-			if((offset / 100 ) == idx ) {
+			if(Math.round((offset / rows )) == idx ) {
 				searchQuery.setPageable(PageRequest.ofSize(rows));
 				searchHits = operation.search(searchQuery, SolrEdcVO.class);
 				break;
