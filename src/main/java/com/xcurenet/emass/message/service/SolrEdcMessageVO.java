@@ -16,7 +16,6 @@ import org.elasticsearch.search.aggregations.bucket.range.ParsedRange;
 import org.elasticsearch.search.aggregations.bucket.range.Range;
 import org.elasticsearch.search.aggregations.bucket.terms.ParsedLongTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms;
-import org.elasticsearch.search.aggregations.bucket.terms.ParsedTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.metrics.ParsedSum;
 import org.springframework.data.elasticsearch.core.ElasticsearchAggregations;
@@ -80,6 +79,8 @@ public class SolrEdcMessageVO {
 	public SolrEdcMessageVO(final SearchHits<SolrEdcVO> resp, final String adminId) throws SolrServerException, IOException {
 		this.numFound = resp.getTotalHits();
 		this.maxScore = resp.getMaxScore();
+
+
 		for (SearchHit<SolrEdcVO> solrEdcVO : resp.getSearchHits()) {
 			SolrEdcVO edcVO = solrEdcVO.getContent();
 			edcVO.setReadYn(isRead(solrEdcVO.getContent().getChecked(), adminId) ? "Y" : "N");

@@ -2,7 +2,6 @@ package com.xcurenet.emass.message.service;
 
 import com.xcurenet.emass.message.service.impl.parseJsonFile;
 import com.xcurenet.emass.searchHistory.vo.SearchHistoryGroupVO;
-import com.xcurenet.emass.searchHistory.vo.SearchHistoryVO;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -19,7 +18,7 @@ public interface SolrEdcService {
 
 	public SearchHistoryGroupVO getSearchHistoryList(final SolrQuery sq) throws SolrServerException, IOException;
 
-	public SearchHits<SolrEdcVO> getList(final SolrQuery sq) throws SolrServerException, IOException;
+	public SearchHits<SolrEdcVO>  getList(final SolrQuery sq) throws SolrServerException, IOException;
 
 	public SolrEdcMessageVO getEmassMessage(final SolrQuery sq, final String adminId) throws IOException, SolrServerException;
 

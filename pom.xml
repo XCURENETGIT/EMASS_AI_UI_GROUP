@@ -23,7 +23,7 @@
 
 		<java.version>11</java.version>
 
-		<release.version>3</release.version>
+		<release.version>4</release.version>
 		<build.version>${project.version}-${release.version}</build.version>
 		<arch>x86_64</arch>
 
@@ -122,11 +122,6 @@
 			<artifactId>spring-boot-starter-data-mongodb</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-core</artifactId>
-			<version>9.2.0</version>
-		</dependency>
 
 
 <!--		<dependency>-->
@@ -516,19 +511,7 @@
 			<version>3.0.3</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-elasticsearch</artifactId>
-			<version>3.0.5</version>
-		</dependency>
 
-
-		<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-core -->
-		<dependency>
-			<groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-core</artifactId>
-			<version>8.11.1</version>
-		</dependency>
 
 		<!-- kafka -->
 		<dependency>
@@ -538,6 +521,21 @@
 
 		<!-- elasticsearch -->
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-elasticsearch</artifactId>
+			<version>2.7.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-commons</artifactId>
+			<version>2.7.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-elasticsearch</artifactId>
+			<version>4.4.2</version>
+		</dependency>
+		<dependency>
 			<groupId>org.elasticsearch</groupId>
 			<artifactId>elasticsearch</artifactId>
 			<version>7.17.6</version>
@@ -546,10 +544,13 @@
 		<dependency>
 			<groupId>org.elasticsearch.client</groupId>
 			<artifactId>elasticsearch-rest-high-level-client</artifactId>
-			<version>7.17.6</version>
+			<version>7.17.14</version>
 		</dependency>
-
-
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-core</artifactId>
+			<version>9.2.0</version>
+		</dependency>
 
 
 

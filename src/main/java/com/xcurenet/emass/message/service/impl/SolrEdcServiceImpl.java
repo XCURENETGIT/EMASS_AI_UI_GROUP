@@ -34,6 +34,7 @@ import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.elasticsearch.search.aggregations.pipeline.BucketSortPipelineAggregationBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
+import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.core.AggregationsContainer;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
@@ -123,9 +125,8 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		try {
 			String sort = sq.getSortField();
 			if (Common.isEmpty(sort)) {
-				sq.setSort(SortClause.desc("_score"));
-				sq.addSort(SortClause.desc("ctime"));
-				sq.addSort(SortClause.desc("msgid"));
+				sq.setSort(SortClause.desc("ctime"));
+				sq.setSort(SortClause.desc("msgid"));
 			}
 			log.debug("[SORT] : {}", sq.getSortField());
 			log.debug("[QUERY] {}", sq.getQuery());
@@ -186,24 +187,52 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 
 		log.info("page : {}  rows : {}", getPage(sq), sq.getRows());
+
+
+		List<Object> searchAfter = null;
+		int offset = sq.getStart(); // start
+		int rows = sq.getRows();  // size
+
 		Query searchQuery = new NativeSearchQueryBuilder()
 				.withFields(Common.toArray(sq.getFields(), ","))
 				.withQuery(complateQuery)
-				.withPageable(PageRequest.of(getPage(sq), sq.getRows(), getSort(sq)))
+		    	.withPageable(PageRequest.ofSize(100))
+				.withSort(getSort(sq))
 				.withAggregations(getAggregations(sq))
 				.withAggregations(getAggregationsByPivot(sq))
 				.withTrackTotalHits(true)
 				.withTrackScores((Common.isEquals(sq.get("track_scores"),"true")) ? true : false )
-			//	.withTimeout(Duration.ofSeconds(60))
+				.withSearchAfter(searchAfter)
+				.withTimeout(Duration.ofSeconds(60))
 				.build();
 
-		SearchHits<SolrEdcVO>  hits = operation.search(searchQuery, SolrEdcVO.class);
+		int range = ((rows + offset) / 100); // for문 횟수
+
+		int idx = 0;
+		SearchHits<SolrEdcVO> searchHits = null;
+		do {
+			searchQuery.setSearchAfter(searchAfter);
+			if((offset / 100 ) == idx ) {
+				searchQuery.setPageable(PageRequest.ofSize(rows));
+				searchHits = operation.search(searchQuery, SolrEdcVO.class);
+				break;
+			}else {
+				searchHits = operation.search(searchQuery, SolrEdcVO.class);
+			}
+
+			if(idx > range || searchHits.getSearchHits().isEmpty())break;
+			SearchHit lastHit = searchHits.getSearchHit((int) (searchHits.getSearchHits().size() - 1));
+			searchAfter = lastHit.getSortValues();
+			idx++;
+		} while (true);
+
+
 		try {
-			printQueryLog(sq, hits);
+			printQueryLog(sq, searchHits);
 		} catch (Exception e) {
 			log.info("[QUERY_RESULT] TOTAL_COUNT : {}, QUERY_TIME : {}", 0, TimeUtil.print());
 		}
-		return hits;
+		return searchHits;
 	}
 
 	private Map<String, Float> getDefaultSearchField(SolrQuery sq) {
@@ -450,6 +479,8 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		}
 		return sort;
 	}
+
+
 
 	private int maxCount(int cnt) {
 		if (cnt == 25) return Integer.MAX_VALUE; //Solr Facet Limit가 25가 Default라서 25값인경우 MAX로 전달
@@ -791,6 +822,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	private Map<String, List<parseJsonFile>> groupingBySecurityYn(List<parseJsonFile> ChangefeedbackList) {
 		return ChangefeedbackList.stream().collect(Collectors.groupingBy(parseJsonFile::getSecurityYn));
 	}
+
 
 
 
