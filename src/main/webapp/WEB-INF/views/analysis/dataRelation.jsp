@@ -726,8 +726,8 @@
         var str = '';
         var val = '';
         for (var i = 0; i < data.length; i++) {
-            str += data[i].email;
-            val += data[i].email;
+            str += data[i].userid;
+            val += data[i].userid;
             if (codeType == 'regexp') {
                 var arr = data[i].count.split('@');
                 if (arr[0] == 'B') str += '(' + arr[1] + '<s:message code="selectCodeAll.items"/> ~ ' + arr[2] + '<s:message code="selectCodeAll.items"/>)';

@@ -34,7 +34,6 @@ import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.elasticsearch.search.aggregations.pipeline.BucketSortPipelineAggregationBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
-import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -190,13 +189,14 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 
 		List<Object> searchAfter = null;
-		int offset = sq.getStart(); // start
-		int rows = sq.getRows();  // size
+
+		int offset = (null == sq.getStart()) ? 0 : sq.getStart(); // start
+		int rows = (sq.getRows() == 0) ? 100 : sq.getRows() ;  // size
+
 
 		Query searchQuery = new NativeSearchQueryBuilder()
 				.withFields(Common.toArray(sq.getFields(), ","))
 				.withQuery(complateQuery)
-		    	.withPageable(PageRequest.ofSize(rows))
 				.withSort(getSort(sq))
 				.withAggregations(getAggregations(sq))
 				.withAggregations(getAggregationsByPivot(sq))
@@ -210,22 +210,27 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 		int idx = 0;
 		SearchHits<SolrEdcVO> searchHits = null;
-		do {
-			searchQuery.setSearchAfter(searchAfter);
-			if(Math.round((offset / rows )) == idx ) {
-				searchQuery.setPageable(PageRequest.ofSize(rows));
-				searchHits = operation.search(searchQuery, SolrEdcVO.class);
-				break;
-			}else {
-				searchHits = operation.search(searchQuery, SolrEdcVO.class);
-			}
 
-			if(idx > range || searchHits.getSearchHits().isEmpty())break;
-			SearchHit lastHit = searchHits.getSearchHit((int) (searchHits.getSearchHits().size() - 1));
-			searchAfter = lastHit.getSortValues();
-			idx++;
-		} while (true);
+		if(Common.isEquals(sq.get("group"),"true")) {
+			searchQuery.setPageable(PageRequest.of(getPage(sq), sq.getRows(),getSort(sq)));
+			searchHits = operation.search(searchQuery, SolrEdcVO.class);
+		}else {
+			searchQuery.setPageable(PageRequest.ofSize(rows));
+			do {
+				searchQuery.setSearchAfter(searchAfter);
+				if (Math.round((offset / rows)) == idx) {
+					searchHits = operation.search(searchQuery, SolrEdcVO.class);
+					break;
+				} else {
+					searchHits = operation.search(searchQuery, SolrEdcVO.class);
+				}
 
+				if (idx > range || searchHits.getSearchHits().isEmpty()) break;
+				SearchHit lastHit = searchHits.getSearchHit((int) (searchHits.getSearchHits().size() - 1));
+				searchAfter = lastHit.getSortValues();
+				idx++;
+			} while (true);
+		}
 
 		try {
 			printQueryLog(sq, searchHits);

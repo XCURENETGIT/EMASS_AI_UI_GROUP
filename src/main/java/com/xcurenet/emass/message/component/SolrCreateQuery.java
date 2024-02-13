@@ -1438,7 +1438,7 @@ public class SolrCreateQuery {
 		StringBuilder result = new StringBuilder();
 		result.append("(");
 		for (int i = 0; i < param.length; i++) {
-			result.append(param[i]).append(addString);
+			result.append(makeParentheses(param[i])).append(addString);
 			if (i != param.length - 1) result.append(SPACE);
 		}
 		result.append(")");
