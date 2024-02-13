@@ -1,21 +1,29 @@
 package com.xcurenet.emass.message.service.impl;
 
 import com.xcurenet.common.util.Common;
+import com.xcurenet.common.util.config.Config;
 import com.xcurenet.emass.message.service.*;
 import com.xcurenet.emass.message.service.vo.EmassAttachData;
 import com.xcurenet.emass.message.service.vo.EmassMessageData;
 import com.xcurenet.emass.message.service.vo.EmassPiData;
+import com.xcurenet.user.service.UserService;
+import com.xcurenet.user.service.UserVO;
+import org.apache.cxf.wsdl11.SOAPBindingUtil;
 import org.joda.time.DateTime;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
 public class EmsMessageConvert {
 
 
+	@Autowired
+	public UserService userService;
 	/*util mongo convert */
 	public EmsMessageVO convertData(EmassMessageData data) {
 		if(null == data) {data = new EmassMessageData();} // null err방지
@@ -36,8 +44,8 @@ public class EmsMessageConvert {
 
 //		/* GMT 를 사용하는 서버시간대의 경우 */
 //		if("GMT+09:00".equals(TimeZone.getDefault().getID())){
-			ltime = ltime.minusHours(9);
-			ctime = ctime.minusHours(9);
+		ltime = ltime.minusHours(9);
+		ctime = ctime.minusHours(9);
 //		}
 
 		vo.setLtime(Common.yyyy_MM_dd_HH_mm_ss.print(ltime));
@@ -78,6 +86,15 @@ public class EmsMessageConvert {
 		vo.setSiteCode(data.getSiteCode());
 
 		if(data.getUserInfo() != null) {
+			String email = "";
+			String ip = "";
+				UserVO userVO = userService.getUseridbyEmailIp(data.getUserInfo().getUserId());
+				if (userVO != null && userVO.getUserIp() != null) {
+					email = userVO.getUserEmail();
+					ip = userVO.getUserIp();
+				}
+			data.getUserInfo().setEmail(email);
+			data.getUserInfo().setIp(ip);
 			vo.setUser(data.getUserInfo().getId());
 			vo.setUserId(data.getUserInfo().getUserId());
 			vo.setName(data.getUserInfo().getName());
@@ -238,7 +255,6 @@ public class EmsMessageConvert {
 		vo.setMsgId(msgId);
 		vo.setRecvId(data.getId());
 		vo.setUType(uType);
-		vo.setEMail(data.getEmail());
 		vo.setName(data.getName());
 		vo.setIp(data.getIp());
 		vo.setCoCd(data.getCoCd());
@@ -252,6 +268,9 @@ public class EmsMessageConvert {
 		vo.setJikgubCd(data.getJikgubCd());
 		vo.setJikgubNm(data.getJikgubNm());
 		vo.setInSide(data.getInside());
+		vo.setEMail(data.getEmail());
+
+
 		result.add(vo);
 		return result;
 	}

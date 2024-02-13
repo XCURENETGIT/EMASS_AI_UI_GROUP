@@ -19,6 +19,8 @@ import com.xcurenet.emass.message.service.vo.EmassMessageData;
 import com.xcurenet.emass.message.web.EmsAttachDownload;
 import com.xcurenet.minio.MinioFileAdapter;
 import com.xcurenet.searchWord.service.RelationKeywordVO;
+import com.xcurenet.user.service.UserService;
+import com.xcurenet.user.service.UserVO;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +49,9 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 
 	@Autowired
 	private EmsMessageConvert emsMessageConvert;
+
+	@Autowired
+	public UserService userService;
 
 	@Autowired
 	public Config config;
@@ -178,6 +183,17 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 			}
 			emsMessageVO.setSubject(EmsReDefined.reSubject(emsMessageVO));
 
+			/* userIp 가져오기*/
+			String ip = "";
+			UserVO userVO = userService.getUseridbyEmailIp(emsMessageVO.getUserId());
+			if (userVO != null && userVO.getUserIp() != null) {
+				ip = userVO.getUserIp();
+			}
+			emsMessageVO.setUsrIp(ip);
+
+
+
+
 			List<EmsRecvVO> users = emsMessageVO.getFullUsers();
 			List<EmsRecvVO> user = new ArrayList<>();
 			List<EmsRecvVO> sender = new ArrayList<>();
@@ -193,6 +209,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 			}
 			String formatval = configAdminVO.getVal();
 			log.debug("Message : " + emsMessageVO);
+
 			for (EmsRecvVO emsRecvVO : users) {
 				EmsRecvVO u = EmsReDefined.reUserIp(emsRecvVO, Common.nvl(emsMessageVO.getSrcIp()), Common.nvl(emsMessageVO.getDstIp()), Common.nvl(emsMessageVO.getUsrIp()));
 				if (Common.isEquals(u.getUType(), "U")) {

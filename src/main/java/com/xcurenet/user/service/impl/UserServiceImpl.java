@@ -120,6 +120,18 @@ public class UserServiceImpl extends XcnAbstractDAO implements UserService {
 		}
 		return selectList("com.xcurenet.sqlmap.mappers.mysql.user.getUserNamebyEmail", param);
 	}
+
+	@Override
+	public UserVO getUseridbyEmailIp(String userid) {
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userid", userid);
+		UserVO result = selectOne("com.xcurenet.sqlmap.mappers.mysql.user.getUseridbyEmailIp", userid);
+		if (result != null) {
+			return result;
+		} else {
+			return null;
+		}
+	}
 	
 	@Override
 	public AdminVO getAdminAuthCoBusi(final String adminId) {
@@ -500,6 +512,7 @@ public class UserServiceImpl extends XcnAbstractDAO implements UserService {
 		}
 		return result;
 	}
+
 	
 	@Override
 	public String getBusiNmByIpRange(UserVO user) {
@@ -547,6 +560,8 @@ public class UserServiceImpl extends XcnAbstractDAO implements UserService {
 	public List<PersCodeInfo> getServiceInfo() {
 		return selectList("com.xcurenet.sqlmap.mappers.mysql.user.getServiceInfo");
 	}
+
+
 
 
 }
