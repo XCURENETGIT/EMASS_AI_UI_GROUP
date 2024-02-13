@@ -79,7 +79,7 @@
     Highcharts.setOptions({
         chart: {
             type: 'column',
-            marginTop: 10
+            marginTop: 25
         },
         global: {useUTC: false},
         gridLineColor: '#fff',
