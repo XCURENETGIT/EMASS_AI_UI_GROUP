@@ -1406,7 +1406,6 @@
                 var searchType = $('#searchType').val();
                 var consentNo = grid.getValue(0, 'consentNo');
                 if( searchType != 'L'){
-                    console.log(isConsent());
 
                     if(isConsent() && consentNo == '' && '<%=adminType%>' != 'C'){
                         alert('<s:message code="download.msg.consent"/>');
@@ -3158,21 +3157,25 @@
                         </div>
                     </div>
                     <div id="section_cen" style=" width:100px; float:right; z-index:999;" class="ui-layout-center">
-                        <%if( consent && Common.isEquals(firstAdminYn, "N") && Common.isNotEquals(adminType, "C")){ %>
-                        <div style="position: absolute;z-index: 1;padding-top: 1px;padding-left: 5px;">
-                            <button class="search_btn" style="width:150px;" accesskey="O" id="consentBtn" onclick="searchConsentNo();"><span class="glyphicon glyphicon-tags"></span>&nbsp;<s:message code="consent.select.consent"/></button>
-                            <button class="reset_btn" accesskey="X" id="resetConsentBtn" onclick="resetConsentNo();">X</button>
-                            <input type="text" style="width:120px;height:28px;display:none;" readonly="readonly" id="consentNo">
-                            <input type="hidden" readonly="readonly" id="consentIp">
-                            <input type="hidden" readonly="readonly" id="consentEmail">
-                            <input type="hidden" readonly="readonly" id="consentUserId">
-                            <span id="consentName" style="font-weight: bold;"></span>
-                            <input type="hidden" readonly="readonly" id="consentShortName">
-                        </div>
-                        <%} %>
+
                         <div class="viewSetup" style="position: absolute;top:7px;right:10px;z-index: 9;">
 
                             <div style="display: inline-block; padding-left:10px;vertical-align: bottom;">
+
+                                <%if( consent && Common.isEquals(firstAdminYn, "N") && Common.isNotEquals(adminType, "C")){ %>
+                                <div  style="display: inline-block; padding-left:10px;vertical-align: bottom;">
+                                    <button class="btn05" style="width:150px;" accesskey="O" id="consentBtn" onclick="searchConsentNo();"><span class="glyphicon glyphicon-tags"></span>&nbsp;<s:message code="consent.select.consent"/></button>
+                                    <button class="reset_btn" accesskey="X" id="resetConsentBtn" onclick="resetConsentNo();">X</button>
+                                    <input type="text" style="width:120px;height:28px;display:none;" readonly="readonly" id="consentNo">
+                                    <input type="hidden" readonly="readonly" id="consentIp">
+                                    <input type="hidden" readonly="readonly" id="consentEmail">
+                                    <input type="hidden" readonly="readonly" id="consentUserId">
+                                    <span id="consentName" style="font-weight: bold;"></span>
+                                    <input type="hidden" readonly="readonly" id="consentShortName">
+                                </div>
+                                <%} %>
+
+
                                 <a href="javascript:;" class="btn05" style="padding-right:10px; color:#383838; cursor: pointer; font-size: 13px;float: right; margin-right:4px;"data-toggle="dropdown" id="exportMsg"><s:message code="common.msg.export"/><span class="caret"></span></a>
                                 <ul class="dropdown-menu dropdown-menu-left" role="menu" style="min-width:100px;font-size:13px;">
                                     <li style="display:none;"><a href="javascript:void(0);" id="body_link_btn" class="body_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-text-o"></span>&nbsp;<s:message code="condition.body"/></a></li>
