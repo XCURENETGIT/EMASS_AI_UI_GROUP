@@ -711,12 +711,18 @@ public class SolrCreateQuery {
 
 		if (Common.isNotEmpty(kwds)) {
 			if(Common.isEquals(keywordYn_not, "Y")){
-				queryStr.append(String.format("%s%s:%s", EXCEPT_QUERY, KEYWORD, createOrQuery(kwds, ", ")));
-				queryStr.append(String.format("%s%s:%s", EXCEPT_QUERY, KWDS_ATTACHNAME, createOrQuery(kwds, ", ")));
+				queryStr.append(EXCEPT_QUERY);
+				queryStr.append("(");
+				queryStr.append(String.format("%s%s:%s", "", KEYWORD, createOrQuery(kwds, ", ")));
+				queryStr.append(String.format("%s%s:%s", " ", KWDS_ATTACHNAME, createOrQuery(kwds, ", ")));
+				queryStr.append(")");
 			}
 			else{
-				queryStr.append(String.format("%s%s:%s", AND_QUERY, KEYWORD, createOrQuery(kwds, ", ")));
-				queryStr.append(String.format("%s%s:%s", AND_QUERY, KWDS_ATTACHNAME, createOrQuery(kwds, ", ")));
+				queryStr.append(AND_QUERY);
+				queryStr.append("(");
+				queryStr.append(String.format("%s%s:%s", "", KEYWORD, createOrQuery(kwds, ", ")));
+				queryStr.append(String.format("%s%s:%s", " ", KWDS_ATTACHNAME, createOrQuery(kwds, ", ")));
+				queryStr.append(")");
 			}
 		}
 		return addQuery(queryStr.toString());
@@ -1432,7 +1438,7 @@ public class SolrCreateQuery {
 		StringBuilder result = new StringBuilder();
 		result.append("(");
 		for (int i = 0; i < param.length; i++) {
-			result.append(makeParentheses(param[i])).append(addString);
+			result.append(param[i]).append(addString);
 			if (i != param.length - 1) result.append(SPACE);
 		}
 		result.append(")");
