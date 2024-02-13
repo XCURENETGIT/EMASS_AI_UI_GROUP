@@ -469,7 +469,7 @@ function eventEnterSearch(event) {
 		var selectKey = '';
 		function selectDetail( key ) {
 			selectKey = key;
-			selectDetailList('N');
+			selectDetailList('Y');
 		}
 
 		function selectDetailList( flag ) {
