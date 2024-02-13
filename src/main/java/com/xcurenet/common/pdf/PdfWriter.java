@@ -279,7 +279,7 @@ public class PdfWriter {
 	}
 
 	public Font getFont(String fontName) throws DocumentException, IOException {
-		FontFactory.register("/resources/static/fonts/woff2/Pretendard-Black.subset.woff2", fontName);
+		FontFactory.register("/resources/static/fonts/woff2/" + fontName, fontName);
 		 return FontFactory.getFont(fontName);
 	}
 
