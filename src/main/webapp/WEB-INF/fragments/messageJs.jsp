@@ -13,6 +13,7 @@
 <script type="text/javascript" src="<c:url value="/js/jquery.fileDownload.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/jquery.event.drag-2.2.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/jquery.bootstrap-growl.min.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/bootstrap-tagsinput.min.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/bootstrap.min.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/bootstrap-dialog.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/bootstrap-notify.min.js"/>"></script>

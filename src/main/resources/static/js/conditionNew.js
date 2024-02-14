@@ -1138,12 +1138,13 @@ function setValueById(id, val){
  */
 function getSelectedCodeData( codeType, data ) {
 	var endId = '';
-	if( codeType == 'senders' || codeType == 'receivers'){
-		$('#'+codeType).tagsinput('removeAll');
-		for (var i = 0; i < data.length; i++) {
-			$('#'+codeType).tagsinput('add', data[i]);
-		}
-	}else{
+	// if( codeType == 'senders' || codeType == 'receivers'){
+	// 	$('#'+codeType).tagsinput('removeAll');
+	// 	for (var i = 0; i < data.length; i++) {
+	// 		$('#'+codeType).tagsinput('add', data[i]);
+	// 	}
+	// }else
+	// {
 		var str = '';
 		var val = '';
 		for(var i=0; i<data.length; i++){
@@ -1209,7 +1210,7 @@ function getSelectedCodeData( codeType, data ) {
 			$('#'+codeType+'SelectedArea'+endId).find('.btn').attr('title', '');
 			$('#'+codeType+'SelectedArea'+endId).hide();
 		}
-	}
+	// }
 
 }
 /**
@@ -1220,9 +1221,9 @@ function getSelectedCodeData( codeType, data ) {
 function resetCode(codeType){
 	var endId = '';
 	//if( popOpenFlag ) endId = 'Pop';
-	if( codeType == 'senders' || codeType == 'receivers'){
-		$('#'+codeType+endId).tagsinput('removeAll');
-	}else{
+	// if( codeType == 'senders' || codeType == 'receivers'){
+	// 	$('#'+codeType+endId).tagsinput('removeAll');
+	// }else{
 		$('#'+codeType+'Val'+endId).val('');
 		$('#'+codeType+'Str'+endId).val('');
 		$('#'+codeType+'SelectedArea'+endId).hide();
@@ -1234,7 +1235,7 @@ function resetCode(codeType){
 			$('#'+codeType+'Yn_not'+endId).prop('disabled', true);
 		}
 
-	}
+	// }
 }
 
 function checkRadioBtn( name, val ){

@@ -20,6 +20,7 @@
 <script type="text/javascript" src="<c:url value="/js/bootstrap.min.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/bootstrap-dialog.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/bootstrap-notify.min.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/bootstrap-tagsinput.min.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/slick.core.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/jquery.numberedtextarea.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/jquery.bootstrap.wizard.js"/>"></script>

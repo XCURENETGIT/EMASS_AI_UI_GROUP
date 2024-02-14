@@ -104,29 +104,30 @@
 
     $(document).ready(function(){
         initCondition();
-        searchReset();
-
+		dateDefault();
         /* 보낸사람 */
-        $('#sendUser').click(function () {
-            var id = $(this).attr('id');
-            openCodeWindow("senders", $('#' + id + 'Val').val(), $('#' + id + 'Str').val(),id);
+        $('#senders').click(function () {
+            var code = $(this).attr('id');
+            openCodeWindow("senders", $('#' + code + 'Val').val(), $('#' + code + 'Str').val());
         });
 
         /* 받는사람 */
-        $('#receiveUser').click(function () {
-            var id = $(this).attr('id');
-            openCodeWindow("user", $('#' + id + 'Val').val(), $('#' + id + 'Str').val(),id);
+        $('#receivers').click(function () {
+            var code = $(this).attr('id');
+            openCodeWindow('receivers', $('#' + code + 'Val').val(), $('#' + code + 'Str').val());
         });
 
 
-        $(document).on('click', '#sendUserSelectedArea', function (e) {
-            $('#sendUserVal, #sendUserVal').val('');
-            $('#sendUserSelectedArea').hide();
+
+;
+        $(document).on('click', '#sendersSelectedArea', function (e) {
+            $('#sendersStr, #sendersVal').val('');
+            $('#sendersSelectedArea').hide();
         });
 
-        $(document).on('click', '#receiveUserSelectedArea', function (e) {
-            $('#receiveUserVal, #receiveUserVal').val('');
-            $('#receiveUserSelectedArea').hide();
+        $(document).on('click', '#receiversSelectedArea', function (e) {
+            $('#receiversStr, #receiversVal').val('');
+            $('#receiversSelectedArea').hide();
         });
 
 
@@ -171,7 +172,7 @@
             searchReset();
         });
 
-        $("#startDate, #endDate, #dynamicSearch, #sendUser, #receiveUser, #keyword, #fileSize").keyup(function(event){
+        $("#startDate, #endDate, #dynamicSearch, #senders, #receivers, #keyword, #fileSize").keyup(function(event){
             eventEnterSearch(event);
         });
 
@@ -198,10 +199,9 @@
 
 
     function searchReset() {
-        dateDefault();
-        $('#interGroup,#dynamicSearch, #sendUserVal,#sendUserStr,#receiveUserVal,#receiveUserStr,#keyword,#fileSize ').val('');
-        $('#sendUserSelectedArea').hide();
-        $('#receiveUserSelectedArea').hide();
+        $('#interGroup,#dynamicSearch, #sendersValVal,#sendersStr,#receiversVal,#receiversStr,#keyword,#fileSize ').val('');
+       $('#sendersSelectedArea').hide();
+       $('#receiversSelectedArea').hide();
     }
 
     function eventEnterSearch(event) {
@@ -231,18 +231,20 @@
 
     }
 
-    function openCodeWindow(codetype,oldCode, oldConm,id) {
-        $('#oldCode').val(oldCode);
-        $('#oldConm').val(oldConm);
 
-        var url = '<c:url value="/commons/selectCode.do?codeType='+codetype+'&id='+id+'"/>';
-        var pop = fnOpenWindow('', 'selectCodeWinPopup', 1200, 700, 'resize');
+	function openCodeWindow(id, oldCode, oldConm) {
+		$('#oldCode').val(oldCode);
+		$('#oldConm').val(oldConm);
 
-        $('#codeParam').attr('target', 'selectCodeWinPopup');
-        $('#codeParam').attr('action', url);
-        $('#codeParam').attr('method', 'post');
-        $('#codeParam').submit();
-    }
+		var url = '<c:url value="/commons/selectCode.do?codeType='+id+'"/>';
+		var pop = fnOpenWindow('', 'selectCodeWinPopup', 1200, 700, 'resize');
+
+		$('#codeParam').attr('target', 'selectCodeWinPopup');
+		$('#codeParam').attr('action', url);
+		$('#codeParam').attr('method', 'post');
+		$('#codeParam').submit();
+	}
+
 
 
 </script>
@@ -295,24 +297,24 @@
 				</div>
 				<%-- 보낸사람 --%>
 				<div>
-					<button class="btn01" id="sendUser"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
+					<button class="btn01" id="senders"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
 							code="common.org.choose.sendUser"/></button>
-					<span id="sendUserSelectedArea" class="codeSelectedBtn" style="display: none">
+					<span id="sendersSelectedArea" class="codeSelectedBtn" >
 							<button type="button" class="btn num_add bornone"  style="z-index: 2;">0</button>
-							</span>
-					<input type="hidden" id="sendUserStr" class="selectedTitle"/>
-					<input type="hidden" id="sendUserVal"/>
+					</span>
+					<input type="hidden" id="sendersStr" class="selectedTitle"/>
+					<input type="hidden" id="sendersVal"/>
 				</div>
 
 				<%-- 받는사람 --%>
 				<div>
-					<button class="btn01" id="receiveUser"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
+					<button class="btn01" id="receivers"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
 							code="common.org.choose.receiveUser"/></button>
-					<span id="receiveUserSelectedArea" class="codeSelectedBtn" style="display: none">
+					<span id="receiversSelectedArea" class="codeSelectedBtn" >
 							<button type="button" class="btn num_add bornone"  style="z-index: 2;">0</button>
-							</span>
-					<input type="hidden" id="receiveUserStr" class="selectedTitle"/>
-					<input type="hidden" id="receiveUserVal"/>
+						</span>
+					<input type="hidden" id="receiversStr" class="selectedTitle"/>
+					<input type="hidden" id="receiversVal"/>
 				</div>
 
 
@@ -487,13 +489,13 @@
 
         /* 보낸 사람 , 받는 사람 */
 
-        var sendUv = $('#sendUserVal').val().split('|');
+        var sendUv = $('#sendersVal').val().split('|');
         var sendUser = sendUv.join(',');
         var sendUserStr ='';
         if (sendUser != '') sendUserStr = sendUser;
         else sendUserStr = '';
 
-        var receiveUv = $('#receiveUserVal').val().split('|');
+        var receiveUv = $('#receiversVal').val().split('|');
         var receiveUser = receiveUv.join(',');
         var receiveUserStr ='';
         if (receiveUser != '') receiveUserStr = receiveUser;
@@ -722,55 +724,7 @@
         }
         return false;
     }
-    function getSelectedCodeData(codeType, data) {
-        var str = '';
-        var val = '';
-        for (var i = 0; i < data.length; i++) {
-            str += data[i].userid;
-            val += data[i].userid;
-            if (codeType == 'regexp') {
-                var arr = data[i].count.split('@');
-                if (arr[0] == 'B') str += '(' + arr[1] + '<s:message code="selectCodeAll.items"/> ~ ' + arr[2] + '<s:message code="selectCodeAll.items"/>)';
-                else if (arr[0] == 'L') str += '(' + arr[1] + '<s:message code="selectCodeAll.items"/> <s:message code="selectCodeAll.over"/>)';
-                else str += '(' + arr[1] + '<s:message code="selectCodeAll.items"/> <s:message code="selectCodeAll.below"/>)';
-                val += '%' + data[i].count;
-            }
 
-            if (i != data.length - 1) {
-                str += ', ';
-                val += '|';
-            }
-        }
-        if (data.length == 0) {
-            if (codeType == 'dept') {
-                $('[name=dept_not]').prop('disabled', true);
-                $('[name=dept_not]').prop('checked', false);
-            } else {
-                $('[name=' + codeType + '_not]').prop('disabled', true);
-                $('[name=' + codeType + '_not]').prop('checked', false);
-            }
-        } else {
-            if (codeType == 'dept') {
-                $('[name=dept_not]').prop('disabled', false);
-            } else {
-                $('[name=' + codeType + '_not]').prop('disabled', false);
-            }
-        }
 
-        if (val != '') {
-            str = str.rtrim();
-            val = val.trimAll();
-        }
-        $('#' + codeType + 'Str').val(str);
-        $('#' + codeType + 'Val').val(val);
-
-        if ($('#' + codeType + 'Str').val() != '') {
-            $('#' + codeType + 'SelectedArea').find('.btn').text(data.length);
-            $('#' + codeType + 'SelectedArea').show();
-        } else {
-            $('#' + codeType + 'SelectedArea').find('.btn').text(0);
-            $('#' + codeType + 'SelectedArea').hide();
-        }
-    }
 
 </script>

@@ -1,6 +1,8 @@
 package com.xcurenet.common.util;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SolrQueryString {
 
@@ -61,7 +63,12 @@ public class SolrQueryString {
 						|| (String.valueOf(value).indexOf("[") > 0 || String.valueOf(value).indexOf("]") > 0)
 						|| (String.valueOf(value).indexOf("{") > 0 || String.valueOf(value).indexOf("}") > 0)) {
 					query.append(name).append(":\"").append(String.valueOf(value)).append("\"");
-				} else {
+				} else if(String.valueOf(value).indexOf(",") > -1){
+					String[] values = String.valueOf(value).split(",");
+					String val = Arrays.stream(values).map(v -> " (\"".concat(v).concat("\")")).collect(Collectors.joining());
+					query.append(name).append(":\"").append(String.valueOf(val)).append("\"");
+				}
+				else {
 					query.append(name).append(":").append("\"").append(value).append("\"").append(" ");
 				}
 			}

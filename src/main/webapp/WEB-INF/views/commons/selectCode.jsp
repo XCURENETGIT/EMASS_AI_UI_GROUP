@@ -81,8 +81,8 @@
                 alert('<s:message code="common.msg.noselect"/>');
                 return;
             }
-            if (id != null && id != '') codeType = id; //조건 추가
-            if (id != null && id == 'sendUser' && grid2.getData().length > 1) {
+            // if (id != null && id != '') codeType = id; //조건 추가
+            if (codeType != null && codeType == 'senders' && grid2.getData().length > 1) {
                 alert('<s:message code="common.warn.sendUser"/>');
                 return;
             }
