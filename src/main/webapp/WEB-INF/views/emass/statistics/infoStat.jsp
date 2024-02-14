@@ -121,6 +121,8 @@
 			$('#userVal, #userVal').val('');
 			$('#userSelectedArea').hide();
 			$('#busiSelect').selectpicker('val', '');
+            $('#piCount').val('1');
+
 		});
 
 		$('#chartCntDiv .dropdown-menu li a').click(function () {

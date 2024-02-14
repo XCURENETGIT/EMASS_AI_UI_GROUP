@@ -1394,7 +1394,7 @@
                                 <span class="fa fa-check"></span><s:message code="query.make.except"/>
                             </label>
                             <%if (Common.isEquals(rsUppercase, "Y")) {%>
-                            <label class="checkbox-inline  exceptOption">
+                            <label class="checkbox-inline  c-checkbox  exceptOption">
                                 <input type="checkbox" name="senders_upperCase" disabled="disabled">
                                 <span class="fa fa-check"></span><s:message code="condition.uppercase"/>
                             </label>
@@ -1447,7 +1447,8 @@
                             <div class="input-group">
                                 <input type="text" class="form-control input-sm condition_input_text" id="rcvCc"
                                        placeholder="<s:message code="condition.cc"/>" style="width: 412px;"/>
-                                <label class="checkbox-inline  exceptOption">
+
+                                <label class="checkbox-inline  c-checkbox  exceptOption">
                                     <input type="checkbox" name="rcvCc_not" disabled="disabled">
                                     <span class="fa fa-check"></span><s:message code="query.make.except"/>
                                 </label>
@@ -1459,7 +1460,7 @@
                             <div class="input-group">
                                 <input type="text" class="form-control input-sm condition_input_text" id="rcvBcc"
                                        placeholder="<s:message code="condition.bcc"/>" style="width: 412px;"/>
-                                <label class="checkbox-inline  exceptOption">
+                                <label class="checkbox-inline  c-checkbox  exceptOption">
                                     <input type="checkbox" name="rcvBcc_not" disabled="disabled">
                                     <span class="fa fa-check"></span><s:message code="query.make.except"/>
                                 </label>
