@@ -589,7 +589,7 @@
             success : function(data, total) {
                 grid1.colInit();
                 grid1.autoNumber();
-                grid1.colAdd('rowKey', '<s:message code="consent.user"/>', 230, 'left', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
+                grid1.colAdd('rowKey', '<s:message code="consent.attach"/>', 230, 'left', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
                     if(grid1.getValue(row, 'rowName') != '') {
                         return grid1.getValue(row, 'rowName') + '&lt;' + value + '&gt;';
                     }
@@ -675,6 +675,9 @@
         var uv = $('#userVal').val().split('|');
         var user = uv.join(',');
 
+        var sDate = $('#startdate').val().replaceAll("-", "");
+        var eDate = $('#enddate').val().replaceAll("-", "");
+
 
         var userStr='';
         if (user != '') userStr = $('#userStr').val();
@@ -690,8 +693,8 @@
             deptStr:dept,
             busiStr:busi,
             userStr:userStr,
-            startDate :  $('#searched_startDate').val(),
-            endDate : $('#searched_endDate').val(),
+            startDate: sDate+"000000",
+            endDate: eDate+"235959",
             xAxis : xAxis,
             xAxis_str : xAxis_str,
             yAxis : 'attachtype',

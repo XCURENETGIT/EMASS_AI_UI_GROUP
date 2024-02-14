@@ -7,7 +7,6 @@ import com.xcurenet.common.schedule.service.JobVO;
 import com.xcurenet.common.schedule.service.QuartzCronTrigger;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.SpringContextUtil;
-import com.xcurenet.common.util.elasticsearch.ElasticSearchCommon;
 import com.xcurenet.config.service.ConfigService;
 import com.xcurenet.config.service.ConfigVO;
 import com.xcurenet.config.service.impl.ConfigServiceImpl;
@@ -382,7 +381,7 @@ public class Config {
 
 		reloadServiceInfo();
 
-		loadElsFieldMap(); // els 필드 컨버터 jsp -> java
+//		loadElsFieldMap(); // els 필드 컨버터 jsp -> java
 
 
 		Locale lo = Locale.forLanguageTag(Config.getString("default.lang", "ko"));
@@ -661,15 +660,15 @@ public class Config {
 		return result;
 	}
 
-	public static void loadElsFieldMap() {
-		elsFields.put("ctime_hh", "ctime");
-		elsFields.put("ctime_yyyymmdd", "ctime");
-		elsFields.put("ctime_yyyymm", "ctime");
-		elsFields.put("businm", ElasticSearchCommon.USER_BUSICD);
-		elsFields.put("conm", ElasticSearchCommon.USER_COCD);
-		elsFields.put("deptnm", ElasticSearchCommon.USER_DEPTCD);
-		elsFields.put("direction_svc", ElasticSearchCommon.DIRECTIONSVC);
-		elsFields.put("jikgubnm,jikgub", ElasticSearchCommon.USER_JIKGUBCD);
-	}
+//	public static void loadElsFieldMap() {
+//		elsFields.put("ctime_hh", "ctime");
+//		elsFields.put("ctime_yyyymmdd", "ctime");
+//		elsFields.put("ctime_yyyymm", "ctime");
+//		elsFields.put("businm", ElasticSearchCommon.USER_BUSICD);
+//		elsFields.put("conm", ElasticSearchCommon.USER_COCD);
+//		elsFields.put("deptnm", ElasticSearchCommon.USER_DEPTCD);
+//		elsFields.put("direction_svc", ElasticSearchCommon.DIRECTIONSVC);
+//		elsFields.put("jikgubnm,jikgub", ElasticSearchCommon.USER_JIKGUBCD);
+//	}
 
 }
