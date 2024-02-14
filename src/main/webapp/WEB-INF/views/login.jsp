@@ -67,6 +67,12 @@
                 $("#number_confirm").val('');
             });
 
+
+            $(document).on('click', '.otpClose', function() {
+                $("#pinCode").val('');
+            });
+
+
             if($('#userIdInput').val() != '') {
                 $('#saveLoginId').prop('checked', true);
                 $('#userPwInput').focus();
@@ -279,7 +285,7 @@
             otpInterval = setInterval(function(){
                 if (!firstOTP) {
                     $('#googleOTPPop .modal-title').html(
-                        title + '  <div style="text-align:right;font-weight:normal;font-size:13px;">Auto Close' + (t--).comma() + ' \'s <span className="close" data-dismiss="modal">x</span></div>'
+                        title + '  <div style="text-align:right;font-weight:normal;font-size:13px;">Auto Close' + (t--).comma() + ' \'s <span className="close" data-dismiss="modal" class="otpClose">x</span></div>'
                     );
                 }
             },1000);
