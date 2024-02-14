@@ -280,8 +280,10 @@
             $(document).on('click', '.downloadIcon', function () {
                 var msgId = $(this).parents('p').attr('msgid');
                 var attachHash = $(this).parents('p').attr('attachhash');
+                var attachId = $(this).parents('p').attr('id');
                 var attachSize = Number($(this).parents('p').attr('attachsize'));
-                var attachUrl = '<c:url value="/downEmassAttachOne.xcn"/>?msgId=' + msgId + '&attachHash=' + attachHash;
+                var attachUrl = '<c:url value="/getEmassAttachInfo4DownHash.xcn"/>?msgIds=' + msgId + '&attachHash=' + attachHash;
+
 
                 if (attachHash == '') {
                     alert('<s:message code="message.message.notfound.attach"/>');
