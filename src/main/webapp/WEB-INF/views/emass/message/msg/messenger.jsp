@@ -344,7 +344,7 @@
                     msgIds.push(msgId);
                 });
 
-                var attachUrl = '<c:url value="/downEmassAttachByMsgId.xcn"/>?msgIds=' + msgIds.join(',');
+                var attachUrl = '<c:url value="/downEmassAttachByMsgId.xcn"/>?msgIds=' + msgIds;
                 try {
                     AttachDown.location.href = attachUrl;
                 } catch (e) {
