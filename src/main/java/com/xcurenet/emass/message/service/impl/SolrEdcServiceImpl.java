@@ -146,9 +146,10 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		sq.setParam("wt", "json");
 
 
+		/*======================= 검색 파라미터 조합 ============================*/
+
 		/* 쿼리 조합을 위한 boolQuery */
 		BoolQueryBuilder boolQuery = new BoolQueryBuilder();
-
 		/* set 필터 쿼리 */
 		String filterQuery =  (null != sq.getFilterQueries())? String.join(" ", sq.getFilterQueries()) : "";
 		/* 일반 검색 쿼리 */
@@ -170,12 +171,28 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			recommendQuery.should(QueryBuilders.moreLikeThisQuery(sq.getMoreLikeThisFields(), null, new MoreLikeThisQueryBuilder.Item[]{new MoreLikeThisQueryBuilder.Item(null, sq.get("id"))}).minTermFreq(1).minDocFreq(0).maxQueryTerms(20));
 			boolQuery.should(recommendQuery).minimumShouldMatch("0<-3%"); // 유사도 0%는 제외
 		}
-		boolQuery.should(queryBuilder).minimumShouldMatch("0<-3%");
 
-
+		boolQuery.should(queryBuilder);
 
 		/* 최종 조합 쿼리 */
 		BoolQueryBuilder complateQuery = QueryBuilders.boolQuery().must(boolQuery);
+
+		/* 수,발신자 조회시 */
+		BoolQueryBuilder existsQueryBuilder = QueryBuilders.boolQuery();
+		if(!Common.isEmpty(sq.get("q"))){
+			if(sq.get("q").contains("sname") ) existsQueryBuilder.should(QueryBuilders.existsQuery("sname"));
+			if(sq.get("q").contains("tname") ) existsQueryBuilder.should(QueryBuilders.existsQuery("tname"));
+			if(sq.get("q").contains("cname") ) existsQueryBuilder.should(QueryBuilders.existsQuery("cname"));
+			if(sq.get("q").contains("bname") ) existsQueryBuilder.should(QueryBuilders.existsQuery("bname"));
+			if(sq.get("q").contains("userid") ) {
+				existsQueryBuilder.should(QueryBuilders.existsQuery("sname"));
+				existsQueryBuilder.should(QueryBuilders.existsQuery("tname"));
+				existsQueryBuilder.should(QueryBuilders.existsQuery("cname"));
+				existsQueryBuilder.should(QueryBuilders.existsQuery("bname"));
+			}
+
+			complateQuery.should(existsQueryBuilder).minimumShouldMatch(1);
+		}
 
 		/* size 검색 있을시 */
 		ScriptQueryBuilder scriptQueryBuilder = null;
@@ -184,14 +201,16 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			complateQuery.filter(scriptQueryBuilder);
 		}
 
+		/*============================================================*/
 
 		log.info("page : {}  rows : {}", getPage(sq), sq.getRows());
 
 
+		/*======================= 검색  영역  ============================*/
 		List<Object> searchAfter = null;
-
 		int offset = (null == sq.getStart()) ? 0 : sq.getStart(); // start
 		int rows = (sq.getRows() == 0) ? 100 : sq.getRows() ;  // size
+		int range = Math.round((rows + offset) / rows); // for문 횟수
 
 
 		Query searchQuery = new NativeSearchQueryBuilder()
@@ -206,16 +225,15 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 				.withTimeout(Duration.ofSeconds(60))
 				.build();
 
-		int range = Math.round((rows + offset) / rows); // for문 횟수
-
-		int idx = 0;
 		SearchHits<SolrEdcVO> searchHits = null;
 
-		if(Common.isEquals(sq.get("group"),"true")) {
+		if(Common.isEquals(sq.get("group"),"true")) { // 집계검색
 			searchQuery.setPageable(PageRequest.of(getPage(sq), sq.getRows(),getSort(sq)));
 			searchHits = operation.search(searchQuery, SolrEdcVO.class);
 		}else {
+			//일반검색
 			searchQuery.setPageable(PageRequest.ofSize(rows));
+			int idx = 0;
 			do {
 				searchQuery.setSearchAfter(searchAfter);
 				if (Math.round((offset / rows)) == idx) {
@@ -224,13 +242,14 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 				} else {
 					searchHits = operation.search(searchQuery, SolrEdcVO.class);
 				}
-
 				if (idx > range || searchHits.getSearchHits().isEmpty()) break;
 				SearchHit lastHit = searchHits.getSearchHit((int) (searchHits.getSearchHits().size() - 1));
 				searchAfter = lastHit.getSortValues();
 				idx++;
 			} while (true);
 		}
+
+		/*============================================================*/
 
 		try {
 			printQueryLog(sq, searchHits);
