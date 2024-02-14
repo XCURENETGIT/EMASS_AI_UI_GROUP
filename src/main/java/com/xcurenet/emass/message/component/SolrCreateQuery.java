@@ -753,6 +753,7 @@ public class SolrCreateQuery {
 		String[] param = Common.toArray(params, separator);
 
 		StringBuilder result = new StringBuilder();
+		result.append(AND_QUERY);
 		result.append("(");
 
 		for (int i = 0; i < param.length; i++) {
