@@ -290,7 +290,7 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		sq.setSort("attachexistcnt", SolrQuery.ORDER.desc);
 		sq.setRows(0);
 		sq.setFacet(true);
-		sq.addFacetField("userid");
+		sq.addFacetField("sender_str");
 		sq.setFacetSort("attachexistcnt");
 		sq.setFacetLimit(10);
 		sq.setFacetMinCount(1);
