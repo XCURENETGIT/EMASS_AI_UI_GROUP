@@ -1333,7 +1333,7 @@ function rtnGenerativeGroupList(data) {
         leftDiv.className = "left";
 
         if(data[i].body_snippet!=undefined) {
-            var bodySnippet = data[i].body_snippet.length > 40 ? data[i].body_snippet.substring(0, 40) + "..." : data[i].body_snippet;
+            var bodySnippet = data[i].body_snippet.length > 30 ? data[i].body_snippet.substring(0, 30) + "..." : data[i].body_snippet;
         }
 
         else{
