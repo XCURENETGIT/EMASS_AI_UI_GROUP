@@ -277,7 +277,10 @@ public class SolrCreateQuery {
 					query.append(String.format("body.kr:(%s) ", getSearchQuery(searchStr)));
 					query.append(String.format("body.en:(%s) ", getSearchQuery(searchStr)));
 					query.append(String.format("body.jp:(%s) ", getSearchQuery(searchStr)));
-					query.append(String.format("body_snippet:(%s) ", getSearchQuery(searchStr)));
+					query.append(String.format("body_snippet:(%s) ",getSearchQuery(searchStr)));
+				}
+				if(Common.isEquals(field, "body_snippet")) {
+					query.append(String.format("body_snippet:(%s) ",createOrQueryAsteriskAll(searchStr)));
 				}
 				else if(Common.isEquals(field, "attach")) {
 					query.append(String.format("attach.kr:(%s) ", getSearchQuery(searchStr)));

@@ -173,8 +173,16 @@ public class AlarmJob {
 				param.put("conditions", conditions);
 
 				SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
-				SolrQuery sq = solrCreateQuery.createQuery(param, adminId);
+				SolrQuery sq = new SolrQuery();
+				String query= String.valueOf(solrCreateQuery.createQuery(param, adminId));
+
+				if(readYn.equals("Y")){
+					query += String.format("+checked.readId:%s", adminId);
+				}
+
+				sq.setQuery(query);
 				sq.setStart(0);
+
 
 				if (Common.isEquals(csvYn, "Y")) {
 					sq.setRows(Common.nvz(alarm.getExcelMaxCnt(), CSV_MAX_ROW_CNT));
