@@ -27,6 +27,11 @@
 
 	#wrap {overflow:hidden;}
 
+	@media screen and (max-width: 1575px) {
+		.chatList {
+			display: none; /* chatList div를 감춤 */
+		}
+	}
 </style>
 
 <head>
@@ -254,13 +259,13 @@
 
 
 			$(document).on('click', '.downloadIcon', function(){
-				var msgId = $(this).parents('li').attr('msgid');
-				var attachHash = $(this).parents('li').attr('attachhash');
-				var attachSize = Number( $(this).parents('li').attr('attachsize') );
+                var msgId = $(this).parents('li').attr('msgid');
+                var attachHash = $(this).parents('li').attr('attachhash');
+                var attachId = $(this).parents('li').attr('id');
+                var attachSize = Number($(this).parents('li').attr('attachsize'));
+                var attachUrl = '<c:url value="/getEmassAttachInfo4DownHash.xcn"/>?msgIds=' + msgId + '&attachHash=' + attachHash;
 
-				var attachUrl = '<c:url value="/downEmassAttachOne.xcn"/>?msgId='+msgId+'&attachHash='+attachHash;
-
-				if( attachHash == ''){
+                if( attachHash == ''){
 					alert('<s:message code="message.message.notfound.attach"/>');
 					return;
 				}

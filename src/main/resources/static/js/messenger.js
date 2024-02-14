@@ -218,6 +218,7 @@ var eikon = {
 
                     detailMsgid=data;
                     detailMsgid.sort();
+                    moveTargetHeight(detailMsgid, false);
                     checkList(searchOffset);
                 }
                 else{
@@ -477,6 +478,7 @@ function getMessengerMessagePrev(xRootmtr, srcip, usr_id, msgid) {
 function makeFileList(data) {
     var str = '';
 
+    console.log(data);
     if (data.length === 0) {
         str += '<div class="list-group-item02 ma_none">첨부파일이 없습니다</div>';
 
@@ -1013,6 +1015,21 @@ function checkLastMsg() {
             return updateEmassMessengerAdminXrootMtr(xrootmtr, lastMsgId, srcip, usr_id);
         }
     });
+}
+
+function TargetHeights(id, moveFlag) {
+    // $('.lastReadLi').removeClass('lastReadLi');
+    var obj = $('#' + idIndicator(id));
+    if (obj.length != 0) {
+        obj.addClass('lastReadLi');
+
+        if (moveFlag) {
+            //$("#scrollArea").animate({
+            //	scrollTop: obj.position().top
+            //}, 10);
+            $(location).attr('href', '#' + id);
+        }
+    }
 }
 
 function moveTargetHeight(id, moveFlag) {

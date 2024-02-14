@@ -24,9 +24,21 @@
 </script>
 
 
-
 <style>
-	#wrap {overflow:hidden;}
+	#wrap {
+		overflow: hidden;
+	}
+
+	.form_btn01{
+		min-width: 70px;
+	}
+
+	@media screen and (max-width: 1575px) {
+		.chatList {
+			display: none; /* chatList div를 감춤 */
+		}
+	}
+
 </style>
 
 <head>
@@ -207,8 +219,10 @@
             $(document).on('click', '.downloadIcon', function(){
                 var msgId = $(this).parents('p').attr('msgid');
                 var attachHash = $(this).parents('p').attr('attachhash');
-                var attachSize = Number( $(this).parents('p').attr('attachsize') );
-                var attachUrl = '<c:url value="/downEmassAttachOne.xcn"/>?msgId='+msgId+'&attachHash='+attachHash;
+                var attachId = $(this).parents('p').attr('id');
+                var attachSize = Number($(this).parents('p').attr('attachsize'));
+                var attachUrl = '<c:url value="/getEmassAttachInfo4DownHash.xcn"/>?msgIds=' + msgId + '&attachHash=' + attachHash;
+
 
                 if( attachHash == ''){
                     alert('<s:message code="message.message.notfound.attach"/>');
@@ -840,12 +854,12 @@
 								<div id="endsubdatepicker"><input type="date" id="endSubDt" style="width: 110px;"></div>
 							</div>
 
-							<button class="form_btn01" type="button" accesskey="M" id="searchMsgQueryBtn"><s:message code="common.msg.search"/></button>
+							<button class="form_btn01"  type="button" accesskey="M" id="searchMsgQueryBtn"><s:message code="common.search"/></button>
 						</div>
 
 						<div class="searchSub txt_right">
 							<input type="text" class="w70" placeholder="<s:message code="condition.research"/>" id="searchMsgStrInput">
-							<button class="form_btn01 blackBg" type="button" accesskey="M" id="searchMsgBtn"><s:message code="common.msg.search"/></button>
+							<button class="form_btn01 blackBg" type="button" accesskey="M" id="searchMsgBtn"><s:message code="common.search"/></button>
 						</div>
 					</div>
 					<%--							<div class="col-lg-12"><span style="font-size: 12px; background-color: #444; color: #fff; display: block; padding-left: 3px; padding-right: 3px;border-top-left-radius:4px;border-top-right-radius:4px;height:20px;padding-top:3px;">&nbsp;<s:message code="condition.xrootmtr"/> : <span id="xrootmtr"></span><span id="srcip" style="display:none;"></span><span id="usr_id" style="display:none;"></span><span id="msgid" style="display:none;"></span></span></div>--%>
