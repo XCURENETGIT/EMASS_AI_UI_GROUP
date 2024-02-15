@@ -641,10 +641,10 @@ public class SolrCreateQuery {
 
 	public SolrCreateQuery setRcvJikgub(String rcvJikgub,String recv_jikgub_not) {
 		if(Common.isEquals(recv_jikgub_not, "Y")) {
-			return addQuery(String.format("%s%s:%s", EXCEPT_QUERY, RECV_JIKGUBCD, createOrQueryAppend(rcvJikgub, SPECIAL_CHAR)));
+			return addQuery(String.format("%s%s:%s", EXCEPT_QUERY, RECV_JIKGUBCD, createOrQuery(rcvJikgub)));
 		}
 		if (Common.isEmpty(rcvJikgub)) return this;
-		return addQuery(String.format("%s%s:%s", AND_QUERY, RECV_JIKGUBCD, createOrQueryAppend(rcvJikgub, SPECIAL_CHAR)));
+		return addQuery(String.format("%s%s:%s", AND_QUERY, RECV_JIKGUBCD, createOrQuery(rcvJikgub)));
 	}
 
 	public SolrCreateQuery setUrl(String url, String url_not) {
