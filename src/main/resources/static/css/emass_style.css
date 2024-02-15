@@ -999,7 +999,7 @@ button img {margin-top:-3px;margin-right:2px; vertical-align:middle;}
 
 .filedown { position: relative; width:100%;}
 .filedown .img {width:32px; height:32px; margin-right:8px; vertical-align: middle; background:url(../img/img_chatbg.png) center center no-repeat;}
-.filedown span {display: inline-block; margin-right:8px; text-align: left; vertical-align: middle;font-weight:300;}
+.filedown span {display: inline-block; margin-right:8px; text-align: left; vertical-align: middle;font-weight:500;}
 
 .fileListdown { position: relative; width:100%;}
 .fileListdown .img {width:32px; height:32px; margin-right:8px; vertical-align: middle; background:url(../img/img_chatbg.png) center center no-repeat;}

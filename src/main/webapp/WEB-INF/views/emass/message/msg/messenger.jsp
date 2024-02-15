@@ -89,6 +89,10 @@
 		}
 	}
 
+	span.mini {
+		font-size: 13px;
+	}
+
 </style>
 
 <script type="text/javascript" src="<c:url value="/js/messenger.js"/>"></script>

@@ -86,7 +86,7 @@ public class AlarmJob {
 
 	private Locale locale = Locale.forLanguageTag(Locale.getDefault().getLanguage());
 
-	@Scheduled(cron="0 10 * * * ?")
+	@Scheduled(cron="0 27 * * * ?")
 	private void execute ( ) throws Exception {
 		log.info("[Scheduler execute] Alarm mail");
 		try {
@@ -173,16 +173,8 @@ public class AlarmJob {
 				param.put("conditions", conditions);
 
 				SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
-				SolrQuery sq = new SolrQuery();
-				String query= String.valueOf(solrCreateQuery.createQuery(param, adminId));
-
-				if(readYn.equals("Y")){
-					query += String.format("+checked.readId:%s", adminId);
-				}
-
-				sq.setQuery(query);
+				SolrQuery sq = solrCreateQuery.createQuery(param, adminId);
 				sq.setStart(0);
-
 
 				if (Common.isEquals(csvYn, "Y")) {
 					sq.setRows(Common.nvz(alarm.getExcelMaxCnt(), CSV_MAX_ROW_CNT));
@@ -193,7 +185,7 @@ public class AlarmJob {
 				String sqToString = sq.getQuery();
 
 
-				SolrEdcMessageVO solrVo = solrEdcService.getEmassMessage(sq, adminId,solrCreateQuery.getFinalReadYn(), null);
+				SolrEdcMessageVO solrVo = solrEdcService.getEmassMessage(sq, adminId,readYn, null);
 				if (solrVo.getNumFound() < 1) {
 					log.warn("adminid : " + adminId + "\t메시지 목록 조회 완료 0건 검출");
 				} else {
@@ -203,7 +195,7 @@ public class AlarmJob {
 					log.warn("userid : " + adminId + "\t알림 쿼리 실행 결과 : " + totalCnt);
 
 					if (Common.isEquals(alarm.getAlarmMailYn(), "Y")) { // 메일을 받고자 하는 경우
-						createMailContent(alarm_name, alarmSeq, csvYn, alarm_to, alarm_cc, searchStr, searchField, senders, receivers, rcvTo, rcvCc, rcvBcc, rcvJikgub, allOfus, busi, dept, jikgub, readYn, receiveSend, serviceType, infoType, feedbackType, probType, interGroup, attachYn, attachStr, keywordYn, keywordStr, regexpYn, regexpStr, sizeStartVal, sizeEndVal, sizeOption, startDt, endDt, solrVo, totalCnt, form_subject, form_content);
+ 						createMailContent(alarm_name, alarmSeq, csvYn, alarm_to, alarm_cc, searchStr, searchField, senders, receivers, rcvTo, rcvCc, rcvBcc, rcvJikgub, allOfus, busi, dept, jikgub, readYn, receiveSend, serviceType, infoType, feedbackType, probType, interGroup, attachYn, attachStr, keywordYn, keywordStr, regexpYn, regexpStr, sizeStartVal, sizeEndVal, sizeOption, startDt, endDt, solrVo, totalCnt, form_subject, form_content);
 					}
 					if (Common.isEquals(alarm.getAlarmSmsYn(), "Y")) {
 						if (Common.isEmpty(alarm.getUserHp())) {

@@ -346,7 +346,7 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 							.USERID((String) obj.get("USERID"))
 							.BUSICD((String) obj.get("BUSICD"))
 							.BUSINM((String) obj.get("BUSINM"))
-							.CEO((String) (obj.get("CEO").equals("Y") ? "true" : "false"))
+							.CEO((String) (obj.get("CEO").equals("Y") ? "Y" : "N"))
 							.COCD((String) obj.get("COCD"))
 							.CONM((String) obj.get("CONM"))
 							.DEPTCD((String) obj.get("DEPTCD"))

@@ -31,6 +31,10 @@
 	}
 	#wrap {overflow:hidden;}
 
+	span.mini {
+		font-size: 13px;
+	}
+
 </style>
 
 <head>
@@ -211,26 +215,48 @@
             });
 
 
-            $(document).on('click', '.downAllFile', function(){
-                var downloadFlag = false;
-                $('.downloadIcon').each ( function ( i, item ) {
-                    var attachHash = $(this).parents('p').attr('attachhash');
-                    if( attachHash != ''){
-                        downloadFlag = true;
-                    }
-                });
-                if( !downloadFlag){
+            $(document).on('click', '.downloadIcon', function () {
+                var msgId = $(this).parents('p').attr('msgid');
+                var attachHash = $(this).parents('p').attr('attachhash');
+                var attachId = $(this).parents('p').attr('id');
+                var attachSize = Number($(this).parents('p').attr('attachsize'));
+                var attachUrl = '<c:url value="/getEmassAttachInfo4DownHash.xcn"/>?msgIds=' + msgId + '&attachHash=' + attachHash;
+
+
+                if (attachHash == '') {
                     alert('<s:message code="message.message.notfound.attach"/>');
                     return;
                 }
 
-                var msgIds=[];
-                $('.downloadIcon').each ( function ( i, item ) {
+                if (attachSize == 0 || attachSize == 'NaN') attachSize = 1;
+
+                try {
+                    AttachDown.location.href = attachUrl;
+                } catch (e) {
+                    AttachDown.src = attachUrl;
+                }
+            });
+
+            $(document).on('click', '.downAllFile', function () {
+                var downloadFlag = false;
+                $('.downloadIcon').each(function (i, item) {
+                    var attachHash = $(this).parents('p').attr('attachhash');
+                    if (attachHash != '') {
+                        downloadFlag = true;
+                    }
+                });
+                if (!downloadFlag) {
+                    alert('<s:message code="message.message.notfound.attach"/>');
+                    return;
+                }
+
+                var msgIds = [];
+                $('.downloadIcon').each(function (i, item) {
                     var msgId = $(this).parents('p').attr('msgid');
-                    if(!msgIds.includes(msgId)){ msgIds.push(msgId);}
+                    msgIds.push(msgId);
                 });
 
-                var attachUrl = '<c:url value="/downEmassAttachByMsgId.xcn"/>?msgIds='+msgIds.join(',');
+                var attachUrl = '<c:url value="/getEmassAttachInfo4DownHash.xcn"/>?msgIds=' + msgIds.join(',');
                 try {
                     AttachDown.location.href = attachUrl;
                 } catch (e) {
@@ -239,21 +265,26 @@
             });
 
 
-            $(document).on('click', '.downloadIcon', function(){
-                var msgId = $(this).parents('p').attr('msgid');
-                var attachHash = $(this).parents('p').attr('attachhash');
-                var attachId = $(this).parents('p').attr('id');
-                var attachSize = Number($(this).parents('p').attr('attachsize'));
-                var attachUrl = '<c:url value="/getEmassAttachInfo4DownHash.xcn"/>?msgIds=' + msgId + '&attachHash=' + attachHash;
-
-
-                if( attachHash == ''){
+            $(document).on('click', '.downAllFile', function () {
+                var downloadFlag = false;
+                $('.downloadIcon').each(function (i, item) {
+                    var attachHash = $(this).parents('p').attr('attachhash');
+                    if (attachHash != '') {
+                        downloadFlag = true;
+                    }
+                });
+                if (!downloadFlag) {
                     alert('<s:message code="message.message.notfound.attach"/>');
                     return;
                 }
 
-                if ( attachSize == 0 || attachSize == 'NaN' ) attachSize = 1;
+                var msgIds = [];
+                $('.downloadIcon').each(function (i, item) {
+                    var msgId = $(this).parents('p').attr('msgid');
+                    msgIds.push(msgId);
+                });
 
+                var attachUrl = '<c:url value="/downEmassAttachByMsgId.xcn"/>?msgIds=' + msgIds;
                 try {
                     AttachDown.location.href = attachUrl;
                 } catch (e) {

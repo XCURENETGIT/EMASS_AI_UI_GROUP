@@ -4,7 +4,7 @@
 <%@ include file="/WEB-INF/fragments/baseScript.jsp" %>
 
 <link rel="stylesheet" href="<c:url value="/css/vis.min.css"/>"/>
-<script type="text/javascript" src="<c:url value="/js/analysisGrid.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/messageGrid.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/vis.min.js"/>"></script>
 <%@ include file="../../analysis/analysisBase.jsp" %>
 <style>
@@ -79,40 +79,6 @@
 	var tabID = 1;
 	var tabNum = 0;
 	var totalChartDat;
-
-	var infoStatGridColumn = {
-		msgid: '<s:message code="common.msg.msgid"/>',
-		subject : '<s:message code="condition.subject"/>',
-		attachcnt : '<s:message code="message.msg.file"/>',
-		inside : '<s:message code="message.msg.inout"/>',
-		msgin : '<s:message code="message.msg.in"/>',
-		msgout : '<s:message code="message.msg.out"/>',
-		direction_svc : '<s:message code="condition.receive_send"/>',
-		receive : '<s:message code="condition.receive"/>',
-		send : '<s:message code="condition.send"/>',
-		svcNm : '<s:message code="condition.service"/>',
-		ctimeFormat : '<s:message code="condition.date"/>',
-		user : '<s:message code="common.org.user"/>',
-		businm : '<s:message code="common.org.businm"/>',
-		deptnm : '<s:message code="common.org.dept"/>',
-		jikgubnm : '<s:message code="common.org.jikgub"/>',
-		sender : '<s:message code="condition.sender"/>',
-		allofus : '<s:message code="condition.allofus"/>',
-		recvs : '<s:message code="condition.recv"/>',
-		to : '<s:message code="condition.to"/>',
-		cc : '<s:message code="condition.cc"/>',
-		bcc : '<s:message code="condition.bcc"/>',
-		srcip : '<s:message code="condition.source"/>',
-		dstip : '<s:message code="condition.destination"/>',
-		sizeStr : '<s:message code="condition.size.all"/>',
-		bodySizeStr : '<s:message code="condition.size.body"/>',
-		attachSizeStr : '<s:message code="condition.size.attach"/>',
-		kwds : '<s:message code="condition.keyword"/>',
-		pi_total : '<s:message code="condition.regexp"/>',
-		ocr : 'OCR <s:message code="message.msg.file"/>',
-		attachname: '<s:message code="condition.attach_name"/>'
-	}
-
 	$(document).ready(function () {
 		initCondition();
 
@@ -215,7 +181,7 @@
 
 	function setGrid() {
 		currentgrid = getCurrentGrid();
-		initGrid(currentgrid, infoStatGridColumn);
+		initGrid(currentgrid, messageGridColumn);
 	}
 
 	function closeDetailTab() {
@@ -438,8 +404,6 @@
 </form>
 
 <script type="text/javascript">
-	var tabInfo = {};
-
 	function getCurrentGrid() {
 		var id = Number($('.listChart .active').attr('idx'));
 		return tabInfo['tab' + id];
@@ -522,10 +486,163 @@
 		makeNetwork(grid1.getValue(grid1.Row, 'rowKey'), grid1.ColKey(grid1.Col), grid1.getValue(grid1.Row, grid1.Col));
 	};
 
-
-	/* 개인정보 유출 내역 Grid 그리드*/
 	var grid2 = new Xgrid('selectGrid', contextRoot);
-	initGrid(grid2, infoStatGridColumn);
+    grid2.autoNumber();
+    grid2.colAdd('interestUserYn', '<s:message code="message.msg.interest"/>', 40, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+        if (value == 'Y') return '<div class="interestUserCheck"></div>';
+        else if (value == 'N') return '';
+    });
+    grid2.colAdd('readYn', '<s:message code="condition.read"/>', 40, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+        if (value == 'Y') return '<div class="readY"></div>';
+        else if (value == 'N') return '<div class="readN"></div>';
+        else return '-';
+    });
+    grid2.colAdd('attachcnt', '<s:message code="message.msg.file"/>', 35, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
+        if (value == '0') return '';
+        else return value.comma();
+    });
+    grid2.colAdd('inside', '<s:message code="message.msg.inout"/>', 55, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+        if (value == 'N') return '<s:message code="message.msg.out"/>';
+        else if (value == 'Y') return '<s:message code="message.msg.in"/>';
+        else return '-';
+    });
+
+    grid2.colAdd('direction_svc', '<s:message code="condition.receive_send"/>', 55, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+        if (value == 'I') return '<s:message code="condition.receive"/>';
+        else if (value == 'O') return '<s:message code="condition.send"/>';
+        else return '-';
+    });
+
+    grid2.colAdd('svcNm', '<s:message code="condition.service"/>', 180, 'center', false, 'nomal');
+    grid2.colAdd('subject', '<s:message code="condition.subject"/>', 410, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+        var body_snippet = grid2.getValue(row, 'body_snippet').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '\'');
+        if(body_snippet.length > 100) body_snippet = body_snippet.substring(0, 1024)+'...';
+
+        if(value.length > 1024) value = value.substring(0, 1024)+'...';
+        value = value.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '\'');
+
+        //예약어 Highlight 처리
+        var kwds = grid2.getValue(row, 'kwds');
+        value = highlightKeyword(value, kwds);
+        value = highlightSearchStr(value, "subject");
+
+        var rtnVal = '<span title="'+body_snippet+'" onclick="" class="subject_read'+grid2.getValue(row, 'readYn')+'">'+value+'</span>&nbsp;<a href="javascript:void(0);" onclick="viewer_openPop('+row+')" class="glyphicon glyphicon-new-window new-window"></a>';
+        if( (isConsent( ) && grid2.getValue(row, 'consentNo') == '') || !isDetailView() ) rtnVal = '<span>'+value+'</span>';
+
+        return rtnVal;
+    });
+    grid2.colAdd('ctimeFormat', '<s:message code="condition.date"/>', 130, 'center', false, 'nomal');
+    grid2.colAdd('user', '<s:message code="consent.user"/>', 120, 'center', false, 'link');
+    grid2.colAdd('usr_id', '<s:message code="common.msg.account"/>', 110, 'center', false, 'nomal');
+    grid2.colAdd('businm', '<s:message code="common.org.busi"/>', 120, 'center', true, 'nomal');
+    grid2.colAdd('deptnm', '<s:message code="common.org.dept"/>', 120, 'center', false, 'nomal');
+    grid2.colAdd('jikgubnm', '<s:message code="common.org.jikgub"/>', 120, 'center', false, 'nomal');
+    grid2.colAdd('sender', '<s:message code="condition.sender"/>', 130, 'left', false, 'link', function(row, cell, value, columnDef, dataContext) {
+        return highlightSearchStr(value, "sender");
+    });
+    grid2.colAdd('allofus', '<s:message code="condition.allofus"/>', 150, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+        if( value == undefined || value.length == 0) return '';
+
+        for( var i=0; i<value.length; i++){
+            if(value[i] == 'IA') value[i] = '<s:message code="condition.allofus1"/>';
+            else if(value[i] == 'ET') value[i] = '<s:message code="condition.allofus8"/>';
+            else if(value[i] == 'IT') value[i] = '<s:message code="condition.allofus7"/>';
+            else if(value[i] == 'EA') value[i] = '<s:message code="condition.allofus2"/>';
+            else if(value[i] == 'PT') value[i] = '<s:message code="condition.allofus9"/>';
+            else if(value[i] == 'PA') value[i] = '<s:message code="condition.allofus3"/>';
+        }
+        return value.join(', ');
+    });
+    grid2.colAdd('recvs', '<s:message code="condition.recv"/>', 220, 'left', false, 'link', function(row, cell, value, columnDef, dataContext) {
+        var innOutInfo = grid2.getValue(row, 'recvsInOutInfo');
+
+        var rtnVal = arrayToString(value);
+        return innOutInfo+highlightSearchStr(rtnVal, "recvs");
+    });
+    grid2.colAdd('to', '<s:message code="condition.to"/>', 150, 'left', true, 'link', function(row, cell, value, columnDef, dataContext) {
+        var innOutInfo = grid2.getValue(row, 'toInOutInfo');
+        var rtnVal = arrayToString(value);
+        return innOutInfo+highlightSearchStr(rtnVal, "to");
+    });
+    grid2.colAdd('cc', '<s:message code="condition.cc"/>', 150, 'left', true, 'link', function(row, cell, value, columnDef, dataContext) {
+        var innOutInfo = grid2.getValue(row, 'ccInOutInfo');
+
+        var rtnVal = arrayToString(value);
+        return innOutInfo+highlightSearchStr(rtnVal, "cc");
+    });
+    grid2.colAdd('bcc', '<s:message code="condition.bcc"/>', 150, 'left', true, 'link', function(row, cell, value, columnDef, dataContext) {
+        var innOutInfo = grid2.getValue(row, 'bccInOutInfo');
+        var rtnVal = arrayToString(value);
+        return innOutInfo+highlightSearchStr(rtnVal, "bcc");
+    });
+    grid2.colAdd('srcip', '<s:message code="condition.source"/> IP', 100, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+        return highlightSearchStr(value, "srcip");
+    }, {sorter:sortUtil.ip});
+    grid2.colAdd('dstip', '<s:message code="condition.destination"/> IP', 100, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+        return highlightSearchStr(value, "dstip");
+    }, {sorter:sortUtil.ip});
+    grid2.colAdd('attachname', '<s:message code="condition.attach_name"/>', 220, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+        var rtnVal = arrayToString(value);
+        return highlightSearchStr(rtnVal, "attachname");
+    });
+    grid2.colAdd('sizeStr', '<s:message code="condition.size.all"/>', 80, 'left', false, 'nomal', null, {sortField:'size'});
+    grid2.colAdd('bodySizeStr', '<s:message code="condition.size.body"/>', 80, 'left', false, 'nomal', null, {sortField:'body_size'});
+    grid2.colAdd('attachSizeStr', '<s:message code="condition.size.attach"/>', 80, 'left', false, 'nomal', null, {sortField:'attachSizeSort'});
+    grid2.colAdd('kwds', '<s:message code="condition.keyword"/>', 120, 'left', false, 'nomal');
+    grid2.colAdd('pi_total', '<s:message code="condition.regexp"/>', 70, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
+        if (value == '0') return '';
+        else return value.comma();
+    });
+
+    if ( isOCR ) {
+        grid2.colAdd('ocr_attach_cnt', 'OCR <s:message code="message.msg.file"/>', 70, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
+            if (value == '0' || value == '' || value == null || value == undefined ) return '';
+            else return value.comma();
+        });
+    }
+    grid2.loadExportMenu('<s:message code="DATA_ANALYSIS.ANALYSIS_INFO"/>');
+    grid2.loadPageSize();
+    grid2.loadHeader(false);
+    grid2.initData('<s:message code="common.msg.search.click"/>');
+
+    grid2.onClick = function() {
+        if (grid.Col == grid.ColIndex('attachcnt')) {
+            fileInfoViewer( grid.Row );
+        }else if (grid.Col == grid.ColIndex('user')) {
+            userInfoViewer( grid.Row, 'user' );
+        }else if (grid.Col == grid.ColIndex('sender')) {
+            userInfoViewer( grid.Row, 'sender' );
+        }else if (grid.Col == grid.ColIndex('recvs')) {
+            if(grid.getValue(grid.Row, 'recvs') != '') 	userInfoViewer( grid.Row, 'recvs');
+        }else if (grid.Col == grid.ColIndex('to')) {
+            if(grid.getValue(grid.Row, 'to') != '') userInfoViewer( grid.Row, 'to');
+        }else if (grid.Col == grid.ColIndex('cc')) {
+            if(grid.getValue(grid.Row, 'cc') != '') userInfoViewer( grid.Row, 'cc');
+        }else if (grid.Col == grid.ColIndex('bcc')) {
+            if(grid.getValue(grid.Row, 'bcc') != '') userInfoViewer( grid.Row, 'bcc');
+        }else if(grid.Col == grid.ColIndex('pi_total')) {
+            regexpInfoViewer(grid.Row);
+        }else if(grid.Col == grid.ColIndex('referer_url')) {
+            var referer_url = grid.getValue(grid.Row, 'referer_url');
+            if(referer_url !='N') fnOpenWindow(referer_url, '', 1024, 800, 'resize');
+        }else if (grid.Col == grid.ColIndex('ocr_attach_cnt')) {
+            ocrFileInfoViewer( grid.Row );
+        }
+
+        if( !(adminMenu != "ALL" && adminMenu.indexOf("DV") < 0) ) {
+            if(!parent.$('#none_btn').hasClass('areaSelected')) viewer_open(grid.Row);
+            if(popWin) viewer_openFocus(grid.Row);
+        } else {
+            alert('<s:message code="message.auth.no.detailview"/>');
+            return;
+        }
+    };
+    grid2.changePageSize = function(cnt){
+        //parent.getList();
+    };
+    grid2.onDblClick = function(){
+        viewer_open(grid2.Row);
+    }
 
 	function viewer_open(row, bodySize) {
 		var msgid = grid2.getValue(row, 'msgid');

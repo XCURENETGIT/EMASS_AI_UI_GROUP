@@ -39,6 +39,10 @@
 		}
 	}
 
+	span.mini {
+		font-size: 13px;
+	}
+
 </style>
 
 <head>
@@ -216,7 +220,7 @@
             });
 
 
-            $(document).on('click', '.downloadIcon', function(){
+            $(document).on('click', '.downloadIcon', function () {
                 var msgId = $(this).parents('p').attr('msgid');
                 var attachHash = $(this).parents('p').attr('attachhash');
                 var attachId = $(this).parents('p').attr('id');
@@ -224,12 +228,12 @@
                 var attachUrl = '<c:url value="/getEmassAttachInfo4DownHash.xcn"/>?msgIds=' + msgId + '&attachHash=' + attachHash;
 
 
-                if( attachHash == ''){
+                if (attachHash == '') {
                     alert('<s:message code="message.message.notfound.attach"/>');
                     return;
                 }
 
-                if ( attachSize == 0 || attachSize == 'NaN' ) attachSize = 1;
+                if (attachSize == 0 || attachSize == 'NaN') attachSize = 1;
 
                 try {
                     AttachDown.location.href = attachUrl;
@@ -238,26 +242,54 @@
                 }
             });
 
-            $(document).on('click', '.downAllFile', function(){
+            $(document).on('click', '.downAllFile', function () {
                 var downloadFlag = false;
-                $('.downloadIcon').each ( function ( i, item ) {
+                $('.downloadIcon').each(function (i, item) {
                     var attachHash = $(this).parents('p').attr('attachhash');
-                    if( attachHash != ''){
+                    if (attachHash != '') {
                         downloadFlag = true;
                     }
                 });
-                if( !downloadFlag){
+                if (!downloadFlag) {
                     alert('<s:message code="message.message.notfound.attach"/>');
                     return;
                 }
 
-                var msgIds=[];
-                $('.downloadIcon').each ( function ( i, item ) {
+                var msgIds = [];
+                $('.downloadIcon').each(function (i, item) {
                     var msgId = $(this).parents('p').attr('msgid');
-                    if(!msgIds.includes(msgId)){ msgIds.push(msgId);}
+                    msgIds.push(msgId);
                 });
 
-                var attachUrl = '<c:url value="/downEmassAttachByMsgId.xcn"/>?msgIds='+msgIds.join(',');
+                var attachUrl = '<c:url value="/getEmassAttachInfo4DownHash.xcn"/>?msgIds=' + msgIds.join(',');
+                try {
+                    AttachDown.location.href = attachUrl;
+                } catch (e) {
+                    AttachDown.src = attachUrl;
+                }
+            });
+
+
+            $(document).on('click', '.downAllFile', function () {
+                var downloadFlag = false;
+                $('.downloadIcon').each(function (i, item) {
+                    var attachHash = $(this).parents('p').attr('attachhash');
+                    if (attachHash != '') {
+                        downloadFlag = true;
+                    }
+                });
+                if (!downloadFlag) {
+                    alert('<s:message code="message.message.notfound.attach"/>');
+                    return;
+                }
+
+                var msgIds = [];
+                $('.downloadIcon').each(function (i, item) {
+                    var msgId = $(this).parents('p').attr('msgid');
+                    msgIds.push(msgId);
+                });
+
+                var attachUrl = '<c:url value="/downEmassAttachByMsgId.xcn"/>?msgIds=' + msgIds;
                 try {
                     AttachDown.location.href = attachUrl;
                 } catch (e) {
@@ -800,7 +832,7 @@
 				</div>
 				<div class="bortop_dd pt16 pl20 pr20">
 					<div class="subtab">
-						<button class="active"><s:message code="consent.attach"/>
+						<button class="active"><s:message code="note.name"/>
 					</div>
 				</div>
 				<div>
