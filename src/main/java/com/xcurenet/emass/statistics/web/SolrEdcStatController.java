@@ -855,7 +855,7 @@ public class SolrEdcStatController {
 		query.append(" -pi_total:0 ");
 		query.append(" +( ");
 		for (String field : Config.PRIVATE_SVC) {
-			query.append(field).append(":[").append(piCount).append(" TO * ] ");
+			query.append(("(").concat(String.format("%s:>=%s", field, piCount).concat(") ")));
 		}
 		query.append(" ) ");
 
@@ -908,11 +908,11 @@ public class SolrEdcStatController {
 		if (Common.isEquals(type, "pi_total")) {
 			query.append(" +( ");
 			for (String field : Config.PRIVATE_SVC) {
-				query.append(field).append(":[").append(piCount).append(" TO * ] ");
+				query.append(("(").concat(String.format("%s:>=%s", field, piCount).concat(") ")));
 			}
 			query.append(" ) ");
 		} else {
-			query.append(" +(").append(type).append(":[").append(piCount).append(" TO *]) ");
+			query.append((" +(").concat(String.format("%s:>=%s", type, piCount).concat(") ")));
 		}
 
 		if (!name.isEmpty()) {

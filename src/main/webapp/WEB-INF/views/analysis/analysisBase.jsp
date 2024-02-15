@@ -2,6 +2,7 @@
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 <script>
     var messageGridColumn = {
+        msgid: '<s:message code="common.msg.msgid"/>',
         interestUserYn : '<s:message code="message.msg.interest"/>',
         readYn : '<s:message code="condition.read"/>',
         attachcnt : '<s:message code="message.msg.file"/>',

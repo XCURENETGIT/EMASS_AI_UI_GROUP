@@ -4,7 +4,7 @@
 <%@ include file="/WEB-INF/fragments/baseScript.jsp" %>
 
 <link rel="stylesheet" href="<c:url value="/css/vis.min.css"/>"/>
-<script type="text/javascript" src="<c:url value="/js/messageGrid.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/analysisGrid.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/vis.min.js"/>"></script>
 <%@ include file="../../analysis/analysisBase.jsp" %>
 <style>
@@ -79,6 +79,40 @@
 	var tabID = 1;
 	var tabNum = 0;
 	var totalChartDat;
+
+	var infoStatGridColumn = {
+		msgid: '<s:message code="common.msg.msgid"/>',
+		subject : '<s:message code="condition.subject"/>',
+		attachcnt : '<s:message code="message.msg.file"/>',
+		inside : '<s:message code="message.msg.inout"/>',
+		msgin : '<s:message code="message.msg.in"/>',
+		msgout : '<s:message code="message.msg.out"/>',
+		direction_svc : '<s:message code="condition.receive_send"/>',
+		receive : '<s:message code="condition.receive"/>',
+		send : '<s:message code="condition.send"/>',
+		svcNm : '<s:message code="condition.service"/>',
+		ctimeFormat : '<s:message code="condition.date"/>',
+		user : '<s:message code="common.org.user"/>',
+		businm : '<s:message code="common.org.businm"/>',
+		deptnm : '<s:message code="common.org.dept"/>',
+		jikgubnm : '<s:message code="common.org.jikgub"/>',
+		sender : '<s:message code="condition.sender"/>',
+		allofus : '<s:message code="condition.allofus"/>',
+		recvs : '<s:message code="condition.recv"/>',
+		to : '<s:message code="condition.to"/>',
+		cc : '<s:message code="condition.cc"/>',
+		bcc : '<s:message code="condition.bcc"/>',
+		srcip : '<s:message code="condition.source"/>',
+		dstip : '<s:message code="condition.destination"/>',
+		sizeStr : '<s:message code="condition.size.all"/>',
+		bodySizeStr : '<s:message code="condition.size.body"/>',
+		attachSizeStr : '<s:message code="condition.size.attach"/>',
+		kwds : '<s:message code="condition.keyword"/>',
+		pi_total : '<s:message code="condition.regexp"/>',
+		ocr : 'OCR <s:message code="message.msg.file"/>',
+		attachname: '<s:message code="condition.attach_name"/>'
+	}
+
 	$(document).ready(function () {
 		initCondition();
 
@@ -181,7 +215,7 @@
 
 	function setGrid() {
 		currentgrid = getCurrentGrid();
-		initGrid(currentgrid, messageGridColumn);
+		initGrid(currentgrid, infoStatGridColumn);
 	}
 
 	function closeDetailTab() {
@@ -404,6 +438,8 @@
 </form>
 
 <script type="text/javascript">
+	var tabInfo = {};
+
 	function getCurrentGrid() {
 		var id = Number($('.listChart .active').attr('idx'));
 		return tabInfo['tab' + id];
@@ -486,8 +522,10 @@
 		makeNetwork(grid1.getValue(grid1.Row, 'rowKey'), grid1.ColKey(grid1.Col), grid1.getValue(grid1.Row, grid1.Col));
 	};
 
+
+	/* 개인정보 유출 내역 Grid 그리드*/
 	var grid2 = new Xgrid('selectGrid', contextRoot);
-	initGrid(grid2, messageGridColumn);
+	initGrid(grid2, infoStatGridColumn);
 
 	function viewer_open(row, bodySize) {
 		var msgid = grid2.getValue(row, 'msgid');
