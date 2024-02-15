@@ -216,7 +216,7 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 .inner_messenger .chatList:nth-child(3) { z-index:99; flex-basis:450px; flex-grow: 1; position: relative; background-color: #606973; }
 .inner_messenger .fileGroupList:nth-child(3) { z-index:99; flex-basis:450px; flex-grow: 1; position: relative; background-color: #f8f8f8; }
 .inner_messenger .rightFile:nth-child(4) { width:300px;background-color: #414A54; z-index:9;}
-.rightFileList {overflow-x: hidden; overflow-y:scroll; height:800px;}
+.rightFileList {overflow-x: hidden; overflow-y:scroll; height:500px;}
 .rightFileList ul {}
 .rightFileList ul li:first-child {padding-top:0; !important;}
 .rightFileList ul li {border-bottom:1px solid #656C74; padding:12px 0; !important;}
