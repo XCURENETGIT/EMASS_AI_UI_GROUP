@@ -280,28 +280,51 @@
 				}
 			});
 
-			$(document).on('mouseover', '.codeSelectedBtn', function (e) {
-				$('#selectedCodeTitle').show();
-				$('#selectedCodeTitle').css('left', (e.pageX + 5) + 'px');
-				$('#selectedCodeTitle').css('top', (e.pageY - 120) + 'px');
+            $(document).on('mouseover', '#deptSelectedArea', function (e) {
+                $('#selectedCodeTitle').show();
+                $('#selectedCodeTitle').css('left', (e.pageX + 5) + 'px');
+                $('#selectedCodeTitle').css('top', (e.pageY - 150) + 'px');
 
-				var str = $(this).parent().find('.selectedTitle').val();
-				if (str != undefined) str = str.replaceAll('\\|', ',');
-				$('#selectedCodeTitle').html(str);
-			});
+                var str = $(this).parent().find('.selectedTitle').val();
+                if (str != undefined) str = str.replaceAll('\\|', ',');
+                $('#selectedCodeTitle').html(str);
+            });
 
-			$(document).on('mousemove', '.codeSelectedBtn', function (e) {
-				$('#selectedCodeTitle').css('left', (e.pageX + 5) + 'px');
-				$('#selectedCodeTitle').css('top', (e.pageY - 120) + 'px');
+            $(document).on('mousemove', '#deptSelectedArea', function (e) {
+                $('#selectedCodeTitle').css('left', (e.pageX + 5) + 'px');
+                $('#selectedCodeTitle').css('top', (e.pageY - 120) + 'px');
 
-				var str = $(this).parent().find('.selectedTitle').val();
-				if (str != undefined) str = str.replaceAll('\\|', ',');
-				$('#selectedCodeTitle').html(str);
-			});
+                var str = $(this).parent().find('.selectedTitle').val();
+                if (str != undefined) str = str.replaceAll('\\|', ',');
+                $('#selectedCodeTitle').html(str);
+            });
 
-			$(document).on('mouseout', '.codeSelectedBtn', function (e) {
-				$('#selectedCodeTitle').hide();
-			});
+            $(document).on('mouseout', '#deptSelectedArea', function (e) {
+                $('#selectedCodeTitle').hide();
+            });
+
+            $(document).on('mouseover', '#userSelectedArea', function (e) {
+                $('#selectedCodeTitle2').show();
+                $('#selectedCodeTitle2').css('left', (e.pageX + 5) + 'px');
+                $('#selectedCodeTitle2').css('top', (e.pageY - 150) + 'px');
+
+                var str = $(this).parent().find('.selectedTitle').val();
+                if (str != undefined) str = str.replaceAll('\\|', ',');
+                $('#selectedCodeTitle2').html(str);
+            });
+
+            $(document).on('mousemove', '#userSelectedArea', function (e) {
+                $('#selectedCodeTitle2').css('left', (e.pageX + 5) + 'px');
+                $('#selectedCodeTitle2').css('top', (e.pageY - 150) + 'px');
+
+                var str = $(this).parent().find('.selectedTitle').val();
+                if (str != undefined) str = str.replaceAll('\\|', ',');
+                $('#selectedCodeTitle2').html(str);
+            });
+
+            $(document).on('mouseout', '#userSelectedArea', function (e) {
+                $('#selectedCodeTitle2').hide();
+            });
 
 			$(document).on('click', '.codeSelectedBtn', function (e) {
 				$('#deptVal, #deptStr').val('');
@@ -769,6 +792,7 @@
 							<input type="hidden" id="deptStr" class="selectedTitle">
 							<input type="hidden" id="deptVal">
 						</p>
+						<div id="selectedCodeTitle" class="infotxt"></div>
 
 						<p class="mat8 formText btnform" data-toggle="buttons">
 							<span class="tit"><s:message code="common.org.choose.user"/></span>
@@ -781,7 +805,7 @@
 							<input type="hidden" id="userStr" class="selectedTitle">
 							<input type="hidden" id="userVal">
 						</p>
-						<div id="selectedCodeTitle" class="infotxt"></div>
+						<div id="selectedCodeTitle2" class="infotxt"></div>
 					</div>
 				</div>
 
