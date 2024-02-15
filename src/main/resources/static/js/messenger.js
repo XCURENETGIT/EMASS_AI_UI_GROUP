@@ -580,7 +580,7 @@ function rtnGroupList(data, type) {
             leftContent += "<span class='file'></span>";
         }
         leftContent += "</p>" +
-            "<p><span class='name'>" + data[i].user + "</span><span class='bar'></span><span class='preview'>" + bodySnippet + "</span></p>";
+            "<p><span class='name'>" + data[i].sender + "</span><span class='bar'></span><span class='preview'>" + bodySnippet + "</span></p>";
 
         leftDiv.innerHTML = leftContent;
         li.appendChild(leftDiv);
@@ -848,7 +848,7 @@ function makeList(nextFlag) {
         str += '</div>';
 
         str += ' <div class="bubbleDate mat4">';
-        str += '<span>' + obj.user + '</span> &nbsp';
+        str += '<span>' + obj.sender + '</span> &nbsp';
         str += '<span>' + obj.ctime + '</span> &nbsp';
         str += '<span style="border: 1px solid #ccc;">' + makeMessengerText(obj.svc) + '</span>';
         str += '</div></div>';
