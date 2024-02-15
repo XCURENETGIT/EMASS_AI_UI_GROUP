@@ -887,9 +887,9 @@
 
 						</div>
 						<div class="input-group btnCustomPosition" id="searchResultBtnArea" style="display:none;">
-							<button class="btn btn-md btn-warning" type="button" accesskey="U" id="searchMsgUp" style="padding:6px"><i
+							<button class="pop_btn03" type="button" accesskey="U" id="searchMsgUp" style="padding:6px"><i
 									class="glyphicon glyphicon-chevron-up"></i></button>
-							<button class="btn btn-md btn-warning" type="button" accesskey="D" id="searchMsgDn" style="padding:6px"><i
+							<button class="pop_btn03" type="button" accesskey="D" id="searchMsgDn" style="padding:6px"><i
 									class="glyphicon glyphicon-chevron-down"></i></button>
 						</div>
 					</div>

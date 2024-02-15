@@ -598,6 +598,7 @@ function filediv(data) {
         } else {
             extClass = " differentExt";
         }
+        console.log("attacccch: "+ file.attachHash);
 
 
         fileStr += '<li msgid="' + data.msgId + '" id="' + file.attachId + '" size="' + file.attachSize  + '" attachHash="' + file.attachHash + '" class="' + trClass + extClass +'" >';
