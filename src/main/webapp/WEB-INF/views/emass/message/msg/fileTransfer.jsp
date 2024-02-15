@@ -85,8 +85,9 @@
                var searchkey=$('#searchStrInput').val();
 
                 var msgId = $(this).parents('li').attr('msgid');
-                var attachId = $(this).parents('li').attr('attachhash');
-                var url = contextRoot + '/ems/attachText.do?msgId='+msgId+'&attachId='+attachId+'&searchKey='+encodeURI(searchkey);
+                var attachId = $(this).parents('li').attr('id');
+
+                var url = contextRoot + '/ems/attachText.do?msgId='+msgId+'&attachId='+attachId+'&searchKey='+searchkey;
                 fnOpenWindow(url, 'attachText', 1050, 800, 'resize');
             });
 
