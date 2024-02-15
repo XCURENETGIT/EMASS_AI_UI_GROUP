@@ -476,15 +476,6 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 		sq.setParam("facet.stats", groupData[0]);
 		sq.setParam("facet", true);
 
-		/* 데이터 */
-//		for(String group  : groupBy) {
-//			if (("sum").equals(group)) sq.setParam("facet.sum", true);
-//			if (("avg").equals(group)) sq.setParam("facet.avg", true);
-//			if (("min").equals(group)) sq.setParam("facet.min", true);
-//			if (("max").equals(group)) sq.setParam("facet.max", true);
-//			if (("count").equals(group)) sq.setParam("facet.count", true);
-//		}
-
 		sq.setFacetMinCount(1);
 		sq.setStart(Common.nvz(0));
 		sq.setRows(Common.nvz(1));
@@ -583,7 +574,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 
 		SolrQueryString query = new SolrQueryString();
 		String freddDomQuery = getFreedomQuery(freedomSearchVO);
-		freddDomQuery = changeQuery(freddDomQuery).concat(" && ").concat(freedomSearchVO.getQuery());
+		freddDomQuery = "("+changeQuery(freddDomQuery).concat(")").concat(" && ").concat(freedomSearchVO.getQuery());
 		query.justAdd(freddDomQuery);
 
 		SolrQuery sq = new SolrQuery();
@@ -719,6 +710,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 				query.afterParen();
 			}
 		}
+
 
 		return query.toString();
 	}

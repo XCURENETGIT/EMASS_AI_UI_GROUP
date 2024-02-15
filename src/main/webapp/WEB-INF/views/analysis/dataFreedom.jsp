@@ -397,7 +397,7 @@
 			<option value="size"><s:message code="analysis.freedom.ui.size"/>(MB<s:message code="filterInfo.rangeL"/>)</option>
 			<option value="host_str">URL</option>
 			<option value="sender"><s:message code="condition.sender"/></option>
-			<option value="recvs"><s:message code="condition.recv"/></option>
+			<option value="to"><s:message code="condition.recv"/></option>
 			<option value="body_snippet"><s:message code="bodyview.body.content"/></option>
 			<option value="subject"><s:message code="analysis.freedom.ui.mailtitle"/></option>
 			<option value="conm"><s:message code="common.org.conm"/></option>
@@ -466,7 +466,7 @@
 			<option value="svc12"><s:message code="condition.service"/></option>
 			<option value="host_str">HOST</option>
 			<option value="sender_str"><s:message code="condition.sender"/></option>
-			<option value="recvs"><s:message code="condition.recv"/></option>
+			<option value="to"><s:message code="condition.recv"/></option>
 			<option value="conm"><s:message code="common.org.conm"/></option>
 			<option value="suborgcd"><s:message code="common.org.suborg"/></option>
 			<option value="businm"><s:message code="common.org.busi"/></option>
@@ -517,7 +517,7 @@
 </div>
 
 <div id="messageListDiv" class="messageList" style="display:none">
-	<div class="panel panel-default " style=min-height:350px;margin:0px;">
+	<div class="panel panel-default " style=min-height:300px;margin:0px;">
 		<div class="panel-heading" style="height: 25px;">
 			<i class="fa fa-file-text-o fa-fw"></i> <span><s:message code="analysis.freedom.ui.msglist"/><span class="resultCnt"></span> - <span
 				class="selectChartData"></span></span>
