@@ -9,6 +9,7 @@ import com.xcurenet.audit.service.Operation;
 import com.xcurenet.audit.service.ParentMenu;
 import com.xcurenet.common.excel.XLSXWriter;
 import com.xcurenet.common.util.Common;
+import com.xcurenet.common.util.MongoUtil;
 import com.xcurenet.common.util.elasticsearch.ElasticSearchCommon;
 import com.xcurenet.common.util.locale.Prop;
 import com.xcurenet.common.vo.XcnResponseVO;
@@ -34,6 +35,8 @@ import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -52,6 +55,9 @@ import java.util.*;
 @AuditParentMenu(ParentMenu.DATA_MONITOR)
 @AuditMenu(Menu.MESSAGE_SERVICE)
 public class MessengerController {
+
+	@Autowired
+	private MongoUtil mongo;
 
 	private static final String MESSENGER = " +svc1:( (Q) (T) ) ";
 	private static final String EMPTY_LINE = "\n";
@@ -221,20 +227,23 @@ public class MessengerController {
 		Map<String, Long> cnt = new HashMap<>();
 		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, adminId);
 		List<MessengerGroupVO> groups = solrEdcGroupVO.getGroups();
+
 		for (MessengerGroupVO group : groups) {
-			if (group.getReadYn().equals("N")) {
+			Query query2 = new Query(Criteria.where("_id").is(group.getMsgid()));
+			SolrCheckedVO vo = mongo.selectOne(query2, SolrCheckedVO.class);
+			if (vo==null) {
 				int cnt2 = 0;
 				if (cnt.containsKey(group.getXrootmtr())) {
-					// 이미 해당 키가 존재하는 경우, 중복 방지를 위해 값을 더하지 않고 새로운 값을 설정
 					cnt2 = cnt.get(group.getXrootmtr()).intValue() + 1;
 				} else {
-					// 해당 키가 존재하지 않는 경우, 값을 설정
+
 					cnt2 = 1;
 				}
 				cnt.put(group.getXrootmtr(), (long) cnt2);
 			}
 		}
 		return cnt;
+
 
 	}
 
