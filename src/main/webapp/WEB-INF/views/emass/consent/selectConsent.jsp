@@ -95,45 +95,47 @@
 
 </head>
 <body class="mini-navbar msgBody">
-<header class="header">
-	<div class="naviBack">
-		<img src="<c:url value="/img/title/home_icon.png"/>">
-		<span class="navi"><span id="code_title"></span><s:message code="consent.select.consent"/></span>
-	</div>
-</header>
-<div class="xcn_container" style="min-width:800px;">
-	<div class="boxArea">
+<%--<header class="header">--%>
+<%--	<div class="naviBack">--%>
+<%--		<img src="<c:url value="/img/title/home_icon.png"/>">--%>
+<%--		<span class="navi"><span id="code_title"></span><s:message code="consent.select.consent"/></span>--%>
+<%--	</div>--%>
+<%--</header>--%>
+
+
+<div class="xcn_container" style="min-width: 650px;">
+	<div class="boxArea" style="min-height:inherit;">
 		<div class="content_body">
-			<div class="row">
-				<div class="col-xs-8 text-left">
-					<div class="form-group form-inline not-dashed">
-						<select class="form-control input-sm" id="consentType" name="consentType"">
+			<div class="p20">
+				<h2><span class="bullet02"></span><s:message code="common.msg.similar"/></h2>
+				<div class="searchKeywordSearch" style="margin-top:30px;">
+					<select class="condition_select" id="consentType" name="consentType">
 						<option value="">- <s:message code="consent.type.consent"/> -</option>
 						<option value="B"><s:message code="consent.informed.consent"/></option>
 						<option value="A"><s:message code="consent.post.consent"/></option>
 						<option value="M"><s:message code="consent.monitoring.consent"/></option>
 						<option value="E"><s:message code="consent.retire.consent"/></option>
-						</select>
-						<div class="input-group">
-							<input type="text" class="form-control input-sm" placeholder="<s:message code="consent.name.input"/>" id="searchStr" style="width: 250px;">
-							<div class="input-group-btn">
-								<button class="btn btn-sm btn-success" type="button" accesskey="Q" id="searchBtn"><i class="glyphicon glyphicon-search"></i></button>
-							</div>
-						</div>
-					</div>
+					</select>
+					<input class="condition_input_text" type="text" name="serch" placeholder="<s:message code="searchKeyword.search"/>" id="searchStr" style="width:calc(50% - 150px);">
+					<button class="form_btn01" id="searchBtn"><span><s:message code="common.search"/></span></button>
+
 				</div>
-				<div class="col-xs-4 text-right">
+				<%--					<div>--%>
+				<%--						<div id="startdatepicker"><input type="date" id="startDate" name='startDate' style="width: 110px;">--%>
+				<%--					</div>--%>
+				<div class="xcn_pop_btn">
 					<button type="button" class="btn btn-sm btn-default" accesskey="C" id="noSelectBtn"><span class="glyphicon glyphicon-remove"></span>&nbsp;<s:message code="common.msg.close"/></button>
 				</div>
-			</div>
-			<div class="row xcn_full top_space">
-				<div class="col-xs-12" style="height: 100%;">
+				<div class="mat16" style="height: 70%;">
 					<div id="userListGrid" class="slickGrid gridArea"></div>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
+
+
+
 
 <%-- <div class="container">
 	<div style="background-image: url('<c:url value="/img/title/n_bg.gif"/>'); border-bottom: 1px solid #3ca00a;">

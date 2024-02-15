@@ -523,7 +523,10 @@
 
         .reset_btn {
             border: 0px;
-            background-color: #ccc;
+            padding:1px 12px 2px 3px;
+            height:18px;
+            width: 14px;
+            background-color: #242330;
             color: #fff;
             font-weight: bold;
         }
@@ -3160,10 +3163,10 @@
 
                         <div class="viewSetup" style="position: absolute;top:7px;right:10px;z-index: 9;">
 
-                            <div style="display: inline-block; padding-left:10px;vertical-align: bottom;">
+                            <div style="display: inline-block; padding-left:10px; vertical-align: bottom;">
 
                                 <%if( consent && Common.isEquals(firstAdminYn, "N") && Common.isNotEquals(adminType, "C")){ %>
-                                <div  style="display: inline-block; padding-left:10px;vertical-align: bottom;">
+                                <div  style="display: inline-block; padding-left:10px;margin-right:10px;  vertical-align: bottom;">
                                     <button class="btn05" style="width:150px;" accesskey="O" id="consentBtn" onclick="searchConsentNo();"><span class="glyphicon glyphicon-tags"></span>&nbsp;<s:message code="consent.select.consent"/></button>
                                     <button class="reset_btn" accesskey="X" id="resetConsentBtn" onclick="resetConsentNo();">X</button>
                                     <input type="text" style="width:120px;height:28px;display:none;" readonly="readonly" id="consentNo">
