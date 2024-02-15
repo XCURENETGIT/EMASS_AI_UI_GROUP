@@ -27,11 +27,6 @@
 
 	#wrap {overflow:hidden;}
 
-	@media screen and (max-width: 1575px) {
-		.chatList {
-			display: none; /* chatList div를 감춤 */
-		}
-	}
 </style>
 
 <head>
@@ -85,9 +80,8 @@
                var searchkey=$('#searchStrInput').val();
 
                 var msgId = $(this).parents('li').attr('msgid');
-                var attachId = $(this).parents('li').attr('id');
-
-                var url = contextRoot + '/ems/attachText.do?msgId='+msgId+'&attachId='+attachId+'&searchKey='+searchkey;
+                var attachId = $(this).parents('li').attr('attachhash');
+                var url = contextRoot + '/ems/attachText.do?msgId='+msgId+'&attachId='+attachId+'&searchKey='+encodeURI(searchkey);
                 fnOpenWindow(url, 'attachText', 1050, 800, 'resize');
             });
 
@@ -233,7 +227,12 @@
 				var downloadFlag = false;
 				$('.downloadIcon').each ( function ( i, item ) {
 					var attachHash = $(this).parents('li').attr('attachhash');
-					if( attachHash != ''){
+                    console.log(attachHash);
+                    if (attachHash == "null"){
+                        alert('<s:message code="message.message.notfound.attach"/>');
+                        return;
+                    }
+					if( attachHash != '' ){
 						downloadFlag = true;
 					}
 				});
@@ -264,12 +263,13 @@
                 var attachHash = $(this).parents('li').attr('attachhash');
                 var attachId = $(this).parents('li').attr('id');
                 var attachSize = Number($(this).parents('li').attr('attachsize'));
-                var attachUrl = '<c:url value="/getEmassAttachInfo4DownHash.xcn"/>?msgIds=' + msgId + '&attachHash=' + attachHash;
+                if (attachHash == "null" ) {
+                    alert('<s:message code="message.message.notfound.attach"/>');
+                    return;
+                }
+              var attachUrl = '<c:url value="/getEmassAttachInfo4DownHash.xcn"/>?msgIds=' + msgId + '&attachHash=' + attachHash;
+               //  var attachUrl = contextRoot + '/downEmassAttach.xcn?msgId='+msgId+'&attachId='+attachId;
 
-                if( attachHash == ''){
-					alert('<s:message code="message.message.notfound.attach"/>');
-					return;
-				}
 
 				if ( attachSize == 0 || attachSize == 'NaN' ) attachSize = 1;
 
