@@ -209,7 +209,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		/*======================= 검색  영역  ============================*/
 		List<Object> searchAfter = null;
 		int offset = (null == sq.getStart()) ? 0 : sq.getStart(); // start
-		int rows = (sq.getRows() == 0) ? 100 : sq.getRows() ;  // size
+		int rows = sq.getRows(); // (sq.getRows() == 0) ? 100 : sq.getRows() ;  // size
 		int range = Math.round((rows + offset) / rows); // for문 횟수
 
 

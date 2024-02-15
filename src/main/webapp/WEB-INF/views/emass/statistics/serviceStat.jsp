@@ -232,13 +232,14 @@
         var data = [];
         var categories = [];
         var cols = grid1.columns;
+
         var maxDat = 0;
         if( dat == undefined ) {
             for ( var i=0 ; i < grid1.data.length ; i++ ) {
                 if ( (i+1) > chartcnt ) break;
                 var items = [];
                 for ( var j=1 ; j < cols.length ; j++ ) {
-                    if ( cols[j].id == 'total' || cols[j].id == 'NUM' || cols[j].id == 'rowKey' ) continue;
+                    if ( cols[j].id == 'total' || cols[j].id == 'NUM' || cols[j].id == 'rowKey' ||  cols[j].id == 'svcLv12Nm'  ) continue;
                     if ( grid1.data[i][cols[j].id] == undefined ) items.push(0);
                     else items.push( Number( grid1.data[i][cols[j].id] ) );
                     if ( i == 0 ) categories.push( cols[j].name );
@@ -464,9 +465,9 @@
     }
 
     var grid1 = new Xgrid('basicStatListGrid', contextRoot);
-    grid1.autoNumber();
+	grid1.autoNumber();
     grid1.colAdd('rowKey', '서비스타입', 100, 'left', true, 'nomal');
-    grid1.colAdd('svcLv1Nm', '<s:message code="stat.service.type"/>', 230, 'left', false, 'nomal');
+	grid1.colAdd('svcLv1Nm', '<s:message code="stat.service.type"/>', 230, 'left', false, 'nomal');
     grid1.colAdd('svcLv2Nm', '<s:message code="condition.service"/>', 230, 'left', false, 'link');
     //grid1.colAdd('svcNm', '상세 서비스명', 230, 'left', false, 'link');
     grid1.colAdd("total", '<s:message code="bodyview.total"/>', 130, "right", false, 'nomal' );
@@ -497,8 +498,7 @@
         }else {
             rowKey = grid1.getValue(grid1.Row, 'rowKey').replaceAll("\"", "\\\"");
         }
-        var svcNm = grid1.getValue(grid1.Row, 'svcLv12Nm');
-        var svcNm = grid1.getValue(grid1.Row, 'svcLv12Nm');
+		rowName = grid1.getValue(grid1.Row, 'rowName');
         colKey = grid1.ColKey(grid1.Col);
         var colKeyNm = colKey;
         if (colKey == 'rowKey' || colKey == 'total' || colKey == 'NUM') {
@@ -516,8 +516,6 @@
             if (xAxis == "ctime_hh") colKeyNm = colKey + '<s:message code="common.msg.hour"/>';
         }
 
-        tabID++;
-        tabNum ++;
 
         var rowKeys = rowKey.split(",");
         svcNm = rowKeys.length > 1 ? '<s:message code="common.msg.all"/>' : grid1.getValue(grid1.Row, 'svcLv12Nm');
@@ -539,6 +537,9 @@
             }
             pDisplayName = "";
         }
+
+		tabID++;
+		tabNum ++;
         if( tabNum > 3 ) {
             var delid = $( ".listChart li:nth-child(2)" ).attr('idx');
             $('#detailTab'+delid+' .subtab_close').click();
@@ -614,12 +615,10 @@
             xAxis_str : xAxis_str,
             rowKey : rowKey,
             success : function(data, total) {
-                grid1.colInit();
+         	    grid1.colInit();
                 grid1.autoNumber();
-
-                grid1.colAdd('svcLv12Nm', '<s:message code="condition.service"/>', 320, 'left', false, 'link');
-
-                grid1.colAdd('total', '<s:message code="bodyview.total"/>', 130, 'right', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
+				grid1.colAdd('svcLv12Nm', '<s:message code="condition.service"/>', 320, 'left', false, 'link');
+				grid1.colAdd('total', '<s:message code="bodyview.total"/>', 130, 'right', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
                     if ( value != undefined ) return value.comma();
                     else return '';
                 });
@@ -674,7 +673,6 @@
     function getDetailData( lastRow ) {
         currentgrid = getCurrentGrid();
         if ( searchFlag ) return;
-        var pColKey="";
 
         if ( lastRow == 'Y' || lastRow == undefined ) {
             currentgrid.data.length = 0;

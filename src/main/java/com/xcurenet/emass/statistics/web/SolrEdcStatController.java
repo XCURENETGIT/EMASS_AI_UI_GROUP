@@ -324,7 +324,7 @@ public class SolrEdcStatController {
 		}
 
 		if (!colKey.isEmpty()) {
-			query += "+" + xAxis + ":" + "\"" + colKey + "\" ";
+			if(!Common.isEquals(yAxis,"svc12")) query += "+" + xAxis + ":" + "\"" + colKey + "\" ";
 		}
 
 		if (Common.isEquals(yAxis, "sender_str")) {
