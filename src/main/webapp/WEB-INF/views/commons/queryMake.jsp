@@ -47,6 +47,12 @@
 			font-weight: normal;
 		}
 
+		.checkbox-inline {
+			margin-top : 0px;
+			margin-left: -24px;
+			padding: 0px;
+		}
+
 		#queryHelpPop {
 			display:none;
 			border: 1px solid #202d82;
@@ -1321,7 +1327,7 @@
 			<div class="col-lg-12" style="height:100%;">
 				<div class="panel panel-default" style="height:100%;">
 					<div class="panel-heading" style="height:40px;">
-						<i class="fa fa-bar-chart-o fa-fw"></i> <s:message code="query.make.title"/>
+						<h4><i class="fa fa-bar-chart-o fa-fw"></i>  <s:message code="query.make.title"/></h4>
 					</div>
 					<div class="panel-body" style="height:calc(100% - 30px);">
 						<div style="float: left;height:100%;width:790px;overflow-y: auto;" >

@@ -650,16 +650,16 @@ div.smartfilter .defbtn_sm{float:right;margin-right:12px;color:#000;}
 }
 
 .c-checkbox span, .c-radio span {
-    position: relative;
-    display: inline-block;
-    vertical-align: middle;
-    margin-left: -20px;
-    width: 16px;
-    height: 16px;
-    border-radius: 2px;
-    border: 1px solid #ccc;
-    margin-right: 0px;
-    text-align: center;
+    /*position: relative;*/
+    /*display: inline-block;*/
+    /*vertical-align: middle;*/
+    /*margin-left: -20px;*/
+    /*width: 16px;*/
+    /*height: 16px;*/
+    /*border-radius: 2px;*/
+    /*border: 1px solid #ccc;*/
+    /*margin-right: 0px;*/
+    /*text-align: center;*/
 }
 
 .c-checkbox span:before, .c-radio span:before {
