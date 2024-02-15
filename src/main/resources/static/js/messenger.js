@@ -829,7 +829,7 @@ function makeList(nextFlag) {
         str += '<div class="' + (chkPati ? 'me' : 'you') + ' timeline-panel" >';
 
 
-        if (obj.attached == "Y") {
+        if(obj.attached=="Y"){
             var attachhash = obj.attachhash;
             var attachname = obj.attachname;
             var attachsize = obj.attachsize;
@@ -840,12 +840,27 @@ function makeList(nextFlag) {
             var attachsizeArray = attachsize.split('|');
             var attachtypeArray = attachtype.split('|');
 
-            str += '<p class="filedown file_link" msgid="' + obj.msgid + '" attachhash="' + attachhashArray[i] + '">';
+            str += '<p class="filedown file_link" msgid="' + obj.msgid + '" attachhash="' + attachhashArray[0] + '">';
             str += '<span class="img"></span>';
-            str += '<span>' + attachnameArray[i] + '.' + attachtypeArray[i] + '<br/>';
-            str += attachsizeArray[i] + 'KB</span>';
+            str += '<span>' + attachnameArray[0] + '<br/>';
+            str += attachsizeArray[0] + 'KB</span>';
             str += '<button class="btnchatdown downlodadBtn"></button></p>';
-
+            if (obj.body_snippet !== undefined) {
+                let maxLength = attachnameArray[0].length + 11; // attachnameArray[0]의 길이에 6을 더한 값
+                let snippet = obj.body_snippet.replaceAll('\n', '<br/>');
+                if (snippet.length > maxLength) {
+                    for (var i = 0; i < snippet.length - maxLength; i += maxLength) {
+                        if (i === 0) {
+                            str += "<hr style='border: 1px solid gray;'>";
+                        } else if (i % maxLength === 0) {
+                            str += "<br>";
+                        }
+                        str += snippet.substring(i, Math.min(i + maxLength, snippet.length));
+                    }
+                } else {
+                    str += snippet;
+                }
+            }
         } else {
             if (obj.body_snippet != undefined) str += '' + obj.body_snippet.replaceAll('\n', '<br/>') + '';
         }
@@ -886,12 +901,38 @@ function makePrevList() {
 
         str += '	<div class="me timeline-panel">';
 
-        if (obj.attached == "Y") {
-            str += '<p class="filedown file_link" msgid="' + obj.msgid + '"+ attachhash="' + obj.attachhash + '" +>';
+        if(obj.attached=="Y"){
+            var attachhash = obj.attachhash;
+            var attachname = obj.attachname;
+            var attachsize = obj.attachsize;
+            var attachtype = obj.attachtype;
+
+            var attachhashArray = attachhash.split('|');
+            var attachnameArray = attachname.split('|');
+            var attachsizeArray = attachsize.split('|');
+            var attachtypeArray = attachtype.split('|');
+
+            str += '<p class="filedown file_link" msgid="' + obj.msgid + '" attachhash="' + attachhashArray[0] + '">';
             str += '<span class="img"></span>';
-            str += '<span>' + obj.attachname + '.' + obj.attachtype + '<br/>';
-            str += obj.attachsize + 'KB</span>';
-            str += '<button class="btnchatdown downloadIcon"></button></p>';
+            str += '<span>' + attachnameArray[0] + '<br/>';
+            str += attachsizeArray[0] + 'KB</span>';
+            str += '<button class="btnchatdown downlodadBtn"></button></p>';
+            if (obj.body_snippet !== undefined) {
+                let maxLength = attachnameArray[0].length + 11; // attachnameArray[0]의 길이에 6을 더한 값
+                let snippet = obj.body_snippet.replaceAll('\n', '<br/>');
+                if (snippet.length > maxLength) {
+                    for (var i = 0; i < snippet.length - maxLength; i += maxLength) {
+                        if (i === 0) {
+                            str += "<hr style='border: 1px solid gray;'>";
+                        } else if (i % maxLength === 0) {
+                            str += "<br>";
+                        }
+                        str += snippet.substring(i, Math.min(i + maxLength, snippet.length));
+                    }
+                } else {
+                    str += snippet;
+                }
+            }
         } else {
             if (obj.body_snippet != undefined) str += '' + obj.body_snippet.replaceAll('\n', '<br/>') + '';
         }

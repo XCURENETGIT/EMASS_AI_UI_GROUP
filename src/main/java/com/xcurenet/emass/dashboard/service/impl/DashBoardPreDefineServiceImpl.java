@@ -72,7 +72,7 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		sq.setFacetMinCount(1);
 		sq.setFacetSort("count");
 
-		sq.setQuery("*:*");
+		sq.setQuery("+attached:Y");
 		sq.setStart(Common.nvz(0));
 		sq.setRows(Common.nvz(1));
 		sq.setSort("ctime", SolrQuery.ORDER.desc);

@@ -181,6 +181,14 @@
                 var confId = 'device.mem.notify.' + $('#deviceSelect').selectpicker('val');
                 saveAlarmCheck(confId, $(this).prop('checked'));
             });
+            $('#sms_proc').click(function(){
+                var confId = 'device.process.sms.'+ $('#deviceSelect').selectpicker('val');
+                saveAlarmCheck(confId, $(this).prop('checked'));
+            });
+            $('#notify_proc').click(function(){
+                var confId = 'device.process.notify.'+ $('#deviceSelect').selectpicker('val');
+                saveAlarmCheck(confId, $(this).prop('checked'));
+            });
             $('#sms_inter').click(function () {
                 var confId = 'device.interface.sms.' + $('#deviceSelect').selectpicker('val');
                 saveAlarmCheck(confId, $(this).prop('checked'));
@@ -277,6 +285,37 @@
                 $('#sshPw').val($('#tblSshPw').text());
             });
 
+            $(document).on('click', '.alertChangeCpu', function () {
+                $('#alertChangeCpuPop').attr('mode', 'insert');
+                $('#alertChangeCpuPop').attr('idx', $('.alertChangeCpu').index(this));
+                $('#alertChangeCpuPop').attr('cpuLoadLimit', $(this).attr('cpuLoadLimit'));
+                $('#alertChangeCpuPop').modal('show');
+            });
+
+            $("#alertChangeCpuPop").on('shown.bs.modal', function () {
+                $('#alarmCpuLv2Critical').slider('setValue', $(this).attr('cpuLoadLimit'));
+
+                $('#alarmCpuLv2Text').html($(this).attr('cpuLoadLimit'));
+                if ($(this).attr('cpuLoadLimit') == '0') {
+                    $('#alarmCpuUsed').prop('checked', false);
+                    $('#alarmCpuModal').show();
+
+                } else {
+                    $('#alarmCpuUsed').prop('checked', true);
+                    $('#alarmCpuModal').hide();
+                }
+                console.log("2")
+                console.log($(this).attr('cpuLoadLimit'))
+            });
+
+            $(document).on('click', '.alertChangeMemory', function () {
+                $('#alertChangeMemoryPop').attr('mode', 'insert');
+                $('#alertChangeMemoryPop').attr('idx', $('.alertChangeMemory').index(this));
+                $('#alertChangeMemoryPop').attr('memInfoLimit', $(this).attr('memInfoLimit'));
+                $('#alertChangeMemoryPop').modal('show');
+            });
+
+
             $("#alertChangePop").on('shown.bs.modal', function () {
                 $('#alarmLv1Critical').slider('setValue', $(this).attr('hddNotifyLimit'));
                 $('#alarmLv2Critical').slider('setValue', $(this).attr('hddWarnLimit'));
@@ -295,19 +334,7 @@
                 }
             });
 
-            $("#alertChangeCpuPop").on('shown.bs.modal', function () {
-                $('#alarmCpuLv2Critical').slider('setValue', $(this).attr('cpuLoadLimit'));
 
-                $('#alarmCpuLv2Text').html($(this).attr('cpuLoadLimit'));
-                if ($(this).attr('cpuLoadLimit') == '0') {
-                    $('#alarmCpuUsed').prop('checked', false);
-                    $('#alarmCpuModal').show();
-
-                } else {
-                    $('#alarmCpuUsed').prop('checked', true);
-                    $('#alarmCpuModal').hide();
-                }
-            });
 
             $("#alertChangeMemoryPop").on('shown.bs.modal', function () {
                 $('#alarmMemoryLv2Critical').slider('setValue', $(this).attr('memInfoLimit'));
@@ -346,11 +373,11 @@
 
             $(document).on('click', '.alertChange', function () {
                 $('#alertChangePop').attr('mode', 'insert');
-                $('#alertChangePop').modal('show');
                 $('#alertChangePop').attr('idx', $('.alertChange').index(this));
                 $('#alertChangePop').attr('hddNotifyLimit', $(this).attr('hddNotifyLimit'));
                 $('#alertChangePop').attr('hddWarnLimit', $(this).attr('hddWarnLimit'));
                 $('#alertChangePop').attr('hddAlarmLimit', $(this).attr('hddAlarmLimit'));
+                $('#alertChangePop').modal('show');
             });
             $('#alarmLv1Critical').slider().on('slide', function (ev) {
                 $('#alarmLv1Text').text(ev.value);
@@ -366,20 +393,6 @@
             });
             $('#alarmLv3Critical').slider().on('slide', function (ev) {
                 $('#alarmLv3Text').text(ev.value);
-            });
-
-            $(document).on('click', '.alertChangeCpu', function () {
-                $('#alertChangeCpuPop').attr('mode', 'insert');
-                $('#alertChangeCpuPop').modal('show');
-                $('#alertChangeCpuPop').attr('idx', $('.alertChangeCpu').index(this));
-                $('#alertChangeCpuPop').attr('cpuLoadLimit', $(this).attr('cpuLoadLimit'));
-            });
-
-            $(document).on('click', '.alertChangeMemory', function () {
-                $('#alertChangeMemoryPop').attr('mode', 'insert');
-                $('#alertChangeMemoryPop').modal('show');
-                $('#alertChangeMemoryPop').attr('idx', $('.alertChangeMemory').index(this));
-                $('#alertChangeMemoryPop').attr('memInfoLimit', $(this).attr('memInfoLimit'));
             });
 
 
@@ -562,6 +575,90 @@
                         });
                     } else {
                         $('.saveAlarmMemoryPopBtn').prop('disabled', false);
+                    }
+                });
+            });
+
+            //프로세스 재시작 버튼
+            $(document).on('click', '.restartBtn', function(){
+                var idx = $(this).parent().parent().attr('idx');
+                $('.restartBtn').prop('disabled', true);
+                ui.confirmMsg('<s:message code="deviceInfo.msg.confirm.restart"/>', '', '', function(rs){
+                    if(rs){
+                        ui.get({
+                            url : 'device/setProcessRestart.xcn',
+                            deviceIp : $.trim($('#tblDeviceIp').text()),
+                            deviceSeq : $('#deviceSelect').selectpicker('val'),
+                            index : idx,
+                            success : function ( data, total ) {
+                                ui.alertMsg('<s:message code="deviceInfo.msg.processrestart"/>');
+                            },
+                            error : function (status, message) {
+                                ui.alertMsg(message);
+                            },
+                            complete : function (){
+                                $('.restartBtn').prop('disabled', false);
+                                getDeviceStatus();
+                            }
+                        });
+                    } else {
+                        $('.restartBtn').prop('disabled', false);
+                    }
+                });
+            });
+
+            //프로세스 종료 버튼
+            $(document).on('click', '.offBtn', function(){
+                var idx = $(this).parent().parent().attr('idx');
+                $('.offBtn').prop('disabled', true);
+                ui.confirmMsg('<s:message code="deviceInfo.msg.confirm.exitprocess"/>', '', '', function(rs){
+                    if(rs){
+                        ui.get({
+                            url : 'device/setProcessStop.xcn',
+                            deviceIp : $.trim($('#tblDeviceIp').text()),
+                            index : idx,
+                            deviceSeq : $('#deviceSelect').selectpicker('val'),
+                            success : function ( data, total ) {
+                                ui.alertMsg('<s:message code="deviceInfo.msg.exitprocess"/>');
+                            },
+                            error : function (status, message) {
+                                ui.alertMsg(message);
+                            },
+                            complete : function (){
+                                $('.offBtn').prop('disabled', false);
+                                getDeviceStatus();
+                            }
+                        });
+                    } else {
+                        $('.offBtn').prop('disabled', false);
+                    }
+                });
+            });
+
+            //프로세스 시작 버튼
+            $(document).on('click', '.startBtn', function(){
+                var idx = $(this).parent().parent().attr('idx');
+                $('.startBtn').prop('disabled', true);
+                ui.confirmMsg('<s:message code="deviceInfo.msg.confirm.restart"/>', '', '', function(rs){
+                    if(rs){
+                        ui.get({
+                            url : 'device/setProcessRestart.xcn',
+                            deviceIp : $.trim($('#tblDeviceIp').text()),
+                            index : idx,
+                            deviceSeq : $('#deviceSelect').selectpicker('val'),
+                            success : function ( data, total ) {
+                                ui.alertMsg('<s:message code="deviceInfo.msg.processstart"/>');
+                            },
+                            error : function (status, message) {
+                                ui.alertMsg(message);
+                            },
+                            complete : function (){
+                                $('.startBtn').prop('disabled', false);
+                                getDeviceStatus();
+                            }
+                        });
+                    } else {
+                        $('.startBtn').prop('disabled', false);
                     }
                 });
             });
@@ -865,39 +962,39 @@
         function saveAlarmCheck(confId, checked) {
             var deviceConfName = '';
             var deviceStatus = '';
-            if (confId == 'device.hdd.sms.1') {
+            if(confId == 'device.hdd.sms.1'){
                 deviceConfName = '<s:message code="deviceInfo.filesystem.sms"/>';
             }
-            if (confId == 'device.hdd.notify.1') {
+            if(confId == 'device.hdd.notify.1'){
                 deviceConfName = '<s:message code="deviceInfo.filesystem.alarm"/>';
             }
-            if (confId == 'device.cpu.sms.1') {
+            if(confId == 'device.cpu.sms.1'){
                 deviceConfName = '<s:message code="deviceInfo.cpu.sms"/>';
             }
-            if (confId == 'device.cpu.notify.1') {
+            if(confId == 'device.cpu.notify.1'){
                 deviceConfName = '<s:message code="deviceInfo.cpu.alarm"/>';
             }
-            if (confId == 'device.mem.sms.1') {
+            if(confId == 'device.mem.sms.1'){
                 deviceConfName = '<s:message code="deviceInfo.mem.sms"/>';
             }
-            if (confId == 'device.mem.notify.1') {
+            if(confId == 'device.mem.notify.1'){
                 deviceConfName = '<s:message code="deviceInfo.mem.alarm"/>';
             }
-            if (confId == 'device.process.sms.1') {
+            if(confId == 'device.process.sms.1'){
                 deviceConfName = '<s:message code="deviceInfo.process.sms"/>';
             }
-            if (confId == 'device.process.notify.1') {
+            if(confId == 'device.process.notify.1'){
                 deviceConfName = '<s:message code="deviceInfo.process.alarm"/>';
             }
-            if (confId == 'device.interface.sms.1') {
+            if(confId == 'device.interface.sms.1'){
                 deviceConfName = '<s:message code="deviceInfo.interface.sms"/>';
             }
-            if (confId == 'device.interface.notify.1') {
+            if(confId == 'device.interface.notify.1'){
                 deviceConfName = '<s:message code="deviceInfo.interface.alarm"/>';
             }
-            if (checked) {
+            if(checked){
                 deviceStatus = ' <s:message code="deviceInfo.check"/>';
-            } else {
+            }else{
                 deviceStatus = ' <s:message code="deviceInfo.uncheck"/>';
             }
             ui.get({
@@ -928,16 +1025,16 @@
             $('#sms_inter').prop('checked', false);
             $('#notify_inter').prop('checked', false);
 
-            if (data.hddSmsUseYn == 'Y') $('#sms_file').prop('checked', true);
-            if (data.hddNotifyUseYn == 'Y') $('#notify_file').prop('checked', true);
-            if (data.cpuSmsUseYn == 'Y') $('#sms_file_cpu').prop('checked', true);
-            if (data.cpuNotifyUseYn == 'Y') $('#notify_file_cpu').prop('checked', true);
-            if (data.memSmsUseYn == 'Y') $('#sms_file_mem').prop('checked', true);
-            if (data.memNotifyUseYn == 'Y') $('#notify_file_mem').prop('checked', true);
-            if (data.processSmsUseYn == 'Y') $('#sms_proc').prop('checked', true);
-            if (data.processNotifyUseYn == 'Y') $('#notify_proc').prop('checked', true);
-            if (data.interfaceSmsUseYn == 'Y') $('#sms_inter').prop('checked', true);
-            if (data.interfaceNotifyUseYn == 'Y') $('#notify_inter').prop('checked', true);
+            if(data.hddSmsUseYn=='Y') $('#sms_file').prop('checked', true);
+            if(data.hddNotifyUseYn=='Y') $('#notify_file').prop('checked', true);
+            if(data.cpuSmsUseYn=='Y') $('#sms_file_cpu').prop('checked', true);
+            if(data.cpuNotifyUseYn=='Y') $('#notify_file_cpu').prop('checked', true);
+            if(data.memSmsUseYn=='Y') $('#sms_file_mem').prop('checked', true);
+            if(data.memNotifyUseYn=='Y') $('#notify_file_mem').prop('checked', true);
+            if(data.processSmsUseYn=='Y') $('#sms_proc').prop('checked', true);
+            if(data.processNotifyUseYn=='Y') $('#notify_proc').prop('checked', true);
+            if(data.interfaceSmsUseYn=='Y') $('#sms_inter').prop('checked', true);
+            if(data.interfaceNotifyUseYn=='Y') $('#notify_inter').prop('checked', true);
         }
 
         //장비 탭 생성
@@ -1529,6 +1626,38 @@
 							</div>
 						</div>
 						<div class="panel-body" id="hddInfoTable">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<div class="form-inline not-dashed">
+								<i class="fa fa-bar-chart-o fa-fw"></i> <s:message code="deviceInfo.process"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								<label for="sms_proc"><input class="checkbox" type="checkbox" id="sms_proc" style="margin-left: 8px;"><span
+										class=" checktit">SMS</span></label>
+								<label class="notify_proc"><input class="checkbox" type="checkbox" id="notify_proc" style="margin-left: 8px;"><span class=" checktit"><s:message
+										code="deviceInfo.alarm"/></span></label>
+								<label>(<s:message code="deviceInfo.set.alarm.critical"/>)</label>
+							</div>
+						</div>
+						<div class="panel-body">
+							<table class="table table-bordered">
+								<thead>
+								<tr>
+									<th><s:message code="deviceInfo.group"/></th>
+									<th><s:message code="deviceInfo.name"/></th>
+									<th>Ver.</th>
+									<th><s:message code="deviceInfo.stime"/></th>
+									<th>Active/Total</th>
+									<th><s:message code="deviceInfo.status"/></th>
+									<th>Command</th>
+								</tr>
+								</thead>
+								<tbody id="processTbody"></tbody>
+							</table>
 						</div>
 					</div>
 				</div>

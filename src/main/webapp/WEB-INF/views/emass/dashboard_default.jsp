@@ -1076,7 +1076,6 @@
         $(document).on('click', '.click2', function () {
             let data = $(this).data('value');
             dashCondition.attachYn = "Y";
-            dashCondition.senders_upperCase = "Y";
             dashCondition.senders = data;
             $('#conditionParam').val(makePeriod2(dashCondition));
             $('#getMessageInfo').submit();
@@ -1205,19 +1204,21 @@
                 break;
             }
         }
+
         for (const key in targetKey) {
             // console.log("key: "+key);
             if (!isNaN(parseInt(key))) {
-                const numericKey = parseInt(key);
+                const numericKey = parseFloat(key);
+                console.log(numericKey);
                 if (numericKey ==  0) {
                     array[0] += targetKey[key];
-                } else if (numericKey == 10) {
+                } else if (numericKey == 10485760) {
                     array[1] += targetKey[key];
-                } else if (numericKey == 50) {
+                } else if (numericKey == 52428800) {
                     array[2] += targetKey[key];
-                } else if (numericKey == 100) {
+                } else if (numericKey == 157286400) {
                     array[3] += targetKey[key];
-                }  else if (numericKey == 150) {
+                }  else if (numericKey == 104857600) {
                     array[4] += targetKey[key];
                 } else {
                     array[5] += targetKey[key];

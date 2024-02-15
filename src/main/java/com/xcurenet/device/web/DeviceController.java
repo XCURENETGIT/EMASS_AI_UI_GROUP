@@ -115,6 +115,8 @@ public class DeviceController {
 			ConfigAdminVO cpuNotify = configAdminService.getConfAdmin("device.cpu.notify." + deviceSeq, adminId);
 			ConfigAdminVO memSms = configAdminService.getConfAdmin("device.mem.sms." + deviceSeq, adminId);
 			ConfigAdminVO memNotify = configAdminService.getConfAdmin("device.mem.notify." + deviceSeq, adminId);
+			ConfigAdminVO processSms = configAdminService.getConfAdmin("device.process.sms." + deviceSeq, adminId);
+			ConfigAdminVO processNofity = configAdminService.getConfAdmin("device.process.notify." + deviceSeq, adminId);
 			ConfigAdminVO interfaceSms = configAdminService.getConfAdmin("device.interface.sms." + deviceSeq, adminId);
 			ConfigAdminVO interfaceNofity = configAdminService.getConfAdmin("device.interface.notify." + deviceSeq, adminId);
 
@@ -126,6 +128,8 @@ public class DeviceController {
 			device.setMemSmsUseYn("N");
 			device.setMemNotifyUseYn("N");
 
+			device.setProcessSmsUseYn("N");
+			device.setProcessNotifyUseYn("N");
 			device.setInterfaceSmsUseYn("N");
 			device.setInterfaceNotifyUseYn("N");
 
@@ -137,6 +141,8 @@ public class DeviceController {
 			if (memSms != null) device.setMemSmsUseYn(Common.nvl(memSms.getVal(), "N"));
 			if (memNotify != null) device.setMemNotifyUseYn(Common.nvl(memNotify.getVal(), "N"));
 
+			if (processSms != null) device.setProcessSmsUseYn(Common.nvl(processSms.getVal(), "N"));
+			if (processNofity != null) device.setProcessNotifyUseYn(Common.nvl(processNofity.getVal(), "N"));
 			if (interfaceSms != null) device.setInterfaceSmsUseYn(Common.nvl(interfaceSms.getVal(), "N"));
 			if (interfaceNofity != null) device.setInterfaceNotifyUseYn(Common.nvl(interfaceNofity.getVal(), "N"));
 		}

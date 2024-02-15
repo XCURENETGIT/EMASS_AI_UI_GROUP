@@ -67,7 +67,6 @@
                 $("#number_confirm").val('');
             });
 
-
             $(document).on('click', '.otpClose', function() {
                 $("#pinCode").val('');
             });
@@ -490,7 +489,7 @@
 			<div class="modalfooter">
 				<button type="button" class="pop_btn02" accesskey="R" id="reloadBtn"><s:message code="login.google.otp.reload"/></button>
 				<button type="button" class="pop_btn02" accesskey="S" id="secretSaveBtn"><s:message code="login.google.otp.login"/></button>
-				<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+				<button type="button" class="pop_btn01 otpClose" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
 			</div>
 		</div>
 	</div>

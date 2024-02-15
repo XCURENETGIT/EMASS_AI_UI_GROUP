@@ -627,6 +627,15 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		sq.setParam("bodysnippet", bodysnippetVal);
 		setAuthoritys(sq, adminId);
 
+/*		if (readYn != null && readYn.isEmpty()) {
+			//읽음 여부 필드 값 추가
+			//solrEdcMessageVO.setEmass(solrCheckedService.findReadList(solrEdcMessageVO.getEmass(), adminId));
+
+			setReadYn(sq,adminId);
+
+		}*/
+
+
 		String serverTime = getServerTime();
 		SearchHits<SolrEdcVO> resp = getList(sq);
 
@@ -638,6 +647,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		if (readYn != null && readYn.isEmpty()) {
 			//읽음 여부 필드 값 추가
 			//solrEdcMessageVO.setEmass(solrCheckedService.findReadList(solrEdcMessageVO.getEmass(), adminId));
+		/*	query += String.format("+checked.readId:%s", adminId);*/
 		}
 
 		sq.clear();
@@ -733,6 +743,12 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		return modifiedQuery.toString();
 	}
 
+
+	private void setReadYn(SolrQuery sq, String adminId) {
+		String query="";
+		query += String.format("+checked.readId:%s", adminId);
+		sq.addFilterQuery(query);
+	}
 
 	private void setAuthoritys(SolrQuery sq, String adminId) {
 		if (Common.isNotEmpty(adminId)) {

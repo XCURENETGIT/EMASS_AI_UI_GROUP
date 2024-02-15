@@ -39,6 +39,10 @@
 		}
 	}
 
+	span.mini {
+		font-size: 13px;
+	}
+
 </style>
 
 <head>
@@ -216,7 +220,7 @@
             });
 
 
-            $(document).on('click', '.downloadIcon', function(){
+            $(document).on('click', '.downloadIcon', function () {
                 var msgId = $(this).parents('p').attr('msgid');
                 var attachHash = $(this).parents('p').attr('attachhash');
                 var attachId = $(this).parents('p').attr('id');
@@ -224,12 +228,12 @@
                 var attachUrl = '<c:url value="/getEmassAttachInfo4DownHash.xcn"/>?msgIds=' + msgId + '&attachHash=' + attachHash;
 
 
-                if( attachHash == ''){
+                if (attachHash == '') {
                     alert('<s:message code="message.message.notfound.attach"/>');
                     return;
                 }
 
-                if ( attachSize == 0 || attachSize == 'NaN' ) attachSize = 1;
+                if (attachSize == 0 || attachSize == 'NaN') attachSize = 1;
 
                 try {
                     AttachDown.location.href = attachUrl;
@@ -238,26 +242,26 @@
                 }
             });
 
-            $(document).on('click', '.downAllFile', function(){
+            $(document).on('click', '.downAllFile', function () {
                 var downloadFlag = false;
-                $('.downloadIcon').each ( function ( i, item ) {
+                $('.downloadIcon').each(function (i, item) {
                     var attachHash = $(this).parents('p').attr('attachhash');
-                    if( attachHash != ''){
+                    if (attachHash != '') {
                         downloadFlag = true;
                     }
                 });
-                if( !downloadFlag){
+                if (!downloadFlag) {
                     alert('<s:message code="message.message.notfound.attach"/>');
                     return;
                 }
 
-                var msgIds=[];
-                $('.downloadIcon').each ( function ( i, item ) {
+                var msgIds = [];
+                $('.downloadIcon').each(function (i, item) {
                     var msgId = $(this).parents('p').attr('msgid');
-                    if(!msgIds.includes(msgId)){ msgIds.push(msgId);}
+                    msgIds.push(msgId);
                 });
 
-                var attachUrl = '<c:url value="/downEmassAttachByMsgId.xcn"/>?msgIds='+msgIds.join(',');
+                var attachUrl = '<c:url value="/getEmassAttachInfo4DownHash.xcn"/>?msgIds=' + msgIds.join(',');
                 try {
                     AttachDown.location.href = attachUrl;
                 } catch (e) {
@@ -266,17 +270,45 @@
             });
 
 
-            $(document).on('mouseover', '.codeSelectedBtn', function (e) {
+            $(document).on('click', '.downAllFile', function () {
+                var downloadFlag = false;
+                $('.downloadIcon').each(function (i, item) {
+                    var attachHash = $(this).parents('p').attr('attachhash');
+                    if (attachHash != '') {
+                        downloadFlag = true;
+                    }
+                });
+                if (!downloadFlag) {
+                    alert('<s:message code="message.message.notfound.attach"/>');
+                    return;
+                }
+
+                var msgIds = [];
+                $('.downloadIcon').each(function (i, item) {
+                    var msgId = $(this).parents('p').attr('msgid');
+                    msgIds.push(msgId);
+                });
+
+                var attachUrl = '<c:url value="/downEmassAttachByMsgId.xcn"/>?msgIds=' + msgIds;
+                try {
+                    AttachDown.location.href = attachUrl;
+                } catch (e) {
+                    AttachDown.src = attachUrl;
+                }
+            });
+
+
+            $(document).on('mouseover', '#deptSelectedArea', function (e) {
                 $('#selectedCodeTitle').show();
                 $('#selectedCodeTitle').css('left', (e.pageX + 5) + 'px');
-                $('#selectedCodeTitle').css('top', (e.pageY - 120) + 'px');
+                $('#selectedCodeTitle').css('top', (e.pageY - 150) + 'px');
 
                 var str = $(this).parent().find('.selectedTitle').val();
                 if (str != undefined) str = str.replaceAll('\\|', ',');
                 $('#selectedCodeTitle').html(str);
             });
 
-            $(document).on('mousemove', '.codeSelectedBtn', function (e) {
+            $(document).on('mousemove', '#deptSelectedArea', function (e) {
                 $('#selectedCodeTitle').css('left', (e.pageX + 5) + 'px');
                 $('#selectedCodeTitle').css('top', (e.pageY - 120) + 'px');
 
@@ -285,9 +317,33 @@
                 $('#selectedCodeTitle').html(str);
             });
 
-            $(document).on('mouseout', '.codeSelectedBtn', function (e) {
+            $(document).on('mouseout', '#deptSelectedArea', function (e) {
                 $('#selectedCodeTitle').hide();
             });
+
+            $(document).on('mouseover', '#userSelectedArea', function (e) {
+                $('#selectedCodeTitle2').show();
+                $('#selectedCodeTitle2').css('left', (e.pageX + 5) + 'px');
+                $('#selectedCodeTitle2').css('top', (e.pageY - 150) + 'px');
+
+                var str = $(this).parent().find('.selectedTitle').val();
+                if (str != undefined) str = str.replaceAll('\\|', ',');
+                $('#selectedCodeTitle2').html(str);
+            });
+
+            $(document).on('mousemove', '#userSelectedArea', function (e) {
+                $('#selectedCodeTitle2').css('left', (e.pageX + 5) + 'px');
+                $('#selectedCodeTitle2').css('top', (e.pageY - 150) + 'px');
+
+                var str = $(this).parent().find('.selectedTitle').val();
+                if (str != undefined) str = str.replaceAll('\\|', ',');
+                $('#selectedCodeTitle2').html(str);
+            });
+
+            $(document).on('mouseout', '#userSelectedArea', function (e) {
+                $('#selectedCodeTitle2').hide();
+            });
+
 
             $(document).on('click', '.codeSelectedBtn', function (e) {
                 $('#deptVal, #deptStr').val('');
@@ -777,6 +833,7 @@
 							<input type="hidden" id="userStr" class="selectedTitle">
 							<input type="hidden" id="userVal">
 						</p>
+						<div id="selectedCodeTitle2" class="infotxt"></div>
 					</div>
 				</div>
 
@@ -800,7 +857,7 @@
 				</div>
 				<div class="bortop_dd pt16 pl20 pr20">
 					<div class="subtab">
-						<button class="active"><s:message code="consent.attach"/>
+						<button class="active"><s:message code="note.name"/>
 					</div>
 				</div>
 				<div>
