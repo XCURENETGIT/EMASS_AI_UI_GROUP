@@ -176,7 +176,6 @@ var eikon2 = {
 
                     checkList(searchOffset,type);
 
-
                 }
                 else{
                     alert(nodataMsg)
@@ -191,8 +190,8 @@ var eikon2 = {
             },
             complete : function() {
                 searchFlag = false;
-                HighSerarchlight();
                 ui.off('timeline-panel');
+                HighSerarchlight();
             }
         });
     }
@@ -935,7 +934,7 @@ function idIndicator(id){
     return id.fReplaceWord('.', '\\.');
 }
 
-jQuery.fn.highlight = function(pat, type) {
+jQuery.fn.highlight2 = function(pat, type) {
     function innerHighlight(node, pat, type) {
         pat = pat.trim();
         var skip = 0;
@@ -999,19 +998,38 @@ function HighlightGroup() {
 }
 
 
+
+
 function HighSerarchlight( ) {
     setTimeout(function(){
         var searchs = $('#searchMsgStrInput').val().split(/\||\+|\s|\*|\"/);
 
         if ( searchs.length > 0 ){
             var timeline_list_obj =  $("#timeline_list").find('div');
-            for ( var i=0 ; i < searchs.lsength ; i++ ) {
+            console.log(timeline_list_obj)
+            for ( var i=0 ; i < searchs.length ; i++ ) {
                 if ( searchs[i] == '' ) continue;
-                $( timeline_list_obj ).highlight(searchs[i], 'BS');
+                $( timeline_list_obj ).highlight2(searchs[i], 'BS');
             }
         }
     }, 100);
 }
+
+
+function Highlight() {
+    setTimeout(function () {
+        var searchs = $('#searchStrInput').val().split(/\||\+|\s|\*|\"/);
+        if (searchs.length > 0) {
+            var timeline_list_obj = $("#timeline_list").find('span');
+
+            for (var i = 0; i < searchs.length; i++) {
+                if (searchs[i] == '') continue;
+                $(timeline_list_obj).highlight2(searchs[i], 'BS');
+            }
+        }
+    }, 100);
+}
+
 
 
 
