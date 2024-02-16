@@ -33,7 +33,7 @@
 		min-width: 70px;
 	}
 
-	@media screen and (max-width: 1575px) {
+	@media screen and (max-width: 1640px) {
 		.chatList {
 			display: none; /* chatList div를 감춤 */
 		}

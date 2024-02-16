@@ -638,7 +638,6 @@ function makeList(nextFlag){
 
         str+='<li class="p20 bubble txt_right slide_right timeline-inverted ' +(i==0 && !nextFlag ? 'lastReadLi' : '')+ '" id="'+obj.msgid+'" ctime="'+obj.ctime+'" userkey="'+obj.userkey+'" srcip="'+obj.srcip+'">';
 
-
         var svc3 = obj.svc3;
         str+='	<div class="me timeline-panel" >';
 
@@ -662,13 +661,13 @@ function makeList(nextFlag){
                 let maxLength = attachnameArray[0].length + 11; // attachnameArray[0]의 길이에 6을 더한 값
                 let snippet = obj.body_snippet.replaceAll('\n', '<br/>');
                 if (snippet.length > maxLength) {
-                    for (var i = 0; i < snippet.length - maxLength; i += maxLength) {
-                        if (i === 0) {
+                    for (var j = 0; j < snippet.length - maxLength; j += maxLength) {
+                        if (j === 0) {
                             str += "<hr style='border: 1px solid #ddd;'>";
-                        } else if (i % maxLength === 0) {
+                        } else if (j % maxLength === 0) {
                             str += "<br>";
                         }
-                        str += snippet.substring(i, Math.min(i + maxLength, snippet.length));
+                        str += snippet.substring(j, Math.min(j + maxLength, snippet.length));
                     }
                 } else {
                     str += snippet;
@@ -734,13 +733,13 @@ function makePrevList(){
                 let maxLength = attachnameArray[0].length + 11; // attachnameArray[0]의 길이에 6을 더한 값
                 let snippet = obj.body_snippet.replaceAll('\n', '<br/>');
                 if (snippet.length > maxLength) {
-                    for (var i = 0; i < snippet.length - maxLength; i += maxLength) {
-                        if (i === 0) {
-                            str += "<hr style='border: 1px solid gray;'>";
-                        } else if (i % maxLength === 0) {
+                    for (var j = 0; j < snippet.length - maxLength; j += maxLength) {
+                        if (j === 0) {
+                            str += "<hr style='border: 1px solid #ddd;'>";
+                        } else if (j % maxLength === 0) {
                             str += "<br>";
                         }
-                        str += snippet.substring(i, Math.min(i + maxLength, snippet.length));
+                        str += snippet.substring(j, Math.min(j + maxLength, snippet.length));
                     }
                 } else {
                     str += snippet;

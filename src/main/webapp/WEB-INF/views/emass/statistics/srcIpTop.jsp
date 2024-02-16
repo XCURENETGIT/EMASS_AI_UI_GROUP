@@ -1,3 +1,5 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
 <style>
 
 	/* The Modal (background) */
@@ -60,7 +62,7 @@
 			</div>
 
 			<div class="coach_logo">
-				<img src="/venus/img/logo_xcurenet.png" alt="xcurenet" >
+				<img src="<c:url value="/img/logo_xcurenet.png"/>" alt="logo_xcurenet">
 				<p class="mat16">
 					Venus EMASS AI, Venus/CS 3.0
 				</p>
@@ -70,9 +72,6 @@
 		</div>
 
 	</div>
-
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
 
 
 
