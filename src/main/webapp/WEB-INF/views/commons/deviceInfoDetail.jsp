@@ -1671,7 +1671,7 @@
 								<label for="sms_inter"><input class="checkbox" type="checkbox" id="sms_inter" style="margin-left: 8px;"><span class=" checktit">SMS</span></label>
 								<label class="notify_inter"><input class="checkbox" type="checkbox" id="notify_inter"><span class=" checktit" style="margin-left: 8px;"><s:message
 										code="deviceInfo.alarm"/></span></label>
-								<label>(<s:message code="deviceInfo.set.alarm.status"/>)</label>
+								<label>(<s:message code="deviceInfo.set.alarm.status2"/>)</label>
 							</div>
 						</div>
 						<div class="panel-body">
