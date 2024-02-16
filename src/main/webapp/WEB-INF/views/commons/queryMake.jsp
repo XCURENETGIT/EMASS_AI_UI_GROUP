@@ -1047,7 +1047,7 @@
 						break;
 
 					case "drm":
-						addQueryText = queryAddMinus + "pi_DRM:*";
+						addQueryText = queryAddMinus + "pi_DRM:>0";
 						break;
 
 					case "user":

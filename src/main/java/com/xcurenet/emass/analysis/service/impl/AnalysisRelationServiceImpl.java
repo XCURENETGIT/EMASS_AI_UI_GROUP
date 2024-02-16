@@ -462,6 +462,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 			}
 		}
 
+
 		/* 문서 결과 표시 X */
 		sq.setStart(0);
 		sq.setRows(1);

@@ -9,6 +9,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.Aggregations;
+import org.elasticsearch.search.aggregations.bucket.terms.ParsedLongTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.metrics.ParsedStats;
@@ -93,6 +94,7 @@ public class XcnFacetsVO {
 		if (aggs instanceof ParsedStringTerms) return   parsedStringTerms(aggs,headerKey,docCount);
 		else if (aggs instanceof ParsedStats) return parsedStats(aggs,headerKey);
 		else if (aggs instanceof ParsedSum)  return parsedSum(aggs,headerKey,docCount);
+		else if (aggs instanceof ParsedLongTerms) return  parsedLongTerms(aggs, headerKey, docCount);
 		else return json;
 	}
 
@@ -106,6 +108,37 @@ public class XcnFacetsVO {
 			if (aggs instanceof ParsedStats) return parsedStats(aggs,headerKey);
 		}
 		return null;
+	}
+
+	public JSONObject parsedLongTerms(Aggregation aggs,String headerKey,long docCount){
+		/* 자유분석 */
+		ParsedLongTerms bucketArgments = (ParsedLongTerms) aggs;
+		if(bucketArgments.getBuckets().size() < 1) return null;
+		JSONArray jsonArray = new JSONArray();
+		JSONObject json = new JSONObject();
+		if(!bucketArgments.getBuckets().get(0).getKeyAsString().equals(headerKey)) {
+
+
+			totalMax = new ArrayList<>();
+			totalSum = new ArrayList<>();
+			totalMin = new ArrayList<>();
+			for (Terms.Bucket arg : bucketArgments.getBuckets()) {
+				jsonArray.add(parseFacetAggs(arg, arg.getKeyAsString()));
+			}
+			json.put("val", headerKey);
+			json.put("count", docCount);
+
+			long tSum = totalSum.stream().mapToLong(m -> m).sum();
+			json.put("sum", totalSum.stream().mapToLong(m -> m).sum());
+			json.put("avg", (tSum / totalSum.size()));
+			json.put("max", Collections.max(totalMax));
+			json.put("min", Collections.max(totalMin));
+			json.put("buckets", jsonArray);
+		}else{
+			return parseFacetAggs(bucketArgments.getBuckets().get(0), bucketArgments.getBuckets().get(0).getKeyAsString());
+		}
+
+		return json;
 	}
 
 	public JSONObject parsedStringTerms(Aggregation aggs,String headerKey,long docCount){
