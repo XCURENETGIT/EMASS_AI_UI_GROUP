@@ -853,15 +853,6 @@ function getDeptSchedule(){
 									code="common.sat"/></span></label></div>
 						</div>
 					</div>
-						<div class="row">
-							<div class="col-35">
-								<label class="fname"><s:message code="userInfo.filepath"/></label>
-							</div>
-							<div class="col-65">
-								<input type="text" class="w100" name="comment" id="dept.path"
-								       placeholder="<s:message code="common.message.input.filepath"/>" maxlength="255">
-							</div>
-						</div>
 
 					<div class="row">
 						<div class="col-35">

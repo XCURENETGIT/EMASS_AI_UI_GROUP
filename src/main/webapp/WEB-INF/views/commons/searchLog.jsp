@@ -186,7 +186,7 @@
     grid.loadHeader(false);
     grid.initData('<s:message code="common.msg.search.click"/>');
     grid.changePageSize = function (cnt) {
-        getData();
+        getData('Y');
     };
 
     grid.onClick = function () {

@@ -33,13 +33,15 @@ public class CollectionControllerLog {
 
 	public void getCollectionGroupList(final HttpServletRequest request, AuditRequestVO auditVo) {
 
+
 		JSONObject param = Common.getParam(request);
 		JSONObject filterVal = Common.toJSONObject(param.get("data"));
 		StringBuffer info = new StringBuffer();
-
 		if (Common.nvl(param.get("type")).equals("G")) {
+			auditVo.setMenuId("GENERATIVEAI_SERVICE");
 			info.append("[" + Prop.propFormat("java.log.generative.group.search") + "]").append(ENTER);
 		}else {
+			auditVo.setMenuId("NOTE_SERVICE");
 			info.append("[" + Prop.propFormat("java.log.note.group.search") + "]").append(ENTER);
 		}
 		try {
@@ -99,14 +101,15 @@ public class CollectionControllerLog {
 			e.printStackTrace();
 		}
 		auditVo.setInformation(info.toString());
+
 		auditService.insertAudit(request, auditVo);
 	}
 
 	public void getFileMessageList(final HttpServletRequest request, AuditRequestVO auditVo) {
-
 		JSONObject param = Common.getParam(request);
 		JSONObject filterVal = Common.toJSONObject(param.get("data"));
 		StringBuffer info = new StringBuffer();
+		auditVo.setMenuId("FILETRANSFER_SERVICE");
 
 			info.append("[" + Prop.propFormat("java.log.file.group.search") + "]").append(ENTER);
 		try {
@@ -169,8 +172,10 @@ public class CollectionControllerLog {
 		String userid = Common.nvl(param.get("userid"));
 		StringBuffer info = new StringBuffer();
 		if (Common.nvl(param.get("type")).equals("G")) {
+			auditVo.setMenuId("GENERATIVEAI_SERVICE");
 			info.append("[" + Prop.propFormat("java.log.generative.group.detail") + "]").append(ENTER);
 		}else{
+			auditVo.setMenuId("NOTE_SERVICE");
 			info.append("[" + Prop.propFormat("java.log.note.group.detail") + "]").append(ENTER);
 		}
 		info.append(Prop.propFormat("condition.userid") + " : ").append(userid).append(ENTER);
@@ -184,8 +189,10 @@ public class CollectionControllerLog {
 		String userid = Common.nvl(param.get("userid"));
 		StringBuffer info = new StringBuffer();
 		if (Common.nvl(param.get("type")).equals("G")) {
+			auditVo.setMenuId("GENERATIVEAI_SERVICE");
 			info.append("[" + Prop.propFormat("java.log.generative.group.msg.search") + "]").append(ENTER);
 		}else{
+			auditVo.setMenuId("NOTE_SERVICE");
 			info.append("[" + Prop.propFormat("java.log.note.group.msg.search") + "]").append(ENTER);
 		}
 		info.append(Prop.propFormat("condition.userid") + " : ").append(userid).append(ENTER);
@@ -208,8 +215,10 @@ public class CollectionControllerLog {
 		String userid = Common.nvl(param.get("userid"));
 
 		StringBuffer info = new StringBuffer();if (Common.nvl(param.get("type")).equals("G")) {
+			auditVo.setMenuId("GENERATIVEAI_SERVICE");
 			info.append("[" + Prop.propFormat("java.log.generative.export") + "]").append(ENTER);
 		}else{
+			auditVo.setMenuId("NOTE_SERVICE");
 			info.append("[" + Prop.propFormat("java.log.note.export") + "]").append(ENTER);
 		}
 		info.append(Prop.propFormat("condition.userid") + " : ").append(userid).append(ENTER);
@@ -224,9 +233,11 @@ public class CollectionControllerLog {
 
 		StringBuffer info = new StringBuffer();
 		if (Common.nvl(param.get("type")).equals("G")) {
+			auditVo.setMenuId("GENERATIVEAI_SERVICE");
 			info.append("[" + Prop.propFormat("java.log.generative.export") + "]").append(ENTER);
 		}
 		else{
+			auditVo.setMenuId("NOTE_SERVICE");
 			info.append("[" + Prop.propFormat("java.log.note.export") + "]").append(ENTER);
 		}
 		info.append(Prop.propFormat("condition.userid") + " : ").append(userid).append(ENTER);
