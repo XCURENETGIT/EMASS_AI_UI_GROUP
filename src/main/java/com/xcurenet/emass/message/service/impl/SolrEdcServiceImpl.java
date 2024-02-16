@@ -34,6 +34,8 @@ import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.elasticsearch.search.aggregations.pipeline.BucketSortPipelineAggregationBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
+import org.elasticsearch.search.sort.SortBuilder;
+import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,11 +100,25 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		Query searchQuery = new NativeSearchQueryBuilder()
 				.withFields(Common.toArray(sq.getFields(), ","))
 				.withQuery(QueryBuilders.queryStringQuery(sq.getQuery() + " " + filterQuery).fields(getDefaultSearchField(sq)))
-				.withPageable(PageRequest.of(getPage(sq), sq.getRows(), getSort(sq)))
+				.withPageable(PageRequest.of(getPage(sq), sq.getRows()))
+//				.withSorts( getSort(sq.getSorts()))
 				.withAggregations(getAggregations(sq))
 				.withAggregations(getAggregationsByPivot(sq))
 				.withTrackTotalHits(true)
 				.build();
+
+
+		/* 정렬 */
+		List<SortClause> sorts =  sq.getSorts();
+		if(!Common.isEmpty(sorts)) {
+			Sort sort = null;
+			for (SortClause s : sorts) {
+				SortOrder sortOrder = (Common.isEquals(s.getOrder(), SortOrder.DESC)) ? SortOrder.DESC : SortOrder.ASC;
+				if (s.getOrder() == SolrQuery.ORDER.desc) sort = Sort.by(s.getItem()).descending();
+				else sort = Sort.by(s.getItem()).ascending();
+				searchQuery.addSort(sort);
+			}
+		}
 
 		SearchHits<SearchHistoryVO> hits = operation.search(searchQuery, SearchHistoryVO.class);
 		return new SearchHistoryGroupVO(hits);
@@ -216,7 +232,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		Query searchQuery = new NativeSearchQueryBuilder()
 				.withFields(Common.toArray(sq.getFields(), ","))
 				.withQuery(complateQuery)
-				.withSort(getSort(sq))
+//				.withSorts(getSort(sq.getSorts()))
 				.withAggregations(getAggregations(sq))
 				.withAggregations(getAggregationsByPivot(sq))
 				.withTrackTotalHits(true)
@@ -227,8 +243,22 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 		SearchHits<SolrEdcVO> searchHits = null;
 
+
+		/* 정렬 */
+		List<SortClause> sorts =  sq.getSorts();
+		if(!Common.isEmpty(sorts)) {
+			Sort sort = null;
+			for (SortClause s : sorts) {
+				SortOrder sortOrder = (Common.isEquals(s.getOrder(), SortOrder.DESC)) ? SortOrder.DESC : SortOrder.ASC;
+				if (s.getOrder() == SolrQuery.ORDER.desc) sort = Sort.by(s.getItem()).descending();
+				else sort = Sort.by(s.getItem()).ascending();
+				searchQuery.addSort(sort);
+			}
+		}
+
+
 		if(Common.isEquals(sq.get("group"),"true")) { // 집계검색
-			searchQuery.setPageable(PageRequest.of(getPage(sq), sq.getRows(),getSort(sq)));
+			searchQuery.setPageable(PageRequest.of(getPage(sq), sq.getRows()));
 			searchHits = operation.search(searchQuery, SolrEdcVO.class);
 		}else {
 			//일반검색
@@ -489,21 +519,37 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	 * @param sq Solr Query
 	 * @return spring data sort
 	 */
-	private Sort getSort(SolrQuery sq) {
-		Sort sort = null;
-		List<SortClause> sorts = sq.getSorts();
-		for (SortClause s : sorts) {
-			if (sort == null) {
-				if (s.getOrder() == SolrQuery.ORDER.desc) sort = Sort.by(s.getItem()).descending();
-				else sort = Sort.by(s.getItem()).ascending();
-			} else {
-				if (s.getOrder() == SolrQuery.ORDER.desc) sort.and(Sort.by(s.getItem()).descending());
-				else sort.and(Sort.by(s.getItem()).ascending());
-			}
-		}
-		return sort;
-	}
+//	private SortBuilder getSort(List<SortClause> sorts) {
+//		if(Common.isEmpty(sorts)) return null;
+//
+//		SortBuilder sortBuilder = null;
+//		SortBuilders sortBuilders = new SortBuilders();
+//		for (SortClause s : sorts) {
+//			SortOrder sortOrder = (Common.isEquals(s.getOrder(), SortOrder.DESC)) ? SortOrder.DESC : SortOrder.ASC;
+//			 sortBuilders.fieldSort(s.getItem()).order(sortOrder);
+//		}
+//
+//		return sortBuilders;
+//
 
+//		Sort sort = null;
+//
+//		Sort complateSort = null;
+//		List<SortClause> sorts = sq.getSorts();
+//		for (SortClause s : sorts) {
+//			if (sort == null) {
+//				if (s.getOrder() == SolrQuery.ORDER.desc) sort = Sort.by(s.getItem()).descending();
+//				else sort = Sort.by(s.getItem()).ascending();
+//			} else {
+//				if (s.getOrder() == SolrQuery.ORDER.desc)  complateSort = sort.and(Sort.by(s.getItem()).descending());
+//				else complateSort = sort.and(Sort.by(s.getItem()).ascending());
+//			}
+//		}
+//
+//		complateSort = sort;
+//
+//		return complateSort;
+//	}
 
 
 	private int maxCount(int cnt) {
