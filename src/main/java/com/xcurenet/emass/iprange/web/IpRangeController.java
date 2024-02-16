@@ -45,7 +45,7 @@ import net.sf.json.JSONObject;
 
 @Slf4j
 @Controller
-@AuditParentMenu(ParentMenu.POLICY_SETUP)
+@AuditParentMenu(ParentMenu.DATA_MONITOR)
 @AuditMenu(Menu.BUSI_IPRANGE)
 public class IpRangeController {
 
