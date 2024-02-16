@@ -207,6 +207,10 @@ public class EmsMessageController {
 			infoSb.append("BODY : ").append(body).append(MailInfo.ENTER);
 			//if(Common.isNotEmpty(emsBodyStr)) infoSb.append("ATTACH : ").append(attach);
 
+
+			/* body load */
+
+
 			createInfo(bodyDoc.html(), body);
 			//if(Common.isNotEmpty(emsBodyStr)) createInfo(emsBodyStr, attach);
 			createInfo(infoSb.toString(), info);

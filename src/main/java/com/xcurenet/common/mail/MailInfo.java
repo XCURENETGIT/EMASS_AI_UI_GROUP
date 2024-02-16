@@ -1,10 +1,9 @@
 package com.xcurenet.common.mail;
 
-import java.io.File;
-
 import com.xcurenet.common.txt.TextReader;
-
 import lombok.Data;
+
+import java.io.File;
 
 @Data
 public class MailInfo {
@@ -17,7 +16,7 @@ public class MailInfo {
 
 	public final static String FOOTER = "</body></html>";
 
-	public final static String ALARM_PATH = "/users/emasslth/alarm_mail/";
+	public final static String ALARM_PATH = "/users/emassai/alarm_mail/";
 
 	public final static String SLASH = "/";
 

@@ -1,13 +1,5 @@
 package com.xcurenet.emass.consent.service.impl;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.xcurenet.common.dao.TransactionManager;
 import com.xcurenet.common.dao.XcnAbstractDAO;
 import com.xcurenet.common.util.Common;
@@ -15,14 +7,20 @@ import com.xcurenet.common.util.config.Config;
 import com.xcurenet.emass.consent.service.ConsentSeqVO;
 import com.xcurenet.emass.consent.service.ConsentService;
 import com.xcurenet.emass.consent.service.ConsentVO;
-
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service("consentService")
 @Slf4j
 public class ConsentServiceImpl extends XcnAbstractDAO implements ConsentService {
 
-	private static final String CONSENT_FILE_PATH = "/users/emasslth/consent/";
+	private static final String CONSENT_FILE_PATH = "/users/emassai/consent/";
 
 	@Override
 	public List<ConsentVO> getConsentList(final String startDate, final String endDate, final String type, final String consentStatus, final String createNm, final String searchStr, final int offset, final int limit) {
