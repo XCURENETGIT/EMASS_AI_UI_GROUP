@@ -112,8 +112,6 @@ public class SolrCreateQuery {
 	public static final String JOIN_READ = " +checked.readId:%s";
 	public static final String JOIN_UNREAD = " -checked.readId:%s";
 
-
-
 	private static final String OCR_FIELD = " ocr_attach ocr_attach.kr ocr_attach.en ocr_attach.jp";
 	private String finalReadYn;
 	private String consentNo;
@@ -135,9 +133,10 @@ public class SolrCreateQuery {
 			"user", "user_str", "userid", "name" //사용자
 	};
 
+	private String[] INEQUALITY_SIGN = {"+","-","|"};
 
-
-
+	private String[] SPECIAL_CHARS = {"!", "\"", "#", "$", "%", "&", "(", ")", "{", "}", "@", "`", "*", ":", "+",
+			";", "-", ".", "<", ">", ",", "^", "~", "|", "'", "[", "]"};
 
 	public SolrCreateQuery() {
 		sq = new SolrQuery();
@@ -266,6 +265,7 @@ public class SolrCreateQuery {
 	 */
 	public SolrCreateQuery setSearchStr(String searchStr, String searchField) {
 		if (Common.isEmpty(searchStr)) return this;
+		if( searchStr.matches("^[\\W]*$") && searchStr.matches("^[\\D]*$") && searchStr.replaceAll("[^ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]", "").length() == 0 )return this; //특수문자만입력시
 
 		if (Common.isEmpty(searchField)) return addQuery(String.format("%s(%s)", AND_QUERY, getSearchQuery(searchStr)));
 		else {
@@ -301,6 +301,7 @@ public class SolrCreateQuery {
 			return addQuery(String.format("%s(%s)", AND_QUERY, query));
 		}
 	}
+
 
 	public SolrCreateQuery setSearchHistoryUserStr(String userStr) {
 		if (Common.isEmpty(userStr)) return this;
@@ -1330,6 +1331,8 @@ public class SolrCreateQuery {
 	private String getSearchQuery(String query) {
 		if( query.startsWith("|")) query = query.substring(1);
 
+		query = query.replaceAll("([+])\\1+","+").replaceAll("([|])\\1+","|").replaceAll("(-)\\1+","-"); // 연산자를 연속2개입력시 1개로 줄이기
+
 		query = getTempQuery(query);
 		StringBuilder sb = new StringBuilder();
 
@@ -1349,18 +1352,16 @@ public class SolrCreateQuery {
 			for (int i = 0; i < terms.length; i++) {
 				if (terms[i].equals("|")) {
 					terms[i] = OR_PREFIX;
+				}else if (i > 0 && terms[i - 1].equals(OR_PREFIX) || terms[i].startsWith("+") || terms[i].startsWith("-")) {
+				} else if (i < terms.length - 1 && !terms[i + 1].equals("|")) {
+					terms[i] = ("+").concat(terms[i]);
+				}else if (!terms[i].startsWith("+") && !terms[i].startsWith("-")) {
+					terms[i] = ("(").concat(terms[i]).concat( ")");
 				}
-//				else if (i < terms.length - 1 && !terms[i + 1].equals("|")) {
-//					terms[i] = "+" + terms[i];
-//				}
-				else {
-					terms[i] =  ("\"").concat(terms[i]).concat( "\"");
-					querySb.append(appendSpecialchar(terms[i])).append(" ");
-				}
+				querySb.append(appendSpecialchar(terms[i])).append(" ");
 			}
-//			querySb.append("\"");
 
-			sb.append("+").append(querySb.toString().trim().replaceAll(" ", " ").replaceAll("__", " "));
+			sb.append(querySb.toString().trim().replaceAll(" ", " ").replaceAll("__", " "));
 		}
 		return sb.toString().replace(OR_PREFIX, " ").replace("__", " ").replace("  ", " ").trim();
 	}
