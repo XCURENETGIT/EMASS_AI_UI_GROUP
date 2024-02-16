@@ -8,6 +8,7 @@
 	String firstAdminYn = Common.getFirstAdminYn(session);
 	String statType = Common.nvl(request.getParameter("statType"));
 	String recvsJikgub = Config.getString("recvs.jikgub.use");
+	String epmsgType = Config.getString("message.epmsg.val");
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -150,6 +151,8 @@
 		var isConsent = false;
 		var erroColumn = "";
 
+		var epmsgType = '<%=epmsgType%>';
+
 		var statType = "<%=statType%>";
 		var isOCR = <%=isOCR%>;
 
@@ -167,7 +170,7 @@
 			"user_str", "user", "host_str", "host", "attachname_str", "attachname", "sender_str", "sender", "recvs",
 			"to", "cc", "bcc", "recvs_name", "tname", "cname", "bname", "ocr_attach", "pi_DRM",
 			"pi_total", "pi_ID", "pi_EF", "pi_PN", "pi_FN", "pi_DN", "pi_SN", "pi_CN", "pi_EC",
-			"pi_IMEI","pi_MCN","pi_CPN","pi_BRN","pi_SSN","pi_CRN","pi_AN","pi_MN",
+			"pi_IMEI","pi_MCN","pi_CPN","pi_BRN","pi_SSN","pi_CRN","pi_AN","pi_MN","epmsg_type",
 		];
 
         <%if( consent && Common.isEquals(firstAdminYn, "N") ){ %>
@@ -186,6 +189,7 @@
 			} else {
 				$('#recvs_poidTr').hide();
 			}
+			initEpmsg();
 			initSetDisplay();
 
 			var dateObj = new Date();
@@ -214,6 +218,36 @@
 				deselectAllText:'<s:message code="common.msg.unselect_all"/>',
 				liveSearchPlaceholder:'<s:message code="condition.search.service"/>'
 			});
+			;
+
+
+			$('#recvs_poid').selectpicker({
+				container:'body',
+				size: 'auto',
+				size: 15,
+				width:'260px',
+				searchLabel:true,
+				style:'btn-xs btn-default',
+				noneSelectedText:'<s:message code="condition.recv_jikgub.all"/>',
+				noneResultsText:'<s:message code="common.msg.noresult"/>'+' ',
+				selectAllText:'<s:message code="common.msg.select_all"/>',
+				deselectAllText:'<s:message code="common.msg.unselect_all"/>',
+			});
+
+
+			$('#epmsg_type').selectpicker({
+				container:'body',
+				size: 'auto',
+				size: 15,
+				width:'260px',
+				searchLabel:true,
+				style:'btn-xs btn-default',
+				noneSelectedText:'<s:message code="condition.epmsgType.all"/>',
+				noneResultsText:'<s:message code="common.msg.noresult"/>'+' ',
+				selectAllText:'<s:message code="common.msg.select_all"/>',
+				deselectAllText:'<s:message code="common.msg.unselect_all"/>',
+			});
+
 
 			$('#allOfus').selectpicker({
 				container:'body',
@@ -425,6 +459,7 @@
 			$('#serviceTypeSelect').selectpicker('refresh');
 		}
 
+
 		function getServiceOptionStr( ){
 			var str = '';
 			for (var i = 0; i < serviceGroups.length; i++) {
@@ -446,6 +481,10 @@
 			}
 			return str;
 		}
+
+
+
+
 
 		function getServiceOptionChildren(serviceType) {
 			var result = '<option value="'+serviceType.serviceCd+'">'+serviceType.serviceNm+'</option>';
@@ -476,31 +515,16 @@
 		}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+		/* KNOX */
+		function initEpmsg(){
+			var epmsg_type = epmsgType.split(',');
+			var result='';
+			for(var i=0 ; i<epmsg_type.length; i++){
+				result+='<option value="' + epmsg_type[i]+ '">' +  epmsg_type[i] + '</option>';
+			}
+			$("#epmsg_type").html(result);
+		//	$('#epmsg_type').selectpicker('refresh');
+		}
 
 
 
@@ -962,6 +986,7 @@
 					case "recvs_poid":
 						var jikgubcd = $('#recvs_poid').selectpicker('val');
 
+
 						if(jikgubcd){
 							addQueryText = queryAddMinus + "recvs_poid:(";
 
@@ -1107,6 +1132,21 @@
 					case "attachstrexcept":
 						addQueryText = queryAddMinus;
 						addQueryText += "attachname_str:noname";
+						break;
+					case "epmsg_type":
+						var epmsg_type = $('#epmsg_type').selectpicker('val');
+
+						if(epmsg_type){
+							addQueryText = queryAddMinus + "epmsg_type:(";
+
+							for(var i = 0; i < epmsg_type.length; i++) {
+								if(i > 0) {
+									addQueryText += " "
+								}
+								addQueryText += '' + epmsg_type[i] + '*';
+							}
+							addQueryText += ")";
+						}
 						break;
 				}
 
@@ -1399,6 +1439,18 @@
 									<td style="text-align: center;"><button type="button" class="btn btn-xs btn-info queryOr" data-queryType="svc">OR</button></td>
 									<td><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="svc"><i class="glyphicon glyphicon-minus"></i></button></td>
 									<td>svc</td>
+									<td></td>
+								</tr>
+								<%-- KNOX 메일 종류 --%>
+								<tr>
+									<th><s:message code="condition.epmsgType.list"/></th>
+									<td>
+										<select id="epmsg_type" class="selectpicker small border-radius-none border-radius-none" data-style="btn-default" multiple data-show-subtext="true" data-live-search="true" data-actions-box="true"></select>
+									</td>
+									<td><button type="button" class="btn btn-xs btn-success queryAdd" data-queryType="epmsg_type">AND</button></td>
+									<td style="text-align: center;"><button type="button" class="btn btn-xs btn-info queryOr" data-queryType="epmsg_type">OR</button></td>
+									<td><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="epmsg_type"><i class="glyphicon glyphicon-minus"></i></button></td>
+									<td>epmsg_type</td>
 									<td></td>
 								</tr>
 								<tr>
