@@ -28,28 +28,28 @@ var inOutInfo = '<%=inOutInfo%>';
 var dataView;
 $(document).ready(function(){
 	$('#noSelectBtn').click(function(){ self.close();  });
-	
+
 	$('#inoutType,#recvType').on('change', function() {
 		getRecvDomainInfo();
 	});
-	
+
 	getRecvDomainInfo();
 });
 
 function getRecvDomainInfo(inside) {
 	var recvsType = $('#recvType').val();
 	var inside = $('#inoutType').val();
-	
+
 	if(inside == 'B') {
 		inside = 'N';
 	} else if(inside == 'L'){
 		inside = 'Y';
 	}
-	
+
 	dataView.beginUpdate();
 	dataView.setItems([]);
 	dataView.endUpdate();
-	
+
 	ui.get({
 		url : 'getRecvDomainInfo.xcn',
 		msgId : msgId,
@@ -64,7 +64,7 @@ function getRecvDomainInfo(inside) {
 				$('#userGrid .grid-canvas' ).html ( '<div class="ui-widget-content slick-row even nodata_msg"><div class="slick-cell l0 r4 slick-init-msg"><s:message code="common.msg.nodata" /></div></div>' );
 			} else {
 				$('#userGrid .grid-canvas' ).html ('');
-				
+
 				dataView.setItems(data);
 				dataView.setGrouping({
 					getter: "domain",
@@ -81,7 +81,7 @@ function getRecvDomainInfo(inside) {
 			ui.alertMsg(message);
 		},
 		complete : function() {
-			
+
 		}
 	})
 }
@@ -93,56 +93,47 @@ function comparer(a, b) {
 </script>
 </head>
 <body class="mini-navbar msgBody">
-	<header class="header">
-		<div class="naviBack">
-			<img src="<c:url value="/img/title/home_icon.png"/>">
-			<span class="navi"><span id="code_title"></span><s:message code="common.msg.domainInfo"/></span>
-		</div>
-	</header>
 
 	<div class="xcn_container" style="min-width: 650px;">
 		<div class="boxArea" style="min-height:inherit;">
 			<div class="content_body">
-				<div class="row">
-					<div class="col-xs-9">
-						<div class="form-inline not-dashed">
-							<div class="form-group">
-								<select class="form-control input-sm" id="recvType" style="max-width: 200px;">
-									<option value="" selected>- <s:message code="common.recv.type" /> -</option>
-									<option value="T"><s:message code="condition.to"/></option>
-									<option value="C"><s:message code="condition.cc"/></option>
-									<option value="B"><s:message code="condition.bcc"/></option>
-								</select>
-								<select class="form-control input-sm" id="inoutType" style="max-width: 200px;">
-									<option value="" selected>- <s:message code="message.msg.inout" /> -</option>
-									<option value="L"><s:message code="message.msg.in" /></option>
-									<option value="B"><s:message code="message.msg.out" /></option>
-								</select>
-								<div style="float:right;line-height:25px;padding-right:15px;padding-top:5px;color: #f25643; font-weight: bold; font-size: 13px;">
-									&nbsp;&nbsp;<s:message code="common.msg.finish_query"/> : <span id="recvsResultCnt">0</span>
-								</div>
-							</div>
+				<div class="p20">
+						<h2><span class="bullet02"></span><span id="code_title"></span><s:message code="common.msg.domainInfo"/></h2>
+					<div class="searchKeywordSearch" style="margin-top:30px;">
+						<select class="condition_select" id="recvType">
+							<option value="" selected>- <s:message code="common.recv.type" /> -</option>
+							<option value="T"><s:message code="condition.to"/></option>
+							<option value="C"><s:message code="condition.cc"/></option>
+							<option value="B"><s:message code="condition.bcc"/></option>
+						</select>
+						<select class="condition_select" id="inoutType">
+							<option value="" selected>- <s:message code="message.msg.inout" /> -</option>
+							<option value="L"><s:message code="message.msg.in" /></option>
+							<option value="B"><s:message code="message.msg.out" /></option>
+						</select>
+						<div style="float:right;line-height:25px;padding-right:15px;padding-top:5px;color: #f25643; font-weight: bold; font-size: 13px;">
+							&nbsp;&nbsp;<s:message code="common.msg.finish_query"/> : <span id="recvsResultCnt">0</span>
 						</div>
 					</div>
-					<div class="col-xs-3 text-right">
+					<div class="xcn_pop_btn">
 						<button type="button" class="btn btn-sm btn-default" accesskey="C" id="noSelectBtn"><span class="glyphicon glyphicon-remove"></span>&nbsp;<s:message code="common.msg.close"/></button>
 					</div>
-				</div>
-				<div class="row xcn_full top_space">
-					<div class="col-xs-12" style="height: 100%;">
+					<div class="mat16" style="height: 70%;">
 						<div id="userGrid" class="slickGrid gridArea"></div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+
+
 	<script type="text/javascript">
 		var groupItemMetadataProvider = new Slick.Data.GroupItemMetadataProvider();
 		dataView = new Slick.Data.DataView({
 		    groupItemMetadataProvider: groupItemMetadataProvider,
 		    inlineFilters: true
 		  });
-		
+
 		var grid = new Xgrid('userGrid', contextRoot, null, null, dataView);
 		grid.grid.registerPlugin(groupItemMetadataProvider);
 		grid.colAdd('utype', '<s:message code="common.msg.information"/>', 80, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
@@ -159,22 +150,22 @@ function comparer(a, b) {
 			else return value;
 		});
 		grid.colAdd('deptNm', '<s:message code="common.org.dept"/>', 100, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-			if (value == null) return '-'; 
+			if (value == null) return '-';
 			else return value;
 		});
 		grid.colAdd('busiNm', '<s:message code="common.org.busi"/>', 100, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-			if (value == null) return '-'; 
+			if (value == null) return '-';
 			else return value;
 		});
-		
-		grid.loadHeader(false); 
+
+		grid.loadHeader(false);
 		dataView.onRowCountChanged.subscribe(function (e, args) {
 			grid.grid.invalidate();
 			grid.grid.updateRowCount();
 			grid.grid.render( );
 			dataView.refresh();
 		});
-		
+
 		dataView.onRowsChanged.subscribe(function (e, args) {
 			grid.grid.invalidate();
 			grid.grid.invalidateRow(args.rows);
@@ -184,7 +175,7 @@ function comparer(a, b) {
 		grid.grid.onSort.subscribe(function (e, args) {
 			sortdir = args.sortCols[0].sortAsc ? 1 : -1;
 			sortcol = args.sortCols[0].sortCol.field;
-			
+
 			if ($.browser.msie && $.browser.version <= 8) {
 			  // use numeric sort of % and lexicographic for everything else
 			  dataView.fastSort(sortcol, args.sortAsc);
@@ -194,7 +185,7 @@ function comparer(a, b) {
 			  // preferred method but can be very slow in IE with huge datasets
 			  dataView.sort(comparer, args.sortCols[0].sortAsc);
 			}
-			
+
 			grid.grid.invalidate();
 			grid.grid.render();
 		});

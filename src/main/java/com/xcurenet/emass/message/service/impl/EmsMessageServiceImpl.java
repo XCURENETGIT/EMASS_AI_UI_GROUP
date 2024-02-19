@@ -704,18 +704,15 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 	@Override
 	public List<Map<String, Object>> getRecvDomainInfo(String msgId, String inside, String recvsType) {
 		List<EmsRecvVO> recvs = getEmassUserAllInfo(msgId);
-		List<EmsRecvVO> result = new ArrayList<>(recvs);
+		List<EmsRecvVO> result  = recvs;
 
-		if (!inside.isEmpty() || !recvsType.isEmpty()) {
-			Iterator<EmsRecvVO> iterator = result.iterator();
-			while (iterator.hasNext()) {
-				EmsRecvVO emsRecvVO = iterator.next();
-				if (!recvsType.isEmpty() && !Common.isEquals(recvsType, emsRecvVO.getUType())) {
-					iterator.remove();
-				}
-				if (!inside.isEmpty() && !Common.isEquals(inside, emsRecvVO.getInSide())) {
-					iterator.remove();
-				}
+		for (int o=result.size()-1;o>-1;o--) {
+			if(!recvsType.isEmpty() && !inside.isEmpty()) {
+				if(!Common.isEquals(recvsType, result.get(o).getUType()) || !Common.isEquals(inside, result.get(o).getInSide())) result.remove(o);
+			}else if(recvsType.isEmpty() && !inside.isEmpty()) {
+				if(!Common.isEquals(inside, result.get(o).getInSide())) result.remove(o);
+			}else if(inside.isEmpty() && !recvsType.isEmpty()) {
+				if(!Common.isEquals(recvsType, result.get(o).getUType())) result.remove(o);
 			}
 		}
 
