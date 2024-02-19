@@ -10,6 +10,14 @@
 		max-width: 8em;
 	}
 
+	.name{
+		display: block;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		max-width: 8em;
+	}
+
 	.files :hover{
 		cursor: pointer;
 		text-decoration: underline;
