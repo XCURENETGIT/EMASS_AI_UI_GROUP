@@ -1,23 +1,19 @@
 package com.xcurenet.common.mail;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.xcurenet.common.util.Common;
+import com.xcurenet.common.util.config.Config;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.mail.EmailAttachment;
 import org.apache.commons.mail.HtmlEmail;
 
-import com.xcurenet.common.util.Common;
-import com.xcurenet.common.util.config.Config;
-
-import lombok.extern.slf4j.Slf4j;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 public class MailSend implements Runnable {
@@ -36,6 +32,7 @@ public class MailSend implements Runnable {
 			email.setHostName(Config.getString("mail.smtp.host"));
 			email.setSmtpPort(Config.getInt("mail.smtp.port"));
 			email.setStartTLSEnabled(Config.getBoolean("mail.ssl"));
+
 			if(Config.getBoolean("mail.ssl")) {
 				email.setSSLOnConnect(true);
 				email.setSslSmtpPort(Config.getString("mail.smtp.port"));
