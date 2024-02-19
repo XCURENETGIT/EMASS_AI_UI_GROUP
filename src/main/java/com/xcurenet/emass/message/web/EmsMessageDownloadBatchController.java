@@ -18,6 +18,7 @@ import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.emass.message.component.SolrCreateQuery;
 import com.xcurenet.emass.message.log.SolrEdcControllerLog;
 import com.xcurenet.emass.message.service.*;
+import com.xcurenet.minio.MinioFileAdapter;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -66,6 +67,9 @@ public class EmsMessageDownloadBatchController {
 
 	@Autowired
 	private SolrEdcControllerLog solrEdcControllerLog;
+
+	@Autowired
+	public MinioFileAdapter minioFileAdapter;
 
 	@RequestMapping(value = "/getEmassMessageSaveBatchZip.xcn")
 	@Description("EMASS 메시지 전체 저장")
@@ -242,7 +246,7 @@ public class EmsMessageDownloadBatchController {
 			FileOutputStream out = null;
 			try {
 				//in = attachDown.getAttach(attach.getAttachPath(), ftp);
-				in = attachDown.getAttach(attach.getAttachPath(), attach.getAttachHarPath());
+				in = minioFileAdapter.findFile(attach.getAttachPath());
 				File file = new File(Common.makeFilepath(dir.getPath(), Common.removeInvalidName(attach.getAttachName())));
 				out = new FileOutputStream(file);
 				if ( in != null) IOUtils.copyLarge(in, out);
