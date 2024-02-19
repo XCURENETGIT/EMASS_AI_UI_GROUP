@@ -1297,7 +1297,7 @@
 				<h3><s:message code="dashboard.todaayPatternCount"/></h3>
 				<div class="mainlist">
 					<div class="click" data-value="passport">
-						<span class="tit07" ><s:message code="bodyview.pn"/> <span class="red_dot"></span> </span>
+						<span class="tit07" ><s:message code="bodyview.pn"/>
 						<p class="blue" id="TodayPasswordTotalCnt">-<span class="text"><s:message code="common.msg.cnt"/></span></p>
 					</div>
 					<div class="click" data-value="drive">
@@ -1317,7 +1317,7 @@
 						<p class="blue" id="TodayCardNumberTotalCnt">-<span class="text"><s:message code="common.msg.cnt"/></span></p>
 					</div>
 					<div class="click" data-value="extension">
-						<span class="tit12"><s:message code="bodyview.ec"/><span class="red_dot"></span> </span>
+						<span class="tit12"><s:message code="bodyview.ec"/></span>
 						<p class="blue" id="TodayExtensionModulationTotalCnt">-<span class="text"><s:message code="common.msg.cnt"/></span></p>
 					</div>
 				</div>
