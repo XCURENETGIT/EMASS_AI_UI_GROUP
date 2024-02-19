@@ -362,7 +362,7 @@ public class SolrEdcStatController {
 		sq.setQuery(query);
 		sq.setStart(offset);
 		sq.setRows(limit);
-		sq.setSort("ctime", SolrQuery.ORDER.desc);
+		//sq.setSort("ctime", SolrQuery.ORDER.desc);
 
 		SolrEdcMessageVO solrStatVo = solrEdcService.getEmassMessage(sq, Common.getAdminId(request), "", null);
 		return new XcnResponseVO(XcnRspCode.OK, solrStatVo, solrStatVo.getNumFound());
@@ -500,7 +500,7 @@ public class SolrEdcStatController {
 		sq.setQuery(query);
 		sq.setStart(offset);
 		sq.setRows(limit);
-		sq.setSort("ctime", SolrQuery.ORDER.desc);
+	//	sq.setSort("ctime", SolrQuery.ORDER.desc);
 
 		SolrEdcMessageVO solrStatVo = solrEdcService.getEmassMessage(sq, Common.getAdminId(request), "", null);
 		return new XcnResponseVO(XcnRspCode.OK, solrStatVo, solrStatVo.getNumFound());
@@ -621,7 +621,7 @@ public class SolrEdcStatController {
 		sq.setQuery(query);
 		sq.setStart(offset);
 		sq.setRows(limit);
-		sq.setSort("ctime", SolrQuery.ORDER.desc);
+		//sq.setSort("ctime", SolrQuery.ORDER.desc);
 
 		SolrEdcMessageVO solrStatVo = solrEdcService.getEmassMessage(sq, Common.getAdminId(request), "", null);
 		return new XcnResponseVO(XcnRspCode.OK, solrStatVo, solrStatVo.getNumFound());
