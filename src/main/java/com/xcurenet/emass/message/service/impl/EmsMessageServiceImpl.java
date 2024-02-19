@@ -92,7 +92,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		bodyVo.setName(data.getName());
 		bodyVo.setCtime(data.getCtime());
 		bodyVo.setEpmsgType(data.getEpmsgType());
-		bodyVo.setBody(minioFileAdapter.open(bodyVo.getBodyPath()));
+		bodyVo.setBody((!Common.isEmpty(data.getBodyPath())) ? minioFileAdapter.open(data.getBodyPath()) : null);
 		return bodyVo;
 	}
 
