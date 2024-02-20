@@ -704,20 +704,20 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 	@Override
 	public List<Map<String, Object>> getRecvDomainInfo(String msgId, String inside, String recvsType) {
 		List<EmsRecvVO> recvs = getEmassUserAllInfo(msgId);
-		List<EmsRecvVO> result  = recvs;
-
-		for (int o=result.size()-1;o>-1;o--) {
-			if(!recvsType.isEmpty() && !inside.isEmpty()) {
-				if(!Common.isEquals(recvsType, result.get(o).getUType()) || !Common.isEquals(inside, result.get(o).getInSide())) result.remove(o);
-			}else if(recvsType.isEmpty() && !inside.isEmpty()) {
-				if(!Common.isEquals(inside, result.get(o).getInSide())) result.remove(o);
-			}else if(inside.isEmpty() && !recvsType.isEmpty()) {
-				if(!Common.isEquals(recvsType, result.get(o).getUType())) result.remove(o);
+		for (int o = recvs.size() - 1; o > -1; o--) {
+			if (!recvsType.isEmpty() && !inside.isEmpty()) {
+				if (!Common.isEquals(recvsType, recvs.get(o).getUType()) || !Common.isEquals(inside, recvs.get(o).getInSide())) {
+					recvs.remove(o);
+				}
+			} else if (recvsType.isEmpty() && !inside.isEmpty()) {
+				if (!Common.isEquals(inside, recvs.get(o).getInSide())) recvs.remove(o);
+			} else if (inside.isEmpty() && !recvsType.isEmpty()) {
+				if (!Common.isEquals(recvsType, recvs.get(o).getUType())) recvs.remove(o);
 			}
 		}
 
 		final ObjectMapper objectMapper = new ObjectMapper();
-		return objectMapper.convertValue(result, new TypeReference<>() {});
+		return objectMapper.convertValue(recvs, new TypeReference<>() {});
 	}
 
 
