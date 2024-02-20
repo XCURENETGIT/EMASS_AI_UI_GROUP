@@ -477,6 +477,7 @@
         .dropdown-menu {
             /*max-height: 344px !important;*/
         }
+
         .condition_top_sub{
             position: fixed;
             width: 300px;
@@ -3375,9 +3376,9 @@
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header ">
-                            <button type="button" class="close " data-dismiss="modal" aria-label="Close">
-                                <span class="glyphicon glyphicon-remove" style="cursor:pointer;"></span>
-                            </button>
+<%--                            <button type="button" class="close " data-dismiss="modal" aria-label="Close">--%>
+<%--                                <span class="glyphicon glyphicon-remove" style="cursor:pointer;"></span>--%>
+<%--                            </button>--%>
                             <h3 class="modal-title mal16" id="exportTitle">&nbsp;</h3>
                         </div>
                         <div class="modal-body">
