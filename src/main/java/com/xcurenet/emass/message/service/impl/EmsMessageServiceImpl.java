@@ -244,13 +244,13 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 			emsMessageVO.setCcList(cc);
 			emsMessageVO.setBccList(bcc);
 
-			if (Common.isNotEmpty(emsMessageVO.getIpBusicd()))
-				emsMessageVO.setIpBusiNm(Common.nvl(getIpBusiNm(emsMessageVO.getIpBusicd())).isEmpty() ? "unknown" : getIpBusiNm(emsMessageVO.getIpBusicd()));
-			else emsMessageVO.setIpBusiNm("");
-
-			if (Common.isNotEmpty(emsMessageVO.getIpDeptcd()))
-				emsMessageVO.setIpDeptNm(Common.nvl(getIpDeptNm(emsMessageVO.getIpDeptcd())).isEmpty() ? "unknown" : getIpDeptNm(emsMessageVO.getIpDeptcd()));
-			else emsMessageVO.setIpDeptNm("");
+//			if (Common.isNotEmpty(emsMessageVO.getIpBusicd()))
+//				emsMessageVO.setIpBusiNm(Common.nvl(getIpBusiNm(emsMessageVO.getIpBusicd())).isEmpty() ? "unknown" : getIpBusiNm(emsMessageVO.getIpBusicd()));
+//			else emsMessageVO.setIpBusiNm("");
+//
+//			if (Common.isNotEmpty(emsMessageVO.getIpDeptcd()))
+//				emsMessageVO.setIpDeptNm(Common.nvl(getIpDeptNm(emsMessageVO.getIpDeptcd())).isEmpty() ? "unknown" : getIpDeptNm(emsMessageVO.getIpDeptcd()));
+//			else emsMessageVO.setIpDeptNm("");
 
 			emsMessageVO.setFiles(getEmassAttachInfoConsent(msgId, firstAdminYn, adminType));
 			emsMessageVO.setPatterns(this.getEmassPattern(msgId));
