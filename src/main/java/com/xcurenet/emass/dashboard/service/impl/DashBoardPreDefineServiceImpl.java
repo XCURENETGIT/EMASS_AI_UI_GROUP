@@ -374,7 +374,6 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		String startDate = Common.plusDays(date, -7);
 		String endDate = Common.plusDays(date, -1);
 		List<Map<String, Object>> result = deviceTrafficStatService.getTrafficStatList_Day(startDate, endDate);
-		System.out.println("result: "+result);
 
 		List<Map<String, Object>> transformedData = new ArrayList<>();
 
