@@ -69,6 +69,12 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 		}
 //		return selectOne("com.xcurenet.sqlmap.mappers.mysql.customDashboard.isDefaultDashboard", customDashboardVo);
 	}
+
+	@Override
+	public CustomDashboardMenuVO getDefaultDashBoardContent(CustomDashboardMenuVO customDashboardMenuVo) {
+		return selectOne("com.xcurenet.sqlmap.mappers.mysql.customDashboard.getDefaultDashBoardContent", customDashboardMenuVo);
+	}
+
 	@Override
 	public int deleteDashBoardMenu(List<CustomDashboardMenuVO> customDashboardMenuVos) {
 		int result = 0;
