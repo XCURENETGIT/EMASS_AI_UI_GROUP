@@ -53,9 +53,7 @@
     Highcharts.setOptions({
         chart: {
             type: 'column',
-            marginTop: 15,
-            marginBottom: 60,
-            spacingBottom: 0
+            marginTop: 25
         },
         global: {useUTC: false},
         gridLineColor: '#fff',
@@ -1014,21 +1012,12 @@
                 },
                 xAxis: {
                     type: 'category',
-                    labels: {
-                        rotation: -20,
-                        x: 25,
-                        style: {
-                            fontSize: '13px',
-                            fontFamily: 'DINLig, Verdana, sans-serif'
-                        }
-                    }, gridLineWidth: 0
                 },
                 yAxis: {
                     type: 'logarithmic',
                     min: 1,
                     title: {
                         text: '',
-                        rotation: 0
                     }
                 },
                 legend: {
