@@ -315,7 +315,7 @@ function filePreviewEv( obj )
 			<div class="row p20">
 				<h2><span class="bullet02"></span><s:message code="bodyview.file_info"/></h2>
 				<div class="xcn_pop_btn">
-					<%if( consentFlag ){ %>
+					<%if( consentFlag || adminTypeCode.equals("S") ){ %>
 					<button type="button" class="btn btn-sm btn-default" accesskey="V" id="saveAttachBtn"><span class="glyphicon glyphicon-floppy-save"></span>&nbsp;<s:message code="bodyview.attach.save"/></button>
 					<%} %>
 					<button type="button" class="btn btn-sm btn-default" accesskey="C" id="noSelectBtn"><span class="glyphicon glyphicon-remove"></span>&nbsp;<s:message code="common.msg.close"/></button>
