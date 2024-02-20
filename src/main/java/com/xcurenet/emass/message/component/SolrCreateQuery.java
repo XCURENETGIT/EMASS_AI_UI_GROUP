@@ -108,6 +108,7 @@ public class SolrCreateQuery {
 	public static final String SIZE = "size";
 	public static final String BODY_SIZE = "body_size";
 	public static final String ATTACH_SIZE = "attachsize";
+	public static final String REPROCESS = "reprocess";
 
 	public static final String JOIN_READ = " +checked.readId:%s";
 	public static final String JOIN_UNREAD = " -checked.readId:%s";
@@ -947,6 +948,15 @@ public class SolrCreateQuery {
 		else if( Common.isEquals(sctYn, "N")) return addQuery(String.format("%s%s:%s", EXCEPT_QUERY, SCT, "*"));
 		else return this;
 	}
+
+
+	public SolrCreateQuery setReProcessYn(String reprocessYn) {
+		if (Common.isEmpty(reprocessYn)) return this;
+		if (Common.isEquals(reprocessYn, "Y")) return addQuery(String.format("%s%s:%s", AND_QUERY, REPROCESS, "1"));
+		else if (Common.isEquals(reprocessYn, "N")) return addQuery(String.format("%s%s:%s", EXCEPT_QUERY, REPROCESS, "0"));
+		else return this;
+	}
+
 	/**
 	 * Knox 첨부 사용 여부 쿼리
 	 * @param bodyImg
@@ -1238,6 +1248,7 @@ public class SolrCreateQuery {
 			String drmYn = Common.nvl(condition.get("drmYn")); // drm 검출 여부
 			String realAttYn = Common.nvl(condition.get("realAttYn")); // drm 검출 여부
 			String sctYn = Common.nvl(condition.get("sctYn")); // sct 여부
+			String reprocessYn = Common.nvl(condition.get("reprocessYn")); // 재처리 여부
 			String query = Common.nvl(condition.get("query")); //고급 쿼리 검색(데이터 있는경우 우선 적용)
 
 			String svc1 = Common.nvl(condition.get("svc1")); //서비스 그룹
@@ -1296,6 +1307,7 @@ public class SolrCreateQuery {
 			setKnox(bodyImg);
 			setOcr(OCRYn);
 			//setDrmYn(drmYn);
+			setReProcessYn(reprocessYn);
 			setSctYn(sctYn);
 			setRegexPattern(regexPattern);
 

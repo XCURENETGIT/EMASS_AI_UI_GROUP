@@ -170,7 +170,7 @@
 			"user_str", "user", "host_str", "host", "attachname_str", "attachname", "sender_str", "sender", "recvs",
 			"to", "cc", "bcc", "recvs_name", "tname", "cname", "bname", "ocr_attach", "pi_DRM",
 			"pi_total", "pi_ID", "pi_EF", "pi_PN", "pi_FN", "pi_DN", "pi_SN", "pi_CN", "pi_EC",
-			"pi_IMEI","pi_MCN","pi_CPN","pi_BRN","pi_SSN","pi_CRN","pi_AN","pi_MN","epmsg_type",
+			"pi_IMEI","pi_MCN","pi_CPN","pi_BRN","pi_SSN","pi_CRN","pi_AN","pi_MN","epmsg_type","reprocess",
 		];
 
         <%if( consent && Common.isEquals(firstAdminYn, "N") ){ %>
@@ -1148,6 +1148,10 @@
 							addQueryText += ")";
 						}
 						break;
+					case "reprocess":
+						if(queryAddMinus == '+') addQueryText = "+reprocess:1";
+						else addQueryText = "+reprocess:0";
+						break;
 				}
 
 				if(addQueryText == "") return;
@@ -1791,6 +1795,20 @@
 									<td>attachname_str</td>
 									<td></td>
 								</tr>
+
+
+								<%-- 재처리 여부--%>
+								<tr>
+									<th><s:message code="condition.reprocess"/></th>
+									<td>
+										<s:message code="condition.exist"/>:AND / <s:message code="condition.none"/>:<s:message code="query.make.except"/>(-)
+									</td>
+									<td><button type="button" class="btn btn-xs btn-success queryAdd" data-queryType="reprocess">AND</button></td>
+									<td style="text-align: center;"></td>
+									<td><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="reprocess"><i class="glyphicon glyphicon-minus"></i></button></td>
+									<td>reprocess</td>
+								</tr>
+
 								<tr>
 									<th style="font-size:16px;"><s:message code="query.make.query"/></th>
 									<td colspan="6">

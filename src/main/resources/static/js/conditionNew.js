@@ -75,7 +75,8 @@ var defaultCondition = {
 	"sort": "ctime desc",
 	"query": "",
 	"filterType": "C",
-	"reSearch": false
+	"reSearch": false,
+	"reprocessYn": ""
 };
 
 var con = {
@@ -208,6 +209,7 @@ var con = {
 		$('#sizeEndVal'+endId).val('');
 		$('#sizeOption'+endId).val('L');
 		checkRadioBtn( 'sizeType'+endId, '' );
+		checkRadioBtn( 'reprocessYn'+endId, '' );
 
 		$('input:checkbox[id="senders_not"]').prop("checked", false);
 		$('input:checkbox[id="senders_not"]').prop("disabled", true);
@@ -503,6 +505,7 @@ var con = {
 
 		condition.sizeOption = $('#sizeOption').val();
 		condition.sizeType = $('input:radio[name=sizeType'+']:input:checked').val();
+		condition.reprocessYn = $('input:radio[name=reprocessYn'+']:input:checked').val();
 
 		condition.sort = $('#messageSort').val();
 		condition.reSearch = $("input:checkbox[id='researchCheckbox']").is(":checked");
@@ -692,6 +695,7 @@ var con = {
 		checkRadioBtn( 'sizeType', condition.sizeType );
 
 		checkRadioBtn( 'ctimeWork', condition.ctimeWork );
+		checkRadioBtn( 'reprocessYn', condition.reprocessYn );
 
 		if( condition.sort == '') $('#messageSort').val('ctime desc');
 		else $('#messageSort').val(condition.sort);
