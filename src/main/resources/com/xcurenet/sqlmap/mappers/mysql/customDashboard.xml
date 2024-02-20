@@ -20,8 +20,14 @@
 		ORDER BY UPDATE_DT DESC
 	</select>
 	
+	<select id="getDefaultDashBoardContent" resultType="customDashboardMenuVO" parameterType="customDashboardMenuVO">
+		SELECT MENU_KEY AS menuKey
+		FROM UI_CUSTOM_DASHBOARD_MENU
+		WHERE ADMIN_ID = #{adminId} AND DEFAULT_MENU = 'Y';
+	</select>
+
 	<select id="getDashBoardMenuMaxMenuKey" resultType="int">
-		SELECT 	IFNULL(MAX(MENU_KEY)+1, 0) AS menuKey 
+		SELECT 	IFNULL(MAX(MENU_KEY)+1, 0) AS menuKey
 		FROM 	UI_CUSTOM_DASHBOARD_MENU
 	</select>
 

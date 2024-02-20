@@ -194,9 +194,6 @@
         }
     });
 
-
-    <%--var infoFeedbackYn = '<%=infoFeedbackYn%>';--%>
-    <%--var infoFeedbackConf = '<%=infoFeedbackConf%>';--%>
     var systemArch = '<%=systemArch%>';
     var adminType = '<%=adminType%>';
     var date;
@@ -216,8 +213,6 @@
         menuKey = $.urlParam('menuKey');
         if(menuKey) dashboardInit();
         else getDefaultMenuKey();
-        // if (menuKey) isDefaultDashboard(menuKey);
-        // else getDefaultMenuKey();
 
         function isDefaultDashboard(menuKey){
             ui.get({
@@ -864,6 +859,7 @@
     }
     var dashboardGrid;
     function dashboardInit(){
+
         var options = {
             acceptWidgets:true,
             cellHeight: 60, //or 80 - default : 60

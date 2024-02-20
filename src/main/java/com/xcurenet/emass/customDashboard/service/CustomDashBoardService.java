@@ -56,4 +56,6 @@ public interface CustomDashBoardService {
 	public int checkMonitorDB();
 
 	public String isDefaultDashboard(CustomDashboardMenuVO customDashboardMenuVO);
+
+	public CustomDashboardMenuVO getDefaultDashBoardContent(CustomDashboardMenuVO customDashboardMenuVo);
 }
