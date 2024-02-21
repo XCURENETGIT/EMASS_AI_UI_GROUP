@@ -10,6 +10,14 @@
 		max-width: 8em;
 	}
 
+	.name{
+		display: block;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		max-width: 8em;
+	}
+
 	.files :hover{
 		cursor: pointer;
 		text-decoration: underline;
@@ -45,9 +53,7 @@
     Highcharts.setOptions({
         chart: {
             type: 'column',
-            marginTop: 15,
-            marginBottom: 60,
-            spacingBottom: 0
+            marginTop: 25
         },
         global: {useUTC: false},
         gridLineColor: '#fff',
@@ -547,8 +553,7 @@
 
 
                             str += "<li class='click2' data-value='" + nameId + "'><p class='num'>" + (i + 1) + "</p>";
-                            if (names=='') str+="<p><span class='name blue'>" + noName + "</span>";
-                            else str += "<p><span class='name blue'>" + names + "</span>";
+                            str+="<p><span class='name blue'>" + noName + "</span>";
                             str += "<span class='team'>" + bu + "</span></p>";
                             str += "<p class='teamnum'>";
                             str += "<span class='name'>" + count + "</span>";
@@ -560,10 +565,10 @@
                             let name = getFormattedValue("ddd", data.facet[i]);
                             let names = getFormattedValue("ddd", name[0]);
                             let count = getFormattedValue("count", name[2]);
+                            let noName = getFormattedValue("size",name[3]);
                             let nameId = name[3];
                             str += "<li class='click2' data-value='" + nameId + "'><span class='num'>" + (i + 1) + "</span>";
-                            if (names=='') str += "<p><span class='name'>" + nameId + "</span>";
-                            else str += "<p><span class='name'>" + names + "</span>";
+	                        str += "<p><span class='name'>" + noName + "</span>";
                             str += "<span class='righttext'>" + count + "</span></p></li>";
                         }
                         str += "</ul></div>"
@@ -1006,21 +1011,12 @@
                 },
                 xAxis: {
                     type: 'category',
-                    labels: {
-                        rotation: -20,
-                        x: 25,
-                        style: {
-                            fontSize: '13px',
-                            fontFamily: 'DINLig, Verdana, sans-serif'
-                        }
-                    }, gridLineWidth: 0
                 },
                 yAxis: {
                     type: 'logarithmic',
                     min: 1,
                     title: {
                         text: '',
-                        rotation: 0
                     }
                 },
                 legend: {
@@ -1297,7 +1293,7 @@
 				<h3><s:message code="dashboard.todaayPatternCount"/></h3>
 				<div class="mainlist">
 					<div class="click" data-value="passport">
-						<span class="tit07" ><s:message code="bodyview.pn"/> <span class="red_dot"></span> </span>
+						<span class="tit07" ><s:message code="bodyview.pn"/>
 						<p class="blue" id="TodayPasswordTotalCnt">-<span class="text"><s:message code="common.msg.cnt"/></span></p>
 					</div>
 					<div class="click" data-value="drive">
@@ -1317,7 +1313,7 @@
 						<p class="blue" id="TodayCardNumberTotalCnt">-<span class="text"><s:message code="common.msg.cnt"/></span></p>
 					</div>
 					<div class="click" data-value="extension">
-						<span class="tit12"><s:message code="bodyview.ec"/><span class="red_dot"></span> </span>
+						<span class="tit12"><s:message code="bodyview.ec"/></span>
 						<p class="blue" id="TodayExtensionModulationTotalCnt">-<span class="text"><s:message code="common.msg.cnt"/></span></p>
 					</div>
 				</div>

@@ -381,12 +381,31 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 			for (Map.Entry<String, Object> subEntry : entry.entrySet()) {
 				String key = subEntry.getKey();
 				if (key.matches("\\d{4}-\\d{2}-\\d{2}")) {
-					Map<String, Object> transformedEntry = new HashMap<>();
-					transformedEntry.put("date", subEntry.getKey());
+					String dateKey = subEntry.getKey();
 					long num = (long) parseCount(subEntry.getValue());
-					transformedEntry.put("longNum",num);
-					transformedEntry.put("longNumStr",Common.convertFileSize(num));
-					transformedData.add(transformedEntry);
+
+					// Check if an entry for this date already exists
+					boolean found = false;
+					for (Map<String, Object> transformedEntry : transformedData) {
+						if (dateKey.equals(transformedEntry.get("date"))) {
+							// If entry for the date exists, update the value
+							long currentNum = (long) transformedEntry.get("longNum");
+							currentNum += num;
+							transformedEntry.put("longNum", currentNum);
+							transformedEntry.put("longNumStr", Common.convertFileSize(currentNum));
+							found = true;
+							break;
+						}
+					}
+
+					// If no entry for this date exists, create a new one
+					if (!found) {
+						Map<String, Object> transformedEntry = new HashMap<>();
+						transformedEntry.put("date", dateKey);
+						transformedEntry.put("longNum", num);
+						transformedEntry.put("longNumStr", Common.convertFileSize(num));
+						transformedData.add(transformedEntry);
+					}
 				}
 			}
 		}

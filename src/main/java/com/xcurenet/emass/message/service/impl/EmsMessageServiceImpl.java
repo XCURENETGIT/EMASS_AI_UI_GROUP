@@ -92,7 +92,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		bodyVo.setName(data.getName());
 		bodyVo.setCtime(data.getCtime());
 		bodyVo.setEpmsgType(data.getEpmsgType());
-		bodyVo.setBody(minioFileAdapter.open(bodyVo.getBodyPath()));
+		bodyVo.setBody((!Common.isEmpty(data.getBodyPath())) ? minioFileAdapter.open(data.getBodyPath()) : null);
 		return bodyVo;
 	}
 
@@ -244,13 +244,13 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 			emsMessageVO.setCcList(cc);
 			emsMessageVO.setBccList(bcc);
 
-			if (Common.isNotEmpty(emsMessageVO.getIpBusicd()))
-				emsMessageVO.setIpBusiNm(Common.nvl(getIpBusiNm(emsMessageVO.getIpBusicd())).isEmpty() ? "unknown" : getIpBusiNm(emsMessageVO.getIpBusicd()));
-			else emsMessageVO.setIpBusiNm("");
-
-			if (Common.isNotEmpty(emsMessageVO.getIpDeptcd()))
-				emsMessageVO.setIpDeptNm(Common.nvl(getIpDeptNm(emsMessageVO.getIpDeptcd())).isEmpty() ? "unknown" : getIpDeptNm(emsMessageVO.getIpDeptcd()));
-			else emsMessageVO.setIpDeptNm("");
+//			if (Common.isNotEmpty(emsMessageVO.getIpBusicd()))
+//				emsMessageVO.setIpBusiNm(Common.nvl(getIpBusiNm(emsMessageVO.getIpBusicd())).isEmpty() ? "unknown" : getIpBusiNm(emsMessageVO.getIpBusicd()));
+//			else emsMessageVO.setIpBusiNm("");
+//
+//			if (Common.isNotEmpty(emsMessageVO.getIpDeptcd()))
+//				emsMessageVO.setIpDeptNm(Common.nvl(getIpDeptNm(emsMessageVO.getIpDeptcd())).isEmpty() ? "unknown" : getIpDeptNm(emsMessageVO.getIpDeptcd()));
+//			else emsMessageVO.setIpDeptNm("");
 
 			emsMessageVO.setFiles(getEmassAttachInfoConsent(msgId, firstAdminYn, adminType));
 			emsMessageVO.setPatterns(this.getEmassPattern(msgId));
@@ -704,23 +704,20 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 	@Override
 	public List<Map<String, Object>> getRecvDomainInfo(String msgId, String inside, String recvsType) {
 		List<EmsRecvVO> recvs = getEmassUserAllInfo(msgId);
-		List<EmsRecvVO> result = new ArrayList<>(recvs);
-
-		if (!inside.isEmpty() || !recvsType.isEmpty()) {
-			Iterator<EmsRecvVO> iterator = result.iterator();
-			while (iterator.hasNext()) {
-				EmsRecvVO emsRecvVO = iterator.next();
-				if (!recvsType.isEmpty() && !Common.isEquals(recvsType, emsRecvVO.getUType())) {
-					iterator.remove();
+		for (int o = recvs.size() - 1; o > -1; o--) {
+			if (!recvsType.isEmpty() && !inside.isEmpty()) {
+				if (!Common.isEquals(recvsType, recvs.get(o).getUType()) || !Common.isEquals(inside, recvs.get(o).getInSide())) {
+					recvs.remove(o);
 				}
-				if (!inside.isEmpty() && !Common.isEquals(inside, emsRecvVO.getInSide())) {
-					iterator.remove();
-				}
+			} else if (recvsType.isEmpty() && !inside.isEmpty()) {
+				if (!Common.isEquals(inside, recvs.get(o).getInSide())) recvs.remove(o);
+			} else if (inside.isEmpty() && !recvsType.isEmpty()) {
+				if (!Common.isEquals(recvsType, recvs.get(o).getUType())) recvs.remove(o);
 			}
 		}
 
 		final ObjectMapper objectMapper = new ObjectMapper();
-		return objectMapper.convertValue(result, new TypeReference<>() {});
+		return objectMapper.convertValue(recvs, new TypeReference<>() {});
 	}
 
 

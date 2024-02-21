@@ -1,5 +1,11 @@
 package com.xcurenet.common.mail;
 
+import com.xcurenet.common.util.Common;
+import com.xcurenet.common.util.config.Config;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Controller;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
@@ -7,20 +13,12 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Controller;
-
-import com.xcurenet.common.util.Common;
-import com.xcurenet.common.util.config.Config;
-
-import lombok.extern.slf4j.Slf4j;
-
 @Slf4j
 @Controller
 public class MailScanner {
 
 	public final static int BEFORE_DAYS = 7;
-	public final static String DEFAULT_SCAN_DIR = "/users/emasslth/alarm_mail/";
+	public final static String DEFAULT_SCAN_DIR = "/users/emassai/alarm_mail/";
 	public final static String SUCCESS_MOVE_DIR = "/SUCCESS";
 	public final static String FAIL_MOVE_DIR = "/FAIL";
 	public final static String INFO_PREFIX = ".info";

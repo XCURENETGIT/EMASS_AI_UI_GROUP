@@ -153,9 +153,10 @@
 	}
 	.dropdown-menu {
 		max-height: 344px !important;
-		/*max-height: 500px;*/
+/*		max-height: 500px; !important;*/
 		overflow-y: auto;
 	}
+
 </style>
 <script type="text/javascript">
 	$(document).ready(function() {

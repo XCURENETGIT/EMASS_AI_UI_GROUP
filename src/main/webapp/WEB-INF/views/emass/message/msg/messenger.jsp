@@ -145,7 +145,6 @@
             });
 
 
-
             $(document).on('click', '.person', function (){
                 var xrootmtr = $(this).attr('xrootmtr');
                 var srcip = $(this).attr('srcip');
@@ -877,8 +876,8 @@
 			else condition.deptStr = ''; */
 
             condition.period = 1;
-            condition.startDt = $('#startdatepicker').data("DateTimePicker").date().format('YYYYMMDD');
-            condition.endDt = $('#enddatepicker').data("DateTimePicker").date().format('YYYYMMDD');
+            condition.startDt =$('#startDt').val()+"000000";
+            condition.endDt =$('#endDt').val()+"235959";
 
             return condition;
         }

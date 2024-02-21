@@ -477,6 +477,7 @@
         .dropdown-menu {
             /*max-height: 344px !important;*/
         }
+
         .condition_top_sub{
             position: fixed;
             width: 300px;
@@ -3100,6 +3101,15 @@
                                             <input type="text" style="width:60px;" id="sizeEndVal" disabled> (KBytes)
                                         </div>
                                     </div>
+                                    <div class="condition_divider"></div>
+                                    <div class="condition_item">
+                                        <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="condition.reprocess"/></div>
+                                        <div class="condition_sub_title">
+                                            <label class="condition_label"><input type="radio" name="reprocessYn" value="" checked="checked"> <span><s:message code="common.msg.all"/></span></label>
+                                            <label class="condition_label"><input type="radio" name="reprocessYn" value="Y"> <span><s:message code="condition.exist"/></span></label>
+                                            <label class="condition_label"><input type="radio" name="reprocessYn" value="N"> <span><s:message code="condition.none"/></span></label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -3375,9 +3385,9 @@
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header ">
-                            <button type="button" class="close " data-dismiss="modal" aria-label="Close">
-                                <span class="glyphicon glyphicon-remove" style="cursor:pointer;"></span>
-                            </button>
+<%--                            <button type="button" class="close " data-dismiss="modal" aria-label="Close">--%>
+<%--                                <span class="glyphicon glyphicon-remove" style="cursor:pointer;"></span>--%>
+<%--                            </button>--%>
                             <h3 class="modal-title mal16" id="exportTitle">&nbsp;</h3>
                         </div>
                         <div class="modal-body">

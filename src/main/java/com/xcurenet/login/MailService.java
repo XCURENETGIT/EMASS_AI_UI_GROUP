@@ -29,7 +29,7 @@ public class MailService {
 		try {
 			message.setFrom(senderEmail);
 			message.setRecipients(MimeMessage.RecipientType.TO, mail);
-			message.setSubject("[LTH PRO] 운용자 계정 잠금해제 이메일 인증");
+			message.setSubject("[EMASS AI] 운용자 계정 잠금해제 이메일 인증");
 			String body = "";
 			body += "<h3>" + "운용자 계정 잠금해제 이메일 인증" + "</h3>";
 			body += "<div style='border-radius: 0.125rem; background-color: #f7f7f9; padding: 40px'";

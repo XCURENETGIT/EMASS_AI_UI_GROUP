@@ -111,6 +111,8 @@
         var attachTextTotalLine = '<%=attachTotalLine%>';
         var pageNum = 1;
         var kHighlight = '<%=keywordHighlight%>';
+
+
         $(document).ready(function () {
 
             /* var totalPageA = '';
@@ -130,6 +132,7 @@
             $('#textLine').change(function () {
                 limit = $('#textLine option:selected').val();
                 pageLoad(1);
+				findKeywordPages()
             });
             $('#textSize').change(function () {
                 var fontSize = $('#textSize option:selected').val();
@@ -152,7 +155,8 @@
                 ocrYn: '<%=ocrYn%>',
                 limit: limit,
                 success: function (data, total) {
-                    makePageNum(data);
+					pageData = data;
+                    makePageNum(pageData);
                 },
                 error: function (status, message) {
                     ui.alertMsg(message);
