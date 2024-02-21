@@ -647,6 +647,7 @@ function getMessengerGroupList(page) {
     var startTotalDate=$('#startDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
     var endTotalDate=$('#endDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 
+
     ui.onBody('timeline_list', 0, -20);
     ui.postJson({
         url: 'getMessengerGroupList.xcn',
@@ -677,6 +678,7 @@ function getMessengerMessageList(page) {
     var offset = groupMessagePage * groupMessagePageBreak - groupMessagePageBreak;
     searchFlag = true;
     ui.onBody('timeline_list', 0, -20);
+
     ui.postJson({
         url: 'getMessengerMessageList.xcn',
         data: JSON.stringify(getCondition()),
