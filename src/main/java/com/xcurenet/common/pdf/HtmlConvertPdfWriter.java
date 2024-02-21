@@ -1,5 +1,6 @@
 package com.xcurenet.common.pdf;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.StringReader;
@@ -29,8 +30,8 @@ public class HtmlConvertPdfWriter {
 
 	private String htmlStr;
 	private FileOutputStream out;
-	private final String font = this.getClass().getResource("").getPath() + "../../files/font/dotum.ttf";
-	private final String css = this.getClass().getResource("").getPath() + "../../files/css/pdf.css";
+	private final String font = this.getClass().getResource("").getPath() + pathReplace("../../files/font/dotum.ttf");
+	private final String css = this.getClass().getResource("").getPath() + pathReplace("../../files/css/pdf.css");
 
 	public HtmlConvertPdfWriter(final String htmlStr, final FileOutputStream out) throws Exception {
 		this.htmlStr = htmlStr;
@@ -81,6 +82,10 @@ public class HtmlConvertPdfWriter {
 		FileOutputStream out = new FileOutputStream("d:/xcn.pdf");
 		new HtmlConvertPdfWriter(html, out);
 		IOUtils.closeQuietly(out);
+	}
+
+	public String pathReplace(String str){
+		return str.replaceAll("//", File.separator);
 	}
 }
 

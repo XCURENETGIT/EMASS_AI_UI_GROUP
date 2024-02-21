@@ -35,7 +35,7 @@ public class PdfWriterEMASS {
 	private PdfPTable table;
 
 
-	private BaseFont baseFont = BaseFont.createFont(this.getClass().getResource("").getPath() + "../../files/font/dotum.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+	private BaseFont baseFont = BaseFont.createFont(this.getClass().getResource("").getPath() + pathReplace("../../files/font/dotum.ttf"), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
 
 	public PdfWriterEMASS(final String title, final JSONArray header, final OutputStream out) throws Exception {
 		this.title = title;
@@ -159,5 +159,9 @@ public class PdfWriterEMASS {
 
 	public static void main(String[] args) throws FileNotFoundException, Exception {
 		new PdfWriter("개별 통신 내역", null, null, new FileOutputStream(new File("d://aaaa.pdf")));
+	}
+
+	public String pathReplace(String str){
+		return str.replaceAll("//", File.separator);
 	}
 }
