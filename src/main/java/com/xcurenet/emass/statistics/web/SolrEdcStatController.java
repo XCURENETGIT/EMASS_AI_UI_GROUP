@@ -474,8 +474,8 @@ public class SolrEdcStatController {
 			if (t.length > 0) {
 				String values = "";
 				for (String value : t) {
-
-					values += "\"" + value + "\" ";
+					values += "\""+value.replaceAll("시", "")+"\" ";
+//					values += "\"" + value + "\" ";
 				}
 				if (Yflag.equals("N")) {
 					yAxis = "svc12";
@@ -491,6 +491,7 @@ public class SolrEdcStatController {
 
 			}
 		}
+
 
 		if (Common.isEquals(dateType,"date"))query += String.format(" +checked.readTime:[%s TO %s]", startDate, endDate);
 		else query +=String.format(" +ctime:[%s TO %s]", startDate, endDate);
