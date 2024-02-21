@@ -294,11 +294,18 @@
 				</select>
 			</div>
 			<div class="optiotab">
-				<button class="optionBtn active" id="svc1" value="svc1">서비스타입</button>
-				<button class="optionBtn" id="direction_svc" value="direction_svc"><s:message code="condition.receive_send"/></button>
+				<button class="optionBtn active" id="svc1" value="svc1"><s:message code="common.msg.svc"/></button>
+				<button class="optionBtn" id="direction_svc" value="direction_svc"><s:message
+						code="condition.receive_send"/></button>
 				<button class="optionBtn" id="ctime_hh" value="ctime_hh"><s:message code="common.msg.time"/></button>
-				<button class="optionBtn" id="ctime_yyyymmdd" value="ctime_yyyymmdd" class="active"><s:message code="common.msg.day"/></button>
-				<button class="optionBtn" id="ctime_yyyymm" value="ctime_yyyymm"><s:message code="common.msg.month"/></button>
+				<button class="optionBtn" id="ctime_yyyymmdd" value="ctime_yyyymmdd" class="active"><s:message
+						code="common.msg.day"/></button>
+				<button class="optionBtn" id="ctime_yyyymm" value="ctime_yyyymm"><s:message
+						code="common.msg.month"/></button>
+				<button class="optionBtn" id="businm" value="businm"><s:message code="common.org.busi"/></button>
+				<button class="optionBtn" id="conm" value="conm"><s:message code="common.org.co"/></button>
+				<button class="optionBtn" id="deptnm" value="deptnm"><s:message code="common.org.dept"/></button>
+				<button class="optionBtn" id="jikgubnm" value="jikgubnm"><s:message code="common.org.jikgub"/></button>
 			</div>
 			<div>
 				<button class="form_btn01" id="searchBtn"><s:message code="common.msg.search"/></button>

@@ -5,18 +5,18 @@
 
     <!-- 발신 메일 서비스 타입 목록 조회-->
 	<select id="getSendMailServiceList" resultType="serviceTypeVO">
-		SELECT  SERVICECD AS serviceCd 
+		SELECT  SERVICECD AS serviceCd
 		FROM    UI_SERVICE
 		WHERE   USE_YN = 'Y'
 		AND     IN_OUT = 'O'
 		AND     ( SUBSTR(SERVICECD, 1, 1) IN ('M', 'W') OR SUBSTR(SERVICECD, 1, 3) = 'EMM' )
 	</select>
-	
+
 	<!-- 발신 메일 서비스 타입 목록 조회 Option 선택용-->
 	<select id="getSendMailServiceListByOption" resultType="serviceTypeVO">
 		SELECT  LEFT(SERVICECD, 1) AS groupCd, SERVICENM_LV1 AS groupNm,
-				LEFT(SERVICECD, 3) AS serviceCd, SERVICENM_LV2 AS serviceNm,
-				'' AS `inOut`
+		LEFT(SERVICECD, 3) AS serviceCd, SERVICENM_LV2 AS serviceNm,
+		'' AS `inOut`
 		FROM	UI_SERVICE A
 		WHERE   USE_YN = 'Y'
 		AND     IN_OUT = 'O'
@@ -53,7 +53,7 @@
 		GROUP	BY LEFT(SERVICECD, 1), SERVICENM_LV1, LEFT(SERVICECD, 3), SERVICENM_LV2
 		ORDER	BY MAX(SORT)
 	</select>
-	
+
 	<!-- 코드 정보 페이지 서비스 타입 목록 조회 -->
 	<select id="getServiceListByAll" resultType="serviceTypeVO" parameterType="hashMap">
 		SELECT  LEFT(SERVICECD, 1) AS groupCd, SERVICENM_LV1 AS groupNm,
@@ -75,71 +75,68 @@
 	<select id="getServiceListAuth" resultType="serviceTypeVO" parameterType="hashMap">
 		SELECT  groupCd, groupNm, serviceCd, serviceNm, '' AS `inOut`
 		FROM	(
-				SELECT	LEFT(A.SERVICECD, 1) AS groupCd, SERVICENM_LV1 AS groupNm,
-						LEFT(A.SERVICECD, 3) AS serviceCd, SERVICENM_LV2 AS serviceNm,
-						'' AS `inOut`, SORT
-				FROM    UI_SERVICE A LEFT JOIN UI_ADMIN_SERVICE B ON LEFT(A.SERVICECD, 3) = B.SERVICECD
-				WHERE   B.ADMIN_ID = #{adminId} AND A.USE_YN='Y'
-				UNION
-				SELECT  LEFT(SERVICECD, 1) AS groupCd, SERVICENM_LV1 AS groupNm,
-						LEFT(SERVICECD, 3) AS serviceCd, SERVICENM_LV2 AS serviceNm,
-						'' AS `inOut`, SORT
-				FROM    UI_SERVICE
-				WHERE 0 =(SELECT COUNT(*) AS CNT FROM UI_ADMIN_SERVICE WHERE ADMIN_ID=#{adminId}) AND USE_YN='Y'
+		SELECT	LEFT(A.SERVICECD, 1) AS groupCd, SERVICENM_LV1 AS groupNm,
+		LEFT(A.SERVICECD, 3) AS serviceCd, SERVICENM_LV2 AS serviceNm,
+		'' AS `inOut`, SORT
+		FROM    UI_SERVICE A LEFT JOIN UI_ADMIN_SERVICE B ON LEFT(A.SERVICECD, 3) = B.SERVICECD
+		WHERE   B.ADMIN_ID = #{adminId} AND A.USE_YN='Y'
+		UNION
+		SELECT  LEFT(SERVICECD, 1) AS groupCd, SERVICENM_LV1 AS groupNm,
+		LEFT(SERVICECD, 3) AS serviceCd, SERVICENM_LV2 AS serviceNm,
+		'' AS `inOut`, SORT
+		FROM    UI_SERVICE
+		WHERE 0 =(SELECT COUNT(*) AS CNT FROM UI_ADMIN_SERVICE WHERE ADMIN_ID=#{adminId}) AND USE_YN='Y'
 
-				UNION
-        		SELECT	LEFT(A.SERVICECD, 1) AS groupCd, SERVICENM_LV1 AS groupNm,
-						LEFT(A.SERVICECD, 4) AS serviceCd, SERVICENM_LV3 AS serviceNm,
-						'' AS `inOut`, SORT
-				FROM    UI_SERVICE A LEFT JOIN UI_ADMIN_SERVICE B ON LEFT(A.SERVICECD, 4) = B.SERVICECD
-				WHERE   B.ADMIN_ID = #{adminId} AND A.USE_YN='Y'
-        		AND     ( LEFT(A.SERVICECD, 3) = 'EMM' OR A.SERVICECD IN ('UWSH', 'UWSM', 'UWSL') )
-				UNION
-				SELECT  LEFT(SERVICECD, 1) AS groupCd, SERVICENM_LV1 AS groupNm,
-						LEFT(SERVICECD, 4) AS serviceCd, SERVICENM_LV3 AS serviceNm,
-						'' AS `inOut`, SORT
-				FROM    UI_SERVICE
-				WHERE   0 =(SELECT COUNT(*) AS CNT FROM UI_ADMIN_SERVICE WHERE ADMIN_ID=#{adminId}) AND USE_YN='Y'
-				AND     ( LEFT(SERVICECD, 3) = 'EMM' OR SERVICECD IN ('UWSH', 'UWSM', 'UWSL') )
+		UNION
+		SELECT	LEFT(A.SERVICECD, 1) AS groupCd, SERVICENM_LV1 AS groupNm,
+		LEFT(A.SERVICECD, 4) AS serviceCd, SERVICENM_LV3 AS serviceNm,
+		'' AS `inOut`, SORT
+		FROM    UI_SERVICE A LEFT JOIN UI_ADMIN_SERVICE B ON LEFT(A.SERVICECD, 4) = B.SERVICECD
+		WHERE   B.ADMIN_ID = #{adminId} AND A.USE_YN='Y'
+		AND     ( LEFT(A.SERVICECD, 3) = 'EMM' OR A.SERVICECD IN ('UWSH', 'UWSM', 'UWSL','CMLS','CMLE','SNVU'))
+		UNION
+		SELECT  LEFT(SERVICECD, 1) AS groupCd, SERVICENM_LV1 AS groupNm,
+		LEFT(SERVICECD, 4) AS serviceCd, SERVICENM_LV3 AS serviceNm,
+		'' AS `inOut`, SORT
+		FROM    UI_SERVICE
+		WHERE   0 =(SELECT COUNT(*) AS CNT FROM UI_ADMIN_SERVICE WHERE ADMIN_ID=#{adminId}) AND USE_YN='Y'
+		AND     ( LEFT(SERVICECD, 3) = 'EMM' OR SERVICECD IN ('UWSH', 'UWSM', 'UWSL','CMLS','CMLE','SNVU') )
 
-				UNION
-        		SELECT	LEFT(A.SERVICECD, 1) AS groupCd, SERVICENM_LV1 AS groupNm,
-						CONCAT(LEFT(A.SERVICECD, 4),'X') AS serviceCd, CONCAT('[ ',SERVICENM_LV2,'_',SERVICENM_LV3,CASE WHEN (SELECT COUNT(*) AS CNT FROM UI_SERVICE WHERE SERVICECD = 'EMMA' AND SERVICENM_LV3 REGEXP '[가-힣]') > 0 THEN ' 제외 ]' ELSE ' except ]' END) AS serviceNm,
-						'' AS `inOut`, (SELECT MAX(SORT)+1 FROM UI_SERVICE WHERE LEFT(SERVICECD, 3) = 'EMM') AS SORT
-				FROM    UI_SERVICE A LEFT JOIN UI_ADMIN_SERVICE B ON LEFT(A.SERVICECD, 5) = B.SERVICECD
-				WHERE   B.ADMIN_ID = #{adminId} AND A.USE_YN='Y'
-        		AND     A.SERVICECD = 'EMMA'
-				UNION
-				SELECT  LEFT(SERVICECD, 1) AS groupCd, SERVICENM_LV1 AS groupNm,
-						CONCAT(LEFT(SERVICECD, 4),'X') AS serviceCd, CONCAT('[ ',SERVICENM_LV2,'_',SERVICENM_LV3,CASE WHEN (SELECT COUNT(*) AS CNT FROM UI_SERVICE WHERE SERVICECD = 'EMMA' AND SERVICENM_LV3 REGEXP '[가-힣]') > 0 THEN ' 제외 ]' ELSE ' except ]' END) AS serviceNm,
-						'' AS `inOut`, (SELECT MAX(SORT)+1 FROM UI_SERVICE WHERE LEFT(SERVICECD, 3) = 'EMM' ) AS SORT
-				FROM    UI_SERVICE
-				WHERE   0 =(SELECT COUNT(*) AS CNT FROM UI_ADMIN_SERVICE WHERE ADMIN_ID=#{adminId}) AND USE_YN='Y'
-				AND     SERVICECD = 'EMMA'
+		UNION
+		SELECT	LEFT(A.SERVICECD, 1) AS groupCd, SERVICENM_LV1 AS groupNm,
+		CONCAT(LEFT(A.SERVICECD, 4),'X') AS serviceCd, CONCAT('[ ',SERVICENM_LV2,'_',SERVICENM_LV3,CASE WHEN (SELECT COUNT(*) AS CNT FROM UI_SERVICE WHERE SERVICECD = 'EMMA' AND SERVICENM_LV3 REGEXP '[가-힣]') > 0 THEN ' 제외 ]' ELSE ' except ]' END) AS serviceNm,
+		'' AS `inOut`, (SELECT MAX(SORT)+1 FROM UI_SERVICE WHERE LEFT(SERVICECD, 3) = 'EMM') AS SORT
+		FROM    UI_SERVICE A LEFT JOIN UI_ADMIN_SERVICE B ON LEFT(A.SERVICECD, 5) = B.SERVICECD
+		WHERE   B.ADMIN_ID = #{adminId} AND A.USE_YN='Y'
+		AND     A.SERVICECD = 'EMMA'
+		UNION
+		SELECT  LEFT(SERVICECD, 1) AS groupCd, SERVICENM_LV1 AS groupNm,
+		CONCAT(LEFT(SERVICECD, 4),'X') AS serviceCd, CONCAT('[ ',SERVICENM_LV2,'_',SERVICENM_LV3,CASE WHEN (SELECT COUNT(*) AS CNT FROM UI_SERVICE WHERE SERVICECD = 'EMMA' AND SERVICENM_LV3 REGEXP '[가-힣]') > 0 THEN ' 제외 ]' ELSE ' except ]' END) AS serviceNm,
+		'' AS `inOut`, (SELECT MAX(SORT)+1 FROM UI_SERVICE WHERE LEFT(SERVICECD, 3) = 'EMM' ) AS SORT
+		FROM    UI_SERVICE
+		WHERE   0 =(SELECT COUNT(*) AS CNT FROM UI_ADMIN_SERVICE WHERE ADMIN_ID=#{adminId}) AND USE_YN='Y'
+		AND     SERVICECD = 'EMMA'
 
-          ) as rs
-		<where>
-			<if test='svc1!=null and svc1!=""'>
-	        AND		groupCd = #{svc1}
-	        </if>
-	        <if test='svc1_not!=null and svc1_not!=""'>
-	        AND		NOT FIND_IN_SET (groupCd, #{svc1_not})
-	        </if>
-        </where>
+		) as rs
+		<if test='svc1!=null and svc1!=""'>
+			WHERE groupCd = #{svc1}
+		</if>
 		GROUP	BY groupCd, groupNm, serviceCd, serviceNm
 		ORDER	BY MAX(SORT)
+
 	</select>
-	
+
 	<!-- 서비스 타입 목록 조회(시스템 설정에서 사용) -->
 	<select id="getServiceConfList" resultType="serviceTypeVO" parameterType="hashMap">
 		SELECT  SERVICECD AS serviceCd, SERVICENM_LV1 AS serviceLv1Nm, SERVICENM_LV2 AS serviceLv2Nm,
-				CONCAT(SERVICENM_LV1, ' > ', SERVICENM_LV2, CASE WHEN (LEFT(SERVICECD, 1) = 'E' OR SERVICECD IN ('UWSH', 'UWSM', 'UWSL', 'WLVT', 'WLVS')) AND SERVICENM_LV3 != '' THEN CONCAT(' > ', SERVICENM_LV3) ELSE '' END) AS serviceNm,
-				CONCAT(SERVICENM_LV1, ' > ', SERVICENM_LV2) AS groupNm,
-				IN_OUT AS `inOut`
+		CONCAT(SERVICENM_LV1, ' > ', SERVICENM_LV2, CASE WHEN (LEFT(SERVICECD, 1) = 'E' OR SERVICECD IN ('SNVU','UWSH', 'UWSM', 'UWSL', 'WLVT', 'WLVS')OR LEFT(SERVICECD, 3) = 'CML') AND SERVICENM_LV3 != '' THEN CONCAT(' > ', SERVICENM_LV3) ELSE '' END) AS serviceNm,
+		CONCAT(SERVICENM_LV1, ' > ', SERVICENM_LV2) AS groupNm,
+		IN_OUT AS `inOut`
 		FROM	UI_SERVICE
 		ORDER	BY SORT
 	</select>
-	
+
+
 	<!-- 서비스별 전체 (3dept) 조회 -->
 	<select id="getServiceDeepList" resultType="serviceTypeVO" parameterType="hashMap">
 		SELECT  SERVICECD AS serviceCd, SERVICENM_LV1 AS serviceLv1Nm, SERVICENM_LV2 AS serviceLv2Nm,
@@ -155,12 +152,12 @@
 		FROM	UI_SERVICE
 		WHERE	SERVICECD = #{serviceCd}
 	</select>
-	
+
 	<!-- 서비스 타입 사용 여부 수정 -->
 	<update id="updateServiceUseYn" parameterType="serviceTypeVO">
-		UPDATE	UI_SERVICE 
+		UPDATE	UI_SERVICE
 		SET		USE_YN = #{useYn}
 		WHERE	LEFT(SERVICECD, 3) = #{serviceCd}
 	</update>
-	
+
 </mapper>

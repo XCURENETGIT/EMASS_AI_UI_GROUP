@@ -354,10 +354,13 @@
 			</div>
 
 			<div class="optiotab">
-				<button class="optionBtn active" id="direction_svc" value="direction_svc"><s:message code="condition.receive_send"/></button>
+				<button class="optionBtn active" id="direction_svc" value="direction_svc"><s:message
+						code="condition.receive_send"/></button>
 				<button class="optionBtn" id="ctime_hh" value="ctime_hh"><s:message code="common.msg.time"/></button>
-				<button class="optionBtn" id="ctime_yyyymmdd" value="ctime_yyyymmdd" class="active"><s:message code="common.msg.day"/></button>
-				<button class="optionBtn" id="ctime_yyyymm" value="ctime_yyyymm"><s:message code="common.msg.month"/></button>
+				<button class="optionBtn" id="ctime_yyyymmdd" value="ctime_yyyymmdd" class="active"><s:message
+						code="common.msg.day"/></button>
+				<button class="optionBtn" id="ctime_yyyymm" value="ctime_yyyymm"><s:message
+						code="common.msg.month"/></button>
 				<button class="optionBtn" id="businm" value="businm"><s:message code="common.org.busi"/></button>
 				<button class="optionBtn" id="conm" value="conm"><s:message code="common.org.co"/></button>
 				<button class="optionBtn" id="deptnm" value="deptnm"><s:message code="common.org.dept"/></button>
@@ -696,9 +699,8 @@
         var uv = $('#userVal').val().split('|');
         var user = uv.join(',');
 
-
         var userStr='';
-        if (user != '') userStr = $('#userStr').val();
+        if (user != '') userStr = user;
         else userStr = '';
 
         searchFlag = true;

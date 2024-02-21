@@ -85,11 +85,19 @@
                 fnOpenWindow(url, 'attachText', 1050, 800, 'resize');
             });
 
-            $(document).on('click', '#attachOcrText', function(){
-               var searchkey=$('#searchStrInput').val();
+/*            $(document).on('click', '#attachOcrText', function(){
+  /!*             var searchkey=$('#searchStrInput').val();
                 var msgId = $(this).parents('li').attr('msgid');
                 var attachId = $(this).parents('li').attr('attachhash');
                 var url = contextRoot + '/ems/attachText.do?msgId=' + msgId+ '&attachId=' + attachId + '&searchKey=' + encodeURI(searchkey) + '&ocrYn=Y';
+                fnOpenWindow(url, 'attachText', 1050, 800, 'resize');
+            });*!/*/
+
+            $(document).on('click', '#attachOcrText', function(){
+                var msgId = $(this).parents('li').attr('msgid');
+                var attachId = $(this).parents('li').attr('attachhash');
+                //var url = '<c:url value="/ems/attachText.do?msgId='+msgId+'&attachId='+attachId+'&searchKey='+searchkey+'&ocrYn=Y"/>';
+                var url = contextRoot + '/ems/attachText.do?msgId=' + msgId+ '&attachId=' + attachId + '&searchKey=' + searchkey + '&ocrYn=Y';
                 fnOpenWindow(url, 'attachText', 1050, 800, 'resize');
             });
 

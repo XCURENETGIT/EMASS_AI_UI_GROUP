@@ -123,16 +123,18 @@
             }); //통합 검색 엔터키
 
             $('#searchMsgBtn').click(function () {
+                var svc12 = $('#selectUserInfo').attr('data-svc12');
                 if ($('#searchMsgStrInput').val() == "") $('#searchMsgQueryBtn').click();
-                else eikon2.findMessageList(0,"G");
+                else eikon2.findMessageList(0,svc12);
                 //eikon.getMessengerDetailList($('#xrootmtr').text(),$('#msgid').text(), $('#srcip').text());
             });
             $('#searchMsgQueryBtn').click(function () {
 
                 var srcip = $('#selectUserInfo').attr('data-srcip');
                 var userkey = $('#selectUserInfo').attr('data-name');
+                var svc12 = $('#selectUserInfo').attr('data-svc12');
 
-                eikon2.getCollectionDetailList(userkey, '', srcip, '',"G");
+                eikon2.getCollectionDetailList(userkey, '', srcip, '',svc12);
             });
             $("#searchMsgStrInput").keypress(function (e) {
                 if (e.keyCode == 13) {
@@ -142,12 +144,14 @@
             });
 
             $('#searchMsgUp').click(function () {
-                eikon2.findMessageList(--searchOffset,"G");
+                var svc12 = $('#selectUserInfo').attr('data-svc12');
+                eikon2.findMessageList(--searchOffset,svc12);
 // 		checkList(--searchOffset);
             });
             $('#searchMsgDn').click(function () {
 // 		checkList(++searchOffset);
-                eikon2.findMessageList(++searchOffset,"G");
+                var svc12 = $('#selectUserInfo').attr('data-svc12');
+                eikon2.findMessageList(++searchOffset,svc12);
             });
             $('#listCntArea').click(function () {
                 //if( $('#messageTotalCnt').html() == 0 || $('#messageTotalCnt').html() == '') return;
@@ -347,8 +351,9 @@
 
                 var userkey = $(this).parent().attr('userkey');
                 var srcip = $(this).parent().attr('srcip');
+                var svc12 = $(this).attr('svc12');
                 var id = $(this).parent().attr('id');
-                updateEmassGenerativeAdminUserid(userkey, id, srcip,"G");
+                updateEmassGenerativeAdminUserid(userkey, id, srcip,svc12);
 
                 moveTargetHeight(id, false);
             });
@@ -400,16 +405,18 @@
                 var userkey =  $(this).attr('userkey');
                 var msgid = $(this).attr('msgid');
                 var username= $(this).attr('name');
+                var svc12= $(this).attr('svc12');
 
                 $('#selectUserInfo').attr('data-srcip', srcip);
                 $('#selectUserInfo').attr('data-name', name);
                 $('#selectUserInfo').attr('data-usrid', usr_id);
+                $('#selectUserInfo').attr('data-svc12', svc12);
 
                 $('#selectUserInfo').html(userkey+"("+username+")");
                 $('#subchatid').html(": "+name);
                 $('#srcip').text(srcip);
                 $('#usr_id').text(usr_id);
-                eikon2.getCollectionDetailList(userkey, msgid, srcip, usr_id,"G");
+                eikon2.getCollectionDetailList(userkey, msgid, srcip, usr_id,svc12);
                 hideUserSelect();
             });
 

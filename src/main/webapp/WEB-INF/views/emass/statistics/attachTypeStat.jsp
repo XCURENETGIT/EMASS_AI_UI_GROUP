@@ -680,7 +680,7 @@
 
 
         var userStr='';
-        if (user != '') userStr = $('#userStr').val();
+        if (user != '') userStr = user;
         else userStr = '';
 
         searchFlag = true;

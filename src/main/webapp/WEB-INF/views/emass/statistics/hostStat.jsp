@@ -657,13 +657,11 @@
         var deptStr='';
         if (dept != '') deptStr = $('#deptStr').val();
         else deptStr = '';
-
         var uv = $('#userVal').val().split('|');
         var user = uv.join(',');
 
-
         var userStr='';
-        if (user != '') userStr = $('#userStr').val();
+        if (user != '') userStr = user;
         else userStr = '';
 
 
