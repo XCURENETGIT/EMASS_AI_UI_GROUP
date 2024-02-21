@@ -229,7 +229,7 @@
 								<select class="form-control"><option value=""></option></select>
 								<select class="form-control"><option value=""><s:message code="analysis.freedom.ui.size"/></option></select>
 								<select class="form-control"><option value="">>=</option></select>
-								<span><input type="text" class="form-control" style="width: 250px;" value="1000000" /></span>
+								<span><input type="text" class="form-control" style="width: 250px;" value="1" /></span>
 								<select class="form-control"><option value=""></option></select>
 							</div>
 						</div>
@@ -240,7 +240,7 @@
 								<select class="form-control"><option value="">(</option></select>
 								<select class="form-control"><option value=""><s:message code="analysis.freedom.ui.size"/></option></select>
 								<select class="form-control"><option value="">>=</option></select>
-								<span><input type="text" class="form-control" style="width: 250px;" value="1000000" /></span>
+								<span><input type="text" class="form-control" style="width: 250px;" value="1" /></span>
 								<select class="form-control"><option value=""></option></select>
 							</div>
 							<div class="form-inline">
@@ -248,7 +248,7 @@
 								<select class="form-control"><option value=""></option></select>
 								<select class="form-control"><option value=""><s:message code="analysis.freedom.ui.size"/></option></select>
 								<select class="form-control"><option value=""><=</option></select>
-								<span><input type="text" class="form-control" style="width: 250px;" value="1000000000" /></span>
+								<span><input type="text" class="form-control" style="width: 250px;" value="10" /></span>
 								<select class="form-control"><option value="">)</option></select>
 							</div>
 							<div class="form-inline">
