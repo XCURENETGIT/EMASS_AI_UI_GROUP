@@ -1335,7 +1335,8 @@
 			<%--			금일 첨부파일 수집 현황 시작!!--%>
 			<div class="graphaBox">
 				<h3><s:message code="dashboard.msg.todayFileType"/></h3>
-				<div class="bordd">
+<%--				<div class="bordd"  style="display: flex;justify-content: center; align-items: center">--%>
+				<div class="bordd" style=" min-width: 400px; box-sizing: border-box; width: 100%">
 					<div class="main_tab">
 						<button class="tablink excel" onclick="openCity('xlsx', this, '#268770')" id="defaultOpen">EXEL</button>
 						<button class="tablink word" onclick="openCity('doc', this, '#3770C3')">DOC</button>

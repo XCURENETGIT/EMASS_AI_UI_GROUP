@@ -6,18 +6,22 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.locale.Prop;
+import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.io.IOUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.ResourceLoader;
 
 import java.io.*;
-import java.util.Objects;
 
+@Slf4j
 public class PdfWriter {
 
+	private ResourceLoader resourceLoader;
 
 	private String title;
 
@@ -264,18 +268,19 @@ public class PdfWriter {
 	}
 
 	public static void main(String[] args) throws FileNotFoundException, Exception {
-		new PdfWriter("개별 통신 내역", null, null, new FileOutputStream(new File("d://aaaa.pdf")));
+		//	new PdfWriter("개별 통신 내역", null, null, new FileOutputStream(new File("d://aaaa.pdf")));
+
 	}
 
+
 	public BaseFont getFontPath(String fontName) throws DocumentException, IOException {
-		if (Common.isWindow())
-			return BaseFont.createFont(Objects.requireNonNull(this.getClass().getResource("")).getPath() + pathReplace("../../files/font/" + fontName), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-		else return BaseFont.createFont("/users/emassai/conf/font/" + fontName, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+		byte[] bytes = IOUtils.toByteArray(new ClassPathResource("/com/xcurenet/files/font/"+fontName).getInputStream());
+		return BaseFont.createFont(fontName, BaseFont.IDENTITY_H, BaseFont.EMBEDDED,true,bytes,null);
 	}
 
 	public Font getFont(String fontName) throws DocumentException, IOException {
-		if (Common.isWindow()) return FontFactory.getFont(pathReplace("path/to/" + fontName), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-		else return FontFactory.getFont("/users/emassai/conf/font/" + fontName, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+		FontFactory.register("/resources/static/fonts/woff2/" + fontName, fontName);
+		return FontFactory.getFont(fontName);
 	}
 
 	public String pathReplace(String str) {

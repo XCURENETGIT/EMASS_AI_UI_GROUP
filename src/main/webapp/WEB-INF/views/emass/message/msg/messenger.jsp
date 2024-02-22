@@ -1144,19 +1144,19 @@
 					</div>
 
 					<div style="display: flex;">
-						<div style="width: 450px;">
+						<div style=" min-width: 250px; box-sizing: border-box; width: 100%" >
 								<span><s:message code="condition.xrootmtr"/>: <span class="chatid"><span id="xrootmtr"></span><span id="srcip" style="display:none;"></span><span
 										id="usr_id" style="display:none;"></span><span id="msgid" style="display:none;"></span></span></span>
 						</div>
 
-						<div style="display: flex;">
+						<div  style=" min-width: 250px; box-sizing: border-box; width: 100%">
 							<span> <s:message code="condition.user"/> : </span>
-							<div title="<s:message code="condition.user"/>" id="userCntArea">
-								<div style="position: relative;display:block;padding-right: 10px;">
+							<span title="<s:message code="condition.user"/>" id="userCntArea">
+								<span>
 									<span id="selectUserInfo" data-srcip="" data-name="" data-usrid="">-</span>
 									<span class="bs-caret"><span class="caret"></span></span>
-								</div>
-							</div>
+								</span>
+							</span>
 							<ul class="dropdown-menu" role="menu" style="min-width: 150px;position: absolute;left:500px; top:35px;"
 							    id="selectUser_menu"></ul>
 						</div>
