@@ -368,7 +368,7 @@
 				<div>
 					<ul class="nav nav-tabs codeTab listChart">
 						<li class="active"><a data-toggle="tab" href="#privateChart"><s:message code="analysis.infostat.chart"/></a></li>
-						<li class=""><a data-toggle="tab" href="#privateDetail"><s:message code="analysis.infostat.list"/></a></li>
+						<li class=""><a data-toggle="tab" href="#privateDetail"><s:message code="analysis.infostat.list"/><span class="resultCnt"></span></a></li>
 					</ul>
 				</div>
 			</div>
@@ -879,6 +879,7 @@
             userStr: userStr,
             success: function (data, total) {
 				grid2.setData(data);
+                $(".resultCnt").html('('+addCommas(total)+')');
 				var nodes = [];
 				var edges = [];
 				if (pi_total === 0) {
