@@ -167,7 +167,7 @@ $(document).ready(function(){
 		selectDetailList('N');
 	});
 	
-	colInit2('N');
+	// colInit2('N');
 });
 function selectDateCount(){
 	var startDate = $('#startDate').val();	
@@ -416,7 +416,7 @@ function eventEnterSearch(event) {
 			$('#detailCnt').html('');
 			$('.resultCnt').html('');
 			colInit();
-			colInit2('Y');
+			// colInit2('Y');
 		}
 
 		var selectDate = '';

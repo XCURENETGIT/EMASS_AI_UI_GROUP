@@ -152,8 +152,8 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 
 	@Override
 	public List<UsageChartVO> selectUsageChart(SearchVO searchVO) throws Exception {
-		searchVO.setStartDate(searchVO.getStartDate().replaceAll("-", "") + "00");
-		searchVO.setEndDate(searchVO.getEndDate().replaceAll("-", "") + "23");
+		searchVO.setStartDate(searchVO.getStartDate().replaceAll("-", "") + "000000");
+		searchVO.setEndDate(searchVO.getEndDate().replaceAll("-", "") + "235959");
 
 		List<UsageChartSchedulerVO> dataList = new ArrayList<>();
 		List<UsageChartSchedulerVO> dataAverageList = new ArrayList<>();
@@ -250,7 +250,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 				break;
 			//메일수
 			case "inMail":
-				query.and().beforeParen().add("svc", "M*", false).or().add("svc", "EMM*", false).afterParen();
+				query.and().beforeParen().add("svc", "M*", true).or().add("svc", "EMM*", false).afterParen();
 				sq.setParam("group.field", "sender_str");
 				sq.setParam("facet.field", "size");
 				sq.setFacetSort("size");

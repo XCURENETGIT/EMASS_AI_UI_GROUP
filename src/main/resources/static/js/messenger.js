@@ -117,8 +117,8 @@ var eikon = {
         ui.get({
             url : 'getMessengerGroupUserList.xcn',
             xrootmtr : xRootmtr,
-            startDt : startDt,
-            endDt : endDt,
+            startDt : startDt+"000000",
+            endDt : endDt+"235959",
             groupField : 'userkey',
             success : function(data, total) {
                 participantDataSet = data.groups;
@@ -267,8 +267,8 @@ function getMessengerMessageTotal(xRootmtr, srcip, startDt, endDt, usr_id, msgid
         url: 'getMessengerMessageTotal.xcn',
         xRootMtr: xRootmtr,
         // srcip: srcip,
-        startDt: startDt,
-        endDt: endDt,
+        startDt: startDt+"000000",
+        endDt: endDt+"235959",
         usr_id: usr_id, //기준이 srcip에서 usr_id로 변경되면서 마지막 데이터 기준 변경
         limit: 0,
         success: function (data, total) {
@@ -301,8 +301,8 @@ function getMessengerMessage(xRootmtr, srcip, usr_id, msgid) {
         url: 'getMessengerMessage.xcn',
         xRootMtr: xRootmtr,
         srcip: srcip,
-        startDt: startDt,
-        endDt: endDt,
+        startDt: startDt+"000000",
+        endDt: endDt+"235959",
         usr_id: usr_id,
         msgId: nvl(msgid),
         limit: detailLimit,
