@@ -3582,7 +3582,7 @@
 
     /* 정규 표현식 */
     var regexSearchGrid = new Xgrid('regexSearchGrid', contextRoot);
-    regexSearchGrid.colAdd('regexPatternName', '<s:message code="condition.regex"/>', 300, 'left', false, 'link');
+    regexSearchGrid.colAdd('regexPatternName', '<s:message code="regexPattern.name"/>', 300, 'left', false, 'link');
     regexSearchGrid.colAdd('regexPattern', '<s:message code="condition.regex"/>', 300, 'left', true, 'link');
     regexSearchGrid.loadHeader(true);
     regexSearchGrid.initData('<s:message code="common.msg.search.click"/>');
