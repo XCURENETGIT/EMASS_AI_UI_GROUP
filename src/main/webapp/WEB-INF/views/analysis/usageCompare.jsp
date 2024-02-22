@@ -367,14 +367,17 @@ function eventEnterSearch(event) {
 
 		var grid2 = new Xgrid('detailListGrid', contextRoot, 26, {commonId:'selectTotalList', status_cnt_id:'#detailCnt', more_btn:'slick_grid_more_btn'});
 
-		function colInit2(reloadYN) {
+		// function colInit2(reloadYN) {
 			grid2.colInit();
 			initGrid(grid2, messageGridColumn);
-			if(reloadYN != 'Y') {
+            grid2.loadHeader(false)
+
+			<%--if(reloadYN != 'Y') {--%>
+                grid2.loadHeader(false);
 				grid2.loadExportMenu('<s:message code="analysis.usagecompare.ui.datacompareanalysis"/>');
-				grid2.loadPageSize();
-			}
-		}
+			<%--	grid2.loadPageSize();--%>
+			<%--}--%>
+		// }
 
 		function getUsageChart() {
 			if($('#startDate').val() > $('#endDate').val()) {
