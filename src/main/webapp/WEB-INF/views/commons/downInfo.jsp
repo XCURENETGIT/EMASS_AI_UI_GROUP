@@ -62,6 +62,7 @@
 				offset 		: grid.data.length,
 				limit 		: grid.pageSize,
 				success 	: function(data, total) {
+                    console.log(data);
 					grid.appendData(data);
 					if($('input[name="autoRefresh"]').is(":checked")) {
 						window.setTimeout(function(){
@@ -252,8 +253,11 @@
 	});
 	grid.colAdd('downVal', '<s:message code="common.msg.download"/> <s:message code="analysis.freedom.ui.condition"/>', 300, 'left', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
 		var statStr = grid.getValue(row, 'statusStr');
-		if( statStr == 'X' ) return '<span class="deleteText">' + value.replaceAll('┌', '<br>') + '</span>';
-		else return value.replaceAll('┌', '<br>');
+        console.log(value);
+        let modifiedString = value.replace(/\[.*?\]┌/, '');
+        // console.log(modifiedString);
+		if( statStr == 'X' ) return '<span class="deleteText">' + modifiedString.replaceAll('┌', '<br>') + '</span>';
+		return modifiedString.replaceAll('┌', '<br>');
 	});
 	grid.colAdd('downStatus', '<s:message code="download.msg.progress"/> <s:message code="deviceInfo.status"/>', 150, 'center', false, 'nomal', function ( row, cell, value, columnDef, dataContext ) {
 		var progClass = "";
@@ -285,7 +289,9 @@
 		else return value;
 	});
 	grid.colAdd('statusStr', '<s:message code="common.msg.download"/>', 80, 'center', false, 'nomal', function ( row, cell, value, columnDef, dataContext ) {
-		if(value=='S') return '<s:message code="common.msg.start"/>';
+        var downVal = grid.getValue(row, 'downVal');
+        let newDown = downVal.match(/\[(.*?)\]/)?.[1];
+        if(value=='S') return '<s:message code="common.msg.start"/>';
 		else if(value=='I') return '<s:message code="download.msg.progressing"/>';
 		else if(value=='Y') {
 			var downPath = grid.getValue(row, 'downFilePath');
@@ -294,7 +300,10 @@
 		}
 		else if(value=='X') return '<span class="deleteText"><s:message code="download.msg.expired"/></span>';
 		else if(value=='E') return '<s:message code="common.msg.noresult"/>';
-		else if(value=='C') return '<s:message code="common.msg.cancel"/>';
+		else if(value=='C'){
+            if (newDown != null) return newDown;
+            else return '<s:message code="common.msg.cancel"/>';
+        }
 		else if(value=='H') return '<s:message code="download.msg.shutdown"/>';
 		else if(value=='M') return '<s:message code="download.msg.monitor"/>';
 		return '';
