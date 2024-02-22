@@ -393,7 +393,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 					}
 				}else {
 					result.add(vo);
-					break;
+
 				}
 		}
 		return result;
