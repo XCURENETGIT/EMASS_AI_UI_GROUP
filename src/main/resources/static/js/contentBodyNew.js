@@ -955,7 +955,7 @@ function getEmassPatternDetail(obj, piId, type, attachName){
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-function getMessage(id, search, bodySize, kHighlight, hostQueryUse){
+function getMessage(id, search, bodySize, kHighlight, hostQueryUse ){
 	$('#infoDiv').hide();
 	if(opener) $('#openBigContent').hide();
 	else $('#openBigContent').show();
@@ -971,6 +971,7 @@ function getMessage(id, search, bodySize, kHighlight, hostQueryUse){
 	ui.get({
 		url : 'getEmassMessageNew.xcn',
 		msgId : msgId,
+		consentUserId : parent.$('#consentUserId').val(),
 		success : function(data, total) {
 			setRead(data); //읽음 여부 처리
 			setMessage(data);

@@ -76,4 +76,6 @@ public interface EmsMessageService {
 	public List<CodeVO> getFileServiceList();
 
 	List<RelationKeywordVO>  getRelationKeywordList(String searchKeyword);
+
+	boolean beforeConsentCheck(final String msgId, final String firstAdminYn, final String adminType,final String consentUserId);
 }

@@ -697,7 +697,7 @@
 			var obj = parent.getIframeBodyObj();
 			var kHigh = parent.keywordHighlight;
 			var hostQuery = parent.hostQuery;
-			obj.getMessage(msgid, searchKeyword(), bodySizeNum, kHigh.toString(), hostQuery.toString());
+			obj.getMessage(msgid, searchKeyword(), bodySizeNum, kHigh.toString(), hostQuery.toString()); //동의서 아이디
 			obj.$('#detailPatternDiv, #imgPreviewDiv').hide();
 			obj.initHighlight();
 		}else{

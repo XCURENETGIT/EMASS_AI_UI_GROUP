@@ -71,6 +71,11 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		return emsMessageConvert.convertData(mongo.selectId(msgId, EmassMessageData.class));
 	}
 
+	private EmsMessageVO getUserInfo(final String msgId) {
+		return emsMessageConvert.getUserInfoData(mongo.selectId(msgId, EmassMessageData.class));
+	}
+
+
 	@Override
 	public EmsBodyVO getEmassBody(String msgId, String firstAdminYn, String adminType) {
 		EmsMessageVO data = getEmassMessageData(msgId);
@@ -393,7 +398,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 					}
 				}else {
 					result.add(vo);
-
+					break;
 				}
 		}
 		return result;
@@ -636,6 +641,25 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		Map<String, String> param = new HashMap<>();
 		param.put("searchKeyword", searchKeyword);
 		return selectList("com.xcurenet.sqlmap.mappers.mysql.searchWord.getRelationKeywordList", param);
+	}
+
+	@Override
+	public boolean beforeConsentCheck(String msgId, String firstAdminYn, String adminType, String consentUserId) {
+		EmsMessageVO emsMessageVO = getUserInfo(msgId);
+		boolean consentFlag = Config.getBoolean("consent.menu.enable");
+		boolean consentRtnFlag = false;
+
+		if (!consentFlag || Common.isEquals(firstAdminYn, "Y")) return true;
+		if (Common.isNotEquals(firstAdminYn, "Y") && Common.isNotEquals(adminType, "C") && !Common.isEmpty(consentUserId)) {
+			List<ConsentVO> consentList = consentService.getConsentSearchList("", "");
+			for (ConsentVO consent : consentList) {
+				if (Common.isEquals(emsMessageVO.getUserId(), consent.getUserId()) && consent.getUserId().equals(consentUserId)  ) {
+					consentRtnFlag = true;
+					break;
+				}
+			}
+		}
+		return consentRtnFlag;
 	}
 
 

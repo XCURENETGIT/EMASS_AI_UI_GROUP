@@ -1,21 +1,18 @@
 package com.xcurenet.emass.message.service.impl;
 
 import com.xcurenet.common.util.Common;
-import com.xcurenet.common.util.config.Config;
 import com.xcurenet.emass.message.service.*;
 import com.xcurenet.emass.message.service.vo.EmassAttachData;
 import com.xcurenet.emass.message.service.vo.EmassMessageData;
 import com.xcurenet.emass.message.service.vo.EmassPiData;
 import com.xcurenet.user.service.UserService;
 import com.xcurenet.user.service.UserVO;
-import org.apache.cxf.wsdl11.SOAPBindingUtil;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -167,6 +164,41 @@ public class EmsMessageConvert {
 
 		vo.setEpmsgType(data.getEpmsgType());
 		vo.setKeywordInfo(data.getKeywordInfo());
+		return vo;
+	}
+
+	/* 사용자 정보 */
+	public EmsMessageVO getUserInfoData(EmassMessageData data) {
+		if(null == data) {data = new EmassMessageData();} // null err방지
+		EmsMessageVO vo = new EmsMessageVO();
+		if(data.getUserInfo() != null) {
+			String email = "";
+			String ip = "";
+			UserVO userVO = userService.getUseridbyEmailIp(data.getUserInfo().getUserId());
+			if (userVO != null && userVO.getUserIp() != null) {
+				email = userVO.getUserEmail();
+				ip = userVO.getUserIp();
+			}
+			data.getUserInfo().setEmail(email);
+			data.getUserInfo().setIp(ip);
+			vo.setUser(data.getUserInfo().getId());
+			vo.setUserId(data.getUserInfo().getUserId());
+			vo.setName(data.getUserInfo().getName());
+			vo.setCoCd(data.getUserInfo().getCoCd());
+			vo.setIpCocd(data.getUserInfo().getIpCoCd());
+			vo.setSubOrgCd(data.getUserInfo().getSuborgCd());
+			vo.setBusiCd(data.getUserInfo().getBusiCd());
+			vo.setBusiNm(data.getUserInfo().getBusiNm());
+			vo.setIpBusicd(data.getUserInfo().getIpBusiCd());
+			vo.setIpBusiNm(data.getUserInfo().getIpBusiNm());
+			vo.setIpDeptcd(data.getUserInfo().getIpDeptCd());
+			vo.setIpDeptNm(data.getUserInfo().getIpDeptNm());
+			vo.setIpDeptcd(data.getUserInfo().getDeptCd());
+			vo.setJikgubCd(data.getUserInfo().getJikgubCd());
+			vo.setInSide(data.getUserInfo().getInside());
+			vo.setCeo(data.getUserInfo().getCeo());
+			vo.setUserList(getUserInfo(data.getUserInfo(), data.getMsgId(), "U"));
+		}
 		return vo;
 	}
 
