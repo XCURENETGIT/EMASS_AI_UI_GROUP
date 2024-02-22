@@ -1538,7 +1538,7 @@
 							<i class="fa fa-bar-chart-o fa-fw"></i> CPU &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							<label for="sms_file_cpu"><input class="checkbox" type="checkbox" style="margin-left: 8px;" id="sms_file_cpu"><span class=" checktit">SMS</span></label>
 							<label class="notify_file_cpu"><input class="checkbox" type="checkbox" style="margin-left: 8px;" id="notify_file_cpu"><span class=" checktit"><s:message code="deviceInfo.alarm"/></span></label>
-							<label>(<s:message code="deviceInfo.set.alarm.critical"/>)</label>
+							<label>(<s:message code="deviceInfo.set.alarm.change.critical"/>)</label>
 							<span style="float: right;">
 									<a href="javascript:void(0)" class="alertChangeCpu"><span
 											class="glyphicon glyphicon-bell" style=" color: black;" title=""></span>;&nbsp;</a>
@@ -1556,7 +1556,7 @@
 							<label for="sms_file_mem"><input class="checkbox" type="checkbox" style="margin-left: 8px;" id="sms_file_mem"><span class=" checktit">SMS</span></label>
 							<label class="notify_file_mem"><input class="checkbox" type="checkbox" style="margin-left: 8px;" id="notify_file_mem"><span class=" checktit"><s:message
 									code="deviceInfo.alarm"/></span></label>
-							<label>(<s:message code="deviceInfo.set.alarm.critical"/>)</label>
+							<label>(<s:message code="deviceInfo.set.alarm.change.critical"/>)</label>
 							<span style="float: right;">
 									<a href="javascript:void(0)" class="alertChangeMemory"><span
 											class="glyphicon glyphicon-bell" style=" color: black;" title=""></span>;&nbsp;</a>
@@ -1622,7 +1622,7 @@
 										class=" checktit">SMS</span></label>
 								<label class="notify_inter"><input class="checkbox" type="checkbox" id="notify_file" style="margin-left: 8px;"><span class=" checktit"><s:message
 										code="deviceInfo.alarm"/></span></label>
-								<label>(<s:message code="deviceInfo.set.alarm.critical"/>)</label>
+								<label>(<s:message code="deviceInfo.set.alarm.change.critical"/>)</label>
 							</div>
 						</div>
 						<div class="panel-body" id="hddInfoTable">
@@ -1640,7 +1640,7 @@
 										class=" checktit">SMS</span></label>
 								<label class="notify_proc"><input class="checkbox" type="checkbox" id="notify_proc" style="margin-left: 8px;"><span class=" checktit"><s:message
 										code="deviceInfo.alarm"/></span></label>
-								<label>(<s:message code="deviceInfo.set.alarm.critical"/>)</label>
+								<label>(<s:message code="deviceInfo.set.alarm.change.critical"/>)</label>
 							</div>
 						</div>
 						<div class="panel-body">
