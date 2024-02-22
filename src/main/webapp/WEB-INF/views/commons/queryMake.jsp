@@ -799,6 +799,7 @@
 						break;
 					case "work":
 						if($('#work:checked').length > 0) {
+                            console.log($('#work:checked').val());
 							addQueryText=queryAddMinus + "work:" + $('#work:checked').val();
 						}
 						break;
@@ -1475,8 +1476,8 @@
 									<th><s:message code="condition.ctimework"/></th>
 									<td>
 										<div class="btn-group filterBtn" data-toggle="buttons">
-											<label class="btn btn-xs btn-default active"><input type="radio" class="border-radius-none" id="work" value="W" checked> <s:message code="condition.work"/></label>
-											<label class="btn btn-xs btn-default"><input type="radio" class="border-radius-none" id="work" value="R"> <s:message code="condition.notwork"/></label>
+											<label class="btn btn-xs btn-default active"><input type="radio" class="border-radius-none" name="work" id="work" value="W" checked> <s:message code="condition.work"/></label>
+											<label class="btn btn-xs btn-default"><input type="radio" class="border-radius-none"name="work" id="work" value="R"> <s:message code="condition.notwork"/></label>
 										</div>
 									</td>
 									<td><button type="button" class="btn btn-xs btn-success queryAdd" data-queryType="work">AND</button></td>
