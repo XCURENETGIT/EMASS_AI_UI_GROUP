@@ -107,7 +107,7 @@
 	<div class="boxArea" style="min-height:inherit;">
 		<div class="content_body">
 			<div class="p20">
-				<h2><span class="bullet02"></span><s:message code="common.msg.similar"/></h2>
+				<h2><span class="bullet02"></span><s:message code="consent.select.consent"/></h2>
 				<div class="searchKeywordSearch" style="margin-top:30px;">
 					<select class="condition_select" id="consentType" name="consentType">
 						<option value="">- <s:message code="consent.type.consent"/> -</option>
