@@ -2,12 +2,15 @@
 <%@ include file="/WEB-INF/fragments/baseScript.jsp" %>
 <link rel="stylesheet" href="<c:url value="/css/dashboard.css"/>"/>
 <style>
+
+
+
 	.filename{
 		display: block;
 		overflow: hidden;
 		white-space: nowrap;
 		text-overflow: ellipsis;
-		max-width: 8em;
+		max-width: 4em !important;
 	}
 
 	.name{
@@ -15,7 +18,7 @@
 		overflow: hidden;
 		white-space: nowrap;
 		text-overflow: ellipsis;
-		max-width: 8em;
+		max-width: 6em;
 	}
 
 	.files :hover{
