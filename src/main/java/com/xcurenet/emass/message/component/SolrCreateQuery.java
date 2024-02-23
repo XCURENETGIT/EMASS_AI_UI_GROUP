@@ -931,8 +931,8 @@ public class SolrCreateQuery {
 
 	public SolrCreateQuery setWork(String work) {
 		if (Common.isEmpty(work)) return this;
-
-		return addQuery(String.format("%s%s:%s", AND_QUERY, WORK, work));
+		if(work.equals("R")) work = work.concat(",H");
+		return addQuery(String.format("%s%s:%s", AND_QUERY, WORK, createOrQuery(work)));
 	}
 
 	public SolrCreateQuery setDrmYn(String drmYn) {
