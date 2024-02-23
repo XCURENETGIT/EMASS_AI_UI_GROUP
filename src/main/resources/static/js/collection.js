@@ -1133,7 +1133,7 @@ function HighSerarchlight( ) {
         var searchs = $('#searchMsgStrInput').val().split(/\||\+|\s|\*|\"/);
 
         if ( searchs.length > 0 ){
-            var timeline_list_obj =  $("#timeline_list").find('div');
+            var timeline_list_obj = $("#timeline_list").find('.me, .you');
             console.log(timeline_list_obj)
             for ( var i=0 ; i < searchs.length ; i++ ) {
                 if ( searchs[i] == '' ) continue;
