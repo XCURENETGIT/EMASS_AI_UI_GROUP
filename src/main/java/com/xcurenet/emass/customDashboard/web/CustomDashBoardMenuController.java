@@ -42,11 +42,9 @@ public class CustomDashBoardMenuController {
 	@Description("DashBoard 페이지")
 	public String dashboard(final CustomDashboardMenuVO customDashboardMenuVo, final HttpSession session) {
 		customDashboardMenuVo.setAdminId(Common.getAdminId(session));
-		CustomDashboardMenuVO results = customDashBoardService.getDefaultDashBoardContent(customDashboardMenuVo);
-		System.out.println(results);
-
-		if(Common.isNotEmpty(results)) {
-			if (Common.isEquals(customDashBoardService.isDefaultDashboard(results),"true")){ //디폴트 일때
+		List<CustomDashboardMenuVO> result = customDashBoardService.getDashBoardMenuList(customDashboardMenuVo);
+		if(CollectionUtils.isNotEmpty(result)) {
+			if (Common.isEquals(customDashBoardService.isDefaultDashboard(customDashboardMenuVo),"true")){ //디폴트 일때
 				return "/emass/dashboard_default";
 			}else{ //디폴트 아닐때
 				return "/emass/dashboard";
