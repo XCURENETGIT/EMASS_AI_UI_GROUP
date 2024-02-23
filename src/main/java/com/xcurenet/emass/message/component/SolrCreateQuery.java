@@ -99,6 +99,7 @@ public class SolrCreateQuery {
 	public static final String WORK = "work";
 	public static final String DRM = "pi_DRM";
 	public static final String ATTACH_EXIST_CNT = "attachexistcnt";
+	public static final String ATTACH_CNT = "attachcnt";
 	public static final String SCT = "pi_sct";
 	public static final String ALLOFUS = "allofus";
 	public static final String LTIME = "ltime";
@@ -689,8 +690,9 @@ public class SolrCreateQuery {
 		//첨부가 있는 경우에만 실제 존재 및 drm 기능 확인
 		if(Common.isEquals(attachYn, "Y")){
 
-			if (Common.isEquals(realAttYn, "Y")) realyAttQueryStr.append(String.format("%s%s:%s", AND_QUERY, ATTACH_EXIST_CNT, "[ 1 TO * ]"));
-			else if (Common.isEquals(realAttYn, "N")) realyAttQueryStr.append(String.format("%s%s:%s", AND_QUERY, ATTACH_EXIST_CNT, "0"));
+			if (Common.isEquals(realAttYn, "Y")) realyAttQueryStr.append(String.format("%s%s:%s", AND_QUERY, ATTACH_EXIST_CNT, ">0"));
+			else if (Common.isEquals(realAttYn, "N")) realyAttQueryStr.append(String.format("%s%s:%s ", AND_QUERY, ATTACH_EXIST_CNT, "0").concat(String.format("%s%s:%s", AND_QUERY, ATTACH_CNT, "0")));
+
 
 			if (Common.isEquals(drmYn, "Y")) drmQueryStr.append(String.format("%s%s:%s", AND_QUERY, DRM, ">0"));
 			else if (Common.isEquals(drmYn, "N")) drmQueryStr.append(String.format("%s%s:%s", EXCEPT_QUERY, DRM, ">0"));
