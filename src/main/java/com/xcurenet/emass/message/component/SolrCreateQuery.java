@@ -977,7 +977,7 @@ public class SolrCreateQuery {
 	 * @return
 	 */
 	public SolrCreateQuery setOcr(String OCRYn) {
-		String queryStr = "[1 TO *]";
+		String queryStr = ">0";
 		if (Common.isEmpty(OCRYn)) return this;
 		if( Common.isEquals(OCRYn, "Y")) return addQuery(String.format("%s%s:%s", AND_QUERY, OCR_ATTACH_CNT, queryStr));
 		else if( Common.isEquals(OCRYn, "N")) return addQuery(String.format("%s%s:%s", EXCEPT_QUERY, OCR_ATTACH_CNT, queryStr));

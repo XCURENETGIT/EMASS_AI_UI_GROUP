@@ -222,14 +222,14 @@
 			}
 
 			if( infoFeedbackConf == 'true' && infoFeedbackYn == 'Y' ){
-				$('#infoFeedbackTr, #recommendBtn').show();
+				$('#infoFeedbackTr').show();
 				$('#docTr').hide();
 				if( infoHynixConf == 'true'){
-					$('#infoFeedbackTr, #recommendBtn').hide();
+					$('#infoFeedbackTr').hide();
 					$('#docTr').show();
 				}
 			} else{
-				$('#infoFeedbackTr, #recommendBtn').hide();
+				$('#infoFeedbackTr').hide();
 			}
 
 			$('.fold_clickTr').click(function(){
