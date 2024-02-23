@@ -300,7 +300,6 @@ function getMessengerMessage(xRootmtr, srcip, usr_id, msgid) {
     ui.get({
         url: 'getMessengerMessage.xcn',
         xRootMtr: xRootmtr,
-        srcip: srcip,
         startDt: startDt+"000000",
         endDt: endDt+"235959",
         usr_id: usr_id,
@@ -871,7 +870,7 @@ function makeList(nextFlag) {
         str += ' <div class="bubbleDate mat4">';
         str += '<span>' + obj.sender + '</span> &nbsp';
         str += '<span>' + obj.ctime + '</span> &nbsp';
-        str += '<span style="border: 1px solid #ccc;">' + makeMessengerText(obj.svc) + '</span>';
+        str+='<span class="mal4">'+makeMessengerText(obj.svc)+'</span>';
         str += '</div></div>';
         str += '</li>';
     }
@@ -1040,7 +1039,7 @@ function viewDate(dateStr) {
 
 function checkList(cnt) {
 //	selectedSearchData = cnt;
-    getMessengerMessage($('#xrootmtr').text(), $('#selectUserInfo').attr('data-srcip'), $('#selectUserInfo').attr('data-usrid'), focusMsgId);
+    getMessengerMessage($('#xrootmtr').text(), $('#srcip').text(), $('#selectUserInfo').attr('data-usrid'), focusMsgId);
     $('#selectCnt').html(cnt + 1);
 }
 
