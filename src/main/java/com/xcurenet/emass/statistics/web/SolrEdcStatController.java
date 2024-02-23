@@ -398,6 +398,7 @@ public class SolrEdcStatController {
 		sq.setQuery(query);
 		sq.setStart(0);
 		sq.setRows(0);
+		sq.setFacetLimit(limit);
 		sq.setFacet(true);
 		sq.setFacetMinCount(1);
 		sq.setFacetSort("count");
@@ -413,13 +414,21 @@ public class SolrEdcStatController {
 		List<Map<String, Object>> list = solrCheckedStatVo.getPivotData();
 		Map<String, Object> totalItem = new HashMap<>();
 		long allTotal = 0;
-		if (list.isEmpty()) return;
+		if (list.size() == 0) return;
 		for (Map<String, Object> item : list) {
 			rowKey.add(Common.nvl(item.get("rowKey")));
 		}
+		StringBuilder resultBuilder = new StringBuilder();
+		String rows = Common.join(rowKey, " ");
+		String[] ro = rows.split(" ");
+		for (String s:ro){
+			resultBuilder.append("(");
+			resultBuilder.append(s);
+			resultBuilder.append(")");
+		}
 
 		SolrQuery edcSolrQuery = new SolrQuery();
-		edcSolrQuery.setQuery(String.format("+%s:(%s)", yAxis, Common.join(rowKey, " ")));
+		edcSolrQuery.setQuery(String.format("+%s:(%s)", yAxis, resultBuilder));
 		edcSolrQuery.setStart(0);
 		edcSolrQuery.setRows(0);
 		edcSolrQuery.setFacet(true);
@@ -433,7 +442,7 @@ public class SolrEdcStatController {
 		for (Map<String, Object> checkedItem : list) {
 			String key = Common.nvl(checkedItem.get("rowKey"));
 			allTotal += Common.nvz(checkedItem.get("total"));
-			for (String header : solrCheckedStatVo.getPivotHeader()) {
+			for(String header : solrCheckedStatVo.getPivotHeader()) {
 				totalItem.put(Common.nvl(header), Common.nvz(totalItem.get(header)) + Common.nvz(checkedItem.get(header)));
 			}
 			for (Map<String, Object> edcItem : edcAll) {
@@ -474,8 +483,8 @@ public class SolrEdcStatController {
 			if (t.length > 0) {
 				String values = "";
 				for (String value : t) {
-					values += "\""+value.replaceAll("시", "")+"\" ";
-//					values += "\"" + value + "\" ";
+
+					values += "\"" + value + "\" ";
 				}
 				if (Yflag.equals("N")) {
 					yAxis = "svc12";
@@ -491,7 +500,6 @@ public class SolrEdcStatController {
 
 			}
 		}
-
 
 		if (Common.isEquals(dateType,"date"))query += String.format(" +checked.readTime:[%s TO %s]", startDate, endDate);
 		else query +=String.format(" +ctime:[%s TO %s]", startDate, endDate);

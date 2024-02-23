@@ -218,6 +218,27 @@
                 eikon2.getCollectionGroupTextExport('<c:url value="/getCollectionGroupAllExport.xcn"/>?userkey=' + userkey + '&srcip=' + srcip + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr+'&limit=1000&facet_detail=true&type=N&export=true');
                 hideSelect();
             });
+            $(document).on('click', '.filesdown', function () {
+                var msgId = $(this).parents('p').attr('msgid');
+                var attachHash = $(this).parents('p').attr('attachhash');
+                var attachId = $(this).parents('p').attr('id');
+                var attachSize = Number($(this).parents('p').attr('attachsize'));
+                var attachUrl = '<c:url value="/getEmassAttachInfo4DownHash.xcn"/>?msgIds=' + msgId + '&attachHash=' + attachHash;
+
+
+                if (attachHash == '') {
+                    alert('<s:message code="message.message.notfound.attach"/>');
+                    return;
+                }
+
+                if (attachSize == 0 || attachSize == 'NaN') attachSize = 1;
+
+                try {
+                    AttachDown.location.href = attachUrl;
+                } catch (e) {
+                    AttachDown.src = attachUrl;
+                }
+            });
 
 
             $(document).on('click', '.downloadIcon', function () {
@@ -904,12 +925,10 @@
 					</div>
 
 					<div class="chatDate">
-						<div class="searchSub" style="display: flex">
-							<div style="display: flex;">
-								<div id="startsubdatepicker"><input type="date" id="startSubDt" style="width: 110px;">
-									<span class="hyphen">~</span></div>
-								<div id="endsubdatepicker"><input type="date" id="endSubDt" style="width: 110px;"></div>
-							</div>
+						<div class="searchSub" style=" min-width: 150px; box-sizing: border-box; width: 100%" >
+								<span id="startsubdatepicker"><input type="date" id="startSubDt" style="width: 110px;">
+									<span class="hyphen">~</span></span>
+								<span id="endsubdatepicker"><input type="date" id="endSubDt" style="width: 110px;"></span>
 
 							<button class="form_btn01"  type="button" accesskey="M" id="searchMsgQueryBtn"><s:message code="common.search"/></button>
 						</div>

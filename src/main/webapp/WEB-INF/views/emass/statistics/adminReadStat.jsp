@@ -419,22 +419,20 @@
     grid1.onClick = function () {
         if (grid1.Col == grid1.ColIndex('edcTotal')) return;
 
-
         var valChk = grid1.getValue(grid1.Row, grid1.Col);
-        if (valChk == "" || valChk == "-") return;
+        if(valChk == "" || valChk == "-") return;
 
-        if (grid1.getValue(grid1.Row, 'NUM') == '<s:message code="bodyview.total"/>') {
+        if(grid1.getValue(grid1.Row, 'NUM') == '<s:message code="bodyview.total"/>') {
             var key = "";
-            for (var i = 0; i < grid1.Rows; i++) {
-                if (grid1.getValue(i, 'rowKey') == "" || grid1.getValue(i, 'rowKey') == "-") continue;
+            for(var i=0; i<grid1.Rows; i++) {
+                console.log(grid1.getValue(i, 'rowKey') );
+                if(grid1.getValue(i, 'rowKey') == "" || grid1.getValue(i, 'rowKey') == "-") continue;
                 else key += grid1.getValue(i, 'rowKey').replaceAll("\"", "\\\"") + ",";
             }
-            key = key.substring(0, key.length - 1)
             rowKey = key;
-        } else {
+        }else {
             rowKey = grid1.getValue(grid1.Row, 'rowKey').replaceAll("\"", "\\\"");
         }
-        rowName = grid1.getValue(grid1.Row, 'rowName');
         colKey = grid1.ColKey(grid1.Col);
         var colKeyNm = colKey;
         if (colKey == 'rowKey' || colKey == 'total' || colKey == 'NUM') {
@@ -456,8 +454,9 @@
             $('#detailTab' + delid + ' .subtab_close').click();
         }
 
-        var displayName = (rowKey.indexOf(',') > -1) ? '<s:message code="common.msg.all"/>' : rowKey.replaceAll("\\\"", "\"");
-        if (rowName != '') displayName = rowName + '&lt;' + rowKey + '&gt;';
+        var rowKeys = rowKey.split(",");
+        var displayName = rowKeys.length > 1 ? '<s:message code="common.msg.all"/>' : rowKey.replaceAll("\\\"", "\"");
+        // if (rowName != '') displayName = rowName + '&lt;' + rowKey + '&gt;';
         var id = 'tab' + tabID;
         $('.listChart').append($('<li style="display:inline-flex;text-align: center;z-index:1001;" idx="' + tabID + '" id="liTab' + tabID + '"><a data-toggle="tab" href="#tab' + tabID + '" id="detailTab' + tabID + '" style="display: flex; align-items: center; justify-content: center;">' + displayName + ' - ' + colKeyNm + '<span class="badge mal4"></span><button type="button" class="subtab_close closeBtn">	&#10006;</button></a></li>'));
         $('#basicStatList').after($('<div class="tab-pane fade" id="tab' + tabID + '"><div id="grid' + tabID + '" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; height: 400px"></div></div>'));
@@ -513,7 +512,6 @@
             success: function (data, total) {
                 grid1.colInit();
                 grid1.autoNumber();
-
                 var str = '';
                 if (xAxis == '_yyyymmdd') str = '<s:message code="stat.ctime.yyyymmdd"/>';
                 else if (xAxis == '_yyyymm') str = '<s:message code="stat.ctime.yyyymm"/>';
@@ -529,7 +527,6 @@
                     else return '';
                 });
                 for (var i = 0; i < data.pivotHeader.length; i++) {
-                    console
                     var Header = data.pivotHeader[i];
                     var HeaderNm = "";
                     if (xAxis == "_yyyymmdd") HeaderNm = Header.substr(0, 4) + "-" + Header.substr(4, 2) + "-" + Header.substr(6, 2);
@@ -623,7 +620,7 @@
             limit: currentgrid.pageSize,
             success: function (data, total) {
                 if ( lastRow == 'Y' || lastRow == undefined ) detailTotal = total;
-                console.log(getCurrentGrid());
+
                 currentgrid.appendData(data.emass);
                 currentgrid = getCurrentGrid();
                 if ( currentgrid.loadingPage == 0 ) currentgrid.Select(-1,-1);

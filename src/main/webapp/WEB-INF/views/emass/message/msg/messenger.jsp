@@ -286,6 +286,28 @@
                 }
             });
 
+            $(document).on('click', '.filesdown', function () {
+                var msgId = $(this).parents('p').attr('msgid');
+                var attachHash = $(this).parents('p').attr('attachhash');
+                var attachId = $(this).parents('p').attr('id');
+                var attachSize = Number($(this).parents('p').attr('attachsize'));
+                var attachUrl = '<c:url value="/getEmassAttachInfo4DownHash.xcn"/>?msgIds=' + msgId + '&attachHash=' + attachHash;
+
+
+                if (attachHash == '') {
+                    alert('<s:message code="message.message.notfound.attach"/>');
+                    return;
+                }
+
+                if (attachSize == 0 || attachSize == 'NaN') attachSize = 1;
+
+                try {
+                    AttachDown.location.href = attachUrl;
+                } catch (e) {
+                    AttachDown.src = attachUrl;
+                }
+            });
+
             $(document).on('click', '.downloadIcon', function () {
                 var msgId = $(this).parents('p').attr('msgid');
                 var attachHash = $(this).parents('p').attr('attachhash');
@@ -1144,12 +1166,12 @@
 					</div>
 
 					<div style="display: flex;">
-						<div style=" min-width: 250px; box-sizing: border-box; width: 100%" >
+						<div style=" min-width: 150px; box-sizing: border-box; width: 100%" >
 								<span><s:message code="condition.xrootmtr"/>: <span class="chatid"><span id="xrootmtr"></span><span id="srcip" style="display:none;"></span><span
 										id="usr_id" style="display:none;"></span><span id="msgid" style="display:none;"></span></span></span>
 						</div>
 
-						<div  style=" min-width: 250px; box-sizing: border-box; width: 100%">
+						<div  style=" min-width: 150px; box-sizing: border-box; width: 100%">
 							<span> <s:message code="condition.user"/> : </span>
 							<span title="<s:message code="condition.user"/>" id="userCntArea">
 								<span>
@@ -1163,17 +1185,15 @@
 					</div>
 
 					<div class="chatDate">
-						<div class="searchSub" style="display: flex">
-							<div style="display: flex;">
-								<div id="startsubdatepicker"><input type="date" id="startSubDt" style="width: 110px;">
-									<span class="hyphen">~</span></div>
-								<div id="endsubdatepicker"><input type="date" id="endSubDt" style="width: 110px;"></div>
-							</div>
+						<div class="searchSub" style=" min-width: 150px; box-sizing: border-box; width: 100%" >
 
+								<span id="startsubdatepicker"><input type="date" id="startSubDt" style="width: 110px;">
+									<span class="hyphen">~</span></span>
+								<span id="endsubdatepicker"><input type="date" id="endSubDt" style="width: 110px;"></span>
 							<button class="form_btn01" type="button" accesskey="M" id="searchMsgQueryBtn"><s:message code="common.search"/></button>
 						</div>
 
-						<div class="searchSub txt_right">
+						<div class="searchSub txt_right" style=" min-width: 150px; box-sizing: border-box; width: 100%" >
 							<input type="text" class="w70" placeholder="<s:message code="condition.research"/>" id="searchMsgStrInput">
 							<button class="form_btn01 blackBg" type="button" accesskey="M" id="searchMsgBtn"><s:message code="common.search"/></button>
 						</div>
