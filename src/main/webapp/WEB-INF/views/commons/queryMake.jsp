@@ -799,8 +799,9 @@
 						break;
 					case "work":
 						if($('#work:checked').length > 0) {
-                            console.log($('#work:checked').val());
-							addQueryText=queryAddMinus + "work:" + $('#work:checked').val();
+							var work = $('#work:checked').val();
+                          if(work == 'R') work = '((R) (H))';
+							addQueryText=queryAddMinus + "work:" + work;
 						}
 						break;
 					case "busi":
