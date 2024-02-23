@@ -1,17 +1,28 @@
 package com.xcurenet.emass.message.service;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xcurenet.common.util.Common;
+import com.xcurenet.common.util.config.Config;
 import com.xcurenet.common.util.locale.Prop;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.Aggregations;
+import org.elasticsearch.search.aggregations.PipelineAggregatorBuilders;
+import org.elasticsearch.search.aggregations.bucket.range.ParsedRange;
+import org.elasticsearch.search.aggregations.bucket.range.Range;
+import org.elasticsearch.search.aggregations.bucket.terms.ParsedLongTerms;
+import org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.metrics.ParsedCardinality;
+import org.elasticsearch.search.aggregations.metrics.ParsedSum;
 import org.elasticsearch.search.aggregations.metrics.TopHits;
+import org.elasticsearch.search.aggregations.pipeline.BucketSortPipelineAggregationBuilder;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -20,6 +31,7 @@ import org.springframework.data.elasticsearch.core.SearchHits;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @ToString
 public class MessengerEdcGroupVO {
@@ -32,6 +44,9 @@ public class MessengerEdcGroupVO {
 	private long offset;
 
 	private List<MessengerGroupVO> groups;
+	private List<MessengerGroupSvcVO> fact;
+
+
 
 	public MessengerEdcGroupVO(final List<MessengerGroupVO> groups) {
 		this.groups = groups;
@@ -61,6 +76,7 @@ public class MessengerEdcGroupVO {
 
 			Map<String, Aggregation> mainAggsMap = mainAggregations.getAsMap();
 			Map<String, Aggregations> groupAggsMap = new HashMap<>();  // 추출할 그룹 aggs
+			Map<String, Aggregations> subAggsMap = new HashMap<>();  // 추출할 그룹 aggs
 
 			long total = 0;
 			//메인 Aggs의 sub Aggs 추출
@@ -79,6 +95,7 @@ public class MessengerEdcGroupVO {
 					if (agg instanceof Terms) {
 						Terms terms = (Terms) agg;
 						for (Terms.Bucket bucket : terms.getBuckets()) {
+							/*groupAggsMap.put(bucket.getKeyAsString(), bucket.getAggregations().get(0).getBuckets().get(0).getAggregations());*/
 							groupAggsMap.put(bucket.getKeyAsString(), bucket.getAggregations());
 						}
 					}
@@ -96,17 +113,35 @@ public class MessengerEdcGroupVO {
 
 			// sub Aggs에서 document 추출
 			List<TopHits> topHitsList = new ArrayList<>();
+			// sub Aggs에서 document 추출
 			for (Map.Entry<String, Aggregations> groupAgg : groupAggsMap.entrySet()) {
-				Aggregations groupAggs = groupAggsMap.get(groupAgg.getKey());
-				Map<String, Aggregation> groupAggMap = groupAggs.getAsMap();
-				for (Map.Entry<String, Aggregation> gMap : groupAggMap.entrySet()) {
-					Aggregation gAgg = gMap.getValue();
-					topHitsList.add(groupAggs.get(gAgg.getName()));
+				Aggregations groupAggs = groupAgg.getValue(); // get()을 사용하여 값 가져오기
+				Terms termsAgg = groupAggs.get("topSvc"); // 첫 번째 집계 결과 가져오기
+
+					if (termsAgg != null) { /* 생성형ai,노트*/
+						for (Terms.Bucket bucket : termsAgg.getBuckets()) {
+							Aggregations subAggregations = bucket.getAggregations(); // 각 버킷의 하위 집계 결과 가져오기
+							if (subAggregations != null) {
+								// 각 하위 집계 결과를 반복하여 처리
+								for (Aggregation subAgg : subAggregations) {
+									if (subAgg instanceof TopHits) {
+										topHitsList.add((TopHits) subAgg); // 하위 집계 결과를 topHitsList에 추가
+									}
+								}
+							}
+						}
+					} else {/* 메신저*/
+					Aggregations groupAggs2 = groupAggsMap.get(groupAgg.getKey());
+					Map<String, Aggregation> groupAggMap = groupAggs2.getAsMap();
+					for (Map.Entry<String, Aggregation> gMap : groupAggMap.entrySet()) {
+						Aggregation gAgg = gMap.getValue();
+						topHitsList.add(groupAggs2.get(gAgg.getName()));
+					}
 				}
 			}
 
 			for (TopHits topHits : topHitsList) {
-				org.elasticsearch.search.SearchHit[] hits = topHits.getHits().getHits();
+				SearchHit[] hits = topHits.getHits().getHits();
 				for (SearchHit hit : hits) {
 					Map<String, Object> map = hit.getSourceAsMap();
 					if (!map.isEmpty()) {
@@ -133,6 +168,7 @@ public class MessengerEdcGroupVO {
 				});
 			}
 			this.numFound = resp.getTotalHits();
+
 		}
 	}
 
@@ -165,6 +201,7 @@ public class MessengerEdcGroupVO {
 		solrGroupVO.setJikgubNm(edc.getJikgubnm());
 		solrGroupVO.setSrcip(edc.getSrcip());
 		solrGroupVO.setName(edc.getName());
+		solrGroupVO.setSvc12(edc.getSvc12());
 		solrGroupVO.setReadYn("Y");
 		solrGroupVO.setXrootmtr(edc.getXrootmtr());
 		solrGroupVO.setUser(edc.getUser());
@@ -183,6 +220,7 @@ public class MessengerEdcGroupVO {
 		solrGroupVO.setMsgid(edc.getMsgid());
 		solrGroupVO.setSvc(edc.getSvc());
 		solrGroupVO.setSvc3(edc.getSvc3());
+		solrGroupVO.setSvc12(edc.getSvc12());
 		solrGroupVO.setReadYn(isRead(edc.getChecked(), adminId) ? "Y" : "N");
 		solrGroupVO.setCtime(reCtime(edc.getCtime()));
 		solrGroupVO.setAttached(edc.getAttached());
@@ -258,6 +296,14 @@ public class MessengerEdcGroupVO {
 		return groups;
 	}
 
+	public List<MessengerGroupSvcVO> setFact() {
+		return fact;
+	}
+
+	public List<MessengerGroupSvcVO> getFact() {
+		return fact;
+	}
+
 	public void setGroups(List<MessengerGroupVO> groups) {
 		this.groups = groups;
 	}
@@ -283,5 +329,8 @@ public class MessengerEdcGroupVO {
 		return false;
 	}
 
+
+	public void setFact(List<SolrEdcVO> groups) {
+	}
 }
 

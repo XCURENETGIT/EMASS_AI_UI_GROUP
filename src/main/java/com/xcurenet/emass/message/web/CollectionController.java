@@ -143,16 +143,22 @@ public class CollectionController {
 		return new XcnResponseVO(XcnRspCode.OK, solrEdcGroupVO, solrEdcGroupVO.getNumFound());
 	}
 
-	@AuditOperation(Operation.SEARCH)
-	@RequestMapping(value = "/getCollectionGroupList.xcn")
-	@Description("서비스 그룹 조회")
-	@ResponseBody
-	public XcnResponseVO getCollectionGroupList(final HttpServletRequest request, final HttpSession session) throws Exception {
 
+
+	@RequestMapping(value = "/getCollectionMessageSvc.xcn")
+	@Description("메세지 서비스타입 조회")
+	@ResponseBody
+	public XcnResponseVO getCollectionMessageSvc(final HttpServletRequest request, final HttpSession session) throws Exception {
+		MessengerGroupSvcVO  solrEdcGroupVO = getCollectionMessageSvc(request, 10000,session);
+		return new XcnResponseVO(XcnRspCode.OK, solrEdcGroupVO,solrEdcGroupVO.getNumFoundsvc() );
+	}
+
+	public MessengerGroupSvcVO getCollectionMessageSvc(final HttpServletRequest request, final int rows,final HttpSession session) throws Exception {
 		JSONObject param = Common.getParam(request);
 		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
 		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), Common.getAdminId(session));
 		String name = Common.nvl(request.getParameter("userStr"));
+		String type = Common.nvl(request.getParameter("type"));
 
 		StringBuilder query = new StringBuilder();
 
@@ -173,7 +179,61 @@ public class CollectionController {
 			query.append("))");
 		}
 
+
 		sq.setQuery(sq.getQuery()+query);
+		sq.setStart(0);
+		sq.setRows(rows);
+		sq.setFields("svc12", "srcip", "name", "conm", "businm", "deptnm", "jikgubnm", "suborgnm", "sname", "sender", "srcip", "sname", "user");
+		sq.setParam("group", true);
+		sq.setParam("group.field", "svc12");
+		sq.setParam("group.facet", true);
+		sq.setParam("group.ngroups", true);
+		sq.setParam("facet", true);
+		sq.setParam("facet.field", "userkey");
+		MessengerGroupSvcVO result = solrEdcService.getCollectionMessageSvc(sq, Common.getAdminId(request));
+		return result;
+	}
+
+
+
+
+	@AuditOperation(Operation.SEARCH)
+	@RequestMapping(value = "/getCollectionGroupList.xcn")
+	@Description("서비스 그룹 조회")
+	@ResponseBody
+	public XcnResponseVO getCollectionGroupList(final HttpServletRequest request, final HttpSession session) throws Exception {
+
+		JSONObject param = Common.getParam(request);
+		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), Common.getAdminId(session));
+		String name = Common.nvl(request.getParameter("userStr"));
+		String type = Common.nvl(request.getParameter("type"));
+
+		StringBuilder query = new StringBuilder();
+
+		if (Common.isEquals(param.get("readYn"), "N")) {
+			query.append(" -checked.readId:").append(Common.getAdminId(session));
+		}
+		if (!name.isEmpty()) {
+			String[] nameArray = name.split(",");
+			query.append(" +userid:((");
+
+			for (int i = 0; i < nameArray.length; i++) {
+				if (i > 0) {
+					query.append(") (");
+				}
+				query.append(nameArray[i]);
+			}
+
+			query.append("))");
+		}
+
+		if (!type.equals("G")&&!type.equals("N")&&!type.equals("")){
+			query.append("+svc12:"+type);
+		}
+
+		sq.setQuery(sq.getQuery()+query);
+
 
 
 		sq.setParam("group", true);
@@ -182,7 +242,6 @@ public class CollectionController {
 		sq.setParam("group.field", "userkey");
 		sq.setParam("facet", true);
 		sq.setParam("facet.field", "userkey");
-
 
 		/* 그룹 디테일검색 동적 들어와야 할 offset,size 값*/
 		sq.setParam("facet.offset", String.valueOf(Common.nvz(param.get("offset"), 0)));
@@ -197,7 +256,7 @@ public class CollectionController {
 		sq.setRows(Common.nvz(request.getParameter("limit"), 0));
 
 		sq.setSort("ctime", ORDER.desc);
-		sq.setFields("msgid", "srcip", "svc", "svc3","userkey", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id", "userkey");
+		sq.setFields("msgid", "srcip", "svc", "svc12","svc3","userkey", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id", "userkey");
 
 		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request));
 		long NumFound= solrEdcGroupVO.getNumFound();
@@ -209,13 +268,15 @@ public class CollectionController {
 
 	public List<MessengerGroupVO> setCount_temp(List<MessengerGroupVO> groups, String adminId, JSONObject param) throws IOException, SolrServerException {
 		List<String> userids = new ArrayList<>();
+		List<String> svc12s = new ArrayList<>();
 		for (MessengerGroupVO group : groups) {
 			userids.add("\"" + group.getUserid() + "\"");
+			svc12s.add("\"" + group.getSvc12() + "\"");
 		}
 		if (userids.size() == 0) return groups;
 
 		//* 임시 주석*//*
-		Map<String, Long> unReadCount = getUnReadCount_temp(userids, adminId,param);
+		Map<String, Long> unReadCount = getUnReadCount_temp(userids, svc12s, adminId,param);
 
 		for (MessengerGroupVO group : groups) {
 			group.setUnread_cnt(Common.nvn(unReadCount.get(group.getUserid())));
@@ -223,7 +284,7 @@ public class CollectionController {
 		return groups;
 	}
 
-	private Map<String, Long> getUnReadCount_temp(List<String> userids, String adminId, JSONObject param) throws IOException, SolrServerException {
+	private Map<String, Long> getUnReadCount_temp(List<String> userids,List<String> svc12s, String adminId, JSONObject param) throws IOException, SolrServerException {
 
 		SolrQuery sq = new SolrQuery();
 		String query="";
@@ -241,12 +302,26 @@ public class CollectionController {
 			query+="))";
 		}
 
+		if (!svc12s.isEmpty()) {
+			query +=" +svc12:((";
+
+			for (int i = 0; i < svc12s.size(); i++) {
+				if (i > 0) {
+					query+=") (";
+				}
+				query+=svc12s.get(i);
+			}
+
+			query+="))";
+		}
+
+
 		query += String.format("+ctime:[%s TO %s] ",
 				Common.nvl(param.get("startTotalDate"), "defaultStartDate"),
 				Common.nvl(param.get("endTotalDate"), "defaultEndDate")
 		);
 
-		sq.setQuery(query  + (Common.nvl(param.get("type")).equals("N") ? MESSENGER3 : (Common.nvl(param.get("type")).equals("G") ? MESSENGER2 : (Common.nvl(param.get("type")).equals("F") ? MESSENGER4 : ""))));
+		sq.setQuery(query);
 		sq.addFilterQuery(String.format(SolrEdcServiceImpl.JOIN_UNREAD, adminId));
 
 		sq.setParam("group", true);
@@ -385,6 +460,7 @@ public class CollectionController {
 		String startDt = Common.nvl(param.get("startDt"));
 		String endDt = Common.nvl(param.get("endDt"));
 		String searchStr = Common.nvl(param.get("searchStr"));
+		String type = Common.nvl(param.get("type"));
 		int limit = Common.nvz(param.get("limit"), 10000);
 
 		SolrQuery sq = new SolrQuery();
@@ -404,9 +480,31 @@ public class CollectionController {
 			}
 		}
 
+		if(type.equals("N")||type.equals("G")){
+			if (type.equals("N")){
+				query +=String.format(" +svc1:N");
+			}else{
+				query +=String.format(" +svc1:I");
+			}
+		}
+		else{
+			String[] svcArray = type.split(",");
+			query +=String.format(" +svc12:((");
+
+			for (int i = 0; i < svcArray.length; i++) {
+				if (i > 0) {
+					query+=String.format(") (");
+				}
+				query+=String.format(svcArray[i]);
+			}
+
+			query+=String.format("))");
+		}
+
+
 		if(Common.isNotEmpty(searchStr)) query += String.format(" +body:(*%s*) ", searchStr);
 
-		sq.setQuery(query + (Common.nvl(param.get("type")).equals("N") ? MESSENGER3 : (Common.nvl(param.get("type")).equals("G") ? MESSENGER2 : (Common.nvl(param.get("type")).equals("F") ? MESSENGER4 : ""))));
+		sq.setQuery(query);
 		sq.setStart(Common.nvz(param.get("offset"), 0));
 		sq.setRows(limit);
 		sq.addSort("ctime", ORDER.asc);
@@ -424,6 +522,7 @@ public class CollectionController {
 		String startDt = Common.nvl(param.get("startDt"));
 		String endDt = Common.nvl(param.get("endDt"));
 		String searchStr = Common.nvl(param.get("searchStr"));
+		String type = Common.nvl(param.get("type"));
 		int limit = Common.nvz(param.get("limit"), 10000);
 
 		SolrQuery sq = new SolrQuery();
@@ -433,6 +532,26 @@ public class CollectionController {
 
 		if(Common.isNotEmpty(usr_id)) query += String.format(" +usr_id:\"%s\"", usr_id);
 		else query += String.format(" -usr_id:*");
+		if(type.equals("N")||type.equals("G")){
+			if (type.equals("N")){
+				query +=String.format(" +svc1:N");
+			}else{
+				query +=String.format(" +svc1:I");
+			}
+		}
+		else{
+			String[] svcArray = type.split(",");
+			query +=String.format(" +svc12:((");
+
+			for (int i = 0; i < svcArray.length; i++) {
+				if (i > 0) {
+					query+=String.format(") (");
+				}
+				query+=String.format(svcArray[i]);
+			}
+
+			query+=String.format("))");
+		}
 
 		//이미 출력된 동시간대 데이터 제외
 		if(Common.isNotEmpty(msgId)) {
@@ -441,7 +560,7 @@ public class CollectionController {
 
 		if(Common.isNotEmpty(searchStr)) query += String.format(" +body:(*%s*) ", searchStr);
 
-		sq.setQuery(query + (Common.nvl(param.get("type")).equals("N") ? MESSENGER3 : (Common.nvl(param.get("type")).equals("G") ? MESSENGER2 : (Common.nvl(param.get("type")).equals("F") ? MESSENGER4 : ""))));
+		sq.setQuery(query);
 		sq.setStart(Common.nvz(param.get("offset"), 0));
 		sq.setRows(limit);
 		sq.addSort("ctime", ORDER.desc);
@@ -469,6 +588,7 @@ public class CollectionController {
 		String usr_id = Common.nvl(param.get("usr_id"));
 		String startDt = Common.nvl(param.get("startDt"));
 		String endDt = Common.nvl(param.get("endDt"));
+		String type = Common.nvl(param.get("type"));
 		int limit = Common.nvz(param.get("limit"), 10000);
 
 		SolrQuery sq = new SolrQuery();
@@ -479,7 +599,29 @@ public class CollectionController {
 		if(Common.isNotEmpty(usr_id)) query += String.format(" +usr_id:\"%s\"", usr_id);
 		else query += String.format(" -usr_id:*");
 
-		sq.setQuery(query + (Common.nvl(param.get("type")).equals("N") ? MESSENGER3 : (Common.nvl(param.get("type")).equals("G") ? MESSENGER2 : (Common.nvl(param.get("type")).equals("F") ? MESSENGER4 : ""))));
+		if(type.equals("N")||type.equals("G")){
+			if (type.equals("N")){
+				query +=String.format(" +svc1:N");
+			}else{
+				query +=String.format(" +svc1:I");
+			}
+		}
+		else{
+				String[] svcArray = type.split(",");
+				query +=String.format(" +svc12:((");
+
+				for (int i = 0; i < svcArray.length; i++) {
+					if (i > 0) {
+						query+=String.format(") (");
+					}
+					query+=String.format(svcArray[i]);
+				}
+
+				query+=String.format("))");
+		}
+
+
+		sq.setQuery(query);
 		sq.setRows(limit);
 		sq.addSort("ctime", ORDER.asc);
 		sq.addSort("msgid", ORDER.asc);
@@ -520,13 +662,35 @@ public class CollectionController {
 		String userkey = Common.nvl(param.get("userkey"));
 		String srcip = Common.nvl(param.get("srcip"));
 		String usr_id = Common.nvl(param.get("usr_id"));
+		String type = Common.nvl(param.get("type"));
 
 		String addQuery = String.format(" +userkey:\"%s\"", userkey);
 		if(Common.isNotEmpty(srcip)) addQuery += String.format(" +srcip:\"%s\"", srcip);
 
+		if(type.equals("N")||type.equals("G")){
+			if (type.equals("N")){
+				addQuery +=String.format(" +svc1:N");
+			}else{
+				addQuery +=String.format(" +svc1:I");
+			}
+		}
+			else{
+				String[] svcArray = type.split(",");
+				addQuery +=String.format(" +svc12:((");
+
+				for (int i = 0; i < svcArray.length; i++) {
+					if (i > 0) {
+						addQuery+=String.format(") (");
+					}
+					addQuery+=String.format(svcArray[i]);
+				}
+
+				addQuery+=String.format("))");
+			}
+
 		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
 		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), Common.getAdminId(session));
-		sq.setQuery(sq.getQuery() + addQuery + (Common.nvl(param.get("type")).equals("N") ? MESSENGER3 : (Common.nvl(param.get("type")).equals("G") ? MESSENGER2 : (Common.nvl(param.get("type")).equals("F") ? MESSENGER4 : ""))));
+		sq.setQuery(sq.getQuery() + addQuery);
 		sq.setStart(Common.nvz(param.get("offset"), 0));
 		sq.setRows(1);
 		sq.setSort("ctime", ORDER.asc);
@@ -556,16 +720,38 @@ public class CollectionController {
 		String startDt = Common.nvl(param.get("startDt"));
 		String endDt = Common.nvl(param.get("endDt"));
 		String searchStr = Common.nvl(param.get("searchStr"));
+		String type = Common.nvl(param.get("type"));
 
 		SolrQuery sq = new SolrQuery();
 		String query = "";
 		if (Common.isNotEmpty(startDt) && Common.isNotEmpty(endDt))
 			query += String.format("+ctime:[%s TO %s] ", startDt, endDt);
 		query += String.format("+userkey:\"%s\" +attached:Y", userkey);
+
+		if(type.equals("N")||type.equals("G")){
+			if (type.equals("N")){
+				query +=String.format(" +svc1:N");
+			}else{
+				query +=String.format(" +svc1:I");
+			}
+		}
+		else{
+			String[] svcArray = type.split(",");
+			query +=String.format(" +svc12:((");
+
+			for (int i = 0; i < svcArray.length; i++) {
+				if (i > 0) {
+					query+=String.format(") (");
+				}
+				query+=String.format(svcArray[i]);
+			}
+
+			query+=String.format("))");
+		}
 		if (Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
 		if (Common.isNotEmpty(searchStr)) query += String.format(" +body:(*%s*) ", searchStr);
 
-		sq.setQuery(query + (Common.nvl(param.get("type")).equals("N") ? MESSENGER3 : (Common.nvl(param.get("type")).equals("G") ? MESSENGER2 : (Common.nvl(param.get("type")).equals("F") ? MESSENGER4 : ""))));
+		sq.setQuery(query);
 
 		sq.setStart(0);
 		sq.setRows(10000);
@@ -913,7 +1099,6 @@ public class CollectionController {
 	private void xlsxCollectionExport(String userkey, MessengerEdcGroupVO groups, OutputStream out, boolean link, Locale locale) throws Exception {
 		JSONArray header = new JSONArray();
 		header.add(getXlsxHeader("sender", Prop.propFormat("eikon.msg.sender", locale), "130", "center"));
-		header.add(getXlsxHeader("ctime", Prop.propFormat("eikon.msg.send.time"), "130", "center"));
 		header.add(getXlsxHeader("content", Prop.propFormat("eikon.msg.chatContents", locale), "750", "left", "LINK"));
 
 		JSONArray data = new JSONArray();

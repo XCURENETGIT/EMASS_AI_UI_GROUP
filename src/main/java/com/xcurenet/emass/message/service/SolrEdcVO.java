@@ -261,4 +261,5 @@ public class SolrEdcVO {
 	public String user_str;
 
 	public float score; // 연관도
+	public int docCount;
 }

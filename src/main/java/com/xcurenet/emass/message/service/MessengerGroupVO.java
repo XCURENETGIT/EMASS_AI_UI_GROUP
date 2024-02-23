@@ -27,6 +27,7 @@ public class MessengerGroupVO  implements Comparable<MessengerGroupVO> {
 	private String xrootmtr;
 	private String svc;
 	private String svc3;
+	private String svc12;
 	private String userid;
 	private String attached;
 	private String attachhash;

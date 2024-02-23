@@ -1,9 +1,11 @@
 package com.xcurenet.common.vo;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.xcurenet.emass.message.service.MessengerEdcGroupVO;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -68,6 +70,7 @@ public class XcnResponseVO {
 		this.success = this.code == XcnRspCode.OK ? true : false;
 		this.total = total;
 	}
+
 
 	public XcnResponseVO setMessage(String message){
 		this.message = message;

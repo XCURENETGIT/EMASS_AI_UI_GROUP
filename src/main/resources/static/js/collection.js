@@ -10,6 +10,8 @@ var groupPageId = '';
 var detailId = '';
 var detailCount=0;
 
+var busiScrollTabs;
+
 var groupPage = 1;
 var groupPageBreak = 10;
 var groupMessagePage = 1;
@@ -59,19 +61,24 @@ var eikon2 = {
             var srcip = $('#selectUserInfo').attr('data-srcip');
             var usr_id = $('#selectUserInfo').attr('data-usrid');
             var userkey = $('#selectUserInfo').attr('data-name');
+            var type = $('#selectUserInfo').attr('data-svc12');
             var msgIds = [];
+
+            var type = $('#selectUserInfo').attr('data-svc12');
+
+            if (type == null || typeof type === 'undefined' || type === '') {
+                type=getPageType();
+            }
 
             if($(this).hasClass('messenger_next')) {
 
                 var msgid = $('.timeline').children().last().attr('id');
-                var type = getPageType();
 
                 getGenerativeMessageNext(userkey, srcip, usr_id, msgid,type);
 
             } else {
 
                 var firstData = $('.timeline').children().filter(':eq(1)');
-                var type = getPageType();
                 var msgid = $(firstData).attr('id');
                 getGenerativeMessagePrev(userkey, srcip, usr_id, msgid,type);
 
@@ -82,7 +89,8 @@ var eikon2 = {
     },
     getCollectionList : function(page,type){
         var searchType = $('input:radio[name=searchType]:input:checked').val();
-        getCollectionGroupList(page,type);
+
+        getCollectionMessageSvc(page, type);
     },
     getFileGroupList : function(page){
         var searchType = $('input:radio[name=searchType]:input:checked').val();
@@ -126,7 +134,13 @@ var eikon2 = {
     /**
      * 결과 내 검색
      */
-    findMessageList : function(offset,type){
+    findMessageList : function(offset){
+
+        var type = $('#selectUserInfo').attr('data-svc12');
+
+        if (type == null || typeof type === 'undefined' || type === '') {
+            type=getPageType();
+        }
         var searchStr = $('#searchMsgStrInput').val();
         var userkey = $('#selectUserInfo').attr("data-name");
         var srcip = $('#selectUserInfo').attr("data-srcip");
@@ -174,7 +188,7 @@ var eikon2 = {
                     detailMsgid=data;
                     detailMsgid.sort();
 
-                    checkList(searchOffset,type);
+                    checkList(searchOffset);
 
                 }
                 else{
@@ -199,6 +213,7 @@ var eikon2 = {
 
 
 function getCollectionMessageTotal(userkey, srcip, startDt, endDt, usr_id, msgid,type){
+
     /*총 갯수 계산하는 함수*/
     ui.get({
         url : 'getCollectionMessageTotal.xcn',
@@ -221,6 +236,8 @@ function getCollectionMessageTotal(userkey, srcip, startDt, endDt, usr_id, msgid
         }
     });
 }
+
+
 
 
 /**
@@ -424,6 +441,49 @@ function getFileMessageList  (page){
     });
 }
 
+function getCollectionMessageSvc(page,type){
+
+    var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
+    groupPage = page;
+    var offset = groupPage*groupPageBreak - groupPageBreak;
+    var uv = $('#userVal').val().split('|');
+    var user = uv.join(',');
+
+    var userStr='';
+    if (user != '') userStr = user;
+    else userStr = '';
+
+    var startDt=$('#startDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+    var endDt=$('#endDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+
+    var searchStr=$('#searchStrInput').val();
+
+
+    var startTotalDate=$('#startDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+    var endTotalDate=$('#endDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+
+    ui.get({
+        url : 'getCollectionMessageSvc.xcn',
+        data : JSON.stringify( getCondition( )),
+        readYn : readYn,
+        userStr:userStr,
+        startTotalDate:startTotalDate+"00000",
+        endTotalDate:endTotalDate+"235959",
+        type:type,
+        success : function(data, total) {
+            setSvcButton(data.groups,data.numFoundsvc);
+            getCollectionGroupList(page, type)
+        },
+        error : function(status, message) {
+            ui.alertMsg(message);
+        },
+        complete : function() {
+            ui.off();
+        }
+    });
+}
+
+
 
 function getCollectionGroupList (page,type){
     var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
@@ -465,6 +525,20 @@ function getCollectionGroupList (page,type){
             ui.off('timeline_list');
         }
     });
+
+}
+function getPageType() {
+    var currentPageUrl = window.location.href;
+
+    if (currentPageUrl.includes('fileTransfer.do')) {
+        return 'F';
+    } else if (currentPageUrl.includes('note.do')) {
+        return 'N';
+    } else if (currentPageUrl.includes('generativeAi.do')) {
+        return 'G';
+    } else {
+        return 'U'; // Unknown
+    }
 }
 
 function setMessengerRead(dataSet){
@@ -603,8 +677,8 @@ function filediv(data) {
         fileStr += '<li msgid="' + data.msgId + '" id="' + file.attachId + '" size="' + file.attachSize  + '" attachHash="' + file.attachHash + '" class="' + trClass + extClass +'" >';
 
         fileStr +=  '<p class="attach_'+attachExt+' attach_file_img">';
-        if (attachNameExist == "N") fileStr += '<a href="#">'+filelist.noname +'</a>';
-        else{ fileStr += '<a href="#"  style="text-decoration: underline;" attachname="' + attachName + '">';
+        if (attachNameExist == "N") fileStr += '<a href="#" class="downloadIcon">'+filelist.noname +'</a>';
+        else{ fileStr += '<a href="#" class="downloadIcon" style="text-decoration: underline;" attachname="' + attachName + '">';
             fileStr += '' + attachName;
         };
         fileStr+='(' + convertFileSize(file.attachSize) + ')</a></p>';
@@ -849,8 +923,16 @@ function viewDate(dateStr){
 }
 
 
-function checkList(cnt,type){
+function checkList(cnt){
 //	selectedSearchData = cnt;
+
+
+    var type = $('#selectUserInfo').attr('data-svc12');
+
+    if (type == null || typeof type === 'undefined' || type === '') {
+        type=getPageType();
+    }
+
     getCollectionMessage($('#selectUserInfo').attr('data-name'), $('#selectUserInfo').attr('data-srcip'), $('#selectUserInfo').attr('data-usr_id'), detailMsgid[0],type);
     $('#selectCnt').html(cnt+1);
 }
@@ -870,6 +952,11 @@ function checkLastMsg(){
     $('#timeline_list div.me').each(function(){
         var objOffsetTop = $(this).offset().top-topHeight;
         var objHeight = $(this).height();
+        var svc12 = $('#selectUserInfo').attr('data-svc12');
+
+        if (svc12 == null || typeof svc12 === 'undefined' || svc12 === '') {
+            svc12="G";
+        }
         var currentPage;
         //console.log("objHeight = "+objHeight)
         //console.log("objOffsetTop = "+objOffsetTop)
@@ -877,12 +964,13 @@ function checkLastMsg(){
         if(objOffsetTop-(objHeight/2)-marginBottom < 0){
             lastMsgId = $(this).parent().parent().attr('id');
         }else{
-            var type = getPageType();
-            return updateEmassGenerativeAdminUserid(userkey, lastMsgId, srcip,type);
+
+            return updateEmassGenerativeAdminUserid(userkey, lastMsgId, srcip,svc12);
 
         }
     });
 }
+/*
 function getPageType() {
     var currentPageUrl = window.location.href;
 
@@ -896,6 +984,7 @@ function getPageType() {
         return 'U'; // Unknown
     }
 }
+*/
 
 function moveTargetHeight(id, moveFlag){
     $('.lastReadLi').removeClass('lastReadLi');
@@ -914,7 +1003,6 @@ function moveTargetHeight(id, moveFlag){
 var readTimeFlag = false;
 function updateEmassGenerativeAdminUserid(userkey, lastMsgId, srcip,type){ /*읽은위치저장*/
     moveTargetHeight(lastMsgId, false);
-
     ui.get({
         url : 'updateEmassGenerativeAdminUserid.xcn',
         userkey : userkey,
@@ -1163,6 +1251,23 @@ function rtnFilePage(total, page){
     $('#groupPage').html(getPage3(total, page, groupPageBreak, 'eikon2.getFileGroupList'));
 }
 
+function setSvcButton(data,total){
+    busiScrollTabs.clearTabs();
+    busiScrollTabs.refreshState();
+    busiScrollTabs.addTab('<span class="tab_selected noSearch"><a href="javascript:;" class="busiCounts active" data-busicd=""><s:message code="common.msg.all"/>전체</a></span>');
+    for(var i=0; i<data.length; i++){
+        busiScrollTabs.addTab('<span><a href="javascript:;" class="busiCounts" data-svc1="'+data[i].facetSvc+'">'+makeSVCText(data[i].facetSvc)+'<span class="busiCnt">('+data[i].facetCnt.comma()+')</span></a></span>');
+    }
+}
+
+function makeSVCText( svc ){
+    var str = '';
+    $('#serviceTypeSelect option').each(function(e){
+        if( svc == $(this).val() ) str = $(this).text();
+    });
+    return str;
+}
+
 
 function getPage3(total, pageCount, listSize, rtnMethod){
     var str = "";
@@ -1205,7 +1310,6 @@ function getPage3(total, pageCount, listSize, rtnMethod){
 
     return str;
 }
-
 function getCollectionMessage(userkey, srcip, usr_id, msgid,type){
     $("#timeline_list").html('');
 
@@ -1387,6 +1491,7 @@ function rtnGenerativeGroupList(data) {
         li.setAttribute("body_snippet", data[i].body_snippet);
         li.setAttribute("name", data[i].name);
         li.setAttribute("data-chat", "person" + (i + 1));
+        li.setAttribute("svc12",data[i].svc12);
 
         var leftDiv = document.createElement("div");
         leftDiv.className = "left";
@@ -1486,4 +1591,23 @@ function createCondition( ){
     condition.endDt = $('#enddatepicker').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
 
     return condition;
+}
+
+
+function initServiceTab() {
+    if (busiScrollTabs != undefined) busiScrollTabs.destroy();
+    busiScrollTabs = $('#busiCntArea').scrollTabs({
+        click_callback: function (e) {
+            var svc1Value = $('.tab_selected  .busiCounts').attr('data-svc1');
+            console.log(svc1Value);
+            $('#selectUserInfo').attr('data-svc12', svc1Value);
+
+            if (svc1Value == null || typeof svc1Value === 'undefined' || svc1Value === '') {
+                $('#selectUserInfo').attr('data-svc12', 'G');
+                getCollectionGroupList(1, 'G');
+            } else {
+                getCollectionGroupList(1, svc1Value);
+            }
+        }
+    });
 }

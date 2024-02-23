@@ -413,6 +413,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			if(fields.length == 1 &&  !Common.isEmpty(sq.get("facet.stats"))) 	termsAggregation.subAggregation(AggregationBuilders.terms(fields[0]).field(fields[0]).subAggregation(AggregationBuilders.stats(sq.get("facet.stats")).field(sq.get("facet.stats"))));
 			else if(fields.length > 1  &&  !Common.isEmpty(sq.get("facet.stats"))) 	termsAggregation.subAggregation(AggregationBuilders.terms(fields[1]).field(fields[1]).subAggregation(AggregationBuilders.stats(sq.get("facet.stats")).field(sq.get("facet.stats"))));
 			else if(fields.length > 1)  termsAggregation.subAggregation(AggregationBuilders.terms(fields[1]).field(fields[1]));
+			/*else if(fields.length > 1)  termsAggregation.subAggregation(AggregationBuilders.terms("topSvc").field(fields[1]).subAggregation(AggregationBuilders.topHits(field).size(1).from(0).sort("ctime", SortOrder.DESC)));*/
 
 			if (!Common.isEmpty(sq.get("facet.ranges"))) {
 				List<String> ranges = Common.toList(sq.get("facet.ranges"), ",");
@@ -596,6 +597,14 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		SearchHits<SolrEdcVO> resp = getList(sq);
 		sq.clear();
 		return new MessengerGroupUserVO(resp);
+	}
+
+	@Override
+	public MessengerGroupSvcVO getCollectionMessageSvc(SolrQuery sq, String adminId) throws IOException, SolrServerException {
+		setAuthoritys(sq, adminId);
+		SearchHits<SolrEdcVO> resp = getList(sq);
+		sq.clear();
+		return new MessengerGroupSvcVO(resp);
 	}
 
 	@Override

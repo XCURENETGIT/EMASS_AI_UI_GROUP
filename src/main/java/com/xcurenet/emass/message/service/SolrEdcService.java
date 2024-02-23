@@ -31,6 +31,7 @@ public interface SolrEdcService {
 	public MessengerEdcGroupVO getMessengerGroupList(final SolrQuery sq, final String adminId, final boolean detail, final boolean original) throws IOException, SolrServerException;
 
 	public MessengerGroupUserVO getMessengerGroupUserList(final SolrQuery sq, final String adminId) throws IOException, SolrServerException;
+	public MessengerGroupSvcVO getCollectionMessageSvc(final SolrQuery sq, final String adminId) throws IOException, SolrServerException;
 	public MessengerGroupUserVO getGenerativeGroupUserList(final SolrQuery sq, final String adminId) throws IOException, SolrServerException;
 
 	public void setFeedback(final String msgId, final String ml_confd_feedback) throws ElasticsearchException, IOException;
