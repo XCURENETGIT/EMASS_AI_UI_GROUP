@@ -1603,8 +1603,9 @@ function initServiceTab() {
             $('#selectUserInfo').attr('data-svc12', svc1Value);
 
             if (svc1Value == null || typeof svc1Value === 'undefined' || svc1Value === '') {
-                $('#selectUserInfo').attr('data-svc12', 'G');
-                getCollectionGroupList(1, 'G');
+
+                $('#selectUserInfo').attr('data-svc12', getPageType());
+                getCollectionGroupList(1,  getPageType());
             } else {
                 getCollectionGroupList(1, svc1Value);
             }

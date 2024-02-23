@@ -59,9 +59,10 @@
         $('#clearBtn').click(function(){
             $('#startdate').val(new Date().format('yyyy-mm-dd'));
             $('#enddate').val(new Date().format('yyyy-mm-dd'));
+            $('#interGroup').prop('selectedIndex', 0);
 
             $('.optionBtn').removeClass('active');
-            $('#deptnm').addClass('active');
+            $('#svc1').addClass('active');
         });
 
 
@@ -290,7 +291,7 @@
 			</div>
 			<div>
 				<select id="interGroup" name="interGroup" class="input-sm form-control">
-					<option value="">- <s:message code="condition.select.interest"/> -</option>
+					<option value="1">- <s:message code="condition.select.interest"/> -</option>
 				</select>
 			</div>
 			<div class="optiotab">
