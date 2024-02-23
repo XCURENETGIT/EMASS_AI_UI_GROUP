@@ -229,7 +229,7 @@ public class CollectionController {
 		}
 
 		if (!type.equals("G")&&!type.equals("N")&&!type.equals("")){
-			query.append("+svc12:"+type);
+			query.append(" +svc12:"+type);
 		}
 
 		sq.setQuery(sq.getQuery()+query);

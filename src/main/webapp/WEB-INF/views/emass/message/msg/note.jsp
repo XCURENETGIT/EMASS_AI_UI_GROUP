@@ -43,6 +43,53 @@
 		font-size: 13px;
 	}
 
+	.busiCounts{
+		display: inline-block; color:#333;
+		border:1px solid #ddd;
+		padding:3px 8px;
+		border-radius: 20px;
+		margin-left:-4px;
+		margin-top:4px;
+	}
+	.busiCounts:hover{
+		color:#333;
+		text-decoration: underline !important;
+	}
+	.busiCounts:hover > i, .busiCounts:hover > span{
+		opacity: 1 !important;
+	}
+
+	a.busiCounts i{
+		color:#253f56
+	}
+
+	.tab_selected > a{
+		font-weight: bold;
+		color:#fff;
+		background-color: #1C64D3;
+		padding:4px 12px 3px;
+		border-radius: 16px;
+		isolation: isolate;
+		margin-top:4px;
+		border:none;
+	}
+
+	.tab_selected > a:hover {color:#fff;}
+
+	.tab_selected > a > i{
+		color:#5cb85c;
+	}
+	a:hover, a:focus{
+		text-decoration: none;
+
+
+	}
+
+	.noSearch{
+		cursor:default !important;
+	}
+
+
 </style>
 
 <head>
@@ -93,6 +140,7 @@
 
             var today = new Date();
             today.setDate(today.getDate() - 7);
+            initServiceTab();
 
             document.getElementById("startDt").valueAsDate = today;
             document.getElementById("endDt").valueAsDate = new Date();
@@ -124,6 +172,8 @@
                     return;
                 }*/
 
+                var svcArray = arrayToString($('#serviceTypeSelect').selectpicker('val'));
+                $('#selectUserInfo').attr('data-svc12',svcArray);
                 eikon2.getCollectionList(1,"N");
             });
 
@@ -153,14 +203,18 @@
 
             $('#searchMsgBtn').click(function () {
                 if ($('#searchMsgStrInput').val() == "") $('#searchMsgQueryBtn').click();
-                else eikon2.findMessageList(0,"N");
+                else eikon2.findMessageList(0);
                 //eikon.getMessengerDetailList($('#xrootmtr').text(),$('#msgid').text(), $('#srcip').text());
             });
             $('#searchMsgQueryBtn').click(function () {
                 var srcip = $('#selectUserInfo').attr('data-srcip');
                 var userkey = $('#selectUserInfo').attr('data-name');
+                var svc12 = $('#selectUserInfo').attr('data-svc12');
 
-                eikon2.getCollectionDetailList(userkey, '', srcip, '',"N");
+                if (svc12 == null || typeof svc12 === 'undefined' || svc12 === '') {
+                    svc12="N";
+                }
+                eikon2.getCollectionDetailList(userkey, '', srcip, '',svc12);
             });
             $("#searchMsgStrInput").keypress(function (e) {
                 if (e.keyCode == 13) {
@@ -170,12 +224,12 @@
             });
 
             $('#searchMsgUp').click(function () {
-                eikon2.findMessageList(--searchOffset,"N");
+                eikon2.findMessageList(--searchOffset);
 // 		checkList(--searchOffset);
             });
             $('#searchMsgDn').click(function () {
 // 		checkList(++searchOffset);
-                eikon2.findMessageList(++searchOffset,"N");
+                eikon2.findMessageList(++searchOffset);
             });
             $('#listCntArea').click(function () {
                 //if( $('#messageTotalCnt').html() == 0 || $('#messageTotalCnt').html() == '') return;
@@ -215,7 +269,13 @@
                 var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '')+"235959";
                 var searchStr = '';
                 if (userkey == '') return;
-                eikon2.getCollectionGroupTextExport('<c:url value="/getCollectionGroupAllExport.xcn"/>?userkey=' + userkey + '&srcip=' + srcip + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr+'&limit=1000&facet_detail=true&type=N&export=true');
+
+                var svc12 = $('#selectUserInfo').attr('data-svc12');
+
+                if (svc12 == null || typeof svc12 === 'undefined' || svc12 === '') {
+                    svc12="G";
+                }
+                eikon2.getCollectionGroupTextExport('<c:url value="/getCollectionGroupAllExport.xcn"/>?userkey=' + userkey + '&srcip=' + srcip + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr+'&limit=1000&facet_detail=true&export=true&type='+svc12);
                 hideSelect();
             });
             $(document).on('click', '.filesdown', function () {
@@ -376,7 +436,14 @@
                 var userkey = $(this).parent().attr('userkey');
                 var srcip = $(this).parent().attr('srcip');
                 var id = $(this).parent().attr('id');
-                updateEmassGenerativeAdminUserid(userkey, id, srcip,"N");
+                var type = $('#selectUserInfo').attr('data-svc12');
+
+                if (type == null || typeof type === 'undefined' || type === '') {
+                    type="N";
+                }
+                var id = $(this).parent().attr('id');
+                updateEmassGenerativeAdminUserid(userkey, id, srcip,type);
+
 
                 moveTargetHeight(id, false);
             });
@@ -437,7 +504,13 @@
                 $('#subchatid').html(": "+name);
                 $('#srcip').text(srcip);
                 $('#usr_id').text(usr_id);
-                eikon2.getCollectionDetailList(userkey, msgid, srcip, usr_id,"N");
+
+                var svc12 = $('#selectUserInfo').attr('data-svc12');
+
+                if (svc12 == null || typeof svc12 === 'undefined' || svc12 === '') {
+                    svc12="G";
+                }
+                eikon2.getCollectionDetailList(userkey, msgid, srcip, usr_id,svc12);
                 hideUserSelect();
             });
 
@@ -529,7 +602,12 @@
             var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '')+"235959";
             var searchStr = '';
 
-            eikon2.getCollectionGroupTextExport('<c:url value="/getCollectionrGroupTextExport.xcn"/>?userkey=' + userkey + '&srcip=' + srcip + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr + '&type=N' +'&export_type='+type + '&groupField=sender_str&limit=1000&facet_detail=true', userkey);
+            var svc12 = $('#selectUserInfo').attr('data-svc12');
+
+            if (svc12 == null || typeof svc12 === 'undefined' || svc12 === '') {
+                svc12="N";
+            }
+            eikon2.getCollectionGroupTextExport('<c:url value="/getCollectionrGroupTextExport.xcn"/>?userkey=' + userkey + '&srcip=' + srcip + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr + '&type='+svc12 +'&export_type='+type + '&groupField=sender_str&limit=1000&', userkey);
         }
 
 
@@ -877,8 +955,7 @@
 					</h2>
 				</div>
 				<div class="bortop_dd pt16 pl20 pr20">
-					<div class="subtab">
-						<button class="active"><s:message code="note.name"/>
+					<div id="busiCntArea" style="padding-left: 5px;padding-right: 15px; margin-left:6px; height:36px;">
 					</div>
 				</div>
 				<div>
