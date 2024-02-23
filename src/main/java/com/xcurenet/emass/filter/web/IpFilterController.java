@@ -129,7 +129,6 @@ public class IpFilterController {
 			}
 			
 			int rs = ipFilterService.insertIpFilter(filter);
-			makeInfoService.addInfoNoLog();
 			return new XcnResponseVO(XcnRspCode.OK, rs);
 		}
 	}
@@ -186,7 +185,6 @@ public class IpFilterController {
 			}
 			
 			int rs = ipFilterService.updateIpFilter(filter);
-			makeInfoService.addInfoNoLog();
 			return new XcnResponseVO(XcnRspCode.OK, rs);
 		}
 	}
@@ -205,7 +203,6 @@ public class IpFilterController {
 			filters.add(filter);
 		}
 		if (ipFilterService.deleteIpFilter(filters) == 1) {
-			makeInfoService.addInfoNoLog();
 			return new XcnResponseVO(XcnRspCode.OK);
 		} else {
 			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("java.error.delete", request));

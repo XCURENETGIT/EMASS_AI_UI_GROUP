@@ -46,7 +46,6 @@ public class MakeInfoController {
 			makeInfoService.addInfoIpRange();
 			makeInfoService.addInfoKeyword();
 			makeInfoService.addInfoRegExp();
-			makeInfoService.addInfoNoLog();
 			log.info("end make info. (success)");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -105,10 +104,5 @@ public class MakeInfoController {
 		return new XcnResponseVO(XcnRspCode.OK, makeInfoService.addInfoRegExp());
 	}
 
-	@RequestMapping(value = "/makeInfoNoLog")
-	@Description("MAKE INFO REGEXP")
-	@ResponseBody
-	public XcnResponseVO makeInfoNoLog(final HttpServletRequest request) throws Exception {
-		return new XcnResponseVO(XcnRspCode.OK, makeInfoService.addInfoNoLog());
-	}
+
 }

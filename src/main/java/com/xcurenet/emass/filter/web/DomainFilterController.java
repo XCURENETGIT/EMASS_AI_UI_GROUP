@@ -60,7 +60,7 @@ public class DomainFilterController {
 			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("java.already.insert.domain", request, filter.getDomain()));
 		} else {
 			int rs = domainFilterService.insertDomainFilter(filter);
-			makeInfoService.addInfoNoLog();
+			makeInfoService.addInfoDomainNoLog();
 			return new XcnResponseVO(XcnRspCode.OK, rs);
 		}
 	}
@@ -74,7 +74,7 @@ public class DomainFilterController {
 			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("java.already.insert.domain", request, filter.getDomain()));
 		} else {
 			int rs = domainFilterService.updateDomainFilter(filter);
-			makeInfoService.addInfoNoLog();
+			makeInfoService.addInfoDomainNoLog();
 			return new XcnResponseVO(XcnRspCode.OK, rs);
 		}
 	}
@@ -92,7 +92,7 @@ public class DomainFilterController {
 			filters.add(filter);
 		}
 		if (domainFilterService.deleteDomainFilter(filters) == 1) {
-			makeInfoService.addInfoNoLog();
+			makeInfoService.addInfoDomainNoLog();
 			return new XcnResponseVO(XcnRspCode.OK);
 		} else {
 			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("java.error.delete", request));

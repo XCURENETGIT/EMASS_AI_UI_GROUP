@@ -58,7 +58,7 @@ public class UrlFilterController {
 			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("java.already.insert.url", request, filter.getUrl()));
 		} else {
 			int rs = urlFilterService.insertUrlFilter(filter);
-			makeInfoService.addInfoNoLog();
+			makeInfoService.addInfoUrlNoLog();
 			return new XcnResponseVO(XcnRspCode.OK, rs);
 		}
 	}
@@ -72,7 +72,7 @@ public class UrlFilterController {
 			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("java.already.insert.url", request, filter.getUrl()));
 		} else {
 			int rs = urlFilterService.updateUrlFilter(filter);
-			makeInfoService.addInfoNoLog();
+			makeInfoService.addInfoUrlNoLog();
 			return new XcnResponseVO(XcnRspCode.OK, rs);
 		}
 	}
@@ -90,7 +90,7 @@ public class UrlFilterController {
 			filters.add(filter);
 		}
 		if (urlFilterService.deleteUrlFilter(filters) == 1) {
-			makeInfoService.addInfoNoLog();
+			makeInfoService.addInfoUrlNoLog();
 			return new XcnResponseVO(XcnRspCode.OK);
 		} else {
 			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("java.error.delete", request));

@@ -59,7 +59,7 @@ public class AttachFilterController {
 			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("java.already.insert.subject", request, filter.getAttach()));
 		} else {
 			int rs = attachFilterService.insertAttachFilter(filter);
-			makeInfoService.addInfoNoLog();
+	
 			return new XcnResponseVO(XcnRspCode.OK, rs);
 		}
 	}
@@ -73,7 +73,7 @@ public class AttachFilterController {
 			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("java.already.insert.subject", request, filter.getAttach()));
 		} else {
 			int rs = attachFilterService.updateAttachFilter(filter);
-			makeInfoService.addInfoNoLog();
+
 			return new XcnResponseVO(XcnRspCode.OK, rs);
 		}
 	}
@@ -91,7 +91,7 @@ public class AttachFilterController {
 			filters.add(filter);
 		}
 		if (attachFilterService.deleteAttachFilter(filters) == 1) {
-			makeInfoService.addInfoNoLog();
+
 			return new XcnResponseVO(XcnRspCode.OK);
 		} else {
 			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("java.error.delete", request));

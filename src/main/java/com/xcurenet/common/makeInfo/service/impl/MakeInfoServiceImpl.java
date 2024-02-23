@@ -58,9 +58,35 @@ public class MakeInfoServiceImpl extends XcnAbstractDAO implements MakeInfoServi
 	}
 
 	@Override
+	public int addInfoDomainNoLog() {
+		return makeInfoServiceMysql.addInfoDomainNoLog();
+	}
+
+	@Override
 	public int addInfoIpRangeDept() {
 		return makeInfoServiceMysql.addInfoIpRangeDept();
 	}
+
+	@Override
+	public int addInfoUrlNoLog() {
+		return makeInfoServiceMysql.addInfoUrlNoLog();
+	}
+
+	@Override
+	public int addInfoIdNoLog() {
+		return makeInfoServiceMysql.addInfoIdNoLog();
+	}
+
+	@Override
+	public int addInfoSizeNoLog() {
+		return makeInfoServiceMysql.addInfoSizeNoLog();
+	}
+
+	@Override
+	public int addInfoSubjectNoLog() {
+		return makeInfoServiceMysql.addInfoSubjectNoLog();
+	}
+
 
 	@Override
 	public int addInfoKeyword() {
@@ -72,9 +98,6 @@ public class MakeInfoServiceImpl extends XcnAbstractDAO implements MakeInfoServi
 		return makeInfoServiceMysql.addInfoRegExp();
 	}
 
-	@Override
-	public int addInfoNoLog() {
-		return makeInfoServiceMysql.addInfoNoLog();
-	}
+
 
 }

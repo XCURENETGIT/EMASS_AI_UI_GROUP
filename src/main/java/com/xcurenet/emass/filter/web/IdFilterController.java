@@ -59,7 +59,7 @@ public class IdFilterController {
 			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("java.already.insert.id", request, filter.getUserId()));
 		} else {
 			int rs = idFilterService.insertIdFilter(filter);
-			makeInfoService.addInfoNoLog();
+			makeInfoService.addInfoIdNoLog();
 			return new XcnResponseVO(XcnRspCode.OK, rs);
 		}
 	}
@@ -73,7 +73,7 @@ public class IdFilterController {
 			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("java.already.insert.id", request, filter.getUserId()));
 		} else {
 			int rs = idFilterService.updateIdFilter(filter);
-			makeInfoService.addInfoNoLog();
+			makeInfoService.addInfoIdNoLog();
 			return new XcnResponseVO(XcnRspCode.OK, rs);
 		}
 	}
@@ -91,7 +91,7 @@ public class IdFilterController {
 			filters.add(filter);
 		}
 		if (idFilterService.deleteIdFilter(filters) == 1) {
-			makeInfoService.addInfoNoLog();
+			makeInfoService.addInfoIdNoLog();
 			return new XcnResponseVO(XcnRspCode.OK);
 		} else {
 			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("java.error.delete", request));

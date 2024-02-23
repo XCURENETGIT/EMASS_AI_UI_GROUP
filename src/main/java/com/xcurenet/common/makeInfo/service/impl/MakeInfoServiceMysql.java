@@ -175,6 +175,80 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 		return result;
 	}
 
+	public int addInfoDomainNoLog() {
+		int result = 0;
+		log.info("[MAKE INFO] NoLogDomainFilter information apply start");
+		LocalDateTime localDateTime = LocalDateTime.now();
+
+		long version = getTableCurrentVersion("INFO_NOLOG_DOMAIN") + 1;
+		appendData("getInfoNoLogDomain", "INFO_NOLOG_DOMAIN", version);
+		addVersion("INFO_NOLOG_DOMAIN", version);
+		mongoUtil.updateDate("INFO_NOLOG_DOMAIN", localDateTime);
+
+		log.info("[MAKE INFO] NoLogDomainFilter information apply end");
+		return result;
+
+	}
+
+	public int addInfoSubjectNoLog() {
+		int result = 0;
+		log.info("[MAKE INFO] NoLogSubjectFilter information apply start");
+		LocalDateTime localDateTime = LocalDateTime.now();
+
+		long version = getTableCurrentVersion("INFO_NOLOG_SUBJECT") + 1;
+		appendData("getInfoNoLogSubject", "INFO_NOLOG_SUBJECT", version);
+		addVersion("INFO_NOLOG_SUBJECT", version);
+		mongoUtil.updateDate("INFO_NOLOG_SUBJECT", localDateTime);
+
+		log.info("[MAKE INFO] NoLogSubjectFilter information apply end");
+		return result;
+
+	}
+
+	public int addInfoSizeNoLog() {
+		int result = 0;
+		log.info("[MAKE INFO] NoLogSizeFilter information apply start");
+		LocalDateTime localDateTime = LocalDateTime.now();
+
+		long version = getTableCurrentVersion("INFO_NOLOG_SIZE") + 1;
+		appendData("getInfoNoLogSize", "INFO_NOLOG_SIZE", version);
+		addVersion("INFO_NOLOG_SIZE", version);
+		mongoUtil.updateDate("INFO_NOLOG_SIZE", localDateTime);
+
+		log.info("[MAKE INFO] NoLogSizeFilter information apply end");
+		return result;
+
+	}
+
+	public int addInfoUrlNoLog() {
+		int result = 0;
+		log.info("[MAKE INFO] NoLogUrlFilter information apply start");
+		LocalDateTime localDateTime = LocalDateTime.now();
+
+		long version = getTableCurrentVersion("INFO_NOLOG_URL") + 1;
+		appendData("getInfoNoLogUrl", "INFO_NOLOG_URL", version);
+		addVersion("INFO_NOLOG_URL", version);
+		mongoUtil.updateDate("INFO_NOLOG_URL", localDateTime);
+
+		log.info("[MAKE INFO] NoLogUrlFilter information apply end");
+		return result;
+
+	}
+
+	public int addInfoIdNoLog() {
+		int result = 0;
+		log.info("[MAKE INFO] NoLogIdFilter information apply start");
+		LocalDateTime localDateTime = LocalDateTime.now();
+
+		long version = getTableCurrentVersion("INFO_NOLOG_ID") + 1;
+		appendData("getInfoNoLogId", "INFO_NOLOG_ID", version);
+		addVersion("INFO_NOLOG_ID", version);
+		mongoUtil.updateDate("INFO_NOLOG_ID", localDateTime);
+
+		log.info("[MAKE INFO] NoLogIdFilter information apply end");
+		return result;
+
+	}
 
 	public int addInfoIpRange() {
 		int result = 0;
@@ -235,41 +309,6 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 		return result;
 	}
 
-	public int addInfoNoLog() {
-		int result = 0;
-		log.info("[MAKE INFO] NoLogFilter information apply start");
-		LocalDateTime localDateTime = LocalDateTime.now();
-
-		long version = getTableCurrentVersion("INFO_NOLOG_URL") + 1;
-		appendData("getInfoNoLogUrl", "INFO_NOLOG_URL", version);
-		addVersion("INFO_NOLOG_URL", version);
-		mongoUtil.updateDate("INFO_NOLOG_URL", localDateTime);
-		save(Common.toJSONArray(selectList("com.xcurenet.sqlmap.mappers.mysql.makeInfo.getInfoNoLogUrl")));
-
-		version = getTableCurrentVersion("INFO_NOLOG_SUBJECT") + 1;
-		appendData("getInfoNoLogSubject", "INFO_NOLOG_SUBJECT", version);
-		addVersion("INFO_NOLOG_SUBJECT", version);
-		mongoUtil.updateDate("INFO_NOLOG_SUBJECT", localDateTime);
-
-		version = getTableCurrentVersion("INFO_NOLOG_SIZE") + 1;
-		appendData("getInfoNoLogSize", "INFO_NOLOG_SIZE", version);
-		addVersion("INFO_NOLOG_SIZE", version);
-		mongoUtil.updateDate("INFO_NOLOG_SIZE", localDateTime);
-
-		version = getTableCurrentVersion("INFO_NOLOG_ID") + 1;
-		appendData("getInfoNoLogId", "INFO_NOLOG_ID", version);
-		addVersion("INFO_NOLOG_ID", version);
-		mongoUtil.updateDate("INFO_NOLOG_ID", localDateTime);
-
-		version = getTableCurrentVersion("INFO_NOLOG_DOMAIN") + 1;
-		appendData("getInfoNoLogDomain", "INFO_NOLOG_DOMAIN", version);
-		addVersion("INFO_NOLOG_DOMAIN", version);
-		mongoUtil.updateDate("INFO_NOLOG_DOMAIN", localDateTime);
-
-
-		log.info("[MAKE INFO] NoLogFilter information apply end");
-		return result;
-	}
 
 	public void save(JSONArray data) {
 		String urlContent = data.toString();
@@ -456,7 +495,8 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 							.USERID((String) obj.get("USERID"))
 							.build();
 					mongoUtil.insert(infoNologIdVO, collectionName);
-				} else if (Common.isEquals(collectionName, "INFO_NOLOG_DOMAIN")) {
+				}
+				else if (Common.isEquals(collectionName, "INFO_NOLOG_DOMAIN")) {
 					InfoNologDomainVO infoNologDomainVO = InfoNologDomainVO.builder()
 							.VERSION((int) obj.get("VERSION"))
 							.SERVICECD((String) obj.get("SERVICECD"))

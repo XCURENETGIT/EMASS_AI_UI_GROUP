@@ -58,7 +58,7 @@ public class SizeFilterController {
 			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("java.already.insert.service", request));
 		} else {
 			int rs = sizeFilterService.insertSizeFilter(filter);
-			makeInfoService.addInfoNoLog();
+			makeInfoService.addInfoSizeNoLog();
 			return new XcnResponseVO(XcnRspCode.OK, rs);
 		}
 	}
@@ -69,7 +69,7 @@ public class SizeFilterController {
 	@ResponseBody
 	public XcnResponseVO updateSizeFilter(SizeFilterVO filter) throws Exception {
 		int rs = sizeFilterService.updateSizeFilter(filter);
-		makeInfoService.addInfoNoLog();
+		makeInfoService.addInfoSizeNoLog();
 		return new XcnResponseVO(XcnRspCode.OK, rs);
 	}
 
@@ -86,7 +86,7 @@ public class SizeFilterController {
 			filters.add(filter);
 		}
 		if (sizeFilterService.deleteSizeFilter(filters) == 1) {
-			makeInfoService.addInfoNoLog();
+			makeInfoService.addInfoSizeNoLog();
 			return new XcnResponseVO(XcnRspCode.OK);
 		} else {
 			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("java.error.delete", request));

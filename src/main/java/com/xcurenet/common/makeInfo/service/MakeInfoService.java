@@ -11,13 +11,17 @@ public interface MakeInfoService {
 	public int addInfoWorkDay();
 
 	public int addInfoIpRange();
+	public int addInfoDomainNoLog();
 
 	public int addInfoKeyword();
 
 	public int addInfoRegExp();
 
-	public int addInfoNoLog();
 	
 	public int addInfoIpRangeDept();
+	public int addInfoUrlNoLog();
+	public int addInfoIdNoLog();
+	public int addInfoSizeNoLog();
+	public int addInfoSubjectNoLog();
 
 }
