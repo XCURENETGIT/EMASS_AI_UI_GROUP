@@ -185,7 +185,7 @@ public class CollectionController {
 		sq.setRows(rows);
 		sq.setFields("svc12", "srcip", "name", "conm", "businm", "deptnm", "jikgubnm", "suborgnm", "sname", "sender", "srcip", "sname", "user");
 		sq.setParam("group", true);
-		sq.setParam("group.field", "svc12");
+		sq.setParam("group.field", "svc12,userkey");
 		sq.setParam("group.facet", true);
 		sq.setParam("group.ngroups", true);
 		sq.setParam("facet", true);

@@ -5,6 +5,8 @@
 	String coCd = Common.nvl(request.getParameter("coCd"));
 	String oldCode = Common.nvl(request.getParameter("oldCode"));
 	String oldConm = Common.nvl(request.getParameter("oldConm"));
+	String oldDept = Common.nvl(request.getParameter("oldDept"));
+	String oldJib = Common.nvl(request.getParameter("oldJib"));
 %>
 <style>
 	input[type="checkbox"] {
@@ -17,6 +19,8 @@
     var coCd = '<%=coCd%>';
     var oldCode = '<%=oldCode%>';
     var oldConm = '<%=oldConm%>';
+    var oldDept = '<%=oldDept%>';
+    var oldJib = '<%=oldJib%>';
     var addFlag = true;
 
     $(document).ready(function () {
@@ -159,18 +163,26 @@
     }
 
     function setCode() {
+        console.log("들어옴");
         oldCode = oldCode.replaceAll(',', '|');
         var codeArr = '';
         var conmArr = '';
+        var deptArr = '';
+        var jibArr = '';
         var flag = false;
         if (oldCode.indexOf('|') > -1) {
             codeArr = oldCode.split('|');
             conmArr = oldConm.split(',');
+            deptArr = oldDept.split('|');
+            jibArr = oldJib.split('|');
         } else {
             codeArr = oldCode;
             conmArr = oldConm;
+            deptArr = oldDept;
+            jibArr = oldJib;
             flag = true;
         }
+
         var data = [];
         if (flag == false) {
             for (var i = 0; i < codeArr.length; i++) {
@@ -178,7 +190,11 @@
                     var code = codeArr[i].split('%');
                     data.push({'code': code[0], 'codeName': conmArr[i].substring(0, conmArr[i].indexOf('(')).rtrim(), 'count': code[1]});
                 } else {
-                    data.push({'code': codeArr[i], 'codeName': conmArr[i].rtrim()});
+                    if (codeType == 'user') {
+                        data.push({'code': codeArr[i], 'codeName': conmArr[i], 'tempNm1': deptArr[i], 'tempNm2': jibArr[i]});
+                    }else{
+                        data.push({'code': codeArr[i], 'codeName': conmArr[i].rtrim()});
+                    }
                 }
             }
         } else {
@@ -186,13 +202,18 @@
                 var code = codeArr.split('%');
                 data.push({'code': code[0], 'codeName': conmArr.substring(0, conmArr.indexOf('(')).rtrim(), 'count': code[1]});
             } else {
-                data.push({'code': codeArr, 'codeName': conmArr.rtrim()});
+                if (codeType == 'user') {
+                    data.push({'code': codeArr[i], 'codeName': conmArr[i].rtrim(), 'tempNm1': deptArr[i], 'tempNm2': jibArr[i]});
+                }else{
+                    data.push({'code': codeArr[i], 'codeName': conmArr[i].rtrim()});
+                }
             }
         }
         if (codeArr != null && codeArr != '' && codeArr != undefined) grid2.setData(data);
     }
 
     function setSelectedData() {
+        console.log("들어옴11112");
         var selectedData = grid2.getData();
         var selectData = grid.getSelectedRows();
         var data = [];
@@ -216,7 +237,7 @@
                 else data.push({
                     'code': selectData[i].code,
                     'codeName': selectData[i].codeName,
-                    'tempNm1': selectData[i].tempNm1,
+                    'tempNm1':selectData[i].tempNm1,
                     'tempNm2': selectData[i].tempNm2,
                     'email': selectData[i].email
                 });
@@ -408,8 +429,8 @@
         grid.colAdd('code', '<s:message code="common.msg.id"/>', 100, 'center', false, 'link');
         grid.colAdd('codeName', '<s:message code="common.msg.name"/>', 100, 'left', false, 'nomal');
         grid.colAdd('tempNm1', '<s:message code="common.org.dept"/>', 100, 'center', false, 'nomal');
-        grid.colAdd('tempNm2', '<s:message code="common.org.jikgub"/>', 260, 'left', false, 'nomal');
-        grid.colAdd('email', '<s:message code="common.org.email"/>', 260, 'left', false, 'nomal');
+        grid.colAdd('tempNm2', '<s:message code="common.org.jikgub"/>', 150, 'left', false, 'nomal');
+        /*grid.colAdd('email', '<s:message code="common.org.email"/>', 260, 'left', false, 'nomal');*/
     } else if (codeType == 'keyword') {
         grid.colAdd('tempNm1', '<s:message code="keyword.msg.partnm"/>', 120, 'left', false, 'nomal');
         grid.colAdd('codeName', '<s:message code="keyword.msg.keyword"/>', 230, 'left', false, 'link');
@@ -486,7 +507,7 @@
         grid2.colAdd('codeName', '<s:message code="common.msg.name"/>', 100, 'left', false, 'nomal');
         grid2.colAdd('tempNm1', '<s:message code="common.org.dept"/>', 100, 'center', false, 'nomal');
         grid2.colAdd('tempNm2', '<s:message code="common.org.jikgub"/>', 160, 'left', false, 'nomal');
-        grid2.colAdd('email', '<s:message code="common.org.email"/>', 260, 'left', false, 'nomal');
+       /* grid2.colAdd('email', '<s:message code="common.org.email"/>', 260, 'left', false, 'nomal');*/
     } else if (codeType == 'keyword') {
         grid2.colAdd('codeName', '<s:message code="keyword.msg.keyword"/>', 260, 'left', false, 'link');
     } else {
@@ -523,4 +544,6 @@
     };
     grid2.loadHeader(false);
     grid2.initData('<s:message code="selectCodeAll.select.code"/>');
+
+
 </script>

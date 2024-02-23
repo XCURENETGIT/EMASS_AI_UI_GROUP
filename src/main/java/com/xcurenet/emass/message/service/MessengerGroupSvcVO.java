@@ -8,6 +8,7 @@ import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.Aggregations;
+import org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.metrics.ParsedCardinality;
 import org.elasticsearch.search.aggregations.metrics.ParsedTopHits;
@@ -61,7 +62,12 @@ public class MessengerGroupSvcVO {
 		if (queryResultCnt > 0) {
 			for (Terms.Bucket bucket : bucketList) {
 				String facetSvc = bucket.getKeyAsString();
-				long facetCnt = mainAggsMap.size();
+				// "userkey" 집계(aggregation)가 있는지 확인
+				ParsedStringTerms userKeyAgg = bucket.getAggregations().get("userkey");
+				long facetCnt = 0;
+				if (userKeyAgg != null) {
+					facetCnt = userKeyAgg.getBuckets().size();
+				}
 
 				EmsSvcVo emsSvcVo = new EmsSvcVo(); // EmsSvcVo 인스턴스 생성
 				emsSvcVo.setFacetSvc(facetSvc);

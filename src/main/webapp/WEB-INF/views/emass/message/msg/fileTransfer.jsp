@@ -96,8 +96,7 @@
             $(document).on('click', '#attachOcrText', function(){
                 var msgId = $(this).parents('li').attr('msgid');
                 var attachId = $(this).parents('li').attr('attachhash');
-                //var url = '<c:url value="/ems/attachText.do?msgId='+msgId+'&attachId='+attachId+'&searchKey='+searchkey+'&ocrYn=Y"/>';
-                var url = contextRoot + '/ems/attachText.do?msgId=' + msgId+ '&attachId=' + attachId + '&searchKey=' + searchkey + '&ocrYn=Y';
+                var url = contextRoot + '/ems/attachText.do?msgId=' + msgId+ '&attachId=' + attachId + '&searchKey=' + '' + '&ocrYn=Y';
                 fnOpenWindow(url, 'attachText', 1050, 800, 'resize');
             });
 
