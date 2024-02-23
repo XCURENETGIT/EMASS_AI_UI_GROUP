@@ -318,22 +318,19 @@ public class Config {
 	@PostConstruct
 	public void init() {
 		springContextUtil.setApplicationContext(applicationContext);
-		if(!Common.isEquals(System.getProperty("spring.profiles.active"),"local")) {
-			String sqlPath = "/sqlmap/mappers/sql/";
-			if (!Common.isWindow()) sqlPath = "/users/emassai/conf/";
-			execute(sqlPath + "procedure.sql", true);
-			execute(sqlPath + "create_table.sql", false);
-			execute(sqlPath + "patch_data.sql", false);
-			execute(sqlPath + "insert_data.sql", false);
 
-			List<SearchWordVO> searchWords = searchWordService.getSearchWord(0, 1, "");
-			if (searchWords.isEmpty()) {
-				execute(sqlPath + "xcn_keyword.sql", false);
-				execute(sqlPath + "xcn_keyword_rel.sql", false);
-			}
+		/* 연관 키워드 관련 */
+		String sqlPath = "/sqlmap/mappers/sql/";
+		if (!Common.isWindow()) sqlPath = "/users/emassai/conf/";
+		List<SearchWordVO> searchWords = searchWordService.getSearchWord(0, 1, "");
+		if (searchWords.isEmpty()) {
+			execute(sqlPath + "xcn_keyword.sql", false);
+			execute(sqlPath + "xcn_keyword_rel.sql", false);
 		}
 
+
 		log.info("[CONFIG] LOAD START..");
+
 
 		configs = configService.getConfList();
 
