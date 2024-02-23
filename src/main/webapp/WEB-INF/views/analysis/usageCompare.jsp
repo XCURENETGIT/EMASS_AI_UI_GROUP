@@ -69,6 +69,8 @@ $(document).ready(function(){
     });
 
     $('#clearBtn').click(function(){
+        $('#unit').val('t');
+        $('#item').val('totalSize');
         $('#startDate').val(new Date().format('yyyy-mm-dd'));
         $('#endDate').val(new Date().format('yyyy-mm-dd'));
     });
