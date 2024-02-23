@@ -76,7 +76,7 @@ var eikon = {
         });
     },
     getMessengerList: function (page) {
-        var searchType = $('button[name="searchType"].active').val();
+        var searchType = $('button[name=searchType].active').val();
         $('#startsubdatepicker').data("DateTimePicker").date($('#startdatepicker').data("DateTimePicker").date());
         $('#endsubdatepicker').data("DateTimePicker").date($('#enddatepicker').data("DateTimePicker").date());
         if (searchType == "G") {
@@ -96,7 +96,6 @@ var eikon = {
         eikon.getMessengerDetailList(xRootmtr, msgid, '', '');
     },
     getMessengerDetailList: function (xRootmtr, msgid, srcip, usr_id) {
-
 
         if (!isDetailView()) {
             alert(condition.authAlert);
@@ -131,21 +130,6 @@ var eikon = {
             }
         });
 
-        // searchFlag = true;
-        // ui.onBody('timeline_list', 0, 60);
-        //
-        // $("#timeline_list").html('');
-        //
-        // $('#searchMsgStrInput').val('');
-        // $('#searchResult').html('');
-        // $('#searchResultArea').hide();
-        // $('#searchResultBtnArea').hide();
-        //
-        // var startDt = $('#startDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
-        // var endDt = $('#endDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
-        //
-        //
-        // getMessengerMessageTotal(xRootmtr, srcip, startDt, endDt, usr_id, '');
     },
     getMessengerGroupDetail: function (xRootmtr, msgid, srcip, usr_id) {
         searchFlag = true;
@@ -160,8 +144,7 @@ var eikon = {
 
         var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
         var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
-
-        var searchType = $('button[name="searchType"]').val();
+        var searchType = $('button[name=searchType].active').val();
         if (searchType == null || searchType == undefined) searchType = 'G';
         if (searchType == 'G') {
             getMessengerMessageTotal(xRootmtr, srcip, startDt, endDt, usr_id, '');
@@ -293,6 +276,7 @@ function getMessengerMessageTotal(xRootmtr, srcip, startDt, endDt, usr_id, msgid
  * @returns
  */
 function getMessengerMessage(xRootmtr, srcip, usr_id, msgid) {
+
     var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
     var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
 

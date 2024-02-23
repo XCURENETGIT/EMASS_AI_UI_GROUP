@@ -159,14 +159,9 @@
 
                 $(this).addClass('active');
 
-
+                $('#msgid').text(msgid);
                 $('#xrootmtr').text(xrootmtr);
 
-                // $('#selectUserInfo').attr('data-srcip', srcip);
-                // $('#selectUserInfo').attr('data-name', name);
-                // $('#selectUserInfo').attr('data-usrid', usr_id);
-                //
-                // $('#selectUserInfo').html(userid + "(" + username + ")");
                 $('#subchatid').html(": " + name);
                 $('#srcip').text(srcip);
                 $('#usr_id').text(usr_id);
@@ -336,6 +331,7 @@
                 var usr_id = $(this).attr('data-usrid');
                 var xrootmtr = $('#xrootmtr').text();
                 var msgid = $('#msgid').text();
+                // var msgid = $(this).attr('msgid');
 
                 $('#selectUserInfo').attr('data-srcip', srcip);
                 $('#selectUserInfo').attr('data-name', name);
@@ -544,7 +540,7 @@
                 var srcip = $(this).attr('data-srcip');
                 var usr_id = $(this).attr('data-usrid');
                 var xrootmtr = $('#xrootmtr').text();
-                var msgid = $('#msgid').text();
+                var  msgid= $(this).attr('msgid');
                 $('#selectUserInfo').attr('data-srcip', srcip);
                 $('#selectUserInfo').attr('data-name', name);
                 $('#selectUserInfo').attr('data-usrid', usr_id);
