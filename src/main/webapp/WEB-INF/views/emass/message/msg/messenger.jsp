@@ -52,22 +52,6 @@
 %>
 
 
-<script>
-    $(function() {
-        $("#xcn_toggleBtn").on("click", function() {
-            $("#xcn_Search").toggle("show");
-        })
-    })
-
-    $(function() {
-        $("#showBtn").on("click", function() {
-            $("#xcn_Search2").show();
-        })
-        $("#xcn_toggleBtn2").on("click", function() {
-            $("#xcn_Search2").hide();
-        })
-    })
-</script>
 
 <style>
 
@@ -1027,7 +1011,7 @@
 <div id="searchArea">
 	<div class="inner_messenger">
 		<%--			검색 영역--%>
-		<div class="leftSearch p20">
+		<div class="leftSearch p20"  id="xcn_Search">
 			<div class="leftSearchTab mat8">
 				<button class="active" onclick="openCity('Tab01')"><s:message code="condition.search.messenger"/></button>
 				<!--<button onclick="openCity('Tab02')">탭 비활성</button>-->
@@ -1107,7 +1091,7 @@
 			<div class="messengerBox">
 				<div class="subTit">
 					<h2 class="ma_none">
-						<button class="menu"></button>
+						<button id="xcn_toggleBtn" class="menu"></button>
 						<s:message code="DATA_MONITOR.MESSAGE_SERVICE"/>
 						<span class="xcnTooltip">
                                         <a><img src="<c:url value="/img/ico_info.png"/>" alt="allmenu"></a>
@@ -1296,6 +1280,21 @@
 </form>
 
 <script>
+
+    $(function() {
+        $("#xcn_toggleBtn").on("click", function() {
+            $("#xcn_Search").toggle("show");
+        })
+    })
+
+    $(function() {
+        $("#showBtn").on("click", function() {
+            $("#xcn_Search2").show();
+        })
+        $("#xcn_toggleBtn2").on("click", function() {
+            $("#xcn_Search2").hide();
+        })
+    })
     // document.querySelector(".chat[data-chat=person2]").classList.add("active-chat");
     // document.querySelector(".person[data-chat=person2]").classList.add("active");
 
