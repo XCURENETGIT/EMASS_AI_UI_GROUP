@@ -3191,7 +3191,7 @@
 
 
                                 <a href="javascript:;" class="btn05" style="padding-right:10px; color:#383838; cursor: pointer; font-size: 13px;float: right; margin-right:4px;"data-toggle="dropdown" id="exportMsg"><s:message code="common.msg.export"/><span class="caret"></span></a>
-                                <ul class="dropdown-menu dropdown-menu-left" role="menu" style="min-width:100px;font-size:13px;">
+                                <ul class="dropdown-menu dropdown-menu-left" role="menu" style="min-width:100px;font-size:13px;	">
                                     <li style="display:none;"><a href="javascript:void(0);" id="body_link_btn" class="body_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-text-o"></span>&nbsp;<s:message code="condition.body"/></a></li>
                                     <li style="display:none;"><a href="javascript:void(0);" id="attach_link_btn" class="attach_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-archive-o"></span>&nbsp;<s:message code="consent.attach"/></a></li>
                                     <li style="display:none;"><a href="javascript:void(0);" id="excel_link_btn" class="excel_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>" option="Y"><span class="fa fa-file-excel-o"></span>&nbsp;<s:message code="selectCodeAll.list"/> (<s:message code="common.msg.excel"/> xlsx)</a></li>
@@ -3239,7 +3239,7 @@
                                 <button id="bottom_btn" style="font-size: 11px; font-weight: initial; line-height: 20px; padding-right: 2px;" class="areaBtn btn05"><img src="<c:url value="/img/message/message_bottom.png"/>" style="padding-right: 4px;"></button>
                                 <button id="right_btn" style="font-size: 11px; font-weight: initial; line-height: 20px; padding-right: 2px;" class="areaBtn btn05"><img src="<c:url value="/img/message/message_right.png"/>" style="padding-right: 4px;"></button>
                             </div>
-                            <div class="dropdown-menu dropdown-menu-right"  style="min-width:180px;font-size:13px; padding:0;" id="additionalBtn">
+                            <div class="dropdown-menu dropdown-menu-right"  style="min-width:180px;font-size:13px;min-height: 415px; padding:0;" id="additionalBtn">
                                 <div class="listRow" style="padding: 0;">
                                     <div class="listRowLeft" style="text-align:center; font-weight: bold; background-color: #eaeaea; width: 120px; height: 34px;"><s:message code="condition.orderType"/></div>
                                     <select id="messageSort" class="listRowLeft" style="margin-top:5px; margin-left: 5px;">
