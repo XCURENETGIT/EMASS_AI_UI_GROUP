@@ -182,7 +182,7 @@ var con = {
 		$('#m_cc'+endId).val('');
 		$('#m_bcc'+endId).val('');
 		$('#senders'+endId).val('');
-		$('#rcvJikgub'+endId).selectpicker('val', []);
+		$('#jikgub'+endId).selectpicker('val', []);
 
 		$('#initEpmsg'+endId).selectpicker('val', []);
 
@@ -432,7 +432,7 @@ var con = {
 			}
 		}
 
-		condition.rcvJikgub = arrayToString($('#rcvJikgub').selectpicker('val'));
+		condition.jikgub = arrayToString($('#jikgub').selectpicker('val'));
 		condition.recv_jikgub_not = $('input:checkbox[id="recv_jikgub_not"]').is(":checked") ? 'Y' : '';
 
 		condition.senders = $('#senders').val();
@@ -632,12 +632,12 @@ var con = {
 		//$('#rcvBcc').val( condition.rcvBcc ); //미구현
 		//$('#jikgubInput').val( condition.jikgub ); //미구현
 
-		$('#rcvJikgub').selectpicker('val', stringToArray(condition.rcvJikgub) );
+		$('#jikgub').selectpicker('val', stringToArray(condition.jikgub) );
 		$('#busi').selectpicker('val', stringToArray(condition.busi) );
 		$('input:checkbox[id="busi_not"]').prop("disabled", condition.busi == '' ? true : false);
 		$('input:checkbox[id="busi_not"]').prop("checked", condition.busi_not == 'Y' ? true : false);
 
-		$('input:checkbox[id="recv_jikgub_not"]').prop("disabled", condition.rcvJikgub == '' ? true : false);
+		$('input:checkbox[id="recv_jikgub_not"]').prop("disabled", condition.jikgub == '' ? true : false);
 		$('input:checkbox[id="recv_jikgub_not"]').prop("checked", condition.recv_jikgub_not == 'Y' ? true : false);
 		if(condition.dept != "") {
 			$('#deptVal').val( condition.dept );
@@ -768,7 +768,7 @@ function initCondition(endId){
 		}).on("changed.bs.select", function (e) {
 			var value = $(this).selectpicker('val');
 		});
-		$('#rcvJikgub').selectpicker({
+		$('#jikgub').selectpicker({
 			size: 'auto',
 			width:'260px',
 			searchLabel:true,
@@ -870,8 +870,8 @@ function getJikgubList() {
 				console.log(data[i].jikgubCd+"//");
 
 			}
-			$('#rcvJikgub').html(str);
-			$('#rcvJikgub').selectpicker('refresh');
+			$('#jikgub').html(str);
+			$('#jikgub').selectpicker('refresh');
 		},
 		error : function(status, message) {
 			ui.alertMsg('error:' + status);

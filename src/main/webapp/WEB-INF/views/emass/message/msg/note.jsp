@@ -273,7 +273,7 @@
                 var svc12 = $('#selectUserInfo').attr('data-svc12');
 
                 if (svc12 == null || typeof svc12 === 'undefined' || svc12 === '') {
-                    svc12="G";
+                    svc12="N";
                 }
                 eikon2.getCollectionGroupTextExport('<c:url value="/getCollectionGroupAllExport.xcn"/>?userkey=' + userkey + '&srcip=' + srcip + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr+'&limit=1000&facet_detail=true&export=true&type='+svc12);
                 hideSelect();

@@ -63,6 +63,7 @@ public class SolrCreateQuery {
 	public static final String BUSICD = "busicd";
 	public static final String IP_BUSICD = "ip_busicd";
 	public static final String DEPTCD = "deptcd";
+	public static final String JIKGUBCD = "jikgubcd";
 	public static final String IP_DEPTCD = "ip_deptcd";
 	public static final String EPMSG_TYPE = "epmsg_type";
 	public static final String[] SENDER = {"sender_str", "sname", "srcip","userkey"};
@@ -545,6 +546,16 @@ public class SolrCreateQuery {
 		if(Common.isEquals(dept_not, "Y")) return addQuery(String.format("%s(%s)", EXCEPT_QUERY, query.toString()));
 		else return addQuery(String.format("%s(%s)", AND_QUERY,query.toString()));
 	}
+
+	public SolrCreateQuery setJikgub(String jikgub, String jikgub_not) {
+		if(Common.isEquals(jikgub_not, "Y")) {
+			return addQuery(String.format("%s%s:%s", EXCEPT_QUERY, JIKGUBCD, createOrQuery(jikgub_not)));
+		}
+		if (Common.isEmpty(jikgub)) return this;
+		return addQuery(String.format("%s%s:%s", AND_QUERY, JIKGUBCD, createOrQuery(jikgub)));
+	}
+
+
 	/**
 	 * 대외비 쿼리
 	 */
@@ -1204,6 +1215,9 @@ public class SolrCreateQuery {
 			String dept = Common.nvl(condition.get("dept")).replaceAll("\\|", ","); // 부서
 			String dept_not = Common.nvl(condition.get("dept_not")); //부서 부정
 
+			String jikgub = Common.nvl(condition.get("jikgub")).replaceAll("\\|", ","); // 직급
+			String jikgub_not = Common.nvl(condition.get("jikgub_not")); //직급 부정
+
 			String url = Common.nvl(condition.get("url")).replaceAll("\n", " "); //url
 			String url_not = Common.nvl(condition.get("url_not")); //url 부정
 
@@ -1292,6 +1306,7 @@ public class SolrCreateQuery {
 			setDirection(receiveSend);
 			setBusicd(busi, busi_not);
 			setDeptcd(dept, dept_not);
+			setJikgub(jikgub, jikgub_not);
 			setEpmsgType(epmsg_type);
 			setSender(senders, senders_not, senders_upperCase);
 			setReciver(receive_option, receivers, receivers_not, receivers_upperCase, m_to, m_to_not, m_cc, m_cc_not, m_bcc, m_bcc_not);

@@ -2869,7 +2869,7 @@
                                     <div class="condition_item recvs_jikgub">
                                         <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.recv_jikgub"/></div>
                                         <div class="condition_not"><label><input type="checkbox" id="recv_jikgub_not" disabled/><span> <s:message code="query.make.except"/></span></label></div>
-                                        <select id="rcvJikgub" title="<s:message code="condition.recv_jikgub.all"/>" class="selectpicker" data-style="btn-default" multiple data-show-subtext="true" data-actions-box="true"data-live-search="true"></select>
+                                        <select id="jikgub" title="<s:message code="condition.recv_jikgub.all"/>" class="selectpicker" data-style="btn-default" multiple data-show-subtext="true" data-actions-box="true"data-live-search="true"></select>
                                     </div>
                                     <div class="condition_divider"></div>
                                     <div class="condition_item">
