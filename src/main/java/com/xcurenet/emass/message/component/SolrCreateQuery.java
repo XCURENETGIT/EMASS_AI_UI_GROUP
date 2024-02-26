@@ -532,12 +532,17 @@ public class SolrCreateQuery {
 		StringBuilder query = new StringBuilder();
 		String [] deptCd = Common.toArray(deptcds, ",");
 		StringBuilder deptCd_strs = new StringBuilder();
+		StringBuilder sb = new StringBuilder();
+		for (String s : deptCd){
+			sb.append("(").append(s).append(")");
+		}
 
 		for (int i = 0; i < deptCd.length; i++) {
 			if(Common.isEquals(deptCd[i], "C00-00")){
+				System.out.println(deptCd[i]);
 				query.append(String.format("(%s%s:%s %s%s:%s) ", AND_QUERY, DEPTCD, deptCd[i], AND_QUERY, IP_DEPTCD, deptCd[i]));
 			}else{
-				deptCd_strs.append(deptCd[i]).append(SPACE);
+				deptCd_strs.append(sb).append(SPACE);
 			}
 		}
 
