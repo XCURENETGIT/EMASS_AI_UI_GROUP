@@ -767,9 +767,9 @@ h3{margin-top: 0px; !important}
     line-height: 15px;
     vertical-align: sub;
 }
-.modal-header {
-    background-color: whitesmoke;
-}
+/*.modal-header {*/
+/*    background-color: whitesmoke;*/
+/*}*/
 
 .folder_open{
     margin-right:2px; background-position:-110px -16px; vertical-align:top; *vertical-align:middle

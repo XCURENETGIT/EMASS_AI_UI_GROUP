@@ -13,6 +13,60 @@
 		.deleteText{
 			text-decoration:line-through;
 		}
+
+
+		.modal-header {
+			padding: 15px;
+			border-bottom: 1px solid #e5e5e5
+		}
+		.modal-header .close {
+			margin-top: -2px
+		}
+
+		.modal-title {
+			margin: 0;
+			line-height: 1.42857143
+		}
+
+		.modal-body {
+			position: relative;
+			padding: 15px
+		}
+
+		.modal-footer {
+			padding: 15px;
+			text-align: right;
+			border-top: 1px solid #e5e5e5
+		}
+
+		.modal-footer .btn+.btn {
+			margin-bottom: 0;
+			margin-left: 5px
+		}
+
+		.modal-footer .btn-group .btn+.btn {
+			margin-left: -1px
+		}
+
+		.modal-footer .btn-block+.btn-block {
+			margin-left: 0
+		}
+
+		.modal-scrollbar-measure {
+			position: absolute;
+			top: -9999px;
+			width: 50px;
+			height: 50px;
+			overflow: scroll
+		}
+
+	 .modal {z-index: 99999 !important;}
+	 .modal-dialog .modal-content {padding: 15px !important;max-width: 500px;}
+	 .modal-dialog .modal-content .modal-footer button {width: 100% !important; padding: 14px 20px !important; margin: 14px 0 8px 0; background-color: #1C64D3 !important; border: none !important; color: #fff !important; font-size: 16px; cursor: pointer;}
+	 .modal-dialog .modal-content .modal-footer .bootstrap-dialog-footer-buttons {padding: 8px 0 0 0;font-size: 16px;}
+	 .modal-dialog .modal-content .modal-footer button:hover{opacity: 0.8 !important;}
+	 .modal-dialog .modal-content .modal-body .bootstrap-dialog-body .bootstrap-dialog-message{ display: block; font-size: 16px; font-weight: 500; margin-top: 8px; vertical-align: middle; padding: 45px 0 0 0; background:url(../img/ico_contained.png) top center no-repeat; }
+	/* 모달 관련 임시.*/
 	</style>
 	<script type="text/JavaScript">
 		var searchFlag=false;
