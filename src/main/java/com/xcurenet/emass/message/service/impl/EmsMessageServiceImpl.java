@@ -739,6 +739,14 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 			}
 		}
 
+		for(EmsRecvVO recvVO : recvs){
+			if(recvVO.getRecvId() != null && recvVO.getRecvId().indexOf("@") > -1) {
+				String[] temp = recvVO.getRecvId().split("@");
+				recvVO.setDomain(temp[temp.length-1]);
+			}
+		}
+
+
 		final ObjectMapper objectMapper = new ObjectMapper();
 		return objectMapper.convertValue(recvs, new TypeReference<>() {});
 	}
