@@ -247,6 +247,18 @@
         //장비 추가
         function insertDevice(){
             $('.savePopBtn').prop('disabled', true);
+            if ($('#sshId').val().ltrim().rtrim()==''){
+                ui.alertMsg('<s:message code="deviceInfo.ssh.id.input"/>')
+                $('#sshId').focus();
+
+	            return;
+            }
+            if ($('#sshPw').val().ltrim().rtrim()==''){
+                ui.alertMsg('<s:message code="deviceInfo.ssh.password.input"/>')
+                $('#sshId').focus();
+	            return;
+            }
+
             ui.confirmMsg('<s:message code="common.msg.confirm.save"/>', '', '', function(rs){
                 if(rs){
                     ui.post({
