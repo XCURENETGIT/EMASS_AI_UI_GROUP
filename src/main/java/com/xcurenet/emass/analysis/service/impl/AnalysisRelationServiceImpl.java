@@ -579,6 +579,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 		freddDomQuery = "("+changeQuery(freddDomQuery).concat(")").concat(" && ").concat(freedomSearchVO.getQuery());
 		query.justAdd(freddDomQuery);
 
+
 		SolrQuery sq = new SolrQuery();
 		log.info(query.toString());
 		sq.setQuery(query.toString());
@@ -688,7 +689,6 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 							query.add(column, tmpContext, false);
 							break;
 						case ">":
-							System.out.println(">");
 							startIncludeYN = false;
 						case ">=":
 							start = tmpContext;

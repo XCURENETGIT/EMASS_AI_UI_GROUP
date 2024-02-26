@@ -145,7 +145,7 @@
 
         $('#messageListCount .caret').change(function () {
             grid.pageSize = Number($('#messageListCount .caret').attr('val'));
-            selectMessageList();
+            // selectMessageList();
         });
 
         colInit();
@@ -166,7 +166,7 @@
 					</span>
 				</div>
 				<div id="termsData"></div>
-			</div>
+			 </div>
 			<!--//LIST-->
 			<!--컬럼-->
 			<div>
@@ -863,8 +863,8 @@
             data: $("#frm").serialize() + "&tabIdx=" + tabIdx + "&query=" + selectQuery + "&offset=" + grid.data.length + "&limit=" + grid.pageSize,
             success: function (data, total) {
                 resultTotal = total;
-                grid.autoNumber();
-                grid.loadHeader(false);
+                // grid.autoNumber();
+                // grid.loadHeader(true);
                 grid.appendData(data);
                 $(".resultCnt").html('(' + addCommas(total) + ')');
             },
