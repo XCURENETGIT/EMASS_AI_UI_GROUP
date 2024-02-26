@@ -214,10 +214,10 @@
 
             $('#user').click(function () {
                 var code = $(this).attr('id');
-                openCodeWindow(code, $('#' + code + 'Val').val(), $('#' + code + 'Str').val());
+                openCodeWindow(code, $('#' + code + 'Val').val(), $('#' + code + 'Str').val(), $('#' + code + 'Dept').val(), $('#' + code + 'Jib').val());
             });
 
-			$('.txt_down').click(function () {
+            $('.txt_down').click(function () {
 				downloadList('txt');
 				hideSelect();
 			});
@@ -330,6 +330,7 @@
             });
 
             $(document).on('mouseout', '#userSelectedArea', function (e) {
+                $('#userVal, #userStr, #userDept, #userJib').val('');
                 $('#selectedCodeTitle2').hide();
             });
 
@@ -401,10 +402,11 @@
 
 		});
 
-		function openCodeWindow(id, oldCode, oldConm) {
-			$('#oldCode').val(oldCode);
-			$('#oldConm').val(oldConm);
-
+        function openCodeWindow(id, oldCode, oldConm,oldDept,oldJib) {
+            $('#oldCode').val(oldCode);
+            $('#oldConm').val(oldConm);
+            $('#oldDept').val(oldDept);
+            $('#oldJib').val(oldJib);
 			var url = '<c:url value="/commons/selectCode.do?codeType='+id+'"/>';
 			var pop = fnOpenWindow('', 'selectCodeWinPopup', 1200, 700, 'resize');
 
@@ -702,48 +704,56 @@
 			return str;
 		}
 
-		function getSelectedCodeData(codeType, data) {
-			var str = '';
-			var val = '';
-			for (var i = 0; i < data.length; i++) {
-				str += data[i].codeName;
-				val += data[i].code;
-				if (codeType == 'regexp') {
-					var arr = data[i].count.split('@');
-					if (arr[0] == 'B') str += '(' + arr[1] + '<s:message code="selectCodeAll.items"/> ~ ' + arr[2] + '<s:message code="selectCodeAll.items"/>)';
-					else if (arr[0] == 'L') str += '(' + arr[1] + '<s:message code="selectCodeAll.items"/> <s:message code="selectCodeAll.over"/>)';
-					else str += '(' + arr[1] + '<s:message code="selectCodeAll.items"/> <s:message code="selectCodeAll.below"/>)';
-					val += '%' + data[i].count;
-				}
+        function getSelectedCodeData(codeType, data) {
+            var str = '';
+            var val = '';
+            var dept = '';
+            var jib = '';
 
-				if (i != data.length - 1) {
-					str += ', ';
-					val += '|';
-				}
-			}
-			if (val != '') {
-				str = str.rtrim();
-				val = val.trimAll();
-			}
+            for (var i = 0; i < data.length; i++) {
+                str += data[i].codeName;
+                val += data[i].code;
 
-			$('#' + codeType + 'Str').val(str);
-			$('#' + codeType + 'Val').val(val);
+                dept += (data[i].tempNm1 !== undefined) ? data[i].tempNm1 : "";
 
-			if ($('#' + codeType + 'Str').val() != '') {
-				$('#' + codeType + 'SelectedArea').find('.btn').text(data.length);
-				$('#' + codeType + 'SelectedArea').show();
-			} else {
-				$('#' + codeType + 'SelectedArea').find('.btn').text(0);
-				$('#' + codeType + 'SelectedArea').hide();
-			}
-		}
+                jib += (data[i].tempNm2 !== undefined) ? data[i].tempNm2 : "";
 
-		function resetCode(codeType) {
-			if (codeType == 'deptByCo') $('#deptByCoStrSpan').html('');
-			$('#' + codeType + 'Val').val('');
-			$('#' + codeType + 'Str').val('');
-			$('#' + codeType + 'SelectedArea').hide();
-		}
+                if (i != data.length - 1) {
+                    str += ', ';
+                    val += '|';
+                    dept += '|';
+                    jib += '|';
+                }
+            }
+            if (val != '') {
+                str = str.rtrim();
+                val = val.trimAll();
+                dept = dept.trimAll();
+                jib = jib.trimAll();
+            }
+
+            $('#' + codeType + 'Str').val(str);
+            $('#' + codeType + 'Val').val(val);
+            $('#' + codeType + 'Dept').val(dept);
+            $('#' + codeType + 'Jib').val(jib);
+
+            if ($('#' + codeType + 'Str').val() != '') {
+                $('#' + codeType + 'SelectedArea').find('.btn').text(data.length);
+                $('#' + codeType + 'SelectedArea').show();
+            } else {
+                $('#' + codeType + 'SelectedArea').find('.btn').text(0);
+                $('#' + codeType + 'SelectedArea').hide();
+            }
+        }
+
+        function resetCode(codeType) {
+            if (codeType == 'deptByCo') $('#deptByCoStrSpan').html('');
+            $('#' + codeType + 'Val').val('');
+            $('#' + codeType + 'Str').val('');
+            $('#' + codeType + 'Dept').val('');
+            $('#' + codeType + 'Jib').val('');
+            $('#' + codeType + 'SelectedArea').hide();
+        }
 	</script>
 </head>
 <div id="searchArea">
@@ -811,6 +821,8 @@
 									</span>
 							<input type="hidden" id="userStr" class="selectedTitle">
 							<input type="hidden" id="userVal">
+							<input type="hidden" id="userDept">
+							<input type="hidden" id="userJib">
 						</p>
 						<div id="selectedCodeTitle2" class="infotxt"></div>
 					</div>
@@ -892,4 +904,6 @@
 <form method="post" id="codeParam">
 	<input type="hidden" name="oldCode" id="oldCode"></input>
 	<input type="hidden" name="oldConm" id="oldConm"></input>
+	<input type="hidden" name="oldDept" id="oldDept"></input>
+	<input type="hidden" name="oldJib" id="oldJib"></input>
 </form>

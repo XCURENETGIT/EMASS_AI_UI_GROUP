@@ -58,14 +58,16 @@
             openCodeWindow(code, $('#' + code + 'Val').val(), $('#' + code + 'Str').val());
         });
 
+
         $('#user').click(function () {
             var code = $(this).attr('id');
-            openCodeWindow(code, $('#' + code + 'Val').val(), $('#' + code + 'Str').val());
+            openCodeWindow(code, $('#' + code + 'Val').val(), $('#' + code + 'Str').val(), $('#' + code + 'Dept').val(), $('#' + code + 'Jib').val());
         });
 
 
+
         $(document).on('click', '#userSelectedArea', function (e) {
-            $('#userVal, #userVal').val('');
+            $('#userVal, #userStr, #userDept, #userJib').val('');
             $('#userSelectedArea').hide();
         });
 
@@ -93,7 +95,7 @@
             $('#enddate').val(new Date().format('yyyy-mm-dd'));
             $('#deptVal, #deptStr').val('');
             $('#deptSelectedArea').hide();
-            $('#userVal, #userVal').val('');
+            $('#userVal, #userStr, #userDept, #userJib').val('');
             $('#userSelectedArea').hide();
 
             $('.optionBtn').removeClass('active');
@@ -206,10 +208,11 @@
         initGrid(currentgrid, messageGridColumn);
     }
 
-
-    function openCodeWindow(id, oldCode, oldConm) {
+    function openCodeWindow(id, oldCode, oldConm,oldDept,oldJib) {
         $('#oldCode').val(oldCode);
         $('#oldConm').val(oldConm);
+        $('#oldDept').val(oldDept);
+        $('#oldJib').val(oldJib);
 
         var url = '<c:url value="/commons/selectCode.do?codeType='+id+'"/>';
         var pop = fnOpenWindow('', 'selectCodeWinPopup', 1200, 700, 'resize');
@@ -596,6 +599,8 @@
 									</span>
 				<input type="hidden" id="userStr" class="selectedTitle">
 				<input type="hidden" id="userVal">
+				<input type="hidden" id="userDept">
+				<input type="hidden" id="userJib">
 
 
 			</div>
@@ -656,6 +661,8 @@
 <form method="post" id="codeParam">
 	<input type="hidden" name="oldCode" id="oldCode"></input>
 	<input type="hidden" name="oldConm" id="oldConm"></input>
+	<input type="hidden" name="oldDept" id="oldDept"></input>
+	<input type="hidden" name="oldJib" id="oldJib"></input>
 </form>
 
 
@@ -975,4 +982,48 @@
             }
         });
     }
+
+
+    function getSelectedCodeData(codeType, data) {
+        var str = '';
+        var val = '';
+        var dept = '';
+        var jib = '';
+
+        for (var i = 0; i < data.length; i++) {
+            str += data[i].codeName;
+            val += data[i].code;
+
+            dept += (data[i].tempNm1 !== undefined) ? data[i].tempNm1 : "";
+
+            jib += (data[i].tempNm2 !== undefined) ? data[i].tempNm2 : "";
+
+            if (i != data.length - 1) {
+                str += ', ';
+                val += '|';
+                dept += '|';
+                jib += '|';
+            }
+        }
+        if (val != '') {
+            str = str.rtrim();
+            val = val.trimAll();
+            dept = dept.trimAll();
+            jib = jib.trimAll();
+        }
+
+        $('#' + codeType + 'Str').val(str);
+        $('#' + codeType + 'Val').val(val);
+        $('#' + codeType + 'Dept').val(dept);
+        $('#' + codeType + 'Jib').val(jib);
+
+        if ($('#' + codeType + 'Str').val() != '') {
+            $('#' + codeType + 'SelectedArea').find('.btn').text(data.length);
+            $('#' + codeType + 'SelectedArea').show();
+        } else {
+            $('#' + codeType + 'SelectedArea').find('.btn').text(0);
+            $('#' + codeType + 'SelectedArea').hide();
+        }
+    }
+
 </script>
