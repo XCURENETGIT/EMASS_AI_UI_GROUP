@@ -691,7 +691,7 @@ public class SolrCreateQuery {
 		if(Common.isEquals(attachYn, "Y")){
 
 			if (Common.isEquals(realAttYn, "Y")) realyAttQueryStr.append(String.format("%s%s:%s", AND_QUERY, ATTACH_EXIST_CNT, ">0"));
-			else if (Common.isEquals(realAttYn, "N")) realyAttQueryStr.append(String.format("%s%s:%s ", AND_QUERY, ATTACH_EXIST_CNT, "0").concat(String.format("%s%s:%s", AND_QUERY, ATTACH_CNT, "0")));
+			else if (Common.isEquals(realAttYn, "N")) realyAttQueryStr.append(String.format("%s%s:%s ", AND_QUERY, ATTACH_EXIST_CNT, "0"));
 
 
 			if (Common.isEquals(drmYn, "Y")) drmQueryStr.append(String.format("%s%s:%s", AND_QUERY, DRM, ">0"));

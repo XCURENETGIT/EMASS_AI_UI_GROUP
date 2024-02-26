@@ -508,7 +508,7 @@
                 var svc12 = $('#selectUserInfo').attr('data-svc12');
 
                 if (svc12 == null || typeof svc12 === 'undefined' || svc12 === '') {
-                    svc12="G";
+                    svc12="N";
                 }
                 eikon2.getCollectionDetailList(userkey, msgid, srcip, usr_id,svc12);
                 hideUserSelect();
