@@ -6,9 +6,7 @@
     Highcharts.setOptions({
         chart: {
             type: 'column',
-            marginTop: 15,
-            marginBottom: 60,
-            spacingBottom: 0
+            marginTop : 25
         },
         global: {useUTC: false},
         gridLineColor: '#fff',
@@ -424,12 +422,13 @@
 
         if(grid1.getValue(grid1.Row, 'NUM') == '<s:message code="bodyview.total"/>') {
             var key = "";
-            for(var i=0; i<grid1.Rows; i++) {
-                console.log(grid1.getValue(i, 'rowKey') );
-                if(grid1.getValue(i, 'rowKey') == "" || grid1.getValue(i, 'rowKey') == "-") continue;
-                else key += grid1.getValue(i, 'rowKey').replaceAll("\"", "\\\"") + ",";
-            }
-            rowKey = key;
+            if (grid1.ColKey(grid1.Col) == "total") {
+                for (var i = 0; i < grid1.Rows; i++) {
+                    if (grid1.getValue(i, 'rowKey') == "" || grid1.getValue(i, 'rowKey') == "-") continue;
+                    else key += grid1.getValue(i, 'rowKey').replaceAll("\"", "\\\"") + ",";
+                }
+                rowKey = key;
+            }else rowKey = grid1.ColKey(grid1.Col);
         }else {
             rowKey = grid1.getValue(grid1.Row, 'rowKey').replaceAll("\"", "\\\"");
         }

@@ -474,6 +474,7 @@ public class SolrEdcStatController {
 		String query = "";
 		int cnt = rowKey.length();
 
+
 		String adminId = Common.nvl(request.getParameter("adminId"));
 		if (Common.isEmpty(adminId)) adminId = "*";
 
@@ -483,8 +484,7 @@ public class SolrEdcStatController {
 			if (t.length > 0) {
 				String values = "";
 				for (String value : t) {
-
-					values += "\"" + value + "\" ";
+					if (!value.equals(" ")) values += "(" + value +")";
 				}
 				if (Yflag.equals("N")) {
 					yAxis = "svc12";
@@ -497,19 +497,19 @@ public class SolrEdcStatController {
 				} else {
 					query += "+" + yAxis + ":" + rowKey + " ";
 				}
-
 			}
 		}
 
+
 		if (Common.isEquals(dateType,"date"))query += String.format(" +checked.readTime:[%s TO %s]", startDate, endDate);
 		else query +=String.format(" +ctime:[%s TO %s]", startDate, endDate);
+
 		query += String.format("+checked.readId:%s", adminId);
 
 		SolrQuery sq = new SolrQuery();
 		sq.setQuery(query);
 		sq.setStart(offset);
 		sq.setRows(limit);
-	//	sq.setSort("ctime", SolrQuery.ORDER.desc);
 
 		SolrEdcMessageVO solrStatVo = solrEdcService.getEmassMessage(sq, Common.getAdminId(request), "", null);
 		return new XcnResponseVO(XcnRspCode.OK, solrStatVo, solrStatVo.getNumFound());
