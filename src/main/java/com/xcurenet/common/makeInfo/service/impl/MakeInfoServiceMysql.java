@@ -1,35 +1,32 @@
 package com.xcurenet.common.makeInfo.service.impl;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.xcurenet.common.dao.TransactionManager;
+import com.xcurenet.common.dao.XcnAbstractDAO;
+import com.xcurenet.common.ftp.SFTPUtil;
 import com.xcurenet.common.makeInfo.service.*;
+import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.MongoUtil;
+import com.xcurenet.common.util.config.Config;
+import com.xcurenet.device.service.DeviceService;
+import com.xcurenet.device.service.DeviceVO;
+import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
-import com.xcurenet.common.dao.TransactionManager;
-import com.xcurenet.common.dao.XcnAbstractDAO;
-import com.xcurenet.common.ftp.SFTPUtil;
-import com.xcurenet.common.util.Common;
-import com.xcurenet.common.util.config.Config;
-import com.xcurenet.device.service.DeviceService;
-import com.xcurenet.device.service.DeviceVO;
-
-import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -451,7 +448,7 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 				} else if (Common.isEquals(collectionName, "INFO_IPRANGE_DEPT")) {
 					InfoIpRangeDeptVO infoIpRangeDeptVO = InfoIpRangeDeptVO.builder()
 							.VERSION((int) obj.get("VERSION"))
-							.SLP((String) obj.get("SLP"))
+							.SLP((String) obj.get("SIP"))
 							.EIP((String) obj.get("EIP"))
 							.DEPTCD((String) obj.get("DEPTCD"))
 							.DEPTNM((String) obj.get("DEPTNM"))
