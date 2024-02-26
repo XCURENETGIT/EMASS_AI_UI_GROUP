@@ -91,6 +91,8 @@
 <form method="post" id="codeParam">
 	<input type="hidden" name="oldCode" id="oldCode"></input>
 	<input type="hidden" name="oldConm" id="oldConm"></input>
+	<input type="hidden" name="oldDept" id="oldDept"></input>
+	<input type="hidden" name="oldJib" id="oldJib"></input>
 </form>
 
 <script>
@@ -108,25 +110,25 @@
         /* 보낸사람 */
         $('#senders').click(function () {
             var code = $(this).attr('id');
-            openCodeWindow("senders", $('#' + code + 'Val').val(), $('#' + code + 'Str').val());
+            openCodeWindow(code, $('#' + code + 'Val').val(), $('#' + code + 'Str').val(), $('#' + code + 'Dept').val(), $('#' + code + 'Jib').val());
         });
 
         /* 받는사람 */
         $('#receivers').click(function () {
             var code = $(this).attr('id');
-            openCodeWindow('receivers', $('#' + code + 'Val').val(), $('#' + code + 'Str').val());
+            openCodeWindow(code, $('#' + code + 'Val').val(), $('#' + code + 'Str').val(), $('#' + code + 'Dept').val(), $('#' + code + 'Jib').val());
         });
 
 
 
 ;
         $(document).on('click', '#sendersSelectedArea', function (e) {
-            $('#sendersStr, #sendersVal').val('');
+            $('#sendersStr, #sendersVal,#sendersDept, #sendersJib').val('');
             $('#sendersSelectedArea').hide();
         });
 
         $(document).on('click', '#receiversSelectedArea', function (e) {
-            $('#receiversStr, #receiversVal').val('');
+            $('#receiversStr, #receiversVal,#receiversDept, #receiversJib').val('');
             $('#receiversSelectedArea').hide();
         });
 
@@ -234,9 +236,12 @@
     }
 
 
-	function openCodeWindow(id, oldCode, oldConm) {
-		$('#oldCode').val(oldCode);
-		$('#oldConm').val(oldConm);
+    function openCodeWindow(id, oldCode, oldConm,oldDept,oldJib) {
+        $('#oldCode').val(oldCode);
+        $('#oldConm').val(oldConm);
+        $('#oldDept').val(oldDept);
+        $('#oldJib').val(oldJib);
+
 
 		var url = '<c:url value="/commons/selectCode.do?codeType='+id+'"/>';
 		var pop = fnOpenWindow('', 'selectCodeWinPopup', 1200, 700, 'resize');
@@ -306,6 +311,8 @@
 					</span>
 					<input type="hidden" id="sendersStr" class="selectedTitle"/>
 					<input type="hidden" id="sendersVal"/>
+					<input type="hidden" id="sendersDept"/>
+					<input type="hidden" id="sendersJib"/>
 				</div>
 
 				<%-- 받는사람 --%>
@@ -317,6 +324,8 @@
 						</span>
 					<input type="hidden" id="receiversStr" class="selectedTitle"/>
 					<input type="hidden" id="receiversVal"/>
+					<input type="hidden" id="receiversDept"/>
+					<input type="hidden" id="receiversJib"/>
 				</div>
 
 
@@ -725,6 +734,48 @@
             return true;
         }
         return false;
+    }
+
+    function getSelectedCodeData(codeType, data) {
+        var str = '';
+        var val = '';
+        var dept = '';
+        var jib = '';
+
+        for (var i = 0; i < data.length; i++) {
+            str += data[i].codeName;
+            val += data[i].code;
+
+            dept += (data[i].tempNm1 !== undefined) ? data[i].tempNm1 : "";
+
+            jib += (data[i].tempNm2 !== undefined) ? data[i].tempNm2 : "";
+
+            if (i != data.length - 1) {
+                str += ', ';
+                val += '|';
+                dept += '|';
+                jib += '|';
+            }
+        }
+        if (val != '') {
+            str = str.rtrim();
+            val = val.trimAll();
+            dept = dept.trimAll();
+            jib = jib.trimAll();
+        }
+
+        $('#' + codeType + 'Str').val(str);
+        $('#' + codeType + 'Val').val(val);
+        $('#' + codeType + 'Dept').val(dept);
+        $('#' + codeType + 'Jib').val(jib);
+
+        if ($('#' + codeType + 'Str').val() != '') {
+            $('#' + codeType + 'SelectedArea').find('.btn').text(data.length);
+            $('#' + codeType + 'SelectedArea').show();
+        } else {
+            $('#' + codeType + 'SelectedArea').find('.btn').text(0);
+            $('#' + codeType + 'SelectedArea').hide();
+        }
     }
 
 

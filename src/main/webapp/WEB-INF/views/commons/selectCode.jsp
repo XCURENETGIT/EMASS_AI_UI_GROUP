@@ -163,25 +163,30 @@
     }
 
     function setCode() {
-        console.log("들어옴");
-        oldCode = oldCode.replaceAll(',', '|');
+
         var codeArr = '';
         var conmArr = '';
         var deptArr = '';
         var jibArr = '';
+
+
         var flag = false;
         if (oldCode.indexOf('|') > -1) {
             codeArr = oldCode.split('|');
             conmArr = oldConm.split(',');
             deptArr = oldDept.split('|');
             jibArr = oldJib.split('|');
+
+            console.log("if");
         } else {
-            codeArr = oldCode;
-            conmArr = oldConm;
-            deptArr = oldDept;
-            jibArr = oldJib;
+
+            codeArr = [oldCode];
+            conmArr = [oldConm];
+            deptArr = [oldDept];
+            jibArr = [oldJib];
             flag = true;
         }
+
 
         var data = [];
         if (flag == false) {
@@ -190,8 +195,12 @@
                     var code = codeArr[i].split('%');
                     data.push({'code': code[0], 'codeName': conmArr[i].substring(0, conmArr[i].indexOf('(')).rtrim(), 'count': code[1]});
                 } else {
-                    if (codeType == 'user') {
+                    if (codeType == 'user'||codeType == 'senders'||codeType == 'receivers') {
+                        if (codeArr.length==1){
+                            data.push({'code': codeArr[0], 'codeName': conmArr[0], 'tempNm1': deptArr[0], 'tempNm2': jibArr[0]});
+                        }else{
                         data.push({'code': codeArr[i], 'codeName': conmArr[i], 'tempNm1': deptArr[i], 'tempNm2': jibArr[i]});
+                            }
                     }else{
                         data.push({'code': codeArr[i], 'codeName': conmArr[i].rtrim()});
                     }
@@ -202,8 +211,12 @@
                 var code = codeArr.split('%');
                 data.push({'code': code[0], 'codeName': conmArr.substring(0, conmArr.indexOf('(')).rtrim(), 'count': code[1]});
             } else {
-                if (codeType == 'user') {
-                    data.push({'code': codeArr[i], 'codeName': conmArr[i].rtrim(), 'tempNm1': deptArr[i], 'tempNm2': jibArr[i]});
+                if (codeType == 'user'||codeType == 'senders'||codeType == 'receivers') {
+                    if (codeArr.length==1){
+                        data.push({'code': codeArr[0], 'codeName': conmArr[0], 'tempNm1': deptArr[0], 'tempNm2': jibArr[0]});
+                    }else{
+                        data.push({'code': codeArr[i], 'codeName': conmArr[i], 'tempNm1': deptArr[i], 'tempNm2': jibArr[i]});
+                    }
                 }else{
                     data.push({'code': codeArr[i], 'codeName': conmArr[i].rtrim()});
                 }
@@ -213,7 +226,6 @@
     }
 
     function setSelectedData() {
-        console.log("들어옴11112");
         var selectedData = grid2.getData();
         var selectData = grid.getSelectedRows();
         var data = [];
