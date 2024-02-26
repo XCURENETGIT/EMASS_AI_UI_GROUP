@@ -215,6 +215,7 @@
 
     grid.onClick = function() {
         if (grid.Col == grid.ColIndex('no')) {
+			opener.$('.listTab_div').css("width","70%");
             opener.selectedConsent( grid.getRowData( grid.Row ) );
             self.close();
         }

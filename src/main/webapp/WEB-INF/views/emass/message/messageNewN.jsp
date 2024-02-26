@@ -1839,7 +1839,7 @@
         function clickHeader(obj){
 
             if(tabIsSelected(obj)) return;
-
+            $('.listTab_div').css("width","83%");
             var index = $(obj).parents('li').attr('data-index');
             if(index == ''){
                 if( addTabFlag ) return;
@@ -2302,6 +2302,7 @@
             return fnOpenWindow(url, 'selectConsentWinPopup', 1000, 700, 'resize');
         }
         function resetConsentNo(){
+           $('.listTab_div').css("width","83%");
             $('#consentNo').val('');
             $('#consentName').text('');
             $('#consentShortName').val('');

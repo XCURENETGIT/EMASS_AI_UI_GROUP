@@ -867,7 +867,7 @@ function getJikgubList() {
 			var str = '';
 			for (var i = 0; i < data.length; i++) {
 				str += '<option value="'+data[i].jikgubCd+'">'+data[i].jikgubNm+'</option>';
-				console.log(data[i].jikgubCd+"//");
+				//console.log(data[i].jikgubCd+"//");
 
 			}
 			$('#jikgub').html(str);

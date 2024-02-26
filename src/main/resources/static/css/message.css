@@ -250,6 +250,7 @@ input[type="text"] {
 
 .listTab_div {
 	min-width: 425px;
+	width: 83%;
 	list-style: none;
 	margin: 0px;
 	padding: 0px;
