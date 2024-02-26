@@ -23,7 +23,7 @@ import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
 
 @Controller
-@AuditParentMenu(ParentMenu.OPERATION_MGMT)
+@AuditParentMenu(ParentMenu.POLICY_SETUP)
 @AuditMenu(Menu.ORG_MGMT)
 public class JikgubController {
 

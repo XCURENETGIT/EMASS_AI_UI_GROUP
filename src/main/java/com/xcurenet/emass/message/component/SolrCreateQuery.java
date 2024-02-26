@@ -1113,7 +1113,7 @@ public class SolrCreateQuery {
 	}
 
 	// 조건 처리
-	public SolrQuery createQuery(JSONObject param, String adminId, String searchTime) throws Exception {
+	public SolrQuery  createQuery(JSONObject param, String adminId, String searchTime) throws Exception {
 		//String filterName = Common.nvl(param.get("filterName")); // 필터명
 		//String p_filter_seq = Common.nvl(param.get("p_filter_seq")); // 상위필터seq(필터저장위치)
 		//String consentEmail = Common.nvl(param.get("consentEmail")); // 동의서 Id
