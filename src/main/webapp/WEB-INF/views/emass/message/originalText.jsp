@@ -22,9 +22,11 @@
 	
 	String body = "";
 	String title = "";
+	String subTitle = "";
 	String no_data = "";
 	if( Common.isEquals(type, "header")){
 		title = Prop.propFormat("common.msg.header", Common.getLocale(session));
+		subTitle = Prop.propFormat("common.msg.headerInfo", Common.getLocale(session));
 		EmsHeaderVO headerVo = emassService.getEmassHeader(msgId);
 		if (headerVo == null || Common.isEmpty(headerVo.getHeader())){
 			body = Prop.propFormat("common.msg.nocontent", Common.getLocale(session));
@@ -38,6 +40,7 @@
 	}
 	else if( Common.isEquals(type, "original")){
 		title = Prop.propFormat("common.msg.original", Common.getLocale(session));
+		subTitle = Prop.propFormat("common.msg.originalInfo", Common.getLocale(session));
 		EmsBodyVO emsBody = emassService.getEmassBody(msgId, Common.getFirstAdminYn(session), Common.getAdminType(session));
 		if (emsBody == null || emsBody.getBody() == null){
 			body = Prop.propFormat("common.msg.nocontent", Common.getLocale(session));
@@ -65,6 +68,7 @@ xmp {
 var type = '<%=type%>';
 var msgId = '<%=msgId%>';
 var no_data = '<%=no_data%>';
+
 $(document).ready(function(){
 	$('#saveBtn').click(function(){
 		saveOriginalText( );
@@ -165,7 +169,7 @@ function saveOriginalText( )
 			<div class="content_body ">
 				<div class="row p20 grayBg" style="margin:0;">
 					<div class="col-xs-10">
-						<h2 class="navi"><span id="code_title"></span><s:message code="common.msg.view.original"/></h2>
+						<h2 class="navi" style="margin-top:6px;"><span id="code_title"></span><%=subTitle %></h2>
 					</div>
 					<div class="col-xs-2 text-right">
 						<button type="button" class="btn btn-sm btn-default" id="saveBtn"><span class="glyphicon glyphicon-floppy-save"></span>&nbsp;<s:message code="common.msg.save"/></button>
