@@ -541,7 +541,7 @@
             endDate : endDate,
             listData : $('#dynamicSearch').val(),
             sendUser : sendUser,
-            receiveUser : receiveUser,
+            receivers : receiveUser,
             keyword : keyword,
             fileSize : fileSize,
             interGroup : interGroup,
@@ -737,6 +737,7 @@
     }
 
     function getSelectedCodeData(codeType, data) {
+        console.log("Gg");
         var str = '';
         var val = '';
         var dept = '';
@@ -744,7 +745,7 @@
 
         for (var i = 0; i < data.length; i++) {
             str += data[i].codeName;
-            val += data[i].code;
+            val += data[i].email;
 
             dept += (data[i].tempNm1 !== undefined) ? data[i].tempNm1 : "";
 
