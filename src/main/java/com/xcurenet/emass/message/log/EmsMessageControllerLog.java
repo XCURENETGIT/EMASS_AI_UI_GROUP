@@ -49,6 +49,31 @@ public class EmsMessageControllerLog {
 		auditService.insertAudit(request, auditVo);
 	}
 
+	public void emassWarningMail(final HttpServletRequest request, AuditRequestVO auditVo)  {
+		JSONObject param = Common.getParam(request);
+		String xRootMtr = Common.nvl(param.get("xRootMtr"));
+		String msgId = Common.nvl(param.get("msgId"));
+		String subject = Common.nvl(param.get("subject"));
+		String from = Common.nvl(param.get("from"));
+		String to = Common.nvl(param.get("to"));
+		String cc = Common.nvl(param.get("cc"));
+
+		StringBuffer info = new StringBuffer();
+		info.append("["+Prop.propFormat("common.msg.warning_mail")+"]").append(ENTER);
+		if( Common.isEmpty(msgId)) info.append(Prop.propFormat("condition.xrootmtr") + " : ").append(xRootMtr).append(ENTER);
+		else info.append(""+Prop.propFormat("common.msg.msgid")+" : ").append(msgId).append(ENTER);
+
+		if( Common.isNotEmpty(subject)) info.append(Prop.propFormat("condition.subject") + " : ").append(subject).append(ENTER);
+		if( Common.isNotEmpty(from)) info.append(Prop.propFormat("mail.sender") + " : ").append(from).append(ENTER);
+		if( Common.isNotEmpty(to)) info.append(Prop.propFormat("condition.to") + " : ").append(to).append(ENTER);
+		if( Common.isNotEmpty(cc)) info.append(Prop.propFormat("condition.cc") + " : ").append(cc).append(ENTER);
+		auditVo.setInformation(info.toString());
+		auditService.insertAudit(request, auditVo);
+	}
+
+
+
+
 	public void getEmassMessageSaveZip(final HttpServletRequest request, AuditRequestVO auditVo) {
 		JSONObject param = Common.getParam(request);
 		String searchType = Common.nvl(param.get("searchType"));
