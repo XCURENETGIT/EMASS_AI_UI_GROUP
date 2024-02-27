@@ -30,6 +30,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.InputStream;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -58,6 +59,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 
 	@Autowired
 	private MongoUtil mongo;
+
 
 	String message_prefix = "EMS_MESSAGE_";
 
@@ -352,7 +354,8 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 					attachVO.setOcrYn("Y");
 					attachVO.setOcrText(ocrVo.getAttachText());
 					try {
-						attachVO.setOcrImageStr(ImageUtils.imageResize(attachDown.getAttach(attachVO.getAttachPath(), attachVO.getAttachHarPath()), 200));
+						InputStream is  = minioFileAdapter.findFile(attachVO.getAttachPath());
+						attachVO.setOcrImageStr(ImageUtils.imageResize(is, 200));
 					} catch (Exception e) {
 						log.error("", e);
 					}

@@ -1,19 +1,13 @@
 package com.xcurenet.common.image;
 
-import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UncheckedIOException;
-import java.util.Base64;
-
-import javax.imageio.ImageIO;
-
 import org.apache.commons.io.IOUtils;
 import org.imgscalr.Scalr;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
+import java.io.*;
+import java.util.Base64;
 
 
 public class ImageUtils {
