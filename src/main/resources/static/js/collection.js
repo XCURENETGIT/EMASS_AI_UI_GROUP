@@ -628,23 +628,27 @@ function makeFileServiceList(data) {
         str += '<img src="' + mainContext + '/img/ico_w_chatshare_fill.png" alt="외부" height="12px">';
         str += filelist.Outside+'</span>';
     }
-    str += data.attachname + '</h4>';
+    str += (data.name ? data.name : '-') + '</h4>'; // If data.name is not present, use '-'
     str += '<div class="loca">' + data.svcNm + '</div>';
     str += '</div>';
     str += '<div class="conBox">';
     str += '<div class="borbottom_dashed pb16">';
     str += '<p>';
-    str += '<span class="name">' + data.ipBusiNm + '</span> <span class="xcn_bar"></span>';
-    str += '<span class="name">' + data.ipDeptNm + '</span> <span class="xcn_bar"></span>';
-    str += '<span class="name">' + data.name + '</span>';
+    str += '<span class="name">' + data.userList[0].busiNm + '</span> <span class="xcn_bar"></span>';
+    str += '<span class="name">' + data.userList[0].deptNm + '</span> <span class="xcn_bar"></span>';
+    str += '<span class="name">' + (data.userList[0].name ? data.userList[0].name : '-') + '</span>'; // If data.name is not present, use '-'
     str += '</p>';
     str += '<p class="rightBox">';
     str += '<span>' + data.ctime + '</span>';
     str += '</p>';
+    var totalAttachSize = 0;
+    for (var i = 0; i < data.files.length; i++) {
+        totalAttachSize += data.files[i].attachSize;
+    }
     str += '<table class="subTable2 mat8"><tr><th>';
     str+=   filelist.srcIp +'</th><td class="topline">' + data.srcIp + '</td><th>'+filelist.dstIp+'</th><td class="topline">' + data.dstIp + '</td>';
-    str += '<tr xmlns="http://www.w3.org/1999/html"><th>'+filelist.bodySize+'</th><td>' + data.bodySize + '</td><th>'+filelist.userId+'</th><td>' + '</td></tr>';
-    str += '<tr><th>HOST/PATH</th><td colspan="3" class="mal8 tableLink txt_left">' + data.host + data.path + '</td><tr></table>';
+    str += '<tr xmlns="http://www.w3.org/1999/html"><th>'+filelist.bodySize+'</th><td>' + totalAttachSize + '</td><th>'+filelist.userId+'</th><td>' +(data.usrid ? data.usrid : '-') + '</td></tr>';
+    str += '<tr><th>HOST/PATH</th><td colspan="3" class="mal8 tableLink txt_left">' + (data.host ? data.host : '') + (data.path ? data.path : '') + '</td><tr></table>'; // If data.host or data.path is not present, use empty string
     str += '</div>';
     str += '<div class="messageCon"> <div class="top grayBg03"><h4 class="fileCntArea">'+filelist.fileinfo+'(' + files.length + ')</h4><div class="btn btnform" style="padding: 0px; border: none;"><button accesskey="V" class="btn05 downAllFile"><img src="'+mainContext+'/img/subBtn_save.png" alt="전체 저장">'+filelist.allSave+'</buttonaccesskey></div></div><div class="filelist"><ul>';
     str +=  filediv(data) + '</ul>';
@@ -653,6 +657,7 @@ function makeFileServiceList(data) {
 
     return str;
 }
+
 var extClass = "";
 function filediv(data) {
     var files = data.files;
@@ -671,16 +676,16 @@ function filediv(data) {
         } else {
             extClass = " differentExt";
         }
-        console.log("attacccch: "+ file.attachHash);
-
 
         fileStr += '<li msgid="' + data.msgId + '" id="' + file.attachId + '" size="' + file.attachSize  + '" attachHash="' + file.attachHash + '" class="' + trClass + extClass +'" >';
 
         fileStr +=  '<p class="attach_'+attachExt+' attach_file_img">';
         if (attachNameExist == "N") fileStr += '<a href="#" class="downloadIcon">'+filelist.noname +'</a>';
-        else{ fileStr += '<a href="#" class="downloadIcon" style="text-decoration: underline;" attachname="' + attachName + '">';
+        else{ fileStr += '<a href="#" class="downloadIcon attachName" style="text-decoration: underline;" attachname="' + attachName + '">';
             fileStr += '' + attachName;
         };
+        fileStr+='<div id="imgPreviewDiv"></div>';
+
         fileStr+='(' + convertFileSize(file.attachSize) + ')</a></p>';
         fileStr += '<div class="btn btnform" style="padding: 0px; border: none;">';
         fileStr += '<button class="btn03 borradius downloadIcon"><img src="'+mainContext+'/img/subBtn_save.png">'+filelist.save+'</button>';
