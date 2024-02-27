@@ -481,11 +481,11 @@ public class SolrCreateQuery {
 	 * 사업장 쿼리
 	 */
 	public SolrCreateQuery setBusicd(String busicds, String busi_not) {
-		System.out.println(busicds);
 		if (Common.isEmpty(busicds)) return this;
 		String queryType = Config.getString("query.type", "A"); // 인사정보기준 + IP 기준 사업장 정보
 		StringBuffer query = new StringBuffer();
-		String [] busicd = Common.toArray(busicds, ",");
+//		String [] busicd = Common.toArray(busicds, ",");
+		String [] busicd = busicds.split(",");
 		StringBuilder busicd_strs = new StringBuilder();
 
 		if( Common.isEquals(queryType, "B")) { //인사정보 기준 사업장 정보
@@ -513,7 +513,7 @@ public class SolrCreateQuery {
 				if(Common.isEquals(busicd[i], "C00-00")){
 					query.append(String.format("(%s%s:%s %s%s:%s) ", AND_QUERY, BUSICD, busicd[i], AND_QUERY, IP_BUSICD, busicd[i]));
 				}else{
-					busicd_strs.append(busicd[i]).append(SPACE);
+					busicd_strs.append("(").append(busicd[i]).append(")").append(SPACE);
 				}
 			}
 
