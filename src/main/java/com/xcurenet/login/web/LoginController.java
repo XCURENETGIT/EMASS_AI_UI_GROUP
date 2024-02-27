@@ -256,7 +256,6 @@ public class LoginController {
 	@Description("로그인 처리 프로세스")
 	@ResponseBody
 	public XcnResponseVO loginProcess(LoginVO login, final HttpServletRequest request, final HttpServletResponse response, final HttpSession session) throws Exception {
-		log.info("*************로그인 테스트");
 
 		AuditVO audit = new AuditVO();
 		audit.setAdminIp(request.getRemoteAddr());

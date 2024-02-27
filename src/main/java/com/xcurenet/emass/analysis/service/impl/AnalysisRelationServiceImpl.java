@@ -576,7 +576,8 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 
 		SolrQueryString query = new SolrQueryString();
 		String freddDomQuery = getFreedomQuery(freedomSearchVO);
-		freddDomQuery = "("+changeQuery(freddDomQuery).concat(")").concat(" && ").concat(freedomSearchVO.getQuery());
+
+		freddDomQuery = changeQuery(getFreedomQuery(freedomSearchVO)).concat(freedomSearchVO.getQuery());
 		query.justAdd(freddDomQuery);
 
 		SolrQuery sq = new SolrQuery();
