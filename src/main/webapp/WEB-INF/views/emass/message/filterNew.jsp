@@ -548,8 +548,8 @@
 					</div>
 				</div>
 				<div class="modalfooter">
-					<button type="button" class="pop_btn02"   data-dismiss="modal" aria-label="Close"><s:message code="common.msg.close"/></button>
-					<button type="button" class="pop_btn01 savePopBtn" accesskey="S" id="saveFolderBtn"><s:message code="common.msg.save"/></button>
+					<button type="button" class="pop_btn01"   data-dismiss="modal" aria-label="Close"><s:message code="common.msg.close"/></button>
+					<button type="button" class="pop_btn02 savePopBtn" accesskey="S" id="saveFolderBtn"><s:message code="common.msg.save"/></button>
 				</div>
 			</div>
 		</div>
