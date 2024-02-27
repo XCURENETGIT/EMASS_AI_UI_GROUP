@@ -9,4 +9,4 @@ BEGIN
                 EXECUTE STMT;
         END;
     END IF;
-END;
+END

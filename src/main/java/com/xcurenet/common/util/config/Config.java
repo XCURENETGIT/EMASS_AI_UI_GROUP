@@ -167,6 +167,8 @@ public class Config {
 
 	public static String DBMS_NAME = "mysql";
 
+	public static String CURRENT_LANGUAGE = "";
+
 	public static Map<String, String> elsFields = new HashMap<>();
 
 
@@ -319,9 +321,11 @@ public class Config {
 	public void init() {
 		springContextUtil.setApplicationContext(applicationContext);
 
-		/* 연관 키워드 관련 */
 		String sqlPath = "/sqlmap/mappers/sql/";
 		if (!Common.isWindow()) sqlPath = "/users/emassai/conf/";
+
+
+		/* 연관 키워드 관련 */
 		List<SearchWordVO> searchWords = searchWordService.getSearchWord(0, 1, "");
 		if (searchWords.isEmpty()) {
 			execute(sqlPath + "xcn_keyword.sql", false);
@@ -383,6 +387,13 @@ public class Config {
 
 		Locale lo = Locale.forLanguageTag(Config.getString("default.lang", "ko"));
 		Locale.setDefault(lo);
+		CURRENT_LANGUAGE = lo.getLanguage();
+
+		if(!Common.isEquals(lo.getLanguage(),CURRENT_LANGUAGE)) {
+			if (Common.isEquals(lo.getLanguage(), "ko")) execute(sqlPath + "Update_Query_ko.sql", false);
+			else execute(sqlPath + "Update_Query_en.sql", false);
+		}
+
 		log.info("시스템 언어:{}", lo.getLanguage());
 
 		log.info("[CONFIG] LOAD END..");
