@@ -971,7 +971,7 @@ public class SolrCreateQuery {
 	public SolrCreateQuery setReProcessYn(String reprocessYn) {
 		if (Common.isEmpty(reprocessYn)) return this;
 		if (Common.isEquals(reprocessYn, "Y")) return addQuery(String.format("%s%s:%s", AND_QUERY, REPROCESS, "1"));
-		else if (Common.isEquals(reprocessYn, "N")) return addQuery(String.format("%s%s:%s", EXCEPT_QUERY, REPROCESS, "0"));
+		else if (Common.isEquals(reprocessYn, "N")) return addQuery(String.format("%s%s:%s", AND_QUERY, REPROCESS, "0"));
 		else return this;
 	}
 
