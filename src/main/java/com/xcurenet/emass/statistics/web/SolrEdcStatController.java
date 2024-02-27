@@ -484,7 +484,7 @@ public class SolrEdcStatController {
 			if (t.length > 0) {
 				String values = "";
 				for (String value : t) {
-					if (!value.equals(" ")) values += "(" + value +")";
+					if (!value.equals(" ")) values += "(" + value.replaceAll("시", "") +")";
 				}
 				if (Yflag.equals("N")) {
 					yAxis = "svc12";
