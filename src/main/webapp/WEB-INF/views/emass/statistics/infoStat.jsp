@@ -105,6 +105,11 @@
 
 		$('#searchBtn').click(function () {
 			closeDetailTab();
+            if ($('#piCount').val() === '' || $('#piCount').val() === null || $('#piCount').val() === undefined) {
+                alert('piCount 값을 입력해주세요.');
+                return;
+            }
+
 			getData('Y');
 			if (codeType == 'deptByCo') $('#deptByCoStrSpan').html('');
 			$('#' + codeType + 'Val').val('');
@@ -159,8 +164,6 @@
 			$('#totalViewDiv').hide();
 			printChart(totalChartDat);
 		});
-
-		getData('Y');
 
 	});
 
@@ -308,8 +311,8 @@
 
 			<div>
 				<select id="piCount" name="piCount">
-					<option value=""><s:message code="condition.infoStat.cnt"/></option>
-					<option value="1" selected=""><s:message code="condition.infoStat.cnt1"/></option>
+					<option value="" selected=""><s:message code="condition.infoStat.cnt"/></option>
+					<option value="1" ><s:message code="condition.infoStat.cnt1"/></option>
 					<option value="2"><s:message code="condition.infoStat.cnt2"/></option>
 					<option value="5"><s:message code="condition.infoStat.cnt5"/></option>
 					<option value="10"><s:message code="condition.infoStat.cnt10"/></option>
@@ -596,32 +599,35 @@
     grid2.initData('<s:message code="common.msg.search.click"/>');
 
     grid2.onClick = function() {
-        if (grid.Col == grid.ColIndex('attachcnt')) {
-            fileInfoViewer( grid.Row );
-        }else if (grid.Col == grid.ColIndex('user')) {
-            userInfoViewer( grid.Row, 'user' );
-        }else if (grid.Col == grid.ColIndex('sender')) {
-            userInfoViewer( grid.Row, 'sender' );
-        }else if (grid.Col == grid.ColIndex('recvs')) {
-            if(grid.getValue(grid.Row, 'recvs') != '') 	userInfoViewer( grid.Row, 'recvs');
-        }else if (grid.Col == grid.ColIndex('to')) {
-            if(grid.getValue(grid.Row, 'to') != '') userInfoViewer( grid.Row, 'to');
-        }else if (grid.Col == grid.ColIndex('cc')) {
-            if(grid.getValue(grid.Row, 'cc') != '') userInfoViewer( grid.Row, 'cc');
-        }else if (grid.Col == grid.ColIndex('bcc')) {
-            if(grid.getValue(grid.Row, 'bcc') != '') userInfoViewer( grid.Row, 'bcc');
-        }else if(grid.Col == grid.ColIndex('pi_total')) {
-            regexpInfoViewer(grid.Row);
-        }else if(grid.Col == grid.ColIndex('referer_url')) {
-            var referer_url = grid.getValue(grid.Row, 'referer_url');
+
+        var msgid = grid2.getValue(grid2.Row, 'msgid');
+
+        if (grid2.Col == grid2.ColIndex('attachcnt')) {
+            fileInfoViewer( msgid);
+        }else if (grid2.Col == grid2.ColIndex('user')) {
+            userInfoViewer( msgid, 'user' );
+        }else if (grid2.Col == grid2.ColIndex('sender')) {
+            userInfoViewer( msgid, 'sender' );
+        }else if (grid2.Col == grid2.ColIndex('recvs')) {
+            if(grid2.getValue(grid2.Row, 'recvs') != '') 	userInfoViewer( grid2.Row, 'recvs');
+        }else if (grid2.Col == grid2.ColIndex('to')) {
+            if(grid2.getValue(grid2.Row, 'to') != '') userInfoViewer( grid2.Row, 'to');
+        }else if (grid2.Col == grid2.ColIndex('cc')) {
+            if(grid2.getValue(grid2.Row, 'cc') != '') userInfoViewer( grid2.Row, 'cc');
+        }else if (grid2.Col == grid2.ColIndex('bcc')) {
+            if(grid2.getValue(grid2.Row, 'bcc') != '') userInfoViewer( grid2.Row, 'bcc');
+        }else if(grid2.Col == grid2.ColIndex('pi_total')) {
+            regexpInfoViewer(msgid);
+        }else if(grid2.Col == grid2.ColIndex('referer_url')) {
+            var referer_url = grid2.getValue(grid2.Row, 'referer_url');
             if(referer_url !='N') fnOpenWindow(referer_url, '', 1024, 800, 'resize');
-        }else if (grid.Col == grid.ColIndex('ocr_attach_cnt')) {
-            ocrFileInfoViewer( grid.Row );
+        }else if (grid2.Col == grid2.ColIndex('ocr_attach_cnt')) {
+            ocrFileInfoViewer( msgid);
         }
 
         if( !(adminMenu != "ALL" && adminMenu.indexOf("DV") < 0) ) {
-            if(!parent.$('#none_btn').hasClass('areaSelected')) viewer_open(grid.Row);
-            if(popWin) viewer_openFocus(grid.Row);
+            if(!parent.$('#none_btn').hasClass('areaSelected')) viewer_open(grid2.Row);
+            if(popWin) viewer_openFocus(grid2.Row);
         } else {
             alert('<s:message code="message.auth.no.detailview"/>');
             return;
@@ -637,8 +643,8 @@
 	function viewer_open(row, bodySize) {
 		var msgid = grid2.getValue(row, 'msgid');
 		openMessageBodyPop(grid2.id, msgid, '', bodySize);
-		grid.setValue(row, grid2.ColIndex('readYn'), 'Y');
-		grid.Select(row, 0);
+        grid2.setValue(row, grid2.ColIndex('readYn'), 'Y');
+        grid2.Select(row, 0);
 	}
 
 	function getData(flag) {
@@ -864,7 +870,7 @@
 			type: type,
 			startDate: $('#startdate').val().replaceAll("-", "") + "000000",
 			endDate: $('#enddate').val().replaceAll("-", "") + "235959",
-			piCount: 1,
+			piCount: piCount,
 			offset: 0,
 			limit: -1,
             deptStr: deptStr,

@@ -937,7 +937,7 @@
 
 							<button class="btn01" id="user"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
 									code="common.org.choose.user"/></button>
-							<span id="userSelectedArea" class="codeSelectedBtn">
+							<span id="userSelectedArea" class="codeSelectedBtn2">
 										<button type="button" class="btn num_add bornone"  style="z-index: 2;">0</button>
 									</span>
 							<input type="hidden" id="userStr" class="selectedTitle">

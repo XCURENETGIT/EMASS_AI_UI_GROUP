@@ -27,7 +27,7 @@
                 getData();
             });
             $("#deviceIp").html(getDeviceOptions());
-            getData();
+            /*getData();*/
         });
 
         function getData(lastRow) {

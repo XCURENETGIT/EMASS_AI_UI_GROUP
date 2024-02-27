@@ -545,6 +545,10 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 		String[] querys = freddDomQuery.split("&&");
 		for (int i = 0; i < querys.length; i++) {
 			String query = querys[i];
+			if (query.equals(" ")) continue;
+			if (i!=0)result += "&&";
+
+
 			if (query.contains("-") && query.contains("||")) {
 				List<String> q = Arrays.asList(query.split("\\|\\|"));
 				result += "-(";
@@ -563,9 +567,8 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 
 				result += String.join(" && ", tmpq) + ")";
 			} else {
-//				result += String.join(" && ", query);
-				if (querys.length - 1 == 0 || i == querys.length - 1) result += query;
-				else if (i != querys.length - 1) result += query + " && ";
+
+				result +="("+query+")";
 			}
 		}
 		return result;
@@ -576,8 +579,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 
 		SolrQueryString query = new SolrQueryString();
 		String freddDomQuery = getFreedomQuery(freedomSearchVO);
-
-		freddDomQuery = changeQuery(getFreedomQuery(freedomSearchVO)).concat(freedomSearchVO.getQuery());
+		freddDomQuery = "("+changeQuery(getFreedomQuery(freedomSearchVO)).concat(")").concat(" && ").concat(freedomSearchVO.getQuery());
 		query.justAdd(freddDomQuery);
 
 		SolrQuery sq = new SolrQuery();
@@ -609,6 +611,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 
 		for (int i = 0; i < andOr.length; i++) {
 
+
 			switch (Common.nvl(andOr[i])) {
 				case "and":
 					query.and();
@@ -617,6 +620,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 					query.or();
 					break;
 			}
+
 
 			if (Common.nvl(beforePparen[i]).equals("(")) {
 				query.beforeParen();
@@ -712,6 +716,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 			if (afterPparen[i].equals(")")) {
 				query.afterParen();
 			}
+
 		}
 
 

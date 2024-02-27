@@ -709,7 +709,7 @@
             }
         })
     }
-    }
+
 
     function getSelectedCodeData(codeType, data) {
         var str = '';
@@ -720,6 +720,8 @@
         for (var i = 0; i < data.length; i++) {
             str += data[i].codeName;
             val += data[i].code;
+
+            console.log(data[i].tempNm1);
 
             dept += (data[i].tempNm1 !== undefined) ? data[i].tempNm1 : "";
 

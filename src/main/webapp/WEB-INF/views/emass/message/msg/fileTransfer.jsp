@@ -75,6 +75,10 @@
 				}
 			});
 
+            $(document).click(function(){
+                $('#imgPreviewDiv').hide();
+            });
+
             $(document).on('click', '#attachText', function(){
                 var searchkey=$('#searchStrInput').val();
 
@@ -83,6 +87,10 @@
 
                 var url = contextRoot + '/ems/attachText.do?msgId='+msgId+'&attachId='+attachId+'&searchKey='+searchkey;
                 fnOpenWindow(url, 'attachText', 1050, 800, 'resize');
+            });
+
+            $(document).on('mouseover', '.attachName', function(){
+                filePreviewEv(this);
             });
 
 /*            $(document).on('click', '#attachOcrText', function(){
@@ -330,8 +338,12 @@
             });
 
             $(document).on('mouseout', '#userSelectedArea', function (e) {
-                $('#userVal, #userStr, #userDept, #userJib').val('');
                 $('#selectedCodeTitle2').hide();
+            });
+
+            $(document).on('click', '#userSelectedArea', function (e) {
+                $('#userVal, #userStr, #userDept, #userJib').val('');
+                $('#userSelectedArea').hide();
             });
 
 			$(document).on('click', '.codeSelectedBtn', function (e) {
@@ -349,7 +361,14 @@
 				moveTargetHeight(id, false);
 			});
 
-			$(document).on('click', '.person', function () {
+
+            $(document).on('click', '#imgPreviewDiv', function(){
+                fullSize(this);
+            });
+
+
+
+            $(document).on('click', '.person', function () {
 
 				if ((isConsent() && $('#consentNo').val() == '') || $(this).attr('userkey') == '') {
 					return;
@@ -754,6 +773,65 @@
             $('#' + codeType + 'Jib').val('');
             $('#' + codeType + 'SelectedArea').hide();
         }
+
+        function fullSize( obj )
+        {
+            var imgUrl = $(obj).attr('url');
+            var fileName = $(obj).attr('filename');
+
+            console.log(obj);
+
+            console.log(imgUrl);
+            console.log(fileName);
+
+            var url = contextRoot + '/ems/imgFullsize.do';
+
+            var winObj = fnOpenWindow('about:blank', "fullSize", 700, 500, "resize" );
+
+            document.imageForm.imgUrl.value = imgUrl;
+            document.imageForm.fileName.value = fileName;
+            document.imageForm.target = "fullSize";
+            document.imageForm.action = url;
+            document.imageForm.submit();
+            winObj.focus();
+        }
+
+        /**
+         * 이미지 미리보기 이벤트 발생
+         */
+        function filePreviewEv( obj )
+        {
+            //contentBodyNew.js 파일에서는 Loading.gif 이미지를 호출할 수가 없어 jsp로 function 뺌
+            var fileName = $(obj).attr('attachname');
+            var str_loc  = fileName.lastIndexOf(".");
+            var fileExt = fileName.substring(str_loc+1);
+            fileExt = fileExt.toLowerCase( );
+            if ( fileExt == "jpg" || fileExt == "jpeg" || fileExt == "gif" || fileExt == "png" || fileExt == "bmp" )
+            {
+                var msgId = $(obj).parents('li').attr('msgid');
+                var attachId = $(obj).parents('li').attr('id');
+                var url = contextRoot + '/downEmassAttach.xcn?msgId='+msgId+'&attachId='+attachId;
+                var u = '<c:url value="/img/loading/Loading.gif"/>';
+                var n = '<c:url value="/img/noneImage.png"/>';
+                var urlStr = "<div id='noneImage' style='width: 200px; height: 200px; padding-left:0px;padding-top:50px;text-align:center;'><img src='"+u+"'/></div>";
+                urlStr += "<a href='javascript:void(0)'><img border='0' id='realImage' style='display:none;' width='200px;' height='200px;' src='"+url+"' onerror=\"this.src='" + n + "';\" onload=\"noneImage.style.display='none';this.style.display=''\" /></a>";
+                urlStr += '<div id="fullSizeOverlay" style="display:none; position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; background-color: #000; opacity: .7; cursor: pointer;"><div style="background-color: #fff; display: inline-block; opacity: 1 !important; padding: 1px; position: relative; top: 95px; left: 30px;"><s:message code="message.msg.img.big"/></div></div>';
+
+                $('#imgPreviewDiv').html(urlStr);
+                $('#imgPreviewDiv').attr('url',url);
+                $('#imgPreviewDiv').attr('fileName',fileName);
+
+                var left = $(obj).offset().left;
+                if( $(obj).offset().left + $('#imgPreviewDiv').width() > $(window).width()){
+                    left-=$('#imgPreviewDiv').width()-20;
+                }
+                $('#imgPreviewDiv').css('top', $(obj).offset().top + 15);
+                $('#imgPreviewDiv').css('left', left + 40);
+                setTimeout(function(){
+                    $('#imgPreviewDiv').fadeIn();
+                }, 100);
+            }
+        }
 	</script>
 </head>
 <div id="searchArea">
@@ -816,7 +894,7 @@
 
 							<button class="btn01" id="user"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
 									code="common.org.choose.user"/></button>
-							<span id="userSelectedArea" class="codeSelectedBtn">
+							<span id="userSelectedArea" class="codeSelectedBtn2">
 										<button type="button" class="btn num_add bornone"  style="z-index: 2;">0</button>
 									</span>
 							<input type="hidden" id="userStr" class="selectedTitle">
@@ -906,4 +984,9 @@
 	<input type="hidden" name="oldConm" id="oldConm"></input>
 	<input type="hidden" name="oldDept" id="oldDept"></input>
 	<input type="hidden" name="oldJib" id="oldJib"></input>
+</form>
+
+<form name="imageForm" method="post" target="">
+	<input type="hidden" name="imgUrl">
+	<input type="hidden" name="fileName">
 </form>

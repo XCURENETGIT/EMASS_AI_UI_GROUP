@@ -363,7 +363,6 @@
 					<div class="row">
 						<div class="col-35">
 							<label for="attachDesc" class="fname"><s:message code="codeInfo.attachcomment"/></label>
-							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
 							<input type="text" class="w100" name="attachDesc" id="attachDesc" placeholder="<s:message code="codeInfo.attachcomment"/>" maxlength="300">

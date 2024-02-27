@@ -845,6 +845,7 @@
 					<div class="row">
 						<div class="col-35">
 							<label for="deptCdPopInput"><s:message code="common.org.co"/></label>
+							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
 							<div id="coNmPopSelect_inDept"></div>
@@ -854,7 +855,6 @@
 					<div class="row">
 						<div class="col-35">
 							<label for="deptCdPopInput"><s:message code="common.org.pdept"/></label>
-							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
 							<div id="pDeptPopSelect_inDept"></div>

@@ -8,9 +8,7 @@
     Highcharts.setOptions({
         chart: {
             type: 'column',
-            marginTop : 15,
-            marginBottom : 60,
-            spacingBottom: 0
+            marginTop : 25
         },
         global : { useUTC : false },
         gridLineColor: '#fff',
