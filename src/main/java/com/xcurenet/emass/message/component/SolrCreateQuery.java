@@ -1365,7 +1365,7 @@ public class SolrCreateQuery {
 	private String getSearchQuery(String query) {
 		if( query.startsWith("|")) query = query.substring(1);
 
-		query = query.replaceAll("([+])\\1+","+").replaceAll("([|])\\1+","|").replaceAll("(-)\\1+","-"); // 연산자를 연속2개입력시 1개로 줄이기
+		query = query.replaceAll("([/])\\1+","/").replaceAll("([+])\\1+","+").replaceAll("([|])\\1+","|").replaceAll("(-)\\1+","-"); // 연산자를 연속2개입력시 1개로 줄이기
 
 		query = getTempQuery(query);
 		StringBuilder sb = new StringBuilder();
