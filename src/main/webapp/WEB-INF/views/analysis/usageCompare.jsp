@@ -166,7 +166,7 @@ $(document).ready(function(){
 	
 	$('#detailListCount .caret').change(function(){ 
 		grid2.pageSize = Number( $('#detailListCount .caret').attr('val') );
-		selectDetailList('N');
+		selectDetailList('Y');
 	});
 	
 	// colInit2('N');
@@ -361,7 +361,6 @@ function eventEnterSearch(event) {
 				if ( value != undefined ) return convertFileSize(value);
 				else return '';
 			} );
-			grid1.loadHeader(false);
 			grid1.initData('<s:message code="common.msg.search.click"/>');
 
 		}
@@ -370,16 +369,15 @@ function eventEnterSearch(event) {
 		var grid2 = new Xgrid('detailListGrid', contextRoot, 26, {commonId:'selectTotalList', status_cnt_id:'#detailCnt', more_btn:'slick_grid_more_btn'});
 
 		// function colInit2(reloadYN) {
-			grid2.colInit();
-			initGrid(grid2, messageGridColumn);
-            grid2.loadHeader(false)
+		// 	grid2.colInit();
+		initGrid(grid2, messageGridColumn);
+        grid2.loadHeader(false)
+        grid2.loadPageSize();
+        grid2.changePageSize = function(cnt){
+            selectDetailList('Y');
+        };
 
-			<%--if(reloadYN != 'Y') {--%>
-                grid2.loadHeader(false);
-				grid2.loadExportMenu('<s:message code="analysis.usagecompare.ui.datacompareanalysis"/>');
-			<%--	grid2.loadPageSize();--%>
-			<%--}--%>
-		// }
+		grid2.loadExportMenu('<s:message code="analysis.usagecompare.ui.datacompareanalysis"/>');
 
 		function getUsageChart() {
 			if($('#startDate').val() > $('#endDate').val()) {
@@ -502,11 +500,11 @@ function eventEnterSearch(event) {
 				offset : grid2.data.length,
 				limit : grid2.pageSize,
 				success : function(data, total) {
+
 					resultTotal = total;
-					grid2.autoNumber();
-					grid2.loadHeader(false);
 					grid2.appendData(data.list);
 					$(".resultCnt").html('('+addCommas(data.total)+')');
+                    if ( grid2.loadingPage == 0 ) grid2.Select(-1,-1);
 				},
 				error : function(status, message) {
 					ui.alertMsg(message);
