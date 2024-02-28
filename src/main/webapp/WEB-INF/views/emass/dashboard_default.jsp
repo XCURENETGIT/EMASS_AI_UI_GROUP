@@ -18,7 +18,7 @@
 		overflow: hidden;
 		white-space: nowrap;
 		text-overflow: ellipsis;
-		max-width: 6em;
+		max-width: 10em !important;
 	}
 
 	.files :hover{
