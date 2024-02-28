@@ -498,17 +498,17 @@ public class LoginController {
 		JSONObject ntpStatus = ntpScheduler.getNtpStatus();
 		loginMsg += "\n";
 		loginMsg += "\n";
-		loginMsg += "         *****  " + Prop.propFormat("trap.message.ntp", Common.getLocale(session)) + "  *****";
+		loginMsg += "         *****  " + Prop.propFormat("trap.message.Chrony", Common.getLocale(session)) + "  *****";
 		loginMsg += "\n";
 		loginMsg += "\n";
-		loginMsg += Prop.propFormat("trap.message.ntp.server", Common.getLocale(session)) + " : " + ntpStatus.getString("ntpServer") + "\n";
+		loginMsg += Prop.propFormat("trap.message.Chrony.server", Common.getLocale(session)) + " : " + ntpStatus.getString("ntpServer") + "\n";
 
 		if (Common.isEquals(ntpStatus.getString("status"), "sync")) {
-			loginMsg += Prop.propFormat("trap.message.ntp.sync.msg", Common.getLocale(session)) + " : " + Prop.propFormat("trap.message.ntp.sync", Common.getLocale(session)) + "\n";
+			loginMsg += Prop.propFormat("trap.message.Chrony.sync.msg", Common.getLocale(session)) + " : " + Prop.propFormat("trap.message.Chrony.sync", Common.getLocale(session)) + "\n";
 		} else if (Common.isEquals(ntpStatus.getString("status"), "unsync")) {
-			loginMsg += Prop.propFormat("trap.message.ntp.sync.msg", Common.getLocale(session)) + " : " + Prop.propFormat("trap.message.ntp.unsync", Common.getLocale(session)) + "\n";
+			loginMsg += Prop.propFormat("trap.message.Chrony.sync.msg", Common.getLocale(session)) + " : " + Prop.propFormat("trap.message.Chrony.unsync", Common.getLocale(session)) + "\n";
 		} else {
-			loginMsg += Prop.propFormat("trap.message.ntp.sync.msg", Common.getLocale(session)) + " : " + Prop.propFormat("trap.message.ntp.unconnect", Common.getLocale(session)) + "\n";
+			loginMsg += Prop.propFormat("trap.message.Chrony.sync.msg", Common.getLocale(session)) + " : " + Prop.propFormat("trap.message.Chrony.unconnect", Common.getLocale(session)) + "\n";
 		}
 
 		obj.put("welcomeInfo", loginMsg);

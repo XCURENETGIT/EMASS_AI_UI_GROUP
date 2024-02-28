@@ -119,7 +119,7 @@
 				<%} else {%>
 				<span id="ntpColor" class="top_flag03"></span>&nbsp; <%-- 추후 레드 변경--%>
 				<%}%>
-				<span id="ntpStatus" class="fb600">NTP - <%=Common.nvl(ntpInfo.get("ntpServer")) %></span>
+				<span id="ntpStatus" class="fb600">Chrony - <%=Common.nvl(ntpInfo.get("ntpServer")) %></span>
 			</p>
 			<p>
 				<span class="graybbb"><s:message code="login.login.date"/> : ${sessionScope.sessionLastLoginDt}</span>
@@ -145,19 +145,18 @@
     function changeMainMenu(val) {
         $('.topMenuLi:eq(0) .topMenu').attr('href', '<c:url value="/ems/dashboard.do?menuKey="/>' + val);
     }
-
     function changeNTP(ntpServer, lv) {
-        let ntpStr = 'NTP - ' + ntpServer;
+        let ntpStr = 'Chrony - ' + ntpServer;
         let titleStr = '';
         if (lv === 'info') {
             $('#ntpColor').removeClass().addClass('top_flag01');
-            titleStr = '<s:message code="trap.message.ntp.sync"/>';
+            titleStr = '<s:message code="trap.message.Chrony.sync"/>';
         } else if (lv === 'warning') {
             $('#ntpColor').removeClass().addClass('top_flag02');
-            titleStr = '<s:message code="trap.message.ntp.unsync"/>';
+            titleStr = '<s:message code="trap.message.Chrony.unsync"/>';
         } else {
             $('#ntpColor').removeClass().addClass('top_flag03');
-            titleStr = '<s:message code="trap.message.ntp.unconnect"/>';
+            titleStr = '<s:message code="trap.message.Chrony.unconnect"/>';
         }
         $('#ntpStatus').html(ntpStr);
         $('#ntpStatus').parent().attr('title', titleStr);
