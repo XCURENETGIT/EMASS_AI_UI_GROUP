@@ -408,7 +408,7 @@
 					<h3>
 						<span id="chartAreaTitle">TOP <s:message code="DATA_MONITOR.STAT_LABEL"/> CHART
 						<span class="sel">
-						<div id="totalViewDiv" style="display:none;">
+						<div id="totalViewDiv" class="totalView" style="display:none;">
 							<div class="subtab">
 							<button type="button" title="<s:message code="stat.view.all"/>"><s:message
 									code="stat.view.all"/></button>

@@ -588,8 +588,8 @@
 				<div class="modalTop">
 					<h3><s:message code="admin.adminpop.title"/></h3>
 					<p>
-						<span class="red_dot veralign_middle"></span>
-						<s:message code="common.required.msg"/>
+					<%--	<span class="red_dot veralign_middle"></span>--%>
+					<%--	<s:message code="common.required.msg"/>--%>
 					</p>
 				</div>
 				<div class="modalbody">

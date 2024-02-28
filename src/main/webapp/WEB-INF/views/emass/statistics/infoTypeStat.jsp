@@ -482,7 +482,7 @@
         tabID++;
         tabNum++;
 
-        if( tabNum > 8) {
+        if( tabNum > 3) {
             tabFlag = true;
             var delid = $( ".listChart li:nth-child(2)" ).attr('idx');
             $('#detailTab'+delid+' .close').click();
@@ -621,7 +621,7 @@
 					<h3>
 						TOP 통계 Chart
 						<span class="sel">
-						<div id="totalViewDiv" style="display:none;">
+						<div id="totalViewDiv" class="totalView" style="display:none;">
 							<div class="subtab">
 							<button type="button" title="<s:message code="stat.view.all"/>"><s:message code="stat.view.all"/></button>
 							</div>

@@ -335,7 +335,7 @@
 						<span class="sel">
 						<div id="totalViewDiv" style="display:none;">
 							<div class="subtab">
-							<button type="button" title="<s:message code="stat.view.all"/>"><s:message code="stat.view.all"/></button>
+							<button type="button" class="totalView" title="<s:message code="stat.view.all"/>"><s:message code="stat.view.all"/></button>
 							</div>
 						</div>
 						<div class="panel-headings" id="chartCntDiv">
