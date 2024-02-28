@@ -553,11 +553,12 @@ public class SolrCreateQuery {
 	}
 
 	public SolrCreateQuery setJikgub(String jikgub, String jikgub_not) {
+
 		if(Common.isEquals(jikgub_not, "Y")) {
-			return addQuery(String.format("%s%s:%s", EXCEPT_QUERY, JIKGUBCD, createOrQuery(jikgub_not)));
+			return addQuery(String.format("-allofus:(EA) %s%s:%s", EXCEPT_QUERY, JIKGUBCD, createOrQuery(jikgub_not)));
 		}
 		if (Common.isEmpty(jikgub)) return this;
-		return addQuery(String.format("%s%s:%s", AND_QUERY, JIKGUBCD, createOrQuery(jikgub)));
+		return addQuery(String.format("-allofus:(EA) %s%s:%s", AND_QUERY, JIKGUBCD, createOrQuery(jikgub)));
 	}
 
 
