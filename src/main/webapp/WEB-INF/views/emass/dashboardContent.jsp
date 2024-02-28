@@ -199,7 +199,7 @@
 						<span aria-hidden="true">&times;</span>
 					</button>
 					<div class="#dashColor# bornone panel-heading click xcn_maincon_box" data-value="reserved">
-						<span class="#dashIcon#">#dashName#</span>
+						<span class="#dashIcon# dash-title">#dashName#</span>
 						<p class="rightValue">-<span>건</span><span class='tit13'></span></p>
 					</div>
 					<div class="panel-footer #dashColor#">

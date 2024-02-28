@@ -210,7 +210,6 @@
                 var value = $(this).val();
                 if (value == '') value = '<s:message code="dashboardSetup.dashname"/>';
                 $('#dashHtmlSample .dash-title').text(value);
-
                 var dashHtml = $('<div>').append($('#dashHtml').val());
                 dashHtml.find('.dash-title').text(value);
                 $('#dashHtml').val(dashHtml.html());

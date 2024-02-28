@@ -140,7 +140,7 @@
 	border-bottom: 1px solid #ddd;
 }
 
-.dash-title {
+.panel-footer.dash-title {
 	position: absolute;
 	bottom:8px;
 	left: 8px;

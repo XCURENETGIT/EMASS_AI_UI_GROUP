@@ -8,9 +8,8 @@
     width: 100%;
 }
 
-.dash-title {
-	font-weight: bold;
-	font-size: 15px;
+.panel-footer.dash-title {
+	font-size: 14px;
 }
 
 #page-wrapper {

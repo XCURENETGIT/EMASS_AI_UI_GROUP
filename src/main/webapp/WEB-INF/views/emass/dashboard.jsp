@@ -377,6 +377,7 @@
             var htmlObj = $(contentData[index].html);
             obj.html = htmlObj;
             //obj.html = contentData[index].html;
+	        console.log(obj);
 
             dashboardGrid.addWidget(obj);
         });
@@ -1230,34 +1231,39 @@
         if( width == 6) subjectWidth = 40;
 
         var str ='';
-        for(var i=0; i<data.emass.length; i++){
-            if(i == dataLength) break;
+        console.log(data);
+        if (data !=null) {
+            for (var i = 0; i < data.emass.length; i++) {
+                if (i == dataLength) break;
 
-            str += '<tr>';
-            str += '	<td><i class="bodyOpenBtn fa fa-window-restore" aria-hidden="true" data-msgid="'+data.emass[i].msgid+'"></i></td>';
+                str += '<tr>';
+                str += '	<td><i class="bodyOpenBtn fa fa-window-restore" aria-hidden="true" data-msgid="' + data.emass[i].msgid + '"></i></td>';
 
-            var ctime = data.emass[i].ctimeFormat;
-            var spCtime = ctime.substring(ctime.indexOf('-')+1, ctime.length);
-            str += '	<td>'+spCtime+'</td>';
+                var ctime = data.emass[i].ctimeFormat;
+                var spCtime = ctime.substring(ctime.indexOf('-') + 1, ctime.length);
+                str += '	<td>' + spCtime + '</td>';
 
-            var svcNm = data.emass[i].svcNm;
-            var dpSvcNm = svcNm.substring(0, svcNm.indexOf('>'));
-            str += '	<td>'+dpSvcNm+'</td>';
+                var svcNm = data.emass[i].svcNm;
+                var dpSvcNm = svcNm.substring(0, svcNm.indexOf('>'));
+                str += '	<td>' + dpSvcNm + '</td>';
 
-            var subject = data.emass[i].subject;
-            var addData = '';
-            if(subject.length > subjectWidth) addData = '...';
-            str += '	<td title="'+subject+'">'+(data.emass[i].subject).substring(0, subjectWidth)+addData+'</td>';
-            str += '</tr>';
+                var subject = data.emass[i].subject;
+                var addData = '';
+                if (subject.length > subjectWidth) addData = '...';
+                str += '	<td title="' + subject + '">' + (data.emass[i].subject).substring(0, subjectWidth) + addData + '</td>';
+                str += '</tr>';
+            }
+
+            if(data.emass.length == 0){
+                str += '<tr>';
+                str += '<td colspan="4" style="text-align:center;">';
+                str += '<s:message code="common.msg.nodata"/>';
+                str += '</td>';
+                str += '</tr>';
+            }
         }
 
-        if(data.emass.length == 0){
-            str += '<tr>';
-            str += '<td colspan="4" style="text-align:center;">';
-            str += '<s:message code="common.msg.nodata"/>';
-            str += '</td>';
-            str += '</tr>';
-        }
+
 
         $(obj).html(str);
     }
