@@ -61,9 +61,7 @@ var eikon2 = {
             var srcip = $('#selectUserInfo').attr('data-srcip');
             var usr_id = $('#selectUserInfo').attr('data-usrid');
             var userkey = $('#selectUserInfo').attr('data-name');
-            var type = $('#selectUserInfo').attr('data-svc12');
             var msgIds = [];
-
             var type = $('#selectUserInfo').attr('data-svc12');
 
             if (type == null || typeof type === 'undefined' || type === '') {
@@ -492,6 +490,8 @@ function getCollectionGroupList (page,type){
     var uv = $('#userVal').val().split('|');
     var user = uv.join(',');
 
+    type = $('#selectUserInfo').attr('data-svc12');
+
     var userStr='';
     if (user != '') userStr = user;
     else userStr = '';
@@ -628,7 +628,7 @@ function makeFileServiceList(data) {
         str += '<img src="' + mainContext + '/img/ico_w_chatshare_fill.png" alt="외부" height="12px">';
         str += filelist.Outside+'</span>';
     }
-    str += (data.name ? data.name : '-') + '</h4>'; // If data.name is not present, use '-'
+    str += data.files[0].attachName + '</h4>'; // If data.name is not present, use '-'
     str += '<div class="loca">' + data.svcNm + '</div>';
     str += '</div>';
     str += '<div class="conBox">';

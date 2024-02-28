@@ -161,6 +161,24 @@
 	<div class="content xcn_full">
 		<div class="contentSub">
 			<h3><span id="chartAreaTitle">TOP <s:message code="DATA_MONITOR.STAT_LABEL"/> CHART </span></h3>
+			<span class="sel">
+						<div id="totalViewDiv"  class="totalView" style="display:none;">
+							<div class="subtab">
+							<button type="button" title="<s:message code="stat.view.all"/>"><s:message code="stat.view.all"/></button>
+							</div>
+						</div>
+						<div class="panel-headings" id="chartCntDiv">
+								<button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
+									<s:message code="stat.display.count.chart"/> (<span class="dropdown-text">5</span>) <span val="5" class="caret"></span>
+								</button>
+								<ul class="dropdown-menu dropdown-menu-right" role="menu">
+									<li><a href="#">5</a></li>
+									<li><a href="#">10</a></li>
+									<li><a href="#">15</a></li>
+									<li><a href="#">20</a></li>
+								</ul>
+						</div>
+						</span>
 			<div class="inner_personaldata p20">
 				<div id="chartArea1" style="height: 230px;"></div>
 			</div>

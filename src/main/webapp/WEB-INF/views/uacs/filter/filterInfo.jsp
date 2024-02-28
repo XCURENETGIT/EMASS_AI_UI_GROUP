@@ -800,7 +800,6 @@
 					<div class="row">
 						<div class="col-35">
 							<label for="comment" class="fname"><s:message code="filterInfo.comment"/></label>
-							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
 							<input type="text" class="w100" name="comment" id="comment" placeholder="<s:message code="filterInfo.comment"/>" maxlength="128">
@@ -811,7 +810,6 @@
 					<div class="row">
 						<div class="col-35">
 							<label for="" class="fname" style=""><s:message code="filterInfo.applydevice"/></label>
-							<span class="red_dot"></span>
 							<input type="hidden" name="deviceInfo" id="deviceInfo"/>
 						</div>
 						<div class="col-65">
@@ -912,7 +910,6 @@
 					<div class="row">
 						<div class="col-35">
 							<label for="comment" class="fname"><s:message code="filterInfo.comment"/></label>
-							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
 							<input type="text" class="w100" name="comment" id="comment" placeholder="<s:message code="filterInfo.comment"/>" maxlength="128">
@@ -926,7 +923,6 @@
 							<div style="position: relative; top: 15px;">
 
 								<label for="" class="fname"><s:message code="filterInfo.applydevice"/></label>
-								<span class="red_dot"></span>
 								<input type="hidden" name="deviceInfo" id="deviceInfo"/>
 							</div>
 						</div>

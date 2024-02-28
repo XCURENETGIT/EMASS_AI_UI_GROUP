@@ -142,14 +142,14 @@ public class MessengerEdcGroupVO {
 							List<MessengerGroupVO> tempList = new ArrayList<>();
 							MessengerGroupVO  groupVo  = reDefined(solrEdcVO, adminId, 0L);
 
-							if(groupMap.containsKey(solrEdcVO.getSvc())){
-								tempList = groupMap.get(solrEdcVO.getSvc());
+							if(groupMap.containsKey(solrEdcVO.getUserkey())){
+								tempList = groupMap.get(solrEdcVO.getUserkey());
 								tempList.add(groupVo);
 							}else {
 								tempList.add(groupVo);
 							}
 
-							this.groupMap.put(solrEdcVO.getSvc(),tempList);
+							this.groupMap.put(solrEdcVO.getUserkey(),tempList);
 
 							this.groups.add(reDefined(solrEdcVO, adminId, 0L));
 							Collections.sort(this.groups);
