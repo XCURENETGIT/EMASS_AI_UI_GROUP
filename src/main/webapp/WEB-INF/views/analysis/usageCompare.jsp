@@ -372,7 +372,7 @@ function eventEnterSearch(event) {
 		// 	grid2.colInit();
 		initGrid(grid2, messageGridColumn);
         grid2.loadHeader(false)
-        grid2.loadPageSize();
+        // grid2.loadPageSize();
         grid2.changePageSize = function(cnt){
             selectDetailList('Y');
         };
@@ -500,7 +500,6 @@ function eventEnterSearch(event) {
 				offset : grid2.data.length,
 				limit : grid2.pageSize,
 				success : function(data, total) {
-
 					resultTotal = total;
 					grid2.appendData(data.list);
 					$(".resultCnt").html('('+addCommas(data.total)+')');
