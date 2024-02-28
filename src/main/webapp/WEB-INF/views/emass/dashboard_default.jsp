@@ -486,7 +486,7 @@
             <%--$('#sizeTable').html(data.length > 0 ? str : '<s:message code="common.msg.nodata"/>');--%>
         }
 
-s
+
         function getLoggingData() {
             ui.get({
                 url: 'getLoggingData.xcn',
