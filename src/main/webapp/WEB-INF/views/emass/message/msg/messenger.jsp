@@ -2,47 +2,7 @@
 <%@ include file="/WEB-INF/fragments/baseScript.jsp" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <style>
-	/*.lastReadLI {*/
-	/*	background-color:#D3DBDC !important;*/
-	/*}*/
-	/*.lastReadLi .timeline-panel :after {*/
-	/*	background-color:#D3DBDC !important;*/
-	/*	!*position: absolute !important;*!*/
-	/*	!*left: -14px !important;*!*/
-	/*	!*border-top: 7px solid transparent !important;*!*/
-	/*	!*border-left: 0 solid #D3DBDC !important;*!*/
-	/*	!*border-right: 14px solid #D3DBDC !important;*!*/
-	/*	!*border-bottom: 7px solid transparent !important;*!*/
-	/*}*/
 
-	/*.lastReadLi .timeline-panel :before {*/
-	/*	background-color:#D3DBDC !important;*/
-	/*	!*position: absolute !important;*!*/
-	/*	!*left: -13px !important;*!*/
-	/*	!*border-top: 8px solid transparent !important;*!*/
-	/*	!*border-left: 0px solid #D3DBDC !important;*!*/
-	/*	!*border-right: 13px solid #D3DBDC !important;*!*/
-	/*	!*border-bottom: 8px solid transparent !important;*!*/
-	/*}*/
-	/*.lastReadLi .timeline-panel :after {*/
-	/*	background-color:#D3DBDC !important;*/
-	/*	!*position: absolute !important;*!*/
-	/*	!*right: -14px !important;*!*/
-	/*	!*border-top: 7px solid transparent !important;*!*/
-	/*	!*border-left: 14px solid #D3DBDC !important;*!*/
-	/*	!*border-right: 0 solid #D3DBDC !important;*!*/
-	/*	!*border-bottom: 7px solid transparent !important;*!*/
-	/*}*/
-
-	/*.lastReadLi .timeline-panel :before {*/
-	/*	background-color:#D3DBDC !important;*/
-	/*	!*position: absolute !important;*!*/
-	/*	!*right: -13px !important;*!*/
-	/*	!*border-top: 8px solid transparent !important;*!*/
-	/*	!*border-left: 13px solid #D3DBDC !important;*!*/
-	/*	!*border-right: 0 solid #D3DBDC !important;*!*/
-	/*	!*border-bottom: 8px solid transparent !important;*!*/
-	/*}*/
 </style>
 
 
@@ -76,6 +36,7 @@
 	span.mini {
 		font-size: 13px;
 	}
+
 
 </style>
 
@@ -1162,7 +1123,7 @@
 										id="usr_id" style="display:none;"></span><span id="msgid" style="display:none;"></span></span></span>
 						</div>
 
-						<div  style=" min-width: 150px; box-sizing: border-box; width: 100%">
+						<div  style=" min-width: 150px; box-sizing: border-box; width: 100%; position: relative;">
 							<span> <s:message code="condition.user"/> : </span>
 							<span title="<s:message code="condition.user"/>" id="userCntArea">
 								<span>
@@ -1170,7 +1131,7 @@
 									<span class="bs-caret"><span class="caret"></span></span>
 								</span>
 							</span>
-							<ul class="dropdown-menu" role="menu" style="min-width: 150px;position: absolute;left:500px; top:35px;"
+							<ul class="dropdown-menu" role="menu" style="min-width: 150px; position: absolute; left: 0; top: 100%;"
 							    id="selectUser_menu"></ul>
 						</div>
 					</div>
