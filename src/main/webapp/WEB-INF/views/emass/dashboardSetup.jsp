@@ -583,7 +583,7 @@
 			</div>
 		</div>
 		<div class="modalfooter" style="display: block;">
-			<button class="pop_btn02 conentBatchBtn" id="deleteBatchBtn"><s:message
+			<button class="pop_btn02 conentBatchBtn deleteBtn" id="deleteBatchBtn"><s:message
 					code="selectAdmin.share.delete.batch"/></button>
 			<button class="pop_btn02 deleteBtn" id="deleteOneBtn"><s:message code="selectAdmin.share.delete"/></button>
 			<button class="pop_btn01" id="deleteBatchCloseBtn"><s:message code="common.msg.cancel"/></button>
