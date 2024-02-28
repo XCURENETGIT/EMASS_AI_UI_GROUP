@@ -213,6 +213,7 @@
 		var mode='';
 		var kHighlight = '<%=keywordHighlight%>';
 		var hostQueryUse = '<%=hostQuery%>';
+		var unknown =  '<s:message code="bodyview.unknown"/>';
 
 		$(document).ready(function(){
 			if(popup_msgId!= '') {

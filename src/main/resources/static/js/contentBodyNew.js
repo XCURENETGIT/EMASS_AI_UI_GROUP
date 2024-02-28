@@ -450,17 +450,24 @@ $(document).ready(function(){
 	$(document).on('mouseover', '.userInfoSpan', function(e){
 		var obj =  $(this);
 		userInfoFlag = true;
+
 		setTimeout(function(){
 			if( userInfoFlag ){
 				if( obj.attr('recvname') == '' && obj.attr('recvemail') == ''){
 					if( nvl(obj.attr('sender')) != ''){
+						console.log('12')
 						$('#userNamePop').text(obj.attr('sname'));
 						$('#userEmailPop').text(obj.attr('sender'));
 					}
 					else if( nvl(obj.attr('recvid')) == ''){
-						$('#userNamePop').text(obj.attr('srcip'));
+						  var srcip = '';
+						 if(obj.attr('srcip') == undefined) srcip = unknown;
+						 else srcip = obj.attr('srcip');
+
+						$('#userNamePop').text(unknown);
 					}
 					else{
+						console.log('1')
 						$('#userNamePop').text(obj.text());
 						$('#userEmailPop').text(obj.text());
 					}
@@ -470,7 +477,6 @@ $(document).ready(function(){
 					if(obj.attr('recvemail')!= '') $('#userEmailPop').text(obj.attr('recvemail'));
 					else $('#userEmailPop').text(nvl(obj.attr('recvid'), nvl(obj.attr('srcip'))));
 				}
-				console.log(obj);
 				if(obj.attr('recvconm') != '') $('#userCoNmPop').text(obj.attr('recvconm'));
 				else $('#userCoNmPop').text('');
 				if(obj.attr('recvbusinm') != '') $('#userBusiNmPop').text(obj.attr('recvbusinm'));
@@ -1242,6 +1248,7 @@ function setMessage(msg) {
 }
 
 function userHtml(userList,tr, srcip, dstip, usrip) {
+
 	var userDivHtml = "";
 
 	var inSideCnt = 0;
