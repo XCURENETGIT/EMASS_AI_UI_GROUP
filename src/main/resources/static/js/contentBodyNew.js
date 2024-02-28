@@ -15,6 +15,7 @@ var moveX = 0;
 var keywordHighlight = 'true';
 var hostQuery = 'false';
 var count = 0;
+const originalBodyFontSize = 13;
 
 $(document).ready(function(){
 
@@ -956,6 +957,8 @@ function getEmassPatternDetail(obj, piId, type, attachName){
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 function getMessage(id, search, bodySize, kHighlight, hostQueryUse ){
+	$('#emassBody').css({'font-size':originalBodyFontSize+'px'});
+
 	$('#infoDiv').hide();
 	if(opener) $('#openBigContent').hide();
 	else $('#openBigContent').show();

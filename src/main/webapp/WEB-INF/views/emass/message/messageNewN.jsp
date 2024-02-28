@@ -622,8 +622,8 @@
         };
 
 
-        $(document).ready(function() {
 
+        $(document).ready(function() {
             if(consent && firstAdminYn != 'Y'){
 
             }

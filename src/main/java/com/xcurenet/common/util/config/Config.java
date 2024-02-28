@@ -167,7 +167,7 @@ public class Config {
 
 	public static String DBMS_NAME = "mysql";
 
-	public static String CURRENT_LANGUAGE = "";
+	public static String CURRENT_LANGUAGE = "ko";
 
 	public static Map<String, String> elsFields = new HashMap<>();
 
@@ -387,12 +387,14 @@ public class Config {
 
 		Locale lo = Locale.forLanguageTag(Config.getString("default.lang", "ko"));
 		Locale.setDefault(lo);
-		CURRENT_LANGUAGE = lo.getLanguage();
+
 
 		if(!Common.isEquals(lo.getLanguage(),CURRENT_LANGUAGE)) {
 			if (Common.isEquals(lo.getLanguage(), "ko")) execute(sqlPath + "Update_Query_ko.sql", false);
 			else execute(sqlPath + "Update_Query_en.sql", false);
 		}
+
+		CURRENT_LANGUAGE = lo.getLanguage();
 
 		log.info("시스템 언어:{}", lo.getLanguage());
 
