@@ -47,6 +47,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Scope("prototype")
 @Slf4j
@@ -260,7 +261,21 @@ public class CollectionController {
 
 		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request));
 		long NumFound= solrEdcGroupVO.getNumFound();
-		solrEdcGroupVO.setGroups(setCount_temp(solrEdcGroupVO.getGroups(), Common.getAdminId(request),param));
+
+
+	//	solrEdcGroupVO.setGroups(setCount_temp(solrEdcGroupVO.getGroups(), Common.getAdminId(request),param));
+		Map<String,List<MessengerGroupVO>>  groupMap = solrEdcGroupVO.getGroupMap();
+
+		for(Map.Entry<String, List<MessengerGroupVO>> gmap  : groupMap.entrySet()){
+			List<MessengerGroupVO> groupList = gmap.getValue();
+			Long read =  groupList.stream().filter(m-> m.getReadYn().equals("Y")).collect(Collectors.counting());
+			Long unread =  groupList.stream().filter(m-> m.getReadYn().equals("N")).collect(Collectors.counting());
+		}
+
+
+
+
+
 		return new XcnResponseVO(XcnRspCode.OK, solrEdcGroupVO, NumFound);
 	}
 

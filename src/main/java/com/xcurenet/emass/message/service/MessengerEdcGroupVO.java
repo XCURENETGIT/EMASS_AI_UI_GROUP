@@ -1,28 +1,17 @@
 package com.xcurenet.emass.message.service;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xcurenet.common.util.Common;
-import com.xcurenet.common.util.config.Config;
 import com.xcurenet.common.util.locale.Prop;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.Aggregations;
-import org.elasticsearch.search.aggregations.PipelineAggregatorBuilders;
-import org.elasticsearch.search.aggregations.bucket.range.ParsedRange;
-import org.elasticsearch.search.aggregations.bucket.range.Range;
-import org.elasticsearch.search.aggregations.bucket.terms.ParsedLongTerms;
-import org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.metrics.ParsedCardinality;
-import org.elasticsearch.search.aggregations.metrics.ParsedSum;
 import org.elasticsearch.search.aggregations.metrics.TopHits;
-import org.elasticsearch.search.aggregations.pipeline.BucketSortPipelineAggregationBuilder;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -31,7 +20,6 @@ import org.springframework.data.elasticsearch.core.SearchHits;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @ToString
 public class MessengerEdcGroupVO {
@@ -44,6 +32,7 @@ public class MessengerEdcGroupVO {
 	private long offset;
 
 	private List<MessengerGroupVO> groups;
+	private Map<String,List<MessengerGroupVO>> groupMap = new HashMap<>();
 	private List<MessengerGroupSvcVO> fact;
 
 
@@ -147,8 +136,21 @@ public class MessengerEdcGroupVO {
 					if (!map.isEmpty()) {
 						map.put("msgid", hit.getId());
 						SolrEdcVO solrEdcVO = mapper.convertValue(map, SolrEdcVO.class);
+
 						if (detail) this.groups.add(reDefinedDetail(solrEdcVO, adminId, original));
 						else {
+							List<MessengerGroupVO> tempList = new ArrayList<>();
+							MessengerGroupVO  groupVo  = reDefined(solrEdcVO, adminId, 0L);
+
+							if(groupMap.containsKey(solrEdcVO.getSvc())){
+								tempList = groupMap.get(solrEdcVO.getSvc());
+								tempList.add(groupVo);
+							}else {
+								tempList.add(groupVo);
+							}
+
+							this.groupMap.put(solrEdcVO.getSvc(),tempList);
+
 							this.groups.add(reDefined(solrEdcVO, adminId, 0L));
 							Collections.sort(this.groups);
 						}
@@ -332,5 +334,10 @@ public class MessengerEdcGroupVO {
 
 	public void setFact(List<SolrEdcVO> groups) {
 	}
+
+	public Map<String,List<MessengerGroupVO>> getGroupMap() {
+		return groupMap;
+	}
+
 }
 
