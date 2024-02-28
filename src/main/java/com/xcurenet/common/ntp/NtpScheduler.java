@@ -60,6 +60,7 @@ public class NtpScheduler {
 						if (tokens.length >= 5) {
 							if (tokens[0].startsWith("^*") || Common.isEquals(tokens[4], "377")) synchronizedNTP = true;
 							if (tokens[0].startsWith("^*")) resultServer = tokens[1];
+							if (tokens[0].startsWith("^?") && tokens[1]!="") resultServer = tokens[1];
 						}
 					}
 				}
@@ -71,14 +72,14 @@ public class NtpScheduler {
 		result.put("ntpServer", resultServer);
 		result.put("title", "NTP");
 
-		if (!dataStart) {
+		if (!dataStart) { //ntp 서버가 존재하지 않음
 			result.put("ntpServer", Prop.propFormat("trap.message.ntp.server.nosearch", locale));
 			result.put("status", "unconnect");
 			result.put("content", "[ " + Prop.propFormat("trap.message.ntp", locale) + "] " + Prop.propFormat("trap.message.ntp.unconnect", locale));
-		} else if (!synchronizedNTP || Common.isEmpty(resultServer)) {
+		} else if (!synchronizedNTP || Common.isEmpty(resultServer)) { //ntp 서버가 존재하지만 비동기 상태
 			result.put("status", "unsync");
 			result.put("content", "[ " + Prop.propFormat("trap.message.ntp", locale) + "] " + Prop.propFormat("trap.message.ntp.unsync", locale));
-		} else {
+		} else { //동기 완
 			result.put("status", "sync");
 		}
 
