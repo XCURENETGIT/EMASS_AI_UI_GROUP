@@ -483,10 +483,10 @@
             }
             str += "</tr></table></div>"
 
-            $('#sizeTable').html(data.length > 0 ? str : '<s:message code="common.msg.nodata"/>');
+            <%--$('#sizeTable').html(data.length > 0 ? str : '<s:message code="common.msg.nodata"/>');--%>
         }
 
-
+s
         function getLoggingData() {
             ui.get({
                 url: 'getLoggingData.xcn',
@@ -911,7 +911,7 @@
             var attach = [];
             var attachStr = [];
             if (dat.length == 0) {
-                $('#loggingChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="150px;" height="150px"> ');
+                $('#loggingChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px" class="xcn_nodata"style=" display: block;">');
                 return false;
             } else {
                 for (var i = 0; i < dat.length; i++) {
