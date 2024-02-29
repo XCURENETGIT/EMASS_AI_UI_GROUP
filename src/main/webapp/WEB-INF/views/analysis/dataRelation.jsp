@@ -203,6 +203,7 @@
     function searchReset() {
         $('#startDate').val(new Date().format('yyyy-mm-dd'));
         $('#endDate').val(new Date().format('yyyy-mm-dd'));
+        $('#unit').val('file');
         $('#interGroup,#dynamicSearch, #sendersValVal,#sendersStr,#receiversVal,#receiversStr,#keyword,#fileSize ').val('');
        $('#sendersSelectedArea').hide();
        $('#receiversSelectedArea').hide();
