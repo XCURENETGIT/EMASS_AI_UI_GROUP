@@ -6,7 +6,7 @@
     Highcharts.setOptions({
         chart: {
             type: 'column',
-            marginTop : 25
+            marginTop : 30
         },
         global: {useUTC: false},
         gridLineColor: '#fff',
@@ -353,7 +353,7 @@
 						</span>
 					</h3>
 					<div class="panel-default" id="service.logging.count">
-						<div class="inner_personaldata" style="height:180px;">
+						<div class="inner_personaldata" style="height:230px;">
 							<div id="chartArea1" style="height: 100%"></div>
 						</div>
 					</div>
