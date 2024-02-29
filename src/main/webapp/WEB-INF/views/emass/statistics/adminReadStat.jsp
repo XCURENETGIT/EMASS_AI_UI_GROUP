@@ -55,9 +55,11 @@
         $('#clearBtn').click(function(){
             $('#startdate').val(new Date().format('yyyy-mm-dd'));
             $('#enddate').val(new Date().format('yyyy-mm-dd'));
+            $('#baseType').val('ctime');
+            $('#adminId').val('');
+            $('#xAxis').val('_yyyymmdd');
 
-            $('.optionBtn').removeClass('active');
-            $('#deptnm').addClass('active');
+
         });
 
 
@@ -322,6 +324,7 @@
 			</div>
 			<div>
 				<button class="form_btn01" id="searchBtn"><s:message code="common.msg.search"/></button>
+				<button class="form_btn02" id="clearBtn"><s:message code="condition.reset"/></button>
 			</div>
 		</div>
 	</div>
