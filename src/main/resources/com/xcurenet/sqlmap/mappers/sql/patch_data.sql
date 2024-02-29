@@ -788,6 +788,24 @@ DASH_CONDITION  LONGTEXT  NULL    COMMENT 'DASHBOARD 조건',
 DASH_COMMENT VARCHAR(100) NULL    COMMENT '항목설명',
 USEYN  CHAR(1)  NOT NULL     DEFAULT 'N'   COMMENT '사용여부',
 PRIMARY KEY (DASH_KEY) ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='UI CUSTOM 대시보드 항목 템플릿';
+INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT (DASH_KEY, DASH_NAME, DASH_TYPE, DASH_MULTI_X, DASH_MULTI_Y, DASH_CHART, DASH_CHART_X, DASH_CHART_Y, DASH_ICON, DASH_COLOR, DASH_HTML, DASH_CONDITION, DASH_COMMENT, USEYN) VALUES(13, '재처리 데이터', 'S', 'unread', 'total', 'P', 'svc1', 'total', 'tit03', 'purpleBg', '<div class="grid-stack-item ui-draggable-handle">
+			<div style="display:none;" class="gridValues" data-dashMultiLeft="total" data-dashMultiRight="unread"></div>
+			<div class="grid-stack-item-content ">
+				<div class="xcn_maincon panel singleBorder">
+					<button type="button" class="customClose">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="purpleBg bornone panel-heading click xcn_maincon_box" data-value="reserved">
+						<span class="tit03">재처리 데이터</span>
+						<p class="rightValue">-<span>건</span><span class="tit13"></span></p>
+					</div>
+					<div class="panel-footer purpleBg">
+						<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59">금일</div>
+						<div class="clearfix"></div>
+					</div>
+				</div>
+			</div>
+		</div>', '{"searchStr":"","searchField":"","serviceType":"","serviceTypeNm":"서비스 전체","interGroup":"","interGroupNm":"-관심 사용자 그룹-","userGroupSeq":"","userGroupName":"-사용자 그룹-","startDateSelect":"T","startTimeSelect":"00","endDateSelect":"T","endTimeSelect":"23","senders":"","receivers":"","allOfus":"","busi":"","busiNm":"사업장 전체","dept":"","deptNm":"","receiveSend":"","ctimeWork":"","readYn":"","attachYn":"","attachVal":"","attachStr":"","keywordYn":"","keywordVal":"","keywordStr":"","regexpYn":"","regexpVal":"","regexpStr":"","drmYn":"","sctYn":"","sizeStartVal":"0","sizeEndVal":"0","sizeOption":"L","sizeType":"","reprocessYn":"Y"}', '', 'Y');
 
 CREATE TABLE IF NOT EXISTS UI_CUSTOM_DASHBOARD_MENU(
 MENU_KEY  INT(11)  NOT NULL    COMMENT '메뉴 KEY',
