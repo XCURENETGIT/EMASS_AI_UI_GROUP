@@ -490,7 +490,7 @@ function getCollectionGroupList (page,type){
     var uv = $('#userVal').val().split('|');
     var user = uv.join(',');
 
-    type = $('#selectUserInfo').attr('data-svc12');
+ /*   type = $('#selectUserInfo').attr('data-svc12');*/
 
     var userStr='';
     if (user != '') userStr = user;

@@ -535,6 +535,16 @@
                 if (alarmVal.probType != '') searchStr += setConditionValStr(alarmVal.probTypeNm, '<s:message code="condition.prob"/>');
             }
 
+            var ocrYnMsg = '';
+            if (alarmVal.ocrYn == 'Y') ocrYnMsg = '<s:message code="condition.exist"/>';
+            else if (alarmVal.ocrYn == 'N') ocrYnMsg = '<s:message code="condition.none"/>';
+            if (ocrYnMsg != '') searchStr += setConditionValStr(ocrYnMsg, '<s:message code="condition.ocr.attach"/>');
+
+            var reprocessMsg = '';
+            if (alarmVal.reprocessYn == 'Y') reprocessMsg = '<s:message code="condition.exist"/>';
+            else if (alarmVal.reprocessYn == 'N') reprocessMsg = '<s:message code="condition.unread"/>';
+            if (reprocessMsg != '') searchStr += setConditionValStr(reprocessMsg, '<s:message code="condition.reprocess"/>');
+
             var readYnMsg = '';
             if (alarmVal.readYn == 'Y') readYnMsg = '<s:message code="condition.read"/>';
             else if (alarmVal.readYn == 'N') readYnMsg = '<s:message code="condition.unread"/>';

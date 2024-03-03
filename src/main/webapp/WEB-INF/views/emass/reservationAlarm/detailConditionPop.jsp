@@ -292,7 +292,8 @@
             checkRadioBtn('receive_option', '');
             checkRadioBtn('regexp_drmYnVal', '');
             checkRadioBtn('realAttYnVal', '');
-            checkRadioBtn('regexp_sctYnVal', '');
+            checkRadioBtn('ocrYnVal', '');
+            checkRadioBtn('reprocessYnVal', '');
 
             $('#serviceTypeSelect').selectpicker('val', '');
             $('#infoTypeSelect').selectpicker('val', '');
@@ -450,6 +451,8 @@
             condition.drmYn = $('input:radio[name=regexp_drmYnVal]:input:checked').val();
             condition.realAttYn = $('input:radio[name=realAttYnVal]:input:checked').val();
             condition.sctYn = $('input:radio[name=regexp_sctYnVal]:input:checked').val();
+            condition.ocrYn = $('input:radio[name=ocrYnVal]:input:checked').val();
+            condition.reprocessYn = $('input:radio[name=reprocessYnVal]:input:checked').val();
 
             condition.sizeStartVal = $('#sizeStartVal').val() * 1024;
             condition.sizeEndVal = $('#sizeEndVal').val() * 1024;
@@ -571,6 +574,8 @@
             checkRadioBtn('regexp_drmYnVal', alarmVal.drmYn);
             checkRadioBtn('realAttYnVal', alarmVal.realAttYn);
             checkRadioBtn('regexp_sctYnVal', alarmVal.sctYn);
+            checkRadioBtn('ocrYnVal', alarmVal.ocrYn);
+            checkRadioBtn('reprocessYnVal', alarmVal.reprocessYn);
 
             $('#sizeStartVal').val(alarmVal.sizeStartVal);
             $('#sizeEndVal').val(alarmVal.sizeEndVal);
@@ -1633,6 +1638,34 @@
                                                                            disabled="disabled"><span
                                         class="fa fa-check"></span><s:message code="condition.none"/></label>
                             </div>
+                        </div>
+                    </li>
+                    <li id="ocrDiv">
+                        <div class="form-inline">
+                            <label for="" class=" col-xs-3"><s:message code="condition.ocr.attach"/></label>
+                            <label class="radio-inline c-radio"><input type="radio" name="ocrYnVal" value=""
+                                                                       checked><span
+                                    class="fa fa-check"></span><s:message code="common.msg.all"/></label>
+                            <label class="radio-inline c-radio"><input type="radio" name="ocrYnVal"
+                                                                       value="Y"><span
+                                    class="fa fa-check"></span><s:message code="condition.exist"/></label>
+                            <label class="radio-inline c-radio"><input type="radio" name="ocrYnVal"
+                                                                       value="N"><span
+                                    class="fa fa-check"></span><s:message code="condition.none"/></label>
+                        </div>
+                    </li>
+                    <li id="reprocessDiv">
+                        <div class="form-inline">
+                            <label for="" class=" col-xs-3"><s:message code="condition.reprocess"/></label>
+                            <label class="radio-inline c-radio"><input type="radio" name="reprocessYnVal" value=""
+                                                                       checked><span
+                                    class="fa fa-check"></span><s:message code="common.msg.all"/></label>
+                            <label class="radio-inline c-radio"><input type="radio" name="reprocessYnVal"
+                                                                       value="Y"><span
+                                    class="fa fa-check"></span><s:message code="condition.exist"/></label>
+                            <label class="radio-inline c-radio"><input type="radio" name="reprocessYnVal"
+                                                                       value="N"><span
+                                    class="fa fa-check"></span><s:message code="condition.none"/></label>
                         </div>
                     </li>
 

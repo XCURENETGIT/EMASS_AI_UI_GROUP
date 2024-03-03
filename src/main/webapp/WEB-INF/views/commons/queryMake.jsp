@@ -930,22 +930,9 @@
 						break;
 
 					case "ocr":
-						var ocrStr = $('#ocr').val();
-						if(ocrStr != "") {
-							addQueryText = queryAddMinus + "ocr_attach:(";
-
-							var ocrStrArr = ocrStr.split("|");
-
-							for(var i = 0; i < ocrStrArr.length; i++) {
-								if(i > 0) {
-									addQueryText += " "
-								}
-								addQueryText += ocrStrArr[i].ltrim().rtrim() + "*";
-							}
-
-							addQueryText += ")";
-						}
-						break;
+                        if(queryAddMinus == '+') addQueryText = "+ocr_attach_cnt:>0";
+                        else addQueryText = "-ocr_attach_cnt:>0 ";
+                        break;
 
 					case "allofus":
 						var allOfus = $('#allOfus').val();
@@ -1569,10 +1556,9 @@
 								<tr>
 									<th>OCR</th>
 									<td>
-										<input type="text" class="form-control input-xs border-radius-none" id="ocr" placeholder="OCR" style="width: 313px;">
+										<s:message code="condition.exist"/>:AND / <s:message code="condition.none"/>:<s:message code="query.make.except"/>(-)
 									</td>
 									<td ><button type="button" class="btn btn-xs btn-success queryAdd" data-queryType="ocr">AND</button></td>
-									<td style="text-align: center;"><button type="button" class="btn btn-xs btn-info queryOr" data-queryType="ocr">OR</button></td>
 									<td ><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="ocr"><i class="glyphicon glyphicon-minus"></i></button></td>
 									<td>ocr_attach</td>
 									<td ><span class="fa fa-question queryHelp" data-helptext="<s:message code="query.make.multi.message"/>"></span></td>

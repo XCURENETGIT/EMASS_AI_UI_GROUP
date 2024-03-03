@@ -314,6 +314,7 @@
 					<input type="hidden" id="sendersVal"/>
 					<input type="hidden" id="sendersDept"/>
 					<input type="hidden" id="sendersJib"/>
+					<input type="hidden" id="sendersEmail"/>
 				</div>
 
 				<%-- 받는사람 --%>
@@ -327,6 +328,7 @@
 					<input type="hidden" id="receiversVal"/>
 					<input type="hidden" id="receiversDept"/>
 					<input type="hidden" id="receiversJib"/>
+					<input type="hidden" id="receiversEmail"/>
 				</div>
 
 
@@ -501,13 +503,13 @@
 
         /* 보낸 사람 , 받는 사람 */
 
-        var sendUv = $('#sendersVal').val().split('|');
+        var sendUv = $('#sendersEmail').val().split('|');
         var sendUser = sendUv.join(',');
         var sendUserStr ='';
         if (sendUser != '') sendUserStr = sendUser;
         else sendUserStr = '';
 
-        var receiveUv = $('#receiversVal').val().split('|');
+        var receiveUv = $('#receiversEmail').val().split('|');
         var receiveUser = receiveUv.join(',');
         var receiveUserStr ='';
         if (receiveUser != '') receiveUserStr = receiveUser;
@@ -740,13 +742,15 @@
     function getSelectedCodeData(codeType, data) {
         console.log("Gg");
         var str = '';
+        var email = '';
         var val = '';
         var dept = '';
         var jib = '';
 
         for (var i = 0; i < data.length; i++) {
             str += data[i].codeName;
-            val += data[i].email;
+            val += data[i].code;
+            email += data[i].email;
 
             dept += (data[i].tempNm1 !== undefined) ? data[i].tempNm1 : "";
 
@@ -757,6 +761,7 @@
                 val += '|';
                 dept += '|';
                 jib += '|';
+                email += '|';
             }
         }
         if (val != '') {
@@ -764,12 +769,14 @@
             val = val.trimAll();
             dept = dept.trimAll();
             jib = jib.trimAll();
+            email = email.trimAll();
         }
 
         $('#' + codeType + 'Str').val(str);
         $('#' + codeType + 'Val').val(val);
         $('#' + codeType + 'Dept').val(dept);
         $('#' + codeType + 'Jib').val(jib);
+        $('#' + codeType + 'Email').val(email);
 
         if ($('#' + codeType + 'Str').val() != '') {
             $('#' + codeType + 'SelectedArea').find('.btn').text(data.length);

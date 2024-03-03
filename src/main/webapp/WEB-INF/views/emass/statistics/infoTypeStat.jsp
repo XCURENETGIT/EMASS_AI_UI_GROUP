@@ -392,7 +392,8 @@
             exporting: chartAPI.exporting,
             credits: chartAPI.credits,
             xAxis: {
-                categories: categories
+                categories: categories,
+                w:20
             },
             yAxis: {
                 type: 'logarithmic',

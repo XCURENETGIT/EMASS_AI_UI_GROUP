@@ -160,13 +160,8 @@
 	<!-- 차트-->
 	<div class="content xcn_full">
 		<div class="contentSub">
-			<h3><span id="chartAreaTitle">TOP <s:message code="DATA_MONITOR.STAT_LABEL"/> CHART </span></h3>
+			<h3>TOP <s:message code="DATA_MONITOR.STAT_LABEL"/> CHART
 			<span class="sel">
-						<div id="totalViewDiv"  class="totalView" style="display:none;">
-							<div class="subtab">
-							<button type="button" title="<s:message code="stat.view.all"/>"><s:message code="stat.view.all"/></button>
-							</div>
-						</div>
 						<div class="panel-headings" id="chartCntDiv">
 								<button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
 									<s:message code="stat.display.count.chart"/> (<span class="dropdown-text">5</span>) <span val="5" class="caret"></span>
@@ -179,8 +174,10 @@
 								</ul>
 						</div>
 						</span>
+			</h3>
+
 			<div class="inner_personaldata p20">
-				<div id="chartArea1" style="height: 230px;"></div>
+				<div id="chartArea1" style="height: 300px;"></div>
 			</div>
 			<div class="mat32">
 				<div class="subtab">
@@ -189,10 +186,11 @@
 						<span id="consentCount"></span>
 					</button>
 				</div>
-				<span style="position:absolute; top: 355px;">
+				<div class="subtab" style="position:absolute; margin-left:10px;">
 					[ <span style="color: red;">● <s:message code="stat.traffic.tx"/></span>&nbsp;/&nbsp;<span style="color: blue;">● <s:message
 						code="stat.traffic.rx"/></span> ]&nbsp; : <s:message code="stat.traffic.unit"/>
-				</span>
+				</div>
+
 				<div id="basicStatListGrid" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; height: 400px"></div>
 			</div>
 		</div>
@@ -239,7 +237,7 @@
                 grid1.colAdd('deviceNm', '<s:message code="common.msg.device"/>', 230, 'left', false, 'link');
                 for (var i = 0; i < data.header.length; i++) {
                     var header = data.header[i];
-                    grid1.colAdd(header.key, header.text, 100, "center", false, 'nomal', function (row, cell, value, columnDef, dataContext) {
+                    grid1.colAdd(header.key, header.key, 100, "center", false, 'nomal', function (row, cell, value, columnDef, dataContext) {
                         if (value != undefined) {
                             if (value != '') {
                                 var valArr = value.split('/');

@@ -159,6 +159,8 @@ public class AlarmJob {
 				String sizeStartVal = Common.nvl(alarm_val.get("sizeStartVal")); // 메시지시작크기
 				String sizeEndVal = Common.nvl(alarm_val.get("sizeEndVal")); // 메시지종료크기
 				String sizeOption = Common.nvl(alarm_val.get("sizeOption")); // 메시지조건 옵션(B:범위,L:이상,S:이하)
+				String ocrYn = Common.nvl(alarm_val.get("ocrYn")); // OCR 여부
+				String reprocessYn = Common.nvl(alarm_val.get("reprocessYn")); // 재처리 여부
 
 				String startDt = getStartDt(startDateSelect, startTimeSelect, alarm_cycle);
 				String endDt = getEndDt(endDateSelect, endTimeSelect, alarm_cycle);

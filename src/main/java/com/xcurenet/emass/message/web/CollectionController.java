@@ -274,8 +274,6 @@ public class CollectionController {
 
 
 
-
-
 		return new XcnResponseVO(XcnRspCode.OK, solrEdcGroupVO, NumFound);
 	}
 
