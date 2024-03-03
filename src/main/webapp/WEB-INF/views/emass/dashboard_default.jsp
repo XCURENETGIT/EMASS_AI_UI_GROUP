@@ -1296,8 +1296,8 @@
 				<h3><s:message code="dashboard.todaayPatternCount"/></h3>
 				<div class="mainlist">
 					<div class="click" data-value="passport">
-						<span class="tit07" ><s:message code="bodyview.pn"/>
-						<p class="blue" id="TodayPasswordTotalCnt">-<span class="text"><s:message code="common.msg.cnt"/></span></p>
+						<span class="tit07" ><s:message code="bodyview.pn"/></span>
+						<p class="blue" id="TodayPasswordTotalCnt">-<span class="text"><s:message code="common.msg.cnt"/></p>
 					</div>
 					<div class="click" data-value="drive">
 						<span class="tit08"><s:message code="bodyview.dn"/></span>
