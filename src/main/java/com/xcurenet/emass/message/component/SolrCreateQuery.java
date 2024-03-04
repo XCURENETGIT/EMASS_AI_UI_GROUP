@@ -65,6 +65,7 @@ public class SolrCreateQuery {
 	public static final String DEPTCD = "deptcd";
 	public static final String JIKGUBCD = "jikgubcd";
 	public static final String IP_DEPTCD = "ip_deptcd";
+	public static final String USERKEY = "userkey";
 	public static final String EPMSG_TYPE = "epmsg_type";
 	public static final String[] SENDER = {"sender_str", "sname", "srcip","userkey"};
 	public static final String SENDER_UPPER = "sender_str";
@@ -585,12 +586,12 @@ public class SolrCreateQuery {
 
 			for (int i = 0; i < SENDER_NOTUPPER.length; i++) {
 				if (sender.startsWith("\"") && sender.endsWith("\"")) queryStr.append(String.format("%s:%s", SENDER_NOTUPPER[i], sender)).append(SPACE);
-				else queryStr.append(String.format("%s:%s", SENDER_NOTUPPER[i], createOrQueryAsteriskAll(sender))).append(SPACE);
+				else queryStr.append(String.format("%s:%s", SENDER_NOTUPPER[i], createOrQuery(sender))).append(SPACE);
 			}
 		} else {
 			for (int i = 0; i < SENDER.length; i++) {
 				if (sender.startsWith("\"") && sender.endsWith("\"")) queryStr.append(String.format("%s:%s", SENDER[i], sender)).append(SPACE);
-				else queryStr.append(String.format("%s:%s", SENDER[i], createOrQueryAsteriskAll(sender))).append(SPACE);
+				else queryStr.append(String.format("%s:%s", SENDER[i], createOrQuery(sender))).append(SPACE);
 			}
 		}
 
@@ -1227,6 +1228,7 @@ public class SolrCreateQuery {
 			String url = Common.nvl(condition.get("url")).replaceAll("\n", " "); //url
 			String url_not = Common.nvl(condition.get("url_not")); //url 부정
 
+
 			String readYn = Common.nvl(condition.get("readYn")); // 읽음여부
 			String receiveSend = Common.nvl(condition.get("receiveSend")); // 수/발신
 			String serviceType = Common.nvl(condition.get("serviceType")); // 서비스타입
@@ -1342,6 +1344,9 @@ public class SolrCreateQuery {
 		}
 		return this;
 	}
+
+
+
 
 	public String getStartDt(String startDateSelect, int startTimeSelect) {
 		String result = "";

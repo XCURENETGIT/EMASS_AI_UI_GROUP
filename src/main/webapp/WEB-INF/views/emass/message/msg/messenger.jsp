@@ -820,7 +820,7 @@
             condition.searchStr = $('#searchStrInput').val();
             // condition.senders = $('#senders').val();
 
-            var dv = $('#userVal').val().split('|');
+            var dv = $('#userEmail').val().split('|');
             condition.senders = dv.join(',');
             if (condition.senders != '') condition.sendersStr = $('#userStr').val();
 
@@ -931,10 +931,12 @@
             var val = '';
             var dept = '';
             var jib = '';
+            var email = '';
 
             for (var i = 0; i < data.length; i++) {
                 str += data[i].codeName;
                 val += data[i].code;
+                email += data[i].email;
 
                 dept += (data[i].tempNm1 !== undefined) ? data[i].tempNm1 : "";
 
@@ -952,12 +954,15 @@
                 val = val.trimAll();
                 dept = dept.trimAll();
                 jib = jib.trimAll();
+                email = email.trimAll();
             }
 
             $('#' + codeType + 'Str').val(str);
             $('#' + codeType + 'Val').val(val);
             $('#' + codeType + 'Dept').val(dept);
             $('#' + codeType + 'Jib').val(jib);
+            $('#' + codeType + 'Email').val(email);
+
 
             if ($('#' + codeType + 'Str').val() != '') {
                 $('#' + codeType + 'SelectedArea').find('.btn').text(data.length);
@@ -1041,6 +1046,7 @@
 									</span>
 							<input type="hidden" id="userStr" class="selectedTitle">
 							<input type="hidden" id="userVal">
+							<input type="hidden" id="userEmail">
 							<input type="hidden" id="userDept">
 							<input type="hidden" id="userJib">
 						</p>
