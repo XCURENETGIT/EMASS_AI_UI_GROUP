@@ -193,23 +193,35 @@
             for (var i = 0; i < codeArr.length; i++) {
                 if (codeType == 'regexp') {
                     var code = codeArr[i].split('%');
-                    data.push({'code': code[0], 'codeName': conmArr[i].substring(0, conmArr[i].indexOf('(')).rtrim(), 'count': code[1]});
+                    data.push({'code': code[0], 'codeName': conmArr[i].substring(0, conmArr[i].indexOf('(')), 'count': code[1]});
+                    data.push({
+                        'code': code[0],
+                        'codeName': codeName,
+                        'count': code[1]
+                    });
                 } else {
                     if (codeType == 'user'||codeType == 'senders'||codeType == 'receivers') {
                         if (codeArr.length==1){
+                         ;
                             data.push({'code': codeArr[0], 'codeName': conmArr[0], 'tempNm1': deptArr[0], 'tempNm2': jibArr[0]});
                         }else{
+
                         data.push({'code': codeArr[i], 'codeName': conmArr[i], 'tempNm1': deptArr[i], 'tempNm2': jibArr[i]});
                             }
                     }else{
-                        data.push({'code': codeArr[i], 'codeName': conmArr[i].rtrim()});
+
+                        if (codeArr.length==1){
+                            data.push({'code': codeArr[0], 'codeName': conmArr[0]});
+                        }else{
+                            data.push({'code': codeArr[i], 'codeName': conmArr[i]});
+                        }
                     }
                 }
             }
         } else {
             if (codeType == 'regexp') {
                 var code = codeArr.split('%');
-                data.push({'code': code[0], 'codeName': conmArr.substring(0, conmArr.indexOf('(')).rtrim(), 'count': code[1]});
+                data.push({'code': code[0], 'codeName': conmArr.substring(0, conmArr.indexOf('(')), 'count': code[1]});
             } else {
                 if (codeType == 'user'||codeType == 'senders'||codeType == 'receivers') {
                     if (codeArr.length==1){
@@ -218,7 +230,12 @@
                         data.push({'code': codeArr[i], 'codeName': conmArr[i], 'tempNm1': deptArr[i], 'tempNm2': jibArr[i]});
                     }
                 }else{
-                    data.push({'code': codeArr[i], 'codeName': conmArr[i].rtrim()});
+                    if (codeArr.length==1){
+                        data.push({'code': codeArr[0], 'codeName': conmArr[0]});
+                    }else{
+                        data.push({'code': codeArr[i], 'codeName': conmArr[i]});
+                    }
+
                 }
             }
         }
@@ -485,7 +502,7 @@
     options.status_cnt_end_name = '<s:message code="selectCodeAll.cnt.select"/>';
     var grid2 = new Xgrid('coCdGrid2', contextRoot, 26, options);
     grid2.onCheckBox();
-    //grid2.autoNumber();
+    grid2.autoNumber();
 
     if (codeType == 'co') {
         grid2.colAdd('code', '<s:message code="common.org.cocd"/>', 100, 'center', false, 'link');
