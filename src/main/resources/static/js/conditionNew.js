@@ -93,6 +93,8 @@ var con = {
 		$('#filterName').val('');
 		$('#filter_seq').val('');
 		$('#p_filter_seq').val('');
+		$('.relationKeywordBtn').prop('checked', false);
+		$('#relationKeywordDiv').hide();
 
 		if( isConsent() && endId == ''){
 			$('#consentNo').val('');
