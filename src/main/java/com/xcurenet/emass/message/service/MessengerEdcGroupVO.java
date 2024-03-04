@@ -4,14 +4,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.locale.Prop;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.Aggregations;
+import org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.metrics.ParsedCardinality;
-import org.elasticsearch.search.aggregations.metrics.TopHits;
+import org.elasticsearch.search.aggregations.metrics.ParsedTopHits;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -22,6 +24,7 @@ import java.io.IOException;
 import java.util.*;
 
 @ToString
+@Slf4j
 public class MessengerEdcGroupVO {
 
 	private final static DateTimeFormatter yyyyMMddHHmmss = DateTimeFormat.forPattern("yyyyMMddHHmmss");
@@ -32,9 +35,18 @@ public class MessengerEdcGroupVO {
 	private long offset;
 
 	private List<MessengerGroupVO> groups;
-	private Map<String,List<MessengerGroupVO>> groupMap = new HashMap<>();
+
+	private Map<String,List<MessengerGroupVO>> groupMaps;
+
+	private Aggregations aggregations = null;
 	private List<MessengerGroupSvcVO> fact;
 
+	/* 카테고리 헤더 설정 */
+	private Map<String,Integer> headerMap = new HashMap<>();
+
+	private boolean detail = false;
+	private String adminId = "";
+	private boolean original = false;
 
 
 	public MessengerEdcGroupVO(final List<MessengerGroupVO> groups) {
@@ -55,7 +67,9 @@ public class MessengerEdcGroupVO {
 
 	public MessengerEdcGroupVO(SearchHits<SolrEdcVO> resp, final String adminId, final boolean detail, final boolean original) throws SolrServerException, IOException {
 		this.groups = new ArrayList<>();
-		ObjectMapper mapper = new ObjectMapper(); //임시
+		this.detail = detail;
+		this.adminId = adminId;
+		this.original = original;
 
 		ElasticsearchAggregations elasticSearchAggregations = (ElasticsearchAggregations) resp.getAggregations();
 		/* 집계쿼리 사용할때  */
@@ -63,102 +77,15 @@ public class MessengerEdcGroupVO {
 			Aggregations mainAggregations = elasticSearchAggregations.aggregations();
 			if (null == mainAggregations) return;
 
-			Map<String, Aggregation> mainAggsMap = mainAggregations.getAsMap();
-			Map<String, Aggregations> groupAggsMap = new HashMap<>();  // 추출할 그룹 aggs
-			Map<String, Aggregations> subAggsMap = new HashMap<>();  // 추출할 그룹 aggs
+			ParsedCardinality cardinality = mainAggregations.get("bucket_total");
+			if(!Common.isEmpty(cardinality)) this.numFound = cardinality.getValue();
 
-			long total = 0;
-			//메인 Aggs의 sub Aggs 추출
-			for (Map.Entry<String, Aggregation> map : mainAggsMap.entrySet()) {
-				Aggregation agg = map.getValue();
-				String currentKey = map.getKey();
-
-				if ("bucket_total".equals(currentKey)) {
-					continue;
-				}
-
-				ParsedCardinality cardinality = mainAggregations.get("bucket_total");
-				if (!Common.isEmpty(cardinality)) {
-					/* 그룹 파싱만 */
-					total = cardinality.getValue();
-					if (agg instanceof Terms) {
-						Terms terms = (Terms) agg;
-						for (Terms.Bucket bucket : terms.getBuckets()) {
-							/*groupAggsMap.put(bucket.getKeyAsString(), bucket.getAggregations().get(0).getBuckets().get(0).getAggregations());*/
-							groupAggsMap.put(bucket.getKeyAsString(), bucket.getAggregations());
-						}
-					}
-					break;
-				} else if (agg instanceof Terms) {
-					/* 대화방 파싱 */
-					Terms terms = (Terms) agg;
-					for (Terms.Bucket bucket : terms.getBuckets()) {
-						total = total + bucket.getDocCount();
-						groupAggsMap.put(bucket.getKeyAsString(), bucket.getAggregations());
-					}
-				}
-			}
+			/* checked aggs 파싱 */
+			if(mainAggregations.getAsMap().entrySet().stream().filter(k->Common.isEquals(k.getKey(),"checked_bucket_total")).count() > 0){
+				this.aggregations = mainAggregations;
+			}else aggregationsParser(mainAggregations); 	/* 일반 group 파싱 */
 
 
-			// sub Aggs에서 document 추출
-			List<TopHits> topHitsList = new ArrayList<>();
-			// sub Aggs에서 document 추출
-			for (Map.Entry<String, Aggregations> groupAgg : groupAggsMap.entrySet()) {
-				Aggregations groupAggs = groupAgg.getValue(); // get()을 사용하여 값 가져오기
-				Terms termsAgg = groupAggs.get("topSvc"); // 첫 번째 집계 결과 가져오기
-
-					if (termsAgg != null) { /* 생성형ai,노트*/
-						for (Terms.Bucket bucket : termsAgg.getBuckets()) {
-							Aggregations subAggregations = bucket.getAggregations(); // 각 버킷의 하위 집계 결과 가져오기
-							if (subAggregations != null) {
-								// 각 하위 집계 결과를 반복하여 처리
-								for (Aggregation subAgg : subAggregations) {
-									if (subAgg instanceof TopHits) {
-										topHitsList.add((TopHits) subAgg); // 하위 집계 결과를 topHitsList에 추가
-									}
-								}
-							}
-						}
-					} else {/* 메신저*/
-					Aggregations groupAggs2 = groupAggsMap.get(groupAgg.getKey());
-					Map<String, Aggregation> groupAggMap = groupAggs2.getAsMap();
-					for (Map.Entry<String, Aggregation> gMap : groupAggMap.entrySet()) {
-						Aggregation gAgg = gMap.getValue();
-						topHitsList.add(groupAggs2.get(gAgg.getName()));
-					}
-				}
-			}
-
-			for (TopHits topHits : topHitsList) {
-				SearchHit[] hits = topHits.getHits().getHits();
-				for (SearchHit hit : hits) {
-					Map<String, Object> map = hit.getSourceAsMap();
-					if (!map.isEmpty()) {
-						map.put("msgid", hit.getId());
-						SolrEdcVO solrEdcVO = mapper.convertValue(map, SolrEdcVO.class);
-
-						if (detail) this.groups.add(reDefinedDetail(solrEdcVO, adminId, original));
-						else {
-							List<MessengerGroupVO> tempList = new ArrayList<>();
-							MessengerGroupVO  groupVo  = reDefined(solrEdcVO, adminId, 0L);
-
-							if(groupMap.containsKey(solrEdcVO.getUserkey())){
-								tempList = groupMap.get(solrEdcVO.getUserkey());
-								tempList.add(groupVo);
-							}else {
-								tempList.add(groupVo);
-							}
-
-							this.groupMap.put(solrEdcVO.getUserkey(),tempList);
-
-							this.groups.add(reDefined(solrEdcVO, adminId, 0L));
-							Collections.sort(this.groups);
-						}
-
-					}
-				}
-			}
-			this.numFound = total;
 		} else { //집계쿼리 사용하지 않을때
 			if (detail) {
 				resp.getSearchHits().stream().map(org.springframework.data.elasticsearch.core.SearchHit::getContent).forEach(s -> {
@@ -172,7 +99,93 @@ public class MessengerEdcGroupVO {
 			this.numFound = resp.getTotalHits();
 
 		}
+
+		this.detail = false;
+		this.adminId = "";
+		this.original = false;
+
 	}
+
+	public void aggregationsParser(Aggregations aggregations){
+
+		for (Map.Entry<String, Aggregation> aggsKey : aggregations.getAsMap().entrySet()) {
+			Aggregation aggregation = aggregations.get(aggsKey.getKey());
+
+			/* StringTerms */
+			if (aggregation instanceof ParsedStringTerms) {
+				List<? extends Terms.Bucket> buckets = ((ParsedStringTerms) aggregation).getBuckets();
+				Iterator iter = buckets.iterator();
+				while (iter.hasNext()) {
+					Terms.Bucket bucket = (Terms.Bucket) iter.next();
+					if (null != bucket.getAggregations()) aggregationsParser(bucket.getAggregations());
+				}
+			}
+			/* top hits */
+			else if (aggregation instanceof ParsedTopHits) {
+				ObjectMapper mapper = new ObjectMapper();
+				ParsedTopHits topHits = (ParsedTopHits) aggregation;
+				SearchHit[] hits = topHits.getHits().getHits();
+				for (SearchHit hit : hits) {
+					Map<String, Object> map = hit.getSourceAsMap();
+					if (!map.isEmpty()) {
+						map.put("msgid", hit.getId());
+						SolrEdcVO solrEdcVO = mapper.convertValue(map, SolrEdcVO.class);
+						if (detail) this.groups.add(reDefinedDetail(solrEdcVO, adminId, original));
+						else {
+							this.groups.add(reDefined(solrEdcVO, adminId, 0L));
+							Collections.sort(this.groups);
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+	String currentMainKey = "";
+	Long currentDocSize = 0L;
+
+	public void  aggregationsCheckedParser(){
+		for (Map.Entry<String, List<MessengerGroupVO>> maps : groupMaps.entrySet()) {
+			aggregationsCheckedParser(this.getAggregations(),maps.getKey());
+		}
+		this.aggregations = null;
+		currentMainKey = "";
+		currentDocSize = 0L;
+	}
+	public void  aggregationsCheckedParser(Aggregations aggregations,String key){
+		if(!Common.isEmpty(key)) {
+			for (Map.Entry<String, Aggregation> aggsKey : aggregations.getAsMap().entrySet()) {
+				if (Common.isEquals(aggsKey.getKey(), "userkey") && !Common.isEmpty(key)) currentMainKey = key;
+				Aggregation aggregation = aggregations.get(aggsKey.getKey());
+
+				/* StringTerms */
+				if (aggregation instanceof ParsedStringTerms) {
+					List<? extends Terms.Bucket> buckets = ((ParsedStringTerms) aggregation).getBuckets();
+					Iterator iter = buckets.iterator();
+					while (iter.hasNext()) {
+						Terms.Bucket bucket = (Terms.Bucket) iter.next();
+						if (Common.isEquals(aggsKey.getKey(), "userkey") && !Common.isEmpty(key))   currentDocSize = bucket.getDocCount();
+						if (Common.isEquals(aggsKey.getKey(), "checked.readId")) {
+//							log.info("서비스 : " + currentMainKey);
+//							log.info("유저키 : " + key);
+//							log.info("유저의 문서 수 : " +  currentDocSize );
+//							log.info("읽은 이 : " + bucket.getKeyAsString());
+//							log.info("읽은 수 : " + bucket.getDocCount());
+							if(groupMaps.get(currentMainKey) == null ) break;
+							else
+							groupMaps.get(currentMainKey).stream().filter(m -> Common.isEquals(m.getUserkey(), key)).forEach(k -> k.setUnread_cnt(currentDocSize-bucket.getDocCount()));
+
+						} else if (null != bucket.getAggregations()) {
+							aggregationsCheckedParser(bucket.getAggregations(), bucket.getKeyAsString());
+						}
+					}
+				}
+			}
+		}
+	}
+
+
 
 	/**
 	 * 아이콘 메신저 그룹방 상세보기
@@ -335,9 +348,30 @@ public class MessengerEdcGroupVO {
 	public void setFact(List<SolrEdcVO> groups) {
 	}
 
-	public Map<String,List<MessengerGroupVO>> getGroupMap() {
-		return groupMap;
+
+	public Aggregations getAggregations() {
+		return aggregations;
 	}
+
+
+	public Map<String,List<MessengerGroupVO>> getGroupMaps() {
+		return groupMaps;
+	}
+
+	public void setGroupMaps(Map<String,List<MessengerGroupVO>> groupMaps) {
+		this.groupMaps = groupMaps;
+	}
+
+
+
+	public Map<String,Integer> getHeaderMap(){
+		return headerMap;
+	}
+
+	public void putHeaderMap(Map<String,Integer> map){
+		 headerMap.putAll(map);
+	}
+
 
 }
 

@@ -30,6 +30,7 @@ var resizeTimer;
 var detailSearchFlag=true;
 
 
+
 var eikon2 = {
     init : function() {
         //makeSampleData();
@@ -62,7 +63,7 @@ var eikon2 = {
             var usr_id = $('#selectUserInfo').attr('data-usrid');
             var userkey = $('#selectUserInfo').attr('data-name');
             var msgIds = [];
-            var type = $('#selectUserInfo').attr('data-svc12');
+          //  var type = $('#selectUserInfo').attr('data-svc12');
 
             if (type == null || typeof type === 'undefined' || type === '') {
                 type=getPageType();
@@ -88,7 +89,8 @@ var eikon2 = {
     getCollectionList : function(page,type){
         var searchType = $('input:radio[name=searchType]:input:checked').val();
 
-        getCollectionMessageSvc(page, type);
+      //  getCollectionMessageSvc(page, type);
+        getCollectionGroupList(page,type);
     },
     getFileGroupList : function(page){
         var searchType = $('input:radio[name=searchType]:input:checked').val();
@@ -133,7 +135,6 @@ var eikon2 = {
      * 결과 내 검색
      */
     findMessageList : function(offset){
-
         var type = $('#selectUserInfo').attr('data-svc12');
 
         if (type == null || typeof type === 'undefined' || type === '') {
@@ -438,48 +439,48 @@ function getFileMessageList  (page){
         }
     });
 }
-
-function getCollectionMessageSvc(page,type){
-
-    var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
-    groupPage = page;
-    var offset = groupPage*groupPageBreak - groupPageBreak;
-    var uv = $('#userVal').val().split('|');
-    var user = uv.join(',');
-
-    var userStr='';
-    if (user != '') userStr = user;
-    else userStr = '';
-
-    var startDt=$('#startDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
-    var endDt=$('#endDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
-
-    var searchStr=$('#searchStrInput').val();
-
-
-    var startTotalDate=$('#startDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
-    var endTotalDate=$('#endDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
-
-    ui.get({
-        url : 'getCollectionMessageSvc.xcn',
-        data : JSON.stringify( getCondition( )),
-        readYn : readYn,
-        userStr:userStr,
-        startTotalDate:startTotalDate+"00000",
-        endTotalDate:endTotalDate+"235959",
-        type:type,
-        success : function(data, total) {
-            setSvcButton(data.groups,data.numFoundsvc);
-            getCollectionGroupList(page, type)
-        },
-        error : function(status, message) {
-            ui.alertMsg(message);
-        },
-        complete : function() {
-            ui.off();
-        }
-    });
-}
+//
+// function getCollectionMessageSvc(page,type){
+//
+//     var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
+//     groupPage = page;
+//     var offset = groupPage*groupPageBreak - groupPageBreak;
+//     var uv = $('#userVal').val().split('|');
+//     var user = uv.join(',');
+//
+//     var userStr='';
+//     if (user != '') userStr = user;
+//     else userStr = '';
+//
+//     var startDt=$('#startDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+//     var endDt=$('#endDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+//
+//     var searchStr=$('#searchStrInput').val();
+//
+//
+//     var startTotalDate=$('#startDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+//     var endTotalDate=$('#endDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
+//
+//     ui.get({
+//         url : 'getCollectionMessageSvc.xcn',
+//         data : JSON.stringify( getCondition( )),
+//         readYn : readYn,
+//         userStr:userStr,
+//         startTotalDate:startTotalDate+"00000",
+//         endTotalDate:endTotalDate+"235959",
+//         type:type,
+//         success : function(data, total) {
+//             setSvcButton(data.groups,data.numFoundsvc);
+//             getCollectionGroupList(page, type)
+//         },
+//         error : function(status, message) {
+//             ui.alertMsg(message);
+//         },
+//         complete : function() {
+//             ui.off();
+//         }
+//     });
+// }
 
 
 
@@ -499,11 +500,12 @@ function getCollectionGroupList (page,type){
     var startTotalDate=$('#startDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
     var endTotalDate=$('#endDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 
+
     searchFlag = true;
     ui.onBody('timeline_list', 0, -20);
     ui.postJson({
         url : 'getCollectionGroupList.xcn',
-        data : JSON.stringify( getCondition( )),
+        data : JSON.stringify(getCondition(type)),
         readYn : readYn,
         offset : offset,
         userStr:userStr,
@@ -512,7 +514,7 @@ function getCollectionGroupList (page,type){
         type:type,
         limit : groupPageBreak,
         success : function(data, total) {
-            rtnGenerativeGroupList(data.groups)
+            if(data.groupMaps != null) rtnGenerativeGroupList(data);
             rtnnGenerativeGroupPage(total, page);
             HighlightGroup();
         },
@@ -525,8 +527,11 @@ function getCollectionGroupList (page,type){
             ui.off('timeline_list');
         }
     });
-
 }
+
+
+
+
 function getPageType() {
     var currentPageUrl = window.location.href;
 
@@ -1227,24 +1232,24 @@ function getFileServiceList(){
 }
 
 
-function getCondition( ){
-    var filterVal = {};
-
-    if( isConsent()){
-        filterVal.consentNo = $('#consentNo').val();
-        filterVal.consentName = $('#consentName').text();
-        //filterVal.consentIp = $('#consentIp').val();
-        //filterVal.consentEmail = $('#consentEmail').val();
-        filterVal.consentUserId = $('#consentUserId').val();
-    }
-
-    var conArray = [];
-    conArray.push( createCondition( ) );
-    filterVal.conditions = conArray;
-
-    //console.log(JSON.stringify(filterVal))
-    return filterVal;
-}
+// function getCondition(type){
+//     var filterVal = {};
+//     alert(type)
+//
+//     if( isConsent()){
+//         filterVal.consentNo = $('#consentNo').val();
+//         filterVal.consentName = $('#consentName').text();
+//         //filterVal.consentIp = $('#consentIp').val();
+//         //filterVal.consentEmail = $('#consentEmail').val();
+//         filterVal.consentUserId = $('#consentUserId').val();
+//     }
+//     var conArray = [];
+//     conArray.push( createCondition(type ) );
+//     filterVal.conditions = conArray;
+//
+//     //console.log(JSON.stringify(filterVal))
+//     return filterVal;
+// }
 
 function rtnnGenerativeGroupPage(total, page){
     $('#groupResultCnt').html(total.comma());
@@ -1256,13 +1261,14 @@ function rtnFilePage(total, page){
     $('#groupPage').html(getPage3(total, page, groupPageBreak, 'eikon2.getFileGroupList'));
 }
 
-function setSvcButton(data,total){
+function setSvcButton(data){
     busiScrollTabs.clearTabs();
     busiScrollTabs.refreshState();
     busiScrollTabs.addTab('<span class="tab_selected noSearch"><a href="javascript:;" class="busiCounts active" data-busicd=""><s:message code="common.msg.all"/>전체</a></span>');
-    for(var i=0; i<data.length; i++){
-        busiScrollTabs.addTab('<span><a href="javascript:;" class="busiCounts" data-svc1="'+data[i].facetSvc+'">'+makeSVCText(data[i].facetSvc)+'<span class="busiCnt">('+data[i].facetCnt.comma()+')</span></a></span>');
+    for (i in data) {
+         busiScrollTabs.addTab('<span><a href="javascript:;" class="busiCounts" data-svc1="' + i + '">' + makeSVCText(i) + '<span class="busiCnt">(' + data[i].comma() + ')</span></a></span>');
     }
+    pivotused = true;
 }
 
 function makeSVCText( svc ){
@@ -1476,7 +1482,7 @@ function rtnFileGroupList (data) {
 
 
 
-function rtnGenerativeGroupList(data) {
+function rtnGenerativeGroupList(gData) {
 
     var str = '';
     var groupList = document.getElementById("group_list");
@@ -1486,67 +1492,76 @@ function rtnGenerativeGroupList(data) {
     var ul = document.createElement("ul");
     ul.className = "people";
 
-    for (var i = 0; i < data.length; i++) {
-        var li = document.createElement("li");
-        li.className = "person";
-        li.setAttribute("userkey", data[i].userkey);
-        li.setAttribute("msgid", data[i].msgid);
-        li.setAttribute("srcip", data[i].srcip);
-        li.setAttribute("usrid", data[i].usrid);
-        li.setAttribute("body_snippet", data[i].body_snippet);
-        li.setAttribute("name", data[i].name);
-        li.setAttribute("data-chat", "person" + (i + 1));
-        li.setAttribute("svc12",data[i].svc12);
+    if(gData.headerMap != null && !pivotused) setSvcButton(gData.headerMap);
 
-        var leftDiv = document.createElement("div");
-        leftDiv.className = "left";
+    for(k in gData.groupMaps){
+       var data =  gData.groupMaps[k];
+        for (var i = 0; i < data.length; i++) {
+            var li = document.createElement("li");
+            li.className = "person";
+            li.setAttribute("userkey", data[i].userkey);
+            li.setAttribute("msgid", data[i].msgid);
+            li.setAttribute("srcip", data[i].srcip);
+            li.setAttribute("usrid", data[i].usrid);
+            li.setAttribute("body_snippet", data[i].body_snippet);
+            li.setAttribute("name", data[i].name);
+            li.setAttribute("data-chat", "person" + (i + 1));
+            li.setAttribute("svc12",data[i].svc12);
 
-        if(data[i].body_snippet!=undefined) {
-            var bodySnippet = data[i].body_snippet.length > 30 ? data[i].body_snippet.substring(0, 30) + "..." : data[i].body_snippet;
+            var leftDiv = document.createElement("div");
+            leftDiv.className = "left";
+
+            if(data[i].body_snippet!=undefined) {
+                var bodySnippet = data[i].body_snippet.length > 30 ? data[i].body_snippet.substring(0, 30) + "..." : data[i].body_snippet;
+            }
+
+            else{
+                var bodySnippet="";
+            }
+            var leftContent = "<p><span class='chatid'>";
+            var deptNm = data[i].deptNm || "-";
+            var jikgubNm = data[i].jikgubNm || "-";
+            var name = data[i].name || "-";
+
+            leftContent += data[i].userkey + "(" + deptNm + "/" + jikgubNm + "/" + name + ")" + "</span>";
+
+            if (data[i].attached === 'Y') {
+                leftContent += "<span class='file'></span>";
+            }
+            leftContent += "</p>" +
+                "<p><span class='name'>" + data[i].user + "</span><span class='bar'></span><span class='preview'>" + bodySnippet + "</span></p>";
+
+            leftDiv.innerHTML = leftContent;
+            li.appendChild(leftDiv);
+
+            // Create right div
+            var rightDiv = document.createElement("div");
+            rightDiv.className = "right";
+            var imageName =mainContext+"/img/icon/ico_sns_"+ data[i].svc+".png";
+            var makescv = makeMessengerText(data[i].svc);
+            var defaultImageName = mainContext + "/img/icon/ico_sns_FUKR.png";
+            var rightContent;
+            rightContent = "<span class='logo'><img src='" + imageName + "' onerror=\"this.src='" + defaultImageName + "'\">" + makescv + "</span>";
+
+            if (data[i].unread_cnt > 0) {
+                rightContent += "<span class='new'>" + data[i].unread_cnt + "</span>";
+            }
+
+            rightContent += "</p><span class='time'>" + data[i].ctime + "</span>";
+
+            rightDiv.innerHTML = rightContent;
+            li.appendChild(rightDiv);
+
+            // Append li to ul
+            ul.appendChild(li);
+
         }
-
-        else{
-            var bodySnippet="";
-        }
-        var leftContent = "<p><span class='chatid'>";
-        var deptNm = data[i].deptNm || "-";
-        var jikgubNm = data[i].jikgubNm || "-";
-        var name = data[i].name || "-";
-
-        leftContent += data[i].userkey + "(" + deptNm + "/" + jikgubNm + "/" + name + ")" + "</span>";
-
-        if (data[i].attached === 'Y') {
-            leftContent += "<span class='file'></span>";
-        }
-        leftContent += "</p>" +
-            "<p><span class='name'>" + data[i].user + "</span><span class='bar'></span><span class='preview'>" + bodySnippet + "</span></p>";
-
-        leftDiv.innerHTML = leftContent;
-        li.appendChild(leftDiv);
-
-        // Create right div
-        var rightDiv = document.createElement("div");
-        rightDiv.className = "right";
-        var imageName =mainContext+"/img/icon/ico_sns_"+ data[i].svc+".png";
-        var makescv = makeMessengerText(data[i].svc);
-        var defaultImageName = mainContext + "/img/icon/ico_sns_FUKR.png";
-        var rightContent;
-        rightContent = "<span class='logo'><img src='" + imageName + "' onerror=\"this.src='" + defaultImageName + "'\">" + makescv + "</span>";
-
-        if (data[i].unread_cnt > 0) {
-            rightContent += "<span class='new'>" + data[i].unread_cnt + "</span>";
-        }
-
-        rightContent += "</p><span class='time'>" + data[i].ctime + "</span>";
-
-        rightDiv.innerHTML = rightContent;
-        li.appendChild(rightDiv);
-
-        // Append li to ul
-        ul.appendChild(li);
 
     }
-    if( data.length == 0 ){
+
+
+
+    if(gData.groupMaps == undefined || gData.groupMaps.length == 0 ){
         str += '	<div class="pl20 pr20">';
         str += '    <a href="#" class="list-group-item list-group-item-action active" style="cursor:default;">';
         str += '	    <p class="list-group-item-text" style="line-height:30px; text-align: center">';
@@ -1563,40 +1578,63 @@ function rtnGenerativeGroupList(data) {
 }
 
 
-
-function createCondition( ){
-    var allSelect = new Array();
-    var condition = {};
-    if( $('#serviceTypeSelect').selectpicker('val') == null ) {
-        $('#serviceTypeSelect option').each(function(){
-            if( $(this).val() != '' && $(this).val() != null ) allSelect.push( $(this).val() );
-        });
-        condition.serviceType = arrayToString(allSelect);
-    } else {
-        condition.serviceType = arrayToString($('#serviceTypeSelect').selectpicker('val'));
-    }
-    condition.searchStr = $('#searchStrInput').val();
-    condition.senders = $('#senders').val();
-    condition.attachYn = $('input:radio[name=attachYn]:input:checked').val();
-    condition.busi = arrayToString($('#busiSelect').selectpicker('val'));
-
-    if(condition.busi != '') condition.busiStr = $('#busiSelect').parent().find('.filter-option').text();
-    else condition.busiStr = '';
-
-    var dv = $('#deptVal').val().split('|');
-    condition.dept = dv.join(',');
-    if(condition.dept != '') condition.deptStr = $('#deptStr').val();
-    else condition.deptStr = '';
-    /* condition.dept = arrayToString($('#deptSelect').selectpicker('val'));
-    if(condition.dept != '') condition.deptStr = $('#deptSelect').parent().find('.filter-option').text();
-    else condition.deptStr = ''; */
-
-    condition.period = 1;
-    condition.startDt = $('#startdatepicker').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
-    condition.endDt = $('#enddatepicker').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
-
-    return condition;
-}
+// function getCondition(type ){
+//     var filterVal = {};
+//
+//     if( isConsent()){
+//         filterVal.consentNo = $('#consentNo').val();
+//         filterVal.consentName = $('#consentName').text();
+//         //filterVal.consentIp = $('#consentIp').val();
+//         //filterVal.consentEmail = $('#consentEmail').val();
+//         filterVal.consentUserId = $('#consentUserId').val();
+//     }
+//     var conArray = [];
+//     conArray.push( createCondition(type ) );
+//     filterVal.conditions = conArray;
+//
+//     //console.log(JSON.stringify(filterVal))
+//     return filterVal;
+// }
+//
+// function createCondition(type ){
+//     var allSelect = new Array();
+//     var condition = {};
+//
+//
+//     if( !type == "G" && !type ==  "N" && !type == "" ){
+//         condition.serviceType = type; /* 카테고리 선택 */
+//     }
+//     else if( $('#serviceTypeSelect').selectpicker('val') == null ) {
+//         $('#serviceTypeSelect option').each(function(){
+//             if( $(this).val() != '' && $(this).val() != null ) allSelect.push( $(this).val() );
+//         });
+//         condition.serviceType = arrayToString(allSelect);
+//     }
+//     else {
+//         condition.serviceType = arrayToString($('#serviceTypeSelect').selectpicker('val'));
+//     }
+//     condition.searchStr = $('#searchStrInput').val();
+//     condition.senders = $('#senders').val();
+//     condition.attachYn = $('input:radio[name=attachYn]:input:checked').val();
+//     condition.busi = arrayToString($('#busiSelect').selectpicker('val'));
+//
+//     if(condition.busi != '') condition.busiStr = $('#busiSelect').parent().find('.filter-option').text();
+//     else condition.busiStr = '';
+//
+//     var dv = $('#deptVal').val().split('|');
+//     condition.dept = dv.join(',');
+//     if(condition.dept != '') condition.deptStr = $('#deptStr').val();
+//     else condition.deptStr = '';
+//     /* condition.dept = arrayToString($('#deptSelect').selectpicker('val'));
+//     if(condition.dept != '') condition.deptStr = $('#deptSelect').parent().find('.filter-option').text();
+//     else condition.deptStr = ''; */
+//
+//     condition.period = 1;
+//     condition.startDt = $('#startdatepicker').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
+//     condition.endDt = $('#enddatepicker').data("DateTimePicker").date().format('YYYYMMDDHHmmss');
+//
+//     return condition;
+// }
 
 
 function initServiceTab() {
@@ -1604,11 +1642,10 @@ function initServiceTab() {
     busiScrollTabs = $('#busiCntArea').scrollTabs({
         click_callback: function (e) {
             var svc1Value = $('.tab_selected  .busiCounts').attr('data-svc1');
-            console.log(svc1Value);
+         //   console.log(svc1Value);
             $('#selectUserInfo').attr('data-svc12', svc1Value);
 
             if (svc1Value == null || typeof svc1Value === 'undefined' || svc1Value === '') {
-
                 $('#selectUserInfo').attr('data-svc12', getPageType());
                 getCollectionGroupList(1,  getPageType());
             } else {

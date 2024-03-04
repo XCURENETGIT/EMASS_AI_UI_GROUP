@@ -34,8 +34,6 @@ import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.elasticsearch.search.aggregations.pipeline.BucketSortPipelineAggregationBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
-import org.elasticsearch.search.sort.SortBuilder;
-import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -206,7 +204,6 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 				existsQueryBuilder.should(QueryBuilders.existsQuery("cname"));
 				existsQueryBuilder.should(QueryBuilders.existsQuery("bname"));
 			}
-
 			complateQuery.should(existsQueryBuilder).minimumShouldMatch(1);
 		}
 
@@ -259,7 +256,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 		if(Common.isEquals(sq.get("group"),"true")) { // 집계검색
 			searchQuery.setPageable(PageRequest.of(getPage(sq), sq.getRows()));
-			searchHits = operation.search(searchQuery, SolrEdcVO.class);
+			searchHits =  operation.search(searchQuery, SolrEdcVO.class);
 		}else {
 			//일반검색
 			searchQuery.setPageable(PageRequest.ofSize(rows));
@@ -412,8 +409,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			/* sub terms 필드는 1개만*/
 			if(fields.length == 1 &&  !Common.isEmpty(sq.get("facet.stats"))) 	termsAggregation.subAggregation(AggregationBuilders.terms(fields[0]).field(fields[0]).subAggregation(AggregationBuilders.stats(sq.get("facet.stats")).field(sq.get("facet.stats"))));
 			else if(fields.length > 1  &&  !Common.isEmpty(sq.get("facet.stats"))) 	termsAggregation.subAggregation(AggregationBuilders.terms(fields[1]).field(fields[1]).subAggregation(AggregationBuilders.stats(sq.get("facet.stats")).field(sq.get("facet.stats"))));
-			else if(fields.length > 1)  termsAggregation.subAggregation(AggregationBuilders.terms(fields[1]).field(fields[1]));
-			/*else if(fields.length > 1)  termsAggregation.subAggregation(AggregationBuilders.terms("topSvc").field(fields[1]).subAggregation(AggregationBuilders.topHits(field).size(1).from(0).sort("ctime", SortOrder.DESC)));*/
+			else if(fields.length > 1 )  termsAggregation.subAggregation(AggregationBuilders.terms(fields[1]).field(fields[1]));
 
 			if (!Common.isEmpty(sq.get("facet.ranges"))) {
 				List<String> ranges = Common.toList(sq.get("facet.ranges"), ",");
@@ -426,10 +422,18 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			else if (sq.get("facet.list") != null &&  Common.isEquals("true", sq.get("facet.list"))) {
 				/* 대화방 목록 (그룹) */
 				limit = Common.nvz(sq.get("facet.group"), 100);
-				termsAggregation.subAggregation(AggregationBuilders.topHits(field).size(1).from(0).sort("ctime", SortOrder.DESC));
 				BucketSortPipelineAggregationBuilder paging = PipelineAggregatorBuilders.bucketSort("paging", null).from(offset).size(limit);
+
+				if(sq.get("checked.readId") != null) {
+					 termsAggregation.subAggregation(AggregationBuilders.terms(field).field(field).subAggregation(AggregationBuilders.terms(sq.get("checked.readId")).field(sq.get("checked.readId"))));
+					aggregations.add(AggregationBuilders.cardinality("checked_bucket_total").field(mainField));
+				} else {
+					termsAggregation.subAggregation(AggregationBuilders.terms(field).field(field).subAggregation(AggregationBuilders.topHits(field.concat("_top")).size(1).from(0).sort("ctime", SortOrder.DESC)));
+					aggregations.add(AggregationBuilders.cardinality("bucket_total").field(mainField));
+				}
 				termsAggregation.subAggregation(paging);
-				aggregations.add(AggregationBuilders.cardinality("bucket_total").field(mainField));
+
+
 			}else if (sq.get("facet.detail") != null &&  Common.isEquals("true", sq.get("facet.detail"))) {
 				/* 대화 상세 내역 */
 				int size = (!Common.isEmpty(sq.get("facet.size"))) ? Common.nvz(sq.get("facet.size")) : 1; // default 1
