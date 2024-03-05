@@ -463,11 +463,10 @@ $(document).ready(function(){
 						  var srcip = '';
 						 if(obj.attr('srcip') == undefined) srcip = unknown;
 						 else srcip = obj.attr('srcip');
-
-						$('#userNamePop').text(unknown);
+						$('#userNamePop').text(srcip);
+						$('#userEmailPop').text(obj.text());
 					}
 					else{
-						console.log('1')
 						$('#userNamePop').text(obj.text());
 						$('#userEmailPop').text(obj.text());
 					}
