@@ -238,8 +238,14 @@ public class CollectionController {
 
 
 		/* 그룹 디테일검색 동적 들어와야 할 offset,size 값*/
-		sq.setParam("facet.offset", String.valueOf(Common.nvz(param.get("offset"), 0)));
-		sq.setParam("facet.group", String.valueOf(Common.nvz(param.get("limit"), 100)));
+		int offset =  Common.nvz(param.get("offset"), 0);
+		int limit =   Common.nvz(param.get("limit"), 10);
+
+
+		log.info("offset  : " + offset);
+
+		sq.setParam("facet.offset", String.valueOf(offset));
+		sq.setParam("facet.group", String.valueOf(limit));
 		sq.setParam("facet.detail", false);
 		sq.setParam("facet.list", true);
 		sq.setParam("facet.mincount", "1");
@@ -276,13 +282,15 @@ public class CollectionController {
 
 		/* 총 계산 (안읽음처리)*/
 		MessengerEdcGroupVO messengerEdcGroupVO = getCheckedList(request,session);
+		messengerEdcGroupVO.setGroups(solrEdcGroupVO.getGroups());
+		messengerEdcGroupVO.putHeaderMap(tempHeaderMap);
 		messengerEdcGroupVO.setGroupMaps(groupMap);
 		messengerEdcGroupVO.aggregationsCheckedParser();
-		messengerEdcGroupVO.putHeaderMap(tempHeaderMap);
+		messengerEdcGroupVO.groupSort();
+		messengerEdcGroupVO.pagenations(offset,limit);
 
 
-		long NumFound= solrEdcGroupVO.getNumFound();
-
+		long NumFound = solrEdcGroupVO.getNumFound();
 		return new XcnResponseVO(XcnRspCode.OK, messengerEdcGroupVO, NumFound);
 	}
 
@@ -348,7 +356,12 @@ public class CollectionController {
 		return solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request));
 	}
 
+	public void pagination(final HttpServletRequest request, final HttpSession session) throws Exception {
 
+
+
+
+	}
 
 	public List<MessengerGroupVO> setCount_temp(List<MessengerGroupVO> groups, String adminId, JSONObject param) throws IOException, SolrServerException {
 		List<String> userids = new ArrayList<>();

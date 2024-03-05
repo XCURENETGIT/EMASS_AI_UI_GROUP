@@ -146,39 +146,36 @@ public class MessengerEdcGroupVO {
 	Long currentDocSize = 0L;
 
 	public void  aggregationsCheckedParser(){
-		for (Map.Entry<String, List<MessengerGroupVO>> maps : groupMaps.entrySet()) {
-			aggregationsCheckedParser(this.getAggregations(),maps.getKey());
-		}
+		aggregationsCheckedParser(this.getAggregations(),null);
 		this.aggregations = null;
+		this.groupMaps = new HashMap<>();
 		currentMainKey = "";
 		currentDocSize = 0L;
 	}
 	public void  aggregationsCheckedParser(Aggregations aggregations,String key){
-		if(!Common.isEmpty(key)) {
-			for (Map.Entry<String, Aggregation> aggsKey : aggregations.getAsMap().entrySet()) {
-				if (Common.isEquals(aggsKey.getKey(), "userkey") && !Common.isEmpty(key)) currentMainKey = key;
-				Aggregation aggregation = aggregations.get(aggsKey.getKey());
+		for (Map.Entry<String, Aggregation> aggsKey : aggregations.getAsMap().entrySet()) {
+			if (Common.isEquals(aggsKey.getKey(), "userkey") && !Common.isEmpty(key)) currentMainKey = key;
+			Aggregation aggregation = aggregations.get(aggsKey.getKey());
 
-				/* StringTerms */
-				if (aggregation instanceof ParsedStringTerms) {
-					List<? extends Terms.Bucket> buckets = ((ParsedStringTerms) aggregation).getBuckets();
-					Iterator iter = buckets.iterator();
-					while (iter.hasNext()) {
-						Terms.Bucket bucket = (Terms.Bucket) iter.next();
-						if (Common.isEquals(aggsKey.getKey(), "userkey") && !Common.isEmpty(key))   currentDocSize = bucket.getDocCount();
-						if (Common.isEquals(aggsKey.getKey(), "checked.readId")) {
-//							log.info("서비스 : " + currentMainKey);
-//							log.info("유저키 : " + key);
-//							log.info("유저의 문서 수 : " +  currentDocSize );
-//							log.info("읽은 이 : " + bucket.getKeyAsString());
-//							log.info("읽은 수 : " + bucket.getDocCount());
-							if(groupMaps.get(currentMainKey) == null ) break;
-							else
-							groupMaps.get(currentMainKey).stream().filter(m -> Common.isEquals(m.getUserkey(), key)).forEach(k -> k.setUnread_cnt(currentDocSize-bucket.getDocCount()));
-
-						} else if (null != bucket.getAggregations()) {
-							aggregationsCheckedParser(bucket.getAggregations(), bucket.getKeyAsString());
-						}
+			/* StringTerms */
+			if (aggregation instanceof ParsedStringTerms) {
+				List<? extends Terms.Bucket> buckets = ((ParsedStringTerms) aggregation).getBuckets();
+				Iterator iter = buckets.iterator();
+				while (iter.hasNext()) {
+					Terms.Bucket bucket = (Terms.Bucket) iter.next();
+					if (Common.isEquals(aggsKey.getKey(), "userkey") && !Common.isEmpty(key))   currentDocSize = bucket.getDocCount();
+					if (Common.isEquals(aggsKey.getKey(), "checked.readId")) {
+//						log.info("서비스 : " + currentMainKey);
+//						log.info("유저키 : " + key);
+//						log.info("유저의 문서 수 : " +  currentDocSize );
+//						log.info("읽은 이 : " + bucket.getKeyAsString());
+//						log.info("읽은 수 : " + bucket.getDocCount());
+						if( groups.stream().filter(v -> Common.isEquals(v.getSvc12(), currentMainKey)).count() == 0 ) break;
+						else
+							 groups.stream().filter(v -> Common.isEquals(v.getSvc12(), currentMainKey)).filter(m -> Common.isEquals(m.getUserkey(), key))
+							.forEach(v -> v.setUnread_cnt(currentDocSize-bucket.getDocCount()));
+					} else if (null != bucket.getAggregations()) {
+						aggregationsCheckedParser(bucket.getAggregations(), bucket.getKeyAsString());
 					}
 				}
 			}
@@ -373,5 +370,16 @@ public class MessengerEdcGroupVO {
 	}
 
 
+	public void pagenations(int offset, int limit) {
+		log.info("START : " + offset);
+		log.info("LIMIT : " + offset + limit);
+		log.info("groups.size() : " + groups.size());
+		if(limit > groups.size()) limit = groups.size();
+		this.groups = new ArrayList<MessengerGroupVO>(groups.subList(offset, offset + limit));
+	}
+
+	public void groupSort() {
+		groups.stream().sorted(Comparator.comparing(MessengerGroupVO::getCtime).reversed());
+	}
 }
 

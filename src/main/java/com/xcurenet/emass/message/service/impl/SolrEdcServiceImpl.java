@@ -422,7 +422,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			else if (sq.get("facet.list") != null &&  Common.isEquals("true", sq.get("facet.list"))) {
 				/* 대화방 목록 (그룹) */
 				limit = Common.nvz(sq.get("facet.group"), 100);
-				BucketSortPipelineAggregationBuilder paging = PipelineAggregatorBuilders.bucketSort("paging", null).from(offset).size(limit);
+			//	BucketSortPipelineAggregationBuilder paging = PipelineAggregatorBuilders.bucketSort("paging", null).from(offset).size(limit);
 
 				if(sq.get("checked.readId") != null) {
 					 termsAggregation.subAggregation(AggregationBuilders.terms(field).field(field).subAggregation(AggregationBuilders.terms(sq.get("checked.readId")).field(sq.get("checked.readId"))));
@@ -431,7 +431,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 					termsAggregation.subAggregation(AggregationBuilders.terms(field).field(field).subAggregation(AggregationBuilders.topHits(field.concat("_top")).size(1).from(0).sort("ctime", SortOrder.DESC)));
 					aggregations.add(AggregationBuilders.cardinality("bucket_total").field(mainField));
 				}
-				termsAggregation.subAggregation(paging);
+			//	termsAggregation.subAggregation(paging);
 
 
 			}else if (sq.get("facet.detail") != null &&  Common.isEquals("true", sq.get("facet.detail"))) {

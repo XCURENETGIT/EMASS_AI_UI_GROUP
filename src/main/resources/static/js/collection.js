@@ -500,6 +500,7 @@ function getCollectionGroupList (page,type){
     var startTotalDate=$('#startDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
     var endTotalDate=$('#endDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 
+    if(typeof type == 'number' ) type = '';
 
     searchFlag = true;
     ui.onBody('timeline_list', 0, -20);
@@ -514,7 +515,8 @@ function getCollectionGroupList (page,type){
         type:type,
         limit : groupPageBreak,
         success : function(data, total) {
-            if(data.groupMaps != null) rtnGenerativeGroupList(data);
+            if(data.groups != null) rtnGenerativeGroupList(data.groups);
+            if(data.headerMap != null && !pivotused) setSvcButton(data.headerMap);
             rtnnGenerativeGroupPage(total, page);
             HighlightGroup();
         },
@@ -1482,7 +1484,7 @@ function rtnFileGroupList (data) {
 
 
 
-function rtnGenerativeGroupList(gData) {
+function rtnGenerativeGroupList(data) {
 
     var str = '';
     var groupList = document.getElementById("group_list");
@@ -1492,76 +1494,136 @@ function rtnGenerativeGroupList(gData) {
     var ul = document.createElement("ul");
     ul.className = "people";
 
-    if(gData.headerMap != null && !pivotused) setSvcButton(gData.headerMap);
 
-    for(k in gData.groupMaps){
-       var data =  gData.groupMaps[k];
-        for (var i = 0; i < data.length; i++) {
-            var li = document.createElement("li");
-            li.className = "person";
-            li.setAttribute("userkey", data[i].userkey);
-            li.setAttribute("msgid", data[i].msgid);
-            li.setAttribute("srcip", data[i].srcip);
-            li.setAttribute("usrid", data[i].usrid);
-            li.setAttribute("body_snippet", data[i].body_snippet);
-            li.setAttribute("name", data[i].name);
-            li.setAttribute("data-chat", "person" + (i + 1));
-            li.setAttribute("svc12",data[i].svc12);
+    for (var i = 0; i < data.length; i++) {
+        var li = document.createElement("li");
+        li.className = "person";
+        li.setAttribute("userkey", data[i].userkey);
+        li.setAttribute("msgid", data[i].msgid);
+        li.setAttribute("srcip", data[i].srcip);
+        li.setAttribute("usrid", data[i].usrid);
+        li.setAttribute("body_snippet", data[i].body_snippet);
+        li.setAttribute("name", data[i].name);
+        li.setAttribute("data-chat", "person" + (i + 1));
+        li.setAttribute("svc12",data[i].svc12);
 
-            var leftDiv = document.createElement("div");
-            leftDiv.className = "left";
+        var leftDiv = document.createElement("div");
+        leftDiv.className = "left";
 
-            if(data[i].body_snippet!=undefined) {
-                var bodySnippet = data[i].body_snippet.length > 30 ? data[i].body_snippet.substring(0, 30) + "..." : data[i].body_snippet;
-            }
-
-            else{
-                var bodySnippet="";
-            }
-            var leftContent = "<p><span class='chatid'>";
-            var deptNm = data[i].deptNm || "-";
-            var jikgubNm = data[i].jikgubNm || "-";
-            var name = data[i].name || "-";
-
-            leftContent += data[i].userkey + "(" + deptNm + "/" + jikgubNm + "/" + name + ")" + "</span>";
-
-            if (data[i].attached === 'Y') {
-                leftContent += "<span class='file'></span>";
-            }
-            leftContent += "</p>" +
-                "<p><span class='name'>" + data[i].user + "</span><span class='bar'></span><span class='preview'>" + bodySnippet + "</span></p>";
-
-            leftDiv.innerHTML = leftContent;
-            li.appendChild(leftDiv);
-
-            // Create right div
-            var rightDiv = document.createElement("div");
-            rightDiv.className = "right";
-            var imageName =mainContext+"/img/icon/ico_sns_"+ data[i].svc+".png";
-            var makescv = makeMessengerText(data[i].svc);
-            var defaultImageName = mainContext + "/img/icon/ico_sns_FUKR.png";
-            var rightContent;
-            rightContent = "<span class='logo'><img src='" + imageName + "' onerror=\"this.src='" + defaultImageName + "'\">" + makescv + "</span>";
-
-            if (data[i].unread_cnt > 0) {
-                rightContent += "<span class='new'>" + data[i].unread_cnt + "</span>";
-            }
-
-            rightContent += "</p><span class='time'>" + data[i].ctime + "</span>";
-
-            rightDiv.innerHTML = rightContent;
-            li.appendChild(rightDiv);
-
-            // Append li to ul
-            ul.appendChild(li);
-
+        if(data[i].body_snippet!=undefined) {
+            var bodySnippet = data[i].body_snippet.length > 30 ? data[i].body_snippet.substring(0, 30) + "..." : data[i].body_snippet;
         }
+
+        else{
+            var bodySnippet="";
+        }
+        var leftContent = "<p><span class='chatid'>";
+        var deptNm = data[i].deptNm || "-";
+        var jikgubNm = data[i].jikgubNm || "-";
+        var name = data[i].name || "-";
+
+        leftContent += data[i].userkey + "(" + deptNm + "/" + jikgubNm + "/" + name + ")" + "</span>";
+
+        if (data[i].attached === 'Y') {
+            leftContent += "<span class='file'></span>";
+        }
+        leftContent += "</p>" +
+            "<p><span class='name'>" + data[i].user + "</span><span class='bar'></span><span class='preview'>" + bodySnippet + "</span></p>";
+
+        leftDiv.innerHTML = leftContent;
+        li.appendChild(leftDiv);
+
+        // Create right div
+        var rightDiv = document.createElement("div");
+        rightDiv.className = "right";
+        var imageName =mainContext+"/img/icon/ico_sns_"+ data[i].svc+".png";
+        var makescv = makeMessengerText(data[i].svc);
+        var defaultImageName = mainContext + "/img/icon/ico_sns_FUKR.png";
+        var rightContent;
+        rightContent = "<span class='logo'><img src='" + imageName + "' onerror=\"this.src='" + defaultImageName + "'\">" + makescv + "</span>";
+
+        if (data[i].unread_cnt > 0) {
+            rightContent += "<span class='new'>" + data[i].unread_cnt + "</span>";
+        }
+
+        rightContent += "</p><span class='time'>" + data[i].ctime + "</span>";
+
+        rightDiv.innerHTML = rightContent;
+        li.appendChild(rightDiv);
+
+        // Append li to ul
+        ul.appendChild(li);
 
     }
 
+    // for(k in gData.groupMaps){
+    //    var data =  gData.groupMaps[k];
+    //     for (var i = 0; i < data.group.length; i++) {
+    //         var li = document.createElement("li");
+    //         li.className = "person";
+    //         li.setAttribute("userkey", data[i].userkey);
+    //         li.setAttribute("msgid", data[i].msgid);
+    //         li.setAttribute("srcip", data[i].srcip);
+    //         li.setAttribute("usrid", data[i].usrid);
+    //         li.setAttribute("body_snippet", data[i].body_snippet);
+    //         li.setAttribute("name", data[i].name);
+    //         li.setAttribute("data-chat", "person" + (i + 1));
+    //         li.setAttribute("svc12",data[i].svc12);
+    //
+    //         var leftDiv = document.createElement("div");
+    //         leftDiv.className = "left";
+    //
+    //         if(data[i].body_snippet!=undefined) {
+    //             var bodySnippet = data[i].body_snippet.length > 30 ? data[i].body_snippet.substring(0, 30) + "..." : data[i].body_snippet;
+    //         }
+    //
+    //         else{
+    //             var bodySnippet="";
+    //         }
+    //         var leftContent = "<p><span class='chatid'>";
+    //         var deptNm = data[i].deptNm || "-";
+    //         var jikgubNm = data[i].jikgubNm || "-";
+    //         var name = data[i].name || "-";
+    //
+    //         leftContent += data[i].userkey + "(" + deptNm + "/" + jikgubNm + "/" + name + ")" + "</span>";
+    //
+    //         if (data[i].attached === 'Y') {
+    //             leftContent += "<span class='file'></span>";
+    //         }
+    //         leftContent += "</p>" +
+    //             "<p><span class='name'>" + data[i].user + "</span><span class='bar'></span><span class='preview'>" + bodySnippet + "</span></p>";
+    //
+    //         leftDiv.innerHTML = leftContent;
+    //         li.appendChild(leftDiv);
+    //
+    //         // Create right div
+    //         var rightDiv = document.createElement("div");
+    //         rightDiv.className = "right";
+    //         var imageName =mainContext+"/img/icon/ico_sns_"+ data[i].svc+".png";
+    //         var makescv = makeMessengerText(data[i].svc);
+    //         var defaultImageName = mainContext + "/img/icon/ico_sns_FUKR.png";
+    //         var rightContent;
+    //         rightContent = "<span class='logo'><img src='" + imageName + "' onerror=\"this.src='" + defaultImageName + "'\">" + makescv + "</span>";
+    //
+    //         if (data[i].unread_cnt > 0) {
+    //             rightContent += "<span class='new'>" + data[i].unread_cnt + "</span>";
+    //         }
+    //
+    //         rightContent += "</p><span class='time'>" + data[i].ctime + "</span>";
+    //
+    //         rightDiv.innerHTML = rightContent;
+    //         li.appendChild(rightDiv);
+    //
+    //         // Append li to ul
+    //         ul.appendChild(li);
+    //
+    //     }
+    //
+    // }
 
 
-    if(gData.groupMaps == undefined || gData.groupMaps.length == 0 ){
+
+    if(data == undefined || data.length == 0 ){
         str += '	<div class="pl20 pr20">';
         str += '    <a href="#" class="list-group-item list-group-item-action active" style="cursor:default;">';
         str += '	    <p class="list-group-item-text" style="line-height:30px; text-align: center">';
