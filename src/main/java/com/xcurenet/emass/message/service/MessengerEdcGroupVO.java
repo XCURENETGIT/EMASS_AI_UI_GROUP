@@ -45,9 +45,8 @@ public class MessengerEdcGroupVO {
 	private Map<String,Integer> headerMap = new HashMap<>();
 
 	private boolean detail = false;
-	private String adminId = "";
 	private boolean original = false;
-
+	private String adminId = "";
 
 	public MessengerEdcGroupVO(final List<MessengerGroupVO> groups) {
 		this.groups = groups;
@@ -101,7 +100,6 @@ public class MessengerEdcGroupVO {
 		}
 
 		this.detail = false;
-		this.adminId = "";
 		this.original = false;
 
 	}
@@ -144,11 +142,14 @@ public class MessengerEdcGroupVO {
 
 	String currentMainKey = "";
 	Long currentDocSize = 0L;
+	String admin = "";
 
-	public void  aggregationsCheckedParser(){
+	public void  aggregationsCheckedParser(String id){
+		admin = id;
 		aggregationsCheckedParser(this.getAggregations(),null);
 		this.aggregations = null;
 		this.groupMaps = new HashMap<>();
+		adminId = "";
 		currentMainKey = "";
 		currentDocSize = 0L;
 	}
@@ -171,9 +172,10 @@ public class MessengerEdcGroupVO {
 //						log.info("읽은 이 : " + bucket.getKeyAsString());
 //						log.info("읽은 수 : " + bucket.getDocCount());
 						if( groups.stream().filter(v -> Common.isEquals(v.getSvc12(), currentMainKey)).count() == 0 ) break;
-						else
-							 groups.stream().filter(v -> Common.isEquals(v.getSvc12(), currentMainKey)).filter(m -> Common.isEquals(m.getUserkey(), key))
-							.forEach(v -> v.setUnread_cnt(currentDocSize-bucket.getDocCount()));
+						else if (admin.equals(bucket.getKeyAsString())) {
+							groups.stream().filter(v -> Common.isEquals(v.getSvc12(), currentMainKey)).filter(m -> Common.isEquals(m.getUserkey(), key))
+									.forEach(v -> v.setUnread_cnt(currentDocSize - bucket.getDocCount()));
+						}
 					} else if (null != bucket.getAggregations()) {
 						aggregationsCheckedParser(bucket.getAggregations(), bucket.getKeyAsString());
 					}

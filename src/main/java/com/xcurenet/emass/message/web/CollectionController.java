@@ -286,7 +286,7 @@ public class CollectionController {
 		MessengerEdcGroupVO messengerEdcGroupVO = getCheckedList(request,session);
 		messengerEdcGroupVO.setGroups(solrEdcGroupVO.getGroups());
 		messengerEdcGroupVO.putHeaderMap(tempHeaderMap);
-		messengerEdcGroupVO.aggregationsCheckedParser();
+		messengerEdcGroupVO.aggregationsCheckedParser(Common.getAdminId(session));
 
 
 		return new XcnResponseVO(XcnRspCode.OK, messengerEdcGroupVO, NumFound);
