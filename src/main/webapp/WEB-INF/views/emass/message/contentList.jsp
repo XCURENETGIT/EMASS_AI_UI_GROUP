@@ -58,6 +58,11 @@
 			min-width: 100px !important;
 		}
 
+		.status_rownum{
+			margin-top:7px; !important;
+		}
+
+
 		::-webkit-scrollbar {
 			width: 8px;  /* 세로축 스크롤바 폭 너비 */
 			height: 6px;  /* 가로축 스크롤바 폭 너비 */
@@ -186,7 +191,7 @@
 			<div id="busiCntArea" style="padding-left: 5px;padding-right: 15px; margin-left:6px; height:36px;">
 				<span class="tab_selected noSearch"><a href="javascript:;" class="busiCounts active" data-busicd=""><!--<i class="fa fa-angle-right" aria-hidden="true"></i> --><s:message code="common.msg.all"/></a></span>
 			</div>
-			<div id="messageNewGrid" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px;min-height:200px;height:calc(100% - 60px);"></div>
+			<div id="messageNewGrid" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px;min-height:200px;height:calc(100% - 65px);"></div>
 			<input type="hidden" id="searchTime" />
 		</div>
 	</div>
