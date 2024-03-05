@@ -196,8 +196,10 @@ public class SolrEdcController {
 
 			SolrEdcMessageVO solrVo = solrEdcService.getEmassMessage(sq, Common.getAdminId(session), solrCreateQuery.getFinalReadYn(), solrCreateQuery.getConsentNo());
 			ConfigAdminVO conf = configAdminService.getConfAdmin("message.overlap.use", Common.getAdminId(request));
+			String confVal = "N";
 
-			if(Common.isEquals(Common.nvl(param.get("overlap")), "Y") && Common.isEquals(conf.getVal(), "Y")) {
+			if(!Common.isEmpty(conf)) confVal = conf.getVal();
+			if(Common.isEquals(Common.nvl(param.get("overlap")), "Y") && Common.isEquals(confVal, "Y")) {
 				solrVo = solrEdcService.setOverlap(solrVo);
 			}
 
