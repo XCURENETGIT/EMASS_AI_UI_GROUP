@@ -133,13 +133,13 @@ public class CollectionController {
 			query.append("))");
 		}
 
-		sq.setQuery(sq.getQuery()+query+ MESSENGER4 + " +userkey:* +attached:Y");
+		sq.setQuery(sq.getQuery()+query + " +attached:Y");
 		sq.setStart(Common.nvz(param.get("offset"), 0));
 		sq.setRows(Common.nvz(param.get("limit"), 100));
 		sq.setSort("ctime", ORDER.desc);
 		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "deptnm","businm", "jikgubnm", "usr_id");
 
-		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request));
+		SolrEdcMessageVO solrEdcGroupVO = solrEdcService.getEmassMessage(sq, Common.getAdminId(request));
 		return new XcnResponseVO(XcnRspCode.OK, solrEdcGroupVO, solrEdcGroupVO.getNumFound());
 	}
 

@@ -226,6 +226,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		int range = Math.round((rows + offset) / rows); // for문 횟수
 
 
+
 		Query searchQuery = new NativeSearchQueryBuilder()
 				.withFields(Common.toArray(sq.getFields(), ","))
 				.withQuery(complateQuery)
@@ -247,7 +248,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			Sort sort = null;
 			for (SortClause s : sorts) {
 				SortOrder sortOrder = (Common.isEquals(s.getOrder(), SortOrder.DESC)) ? SortOrder.DESC : SortOrder.ASC;
-				if (s.getOrder() == SolrQuery.ORDER.desc) sort = Sort.by(s.getItem()).descending();
+				if (s.getOrder() == SolrQuery.ORDER.desc) sort = Sort.by("msgid").descending();
 				else sort = Sort.by(s.getItem()).ascending();
 				searchQuery.addSort(sort);
 			}
@@ -268,10 +269,11 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 					break;
 				} else {
 					searchHits = operation.search(searchQuery, SolrEdcVO.class);
+					System.out.println(searchHits);
 				}
 				if (idx > range || searchHits.getSearchHits().isEmpty()) break;
-				SearchHit lastHit = searchHits.getSearchHit((int) (searchHits.getSearchHits().size() - 1));
-				searchAfter = lastHit.getSortValues();
+				SearchHit lastHit = searchHits.getSearchHit((int) (searchHits.getSearchHits().size()-1 ));
+				searchAfter = java.util.Collections.singletonList(lastHit.getId());
 				idx++;
 			} while (true);
 		}
