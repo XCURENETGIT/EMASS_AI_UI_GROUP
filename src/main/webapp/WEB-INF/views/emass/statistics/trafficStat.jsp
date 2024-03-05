@@ -5,6 +5,32 @@
 <head>
 	<title>EMASS AI - <s:message code="DATA_MONITOR.STAT_LABEL"/></title>
 	<script>
+        Highcharts.setOptions({
+            chart: {
+                type: 'column',
+                marginTop : 25
+            },
+            global : { useUTC : false },
+            gridLineColor: '#fff',
+            colors: ['#80599F', '#656C7C', '#598AD3', '#D35976', '#DDDDDD', '#bb6ecb', '#439851', '#33a0c4', '#7558cb', '#97b420'],
+            lang: {
+                months: [ '<s:message code="common.january"/>', '<s:message code="common.february"/>', '<s:message code="common.march"/>', '<s:message code="common.april"/>', '<s:message code="common.may"/>', '<s:message code="common.june"/>', '<s:message code="common.july"/>', '<s:message code="common.august"/>', '<s:message code="common.september"/>', '<s:message code="common.october"/>', '<s:message code="common.november"/>', '<s:message code="common.december"/>' ],
+                shortMonths : [ '<s:message code="common.january"/>', '<s:message code="common.february"/>', '<s:message code="common.march"/>', '<s:message code="common.april"/>', '<s:message code="common.may"/>', '<s:message code="common.june"/>', '<s:message code="common.july"/>', '<s:message code="common.august"/>', '<s:message code="common.september"/>', '<s:message code="common.october"/>', '<s:message code="common.november"/>', '<s:message code="common.december"/>' ],
+                weekdays : [ '<s:message code="common.sunday"/>', '<s:message code="common.monday"/>', '<s:message code="common.tuesday"/>', '<s:message code="common.wednesday"/>', '<s:message code="common.thursday"/>', '<s:message code="common.friday"/>', '<s:message code="common.saturday"/>' ],
+                contextButtonTitle : '<s:message code="common.msg.char_type"/>',
+                thousandsSep : ','
+            },
+            xAxis: {
+                dateTimeLabelFormats: {
+                    day: '<s:message code="dashboard.display.day" arguments="%b,%d" />'
+                }
+            },
+            yAxis: {
+                gridLineColor: '#333',
+                gridLineWidth : 0.1
+            }
+        });
+
         var searchFlag = false;
         var detailTotal = 0;
         var rowKey = "";
@@ -35,72 +61,61 @@
             //getData ('Y');
         });
 
+
         /**
          * Bar Chart
          */
         var chart = null;
         var xAxis;
-
-        function printChart(dat) {
+        function printChart( dat ) {
             var data = [];
             var categories = [];
             var cols = grid1.columns;
-            if (dat == undefined) {
-                for (var i = 0; i < grid1.data.length; i++) {
-                    if ((i + 1) > cnt) break;
+            if( dat == undefined ) {
+                for ( var i=0 ; i < grid1.data.length ; i++ ) {
+                    if ( (i+1) > cnt ) break;
                     var tx = [];
                     var rx = [];
-                    for (var j = 0; j < cols.length; j++) {
-                        if (cols[j].id == 'deviceNm' || cols[j].id == 'NUM') continue;
+                    for ( var j=0 ; j < cols.length ; j++ ) {
+                        if ( cols[j].id == 'deviceNm' || cols[j].id == 'NUM' ) continue;
                         var valArr = (grid1.data[i][cols[j].id]).split('/');
-                        if (grid1.data[i][cols[j].id] == '') {
+                        if ( grid1.data[i][cols[j].id] == '' ) {
                             tx.push(0);
                             rx.push(0);
                         } else {
-                            tx.push(Number(valArr[0]));
-                            rx.push(Number(valArr[1]));
+                            tx.push( Number( valArr[0] ) );
+                            rx.push( Number( valArr[1] ) );
                         }
-                        if (i == 0) categories.push(cols[j].name);
+                        if ( i == 0 ) categories.push( cols[j].name );
                     }
-                    txNm = '<s:message code="stat.traffic.tx"/>(' + grid1.data[i]["deviceNm"] + ')';
-                    rxNm = '<s:message code="stat.traffic.rx"/>(' + grid1.data[i]["deviceNm"] + ')';
-                    data.push({name: txNm, data: tx, stack: 'traffic' + i}, {name: rxNm, data: rx, stack: 'traffic' + i});
+                    txNm = '<s:message code="stat.traffic.tx"/>('+grid1.data[i]["deviceNm"]+')';
+                    rxNm = '<s:message code="stat.traffic.rx"/>('+grid1.data[i]["deviceNm"]+')';
+                    data.push({name:txNm, data:tx, stack:'traffic'+i},{name:rxNm, data:rx, stack:'traffic'+i});
                 }
-            } else {
+            }
+            else {
                 var tx = [];
                 var rx = [];
-                for (var j = 0; j < cols.length; j++) {
-                    if (cols[j].id == 'deviceNm' || cols[j].id == 'NUM') continue;
+                for ( var j=0 ; j < cols.length ; j++ ) {
+                    if ( cols[j].id == 'deviceNm' || cols[j].id == 'NUM' ) continue;
                     var valArr = (dat[cols[j].id]).split('/');
-                    if (dat[cols[j].id] == '') {
+                    if ( dat[cols[j].id] == '' ) {
                         tx.push(0);
                         rx.push(0);
                     } else {
-                        tx.push(Number(valArr[0]));
-                        rx.push(Number(valArr[1]));
+                        tx.push( Number( valArr[0] ) );
+                        rx.push( Number( valArr[1] ) );
                     }
-                    categories.push(cols[j].name);
+                    categories.push( cols[j].name );
                 }
-                txNm = '<s:message code="stat.traffic.tx"/>(' + dat["deviceNm"] + ')';
-                rxNm = '<s:message code="stat.traffic.rx"/>(' + dat["deviceNm"] + ')';
-                data.push({name: txNm, data: tx, stack: 'traffic'}, {name: rxNm, data: rx, stack: 'traffic'});
+                txNm = '<s:message code="stat.traffic.tx"/>('+dat["deviceNm"]+')';
+                rxNm = '<s:message code="stat.traffic.rx"/>('+dat["deviceNm"]+')';
+                data.push({name:txNm, data:tx, stack:'traffic'},{name:rxNm, data:rx, stack:'traffic'});
             }
 
             var rotation = 40;
-            if (xAxis == 'W') rotation = 0;
+            if ( xAxis == 'W' ) rotation = 0;
             $('#chartArea1').highcharts({
-                chart: {
-                    type: 'column',
-                    options3d: {
-                        enabled: true,
-                        alpha: 0,
-                        beta: 0,
-                        viewDistance: 15,
-                        depth: 40
-                    },
-                    marginTop: 25,
-                    marginRight: 45
-                },
                 title: {
                     text: null
                 },
@@ -108,10 +123,6 @@
                 credits: chartAPI.credits,
                 xAxis: {
                     categories: categories,
-                    labels: {
-                        y: 35,
-                        rotation: rotation
-                    }
                 },
                 yAxis: {
                     allowDecimals: false,
@@ -124,11 +135,11 @@
                     headerFormat: '<b>{point.key}</b><br>',
                     pointFormat: '<span style="color:{series.color}">\u25CF</span> {series.name}: {point.y}(MB)'
                 },
-                plotOptions: {},
+                plotOptions: {
+                },
                 series: data
             });
         }
-
 	</script>
 </head>
 <body class="mini-navbar">
@@ -236,8 +247,9 @@
                 grid1.autoNumber();
                 grid1.colAdd('deviceNm', '<s:message code="common.msg.device"/>', 230, 'left', false, 'link');
                 for (var i = 0; i < data.header.length; i++) {
+                    console.log(header);
                     var header = data.header[i];
-                    grid1.colAdd(header.key, header.key, 100, "center", false, 'nomal', function (row, cell, value, columnDef, dataContext) {
+                    grid1.colAdd(header.key, header.text, 100, "center", false, 'nomal', function (row, cell, value, columnDef, dataContext) {
                         if (value != undefined) {
                             if (value != '') {
                                 var valArr = value.split('/');

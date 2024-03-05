@@ -341,6 +341,8 @@
             else if (alarmVal.endDateSelect == 'W') searchDateStr += '<s:message code="condition.sevenago"/> ';
             searchDateStr += '<s:message code="condition.time" arguments="'+alarmVal.endTimeSelect+',59,59" />';
 
+
+
             if (alarmCycle != 'H') searchStr = setConditionValStr(searchDateStr, '<s:message code="condition.period"/>');
             else searchStr = setConditionValStr('<s:message code="mail.message.condition_info"/>', '<s:message code="condition.period"/>');
 
@@ -357,6 +359,13 @@
             if (alarmVal.readYn == 'Y') readYnMsg = '<s:message code="condition.read"/>';
             else if (alarmVal.readYn == 'N') readYnMsg = '<s:message code="condition.unread"/>';
             if (readYnMsg != '') searchStr += setConditionValStr(readYnMsg, '<s:message code="condition.isread"/>');
+
+            var reprocessYnMsg = '';
+            if (alarmVal.reprocessYn='Y') reprocessYnMsg = '<s:message code="condition.exist"/>';
+            else if (alarmVal.reprocessYn='N') reprocessYnMsg = '<s:message code="condition.none"/>';
+            if (reprocessYnMsg != '') searchStr += setConditionValStr(reprocessYnMsg, '<s:message code="condition.reprocess"/>');
+            console.log(reprocessYnMsg);
+            console.log("")
 
             var receiveSendMsg = '';
             if (alarmVal.receiveSend == 'O') receiveSendMsg = '<s:message code="condition.send"/>';

@@ -426,7 +426,7 @@ function getFileMessageList  (page){
         userStr:userStr,
         limit : groupPageBreak,
         success : function(data, total) {
-            rtnFileGroupList(data.groups)
+            rtnFileGroupList(data.emass)
             rtnFilePage(total, page);
             HighlightGroup();
         },
@@ -623,6 +623,15 @@ function makeFileServiceList(data) {
     var files = data.files;
     var str = '';
 
+    var attachname = files.map(function(file) {
+        return file.attachName;
+    }).join(', ');
+
+    var maxLength = 50;
+    if (attachname.length > maxLength) {
+        attachname = attachname.substring(0, maxLength) + '...';
+    }
+
     str += '<div class="messageCon">';
     if (data.inSide == "N") {
         str += '<div id="conmsg" class="top redBg" msgid="' + data.msgId + '">';
@@ -635,7 +644,7 @@ function makeFileServiceList(data) {
         str += '<img src="' + mainContext + '/img/ico_w_chatshare_fill.png" alt="외부" height="12px">';
         str += filelist.Outside+'</span>';
     }
-    str += data.files[0].attachName + '</h4>'; // If data.name is not present, use '-'
+    str += attachname+ '</h4>';
     str += '<div class="loca">' + data.svcNm + '</div>';
     str += '</div>';
     str += '<div class="conBox">';
@@ -643,7 +652,7 @@ function makeFileServiceList(data) {
     str += '<p>';
     str += '<span class="name">' + data.userList[0].busiNm + '</span> <span class="xcn_bar"></span>';
     str += '<span class="name">' + data.userList[0].deptNm + '</span> <span class="xcn_bar"></span>';
-    str += '<span class="name">' + (data.userList[0].name ? data.userList[0].name : '-') + '</span>'; // If data.name is not present, use '-'
+    str += '<span class="name">' + (data.userList[0].name ? data.userList[0].name : (data.user ? data.user : '-')) + '</span>';
     str += '</p>';
     str += '<p class="rightBox">';
     str += '<span>' + data.ctime + '</span>';
@@ -687,13 +696,12 @@ function filediv(data) {
         fileStr += '<li msgid="' + data.msgId + '" id="' + file.attachId + '" size="' + file.attachSize  + '" attachHash="' + file.attachHash + '" class="' + trClass + extClass +'" >';
 
         fileStr +=  '<p class="attach_'+attachExt+' attach_file_img">';
-        if (attachNameExist == "N") fileStr += '<a href="#" class="downloadIcon">'+filelist.noname +'</a>';
+        if (attachNameExist == "N") fileStr += '<a href="#" class="downloadIcon">'+filelist.noname ;
         else{ fileStr += '<a href="#" class="downloadIcon attachName" style="text-decoration: underline;" attachname="' + attachName + '">';
             fileStr += '' + attachName;
         };
-        fileStr+='<div id="imgPreviewDiv"></div>';
 
-        fileStr+='(' + convertFileSize(file.attachSize) + ')</a></p>';
+        fileStr+='(' + convertFileSize(file.attachSize) + ')</a><div class="imgPreviewDiv"></div></p>';
         fileStr += '<div class="btn btnform" style="padding: 0px; border: none;">';
         fileStr += '<button class="btn03 borradius downloadIcon"><img src="'+mainContext+'/img/subBtn_save.png">'+filelist.save+'</button>';
         if (nvl(file.ocrYn) == "Y") {
@@ -1434,10 +1442,10 @@ function rtnFileGroupList (data) {
         leftDiv.className = "left";
 
         var leftContent = "<p><span class='chatid'>" + data[i].attachname + "</span></p>" +
-            "<p><span class='name'>" + data[i].busiNm + "</span>";
+            "<p><span class='name'>" + data[i].businm + "</span>";
 
-        leftContent += data[i].deptNm ? "<span class='bar'></span><span class='name'>" + data[i].deptNm + "</span>" : "<span class='bar'></span><span class='name'>-</span>";
-        leftContent += data[i].jikgubNm ? "<span class='bar'></span><span class='name'>" + data[i].jikgubNm + "</span>" : "<span class='bar'></span><span class='name'>-</span>";
+        leftContent += data[i].deptnm ? "<span class='bar'></span><span class='name'>" + data[i].deptnm + "</span>" : "<span class='bar'></span><span class='name'>-</span>";
+        leftContent += data[i].jikgubnm ? "<span class='bar'></span><span class='name'>" + data[i].jikgubnm + "</span>" : "<span class='bar'></span><span class='name'>-</span>";
         if (data[i].name != null) {
             leftContent += "<span class='bar'></span><span class='name'>" + data[i].name + "</span>";
         } else {
@@ -1456,7 +1464,7 @@ function rtnFileGroupList (data) {
         var makescv = makeMessengerText(data[i].svc);
         var rightContent = "<p><span class='logo'><img src="+imageName+">"+makescv+"</span></p>";
 
-        rightContent += "</p><span class='time'>" + data[i].ctime + "</span>";
+        rightContent += "</p><span class='time'>" + data[i].ctimeFormat + "</span>";
 
         rightDiv.innerHTML = rightContent;
         li.appendChild(rightDiv);

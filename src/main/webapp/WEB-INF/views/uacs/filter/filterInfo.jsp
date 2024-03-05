@@ -496,6 +496,7 @@
         var msg = '<s:message code="filterInfo.msg.nologging"/>';
         var ph = '<s:message code="filterInfo.msg.enter.id"/>';
         $('#devStatusBtn').hide();
+        $('#devStatusStr').hide();
 
         if (currentTab == 'idTab') {
             gridObj = gridId;
@@ -507,6 +508,8 @@
             url = 'getIpFilterList.xcn';
             ph = '<s:message code="filterInfo.msg.enter.ip"/>';
             $('#devStatusBtn').show();
+            $('#devStatusStr').show();
+
         } else if (currentTab == 'domainTab') {
             gridObj = gridDomain;
             url = 'getDomainFilterList.xcn';
@@ -940,6 +943,11 @@
 				<input type="hidden" name="tabId"/>
 				<input type="hidden" name="createId" value="${_USERCREDENTIAL_.adminId}">
 				<input type="hidden" name="updateId" value="${_USERCREDENTIAL_.adminId}">
+				<div class="info">
+					<s:message code="common.guidance"/>
+					<br>
+					<s:message code="filterInfo.msg.ip.add"/>
+				</div>
 				<div class="modalfooter">
 					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
 					<button type="button" class="pop_btn02 savePopBtn" accesskey="S" id="savePopBtn">
@@ -1243,6 +1251,7 @@
 				<button type="button" class="btn01" accesskey="I" id="insertBtn"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
 				<button type="button" class="btn02" accesskey="D" id="deleteBtn"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
 				<button type="button" class="form_btn06" accesskey="R" id="devStatusBtn" style="display: none;"><s:message code="filterInfo.ruleapply"/></button>
+				<span class="red fs12 fb600 mat8" style="display: none" id="devStatusStr"><s:message code="filterInfo.msg.ipnologging"/></span>
 				<p class="red fs12 fb600 mat8" id="noticeMsg"><s:message code="filterInfo.msg.nologging"/></pclass>
 		</div>
 	</div>

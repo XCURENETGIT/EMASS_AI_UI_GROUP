@@ -106,7 +106,7 @@
 		$('#searchBtn').click(function () {
 			closeDetailTab();
             if ($('#piCount').val() === '' || $('#piCount').val() === null || $('#piCount').val() === undefined) {
-                alert('piCount 값을 입력해주세요.');
+                alert('기준 유출 건수 값을 입력해주세요.');
                 return;
             }
 

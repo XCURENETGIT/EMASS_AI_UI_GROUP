@@ -810,6 +810,7 @@ public class SolrEdcStatController {
 		JSONObject param = Common.getParam(request);
 		String startDate = Common.nvl(param.get("startDate"));
 		String endDate = Common.nvl(param.get("endDate"));
+		String type = Common.nvl(param.get("type"));
 		int piCount = Common.nvz(param.get("piCount"), 1);
 		String busi = Common.nvl(param.get("busiStr"));
 		String dept = Common.nvl(param.get("deptStr")).replaceAll("\\|", ",");
@@ -861,13 +862,12 @@ public class SolrEdcStatController {
 			query.append("))");
 		}
 
-		query.append(" -pi_total:0 ");
+		query.append(("(").concat(String.format("+pi_total: [1 TO *]").concat(") ")));
 		query.append(" +( ");
 		for (String field : Config.PRIVATE_SVC) {
-			query.append(("(").concat(String.format("%s:>=%s", field, piCount).concat(") ")));
+			query.append(("(").concat(String.format("%s: [%s TO *]", field, piCount).concat(") ")));
 		}
 		query.append(" ) ");
-
 		SolrQuery sq = new SolrQuery();
 
 		sq.setQuery(query.toString());
@@ -909,19 +909,24 @@ public class SolrEdcStatController {
 
 
 		StringBuilder query = new StringBuilder();
-		query.append(String.format("+userkey:" + userkey));
+		query.append(String.format("+(userkey:" + userkey)+")");
 		if (!(startDate.isEmpty() && endDate.isEmpty())) {
 			query.append(" +ctime:[").append(startDate).append(" TO ").append(endDate).append("] ");
 		}
-		query.append(" -pi_total:0 ");
+		query.append(("(").concat(String.format("pi_total: [1 TO *]").concat(") ")));
 		if (Common.isEquals(type, "pi_total")) {
 			query.append(" +( ");
 			for (String field : Config.PRIVATE_SVC) {
-				query.append(("(").concat(String.format("%s:>=%s", field, piCount).concat(") ")));
+				query.append(("(").concat(String.format("%s: [%s TO *]", field, 1).concat(") ")));
 			}
 			query.append(" ) ");
 		} else {
-			query.append((" +(").concat(String.format("%s:>=%s", type, piCount).concat(") ")));
+			query.append(" +( ");
+			for (String field : Config.PRIVATE_SVC) {
+				 query.append(("(").concat(String.format("%s: [%s TO *]", field, piCount).concat(") ")));
+			}
+			query.append(" )");
+			query.append((" +(").concat(String.format("%s: [%s TO *]", type, 1).concat(") ")));
 		}
 
 		if (!name.isEmpty()) {
