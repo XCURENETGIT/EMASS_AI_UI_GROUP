@@ -1556,9 +1556,10 @@
 								<tr>
 									<th>OCR</th>
 									<td>
-										<s:message code="condition.exist"/>:AND / <s:message code="condition.none"/>:<s:message code="query.make.except"/>(-)
+										<input type="text" class="form-control input-xs border-radius-none" id="ocr" placeholder="OCR" style="width: 313px;">
 									</td>
 									<td ><button type="button" class="btn btn-xs btn-success queryAdd" data-queryType="ocr">AND</button></td>
+									<td style="text-align: center;"><button type="button" class="btn btn-xs btn-info queryOr" data-queryType="ocr">OR</button></td>
 									<td ><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="ocr"><i class="glyphicon glyphicon-minus"></i></button></td>
 									<td>ocr_attach</td>
 									<td ><span class="fa fa-question queryHelp" data-helptext="<s:message code="query.make.multi.message"/>"></span></td>
