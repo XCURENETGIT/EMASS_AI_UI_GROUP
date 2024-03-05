@@ -746,8 +746,7 @@
             $('#searchQueryBtn').click(function(){toggleSolrQuery();}); //고급 버튼 클릭
             $("#searchStrInput").keypress(function(e){if( e.keyCode == 13) searchData( );}); //통합 검색 엔터키
 
-
-
+            var dateObj = new Date();
             $('#startdatepicker').datetimepicker({
                 format: 'YYYY-MM-DD HH:mm:ss',
                 locale: 'ko',
