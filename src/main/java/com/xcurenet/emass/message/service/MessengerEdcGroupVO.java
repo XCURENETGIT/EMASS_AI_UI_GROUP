@@ -371,8 +371,11 @@ public class MessengerEdcGroupVO {
 
 
 	public void pagenations(int offset, int limit) {
-		if(limit > groups.size()) limit = groups.size();
-		this.groups = new ArrayList<MessengerGroupVO>(groups.subList(offset, offset + limit));
+		int pageSize  = groups.size();
+		if((offset + limit) > pageSize && (pageSize % 10) != 0) limit = pageSize;
+		else limit = offset+limit;
+
+		this.groups = new ArrayList<MessengerGroupVO>(groups.subList(offset, limit));
 	}
 
 	public void groupSort() {

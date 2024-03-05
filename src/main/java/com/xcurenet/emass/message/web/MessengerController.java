@@ -1,6 +1,5 @@
 package com.xcurenet.emass.message.web;
 
-import com.sun.tools.jconsole.JConsoleContext;
 import com.xcurenet.annotations.AuditMenu;
 import com.xcurenet.annotations.AuditOperation;
 import com.xcurenet.annotations.AuditParentMenu;
@@ -150,8 +149,11 @@ public class MessengerController {
 
 
 		/* 그룹 디테일검색 동적 들어와야 할 offset,size 값*/
-		sq.setParam("facet.offset", String.valueOf(Common.nvz(param.get("offset"), 0)));
-		sq.setParam("facet.group", String.valueOf(Common.nvz(param.get("limit"), 100)));
+		int offset =  Common.nvz(param.get("offset"), 0);
+		int limit =   Common.nvz(param.get("limit"), 10);
+
+		sq.setParam("facet.offset", String.valueOf(offset));
+		sq.setParam("facet.group", String.valueOf(limit));
 		sq.setParam("facet.detail", false);
 		sq.setParam("facet.list", true);
 		sq.setParam("facet.mincount", "1");
@@ -165,6 +167,10 @@ public class MessengerController {
 		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id","userid");
 
 		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request));
+		solrEdcGroupVO.groupSort();
+		solrEdcGroupVO.pagenations(offset,limit);
+
+
 		long NumFound= solrEdcGroupVO.getNumFound();
 		solrEdcGroupVO.setGroups(setCount_temp(solrEdcGroupVO.getGroups(), Common.getAdminId(request),param));
 

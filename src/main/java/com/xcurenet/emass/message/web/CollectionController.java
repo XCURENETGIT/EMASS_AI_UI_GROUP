@@ -242,8 +242,6 @@ public class CollectionController {
 		int limit =   Common.nvz(param.get("limit"), 10);
 
 
-		log.info("offset  : " + offset);
-
 		sq.setParam("facet.offset", String.valueOf(offset));
 		sq.setParam("facet.group", String.valueOf(limit));
 		sq.setParam("facet.detail", false);
@@ -356,12 +354,6 @@ public class CollectionController {
 		return solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request));
 	}
 
-	public void pagination(final HttpServletRequest request, final HttpSession session) throws Exception {
-
-
-
-
-	}
 
 	public List<MessengerGroupVO> setCount_temp(List<MessengerGroupVO> groups, String adminId, JSONObject param) throws IOException, SolrServerException {
 		List<String> userids = new ArrayList<>();
