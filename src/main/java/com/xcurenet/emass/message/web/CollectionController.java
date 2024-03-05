@@ -279,18 +279,18 @@ public class CollectionController {
 		for(Map.Entry<String, List<MessengerGroupVO>> gmap  : groupMap.entrySet()){
 			tempHeaderMap.put(gmap.getKey(),groupMap.get(gmap.getKey()).size()); // header Insert
 		}
+		solrEdcGroupVO.groupSort();
+		solrEdcGroupVO.pagenations(offset,limit);
+		long NumFound = tempHeaderMap.values().stream().mapToLong(Integer::intValue).sum();
+
 
 		/* 총 계산 (안읽음처리)*/
 		MessengerEdcGroupVO messengerEdcGroupVO = getCheckedList(request,session);
 		messengerEdcGroupVO.setGroups(solrEdcGroupVO.getGroups());
 		messengerEdcGroupVO.putHeaderMap(tempHeaderMap);
-		messengerEdcGroupVO.setGroupMaps(groupMap);
 		messengerEdcGroupVO.aggregationsCheckedParser();
-		messengerEdcGroupVO.groupSort();
-		messengerEdcGroupVO.pagenations(offset,limit);
 
 
-		long NumFound = solrEdcGroupVO.getNumFound();
 		return new XcnResponseVO(XcnRspCode.OK, messengerEdcGroupVO, NumFound);
 	}
 
