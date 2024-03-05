@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.ORDER;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.json.simple.JSONObject;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -250,7 +252,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 				break;
 			//메일수
 			case "inMail":
-				query.and().beforeParen().add("svc", "M*", false).or().add("svc", "EMM*", false).or().add("svc", "P*", false).or().add("svc", "I*", false).afterParen();
+				query.and().beforeParen().beforeParen().add("svc", "M*", false).afterParen().or().beforeParen().add("svc", "EMM*", false).afterParen().or().beforeParen().add("svc", "P*", false).afterParen().or().beforeParen().add("svc", "I*", false).afterParen().afterParen();
 //				query.and().beforeParen().add("svc", "PM*", false).or().add("svc", "M*", false).or().add("svc", "EMM*", false).afterParen();
 				sq.setParam("group.field", "sender_str");
 				sq.setParam("facet.field", "size");
@@ -286,7 +288,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 		String date = searchVO.getDate();
 		sq.setStart(Common.nvz(searchVO.getOffset()));
 		sq.setRows(Common.nvz(searchVO.getLimit()));
-		sq.setSort("size", ORDER.desc);
+//		sq.setSort("size", ORDER.desc);
 
 		switch (searchVO.getUnit()) {
 			case "t":
@@ -326,7 +328,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 
 				break;
 			case "inMail":
-				query.and().beforeParen().add("svc", "PM*", false).or().add("svc", "M*", false).or().add("svc", "EMM*", false).afterParen();
+				query.and().beforeParen().add("svc", "M*", false).or().add("svc", "EMM*", false).or().add("svc", "P*", false).or().add("svc", "I*", false).afterParen();
 				query.add("sender_str", searchVO.getKeyword());
 
 				break;
@@ -453,7 +455,6 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 
 		//젤 첫번째 애들
 		String freddDomQuery = changeQuery(getFreedomQuery(freedomSearchVO));
-		sq.setQuery(freddDomQuery);
 
 		// column 중복 제거.
 		List<String> columnList = new ArrayList<>();
@@ -462,25 +463,24 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 				columnList.add(column[i]);
 			}
 		}
-
-
-		/* 문서 결과 표시 X */
+		for (int i = 0; i<columnList.size(); i++){
+			freddDomQuery += String.format("&& (%s:*)", columnList.get(i));
+		}
+		sq.setQuery(freddDomQuery);
 		sq.setStart(0);
 		sq.setRows(1);
+
 
 		/* 컬럼 */
 		/* Main Aggregations param  */
 		sq.setParam("group", true);
 		sq.setParam("group.facet", true);
 		sq.setParam("group.field", columnList.stream().collect(Collectors.joining(",")));
-		sq.setParam("facet.mincount", "0");
 		sq.setParam("facet.field", groupData[0]);
 		sq.setParam("facet.stats", groupData[0]);
 		sq.setParam("facet", true);
 
 		sq.setFacetMinCount(1);
-		sq.setStart(Common.nvz(0));
-		sq.setRows(Common.nvz(1));
 		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, freedomSearchVO.getAdminId());
 
 		return new AnalysisFreedomListVO(edc, columnList.size());
@@ -576,22 +576,18 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 
 	@Override
 	public SolrEdcMessageVO selectFreedomMessageList(FreedomSearchVO freedomSearchVO) throws IOException, SolrServerException {
-
-		SolrQueryString query = new SolrQueryString();
-		String freddDomQuery = getFreedomQuery(freedomSearchVO);
-		freddDomQuery = "("+changeQuery(getFreedomQuery(freedomSearchVO)).concat(")").concat(" && ").concat(freedomSearchVO.getQuery());
-		query.justAdd(freddDomQuery);
-
 		SolrQuery sq = new SolrQuery();
-		log.info(query.toString());
-		sq.setQuery(query.toString());
+//		SolrQueryString query = new SolrQueryString();
+		String freddDomQuery = "("+changeQuery(getFreedomQuery(freedomSearchVO)).concat(")").concat(" && ").concat(freedomSearchVO.getQuery());
+
+
+		sq.setQuery(freddDomQuery);
 
 		sq.setStart(Common.nvz(freedomSearchVO.getOffset(), 0));
 		sq.setRows(Common.nvz(freedomSearchVO.getLimit(), 100));
+		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, freedomSearchVO.getAdminId());
 
-		SolrEdcMessageVO solrVo = solrEdcService.getEmassMessage(sq, freedomSearchVO.getAdminId(), "", null);
-
-		return solrVo;
+		return edc;
 	}
 
 	@Override
@@ -631,8 +627,8 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 			}
 
 			String column = Common.nvl(termsColumn[i]);
-			if (column.equals("ctime_yyyymmdd")) {
-				query.addRange(column, Common.nvl(startDate[i]).replaceAll("-", ""), Common.nvl(endDate[i]).replaceAll("-", ""), false);
+			if (column.equals("ctime_yyyymmdd") || column.equals("ctime")) {
+				query.addRange(column, Common.nvl(startDate[i]).replaceAll("-", "")+"000000", Common.nvl(endDate[i]).replaceAll("-", "")+"235959", false);
 			} else if (column.equals("svc")) {
 				String service = Common.nvl(serviceCd[i]);
 				switch (service.length()) {

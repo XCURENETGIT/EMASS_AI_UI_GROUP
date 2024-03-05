@@ -145,7 +145,7 @@
 
         $('#messageListCount .caret').change(function () {
             grid.pageSize = Number($('#messageListCount .caret').attr('val'));
-            // selectMessageList();
+            selectMessageList();
         });
 
         colInit();
@@ -166,7 +166,7 @@
 					</span>
 				</div>
 				<div id="termsData"></div>
-			 </div>
+			</div>
 			<!--//LIST-->
 			<!--컬럼-->
 			<div>
@@ -388,7 +388,7 @@
 		</select>
 		<select id="termsColumn" name="termsColumn" onchange="javascript:SearchTrue();terms.colChange(this.value, tabIdx, termsIdx);">
 			<option value="userid"><s:message code="condition.usrid"/></option>
-			<option value="ctime_yyyymmdd"><s:message code="condition.date"/></option>
+			<option value="ctime"><s:message code="condition.date"/></option>
 			<option value="srcip"><s:message code="condition.source"/> IP</option>
 			<option value="sport"><s:message code="condition.source"/> PORT</option>
 			<option value="dstip"><s:message code="condition.destination"/> IP</option>
@@ -582,10 +582,11 @@
                 endDate[i] = val.value;
             });
             for (var ii = 0; ii < termsLength; ii++) {
-                if (termsColumn[ii] == "ctime_yyyymmdd" && startDate[ii] > endDate[ii]) {
+                if ((termsColumn[ii] == "ctime" || termsColumn[ii] == "ctime_yyyymmdd") && startDate[ii] > endDate[ii]) {
                     alert("<s:message code="analysis.freedom.ui.msg1"/>");
                     return;
                 }
+
 
             }
         }
@@ -608,6 +609,7 @@
             alert("<s:message code="analysis.freedom.ui.msg2"/>");
             return;
         }
+
         //if(isSearch) {
         ui.post({
             url: 'analysis/freedomView.xcn',
@@ -832,10 +834,14 @@
     });
 
     function colInit() {
-        grid.colInit();
+        // grid.colInit();   // grid.colInit();
         initGrid(grid, messageGridColumn);
         writeExportMenu('export_menu', 'messageListGrid', '<s:message code="DATA_ANALYSIS.ANALYSIS_CUSTOM"/> - <s:message code="analysis.freedom.ui.msglist"/>');
     }
+    grid.loadPageSize();
+    grid.changePageSize = function(cnt){
+        getData('Y');
+    };
 
     var selectQuery = '';
 
@@ -864,7 +870,7 @@
             success: function (data, total) {
                 resultTotal = total;
                 // grid.autoNumber();
-                // grid.loadHeader(true);
+                // grid.loadHeader(false);
                 grid.appendData(data);
                 $(".resultCnt").html('(' + addCommas(total) + ')');
             },
@@ -988,7 +994,7 @@
         },
         colChange: function (value, tabIdx, termsIdx) {
             switch (value) {
-                case "ctime_yyyymmdd" :
+                case "ctime" :
                     $(("#inputNumber" + tabIdx) + termsIdx).hide();
                     $(("#inputText" + tabIdx) + termsIdx).hide();
                     $(("#inputDate" + tabIdx) + termsIdx).show();
