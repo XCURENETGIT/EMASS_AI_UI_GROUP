@@ -52,6 +52,15 @@
         $('#startdate').val(new Date().format('yyyy-mm-dd'));
         $('#enddate').val(new Date().format('yyyy-mm-dd'));
 
+        $('.totalView').click(function(){
+
+            $("#chartCntDiv").show();
+            $('#totalViewDiv').hide();
+            totalViewSig = true;
+            printChart(totalChartDat,grid1);
+        });
+
+
 
         initCondition();
         $('#dept').click(function () {
@@ -193,12 +202,6 @@
             }
         });
 
-        $('.totalView').click(function(){
-            $("#chartCntDiv").show();
-            $('#totalViewDiv').hide();
-            totalViewSig = true;
-            printChart(totalChartDat);
-    });
 
     function openCodeWindow(id, oldCode, oldConm,oldDept,oldJib) {
         $('#oldCode').val(oldCode);

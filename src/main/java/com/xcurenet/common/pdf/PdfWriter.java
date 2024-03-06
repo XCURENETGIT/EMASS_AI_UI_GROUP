@@ -43,15 +43,12 @@ public class PdfWriter {
 	private String check;
 
 	private final BaseFont baseFont = getFontPath("dotum.ttf");
-	private BaseFont baseFont9 = getFontPath("Pretendard-Black.ttf");
-	private BaseFont baseFont8 = getFontPath("Pretendard-Bold.ttf");
-	private BaseFont baseFont7 = getFontPath("Pretendard-Medium.ttf");
-	private BaseFont baseFont6 = getFontPath("Pretendard-Regular.ttf");
-	private BaseFont baseFont5 = getFontPath("Pretendard-SemiBold.ttf");
-	private BaseFont baseFont4 = getFontPath("Pretendard-Light.ttf");
-	private BaseFont baseFont3 = getFontPath("Pretendard-ExtraLight.ttf");
-	private BaseFont baseFont2 = getFontPath("Pretendard-Thin.ttf");
-	private Font font2 = getFont("Pretendard-Black.subset.woff2");
+	private final  BaseFont baseFont8 = getFontPath("Pretendard-Bold.ttf");
+	private final BaseFont baseFont6 = getFontPath("Pretendard-Regular.ttf");
+	private final BaseFont baseFont5 = getFontPath("Pretendard-SemiBold.ttf");
+	private final BaseFont baseFont4 = getFontPath("Pretendard-Light.ttf");
+	private final  BaseFont baseFont3 = getFontPath("Pretendard-ExtraLight.ttf");
+	private final BaseFont baseFont2 = getFontPath("Pretendard-Thin.ttf");
 
 	public PdfWriter(final String title, final JSONArray header, final JSONArray data, final FileOutputStream out) throws Exception {
 		this.title = title;

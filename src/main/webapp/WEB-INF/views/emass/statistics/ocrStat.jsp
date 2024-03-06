@@ -52,6 +52,14 @@
 
     $(document).ready(function(){
 
+        $('.totalView').click(function(){
+
+            $("#chartCntDiv").show();
+            $('#totalViewDiv').hide();
+            totalViewSig = true;
+            printChart(totalChartDat,grid1);
+        });
+
         initCondition();
         $('#dept').click(function () {
             var code = $(this).attr('id');
@@ -182,12 +190,6 @@
     });
 
 
-    $('.totalView').click(function(){
-        $("#chartCntDiv").show();
-        $('#totalViewDiv').hide();
-        totalViewSig = true;
-        printChart(totalChartDat);
-    });
 
     function getServiceList(){
         ui.get({
@@ -345,6 +347,7 @@
                     data.push({name:getClassStr(grid1.data[i]['rowKey']), data:items});
                 } else {
                     if(grid1.data[i]['NUM'] == '<s:message code="bodyview.total"/>') continue;
+                    if (typeof grid1.data[i]['rowKey'] === 'undefined') continue;
                     else if(grid1.data[i].rowKey.length == '3') {
                         data.push({name:grid1.data[i]['svcLv12Nm'], data:items});
                     }else {
@@ -367,6 +370,7 @@
             if(grid1.id == 'basicStatListGrid') {
                 data.push({name:getClassStr(grid1.data[i]['rowKey']), data:items});
             } else {
+
                 if(dat['NUM'] == '<s:message code="bodyview.total"/>') return;
                 else data.push({name:dat['svcLv12Nm'], data:items});
             }
