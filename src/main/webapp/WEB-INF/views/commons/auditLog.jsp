@@ -253,7 +253,7 @@
 	        $('#menuId').html(str);
 	    });
 
-	    getData();
+	/*    getData();*/
 	});
 
 	function getData(lastRow) {

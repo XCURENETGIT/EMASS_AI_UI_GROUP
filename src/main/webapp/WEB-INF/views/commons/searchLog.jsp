@@ -50,7 +50,7 @@
 
             $("#adminId").html(getAdminOptions());
 
-            getData();
+    /*        getData();*/
         });
 
         function getData(lastRow) {
