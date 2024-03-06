@@ -120,7 +120,7 @@
 				<span id="ntpColor" class="top_flag03"></span>&nbsp; <%-- 추후 레드 변경--%>
 				<%}%>
 
-				<%if (Common.isEquals(ntpInfo.getString("ntpServer"), "sync")) {%>
+				<%if (!Common.isEquals(ntpInfo.getString("ntpServer"), "")) {%>
 				<span id="ntpStatus" class="fb600">Chrony - <%=Common.nvl(ntpInfo.get("ntpServer")) %></span>
 				<%} else {%>
 				<span id="ntpStatus" class="fb600">Chrony - <s:message code="trap.message.Chrony.server.nosearch"/></span>
