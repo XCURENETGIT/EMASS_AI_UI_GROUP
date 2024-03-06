@@ -629,7 +629,6 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 				sq.addFilterQuery(String.format(JOIN_UNREAD, adminId));
 			}
 		}
-
 		List<ConfigAdminVO> conf = configAdminService.getConfAdminOption(adminId);
 		String bodysnippetVal = "N";
 		for (ConfigAdminVO configAdminVO : conf) {
@@ -644,16 +643,14 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 /*		if (readYn != null && readYn.isEmpty()) {
 			//읽음 여부 필드 값 추가
 			//solrEdcMessageVO.setEmass(solrCheckedService.findReadList(solrEdcMessageVO.getEmass(), adminId));
-
 			setReadYn(sq,adminId);
-
 		}*/
-
 
 		String serverTime = getServerTime();
 		SearchHits<SolrEdcVO> resp = getList(sq);
+		String overlap = (!Common.isEmpty(conf) && conf.size() > 0) ? conf.get(0).getVal() : "N";
 
-		SolrEdcMessageVO solrEdcMessageVO = new SolrEdcMessageVO(resp, adminId);
+		SolrEdcMessageVO solrEdcMessageVO =  new SolrEdcMessageVO(resp, adminId);   //      ((Common.isEquals(overlap, "Y")) ? new SolrEdcMessageVO(resp, adminId) : new SolrEdcMessageVO(resp, adminId,true));
 		solrEdcMessageVO.setSearchTime(serverTime);
 		solrEdcMessageVO.setExcuteQuery(sq.getQuery());
 		solrEdcMessageVO.setEmass(new EmsReDefined(solrEdcMessageVO.getEmass(), readYn, consentNo, adminUserGroupService.getAdminUserGroupSimpleAdminList(adminId)).reDefined(adminId, conf));
@@ -702,6 +699,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	public SolrEdcMessageVO setOverlap(SolrEdcMessageVO solrVo) throws SolrServerException, IOException {
 		List<SolrEdcVO> result = new ArrayList<>();
 
+
 		//조회 된 결과에서 중복 데이터 제거
 		List<SolrEdcVO> emass = solrVo.getEmass().stream().filter(distinctBykey(SolrEdcVO::getSvcNm, SolrEdcVO::getSubject, SolrEdcVO::getSender)).collect(Collectors.toList());
 		//조회 결과에서 중복되는 데이터만 추출
@@ -715,7 +713,6 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 		for (SolrEdcVO obj : emass) {
 			List<SolrEdcVO> overlapData = setOverLapCnt(allOverlap, obj, idx); //중복 제거한 데이터 List 에서 데이터 별로 중복 데이터 find
-
 			if (overlapData.isEmpty()) { //중복 데이터 없을시
 				result.add(obj);
 			} else if (!overlapData.isEmpty()) { //중복 데이터 있을 시
@@ -728,12 +725,13 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		result.sort((first, second) -> second.getCtime().compareTo(first.getCtime()));
 
 
-
 		solrVo.setEmass(result);
 
 
 		return solrVo;
 	}
+
+
 
 	private String getServerTime() {
 		try {

@@ -97,6 +97,28 @@ public class SolrEdcMessageVO {
 
 	}
 
+	public SolrEdcMessageVO(final SearchHits<SolrEdcVO> resp, final String adminId,final boolean overlap) throws SolrServerException, IOException {
+		this.numFound = resp.getTotalHits();
+		this.maxScore = resp.getMaxScore();
+
+		for (SearchHit<SolrEdcVO> solrEdcVO : resp.getSearchHits()) {
+			SolrEdcVO edcVO = solrEdcVO.getContent();
+			edcVO.setReadYn(isRead(solrEdcVO.getContent().getChecked(), adminId) ? "Y" : "N");
+			edcVO.setConfidence( (maxScore > 0) ? String.valueOf((solrEdcVO.getScore() / maxScore ) * 100) : "0"); //유사도 계산
+			this.emass.add(edcVO);
+		}
+
+		if(resp.getAggregations() != null) {
+			ElasticsearchAggregations elasticSearchAggregations = (ElasticsearchAggregations) resp.getAggregations();
+			this.setFacet(elasticSearchAggregations.aggregations());
+			this.setPivot(elasticSearchAggregations.aggregations());
+			tempDataClear();
+			this.setFacets(elasticSearchAggregations);
+		}
+
+
+	}
+
 	private void tempDataClear(){
 		this.facetChkSvc = null;
 		this.pivotChkSvc = null;
@@ -475,9 +497,6 @@ public class SolrEdcMessageVO {
 
 
 
-
-
-
 	public  String convertTimeStr(String str,String flag,boolean key){
 		if(Common.isEmpty(str)) return str;
 		if (ElasticSearchCommon.CTIME_HH.equals(flag))  return  (key) ? str.substring(8, 10) : Prop.msg(ElasticSearchCommon.TIME_FORMAT.concat(str.substring(8, 10)));
@@ -485,6 +504,8 @@ public class SolrEdcMessageVO {
 		else if(ElasticSearchCommon.CTIME_YYYYMMDD.equals(flag))  return (key) ? str.substring(0, 8) : Common.formatDate(str.substring(0, 8));
 		else return str;
 	}
+
+
 
 
 }
