@@ -733,6 +733,7 @@
             else userStr = '';
 
 			searchFlag = true;
+            grid1.pageSize=5000
 			ui.get({
 				url : 'getOcrStatList.xcn',
 				startDate: sDate+"000000",
@@ -839,6 +840,7 @@
 
         searchFlag = true;
         currentgrid.on();
+        currentgrid.pageSize=5000
         ui.get({
             url : 'getStatList.xcn',
             startDate: sDate+"000000",
@@ -948,7 +950,7 @@
         else userStr = '';
         searchFlag = true;
         currentgrid.on();
-
+        currentgrid.pageSize=5000
         ui.get({
             url : 'getOcrStatDetailList.xcn',
             rowKey : rowKey,

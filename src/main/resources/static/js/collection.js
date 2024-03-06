@@ -63,7 +63,7 @@ var eikon2 = {
             var usr_id = $('#selectUserInfo').attr('data-usrid');
             var userkey = $('#selectUserInfo').attr('data-name');
             var msgIds = [];
-          //  var type = $('#selectUserInfo').attr('data-svc12');
+             var type = $('#selectUserInfo').attr('data-svc12');
 
             if (type == null || typeof type === 'undefined' || type === '') {
                 type=getPageType();

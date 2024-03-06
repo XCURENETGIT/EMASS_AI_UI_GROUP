@@ -448,9 +448,22 @@
     var grid1 = new Xgrid('basicStatListGrid', contextRoot);
     grid1.autoNumber();
     grid1.colAdd("rowKey", '<s:message code="consent.user"/>', 230, "left", false, 'link');
-    grid1.colAdd("total", '<s:message code="bodyview.total"/>', 130, "right", false, 'nomal');
     grid1.loadExportMenu('<s:message code="DATA_MONITOR.STAT_USER"/>');
-    grid1.loadPageSize();
+    /*grid1.loadPageSize();
+    document.addEventListener("DOMContentLoaded", function() {
+        var linkElements = document.querySelectorAll('a[data="5000"]');
+
+        linkElements.forEach(function(linkElement) {
+            linkElement.click();
+        });
+    });
+
+    var elements = document.querySelectorAll('.status_rownum');
+
+    elements.forEach(function(element) {
+        element.style.display = 'none';
+    });*/
+
     grid1.loadHeader(false);
     grid1.initData('<s:message code="common.msg.search.click"/>');
     grid1.changePageSize = function (cnt) {
@@ -515,10 +528,27 @@
         chartDat[tabID] = dat;
         printChart(dat);
         gridObj.loadExportMenu('<s:message code="stat.detail.user.list"/>');
-        gridObj.loadPageSize();
+     /*   gridObj.loadPageSize();
+        document.addEventListener("DOMContentLoaded", function() {
+            var linkElements = document.querySelectorAll('a[data="5000"]');
+
+            linkElements.forEach(function(linkElement) {
+                linkElement.click();
+            });
+        });
+
+        var elements = document.querySelectorAll('.status_rownum');
+
+        elements.forEach(function(element) {
+            element.style.display = 'none';
+        });*/
+
         gridObj.changePageSize = function (cnt) {
             getDetailData('Y');
+
+
         };
+
         getDetailData('Y');
     };
 
@@ -566,8 +596,11 @@
         if (user != '') userStr = user;
         else userStr = '';
 
+
         searchFlag = true;
         grid1.on();
+
+        grid1.pageSize=5000
         ui.get({
             url: 'getStatList.xcn',
             startDate: sDate + "000000",
@@ -649,12 +682,16 @@
         currentgrid = getCurrentGrid();
         if (searchFlag) return;
         if (lastRow == 'Y' || lastRow == undefined) {
+            console.log(lastRow);
             currentgrid.data.length = 0;
             currentgrid.rtnNextPageFunc = getDetailData;
             currentgrid.loadingPage = 0;
         } else {
+            console.log(lastRow);
             currentgrid.loadingPage++;
         }
+
+
         var busi = arrayToString($('#busiSelect').selectpicker('val'));
         var dv = $('#deptVal').val().split('|');
         var dept = dv.join(',');
@@ -673,7 +710,7 @@
         var xAxis_str = $('button.optionBtn.active').text();
         searchFlag = true;
         currentgrid.on();
-
+        currentgrid.pageSize=5000
         ui.get({
             url: 'getStatDetailList.xcn',
             rowKey: rowKey,
