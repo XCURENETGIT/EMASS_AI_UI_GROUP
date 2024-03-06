@@ -980,6 +980,95 @@ public class SolrEdcStatController {
 		return new XcnResponseVO(XcnRspCode.OK, solrVo.getEmass(), solrVo.getNumFound());
 	}
 
+	@RequestMapping(value = "/getInfoDetailList.xcn")
+	@Description("개인정보 유출 관계 분석 내역 조회")
+	@ResponseBody
+	public XcnResponseVO getInfoDetailList(final HttpServletRequest request, final HttpSession session) throws SolrServerException, IOException {
+		String userkey = request.getParameter("userkey");
+		String startDate = Common.nvl(request.getParameter("startDate"));
+		String endDate = Common.nvl(request.getParameter("endDate"));
+		String type = Common.nvl(request.getParameter("type"));
+		String piCount = Common.nvl(request.getParameter("piCount"));
+		String busi = Common.nvl(request.getParameter("busiStr"));
+		String dept = Common.nvl(request.getParameter("deptStr")).replaceAll("\\|", ",");
+		String name = Common.nvl(request.getParameter("userStr")).replaceAll("\\|", ",");
+
+		int offset = Common.nvz(request.getParameter("offset"));
+		int limit = Common.nvz(request.getParameter("limit"));
+
+		StringBuilder query = new StringBuilder();
+		query.append(String.format("+(userkey:" + userkey)+")");
+		if (!(startDate.isEmpty() && endDate.isEmpty())) {
+			query.append(" +ctime:[").append(startDate).append(" TO ").append(endDate).append("] ");
+		}
+		query.append(("(").concat(String.format("pi_total: [1 TO *]").concat(") ")));
+		if (Common.isEquals(type, "pi_total")) {
+			query.append(" +( ");
+			for (String field : Config.PRIVATE_SVC) {
+				query.append(("(").concat(String.format("%s: [%s TO *]", field, 1).concat(") ")));
+			}
+			query.append(" ) ");
+		} else {
+			query.append(" +( ");
+			for (String field : Config.PRIVATE_SVC) {
+				query.append(("(").concat(String.format("%s: [%s TO *]", field, piCount).concat(") ")));
+			}
+			query.append(" )");
+			query.append((" +(").concat(String.format("%s: [%s TO *]", type, 1).concat(") ")));
+		}
+
+		if (!name.isEmpty()) {
+			String[] nameArray = name.split(",");
+			query.append(" +userid:((");
+
+			for (int i = 0; i < nameArray.length; i++) {
+				if (i > 0) {
+					query.append(") (");
+				}
+				query.append(nameArray[i]);
+			}
+
+			query.append("))");
+		}
+
+		if (!busi.isEmpty()) {
+			String[] busiArray = busi.split(",");
+			query.append(" +busicd:((");
+
+			for (int i = 0; i < busiArray.length; i++) {
+				if (i > 0) {
+					query.append(") (");
+				}
+				query.append(busiArray[i]);
+			}
+
+			query.append("))");
+		}
+
+		if (!dept.isEmpty()) {
+			String[] deptArray = dept.split(",");
+			query.append(" +deptcd:((");
+
+			for (int i = 0; i < deptArray.length; i++) {
+				if (i > 0) {
+					query.append(") (");
+				}
+				query.append(deptArray[i]);
+			}
+
+			query.append("))");
+		}
+
+		SolrQuery sq = new SolrQuery();
+		sq.setQuery(query.toString());
+		sq.setStart(offset);
+		sq.setRows(limit);
+
+		SolrEdcMessageVO solrVo = solrEdcService.getEmassMessage(sq, Common.getAdminId(request), "", null);
+		return new XcnResponseVO(XcnRspCode.OK, solrVo.getEmass(), solrVo.getNumFound());
+	}
+
+
 
 	// "pi_total" 기준으로 정렬하는 Comparator 클래스
 	class PiTotalComparator implements Comparator<Map<String, Object>> {
