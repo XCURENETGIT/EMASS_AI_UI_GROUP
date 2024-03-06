@@ -166,13 +166,14 @@ public class MessengerController {
 		sq.setSort("ctime", ORDER.desc);
 		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id","userid");
 
+
 		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request));
+		long NumFound= solrEdcGroupVO.getNumFound();
+		solrEdcGroupVO.setGroups(setCount_temp(solrEdcGroupVO.getGroups(), Common.getAdminId(request),param));
+
 		solrEdcGroupVO.groupSort();
 		solrEdcGroupVO.pagenations(offset,limit);
 
-
-		long NumFound= solrEdcGroupVO.getNumFound();
-		solrEdcGroupVO.setGroups(setCount_temp(solrEdcGroupVO.getGroups(), Common.getAdminId(request),param));
 
 		return new XcnResponseVO(XcnRspCode.OK, solrEdcGroupVO, NumFound);
 	}

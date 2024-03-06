@@ -152,6 +152,7 @@
     }
     function changeNTP(ntpServer, lv) {
         let ntpStr = 'Chrony - ' + ntpServer;
+        if (ntpServer =="") ntpStr = 'Chrony - ' + '<s:message code="trap.message.Chrony.server.nosearch"/>';
         let titleStr = '';
         if (lv === 'info') {
             $('#ntpColor').removeClass().addClass('top_flag01');
