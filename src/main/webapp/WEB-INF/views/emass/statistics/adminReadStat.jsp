@@ -408,7 +408,34 @@
         else return '';
     });
     grid1.loadExportMenu('<s:message code="DATA_ANALYSIS.STAT_ADMINREAD"/>');
-    grid1.loadPageSize();
+/*    grid1.loadPageSize();
+    document.addEventListener("DOMContentLoaded", function() {
+        var linkElements = document.querySelectorAll('a[data="5000"]');
+
+        linkElements.forEach(function(linkElement) {
+            linkElement.click();
+        });
+    });
+
+    var elements = document.querySelectorAll('.status_rownum');
+
+    elements.forEach(function(element) {
+        element.style.display = 'none';
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        var linkElements = document.querySelectorAll('a[data="5000"]');
+
+        linkElements.forEach(function(linkElement) {
+            linkElement.click();
+        });
+    });
+
+    var elements = document.querySelectorAll('.status_rownum');
+
+    elements.forEach(function(element) {
+        element.style.display = 'none';
+    });*/
     grid1.loadHeader(false);
     grid1.initData('<s:message code="common.msg.search.click"/>');
     grid1.changePageSize = function (cnt) {
@@ -475,10 +502,23 @@
         chartDat[tabID] = dat;
         printChart(dat);
         gridObj.loadExportMenu('<s:message code="stat.detail.keyword.list"/>');
-        gridObj.loadPageSize();
+       /* gridObj.loadPageSize();
+        document.addEventListener("DOMContentLoaded", function() {
+            var linkElements = document.querySelectorAll('a[data="5000"]');
+
+            linkElements.forEach(function(linkElement) {
+                linkElement.click();
+            });
+        });
+
+        var elements = document.querySelectorAll('.status_rownum');
+
+        elements.forEach(function(element) {
+            element.style.display = 'none';
+        });
         gridObj.changePageSize = function (cnt) {
             getDetailData('Y');
-        };
+        };*/
         getDetailData('Y');
     };
 
@@ -498,6 +538,7 @@
     function getReadTimeData(sDate, eDate, xAxis, xAxis_str, dateType, adminId) {
         searchFlag = true;
         grid1.on();
+        grid1.pageSize=5000
         var xAxis = $('select[name=xAxis]').val();
         ui.get({
             url: 'getCheckedStatList.xcn',
@@ -595,7 +636,7 @@
         } else {
             currentgrid.loadingPage++;
         }
-
+        currentgrid.pageSize=5000
         var xAxis = $('select[name=xAxis]').val();
         var xAxis_str = $('select[name=xAxis] option:selected').text();
 

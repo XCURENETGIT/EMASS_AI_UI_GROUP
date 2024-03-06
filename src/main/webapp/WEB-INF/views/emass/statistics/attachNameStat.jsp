@@ -479,7 +479,33 @@
     grid1.colAdd("rowKey", '<s:message code="condition.attach_name"/>', 230, "left", false, 'link');
     grid1.colAdd("total", '<s:message code="bodyview.total"/>', 130, "right", false, 'nomal');
     grid1.loadExportMenu('<s:message code="DATA_STAT.STAT_ATTACHNAME"/>');
-    grid1.loadPageSize();
+    /*grid1.loadPageSize();
+    document.addEventListener("DOMContentLoaded", function() {
+        var linkElements = document.querySelectorAll('a[data="5000"]');
+
+        linkElements.forEach(function(linkElement) {
+            linkElement.click();
+        });
+    });
+
+    var elements = document.querySelectorAll('.status_rownum');
+
+    elements.forEach(function(element) {
+        element.style.display = 'none';
+    });
+    document.addEventListener("DOMContentLoaded", function() {
+        var linkElements = document.querySelectorAll('a[data="5000"]');
+
+        linkElements.forEach(function(linkElement) {
+            linkElement.click();
+        });
+    });
+
+    var elements = document.querySelectorAll('.status_rownum');
+
+    elements.forEach(function(element) {
+        element.style.display = 'none';
+    });*/
     grid1.loadHeader(false);
     grid1.initData('<s:message code="common.msg.search.click"/>');
     grid1.changePageSize = function (cnt) {
@@ -544,7 +570,20 @@
         chartDat[tabID] = dat;
         printChart(dat);
         gridObj.loadExportMenu('<s:message code="stat.detail.attachname.list"/>');
-        gridObj.loadPageSize();
+        /*gridObj.loadPageSize();
+        document.addEventListener("DOMContentLoaded", function() {
+            var linkElements = document.querySelectorAll('a[data="5000"]');
+
+            linkElements.forEach(function(linkElement) {
+                linkElement.click();
+            });
+        });
+
+        var elements = document.querySelectorAll('.status_rownum');
+
+        elements.forEach(function(element) {
+            element.style.display = 'none';
+        });*/
         gridObj.changePageSize = function (cnt) {
             getDetailData('Y');
         };
@@ -584,6 +623,7 @@
 
         searchFlag = true;
         grid1.on();
+        grid1.pageSize=5000
         ui.get({
             url: 'getStatList.xcn',
             startDate: sDate + "000000",
@@ -693,7 +733,7 @@
 
         searchFlag = true;
         currentgrid.on();
-
+        currentgrid.pageSize=5000
         ui.get({
             url: 'getStatDetailList.xcn',
             rowKey: rowKey,

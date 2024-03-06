@@ -376,9 +376,6 @@ public class MessengerEdcGroupVO {
 		if (pageSize == 0) return;
 		if((offset + limit) > pageSize && (pageSize % 10) != 0) limit = pageSize;
 		else limit = offset+limit;
-		System.out.println(offset);
-		System.out.println(limit);
-		System.out.println(pageSize);
 
 		this.groups = new ArrayList<MessengerGroupVO>(groups.subList(offset, limit));
 	}

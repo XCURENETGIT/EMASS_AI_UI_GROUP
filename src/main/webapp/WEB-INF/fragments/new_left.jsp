@@ -47,7 +47,7 @@
 			menuId = currentMenu.menuId;
 			pMenuId = currentMenu.tid;
 
-			$('.subTit .page a.menu1').html($('a[menuid="'+pMenuId+'"] span').text());
+            $('.subTit .page a.menu1').html($('a[menuid="'+pMenuId+'"] span').text());
 			$('a[menuid="'+pMenuId+'"]').addClass('active');
 			$('a[menuid="'+pMenuId+'"] img').attr('src', $('a[menuid="'+pMenuId+'"] img').attr('src').replaceAll('.png', '_on.png'));
 		}
@@ -68,6 +68,7 @@
 
 			currentMenuId = $(this).attr('menuid');
 			createMenuList(1);
+            $('a[menuid="'+menuId+'"]').attr('class','active')
 			sideBar.show();
 		});
 	});

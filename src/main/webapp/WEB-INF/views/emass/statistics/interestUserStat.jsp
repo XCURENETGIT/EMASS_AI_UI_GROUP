@@ -45,7 +45,10 @@
     var tabID = 1;
     var tabNum = 0;
     var totalChartDat;
+    var serviceList=[];
     $(document).ready(function(){
+        getInterestUserOptions();
+        getServiceList();
 
         $('.optionBtn').click(function () {
             $('.optionBtn').removeClass('active');
@@ -113,7 +116,6 @@
             printChart(totalChartDat);
         });
 
-        getInterestUserOptions();
     });
 
     function setGrid( ){
@@ -161,6 +163,20 @@
             return true;
         }
         return false;
+    }
+
+    function getServiceList(){
+        ui.get({
+            url : 'getServiceGroupList.xcn',
+            success : function(data, total) {
+                serviceList = data;
+            },
+            error : function(status, message) {
+                ui.alertMsg(message);
+            },
+            complete : function() {
+            }
+        });
     }
 
     function nextMsg( ) {
@@ -382,7 +398,20 @@
     grid1.colAdd( "rowKey", '<s:message code="consent.user"/>', 230, "left", false, 'link' );
     grid1.colAdd("total", '<s:message code="bodyview.total"/>', 130, "right", false, 'nomal' );
     grid1.loadExportMenu('<s:message code="DATA_STAT.STAT_INTEREST"/>');
-    grid1.loadPageSize();
+  /*  grid1.loadPageSize();
+    document.addEventListener("DOMContentLoaded", function() {
+        var linkElements = document.querySelectorAll('a[data="5000"]');
+
+        linkElements.forEach(function(linkElement) {
+            linkElement.click();
+        });
+    });
+
+    var elements = document.querySelectorAll('.status_rownum');
+
+    elements.forEach(function(element) {
+        element.style.display = 'none';
+    });*/
     grid1.loadHeader(false);
     grid1.initData('<s:message code="common.msg.search.click"/>');
     grid1.changePageSize = function(cnt){
@@ -447,12 +476,27 @@
         chartDat[tabID] = dat;
         printChart(dat);
         gridObj.loadExportMenu('<s:message code="stat.detail.user.list"/>');
-        gridObj.loadPageSize();
+ /*       gridObj.loadPageSize();
+        document.addEventListener("DOMContentLoaded", function() {
+            var linkElements = document.querySelectorAll('a[data="5000"]');
+
+            linkElements.forEach(function(linkElement) {
+                linkElement.click();
+            });
+        });
+
+        var elements = document.querySelectorAll('.status_rownum');
+
+        elements.forEach(function(element) {
+            element.style.display = 'none';
+        });*/
         gridObj.changePageSize = function(cnt){
             getDetailData('Y');
         };
         getDetailData('Y');
     };
+
+
 
     function getData( flag ) {
         if ( searchFlag ) return;
@@ -474,6 +518,7 @@
 
         searchFlag = true;
         grid1.on();
+        grid1.pageSize=5000
         ui.get({
             url : 'getStatList.xcn',
             startDate: sDate+"000000",
@@ -512,6 +557,7 @@
                         if(Header == "I") HeaderNm = '<s:message code="condition.receive"/>';
                         else HeaderNm = '<s:message code="condition.send"/>';
                     } else if ( xAxis == "ctime_hh") HeaderNm = Header+'<s:message code="common.msg.hour"/>';
+                    else if (xAxis === 'svc1') HeaderNm = serviceList.search(Header, 'groupCd', 'groupNm');
                     else HeaderNm = Header;
                     grid1.colAdd( Header, HeaderNm, 90, "right", false, 'link', function ( row, cell, value, columnDef, dataContext ) {
                         if ( value != undefined ) return value.comma();
@@ -572,6 +618,7 @@
         var xAxis_str = $('button.optionBtn.active').text();
         searchFlag = true;
         currentgrid.on();
+        currentgrid.pageSize=5000
 
         ui.get({
             url : 'getStatDetailList.xcn',

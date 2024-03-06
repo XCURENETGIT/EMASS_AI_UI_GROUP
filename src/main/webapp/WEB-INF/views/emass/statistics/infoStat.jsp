@@ -478,6 +478,7 @@
 		if (grid1.Col === grid1.ColIndex('rowKey')) return;
 		initProgressbar();
 		makeNetwork(grid1.getValue(grid1.Row, 'rowKey'), grid1.ColKey(grid1.Col), grid1.getValue(grid1.Row, grid1.Col));
+        getInfoDetailList("Y",grid1.getValue(grid1.Row, 'rowKey'), grid1.ColKey(grid1.Col), grid1.getValue(grid1.Row, grid1.Col));
 	};
 
 	var grid2 = new Xgrid('selectGrid', contextRoot);
@@ -596,6 +597,7 @@
     }
     grid2.loadExportMenu('<s:message code="DATA_ANALYSIS.ANALYSIS_INFO"/>');
     grid2.loadHeader(false);
+    grid2.loadPageSize();
     grid2.initData('<s:message code="common.msg.search.click"/>');
 
     grid2.onClick = function() {
@@ -845,7 +847,77 @@
 		return date.substring(0, 4) + "-" + date.substring(4, 6) + "-" + date.substring(6, 8);
 	}
 
+    function getInfoDetailList(flag,value,type, pi_total) {
+
+        if ( flag == 'Y' || flag == undefined ) {
+            grid2.data.length = 0;
+            grid2.rtnNextPageFunc = getInfoDetailList;
+            grid2.loadingPage = 0;
+        } else {
+            grid2.loadingPage++;
+        }
+
+        var userkey = value;
+
+        if(userkey==undefined){
+            userkey=flag.userkey;
+        }
+
+
+        var type = type;
+
+        if(type==undefined){
+            type= grid1.ColKey(grid1.Col);
+        }
+
+        var pi_total = pi_total;
+        var piCount = $('#piCount').val();
+        var busiStr = arrayToString($('#busiSelect').selectpicker('val'));
+        var dv = $('#deptVal').val().split('|');
+        var dept = dv.join(',');
+
+        var deptStr = '';
+        if (dept != '') deptStr = dept;
+        else deptStr = '';
+
+        var uv = $('#userVal').val().split('|');
+        var user = uv.join(',');
+
+        var userStr = '';
+        if (user != '') userStr = user;
+        else userStr = ''
+
+        grid2.on();
+        ui.postJson({
+            url: 'getInfoDetailList.xcn',
+            userkey: userkey,
+            type: type,
+            startDate: $('#startdate').val().replaceAll("-", "") + "000000",
+            endDate: $('#enddate').val().replaceAll("-", "") + "235959",
+            piCount: piCount,
+            offset: grid2.data.length,
+            limit: grid2.pageSize,
+            deptStr: deptStr,
+            busiStr: busiStr,
+            userStr: userStr,
+            success: function (data, total) {
+                grid2.appendData(data);
+                if ( grid2.loadingPage == 0 ) grid2.Select(-1,-1);
+            },
+            error: function (status, message) {
+                alert(message);
+            },
+            complete: function () {
+                grid2.off();
+            }
+        });
+    }
+
+
+
 	function makeNetwork(value, type, pi_total) {
+
+
 		var userkey = value;
 		var type = type;
 		var pi_total = pi_total;
@@ -877,7 +949,7 @@
             busiStr: busiStr,
             userStr: userStr,
             success: function (data, total) {
-				grid2.setData(data);
+			/*	grid2.setData(data);*/
                 $(".resultCnt").html('('+addCommas(total)+')');
 				var nodes = [];
 				var edges = [];

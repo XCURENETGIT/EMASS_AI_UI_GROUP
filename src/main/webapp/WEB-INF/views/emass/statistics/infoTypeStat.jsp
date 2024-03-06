@@ -354,12 +354,14 @@
                 }
                 if(grid1.id == 'basicStatListGrid') {
                     data.push({name:getClassStr(grid1.data[i]['rowKey']), data:items});
-                } else {
-                    if(grid1.data[i]['NUM'] == '<s:message code="bodyview.total"/>') continue;
-                    else if(grid1.data[i].rowKey.length == '3') {
-                        data.push({name:grid1.data[i]['svcLv12Nm'], data:items});
-                    }else {
-                        data.push({name:grid1.data[i]['svcNm'], data:items});
+                }else {
+                    if (typeof grid1.data[i]['rowKey'] === 'undefined') continue;
+
+                    if (grid1.data[i]['NUM'] == '<s:message code="bodyview.total"/>') continue;
+                    else if (grid1.data[i]['rowKey'].length == '3') {
+                        data.push({ name: grid1.data[i]['svcLv12Nm'], data: items });
+                    } else {
+                        data.push({ name: grid1.data[i]['svcNm'], data: items });
                     }
                 }
             }
@@ -534,7 +536,20 @@
         var dat = grid1.getRowData( grid1.Row );
         chartDat[tabID] = dat;
         gridObj.loadExportMenu('<s:message code="stat.detail.user.list"/> ( ' + name + displayName + ' )');
-        gridObj.loadPageSize();
+      /*  gridObj.loadPageSize();
+        document.addEventListener("DOMContentLoaded", function() {
+            var linkElements = document.querySelectorAll('a[data="5000"]');
+
+            linkElements.forEach(function(linkElement) {
+                linkElement.click();
+            });
+        });
+
+        var elements = document.querySelectorAll('.status_rownum');
+
+        elements.forEach(function(element) {
+            element.style.display = 'none';
+        });*/
         gridObj.changePageSize = function(cnt){
             if((rowKey > -2 && rowKey < 5) || liTab.includes("D")){
                 rowKey = rowKey.substr(0,3);
@@ -694,7 +709,20 @@
     grid1.colAdd( "rowKey", '<s:message code="consent.user"/>', 230, "left", false, 'link' );
     grid1.colAdd("total", '<s:message code="bodyview.total"/>', 130, "right", false, 'nomal' );
     grid1.loadExportMenu('<s:message code="DATA_ANALYSIS.STAT_INFOTYPE"/>');
-    grid1.loadPageSize();
+  /*  grid1.loadPageSize();
+    document.addEventListener("DOMContentLoaded", function() {
+        var linkElements = document.querySelectorAll('a[data="5000"]');
+
+        linkElements.forEach(function(linkElement) {
+            linkElement.click();
+        });
+    });
+
+    var elements = document.querySelectorAll('.status_rownum');
+
+    elements.forEach(function(element) {
+        element.style.display = 'none';
+    });*/
     grid1.loadHeader(false);
     grid1.initData('<s:message code="common.msg.search.click"/>');
     grid1.changePageSize = function(cnt){
@@ -745,9 +773,9 @@
         if (user != '') userStr = user;
         else userStr = '';
 
-
         searchFlag = true;
         grid1.on();
+        grid1.pageSize=5000
         ui.get({
             url : 'getStatList.xcn',
             startDate: sDate+"000000",
@@ -855,7 +883,7 @@
 
         searchFlag = true;
         currentgrid.on();
-
+        currentgrid.pageSize=5000
         ui.get({
             url : 'getStatDetailList.xcn',
             rowKey : rowKey,
@@ -921,6 +949,7 @@
 
         searchFlag = true;
         currentgrid.on();
+        currentgrid.pageSize=5000
         ui.get({
             url : 'getStatList.xcn',
             startDate: sDate+"000000",

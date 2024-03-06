@@ -494,25 +494,22 @@
                 var userkey =  $(this).attr('userkey');
                 var msgid = $(this).attr('msgid');
                 var username= $(this).attr('name');
+                var type= $(this).attr('svc12');
             /*    var svc1Value = $('.tab_selected  .busiCounts').attr('data-svc1');
                 var svcArray = arrayToString($('#serviceTypeSelect').selectpicker('val'));*/
 
                 $('#selectUserInfo').attr('data-srcip', srcip);
                 $('#selectUserInfo').attr('data-name', name);
                 $('#selectUserInfo').attr('data-usrid', usr_id);
-/*                $('#selectUserInfo').attr('data-svc12', svcArray);*/
+                $('#selectUserInfo').attr('data-svc12', type);
 
                 $('#selectUserInfo').html(userkey+"("+username+")");
                 $('#subchatid').html(": "+name);
                 $('#srcip').text(srcip);
                 $('#usr_id').text(usr_id);
 
-                var svc12 = $('#selectUserInfo').attr('data-svc12');
 
-                if (svc12 == null || typeof svc12 === 'undefined' || svc12 === '') {
-                    svc12="G";
-                }
-	            eikon2.getCollectionDetailList(userkey, msgid, srcip, usr_id,svc12);
+	            eikon2.getCollectionDetailList(userkey, msgid, srcip, usr_id,type);
                 hideUserSelect();
             });
 
