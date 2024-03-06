@@ -465,6 +465,11 @@
                     return;
                 }
 
+                if (Number(lv2) > Number(lv3)) {
+                    alert('<s:message code="deviceInfo.set.lower.caution2"/>')
+                    return;
+                }
+
                 var idx = $('#alertChangePop').attr('idx');
                 $('.saveAlarmPopBtn').prop('disabled', true);
                 ui.confirmMsg('<s:message code="common.msg.confirm.save"/>', '', '', function (rs) {
