@@ -226,7 +226,6 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		int range = Math.round((rows + offset) / rows); // for문 횟수
 
 
-
 		Query searchQuery = new NativeSearchQueryBuilder()
 				.withFields(Common.toArray(sq.getFields(), ","))
 				.withQuery(complateQuery)
@@ -248,7 +247,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			Sort sort = null;
 			for (SortClause s : sorts) {
 				SortOrder sortOrder = (Common.isEquals(s.getOrder(), SortOrder.DESC)) ? SortOrder.DESC : SortOrder.ASC;
-				if (s.getOrder() == SolrQuery.ORDER.desc) sort = Sort.by("msgid").descending();
+				if (s.getOrder() == SolrQuery.ORDER.desc) sort = Sort.by(s.getItem()).descending();
 				else sort = Sort.by(s.getItem()).ascending();
 				searchQuery.addSort(sort);
 			}
@@ -269,11 +268,10 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 					break;
 				} else {
 					searchHits = operation.search(searchQuery, SolrEdcVO.class);
-					System.out.println(searchHits);
 				}
 				if (idx > range || searchHits.getSearchHits().isEmpty()) break;
-				SearchHit lastHit = searchHits.getSearchHit((int) (searchHits.getSearchHits().size()-1 ));
-				searchAfter = java.util.Collections.singletonList(lastHit.getId());
+				SearchHit lastHit = searchHits.getSearchHit((int) (searchHits.getSearchHits().size() - 1));
+				searchAfter = lastHit.getSortValues();
 				idx++;
 			} while (true);
 		}
@@ -281,6 +279,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		/*============================================================*/
 
 		try {
+			log.info("검색된 갯수 : " + searchHits.getSearchHits().size() );
 			printQueryLog(sq, searchHits);
 		} catch (Exception e) {
 			log.info("[QUERY_RESULT] TOTAL_COUNT : {}, QUERY_TIME : {}", 0, TimeUtil.print());
@@ -721,7 +720,6 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 				result.add(obj);
 			} else if (!overlapData.isEmpty()) { //중복 데이터 있을 시
 				result.add(setReaderMsg(overlapData, obj)); //중복 데이터와 전체 크기를 비교하여 제일 큰 데이터를 대표 메시지로 선정하여 최종 결과 List에 추가
-
 				idx += overlapData.size(); //존재 하는 중복 데이터 만큼 Index 증가하여 다음 중복 데이터 find
 			}
 		}
@@ -729,7 +727,10 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		//기존 정렬 방식 (ctime 내림차순) 으로 재 정렬
 		result.sort((first, second) -> second.getCtime().compareTo(first.getCtime()));
 
+
+
 		solrVo.setEmass(result);
+		solrVo.setNumFound(result.size());
 
 		return solrVo;
 	}

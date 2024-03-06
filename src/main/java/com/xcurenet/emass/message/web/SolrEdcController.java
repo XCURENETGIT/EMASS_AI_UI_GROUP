@@ -181,10 +181,10 @@ public class SolrEdcController {
 
 		}else {
 			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+			String adminId = Common.getAdminId(session);
 			SolrQuery sq = solrCreateQuery.createQuery(data, Common.getAdminId(session), Common.nvl(data.get("searchTime")));
 			sq.setStart(Common.nvz(param.get("offset"), 0));
 			sq.setRows(Common.nvz(param.get("limit"), 100));
-
 
 
 			if(Common.isEmpty(data.get("searchTime"))) {
@@ -194,12 +194,12 @@ public class SolrEdcController {
 				sq.setFacetMinCount(1);
 			}
 
-			SolrEdcMessageVO solrVo = solrEdcService.getEmassMessage(sq, Common.getAdminId(session), solrCreateQuery.getFinalReadYn(), solrCreateQuery.getConsentNo());
-			ConfigAdminVO conf = configAdminService.getConfAdmin("message.overlap.use", Common.getAdminId(request));
-			String confVal = "N";
 
-			if(!Common.isEmpty(conf)) confVal = conf.getVal();
-			if(Common.isEquals(Common.nvl(param.get("overlap")), "Y") && Common.isEquals(confVal, "Y")) {
+			SolrEdcMessageVO solrVo = solrEdcService.getEmassMessage(sq, adminId, solrCreateQuery.getFinalReadYn(), solrCreateQuery.getConsentNo());
+			List<ConfigAdminVO> conf = configAdminService.getConfAdminOption(adminId);
+
+			String overlap = (!Common.isEmpty(conf) && conf.size() > 0) ? conf.get(0).getVal() : "N";
+			if(Common.isEquals(Common.nvl(param.get("overlap")), "Y") && Common.isEquals(overlap, "Y")) {
 				solrVo = solrEdcService.setOverlap(solrVo);
 			}
 

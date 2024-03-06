@@ -1,14 +1,13 @@
 package com.xcurenet.config.service.impl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.stereotype.Service;
-
 import com.xcurenet.common.dao.XcnAbstractDAO;
 import com.xcurenet.config.service.ConfigAdminService;
 import com.xcurenet.config.service.ConfigAdminVO;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service("configAdminService")
 public class ConfigAdminServiceImpl extends XcnAbstractDAO implements ConfigAdminService {
@@ -23,6 +22,8 @@ public class ConfigAdminServiceImpl extends XcnAbstractDAO implements ConfigAdmi
 		Map<String, String> param = new HashMap<>();
 		param.put("confId", confId);
 		param.put("adminId", adminId);
+
+
 		return selectOne("com.xcurenet.sqlmap.mappers.mysql.config.getConfAdmin", param);
 	}
 

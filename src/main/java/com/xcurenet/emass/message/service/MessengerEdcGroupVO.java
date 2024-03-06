@@ -142,14 +142,13 @@ public class MessengerEdcGroupVO {
 
 	String currentMainKey = "";
 	Long currentDocSize = 0L;
-	String admin = "";
 
 	public void  aggregationsCheckedParser(String id){
-		admin = id;
+		this.adminId = id;
 		aggregationsCheckedParser(this.getAggregations(),null);
 		this.aggregations = null;
 		this.groupMaps = new HashMap<>();
-		adminId = "";
+		this.adminId = "";
 		currentMainKey = "";
 		currentDocSize = 0L;
 	}
@@ -172,7 +171,7 @@ public class MessengerEdcGroupVO {
 //						log.info("읽은 이 : " + bucket.getKeyAsString());
 //						log.info("읽은 수 : " + bucket.getDocCount());
 						if( groups.stream().filter(v -> Common.isEquals(v.getSvc12(), currentMainKey)).count() == 0 ) break;
-						else if (admin.equals(bucket.getKeyAsString())) {
+						else if (adminId.equals(bucket.getKeyAsString())) {
 							groups.stream().filter(v -> Common.isEquals(v.getSvc12(), currentMainKey)).filter(m -> Common.isEquals(m.getUserkey(), key))
 									.forEach(v -> v.setUnread_cnt(currentDocSize - bucket.getDocCount()));
 						}

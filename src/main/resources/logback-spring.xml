@@ -25,9 +25,9 @@
 	</appender>
 
 	<appender name="sql_log" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>/users/apache/logs/sql_edc3.0.log</file>
+		<file>/users/apache/logs/sql.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>/users/apache/logs/emass_sql.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<fileNamePattern>/users/apache/logs/sql.%d{yyyy-MM-dd}.log</fileNamePattern>
 			<maxHistory>10</maxHistory>
 		</rollingPolicy>
 		<encoder>
