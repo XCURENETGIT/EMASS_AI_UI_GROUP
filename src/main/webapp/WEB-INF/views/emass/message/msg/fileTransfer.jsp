@@ -103,7 +103,7 @@
 
             $(document).on('click', '#attachOcrText', function(){
                 var msgId = $(this).parents('li').attr('msgid');
-                var attachId = $(this).parents('li').attr('attachhash');
+                var attachId = $(this).parents('li').attr('id');
                 var url = contextRoot + '/ems/attachText.do?msgId=' + msgId+ '&attachId=' + attachId + '&searchKey=' + '' + '&ocrYn=Y';
                 fnOpenWindow(url, 'attachText', 1050, 800, 'resize');
             });
