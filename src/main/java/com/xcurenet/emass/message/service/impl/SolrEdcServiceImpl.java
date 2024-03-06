@@ -730,7 +730,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 
 		solrVo.setEmass(result);
-		solrVo.setNumFound(result.size());
+
 
 		return solrVo;
 	}
