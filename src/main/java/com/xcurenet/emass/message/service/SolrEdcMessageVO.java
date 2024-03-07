@@ -248,7 +248,7 @@ public class SolrEdcMessageVO {
 
 
 
-
+	List<Map<String, Object>> pivotResult = new ArrayList<Map<String, Object>>();
 	public void pivotAggregationsParser(final String key,final Aggregations aggregations,final long docsCount){
 		for (Map.Entry<String, Aggregation> aggsKey : aggregations.getAsMap().entrySet()) {
 			Aggregation aggregation = aggregations.get(aggsKey.getKey());
@@ -256,7 +256,6 @@ public class SolrEdcMessageVO {
 			if (aggregation instanceof ParsedStringTerms) {
 				List<? extends Terms.Bucket> buckets = ((ParsedStringTerms) aggregation).getBuckets();
 				Iterator iter = buckets.iterator();
-				pivotItem = new HashMap();
 				while (iter.hasNext()) {
 					Terms.Bucket bucket = (Terms.Bucket) iter.next();
 					pivotItem.put(Common.nvl(bucket.getKeyAsString()), bucket.getDocCount());
@@ -267,7 +266,6 @@ public class SolrEdcMessageVO {
 			else if (aggregation instanceof ParsedLongTerms) {
 				List<? extends Terms.Bucket> buckets = ((ParsedLongTerms) aggregation).getBuckets();
 				Iterator iter = buckets.iterator();
-				pivotItem = new HashMap();
 				while (iter.hasNext()) {
 					Terms.Bucket bucket = (Terms.Bucket) iter.next();
 					pivotItem.put(Common.nvl(bucket.getKeyAsString()), bucket.getDocCount());
@@ -278,7 +276,6 @@ public class SolrEdcMessageVO {
 			else if (aggregation instanceof ParsedRange) {
 				List<? extends Range.Bucket>  buckets =  ((ParsedRange) aggregation).getBuckets();
 				Iterator iter = buckets.iterator();
-				pivotItem = new HashMap();
 				while (iter.hasNext()) {
 					Terms.Bucket bucket = (Terms.Bucket) iter.next();
 					pivotItem.put(Common.nvl(bucket.getKeyAsString()), bucket.getDocCount());
@@ -286,20 +283,17 @@ public class SolrEdcMessageVO {
 					pivotItem.putAll(pivotParse( key, docsCount));
 				}
 			} else if (aggregation instanceof ParsedSum) {
-				pivotItem = new HashMap();
 				ParsedSum bucketArgments = (ParsedSum) aggregation;
 				pivotItem.put(Common.nvl(bucketArgments.getName()), bucketArgments.getValue());
 				pivotKeys.put(Common.nvl(bucketArgments.getName()), 0);
 				pivotItem.putAll(pivotParse( key, docsCount));
-
 			}
-
 		}
+		pivotResult.add(pivotItem);
 	}
 
 
 	private void setPivot(final Aggregations aggregations) {
-		List<Map<String, Object>> pivotResult = new ArrayList<Map<String, Object>>();
 
 		headerList = new ArrayList();
 		pivotKeys = new HashMap();
@@ -313,9 +307,9 @@ public class SolrEdcMessageVO {
 				Iterator iter = buckets.iterator();
 				while (iter.hasNext()) {
 					Terms.Bucket bucket = (Terms.Bucket) iter.next();
+					pivotItem = new HashMap();
 					if (null != bucket.getAggregations() && bucket.getAggregations().asList().size() > 0 ) {
 						pivotAggregationsParser(bucket.getKeyAsString(),bucket.getAggregations(), bucket.getDocCount());
-						pivotResult.add(pivotItem);
 					}else {
 						String bucketKey = bucket.getKeyAsString();
 						long docCount = bucket.getDocCount();
