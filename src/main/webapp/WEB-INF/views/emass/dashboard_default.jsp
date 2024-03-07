@@ -813,9 +813,10 @@
             var categories = [];
 
             if (dat.length == 0) {
-                $('#sizeChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="150px;" height="150px" style="margin: auto; display: block;"> ');
+                $('#sizeChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data"class ="xcn_nodata" width="100px;" height="100px" style="display: block;"> ');
                 return false;
-            } else {
+            }
+             else {
                 var max = 0;
                 for (var i = 0; i < dat.length; i++) {
                     var items = [];
