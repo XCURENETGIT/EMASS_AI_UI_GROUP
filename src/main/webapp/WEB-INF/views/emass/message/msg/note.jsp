@@ -129,6 +129,8 @@
             noselect: '<s:message code="common.msg.noselect"/>'
 
         };
+        let pivotused = false;
+
         $(document).ready(function () {
             $(window).resize(function () {
                 if ($(window).width() < 1700) {
@@ -149,6 +151,7 @@
             document.getElementById("endSubDt").valueAsDate = new Date();
 
             $('#searchBtn').click(function () {
+                pivotused = false;
                 if (messengerListCnt == 0) {
                     ui.alertMsg('<s:message code="eikon.noList"/>');
                     return;
@@ -498,22 +501,19 @@
                 var userkey =  $(this).attr('userkey');
                 var msgid = $(this).attr('msgid');
                 var username= $(this).attr('name');
+                var type= $(this).attr('svc12');
 
                 $('#selectUserInfo').attr('data-srcip', srcip);
                 $('#selectUserInfo').attr('data-name', name);
                 $('#selectUserInfo').attr('data-usrid', usr_id);
-
+                $('#selectUserInfo').attr('data-svc12', type);
                 $('#selectUserInfo').html(userkey+"("+username+")");
                 $('#subchatid').html(": "+name);
                 $('#srcip').text(srcip);
                 $('#usr_id').text(usr_id);
 
-                var svc12 = $('#selectUserInfo').attr('data-svc12');
 
-                if (svc12 == null || typeof svc12 === 'undefined' || svc12 === '') {
-                    svc12="N";
-                }
-                eikon2.getCollectionDetailList(userkey, msgid, srcip, usr_id,svc12);
+                eikon2.getCollectionDetailList(userkey, msgid, srcip, usr_id,type);
                 hideUserSelect();
             });
 
@@ -734,7 +734,7 @@
         }
 
 
-        function getCondition() {
+        function getCondition(type) {
             var filterVal = {};
 
             if (isConsent()) {
@@ -746,17 +746,21 @@
             }
 
             var conArray = [];
-            conArray.push(createCondition());
+            conArray.push(createCondition(type));
             filterVal.conditions = conArray;
 
             //console.log(JSON.stringify(filterVal))
             return filterVal;
         }
 
-        function createCondition() {
+        function createCondition(type) {
             var allSelect = new Array();
             var condition = {};
-            if ($('#serviceTypeSelect').selectpicker('val') == null) {
+
+            if( type != "G" && type !=  "N" && type != "" ){
+                condition.serviceType = type; /* 카테고리 선택 */
+            }
+            else if ($('#serviceTypeSelect').selectpicker('val') == null) {
                 $('#serviceTypeSelect option').each(function () {
                     if ($(this).val() != '' && $(this).val() != null) allSelect.push($(this).val());
                 });

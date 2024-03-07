@@ -500,6 +500,7 @@ public class SolrCreateQuery {
 			if(Common.isNotEmpty(busicd_strs.toString())) query.append(String.format("%s:(%s) ", BUSICD, busicd_strs.toString()));
 
 		} else if( Common.isEquals(queryType, "C")) { // IP 기준 사업장 정보
+			query.append("+");
 			for (int i = 0; i < busicd.length; i++) {
 				if(Common.isEquals(busicd[i], "C00-00")){
 					query.append(String.format("(%s%s:%s) ", AND_QUERY, IP_BUSICD, busicd[i]));

@@ -206,11 +206,11 @@ public class PdfWriter {
 		reportDate2.setSpacingAfter(160);
 		doc.add(reportDate2);
 
-		Image img2 = Image.getInstance(pathReplace("src/main/resources/static/img/login_bi.png"));
-		/*img1.scaleAbsolute(30, 30);*/
-		img2.scaleAbsolute(40, 40);
+/*		Image img2 = Image.getInstance(String.valueOf(new ClassPathResource("/static/img/login_bi.png")));
+		*//*img1.scaleAbsolute(30, 30);*//*
+		img2.scaleAbsolute(40, 40);*/
 		Paragraph emassPro = new Paragraph();
-		emassPro.add(new Chunk(img2, 0, 0));
+	/*	emassPro.add(new Chunk(img2, 0, 0));*/
 		emassPro.add(new Chunk("EMASS AI", new Font(baseFont5, 15, Font.NORMAL)));
 
 		doc.add(emassPro);

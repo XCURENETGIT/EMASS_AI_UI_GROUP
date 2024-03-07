@@ -123,84 +123,84 @@
 
     });
 
-        $(".nav-tabs").on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
+    $(".nav-tabs").on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
 
 
-            currentgrid = getCurrentGrid();
-            var id = $(this).parents('li').attr('idx');
-            var hrefNm = $(this).attr('href');
-            var liTab = $(this).parents('li').attr('id');
-            var text = $(this).text();
+        currentgrid = getCurrentGrid();
+        var id = $(this).parents('li').attr('idx');
+        var hrefNm = $(this).attr('href');
+        var liTab = $(this).parents('li').attr('id');
+        var text = $(this).text();
 
-            var textClass4 = '<s:message code="condition.info.class4"/>';
-            var textClass3='<s:message code="condition.info.class3"/>';
-            var textClass2='<s:message code="condition.info.class2"/>';
-            var textClass1='<s:message code="condition.info.class1"/>';
-            var textClass0='<s:message code="common.msg.noinfo"/>';
+        var textClass4 = '<s:message code="condition.info.class4"/>';
+        var textClass3='<s:message code="condition.info.class3"/>';
+        var textClass2='<s:message code="condition.info.class2"/>';
+        var textClass1='<s:message code="condition.info.class1"/>';
+        var textClass0='<s:message code="common.msg.noinfo"/>';
 
-            if(hrefNm=='#basicStatList') {
-                $("#chartCntDiv").show();
-                $('#totalViewDiv').hide();
-                printChart(totalChartDat , grid1);
-            } else if(liTab.includes("D")){
-                if(text.includes(textClass4)){
-                    colRowKey = '4' ;
-                }else if(text.includes(textClass2)){
-                    colRowKey = '2' ;
-                }else if(text.includes(textClass3)){
-                    colRowKey = '3' ;
-                }else if(text.includes(textClass1)){
-                    colRowKey = '1' ;
-                }else if (text.includes(textClass0)){
-                    colRowKey = '-1';
-                }
-
-                $("#chartCntDiv").show();
-                $('#totalViewDiv').hide();
-                parentGrid = currentgrid;
-                printChart( totalChartDat , currentgrid);
-
-            }else {
-                if(text.includes(textClass4)){
-                    colRowKey = '4' ;
-                }else if(text.includes(textClass2)){
-                    colRowKey = '2' ;
-                }else if(text.includes(textClass3)){
-                    colRowKey = '3' ;
-                }else if(text.includes(textClass1)){
-                    colRowKey = '1' ;
-                }else if (text.includes(textClass0)){
-                    colRowKey = '-1';
-                }
-                $("#chartCntDiv").hide();
-                $('#totalViewDiv').show();
-                var dat = chartDat[id];
-                printChart( dat , parentGrid);
-
+        if(hrefNm=='#basicStatList') {
+            $("#chartCntDiv").show();
+            $('#totalViewDiv').hide();
+            printChart(totalChartDat , grid1);
+        } else if(liTab.includes("D")){
+            if(text.includes(textClass4)){
+                colRowKey = '4' ;
+            }else if(text.includes(textClass2)){
+                colRowKey = '2' ;
+            }else if(text.includes(textClass3)){
+                colRowKey = '3' ;
+            }else if(text.includes(textClass1)){
+                colRowKey = '1' ;
+            }else if (text.includes(textClass0)){
+                colRowKey = '-1';
             }
-        })
 
-        $(document).on('click', '.subtab_close', function(){
-            currentgrid = getCurrentGrid();
-            var id = 'tab'+ Number($(this).parents('li').attr('idx'));
-            var obj = tabInfo[id];
-            obj.close();
+            $("#chartCntDiv").show();
+            $('#totalViewDiv').hide();
+            parentGrid = currentgrid;
+            printChart( totalChartDat , currentgrid);
 
-            var tabID = $(this).parents('a').attr('href');
-            $(this).parents('li').remove();
-            $(tabID).remove();
-            tabNum --;
-
-            if(tabFlag == false){
-                var tabFirst = $('.listChart a:first');
-                tabFirst.tab('show');
-
-                $("#chartCntDiv").show();
-                $('#totalViewDiv').hide();
-            }else if (tabFlag == true){
-                tabFlag = false;
+        }else {
+            if(text.includes(textClass4)){
+                colRowKey = '4' ;
+            }else if(text.includes(textClass2)){
+                colRowKey = '2' ;
+            }else if(text.includes(textClass3)){
+                colRowKey = '3' ;
+            }else if(text.includes(textClass1)){
+                colRowKey = '1' ;
+            }else if (text.includes(textClass0)){
+                colRowKey = '-1';
             }
-        });
+            $("#chartCntDiv").hide();
+            $('#totalViewDiv').show();
+            var dat = chartDat[id];
+            printChart( dat , parentGrid);
+
+        }
+    })
+
+    $(document).on('click', '.subtab_close', function(){
+        currentgrid = getCurrentGrid();
+        var id = 'tab'+ Number($(this).parents('li').attr('idx'));
+        var obj = tabInfo[id];
+        obj.close();
+
+        var tabID = $(this).parents('a').attr('href');
+        $(this).parents('li').remove();
+        $(tabID).remove();
+        tabNum --;
+
+        if(tabFlag == false){
+            var tabFirst = $('.listChart a:first');
+            tabFirst.tab('show');
+
+            $("#chartCntDiv").show();
+            $('#totalViewDiv').hide();
+        }else if (tabFlag == true){
+            tabFlag = false;
+        }
+    });
 
 
     function openCodeWindow(id, oldCode, oldConm,oldDept,oldJib) {
@@ -539,20 +539,20 @@
         var dat = grid1.getRowData( grid1.Row );
         chartDat[tabID] = dat;
         gridObj.loadExportMenu('<s:message code="stat.detail.user.list"/> ( ' + name + displayName + ' )');
-      /*  gridObj.loadPageSize();
-        document.addEventListener("DOMContentLoaded", function() {
-            var linkElements = document.querySelectorAll('a[data="5000"]');
+        /*  gridObj.loadPageSize();
+		  document.addEventListener("DOMContentLoaded", function() {
+			  var linkElements = document.querySelectorAll('a[data="5000"]');
 
-            linkElements.forEach(function(linkElement) {
-                linkElement.click();
-            });
-        });
+			  linkElements.forEach(function(linkElement) {
+				  linkElement.click();
+			  });
+		  });
 
-        var elements = document.querySelectorAll('.status_rownum');
+		  var elements = document.querySelectorAll('.status_rownum');
 
-        elements.forEach(function(element) {
-            element.style.display = 'none';
-        });*/
+		  elements.forEach(function(element) {
+			  element.style.display = 'none';
+		  });*/
         gridObj.changePageSize = function(cnt){
             if((rowKey > -2 && rowKey < 5) || liTab.includes("D")){
                 rowKey = rowKey.substr(0,3);
@@ -712,20 +712,20 @@
     grid1.colAdd( "rowKey", '<s:message code="consent.user"/>', 230, "left", false, 'link' );
     grid1.colAdd("total", '<s:message code="bodyview.total"/>', 130, "right", false, 'nomal' );
     grid1.loadExportMenu('<s:message code="DATA_ANALYSIS.STAT_INFOTYPE"/>');
-  /*  grid1.loadPageSize();
-    document.addEventListener("DOMContentLoaded", function() {
-        var linkElements = document.querySelectorAll('a[data="5000"]');
+    /*  grid1.loadPageSize();
+	  document.addEventListener("DOMContentLoaded", function() {
+		  var linkElements = document.querySelectorAll('a[data="5000"]');
 
-        linkElements.forEach(function(linkElement) {
-            linkElement.click();
-        });
-    });
+		  linkElements.forEach(function(linkElement) {
+			  linkElement.click();
+		  });
+	  });
 
-    var elements = document.querySelectorAll('.status_rownum');
+	  var elements = document.querySelectorAll('.status_rownum');
 
-    elements.forEach(function(element) {
-        element.style.display = 'none';
-    });*/
+	  elements.forEach(function(element) {
+		  element.style.display = 'none';
+	  });*/
     grid1.loadHeader(false);
     grid1.initData('<s:message code="common.msg.search.click"/>');
     grid1.changePageSize = function(cnt){
