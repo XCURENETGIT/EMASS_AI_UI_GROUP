@@ -837,7 +837,7 @@
             /* condition.dept = arrayToString($('#deptSelect').selectpicker('val'));
 			if(condition.dept != '') condition.deptStr = $('#deptSelect').parent().find('.filter-option').text();
 			else condition.deptStr = ''; */
-
+            condition.searchField = 'body_snippet attachname attachname_str';
             condition.period = 1;
             condition.startDt =$('#startDt').val()+"000000";
             condition.endDt =$('#endDt').val()+"235959";
