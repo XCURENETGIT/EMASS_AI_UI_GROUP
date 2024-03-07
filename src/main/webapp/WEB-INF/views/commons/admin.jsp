@@ -29,7 +29,8 @@
         var sso_type = '<%=sso_type%>';
         var googleOtp = '<%=googleOtp%>';
         $(document).ready(function () {
-            console.log(googleOtp);
+
+
             if (certType != '' || sso_type == 'S') $('#certTypeDiv').show();
             else $('#certTypeDiv').hide();
 

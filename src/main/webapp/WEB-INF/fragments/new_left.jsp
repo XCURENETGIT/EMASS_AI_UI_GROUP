@@ -17,6 +17,10 @@
 	String infoFeedbackYn = Common.getInfoFeedbackYn(session);
 	JSONObject ntpInfo = NtpScheduler.ntpStatus;
 %>
+<style type="text/css">
+	a {cursor: pointer;}
+</style>
+
 <script type="text/javascript">
 	let infoFeedbackConf = '<%=infoFeedbackConf%>';
 	let infoHynixConf = '<%=infoHynixConf%>';
@@ -73,6 +77,8 @@
 		});
 	});
 
+
+
 	// Left Menu외 다른곳 클리 시 자동 닫힘.
 	$(document).on("click", function (event) {
 		if (!sideBar.is(event.target) && sideBar.has(event.target).length === 0 && !$('#topMenu').is(event.target) && $('#topMenu').has(event.target).length === 0) {
@@ -98,13 +104,13 @@
 				if (menuList[k].pid == currentMenuId && menuList[k].pid != null) {
                     if ((menuList[k].menuId == "SEARCH_LOG") && (consentMenuEnable == "false")) continue;
 					html += '<li><span>-</span>';
-                    html += '<a menuClick id="' + menuList[k].menuLink + '" href="' + mainContext + '/' + menuList[k].menuLink + '">' + menuList[k].defaultName + '</a>';
+                    html += '<a menuClick id="' + menuList[k].menuLink + '" url="' + mainContext + '/' + menuList[k].menuLink + '">' + menuList[k].defaultName + '</a>';
                     html += '<ul  id="' + menuList[k].menuId + '"  lastMenuUl>';
 					for (let l in menuList) {
                         if ((menuList[l].menuId == "CONSENT_MGMT") && (consentMenuEnable == "false")) continue;
 						if (menuList[l].pid == null || menuList[l].pid != menuList[k].menuId) continue;
 						html += '<li><span>-</span>';
-						html += '<a lastChildMenu href="' + mainContext + '/' + menuList[l].menuLink + '"class="topMenu ' + menuList[l].menuId + ' menuList"' + 'menuid=' + menuList[l].menuId + '>';
+						html += '<a lastChildMenu  url="' + mainContext + '/' + menuList[l].menuLink + '"class="topMenu ' + menuList[l].menuId + ' menuList"' + 'menuid=' + menuList[l].menuId + '>';
 						html += '<span> ' + menuList[l].defaultName + ' </span>';
 						html += '</a>';
 						html += '</li>';
@@ -136,8 +142,14 @@
 		sideBar.hide();
 	});
 
+	$(document).on("click", "a[lastChildMenu]", function () {
+		var tag = $(this)[0];
+		location.replace($(tag).attr('url'));
+	});
+
 	$(document).on("click", "a[menuClick]", function () {
-		location.replace(mainContext + '/' + $(this)[0].id)
+		var tag = $(this)[0];
+		location.replace($(tag).attr('url'));
 	});
 </script>
 <!--Gnb-->
