@@ -78,46 +78,31 @@ public class SolrEdcMessageVO {
 	public SolrEdcMessageVO(final SearchHits<SolrEdcVO> resp, final String adminId) throws SolrServerException, IOException {
 		this.numFound = resp.getTotalHits();
 		this.maxScore = resp.getMaxScore();
+		dataProc(resp,adminId); // 조회한 데이터 처리
+		if(resp.getAggregations() != null) aggregationsProc( (ElasticsearchAggregations) resp.getAggregations());	// 집계 처리
+
+	}
 
 
+
+
+	private void dataProc(final SearchHits<SolrEdcVO> resp, final String adminId){
 		for (SearchHit<SolrEdcVO> solrEdcVO : resp.getSearchHits()) {
 			SolrEdcVO edcVO = solrEdcVO.getContent();
 			edcVO.setReadYn(isRead(solrEdcVO.getContent().getChecked(), adminId) ? "Y" : "N");
 			edcVO.setConfidence( (maxScore > 0) ? String.valueOf((solrEdcVO.getScore() / maxScore ) * 100) : "0"); //유사도 계산
 			this.emass.add(edcVO);
 		}
-
-		if(resp.getAggregations() != null) {
-			ElasticsearchAggregations elasticSearchAggregations = (ElasticsearchAggregations) resp.getAggregations();
-			this.setFacet(elasticSearchAggregations.aggregations());
-	    	this.setPivot(elasticSearchAggregations.aggregations());
-			tempDataClear();
-			this.setFacets(elasticSearchAggregations);
-		}
-
 	}
 
-	public SolrEdcMessageVO(final SearchHits<SolrEdcVO> resp, final String adminId,final boolean overlap) throws SolrServerException, IOException {
-		this.numFound = resp.getTotalHits();
-		this.maxScore = resp.getMaxScore();
-
-		for (SearchHit<SolrEdcVO> solrEdcVO : resp.getSearchHits()) {
-			SolrEdcVO edcVO = solrEdcVO.getContent();
-			edcVO.setReadYn(isRead(solrEdcVO.getContent().getChecked(), adminId) ? "Y" : "N");
-			edcVO.setConfidence( (maxScore > 0) ? String.valueOf((solrEdcVO.getScore() / maxScore ) * 100) : "0"); //유사도 계산
-			this.emass.add(edcVO);
-		}
-
-		if(resp.getAggregations() != null) {
-			ElasticsearchAggregations elasticSearchAggregations = (ElasticsearchAggregations) resp.getAggregations();
-			this.setFacet(elasticSearchAggregations.aggregations());
-			this.setPivot(elasticSearchAggregations.aggregations());
+	private void aggregationsProc(final ElasticsearchAggregations elasticsearchAggregations){
+			this.setFacet(elasticsearchAggregations.aggregations());
+			this.setPivot(elasticsearchAggregations.aggregations());
 			tempDataClear();
-			this.setFacets(elasticSearchAggregations);
-		}
-
-
+			this.setFacets(elasticsearchAggregations);
 	}
+
+
 
 	private void tempDataClear(){
 		this.facetChkSvc = null;

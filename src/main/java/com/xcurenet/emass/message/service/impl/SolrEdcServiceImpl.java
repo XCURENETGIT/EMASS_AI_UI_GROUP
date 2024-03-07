@@ -1,6 +1,7 @@
 package com.xcurenet.emass.message.service.impl;
 
 
+import co.elastic.clients.elasticsearch.core.search.FieldCollapse;
 import com.xcurenet.EmassproApplication;
 import com.xcurenet.admin.service.AuthorityService;
 import com.xcurenet.admin.service.AuthorityVO;
@@ -19,7 +20,7 @@ import edu.emory.mathcs.backport.java.util.Collections;
 import lombok.extern.log4j.Log4j2;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.SortClause;
@@ -33,6 +34,7 @@ import org.elasticsearch.search.aggregations.bucket.range.RangeAggregationBuilde
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.elasticsearch.search.aggregations.pipeline.BucketSortPipelineAggregationBuilder;
+import org.elasticsearch.search.collapse.CollapseBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.slf4j.MDC;
@@ -239,8 +241,6 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 				.build();
 
 		SearchHits<SolrEdcVO> searchHits = null;
-
-
 		/* 정렬 */
 		List<SortClause> sorts =  sq.getSorts();
 		if(!Common.isEmpty(sorts)) {
@@ -648,9 +648,8 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 		String serverTime = getServerTime();
 		SearchHits<SolrEdcVO> resp = getList(sq);
-		String overlap = (!Common.isEmpty(conf) && conf.size() > 0) ? conf.get(0).getVal() : "N";
 
-		SolrEdcMessageVO solrEdcMessageVO =  new SolrEdcMessageVO(resp, adminId);   //      ((Common.isEquals(overlap, "Y")) ? new SolrEdcMessageVO(resp, adminId) : new SolrEdcMessageVO(resp, adminId,true));
+		SolrEdcMessageVO solrEdcMessageVO = new SolrEdcMessageVO(resp, adminId);
 		solrEdcMessageVO.setSearchTime(serverTime);
 		solrEdcMessageVO.setExcuteQuery(sq.getQuery());
 		solrEdcMessageVO.setEmass(new EmsReDefined(solrEdcMessageVO.getEmass(), readYn, consentNo, adminUserGroupService.getAdminUserGroupSimpleAdminList(adminId)).reDefined(adminId, conf));
@@ -723,7 +722,6 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 		//기존 정렬 방식 (ctime 내림차순) 으로 재 정렬
 		result.sort((first, second) -> second.getCtime().compareTo(first.getCtime()));
-
 
 		solrVo.setEmass(result);
 
@@ -881,26 +879,26 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			int ret = 0;
 
 			@Override
-			public int compare(SolrEdcVO first, SolrEdcVO second) {
-				if ((first.getSvcNm()).compareTo(second.getSvcNm()) > 0) {
+			public int compare(	SolrEdcVO first,SolrEdcVO second) {
+				if (StringUtils.compare(first.getSvcNm(),second.getSvcNm()) > 0) {
 					ret = 1;
 				}
-				if ((first.getSvcNm()).compareTo(second.getSvcNm()) == 0) {
-					if ((first.getSubject()).compareTo(second.getSubject()) > 0) {
+				if (StringUtils.compare(first.getSvcNm(),second.getSvcNm()) == 0) {
+					if (StringUtils.compare(first.getSubject(),second.getSubject()) > 0) {
 						ret = 1;
-					} else if ((first.getSubject()).compareTo(second.getSubject()) == 0) {
-						if ((first.getSender()).compareTo(second.getSender()) > 0) {
+					} else if (StringUtils.compare(first.getSubject(),second.getSubject()) == 0) {
+						if (StringUtils.compare(first.getSender(),second.getSender()) > 0) {
 							ret = 1;
-						} else if ((first.getSender()).compareTo(second.getSender()) == 0) {
+						} else if (StringUtils.compare(first.getSender(),second.getSender()) == 0) {
 							ret = 0;
-						} else if ((first.getSender()).compareTo(second.getSender()) < 0) {
+						} else if (StringUtils.compare(first.getSender(),second.getSender()) < 0) {
 							ret = -1;
 						}
-					} else if ((first.getSubject()).compareTo(second.getSubject()) < 0) {
+					} else if (StringUtils.compare(first.getSubject(),second.getSubject()) < 0) {
 						ret = -1;
 					}
 				}
-				if ((first.getSvcNm()).compareTo(second.getSvcNm()) < 0) {
+				if (StringUtils.compare(first.getSvcNm(),second.getSvcNm()) < 0) {
 					ret = -1;
 				}
 				return ret;

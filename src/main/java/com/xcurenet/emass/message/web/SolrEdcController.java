@@ -11,6 +11,7 @@ import com.xcurenet.common.util.config.Config;
 import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.config.service.ConfigAdminService;
+import com.xcurenet.config.service.ConfigAdminVO;
 import com.xcurenet.emass.adminFolder.service.AdminFolderMessageVO;
 import com.xcurenet.emass.adminFolder.service.AdminFolderService;
 import com.xcurenet.emass.message.component.SolrCreateQuery;
@@ -191,8 +192,14 @@ public class SolrEdcController {
 				else if(Common.isEquals(pageType, "U")) sq.addFacetField("svc12");
 				sq.setFacetMinCount(1);
 			}
+			ConfigAdminVO overlapInfo = configAdminService.getConfAdmin("message.overlap.use", adminId);
+			String overlap = (!Common.isEmpty(overlapInfo)) ? overlapInfo.getVal() : "N";
 
 			SolrEdcMessageVO solrVo = solrEdcService.getEmassMessage(sq, adminId, solrCreateQuery.getFinalReadYn(), solrCreateQuery.getConsentNo());
+
+			if(Common.isEquals(Common.nvl(param.get("overlap")), "Y") && Common.isEquals(overlap, "Y")) {
+				solrVo = solrEdcService.setOverlap(solrVo);
+			}
 
 			if(Config.getBoolean("consent.menu.enable") && Common.isEquals(Common.nvz(param.get("offset"), 0), 0)) {
 				searchLogService.insertSearchLog(param);
