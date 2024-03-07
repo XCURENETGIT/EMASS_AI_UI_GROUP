@@ -1,7 +1,6 @@
 package com.xcurenet.emass.message.service.impl;
 
 
-import co.elastic.clients.elasticsearch.core.search.FieldCollapse;
 import com.xcurenet.EmassproApplication;
 import com.xcurenet.admin.service.AuthorityService;
 import com.xcurenet.admin.service.AuthorityVO;
@@ -34,7 +33,6 @@ import org.elasticsearch.search.aggregations.bucket.range.RangeAggregationBuilde
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.elasticsearch.search.aggregations.pipeline.BucketSortPipelineAggregationBuilder;
-import org.elasticsearch.search.collapse.CollapseBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.slf4j.MDC;
@@ -231,7 +229,6 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		Query searchQuery = new NativeSearchQueryBuilder()
 				.withFields(Common.toArray(sq.getFields(), ","))
 				.withQuery(complateQuery)
-//				.withSorts(getSort(sq.getSorts()))
 				.withAggregations(getAggregations(sq))
 				.withAggregations(getAggregationsByPivot(sq))
 				.withTrackTotalHits(true)
@@ -241,6 +238,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 				.build();
 
 		SearchHits<SolrEdcVO> searchHits = null;
+
 		/* 정렬 */
 		List<SortClause> sorts =  sq.getSorts();
 		if(!Common.isEmpty(sorts)) {
@@ -258,7 +256,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			searchQuery.setPageable(PageRequest.of(getPage(sq), sq.getRows()));
 			searchHits =  operation.search(searchQuery, SolrEdcVO.class);
 		}else {
-			//일반검색
+			//일반검색 (페이징)
 			searchQuery.setPageable(PageRequest.ofSize(rows));
 			int idx = 0;
 			do {
