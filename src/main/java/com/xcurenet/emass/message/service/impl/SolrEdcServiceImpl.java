@@ -226,6 +226,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		int range = Math.round((rows + offset) / rows); // for문 횟수
 
 
+
 		Query searchQuery = new NativeSearchQueryBuilder()
 				.withFields(Common.toArray(sq.getFields(), ","))
 				.withQuery(complateQuery)
@@ -236,7 +237,6 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 				.withSearchAfter(searchAfter)
 				.withTimeout(Duration.ofSeconds(60))
 				.build();
-
 		SearchHits<SolrEdcVO> searchHits = null;
 
 		/* 정렬 */
@@ -250,7 +250,6 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 				searchQuery.addSort(sort);
 			}
 		}
-
 
 		if(Common.isEquals(sq.get("group"),"true")) { // 집계검색
 			searchQuery.setPageable(PageRequest.of(getPage(sq), sq.getRows()));

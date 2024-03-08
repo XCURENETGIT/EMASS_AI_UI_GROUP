@@ -172,6 +172,8 @@ public class Config {
 	public static Map<String, String> elsFields = new HashMap<>();
 
 
+
+
 	public static ServiceGroupVO getServiceGroup(final String groupCd) {
 		for (ServiceGroupVO service : serviceGroups) {
 			if (Common.isEquals(service.getGroupCd(), groupCd)) return service;
@@ -326,10 +328,12 @@ public class Config {
 
 
 		/* 연관 키워드 관련 */
-		List<SearchWordVO> searchWords = searchWordService.getSearchWord(0, 1, "");
-		if (searchWords.isEmpty()) {
-			execute(sqlPath + "xcn_keyword.sql", false);
-			execute(sqlPath + "xcn_keyword_rel.sql", false);
+		if(searchWordService.tableIsExist() >= 2 ) { /* 키워드 테이블 없으면 실행 금지 */
+			List<SearchWordVO> searchWords = searchWordService.getSearchWord(0, 1, "");
+			if (searchWords.isEmpty()) {
+				execute(sqlPath + "xcn_keyword.sql", false);
+				execute(sqlPath + "xcn_keyword_rel.sql", false);
+			}
 		}
 
 

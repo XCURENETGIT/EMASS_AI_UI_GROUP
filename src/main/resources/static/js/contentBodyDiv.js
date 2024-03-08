@@ -17,7 +17,10 @@ $(document).ready(function(){
 		$('#emassBody *').each(function(){
 			var fontSize = parseInt($(this).css("font-size"));
 			if(more == 'small_txt') fontSize -= fontZoom;
-			else fontSize += fontZoom;
+			else {
+				if (fontSize>24) fontSize=14;
+				else fontSize += fontZoom;
+			}
 			$(this).css({'font-size':fontSize+'px'});
 		});
 	});

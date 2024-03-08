@@ -27,7 +27,11 @@ $(document).ready(function(){
 		var more = $(this).attr('id');
 		var fontSize = parseInt($('#emassBody').css("font-size"));
 		if(more == 'small_txt') fontSize -= fontZoom;
-		else fontSize += fontZoom;
+		else {
+			console.log(fontSize)
+			if (fontSize>24) fontSize=13;
+			else fontSize += fontZoom;
+		}
 		$('#emassBody').css({'font-size':fontSize+'px'});
 
 		$('#emassBody *').each(function(){
