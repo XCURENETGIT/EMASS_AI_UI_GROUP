@@ -1079,6 +1079,9 @@ public class EmsMessageController {
 			changeLink(doc);
 
 			Element bodyEl = doc.body();
+
+			reValueTag(bodyEl, "input","type","button"); 	/* submit방지 */
+
 			replaceTagNames(bodyEl, "HTML", "XHTML", false);
 			replaceTagNames(bodyEl, "META", "XMETA", false);
 			replaceTagNames(bodyEl, "STYLE", "XSTYLE", true);
@@ -1120,6 +1123,13 @@ public class EmsMessageController {
 		if (findEls == null) return;
 		findEls = findEls.tagName(change);
 		if (displayNone) findEls.attr("style", "display:none");
+	}
+
+	public static void reValueTag(Element els, String find, String key, String value) {
+		if (els == null) return;
+		Elements findEls = els.select(find);
+		if (findEls == null) return;
+	 	findEls.attr(key, value);
 	}
 
 	public static String getBodyStrProc(String userCharset, EmsBodyVO emsBody) throws UnsupportedEncodingException {
