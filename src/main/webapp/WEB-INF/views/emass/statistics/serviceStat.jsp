@@ -584,7 +584,7 @@
         setGrid();
 
         $("#chartCntDiv").hide();
-        $('#totalViewDiv').show();
+        $('#totalViewDiv').show();1
         var dat = grid1.getRowData( grid1.Row );
         chartDat[tabID] = dat;
         printChart(dat);
