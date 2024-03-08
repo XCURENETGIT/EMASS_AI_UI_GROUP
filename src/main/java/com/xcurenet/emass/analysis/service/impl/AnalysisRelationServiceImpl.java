@@ -244,7 +244,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 				break;
 			//웹 메일 수
 			case "outMail":
-				query.add("svc", "W*", true);
+				query.and().beforeParen().beforeParen().add("svc", "P*", false).afterParen().or().beforeParen().add("svc", "I*", false).afterParen().or().beforeParen().add("svc", "W*", false).afterParen().afterParen();
 				sq.setParam("group.field", "sender_str");
 				sq.setParam("facet.field", "size");
 				sq.setFacetSort("size");
