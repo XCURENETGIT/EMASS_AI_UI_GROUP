@@ -163,10 +163,10 @@ public class SolrEdcMessageVO {
 				}
 			}
 			else if (aggregation instanceof ParsedRange) {
-				List<? extends Range.Bucket>  buckets =  ((ParsedRange) aggregation).getBuckets();
-				Iterator iter = buckets.iterator();
+				List<? extends Range.Bucket> buckets = ((ParsedRange) aggregation).getBuckets();
+				Iterator<? extends Range.Bucket> iter = buckets.iterator();
 				while (iter.hasNext()) {
-					Terms.Bucket bucket = (Terms.Bucket) iter.next();
+					Range.Bucket bucket = iter.next();
 					headerList.add(key);
 					facetParse(bucket.getKeyAsString(), bucket.getDocCount());
 				}
@@ -274,13 +274,13 @@ public class SolrEdcMessageVO {
 				}
 			}
 			else if (aggregation instanceof ParsedRange) {
-				List<? extends Range.Bucket>  buckets =  ((ParsedRange) aggregation).getBuckets();
-				Iterator iter = buckets.iterator();
+				List<? extends Range.Bucket> buckets = ((ParsedRange) aggregation).getBuckets();
+				Iterator<? extends Range.Bucket> iter = buckets.iterator();
 				while (iter.hasNext()) {
-					Terms.Bucket bucket = (Terms.Bucket) iter.next();
+					Range.Bucket bucket = iter.next();
 					pivotItem.put(Common.nvl(bucket.getKeyAsString()), bucket.getDocCount());
 					pivotKeys.put(Common.nvl(bucket.getKey()), 0);
-					pivotItem.putAll(pivotParse( key, docsCount));
+					pivotItem.putAll(pivotParse(key, docsCount));
 				}
 			} else if (aggregation instanceof ParsedSum) {
 				ParsedSum bucketArgments = (ParsedSum) aggregation;
