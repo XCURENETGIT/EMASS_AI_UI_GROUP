@@ -500,14 +500,19 @@
                 var usr_id = $(this).attr('usr_id');
                 var userkey =  $(this).attr('userkey');
                 var msgid = $(this).attr('msgid');
-                var username= $(this).attr('name');
                 var type= $(this).attr('svc12');
 
                 $('#selectUserInfo').attr('data-srcip', srcip);
                 $('#selectUserInfo').attr('data-name', name);
                 $('#selectUserInfo').attr('data-usrid', usr_id);
                 $('#selectUserInfo').attr('data-svc12', type);
-                $('#selectUserInfo').html(userkey+"("+username+")");
+                var username = $(this).attr('name');
+                if (username == "undefined") {
+                    username = '-';
+                }
+                var userInfo = userkey + "(" + username + ")";
+                $('#selectUserInfo').html(userInfo);
+
                 $('#subchatid').html(": "+name);
                 $('#srcip').text(srcip);
                 $('#usr_id').text(usr_id);
