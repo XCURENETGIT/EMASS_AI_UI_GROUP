@@ -400,6 +400,7 @@
 			<button class ="btn01" id="prevBtn"><img src="../img/icon/ico_arrow_left_b.png/" ></button>
 			<button class ="btn01" id="nextBtn"><img src="../img/icon/ico_arrow_right_b.png/" ></button>
 			<div class="btnright">
+				<button class ="btn05" id="openOriginal" style="display: none;"><img src="../img/ico_main_tit12.png/" ><s:message code="common.msg.view.original"/></button>
 				<button class ="btn05" id="saveBtn"><img src="../img/subBtn_save.png/" ><s:message code="common.msg.save"/></button>
 				<button class ="btn05" id="printBtn"><img src="../img/subBtn_mail.png/" ><s:message code="common.msg.print"/></button>
 				<ul class="dropdown-menu dropdown-menu-left" role="menu" style="left:calc(80% - 102px);right:-1px"  id="additionalBtn">
