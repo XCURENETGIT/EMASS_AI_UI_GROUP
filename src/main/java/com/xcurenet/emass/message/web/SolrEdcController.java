@@ -197,6 +197,7 @@ public class SolrEdcController {
 
 			SolrEdcMessageVO solrVo = solrEdcService.getEmassMessage(sq, adminId, solrCreateQuery.getFinalReadYn(), solrCreateQuery.getConsentNo());
 
+			log.info("데이터 중복처리 사용?  : " + overlap);
 			if(Common.isEquals(Common.nvl(param.get("overlap")), "Y") && Common.isEquals(overlap, "Y")) {
 				solrVo = solrEdcService.setOverlap(solrVo);
 			}

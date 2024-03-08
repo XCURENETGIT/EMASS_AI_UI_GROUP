@@ -80,9 +80,11 @@
 
             $('.applyBtn').click(function(){
                 $(this).prop('disabled',true);
-                var data = valueCheck();
-                if(!data) $(this).prop('disabled',false);
-                else setConfig(data);
+	            var data = valueCheck();
+	            if (!data) $(this).prop('disabled', false);
+	            else setConfig(data);
+
+
             });
 
             $('#mailSendBtn').click(function(){
@@ -160,6 +162,7 @@
                 if(!numberCheck('password.fail.count', '<s:message code="setup.password.fail.count"/>')) return false;
                 if(!numberCheck('password.restore.minute', '<s:message code="setup.password.restore.minute"/>')) return false;
                 if(!numberCheck('session.timeoutSecond', '<s:message code="setup.session.timeoutSecond"/>')) return false;
+                if(!timeoutCheck('session.timeoutSecond', '<s:message code="setup.session.timeoutSecond"/>')) return false;
 
                 data.push({confId:'long.term.unused', val:$('#'+idIndicator('long.term.unused')).val()});
                 data.push({confId:'password.change.day', val:$('#'+idIndicator('password.change.day')).val()});
@@ -223,6 +226,15 @@
             var val = $('#'+idIndicator(id)).val();
             if(val=='') {
                 ui.alertMsg('<s:message code="setup.input.value" arguments="'+title+'" />');
+                return false;
+            }
+            return true;
+        }
+
+        function timeoutCheck(id, title){
+            var val = $('#'+idIndicator(id)).val();
+            if (val > 360000) {
+                ui.alertMsg('<s:message code="login.timeout"/>');
                 return false;
             }
             return true;
