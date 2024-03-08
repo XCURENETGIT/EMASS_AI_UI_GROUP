@@ -91,10 +91,9 @@ public class SolrEdcController {
 	public XcnResponseVO getListByRootMtr(final HttpServletRequest request, final HttpSession session) throws Exception {
 		JSONObject param = Common.getParam(request);
 		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
-		SolrQuery sq = solrCreateQuery.createQuery("+xmsgkey : " + Common.nvl(param.get("xrootmtr")));
+		SolrQuery sq = solrCreateQuery.createQuery("+xmsgKey : "+ Common.nvl(param.get("xrootmtr")));
 		sq.setStart(0);
 		sq.setRows(1);
-		sq.setFields("msgid", "body_size");
 
 		SolrEdcMessageVO solrVo = solrEdcService.getEmassMessage(sq, Common.getAdminId(session));
 		return new XcnResponseVO(XcnRspCode.OK, solrVo.getEmass());

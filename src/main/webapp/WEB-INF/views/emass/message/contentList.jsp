@@ -342,6 +342,7 @@
 			limit : grid.pageSize,
 			overlap : overlapUse,
 			success : function(data, total) {
+
 				searchedFlag = true;
 				grid.appendData(data.emass);
 				if ( grid.loadingPage == 0 ) grid.Select(-1,-1);

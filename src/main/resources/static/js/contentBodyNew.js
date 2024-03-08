@@ -2,6 +2,7 @@ var msgId = '';
 var svc = '';
 var searchkey = '';
 var xRootMtr = '';
+var xmsgKey = '';
 var srcip = '';
 var dstip = '';
 var usrip = '';
@@ -315,6 +316,31 @@ $(document).ready(function(){
 		}
 		ui.off();
 	});
+
+	$('#openOriginal').click(function() {
+
+		ui.get({
+			url : 'getListByRootMtr.xcn',
+			xrootmtr : xRootMtr,
+			success : function(data, total) {
+				if(data.length == 0) {
+					ui.alertMsg('원본 메시지가 존재하지 않습니다.');
+					return;
+				}
+				openMessageBodyPop( '', data[0].msgid, '', data[0].body_size);
+			},
+			error : function(status, message) {
+				ui.alertMsg(message);
+			},
+			complete : function() {
+			}
+		});
+	});
+
+
+
+
+
 	$('#openBigContent').click(function() {
 		if(opener){
 			var grid = opener.grid;
@@ -1088,6 +1114,10 @@ function setMessage(msg) {
 		$('.svcnmSpan').html(msg.svcNm + getProtocolNm(msg.protocol));
 		$('.svcnmSpan').css("display", "");
 	}
+
+	if(xRootMtr!='' && xRootMtr != xmsgKey && msg.svc.startsWith('E')) {
+		$('#openOriginal').show();
+	} else $('#openOriginal').hide();
 
 	if(nvl(msg.subjectStr) == "") {
 		$('#subjectStrDiv #subjectStr').html("");
