@@ -48,7 +48,7 @@ public class DashBoardPreDefineController {
 		JSONObject param = Common.getParam(request);
 		long now = System.currentTimeMillis();
 		String range = Common.nvl(param.get("range"));
-		if (range == null) range = "0,10485760,52428800,104857600,157286400,209715200,2147483647";
+		if (range == "" || range == null) range = "0,10485760,52428800,104857600,157286400,209715200,2147483647";
 
 		TodayDataStatusVO vo = new TodayDataStatusVO();
 		vo.setRange(range);
