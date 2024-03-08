@@ -88,7 +88,19 @@
 		WHERE KEYWORD = BINARY #{searchWord}
 	</select>
 
+	<!--연관 키워드 테이블 확인 1 -->
+	<select id ="tableIsExist1" resultType="int">
+		SELECT COUNT(1)
+		FROM information_schema.TABLES
+		WHERE TABLE_NAME = 'XCN_KEYWORD'
+	</select>
 
+	<!--연관 키워드 테이블 확인 2 -->
+	<select id ="tableIsExist2" resultType="int">
+		SELECT COUNT(1)
+		FROM information_schema.TABLES
+		WHERE TABLE_NAME = 'XCN_KEYWORD_REL'
+	</select>
 
 
 </mapper>

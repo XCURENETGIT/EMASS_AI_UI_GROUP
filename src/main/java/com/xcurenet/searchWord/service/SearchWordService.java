@@ -15,6 +15,8 @@ public interface SearchWordService {
 
 	public int insertRelSearchWord(SearchWordVO searchWordVO);
 
+	public int tableIsExist();
+
 	public int findSearchWordNum(SearchWordVO searchWordVO);
 
 	public int deleteSearchWord(List<SearchWordVO> searchWords);
