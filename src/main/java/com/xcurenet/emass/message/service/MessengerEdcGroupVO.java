@@ -152,6 +152,9 @@ public class MessengerEdcGroupVO {
 		currentMainKey = "";
 		currentDocSize = 0L;
 	}
+
+	long unread = 0;
+	String target = "";
 	public void  aggregationsCheckedParser(Aggregations aggregations,String key){
 		for (Map.Entry<String, Aggregation> aggsKey : aggregations.getAsMap().entrySet()) {
 			if (Common.isEquals(aggsKey.getKey(), "userkey") && !Common.isEmpty(key)) currentMainKey = key;
@@ -162,23 +165,36 @@ public class MessengerEdcGroupVO {
 				List<? extends Terms.Bucket> buckets = ((ParsedStringTerms) aggregation).getBuckets();
 				Iterator iter = buckets.iterator();
 				while (iter.hasNext()) {
+					unread = 0;
+					target = "";
 					Terms.Bucket bucket = (Terms.Bucket) iter.next();
-					if (Common.isEquals(aggsKey.getKey(), "userkey") && !Common.isEmpty(key))   currentDocSize = bucket.getDocCount();
+
+					if (Common.isEquals(aggsKey.getKey(), "userkey")) {
+						currentDocSize = bucket.getDocCount();
+						unread = bucket.getDocCount();
+						target = bucket.getKeyAsString();
+					}
+
+					/* 읽은 운용자가 존재시 */
 					if (Common.isEquals(aggsKey.getKey(), "checked.readId")) {
 //						log.info("서비스 : " + currentMainKey);
 //						log.info("유저키 : " + key);
 //						log.info("유저의 문서 수 : " +  currentDocSize );
-//						log.info("읽은 이 : " + bucket.getKeyAsString());
+//						log.info("읽은 운용자 : " + bucket.getKeyAsString());
 //						log.info("읽은 수 : " + bucket.getDocCount());
-						if( groups.stream().filter(v -> Common.isEquals(v.getSvc12(), currentMainKey)).count() == 0 ) break;
-						else if (adminId.equals(bucket.getKeyAsString())) {
-							groups.stream().filter(v -> Common.isEquals(v.getSvc12(), currentMainKey)).filter(m -> Common.isEquals(m.getUserkey(), key))
-									.forEach(v -> v.setUnread_cnt(currentDocSize - bucket.getDocCount()));
-						}
+					    	if (groups.stream().filter(v -> Common.isEquals(v.getSvc12(), currentMainKey)).count() == 0) break;
+						    if (adminId.equals(bucket.getKeyAsString())) {
+								unread = currentDocSize - bucket.getDocCount();
+								target = key;
+							}
 					} else if (null != bucket.getAggregations()) {
-						aggregationsCheckedParser(bucket.getAggregations(), bucket.getKeyAsString());
+						 aggregationsCheckedParser(bucket.getAggregations(), bucket.getKeyAsString());
 					}
+
+					groups.stream().filter(v -> Common.isEquals(v.getSvc12(), currentMainKey)).filter(m -> Common.isEquals(m.getUserkey(),target)).forEach(v -> v.setUnread_cnt(unread));
+
 				}
+
 			}
 		}
 	}
