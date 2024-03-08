@@ -2558,7 +2558,9 @@
                 <%-- 정규 표현식 모달 --%>
                 <div id="regexSearchDiv" class="regexSearchDiv">
                     <div class="searchKeywordTab"><s:message code="condition.regex.appo"/>
-                        <div class="rightGroup"><span class="regexSearchCloseBtn">&times;</span></div>
+                        <div class="regexSearchCloseBtn" style="position:absolute;top:12px; right:8px;">
+                            <span class="glyphicon glyphicon-remove" style="cursor:pointer;font-size:13px;" aria-hidden="true"></span>
+                        </div>
                     </div>
                     <div style="padding: 5px 5px 5px 10px;">
                         <input  type="text" placeholder="<s:message code="searchKeyword.search"/>" id="regexSearchStr" style="width:calc(100% - 150px);"/>

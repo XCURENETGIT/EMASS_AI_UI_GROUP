@@ -230,7 +230,7 @@
 
         function openWindow(id) {
             var url = '<c:url value="/commons/selectCodeAll.do?codeType='+id+'"/>';
-            var pop = fnOpenWindow('', 'selectCodeWinPopup', 860, 500, 'resize');
+            var pop = fnOpenWindow('', 'selectCodeWinPopup', 1200, 700, 'resize');
             $('#userPopForm').attr('target', 'selectCodeWinPopup');
             $('#userPopForm').attr('action', url);
             $('#userPopForm').attr('method', 'post');
