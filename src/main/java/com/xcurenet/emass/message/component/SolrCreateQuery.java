@@ -22,6 +22,7 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -139,8 +140,8 @@ public class SolrCreateQuery {
 
 	private String[] INEQUALITY_SIGN = {"+","-","|"};
 
-	private String[] SPECIAL_CHARS = {"!", "\"", "#", "$", "%", "&", "(", ")", "{", "}", "@", "`", "*", ":", "+",
-			";", "-", ".", "<", ">", ",", "^", "~", "|", "'", "[", "]"};
+	private String[] SPECIAL_CHARS = {"!", "\"", "#", "$", "%", "&", "(", ")", "{", "}", "@", "`", "*", ":",
+			";", ".", "<", ">", ",", "^", "~", "'", "[", "]"};
 
 	public SolrCreateQuery() {
 		sq = new SolrQuery();
@@ -1371,8 +1372,7 @@ public class SolrCreateQuery {
 	private String getSearchQuery(String query) {
 		if( query.startsWith("|")) query = query.substring(1);
 
-		query = query.replaceAll("([/])\\1+","/").replaceAll("([+])\\1+","+").replaceAll("([|])\\1+","|").replaceAll("(-)\\1+","-"); // 연산자를 연속2개입력시 1개로 줄이기
-
+		query = specialCharsValid(query);
 		query = getTempQuery(query);
 		StringBuilder sb = new StringBuilder();
 
@@ -1380,8 +1380,9 @@ public class SolrCreateQuery {
 			StringBuilder queryStr = new StringBuilder();
 			String[] terms = query.split(" ");
 			for (String term : terms) {
- 			term =  ("\"").concat(term).concat( "\"");
-				//	queryStr.append("(".concat(appendSpecialchar(term)).concat(")")).append(" ");
+			     /*특수문자 처리*/
+				term = specialCharsCheck(term);
+
 				queryStr.append(appendSpecialchar(term)).append(" ");
 			}
 			sb.append("+").append(queryStr.toString().trim().replaceAll(" ", " ").replaceAll("__", " "));
@@ -1390,10 +1391,13 @@ public class SolrCreateQuery {
 			String[] terms = query.split(" ");
 //			querySb.append("\"");
 			for (int i = 0; i < terms.length; i++) {
+
+				terms[i] = specialCharsCheck(terms[i]);
+
 				if (terms[i].equals("|")) {
 					terms[i] = OR_PREFIX;
 				}else if (i > 0 && terms[i - 1].equals(OR_PREFIX) || terms[i].startsWith("+") || terms[i].startsWith("-")) {
-				} else if (i < terms.length - 1 && !terms[i + 1].equals("|")) {
+				}else if (i < terms.length - 1 && !terms[i + 1].equals("|")) {
 					terms[i] = ("+").concat(terms[i]);
 				}else if (!terms[i].startsWith("+") && !terms[i].startsWith("-")) {
 					terms[i] = ("(").concat(terms[i]).concat( ")");
@@ -1405,6 +1409,23 @@ public class SolrCreateQuery {
 		}
 		return sb.toString().replace(OR_PREFIX, " ").replace("__", " ").replace("  ", " ").trim();
 	}
+
+
+	public String specialCharsValid(String str){
+		if(str.indexOf("\"") > -1) {
+			if(str.indexOf("\"") == str.lastIndexOf("\"")) str = str.replace("\"", "");
+		}
+		str = str.replaceAll("([/])\\1+","/").replaceAll("([+])\\1+","+").replaceAll("([|])\\1+","|").replaceAll("(-)\\1+","-"); // 연산자를 연속2개입력시 1개로 줄이기
+		return str;
+	}
+
+	public String specialCharsCheck(String str){
+		String result = str;
+		if(Arrays.stream(SPECIAL_CHARS).filter(s-> str.indexOf(s) > -1).count() > 0) result = ("\"").concat(str).concat( "\"").replaceAll("(\")\\1+","\"");
+		result.replaceAll("(\")\\1+","\"");
+		return result;
+	}
+
 
 	/**
 	 * 공백 구분 임시 쿼리 생성
