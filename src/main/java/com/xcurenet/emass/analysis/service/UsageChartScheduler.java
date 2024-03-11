@@ -84,11 +84,11 @@ public class UsageChartScheduler {
 			String firstServiceCode = edcVO.getSvc().substring(0, 1);
 			String ThirdServiceCode = edcVO.getSvc().substring(0, 3);
 
-			if (firstServiceCode.equals("P") || firstServiceCode.equals("I") || firstServiceCode.equals("W")) {
+			if (firstServiceCode.equals("W")) {
 				vo.setOutMail(1);
 			}
 
-			if (firstServiceCode.equals("P") || firstServiceCode.equals("I") || firstServiceCode.equals("M") || ThirdServiceCode.equals("EMM")) {
+			if (firstServiceCode.equals("M") || ThirdServiceCode.equals("EMM")) {
 				vo.setInMail(1);
 			}
 

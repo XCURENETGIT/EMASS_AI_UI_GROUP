@@ -244,7 +244,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 				break;
 			//웹 메일 수
 			case "outMail":
-				query.and().beforeParen().beforeParen().add("svc", "P*", false).afterParen().or().beforeParen().add("svc", "I*", false).afterParen().or().beforeParen().add("svc", "W*", false).afterParen().afterParen();
+				query.and().beforeParen().add("svc", "W*", false).afterParen();
 				sq.setParam("group.field", "sender_str");
 				sq.setParam("facet.field", "size");
 				sq.setFacetSort("size");
@@ -252,8 +252,8 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 				break;
 			//메일수
 			case "inMail":
-				query.and().beforeParen().beforeParen().add("svc", "M*", false).afterParen().or().beforeParen().add("svc", "EMM*", false).afterParen().or().beforeParen().add("svc", "P*", false).afterParen().or().beforeParen().add("svc", "I*", false).afterParen().afterParen();
-//				query.and().beforeParen().add("svc", "PM*", false).or().add("svc", "M*", false).or().add("svc", "EMM*", false).afterParen();
+				query.and().beforeParen().beforeParen().add("svc", "M*", false).afterParen().or().beforeParen().add("svc", "EMM*", false).afterParen().afterParen();
+//				query.and().beforeParen().beforeParen().add("svc", "M*", false).afterParen().or().beforeParen().add("svc", "EMM*", false).afterParen().or().beforeParen().add("svc", "P*", false).afterParen().or().beforeParen().add("svc", "I*", false).afterParen().afterParen();
 				sq.setParam("group.field", "sender_str");
 				sq.setParam("facet.field", "size");
 				sq.setFacetSort("size");
@@ -323,12 +323,13 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 
 				break;
 			case "outMail":
-				query.and().beforeParen().add("svc", "PM*", false).or().add("svc", "W*", false).afterParen();
+				query.and().beforeParen().add("svc", "W*", false).afterParen();
+				//query.and().beforeParen().add("svc", "PM*", false).or().add("svc", "W*", false).afterParen();
 				query.add("sender_str", searchVO.getKeyword());
 
 				break;
 			case "inMail":
-				query.and().beforeParen().add("svc", "M*", false).or().add("svc", "EMM*", false).or().add("svc", "P*", false).or().add("svc", "I*", false).afterParen();
+				query.and().beforeParen().beforeParen().add("svc", "M*", false).afterParen().or().beforeParen().add("svc", "EMM*", false).afterParen().afterParen();
 				query.add("sender_str", searchVO.getKeyword());
 
 				break;
