@@ -9,6 +9,9 @@
 		overflow: hidden;
 
 	}
+	input[type="checkbox"] {
+		margin-top: 5px;
+	}
 .modal-body {
 	padding-top: 5px;
 }
