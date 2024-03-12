@@ -17,7 +17,7 @@ var detailEndPage = 1;
 var detailViewPage = 10;
 var detailPageBreak = 100;
 
-var detailLimit = 100;
+var detailLimit = 10;
 
 var selectedSearchData = 1;
 var searchOffset = 0;
@@ -377,7 +377,7 @@ function getMessengerMessageNext(xRootmtr, srcip, usr_id, msgid) {
                 }
             }
 
-            $("#timeline_list").append(makeList(true));
+            $("#timeline_list").append(makeList2(true));
             Highlight( );
         },
         error : function(status, message) {
@@ -807,7 +807,7 @@ function makeList2(nextFlag) {
     var srcip = $('#selectUserInfo').attr('data-srcip');
 
 
-    if (detailDataSet.length < detailLimit) str += noPrevDataMsg();
+    if (detailDataSet.length < detailLimit && !nextFlag ) str += noPrevDataMsg();
 
     for (var i =0; i <detailDataSet.length; i++) {
         dataHasFlag = true;
@@ -963,7 +963,7 @@ function makePrevList() {
     // if (prevDetailDataSet.length < detailLimit) str += noPrevDataMsg();
     var usrid = $('#selectUserInfo').attr('data-usrid');
     var srcip = $('#selectUserInfo').attr('data-srcip');
-    str += checkDatePre(prevDetailDataSet.length-1);
+    // str += checkDatePre(prevDetailDataSet.length-1);
     for (var i = prevDetailDataSet.length-1; i >0; i--) {
         dataHasFlag = true;
         var obj = prevDetailDataSet[i];
