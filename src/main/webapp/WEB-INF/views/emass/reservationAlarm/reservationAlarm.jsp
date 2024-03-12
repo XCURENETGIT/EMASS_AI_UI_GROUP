@@ -691,10 +691,10 @@
 										</div>
 									</div>
 								</div>
-								<p class="txt_right fs12">
+						<%--		<p class="txt_right fs12">
 									<span class="red_dot veralign_middle"></span>
 									<s:message code="mail.input.item"/>
-								</p>
+								</p>--%>
 								<!-- 탭 -->
 
 								<div class="tab-content modalbody">
@@ -711,7 +711,7 @@
 										<div class="row">
 											<div class="col-35">
 												<label for="fname"><s:message code="mail.reservation.name"/></label>
-												<span class="red_dot"></span>
+												<%--<span class="red_dot"></span>--%>
 											</div>
 											<div class="col-65">
 												<input type="text" class="w100" name="alarmName" id="alarmName"
@@ -767,7 +767,7 @@
 											<div class="col-35">
 												<label for="alarmCycleVal"><s:message
 														code="mail.execute_cycle"/></label>
-												<span class="red_dot"></span>
+											<%--	<span class="red_dot"></span>--%>
 											</div>
 											<div class="col-65">
 												<div class="radiotab w100">
@@ -824,7 +824,7 @@
 										<div id="mailField" class="row">
 											<div class="col-35">
 												<label for="alarmTo"><s:message
-														code="mail.recv"/></label><span class="red_dot"></span>
+														code="mail.recv"/></label><%--<span class="red_dot"></span>--%>
 											</div>
 											<div class="col-65">
 												<input type="text" class="input-sm w75" name="alarmTo"
@@ -848,7 +848,7 @@
 											<div class="clear pt16"></div>
 											<div class="col-35">
 												<label for="mailFormSelBtn"><s:message
-														code="mail.form.mail"/></label><span class="red_dot"></span>
+														code="mail.form.mail"/></label><%--<span class="red_dot"></span>--%>
 											</div>
 											<div class="col-65">
 
