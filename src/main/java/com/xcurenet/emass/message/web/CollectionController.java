@@ -484,23 +484,25 @@ public class CollectionController {
 		int startRange = 0;
 		int endRange = 0;
 
+		String msgids = null;
+
 		SolrQuery sq = new SolrQuery();
 		if (Common.isEmpty(msgId)) {
 
 			EmsMessengerAdminXrootMtrVO emaxm = emsMessageService.getEmassGenerativeAdminXrootMtr(userkey, Common.getAdminId(request), srcip, usr_id,type);
 
 			if (Common.isNotEmpty(emaxm)) {
-				msgId = Common.nvl(emaxm.getMsgId());
-				startRange = Common.diffOfDate(startDt.substring(0, 8), msgId.substring(0, 8));
-				endRange = Common.diffOfDate(endDt.substring(0, 8), msgId.substring(0, 8));
+				msgids = Common.nvl(emaxm.getMsgId());
+				startRange = Common.diffOfDate(startDt.substring(0,8), msgids.substring(0,8));
+				endRange = Common.diffOfDate(endDt.substring(0,8), msgids.substring(0,8));
 			}
 
 		}
 
-		if (Common.isEmpty(msgId) || (startRange < 0) || (endRange > 0)) {
+		if (Common.isEmpty(msgids) || (startRange < 0) || (endRange > 0)) {
 			sq = getCollectionMessageTotalQuery(request);
 		} else {
-			sq = getMessengerGtNext(request, msgId, true);
+			sq = getMessengerGtPrev(request, msgids, true);
 		}
 
 
@@ -539,7 +541,7 @@ public class CollectionController {
 		JSONObject param = Common.getParam(request);
 		String msgId = Common.nvl(param.get("msgId"));
 
-		SolrQuery prevQuery = getMessengerGtPrev(request, msgId);
+		SolrQuery prevQuery = getMessengerGtPrev(request, msgId, false);
 		MessengerEdcGroupVO result = solrEdcService.getMessengerGroupList(prevQuery, Common.getAdminId(request), true, false);
 
 		return new XcnResponseVO(XcnRspCode.OK, result);
@@ -567,11 +569,7 @@ public class CollectionController {
 
 		//이미 출력된 동시간대 데이터 제외
 		if(Common.isNotEmpty(msgId)) {
-			if(lastMsgYn) {
-				query += String.format(" +msgid:[%s TO *]", msgId);
-			} else {
-				query += String.format(" +msgid:{%s TO *]", msgId);
-			}
+			query += String.format(" +msgid:{%s TO *]", msgId);
 		}
 
 		if(type.equals("N")||type.equals("G")){
@@ -608,7 +606,7 @@ public class CollectionController {
 		return sq;
 	}
 
-	public SolrQuery getMessengerGtPrev(final HttpServletRequest request, final String msgId) throws Exception {
+	public SolrQuery getMessengerGtPrev(final HttpServletRequest request, final String msgId, final boolean lastMsgYn) throws Exception {
 		JSONObject param = Common.getParam(request);
 		String userkey = Common.nvl(param.get("userkey"));
 		String srcip = Common.nvl(param.get("srcip"));
@@ -649,7 +647,11 @@ public class CollectionController {
 
 		//이미 출력된 동시간대 데이터 제외
 		if(Common.isNotEmpty(msgId)) {
-			query += String.format(" +msgid:[* TO %s}", msgId);
+			if(lastMsgYn) {
+				query += String.format(" +msgid:[* TO %s]", msgId);
+			} else {
+				query += String.format(" +msgid:[* TO %s}", msgId);
+			}
 		}
 
 		if(Common.isNotEmpty(searchStr)) query += String.format(" +body:(*%s*) ", searchStr);
@@ -717,8 +719,8 @@ public class CollectionController {
 
 		sq.setQuery(query);
 		sq.setRows(limit);
-		sq.addSort("ctime", ORDER.asc);
-		sq.addSort("msgid", ORDER.asc);
+		sq.addSort("ctime", ORDER.desc);
+		sq.addSort("msgid", ORDER.desc);
 		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user");
 
 		return sq;

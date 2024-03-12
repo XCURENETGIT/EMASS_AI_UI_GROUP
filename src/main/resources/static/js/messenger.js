@@ -17,7 +17,7 @@ var detailEndPage = 1;
 var detailViewPage = 10;
 var detailPageBreak = 100;
 
-var detailLimit = 10;
+var detailLimit = 100;
 
 var selectedSearchData = 1;
 var searchOffset = 0;
@@ -450,7 +450,6 @@ function getMessengerMessagePrev(xRootmtr, srcip, usr_id, msgid) {
                 $('.messenger_prev').css('display', 'block');
             }
             prevDetailDataSet = data.groups;
-            console.log($(".pageInfoDiv").size());
 
             if ($(".pageInfoDiv").size() > detailViewPage - 1) {
                 $(".pageInfoDiv").last().remove();
