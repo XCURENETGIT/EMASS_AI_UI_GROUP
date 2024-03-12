@@ -491,7 +491,7 @@
         if( tabNum > 3) {
             tabFlag = true;
             var delid = $( ".listChart li:nth-child(2)" ).attr('idx');
-            $('#detailTab'+delid+' .close').click();
+            $('#detailTab'+delid+' .subtab_close ').click();
         }
 
         var displayName = rowName;
