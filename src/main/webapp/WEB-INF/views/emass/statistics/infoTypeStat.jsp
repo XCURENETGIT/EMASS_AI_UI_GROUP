@@ -510,7 +510,7 @@
             displayName = grid1.getValue(grid1.Row, 'svcLv12Nm');
             liTab ="liTabD"
         }else if (rowKey == '-1'|| rowKey == '1'||rowKey == '2'||rowKey == '3'|| rowKey == '4'){
-            displayName = colKeyNm;
+            displayName = colKeyNm
             colKeyNm = '<s:message code="analysis.usagecompare.ui.detaillist"/>';
             liTab ="liTabD"
         }else if (rowKey == '-1'){
@@ -519,6 +519,7 @@
             liTab ="liTabD"
 
         }else{
+            displayName = colKeyNm;
             colKeyNm = '<s:message code="analysis.usagecompare.ui.detaillist"/>';
             liTab ="liTabD"
         }
