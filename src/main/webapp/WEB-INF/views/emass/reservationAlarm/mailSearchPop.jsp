@@ -143,7 +143,7 @@
 		</div>
 	</header>-->
 <div class="xcn_container">
-	<div style="width: 900px; overflow: auto; margin-top:20px;">
+	<div style="overflow: auto; margin-top:10px;">
 		<div >
 			<div class="row">
 				<div class="col-xs-12">

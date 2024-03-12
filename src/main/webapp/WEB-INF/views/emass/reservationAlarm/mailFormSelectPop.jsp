@@ -3,12 +3,9 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-	<title>EMASS LTH - <s:message code="mail.select.form.mail"/></title>
+	<title>EMASS AI - <s:message code="mail.select.form.mail"/></title>
 	<style type="text/css">
-		body {
-			overflow: hidden;
-
-		}
+		html,body{height: 100%; padding: 0px; margin: 0px;overflow: auto;min-width: 650px;}
 
 	</style>
 	<script type="text/javascript"
@@ -67,34 +64,41 @@
         }
 	</script>
 </head>
-<div class="popup-container" id="popup">
-	<div class="row">
-		<div class="col-xs-12">
-			<h3 class="blue"><span class="bullet01"></span><s:message code="mail.select.form.mail"/>
-				<button type="button" class="form_btn04 cencel_right" accesskey="C" onclick="closePopup()"><s:message code="common.msg.close"/></button>
-			</h3>
-
-			<div class="grayBg mat16 popupInner">
-				<div>
-					<input type="text" placeholder="<s:message code="common.msg.searchMsg"/>" id="searchStr">
-					<button class="form_btn01" type="button" accesskey="Q" id="searchBtn"><s:message code="common.msg.search"/></button>
-					<button type="button" class="form_btn03 cencel_right mat8 mar12" accesskey="S" id="chooseBtn"></span>&nbsp;<s:message code="consent.select"/></button>
+<body class="mini-navbar msgBody">
+<div class="xcn_container">
+	<div style="overflow: auto; margin-top:10px;">
+		<div >
+			<div class="row">
+				<div class="col-xs-12">
+					<h3 class="blue"><span class="bullet01"></span>
+						<span class="navi"><span id="code_title"></span><s:message code="mail.select.form.mail"/></span>
+						<button type="button" class="form_btn04 cencel_right" accesskey="C" id="cancelBtn" onclick="closePopup()"><s:message code="common.msg.close"/></button>
+					</h3>
+					<div class="grayBg mat16 popupInner">
+						<div>
+							<input type="text" class=" input-sm" placeholder="<s:message code="common.msg.searchMsg"/>" id="searchStr" style="width: 250px;">
+							<button class="form_btn01" type="button" accesskey="Q" id="searchBtn"><s:message code="common.msg.search"/></button>
+							<button type="button" class="form_btn03 cencel_right mat8 mar12" accesskey="S" id="chooseBtn"></span><s:message code="consent.select"/></button>
+						</div>
+					</div>
 				</div>
 			</div>
-			<div class="mat8">
-				<div id="mailFormListGrid" class="slickGrid gridArea" style="max-height:200px; overflow-y: scroll !important;"></div>
+			<div class="row top_space" style="height: calc(100% - 370px);">
+				<div class="col-xs-12" >
+					<div id="mailFormListGrid" class="slickGrid gridArea" style="max-height:200px; overflow-y: scroll !important;" ></div>
+				</div>
 			</div>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-xs-12">
-			<div class="form-inline not-dashed">
-				<label for="formContent" class="control-label"><s:message code="mail.form.content"/></label>
-				<textarea class="form-control" style="width:100%; height: 300px; margin-top: 5px; background-color: #f8f6f6; margin-left: 1px;" name="formContent" id="formContent" readonly="readonly"></textarea>
+			<div class="row">
+				<div class="col-sm-12">
+					<label for="formContent" class="control-label"><s:message code="mail.form.content"/></label>
+					<textarea class="form-control" style="width:100%; height: 200px; margin-top: 5px; background-color: #f8f6f6; margin-left: 1px;" name="formContent" id="formContent" readonly="readonly"></textarea>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
 </div>
+</body>
 
 <%--	<button type="button" class="btn btn-sm btn-primary" accesskey="S" id="chooseBtn"><span class="glyphicon glyphicon-ok"></span>&nbsp;<s:message code="consent.select"/></button>
                 <button type="button" class="btn btn-sm btn-default" accesskey="C" id="cancelBtn"><span class="glyphicon glyphicon-remove"></span>&nbsp;<s:message code="common.msg.close"/></button>
