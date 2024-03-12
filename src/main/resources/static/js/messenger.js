@@ -1263,7 +1263,7 @@ function Highlight() {
     setTimeout(function () {
         var searchs = $('#searchStrInput').val().split(/\||\+|\s|\*|\"/);
         if (searchs.length > 0) {
-            var timeline_list_obj = $("#timeline_list").find('span');
+            var timeline_list_obj = $("#timeline_list").find('#preview, .me, .you');
 
 
             for (var i = 0; i < searchs.length; i++) {
