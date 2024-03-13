@@ -695,7 +695,7 @@ function filediv(data) {
         fileStr += '<li msgid="' + data.msgId + '" id="' + file.attachId + '" size="' + file.attachSize  + '" attachHash="' + file.attachHash + '" class="' + trClass + extClass +'" >';
 
         fileStr +=  '<p class="attach_'+attachExt+' attach_file_img">';
-        if (attachNameExist == "N") fileStr += '<a href="#" class="downloadIcon">'+filelist.noname ;
+        if (attachNameExist == "N") fileStr += '<a href="#" class="downloadIcon">['+filelist.noname +"]noname";
         else{ fileStr += '<a href="#" class="downloadIcon attachName" style="text-decoration: underline;" attachname="' + attachName + '">';
             fileStr += '' + attachName;
         };
