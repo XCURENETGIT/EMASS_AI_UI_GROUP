@@ -16,11 +16,12 @@
 	boolean infoHynixConf = Config.getBoolean("info.hynix.used");
 	String infoFeedbackYn = Common.getInfoFeedbackYn(session);
 	JSONObject ntpInfo = NtpScheduler.ntpStatus;
+	String menuKey = Common.nvl(Common.getParam(request).get("menuKey"));
 %>
 <style type="text/css">
 	a {cursor: pointer;}
 
-	.clicks{
+	.clickEvent{
 		color: #88B8FF !important;
 		font-weight: 400;
 	}
@@ -42,7 +43,7 @@
 	let mainContext = "<%=context%>";
 	let sideBar;
 
-    var menuKey;
+    menuKey = "<%=menuKey%>";
 	$(document).ready(function () {
 		createMenuList(0); //init Menu
 		sideBar = $("#sideBar");
@@ -141,16 +142,16 @@
 
 	/*  마우스 오버 */
 	$(document).on("mouseover", "a[menuClick]", function () {
-        $(this).addClass('clicks');
+        $(this).addClass('clickEvent');
 	});
 	$(document).on("mouseout", "a[menuClick]", function () {
-        $(this).removeClass('clicks');
+        $(this).removeClass('clickEvent');
 	});
 	$(document).on("mouseover", "a[lastChildMenu]", function () {
-        $(this).addClass('clicks');
+        $(this).addClass('clickEvent');
 	});
 	$(document).on("mouseout", "a[lastChildMenu]", function () {
-        $(this).removeClass('clicks');
+        $(this).removeClass('clickEvent');
 	});
 
 
