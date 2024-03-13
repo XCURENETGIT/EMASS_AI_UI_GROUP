@@ -66,6 +66,7 @@ var eikon = {
                 getMessengerMessageNext(xrootmtr, srcip, usr_id, msgid);
 
             } else {
+                // var msgid = $('.timeline').children().first().attr('id');
                 var firstData = $('.timeline').children().filter(':eq(1)');
                 var msgid = $(firstData).attr('id');
                 getMessengerMessagePrev(xrootmtr, srcip, usr_id, msgid);
@@ -291,7 +292,7 @@ function getMessengerMessage(xRootmtr, srcip, usr_id, msgid) {
         limit: detailLimit,
         success: function (data, total) {
             if (data.groups.length > 0) {
-                $('.messenger_prev').css('display', 'block');
+                $('.messenger_next').css('display', 'block');
                 $('#totalCount').css('display', 'block');
             }
             if (data.groups.length == 0) {
@@ -308,10 +309,13 @@ function getMessengerMessage(xRootmtr, srcip, usr_id, msgid) {
             prevDetailDataSet = data.groups;
 
             if (data.numFound < detailLimit)
-                $('.messenger_next').css('display', 'none');
-            else $('.messenger_next').css('display', 'block');
+                $('.messenger_prev').css('display', 'none');
+            else $('.messenger_prev').css('display', 'block');
 
             $("#timeline_list").html(makeList(false));
+
+
+            $('.chatList').scrollTop($('.chatList')[0].scrollHeight);
             Highlight();
         },
         error: function (status, message) {
@@ -348,7 +352,7 @@ function getMessengerMessageNext(xRootmtr, srcip, usr_id, msgid) {
             searchFlag = false;
             if(data.groups.length == 0) {
                 detailDataSet = [];
-                $("#timeline_list").prepend(noNextDataMsg());
+                $("#timeline_list").append(noNextDataMsg());
                 $('.messenger_next').css('display', 'none');
                 return;
             }
@@ -357,6 +361,8 @@ function getMessengerMessageNext(xRootmtr, srcip, usr_id, msgid) {
                 $('.messenger_next').css('display', 'block');
             }
             detailDataSet = data.groups;
+
+
 
             /**
              * 전체 10 페이지가 넘어갈 경우 첫번째 페이지 제거
@@ -371,7 +377,7 @@ function getMessengerMessageNext(xRootmtr, srcip, usr_id, msgid) {
                 }
             }
 
-            $("#timeline_list").append(makeList(true));
+            $("#timeline_list").append(makeList2(true));
             Highlight( );
         },
         error : function(status, message) {
@@ -440,13 +446,14 @@ function getMessengerMessagePrev(xRootmtr, srcip, usr_id, msgid) {
             }
             if (data.groups.length < detailLimit) {
                 $('.messenger_prev').css('display', 'none');
+            }else {
+                $('.messenger_prev').css('display', 'block');
             }
             prevDetailDataSet = data.groups;
 
             if ($(".pageInfoDiv").size() > detailViewPage - 1) {
                 $(".pageInfoDiv").last().remove();
             }
-
             $("#timeline_list").prepend(makePrevList());
             $('#scrollArea').scrollTop($(".pageInfoDiv").height());
             Highlight();
@@ -792,15 +799,16 @@ function getPageNum(msgid) {
     if (idx != -1) return rtnValue == 0 ? 1 : rtnValue;
     else return 1;
 }
-
-
-
-function makeList(nextFlag) {
+function makeList2(nextFlag) {
     var dataHasFlag = false;
     var str = '<ul class="pageInfoDiv timeline">';
     var usrid = $('#selectUserInfo').attr('data-usrid');
     var srcip = $('#selectUserInfo').attr('data-srcip');
-    for (var i = 0; i < detailDataSet.length; i++) {
+
+
+    if (detailDataSet.length < detailLimit && !nextFlag ) str += noPrevDataMsg();
+
+    for (var i =0; i <detailDataSet.length; i++) {
         dataHasFlag = true;
         var obj = detailDataSet[i];
         var chkPati = false;
@@ -860,7 +868,86 @@ function makeList(nextFlag) {
     }
 
     str += '</ul>';
-    if (detailDataSet.length < detailLimit) str += noNextDataMsg();
+
+
+    if (!dataHasFlag) {
+        str = noDataMsg();
+    }
+
+    return str;
+}
+
+
+function makeList(nextFlag) {
+    var dataHasFlag = false;
+    var str = '<ul class="pageInfoDiv timeline">';
+    var usrid = $('#selectUserInfo').attr('data-usrid');
+    var srcip = $('#selectUserInfo').attr('data-srcip');
+
+
+    if (detailDataSet.length < detailLimit && !nextFlag ) str += noPrevDataMsg();
+
+    for (var i =detailDataSet.length-1; i >=0; i--) {
+        dataHasFlag = true;
+        var obj = detailDataSet[i];
+        var chkPati = false;
+        if (nvl(obj.user) != '' && (srcip == nvl(obj.userid) || srcip == nvl(obj.user))) chkPati = true;
+        str += checkDate(i);
+
+        str += '<li class="p20 bubble ' + (chkPati ? 'txt_right slide_right' : 'txt_left slide_left') + (i == 0 && !nextFlag ? ' lastReadLi' : '') + '" id="' + obj.msgid + '" ctime="' + obj.ctime + '" userid="' + obj.userid + '" srcip="' + obj.srcip + '" xrootmtr="' + obj.xrootmtr + '">';
+        str += '<span id="xrootmtr" style="display: none;">' + obj.xrootmtr + '</span>';
+
+        var svc3 = obj.svc3;
+        str += '<div class="' + (chkPati ? 'me' : 'you') + ' timeline-panel" >';
+
+
+        if(obj.attached=="Y"){
+            var attachhash = obj.attachhash;
+            var attachname = obj.attachname;
+            var attachsize = obj.attachsize;
+            var attachtype = obj.attachtype;
+
+            var attachhashArray = attachhash.split('|');
+            var attachnameArray = attachname.split('|');
+            var attachsizeArray = attachsize.split('|');
+            var attachtypeArray = attachtype.split('|');
+
+            str += '<p class="filedown file_link" msgid="' + obj.msgid + '" attachhash="' + attachhashArray[0] + '">';
+            str += '<span class="img"></span>';
+            str += '<span>' + attachnameArray[0] + '<br/>';
+            str += attachsizeArray[0] + 'KB</span>';
+            str += '<button class="btnchatdown downlodadBtn"></button></p>';
+            if (obj.body_snippet !== undefined) {
+                let maxLength = attachnameArray[0].length + 11; // attachnameArray[0]의 길이에 6을 더한 값
+                let snippet = obj.body_snippet.replaceAll('\n', '<br/>');
+                if (snippet.length > maxLength) {
+                    for (var j = 0; j < snippet.length - maxLength; j += maxLength) {
+                        if (j === 0) {
+                            str += "<hr style='border: 1px solid #ddd;'>";
+                        } else if (j % maxLength === 0) {
+                            str += "<br>";
+                        }
+                        str += snippet.substring(j, Math.min(j + maxLength, snippet.length));
+                    }
+                } else {
+                    str += snippet;
+                }
+            }
+        } else {
+            if (obj.body_snippet != undefined) str += '' + obj.body_snippet.replaceAll('\n', '<br/>') + '';
+        }
+        str += '</div>';
+
+        str += ' <div class="bubbleDate mat4">';
+        str += '<span>' + obj.sender + '</span> &nbsp';
+        str += '<span>' + obj.ctime + '</span> &nbsp';
+        str+='<span class="mal4">'+makeMessengerText(obj.svc)+'</span>';
+        str += '</div></div>';
+        str += '</li>';
+    }
+
+    str += '</ul>';
+
 
     if (!dataHasFlag) {
         str = noDataMsg();
@@ -872,11 +959,11 @@ function makeList(nextFlag) {
 function makePrevList() {
     var dataHasFlag = false;
     var str = '<ul class="pageInfoDiv timeline">';
-    if (prevDetailDataSet.length < detailLimit) str += noPrevDataMsg();
+    // if (prevDetailDataSet.length < detailLimit) str += noPrevDataMsg();
     var usrid = $('#selectUserInfo').attr('data-usrid');
     var srcip = $('#selectUserInfo').attr('data-srcip');
-    for (var i = prevDetailDataSet.length - 1; i > -1; i--) {
-        str += checkDatePre(i);
+    // str += checkDatePre(prevDetailDataSet.length-1);
+    for (var i = prevDetailDataSet.length-1; i >0; i--) {
         dataHasFlag = true;
         var obj = prevDetailDataSet[i];
         if ((nvl(obj.user) != '' && obj.user == obj.sender) || usrid == obj.title || usrid == obj.sender) chkPati = true;
@@ -924,6 +1011,7 @@ function makePrevList() {
         str += '			</div>';
 
         str += ' <div class="bubbleDate mat4">';
+        str += '<span>' + obj.sender + '</span> &nbsp';
         str += '<span>' + obj.ctime + '</span>';
         str+='<span class="mal4">'+makeMessengerText(obj.svc)+'</span>';
         str += '</div></div>';
@@ -1175,7 +1263,7 @@ function Highlight() {
     setTimeout(function () {
         var searchs = $('#searchStrInput').val().split(/\||\+|\s|\*|\"/);
         if (searchs.length > 0) {
-            var timeline_list_obj = $("#timeline_list").find('span');
+            var timeline_list_obj = $("#timeline_list").find('#preview, .me, .you');
 
 
             for (var i = 0; i < searchs.length; i++) {

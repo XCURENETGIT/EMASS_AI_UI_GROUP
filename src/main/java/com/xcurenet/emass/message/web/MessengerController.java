@@ -289,22 +289,23 @@ public class MessengerController {
 		String endDt = Common.nvl(param.get("endDt"));
 		int startRange = 0;
 		int endRange = 0;
-
+		String msgids = null;
 
 		SolrQuery sq = new SolrQuery();
 		if(Common.isEmpty(msgId)) {
 			EmsMessengerAdminXrootMtrVO emaxm = emsMessageService.getEmassMessengerAdminXrootMtr(xRootMtr, Common.getAdminId(request), srcip, usr_id);
 			if(Common.isNotEmpty(emaxm)) {
-				msgId = Common.nvl(emaxm.getMsgId());
-				startRange = Common.diffOfDate(startDt.substring(0,8), msgId.substring(0,8));
-				endRange = Common.diffOfDate(endDt.substring(0,8), msgId.substring(0,8));
+				msgids = Common.nvl(emaxm.getMsgId());
+				startRange = Common.diffOfDate(startDt.substring(0,8), msgids.substring(0,8));
+				endRange = Common.diffOfDate(endDt.substring(0,8), msgids.substring(0,8));
 			}
 
 		}
-		if(Common.isEmpty(msgId) || (startRange < 0) || (endRange > 0)) {
+		if(Common.isEmpty(msgids) || (startRange < 0) || (endRange > 0)) {
 			sq = getMessengerMsgTotalQuery(request);
 		} else {
-			sq = getMessengerMsgNext(request, msgId, true);
+//			sq = getMessengerMsgNext(request, msgids, true);
+			sq = getMessengerMsgPrev(request, msgids, true);
 		}
 		MessengerEdcGroupVO result = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request), true, false);
 		return new XcnResponseVO(XcnRspCode.OK, result);
@@ -329,7 +330,7 @@ public class MessengerController {
 	public XcnResponseVO getMessengerMessagePrev(final HttpServletRequest request, final HttpSession session) throws Exception {
 		JSONObject param = Common.getParam(request);
 		String msgId = Common.nvl(param.get("msgId"));
-		SolrQuery prevQuery = getMessengerMsgPrev(request, msgId);
+		SolrQuery prevQuery = getMessengerMsgPrev(request, msgId, false);
 		MessengerEdcGroupVO result = solrEdcService.getMessengerGroupList(prevQuery, Common.getAdminId(request), true, false);
 
 		return new XcnResponseVO(XcnRspCode.OK, result);
@@ -366,6 +367,37 @@ public class MessengerController {
 
 		sq.setQuery(query + MESSENGER);
 		sq.setRows(limit);
+		sq.addSort("ctime", ORDER.desc);
+		sq.addSort("msgid", ORDER.desc);
+		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user");
+
+		return sq;
+	}
+
+	public SolrQuery getMessengerMsgNext(final HttpServletRequest request, final String msgId, final boolean lastMsgYn) throws Exception {
+		JSONObject param = Common.getParam(request);
+		String xRootMtr = Common.nvl(param.get("xRootMtr"));
+		String srcip = Common.nvl(param.get("srcip"));
+		String usr_id = Common.nvl(param.get("usr_id"));
+		String startDt = Common.nvl(param.get("startDt"));
+		String endDt = Common.nvl(param.get("endDt"));
+		String searchStr = Common.nvl(param.get("searchStr"));
+		int limit = Common.nvz(param.get("limit"), 10000);
+
+		SolrQuery sq = new SolrQuery();
+		String query = String.format("+ctime:[%s TO %s] +xrootmtr:\"%s\"", startDt, endDt, xRootMtr);
+
+		if(Common.isNotEmpty(usr_id)) query += String.format(" +userkey:\"%s\"", usr_id);
+
+		if(Common.isNotEmpty(msgId)) {
+			query += String.format(" +msgid:{%s TO *]", msgId);
+		}
+
+		if(Common.isNotEmpty(searchStr)) query += String.format(" +body:(*%s*) ", searchStr);
+
+		sq.setQuery(query + MESSENGER);
+		sq.setStart(Common.nvz(param.get("offset"), 0));
+		sq.setRows(limit);
 		sq.addSort("ctime", ORDER.asc);
 		sq.addSort("msgid", ORDER.asc);
 		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user");
@@ -373,7 +405,9 @@ public class MessengerController {
 		return sq;
 	}
 
-	public SolrQuery getMessengerMsgNext(final HttpServletRequest request, final String msgId, final boolean lastMsgYn) throws Exception {
+
+
+	public SolrQuery getMessengerMsgPrev(final HttpServletRequest request, final String msgId, final boolean lastMsgYn) throws Exception {
 		JSONObject param = Common.getParam(request);
 		String xRootMtr = Common.nvl(param.get("xRootMtr"));
 		String srcip = Common.nvl(param.get("srcip"));
@@ -394,50 +428,11 @@ public class MessengerController {
 		//이미 출력된 동시간대 데이터 제외
 		if(Common.isNotEmpty(msgId)) {
 			if(lastMsgYn) {
-				query += String.format(" +msgid:[%s TO *]", msgId);
+				query += String.format(" +msgid:[* TO %s]", msgId);
 			} else {
-				query += String.format(" +msgid:{%s TO *]", msgId);
+				query += String.format(" +msgid:[* TO %s}", msgId);
 			}
 		}
-
-
-		if(Common.isNotEmpty(searchStr)) query += String.format(" +body:(*%s*) ", searchStr);
-
-		sq.setQuery(query + MESSENGER);
-		sq.setStart(Common.nvz(param.get("offset"), 0));
-		sq.setRows(limit);
-		sq.addSort("ctime", ORDER.asc);
-		sq.addSort("msgid", ORDER.asc);
-		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user");
-
-		return sq;
-	}
-
-
-
-	public SolrQuery getMessengerMsgPrev(final HttpServletRequest request, final String msgId) throws Exception {
-		JSONObject param = Common.getParam(request);
-		String xRootMtr = Common.nvl(param.get("xRootMtr"));
-		String srcip = Common.nvl(param.get("srcip"));
-		String usr_id = Common.nvl(param.get("usr_id"));
-		String startDt = Common.nvl(param.get("startDt"));
-		String endDt = Common.nvl(param.get("endDt"));
-		String searchStr = Common.nvl(param.get("searchStr"));
-		int limit = Common.nvz(param.get("limit"), 10000);
-
-		SolrQuery sq = new SolrQuery();
-		String query = String.format("+ctime:[%s TO %s] +xrootmtr:\"%s\"", startDt, endDt, xRootMtr);
-
-//		if(Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
-
-		if(Common.isNotEmpty(usr_id)) query += String.format(" +userkey:\"%s\"", usr_id);
-//		else query += String.format(" -userkey:*");
-
-		//이미 출력된 동시간대 데이터 제외
-		if(Common.isNotEmpty(msgId)) {
-			query += String.format(" +msgid:[* TO %s}", msgId);
-		}
-
 		if(Common.isNotEmpty(searchStr)) query += String.format(" +body:(*%s*) ", searchStr);
 
 		sq.setQuery(query + MESSENGER);

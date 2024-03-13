@@ -838,7 +838,7 @@
         initGrid(grid, messageGridColumn);
         writeExportMenu('export_menu', 'messageListGrid', '<s:message code="DATA_ANALYSIS.ANALYSIS_CUSTOM"/> - <s:message code="analysis.freedom.ui.msglist"/>');
     }
-    grid.loadPageSize();
+    // grid.loadPageSize();
     grid.changePageSize = function(cnt){
         getData('Y');
     };
