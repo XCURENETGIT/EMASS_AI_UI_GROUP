@@ -528,9 +528,13 @@
 
             $(document).on("change",".insaSelctClass",function(){
                 if($(this).val() == 'delete' && current_select_count>11){
-                    $(this).parent().remove();
+
+                    $(this).prevAll('.num_list').first().remove();
+                    $(this).remove();
                     current_select_count = current_select_count-1;
-                    //alert(current_select_count)
+                    $('.num_list').each(function(index) {
+                        $(this).text(index + 1);
+                    });
                 }else if($(this).val() == 'delete' && current_select_count==11){
                     ui.alertMsg('<s:message code="userInfo.msg.colneed"/>');
                     $(this).val('').attr("selected", "selected");
