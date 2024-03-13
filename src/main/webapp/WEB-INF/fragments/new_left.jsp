@@ -19,6 +19,11 @@
 %>
 <style type="text/css">
 	a {cursor: pointer;}
+
+	.clicks{
+		color: #88B8FF !important;
+		font-weight: 400;
+	}
 </style>
 
 <script type="text/javascript">
@@ -37,6 +42,7 @@
 	let mainContext = "<%=context%>";
 	let sideBar;
 
+    var menuKey;
 	$(document).ready(function () {
 		createMenuList(0); //init Menu
 		sideBar = $("#sideBar");
@@ -72,7 +78,16 @@
 
 			currentMenuId = $(this).attr('menuid');
 			createMenuList(1);
-            $('a[menuid="'+menuId+'"]').attr('class','active')
+            if (menuId == "DASHBOARD_CUSTOM"){
+                $('.topMenuList a').each(function(){
+                    var href =$(this).attr('id');
+                    if(href.indexOf('menuKey='+menuKey) > -1) {
+                        $(this).attr('class', 'active')
+                    }
+                });
+            }else {
+                $('a[menuid="' + menuId + '"]').attr('class', 'active')
+            }
 			sideBar.show();
 		});
 	});
@@ -107,7 +122,7 @@
                     html += '<a menuClick id="' + menuList[k].menuLink + '" url="' + mainContext + '/' + menuList[k].menuLink + '" menuid="' + menuList[k].menuId + '">' + menuList[k].defaultName + '</a>';
 
                     //html += '<a menuClick id="' + menuList[k].menuLink + '" url="' + mainContext + '/' + menuList[k].menuLink + '" 'menuid=' + menuList[l].menuId + '>' + menuList[k].defaultName + '</a>';
-                    html += '<ul  id="' + menuList[k].menuId + '"  lastMenuUl>';
+                    html += '<ul  id="' + menuList[k].menuId + '"  lastMenuUl class="topMenuList">';
 					for (let l in menuList) {
                         if ((menuList[l].menuId == "CONSENT_MGMT") && (consentMenuEnable == "false")) continue;
 						if (menuList[l].pid == null || menuList[l].pid != menuList[k].menuId) continue;
@@ -126,16 +141,16 @@
 
 	/*  마우스 오버 */
 	$(document).on("mouseover", "a[menuClick]", function () {
-		$(this).attr('class', 'active');
+        $(this).addClass('clicks');
 	});
 	$(document).on("mouseout", "a[menuClick]", function () {
-		$(this).attr('class', '');
+        $(this).removeClass('clicks');
 	});
 	$(document).on("mouseover", "a[lastChildMenu]", function () {
-		$(this).attr('class', 'active');
+        $(this).addClass('clicks');
 	});
 	$(document).on("mouseout", "a[lastChildMenu]", function () {
-		$(this).attr('class', '');
+        $(this).removeClass('clicks');
 	});
 
 
@@ -167,7 +182,7 @@
 	<div class="gnbMenu" id="sideBar">
 		<h2 id="childMainMenuName"></h2>
 		<br>
-		<ul></ul>
+		<ul class="topMenuList"></ul>
 	</div>
 	<div class="setting">
 		<a href="javascript:;" id="systemSettingsMenu">
