@@ -79,7 +79,7 @@
 
 			currentMenuId = $(this).attr('menuid');
 			createMenuList(1);
-            if (menuId == "DASHBOARD_CUSTOM"){
+            if (currentMenuId === "DASHBOARD" && menuId ==="DASHBOARD_CUSTOM"){
                 $('.topMenuList a').each(function(){
                     var href =$(this).attr('id');
                     if(href.indexOf('menuKey='+menuKey) > -1) {
