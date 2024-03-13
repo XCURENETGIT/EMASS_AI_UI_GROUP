@@ -85,11 +85,11 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 				query.add("attachname_str",searchVO.getListData());
 				break;
 			case "messenger":
-				query.add(new String[]{"sender_str", "sname", "recvs", "recvs_name", "cc", "cname", "bcc"}, searchVO.getListData());
+				query.add(new String[]{"sender_str"}, searchVO.getListData());
 				query.add("svc1", "Q");
 				break;
 			case "mailid":
-				query.add(new String[]{"sender_str", "sname", "recvs", "recvs_name", "cc", "cname", "bcc"}, searchVO.getListData());
+				query.add(new String[]{"sender_str"}, searchVO.getListData());
 				query.and().beforeParen().add("svc1", "W", false).or().add("svc1", "M", false).or().add("svc12", "EMM", false).afterParen();
 				break;
 		}
