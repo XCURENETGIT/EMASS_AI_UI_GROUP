@@ -287,6 +287,7 @@ function getMessengerMessage(xRootmtr, srcip, usr_id, msgid) {
         xRootMtr: xRootmtr,
         startDt: startDt+"000000",
         endDt: endDt+"235959",
+        srcip : srcip,
         usr_id: usr_id,
         msgId: nvl(msgid),
         limit: detailLimit,
