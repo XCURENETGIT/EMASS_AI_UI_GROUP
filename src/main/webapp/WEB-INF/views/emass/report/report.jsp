@@ -445,7 +445,7 @@
 			</div>
 			<ul class="dropdown-menu dropdown-menu-right"  role="menu">
 				<li><a href="#" class="excel_link3"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;<s:message code="common.msg.excel"/>(xlsx)</a></li>
-				<li><a href="#" class="pdf_link3"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;(pdf)</a></li>
+				<li><a href="#" class="pdf_link3"><span class="fa fa-file-excel-o" style="font-size:16px"></span>&nbsp;PDF</a></li>
 				<li><a href="#" class="print_link2"><span class="glyphicon glyphicon-print"></span>&nbsp;<s:message code="common.msg.print"/></a></li>
 			</ul>
 		</div>

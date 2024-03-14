@@ -83,7 +83,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="row top_space" style="height: calc(100% - 370px);">
+			<div class="row top_space" style="height: calc(100% - 450px);">
 				<div class="col-xs-12" >
 					<div id="mailFormListGrid" class="slickGrid gridArea" style="max-height:200px; overflow-y: scroll !important;" ></div>
 				</div>
@@ -91,7 +91,7 @@
 			<div class="row">
 				<div class="col-sm-12">
 					<label for="formContent" class="control-label"><s:message code="mail.form.content"/></label>
-					<textarea class="form-control" style="width:100%; height: 200px; margin-top: 5px; background-color: #f8f6f6; margin-left: 1px;" name="formContent" id="formContent" readonly="readonly"></textarea>
+					<textarea class="form-control" style="width:100%; height: 300px; margin-top: 5px; background-color: #f8f6f6; margin-left: 1px;" name="formContent" id="formContent" readonly="readonly"></textarea>
 					</div>
 				</div>
 			</div>
