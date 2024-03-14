@@ -494,6 +494,9 @@ function makeFileList(data) {
 
 
 function userSelectBox(data, srcip, usr_id){
+    console.log(data);
+    console.log(srcip);
+    console.log(usr_id);
     var name = $('#selectUserInfo').attr('data-name');
     var str = '';
     for(var i=0; i<data.length; i++){
@@ -507,12 +510,12 @@ function userSelectBox(data, srcip, usr_id){
         else if( nvl(data[i].usr_id) != '') selectUserTitle = data[i].usr_id;
         else if( nvl(data[i].srcip) != '') selectUserTitle = data[i].srcip;
 
-        $('#selectUserInfo').attr('data-srcip', nvl(ip));
+        $('#selectUserInfo').attr('data-srcip', nvl(data[i].srcip));
         $('#selectUserInfo').attr('data-name', nvl(data[i].name));
         $('#selectUserInfo').attr('data-usrid', nvl(data[i].usr_id));
         $('#selectUserInfo').html(selectUserTitle);
 
-        str += '<li class="selectUser clickUser" data-name="'+nvl(data[i].name)+'" data-srcip="'+nvl(ip)+'" data-usrid="'+nvl(data[i].usr_id)+'"><a href="javascript:void(0);">'+selectUserTitle+'</a></li>';
+        str += '<li class="selectUser clickUser" data-name="'+nvl(data[i].name)+'" data-srcip="'+nvl(data[i].srcip)+'" data-usrid="'+nvl(data[i].usr_id)+'"><a href="javascript:void(0);">'+selectUserTitle+'</a></li>';
     }
     $('#selectUser_menu').html(str);
     getDetailData();
@@ -839,21 +842,10 @@ function makeList2(nextFlag) {
             str += '<span>' + attachnameArray[0] + '<br/>';
             str += attachsizeArray[0] + 'KB</span>';
             str += '<button class="btnchatdown downlodadBtn"></button></p>';
-            if (obj.body_snippet !== undefined) {
-                let maxLength = attachnameArray[0].length + 11; // attachnameArray[0]의 길이에 6을 더한 값
+            if(obj.body_snippet==null || nvl( obj.body_snippet,'')=='') {
                 let snippet = obj.body_snippet.replaceAll('\n', '<br/>');
-                if (snippet.length > maxLength) {
-                    for (var j = 0; j < snippet.length - maxLength; j += maxLength) {
-                        if (j === 0) {
-                            str += "<hr style='border: 1px solid #ddd;'>";
-                        } else if (j % maxLength === 0) {
-                            str += "<br>";
-                        }
-                        str += snippet.substring(j, Math.min(j + maxLength, snippet.length));
-                    }
-                } else {
-                    str += snippet;
-                }
+                str += "<hr style='border: 1px solid #ddd;'>";
+                str += snippet;
             }
         } else {
             if (obj.body_snippet != undefined) str += '' + obj.body_snippet.replaceAll('\n', '<br/>') + '';
@@ -918,27 +910,15 @@ function makeList(nextFlag) {
             str += '<span>' + attachnameArray[0] + '<br/>';
             str += attachsizeArray[0] + 'KB</span>';
             str += '<button class="btnchatdown downlodadBtn"></button></p>';
-            if (obj.body_snippet !== undefined) {
-                let maxLength = attachnameArray[0].length + 11; // attachnameArray[0]의 길이에 6을 더한 값
+            if(obj.body_snippet==null || nvl( obj.body_snippet,'')=='') {
                 let snippet = obj.body_snippet.replaceAll('\n', '<br/>');
-                if (snippet.length > maxLength) {
-                    for (var j = 0; j < snippet.length - maxLength; j += maxLength) {
-                        if (j === 0) {
-                            str += "<hr style='border: 1px solid #ddd;'>";
-                        } else if (j % maxLength === 0) {
-                            str += "<br>";
-                        }
-                        str += snippet.substring(j, Math.min(j + maxLength, snippet.length));
-                    }
-                } else {
+                str += "<hr style='border: 1px solid #ddd;'>";
                     str += snippet;
-                }
             }
         } else {
             if (obj.body_snippet != undefined) str += '' + obj.body_snippet.replaceAll('\n', '<br/>') + '';
         }
         str += '</div>';
-
         str += ' <div class="bubbleDate mat4">';
         str += '<span>' + obj.sender + '</span> &nbsp';
         str += '<span>' + obj.ctime + '</span> &nbsp';
@@ -990,21 +970,10 @@ function makePrevList() {
             str += '<span>' + attachnameArray[0] + '<br/>';
             str += attachsizeArray[0] + 'KB</span>';
             str += '<button class="btnchatdown downlodadBtn"></button></p>';
-            if (obj.body_snippet !== undefined) {
-                let maxLength = attachnameArray[0].length + 11; // attachnameArray[0]의 길이에 6을 더한 값
+            if(obj.body_snippet==null || nvl( obj.body_snippet,'')=='') {
                 let snippet = obj.body_snippet.replaceAll('\n', '<br/>');
-                if (snippet.length > maxLength) {
-                    for (var j = 0; j < snippet.length - maxLength; j += maxLength) {
-                        if (j === 0) {
-                            str += "<hr style='border: 1px solid #ddd;'>";
-                        } else if (j % maxLength === 0) {
-                            str += "<br>";
-                        }
-                        str += snippet.substring(j, Math.min(j + maxLength, snippet.length));
-                    }
-                } else {
-                    str += snippet;
-                }
+                str += "<hr style='border: 1px solid #ddd;'>";
+                str += snippet;
             }
         } else {
             if (obj.body_snippet != undefined) str += '' + obj.body_snippet.replaceAll('\n', '<br/>') + '';

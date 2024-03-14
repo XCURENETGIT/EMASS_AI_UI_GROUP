@@ -3,6 +3,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <style>
 
+
+	pre{
+		background-color: transparent; !important;
+		font-size: 14px;!important;
+		color: black;
+	}
+	code{
+		color: black;
+	}
 </style>
 
 
@@ -183,7 +192,7 @@
 
             $(document).on('click', '.me', function (e) {
                 var xrootmtr = $(this).parent().attr('xrootmtr');
-                var srcip = $(this).parent().attr('srcip');
+                var srcip = $(this).parent().attr('userid');
                 var id = $(this).parent().attr('id');
                 updateEmassMessengerAdminXrootMtr(xrootmtr, id, srcip);
 
@@ -192,7 +201,7 @@
 
             $(document).on('click', '.you', function (e) {
                 var xrootmtr = $(this).parent().attr('xrootmtr');
-                var srcip = $(this).parent().attr('srcip');
+                var srcip = $(this).parent().attr('userid');
                 var id = $(this).parent().attr('id');
                 updateEmassMessengerAdminXrootMtr(xrootmtr, id, srcip);
 
@@ -413,6 +422,7 @@
                 var xrootmtr = $('#xrootmtr').text();
                 var srcip = $('#srcip').text();
                 var usr_id = $('#usr_id').text();
+
                 var id = $(this).parent().parent().attr('id');
                 updateEmassMessengerAdminXrootMtr(xrootmtr, id, srcip, usr_id);
 
