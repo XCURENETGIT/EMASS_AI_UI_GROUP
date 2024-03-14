@@ -515,11 +515,13 @@
             if (alarmVal.startDateSelect == 'Y') searchDateStr += '<s:message code="condition.yesterday_str"/> ';
             else if (alarmVal.startDateSelect == 'T') searchDateStr += '<s:message code="condition.today_str"/> ';
             else if (alarmVal.startDateSelect == 'W') searchDateStr += '<s:message code="condition.sevenago"/> ';
+            else if (alarmVal.startDateSelect == 'M') searchDateStr += '<s:message code="condition.month" arguments="1" argumentSeparator="|"/> ';
             searchDateStr += '<s:message code="condition.clock" arguments="'+alarmVal.startTimeSelect+'" />';
             searchDateStr += ' ~ ';
             if (alarmVal.endDateSelect == 'Y') searchDateStr += '<s:message code="condition.yesterday_str"/> ';
             else if (alarmVal.endDateSelect == 'T') searchDateStr += '<s:message code="condition.today_str"/> ';
             else if (alarmVal.endDateSelect == 'W') searchDateStr += '<s:message code="condition.sevenago"/> ';
+            else if (alarmVal.endDateSelect == 'M') searchDateStr += '<s:message code="condition.month" arguments="1" argumentSeparator="|"/>';
             searchDateStr += '<s:message code="condition.time" arguments="'+alarmVal.endTimeSelect+',59,59" />';
 
             if (alarmCycle != 'H') searchStr = setConditionValStr(searchDateStr, '<s:message code="condition.period"/>');

@@ -94,7 +94,7 @@
     <script type="text/javascript">
         var infoFeedbackYn = '<%=infoFeedbackYn%>';
         var infoFeedbackConf = '<%=infoFeedbackConf%>';
-        var epmsgType = '<%=epmsgType%>';
+        <%--var epmsgType = '<%=epmsgType%>';--%>
         var rsUppercase = '<%=rsUppercase%>';
         $(document).ready(function () {
             conditionSetup();
@@ -104,7 +104,7 @@
             initInterestUser();
             initUserGroupList();
             loadCondition();
-            initEpmsg();
+            // initEpmsg();
 
             document.getElementById('addUrlBtn').addEventListener('click', function() {
                 // Create a new input field
@@ -121,11 +121,11 @@
             if (infoFeedbackConf == 'true' && infoFeedbackYn == 'Y') $('#infoFeedbackDiv, #feedbackBtn, #sctDiv').show();
             else $('#infoFeedbackDiv, #feedbackBtn, #sctDiv').hide();
 
-            if (epmsgType == "") {
-                $('#epmsgList').hide();
-            } else {
-                $('#epmsgList').show();
-            }
+            // if (epmsgType == "") {
+            //     $('#epmsgList').hide();
+            // } else {
+            //     $('#epmsgList').show();
+            // }
 
             $(document).on('click', '.filterAddBtn', function () {
                 var code = $(this).attr('id').substring(0, $(this).attr('id').length - 3);
@@ -341,7 +341,7 @@
             $('#sizeStartVal').val(0);
             $('#sizeEndVal').val(0);
 
-            $('#epmsgTypeSelect').selectpicker('val', '');
+            // $('#epmsgTypeSelect').selectpicker('val', '');
 
             $('#sizeFilterType').selectpicker('val', '');
             $('#sizeFilterSelect').selectpicker('val', 'L');
@@ -381,7 +381,7 @@
             condition.userGroupName = $('#userGroupSeq option:selected').text();
             condition.interGroup_not = $('[name=interGroup_not]').is(":checked") ? 'Y' : '';
 
-            condition.epmsgType = arrayToString($('#epmsgTypeSelect').selectpicker('val'));
+            // condition.epmsgType = arrayToString($('#epmsgTypeSelect').selectpicker('val'));
             if (alarmCycle != 'H') {
                 condition.startDateSelect = $('#startDateSelect option:selected').val();
                 condition.endDateSelect = $('#endDateSelect option:selected').val();
@@ -614,8 +614,8 @@
                 $('#userGroupSeq').selectpicker('val', alarmVal.userGroupSeq);
                 $('#userGroupSeq').selectpicker("refresh");
 
-                $('#epmsgTypeSelect').selectpicker('val', stringToArray(alarmVal.epmsgType));
-                $('#epmsgTypeSelect').selectpicker("refresh");
+                // $('#epmsgTypeSelect').selectpicker('val', stringToArray(alarmVal.epmsgType));
+                // $('#epmsgTypeSelect').selectpicker("refresh");
             }, 500);
         }
 
@@ -1020,26 +1020,26 @@
             });
         }
 
-        /**
-         *  대외비 목록 조회
-         */
-        function initEpmsg() {
-            $('#epmsgTypeSelect').selectpicker({
-                size: 15,
-                width: '415px',
-                noneSelectedText: '<s:message code="condition.epmsgType.all"/>',
-                noneResultsText: '<s:message code="common.msg.noresult"/> ',
-                selectAllText: '<s:message code="common.msg.select_all"/>',
-                deselectAllText: '<s:message code="common.msg.unselect_all"/>'
-            });
-            var epmsg_type = epmsgType.split(',');
-            var result = '';
-            for (var i = 0; i < epmsg_type.length; i++) {
-                result += '<option value="' + epmsg_type[i] + '">' + epmsg_type[i] + '</option>';
-            }
-            $("#epmsgTypeSelect").html(result);
-            $("#epmsgTypeSelect").selectpicker('refresh');
-        }
+        <%--/**--%>
+        <%-- *  대외비 목록 조회--%>
+        <%-- */--%>
+        <%--function initEpmsg() {--%>
+        <%--    $('#epmsgTypeSelect').selectpicker({--%>
+        <%--        size: 15,--%>
+        <%--        width: '415px',--%>
+        <%--        noneSelectedText: '<s:message code="condition.epmsgType.all"/>',--%>
+        <%--        noneResultsText: '<s:message code="common.msg.noresult"/> ',--%>
+        <%--        selectAllText: '<s:message code="common.msg.select_all"/>',--%>
+        <%--        deselectAllText: '<s:message code="common.msg.unselect_all"/>'--%>
+        <%--    });--%>
+        <%--    var epmsg_type = epmsgType.split(',');--%>
+        <%--    var result = '';--%>
+        <%--    for (var i = 0; i < epmsg_type.length; i++) {--%>
+        <%--        result += '<option value="' + epmsg_type[i] + '">' + epmsg_type[i] + '</option>';--%>
+        <%--    }--%>
+        <%--    $("#epmsgTypeSelect").html(result);--%>
+        <%--    $("#epmsgTypeSelect").selectpicker('refresh');--%>
+        <%--}--%>
 
         /**
          * 관심사용자 리스트 조회
@@ -1233,13 +1233,13 @@
                                 data-actions-box="true"></select>
                     </li>
 
-                    <li id="epmsgList">
-                        <label for="epmsgTypeSelect" class="col-xs-3"><s:message
-                                code="condition.epmsgType.list"/></label>
-                        <select id="epmsgTypeSelect" class="selectpicker col-xs" data-style="btn-default btn-sm"
-                                multiple data-show-subtext="true" data-live-search="true"
-                                data-actions-box="true"></select>
-                    </li>
+<%--                    <li id="epmsgList">--%>
+<%--                        <label for="epmsgTypeSelect" class="col-xs-3"><s:message--%>
+<%--                                code="condition.epmsgType.list"/></label>--%>
+<%--                        <select id="epmsgTypeSelect" class="selectpicker col-xs" data-style="btn-default btn-sm"--%>
+<%--                                multiple data-show-subtext="true" data-live-search="true"--%>
+<%--                                data-actions-box="true"></select>--%>
+<%--                    </li>--%>
 
                     <li>
                         <label for="day_msg" class="col-xs-3"><s:message
@@ -1288,10 +1288,10 @@
                             <span style="padding: 5px;float: left;">~</span>
                             <div class="selecBtnArea" style="width:auto;float: left; margin-right: 3px;">
                                 <select class="selectpicker col-xs" data-style="btn-primary" id="endDateSelect">
-                                    <option value="Y" selected><s:message code="condition.yesterday_str"/></option>
-                                    <option value="T"><s:message code="condition.today_str"/></option>
+                                    <option value="M"><s:message code="condition.month" arguments="1"/></option>
                                     <option value="W"><s:message code="condition.sevenago"/></option>
-                                    <option value="M"><s:message code="condition.month" arguments="1" argumentSeparator="|"/></option>
+                                    <option value="Y"><s:message code="condition.yesterday_str"/></option>
+                                    <option value="T" selected><s:message code="condition.today_str"/></option>
                                 </select>
                             </div>
                             <div class="selecBtnArea" style="width:100%; padding-left:3px;">
