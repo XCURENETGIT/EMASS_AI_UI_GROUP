@@ -82,6 +82,15 @@
 
 
 
+            var today = new Date();
+            today.setDate(today.getDate() - 7);
+
+            document.getElementById("startDt").valueAsDate = today;
+            document.getElementById("endDt").valueAsDate = new Date();
+
+            document.getElementById("startSubDt").valueAsDate = today;
+            document.getElementById("endSubDt").valueAsDate = new Date();
+
             $(document).click(function(){
                 $('.imgPreviewDiv').hide();
             });

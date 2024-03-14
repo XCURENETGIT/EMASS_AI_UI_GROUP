@@ -2691,12 +2691,12 @@
                                         <select id="serviceType" title="<s:message code="condition.service.all"/>" class="selectpicker" data-style="btn-default" multiple data-show-subtext="true" data-actions-box="true" data-live-search="true"></select>
                                     </div>
                                     <!--  대외비 목록 -->
-                                    <div class="condition_item" id="epmsgList">
-                                        <div class="condition_divider"></div>
-                                        <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.epmsgType.list"/></div>
-                                        <select id="initEpmsg" title="<s:message code="condition.epmsgType.all"/>" class="selectpicker" data-style="btn-default" multiple data-show-subtext="true" data-actions-box="true"data-live-search="true"></select>
-                                        <input type="hidden" id="initEpmsgName" />
-                                    </div>
+<%--                                    <div class="condition_item" id="epmsgList">--%>
+<%--                                        <div class="condition_divider"></div>--%>
+<%--                                        <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.epmsgType.list"/></div>--%>
+<%--                                        <select id="initEpmsg" title="<s:message code="condition.epmsgType.all"/>" class="selectpicker" data-style="btn-default" multiple data-show-subtext="true" data-actions-box="true"data-live-search="true"></select>--%>
+<%--                                        <input type="hidden" id="initEpmsgName" />--%>
+<%--                                    </div>--%>
                                     <!-- Knox 첨부 여부  -->
                                     <div class="condition_item" id ="KnoxAttachYN">
                                         <div class="condition_divider"></div>

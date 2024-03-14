@@ -8,7 +8,7 @@
 	String firstAdminYn = Common.getFirstAdminYn(session);
 	String statType = Common.nvl(request.getParameter("statType"));
 	String recvsJikgub = Config.getString("recvs.jikgub.use");
-	String epmsgType = Config.getString("message.epmsg.val");
+//	String epmsgType = Config.getString("message.epmsg.val");
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -151,7 +151,7 @@
 		var isConsent = false;
 		var erroColumn = "";
 
-		var epmsgType = '<%=epmsgType%>';
+		<%--var epmsgType = '<%=epmsgType%>';--%>
 
 		var statType = "<%=statType%>";
 		var isOCR = <%=isOCR%>;
@@ -189,7 +189,7 @@
 			} else {
 				$('#recvs_poidTr').hide();
 			}
-			initEpmsg();
+			// initEpmsg();
 			initSetDisplay();
 
 			var dateObj = new Date();
@@ -235,18 +235,18 @@
 			});
 
 
-			$('#epmsg_type').selectpicker({
-				container:'body',
-				size: 'auto',
-				size: 15,
-				width:'260px',
-				searchLabel:true,
-				style:'btn-xs btn-default',
-				noneSelectedText:'<s:message code="condition.epmsgType.all"/>',
-				noneResultsText:'<s:message code="common.msg.noresult"/>'+' ',
-				selectAllText:'<s:message code="common.msg.select_all"/>',
-				deselectAllText:'<s:message code="common.msg.unselect_all"/>',
-			});
+			<%--$('#epmsg_type').selectpicker({--%>
+			<%--	container:'body',--%>
+			<%--	size: 'auto',--%>
+			<%--	size: 15,--%>
+			<%--	width:'260px',--%>
+			<%--	searchLabel:true,--%>
+			<%--	style:'btn-xs btn-default',--%>
+			<%--	noneSelectedText:'<s:message code="condition.epmsgType.all"/>',--%>
+			<%--	noneResultsText:'<s:message code="common.msg.noresult"/>'+' ',--%>
+			<%--	selectAllText:'<s:message code="common.msg.select_all"/>',--%>
+			<%--	deselectAllText:'<s:message code="common.msg.unselect_all"/>',--%>
+			<%--});--%>
 
 
 			$('#allOfus').selectpicker({
@@ -516,15 +516,15 @@
 
 
 		/* KNOX */
-		function initEpmsg(){
-			var epmsg_type = epmsgType.split(',');
-			var result='';
-			for(var i=0 ; i<epmsg_type.length; i++){
-				result+='<option value="' + epmsg_type[i]+ '">' +  epmsg_type[i] + '</option>';
-			}
-			$("#epmsg_type").html(result);
-		//	$('#epmsg_type').selectpicker('refresh');
-		}
+		// function initEpmsg(){
+		// 	var epmsg_type = epmsgType.split(',');
+		// 	var result='';
+		// 	for(var i=0 ; i<epmsg_type.length; i++){
+		// 		result+='<option value="' + epmsg_type[i]+ '">' +  epmsg_type[i] + '</option>';
+		// 	}
+		// 	$("#epmsg_type").html(result);
+		// //	$('#epmsg_type').selectpicker('refresh');
+		// }
 
 
 
@@ -1122,21 +1122,21 @@
 						addQueryText = queryAddMinus;
 						addQueryText += "attachname_str:noname";
 						break;
-					case "epmsg_type":
-						var epmsg_type = $('#epmsg_type').selectpicker('val');
-
-						if(epmsg_type){
-							addQueryText = queryAddMinus + "epmsg_type:(";
-
-							for(var i = 0; i < epmsg_type.length; i++) {
-								if(i > 0) {
-									addQueryText += " "
-								}
-								addQueryText += '' + epmsg_type[i] + '*';
-							}
-							addQueryText += ")";
-						}
-						break;
+					// case "epmsg_type":
+					// 	var epmsg_type = $('#epmsg_type').selectpicker('val');
+					//
+					// 	if(epmsg_type){
+					// 		addQueryText = queryAddMinus + "epmsg_type:(";
+					//
+					// 		for(var i = 0; i < epmsg_type.length; i++) {
+					// 			if(i > 0) {
+					// 				addQueryText += " "
+					// 			}
+					// 			addQueryText += '' + epmsg_type[i] + '*';
+					// 		}
+					// 		addQueryText += ")";
+					// 	}
+					// 	break;
 					case "reprocess":
 						if(queryAddMinus == '+') addQueryText = "+reprocess:1";
 						else addQueryText = "+reprocess:0";
@@ -1435,17 +1435,17 @@
 									<td></td>
 								</tr>
 								<%-- KNOX 메일 종류 --%>
-								<tr>
-									<th><s:message code="condition.epmsgType.list"/></th>
-									<td>
-										<select id="epmsg_type" class="selectpicker small border-radius-none border-radius-none" data-style="btn-default" multiple data-show-subtext="true" data-live-search="true" data-actions-box="true"></select>
-									</td>
-									<td><button type="button" class="btn btn-xs btn-success queryAdd" data-queryType="epmsg_type">AND</button></td>
-									<td style="text-align: center;"><button type="button" class="btn btn-xs btn-info queryOr" data-queryType="epmsg_type">OR</button></td>
-									<td><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="epmsg_type"><i class="glyphicon glyphicon-minus"></i></button></td>
-									<td>epmsg_type</td>
-									<td></td>
-								</tr>
+<%--								<tr>--%>
+<%--									<th><s:message code="condition.epmsgType.list"/></th>--%>
+<%--									<td>--%>
+<%--										<select id="epmsg_type" class="selectpicker small border-radius-none border-radius-none" data-style="btn-default" multiple data-show-subtext="true" data-live-search="true" data-actions-box="true"></select>--%>
+<%--									</td>--%>
+<%--									<td><button type="button" class="btn btn-xs btn-success queryAdd" data-queryType="epmsg_type">AND</button></td>--%>
+<%--									<td style="text-align: center;"><button type="button" class="btn btn-xs btn-info queryOr" data-queryType="epmsg_type">OR</button></td>--%>
+<%--									<td><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="epmsg_type"><i class="glyphicon glyphicon-minus"></i></button></td>--%>
+<%--									<td>epmsg_type</td>--%>
+<%--									<td></td>--%>
+<%--								</tr>--%>
 								<tr>
 									<th><s:message code="condition.receive_send"/></th>
 									<td>
