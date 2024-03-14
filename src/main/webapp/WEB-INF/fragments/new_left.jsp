@@ -14,7 +14,7 @@
 	boolean infoFeedbackConf = Config.getBoolean("info.feedback.used");
 	boolean consentMenuEnable = Config.getBoolean("consent.menu.enable");
 	boolean infoHynixConf = Config.getBoolean("info.hynix.used");
-	String infoFeedbackYn = Common.getInfoFeedbackYn(session);
+	boolean infoFeedbackYn = Config.getBoolean("info.feedback.used");
 	JSONObject ntpInfo = NtpScheduler.ntpStatus;
 	String menuKey = Common.nvl(Common.getParam(request).get("menuKey"));
 %>
@@ -115,6 +115,7 @@
 			}
 			$('#gnb').find('#topMenu').html(html);
 		} else {
+            console.log(infoFeedbackYn)
 			let html = '';
 			for (let k in menuList) {
 				if (menuList[k].pid == currentMenuId && menuList[k].pid != null) {
@@ -126,6 +127,7 @@
                     html += '<ul  id="' + menuList[k].menuId + '"  lastMenuUl class="topMenuList">';
 					for (let l in menuList) {
                         if ((menuList[l].menuId == "CONSENT_MGMT") && (consentMenuEnable == "false")) continue;
+                        if ((menuList[l].menuId == "STAT_INFOTYPE") && (infoFeedbackYn  == "false")) continue;
 						if (menuList[l].pid == null || menuList[l].pid != menuList[k].menuId) continue;
 						html += '<li><span>-</span>';
 						html += '<a lastChildMenu  url="' + mainContext + '/' + menuList[l].menuLink + '"class="topMenu ' + menuList[l].menuId + ' menuList"' + 'menuid=' + menuList[l].menuId + '>';
