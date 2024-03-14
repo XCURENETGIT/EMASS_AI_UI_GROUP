@@ -3120,7 +3120,7 @@
                             <div style="border-top:1px solid #ddd; position: relative; background: #fff;">
 
                                 <div class="condition_top_sub"></div>
-                                <div class="condition_top">▲</div>
+                                <div class="condition_top" style="margin-left: 1px;">▲</div>
 
                                 <div class="searchButtonArea p12" style="position: relative;">
                                     <div class="condition_item">
