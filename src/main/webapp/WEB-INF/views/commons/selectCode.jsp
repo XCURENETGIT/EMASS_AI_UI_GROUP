@@ -194,11 +194,11 @@
                 if (codeType == 'regexp') {
                     var code = codeArr[i].split('%');
                     data.push({'code': code[0], 'codeName': conmArr[i].substring(0, conmArr[i].indexOf('(')), 'count': code[1]});
-                    data.push({
-                        'code': code[0],
-                        'codeName': codeName,
-                        'count': code[1]
-                    });
+                    // data.push({
+                    //     'code': code[0],
+                    //     'codeName': codeName,
+                    //     'count': code[1]
+                    // });
                 } else {
                     if (codeType == 'user'||codeType == 'senders'||codeType == 'receivers') {
                         if (codeArr.length==1){
