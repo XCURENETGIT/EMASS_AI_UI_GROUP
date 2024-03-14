@@ -547,16 +547,20 @@
         if(startDtSelect == '' || startDtSelect == undefined) return JSON.stringify(dashCondition);
 
         var startMinusDay = 0;
+        var startMinusMouth=0;
         var endMinusDay = 0;
+        var endMinusMouth=0;
         if(startDtSelect == 'Y') startMinusDay = 1;
         else if(startDtSelect == 'W') startMinusDay = 7;
+        else if(startDtSelect == 'M') startMinusMouth = 1;
 
         if(endDtSelect == 'Y') endMinusDay = 1;
         else if(endDtSelect == 'W') endMinusDay = 7;
+        else if(endDtSelect == 'M') endMinusMouth = 1;
 
         var dateObj = new Date();
-        var startDate = new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()-startMinusDay, startTimeSelect, 00, 00 );
-        var endDate = new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()-endMinusDay, endTimeSelect, 59, 59 );
+        var startDate = new Date( dateObj.getFullYear(), dateObj.getMonth()-startMinusMouth, dateObj.getDate()-startMinusDay, startTimeSelect, 00, 00 );
+        var endDate = new Date( dateObj.getFullYear(), dateObj.getMonth()-endMinusMouth, dateObj.getDate()-endMinusDay, endTimeSelect, 59, 59 );
 
         dashCondition.startDt = startDate.format('yyyymmddHHnnss');
         dashCondition.endDt = endDate.format('yyyymmddHHnnss');
@@ -626,14 +630,16 @@
     {
         var searchStr  = '';
         var searchDateStr = '';
-        if ( alarmVal.startDateSelect == 'Y' ) searchDateStr += '<s:message code="condition.yesterday_str"/> ';
-        else if ( alarmVal.startDateSelect == 'T' ) searchDateStr += '<s:message code="condition.today_str"/> ';
-        else if ( alarmVal.startDateSelect == 'W' ) searchDateStr += '<s:message code="condition.sevenago"/> ';
+        if (alarmVal.startDateSelect == 'Y') searchDateStr += '<s:message code="condition.yesterday_str"/> ';
+        else if (alarmVal.startDateSelect == 'T') searchDateStr += '<s:message code="condition.today_str"/> ';
+        else if (alarmVal.startDateSelect == 'W') searchDateStr += '<s:message code="condition.sevenago"/> ';
+        else if (alarmVal.startDateSelect == 'M') searchDateStr += '<s:message code="condition.month" arguments="1" argumentSeparator="|"/> ';
         searchDateStr += '<s:message code="condition.clock" arguments="'+alarmVal.startTimeSelect+'" />';
         searchDateStr += ' ~ ';
-        if ( alarmVal.endDateSelect == 'Y' ) searchDateStr += '<s:message code="condition.yesterday_str"/> ';
-        else if ( alarmVal.endDateSelect == 'T' ) searchDateStr += '<s:message code="condition.today_str"/> ';
-        else if ( alarmVal.endDateSelect == 'W' ) searchDateStr += '<s:message code="condition.sevenago"/> ';
+        if (alarmVal.startDateSelect == 'Y') searchDateStr += '<s:message code="condition.yesterday_str"/> ';
+        else if (alarmVal.startDateSelect == 'T') searchDateStr += '<s:message code="condition.today_str"/> ';
+        else if (alarmVal.startDateSelect == 'W') searchDateStr += '<s:message code="condition.sevenago"/> ';
+        else if (alarmVal.startDateSelect == 'M') searchDateStr += '<s:message code="condition.month" arguments="1" argumentSeparator="|"/> ';
         searchDateStr += '<s:message code="condition.time" arguments="'+alarmVal.endTimeSelect+',59,59" />';
 
         if(alarmCycle != 'H') searchStr = setConditionValStr( searchDateStr, '<s:message code="condition.period"/>');
@@ -1012,13 +1018,23 @@
 
         var startDt = dashCondition.startDt;
         var endDt = dashCondition.endDt;
-
+        console.log(startDt);
+        console.log(endDt);
         var startDtStr = startDt.substring(0, 4) +'-'+ startDt.substring(4, 6) +'-'+ startDt.substring(6, 8)+' '+startDt.substring(8, 10) + ':'+startDt.substring(10, 12)+':'+startDt.substring(12, startDt.length);
         var endDtStr = endDt.substring(0, 4) +'-'+ endDt.substring(4, 6) +'-'+ endDt.substring(6, 8)+' '+endDt.substring(8, 10) + ':'+endDt.substring(10, 12)+':'+endDt.substring(12, startDt.length);
         var dateMsg = '<s:message code="custom.today"/>';
-        if( startDtSelect == 'Y' ){
+        if( startDtSelect == 'Y' ){ //시작: 어제
             dateMsg = '<s:message code="custom.yesterday"/>';
             if( endDtSelect == 'T' ) dateMsg += '~<s:message code="custom.today"/>';
+        }else if (startDtSelect == 'W'){ // 시작 : 7일전
+            dateMsg = '<s:message code="condition.sevenago"/>';
+            if (endDtSelect == 'Y') dateMsg += '~<s:message code="condition.yesterday_str"/>';
+            else if (endDtSelect == 'T') dateMsg += '~<s:message code="custom.today"/>';
+        }else if (startDtSelect == 'M'){ //시작 : 한달전
+            dateMsg = '<s:message code="condition.month" arguments="1" argumentSeparator="|"/>';
+            if (endDtSelect == 'Y') dateMsg += '~<s:message code="condition.yesterday_str"/>';
+            else if (endDtSelect == 'T') dateMsg += '~<s:message code="custom.today"/>';
+            else if (endDtSelect == 'W') dateMsg += '~<s:message code="condition.sevenago"/>';
         }
 
         var obj = $(node.html);

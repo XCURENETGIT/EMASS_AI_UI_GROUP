@@ -192,6 +192,7 @@
                     opener.printAlarmValStr(alarmCycle, alarmVal);
                     self.close();
                 } catch (e) {
+                    console.log(e);
                     alert('<s:message code="common.msg.connect.error"/>');
                     return;
                 }
@@ -224,13 +225,13 @@
 
         function loadCondition() {
             var alarmCycle = opener.$('#alarmCycleGroup input:radio:checked').val();
-            if (alarmCycle == '' || alarmCycle == null) {
-                $('#startDateSelect option[value=W]').hide();
-                $('#endDateSelect option[value=W]').hide();
-            } else {
+            // if (alarmCycle == '' || alarmCycle == null) {
+            //     $('#startDateSelect option[value=W]').hide();
+            //     $('#endDateSelect option[value=W]').hide();
+            // } else {
                 $('#startDateSelect option[value=W]').show();
                 $('#endDateSelect option[value=W]').show();
-            }
+            // }
             $('#busiSelect').selectpicker({
                 size: 'auto',
                 searchLabel: true
@@ -1247,9 +1248,12 @@
                             <div class="selecBtnArea" style="width:auto;float: left;">
                                 <select class="selectpicker col-xs" data-style="btn-primary" id="startDateSelect"
                                         style="width: 1000px;">
-                                    <option value="Y" selected><s:message code="condition.yesterday_str"/></option>
-                                    <option value="T"><s:message code="condition.today_str"/></option>
+                                    <option value="M"><s:message code="condition.month" arguments="1"/></option>
                                     <option value="W"><s:message code="condition.sevenago"/></option>
+                                    <option value="Y"><s:message code="condition.yesterday_str"/></option>
+                                    <option value="T" selected><s:message code="condition.today_str"/></option>
+
+
                                 </select>
                             </div>
                             <div class="selecBtnArea" style="width:auto; padding-left: 3px;float: left;">
@@ -1287,6 +1291,7 @@
                                     <option value="Y" selected><s:message code="condition.yesterday_str"/></option>
                                     <option value="T"><s:message code="condition.today_str"/></option>
                                     <option value="W"><s:message code="condition.sevenago"/></option>
+                                    <option value="M"><s:message code="condition.month" arguments="1" argumentSeparator="|"/></option>
                                 </select>
                             </div>
                             <div class="selecBtnArea" style="width:100%; padding-left:3px;">

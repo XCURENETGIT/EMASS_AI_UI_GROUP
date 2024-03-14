@@ -334,11 +334,13 @@
             if (alarmVal.startDateSelect == 'Y') searchDateStr += '<s:message code="condition.yesterday_str"/> ';
             else if (alarmVal.startDateSelect == 'T') searchDateStr += '<s:message code="condition.today_str"/> ';
             else if (alarmVal.startDateSelect == 'W') searchDateStr += '<s:message code="condition.sevenago"/> ';
+            else if (alarmVal.startDateSelect == 'M') searchDateStr += '<s:message code="condition.month" arguments="1" argumentSeparator="|"/> ';
             searchDateStr += '<s:message code="condition.clock" arguments="'+alarmVal.startTimeSelect+'" />';
             searchDateStr += ' ~ ';
             if (alarmVal.endDateSelect == 'Y') searchDateStr += '<s:message code="condition.yesterday_str"/> ';
             else if (alarmVal.endDateSelect == 'T') searchDateStr += '<s:message code="condition.today_str"/> ';
             else if (alarmVal.endDateSelect == 'W') searchDateStr += '<s:message code="condition.sevenago"/> ';
+            else if (alarmVal.startDateSelect == 'M') searchDateStr += '<s:message code="condition.month" arguments="1" argumentSeparator="|"/>';
             searchDateStr += '<s:message code="condition.time" arguments="'+alarmVal.endTimeSelect+',59,59" />';
 
 
@@ -360,12 +362,11 @@
             else if (alarmVal.readYn == 'N') readYnMsg = '<s:message code="condition.unread"/>';
             if (readYnMsg != '') searchStr += setConditionValStr(readYnMsg, '<s:message code="condition.isread"/>');
 
-            var reprocessYnMsg = '';
-            if (alarmVal.reprocessYn='Y') reprocessYnMsg = '<s:message code="condition.exist"/>';
-            else if (alarmVal.reprocessYn='N') reprocessYnMsg = '<s:message code="condition.none"/>';
-            if (reprocessYnMsg != '') searchStr += setConditionValStr(reprocessYnMsg, '<s:message code="condition.reprocess"/>');
-            console.log(reprocessYnMsg);
-            console.log("")
+            var reprocessMsg = '';
+            if (alarmVal.reprocessYn == 'Y') reprocessMsg = '<s:message code="condition.exist"/>';
+            else if (alarmVal.reprocessYn == 'N') reprocessMsg = '<s:message code="condition.none"/>';
+            if (reprocessMsg != '') searchStr += setConditionValStr(reprocessMsg, '<s:message code="condition.reprocess"/>');
+
 
             var receiveSendMsg = '';
             if (alarmVal.receiveSend == 'O') receiveSendMsg = '<s:message code="condition.send"/>';

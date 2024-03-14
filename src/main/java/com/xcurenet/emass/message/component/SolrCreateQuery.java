@@ -1355,7 +1355,7 @@ public class SolrCreateQuery {
 		if (startDateSelect.equals("Y")) result = String.format("%s%02d0000", yyyyMMdd.print(startDt.minusDays(1)), startTimeSelect);
 		else if (startDateSelect.equals("T")) result = String.format("%s%02d0000", yyyyMMdd.print(DateTime.now()), startTimeSelect);
 		else if (startDateSelect.equals("W")) result = String.format("%s%02d0000", yyyyMMdd.print(startDt.minusDays(7)), startTimeSelect);
-
+		else if (startDateSelect.equals("M")) result = String.format("%s%02d0000", yyyyMMdd.print(startDt.minusMonths(1)), startTimeSelect);
 		return result;
 	}
 
@@ -1365,6 +1365,7 @@ public class SolrCreateQuery {
 		if (endDateSelect.equals("Y")) result = String.format("%s%02d5959", yyyyMMdd.print(endDt.minusDays(1)), endTimeSelect);
 		else if (endDateSelect.equals("T")) result = String.format("%s%02d5959", yyyyMMdd.print(DateTime.now()), endTimeSelect);
 		else if (endDateSelect.equals("W")) result = String.format("%s%02d5959", yyyyMMdd.print(endDt.minusDays(7)), endTimeSelect);
+		else if (endDateSelect.equals("M")) result = String.format("%s%02d0000", yyyyMMdd.print(endDt.minusMonths(1)), endTimeSelect);
 
 		return result;
 	}
