@@ -63,7 +63,7 @@
 		<div class="coach_logo">
 			<img src="<c:url value="/img/logo_xcurenet.png"/>" alt="xcurenet">
 			<p class="mat16">
-				Venus EMASS AI, Venus/CS 3.0
+				Venus EMASS AI
 			</p>
 		</div>
 
