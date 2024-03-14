@@ -74,6 +74,13 @@
 					$('#searchResultBtnArea').removeClass('btnCustomPosition');
 				}
 			});
+            var today = new Date();
+            today.setDate(today.getDate() - 7);
+
+            document.getElementById("startDt").valueAsDate = today;
+            document.getElementById("endDt").valueAsDate = new Date();
+
+
 
             $(document).click(function(){
                 $('.imgPreviewDiv').hide();
@@ -532,8 +539,7 @@
 		}
 
 		function initCondition() {
-            $('#startDt').val(new Date().format('yyyy-mm-dd'));
-            $('#endDt').val(new Date().format('yyyy-mm-dd'));
+
 			getFileServiceList();
 			getCodeList('busi');
 			getCodeList('dept');
