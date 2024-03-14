@@ -58,6 +58,9 @@ public class CollectionController {
 	@Autowired
 	private MongoUtil mongo;
 
+	@Resource(name = "emsMessageController")
+	private EmsMessageController emsMessageController;
+
 	private static final String MESSENGER2 = " +svc1: I ";
 	private static final String MESSENGER3 = " +svc1: N ";
 	private static final String MESSENGER4 = " +svc1: F ";
@@ -508,6 +511,11 @@ public class CollectionController {
 
 		MessengerEdcGroupVO result = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request), true, false);
 
+		for (int i = 0; i<result.getGroups().size(); i++){ //내용 minio 통해 가져오기
+			EmsBodyVO emsBodyVO = emsMessageService.getEmassBody(result.getGroups().get(i).getMsgid(),Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
+			String body = emsMessageController.getBodyStr("",emsBodyVO );
+			result.getGroups().get(i).setBody_snippet(body);
+		}
 		return new XcnResponseVO(XcnRspCode.OK, result);
 	}
 

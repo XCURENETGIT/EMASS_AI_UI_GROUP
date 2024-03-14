@@ -25,6 +25,15 @@
 
 
 <style>
+	pre{
+		background-color: transparent; !important;
+		font-size: 14px;!important;
+		color: black;
+	}
+	code{
+		color: black;
+	}
+
 	#wrap {
 		overflow: hidden;
 	}
