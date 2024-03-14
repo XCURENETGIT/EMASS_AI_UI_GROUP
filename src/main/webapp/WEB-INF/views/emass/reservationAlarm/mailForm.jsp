@@ -204,6 +204,7 @@ function getData() {
 					<div class="row">
 						<div class="col-35">
 							<label for="formContentSel" class="fname"><s:message code="mail.form.content"/></label>
+							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
 							<select id='formContentSel'>
@@ -243,7 +244,6 @@ function getData() {
 					<div class="row">
 						<div class="col-35">
 							<label for="formComment" class="fname"><s:message code="mail.form.comment"/></label>
-							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
 							<input type="text" class="w100" name="formComment" id="formComment">
