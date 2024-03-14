@@ -14,8 +14,8 @@ var defaultCondition = {
 	"serviceType": "",
 
 	// 대외비
-	"epmsg_type": "",
-	"initEpmsgName": "",
+	// "epmsg_type": "",
+	// "initEpmsgName": "",
 
 	//시간
 	"easyDate": "",
@@ -186,7 +186,7 @@ var con = {
 		$('#senders'+endId).val('');
 		$('#jikgub'+endId).selectpicker('val', []);
 
-		$('#initEpmsg'+endId).selectpicker('val', []);
+		// $('#initEpmsg'+endId).selectpicker('val', []);
 
 		$('#busi'+endId).selectpicker('val', [] );
 		$('#deptStr'+endId).val('');
@@ -455,7 +455,7 @@ var con = {
 		if(condition.interGroup != '') condition.interGroupName = $('#interGroup option:selected').text();
 		else condition.interGroupName = '';
 
-		condition.epmsgType = arrayToString($('#initEpmsg').selectpicker('val'));
+		// condition.epmsgType = arrayToString($('#initEpmsg').selectpicker('val'));
 
 		condition.busi = arrayToString($('#busi').selectpicker('val'));
 		condition.busi_not = $('input:checkbox[id="busi_not"]').is(":checked") ? 'Y' : '';
@@ -618,7 +618,7 @@ var con = {
 			$('input:checkbox[id="senders_upperCase"]').prop("checked", condition.senders_upperCase == 'Y' ? true : false);
 		}
 
-		$('#initEpmsg').selectpicker('val', stringToArray(condition.epmsgType) );
+		// $('#initEpmsg').selectpicker('val', stringToArray(condition.epmsgType) );
 
 		$('#userGroupSeq').val(condition.userGroupSeq);
 		$('input:checkbox[id="userGroupSeq_not"]').prop("disabled", condition.userGroupSeq == '' ? true : false);
@@ -759,17 +759,17 @@ function initCondition(endId){
 			deselectAllText:condition.msgUnselect_all,
 			liveSearchPlaceholder:condition.searchService
 		});
-		$('#initEpmsg').selectpicker({
-			size: 'auto',
-			width:'260px',
-			searchLabel:true,
-			noneSelectedText:condition.epmsgTypeAll,
-			noneResultsText:condition.msgNoresult+' ',
-			selectAllText:condition.msgSelect_all,
-			deselectAllText:condition.msgUnselect_all
-		}).on("changed.bs.select", function (e) {
-			var value = $(this).selectpicker('val');
-		});
+		// $('#initEpmsg').selectpicker({
+		// 	size: 'auto',
+		// 	width:'260px',
+		// 	searchLabel:true,
+		// 	noneSelectedText:condition.epmsgTypeAll,
+		// 	noneResultsText:condition.msgNoresult+' ',
+		// 	selectAllText:condition.msgSelect_all,
+		// 	deselectAllText:condition.msgUnselect_all
+		// }).on("changed.bs.select", function (e) {
+		// 	var value = $(this).selectpicker('val');
+		// });
 		$('#jikgub').selectpicker({
 			size: 'auto',
 			width:'260px',
@@ -858,7 +858,7 @@ function initConditionData(){
 	getCodeList('busi');   //사업장
 	initUserGroupList();   //사용자그룹
 	initInterestUser();    //관심사용자
-	initEpmsg();			//대외비 목록
+	// initEpmsg();			//대외비 목록
 }
 var serviceGroups=[];
 var serviceTypes=[];
@@ -886,16 +886,16 @@ function getJikgubList() {
 /**
  * 대외비 리스트 조회해서 조건에 적용
  */
-function initEpmsg(){
-	var epmsg_type = epmsgType.split(',');
-	var result='';
-	for(var i=0 ; i<epmsg_type.length; i++){
-		result+='<option value="' + epmsg_type[i]+ '">' +  epmsg_type[i] + '</option>';
-	}
-	$("#initEpmsg").html(result);
-	$('#initEpmsg').selectpicker('refresh');
-
-}
+// function initEpmsg(){
+// 	var epmsg_type = epmsgType.split(',');
+// 	var result='';
+// 	for(var i=0 ; i<epmsg_type.length; i++){
+// 		result+='<option value="' + epmsg_type[i]+ '">' +  epmsg_type[i] + '</option>';
+// 	}
+// 	$("#initEpmsg").html(result);
+// 	$('#initEpmsg').selectpicker('refresh');
+//
+// }
 
 /**
  * 서비스타입 리스트를 불러와서 조건에 적용
