@@ -368,7 +368,7 @@
             });
 
             $('#alarmValBtn').click(function () {
-                fnOpenWindow('<c:url value="/ems/detailConditionPop.do"/>', 'alarmVal', 700, 930, 'fix');
+                fnOpenWindow('<c:url value="/ems/detailConditionPop.do"/>', 'alarmVal', 700, 1310, 'fix');
             });
 
             modalinit();
