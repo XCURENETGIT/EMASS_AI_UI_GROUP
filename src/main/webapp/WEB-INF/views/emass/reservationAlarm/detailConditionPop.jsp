@@ -1175,7 +1175,8 @@
         }
     </script>
 </head>
-<body>
+<body class="mini-navbar">
+<div class="xcn_container" >
 <div class="modalHead">
     <h2 class="ma_none"><s:message code="condition.select.condition.search"/></h2>
     <div class="btnBox">
@@ -1686,8 +1687,8 @@
                         <input type="hidden" name="keywordYn" id="keywordYn">
 
                         <span id="keywordBtnArea" style="display:none;">
-								<button type="button" class="btn btn-sm btn-default btn-open filterAddBtn" accesskey="K"
-                                        id="keywordBtn"><span class="glyphicon glyphicon-plus-sign"><s:message
+								<button type="button" class="btn btn-sm btn-default btn-open btn01 filterAddBtn" accesskey="K"
+                                        id="keywordBtn"><img src="../img/subBtn_plus.png" alt="선택"><s:message
                                         code="condition.select"/></span></button>
 							</span>
                         <span id="keywordSelectedArea" class="codeSelectedBtn">
@@ -1714,8 +1715,8 @@
                         <input type="hidden" name="regexpYn" id="regexpYn">
 
                         <span id="regexpBtnArea" style="display:none;">
-								<button type="button" class="btn btn-sm btn-default btn-open filterAddBtn" accesskey="P"
-                                        id="regexpBtn"><span class="glyphicon glyphicon-plus-sign"><s:message
+								<button type="button" class="btn btn-sm btn-default btn-open  btn01 filterAddBtn" accesskey="P"
+                                        id="regexpBtn"><img src="../img/subBtn_plus.png" alt="선택"><s:message
                                         code="condition.select"/></span></button>
 							</span>
                         <span id="regexpSelectedArea" class="codeSelectedBtn">
