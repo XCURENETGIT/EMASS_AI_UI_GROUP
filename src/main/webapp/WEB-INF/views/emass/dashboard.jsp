@@ -198,6 +198,7 @@
     var adminType = '<%=adminType%>';
     var date;
     var editMode = 'N';
+    var loggingDataSettingVal;
 
     $.urlParam = function (name) {
         var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
@@ -377,7 +378,6 @@
             var htmlObj = $(contentData[index].html);
             obj.html = htmlObj;
             //obj.html = contentData[index].html;
-            console.log(obj);
 
             dashboardGrid.addWidget(obj);
         });
@@ -439,7 +439,7 @@
     }
 
 
-    var loggingDataSettingVal;
+
 
     function getLoggingDataSetting() {
         ui.get({
@@ -452,8 +452,10 @@
                     $('#dashboardInfo').show();
                     $('#dashboardInfo').css('margin-top','200px');
                     $('#dashboardArea').css('top','-10px');
+                    $('#emptyDiv').hide();
                     getLoggingData();
-                }else $('#dashboardInfo').hide();
+                }else{ $('#dashboardInfo').hide();
+                    if(listCnt == 0)  $('#emptyDiv').show();}
             },
             error: function (status, message) {
                 console.log(message);
@@ -494,6 +496,7 @@
     }
 
     function printChart2(dat) {
+        console.log(dat.length);
         var visible = true;
         // if(systemArch == 'multiple' && adminType == 'M') visible = false;
 
@@ -502,7 +505,8 @@
         var attach = [];
         var attachStr = [];
         if (dat.length == 0) {
-            $('#loggingChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px" class="xcn_nodata"style=" display: block;">');
+            $('#loggingChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px" style="display: block;"> ');
+           // $('#loggingChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px" class="xcn_nodata"style=" display: block;">');
             return false;
         } else {
             for (var i = 0; i < dat.length; i++) {
@@ -592,7 +596,7 @@
         var categories = [];
 
         if (dat.length == 0) {
-            $('#sizeChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data"class ="xcn_nodata" width="100px;" height="100px" style="display: block;"> ');
+            $('#sizeChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px" style="display: block;"> ');
             return false;
         } else {
             var max = 0;
@@ -682,7 +686,6 @@
         ui.get({
             url: 'getLoggingData.xcn',
             success: function (data, total) {
-                console.log(data);
                 makeTableLoggingData(data.data);
                 printChart2(data.data);
                 getBodySize();
@@ -935,6 +938,7 @@
     var chartxAxis;
 
     function printChart(dat) {
+        console.log(data.length);
         var visible = true;
         if (systemArch == 'multiple' && adminType == 'M') visible = false;
         var categories = [];
@@ -1116,11 +1120,13 @@
             url: 'getDashBoardList.xcn',
             menuKey: menuKey,
             success: function (data, total) {
+                console.log(loggingDataSettingVal);
                 listCnt = data.length;
-                if (data.length == 0) {
-                    $('#emptyDiv').show();
-                } else $('#emptyDiv').hide();
-
+                if(data.length == 0) {
+                    if(loggingDataSettingVal == 'Y') $('#emptyDiv').hide();
+                    else $('#emptyDiv').show();
+                }
+                else $('#emptyDiv').hide();
                 dashboardGrid.loadGrid(data);
 
                 getDashBoardContent();
@@ -1509,6 +1515,8 @@
                 this.grid.removeWidget(item);
                 return false;
             };
+
+            getLoggingDataSetting();
 
             getDashBoardList();
         };
