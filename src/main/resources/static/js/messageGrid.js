@@ -8,11 +8,11 @@ function initGrid( currGrid, gridColumn){
 	currGrid.colAdd('xrootmtr', gridColumn.xrootmtr, 100, 'left', true, 'nomal');
 	currGrid.colAdd('interestUserYn', gridColumn.interestUserYn, 40, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 		if (value == 'Y') return '<div class="interestUserCheck"></div>';
-		else if (value == 'N') return '';
+		else if (value == 'N') return 'N';
 	});
 	currGrid.colAdd('readYn', gridColumn.readYn, 40, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-		if (value == 'Y') return '<div class="readY"></div>';
-		else if (value == 'N') return '<div class="readN"></div>';
+		if (value == 'Y') return 'Y';
+		else if (value == 'N') return 'N';
 		else return '-';
 	});
 	if( infoFeedbackConf == 'true' && infoFeedbackYn == 'Y' ) {
@@ -117,7 +117,6 @@ function initGrid( currGrid, gridColumn){
 	currGrid.colAdd('bcc', gridColumn.bcc, 150, 'left', true, 'link', function(row, cell, value, columnDef, dataContext) {
 		var innOutInfo = currGrid.getValue(row, 'bccInOutInfo');
 		if(value == undefined) value = '';
-		return innOutInfo+value;
 	});
 	currGrid.colAdd('srcip', gridColumn.srcip + ' IP', 100, 'left', false, 'nomal');
 	currGrid.colAdd('dstip', gridColumn.dstip + ' IP', 100, 'left', false, 'nomal');
@@ -131,12 +130,12 @@ function initGrid( currGrid, gridColumn){
 	currGrid.colAdd('attachSizeStr', gridColumn.attachSizeStr, 80, 'left', false, 'nomal', null, {sortField:'attachSizeSort'});
 	currGrid.colAdd('kwds', gridColumn.kwds, 120, 'left', false, 'nomal');
 	currGrid.colAdd('pi_total', gridColumn.pi_total, 70, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
-		if (value == '0') return '';
+		if (value == '0') return '0';
 		else return value.comma();
 	});
 	if ( isOCR ) {
 		currGrid.colAdd('ocr_attach_cnt', gridColumn.ocr, 70, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
-			if (value == '0' || value == '' || value == null || value == undefined ) return '';
+			if (value == '0' || value == '' || value == null || value == undefined ) return '0';
 			else return value.comma();
 		});
 	}

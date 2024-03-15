@@ -181,6 +181,8 @@
         $(".numberinput").forceNumeric();
 
         getInterestUserOptions();
+        // console.log(tabGrid);
+        console.log(messageGridColumn);
 
         initGrid(tabGrid, messageGridColumn);
 
