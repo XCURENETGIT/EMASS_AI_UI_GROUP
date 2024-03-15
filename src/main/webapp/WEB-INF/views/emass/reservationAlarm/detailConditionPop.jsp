@@ -160,7 +160,6 @@
                 if (str != undefined) str = str.replaceAll('\\|', ',');
                 $('#selectedCodeTitle').html(str);
             });
-            busiSelect
             $(document).on('mouseout', '.codeSelectedBtn', function (e) {
                 $('#selectedCodeTitle').hide();
             });
