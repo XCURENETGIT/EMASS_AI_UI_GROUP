@@ -450,6 +450,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 	@Override
 	public AnalysisFreedomListVO freedomView(FreedomSearchVO freedomSearchVO) throws IOException, SolrServerException {
 		String[] column = freedomSearchVO.getColumn();
+
 		String[] groupData = freedomSearchVO.getGroupData();
 
 		SolrQuery sq = new SolrQuery();
@@ -679,7 +680,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 				}
 			} else {
 				String tmpContext = Common.nvl(context[i]);
-				if (Common.isNotEmpty(tmpContext)) {
+				if (Common.isEmpty(tmpContext)) tmpContext = "*";
 					boolean startIncludeYN = true;
 					boolean endIncludeYN = true;
 					String start = "*";
@@ -706,7 +707,6 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 							List<Object> textList = new ArrayList<>(Arrays.asList(tmpContext.split("\\s*,\\s*")));
 							query.add(column, textList, false);
 							break;
-					}
 				}
 			}
 
