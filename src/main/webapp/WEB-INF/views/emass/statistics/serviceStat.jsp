@@ -522,6 +522,9 @@
 		rowName = grid1.getValue(grid1.Row, 'rowName');
         colKey = grid1.ColKey(grid1.Col);
         var colKeyNm = colKey;
+
+        console.log(colKey)
+
         if (colKey == 'rowKey' || colKey == 'total' || colKey == 'NUM') {
             colKey = "";
             colKeyNm = '<s:message code="bodyview.total"/>';
@@ -743,7 +746,7 @@
         ui.get({
             url : 'getStatDetailList.xcn',
             rowKey : rowKey,
-            colKey : pColKey,
+            colKey : colKey,
             startDate: sDate+"000000",
             endDate: eDate+"235959",
             xAxis : xAxis,

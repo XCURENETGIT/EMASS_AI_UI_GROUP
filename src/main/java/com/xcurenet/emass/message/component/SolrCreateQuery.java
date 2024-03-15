@@ -354,7 +354,6 @@ public class SolrCreateQuery {
 		else if(serviceGroups.length() == 3 ) return addQuery(String.format("%s%s:%s", AND_QUERY, SERVICE_12, createOrQuery(serviceGroups)));
 		else return this;
 	}
-
 	/**
 	 * 서비스 타입 쿼리
 	 */

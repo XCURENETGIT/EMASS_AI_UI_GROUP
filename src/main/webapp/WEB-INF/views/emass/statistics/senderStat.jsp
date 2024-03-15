@@ -517,6 +517,10 @@
         }
         rowName = grid1.getValue(grid1.Row, 'rowName');
         colKey = grid1.ColKey(grid1.Col);
+
+
+        console.log(colKey)
+
         var colKeyNm = colKey;
         if (colKey == 'rowKey' || colKey == 'total' || colKey == 'NUM') {
             colKey = "";

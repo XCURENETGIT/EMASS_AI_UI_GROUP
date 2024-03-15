@@ -325,7 +325,12 @@ public class SolrEdcStatController {
 
 		if (!colKey.isEmpty()) {
 			if(!Common.isEquals(yAxis,"svc12")) query += "+" + xAxis + ":" + "\"" + colKey + "\" ";
+			else{
+					query += "+"+xAxis+":"+"\""+colKey+"\" ";
+			}
 		}
+
+
 
 		if (Common.isEquals(yAxis, "sender_str")) {
 			List<String> codes = new ArrayList<>();

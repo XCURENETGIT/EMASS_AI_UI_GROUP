@@ -74,11 +74,6 @@
 					$('#searchResultBtnArea').removeClass('btnCustomPosition');
 				}
 			});
-            var today = new Date();
-            today.setDate(today.getDate() - 7);
-
-            document.getElementById("startDt").valueAsDate = today;
-            document.getElementById("endDt").valueAsDate = new Date();
 
 
 
@@ -88,8 +83,6 @@
             document.getElementById("startDt").valueAsDate = today;
             document.getElementById("endDt").valueAsDate = new Date();
 
-            document.getElementById("startSubDt").valueAsDate = today;
-            document.getElementById("endSubDt").valueAsDate = new Date();
 
             $(document).click(function(){
                 $('.imgPreviewDiv').hide();
@@ -598,20 +591,6 @@
 				noneSelectedText: '<s:message code="common.msg.all"/>'
 			});
 
-			$('button[name="attachYn"]').click(function(){
-				$(this).addClass('active');
-				$('button[name="attachYn"]').not(this).removeClass('active')
-				var attachYnValue = $(this).attr('value');
-
-				if (attachYnValue === '') {
-					$("#searchField option:eq(1)").prop('disabled', false);
-				} else {
-					$("#searchField option:eq(1)").prop('disabled', true);
-				}
-
-				$('#searchField').selectpicker('refresh');
-
-			});
 		}
 
 		function getCodeList(codeType) {
@@ -674,7 +653,6 @@
 			}
 			condition.searchStr = $('#searchStrInput').val();
 			condition.senders = $('#senders').val();
-			condition.attachYn = $('button[name=attachYn].active').val();
 			condition.busi = arrayToString($('#busiSelect').selectpicker('val'));
 
 			if (condition.busi != '') condition.busiStr = $('#busiSelect').parent().find('.filter-option').text();
@@ -886,11 +864,6 @@
 
 						<input class="w45 mat8 txt_center" type="date" id="startDt"  value="2023-11-20"><span class="w10 dis_inlineblock txt_center">~</span><input class="w45 txt_center" type="date" id="endDt"  value="2023-11-30">
 
-
-						<div class="optiotab w100 mat8" data-toggle="buttons">
-							<button class="active w50" name="attachYn" id="attachAll" value=""><s:message code="condition.isattached.all"/></button>
-							<button class="w50" name="attachYn" id="attachY" value="Y"><s:message code="eikon.attach.exist"/></button>
-						</div>
 
 						<select id="busiSelect" class="w100 mat8" data-style="btn-default btn-sm" multiple data-show-subtext="true"
 						        data-live-search="true" data-actions-box="true"></select>
