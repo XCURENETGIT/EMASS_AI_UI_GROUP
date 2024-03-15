@@ -47,6 +47,15 @@ body,html {width:100%; height:100%;}
 /*.arrow_up {}
 .arrow_down {cursor: pointer; position: absolute; top:10px; right:20px; width:20px;height:20px; background-color:#fff; text-align: center;}*/
 
+
+/*#xcn_mainWrap2 {position: relative; display: grid; grid-template-columns: 1fr 1fr; column-gap: 0; grid-template-rows: 100%;}*/
+/*#xcn_mainWrap2 .all {position: relative; width:100%; padding:20px;}*/
+/*#xcn_mainWrap2 .left {position: relative; width:100%; padding:20px;}*/
+/*#xcn_mainWrap2 .left .m_chartArea {margin-top:8px;}*/
+/*#xcn_mainWrap2 .left .m_grapha {display: grid; grid-template-columns: 1fr 1fr; column-gap: 12px;}*/
+/*#xcn_mainWrap2 .left .m_grapha .graphaBox {}*/
+/*#xcn_mainWrap2 .left .m_grapha .graphaBox > div {height:341px; padding:20px;display: grid; grid-template-columns: 90px 1fr; column-gap: 12px;}*/
+
 /* Main */
 #xcn_mainWrap {position: relative; display: grid; grid-template-columns: 1fr 1fr; column-gap: 0; grid-template-rows: 100%;}
 #xcn_mainWrap .all {position: relative; width:100%; padding:20px;}
@@ -434,6 +443,7 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 .text_tabcontent,.text_tabcontent2  { display: none; min-height:176px; padding: 20px; background-color:#fff; border: 1px solid #ddd; margin-top:12px;}
 .text_tabcontent2 {min-height:310px;}
 .text_tab .bar {width:1px; height:12px; margin:2px 8px; background-color:#ddd;}
+
 
 /*
 #PPT {background-color:red; }

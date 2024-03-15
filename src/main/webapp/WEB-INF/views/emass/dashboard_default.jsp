@@ -483,7 +483,8 @@
             }
             str += "</tr></table></div>"
 
-            <%--$('#sizeTable').html(data.length > 0 ? str : '<s:message code="common.msg.nodata"/>');--%>
+
+            $('#sizeTable').html(str);
         }
 
 
