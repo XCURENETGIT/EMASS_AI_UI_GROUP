@@ -1179,7 +1179,11 @@
             searchStr: '',
             success: function (data, total) {
                 if (rowSearchkey == null) rowSearchkey = "xlsx";
-                getTodayFileList(data, rowSearchkey);
+                if (data.pivotdata != null){
+                    getTodayFileList(data, rowSearchkey);
+                }else{
+                    $('#dataStatus').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px" style ="margin:auto; display:block; margin-top:85px;"> ');
+                }
             },
             error: function (status, message) {
                 //ui.alertMsg(message);
