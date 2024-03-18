@@ -515,7 +515,6 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 		sq.setFacetSort("ctime_yyyymmdd");
 
 		sq.setFacetMinCount(1);
-//		sq.setQuery("*:*");
 		sq.setStart(Common.nvz(0));
 		sq.setRows(Common.nvz(1));
 		sq.setSort("ctime_yyyymmdd", SolrQuery.ORDER.desc);
@@ -528,15 +527,18 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 
 		List<Map<String, Object>> result = new ArrayList<>();
 
-		for (int i = 0; i<edc.getPivotData().size(); i++){
-			Map<String, Object> item = new HashMap<>();
-			item.put("date",edc.getPivotData().get(i).get("rowKey"));
-			item.put("logging", edc.getPivotData().get(i).get("total"));
-			double doubleNum = (double) edc.getPivotData().get(i).get("attachsize");
-			long attach = (long) doubleNum;
-			item.put("attach", attach);
-			item.put("attachStr", Common.convertFileSize(attach));
-			result.add(item);
+		if (edc.getPivotData() != null) {
+
+			for (int i = 0; i < edc.getPivotData().size(); i++) {
+				Map<String, Object> item = new HashMap<>();
+				item.put("date", edc.getPivotData().get(i).get("rowKey"));
+				item.put("logging", edc.getPivotData().get(i).get("total"));
+				double doubleNum = (double) edc.getPivotData().get(i).get("attachsize");
+				long attach = (long) doubleNum;
+				item.put("attach", attach);
+				item.put("attachStr", Common.convertFileSize(attach));
+				result.add(item);
+			}
 		}
 
 		result = result.stream().sorted((o1, o2) -> o1.get("date").toString().compareTo(o2.get("date").toString()) ).collect(Collectors.toList());

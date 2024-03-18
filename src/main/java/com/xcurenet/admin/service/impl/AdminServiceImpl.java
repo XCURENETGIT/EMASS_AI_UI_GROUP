@@ -118,7 +118,8 @@ public class AdminServiceImpl extends XcnAbstractDAO implements AdminService {
 				vo.setMenu(authId);
 				insert("com.xcurenet.sqlmap.mappers.mysql.admin.insertAdminMenu", vo);
 			}
-			delete("com.xcurenet.sqlmap.mappers.mysql.admin.deleteAdminDashBoardConf", admin.getOldId());
+			delete("com.xcurenet.sqlmap.mappers.mysql.admin.deleteAdminDashBoardConf", admin);
+//			delete("com.xcurenet.sqlmap.mappers.mysql.admin.deleteAdminDashBoardConf", admin.getOldId());
 			insert("com.xcurenet.sqlmap.mappers.mysql.admin.insertAdminDashBoardConf", admin);
 			tx.commit();
 		} finally {

@@ -1684,7 +1684,7 @@
 
 
         if (data == null) {
-            return $(obj).html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="50px;" height="50px"> ');
+          return $(obj).html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" class="xcn_nodata" width="110px;" height="110px"> ');
         }
 
         var dlength = data.length;
