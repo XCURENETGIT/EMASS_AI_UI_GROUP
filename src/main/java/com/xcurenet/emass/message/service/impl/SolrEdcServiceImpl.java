@@ -25,6 +25,7 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.SortClause;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.elasticsearch.ElasticsearchException;
+import org.elasticsearch.ElasticsearchStatusException;
 import org.elasticsearch.index.query.*;
 import org.elasticsearch.script.Script;
 import org.elasticsearch.script.ScriptType;
@@ -85,6 +86,11 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	@Autowired
 	private AdminServiceImpl adminServiceImpl;
 	private AbstractAggregationBuilder<TermsAggregationBuilder> termsAggregation;
+
+
+	String defaultFields = "_score,date_hh,date_yyyy,date_yyyymm,date_yyyymmdd,ml_confd_class,ml_confd_feedback,ml_confd_prob,msgid,cid,srcip,sport,dstip,dport,svc,svc1,svc2,svc3,ltime,ctime,ctime_yyyy,ctime_yyyymm,ctime_yyyymmdd,ctime_hh,size,body_size,usr_id,usr_ip,userkey,user,userid,name,subject,host,path,xmsgkey,sender,sname,recvs,recvs_name,to,cc,bcc,tname,cocd,conm,suborgcd,suborgnm,busicd,businm,deptcd,deptnm,jikgubcd,jikgubnm,ip_cocd,ip_conm,ip_busicd,ip_businm,ip_deptcd,ip_deptnm,allofus,attached,direction,direction_svc,kwd,kwds,inside,work,attachname,attachname_str,attachsize,attachhash,attachtype,attachcnt,pi_total,read_time,xrootmtr,protocol,epmsg_type,user_str,pi_SN,pi_FN,pi_DN,pi_CN,pi_EC,pi_ID,pi_EF,pi_DRM,pi_MN,pi_AN,pi_CRN,pi_SSN,pi_PN,pi_EMEI,pi_BRN,pi_CPN,pi_MCN,svc12";
+
+
 
 	@Override
 	public SolrClient getSolrServer() {
@@ -151,7 +157,6 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 		TimeUtil.start();
 		if (sq.getFields() == null) {
-			String defaultFields = "_score,date_hh,date_yyyy,date_yyyymm,date_yyyymmdd,ml_confd_class,ml_confd_feedback,ml_confd_prob,msgid,cid,srcip,sport,dstip,dport,svc,svc1,svc2,svc3,ltime,ctime,ctime_yyyy,ctime_yyyymm,ctime_yyyymmdd,ctime_hh,size,body_size,usr_id,usr_ip,userkey,user,userid,name,subject,host,path,xmsgkey,sender,sname,recvs,recvs_name,to,cc,bcc,tname,cocd,conm,suborgcd,suborgnm,busicd,businm,deptcd,deptnm,jikgubcd,jikgubnm,ip_cocd,ip_conm,ip_busicd,ip_businm,ip_deptcd,ip_deptnm,allofus,attached,direction,direction_svc,kwd,kwds,inside,work,attachname,attachname_str,attachsize,attachhash,attachtype,attachcnt,pi_total,read_time,xrootmtr,protocol,epmsg_type,user_str,pi_SN,pi_FN,pi_DN,pi_CN,pi_EC,pi_ID,pi_EF,pi_DRM,pi_MN,pi_AN,pi_CRN,pi_SSN,pi_PN,pi_EMEI,pi_BRN,pi_CPN,pi_MCN,svc12";
 			if (Config.isOCR) defaultFields = defaultFields + ",ocr_attach_cnt";
 			if (Common.isEquals(bodysnippet, "Y")) defaultFields = defaultFields + ",body_snippet";
 			sq.setFields(defaultFields);
@@ -167,7 +172,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		/* set 필터 쿼리 */
 		String filterQuery =  (null != sq.getFilterQueries())? String.join(" ", sq.getFilterQueries()) : "";
 		/* 일반 검색 쿼리 */
-		QueryStringQueryBuilder queryBuilder = QueryBuilders.queryStringQuery(sq.getQuery() + " " + filterQuery).fields(getDefaultSearchField(sq));
+		QueryStringQueryBuilder queryBuilder = QueryBuilders.queryStringQuery(sq.getQuery() + " " + filterQuery).fields(getDefaultSearchField(sq)).type(MultiMatchQueryBuilder.Type.PHRASE);  // type PHRASE
 
 		/* 정규식 패턴 필드 설정 */
 		BoolQueryBuilder regexQuery = QueryBuilders.boolQuery();
@@ -250,35 +255,36 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 				searchQuery.addSort(sort);
 			}
 		}
-
-		if(Common.isEquals(sq.get("group"),"true")) { // 집계검색
-			searchQuery.setPageable(PageRequest.of(getPage(sq), sq.getRows()));
-			searchHits =  operation.search(searchQuery, SolrEdcVO.class);
-		}else {
-			//일반검색 (페이징)
-			searchQuery.setPageable(PageRequest.ofSize(rows));
-			int idx = 0;
-			do {
-				searchQuery.setSearchAfter(searchAfter);
-				if (Math.round((offset / rows)) == idx) {
-					searchHits = operation.search(searchQuery, SolrEdcVO.class);
-					break;
-				} else {
-					searchHits = operation.search(searchQuery, SolrEdcVO.class);
-				}
-				if (idx > range || searchHits.getSearchHits().isEmpty()) break;
-				SearchHit lastHit = searchHits.getSearchHit((int) (searchHits.getSearchHits().size() - 1));
-				searchAfter = lastHit.getSortValues();
-				idx++;
-			} while (true);
-		}
+		try {
+			if(Common.isEquals(sq.get("group"),"true")) { // 집계검색
+				searchQuery.setPageable(PageRequest.of(getPage(sq), sq.getRows()));
+				searchHits =  operation.search(searchQuery, SolrEdcVO.class);
+			}else {
+				//일반검색 (페이징)
+				searchQuery.setPageable(PageRequest.ofSize(rows));
+				int idx = 0;
+				do {
+					searchQuery.setSearchAfter(searchAfter);
+					if (Math.round((offset / rows)) == idx) {
+						searchHits = operation.search(searchQuery, SolrEdcVO.class);
+						break;
+					} else {
+						searchHits = operation.search(searchQuery, SolrEdcVO.class);
+					}
+					if (idx > range || searchHits.getSearchHits().isEmpty()) break;
+					SearchHit lastHit = searchHits.getSearchHit((int) (searchHits.getSearchHits().size() - 1));
+					searchAfter = lastHit.getSortValues();
+					idx++;
+				} while (true);
+			}
 
 		/*============================================================*/
 
-		try {
 			log.info("검색된 갯수 : " + searchHits.getSearchHits().size() );
 			printQueryLog(sq, searchHits);
-		} catch (Exception e) {
+		}catch (ElasticsearchStatusException es) {
+			log.info("[QUERY_ERROR]", 0, TimeUtil.print());
+		}catch (ElasticsearchException e) {
 			log.info("[QUERY_RESULT] TOTAL_COUNT : {}, QUERY_TIME : {}", 0, TimeUtil.print());
 		}
 		return searchHits;

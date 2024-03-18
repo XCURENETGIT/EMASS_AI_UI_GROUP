@@ -1565,6 +1565,7 @@ public class EmsMessageController {
 	public XcnResponseVO getSearchKeywordAuto(final HttpServletRequest request, final HttpSession session) throws Exception {
 		String adminId = Common.getAdminId(request);
 		String searchKeyword = Common.nvl(request.getParameter("searchKeyword"));
+		searchKeyword = searchKeyword.replace("/","");
 
 		return new XcnResponseVO(XcnRspCode.OK, emsMessageService.getSearchKeywordAuto(adminId, searchKeyword));
 	}

@@ -449,6 +449,7 @@
 		var rtnValue = '';
 		var QnoSearchPattern = /[\s\"?/|()+*]/;
 		var DnoSearchPattern = /[+*?]/;
+
 		try{
 
 			var searchType = '';
@@ -459,7 +460,7 @@
 				searchType = parent.$('#searchField').val();
 			}
 			searchStr = searchKeyword();
-			search = searchStr;
+            search = searchStr;
 
 			if(column != "subject") {
 				rtnVal = rtnVal.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '\'');
@@ -498,9 +499,9 @@
 				if(searchType == column) chk = true;
 			}
 
+
 			if(chk) {
 				var searchArray = [];
-
 				search = search.trim();
 				if(search.indexOf("\"") == 0 && search.charAt(search.length-1) == "\"" && nvl(search.match(/"/g)).length == 2) {
 					searchArray[0] = search.substring(1, search.length-1);
@@ -539,6 +540,8 @@
 							first = re.lastIndex;
 							// RegExp객체의 lastIndex속성을 이용해 검색 결과의 마지막인덱스 접근 가능
 						}
+
+
 						resultString += rtnVal.substring(first, rtnVal.length);
 						rtnVal = resultString;
 						rtnValue = resultString;

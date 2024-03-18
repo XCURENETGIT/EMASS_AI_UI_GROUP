@@ -109,8 +109,6 @@ public class SolrEdcController {
 		JSONObject data = Common.toJSONObject(param.get("data"));
 		String pageType = Common.nvl(param.get("pageType"));
 
-
-
 		if(Common.isNotEmpty(data.get("folderSeq"))) {
 			String folder_seq = Common.nvl(data.get("folderSeq"));
 			//String folder_name = Common.nvl(data.get("folderName"));
