@@ -25,7 +25,6 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.SortClause;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.elasticsearch.ElasticsearchException;
-import org.elasticsearch.ElasticsearchStatusException;
 import org.elasticsearch.index.query.*;
 import org.elasticsearch.script.Script;
 import org.elasticsearch.script.ScriptType;
@@ -279,11 +278,8 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			}
 
 		/*============================================================*/
-
 			log.info("검색된 갯수 : " + searchHits.getSearchHits().size() );
 			printQueryLog(sq, searchHits);
-		}catch (ElasticsearchStatusException es) {
-			log.info("[QUERY_ERROR]", 0, TimeUtil.print());
 		}catch (ElasticsearchException e) {
 			log.info("[QUERY_RESULT] TOTAL_COUNT : {}, QUERY_TIME : {}", 0, TimeUtil.print());
 		}
@@ -694,6 +690,39 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	@Override
 	public boolean setSecretInfo(final String sourceKey, final String securityYn, final String securityPct, final Map<String, List<parseJsonFile>> sortList) throws SolrServerException, IOException {
 		return false;
+	}
+
+
+
+	@Override
+	public List<SolrEdcVO> setOverlap(List<SolrEdcVO> solrVo) throws SolrServerException, IOException {
+		List<SolrEdcVO> result = new ArrayList<>();
+
+		//조회 된 결과에서 중복 데이터 제거
+		List<SolrEdcVO> emass = solrVo.stream().filter(distinctBykey(SolrEdcVO::getSvcNm, SolrEdcVO::getSubject, SolrEdcVO::getSender)).collect(Collectors.toList());
+		//조회 결과에서 중복되는 데이터만 추출
+		List<SolrEdcVO> allOverlap = solrVo.stream().filter(distinctBykey2(SolrEdcVO::getSvcNm, SolrEdcVO::getSubject, SolrEdcVO::getSender)).collect(Collectors.toList());
+
+		//중복 처리를 위한 정렬
+		emass = overlapSortData(emass);
+		allOverlap = overlapSortData(allOverlap);
+
+		int idx = 0; //중복 데이터 find 할때 범위 축소를 위한 Index
+
+		for (SolrEdcVO obj : emass) {
+			List<SolrEdcVO> overlapData = setOverLapCnt(allOverlap, obj, idx); //중복 제거한 데이터 List 에서 데이터 별로 중복 데이터 find
+			if (overlapData.isEmpty()) { //중복 데이터 없을시
+				result.add(obj);
+			} else if (!overlapData.isEmpty()) { //중복 데이터 있을 시
+				result.add(setReaderMsg(overlapData, obj)); //중복 데이터와 전체 크기를 비교하여 제일 큰 데이터를 대표 메시지로 선정하여 최종 결과 List에 추가
+				idx += overlapData.size(); //존재 하는 중복 데이터 만큼 Index 증가하여 다음 중복 데이터 find
+			}
+		}
+
+		//기존 정렬 방식 (ctime 내림차순) 으로 재 정렬
+		result.sort((first, second) -> second.getCtime().compareTo(first.getCtime()));
+
+		return result;
 	}
 
 	@SuppressWarnings("unchecked")

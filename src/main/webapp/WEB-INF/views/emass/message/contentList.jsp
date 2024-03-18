@@ -626,7 +626,7 @@
 
 		window.open("","overlapInfoPop","width=1100, height=620");
 
-		var frmObj = $('<form>',{'id': 'fm_formIO', 'action': '/emass/ems/overlapInfoPop.do', 'method': 'POST', 'target': 'overlapInfoPop'});
+		var frmObj = $('<form>',{'id': 'fm_formIO', 'action': contextRoot+'/ems/overlapInfoPop.do', 'method': 'POST', 'target': 'overlapInfoPop'});
 		var inpObj = $('<input>',{'name':'body', 'value': JSON.stringify(selectOverlapData.slice(0, 100))});
 		var inpObj2 = $('<input>',{'name':'total', 'value': selectOverlapData.length});
 

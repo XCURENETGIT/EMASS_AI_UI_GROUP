@@ -35,7 +35,6 @@ html,body{height: 100%; padding: 0px; margin: 0px;overflow: auto;min-width: 650p
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	width: 34%;
 	position: relative;
     top: 5px;
 }
@@ -89,6 +88,7 @@ function setOverlapData(flag) {
 	if ( flag == undefined) {
 		grid.data.length = 0;
 		grid.loadingPage = 0;
+        console.log(datas)
 		grid.appendData(datas);
 	} else {
 		grid.loadingPage++;
@@ -400,7 +400,7 @@ function viewer_newOpen(row, selectedGrid){
 
 function drawGrid() {
 	grid = new Xgrid('messageNewGrid', contextRoot, 20);
-	grid.onCheckBox();
+//	grid.onCheckBox();
 	grid.autoNumber();
 	grid.colAdd('msgid', '<s:message code="common.msg.msgid"/>', 100, 'left', false, 'nomal');
 	grid.colAdd('epmsg_type', '<s:message code="condition.epmsgType.list"/>', 100, 'center', true, 'nomal');
@@ -658,26 +658,19 @@ function drawGrid() {
 </script>
 </head>
 <body class="mini-navbar">
-	<header class="header">
-		<div class="naviBack">
-			<img src="<c:url value="/img/title/home_icon.png"/>">
-			<span class="navi"><span id="code_title"></span><s:message code="message.overlap.poptitle"/></span>
-		</div>
-	</header>
+
 	<div class="xcn_container" style="min-width: 650px;">
 		<div class="boxArea">
 			<div class="content_body">
-				<div class="row">
-					<div class="col-xs-6 text-left" style="font-weight: bold; font-size: 13px;">
-						<span class="ocTitle"><s:message code="condition.subject"/> : </span><span id="subjectVal"></span>&nbsp;&nbsp;<span class="ocTitle"><s:message code="condition.sender"/> : </span><span id="senderVal"></span>
-						</br><s:message code="common.overlap.count"/> : <span id="totalCnt"></span>
-					</div>
-					<div class="col-xs-6 text-right">
+				<div class="p20">
+					<h2><span class="bullet02"></span> <s:message code="message.overlap.poptitle"/></h2>
+						<h3 class="ocTitle"><s:message code="condition.subject"/> : <span id="subjectVal"></span></h3> &nbsp;
+						</br><h3 class="ocTitle"><s:message code="condition.sender"/> : <span id="senderVal"></span> </h3>
+						</br><h3><s:message code="common.overlap.count"/> : <span id="totalCnt"></span></h3>
+					<div class="xcn_pop_btn">
 						<button type="button" class="btn btn-sm btn-default" accesskey="C" id="noSelectBtn"><span class="glyphicon glyphicon-remove"></span>&nbsp;<s:message code="common.msg.close"/></button>
 					</div>
-				</div>
-				<div class="row xcn_full top_space">
-					<div class="col-xs-12" style="height: 100%;">
+					<div class="mat16" style="height: 70%;">
 						<div id="messageNewGrid" class="slickGrid gridArea"></div>
 					</div>
 				</div>
@@ -685,7 +678,6 @@ function drawGrid() {
 		</div>
 	</div>
 	<!-- Back to top -->
-	<a href="#0" class="back-to-top cd-top"><span class="[ fa fa-chevron-up ]"></span> <span class="[ ]">Back to the Top</span></a>
 	<iframe id="ExcelDown" name="ExcelDown" src="about:blank;" style="display: none;" height="0" width="0" ></iframe>
 	<div class="modal fade" id="exportDialog" tabindex="-1" role="dialog" aria-labelledby="exportDialog">
 		<div class="modal-dialog" role="document">

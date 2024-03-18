@@ -193,10 +193,11 @@ public class SolrEdcController {
 			String overlap = (!Common.isEmpty(overlapInfo)) ? overlapInfo.getVal() : "N";
 
 			SolrEdcMessageVO solrVo = solrEdcService.getEmassMessage(sq, adminId, solrCreateQuery.getFinalReadYn(), solrCreateQuery.getConsentNo());
-
 			if(Common.isEquals(Common.nvl(param.get("overlap")), "Y") && Common.isEquals(overlap, "Y")) {
 				solrVo = solrEdcService.setOverlap(solrVo);
 			}
+
+
 
 			if(Config.getBoolean("consent.menu.enable") && Common.isEquals(Common.nvz(param.get("offset"), 0), 0)) {
 				searchLogService.insertSearchLog(param);
