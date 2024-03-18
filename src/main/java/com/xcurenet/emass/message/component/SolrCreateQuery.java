@@ -614,17 +614,17 @@ public class SolrCreateQuery {
 			StringBuffer queryStr = new StringBuffer();
 
 			if(Common.isEquals(receivers_upperCase, "Y")) {
-				queryStr.append(String.format("%s%s:%s", AND_QUERY, RECEIVER_UPPER, createOrQueryAsteriskAll(receivers))).append(SPACE);
+				queryStr.append(String.format("%s%s:%s", AND_QUERY, RECEIVER_UPPER, createOrQuery(receivers))).append(SPACE);
 			} else if(Common.isEquals(Config.getString("receiver.sender.uppercase"), "Y")) {
 
 				for (int i = 0; i < RECEIVER_NOTUPPER.length; i++) {
 					if (receivers.startsWith("\"") && receivers.endsWith("\"")) queryStr.append(String.format("%s:%s", RECEIVER_NOTUPPER[i], receivers)).append(SPACE);
-					else queryStr.append(String.format("%s:%s", RECEIVER_NOTUPPER[i], createOrQueryAsteriskAll(receivers))).append(SPACE);
+					else queryStr.append(String.format("%s:%s", RECEIVER_NOTUPPER[i], createOrQuery(receivers))).append(SPACE);
 				}
 			} else {
 				for (int i = 0; i < RECEIVER.length; i++) {
 					if (receivers.startsWith("\"") && receivers.endsWith("\"")) queryStr.append(String.format("%s:%s", RECEIVER[i], receivers)).append(SPACE);
-					else queryStr.append(String.format("%s:%s", RECEIVER[i], createOrQueryAsteriskAll(receivers))).append(SPACE);
+					else queryStr.append(String.format("%s:%s", RECEIVER[i], createOrQuery(receivers))).append(SPACE);
 				}
 			}
 
