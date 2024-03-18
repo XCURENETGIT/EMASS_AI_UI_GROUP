@@ -7,36 +7,36 @@ var chartAPI = {
 			filename : 'Export_Chart',
 			sourceWidth: $('#chartArea1').width(),
 			sourceHeight: $('#chartArea1').height(),
-			buttons: {
-				contextButton: {
-					menuItems: [
-					{
-						text: '<img src="'+contextRoot+'/img/icon/icon_disk.png" width="16" style="width:16px;height:16px;vertical-align: middle;"> ' + chartAPIJS.imageSave,
-						onclick: function () {
-							this.exportChart();
-						}
-					}/*,{
-						text: '<br />',
-						onclick: function () {}
-					},
-					{
-						text: '<img src="'+contextRoot+'/img/icon/line.bmp" width="16" style="width:16px;height:16px;vertical-align: middle;"> ' + chartAPIJS.curveChart,
-						onclick: function () {chartAPI.changeChartType('spline', this);}
-					}, {
-						text: '<img src="'+contextRoot+'/img/icon/line.bmp" width="16" style="width:16px;height:16px;vertical-align: middle;"> ' + chartAPIJS.polyChart,
-						onclick: function () {chartAPI.changeChartType('line', this);}
-					}, {
-						text: '<img src="'+contextRoot+'/img/icon/line.bmp" width="16" style="width:16px;height:16px;vertical-align: middle;"> ' + chartAPIJS.pointChart,
-						onclick: function () {chartAPI.changeChartType('scatter', this);}
-					}, {
-						text: '<img src="'+contextRoot+'/img/icon/bar.bmp" width="16" style="width:16px;height:16px;vertical-align: middle;"> ' + chartAPIJS.barChart,
-						onclick: function () {chartAPI.changeChartType('column', this);}
-					}, {
-						text: '<img src="'+contextRoot+'/img/icon/area.bmp" width="16" style="width:16px;height:16px;vertical-align: middle;"> ' + chartAPIJS.areaChart,
-						onclick: function () {chartAPI.changeChartType('areaspline', this);}
-					}*/]
-				}
-			},
+			// buttons: {
+			// 	contextButton: {
+			// 		menuItems: [
+			// 		{
+			// 			// text: '<img src="'+contextRoot+'/img/icon/icon_disk.png" width="16" style="width:16px;height:16px;vertical-align: middle;"> ' + chartAPIJS.imageSave,
+			// 			// onclick: function () {
+			// 			// 	this.exportChart();
+			// 			// }
+			// 		}/*,{
+			// 			text: '<br />',
+			// 			onclick: function () {}
+			// 		},
+			// 		{
+			// 			text: '<img src="'+contextRoot+'/img/icon/line.bmp" width="16" style="width:16px;height:16px;vertical-align: middle;"> ' + chartAPIJS.curveChart,
+			// 			onclick: function () {chartAPI.changeChartType('spline', this);}
+			// 		}, {
+			// 			text: '<img src="'+contextRoot+'/img/icon/line.bmp" width="16" style="width:16px;height:16px;vertical-align: middle;"> ' + chartAPIJS.polyChart,
+			// 			onclick: function () {chartAPI.changeChartType('line', this);}
+			// 		}, {
+			// 			text: '<img src="'+contextRoot+'/img/icon/line.bmp" width="16" style="width:16px;height:16px;vertical-align: middle;"> ' + chartAPIJS.pointChart,
+			// 			onclick: function () {chartAPI.changeChartType('scatter', this);}
+			// 		}, {
+			// 			text: '<img src="'+contextRoot+'/img/icon/bar.bmp" width="16" style="width:16px;height:16px;vertical-align: middle;"> ' + chartAPIJS.barChart,
+			// 			onclick: function () {chartAPI.changeChartType('column', this);}
+			// 		}, {
+			// 			text: '<img src="'+contextRoot+'/img/icon/area.bmp" width="16" style="width:16px;height:16px;vertical-align: middle;"> ' + chartAPIJS.areaChart,
+			// 			onclick: function () {chartAPI.changeChartType('areaspline', this);}
+			// 		}*/]
+			// 	}
+			// },
 			chartOptions: {
 				xAxis: {
 					labels: {
@@ -69,52 +69,52 @@ var chartAPI = {
 			url : contextRoot + '/export',
 			type : 'image/png',
 			filename : 'Export_Chart',
-			buttons: {
-				contextButton: {
-					menuItems: [
-					{
-						text: '<img src="'+contextRoot+'/img/icon/icon_disk.png" width="16" style="width:16px;height:16px;vertical-align: middle;"> ' + chartAPIJS.imageSave,
-						onclick: function () {
-							this.exportChart();
-						}
-					},{
-						text: '<br />',
-						onclick: function () {}
-					},
-					{
-						text: '<img src="'+contextRoot+'/img/icon/line.bmp" width="16" style="width:16px;height:16px;vertical-align: middle;"> ' + chartAPIJS.curveChart,
-						onclick: function () {chartAPI.changeChartType('spline', this);}
-					}, {
-						text: '<img src="'+contextRoot+'/img/icon/line.bmp" width="16" style="width:16px;height:16px;vertical-align: middle;"> ' + chartAPIJS.polyChart,
-						onclick: function () {chartAPI.changeChartType('line', this);}
-					}, {
-						text: '<img src="'+contextRoot+'/img/icon/line.bmp" width="16" style="width:16px;height:16px;vertical-align: middle;"> ' + chartAPIJS.pointChart,
-						onclick: function () {chartAPI.changeChartType('scatter', this);}
-					}, {
-						text: '<img src="'+contextRoot+'/img/icon/bar.bmp" width="16" style="width:16px;height:16px;vertical-align: middle;"> ' + chartAPIJS.barChart,
-						onclick: function () {chartAPI.changeChartType('column', this);}
-					}, {
-						text: '<img src="'+contextRoot+'/img/icon/area.bmp" width="16" style="width:16px;height:16px;vertical-align: middle;"> ' + chartAPIJS.areaChart,
-						onclick: function () {chartAPI.changeChartType('areaspline', this);}
-					}]
-				}
-			}
+			// buttons: {
+			// 	contextButton: {
+			// 		menuItems: [
+			// 		{
+			// 			// text: '<img src="'+contextRoot+'/img/icon/icon_disk.png" width="16" style="width:16px;height:16px;vertical-align: middle;"> ' + chartAPIJS.imageSave,
+			// 			// onclick: function () {
+			// 			// 	this.exportChart();
+			// 			// }
+			// 		},{
+			// 			text: '<br />',
+			// 			onclick: function () {}
+			// 		},
+			// 		{
+			// 			text: '<img src="'+contextRoot+'/img/icon/line.bmp" width="16" style="width:16px;height:16px;vertical-align: middle;"> ' + chartAPIJS.curveChart,
+			// 			onclick: function () {chartAPI.changeChartType('spline', this);}
+			// 		}, {
+			// 			text: '<img src="'+contextRoot+'/img/icon/line.bmp" width="16" style="width:16px;height:16px;vertical-align: middle;"> ' + chartAPIJS.polyChart,
+			// 			onclick: function () {chartAPI.changeChartType('line', this);}
+			// 		}, {
+			// 			text: '<img src="'+contextRoot+'/img/icon/line.bmp" width="16" style="width:16px;height:16px;vertical-align: middle;"> ' + chartAPIJS.pointChart,
+			// 			onclick: function () {chartAPI.changeChartType('scatter', this);}
+			// 		}, {
+			// 			text: '<img src="'+contextRoot+'/img/icon/bar.bmp" width="16" style="width:16px;height:16px;vertical-align: middle;"> ' + chartAPIJS.barChart,
+			// 			onclick: function () {chartAPI.changeChartType('column', this);}
+			// 		}, {
+			// 			text: '<img src="'+contextRoot+'/img/icon/area.bmp" width="16" style="width:16px;height:16px;vertical-align: middle;"> ' + chartAPIJS.areaChart,
+			// 			onclick: function () {chartAPI.changeChartType('areaspline', this);}
+			// 		}]
+			// 	}
+			// }
 		},
 		exporting2: {
 			url : contextRoot + '/export',
 			type : 'image/png',
 			filename : 'Export_Chart',
 			width:2000,
-			buttons: {
-				contextButton: {
-					menuItems: [{
-						text: '<img src="'+contextRoot+'/img/icon/icon_disk.png" width="16" style="width:16px;height:16px;vertical-align: middle;"> ' + chartAPIJS.imageSave,
-						onclick: function () {
-							this.exportChart();
-						}
-					}]
-				}
-			}
+			// buttons: {
+			// 	contextButton: {
+			// 		menuItems: [{
+			// 			// text: '<img src="'+contextRoot+'/img/icon/icon_disk.png" width="16" style="width:16px;height:16px;vertical-align: middle;"> ' + chartAPIJS.imageSave,
+			// 			// onclick: function () {
+			// 			// 	this.exportChart();
+			// 			// }
+			// 		}]
+			// 	}
+			// }
 		},
 		legend: {
 			enabled : true,
