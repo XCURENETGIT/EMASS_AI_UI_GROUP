@@ -137,6 +137,12 @@
 		}
 		input[type="checkbox"]:disabled {width:0; height:0; border:none;}
 
+
+		.radiotab label{
+			padding: 2px 17px; !important
+		}
+
+
 	</style>
 
 
@@ -747,14 +753,14 @@
 											</div>
 											<div class="col-65">
 												<div class="radiotab w100">
-													<label class="w33">
+													<label class="">
 														<input type="checkbox" name="alarmType" value="E" checked><span
 															class="fa fa-check"><span class="text">
 														<s:message code="mail.msg"/></span></span></label><label
-														class="w33">
+														class="">
 													<input type="checkbox" name="alarmType" value="S"><span
 														class="fa fa-check"><span class="text">
-														SMS</span></span></label><label class="w33">
+														SMS</span></span></label><label class="">
 													<input type="checkbox" name="alarmType" value="M"><span
 														class="fa fa-check"><span class="text">
 														<s:message code="mail.alert_message"/></span></span></label>
@@ -773,17 +779,17 @@
 											</div>
 											<div class="col-65">
 												<div class="radiotab w100">
-													<label class="w33">
+													<label class="">
 														<input type="radio" name="alarmCycleVal" value="W" checked><span
 															class="fa fa-check"><span class="text">
 														<s:message
 																code="common.msg.everyweek"/></span></span></label><label
-														class="w33">
+														class="">
 													<input type="radio" name="alarmCycleVal" value="D"><span
 														class="fa fa-check"><span class="text">
 														<s:message
 																code="common.msg.everyday"/></span></span></label><label
-														class="w33">
+														class="">
 													<input type="radio" name="alarmCycleVal" value="H"><span
 														class="fa fa-check"><span class="text">
 														<s:message code="common.msg.everyhour"/></span></span></label>

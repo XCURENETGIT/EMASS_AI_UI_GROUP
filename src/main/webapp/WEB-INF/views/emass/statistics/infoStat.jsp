@@ -106,7 +106,7 @@
 		$('#searchBtn').click(function () {
 			closeDetailTab();
             if ($('#piCount').val() === '' || $('#piCount').val() === null || $('#piCount').val() === undefined) {
-                alert('기준 유출 건수 값을 입력해주세요.');
+                ui.alertMsg('<s:message code="piCount.msg.nonSelect"/>');
                 return;
             }
 
@@ -125,7 +125,7 @@
             $('#userVal, #userStr, #userDept, #userJib').val('');
 			$('#userSelectedArea').hide();
 			$('#busiSelect').selectpicker('val', '');
-            $('#piCount').val('1');
+            $('#piCount').val('');
 
 		});
 

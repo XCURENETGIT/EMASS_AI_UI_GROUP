@@ -1564,7 +1564,7 @@
                                 <input type="checkbox" name="url_not" disabled="disabled">
                                 <span class="fa fa-check"></span><s:message code="query.make.except"/>
                             </label>
-                            <button type="button" class="btn01" accesskey="A" id="addUrlBtn">url <s:message code="auditLog.oper.INSERT"/></button>
+                       <%--     <button type="button" class="btn01" accesskey="A" id="addUrlBtn">url추가</button>--%>
                             <div id="additionalUrlFields"></div>
                         </div>
                     </li>
@@ -1579,7 +1579,7 @@
                         <input type="hidden" name="readYn" id="readYn">
                     </li>
                     <!-- 첨부여부 -->
-                    <li class="form-inline" style="height:110px;">
+                    <li class="form-inline" style="height:118px;">
                         <div class=" col-xs-3">
                             <label for="attachYnVal"><s:message code="condition.isattached"/></label>
                         </div>
