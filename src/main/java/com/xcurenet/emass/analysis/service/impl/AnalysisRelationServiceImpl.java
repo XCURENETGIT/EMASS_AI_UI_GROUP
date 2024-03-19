@@ -559,9 +559,9 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 				for (int j = 0; j < q.size(); j++) {
 					String fv = q.get(j).trim();
 					if (fv.startsWith("-")) {
-						tmpq.add(fv.replace('-', ' '));
+						tmpq.add("("+fv.replace('-', ' ')+")");
 					} else if (fv.startsWith("+")) {
-						tmpq.add(fv.replace('+', '-'));
+						tmpq.add("("+fv.replace('+', '-')+")");
 					} else {
 						tmpq.add("-" + fv);
 					}
@@ -611,6 +611,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 
 
 			switch (Common.nvl(andOr[i])) {
+
 				case "and":
 					query.and();
 					break;
@@ -709,6 +710,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 							break;
 				}
 			}
+
 
 			if (afterPparen[i].equals(")")) {
 				query.afterParen();

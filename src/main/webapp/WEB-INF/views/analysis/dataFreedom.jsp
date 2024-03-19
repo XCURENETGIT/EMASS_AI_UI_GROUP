@@ -146,6 +146,7 @@
         $('#messageListCount .caret').change(function () {
             grid.pageSize = Number($('#messageListCount .caret').attr('val'));
             selectMessageList();
+            console.log("3");
         });
 
         colInit();
@@ -762,6 +763,7 @@
     }
 
     function messagePageLink(col1, col2, value) {
+        console.log("5");
 
         var query = '';
         var title = '';
@@ -790,6 +792,7 @@
         }
 
         selectDetail(query);
+        console.log("6");
         $(".selectChartData").html(title);
     }
 
@@ -839,18 +842,20 @@
         writeExportMenu('export_menu', 'messageListGrid', '<s:message code="DATA_ANALYSIS.ANALYSIS_CUSTOM"/> - <s:message code="analysis.freedom.ui.msglist"/>');
     }
     // grid.loadPageSize();
-    grid.changePageSize = function(cnt){
-        getData('Y');
-    };
+    // grid.changePageSize = function(cnt){
+    //     getData('Y');
+    // };
 
     var selectQuery = '';
 
     function selectDetail(query) {
         selectQuery = query;
-        selectMessageList('Y');
+        console.log("10");
+        selectMessageList();
     }
 
     function selectMessageList(flag) {
+        console.log("1");
         $("#messageList").show();
         if (flag == undefined || flag == 'Y') {
             grid.data.length = 0;
@@ -862,6 +867,7 @@
         }
         grid.pageSize = getPageSize('messageListCount');
         grid.on();
+        searchFlag=true;
 
 
         ui.post({
@@ -878,6 +884,7 @@
                 ui.alertMsg(message);
             },
             complete: function () {
+                searchFlag=false;
                 grid.off();
             }
         });
