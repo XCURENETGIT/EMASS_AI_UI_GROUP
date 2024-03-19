@@ -522,7 +522,7 @@
 						rtnValue =  $(obj).html();
 					}
 					else {
-						var solrQueryText = searchStr.replaceAll('/','');
+						var solrQueryText = searchStr;
 						var re = new RegExp(solrQueryText, 'ig');
 						var matchArray;
 						var first = 0;
@@ -547,6 +547,8 @@
 						rtnValue = resultString;
 					}
 				}
+
+
 			} else {
 				rtnValue =  rtnVal;
 			}

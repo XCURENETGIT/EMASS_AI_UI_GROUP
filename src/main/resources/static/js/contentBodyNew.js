@@ -1004,6 +1004,7 @@ function getMessage(id, search, bodySize, kHighlight, hostQueryUse ){
 	msgId = id;
 	searchkey = search;
 
+
 	if(kHighlight != undefined) keywordHighlight = kHighlight;
 	if(hostQueryUse != undefined) hostQuery = hostQueryUse;
 
@@ -1919,7 +1920,7 @@ jQuery.fn.highlight = function(pat, type) {
 			if(pat.substring(0,1) == '/' && pat.substring(pat.length - 1) == '/') {
 				//var pos = node.data.toUpperCase().indexOf(pat);
 
-				var solrQueryText = pat.replaceAll('/','');
+				var solrQueryText = pat;
 				var re = new RegExp(solrQueryText, 'ig');
 				var matchArray;
 				var first = 0;
