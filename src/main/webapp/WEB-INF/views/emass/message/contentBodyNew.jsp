@@ -56,7 +56,7 @@
 		html, body{
 			min-width:600px !important;}
 		.contents {
-			min-width:600px !important;
+			min-width:700px !important;
 		}
 		.boxArea {
 			height: 100% !important;
@@ -75,7 +75,7 @@
 			right: 0px;
 			height: 35px;
 			width: 100%;
-			min-width: 600px;
+			min-width: 675px;
 		}
 
 
@@ -396,14 +396,15 @@
 </div>
 <div class="msgBody">
 	<div style="display: none;" id="buttonDiv">
-		<div class="form-group p12" style="float:left;padding:4px 0px 0 5px;" id="buttonArea">
-			<button class ="btn01" id="prevBtn"><img src="../img/icon/ico_arrow_left_b.png/" ></button>
-			<button class ="btn01" id="nextBtn"><img src="../img/icon/ico_arrow_right_b.png/" ></button>
+		<div class="form-group p12" style="padding:4px 0px 0 5px;" id="buttonArea">
+			<button class="btn01" id="prevBtn"><img src="../img/icon/ico_arrow_left_b.png/"></button>
+			<button class="btn01" id="nextBtn"><img src="../img/icon/ico_arrow_right_b.png/"></button>
 			<div class="btnright">
-				<button class ="btn05" id="openOriginal" style="display: none;"><img src="../img/ico_main_tit12.png/" ><s:message code="common.msg.view.original"/></button>
-				<button class ="btn05" id="saveBtn"><img src="../img/subBtn_save.png/" ><s:message code="common.msg.save"/></button>
-				<button class ="btn05" id="printBtn"><img src="../img/subBtn_mail.png/" ><s:message code="common.msg.print"/></button>
-				<ul class="dropdown-menu dropdown-menu-left" role="menu" style="left:calc(80% - 102px);right:-1px"  id="additionalBtn">
+
+				<button class="btn05" id="openOriginal" style="display: none;"><img src="../img/ico_main_tit12.png/"><s:message code="common.msg.view.original"/></button>
+				<button class="btn05" id="saveBtn"><img src="../img/subBtn_save.png/"><s:message code="common.msg.save"/></button>
+				<button class="btn05" id="printBtn"><img src="../img/subBtn_mail.png/"><s:message code="common.msg.print"/></button>
+				<ul class="dropdown-menu dropdown-menu-left" role="menu" style="left:calc(80% - 102px);right:-1px" id="additionalBtn">
 					<li><a href="javascript:void(0);" id="usersInfoBtn"><s:message code="common.msg.userinfo"/></a></li>
 					<li class="dropdown-divider"></li>
 					<li><a href="javascript:void(0);" id="headerBtn"><s:message code="common.msg.headerInfo"/></a></li>
@@ -418,8 +419,8 @@
 					<li class="dropdown-divider"></li>
 					<li><a href="javascript:void(0);" id="msgIdBtn">ID</a></li>
 				</ul>
-				<button class ="btn05" id="openBigContent"><img src="../img/subBtn_link.png/" ><s:message code="bodyview.window.new"/></button>
-				<button class ="btn05" id="recommendBtn"><img src="../img/ico_main_tit12.png/" ><s:message code="common.msg.similar"/></button>
+				<button class="btn05" id="openBigContent"><img src="../img/subBtn_link.png/"><s:message code="bodyview.window.new"/></button>
+				<button class="btn05" id="recommendBtn"><img src="../img/ico_main_tit12.png/"><s:message code="common.msg.similar"/></button>
 				<button type="button" class="btn05 dropdown-toggle" data-toggle="dropdown">
 					<s:message code="common.msg.addFunctions"/> <span class="caret"></span>
 				</button>
