@@ -170,7 +170,7 @@
 			</div>
 			<!--//LIST-->
 			<!--컬럼-->
-			<div>
+			<div >
 				<div class="lineTit">
 					<h3><s:message code="analysis.freedom.ui.column"/></h3>
 					<span id="columnPopover" class="btn-popover">

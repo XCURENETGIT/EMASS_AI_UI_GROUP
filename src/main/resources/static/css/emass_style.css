@@ -164,7 +164,7 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 .chartArea02 {display: grid; grid-template-columns: 600px 1fr; margin-bottom:24px; column-gap: 12px;}
 .chartArea02 > div {position: relative;}
 .chartArea03 {display: grid; grid-template-columns: 1fr 1fr 1fr; margin-bottom:12px;column-gap: 8px;}
-.chartArea04 {display: grid; grid-template-columns: auto 25% 25% 184px; column-gap: 20px;}
+.chartArea04 {display: grid; grid-template-columns: auto 28% 20% 184px; column-gap: 20px;}
 .chartArea04 > div {position: relative; }
 .chartAreafull {display: grid; grid-template-columns: 1fr; margin-bottom:24px;column-gap: 12px;}
 
