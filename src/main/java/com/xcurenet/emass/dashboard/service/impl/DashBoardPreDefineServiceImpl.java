@@ -351,18 +351,20 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		List<Map<String, Object>> result = new ArrayList<>();
 
 		long max = 0;
-		for (int i = 0; i < edc.getPivotData().size(); i++) {
-			Map<String, Object> item = new HashMap<>();
-			item.put("date", edc.getPivotData().get(i).get("rowKey"));
-			item.put("total", edc.getPivotData().get(i).get("total"));
-			double doubleNum = (double) edc.getPivotData().get(i).get("size");
-			long attach = (long) doubleNum;
-			item.put("bodySize", attach);
-			item.put("bodySizeStr", Common.convertFileSize(attach));
-			if (attach > max) {
-				max = attach;
+		if (edc.getPivotData()!= null) {
+			for (int i = 0; i < edc.getPivotData().size(); i++) {
+				Map<String, Object> item = new HashMap<>();
+				item.put("date", edc.getPivotData().get(i).get("rowKey"));
+				item.put("total", edc.getPivotData().get(i).get("total"));
+				double doubleNum = (double) edc.getPivotData().get(i).get("size");
+				long attach = (long) doubleNum;
+				item.put("bodySize", attach);
+				item.put("bodySizeStr", Common.convertFileSize(attach));
+				if (attach > max) {
+					max = attach;
+				}
+				result.add(item);
 			}
-			result.add(item);
 		}
 		result = result.stream().sorted((o1, o2) -> o1.get("date").toString().compareTo(o2.get("date").toString()) ).collect(Collectors.toList());
 		return new XcnResponseVO(XcnRspCode.OK, result);

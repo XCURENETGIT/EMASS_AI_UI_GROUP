@@ -39,6 +39,8 @@ public interface SolrEdcService {
 
 	public SolrEdcMessageVO setOverlap(SolrEdcMessageVO solrVo) throws SolrServerException, IOException;
 
+	public List<SolrEdcVO>  setOverlap(List<SolrEdcVO> emass) throws SolrServerException, IOException;
+
 	public boolean setSecretInfo(String sourceKey, String securityYn, String doublSecurityPctStr, Map<String, List<parseJsonFile>> sortList) throws SolrServerException, IOException;
 
 	public boolean updateSolrFeedbackData(List<parseJsonFile> feedbackList);

@@ -24,6 +24,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Data
@@ -117,7 +118,7 @@ public class SolrCreateQuery {
 	public static final String JOIN_READ = " +checked.readId:%s";
 	public static final String JOIN_UNREAD = " -checked.readId:%s";
 
-	private static final String OCR_FIELD = " ocr_attach ocr_attach.kr ocr_attach.en ocr_attach.jp";
+	private static final String OCR_FIELD = " ocr_attach";
 	private String finalReadYn;
 	private String consentNo;
 
@@ -125,9 +126,9 @@ public class SolrCreateQuery {
 
 	public String[] SEARCH_FIELD = {"msgid",
 			"kwds_body", "kwds_subject", "kwds_attach",
-			"subject", "subject.kr", "subject.jp", "subject.en",
-			"body", "body.kr", "body.jp", "body.en",
-			"attach", "attach.kr", "attach.jp", "attach.en",
+			"subject",
+			"body",
+			"attach",
 			"attachname", "attachname_str", "kwds_attachname", // 첨부파일명
 			"host", "host_str", // host
 			"path", "query", // url
@@ -140,8 +141,17 @@ public class SolrCreateQuery {
 
 	private String[] INEQUALITY_SIGN = {"+","-","|"};
 
-	private String[] SPECIAL_CHARS = {"!", "\"", "#", "$", "%", "&", "(", ")", "{", "}", "@", "`", "*", ":",
-			";", ".", "<", ">", ",", "^", "~", "'", "[", "]"};
+	private String[] SPECIAL_CHARS = {"!", "/",  "#", "$", "%", "&", "@", "`", "*", ":",
+			";", ".", "<", ">", ",", "^", "~", "'"};
+
+	private static Map<String,String> BRACKET_MAP = Map.of(
+			"{", "}",
+			"[", "]"
+			);
+
+	private static Map<String,String> PARENTHESES = Map.of(
+			"(", ")"
+	);
 
 	public SolrCreateQuery() {
 		sq = new SolrQuery();
@@ -262,6 +272,7 @@ public class SolrCreateQuery {
 	 */
 	public SolrCreateQuery setSearchStr(String searchStr) {
 		if (Common.isEmpty(searchStr)) return this;
+
 		return addQuery(String.format("%s(%s)", AND_QUERY, getSearchQuery(searchStr)));
 	}
 
@@ -278,32 +289,10 @@ public class SolrCreateQuery {
 			String[] fields = searchField.split(" ");
 			StringBuilder query = new StringBuilder();
 			for (String field : fields) {
-				if(Common.isEquals(field, "body")) {
-					query.append(String.format("body.kr:(%s) ", getSearchQuery(searchStr)));
-					query.append(String.format("body.en:(%s) ", getSearchQuery(searchStr)));
-					query.append(String.format("body.jp:(%s) ", getSearchQuery(searchStr)));
-					query.append(String.format("body_snippet:(%s) ",getSearchQuery(searchStr)));
-				}
-				if(Common.isEquals(field, "body_snippet")) {
-					query.append(String.format("body_snippet:(%s) ",createOrQueryAsteriskAll(searchStr)));
-				}
-				else if(Common.isEquals(field, "attach")) {
-					query.append(String.format("attach.kr:(%s) ", getSearchQuery(searchStr)));
-					query.append(String.format("attach.en:(%s) ", getSearchQuery(searchStr)));
-					query.append(String.format("attach.jp:(%s) ", getSearchQuery(searchStr)));
-				} else if(Common.isEquals(field, "subject")) {
-					query.append(String.format("subject.kr:(%s) ", getSearchQuery(searchStr)));
-					query.append(String.format("subject.en:(%s) ", getSearchQuery(searchStr)));
-					query.append(String.format("subject.jp:(%s) ", getSearchQuery(searchStr)));
-				} else if(Common.isEquals(field, "ocr_attach")) {
-					query.append(String.format("ocr_attach.kr:(%s) ", getSearchQuery(searchStr)));
-					query.append(String.format("ocr_attach.en:(%s) ", getSearchQuery(searchStr)));
-					query.append(String.format("ocr_attach.jp:(%s) ", getSearchQuery(searchStr)));
-				} else {
-					query.append(String.format("%s:(%s) ", field, getSearchQuery(searchStr)));
-				}
+				query.append(String.format("%s:(%s) ", field, getSearchQuery(searchStr)));
 			}
-			return addQuery(String.format("%s(%s)", AND_QUERY, query));
+
+			return addQuery(String.format("%s(%s)", AND_QUERY,query));
 		}
 	}
 
@@ -614,17 +603,17 @@ public class SolrCreateQuery {
 			StringBuffer queryStr = new StringBuffer();
 
 			if(Common.isEquals(receivers_upperCase, "Y")) {
-				queryStr.append(String.format("%s%s:%s", AND_QUERY, RECEIVER_UPPER, createOrQueryAsteriskAll(receivers))).append(SPACE);
+				queryStr.append(String.format("%s%s:%s", AND_QUERY, RECEIVER_UPPER, createOrQuery(receivers))).append(SPACE);
 			} else if(Common.isEquals(Config.getString("receiver.sender.uppercase"), "Y")) {
 
 				for (int i = 0; i < RECEIVER_NOTUPPER.length; i++) {
 					if (receivers.startsWith("\"") && receivers.endsWith("\"")) queryStr.append(String.format("%s:%s", RECEIVER_NOTUPPER[i], receivers)).append(SPACE);
-					else queryStr.append(String.format("%s:%s", RECEIVER_NOTUPPER[i], createOrQueryAsteriskAll(receivers))).append(SPACE);
+					else queryStr.append(String.format("%s:%s", RECEIVER_NOTUPPER[i], createOrQuery(receivers))).append(SPACE);
 				}
 			} else {
 				for (int i = 0; i < RECEIVER.length; i++) {
 					if (receivers.startsWith("\"") && receivers.endsWith("\"")) queryStr.append(String.format("%s:%s", RECEIVER[i], receivers)).append(SPACE);
-					else queryStr.append(String.format("%s:%s", RECEIVER[i], createOrQueryAsteriskAll(receivers))).append(SPACE);
+					else queryStr.append(String.format("%s:%s", RECEIVER[i], createOrQuery(receivers))).append(SPACE);
 				}
 			}
 
@@ -1375,57 +1364,137 @@ public class SolrCreateQuery {
 		query = specialCharsValid(query);
 		query = getTempQuery(query);
 		StringBuilder sb = new StringBuilder();
-
 		if (!query.contains("|") && !query.contains("+") && !query.contains("-") & !query.contains(" ")) {
 			StringBuilder queryStr = new StringBuilder();
 			String[] terms = query.split(" ");
 			for (String term : terms) {
 			     /*특수문자 처리*/
 				term = specialCharsCheck(term);
-
 				queryStr.append(appendSpecialchar(term)).append(" ");
 			}
-			sb.append("+").append(queryStr.toString().trim().replaceAll(" ", " ").replaceAll("__", " "));
+			sb.append(queryStr.toString().trim().replaceAll(" ", " ").replaceAll("__", " "));
 		} else {
 			StringBuilder querySb = new StringBuilder();
 			String[] terms = query.split(" ");
-//			querySb.append("\"");
 			for (int i = 0; i < terms.length; i++) {
 
-				terms[i] = specialCharsCheck(terms[i]);
 
 				if (terms[i].equals("|")) {
 					terms[i] = OR_PREFIX;
 				}else if (i > 0 && terms[i - 1].equals(OR_PREFIX) || terms[i].startsWith("+") || terms[i].startsWith("-")) {
 				}else if (i < terms.length - 1 && !terms[i + 1].equals("|")) {
-					terms[i] = ("+").concat(terms[i]);
+				//	terms[i] = ("+").concat(terms[i]);
 				}else if (!terms[i].startsWith("+") && !terms[i].startsWith("-")) {
-					terms[i] = ("(").concat(terms[i]).concat( ")");
+				//	terms[i] = ("(").concat(terms[i]).concat( ")");
 				}
+
 				querySb.append(appendSpecialchar(terms[i])).append(" ");
 			}
-
 			sb.append(querySb.toString().trim().replaceAll(" ", " ").replaceAll("__", " "));
 		}
-		return sb.toString().replace(OR_PREFIX, " ").replace("__", " ").replace("  ", " ").trim();
+
+		String result = sb.toString().replace(OR_PREFIX, " ").replace("__", " ").replace("  ", " ").trim();
+
+		 /* 괄호 처리 */
+		 result = braketProc(result);
+		 /* 연산자 처리 */
+	 	 result = inequalitySignProc(result);
+		return result;
 	}
 
 
 	public String specialCharsValid(String str){
-		if(str.indexOf("\"") > -1) {
-			if(str.indexOf("\"") == str.lastIndexOf("\"")) str = str.replace("\"", "");
+		String result = str;
+		if(result.indexOf("\"") > -1) {
+		  result = result.replace("\"", "");
 		}
-		str = str.replaceAll("([/])\\1+","/").replaceAll("([+])\\1+","+").replaceAll("([|])\\1+","|").replaceAll("(-)\\1+","-"); // 연산자를 연속2개입력시 1개로 줄이기
-		return str;
+		if(result.indexOf("\\") > -1) {
+			result = result.replace("\\", "");
+		}
+		if(result.indexOf("/") > -1) result = result.replace("/", "");
+
+
+		result = result.replaceAll("([+])\\1+","+").replaceAll("([|])\\1+","|").replaceAll("(-)\\1+","-"); // 연산자를 연속2개입력시 1개로 줄이기
+
+		return result;
 	}
 
 	public String specialCharsCheck(String str){
 		String result = str;
-		if(Arrays.stream(SPECIAL_CHARS).filter(s-> str.indexOf(s) > -1).count() > 0) result = ("\"").concat(str).concat( "\"").replaceAll("(\")\\1+","\"");
-		result.replaceAll("(\")\\1+","\"");
+
+		/* 특수문자 처리 */
+		for(String spStr : SPECIAL_CHARS) {
+			if(result.indexOf(spStr) > -1) {
+			result = result.replace(spStr, "");
+			}
+		}
+
 		return result;
 	}
 
+
+
+	public String braketProc(String str){
+		String result = str;
+		int preIdx = -1;
+		int sufIdx = -1;
+
+		String temp = "";
+
+		for(Map.Entry<String,String> pre : PARENTHESES.entrySet()) {
+			if((result.indexOf(pre.getKey())) > -1) {
+				if((result.indexOf(pre.getValue())) == -1) {
+					result = result.replace(pre.getKey(), "");
+				}
+			}else if((result.indexOf(pre.getKey())) == -1) {
+				if((result.indexOf(pre.getValue())) > -1) {
+					result = result.replace(pre.getValue(), "");
+				}
+			}
+		}
+
+		/* 괄호 처리 */
+		for(Map.Entry<String,String> pre : BRACKET_MAP.entrySet()) {
+			if((preIdx = result.indexOf(pre.getKey())) > -1) {
+				if((sufIdx = result.indexOf(pre.getValue())) > -1) {
+					temp = result.substring(preIdx,sufIdx+1);
+					result = result.replace(temp, ("\"").concat(temp).concat( "\""));
+				}else if((sufIdx = result.indexOf(pre.getValue())) == -1) {
+					result = result.replace(pre.getKey(), "");
+				}
+			}else if((preIdx = result.indexOf(pre.getKey())) == -1) {
+				if((sufIdx = result.indexOf(pre.getValue())) > -1) {
+					result = result.replace(pre.getValue(), "");
+				}
+			}
+		}
+
+		return result;
+	}
+
+	public String inequalitySignProc(String str) {
+		String result = str;
+		StringBuilder tempSb = new StringBuilder();
+		tempSb.append(result);
+
+		int idx = 0;
+		char[] chars =  result.toCharArray();
+		for(char c : chars) {
+			if( Arrays.stream(INEQUALITY_SIGN).filter(s -> s.equals(String.valueOf(c))).count() > 0) {
+				if(idx+1 == chars.length) {
+					tempSb.setCharAt(idx,' ');
+				}else {
+					String cstr = String.valueOf(chars[idx+1]);
+					if(String.valueOf(chars[idx+1]).equals(" ") ||  Arrays.stream(INEQUALITY_SIGN).filter(s -> s.equals(String.valueOf(cstr))).count() > 0) {
+						tempSb.setCharAt(idx,' ');
+					}
+				}
+			}
+			idx++;
+		}
+
+		return tempSb.toString();
+	}
 
 	/**
 	 * 공백 구분 임시 쿼리 생성

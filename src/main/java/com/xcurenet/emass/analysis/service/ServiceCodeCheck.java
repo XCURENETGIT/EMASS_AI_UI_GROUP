@@ -156,12 +156,12 @@ public class ServiceCodeCheck {
 		String ThirdServiceCode = edcVO.getSvc().substring(0, 2);
 		switch (item) {
 			case "outMail":
-				if (firstServiceCode.equals("P") || firstServiceCode.equals("I") || firstServiceCode.equals("W")) {
+				if (firstServiceCode.equals("W")) {
 					value = 1;
 				}
 				break;
 			case "inMail":
-				if (firstServiceCode.equals("P") || firstServiceCode.equals("I") || firstServiceCode.equals("M") || ThirdServiceCode.equals("EMM")) {
+				if (firstServiceCode.equals("M") || ThirdServiceCode.equals("EMM")) {
 					value = 1;
 				}
 				break;

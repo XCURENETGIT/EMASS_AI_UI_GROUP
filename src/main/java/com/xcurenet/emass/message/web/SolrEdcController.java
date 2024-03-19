@@ -109,8 +109,6 @@ public class SolrEdcController {
 		JSONObject data = Common.toJSONObject(param.get("data"));
 		String pageType = Common.nvl(param.get("pageType"));
 
-
-
 		if(Common.isNotEmpty(data.get("folderSeq"))) {
 			String folder_seq = Common.nvl(data.get("folderSeq"));
 			//String folder_name = Common.nvl(data.get("folderName"));
@@ -195,10 +193,11 @@ public class SolrEdcController {
 			String overlap = (!Common.isEmpty(overlapInfo)) ? overlapInfo.getVal() : "N";
 
 			SolrEdcMessageVO solrVo = solrEdcService.getEmassMessage(sq, adminId, solrCreateQuery.getFinalReadYn(), solrCreateQuery.getConsentNo());
-
 			if(Common.isEquals(Common.nvl(param.get("overlap")), "Y") && Common.isEquals(overlap, "Y")) {
 				solrVo = solrEdcService.setOverlap(solrVo);
 			}
+
+
 
 			if(Config.getBoolean("consent.menu.enable") && Common.isEquals(Common.nvz(param.get("offset"), 0), 0)) {
 				searchLogService.insertSearchLog(param);

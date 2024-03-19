@@ -436,12 +436,12 @@ function initGrid(){
  	grid.colAdd('epmsg_type', '<s:message code="condition.epmsgType.list"/>', 100, 'center', true, 'nomal');
 	grid.colAdd('xrootmtr', '<s:message code="common.msg.xrootmtr"/>', 100, 'left', true, 'nomal');
 	grid.colAdd('interestUserYn', '<s:message code="message.msg.interest"/>', 40, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-		if (value == 'Y') return '<div class="interestUserCheck"></div>';
-		else if (value == 'N') return '';
+		if (value == 'Y') return 'Y';
+		else if (value == 'N') return 'N';
 	});
 	grid.colAdd('readYn', '<s:message code="condition.read"/>', 40, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-		if (value == 'Y') return '<div class="readY"></div>';
-		else if (value == 'N') return '<div class="readN"></div>';
+		if (value == 'Y') return 'Y';
+		else if (value == 'N')  return 'N';
 		else return '-';
 	});
 	if( infoFeedbackConf == 'true' && infoFeedbackYn == 'Y' ) {
@@ -484,7 +484,7 @@ function initGrid(){
 	});
 	}
 	grid.colAdd('attachcnt', '<s:message code="message.msg.file"/>', 35, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
-		if (value == '0') return '';
+		if (value == '0') return '0';
 		else return value.comma();
 	});
 	grid.colAdd('inside', '<s:message code="message.msg.inout"/>', 55, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {

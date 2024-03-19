@@ -253,9 +253,11 @@ function highlightSearchStr(rtnVal, column){
 		var searchType = parent.$('#searchField').val();
 		var searchStr = parent.$('#searchStrInput').val();
 
+
 		if(column != "subject") {
 			rtnVal = rtnVal.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '\'');
 		}
+
 
 		if(searchStr == "") {
 			return rtnVal;
