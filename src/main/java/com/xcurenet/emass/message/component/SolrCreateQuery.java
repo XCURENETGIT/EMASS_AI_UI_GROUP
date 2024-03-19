@@ -141,8 +141,7 @@ public class SolrCreateQuery {
 
 	private String[] INEQUALITY_SIGN = {"+","-","|"};
 
-	private String[] SPECIAL_CHARS = {"!", "/",  "#", "$", "%", "&", "@", "`", "*", ":",
-			";", ".", "<", ">", ",", "^", "~", "'"};
+
 
 	private static Map<String,String> BRACKET_MAP = Map.of(
 			"{", "}",
@@ -281,7 +280,6 @@ public class SolrCreateQuery {
 	 */
 	public SolrCreateQuery setSearchStr(String searchStr, String searchField) {
 		if (Common.isEmpty(searchStr)) return this;
-		if( searchStr.matches("^[\\W]*$") && searchStr.matches("^[\\D]*$") && searchStr.replaceAll("[^ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]", "").length() == 0 )return this; //특수문자만입력시
 
 		if (Common.isEmpty(searchField)) return addQuery(String.format("%s(%s)", AND_QUERY, getSearchQuery(searchStr)));
 		else {
@@ -1369,7 +1367,6 @@ public class SolrCreateQuery {
 			String[] terms = query.split(" ");
 			for (String term : terms) {
 			     /*특수문자 처리*/
-				term = specialCharsCheck(term);
 				queryStr.append(appendSpecialchar(term)).append(" ");
 			}
 			sb.append(queryStr.toString().trim().replaceAll(" ", " ").replaceAll("__", " "));
@@ -1377,7 +1374,6 @@ public class SolrCreateQuery {
 			StringBuilder querySb = new StringBuilder();
 			String[] terms = query.split(" ");
 			for (int i = 0; i < terms.length; i++) {
-
 
 				if (terms[i].equals("|")) {
 					terms[i] = OR_PREFIX;
@@ -1397,38 +1393,28 @@ public class SolrCreateQuery {
 
 		 /* 괄호 처리 */
 		 result = braketProc(result);
+		 // 특수문자 처리
+		result = specialCharsCheck(result);
 		 /* 연산자 처리 */
-	 	 result = inequalitySignProc(result);
 		return result;
 	}
 
 
 	public String specialCharsValid(String str){
 		String result = str;
-		if(result.indexOf("\"") > -1) {
-		  result = result.replace("\"", "");
+		if(result.indexOf("/") > -1) {
+			if(result.indexOf("/") == result.lastIndexOf("/")) result = result.replace("/", "");
 		}
-		if(result.indexOf("\\") > -1) {
-			result = result.replace("\\", "");
-		}
-		if(result.indexOf("/") > -1) result = result.replace("/", "");
-
-
-		result = result.replaceAll("([+])\\1+","+").replaceAll("([|])\\1+","|").replaceAll("(-)\\1+","-"); // 연산자를 연속2개입력시 1개로 줄이기
+		result = result.replaceAll("([+])\\1+","+").replaceAll("([|])\\1+","|")
+				.replaceAll("(-)\\1+","-"); // 연속2개입력시 1개로 줄이기
 
 		return result;
 	}
 
 	public String specialCharsCheck(String str){
 		String result = str;
-
 		/* 특수문자 처리 */
-		for(String spStr : SPECIAL_CHARS) {
-			if(result.indexOf(spStr) > -1) {
-			result = result.replace(spStr, "");
-			}
-		}
-
+		result  =  result.replaceAll("[[\\\\]=/&><!*:^~/+-[|][\"]]", ("\"").concat("\\\\\\\\"+"$0").concat( "\""));
 		return result;
 	}
 

@@ -710,6 +710,8 @@
                     return false;
                 }
             });
+
+
             function split(val) {
                 return val.split(/,\s*/);
             }
@@ -1867,9 +1869,6 @@
         //일반 검색
         function searchData( ){
             //체크로직 및 분기
-           var str =  $('#searchStrInput').val();
-           str = str.replaceAll('/','');
-           $('#searchStrInput').val(str);
             getList('D');
         }
 
