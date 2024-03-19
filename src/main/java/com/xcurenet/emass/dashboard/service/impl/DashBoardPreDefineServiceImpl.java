@@ -429,25 +429,45 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		String date = Common.getCurrentDate();
 		List<Map<String, Object>> result = deviceTrafficStatService.getTrafficStatList_Hour(date, date);
 
-		List<Map<String, Object>> transformedData = new ArrayList<>();
+		Map<String, Long> dateToLongNumMap = new HashMap<>();
 
+		// 결과를 처리하여 날짜별로 longNum 값을 누적
 		for (Map<String, Object> entry : result) {
 			for (Map.Entry<String, Object> subEntry : entry.entrySet()) {
 				String key = subEntry.getKey();
 				if (isInteger(key)){
-					Map<String, Object> transformedEntry = new HashMap<>();
-					transformedEntry.put("date", subEntry.getKey());
+					String dateKey = subEntry.getKey();
 					long num = (long) parseCount(subEntry.getValue());
-					transformedEntry.put("longNum",num);
-					transformedEntry.put("longNumStr",Common.convertFileSize(num));
-					transformedData.add(transformedEntry);
+
+					// 날짜가 이미 맵에 있는 경우에는 해당 날짜의 longNum에 누적값을 더함
+					if (dateToLongNumMap.containsKey(dateKey)) {
+						long accumulatedNum = dateToLongNumMap.get(dateKey);
+						accumulatedNum += num;
+						dateToLongNumMap.put(dateKey, accumulatedNum);
+					} else {
+						dateToLongNumMap.put(dateKey, num);
+					}
 				}
 			}
 		}
-		transformedData = transformedData.stream().sorted((o1, o2) -> o1.get("date").toString().compareTo(o2.get("date").toString()) ).collect(Collectors.toList());
+
+		List<Map<String, Object>> transformedData = new ArrayList<>();
+
+		// 변환된 데이터 생성
+		for (Map.Entry<String, Long> entry : dateToLongNumMap.entrySet()) {
+			Map<String, Object> transformedEntry = new HashMap<>();
+			transformedEntry.put("date", entry.getKey());
+			transformedEntry.put("longNum", entry.getValue());
+			transformedEntry.put("longNumStr", Common.convertFileSize(entry.getValue()));
+			transformedData.add(transformedEntry);
+		}
+
+		// 날짜 순으로 정렬
+		transformedData.sort((o1, o2) -> o1.get("date").toString().compareTo(o2.get("date").toString()));
 
 		return transformedData;
 	}
+
 
 
 
