@@ -525,7 +525,7 @@
 
         console.log(colKey)
 
-        if (colKey == 'rowKey' || colKey == 'total' || colKey == 'NUM') {
+        if (colKey == 'rowKey' || colKey == 'total' || colKey == 'NUM'|| colKey =='svcLv12Nm') {
             colKey = "";
             colKeyNm = '<s:message code="bodyview.total"/>';
         } else if (colKey == "I") {
@@ -653,7 +653,6 @@
             offset : grid1.data.length,
             limit : grid1.pageSize,
             xAxis_str : xAxis_str,
-            rowKey : rowKey,
             success : function(data, total) {
          	    grid1.colInit();
                 grid1.autoNumber();
