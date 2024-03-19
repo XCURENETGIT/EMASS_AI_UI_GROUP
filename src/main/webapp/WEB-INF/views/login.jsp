@@ -305,7 +305,7 @@
             var userIdInput = $('#userIdInput').val().ltrim().rtrim();
 
             if(timeOut!=true){
-                alert("아직 유효 메일이 남아있습니다");
+                ui.alertMsg('<s:message code="login.mail.notyet"/>');
             }
             else {
                 confirmTimeOut();
@@ -321,9 +321,9 @@
                     },
                     error: function (request,status,error,data) {
                         if (error=='MAILNOCHECK') {
-                            alert("메일서버가 비활성화 상태 입니다. 관리자에게 문의하시길 바랍니다");
+                            ui.alertMsg('<s:message code="login.MAILNOCHECK.access"/>');
                         } else {
-                            alert("인증코드 발송에 실패하였습니다 관리자에게 문의하시길 바랍니다");
+                            ui.alertMsg('<s:message code="login.MAILNOCHECK.access2"/>');
                         }
                         timeOut=true;
                         $('#unuseAdminPop').modal('hide');
@@ -434,20 +434,20 @@
      data-backdrop="static">
 	<div class="modal-content">
 		<div class="modalHead">
-			<h2>운용자 계정 잠금</h2>
+			<h2><s:message code="login.mail.unuse"/></h2>
 			<span class="close clearBtn" data-dismiss="modal">&times;</span>
 		</div>
 		<div class="modalCon">
 			<div class="modalbody">
-				<h4 class="blue02" style="font-weight: 600;"> 이메일 인증</h4>
+				<h4 class="blue02" style="font-weight: 600;"> <s:message code="login.mail.send"/></h4>
 
 				<div class="row pt8">
 					<input type="text" name="number" id="number_confirm" style="width:250px; margin-top: -10px; position: relative;"
-					       placeholder="인증코드 입력">
-					<button type="button" class="form_btn01_02" name="confirmBtn" id="confirmBtn" onclick="sendMail()">메일 보내기</button>
+					       placeholder="<s:message code="login.mail.code"/>">
+					<button type="button" class="form_btn01_02" name="confirmBtn" id="confirmBtn" onclick="sendMail()"><s:message code="login.mail.send"/></button>
 					<%--<span id="unusetime"></span>--%>
 				</div>
-				<div style="font-size: 13px;">메일은 가입 시 작성하셨던 주소로 전송됩니다. 인증코드는 90초간 유효합니다.</div>
+				<div style="font-size: 13px;"><s:message code="login.mail.info"/></div>
 			</div>
 		</div>
 	</div>

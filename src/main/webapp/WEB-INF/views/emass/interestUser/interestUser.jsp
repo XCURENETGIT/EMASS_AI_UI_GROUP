@@ -658,7 +658,7 @@
 			<div class="modalbody" style="height: 430px;">
 				<textarea rows="110" cols="49" style="height:380px; border: 1px solid #ccc; " id="textUploadTextArea"></textarea>
 			</div>
-			<div class="info"> 안내 사항
+			<div class="info"><s:message code="common.guidance"/>
 				<div class="form-inline" style="padding-left: 10px;">1) <s:message code="interest.message.upload.info3"/></div>
 				<div class="form-inline" style="padding-left: 10px;">2) <s:message code="interest.message.upload.info4"/></div>
 				<div class="form-inline" style="padding-left: 10px;">3) <s:message code="interest.message.upload.info5"/></div>
