@@ -246,6 +246,7 @@
         $('#oldJib').val(oldJib);
 
 
+
 		var url = '<c:url value="/commons/selectCode.do?codeType='+id+'"/>';
 		var pop = fnOpenWindow('', 'selectCodeWinPopup', 1200, 700, 'resize');
 
@@ -267,10 +268,10 @@
 					<span class="hyphen">~</span></div>
 				<div id="endDatePicker"><input type="date" id="endDate" name='endDate' style="width: 110px;"></div>
 				<div class="form-group optiotab">
-					<button type="button" id="dateYesterday" accesskey="Y" style="width:72px;"><s:message code="condition.yesterday"/></button>
-					<button type="button" id="dateToday" accesskey="T" style="width:72px;"><s:message code="condition.today"/></button>
-					<button type="button" id="dateWeek" accesskey="W" ><s:message code="condition.week" arguments="1" argumentSeparator="|"/></button>
-					<button type="button" id="dateMonth" accesskey="M" ><s:message code="condition.month" arguments="1" argumentSeparator="|"/></button>
+					<button type="button" id="dateYesterday" accesskey="Y" style="width:85px;"><s:message code="condition.yesterday"/></button>
+					<button type="button" id="dateToday" accesskey="T" style="width:85px;"><s:message code="condition.today"/></button>
+					<button type="button" id="dateWeek" accesskey="W"style="width:85px;" ><s:message code="condition.week" arguments="1" argumentSeparator="|"/></button>
+					<button type="button" id="dateMonth" accesskey="M" style="width:90px;"><s:message code="condition.month" arguments="1" argumentSeparator="|"/></button>
 				</div>
 			</div>
 			<div class="searchSub_Box">
@@ -290,7 +291,7 @@
 				</div>
 				<%-- 첨부파일 크기--%>
 				<div>
-					<input type="text" id="fileSize" name="fileSize"  style="width: 80px;"placeholder="<s:message code="analysis.relation.attachsize"/>" maxlength="8" /><span class="fs12 mal4">(MByte <s:message code="filterInfo.rangeL"/>)</span>
+					<input type="text" id="fileSize" name="fileSize"  style="width: 130px;"placeholder="<s:message code="analysis.relation.attachsize"/>" maxlength="8" /><span class="fs12 mal4">(MByte <s:message code="filterInfo.rangeL"/>)</span>
 				</div>
 				<%-- 예약어 --%>
 				<div>
@@ -309,8 +310,8 @@
 				<div>
 					<button class="btn01" id="senders"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
 							code="common.org.choose.sendUser"/></button>
-					<span id="sendersSelectedArea" class="codeSelectedBtn" >
-							<button type="button" class="btn num_add bornone"  style="z-index: 2;">0</button>
+					<span id="sendersSelectedArea" class="codeSelectedBtn" style="display: none;" >
+							<button type="button" class="btn num_add bornone"  style="z-index: 2;" >0</button>
 					</span>
 					<input type="hidden" id="sendersStr" class="selectedTitle"/>
 					<input type="hidden" id="sendersVal"/>
@@ -323,7 +324,7 @@
 				<div>
 					<button class="btn01" id="receivers"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
 							code="common.org.choose.receiveUser"/></button>
-					<span id="receiversSelectedArea" class="codeSelectedBtn" >
+					<span id="receiversSelectedArea" class="codeSelectedBtn"  style="display: none;">
 							<button type="button" class="btn num_add bornone"  style="z-index: 2;">0</button>
 						</span>
 					<input type="hidden" id="receiversStr" class="selectedTitle"/>
@@ -332,8 +333,6 @@
 					<input type="hidden" id="receiversJib"/>
 					<input type="hidden" id="receiversEmail"/>
 				</div>
-
-
 				<div class="btnform">
 					<button type="button" accesskey="Q" class="form_btn01" id="btnSearch"><s:message code="common.msg.search"/></button>
 					<button type="button" accesskey="Q" class="form_btn02" id="btnReset"><s:message code="condition.reset"/></button>
