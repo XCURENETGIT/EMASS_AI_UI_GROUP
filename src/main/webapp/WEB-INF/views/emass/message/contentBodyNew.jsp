@@ -729,9 +729,11 @@
 							<div class="panel-heading " style="padding:10px 12px 9px;">
 								<s:message code="bodyview.body.content"/>
 								<div class="pull-right" style="position: relative;top:-7px;">
-
-									<button class="btn05 body_selectBtn font_size" id="large_txt">+ <s:message code="bodyview.msg.zoomIn"/></button>
-									<button class="btn05 body_selectBtn font_size" id="small_txt">- <s:message code="bodyview.msg.zoomOut"/></button>
+										<span class="select-xs body_selectBtn">
+											<s:message code="common.msg.zoom"/> :
+										</span>
+									<button class="btn05 body_selectBtn font_size" id="large_txt">+</button>
+									<button class="btn05 body_selectBtn font_size" id="small_txt">-</button>
 									&nbsp;
 									<span class="body_selectBtn"> <s:message code="bodyview.charset"/> : </span>
 									<span class="select-xs">
