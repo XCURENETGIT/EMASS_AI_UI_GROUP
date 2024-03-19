@@ -111,10 +111,12 @@
             }
 
 			getData('Y');
-			if (codeType == 'deptByCo') $('#deptByCoStrSpan').html('');
-			$('#' + codeType + 'Val').val('');
-			$('#' + codeType + 'Str').val('');
-			$('#' + codeType + 'SelectedArea').hide();
+            if (codeType != null) {
+                if (codeType == 'deptByCo') $('#deptByCoStrSpan').html('');
+                $('#' + codeType + 'Val').val('');
+                $('#' + codeType + 'Str').val('');
+                $('#' + codeType + 'SelectedArea').hide();
+            }
 		});
 
 		$('#clearBtn').click(function () {
@@ -625,14 +627,16 @@
             if(referer_url !='N') fnOpenWindow(referer_url, '', 1024, 800, 'resize');
         }else if (grid2.Col == grid2.ColIndex('ocr_attach_cnt')) {
             ocrFileInfoViewer( msgid);
-        }
+        }else {
 
-        if( !(adminMenu != "ALL" && adminMenu.indexOf("DV") < 0) ) {
-            if(!parent.$('#none_btn').hasClass('areaSelected')) viewer_open(grid2.Row);
-            if(popWin) viewer_openFocus(grid2.Row);
-        } else {
-            alert('<s:message code="message.auth.no.detailview"/>');
-            return;
+            if (!(adminMenu != "ALL" && adminMenu.indexOf("DV") < 0)) {
+                if (!parent.$('#none_btn').hasClass('areaSelected')) viewer_open(grid2.Row);
+                if (popWin) viewer_openFocus(grid2.Row);
+            } else {
+                console.log("2");
+                alert('<s:message code="message.auth.no.detailview"/>');
+                return;
+            }
         }
     };
     grid2.changePageSize = function(cnt){
