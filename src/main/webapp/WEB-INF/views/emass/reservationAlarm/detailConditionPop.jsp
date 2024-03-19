@@ -1564,7 +1564,7 @@
                                 <input type="checkbox" name="url_not" disabled="disabled">
                                 <span class="fa fa-check"></span><s:message code="query.make.except"/>
                             </label>
-                            <button type="button" class="btn01" accesskey="A" id="addUrlBtn">url추가</button>
+                            <button type="button" class="btn01" accesskey="A" id="addUrlBtn">url <s:message code="auditLog.oper.INSERT"/></button>
                             <div id="additionalUrlFields"></div>
                         </div>
                     </li>

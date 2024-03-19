@@ -21,6 +21,7 @@
 		margin: auto;
 		padding: 20px;
 		width: 93%;
+		border: 1px solid #ccc;
 		height:90%;
 		background: none;
 		border:none;
