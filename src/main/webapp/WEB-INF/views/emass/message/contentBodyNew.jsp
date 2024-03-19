@@ -855,7 +855,7 @@
 				<div>
 					<table style="table-layout: fixed;width:100%;" class="subTable02">
 						<colgroup>
-							<col width="70px">
+							<col width="85px">
 							<col width="*">
 						</colgroup>
 						<tr>
