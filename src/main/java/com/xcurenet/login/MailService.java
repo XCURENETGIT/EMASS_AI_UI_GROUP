@@ -1,11 +1,14 @@
 package com.xcurenet.login;
 
 import com.xcurenet.common.util.config.Config;
+import com.xcurenet.config.service.ConfigService;
+import com.xcurenet.config.service.ConfigVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
@@ -14,7 +17,8 @@ import javax.mail.internet.MimeMessage;
 public class MailService {
 
 	private final JavaMailSender javaMailSender;
-
+	@Resource(name = "configService")
+	public ConfigService configService;
 
 	private static final String senderEmail= Config.getString("system.mail.addr");
 	private static int number;
@@ -58,8 +62,21 @@ public class MailService {
 		if (!Config.getBoolean("mail.forward.flag"))
 			return -1;
 
+		ConfigVO hostConfig = configService.getConf("mail.smtp.host");
+		ConfigVO portConfig = configService.getConf("mail.smtp.port");
+		ConfigVO usernameConfig = configService.getConf("mail.smtp.id");
+		ConfigVO passwordConfig = configService.getConf("mail.smtp.password");
+
+		// JavaMailSender의 설정을 변경
+		JavaMailSenderImpl mailSender = (JavaMailSenderImpl) javaMailSender;
+		mailSender.setHost(hostConfig.getVal());
+		mailSender.setPort(Integer.parseInt(portConfig.getVal()));
+		mailSender.setUsername(usernameConfig.getVal());
+		mailSender.setPassword(passwordConfig.getVal());
+
+		// 메일 보내기
 		MimeMessage message = CreateMail(mail);
-		javaMailSender.send(message);
+		mailSender.send(message);
 
 
 

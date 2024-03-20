@@ -127,7 +127,6 @@ public class LoginController {
 	@RequestMapping(value = "/mailSend.xcn")
 	public XcnResponseVO sendMail(LoginVO login, final HttpServletRequest request, final HttpSession session) throws Exception {
 
-		if (saveConf(request)) {
 			PrivateKey privateKey = (PrivateKey) session.getAttribute(LoginController.RSA_WEB_KEY);
 
 			String loginId = decryptRsa(privateKey, login.getUserId());
@@ -138,7 +137,7 @@ public class LoginController {
 			audit.setAdminIp(request.getRemoteAddr());
 			audit.setPMenuId("SYSTEM");
 			audit.setMenuId("CONNECTION");
-			audit.setOperation("LOGIN");
+			audit.setOperation("MAILSEND");
 
 
 			AdminVO admin = adminService.getAdmin(login.getUserId());
@@ -158,9 +157,7 @@ public class LoginController {
 				return new XcnResponseVO(XcnRspCode.OK, num);
 			}
 
-		}else{
-			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("java.error.change.language", request));
-		}
+
 	}
 
 
