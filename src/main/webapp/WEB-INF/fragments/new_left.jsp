@@ -106,6 +106,8 @@
 		if(lv == 0) {
 			let html = '';
 			for (let k in menuList) {
+                if (menuList[k].menuUseyn == "N")continue;
+                console.log(menuList[k]);
 				if (menuList[k].menuId == null || menuList[k].pid != null) continue;
 				html += '<li>';
 				html += '<a href="#" class="topMenu ' + menuList[k].menuId + ' menuList"' + 'menuid=' + menuList[k].menuId + '>';
@@ -118,6 +120,7 @@
             console.log(infoFeedbackYn)
 			let html = '';
 			for (let k in menuList) {
+                if (menuList[k].menuUseyn == "N")continue;
 				if (menuList[k].pid == currentMenuId && menuList[k].pid != null) {
                     if ((menuList[k].menuId == "SEARCH_LOG") && (consentMenuEnable == "false")) continue;
 					html += '<li><span>-</span>';
@@ -126,6 +129,7 @@
                     //html += '<a menuClick id="' + menuList[k].menuLink + '" url="' + mainContext + '/' + menuList[k].menuLink + '" 'menuid=' + menuList[l].menuId + '>' + menuList[k].defaultName + '</a>';
                     html += '<ul  id="' + menuList[k].menuId + '"  lastMenuUl class="topMenuList">';
 					for (let l in menuList) {
+                        if (menuList[l].menuUseyn == "N")continue;
                         if ((menuList[l].menuId == "CONSENT_MGMT") && (consentMenuEnable == "false")) continue;
                         if ((menuList[l].menuId == "STAT_INFOTYPE") && (infoFeedbackYn  == "false")) continue;
 						if (menuList[l].pid == null || menuList[l].pid != menuList[k].menuId) continue;
