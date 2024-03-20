@@ -1,6 +1,8 @@
 package com.xcurenet.login;
 
 import com.xcurenet.common.util.config.Config;
+import com.xcurenet.config.service.ConfigService;
+import com.xcurenet.config.service.ConfigVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.mail.HtmlEmail;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,11 +12,15 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
+import javax.annotation.Resource;
 import java.io.IOException;
+import java.util.List;
 import java.util.Properties;
 
 @Configuration
+@Slf4j
 public class EmailConfig {
+
 	private static final String MAIL_DEBUG = "mail.debug";
 	private static final String MAIL_SMTP_STARTTLS_REQUIRED = "mail.smtp.starttls.required";
 	private static final String MAIL_SMTP_AUTH = "mail.smtp.auth";
@@ -26,6 +32,8 @@ public class EmailConfig {
 	@Bean
 	public JavaMailSender javaMailSender(){
 
+
+		log.info("[mail send] host:{}, port:{}, subject:{}", Config.getString("mail.smtp.host"), Config.getInt("mail.smtp.port"));
 
 		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 		mailSender.setHost(Config.getString("mail.smtp.host"));
