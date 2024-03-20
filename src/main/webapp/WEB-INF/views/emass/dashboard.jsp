@@ -1910,9 +1910,9 @@
 	</div>
 	<div class="dashboardHeader" style="display:none; z-index: 999; position: absolute; top: 16px; left: 0px; right: 0px;">
 		<div class="col-xs-12">
-			<button type="button" class="form_btn01_02" style="position: absolute;right:162px;top:2px;" id="saveDashboardBtn">저장</button>
+			<button type="button" class="form_btn01_02" style="position: absolute;right:162px;top:2px;" id="saveDashboardBtn"><s:message code="common.msg.save"/></button>
 			<button type="button" class="form_btn04" style="position: absolute;right:90px;top:2px;" id="cancleDashboardBtn">
-				닫기
+				<s:message code="common.msg.close"/>
 			</button>
 		</div>
 		<div class="col-xs-12" style="margin-top: 30px;">

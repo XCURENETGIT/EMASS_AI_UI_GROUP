@@ -40,7 +40,9 @@
         kwds: '<s:message code="condition.keyword"/>',
         pi_total: '<s:message code="condition.regexp"/>',
         ocr: 'OCR <s:message code="message.msg.file"/>',
-        attachname: '<s:message code="condition.attach_name"/>'
+        attachname: '<s:message code="condition.attach_name"/>',
+        reprocess: '<s:message code="condition.reprocess"/>'
+
     }
     var baseMsg1 = '<s:message code="analysis.ui.basemsg1"/>';
     var baseMsg2 = '<s:message code="analysis.ui.basemsg2"/>';

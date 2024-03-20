@@ -191,9 +191,18 @@
         var data = [];
         if (flag == false) {
             for (var i = 0; i < codeArr.length; i++) {
+                console.log(codeArr[i]);
                 if (codeType == 'regexp') {
                     var code = codeArr[i].split('%');
-                    data.push({'code': code[0], 'codeName': conmArr[i].substring(0, conmArr[i].indexOf('(')), 'count': code[1]});
+                    if (codeArr.length == 1){
+                        data.push({
+                                'code': code[0],
+                                'codeName': codeName,
+                                'count': code[1]
+                            });
+                    }else {
+                        data.push({'code': code[0], 'codeName': conmArr[i].substring(0, conmArr[i].indexOf('(')), 'count': code[1]});
+                    }
                     // data.push({
                     //     'code': code[0],
                     //     'codeName': codeName,
@@ -220,8 +229,10 @@
             }
         } else {
             if (codeType == 'regexp') {
-                var code = codeArr.split('%');
-                data.push({'code': code[0], 'codeName': conmArr.substring(0, conmArr.indexOf('(')), 'count': code[1]});
+
+                    var code = codeArr[0].split('%');
+                    data.push({'code': code[0], 'codeName': conmArr[0].substring(0, conmArr[0].indexOf('(')), 'count': code[1]});
+
             } else {
                 if (codeType == 'user'||codeType == 'senders'||codeType == 'receivers') {
                     if (codeArr.length==1){

@@ -139,6 +139,11 @@ function initGrid( currGrid, gridColumn){
 			else return value.comma();
 		});
 	}
+	currGrid.colAdd('reprocess', gridColumn.reprocess, 70, 'center', true, 'nomal', function(row, cell, value, columnDef, dataContext) {
+		if (value == 0) return 'No';
+		else return 'Yes'
+	});
+
 
 	currGrid.loadHeader(true);
 	currGrid.initData('');

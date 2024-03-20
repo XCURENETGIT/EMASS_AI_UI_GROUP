@@ -3,6 +3,7 @@ package com.xcurenet.login;
 import com.xcurenet.common.util.config.Config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
@@ -49,12 +50,18 @@ public class MailService {
 	}
 
 	public int sendMail(String mail){
+/*		System.out.println(((JavaMailSenderImpl) javaMailSender).getHost()+"호스트");
+		System.out.println(((JavaMailSenderImpl) javaMailSender).getPort()+"포트");
+		System.out.println(((JavaMailSenderImpl) javaMailSender).getUsername()+"이름");
+		System.out.println(((JavaMailSenderImpl) javaMailSender).getPassword()+"비밀번호 ");*/
 
 		if (!Config.getBoolean("mail.forward.flag"))
 			return -1;
 
 		MimeMessage message = CreateMail(mail);
 		javaMailSender.send(message);
+
+
 
 		return number;
 	}

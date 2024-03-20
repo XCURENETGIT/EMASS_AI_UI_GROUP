@@ -17,10 +17,11 @@
 	}
 
 	/* Modal Content */
-	.modal-content {
+	.modal-content2 {
 		margin: auto;
 		padding: 20px;
 		width: 93%;
+		border: 1px solid #ccc;
 		height:90%;
 		background: none;
 		border:none;
@@ -40,7 +41,7 @@
 <div id="myModal" class="coach_modal">
 
 	<!-- Modal content -->
-	<div class="modal-content">
+	<div class="modal-content2">
 		<div>
 			<div class="coach_name">
 				<span>Sysadmin</span>님 환영합니다.

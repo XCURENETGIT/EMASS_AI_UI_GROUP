@@ -27,8 +27,12 @@ import javax.servlet.http.HttpSession;
 
 import com.xcurenet.common.mail.MailInfo;
 import com.xcurenet.common.mail.MailSend;
+import com.xcurenet.common.sms.SmsSender;
+import com.xcurenet.config.service.ConfigService;
+import com.xcurenet.config.service.ConfigVO;
 import com.xcurenet.login.MailService;
 import lombok.RequiredArgsConstructor;
+import net.sf.json.JSONArray;
 import org.apache.commons.codec.binary.Base32;
 import org.apache.commons.mail.HtmlEmail;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -110,43 +114,81 @@ public class LoginController {
 	@Autowired
 	private final MailService mailService;
 
+	@Resource(name = "configService")
+	public ConfigService configService;
+
+
+	@Resource(name = "config")
+	public Config config;
+
+
 	@Description("본인확인 메일 전송")
 	@ResponseBody
 	@RequestMapping(value = "/mailSend.xcn")
 	public XcnResponseVO sendMail(LoginVO login, final HttpServletRequest request, final HttpSession session) throws Exception {
-		PrivateKey privateKey = (PrivateKey) session.getAttribute(LoginController.RSA_WEB_KEY);
 
-		String loginId = decryptRsa(privateKey, login.getUserId());
-		login.setUserId(loginId);
+		if (saveConf(request)) {
+			PrivateKey privateKey = (PrivateKey) session.getAttribute(LoginController.RSA_WEB_KEY);
 
-
-		AuditVO audit = new AuditVO();
-		audit.setAdminIp(request.getRemoteAddr());
-		audit.setPMenuId("SYSTEM");
-		audit.setMenuId("CONNECTION");
-		audit.setOperation("LOGIN");
+			String loginId = decryptRsa(privateKey, login.getUserId());
+			login.setUserId(loginId);
 
 
-		AdminVO admin = adminService.getAdmin(login.getUserId());
+			AuditVO audit = new AuditVO();
+			audit.setAdminIp(request.getRemoteAddr());
+			audit.setPMenuId("SYSTEM");
+			audit.setMenuId("CONNECTION");
+			audit.setOperation("LOGIN");
 
-		String mail = adminService.getAdmin(admin.getAdminId()).getAdminEmail();
+
+			AdminVO admin = adminService.getAdmin(login.getUserId());
+
+			String mail = adminService.getAdmin(admin.getAdminId()).getAdminEmail();
 
 
+			int number = mailService.sendMail(mail);
 
-		int number = mailService.sendMail(mail);
+			if (number == -1) {
+				return new XcnResponseVO(XcnRspCode.OK_CUSTOM, "MAILNOCHECK");
+			} else {
+				String num = "" + number;
 
-		if(number == -1){
-			return new XcnResponseVO(XcnRspCode.OK_CUSTOM,"MAILNOCHECK");
+				session.setAttribute("number", number);
+
+				return new XcnResponseVO(XcnRspCode.OK, num);
+			}
+
+		}else{
+			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("java.error.change.language", request));
 		}
-	else {
-			String num = "" + number;
-
-			session.setAttribute("number", number);
-
-			return new XcnResponseVO(XcnRspCode.OK, num);
-		}
-
 	}
+
+
+
+	private boolean saveConf (final HttpServletRequest request) throws Exception {
+		JSONObject param = Common.getParam(request);
+		JSONArray confs = Common.toJSONArray(param.get("data"));
+		String oldLang = Config.getString("default.lang");
+		boolean update_result = true;
+		for (int i = 0; i < confs.size(); i++) {
+			ConfigVO conf = (ConfigVO) JSONObject.toBean(confs.getJSONObject(i), ConfigVO.class);
+			if( Common.isEquals(conf.getConfId(), "default.lang") && Common.isNotEquals(conf.getVal(), oldLang) ){
+				update_result = configService.execute(conf);
+			}
+		}
+		if( update_result){
+			for (int i = 0; i < confs.size(); i++) {
+				ConfigVO conf = (ConfigVO) JSONObject.toBean(confs.getJSONObject(i), ConfigVO.class);
+				configService.setConf(conf);
+			}
+			config.reload();
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+
 	@Description("인증코드 세션 삭제")
 	@ResponseBody
 	@RequestMapping("/deleteSession.xcn")
