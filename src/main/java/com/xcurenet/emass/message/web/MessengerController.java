@@ -738,7 +738,8 @@ public class MessengerController {
 		JSONArray data = new JSONArray();
 		List<MessengerGroupVO> list = groups.getGroups();
 		if (list != null) {
-			for (MessengerGroupVO item : list) {
+			for (int i = list.size() - 1; i >= 0; i--) {
+				MessengerGroupVO item = list.get(i);
 				JSONObject dataObj = new JSONObject();
 				dataObj.put("sender", item.getUser());
 				dataObj.put("ctime", item.getCtime());
@@ -748,6 +749,7 @@ public class MessengerController {
 				}
 				data.add(dataObj);
 			}
+
 		}
 		XLSXWriter xlsx = new XLSXWriter(Prop.propFormat("eikon.msg.export.chat", locale) + " : " + xRootMtr, header, data, out);
 		xlsx.execute();
@@ -951,7 +953,8 @@ public class MessengerController {
 				_sb.append("<" + Prop.propFormat("eikon.msg.chatContents", locale) + ">").append(Common.EMPTY_LINE);
 				List<MessengerGroupVO> list = groups.getGroups();
 				if (list != null) {
-					for (MessengerGroupVO item : list) {
+					for (int i = list.size() - 1; i >= 0; i--) {
+						MessengerGroupVO item = list.get(i);
 						_sb.append(String.format("[%s] [%s] %s", item.getUserkey(), item.getCtime(), item.getMessage())).append(Common.EMPTY_LINE);
 					}
 				}
