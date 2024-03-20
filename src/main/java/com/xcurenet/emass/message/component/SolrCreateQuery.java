@@ -281,6 +281,11 @@ public class SolrCreateQuery {
 	public SolrCreateQuery setSearchStr(String searchStr, String searchField) {
 		if (Common.isEmpty(searchStr)) return this;
 
+		if(searchStr.indexOf("\\") > -1 && searchStr.length() == 1) {
+			if(searchStr.indexOf("\\") == searchStr.lastIndexOf("\\")) return this;
+		}
+
+
 		if (Common.isEmpty(searchField)) return addQuery(String.format("%s(%s)", AND_QUERY, getSearchQuery(searchStr)));
 		else {
 			searchField = searchField.replaceAll(",", " ");
@@ -1391,11 +1396,11 @@ public class SolrCreateQuery {
 
 		String result = sb.toString().replace(OR_PREFIX, " ").replace("__", " ").replace("  ", " ").trim();
 
-		 /* 괄호 처리 */
-		 result = braketProc(result);
 		 // 특수문자 처리
 		result = specialCharsCheck(result);
-		 /* 연산자 처리 */
+		// 연산자 처리
+		result = inequalitySignProc(result);
+
 		return result;
 	}
 
@@ -1403,8 +1408,9 @@ public class SolrCreateQuery {
 	public String specialCharsValid(String str){
 		String result = str;
 		if(result.indexOf("/") > -1) {
-			if(result.indexOf("/") == result.lastIndexOf("/")) result = result.replace("/", "");
+			if(result.indexOf("/") == result.lastIndexOf("/")) result =  result.replace(result, ("\"").concat(result).concat( "\""));
 		}
+
 		result = result.replaceAll("([+])\\1+","+").replaceAll("([|])\\1+","|")
 				.replaceAll("(-)\\1+","-"); // 연속2개입력시 1개로 줄이기
 
@@ -1414,49 +1420,10 @@ public class SolrCreateQuery {
 	public String specialCharsCheck(String str){
 		String result = str;
 		/* 특수문자 처리 */
-		result  =  result.replaceAll("[[\\\\]=/&><!*:^~/[+][-][|][\"]]", "\\\\\\\\"+"$0");
+		result  =  result.replaceAll("[[\\\\]=/&><!*:^~/[\"]]", "\\\\\\\\"+"$0").replaceAll("[\\[\\]\\(\\)\\{\\}]",  ("\"").concat("$0").concat( "\""));
 		return result;
 	}
 
-
-
-	public String braketProc(String str){
-		String result = str;
-		int preIdx = -1;
-		int sufIdx = -1;
-
-		String temp = "";
-
-		for(Map.Entry<String,String> pre : PARENTHESES.entrySet()) {
-			if((result.indexOf(pre.getKey())) > -1) {
-				if((result.indexOf(pre.getValue())) == -1) {
-					result = result.replace(pre.getKey(), "");
-				}
-			}else if((result.indexOf(pre.getKey())) == -1) {
-				if((result.indexOf(pre.getValue())) > -1) {
-					result = result.replace(pre.getValue(), "");
-				}
-			}
-		}
-
-		/* 괄호 처리 */
-		for(Map.Entry<String,String> pre : BRACKET_MAP.entrySet()) {
-			if((preIdx = result.indexOf(pre.getKey())) > -1) {
-				if((sufIdx = result.indexOf(pre.getValue())) > -1) {
-					temp = result.substring(preIdx,sufIdx+1);
-					result = result.replace(temp, ("\"").concat(temp).concat( "\""));
-				}else if((sufIdx = result.indexOf(pre.getValue())) == -1) {
-					result = result.replace(pre.getKey(), "");
-				}
-			}else if((preIdx = result.indexOf(pre.getKey())) == -1) {
-				if((sufIdx = result.indexOf(pre.getValue())) > -1) {
-					result = result.replace(pre.getValue(), "");
-				}
-			}
-		}
-
-		return result;
-	}
 
 	public String inequalitySignProc(String str) {
 		String result = str;
