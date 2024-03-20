@@ -910,7 +910,7 @@
 			</div>
 			<div id="Tab01">
 				<div>
-					<h3 class="mat16">기본 검색</h3>
+					<h3 class="mat16"><s:message code="message.msg.default.search"/></h3>
 					<%if (consent && Common.isEquals(firstAdminYn, "N") && Common.isNotEquals(adminType, "C")) { %>
 					<div class="form-group form-inline not-dashed" style="padding-left: 10px; width: 100%; margin-bottom: 3px;">
 						<button type="button" class="btn btn-sm btn-default" accesskey="C" id="consentBtn" onclick="searchConsentNo();"><span
@@ -928,7 +928,7 @@
 						</select>
 						<input class="w100 mat8" type="text" id="searchStrInput" placeholder="<s:message code="common.msg.searchMsg"/>">
 					</div>
-					<h3 class="mat16">상세 검색</h3>
+					<h3 class="mat16"><s:message code="message.msg.deepsearch"/></h3>
 					<div>
 						<input class="w45 mat8 txt_center" type="date" id="startDt"  value="2023-11-20"><span class="w10 dis_inlineblock txt_center">~</span><input class="w45 txt_center" type="date" id="endDt"  value="2023-11-30">
 
@@ -973,7 +973,7 @@
 					<div class="xcn_checkbox">
 						<input type="checkbox" name="readYn" id="readYn"><label><s:message code="eikon.msg.notRead"/></label>
 					</div>
-					<button class="fullbtn" type="button" accesskey="Q" id="searchBtn">검색</button>
+					<button class="fullbtn" type="button" accesskey="Q" id="searchBtn"><s:message code="common.search"/></button>
 				</div>
 			</div>
 		</div>
@@ -1038,7 +1038,7 @@
 						<div class="searchSub" style=" min-width: 150px; box-sizing: border-box; width: 100%" >
 								<span id="startsubdatepicker"><input type="date" id="startSubDt" style="width: 110px;">
 									<span class="hyphen">~</span></span>
-								<span id="endsubdatepicker"><input type="date" id="endSubDt" style="width: 110px;"></span>
+							<span id="endsubdatepicker"><input type="date" id="endSubDt" style="width: 110px;"></span>
 
 							<button class="form_btn01"  type="button" accesskey="M" id="searchMsgQueryBtn"><s:message code="common.search"/></button>
 						</div>
