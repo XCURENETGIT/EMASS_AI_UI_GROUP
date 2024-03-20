@@ -1023,6 +1023,10 @@
 				else return value.comma();
 			});
 		}
+        grid.colAdd('reprocess', '<s:message code="condition.reprocess"/>', 70, 'center', true, 'nomal', function(row, cell, value, columnDef, dataContext) {
+            if (value == 0) return 'No';
+            else return 'Yes'
+        });
 
 		grid.loadHeader(true);
 		grid.loadPageSize();
