@@ -278,6 +278,16 @@
   var pMenuId = "";
 
 
+  var adminLangLayout = {
+        west_ko : 300
+        ,west_en : 300
+        ,east_ko : 680
+        ,east_en : 840
+        ,south_ko : 400
+        ,south_en : 400
+  }
+
+
   $(document).ready(function() {
     if( $('.content_header').css('display') == undefined ) {
       $('.container').css('top',' 80px');

@@ -946,9 +946,11 @@
 
             $('#none_btn').click(function(){
                 if(msgInfoLayout != undefined) msgInfoLayout.destroy();
+
+                var westSize = (adminLang == 'ko') ? adminLangLayout.west_ko : adminLangLayout.west_en;
                 msgInfoLayout = $('#mainBodyArea').layout({
-                    west__size: 300,
-                    west__maxSize: 300,
+                    west__size:  westSize,
+                    west__maxSize: westSize,
                     west__maskContents:  true,
                     west__spacing_open:3,
                     center__maskContents:  true,
@@ -974,9 +976,13 @@
             });
             $('#bottom_btn').click(function(){
                 if(msgInfoLayout != undefined) msgInfoLayout.destroy();
+
+                var westSize = (adminLang == 'ko') ? adminLangLayout.west_ko : adminLangLayout.west_en;
+                var southSize = (adminLang == 'ko') ? adminLangLayout.south_ko : adminLangLayout.south_en;
+
                 msgInfoLayout = $('#mainBodyArea').layout({
-                    west__size: 300,
-                    west__maxSize: 300,
+                    west__size: westSize,
+                    west__maxSize:westSize,
                     west__maskContents:  true,
                     west__spacing_open:3,
                     center__maskContents:  true,
@@ -986,7 +992,7 @@
                         center__maskContents:  true,
                         south__paneSelector: ".inner-east",
                         south__maskContents:  true,
-                        south__size: 400,
+                        south__size: southSize,
                         south__spacing_open:3,
                         north__spacing_open:0
                     },
@@ -1001,11 +1007,17 @@
                 $('.dropdown-backdrop').click();
             });
 
+
+
             $('#right_btn').click(function(){
+
+                var westSize = (adminLang == 'ko') ? adminLangLayout.west_ko : adminLangLayout.west_en;
+                var eastSize = (adminLang == 'ko') ? adminLangLayout.east_ko : adminLangLayout.east_en;
+
                 if(msgInfoLayout != undefined) msgInfoLayout.destroy();
                 msgInfoLayout = $('#mainBodyArea').layout({
-                    west__size: 300,
-                    west__maxSize: 300,
+                    west__size: westSize,
+                    west__maxSize: westSize,
                     west__maskContents:  true,
                     center__maskContents:  true,
                     west__spacing_open:3,
@@ -1016,7 +1028,7 @@
                         center__spacing_open:3,
                         east__paneSelector: ".inner-east",
                         east__maskContents:  true,
-                        east__size: 680,
+                        east__size: eastSize,
                         east__spacing_open:3,
                         north__spacing_open:0
                     },
