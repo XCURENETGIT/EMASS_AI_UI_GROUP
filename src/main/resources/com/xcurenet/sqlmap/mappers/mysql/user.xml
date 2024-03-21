@@ -210,8 +210,8 @@
 
 	<!-- 사용자 등록 -->
 	<insert id="insertUser" parameterType="userVO">
-		INSERT INTO UI_USERS (USER_ID, USER_NM, COCD, GENERALCD, BUSICD, DEPTCD, JIKINCD, JIKGUBCD)
-		VALUES (#{userId}, #{userNm}, #{coCd}, #{generalCd}, #{busiCd}, #{deptCd}, #{jikinCd}, #{jikgubCd})
+		INSERT INTO UI_USERS (USER_ID, USER_NM, COCD, GENERALCD, BUSICD, DEPTCD, JIKINCD, JIKGUBCD, CEO)
+		VALUES (#{userId}, #{userNm}, #{coCd}, #{generalCd}, #{busiCd}, #{deptCd}, #{jikinCd}, #{jikgubCd}, #{ceo})
 	</insert>
 
 	<!-- 사용자 수정 -->
