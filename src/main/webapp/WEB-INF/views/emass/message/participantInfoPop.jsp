@@ -63,7 +63,7 @@
             };
             ui.get({
                 url: 'getMessengerGroupUserList.xcn',
-                xrootmtr: data.xrootmtr,
+                xRootMtr: data.xrootmtr,
                 startDt: data.startDt + "000000",
                 endDt: data.endDt + "235959",
                 groupField: 'userkey',

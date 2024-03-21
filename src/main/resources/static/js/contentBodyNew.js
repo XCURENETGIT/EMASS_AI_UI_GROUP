@@ -763,7 +763,7 @@ function getGroupDetail(rootmtr, usrId){
 	ui.onBody('content_body', 0, 0);
 	ui.get({
 		url : 'getMessengerGroupUserList.xcn',
-		xrootmtr : rootmtr,
+		xRootMtr : rootmtr,
 		startDt : startDt+"000000",
 		endDt : endDt+"235959",
 		userkey : usr_id,
