@@ -107,7 +107,6 @@
 			let html = '';
 			for (let k in menuList) {
                 if (menuList[k].menuUseyn == "N")continue;
-                console.log(menuList[k]);
 				if (menuList[k].menuId == null || menuList[k].pid != null) continue;
 				html += '<li>';
 				html += '<a href="#" class="topMenu ' + menuList[k].menuId + ' menuList"' + 'menuid=' + menuList[k].menuId + '>';
@@ -117,7 +116,6 @@
 			}
 			$('#gnb').find('#topMenu').html(html);
 		} else {
-            console.log(infoFeedbackYn)
 			let html = '';
 			for (let k in menuList) {
                 if (menuList[k].menuUseyn == "N")continue;

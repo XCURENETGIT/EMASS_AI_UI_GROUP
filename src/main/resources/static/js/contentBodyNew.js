@@ -29,7 +29,6 @@ $(document).ready(function(){
 		var fontSize = parseInt($('#emassBody').css("font-size"));
 		if(more == 'small_txt') fontSize -= fontZoom;
 		else {
-			console.log(fontSize)
 			if (fontSize>24) fontSize=13;
 			else fontSize += fontZoom;
 		}
@@ -485,7 +484,6 @@ $(document).ready(function(){
 			if( userInfoFlag ){
 				if( obj.attr('recvname') == '' && obj.attr('recvemail') == ''){
 					if( nvl(obj.attr('sender')) != ''){
-						console.log('12')
 						$('#userNamePop').text(obj.attr('sname'));
 						$('#userEmailPop').text(obj.attr('sender'));
 					}
@@ -587,7 +585,6 @@ $(document).ready(function(){
 	});
 
 	$('.body_toggle').click(function(){
-		console.log($(this))
 		$(this).next().toggle();
 	});
 	$('.fileFold, .patternFold').click(function() {
@@ -860,7 +857,6 @@ function getUsersInfo( data, xrootmtr){
 	var str = '';
 	for(var i=0; i<data.length; i++){
 		if(data[i].groupName == 'sender_str') continue;
-		console.log(data)
 		str +='<span class="userInfoSpan" sname="'+nvl(data[i].sname)+'" sender="'+nvl(data[i].sender)+'" srcip="'+nvl(data[i].srcip)+'" recvid="'+nvl(data[i].usr_id)+'" recvip="" recvemail="" recvname="'+nvl(data[i].name)+'" ';
 		str +='recvconm="'+nvl(data[i].conm)+'" recvbusinm="'+nvl(data[i].businm)+'" recvsuborgnm="'+nvl(data[i].suborgnm)+'" recvdeptnm="'+nvl(data[i].deptnm)+'" recvjikgubnm="'+nvl(data[i].jikgubnm)+'" >'+nvl(data[i].srcip)+'; </span>';
 	}
