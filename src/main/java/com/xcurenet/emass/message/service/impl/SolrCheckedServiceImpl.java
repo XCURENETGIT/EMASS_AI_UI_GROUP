@@ -13,7 +13,10 @@ import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -22,6 +25,7 @@ import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Log4j2
 @Service("solrCheckedService")
@@ -29,6 +33,10 @@ public class SolrCheckedServiceImpl implements SolrCheckedService {
 
 	@Autowired
 	private MongoUtil mongo;
+
+	@Autowired
+	@Qualifier("elasticsearchTemplate")
+	private ElasticsearchOperations operation;
 
 	public static final DateTimeFormatter DATETIMEMILLISSYMBOL = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
@@ -44,29 +52,52 @@ public class SolrCheckedServiceImpl implements SolrCheckedService {
 
 		Query query = new Query(Criteria.where("_id").is(msgId));
 		SolrCheckedVO vo = mongo.selectOne(query, SolrCheckedVO.class);
+
+
+		boolean mongoExist = false;
+
+
 		if (vo != null) {
 			List<SolrCheckedVO.SolrCheckedAttr> checkedList = vo.getChecked();
 			if (checkedList != null) {
+				String isAlreadyId = "";
 				for (SolrCheckedVO.SolrCheckedAttr checked : checkedList) { //이미 등록된 운용자
-					if (checked.getReadId().equals(adminId)) return;
+					if (checked.getReadId().equals(adminId)) {
+						isAlreadyId = adminId;
+						mongoExist = true;
+					}
 				}
+				/* 엘라스틱 인덱스도 같이 조회 */
+				if (!Common.isEmpty(isAlreadyId)) {
+					SolrEdcVO solrEdcVO = operation.get(msgId, SolrEdcVO.class, IndexCoordinates.of(String.format("%s_%s", "edc", msgId.substring(0, 6))));
+					if (!Common.isEmpty(solrEdcVO)) {
+						List<Map<String, Object>> checked = solrEdcVO.getChecked();
+						for (Map<String, Object> map : checked) {
+							if (Common.isEquals(adminId, map.get("readId"))) return;
+						}
+					}
+				}
+
 			} else vo.setChecked(new ArrayList<>());
 		} else {
 			vo = new SolrCheckedVO();
 			vo.setMsgId(msgId);
 			vo.setChecked(new ArrayList<>());
 		}
-		List<SolrCheckedVO.SolrCheckedAttr> checkedList = vo.getChecked();
-		SolrCheckedVO.SolrCheckedAttr attr = new SolrCheckedVO.SolrCheckedAttr();
-		attr.setReadId(adminId);
-		attr.setReadTime(LocalDateTime.parse(new DateTime().toString(), DATETIMEMILLISSYMBOL).toDateTime(DateTimeZone.UTC));
-		checkedList.add(attr);
-		vo.setChecked(checkedList);
-		log.info("checked : {}", vo);
-		mongo.save(vo);
+		if (!mongoExist) {
+			List<SolrCheckedVO.SolrCheckedAttr> checkedList = vo.getChecked();
+			SolrCheckedVO.SolrCheckedAttr attr = new SolrCheckedVO.SolrCheckedAttr();
+			attr.setReadId(adminId);
+			attr.setReadTime(LocalDateTime.parse(new DateTime().toString(), DATETIMEMILLISSYMBOL).toDateTime(DateTimeZone.UTC));
+			checkedList.add(attr);
+			vo.setChecked(checkedList);
+			log.info("checked : {}", vo);
+			mongo.save(vo);
+		}
 
 		String checkedTopic = "ems_ui_checked_index";
 		kafkaProducerService.send(checkedTopic, "_id", msgId);
+
 	}
 
 
