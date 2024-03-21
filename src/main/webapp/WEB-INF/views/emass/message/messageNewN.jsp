@@ -1726,7 +1726,6 @@
                 if(grid.Rows == 0 ) return;
                 var fileExists = false;
                 grid.getSelectedKey('attachcnt').forEach(function (e){
-                    console.log(e)
                     if(e > 0) {
                         fileExists = true;
                         return true;
@@ -1843,7 +1842,6 @@
                         searchData( );
                     },500);
                 }catch(e){
-                    console.log(e)
                     console.log('<s:message code="common.msg.data.error"/>');
                     //goMainPage();
                 }

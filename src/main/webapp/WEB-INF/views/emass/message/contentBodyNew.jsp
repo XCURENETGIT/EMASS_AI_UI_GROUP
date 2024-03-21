@@ -239,7 +239,6 @@
 			});
 
 			$('#testx').click(function(){
-				console.log($(this).html());
 			});
 
 			$('#recommendBtn').click(function(){

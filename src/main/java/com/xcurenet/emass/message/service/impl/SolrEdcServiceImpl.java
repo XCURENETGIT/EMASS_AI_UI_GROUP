@@ -156,9 +156,10 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 		TimeUtil.start();
 		if (sq.getFields() == null) {
-			if (Config.isOCR) defaultFields = defaultFields + ",ocr_attach_cnt";
-			if (Common.isEquals(bodysnippet, "Y")) defaultFields = defaultFields + ",body_snippet";
-			sq.setFields(defaultFields);
+			String tempDefaultFields = defaultFields;
+			if (Config.isOCR) tempDefaultFields = tempDefaultFields + ",ocr_attach_cnt";
+			if (Common.isEquals(bodysnippet, "Y")) tempDefaultFields = tempDefaultFields + ",body_snippet";
+			sq.setFields(tempDefaultFields);
 		}
 		log.debug("[Fields] {}", sq.getFields());
 		sq.setParam("wt", "json");
