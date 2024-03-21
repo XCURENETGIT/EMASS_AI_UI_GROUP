@@ -348,7 +348,7 @@
                 var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '') + "235959";
                 var searchStr = '';
                 if (xrootmtr == '') return;
-                eikon.getMessengerGroupAllExport('<c:url value="/getMessengerGroupAllExport.xcn"/>?xRootMtr=' + xRootMtr + '&srcip=' + srcip + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr + '&limit=1000&facet_detail=true&export=true');
+                eikon.getMessengerGroupAllExport('<c:url value="/getMessengerGroupAllExport.xcn"/>?xRootMtr=' + xRootMtr  + '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr + '&limit=1000&facet_detail=true&export=true');
                 hideSelect();
             });
 
@@ -591,8 +591,8 @@
             var usr_id = $('#selectUserInfo').attr('data-usrid');
 
             if (xrootmtr == '') return;
-            var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
-            var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
+            var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '')+"000000";
+            var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '')+"235959";
             var searchStr = '';
             eikon.getMessengerGroupTextExport('<c:url value="/getMessengerGroupTextExport.xcn"/>?xRootMtr=' + xRootMtr +'&usr_id='+usr_id+ '&startDt=' + startDt + '&endDt=' + endDt + '&searchStr=' + searchStr + '&type=' + type + '&limit=1000', xRootMtr);
         }
