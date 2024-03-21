@@ -365,7 +365,7 @@
             var categories = [];
 
             if (dat.length == 0) {
-                $('#con02').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px" style="margin: auto; display: block;">');
+                $('#con02').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px" style ="margin:auto; display:block; margin-top:16px;"> ');
                 return false;
             } else {
                 var max = 0;
@@ -466,6 +466,10 @@
 
 
         function makeTableSizeData(data) {
+            if (data.length == 0) {
+                return;
+            }
+
             var str = "<table class='mainTable'><tr>"
             str += "<th>  </th>";
             for (var i = 0; i < data.length; i++) {

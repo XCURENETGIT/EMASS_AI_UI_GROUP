@@ -13,6 +13,24 @@
 
   #contentArea {}
 
+
+
+  .files :hover{
+	  cursor: pointer;
+	  text-decoration: underline;
+  }
+
+  .filename:hover{
+	  cursor: pointer;
+	  text-decoration: underline;
+  }
+
+
+  .name:hover{
+	  cursor: pointer;
+	  text-decoration: underline;
+  }
+
 	.rightValue:hover{
 		cursor: pointer;
 		text-decoration: underline;
@@ -199,6 +217,7 @@
     var date;
     var editMode = 'N';
     var loggingDataSettingVal;
+    var fileTopDataSettingVal;
 
     $.urlParam = function (name) {
         var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
@@ -215,6 +234,7 @@
         else getDefaultMenuKey();
 
         getLoggingDataSetting();
+        getFileDataSetting();
 
         function isDefaultDashboard(menuKey) {
             ui.get({
@@ -387,9 +407,18 @@
             $('#loggingDataUseYn').val(loggingDataSettingVal);
         });
 
+        $('#fileTopBtn').click(function () {
+            $("#fileTopDataPop").modal('show');
+            $('#fileTopDataUseYn').val(fileTopDataSettingVal);
+        });
+
 
         $('#loggingDataSaveBtn').click(function () {
             saveLoggingData();
+        });
+
+        $('#fileTopDataSaveBtn').click(function () {
+            saveFileTopData();
         });
 
         $('#menuDefaultSetupBtn').click(function () {
@@ -438,6 +467,27 @@
         });
     }
 
+    function saveFileTopData() {
+        ui.confirmMsg('<s:message code="base.change.pw"/>', '', '', function (rs) {
+            if (rs) {
+                ui.get({
+                    url: 'saveFileTopData.xcn',
+                    useYn: $('#fileTopDataUseYn').val(),
+                    success: function (data, total) {
+                        $("#fileTopDataPop").modal('hide');
+                        ui.alertMsg('<s:message code="dashboard.logginDataChange"/>');
+                        getFileDataSetting();
+                    },
+                    error: function (status, message) {
+                        ui.alertMsg(message);
+                    },
+                    complete: function () {
+                    }
+                });
+            }
+        });
+    }
+
 
 
 
@@ -447,7 +497,6 @@
             success: function (data, total) {
                 loggingDataSettingVal = data;
 
-                console.log(loggingDataSettingVal);
                 if (loggingDataSettingVal == 'Y') {
                     $('#dashboardInfo').show();
                     $('#dashboardInfo').css('margin-top','200px');
@@ -455,7 +504,31 @@
                     $('#emptyDiv').hide();
                     getLoggingData();
                 }else{ $('#dashboardInfo').hide();
-                    if(listCnt == 0)  $('#emptyDiv').show();}
+                    if(listCnt == 0 && fileTopDataSettingVal == 'N')  $('#emptyDiv').show();}
+            },
+            error: function (status, message) {
+                console.log(message);
+            },
+            complete: function () {
+            }
+        });
+    }
+
+    function getFileDataSetting() {
+        ui.get({
+            url: 'getFileDataSetting.xcn',
+            success: function (data, total) {
+                fileTopDataSettingVal = data;
+
+
+                if (fileTopDataSettingVal == 'Y') {
+                    $('#dashboardInfo2').show();
+                    $('#dashboardInfo').css('margin-top','200px');
+                    $('#dashboardArea').css('top','-10px');
+                    $('#emptyDiv').hide();
+                    getFileTopData();
+                }else{ $('#dashboardInfo2').hide();
+                    if(listCnt == 0 && loggingDataSettingVal == 'N')  $('#emptyDiv').show();}
             },
             error: function (status, message) {
                 console.log(message);
@@ -496,7 +569,6 @@
     }
 
     function printChart2(dat) {
-        console.log(dat.length);
         var visible = true;
         // if(systemArch == 'multiple' && adminType == 'M') visible = false;
 
@@ -701,6 +773,119 @@
             }
         });
     }
+
+    function getFileTopData() {
+        ui.get({
+            url: 'getTodayFilePerson.xcn',
+            success: function (data, total) {
+                filePerson(data);
+                fileTop();
+            },
+            error: function (status, message) {
+                //ui.alertMsg(message);
+
+            },
+            complete: function () {
+
+            }
+        });
+    }
+    function fileTop() {
+        ui.get({
+            url: 'getTodayFileTop.xcn',
+            success: function (data, total) {
+
+                let str = "";
+                if (data.total == 0) {
+                    str += '<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" class="xcn_nodata"width="100px;" height="100px" style=" display: block;"> ';
+                } else {
+
+                    str += "<div><ul>";
+                    for (let i = 0; i < 4; i++) {
+                        let filesSize = getFormattedValue("size", data.fileSize[i]);
+                        let filesType = getFormattedValue("type", data.fileType[i]);
+                        let leFileName = data.fileName[i];
+                        let fileName = getFormattedValue("name", leFileName);
+                        str += "<li class='clicks' ' data-value='" + data.fileId[i] + "'>"
+                        str += "<span class = 'num'>" + (i + 1) + "</span>";
+                        str += "<p class='file blueBg'><span class='filename blue' style='max-width: 180px;'>" + fileName + "</span><span class='Volume'>" + filesSize + "</span></p>";
+                        str += "</li>"
+                    }
+                    str += "</ul></div>";
+
+                    str += "<div class='list'><ul>";
+                    for (let i = 4; i < 10; i++) {
+                        let leFileName = data.fileName[i];
+                        let fileName = getFormattedValue("name", leFileName);
+                        let filesSize = getFormattedValue("size", data.fileSize[i]);
+                        let filesType = getFormattedValue("type", data.fileType[i]);
+                        str += "<li class='clicks' ' data-value='" + data.fileId[i] + "'><span class='num'>" + (i + 1) + "</span>";
+                        str += "<p><span class='filename'  style='max-width: 180px;'>" + leFileName + "</span>"
+                        str += "<span class='righttext'>" + filesSize + "</span></p></li>"
+                    }
+                    str += "<ul><div>";
+                }
+
+
+                $('#bigFileTop').html(str);
+
+            },
+            error: function (status, message) {
+                ui.alertMsg(message);
+            },
+            complete: function () {
+
+            }
+        });
+    }
+
+    function filePerson(data){
+        let str = "";
+        if (data.total == 0) {
+            str += '<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px" class="xcn_nodata"style=" display: block;">';
+            $('#FilePeople').html(str);
+        } else {
+            str += "<div class='teamList'><ul>";
+            for (let i = 0; i < 4; i++) {
+                let name = getFormattedValue("size", data.facet[i]);
+                let names = getFormattedValue("size", name[0]);
+                let bu = getFormattedValue("size", name[1]);
+                let count = getFormattedValue("count", name[2]);
+                let noName = getFormattedValue("size",name[3]);
+                let nameId = name[3];
+
+
+                str += "<li class='click2' data-value='" + nameId + "'><p class='num'>" + (i + 1) + "</p>";
+                str+="<p><span class='name blue'>" + noName + "</span>";
+                str += "<span class='team'>" + bu + "</span></p>";
+                str += "<p class='teamnum'>";
+                str += "<span class='name'>" + count + "</span>";
+                str += "</p></li>"
+            }
+            str += "</ul></div>";
+            str += "<div class='list'><ul>";
+            for (let i = 4; i < 10; i++) {
+                let name = getFormattedValue("ddd", data.facet[i]);
+                let names = getFormattedValue("ddd", name[0]);
+                let count = getFormattedValue("count", name[2]);
+                let noName = getFormattedValue("size",name[3]);
+                let nameId = name[3];
+                str += "<li class='click2' data-value='" + nameId + "'><span class='num'>" + (i + 1) + "</span>";
+                str += "<p><span class='name'>" + noName + "</span>";
+                str += "<span class='righttext'>" + count + "</span></p></li>";
+            }
+            str += "</ul></div>"
+            $('#FilePeople').html(str);
+        }
+    }
+
+    function getFormattedValue(size, value) {
+        if (size == "size") return (value === undefined || value === null) ? ' ' : value;
+        else if (size == "count") return (value === undefined || value === null) ? ' ' : value.comma() + "건";
+        else return (value === undefined || value === null) ? '-' : value;
+
+    }
+
 
     function getTrafficData() {
         ui.get({
@@ -938,7 +1123,6 @@
     var chartxAxis;
 
     function printChart(dat) {
-        console.log(data.length);
         var visible = true;
         if (systemArch == 'multiple' && adminType == 'M') visible = false;
         var categories = [];
@@ -1120,10 +1304,9 @@
             url: 'getDashBoardList.xcn',
             menuKey: menuKey,
             success: function (data, total) {
-                console.log(loggingDataSettingVal);
                 listCnt = data.length;
                 if(data.length == 0) {
-                    if(loggingDataSettingVal == 'Y') $('#emptyDiv').hide();
+                    if(loggingDataSettingVal == 'Y' && fileTopDataSettingVal == 'Y') $('#emptyDiv').hide();
                     else $('#emptyDiv').show();
                 }
                 else $('#emptyDiv').hide();
@@ -1374,6 +1557,91 @@
         }
     }
 
+
+    $(document).on('click', '.clicks', function () {
+        let data = $(this).data('value');
+        openMessageBodyPop(data, data);
+    });
+
+    var dashCondition = {
+        "searchStr": "",
+        "searchField": "",
+        "serviceType": "",
+        "serviceTypeNm": "서비스 전체",
+        "interGroup": "",
+        "interGroupNm": "-관심 사용자 그룹-",
+        "userGroupSeq": "",
+        "userGroupName": "-사용자 그룹-",
+        "startDateSelect": "T",
+        "startTimeSelect": "00",
+        "endDateSelect": "T",
+        "endTimeSelect": "23",
+        "senders": "",
+        "receivers": "",
+        "allOfus": "",
+        "busi": "",
+        "busiNm": "사업장 전체",
+        "dept": "",
+        "deptNm": "",
+        "receiveSend": "",
+        "ctimeWork": "",
+        "readYn": "",
+        "attachYn": "",
+        "attachVal": "",
+        "attachStr": "",
+        "keywordYn": "",
+        "keywordVal": "",
+        "keywordStr": "",
+        "regexpYn": "",
+        "regexpVal": "",
+        "regexpStr": "",
+        "drmYn": "",
+        "sctYn": "",
+        "sizeStartVal": "0",
+        "sizeEndVal": "0",
+        "sizeOption": "L",
+        "sizeType": ""
+    };
+
+    $(document).on('click', '.click2', function () {
+        let data = $(this).data('value');
+        dashCondition.attachYn = "Y";
+        dashCondition.senders = data;
+        dashCondition.senders_upperCase = "Y";
+        $('#conditionParam').val(makePeriod2(dashCondition));
+        $('#getMessageInfo').submit();
+    });
+
+    function makePeriod2(dashCondition) {
+        var startDtSelect = dashCondition.startDateSelect;
+        var startTimeSelect = dashCondition.startTimeSelect;
+        var endDtSelect = dashCondition.endDateSelect;
+        var endTimeSelect = dashCondition.endTimeSelect;
+
+        if (startDtSelect == '' || startDtSelect == undefined) return JSON.stringify(dashCondition);
+
+        var startMinusDay = 0;
+        var endMinusDay = 0;
+        if (startDtSelect == 'Y') startMinusDay = 1;
+        else if (startDtSelect == 'W') startMinusDay = 7;
+
+        if (endDtSelect == 'Y') endMinusDay = 1;
+        else if (endDtSelect == 'W') endMinusDay = 7;
+
+        var dateObj = new Date();
+        var startDate = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate() - startMinusDay, startTimeSelect, 00, 00);
+        var endDate = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate() - endMinusDay, endTimeSelect, 59, 59);
+
+        dashCondition.startDt = startDate.format('yyyymmddHHnnss');
+        dashCondition.endDt = endDate.format('yyyymmddHHnnss');
+        return JSON.stringify(dashCondition);
+    }
+
+
+
+
+
+
     function getDashData() {
         return [];
         /* return [
@@ -1517,6 +1785,7 @@
             };
 
             getLoggingDataSetting();
+	        getFileDataSetting();
 
             getDashBoardList();
         };
@@ -1537,7 +1806,6 @@
 
     function setDateHtml(node) {
         var dashCondition = JSON.parse(makePeriod(node.dashCondition));
-
         var startDtSelect = dashCondition.startDateSelect;
         var endDtSelect = dashCondition.endDateSelect;
 
@@ -1592,7 +1860,6 @@
 
                 },
                 error: function (status, message) {
-                    console.log(message);
                 },
                 complete: function () {
                 }
@@ -1770,7 +2037,6 @@
         if (width == 6) subjectWidth = 40;
 
         var str = '';
-        console.log(data);
         if (data != null) {
             for (var i = 0; i < data.emass.length; i++) {
                 if (i == dataLength) break;
@@ -1860,6 +2126,33 @@
 	</div>
 </div>
 
+<div class="modal" id="fileTopDataPop" tabindex="-1" role="dialog" aria-labelledby="loggingDataModal" data-backdrop="static">
+	<div class="modal-content">
+		<div class="modalHead">
+			<h2><s:message code="dashboard.fileTop.show"/></h2>
+			<span class="close" data-dismiss="modal">&times;</span>
+		</div>
+		<div class="modalCon">
+			<div class="modalbody" style="height:120px;">
+				<div class="col-sm-12">
+					<span class="help-block m-b-none"><s:message code="dashboard.fileTop.show"/></span>
+				</div>
+				<div class="col-sm-12">
+					<select id="fileTopDataUseYn" class="form-control m-b">
+						<option value="Y"><s:message code="dashboardMenu.use"/></option>
+						<option value="N"><s:message code="dashboardMenu.unuse"/></option>
+					</select>
+				</div>
+			</div>
+			<div class="modalfooter">
+				<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+				<button type="button" class="pop_btn02" accesskey="S" id="fileTopDataSaveBtn"><s:message code="common.msg.change"/></button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
 
 <div class="modal fade" id="fileSendPop" tabindex="-1" role="dialog" aria-labelledby="fileSendModal">
 	<div class="modal-dialog" role="document">
@@ -1902,6 +2195,8 @@
 						code="dashboardMenu.defaultMenu"/></a></li>
 				<li><a href="javascript:;" id="menuLoggingBtn"><span class="fa fa-file-text-o" style="font-size:16px"></span>&nbsp;<s:message
 						code="dashboard.loggingData.show"/></a></li>
+				<li><a href="javascript:;" id="fileTopBtn"><span class="fa fa-file-text-o" style="font-size:16px"></span>&nbsp;<s:message
+						code="dashboard.fileTop.show"/></a></li>
 				<li class="dropdown-divider"></li>
 				<li><a href="javascript:;" id="setupDashboardBtn"><span class="glyphicon glyphicon-th-list"></span>&nbsp;<s:message
 						code="DATA_MONITOR.DASHBOARD_SETUP"/></a></li>
@@ -1985,6 +2280,27 @@
 					</div>
 
 				</div>
+			</div>
+
+
+			<div id="dashboardInfo2" style="display: none">
+				<div id="xcn_mainWrap" style="display: block; background-color: transparent">
+					<div class="right" style="background-color: transparent">
+					<div class="m_grapha mat32" style="margin-top: 0px;">
+						<div>
+							<h3><s:message code="dashboard.fileSizeTop"/></h3>
+							<div class="bigtop10" id="bigFileTop" style=" min-width: 500px; box-sizing: border-box; width: 100%" >
+							</div>
+						</div>
+						<%--		대용량 파일 TOP 10 끝--%>
+						<%--			파일 다 사용자 TOP 10--%>
+						<div>
+							<h3><s:message code="dashboard.fileSendTop"/></h3>
+							<div class="filetop10" id="FilePeople"  style=" min-width: 500px; box-sizing: border-box; width: 100%" >
+							</div>
+						</div>
+					</div>
+					</div>
 			</div>
 
 			<div>
