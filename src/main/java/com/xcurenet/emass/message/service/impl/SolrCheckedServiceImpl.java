@@ -65,6 +65,7 @@ public class SolrCheckedServiceImpl implements SolrCheckedService {
 					if (checked.getReadId().equals(adminId)) {
 						isAlreadyId = adminId;
 						mongoExist = true;
+						break;
 					}
 				}
 				/* 엘라스틱 인덱스도 같이 조회 */
