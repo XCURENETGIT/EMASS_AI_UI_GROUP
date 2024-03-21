@@ -466,6 +466,10 @@
 
 
         function makeTableSizeData(data) {
+            if (data.length == 0) {
+                return;
+            }
+
             var str = "<table class='mainTable'><tr>"
             str += "<th>  </th>";
             for (var i = 0; i < data.length; i++) {
