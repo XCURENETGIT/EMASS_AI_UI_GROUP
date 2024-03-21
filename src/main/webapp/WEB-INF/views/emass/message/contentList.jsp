@@ -200,7 +200,7 @@
 <div id="contextMenu" style="display:none;position:absolute">
 	<ul>
 		<li style="background-color:#242330;color:#fff;font-weight: bold;cursor:default;"><s:message code="common.msg.menu"/>
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close" style="font-size:15px;color:#fff;text-shadow:0 1px 0 #000; opacity:0.7;" id="contextMenuCloseBtn">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close" style="font-size:15px;color:#fff;text-shadow:0 1px 0 #000; opacity:0.7;margin-top:3px;" id="contextMenuCloseBtn">
 				<span aria-hidden="true">&times;</span>
 			</button>
 		</li>
