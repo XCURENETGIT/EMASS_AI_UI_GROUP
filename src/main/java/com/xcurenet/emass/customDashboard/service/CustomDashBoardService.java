@@ -38,7 +38,8 @@ public interface CustomDashBoardService {
 	public int insertDashBoardDefaultData(final CustomDashboardVO customDashboardVo);
 	
 	public String getLoggingDataSetting(final HttpSession session) throws Exception;
-	
+	public String getFileDataSetting(final HttpSession session) throws Exception;
+
 	public XcnResponseVO getLoggingData(final HttpServletRequest request, final HttpSession session) throws Exception;
 	
 	public List<HdfsVO> getHdfsData(final HttpServletRequest request, final HttpSession session) throws Exception;
@@ -48,7 +49,8 @@ public interface CustomDashBoardService {
 	public int insertHDFSDirSize(Map<String, String> param);
 	
 	public int saveLoggingData(final HttpServletRequest request, final HttpSession session);
-	
+	public int saveFileTopData(final HttpServletRequest request, final HttpSession session);
+
 	public List<FileDataVO> getFileSizeData(HttpServletRequest request, HttpSession session) throws Exception;
 	
 	public List<FileDataVO> getFileCount(HttpServletRequest request, HttpSession session) throws Exception;

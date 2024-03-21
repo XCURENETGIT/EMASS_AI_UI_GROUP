@@ -79,6 +79,14 @@ public class CustomDashBoardController {
 	public XcnResponseVO getLoggingDataSetting(final HttpServletRequest request, final HttpSession session) throws Exception {
 		return new XcnResponseVO(XcnRspCode.OK, customDashBoardService.getLoggingDataSetting(session));
 	}
+
+	@RequestMapping(value = "/getFileDataSetting.xcn")
+	@Description("Dashboard - 로깅 데이터 건수 조회")
+	@ResponseBody
+	public XcnResponseVO getFileDataSetting(final HttpServletRequest request, final HttpSession session) throws Exception {
+		return new XcnResponseVO(XcnRspCode.OK, customDashBoardService.getFileDataSetting(session));
+	}
+
 	
 	@RequestMapping(value = "/getLoggingData.xcn")
 	@Description("Dashboard - 로깅 데이터 건수 조회")
@@ -125,10 +133,17 @@ public class CustomDashBoardController {
 
 	
 	@RequestMapping(value = "/saveLoggingData.xcn")
-	@Description("Dashboard - default 셋 등록")
+	@Description("Dashboard - default 셋 등록(일별 로깅 데이터)")
 	@ResponseBody
 	public XcnResponseVO saveLoggingData(final HttpServletRequest request, final HttpSession session) throws Exception {
 		return new XcnResponseVO(XcnRspCode.OK, customDashBoardService.saveLoggingData(request, session));
+	}
+
+	@RequestMapping(value = "/saveFileTopData.xcn")
+	@Description("Dashboard - default 셋 등록(Filet top10)")
+	@ResponseBody
+	public XcnResponseVO saveFileTopData(final HttpServletRequest request, final HttpSession session) throws Exception {
+		return new XcnResponseVO(XcnRspCode.OK, customDashBoardService.saveFileTopData(request, session));
 	}
 	
 	@RequestMapping(value = "/getFilSizeData.xcn")

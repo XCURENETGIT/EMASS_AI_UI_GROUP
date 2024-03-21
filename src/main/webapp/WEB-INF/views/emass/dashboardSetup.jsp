@@ -331,6 +331,7 @@
         function printAlarmValStr(alarmCycle, alarmVal, rtnType) {
             var searchStr = '';
             var searchDateStr = '';
+            console.log(alarmVal);
             if (alarmVal.startDateSelect == 'Y') searchDateStr += '<s:message code="condition.yesterday_str"/> ';
             else if (alarmVal.startDateSelect == 'T') searchDateStr += '<s:message code="condition.today_str"/> ';
             else if (alarmVal.startDateSelect == 'W') searchDateStr += '<s:message code="condition.sevenago"/> ';

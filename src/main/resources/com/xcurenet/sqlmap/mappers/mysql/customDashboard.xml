@@ -244,12 +244,25 @@
 		REPLACE INTO UI_CONF_ADMIN (CONF_ID, ADMIN_ID, VAL, DEFAULT_VAL, UPDATE_DT) 
 		VALUES ( 'dashboard.logging.use', #{adminId}, #{useYn}, null, NOW())
 	</insert>
+
+	<insert id="saveFileTopData" parameterType="hashmap">
+		REPLACE INTO UI_CONF_ADMIN (CONF_ID, ADMIN_ID, VAL, DEFAULT_VAL, UPDATE_DT)
+		VALUES ( 'dashboard.fileTop.use', #{adminId}, #{useYn}, null, NOW())
+	</insert>
 	
 	<select id="getLoggingDataSetting" resultType="string" parameterType="hashmap">
 		SELECT	VAL AS val
 		FROM	UI_CONF_ADMIN
 		WHERE	ADMIN_ID = #{adminId}
 		AND		CONF_ID = 'dashboard.logging.use'
+	</select>
+
+
+	<select id="getFileDataSetting" resultType="string" parameterType="hashmap">
+		SELECT	VAL AS val
+		FROM	UI_CONF_ADMIN
+		WHERE	ADMIN_ID = #{adminId}
+		AND		CONF_ID = 'dashboard.fileTop.use'
 	</select>
 
 	<select id="getFileSizeData" resultType="fileDataVO" parameterType="string" >	

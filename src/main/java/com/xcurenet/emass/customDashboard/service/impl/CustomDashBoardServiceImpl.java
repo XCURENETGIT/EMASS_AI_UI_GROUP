@@ -481,6 +481,15 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 	}
 
 	@Override
+	public int saveFileTopData(final HttpServletRequest request, final HttpSession session) {
+		Map<String, String> param = new HashMap<>();
+		param.put("adminId", Common.getAdminId(session));
+		param.put("useYn", Common.nvl(request.getParameter("useYn")));
+		insert("com.xcurenet.sqlmap.mappers.mysql.customDashboard.saveFileTopData", param);
+		return 0;
+	}
+
+	@Override
 	public String getLoggingDataSetting(final HttpSession session) throws Exception {
 		Map<String, String> param = new HashMap<>();
 		param.put("adminId", Common.getAdminId(session));
@@ -488,6 +497,16 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 		if (rs.isEmpty()) rs = "N";
 		return rs;
 	}
+
+	@Override
+	public String getFileDataSetting(HttpSession session) throws Exception {
+		Map<String, String> param = new HashMap<>();
+		param.put("adminId", Common.getAdminId(session));
+		String rs = Common.nvl(selectOne("com.xcurenet.sqlmap.mappers.mysql.customDashboard.getFileDataSetting", param));
+		if (rs.isEmpty()) rs = "N";
+		return rs;
+	}
+
 
 	@Override
 	public XcnResponseVO getLoggingData(final HttpServletRequest request, final HttpSession session) throws Exception {
