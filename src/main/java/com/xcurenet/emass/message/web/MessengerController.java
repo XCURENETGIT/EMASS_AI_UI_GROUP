@@ -677,7 +677,7 @@ public class MessengerController {
 
 	public MessengerGroupUserVO getMessengerGroupUserList(final HttpServletRequest request, final int rows) throws IOException, SolrServerException {
 		JSONObject param = Common.getParam(request);
-		String xrootmtr = Common.nvl(param.get("xrootmtr"));
+		String xrootmtr = Common.nvl(param.get("xRootMtr"));
 		String groupField = Common.nvl(param.get("groupField"), "userkey");
 		String srcip = Common.nvl(param.get("srcip"));
 		String userid = Common.nvl(param.get("userid"));

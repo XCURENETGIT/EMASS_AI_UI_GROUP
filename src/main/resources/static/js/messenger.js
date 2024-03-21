@@ -116,7 +116,7 @@ var eikon = {
         // 참여자 수, 참여자 정보
         ui.get({
             url : 'getMessengerGroupUserList.xcn',
-            xrootmtr : xRootmtr,
+            xRootMtr : xRootmtr,
             startDt : startDt+"000000",
             endDt : endDt+"235959",
             groupField : 'userkey',
