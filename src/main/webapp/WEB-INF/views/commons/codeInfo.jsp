@@ -441,7 +441,7 @@
             });
         }
     };
-    gridAttach.loadExportMenu('<s:message code="codeInfo.info.filetype"/>');
+    gridAttach.loadExportMenu('<s:message code="OPERATION_MGMT.CODE_INFO"/>');
     gridAttach.loadHeader(true);
     gridAttach.initData('<s:message code="common.msg.search.click"/>');
 
@@ -469,7 +469,7 @@
             $('#servicePop').modal('show');
         }
     }
-    gridService.loadExportMenu('<s:message code="codeInfo.info.svc"/>');
+    gridService.loadExportMenu('<s:message code="OPERATION_MGMT.CODE_INFO"/>');
     gridService.loadHeader(true);
     gridService.initData('<s:message code="common.msg.search.click"/>');
 </script>

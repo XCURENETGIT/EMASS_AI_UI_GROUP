@@ -733,7 +733,7 @@
     gridGroup.colAdd('open', '<s:message code="common.msg.modify"/>', 80, 'center', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
         return "<input type='button' value='<s:message code="common.msg.modify"/>' class='table_btn01' />";
     });
-    gridGroup.loadExportMenu('<s:message code="userGroup.navi.title2"/>');
+    gridGroup.loadExportMenu('<s:message code="DATA_MONITOR.INTEREST_USER"/>');
     gridGroup.loadHeader(false);
     gridGroup.initData('<s:message code="common.msg.search.click"/>');
 
@@ -773,7 +773,7 @@
         if (ceo == 'Y') return 'CEO';
         else return '';
     });
-    gridItem.loadExportMenu('<s:message code="userGroup.navi.title2"/>');
+    gridItem.loadExportMenu('<s:message code="DATA_MONITOR.INTEREST_USER"/>');
     gridItem.loadHeader(true);
     gridItem.initData('<s:message code="userGroup.msg.select.group"/>');
 

@@ -181,7 +181,7 @@
     grid.colAdd('consentName', '<s:message code="common.msg.name"/>', 150, 'center', false, 'nomal');
     grid.colAdd('consentUserId', '<s:message code="common.msg.id"/>', 150, 'center', false, 'nomal');
 
-    grid.loadExportMenu('<s:message code="auditLog.auditlogpop.title"/>');
+    grid.loadExportMenu('<s:message code="OPERATION_MGMT.SEARCH_LOG"/>');
     grid.loadPageSize();
     grid.loadHeader(false);
     grid.initData('<s:message code="common.msg.search.click"/>');
