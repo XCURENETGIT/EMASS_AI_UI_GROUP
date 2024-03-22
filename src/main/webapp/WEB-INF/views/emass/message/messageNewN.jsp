@@ -1285,7 +1285,19 @@
                 $('#periodSetupMenu').hide();
             });
 
-
+            /* 조건 보관함 */
+            $("#filterHeaderDiv").draggable({
+                scroll: false,
+                containment: "#mainBodyArea",
+                start: function( event, ui ) {
+                    $('#contentListArea').css({pointerEvents:'none', 'user-select':'none'});
+                    $('#contentBodyArea').css({pointerEvents:'none', 'user-select':'none'});
+                },
+                stop: function( event, ui ) {
+                    $('#contentListArea').css({pointerEvents:'', 'user-select':''});
+                    $('#contentBodyArea').css({pointerEvents:'', 'user-select':''});
+                }
+            });
 
             /* 검색어 관리 */
             $("#searchKeywordDiv").draggable({
