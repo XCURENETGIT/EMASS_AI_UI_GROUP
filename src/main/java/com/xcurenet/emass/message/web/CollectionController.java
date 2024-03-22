@@ -9,6 +9,7 @@ import com.xcurenet.audit.service.ParentMenu;
 import com.xcurenet.common.excel.XLSXWriter;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.MongoUtil;
+import com.xcurenet.common.util.config.Config;
 import com.xcurenet.common.util.elasticsearch.ElasticSearchCommon;
 import com.xcurenet.common.util.locale.Prop;
 import com.xcurenet.common.vo.XcnResponseVO;
@@ -1058,6 +1059,42 @@ public class CollectionController {
 		}
 	}
 
+
+	@RequestMapping(value = "/getCollectionGroupTextAllExportZip.xcn")
+	@Description("서비스 대화내용 압축 내보내기")
+	@ResponseBody
+	public void getCollectionGroupTextAllExportZip(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+		JSONObject param = Common.getParam(request);
+		String userkey = Common.nvl(param.get("userkey"));
+
+		response.setCharacterEncoding(Common.UTF8);
+		response.setHeader("Cache-control", "no-store");
+		response.setHeader("Pragma", "no-cache");
+		response.setDateHeader("Expires", 0);
+		response.setContentType("application/octet-stream");
+		response.setHeader("Content-Transfer-Encoding", "binary");
+		response.setHeader("Connection", "close");
+
+		ServletOutputStream out = null;
+		ArchiveOutputStream os = null;
+		try {
+			response.setHeader("Content-Disposition", "attachment; filename=\"" + Common.getDateTimeFormat() + "_message.zip\"");
+
+			out = response.getOutputStream();
+			os = new ArchiveStreamFactory().createArchiveOutputStream("zip", out);
+			MessengerEdcGroupVO groups = getCollectionMessageTotal(request, true);
+			inputAttach(os, groups);
+			inputCollectionZipExcel(os, groups, userkey, Common.getLocale(request.getSession()));
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			IOUtils.closeQuietly(os);
+			IOUtils.closeQuietly(out);
+			response.flushBuffer();
+		}
+	}
+
 	public String getGroupBody(List<MessengerGroupVO> data, String rootmtr, Locale locale) throws Exception {
 		StringBuffer _sb = new StringBuffer();
 		_sb.append("<table class=\"g_request\"><colgroup><col width=\"120\"><col width=\"*\"><col width=\"70\"></colgroup><tbody>").append(EMPTY_LINE);
@@ -1181,7 +1218,7 @@ public class CollectionController {
 				List<MessengerGroupVO> list = groups.getGroups();
 				if (list != null) {
 					for (MessengerGroupVO item : list) {
-						_sb.append(String.format("[%s] [%s] %s", item.getTitle(), item.getCtime(), item.getBody_snippet())).append(Common.EMPTY_LINE);
+						_sb.append(String.format("[%s] [%s] [%s] %s", item.getTitle(), item.getCtime(),Config.getServiceNm(item.getSvc()), item.getBody_snippet())).append(Common.EMPTY_LINE);
 					}
 				}
 				if (Common.isEquals(type, "html")) {
@@ -1203,6 +1240,8 @@ public class CollectionController {
 	private void xlsxCollectionExport(String userkey, MessengerEdcGroupVO groups, OutputStream out, boolean link, Locale locale) throws Exception {
 		JSONArray header = new JSONArray();
 		header.add(getXlsxHeader("sender", Prop.propFormat("eikon.msg.sender", locale), "130", "center"));
+		header.add(getXlsxHeader("ctime", Prop.propFormat("eikon.msg.send.time"), "130", "center"));
+		header.add(getXlsxHeader("svc", Prop.propFormat("filterInfo.servicetype"), "130", "center"));
 		header.add(getXlsxHeader("content", Prop.propFormat("eikon.msg.chatContents", locale), "750", "left", "LINK"));
 
 		JSONArray data = new JSONArray();
@@ -1212,6 +1251,7 @@ public class CollectionController {
 				JSONObject dataObj = new JSONObject();
 				dataObj.put("sender", item.getTitle());
 				dataObj.put("ctime", item.getCtime());
+				dataObj.put("svc", Config.getServiceNm(item.getSvc()));
 				dataObj.put("content", item.getBody_snippet());
 				if (link && Common.isEquals(item.getAttached(), "Y")) {
 					dataObj.put("content_LINK", Common.makeFilepath("attachs", item.getMsgid()));

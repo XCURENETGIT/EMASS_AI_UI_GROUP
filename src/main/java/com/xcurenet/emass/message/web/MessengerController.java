@@ -9,6 +9,7 @@ import com.xcurenet.audit.service.ParentMenu;
 import com.xcurenet.common.excel.XLSXWriter;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.MongoUtil;
+import com.xcurenet.common.util.config.Config;
 import com.xcurenet.common.util.elasticsearch.ElasticSearchCommon;
 import com.xcurenet.common.util.locale.Prop;
 import com.xcurenet.common.vo.XcnResponseVO;
@@ -733,6 +734,7 @@ public class MessengerController {
 		JSONArray header = new JSONArray();
 		header.add(getXlsxHeader("sender", Prop.propFormat("eikon.msg.sender", locale), "130", "center"));
 		header.add(getXlsxHeader("ctime", Prop.propFormat("eikon.msg.send.time"), "130", "center"));
+		header.add(getXlsxHeader("svc", Prop.propFormat("filterInfo.servicetype"), "130", "center"));
 		header.add(getXlsxHeader("content", Prop.propFormat("eikon.msg.chatContents", locale), "750", "left", "LINK"));
 
 		JSONArray data = new JSONArray();
@@ -743,6 +745,7 @@ public class MessengerController {
 				JSONObject dataObj = new JSONObject();
 				dataObj.put("sender", item.getUser());
 				dataObj.put("ctime", item.getCtime());
+				dataObj.put("svc", Config.getServiceNm(item.getSvc()));
 				dataObj.put("content", item.getMessage());
 				if (link && Common.isEquals(item.getAttached(), "Y")) {
 					dataObj.put("content_LINK", Common.makeFilepath("attachs", item.getMsgid()));
@@ -955,7 +958,7 @@ public class MessengerController {
 				if (list != null) {
 					for (int i = list.size() - 1; i >= 0; i--) {
 						MessengerGroupVO item = list.get(i);
-						_sb.append(String.format("[%s] [%s] %s", item.getUserkey(), item.getCtime(), item.getMessage())).append(Common.EMPTY_LINE);
+						_sb.append(String.format("[%s] [%s] [%s] %s", item.getTitle(), item.getCtime(),Config.getServiceNm(item.getSvc()), item.getBody_snippet())).append(Common.EMPTY_LINE);
 					}
 				}
 				if (Common.isEquals(type, "html")) {

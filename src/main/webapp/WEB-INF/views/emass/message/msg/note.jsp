@@ -660,23 +660,9 @@
 
             $("#xcn_Search2").hide();
 
-            var dateObj = new Date();
 
             $('#easyDate').change(function () {
                 changeDate($(this).val());
-            });
-            $('#timedatepicker').datetimepicker({
-                format: 'YYYY-MM-DD',
-                locale: 'ko',
-                defaultDate: moment(new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), 23, 59, 59))
-            }).on("dp.change", function (e) {
-                var date = $(this).data("DateTimePicker").date().format('YYYY-MM-DD');
-                detailDateFocus(date);
-
-                $('#searchMsgStrInput').val('');
-                $('#searchResult').html('');
-                $('#searchResultArea').hide();
-                $('#searchResultBtnArea').hide();
             });
 
             $('#serviceTypeSelect').selectpicker({
@@ -1149,8 +1135,23 @@
 </form>
 
 <script>
-    document.querySelector(".chat[data-chat=person2]").classList.add("active-chat");
-    document.querySelector(".person[data-chat=person2]").classList.add("active");
+
+    $(function() {
+        $("#xcn_toggleBtn").on("click", function() {
+            $("#xcn_Search").toggle("show");
+        })
+    })
+
+    $(function() {
+        $("#showBtn").on("click", function() {
+            $("#xcn_Search2").show();
+        })
+        $("#xcn_toggleBtn2").on("click", function() {
+            $("#xcn_Search2").hide();
+        })
+    })
+    // document.querySelector(".chat[data-chat=person2]").classList.add("active-chat");
+    // document.querySelector(".person[data-chat=person2]").classList.add("active");
 
     let friends = {
             list: document.querySelector("ul.people"),
