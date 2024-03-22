@@ -106,7 +106,7 @@
             loadCondition();
             // initEpmsg();
 
-            document.getElementById('addUrlBtn').addEventListener('click', function() {
+/*            document.getElementById('addUrlBtn').addEventListener('click', function() {
                 // Create a new input field
                 var newInput = document.createElement('input');
                 newInput.type = 'text';
@@ -116,7 +116,7 @@
 
                 // Append the new input field to the additionalUrlFields div
                 document.getElementById('additionalUrlFields').appendChild(newInput);
-            });
+            });*/
 
             if (infoFeedbackConf == 'true' && infoFeedbackYn == 'Y') $('#infoFeedbackDiv, #feedbackBtn, #sctDiv').show();
             else $('#infoFeedbackDiv, #feedbackBtn, #sctDiv').hide();
@@ -228,8 +228,8 @@
             //     $('#startDateSelect option[value=W]').hide();
             //     $('#endDateSelect option[value=W]').hide();
             // } else {
-                $('#startDateSelect option[value=W]').show();
-                $('#endDateSelect option[value=W]').show();
+            $('#startDateSelect option[value=W]').show();
+            $('#endDateSelect option[value=W]').show();
             // }
             $('#busiSelect').selectpicker({
                 size: 'auto',
@@ -1177,606 +1177,606 @@
 </head>
 <body class="mini-navbar">
 <div class="xcn_container" >
-<div class="modalHead">
-    <h2 class="ma_none"><s:message code="condition.select.condition.search"/></h2>
-    <div class="btnBox">
-        <button type="button" class="form_btn02" accesskey="R" id="conditionResetBtn"><s:message
-                code="condition.reset"/></button>
-        <button type="button" class="form_btn01_02" accesskey="S" id="conditionSaveBtn"><s:message
-                code="condition.select"/></button>
+    <div class="modalHead">
+        <h2 class="ma_none"><s:message code="condition.select.condition.search"/></h2>
+        <div class="btnBox">
+            <button type="button" class="form_btn02" accesskey="R" id="conditionResetBtn"><s:message
+                    code="condition.reset"/></button>
+            <button type="button" class="form_btn01_02" accesskey="S" id="conditionSaveBtn"><s:message
+                    code="condition.select"/></button>
+        </div>
     </div>
-</div>
-<div class="modalCon" style="padding:12px; background-color:#f8f8f8;">
-    <div>
-        <div class="content_body">
-            <div id="selectedCodeTitle"></div><!-- selectedCodeTitle: 선택된 코드 개수표시용 -->
-            <div class="row">
-                <ul>
-                    <li>
-                        <label for="searchField" class="col-xs-3"><s:message code="condition.field.search"/></label>
-                        <select id="searchField" title="<s:message code="condition.field.search.all"/>"
-                                class="selectpicker" data-style="btn-default" multiple data-show-subtext="true"
-                                data-actions-box="true" data-live-search="true">
-                            <option value="subject"><s:message code="condition.subject"/></option>
-                            <option value="body"><s:message code="condition.body"/></option>
-                            <option value="attachname attachname_str"><s:message code="condition.attach_name"/></option>
-                            <%if (!isOCR) { %>
-                            <option value="attach"><s:message code="condition.attach"/></option>
-                            <%} else { %>
-                            <option value="attach ocr_attach"><s:message code="condition.attach"/></option>
-                            <option value="ocr_attach">OCR</option>
-                            <%} %>
-                            <option value="host host_str">Host</option>
-                            <option value="path query">Path</option>
-                            <option value="srcip"><s:message code="condition.source"/> IP</option>
-                            <option value="dstip"><s:message code="condition.destination"/> IP</option>
-                            <option value="sender_str"><s:message code="condition.sender"/></option>
-                            <option value="sname"><s:message code="condition.sender_name"/></option>
-                            <option value="recvs"><s:message code="condition.recv"/></option>
-                            <option value="recvs_name"><s:message code="condition.recv_name"/></option>
-                            <option value="to tname"><s:message code="condition.recv"/>(<s:message code="condition.to"/>)</option>
-                            <option value="cc cname"><s:message code="condition.recv"/>(<s:message code="condition.cc"/>)</option>
-                            <option value="bcc bname"><s:message code="condition.recv"/>(<s:message
-                                    code="condition.bcc"/>)
-                            </option>
-                            <option value="user user_str userid name"><s:message code="common.org.user"/></option>
-                            <option value="usrId"><s:message code="common.msg.account"/></option>
-                        </select>
-                        <input type="search" class="" id="searchStrInput"
-                               placeholder="<s:message code="condition.search_str"/>"/>
-                    </li>
-                    <li>
-                        <label for="serviceTypeSelect" class="col-xs-3"><s:message
-                                code="condition.service"/></label>
-                        <select id="serviceTypeSelect" class="selectpicker col-xs" data-style="btn-default btn-sm"
-                                multiple data-show-subtext="true" data-live-search="true"
-                                data-actions-box="true"></select>
-                    </li>
-
-<%--                    <li id="epmsgList">--%>
-<%--                        <label for="epmsgTypeSelect" class="col-xs-3"><s:message--%>
-<%--                                code="condition.epmsgType.list"/></label>--%>
-<%--                        <select id="epmsgTypeSelect" class="selectpicker col-xs" data-style="btn-default btn-sm"--%>
-<%--                                multiple data-show-subtext="true" data-live-search="true"--%>
-<%--                                data-actions-box="true"></select>--%>
-<%--                    </li>--%>
-
-                    <li>
-                        <label for="day_msg" class="col-xs-3"><s:message
-                                code="condition.period.setting"/></label>
-                        <div id="day_msg" style="display:inline-flex;">
-                            <div class="selecBtnArea" style="width:auto;float: left;">
-                                <select class="selectpicker col-xs" data-style="btn-primary" id="startDateSelect"
-                                        style="width: 1000px;">
-                                    <option value="M"><s:message code="condition.month" arguments="1"/></option>
-                                    <option value="W"><s:message code="condition.sevenago"/></option>
-                                    <option value="Y"><s:message code="condition.yesterday_str"/></option>
-                                    <option value="T" selected><s:message code="condition.today_str"/></option>
-
-
-                                </select>
-                            </div>
-                            <div class="selecBtnArea" style="width:auto; padding-left: 3px;float: left;">
-                                <select class="selectpicker col-xs" data-style="btn-primary" id="startTimeSelect">
-                                    <option value="00" selected><s:message code="condition.clock"
-                                                                           arguments="0"/></option>
-                                    <option value="01"><s:message code="condition.clock" arguments="1"/></option>
-                                    <option value="02"><s:message code="condition.clock" arguments="2"/></option>
-                                    <option value="03"><s:message code="condition.clock" arguments="3"/></option>
-                                    <option value="04"><s:message code="condition.clock" arguments="4"/></option>
-                                    <option value="05"><s:message code="condition.clock" arguments="5"/></option>
-                                    <option value="06"><s:message code="condition.clock" arguments="6"/></option>
-                                    <option value="07"><s:message code="condition.clock" arguments="7"/></option>
-                                    <option value="08"><s:message code="condition.clock" arguments="8"/></option>
-                                    <option value="09"><s:message code="condition.clock" arguments="9"/></option>
-                                    <option value="10"><s:message code="condition.clock" arguments="10"/></option>
-                                    <option value="11"><s:message code="condition.clock" arguments="11"/></option>
-                                    <option value="12"><s:message code="condition.clock" arguments="12"/></option>
-                                    <option value="13"><s:message code="condition.clock" arguments="13"/></option>
-                                    <option value="14"><s:message code="condition.clock" arguments="14"/></option>
-                                    <option value="15"><s:message code="condition.clock" arguments="15"/></option>
-                                    <option value="16"><s:message code="condition.clock" arguments="16"/></option>
-                                    <option value="17"><s:message code="condition.clock" arguments="17"/></option>
-                                    <option value="18"><s:message code="condition.clock" arguments="18"/></option>
-                                    <option value="19"><s:message code="condition.clock" arguments="19"/></option>
-                                    <option value="20"><s:message code="condition.clock" arguments="20"/></option>
-                                    <option value="21"><s:message code="condition.clock" arguments="21"/></option>
-                                    <option value="22"><s:message code="condition.clock" arguments="22"/></option>
-                                    <option value="23"><s:message code="condition.clock" arguments="23"/></option>
-                                </select>
-                            </div>
-                            <span style="padding: 5px;float: left;">~</span>
-                            <div class="selecBtnArea" style="width:auto;float: left; margin-right: 3px;">
-                                <select class="selectpicker col-xs" data-style="btn-primary" id="endDateSelect">
-                                    <option value="M"><s:message code="condition.month" arguments="1"/></option>
-                                    <option value="W"><s:message code="condition.sevenago"/></option>
-                                    <option value="Y"><s:message code="condition.yesterday_str"/></option>
-                                    <option value="T" selected><s:message code="condition.today_str"/></option>
-                                </select>
-                            </div>
-                            <div class="selecBtnArea" style="width:100%; padding-left:3px;">
-                                <select class="selectpicker col-xs" data-style="btn-primary" id="endTimeSelect">
-                                    <option value="00"><s:message code="condition.time" arguments="0,59,59"/></option>
-                                    <option value="01"><s:message code="condition.time" arguments="1,59,59"/></option>
-                                    <option value="02"><s:message code="condition.time" arguments="2,59,59"/></option>
-                                    <option value="03"><s:message code="condition.time" arguments="3,59,59"/></option>
-                                    <option value="04"><s:message code="condition.time" arguments="4,59,59"/></option>
-                                    <option value="05"><s:message code="condition.time" arguments="5,59,59"/></option>
-                                    <option value="06"><s:message code="condition.time" arguments="6,59,59"/></option>
-                                    <option value="07"><s:message code="condition.time" arguments="7,59,59"/></option>
-                                    <option value="08"><s:message code="condition.time" arguments="8,59,59"/></option>
-                                    <option value="09"><s:message code="condition.time" arguments="9,59,59"/></option>
-                                    <option value="10"><s:message code="condition.time" arguments="10,59,59"/></option>
-                                    <option value="11"><s:message code="condition.time" arguments="11,59,59"/></option>
-                                    <option value="12"><s:message code="condition.time" arguments="12,59,59"/></option>
-                                    <option value="13"><s:message code="condition.time" arguments="13,59,59"/></option>
-                                    <option value="14"><s:message code="condition.time" arguments="14,59,59"/></option>
-                                    <option value="15"><s:message code="condition.time" arguments="15,59,59"/></option>
-                                    <option value="16"><s:message code="condition.time" arguments="16,59,59"/></option>
-                                    <option value="17"><s:message code="condition.time" arguments="17,59,59"/></option>
-                                    <option value="18"><s:message code="condition.time" arguments="18,59,59"/></option>
-                                    <option value="19"><s:message code="condition.time" arguments="19,59,59"/></option>
-                                    <option value="20"><s:message code="condition.time" arguments="20,59,59"/></option>
-                                    <option value="21"><s:message code="condition.time" arguments="21,59,59"/></option>
-                                    <option value="22"><s:message code="condition.time" arguments="22,59,59"/></option>
-                                    <option value="23" selected><s:message code="condition.time"
-                                                                           arguments="23,59,59"/></option>
-                                </select>
-                            </div>
-                        </div>
-                        <div id="time_msg" style="display: none;">
-                            <span><s:message code="mail.message.condition_info"/></span>
-                        </div>
-                    </li>
-                    <li class="form-inline" id="ctimeWorkGroup">
-                        <label for="" class=" col-xs-3">
-                            <s:message code="condition.ctimework"/></label>
-
-                        <label class="radio-inline c-radio"><input type="radio" name="ctimeWorkVal" value=""
-                                                                   checked><span class="fa fa-check"></span><s:message
-                                code="condition.ctimework.all"/></label>
-                        <label class="radio-inline c-radio"><input type="radio" name="ctimeWorkVal" value="W"><span
-                                class="fa fa-check"></span><s:message code="condition.work"/></label>
-                        <label class="radio-inline c-radio"><input type="radio" name="ctimeWorkVal" value="R"><span
-                                class="fa fa-check"></span><s:message code="condition.notwork"/></label>
-                        <input type="hidden" name="ctimeWork" id="ctimeWork">
-
-
-                    </li>
-                    <li id="infoFeedbackDiv" style="display: none;">
-                        <div>
-                            <label for="infoTypeSelect" class=" col-xs-3"><s:message
-                                    code="condition.infotype"/></label>
-                            <select id="infoTypeSelect" class="selectpicker col-xs" data-style="btn-default btn-sm"
-                                    multiple data-show-subtext="true" data-live-search="true" data-actions-box="true">
-                                <option value="4"><s:message code="condition.info.class4"/></option>
-                                <option value="3"><s:message code="condition.info.class3"/></option>
-                                <option value="2"><s:message code="condition.info.class2"/></option>
-                                <option value="1"><s:message code="condition.info.class1"/></option>
+    <div class="modalCon" style="padding:12px; background-color:#f8f8f8;">
+        <div>
+            <div class="content_body">
+                <div id="selectedCodeTitle"></div><!-- selectedCodeTitle: 선택된 코드 개수표시용 -->
+                <div class="row">
+                    <ul>
+                        <li>
+                            <label for="searchField" class="col-xs-3"><s:message code="condition.field.search"/></label>
+                            <select id="searchField" title="<s:message code="condition.field.search.all"/>"
+                                    class="selectpicker" data-style="btn-default" multiple data-show-subtext="true"
+                                    data-actions-box="true" data-live-search="true">
+                                <option value="subject"><s:message code="condition.subject"/></option>
+                                <option value="body"><s:message code="condition.body"/></option>
+                                <option value="attachname attachname_str"><s:message code="condition.attach_name"/></option>
+                                <%if (!isOCR) { %>
+                                <option value="attach"><s:message code="condition.attach"/></option>
+                                <%} else { %>
+                                <option value="attach ocr_attach"><s:message code="condition.attach"/></option>
+                                <option value="ocr_attach">OCR</option>
+                                <%} %>
+                                <option value="host host_str">Host</option>
+                                <option value="path query">Path</option>
+                                <option value="srcip"><s:message code="condition.source"/> IP</option>
+                                <option value="dstip"><s:message code="condition.destination"/> IP</option>
+                                <option value="sender_str"><s:message code="condition.sender"/></option>
+                                <option value="sname"><s:message code="condition.sender_name"/></option>
+                                <option value="recvs"><s:message code="condition.recv"/></option>
+                                <option value="recvs_name"><s:message code="condition.recv_name"/></option>
+                                <option value="to tname"><s:message code="condition.recv"/>(<s:message code="condition.to"/>)</option>
+                                <option value="cc cname"><s:message code="condition.recv"/>(<s:message code="condition.cc"/>)</option>
+                                <option value="bcc bname"><s:message code="condition.recv"/>(<s:message
+                                        code="condition.bcc"/>)
+                                </option>
+                                <option value="user user_str userid name"><s:message code="common.org.user"/></option>
+                                <option value="usrId"><s:message code="common.msg.account"/></option>
                             </select>
-                        </div>
+                            <input type="search" class="" id="searchStrInput"
+                                   placeholder="<s:message code="condition.search_str"/>"/>
+                        </li>
+                        <li>
+                            <label for="serviceTypeSelect" class="col-xs-3"><s:message
+                                    code="condition.service"/></label>
+                            <select id="serviceTypeSelect" class="selectpicker col-xs" data-style="btn-default btn-sm"
+                                    multiple data-show-subtext="true" data-live-search="true"
+                                    data-actions-box="true"></select>
+                        </li>
 
-                        <div class="mat8">
-                            <label for="feedbackTypeSelect" class=" col-xs-3"><s:message
-                                    code="condition.feedback"/></label>
-                            <select id="feedbackTypeSelect" class="selectpicker col-xs" data-style="btn-default btn-sm"
-                                    multiple data-show-subtext="true" data-live-search="true" data-actions-box="true">
-                                <option value="0"><s:message code="condition.info.feedback0"/></option>
-                                <option value="1"><s:message code="condition.info.feedback1"/></option>
-                                <option value="2"><s:message code="condition.info.feedback2"/></option>
-                                <option value="3"><s:message code="condition.info.feedback3"/></option>
-                                <option value="4"><s:message code="condition.info.feedback4"/></option>
-                                <option value="9"><s:message code="condition.info.feedback9"/></option>
-                                <option value="-1"><s:message code="condition.info.feedback-1"/></option>
-                            </select>
-                        </div>
+                        <%--                    <li id="epmsgList">--%>
+                        <%--                        <label for="epmsgTypeSelect" class="col-xs-3"><s:message--%>
+                        <%--                                code="condition.epmsgType.list"/></label>--%>
+                        <%--                        <select id="epmsgTypeSelect" class="selectpicker col-xs" data-style="btn-default btn-sm"--%>
+                        <%--                                multiple data-show-subtext="true" data-live-search="true"--%>
+                        <%--                                data-actions-box="true"></select>--%>
+                        <%--                    </li>--%>
 
-                        <div class="mat8">
-                            <label for="probTypeSelect" class=" col-xs-3"><s:message
-                                    code="condition.prob"/></label>
-                            <select id="probTypeSelect" class="selectpicker col-xs" data-style="btn-default btn-sm"
-                                    multiple data-show-subtext="true" data-live-search="true" data-actions-box="true">
-                                <option value="0.5|1.1">50 ~ 100</option>
-                                <option value="0.1|0.5">10 ~ 49</option>
-                                <option value="0|0.1">0 ~ 9</option>
-                            </select>
-                        </div>
-                    </li>
-                    <li class="form-inline" id="recvSendGroup">
-                        <label for="" class=" col-xs-3"><s:message code="condition.receive_send"/></label>
-                        <label class="radio-inline c-radio">
-                            <input type="radio" name="receiveSendVal" value="" checked>
-                            <span class="fa fa-check"></span><s:message
-                                code="common.msg.all"/></label>
-                        <label class="radio-inline c-radio"><input type="radio" name="receiveSendVal" value="I"><span
-                                class="fa fa-check"></span><s:message code="condition.receive"/></label>
-                        <label class="radio-inline c-radio"><input type="radio" name="receiveSendVal" value="O"><span
-                                class="fa fa-check"></span><s:message code="condition.send"/></label>
-                        <input type="hidden" name="receiveSend" id="receiveSend">
-                    </li>
-                    <li>
-                        <label for="senders" class=" col-xs-3"><s:message code="condition.sender"/></label>
-                        <div class="input-group">
-                            <input type="text" class="form-control input-sm condition_input_text" id="senders"
-                                   placeholder="<s:message code="condition.sender"/>" style="width: 290px;"/>
-                            <label class="checkbox-inline c-checkbox exceptOption">
-                                <input type="checkbox" name="senders_not" disabled="disabled">
-                                <span class="fa fa-check"></span><s:message code="query.make.except"/>
-                            </label>
-                            <%if (Common.isEquals(rsUppercase, "Y")) {%>
-                            <label class="checkbox-inline  c-checkbox  exceptOption">
-                                <input type="checkbox" name="senders_upperCase" disabled="disabled">
-                                <span class="fa fa-check"></span><s:message code="condition.uppercase"/>
-                            </label>
-                            <%} %>
-                        </div>
-                    </li>
-                    <li class="form-inline">
-                        <label for="" class=" col-xs-3"><s:message code="condition.detail.recvs"/></label>
-                        <label class="radio-inline c-radio"><input type="radio" name="receive_option"
-                                                                   id="receive_option_all" value="" checked><span
-                                class="fa fa-check"></span><s:message code="common.msg.all"/></label>
-                        <label class="radio-inline c-radio"><input type="radio" name="receive_option"
-                                                                   id="receive_option_more" value="detail"><span
-                                class="fa fa-check "></span><s:message code="condition.info.detail"/></label>
-                        <input type="hidden" name="receiveSend" id="receiveSend">
-                    </li>
-                    <li>
-                        <label for="receivers" class=" col-xs-3"><s:message code="condition.recv"/></label>
-                        <div class="input-group">
-                            <input type="text" class="form-control input-sm condition_input_text" id="receivers"
-                                   placeholder="<s:message code="condition.recv"/>" style="width: 290px;"/>
-                            <label class="checkbox-inline c-checkbox  exceptOption">
-                                <input type="checkbox" name="receivers_not" disabled="disabled">
-                                <span class="fa fa-check"></span><s:message code="query.make.except"/>
-                            </label>
-                            <%if (Common.isEquals(rsUppercase, "Y")) {%>
-                            <label class="checkbox-inline  c-checkbox  exceptOption">
-                                <input type="checkbox" name="receivers_upperCase" disabled="disabled">
-                                <span class="fa fa-check"></span><s:message code="condition.uppercase"/>
-                            </label>
-                            <%} %>
-                        </div>
-                    </li>
-                    <li class="receivers_detail" style="display: none;">
-                        <div>
-                            <label for="rcvTo" class=" col-xs-3"> ><s:message
-                                    code="condition.recv"/>(<s:message code="condition.to"/>)</label>
+                        <li>
+                            <label for="day_msg" class="col-xs-3"><s:message
+                                    code="condition.period.setting"/></label>
+                            <div id="day_msg" style="display:inline-flex;">
+                                <div class="selecBtnArea" style="width:auto;float: left;">
+                                    <select class="selectpicker col-xs" data-style="btn-primary" id="startDateSelect"
+                                            style="width: 1000px;">
+                                        <option value="M"><s:message code="condition.month" arguments="1"/></option>
+                                        <option value="W"><s:message code="condition.sevenago"/></option>
+                                        <option value="Y"><s:message code="condition.yesterday_str"/></option>
+                                        <option value="T" selected><s:message code="condition.today_str"/></option>
+
+
+                                    </select>
+                                </div>
+                                <div class="selecBtnArea" style="width:auto; padding-left: 3px;float: left;">
+                                    <select class="selectpicker col-xs" data-style="btn-primary" id="startTimeSelect">
+                                        <option value="00" selected><s:message code="condition.clock"
+                                                                               arguments="0"/></option>
+                                        <option value="01"><s:message code="condition.clock" arguments="1"/></option>
+                                        <option value="02"><s:message code="condition.clock" arguments="2"/></option>
+                                        <option value="03"><s:message code="condition.clock" arguments="3"/></option>
+                                        <option value="04"><s:message code="condition.clock" arguments="4"/></option>
+                                        <option value="05"><s:message code="condition.clock" arguments="5"/></option>
+                                        <option value="06"><s:message code="condition.clock" arguments="6"/></option>
+                                        <option value="07"><s:message code="condition.clock" arguments="7"/></option>
+                                        <option value="08"><s:message code="condition.clock" arguments="8"/></option>
+                                        <option value="09"><s:message code="condition.clock" arguments="9"/></option>
+                                        <option value="10"><s:message code="condition.clock" arguments="10"/></option>
+                                        <option value="11"><s:message code="condition.clock" arguments="11"/></option>
+                                        <option value="12"><s:message code="condition.clock" arguments="12"/></option>
+                                        <option value="13"><s:message code="condition.clock" arguments="13"/></option>
+                                        <option value="14"><s:message code="condition.clock" arguments="14"/></option>
+                                        <option value="15"><s:message code="condition.clock" arguments="15"/></option>
+                                        <option value="16"><s:message code="condition.clock" arguments="16"/></option>
+                                        <option value="17"><s:message code="condition.clock" arguments="17"/></option>
+                                        <option value="18"><s:message code="condition.clock" arguments="18"/></option>
+                                        <option value="19"><s:message code="condition.clock" arguments="19"/></option>
+                                        <option value="20"><s:message code="condition.clock" arguments="20"/></option>
+                                        <option value="21"><s:message code="condition.clock" arguments="21"/></option>
+                                        <option value="22"><s:message code="condition.clock" arguments="22"/></option>
+                                        <option value="23"><s:message code="condition.clock" arguments="23"/></option>
+                                    </select>
+                                </div>
+                                <span style="padding: 5px;float: left;">~</span>
+                                <div class="selecBtnArea" style="width:auto;float: left; margin-right: 3px;">
+                                    <select class="selectpicker col-xs" data-style="btn-primary" id="endDateSelect">
+                                        <option value="M"><s:message code="condition.month" arguments="1"/></option>
+                                        <option value="W"><s:message code="condition.sevenago"/></option>
+                                        <option value="Y"><s:message code="condition.yesterday_str"/></option>
+                                        <option value="T" selected><s:message code="condition.today_str"/></option>
+                                    </select>
+                                </div>
+                                <div class="selecBtnArea" style="width:100%; padding-left:3px;">
+                                    <select class="selectpicker col-xs" data-style="btn-primary" id="endTimeSelect">
+                                        <option value="00"><s:message code="condition.time" arguments="0,59,59"/></option>
+                                        <option value="01"><s:message code="condition.time" arguments="1,59,59"/></option>
+                                        <option value="02"><s:message code="condition.time" arguments="2,59,59"/></option>
+                                        <option value="03"><s:message code="condition.time" arguments="3,59,59"/></option>
+                                        <option value="04"><s:message code="condition.time" arguments="4,59,59"/></option>
+                                        <option value="05"><s:message code="condition.time" arguments="5,59,59"/></option>
+                                        <option value="06"><s:message code="condition.time" arguments="6,59,59"/></option>
+                                        <option value="07"><s:message code="condition.time" arguments="7,59,59"/></option>
+                                        <option value="08"><s:message code="condition.time" arguments="8,59,59"/></option>
+                                        <option value="09"><s:message code="condition.time" arguments="9,59,59"/></option>
+                                        <option value="10"><s:message code="condition.time" arguments="10,59,59"/></option>
+                                        <option value="11"><s:message code="condition.time" arguments="11,59,59"/></option>
+                                        <option value="12"><s:message code="condition.time" arguments="12,59,59"/></option>
+                                        <option value="13"><s:message code="condition.time" arguments="13,59,59"/></option>
+                                        <option value="14"><s:message code="condition.time" arguments="14,59,59"/></option>
+                                        <option value="15"><s:message code="condition.time" arguments="15,59,59"/></option>
+                                        <option value="16"><s:message code="condition.time" arguments="16,59,59"/></option>
+                                        <option value="17"><s:message code="condition.time" arguments="17,59,59"/></option>
+                                        <option value="18"><s:message code="condition.time" arguments="18,59,59"/></option>
+                                        <option value="19"><s:message code="condition.time" arguments="19,59,59"/></option>
+                                        <option value="20"><s:message code="condition.time" arguments="20,59,59"/></option>
+                                        <option value="21"><s:message code="condition.time" arguments="21,59,59"/></option>
+                                        <option value="22"><s:message code="condition.time" arguments="22,59,59"/></option>
+                                        <option value="23" selected><s:message code="condition.time"
+                                                                               arguments="23,59,59"/></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="time_msg" style="display: none;">
+                                <span><s:message code="mail.message.condition_info"/></span>
+                            </div>
+                        </li>
+                        <li class="form-inline" id="ctimeWorkGroup">
+                            <label for="" class=" col-xs-3">
+                                <s:message code="condition.ctimework"/></label>
+
+                            <label class="radio-inline c-radio"><input type="radio" name="ctimeWorkVal" value=""
+                                                                       checked><span class="fa fa-check"></span><s:message
+                                    code="condition.ctimework.all"/></label>
+                            <label class="radio-inline c-radio"><input type="radio" name="ctimeWorkVal" value="W"><span
+                                    class="fa fa-check"></span><s:message code="condition.work"/></label>
+                            <label class="radio-inline c-radio"><input type="radio" name="ctimeWorkVal" value="R"><span
+                                    class="fa fa-check"></span><s:message code="condition.notwork"/></label>
+                            <input type="hidden" name="ctimeWork" id="ctimeWork">
+
+
+                        </li>
+                        <li id="infoFeedbackDiv" style="display: none;">
+                            <div>
+                                <label for="infoTypeSelect" class=" col-xs-3"><s:message
+                                        code="condition.infotype"/></label>
+                                <select id="infoTypeSelect" class="selectpicker col-xs" data-style="btn-default btn-sm"
+                                        multiple data-show-subtext="true" data-live-search="true" data-actions-box="true">
+                                    <option value="4"><s:message code="condition.info.class4"/></option>
+                                    <option value="3"><s:message code="condition.info.class3"/></option>
+                                    <option value="2"><s:message code="condition.info.class2"/></option>
+                                    <option value="1"><s:message code="condition.info.class1"/></option>
+                                </select>
+                            </div>
+
+                            <div class="mat8">
+                                <label for="feedbackTypeSelect" class=" col-xs-3"><s:message
+                                        code="condition.feedback"/></label>
+                                <select id="feedbackTypeSelect" class="selectpicker col-xs" data-style="btn-default btn-sm"
+                                        multiple data-show-subtext="true" data-live-search="true" data-actions-box="true">
+                                    <option value="0"><s:message code="condition.info.feedback0"/></option>
+                                    <option value="1"><s:message code="condition.info.feedback1"/></option>
+                                    <option value="2"><s:message code="condition.info.feedback2"/></option>
+                                    <option value="3"><s:message code="condition.info.feedback3"/></option>
+                                    <option value="4"><s:message code="condition.info.feedback4"/></option>
+                                    <option value="9"><s:message code="condition.info.feedback9"/></option>
+                                    <option value="-1"><s:message code="condition.info.feedback-1"/></option>
+                                </select>
+                            </div>
+
+                            <div class="mat8">
+                                <label for="probTypeSelect" class=" col-xs-3"><s:message
+                                        code="condition.prob"/></label>
+                                <select id="probTypeSelect" class="selectpicker col-xs" data-style="btn-default btn-sm"
+                                        multiple data-show-subtext="true" data-live-search="true" data-actions-box="true">
+                                    <option value="0.5|1.1">50 ~ 100</option>
+                                    <option value="0.1|0.5">10 ~ 49</option>
+                                    <option value="0|0.1">0 ~ 9</option>
+                                </select>
+                            </div>
+                        </li>
+                        <li class="form-inline" id="recvSendGroup">
+                            <label for="" class=" col-xs-3"><s:message code="condition.receive_send"/></label>
+                            <label class="radio-inline c-radio">
+                                <input type="radio" name="receiveSendVal" value="" checked>
+                                <span class="fa fa-check"></span><s:message
+                                    code="common.msg.all"/></label>
+                            <label class="radio-inline c-radio"><input type="radio" name="receiveSendVal" value="I"><span
+                                    class="fa fa-check"></span><s:message code="condition.receive"/></label>
+                            <label class="radio-inline c-radio"><input type="radio" name="receiveSendVal" value="O"><span
+                                    class="fa fa-check"></span><s:message code="condition.send"/></label>
+                            <input type="hidden" name="receiveSend" id="receiveSend">
+                        </li>
+                        <li>
+                            <label for="senders" class=" col-xs-3"><s:message code="condition.sender"/></label>
                             <div class="input-group">
-                                <input type="text" class="form-control input-sm condition_input_text" id="rcvTo"
-                                       placeholder="<s:message code="condition.to"/>" style="width: 412px;"/>
-                                <label class="checkbox-inline  c-checkbox  exceptOption">
-                                    <input type="checkbox" name="rcvTo_not" disabled="disabled">
+                                <input type="text" class="form-control input-sm condition_input_text" id="senders"
+                                       placeholder="<s:message code="condition.sender"/>" style="width: 290px;"/>
+                                <label class="checkbox-inline c-checkbox exceptOption">
+                                    <input type="checkbox" name="senders_not" disabled="disabled">
                                     <span class="fa fa-check"></span><s:message code="query.make.except"/>
                                 </label>
-                            </div>
-                        </div>
-                        <div>
-                            <label for="rcvCc" class=" col-xs-3"> ><s:message code="condition.recv"/>
-                                (<s:message code="condition.cc"/>)</label>
-                            <div class="input-group">
-                                <input type="text" class="form-control input-sm condition_input_text" id="rcvCc"
-                                       placeholder="<s:message code="condition.cc"/>" style="width: 412px;"/>
-
+                                <%if (Common.isEquals(rsUppercase, "Y")) {%>
                                 <label class="checkbox-inline  c-checkbox  exceptOption">
-                                    <input type="checkbox" name="rcvCc_not" disabled="disabled">
+                                    <input type="checkbox" name="senders_upperCase" disabled="disabled">
+                                    <span class="fa fa-check"></span><s:message code="condition.uppercase"/>
+                                </label>
+                                <%} %>
+                            </div>
+                        </li>
+                        <li class="form-inline">
+                            <label for="" class=" col-xs-3"><s:message code="condition.detail.recvs"/></label>
+                            <label class="radio-inline c-radio"><input type="radio" name="receive_option"
+                                                                       id="receive_option_all" value="" checked><span
+                                    class="fa fa-check"></span><s:message code="common.msg.all"/></label>
+                            <label class="radio-inline c-radio"><input type="radio" name="receive_option"
+                                                                       id="receive_option_more" value="detail"><span
+                                    class="fa fa-check "></span><s:message code="condition.info.detail"/></label>
+                            <input type="hidden" name="receiveSend" id="receiveSend">
+                        </li>
+                        <li>
+                            <label for="receivers" class=" col-xs-3"><s:message code="condition.recv"/></label>
+                            <div class="input-group">
+                                <input type="text" class="form-control input-sm condition_input_text" id="receivers"
+                                       placeholder="<s:message code="condition.recv"/>" style="width: 290px;"/>
+                                <label class="checkbox-inline c-checkbox  exceptOption">
+                                    <input type="checkbox" name="receivers_not" disabled="disabled">
                                     <span class="fa fa-check"></span><s:message code="query.make.except"/>
                                 </label>
-                            </div>
-                        </div>
-                        <div>
-                            <label for="rcvBcc" class=" col-xs-3"> ><s:message code="condition.recv"/>
-                                (<s:message code="condition.bcc"/>)</label>
-                            <div class="input-group">
-                                <input type="text" class="form-control input-sm condition_input_text" id="rcvBcc"
-                                       placeholder="<s:message code="condition.bcc"/>" style="width: 412px;"/>
+                                <%if (Common.isEquals(rsUppercase, "Y")) {%>
                                 <label class="checkbox-inline  c-checkbox  exceptOption">
-                                    <input type="checkbox" name="rcvBcc_not" disabled="disabled">
-                                    <span class="fa fa-check"></span><s:message code="query.make.except"/>
+                                    <input type="checkbox" name="receivers_upperCase" disabled="disabled">
+                                    <span class="fa fa-check"></span><s:message code="condition.uppercase"/>
                                 </label>
+                                <%} %>
                             </div>
-                        </div>
-                    </li>
-                    <li>
-                        <label for="allOfus" class=" col-xs-3"><s:message
-                                code="condition.allofus"/></label>
-                        <div class="btn-group filterBtn" data-toggle="buttons" style="margin-top:3px;">
-                            <select class="selectpicker col-xs" id="allOfus" style="width:100%;"
-                                    data-style="btn-default btn-sm">
-                                <option value=""><s:message code="condition.allofus.all"/></option>
-                                <option value="IA">1) <s:message code="condition.allofus1"/></option>
-                                <option value="EA">2) <s:message code="condition.allofus2"/></option>
-                                <option value="PA">3) <s:message code="condition.allofus3"/></option>
-                                <option value="IA|EA">4) <s:message code="condition.allofus4"/></option>
-                                <option value="EA|PA">5) <s:message code="condition.allofus5"/></option>
-                                <option value="IA|PA">6) <s:message code="condition.allofus6"/></option>
-                                <option value="IA|IT">7) <s:message code="condition.allofus7"/></option>
-                                <option value="ET|EA">8) <s:message code="condition.allofus8"/></option>
-                                <option value="PT|PA">9) <s:message code="condition.allofus9"/></option>
-                                <option value="IA|ET|IT|EA">10) <s:message code="condition.allofus10"/></option>
-                                <option value="IA|IT|PT|PA">11) <s:message code="condition.allofus11"/></option>
-                                <option value="ET|EA|PT|PA">12) <s:message code="condition.allofus12"/></option>
-                                <option value="SO">13) <s:message code="condition.allofus13"/></option>
-                                <option value="SI">14) <s:message code="condition.allofus14"/></option>
-                            </select>
-                        </div>
-                    </li>
-                    <li>
-                        <label for="userGroupSeq" class=" col-xs-3"><s:message
-                                code="userGroup.navi.title2"/></label>
-                        <div class="btn-group filterBtn" data-toggle="buttons" style="margin-top:3px;">
-                            <select id="userGroupSeq" class="selectpicker col-xs"
-                                    data-style="btn-default btn-sm"></select>
-                        </div>
-                        <label class="checkbox-inline c-checkbox exceptOption2">
-                            <input type="checkbox" name="userGroupSeq_not" disabled="disabled">
-                            <span class="fa fa-check"></span><s:message code="query.make.except"/>
-                        </label>
-                        <input type="hidden" id="userGroupStr">
-                    </li>
-                    <li>
-                        <label for="interGroup" class=" col-xs-3"><s:message code="interest.user"/></label>
-                        <div class="btn-group filterBtn" data-toggle="buttons" style="margin-top:3px;">
-                            <select id="interGroup" class="selectpicker col-xs"
-                                    data-style="btn-default btn-sm"></select>
-                        </div>
-                        <label class="checkbox-inline c-checkbox exceptOption2">
-                            <input type="checkbox" name="interGroup_not" disabled="disabled">
-                            <span class="fa fa-check"></span><s:message code="query.make.except"/>
-                        </label>
-                    </li>
+                        </li>
+                        <li class="receivers_detail" style="display: none;">
+                            <div>
+                                <label for="rcvTo" class=" col-xs-3"> ><s:message
+                                        code="condition.recv"/>(<s:message code="condition.to"/>)</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control input-sm condition_input_text" id="rcvTo"
+                                           placeholder="<s:message code="condition.to"/>" style="width: 412px;"/>
+                                    <label class="checkbox-inline  c-checkbox  exceptOption">
+                                        <input type="checkbox" name="rcvTo_not" disabled="disabled">
+                                        <span class="fa fa-check"></span><s:message code="query.make.except"/>
+                                    </label>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="rcvCc" class=" col-xs-3"> ><s:message code="condition.recv"/>
+                                    (<s:message code="condition.cc"/>)</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control input-sm condition_input_text" id="rcvCc"
+                                           placeholder="<s:message code="condition.cc"/>" style="width: 412px;"/>
 
-                    <li>
-                        <label for="busiSelect" class=" col-xs-3"><s:message
-                                code="condition.organization"/></label>
-                        <div class="btn-group filterBtn" data-toggle="buttons" style="margin-top:3px;">
-                            <select id="busiSelect" class="selectpicker col-xs" data-style="btn-default btn-sm" multiple
-                                    data-show-subtext="true" data-live-search="true" data-actions-box="true"></select>
+                                    <label class="checkbox-inline  c-checkbox  exceptOption">
+                                        <input type="checkbox" name="rcvCc_not" disabled="disabled">
+                                        <span class="fa fa-check"></span><s:message code="query.make.except"/>
+                                    </label>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="rcvBcc" class=" col-xs-3"> ><s:message code="condition.recv"/>
+                                    (<s:message code="condition.bcc"/>)</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control input-sm condition_input_text" id="rcvBcc"
+                                           placeholder="<s:message code="condition.bcc"/>" style="width: 412px;"/>
+                                    <label class="checkbox-inline  c-checkbox  exceptOption">
+                                        <input type="checkbox" name="rcvBcc_not" disabled="disabled">
+                                        <span class="fa fa-check"></span><s:message code="query.make.except"/>
+                                    </label>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <label for="allOfus" class=" col-xs-3"><s:message
+                                    code="condition.allofus"/></label>
+                            <div class="btn-group filterBtn" data-toggle="buttons" style="margin-top:3px;">
+                                <select class="selectpicker col-xs" id="allOfus" style="width:100%;"
+                                        data-style="btn-default btn-sm">
+                                    <option value=""><s:message code="condition.allofus.all"/></option>
+                                    <option value="IA">1) <s:message code="condition.allofus1"/></option>
+                                    <option value="EA">2) <s:message code="condition.allofus2"/></option>
+                                    <option value="PA">3) <s:message code="condition.allofus3"/></option>
+                                    <option value="IA|EA">4) <s:message code="condition.allofus4"/></option>
+                                    <option value="EA|PA">5) <s:message code="condition.allofus5"/></option>
+                                    <option value="IA|PA">6) <s:message code="condition.allofus6"/></option>
+                                    <option value="IA|IT">7) <s:message code="condition.allofus7"/></option>
+                                    <option value="ET|EA">8) <s:message code="condition.allofus8"/></option>
+                                    <option value="PT|PA">9) <s:message code="condition.allofus9"/></option>
+                                    <option value="IA|ET|IT|EA">10) <s:message code="condition.allofus10"/></option>
+                                    <option value="IA|IT|PT|PA">11) <s:message code="condition.allofus11"/></option>
+                                    <option value="ET|EA|PT|PA">12) <s:message code="condition.allofus12"/></option>
+                                    <option value="SO">13) <s:message code="condition.allofus13"/></option>
+                                    <option value="SI">14) <s:message code="condition.allofus14"/></option>
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <label for="userGroupSeq" class=" col-xs-3"><s:message
+                                    code="userGroup.navi.title2"/></label>
+                            <div class="btn-group filterBtn" data-toggle="buttons" style="margin-top:3px;">
+                                <select id="userGroupSeq" class="selectpicker col-xs"
+                                        data-style="btn-default btn-sm"></select>
+                            </div>
                             <label class="checkbox-inline c-checkbox exceptOption2">
-                                <input type="checkbox" name="busi_not" disabled="disabled">
+                                <input type="checkbox" name="userGroupSeq_not" disabled="disabled">
                                 <span class="fa fa-check"></span><s:message code="query.make.except"/>
                             </label>
-                            <p>
-                            <div class="btn-group" data-toggle="buttons" style="margin-top: 5px;">
-                                <button type="button" class="btn01" id="dept" style="border-radius: 0;">
-                                    <img src="../img/subBtn_plus.png" alt="부서 추가"><s:message
-                                        code="common.org.choose.dept"/></button>
-                                <span id="deptSelectedArea" class="codeSelectedBtn" style="z-index: 999;">
+                            <input type="hidden" id="userGroupStr">
+                        </li>
+                        <li>
+                            <label for="interGroup" class=" col-xs-3"><s:message code="interest.user"/></label>
+                            <div class="btn-group filterBtn" data-toggle="buttons" style="margin-top:3px;">
+                                <select id="interGroup" class="selectpicker col-xs"
+                                        data-style="btn-default btn-sm"></select>
+                            </div>
+                            <label class="checkbox-inline c-checkbox exceptOption2">
+                                <input type="checkbox" name="interGroup_not" disabled="disabled">
+                                <span class="fa fa-check"></span><s:message code="query.make.except"/>
+                            </label>
+                        </li>
+
+                        <li>
+                            <label for="busiSelect" class=" col-xs-3"><s:message
+                                    code="condition.organization"/></label>
+                            <div class="btn-group filterBtn" data-toggle="buttons" style="margin-top:3px;">
+                                <select id="busiSelect" class="selectpicker col-xs" data-style="btn-default btn-sm" multiple
+                                        data-show-subtext="true" data-live-search="true" data-actions-box="true"></select>
+                                <label class="checkbox-inline c-checkbox exceptOption2">
+                                    <input type="checkbox" name="busi_not" disabled="disabled">
+                                    <span class="fa fa-check"></span><s:message code="query.make.except"/>
+                                </label>
+                                <p>
+                                <div class="btn-group" data-toggle="buttons" style="margin-top: 5px;">
+                                    <button type="button" class="btn01" id="dept" style="border-radius: 0;">
+                                        <img src="../img/subBtn_plus.png" alt="부서 추가"><s:message
+                                            code="common.org.choose.dept"/></button>
+                                    <span id="deptSelectedArea" class="codeSelectedBtn" style="z-index: 999;">
 									<button type="button" class="btn" style="z-index: 2">0</button>
 								</span>
-                                <input type="hidden" id="deptStr" class="selectedTitle">
-                                <input type="hidden" id="deptVal">
+                                    <input type="hidden" id="deptStr" class="selectedTitle">
+                                    <input type="hidden" id="deptVal">
+                                </div>
+                                <label class="checkbox-inline c-checkbox exceptOption mat4">
+                                    <input type="checkbox" name="dept_not" disabled="disabled">
+                                    <span class="fa fa-check"></span><s:message code="query.make.except"/>
+                                </label>
+                                </p>
                             </div>
-                            <label class="checkbox-inline c-checkbox exceptOption mat4">
-                                <input type="checkbox" name="dept_not" disabled="disabled">
-                                <span class="fa fa-check"></span><s:message code="query.make.except"/>
-                            </label>
-                            </p>
-                        </div>
-                    </li>
-                    <li>
-                        <label for="url" class=" col-xs-3">URL</label>
-                        http://
-                        <div class="input-group">
-                            <input type="text" class="form-control input-sm condition_input_text" id="url"
-                                   placeholder="URL" style="width: 372px;"/>
-                            <label class="checkbox-inline c-checkbox exceptOption">
-                                <input type="checkbox" name="url_not" disabled="disabled">
-                                <span class="fa fa-check"></span><s:message code="query.make.except"/>
-                            </label>
-                       <%--     <button type="button" class="btn01" accesskey="A" id="addUrlBtn">url추가</button>--%>
-                            <div id="additionalUrlFields"></div>
-                        </div>
-                    </li>
-                    <li class="form-inline" id="readYnGroup">
-                        <label for="" class=" col-xs-3"><s:message code="condition.isread"/></label>
-                        <label class="radio-inline c-radio"><input type="radio" name="readYnVal" value="" checked><span
-                                class="fa fa-check"></span><s:message code="common.msg.all"/></label>
-                        <label class="radio-inline c-radio"><input type="radio" name="readYnVal" value="Y"><span
-                                class="fa fa-check"></span><s:message code="condition.read"/></label>
-                        <label class="radio-inline c-radio"><input type="radio" name="readYnVal" value="N"><span
-                                class="fa fa-check"></span><s:message code="condition.unread"/></label>
-                        <input type="hidden" name="readYn" id="readYn">
-                    </li>
-                    <!-- 첨부여부 -->
-                    <li class="form-inline" style="height:118px;">
-                        <div class=" col-xs-3">
-                            <label for="attachYnVal"><s:message code="condition.isattached"/></label>
-                        </div>
-                        <div class="col-xs-9" style="padding-left:0px;">
-                            <div style="height:35px;line-height:35px;">
-                                <label class="radio-inline c-radio"><input type="radio" name="attachYnVal" value=""
-                                                                           checked><span
-                                        class="fa fa-check"></span><s:message code="common.msg.all"/></label>
-                                <label class="radio-inline c-radio"><input type="radio" name="attachYnVal"
-                                                                           value="Y"><span
-                                        class="fa fa-check"></span><s:message code="condition.exist"/></label>
-                                <label class="radio-inline c-radio"><input type="radio" name="attachYnVal"
-                                                                           value="N"><span
-                                        class="fa fa-check"></span><s:message code="condition.none"/></label>
-                                <input type="hidden" name="attachYn" id="attachYn">
+                        </li>
+                        <li>
+                            <label for="url" class=" col-xs-3">URL</label>
+                            http://
+                            <div class="input-group">
+                                <input type="text" class="form-control input-sm condition_input_text" id="url"
+                                       placeholder="URL" style="width: 372px;"/>
+                                <label class="checkbox-inline c-checkbox exceptOption">
+                                    <input type="checkbox" name="url_not" disabled="disabled">
+                                    <span class="fa fa-check"></span><s:message code="query.make.except"/>
+                                </label>
+                                <%--<button type="button" class="btn01" accesskey="A" id="addUrlBtn">url <s:message code="auditLog.oper.INSERT"/></button>--%>
+                                <div id="additionalUrlFields"></div>
+                            </div>
+                        </li>
+                        <li class="form-inline" id="readYnGroup">
+                            <label for="" class=" col-xs-3"><s:message code="condition.isread"/></label>
+                            <label class="radio-inline c-radio"><input type="radio" name="readYnVal" value="" checked><span
+                                    class="fa fa-check"></span><s:message code="common.msg.all"/></label>
+                            <label class="radio-inline c-radio"><input type="radio" name="readYnVal" value="Y"><span
+                                    class="fa fa-check"></span><s:message code="condition.read"/></label>
+                            <label class="radio-inline c-radio"><input type="radio" name="readYnVal" value="N"><span
+                                    class="fa fa-check"></span><s:message code="condition.unread"/></label>
+                            <input type="hidden" name="readYn" id="readYn">
+                        </li>
+                        <!-- 첨부여부 -->
+                        <li class="form-inline" style="height:118px;">
+                            <div class=" col-xs-3">
+                                <label for="attachYnVal"><s:message code="condition.isattached"/></label>
+                            </div>
+                            <div class="col-xs-9" style="padding-left:0px;">
+                                <div style="height:35px;line-height:35px;">
+                                    <label class="radio-inline c-radio"><input type="radio" name="attachYnVal" value=""
+                                                                               checked><span
+                                            class="fa fa-check"></span><s:message code="common.msg.all"/></label>
+                                    <label class="radio-inline c-radio"><input type="radio" name="attachYnVal"
+                                                                               value="Y"><span
+                                            class="fa fa-check"></span><s:message code="condition.exist"/></label>
+                                    <label class="radio-inline c-radio"><input type="radio" name="attachYnVal"
+                                                                               value="N"><span
+                                            class="fa fa-check"></span><s:message code="condition.none"/></label>
+                                    <input type="hidden" name="attachYn" id="attachYn">
 
-                                <span id="attachBtnArea" style="display:none;">
+                                    <span id="attachBtnArea" style="display:none;">
                                      <button type="button" class="btn-open filterAddBtn btn01" accesskey="A" id="attachBtn" style="border-radius: 0;">
                                     <img src="../img/subBtn_plus.png" alt="선택"><s:message
                                              code="condition.select"/></button>
 
-										<!--<button type="button" class="btn btn-sm btn-default btn-open filterAddBtn"
+                                        <!--<button type="button" class="btn btn-sm btn-default btn-open filterAddBtn"
                                                 accesskey="A" id="attachBtn"><span
                                                 class="glyphicon glyphicon-plus-sign"><s:message
                                                 code="condition.select"/></span></button>-->
 									</span>
-                                <span id="attachSelectedArea" class="codeSelectedBtn">
+                                    <span id="attachSelectedArea" class="codeSelectedBtn">
 										<button type="button" class="btn">0</button>
 									</span>
-                                <label class="checkbox-inline c-checkbox exceptOption2">
-                                    <input type="checkbox" name="attach_not" disabled="disabled">
-                                    <span class="fa fa-check"></span><s:message code="query.make.except"/>
-                                </label>
-                                <input type="hidden" id="attachStr">
-                                <input type="hidden" id="attachVal" class="selectedTitle">
-                            </div>
-                            <div style="padding-top:5px;">
-                                <label for="" class="" style="width:100px;"><s:message
-                                        code="condition.actual.attachment"/></label>
+                                    <label class="checkbox-inline c-checkbox exceptOption2">
+                                        <input type="checkbox" name="attach_not" disabled="disabled">
+                                        <span class="fa fa-check"></span><s:message code="query.make.except"/>
+                                    </label>
+                                    <input type="hidden" id="attachStr">
+                                    <input type="hidden" id="attachVal" class="selectedTitle">
+                                </div>
+                                <div style="padding-top:5px;">
+                                    <label for="" class="" style="width:100px;"><s:message
+                                            code="condition.actual.attachment"/></label>
 
 
-                                <label class="radio-inline c-radio"><input type="radio" name="realAttYnVal" value=""
-                                                                           checked disabled="disabled"><span
-                                        class="fa fa-check"></span><s:message code="common.msg.all"/></label>
-                                <label class="radio-inline c-radio"><input type="radio" name="realAttYnVal" value="Y"
-                                                                           disabled="disabled"><span
-                                        class="fa fa-check"></span><s:message code="condition.onemore"/></label>
-                                <label class="radio-inline c-radio"><input type="radio" name="realAttYnVal" value="N"
-                                                                           disabled="disabled"><span
-                                        class="fa fa-check"></span><s:message code="condition.none"/></label>
+                                    <label class="radio-inline c-radio"><input type="radio" name="realAttYnVal" value=""
+                                                                               checked disabled="disabled"><span
+                                            class="fa fa-check"></span><s:message code="common.msg.all"/></label>
+                                    <label class="radio-inline c-radio"><input type="radio" name="realAttYnVal" value="Y"
+                                                                               disabled="disabled"><span
+                                            class="fa fa-check"></span><s:message code="condition.onemore"/></label>
+                                    <label class="radio-inline c-radio"><input type="radio" name="realAttYnVal" value="N"
+                                                                               disabled="disabled"><span
+                                            class="fa fa-check"></span><s:message code="condition.none"/></label>
+                                </div>
+                                <div>
+                                    <label for="" class="" style="width:100px;">DRM</label>
+                                    <label class="radio-inline c-radio"><input type="radio" name="regexp_drmYnVal" value=""
+                                                                               checked disabled="disabled"><span
+                                            class="fa fa-check"></span><s:message code="common.msg.all"/></label>
+                                    <label class="radio-inline c-radio"><input type="radio" name="regexp_drmYnVal" value="Y"
+                                                                               disabled="disabled"><span
+                                            class="fa fa-check"></span><s:message code="condition.exist"/></label>
+                                    <label class="radio-inline c-radio"><input type="radio" name="regexp_drmYnVal" value="N"
+                                                                               disabled="disabled"><span
+                                            class="fa fa-check"></span><s:message code="condition.none"/></label>
+                                </div>
                             </div>
-                            <div>
-                                <label for="" class="" style="width:100px;">DRM</label>
-                                <label class="radio-inline c-radio"><input type="radio" name="regexp_drmYnVal" value=""
-                                                                           checked disabled="disabled"><span
+                        </li>
+                        <li id="ocrDiv">
+                            <div class="form-inline">
+                                <label for="" class=" col-xs-3"><s:message code="condition.ocr.attach"/></label>
+                                <label class="radio-inline c-radio"><input type="radio" name="ocrYnVal" value=""
+                                                                           checked><span
                                         class="fa fa-check"></span><s:message code="common.msg.all"/></label>
-                                <label class="radio-inline c-radio"><input type="radio" name="regexp_drmYnVal" value="Y"
-                                                                           disabled="disabled"><span
+                                <label class="radio-inline c-radio"><input type="radio" name="ocrYnVal"
+                                                                           value="Y"><span
                                         class="fa fa-check"></span><s:message code="condition.exist"/></label>
-                                <label class="radio-inline c-radio"><input type="radio" name="regexp_drmYnVal" value="N"
-                                                                           disabled="disabled"><span
+                                <label class="radio-inline c-radio"><input type="radio" name="ocrYnVal"
+                                                                           value="N"><span
                                         class="fa fa-check"></span><s:message code="condition.none"/></label>
                             </div>
-                        </div>
-                    </li>
-                    <li id="ocrDiv">
-                        <div class="form-inline">
-                            <label for="" class=" col-xs-3"><s:message code="condition.ocr.attach"/></label>
-                            <label class="radio-inline c-radio"><input type="radio" name="ocrYnVal" value=""
-                                                                       checked><span
-                                    class="fa fa-check"></span><s:message code="common.msg.all"/></label>
-                            <label class="radio-inline c-radio"><input type="radio" name="ocrYnVal"
-                                                                       value="Y"><span
-                                    class="fa fa-check"></span><s:message code="condition.exist"/></label>
-                            <label class="radio-inline c-radio"><input type="radio" name="ocrYnVal"
-                                                                       value="N"><span
-                                    class="fa fa-check"></span><s:message code="condition.none"/></label>
-                        </div>
-                    </li>
-                    <li id="reprocessDiv">
-                        <div class="form-inline">
-                            <label for="" class=" col-xs-3"><s:message code="condition.reprocess"/></label>
-                            <label class="radio-inline c-radio"><input type="radio" name="reprocessYnVal" value=""
-                                                                       checked><span
-                                    class="fa fa-check"></span><s:message code="common.msg.all"/></label>
-                            <label class="radio-inline c-radio"><input type="radio" name="reprocessYnVal"
-                                                                       value="Y"><span
-                                    class="fa fa-check"></span><s:message code="condition.exist"/></label>
-                            <label class="radio-inline c-radio"><input type="radio" name="reprocessYnVal"
-                                                                       value="N"><span
-                                    class="fa fa-check"></span><s:message code="condition.none"/></label>
-                        </div>
-                    </li>
+                        </li>
+                        <li id="reprocessDiv">
+                            <div class="form-inline">
+                                <label for="" class=" col-xs-3"><s:message code="condition.reprocess"/></label>
+                                <label class="radio-inline c-radio"><input type="radio" name="reprocessYnVal" value=""
+                                                                           checked><span
+                                        class="fa fa-check"></span><s:message code="common.msg.all"/></label>
+                                <label class="radio-inline c-radio"><input type="radio" name="reprocessYnVal"
+                                                                           value="Y"><span
+                                        class="fa fa-check"></span><s:message code="condition.exist"/></label>
+                                <label class="radio-inline c-radio"><input type="radio" name="reprocessYnVal"
+                                                                           value="N"><span
+                                        class="fa fa-check"></span><s:message code="condition.none"/></label>
+                            </div>
+                        </li>
 
-                    <!-- 예약어 -->
-                    <li class="form-inline" style="line-height:35px;">
-                        <label for="" class=" col-xs-3"><s:message code="condition.keyword"/></label>
-                        <label class="radio-inline c-radio"><input type="radio" name="keywordYnVal" value=""
-                                                                   checked><span class="fa fa-check"></span><s:message
-                                code="common.msg.all"/></label>
-                        <label class="radio-inline c-radio"><input type="radio" name="keywordYnVal" value="Y"><span
-                                class="fa fa-check"></span><s:message code="condition.exist"/></label>
-                        <label class="radio-inline c-radio"><input type="radio" name="keywordYnVal" value="N"><span
-                                class="fa fa-check"></span><s:message code="condition.none"/></label>
-                        <input type="hidden" name="keywordYn" id="keywordYn">
+                        <!-- 예약어 -->
+                        <li class="form-inline" style="line-height:35px;">
+                            <label for="" class=" col-xs-3"><s:message code="condition.keyword"/></label>
+                            <label class="radio-inline c-radio"><input type="radio" name="keywordYnVal" value=""
+                                                                       checked><span class="fa fa-check"></span><s:message
+                                    code="common.msg.all"/></label>
+                            <label class="radio-inline c-radio"><input type="radio" name="keywordYnVal" value="Y"><span
+                                    class="fa fa-check"></span><s:message code="condition.exist"/></label>
+                            <label class="radio-inline c-radio"><input type="radio" name="keywordYnVal" value="N"><span
+                                    class="fa fa-check"></span><s:message code="condition.none"/></label>
+                            <input type="hidden" name="keywordYn" id="keywordYn">
 
-                        <span id="keywordBtnArea" style="display:none;">
+                            <span id="keywordBtnArea" style="display:none;">
 								<button type="button" class="btn btn-sm btn-default btn-open btn01 filterAddBtn" accesskey="K"
                                         id="keywordBtn"><img src="../img/subBtn_plus.png" alt="선택"><s:message
-                                        code="condition.select"/></span></button>
-							</span>
-                        <span id="keywordSelectedArea" class="codeSelectedBtn">
+                                    code="condition.select"/></span></button>
+                            </span>
+                            <span id="keywordSelectedArea" class="codeSelectedBtn">
 								<button type="button" class="btn">0</button>
 							</span>
-                        <label class="checkbox-inline c-checkbox exceptOption2">
-                            <input type="checkbox" name="keyword_not" disabled="disabled">
-                            <span class="fa fa-check"></span><s:message code="query.make.except"/>
-                        </label>
-                        <input type="hidden" id="keywordStr" class="selectedTitle">
-                        <input type="hidden" id="keywordVal">
-                    </li>
+                            <label class="checkbox-inline c-checkbox exceptOption2">
+                                <input type="checkbox" name="keyword_not" disabled="disabled">
+                                <span class="fa fa-check"></span><s:message code="query.make.except"/>
+                            </label>
+                            <input type="hidden" id="keywordStr" class="selectedTitle">
+                            <input type="hidden" id="keywordVal">
+                        </li>
 
-                    <!-- 패턴검출 -->
-                    <li class="form-inline" style="line-height:35px;">
-                        <label for="" class=" col-xs-3"><s:message code="condition.regexp.detect"/></label>
-                        <label class="radio-inline c-radio"><input type="radio" name="regexpYnVal" value=""
-                                                                   checked><span class="fa fa-check"></span><s:message
-                                code="common.msg.all"/></label>
-                        <label class="radio-inline c-radio"><input type="radio" name="regexpYnVal" value="Y"><span
-                                class="fa fa-check"></span><s:message code="condition.exist"/></label>
-                        <label class="radio-inline c-radio"><input type="radio" name="regexpYnVal" value="N"><span
-                                class="fa fa-check"></span><s:message code="condition.none"/></label>
-                        <input type="hidden" name="regexpYn" id="regexpYn">
+                        <!-- 패턴검출 -->
+                        <li class="form-inline" style="line-height:35px;">
+                            <label for="" class=" col-xs-3"><s:message code="condition.regexp.detect"/></label>
+                            <label class="radio-inline c-radio"><input type="radio" name="regexpYnVal" value=""
+                                                                       checked><span class="fa fa-check"></span><s:message
+                                    code="common.msg.all"/></label>
+                            <label class="radio-inline c-radio"><input type="radio" name="regexpYnVal" value="Y"><span
+                                    class="fa fa-check"></span><s:message code="condition.exist"/></label>
+                            <label class="radio-inline c-radio"><input type="radio" name="regexpYnVal" value="N"><span
+                                    class="fa fa-check"></span><s:message code="condition.none"/></label>
+                            <input type="hidden" name="regexpYn" id="regexpYn">
 
-                        <span id="regexpBtnArea" style="display:none;">
+                            <span id="regexpBtnArea" style="display:none;">
 								<button type="button" class="btn btn-sm btn-default btn-open  btn01 filterAddBtn" accesskey="P"
                                         id="regexpBtn"><img src="../img/subBtn_plus.png" alt="선택"><s:message
-                                        code="condition.select"/></span></button>
-							</span>
-                        <span id="regexpSelectedArea" class="codeSelectedBtn">
+                                    code="condition.select"/></span></button>
+                            </span>
+                            <span id="regexpSelectedArea" class="codeSelectedBtn">
 								<button type="button" class="btn">0</button>
 							</span>
-                        <input type="hidden" id="regexpStr" class="selectedTitle">
-                        <input type="hidden" id="regexpVal">
-                    </li>
+                            <input type="hidden" id="regexpStr" class="selectedTitle">
+                            <input type="hidden" id="regexpVal">
+                        </li>
 
-                    <li id="sctDiv" style="display: none;">
-                        <!-- 수신필터 SCT -->
-                        <div class="form-inline">
-                            <label for="" class=" col-xs-3"><s:message code="condition.sct"/></label>
-                            <label class="radio-inline c-radio"><input type="radio" name="regexp_sctYnVal" value=""
-                                                                       checked><span
-                                    class="fa fa-check"></span><s:message code="common.msg.all"/></label>
-                            <label class="radio-inline c-radio"><input type="radio" name="regexp_sctYnVal"
-                                                                       value="Y"><span
-                                    class="fa fa-check"></span><s:message code="condition.exist"/></label>
-                            <label class="radio-inline c-radio"><input type="radio" name="regexp_sctYnVal"
-                                                                       value="N"><span
-                                    class="fa fa-check"></span><s:message code="condition.none"/></label>
-                        </div>
-                    </li>
-                    <li class="filterDiv">
-                        <div style="width:110px;float: left;">
-                            <h5><s:message code="filterInfo.size"/></h5>
-                        </div>
-                        <div class="selecBtnArea" style="width:calc(100% - 116px); text-align: right;float: left;">
-                            <select class="selectpicker col-xs" data-style="btn-primary" id="sizeFilterType">
-                                <option value=""><s:message code="condition.size.all"/></option>
-                                <option value="B"><s:message code="condition.size.body"/></option>
-                                <option value="A"><s:message code="condition.size.attach"/></option>
-                            </select>
-                            <select class="selectpicker col-xs" data-style="btn-primary" id="sizeFilterSelect">
-                                <option value="L"><s:message code="condition.over"/></option>
-                                <option value="S"><s:message code="condition.below"/></option>
-                                <option value="B"><s:message code="condition.range"/></option>
-                            </select>
-                        </div>
-                        <div style="clear:both;height:60px;padding:1px 5px 0px 5px;">
-                            <div id="size-setup" style="margin-bottom:10px;"></div>
-                            <div style="padding-left:5px;">
-                                <span id="sizeStartValStr" style="line-height:30px;"></span><input type="text"
-                                                                                                   id="sizeStartVal"
-                                                                                                   style="width: 90px; display: none;">
-                                <span id="sizeRangeValStr" style="display:none;"> ~ </span>
-                                <span id="sizeEndValStr" style="display:none;"></span><input type="text" id="sizeEndVal"
-                                                                                             style="width:90px; display: none;">
+                        <li id="sctDiv" style="display: none;">
+                            <!-- 수신필터 SCT -->
+                            <div class="form-inline">
+                                <label for="" class=" col-xs-3"><s:message code="condition.sct"/></label>
+                                <label class="radio-inline c-radio"><input type="radio" name="regexp_sctYnVal" value=""
+                                                                           checked><span
+                                        class="fa fa-check"></span><s:message code="common.msg.all"/></label>
+                                <label class="radio-inline c-radio"><input type="radio" name="regexp_sctYnVal"
+                                                                           value="Y"><span
+                                        class="fa fa-check"></span><s:message code="condition.exist"/></label>
+                                <label class="radio-inline c-radio"><input type="radio" name="regexp_sctYnVal"
+                                                                           value="N"><span
+                                        class="fa fa-check"></span><s:message code="condition.none"/></label>
                             </div>
-                        </div>
-                    </li>
-                </ul>
+                        </li>
+                        <li class="filterDiv">
+                            <div style="width:110px;float: left;">
+                                <h5><s:message code="filterInfo.size"/></h5>
+                            </div>
+                            <div class="selecBtnArea" style="width:calc(100% - 116px); text-align: right;float: left;">
+                                <select class="selectpicker col-xs" data-style="btn-primary" id="sizeFilterType">
+                                    <option value=""><s:message code="condition.size.all"/></option>
+                                    <option value="B"><s:message code="condition.size.body"/></option>
+                                    <option value="A"><s:message code="condition.size.attach"/></option>
+                                </select>
+                                <select class="selectpicker col-xs" data-style="btn-primary" id="sizeFilterSelect">
+                                    <option value="L"><s:message code="condition.over"/></option>
+                                    <option value="S"><s:message code="condition.below"/></option>
+                                    <option value="B"><s:message code="condition.range"/></option>
+                                </select>
+                            </div>
+                            <div style="clear:both;height:60px;padding:1px 5px 0px 5px;">
+                                <div id="size-setup" style="margin-bottom:10px;"></div>
+                                <div style="padding-left:5px;">
+                                    <span id="sizeStartValStr" style="line-height:30px;"></span><input type="text"
+                                                                                                       id="sizeStartVal"
+                                                                                                       style="width: 90px; display: none;">
+                                    <span id="sizeRangeValStr" style="display:none;"> ~ </span>
+                                    <span id="sizeEndValStr" style="display:none;"></span><input type="text" id="sizeEndVal"
+                                                                                                 style="width:90px; display: none;">
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<form method="post" id="codeParam">
-    <input type="hidden" name="oldCode" id="oldCode"></input>
-    <input type="hidden" name="oldConm" id="oldConm"></input>
-</form>
+    <form method="post" id="codeParam">
+        <input type="hidden" name="oldCode" id="oldCode"></input>
+        <input type="hidden" name="oldConm" id="oldConm"></input>
+    </form>
 </body>
 </html>

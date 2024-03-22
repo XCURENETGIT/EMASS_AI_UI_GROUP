@@ -171,7 +171,7 @@
             });
 
             $('#dashConditionBtn').click(function () {
-                fnOpenWindow('<c:url value="/ems/detailConditionPop.do"/>', 'dashCondition', 700, 850, 'fix');
+                fnOpenWindow('<c:url value="/ems/detailConditionPop.do"/>', 'dashCondition', 700, 1310, 'fix');
             });
 
             $("input[name=dashType]").change(function () {

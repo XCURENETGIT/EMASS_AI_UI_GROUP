@@ -221,10 +221,10 @@ function eventEnterSearch(event) {
 					</div>
 					<div>
 						<select id="unit" name="unit">
-							<option value="t">시간단위</option>
-							<option value="d">일단위</option>
-							<option value="w">주단위</option>
-							<option value="m">월단위</option>
+							<option value="t"><s:message code="analysis.usagecompare.timeunit"/></option>
+							<option value="d"><s:message code="analysis.usagecompare.dayunit"/></option>
+							<option value="w"><s:message code="analysis.usagecompare.weekunit"/></option>
+							<option value="m"><s:message code="analysis.usagecompare.monthunit"/></option>
 						</select>
 					</div>
 					<div>

@@ -293,10 +293,10 @@ function deleteUserGroupItem (){
 			</div>
 			<div class="modalCon">
 				<div class="modalTop">
-					<h3>사용자 그룹 추가</h3>
+					<h3><s:message code="userGroup.grouppop.title"/></h3>
 					<p>
 						<span class="red_dot veralign_middle"></span>
-						필수 입력 사항입니다.
+						<s:message code="common.required.msg"/>
 					</p>
 				</div>
 				<div class="modalbody">
@@ -358,7 +358,7 @@ function deleteUserGroupItem (){
 					</div>
 					<div class="input-group">
 						<input type="text" class="w100" placeholder="<s:message code="common.msg.searchMsg"/>" id="popSearchStr" style="width: 150px;">
-						<button class="form_btn01" type="button" accesskey="Q" id="popSearchBtn">조회
+						<button class="form_btn01" type="button" accesskey="Q" id="popSearchBtn"><s:message code="common.search"/>
 						</button>
 						<div>
 						</div>
@@ -370,7 +370,7 @@ function deleteUserGroupItem (){
 			</div>
 			<div class="modalfooter">
 				<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal" id="userSave"><s:message code="common.msg.close"/></button>
-				<button type="button" class="pop_btn02" accesskey="S" id="saveUserBtn">선택데이터 저장</button>
+				<button type="button" class="pop_btn02" accesskey="S" id="saveUserBtn"><s:message code="common.msg.select.save"/></button>
 			</div>
 		</div>
 	</div>
@@ -382,7 +382,7 @@ function deleteUserGroupItem (){
 				<div class="searchSub" style="width: 470px;">
 					<div>
 						<input type="text" placeholder="<s:message code="common.msg.searchMsg"/>" id="searchStrGroup" style="width: 220px;">
-						<button class="form_btn01" type="button"  accesskey="G" id="searchGroupBtn">검색</button>
+						<button class="form_btn01" type="button"  accesskey="G" id="searchGroupBtn"<s:message code="common.search"/></button>
 					</div>
 					<div class="btnform">
 						<button type="button" class="btn01" accesskey="I" id="groupInsertBtn"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
@@ -400,7 +400,7 @@ function deleteUserGroupItem (){
 				<div class="searchSub" style="width:calc(100% - 470px) ">
 					<div>
 						<input type="text" placeholder="<s:message code="common.msg.searchMsg"/>" id="searchStrItem" style="width: 280px;">
-						<button class="form_btn01" type="button" accesskey="K" id="searchStrItemBtn">검색</button>
+						<button class="form_btn01" type="button" accesskey="K" id="searchStrItemBtn"><s:message code="common.search"/></button>
 					</div>
 						<div class="btnform">
 							<button type="button" class="btn01" accesskey="A" id="itemInsertBtn"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
