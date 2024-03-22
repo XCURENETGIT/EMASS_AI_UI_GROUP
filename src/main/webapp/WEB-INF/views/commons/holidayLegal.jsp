@@ -144,7 +144,7 @@
 	</script>
 </head>
 
-<div class="modal" id="holidayPop" data-backdrop="static">
+<div class="modal" id="holidayPop" data-backdrop="static"  tabindex="-1" role="dialog">
 	<div class="modal-content">
 		<form method="post" id="holidayPopForm">
 			<div class="modalHead">
@@ -177,6 +177,7 @@
 							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
+							<input hidden="hidden" />
 							<input type="text" class="w100" name="comment" id="comment" placeholder="<s:message code="common.msg.comment"/>" maxlength="150">
 						</div>
 					</div>

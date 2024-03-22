@@ -480,6 +480,7 @@
 							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
+							<input hidden="hidden" />
 							<input type="text" class="w100" name="comment" id="comment" placeholder="<s:message code="common.msg.comment"/>" maxlength="150">
 						</div>
 					</div>
