@@ -11,177 +11,218 @@
 
 <style type="text/css">
 
-  #contentArea {}
+	#contentArea {
+	}
 
 
-
-  .files :hover{
-	  cursor: pointer;
-	  text-decoration: underline;
-  }
-
-  .filename:hover{
-	  cursor: pointer;
-	  text-decoration: underline;
-  }
-
-
-  .name:hover{
-	  cursor: pointer;
-	  text-decoration: underline;
-  }
-
-	.rightValue:hover{
+	.files :hover {
 		cursor: pointer;
 		text-decoration: underline;
 	}
 
-	.dash-title:hover{
+	.filename:hover {
 		cursor: pointer;
 		text-decoration: underline;
 	}
 
 
-	.form_btn05:hover{
+	.name:hover {
+		cursor: pointer;
+		text-decoration: underline;
+	}
+
+	.rightValue:hover {
+		cursor: pointer;
+		text-decoration: underline;
+	}
+
+	.dash-title:hover {
+		cursor: pointer;
+		text-decoration: underline;
+	}
+
+
+	.form_btn05:hover {
 		color: #fff !important;
 	}
-	.form_btn05:active{
+
+	.form_btn05:active {
 		color: #fff !important;
 	}
+
 	.panel-body {
 		padding-top: 15px;
 		padding-bottom: 0px;
 	}
-	#emptyDiv{
+
+	#emptyDiv {
 		position: absolute;
 		top: 110px;
 		bottom: 100px;
 		left: 0;
 		right: 0;
 	}
-	#emptyDiv p, #emptyDiv h1{
+
+	#emptyDiv p, #emptyDiv h1 {
 		text-align: center;
 	}
 
-	.empty-dashboard-message{
-		margin:0 auto;
-		text-align:center;
-		width:700px;
-		padding:40px;
+	.empty-dashboard-message {
+		margin: 0 auto;
+		text-align: center;
+		width: 700px;
+		padding: 40px;
 		overflow: hidden;
 	}
 
-	.empty-dashboard-message a{
-		color:#1C64D3;text-decoration: underline;
+	.empty-dashboard-message a {
+		color: #1C64D3;
+		text-decoration: underline;
 	}
-	.empty-dashboard-message a:hover{
-		color:#1C64D3;text-decoration: underline;
+
+	.empty-dashboard-message a:hover {
+		color: #1C64D3;
+		text-decoration: underline;
 	}
-	.empty-dashboard-message p {line-height: 1.3;}
-	#emptyDashboard{
+
+	.empty-dashboard-message p {
+		line-height: 1.3;
+	}
+
+	#emptyDashboard {
 		text-align: center;
 		padding-top: 25px;
 	}
-	.customBtn{
-		border:1px solid #ccc;
+
+	.customBtn {
+		border: 1px solid #ccc;
 	}
 
 
-	.carousel-inner{
+	.carousel-inner {
 
 	}
-	.item{
-		padding-top:10px;
+
+	.item {
+		padding-top: 10px;
 	}
 
-	.addDashboardContent:hover{
+	.addDashboardContent:hover {
 		text-decoration: none;
 	}
-	.card{
+
+	.card {
 		border: 1px solid #ddd;
 		background: #fff;
 		padding: 14px 80px 18px 36px;
 		cursor: pointer;
 	}
 
-	.card:hover{
-		box-shadow: 0px 12px 12px rgba(0,0,0,.12), 0 5px 10px rgba(0,0,0,.06);
+	.card:hover {
+		box-shadow: 0px 12px 12px rgba(0, 0, 0, .12), 0 5px 10px rgba(0, 0, 0, .06);
 
 	}
 
-	.card h4{
+	.card h4 {
 		font-weight: 600;
-		color:#000;
+		color: #000;
 	}
 
-	.card p{
-		color:#999;
-		font-size:12px;
+	.card p {
+		color: #999;
+		font-size: 12px;
 	}
 
-	.card div{
-		color:#111;
-		font-size:16px;
+	.card div {
+		color: #111;
+		font-size: 16px;
 	}
 
-	.card img{
+	.card img {
 		position: absolute;
 		top: 20px;
 		right: 15px;
 		max-height: 120px;
 	}
 
-	.card-1{
-		height:80px;
+	.card-1 {
+		height: 80px;
 		background-color: #F8F8F8;
-		padding:16px;
+		padding: 16px;
 		border: 2px dashed #ddd;
-		margin-bottom:16px;
+		margin-bottom: 16px;
 	}
-	.card-1 > div {color:#1C64D3; font-weight:600;}
 
-	@media(max-width: 990px){
-		.card{
+	.card-1 > div {
+		color: #1C64D3;
+		font-weight: 600;
+	}
+
+	@media (max-width: 990px) {
+		.card {
 			margin: 20px;
 		}
 	}
+
 	.customClose {
 		color: #666;
 		opacity: 1;
 	}
+
 	.customClose:hover {
 		color: #999;
 	}
-	.grid-stack-item-content{
+
+	.grid-stack-item-content {
 		text-align: left;
 
 	}
+
 	.customClass {
 		font-size: 3em !important;
 	}
+
 	.chartDash {
 		font-size: 15px !important;
 	}
+
 	.grid-stack-item-content .fa {
 		display: inline-block;
 
 	}
-	div#conditionViewDiv{
+
+	div#conditionViewDiv {
 		position: absolute;
 		display: none;
 		text-align: left;
 		z-index: 1000;
 		border: 1px solid #555;
 		background-color: #f8f8f8;
-		width:400px;
+		width: 400px;
 		overflow: auto;
 		word-break: break-all;
 	}
-	.tCenter {text-align: center; background-color: #f9f9f9;}
-	.Center {text-align: center;}
-	.tLeft {text-align: left;}
-	.tRight {text-align: right;}
-	.col-md-3 {padding:0 6px;}
+
+	.tCenter {
+		text-align: center;
+		background-color: #f9f9f9;
+	}
+
+	.Center {
+		text-align: center;
+	}
+
+	.tLeft {
+		text-align: left;
+	}
+
+	.tRight {
+		text-align: right;
+	}
+
+	.col-md-3 {
+		padding: 0 6px;
+	}
 </style>
 <script type="text/javascript">
     Highcharts.setOptions({
@@ -379,6 +420,7 @@
         $(document).on('click', '.addDashboardContent', function () {
             var index = $(this).attr('data-index');
 
+
             var obj = getDashPosition(contentData[index].dashKey, contentData[index].dashType, contentData[index].dashChart);
             var id = menuKey + '_' + contentData[index].dashKey;
 
@@ -489,22 +531,35 @@
     }
 
 
-
-
     function getLoggingDataSetting() {
         ui.get({
             url: 'getLoggingDataSetting.xcn',
             success: function (data, total) {
                 loggingDataSettingVal = data;
 
-                if (loggingDataSettingVal == 'Y') {
-                    $('#dashboardInfo').show();
-                    $('#dashboardInfo').css('margin-top','200px');
-                    $('#dashboardArea').css('top','-10px');
-                    $('#emptyDiv').hide();
-                    getLoggingData();
-                }else{ $('#dashboardInfo').hide();
-                    if(listCnt == 0 && fileTopDataSettingVal == 'N')  $('#emptyDiv').show();}
+                if(editMode == 'Y') {
+                    if (loggingDataSettingVal == 'Y') {
+                        $('#dashboardInfo').show();
+                        $('#dashboardInfo').css('margin-top', '200px');
+                        $('#dashboardArea').css('top', '-10px');
+                        $('#emptyDiv').hide();
+                        getLoggingData();
+                    } else {
+                        $('#dashboardInfo').hide();
+                    }
+                }else {
+                    if (loggingDataSettingVal == 'Y') {
+                        $('#dashboardInfo').show();
+                        $('#dashboardInfo').css('margin-top', '200px');
+                        $('#dashboardArea').css('top', '-10px');
+                        $('#emptyDiv').hide();
+                        getLoggingData();
+                    } else {
+                        console.log("44");
+                        $('#dashboardInfo').hide();
+                        if (listCnt == 0 && fileTopDataSettingVal != 'Y') $('#emptyDiv').show();
+                    }
+                }
             },
             error: function (status, message) {
                 console.log(message);
@@ -519,16 +574,31 @@
             url: 'getFileDataSetting.xcn',
             success: function (data, total) {
                 fileTopDataSettingVal = data;
+                console.log("loggingDataSettingVal"+loggingDataSettingVal);
+                if(editMode == 'Y') {
+                    if (fileTopDataSettingVal == 'Y') {
+                        $('#dashboardInfo2').show();
+                        $('#dashboardInfo2').css('margin-top', '200px');
+                        $('#dashboardArea').css('top', '-10px');
+                        $('#emptyDiv').hide();
+                        getFileTopData();
+                    } else {
+                        $('#dashboardInfo2').hide();
+                    }
 
-
-                if (fileTopDataSettingVal == 'Y') {
-                    $('#dashboardInfo2').show();
-                    $('#dashboardInfo').css('margin-top','200px');
-                    $('#dashboardArea').css('top','-10px');
-                    $('#emptyDiv').hide();
-                    getFileTopData();
-                }else{ $('#dashboardInfo2').hide();
-                    if(listCnt == 0 && loggingDataSettingVal == 'N')  $('#emptyDiv').show();}
+                }else {
+                    if (fileTopDataSettingVal == 'Y') {
+                        $('#dashboardInfo2').show();
+                        $('#dashboardInfo2').css('margin-top', '200px');
+                        $('#dashboardArea').css('top', '-10px');
+                        $('#emptyDiv').hide();
+                        getFileTopData();
+                    } else {
+                        console.log("22");
+                        $('#dashboardInfo2').hide();
+                        if (listCnt == 0 && loggingDataSettingVal != 'Y') $('#emptyDiv').show();
+                    }
+                }
             },
             error: function (status, message) {
                 console.log(message);
@@ -578,7 +648,7 @@
         var attachStr = [];
         if (dat.length == 0) {
             $('#loggingChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px" style="display: block;"> ');
-           // $('#loggingChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px" class="xcn_nodata"style=" display: block;">');
+            // $('#loggingChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px" class="xcn_nodata"style=" display: block;">');
             return false;
         } else {
             for (var i = 0; i < dat.length; i++) {
@@ -790,6 +860,7 @@
             }
         });
     }
+
     function fileTop() {
         ui.get({
             url: 'getTodayFileTop.xcn',
@@ -839,7 +910,7 @@
         });
     }
 
-    function filePerson(data){
+    function filePerson(data) {
         let str = "";
         if (data.total == 0) {
             str += '<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px" class="xcn_nodata"style=" display: block;">';
@@ -851,12 +922,12 @@
                 let names = getFormattedValue("size", name[0]);
                 let bu = getFormattedValue("size", name[1]);
                 let count = getFormattedValue("count", name[2]);
-                let noName = getFormattedValue("size",name[3]);
+                let noName = getFormattedValue("size", name[3]);
                 let nameId = name[3];
 
 
                 str += "<li class='click2' data-value='" + nameId + "'><p class='num'>" + (i + 1) + "</p>";
-                str+="<p><span class='name blue'>" + noName + "</span>";
+                str += "<p><span class='name blue'>" + noName + "</span>";
                 str += "<span class='team'>" + bu + "</span></p>";
                 str += "<p class='teamnum'>";
                 str += "<span class='name'>" + count + "</span>";
@@ -868,7 +939,7 @@
                 let name = getFormattedValue("ddd", data.facet[i]);
                 let names = getFormattedValue("ddd", name[0]);
                 let count = getFormattedValue("count", name[2]);
-                let noName = getFormattedValue("size",name[3]);
+                let noName = getFormattedValue("size", name[3]);
                 let nameId = name[3];
                 str += "<li class='click2' data-value='" + nameId + "'><span class='num'>" + (i + 1) + "</span>";
                 str += "<p><span class='name'>" + noName + "</span>";
@@ -1305,11 +1376,10 @@
             menuKey: menuKey,
             success: function (data, total) {
                 listCnt = data.length;
-                if(data.length == 0) {
-                    if(loggingDataSettingVal == 'Y' && fileTopDataSettingVal == 'Y') $('#emptyDiv').hide();
-                    else $('#emptyDiv').show();
-                }
-                else $('#emptyDiv').hide();
+                if (data.length == 0) {
+                    if (loggingDataSettingVal != 'Y' && fileTopDataSettingVal != 'Y') $('#emptyDiv').show();
+                    else $('#emptyDiv').hide();
+                } else $('#emptyDiv').hide();
                 dashboardGrid.loadGrid(data);
 
                 getDashBoardContent();
@@ -1638,10 +1708,6 @@
     }
 
 
-
-
-
-
     function getDashData() {
         return [];
         /* return [
@@ -1785,7 +1851,7 @@
             };
 
             getLoggingDataSetting();
-	        getFileDataSetting();
+            getFileDataSetting();
 
             getDashBoardList();
         };
@@ -1951,7 +2017,7 @@
 
 
         if (data == null) {
-          return $(obj).html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" class="xcn_nodata" width="110px;" height="110px"> ');
+            return $(obj).html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" class="xcn_nodata" width="110px;" height="110px"> ');
         }
 
         var dlength = data.length;
@@ -2153,7 +2219,6 @@
 </div>
 
 
-
 <div class="modal fade" id="fileSendPop" tabindex="-1" role="dialog" aria-labelledby="fileSendModal">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
@@ -2205,7 +2270,8 @@
 	</div>
 	<div class="dashboardHeader" style="display:none; z-index: 999; position: absolute; top: 16px; left: 0px; right: 0px;">
 		<div class="col-xs-12">
-			<button type="button" class="form_btn01_02" style="position: absolute;right:162px;top:2px;" id="saveDashboardBtn"><s:message code="common.msg.save"/></button>
+			<button type="button" class="form_btn01_02" style="position: absolute;right:162px;top:2px;" id="saveDashboardBtn"><s:message
+					code="common.msg.save"/></button>
 			<button type="button" class="form_btn04" style="position: absolute;right:90px;top:2px;" id="cancleDashboardBtn">
 				<s:message code="common.msg.close"/>
 			</button>
@@ -2247,11 +2313,12 @@
 					<div class="container" style="display: flex; justify-content: space-between;">
 						<div style="left-padding: 0; width: 50%; height: 350px; min-height: 350px;">
 							<div class="text_tab">
-								<span class="tablinks2" onclick="openCity3(event, 'con03')" id="defaultOpen3"><s:message code="dashboard.loggingData.count"/></span>
+								<span class="tablinks2" onclick="openCity3(event, 'con03')" id="defaultOpen3"><s:message
+										code="dashboard.loggingData.count"/></span>
 								<span class="bar"></span>
 								<span class="tablinks2" onclick="openCity3(event, 'con04')"><s:message code="dashboard.Data.size"/></span>
 							</div>
-							<div id="con03" class="text_tabcontent2" >
+							<div id="con03" class="text_tabcontent2">
 								<div class="h200" id="loggingChart"></div>
 								<div id="loggingCount"></div>
 							</div>
@@ -2263,20 +2330,21 @@
 						</div>
 
 						<div style=" width: 48%; ">
-								<div class="text_tab">
-									<span class="tablinks" onclick="openCity2(event, 'con01')" id="defaultOpen2"><s:message code="dashboard.msg.todayTraffic"/></span>
-									<span class="bar"></span>
-									<span class="tablinks" onclick="openCity2(event, 'con02')"><s:message code="dashboard.msg.weekTraffic"/></span>
-								</div>
-
-								<div id="con01" class="text_tabcontent" style="min-height: 310px ">
-									<div id="todayTraffic"></div>
-								</div>
-
-								<div id="con02" class="text_tabcontent" style="min-height: 310px ">
-									<!-- <div id="weekTraffic"></div> -->
-								</div>
+							<div class="text_tab">
+								<span class="tablinks" onclick="openCity2(event, 'con01')" id="defaultOpen2"><s:message
+										code="dashboard.msg.todayTraffic"/></span>
+								<span class="bar"></span>
+								<span class="tablinks" onclick="openCity2(event, 'con02')"><s:message code="dashboard.msg.weekTraffic"/></span>
 							</div>
+
+							<div id="con01" class="text_tabcontent" style="min-height: 310px ">
+								<div id="todayTraffic"></div>
+							</div>
+
+							<div id="con02" class="text_tabcontent" style="min-height: 310px ">
+								<!-- <div id="weekTraffic"></div> -->
+							</div>
+						</div>
 					</div>
 
 				</div>
@@ -2285,85 +2353,87 @@
 
 			<div id="dashboardInfo2" style="display: none">
 				<div id="xcn_mainWrap" style="display: block; background-color: transparent">
-					<div class="right" style="background-color: transparent">
-					<div class="m_grapha mat32" style="margin-top: 0px;">
-						<div>
-							<h3><s:message code="dashboard.fileSizeTop"/></h3>
-							<div class="bigtop10" id="bigFileTop" style=" min-width: 500px; box-sizing: border-box; width: 100%" >
-							</div>
-						</div>
-						<%--		대용량 파일 TOP 10 끝--%>
-						<%--			파일 다 사용자 TOP 10--%>
-						<div>
-							<h3><s:message code="dashboard.fileSendTop"/></h3>
-							<div class="filetop10" id="FilePeople"  style=" min-width: 500px; box-sizing: border-box; width: 100%" >
-							</div>
-						</div>
-					</div>
-					</div>
-			</div>
 
-			<div>
-				<!-- 대시보드 박스 -->
-				<div id="xcn_mainWrap_new">
-					<div id="dashboardArea" class="grid-stack xcn_con_area" >
-					</div>
+						<div class="right" style="background-color: transparent">
+							<div class="m_grapha mat32" style="margin-top: 0px;">
+								<div>
+									<h3><s:message code="dashboard.fileSizeTop"/></h3>
+									<div class="bigtop10" id="bigFileTop" style=" min-width: 500px; box-sizing: border-box; width: 100%">
+									</div>
+								</div>
+								<%--		대용량 파일 TOP 10 끝--%>
+								<%--			파일 다 사용자 TOP 10--%>
+								<div>
+									<h3><s:message code="dashboard.fileSendTop"/></h3>
+									<div class="filetop10" id="FilePeople" style=" min-width: 500px; box-sizing: border-box; width: 100%">
+									</div>
+								</div>
+							</div>
+						</div>
 				</div>
-				<!-- //대시보드 -->
 			</div>
 
+				<div>
+					<!-- 대시보드 박스 -->
+					<div id="xcn_mainWrap_new">
+						<div id="dashboardArea" class="grid-stack xcn_con_area">
+						</div>
+					</div>
+					<!-- //대시보드 -->
+				</div>
+
+			</div>
 		</div>
+		<!-- //대시보드 -->
 	</div>
-	<!-- //대시보드 -->
-</div>
-<a href="#0" class="back-to-top cd-top"><span class="[ fa fa-chevron-up ]"></span> <span class="[ ]">Back to the Top</span></a>
-<form method="post" id="getMessageInfo" action="<c:url value="/ems/message.do"/>" target="_self">
-	<input type="hidden" name="conditionParam" id="conditionParam"/>
-</form>
+	<a href="#0" class="back-to-top cd-top"><span class="[ fa fa-chevron-up ]"></span> <span class="[ ]">Back to the Top</span></a>
+	<form method="post" id="getMessageInfo" action="<c:url value="/ems/message.do"/>" target="_self">
+		<input type="hidden" name="conditionParam" id="conditionParam"/>
+	</form>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        document.getElementById("defaultOpen3").click();
-    });
+	<script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("defaultOpen3").click();
+        });
 
-    function openCity3(evt, cityName) {
-        var i, tabcontent, tablinks;
+        function openCity3(evt, cityName) {
+            var i, tabcontent, tablinks;
 
-        tabcontent = document.getElementsByClassName("text_tabcontent2");
-        for (i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = "none";
+            tabcontent = document.getElementsByClassName("text_tabcontent2");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+
+            tablinks = document.getElementsByClassName("tablinks2");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            document.getElementById(cityName).style.display = "block";
+            evt.currentTarget.classList.add("active");
         }
+	</script>
 
-        tablinks = document.getElementsByClassName("tablinks2");
-        for (i = 0; i < tablinks.length; i++) {
-            tablinks[i].classList.remove("active");
+	<script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("defaultOpen2").click();
+        });
+
+        function openCity2(evt, cityName) {
+            var i, tabcontent, tablinks;
+
+            tabcontent = document.getElementsByClassName("text_tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+
+            document.getElementById(cityName).style.display = "block";
+            evt.currentTarget.classList.add("active");
         }
-        document.getElementById(cityName).style.display = "block";
-        evt.currentTarget.classList.add("active");
-    }
-</script>
+	</script>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        document.getElementById("defaultOpen2").click();
-    });
-
-    function openCity2(evt, cityName) {
-        var i, tabcontent, tablinks;
-
-        tabcontent = document.getElementsByClassName("text_tabcontent");
-        for (i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = "none";
-        }
-
-        tablinks = document.getElementsByClassName("tablinks");
-        for (i = 0; i < tablinks.length; i++) {
-            tablinks[i].classList.remove("active");
-        }
-
-        document.getElementById(cityName).style.display = "block";
-        evt.currentTarget.classList.add("active");
-    }
-</script>
-
-<%@ include file="./dashboardContent.jsp" %>
+	<%@ include file="./dashboardContent.jsp" %>
