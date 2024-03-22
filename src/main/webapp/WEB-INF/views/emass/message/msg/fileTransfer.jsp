@@ -76,7 +76,6 @@
 			});
 
 
-
             var today = new Date();
             today.setDate(today.getDate() - 7);
 
