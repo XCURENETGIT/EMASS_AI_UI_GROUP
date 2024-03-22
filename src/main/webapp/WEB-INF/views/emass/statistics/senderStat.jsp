@@ -475,7 +475,7 @@
 
     var grid1 = new Xgrid('basicStatListGrid', contextRoot);
     grid1.autoNumber();
-    grid1.colAdd( "rowKey", '<s:message code="consent.user"/>', 230, "left", false, 'link' );
+    grid1.colAdd( "rowKey", '<s:message code="condition.sender"/>', 230, "left", false, 'link' );
     grid1.colAdd("total", '<s:message code="bodyview.total"/>', 130, "right", false, 'nomal' );
     grid1.loadExportMenu('<s:message code="DATA_STAT.STAT_SENDER"/>');
    /* grid1.loadPageSize();

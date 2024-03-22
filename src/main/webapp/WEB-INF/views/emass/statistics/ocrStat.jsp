@@ -686,7 +686,7 @@
 
 		var grid1 = new Xgrid('basicStatListGrid', contextRoot);
 		grid1.autoNumber();
-		grid1.colAdd( "rowKey", '<s:message code="consent.user"/>', 230, "left", false, 'link' );
+		grid1.colAdd( "rowKey", '<s:message code="condition.ocr.attach"/>', 230, "left", false, 'link' );
 		grid1.colAdd("total", '<s:message code="bodyview.total"/>', 130, "right", false, 'nomal' );
 		grid1.loadExportMenu('<s:message code="DATA_ANALYSIS.STAT_OCR"/>');
 		grid1.loadPageSize();
