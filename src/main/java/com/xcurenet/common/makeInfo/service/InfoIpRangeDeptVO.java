@@ -7,7 +7,7 @@ import lombok.Data;
 @Builder
 public class InfoIpRangeDeptVO {
 	private int VERSION;
-	private String SLP;
+	private String SIP;
 	private String EIP;
 	private String DEPTCD;
 	private String DEPTNM;

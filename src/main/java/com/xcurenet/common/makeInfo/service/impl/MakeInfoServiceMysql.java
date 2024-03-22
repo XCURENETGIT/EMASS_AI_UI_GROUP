@@ -448,7 +448,7 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 				} else if (Common.isEquals(collectionName, "INFO_IPRANGE_DEPT")) {
 					InfoIpRangeDeptVO infoIpRangeDeptVO = InfoIpRangeDeptVO.builder()
 							.VERSION((int) obj.get("VERSION"))
-							.SLP((String) obj.get("SIP"))
+							.SIP((String) obj.get("SIP"))
 							.EIP((String) obj.get("EIP"))
 							.DEPTCD((String) obj.get("DEPTCD"))
 							.DEPTNM((String) obj.get("DEPTNM"))
