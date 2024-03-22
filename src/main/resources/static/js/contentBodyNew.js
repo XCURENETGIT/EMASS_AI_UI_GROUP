@@ -1032,8 +1032,7 @@ var msgData;
 function setMessage(msg) {
 	msgData = msg;
 
-	if(msgData.msgId == null)	console.log('no data (mongoDb)'); return;
-
+	if(msgData.msgId == null)	{console.log('no data (mongoDb)'); return;}
 
 	window.scrollTo(0,0);
 	if(msg == null) {
