@@ -1183,11 +1183,8 @@
             searchStr: '',
             success: function (data, total) {
                 if (rowSearchkey == null) rowSearchkey = "xlsx";
-                if (data.pivotdata != null){
                     getTodayFileList(data, rowSearchkey);
-                }else{
-                    $('#dataStatus').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px" style ="margin:auto; display:block; margin-top:85px;"> ');
-                }
+
             },
             error: function (status, message) {
                 //ui.alertMsg(message);
@@ -1206,20 +1203,21 @@
         let arrayStr = ["~10MB", "~50MB", "~100MB", "~150MB", "~200MB", "201MB~"]
         let arrays = ["0","11","51","101","151","201"];
 
-        // 여기에 쿼리 쓰기
-        let targetKey;
-        for (var i = 0; i < data.pivotData.length; i++) {
-            if (data.pivotData[i].rowKey == rowSearchkey) {
-                targetKey = data.pivotData[i];
-                break;
+        if (data.pivotData) {
+            // 여기에 쿼리 쓰기
+            let targetKey;
+            for (var i = 0; i < data.pivotData.length; i++) {
+                if (data.pivotData[i].rowKey == rowSearchkey) {
+                    targetKey = data.pivotData[i];
+                    break;
+                }
             }
-        }
+        }else targetKey = 0;
 
         for (const key in targetKey) {
             // console.log("key: "+key);
             if (!isNaN(parseInt(key))) {
                 const numericKey = parseFloat(key);
-                console.log(numericKey);
                 if (numericKey ==  0) {
                     array[0] += targetKey[key];
                 } else if (numericKey == 10485760) {
