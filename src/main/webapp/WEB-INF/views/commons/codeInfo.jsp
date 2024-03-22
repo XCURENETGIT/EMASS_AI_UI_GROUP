@@ -335,7 +335,7 @@
 					<h3><s:message code="codeInfo.attachpop.title"/></h3>
 					<p>
 						<span class="red_dot veralign_middle"></span>
-						필수 입력 사항입니다.
+						<s:message code="common.required.msg"/>
 					</p>
 				</div>
 				<div class="modalbody">

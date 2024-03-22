@@ -303,7 +303,7 @@
 	        offset: grid.data.length,
 	        limit: grid.pageSize,
 	        success: function (data, total) {
-	            $("#auditLogCount").html(' [' + total.comma() + '건]');
+	            $("#auditLogCount").html(' [' + total.comma() + '<s:message code="common.msg.cnt"/>]');
 	            grid.appendData(data);
 	        },
 	        error: function (status, message) {
@@ -394,7 +394,7 @@
 		<div class="contentSub">
 			<div class="subtab">
 				<button class="active">
-					운용자 감사로그 목록
+					<s:message code="auditLog.navi.title3"/>
 					<span id="auditLogCount">[]</span>
 				</button>
 			</div>
