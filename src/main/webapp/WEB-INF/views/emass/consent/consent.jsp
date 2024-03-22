@@ -7,6 +7,8 @@
 			text-overflow: ellipsis;
 			overflow: hidden;
 			white-space: nowrap;
+            font-family: Pretendard !important;
+			color:#333;
 		}
 	</style>
 	<script type="text/javascript">
@@ -55,6 +57,11 @@
                 $("input:checkbox[name='alarmType']").prop('disabled', checked);
             }
 
+            $("[name=attach]").change(function (){
+                fileExtCheck($(this));
+            });
+
+
             $('.savePopBtn').click(function () {
                 var mode = $('#consentPop').attr('mode');
 
@@ -81,8 +88,7 @@
                         $("#consentPopForm").ajaxForm({
                             target: '#return',
                             beforeSubmit: function () {
-                                $('#no, #name, #userId, #deptNm, #createNm').prop('disabled', true);
-                                $('#attachSpan').html('<input type="file" class="w100" name="attach" id="attach" style="width: 350px; border: 0px; padding: 0px; background-color: transparent">');
+                                attachInit('attachSpan','attachFileName','attach');
                             },
                             success: function (result) {
                                 if (result.success) {
@@ -108,7 +114,8 @@
                 $('#sdate').prop('disabled', true);
                 $('#fileDeleteYn').val('');
                 if ($("#consentPop").attr('mode') == 'insert') {
-                    $('#attachSpan').html('<input type="file" class="w100" name="attach" id="attach" style="width: 350px; border: 0px; padding: 0px; background-color: transparent">').show();
+                    $('#attachDiv').css("display","block");
+                    attachInit('attachSpan','attachFileName','attach');
                     $('#attachNameSpan').hide();
                     ui.get({
                         url: 'getConsentSeq.xcn',
@@ -218,7 +225,7 @@
             $('#attachModifyBtn').click(function () {
                 $('#fileDeleteYn').val('Y');
                 $('#attachNameA').hide();
-                $('#attachNameB').html('<input type="file" class="w100" name="attach" id="attach" style="width: 350px; border: 0px; padding: 0px; background-color: transparent">');
+                $('#attachDiv').css("display","show");
                 $('#attachModifyBtn, #attachDeleteBtn').hide();
             });
             $('#attachDeleteBtn').click(function () {
@@ -228,7 +235,7 @@
             $('#attachCancelBtn').click(function () {
                 $('#fileDeleteYn').val('');
                 $('#attachNameA').css('text-decoration', 'none').show();
-                $('#attachNameB').html('');
+                $('#attachDiv').css("display","none");
                 $('#attachModifyBtn, #attachDeleteBtn').show();
             });
 
@@ -361,6 +368,12 @@
                 }
             });
         }
+
+        function fileExtCheck(obj){
+			 $('#attachFileName').html(obj[0].files[0].name);
+        }
+
+
 	</script>
 </head>
 <div id="return"></div>
@@ -376,7 +389,7 @@
 					<h3><s:message code="consent.consent"/> - <s:message code="common.msg.addmodify"/></h3>
 					<p>
 						<span class="red_dot veralign_middle"></span>
-						필수 입력 사항입니다.
+						<s:message code="common.required.msg"/>
 					</p>
 				</div>
 				<div class="modalbody">
@@ -471,13 +484,19 @@
 							<label for="attach" class="fname"><s:message code="consent.attach"/></label>
 						</div>
 						<div class="col-65">
-						<span id="attachSpan"><input type="file" class="w100" name="attach" id="attach" style="width: 350px; border: 0px; padding: 0px; background-color: transparent"></span>
+							<div id="attachDiv">
+								<label for="attach" class="pop_btn02" style="height: 26px;"><span style="line-height: 1.8;"><s:message code="keyword.select.file"/></span></label>
+								<span style="font-family: Pretendard !important;  color:#333; background-color: transparent; width:40%; height:26px; line-height: 1.8;  padding:0 8px; vertical-align:middle;  font-size:14px; position: absolute;" id="attachFileName"> <s:message code="keyword.msg.upload.file"/></span>
+							</div>
+							<span id="attachSpan"><input type="file"  name="attach" id="attach" style="display:none"></span>
 							<span id="attachNameSpan" style="display: none;">
-								<a href="#" id="attachNameA" class="ellipsis" style="width: 260px; display: inline-block;"></a>
+								<a href="#" id="attachNameA" class="ellipsis" style=" display: inline-block;"></a>
 								<a href="#" id="attachNameB"></a>&nbsp;
-								<button type="button" class="btn btn-default btn-xs" accesskey="M" id="attachModifyBtn"><s:message code="common.msg.modify"/></button>
-								<button type="button" class="btn btn-default btn-xs" accesskey="D" id="attachDeleteBtn"><s:message code="common.msg.delete"/></button>
-								<button type="button" class="btn btn-default btn-xs" accesskey="X" id="attachCancelBtn"><s:message code="common.msg.cancel"/></button>
+								<div>
+									<button type="button" class="btn btn-default btn-xs" accesskey="M" id="attachModifyBtn"><s:message code="common.msg.modify"/></button>
+									<button type="button" class="btn btn-default btn-xs" accesskey="D" id="attachDeleteBtn"><s:message code="common.msg.delete"/></button>
+									<button type="button" class="btn btn-default btn-xs" accesskey="X" id="attachCancelBtn"><s:message code="common.msg.cancel"/></button>
+								</div>
 							</span>
 							<input type="hidden" id="fileDeleteYn" name="fileDeleteYn"/>
 						</div>
@@ -627,7 +646,6 @@
             $('#user').hide();
 
             var obj = grid.getRowData(grid.Row);
-            console.log(obj);
 
             ui.get({
                 url: 'getApprobator.xcn',
@@ -693,13 +711,14 @@
             }
             if (obj.attachedYn == 'Y') {
                 $('#attachSpan').hide();
+                $('#attachDiv').css("display","none");
                 $('#attachNameA').html(obj.fileName);
                 $('#attachNameA').attr('title', obj.fileName);
                 $('#attachNameSpan').show();
-
                 $('#attachCancelBtn').click();
             } else {
-                $('#attachSpan').html('<input type="file" class="w100" name="attach" id="attach" style="width: 350px; border: 0px; padding: 0px; background-color: transparent">').show();
+                $('#attachDiv').css("display","block");
+                attachInit('attachSpan','attachFileName','attach');
                 $('#attachNameSpan').hide();
             }
         }

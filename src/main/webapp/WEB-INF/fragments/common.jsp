@@ -127,7 +127,14 @@
 	var menuId = "";
 	var pMenuId = "";
 
+    var fileTagCode = '<input type="file"  name="attach" id="attach" style="display:none">';
 
+
+    function attachInit(span,nametag,attach){
+        $('#'+span).html(fileTagCode);
+        $('#'+nametag).html('<s:message code="keyword.msg.upload.file"/>');
+        $('#'+attach).change(function (){fileExtCheck($('#attach'));});
+    }
 
 	function reSizeHeight() {
 		let h = $(window).height();
@@ -955,6 +962,7 @@
 			}
 		});
 	}
+
 
 
 </script>

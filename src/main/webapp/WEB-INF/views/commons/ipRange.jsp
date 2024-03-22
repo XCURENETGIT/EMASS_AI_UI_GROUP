@@ -10,6 +10,9 @@
 var searchFlag=false;
 var orgStartIp ='';
 var orgEndIp ='';
+
+
+
 $(document).ready(function(){
 	$('#searchBtn').click(function(){
 		getData();
@@ -221,8 +224,7 @@ function importIp(){
 			$("#uploadForm").ajaxForm({
 				target : "#upload_file",
 				beforeSubmit : function(){
-					$('#attachSpan').html('<input type="file" class="form-control" name="attach" id="attach" style="width: 350px; border: 0px;">');
-					$('#attach').change(function (){fileExtCheck($('#attach'));});
+                    attachInit('attachSpan','attachFileName','attach');
 				},
 				success: function(result){
 					if(result.success){
@@ -271,10 +273,10 @@ function fileExtCheck(obj){
 	var fileExt  = fileName.substring(fileName.lastIndexOf(".") +1, fileName.length).toLowerCase();
 	if(!(fileExt == "txt" || fileExt == "text" || fileExt == "csv" || fileExt == "xlsx")){
 		ui.alertMsg('<s:message code="keyword.msg.fileext"/>');
-		$('#attachSpan').html('<input type="file" class="form-control" name="attach" id="attach" style="width: 350px; border: 0px;">');
-		$('#attach').change(function (){fileExtCheck($('#attach'));});
-	}
+        attachInit('attachSpan','attachFileName','attach');
+	}else $('#attachFileName').html(obj[0].files[0].name);
 }
+
 
 </script>
 </head>
@@ -465,7 +467,11 @@ function fileExtCheck(obj){
 								<label for="comment" class="fname"><s:message code="keyword.select.file"/></label>
 							</div>
 							<div class="col-65">
-								<span id="attachSpan"><input type="file" class="form-control" name="attach" id="attach" style="width: 100%; border: 0px; padding: 0px;"></span>
+								<div>
+									<label for="attach" class="pop_btn02" style="height: 26px;"><span style="line-height: 1.8;"><s:message code="keyword.select.file"/></span></label>
+									<span style="font-family: Pretendard !important;  color:#333; background: #FFF; width:40%; height:26px; line-height: 1.8;  padding:0 8px; vertical-align:middle;  font-size:14px; position: absolute;" id="attachFileName"> <s:message code="keyword.msg.upload.file"/></span>
+								</div>
+								<span id="attachSpan"><input type="file"  name="attach" id="attach" style="visibility:hidden"></span>
 							</div>
 						</div>
 					</div>

@@ -1,33 +1,9 @@
 package com.xcurenet.emass.iprange.web;
 
-import java.io.File;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import org.apache.commons.compress.utils.IOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Description;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.xcurenet.annotations.AuditMenu;
 import com.xcurenet.annotations.AuditOperation;
 import com.xcurenet.annotations.AuditParentMenu;
-import com.xcurenet.audit.service.AuditRequestVO;
-import com.xcurenet.audit.service.AuditService;
-import com.xcurenet.audit.service.Menu;
-import com.xcurenet.audit.service.Operation;
-import com.xcurenet.audit.service.ParentMenu;
+import com.xcurenet.audit.service.*;
 import com.xcurenet.common.csv.CsvReader;
 import com.xcurenet.common.excel.XLSXReader;
 import com.xcurenet.common.makeInfo.service.MakeInfoService;
@@ -38,10 +14,27 @@ import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.emass.iprange.service.IpRangeService;
 import com.xcurenet.emass.iprange.service.IpRangeVO;
-
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.commons.compress.utils.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Description;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -164,7 +157,7 @@ public class IpRangeController {
 		
 		InputStream is = null;
 		try {
-			file.transferTo(dest);;
+			file.transferTo(dest);
 			
 			String fileName = dest.getName();
 			String fileExt  = fileName.substring(fileName.lastIndexOf(".") +1, fileName.length()).toLowerCase();
