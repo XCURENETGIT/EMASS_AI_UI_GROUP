@@ -7,14 +7,14 @@
 <html lang="ko">
 <head>
 	<title><s:message code="deviceInfo.title"/></title>
-	<link rel="stylesheet" href="<c:url value="/resources/css/slider.css"/>" />
-	<link rel="stylesheet" href="<c:url value="/resources/css/jquery.circliful.css"/>">
-	<link rel="stylesheet" href="<c:url value="/resources/css/bootstrap-select.min.css"/>"/>
-	<link rel="stylesheet" href="<c:url value="/resources/css/sb-admin-2.css"/>" />
+	<link rel="stylesheet" href="<c:url value="/css/slider.css"/>" />
+	<link rel="stylesheet" href="<c:url value="/css/jquery.circliful.css"/>">
+	<link rel="stylesheet" href="<c:url value="/css/bootstrap-select.min.css"/>"/>
+	<link rel="stylesheet" href="<c:url value="/css/sb-admin-2.css"/>" />
 
-	<script type="text/javascript" src="<c:url value="/resources/js/bootstrap-slider.js"/>"></script>
-	<script type="text/javascript" src="<c:url value="/resources/js/jquery.circliful.min.js"/>"></script>
-	<script type="text/javascript" src="<c:url value="/resources/js/bootstrap-select.js"/>"></script>
+	<script type="text/javascript" src="<c:url value="/js/bootstrap-slider.js"/>"></script>
+	<script type="text/javascript" src="<c:url value="/js/jquery.circliful.min.js"/>"></script>
+	<script type="text/javascript" src="<c:url value="/js/bootstrap-select.js"/>"></script>
 
 	<!--[if lt IE 9]>
 	<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -440,6 +440,6 @@
 		</div>
 	</div>
 </div>
-<script type="text/javascript" src="<c:url value="/resources/js/sb-admin-2.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/sb-admin-2.js"/>"></script>
 
 </html>
