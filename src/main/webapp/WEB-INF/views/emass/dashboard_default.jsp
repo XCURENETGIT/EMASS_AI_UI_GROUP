@@ -1202,10 +1202,10 @@
         let array = [0, 0, 0, 0, 0, 0];
         let arrayStr = ["~10MB", "~50MB", "~100MB", "~150MB", "~200MB", "201MB~"]
         let arrays = ["0","11","51","101","151","201"];
-
+        let targetKey;
         if (data.pivotData) {
             // 여기에 쿼리 쓰기
-            let targetKey;
+
             for (var i = 0; i < data.pivotData.length; i++) {
                 if (data.pivotData[i].rowKey == rowSearchkey) {
                     targetKey = data.pivotData[i];
@@ -1215,6 +1215,7 @@
         }else targetKey = 0;
 
         for (const key in targetKey) {
+
             // console.log("key: "+key);
             if (!isNaN(parseInt(key))) {
                 const numericKey = parseFloat(key);
