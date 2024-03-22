@@ -559,6 +559,8 @@ function rtnGroupList(data, type) {
 
         var user_cnt = data[i].user_cnt;
         var svc3 = data[i].svc3;
+        if( svc3 == 'J') obj.body_snippet =contentBodyDivJS.chatJoin;
+        else if( svc3 == 'L') obj.body_snippet = contentBodyDivJS.chatLeave;
         var closeFlag = false;
         if (user_cnt == 1 && svc3 == 'L') closeFlag = true;
 
@@ -823,6 +825,8 @@ function makeList2(nextFlag) {
         str += '<span id="xrootmtr" style="display: none;">' + obj.xrootmtr + '</span>';
 
         var svc3 = obj.svc3;
+        if( svc3 == 'J') obj.body_snippet =contentBodyDivJS.chatJoin;
+        else if( svc3 == 'L') obj.body_snippet = contentBodyDivJS.chatLeave;
         str += '<div class="' + (chkPati ? 'me' : 'you') + ' timeline-panel" >';
 
 
@@ -891,6 +895,8 @@ function makeList(nextFlag) {
         str += '<span id="xrootmtr" style="display: none;">' + obj.xrootmtr + '</span>';
 
         var svc3 = obj.svc3;
+        if( svc3 == 'J') obj.body_snippet =contentBodyDivJS.chatJoin;
+        else if( svc3 == 'L') obj.body_snippet = contentBodyDivJS.chatLeave;
         str += '<div class="' + (chkPati ? 'me' : 'you') + ' timeline-panel" >';
 
 
