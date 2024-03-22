@@ -67,9 +67,9 @@ public class OwlnestController {
 		sq.setRows(100);
 		sq.setMoreLikeThis(true);
 		sq.setMoreLikeThisFields("body");
-		sq.setMoreLikeThisFields("body_snippet");
 		sq.setMoreLikeThisFields("attach");
 		sq.setQuery("");
+
 		if(!subjectIsEmpty)sq.addMoreLikeThisField("subject");
 		else {
 			sq.addMoreLikeThisField("host");

@@ -196,6 +196,7 @@ function regexpInfoViewer(row, selectedGrid){
 			<div class="content_body">
 				<div class="p20">
 					<h2><span class="bullet02"></span><s:message code="common.msg.similar"/></h2>
+					<span class="ocTitle"><s:message code="RECOMMEND.msg.header"/> </span> &nbsp;
 <%--					<div>--%>
 <%--						<div id="startdatepicker"><input type="date" id="startDate" name='startDate' style="width: 110px;">--%>
 <%--					</div>--%>
@@ -265,7 +266,7 @@ function regexpInfoViewer(row, selectedGrid){
 		<%--grid.colAdd('ml_confd_prob', '<s:message code="condition.prob"/>(%)', 90, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {--%>
 		<%--	return probPercent(value);--%>
 		<%--});--%>
-		grid.colAdd('confidence', '<s:message code="condition.info.feedback.confidence"/>(%)', 100, 'right', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+		grid.colAdd('confidence', '<s:message code="condition.info.similarity"/>(%)', 100, 'right', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 			return	Math.floor(parseInt(value));
 		});
 		grid.colAdd('subject', '<s:message code="condition.subject"/>', 410, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
