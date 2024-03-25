@@ -979,10 +979,12 @@ public class CollectionController {
 		JSONArray data = new JSONArray();
 		List<MessengerGroupVO> list = groups.getGroups();
 		if (list != null) {
-			for (MessengerGroupVO item : list) {
+			for (int i = list.size() - 1; i >= 0; i--) {
+				MessengerGroupVO item = list.get(i);
 				JSONObject dataObj = new JSONObject();
-				dataObj.put("sender", item.getTitle());
+				dataObj.put("sender", item.getUser());
 				dataObj.put("ctime", item.getCtime());
+				dataObj.put("svc", Config.getServiceNm(item.getSvc()));
 				dataObj.put("content", item.getMessage());
 				if (link && Common.isEquals(item.getAttached(), "Y")) {
 					dataObj.put("content_LINK", Common.makeFilepath("attachs", item.getMsgid()));
@@ -1217,7 +1219,8 @@ public class CollectionController {
 				_sb.append("<" + Prop.propFormat("eikon.msg.chatContents", locale) + ">").append(Common.EMPTY_LINE);
 				List<MessengerGroupVO> list = groups.getGroups();
 				if (list != null) {
-					for (MessengerGroupVO item : list) {
+					for (int i = list.size() - 1; i >= 0; i--) {
+						MessengerGroupVO item = list.get(i);
 						_sb.append(String.format("[%s] [%s] [%s] %s", item.getTitle(), item.getCtime(),Config.getServiceNm(item.getSvc()), item.getBody_snippet())).append(Common.EMPTY_LINE);
 					}
 				}
@@ -1247,17 +1250,18 @@ public class CollectionController {
 		JSONArray data = new JSONArray();
 		List<MessengerGroupVO> list = groups.getGroups();
 		if (list != null) {
-			for (MessengerGroupVO item : list) {
-				JSONObject dataObj = new JSONObject();
-				dataObj.put("sender", item.getTitle());
-				dataObj.put("ctime", item.getCtime());
-				dataObj.put("svc", Config.getServiceNm(item.getSvc()));
-				dataObj.put("content", item.getBody_snippet());
-				if (link && Common.isEquals(item.getAttached(), "Y")) {
-					dataObj.put("content_LINK", Common.makeFilepath("attachs", item.getMsgid()));
+				for (int i = list.size() - 1; i >= 0; i--) {
+					MessengerGroupVO item = list.get(i);
+					JSONObject dataObj = new JSONObject();
+					dataObj.put("sender", item.getUser());
+					dataObj.put("ctime", item.getCtime());
+					dataObj.put("svc", Config.getServiceNm(item.getSvc()));
+					dataObj.put("content", item.getMessage());
+					if (link && Common.isEquals(item.getAttached(), "Y")) {
+						dataObj.put("content_LINK", Common.makeFilepath("attachs", item.getMsgid()));
+					}
+					data.add(dataObj);
 				}
-				data.add(dataObj);
-			}
 		}
 		XLSXWriter xlsx = new XLSXWriter(Prop.propFormat("eikon.msg.export.chat", locale) + " : " + userkey, header, data, out);
 		xlsx.execute();
