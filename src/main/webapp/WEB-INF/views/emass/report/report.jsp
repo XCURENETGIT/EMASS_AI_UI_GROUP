@@ -31,18 +31,19 @@
             $('#searchBtn').click(function(){
 
             });
+            initDateTimePicker('startdate','enddate');
 
-            $('#startdatepicker').datetimepicker({
-                format: 'YYYY-MM-DD',
-                locale: 'ko',
-                defaultDate: moment(new Date())
-            });
-
-            $('#enddatepicker').datetimepicker({
-                format: 'YYYY-MM-DD',
-                locale: 'ko',
-                defaultDate: moment(new Date())
-            });
+            // $('#startdatepicker').datetimepicker({
+            //     format: 'YYYY-MM-DD',
+            //     locale: 'ko',
+            //     defaultDate: moment(new Date())
+            // });
+			//
+            // $('#enddatepicker').datetimepicker({
+            //     format: 'YYYY-MM-DD',
+            //     locale: 'ko',
+            //     defaultDate: moment(new Date())
+            // });
 
             $('.print_link2').click(function() {
                 if( $('input:checkbox[name="reportMenu"]:checked').length == 0 ) {
@@ -434,9 +435,9 @@
 	<div class="searchArea">
 
 		<div class="searchSub">
-			<div id="startdatepicker"><input type="date" id="startdate" style="width: 110px;">
+			<div id="startdatepicker"><input type="text" id="startdate" style="width: 110px;">
 				<span class="hyphen">~</span></div>
-			<div id="enddatepicker"><input type="date" id="enddate" style="width: 110px;"></div>
+			<div id="enddatepicker"><input type="text" id="enddate" style="width: 110px;"></div>
 			<div class="infotxt mat4 blue">&nbsp<s:message code="report.message.period"/></div>
 		</div>
 		<div class="btnList">

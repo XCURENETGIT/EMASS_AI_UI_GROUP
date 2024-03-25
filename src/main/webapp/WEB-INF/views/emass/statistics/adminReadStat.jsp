@@ -41,6 +41,7 @@
     var totalChartDat;
     $(document).ready(function () {
         getAdminOptions();
+        initDateTimePicker('startdate','enddate');
 
         $('.optionBtn').click(function () {
             $('.optionBtn').removeClass('active');
@@ -69,18 +70,18 @@
         });
 
 
-
-        $('#startdatepicker').datetimepicker({
-            format: 'YYYY-MM-DD',
-            locale: 'ko',
-            defaultDate: moment(new Date())
-        });
-
-        $('#enddatepicker').datetimepicker({
-            format: 'YYYY-MM-DD',
-            locale: 'ko',
-            defaultDate: moment(new Date())
-        });
+		//
+        // $('#startdatepicker').datetimepicker({
+        //     format: 'YYYY-MM-DD',
+        //     locale: 'ko',
+        //     defaultDate: moment(new Date())
+        // });
+		//
+        // $('#enddatepicker').datetimepicker({
+        //     format: 'YYYY-MM-DD',
+        //     locale: 'ko',
+        //     defaultDate: moment(new Date())
+        // });
 
         $("#adminId").html(getAdminOptions());
 
@@ -306,9 +307,9 @@
 					<option value="date"><s:message code="analysis.freedom.readdate"/></option>
 				</select>
 			</div>
-			<div id="startdatepicker"><input type="date" id="startdate" style="width: 110px;">
+			<div id="startdatepicker"><input type="text" id="startdate" style="width: 110px;">
 				<span class="hyphen">~</span></div>
-			<div id="enddatepicker"><input type="date" id="enddate" style="width: 110px;"></div>
+			<div id="enddatepicker"><input type="text" id="enddate" style="width: 110px;"></div>
 
 			<div>
 				<select class="form-control input-sm" id="adminId" name="adminId" style="width: 205px;">

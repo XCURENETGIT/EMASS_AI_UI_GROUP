@@ -964,5 +964,19 @@
 	}
 
 
+    function initDateTimePicker(sid,eid){
+        $('#'+sid).datetimepicker({
+            format: 'YYYY-MM-DD',
+            locale: 'ko',
+            defaultDate: moment(new Date())
+        });
+        $('#'+eid).datetimepicker({
+            format: 'YYYY-MM-DD',
+            locale: 'ko',
+            defaultDate: moment(new Date())
+        });
+    }
+
+
 
 </script>

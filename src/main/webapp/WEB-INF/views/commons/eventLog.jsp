@@ -5,17 +5,7 @@
 	<script type="text/javascript">
         var searchFlag = false;
         $(document).ready(function () {
-            $('#startDatePicker').datetimepicker({
-                format: 'YYYY-MM-DD',
-                locale: 'ko',
-                defaultDate: moment(new Date())
-            });
-
-            $('#endDatePicker').datetimepicker({
-                format: 'YYYY-MM-DD',
-                locale: 'ko',
-                defaultDate: moment(new Date())
-            });
+            initDateTimePicker('startDt','endDt');
 
             $('#searchBtn').click(function () {
                 getData();
@@ -102,9 +92,9 @@
 <div>
 	<div class="searchArea">
 		<div class="searchSub">
-			<div id="startDatePicker"><input type="date" id="startDt" style="width: 110px;">
+			<div id="startDatePicker"><input type="text" id="startDt" style="width: 110px;">
 				<span class="hyphen">~</span></div>
-			<div id="endDatePicker"><input type="date" id="endDt" style="width: 110px;"></div>
+			<div id="endDatePicker"><input type="text" id="endDt" style="width: 110px;"></div>
 			<div>
 				<select id="deviceIp" style="width: 200px; display: flex; ">
 					<option value="">- <s:message code="eventLog.select.device"/> -</option>

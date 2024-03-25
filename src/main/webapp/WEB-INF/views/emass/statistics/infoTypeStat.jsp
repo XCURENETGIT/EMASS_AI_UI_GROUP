@@ -49,8 +49,8 @@
 
 
     $(document).ready(function(){
-        $('#startdate').val(new Date().format('yyyy-mm-dd'));
-        $('#enddate').val(new Date().format('yyyy-mm-dd'));
+        // $('#startdate').val(new Date().format('yyyy-mm-dd'));
+        // $('#enddate').val(new Date().format('yyyy-mm-dd'));
 
         $('.totalView').click(function(){
 
@@ -63,6 +63,7 @@
 
 
         initCondition();
+        initDateTimePicker('startdate','enddate');
         $('#dept').click(function () {
             var code = $(this).attr('id');
             openCodeWindow(code, $('#' + code + 'Val').val(), $('#' + code + 'Str').val());
@@ -582,11 +583,11 @@
 	<div class="searchArea w100">
 		<div class="searchSub w100">
 			<div>
-				<input type="date" id="startdate" style="width: 110px;"/>
+				<input type="text" id="startdate" style="width: 110px;"/>
 				<span class="hyphen">~</span>
 			</div>
 			<div>
-				<input type="date" id="enddate" style="width: 110px;"/>
+				<input type="text" id="enddate" style="width: 110px;"/>
 			</div>
 
 			<div class="optiotab">

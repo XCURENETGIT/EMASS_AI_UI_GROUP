@@ -45,18 +45,18 @@
                 chartcnt = $(this).text();
                 printChart();
             });
-
-            $('#startdatepicker').datetimepicker({
-                format: 'YYYY-MM-DD',
-                locale: 'ko',
-                defaultDate: moment(new Date())
-            });
-
-            $('#enddatepicker').datetimepicker({
-                format: 'YYYY-MM-DD',
-                locale: 'ko',
-                defaultDate: moment(new Date())
-            });
+            initDateTimePicker('startdate','enddate');
+            // $('#startdatepicker').datetimepicker({
+            //     format: 'YYYY-MM-DD',
+            //     locale: 'ko',
+            //     defaultDate: moment(new Date())
+            // });
+			//
+            // $('#enddatepicker').datetimepicker({
+            //     format: 'YYYY-MM-DD',
+            //     locale: 'ko',
+            //     defaultDate: moment(new Date())
+            // });
 
             //getData ('Y');
         });
@@ -148,9 +148,9 @@
 	<div class="searchArea w100">
 		<div class="searchSub w100">
 
-			<div id="startdatepicker"><input type="date" id="startdate" style="width: 110px;">
+			<div id="startdatepicker"><input type="text" id="startdate" style="width: 110px;">
 				<span class="hyphen">~</span></div>
-			<div id="enddatepicker"><input type="date" id="enddate" style="width: 110px;"></div>
+			<div id="enddatepicker"><input type="text" id="enddate" style="width: 110px;"></div>
 
 
 			<div>

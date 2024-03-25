@@ -21,6 +21,7 @@
         var searchFlag = false;
         $(document).ready(function () {
             getBusiList();
+            initDateTimePicker('startdate',null);
             $(function () {
                 $("#selectableWorkday").selectable({
                     stop: function () {
@@ -464,17 +465,16 @@
 					</p>
 				</div>
 				<div class="modalbody">
-					<div class="row">
+					<div class="new-row">
 						<div class="col-35">
 							<label for="attachTypePopInput" class="fname"><s:message code="condition.date"/></label>
 							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
-							<input type='date' class="w40" id='date'/>
+							<input type="text" class="w40" id="startdate"/>
 						</div>
 					</div>
-
-					<div class="row">
+					<div class="new-row">
 						<div class="col-35">
 							<label for="attachDescPopInput" class="fname"><s:message code="common.msg.comment"/></label>
 							<span class="red_dot"></span>

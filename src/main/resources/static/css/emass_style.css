@@ -1202,3 +1202,20 @@ button img {margin-top:-1px;margin-right:2px; vertical-align:middle;}
 	background-image: url(../img/file/zip.png);
 }
 
+/* datetimepicker css*/
+.new-row { overflow: hidden; overflow: hidden;margin-bottom:12px;margin-left: 0;margin-right: 0;}
+.new-row ol,ul{list-style: none;}
+.new-row ul li {border-top:1px dashed #ddd; padding-top:12px; padding-bottom:12px !important;}
+.new-row ul li:first-child {border:none;}
+.new-row:last-child {margin-bottom:0;}
+.new-row label {vertical-align: middle;line-height: 1.5; font-size:14px;font-weight:400;}
+.new-row select {display: inline-block;}
+.new-row:after {content: "";display: table;clear: both;}
+.new-row .checkbox {font-size:13px; margin-right:12px; margin-bottom:4px;display: inline-block;}
+.new-row .checkbox input {vertical-align: middle; margin-left:-4px;}
+.new-row .checkbox span.checktit {font-size:14px; margin-left:-4px;}
+.new-row .radio {font-size:13px; margin-right:12px;margin-bottom:4px; display: inline-block;}
+.new-row  .radio input {vertical-align: top;}
+.new-row > div[class="bootstrap-datetimepicker-widget dropdown-menu usetwentyfour bottom"] {width:250px;height: 300px;}
+
+.searchSub > div > div[class="bootstrap-datetimepicker-widget dropdown-menu usetwentyfour bottom"] {padding: 10px 0px 10px 10px;}
