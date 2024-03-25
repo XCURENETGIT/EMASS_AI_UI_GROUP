@@ -25,6 +25,35 @@
 
 
 <style>
+	.condition_top_sub{
+		position: fixed;
+		width: 300px;
+		background-color: rgba(0, 94, 193, 0.56);
+		height: 2px;
+		z-index: 100000;
+		display: none;
+	}
+
+	.condition_top{
+		position: fixed;
+		width: 25px;
+		background-color: rgba(0, 94, 193, 0.8);
+		text-align: center;
+		margin-left: 260px;
+		z-index: 100000;
+		margin-top: 3px;
+		-moz-border-radius: 50px;
+		-webkit-border-radius: 50px;
+		border-radius: 50px;
+		height: 25px;
+		line-height: 23px;
+		font-size: 10px;
+		font-weight: bold;
+		cursor: pointer;
+		color:#fff;
+		margin-top:-8px;
+	}
+
 	pre{
 		background-color: transparent; !important;
 		font-size: 14px;!important;
@@ -141,6 +170,12 @@
         let pivotused = false;
 
         $(document).ready(function () {
+            $($('.condition_top')).click(function(){
+                $('.chatList').animate({
+                    scrollTop: 0
+                }, 200);
+            });
+
             $(window).resize(function () {
                 if ($(window).width() < 1700) {
                     $('#searchResultBtnArea').addClass('btnCustomPosition');
@@ -1083,6 +1118,8 @@
 				<div class="messenger_next" title="<s:message code='eikon.msg.show.next'/>"><svg xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M246.6 470.6c-12.5 12.5-32.8 12.5-45.3 0l-160-160c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L224 402.7 361.4 265.4c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3l-160 160zm160-352l-160 160c-12.5 12.5-32.8 12.5-45.3 0l-160-160c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L224 210.7 361.4 73.4c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3z"/></svg></div>
 				<div class="p16 white" style="position: fixed; bottom:0; background-color:#606973;">
 					<s:message code="eikon.msg.total.cnt"/> : <span id="groupSubResultCnt" class="blue03">0</span>
+					<span class="condition_top_sub"></span> &nbsp;&nbsp;&nbsp;
+					<span class="condition_top" id="condition_top" style="margin-left: 1px;">▲</span>
 				</div>
 				<%--	<div class="chat active-chat" data-chat="person2">
 						<div class="conversation-start">
