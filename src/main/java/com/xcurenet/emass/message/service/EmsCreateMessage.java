@@ -95,8 +95,10 @@ public class EmsCreateMessage {
 			String protocolNm = Config.getProtocolNm(msg.getProtocol());
 			if( Common.isNotEmpty(protocolNm)) svcnm += " [" + protocolNm+"]";
 			String subject = EmsReDefined.reSubject(msg);
-			String ipBusiNm = emsMessageService.getIpBusiNm(msg.getIpBusicd());
-			String ipDeptNm = emsMessageService.getIpDeptNm(msg.getIpDeptcd());
+			String ipBusiNm = msg.getIpBusiNm();
+			String ipDeptNm = msg.getIpDeptNm();
+//			String ipBusiNm = emsMessageService.getIpBusiNm(msg.getIpBusicd());
+//			String ipDeptNm = emsMessageService.getIpDeptNm(msg.getIpDeptcd());
 
 			if( participants == null){
 				if (Common.isEquals(msg.getKwd(), "Y")) {
