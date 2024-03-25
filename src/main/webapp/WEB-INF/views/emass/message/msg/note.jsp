@@ -123,6 +123,11 @@
 
 	}
 
+	td.day,.dow,.picker-switch,.prev,.next{
+		color:#333333 !important;
+	}
+
+
 	.noSearch{
 		cursor:default !important;
 	}
@@ -170,6 +175,10 @@
         let pivotused = false;
 
         $(document).ready(function () {
+
+            initDateTimePicker('startDt','endDt');
+            initDateTimePicker('startSubDt','endSubDt');
+
             $($('.condition_top')).click(function(){
                 $('.chatList').animate({
                     scrollTop: 0
@@ -184,15 +193,8 @@
                 }
             });
 
-            var today = new Date();
-            today.setDate(today.getDate() - 7);
             initServiceTab();
 
-            document.getElementById("startDt").valueAsDate = today;
-            document.getElementById("endDt").valueAsDate = new Date();
-
-            document.getElementById("startSubDt").valueAsDate = today;
-            document.getElementById("endSubDt").valueAsDate = new Date();
 
             $('#searchBtn').click(function () {
                 pivotused = false;
@@ -788,6 +790,19 @@
             return filterVal;
         }
 
+
+        function initDateTimePicker(sid,eid){
+            $('#'+sid).datetimepicker({
+                format: 'YYYY-MM-DD',
+                locale: 'ko',
+                defaultDate: moment().subtract(7, 'days')
+            });
+            $('#'+eid).datetimepicker({
+                format: 'YYYY-MM-DD',
+                locale: 'ko',
+                defaultDate: moment(new Date())
+            });
+        }
         function createCondition(type) {
             var allSelect = new Array();
             var condition = {};
@@ -951,7 +966,7 @@
 					</div>
 					<h3 class="mat16"><s:message code="message.msg.deepsearch"/></h3>
 					<div>
-						<input class="w45 mat8 txt_center" type="date" id="startDt"  value="2023-11-20"><span class="w10 dis_inlineblock txt_center">~</span><input class="w45 txt_center" type="date" id="endDt"  value="2023-11-30">
+						<input class="w45 mat8 txt_center" type="text" id="startDt"><span class="w10 dis_inlineblock txt_center">~</span><input class="w45 txt_center" type="text" id="endDt" >
 
 
 						<div class="optiotab w100 mat8" data-toggle="buttons">
@@ -1057,9 +1072,9 @@
 
 					<div class="chatDate">
 						<div class="searchSub" style=" min-width: 150px; box-sizing: border-box; width: 100%" >
-								<span id="startsubdatepicker"><input type="date" id="startSubDt" style="width: 110px;">
+								<span><input type="text" id="startSubDt" style="width: 110px;">
 									<span class="hyphen">~</span></span>
-							<span id="endsubdatepicker"><input type="date" id="endSubDt" style="width: 110px;"></span>
+							<span><input type="text" id="endSubDt" style="width: 110px;"></span>
 
 							<button class="form_btn01"  type="button" accesskey="M" id="searchMsgQueryBtn"><s:message code="common.search"/></button>
 						</div>

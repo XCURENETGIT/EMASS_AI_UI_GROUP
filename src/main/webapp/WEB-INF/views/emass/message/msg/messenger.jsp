@@ -3,6 +3,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <style>
 
+	td.day,.dow,.picker-switch,.prev,.next{
+		color:#333333 !important;
+	}
 
 	pre{
 		background-color: transparent; !important;
@@ -118,6 +121,8 @@
 
         };
         $(document).ready(function () {
+            initDateTimePicker('startDt','endDt');
+            initDateTimePicker('startSubDt','endSubDt');
 
             $($('.condition_top')).click(function(){
                 $('.chatList').animate({
@@ -569,6 +574,20 @@
             }
         }
 
+
+        function initDateTimePicker(sid,eid){
+            $('#'+sid).datetimepicker({
+                format: 'YYYY-MM-DD',
+                locale: 'ko',
+                defaultDate: moment().subtract(7, 'days')
+            });
+            $('#'+eid).datetimepicker({
+                format: 'YYYY-MM-DD',
+                locale: 'ko',
+                defaultDate: moment(new Date())
+            });
+        }
+
         function hideUserSelect() {
             if ($('#selectUser_menu')) {
                 $('#selectUser_menu').hide();
@@ -657,88 +676,12 @@
             getCodeList('dept');
 
             var dateObj = new Date();
-            $('#startdatepicker').datetimepicker({
-                format: 'YYYY-MM-DD',
-                locale: 'ko',
-                sideBySide: true,
-                defaultDate: moment(new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate() - 7))
-            }).on("dp.change", function (e) {
-                if (easyDateStartFlag) {
-                    easyDateStartFlag = false;
-                    return;
-                } else {
-                    $('#easyDate').val('');
-                }
-            });
-            $('#enddatepicker').datetimepicker({
-                format: 'YYYY-MM-DD',
-                locale: 'ko',
-                sideBySide: true,
-                defaultDate: moment(new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), 23, 59, 59))
-            }).on("dp.change", function (e) {
-                if (easyDateEndFlag) {
-                    easyDateEndFlag = false;
-                    return;
-                } else {
-                    $('#easyDate').val('');
-                }
-            });
 
-            $('#startsubdatepicker').datetimepicker({
-                format: 'YYYY-MM-DD',
-                locale: 'ko',
-                widgetParent: '.boxArea',
-                sideBySide: true,
-                defaultDate: moment(new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate() - 1))
-            }).on("dp.change", function (e) {
-            }).on('dp.show', function () {
-                var datepicker = $("body").find('.bootstrap-datetimepicker-widget:last');
-                if (datepicker.hasClass('bottom')) {
-                    var top = $(this).offset().top + $(this).outerHeight();
-                    var left = $(this).offset().left;
-                    datepicker.css({
-                        'top': (top - 80) + 'px',
-                        'bottom': 'auto',
-                        'left': left + 'px'
-                    });
-                }
-            });
-            $('#endsubdatepicker').datetimepicker({
-                format: 'YYYY-MM-DD',
-                locale: 'ko',
-                widgetParent: '.boxArea',
-                sideBySide: true,
-                defaultDate: moment(new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), 23, 59, 59))
-            }).on("dp.change", function (e) {
-            }).on('dp.show', function () {
-                var datepicker = $("body").find('.bootstrap-datetimepicker-widget:last');
-                if (datepicker.hasClass('bottom')) {
-                    var top = $(this).offset().top + $(this).outerHeight();
-                    var left = $(this).offset().left;
-                    var rightDivWidth = $('#rightDiv').width();
-                    if (rightDivWidth < 640) left = left - 280;
-                    datepicker.css({
-                        'top': (top - 80) + 'px',
-                        'bottom': 'auto',
-                        'left': (left) + 'px'
-                    });
-                }
-            });
+
+
+
             $('#easyDate').change(function () {
                 changeDate($(this).val());
-            });
-            $('#timedatepicker').datetimepicker({
-                format: 'YYYY-MM-DD',
-                locale: 'ko',
-                defaultDate: moment(new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), 23, 59, 59))
-            }).on("dp.change", function (e) {
-                var date = $(this).data("DateTimePicker").date().format('YYYY-MM-DD');
-                detailDateFocus(date);
-
-                $('#searchMsgStrInput').val('');
-                $('#searchResult').html('');
-                $('#searchResultArea').hide();
-                $('#searchResultBtnArea').hide();
             });
 
             $('#serviceTypeSelect').selectpicker({
@@ -1061,10 +1004,10 @@
 					<h3 class="mat16"><s:message code="message.msg.deepsearch"/></h3>
 					<div>
 						<div style="display: flex;">
-							<div id="startdatepicker"><input type="date" id="startDt" style="width: 140px;">
-								<span class="hyphen">~</span></div>
-							<div id="enddatepicker"><input type="date" id="endDt" style="width: 140px;"></div>
-						</div>
+							<input type="text" id="startDt" style="width: 140px;">
+								<span class="hyphen">~</span>
+							<input type="text" id="endDt" style="width: 140px;"></div>
+
 						<div class="optiotab w100 mat8">
 							<button class="active w50" name="attachYn" id="attachAll" value=""><s:message code="condition.isattached.all"/></button>
 							<button class="w50" name="attachYn" id="attachY" value="Y"><s:message code="eikon.attach.exist"/></button>
@@ -1192,9 +1135,9 @@
 					<div class="chatDate">
 						<div class="searchSub" style=" min-width: 150px; box-sizing: border-box; width: 100%" >
 
-								<span id="startsubdatepicker"><input type="date" id="startSubDt" style="width: 110px;">
-									<span class="hyphen">~</span></span>
-								<span id="endsubdatepicker"><input type="date" id="endSubDt" style="width: 110px;"></span>
+								<input type="text" id="startSubDt" style="width: 110px;">
+									<span class="hyphen">~</span>
+								<input type="text" id="endSubDt" style="width: 110px;">
 							<button class="form_btn01" type="button" accesskey="M" id="searchMsgQueryBtn"><s:message code="common.search"/></button>
 						</div>
 

@@ -607,7 +607,7 @@ function makeFileList(data) {
         str = '<ul>';
         for (var i = 0; i < data.length; i++) {
             str += '<li><p class="fileListdown" attachsize="' + data[i].attachsize + '" msgid="' + data[i].msgid + '" attachhash="' + data[i].attachhash + '"><span class="img"></span><span>';
-            str += '<a href="#"  class="filesdown">' + data[i].attachname + "." + data[i].attachtype + '</a>';
+            str += '<a href="#"  class="filesdown">' + data[i].attachname + '</a>';
             str += '</span><span style="position: absolute; right: 0; top: 8px;" ><button class="btnchatdown_w downloadIcon"></button></span></p></li>';
         }
 
