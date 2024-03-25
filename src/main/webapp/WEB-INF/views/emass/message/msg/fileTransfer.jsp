@@ -74,13 +74,13 @@
 					$('#searchResultBtnArea').removeClass('btnCustomPosition');
 				}
 			});
+            initDateTimePicker('startDt','endDt');
 
-
-            var today = new Date();
+/*            var today = new Date();
             today.setDate(today.getDate() - 7);
 
             document.getElementById("startDt").valueAsDate = today;
-            document.getElementById("endDt").valueAsDate = new Date();
+            document.getElementById("endDt").valueAsDate = new Date();*/
 
 
             $(document).click(function(){
@@ -715,6 +715,20 @@
 			return str;
 		}
 
+
+
+        function initDateTimePicker(sid,eid){
+            $('#'+sid).datetimepicker({
+                format: 'YYYY-MM-DD',
+                locale: 'ko',
+                defaultDate: moment().subtract(7, 'days')
+            });
+            $('#'+eid).datetimepicker({
+                format: 'YYYY-MM-DD',
+                locale: 'ko',
+                defaultDate: moment(new Date())
+            });
+        }
         function getSelectedCodeData(codeType, data) {
             var str = '';
             var val = '';
@@ -861,7 +875,7 @@
 					<h3 class="mat16"><s:message code="message.msg.deepsearch"/></h3>
 					<div>
 
-						<input class="w45 mat8 txt_center" type="date" id="startDt"  value="2023-11-20"><span class="w10 dis_inlineblock txt_center">~</span><input class="w45 txt_center" type="date" id="endDt"  value="2023-11-30">
+						<input class="w45 mat8 txt_center" type="text" id="startDt" ><span class="w10 dis_inlineblock txt_center">~</span><input class="w45 txt_center" type="text" id="endDt" >
 
 
 						<select id="busiSelect" class="w100 mat8" data-style="btn-default btn-sm" multiple data-show-subtext="true"
