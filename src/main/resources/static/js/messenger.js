@@ -78,8 +78,8 @@ var eikon = {
     },
     getMessengerList: function (page) {
         var searchType = $('button[name=searchType].active').val();
-        $('#startsubdatepicker').data("DateTimePicker").date($('#startdatepicker').data("DateTimePicker").date());
-        $('#endsubdatepicker').data("DateTimePicker").date($('#enddatepicker').data("DateTimePicker").date());
+        $('#startSubDt').val($('#startDt').val());
+        $('#endSubDt').val($('#endDt').val());
         if (searchType == "G") {
             getMessengerGroupList(page);
         } else if (searchType == "GD") {
@@ -432,8 +432,8 @@ function getMessengerMessagePrev(xRootmtr, srcip, usr_id, msgid) {
         url: 'getMessengerMessagePrev.xcn',
         xRootMtr: xRootmtr,
         srcip: srcip,
-        startDt: startDt,
-        endDt: endDt,
+        startDt: startDt+"000000",
+        endDt: endDt+"235959",
         usr_id: usr_id,
         msgId: msgid,
         limit: detailLimit,
@@ -846,11 +846,12 @@ function makeList2(nextFlag) {
             str += '<span>' + attachnameArray[0] + '<br/>';
             str += attachsizeArray[0] + 'KB</span>';
             str += '<button class="btnchatdown downlodadBtn"></button></p>';
-            if(obj.body_snippet==null || nvl( obj.body_snippet,'')=='') {
-                let snippet = obj.body_snippet.replaceAll('\n', '<br/>');
+            let snippet = '';
+            if (obj.body_snippet != null && obj.body_snippet !== '') {
+                snippet = obj.body_snippet.replaceAll('\n', '<br/>');
                 str += "<hr style='border: 1px solid #ddd;'>";
-                str += snippet;
             }
+            str += snippet;
         } else {
             if (obj.body_snippet != undefined) str += '' + obj.body_snippet.replaceAll('\n', '<br/>') + '';
         }
@@ -916,11 +917,13 @@ function makeList(nextFlag) {
             str += '<span>' + attachnameArray[0] + '<br/>';
             str += attachsizeArray[0] + 'KB</span>';
             str += '<button class="btnchatdown downlodadBtn"></button></p>';
-            if(obj.body_snippet==null || nvl( obj.body_snippet,'')=='') {
-                let snippet = obj.body_snippet.replaceAll('\n', '<br/>');
+            let snippet = '';
+            if (obj.body_snippet != null && obj.body_snippet !== '') {
+                console.log("zz: "+obj.body_snippet)
+                snippet = obj.body_snippet.replaceAll('\n', '<br/>');
                 str += "<hr style='border: 1px solid #ddd;'>";
-                    str += snippet;
             }
+            str += snippet;
         } else {
             if (obj.body_snippet != undefined) str += '' + obj.body_snippet.replaceAll('\n', '<br/>') + '';
         }
@@ -976,11 +979,14 @@ function makePrevList() {
             str += '<span>' + attachnameArray[0] + '<br/>';
             str += attachsizeArray[0] + 'KB</span>';
             str += '<button class="btnchatdown downlodadBtn"></button></p>';
-            if(obj.body_snippet==null || nvl( obj.body_snippet,'')=='') {
-                let snippet = obj.body_snippet.replaceAll('\n', '<br/>');
+            let snippet = '';
+            console.log("2: "+obj.body_snippet);
+            if (obj.body_snippet != null && obj.body_snippet !== '') {
+
+                snippet = obj.body_snippet.replaceAll('\n', '<br/>');
                 str += "<hr style='border: 1px solid #ddd;'>";
-                str += snippet;
             }
+            str += snippet;
         } else {
             if (obj.body_snippet != undefined) str += '' + obj.body_snippet.replaceAll('\n', '<br/>') + '';
         }

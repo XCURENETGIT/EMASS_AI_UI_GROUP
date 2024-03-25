@@ -330,6 +330,11 @@ public class MessengerController {
 		SolrQuery nextQuery = getMessengerMsgNext(request, msgId, false);
 		MessengerEdcGroupVO result = solrEdcService.getMessengerGroupList(nextQuery, Common.getAdminId(request), true, false);
 
+		for (int i = 0; i<result.getGroups().size(); i++){ //내용 minio 통해 가져오기
+			EmsBodyVO emsBodyVO = emsMessageService.getEmassBody(result.getGroups().get(i).getMsgid(),Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
+			String body = emsMessageController.getBodyStr("",emsBodyVO );
+			result.getGroups().get(i).setBody_snippet(body);
+		}
 		return new XcnResponseVO(XcnRspCode.OK, result);
 	}
 
@@ -341,7 +346,11 @@ public class MessengerController {
 		String msgId = Common.nvl(param.get("msgId"));
 		SolrQuery prevQuery = getMessengerMsgPrev(request, msgId, false);
 		MessengerEdcGroupVO result = solrEdcService.getMessengerGroupList(prevQuery, Common.getAdminId(request), true, false);
-
+		for (int i = 0; i<result.getGroups().size(); i++){ //내용 minio 통해 가져오기
+			EmsBodyVO emsBodyVO = emsMessageService.getEmassBody(result.getGroups().get(i).getMsgid(),Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
+			String body = emsMessageController.getBodyStr("",emsBodyVO );
+			result.getGroups().get(i).setBody_snippet(body);
+		}
 		return new XcnResponseVO(XcnRspCode.OK, result);
 	}
 
