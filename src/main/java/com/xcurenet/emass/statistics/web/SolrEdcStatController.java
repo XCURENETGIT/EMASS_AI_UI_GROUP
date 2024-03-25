@@ -483,30 +483,13 @@ public class SolrEdcStatController {
 		String adminId = Common.nvl(request.getParameter("adminId"));
 		if (Common.isEmpty(adminId)) adminId = "*";
 
-		String Yflag = "Y";
-		if (!rowKey.isEmpty()) {
-			String[] t = rowKey.split(",");
-			if (t.length > 0) {
-				String values = "";
-				for (String value : t) {
-					if (!value.equals(" ")) values += "(" + value.replaceAll("시", "") +")";
-				}
-				if (Yflag.equals("N")) {
-					yAxis = "svc12";
-				}
-				query += "+" + yAxis + ":" + "(" + values + ") ";
-			} else {
-				if (rowKey.contains(",")) {
-					rowKey = rowKey.replaceAll(",", "");
-					query += "+" + yAxis + ":" + "\"" + rowKey.replaceAll(",", "") + "\" ";
-				} else {
-					query += "+" + yAxis + ":" + rowKey + " ";
-				}
-			}
+
+		if (!colKey.isEmpty()) {
+			query += "+" + xAxis + ":" + "\"" + colKey + "\" ";
 		}
 
 
-		if (Common.isEquals(dateType,"date"))query += String.format(" +checked.readTime:[%s TO %s]", startDate, endDate);
+		if (Common.isEquals(dateType,"date")) query += String.format(" +checked.readTime:[%s TO %s]", startDate, endDate);
 		else query +=String.format(" +ctime:[%s TO %s]", startDate, endDate);
 
 		query += String.format("+checked.readId:%s", adminId);

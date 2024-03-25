@@ -541,12 +541,18 @@
         grid1.on();
         grid1.pageSize=5000
         var xAxis = $('select[name=xAxis]').val();
+
+        var baseType = $("#baseType").val();
+        var timeValue = '';
+        if (baseType == "ctime")  timeValue = 'ctime'+xAxis;
+        else  timeValue = 'checked.readTime'+xAxis;
+
         ui.get({
             url: 'getCheckedStatList.xcn',
             startDate: sDate + "000000",
             endDate: eDate + "235959",
             detailQuery: '',
-            xAxis: 'ctime' + xAxis,
+            xAxis:  timeValue,
             yAxis: 'ctime' + xAxis,
             dateType: dateType,
             adminId: adminId,
@@ -643,11 +649,16 @@
 
         var baseType = $("#baseType").val();
         var solrQueryText = "";
+        var timeValue = '';
         if (baseType == "ctime") {
             solrQueryText = $('#solrQueryText').val();
-        }
+            if (baseType == "ctime")  timeValue = 'ctime'+xAxis;
+        } else  timeValue = 'checked.readTime'+xAxis;
         searchFlag = true;
         currentgrid.on();
+
+
+
         ui.get({
             url: 'getStatCheckedDetailList.xcn',
             rowKey: rowKey,
@@ -655,7 +666,7 @@
             startDate: $('#startdate').val().replaceAll("-", "") + "000000",
             endDate: $('#enddate').val().replaceAll("-", "") + "235959",
             detailQuery: solrQueryText,
-            xAxis: 'ctime' + xAxis,
+            xAxis:  timeValue,
             xAxis_str: xAxis_str,
             yAxis: 'ctime' + xAxis,
             dateType: baseType,
