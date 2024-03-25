@@ -504,16 +504,23 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		List<String> pivots = Common.toList(sq.get("facet.pivot"), ",");
 		if (pivots.size() > 1) {
 			//f."+yAxis+".facet.limit
+			Iterator iter =  pivots.iterator();
 			AbstractAggregationBuilder<TermsAggregationBuilder> termsAggregation = AggregationBuilders.terms(pivots.get(0))
-					.field(pivots.get(0))
+					.field(String.valueOf(iter.next()))
 					.order(BucketOrder.count(false))
 					.size(maxCount(Common.nvz(sq.get("f." + pivots.get(0) + ".facet.limit"))))
-					.minDocCount(Common.nvz(sq.getFacetMinCount(), 1))
-					.subAggregation(AggregationBuilders.terms(pivots.get(1))
-							.field(pivots.get(1))
-							.size(maxCount(Common.nvz(sq.get("f." + pivots.get(1) + ".facet.limit"))))
-							.minDocCount(Common.nvz(sq.getFacetMinCount(), 1)));
+					.minDocCount(Common.nvz(sq.getFacetMinCount(), 1));
+
+			while(iter.hasNext()) {
+				String aggsField = String.valueOf(iter.next());
+				termsAggregation.subAggregation(AggregationBuilders.terms(aggsField)
+						.field(aggsField)
+						.size(maxCount(Common.nvz(sq.get("f." +aggsField + ".facet.limit"))))
+						.minDocCount(Common.nvz(sq.getFacetMinCount(), 1)));
+			}
 			aggregations.add(termsAggregation);
+
+
 		}
 		return aggregations;
 	}
