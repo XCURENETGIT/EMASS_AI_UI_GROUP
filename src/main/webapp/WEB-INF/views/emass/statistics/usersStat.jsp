@@ -49,6 +49,7 @@
 
     $(document).ready(function(){
         getServiceList();
+        initDateTimePicker('startdate','enddate');
 
         initCondition();
         $('.optionBtn').click(function () {
@@ -325,14 +326,14 @@
     }
 </script>
 <div>
-	<div class="searchArea w100">
+	<div class="container searchArea w100">
 		<div class="searchSub w100">
 			<div>
-				<input type="date" id="startdate" style="width: 110px;"/>
+				<input type="text"  id="startdate"  style="width: 110px;"/>
 				<span class="hyphen">~</span>
 			</div>
 			<div>
-				<input type="date" id="enddate" style="width: 110px;"/>
+				<input type="text" id="enddate" style="width: 110px;"/>
 			</div>
 
 			<div class="optiotab">
