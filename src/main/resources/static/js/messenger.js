@@ -67,7 +67,7 @@ var eikon = {
 
             } else {
                 // var msgid = $('.timeline').children().first().attr('id');
-                var firstData = $('.timeline').children().filter(':eq(0)');
+                var firstData = $('.timeline').children().filter(':eq(1)');
                 var msgid = $(firstData).attr('id');
                 getMessengerMessagePrev(xrootmtr, srcip, usr_id, msgid);
 
