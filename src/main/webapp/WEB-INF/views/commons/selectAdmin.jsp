@@ -220,7 +220,7 @@
 			<div class="grayBg mat8 popupInner">
 				<div class="txt_right">
 					<button class="form_btn03" accesskey="Y" id="selectBtn"><s:message code="common.msg.select"/></button>
-					<button class="form_btn04" accesskey="N" id="noSelectBtn"><s:message code="selectCodeAll.noselect"/></button>
+					<button class="form_btn04" accesskey="N" id="closeSelectBtn"><s:message code="selectCodeAll.noselect"/></button>
 				</div>
 			</div>
 			<!-- 테이블 -->
