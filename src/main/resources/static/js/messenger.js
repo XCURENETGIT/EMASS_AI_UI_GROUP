@@ -181,7 +181,7 @@ var eikon = {
         condition.searchStr = searchStr;
         condition.startDt = startDt;
         condition.endDt = endDt;
-        condition.searchField = 'body_snippet attachname attachname_str attach';
+        // condition.searchField = 'body_snippet attachname attachname_str attach';
         conArray.push(condition);
         filterVal.conditions = conArray;
 
