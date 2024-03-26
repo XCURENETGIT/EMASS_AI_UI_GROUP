@@ -970,60 +970,6 @@ public class CollectionController {
 		return getXlsxHeader(key, title, width, align, null);
 	}
 
-	private void xlsxExport(String xRootMtr, MessengerEdcGroupVO groups, OutputStream out, boolean link, Locale locale) throws Exception {
-		JSONArray header = new JSONArray();
-		header.add(getXlsxHeader("sender", Prop.propFormat("eikon.msg.sender", locale), "130", "center"));
-		header.add(getXlsxHeader("ctime", Prop.propFormat("eikon.msg.send.time"), "130", "center"));
-		header.add(getXlsxHeader("content", Prop.propFormat("eikon.msg.chatContents", locale), "750", "left", "LINK"));
-
-		JSONArray data = new JSONArray();
-		List<MessengerGroupVO> list = groups.getGroups();
-		if (list != null) {
-			for (int i = list.size() - 1; i >= 0; i--) {
-				MessengerGroupVO item = list.get(i);
-				JSONObject dataObj = new JSONObject();
-				dataObj.put("sender", item.getUser());
-				dataObj.put("ctime", item.getCtime());
-				dataObj.put("svc", Config.getServiceNm(item.getSvc()));
-				dataObj.put("content", item.getMessage());
-				if (link && Common.isEquals(item.getAttached(), "Y")) {
-					dataObj.put("content_LINK", Common.makeFilepath("attachs", item.getMsgid()));
-				}
-				data.add(dataObj);
-			}
-		}
-		XLSXWriter xlsx = new XLSXWriter(Prop.propFormat("eikon.msg.export.chat", locale) + " : " + xRootMtr, header, data, out);
-		xlsx.execute();
-	}
-
-	public String getFileName(String xRootMtr, MessengerGroupUserVO users, Locale locale) {
-		String fileName = Common.EMPTY;
-		List<String> groupUsers = new ArrayList<>();
-		if (users != null) {
-			for (SolrEdcVO user : users.getGroups()) {
-				String name = Common.nvl(user.getSname());
-				String usr_id = Common.nvl(user.getUsr_id());
-				String srcip = Common.nvl(user.getSrcip());
-
-				if (Common.isEmpty(name)) {
-					if (Common.isNotEmpty(usr_id)) name = usr_id;
-					else if (Common.isNotEmpty(srcip)) name = srcip;
-					else name = Common.nvl(user.getUser());
-				} else {
-					if (Common.isNotEmpty(usr_id)) name += " (" + usr_id + ")";
-					if (Common.isNotEmpty(srcip)) name += " (" + srcip + ")";
-				}
-
-
-				if (groupUsers.size() <= 2) groupUsers.add(name);
-				else break;
-			}
-			fileName = Common.join(groupUsers, ",") + String.format(" (Total %s" + Prop.propFormat("eikon.msg.person", locale) + ")", users.getGroups().size());
-			fileName = fileName.replaceAll("[\\\\/:*?\"<>|]", "");
-		}
-		if (Common.isEmpty(fileName)) fileName = xRootMtr;
-		return fileName;
-	}
 
 
 	@RequestMapping(value = "/getCollectionGroupAllExport.xcn")

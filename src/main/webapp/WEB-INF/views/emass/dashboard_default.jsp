@@ -1347,7 +1347,7 @@
 <%--				<div class="bordd"  style="display: flex;justify-content: center; align-items: center">--%>
 				<div class="bordd" style=" min-width: 400px; box-sizing: border-box; width: 100%">
 					<div class="main_tab">
-						<button class="tablink excel" onclick="openCity('xlsx', this, '#268770')" id="defaultOpen">EXEL</button>
+						<button class="tablink excel" onclick="openCity('xlsx', this, '#268770')" id="defaultOpen">EXCEL</button>
 						<button class="tablink word" onclick="openCity('doc', this, '#3770C3')">DOC</button>
 						<button class="tablink pdf" onclick="openCity('pdf', this, '#E7443A')">PDF</button>
 						<button class="tablink jpg" onclick="openCity('jpg', this, '#9A52D2')">JPG</button>
