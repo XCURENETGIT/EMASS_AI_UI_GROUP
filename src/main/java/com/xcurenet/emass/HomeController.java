@@ -929,7 +929,7 @@ public class HomeController {
 	@RequestMapping(value = "/commons/selectAdmin.do")
 	@Description("Admin 선택 페이지")
 	public String selectAdmin(Locale locale, Model model) {
-		return "/commons/selectAdmin";
+		return "/commons/selectAdmin.popup";
 	}
 
 	@RequestMapping(value = "/commons/xcnLog.do", method = RequestMethod.GET)
