@@ -146,7 +146,8 @@
             $('.savePopBtn').click(function () {
                 var mode = $('#holidayPop').attr('mode');
 
-                var date = $('#date').val().ltrim().rtrim();
+                var date = $('#startdate').val().ltrim().rtrim();
+                console.log(date);
                 var comment = $('#comment').val().ltrim().rtrim();
                 var busiCd = $('#busiCd option:selected').val();
                 if (date == '') {

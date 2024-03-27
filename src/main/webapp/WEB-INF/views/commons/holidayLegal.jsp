@@ -35,7 +35,7 @@
             $('.savePopBtn').click(function () {
                 var mode = $('#holidayPop').attr('mode');
 
-                var date = $('#date').val().ltrim().rtrim();
+                var date = $('#startdate').val().ltrim().rtrim();
                 var comment = $('#comment').val().ltrim().rtrim();
                 if (date == '') {
                     ui.alertMsg('<s:message code="holidayBusiness.msg.enter.date"/>');
