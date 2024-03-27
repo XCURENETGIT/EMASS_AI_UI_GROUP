@@ -6,6 +6,10 @@
 	td.day,.dow,.picker-switch,.prev,.next{
 		color:#333333 !important;
 	}
+	.chatList .chatBox .bubble {
+		margin-top: 0px;
+	}
+
 
 	pre{
 		background-color: transparent; !important;
