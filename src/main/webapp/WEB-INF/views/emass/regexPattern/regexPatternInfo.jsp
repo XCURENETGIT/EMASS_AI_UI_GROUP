@@ -178,6 +178,12 @@
 						</div>
 					</div>
 				</div>
+				<div class="info">
+					<s:message code="common.guidance"/>
+					<br>
+					<s:message code="regex.Pattern.ex"/>
+<%--					<s:message code="filterInfo.msg.ip.add"/>--%>
+				</div>
 				<div class="modalfooter">
 					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message
 							code="common.msg.close"/></button>
