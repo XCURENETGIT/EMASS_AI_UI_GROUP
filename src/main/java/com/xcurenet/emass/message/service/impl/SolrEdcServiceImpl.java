@@ -47,6 +47,7 @@ import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
+import org.springframework.data.elasticsearch.core.query.FetchSourceFilter;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.data.elasticsearch.core.query.UpdateQuery;
@@ -245,9 +246,8 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		int range = Math.round((rows + offset) / rows); // for문 횟수
 
 
-
 		Query searchQuery = new NativeSearchQueryBuilder()
-				.withFields(Common.toArray(sq.getFields(), ","))
+				.withSourceFilter(new FetchSourceFilter( Common.toArray(sq.getFields(), ","),new String[]{"body","attach"}))
 				.withQuery(complateQuery)
 				.withAggregations(getAggregations(sq))
 				.withAggregations(getAggregationsByPivot(sq))
