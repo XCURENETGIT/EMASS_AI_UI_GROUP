@@ -15,6 +15,22 @@
 	}
 
 
+	.filename{
+		display: block;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		max-width: 20em !important;
+	}
+
+	.name{
+		display: block;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		max-width: 15em !important;
+	}
+
 	.files :hover {
 		cursor: pointer;
 		text-decoration: underline;
@@ -578,7 +594,7 @@
                 if(editMode == 'Y') {
                     if (fileTopDataSettingVal == 'Y') {
                         $('#dashboardInfo2').show();
-                        $('#dashboardInfo2').css('margin-top', '200px');
+                        // $('#dashboardInfo2').css('margin-top', '200px');
                         $('#dashboardArea').css('top', '-10px');
                         $('#emptyDiv').hide();
                         getFileTopData();
@@ -589,12 +605,11 @@
                 }else {
                     if (fileTopDataSettingVal == 'Y') {
                         $('#dashboardInfo2').show();
-                        $('#dashboardInfo2').css('margin-top', '200px');
+                        // $('#dashboardInfo2').css('margin-top', '200px');
                         $('#dashboardArea').css('top', '-10px');
                         $('#emptyDiv').hide();
                         getFileTopData();
                     } else {
-                        console.log("22");
                         $('#dashboardInfo2').hide();
                         if (listCnt == 0 && loggingDataSettingVal != 'Y') $('#emptyDiv').show();
                     }
