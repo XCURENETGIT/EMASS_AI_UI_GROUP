@@ -199,15 +199,29 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		/* 수,발신자 조회시 */
 		BoolQueryBuilder existsQueryBuilder = QueryBuilders.boolQuery();
 		if(!Common.isEmpty(sq.get("q"))){
-			if(sq.get("q").contains("sname") ) existsQueryBuilder.should(QueryBuilders.existsQuery("sname"));
-			if(sq.get("q").contains("tname") ) existsQueryBuilder.should(QueryBuilders.existsQuery("tname"));
-			if(sq.get("q").contains("cname") ) existsQueryBuilder.should(QueryBuilders.existsQuery("cname"));
-			if(sq.get("q").contains("bname") ) existsQueryBuilder.should(QueryBuilders.existsQuery("bname"));
+			if(sq.get("q").contains("sname") ) {
+				existsQueryBuilder.should(QueryBuilders.existsQuery("sname"));
+				existsQueryBuilder.should(QueryBuilders.existsQuery("srcip"));
+			}
+			if(sq.get("q").contains("tname") ) {
+				existsQueryBuilder.should(QueryBuilders.existsQuery("tname"));
+				existsQueryBuilder.should(QueryBuilders.existsQuery("dstip"));
+			}
+			if(sq.get("q").contains("cname") ) {
+				existsQueryBuilder.should(QueryBuilders.existsQuery("cname"));
+				existsQueryBuilder.should(QueryBuilders.existsQuery("dstip"));
+			}
+			if(sq.get("q").contains("bname") ) {
+				existsQueryBuilder.should(QueryBuilders.existsQuery("bname"));
+				existsQueryBuilder.should(QueryBuilders.existsQuery("dstip"));
+			}
 			if(sq.get("q").contains("userid") ) {
 				existsQueryBuilder.should(QueryBuilders.existsQuery("sname"));
 				existsQueryBuilder.should(QueryBuilders.existsQuery("tname"));
 				existsQueryBuilder.should(QueryBuilders.existsQuery("cname"));
 				existsQueryBuilder.should(QueryBuilders.existsQuery("bname"));
+				existsQueryBuilder.should(QueryBuilders.existsQuery("srcip"));
+				existsQueryBuilder.should(QueryBuilders.existsQuery("dstip"));
 			}
 			complateQuery.should(existsQueryBuilder).minimumShouldMatch(1);
 		}
