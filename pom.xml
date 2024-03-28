@@ -13,7 +13,7 @@
 
 	<groupId>com.xcurenet</groupId>
 	<artifactId>emassai</artifactId>
-	<version>1.0.23</version>
+	<version>1.0.24</version>
 	<name>emassai</name>
 	<description>EMASS AI</description>
 
@@ -23,7 +23,7 @@
 
 		<java.version>11</java.version>
 
-		<release.version>17</release.version>
+		<release.version>18</release.version>
 		<build.version>${project.version}-${release.version}</build.version>
 		<arch>x86_64</arch>
 
