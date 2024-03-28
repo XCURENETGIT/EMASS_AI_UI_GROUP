@@ -941,7 +941,7 @@
 		<%--			검색 영역--%>
 		<div class="leftSearch p20" id="xcn_Search">
 			<div class="leftSearchTab mat8">
-				<button class="active" onclick="openCity('Tab01')">메시지 검색</button>
+				<button class="active" onclick="openCity('Tab01')"><s:message code="DATA_MONITOR.NOTE_SERVICE"/></button>
 				<!--<button onclick="openCity('Tab02')">탭 비활성</button>-->
 			</div>
 			<div id="Tab01">

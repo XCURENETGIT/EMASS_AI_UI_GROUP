@@ -1142,7 +1142,7 @@
             } else if (dat == 'person') {
                 dashCondition.regexpYn = "Y";
                 dashCondition.regexpVal = "MN%L@1|CN%L@1|AN%L@1|SN%L@1|CRN%L@1|DN%L@1|FN%L@1|PN%L@1|SSN%L@1|BRN%L@1|CPN%L@1|MCN%L@1";
-                dashCondition.regexpStr = "휴대전화번호(1건 이상),카드번호(1건 이상),주소(1건 이상),주민번호(1건 이상),자동차 등록 번호(1건 이상),운전면호 번호(1건 이상),외국인 등록번호(1건 이상),여권번호(1건 이상),사회 보장번호(1건 이상),사업자 등록번호(1건 이상), 법인 등록번호(1건 이상),MAC 주소(1건 이상)";
+                dashCondition.regexpStr = "휴대전화번호(1건 이상),카드번호(1건 이상),주소(1건 이상),주민번호(1건 이상),자동차 등록 번호(1건 이상),운전면허 번호(1건 이상),외국인 등록번호(1건 이상),여권번호(1건 이상),사회 보장번호(1건 이상),사업자 등록번호(1건 이상), 법인 등록번호(1건 이상),MAC 주소(1건 이상)";
             } else if (dat == 'passport') {
                 dashCondition.regexpYn = "Y";
                 dashCondition.regexpVal = "PN%L@1"

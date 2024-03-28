@@ -543,6 +543,7 @@
         } else {
             var xAxis = $('button.optionBtn.active').val();
             if (xAxis == "ctime_hh") colKeyNm = colKey + '<s:message code="common.msg.hour"/>';
+            if(xAxis == "svc1") colKeyNm =serviceList.search(colKeyNm, 'groupCd', 'groupNm');
         }
 
         tabID++;

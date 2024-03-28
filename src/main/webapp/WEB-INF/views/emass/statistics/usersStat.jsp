@@ -270,6 +270,7 @@
                 if ( (i+1) > chartcnt ) break;
                 var items = [];
                 for ( var j=1 ; j < cols.length ; j++ ) {
+				console.log(items);
                     if ( cols[j].id == 'total' || cols[j].id == 'NUM' || cols[j].id == 'rowKey' ) continue;
                     if ( grid1.data[i][cols[j].id] == undefined ) items.push(0);
                     else items.push( Number( grid1.data[i][cols[j].id] ) );
@@ -501,6 +502,7 @@
         } else {
             var xAxis =  $('button.optionBtn.active').val();
             if (xAxis == "ctime_hh") colKeyNm = colKey + '<s:message code="common.msg.hour"/>';
+            if(xAxis == "svc1") colKeyNm =serviceList.search(colKeyNm, 'groupCd', 'groupNm');
         }
 
         tabID++;
@@ -526,6 +528,7 @@
         $("#chartCntDiv").hide();
         $('#totalViewDiv').show();
         var dat = grid1.getRowData(grid1.Row);
+        console.log(dat);
         chartDat[tabID] = dat;
         printChart(dat);
         gridObj.loadExportMenu('<s:message code="stat.detail.user.list"/>');

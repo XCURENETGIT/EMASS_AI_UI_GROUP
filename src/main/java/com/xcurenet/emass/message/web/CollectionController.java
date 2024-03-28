@@ -1202,7 +1202,7 @@ public class CollectionController {
 					dataObj.put("sender", item.getUser());
 					dataObj.put("ctime", item.getCtime());
 					dataObj.put("svc", Config.getServiceNm(item.getSvc()));
-					dataObj.put("content", item.getMessage());
+					dataObj.put("content", item.getBody_snippet());
 					if (link && Common.isEquals(item.getAttached(), "Y")) {
 						dataObj.put("content_LINK", Common.makeFilepath("attachs", item.getMsgid()));
 					}
