@@ -406,7 +406,7 @@ h5 {position: relative; font-size:13px; font-weight: 600; color:#111;}
 .tabcontent ul li p {position: relative; display:inline-block; width:100%; text-align: left; color:#111; font-weight:500;  }
 .tabcontent ul li span {position: absolute; right:0; top:0;  color:#555; font-weight:300; }
 .tablink {
-	width: 110px;
+	width: 115px;
 	height:40px;
 	float: left;
 	border: none;

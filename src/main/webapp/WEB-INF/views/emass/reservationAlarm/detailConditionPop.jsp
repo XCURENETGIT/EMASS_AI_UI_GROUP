@@ -141,25 +141,35 @@
                 }
             });
 
-            $(document).on('mouseover', '.codeSelectedBtn', function (e) {
-                $('#selectedCodeTitle').show();
+            $(document).on('mouseover', '.codeSelectedBtn', function () {
+                var $selectedCodeTitle = $('#selectedCodeTitle');
+                var offset = $(this).offset();
 
-                $('#selectedCodeTitle').css('left', e.clientX + 10 + 'px');
-                $('#selectedCodeTitle').css('top', e.clientY - 30 + 'px');
+                $selectedCodeTitle.show();
 
-                var str = $(this).parent().find('.selectedTitle').val();
-                if (str != undefined) str = str.replaceAll('\\|', ',');
-                $('#selectedCodeTitle').html(str);
-            });
-
-            $(document).on('mousemove', '.codeSelectedBtn', function (e) {
-                $('#selectedCodeTitle').css('left', e.clientX + 10 + 'px');
-                $('#selectedCodeTitle').css('top', e.clientY - 30 + 'px');
+                $selectedCodeTitle.css('left', offset.left + 10 + 'px');
+                $selectedCodeTitle.css('top', offset.top + $(this).outerHeight() + 'px');
 
                 var str = $(this).parent().find('.selectedTitle').val();
-                if (str != undefined) str = str.replaceAll('\\|', ',');
-                $('#selectedCodeTitle').html(str);
+                if (str !== undefined) str = str.replaceAll('\\|', ',');
+                $selectedCodeTitle.html(str);
             });
+
+            $(document).on('mouseover', '.codeSelectedBtn', function () {
+                var $selectedCodeTitle = $('#selectedCodeTitle');
+                var offset = $(this).offset();
+
+                $selectedCodeTitle.show();
+
+                $selectedCodeTitle.css('left', offset.left + 10 + 'px'); // 필요한 경우 좌표 조정
+                $selectedCodeTitle.css('top', offset.top + $(this).outerHeight() + 'px'); // 요소 높이만큼 아래에 위치
+
+                var str = $(this).parent().find('.selectedTitle').val();
+                if (str !== undefined) str = str.replaceAll('\\|', ',');
+                $selectedCodeTitle.html(str);
+            });
+
+
             $(document).on('mouseout', '.codeSelectedBtn', function (e) {
                 $('#selectedCodeTitle').hide();
             });
