@@ -348,6 +348,7 @@
                     data.push({name:getClassStr(grid1.data[i]['rowKey']), data:items});
                 } else {
                     if(grid1.data[i]['NUM'] == '<s:message code="bodyview.total"/>') continue;
+                    if (grid1.data[i].NUM == "Total") continue;
                     if (typeof grid1.data[i]['rowKey'] === 'undefined') continue;
                     else if(grid1.data[i].rowKey.length == '3') {
                         data.push({name:grid1.data[i]['svcLv12Nm'], data:items});

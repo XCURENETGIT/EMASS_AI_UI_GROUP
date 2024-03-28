@@ -297,6 +297,7 @@
                     if ( i == 0 ) categories.push( cols[j].name );
                     if(Number( grid1.data[i][cols[j].id] ) > maxDat) maxDat = Number( grid1.data[i][cols[j].id] );
                 }
+                if (grid1.data[i].NUM == "Total") continue;
                 if(grid1.data[i]['NUM'] == '<s:message code="bodyview.total"/>') continue;
                 else data.push({name:grid1.data[i]['rowKey'], data:items});
             }
@@ -313,6 +314,7 @@
                 if(Number( dat[cols[j].id] ) > maxDat) maxDat = Number( dat[cols[j].id] );
             }
             if(dat['NUM'] == '<s:message code="bodyview.total"/>') return;
+
             else data.push({name:dat['rowKey'], data:items});
         }
 

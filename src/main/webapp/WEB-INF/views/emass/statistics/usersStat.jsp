@@ -266,20 +266,23 @@
         var cols = grid1.columns;
         var maxDat = 0;
         if( dat == undefined ) {
-            for ( var i=0 ; i < grid1.data.length ; i++ ) {
-                if ( (i+1) > chartcnt ) break;
+
+            for (var i = 0; i < grid1.data.length; i++) {
+                if ((i + 1) > chartcnt ) break;
                 var items = [];
-                for ( var j=1 ; j < cols.length ; j++ ) {
-				console.log(items);
-                    if ( cols[j].id == 'total' || cols[j].id == 'NUM' || cols[j].id == 'rowKey' ) continue;
-                    if ( grid1.data[i][cols[j].id] == undefined ) items.push(0);
-                    else items.push( Number( grid1.data[i][cols[j].id] ) );
-                    if ( i == 0 ) categories.push( cols[j].name );
-                    if(Number( grid1.data[i][cols[j].id] ) > maxDat) maxDat = Number( grid1.data[i][cols[j].id] );
+                for (var j = 1; j < cols.length; j++) {
+                    if (cols[j].id == 'total' || cols[j].id == 'NUM' || cols[j].id == 'rowKey') continue;
+                    if (grid1.data[i][cols[j].id] == undefined) items.push(0);
+                    else items.push(Number(grid1.data[i][cols[j].id]));
+                    if (i == 0) categories.push(cols[j].name);
+                    if (Number(grid1.data[i][cols[j].id]) > maxDat) maxDat = Number(grid1.data[i][cols[j].id]);
                 }
-                if(grid1.data[i]['NUM'] == '<s:message code="bodyview.total"/>') continue;
-                else data.push({name:grid1.data[i]['rowKey'], data:items});
+                if (grid1.data[i]['NUM'] == '<s:message code="bodyview.total"/>') continue;
+                if ((grid1.data[i].NUM == "Total")) continue;
+                else data.push({name: grid1.data[i]['rowKey'], data: items});
             }
+
+
         } else {
             var items = [];
             for ( var j=0 ; j < cols.length ; j++ ) {
@@ -298,6 +301,7 @@
 
         var rotation = 40;
         if ( chartxAxis == 'W' ) rotation = 0;
+
         $('#chartArea1').highcharts({
             title: {
                 text: null

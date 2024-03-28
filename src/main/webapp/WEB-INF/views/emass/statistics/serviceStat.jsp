@@ -246,6 +246,7 @@
                     if(Number( grid1.data[i][cols[j].id] ) > maxDat) maxDat = Number( grid1.data[i][cols[j].id] );
                 }
                 if(grid1.data[i]['NUM'] == '<s:message code="bodyview.total"/>') continue;
+                if (grid1.data[i].NUM == "Total") continue;
                 else data.push({name:grid1.data[i]['rowKey'], data:items});
             }
         } else {
