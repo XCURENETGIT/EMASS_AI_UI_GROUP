@@ -303,6 +303,7 @@
 
         function sendMail(){
             var userIdInput = $('#userIdInput').val().ltrim().rtrim();
+            var confirm='<s:message code="login.mail.confirmlast"/>';
 
             if(timeOut!=true){
                 ui.alertMsg('<s:message code="login.mail.notyet"/>');
@@ -310,7 +311,7 @@
             else {
                 confirmTimeOut();
                 // 버튼 텍스트 변경
-                $('#confirmBtn').text('확인하기');
+                $('#confirmBtn').text(confirm);
                 $('#confirmBtn').attr('onclick', 'confirmNumber()');
 
                 ui.get({
@@ -336,8 +337,9 @@
 
             var userIdInput = $('#userIdInput').val().ltrim().rtrim();
             var number1 = $("#number_confirm").val().ltrim().rtrim();
+            var confirm='<s:message code="login.mail.authenticate"/>';
             if (!number1.trim()) {
-                alert("입력 후 확인을 눌러주세요.");
+                ui.alertMsg('<s:message code="login.mail.nodata"/>');
                 return;
             }
 
@@ -350,19 +352,20 @@
                     $("#unusePop").modal('hide');
                     $('#unusetime').css("display", "none");
                     $('#number').val('');
-                    alert("잠금이 해제되었습니다. 다시 로그인하세요");
+                    ui.alertMsg('<s:message code="login.mail.lock"/>');
                     $('#confirmBtn').attr('class', 'form_btn01_02');
                     $('#confirmBtn').attr('onclick', 'sendMail()');
                     $('#number_confirm').html('');
-                    $('#confirmBtn').text('인증하기');
+                    $('#confirmBtn').text(confirm);
                 },
                 error: function (data,message){
-                    alert("코드 입력이 잘못되었습니다");
+                    ui.alertMsg('<s:message code="login.mail.wrong"/>');
                 }
             });
         }
 
         function confirmTimeOut() {
+            var confirm='<s:message code="login.mail.send"/>';
             timeOut = false;
             var t = (90000 / 1000) - 1;
             var numberConfirmInput = document.getElementById('number_confirm');
@@ -375,7 +378,6 @@
             displayText.style.color = 'red';
             displayText.style.fontSize = 'small';
 
-            // 수정된 부분: number_confirm의 부모에 displayText 추가 대신 number_confirm에 직접 추가
             numberConfirmInput.parentElement.appendChild(displayText);
 
             var countdownInterval = setInterval(function () {
@@ -398,7 +400,7 @@
                         $('#confirmBtn').attr('class', 'form_btn01_02');
                         $('#confirmBtn').attr('onclick', 'sendMail()');
                         $('#number_confirm').html('');
-                        $('#confirmBtn').text('인증하기');
+                        $('#confirmBtn').text(confirm);
                     }
                 });
             }, 90000);

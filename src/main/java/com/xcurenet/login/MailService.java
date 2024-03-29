@@ -1,6 +1,7 @@
 package com.xcurenet.login;
 
 import com.xcurenet.common.util.config.Config;
+import com.xcurenet.common.util.locale.Prop;
 import com.xcurenet.config.service.ConfigService;
 import com.xcurenet.config.service.ConfigVO;
 import lombok.RequiredArgsConstructor;
@@ -34,16 +35,14 @@ public class MailService {
 		try {
 			message.setFrom(senderEmail);
 			message.setRecipients(MimeMessage.RecipientType.TO, mail);
-			message.setSubject("[EMASS AI] 운용자 계정 잠금해제 이메일 인증");
+			message.setSubject("[EMASS AI] "+ Prop.propFormat("setup.long.term.unusedTitle"));
 			String body = "";
-			body += "<h3>" + "운용자 계정 잠금해제 이메일 인증" + "</h3>";
+			body += "<h3>" + Prop.propFormat("setup.long.term.unusedTitle") + "</h3>";
 			body += "<div style='border-radius: 0.125rem; background-color: #f7f7f9; padding: 40px'";
-			body+= "<p style=\"margin: 0; text-align: center; font-size: 18px; color: #758592;\">인증 코드</p>";
+			body+= "<p style=\"margin: 0; text-align: center; font-size: 18px; color: #758592;\">"+ Prop.propFormat("setup.long.term.code")+"</p>";
 			body += "<h1>" + number + "</h1>";
 			body += "</div>";
-			body += "<div>" + "안녕하세요, EMASS AI 입니다!\n" +
-					"인증 코드를 입력하여 이메일 주소를 인증해 주세요. " +
-					"인증 코드를 입력하는 데 문제가 있거나, 다른 문제가 발생하면 관리자에게 연락주시기 바랍니다." + "</div>";
+			body += "<div>" +Prop.propFormat("setup.long.term.unusedBody")+ "</div>";
 
 			message.setText(body,"UTF-8", "html");
 		} catch (MessagingException e) {

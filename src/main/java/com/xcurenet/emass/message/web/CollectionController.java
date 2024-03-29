@@ -140,7 +140,7 @@ public class CollectionController {
 		sq.setQuery(sq.getQuery()+query + " +attached:Y");
 		sq.setStart(Common.nvz(param.get("offset"), 0));
 		sq.setRows(Common.nvz(param.get("limit"), 100));
-		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "deptnm","businm", "jikgubnm", "usr_id");
+		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attachSizeStr","attachsize","attached", "attachname", "xrootmtr", "deptnm","businm", "jikgubnm", "usr_id");
 
 		SolrEdcMessageVO solrEdcGroupVO = solrEdcService.getEmassMessage(sq, Common.getAdminId(request));
 		return new XcnResponseVO(XcnRspCode.OK, solrEdcGroupVO, solrEdcGroupVO.getNumFound());
