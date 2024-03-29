@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 @Component
 public class EmsMessageConvert {
 
-
 	@Autowired
 	public UserService userService;
 	/*util mongo convert */

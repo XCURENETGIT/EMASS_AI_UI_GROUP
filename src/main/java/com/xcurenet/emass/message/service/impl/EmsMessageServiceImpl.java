@@ -17,6 +17,7 @@ import com.xcurenet.emass.message.service.*;
 import com.xcurenet.emass.message.service.vo.EmassKeywordData;
 import com.xcurenet.emass.message.service.vo.EmassMessageData;
 import com.xcurenet.emass.message.web.EmsAttachDownload;
+import com.xcurenet.gridfs.GridFs;
 import com.xcurenet.minio.MinioFileAdapter;
 import com.xcurenet.searchWord.service.RelationKeywordVO;
 import com.xcurenet.user.service.UserService;
@@ -43,6 +44,9 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 	public ConsentService consentService;
 
 	@Autowired
+	private GridFs gridFs;
+
+	@Autowired
 	public ConfigAdminService configAdminService;
 
 	@Autowired
@@ -59,6 +63,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 
 	@Autowired
 	private MongoUtil mongo;
+
 
 
 	String message_prefix = "EMS_MESSAGE_";
@@ -99,7 +104,8 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		bodyVo.setName(data.getName());
 		bodyVo.setCtime(data.getCtime());
 		bodyVo.setEpmsgType(data.getEpmsgType());
-		bodyVo.setBody((!Common.isEmpty(data.getBodyPath())) ? minioFileAdapter.open(data.getBodyPath()) : null);
+
+		bodyVo.setBody(gridFs.open(data.getMsgId()));
 		return bodyVo;
 	}
 
