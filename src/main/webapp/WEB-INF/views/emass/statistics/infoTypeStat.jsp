@@ -385,7 +385,6 @@
                 data.push({name:getClassStr(grid1.data[i]['rowKey']), data:items});
             } else {
                 if(dat['NUM'] == '<s:message code="bodyview.total"/>') return;
-                if (grid1.data[i].NUM == "Total") return;
                 else data.push({name:dat['svcLv12Nm'], data:items});
             }
         }
