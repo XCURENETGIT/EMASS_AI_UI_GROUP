@@ -669,6 +669,10 @@ function getBody(userCharset){
 		$('#headerBtn').prop('disabled', true);
 		$('#originalBtn').prop('disabled', true);
 		$('#usersInfoBtn').html('<span class="glyphicon glyphicon-user"></span>&nbsp;' + message.userinfo);
+	}else{
+		$('#headerBtn').prop('disabled', false);
+		$('#originalBtn').prop('disabled', false);
+		$('#usersInfoBtn').html(message.userinfo);
 	}
 	//$('#fromTr').show();
 	//$('#toTr').show();
