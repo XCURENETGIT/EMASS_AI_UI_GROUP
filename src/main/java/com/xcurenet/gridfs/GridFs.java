@@ -36,7 +36,8 @@ public class GridFs {
 	}
 
 	public InputStream read(final String msgId) throws IOException {
-		return GridFSBuckets.create(database, BUCKET_NAME + msgId.substring(0, 6)).openDownloadStream(new ObjectId(msgId));
+		String colName = msgId.substring(0, 6);
+		return GridFSBuckets.create(database, BUCKET_NAME + colName).openDownloadStream(new ObjectId(msgId));
 	}
 
 //	public boolean isEmpty(final String msgId) throws IOException {
