@@ -46,6 +46,7 @@ public class SolrCheckedServiceImpl implements SolrCheckedService {
 	@Resource
 	private KafkaProducerService kafkaProducerService; // kafka
 
+
 	@Override
 	public void setRead(final String msgId, final String adminId) {
 		if (Common.isEmpty(msgId) || Common.isEmpty(adminId)) return;
@@ -53,10 +54,7 @@ public class SolrCheckedServiceImpl implements SolrCheckedService {
 		Query query = new Query(Criteria.where("_id").is(msgId));
 		SolrCheckedVO vo = mongo.selectOne(query, SolrCheckedVO.class);
 
-
-		boolean mongoExist = false;
-
-
+		boolean isEmpty = true;
 		if (vo != null) {
 			List<SolrCheckedVO.SolrCheckedAttr> checkedList = vo.getChecked();
 			if (checkedList != null) {
@@ -64,7 +62,6 @@ public class SolrCheckedServiceImpl implements SolrCheckedService {
 				for (SolrCheckedVO.SolrCheckedAttr checked : checkedList) { //이미 등록된 운용자
 					if (checked.getReadId().equals(adminId)) {
 						isAlreadyId = adminId;
-						mongoExist = true;
 						break;
 					}
 				}
@@ -74,18 +71,21 @@ public class SolrCheckedServiceImpl implements SolrCheckedService {
 					if (!Common.isEmpty(solrEdcVO)) {
 						List<Map<String, Object>> checked = solrEdcVO.getChecked();
 						for (Map<String, Object> map : checked) {
-							if (Common.isEquals(adminId, map.get("readId"))) return;
+							if (Common.isEquals(adminId, map.get("readId"))) {
+							isEmpty = false;
+							break;
+							}
 						}
 					}
 				}
-
 			} else vo.setChecked(new ArrayList<>());
 		} else {
 			vo = new SolrCheckedVO();
 			vo.setMsgId(msgId);
 			vo.setChecked(new ArrayList<>());
 		}
-		if (!mongoExist) {
+
+		if (isEmpty) {
 			List<SolrCheckedVO.SolrCheckedAttr> checkedList = vo.getChecked();
 			SolrCheckedVO.SolrCheckedAttr attr = new SolrCheckedVO.SolrCheckedAttr();
 			attr.setReadId(adminId);
@@ -94,11 +94,9 @@ public class SolrCheckedServiceImpl implements SolrCheckedService {
 			vo.setChecked(checkedList);
 			log.info("checked : {}", vo);
 			mongo.save(vo);
+			String checkedTopic = "ems_ui_checked_index";
+			kafkaProducerService.send(checkedTopic, "_id", msgId);
 		}
-
-		String checkedTopic = "ems_ui_checked_index";
-		kafkaProducerService.send(checkedTopic, "_id", msgId);
-
 	}
 
 
