@@ -1495,6 +1495,7 @@ function rtnFileGroupList (data) {
             leftContent += "<span class='bar'></span><span class='name'>" + data[i].userkey + "</span>";
         }
 
+        leftContent += "<span class='bar'></span><span class='name'>" + data[i].attachsize + "KB</span></p>";
 
         leftDiv.innerHTML = leftContent;
         li.appendChild(leftDiv);
