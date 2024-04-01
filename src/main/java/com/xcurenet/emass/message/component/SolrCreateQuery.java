@@ -781,7 +781,7 @@ public class SolrCreateQuery {
 			String[] val = Common.toArray(svc[1], "@");
 			if( val[0].equals("B") ) result.append("[ " + val[1] + " TO " + val[2] + " ]");
 			else if( val[0].equals("L") ) result.append("[ " + val[1] + " TO * ]");
-			else result.append("[ * TO " + val[1] + " ]");
+			else result.append("[ 1 TO " + val[1] + " ]");
 
 			if (i != param.length - 1) result.append(SPACE);
 		}
