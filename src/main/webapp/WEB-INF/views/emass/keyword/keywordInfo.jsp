@@ -582,7 +582,7 @@ function fileExtCheck(obj){
 				 return "<input type='button' value='<s:message code="common.msg.modify"/>' class='table_btn01' style='line-height: 0px; color:white; height:20px; vertical-align: 1px; font-weight:bold;'/>";
 			});
 		}
-		gridGroup.loadExportMenu('<s:message code="keyword.msg.part_mgnt"/>');
+		gridGroup.loadExportMenu('<s:message code="DATA_MONITOR.KEYWORD_MGMT"/>');
 		gridGroup.loadHeader(false);
 		<%--//gridGroup.initData('<s:message code="common.msg.search.click"/>');--%>
 		
