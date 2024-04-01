@@ -215,7 +215,7 @@
     var grid1 = new Xgrid('basicStatListGrid', contextRoot);
     grid1.autoNumber();
     grid1.colAdd("rowKey", '<s:message code="common.msg.device"/>', 230, "left", false, 'link');
-    grid1.loadExportMenu('<s:message code="DATA_ANALYSIS.STAT_DEVTRAFFIC"/> [<s:message code="stat.traffic.tx"/> / <s:message code="stat.traffic.rx"/> ] : <s:message code="stat.traffic.unit"/>');
+    grid1.loadExportMenu('<s:message code="DATA_STAT.STAT_DEVTRAFFIC"/> [<s:message code="stat.traffic.tx"/> / <s:message code="stat.traffic.rx"/> ] : <s:message code="stat.traffic.unit"/>');
     grid1.loadHeader(false);
     grid1.initData('<s:message code="common.msg.search.click"/>');
     grid1.onClick = function () {

@@ -324,7 +324,7 @@ input[type="text"] {
 
 .section_menu .filter_icon_text {
 	position: relative;
-	top: 5px;
+	top: 10px;
 	display: inline-block;
 	margin-left: -1px;
 	text-align: center;

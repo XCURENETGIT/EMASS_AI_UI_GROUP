@@ -69,7 +69,7 @@ function getData(lastRow) {
 		<div class="contentSub">
 			<div class="subtab">
 				<button class="active">
-					부서 내부 ip 확인
+					<s:message code="POLICY_SETUP.DEPT_IPRANGE"/>
 					<span id="relationKeywordCount"></span>
 				</button>
 			</div>
@@ -96,7 +96,7 @@ function getData(lastRow) {
         grid.colAdd('updateDt', '<s:message code="filterInfo.updateDt"/>', 140, 'center', false, 'nomal');
         grid.colAdd('updateId', '<s:message code="filterInfo.updateId"/>', 140, 'center', false, 'nomal');
 
-        grid.loadExportMenu('<s:message code="ipRange.set.iprange"/>');
+        grid.loadExportMenu('<s:message code="POLICY_SETUP.DEPT_IPRANGE"/>');
 		grid.loadPageSize();
 		grid.loadHeader(true);
 		grid.initData('<s:message code="common.msg.search.click"/>');

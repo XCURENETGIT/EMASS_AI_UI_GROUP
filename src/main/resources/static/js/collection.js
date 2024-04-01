@@ -776,6 +776,22 @@ function makeList2(nextFlag){
     return str;
 }
 
+function removeStyleAttributes(htmlString) {
+    // DOMParser를 사용하여 HTML 문자열을 파싱하고 DOM으로 변환
+    var parser = new DOMParser();
+    var doc = parser.parseFromString(htmlString, 'text/html');
+
+    // 모든 요소를 순회하면서 style 속성 제거
+    var elements = doc.getElementsByTagName("*");
+    for (var i = 0; i < elements.length; i++) {
+        elements[i].removeAttribute("style");
+    }
+
+    // 변경된 내용을 다시 문자열로 변환
+    var newHtmlString = doc.body.innerHTML;
+    return newHtmlString;
+}
+
 function makeList(nextFlag){
     var dataHasFlag = false;
     var str = '<ul class="pageInfoDiv timeline">';
@@ -793,7 +809,7 @@ function makeList(nextFlag){
         str+='<li class="p20 bubble txt_right slide_right timeline-inverted ' +(i==0 && !nextFlag ? 'lastReadLi' : '')+ '" id="'+obj.msgid+'" ctime="'+obj.ctime+'" userkey="'+obj.userkey+'" srcip="'+obj.srcip+'">';
 
         var svc3 = obj.svc3;
-        str+='	<div class="me timeline-panel" >';
+        str+='	<div class="me timeline-panel">';
 
         if(obj.attached=="Y") {
             var attachhash = obj.attachhash;
@@ -814,11 +830,11 @@ function makeList(nextFlag){
             if(obj.body_snippet==null || nvl( obj.body_snippet,'')=='') {
                 let snippet = obj.body_snippet.replaceAll('\n', '<br/>');
                 str += "<hr style='border: 1px solid #ddd;'>";
-                str += snippet;
+                str += removeStyleAttributes(snippet);
             }
 
         } else {
-            if (obj.body_snippet != undefined) str += '' + obj.body_snippet.replaceAll('\n', '<br/>') + '';
+            if (obj.body_snippet != undefined) str += '' + removeStyleAttributes(obj.body_snippet).replaceAll('\n', '<br/>') + '';
         }
         str+='			</div>';
 
@@ -1490,9 +1506,9 @@ function rtnFileGroupList (data) {
         leftContent += data[i].deptnm ? "<span class='bar'></span><span class='name'>" + data[i].deptnm + "</span>" : "<span class='bar'></span><span class='name'>-</span>";
         leftContent += data[i].jikgubnm ? "<span class='bar'></span><span class='name'>" + data[i].jikgubnm + "</span>" : "<span class='bar'></span><span class='name'>-</span>";
         if (data[i].name != null) {
-            leftContent += "<span class='bar'></span><span class='name'>" + data[i].name + "</span>";
+            leftContent += "<span class='bar'></span><span class='name'>" + data[i].user + "</span>";
         } else {
-            leftContent += "<span class='bar'></span><span class='name'>" + data[i].userkey + "</span>";
+            leftContent += "<span class='bar'></span><span class='name'>" + data[i].user + "</span>";
         }
 
         leftContent += "<span class='bar'></span><span class='name'>" + data[i].attachsize + "KB</span></p>";
