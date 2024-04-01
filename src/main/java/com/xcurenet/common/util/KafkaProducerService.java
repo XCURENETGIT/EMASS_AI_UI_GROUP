@@ -3,8 +3,10 @@ package com.xcurenet.common.util;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
@@ -15,8 +17,22 @@ public class KafkaProducerService {
     @Resource
     private KafkaTemplate<String, String> kafkaTemplate;
 
+    @Async
     public void send(final String topic, final String key, final String message) {
-        this.kafkaTemplate.send(topic, key, message);
+
+        ListenableFuture<SendResult<String, String>>  future = kafkaTemplate.send(topic, key, message);
+        future.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
+            @Override
+            public void onSuccess(final SendResult<String, String> message) {
+                log.info("sent message= " + message + " with offset= " + message.getRecordMetadata().offset());
+            }
+            @Override
+            public void onFailure(final Throwable throwable) {
+                log.error("unable to send message= " + message, throwable);
+            }
+        });
+
+
     }
 
     public void sendDebug(final String topic, final String key, final String message) {
