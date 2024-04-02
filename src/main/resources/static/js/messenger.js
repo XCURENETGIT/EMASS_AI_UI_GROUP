@@ -939,12 +939,12 @@ function makeList(nextFlag) {
             str += '<span>' + attachnameArray[0] + '<br/>';
             str += attachsizeArray[0] + 'KB</span>';
             str += '<button class="btnchatdown downlodadBtn"></button></p>';
-            if(obj.body_snippet==null || nvl( obj.body_snippet,'')=='') {
-                let snippet = obj.body_snippet.replaceAll('\n', '<br/>');
+            let snippet = '';
+            if (obj.body_snippet != null && obj.body_snippet !== '') {
+                snippet = obj.body_snippet.replaceAll('\n', '<br/>');
                 str += "<hr style='border: 1px solid #ddd;'>";
-                str += removeStyleAttributes(snippet);
             }
-
+            str += removeStyleAttributes(snippet);
         } else {
             if (obj.body_snippet != undefined) str += '' + removeStyleAttributes(obj.body_snippet).replaceAll('\n', '<br/>') + '';
         }
@@ -1002,12 +1002,12 @@ function makePrevList() {
             str += '<span>' + attachnameArray[0] + '<br/>';
             str += attachsizeArray[0] + 'KB</span>';
             str += '<button class="btnchatdown downlodadBtn"></button></p>';
-            if(obj.body_snippet==null || nvl( obj.body_snippet,'')=='') {
-                let snippet = obj.body_snippet.replaceAll('\n', '<br/>');
+            let snippet = '';
+            if (obj.body_snippet != null && obj.body_snippet !== '') {
+                snippet = obj.body_snippet.replaceAll('\n', '<br/>');
                 str += "<hr style='border: 1px solid #ddd;'>";
-                str += removeStyleAttributes(snippet);
             }
-
+            str += removeStyleAttributes(snippet);
         } else {
             if (obj.body_snippet != undefined) str += '' + removeStyleAttributes(obj.body_snippet).replaceAll('\n', '<br/>') + '';
         }
