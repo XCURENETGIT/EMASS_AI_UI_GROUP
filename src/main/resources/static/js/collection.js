@@ -781,10 +781,11 @@ function removeStyleAttributes(htmlString) {
     var parser = new DOMParser();
     var doc = parser.parseFromString(htmlString, 'text/html');
 
-    // 모든 요소를 순회하면서 style 속성 제거
+    // 모든 요소를 순회하면서 font-size 스타일을 '16px'로 설정
     var elements = doc.getElementsByTagName("*");
     for (var i = 0; i < elements.length; i++) {
-        elements[i].removeAttribute("style");
+        // 기존의 스타일 속성을 유지하면서 font-size만 설정하려면 아래 코드를 조정
+        elements[i].style.fontSize = "14px";
     }
 
     // 변경된 내용을 다시 문자열로 변환
@@ -893,12 +894,11 @@ function makePrevList(){
             if(obj.body_snippet==null || nvl( obj.body_snippet,'')=='') {
                 let snippet = obj.body_snippet.replaceAll('\n', '<br/>');
                 str += "<hr style='border: 1px solid #ddd;'>";
-                str += snippet;
+                str += removeStyleAttributes(snippet);
             }
-        }
 
-        else {
-            if (obj.body_snippet != undefined) str += '' + obj.body_snippet.replaceAll('\n', '<br/>') + '';
+        } else {
+            if (obj.body_snippet != undefined) str += '' + removeStyleAttributes(obj.body_snippet).replaceAll('\n', '<br/>') + '';
         }
         str+='			</div>';
 
