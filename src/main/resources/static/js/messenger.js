@@ -119,7 +119,7 @@ var eikon = {
             xRootMtr : xRootmtr,
             startDt : startDt+"000000",
             endDt : endDt+"235959",
-            groupField : 'userkey',
+            groupField : 'user_str',
             success : function(data, total) {
                 participantDataSet = data.groups;
                 userSelectBox(data. groups, srcip, usr_id);
@@ -494,9 +494,6 @@ function makeFileList(data) {
 
 
 function userSelectBox(data, srcip, usr_id){
-    console.log(data);
-    console.log(srcip);
-    console.log(usr_id);
     var name = $('#selectUserInfo').attr('data-name');
     var str = '';
     for(var i=0; i<data.length; i++){
@@ -818,7 +815,10 @@ function makeList2(nextFlag) {
         dataHasFlag = true;
         var obj = detailDataSet[i];
         var chkPati = false;
-        if (nvl(obj.user) != '' && (srcip == nvl(obj.userid) || srcip == nvl(obj.user))) chkPati = true;
+        if (obj.user.includes('@')){
+            user = obj.user.split('@')[0];
+        }
+        if (nvl(obj.user) != '' && ( srcip == nvl(obj.user)) && user == nvl(obj.sender)) chkPati = true;
         str += checkDate(i);
 
         str += '<li class="p12 bubble ' + (chkPati ? 'txt_right slide_right' : 'txt_left slide_left') + (i == 0 && !nextFlag ? ' lastReadLi' : '') + '" id="' + obj.msgid + '" ctime="' + obj.ctime + '" userid="' + obj.userid + '" srcip="' + obj.srcip + '" xrootmtr="' + obj.xrootmtr + '">';
@@ -889,8 +889,13 @@ function makeList(nextFlag) {
         dataHasFlag = true;
         var obj = detailDataSet[i];
         var chkPati = false;
-        if (nvl(obj.user) != '' && (srcip == nvl(obj.userid) || srcip == nvl(obj.user))) chkPati = true;
+        var user = obj.user;
+        if (obj.user.includes('@')){
+            user = obj.user.split('@')[0];
+        }
+        if (nvl(obj.user) != '' && ( srcip == nvl(obj.user)) && user == nvl(obj.sender)) chkPati = true;
         str += checkDate(i);
+
 
         str += '<li class="p12 bubble ' + (chkPati ? 'txt_right slide_right' : 'txt_left slide_left') + (i == 0 && !nextFlag ? ' lastReadLi' : '') + '" id="' + obj.msgid + '" ctime="' + obj.ctime + '" userid="' + obj.userid + '" srcip="' + obj.srcip + '" xrootmtr="' + obj.xrootmtr + '">';
         str += '<span id="xrootmtr" style="display: none;">' + obj.xrootmtr + '</span>';
@@ -919,7 +924,6 @@ function makeList(nextFlag) {
             str += '<button class="btnchatdown downlodadBtn"></button></p>';
             let snippet = '';
             if (obj.body_snippet != null && obj.body_snippet !== '') {
-                console.log("zz: "+obj.body_snippet)
                 snippet = obj.body_snippet.replaceAll('\n', '<br/>');
                 str += "<hr style='border: 1px solid #ddd;'>";
             }
@@ -956,7 +960,10 @@ function makePrevList() {
     for (var i = prevDetailDataSet.length-1; i >0; i--) {
         dataHasFlag = true;
         var obj = prevDetailDataSet[i];
-        if ((nvl(obj.user) != '' && obj.user == obj.sender) || usrid == obj.title || usrid == obj.sender) chkPati = true;
+        if (obj.user.includes('@')){
+            user = obj.user.split('@')[0];
+        }
+        if (nvl(obj.user) != '' && ( srcip == nvl(obj.user)) && user == nvl(obj.sender)) chkPati = true;
 
 
         str += '<li class="p12 bubble txt_right slide_right timeline-inverted" id="' + obj.msgid + '" ctime="' + obj.ctime + '" userid="' + obj.userid + '" srcip="' + obj.srcip + '" xrootmtr="' + obj.xrootmtr + '" >';
@@ -980,7 +987,6 @@ function makePrevList() {
             str += attachsizeArray[0] + 'KB</span>';
             str += '<button class="btnchatdown downlodadBtn"></button></p>';
             let snippet = '';
-            console.log("2: "+obj.body_snippet);
             if (obj.body_snippet != null && obj.body_snippet !== '') {
 
                 snippet = obj.body_snippet.replaceAll('\n', '<br/>');
@@ -1263,7 +1269,6 @@ function HighSerarchlight( ) {
 
         if ( searchs.length > 0 ){
             var timeline_list_obj = $("#timeline_list").find('.me, .you');
-            console.log(timeline_list_obj)
             for ( var i=0 ; i < searchs.length ; i++ ) {
                 if ( searchs[i] == '' ) continue;
                 $( timeline_list_obj ).highlight2(searchs[i], 'BS');

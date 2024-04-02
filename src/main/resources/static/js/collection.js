@@ -1210,7 +1210,6 @@ function HighSerarchlight( ) {
 
         if ( searchs.length > 0 ){
             var timeline_list_obj = $("#timeline_list").find('.me, .you');
-            console.log(timeline_list_obj)
             for ( var i=0 ; i < searchs.length ; i++ ) {
                 if ( searchs[i] == '' ) continue;
                 $( timeline_list_obj ).highlight2(searchs[i], 'BS');
