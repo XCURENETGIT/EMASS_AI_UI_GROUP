@@ -119,7 +119,7 @@ var eikon = {
             xRootMtr : xRootmtr,
             startDt : startDt+"000000",
             endDt : endDt+"235959",
-            groupField : 'user_str',
+            groupField : 'userid',
             success : function(data, total) {
                 participantDataSet = data.groups;
                 userSelectBox(data. groups, srcip, usr_id);
@@ -818,7 +818,7 @@ function makeList2(nextFlag) {
         if (obj.user.includes('@')){
             user = obj.user.split('@')[0];
         }
-        if (nvl(obj.user) != '' && ( srcip == nvl(obj.user)) && user == nvl(obj.sender)) chkPati = true;
+        if (nvl(obj.userid) != '' && ( srcip == nvl(obj.userid)) &&  nvl(user) == nvl(obj.sender)) chkPati = true;
         str += checkDate(i);
 
         str += '<li class="p12 bubble ' + (chkPati ? 'txt_right slide_right' : 'txt_left slide_left') + (i == 0 && !nextFlag ? ' lastReadLi' : '') + '" id="' + obj.msgid + '" ctime="' + obj.ctime + '" userid="' + obj.userid + '" srcip="' + obj.srcip + '" xrootmtr="' + obj.xrootmtr + '">';
@@ -893,7 +893,8 @@ function makeList(nextFlag) {
         if (obj.user.includes('@')){
             user = obj.user.split('@')[0];
         }
-        if (nvl(obj.user) != '' && ( srcip == nvl(obj.user)) && user == nvl(obj.sender)) chkPati = true;
+
+        if (nvl(obj.userid) != '' && ( srcip == nvl(obj.userid)) &&  nvl(user) == nvl(obj.sender)) chkPati = true;
         str += checkDate(i);
 
 
@@ -963,8 +964,7 @@ function makePrevList() {
         if (obj.user.includes('@')){
             user = obj.user.split('@')[0];
         }
-        if (nvl(obj.user) != '' && ( srcip == nvl(obj.user)) && user == nvl(obj.sender)) chkPati = true;
-
+        if (nvl(obj.userid) != '' && ( srcip == nvl(obj.userid)) &&  nvl(user) == nvl(obj.sender)) chkPati = true;
 
         str += '<li class="p12 bubble txt_right slide_right timeline-inverted" id="' + obj.msgid + '" ctime="' + obj.ctime + '" userid="' + obj.userid + '" srcip="' + obj.srcip + '" xrootmtr="' + obj.xrootmtr + '" >';
 
