@@ -46,6 +46,6 @@ let mainUri = "<%=uri%>";
 		<span class="tooltip"><a href="#"><img src="<c:url value="/img/ico_info.png"/>" alt="툴팁"/></a><span class="tooltiptext"></span></span>
 	</h2>
 	<p><s:message code="${menuId}.msg.header"/></p>
-	<div class="page"> <a href="#" class="focus"><%=menuName%></a>  / <a href="#" class="menu1">1뎁스 메뉴</a> / <a href="#">홈 </a> </div>
+	<div class="page"> <a href="#" class="focus"><%=menuName%></a>  / <a href="#" class="menu1">1뎁스 메뉴</a> / <a href="#"><s:message code="common.home"/> </a> </div>
 </div>
 <%} %>
