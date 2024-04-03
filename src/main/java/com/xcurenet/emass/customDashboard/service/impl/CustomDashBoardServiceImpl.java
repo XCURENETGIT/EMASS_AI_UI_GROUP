@@ -537,7 +537,7 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 		sq.setStart(Common.nvz(0));
 		sq.setRows(Common.nvz(1));
 		sq.setSort("ctime_yyyymmdd", SolrQuery.ORDER.desc);
-		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id");
+		sq.setFields("msgid", "srcip", "svc", "svc3", "attachsize","ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id");
 		sq.setQuery(String.format("+ctime_yyyymmdd:[ %s TO %s ]", startDate, endDate));
 
 		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, Common.getAdminId(session));
@@ -545,7 +545,6 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 		log.info("query : {}", sq.getQuery());
 
 		List<Map<String, Object>> result = new ArrayList<>();
-
 		if (edc.getPivotData() != null) {
 
 			for (int i = 0; i < edc.getPivotData().size(); i++) {
