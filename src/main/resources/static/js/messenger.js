@@ -119,7 +119,7 @@ var eikon = {
             xRootMtr : xRootmtr,
             startDt : startDt+"000000",
             endDt : endDt+"235959",
-            groupField : 'userid',
+            groupField : 'userkey',
             success : function(data, total) {
                 participantDataSet = data.groups;
                 userSelectBox(data. groups, srcip, usr_id);
