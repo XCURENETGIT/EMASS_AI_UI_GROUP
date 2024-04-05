@@ -44,26 +44,7 @@ public class DashBoardServiceImpl extends XcnAbstractDAO implements DashBoardSer
 		return update("com.xcurenet.sqlmap.mappers.mysql.dashboard.saveDashBoardConfig", dashboardVO);
 	}
 
-//	@Override
-//	public FileSendVO getFileSend(FileSendVO fileSendVO) throws IOException, SolrServerException {
-//		FileSendVO result = new FileSendVO();
-//		SolrQuery sq = new SolrQuery();
-//		sq.setQuery(String.format("+attachsize:[%s TO *] +ctime:[%s TO %s]", (fileSendVO.getFileSize() * 1024 * 1024), fileSendVO.getStartDt(), fileSendVO.getEndDt()));
-//		sq.setRows(0);
-//		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, fileSendVO.getAdminId());
-//		result.setTotal(Config.getBoolean("ui.dashboard.abbreviation") ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));
-//
-//		return result;
-//	}
 
-//	@Override
-//	public long getAdminFilterAmount(AdminFilterVO filter) throws Exception {
-//		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
-//		SolrQuery sq = solrCreateQuery.createFilterQuery(filter);
-//		sq.setRows(0);
-//		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, filter.getAdminId());
-//		return edc.getNumFound();
-//	}
 
 	@Override
 	public int initDashBoardConfig(DashboardVO dashboard) {

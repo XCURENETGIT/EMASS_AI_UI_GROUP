@@ -1146,7 +1146,7 @@ public class EmsMessageController {
 				charset = DetectCharset.getCharset(body, 50);
 			}
 			if (Common.isEmpty(charset)) charset = emsBody.getBodyCharset();
-			if (Common.isEmpty(charset)) charset = DEFAULT_ENCODING;
+			if (Common.isEmpty(charset) || charset.equals("IBM424_rtl")) charset = DEFAULT_ENCODING;
 			bodyStr = Common.toString(body, Charset.forName(charset).toString());
 		} else {
 			charset = userCharset;
