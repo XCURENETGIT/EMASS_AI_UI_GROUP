@@ -1443,7 +1443,7 @@ public class SolrCreateQuery {
 	public String specialCharsCheck(String str){
 		String result = str;
 		/* 특수문자 처리 */
-		result  =  result.replaceAll("[[\\\\]=/&><!*:^~/[\"]]", "\\\\\\\\"+"$0").replaceAll("[\\[\\]\\(\\)\\{\\}]",  ("\"").concat("$0").concat( "\""));
+		result  =  result.replaceAll("[[\\\\]=/&><!:^~/[\"]]", "\\\\\\\\"+"$0").replaceAll("[\\[\\]\\(\\)\\{\\}]",  ("\"").concat("$0").concat( "\""));
 		return result;
 	}
 
