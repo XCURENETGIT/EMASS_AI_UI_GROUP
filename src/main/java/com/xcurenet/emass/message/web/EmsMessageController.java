@@ -1154,6 +1154,7 @@ public class EmsMessageController {
 		}
 
 
+
 		EmsBodyType contentType = getEmsBodyType(bodyStr);
 		log.debug("message Type : {} final chrset : {} msgId : {}", contentType, charset, emsBody.getMsgId());
 
@@ -1177,6 +1178,7 @@ public class EmsMessageController {
 				}
 				return Common.toString(rs, Common.nvl(mimeVo.getCharset(), DEFAULT_ENCODING));
 			case JSON:
+				bodyStr = bodyStr.replaceAll("\r\n", "");
 				return textParser(JSONSerializer.toJSON(bodyStr).toString(4, 1));
 			case OTHER: // etc...
 				return textParser(bodyStr);
