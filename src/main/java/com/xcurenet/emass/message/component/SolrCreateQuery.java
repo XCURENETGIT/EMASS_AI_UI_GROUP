@@ -118,7 +118,7 @@ public class SolrCreateQuery {
 	public static final String JOIN_READ = " +checked.readId:%s";
 	public static final String JOIN_UNREAD = " -checked.readId:%s";
 
-	private static final String OCR_FIELD = " ocr_attach";
+	private static final String OCR_FIELD = " ocr_attach ocr_attach.kr ocr_attach.en ocr_attach.jp";
 	private String finalReadYn;
 	private String consentNo;
 
@@ -126,9 +126,9 @@ public class SolrCreateQuery {
 
 	public String[] SEARCH_FIELD = {"msgid",
 			"kwds_body", "kwds_subject", "kwds_attach",
-			"subject",
-			"body",
-			"attach",
+			"subject", "subject.kr", "subject.jp", "subject.en",
+			"body", "body.kr", "body.jp", "body.en",
+			"attach", "attach.kr", "attach.jp", "attach.en",
 			"attachname", "attachname_str", "kwds_attachname", // 첨부파일명
 			"host", "host_str", // host
 			"path", "query", // url
@@ -292,7 +292,30 @@ public class SolrCreateQuery {
 			String[] fields = searchField.split(" ");
 			StringBuilder query = new StringBuilder();
 			for (String field : fields) {
-				query.append(String.format("%s:(%s) ", field, getSearchQuery(searchStr)));
+				if(Common.isEquals(field, "body")) {
+					query.append(String.format("body.kr:(%s) ", getSearchQuery(searchStr)));
+					query.append(String.format("body.en:(%s) ", getSearchQuery(searchStr)));
+					query.append(String.format("body.jp:(%s) ", getSearchQuery(searchStr)));
+					query.append(String.format("body_snippet:(%s) ",getSearchQuery(searchStr)));
+				}
+				if(Common.isEquals(field, "body_snippet")) {
+					query.append(String.format("body_snippet:(%s) ",createOrQueryAsteriskAll(searchStr)));
+				}
+				else if(Common.isEquals(field, "attach")) {
+					query.append(String.format("attach.kr:(%s) ", getSearchQuery(searchStr)));
+					query.append(String.format("attach.en:(%s) ", getSearchQuery(searchStr)));
+					query.append(String.format("attach.jp:(%s) ", getSearchQuery(searchStr)));
+				} else if(Common.isEquals(field, "subject")) {
+					query.append(String.format("subject.kr:(%s) ", getSearchQuery(searchStr)));
+					query.append(String.format("subject.en:(%s) ", getSearchQuery(searchStr)));
+					query.append(String.format("subject.jp:(%s) ", getSearchQuery(searchStr)));
+				} else if(Common.isEquals(field, "ocr_attach")) {
+					query.append(String.format("ocr_attach.kr:(%s) ", getSearchQuery(searchStr)));
+					query.append(String.format("ocr_attach.en:(%s) ", getSearchQuery(searchStr)));
+					query.append(String.format("ocr_attach.jp:(%s) ", getSearchQuery(searchStr)));
+				} else {
+					query.append(String.format("%s:(%s) ", field, getSearchQuery(searchStr)));
+				}
 			}
 
 			return addQuery(String.format("%s(%s)", AND_QUERY,query));

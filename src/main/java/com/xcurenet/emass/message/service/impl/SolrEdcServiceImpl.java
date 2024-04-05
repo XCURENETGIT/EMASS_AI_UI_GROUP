@@ -688,7 +688,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	@Override
 	public void setFeedback(final String msgId, final String ml_confd_feedback) throws ElasticsearchException, IOException {
 		int feedBack = Common.nvz(ml_confd_feedback, 9);
-		String index = "edc_"+(Common.nvl(msgId).substring(0,6));
+		String index = "edc_w_"+(Common.nvl(msgId).substring(0,6));
 		Map<String, Object> params = new HashMap<>();
 		params.put("feedback",feedBack);
 

@@ -67,7 +67,7 @@ public class SolrCheckedServiceImpl implements SolrCheckedService {
 				}
 				/* 엘라스틱 인덱스도 같이 조회 */
 				if (!Common.isEmpty(isAlreadyId)) {
-					SolrEdcVO solrEdcVO = operation.get(msgId, SolrEdcVO.class, IndexCoordinates.of(String.format("%s_%s", "edc", msgId.substring(0, 6))));
+					SolrEdcVO solrEdcVO = operation.get(msgId, SolrEdcVO.class, IndexCoordinates.of(String.format("%s_w_%s", "edc", msgId.substring(0, 6))));
 					if (!Common.isEmpty(solrEdcVO)) {
 						List<Map<String, Object>> checked = solrEdcVO.getChecked();
 						for (Map<String, Object> map : checked) {
