@@ -896,7 +896,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			emass.set(0, reader);
 			reader = tmp;
 		}
-
+		//
 		emass.sort((first, second) -> second.getCtime().compareTo(first.getCtime()));
 
 		reader.setOverlap(Common.toMap(emass));

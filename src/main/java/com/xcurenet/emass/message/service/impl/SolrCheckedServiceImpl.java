@@ -33,7 +33,7 @@ public class SolrCheckedServiceImpl implements SolrCheckedService {
 
 	@Autowired
 	private MongoUtil mongo;
-
+//
 	@Autowired
 	@Qualifier("elasticsearchTemplate")
 	private ElasticsearchOperations operation;

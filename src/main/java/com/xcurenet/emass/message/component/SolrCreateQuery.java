@@ -1423,7 +1423,7 @@ public class SolrCreateQuery {
 		result = specialCharsCheck(result);
 		// 연산자 처리
 		result = inequalitySignProc(result);
-
+//
 		return result;
 	}
 
