@@ -485,9 +485,9 @@
 				if(column == "recvs" || column == "to" || column == "cc" || column == "bcc") chk = true;
 			} else if (searchType == "to tname"){
 				if(column == "to" || column == "column") chk = true;
-			} else if (searchType == "cc tname"){
+			} else if (searchType == "cc cname"){
 				if(column == "cc" || column == "column") chk = true;
-			} else if (searchType == "bcc tname"){
+			} else if (searchType == "bcc bname"){
 				if(column == "bcc" || column == "column") chk = true;
 			} else if (searchType == "subject"){
 				if(column == "subject" ) chk = true;
