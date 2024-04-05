@@ -158,7 +158,6 @@
         getBodySize();
         getTrafficData();
         getTodayTrafficData();
-
         TodayPassportData();
         getTodayDriveData();
         TodayForeignerData();
@@ -169,7 +168,8 @@
 
         function TodayPassportData() {
             ui.get({
-                url: 'getTodayPassportData.xcn',
+                url: 'getTodayPattern.xcn',
+                patternType:'pi_PN',
                 success: function (data, total) {
                     $('#TodayPasswordTotalCnt').html(data.total + "<span>건</span><span class='tit13'></span>");
                 },
@@ -182,7 +182,8 @@
 
         function TodayForeignerData() {
             ui.get({
-                url: 'TodayForeignerData.xcn',
+                url: 'getTodayPattern.xcn',
+                patternType:'pi_FN',
                 success: function (data, total) {
                     $('#TodayForeignerTotalCnt').html(data.total + "<span>건</span> <span class='tit13'></span>");
                 },
@@ -196,7 +197,8 @@
 
         function TodaySecurityData() {
             ui.get({
-                url: 'TodaySecurityData.xcn',
+                url: 'getTodayPattern.xcn',
+                patternType:'pi_SN',
                 success: function (data, total) {
                     $('#TodaySecurityTotalCnt').html(data.total + "<span>건</span> <span class='tit13'></span>");
                 },
@@ -210,7 +212,8 @@
 
         function TodayCardNumberData() {
             ui.get({
-                url: 'TodayCardNumberData.xcn',
+                url: 'getTodayPattern.xcn',
+                patternType:'pi_CN',
                 success: function (data, total) {
                     $('#TodayCardNumberTotalCnt').html(data.total + "<span>건</span> <span class='tit13'></span>");
                 },
@@ -225,7 +228,8 @@
 
         function getTodayDriveData() {
             ui.get({
-                url: 'getTodayDriveData.xcn',
+                url: 'getTodayPattern.xcn',
+                patternType:'pi_DN',
                 success: function (data, total) {
                     $('#TodayDriveTotalCnt').html(data.total + "<span>건</span> <span class='tit13'></span>");
                 },
@@ -241,7 +245,8 @@
         function getExtensionModulation() {
 
             ui.get({
-                url: 'getExtensionModulation.xcn',
+                url: 'getTodayPattern.xcn',
+                patternType:'pi_EC',
                 success: function (data, total) {
                     $('#TodayExtensionModulationTotalCnt').html(data.total + "<span>건</span> <span class='tit13'></span>");
                 },

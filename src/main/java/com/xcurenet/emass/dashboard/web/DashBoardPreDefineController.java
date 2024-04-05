@@ -32,15 +32,6 @@ public class DashBoardPreDefineController {
 	@Resource(name = "dashBoardPreDefineService")
 	private DashBoardPreDefineService dashBoardPreDefineService;
 
-	@Resource(name = "deviceTrafficStatService")
-	private DeviceTrafficStatService deviceTrafficStatService;
-
-	@Resource(name = "solrEdcService")
-	private SolrEdcService solrEdcService;
-
-
-	private final static String FACET_QUERY = "{result: {type: terms,limit: -1,field: \"user_str\",sort: \"count desc\",facet: {pi_SN:\"sum(pi_SN)\", pi_PN:\"sum(pi_PN)\", pi_DN:\"sum(pi_DN)\", pi_FN:\"sum(pi_FN)\", pi_CN:\"sum(pi_CN)\"}}}";
-
 	@RequestMapping(value = "/getTodayDataStatus.xcn")
 	@Description("Dashboard - 금일 첨부파일 수집 현황")
 	@ResponseBody
@@ -62,6 +53,25 @@ public class DashBoardPreDefineController {
 		if (todayDataStatusVO != null) {
 			vo.setPivotData(todayDataStatusVO.getPivotData());
 		}
+		return new XcnResponseVO(XcnRspCode.OK, vo);
+	}
+
+	@RequestMapping(value = "/getTodayPattern.xcn")
+	@Description("Dashboard - 금일 패턴 수집 건수")
+	@ResponseBody
+	public XcnResponseVO getTodayPattern(final HttpSession session, final HttpServletRequest request) throws Exception {
+		long now = System.currentTimeMillis();
+		JSONObject param = Common.getParam(request);
+		TodayPatternVO vo = new TodayPatternVO();
+		vo.setAdminId(Common.getAdminId(session));
+		vo.setStartDt(Common.getCurrentDate() + "000000");
+		vo.setEndDt(Common.getDateTime(now, "yyyyMMddHHmmss"));
+		vo.setPatternType(Common.nvl(param.get("patternType")));
+		vo.setTermDtStr(Prop.propFormat("condition.hour", session, "00")+" ~ " + Common.getDateTime(now, Prop.propFormat("condition.time", session, "HH", "mm", "ss")));
+
+		TodayPatternVO TodayPatternVO = dashBoardPreDefineService.getTodayPattern(vo);
+		if (TodayPatternVO != null) vo.setTotal(TodayPatternVO.getTotal());
+
 		return new XcnResponseVO(XcnRspCode.OK, vo);
 	}
 
@@ -128,54 +138,6 @@ public class DashBoardPreDefineController {
 	}
 
 
-	@RequestMapping(value = "/getTodayPassportData.xcn")
-	@Description("Dashboard - 여권번호 수집 건수")
-	@ResponseBody
-	public XcnResponseVO getTodayPassportData(final HttpSession session) throws Exception {
-		long now = System.currentTimeMillis();
-		PatternPrivacyVO vo = new PatternPrivacyVO();
-		vo.setAdminId(Common.getAdminId(session));
-		vo.setStartDt(Common.getCurrentDate() + "000000");
-		vo.setEndDt(Common.getDateTime(now, "yyyyMMddHHmmss"));
-		vo.setTermDtStr(Prop.propFormat("condition.hour", session, "00")+" ~ " + Common.getDateTime(now, Prop.propFormat("condition.time", session, "HH", "mm", "ss")));
-
-		PatternPrivacyVO result = dashBoardPreDefineService.getTodayPassportData(vo);
-
-		return new XcnResponseVO(XcnRspCode.OK, result);
-	}
-
-	@RequestMapping(value = "/getTodayDriveData.xcn")
-	@Description("Dashboard - 운전면허 수집 건수")
-	@ResponseBody
-	public XcnResponseVO getTodayDriveData(final HttpSession session) throws Exception {
-		long now = System.currentTimeMillis();
-		PatternPrivacyVO vo = new PatternPrivacyVO();
-		vo.setAdminId(Common.getAdminId(session));
-		vo.setStartDt(Common.getCurrentDate() + "000000");
-		vo.setEndDt(Common.getDateTime(now, "yyyyMMddHHmmss"));
-		vo.setTermDtStr(Prop.propFormat("condition.hour", session, "00")+" ~ " + Common.getDateTime(now, Prop.propFormat("condition.time", session, "HH", "mm", "ss")));
-
-		PatternPrivacyVO result = dashBoardPreDefineService.getTodayDriveData(vo);
-
-		return new XcnResponseVO(XcnRspCode.OK, result);
-	}
-
-	@RequestMapping(value = "/getExtensionModulation.xcn")
-	@Description("Dashboard - 확장자 변조 파일 건수")
-	@ResponseBody
-	public XcnResponseVO getExtensionModulation(final HttpSession session) throws Exception {
-		long now = System.currentTimeMillis();
-		PatternPrivacyVO vo = new PatternPrivacyVO();
-		vo.setAdminId(Common.getAdminId(session));
-		vo.setStartDt(Common.getCurrentDate() + "000000");
-		vo.setEndDt(Common.getDateTime(now, "yyyyMMddHHmmss"));
-		vo.setTermDtStr(Prop.propFormat("condition.hour", session, "00")+" ~ " + Common.getDateTime(now, Prop.propFormat("condition.time", session, "HH", "mm", "ss")));
-
-		PatternPrivacyVO result = dashBoardPreDefineService.getExtensionModulation(vo);
-
-		return new XcnResponseVO(XcnRspCode.OK, result);
-	}
-
 	@RequestMapping(value = "getBodySize.xcn")
 	@Description("Dashboard - 일별 용량")
 	@ResponseBody
@@ -189,55 +151,6 @@ public class DashBoardPreDefineController {
 
 		return new XcnResponseVO(XcnRspCode.OK, dashBoardPreDefineService.getBodySize(vo));
 	}
-
-	@RequestMapping(value = "/TodayForeignerData.xcn")
-	@Description("Dashboard - 외국인 등록 번호 수집 건수")
-	@ResponseBody
-	public XcnResponseVO TodayForeignerData(final HttpSession session) throws Exception {
-		long now = System.currentTimeMillis();
-		PatternPrivacyVO vo = new PatternPrivacyVO();
-		vo.setAdminId(Common.getAdminId(session));
-		vo.setStartDt(Common.getCurrentDate() + "000000");
-		vo.setEndDt(Common.getDateTime(now, "yyyyMMddHHmmss"));
-		vo.setTermDtStr(Prop.propFormat("condition.hour", session, "00")+" ~ " + Common.getDateTime(now, Prop.propFormat("condition.time", session, "HH", "mm", "ss")));
-
-		PatternPrivacyVO result = dashBoardPreDefineService.TodayForeignerData(vo);
-
-		return new XcnResponseVO(XcnRspCode.OK, result);
-	}
-
-	@RequestMapping(value = "/TodaySecurityData.xcn")
-	@Description("Dashboard - 주민  번호 수집 건수")
-	@ResponseBody
-	public XcnResponseVO TodaySecurityData(final HttpSession session) throws Exception {
-		long now = System.currentTimeMillis();
-		PatternPrivacyVO vo = new PatternPrivacyVO();
-		vo.setAdminId(Common.getAdminId(session));
-		vo.setStartDt(Common.getCurrentDate() + "000000");
-		vo.setEndDt(Common.getDateTime(now, "yyyyMMddHHmmss"));
-		vo.setTermDtStr(Prop.propFormat("condition.hour", session, "00")+" ~ " + Common.getDateTime(now, Prop.propFormat("condition.time", session, "HH", "mm", "ss")));
-
-		PatternPrivacyVO result = dashBoardPreDefineService.TodaySecurityData(vo);
-
-		return new XcnResponseVO(XcnRspCode.OK, result);
-	}
-
-	@RequestMapping(value = "/TodayCardNumberData.xcn")
-	@Description("Dashboard - 주민  번호 수집 건수")
-	@ResponseBody
-	public XcnResponseVO TodayCardNumberData(final HttpSession session) throws Exception {
-		long now = System.currentTimeMillis();
-		PatternPrivacyVO vo = new PatternPrivacyVO();
-		vo.setAdminId(Common.getAdminId(session));
-		vo.setStartDt(Common.getCurrentDate() + "000000");
-		vo.setEndDt(Common.getDateTime(now, "yyyyMMddHHmmss"));
-		vo.setTermDtStr(Prop.propFormat("condition.hour", session, "00")+" ~ " + Common.getDateTime(now, Prop.propFormat("condition.time", session, "HH", "mm", "ss")));
-
-		PatternPrivacyVO result = dashBoardPreDefineService.TodayCardNumberData(vo);
-
-		return new XcnResponseVO(XcnRspCode.OK, result);
-	}
-
 
 	@RequestMapping(value = "/getTodayRiskBehavior.xcn")
 	@Description("Dashboard - 패턴(위험행위)")
