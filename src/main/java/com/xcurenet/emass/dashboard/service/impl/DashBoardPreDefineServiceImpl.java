@@ -124,26 +124,12 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		return result;
 	}
 
-	@Override
-	public PatternPrivacyVO getExtensionModulation(PatternPrivacyVO patternPrivacyVO) throws IOException, SolrServerException {
-		PatternPrivacyVO result = new PatternPrivacyVO();
-
-		String query = String.format("+ctime:[%s TO %s] +(pi_EC:[ 1 TO * ])", patternPrivacyVO.getStartDt(), patternPrivacyVO.getEndDt());
-		SolrQuery sq = new SolrQuery();
-		sq.setQuery(query);
-		sq.setRows(0);
-		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, patternPrivacyVO.getAdminId());
-		result.setTotal(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));;
-		sq.setQuery(query);
-		sq.setRows(0);
-		return result;
-	}
 
 	@Override
-	public PatternPrivacyVO getTodayPassportData(PatternPrivacyVO vo) throws SolrServerException, IOException {
-		PatternPrivacyVO result = new PatternPrivacyVO();
+	public TodayPatternVO getTodayPattern(TodayPatternVO vo) throws SolrServerException, IOException {
+		TodayPatternVO result = new TodayPatternVO();
 
-		String query = String.format("+ctime:[%s TO %s] +(pi_PN:[ 1 TO * ])", vo.getStartDt(), vo.getEndDt());
+		String query = String.format("+ctime:[%s TO %s] +(%s:[ 1 TO * ])", vo.getStartDt(), vo.getEndDt(), vo.getPatternType());
 		SolrQuery sq = new SolrQuery();
 		sq.setQuery(query);
 		sq.setRows(0);
@@ -151,68 +137,11 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		result.setTotal(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));;
 		sq.setQuery(query);
 		sq.setRows(0);
+
 		return result;
 	}
 
-	@Override
-	public PatternPrivacyVO getTodayDriveData(PatternPrivacyVO vo) throws SolrServerException, IOException {
-		PatternPrivacyVO result = new PatternPrivacyVO();
 
-		String query = String.format("+ctime:[%s TO %s] +(pi_DN:[ 1 TO * ])", vo.getStartDt(), vo.getEndDt());
-		SolrQuery sq = new SolrQuery();
-		sq.setQuery(query);
-		sq.setRows(0);
-		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, vo.getAdminId());
-		result.setTotal(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));;
-		sq.setQuery(query);
-		sq.setRows(0);
-		return result;
-	}
-
-	@Override
-	public PatternPrivacyVO TodayForeignerData(PatternPrivacyVO vo) throws SolrServerException, IOException {
-		PatternPrivacyVO result = new PatternPrivacyVO();
-
-		String query = String.format("+ctime:[%s TO %s] +(pi_FN:[ 1 TO * ])", vo.getStartDt(), vo.getEndDt());
-		SolrQuery sq = new SolrQuery();
-		sq.setQuery(query);
-		sq.setRows(0);
-		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, vo.getAdminId());
-		result.setTotal(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));;
-		sq.setQuery(query);
-		sq.setRows(0);
-		return result;
-	}
-
-	@Override
-	public PatternPrivacyVO TodaySecurityData(PatternPrivacyVO vo) throws SolrServerException, IOException {
-		PatternPrivacyVO result = new PatternPrivacyVO();
-
-		String query = String.format("+ctime:[%s TO %s] +(pi_SN:[ 1 TO * ])", vo.getStartDt(), vo.getEndDt());
-		SolrQuery sq = new SolrQuery();
-		sq.setQuery(query);
-		sq.setRows(0);
-		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, vo.getAdminId());
-		result.setTotal(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));;
-		sq.setQuery(query);
-		sq.setRows(0);
-		return result;
-	}
-
-	@Override
-	public PatternPrivacyVO TodayCardNumberData(PatternPrivacyVO vo) throws SolrServerException, IOException {
-		PatternPrivacyVO result = new PatternPrivacyVO();
-
-		String query = String.format("+ctime:[%s TO %s] +(pi_CN:[ 1 TO * ])", vo.getStartDt(), vo.getEndDt());
-		SolrQuery sq = new SolrQuery();
-		sq.setQuery(query);
-		sq.setRows(0);
-		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, vo.getAdminId());
-		result.setTotal(Config.getBoolean(ABBREVIATION) ? Common.formatNum(edc.getNumFound()) : Common.numberFormatter(edc.getNumFound()));;
-		sq.setQuery(query);
-		sq.setRows(0);
-		return result;
-	}
 
 	@Override
 	public RiskBehaviorVO getTodayRiskBehavior(RiskBehaviorVO riskBehaviorVO) throws IOException, SolrServerException {

@@ -14,6 +14,8 @@ public class TodayPatternVO {
 
 	private String termDtStr;
 
+	private String patternType;
+
 	//주민 번호
 	private String pi_SN;
 
