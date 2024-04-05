@@ -279,7 +279,8 @@ DROP TABLE IF EXISTS UI_SERVICE_TMP;
 CREATE TABLE IF NOT EXISTS UI_SERVICE_TMP AS SELECT  * FROM  UI_SERVICE;
 
 DELETE FROM UI_SERVICE;
-INSERT INTO UI_SERVICE (`SERVICECD`, `SERVICENM_LV1`, `SERVICENM_LV2`, `SERVICENM_LV3`, `IN_OUT`, `SORT`, `USE_YN`, `MSGGRPCD`)  VALUES ('MP3-', '메일', 'POP3', '-', 'I', 1, 'Y', ''),
+INSERT INTO UI_SERVICE (`SERVICECD`, `SERVICENM_LV1`, `SERVICENM_LV2`, `SERVICENM_LV3`, `IN_OUT`, `SORT`, `USE_YN`, `MSGGRPCD`)  VALUES
+    ('MP3-', '메일', 'POP3', '-', 'I', 1, 'Y', ''),
     ('MSM-', '메일', 'SMTP', '-', 'O', 2, 'Y', ''),
     ('MIM-', '메일', 'IMAP', '-', 'I', 3, 'Y', ''),
     ('WNVR', '웹메일', '네이버', '수신', 'I', 4, 'Y', ''),
@@ -541,7 +542,7 @@ INSERT INTO UI_SERVICE (`SERVICECD`, `SERVICENM_LV1`, `SERVICENM_LV2`, `SERVICEN
     ('QGGC', '메신저', '구글 chat', '채팅', 'O', 260, 'Y', 'MSG'),
     ('QGGF', '메신저', '구글 chat', '파일전송', 'O', 261, 'Y', 'MSG'),
     ('QGMC', '메신저', '구글 Meet', '채팅', 'O', 262, 'Y', 'MSG'),
-    ('QGBC', '메신저', '구글 Bard', '채팅', 'O', 263, 'Y', 'MSG'),
+    ('QGBC', '메신저', '구글 Gemini', '채팅', 'O', 263, 'Y', 'MSG'),
     ('QBIC', '메신저', 'Microsoft BingAI Chat', '채팅', 'O', 264, 'Y', 'MSG'),
     ('QWTC', '메신저', 'wrtn', '채팅', 'O', 265, 'Y', ''),
     ('QISC', '메신저', '인스타그램 DM', '채팅', 'O', 266, 'Y', 'MSG'),
@@ -1293,7 +1294,7 @@ INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH
 				</div>
 			</div>
 		</div>
-	','{"searchStr":"","searchField":"","serviceFieldNm":"검색 영역 전체","serviceType":"QNV,QNM,QDS,QSH,QDI,QDF,QDG,QFM,QMC,QMS,QNT,QSS,QSF,QSP,QSB,QWJ,QGP,QDA,QCL,QKB,QEK,QSL,QSY,QFB,QKM,QGH,QGG,QGM,QGB,QBI,QWT,QIS,QZA,QUK","serviceTypeNm":"네이버, 네이버 쪽지, 대신, 삼홍사, 동부생명, 동부금융, 동국제강, 프리본드, M-채널, 미쓰리, 네이트, 삼성증권, 삼성화재, SK 프라이든, SK 비즈, 웅진, chatGPT, Dall-E, 쿨, k-bond, 아이콘, Slack, 신영자산운용, 페이스북, 삼성KnoxMessenger, 구글 Hangout, 구글 chat, 구글 Meet, 구글 Bard, Microsoft BingAI Chat, wrtn, 인스타그램 DM, Zalo, 기타","infoType":"","infoTypeNm":"정보 분류 전체","feedbackType":"","feedbackTypeNm":"피드백 전체","probType":"","probTypeNm":"판정 확률 전체","interGroup":"","interGroupNm":"-관심 사용자 선택-","userGroupSeq_not":"","userGroupSeq":"","userGroupName":"-사용자 그룹-","interGroup_not":"","epmsgType":"","startDateSelect":"T","endDateSelect":"T","startTimeSelect":"00","endTimeSelect":"23","senders":"","senders_not":"","receive_option":"","receivers":"","receivers_not":"","allOfus":"","busi":"","busiNm":"사업장 전체","busi_not":"","dept":"","deptNm":"","dept_not":"","url":"","url_not":"","receiveSend":"","ctimeWork":"","readYn":"","attachYn":"","attachVal":"","attachStr":"","attachYn_not":"","keywordYn":"","keywordVal":"","keywordStr":"","keywordYn_not":"","regexpYn":"","regexpVal":"","regexpStr":"","drmYn":"","realAttYn":"","sctYn":"","sizeStartVal":0,"sizeEndVal":0,"sizeOption":"L","sizeType":""}','','Y');
+	','{"searchStr":"","searchField":"","serviceFieldNm":"검색 영역 전체","serviceType":"QNV,QNM,QDS,QSH,QDI,QDF,QDG,QFM,QMC,QMS,QNT,QSS,QSF,QSP,QSB,QWJ,QGP,QDA,QCL,QKB,QEK,QSL,QSY,QFB,QKM,QGH,QGG,QGM,QGB,QBI,QWT,QIS,QZA,QUK","serviceTypeNm":"네이버, 네이버 쪽지, 대신, 삼홍사, 동부생명, 동부금융, 동국제강, 프리본드, M-채널, 미쓰리, 네이트, 삼성증권, 삼성화재, SK 프라이든, SK 비즈, 웅진, chatGPT, Dall-E, 쿨, k-bond, 아이콘, Slack, 신영자산운용, 페이스북, 삼성KnoxMessenger, 구글 Hangout, 구글 chat, 구글 Meet, 구글 Gemini, Microsoft BingAI Chat, wrtn, 인스타그램 DM, Zalo, 기타","infoType":"","infoTypeNm":"정보 분류 전체","feedbackType":"","feedbackTypeNm":"피드백 전체","probType":"","probTypeNm":"판정 확률 전체","interGroup":"","interGroupNm":"-관심 사용자 선택-","userGroupSeq_not":"","userGroupSeq":"","userGroupName":"-사용자 그룹-","interGroup_not":"","epmsgType":"","startDateSelect":"T","endDateSelect":"T","startTimeSelect":"00","endTimeSelect":"23","senders":"","senders_not":"","receive_option":"","receivers":"","receivers_not":"","allOfus":"","busi":"","busiNm":"사업장 전체","busi_not":"","dept":"","deptNm":"","dept_not":"","url":"","url_not":"","receiveSend":"","ctimeWork":"","readYn":"","attachYn":"","attachVal":"","attachStr":"","attachYn_not":"","keywordYn":"","keywordVal":"","keywordStr":"","keywordYn_not":"","regexpYn":"","regexpVal":"","regexpStr":"","drmYn":"","realAttYn":"","sctYn":"","sizeStartVal":0,"sizeEndVal":0,"sizeOption":"L","sizeType":""}','','Y');
 
 
 
