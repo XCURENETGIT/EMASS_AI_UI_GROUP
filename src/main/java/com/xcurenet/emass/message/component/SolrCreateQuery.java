@@ -1413,6 +1413,7 @@ public class SolrCreateQuery {
 		if(result.indexOf("/") > -1) {
 			if(result.indexOf("/") == result.lastIndexOf("/")) result =  result.replace(result, ("\"").concat(result).concat( "\""));
 		}
+		result = result.replaceAll("([+])\\1+","+").replaceAll("([|])\\1+","|").replaceAll("(-)\\1+","-"); // 연속2개입력시
 
 		return result;
 	}
@@ -1420,7 +1421,7 @@ public class SolrCreateQuery {
 	public String specialCharsCheck(String str){
 		String result = str;
 		/* 특수문자 처리 */
-		result  =  result.replaceAll("[[\\\\]=/&:><!^~/*[+][-]\\|[\"]\\[\\]\\(\\)\\{\\}]", "\\\\"+"$0");
+		result  =  result.replaceAll("[[\\\\]=/&:><!^~/[\"]\\[\\]\\(\\)\\{\\}]", "\\\\"+"$0");
 		return result;
 	}
 
