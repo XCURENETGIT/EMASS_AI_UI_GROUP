@@ -175,6 +175,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		/* 일반 검색 쿼리 */
 		QueryStringQueryBuilder queryBuilder = QueryBuilders.queryStringQuery(sq.getQuery() + " " + filterQuery).fields(getDefaultSearchField(sq)).type(MultiMatchQueryBuilder.Type.PHRASE);  // type PHRASE
 
+
 		/* 정규식 패턴 필드 설정 */
 		BoolQueryBuilder regexQuery = QueryBuilders.boolQuery();
 		if(!Common.isEmpty(sq.get("regexPattern"))) {

@@ -461,7 +461,6 @@
 			}
 			searchStr = searchKeyword();
             search = searchStr;
-
 			if(column != "subject") {
 				rtnVal = rtnVal.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '\'');
 			}
@@ -500,63 +499,63 @@
 			}
 
 
-			if(chk) {
-				var searchArray = [];
-				search = search.trim();
-				if(search.indexOf("\"") == 0 && search.charAt(search.length-1) == "\"" && nvl(search.match(/"/g)).length == 2) {
-					searchArray[0] = search.substring(1, search.length-1);
-				} else {
-					search = search.replaceAll('\\|',' ');
-					search = search.replaceAll("\\+", "").replaceAll("\\*", "").replaceAll("\\?", "");
-					search = search.replaceAll("\"", "");
-					search = search.replaceAll("\\(", "").replaceAll("\\)","");
-					searchArray = search.split(" ");
-				}
-				var obj = $.parseHTML('<div>'+rtnVal+'</div>');
-				for(var i = 0; i < searchArray.length; i++) {
-					var searchStr =  searchArray[i];
-					if(!(searchStr.substr(0,1) == '/' && searchStr.substr(searchStr.length - 1) == '/')) {
-						searchStr = searchStr.replaceAll("\\(","").replaceAll("\\)","");
-						if( searchStr == ' ' || searchStr == '') continue;
-						$(obj).highlight(searchStr, 'S');
-						rtnValue =  $(obj).html();
-					}
-					else {
-						var solrQueryText = searchStr;
-						var re = new RegExp(solrQueryText, 'ig');
-						var matchArray;
-						var first = 0;
-						var last = 0;
-						var resultString = '';
+            if(chk) {
+                var searchArray = [];
+                search = search.trim();
+                if(search.indexOf("\"") == 0 && search.charAt(search.length-1) == "\"" && nvl(search.match(/"/g)).length == 2) {
+                    searchArray[0] = search.substring(1, search.length-1);
+                } else {
+                    // search = search.replaceAll('\\|',' ');
+                    // search = search.replaceAll("\\+", "").replaceAll("\\*", "").replaceAll("\\?", "");
+                    // search = search.replaceAll("\"", "");
+                    // search = search.replaceAll("\\(", "").replaceAll("\\)","");
+                	searchArray[0] = search;
+                }
+                var obj = $.parseHTML('<div>'+rtnVal+'</div>');
+                for(var i = 0; i < searchArray.length; i++) {
+                    var searchStr =  searchArray[i];
+                    if(!(searchStr.substr(0,1) == '/' && searchStr.substr(searchStr.length - 1) == '/')) {
+             		  // searchStr = searchStr.replaceAll("\\(","").replaceAll("\\)","");
+                        if( searchStr == ' ' || searchStr == '') continue;
+                        $(obj).highlight(searchStr, 'S');
+                        console.log('aa : ' + searchStr)
+                        rtnValue =  $(obj).html();
+                    }
+                    else {
+                        console.log(searchStr)
+                        var solrQueryText = searchStr;
+                        var re = new RegExp(solrQueryText, 'ig');
+                        var matchArray;
+                        var first = 0;
+                        var last = 0;
+                        var resultString = '';
 
-						while ( (matchArray = re.exec(rtnVal)) != null ) {
-							last = matchArray.index;
+                        while ( (matchArray = re.exec(rtnVal)) != null ) {
+                            last = matchArray.index;
+                            // 일치하는 모든 문자열을 연결
+                            resultString += rtnVal.substring(first, last);
 
-							// 일치하는 모든 문자열을 연결
-							resultString += rtnVal.substring(first, last);
+                            // 일치하는 부분에 강조 스타일이 지정된 class 추가
+                            resultString += "<span class='highlightSearch'>" + matchArray[0] + "</span>";
+                            first = re.lastIndex;
+                            // RegExp객체의 lastIndex속성을 이용해 검색 결과의 마지막인덱스 접근 가능
+                        }
 
-							// 일치하는 부분에 강조 스타일이 지정된 class 추가
-							resultString += "<span class='highlightSearch'>" + matchArray[0] + "</span>";
-							first = re.lastIndex;
-							// RegExp객체의 lastIndex속성을 이용해 검색 결과의 마지막인덱스 접근 가능
-						}
-
-
-						resultString += rtnVal.substring(first, rtnVal.length);
-						rtnVal = resultString;
-						rtnValue = resultString;
-					}
-				}
+                        resultString += rtnVal.substring(first, rtnVal.length);
+                        rtnVal = resultString;
+                        rtnValue = resultString;
+                    }
+                }
 
 
-			} else {
-				rtnValue =  rtnVal;
-			}
-		} catch(e){
-			rtnValue =  rtnVal;
-			console.log("highlightSearchStr Error..");
-		}
-		return rtnValue;
+            } else {
+                rtnValue =  rtnVal;
+            }
+        } catch(e){
+            rtnValue =  rtnVal;
+            console.log("highlightSearchStr Error..");
+        }
+        return rtnValue;
 	}
 	function highlightKeyword (rtnVal, keyWords) {
 		var rtnValue = '';
