@@ -16,6 +16,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
@@ -69,23 +70,24 @@ public class SolrCheckedServiceImpl implements SolrCheckedService {
 					}
 				}
 				/* 엘라스틱 인덱스도 같이 조회 */
-				if (!Common.isEmpty(isAlreadyId)) {
-					org.springframework.data.elasticsearch.core.query.Query searchQuery = new NativeSearchQueryBuilder()
-							.withQuery(QueryBuilders.termQuery("msgid",msgId))
-							.withTimeout(Duration.ofSeconds(60))
-							.build();
-
-					SolrEdcVO solrEdcVO = operation.searchOne(searchQuery, SolrEdcVO.class, IndexCoordinates.of(String.format("%s_w_%s", "edc", msgId.substring(0, 6)))).getContent();
-					if (!Common.isEmpty(solrEdcVO)) {
-						List<Map<String, Object>> checked = solrEdcVO.getChecked();
-						for (Map<String, Object> map : checked) {
-							if (Common.isEquals(adminId, map.get("readId"))) {
-							isEmpty = false;
-							break;
-							}
-						}
-					}
-				}
+//				if (!Common.isEmpty(isAlreadyId)) {
+//					org.springframework.data.elasticsearch.core.query.Query searchQuery = new NativeSearchQueryBuilder()
+//							.withQuery(QueryBuilders.termQuery("msgid",msgId))
+//							.withTimeout(Duration.ofSeconds(60))
+//							.build();
+//					SearchHit<SolrEdcVO> searchHits = operation.searchOne(searchQuery, SolrEdcVO.class, IndexCoordinates.of(String.format("%s_w_%s", "edc", msgId.substring(0, 6))));
+//					//SolrEdcVO solrEdcVO = operation.searchOne(searchQuery, SolrEdcVO.class, IndexCoordinates.of(String.format("%s_w_%s", "edc", msgId.substring(0, 6)))).getContent();
+//					if (!Common.isEmpty(searchHits) && searchHits != null) {
+//						SolrEdcVO solrEdcVO = searchHits.getContent();
+//						List<Map<String, Object>> checked = solrEdcVO.getChecked();
+//						for (Map<String, Object> map : checked) {
+//							if (Common.isEquals(adminId, map.get("readId"))) {
+//							isEmpty = false;
+//							break;
+//							}
+//						}
+//					}
+//				}
 			} else vo.setChecked(new ArrayList<>());
 		} else {
 			vo = new SolrCheckedVO();
