@@ -78,8 +78,10 @@ public class OwlnestController {
 		sq.setRows(100);
 		sq.setMoreLikeThis(true);
 
-    	sq.setMoreLikeThisFields("body");
-		sq.setMoreLikeThisFields("attach");
+    	sq.addMoreLikeThisField("body");
+		sq.addMoreLikeThisField("attach");
+		sq.setSort("_score", SolrQuery.ORDER.desc);
+		sq.setParam("id",msgid);
 		if(!subjectIsEmpty) {
 			SolrEdcVO solrEdcVO = solrEdcService.getSelectOne(msgid, isUnknownDocument);
 			sq.addMoreLikeThisField("subject");
@@ -92,13 +94,10 @@ public class OwlnestController {
 			sq.addMoreLikeThisField("host");
 			sq.addMoreLikeThisField("path");
 		}
-
-
 		sq.setQuery(query);
-		sq.setSort("_score", SolrQuery.ORDER.desc);
-		sq.setParam("id",msgid);
+		SolrEdcMessageVO solrEdcMessageVO = solrEdcService.getEmassMessage(sq, adminId);
 
-		return solrEdcService.getEmassMessage(sq, adminId);
+		return solrEdcMessageVO;
 	}
 }
 
