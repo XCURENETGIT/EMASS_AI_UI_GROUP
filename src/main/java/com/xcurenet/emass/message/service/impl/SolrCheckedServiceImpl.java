@@ -7,6 +7,7 @@ import com.xcurenet.emass.message.service.*;
 import lombok.extern.log4j.Log4j2;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
@@ -17,12 +18,14 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +36,7 @@ public class SolrCheckedServiceImpl implements SolrCheckedService {
 
 	@Autowired
 	private MongoUtil mongo;
-
+//
 	@Autowired
 	@Qualifier("elasticsearchTemplate")
 	private ElasticsearchOperations operation;
@@ -67,7 +70,12 @@ public class SolrCheckedServiceImpl implements SolrCheckedService {
 				}
 				/* 엘라스틱 인덱스도 같이 조회 */
 				if (!Common.isEmpty(isAlreadyId)) {
-					SolrEdcVO solrEdcVO = operation.get(msgId, SolrEdcVO.class, IndexCoordinates.of(String.format("%s_%s", "edc", msgId.substring(0, 6))));
+					org.springframework.data.elasticsearch.core.query.Query searchQuery = new NativeSearchQueryBuilder()
+							.withQuery(QueryBuilders.termQuery("msgid",msgId))
+							.withTimeout(Duration.ofSeconds(60))
+							.build();
+
+					SolrEdcVO solrEdcVO = operation.searchOne(searchQuery, SolrEdcVO.class, IndexCoordinates.of(String.format("%s_w_%s", "edc", msgId.substring(0, 6)))).getContent();
 					if (!Common.isEmpty(solrEdcVO)) {
 						List<Map<String, Object>> checked = solrEdcVO.getChecked();
 						for (Map<String, Object> map : checked) {

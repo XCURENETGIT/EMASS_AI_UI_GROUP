@@ -1267,6 +1267,7 @@ public class SolrCreateQuery {
 			String reprocessYn = Common.nvl(condition.get("reprocessYn")); // 재처리 여부
 			String query = Common.nvl(condition.get("query")); //고급 쿼리 검색(데이터 있는경우 우선 적용)
 
+
 			String svc1 = Common.nvl(condition.get("svc1")); //서비스 그룹
 			String svc1_not = Common.nvl(condition.get("svc1_not")); //서비스 제외 그룹
 
@@ -1278,6 +1279,8 @@ public class SolrCreateQuery {
 				finalReadYn = "";
 				setSearchField(searchField);
 				setSort(sort);
+				query = query.replaceAll("([+])\\1+","+").replaceAll("([|])\\1+","|").replaceAll("(-)\\1+","-"); // 연속2개입력시 1개로 줄이기
+				query  =  query.replaceAll("[[\\\\][\"]\\[\\]\\(\\)\\{\\}]",  "\\\\"+"$0");
 				addQuery(query);
 				setSvc1(svc1, svc1_not);
 				return this;
@@ -1400,7 +1403,7 @@ public class SolrCreateQuery {
 		result = specialCharsCheck(result);
 		// 연산자 처리
 		result = inequalitySignProc(result);
-
+//
 		return result;
 	}
 
@@ -1410,9 +1413,7 @@ public class SolrCreateQuery {
 		if(result.indexOf("/") > -1) {
 			if(result.indexOf("/") == result.lastIndexOf("/")) result =  result.replace(result, ("\"").concat(result).concat( "\""));
 		}
-
-		result = result.replaceAll("([+])\\1+","+").replaceAll("([|])\\1+","|")
-				.replaceAll("(-)\\1+","-"); // 연속2개입력시 1개로 줄이기
+		result = result.replaceAll("([+])\\1+","+").replaceAll("([|])\\1+","|").replaceAll("(-)\\1+","-"); // 연속2개입력시
 
 		return result;
 	}
@@ -1420,7 +1421,7 @@ public class SolrCreateQuery {
 	public String specialCharsCheck(String str){
 		String result = str;
 		/* 특수문자 처리 */
-		result  =  result.replaceAll("[[\\\\]=/&><!*:^~/[\"]]", "\\\\\\\\"+"$0").replaceAll("[\\[\\]\\(\\)\\{\\}]",  ("\"").concat("$0").concat( "\""));
+		result  =  result.replaceAll("[[\\\\]=/&:><!^~/[\"]\\[\\]\\(\\)\\{\\}]", "\\\\"+"$0");
 		return result;
 	}
 

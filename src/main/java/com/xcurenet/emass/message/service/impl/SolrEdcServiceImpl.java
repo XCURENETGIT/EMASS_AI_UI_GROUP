@@ -173,7 +173,8 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		/* set 필터 쿼리 */
 		String filterQuery =  (null != sq.getFilterQueries())? String.join(" ", sq.getFilterQueries()) : "";
 		/* 일반 검색 쿼리 */
-		QueryStringQueryBuilder queryBuilder = QueryBuilders.queryStringQuery(sq.getQuery() + " " + filterQuery).fields(getDefaultSearchField(sq)).type(MultiMatchQueryBuilder.Type.PHRASE);  // type PHRASE
+		QueryStringQueryBuilder queryBuilder = QueryBuilders.queryStringQuery(sq.getQuery() + " " + filterQuery).fields(getDefaultSearchField(sq)); //.type(MultiMatchQueryBuilder.Type.PHRASE);  // type PHRASE
+
 
 		/* 정규식 패턴 필드 설정 */
 		BoolQueryBuilder regexQuery = QueryBuilders.boolQuery();
@@ -688,7 +689,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	@Override
 	public void setFeedback(final String msgId, final String ml_confd_feedback) throws ElasticsearchException, IOException {
 		int feedBack = Common.nvz(ml_confd_feedback, 9);
-		String index = "edc_"+(Common.nvl(msgId).substring(0,6));
+		String index = "edc_w_"+(Common.nvl(msgId).substring(0,6));
 		Map<String, Object> params = new HashMap<>();
 		params.put("feedback",feedBack);
 
@@ -896,7 +897,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			emass.set(0, reader);
 			reader = tmp;
 		}
-
+		//
 		emass.sort((first, second) -> second.getCtime().compareTo(first.getCtime()));
 
 		reader.setOverlap(Common.toMap(emass));
