@@ -83,6 +83,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	@Autowired
 	private AdminUserGroupService adminUserGroupService;
 
+
 	@Autowired
 	private AdminServiceImpl adminServiceImpl;
 	private AbstractAggregationBuilder<TermsAggregationBuilder> termsAggregation;
@@ -190,7 +191,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		BoolQueryBuilder recommendQuery = QueryBuilders.boolQuery();
 		if(!Common.isEmpty(sq.getMoreLikeThisFields()) && !Common.isEmpty(sq.get("id"))){
 			recommendQuery.should(QueryBuilders.moreLikeThisQuery(sq.getMoreLikeThisFields(), null, new MoreLikeThisQueryBuilder.Item[]{new MoreLikeThisQueryBuilder.Item(null, sq.get("id"))}).minTermFreq(1).minDocFreq(0).maxQueryTerms(20));
-			boolQuery.should(recommendQuery).minimumShouldMatch("0<-3%"); // 유사도 0%는 제외
+			boolQuery.should(recommendQuery).minimumShouldMatch("30%"); // 유사도 30%이상
 		}
 
 		boolQuery.should(queryBuilder);
@@ -259,6 +260,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 				.build();
 		SearchHits<SolrEdcVO> searchHits = null;
 
+
 		/* 정렬 */
 		List<SortClause> sorts =  sq.getSorts();
 		if(!Common.isEmpty(sorts)) {
@@ -299,7 +301,15 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		}catch (ElasticsearchException e) {
 			log.info("[QUERY_RESULT] TOTAL_COUNT : {}, QUERY_TIME : {}", 0, TimeUtil.print());
 		}
+
 		return searchHits;
+	}
+
+	@Override
+	public SolrEdcVO getSelectOne(String msgId) {
+		org.springframework.data.elasticsearch.core.query.Query searchQuery = new NativeSearchQueryBuilder().withQuery(QueryBuilders.termQuery("msgid",msgId)).withTimeout(Duration.ofSeconds(60)).build();
+		SolrEdcVO solrEdcVO = operation.searchOne(searchQuery, SolrEdcVO.class, IndexCoordinates.of(String.format("%s_w_%s", "edc", msgId.substring(0, 6)))).getContent();
+		return solrEdcVO;
 	}
 
 	private Map<String, Float> getDefaultSearchField(SolrQuery sq) {
