@@ -600,7 +600,7 @@
 
         function getFormattedValue(size, value) {
             if (size == "size") return (value === undefined || value === null) ? ' ' : value;
-            else if (size == "count") return (value === undefined || value === null) ? ' ' : value.comma() + "건";
+            else if (size == "count") return (value === undefined || value === null) ? ' ' : value.comma() + "<s:message code="common.msg.cnt"/>";
             else return (value === undefined || value === null) ? '-' : value;
 
         }
@@ -616,7 +616,7 @@
                 success: function (data, total) {
 
                     try {
-                        $('#TodayKeywordTotalCnt').html(data.total + "<span>건</span><span class='tit13'></span>");
+                        $('#TodayKeywordTotalCnt').html(data.total + "<span><s:message code="common.msg.cnt"/></span><span class='tit13'></span>");
                         // off('keyword.message.count');
                     } catch (e) {
                     }
@@ -637,7 +637,7 @@
                 searchStr: '',
                 success: function (data, total) {
                     try {
-                        $('#todayNotWork').html(data.total + "<span>건</span> <span class='tit13'></span>");
+                        $('#todayNotWork').html(data.total + "<span><s:message code="common.msg.cnt"/></span> <span class='tit13'></span>");
                         // off('riskBehavior.message.count');
                     } catch (e) {
                     }
@@ -657,7 +657,7 @@
                 searchStr: '',
                 success: function (data, total) {
                     try {
-                        $('#getTodayRiskTotalCnt').html(data.total + "<span>건</span> <span class='tit13'></span>");
+                        $('#getTodayRiskTotalCnt').html(data.total + "<span><s:message code="common.msg.cnt"/></span> <span class='tit13'></span>");
                         // off('riskBehavior.message.count');
                     } catch (e) {
                     }
@@ -677,7 +677,7 @@
                 url: 'getTodayPatternPrivacy.xcn',
                 searchStr: '',
                 success: function (data, total) {
-                    $('#TodayPatternPrivacyTotalCnt').html(data.total + "<span>건</span> <span class='tit13'></span>");
+                    $('#TodayPatternPrivacyTotalCnt').html(data.total + "<span><s:message code="common.msg.cnt"/></span> <span class='tit13'></span>");
                 },
                 error: function (status, message) {
                     //ui.alertMsg(message);
@@ -766,7 +766,7 @@
             ui.get({
                 url: 'getFileSendTotal.xcn',
                 success: function (data, total) {
-                    $('#TodayfileSendTotalCnt').html(data.total + "<span>건</span> <span class='tit13'></span>");
+                    $('#TodayfileSendTotalCnt').html(data.total + "<span><s:message code="common.msg.cnt"/></span> <span class='tit13'></span>");
                 },
                 error: function (status, message) {
                     //ui.alertMsg(message);
@@ -797,7 +797,7 @@
                             break;
                         }
                     }
-                    $('#todayGroupWareSum').html(todayGroupWareSum + "<span>건</span> <span class='tit13'></span>");
+                    $('#todayGroupWareSum').html(todayGroupWareSum + "<span><s:message code="common.msg.cnt"/></span> <span class='tit13'></span>");
 
                     if (areAllValuesZero(data.facet))  $('#svcDataChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="150px;" height="150px" style="margin: auto; display: block;"> ');
                     else printChart(data.facet);
