@@ -355,7 +355,7 @@
 				<div class="form-inline" id="modal_body_area"></div>
 			</div>
 			<div class="modalfooter">
-				<button class="pop_btn01" data-dismiss="modal">닫기</button>
+				<button class="pop_btn01" data-dismiss="modal"><s:message code="common.msg.close"/></button>
 			</div>
 		</div>
 	</div>
