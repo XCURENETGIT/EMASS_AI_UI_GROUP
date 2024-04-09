@@ -600,7 +600,7 @@
 
         function getFormattedValue(size, value) {
             if (size == "size") return (value === undefined || value === null) ? ' ' : value;
-            else if (size == "count") return (value === undefined || value === null) ? ' ' : value.comma() + <s:message code="common.msg.cnt"/>;
+            else if (size == "count") return (value === undefined || value === null) ? ' ' : value.comma() + '<s:message code="common.msg.cnt"/>';
             else return (value === undefined || value === null) ? '-' : value;
 
         }
