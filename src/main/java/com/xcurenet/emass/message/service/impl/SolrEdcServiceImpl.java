@@ -42,10 +42,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.elasticsearch.core.AggregationsContainer;
-import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
-import org.springframework.data.elasticsearch.core.SearchHit;
-import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.*;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.FetchSourceFilter;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
@@ -306,9 +303,14 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	}
 
 	@Override
-	public SolrEdcVO getSelectOne(String msgId) {
+	public SolrEdcVO getSelectOne(String msgId,boolean isUnknownDocument) {
 		org.springframework.data.elasticsearch.core.query.Query searchQuery = new NativeSearchQueryBuilder().withQuery(QueryBuilders.termQuery("msgid",msgId)).withTimeout(Duration.ofSeconds(60)).build();
-		SolrEdcVO solrEdcVO = operation.searchOne(searchQuery, SolrEdcVO.class, IndexCoordinates.of(String.format("%s_w_%s", "edc", msgId.substring(0, 6)))).getContent();
+		String index = (!isUnknownDocument) ? String.format("%s_w_%s", "edc", msgId.substring(0, 6)) :  String.format("%s_u_%s", "edc", msgId.substring(0, 6));
+		IndexOperations indexoperations = operation.indexOps(IndexCoordinates.of(index));
+		SolrEdcVO solrEdcVO = null;
+		if(indexoperations.exists()) solrEdcVO = operation.searchOne(searchQuery, SolrEdcVO.class, indexoperations.getIndexCoordinates()).getContent();
+
+
 		return solrEdcVO;
 	}
 

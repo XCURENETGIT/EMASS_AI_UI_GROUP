@@ -20,7 +20,7 @@ public interface SolrEdcService {
 
 	public SearchHits<SolrEdcVO>  getList(final SolrQuery sq) throws SolrServerException, IOException;
 
-	public SolrEdcVO getSelectOne(final String msgId);
+	public SolrEdcVO getSelectOne(final String msgId,final boolean isUnknownDocument);
 
 	public SolrEdcMessageVO getEmassMessage(final SolrQuery sq, final String adminId) throws IOException, SolrServerException;
 

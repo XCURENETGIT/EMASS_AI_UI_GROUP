@@ -1094,6 +1094,10 @@ function setMessage(msg) {
 		$('#subject').append(html);
 	}
 
+	/* 서비스 타입 알수 없음의 경우  */
+	var svcHtml = '<input id="unKnownDocument" type="hidden" value="'+svc+'">';
+	$('#subject').append(svcHtml);
+
 
 	// /* 수신 */
 	// if(msg.direction == 'I') {

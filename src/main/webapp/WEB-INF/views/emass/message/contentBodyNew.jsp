@@ -246,8 +246,12 @@
 				d.setDate(d.getDate() - 1);
 				var targetDate = d.format('yyyymmdd');
 				var subjectIsEmpty = false;
+				var isUnknownDocument = false;
 				if($('#subjectIsEmpty').length > 0) subjectIsEmpty = true;
-				fnOpenWindow('<c:url value="/ems/recommend.do" />?msgId='+msgId+'&targetDate='+targetDate+'&subjectIsEmpty='+subjectIsEmpty, 'recommend', 1300, 800, 'fix');
+                
+                var svcValue = $("#unKnownDocument").val();
+                if(svcValue.startsWith("u") > -1) isUnknownDocument = true;
+				fnOpenWindow('<c:url value="/ems/recommend.do" />?msgId='+msgId+'&targetDate='+targetDate+'&subjectIsEmpty='+subjectIsEmpty+'&isUnknownDocument='+isUnknownDocument, 'recommend', 1300, 800, 'fix');
 			});
 
 			$(document).on('click', '#nologUrlBtn', function(){
