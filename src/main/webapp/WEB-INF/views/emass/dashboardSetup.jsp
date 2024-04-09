@@ -1,3 +1,5 @@
+<%@ page import="com.xcurenet.common.util.Common" %>
+<%@ page import="com.xcurenet.common.util.config.Config" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp" %>
 <%

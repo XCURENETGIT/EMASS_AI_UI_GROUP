@@ -171,7 +171,7 @@
                 url: 'getTodayPattern.xcn',
                 patternType:'pi_PN',
                 success: function (data, total) {
-                    $('#TodayPasswordTotalCnt').html(data.total + "<span>건</span><span class='tit13'></span>");
+                    $('#TodayPasswordTotalCnt').html(data.total + "<span><s:message code="common.msg.cnt"/></span><span class='tit13'></span>");
                 },
                 error: function (status, message) {
                 },
@@ -185,7 +185,7 @@
                 url: 'getTodayPattern.xcn',
                 patternType:'pi_FN',
                 success: function (data, total) {
-                    $('#TodayForeignerTotalCnt').html(data.total + "<span>건</span> <span class='tit13'></span>");
+                    $('#TodayForeignerTotalCnt').html(data.total + "<span><s:message code="common.msg.cnt"/></span> <span class='tit13'></span>");
                 },
                 error: function (status, message) {
                 },
@@ -200,7 +200,7 @@
                 url: 'getTodayPattern.xcn',
                 patternType:'pi_SN',
                 success: function (data, total) {
-                    $('#TodaySecurityTotalCnt').html(data.total + "<span>건</span> <span class='tit13'></span>");
+                    $('#TodaySecurityTotalCnt').html(data.total + "<span><s:message code="common.msg.cnt"/></span> <span class='tit13'></span>");
                 },
                 error: function (status, message) {
                 },
@@ -215,7 +215,7 @@
                 url: 'getTodayPattern.xcn',
                 patternType:'pi_CN',
                 success: function (data, total) {
-                    $('#TodayCardNumberTotalCnt').html(data.total + "<span>건</span> <span class='tit13'></span>");
+                    $('#TodayCardNumberTotalCnt').html(data.total + "<span><s:message code="common.msg.cnt"/></span> <span class='tit13'></span>");
                 },
                 error: function (status, message) {
                 },
@@ -231,7 +231,7 @@
                 url: 'getTodayPattern.xcn',
                 patternType:'pi_DN',
                 success: function (data, total) {
-                    $('#TodayDriveTotalCnt').html(data.total + "<span>건</span> <span class='tit13'></span>");
+                    $('#TodayDriveTotalCnt').html(data.total + "<span><s:message code="common.msg.cnt"/></span> <span class='tit13'></span>");
                 },
                 error: function (status, message) {
 
@@ -248,7 +248,7 @@
                 url: 'getTodayPattern.xcn',
                 patternType:'pi_EC',
                 success: function (data, total) {
-                    $('#TodayExtensionModulationTotalCnt').html(data.total + "<span>건</span> <span class='tit13'></span>");
+                    $('#TodayExtensionModulationTotalCnt').html(data.total + "<span><s:message code="common.msg.cnt"/></span> <span class='tit13'></span>");
                 },
                 error: function (status, message) {
 
@@ -581,7 +581,7 @@
                             let noName = getFormattedValue("size",name[3]);
                             let nameId = name[3];
                             str += "<li class='click2' data-value='" + nameId + "'><span class='num'>" + (i + 1) + "</span>";
-	                        str += "<p><span class='name'>" + noName + "</span>";
+                            str += "<p><span class='name'>" + noName + "</span>";
                             str += "<span class='righttext'>" + count + "</span></p></li>";
                         }
                         str += "</ul></div>"
@@ -600,7 +600,7 @@
 
         function getFormattedValue(size, value) {
             if (size == "size") return (value === undefined || value === null) ? ' ' : value;
-            else if (size == "count") return (value === undefined || value === null) ? ' ' : value.comma() + "<s:message code="common.msg.cnt"/>";
+            else if (size == "count") return (value === undefined || value === null) ? ' ' : value.comma() + <s:message code="common.msg.cnt"/>;
             else return (value === undefined || value === null) ? '-' : value;
 
         }
@@ -826,7 +826,7 @@
                 $('#sizeChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data"class ="xcn_nodata" width="100px;" height="100px" style="display: block;"> ');
                 return false;
             }
-             else {
+            else {
                 var max = 0;
                 for (var i = 0; i < dat.length; i++) {
                     var items = [];
@@ -1188,7 +1188,7 @@
             searchStr: '',
             success: function (data, total) {
                 if (rowSearchkey == null) rowSearchkey = "xlsx";
-                    getTodayFileList(data, rowSearchkey);
+                getTodayFileList(data, rowSearchkey);
 
             },
             error: function (status, message) {
@@ -1349,7 +1349,7 @@
 			<%--			금일 첨부파일 수집 현황 시작!!--%>
 			<div class="graphaBox">
 				<h3><s:message code="dashboard.msg.todayFileType"/></h3>
-<%--				<div class="bordd"  style="display: flex;justify-content: center; align-items: center">--%>
+				<%--				<div class="bordd"  style="display: flex;justify-content: center; align-items: center">--%>
 				<div class="bordd" style=" min-width: 400px; box-sizing: border-box; width: 100%">
 					<div class="main_tab">
 						<button class="tablink excel" onclick="openCity('xlsx', this, '#268770')" id="defaultOpen">EXCEL</button>

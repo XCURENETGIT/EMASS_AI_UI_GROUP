@@ -1281,6 +1281,7 @@ function Highlight() {
 function HighSerarchlight( ) {
     setTimeout(function(){
         var searchs = $('#searchMsgStrInput').val().split(/\||\+|\s|\*|\"/);
+        console.log(searchs);
 
         if ( searchs.length > 0 ){
             var timeline_list_obj = $("#timeline_list").find('.me, .you');

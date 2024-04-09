@@ -25,10 +25,10 @@
 		</div>
 		<div class="modalCon">
 			<div class="modalTop">
-				<h3>비밀번호 변경</h3>
+				<h3><s:message code="auditLog.oper.CHG_PWD"/></h3>
 				<p>
 					<span class="red_dot veralign_middle"></span>
-					필수 입력 사항입니다.
+					<s:message code="common.required.msg"/>
 				</p>
 			</div>
 			<div class="modalbody">
