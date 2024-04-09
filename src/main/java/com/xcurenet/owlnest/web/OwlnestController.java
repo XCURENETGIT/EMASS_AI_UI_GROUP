@@ -87,7 +87,7 @@ public class OwlnestController {
 			if (Common.isEmpty(subject))return null;
 			/* 검색어 정리*/
 			subject = owlnestService.getSearchQuery(subject);
-			query = String.format("+subject:(%s)",subject);
+			query = String.format("+subject:(%s) -msgid:(%s)",subject,msgid);
 		} else {
 			sq.addMoreLikeThisField("host");
 			sq.addMoreLikeThisField("path");
