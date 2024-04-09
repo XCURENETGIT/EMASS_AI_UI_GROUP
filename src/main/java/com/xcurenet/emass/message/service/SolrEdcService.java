@@ -20,7 +20,10 @@ public interface SolrEdcService {
 
 	public SearchHits<SolrEdcVO>  getList(final SolrQuery sq) throws SolrServerException, IOException;
 
+	public SolrEdcVO getSelectOne(final String msgId);
+
 	public SolrEdcMessageVO getEmassMessage(final SolrQuery sq, final String adminId) throws IOException, SolrServerException;
+
 
 	public SolrEdcMessageVO getEmassMessage(final SolrQuery sq, final String adminId, final String readYn, final String consentNo) throws IOException, SolrServerException;
 

@@ -1,12 +1,5 @@
 package com.xcurenet.owlnest.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.stereotype.Service;
-
 import com.owlnest.test.paraphraserClient;
 import com.xcurenet.common.dao.XcnAbstractDAO;
 import com.xcurenet.common.util.Common;
@@ -14,15 +7,22 @@ import com.xcurenet.common.util.config.Config;
 import com.xcurenet.owlnest.service.OwlnestResultVO;
 import com.xcurenet.owlnest.service.OwlnestService;
 import com.xcurenet.owlnest.service.ParaphraserMessageVO;
-
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 
 @Service("owlnestService")
 @Slf4j
 public class OwlnestServiceImpl extends XcnAbstractDAO implements OwlnestService {
+
+	private String[] INEQUALITY_SIGN = {"+","-","|"};
+	private static final String OR_PREFIX = " ";
+	private static final String SPECIAL_CHAR = "*";
+
 
 	@Override
 	public OwlnestResultVO getParaphraserData(String msgId, String targetDate) {
@@ -96,5 +96,137 @@ public class OwlnestServiceImpl extends XcnAbstractDAO implements OwlnestService
 			e.printStackTrace();
 		}
 		return output;
+	}
+
+
+
+
+	public String getSearchQuery(String query) {
+		if( query.startsWith("|")) query = query.substring(1);
+
+		query = specialCharsValid(query);
+		query = getTempQuery(query);
+		// 특수문자 처리
+		query = specialCharsCheck(query);
+		StringBuilder sb = new StringBuilder();
+		if (!query.contains("|") && !query.contains("+") && !query.contains("-") & !query.contains(" ")) {
+			StringBuilder queryStr = new StringBuilder();
+			String[] terms = query.split(" ");
+			for (String term : terms) {
+				/*특수문자 처리*/
+				queryStr.append(appendSpecialchar(term)).append(" ");
+			}
+			sb.append(queryStr.toString().trim().replaceAll(" ", " ").replaceAll("__", " "));
+		} else {
+			StringBuilder querySb = new StringBuilder();
+			String[] terms = query.split(" ");
+			for (int i = 0; i < terms.length; i++) {
+				if (terms[i].equals("|")) {
+					terms[i] = OR_PREFIX;
+				}else {
+					terms[i] = ("\"").concat(terms[i]).concat("\"");
+				}
+
+				querySb.append(appendSpecialchar(terms[i])).append(" ");
+			}
+			sb.append(querySb.toString().trim().replaceAll(" ", " ").replaceAll("__", " "));
+		}
+
+		String result = sb.toString().replace(OR_PREFIX, " ").replace("__", " ").replace("  ", " ").trim();
+
+		// 연산자 처리
+		result = inequalitySignProc(result);
+		return result;
+	}
+
+
+	public String specialCharsValid(String str){
+		String result = str;
+		if(result.indexOf("/") > -1) {
+			if(result.indexOf("/") == result.lastIndexOf("/")) result =  result.replace(result, ("\"").concat(result).concat( "\""));
+		}
+		result = result.replaceAll("([+])\\1+","+").replaceAll("([|])\\1+","|").replaceAll("(-)\\1+","-"); // 연속2개입력시
+
+		return result;
+	}
+
+	public String specialCharsCheck(String str){
+		String result = str;
+		/* 특수문자 처리 */
+		result  =  result.replaceAll("[[\\\\]=/&:><!^~*/[\"]\\[\\]\\(\\)\\{\\}]", "\\\\"+"$0");
+		return result;
+	}
+
+
+	public String inequalitySignProc(String str) {
+		String result = str;
+		StringBuilder tempSb = new StringBuilder();
+		tempSb.append(result);
+
+		int idx = 0;
+		char[] chars =  result.toCharArray();
+		for(char c : chars) {
+			if( Arrays.stream(INEQUALITY_SIGN).filter(s -> s.equals(String.valueOf(c))).count() > 0) {
+				if(idx+1 == chars.length) {
+					tempSb.setCharAt(idx,' ');
+				}else {
+					String cstr = String.valueOf(chars[idx+1]);
+					if(String.valueOf(chars[idx+1]).equals(" ") ||  Arrays.stream(INEQUALITY_SIGN).filter(s -> s.equals(String.valueOf(cstr))).count() > 0) {
+						tempSb.setCharAt(idx,' ');
+					}
+				}
+			}
+			idx++;
+		}
+
+		return tempSb.toString();
+	}
+
+	public String appendSpecialchar(String str) {
+		if (Common.isEmpty(str.trim())) return str;
+		else if (str.endsWith(SPECIAL_CHAR)) return str;
+		else if (str.endsWith(OR_PREFIX)) return str;
+		else if (str.endsWith("\"")) return str;
+		else {
+//			for (String item : SPECIALCHARS) {
+//				if (str.contains(item)) {
+//					str = str.replaceAll(item, "");
+//				}
+//			}
+			return str;
+		}
+	}
+
+	@Override
+	public String getTempQuery(String query) {
+		StringBuilder result = new StringBuilder();
+		StringBuilder tmp = new StringBuilder();
+		for (int i = 0; i < query.length(); i++) {
+			char q = query.charAt(i);
+			if (q == '|') {
+				if (!Character.isWhitespace(query.charAt(i - 1))) {
+					tmp.append(" ");
+				}
+				tmp.append(q).append(" ");
+			} else {
+				tmp.append(q);
+			}
+		}
+		query = tmp.toString();
+		query = query.replaceAll("( )+", " ");
+		String[] terms = query.split(" ");
+		for (int i = 0; i < terms.length; i++) {
+			String t = terms[i].trim();
+			result.append(" ").append(t);
+			if (t.indexOf("\"") > -1 && !t.endsWith("\"")) {
+				for (int j = i + 1; j < terms.length; j++) {
+					String tx = terms[j].trim();
+					result.append("__").append(terms[j].trim());
+					i++;
+					if (tx.endsWith("\"")) break;
+				}
+			}
+		}
+		return result.toString().trim();
 	}
 }

@@ -5,6 +5,7 @@ import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.emass.message.service.SolrEdcMessageVO;
 import com.xcurenet.emass.message.service.SolrEdcService;
+import com.xcurenet.emass.message.service.SolrEdcVO;
 import com.xcurenet.emass.searchLog.service.SearchLogService;
 import com.xcurenet.owlnest.service.OwlnestService;
 import lombok.extern.slf4j.Slf4j;
@@ -63,21 +64,27 @@ public class OwlnestController {
 	private SolrEdcMessageVO getSolrEdcMessage(String msgid,boolean subjectIsEmpty, String adminId) throws Exception {
 
 		SolrQuery sq = new SolrQuery();
+		String query = "";
 		sq.setStart(0);
 		sq.setRows(100);
 		sq.setMoreLikeThis(true);
 
     	sq.setMoreLikeThisFields("body");
 		sq.setMoreLikeThisFields("attach");
-		sq.setQuery("");
+
 
 //	 	sq.setMoreLikeThisFields("body_snippet");
-		if(!subjectIsEmpty)sq.addMoreLikeThisField("subject");
-		else {
+		if(!subjectIsEmpty) {
+			SolrEdcVO solrEdcVO = solrEdcService.getSelectOne(msgid);
+			sq.addMoreLikeThisField("subject");
+			String subject = solrEdcVO.getSubject();
+			subject = owlnestService.getSearchQuery(subject);
+			query = String.format("+subject:(%s)",subject);
+		} else {
 			sq.addMoreLikeThisField("host");
 			sq.addMoreLikeThisField("path");
 		}
-
+		sq.setQuery(query);
 		sq.setSort("_score", SolrQuery.ORDER.desc);
 		sq.setParam("id",msgid);
 
