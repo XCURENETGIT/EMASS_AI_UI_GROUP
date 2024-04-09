@@ -23,6 +23,7 @@ import com.xcurenet.searchWord.service.RelationKeywordVO;
 import com.xcurenet.user.service.UserService;
 import com.xcurenet.user.service.UserVO;
 import lombok.extern.log4j.Log4j2;
+import org.apache.cxf.wsdl11.SOAPBindingUtil;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -496,7 +497,8 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		List<EmsPiVO> emsPis = emsMessageVO.getPatterns();
 
 		/* 주민번호 & 외국인등록번호 마스킹 */
-		if(Common.isEquals(piId,"SN") || Common.isEquals(piId,"FN")) emsPis.forEach(m ->  m.setKwds(m.getKwds().replaceAll("([0-9]{6})([1-4]{1})([0-9]{6})", "$1$2******")));
+		if(Common.isEquals(piId,"SN")) emsPis.forEach(m ->  m.setKwds(m.getKwds().replaceAll("-","").replaceAll("([0-9]{6})([1-4]{1})([0-9]{6})", "$1$2******")));
+		if(Common.isEquals(piId,"FN")) emsPis.forEach(m ->  m.setKwds(m.getKwds().replaceAll("-","").replaceAll("([0-9]{6})([0-9]{1})([0-9]{6})", "$1$2******")));
 
 		for (EmsPiVO pi : emsPis) {
 			if ((Common.isEmpty(piId) || Common.isEquals(piId, pi.getPiid())) && (Common.isEmpty(type) || Common.isEquals(type, pi.getType())) && (Common.isEmpty(attachName) || Common.isEquals(attachName, pi.getAttachName()))) {
