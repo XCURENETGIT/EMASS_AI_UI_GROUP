@@ -1369,6 +1369,8 @@ public class SolrCreateQuery {
 
 		query = specialCharsValid(query);
 		query = getTempQuery(query);
+		// 특수문자 처리
+		query = specialCharsCheck(query);
 		StringBuilder sb = new StringBuilder();
 		if (!query.contains("|") && !query.contains("+") && !query.contains("-") & !query.contains(" ")) {
 			StringBuilder queryStr = new StringBuilder();
@@ -1387,9 +1389,9 @@ public class SolrCreateQuery {
 					terms[i] = OR_PREFIX;
 				}else if (i > 0 && terms[i - 1].equals(OR_PREFIX) || terms[i].startsWith("+") || terms[i].startsWith("-")) {
 				}else if (i < terms.length - 1 && !terms[i + 1].equals("|")) {
-				//	terms[i] = ("+").concat(terms[i]);
+					terms[i] = ("\"").concat(terms[i]).concat("\"");
 				}else if (!terms[i].startsWith("+") && !terms[i].startsWith("-")) {
-				//	terms[i] = ("(").concat(terms[i]).concat( ")");
+					terms[i] = ("\"").concat(terms[i]).concat("\"");
 				}
 
 				querySb.append(appendSpecialchar(terms[i])).append(" ");
@@ -1399,11 +1401,8 @@ public class SolrCreateQuery {
 
 		String result = sb.toString().replace(OR_PREFIX, " ").replace("__", " ").replace("  ", " ").trim();
 
-		 // 특수문자 처리
-		result = specialCharsCheck(result);
 		// 연산자 처리
 		result = inequalitySignProc(result);
-//
 		return result;
 	}
 
