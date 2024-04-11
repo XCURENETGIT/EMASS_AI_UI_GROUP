@@ -488,9 +488,9 @@ $(document).ready(function(){
 						$('#userEmailPop').text(obj.attr('sender'));
 					}
 					else if( nvl(obj.attr('recvid')) == ''){
-						  var srcip = '';
-						 if(obj.attr('srcip') == undefined) srcip = unknown;
-						 else srcip = obj.attr('srcip');
+						var srcip = '';
+						if(obj.attr('srcip') == undefined) srcip = unknown;
+						else srcip = obj.attr('srcip');
 						$('#userNamePop').text(srcip);
 						$('#userEmailPop').text(obj.text());
 					}
@@ -1324,8 +1324,8 @@ function userHtml(userList,tr, srcip, dstip, usrip) {
 		else insideClass = 'userInside';
 
 
-	 	if(''!=nvl(user.name))  userDivHtml += '<span class="userInfoSpan '+insideClass+'"';
-	 	else  userDivHtml += '<span class="userInfoSpan notuser';
+		if(''!=nvl(user.name))  userDivHtml += '<span class="userInfoSpan '+insideClass+'"';
+		else  userDivHtml += '<span class="userInfoSpan notuser';
 
 
 		userDivHtml += ' recvid="' + nvl(user.recvId) + '"';

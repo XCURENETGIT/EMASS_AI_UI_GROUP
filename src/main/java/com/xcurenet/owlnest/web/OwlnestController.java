@@ -73,9 +73,9 @@ public class OwlnestController {
 
 	private SolrEdcMessageVO getSolrEdcMessage(String msgid,boolean subjectIsEmpty,boolean isUnknownDocument, String adminId) throws Exception {
 		SolrQuery sq = new SolrQuery();
-		String query = "";
 		sq.setStart(0);
 		sq.setRows(100);
+		sq.setQuery("");
 		sq.setMoreLikeThis(true);
 
     	sq.addMoreLikeThisField("body");
@@ -83,18 +83,19 @@ public class OwlnestController {
 		sq.setSort("_score", SolrQuery.ORDER.desc);
 		sq.setParam("id",msgid);
 		if(!subjectIsEmpty) {
-			SolrEdcVO solrEdcVO = solrEdcService.getSelectOne(msgid, isUnknownDocument);
+//			SolrEdcVO solrEdcVO = solrEdcService.getSelectOne(msgid, isUnknownDocument);
 			sq.addMoreLikeThisField("subject");
-			String subject = (solrEdcVO != null) ? solrEdcVO.getSubject() : null;
-			if (Common.isEmpty(subject))return null;
-			/* 검색어 정리*/
-			subject = owlnestService.getSearchQuery(subject);
-			query = String.format("+subject:(%s) -msgid:(%s)",subject,msgid);
+//			String subject = (solrEdcVO != null) ? solrEdcVO.getSubject() : null;
+//			if (Common.isEmpty(subject))return null;
+//			/* 검색어 정리*/
+//			subject = owlnestService.getSearchQuery(subject);
+//			query = String.format("+subject:(%s) -msgid:(%s)",subject,msgid);
 		} else {
 			sq.addMoreLikeThisField("host");
 			sq.addMoreLikeThisField("path");
 		}
-		sq.setQuery(query);
+
+
 		SolrEdcMessageVO solrEdcMessageVO = solrEdcService.getEmassMessage(sq, adminId);
 
 		return solrEdcMessageVO;

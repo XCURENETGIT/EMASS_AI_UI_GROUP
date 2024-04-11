@@ -44,10 +44,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.core.*;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
-import org.springframework.data.elasticsearch.core.query.FetchSourceFilter;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
-import org.springframework.data.elasticsearch.core.query.Query;
-import org.springframework.data.elasticsearch.core.query.UpdateQuery;
+import org.springframework.data.elasticsearch.core.query.*;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -171,8 +168,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		/* set 필터 쿼리 */
 		String filterQuery =  (null != sq.getFilterQueries())? String.join(" ", sq.getFilterQueries()) : "";
 		/* 일반 검색 쿼리 */
-		QueryStringQueryBuilder queryBuilder = QueryBuilders.queryStringQuery(sq.getQuery() + " " + filterQuery).fields(getDefaultSearchField(sq));  // type PHRASE
-
+		QueryStringQueryBuilder queryBuilder = QueryBuilders.queryStringQuery(sq.getQuery() + " " + filterQuery);  // type PHRASE
 
 		/* 정규식 패턴 필드 설정 */
 		BoolQueryBuilder regexQuery = QueryBuilders.boolQuery();
@@ -188,10 +184,13 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		BoolQueryBuilder recommendQuery = QueryBuilders.boolQuery();
 		if(!Common.isEmpty(sq.getMoreLikeThisFields()) && !Common.isEmpty(sq.get("id"))){
 			recommendQuery.should(QueryBuilders.moreLikeThisQuery(sq.getMoreLikeThisFields(), null, new MoreLikeThisQueryBuilder.Item[]{new MoreLikeThisQueryBuilder.Item(null, sq.get("id"))}).minTermFreq(1).minDocFreq(0).maxQueryTerms(20));
-			boolQuery.should(recommendQuery).minimumShouldMatch("30%"); // 유사도 30%이상
+			queryBuilder.fields(new HashMap<String,Float>(){{put("svc",0.1f);}});
+			boolQuery.should(recommendQuery).minimumShouldMatch("0<-3%"); // 유사도 0%는 제외
 		}
-
 		boolQuery.should(queryBuilder);
+
+
+
 
 		/* 최종 조합 쿼리 */
 		BoolQueryBuilder complateQuery = QueryBuilders.boolQuery().must(boolQuery);
