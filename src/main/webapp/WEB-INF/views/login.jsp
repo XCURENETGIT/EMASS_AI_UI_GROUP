@@ -559,7 +559,7 @@
 					<input class="mat12" type="password" placeholder="Password" id="userPwInput" autocomplete="off" required>
 				</div>
 				<div>
-					<button id="loginBtn" type="button">로그인</button>
+					<button id="loginBtn" type="button"><%= Common.isEquals(locale, "ko") ? "로그인" : "Login" %></button>
 				</div>
 			</div>
 			<div id="login_switch">

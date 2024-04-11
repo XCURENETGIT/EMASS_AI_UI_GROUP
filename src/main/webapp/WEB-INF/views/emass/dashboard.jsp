@@ -967,7 +967,7 @@
 
     function getFormattedValue(size, value) {
         if (size == "size") return (value === undefined || value === null) ? ' ' : value;
-        else if (size == "count") return (value === undefined || value === null) ? ' ' : value.comma() + "건";
+        else if (size == "count") return (value === undefined || value === null) ? ' ' : value.comma() + "<s:message code="common.msg.cnt"/>";
         else return (value === undefined || value === null) ? '-' : value;
 
     }
@@ -1950,7 +1950,7 @@
 
     function rtnGetSearchData(data, obj) {
         if (obj.dashType == 'S') {
-            $('[data-gs-id=' + obj.id + ']').find('.rightValue').text(nvn(data.rightValue) + '건').append("<span class='tit13'></span>");
+            $('[data-gs-id=' + obj.id + ']').find('.rightValue').text(nvn(data.rightValue) + '<s:message code="common.msg.cnt"/>').append("<span class='tit13'></span>");
         } else if (obj.dashType == 'D') {
             $('[data-gs-id=' + obj.id + ']').find('.rightValue').text(nvn(data.rightValue));
             $('[data-gs-id=' + obj.id + ']').find('.leftValue').text(nvn(data.leftValue));
