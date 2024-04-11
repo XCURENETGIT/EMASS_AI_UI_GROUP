@@ -296,7 +296,7 @@ function getData() {
 					</div>
 				</div>-->
 				<div class="row xcn_full top_space" >
-					<div class="col-xs-12" style="width:900px;">
+					<div class="col-xs-12">
 						<div id="mailFormListGrid" class="slickGrid gridArea"></div>
 					</div>
 				</div>
