@@ -66,6 +66,13 @@
 		background: rgb(0, 173, 246); /* Old browsers */
 		box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
 	}
+	 .interestUserCheck{
+		 background-image: url('<c:url value="/img/icon/star.png"/>');
+		 background-position: center;
+		 background-repeat:no-repeat;
+		 width:100%;
+		 height:100%;
+	 }
 </style>
 <script>
 	var searchFlag = false;
