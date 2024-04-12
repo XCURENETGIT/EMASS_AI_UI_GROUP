@@ -4,7 +4,13 @@
 
 <script type="text/javascript" src="<c:url value="/js/messageGrid.js"/>"></script>
 <style>
-
+	.interestUserCheck{
+		background-image: url('<c:url value="/img/icon/star.png"/>');
+		background-position: center;
+		background-repeat:no-repeat;
+		width:100%;
+		height:100%;
+	}
 </style>
 <script>
 
@@ -690,12 +696,10 @@
         currentgrid = getCurrentGrid();
         if (searchFlag) return;
         if (lastRow == 'Y' || lastRow == undefined) {
-            console.log(lastRow);
             currentgrid.data.length = 0;
             currentgrid.rtnNextPageFunc = getDetailData;
             currentgrid.loadingPage = 0;
         } else {
-            console.log(lastRow);
             currentgrid.loadingPage++;
         }
 

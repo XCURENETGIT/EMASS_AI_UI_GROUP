@@ -59,13 +59,15 @@ public class SolrCheckedServiceImpl implements SolrCheckedService {
 		SolrCheckedVO vo = mongo.selectOne(query, SolrCheckedVO.class);
 
 		boolean isEmpty = true;
+		boolean update = false;
+		String isAlreadyId = "";
 		if (vo != null) {
 			List<SolrCheckedVO.SolrCheckedAttr> checkedList = vo.getChecked();
 			if (checkedList != null) {
-				String isAlreadyId = "";
 				for (SolrCheckedVO.SolrCheckedAttr checked : checkedList) { //이미 등록된 운용자
 					if (checked.getReadId().equals(adminId)) {
 						isAlreadyId = adminId;
+						update = true;
 						break;
 					}
 				}
@@ -103,10 +105,13 @@ public class SolrCheckedServiceImpl implements SolrCheckedService {
 			checkedList.add(attr);
 			vo.setChecked(checkedList);
 			log.info("checked : {}", vo);
-			mongo.save(vo);
+			if (update){
+				mongo.updateReadTimeIfExists("EMS_CHECKED",adminId, String.valueOf(LocalDateTime.parse(new DateTime().toString(), DATETIMEMILLISSYMBOL).toDateTime(DateTimeZone.UTC)));
+			}else mongo.save(vo);
 			String checkedTopic = "ems_ui_checked_index";
 			kafkaProducerService.send(checkedTopic, "_id", msgId);
 		}
+
 	}
 
 

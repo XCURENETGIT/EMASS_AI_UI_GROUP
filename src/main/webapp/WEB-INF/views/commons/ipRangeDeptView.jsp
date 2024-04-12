@@ -69,7 +69,7 @@ function getData(lastRow) {
 		<div class="contentSub">
 			<div class="subtab">
 				<button class="active">
-					<s:message code="POLICY_SETUP.DEPT_IPRANGE"/>
+					<s:message code="DATA_MONITOR.DEPT_IPRANGE_VIEW"/>
 					<span id="relationKeywordCount"></span>
 				</button>
 			</div>

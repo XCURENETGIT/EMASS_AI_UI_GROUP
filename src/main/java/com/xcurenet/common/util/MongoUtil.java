@@ -1,6 +1,7 @@
 package com.xcurenet.common.util;
 
 import com.xcurenet.audit.service.AuditVO;
+import com.xcurenet.emass.message.service.SolrCheckedVO;
 import lombok.extern.log4j.Log4j2;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,7 +104,6 @@ public class MongoUtil {
 		return mongoTemplate.save(object, collectionName);
 	}
 
-
 	//단건등록
 	public <T> T insert(T object) {
 		return mongoTemplate.insert(object);
@@ -158,6 +158,12 @@ public class MongoUtil {
 		query.addCriteria(Criteria.where("TABLENAME").is(table));
 		update.set("VERSION", version);
 		mongoTemplate.updateMulti(query, update, collectionName);
+	}
+
+	public void updateReadTimeIfExists(String collectionName, String readId, String newReadTime) {
+		Query query = new Query(Criteria.where("check.readId").is(readId));
+		Update update = new Update().set("check.$.readTime", newReadTime);
+		mongoTemplate.findAndModify(query, update, SolrCheckedVO.class, collectionName);
 	}
 
 	public void updateDate(String tableName, LocalDateTime localDateTime) {

@@ -3,7 +3,13 @@
 
 <script type="text/javascript" src="<c:url value="/js/messageGrid.js"/>"></script>
 <style>
-
+	.interestUserCheck{
+		background-image: url('<c:url value="/img/icon/star.png"/>');
+		background-position: center;
+		background-repeat:no-repeat;
+		width:100%;
+		height:100%;
+	}
 </style>
 <script>
     Highcharts.setOptions({
@@ -431,7 +437,7 @@
 			<div class="subtab">
 				<div>
 					<ul class="nav nav-tabs codeTab listChart">
-						<li class="active"><a data-toggle="tab" href="#basicStatList" id="listTab" >URI TOP</a></li>
+						<li class="active"><a data-toggle="tab" href="#basicStatList" id="listTab" >URL TOP</a></li>
 					</ul>
 				</div>
 			</div>
@@ -518,8 +524,8 @@
         } else if (colKey == "O") {
             colKeyNm = '<s:message code="condition.send"/>';
         } else {
-            var xAxis = $('select[name=xAxis]').val();
-            if (xAxis == "ctime_hh") colKeyNm = colKey + '<s:message code="common.msg.hour"/>';
+            var xAxis = $('button.optionBtn.active').val();
+            if(xAxis == "svc1") colKeyNm =serviceList.search(colKeyNm, 'groupCd', 'groupNm');
         }
 
         tabID++;

@@ -1,6 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp" %>
-
+<style>
+	.interestUserCheck{
+		background-image: url('<c:url value="/img/icon/star.png"/>');
+		background-position: center;
+		background-repeat:no-repeat;
+		width:100%;
+		height:100%;
+	}
+</style>
 <script type="text/javascript" src="<c:url value="/js/messageGrid.js"/>"></script>
 <script>
     Highcharts.setOptions({
