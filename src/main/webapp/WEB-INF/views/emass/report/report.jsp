@@ -117,6 +117,13 @@
             });
 
             $('#selectAll').click(function() {
+
+                var sDate = $('#startdate').val().replaceAll("-","");
+                var eDate = $('#enddate').val().replaceAll("-","");
+                if(sDate > eDate) {
+                    ui.alertMsg('<s:message code="consent.msg.timecheck"/>');
+                    return;
+                }
                 if(!clickFlag) {
                     $('input[name=reportMenu]:checkbox').each(function(){
                         if (!$(this).is(":checked")) {
@@ -262,6 +269,7 @@
         }
 
         function getReportDevice() {
+
             var sDate = $('#startdate').val().replaceAll("-","");
             var eDate = $('#enddate').val().replaceAll("-","");
             if(sDate > eDate) {

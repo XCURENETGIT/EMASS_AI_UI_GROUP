@@ -163,7 +163,7 @@ public class Config {
 
 	public static final String MESSAGE_EXPORT_PATH = "/users/emassai/message/";
 
-	public static final int MESSAGE_EXPORT_USED_RATE = 2;
+	public static final int MESSAGE_EXPORT_USED_RATE = 4;
 
 	public static String DBMS_NAME = "mysql";
 
