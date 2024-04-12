@@ -357,22 +357,20 @@ public class GetSnmp {
 		//log.warn("Set HDD Alarm host:{} index:{}, hddNotifyLimit:{}, hddWarnLimit:{}, hddAlarmLimit:{}", ip, index, hddNotifyLimit, hddWarnLimit, hddAlarmLimit);
 		if (Common.isEmpty(ip)) return false;
 
-		//여기서 null 에러 발생
 		String sysInfoUserId = getDeviceSysEID(ip);
 		if (Common.isEmpty(sysInfoUserId)) return false;
 
 		String emdcIpfInfoFileCtrl = snmpMibLoader.getOID("emdcIpfInfoFileCtrl");
 		String oidStr = emdcIpfInfoFileCtrl + "." + sysInfoUserId + SNMP_OID_PREFIX;
+		log.warn ( "DELETE Device Info IP : " + ip + "  OID : " + oidStr );
+		if ( !snmpUtil.setValue ( oidStr, DELETE_ALL ) ) return false;
 
-		log.warn("DELETE Device Info IP : " + ip + "  OID : " + oidStr);
-		if (!snmpUtil.setValue(oidStr, DELETE_ALL)) return false;
-
-		if (Config.isIPv6) {
+		if ( Config.isIPv6 ) {
 			String emdcIpfV6InfoFileCtrl = snmpMibLoader.getOID("emdcIpfV6InfoFileCtrl");
 			String oidV6Str = emdcIpfV6InfoFileCtrl + "." + sysInfoUserId + SNMP_OID_PREFIX;
 
-			log.warn("DELETE Device Info IP : " + ip + " OIDV6 : " + oidV6Str);
-			return snmpUtil.setValue(oidV6Str, DELETE_ALL);
+			log.warn ( "DELETE Device Info IP : " + ip + " OIDV6 : " + oidV6Str );
+			if ( !snmpUtil.setValue ( oidV6Str, DELETE_ALL ) ) return false;
 		}
 
 		return true;
@@ -474,12 +472,12 @@ public class GetSnmp {
 
 		String emdcIpfInfoFileCtrl = snmpMibLoader.getOID("emdcIpfInfoFileCtrl");
 		String oidStr = emdcIpfInfoFileCtrl + "." + sysInfoUserId + SNMP_OID_PREFIX;
-		if (!snmpUtil.setValue(oidStr, OVERWRITE)) return false;
+		if ( !snmpUtil.setValue ( oidStr, OVERWRITE ) ) return false;
 
-		if (Config.isIPv6) {
+		if ( Config.isIPv6 ) {
 			String emdcIpfV6InfoFileCtrl = snmpMibLoader.getOID("emdcIpfV6InfoFileCtrl");
 			String oidV6Str = emdcIpfV6InfoFileCtrl + "." + sysInfoUserId + SNMP_OID_PREFIX;
-			return snmpUtil.setValue(oidV6Str, OVERWRITE);
+			if ( !snmpUtil.setValue ( oidV6Str, OVERWRITE ) ) return false;
 		}
 
 		return true;
