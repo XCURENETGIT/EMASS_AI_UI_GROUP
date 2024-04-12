@@ -46,8 +46,9 @@ public class OwlnestController {
 //		String targetDate = Common.nvl(param.get("targetDate"));
 		boolean subjectIsEmpty = Boolean.parseBoolean(Common.nvl(param.get("subjectIsEmpty")));
 		boolean isUnknownDocument = Boolean.parseBoolean(Common.nvl(param.get("isUnknownDocument")));
+		String tabId = Common.nvl(param.get("tabId"));
 
-		SolrEdcMessageVO solrVo = getSolrEdcMessage(msgId,subjectIsEmpty,isUnknownDocument, Common.getAdminId(request));
+		SolrEdcMessageVO solrVo = getSolrEdcMessage(msgId,subjectIsEmpty,isUnknownDocument,tabId, Common.getAdminId(request));
 //			List<SolrEdcVO> emassList = solrVo.getEmass();
 //		emassList.sort(new Comparator<SolrEdcVO>() {
 //			@Override
@@ -71,31 +72,42 @@ public class OwlnestController {
 		return new XcnResponseVO(XcnRspCode.OK, solrVo,total);
 	}
 
-	private SolrEdcMessageVO getSolrEdcMessage(String msgid,boolean subjectIsEmpty,boolean isUnknownDocument, String adminId) throws Exception {
+	private SolrEdcMessageVO getSolrEdcMessage(String msgid,boolean subjectIsEmpty,boolean isUnknownDocument,String tabId, String adminId) throws Exception {
 		SolrQuery sq = new SolrQuery();
 		sq.setStart(0);
 		sq.setRows(100);
 		sq.setQuery("");
 		sq.setMoreLikeThis(true);
 
-    	sq.addMoreLikeThisField("body");
-		sq.addMoreLikeThisField("attach");
-		sq.setSort("_score", SolrQuery.ORDER.desc);
-		sq.setParam("id",msgid);
-		if(!subjectIsEmpty) {
-//			SolrEdcVO solrEdcVO = solrEdcService.getSelectOne(msgid, isUnknownDocument);
-			sq.addMoreLikeThisField("subject");
-//			String subject = (solrEdcVO != null) ? solrEdcVO.getSubject() : null;
-//			if (Common.isEmpty(subject))return null;
-//			/* 검색어 정리*/
-//			subject = owlnestService.getSearchQuery(subject);
-//			query = String.format("+subject:(%s) -msgid:(%s)",subject,msgid);
-		} else {
-			sq.addMoreLikeThisField("host");
-			sq.addMoreLikeThisField("path");
+		boolean all = false;
+		boolean body = false;
+		boolean attach = false;
+		boolean subject = false;
+
+		if(Common.isEmpty(tabId) || Common.isEquals(tabId,"allRecommendTab")) all = true;
+		else if(Common.isEquals(tabId,"bodyRecommendTab")) body = true;
+		else if(Common.isEquals(tabId,"attachRecommendTab")) attach = true;
+		else if(Common.isEquals(tabId,"subjectRecommendTab")) subject = true;
+
+		if(body || all)  sq.addMoreLikeThisField("body");
+		if(attach || all) sq.addMoreLikeThisField("attach");
+		if(subject || all){
+			if(!subjectIsEmpty) {
+				//			SolrEdcVO solrEdcVO = solrEdcService.getSelectOne(msgid, isUnknownDocument);
+				sq.addMoreLikeThisField("subject");
+				//			String subject = (solrEdcVO != null) ? solrEdcVO.getSubject() : null;
+				//			if (Common.isEmpty(subject))return null;
+				//			/* 검색어 정리*/
+				//			subject = owlnestService.getSearchQuery(subject);
+				//			query = String.format("+subject:(%s) -msgid:(%s)",subject,msgid);
+			} else {
+				sq.addMoreLikeThisField("host");
+				sq.addMoreLikeThisField("path");
+			}
 		}
 
-
+		sq.setSort("_score", SolrQuery.ORDER.desc);
+		sq.setParam("id",msgid);
 		SolrEdcMessageVO solrEdcMessageVO = solrEdcService.getEmassMessage(sq, adminId);
 
 		return solrEdcMessageVO;

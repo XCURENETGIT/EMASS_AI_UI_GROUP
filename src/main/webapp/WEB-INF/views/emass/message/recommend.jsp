@@ -53,7 +53,7 @@ var searchFlag=false;
 var msgId = '<%=msgId%>';
 var targetDate = '<%=targetDate%>';
 var subjectIsEmpty = '<%=subjectIsEmpty%>';
-
+var recommendTab = null;
 $(document).ready(function(){
 	// $('#startdatepicker').datetimepicker({
 	// 	format: 'YYYY-MM-DD',
@@ -68,20 +68,26 @@ $(document).ready(function(){
 	});
 
 	$('#noSelectBtn').click(function(){ self.close();  });
-	getData();
+	getData(null);
+
+
+	/* 탭 */
+    $(".nav-tabs a").click(function(){
+        recommendTab =  $(this).attr('id');
+        getData(recommendTab);
+    });
 });
 
 
-function getData() {
+function getData(tab) {
 	if(searchFlag) return;
-	
 	grid.on();
 	searchFlag=true;
 	ui.get({
 		url 		: 'getRecommendData.xcn',
 		msgId		: msgId,
 		subjectIsEmpty	: subjectIsEmpty,
-	//	targetDate	: targetDate,
+		tabId	: tab,
 		success 	: function(data, total) {
 			grid.setData(data.emass);
 		},
@@ -204,6 +210,14 @@ function regexpInfoViewer(row, selectedGrid){
 						<button type="button" class="btn btn-sm btn-default" accesskey="C" id="noSelectBtn"><span class="glyphicon glyphicon-remove"></span>&nbsp;<s:message code="common.msg.close"/></button>
 					</div>
 					<div class="mat16" style="height: 70%;">
+						<div class="subtab">
+							<ul class="nav nav-tabs codeTab" id="codeTab">
+								<li class="active" style=" text-align: center"><a data-toggle="tab" href="#allRecommend" id="allRecommendTab"><s:message code="common.msg.all"/></a></li>
+								<li style=" text-align: center"><a data-toggle="tab" href="#bodyRecommend" id="bodyRecommendTab"><s:message code="condition.body"/></a></li>
+								<li style=" text-align: center"><a data-toggle="tab" href="#attachRecommend" id="attachRecommendTab"><s:message code="condition.attach"/></a></li>
+								<li style=" text-align: center"><a data-toggle="tab" href="#subjectRecommend" id="subjectRecommendTab"><s:message code="condition.subject"/></a></li>
+							</ul>
+						</div>
 						<div id="recommendListGrid" class="slickGrid gridArea"></div>
 					</div>
 				</div>
