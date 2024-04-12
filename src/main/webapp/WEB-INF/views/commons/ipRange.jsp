@@ -508,7 +508,7 @@ function fileExtCheck(obj){
 		<div class="contentSub">
 			<div class="subtab">
 				<button class="active">
-					<s:message code="DATA_MONITOR.BUSI_IPRANGE_VIEW"/>
+					<s:message code="POLICY_SETUP.BUSI_IPRANGE"/>
 					<span id="relationKeywordCount"></span>
 				</button>
 			</div>
