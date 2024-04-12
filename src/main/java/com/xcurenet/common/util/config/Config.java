@@ -323,146 +323,145 @@ public class Config {
 	public void init() {
 		springContextUtil.setApplicationContext(applicationContext);
 
-		String sqlPath = "/sqlmap/mappers/sql/";
-		if (!Common.isWindow()) sqlPath = "/users/emassai/conf/";
+			String sqlPath = "/sqlmap/mappers/sql/";
+			if (!Common.isWindow()) sqlPath = "/users/emassai/conf/";
 
-
-		/* 연관 키워드 관련 */
-		if(searchWordService.tableIsExist() >= 2 ) { /* 키워드 테이블 없으면 실행 금지 */
-			List<SearchWordVO> searchWords = searchWordService.getSearchWord(0, 1, "");
-			if (searchWords.isEmpty()) {
-				execute(sqlPath + "xcn_keyword.sql", false);
-				execute(sqlPath + "xcn_keyword_rel.sql", false);
+			/* 연관 키워드 관련 */
+			if (searchWordService.tableIsExist() >= 2) { /* 키워드 테이블 없으면 실행 금지 */
+				List<SearchWordVO> searchWords = searchWordService.getSearchWord(0, 1, "");
+				if (searchWords.isEmpty()) {
+					execute(sqlPath + "xcn_keyword.sql", false);
+					execute(sqlPath + "xcn_keyword_rel.sql", false);
+				}
 			}
-		}
 
 
-		log.info("[CONFIG] LOAD START..");
+			log.info("[CONFIG] LOAD START..");
 
 
-		configs = configService.getConfList();
+			configs = configService.getConfList();
 
-		reloadIpRange();
+			reloadIpRange();
 
-		isIPv6 = Config.getBoolean("ui.ipv6");
-		log.info("[IPv6 USE] " + isIPv6);
+			isIPv6 = Config.getBoolean("ui.ipv6");
+			log.info("[IPv6 USE] " + isIPv6);
 
-		isOCR = Config.getBoolean("ui.ocr");
-		log.info("[OCR USE] " + isOCR);
+			isOCR = Config.getBoolean("ui.ocr");
+			log.info("[OCR USE] " + isOCR);
 
-		serviceTypes = serviceTypeService.getServiceConfList();
+			serviceTypes = serviceTypeService.getServiceConfList();
 
-		serviceTypesAll = serviceTypeService.getServiceDeepList();
+			serviceTypesAll = serviceTypeService.getServiceDeepList();
 
-		serviceGroups = serviceGroupService.getServiceGroupList();
+			serviceGroups = serviceGroupService.getServiceGroupList();
 
-		sendMailTypes = serviceTypeService.getSendMailServiceList();
+			sendMailTypes = serviceTypeService.getSendMailServiceList();
 
-		adminList = adminService.getAdminList();
+			adminList = adminService.getAdminList();
 
-		reloadUserId();
+			reloadUserId();
 
-		reloadUser();
+			reloadUser();
 
-		reloadCo();
+			reloadCo();
 
-		reloadBusi();
+			reloadBusi();
 
-		reloadDept();
+			reloadDept();
 
-		reloadJikgub();
+			reloadJikgub();
 
-		reloadEmail();
+			reloadEmail();
 
-		reloadNamebyEmail();
+			reloadNamebyEmail();
 
-		reloadCompInfo();
+			reloadCompInfo();
 
-		reloadBusi();
+			reloadBusi();
 
-		reloadDeptInfo();
+			reloadDeptInfo();
 
-		reloadJikgubInfo();
+			reloadJikgubInfo();
 
-		reloadServiceInfo();
+			reloadServiceInfo();
 
 //		loadElsFieldMap(); // els 필드 컨버터 jsp -> java
 
 
-		Locale lo = Locale.forLanguageTag(Config.getString("default.lang", "ko"));
-		Locale.setDefault(lo);
+			Locale lo = Locale.forLanguageTag(Config.getString("default.lang", "ko"));
+			Locale.setDefault(lo);
 
 
-		if(!Common.isEquals(lo.getLanguage(),CURRENT_LANGUAGE)) {
-			if (Common.isEquals(lo.getLanguage(), "ko")) execute(sqlPath + "Update_Query_ko.sql", false);
-			else execute(sqlPath + "Update_Query_en.sql", false);
-		}
-
-		CURRENT_LANGUAGE = lo.getLanguage();
-
-		log.info("시스템 언어:{}", lo.getLanguage());
-
-		log.info("[CONFIG] LOAD END..");
-
-		log.info("[SCHEDULER] LOAD START..");
-
-		//SCHEDULE_INSA_LOAD
-		JobVO job = new JobVO();
-		job.setJobId("SCHEDULE_INSA_LOAD");
-		job.setJobClass("userJob");
-		job.setCronExp(getString("insa.schedule"));
-		job.setDescription("인사 연동 스케쥴러");
-
-		if (Common.isNotEmpty(job.getCronExp()) && Common.isNotEmpty(job.getJobClass())) {
-			if (Common.isEquals(getString("insa.auto"), "Y")) {
-				trigger.putJob(job.getJobId(), SpringContextUtil.getBean(job.getJobClass()).getClass(), job.getCronExp(), job.getDescription());
-			} else {
-				trigger.deleteJob(job.getJobId());
+			if (!Common.isEquals(lo.getLanguage(), CURRENT_LANGUAGE)) {
+				if (Common.isEquals(lo.getLanguage(), "ko")) execute(sqlPath + "Update_Query_ko.sql", false);
+				else execute(sqlPath + "Update_Query_en.sql", false);
 			}
-		}
 
-		//SCHEDULE_INSA_LOAD
-		JobVO deptjob = new JobVO();
-		deptjob.setJobId("SCHEDULE_DEPT_LOAD");
-		deptjob.setJobClass("deptRangeJob");
-		deptjob.setCronExp(getString("dept.schedule"));
-		deptjob.setDescription("부서 내부 IP 스케쥴러");
+			CURRENT_LANGUAGE = lo.getLanguage();
 
-		if (Common.isNotEmpty(deptjob.getCronExp()) && Common.isNotEmpty(deptjob.getJobClass())) {
-			if (Common.isEquals(getString("dept.auto"), "Y")) {
-				trigger.putJob(deptjob.getJobId(), SpringContextUtil.getBean(deptjob.getJobClass()).getClass(), deptjob.getCronExp(), deptjob.getDescription());
-			} else {
-				trigger.deleteJob(deptjob.getJobId());
+			log.info("시스템 언어:{}", lo.getLanguage());
+
+			log.info("[CONFIG] LOAD END..");
+
+			log.info("[SCHEDULER] LOAD START..");
+
+			//SCHEDULE_INSA_LOAD
+			JobVO job = new JobVO();
+			job.setJobId("SCHEDULE_INSA_LOAD");
+			job.setJobClass("userJob");
+			job.setCronExp(getString("insa.schedule"));
+			job.setDescription("인사 연동 스케쥴러");
+
+			if (Common.isNotEmpty(job.getCronExp()) && Common.isNotEmpty(job.getJobClass())) {
+				if (Common.isEquals(getString("insa.auto"), "Y")) {
+					trigger.putJob(job.getJobId(), SpringContextUtil.getBean(job.getJobClass()).getClass(), job.getCronExp(), job.getDescription());
+				} else {
+					trigger.deleteJob(job.getJobId());
+				}
 			}
-		}
 
-		if (Common.isNotEmpty(Config.getString("api.insa.useyn"))) {
-			JobVO apiUserJob = new JobVO();
-			apiUserJob.setJobId("SCHEDULE_INSA_API_LOAD");
-			apiUserJob.setJobClass("userInsaJob");
-			apiUserJob.setCronExp("0 0 1 * * ?");
-			apiUserJob.setDescription("인사 연동 스케쥴러(API)"); //삼성생명 인사연동 스케줄러
-			trigger.putJob(apiUserJob.getJobId(), SpringContextUtil.getBean(apiUserJob.getJobClass()).getClass(), apiUserJob.getCronExp(), apiUserJob.getDescription());
-		}
+			//SCHEDULE_INSA_LOAD
+			JobVO deptjob = new JobVO();
+			deptjob.setJobId("SCHEDULE_DEPT_LOAD");
+			deptjob.setJobClass("deptRangeJob");
+			deptjob.setCronExp(getString("dept.schedule"));
+			deptjob.setDescription("부서 내부 IP 스케쥴러");
 
-		JobVO longTermUnusedJob = new JobVO();
-		longTermUnusedJob.setJobId("SCHEDULE_LONG_TERM_UNUSED_STATUS");
-		longTermUnusedJob.setJobClass("longTermUnusedJob");
-		longTermUnusedJob.setCronExp("0 0 1 * * ?");
-		longTermUnusedJob.setDescription("장기 미사용 운용자 상태 업데이트");
-		if (Common.isNotEmpty(longTermUnusedJob.getCronExp()) && Common.isNotEmpty(longTermUnusedJob.getJobClass())) {
-			trigger.putJob(longTermUnusedJob.getJobId(), SpringContextUtil.getBean(longTermUnusedJob.getJobClass()).getClass(), longTermUnusedJob.getCronExp(), longTermUnusedJob.getDescription());
-		}
-		QuartzCronTrigger.runJob(longTermUnusedJob);
+			if (Common.isNotEmpty(deptjob.getCronExp()) && Common.isNotEmpty(deptjob.getJobClass())) {
+				if (Common.isEquals(getString("dept.auto"), "Y")) {
+					trigger.putJob(deptjob.getJobId(), SpringContextUtil.getBean(deptjob.getJobClass()).getClass(), deptjob.getCronExp(), deptjob.getDescription());
+				} else {
+					trigger.deleteJob(deptjob.getJobId());
+				}
+			}
 
-		JobVO exportFileDelJob = new JobVO();
-		exportFileDelJob.setJobId("SCHEDULE_EXPORT_DOWNLOAD_FILE_DELETE");
-		exportFileDelJob.setJobClass("downloadDelJob");
-		exportFileDelJob.setCronExp("0 0 1 * * ?");
-		exportFileDelJob.setDescription("Export File Expire");
-		trigger.putJob(exportFileDelJob.getJobId(), SpringContextUtil.getBean(exportFileDelJob.getJobClass()).getClass(), exportFileDelJob.getCronExp(), exportFileDelJob.getDescription());
+			if (Common.isNotEmpty(Config.getString("api.insa.useyn"))) {
+				JobVO apiUserJob = new JobVO();
+				apiUserJob.setJobId("SCHEDULE_INSA_API_LOAD");
+				apiUserJob.setJobClass("userInsaJob");
+				apiUserJob.setCronExp("0 0 1 * * ?");
+				apiUserJob.setDescription("인사 연동 스케쥴러(API)"); //삼성생명 인사연동 스케줄러
+				trigger.putJob(apiUserJob.getJobId(), SpringContextUtil.getBean(apiUserJob.getJobClass()).getClass(), apiUserJob.getCronExp(), apiUserJob.getDescription());
+			}
 
-		log.info("[SCHEDULER] LOAD END..");
+			JobVO longTermUnusedJob = new JobVO();
+			longTermUnusedJob.setJobId("SCHEDULE_LONG_TERM_UNUSED_STATUS");
+			longTermUnusedJob.setJobClass("longTermUnusedJob");
+			longTermUnusedJob.setCronExp("0 0 1 * * ?");
+			longTermUnusedJob.setDescription("장기 미사용 운용자 상태 업데이트");
+			if (Common.isNotEmpty(longTermUnusedJob.getCronExp()) && Common.isNotEmpty(longTermUnusedJob.getJobClass())) {
+				trigger.putJob(longTermUnusedJob.getJobId(), SpringContextUtil.getBean(longTermUnusedJob.getJobClass()).getClass(), longTermUnusedJob.getCronExp(), longTermUnusedJob.getDescription());
+			}
+			QuartzCronTrigger.runJob(longTermUnusedJob);
+
+			JobVO exportFileDelJob = new JobVO();
+			exportFileDelJob.setJobId("SCHEDULE_EXPORT_DOWNLOAD_FILE_DELETE");
+			exportFileDelJob.setJobClass("downloadDelJob");
+			exportFileDelJob.setCronExp("0 0 1 * * ?");
+			exportFileDelJob.setDescription("Export File Expire");
+			trigger.putJob(exportFileDelJob.getJobId(), SpringContextUtil.getBean(exportFileDelJob.getJobClass()).getClass(), exportFileDelJob.getCronExp(), exportFileDelJob.getDescription());
+
+			log.info("[SCHEDULER] LOAD END..");
 	}
 
 

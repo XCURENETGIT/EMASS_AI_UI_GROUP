@@ -16,13 +16,13 @@ import java.io.PrintStream;
 @ServletComponentScan
 @EnableAsync
 @SpringBootApplication
-public class EmassproApplication {
+public class EmassproApplication{
+
 
 	public static void main(String[] args) throws FileNotFoundException {
 		setSystemOutAndErrToLog();
 		SpringApplication.run(EmassproApplication.class, args);
 	}
-
 
 	public static void setSystemOutAndErrToLog() {
 		System.setOut(createLoggingProxy(System.out));

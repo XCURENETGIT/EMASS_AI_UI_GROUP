@@ -1,6 +1,7 @@
 //package com.xcurenet.common.util;
 //
 //
+//import com.xcurenet.searchWord.service.SearchWordService;
 //import lombok.extern.slf4j.Slf4j;
 //import org.springframework.core.io.FileSystemResource;
 //import org.springframework.core.io.support.EncodedResource;
@@ -19,9 +20,14 @@
 //    @Resource
 //    private DataSource dataSource;
 //
+//    @Resource
+//    SearchWordService searchWordService;
 //
 //    public void initData() {
-//        execute("classpath*:com/xcurenet/sqlmap/mappers/sql/procedure.sql",true);
+//        if(searchWordService.tableNum() == 0) {
+//            log.info("create_table 실행");
+//            execute("classpath*:com/xcurenet/sqlmap/mappers/sql/create_table.sql", false);
+//        }
 //    }
 //
 //    public boolean execute(String filePath, boolean all) {
@@ -40,6 +46,7 @@
 //            rollback(_con);
 //            e.printStackTrace();
 //        } finally {
+//            log.info("create_table 실행 완료");
 //            close(_con);
 //        }
 //        return false;

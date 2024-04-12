@@ -794,77 +794,89 @@ INSERT IGNORE INTO UI_REGEXP (CODE, NAME, REGEX) VALUES('LTO', '대용량 본문
 INSERT IGNORE INTO UI_REGEXP (CODE, NAME, REGEX) VALUES('LAO', '대용량 첨부파일 사외발송', NULL);
 INSERT IGNORE INTO UI_REGEXP (CODE, NAME, REGEX) VALUES('LF', '대용량 파일 FTP 전송', NULL);
 
+
+
+
+
+
+
+
 /* UI MENU */
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('ANALYSIS_FLUCTUATION', '사용량 증감 분석', 'DATA_ANALYSIS', 'L', 'M', 'analysis/usageCompare.do', 'fa fa-area-chart', 2, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('ANALYSIS_INFO', '개인정보 유출 관계 분석', 'DATA_ANALYSIS', 'L', 'M', 'analysis/infoStat.do', 'fa fa-cube', 6, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('ANALYSIS_RELATION', '데이터 관계 분석', 'DATA_ANALYSIS', 'L', 'M', 'analysis/dataRelation.do', 'fa fa-share-alt', 1, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('ANALYSIS_SEARCH', '웹 검색어 동향 분석', 'DATA_ANALYSIS', 'L', 'N', 'analysis/searchKeyword.do', 'fa fa-cube', 5, 'N', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('ANALYSIS_UBA', '사용자 행위 분석', 'DATA_ANALYSIS', 'L', 'M', 'analysis/userBehavior.do', 'fa fa-cube', 4, 'N', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('AUDIT_LOG', '운용자 감사 로그', 'OPERATION_MGMT', 'L', 'S', 'commons/auditLog.do', 'fa fa-pencil-square', 7, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('BUSI_IPRANGE', '사업장 내부 IP 설정', 'ORG', 'L', 'S', 'commons/ipRange.do', 'fa fa-building', 5, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('BUSI_IPRANGE_VIEW', '사업장 내부 IP 확인', 'IPRANGE_VIEW', 'L', 'M', 'commons/ipRangeView.do', 'fa fa-building', 2, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('CODE_INFO', '코드 정보', 'OPERATION_MGMT', 'L', 'S', 'commons/codeInfo.do', 'fa fa-list-ul', 3, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('CONSENT_MGMT', '동의서 관리', 'MONITOR_MGMT', 'L', 'M', 'ems/consent.do', 'fa fa-flask', 5, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('DASHBOARD', '대시보드', NULL, 'L', 'M', 'ems/index.do', 'fa fa-dashboard', 1, 'Y', '/img/ico_gnb_01.png');
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('DASHBOARD_MENU', 'Dashboard 메뉴', 'DASHBOARD', 'L', 'M', 'ems/dashboardMenu.do', 'fa fa-sort-amount-asc', 2, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('DASHBOARD_SETUP', 'Dashboard 관리', 'DASHBOARD', 'L', 'M', 'ems/dashboardSetup.do', 'fa fa-cogs', 3, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('DATA_ANALYSIS', '분석', NULL, 'L', 'M', NULL, 'fa fa-area-chart', 5, 'Y', '/img/ico_gnb_05.png');
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('DATA_MONITOR', '모니터링', NULL, 'L', 'M', NULL, 'glyphicon glyphicon-list-alt', 2, 'Y', '/img/ico_gnb_02.png');
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('DATA_REPORT', '보고서', NULL, 'L', 'M', NULL, 'fa fa-area-chart', 3, 'Y', '/img/ico_gnb_03.png');
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('DATA_STAT', '통계', NULL, 'L', 'M', '', 'fa fa-area-chart', 4, 'Y', '/img/ico_gnb_04.png');
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('DEPT_IPRANGE', '부서 내부 IP 설정', 'ORG', 'L', 'S', 'commons/ipRangeDept.do', 'fa fa-building', 4, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('DEPT_IPRANGE_VIEW', '부서 내부 IP 확인', 'IPRANGE_VIEW', 'L', 'M', 'commons/ipRangeDeptView.do', 'fa fa-building', 1, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('DEV', '장비 관리', 'OPERATION_MGMT', 'L', 'M', NULL, 'fa fa-desktop', 1, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('DEV_EVENTLOG', '장비 이벤트 로그', 'DEV', 'L', 'M', 'commons/eventLog.do', 'fa fa-bell', 2, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('DEV_INFO', '장비 정보', 'DEV', 'L', 'M', 'commons/deviceInfo.do', 'fa fa-desktop', 1, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('FILETRANSFER_SERVICE', '파일전송 모아보기', 'MESSAGE', 'L', 'M', 'ems/msg/fileTransfer.do', 'fa fa-envelope', 6, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('GENERATIVEAI_SERVICE', '생성형AI 모아보기', 'MESSAGE', 'L', 'M', 'ems/msg/generativeAi.do', 'fa fa-envelope', 4, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('HOLIDAY_BUSI', '사업장 업무일/휴일', 'HOLIDAY_LABEL', 'L', 'S', 'commons/holidayBusiness.do', 'fa fa-calendar-check-o', 1, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('HOLIDAY_LABEL', '업무/휴일 설정', 'POLICY_SETUP', 'L', 'S', '', 'fa fa-calendar', 5, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('HOLIDAY_LEGAL', '법정 공휴일', 'HOLIDAY_LABEL', 'L', 'S', 'commons/holidayLegal.do', 'fa fa-calendar-o', 2, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('INTEREST_USER', '관심 사용자 관리', 'MONITOR_MGMT', 'L', 'M', 'ems/interestUser.do', 'fa fa-male', 1, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('IPRANGE_VIEW', '내부 IP 정보', 'DATA_MONITOR', 'L', 'M', 'commons/ipRangeDeptView.do', 'fa fa-building', 4, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('KEYWORD_MGMT', '예약 키워드 관리', 'MONITOR_MGMT', 'L', 'M', 'ems/keywordInfo.do', 'fa fa-tasks', 2, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('MESSAGE', '컨텐츠 모니터링', 'DATA_MONITOR', 'L', 'M', '', 'fa fa-envelope', 1, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('MESSAGE_INFO', '메시지 정보', 'MESSAGE', 'L', 'M', 'ems/message.do', 'fa fa-envelope', 1, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('MESSAGE_SERVICE', '메신저 모아보기', 'MESSAGE', 'L', 'M', 'ems/msg/messenger.do', 'fa fa-envelope', 3, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('MONITOR_MGMT', '데이터 설정 관리', 'DATA_MONITOR', 'L', 'M', 'ems/interestUser.do', 'fa fa-male', 2, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('NOTE_SERVICE', '노트 모아보기', 'MESSAGE', 'L', 'M', 'ems/msg/note.do', 'fa fa-envelope', 5, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('OPERATION_MGMT', '운용 관리', NULL, 'L', 'M', NULL, 'glyphicon glyphicon-th', 7, 'Y', '/img/ico_gnb_07.png');
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('ORG', '조직 관리', 'POLICY_SETUP', 'L', 'S', NULL, 'fa fa-users', 2, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('ORG_MGMT', '조직 관리', 'ORG', 'L', 'S', 'commons/organizationInfo.do', 'fa fa-users', 1, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('POLICY_MGMT', '컨텐츠 미로깅 정책', 'POLICY_SETUP', 'L', 'S', 'uacs/filterInfo.do', 'fa fa-unlink', 1, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('POLICY_NOLOG', '데이터 미로깅 정책', 'POLICY_MGMT', 'L', 'S', 'uacs/filterInfo.do', 'fa fa-unlink', 1, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('POLICY_SETUP', '정책 설정', NULL, 'L', 'S', NULL, 'glyphicon glyphicon-eye-close', 6, 'Y', '/img/ico_gnb_06.png');
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('REGEX_PATTERN', '정규식 패턴 관리', 'MONITOR_MGMT', 'L', 'M', 'ems/regexPatternInfo.do', 'fa fa-building', 4, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('RELATION_KEYWORD', '연관 키워드 관리', 'MONITOR_MGMT', 'L', 'M', 'ems/relationKeyword.do', 'fa fa-building', 3, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('REPORT_CONTENT', '컨텐츠 보고서', 'DATA_REPORT', 'L', 'M', 'report/contentReport.do', 'glyphicon glyphicon-list-alt', 2, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('REPORT_DEVICE', '장비 운용 보고서', 'DATA_REPORT', 'L', 'M', 'report/deviceReport.do', 'fa fa-area-chart', 3, 'N', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('REPORT_TRAFFIC', '트래픽 보고서', 'DATA_REPORT', 'L', 'M', 'report/trafficReport.do', 'fa fa-area-chart', 1, 'N', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('RESERVATION', '알림 관리', 'DATA_MONITOR', 'L', 'M', 'ems/reservationAlarm.do', 'fa fa-building', 3, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('RESERVATION_ALARM', '예약 알림', 'RESERVATION', 'L', 'M', 'ems/reservationAlarm.do', 'fa fa-calendar', 5, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('SEARCH_LOG', '조회이력', 'OPERATION_MGMT', 'L', 'S', 'commons/searchLog.do', 'fa fa-pencil', 6, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('STAT_ADMINREAD', '운용자 열람 통계', 'STAT_CONTENT', 'L', 'M', 'ems/adminReadStat.do', 'fa fa-pie-chart', 9, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('STAT_ATTACHNAME', '첨부 파일명 통계', 'STAT_CONTENT', 'L', 'M', 'ems/attachNameStat.do', 'fa fa-pie-chart', 7, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('STAT_ATTACHTYPE', '첨부 파일 통계', 'STAT_CONTENT', 'L', 'M', 'ems/attachTypeStat.do', 'fa fa-pie-chart', 6, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('STAT_CONTENT', '컨텐츠 통계', 'DATA_STAT', 'L', 'M', 'ems/usersStat.do', 'fa fa-pie-chart', 2, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('STAT_DEVTRAFFIC', '장비 트래픽 통계', 'STAT_TRAFFIC', 'L', 'M', 'ems/trafficStat.do', 'fa fa-pie-chart', 1, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('STAT_DSTIPTOP', '목적지 IP TOP100', 'STAT_TRAFFIC', 'L', 'M', 'ems/dstIpTop.do', 'fa fa-pie-chart', 2, 'N', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('STAT_DSTPORTTOP', '목적지 Port TOP100', 'STAT_TRAFFIC', 'L', 'M', 'ems/dstPortTop.do', 'fa fa-pie-chart', 3, 'N', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('STAT_INFOTYPE', '정보 분류 통계', 'STAT_CONTENT', 'L', 'M', 'ems/infoTypeStat.do', 'fa fa-pie-chart', 11, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('STAT_INTEREST', '관심 사용자 통계', 'STAT_CONTENT', 'L', 'M', 'ems/interestUserStat.do', 'fa fa-pie-chart', 2, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('STAT_IPNONIP', 'IP/non-IP 빈도', 'STAT_TRAFFIC', 'L', 'M', 'ems/ipNonIp.do', 'fa fa-pie-chart', 5, 'N', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('STAT_KWD', '예약어 통계', 'STAT_CONTENT', 'L', 'M', 'ems/keywordStat.do', 'fa fa-pie-chart', 5, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('STAT_OCR', 'OCR 통계', 'STAT_CONTENT', 'L', 'M', 'ems/ocrStat.do', 'fa fa-pie-chart', 10, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('STAT_SENDER', '발신자 통계', 'STAT_CONTENT', 'L', 'M', 'ems/senderStat.do', 'fa fa-pie-chart', 3, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('STAT_SRCIPTOP', '출발지 IP TOP100', 'STAT_TRAFFIC', 'L', 'M', 'ems/srcIpTop.do', 'fa fa-pie-chart', 4, 'N', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('STAT_SVC', '서비스타입 통계', 'STAT_CONTENT', 'L', 'M', 'ems/serviceStat.do', 'fa fa-pie-chart', 4, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('STAT_TRAFFIC', '네트워크 통계', 'DATA_STAT', 'L', 'M', 'ems/trafficStat.do', 'fa fa-pie-chart', 1, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('STAT_URL', 'URL 통계', 'STAT_CONTENT', 'L', 'M', 'ems/hostStat.do', 'fa fa-pie-chart', 8, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('STAT_USER', '사용자 통계', 'STAT_CONTENT', 'L', 'M', 'ems/usersStat.do', 'fa fa-pie-chart', 1, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('STAT_WEBTOP', '웹 URL TOP100', 'STAT_TRAFFIC', 'L', 'M', 'ems/webUrlTop.do', 'fa fa-pie-chart', 6, 'N', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('USER_GROUP_MGMT', '사용자 그룹', 'ORG', 'L', 'S', 'commons/userGroup.do', 'fa fa-user-circle', 3, 'Y', NULL);
-INSERT IGNORE INTO UI_MENU (MENU_ID, MENU_DEFAULT_NAME, P_MENU_ID, PKG_TYPE, MENU_AUTH, MENU_LINK, MENU_ICON, MENU_ORDER, MENU_USEYN, MENU_IMG_PATH) VALUES('USER_MGMT', '사용자 관리', 'ORG', 'L', 'S', 'commons/userInfo.do', 'fa fa-user', 2, 'Y', NULL);
+INSERT IGNORE INTO UI_MENU (`MENU_ID`, `MENU_DEFAULT_NAME`, `P_MENU_ID`, `PKG_TYPE`, `MENU_AUTH`, `MENU_LINK`, `MENU_ICON`, `MENU_ORDER`, `MENU_USEYN`, `MENU_IMG_PATH`)  VALUES
+('ANALYSIS_FLUCTUATION', '사용량 증감 분석', 'DATA_ANALYSIS', 'L', 'M', 'analysis/usageCompare.do', 'fa fa-area-chart', 2, 'Y', NULL),
+('ANALYSIS_INFO', '개인정보 유출 관계 분석', 'DATA_ANALYSIS', 'L', 'M', 'analysis/infoStat.do', 'fa fa-cube', 6, 'Y', NULL),
+('ANALYSIS_RELATION', '데이터 관계 분석', 'DATA_ANALYSIS', 'L', 'M', 'analysis/dataRelation.do', 'fa fa-share-alt', 1, 'Y', NULL),
+('ANALYSIS_SEARCH', '웹 검색어 동향 분석', 'DATA_ANALYSIS', 'L', 'N', 'analysis/searchKeyword.do', 'fa fa-cube', 5, 'N', NULL),
+('ANALYSIS_UBA', '사용자 행위 분석', 'DATA_ANALYSIS', 'L', 'M', 'analysis/userBehavior.do', 'fa fa-cube', 4, 'N', NULL),
+('AUDIT_LOG', '운용자 감사 로그', 'OPERATION_MGMT', 'L', 'S', 'commons/auditLog.do', 'fa fa-pencil-square', 7, 'Y', NULL),
+('BUSI_IPRANGE', '사업장 내부 IP 설정', 'ORG', 'L', 'S', 'commons/ipRange.do', 'fa fa-building', 5, 'Y', NULL),
+('BUSI_IPRANGE_VIEW', '사업장 내부 IP 확인', 'IPRANGE_VIEW', 'L', 'M', 'commons/ipRangeView.do', 'fa fa-building', 2, 'Y', NULL),
+('CODE_INFO', '코드 정보', 'OPERATION_MGMT', 'L', 'S', 'commons/codeInfo.do', 'fa fa-list-ul', 3, 'Y', NULL),
+('CONSENT_MGMT', '동의서 관리', 'MONITOR_MGMT', 'L', 'M', 'ems/consent.do', 'fa fa-flask', 5, 'Y', NULL),
+('DASHBOARD', '대시보드', NULL, 'L', 'M', 'ems/index.do', 'fa fa-dashboard', 1, 'Y', '/img/ico_gnb_01.png'),
+('DASHBOARD_MENU', 'Dashboard 메뉴', 'DASHBOARD', 'L', 'M', 'ems/dashboardMenu.do', 'fa fa-sort-amount-asc', 2, 'Y', NULL),
+('DASHBOARD_SETUP', 'Dashboard 관리', 'DASHBOARD', 'L', 'M', 'ems/dashboardSetup.do', 'fa fa-cogs', 3, 'Y', NULL),
+('DATA_ANALYSIS', '분석', NULL, 'L', 'M', NULL, 'fa fa-area-chart', 5, 'Y', '/img/ico_gnb_05.png'),
+('DATA_MONITOR', '모니터링', NULL, 'L', 'M', NULL, 'glyphicon glyphicon-list-alt', 2, 'Y', '/img/ico_gnb_02.png'),
+('DATA_REPORT', '보고서', NULL, 'L', 'M', NULL, 'fa fa-area-chart', 3, 'Y', '/img/ico_gnb_03.png'),
+('DATA_STAT', '통계', NULL, 'L', 'M', '', 'fa fa-area-chart', 4, 'Y', '/img/ico_gnb_04.png'),
+('DEPT_IPRANGE', '부서 내부 IP 설정', 'ORG', 'L', 'S', 'commons/ipRangeDept.do', 'fa fa-building', 4, 'Y', NULL),
+('DEPT_IPRANGE_VIEW', '부서 내부 IP 확인', 'IPRANGE_VIEW', 'L', 'M', 'commons/ipRangeDeptView.do', 'fa fa-building', 1, 'Y', NULL),
+('DEV', '장비 관리', 'OPERATION_MGMT', 'L', 'M', NULL, 'fa fa-desktop', 1, 'Y', NULL),
+('DEV_EVENTLOG', '장비 이벤트 로그', 'DEV', 'L', 'M', 'commons/eventLog.do', 'fa fa-bell', 2, 'Y', NULL),
+('DEV_INFO', '장비 정보', 'DEV', 'L', 'M', 'commons/deviceInfo.do', 'fa fa-desktop', 1, 'Y', NULL),
+('FILETRANSFER_SERVICE', '파일전송 모아보기', 'MESSAGE', 'L', 'M', 'ems/msg/fileTransfer.do', 'fa fa-envelope', 6, 'Y', NULL),
+('GENERATIVEAI_SERVICE', '생성형AI 모아보기', 'MESSAGE', 'L', 'M', 'ems/msg/generativeAi.do', 'fa fa-envelope', 4, 'Y', NULL),
+('HOLIDAY_BUSI', '사업장 업무일/휴일', 'HOLIDAY_LABEL', 'L', 'S', 'commons/holidayBusiness.do', 'fa fa-calendar-check-o', 1, 'Y', NULL),
+('HOLIDAY_LABEL', '업무/휴일 설정', 'POLICY_SETUP', 'L', 'S', '', 'fa fa-calendar', 5, 'Y', NULL),
+('HOLIDAY_LEGAL', '법정 공휴일', 'HOLIDAY_LABEL', 'L', 'S', 'commons/holidayLegal.do', 'fa fa-calendar-o', 2, 'Y', NULL),
+('INTEREST_USER', '관심 사용자 관리', 'MONITOR_MGMT', 'L', 'M', 'ems/interestUser.do', 'fa fa-male', 1, 'Y', NULL),
+('IPRANGE_VIEW', '내부 IP 정보', 'DATA_MONITOR', 'L', 'M', 'commons/ipRangeDeptView.do', 'fa fa-building', 4, 'Y', NULL),
+('KEYWORD_MGMT', '예약 키워드 관리', 'MONITOR_MGMT', 'L', 'M', 'ems/keywordInfo.do', 'fa fa-tasks', 2, 'Y', NULL),
+('MESSAGE', '컨텐츠 모니터링', 'DATA_MONITOR', 'L', 'M', '', 'fa fa-envelope', 1, 'Y', NULL),
+('MESSAGE_INFO', '메시지 정보', 'MESSAGE', 'L', 'M', 'ems/message.do', 'fa fa-envelope', 1, 'Y', NULL),
+('MESSAGE_SERVICE', '메신저 모아보기', 'MESSAGE', 'L', 'M', 'ems/msg/messenger.do', 'fa fa-envelope', 3, 'Y', NULL),
+('MONITOR_MGMT', '데이터 설정 관리', 'DATA_MONITOR', 'L', 'M', 'ems/interestUser.do', 'fa fa-male', 2, 'Y', NULL),
+('NOTE_SERVICE', '노트 모아보기', 'MESSAGE', 'L', 'M', 'ems/msg/note.do', 'fa fa-envelope', 5, 'Y', NULL),
+('OPERATION_MGMT', '운용 관리', NULL, 'L', 'M', NULL, 'glyphicon glyphicon-th', 7, 'Y', '/img/ico_gnb_07.png'),
+('ORG', '조직 관리', 'POLICY_SETUP', 'L', 'S', NULL, 'fa fa-users', 2, 'Y', NULL),
+('ORG_MGMT', '조직 관리', 'ORG', 'L', 'S', 'commons/organizationInfo.do', 'fa fa-users', 1, 'Y', NULL),
+('POLICY_MGMT', '컨텐츠 미로깅 정책', 'POLICY_SETUP', 'L', 'S', 'uacs/filterInfo.do', 'fa fa-unlink', 1, 'Y', NULL),
+('POLICY_NOLOG', '데이터 미로깅 정책', 'POLICY_MGMT', 'L', 'S', 'uacs/filterInfo.do', 'fa fa-unlink', 1, 'Y', NULL),
+('POLICY_SETUP', '정책 설정', NULL, 'L', 'S', NULL, 'glyphicon glyphicon-eye-close', 6, 'Y', '/img/ico_gnb_06.png'),
+('REGEX_PATTERN', '정규식 패턴 관리', 'MONITOR_MGMT', 'L', 'M', 'ems/regexPatternInfo.do', 'fa fa-building', 4, 'Y', NULL),
+('RELATION_KEYWORD', '연관 키워드 관리', 'MONITOR_MGMT', 'L', 'M', 'ems/relationKeyword.do', 'fa fa-building', 3, 'Y', NULL),
+('REPORT_CONTENT', '컨텐츠 보고서', 'DATA_REPORT', 'L', 'M', 'report/contentReport.do', 'glyphicon glyphicon-list-alt', 2, 'Y', NULL),
+('REPORT_DEVICE', '장비 운용 보고서', 'DATA_REPORT', 'L', 'M', 'report/deviceReport.do', 'fa fa-area-chart', 3, 'N', NULL),
+('REPORT_TRAFFIC', '트래픽 보고서', 'DATA_REPORT', 'L', 'M', 'report/trafficReport.do', 'fa fa-area-chart', 1, 'N', NULL),
+('RESERVATION', '알림 관리', 'DATA_MONITOR', 'L', 'M', 'ems/reservationAlarm.do', 'fa fa-building', 3, 'Y', NULL),
+('RESERVATION_ALARM', '예약 알림', 'RESERVATION', 'L', 'M', 'ems/reservationAlarm.do', 'fa fa-calendar', 5, 'Y', NULL),
+('SEARCH_LOG', '조회이력', 'OPERATION_MGMT', 'L', 'S', 'commons/searchLog.do', 'fa fa-pencil', 6, 'Y', NULL),
+('STAT_ADMINREAD', '운용자 열람 통계', 'STAT_CONTENT', 'L', 'M', 'ems/adminReadStat.do', 'fa fa-pie-chart', 9, 'Y', NULL),
+('STAT_ATTACHNAME', '첨부 파일명 통계', 'STAT_CONTENT', 'L', 'M', 'ems/attachNameStat.do', 'fa fa-pie-chart', 7, 'Y', NULL),
+('STAT_ATTACHTYPE', '첨부 파일 통계', 'STAT_CONTENT', 'L', 'M', 'ems/attachTypeStat.do', 'fa fa-pie-chart', 6, 'Y', NULL),
+('STAT_CONTENT', '컨텐츠 통계', 'DATA_STAT', 'L', 'M', 'ems/usersStat.do', 'fa fa-pie-chart', 2, 'Y', NULL),
+('STAT_DEVTRAFFIC', '장비 트래픽 통계', 'STAT_TRAFFIC', 'L', 'M', 'ems/trafficStat.do', 'fa fa-pie-chart', 1, 'Y', NULL),
+('STAT_DSTIPTOP', '목적지 IP TOP100', 'STAT_TRAFFIC', 'L', 'M', 'ems/dstIpTop.do', 'fa fa-pie-chart', 2, 'N', NULL),
+('STAT_DSTPORTTOP', '목적지 Port TOP100', 'STAT_TRAFFIC', 'L', 'M', 'ems/dstPortTop.do', 'fa fa-pie-chart', 3, 'N', NULL),
+('STAT_INFOTYPE', '정보 분류 통계', 'STAT_CONTENT', 'L', 'M', 'ems/infoTypeStat.do', 'fa fa-pie-chart', 11, 'Y', NULL),
+('STAT_INTEREST', '관심 사용자 통계', 'STAT_CONTENT', 'L', 'M', 'ems/interestUserStat.do', 'fa fa-pie-chart', 2, 'Y', NULL),
+('STAT_IPNONIP', 'IP/non-IP 빈도', 'STAT_TRAFFIC', 'L', 'M', 'ems/ipNonIp.do', 'fa fa-pie-chart', 5, 'N', NULL),
+('STAT_KWD', '예약어 통계', 'STAT_CONTENT', 'L', 'M', 'ems/keywordStat.do', 'fa fa-pie-chart', 5, 'Y', NULL),
+('STAT_OCR', 'OCR 통계', 'STAT_CONTENT', 'L', 'M', 'ems/ocrStat.do', 'fa fa-pie-chart', 10, 'Y', NULL),
+('STAT_SENDER', '발신자 통계', 'STAT_CONTENT', 'L', 'M', 'ems/senderStat.do', 'fa fa-pie-chart', 3, 'Y', NULL),
+('STAT_SRCIPTOP', '출발지 IP TOP100', 'STAT_TRAFFIC', 'L', 'M', 'ems/srcIpTop.do', 'fa fa-pie-chart', 4, 'N', NULL),
+('STAT_SVC', '서비스타입 통계', 'STAT_CONTENT', 'L', 'M', 'ems/serviceStat.do', 'fa fa-pie-chart', 4, 'Y', NULL),
+('STAT_TRAFFIC', '네트워크 통계', 'DATA_STAT', 'L', 'M', 'ems/trafficStat.do', 'fa fa-pie-chart', 1, 'Y', NULL),
+('STAT_URL', 'URL 통계', 'STAT_CONTENT', 'L', 'M', 'ems/hostStat.do', 'fa fa-pie-chart', 8, 'Y', NULL),
+('STAT_USER', '사용자 통계', 'STAT_CONTENT', 'L', 'M', 'ems/usersStat.do', 'fa fa-pie-chart', 1, 'Y', NULL),
+('STAT_WEBTOP', '웹 URL TOP100', 'STAT_TRAFFIC', 'L', 'M', 'ems/webUrlTop.do', 'fa fa-pie-chart', 6, 'N', NULL),
+('USER_GROUP_MGMT', '사용자 그룹', 'ORG', 'L', 'S', 'commons/userGroup.do', 'fa fa-user-circle', 3, 'Y', NULL),
+('USER_MGMT', '사용자 관리', 'ORG', 'L', 'S', 'commons/userInfo.do', 'fa fa-user', 2, 'Y', NULL),
+('TEST', 'TEST', 'ORG', 'L', 'S', 'commons/userInfo.do', 'fa fa-user', 2, 'Y', NULL);
+
+
+
 
 /* UI_CUSTOM_DASHBOARD_POSITION_DEFAULT */
     
@@ -889,7 +901,8 @@ INSERT IGNORE INTO UI_EPMSG_TYPE (EPMSG_TYPE_CODE, EPMSG_TYPE_NAME, EPMSG_TYPE_C
 INSERT IGNORE INTO UI_EPMSG_TYPE (EPMSG_TYPE_CODE, EPMSG_TYPE_NAME, EPMSG_TYPE_COLOR) VALUES('prohibit_forward', '재전송금지', 'blue');
 
 
-INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT (DASH_KEY, DASH_NAME, DASH_TYPE, DASH_MULTI_X, DASH_MULTI_Y, DASH_CHART, DASH_CHART_X, DASH_CHART_Y, DASH_ICON, DASH_COLOR, DASH_HTML, DASH_CONDITION, DASH_COMMENT, USEYN) VALUES(1, '패턴(개인정보)메시지', 'S', 'unread', 'total', 'P', 'svc1', 'total', 'tit01', 'blueBg', '<div class="grid-stack-item ui-draggable-handle">
+INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,USEYN) values (1,'패턴(개인정보)메시지','S','unread','total','P','svc1','total','tit01','blueBg','
+		<div class="grid-stack-item ui-draggable-handle">
 			<div style="display:none;" class="gridValues" data-dashMultiLeft="total" data-dashMultiRight="unread"></div>
 			<div class="grid-stack-item-content ">
 				<div class="xcn_maincon panel singleBorder">
@@ -906,8 +919,10 @@ INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT (DASH_KEY, DASH_NAME, DASH_TYPE, 
 					</div>
 				</div>
 			</div>
-		</div>', '{"searchStr":"","searchField":"","serviceType":"","serviceTypeNm":"서비스 전체","interGroup":"","interGroupNm":"-관심 사용자 그룹-","userGroupSeq":"","userGroupName":"-사용자 그룹-","startDateSelect":"T","startTimeSelect":"00","endDateSelect":"T","endTimeSelect":"23","senders":"","receivers":"","allOfus":"","busi":"","busiNm":"사업장 전체","dept":"","deptNm":"","readYn":"","receiveSend":"","ctimeWork":"","attachYn":"","attachVal":"","attachStr":"","keywordYn":"","keywordVal":"","keywordStr":"","regexpYn":"Y","regexpVal":"PN%L@1|FN%L@1|DN%L@1|SN%L@1|CN%L@1","regexpStr":"여권번호(1건 이상), 외국인 등록번호(1건 이상), 운전면허번호(1건 이상), 주민번호(1건 이상), 카드번호(1건 이상)","drmYn":"","sctYn":"","sizeStartVal":"0","sizeEndVal":"0","sizeOption":"L","sizeType":""}', '미열람/전체', 'Y');
-INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT (DASH_KEY, DASH_NAME, DASH_TYPE, DASH_MULTI_X, DASH_MULTI_Y, DASH_CHART, DASH_CHART_X, DASH_CHART_Y, DASH_ICON, DASH_COLOR, DASH_HTML, DASH_CONDITION, DASH_COMMENT, USEYN) VALUES(2, '패턴(위험행위)메시지', 'S', 'unread', 'total', 'P', 'svc1', 'total', 'tit02', 'grayBg', '<div class="grid-stack-item ui-draggable-handle">
+		</div>
+	','{"searchStr":"","searchField":"","serviceType":"","serviceTypeNm":"서비스 전체","interGroup":"","interGroupNm":"-관심 사용자 그룹-","userGroupSeq":"","userGroupName":"-사용자 그룹-","startDateSelect":"T","startTimeSelect":"00","endDateSelect":"T","endTimeSelect":"23","senders":"","receivers":"","allOfus":"","busi":"","busiNm":"사업장 전체","dept":"","deptNm":"","readYn":"","receiveSend":"","ctimeWork":"","attachYn":"","attachVal":"","attachStr":"","keywordYn":"","keywordVal":"","keywordStr":"","regexpYn":"Y","regexpVal":"PN%L@1|FN%L@1|DN%L@1|SN%L@1|CN%L@1","regexpStr":"여권번호(1건 이상), 외국인 등록번호(1건 이상), 운전면허번호(1건 이상), 주민번호(1건 이상), 카드번호(1건 이상)","drmYn":"","sizeStartVal":"0","sizeEndVal":"0","sizeOption":"L","sizeType":""}','미열람/전체','Y');
+INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,USEYN) values (2,'패턴(위험행위)메시지','S','unread','total','P','svc1','total','tit02','grayBg','
+		<div class="grid-stack-item ui-draggable-handle">
 			<div style="display:none;" class="gridValues" data-dashMultiLeft="total" data-dashMultiRight="unread"></div>
 			<div class="grid-stack-item-content ">
 				<div class="xcn_maincon panel singleBorder">
@@ -924,7 +939,8 @@ INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT (DASH_KEY, DASH_NAME, DASH_TYPE, 
 					</div>
 				</div>
 			</div>
-		</div>', '{"searchStr":"","searchField":"","serviceType":"","serviceTypeNm":"서비스 전체","interGroup":"","interGroupNm":"-관심 사용자 그룹-","userGroupSeq":"","userGroupName":"-사용자 그룹-","startDateSelect":"T","startTimeSelect":"00","endDateSelect":"T","endTimeSelect":"23","senders":"","receivers":"","allOfus":"","busi":"","busiNm":"사업장 전체","dept":"","deptNm":"","receiveSend":"","ctimeWork":"","readYn":"","attachYn":"","attachVal":"","attachStr":"","keywordYn":"","keywordVal":"","keywordStr":"","regexpYn":"Y","regexpVal":"EC%L@1|EF%L@1|ID%L@1","regexpStr":"확장자 변조 파일(1건 이상),   암호화 파일(1건 이상),   송수신자 동일아이디(1건 이상)","drmYn":"","sctYn":"","sizeStartVal":"0","sizeEndVal":"0","sizeOption":"L","sizeType":""}', '', 'Y');
+		</div>
+	','{"searchStr":"","searchField":"","serviceType":"","serviceTypeNm":"서비스 전체","interGroup":"","interGroupNm":"-관심 사용자 그룹-","userGroupSeq":"","userGroupName":"-사용자 그룹-","startDateSelect":"T","startTimeSelect":"00","endDateSelect":"T","endTimeSelect":"23","senders":"","receivers":"","allOfus":"","busi":"","busiNm":"사업장 전체","dept":"","deptNm":"","receiveSend":"","ctimeWork":"","readYn":"","attachYn":"","attachVal":"","attachStr":"","keywordYn":"","keywordVal":"","keywordStr":"","regexpYn":"Y","regexpVal":"EC%L@1|EF%L@1|ID%L@1","regexpStr":"확장자 변조 파일(1건 이상),   암호화 파일(1건 이상),   송수신자 동일아이디(1건 이상)","drmYn":"","sctYn":"","sizeStartVal":"0","sizeEndVal":"0","sizeOption":"L","sizeType":""}','','Y');
 INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT (DASH_KEY, DASH_NAME, DASH_TYPE, DASH_MULTI_X, DASH_MULTI_Y, DASH_CHART, DASH_CHART_X, DASH_CHART_Y, DASH_ICON, DASH_COLOR, DASH_HTML, DASH_CONDITION, DASH_COMMENT, USEYN) VALUES(3, '키워드(예약어)', 'S', 'unread', 'total', 'P', 'svc1', 'total', 'tit03', 'purpleBg', '<div class="grid-stack-item ui-draggable-handle">
 			<div style="display:none;" class="gridValues" data-dashMultiLeft="total" data-dashMultiRight="unread"></div>
 			<div class="grid-stack-item-content ">
@@ -943,7 +959,9 @@ INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT (DASH_KEY, DASH_NAME, DASH_TYPE, 
 				</div>
 			</div>
 		</div>', '{"searchStr":"","searchField":"","serviceType":"","serviceTypeNm":"서비스 전체","interGroup":"","interGroupNm":"-관심 사용자 그룹-","userGroupSeq":"","userGroupName":"-사용자 그룹-","startDateSelect":"T","startTimeSelect":"00","endDateSelect":"T","endTimeSelect":"23","senders":"","receivers":"","allOfus":"","busi":"","busiNm":"사업장 전체","dept":"","deptNm":"","receiveSend":"","ctimeWork":"","readYn":"","attachYn":"","attachVal":"","attachStr":"","keywordYn":"Y","keywordVal":"","keywordStr":"","regexpYn":"","regexpVal":"","regexpStr":"","drmYn":"","sctYn":"","sizeStartVal":"0","sizeEndVal":"0","sizeOption":"L","sizeType":""}', '', 'Y');
-INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT (DASH_KEY, DASH_NAME, DASH_TYPE, DASH_MULTI_X, DASH_MULTI_Y, DASH_CHART, DASH_CHART_X, DASH_CHART_Y, DASH_ICON, DASH_COLOR, DASH_HTML, DASH_CONDITION, DASH_COMMENT, USEYN) VALUES(4, '서비스별 데이터 수집건수', 'C', 'unread', 'total', 'B', 'svc1', 'total', 'tit04', 'greenBg', '<div class="grid-stack-item ui-draggable-handle">
+
+INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,USEYN) values (4,'서비스별 데이터 수집건수','C','unread','total','B','svc1','total','tit04','greenBg','
+		<div class="grid-stack-item ui-draggable-handle">
 			<div style="display:none;" class="gridValues" data-dashMultiLeft="total" data-dashMultiRight="unread"></div>
 			<div class="grid-stack-item-content">
 				<div class="panel greenBgBorder">
@@ -965,8 +983,10 @@ INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT (DASH_KEY, DASH_NAME, DASH_TYPE, 
 					</div>
 				</div>
 			</div>
-		</div>', '{"searchStr":"","searchField":"","serviceType":"","serviceTypeNm":"서비스 전체","interGroup":"","interGroupNm":"-관심 사용자 그룹-","userGroupSeq":"","userGroupName":"-사용자 그룹-","startDateSelect":"T","startTimeSelect":"00","endDateSelect":"T","endTimeSelect":"23","senders":"","receivers":"","allOfus":"","busi":"","busiNm":"사업장 전체","dept":"","deptNm":"","readYn":"","receiveSend":"","ctimeWork":"","attachYn":"","attachVal":"","attachStr":"","keywordYn":"","keywordVal":"","keywordStr":"","regexpYn":"","regexpVal":"","regexpStr":"","drmYn":"","sctYn":"","sizeStartVal":"0","sizeEndVal":"0","sizeOption":"L","sizeType":""}', '', 'Y');
-INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT (DASH_KEY, DASH_NAME, DASH_TYPE, DASH_MULTI_X, DASH_MULTI_Y, DASH_CHART, DASH_CHART_X, DASH_CHART_Y, DASH_ICON, DASH_COLOR, DASH_HTML, DASH_CONDITION, DASH_COMMENT, USEYN) VALUES(5, '외부 메일 발신 서비스 비율', 'C', 'unread', 'total', 'P', 'svc1', 'total', 'tit05', 'redBg', '	<div class="grid-stack-item ui-draggable-handle">
+		</div>
+	','{"searchStr":"","searchField":"","serviceType":"","serviceTypeNm":"서비스 전체","interGroup":"","interGroupNm":"-관심 사용자 그룹-","userGroupSeq":"","userGroupName":"-사용자 그룹-","startDateSelect":"T","startTimeSelect":"00","endDateSelect":"T","endTimeSelect":"23","senders":"","receivers":"","allOfus":"","busi":"","busiNm":"사업장 전체","dept":"","deptNm":"","readYn":"","receiveSend":"","ctimeWork":"","attachYn":"","attachVal":"","attachStr":"","keywordYn":"","keywordVal":"","keywordStr":"","regexpYn":"","regexpVal":"","regexpStr":"","drmYn":"","sctYn":"","sizeStartVal":"0","sizeEndVal":"0","sizeOption":"L","sizeType":""}','','Y');
+INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,USEYN) values (5,'외부 메일 발신 서비스 비율','C','unread','total','P','svc1','total','tit05','redBg','
+		<div class="grid-stack-item ui-draggable-handle">
 			<div style="display:none;" class="gridValues" data-dashMultiLeft="total" data-dashMultiRight="unread"></div>
 			<div class="grid-stack-item-content">
 				<div class="panel redBgBorder">
@@ -988,8 +1008,10 @@ INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT (DASH_KEY, DASH_NAME, DASH_TYPE, 
 					</div>
 				</div>
 			</div>
-		</div>', '{"searchStr":"","searchField":"","serviceType":"MP3,MSM,MIM,WNV,WDU,WCL,WNT,WKR,WUT,WNA,WYA,WSN,WSU,WDW,WYH,WGG,WYI,WLV,WQQ,WOS,WOT,WUK,WBM,WPO,EBD,EBB,EAA,EMM,EMB,EWS,EPU,ESC,EMF,EMU","serviceTypeNm":"POP3, SMTP, IMAP, 네이버, 다음, 천리안, 네이트, 코리아, 유니텔, 네띠앙, Yeah, SINA, SOHU, 야후, 구글, 용인시, Live.com, QQ, 163, 126, 기타, KT비즈메카, 우체국, 게시, 게시판, 결재, 메일, 모바일, 웹서비스, 일반, 일정 명함, 파일 다운로드, 기타","infoType":"","infoTypeNm":"정보 분류 전체","feedbackType":"","feedbackTypeNm":"피드백 전체","interGroup":"","interGroupNm":"-관심 사용자 선택-","userGroupSeq":"","userGroupName":"-사용자 그룹-","startDateSelect":"Y","startTimeSelect":"00","endDateSelect":"Y","endTimeSelect":"23","senders":"","receivers":"","allOfus":"ET|EA","busi":"","busiNm":"사업장 전체","dept":"","deptNm":"","receiveSend":"O","ctimeWork":"","readYn":"","attachYn":"","attachVal":"","attachStr":"","keywordYn":"","keywordVal":"","keywordStr":"","regexpYn":"","regexpVal":"","regexpStr":"","drmYn":"","sctYn":"","sizeStartVal":0,"sizeEndVal":0,"sizeOption":"L","sizeType":""}', '', 'Y');
-INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT (DASH_KEY, DASH_NAME, DASH_TYPE, DASH_MULTI_X, DASH_MULTI_Y, DASH_CHART, DASH_CHART_X, DASH_CHART_Y, DASH_ICON, DASH_COLOR, DASH_HTML, DASH_CONDITION, DASH_COMMENT, USEYN) VALUES(6, '1MB 이상 파일 전송', 'S', 'unread', 'total', 'P', 'svc1', 'total', 'tit06', 'yellowBg', ' <div class="grid-stack-item ui-draggable-handle">
+		</div>
+	','{"searchStr":"","searchField":"","serviceType":"MP3,MSM,MIM,WNV,WDU,WCL,WNT,WKR,WUT,WNA,WYA,WSN,WSU,WDW,WYH,WGG,WYI,WLV,WQQ,WOS,WOT,WUK,WBM,WPO,EBD,EBB,EAA,EMM,EMB,EWS,EPU,ESC,EMF,EMU","serviceTypeNm":"POP3, SMTP, IMAP, 네이버, 다음, 천리안, 네이트, 코리아, 유니텔, 네띠앙, Yeah, SINA, SOHU, 야후, 구글, 용인시, Live.com, QQ, 163, 126, 기타, KT비즈메카, 우체국, 게시, 게시판, 결재, 메일, 모바일, 웹서비스, 일반, 일정 명함, 파일 다운로드, 기타","infoType":"","infoTypeNm":"정보 분류 전체","feedbackType":"","feedbackTypeNm":"피드백 전체","interGroup":"","interGroupNm":"-관심 사용자 선택-","userGroupSeq":"","userGroupName":"-사용자 그룹-","startDateSelect":"Y","startTimeSelect":"00","endDateSelect":"Y","endTimeSelect":"23","senders":"","receivers":"","allOfus":"ET|EA","busi":"","busiNm":"사업장 전체","dept":"","deptNm":"","receiveSend":"O","ctimeWork":"","readYn":"","attachYn":"","attachVal":"","attachStr":"","keywordYn":"","keywordVal":"","keywordStr":"","regexpYn":"","regexpVal":"","regexpStr":"","drmYn":"","sctYn":"","sizeStartVal":0,"sizeEndVal":0,"sizeOption":"L","sizeType":""}','','Y');
+INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,USEYN) values (6,'1MB 이상 파일 전송','S','unread','total','P','svc1','total','tit06','yellowBg','
+	    <div class="grid-stack-item ui-draggable-handle">
 			<div style="display:none;" class="gridValues" data-dashMultiLeft="total" data-dashMultiRight="unread"></div>
 			<div class="grid-stack-item-content ">
 				<div class="xcn_maincon panel singleBorder">
@@ -1006,8 +1028,10 @@ INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT (DASH_KEY, DASH_NAME, DASH_TYPE, 
 					</div>
 				</div>
 			</div>
-		</div>', '{"searchStr":"","searchField":"","serviceType":"","serviceTypeNm":"서비스 전체","interGroup":"","interGroupNm":"-관심 사용자 그룹-","userGroupSeq":"","userGroupName":"-사용자 그룹-","startDateSelect":"T","startTimeSelect":"00","endDateSelect":"T","endTimeSelect":"23","senders":"","receivers":"","allOfus":"","busi":"","busiNm":"사업장 전체","dept":"","deptNm":"","receiveSend":"","ctimeWork":"","readYn":"","attachYn":"","attachVal":"","attachStr":"","keywordYn":"","keywordVal":"","keywordStr":"","regexpYn":"","regexpVal":"","regexpStr":"","drmYn":"","sctYn":"","sizeStartVal":"1048576","sizeEndVal":"0","sizeOption":"L","sizeType":"A"}', '', 'Y');
-INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT (DASH_KEY, DASH_NAME, DASH_TYPE, DASH_MULTI_X, DASH_MULTI_Y, DASH_CHART, DASH_CHART_X, DASH_CHART_Y, DASH_ICON, DASH_COLOR, DASH_HTML, DASH_CONDITION, DASH_COMMENT, USEYN) VALUES(7, '외부 발신 데이터', 'S', 'unread', 'total', 'P', 'svc1', 'total', 'tit07', 'blueBg', '<div class="grid-stack-item ui-draggable-handle">
+		</div>
+	','{"searchStr":"","searchField":"","serviceType":"","serviceTypeNm":"서비스 전체","interGroup":"","interGroupNm":"-관심 사용자 그룹-","userGroupSeq":"","userGroupName":"-사용자 그룹-","startDateSelect":"T","startTimeSelect":"00","endDateSelect":"T","endTimeSelect":"23","senders":"","receivers":"","allOfus":"","busi":"","busiNm":"사업장 전체","dept":"","deptNm":"","receiveSend":"","ctimeWork":"","readYn":"","attachYn":"","attachVal":"","attachStr":"","keywordYn":"","keywordVal":"","keywordStr":"","regexpYn":"","regexpVal":"","regexpStr":"","drmYn":"","sctYn":"","sizeStartVal":"1048576","sizeEndVal":"0","sizeOption":"L","sizeType":"A"}','','Y');
+INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,USEYN) values (7,'외부 발신 데이터','S','unread','total','P','svc1','total','tit07','blueBg','
+		<div class="grid-stack-item ui-draggable-handle">
 			<div style="display:none;" class="gridValues" data-dashMultiLeft="total" data-dashMultiRight="unread"></div>
 			<div class="grid-stack-item-content ">
 				<div class="xcn_maincon panel singleBorder">
@@ -1024,8 +1048,10 @@ INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT (DASH_KEY, DASH_NAME, DASH_TYPE, 
 					</div>
 				</div>
 			</div>
-		</div>', '{"searchStr":"","searchField":"","serviceType":"","serviceTypeNm":"서비스 전체","interGroup":"","interGroupNm":"-관심 사용자 그룹-","userGroupSeq":"","userGroupName":"-사용자 그룹-","startDateSelect":"T","startTimeSelect":"00","endDateSelect":"T","endTimeSelect":"23","senders":"","receivers":"","allOfus":"","busi":"","busiNm":"사업장 전체","dept":"","deptNm":"","readYn":"","receiveSend":"O","ctimeWork":"","attachYn":"","attachVal":"","attachStr":"","keywordYn":"","keywordVal":"","keywordStr":"","regexpYn":"","regexpVal":"","regexpStr":"","drmYn":"","sctYn":"","sizeStartVal":"0","sizeEndVal":"0","sizeOption":"L","sizeType":""}', '', 'Y');
-INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT (DASH_KEY, DASH_NAME, DASH_TYPE, DASH_MULTI_X, DASH_MULTI_Y, DASH_CHART, DASH_CHART_X, DASH_CHART_Y, DASH_ICON, DASH_COLOR, DASH_HTML, DASH_CONDITION, DASH_COMMENT, USEYN) VALUES(8, '비업무시간 데이터', 'S', 'unread', 'total', 'P', 'svc1', 'total', 'tit08', 'grayBg', '<div class="grid-stack-item ui-draggable-handle">
+		</div>
+	','{"searchStr":"","searchField":"","serviceType":"","serviceTypeNm":"서비스 전체","interGroup":"","interGroupNm":"-관심 사용자 그룹-","userGroupSeq":"","userGroupName":"-사용자 그룹-","startDateSelect":"T","startTimeSelect":"00","endDateSelect":"T","endTimeSelect":"23","senders":"","receivers":"","allOfus":"","busi":"","busiNm":"사업장 전체","dept":"","deptNm":"","readYn":"","receiveSend":"O","ctimeWork":"","attachYn":"","attachVal":"","attachStr":"","keywordYn":"","keywordVal":"","keywordStr":"","regexpYn":"","regexpVal":"","regexpStr":"","drmYn":"","sctYn":"","sizeStartVal":"0","sizeEndVal":"0","sizeOption":"L","sizeType":""}','','Y');
+INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,USEYN) values (8,'비업무시간 데이터','S','unread','total','P','svc1','total','tit08','grayBg','
+		<div class="grid-stack-item ui-draggable-handle">
 			<div style="display:none;" class="gridValues" data-dashMultiLeft="total" data-dashMultiRight="unread"></div>
 			<div class="grid-stack-item-content ">
 				<div class="xcn_maincon panel singleBorder">
@@ -1042,8 +1068,10 @@ INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT (DASH_KEY, DASH_NAME, DASH_TYPE, 
 					</div>
 				</div>
 			</div>
-		</div>', '{"searchStr":"","searchField":"","serviceType":"","serviceTypeNm":"서비스 전체","interGroup":"","interGroupNm":"-관심 사용자 그룹-","userGroupSeq":"","userGroupName":"-사용자 그룹-","startDateSelect":"T","startTimeSelect":"00","endDateSelect":"T","endTimeSelect":"23","senders":"","receivers":"","allOfus":"","busi":"","busiNm":"사업장 전체","dept":"","deptNm":"","receiveSend":"","ctimeWork":"R","readYn":"","attachYn":"","attachVal":"","attachStr":"","keywordYn":"","keywordVal":"","keywordStr":"","regexpYn":"","regexpVal":"","regexpStr":"","drmYn":"","sctYn":"","sizeStartVal":"0","sizeEndVal":"0","sizeOption":"L","sizeType":""}', '', 'Y');
-INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT (DASH_KEY, DASH_NAME, DASH_TYPE, DASH_MULTI_X, DASH_MULTI_Y, DASH_CHART, DASH_CHART_X, DASH_CHART_Y, DASH_ICON, DASH_COLOR, DASH_HTML, DASH_CONDITION, DASH_COMMENT, USEYN) VALUES(9, '그룹웨어 데이터', 'S', 'unread', 'total', 'P', 'svc1', 'total', 'tit09', 'purpleBg', '<div class="grid-stack-item ui-draggable-handle">
+		</div>
+	','{"searchStr":"","searchField":"","serviceType":"","serviceTypeNm":"서비스 전체","interGroup":"","interGroupNm":"-관심 사용자 그룹-","userGroupSeq":"","userGroupName":"-사용자 그룹-","startDateSelect":"T","startTimeSelect":"00","endDateSelect":"T","endTimeSelect":"23","senders":"","receivers":"","allOfus":"","busi":"","busiNm":"사업장 전체","dept":"","deptNm":"","receiveSend":"","ctimeWork":"R","readYn":"","attachYn":"","attachVal":"","attachStr":"","keywordYn":"","keywordVal":"","keywordStr":"","regexpYn":"","regexpVal":"","regexpStr":"","drmYn":"","sctYn":"","sizeStartVal":"0","sizeEndVal":"0","sizeOption":"L","sizeType":""}','','Y');
+INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,USEYN) values (9,'그룹웨어 데이터','S','unread','total','P','svc1','total','tit09','purpleBg','
+		<div class="grid-stack-item ui-draggable-handle">
 			<div style="display:none;" class="gridValues" data-dashMultiLeft="total" data-dashMultiRight="unread"></div>
 			<div class="grid-stack-item-content ">
 				<div class="xcn_maincon panel singleBorder">
@@ -1060,8 +1088,10 @@ INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT (DASH_KEY, DASH_NAME, DASH_TYPE, 
 					</div>
 				</div>
 			</div>
-		</div>', '{"searchStr":"","searchField":"","serviceType":"EBD,EBB,EAA,EMM,EMB,EWS,EPU,ESC,EMF,EMU","serviceTypeNm":"게시, 게시판, 결재, 메일, 모바일, 웹서비스, 일반, 일정 명함, 파일 다운로드, 기타","interGroup":"","interGroupNm":"-관심 사용자 그룹-","userGroupSeq":"","userGroupName":"-사용자 그룹-","startDateSelect":"T","startTimeSelect":"00","endDateSelect":"T","endTimeSelect":"23","senders":"","receivers":"","allOfus":"","busi":"","busiNm":"사업장 전체","dept":"","deptNm":"","readYn":"","receiveSend":"","ctimeWork":"","attachYn":"","attachVal":"","attachStr":"","keywordYn":"","keywordVal":"","keywordStr":"","regexpYn":"","regexpVal":"","regexpStr":"","drmYn":"","sctYn":"","sizeStartVal":"0","sizeEndVal":"0","sizeOption":"L","sizeType":""}', '미열람/전체', 'Y');
-INSERT IGNORE  INTO UI_CUSTOM_DASHBOARD_DEFAULT (DASH_KEY, DASH_NAME, DASH_TYPE, DASH_MULTI_X, DASH_MULTI_Y, DASH_CHART, DASH_CHART_X, DASH_CHART_Y, DASH_ICON, DASH_COLOR, DASH_HTML, DASH_CONDITION, DASH_COMMENT, USEYN) VALUES(10, '금일 수집 데이터', 'S', 'unread', 'total', 'P', 'svc1', 'total', 'tit10', 'greenBg', '<div class="grid-stack-item ui-draggable-handle">
+		</div>
+	','{"searchStr":"","searchField":"","serviceType":"EBD,EBB,EAA,EMM,EMB,EWS,EPU,ESC,EMF,EMU","serviceTypeNm":"게시, 게시판, 결재, 메일, 모바일, 웹서비스, 일반, 일정 명함, 파일 다운로드, 기타","interGroup":"","interGroupNm":"-관심 사용자 그룹-","userGroupSeq":"","userGroupName":"-사용자 그룹-","startDateSelect":"T","startTimeSelect":"00","endDateSelect":"T","endTimeSelect":"23","senders":"","receivers":"","allOfus":"","busi":"","busiNm":"사업장 전체","dept":"","deptNm":"","readYn":"","receiveSend":"","ctimeWork":"","attachYn":"","attachVal":"","attachStr":"","keywordYn":"","keywordVal":"","keywordStr":"","regexpYn":"","regexpVal":"","regexpStr":"","drmYn":"","sctYn":"","sizeStartVal":"0","sizeEndVal":"0","sizeOption":"L","sizeType":""}','미열람/전체','Y');
+INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,USEYN) values (10,'금일 수집 데이터','S','unread','total','P','svc1','total','tit10','greenBg','
+		<div class="grid-stack-item ui-draggable-handle">
 			<div style="display:none;" class="gridValues" data-dashMultiLeft="total" data-dashMultiRight="unread"></div>
 			<div class="grid-stack-item-content ">
 				<div class="xcn_maincon panel singleBorder">
@@ -1078,8 +1108,10 @@ INSERT IGNORE  INTO UI_CUSTOM_DASHBOARD_DEFAULT (DASH_KEY, DASH_NAME, DASH_TYPE,
 					</div>
 				</div>
 			</div>
-		</div>', '{"searchStr":"","searchField":"","serviceType":"","serviceTypeNm":"서비스 전체","interGroup":"","interGroupNm":"-관심 사용자 그룹-","userGroupSeq":"","userGroupName":"-사용자 그룹-","startDateSelect":"T","startTimeSelect":"00","endDateSelect":"T","endTimeSelect":"23","senders":"","receivers":"","allOfus":"","busi":"","busiNm":"사업장 전체","dept":"","deptNm":"","receiveSend":"","ctimeWork":"","readYn":"","attachYn":"","attachVal":"","attachStr":"","keywordYn":"","keywordVal":"","keywordStr":"","regexpYn":"","regexpVal":"","regexpStr":"","drmYn":"","sctYn":"","sizeStartVal":"0","sizeEndVal":"0","sizeOption":"L","sizeType":""}', '', 'Y');
-INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT (DASH_KEY, DASH_NAME, DASH_TYPE, DASH_MULTI_X, DASH_MULTI_Y, DASH_CHART, DASH_CHART_X, DASH_CHART_Y, DASH_ICON, DASH_COLOR, DASH_HTML, DASH_CONDITION, DASH_COMMENT, USEYN) VALUES(11, '수신자 발신자 동일 데이터', 'S', 'unread', 'total', 'P', 'svc1', 'total', 'tit11', 'redBg', '<div class="grid-stack-item ui-draggable-handle">
+		</div>
+	','{"searchStr":"","searchField":"","serviceType":"","serviceTypeNm":"서비스 전체","interGroup":"","interGroupNm":"-관심 사용자 그룹-","userGroupSeq":"","userGroupName":"-사용자 그룹-","startDateSelect":"T","startTimeSelect":"00","endDateSelect":"T","endTimeSelect":"23","senders":"","receivers":"","allOfus":"","busi":"","busiNm":"사업장 전체","dept":"","deptNm":"","receiveSend":"","ctimeWork":"","readYn":"","attachYn":"","attachVal":"","attachStr":"","keywordYn":"","keywordVal":"","keywordStr":"","regexpYn":"","regexpVal":"","regexpStr":"","drmYn":"","sctYn":"","sizeStartVal":"0","sizeEndVal":"0","sizeOption":"L","sizeType":""}','','Y');
+INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,USEYN) values (11,'수신자 발신자 동일 데이터','S','unread','total','P','svc1','total','tit11','redBg','
+		<div class="grid-stack-item ui-draggable-handle">
 			<div style="display:none;" class="gridValues" data-dashMultiLeft="total" data-dashMultiRight="unread"></div>
 			<div class="grid-stack-item-content ">
 				<div class="xcn_maincon panel singleBorder">
@@ -1096,8 +1128,10 @@ INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT (DASH_KEY, DASH_NAME, DASH_TYPE, 
 					</div>
 				</div>
 			</div>
-		</div>', '{"searchStr":"","searchField":"","serviceFieldNm":"검색 영역 전체","serviceType":"","serviceTypeNm":"서비스 전체","infoType":"","infoTypeNm":"정보 분류 전체","feedbackType":"","feedbackTypeNm":"피드백 전체","probType":"","probTypeNm":"판정 확률 전체","interGroup":"","interGroupNm":"-관심 사용자 선택-","userGroupSeq_not":"","userGroupSeq":"","userGroupName":"-사용자 그룹-","interGroup_not":"","epmsgType":"","startDateSelect":"T","endDateSelect":"T","startTimeSelect":"00","endTimeSelect":"23","senders":"","senders_not":"","receive_option":"","receivers":"","receivers_not":"","allOfus":"SO","busi":"","busiNm":"사업장 전체","busi_not":"","dept":"","deptNm":"","dept_not":"","url":"","url_not":"","receiveSend":"","ctimeWork":"","readYn":"","attachYn":"","attachVal":"","attachStr":"","attachYn_not":"","keywordYn":"","keywordVal":"","keywordStr":"","keywordYn_not":"","regexpYn":"","regexpVal":"","regexpStr":"","drmYn":"","realAttYn":"","sctYn":"","sizeStartVal":0,"sizeEndVal":0,"sizeOption":"L","sizeType":""}', NULL, 'Y');
-INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT (DASH_KEY, DASH_NAME, DASH_TYPE, DASH_MULTI_X, DASH_MULTI_Y, DASH_CHART, DASH_CHART_X, DASH_CHART_Y, DASH_ICON, DASH_COLOR, DASH_HTML, DASH_CONDITION, DASH_COMMENT, USEYN) VALUES(12, '첨부파일(MS-OFFICE) 데이터', 'S', 'unread', 'total', 'P', 'svc1', 'total', 'tit12', 'yellowBg', '<div class="grid-stack-item ui-draggable-handle">
+		</div>
+	','{"searchStr":"","searchField":"","serviceFieldNm":"검색 영역 전체","serviceType":"","serviceTypeNm":"서비스 전체","infoType":"","infoTypeNm":"정보 분류 전체","feedbackType":"","feedbackTypeNm":"피드백 전체","probType":"","probTypeNm":"판정 확률 전체","interGroup":"","interGroupNm":"-관심 사용자 선택-","userGroupSeq_not":"","userGroupSeq":"","userGroupName":"-사용자 그룹-","interGroup_not":"","epmsgType":"","startDateSelect":"T","endDateSelect":"T","startTimeSelect":"00","endTimeSelect":"23","senders":"","senders_not":"","receive_option":"","receivers":"","receivers_not":"","allOfus":"SO","busi":"","busiNm":"사업장 전체","busi_not":"","dept":"","deptNm":"","dept_not":"","url":"","url_not":"","receiveSend":"","ctimeWork":"","readYn":"","attachYn":"","attachVal":"","attachStr":"","attachYn_not":"","keywordYn":"","keywordVal":"","keywordStr":"","keywordYn_not":"","regexpYn":"","regexpVal":"","regexpStr":"","drmYn":"","realAttYn":"","sctYn":"","sizeStartVal":0,"sizeEndVal":0,"sizeOption":"L","sizeType":""}','','Y');
+INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,USEYN) values (12,'첨부파일(MS-OFFICE) 데이터','S','unread','total','P','svc1','total','tit12','yellowBg','
+		<div class="grid-stack-item ui-draggable-handle">
 			<div style="display:none;" class="gridValues" data-dashMultiLeft="total" data-dashMultiRight="unread"></div>
 			<div class="grid-stack-item-content ">
 				<div class="xcn_maincon panel singleBorder">
@@ -1114,8 +1148,55 @@ INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT (DASH_KEY, DASH_NAME, DASH_TYPE, 
 					</div>
 				</div>
 			</div>
-		</div>', '{"searchStr":"","searchField":"","serviceFieldNm":"검색 영역 전체","serviceType":"","serviceTypeNm":"서비스 전체","infoType":"","infoTypeNm":"정보 분류 전체","feedbackType":"","feedbackTypeNm":"피드백 전체","probType":"","probTypeNm":"판정 확률 전체","interGroup":"","interGroupNm":"-관심 사용자 선택-","userGroupSeq_not":"","userGroupSeq":"","userGroupName":"-사용자 그룹-","interGroup_not":"","epmsgType":"","startDateSelect":"T","endDateSelect":"T","startTimeSelect":"00","endTimeSelect":"23","senders":"","senders_not":"","receive_option":"","receivers":"","receivers_not":"","allOfus":"","busi":"","busiNm":"사업장 전체","busi_not":"","dept":"","deptNm":"","dept_not":"","url":"","url_not":"","receiveSend":"","ctimeWork":"","readYn":"","attachYn":"Y","attachVal":"DB|ADE|ADP|DBF|DOC|DOT|MDA|MDB|MDE|ODC|ODP|ODS|ODT|PDB|POT|PPS|PPT|PRN|PTF|PWZ|RTF|XLA|XLM|XLR|XLS|XLT|XLW|DOCM|DOCX|DOTM|DOTX|POTM|POTX|PPSM|PPSX|PPTM|PPTX|UXDC|XLAM|XLSB|XLSM|XLSX|XLTM|ACCDA|ACCDB|ACCDE|ACCDT","attachStr":"MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE","attachYn_not":"","keywordYn":"","keywordVal":"","keywordStr":"","keywordYn_not":"","regexpYn":"","regexpVal":"","regexpStr":"","drmYn":"","realAttYn":"","sctYn":"","sizeStartVal":0,"sizeEndVal":0,"sizeOption":"L","sizeType":""}', NULL, 'Y');
-INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT (DASH_KEY, DASH_NAME, DASH_TYPE, DASH_MULTI_X, DASH_MULTI_Y, DASH_CHART, DASH_CHART_X, DASH_CHART_Y, DASH_ICON, DASH_COLOR, DASH_HTML, DASH_CONDITION, DASH_COMMENT, USEYN) VALUES(13, '재처리 데이터', 'S', 'unread', 'total', 'P', 'svc1', 'total', 'tit03', 'purpleBg', '<div class="grid-stack-item ui-draggable-handle">
+		</div>
+	','{"searchStr":"","searchField":"","serviceFieldNm":"검색 영역 전체","serviceType":"","serviceTypeNm":"서비스 전체","infoType":"","infoTypeNm":"정보 분류 전체","feedbackType":"","feedbackTypeNm":"피드백 전체","probType":"","probTypeNm":"판정 확률 전체","interGroup":"","interGroupNm":"-관심 사용자 선택-","userGroupSeq_not":"","userGroupSeq":"","userGroupName":"-사용자 그룹-","interGroup_not":"","epmsgType":"","startDateSelect":"T","endDateSelect":"T","startTimeSelect":"00","endTimeSelect":"23","senders":"","senders_not":"","receive_option":"","receivers":"","receivers_not":"","allOfus":"","busi":"","busiNm":"사업장 전체","busi_not":"","dept":"","deptNm":"","dept_not":"","url":"","url_not":"","receiveSend":"","ctimeWork":"","readYn":"","attachYn":"Y","attachVal":"DB|ADE|ADP|DBF|DOC|DOT|MDA|MDB|MDE|ODC|ODP|ODS|ODT|PDB|POT|PPS|PPT|PRN|PTF|PWZ|RTF|XLA|XLM|XLR|XLS|XLT|XLW|DOCM|DOCX|DOTM|DOTX|POTM|POTX|PPSM|PPSX|PPTM|PPTX|UXDC|XLAM|XLSB|XLSM|XLSX|XLTM|ACCDA|ACCDB|ACCDE|ACCDT","attachStr":"MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE, MS-OFFICE","attachYn_not":"","keywordYn":"","keywordVal":"","keywordStr":"","keywordYn_not":"","regexpYn":"","regexpVal":"","regexpStr":"","drmYn":"","realAttYn":"","sctYn":"","sizeStartVal":0,"sizeEndVal":0,"sizeOption":"L","sizeType":""}','','Y');
+INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,USEYN) values (13,'500GB 이상 파일 크기','C','unread','total','B','svc1','total','tit01','blueBg','
+<div class="grid-stack-item ui-draggable-handle">
+			<div style="display:none;" class="gridValues" data-dashMultiLeft="total" data-dashMultiRight="unread"></div>
+			<div class="grid-stack-item-content">
+				<div class="panel blueBgBorder">
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-xs-12 text-right">
+								<button type="button" class="customClose">
+									<span aria-hidden="true">&times;</span>
+								</button>
+								<div class="dashChartArea" data-chartType="B"
+								     style="min-height: 200px;height:100%; width: 100%; margin: 0 auto"></div>
+							</div>
+						</div>
+					</div>
+					<div class="panel-footer">
+						<span class="tit01 pull-left dash-title">500GB 이상 파일 크기</span>
+						<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59">금일</div>
+						<div class="clearfix"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	','{"searchStr":"","searchField":"","serviceFieldNm":"검색 영역 전체","serviceType":"","serviceTypeNm":"서비스 전체","infoType":"","infoTypeNm":"정보 분류 전체","feedbackType":"","feedbackTypeNm":"피드백 전체","probType":"","probTypeNm":"판정 확률 전체","interGroup":"","interGroupNm":"-관심 사용자 선택-","userGroupSeq_not":"","userGroupSeq":"","userGroupName":"-사용자 그룹-","interGroup_not":"","epmsgType":"","startDateSelect":"Y","endDateSelect":"Y","startTimeSelect":"00","endTimeSelect":"23","senders":"","senders_not":"","receive_option":"","receivers":"","receivers_not":"","allOfus":"","busi":"","busiNm":"사업장 전체","busi_not":"","dept":"","deptNm":"","dept_not":"","url":"","url_not":"","receiveSend":"","ctimeWork":"","readYn":"","attachYn":"","attachVal":"","attachStr":"","attachYn_not":"","keywordYn":"","keywordVal":"","keywordStr":"","keywordYn_not":"","regexpYn":"","regexpVal":"","regexpStr":"","drmYn":"","realAttYn":"","sctYn":"","sizeStartVal":537096999936,"sizeEndVal":0,"sizeOption":"L","sizeType":"A"}','','Y');
+INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,USEYN) values (14,'메일 수집 건수 데이터','S','unread','total','P','svc1','total','tit02','grayBg','
+		<div class="grid-stack-item ui-draggable-handle">
+			<div style="display:none;" class="gridValues" data-dashMultiLeft="total" data-dashMultiRight="unread"></div>
+			<div class="grid-stack-item-content ">
+				<div class="xcn_maincon panel singleBorder">
+					<button type="button" class="customClose">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="grayBg bornone panel-heading click xcn_maincon_box" data-value="reserved">
+						<span class="tit02">메일 수집 건수 데이터</span>
+						<p class="rightValue">-<span>건</span><span class="tit13"></span></p>
+					</div>
+					<div class="panel-footer grayBg">
+						<div class="termDtStr" title="2018-01-01 00:00:00 ~ 2018-01-01 23:59:59">금일</div>
+						<div class="clearfix"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	','{"searchStr":"","searchField":"","serviceFieldNm":"검색 영역 전체","serviceType":"MP3,MSM,MIM","serviceTypeNm":"POP3, SMTP, IMAP","infoType":"","infoTypeNm":"정보 분류 전체","feedbackType":"","feedbackTypeNm":"피드백 전체","probType":"","probTypeNm":"판정 확률 전체","interGroup":"","interGroupNm":"-관심 사용자 선택-","userGroupSeq_not":"","userGroupSeq":"","userGroupName":"-사용자 그룹-","interGroup_not":"","epmsgType":"","startDateSelect":"T","endDateSelect":"T","startTimeSelect":"00","endTimeSelect":"23","senders":"","senders_not":"","receive_option":"","receivers":"","receivers_not":"","allOfus":"","busi":"","busiNm":"사업장 전체","busi_not":"","dept":"","deptNm":"","dept_not":"","url":"","url_not":"","receiveSend":"","ctimeWork":"","readYn":"","attachYn":"","attachVal":"","attachStr":"","attachYn_not":"","keywordYn":"","keywordVal":"","keywordStr":"","keywordYn_not":"","regexpYn":"","regexpVal":"","regexpStr":"","drmYn":"","realAttYn":"","sctYn":"","sizeStartVal":0,"sizeEndVal":0,"sizeOption":"L","sizeType":""}','','Y');
+INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,USEYN) values (15,'메신저 수집 건수 데이터','S','unread','total','P','svc1','total','tit03','purpleBg','
+		<div class="grid-stack-item ui-draggable-handle">
 			<div style="display:none;" class="gridValues" data-dashMultiLeft="total" data-dashMultiRight="unread"></div>
 			<div class="grid-stack-item-content ">
 				<div class="xcn_maincon panel singleBorder">
@@ -1123,7 +1204,7 @@ INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT (DASH_KEY, DASH_NAME, DASH_TYPE, 
 						<span aria-hidden="true">&times;</span>
 					</button>
 					<div class="purpleBg bornone panel-heading click xcn_maincon_box" data-value="reserved">
-						<span class="tit03">재처리 데이터</span>
+						<span class="tit03">메신저 수집 건수 데이터</span>
 						<p class="rightValue">-<span>건</span><span class="tit13"></span></p>
 					</div>
 					<div class="panel-footer purpleBg">
@@ -1132,9 +1213,15 @@ INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_DEFAULT (DASH_KEY, DASH_NAME, DASH_TYPE, 
 					</div>
 				</div>
 			</div>
-		</div>', '{"searchStr":"","searchField":"","serviceType":"","serviceTypeNm":"서비스 전체","interGroup":"","interGroupNm":"-관심 사용자 그룹-","userGroupSeq":"","userGroupName":"-사용자 그룹-","startDateSelect":"T","startTimeSelect":"00","endDateSelect":"T","endTimeSelect":"23","senders":"","receivers":"","allOfus":"","busi":"","busiNm":"사업장 전체","dept":"","deptNm":"","receiveSend":"","ctimeWork":"","readYn":"","attachYn":"","attachVal":"","attachStr":"","keywordYn":"","keywordVal":"","keywordStr":"","regexpYn":"","regexpVal":"","regexpStr":"","drmYn":"","sctYn":"","sizeStartVal":"0","sizeEndVal":"0","sizeOption":"L","sizeType":"","reprocessYn":"Y"}', '', 'Y');
+		</div>
+	','{"searchStr":"","searchField":"","serviceFieldNm":"검색 영역 전체","serviceType":"QNV,QNM,QDS,QSH,QDI,QDF,QDG,QFM,QMC,QMS,QNT,QSS,QSF,QSP,QSB,QWJ,QGP,QDA,QCL,QKB,QEK,QSL,QSY,QFB,QKM,QGH,QGG,QGM,QGB,QBI,QWT,QIS,QZA,QUK","serviceTypeNm":"네이버, 네이버 쪽지, 대신, 삼홍사, 동부생명, 동부금융, 동국제강, 프리본드, M-채널, 미쓰리, 네이트, 삼성증권, 삼성화재, SK 프라이든, SK 비즈, 웅진, chatGPT, Dall-E, 쿨, k-bond, 아이콘, Slack, 신영자산운용, 페이스북, 삼성KnoxMessenger, 구글 Hangout, 구글 chat, 구글 Meet, 구글 Gemini, Microsoft BingAI Chat, wrtn, 인스타그램 DM, Zalo, 기타","infoType":"","infoTypeNm":"정보 분류 전체","feedbackType":"","feedbackTypeNm":"피드백 전체","probType":"","probTypeNm":"판정 확률 전체","interGroup":"","interGroupNm":"-관심 사용자 선택-","userGroupSeq_not":"","userGroupSeq":"","userGroupName":"-사용자 그룹-","interGroup_not":"","epmsgType":"","startDateSelect":"T","endDateSelect":"T","startTimeSelect":"00","endTimeSelect":"23","senders":"","senders_not":"","receive_option":"","receivers":"","receivers_not":"","allOfus":"","busi":"","busiNm":"사업장 전체","busi_not":"","dept":"","deptNm":"","dept_not":"","url":"","url_not":"","receiveSend":"","ctimeWork":"","readYn":"","attachYn":"","attachVal":"","attachStr":"","attachYn_not":"","keywordYn":"","keywordVal":"","keywordStr":"","keywordYn_not":"","regexpYn":"","regexpVal":"","regexpStr":"","drmYn":"","realAttYn":"","sctYn":"","sizeStartVal":0,"sizeEndVal":0,"sizeOption":"L","sizeType":""}','','Y');
 
-       INSERT IGNORE INTO UI_CUSTOM_DASHBOARD_MENU (MENU_KEY,MENU_NAME,MENU_ICON,ADMIN_ID,USEYN,DEFAULT_MENU,DEFAULT_DASHBOARD,UPDATE_DT) VALUES (0,'Default Dashboard','fa fa-th-list','sysadmin','Y','Y','Y',NOW());
+
+INSERT INTO UI_CUSTOM_DASHBOARD_MENU(MENU_KEY,MENU_NAME,MENU_ICON,ADMIN_ID,USEYN,DEFAULT_MENU,DEFAULT_DASHBOARD,UPDATE_DT)
+SELECT @ROWNUM:=@ROWNUM+1 AS MENU_KEY,'Default Dashboard','fa fa-laptop',A.ADMIN_ID,'Y','Y','Y',NOW()
+FROM (SELECT * FROM UI_ADMIN ORDER BY ADMIN_ID) A, (SELECT @ROWNUM:=-1) B
+WHERE NOT EXISTS (SELECT * FROM UI_CUSTOM_DASHBOARD_MENU WHERE MENU_KEY=0 );
+
 
 INSERT IGNORE INTO UI_CUSTOM_DASHBOARD(DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,ADMIN_ID,USEYN)
 SELECT DASH_KEY,DASH_NAME,DASH_TYPE,DASH_MULTI_X,DASH_MULTI_Y,DASH_CHART,DASH_CHART_X,DASH_CHART_Y,DASH_ICON,DASH_COLOR,DASH_HTML,DASH_CONDITION,DASH_COMMENT,'sysadmin',USEYN

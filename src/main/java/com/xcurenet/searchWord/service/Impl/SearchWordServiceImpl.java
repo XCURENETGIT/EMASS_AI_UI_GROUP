@@ -46,6 +46,11 @@ public class SearchWordServiceImpl extends XcnAbstractDAO implements SearchWordS
 		return one+two;
 	}
 
+	@Override
+	public int tableNum() {
+		return selectOne("com.xcurenet.sqlmap.mappers.mysql.searchWord.tableNum");
+	}
+
 	public int findSearchWordNum(SearchWordVO searchWordVO) {
 		return selectOne("com.xcurenet.sqlmap.mappers.mysql.searchWord.getSearchWordNum", searchWordVO);
 	}

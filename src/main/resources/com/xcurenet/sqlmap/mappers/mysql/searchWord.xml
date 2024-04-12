@@ -102,5 +102,11 @@
 		WHERE TABLE_NAME = 'XCN_KEYWORD_REL'
 	</select>
 
+	<!--전체 테이블 확인 -->
+	<select id ="tableNum" resultType="int">
+	SELECT COUNT(1)
+	FROM information_schema.TABLES
+	WHERE TABLE_NAME = 'UI_ADMIN'
+	</select>
 
 </mapper>

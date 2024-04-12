@@ -17,6 +17,8 @@ public interface SearchWordService {
 
 	public int tableIsExist();
 
+	public int tableNum();
+
 	public int findSearchWordNum(SearchWordVO searchWordVO);
 
 	public int deleteSearchWord(List<SearchWordVO> searchWords);

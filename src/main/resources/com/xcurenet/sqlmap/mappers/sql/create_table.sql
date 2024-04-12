@@ -1002,6 +1002,15 @@ CREATE TABLE IF NOT EXISTS XCN_KEYWORD_REL (
 
 
 
+CREATE TABLE IF NOT EXISTS UI_DEPT_IPRANGE(
+    DEPTCD  varchar(20)  NOT NULL    COMMENT '부서 코드',
+    START_IP  varchar(64)  NOT NULL    COMMENT '시작 아이피',
+    END_IP  varchar(64)  NOT NULL    COMMENT '끝 아이피',
+    COMMENT  varchar(500)  NULL    COMMENT '설명',
+    CREATE_DT  datetime  NULL    COMMENT '생성일',
+    PRIMARY KEY (DEPTCD, START_IP, END_IP)     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='부서 내부 아이피';
+
+
 
 
 
