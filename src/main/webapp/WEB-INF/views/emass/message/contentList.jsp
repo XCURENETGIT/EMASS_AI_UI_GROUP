@@ -1041,6 +1041,11 @@
                 .show();
         };
         grid.onClick = function() {
+            if (!isDetailView()) {
+                alert(condition.authAlert);
+                return;
+            }
+
             if($('#contextMenu').css('display')=='block' || $('#contextMenu').css('display')=='inline-block') $('#contextMenu').hide();
             if (grid.Col == grid.ColIndex('attachcnt')) {
                 fileInfoViewer( grid.Row );
@@ -1070,13 +1075,6 @@
                 overlapInfoViewer( grid.Row );
             }
 
-            if( !(adminMenu != "ALL" && adminMenu.indexOf("DV") < 0) ) {
-                if(!parent.$('#none_btn').hasClass('areaSelected')) viewer_open(grid.Row);
-                if(popWin) viewer_openFocus(grid.Row);
-            } else {
-                alert('<s:message code="message.auth.no.detailview"/>');
-                return;
-            }
         };
         grid.changePageSize = function(cnt){
             parent.getList();

@@ -97,6 +97,12 @@ var eikon2 = {
     },
     getCollectionDetailList : function(userkey, msgid, srcip, usr_id,type){
         searchFlag = true;
+
+        if (!isDetailView()) {
+            alert(condition.authAlert);
+            return;
+        }
+
         ui.onBody('timeline_list', 0, 60);
 
         $("#timeline_list").html('');
@@ -402,6 +408,7 @@ function makeMessengerText( svc ){
 }
 
 function getFileMessageList  (page){
+
     var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
     groupPage = page;
     var offset = groupPage*groupPageBreak - groupPageBreak;
@@ -1100,6 +1107,11 @@ function updateEmassGenerativeAdminUserid(userkey, lastMsgId, srcip,type){ /*읽
 }
 
 function getFileDetailMessage(msgid){
+
+    if (!isDetailView()) {
+        alert(condition.authAlert);
+        return;
+    }
 
     ui.get({
         url : 'getEmassMessageNew.xcn',

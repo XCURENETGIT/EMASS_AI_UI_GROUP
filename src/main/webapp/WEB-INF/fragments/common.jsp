@@ -63,7 +63,6 @@
         reprocess: '<s:message code="condition.reprocess"/>'
 	}
 
-
 	var baseMsg1 = '<s:message code="analysis.ui.basemsg1"/>';
 	var baseMsg2 = '<s:message code="analysis.ui.basemsg2"/>';
 
@@ -373,6 +372,12 @@
 
 
 		$(document).on('click', '.print_link', function () {
+            if( !(adminMenu == 'ALL' || adminMenu.indexOf("DP") > -1 || adminMenu.indexOf("LP") > -1 )) {
+                ui.alertMsg('<s:message code="admin.auth.alert"/>')
+                return false;
+
+            }
+
 			var grid = getTargetGrid($(this).attr('data-target'));
 			var title = $(this).attr('rel');
 			if (grid.Rows == 0) {

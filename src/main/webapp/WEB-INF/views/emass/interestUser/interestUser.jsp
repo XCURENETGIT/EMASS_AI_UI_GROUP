@@ -791,7 +791,7 @@
     gridSelectUser.colAdd('ceo', '<s:message code="userInfo.usertype"/>', 80, 'center', false, 'normal', function (row, cell, value, columnDef, dataContext) {
         var ceo = gridSelectUser.getValue(row, 'ceo');
         if (ceo == 'Y') return 'CEO';
-        else return '';
+        else return 'N';
     });
 
     gridSelectUser.onClick = function () {
