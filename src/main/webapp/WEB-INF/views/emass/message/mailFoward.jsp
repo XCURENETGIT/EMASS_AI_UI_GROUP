@@ -8,6 +8,8 @@
 <%@ page import="com.xcurenet.emass.message.service.EmsBodyVO" %>
 <%@ page import="com.xcurenet.emass.message.service.EmsCreateMessage" %>
 <%@ page import="com.xcurenet.emass.message.web.EmsMessageController" %>
+<%@ page import="com.xcurenet.admin.service.AdminVO" %>
+<%@ page import="com.xcurenet.admin.service.impl.AdminServiceImpl" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
@@ -28,6 +30,18 @@
 	String styleStr = cssEl.toString();
 	Elements bodyEl = doc.getElementsByClass("container");
 	String bodyStr = bodyEl.toString().replaceAll("class=\"container\"", "class=\"msg_container\"");
+	
+	AdminVO adminVo = (AdminVO) session.getAttribute("_USERCREDENTIAL_");
+	String adminEmail = "";
+	if(adminVo != null){
+		if(Common.isEmpty(adminVo.getAdminEmail())) {
+			AdminServiceImpl adminService = SpringContextUtil.getBean(AdminServiceImpl.class);
+			AdminVO result = adminService.getAdmin(adminVo.getAdminId());
+			adminEmail = result.getAdminEmail();
+		}else{
+			adminEmail = adminVo.getAdminEmail();
+		}
+	}
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -58,7 +72,8 @@ var msgId = '<%=msgId%>';
 var xRootMtr = '<%=xRootMtr%>';
 var userCharset = '<%=userCharset%>';
 <%-- var bodyStr = '<%=bodyStr%>'; --%>
-var adminEmail = '${_USERCREDENTIAL_.adminEmail}';
+var adminEmail = '<%=adminEmail%>';
+
 $(document).ready(function(){
 	/**
 	 * 메일 수신자 및 참조 메일 수신자 선택

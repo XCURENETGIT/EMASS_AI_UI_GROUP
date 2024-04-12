@@ -7,6 +7,9 @@
 <%@ page import="com.xcurenet.config.service.ConfigAdminService" %>
 <%@ page import="com.xcurenet.common.util.Common" %>
 <%@ page import="com.xcurenet.common.util.config.Config" %>
+<%@ page import="com.xcurenet.admin.service.AdminVO" %>
+<%@ page import="com.xcurenet.admin.service.impl.AdminServiceImpl" %>
+<%@ page import="com.xcurenet.common.session.SessionManagement" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -46,6 +49,21 @@
 	boolean hostQuery = false;
 	ConfigAdminVO hostQueryVO = configAdminService.getConfAdmin("host.query.use", adminId);
 	if(Common.isNotEmpty(hostQueryVO)) hostQuery = Common.isEquals(Common.nvl(hostQueryVO.getVal()), "Y") ? true : false;
+	
+	
+	
+	AdminVO adminVo = (AdminVO) session.getAttribute("_USERCREDENTIAL_");
+	String adminEmail = "";
+	if(adminVo != null){
+		if(Common.isEmpty(adminVo.getAdminEmail())) {
+			AdminServiceImpl adminService = SpringContextUtil.getBean(AdminServiceImpl.class);
+			AdminVO result = adminService.getAdmin(adminVo.getAdminId());
+			adminEmail = result.getAdminEmail();
+		}else{
+			adminEmail = adminVo.getAdminEmail();
+		}
+	}
+
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -921,7 +939,7 @@
 	var op_body_save = '<%=op_body_save%>';
 	var op_body_print = '<%=op_body_print%>';
 	var mailUseFlag = <%=mailUseFlag%>;
-	var adminEmail = '${_USERCREDENTIAL_.adminEmail}';
+	var adminEmail = '<%=adminEmail%>';
 
 	var message = {
 		nosubject:'<s:message code="common.msg.nosubject"/>',

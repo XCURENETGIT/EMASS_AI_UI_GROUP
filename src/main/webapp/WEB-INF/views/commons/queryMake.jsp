@@ -780,16 +780,23 @@
 						addQueryText = queryAddMinus + "ctime:[" + startDt + " TO " + endDt + "]";
 						break;
 					case "svc":
+                        console.log("svc");
 						var service = $('#serviceTypeSelect').selectpicker('val');
 						if(service) {
-							addQueryText = queryAddMinus + "svc:(";
-							for(var i = 0; i < service.length; i++) {
-								if(i > 0) {
-									addQueryText += " "
-								}
-								addQueryText += service[i] + "*";
-							}
-							addQueryText += ")";
+                            if (service.length == 1) {
+                                addQueryText = queryAddMinus + "svc:";
+                                addQueryText += service[0]+"*";
+                            }
+                            else {
+                                addQueryText = queryAddMinus + "svc:(";
+                                for (var i = 0; i < service.length; i++) {
+                                    if (i > 0) {
+                                        addQueryText += " "
+                                    }
+                                    addQueryText += service[i] + "*";
+                                }
+                                addQueryText += ")";
+                            }
 						}
 						break;
 					case "direction_svc":

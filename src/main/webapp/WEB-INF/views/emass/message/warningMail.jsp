@@ -1,4 +1,8 @@
 <%@ page import="net.sf.json.JSONObject" %>
+<%@ page import="com.xcurenet.admin.service.impl.AdminServiceImpl" %>
+<%@ page import="com.xcurenet.config.service.ConfigService" %>
+<%@ page import="com.xcurenet.common.util.SpringContextUtil" %>
+<%@ page import="com.xcurenet.admin.service.AdminVO" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
 <%
@@ -6,6 +10,18 @@
 	String msgId = Common.nvl( param.get("msgId"));
 	String xRootMtr = Common.nvl( param.get("xRootMtr"));
 	String userCharset = Common.nvl( param.get("userCharset"));
+	
+	AdminVO adminVo = (AdminVO) session.getAttribute("_USERCREDENTIAL_");
+	String adminEmail = "";
+	if(adminVo != null){
+		if(Common.isEmpty(adminVo.getAdminEmail())) {
+			AdminServiceImpl adminService = SpringContextUtil.getBean(AdminServiceImpl.class);
+			AdminVO result = adminService.getAdmin(adminVo.getAdminId());
+			adminEmail = result.getAdminEmail();
+		}else{
+			adminEmail = adminVo.getAdminEmail();
+		}
+	}
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -27,7 +43,8 @@ table td{
 var msgId = '<%=msgId%>';
 var xRootMtr = '<%=xRootMtr%>';
 var userCharset = '<%=userCharset%>';
-var adminEmail = '${_USERCREDENTIAL_.adminEmail}';
+var adminEmail = '<%=adminEmail%>';
+
 $(document).ready(function(){
 	/**
 	 * 메일 수신자 및 참조 메일 수신자 선택
