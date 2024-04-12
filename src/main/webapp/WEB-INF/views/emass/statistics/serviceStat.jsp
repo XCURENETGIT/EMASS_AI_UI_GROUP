@@ -526,8 +526,6 @@
         colKey = grid1.ColKey(grid1.Col);
         var colKeyNm = colKey;
 
-        console.log(colKey)
-
         if (colKey == 'rowKey' || colKey == 'total' || colKey == 'NUM'|| colKey =='svcLv12Nm') {
             colKey = "";
             colKeyNm = '<s:message code="bodyview.total"/>';
@@ -543,16 +541,11 @@
             if (xAxis == "ctime_hh") colKeyNm = colKey + '<s:message code="common.msg.hour"/>';
         }
 
-
         var rowKeys = rowKey.split(",");
         svcNm = rowKeys.length > 1 ? '<s:message code="common.msg.all"/>' : grid1.getValue(grid1.Row, 'svcLv12Nm');
         var id = 'tab'+tabID;
         var liTab = " "
-        if(rowKey.length == 3){
-            colKeyNm = '<s:message code="analysis.usagecompare.ui.detaillist"/>';
-            pDisplayName = svcNm;
-            liTab ="liTabD"
-        }else if( rowKey.length == 4 ){
+		 if( rowKey.length == 4 ){
             svcNm = grid1.getValue(grid1.Row, 'svcNm');
             liTab ="liTabT"
         }else {

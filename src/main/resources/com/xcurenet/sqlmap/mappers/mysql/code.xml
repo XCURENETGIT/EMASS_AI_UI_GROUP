@@ -230,6 +230,7 @@
 		SELECT	COUNT(*) AS CNT
 		FROM	UI_DEPT
 		WHERE	DEPTNM	= #{deptNm}
+		AND COCD = #{coCd}
 		<if test='deptCd!=null and deptCd!=""'>
 			AND		DEPTCD != #{deptCd}
 		</if>
