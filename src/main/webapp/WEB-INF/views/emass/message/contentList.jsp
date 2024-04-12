@@ -1075,6 +1075,13 @@
                 overlapInfoViewer( grid.Row );
             }
 
+            if( !(adminMenu != "ALL" && adminMenu.indexOf("DV") < 0) ) {
+                if(!parent.$('#none_btn').hasClass('areaSelected')) viewer_open(grid.Row);
+                if(popWin) viewer_openFocus(grid.Row);
+            } else {
+                alert('<s:message code="message.auth.no.detailview"/>');
+                return;
+            }
         };
         grid.changePageSize = function(cnt){
             parent.getList();
