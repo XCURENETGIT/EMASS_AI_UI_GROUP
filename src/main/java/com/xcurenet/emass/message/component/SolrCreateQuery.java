@@ -1279,8 +1279,8 @@ public class SolrCreateQuery {
 				finalReadYn = "";
 				setSearchField(searchField);
 				setSort(sort);
-				query = query.replaceAll("([+])\\1+","+").replaceAll("([|])\\1+","|").replaceAll("(-)\\1+","-"); // 연속2개입력시 1개로 줄이기
-				query  =  query.replaceAll("[[\\\\][\"]\\[\\]\\(\\)\\{\\}]",  "\\\\"+"$0");
+//				query = query.replaceAll("([+])\\1+","+").replaceAll("([|])\\1+","|").replaceAll("(-)\\1+","-"); // 연속2개입력시 1개로 줄이기
+//				query  =  query.replaceAll("[[\\\\][\"]\\[\\]\\(\\)\\{\\}]",  "\\\\"+"$0");
 				addQuery(query);
 				setSvc1(svc1, svc1_not);
 				return this;
