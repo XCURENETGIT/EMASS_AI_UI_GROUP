@@ -193,7 +193,7 @@ public class SolrEdcController {
 			String overlap = (!Common.isEmpty(overlapInfo)) ? overlapInfo.getVal() : "N";
 
 			SolrEdcMessageVO solrVo = solrEdcService.getEmassMessage(sq, adminId, solrCreateQuery.getFinalReadYn(), solrCreateQuery.getConsentNo());
-			if(Common.isEquals(Common.nvl(param.get("overlap")), "Y") && Common.isEquals(overlap, "Y")) {
+			if(Common.isEquals(Common.nvl(param.get("overlap")), "Y") || Common.isEquals(overlap, "Y")) {
 				solrVo = solrEdcService.setOverlap(solrVo);
 			}
 
