@@ -82,7 +82,7 @@
 
 
 <style>
-
+  
   <!--
   .menu-content a {
     word-break:break-all;
@@ -98,7 +98,7 @@
   .btn {
     position: relative;
   }
-
+  
   #menu-content span.open{
     position: fixed;
     left: 37px;
@@ -108,15 +108,15 @@
     border-left : 0px;
     border-right : 3px solid #D19B3D;
   }
-
+  
   .subMenu.open{
     position: fixed;
     display: inline;
     left: 37px;
     width: 180px;
   }
-
-
+  
+  
   #full_menu .panel-header, .panel-body, #sel_menu .panel-header {
     z-index:999;
   }
@@ -137,7 +137,7 @@
     padding: 9px;
     text-align: center;
   }
-
+  
   #full_menu .panel-title {
     font-weight: bold;
   }
@@ -147,11 +147,11 @@
   #full_menu a:HOVER {
     color:#fff;
   }
-
+  
   #full_menu .col-md-1 {
     width: inherit !important;
   }
-
+  
   .nav.nav-tabs > li > a {
     cursor: pointer;
   }
@@ -169,7 +169,7 @@
   var consent = '<%=consent%>';
   var isIPv6 = '<%=isIPv6%>';
   var isOCR = '<%=isOCR%>';
-
+  
   /* analysis */
   var messageGridColumn = {
     msgid: '<s:message code="common.msg.msgid"/>',
@@ -212,11 +212,11 @@
     attachname: '<s:message code="condition.attach_name"/>',
     reprocess: '<s:message code="condition.reprocess"/>'
   }
-
-
+  
+  
   var baseMsg1 = '<s:message code="analysis.ui.basemsg1"/>';
   var baseMsg2 = '<s:message code="analysis.ui.basemsg2"/>';
-
+  
   var allofusMsg = {
     IA: '<s:message code="condition.allofus1"/>',
     ET: '<s:message code="condition.allofus8"/>',
@@ -227,7 +227,7 @@
     SO: '<s:message code="condition.allofus13"/>',
     SI: '<s:message code="condition.allofus14"/>'
   };
-
+  
   var mlConfdClassMsg = {
     C4: '<s:message code="condition.info.class4"/>',
     C3: '<s:message code="condition.info.class3"/>',
@@ -235,7 +235,7 @@
     C1: '<s:message code="condition.info.class1"/>',
     C0: '<s:message code="common.msg.noinfo"/>'
   };
-
+  
   var mlConfdFeedbackMsg = {
     F1: '<s:message code="condition.info.feedback1"/>',
     F2: '<s:message code="condition.info.feedback2"/>',
@@ -249,20 +249,20 @@
     SC2: '<s:message code="condition.info.Y"/>',
     SC1: '<s:message code="condition.info.N"/>',
   };
-
+  
   var skMlConfdFeedbackMsg = {
     SF1: '<s:message code="condition.info.secretFeedbackY"/>',
     SF2: '<s:message code="condition.info.secretFeedbackN"/>',
   };
-
+  
   function addMonth2(day) {
     var today = new Date();
     today.setMonth(today.getMonth() + parseInt(day));
-
+    
     return getDate(today);
   }
-
-
+  
+  
   var pwchgDt = '${_USERCREDENTIAL_.pwchgDt}';
   var adminLang = '<%=adminLanguage%>';
   var enter = "┌";
@@ -276,18 +276,18 @@
   var leftSize = 225;
   var menuId = "";
   var pMenuId = "";
-
-
+  
+  
   var adminLangLayout = {
-        west_ko : 300
-        ,west_en : 300
-        ,east_ko : 680
-        ,east_en : 840
-        ,south_ko : 400
-        ,south_en : 400
+    west_ko : 300
+    ,west_en : 300
+    ,east_ko : 680
+    ,east_en : 840
+    ,south_ko : 400
+    ,south_en : 400
   }
-
-
+  
+  
   $(document).ready(function() {
     if( $('.content_header').css('display') == undefined ) {
       $('.container').css('top',' 80px');
@@ -299,13 +299,13 @@
         }
       }
     });
-
+    
     $('.xcn_full').each(function(e){
       var obj = this;
       var pTop = $(obj).parent().offset().top;
       var cTop = $(obj).offset().top;
       $(obj).outerHeight($(obj).parent().outerHeight() - (cTop - pTop) );
-
+      
       var parent = $(obj).parent();
       $(parent).sizeChanged( function(element){
         var pTop = $(element).offset().top;
@@ -313,10 +313,10 @@
         $(element).find('.xcn_full').outerHeight($(element).outerHeight() - (cTop - pTop) );
       });
     });
-
+    
     //$('button').easyHotkey();
-
-
+    
+    
     //언어 설정
     $('#korLan').click(function (){
       var adminLang = (this).getAttribute('data-value');
@@ -326,7 +326,7 @@
         }
       });
     })
-
+    
     $('#EnLan').click(function (){
       var adminLang = (this).getAttribute('data-value');
       ui.confirmMsg('<s:message code="common.msg.change.apply"/>', '', '', function(rs){
@@ -335,9 +335,9 @@
         }
       });
     })
-
-
-
+    
+    
+    
     $('#TheFirstSaveBtn').click(function(){
       $('#TheFirstSaveBtn').prop('disabled', true);
       var first_adminId = $('#first_adminId').val().trim();
@@ -379,7 +379,7 @@
         $('#TheFirstSaveBtn').prop('disabled', false);
         return;
       }
-
+      
       if(first_adminPw != first_c_adminPw) {
         ui.alertMsg('<s:message code="admin.msg.diff.pw"/>');
         $('#first_adminPw').focus( );
@@ -421,28 +421,28 @@
         }else{
           $('#TheFirstSaveBtn').prop('disabled', false);
         }
-
+        
       });
     });
-
+    
     $('#changePasswordBtn').click(function(){
       $('#current_password').val('');
       $('#change_password').val('');
       $('#current_confirm_password').val('');
-
+      
       $("#changePasswordPop").modal('show');
     });
-
+    
     $('#changeLanguageBtn').click(function(){
       $('#adminLang').val(adminLang);
       $("#changeLanguagePop").modal('show');
     });
-
+    
     $('#changePasswordSaveBtn').click(function(){
       var current_password = $('#current_password').val().trim();
       var change_password = $('#change_password').val().trim();
       var current_confirm_password = $('#current_confirm_password').val().trim();
-
+      
       if(current_password == '') {
         ui.alertMsg('<s:message code="base.enter.current.pw"/>');
         return;
@@ -455,7 +455,7 @@
         ui.alertMsg('<s:message code="base.enter.changeconfirm.pw"/>');
         return;
       }
-
+      
       if(change_password != current_confirm_password) {
         ui.alertMsg('<s:message code="base.different.pw"/>');
         return;
@@ -464,12 +464,12 @@
         ui.alertMsg('<s:message code="base.wrong.pw"/>');
         return;
       }
-
+      
       if(sha256_digest(current_password) == sha256_digest(change_password)) {
         ui.alertMsg('<s:message code="base.same.pw"/>');
         return;
       }
-
+      
       if(!validationPassword('${_USERCREDENTIAL_.adminId}', change_password)) return;
       ui.confirmMsg('<s:message code="base.change.pw"/>', '', '', function(rs){
         if(rs){
@@ -492,17 +492,17 @@
         }
       });
     });
-
+    
     $('#changeLanguageSaveBtn').click(function(){
       var adminLang = $('#adminLang').val();
-
+      
       ui.confirmMsg('<s:message code="common.msg.change.apply"/>', '', '', function(rs){
         if(rs){
           document.location.href = '<c:url value="/changeLocale?locale='+adminLang+'"/>';
         }
       });
     });
-
+    
     $('#logoutBtn').click(function () {
       ui.get({
         url: 'logout.xcn',
@@ -518,7 +518,7 @@
         }
       });
     });
-
+    
     $('#connectCf').click(function(){
       if(checkBrowser() == "chrome" || checkBrowser() == "safari" ||
               checkBrowser() == "firefox" || checkBrowser() == "opera" ||
@@ -549,13 +549,13 @@
         });
       }
     });
-
+    
     function checkBrowser() {
       // 브라우저 및 버전을 구하기 위한 변수들.
       var agent = navigator.userAgent.toLowerCase(),
               name = navigator.appName,
               browser;
-
+      
       // MS 계열 브라우저를 구분하기 위함.
       if(name === 'Microsoft Internet Explorer' || agent.indexOf('trident') > -1 || agent.indexOf('edge/') > -1) {
         browser = 'ie';
@@ -580,31 +580,31 @@
       } else if(agent.indexOf('firefox') > -1) { // Firefox
         return browser = 'firefox';
       }
-
+      
       // IE: ie7~ie11, Edge: edge, Chrome: chrome, Firefox: firefox, Safari: safari, Opera: opera
       document.getElementsByTagName('html')[0].className = browser;
     }
-
+    
     $('#systemSettingsMenu').click(function() {
       fnOpenWindow('<c:url value="/conf.do"/>', 'systemConfig', 1100, 800, 'scroll');
     });
     $('#adminSettingsMenu').click(function() {
       fnOpenWindow('<c:url value="/endPoints"/>', 'endPoints', 1300, 650, 'scroll');
     });
-
+    
     $(window).scroll(function () {
       $(this).scrollTop() > 200 ? $('.back-to-top').addClass('cd-is-visible') : $('.back-to-top').removeClass('cd-is-visible cd-fade-out');
     }).trigger('scroll');
-
+    
     $('.back-to-top').on('click', function (event) {
       event.preventDefault();
       $('html,body').animate({
         scrollTop: 0
       }, 500);
     });
-
-
-
+    
+    
+    
     $('#titleOpen').click(function(){
       $(this).hide();
       $('#titleClose').show('fade');
@@ -617,22 +617,22 @@
       $('.content_header').slideUp('fast');
       $('.container').animate({top: '73'}, 200);
     });
-
+    
     $('#menu_fold').click(function() {
       if($('#full_menu').is(':visible')) $('#full_menu').slideUp('fast');
       else $('#full_menu').slideDown('fast');
     });
-
+    
     $(document).on('click', '.menuClose', function(){
       $(this).parent().parent().hide();
     });
-
+    
     $(document).mouseup(function(e){
       if($('#full_menu').has(e.target).length===0){
         $('#full_menu').slideUp('fast');
       }
     });
-
+    
     $('#full_menu .panel-body').clone().appendTo('#sub_menu');
     $('.topMenuLi').hover(
             function(e){
@@ -642,7 +642,7 @@
               $(this).find('.sub-slide').hide();
             }
     );
-
+    
     $(document).on('click', '.print_link', function(){
       var grid = getTargetGrid($(this).attr('data-target'));
       var title = $(this).attr('rel');
@@ -650,7 +650,7 @@
         alert('<s:message code="common.msg.nodata"/>');
         return;
       }
-
+      
       grid.print(title, pMenuId, menuId);
     });
     $(document).on('click', '.excel_link', function(){
@@ -671,7 +671,7 @@
         cellDownLoad(grid, title, null, null, option);
       }, 200);
     });
-
+    
     $(document).on('click', '.pdf_link', function(){
       var grid = getTargetGrid($(this).attr('data-target'));
       var title = $(this).attr('rel');
@@ -690,7 +690,7 @@
         csvDownLoad(grid, title, null, null, option);
       }, 200);
     });
-
+    
     //목록개수
     var str='';
     str += '<button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">';
@@ -706,19 +706,19 @@
     str += '	<li><a href="javascript:void(0);" data="5000">5000</a></li>';
     str += '</ul>';
     $('.grid-limit').html(str);
-
+    
     $(document).on('click','.dropdown-menu a', function(){
       $(this).parent().parent().parent().find('.caret').attr('val', $(this).attr('data'));
       $(this).parent().parent().parent().find('.dropdown-text').text($(this).text());
       $(this).parent().parent().parent().find('.caret').trigger( "change" );
     });
-
+    
     if($('body').attr('id') != 'loginBody' && $('#menu_fold').length > 0 ){
       if(menuId != 'DASHBOARD' && menuId !='MESSAGE_INFO'){
         $('.container').css('min-width', '1580px');
         $('.top_container').css('min-width', '100%');
       }
-
+      
       var socket = new SockJS("<c:url value="/socket"/>");
       socket.onheartbeat = function() {
         console.log('heartbeat');
@@ -726,7 +726,7 @@
       socket.disconnect = function(data) {
         console.log('서버 연결이 해제 되었습니다.!');
       };
-
+      
       stompClient = Stomp.over(socket);
       stompClient.debug = null
       var win_title = document.title;
@@ -742,7 +742,7 @@
           else if(lv=='W') lv = 'warning';
           else if(lv=='E') lv = 'danger';
           else lv = 'info';
-
+          
           $.notify({
             icon: 'glyphicon glyphicon-warning-sign',
             title: '<strong>'+body.title+'</strong><br>',
@@ -813,7 +813,7 @@
       };
       stompClient.connect('${pageContext.session.id}', "", connectCallback, errorCallback);
     }
-
+    
     function setAlive( ){
       stompClient.send("/app/browserAlive", {}, '${pageContext.session.id}');
     }
@@ -835,7 +835,7 @@
     str += '<li><a href="javascript:void(0);" class="print_link" data-target="'+gridName+'" rel="'+title+'"><span class="glyphicon glyphicon-print"></span>&nbsp;<s:message code="common.msg.print"/></a></li>';
     $('#'+target).append(str);
   }
-
+  
   function loginCheck(firstAdmin){
     adminId = $('#first_adminId').val().trim();
     if(firstAdminYn == '') firstAdminYn = firstAdmin;
@@ -845,7 +845,7 @@
       $('#TheFirstChangePw').modal('show');
     }
   }
-
+  
   //팝업 전용
   function checkMenuId(){
     if(opener){
@@ -857,7 +857,7 @@
       }
     }
   }
-
+  
   function getTargetGrid(target) {
     for (var i = 0; i < window.__grids.length; i++) {
       if (window.__grids[i].id == target)
@@ -870,18 +870,18 @@
     if( consent=="true" && firstAdminYn != 'Y' ) return true;
     else return false;
   }
-
+  
   function isDetailView( ){
     if( adminMenu == 'ALL' || adminMenu.indexOf("DV") > -1) return true;
     else return false;
   }
-
+  
   function renderPrice(frame) {
     var prices = JSON.parse(frame.body);
     $('#fileSend_totalCnt').html(prices.nowToday);
     $('#fileSend_termDtStr').html(prices.rate);
   }
-
+  
   // 메시지 본문 조회 팝업
   function openMessageBody( title, msgId, searchKey){
     if( !isDetailView() ) return;
@@ -890,23 +890,23 @@
   function openMessageBodyPop(title, msgId, searchKey){
     if( !isDetailView() ) return;
     if( searchKey == undefined ) searchKey = '';
-
+    
     var url  = '<c:url value="/ems/contentBodyNew.do?msgid='+msgId+'&searchKey='+searchKey+'"/>';
-
+    
     if( title == '' ) title='No_Title'+ ''// makeDateTime();
     return fnOpenWindow(url, title, 1000, 800, 'resize');
   }
-
+  
   function openGroupMessagePop(){
     var url    = '<c:url value="/ems/contentGroup.do"/>';
     var title='_blank'+makeDateTime();
     return fnOpenWindow(url, title, 1280, 800, 'resize');
   }
-
+  
   function makeDateTime(){
     return new Date().format('yyyymmddHHnnss');
   }
-
+  
   // 목록개수 건수 조회
   function getPageSize(id){
     return Number( $('#'+id + ' .caret').attr('val') );
@@ -916,7 +916,7 @@
     $('#'+id + ' .caret').attr('val', val);
     $('#'+id + ' .dropdown-text').text(val);
   }
-
+  
   function csvDownLoad(grid, title, pmenu_id, menu_id, option) {
     if (grid.Rows == 0) {
       grid.off();
@@ -952,7 +952,7 @@
       }
     });
   }
-
+  
   function pdfDownLoad(grid, title, pmenu_id, menu_id, option) {
     if (grid.Rows == 0) {
       grid.off();
@@ -988,7 +988,7 @@
       }
     });
   }
-
+  
   function excelDownLoad(grid, title, pmenu_id, menu_id, option) {
     if (grid.Rows == 0) {
       grid.off();
@@ -999,7 +999,7 @@
       pmenu_id = pMenuId;
       menu_id = menuId;
     }
-
+    
     var header = grid.getHeaderEXCEL();
     var body = grid.getBodyEXCEL(option);
     grid.on();
@@ -1025,7 +1025,7 @@
       }
     });
   }
-
+  
   function cellDownLoad(grid, title, pmenu_id, menu_id, option) {
     if (grid.Rows == 0) {
       grid.off();
@@ -1061,8 +1061,8 @@
       }
     });
   }
-
-
+  
+  
   function insertAudit(operation, information){
     ui.get({
       url : 'insertAudit.xcn',
@@ -1079,7 +1079,7 @@
       }
     });
   }
-
+  
   function restartTomcat(){
     ui.get({
       url : 'restartTomcat.xcn',
@@ -1092,7 +1092,7 @@
       }
     });
   }
-
+  
   function chkInteger(val){
     if( val == 0) return true;
     if( !Number(val)){
@@ -1102,17 +1102,17 @@
     if( val.indexOf('.') > -1){
       return false;
     }
-
+    
     return true;
   }
-
+  
   /**
    * IPv4 및 IPv6 한꺼번에 체크 by JGH
    */
   function checkIP(ip) {
     return ipv6Check._validate(ip);
   }
-
+  
   /**
    * 시작, 끝 IP 유효성 검사
    *
@@ -1122,7 +1122,7 @@
     var endIp = eip;
     if ( ipv6Check.storeIP(startIp) != "" ) startIp = ipv6Check.storeIP(startIp);
     if ( ipv6Check.storeIP(endIp) != "" ) endIp = ipv6Check.storeIP(endIp);
-
+    
     var iplen = 3;
     var symbol = '';
     if ( ipv6Check.ver( startIp ) == 6 ) {
@@ -1146,31 +1146,31 @@
     if ( strcmp(startIpStr, endIpStr) == 1 ) return false;
     else return true;
   }
-
+  
   function strcmp(a, b)
   {
     return (a<b?-1:(a>b?1:0));
   }
-
+  
   function prependZero(num, len) {
     while(num.toString().length < len) {
       num = "0" + num;
     }
     return num;
   }
-
+  
   function probPercent(val) {
     if( val == undefined || val == null || val == -1.0 ) return '';
     return Math.floor(parseInt(val) * 100);
   }
-
-
+  
+  
   $(document).on('click', '.saveNoLogUrlPopBtn', function () {
     $('.saveNoLogUrlPopBtn').prop('disabled', true);
     saveNoLogUrlData();
   });
-
-
+  
+  
   function saveNoLogUrlData() {
     $('#noLogurl').val($.trim($('#noLogurl').val()));
     if ($('#noLogurl').val() == '') {

@@ -1265,12 +1265,15 @@ public class EmsMessageController {
 	public XcnResponseVO getEmassMessageNew(final HttpServletRequest request, final HttpSession session) throws Exception {
 		String msgId = Common.nvl(request.getParameter("msgId"));
 		String consentUserId = Common.nvl(request.getParameter("consentUserId"));
+	//	boolean openAuth = Boolean.parseBoolean(Common.nvl(request.getParameter("open"))); // 읽기 권한 있음여부
 		String firstAdminYn = Common.getFirstAdminYn(request.getSession());
 		String adminType = Common.getAdminType(request.getSession());
 
 		EmsMessageVO emass = new EmsMessageVO();
 		if(emsMessageService.beforeConsentCheck(msgId,firstAdminYn,adminType,consentUserId)) emass = emsMessageService.getEmassMessageNew(Common.getAdminId(request), msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
+	//	else if(openAuth) emass.setConsentFlag(true);
 		else emass.setConsentFlag(false);
+
 
 		if (emass != null && emass.isConsentFlag()) {
 			solrCheckedService.setRead(msgId, Common.getAdminId(session));
