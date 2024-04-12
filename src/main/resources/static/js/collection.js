@@ -203,7 +203,7 @@ var eikon2 = {
             complete : function() {
                 searchFlag = false;
                 ui.off('timeline-panel');
-                HighSerarchlight();
+                HighSerarchlight2();
             }
         });
     }
@@ -234,8 +234,6 @@ function getCollectionMessageTotal(userkey, srcip, startDt, endDt, usr_id, msgid
         }
     });
 }
-
-
 
 
 /**
@@ -284,7 +282,7 @@ function getGenerativeMessageNext(userkey, srcip, usr_id, msgid,type) {
             }
 
             $("#timeline_list").append(makeList2(true));
-            Highlight( );
+            Highlight_detail( );
         },
         error : function(status, message) {
             searchFlag = false;
@@ -339,7 +337,7 @@ function getGenerativeMessagePrev(userkey, srcip, usr_id, msgid,type) {
 
             $("#timeline_list").prepend(makePrevList());
             $('#scrollArea').scrollTop($(".pageInfoDiv").height());
-            Highlight( );
+            Highlight_detail()
             detailSearchFlag = false;
         },
         error : function(status, message) {
@@ -427,7 +425,7 @@ function getFileMessageList  (page){
         success : function(data, total) {
             rtnFileGroupList(data.emass)
             rtnFilePage(total, page);
-            HighlightGroup();
+            HighlightGroup2();
         },
         error : function(status, message) {
             ui.alertMsg(message);
@@ -517,7 +515,7 @@ function getCollectionGroupList (page,type){
             if(data.groups != null) rtnGenerativeGroupList(data.groups);
             if(data.headerMap != null && !pivotused) setSvcButton(data.headerMap);
             rtnnGenerativeGroupPage(total, page);
-            HighlightGroup();
+            HighlightGroup2();
         },
         error : function(status, message) {
             ui.alertMsg(message);
@@ -1138,7 +1136,56 @@ function idIndicator(id){
     return id.fReplaceWord('.', '\\.');
 }
 
-jQuery.fn.highlight2 = function(pat, type) {
+
+
+function HighlightGroup2() {
+    setTimeout(function () {
+        var searchs = $('#searchStrInput').val().split(/\||\+|\s|\*|\"/);
+        if (searchs.length > 0) {
+            var group_list_obj = $("#group_list").find('span');
+
+            for (var i = 0; i < searchs.length; i++) {
+                if (searchs[i] == '') continue;
+                $(group_list_obj).highlight3(searchs[i], 'BS');
+            }
+        }
+    }, 100);
+}
+
+
+function Highlight_detail() {
+    setTimeout(function () {
+        var searchs = $('#searchStrInput').val().split(/\||\+|\s|\*|\"/);
+        if (searchs.length > 0) {
+            var timeline_list_obj = $("#timeline_list").find('#preview, .me, .you');
+
+
+            for (var i = 0; i < searchs.length; i++) {
+                if (searchs[i] == '') continue;
+                $(timeline_list_obj).highlight3(searchs[i], 'BS');
+            }
+        }
+    }, 100);
+}
+
+
+function HighSerarchlight2( ) {
+    setTimeout(function(){
+        var searchs = $('#searchMsgStrInput').val().split(/\||\+|\s|\*|\"/);
+
+        if ( searchs.length > 0 ){
+            var timeline_list_obj = $("#timeline_list").find('.me, .you');
+            for ( var i=0 ; i < searchs.length ; i++ ) {
+                if ( searchs[i] == '' ) continue;
+                $( timeline_list_obj ).highlight3(searchs[i], 'BS');
+            }
+        }
+    }, 100);
+}
+
+
+
+jQuery.fn.highlight3 = function(pat, type) {
     function innerHighlight(node, pat, type) {
         pat = pat.trim();
         var skip = 0;
@@ -1186,55 +1233,6 @@ jQuery.fn.highlight2 = function(pat, type) {
         innerHighlight(this, pat.toUpperCase(), type);
     });
 };
-
-function HighlightGroup() {
-    setTimeout(function () {
-        var searchs = $('#searchStrInput').val().split(/\||\+|\s|\*|\"/);
-        if (searchs.length > 0) {
-            var group_list_obj = $("#group_list").find('span');
-
-            for (var i = 0; i < searchs.length; i++) {
-                if (searchs[i] == '') continue;
-                $(group_list_obj).highlight(searchs[i], 'BS');
-            }
-        }
-    }, 100);
-}
-
-
-
-
-function HighSerarchlight( ) {
-    setTimeout(function(){
-        var searchs = $('#searchMsgStrInput').val().split(/\||\+|\s|\*|\"/);
-
-        if ( searchs.length > 0 ){
-            var timeline_list_obj = $("#timeline_list").find('.me, .you');
-            for ( var i=0 ; i < searchs.length ; i++ ) {
-                if ( searchs[i] == '' ) continue;
-                $( timeline_list_obj ).highlight2(searchs[i], 'BS');
-            }
-        }
-    }, 100);
-}
-
-
-function Highlight() {
-    setTimeout(function () {
-        var searchs = $('#searchStrInput').val().split(/\||\+|\s|\*|\"/);
-        if (searchs.length > 0) {
-            var timeline_list_obj = $("#timeline_list").find('span');
-
-            for (var i = 0; i < searchs.length; i++) {
-                if (searchs[i] == '') continue;
-                $(timeline_list_obj).highlight2(searchs[i], 'BS');
-            }
-        }
-    }, 100);
-}
-
-
-
 
 
 /* 드롭박스 구성*/
@@ -1429,7 +1427,7 @@ function getCollectionMessage(userkey, srcip, usr_id, msgid,type){
             $("#timeline_list").html(makeList(false));
 
             $('.chatList').scrollTop($('.chatList')[0].scrollHeight);
-            HighlightGroup();
+            Highlight_detail()
 
 
         },
@@ -1440,7 +1438,7 @@ function getCollectionMessage(userkey, srcip, usr_id, msgid,type){
         complete : function() {
             ui.off('timeline_list');
             setMessengerRead();
-            HighSerarchlight();
+            HighSerarchlight2();
             searchFlag = false;
         }
     });
