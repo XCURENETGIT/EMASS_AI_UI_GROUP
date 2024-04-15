@@ -44,13 +44,19 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.core.*;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
-import org.springframework.data.elasticsearch.core.query.*;
+import org.springframework.data.elasticsearch.core.query.FetchSourceFilter;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.Query;
+import org.springframework.data.elasticsearch.core.query.UpdateQuery;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.sql.Date;
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -63,6 +69,9 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	private static final int COMMIT_WITH_IN_MS = 1000;
 	public static String JOIN_READ = " +checked.readId:%s";
 	public static String JOIN_UNREAD = " -checked.readId:%s";
+
+	public static IndexCoordinates defaultIndex = IndexCoordinates.of("edc_*");
+	public static IndexCoordinates defaultHistoryIndex = IndexCoordinates.of("ems_search_history_*");
 
 	@Autowired
 	@Qualifier("elasticsearchTemplate")
@@ -119,7 +128,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			}
 		}
 
-		SearchHits<SearchHistoryVO> hits = operation.search(searchQuery, SearchHistoryVO.class);
+		SearchHits<SearchHistoryVO> hits = operation.search(searchQuery, SearchHistoryVO.class,defaultHistoryIndex);
 		return new SearchHistoryGroupVO(hits);
 	}
 
@@ -159,6 +168,9 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		}
 		log.debug("[Fields] {}", sq.getFields());
 		sq.setParam("wt", "json");
+
+		if(!Common.isEmpty(sq.get("indics"))) defaultIndex =  IndexCoordinates.of(sq.get("indics"));
+
 
 
 		/*======================= 검색 파라미터 조합 ============================*/
@@ -259,7 +271,6 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 				.build();
 		SearchHits<SolrEdcVO> searchHits = null;
 
-
 		/* 정렬 */
 		List<SortClause> sorts =  sq.getSorts();
 		if(!Common.isEmpty(sorts)) {
@@ -274,7 +285,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		try {
 			if(Common.isEquals(sq.get("group"),"true")) { // 집계검색
 				searchQuery.setPageable(PageRequest.of(getPage(sq), sq.getRows()));
-				searchHits =  operation.search(searchQuery, SolrEdcVO.class);
+				searchHits =  operation.search(searchQuery, SolrEdcVO.class,defaultIndex);
 			}else {
 				//일반검색 (페이징)
 				searchQuery.setPageable(PageRequest.ofSize(rows));
@@ -282,10 +293,10 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 				do {
 					searchQuery.setSearchAfter(searchAfter);
 					if (Math.round((offset / rows)) == idx) {
-						searchHits = operation.search(searchQuery, SolrEdcVO.class);
+						searchHits = operation.search(searchQuery, SolrEdcVO.class,defaultIndex);
 						break;
 					} else {
-						searchHits = operation.search(searchQuery, SolrEdcVO.class);
+						searchHits = operation.search(searchQuery, SolrEdcVO.class,defaultIndex);
 					}
 					if (idx > range || searchHits.getSearchHits().isEmpty()) break;
 					SearchHit lastHit = searchHits.getSearchHit((int) (searchHits.getSearchHits().size() - 1));
@@ -980,6 +991,17 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	@Override
 	public boolean updateSolrFeedbackData(List<parseJsonFile> feedbackList) {
 		return false;
+	}
+
+	@Override
+	public String[] getExistIndics(String msgId,String format) {
+		String[] indics = new String[2];
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMM");
+		LocalDate ld =  YearMonth.parse(msgId.substring(0, 6), formatter).atDay(1);
+
+		if(operation.indexOps(IndexCoordinates.of(format.concat(ld.format(formatter)))).exists()) indics[0] = format.concat(ld.format(formatter));
+		if(operation.indexOps(IndexCoordinates.of(format.concat(ld.format(formatter)))).exists()) indics[1] = format.concat(ld.minusMonths(1).format(formatter));
+		return indics;
 	}
 
 	public static Map<Date, List<parseJsonFile>> groupingByMlFeedbackTime(List<parseJsonFile> feedbackList) {
