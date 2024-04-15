@@ -1924,7 +1924,6 @@ jQuery.fn.highlight = function(pat, type) {
 	function innerHighlight(node, pat, type) {
 		var skip = 0;
 		if (node.nodeType == 3) {
-			console.log(pat)
 			var pos = node.data.toUpperCase().indexOf(pat);
 			if (pos >= 0) {
 				var spannode = document.createElement('span');

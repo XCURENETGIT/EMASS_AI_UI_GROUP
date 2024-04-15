@@ -163,94 +163,46 @@
     }
 
     function setCode() {
-
-        var codeArr = '';
-        var conmArr = '';
-        var deptArr = '';
-        var jibArr = '';
-
-
-        var flag = false;
-        if (oldCode.indexOf('|') > -1) {
-            codeArr = oldCode.split('|');
-            conmArr = oldConm.split(',');
-            deptArr = oldDept.split('|');
-            jibArr = oldJib.split('|');
-
-            console.log("if");
-        } else {
-
-            codeArr = [oldCode];
-            conmArr = [oldConm];
-            deptArr = [oldDept];
-            jibArr = [oldJib];
-            flag = true;
-        }
-
-
+        var codeArr = (oldCode.indexOf("|") > -1) ? oldCode.split('|') : oldCode.split(',');
+        var conmArr =  oldConm.split(',');
+        var deptArr = oldDept.split('|');
+        var jibArr =  oldJib.split('|');
+        var dataArr = [];
+        
+        $.each(codeArr, function (i, d) {
+            var dataObj = {
+                 code : d
+				,conm : conmArr[i]
+				,dept : (deptArr[i] == undefined) ? '' : deptArr[i]
+				,jib : (jibArr[i] == undefined) ? '' : jibArr[i]
+    
+			}
+            dataArr.push(dataObj);
+        });
+        
         var data = [];
-        if (flag == false) {
-            for (var i = 0; i < codeArr.length; i++) {
-                console.log(codeArr[i]);
-                if (codeType == 'regexp') {
-                    var code = codeArr[i].split('%');
-                    if (codeArr.length == 1){
-                        data.push({
-                                'code': code[0],
-                                'codeName': codeName,
-                                'count': code[1]
-                            });
-                    }else {
-                        data.push({'code': code[0], 'codeName': conmArr[i].substring(0, conmArr[i].indexOf('(')), 'count': code[1]});
-                    }
-                    // data.push({
-                    //     'code': code[0],
-                    //     'codeName': codeName,
-                    //     'count': code[1]
-                    // });
-                } else {
-                    if (codeType == 'user'||codeType == 'senders'||codeType == 'receivers') {
-                        if (codeArr.length==1){
-                         ;
-                            data.push({'code': codeArr[0], 'codeName': conmArr[0], 'tempNm1': deptArr[0], 'tempNm2': jibArr[0]});
-                        }else{
-
-                        data.push({'code': codeArr[i], 'codeName': conmArr[i], 'tempNm1': deptArr[i], 'tempNm2': jibArr[i]});
-                            }
-                    }else{
-
-                        if (codeArr.length==1){
-                            data.push({'code': codeArr[0], 'codeName': conmArr[0]});
-                        }else{
-                            data.push({'code': codeArr[i], 'codeName': conmArr[i]});
-                        }
-                    }
-                }
-            }
-        } else {
-            if (codeType == 'regexp') {
-
-                    var code = codeArr[0].split('%');
-                    data.push({'code': code[0], 'codeName': conmArr[0].substring(0, conmArr[0].indexOf('(')), 'count': code[1]});
-
-            } else {
-                if (codeType == 'user'||codeType == 'senders'||codeType == 'receivers') {
-                    if (codeArr.length==1){
-                        data.push({'code': codeArr[0], 'codeName': conmArr[0], 'tempNm1': deptArr[0], 'tempNm2': jibArr[0]});
-                    }else{
-                        data.push({'code': codeArr[i], 'codeName': conmArr[i], 'tempNm1': deptArr[i], 'tempNm2': jibArr[i]});
-                    }
-                }else{
-                    if (codeArr.length==1){
-                        data.push({'code': codeArr[0], 'codeName': conmArr[0]});
-                    }else{
-                        data.push({'code': codeArr[i], 'codeName': conmArr[i]});
-                    }
-
-                }
-            }
+        if (codeType == 'regexp') {
+            $.each(dataArr, function (i, d) {
+                var code = d.code.split('%');
+                data.push({
+                    'code': code[0],
+                    'codeName': d.conm.substring(0, d.conm.indexOf('(')),
+                    'count':  code[1]
+                });
+            });
+        } else if (codeType == 'user'||codeType == 'senders'||codeType == 'receivers') {
+            $.each(dataArr, function (i, d) {
+                console.log(d)
+                data.push({'code': d.code, 'codeName':  d.conm , 'tempNm1': d.dept, 'tempNm2': d.jib});
+            });
+		} else  {
+            $.each(dataArr, function (i, d) {
+                data.push({'code': d.code, 'codeName': d.conm});
+            });
         }
-        if (codeArr != null && codeArr != '' && codeArr != undefined) grid2.setData(data);
+
+		if (dataArr != null && dataArr != '' && dataArr != undefined) grid2.setData(data);
+    
     }
 
     function setSelectedData() {
