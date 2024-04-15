@@ -1918,101 +1918,44 @@ function getPiName(pattern){
 	return contentBody.bodyviewInfoPattern;
 }
 
+
+
 jQuery.fn.highlight = function(pat, type) {
 	function innerHighlight(node, pat, type) {
-		pat = pat.trim().replaceAll("\\(","").replaceAll("\\)","");
 		var skip = 0;
 		if (node.nodeType == 3) {
-			if(pat.substring(0,1) == '/' && pat.substring(pat.length - 1) == '/') {
-				//var pos = node.data.toUpperCase().indexOf(pat);
-
-				var solrQueryText = pat;
-				var re = new RegExp(solrQueryText, 'ig');
-				var matchArray;
-				var first = 0;
-				var last = 0;
-				var resultString = '';
-				while ( (matchArray = re.exec(node.data.toString())) != null ) {
-					/* last = matchArray.index;
-					// 일치하는 모든 문자열을 연결
-					resultString += nStr.substring(first, last);
-
-					// 일치하는 부분에 강조 스타일이 지정된 class 추가
-					resultString += "<span class='mulfound'>" + matchArray[0] + "</span>";
-					first = re.lastIndex;
-					// RegExp객체의 lastIndex속성을 이용해 검색 결과의 마지막인덱스 접근 가능 */
-
-					var pos = matchArray.index;
-					console.log('pos: ' + pos);
-					if (pos >= 0) {
-						var spannode = document.createElement('span');
-						spannode.name='spnHighlight';
-						if ( type.indexOf('K') > -1) {
-							spannode.className = 'clsHighlightKwds';
-						}
-						else {
-							spannode.className = 'clsHighlight';
-						}
-						if ( type.indexOf('B') > -1 ) {
-							if ( type.indexOf('K') > -1) {
-								spannode.style.backgroundColor = '#FFAD5B';
-								spannode.style.color = '#000000';
-								spannode.style.fontWeight = 'bold';
-							} else {
-								spannode.style.backgroundColor = '#13C7A3';
-								spannode.style.color = '#000000';
-								spannode.style.fontWeight = 'bold';
-							}
-						}
-						try{
-							var sbit = node.splitText( pos );
-							sbit.splitText( matchArray[0].length );
-							spannode.nodeValue = sbit.data;
-							var sbitclone = sbit.cloneNode(true);
-							spannode.appendChild(sbitclone);
-							sbit.parentNode.replaceChild(spannode, sbit);
-							skip = 1;
-						} catch(e) {
-
-						}
-					}
+			console.log(pat)
+			var pos = node.data.toUpperCase().indexOf(pat);
+			if (pos >= 0) {
+				var spannode = document.createElement('span');
+				if ( type.indexOf('K') > -1) {
+					spannode.className = 'highlightKeyword';
 				}
-			} else {
-				var pos = node.data.toUpperCase().indexOf(pat);
-				if (pos >= 0) {
-					var spannode = document.createElement('span');
-					spannode.name='spnHighlight';
+				else {
+					spannode.className = 'highlightSearch';
+				}
+				if ( type.indexOf('B') > -1 ) {
 					if ( type.indexOf('K') > -1) {
-						spannode.className = 'clsHighlightKwds';
+						spannode.style.backgroundColor = '#FFAD5B';
+						spannode.style.color = '#000000';
+						spannode.style.fontWeight = 'bold';
+					} else {
+						spannode.style.backgroundColor = '#13C7A3';
+						spannode.style.color = '#000000';
+						spannode.style.fontWeight = 'bold';
 					}
-					else {
-						spannode.className = 'clsHighlight';
-					}
-					if ( type.indexOf('B') > -1 ) {
-						if ( type.indexOf('K') > -1) {
-							spannode.style.backgroundColor = '#FFAD5B';
-							spannode.style.color = '#000000';
-							spannode.style.fontWeight = 'bold';
-						} else {
-							spannode.style.backgroundColor = '#13C7A3';
-							spannode.style.color = '#000000';
-							spannode.style.fontWeight = 'bold';
-						}
-					}
-
-					var sbit = node.splitText( pos );
-					sbit.splitText( pat.length );
-					spannode.nodeValue = sbit.data;
-					var sbitclone = sbit.cloneNode(true);
-					spannode.appendChild(sbitclone);
-					sbit.parentNode.replaceChild(spannode, sbit);
-					skip = 1;
 				}
+
+				var sbit = node.splitText( pos );
+				sbit.splitText( pat.length );
+				spannode.nodeValue = sbit.data;
+				var sbitclone = sbit.cloneNode(true);
+				spannode.appendChild(sbitclone);
+				sbit.parentNode.replaceChild(spannode, sbit);
+				skip = 1;
 			}
 		} else if (node.nodeType == 1 && node.childNodes && !/(script|style)/i.test(node.tagName)) {
-			var cnt = node.childNodes.length;
-			if ( node.childNodes.length > 1000 ) cnt = 1000;
-			for ( var i = 0; i < cnt; ++i) {
+			for ( var i = 0; i < node.childNodes.length; ++i) {
 				i += innerHighlight(node.childNodes[i], pat, type);
 			}
 		}
@@ -2022,6 +1965,90 @@ jQuery.fn.highlight = function(pat, type) {
 		innerHighlight(this, pat.toUpperCase(), type);
 	});
 };
+
+//
+// jQuery.fn.highlight = function(pat, type) {
+// 	function innerHighlight(node, pat, type) {
+// 		pat = pat.trim().replaceAll("\\(","").replaceAll("\\)","");
+// 		var skip = 0;
+// 		if (node.nodeType == 3) {
+// 			if(pat.substring(0,1) == '/' && pat.substring(pat.length - 1) == '/') {
+// 				//var pos = node.data.toUpperCase().indexOf(pat);
+//
+// 				var solrQueryText = pat;
+// 				var re = new RegExp(solrQueryText, 'ig');
+// 				var matchArray;
+// 				var first = 0;
+// 				var last = 0;
+// 				var resultString = '';
+// 				while ( (matchArray = re.exec(node.data.toString())) != null ) {
+// 					/* last = matchArray.index;
+// 					// 일치하는 모든 문자열을 연결
+// 					resultString += nStr.substring(first, last);
+//
+// 					// 일치하는 부분에 강조 스타일이 지정된 class 추가
+// 					resultString += "<span class='mulfound'>" + matchArray[0] + "</span>";
+// 					first = re.lastIndex;
+// 					// RegExp객체의 lastIndex속성을 이용해 검색 결과의 마지막인덱스 접근 가능 */
+//
+// 					var pos = matchArray.index;
+// 					console.log('pos: ' + pos);
+// 					if (pos >= 0) {
+// 						var spannode = document.createElement('span');
+// 						spannode.name='spnHighlight';
+// 						if ( type.indexOf('K') > -1) {
+// 							spannode.className = 'clsHighlightKwds';
+// 						}
+// 						else {
+// 							spannode.className = 'clsHighlight';
+// 						}
+// 						if ( type.indexOf('B') > -1 ) {
+// 							if ( type.indexOf('K') > -1) {
+// 								spannode.style.backgroundColor = '#FFAD5B';
+// 								spannode.style.color = '#000000';
+// 								spannode.style.fontWeight = 'bold';
+// 							} else {
+// 								spannode.style.backgroundColor = '#13C7A3';
+// 								spannode.style.color = '#000000';
+// 								spannode.style.fontWeight = 'bold';
+// 							}
+// 						}
+// 						try{
+// 							var sbit = node.splitText( pos );
+// 							sbit.splitText( matchArray[0].length );
+// 							spannode.nodeValue = sbit.data;
+// 							var sbitclone = sbit.cloneNode(true);
+// 							spannode.appendChild(sbitclone);
+// 							sbit.parentNode.replaceChild(spannode, sbit);
+// 							skip = 1;
+// 						} catch(e) {
+//
+// 						}
+// 					}
+// 				}
+// 			} else {
+// 				var posArr = [];
+// 				var pos = -1;
+// 				var stIdx = 0;
+// 				var edIdx = node.data.length;
+//
+//
+// 			}
+// 		} else if (node.nodeType == 1 && node.childNodes && !/(script|style)/i.test(node.tagName)) {
+// 			var cnt = node.childNodes.length;
+// 			if ( node.childNodes.length > 1000 ) cnt = 1000;
+// 			for ( var i = 0; i < cnt; ++i) {
+// 				i += innerHighlight(node.childNodes[i], pat, type);
+// 			}
+// 		}
+// 		return skip;
+// 	}
+// 	return this.each(function() {
+// 		innerHighlight(this, pat, type);
+// 	});
+// };
+
+
 function Highlight( ) {
 	loading_off();
 	var searchs = searchkey.split(/\||\+|\s|\*|\"/);
@@ -2035,6 +2062,7 @@ function Highlight( ) {
 	var subjectStrs = subjectStr.split(', ');
 	var bodyStrs = bodyStr.split(', ');
 
+
 	if ( fileNameStrs.length > 0 ) {
 		if(searchkey.length == 0 || keywordHighlight == 'true') setFileNameHighLight ( fileNameStrs, 'K'); //예약어 하이라이트 처리
 	}
@@ -2046,6 +2074,9 @@ function Highlight( ) {
 	}
 
 }
+
+
+
 function isImageOk(img) {
 	if (!img.complete) {
 		return false;
@@ -2057,6 +2088,7 @@ function isImageOk(img) {
 }
 function setSubjectHighLight( defaultText, type){
 	var subject_obj = $("#subject");
+
 	for ( var i=0 ; i < defaultText.length ; i++ ) {
 		if ( defaultText[i] == '' ) continue;
 		$( subject_obj ).highlight(defaultText[i], type);

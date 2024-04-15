@@ -947,10 +947,10 @@
                 value = highlightKeyword(value, kwds);
             }
             value = highlightSearchStr(value, "subject");
-
             var rtnVal = '<span title="'+body_snippet+'" onclick="" class="subject_read'+grid.getValue(row, 'readYn')+'">'+value+'</span>&nbsp;<a href="javascript:void(0);" onclick="viewer_newOpen('+row+')" class="glyphicon glyphicon-new-window new-window"></a>';
             if( (isConsent( ) && grid.getValue(row, 'consentNo') == '') || !isDetailView() ) rtnVal = '<span>'+value+'</span>';
 
+            
             return rtnVal;
         });
         grid.colAdd('ctimeFormat', '<s:message code="condition.date"/>', 130, 'center', false, 'nomal');
@@ -1045,7 +1045,7 @@
                 alert(condition.authAlert);
                 return;
             }
-
+            
             if($('#contextMenu').css('display')=='block' || $('#contextMenu').css('display')=='inline-block') $('#contextMenu').hide();
             if (grid.Col == grid.ColIndex('attachcnt')) {
                 fileInfoViewer( grid.Row );
