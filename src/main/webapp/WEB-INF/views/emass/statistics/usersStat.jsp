@@ -538,7 +538,6 @@
         $("#chartCntDiv").hide();
         $('#totalViewDiv').show();
         var dat = grid1.getRowData(grid1.Row);
-        console.log(dat);
         chartDat[tabID] = dat;
         printChart(dat);
         gridObj.loadExportMenu('<s:message code="stat.detail.user.list"/>');
@@ -563,6 +562,7 @@
 
         };
 
+        console.log(chartDat);
         getDetailData('Y');
     };
 
@@ -580,6 +580,7 @@
         $('#codeParam').attr('method', 'post');
         $('#codeParam').submit();
     }
+
 
 
     function getData(flag) {
