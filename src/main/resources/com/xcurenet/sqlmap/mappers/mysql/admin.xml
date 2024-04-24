@@ -494,6 +494,7 @@
 									THEN	'L'
 									ELSE	CASE WHEN STATUS = 'L' THEN 'S' ELSE STATUS END
 							END
+		WHERE FIRSTADMIN_YN != 'Y'
 	</update>
 
 
