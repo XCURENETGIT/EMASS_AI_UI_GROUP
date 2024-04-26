@@ -83,7 +83,7 @@ public class MinioFileAdapter {
 						PutObjectArgs.builder()
 								.bucket(decoderBucket)
 								.stream(inputStream, inputStream.available(), -1)
-								.object(fileName)
+								.object("/info/"+fileName)
 								.build()
 				);
 			}
