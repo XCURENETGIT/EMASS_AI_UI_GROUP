@@ -13,10 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 
 @Log4j2
@@ -27,6 +24,12 @@ public class MinioFileAdapter {
 
 	@Value("${spring.minio.bucket}")
 	public String bucket;
+
+
+	@Value("${spring.minio.decoderBucket}")
+	public String decoderBucket;
+
+
 
 	@Autowired
 	public MinioFileAdapter(MinioClient minioClient) {
@@ -49,6 +52,7 @@ public class MinioFileAdapter {
 	}
 
 
+
 	public byte[] open(String objectName) {
 		InputStream in = null;
 		try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
@@ -69,6 +73,24 @@ public class MinioFileAdapter {
 			IOUtils.closeQuietly(in);
 		}
 		return new byte[0];
+	}
+
+	public InputStream decoderFileUpload(InputStream inputStream, String fileName){
+		try{
+			boolean found = findBucket(decoderBucket);
+			if (found) {
+				minioClient.putObject(
+						PutObjectArgs.builder()
+								.bucket(decoderBucket)
+								.stream(inputStream, inputStream.available(), -1)
+								.object(fileName)
+								.build()
+				);
+			}
+		}catch (Exception e){
+			log.warn("decoder File Upload error : {} {}",fileName, inputStream);
+		}
+		return null;
 	}
 
 

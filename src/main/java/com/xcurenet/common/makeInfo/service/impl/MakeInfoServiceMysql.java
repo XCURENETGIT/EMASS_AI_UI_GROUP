@@ -9,11 +9,13 @@ import com.xcurenet.common.util.MongoUtil;
 import com.xcurenet.common.util.config.Config;
 import com.xcurenet.device.service.DeviceService;
 import com.xcurenet.device.service.DeviceVO;
+import com.xcurenet.minio.MinioFileAdapter;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.lucene.util.InfoStream;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +23,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +37,9 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 
 	@Autowired
 	MongoUtil mongoUtil;
+
+	@Autowired
+	public MinioFileAdapter minioFileAdapter;
 
 
 	public long getTableCurrentVersion(String tableName) {
@@ -341,24 +344,16 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 		makeInfo_nologUrl();
 	}
 
-	private void makeInfo_nologUrl() {
-		List<DeviceVO> devices = deviceService.getCollectionDevice();
-		for (DeviceVO device : devices) {
+	private void makeInfo_nologUrl(){
 			File urlFile = new File(Config.URL_PATH);
 			if (!urlFile.exists()) return;
-
-			SFTPUtil ftp = new SFTPUtil();
 			try {
-				ftp.init(device.getDeviceIp(), device.getSshId(), device.getSshPw(), 22);
-				ftp.mkdir(Config.DECODER_CONF_PATH);
-				ftp.upload(Config.DECODER_CONF_PATH, urlFile.getName() + ".tmp", urlFile);
-				ftp.rename(Common.makeFilepath(Config.DECODER_CONF_PATH, urlFile.getName() + ".tmp"), Common.makeFilepath(Config.DECODER_CONF_PATH, urlFile.getName()));
+				InputStream inputStream = new FileInputStream(urlFile);
+				String fileName =  urlFile.getName();
+				minioFileAdapter.decoderFileUpload(inputStream, fileName);
 			} catch (Exception e) {
 				e.printStackTrace();
-			} finally {
-				ftp.disconnection();
 			}
-		}
 	}
 
 
