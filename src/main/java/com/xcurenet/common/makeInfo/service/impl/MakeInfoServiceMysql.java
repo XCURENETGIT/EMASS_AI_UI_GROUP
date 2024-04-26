@@ -226,6 +226,7 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 		appendData("getInfoNoLogUrl", "INFO_NOLOG_URL", version);
 		addVersion("INFO_NOLOG_URL", version);
 		mongoUtil.updateDate("INFO_NOLOG_URL", localDateTime);
+		save(Common.toJSONArray(selectList("com.xcurenet.sqlmap.mappers.mysql.makeInfo.getInfoNoLogUrl")));
 
 		log.info("[MAKE INFO] NoLogUrlFilter information apply end");
 		return result;
