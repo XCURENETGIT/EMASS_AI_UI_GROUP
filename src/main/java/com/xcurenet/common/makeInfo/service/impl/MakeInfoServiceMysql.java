@@ -545,4 +545,42 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 		}
 	}
 
+	public int addInfoNoLog() {
+		int result = 0;
+		TransactionManager tx = getTransactionManager();
+		try {
+			tx.start();
+
+			log.info("[MAKE INFO] NoLogFilter information apply start");
+
+			long version = getTableCurrentVersion("INFO_NOLOG_URL")+1;
+			result = insert("com.xcurenet.sqlmap.mappers.mysql.makeInfo.addInfoNoLogUrl", version);
+			addVersion("INFO_NOLOG_URL", version);
+			save(Common.toJSONArray(selectList("com.xcurenet.sqlmap.mappers.mysql.makeInfo.getInfoNoLogUrl")));
+
+			version = getTableCurrentVersion("INFO_NOLOG_SUBJECT")+1;
+			insert("com.xcurenet.sqlmap.mappers.mysql.makeInfo.addInfoNoLogSubject", version);
+			addVersion("INFO_NOLOG_SUBJECT", version);
+
+			version = getTableCurrentVersion("INFO_NOLOG_SIZE")+1;
+			insert("com.xcurenet.sqlmap.mappers.mysql.makeInfo.addInfoNoLogSize", version);
+			addVersion("INFO_NOLOG_SIZE", version);
+
+			version = getTableCurrentVersion("INFO_NOLOG_ID")+1;
+			insert("com.xcurenet.sqlmap.mappers.mysql.makeInfo.addInfoNoLogUserId", version);
+			addVersion("INFO_NOLOG_ID", version);
+
+			version = getTableCurrentVersion("INFO_NOLOG_DOMAIN")+1;
+			insert("com.xcurenet.sqlmap.mappers.mysql.makeInfo.addInfoNoLogDomain", version);
+			addVersion("INFO_NOLOG_DOMAIN", version);
+
+			log.info("[MAKE INFO] NoLogFilter information apply end");
+
+			tx.commit();
+		} finally {
+			tx.end();
+		}
+		return result;
+	}
+
 }
