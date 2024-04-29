@@ -352,6 +352,7 @@ public class UserServiceImpl extends XcnAbstractDAO implements UserService {
 			tx.start();
 			deleteUserEmail(user);
 			deleteUserIp(user);
+			deleteUserAccount(user);
 			result = delete("com.xcurenet.sqlmap.mappers.mysql.user.deleteUser", user);
 			result = delete("com.xcurenet.sqlmap.mappers.mysql.user.deleteUserCeo", user);
 			deleteUserGroupWithDelUser(user);

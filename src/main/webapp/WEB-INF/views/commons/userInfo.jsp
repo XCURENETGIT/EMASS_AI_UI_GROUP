@@ -1794,7 +1794,7 @@
     grid.onClick = function() {
         if (grid.Col == grid.ColIndex('userId')) {
             if( $('#insertBtn').css('display') == 'none' ) return;
-            allSelectOptions();
+
             $('#userId').prop("disabled", true);
             $('#userPop').attr('mode', 'modify');
             $('#userPop').modal('show');
