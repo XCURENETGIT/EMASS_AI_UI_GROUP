@@ -31,10 +31,12 @@ public class AdminUserGroupVO {
 	private String ceo;
 	private String userIp;
 	private String userEmail;
-	
+	private String userAccountStr;
 	private String encryptUseYN;
 	private String encryptAlgorithm;
 	private String encryptSize;
 	private String encryptKey;
 	private int NUM;
+	private String account;
+	private String serviceCd;
 }

@@ -27,6 +27,7 @@ public class UserGroupVO {
 	private String encryptUseYN;
 	private String encryptAlgorithm;
 	private String encryptSize;
+	private String userAccountStr;
 	private String encryptKey;
 	private String pdeptCd;
 	private String pdeptNm;
