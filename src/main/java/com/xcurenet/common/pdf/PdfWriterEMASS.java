@@ -1,25 +1,20 @@
 package com.xcurenet.common.pdf;
 
-import java.io.*;
-import java.lang.reflect.Field;
-import java.util.List;
-
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.Phrase;
+import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
-import com.xcurenet.common.csv.CsvWriterEMASS;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.locale.Prop;
 import com.xcurenet.emass.message.service.SolrEdcVO;
-
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
+import org.apache.commons.io.IOUtils;
+import org.springframework.core.io.ClassPathResource;
+
+import java.io.*;
+import java.lang.reflect.Field;
+import java.util.List;
 
 @Slf4j
 public class PdfWriterEMASS {
@@ -35,7 +30,7 @@ public class PdfWriterEMASS {
 	private PdfPTable table;
 
 
-	private BaseFont baseFont = BaseFont.createFont(this.getClass().getResource("").getPath() + "../../files/font/dotum.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+	private BaseFont baseFont =  getFontPath("dotum.ttf");
 
 	public PdfWriterEMASS(final String title, final JSONArray header, final OutputStream out) throws Exception {
 		this.title = title;
@@ -47,6 +42,9 @@ public class PdfWriterEMASS {
 
 	private void init() throws Exception {
 		open();
+
+		log.info("{} : {} :  {}",title,header,out);
+
 		writeHeader();
 	}
 
@@ -155,6 +153,10 @@ public class PdfWriterEMASS {
 			widths[i] = (float) header.getJSONObject(i).getDouble("width");
 		}
 		table.setWidths(widths);
+	}
+	public BaseFont getFontPath(String fontName) throws DocumentException, IOException {
+		byte[] bytes = IOUtils.toByteArray(new ClassPathResource("/com/xcurenet/files/font/"+fontName).getInputStream());
+		return BaseFont.createFont(fontName, BaseFont.IDENTITY_H, BaseFont.EMBEDDED,true,bytes,null);
 	}
 
 	public static void main(String[] args) throws FileNotFoundException, Exception {

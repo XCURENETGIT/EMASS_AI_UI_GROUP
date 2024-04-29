@@ -394,6 +394,7 @@ public class EmsMessageController {
 						if (listFlag)
 							xlsxWriter = createExcelZipFile(os, xlsxWriter, emass, header, Prop.propFormat("DATA_MONITOR.MESSAGE_INFO", locale), total, i, solrCnt, bodyFlag, attachFlag, exportFileExt);
 					}
+
 				} catch (Exception e) {
 					e.printStackTrace();
 				} finally {
@@ -682,13 +683,17 @@ public class EmsMessageController {
 							if (attachFlag) inputAttach(os, attachDown, edc);
 						}
 
+						log.info("PDF TEST {} == {}",solrCnt,i);
 						if (i % solrCnt == 1 || i == 1) {
+							log.info("??");
 							xOut = new ByteArrayOutputStream();
 							pdfWriter = new PdfWriterEMASS(Prop.propFormat("DATA_MONITOR.MESSAGE_INFO", locale), header, xOut);
 							log.info("[PDF Write] Create New file start");
 						}
 
+						log.info("emass {}", emass.size());
 						pdfWriter.appendData(emass, (i - 1) * PAGE_BREAK);
+
 
 						if (i % solrCnt == 0 || i == queryCnt) {
 							long lastNum = i * PAGE_BREAK;
@@ -698,6 +703,9 @@ public class EmsMessageController {
 								else startNum = (queryCnt - (queryCnt % solrCnt)) * PAGE_BREAK + 1;
 							}
 							if (lastNum > total) lastNum = total;
+
+							log.info("PDF DOWNLOAD ?");
+
 							String fileName = "list_" + startNum + "-" + lastNum + ".pdf";
 							ByteArrayInputStream bIn = null;
 							try {

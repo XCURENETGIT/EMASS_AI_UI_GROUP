@@ -1739,25 +1739,34 @@
             $(document).on('click', '.attach_link_new', function(){
                 var grid = getIframeListObj().grid;
                 if(grid.Rows == 0 ) return;
-                var fileExists = false;
-                grid.getSelectedKey('attachcnt').forEach(function (e){
-                    if(e > 0) {
-                        fileExists = true;
-                        return true;
-                    }
-                });
-
-                if(!fileExists) {
-                    alert('<s:message code="common.msg.nodata"/>');
-                    return;
-                }
                 grid.on();
-
+                
+                var msgids = [];
                 setTimeout(function () {
-                    var msgid = grid.getSelectedKey('msgid');
-                    if (msgid.length == 0) msgid = grid.getKeyData('msgid');
-
-                    $('#msgIds').val(msgid.join(','));
+                    var msgid  = grid.getSelectedKey('msgid');
+                    var attachcnt  = grid.getSelectedKey('attachcnt');
+                    
+                    var datas = new Array();
+                    if (msgid.length == 0) {
+                        msgid = grid.getKeyData('msgid');
+                        attachcnt = grid.getKeyData('attachcnt');
+                    }
+                    $.each(msgid,function (i,e){
+                        for(var k =0;k < attachcnt.length ; k++){
+                            datas[i] = new Array(e,attachcnt[i]);
+                        }
+                    });
+                    $.each(datas,function (i,e){
+                       if(e[1] > 0) msgids.push(e[0]);
+                    })
+    
+                    if(msgids.length == 0) {
+                        alert('<s:message code="common.msg.nodata"/>');
+                        return;
+                    }
+                    
+                    
+                    $('#msgIds').val(msgids.join(','));
                     $('#downForm').attr('action', '<c:url value="/downEmassAttachByMsgId.xcn"/>');
                     $('#downForm').submit();
                     grid.off();

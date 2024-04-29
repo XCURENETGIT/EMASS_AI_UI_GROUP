@@ -1,14 +1,9 @@
 package com.xcurenet.common.pdf;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.StringReader;
-import java.nio.charset.Charset;
-
-import org.apache.commons.io.IOUtils;
-
 import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.PageSize;
+import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.tool.xml.XMLWorker;
 import com.itextpdf.tool.xml.XMLWorkerFontProvider;
 import com.itextpdf.tool.xml.XMLWorkerHelper;
@@ -24,13 +19,21 @@ import com.itextpdf.tool.xml.pipeline.end.PdfWriterPipeline;
 import com.itextpdf.tool.xml.pipeline.html.HtmlPipeline;
 import com.itextpdf.tool.xml.pipeline.html.HtmlPipelineContext;
 import com.xcurenet.common.txt.TextReader;
+import org.apache.commons.io.IOUtils;
+import org.springframework.core.io.ClassPathResource;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.StringReader;
+import java.nio.charset.Charset;
 
 public class HtmlConvertPdfWriter {
 
 	private String htmlStr;
 	private FileOutputStream out;
-	private final String font = this.getClass().getResource("").getPath() + "../../files/font/dotum.ttf";
-	private final String css = this.getClass().getResource("").getPath() + "../../files/css/pdf.css";
+	private final String font =    this.getClass().getResource("").getPath() + "/com/xcurenet/files/font/dotum.ttf";
+	private final String css = this.getClass().getResource("").getPath() + "/com/xcurenet/files/css/pdf.css";
 
 	public HtmlConvertPdfWriter(final String htmlStr, final FileOutputStream out) throws Exception {
 		this.htmlStr = htmlStr;
@@ -72,6 +75,11 @@ public class HtmlConvertPdfWriter {
 		writer.close();
 
 		IOUtils.closeQuietly(out);
+	}
+
+	public BaseFont getFontPath(String fontName) throws DocumentException, IOException {
+		byte[] bytes = IOUtils.toByteArray(new ClassPathResource("/com/xcurenet/files/font/"+fontName).getInputStream());
+		return BaseFont.createFont(fontName, BaseFont.IDENTITY_H, BaseFont.EMBEDDED,true,bytes,null);
 	}
 
 	public static void main(String[] args) throws Exception {
