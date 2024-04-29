@@ -12,6 +12,28 @@
             font-size: 12px;
         }
 
+        /*정규 표현식 */
+        .regexSearchDiv{
+            position: absolute;
+            top: 560px;
+            background-color: #f4f4f4;
+            z-index: 999;
+            left: 315px;
+            border: 1px solid #ccc;
+            width: 400px;
+            display:none;
+            height:500px;
+        }
+
+        .searchKeywordTab{
+            height: 40px;
+            background-color: #242330;
+            cursor: move;
+            color:#fff;
+            line-height: 40px;
+            padding-left: 10px;
+        }
+
         html, body {
             height: 100%;
             padding: 0px;
@@ -132,6 +154,30 @@
                 openCodeWindow(code, $('#' + code + 'Val').val(), $('#' + code + 'Str').val());
             });
 
+            $('.regexSearchBtn').click(function(){
+                getRegexList();
+                $('#regexSearchDiv').css('display','block');
+            });
+            $('.regexSearchCloseBtn').click(function(){
+                $('#regexSearchDiv').css('display','none');
+            });
+
+            function getRegexList(){
+                var searchKeyword = $('#regexSearchStr').val();
+                ui.get({
+                    url : 'getRegexPattern.xcn',
+                    searchStr : searchKeyword,
+                    success : function(data, total) {
+                        regexSearchGrid.setData(data);
+                    },
+                    error : function(status, message) {
+                        ui.alertMsg(message);
+                    },
+                    complete : function() {
+                    }
+                });
+            }
+
             $(document).on('keyup', '.condition_input_text', function (e) {
                 if ($(this).val() == '') {
                     $(this).parent().find('input:checkbox').prop('disabled', true);
@@ -139,6 +185,20 @@
                 } else {
                     $(this).parent().find('input:checkbox').prop('disabled', false);
                 }
+            });
+
+            $("#regexSearchDiv").draggable({
+                // cancel: ".filterSearch, .saveFilterTab_tree",
+                // scroll: false,
+                // containment: "#mainBodyArea",
+                // start: function( event, ui ) {
+                //     $('#contentListArea').css({pointerEvents:'none', 'user-select':'none'});
+                //     $('#contentBodyArea').css({pointerEvents:'none', 'user-select':'none'});
+                // },
+                // stop: function( event, ui ) {
+                //     $('#contentListArea').css({pointerEvents:'', 'user-select':''});
+                //     $('#contentBodyArea').css({pointerEvents:'', 'user-select':''});
+                // }
             });
 
             $(document).on('mouseover', '.codeSelectedBtn', function () {
@@ -310,7 +370,7 @@
             $('#feedbackTypeSelect').selectpicker('val', '');
             $('#probTypeSelect').selectpicker('val', '');
 
-            $('#receivers,#senders,#rcvTo,#rcvCc,#rcvBcc,#url').val('');
+            $('#receivers,#senders,#rcvTo,#rcvCc,#rcvBcc,#url,#regexPattern').val('');
 
             var arr = ['senders', 'receivers', 'rcvTo', 'rcvCc', 'rcvBcc', 'userGroupSeq', 'interGroup', 'busi', 'dept', 'url', 'attach', 'keyword'];
             for (var i = 0; i < arr.length; i++) {
@@ -439,6 +499,8 @@
 
             condition.url = $('#url').val();
             condition.url_not = $('[name=url_not]').is(":checked") ? 'Y' : '';
+
+            condition.regexPattern = $('#regexPattern').val();
 
             condition.receiveSend = $('input:radio[name=receiveSendVal]:input:checked').val();
             condition.ctimeWork = $('input:radio[name=ctimeWorkVal]:input:checked').val();
@@ -579,7 +641,7 @@
                 $('#deptStr').val(alarmVal.deptNm);
             }
 
-            if (alarmVal.url != "") $('#url').val(alarmVal.url);
+            if (alarmVal.regexPattern != "") $('#regexPattern').val(alarmVal.regexPattern);
 
             checkRadioBtn('regexp_drmYnVal', alarmVal.drmYn);
             checkRadioBtn('realAttYnVal', alarmVal.realAttYn);
@@ -1185,9 +1247,15 @@
         }
     </script>
 </head>
+
+
+
 <body class="mini-navbar">
+
+
 <div class="xcn_container" >
     <div class="modalHead">
+
         <h2 class="ma_none"><s:message code="condition.select.condition.search"/></h2>
         <div class="btnBox">
             <button type="button" class="form_btn02" accesskey="R" id="conditionResetBtn"><s:message
@@ -1736,6 +1804,30 @@
                             <input type="hidden" id="regexpVal">
                         </li>
 
+                        <!-- 정규식 패턴 -->
+                        <li class="form-inline" style="line-height:35px; " >
+                            <label for="" class=" col-xs-3"><s:message code="condition.regex"/></label>
+                            <div class="input-group">
+                            <input type="text" class="form-control input-sm condition_input_text" id="regexPattern" style="width: 372px;"/>&nbsp;
+                                <a href="javascript:;" class="regexSearchBtn"  style="color:#111;"><i class="fa fa-cog"></i> <s:message code="condition.regex.appo"/></a>
+                            </div>
+                        </li>
+
+                        <%-- 정규 표현식 모달 --%>
+                        <div id="regexSearchDiv" class="regexSearchDiv" style="display: none">
+                            <div class="searchKeywordTab"><s:message code="condition.regex.appo"/>
+                                <div class="regexSearchCloseBtn" style="position:absolute;top:12px; right:8px;">
+                                    <span class="glyphicon glyphicon-remove" style="cursor:pointer;font-size:13px;" aria-hidden="true"></span>
+                                </div>
+                            </div>
+                            <div style="padding: 5px 5px 5px 10px;">
+                                <input  type="text" placeholder="<s:message code="searchKeyword.search"/>" id="regexSearchStr" style="width:calc(100% - 150px);"/>
+                                <button class="form_btn01" id="regexSearchStrBtn"><span><s:message code="common.search"/></span></button>
+                            </div>
+                            <div id="regexSearchGrid" class="slickGrid gridArea"></div>
+                        </div>
+
+
                         <li id="sctDiv" style="display: none;">
                             <!-- 수신필터 SCT -->
                             <div class="form-inline">
@@ -1788,5 +1880,20 @@
         <input type="hidden" name="oldCode" id="oldCode"></input>
         <input type="hidden" name="oldConm" id="oldConm"></input>
     </form>
+
+    <script type="text/javascript">
+        /* 정규 표현식 */
+        var regexSearchGrid = new Xgrid('regexSearchGrid', contextRoot);
+        regexSearchGrid.colAdd('regexPatternName', '<s:message code="regexPattern.name"/>', 300, 'left', false, 'link');
+        regexSearchGrid.colAdd('regexPattern', '<s:message code="condition.regex"/>', 300, 'left', true, 'link');
+        regexSearchGrid.loadHeader(true);
+        regexSearchGrid.initData('<s:message code="common.msg.search.click"/>');
+        regexSearchGrid.onClick = function () {
+            if (regexSearchGrid.Col == regexSearchGrid.ColIndex('regexPatternName')) {
+                var data = regexSearchGrid.getRowData(regexSearchGrid.Row);
+                $('#regexPattern').val(data.regexPattern);
+            }
+        };
+    </script>
 </body>
 </html>

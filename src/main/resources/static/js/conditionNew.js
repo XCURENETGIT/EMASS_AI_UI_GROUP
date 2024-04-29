@@ -61,7 +61,6 @@ var defaultCondition = {
 	"regexpYn": "",
 	"regexpVal": "",
 	"regexpStr": "",
-	"regexPattern": "",
 	"drmYn": "",
 	"realAttYn": "",
 	"sctYn": "",
@@ -194,6 +193,7 @@ var con = {
 		setCodeCount('dept', endId, '', ',');
 
 		$('#url'+endId).val('');
+		$('#regexPattern'+endId).val('');
 
 		checkRadioBtn( 'serviceYn'+endId, '' );
 		checkRadioBtn( 'attachYn'+endId, '' );
@@ -655,6 +655,7 @@ var con = {
 		$('input:checkbox[id="dept_not"]').prop("checked", condition.dept_not == 'Y' ? true : false);
 
 		$('#url').val( condition.url );
+		$('#regexPattern').val(condition.regexPattern);
 		$('input:checkbox[id="url_not"]').prop("disabled", condition.url == '' ? true : false);
 		$('input:checkbox[id="url_not"]').prop("checked", condition.url_not == 'Y' ? true : false);
 

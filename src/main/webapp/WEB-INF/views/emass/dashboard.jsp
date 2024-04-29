@@ -418,7 +418,9 @@
                 }
             }
             if (dashCondition != undefined) {
+                // console.log(dashCondition);
                 $('#conditionParam').val(makePeriod(dashCondition));
+                console.log(makePeriod(dashCondition));
                 $('#getMessageInfo').submit();
             }
         });
@@ -1478,6 +1480,7 @@
         if (alarmVal.userGroupSeq != '') searchStr += setConditionValStr(alarmVal.userGroupName, '<s:message code="userGroup.navi.title2"/>', alarmVal.userGroupSeq_not);
         if (alarmVal.interGroup != '') searchStr += setConditionValStr(alarmVal.interGroupNm, '<s:message code="interest.user"/>', alarmVal.interGroup_not);
         if (alarmVal.url != '') searchStr += setConditionValStr(alarmVal.url, 'URL', alarmVal.url_not);
+        if (alarmVal.regexPattern != '') searchStr += setConditionValStr(alarmVal.regexPattern, '<s:message code="regexPattern.pattern"/>', alarmVal.regexPattern);
 
         var attachYnMsg = '';
         if (alarmVal.attachYn == 'Y') attachYnMsg = '<s:message code="condition.exist"/>';
@@ -1680,6 +1683,7 @@
         "regexpYn": "",
         "regexpVal": "",
         "regexpStr": "",
+        "regexPattern":"",
         "drmYn": "",
         "sctYn": "",
         "sizeStartVal": "0",

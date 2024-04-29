@@ -399,6 +399,9 @@
             if (alarmVal.interGroup != '') searchStr += setConditionValStr(alarmVal.interGroupNm, '<s:message code="interest.user"/>', alarmVal.interGroup_not);
             if (alarmVal.url != '') searchStr += setConditionValStr(alarmVal.url, 'URL', alarmVal.url_not);
 
+
+            if (alarmVal.regexPattern != '') searchStr += setConditionValStr(alarmVal.regexPattern, '<s:message code="condition.regex"/>', alarmVal.regexPattern);
+
             var attachYnMsg = '';
             if (alarmVal.attachYn == 'Y') attachYnMsg = '<s:message code="condition.exist"/>';
             else if (alarmVal.attachYn == 'N') attachYnMsg = '<s:message code="condition.none"/>';
