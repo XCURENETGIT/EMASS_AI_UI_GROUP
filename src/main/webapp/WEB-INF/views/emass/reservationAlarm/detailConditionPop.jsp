@@ -247,7 +247,6 @@
                 try {
                     var alarmVal = getCondition();
                     var alarmCycle = opener.$('#alarmCycleGroup input:radio:checked').val();
-                    console.log(JSON.stringify(alarmVal))
                     if (alarmVal.startDateSelect == 'T' && alarmVal.endDateSelect == 'Y') {
                         alert('<s:message code="condition.period.inputCheck"/>');
                         return;
