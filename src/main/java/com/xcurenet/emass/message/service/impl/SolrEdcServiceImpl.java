@@ -184,15 +184,8 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		QueryStringQueryBuilder queryBuilder = QueryBuilders.queryStringQuery(sq.getQuery() + " " + filterQuery);  // type PHRASE
 		queryBuilder.fields(getDefaultSearchField(sq));
 
-		/* 정규식 패턴 필드 설정 */
-		BoolQueryBuilder regexQuery = QueryBuilders.boolQuery();
-		if(!Common.isEmpty(sq.get("regexPattern"))) {
-			List<String> list = getselectSearchField(sq);
-			for (String s : list) {
-				regexQuery.should(QueryBuilders.regexpQuery(s, sq.get("regexPattern")));
-			}
-			boolQuery.should(regexQuery);
-		}
+
+
 
 		/* 유사 문서 쿼리 설정 moreLikeThis */
 		BoolQueryBuilder recommendQuery = QueryBuilders.boolQuery();
@@ -202,7 +195,6 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			boolQuery.should(recommendQuery).minimumShouldMatch("0<-3%"); // 유사도 0%는 제외
 		}
 		boolQuery.should(queryBuilder);
-
 
 
 
@@ -248,6 +240,16 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			complateQuery.filter(scriptQueryBuilder);
 		}
 
+		/* 정규식 패턴 필드 설정 */
+		BoolQueryBuilder regexQuery = QueryBuilders.boolQuery();
+		if(!Common.isEmpty(sq.get("regexPattern"))) {
+			List<String> list = getselectSearchField(sq);
+			for (String s : list) {
+				regexQuery.should(QueryBuilders.regexpQuery(s, sq.get("regexPattern").replace("\\\\","\\")));
+			}
+			complateQuery.filter(regexQuery);
+		}
+
 		/*============================================================*/
 		log.info("page : {}  rows : {}", getPage(sq), sq.getRows());
 
@@ -267,6 +269,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 				.withSearchAfter(searchAfter)
 				.withTimeout(Duration.ofSeconds(60))
 				.build();
+
 		SearchHits<SolrEdcVO> searchHits = null;
 
 		/* 정렬 */
