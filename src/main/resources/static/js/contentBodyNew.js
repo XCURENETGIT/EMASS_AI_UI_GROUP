@@ -1269,6 +1269,7 @@ function setMessage(msg) {
 
 	setFileDiv(msg);			//file 및 OCR 처리
 
+	// if(msg.patterns != null && msg.patterns != undefined && msg.patterns != '') $('#msgPatterns').val(msg.patterns);
 	setPatternDiv(msg.patterns);
 
 	// alert(bodySize_str)
