@@ -279,16 +279,16 @@ function eventEnterSearch(event) {
 			<!-- 컨텐츠 -->
 			<div class="mat32">
 				<!-- 사용자별 합계-->
-				<div class="col-lg-4">
+				<div id="usageListGridArea" class="col-lg-4" style="min-width: 1000px">
 					<!-- //탭 -->
 					<div class="subtab mt32">
-						<ul class="nav nav-tabs codeTab" id="codeTab">
+						<ul class="nav nav-tabs codeTab">
 							<li class="active" ><a data-target="#result0" aria-controls="result0" role="tab" data-toggle="tab"><s:message code="analysis.usagecompare.ui.usersum"/></a></li>
 						</ul>
 					</div>
 					<!-- //탭 -->
-					<div class="tab-content" style="height:100%;" id="resultData">
-						<div role="tabpanel" class="tab-pane fade active in" id="result0">
+					<div class="tab-content" style="height:100%;">
+						<div role="tabpanel" class="tab-pane fade active in">
 							<div id="usageList">
 								<div style="min-height:400px;height: 400px;">
 									<div id="usageListGrid" class="slickGrid gridArea" style="height: 100%;"></div>
@@ -302,14 +302,14 @@ function eventEnterSearch(event) {
 				<div class="col-lg-8">
 					<!-- //탭 -->
 					<div class="subtab mt32">
-						<ul class="nav nav-tabs codeTab" id="codeTab">
+						<ul class="nav nav-tabs codeTab">
 							<li class="active" ><a data-target="#result0" aria-controls="result0" role="tab" data-toggle="tab"><s:message code="analysis.usagecompare.ui.detaillist"/></a></li>
 						</ul>
 					</div>
 					<!-- //탭 -->
 					<div>
-						<div class="tab-content" style="height:100%;" id="resultData">
-							<div role="tabpanel" class="tab-pane fade active in" id="result0">
+						<div class="tab-content" style="height:100%;">
+							<div role="tabpanel" class="tab-pane fade active in">
 								<div id="detailList">
 									<div style="min-height:400px;height: 400px;">
 										<div id="detailListGrid" class="slickGrid gridArea" style="height: 100%;"></div>
@@ -334,10 +334,11 @@ function eventEnterSearch(event) {
 
 		var grid1 = new Xgrid('usageListGrid', contextRoot, 26, {status_cnt_id:'#usageCnt'});
 
-		colInit();
+		//colInit();
         grid1.loadHeader(false);
 
 		function colInit() {
+            $('#usageListGridArea').css({"min-width": "1000px"});
 			var itemVal = $("#item option:selected").val();
 			var name = '<s:message code="common.svc.mail"/>';
 			var val = ""
@@ -359,13 +360,13 @@ function eventEnterSearch(event) {
 			grid1.colAdd('count', '<s:message code="analysis.relation.ui.collectcount"/>', 150, 'center', false, 'nomal' , function ( row, cell, value, columnDef, dataContext ) {
 				if ( value != undefined ) return value.comma();
 				else return '';
-			} );
+			});
 			grid1.colAdd('size', '<s:message code="analysis.relation.ui.packetsize"/>', 250, 'right', false, 'nomal', function ( row, cell, value, columnDef, dataContext ) {
 				if ( value != undefined ) return convertFileSize(value);
 				else return '';
-			} );
+			});
 			grid1.initData('<s:message code="common.msg.search.click"/>');
-
+            $('#usageListGridArea').css({"min-width": "auto"});
 		}
 
 
@@ -430,8 +431,6 @@ function eventEnterSearch(event) {
 
 		function getGridList(flag) {
 			if ( searchFlag ) return;
-
-			$("#usageList").show();
 			if ( flag == 'Y' || flag == undefined ) {
 				grid1.data.length = 0;
 				grid1.loadingPage = 0;
@@ -442,7 +441,6 @@ function eventEnterSearch(event) {
 			
 			searchFlag = true;
 			grid1.on();
-			
 			ui.get({
 				url : 'analysis/selectUsageList.xcn',
 				unit : unit,
@@ -458,7 +456,7 @@ function eventEnterSearch(event) {
 					grid1.autoNumber();
 					colInit();
 					grid1.loadHeader(false);
-					grid1.appendData(data);
+                    grid1.appendData(data);
 					
 					//$('#usageCnt').html('<s:message code="analysis.ui.searchend"/>: '+grid1.data.length);
 					searchFlag = false;
