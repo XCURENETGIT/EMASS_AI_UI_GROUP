@@ -223,7 +223,7 @@ public class MessengerEdcGroupVO {
 			solrGroupVO.setAttachsize(Common.join_long(edc.getAttachsize(), "|"));
 		}
 		solrGroupVO.setMessage(getMessageDetail(edc, 0, original));
-		solrGroupVO.setTitle(getSender(edc));
+		solrGroupVO.setTitle(getDetailTitle(edc));
 		solrGroupVO.setDeptNm(edc.getDeptnm());
 		solrGroupVO.setBody_snippet(edc.getBody_snippet());
 		solrGroupVO.setBusiNm(edc.getBusinm());
@@ -242,6 +242,19 @@ public class MessengerEdcGroupVO {
 		solrGroupVO.setDirection_svc(edc.getDirection_svc());
 		solrGroupVO.setBody_snippet(edc.getBody_snippet());
 		return solrGroupVO;
+	}
+
+	private static String getDetailTitle(SolrEdcVO edc) {
+		StringBuilder result = new StringBuilder();
+
+		if(Common.isNotEmpty(edc.getDeptnm())) result.append(edc.getDeptnm()).append("/");
+		if(Common.isNotEmpty(edc.getJikgubnm())) result.append(edc.getJikgubnm()).append("/");
+		if(Common.isNotEmpty(edc.getName())) result.append(edc.getName()).append("/");
+
+		if(Common.isNotEmpty(result.toString())) result.append("(").append(getSender(edc)).append(")");
+		else result.append(getSender(edc));
+
+		return result.toString();
 	}
 
 	public static MessengerGroupVO reDefined(SolrEdcVO edc, String adminId, long msg_cnt) {

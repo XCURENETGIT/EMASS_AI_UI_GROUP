@@ -818,7 +818,9 @@ function makeList2(nextFlag) {
         if (obj.user.includes('@')){
             user = obj.user.split('@')[0];
         }
-        if (nvl(obj.userid) != '' && ( srcip == nvl(obj.userid)) &&  nvl(user) == nvl(obj.sender)) chkPati = true;
+        // if (nvl(obj.userid) != '' && ( srcip == nvl(obj.userid)) &&  nvl(user) == nvl(obj.sender)) chkPati = true;
+        if( (nvl(obj.user) != '' && obj.user == obj.sender) || usrid == obj.title || usrid == obj.sender ) chkPati = true;
+        //if (nvl(obj.userid) != '' && (nvl(user) == nvl(obj.sender))) chkPati = true;
         str += checkDate(i);
 
         str += '<li class="p12 bubble ' + (chkPati ? 'txt_right slide_right' : 'txt_left slide_left') + (i == 0 && !nextFlag ? ' lastReadLi' : '') + '" id="' + obj.msgid + '" ctime="' + obj.ctime + '" userid="' + obj.userid + '" srcip="' + obj.srcip + '" xrootmtr="' + obj.xrootmtr + '">';
@@ -858,7 +860,7 @@ function makeList2(nextFlag) {
         str += '</div>';
 
         str += ' <div class="bubbleDate mat4">';
-        str += '<span>' + obj.sender + '</span> &nbsp';
+        str += '<span>' + obj.title + '</span> &nbsp';
         str += '<span>' + obj.ctime + '</span> &nbsp';
         str+='<span class="mal4">'+makeMessengerText(obj.svc)+'</span>';
         str += '</div></div>';
@@ -910,9 +912,9 @@ function makeList(nextFlag) {
             user = obj.user.split('@')[0];
         }
 
-        if (nvl(obj.userid) != '' && ( srcip == nvl(obj.userid)) &&  nvl(user) == nvl(obj.sender)) chkPati = true;
+        //if (nvl(obj.userid) != '' && ( srcip == nvl(obj.userid)) &&  nvl(user) == nvl(obj.sender)) chkPati = true;
+        if( (nvl(obj.user) != '' && obj.user == obj.sender) || usrid == obj.title || usrid == obj.sender ) chkPati = true;
         str += checkDate(i);
-
 
         str += '<li class="p12 bubble ' + (chkPati ? 'txt_right slide_right' : 'txt_left slide_left') + (i == 0 && !nextFlag ? ' lastReadLi' : '') + '" id="' + obj.msgid + '" ctime="' + obj.ctime + '" userid="' + obj.userid + '" srcip="' + obj.srcip + '" xrootmtr="' + obj.xrootmtr + '">';
         str += '<span id="xrootmtr" style="display: none;">' + obj.xrootmtr + '</span>';
@@ -921,7 +923,6 @@ function makeList(nextFlag) {
         if( svc3 == 'J') obj.body_snippet =contentBodyDivJS.chatJoin;
         else if( svc3 == 'L') obj.body_snippet = contentBodyDivJS.chatLeave;
         str += '<div class="' + (chkPati ? 'me' : 'you') + ' timeline-panel" >';
-
 
         if(obj.attached=="Y"){
             var attachhash = obj.attachhash;
@@ -950,7 +951,7 @@ function makeList(nextFlag) {
         }
         str += '</div>';
         str += ' <div class="bubbleDate mat4">';
-        str += '<span>' + obj.sender + '</span> &nbsp';
+        str += '<span>' + obj.title + '</span> &nbsp';
         str += '<span>' + obj.ctime + '</span> &nbsp';
         str+='<span class="mal4">'+makeMessengerText(obj.svc)+'</span>';
         str += '</div></div>';
@@ -966,6 +967,7 @@ function makeList(nextFlag) {
 
     return str;
 }
+
 
 function makePrevList() {
     var dataHasFlag = false;
