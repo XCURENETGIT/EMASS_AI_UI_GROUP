@@ -166,7 +166,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			if (Common.isEquals(bodysnippet, "Y")) tempDefaultFields = tempDefaultFields + ",body_snippet";
 			sq.setFields(tempDefaultFields);
 		}
-		log.debug("[Fields] {}", sq.getFields());
+		log.info("[Fields] {}", sq.getFields());
 		sq.setParam("wt", "json");
 
 		if(!Common.isEmpty(sq.get("indics"))) defaultIndex =  IndexCoordinates.of(sq.get("indics"));
@@ -180,7 +180,9 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		/* set 필터 쿼리 */
 		String filterQuery =  (null != sq.getFilterQueries())? String.join(" ", sq.getFilterQueries()) : "";
 		/* 일반 검색 쿼리 */
+		//.type(MultiMatchQueryBuilder.Type.PHRASE)
 		QueryStringQueryBuilder queryBuilder = QueryBuilders.queryStringQuery(sq.getQuery() + " " + filterQuery);  // type PHRASE
+		queryBuilder.fields(getDefaultSearchField(sq));
 
 		/* 정규식 패턴 필드 설정 */
 		BoolQueryBuilder regexQuery = QueryBuilders.boolQuery();
@@ -246,11 +248,8 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			complateQuery.filter(scriptQueryBuilder);
 		}
 
-
 		/*============================================================*/
-
 		log.info("page : {}  rows : {}", getPage(sq), sq.getRows());
-
 
 		/*======================= 검색  영역  ============================*/
 		List<Object> searchAfter = null;
@@ -258,8 +257,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		int rows = sq.getRows(); // (sq.getRows() == 0) ? 100 : sq.getRows() ;  // size
 		int range = Math.round((rows + offset) / rows); // for문 횟수
 
-
-		Query searchQuery = new NativeSearchQueryBuilder()
+				Query searchQuery = new NativeSearchQueryBuilder()
 				.withSourceFilter(new FetchSourceFilter( Common.toArray(sq.getFields(), ","),new String[]{"body","attach"}))
 				.withQuery(complateQuery)
 				.withAggregations(getAggregations(sq))
