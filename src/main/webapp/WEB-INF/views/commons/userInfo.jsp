@@ -6,6 +6,7 @@
 	<%
 		String api_insaYn = Common.nvl(Config.getString("api.insa.useyn"));
 	%>
+
 	<style type="text/css">
 		.hide {
 			display: none;
@@ -37,6 +38,81 @@
         var coCd_for_busi = '';
         var insa_schedule = '';
         var current_select_count = 11;
+        var accountMainDelimeter = '<%=Config.getString("account.main.delimiter", "%")%>';
+        var accountSubDelimeter = '<%=Config.getString("account.sub.delimiter", "$")%>';
+        var datas = {
+            idx : 0,
+            add : function(selectIdx, svc, account, disabledFlag){
+                if(disabledFlag == undefined) disabledFlag = false;
+
+                this.idx++;
+                var idx = this.idx;
+                $('#dataHtml input, #dataHtml select, #dataHtml button').prop('disabled', disabledFlag);
+                var tab_content = $('#dataHtml').html().replaceAll('dataContentId', ('dataContentId')+idx)
+                    .replaceAll('btnDataAdd', ('btnDataAdd')+idx)
+                    .replaceAll('btnDataDel', ('btnDataDel')+idx)
+                    .replaceAll('datas.add', ('datas.add(\'')+idx+'\')')
+                    .replaceAll('datas.del', ('datas.del(\'')+idx+'\')')
+                    .replaceAll('userAccountSvc_inUser', 'userAccountSvc_inUser'+idx)
+                    .replaceAll('userAccountText_inUser', 'userAccountText_inUser'+idx);
+
+                if($('#userAccountSelectDiv .dataContent').length == 0 || selectIdx == '') {
+                    $('#userAccountSelectDiv').append(tab_content);
+                } else {
+                    $('#userAccountSelectDiv .dataContent').each(function(i, val) {
+                        if(this.id == 'dataContentId'+selectIdx) {
+                            $(this).after(tab_content);
+                            return false;
+                        }
+                    });
+                }
+                if(svc != undefined && account != undefined){
+                    $('#userAccountText_inUser'+idx).val(account);
+                    $('#userAccountSvc_inUser'+idx).val(svc);
+                }
+            },
+            del : function(selectIdx){
+                if($('#userAccountSelectDiv .dataContent').length > 1) {
+                    $('#dataContentId'+selectIdx).remove();
+                }
+            },
+            reset : function(){
+                $('#userAccountSelectDiv').html('');
+            },
+            getAccountData : function(){
+                var resultData = [];
+
+                $('#userAccountSelectDiv .dataContent').each(function(i, val) {
+                    var subValue = '';
+                    var svc = $(this).find('.userAccountSvc').val();
+                    var account = $(this).find('.userAccountText').val();
+
+                    if(svc != '' && account != ''){
+                        subValue = svc + accountSubDelimeter + account;
+                        resultData.push(subValue);
+                    }
+
+                });
+
+                return resultData.join(accountMainDelimeter);
+            },
+            setAccountData : function (userAccountStr, disabledFlag){
+
+                datas.reset();
+                if(userAccountStr == '' || userAccountStr == null){
+                    datas.add();
+                    return;
+                }
+
+                var userAccounts = userAccountStr.split(accountMainDelimeter);
+                for(var i=0; i<userAccounts.length; i++){
+                    var userAccount = userAccounts[i].split(accountSubDelimeter);
+                    if(userAccount.length != 2) continue;
+
+                    datas.add('', userAccount[0], userAccount[1], disabledFlag);
+                }
+            }
+        };
         $(document).ready(function(){
 
             $('#dept').click(function(){
@@ -369,6 +445,9 @@
                 }
                 var jikinCd_inUser = $('#jikinCd_inUser option:selected').text();
                 $('#jikinHiddenNm').val(jikinCd_inUser);
+
+                $('#userAccountStrHidden').val(datas.getAccountData());
+
                 var message = mode=='insert' ? '<s:message code="common.msg.confirm.add"/>' : '<s:message code="common.msg.confirm.modify"/>';
                 ui.confirmMsg(message, '', '', function(rs){
                     if(rs){
@@ -401,6 +480,7 @@
                 var deptOptions = getDeptOptions();
                 var jikgubOptions = getJikgubOptions();
                 var jikinOptions = getJikinOptions();
+                var userAccountSvcOptions = getUserAccountSvcOptions();
 
                 var str = '<select class="form-control input-sm" id="coCd_inUser" name="coCd" style=" min-width: 197px;">';
                 str += options;
@@ -426,6 +506,13 @@
                 strJikin += jikinOptions;
                 strJikin += '</select>';
                 $("#jikinSelect_inUser").html(strJikin);
+
+                var strUserAccountSvc = '<select class="form-control input-sm userAccountSvc" id="userAccountSvc_inUser" style=" min-width: 150px;">';
+                strUserAccountSvc += userAccountSvcOptions;
+                strUserAccountSvc += '</select>';
+                $("#userAccountSvcDiv").html(strUserAccountSvc);
+                datas.reset();
+                datas.add();
 
                 $('#userId').prop("disabled", false);
                 $('#userNm').prop("disabled", false);
@@ -811,6 +898,28 @@
             });
         }
 
+        function getUserAccountSvcOptions(){
+            var result = '';
+            ui.get({
+                url : 'getMessengerList.xcn',
+                asyncFlag : false,
+                success : function(data, total) {
+                    result+='<option value="">-<s:message code="filterInfo.select.service"/>-</option>';
+                    for(var i=0; i<data.length; i++) {
+                        result += '<option value="'+data[i].code+'">'+data[i].codeName+'</option>';
+                    }
+                },
+                error : function(status, message) {
+                    ui.alertMsg('error:' + status);
+                },
+                complete : function() {
+                    searchFlag=false;
+                }
+            });
+
+            return result;
+        }
+
         function getCoOptions(){
             var result = '';
             ui.get({
@@ -941,6 +1050,7 @@
             var deptOptions = getDeptOptions();
             var jikgubOptions = getJikgubOptions();
             var jikinOptions = getJikinOptions();
+            var userAccountSvcOptions = getUserAccountSvcOptions();
             var str = '<select class="form-control input-sm" id="coCd_inUser" name="coCd" style=" min-width: 197px;">';
             str += options;
             str += '</select>';
@@ -965,6 +1075,11 @@
             strJikin += jikinOptions;
             strJikin += '</select>';
             $("#jikinSelect_inUser").html(strJikin);
+
+            var strUserAccountSvc = '<select class="form-control input-sm userAccountSvc" id="userAccountSvc_inUser" style=" min-width: 150px;">';
+            strUserAccountSvc += userAccountSvcOptions;
+            strUserAccountSvc += '</select>';
+            $("#userAccountSvcDiv").html(strUserAccountSvc);
         }
         function valueCheckInfo(){
             var data=[];
@@ -1128,6 +1243,70 @@
             $('#'+codeType+'Val').val('');
             $('#'+codeType+'Str').val('');
             $('#'+codeType+'SelectedArea').hide();
+        }
+        function userModify(grid){
+            ui.on('setUserPopBtn');
+            ui.get({
+                url : 'getUserAccountInfo.xcn',
+                userId : grid.getValue(grid.Row, 'userId'),
+                success : function ( data, total ) {
+                    allSelectOptions();
+                    $('#userId').prop("disabled", true);
+                    $('#userPop').attr('mode', 'modify');
+                    $('#userPop').modal('show');
+                    $('#userId').val(grid.getValue(grid.Row, 'userId'));
+                    $('#userNm').val(grid.getValue(grid.Row, 'userNm'));
+                    $('#coCd_inUser').val(grid.getValue(grid.Row, 'coCd'));
+                    $('#busiCd_inUser').val(grid.getValue(grid.Row, 'busiCd'));
+                    $('#generalCd_inUser').val(grid.getValue(grid.Row, 'generalCd'));
+                    $('#deptByCoVal').val(grid.getValue(grid.Row, 'deptCd'));
+                    $('#deptByCoStr').val(grid.getValue(grid.Row, 'deptNm'));
+                    $('#deptByCoStrSpan').html(grid.getValue(grid.Row, 'deptNm'));
+
+                    if( $('#deptByCoStr').val() != '' ){
+                        $('#deptByCoSelectedArea').find('.btn').text(1);
+                        $('#deptByCoSelectedArea').show();
+                        $('#deptByCoStrSpan').html( $('#deptByCoStr').val() );
+                    }else{
+                        $('#deptByCoSelectedArea').find('.btn').text(0);
+                        $('#deptByCoSelectedArea').hide();
+                    }
+
+                    $('#jikgubCd_inUser').val(grid.getValue(grid.Row, 'jikgubCd'));
+                    $('#jikinCd_inUser').val(grid.getValue(grid.Row, 'jikinCd'));
+                    $('#userIp').val(grid.getValue(grid.Row, 'userIp'));
+                    $('#userEmail').val(grid.getValue(grid.Row, 'userEmail'));
+                    $('#ceo_inUser').val(grid.getValue(grid.Row, 'ceo'));
+                    coSelectDisabled();
+
+
+                    var modifyCannotFlag = false;
+                    if( $('#insertBtn').css('display') == 'none' ) modifyCannotFlag = true;
+                    datas.setAccountData(data, modifyCannotFlag);
+                    userInfoPopStat(modifyCannotFlag);
+                },
+                error : function (status, message) {
+                    ui.alertMsg(message);
+                },
+                complete : function (){
+                    ui.off('setUserPopBtn');
+                }
+            });
+        }
+        function userInfoPopStat(flag){
+            $('#userId, #userNm, #coCd_inUser, #busiCd_inUser, #generalCd_inUser, #deptByCoVal, #deptByCoStr').prop("disabled", flag);
+            $('#dept, #jikgubCd_inUser, #jikinCd_inUser, #userIp, #userEmail, #ceo_inUser').prop("disabled", flag);
+            $('.userAccountSvc, .userAccountText .userBtnData').prop("diabled", flag);
+
+            if(flag){
+                $('#dept').addClass('disabledClass');
+                $('.userPopFooter').hide();
+            }
+            else{
+                $('#dept').removeClass('disabledClass');
+                $('.userPopFooter').show();
+            }
+
         }
 	</script>
 </head>
@@ -1515,8 +1694,15 @@
 							<input type="text" class="w100" name="userEmail" id="userEmail" placeholder="<s:message code="userInfo.msg.email"/>">
 						</div>
 					</div>
-
-
+					<div class="row">
+						<div class="col-35">
+							<label for="userAccountSelectDiv" class="fname"><s:message code="common.messenger.account"/></label>
+						</div>
+						<div class="col-65">
+							<div class="form-group" id="userAccountSelectDiv"></div>
+							<input type="hidden" id="userAccountStrHidden" name="userAccountStr">
+						</div>
+					</div>
 				</div>
 				<div class="modalfooter">
 					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message
@@ -1568,6 +1754,19 @@
 		<div class="contentSub">
 			<div id="userListGrid" class="slickGrid gridArea"></div>
 		</div>
+	</div>
+</div>
+
+<div id="dataHtml" style="display:none;">
+	<div id="dataContentId" class="dataContent" style="margin-bottom:10px;">
+		<div class="userAccountSvcDiv" id="userAccountSvcDiv"></div>
+		<input type="text" class="userAccountText" id="userAccountText_inUser" placeholder="" style="width: 170px;">
+		<button type="button" id="btnDataDel" class="btn userBtnData" style="height:25px;vertical-align: middle;padding:0px 5px 0px 5px;" onclick="datas.del;">
+			<span class="glyphicon glyphicon-minus"></span>
+		</button>
+		<button type="button" id="btnDataAdd" class="btn userBtnData" style="height:25px;vertical-align: middle;padding:0px 5px 0px 5px;" onclick="datas.add;">
+			<span class="glyphicon glyphicon-plus"></span>
+		</button>
 	</div>
 </div>
 
@@ -1623,6 +1822,10 @@
             $('#userEmail').val(grid.getValue(grid.Row, 'userEmail'));
             $('#ceo_inUser').val(grid.getValue(grid.Row, 'ceo'));
             coSelectDisabled();
+
+            if (grid.Col == grid.ColIndex('userId')) {
+                userModify(grid);
+            }
         }
     };
     grid.loadExportMenu('<s:message code="userInfo.navi.title2"/>');

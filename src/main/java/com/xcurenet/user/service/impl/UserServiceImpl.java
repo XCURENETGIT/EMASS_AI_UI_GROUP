@@ -188,8 +188,10 @@ public class UserServiceImpl extends XcnAbstractDAO implements UserService {
 
 			deleteUserEmail(user);
 			deleteUserIp(user);
+			deleteUserAccount(user);
 			insertUserEmail(user);
 			insertUserIp(user);
+			insertUserAccount(user);
 			result = update("com.xcurenet.sqlmap.mappers.mysql.user.updateUser", user);
 			if(user.getCeo().equals("Y")) result = insert("com.xcurenet.sqlmap.mappers.mysql.user.insertUserCeo", user);
 			else delete("com.xcurenet.sqlmap.mappers.mysql.user.deleteUserCeo", user);
@@ -210,8 +212,10 @@ public class UserServiceImpl extends XcnAbstractDAO implements UserService {
 
 			deleteUserEmail(user);
 			deleteUserIp(user);
+			deleteUserAccount(user);
 			insertUserEmail(user);
 			insertUserIp(user);
+			insertUserAccount(user);
 			result = insert("com.xcurenet.sqlmap.mappers.mysql.user.insertUser", user);
 			if(user.getCeo().equals("Y")) result = insert("com.xcurenet.sqlmap.mappers.mysql.user.insertUserCeo", user);
 
@@ -221,6 +225,49 @@ public class UserServiceImpl extends XcnAbstractDAO implements UserService {
 		}
 		return result;
 	}
+
+	@Override
+	public int insertUserAccount(final UserVO user) {
+		int result = 0;
+		if(Common.isEmpty(user.getUserAccountStr())) return result;
+
+		final String userId = user.getUserId();
+		final String userAccountStr = Common.nvl(user.getUserAccountStr());
+
+		String [] userAccounts = userAccountStr.split("\\"+Config.getString("account.main.delimiter", "%"));
+
+		for (String userAccount : userAccounts) {
+			if (Common.isEmpty(userAccount.trim())) continue;
+			UserVO vo = new UserVO();
+
+			String [] userAccountInfo = userAccount.split("\\"+Config.getString("account.sub.delimiter", "$"));
+			if(userAccountInfo.length != 2) continue;
+
+			vo.setUserId(userId);
+			vo.setServiceCd(userAccountInfo[0]);
+			vo.setAccount(userAccountInfo[1]);
+
+			result += insert("com.xcurenet.sqlmap.mappers.mysql.user.insertUserAccount", vo);
+		}
+		return result;
+
+	}
+
+	@Override
+	public int deleteUserAccount(final UserVO user) {
+		return delete("com.xcurenet.sqlmap.mappers.mysql.user.deleteUserAccount", user);
+	}
+
+	@Override
+	public String getUserAccountInfo(final UserVO user) {
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", user.getUserId());
+		param.put("mainDelimiter", Config.getString("account.main.delimiter", "%"));
+		param.put("subDelimiter", Config.getString("account.sub.delimiter", "$"));
+
+		return selectOne("com.xcurenet.sqlmap.mappers.mysql.user.getUserAccountInfo", param);
+	}
+
 
 	@Override
 	public boolean isUserIdExist(final UserVO user) {

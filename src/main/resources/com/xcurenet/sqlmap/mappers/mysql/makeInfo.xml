@@ -55,7 +55,15 @@
 		ORDER	BY USER_ID
 		LIMIT	${offset}, ${pageSize}
 	</select>
-	
+
+	<!-- 사용자 EMAIL -->
+	<select id="getInfoAccount" resultType="hashmap" parameterType="hashmap">
+		SELECT	USER_ID AS USERID, SERVICECD AS SERVICECD,ACCOUNT AS ACCOUNT
+		FROM	UI_USER_ACCOUNT
+		ORDER	BY USER_ID
+		LIMIT	${offset}, ${pageSize}
+	</select>
+
 	<!-- 개인정보? -->
 	<select id="getInfoRegExp" resultType="hashmap" parameterType="hashmap">
 		SELECT CODE, NAME, REGEX FROM UI_REGEXP
