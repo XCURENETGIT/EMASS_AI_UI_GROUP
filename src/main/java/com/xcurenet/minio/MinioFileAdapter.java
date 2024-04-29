@@ -77,11 +77,11 @@ public class MinioFileAdapter {
 
 	public InputStream decoderFileUpload(InputStream inputStream, String fileName){
 		try{
-			boolean found = findBucket(decoderBucket);
+			boolean found = findBucket(bucket);
 			if (found) {
 				minioClient.putObject(
 						PutObjectArgs.builder()
-								.bucket(decoderBucket)
+								.bucket(bucket)
 								.stream(inputStream, inputStream.available(), -1)
 								.object("/info/"+fileName)
 								.build()
