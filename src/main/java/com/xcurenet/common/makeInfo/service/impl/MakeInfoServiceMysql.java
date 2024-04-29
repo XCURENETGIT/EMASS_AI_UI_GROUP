@@ -78,6 +78,12 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 		addVersion("INFO_IP", version);
 		mongoUtil.updateDate("INFO_IP", localDateTime);
 
+		version = getTableCurrentVersion("INFO_ACCOUNT")+1;
+		appendData("getInfoAccount", "INFO_ACCOUNT", version);
+		addVersion("INFO_ACCOUNT", version);
+		mongoUtil.updateDate("INFO_ACCOUNT", localDateTime);
+
+
 
 		version = getTableCurrentVersion("INFO_EMAILADDR") + 1;
 		JSONObject param = new JSONObject();
@@ -504,6 +510,15 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 							.REGEX((String) obj.get("REGEX"))
 							.build();
 					mongoUtil.insert(infoPrivateVO, collectionName);
+
+				} else if (Common.isEquals(collectionName, "INFO_ACCOUNT")) {
+					InfoAccountVO infoAccountVO = InfoAccountVO.builder()
+							.VERSION((int) obj.get("VERSION"))
+							.USERID((String) obj.get("USERID"))
+							.SERVICECD((String) obj.get("SERVICECD"))
+							.ACCOUNT((String) obj.get("ACCOUNT"))
+							.build();
+					mongoUtil.insert(infoAccountVO, collectionName);
 
 				}
 

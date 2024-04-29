@@ -36,6 +36,8 @@
   var consent = <%=consent%>;
   var isIPv6 = <%=isIPv6%>;
   var isOCR = <%=isOCR%>;
+  var accountMainDelimeter = '<%=Config.getString("account.main.delimiter", "%")%>';
+  var accountSubDelimeter = '<%=Config.getString("account.sub.delimiter", "$")%>';
 </script>
 
 

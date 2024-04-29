@@ -93,4 +93,10 @@ public interface UserService {
 	public List<PersCodeInfo>  getServiceInfo();
 	public UserVO getUseridbyEmailIp(String usrid);
 
+	public int insertUserAccount(final UserVO user);
+
+	public int deleteUserAccount(final UserVO user);
+
+	public String getUserAccountInfo(final UserVO user);
+
 }

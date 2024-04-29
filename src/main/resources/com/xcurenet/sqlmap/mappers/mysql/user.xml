@@ -658,4 +658,22 @@
 		) A
 	</select>
 
+
+	<!-- 사용자 메신저 계정 정보 등록 -->
+	<insert id="insertUserAccount" parameterType="userVO">
+		INSERT IGNORE INTO UI_USER_ACCOUNT (USER_ID, SERVICECD, ACCOUNT)
+		VALUES (#{userId}, #{serviceCd}, #{account})
+	</insert>
+
+	<!-- 사용자 메신저 계정 정보 삭제 -->
+	<delete id="deleteUserAccount" parameterType="userVO">
+		DELETE	FROM UI_USER_ACCOUNT WHERE	FIND_IN_SET(USER_ID, #{userId})
+	</delete>
+
+	<select id="getUserAccountInfo" parameterType="hashmap" resultType="string">
+	SELECT 	GROUP_CONCAT( CONCAT(SERVICECD, #{subDelimiter}, ACCOUNT) SEPARATOR #{mainDelimiter})
+	FROM 	UI_USER_ACCOUNT
+	WHERE 	USER_ID = #{userId}
+	</select>
+
 </mapper>

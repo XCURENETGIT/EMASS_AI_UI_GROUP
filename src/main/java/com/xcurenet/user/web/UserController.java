@@ -82,4 +82,11 @@ public class UserController {
 		return new XcnResponseVO(XcnRspCode.OK, rs);
 	}
 
+	@RequestMapping(value = "/getUserAccountInfo.xcn")
+	@Description("사용자 리스트 조회")
+	@ResponseBody
+	public XcnResponseVO getUserAccountInfo(final HttpServletRequest request, UserVO user) throws Exception {
+		return new XcnResponseVO(XcnRspCode.OK, userService.getUserAccountInfo(user));
+	}
+
 }
