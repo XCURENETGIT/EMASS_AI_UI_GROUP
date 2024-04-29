@@ -16,6 +16,7 @@ var moveX = 0;
 var keywordHighlight = 'true';
 var hostQuery = 'false';
 var count = 0;
+let patnName = '';
 const originalBodyFontSize = 13;
 
 $(document).ready(function(){
@@ -1269,7 +1270,7 @@ function setMessage(msg) {
 
 	setFileDiv(msg);			//file 및 OCR 처리
 
-	// if(msg.patterns != null && msg.patterns != undefined && msg.patterns != '') $('#msgPatterns').val(msg.patterns);
+	if(msg.patterns != null && msg.patterns != undefined && msg.patterns != '')  patnName = getPiName(msg.patterns);
 	setPatternDiv(msg.patterns);
 
 	// alert(bodySize_str)
@@ -1287,6 +1288,10 @@ function setMessage(msg) {
 		$('#bodyStrDiv #bodyStr').html(msg.bodyStr);
 		$('#bodyStrDiv').css("display", "");
 	}
+}
+
+function getPatnName(){
+	return patnName;
 }
 
 function userHtml(userList,tr, srcip, dstip, usrip) {
@@ -1889,6 +1894,7 @@ function setPatternDiv(patterns) {
 			else if( type == "F") piType = message.attach_name;
 			else if( type == "A") piType = message.attach;
 			else piType = message.message_info;
+			patnName = getPiName(pattern);
 			var piId = nvl(pattern.piid);
 			patternStr = '<tr>';
 			if(type == "A" || type == "F") {
@@ -2240,3 +2246,7 @@ function updateEmsFeedback(feedback) {
 	});
 }
 
+
+function getMsgPtns(){
+	return msgPtns;
+}
