@@ -60,6 +60,9 @@
     $(document).ready(function(){
 
         initDateTimePicker('startdate','enddate');
+        closeDetailTab();
+        getData ('Y');
+        
         $('.totalView').click(function(){
 
             $("#chartCntDiv").show();
@@ -906,7 +909,7 @@
                 searchFlag = false;
 
                 var grid1 = currentgrid;
-                if( data.pivotData.length > 0 ) {
+                if( data.pivotData.length > 1 ) {
                     for ( var i=0 ; i < data.length ; i++ ) {
                         var selected = false;
                         if ( i <= 4 ) selected = true;

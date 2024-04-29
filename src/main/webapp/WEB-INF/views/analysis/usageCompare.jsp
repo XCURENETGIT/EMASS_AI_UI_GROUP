@@ -65,7 +65,8 @@ Highcharts.setOptions({
 $(document).ready(function(){
 
     initDateTimePicker('startDate','endDate');
-
+    getUsageChart();
+    
     $('#searchBtn').click(function () {
         getUsageChart();
     });

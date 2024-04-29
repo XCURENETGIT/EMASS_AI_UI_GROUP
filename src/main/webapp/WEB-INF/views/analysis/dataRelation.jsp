@@ -108,6 +108,7 @@
         initCondition();
 		dateDefault();
         initDateTimePicker('startDate','endDate');
+        getData ('Y');
         /* 보낸사람 */
         $('#senders').click(function () {
             var code = $(this).attr('id');

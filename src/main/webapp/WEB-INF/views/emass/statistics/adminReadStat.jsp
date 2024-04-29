@@ -50,6 +50,8 @@
     $(document).ready(function () {
         getAdminOptions();
         initDateTimePicker('startdate','enddate');
+        closeDetailTab();
+        getData('Y');
 
         $('.optionBtn').click(function () {
             $('.optionBtn').removeClass('active');
@@ -614,7 +616,7 @@
                 if (grid1.loadingPage == 0) grid1.Select(-1, -1);
                 searchFlag = false;
 
-                if (data.pivotData.length > 0) {
+                if (data.pivotData.length > 1) {
                     for (var i = 0; i < data.length; i++) {
                         var selected = false;
                         if (i <= 4) selected = true;

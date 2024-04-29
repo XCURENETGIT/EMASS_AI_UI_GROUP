@@ -37,6 +37,7 @@
         var colKey = "";
         var chartcnt = 5;
         $(document).ready(function () {
+            getData('Y');
             $('#searchBtn').click(function () {
                 getData('Y');
             });
