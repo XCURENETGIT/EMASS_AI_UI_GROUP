@@ -112,9 +112,14 @@
         var pageNum = 1;
         var kHighlight = '<%=keywordHighlight%>';
 
-
+		var ptnName = opener.getPatnName();
         $(document).ready(function () {
-
+            
+            if(ptnName != '') {
+                $('#patternDiv').css("display","");
+                popSetPatternDiv(ptnName)
+            }else {$('#patternDiv').css("display","none");}
+            
             /* var totalPageA = '';
 			for (var i= 0; i < totalPage;  i++) {
 				totalPageA+='<a href="#" class="pageNum">'+(i+1)+'</a>';
@@ -360,11 +365,18 @@
                 innerHighlight(this, pat.toUpperCase(), type);
             });
         };
+
+
+        /* setPattern Div  */
+        function popSetPatternDiv(patternName) {
+            $('#patternName').html(patternName);
+        }
 	</script>
 </head>
 <body class="mini-navbar"  style="overflow: auto;">
 <div class="msg_body_container" style="overflow: hidden; padding: 5px 10px;">
 	<div class="content_body">
+		
 		<%if (vo != null) { %>
 		<div class="row p20">
 			<h2><span class="bullet02"></span><s:message code="consent.attach"/></h2>
@@ -372,6 +384,10 @@
 				<div class="panel-heading">
 					<div class="row p12 grayBg02">
 						<div id="attachName" style="font-weight: bold; font-size:20px;"><%=vo.getAttachName()%>
+						</div>
+						<!-- 패턴정보 -->
+						<div class="mat8" id="patternDiv">
+							<div><s:message code="bodyview.info.pattern"/> : <span id="patternName"/></div>
 						</div>
 						<div class="mat8"><s:message code="message.msg.pre_ext"/> : <span id="attachExt"><%=vo.getAttachExt()%></span></div>
 						<div class="mat8"><s:message code="message.msg.attach_size"/> : <span id="attachSize"><%=vo.getAttachSize()%></span></div>
