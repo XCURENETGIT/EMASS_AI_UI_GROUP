@@ -776,7 +776,7 @@ public class SolrCreateQuery {
 
 		for (int i = 0; i < param.length; i++) {
 			String[] svc = Common.toArray(param[i], "%");
-			result.append("pi_amount" + ".pi_" +svc[0] + ":");
+			result.append("pi_" + svc[0] + ":");
 
 			String[] val = Common.toArray(svc[1], "@");
 			if( val[0].equals("B") ) result.append("[ " + val[1] + " TO " + val[2] + " ]");
