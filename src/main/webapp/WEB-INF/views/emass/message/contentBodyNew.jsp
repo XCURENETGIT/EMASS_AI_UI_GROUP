@@ -387,7 +387,6 @@
 
 	</script>
 </head>
-<input>
 <div id="periodBodyMenu">
 	<div style="height:30px;background-color:black;color:#fff;padding-left:10px;line-height:30px;font-weight: bold;cursor:default;">
 		<div style="float:left;width:200px;">
