@@ -183,7 +183,7 @@
         function TodayForeignerData() {
             ui.get({
                 url: 'getTodayPattern.xcn',
-                patternType:'ppi_amount.pi_FN',
+                patternType:'pi_amount.pi_FN',
                 success: function (data, total) {
                     $('#TodayForeignerTotalCnt').html(data.total + "<span><s:message code="common.msg.cnt"/></span> <span class='tit13'></span>");
                 },
