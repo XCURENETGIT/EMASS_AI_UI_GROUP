@@ -58,10 +58,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Log4j2
@@ -1271,8 +1268,12 @@ public class EmsMessageController {
 	@Description("EMASS 메시지 정보 조회")
 	@ResponseBody
 	public XcnResponseVO getEmassMessageNew(final HttpServletRequest request, final HttpSession session) throws Exception {
-		String msgId = Common.nvl(request.getParameter("msgId"));
-		String consentUserId = Common.nvl(request.getParameter("consentUserId"));
+		JSONObject param = Common.getParam(request);
+		String msgId = Common.nvl(param.get("msgId"));
+		String consentUserId = Common.nvl(param.get("consentUserId"));
+		Map<String,Object> regexpHighlight = (Map<String, Object>) param.get("regexpHighlight");
+
+
 	//	boolean openAuth = Boolean.parseBoolean(Common.nvl(request.getParameter("open"))); // 읽기 권한 있음여부
 		String firstAdminYn = Common.getFirstAdminYn(request.getSession());
 		String adminType = Common.getAdminType(request.getSession());
@@ -1281,11 +1282,14 @@ public class EmsMessageController {
 		if(emsMessageService.beforeConsentCheck(msgId,firstAdminYn,adminType,consentUserId)) emass = emsMessageService.getEmassMessageNew(Common.getAdminId(request), msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
 	//	else if(openAuth) emass.setConsentFlag(true);
 		else emass.setConsentFlag(false);
-
-
 		if (emass != null && emass.isConsentFlag()) {
 			solrCheckedService.setRead(msgId, Common.getAdminId(session));
 		}
+		// highLight check
+		if(emass.isConsentFlag() && !Common.isEmpty(regexpHighlight)) {
+			emass = emsMessageService.highlightCheck(emass, regexpHighlight);
+		}
+
 		return new XcnResponseVO(XcnRspCode.OK, emass);
 	}
 

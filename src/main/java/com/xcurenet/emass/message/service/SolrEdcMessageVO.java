@@ -16,7 +16,6 @@ import org.elasticsearch.search.aggregations.bucket.range.ParsedRange;
 import org.elasticsearch.search.aggregations.bucket.range.Range;
 import org.elasticsearch.search.aggregations.bucket.terms.ParsedLongTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms;
-import org.elasticsearch.search.aggregations.bucket.terms.ParsedTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.metrics.ParsedSum;
 import org.springframework.data.elasticsearch.core.ElasticsearchAggregations;
@@ -25,6 +24,7 @@ import org.springframework.data.elasticsearch.core.SearchHits;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Log4j2
 @ToString
@@ -92,6 +92,18 @@ public class SolrEdcMessageVO {
 			SolrEdcVO edcVO = solrEdcVO.getContent();
 			edcVO.setReadYn(isRead(solrEdcVO.getContent().getChecked(), adminId) ? "Y" : "N");
 			edcVO.setConfidence( (maxScore > 0) ? String.valueOf((solrEdcVO.getScore() / maxScore ) * 100) : "0"); //유사도 계산
+			if(!Common.isEmpty(edcVO.getPi_amount())) {
+				List<Map<String, Integer>> piList = edcVO.getPi_amount();
+				for (Map<String, Integer> pimap : piList) edcVO.setPiMap(pimap);
+			}
+			//실시간 정규식 검색 전용 엘라스틱서치 highlight
+			Map<String,String> highLight = new HashMap<>();
+			Map<String, List<String>> highlightFields = solrEdcVO.getHighlightFields();
+			for(Map.Entry hlsItem :  highlightFields.entrySet()) {
+				List<String> itemList = (List<String>) hlsItem.getValue();
+				highLight.put((String) hlsItem.getKey(),itemList.stream().collect(Collectors.joining(",")));
+			}
+			edcVO.setRegexpHighlight(highLight);
 			this.emass.add(edcVO);
 		}
 	}

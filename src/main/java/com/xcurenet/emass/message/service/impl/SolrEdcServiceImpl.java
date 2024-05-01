@@ -25,14 +25,16 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.SortClause;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.elasticsearch.ElasticsearchException;
-import org.elasticsearch.index.query.*;
-import org.elasticsearch.script.Script;
-import org.elasticsearch.script.ScriptType;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.MoreLikeThisQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.QueryStringQueryBuilder;
 import org.elasticsearch.search.aggregations.*;
 import org.elasticsearch.search.aggregations.bucket.range.RangeAggregationBuilder;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.elasticsearch.search.aggregations.pipeline.BucketSortPipelineAggregationBuilder;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.slf4j.MDC;
@@ -44,10 +46,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.core.*;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
-import org.springframework.data.elasticsearch.core.query.FetchSourceFilter;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
-import org.springframework.data.elasticsearch.core.query.Query;
-import org.springframework.data.elasticsearch.core.query.UpdateQuery;
+import org.springframework.data.elasticsearch.core.query.*;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -197,7 +196,6 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		boolQuery.should(queryBuilder);
 
 
-
 		/* 최종 조합 쿼리 */
 		BoolQueryBuilder complateQuery = QueryBuilders.boolQuery().must(boolQuery);
 
@@ -233,19 +231,17 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			}
 		}
 
-		/* size 검색 있을시 */
-		ScriptQueryBuilder scriptQueryBuilder = null;
-		if(!Common.isEmpty(sq.get("sizeFilter"))) {
-			 scriptQueryBuilder = QueryBuilders.scriptQuery(new Script(ScriptType.INLINE, "painless", sq.get("sizeFilter"), Collections.emptyMap(), Collections.emptyMap()));
-			complateQuery.filter(scriptQueryBuilder);
-		}
 
 		/* 정규식 패턴 필드 설정 */
 		BoolQueryBuilder regexQuery = QueryBuilders.boolQuery();
+
+		//highlight 설정
+		HighlightBuilder highlightBuilder = new HighlightBuilder().preTags("<highlight>").postTags("</highlight>");
 		if(!Common.isEmpty(sq.get("regexPattern"))) {
 			List<String> list = getselectSearchField(sq);
 			for (String s : list) {
 				regexQuery.should(QueryBuilders.regexpQuery(s, sq.get("regexPattern").replace("\\\\","\\")));
+				highlightBuilder.field(s);
 			}
 			complateQuery.filter(regexQuery);
 		}
@@ -258,18 +254,17 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		int offset = (null == sq.getStart()) ? 0 : sq.getStart(); // start
 		int rows = sq.getRows(); // (sq.getRows() == 0) ? 100 : sq.getRows() ;  // size
 		int range = Math.round((rows + offset) / rows); // for문 횟수
-
-				Query searchQuery = new NativeSearchQueryBuilder()
-				.withSourceFilter(new FetchSourceFilter( Common.toArray(sq.getFields(), ","),new String[]{"body","attach"}))
-				.withQuery(complateQuery)
-				.withAggregations(getAggregations(sq))
-				.withAggregations(getAggregationsByPivot(sq))
-				.withTrackTotalHits(true)
-				.withTrackScores((Common.isEquals(sq.get("track_scores"),"true")) ? true : false )
-				.withSearchAfter(searchAfter)
-				.withTimeout(Duration.ofSeconds(60))
-				.build();
-
+		Query searchQuery = new NativeSearchQueryBuilder()
+			.withSourceFilter(new FetchSourceFilter( Common.toArray(sq.getFields(), ","),new String[]{"body","attach"}))
+			.withQuery(complateQuery)
+			.withHighlightBuilder(highlightBuilder)
+			.withAggregations(getAggregations(sq))
+			.withAggregations(getAggregationsByPivot(sq))
+			.withTrackTotalHits(true)
+			.withTrackScores((Common.isEquals(sq.get("track_scores"),"true")) ? true : false )
+			.withSearchAfter(searchAfter)
+			.withTimeout(Duration.ofSeconds(60))
+			.build();
 		SearchHits<SolrEdcVO> searchHits = null;
 
 		/* 정렬 */
@@ -1014,8 +1009,12 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	}
 
 
-
-
+// 스크립트 쿼리 (백업용)
+//		ScriptQueryBuilder scriptQueryBuilder = null;
+//		if(!Common.isEmpty(sq.get("sizeFilter"))) {
+//			 scriptQueryBuilder = QueryBuilders.scriptQuery(new Script(ScriptType.INLINE, "painless", sq.get("sizeFilter"), Collections.emptyMap(), Collections.emptyMap()));
+//			complateQuery.filter(scriptQueryBuilder);
+//		}
 
 
 }

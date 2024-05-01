@@ -113,6 +113,7 @@ public class SolrCreateQuery {
 	public static final String SIZE = "size";
 	public static final String BODY_SIZE = "body_size";
 	public static final String ATTACH_SIZE = "attachsize";
+	public static final String ATTACH_MAX_SIZE = "attachsizeSum";
 	public static final String REPROCESS = "reprocess";
 
 	public static final String JOIN_READ = " +checked.readId:%s";
@@ -776,7 +777,7 @@ public class SolrCreateQuery {
 
 		for (int i = 0; i < param.length; i++) {
 			String[] svc = Common.toArray(param[i], "%");
-			result.append("pi_" + svc[0] + ":");
+			result.append("pi_amount" + ".pi_" +svc[0] + ":");
 
 			String[] val = Common.toArray(svc[1], "@");
 			if( val[0].equals("B") ) result.append("[ " + val[1] + " TO " + val[2] + " ]");
@@ -1030,36 +1031,16 @@ public class SolrCreateQuery {
 		if (Common.isOrEquals(minMsgsize, "", "0") && Common.isOrEquals(maxMsgsize, "", "0") && Common.isEquals(size_condition, "B")) return this;
 		if (Common.isOrEquals(minMsgsize, "", "0") && Common.isEquals(size_condition, "S")) return this;
 
-		String queryStr = ""; //
-		String sizeFilter = ""; // array 값 검색 size search filter 용
-
+		String queryStr = "";
 		if (size_condition.equals("B") || size_condition.equals("")) {
-			/* from ~ to */
-			queryStr = String.format("%s(%s#FILED:>=%s  %s#FILED:<%s)", AND_QUERY,AND_QUERY,minMsgsize,AND_QUERY,maxMsgsize);
-			sizeFilter =  String.format("doc['#FILED'].stream().mapToLong(l -> l).sum() >= %sL && doc['#FILED'].stream().mapToLong(l -> l).sum() <%sL", minMsgsize,maxMsgsize);
-		} else if (size_condition.equals("L")) {
-			/* 이상 */
-			queryStr = String.format("%s(%s#FILED:>=%s  %s#FILED:<2147483000)", AND_QUERY, AND_QUERY,minMsgsize,AND_QUERY);
-			sizeFilter =  String.format("doc['#FILED'].stream().mapToLong(l -> l).sum() >= %sL && doc['#FILED'].stream().mapToLong(l -> l).sum() < 2147483000L", minMsgsize);
-		}
-		else if (size_condition.equals("S")) {
-			/* 이하 */
-			queryStr = String.format("%s(%s#FILED:>=0  %s#FILED:<%s)", AND_QUERY, AND_QUERY, AND_QUERY, minMsgsize);
-			sizeFilter =  String.format("doc['#FILED'].stream().mapToLong(l -> l).sum() >= 0L && doc['#FILED'].stream().mapToLong(l -> l).sum() < %sL", minMsgsize);
-		}
+			queryStr = "[" + minMsgsize + " TO " + maxMsgsize + "]";
+		} else if (size_condition.equals("L")) queryStr = "[" + minMsgsize + " TO * ]";
+		else if (size_condition.equals("S")) queryStr = "[ * TO " + minMsgsize + "]";
 
-
-		if(Common.isEquals(sizeType, "B")) {
-			sq.setParam("sizeFilter",sizeFilter.replaceAll("#FILED",BODY_SIZE));
-			return addQuery(queryStr.replaceAll("#FILED",BODY_SIZE));
-		}
-		else if(Common.isEquals(sizeType, "A")){
-			sq.setParam("sizeFilter",sizeFilter.replaceAll("#FILED",ATTACH_SIZE));
-			return addQuery(queryStr.replaceAll("#FILED",ATTACH_SIZE));
-		} else{
-			sq.setParam("sizeFilter",sizeFilter.replaceAll("#FILED",SIZE));
-			return   addQuery(queryStr.replaceAll("#FILED",SIZE));
-		}
+		if(Common.isEquals(sizeType, "B")) return addQuery(String.format("%s%s:%s", AND_QUERY, BODY_SIZE, queryStr));
+		else if(Common.isEquals(sizeType, "A")) return addQuery(String.format("%s%s:%s", AND_QUERY, ATTACH_SIZE, queryStr));
+		else if(Common.isEquals(sizeType, "T")) return addQuery(String.format("%s%s:%s", AND_QUERY, ATTACH_MAX_SIZE, queryStr));
+		else return addQuery(String.format("%s%s:%s", AND_QUERY, SIZE, queryStr));
 	}
 
 	/**

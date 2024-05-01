@@ -868,7 +868,6 @@ public class SolrEdcStatController {
 
 		SolrEdcMessageVO solrVo = solrEdcService.getEmassMessage(sq, Common.getAdminId(request), "", null);
 		List<Map<String, Object>> list = solrVo.getPivotData();
-
 		for (Map<String, Object> item : list) {
 			double total = 0;
 			for (String field : Config.PRIVATE_SVC) {
@@ -876,9 +875,19 @@ public class SolrEdcStatController {
 			}
 			item.put("pi_total", total);
 		}
+		// name remake
+		List<Map<String, Object>> resultList = new ArrayList<>();
+		for(Map<String,Object> map : list){
+			Map<String,Object> hshMap = new HashMap<>();
+			for(Map.Entry<String,Object> entry :map.entrySet()){
+				log.info("hash {}",entry.getKey());
+				hshMap.put(entry.getKey().replace("pi_amount.",""),entry.getValue());
+			}
+			resultList.add(hshMap);
+		}
 
-		Collections.sort(list, new PiTotalComparator());
-		return new XcnResponseVO(XcnRspCode.OK, list);
+		Collections.sort(resultList, new PiTotalComparator());
+		return new XcnResponseVO(XcnRspCode.OK, resultList);
 	}
 
 
@@ -914,7 +923,7 @@ public class SolrEdcStatController {
 				 query.append(("(").concat(String.format("%s: [%s TO *]", field, piCount).concat(") ")));
 			}
 			query.append(" )");
-			query.append((" +(").concat(String.format("%s: [%s TO *]", type, 1).concat(") ")));
+//			query.append((" +(").concat(String.format("%s: [%s TO *]", type, 1).concat(") ")));
 		}
 
 		if (!name.isEmpty()) {
@@ -1002,7 +1011,7 @@ public class SolrEdcStatController {
 				query.append(("(").concat(String.format("%s: [%s TO *]", field, piCount).concat(") ")));
 			}
 			query.append(" )");
-			query.append((" +(").concat(String.format("%s: [%s TO *]", type, 1).concat(") ")));
+//			query.append((" +(").concat(String.format("%s: [%s TO *]", type, 1).concat(") ")));
 		}
 
 		if (!name.isEmpty()) {

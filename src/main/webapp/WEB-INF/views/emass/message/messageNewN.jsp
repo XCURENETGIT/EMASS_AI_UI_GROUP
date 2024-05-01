@@ -3129,6 +3129,7 @@
                                             <label class="condition_label"><input type="radio" name="sizeType" value="" checked="checked"> <span><s:message code="common.msg.all"/></span></label>
                                             <label class="condition_label"><input type="radio" name="sizeType" value="B"> <span><s:message code="condition.size.body"/></span></label>
                                             <label class="condition_label"><input type="radio" name="sizeType" value="A"> <span><s:message code="condition.size.attach"/></span></label>
+                                            <label class="condition_label"><input type="radio" name="sizeType" value="T"> <span><s:message code="condition.size.attach.total"/></span></label>
                                         </div>
                                         <div style="padding-top: 6px;">
                                             <input type="text" style="width:60px;" id="sizeStartVal">

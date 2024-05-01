@@ -23,7 +23,6 @@ import com.xcurenet.searchWord.service.RelationKeywordVO;
 import com.xcurenet.user.service.UserService;
 import com.xcurenet.user.service.UserVO;
 import lombok.extern.log4j.Log4j2;
-import org.apache.cxf.wsdl11.SOAPBindingUtil;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -43,6 +42,9 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 
 	@Resource(name = "consentService")
 	public ConsentService consentService;
+
+	@Resource(name = "solrEdcService")
+	private SolrEdcService solrEdcService;
 
 	@Autowired
 	private GridFs gridFs;
@@ -271,6 +273,8 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 
 			emsMessageVO.setFiles(getEmassAttachInfoConsent(msgId, firstAdminYn, adminType));
 			emsMessageVO.setPatterns(this.getEmassPattern(msgId));
+
+
 			return getConsentMessage(emsMessageVO, firstAdminYn, adminType);
 		}
 	}
@@ -675,6 +679,36 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		return consentRtnFlag;
 	}
 
+	@Override
+	public EmsMessageVO highlightCheck(EmsMessageVO emass,Map<String,Object> regexpHighlight) {
+			//highLight check
+			String subject = Common.nvl(emass.getSubject());
+			String bodyStr = Common.nvl(emass.getBodyStr());
+			String sender = Common.nvl(emass.getSender());
+			List<EmsRecvVO> bccList = emass.getBccList();
+
+			for(Map.Entry<String,Object> regExp : regexpHighlight.entrySet()){
+				String[] values = regExp.getValue().toString().split(",");
+				for(String val : values){
+					String compareValue = val.replace("<highlight>","").replace("</highlight>","");
+					String value = ("<span class='highlightRegexp'>").concat(val).concat("</span>");
+					emass.setSubject(subject.replaceAll(compareValue, value));
+					emass.setBodyStr(bodyStr.replaceAll(compareValue, value));
+					emass.setSender(sender.replaceAll(compareValue, value));
+					emass.setBccList(reValues(bccList,compareValue,value));
+				}
+			}
+		return emass;
+	}
+
+	public List<EmsRecvVO> reValues(List<EmsRecvVO> list,String compareVal,String val) {
+		List<EmsRecvVO> resultList = new ArrayList<>();
+		for(EmsRecvVO recvVO :list) {
+			recvVO.setViewStr(recvVO.getViewStr().replaceAll(compareVal, val));
+			resultList.add(recvVO);
+		}
+		return resultList;
+	}
 
 	@Override
 	public boolean updateEmsFeedback(String msgId, String feedback, String adminId) {

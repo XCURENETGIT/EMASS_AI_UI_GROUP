@@ -3,10 +3,7 @@ package com.xcurenet.emass.message.service;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
@@ -264,4 +261,10 @@ public class SolrEdcVO {
 	public int docCount;
 
 	public int reprocess;
+
+	public List<Map<String, Integer>> pi_amount;
+	public Map<String, Integer> piMap;
+
+	public Map<String, String> regexpHighlight;
+
 }

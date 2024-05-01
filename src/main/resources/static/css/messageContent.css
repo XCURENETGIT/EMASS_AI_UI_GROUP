@@ -588,6 +588,9 @@ span.feedbackCorrect, span.feedbackInCorrect, span.feedbackDefer, span.feedbackI
 .highlightKeyword {
     background-color:#FFAD5B;
 }
+.highlightRegexp {
+    background-color:#FFAD5B;
+}
 
 .dropdown-divider{
     height: 0;
