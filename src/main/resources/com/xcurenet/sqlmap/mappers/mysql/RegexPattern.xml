@@ -43,39 +43,4 @@
 		WHERE	REGEX_PATTERN = #{regexPatternName}
 	</select>
 
-	<select id = "getPatternList" resultType="patternVO" parameterType="hashMap">
-		SELECT CODE AS code, REGEX AS regex, NAME AS name
-		FROM UI_REGEXP
-		<if test='searchStr!=null and searchStr!=""'>
-			WHERE NAME  LIKE CONCAT('%', #{searchStr}, '%')
-		</if>
-		ORDER BY (CASE WHEN REGEX IS NULL THEN 0 ELSE 1 END), CODE
-		<if test='offset!=null and limit > 0'>
-			LIMIT	${offset}, ${limit}
-		</if>
-	</select>
-
-	<insert id="insertPattern" parameterType="patternVO">
-		INSERT INTO UI_REGEXP (CODE, NAME,REGEX)
-		VALUES (#{code}, #{name}, #{regex})
-	</insert>
-
-	<select id="isPatternName" resultType="int" parameterType="patternVO">
-		SELECT  COUNT(*) AS CNT
-		FROM	UI_REGEXP
-		WHERE	CODE = #{code}
-	</select>
-
-	<update id="deletePattern" parameterType="patternVO">
-		DELETE FROM UI_REGEXP WHERE CODE = #{code}
-	</update>
-
-
-	<update id="updatePattern" parameterType="com.xcurenet.regexPattern.service.RegexPatternVO">
-		UPDATE UI_REGEXP
-		SET NAME = #{name},
-		REGEX = #{regex}
-		WHERE CODE = #{code}
-	</update>
-
 </mapper>

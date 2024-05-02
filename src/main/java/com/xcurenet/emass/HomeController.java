@@ -836,13 +836,6 @@ public class HomeController {
 		return "/emass/regexPattern/regexPatternInfo";
 	}
 
-	@RequestMapping(value = "/ems/patternKeyword.do", method = RequestMethod.GET)
-	public String patternKeyword(Locale locale, Model model) {
-		model.addAttribute("headerYn","Y");
-		return "/emass/regexPattern/patternKeyword";
-	}
-
-
 	@RequestMapping(value = "/ems/relationKeyword.do", method = RequestMethod.GET)
 	public String searchWordInfo(Locale locale, Model model){
 		model.addAttribute("headerYn","Y");
