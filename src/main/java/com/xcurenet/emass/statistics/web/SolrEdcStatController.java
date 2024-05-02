@@ -326,7 +326,7 @@ public class SolrEdcStatController {
 		if (!colKey.isEmpty()) {
 			if(!Common.isEquals(yAxis,"svc12")) query += "+" + xAxis + ":" + "\"" + colKey + "\" ";
 			else{
-					query += "+"+xAxis+":"+"\""+colKey+"\" ";
+				query += "+"+xAxis+":"+"\""+colKey+"\" ";
 			}
 		}
 
@@ -410,7 +410,7 @@ public class SolrEdcStatController {
 
 		sq.setParam("facet.pivot", yAxis + "," + xAxis);
 		SolrEdcMessageVO solrCheckedStatVo = solrCheckedService.getCheckedStatList(sq);
-			appendEmassTotal(solrCheckedStatVo, yAxis, Common.getAdminId(request));
+		appendEmassTotal(solrCheckedStatVo, yAxis, Common.getAdminId(request));
 		return new XcnResponseVO(XcnRspCode.OK, solrCheckedStatVo, solrCheckedStatVo.getPivotData().size());
 	}
 
@@ -868,6 +868,7 @@ public class SolrEdcStatController {
 
 		SolrEdcMessageVO solrVo = solrEdcService.getEmassMessage(sq, Common.getAdminId(request), "", null);
 		List<Map<String, Object>> list = solrVo.getPivotData();
+
 		for (Map<String, Object> item : list) {
 			double total = 0;
 			for (String field : Config.PRIVATE_SVC) {
@@ -875,19 +876,9 @@ public class SolrEdcStatController {
 			}
 			item.put("pi_total", total);
 		}
-		// name remake
-		List<Map<String, Object>> resultList = new ArrayList<>();
-		for(Map<String,Object> map : list){
-			Map<String,Object> hshMap = new HashMap<>();
-			for(Map.Entry<String,Object> entry :map.entrySet()){
-				log.info("hash {}",entry.getKey());
-				hshMap.put(entry.getKey().replace("pi_amount.",""),entry.getValue());
-			}
-			resultList.add(hshMap);
-		}
 
-		Collections.sort(resultList, new PiTotalComparator());
-		return new XcnResponseVO(XcnRspCode.OK, resultList);
+		Collections.sort(list, new PiTotalComparator());
+		return new XcnResponseVO(XcnRspCode.OK, list);
 	}
 
 
@@ -920,7 +911,7 @@ public class SolrEdcStatController {
 		} else {
 			query.append(" +( ");
 			for (String field : Config.PRIVATE_SVC) {
-				 query.append(("(").concat(String.format("%s: [%s TO *]", field, piCount).concat(") ")));
+				query.append(("(").concat(String.format("%s: [%s TO *]", field, piCount).concat(") ")));
 			}
 			query.append(" )");
 //			query.append((" +(").concat(String.format("%s: [%s TO *]", type, 1).concat(") ")));

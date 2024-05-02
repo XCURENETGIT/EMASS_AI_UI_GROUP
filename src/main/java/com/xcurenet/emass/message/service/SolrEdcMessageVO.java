@@ -91,10 +91,10 @@ public class SolrEdcMessageVO {
 			SolrEdcVO edcVO = solrEdcVO.getContent();
 			edcVO.setReadYn(isRead(solrEdcVO.getContent().getChecked(), adminId) ? "Y" : "N");
 			edcVO.setConfidence( (maxScore > 0) ? String.valueOf((solrEdcVO.getScore() / maxScore ) * 100) : "0"); //유사도 계산
-			if(!Common.isEmpty(edcVO.getPi_amount())) {
-				List<Map<String, Integer>> piList = edcVO.getPi_amount();
-				for (Map<String, Integer> pimap : piList) edcVO.setPiMap(pimap);
-			}
+//			if(!Common.isEmpty(edcVO.getPi_amount())) {
+//				List<Map<String, Integer>> piList = edcVO.getPi_amount();
+//				for (Map<String, Integer> pimap : piList) edcVO.setPiMap(pimap);
+//			}
 			//실시간 정규식 검색 전용 엘라스틱서치 highlight
 //			Map<String,String> highLight = new HashMap<>();
 //			Map<String, List<String>> highlightFields = solrEdcVO.getHighlightFields();

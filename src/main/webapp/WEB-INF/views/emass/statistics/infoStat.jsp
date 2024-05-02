@@ -833,7 +833,7 @@
         var result = [];
         for (var i = 0; i < data.length; i++) {
             for (var x = 0; x < piArr.length; x++) {
-                var val = data[i]['piMap'][piArr[x]];
+                var val = data[i][piArr[x]];
                 if (val > 0) result.push(piArr[x]);
             }
         }
@@ -927,6 +927,8 @@
 
 
     function makeNetwork(value, type, pi_total) {
+
+
         var userkey = value;
         var type = type;
         var pi_total = pi_total;
@@ -959,6 +961,7 @@
             userStr: userStr,
             success: function (data, total) {
                 /*	grid2.setData(data);*/
+				console.log('data ' , data)
                 $(".resultCnt").html('('+addCommas(total)+')');
                 var nodes = [];
                 var edges = [];
@@ -997,7 +1000,7 @@
                         for (var j = 0; j < nodeLv2.length; j++) {
                             var sum = 0;
                             for (var x = 0; x < data.length; x++) {
-                                if (nodeLv1[i].id === data[x].userkey && data[x]['piMap'][nodeLv2[j]] > 0) sum += data[x]['piMap'][nodeLv2[j]];
+                                if (nodeLv1[i].id === data[x].userkey && data[x][nodeLv2[j]] > 0) sum += data[x][nodeLv2[j]];
                             }
                             if (sum > 0) edges.push({from: nodeLv1[i].id, to: nodeLv2[j], arrows: 'to', color: {color: '#3FB168'}, font: {multi: true}, label: sum.comma()});
                         }

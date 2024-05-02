@@ -262,9 +262,9 @@ public class SolrEdcVO {
 
 	public int reprocess;
 
-	public List<Map<String, Integer>> pi_amount;
-	public Map<String, Integer> piMap;
-
-	public Map<String, String> regexpHighlight;
+//	public List<Map<String, Integer>> pi_amount;
+//	public Map<String, Integer> piMap;
+//
+//	public Map<String, String> regexpHighlight;
 
 }
