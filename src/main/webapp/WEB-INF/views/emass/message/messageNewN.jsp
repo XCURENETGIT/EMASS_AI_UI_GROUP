@@ -3210,9 +3210,7 @@
                         </div>
                     </div>
                     <div id="section_cen" style=" width:100px; float:right; z-index:999;" class="ui-layout-center">
-
                         <div class="viewSetup" style="position: absolute;top:7px;right:10px;z-index: 9;">
-
                             <div style="display: inline-block; padding-left:10px; vertical-align: bottom;">
 
                                 <%if( consent && Common.isEquals(firstAdminYn, "N") && Common.isNotEquals(adminType, "C")){ %>
@@ -3228,7 +3226,7 @@
                                 </div>
                                 <%} %>
 
-
+                            <div style="position: relative; display: inline-block;">
                                 <a href="javascript:;" class="btn05" style="padding-right:10px; color:#383838; cursor: pointer; font-size: 13px;float: right; margin-right:4px;"data-toggle="dropdown" id="exportMsg"><s:message code="common.msg.export"/><span class="caret"></span></a>
                                 <ul class="dropdown-menu dropdown-menu-left" role="menu" style="min-width:100px;font-size:13px;	">
                                     <li style="display:none;"><a href="javascript:void(0);" id="body_link_btn" class="body_link_new" data-target="tabGrid" rel="<s:message code="DATA_MONITOR.MESSAGE_INFO"/>"><span class="fa fa-file-text-o"></span>&nbsp;<s:message code="condition.body"/></a></li>
@@ -3258,6 +3256,7 @@
                                     <li class="dropdown-divider"></li>
                                     <li><a href="javascript:void(0);" class="downList" data-target="tabGrid" ><span class="glyphicon glyphicon-th-list"></span>&nbsp;<s:message code="common.msg.download"/> <s:message code="mail.view.list"/></a></li>
                                 </ul>
+                            </div>
                                 <a href="javascript:;" style="padding-right:10px; color:#383838; cursor: pointer; font-size: 13px;float: right;margin-right:4px;" id="saveMsgData" class="btn05"><s:message code="filterInfo.setMsgFolder1"/></a>
                                 <a href="javascript:;" style="padding-right:10px; color:#383838; cursor: pointer; font-size: 13px;float: right;margin-right:4px; display: none;" id="feedbackBtn" class="btn05"><s:message code="condition.feedback"/> <s:message code="common.msg.setting"/><span class="caret"></span></a>
                                 <ul id="feedbackSetting" style="display: none; z-index: 991; padding: 5px 0px;">
