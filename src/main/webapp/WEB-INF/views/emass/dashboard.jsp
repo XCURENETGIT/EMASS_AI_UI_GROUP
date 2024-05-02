@@ -664,10 +664,9 @@
         var attach = [];
         var attachStr = [];
         if (dat.length == 0) {
-            $('#loggingChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px" style="display: block;"> ');
-            // $('#loggingChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px" class="xcn_nodata"style=" display: block;">');
+            $('#loggingChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px" style="margin:auto; display:block; margin-top:50px;">');
             return false;
-        } else {
+        }  else {
             for (var i = 0; i < dat.length; i++) {
                 categories.push(getDateFormatSize(dat[i].date));
                 logging.push(Number(dat[i].logging));
@@ -755,7 +754,7 @@
         var categories = [];
 
         if (dat.length == 0) {
-            $('#sizeChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px" style="display: block;"> ');
+            $('#sizeChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="100px;" height="100px" style="margin:auto; display:block; margin-top:50px;"> ');
             return false;
         } else {
             var max = 0;
@@ -1185,6 +1184,9 @@
 
 
     function makeTableSizeData(data) {
+        if (data.length == 0) {
+            return;
+        }
         var str = "<table class='mainTable'><tr>"
         str += "<th> 구분 </th>";
         for (var i = 0; i < data.length; i++) {
