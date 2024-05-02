@@ -1356,6 +1356,7 @@ public class SolrCreateQuery {
 			String[] terms = query.split(" ");
 			for (String term : terms) {
 			     /*특수문자 처리*/
+				term = ("\"").concat(term).concat("\"");
 				queryStr.append(appendSpecialchar(term)).append(" ");
 			}
 			sb.append(queryStr.toString().trim().replaceAll(" ", " ").replaceAll("__", " "));

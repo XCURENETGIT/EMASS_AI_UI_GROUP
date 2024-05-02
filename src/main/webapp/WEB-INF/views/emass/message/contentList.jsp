@@ -703,13 +703,13 @@
         var msgid = grid.getValue(row, 'msgid');
         var bodySize = grid.getValue(row, 'bodySizeStr');
         var bodySizeNum = bodySize.substr(0, bodySize.indexOf(' '));
-        var regexpHighlight = grid.getValue(row, 'regexpHighlight');
+        // var regexpHighlight = grid.getValue(row, 'regexpHighlight');
         
         if(parent){
             var obj = parent.getIframeBodyObj();
             var kHigh = parent.keywordHighlight;
             var hostQuery = parent.hostQuery;
-            obj.getMessage(msgid, searchKeyword(), bodySizeNum, kHigh.toString(), hostQuery.toString(),regexpHighlight); //동의서 아이디
+            obj.getMessage(msgid, searchKeyword(), bodySizeNum, kHigh.toString(), hostQuery.toString()); //동의서 아이디
             obj.$('#detailPatternDiv, #imgPreviewDiv').hide();
             obj.initHighlight();
         }else{
@@ -1028,7 +1028,7 @@
             if (value == 0) return 'No';
             else return 'Yes'
         });
-        grid.colAdd('regexpHighlight', 'regexpHighlight', 70, 'center', true, 'nomal', null, null, true);
+        // grid.colAdd('regexpHighlight', 'regexpHighlight', 70, 'center', true, 'nomal', null, null, true);
         
         grid.loadHeader(true);
         grid.loadPageSize();

@@ -34,7 +34,6 @@ import org.elasticsearch.search.aggregations.bucket.range.RangeAggregationBuilde
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.elasticsearch.search.aggregations.pipeline.BucketSortPipelineAggregationBuilder;
-import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.slf4j.MDC;
@@ -46,7 +45,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.core.*;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
-import org.springframework.data.elasticsearch.core.query.*;
+import org.springframework.data.elasticsearch.core.query.FetchSourceFilter;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.Query;
+import org.springframework.data.elasticsearch.core.query.UpdateQuery;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -180,7 +182,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		String filterQuery =  (null != sq.getFilterQueries())? String.join(" ", sq.getFilterQueries()) : "";
 		/* 일반 검색 쿼리 */
 		//.type(MultiMatchQueryBuilder.Type.PHRASE)
-		QueryStringQueryBuilder queryBuilder = QueryBuilders.queryStringQuery(sq.getQuery() + " " + filterQuery);  // type PHRASE
+		QueryStringQueryBuilder queryBuilder = QueryBuilders.queryStringQuery(sq.getQuery() + " " + filterQuery); // type PHRASE
 		queryBuilder.fields(getDefaultSearchField(sq));
 
 
@@ -235,13 +237,11 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		/* 정규식 패턴 필드 설정 */
 		BoolQueryBuilder regexQuery = QueryBuilders.boolQuery();
 
-		//highlight 설정
-		HighlightBuilder highlightBuilder = new HighlightBuilder().preTags("<highlight>").postTags("</highlight>");
+
 		if(!Common.isEmpty(sq.get("regexPattern"))) {
 			List<String> list = getselectSearchField(sq);
 			for (String s : list) {
 				regexQuery.should(QueryBuilders.regexpQuery(s, sq.get("regexPattern").replace("\\\\","\\")));
-				highlightBuilder.field(s);
 			}
 			complateQuery.filter(regexQuery);
 		}
@@ -257,7 +257,6 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		Query searchQuery = new NativeSearchQueryBuilder()
 			.withSourceFilter(new FetchSourceFilter( Common.toArray(sq.getFields(), ","),new String[]{"body","attach"}))
 			.withQuery(complateQuery)
-			.withHighlightBuilder(highlightBuilder)
 			.withAggregations(getAggregations(sq))
 			.withAggregations(getAggregationsByPivot(sq))
 			.withTrackTotalHits(true)
@@ -1008,7 +1007,6 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		return ChangefeedbackList.stream().collect(Collectors.groupingBy(parseJsonFile::getSecurityYn));
 	}
 
-
 // 스크립트 쿼리 (백업용)
 //		ScriptQueryBuilder scriptQueryBuilder = null;
 //		if(!Common.isEmpty(sq.get("sizeFilter"))) {
@@ -1016,5 +1014,8 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 //			complateQuery.filter(scriptQueryBuilder);
 //		}
 
+//		//highlight 설정
+//		HighlightBuilder highlightBuilder = new HighlightBuilder().preTags("<highlight>").postTags("</highlight>");
+//		highlightBuilder.field(s);
 
 }

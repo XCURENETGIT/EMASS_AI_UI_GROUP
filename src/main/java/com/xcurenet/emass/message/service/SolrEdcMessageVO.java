@@ -24,7 +24,6 @@ import org.springframework.data.elasticsearch.core.SearchHits;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Log4j2
 @ToString
@@ -97,13 +96,14 @@ public class SolrEdcMessageVO {
 				for (Map<String, Integer> pimap : piList) edcVO.setPiMap(pimap);
 			}
 			//실시간 정규식 검색 전용 엘라스틱서치 highlight
-			Map<String,String> highLight = new HashMap<>();
-			Map<String, List<String>> highlightFields = solrEdcVO.getHighlightFields();
-			for(Map.Entry hlsItem :  highlightFields.entrySet()) {
-				List<String> itemList = (List<String>) hlsItem.getValue();
-				highLight.put((String) hlsItem.getKey(),itemList.stream().collect(Collectors.joining(",")));
-			}
-			edcVO.setRegexpHighlight(highLight);
+//			Map<String,String> highLight = new HashMap<>();
+//			Map<String, List<String>> highlightFields = solrEdcVO.getHighlightFields();
+//			for(Map.Entry hlsItem :  highlightFields.entrySet()) {
+//				List<String> itemList = (List<String>) hlsItem.getValue();
+//				highLight.put((String) hlsItem.getKey(),itemList.stream().collect(Collectors.joining(",")));
+//			}
+//			edcVO.setRegexpHighlight(highLight);
+//
 			this.emass.add(edcVO);
 		}
 	}

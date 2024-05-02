@@ -997,7 +997,7 @@ function getEmassPatternDetail(obj, piId, type, attachName) {
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-function getMessage(id, search, bodySize, kHighlight, hostQueryUse,regexpHighlight) {
+function getMessage(id, search, bodySize, kHighlight, hostQueryUse) {
     $('#emassBody').css({'font-size': originalBodyFontSize + 'px'});
 
     $('#infoDiv').hide();
@@ -1008,7 +1008,6 @@ function getMessage(id, search, bodySize, kHighlight, hostQueryUse,regexpHighlig
     bodySize_str = bodySize;
     msgId = id;
     searchkey = search;
-    regexpHighlight = regexpHighlight;
 
     if (kHighlight != undefined) keywordHighlight = kHighlight;
     if (hostQueryUse != undefined) hostQuery = hostQueryUse;
@@ -1017,7 +1016,6 @@ function getMessage(id, search, bodySize, kHighlight, hostQueryUse,regexpHighlig
         url: 'getEmassMessageNew.xcn',
         msgId: msgId,
         consentUserId: parent.$('#consentUserId').val(),
-        regexpHighlight : JSON.stringify(regexpHighlight),
         success: function (data, total) {
             setRead(data); //읽음 여부 처리
             setMessage(data);
@@ -2073,13 +2071,11 @@ function Highlight() {
     var fileNameStr = nvl(msgData.fileNameStr);
     var subjectStr = nvl(msgData.subjectStr);
     var bodyStr = nvl(msgData.bodyStr);
-    var regexpStr = nvl(msgData.regexpHighlight); // 정규식 하이라이트
-	console.log(regexpStr)
+    // var regexpStr = nvl(msgData.regexpHighlight); // 정규식 하이라이트
 
     var fileNameStrs = fileNameStr.split(', ');
     var subjectStrs = subjectStr.split(', ');
     var bodyStrs = bodyStr.split(', ');
-    var regexpStrs = regexpStr.split(', '); //
 
     if (fileNameStrs.length > 0) {
         if (searchkey.length == 0 || keywordHighlight == 'true') setFileNameHighLight(fileNameStrs, 'K'); //예약어 하이라이트 처리
@@ -2090,9 +2086,7 @@ function Highlight() {
     if (bodyStrs.length > 0) {
         if (searchkey.length == 0 || keywordHighlight == 'true') setBodyHighLight(bodyStrs, 'K'); //예약어 하이라이트 처리
     }
-    if (regexpStrs.length > 0) {
-        if (searchkey.length == 0 || keywordHighlight == 'true') setRegexpHighlight(regexpStrs, 'K'); //예약어 하이라이트 처리
-    }
+
 
 }
 
@@ -2121,14 +2115,6 @@ function setBodyHighLight(defaultText, type) {
     for (var i = 0; i < defaultText.length; i++) {
         if (defaultText[i] == '') continue;
         $(body_obj).highlight(defaultText[i], 'B' + type);
-    }
-}
-
-function setRegexpHighlight(defaultText, type) {
-    var body_obj = $("#emassBody");
-    for (var i = 0; i < defaultText.length; i++) {
-        if (defaultText[i] == '') continue;
-        $(body_obj).highlight(defaultText[i], type);
     }
 }
 
