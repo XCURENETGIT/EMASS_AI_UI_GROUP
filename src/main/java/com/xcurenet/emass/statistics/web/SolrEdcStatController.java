@@ -909,12 +909,7 @@ public class SolrEdcStatController {
 			}
 			query.append(" ) ");
 		} else {
-			query.append(" +( ");
-			for (String field : Config.PRIVATE_SVC) {
-				query.append(("(").concat(String.format("%s: [%s TO *]", field, piCount).concat(") ")));
-			}
-			query.append(" )");
-//			query.append((" +(").concat(String.format("%s: [%s TO *]", type, 1).concat(") ")));
+			query.append((" +(").concat(String.format("%s: [%s TO *]", type, 1).concat(") ")));
 		}
 
 		if (!name.isEmpty()) {
@@ -997,12 +992,7 @@ public class SolrEdcStatController {
 			}
 			query.append(" ) ");
 		} else {
-			query.append(" +( ");
-			for (String field : Config.PRIVATE_SVC) {
-				query.append(("(").concat(String.format("%s: [%s TO *]", field, piCount).concat(") ")));
-			}
-			query.append(" )");
-//			query.append((" +(").concat(String.format("%s: [%s TO *]", type, 1).concat(") ")));
+			query.append((" +(").concat(String.format("%s: [%s TO *]", type, 1).concat(") ")));
 		}
 
 		if (!name.isEmpty()) {
