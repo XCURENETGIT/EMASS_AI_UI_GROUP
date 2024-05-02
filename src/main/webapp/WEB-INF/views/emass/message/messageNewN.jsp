@@ -724,7 +724,7 @@
 
             $(document).on('click','#exportMsg',function(){
                 if( $('#feedbackBtn').css('display') != 'none' ) $('.dropdown-menu.dropdown-menu-left').css('margin-left','90px');
-                else $('.dropdown-menu.dropdown-menu-left').css('margin-left','20px');
+                else $('.dropdown-menu.dropdown-menu-left').css('margin-left','0px');
             });
 
             ui.onBody('msgBody', 0, 0);

@@ -10,7 +10,7 @@
 		overflow: hidden;
 		white-space: nowrap;
 		text-overflow: ellipsis;
-		max-width: 9.5em !important;
+		max-width: 148px !important;
 	}
 
 	.name{
