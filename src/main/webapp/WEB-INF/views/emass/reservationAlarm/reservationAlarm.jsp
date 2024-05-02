@@ -1096,7 +1096,7 @@
 		<div class="contentSub">
 			<div class="subtab">
 				<button class="active">
-					예약알림 목록
+					<s:message code="mail.reservation.list"/>
 				</button>
 			</div>
 			<div id="alarmListGrid" class="slickGrid gridArea"></div>
