@@ -355,6 +355,9 @@ var ui = {
 				dialogInstance.close();
 			}, timeOut);
 		}
+		setTimeout(function(){
+			$('#bootstrap_alert:visible').find('button').focus();
+		}, 700);
 		return;
 
 		//alert(msg);

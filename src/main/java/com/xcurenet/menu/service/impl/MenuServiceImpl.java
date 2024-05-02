@@ -32,8 +32,8 @@ public class MenuServiceImpl extends XcnAbstractDAO implements MenuService {
 		JSONObject param = Common.getParam(request);
 		String adminId = Common.nvl(param.get("_ses_user_id"));
 		String adminAuth = Common.nvl(param.get("_ses_user_type"));
-		if(Common.isEquals(adminAuth, "C"))adminAuth = "M";
-		
+		if (Common.isEquals(adminAuth, "C")) adminAuth = "M";
+
 		HttpSession session = request.getSession(false);
 		return getMenuList(adminId, adminAuth, session);
 	}
@@ -51,7 +51,7 @@ public class MenuServiceImpl extends XcnAbstractDAO implements MenuService {
 
 			ObjectMapper objectMapper = new ObjectMapper();
 			jsonStr = objectMapper.writeValueAsString(menus);
-		}catch (JsonProcessingException e){
+		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
 		return jsonStr;
@@ -63,40 +63,40 @@ public class MenuServiceImpl extends XcnAbstractDAO implements MenuService {
 		customDashboardMenuVo.setAdminId(Common.getAdminId(session));
 		customDashboardMenuVo.setUseYn("Y");
 		int mainIdx = -1;
-		for(int i=0; i<menus.size(); i++) {
+		for (int i = 0; i < menus.size(); i++) {
 			List<CustomDashboardMenuVO> customList = customDashBoardService.getDashBoardMenuList(customDashboardMenuVo);
 			MenuVO menu = menus.get(i);
 			if (Common.isEquals(menu.getMenuId(), "DATA_MONITOR")) {
 				mainIdx = i;
 			}
-			
+
 			if (Common.isEquals(menu.getMenuId(), "DASHBOARD")) {
-				for(int j=0; j<customList.size(); j++) {
+				for (int j = 0; j < customList.size(); j++) {
 					CustomDashboardMenuVO vo = customList.get(j);
-					
+
 					MenuVO customMenu = new MenuVO();
 					customMenu.setDefaultName(vo.getMenuName());
 					customMenu.setMenuId("DASHBOARD_CUSTOM");
 					customMenu.setPId(menu.getMenuId());
 					customMenu.setTId(menu.getTId());
-					customMenu.setMenuLink("ems/dashboard.do?menuKey="+vo.getMenuKey());
+					customMenu.setMenuLink("ems/dashboard.do?menuKey=" + vo.getMenuKey());
 					customMenu.setPkgType("L");
 					customMenu.setMenuAuth("S");
 					customMenu.setMenuIcon(vo.getMenuIcon());
 					customMenu.setMenuUseyn(vo.getUseYn());
 					customMenu.setLv1_odr(menu.getLv1_odr());
 					customMenu.setLv2_odr(menu.getLv2_odr());
-					customMenu.setLv3_odr(Common.nvl(j+1));
-					
-					menus.add(i+j+1, customMenu);
-					
-					if( Common.isEquals(vo.getDefaultMenu(), "Y")){
-						menu.setMenuLink("ems/dashboard.do?menuKey="+vo.getMenuKey());
+					customMenu.setLv3_odr(Common.nvl(j + 1));
+
+					menus.add(i + j + 1, customMenu);
+
+					if (Common.isEquals(vo.getDefaultMenu(), "Y")) {
+						menu.setMenuLink("ems/dashboard.do?menuKey=" + vo.getMenuKey());
 						menus.set(i, menu);
-						
-						if(mainIdx != -1) {
+
+						if (mainIdx != -1) {
 							MenuVO mainMenu = menus.get(mainIdx);
-							mainMenu.setMenuLink("ems/dashboard.do?menuKey="+vo.getMenuKey());
+							mainMenu.setMenuLink("ems/dashboard.do?menuKey=" + vo.getMenuKey());
 							menus.set(mainIdx, mainMenu);
 						}
 					}
@@ -105,11 +105,11 @@ public class MenuServiceImpl extends XcnAbstractDAO implements MenuService {
 			}
 		}
 	}
-	
+
 	private String getMenuName(MenuVO menu, HttpSession session) {
 		String result = menu.getDefaultName();
 		try {
-			if(Common.isEmpty(menu.getPId())) {
+			if (Common.isEmpty(menu.getPId())) {
 				result = Prop.propFormat(menu.getMenuId(), Common.getLocale(session));
 			} else {
 				result = Prop.propFormat(menu.getTId() + "." + menu.getMenuId(), Common.getLocale(session));
@@ -119,7 +119,7 @@ public class MenuServiceImpl extends XcnAbstractDAO implements MenuService {
 		}
 		return result;
 	}
-	
+
 	private void setMenuLink(List<MenuVO> menus, HttpSession session) {
 		for (int i = 0; i < menus.size(); i++) {
 			MenuVO menu = menus.get(i);
