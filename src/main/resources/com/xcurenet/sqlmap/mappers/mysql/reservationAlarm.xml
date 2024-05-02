@@ -297,6 +297,16 @@
 		FROM	UI_ALARM_LOG
 		WHERE	ALARM_LOG_SEQ = #{alarmLogSeq}
 	</select>
+
+	<!-- 예약 알람 실행 결과 로그SEQ 조회 -->
+	<select id="getAlarmLogQuery" resultType="alarmLogVO" parameterType="string">
+		SELECT	ALARM_LOG_SEQ AS alarmLogSeq,
+		DATE_FORMAT(ETIME,'%Y%m%d%H%i%s') AS executeDt,
+		RMSG AS rMsg,
+		RCNT AS rCnt
+		FROM	UI_ALARM_LOG
+		WHERE	ALARM_LOG_SEQ = #{alarmLogSeq}
+	</select>
 	
 	<!-- 예약 알람  로그 삭제 -->
 	<delete id="deleteAlarmLog" parameterType="alarmLogVO">

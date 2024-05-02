@@ -31,6 +31,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import java.io.InputStream;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -114,6 +115,8 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		bodyVo.setBody(bodyStr);
 		return bodyVo;
 	}
+
+
 
 	@Override
 	public EmsBodyVO getEmassBodyHash(String msgId) {

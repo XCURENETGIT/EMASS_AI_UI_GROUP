@@ -144,6 +144,7 @@
 
 
             $(document).on('click', '.person', function (){
+                console.log(".person")
                 var xrootmtr = $(this).attr('xrootmtr');
                 var srcip = $(this).attr('srcip');
                 var usr_id = $(this).attr('usr_id');
@@ -156,7 +157,7 @@
                 });
 
                 $(this).addClass('active');
-
+                getMessengerAccount(userid,$(this).attr('svc12'))
                 $('#msgid').text(msgid);
                 $('#xrootmtr').text(xrootmtr);
 
@@ -324,17 +325,21 @@
             });
 
             $(document).on('click', '.selectUser', function () {
+                console.log("selectUser")
                 var name = $(this).attr('data-name');
                 var srcip = $(this).attr('data-srcip');
                 var usr_id = $(this).attr('data-usrid');
+                var account = $(this).attr('data-account');
                 var xrootmtr = $('#xrootmtr').text();
                 var msgid = $('#msgid').text();
-                // var msgid = $(this).attr('msgid');
 
+                var element = document.querySelector('.person.active');
+                var svc12Value = element.getAttribute('svc12');
+
+                getMessengerAccount(srcip,svc12Value);
                 $('#selectUserInfo').attr('data-srcip', srcip);
                 $('#selectUserInfo').attr('data-name', name);
                 $('#selectUserInfo').attr('data-usrid', usr_id);
-
 
                 $('#selectUserInfo').html($(this).text());
                 $('#srcip').text(srcip);
@@ -473,7 +478,7 @@
                 moveTargetHeight(id, false);
             });
 
-            $(document).on('click', '#group_list a', function () {
+      /*      $(document).on('click', '#group_list a', function () {
                 if ((isConsent() && $('#consentNo').val() == '') || $(this).attr('xrootmtr') == '') {
                     return;
                 }
@@ -493,13 +498,14 @@
                 $('#selectUserInfo').attr('data-name', '');
                 $('#selectUserInfo').attr('data-srcip', '');
                 $('#selectUserInfo').attr('data-usrid', '');
+                $('#selectUserInfo').attr('data-account', '');
                 $('#selectUserInfo').html('');
                 $('#searchMsgStrInput').val('');
                 $('#startSubDt').val($('#startDt').val());
                 $('#endSubDt').val($('#endDt').val());
                 focusMsgId = '';
                 eikon.getMessengerDetailList($(this).attr('xrootmtr'), $(this).attr('msgid'), $(this).attr('srcip'), $(this).attr('usrid'));
-            });
+            });*/
 
 
             $('button[name="searchType"]').click(function () {
@@ -533,22 +539,24 @@
                 }
             });
 
-            $(document).on('click', '#group_list a', function () {
+/*            $(document).on('click', '#group_list a', function () {
                 var name = $(this).attr('data-name');
                 var srcip = $(this).attr('data-srcip');
                 var usr_id = $(this).attr('data-usrid');
+                var svc12Value = $(this).attr('svc12');
                 var xrootmtr = $('#xrootmtr').text();
                 var  msgid= $(this).attr('msgid');
                 $('#selectUserInfo').attr('data-srcip', srcip);
                 $('#selectUserInfo').attr('data-name', name);
                 $('#selectUserInfo').attr('data-usrid', usr_id);
+                getMessengerAccount(userid,svc12Value);
 
                 $('#selectUserInfo').html($(this).text());
                 $('#srcip').text(srcip);
                 $('#usr_id').text(usr_id);
                 eikon.getMessengerGroupDetail(xrootmtr, msgid, srcip, usr_id);
                 hideUserSelect();
-            });
+            });*/
 
             initCondition();
             eikon.init();

@@ -495,6 +495,10 @@ function makeFileList(data) {
 
 function userSelectBox(data, srcip, usr_id){
     var name = $('#selectUserInfo').attr('data-name');
+
+    var element = document.querySelector('.person.active');
+    var svc12Value = element.getAttribute('svc12');
+
     var str = '';
     for(var i=0; i<data.length; i++){
         var ip = data[i].srcip == undefined ? Object.keys(data[i].srcIpList[0]).toString() : data[i].srcip;
@@ -510,16 +514,34 @@ function userSelectBox(data, srcip, usr_id){
         $('#selectUserInfo').attr('data-srcip', nvl(data[i].srcip));
         $('#selectUserInfo').attr('data-name', nvl(data[i].name));
         $('#selectUserInfo').attr('data-usrid', nvl(data[i].usr_id));
-        $('#selectUserInfo').html(selectUserTitle);
+
+
+        $('#selectUserInfo').html(selectUserTitle)
 
         str += '<li class="selectUser clickUser" data-name="'+nvl(data[i].name)+'" data-srcip="'+nvl(data[i].srcip)+'" data-usrid="'+nvl(data[i].usr_id)+'"><a href="javascript:void(0);">'+selectUserTitle+'</a></li>';
+
     }
     $('#selectUser_menu').html(str);
     getDetailData();
 
 }
 
+function getMessengerAccount(id,svc12Value){
 
+
+    ui.postJson({
+        url: 'getMessengerAccount.xcn',
+        id: id,
+        svc12:svc12Value,
+        success: function (data, total) {
+            console.log(id+"/"+svc12Value+"/"+data)
+            $('#selectUserInfo').attr('data-account',data);
+        },
+        error: function (status, message) {
+            ui.alertMsg(message);
+        }
+    });
+}
 
 function getDetailData(usr_id) {
     if(usr_id !=''){
@@ -552,6 +574,7 @@ function rtnGroupList(data, type) {
         li.setAttribute("usrid", data[i].usrid);
         li.setAttribute("body_snippet", data[i].body_snippet);
         li.setAttribute("name", data[i].name);
+        li.setAttribute("svc12", data[i].svc12);
         li.setAttribute("data-chat", "person" + (i + 1));
 
         var user_cnt = data[i].user_cnt;
@@ -807,8 +830,7 @@ function makeList2(nextFlag) {
     var str = '<ul class="pageInfoDiv timeline">';
     var usrid = $('#selectUserInfo').attr('data-usrid');
     var srcip = $('#selectUserInfo').attr('data-srcip');
-
-
+    var account =$('#selectUserInfo').attr('data-account');
     if (detailDataSet.length < detailLimit && !nextFlag ) str += noPrevDataMsg();
 
     for (var i =0; i <detailDataSet.length; i++) {
@@ -819,7 +841,9 @@ function makeList2(nextFlag) {
             user = obj.user.split('@')[0];
         }
         // if (nvl(obj.userid) != '' && ( srcip == nvl(obj.userid)) &&  nvl(user) == nvl(obj.sender)) chkPati = true;
-        if( (nvl(obj.user) != '' && obj.user == obj.sender) || usrid == obj.title || usrid == obj.sender ) chkPati = true;
+        if (nvl(obj.user) === nvl(obj.sender) || (account && account.split(',').map(item => item.trim()).includes(obj.sender))) {
+            chkPati = true;
+        }
         //if (nvl(obj.userid) != '' && (nvl(user) == nvl(obj.sender))) chkPati = true;
         str += checkDate(i);
 
@@ -899,6 +923,7 @@ function makeList(nextFlag) {
     var str = '<ul class="pageInfoDiv timeline">';
     var usrid = $('#selectUserInfo').attr('data-usrid');
     var srcip = $('#selectUserInfo').attr('data-srcip');
+    var account =$('#selectUserInfo').attr('data-account');
 
 
     if (detailDataSet.length < detailLimit && !nextFlag ) str += noPrevDataMsg();
@@ -913,7 +938,11 @@ function makeList(nextFlag) {
         }
 
         //if (nvl(obj.userid) != '' && ( srcip == nvl(obj.userid)) &&  nvl(user) == nvl(obj.sender)) chkPati = true;
-        if( (nvl(obj.user) != '' && obj.user == obj.sender) || usrid == obj.title || usrid == obj.sender ) chkPati = true;
+        if (srcip === nvl(obj.sender) || (account && account.split(',').map(item => item.trim()).includes(obj.sender))) {
+            chkPati = true;
+        }
+
+
         str += checkDate(i);
 
         str += '<li class="p12 bubble ' + (chkPati ? 'txt_right slide_right' : 'txt_left slide_left') + (i == 0 && !nextFlag ? ' lastReadLi' : '') + '" id="' + obj.msgid + '" ctime="' + obj.ctime + '" userid="' + obj.userid + '" srcip="' + obj.srcip + '" xrootmtr="' + obj.xrootmtr + '">';
@@ -975,6 +1004,7 @@ function makePrevList() {
     // if (prevDetailDataSet.length < detailLimit) str += noPrevDataMsg();
     var usrid = $('#selectUserInfo').attr('data-usrid');
     var srcip = $('#selectUserInfo').attr('data-srcip');
+    var account =$('#selectUserInfo').attr('data-account');
     // str += checkDatePre(prevDetailDataSet.length-1);
     for (var i = prevDetailDataSet.length-1; i >0; i--) {
         dataHasFlag = true;
@@ -982,8 +1012,9 @@ function makePrevList() {
         if (obj.user.includes('@')){
             user = obj.user.split('@')[0];
         }
-        if (nvl(obj.userid) != '' && ( srcip == nvl(obj.userid)) &&  nvl(user) == nvl(obj.sender)) chkPati = true;
-
+        if (nvl(obj.user) === nvl(obj.sender) || (account && account.split(',').map(item => item.trim()).includes(obj.sender))) {
+            chkPati = true;
+        }
         str += '<li class="p12 bubble txt_right slide_right timeline-inverted" id="' + obj.msgid + '" ctime="' + obj.ctime + '" userid="' + obj.userid + '" srcip="' + obj.srcip + '" xrootmtr="' + obj.xrootmtr + '" >';
 
         str += '	<div class="me timeline-panel">';
@@ -1283,7 +1314,6 @@ function Highlight() {
 function HighSerarchlight( ) {
     setTimeout(function(){
         var searchs = $('#searchMsgStrInput').val().split(/\||\+|\s|\*|\"/);
-        console.log(searchs);
 
         if ( searchs.length > 0 ){
             var timeline_list_obj = $("#timeline_list").find('.me, .you');

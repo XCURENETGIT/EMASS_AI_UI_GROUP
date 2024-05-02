@@ -248,7 +248,6 @@ public class MessengerEdcGroupVO {
 		StringBuilder result = new StringBuilder();
 
 		if(Common.isNotEmpty(edc.getDeptnm())) result.append(edc.getDeptnm()).append("/");
-		if(Common.isNotEmpty(edc.getJikgubnm())) result.append(edc.getJikgubnm()).append("/");
 		if(Common.isNotEmpty(edc.getName())) result.append(edc.getName()).append("/");
 
 		if(Common.isNotEmpty(result.toString())) result.append("(").append(getSender(edc)).append(")");

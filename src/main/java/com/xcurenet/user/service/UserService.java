@@ -98,5 +98,7 @@ public interface UserService {
 	public int deleteUserAccount(final UserVO user);
 
 	public String getUserAccountInfo(final UserVO user);
+	public String getUserAccountInfosvc12(final UserVO user);
+	public String getUserAccountList(String sender,String svc12);
 
 }

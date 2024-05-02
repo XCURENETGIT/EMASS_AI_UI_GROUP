@@ -267,6 +267,24 @@ public class UserServiceImpl extends XcnAbstractDAO implements UserService {
 
 		return selectOne("com.xcurenet.sqlmap.mappers.mysql.user.getUserAccountInfo", param);
 	}
+	@Override
+	public String getUserAccountInfosvc12(final UserVO user) {
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", user.getUserId());
+		param.put("svc12", user.getGeneralNm());
+
+		return selectOne("com.xcurenet.sqlmap.mappers.mysql.user.getUserAccountInfosvc12", param);
+	}
+	@Override
+	public String getUserAccountList(String sender,String svc12) {
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("sender", sender);
+		param.put("svc12", svc12);
+
+
+		return selectOne("com.xcurenet.sqlmap.mappers.mysql.user.getUserAccountList", param);
+	}
+
 
 
 	@Override

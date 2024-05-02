@@ -56,7 +56,7 @@
 		LIMIT	${offset}, ${pageSize}
 	</select>
 
-	<!-- 사용자 EMAIL -->
+	<!-- 메신저 ID -->
 	<select id="getInfoAccount" resultType="hashmap" parameterType="hashmap">
 		SELECT	USER_ID AS USERID, SERVICECD AS SERVICECD,ACCOUNT AS ACCOUNT
 		FROM	UI_USER_ACCOUNT

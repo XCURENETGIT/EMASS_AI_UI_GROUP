@@ -675,5 +675,21 @@
 	FROM 	UI_USER_ACCOUNT
 	WHERE 	USER_ID = #{userId}
 	</select>
+	<select id="getUserAccountInfosvc12" parameterType="hashmap" resultType="string">
+		SELECT  GROUP_CONCAT(ACCOUNT SEPARATOR ', ')
+		FROM    UI_USER_ACCOUNT
+		WHERE   SERVICECD = #{svc12}
+		AND   USER_ID = #{userId}
+	</select>
+	<select id="getUserAccountList" parameterType="hashmap" resultType="string">
+		SELECT  USER_ID as userId
+		FROM    UI_USER_ACCOUNT
+		WHERE   SERVICECD = #{svc12}
+		AND     ACCOUNT = #{sender}
+		Limit 1
+	</select>
+
+
+
 
 </mapper>

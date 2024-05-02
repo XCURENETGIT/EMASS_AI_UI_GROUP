@@ -18,6 +18,8 @@ import com.xcurenet.emass.message.component.SolrCreateQuery;
 import com.xcurenet.emass.message.service.*;
 import com.xcurenet.emass.message.service.impl.SolrEdcServiceImpl;
 import com.xcurenet.minio.MinioFileAdapter;
+import com.xcurenet.user.service.UserService;
+import com.xcurenet.user.service.UserVO;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -58,6 +60,9 @@ public class MessengerController {
 
 	@Autowired
 	private MongoUtil mongo;
+
+	@Resource(name = "userService")
+	public UserService userService;
 
 	private static final String MESSENGER = " +svc1:( (Q) (T) ) ";
 	private static final String EMPTY_LINE = "\n";
@@ -315,6 +320,10 @@ public class MessengerController {
 			EmsBodyVO emsBodyVO = emsMessageService.getEmassBody(result.getGroups().get(i).getMsgid(),Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
 			String body = emsMessageController.getBodyStr("",emsBodyVO );
 			result.getGroups().get(i).setBody_snippet(body);
+			if(userService.getUserAccountList(result.getGroups().get(i).getSender(),result.getGroups().get(i).getSvc12())!=null){
+				String account=userService.getUserAccountList(result.getGroups().get(i).getSender(),result.getGroups().get(i).getSvc12());
+				result.getGroups().get(i).setTitle(result.getGroups().get(i).getDeptNm()+"/"+result.getGroups().get(i).getName()+"/"+"("+Config.getUserName(account)+")");;
+			}
 		}
 
 		return new XcnResponseVO(XcnRspCode.OK, result);
@@ -334,6 +343,10 @@ public class MessengerController {
 			EmsBodyVO emsBodyVO = emsMessageService.getEmassBody(result.getGroups().get(i).getMsgid(),Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
 			String body = emsMessageController.getBodyStr("",emsBodyVO );
 			result.getGroups().get(i).setBody_snippet(body);
+			if(userService.getUserAccountList(result.getGroups().get(i).getSender(),result.getGroups().get(i).getSvc12())!=null){
+				String account=userService.getUserAccountList(result.getGroups().get(i).getSender(),result.getGroups().get(i).getSvc12());
+				result.getGroups().get(i).setTitle(result.getGroups().get(i).getDeptNm()+"/"+result.getGroups().get(i).getName()+"/"+"("+Config.getUserName(account)+")");;
+			}
 		}
 		return new XcnResponseVO(XcnRspCode.OK, result);
 	}
@@ -350,6 +363,10 @@ public class MessengerController {
 			EmsBodyVO emsBodyVO = emsMessageService.getEmassBody(result.getGroups().get(i).getMsgid(),Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
 			String body = emsMessageController.getBodyStr("",emsBodyVO );
 			result.getGroups().get(i).setBody_snippet(body);
+			if(userService.getUserAccountList(result.getGroups().get(i).getSender(),result.getGroups().get(i).getSvc12())!=null){
+				String account=userService.getUserAccountList(result.getGroups().get(i).getSender(),result.getGroups().get(i).getSvc12());
+				result.getGroups().get(i).setTitle(result.getGroups().get(i).getDeptNm()+"/"+result.getGroups().get(i).getName()+"/"+"("+Config.getUserName(account)+")");;
+			}
 		}
 		return new XcnResponseVO(XcnRspCode.OK, result);
 	}
@@ -387,7 +404,7 @@ public class MessengerController {
 		sq.setRows(limit);
 		sq.addSort("ctime", ORDER.desc);
 		sq.addSort("msgid", ORDER.desc);
-		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user","userid","userkey");
+		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender","svc12", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user","userid","userkey");
 
 		return sq;
 	}
@@ -418,7 +435,7 @@ public class MessengerController {
 		sq.setRows(limit);
 		sq.addSort("ctime", ORDER.asc);
 		sq.addSort("msgid", ORDER.asc);
-		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user","userid");
+		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "svc12","recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user","userid");
 
 		return sq;
 	}
@@ -458,7 +475,7 @@ public class MessengerController {
 		sq.setRows(limit);
 		sq.addSort("ctime", ORDER.desc);
 		sq.addSort("msgid", ORDER.desc);
-		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user","userid");
+		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname","svc12", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user","userid");
 
 		return sq;
 	}
@@ -625,6 +642,18 @@ public class MessengerController {
 			}
 		}
 		return new XcnResponseVO(XcnRspCode.OK, result, result.size());
+	}
+
+
+	@RequestMapping(value = "/getMessengerAccount.xcn")
+	@Description("메신저 대화 아이디 조회")
+	@ResponseBody
+	public XcnResponseVO getMessengerAccount(final HttpServletRequest request, final HttpSession session) throws Exception {
+		UserVO userVO=new UserVO();
+		userVO.setUserId(request.getParameter("id"));
+		userVO.setGeneralNm(request.getParameter("svc12"));
+
+		return new XcnResponseVO(XcnRspCode.OK, userService.getUserAccountInfosvc12(userVO));
 	}
 
 
