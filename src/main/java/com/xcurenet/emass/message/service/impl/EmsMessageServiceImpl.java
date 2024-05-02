@@ -684,7 +684,18 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 			//highLight check
 			String subject = Common.nvl(emass.getSubject());
 			String bodyStr = Common.nvl(emass.getBodyStr());
+			String attachStr = Common.nvl(emass.getAttachStr());
+			String fileNameStr = Common.nvl(emass.getFileNameStr());
+			String attachnameStr = Common.nvl(emass.getBodyStr());
+			String host = Common.nvl(emass.getHost());
+			String path = Common.nvl(emass.getPath());
+
+			String srcip = Common.nvl(emass.getSrcIp());
+			String dstip = Common.nvl(emass.getDstIp());
+
 			String sender = Common.nvl(emass.getSender());
+			List<EmsRecvVO> toList = emass.getToList();
+			List<EmsRecvVO> ccList = emass.getCcList();
 			List<EmsRecvVO> bccList = emass.getBccList();
 
 			for(Map.Entry<String,Object> regExp : regexpHighlight.entrySet()){
@@ -694,7 +705,20 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 					String value = ("<span class='highlightRegexp'>").concat(val).concat("</span>");
 					emass.setSubject(subject.replaceAll(compareValue, value));
 					emass.setBodyStr(bodyStr.replaceAll(compareValue, value));
+					emass.setAttachStr(attachStr.replaceAll(compareValue, value));
+
+					emass.setFileNameStr(fileNameStr.replaceAll(compareValue, value));
+					emass.setAttachStr(attachnameStr.replaceAll(compareValue, value));
+
+					emass.setHost(host.replaceAll(compareValue, value));
+					emass.setPath(path.replaceAll(compareValue, value));
+
+					emass.setSrcIp(srcip.replaceAll(compareValue, value));
+					emass.setDstIp(dstip.replaceAll(compareValue, value));
+
 					emass.setSender(sender.replaceAll(compareValue, value));
+					emass.setToList(reValues(toList,compareValue,value));
+					emass.setCcList(reValues(ccList,compareValue,value));
 					emass.setBccList(reValues(bccList,compareValue,value));
 				}
 			}
