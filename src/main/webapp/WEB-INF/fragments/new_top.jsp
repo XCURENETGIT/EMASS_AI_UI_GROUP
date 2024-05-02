@@ -111,7 +111,7 @@
 		</div>
 
 		<div class="ipinfo_right">
-			<p class="ntp">
+			<p class="ntp" style="margin-left: 8px;">
 				<%if (Common.isEquals(ntpInfo.getString("status"), "sync")) {%>
 				<span id="ntpColor" class="top_flag01"></span>&nbsp;
 				<%} else if (Common.isEquals(ntpInfo.getString("status"), "unsync")) {%>
