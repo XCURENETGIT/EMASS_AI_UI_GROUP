@@ -1273,7 +1273,6 @@ public class EmsMessageController {
 		String consentUserId = Common.nvl(param.get("consentUserId"));
 		Map<String,Object> regexpHighlight = (Map<String, Object>) param.get("regexpHighlight");
 
-
 	//	boolean openAuth = Boolean.parseBoolean(Common.nvl(request.getParameter("open"))); // 읽기 권한 있음여부
 		String firstAdminYn = Common.getFirstAdminYn(request.getSession());
 		String adminType = Common.getAdminType(request.getSession());
@@ -1285,7 +1284,7 @@ public class EmsMessageController {
 		if (emass != null && emass.isConsentFlag()) {
 			solrCheckedService.setRead(msgId, Common.getAdminId(session));
 		}
-		// highLight check
+		// 정규식검색 하이라이트
 		if(emass.isConsentFlag() && !Common.isEmpty(regexpHighlight)) {
 			emass = emsMessageService.highlightCheck(emass, regexpHighlight);
 		}

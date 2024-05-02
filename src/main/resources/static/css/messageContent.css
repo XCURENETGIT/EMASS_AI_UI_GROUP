@@ -589,7 +589,11 @@ span.feedbackCorrect, span.feedbackInCorrect, span.feedbackDefer, span.feedbackI
     background-color:#FFAD5B;
 }
 .highlightRegexp {
-    background-color:#FFAD5B;
+    background-color:#ffc200DB;
+}
+
+.realHidden {
+    display: none !important;
 }
 
 .dropdown-divider{

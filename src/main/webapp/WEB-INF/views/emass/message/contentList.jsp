@@ -1028,7 +1028,7 @@
             if (value == 0) return 'No';
             else return 'Yes'
         });
-        grid.colAdd('regexpHighlight', 'dd', 70, 'center', true, 'nomal');
+        grid.colAdd('regexpHighlight', 'regexpHighlight', 70, 'center', true, 'nomal', null, null, true);
         
         grid.loadHeader(true);
         grid.loadPageSize();

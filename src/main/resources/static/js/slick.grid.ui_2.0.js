@@ -231,7 +231,7 @@ function Xgrid ( target, contextRoot, rowHeight, options, dataview ) {
 		}
 	};
 
-	this.colAdd = function ( id, name, width, align, hidden, type, formatter, sortCol ) {
+	this.colAdd = function ( id, name, width, align, hidden, type, formatter, sortCol,hide) {
 		if ( this.isAdd(id) ) return;
 		var sortable = true;
 		//if ( id == 'NUM' ) sortable = false;
@@ -240,6 +240,7 @@ function Xgrid ( target, contextRoot, rowHeight, options, dataview ) {
 		else if(formatter!=null) {
 			this.columns.push ( { id:id, name:name, field:id, width:width, cssClass:css, headerCssClass:'link_cell' + css, formatter:formatter, resizable:true, hidden:hidden,sortable:sortable, sortCol:sortCol} );
 		} else {
+			if(hide) this.columns.push ( { id:id, name:name, field:id, width:0, minWidth:0,maxWidth:0, cssClass:"realHidden", headerCssClass:"realHidden"} );
 			this.columns.push ( { id:id, name:name, field:id, width:width, cssClass:css, headerCssClass:'link_cell' + css, resizable:true, hidden:hidden,sortable:sortable, sortCol:sortCol} );
 		}
 	};
@@ -706,7 +707,8 @@ function Xgrid ( target, contextRoot, rowHeight, options, dataview ) {
 		var tmpWidth = 0;
 		var cols = this.getHeader();
 		for ( var i=0 ; i < cols.length ; i++ ) {
-			if ( cols[i].hidden ) continue;
+			if(cols[i].cssClass == 'realHidden') continue;
+			if( cols[i].hidden ) continue;
 			var align = cols[i].cssClass.split(' ')[0];
 			if ( align == 'slick-center' ) align = 'center';
 			else if ( align == 'slick-left' ) align = 'left';
