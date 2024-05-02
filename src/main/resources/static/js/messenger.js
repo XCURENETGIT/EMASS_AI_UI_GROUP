@@ -476,7 +476,7 @@ function makeFileList(data) {
     var str = '';
 
     if (data.length === 0) {
-        str += '<div class="list-group-item02 ma_none">첨부파일이 없습니다</div>';
+        str += '<div class="list-group-item02 ma_none">'+xcnuiJS.notFileInfo+'</div>';
 
     } else {
         str = '<ul>';
