@@ -308,7 +308,7 @@
 		WHERE	ALARM_LOG_SEQ = #{alarmLogSeq}
 	</select>
 	
-	<!-- 예약 알람  로그 삭제 -->
+	<!-- 예약 알람  로그 삭제~ -->
 	<delete id="deleteAlarmLog" parameterType="alarmLogVO">
 		DELETE FROM UI_ALARM_LOG WHERE ALARM_SEQ IN (#{alarmSeq})
 	</delete>
