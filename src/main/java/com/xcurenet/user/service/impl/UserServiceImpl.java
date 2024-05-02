@@ -285,6 +285,10 @@ public class UserServiceImpl extends XcnAbstractDAO implements UserService {
 		return selectOne("com.xcurenet.sqlmap.mappers.mysql.user.getUserAccountList", param);
 	}
 
+	@Override
+	public List<UserVO> getUserIds2() {
+		return selectList("com.xcurenet.sqlmap.mappers.mysql.user.getUserIds2");
+	}
 
 
 	@Override

@@ -50,6 +50,8 @@
 	    FROM	UI_USERS A JOIN	UI_USER_EMAIL B ON A.USER_ID = B.USER_ID
 	</select>
 
+
+
 	<select id="getUserNames" resultType="hashmap" parameterType="hashmap">
 		SELECT  LOWER(USER_ID) AS hash_key, IFNULL(USER_NM,'-') AS value FROM UI_USERS
 		UNION
@@ -539,6 +541,7 @@
 	</select>
 
 
+
 	<!-- 룰 구성 요소 사용자 그룹 등록 여부 확인 -->
 	<select id="isUserGroupItemExist" resultType="int" parameterType="userGroupVO">
 		SELECT	COUNT(*) AS CNT
@@ -689,6 +692,18 @@
 		Limit 1
 	</select>
 
+
+	<select id="getUserIds2" resultType="UserVO">
+		SELECT
+			USER_ID AS userId ,
+			USER_EMAIL AS userEmail
+		FROM  UI_USER_EMAIL
+		UNION ALL
+		SELECT
+			USER_ID AS userId ,
+			ACCOUNT AS userEmail
+		FROM  UI_USER_ACCOUNT
+	</select>
 
 
 

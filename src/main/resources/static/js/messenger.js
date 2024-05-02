@@ -307,6 +307,7 @@ function getMessengerMessage(xRootmtr, srcip, usr_id, msgid) {
             getMessengerAllfile(xRootmtr, srcip, usr_id, msgid);
 
             detailDataSet = data.groups;
+
             prevDetailDataSet = data.groups;
 
             if (data.numFound < detailLimit)

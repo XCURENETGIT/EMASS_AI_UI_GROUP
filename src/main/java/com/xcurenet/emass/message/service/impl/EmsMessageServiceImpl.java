@@ -31,7 +31,6 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
 import java.io.InputStream;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -104,6 +103,9 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		bodyVo.setDstIp(data.getDstIp());
 		bodyVo.setHost(data.getHost());
 		bodyVo.setPath(data.getPath());
+		
+		/* 문서 오너 지정 */
+
 		bodyVo.setUserId(data.getUserId());
 		bodyVo.setName(data.getName());
 		bodyVo.setCtime(data.getCtime());

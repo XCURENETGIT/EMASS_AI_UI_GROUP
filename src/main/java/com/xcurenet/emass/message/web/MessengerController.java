@@ -320,10 +320,13 @@ public class MessengerController {
 			EmsBodyVO emsBodyVO = emsMessageService.getEmassBody(result.getGroups().get(i).getMsgid(),Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
 			String body = emsMessageController.getBodyStr("",emsBodyVO );
 			result.getGroups().get(i).setBody_snippet(body);
-			if(userService.getUserAccountList(result.getGroups().get(i).getSender(),result.getGroups().get(i).getSvc12())!=null){
-				String account=userService.getUserAccountList(result.getGroups().get(i).getSender(),result.getGroups().get(i).getSvc12());
-				result.getGroups().get(i).setTitle(result.getGroups().get(i).getDeptNm()+"/"+result.getGroups().get(i).getName()+"/"+"("+Config.getUserName(account)+")");;
-			}
+//
+//			if(userService.getUserAccountList(result.getGroups().get(i).getSender(),result.getGroups().get(i).getSvc12())!=null){
+//				String account=userService.getUserAccountList(result.getGroups().get(i).getSender(),result.getGroups().get(i).getSvc12());
+//				result.getGroups().get(i).setTitle(result.getGroups().get(i).getDeptNm()+"/"+result.getGroups().get(i).getName()+"/"+"("+Config.getUserName(account)+")");;
+//
+//
+//			}
 		}
 
 		return new XcnResponseVO(XcnRspCode.OK, result);
@@ -343,10 +346,10 @@ public class MessengerController {
 			EmsBodyVO emsBodyVO = emsMessageService.getEmassBody(result.getGroups().get(i).getMsgid(),Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
 			String body = emsMessageController.getBodyStr("",emsBodyVO );
 			result.getGroups().get(i).setBody_snippet(body);
-			if(userService.getUserAccountList(result.getGroups().get(i).getSender(),result.getGroups().get(i).getSvc12())!=null){
-				String account=userService.getUserAccountList(result.getGroups().get(i).getSender(),result.getGroups().get(i).getSvc12());
-				result.getGroups().get(i).setTitle(result.getGroups().get(i).getDeptNm()+"/"+result.getGroups().get(i).getName()+"/"+"("+Config.getUserName(account)+")");;
-			}
+//			if(userService.getUserAccountList(result.getGroups().get(i).getSender(),result.getGroups().get(i).getSvc12())!=null){
+//				String account=userService.getUserAccountList(result.getGroups().get(i).getSender(),result.getGroups().get(i).getSvc12());
+//				result.getGroups().get(i).setTitle(result.getGroups().get(i).getDeptNm()+"/"+result.getGroups().get(i).getName()+"/"+"("+Config.getUserName(account)+")");;
+//			}
 		}
 		return new XcnResponseVO(XcnRspCode.OK, result);
 	}
@@ -363,10 +366,10 @@ public class MessengerController {
 			EmsBodyVO emsBodyVO = emsMessageService.getEmassBody(result.getGroups().get(i).getMsgid(),Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
 			String body = emsMessageController.getBodyStr("",emsBodyVO );
 			result.getGroups().get(i).setBody_snippet(body);
-			if(userService.getUserAccountList(result.getGroups().get(i).getSender(),result.getGroups().get(i).getSvc12())!=null){
-				String account=userService.getUserAccountList(result.getGroups().get(i).getSender(),result.getGroups().get(i).getSvc12());
-				result.getGroups().get(i).setTitle(result.getGroups().get(i).getDeptNm()+"/"+result.getGroups().get(i).getName()+"/"+"("+Config.getUserName(account)+")");;
-			}
+//			if(userService.getUserAccountList(result.getGroups().get(i).getSender(),result.getGroups().get(i).getSvc12())!=null){
+//				String account=userService.getUserAccountList(result.getGroups().get(i).getSender(),result.getGroups().get(i).getSvc12());
+//				result.getGroups().get(i).setTitle(result.getGroups().get(i).getDeptNm()+"/"+result.getGroups().get(i).getName()+"/"+"("+Config.getUserName(account)+")");;
+//			}
 		}
 		return new XcnResponseVO(XcnRspCode.OK, result);
 	}

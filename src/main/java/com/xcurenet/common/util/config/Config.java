@@ -20,6 +20,7 @@ import com.xcurenet.searchWord.service.SearchWordService;
 import com.xcurenet.searchWord.service.SearchWordVO;
 import com.xcurenet.user.service.PersCodeInfo;
 import com.xcurenet.user.service.UserService;
+import com.xcurenet.user.service.UserVO;
 import lombok.Data;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
@@ -98,6 +99,8 @@ public class Config {
 	public static String[] colors = {"#7cb5ec", "#c9cbf6", "#90ed7d", "#f7a35c", "#8085e9", "#f15c80", "#e4d354", "#2b908f", "#f45b5b", "#91e8e1", "#B5CA92", "#a7efff", "#B8B8BA", "#FFB2F5", "#47C83E", "#fee79f", "#8bc4bf", "#bf4444", "#7CB823", "#19D4FF", "#097500"};
 
 	public static Map<String, String> userIds; //(key : ip, email, id) (value: 이름) 통계 이름 추출 용도
+
+	public static Map<String, String> userIds2;
 
 	public static Map<String, String> userNames; //(key : ip, email, id) (value: 이름) 통계 이름 추출 용도
 
@@ -385,6 +388,11 @@ public class Config {
 
 			reloadServiceInfo();
 
+			reloadUserIds2();
+
+
+
+
 //		loadElsFieldMap(); // els 필드 컨버터 jsp -> java
 
 
@@ -462,6 +470,15 @@ public class Config {
 			trigger.putJob(exportFileDelJob.getJobId(), SpringContextUtil.getBean(exportFileDelJob.getJobClass()).getClass(), exportFileDelJob.getCronExp(), exportFileDelJob.getDescription());
 
 			log.info("[SCHEDULER] LOAD END..");
+	}
+
+	private void reloadUserIds2() {
+		userIds2 = new HashMap<>();
+		List<UserVO> users = userService.getUserIds2();
+		for (UserVO vo : users) {
+			userIds2.put(vo.getUserEmail(),vo.getUserId());
+		}
+
 	}
 
 
@@ -604,6 +621,7 @@ public class Config {
 		return Common.nvl(userIds.get(userKey.toLowerCase()));
 	}
 
+
 	public static String getUserName(final String userKey) {
 		return Common.nvl(userNames.get(userKey.toLowerCase()));
 	}
@@ -671,6 +689,10 @@ public class Config {
 		String result = serviceInfo.stream().filter(m -> Common.isEquals(code, m.getCode())).map(m -> m.getName()).collect(Collectors.joining());
 		if (Common.isEmpty(result)) result = "none";
 		return result;
+	}
+
+	public static String getUserId2(final String email) {
+		return Common.nvl(userIds2.get(email.toLowerCase()));
 	}
 
 //	public static void loadElsFieldMap() {

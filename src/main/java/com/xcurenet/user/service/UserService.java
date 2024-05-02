@@ -101,4 +101,5 @@ public interface UserService {
 	public String getUserAccountInfosvc12(final UserVO user);
 	public String getUserAccountList(String sender,String svc12);
 
+	List<UserVO> getUserIds2();
 }

@@ -2,6 +2,7 @@ package com.xcurenet.emass.message.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xcurenet.common.util.Common;
+import com.xcurenet.common.util.config.Config;
 import com.xcurenet.common.util.locale.Prop;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -246,12 +247,24 @@ public class MessengerEdcGroupVO {
 
 	private static String getDetailTitle(SolrEdcVO edc) {
 		StringBuilder result = new StringBuilder();
+		String userId = "";
+		String deptNm = "";
+		String Jikgubnm = "";
+		String userNm = "";
 
-		if(Common.isNotEmpty(edc.getDeptnm())) result.append(edc.getDeptnm()).append("/");
-		if(Common.isNotEmpty(edc.getName())) result.append(edc.getName()).append("/");
+		// 문서 오너와 sender가 일치하지 않을시
+		userId = Config.getUserId2(edc.getSender());
+		userNm =  Config.getUserName(userId);
+		deptNm = Config.getUserDeptnm(userId);
+		Jikgubnm = Config.getUserJikgubnm(userId);
 
+
+
+		result.append(deptNm).append("/");
+		result.append(Jikgubnm).append("/");
+		result.append(userNm);
 		if(Common.isNotEmpty(result.toString())) result.append("(").append(getSender(edc)).append(")");
-		else result.append(getSender(edc));
+
 
 		return result.toString();
 	}
@@ -319,6 +332,7 @@ public class MessengerEdcGroupVO {
 		else if (Common.isNotEmpty(edc.getSender())) return edc.getSender();
 		return edc.getSrcip();
 	}
+
 
 	private static String reCtime(String ctime) {
 		if (Common.isEmpty(ctime)) return Common.EMPTY;
