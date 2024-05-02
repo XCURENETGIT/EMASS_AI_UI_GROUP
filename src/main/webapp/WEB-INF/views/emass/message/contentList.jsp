@@ -944,7 +944,7 @@
 
             //예약어 Highlight 처리
             if(searchKeyword().length == 0 || parent.keywordHighlight.toString() == 'true') {
-                var kwds = grid.getValue(row, 'kwds');
+                var kwds = grid.getValue(row, 'kwds_subject');
                 value = highlightKeyword(value, kwds);
             }
             value = highlightSearchStr(value, "subject");

@@ -97,6 +97,8 @@ public class SolrEdcVO {
 
 	public String subject;
 
+	private String kwds_subject;
+
 	public String host;
 
 	public String path;
