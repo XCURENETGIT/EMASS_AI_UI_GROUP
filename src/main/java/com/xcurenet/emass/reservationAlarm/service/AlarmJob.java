@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -49,7 +50,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 
-@Slf4j
+@Log4j2
 @Controller
 public class AlarmJob {
 
@@ -86,9 +87,10 @@ public class AlarmJob {
 
 	private Locale locale = Locale.forLanguageTag(Locale.getDefault().getLanguage());
 
-	@Scheduled(cron="0 27 * * * ?")
+	@Scheduled(cron="0 10 * * * ?")
 	private void execute ( ) throws Exception {
 		log.info("[Scheduler execute] Alarm mail");
+		if(Common.isWindow()) return;
 		try {
 			alarmList = alarmService.getNowExecuteList();
 			if (alarmList == null) return;
