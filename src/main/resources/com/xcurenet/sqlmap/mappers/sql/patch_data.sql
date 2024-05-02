@@ -123,9 +123,9 @@ CREATE TABLE IF NOT EXISTS `UI_USER_ACCOUNT` (
 
 
 /* 서비스 */
-DELETE FROM UI_SERVICE;
-INSERT INTO UI_SERVICE (`SERVICECD`, `SERVICENM_LV1`, `SERVICENM_LV2`, `SERVICENM_LV3`, `IN_OUT`, `SORT`, `USE_YN`, `MSGGRPCD`)  VALUES ('MP3-', '메일', 'POP3', '-', 'I', 1, 'Y', ''),
-       ('MSM-', '메일', 'SMTP', '-', 'O', 2, 'Y', ''),
+-- DELETE FROM UI_SERVICE;
+INSERT IGNORE INTO UI_SERVICE (`SERVICECD`, `SERVICENM_LV1`, `SERVICENM_LV2`, `SERVICENM_LV3`, `IN_OUT`, `SORT`, `USE_YN`, `MSGGRPCD`)  VALUES ('MP3-', '메일', 'POP3', '-', 'I', 1, 'Y', ''),
+     ('MSM-', '메일', 'SMTP', '-', 'O', 2, 'Y', ''),
     ('MIM-', '메일', 'IMAP', '-', 'I', 3, 'Y', ''),
     ('WNVR', '웹메일', '네이버', '수신', 'I', 4, 'Y', ''),
     ('WNVS', '웹메일', '네이버', '발신', 'O', 5, 'Y', ''),
