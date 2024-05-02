@@ -357,7 +357,7 @@ var ui = {
 		}
 		setTimeout(function(){
 			$('#bootstrap_alert:visible').find('button').focus();
-		}, 700);
+		}, 500);
 		return;
 
 		//alert(msg);
