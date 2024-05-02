@@ -1,3 +1,4 @@
+
 package com.xcurenet.regexPattern.web;
 
 import com.xcurenet.annotations.AuditMenu;
@@ -35,7 +36,6 @@ public class RegexPatternController {
 
 	@Resource(name = "regexPatternService")
 	public RegexPatternService regexPatternService;
-
 	@RequestMapping(value = "/getRegexPattern.xcn")
 	@Description("정규식 패턴 조회")
 	@AuditOperation(Operation.SEARCH)
@@ -46,6 +46,7 @@ public class RegexPatternController {
 		int limit = Common.nvz(request.getParameter("limit"));
 		return new XcnResponseVO(XcnRspCode.OK, regexPatternService.getRegexPatternList(searchStr, offset, limit));
 	}
+
 
 	@RequestMapping(value = "/insertRegexPattern.xcn")
 	@Description("정규식 패턴 등록")

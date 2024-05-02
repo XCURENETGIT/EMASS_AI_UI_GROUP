@@ -181,7 +181,7 @@ public class HomeController {
 	@RequestMapping(value = "/commons/deviceInfoDetail.do", method = RequestMethod.GET)
 	@Description("장비 정보 상세보기 페이지")
 	public String hadoopDeviceInfo(Locale locale, Model model) {
-			return "/commons/deviceInfoDetail";
+		return "/commons/deviceInfoDetail";
 	}
 
 	@RequestMapping(value = "/commons/deviceInfoDetailHadoop.do", method = RequestMethod.GET)
@@ -836,6 +836,13 @@ public class HomeController {
 		return "/emass/regexPattern/regexPatternInfo";
 	}
 
+	@RequestMapping(value = "/ems/patternKeyword.do", method = RequestMethod.GET)
+	public String patternKeyword(Locale locale, Model model) {
+		model.addAttribute("headerYn","Y");
+		return "/emass/regexPattern/patternKeyword";
+	}
+
+
 	@RequestMapping(value = "/ems/relationKeyword.do", method = RequestMethod.GET)
 	public String searchWordInfo(Locale locale, Model model){
 		model.addAttribute("headerYn","Y");
@@ -1086,7 +1093,7 @@ public class HomeController {
 	@Description("내부 전송 사용자 Top10(비업무 시간)")
 	public String attachInCntUserNonworkStat(Locale locale, Model model) {
 		return "/emass/aihr/attachInCntUserNonworkStat";
-		
+
 	}
 
 	@RequestMapping(value = "/ems/attachInCntDeptNonworkStat.do")

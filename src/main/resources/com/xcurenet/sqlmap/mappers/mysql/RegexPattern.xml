@@ -3,13 +3,13 @@
 
 <mapper namespace="com.xcurenet.sqlmap.mappers.mysql.regexPattern">
 
-<!--	정규식 패턴 등록-->
+	<!--	정규식 패턴 등록-->
 	<insert id="insertRegexPattern" parameterType="com.xcurenet.regexPattern.service.RegexPatternVO">
 		INSERT INTO UI_REGEX_PATTERN (REGEX_NAME, REGEX_PATTERN,REGEX_USER,REGEX_DT)
 		VALUES(#{regexPatternName}, #{regexPattern},#{regexUser} ,NOW())
 	</insert>
 
-<!--	정규식 패턴 조회-->
+	<!--	정규식 패턴 조회-->
 	<select id = "getRegexPatternList" resultType="com.xcurenet.regexPattern.service.RegexPatternVO" parameterType="hashMap">
 		SELECT REGEX_NAME AS regexPatternName, REGEX_PATTERN AS regexPattern,REGEX_USER AS regexUser, REGEX_DT AS regexDt, REGEX_SEQ AS regexSeq
 		FROM UI_REGEX_PATTERN
@@ -22,7 +22,7 @@
 		</if>
 	</select>
 
-<!--정규식 패턴 삭제-->
+	<!--정규식 패턴 삭제-->
 	<update id="deleteRegexPattern" parameterType="com.xcurenet.regexPattern.service.RegexPatternVO">
 		DELETE FROM UI_REGEX_PATTERN WHERE REGEX_NAME = #{regexPatternName}
 	</update>
@@ -31,8 +31,8 @@
 	<update id="updateRegex" parameterType="com.xcurenet.regexPattern.service.RegexPatternVO">
 		UPDATE UI_REGEX_PATTERN
 		SET REGEX_NAME = #{regexPatternName},
-			REGEX_PATTERN = #{regexPattern},
-			REGEX_DT = NOW()
+		REGEX_PATTERN = #{regexPattern},
+		REGEX_DT = NOW()
 		WHERE REGEX_SEQ = #{regexSeq}
 	</update>
 
@@ -42,5 +42,40 @@
 		FROM	UI_REGEX_PATTERN
 		WHERE	REGEX_PATTERN = #{regexPatternName}
 	</select>
+
+	<select id = "getPatternList" resultType="patternVO" parameterType="hashMap">
+		SELECT CODE AS code, REGEX AS regex, NAME AS name
+		FROM UI_REGEXP
+		<if test='searchStr!=null and searchStr!=""'>
+			WHERE NAME  LIKE CONCAT('%', #{searchStr}, '%')
+		</if>
+		ORDER BY (CASE WHEN REGEX IS NULL THEN 0 ELSE 1 END), CODE
+		<if test='offset!=null and limit > 0'>
+			LIMIT	${offset}, ${limit}
+		</if>
+	</select>
+
+	<insert id="insertPattern" parameterType="patternVO">
+		INSERT INTO UI_REGEXP (CODE, NAME,REGEX)
+		VALUES (#{code}, #{name}, #{regex})
+	</insert>
+
+	<select id="isPatternName" resultType="int" parameterType="patternVO">
+		SELECT  COUNT(*) AS CNT
+		FROM	UI_REGEXP
+		WHERE	CODE = #{code}
+	</select>
+
+	<update id="deletePattern" parameterType="patternVO">
+		DELETE FROM UI_REGEXP WHERE CODE = #{code}
+	</update>
+
+
+	<update id="updatePattern" parameterType="com.xcurenet.regexPattern.service.RegexPatternVO">
+		UPDATE UI_REGEXP
+		SET NAME = #{name},
+		REGEX = #{regex}
+		WHERE CODE = #{code}
+	</update>
 
 </mapper>

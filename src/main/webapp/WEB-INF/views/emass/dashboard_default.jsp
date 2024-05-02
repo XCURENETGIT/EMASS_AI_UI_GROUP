@@ -169,7 +169,7 @@
         function TodayPassportData() {
             ui.get({
                 url: 'getTodayPattern.xcn',
-                patternType:'pi_PN',
+                patternType:'pi_amount_PN',
                 success: function (data, total) {
                     $('#TodayPasswordTotalCnt').html(data.total + "<span><s:message code="common.msg.cnt"/></span><span class='tit13'></span>");
                 },
@@ -183,7 +183,7 @@
         function TodayForeignerData() {
             ui.get({
                 url: 'getTodayPattern.xcn',
-                patternType:'pi_FN',
+                patternType:'pi_amount_FN',
                 success: function (data, total) {
                     $('#TodayForeignerTotalCnt').html(data.total + "<span><s:message code="common.msg.cnt"/></span> <span class='tit13'></span>");
                 },
@@ -198,7 +198,7 @@
         function TodaySecurityData() {
             ui.get({
                 url: 'getTodayPattern.xcn',
-                patternType:'pi_SN',
+                patternType:'pi_amount_SN',
                 success: function (data, total) {
                     $('#TodaySecurityTotalCnt').html(data.total + "<span><s:message code="common.msg.cnt"/></span> <span class='tit13'></span>");
                 },
@@ -213,7 +213,7 @@
         function TodayCardNumberData() {
             ui.get({
                 url: 'getTodayPattern.xcn',
-                patternType:'pi_CN',
+                patternType:'pi_amount_CN',
                 success: function (data, total) {
                     $('#TodayCardNumberTotalCnt').html(data.total + "<span><s:message code="common.msg.cnt"/></span> <span class='tit13'></span>");
                 },
@@ -229,7 +229,7 @@
         function getTodayDriveData() {
             ui.get({
                 url: 'getTodayPattern.xcn',
-                patternType:'pi_DN',
+                patternType:'pi_amount_DN',
                 success: function (data, total) {
                     $('#TodayDriveTotalCnt').html(data.total + "<span><s:message code="common.msg.cnt"/></span> <span class='tit13'></span>");
                 },
@@ -246,7 +246,7 @@
 
             ui.get({
                 url: 'getTodayPattern.xcn',
-                patternType:'pi_EC',
+                patternType:'pi_amount_EC',
                 success: function (data, total) {
                     $('#TodayExtensionModulationTotalCnt').html(data.total + "<span><s:message code="common.msg.cnt"/></span> <span class='tit13'></span>");
                 },
