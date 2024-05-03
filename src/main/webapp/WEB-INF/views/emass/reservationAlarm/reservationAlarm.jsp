@@ -614,6 +614,8 @@
             if (alarmVal.sctYn == 'Y') searchStr += setConditionValStr('<s:message code="condition.exist"/>', '<s:message code="condition.sct"/>');
             else if (alarmVal.sctYn == 'N') searchStr += setConditionValStr('<s:message code="condition.none"/>', '<s:message code="condition.sct"/>');
 
+            if (alarmVal.regexPattern != '') searchStr += setConditionValStr(alarmVal.regexPattern, '<s:message code="condition.regex"/>');
+
             var msgSize = '';
             if (alarmVal.sizeStartVal != null) {
                 if (alarmVal.sizeOption == 'B') msgSize = convertFileSize(alarmVal.sizeStartVal) + ' ~ ' + convertFileSize(alarmVal.sizeEndVal);

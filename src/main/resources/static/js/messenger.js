@@ -881,9 +881,9 @@ function makeList2(nextFlag) {
                 snippet = obj.body_snippet.replaceAll('\n', '<br/>');
                 str += "<hr style='border: 1px solid #ddd;'>";
             }
-            str += snippet;
+            str += removeStyleAttributes(snippet);
         } else {
-            if (obj.body_snippet != undefined) str += '' + obj.body_snippet.replaceAll('\n', '<br/>') + '';
+            if (obj.body_snippet != undefined) str += '' + removeStyleAttributes(obj.body_snippet).replaceAll('\n', '<br/>') + '';
         }
         str += '</div>';
 
