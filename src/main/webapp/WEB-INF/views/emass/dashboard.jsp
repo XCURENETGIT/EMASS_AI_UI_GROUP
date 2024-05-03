@@ -2332,7 +2332,7 @@
 			<div id="dashboardInfo" style="display: none">
 				<div id="xcn_mainWrap2">
 					<div class="container" style="display: flex; justify-content: space-between;">
-						<div style="left-padding: 0; width: 50%; height: 350px; min-height: 350px; min-width: 685px;">
+						<div style="left-padding: 0; width: 50%; height: 350px; min-height: 350px; min-width: 761px;">
 							<div class="text_tab">
 								<span class="tablinks2" onclick="openCity3(event, 'con03')" id="defaultOpen3"><s:message
 										code="dashboard.loggingData.count"/></span>
