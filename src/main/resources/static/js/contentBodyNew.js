@@ -1164,8 +1164,11 @@ function setMessage(msg) {
         $('#bodySizeTd').html(convertFileSize(msg.size));
 
         $('#userDiv').html(userHtml(msg.userList, 'userTr', srcip, dstip, usrip));
-        $('#userTr #userIdTd').html(msg.usrId);
-        $('#userIdTd').html(msg.usrId);
+        console.log(msg.usrId)
+        var idStr = (msg.usrId == '' || msg.usrId == null || msg.usrId == undefined) ?  msg.userId : msg.usrId;
+        console.log(idStr)
+        $('#userTr #userIdTd').html(idStr);
+        $('#userIdTd').html(idStr);
     }
 
     $('#sendUserDiv').html(userHtml(msg.senderList, 'fromTr', srcip, dstip, usrip));
