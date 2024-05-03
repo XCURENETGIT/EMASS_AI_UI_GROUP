@@ -10,7 +10,7 @@
 		overflow: hidden;
 		white-space: nowrap;
 		text-overflow: ellipsis;
-		max-width: 148px !important;
+		max-width: 57% !important;
 	}
 
 	.name{
@@ -18,7 +18,7 @@
 		overflow: hidden;
 		white-space: nowrap;
 		text-overflow: ellipsis;
-		max-width: 10em !important;
+		/*max-width: 100% !important;*/
 	}
 
 	.files :hover{
@@ -1424,14 +1424,14 @@
 		<div class="m_grapha mat32">
 			<div>
 				<h3><s:message code="dashboard.fileSizeTop"/></h3>
-				<div class="bigtop10" id="bigFileTop" style=" min-width: 550px; box-sizing: border-box; width: 100%" >
+				<div class="bigtop10" id="bigFileTop" style=" box-sizing: border-box; width: 100%" >
 				</div>
 			</div>
 			<%--		대용량 파일 TOP 10 끝--%>
 			<%--			파일 다 사용자 TOP 10--%>
 			<div>
 				<h3><s:message code="dashboard.fileSendTop"/></h3>
-				<div class="filetop10" id="FilePeople"  style=" min-width: 500px; box-sizing: border-box; width: 100%" >
+				<div class="filetop10" id="FilePeople"  style=" box-sizing: border-box; width: 100%" >
 				</div>
 			</div>
 
