@@ -87,7 +87,7 @@
 ////		System.out.println( "searchFields[i]:" + solrCreateQuery.getPeriodQueryBuffer().toString() );
 ////
 ////		SolrQuery sq = new SolrQuery();
-////		sq.setQuery(solrCreateQuery.getPeriodQueryBuffer().toString());
+////		sq.setQuery(Query.getPeriodQueryBuffer().toString());
 ////		sq.setRows(0);
 ////		sq.setFacet(true);
 ////		sq.setFacetLimit(10);

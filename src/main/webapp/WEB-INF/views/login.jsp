@@ -556,26 +556,28 @@
 
 <div id="login">
 	<div id="loginWrap">
-		<div class="imgcontainer">
-			<img src="<c:url value="/img/logo_emass.png"/>" alt="EmassPro" class="emass">
-		</div>
-		<div id="login_container">
-			<div>
-				<input type="text" placeholder="ID" id="userIdInput" required>
-				<input class="mat12" type="password" placeholder="Password" id="userPwInput" autocomplete="off" required>
+		<form method="post">
+			<div class="imgcontainer">
+				<img src="<c:url value="/img/logo_emass.png"/>" alt="EmassPro" class="emass">
 			</div>
-			<div>
-				<button id="loginBtn" type="button"><%= Common.isEquals(locale, "ko") ? "로그인" : "Login" %>
-				</button>
+			<div id="login_container">
+				<div>
+					<input type="text" placeholder="ID" id="userIdInput" name="userIdInput" required>
+					<input class="mat12" type="password" placeholder="Password" id="userPwInput" name="userPwInput" autocomplete="off" required>
+				</div>
+				<div>
+					<button id="loginBtn" type="button"><%= Common.isEquals(locale, "ko") ? "로그인" : "Login" %>
+					</button>
+				</div>
 			</div>
-		</div>
-		<div id="login_switch">
-			<label class="switch">
-				<input type="checkbox" checked="checked" id="saveLoginId" class="checkbox_align">
-				<span class="slider round"></span>
-			</label>
-			<span class="switchText"><%= Common.isEquals(locale, "ko") ? "로그인 ID 저장" : "Save Login ID" %></span>
-		</div>
+			<div id="login_switch">
+				<label class="switch">
+					<input type="checkbox" checked="checked" id="saveLoginId" class="checkbox_align">
+					<span class="slider round"></span>
+				</label>
+				<span class="switchText"><%= Common.isEquals(locale, "ko") ? "로그인 ID 저장" : "Save Login ID" %></span>
+			</div>
+		</form>
 	</div>
 
 </div>
