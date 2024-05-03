@@ -67,7 +67,7 @@ public class MessengerGroupUserVO {
 					Map<String, Object> hitsMap = hits[0].getSourceAsMap();
 					if (hitsMap.size() > 0) {
 						vo.setUser(Common.nvl(hitsMap.get("user")));
-						vo.setUser(Common.nvl(hitsMap.get("user")));
+						vo.setUserkey(Common.nvl(hitsMap.get("userkey")));
 						vo.setConm(Common.nvl(hitsMap.get("conm")));
 						vo.setBusinm(Common.nvl(hitsMap.get("businm")));
 						vo.setName(Common.nvl(hitsMap.get("name")));
@@ -118,6 +118,8 @@ public class MessengerGroupUserVO {
 					}
 				}
 		}
+
+
 		this.numFoundUser = groups.size();
 
 	}

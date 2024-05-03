@@ -151,7 +151,6 @@
                 var userid = $(this).attr('userid');
                 var msgid = $(this).attr('msgid');
                 var username = $(this).attr('name');
-                var sender = $(this).attr('data-sender');
 
                 $('.person').each(function () {
                     $(this).removeClass('active');
@@ -331,7 +330,6 @@
                 var srcip = $(this).attr('data-srcip');
                 var usr_id = $(this).attr('data-usrid');
                 var account = $(this).attr('data-account');
-                var sender = $(this).attr('data-sender');
                 var xrootmtr = $('#xrootmtr').text();
                 var msgid = $('#msgid').text();
 
@@ -342,7 +340,6 @@
                 $('#selectUserInfo').attr('data-srcip', srcip);
                 $('#selectUserInfo').attr('data-name', name);
                 $('#selectUserInfo').attr('data-usrid', usr_id);
-                $('#selectUserInfo').attr('data-sender', sender);
 
                 $('#selectUserInfo').html($(this).text());
                 $('#srcip').text(srcip);
