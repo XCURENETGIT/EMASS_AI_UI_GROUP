@@ -36,7 +36,7 @@
         dstip: '<s:message code="condition.destination"/>',
         sizeStr: '<s:message code="condition.size.all"/>',
         bodySizeStr: '<s:message code="condition.size.body"/>',
-        attachSizeStr: '<s:message code="condition.size.attach"/>',
+        attachSizeStr: '<s:message code="condition.size.attach.total"/>',
         kwds: '<s:message code="condition.keyword"/>',
         pi_total: '<s:message code="condition.regexp"/>',
         ocr: 'OCR <s:message code="message.msg.file"/>',

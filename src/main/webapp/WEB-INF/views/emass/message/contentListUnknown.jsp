@@ -809,7 +809,7 @@ function initGrid(){
 	});
 	grid.colAdd('sizeStr', '<s:message code="condition.size.all"/>', 80, 'left', false, 'nomal', null, {sortField:'size'});
 	grid.colAdd('bodySizeStr', '<s:message code="condition.size.body"/>', 80, 'left', false, 'nomal', null, {sortField:'body_size'});
-	grid.colAdd('attachSizeStr', '<s:message code="condition.size.attach"/>', 80, 'left', false, 'nomal', null, {sortField:'attachSizeSort'});
+	grid.colAdd('attachSizeStr', '<s:message code="condition.size.attach.total"/>', 80, 'left', false, 'nomal', null, {sortField:'attachSizeSort'});
 	grid.colAdd('kwds', '<s:message code="condition.keyword"/>', 120, 'left', false, 'nomal');
 	
 	/* grid.colAdd('referer_url', 'Referer', 120, 'left', false, 'link', function(row, cell, value, columnDef, dataContext) {

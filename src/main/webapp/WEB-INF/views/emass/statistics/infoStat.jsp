@@ -591,7 +591,7 @@
     });
     grid2.colAdd('sizeStr', '<s:message code="condition.size.all"/>', 80, 'left', false, 'nomal', null, {sortField:'size'});
     grid2.colAdd('bodySizeStr', '<s:message code="condition.size.body"/>', 80, 'left', false, 'nomal', null, {sortField:'body_size'});
-    grid2.colAdd('attachSizeStr', '<s:message code="condition.size.attach"/>', 80, 'left', false, 'nomal', null, {sortField:'attachSizeSort'});
+    grid2.colAdd('attachSizeStr', '<s:message code="condition.size.attach.total"/>', 80, 'left', false, 'nomal', null, {sortField:'attachSizeSort'});
     grid2.colAdd('kwds', '<s:message code="condition.keyword"/>', 120, 'left', false, 'nomal');
     grid2.colAdd('pi_total', '<s:message code="condition.regexp"/>', 70, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
         if (value == '0') return '';

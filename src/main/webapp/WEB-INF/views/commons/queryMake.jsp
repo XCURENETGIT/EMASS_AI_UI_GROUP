@@ -158,7 +158,7 @@
 
 		var recvsJikgub = '<%=recvsJikgub%>';
 		var fieldArr = ["date_hh", "date_yyyy", "date_yyyymm", "date_yyyymmdd", "allofus",
-			"attach", "attachcnt", "attached", "attachname", "attachhash", "attachsize", "attachtype", "attachexistcnt",
+			"attach", "attachcnt", "attached", "attachname", "attachhash", "attachsize","attachSizeSum", "attachtype", "attachexistcnt",
 			"bcc", "bname", "body", "body_size", "body_snippet", "busicd", "businm", "cc", "ceo", "cid", "cname",
 			"cocd", "conm", "ctime", "ctime_yyyy", "ctime_yyyymm", "ctime_yyyymmdd", "ctime_yyyymmddhh", "ctime_hh",
 			"deptcd", "deptnm", "direction", "direction_svc", "dport", "dstip", "host", "inside", "ip_busicd", "ip_businm",
@@ -168,9 +168,9 @@
 			"svc1", "svc2", "svc3", "svc12", "tname", "to", "user", "userid", "usr_id", "usr_ip","usrId", "xmsgkey", "xparentmtr",
 			"xrootmtr", "week", "ocr_attach", "ocr_attach_cnt", "favorite_id", "read_key", "read_time",
 			"user_str", "user", "host_str", "host", "attachname_str", "attachname", "sender_str", "sender", "recvs",
-			"to", "cc", "bcc", "recvs_name", "tname", "cname", "bname", "ocr_attach", "pi_DRM",
-			"pi_total", "pi_ID", "pi_EF", "pi_PN", "pi_FN", "pi_DN", "pi_SN", "pi_CN", "pi_EC",
-			"pi_IMEI","pi_MCN","pi_CPN","pi_BRN","pi_SSN","pi_CRN","pi_AN","pi_MN","epmsg_type","reprocess",
+			"to", "cc", "bcc", "recvs_name", "tname", "cname", "bname", "ocr_attach", "pi_amount.pi_DRM",
+			"pi_amount.pi_total", "pi_amount.pi_ID", "pi_amount.pi_EF", "pi_amount.pi_PN", "pi_amount.pi_FN", "pi_amount.pi_DN", "pi_amount.pi_SN", "pi_amount.pi_CN", "pi_amount.pi_EC",
+			"pi_amount.pi_IMEI","pi_amount.pi_MCN","pi_amount.pi_CPN","pi_amount.pi_BRN","pi_amount.pi_SSN","pi_amount.pi_CRN","pi_amount.pi_AN","pi_amount.pi_MN","epmsg_type","reprocess",
 		];
 
         <%if( consent && Common.isEquals(firstAdminYn, "N") ){ %>
@@ -1046,7 +1046,7 @@
 
 								var valIdArr = valArr[i].split("%");
 
-								addQueryText += "pi_" + valIdArr[0] + ":[ ";
+								addQueryText += "pi_amount.pi_" + valIdArr[0] + ":[ ";
 
 								var valCntArr = valIdArr[1].split("@");
 
@@ -1068,7 +1068,7 @@
 						break;
 
 					case "drm":
-						addQueryText = queryAddMinus + "pi_DRM:>0";
+						addQueryText = queryAddMinus + "pi_amount.pi_DRM:>0";
 						break;
 
 					case "user":
@@ -1106,8 +1106,8 @@
 								addQueryText += "body_size:[";
 							} else if(sizeFilterType == "A") {
 								addQueryText += "attachsize:[";
-							} else {
-								addQueryText += "size:[";
+							} else if(sizeFilterType == "T") {
+								addQueryText += "attachSizeSum:[";
 							}
 
 							if(sizeFilterSelect == "B") {
@@ -1642,7 +1642,7 @@
 									<td><button type="button" class="btn btn-xs btn-success queryAdd" data-queryType="drm">AND</button></td>
 									<td style="text-align: center;"></td>
 									<td><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="drm"><i class="glyphicon glyphicon-minus"></i></button></td>
-									<td>pi_DRM</td>
+									<td>pi_amount.pi_DRM</td>
 									<td></td>
 								</tr>
 
@@ -1692,8 +1692,8 @@
 									<td><button type="button" class="btn btn-xs btn-success queryAdd" data-queryType="regexp">AND</button></td>
 									<td style="text-align: center;"><button type="button" class="btn btn-xs btn-info queryOr" data-queryType="regexp">OR</button></td>
 									<td><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="regexp"><i class="glyphicon glyphicon-minus"></i></button></td>
-									<td>pi_total, pi_XX</td>
-									<td><span class="fa fa-question queryHelp" data-helptext="pi_total:pi_total:[1 TO *] / pi_total:0<br>pi_XX:pi_<s:message code="common.msg.regexp"/><s:message code="filterInfo.serviceCode"/> <s:message code="message.msg.example"/>)pi_EF:[ 1 TO * ]"></span></td>
+									<td>pi_total, pi_amount.pi_XX</td>
+									<td><span class="fa fa-question queryHelp" data-helptext="pi_total:pi_total:[1 TO *] / pi_total:0<br>pi_XX:pi_<s:message code="common.msg.regexp"/><s:message code="filterInfo.serviceCode"/> <s:message code="message.msg.example"/>)pi_amount.pi_EF:[ 1 TO * ]"></span></td>
 								</tr>
 
 								<tr id="userTr">
@@ -1753,6 +1753,7 @@
 												<option value=""><s:message code="condition.size.all"/></option>
 												<option value="B"><s:message code="condition.size.body"/></option>
 												<option value="A"><s:message code="condition.size.attach"/></option>
+												<option value="T"><s:message code="condition.size.attach.total"/></option>
 											</select>
 											<input type="text" class="form-control input-xs border-radius-none" name="lowcount" id="lowcount" style="width: 80px;vertical-align:top;text-align: right;padding: 2px 0px"/>
 											<select class="input-xs border-radius-none" data-style="btn-info" id="sizeFilterSelect" style="padding: 0px;">
@@ -1766,8 +1767,8 @@
 									<td><button type="button" class="btn btn-xs btn-success queryAdd" data-queryType="size">AND</button></td>
 									<td style="text-align: center;"><button type="button" class="btn btn-xs btn-info queryOr" data-queryType="size">OR</button></td>
 									<td><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="size"><i class="glyphicon glyphicon-minus"></i></button></td>
-									<td>size, body_size, attachsize</td>
-									<td><span class="fa fa-question queryHelp" data-helptext="size : <s:message code="condition.size.all"/><br>body_size : <s:message code="condition.size.body"/><br>attachsize : <s:message code="condition.size.attach"/>"></span></td>
+									<td>size, body_size, attachsize  ,attachSizeSum</td>
+									<td><span class="fa fa-question queryHelp" data-helptext="size : <s:message code="condition.size.all"/><br>body_size : <s:message code="condition.size.body"/><br>attachsize : <s:message code="condition.size.attach"/><br> attachSizeSum : <s:message code="condition.size.attach.total"/>"> <br></span> </td>
 								</tr>
 								<tr id="attachtypeexceptTr" style="display: none;">
 									<th>제외</th>

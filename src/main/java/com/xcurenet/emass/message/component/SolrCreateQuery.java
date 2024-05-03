@@ -113,7 +113,7 @@ public class SolrCreateQuery {
 	public static final String SIZE = "size";
 	public static final String BODY_SIZE = "body_size";
 	public static final String ATTACH_SIZE = "attachsize";
-	public static final String ATTACH_MAX_SIZE = "attachsizeSum";
+	public static final String ATTACH_MAX_SIZE = "attachSizeSum";
 	public static final String REPROCESS = "reprocess";
 
 	public static final String JOIN_READ = " +checked.readId:%s";
