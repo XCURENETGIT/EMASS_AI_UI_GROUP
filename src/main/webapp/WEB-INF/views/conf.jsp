@@ -590,37 +590,37 @@
 				</li>
 				<li>
 					<span class="bullet02"></span><label for="fname" class="fb600"><s:message code="setup.password.change.day"/> (default : <span id="password.change.day.defaultVal"></span>)</label>
-					<div class="spinner mat8">
-						<button type="button" class="spinner_down">-</button>
+					<div class="spinner mat8 number-spinner" >
+						<button type="button" class="spinner_down" data-dir="dwn">-</button>
 						<input type="text" class="spinner_input w40" id="password.change.day" value="20">
-						<button type="button" class="spinner_up">+</button>
+						<button type="button" class="spinner_up" data-dir="up">+</button>
 					</div>
 					<p class="info mat4"><s:message code="setup.message.passwordchange.day"/></p>
 				</li>
 				<li>
 					<span class="bullet02"></span><label for="fname" class="fb600"><s:message code="setup.password.fail.count"/> (default : <span id="password.fail.count.defaultVal"></span>)</label>
-					<div class="spinner mat8">
-						<button type="button" class="spinner_down">-</button>
+					<div class="spinner mat8 number-spinner">
+						<button type="button" class="spinner_down" data-dir="dwn">-</button>
 						<input type="text" id="password.fail.count" class="spinner_input w40" value="20">
-						<button type="button" class="spinner_up">+</button>
+						<button type="button" class="spinner_up" data-dir="up">+</button>
 					</div>
 					<p class="info mat4"><s:message code="setup.message.passwordfail.count"/></p>
 				</li>
 				<li>
 					<span class="bullet02"></span><label for="fname" class="fb600"><s:message code="setup.password.restore.minute"/> (default : <span id="password.restore.minute.defaultVal"></span>)</label>
-					<div class="spinner mat8">
-						<button type="button" class="spinner_down">-</button>
+					<div class="spinner mat8 number-spinner">
+						<button type="button" class="spinner_down" data-dir="dwn">-</button>
 						<input type="text" id="password.restore.minute"  class="spinner_input w40" value="20">
-						<button type="button" class="spinner_up">+</button>
+						<button type="button" class="spinner_up" data-dir="up">+</button>
 					</div>
 					<p class="info mat4"><s:message code="setup.message.passwordrestore.minute"/></p>
 				</li>
 				<li>
 					<span class="bullet02"></span><label for="fname" class="fb600"><s:message code="setup.session.timeoutSecond"/> (default : <span id="session.timeoutSecond.defaultVal"></span>)</label>
-					<div class="spinner mat8">
-						<button type="button" class="spinner_down">-</button>
+					<div class="spinner mat8 number-spinner">
+						<button type="button" class="spinner_down" data-dir="dwn">-</button>
 						<input type="text" id="session.timeoutSecond" class="spinner_input w40" value="20">
-						<button type="button" class="spinner_up">+</button>
+						<button type="button" class="spinner_up" data-dir="up">+</button>
 					</div>
 					<p class="info mat4"><s:message code="setup.message.sessiontimeout.second"/></p>
 				</li>
