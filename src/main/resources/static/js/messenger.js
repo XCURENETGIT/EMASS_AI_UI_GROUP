@@ -840,13 +840,13 @@ function makeList2(nextFlag) {
         dataHasFlag = true;
         var obj = detailDataSet[i];
         var chkPati = false;
-        if (obj.user.includes('@')){
-            user = obj.user.split('@')[0];
+        if (obj.sender.includes('@')){
+            user = obj.sender.split('@')[0];
         }
-        // if (nvl(obj.userid) != '' && ( srcip == nvl(obj.userid)) &&  nvl(user) == nvl(obj.sender)) chkPati = true;
-        if (nvl(obj.user) === nvl(obj.sender) || nvl(obj.sender) === sender|| (account && account.split(',').map(item => item.trim()).includes(obj.sender))) {
+        if (nvl(obj.user) === nvl(obj.sender) ||user === nvl(obj.userkey) || nvl(obj.sender) === sender|| (account && account.split(',').map(item => item.trim()).includes(obj.sender))) {
             chkPati = true;
         }
+
         //if (nvl(obj.userid) != '' && (nvl(user) == nvl(obj.sender))) chkPati = true;
         str += checkDate(i);
 
@@ -936,12 +936,10 @@ function makeList(nextFlag) {
         var obj = detailDataSet[i];
         var chkPati = false;
         var user = obj.user;
-        if (obj.user.includes('@')){
-            user = obj.user.split('@')[0];
+        if (obj.sender.includes('@')){
+            user = obj.sender.split('@')[0];
         }
-
-        //if (nvl(obj.userid) != '' && ( srcip == nvl(obj.userid)) &&  nvl(user) == nvl(obj.sender)) chkPati = true;
-        if (nvl(obj.user) === nvl(obj.sender) || nvl(obj.sender) === sender|| (account && account.split(',').map(item => item.trim()).includes(obj.sender))) {
+        if (nvl(obj.user) === nvl(obj.sender) ||user === nvl(obj.userkey) || nvl(obj.sender) === sender|| (account && account.split(',').map(item => item.trim()).includes(obj.sender))) {
             chkPati = true;
         }
 
@@ -1013,10 +1011,10 @@ function makePrevList() {
     for (var i = prevDetailDataSet.length-1; i >0; i--) {
         dataHasFlag = true;
         var obj = prevDetailDataSet[i];
-        if (obj.user.includes('@')){
-            user = obj.user.split('@')[0];
+        if (obj.sender.includes('@')){
+            user = obj.sender.split('@')[0];
         }
-        if (nvl(obj.user) === nvl(obj.sender) || nvl(obj.sender) === sender|| (account && account.split(',').map(item => item.trim()).includes(obj.sender))) {
+        if (nvl(obj.user) === nvl(obj.sender) ||user === nvl(obj.userkey) || nvl(obj.sender) === sender|| (account && account.split(',').map(item => item.trim()).includes(obj.sender))) {
             chkPati = true;
         }
 
