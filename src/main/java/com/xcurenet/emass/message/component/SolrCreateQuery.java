@@ -578,7 +578,7 @@ public class SolrCreateQuery {
 		} else if(Common.isEquals(Config.getString("receiver.sender.uppercase"), "Y")) {
 			for (int i = 0; i < SENDER_NOTUPPER.length; i++) {
 				if (sender.startsWith("\"") && sender.endsWith("\"")) queryStr.append(String.format("%s:%s", SENDER_NOTUPPER[i], sender)).append(SPACE);
-				else queryStr.append(String.format("%s:%s", SENDER_NOTUPPER[i], createOrQueryAsteriskAll(sender))).append(SPACE);
+				else queryStr.append(String.format("%s:%s", SENDER_NOTUPPER[i], createOrQuery(sender))).append(SPACE);
 			}
 		} else {
 			for (int i = 0; i < SENDER.length; i++) {
