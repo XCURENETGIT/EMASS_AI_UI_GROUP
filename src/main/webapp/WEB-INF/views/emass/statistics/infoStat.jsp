@@ -976,6 +976,11 @@
                     var nodeLv3 = getNodeByField('ctime_yyyymmdd', data);
                     var nodeLv4 = getNodeBySvc(data);
 
+                    var nodeLv1 = getNodeByUser(data);
+                    var nodeLv2 = type === 'pi_total' ? getNodeByPI(data) : [type];
+                    var nodeLv3 = getNodeByField('ctime_yyyymmdd', data);
+                    var nodeLv4 = getNodeBySvc(data);
+
                     for (var i = 0; i < nodeLv1.length; i++) {
                         nodes.push({id: nodeLv1[i].id, font: {multi: 'html'}, title: nodeLv1[i].title, label: nodeLv1[i].title, group: 'user'});
                     }
@@ -992,6 +997,7 @@
                         nodes.push({id: nodeLv4[i], font: {multi: 'html'}, title: nodeLv4[i], label: nodeLv4[i], group: 'msg'});
                     }
 
+
                     for (var i = 0; i < nodeLv1.length; i++) {
                         for (var j = 0; j < nodeLv2.length; j++) {
                             var sum = 0;
@@ -1005,7 +1011,7 @@
                         for (var j = 0; j < nodeLv3.length; j++) {
                             var sum = 0;
                             for (var x = 0; x < data.length; x++) {
-                                if (data[x][nodeLv2[i]] > 0 && data[x].ctime_yyyymmdd === nodeLv3[j]) sum += data[x][nodeLv2[i]];
+                                if (data[x]['piMap'][nodeLv2[i]] > 0 && data[x].ctime_yyyymmdd === nodeLv3[j]) sum += data[x]['piMap'][nodeLv2[i]];
                             }
                             if (sum > 0) edges.push({from: nodeLv2[i], to: nodeLv3[j], arrows: 'to', color: {color: '#2A6727'}, font: {multi: true}, label: sum.comma()});
                         }
@@ -1020,7 +1026,7 @@
                                 if (svc1 === 'X' || svc1 === 'U') id = data[x]['host'];
                                 if (data[x].ctime_yyyymmdd === nodeLv3[i] && id === nodeLv4[j]) {
                                     for (var y = 0; y < nodeLv2.length; y++) {
-                                        if (data[x][nodeLv2[y]] > 0) sum += data[x][nodeLv2[y]];
+                                        if (data[x]['piMap'][nodeLv2[y]] > 0) sum += data[x]['piMap'][nodeLv2[y]];
                                     }
                                 }
                             }

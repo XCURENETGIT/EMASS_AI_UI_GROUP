@@ -906,7 +906,6 @@ public class SolrEdcStatController {
 		String dept = Common.nvl(request.getParameter("deptStr")).replaceAll("\\|", ",");
 		String name = Common.nvl(request.getParameter("userStr")).replaceAll("\\|", ",");
 
-		type = "pi_amount.".concat(type);
 
 		StringBuilder query = new StringBuilder();
 		query.append(String.format("+(userkey:" + userkey)+")");
@@ -921,6 +920,7 @@ public class SolrEdcStatController {
 			}
 			query.append(" ) ");
 		} else {
+			type = "pi_amount.".concat(type);
 			query.append((" +(").concat(String.format("%s: [%s TO *]", type, 1).concat(") ")));
 		}
 
@@ -992,7 +992,6 @@ public class SolrEdcStatController {
 		int limit = Common.nvz(request.getParameter("limit"));
 
 
-		type = "pi_amount.".concat(type);
 
 		StringBuilder query = new StringBuilder();
 		query.append(String.format("+(userkey:" + userkey)+")");
@@ -1007,6 +1006,7 @@ public class SolrEdcStatController {
 			}
 			query.append(" ) ");
 		} else {
+			type = "pi_amount.".concat(type);
 			query.append((" +(").concat(String.format("%s: [%s TO *]", type, 1).concat(") ")));
 		}
 
