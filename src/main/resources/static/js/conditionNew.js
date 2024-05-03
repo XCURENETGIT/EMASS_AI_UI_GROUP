@@ -183,7 +183,7 @@ var con = {
 		$('#m_cc'+endId).val('');
 		$('#m_bcc'+endId).val('');
 		$('#senders'+endId).val('');
-		$('#jikgub'+endId).selectpicker('val', []);
+		$('#rcvJikgub'+endId).selectpicker('val', []);
 
 		// $('#initEpmsg'+endId).selectpicker('val', []);
 
@@ -434,7 +434,7 @@ var con = {
 			}
 		}
 
-		condition.jikgub = arrayToString($('#jikgub').selectpicker('val'));
+		condition.rcvJikgub = arrayToString($('#rcvJikgub').selectpicker('val'));
 		condition.recv_jikgub_not = $('input:checkbox[id="recv_jikgub_not"]').is(":checked") ? 'Y' : '';
 
 		condition.senders = $('#senders').val();
@@ -634,12 +634,12 @@ var con = {
 		//$('#rcvBcc').val( condition.rcvBcc ); //미구현
 		//$('#jikgubInput').val( condition.jikgub ); //미구현
 
-		$('#jikgub').selectpicker('val', stringToArray(condition.jikgub) );
+		$('#rcvJikgub').selectpicker('val', stringToArray(condition.rcvJikgub) );
 		$('#busi').selectpicker('val', stringToArray(condition.busi) );
 		$('input:checkbox[id="busi_not"]').prop("disabled", condition.busi == '' ? true : false);
 		$('input:checkbox[id="busi_not"]').prop("checked", condition.busi_not == 'Y' ? true : false);
 
-		$('input:checkbox[id="recv_jikgub_not"]').prop("disabled", condition.jikgub == '' ? true : false);
+		$('input:checkbox[id="recv_jikgub_not"]').prop("disabled", condition.rcvJikgub == '' ? true : false);
 		$('input:checkbox[id="recv_jikgub_not"]').prop("checked", condition.recv_jikgub_not == 'Y' ? true : false);
 		if(condition.dept != "") {
 			$('#deptVal').val( condition.dept );
@@ -771,7 +771,7 @@ function initCondition(endId){
 		// }).on("changed.bs.select", function (e) {
 		// 	var value = $(this).selectpicker('val');
 		// });
-		$('#jikgub').selectpicker({
+		$('#rcvJikgub').selectpicker({
 			size: 'auto',
 			width:'260px',
 			searchLabel:true,
@@ -873,8 +873,8 @@ function getJikgubList() {
 				//console.log(data[i].jikgubCd+"//");
 
 			}
-			$('#jikgub').html(str);
-			$('#jikgub').selectpicker('refresh');
+			$('#rcvJikgub').html(str);
+			$('#rcvJikgub').selectpicker('refresh');
 		},
 		error : function(status, message) {
 			ui.alertMsg('error:' + status);
