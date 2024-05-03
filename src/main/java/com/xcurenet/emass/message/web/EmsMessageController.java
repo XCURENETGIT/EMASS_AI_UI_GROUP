@@ -1268,27 +1268,12 @@ public class EmsMessageController {
 	@Description("EMASS 메시지 정보 조회")
 	@ResponseBody
 	public XcnResponseVO getEmassMessageNew(final HttpServletRequest request, final HttpSession session) throws Exception {
-		JSONObject param = Common.getParam(request);
-		String msgId = Common.nvl(param.get("msgId"));
-		String consentUserId = Common.nvl(param.get("consentUserId"));
+		String msgId = Common.nvl(request.getParameter("msgId"));
+		EmsMessageVO emass = emsMessageService.getEmassMessageNew(Common.getAdminId(request), msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
 
-	//	boolean openAuth = Boolean.parseBoolean(Common.nvl(request.getParameter("open"))); // 읽기 권한 있음여부
-		String firstAdminYn = Common.getFirstAdminYn(request.getSession());
-		String adminType = Common.getAdminType(request.getSession());
-
-		EmsMessageVO emass = new EmsMessageVO();
-		if(emsMessageService.beforeConsentCheck(msgId,firstAdminYn,adminType,consentUserId)) emass = emsMessageService.getEmassMessageNew(Common.getAdminId(request), msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
-	//	else if(openAuth) emass.setConsentFlag(true);
-		else emass.setConsentFlag(false);
 		if (emass != null && emass.isConsentFlag()) {
 			solrCheckedService.setRead(msgId, Common.getAdminId(session));
 		}
-
-//		// 정규식검색 하이라이트
-//		if(emass.isConsentFlag() && !Common.isEmpty(regexpHighlight)) {
-//			emass = emsMessageService.highlightCheck(emass, regexpHighlight);
-//		}
-
 		return new XcnResponseVO(XcnRspCode.OK, emass);
 	}
 
