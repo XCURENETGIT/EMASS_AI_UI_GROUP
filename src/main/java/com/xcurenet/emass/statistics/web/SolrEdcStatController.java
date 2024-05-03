@@ -877,8 +877,19 @@ public class SolrEdcStatController {
 			item.put("pi_total", total);
 		}
 
-		Collections.sort(list, new PiTotalComparator());
-		return new XcnResponseVO(XcnRspCode.OK, list);
+		// name remake
+		List<Map<String, Object>> resultList = new ArrayList<>();
+		for(Map<String,Object> map : list){
+			Map<String,Object> hshMap = new HashMap<>();
+			for(Map.Entry<String,Object> entry :map.entrySet()){
+				log.info("hash {}",entry.getKey());
+				hshMap.put(entry.getKey().replace("pi_amount.",""),entry.getValue());
+			}
+			resultList.add(hshMap);
+		}
+
+		Collections.sort(resultList, new PiTotalComparator());
+		return new XcnResponseVO(XcnRspCode.OK, resultList);
 	}
 
 
@@ -895,6 +906,7 @@ public class SolrEdcStatController {
 		String dept = Common.nvl(request.getParameter("deptStr")).replaceAll("\\|", ",");
 		String name = Common.nvl(request.getParameter("userStr")).replaceAll("\\|", ",");
 
+		type = "pi_amount.".concat(type);
 
 		StringBuilder query = new StringBuilder();
 		query.append(String.format("+(userkey:" + userkey)+")");
@@ -978,6 +990,9 @@ public class SolrEdcStatController {
 
 		int offset = Common.nvz(request.getParameter("offset"));
 		int limit = Common.nvz(request.getParameter("limit"));
+
+
+		type = "pi_amount.".concat(type);
 
 		StringBuilder query = new StringBuilder();
 		query.append(String.format("+(userkey:" + userkey)+")");

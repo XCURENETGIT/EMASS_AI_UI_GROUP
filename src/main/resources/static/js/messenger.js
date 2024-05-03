@@ -121,6 +121,7 @@ var eikon = {
             endDt : endDt+"235959",
             groupField : 'userkey',
             success : function(data, total) {
+                console.log('data.groups    ',data.groups)
                 participantDataSet = data.groups;
                 userSelectBox(data. groups, srcip, usr_id);
             },

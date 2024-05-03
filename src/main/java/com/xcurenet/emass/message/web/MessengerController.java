@@ -320,13 +320,6 @@ public class MessengerController {
 			EmsBodyVO emsBodyVO = emsMessageService.getEmassBody(result.getGroups().get(i).getMsgid(),Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
 			String body = emsMessageController.getBodyStr("",emsBodyVO );
 			result.getGroups().get(i).setBody_snippet(body);
-//
-//			if(userService.getUserAccountList(result.getGroups().get(i).getSender(),result.getGroups().get(i).getSvc12())!=null){
-//				String account=userService.getUserAccountList(result.getGroups().get(i).getSender(),result.getGroups().get(i).getSvc12());
-//				result.getGroups().get(i).setTitle(result.getGroups().get(i).getDeptNm()+"/"+result.getGroups().get(i).getName()+"/"+"("+Config.getUserName(account)+")");;
-//
-//
-//			}
 		}
 
 		return new XcnResponseVO(XcnRspCode.OK, result);
@@ -743,7 +736,7 @@ public class MessengerController {
 		sq.setQuery(query);
 		sq.setStart(0);
 		sq.setRows(rows);
-		sq.setFields("usr_id", "srcip", "name", "conm", "businm", "deptnm", "jikgubnm", "suborgnm", "sname", "sender", "srcip", "sname", "user","userid","userkey");
+		sq.setFields("usrId", "srcip", "name", "conm", "businm", "deptnm", "jikgubnm", "suborgnm", "sname", "sender", "srcip", "sname", "user","userid","userkey");
 		sq.setParam("group", true);
 		sq.setParam("group.field", groupField);
 		sq.setParam("facet", true);
@@ -755,6 +748,8 @@ public class MessengerController {
 		MessengerGroupUserVO solrEdcGroupVO = solrEdcService.getMessengerGroupUserList(sq, Common.getAdminId(request));
 		return solrEdcGroupVO;
 	}
+
+
 
 
 	private JSONObject getXlsxHeader(String key, String title, String width, String align, String type) {

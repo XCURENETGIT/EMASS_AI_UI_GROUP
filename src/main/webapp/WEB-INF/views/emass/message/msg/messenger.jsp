@@ -325,7 +325,6 @@
             });
 
             $(document).on('click', '.selectUser', function () {
-                console.log("selectUser")
                 var name = $(this).attr('data-name');
                 var srcip = $(this).attr('data-srcip');
                 var usr_id = $(this).attr('data-usrid');
@@ -340,7 +339,7 @@
                 $('#selectUserInfo').attr('data-srcip', srcip);
                 $('#selectUserInfo').attr('data-name', name);
                 $('#selectUserInfo').attr('data-usrid', usr_id);
-
+                
                 $('#selectUserInfo').html($(this).text());
                 $('#srcip').text(srcip);
                 $('#usr_id').text(usr_id);

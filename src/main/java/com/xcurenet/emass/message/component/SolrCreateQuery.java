@@ -101,10 +101,10 @@ public class SolrCreateQuery {
 	public static final String NAME = "name";
 	public static final String DIRECTION_SVC = "direction_svc";
 	public static final String WORK = "work";
-	public static final String DRM = "pi_DRM";
+	public static final String DRM = "pi_amount.pi_DRM";
 	public static final String ATTACH_EXIST_CNT = "attachexistcnt";
 	public static final String ATTACH_CNT = "attachcnt";
-	public static final String SCT = "pi_sct";
+	public static final String SCT = "pi_amount.pi_sct";
 	public static final String ALLOFUS = "allofus";
 	public static final String LTIME = "ltime";
 	public static final String ATTACH_SPACE = "attachspace";
@@ -774,7 +774,7 @@ public class SolrCreateQuery {
 
 		for (int i = 0; i < param.length; i++) {
 			String[] svc = Common.toArray(param[i], "%");
-			result.append("pi_" + svc[0] + ":");
+			result.append("pi_amount" + ".pi_" +svc[0] + ":");
 
 			String[] val = Common.toArray(svc[1], "@");
 			if( val[0].equals("B") ) result.append("[ " + val[1] + " TO " + val[2] + " ]");

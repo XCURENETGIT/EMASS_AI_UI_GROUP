@@ -252,12 +252,10 @@ public class MessengerEdcGroupVO {
 		String Jikgubnm = "";
 		String userNm = "";
 
-		// 문서 오너와 sender가 일치하지 않을시
 		userId = Config.getUserId2(edc.getSender());
 		userNm =  Config.getUserName(userId);
 		deptNm = Config.getUserDeptnm(userId);
 		Jikgubnm = Config.getUserJikgubnm(userId);
-
 
 
 		result.append(deptNm).append("/");
