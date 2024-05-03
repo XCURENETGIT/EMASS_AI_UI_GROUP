@@ -104,7 +104,7 @@
                     viewDistance: 25
                 }
             },
-            exporting: chartAPI.exporting,
+            exporting: false,
             credits: chartAPI.credits,
             title: {
                 text: ''
