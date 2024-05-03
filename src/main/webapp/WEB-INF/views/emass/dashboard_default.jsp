@@ -719,7 +719,7 @@
                             let filesSize = getFormattedValue("size", data.fileSize[i]);
                             let filesType = getFormattedValue("type", data.fileType[i]);
                             str += "<li class='clicks' ' data-value='" + data.fileId[i] + "'><span class='num'>" + (i + 1) + "</span>";
-                            str += "<p><span class='filename'>" + leFileName + "</span>"
+                            str += "<p><span class='filename'>" + fileName + "</span>"
                             str += "<span class='righttext'>" + filesSize + "</span></p></li>"
                         }
                         str += "<ul><div>";
