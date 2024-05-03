@@ -2068,14 +2068,33 @@ function Highlight() {
     var searchs = searchkey.split(/\||\+|\s|\*|\"/);
     if (searchs.length > 0) setHighLight(searchs, 'S'); //검색어 하이라이트 처리
 
-    var fileNameStr =  nvl(msgData.fileNameStr)
-    var subjectStr = nvl(msgData.subjectStr);
-    var bodyStr = nvl(msgData.bodyStr);
-    // var regexpStr = nvl(msgData.regexpHighlight); // 정규식
+    var fileNameStr = [];
+    fileNameStr.push(nvl(msgData.fileNameStr));
 
-    var fileNameStrs = (fileNameStr != null && fileNameStr != '' && fileNameStr != undefined) ? (fileNameStr.indexOf(',') > -1) ?  fileNameStr.split(', ') : fileNameStr : '';
-    var subjectStrs = (subjectStr != null && subjectStr != '' && subjectStr != undefined) ? (subjectStr.indexOf(',') > -1) ?  subjectStr.split(', ') : subjectStr : '';
-    var bodyStrs = (bodyStr != null && bodyStr != '' && bodyStr != undefined) ? (bodyStr.indexOf(',') > -1) ?  bodyStr.split(', ') : bodyStr : '';
+    var subjectStr = [];
+    subjectStr.push(nvl(msgData.subjectStr));
+
+    var bodyStr =  [];
+    bodyStr.push(nvl(msgData.bodyStr));
+
+
+
+    var fileNameStrs = '';
+    if((fileNameStr[0].indexOf(',') > -1))  fileNameStrs =  fileNameStr[0].split(', ');
+    else fileNameStrs = fileNameStr.map((r) => r);
+    if(fileNameStrs != '') fileNameStrs = fileNameStr.map((r) => r);
+
+    var subjectStrs = '';
+    if((subjectStr[0].indexOf(',') > -1))  subjectStrs =  subjectStr[0].split(', ');
+    else subjectStrs = subjectStr.map((r) => r);
+    if(subjectStrs != '') subjectStrs = subjectStr.map((r) => r);
+
+
+    var bodyStrs = '';
+    if((bodyStr[0].indexOf(',') > -1))  bodyStrs =  bodyStr[0].split(', ');
+    else bodyStrs = bodyStr.map((r) => r);
+    if(bodyStrs != '') bodyStrs = bodyStrs.map((r) => r);
+
 
 
     if (fileNameStrs.length > 0) {
@@ -2104,18 +2123,24 @@ function isImageOk(img) {
 
 function setSubjectHighLight(defaultText, type) {
     var subject_obj = $("#subject");
-
     for (var i = 0; i < defaultText.length; i++) {
-        if (defaultText[i] == '' || defaultText[i] == ' ') continue;
-        $(subject_obj).highlight(defaultText[i], type);
+        var  splitText =  defaultText[i].split(' ');
+        for (var j = 0; j < splitText.length; j++) {
+            if (splitText[j] == '' ) continue;
+            $(subject_obj).highlight(splitText[j], type);
+        }
     }
 }
 
 function setBodyHighLight(defaultText, type) {
     var body_obj = $("#emassBody");
+    console.log(body_obj)
     for (var i = 0; i < defaultText.length; i++) {
-        if (defaultText[i] == '' || defaultText[i] == ' ') continue;
-        $(body_obj).highlight(defaultText[i], 'B' + type);
+        var  splitText =  defaultText[i].split(' ');
+        for (var j = 0; j < splitText.length; j++) {
+            if (splitText[j] == '' ) continue;
+            $(body_obj).highlight(splitText[j], type);
+        }
     }
 }
 
@@ -2123,8 +2148,11 @@ function setBodyHighLight(defaultText, type) {
 function setFileNameHighLight(defaultText, type) {
     var attachDiv_obj = $(".attachName");
     for (var i = 0; i < defaultText.length; i++) {
-        if (defaultText[i] == '' || defaultText[i] == ' ') continue;
-        $(attachDiv_obj).highlight(defaultText[i], type);
+        var  splitText =  defaultText[i].split(' ');
+        for (var j = 0; j < splitText.length; j++) {
+            if (splitText[j] == '' ) continue;
+            $(attachDiv_obj).highlight(splitText[j], type);
+        }
     }
 }
 
