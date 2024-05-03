@@ -107,7 +107,7 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 	public PatternPrivacyVO getTodayPatternPrivacy(PatternPrivacyVO patternPrivacyVO) throws IOException, SolrServerException {
 		PatternPrivacyVO result = new PatternPrivacyVO();
 
-		String query = String.format("+ctime:[%s TO %s] +(pi_amount_MN:[ 1 TO * ] pi_amount_CN:[ 1 TO * ] pi_amount_AN:[ 1 TO * ] pi_amount_SN:[ 1 TO * ] pi_amount_CRN:[ 1 TO * ] pi_amount_DN:[ 1 TO * ] pi_amount_FN:[ 1 TO * ] pi_amount_PN:[ 1 TO * ] pi_amount_SSN:[ 1 TO * ] pi_amount_BRN:[ 1 TO * ] pi_amount_CPN:[ 1 TO * ] pi_amount_MCN:[ 1 TO * ])"
+		String query = String.format("+ctime:[%s TO %s] +(pi_amount.pi_MN:[ 1 TO * ] pi_amount.pi_CN:[ 1 TO * ] pi_amount.pi_AN:[ 1 TO * ] pi_amount.pi_SN:[ 1 TO * ] pi_amount.pi_CRN:[ 1 TO * ] pi_amount.pi_DN:[ 1 TO * ] pi_amount.pi_FN:[ 1 TO * ] pi_amount.pi_PN:[ 1 TO * ] pi_amount.pi_SSN:[ 1 TO * ] pi_amount.pi_BRN:[ 1 TO * ] pi_amount.pi_CPN:[ 1 TO * ] pi_amount.pi_MCN:[ 1 TO * ])"
 				, patternPrivacyVO.getStartDt(), patternPrivacyVO.getEndDt());
 		SolrQuery sq = new SolrQuery();
 		sq.setQuery(query);
@@ -144,7 +144,7 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 	public RiskBehaviorVO getTodayRiskBehavior(RiskBehaviorVO riskBehaviorVO) throws IOException, SolrServerException {
 		RiskBehaviorVO result = new RiskBehaviorVO();
 
-		String query = String.format("+ctime:[%s TO %s] +(pi_amount_EC:[ 1 TO * ] pi_amount_EF:[ 1 TO * ] pi_amount_ID:[ 1 TO * ])", riskBehaviorVO.getStartDt(), riskBehaviorVO.getEndDt());
+		String query = String.format("+ctime:[%s TO %s] +(pi_amount.pi_EC:[ 1 TO * ] pi_amount.pi_EF:[ 1 TO * ] pi_amount.pi_ID:[ 1 TO * ])", riskBehaviorVO.getStartDt(), riskBehaviorVO.getEndDt());
 		SolrQuery sq = new SolrQuery();
 		sq.setQuery(query);
 		sq.setRows(0);
