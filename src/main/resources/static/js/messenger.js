@@ -519,7 +519,7 @@ function userSelectBox(data, srcip, usr_id){
 
         $('#selectUserInfo').html(selectUserTitle)
 
-        str += '<li class="selectUser clickUser" data-name="'+nvl(data[i].name)+'" data-srcip="'+nvl(data[i].srcip)+'" data-usrid="'+nvl(data[i].usr_id)+'"><a href="javascript:void(0);">'+selectUserTitle+'</a></li>';
+        str += '<li class="selectUser clickUser" data-name="'+nvl(data[i].name)+'" data-srcip="'+nvl(data[i].srcip)+'" data-usrid="'+nvl(data[i].usr_id)+'"  data-sender="'+nvl(data[i].srcip)+'"><a href="javascript:void(0);">'+selectUserTitle+'</a></li>';
 
     }
     $('#selectUser_menu').html(str);
@@ -576,6 +576,7 @@ function rtnGroupList(data, type) {
         li.setAttribute("body_snippet", data[i].body_snippet);
         li.setAttribute("name", data[i].name);
         li.setAttribute("svc12", data[i].svc12);
+        li.setAttribute("data-sender", data[i].sender);
         li.setAttribute("data-chat", "person" + (i + 1));
 
         var user_cnt = data[i].user_cnt;
@@ -832,6 +833,7 @@ function makeList2(nextFlag) {
     var usrid = $('#selectUserInfo').attr('data-usrid');
     var srcip = $('#selectUserInfo').attr('data-srcip');
     var account =$('#selectUserInfo').attr('data-account');
+    var sender =$('#selectUserInfo').attr('data-sender');
     if (detailDataSet.length < detailLimit && !nextFlag ) str += noPrevDataMsg();
 
     for (var i =0; i <detailDataSet.length; i++) {
@@ -842,7 +844,7 @@ function makeList2(nextFlag) {
             user = obj.user.split('@')[0];
         }
         // if (nvl(obj.userid) != '' && ( srcip == nvl(obj.userid)) &&  nvl(user) == nvl(obj.sender)) chkPati = true;
-        if (nvl(obj.user) === nvl(obj.sender) || (account && account.split(',').map(item => item.trim()).includes(obj.sender))) {
+        if (nvl(obj.user) === nvl(obj.sender) || nvl(obj.sender) === sender|| (account && account.split(',').map(item => item.trim()).includes(obj.sender))) {
             chkPati = true;
         }
         //if (nvl(obj.userid) != '' && (nvl(user) == nvl(obj.sender))) chkPati = true;
@@ -925,7 +927,7 @@ function makeList(nextFlag) {
     var usrid = $('#selectUserInfo').attr('data-usrid');
     var srcip = $('#selectUserInfo').attr('data-srcip');
     var account =$('#selectUserInfo').attr('data-account');
-
+    var sender =$('#selectUserInfo').attr('data-sender');
 
     if (detailDataSet.length < detailLimit && !nextFlag ) str += noPrevDataMsg();
 
@@ -939,7 +941,7 @@ function makeList(nextFlag) {
         }
 
         //if (nvl(obj.userid) != '' && ( srcip == nvl(obj.userid)) &&  nvl(user) == nvl(obj.sender)) chkPati = true;
-        if (srcip === nvl(obj.sender) || (account && account.split(',').map(item => item.trim()).includes(obj.sender))) {
+        if (nvl(obj.user) === nvl(obj.sender) || nvl(obj.sender) === sender|| (account && account.split(',').map(item => item.trim()).includes(obj.sender))) {
             chkPati = true;
         }
 
@@ -1006,6 +1008,7 @@ function makePrevList() {
     var usrid = $('#selectUserInfo').attr('data-usrid');
     var srcip = $('#selectUserInfo').attr('data-srcip');
     var account =$('#selectUserInfo').attr('data-account');
+    var sender =$('#selectUserInfo').attr('data-sender');
     // str += checkDatePre(prevDetailDataSet.length-1);
     for (var i = prevDetailDataSet.length-1; i >0; i--) {
         dataHasFlag = true;
@@ -1013,9 +1016,10 @@ function makePrevList() {
         if (obj.user.includes('@')){
             user = obj.user.split('@')[0];
         }
-        if (nvl(obj.user) === nvl(obj.sender) || (account && account.split(',').map(item => item.trim()).includes(obj.sender))) {
+        if (nvl(obj.user) === nvl(obj.sender) || nvl(obj.sender) === sender|| (account && account.split(',').map(item => item.trim()).includes(obj.sender))) {
             chkPati = true;
         }
+
         str += '<li class="p12 bubble txt_right slide_right timeline-inverted" id="' + obj.msgid + '" ctime="' + obj.ctime + '" userid="' + obj.userid + '" srcip="' + obj.srcip + '" xrootmtr="' + obj.xrootmtr + '" >';
 
         str += '	<div class="me timeline-panel">';
