@@ -568,10 +568,10 @@
             else if (alarmVal.ctimeWork == 'R') ctimeWorkMsg = '<s:message code="condition.notwork"/>';
             if (ctimeWorkMsg != '') searchStr += setConditionValStr(ctimeWorkMsg, '<s:message code="condition.ctimework"/>');
 
-            if (alarmVal.serviceType != '') searchStr += setConditionValStr(alarmVal.serviceTypeNm, '<s:message code="filterInfo.servicetype"/>');
-            if (alarmVal.senders != '') searchStr += setConditionValStr(alarmVal.senders, '<s:message code="condition.sender"/>', alarmVal.senders_not);
-            if (alarmVal.senders != '') searchStr += setConditionValStr(alarmVal.senders, '<s:message code="condition.sender"/>', alarmVal.senders_not);
-            if (alarmVal.regexPattern != '') searchStr += setConditionValStr(alarmVal.regexPattern, '<s:message code="regexPattern.pattern"/>', alarmVal.regexPattern);
+            if(alarmVal.serviceType != '') searchStr += setConditionValStr( alarmVal.serviceTypeNm, '<s:message code="filterInfo.servicetype"/>' );
+            if(alarmVal.senders!='') searchStr += setConditionValStr( alarmVal.senders, '<s:message code="condition.sender"/>', alarmVal.senders_not);
+            if(alarmVal.receivers!='') searchStr += setConditionValStr( alarmVal.receivers, '<s:message code="condition.recv"/>', alarmVal.receivers_not);
+
 
             if (alarmVal.epmsgType != '') searchStr += setConditionValStr(alarmVal.epmsgType, '<s:message code="condition.epmsgType.list"/>');
 
