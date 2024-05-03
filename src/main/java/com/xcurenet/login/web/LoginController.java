@@ -770,9 +770,10 @@ public class LoginController {
 	 * @param encodeKey 구글 OTP 개인키
 	 * @return
 	 */
+
 	private String getQRcodeURL(String userName, String encodeKey) {
-		String orig = "http://chart.apis.google.com/chart?cht=qr&chs=100x100&chl=otpauth://totp/%s%%3Fsecret%%3D%s&chld=H|0";
-		return String.format(orig, userName, encodeKey);
+		String orig = "https://api.qrserver.com/v1/create-qr-code/?size=177x177&data=%s";
+		return String.format(orig, "otpauth://totp/" + userName + "%3Fsecret%3D" + encodeKey);
 	}
 
 	/**

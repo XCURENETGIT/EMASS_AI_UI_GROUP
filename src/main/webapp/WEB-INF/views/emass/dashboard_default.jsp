@@ -10,7 +10,7 @@
 		overflow: hidden;
 		white-space: nowrap;
 		text-overflow: ellipsis;
-		max-width: 57% !important;
+		max-width: 57%!important;
 	}
 
 	.name{
@@ -18,7 +18,7 @@
 		overflow: hidden;
 		white-space: nowrap;
 		text-overflow: ellipsis;
-		/*max-width: 100% !important;*/
+		/*max-width: 95% !important;*/
 	}
 
 	.files :hover{
@@ -169,9 +169,9 @@
         function TodayPassportData() {
             ui.get({
                 url: 'getTodayPattern.xcn',
-                patternType:'pi_PN',
+                patternType:'pi_amount_PN',
                 success: function (data, total) {
-                    $('#TodayPasswordTotalCnt').html(data.total + "<span><s:message code="common.msg.cnt"/></span><span class='tit13'></span>");
+                    $('#TodayPasswordTotalCnt').html(data.total + "<span class='tit13'></span>");
                 },
                 error: function (status, message) {
                 },
@@ -183,9 +183,9 @@
         function TodayForeignerData() {
             ui.get({
                 url: 'getTodayPattern.xcn',
-                patternType:'pi_FN',
+                patternType:'pi_amount_FN',
                 success: function (data, total) {
-                    $('#TodayForeignerTotalCnt').html(data.total + "<span><s:message code="common.msg.cnt"/></span> <span class='tit13'></span>");
+                    $('#TodayForeignerTotalCnt').html(data.total + " <span class='tit13'></span>");
                 },
                 error: function (status, message) {
                 },
@@ -198,9 +198,9 @@
         function TodaySecurityData() {
             ui.get({
                 url: 'getTodayPattern.xcn',
-                patternType:'pi_SN',
+                patternType:'pi_amount_SN',
                 success: function (data, total) {
-                    $('#TodaySecurityTotalCnt').html(data.total + "<span><s:message code="common.msg.cnt"/></span> <span class='tit13'></span>");
+                    $('#TodaySecurityTotalCnt').html(data.total + " <span class='tit13'></span>");
                 },
                 error: function (status, message) {
                 },
@@ -213,9 +213,9 @@
         function TodayCardNumberData() {
             ui.get({
                 url: 'getTodayPattern.xcn',
-                patternType:'pi_CN',
+                patternType:'pi_amount_CN',
                 success: function (data, total) {
-                    $('#TodayCardNumberTotalCnt').html(data.total + "<span><s:message code="common.msg.cnt"/></span> <span class='tit13'></span>");
+                    $('#TodayCardNumberTotalCnt').html(data.total + " <span class='tit13'></span>");
                 },
                 error: function (status, message) {
                 },
@@ -229,9 +229,9 @@
         function getTodayDriveData() {
             ui.get({
                 url: 'getTodayPattern.xcn',
-                patternType:'pi_DN',
+                patternType:'pi_amount_DN',
                 success: function (data, total) {
-                    $('#TodayDriveTotalCnt').html(data.total + "<span><s:message code="common.msg.cnt"/></span> <span class='tit13'></span>");
+                    $('#TodayDriveTotalCnt').html(data.total + "<span class='tit13'></span>");
                 },
                 error: function (status, message) {
 
@@ -246,9 +246,9 @@
 
             ui.get({
                 url: 'getTodayPattern.xcn',
-                patternType:'pi_EC',
+                patternType:'pi_amount_EC',
                 success: function (data, total) {
-                    $('#TodayExtensionModulationTotalCnt').html(data.total + "<span><s:message code="common.msg.cnt"/></span> <span class='tit13'></span>");
+                    $('#TodayExtensionModulationTotalCnt').html(data.total + " <span class='tit13'></span>");
                 },
                 error: function (status, message) {
 
@@ -600,7 +600,7 @@
 
         function getFormattedValue(size, value) {
             if (size == "size") return (value === undefined || value === null) ? ' ' : value;
-            else if (size == "count") return (value === undefined || value === null) ? ' ' : value.comma() + '<s:message code="common.msg.cnt"/>';
+            else if (size == "count") return (value === undefined || value === null) ? ' ' : value.comma();
             else return (value === undefined || value === null) ? '-' : value;
 
         }
@@ -616,7 +616,7 @@
                 success: function (data, total) {
 
                     try {
-                        $('#TodayKeywordTotalCnt').html(data.total + "<span><s:message code="common.msg.cnt"/></span><span class='tit13'></span>");
+                        $('#TodayKeywordTotalCnt').html(data.total + "<span class='tit13'></span>");
                         // off('keyword.message.count');
                     } catch (e) {
                     }
@@ -637,7 +637,7 @@
                 searchStr: '',
                 success: function (data, total) {
                     try {
-                        $('#todayNotWork').html(data.total + "<span><s:message code="common.msg.cnt"/></span> <span class='tit13'></span>");
+                        $('#todayNotWork').html(data.total + "<span class='tit13'></span>");
                         // off('riskBehavior.message.count');
                     } catch (e) {
                     }
@@ -657,7 +657,7 @@
                 searchStr: '',
                 success: function (data, total) {
                     try {
-                        $('#getTodayRiskTotalCnt').html(data.total + "<span><s:message code="common.msg.cnt"/></span> <span class='tit13'></span>");
+                        $('#getTodayRiskTotalCnt').html(data.total + "<span class='tit13'></span>");
                         // off('riskBehavior.message.count');
                     } catch (e) {
                     }
@@ -677,7 +677,7 @@
                 url: 'getTodayPatternPrivacy.xcn',
                 searchStr: '',
                 success: function (data, total) {
-                    $('#TodayPatternPrivacyTotalCnt').html(data.total + "<span><s:message code="common.msg.cnt"/></span> <span class='tit13'></span>");
+                    $('#TodayPatternPrivacyTotalCnt').html(data.total + " <span class='tit13'></span>");
                 },
                 error: function (status, message) {
                     //ui.alertMsg(message);
@@ -766,7 +766,7 @@
             ui.get({
                 url: 'getFileSendTotal.xcn',
                 success: function (data, total) {
-                    $('#TodayfileSendTotalCnt').html(data.total + "<span><s:message code="common.msg.cnt"/></span> <span class='tit13'></span>");
+                    $('#TodayfileSendTotalCnt').html(data.total + " <span class='tit13'></span>");
                 },
                 error: function (status, message) {
                     //ui.alertMsg(message);
@@ -797,7 +797,7 @@
                             break;
                         }
                     }
-                    $('#todayGroupWareSum').html(todayGroupWareSum + "<span><s:message code="common.msg.cnt"/></span> <span class='tit13'></span>");
+                    $('#todayGroupWareSum').html(todayGroupWareSum + " <span class='tit13'></span>");
 
                     if (areAllValuesZero(data.facet))  $('#svcDataChart').html('<img src="' + '<c:url value="/img/icon/img_nodata.png"/>' + '" alt="No Data" width="150px;" height="150px" style="margin: auto; display: block;"> ');
                     else printChart(data.facet);
@@ -1271,28 +1271,28 @@
 				<div class="mainlist">
 					<div class="blueBg bornone click" data-value="reserved">
 						<span class="tit01"><s:message code="dashboard.keywordSum"/></span>
-						<p id="TodayKeywordTotalCnt">-<span><s:message code="common.msg.cnt"/></span>
+						<p id="TodayKeywordTotalCnt">-
 						</p>
 					</div>
 					<div class="greenBg bornone click" data-value="groupWare">
 						<span class="tit02"><s:message code="common.svc.groupware"/> <s:message code="analysis.freedom.ui.data"/> </span>
-						<p id="todayGroupWareSum">-<span><s:message code="common.msg.cnt"/></span>
+						<p id="todayGroupWareSum">-
 					</div>
 					<div class="yellowBg bornone click" data-value="work">
 						<span class="tit03"><s:message code="condition.notwork"/> <s:message code="analysis.freedom.ui.data"/></span>
-						<p id="todayNotWork">-<span><s:message code="common.msg.cnt"/></span>
+						<p id="todayNotWork">-
 					</div>
 					<div class="redBg bornone click" data-value="danger">
 						<span class="tit04"><s:message code="dashboard.msg.regexp_count.danger"/> <s:message code="analysis.freedom.ui.data"/></span>
-						<p id="getTodayRiskTotalCnt">-<span><s:message code="common.msg.cnt"/></span>
+						<p id="getTodayRiskTotalCnt">-
 					</div>
 					<div class="grayBg bornone click" data-value="file">
 						<span class="tit05"><s:message code="dashboard.msg.over_msg" arguments="1"/></span>
-						<p id="TodayfileSendTotalCnt">-<span><s:message code="common.msg.cnt"/></span>
+						<p id="TodayfileSendTotalCnt">-
 					</div>
 					<div class="blueBg bornone click" data-value="person">
 						<span class="tit06"><s:message code="dashboard.msg.regexp_count"/></span>
-						<p id="TodayPatternPrivacyTotalCnt">-<span><s:message code="common.msg.cnt"/></span>
+						<p id="TodayPatternPrivacyTotalCnt">-
 					</div>
 				</div>
 			</div>
@@ -1311,27 +1311,27 @@
 				<div class="mainlist">
 					<div class="click" data-value="passport">
 						<span class="tit07" ><s:message code="bodyview.pn"/></span>
-						<p class="blue" id="TodayPasswordTotalCnt">-<span class="text"><s:message code="common.msg.cnt"/></p>
+						<p class="blue" id="TodayPasswordTotalCnt">-</p>
 					</div>
 					<div class="click" data-value="drive">
 						<span class="tit08"><s:message code="bodyview.dn"/></span>
-						<p class="blue" id="TodayDriveTotalCnt">-<span class="text"><s:message code="common.msg.cnt"/></span></p>
+						<p class="blue" id="TodayDriveTotalCnt">-</p>
 					</div>
 					<div class="click" data-value="foreigner">
 						<span class="tit09"><s:message code="bodyview.fn"/></span>
-						<p class="blue" id="TodayForeignerTotalCnt">-<span class="text"><s:message code="common.msg.cnt"/></span></p>
+						<p class="blue" id="TodayForeignerTotalCnt">-</p>
 					</div>
 					<div class="click" data-value="social">
 						<span class="tit10"><s:message code="bodyview.sn"/></span>
-						<p class="blue" id="TodaySecurityTotalCnt">-<span class="text"><s:message code="common.msg.cnt"/></span></p>
+						<p class="blue" id="TodaySecurityTotalCnt">-</p>
 					</div>
 					<div class="click" data-value="card">
 						<span class="tit11"><s:message code="bodyview.cn"/></span>
-						<p class="blue" id="TodayCardNumberTotalCnt">-<span class="text"><s:message code="common.msg.cnt"/></span></p>
+						<p class="blue" id="TodayCardNumberTotalCnt">-</p>
 					</div>
 					<div class="click" data-value="extension">
 						<span class="tit12"><s:message code="bodyview.ec"/></span>
-						<p class="blue" id="TodayExtensionModulationTotalCnt">-<span class="text"><s:message code="common.msg.cnt"/></span></p>
+						<p class="blue" id="TodayExtensionModulationTotalCnt">-</p>
 					</div>
 				</div>
 			</div>
@@ -1424,14 +1424,14 @@
 		<div class="m_grapha mat32">
 			<div>
 				<h3><s:message code="dashboard.fileSizeTop"/></h3>
-				<div class="bigtop10" id="bigFileTop" style=" box-sizing: border-box; width: 100%" >
+				<div class="bigtop10" id="bigFileTop" style=" " >
 				</div>
 			</div>
 			<%--		대용량 파일 TOP 10 끝--%>
 			<%--			파일 다 사용자 TOP 10--%>
 			<div>
 				<h3><s:message code="dashboard.fileSendTop"/></h3>
-				<div class="filetop10" id="FilePeople"  style=" box-sizing: border-box; width: 100%" >
+				<div class="filetop10" id="FilePeople"  style="" >
 				</div>
 			</div>
 

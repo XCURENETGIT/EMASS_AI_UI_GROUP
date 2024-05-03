@@ -31,4 +31,6 @@ public class UserGroupVO {
 	private String encryptKey;
 	private String pdeptCd;
 	private String pdeptNm;
+	private String account;
+	private String serviceCd;
 }
