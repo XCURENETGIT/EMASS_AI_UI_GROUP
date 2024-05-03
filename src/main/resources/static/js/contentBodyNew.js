@@ -2068,14 +2068,15 @@ function Highlight() {
     var searchs = searchkey.split(/\||\+|\s|\*|\"/);
     if (searchs.length > 0) setHighLight(searchs, 'S'); //검색어 하이라이트 처리
 
-    var fileNameStr = nvl(msgData.fileNameStr);
+    var fileNameStr =  nvl(msgData.fileNameStr)
     var subjectStr = nvl(msgData.subjectStr);
     var bodyStr = nvl(msgData.bodyStr);
-    // var regexpStr = nvl(msgData.regexpHighlight); // 정규식 하이라이트
+    // var regexpStr = nvl(msgData.regexpHighlight); // 정규식
 
-    var fileNameStrs = fileNameStr.split(', ');
-    var subjectStrs = subjectStr.split(', ');
-    var bodyStrs = bodyStr.split(', ');
+    var fileNameStrs = (fileNameStr != null && fileNameStr != '' && fileNameStr != undefined) ? (fileNameStr.indexOf(',') > -1) ?  fileNameStr.split(', ') : fileNameStr : '';
+    var subjectStrs = (subjectStr != null && subjectStr != '' && subjectStr != undefined) ? (subjectStr.indexOf(',') > -1) ?  subjectStr.split(', ') : subjectStr : '';
+    var bodyStrs = (bodyStr != null && bodyStr != '' && bodyStr != undefined) ? (bodyStr.indexOf(',') > -1) ?  bodyStr.split(', ') : bodyStr : '';
+
 
     if (fileNameStrs.length > 0) {
         if (searchkey.length == 0 || keywordHighlight == 'true') setFileNameHighLight(fileNameStrs, 'K'); //예약어 하이라이트 처리
@@ -2105,7 +2106,7 @@ function setSubjectHighLight(defaultText, type) {
     var subject_obj = $("#subject");
 
     for (var i = 0; i < defaultText.length; i++) {
-        if (defaultText[i] == '') continue;
+        if (defaultText[i] == '' || defaultText[i] == ' ') continue;
         $(subject_obj).highlight(defaultText[i], type);
     }
 }
@@ -2113,16 +2114,16 @@ function setSubjectHighLight(defaultText, type) {
 function setBodyHighLight(defaultText, type) {
     var body_obj = $("#emassBody");
     for (var i = 0; i < defaultText.length; i++) {
-        if (defaultText[i] == '') continue;
+        if (defaultText[i] == '' || defaultText[i] == ' ') continue;
         $(body_obj).highlight(defaultText[i], 'B' + type);
     }
 }
 
 
 function setFileNameHighLight(defaultText, type) {
-    var attachDiv_obj = $("#attachDiv");
+    var attachDiv_obj = $(".attachName");
     for (var i = 0; i < defaultText.length; i++) {
-        if (defaultText[i] == '') continue;
+        if (defaultText[i] == '' || defaultText[i] == ' ') continue;
         $(attachDiv_obj).highlight(defaultText[i], type);
     }
 }
