@@ -819,8 +819,10 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		String[] tokens = inputQuery.split("\\s+");
 
 		modifiedQuery.append(tokens[0]);
+
 		for (int i = 1; i < tokens.length; i++) {
 			String token = tokens[i];
+
 			String modifiedToken = "(" + token + ")";
 
 			modifiedQuery.append(" ");
@@ -857,7 +859,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			List<AuthorityVO> authoritys = authorityService.getAdminAuthority(param);
 			for (AuthorityVO authority : authoritys) {
 				if (authority.getCnt() > 0) {
-					sq.addFilterQuery(modifyQuery(authority.getQuery()));
+					sq.addFilterQuery(authority.getQuery());
 				}
 			}
 			if (log.isInfoEnabled()) {

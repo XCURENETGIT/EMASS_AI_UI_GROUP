@@ -1312,7 +1312,7 @@
     }
 
     function getDefaultMenuKey() {
-        //getDashBoardMenu.xcn
+
         ui.get({
             url: 'getDashBoardMenu.xcn',
             useYn: 'Y',
@@ -2309,7 +2309,7 @@
 	<!-- 대시보드 전체 -->
 	<div class="searchArea">
 		<div class="mat8">
-			<div id="emptyDiv">
+			<div id="emptyDiv" style="display: none">
 				<div class="empty-dashboard-message grayBg02">
 					<h2>
 						<img src="<c:url value="/img/icon/ico_info.png"/>" alt="!">
