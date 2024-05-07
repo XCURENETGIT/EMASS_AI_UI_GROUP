@@ -4,7 +4,7 @@ var prevDetailDataSet = [];
 var focusMsgId = '';
 var participantDataSet = [];
 var detailMsgid=[];
-
+let patnName = '';
 var groupId = '';
 var groupPageId = '';
 var detailId = '';
@@ -1118,6 +1118,8 @@ function getFileDetailMessage(msgid){
         msgId : msgid,
         success : function(data, total) {
             $(".inner_fileList").html(makeFileServiceList(data));
+            patnName='';
+            if (data.patterns != null && data.patterns != undefined && data.patterns != '') patnName = getPiName(data.patterns);
         },
         error : function(status, message) {
             ui.alertMsg(message);
@@ -1130,6 +1132,15 @@ function getFileDetailMessage(msgid){
         }
     });
 
+}
+
+function getPiName(pattern) {
+    var piName="";
+
+    for (let i = 0; i<pattern.length; i++){
+        piName += pattern[i].piName;
+    }
+    return piName;
 }
 
 //테스트 데이터 생성

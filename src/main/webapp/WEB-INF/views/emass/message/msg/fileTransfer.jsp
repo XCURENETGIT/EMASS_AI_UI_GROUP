@@ -429,6 +429,10 @@
 
 		});
 
+        function getPatnName() {
+            return patnName;
+        }
+
         function openCodeWindow(id, oldCode, oldConm,oldDept,oldJib) {
             $('#oldCode').val(oldCode);
             $('#oldConm').val(oldConm);
@@ -770,6 +774,8 @@
                 $('#' + codeType + 'SelectedArea').hide();
             }
         }
+
+
 
         function resetCode(codeType) {
             if (codeType == 'deptByCo') $('#deptByCoStrSpan').html('');

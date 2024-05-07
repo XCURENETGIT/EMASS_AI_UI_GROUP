@@ -1043,7 +1043,6 @@ function setMessage(msg) {
 
     window.scrollTo(0, 0);
     if (msg == null) {
-        console.log("1");
             $('#buttonDiv').css("display", "none");
             $('#msgDiv').css("display", "none");
             $('#notfoundmsgDiv').css("display", "");
@@ -1053,14 +1052,12 @@ function setMessage(msg) {
         return;
     } else {
         if (msg.consentFlag) {
-            console.log("2");
             $('#buttonDiv').css("display", "");
             $('#msgDiv').css("display", "");
             $('#notfoundmsgDiv').css("display", "none");
             $('#notfoundconsentDiv').css("display", "none");
             $('#notSelectDiv').css("display", "none");
         } else {
-            console.log("3");
             $('#buttonDiv').css("display", "none");
             $('#msgDiv').css("display", "none");
             $('#notfoundmsgDiv').css("display", "none");
