@@ -114,7 +114,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 	//	bodyVo.setBody((!Common.isEmpty(data.getBodyPath())) ? minioFileAdapter.open(data.getBodyPath()) : null);
 		byte[] bodyStr = null;
 		if(data.getBodySize() > 0) bodyStr = gridFs.open(data.getMsgId());
-		bodyVo.setBody(bodyStr);
+		bodyVo.setBody((bodyStr == null) ? "".getBytes() : bodyStr );
 		return bodyVo;
 	}
 

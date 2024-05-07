@@ -90,7 +90,9 @@ public class XLSXWriterEMASS {
 					if (Common.isEquals(key, "NUM")) val = offset+ lastRow - HEADER_ROW;
 					else val = getPrivateValue(edc, key);
 
-					if (Common.isEquals(key, "body") && val == null) continue;
+//					if (Common.isNotEquals(key, "body") && val == null) continue;
+
+
 					String str = Common.nvl(val);
 					writerOver(str, h ,r, j);
 					r = ST.getRow(ST.getLastRowNum() - NEW_ROW_CNT);
