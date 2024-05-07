@@ -1041,32 +1041,36 @@ var msgData;
 function setMessage(msg) {
     msgData = msg;
 
-    if (msgData.msgId == null) {
-        console.log('no data (mongoDb)');
-        return;
-    }
-
     window.scrollTo(0, 0);
     if (msg == null) {
-        $('#buttonDiv').css("display", "none");
-        $('#msgDiv').css("display", "none");
-        $('#notfoundmsgDiv').css("display", "");
-        $('#notfoundconsentDiv').css("display", "none");
-        $('#notSelectDiv').css("display", "none");
+        console.log("1");
+            $('#buttonDiv').css("display", "none");
+            $('#msgDiv').css("display", "none");
+            $('#notfoundmsgDiv').css("display", "");
+            $('#notfoundconsentDiv').css("display", "none");
+            $('#notSelectDiv').css("display", "none");
+
         return;
     } else {
         if (msg.consentFlag) {
+            console.log("2");
             $('#buttonDiv').css("display", "");
             $('#msgDiv').css("display", "");
             $('#notfoundmsgDiv').css("display", "none");
             $('#notfoundconsentDiv').css("display", "none");
             $('#notSelectDiv').css("display", "none");
         } else {
+            console.log("3");
             $('#buttonDiv').css("display", "none");
             $('#msgDiv').css("display", "none");
             $('#notfoundmsgDiv').css("display", "none");
             $('#notfoundconsentDiv').css("display", "");
             $('#notSelectDiv').css("display", "none");
+            return;
+        }
+
+        if (msgData.msgId == null && msg.consentFlag == true) {
+            console.log('no data (mongoDb)');
             return;
         }
         var v = msg.ml_confd_class;
