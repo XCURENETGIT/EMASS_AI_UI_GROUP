@@ -263,6 +263,7 @@ public class SolrEdcMessageVO {
 			}
 		});
 		this.facetHeader = headerList;
+		headerList = new ArrayList<>();
 		this.facetData = facetResult;
 	}
 
@@ -301,6 +302,9 @@ public class SolrEdcMessageVO {
 					pivotItem.put(Common.nvl(bucket.getKeyAsString()), bucket.getDocCount());
 					pivotKeys.put(Common.nvl(bucket.getKey()), 0);
 					pivotItem.putAll(pivotParse( key, docsCount));
+//
+//					log.info("pivotItem {} ",Common.nvl(bucket.getKeyAsString()), bucket.getDocCount());
+//					log.info("pivotKey {} ",Common.nvl(bucket.getKey()), 0);
 				}
 			}
 			else if (aggregation instanceof ParsedLongTerms) {
@@ -353,8 +357,10 @@ public class SolrEdcMessageVO {
 					}else {
 						String bucketKey = bucket.getKeyAsString();
 						long docCount = bucket.getDocCount();
+						pivotItem.put(Common.nvl(bucketKey), docCount);
 						pivotKeys.put(Common.nvl(bucketKey), 0);
-						pivotResult.add(pivotParse(bucketKey, docCount));
+						pivotItem.putAll(pivotParse(bucketKey, docCount));
+						pivotResult.add(pivotItem);
 					}
 				}
 			}else{
@@ -368,8 +374,10 @@ public class SolrEdcMessageVO {
 					}else {
 						String bucketKey = bucket.getKeyAsString();
 						long docCount = bucket.getDocCount();
+						pivotItem.put(Common.nvl(bucketKey), docCount);
 						pivotKeys.put(Common.nvl(bucketKey), 0);
-						pivotResult.add(pivotParse(bucketKey, docCount));
+						pivotItem.putAll(pivotParse(bucketKey, docCount));
+						pivotResult.add(pivotItem);
 					}
 
 				}
@@ -379,6 +387,7 @@ public class SolrEdcMessageVO {
 			headerList = new ArrayList<String>(pivotKeys.keySet());
 			Collections.sort(headerList);
 			this.pivotHeader = headerList;
+			headerList = new ArrayList<>();
 			this.pivotData = pivotResult;
 		}
 	}

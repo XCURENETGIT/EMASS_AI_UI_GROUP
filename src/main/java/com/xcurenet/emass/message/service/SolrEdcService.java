@@ -49,4 +49,6 @@ public interface SolrEdcService {
 	public boolean updateSolrFeedbackData(List<parseJsonFile> feedbackList);
 
 	String[] getExistIndics(String msgId,String format);
+
+	public List<SolrEdcVO> getCheckedList(List<SolrEdcVO> solrVo);
 }

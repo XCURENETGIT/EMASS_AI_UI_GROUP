@@ -10,6 +10,7 @@ import com.xcurenet.audit.service.Menu;
 import com.xcurenet.audit.service.Operation;
 import com.xcurenet.audit.service.ParentMenu;
 import com.xcurenet.common.util.Common;
+import com.xcurenet.common.util.DateUtil;
 import com.xcurenet.common.util.config.Config;
 import com.xcurenet.common.util.locale.Prop;
 import com.xcurenet.common.vo.XcnResponseVO;
@@ -40,6 +41,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -383,22 +385,51 @@ public class SolrEdcStatController {
 		String dateType = Common.nvl(request.getParameter("dateType"));
 		String startDate = Common.nvl(request.getParameter("startDate"));
 		String endDate = Common.nvl(request.getParameter("endDate"));
+
+		String dateStr = (Common.isEquals(dateType,"ctime")) ?  "ctime" : "checked.readTime";
+		String schDate = dateStr + xAxis;
+
+		String[] schTypes = new String[2];
+		if(Common.isEquals(dateType,"ctime")) schTypes = new String[]{schDate,"checked.readTime"+xAxis};
+		else schTypes = new String[]{"ctime"+xAxis,"checked.readTime"+xAxis};
+
+
 		String adminId = Common.nvl(request.getParameter("adminId"));
 		if (Common.isEmpty(adminId)) adminId = "*";
 		int limit = Common.nvz(request.getParameter("limit"));
 		String query = "";
-
 		SolrQuery sq = new SolrQuery();
-
 		if (adminId == null) adminId = "*";
 
-		if (Common.isEquals(dateType,"date"))query += String.format(" +checked.readTime:[%s TO %s]", startDate, endDate);
-		else query +=String.format(" +ctime:[%s TO %s]", startDate, endDate);
+		query += String.format("+%s:[%s TO %s]", (Common.isEquals(dateType, "ctime")) ? "ctime" : "checked.readTime", startDate, endDate);
+		if(!Common.isEquals(dateType, "ctime")) {
+			 if( xAxis.length() == 7  ) {
+				startDate = startDate.substring(0,6);
+				endDate = endDate.substring(0,6);
+				LocalDate tempStartDate = DateUtil.getDate(xAxis,startDate);
+				LocalDate tempEndDate = DateUtil.getDate(xAxis,endDate);
+				startDate = DateUtil.getDateStr(xAxis,tempStartDate.minusMonths(1));
+				endDate = DateUtil.getDateStr(xAxis,tempEndDate.minusMonths(1));
+			}else if( xAxis.length() == 9 ) {
+				startDate = startDate.substring(0,8);
+				endDate = endDate.substring(0,8);
+				LocalDate tempStartDate = DateUtil.getDate(xAxis,startDate);
+				LocalDate tempEndDate = DateUtil.getDate(xAxis,endDate);
+				startDate = DateUtil.getDateStr(xAxis,tempStartDate.minusDays(1));
+				endDate = DateUtil.getDateStr(xAxis,tempEndDate.minusDays(1));
+			}
+			xAxis = xAxis.replaceAll("_hh","");
+			query += String.format("-checked.readTime%s:[* TO %s]",xAxis, startDate);
+			query += String.format("-ctime%s:[* TO %s]", xAxis,startDate);
+		}
+
 		query += String.format("+checked.readId:%s", adminId);
 
+		if(!Common.isEquals(dateType, "ctime")) sq.setParam("facet.pivot",     schTypes[0] + "," + schTypes[1]);
+		else sq.setParam("facet.pivot",   schTypes[0] + "," + schTypes[1] );
 
 		log.info("query : {}", query);
-		query += " +" + yAxis + ":*";
+//		query += " +" + yAxis + ":*";
 
 		sq.setQuery(query);
 		sq.setStart(0);
@@ -408,46 +439,64 @@ public class SolrEdcStatController {
 		sq.setFacetMinCount(1);
 		sq.setFacetSort("count");
 
-		sq.setParam("facet.pivot", yAxis + "," + xAxis);
 		SolrEdcMessageVO solrCheckedStatVo = solrCheckedService.getCheckedStatList(sq);
-		appendEmassTotal(solrCheckedStatVo, yAxis, Common.getAdminId(request));
+
+
+		if( xAxis.length() == 9 ) {
+			startDate = startDate.substring(0,8);
+			endDate = endDate.substring(0,8);
+		}else if( xAxis.length() == 7  ) {
+			startDate = startDate.substring(0,6);
+			endDate = endDate.substring(0,6);
+		}
+
+		appendEmassTotal(solrCheckedStatVo, schTypes,xAxis,yAxis,dateType,startDate,endDate, Common.getAdminId(request));
 		return new XcnResponseVO(XcnRspCode.OK, solrCheckedStatVo, solrCheckedStatVo.getPivotData().size());
 	}
 
-	private void appendEmassTotal(SolrEdcMessageVO solrCheckedStatVo, String yAxis, String adminId) throws IOException, SolrServerException {
-		List<String> rowKey = new ArrayList<>();
-		List<Map<String, Object>> list = solrCheckedStatVo.getPivotData();
+	private void appendEmassTotal(SolrEdcMessageVO solrCheckedStatVo,String[] schTypes,String xAxis ,String yAxis,String dateType,String startDate,String endDate,String adminId) throws IOException, SolrServerException {
+		if(solrCheckedStatVo.getPivotData() == null) return;
 		Map<String, Object> totalItem = new HashMap<>();
-		long allTotal = 0;
+		List<Map<String, Object>> list = solrCheckedStatVo.getPivotData();
 		if (list.size() == 0) return;
-		for (Map<String, Object> item : list) {
-			rowKey.add(Common.nvl(item.get("rowKey")));
-		}
-		StringBuilder resultBuilder = new StringBuilder();
-		String rows = Common.join(rowKey, " ");
-		String[] ro = rows.split(" ");
-		for (String s:ro){
-			resultBuilder.append("(");
-			resultBuilder.append(s);
-			resultBuilder.append(")");
+		long allTotal = 0;
+
+		List<String> headers = solrCheckedStatVo.getPivotHeader();
+
+		String query = "";
+		SolrQuery edcSolrQuery = new SolrQuery();
+		if(solrCheckedStatVo.getPivotHeader() != null ) {
+				if (solrCheckedStatVo.getPivotHeader().get(0).length() == 2) {
+					String rowkeyQ = rowKeysQuery(solrCheckedStatVo.getPivotHeader());
+					query += String.format("+%s:[%s TO %s]", (Common.isEquals(dateType, "ctime")) ? "ctime" : "checked.readTime", startDate, endDate);
+					query += String.format("+%s:(%s)", schTypes[0], rowkeyQ);
+				} else {
+					List<LocalDate> rowKeys = new ArrayList<>();
+					for (String item : solrCheckedStatVo.getPivotHeader()) {
+						rowKeys.add(DateUtil.getDate(xAxis, Common.nvl(item)));
+					}
+					String fromDate = DateUtil.getDateStr(xAxis, DateUtil.minDate(rowKeys));
+					String toDate = DateUtil.getDateStr(xAxis, DateUtil.maxDate(rowKeys));
+					query  += String.format("+%s:[%s TO %s]", schTypes[0], fromDate, toDate);
+				}
 		}
 
-		SolrQuery edcSolrQuery = new SolrQuery();
-		edcSolrQuery.setQuery(String.format("+%s:(%s)", yAxis, resultBuilder));
+		edcSolrQuery.setQuery(query);
 		edcSolrQuery.setStart(0);
 		edcSolrQuery.setRows(0);
 		edcSolrQuery.setFacet(true);
 		edcSolrQuery.setFacetLimit(500);
 		edcSolrQuery.setFacetMinCount(1);
 		edcSolrQuery.setFacetSort("count");
-		edcSolrQuery.setParam("facet.field", yAxis);
+		edcSolrQuery.setParam("facet.field", schTypes[0]);
+
 
 		SolrEdcMessageVO edcVo = solrEdcService.getEmassMessage(edcSolrQuery, adminId);
 		List<Map<String, Object>> edcAll = edcVo.getFacetData();
 		for (Map<String, Object> checkedItem : list) {
 			String key = Common.nvl(checkedItem.get("rowKey"));
 			allTotal += Common.nvz(checkedItem.get("total"));
-			for(String header : solrCheckedStatVo.getPivotHeader()) {
+			for(String header : headers) {
 				totalItem.put(Common.nvl(header), Common.nvz(totalItem.get(header)) + Common.nvz(checkedItem.get(header)));
 			}
 			for (Map<String, Object> edcItem : edcAll) {
@@ -472,26 +521,143 @@ public class SolrEdcStatController {
 		String rowKey = Common.nvl(request.getParameter("rowKey")).replaceAll("-", "");
 		String colKey = Common.nvl(request.getParameter("colKey")).replaceAll("-", "");
 		String startDate = Common.nvl(request.getParameter("startDate"));
-		String dateType = Common.nvl(request.getParameter("dateType"));
 		String endDate = Common.nvl(request.getParameter("endDate"));
+		String dateType = Common.nvl(request.getParameter("dateType"));
+
+		String dateStr = (Common.isEquals(dateType,"ctime")) ?  "ctime" : "checked.readTime";
+		String schDate = dateStr + xAxis;
+		List<String> rows = Arrays.stream(rowKey.split(",")).filter(m-> !Common.isEmpty(m)).collect(Collectors.toList());
+		String fromDate = "";
+		String toDate =  "";
+
+		String query = "";
+		if( xAxis.length() == 9 ) {
+			fromDate = DateUtil.getDateStr(xAxis,DateUtil.getMinDate(xAxis,rows));
+			toDate =  DateUtil.getDateStr(xAxis,DateUtil.getMaxDate(xAxis,rows));
+			startDate = startDate.substring(0,8);
+			endDate = endDate.substring(0,8);
+		}else if( xAxis.length() == 7  ) {
+			fromDate = DateUtil.getDateStr(xAxis,DateUtil.getMinDate(xAxis,rows));
+			toDate =  DateUtil.getDateStr(xAxis,DateUtil.getMaxDate(xAxis,rows));
+			startDate = startDate.substring(0,6);
+			endDate = endDate.substring(0,6);
+		}
+
+		String[] schTypes = new String[2];
+		if(Common.isEquals(dateType,"ctime")) schTypes = new String[]{dateStr + xAxis,"checked.readTime"+xAxis};
+		else schTypes = new String[]{"ctime"+xAxis,"checked.readTime"+xAxis};
+
+		String isTotal = Common.nvl(request.getParameter("isTotal"));
+		String totalRow = Common.nvl(request.getParameter("totalRow"));
+
 		int offset = Common.nvz(request.getParameter("offset"));
 		int limit = Common.nvz(request.getParameter("limit"));
-		String query = "";
 		int cnt = rowKey.length();
-
 
 		String adminId = Common.nvl(request.getParameter("adminId"));
 		if (Common.isEmpty(adminId)) adminId = "*";
 
+		if(Common.isEquals(dateType,"ctime")) {
+			/* 수집 시간 */
+			if (xAxis.length() == 3) {
+				//시간 검색
+				String rowkeyQ = rowKeysQuery(rowKey);
+				rowKey = rowkeyQ;
+				if (Common.isEquals(isTotal, "true")) {
+					query += String.format("+%s:[%s TO %s]", "ctime", startDate, endDate);
+					query += String.format("+%s:(%s)", schTypes[0], rowkeyQ);
+				} else if (Common.isEquals(totalRow, "true")) {
+					//열람
+					query += String.format("+%s:[%s TO %s]", "ctime", startDate, endDate);
+					query += String.format("+%s:(%s)", schTypes[0], rowkeyQ);
+					query += String.format("+%s:(%s)", schTypes[1], colKey);
+				} else if (!colKey.isEmpty()) {
+					// 열람 셀
+					query += String.format("+%s:[%s TO %s]", "ctime", startDate, endDate);
+					String type = (Common.isEquals(dateType, "ctime")) ? "checked.readTime" : "ctime";
+					query += "+" + yAxis + ":" + rowKey + " +" + type + xAxis + ":" + "\"" + colKey + "\" ";
+				} else {
+					//수집 & 열람 소계
+					String type = (Common.isEquals(dateType, "ctime")) ? "ctime" : "checked.readTime";
+					query += String.format("+%s:[%s TO %s]", type + xAxis, startDate, endDate);
+					query += String.format("+%s:(%s)", schTypes[1], rowkeyQ);
+				}
 
-		if (!colKey.isEmpty()) {
-			query += "+" + xAxis + ":" + "\"" + colKey + "\" ";
+			} else {
+				// 날짜 검색
+				// 전체 합계 검색
+				if (Common.isEquals(isTotal, "true")) {
+					query += String.format("+%s:[%s TO %s]", schTypes[0], fromDate, toDate);
+					query += String.format("+%s:[%s TO %s]", schTypes[1], startDate, endDate);
+
+				} else if (Common.isEquals(totalRow, "true")) {
+					//열람 소계
+					query += String.format("+%s:[%s TO %s]", schTypes[0], fromDate, toDate);
+					query += "+" + schTypes[1] + ":" + "\"" + colKey + "\" ";
+				} else if (!colKey.isEmpty()) {
+					// 열람 셀
+					String type = "checked.readTime";
+					query += "+" + yAxis + ":" + rowKey + " +" + type + xAxis + ":" + "\"" + colKey + "\" ";
+				} else {
+					//수집 & 열람 소계
+					String type = (Common.isEquals(dateType, "ctime")) ? "ctime" : "checked.readTime";
+					query += String.format("+%s:[%s TO %s]", type + xAxis, fromDate, toDate);
+					query += "+" + dateStr + xAxis + ":" + "\"" + colKey + "\" ";
+				}
+			}
+		}else{
+			/* 열람 시간  */
+			if (xAxis.length() == 3) {
+				//시간 검색
+				String rowkeyQ = rowKeysQuery(rowKey);
+				rowKey = rowkeyQ;
+				if (Common.isEquals(isTotal, "true")) {
+					query += String.format("+%s:[%s TO %s]", "ctime", startDate, endDate);
+					query += String.format("+%s:(%s)", schTypes[0], rowkeyQ);
+				} else if (Common.isEquals(totalRow, "true")) {
+					//열람
+					query += String.format("+%s:[%s TO %s]", "ctime", startDate, endDate);
+					query += String.format("+%s:(%s)", schTypes[0], rowkeyQ);
+					query += String.format("+%s:(%s)", schTypes[1], colKey);
+				} else if (!colKey.isEmpty()) {
+					// 열람 셀
+					query += String.format("+%s:[%s TO %s]", "ctime", startDate, endDate);
+					query += "+" + "ctime_hh" + ":" + rowKey + " +" + "checked.readTime" + xAxis + ":" + "\"" + colKey + "\" ";
+				} else {
+					//수집 & 열람 소계
+					String type = (Common.isEquals(dateType, "ctime")) ? "ctime" : "checked.readTime";
+					query += String.format("+%s:[%s TO %s]", type + xAxis, startDate, endDate);
+					query += String.format("+%s:(%s)", schTypes[1], rowkeyQ);
+				}
+
+			} else {
+				// 날짜 검색
+				// 전체 합계 검색
+				if (Common.isEquals(isTotal, "true")) {
+					if (Common.isEquals(totalRow, "true")) {
+						query += String.format("+%s:[%s TO %s] ", schTypes[0], startDate, endDate);
+						query += String.format("+%s:[%s TO %s]", schTypes[1], fromDate, toDate);
+					}else {
+						query += String.format("+%s:[%s TO %s] ", schTypes[0], toDate, toDate);
+						query += String.format("+%s:[%s TO %s]", schTypes[1], startDate, endDate);
+					}
+				} else if (Common.isEquals(totalRow, "true")) {
+					//열람 소계
+					query += String.format("+%s:[%s TO %s]", schTypes[0],fromDate, toDate);
+					query += String.format("+%s:%s ", schTypes[1], colKey);
+				} else if (!colKey.isEmpty()) {
+					// 열람 셀
+					query += "+ctime"+xAxis + ":" + rowKey + " +" + "checked.readTime"+xAxis + ":" + "\"" + colKey + "\" ";
+				} else {
+					//수집 & 열람 소계
+					String type = (Common.isEquals(dateType, "ctime")) ? "ctime" : "checked.readTime";
+					query += String.format("+%s:[%s TO %s]", type + xAxis, fromDate, toDate);
+					query += String.format("+%s%s:[%s TO %s]", dateStr, xAxis,fromDate, toDate);
+				}
+			}
 		}
 
-
-		if (Common.isEquals(dateType,"date")) query += String.format(" +checked.readTime:[%s TO %s]", startDate, endDate);
-		else query +=String.format(" +ctime:[%s TO %s]", startDate, endDate);
-
+		log.info("col query {}" ,query);
 		query += String.format("+checked.readId:%s", adminId);
 
 		SolrQuery sq = new SolrQuery();
@@ -1062,6 +1228,31 @@ public class SolrEdcStatController {
 	}
 
 
+	public String rowKeysQuery(String rows){
+		StringBuilder resultBuilder = new StringBuilder();
+		String[] ro = rows.split(",");
+		for (String s:ro){
+			if(s=="") continue;
+			if(s.trim().length() == 1) continue;
+			resultBuilder.append("(");
+			resultBuilder.append(s.substring(0,2));
+			resultBuilder.append(")");
+		}
+		return resultBuilder.toString();
+	}
+
+	public String rowKeysQuery(List<String> list){
+		StringBuilder resultBuilder = new StringBuilder();
+		String rows = Common.join(list, " ");
+		String[] ro = rows.split(" ");
+		for (String s:ro){
+			resultBuilder.append("(");
+			resultBuilder.append(s);
+			resultBuilder.append(")");
+		}
+		return resultBuilder.toString();
+	}
+
 
 	// "pi_total" 기준으로 정렬하는 Comparator 클래스
 	class PiTotalComparator implements Comparator<Map<String, Object>> {
@@ -1074,4 +1265,6 @@ public class SolrEdcStatController {
 			return Double.compare(piTotal2, piTotal1);
 		}
 	}
+
+
 }

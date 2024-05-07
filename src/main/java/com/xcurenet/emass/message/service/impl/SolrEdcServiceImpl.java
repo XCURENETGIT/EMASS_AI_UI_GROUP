@@ -536,7 +536,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		List<AbstractAggregationBuilder<?>> aggregations = new ArrayList<>();
 		if(Common.isEquals(sq.get("piAnalysisYn"), "Y")) return aggregations;
 		List<String> pivots = Common.toList(sq.get("facet.pivot"), ",");
-		if (pivots.size() > 1) {
+		if (pivots.size() > 0) {
 			//f."+yAxis+".facet.limit
 			Iterator iter =  pivots.iterator();
 			AbstractAggregationBuilder<TermsAggregationBuilder> termsAggregation = AggregationBuilders.terms(pivots.get(0))
@@ -998,12 +998,44 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		return indics;
 	}
 
+
 	public static Map<Date, List<parseJsonFile>> groupingByMlFeedbackTime(List<parseJsonFile> feedbackList) {
 		return feedbackList.stream().collect(Collectors.groupingBy(parseJsonFile::getMlFeedbackTime));
 	}
 
 	private Map<String, List<parseJsonFile>> groupingBySecurityYn(List<parseJsonFile> ChangefeedbackList) {
 		return ChangefeedbackList.stream().collect(Collectors.groupingBy(parseJsonFile::getSecurityYn));
+	}
+
+	@Override
+	public List<SolrEdcVO> getCheckedList(List<SolrEdcVO> solrVo) {
+		List<SolrEdcVO> result = new ArrayList<>();
+
+		//조회 된 결과에서 중복 데이터 제거
+		List<SolrEdcVO> emass = solrVo.stream().filter(distinctBykey(SolrEdcVO::getSvcNm, SolrEdcVO::getSubject, SolrEdcVO::getSender)).collect(Collectors.toList());
+		//조회 결과에서 중복되는 데이터만 추출
+		List<SolrEdcVO> allOverlap = solrVo.stream().filter(distinctBykey2(SolrEdcVO::getSvcNm, SolrEdcVO::getSubject, SolrEdcVO::getSender)).collect(Collectors.toList());
+
+		//중복 처리를 위한 정렬
+		emass = overlapSortData(emass);
+		allOverlap = overlapSortData(allOverlap);
+
+		int idx = 0; //중복 데이터 find 할때 범위 축소를 위한 Index
+
+		for (SolrEdcVO obj : emass) {
+			List<SolrEdcVO> overlapData = setOverLapCnt(allOverlap, obj, idx); //중복 제거한 데이터 List 에서 데이터 별로 중복 데이터 find
+			if (overlapData.isEmpty()) { //중복 데이터 없을시
+				result.add(obj);
+			} else if (!overlapData.isEmpty()) { //중복 데이터 있을 시
+				result.add(setReaderMsg(overlapData, obj)); //중복 데이터와 전체 크기를 비교하여 제일 큰 데이터를 대표 메시지로 선정하여 최종 결과 List에 추가
+				idx += overlapData.size(); //존재 하는 중복 데이터 만큼 Index 증가하여 다음 중복 데이터 find
+			}
+		}
+
+		//기존 정렬 방식 (ctime 내림차순) 으로 재 정렬
+		result.sort((first, second) -> second.getCtime().compareTo(first.getCtime()));
+
+		return result;
 	}
 
 // 스크립트 쿼리 (백업용)

@@ -461,9 +461,9 @@
         var valChk = grid1.getValue(grid1.Row, grid1.Col);
         if(valChk == "" || valChk == "-") return;
 
-        if(grid1.getValue(grid1.Row, 'NUM') == '<s:message code="bodyview.total"/>') {
+        if(grid1.getValue(grid1.Row, 'NUM') == '<s:message code="bodyview.total"/>' || grid1.Row == grid1.data.length -1) {
             var key = "";
-            if (grid1.ColKey(grid1.Col) == "total") {
+            if (grid1.ColKey(grid1.Col) == "total" || grid1.Row == grid1.data.length -1) {
                 for (var i = 0; i < grid1.Rows; i++) {
                     if (grid1.getValue(i, 'rowKey') == "" || grid1.getValue(i, 'rowKey') == "-") continue;
                     else key += grid1.getValue(i, 'rowKey').replaceAll("\"", "\\\"") + ",";
@@ -551,18 +551,19 @@
         grid1.on();
         grid1.pageSize=5000
         var xAxis = $('select[name=xAxis]').val();
-
+        var yAxis = $('select[name=yAxis]').val();
+        
+        
         var baseType = $("#baseType").val();
-        var timeValue = '';
-        if (baseType == "ctime")  timeValue = 'ctime'+xAxis;
-        else  timeValue = 'checked.readTime'+xAxis;
-
+        // var xTimeValue = (baseType == "ctime") ?  'checked.readTime'+xAxis :'ctime'+xAxis  ;
+        // var yTimeValue = 'ctime'+xAxis;
+		
         ui.get({
             url: 'getCheckedStatList.xcn',
             startDate: sDate + "000000",
             endDate: eDate + "235959",
             detailQuery: '',
-            xAxis:  timeValue,
+            xAxis:  xAxis,
             yAxis: 'ctime' + xAxis,
             dateType: dateType,
             adminId: adminId,
@@ -570,6 +571,7 @@
             limit: grid1.pageSize,
             xAxis_str: xAxis_str,
             success: function (data, total) {
+                console.log(data)
                 grid1.colInit();
                 grid1.autoNumber();
                 var str = '';
@@ -577,7 +579,7 @@
                 else if (xAxis == '_yyyymm') str = '<s:message code="stat.ctime.yyyymm"/>';
                 else if (xAxis == '_hh') str = '<s:message code="stat.ctime.hh"/>';
 
-                grid1.colAdd("rowKey", str, 180, "center", false, 'link')
+                grid1.colAdd("rowKey", str, 180, "center", false, 'link');
                 grid1.colAdd("edcTotal", '<s:message code="stat.ctime.total"/>', 130, "right", false, 'nomal', function (row, cell, value, columnDef, dataContext) {
                     if (value != undefined) return value.comma();
                     else return '';
@@ -659,15 +661,24 @@
 
         var baseType = $("#baseType").val();
         var solrQueryText = "";
-        var timeValue = '';
-        if (baseType == "ctime") {
-            solrQueryText = $('#solrQueryText').val();
-            if (baseType == "ctime")  timeValue = 'ctime'+xAxis;
-        } else  timeValue = 'checked.readTime'+xAxis;
+        var isTotal = false;
+        var totalRow = false;
+        
+
         searchFlag = true;
         currentgrid.on();
+        if(grid1.ColKey(grid1.Col) == "total")  isTotal = true;
+        if(grid1.Row == grid1.data.length -1) totalRow = true;
+        
 
 
+        // alert('colkey {}'+ colKey)
+        // alert('rowkey {}'+ rowKey)
+        // searchFlag = false;
+        // currentgrid.off();
+        // return;
+		//
+		//
 
         ui.get({
             url: 'getStatCheckedDetailList.xcn',
@@ -676,16 +687,19 @@
             startDate: $('#startdate').val().replaceAll("-", "") + "000000",
             endDate: $('#enddate').val().replaceAll("-", "") + "235959",
             detailQuery: solrQueryText,
-            xAxis:  timeValue,
-            xAxis_str: xAxis_str,
+            xAxis:  xAxis,
             yAxis: 'ctime' + xAxis,
+            xAxis_str: xAxis_str,
             dateType: baseType,
             adminId: $('#adminId').val(),
+			isTotal:isTotal,
+            totalRow:totalRow,
             offset: currentgrid.data.length,
             limit: currentgrid.pageSize,
             success: function (data, total) {
                 if ( lastRow == 'Y' || lastRow == undefined ) detailTotal = total;
 
+                
                 currentgrid.appendData(data.emass);
                 currentgrid = getCurrentGrid();
                 if ( currentgrid.loadingPage == 0 ) currentgrid.Select(-1,-1);
