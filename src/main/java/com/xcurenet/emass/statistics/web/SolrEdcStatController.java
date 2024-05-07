@@ -844,11 +844,9 @@ public class SolrEdcStatController {
 		if (!rowKey.isEmpty()) {
 			sq.setParam("facet.pivot", "svc12");
 		}
-
-		if (flag != 0) {
-			sq.setParam("facet.pivot", "svc12");
-		}
-
+//		if (flag != 0) {
+//			sq.setParam("facet.pivot", "svc12");
+//		}
 		sq.setFacetSort(xAxis);
 		setAuthoritys(sq, adminId);
 
@@ -856,37 +854,34 @@ public class SolrEdcStatController {
 		ElasticsearchAggregations elasticSearchAggregations = (ElasticsearchAggregations) resp.getAggregations();
 		//main aggregations key 출력
 		Aggregations mainAggregations = elasticSearchAggregations.aggregations();
-		Map<String, Aggregation> mainAggsMap = mainAggregations.getAsMap();
-		String mainKey = mainAggsMap.keySet().stream().collect(Collectors.joining());
-
-		/* main Aggregations 추출 */
-		Terms facetPivot = elasticSearchAggregations.aggregations().get(mainKey);
-		List<Terms.Bucket> bucketList = (List<Terms.Bucket>) facetPivot.getBuckets();
-		Aggregations subAggs = null;
-
-		if (null != bucketList && bucketList.size() >= 1)
-			subAggs = bucketList.get(0).getAggregations(); // sub Aggregations 존재 여부
-
 		Map<String, Object> item = new HashMap();
-		Long total = 0L;
-		if (null == subAggs || subAggs.asList().size() == 0) {
-			for (Terms.Bucket bucket : bucketList) {
-				if(bucket.getDocCount() > 0) {
-					item.put(bucket.getKeyAsString(), bucket.getDocCount());
-					total = total + bucket.getDocCount();
-					list.add(bucket.getKeyAsString());
+		for (Map.Entry<String, Aggregation> aggsKey : mainAggregations.getAsMap().entrySet()) {
+			/* main Aggregations 추출 */
+			Terms facetPivot = elasticSearchAggregations.aggregations().get(aggsKey.getKey());
+			List<Terms.Bucket> bucketList = (List<Terms.Bucket>) facetPivot.getBuckets();
+			Aggregations subAggs = null;
 
+			if (null != bucketList && bucketList.size() >= 1)
+				subAggs = bucketList.get(0).getAggregations(); // sub Aggregations 존재 여부
 
-					item.put("total", total);
-					if (flag == 0) {
-						item.put("rowKey", "totalOCR");
-						item.put("rowName", Prop.propFormat("stat.ocr.target"));
-					} else if (flag == 1) {
-						item.put("rowKey", "detectOCR");
-						item.put("rowName", Prop.propFormat("stat.ocr.include"));
-					} else if (flag == 2) {
-						item.put("rowKey", "noOCR");
-						item.put("rowName", Prop.propFormat("stat.ocr.notinclude"));
+			Long total = 0L;
+			if (null == subAggs || subAggs.asList().size() == 0) {
+				for (Terms.Bucket bucket : bucketList) {
+					if (bucket.getDocCount() > 0) {
+						item.put(bucket.getKeyAsString(), bucket.getDocCount());
+						total = total + bucket.getDocCount();
+						list.add(bucket.getKeyAsString());
+						item.put("total", total);
+						if (flag == 0) {
+							item.put("rowKey", "totalOCR");
+							item.put("rowName", Prop.propFormat("stat.ocr.target"));
+						} else if (flag == 1) {
+							item.put("rowKey", "detectOCR");
+							item.put("rowName", Prop.propFormat("stat.ocr.include"));
+						} else if (flag == 2) {
+							item.put("rowKey", "noOCR");
+							item.put("rowName", Prop.propFormat("stat.ocr.notinclude"));
+						}
 					}
 				}
 			}
