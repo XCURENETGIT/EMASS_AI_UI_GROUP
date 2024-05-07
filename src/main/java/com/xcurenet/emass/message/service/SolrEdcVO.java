@@ -29,6 +29,8 @@ public class SolrEdcVO {
 
 	public String epmsg_type;
 
+	public String senderId;
+
 	public String cid;
 
 	public String srcip;
@@ -178,6 +180,7 @@ public class SolrEdcVO {
 	public List<String> attachtype;
 
 	public int attachcnt;
+
 
 	public String body_snippet;
 

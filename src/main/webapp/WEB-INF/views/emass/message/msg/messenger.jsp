@@ -144,7 +144,6 @@
 
 
             $(document).on('click', '.person', function (){
-                console.log(".person")
                 var xrootmtr = $(this).attr('xrootmtr');
                 var srcip = $(this).attr('srcip');
                 var usr_id = $(this).attr('usr_id');
@@ -157,7 +156,6 @@
                 });
 
                 $(this).addClass('active');
-                getMessengerAccount(userid,$(this).attr('svc12'))
                 $('#msgid').text(msgid);
                 $('#xrootmtr').text(xrootmtr);
 
@@ -329,14 +327,10 @@
                 var name = $(this).attr('data-name');
                 var srcip = $(this).attr('data-srcip');
                 var usr_id = $(this).attr('data-usrid');
-                var account = $(this).attr('data-account');
                 var xrootmtr = $('#xrootmtr').text();
                 var msgid = $('#msgid').text();
 
-                var element = document.querySelector('.person.active');
-                var svc12Value = element.getAttribute('svc12');
 
-                getMessengerAccount(srcip,svc12Value);
                 $('#selectUserInfo').attr('data-srcip', srcip);
                 $('#selectUserInfo').attr('data-name', name);
                 $('#selectUserInfo').attr('data-usrid', usr_id);

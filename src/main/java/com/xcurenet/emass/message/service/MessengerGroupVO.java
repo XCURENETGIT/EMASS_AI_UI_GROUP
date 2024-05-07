@@ -14,7 +14,7 @@ public class MessengerGroupVO  implements Comparable<MessengerGroupVO> {
 	private String title;
 
 	private String userkey;
-
+	private String senderId;
 	private String message;
 	private long user_cnt;
 	private long msg_cnt;

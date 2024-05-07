@@ -212,6 +212,7 @@ public class MessengerEdcGroupVO {
 		MessengerGroupVO solrGroupVO = new MessengerGroupVO();
 		solrGroupVO.setMsgid(edc.getMsgid());
 		solrGroupVO.setSvc(edc.getSvc());
+		solrGroupVO.setSenderId(edc.getSenderId());
 		solrGroupVO.setReadYn(isRead(edc.getChecked(), adminId) ? "Y" : "N");
 		solrGroupVO.setReadYn(edc.getReadYn());
 		solrGroupVO.setSvc3(edc.getSvc3());
@@ -252,7 +253,7 @@ public class MessengerEdcGroupVO {
 		String Jikgubnm = "";
 		String userNm = "";
 
-		userId = Config.getUserId2(edc.getSender());
+		userId = Config.getUserId2(edc.getSenderId());
 		userNm =  Config.getUserName(userId);
 		deptNm = Config.getUserDeptnm(userId);
 		Jikgubnm = Config.getUserJikgubnm(userId);
@@ -261,7 +262,18 @@ public class MessengerEdcGroupVO {
 		result.append(deptNm).append("/");
 		result.append(Jikgubnm).append("/");
 		result.append(userNm);
-		if(Common.isNotEmpty(result.toString())) result.append("(").append(getSender(edc)).append(")");
+		String senderName = "";
+		if (Common.isNotEmpty(edc.getSenderId())) {
+			senderName = Config.getUserName(edc.getSenderId());
+		} else {
+			if(Common.isNotEmpty(edc.getSender())) {
+				senderName = Config.getUserName(edc.getSender());
+			}else{
+				senderName=edc.getSender();
+			}
+		}
+		result.append("(").append(senderName).append(")");
+
 
 
 		return result.toString();
@@ -271,6 +283,7 @@ public class MessengerEdcGroupVO {
 		MessengerGroupVO solrGroupVO = new MessengerGroupVO();
 		solrGroupVO.setMsgid(edc.getMsgid());
 		solrGroupVO.setSvc(edc.getSvc());
+		solrGroupVO.setSenderId(edc.getSenderId());
 		solrGroupVO.setSvc3(edc.getSvc3());
 		solrGroupVO.setSvc12(edc.getSvc12());
 		solrGroupVO.setReadYn(isRead(edc.getChecked(), adminId) ? "Y" : "N");

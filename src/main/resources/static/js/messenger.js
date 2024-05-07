@@ -495,54 +495,32 @@ function makeFileList(data) {
 }
 
 
-function userSelectBox(data, srcip, usr_id){
+function userSelectBox(data, srcip, usr_id) {
     var name = $('#selectUserInfo').attr('data-name');
 
-    var element = document.querySelector('.person.active');
-    var svc12Value = element.getAttribute('svc12');
-
     var str = '';
-    for(var i=0; i<data.length; i++){
+    for (var i = 0; i < data.length; i++) {
         var ip = data[i].srcip == undefined ? Object.keys(data[i].srcIpList[0]).toString() : data[i].srcip;
         var selectUserTitle = ip;
-        if( nvl(data[i].name) != '') {
+        if (nvl(data[i].name) != '') {
             selectUserTitle = data[i].name;
-            if( nvl(data[i].usr_id) != '') selectUserTitle += ' ('+data[i].usr_id+')';
-            else if( nvl(data[i].srcip) != '') selectUserTitle += ' ('+data[i].srcip+')';
-        }
-        else if( nvl(data[i].usr_id) != '') selectUserTitle = data[i].usr_id;
-        else if( nvl(data[i].srcip) != '') selectUserTitle = data[i].srcip;
+            if (nvl(data[i].usr_id) != '') selectUserTitle += ' (' + data[i].usr_id + ')';
+            else if (nvl(data[i].srcip) != '') selectUserTitle += ' (' + data[i].srcip + ')';
+        } else if (nvl(data[i].usr_id) != '') selectUserTitle = data[i].usr_id;
+        else if (nvl(data[i].srcip) != '') selectUserTitle = data[i].srcip;
 
         $('#selectUserInfo').attr('data-srcip', nvl(data[i].srcip));
         $('#selectUserInfo').attr('data-name', nvl(data[i].name));
         $('#selectUserInfo').attr('data-usrid', nvl(data[i].usr_id));
 
 
-        $('#selectUserInfo').html(selectUserTitle)
+        $('#selectUserInfo').html(selectUserTitle);
 
-        str += '<li class="selectUser clickUser" data-name="'+nvl(data[i].name)+'" data-srcip="'+nvl(data[i].srcip)+'" data-usrid="'+nvl(data[i].usr_id)+'"  data-sender="'+nvl(data[i].srcip)+'"><a href="javascript:void(0);">'+selectUserTitle+'</a></li>';
-
+        str += '<li class="selectUser clickUser" data-name="' + nvl(data[i].name) + '" data-srcip="' + nvl(data[i].srcip) + '" data-usrid="' + nvl(data[i].usr_id) + '"><a href="javascript:void(0);">' + selectUserTitle + '</a></li>';
     }
     $('#selectUser_menu').html(str);
     getDetailData();
 
-}
-
-function getMessengerAccount(id,svc12Value){
-
-
-    ui.postJson({
-        url: 'getMessengerAccount.xcn',
-        id: id,
-        svc12:svc12Value,
-        success: function (data, total) {
-            console.log(id+"/"+svc12Value+"/"+data)
-            $('#selectUserInfo').attr('data-account',data);
-        },
-        error: function (status, message) {
-            ui.alertMsg(message);
-        }
-    });
 }
 
 function getDetailData(usr_id) {
@@ -576,14 +554,13 @@ function rtnGroupList(data, type) {
         li.setAttribute("usrid", data[i].usrid);
         li.setAttribute("body_snippet", data[i].body_snippet);
         li.setAttribute("name", data[i].name);
-        li.setAttribute("svc12", data[i].svc12);
         li.setAttribute("data-sender", data[i].sender);
         li.setAttribute("data-chat", "person" + (i + 1));
 
         var user_cnt = data[i].user_cnt;
         var svc3 = data[i].svc3;
-        if( svc3 == 'J') obj.body_snippet =contentBodyDivJS.chatJoin;
-        else if( svc3 == 'L') obj.body_snippet = contentBodyDivJS.chatLeave;
+        if( svc3 == 'J') data[i].body_snippet =contentBodyDivJS.chatJoin;
+        else if( svc3 == 'L') data[i].body_snippet = contentBodyDivJS.chatLeave;
         var closeFlag = false;
         if (user_cnt == 1 && svc3 == 'L') closeFlag = true;
 
@@ -833,20 +810,14 @@ function makeList2(nextFlag) {
     var str = '<ul class="pageInfoDiv timeline">';
     var usrid = $('#selectUserInfo').attr('data-usrid');
     var srcip = $('#selectUserInfo').attr('data-srcip');
-    var account =$('#selectUserInfo').attr('data-account');
-    var sender =$('#selectUserInfo').attr('data-sender');
     if (detailDataSet.length < detailLimit && !nextFlag ) str += noPrevDataMsg();
 
     for (var i =0; i <detailDataSet.length; i++) {
         dataHasFlag = true;
         var obj = detailDataSet[i];
         var chkPati = false;
-        if (obj.sender.includes('@')){
-            user = obj.sender.split('@')[0];
-        }
-        if (nvl(obj.user) === nvl(obj.sender) ||user === nvl(obj.userkey) || nvl(obj.sender) === sender|| (account && account.split(',').map(item => item.trim()).includes(obj.sender))) {
-            chkPati = true;
-        }
+
+        if( srcip == obj.senderId || srcip == obj.sender) chkPati = true;
 
         //if (nvl(obj.userid) != '' && (nvl(user) == nvl(obj.sender))) chkPati = true;
         str += checkDate(i);
@@ -925,10 +896,7 @@ function removeStyleAttributes(htmlString) {
 function makeList(nextFlag) {
     var dataHasFlag = false;
     var str = '<ul class="pageInfoDiv timeline">';
-    var usrid = $('#selectUserInfo').attr('data-usrid');
     var srcip = $('#selectUserInfo').attr('data-srcip');
-    var account =$('#selectUserInfo').attr('data-account');
-    var sender =$('#selectUserInfo').attr('data-sender');
 
     if (detailDataSet.length < detailLimit && !nextFlag ) str += noPrevDataMsg();
 
@@ -936,15 +904,11 @@ function makeList(nextFlag) {
         dataHasFlag = true;
         var obj = detailDataSet[i];
         var chkPati = false;
-        var user = obj.user;
-        if (obj.sender.includes('@')){
-            user = obj.sender.split('@')[0];
-        }
-        if (nvl(obj.user) === nvl(obj.sender) ||user === nvl(obj.userkey) || nvl(obj.sender) === sender|| (account && account.split(',').map(item => item.trim()).includes(obj.sender))) {
-            chkPati = true;
-        }
 
 
+
+        //if (nvl(obj.userid) != '' && ( srcip == nvl(obj.userid)) &&  nvl(user) == nvl(obj.sender)) chkPati = true;
+        if( srcip == obj.senderId || srcip == obj.sender) chkPati = true;
         str += checkDate(i);
 
         str += '<li class="p12 bubble ' + (chkPati ? 'txt_right slide_right' : 'txt_left slide_left') + (i == 0 && !nextFlag ? ' lastReadLi' : '') + '" id="' + obj.msgid + '" ctime="' + obj.ctime + '" userid="' + obj.userid + '" srcip="' + obj.srcip + '" xrootmtr="' + obj.xrootmtr + '">';
@@ -1006,18 +970,13 @@ function makePrevList() {
     // if (prevDetailDataSet.length < detailLimit) str += noPrevDataMsg();
     var usrid = $('#selectUserInfo').attr('data-usrid');
     var srcip = $('#selectUserInfo').attr('data-srcip');
-    var account =$('#selectUserInfo').attr('data-account');
-    var sender =$('#selectUserInfo').attr('data-sender');
     // str += checkDatePre(prevDetailDataSet.length-1);
     for (var i = prevDetailDataSet.length-1; i >0; i--) {
         dataHasFlag = true;
         var obj = prevDetailDataSet[i];
-        if (obj.sender.includes('@')){
-            user = obj.sender.split('@')[0];
-        }
-        if (nvl(obj.user) === nvl(obj.sender) ||user === nvl(obj.userkey) || nvl(obj.sender) === sender|| (account && account.split(',').map(item => item.trim()).includes(obj.sender))) {
-            chkPati = true;
-        }
+        var chkPati = false;
+        if( srcip == obj.senderId || srcip == obj.sender) chkPati = true;
+        str += checkDate(i);
 
         str += '<li class="p12 bubble txt_right slide_right timeline-inverted" id="' + obj.msgid + '" ctime="' + obj.ctime + '" userid="' + obj.userid + '" srcip="' + obj.srcip + '" xrootmtr="' + obj.xrootmtr + '" >';
 
