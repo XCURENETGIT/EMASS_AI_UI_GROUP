@@ -380,12 +380,6 @@ public class LoginController {
 
 		admin.setLoginType(login.getLoginType());
 
-		if (Common.isEquals(admin.getStatus(), "L")) {
-			msg = Prop.propFormat("login.longterm.unuse") + "(" + login.getUserId() + ")";
-			audit.setInformation(msg);
-			auditService.insertAudit(audit);
-			return new XcnResponseVO(XcnRspCode.OK_CUSTOM, "USER_LOCK").setMessage(msg);
-		}
 
 		if (Common.isNotEmpty(admin.getAccessIp())) {
 			boolean flag = false;
@@ -416,6 +410,7 @@ public class LoginController {
 		if (Common.isNotEquals(admin.getAdminPw(), login.getUserPw())) {
 			admin.setAccessFailCnt(admin.getAccessFailCnt() + 1);
 			adminService.updateUserPasswordWrongCount(admin);
+
 			if (admin.getAccessFailCnt() >= passwordFailCount) {
 				LockRelease lock = new LockRelease();
 				lock.setAdmin(admin);
@@ -436,6 +431,14 @@ public class LoginController {
 			auditService.insertAudit(audit);
 			return new XcnResponseVO(XcnRspCode.OK_CUSTOM, "CORRECT_USER").setMessage(msg);
 		}
+
+		if (Common.isEquals(admin.getStatus(), "L")) {
+			msg = Prop.propFormat("login.longterm.unuse") + "(" + login.getUserId() + ")";
+			audit.setInformation(msg);
+			auditService.insertAudit(audit);
+			return new XcnResponseVO(XcnRspCode.OK_CUSTOM, "USER_LOCK").setMessage(msg);
+		}
+
 		if (Common.isEquals(admin.getUseYn(), "N")) {
 			msg = Prop.propFormat("login.cannotuse.id") + "(" + login.getUserId() + ")";
 			audit.setAdminName("");
