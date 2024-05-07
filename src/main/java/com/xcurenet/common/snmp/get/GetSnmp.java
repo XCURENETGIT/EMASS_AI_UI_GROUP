@@ -131,6 +131,7 @@ public class GetSnmp {
 		result.put("memInfoFree", "0 MB");
 		result.put("memInfoShared", "0 MB");
 		result.put("memInfoCach", "0 MB");
+		result.put("memInfoBuff", "0 MB");
 		result.put("memInfoSlab", "0 MB");
 		result.put("memInfoUsage", "0");
 		result.put("memInfoLimit", "0");
@@ -148,6 +149,7 @@ public class GetSnmp {
 			result.put("memInfoFree", memory(mem.get("memInfoFree")));
 			result.put("memInfoShared", memory(mem.get("memInfoShared")));
 			result.put("memInfoCach", memory(mem.get("memInfoFree")));
+			result.put("memInfoBuff", memory(mem.get("memInfoBuff")));
 			result.put("memInfoSlab", memory(mem.get("memInfoSlab")));
 			result.put("memInfoUsage", Common.convertSnmpVal(Common.nvz(mem.get("memInfoUsage"))));
 			result.put("memInfoLimit", Common.nvz(mem.get("memInfoLimit")));
