@@ -1546,7 +1546,7 @@
 							<label>(<s:message code="deviceInfo.set.alarm.critical"/>)</label>
 							<span style="float: right;">
 									<a href="javascript:void(0)" class="alertChangeCpu"><span
-											class="glyphicon glyphicon-bell" style=" color: black;" title=""></span>;&nbsp;</a>
+											class="glyphicon glyphicon-bell" style=" color: black;" title=""></span>&nbsp;</a>
 								</span>
 						</div>
 						<div class="panel-body" style="padding: 0px;">
@@ -1564,7 +1564,7 @@
 							<label>(<s:message code="deviceInfo.set.alarm.critical"/>)</label>
 							<span style="float: right;">
 									<a href="javascript:void(0)" class="alertChangeMemory"><span
-											class="glyphicon glyphicon-bell" style=" color: black;" title=""></span>;&nbsp;</a>
+											class="glyphicon glyphicon-bell" style=" color: black;" title=""></span>&nbsp;</a>
 								</span>
 						</div>
 						<div class="panel-body" style="padding: 0px;">
