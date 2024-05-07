@@ -261,7 +261,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			.withTrackTotalHits(true)
 			.withTrackScores((Common.isEquals(sq.get("track_scores"),"true")) ? true : false )
 			.withSearchAfter(searchAfter)
-			.withTimeout(Duration.ofSeconds(60))
+			.withTimeout(Duration.ofSeconds(100))
 			.build();
 		SearchHits<SolrEdcVO> searchHits = null;
 
@@ -311,7 +311,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 	@Override
 	public SolrEdcVO getSelectOne(String msgId,boolean isUnknownDocument) {
-		org.springframework.data.elasticsearch.core.query.Query searchQuery = new NativeSearchQueryBuilder().withQuery(QueryBuilders.termQuery("msgid",msgId)).withTimeout(Duration.ofSeconds(60)).build();
+		org.springframework.data.elasticsearch.core.query.Query searchQuery = new NativeSearchQueryBuilder().withQuery(QueryBuilders.termQuery("msgid",msgId)).withTimeout(Duration.ofSeconds(100)).build();
 		String index = (!isUnknownDocument) ? String.format("%s_w_%s", "edc", msgId.substring(0, 6)) :  String.format("%s_u_%s", "edc", msgId.substring(0, 6));
 		IndexOperations indexoperations = operation.indexOps(IndexCoordinates.of(index));
 		SolrEdcVO solrEdcVO = null;
