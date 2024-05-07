@@ -57,6 +57,7 @@ public class UrlFilterController {
 		if (urlFilterService.isUrlExist(filter)) {
 			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("java.already.insert.url", request, filter.getUrl()));
 		} else {
+			filter.setCreateId(Common.getAdminId(request));
 			int rs = urlFilterService.insertUrlFilter(filter);
 			makeInfoService.addInfoUrlNoLog();
 			return new XcnResponseVO(XcnRspCode.OK, rs);
@@ -71,6 +72,7 @@ public class UrlFilterController {
 		if (urlFilterService.isUrlExist(filter)) {
 			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("java.already.insert.url", request, filter.getUrl()));
 		} else {
+			filter.setUpdateId(Common.getAdminId(request));
 			int rs = urlFilterService.updateUrlFilter(filter);
 			makeInfoService.addInfoUrlNoLog();
 			return new XcnResponseVO(XcnRspCode.OK, rs);
