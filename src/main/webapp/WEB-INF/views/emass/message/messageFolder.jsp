@@ -436,13 +436,23 @@ function initGrid(){
  	grid.colAdd('epmsg_type', '<s:message code="condition.epmsgType.list"/>', 100, 'center', true, 'nomal');
 	grid.colAdd('xrootmtr', '<s:message code="common.msg.xrootmtr"/>', 100, 'left', true, 'nomal');
 	grid.colAdd('interestUserYn', '<s:message code="message.msg.interest"/>', 40, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-		if (value == 'Y') return 'Y';
-		else if (value == 'N') return 'N';
+        if (value == 'N') return '';
+
+        var value = grid.getValue(row, 'interestGroupColor')
+        var str = '';
+        if(value != null && value != undefined && value != ''){
+            var v = value.split(',');
+            for(var i = 0; i < v.length; i++) {
+                str += '<span style="display:inline-block; width: 11px; height: 11px; margin: 5px; background-color:'+v[i]+'"></span>';
+            }
+        }
+        return str;
+
 	});
 	grid.colAdd('readYn', '<s:message code="condition.read"/>', 40, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-		if (value == 'Y') return 'Y';
-		else if (value == 'N')  return 'N';
-		else return '-';
+        if (value == 'Y') return '<div class="readY"></div>';
+        else if (value == 'N') return '<div class="readN"></div>';
+        else return '-';
 	});
 	if( infoFeedbackConf == 'true' && infoFeedbackYn == 'Y' ) {
 	/* grid.colAdd('ml_confd_class_label', '<s:message code="condition.infotype"/>', 100, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
