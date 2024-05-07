@@ -61,7 +61,7 @@
 
         initDateTimePicker('startdate','enddate');
         closeDetailTab();
-        // getData ('Y');
+        getData ('Y');
         
         $('.totalView').click(function(){
 
