@@ -253,7 +253,7 @@ public class MessengerEdcGroupVO {
 		String Jikgubnm = "";
 		String userNm = "";
 
-		userId = Config.getUserId2(edc.getSenderId());
+		userId = Config.getUserId2(edc.getSender());
 		userNm =  Config.getUserName(userId);
 		deptNm = Config.getUserDeptnm(userId);
 		Jikgubnm = Config.getUserJikgubnm(userId);
@@ -266,7 +266,7 @@ public class MessengerEdcGroupVO {
 		if (Common.isNotEmpty(edc.getSenderId())) {
 			senderName = Config.getUserName(edc.getSenderId());
 		} else {
-			if(Common.isNotEmpty(edc.getSender())) {
+			if(Common.isNotEmpty(Config.getUserName(edc.getSender()))) {
 				senderName = Config.getUserName(edc.getSender());
 			}else{
 				senderName=edc.getSender();
