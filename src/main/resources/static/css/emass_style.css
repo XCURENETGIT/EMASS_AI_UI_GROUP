@@ -1220,3 +1220,37 @@ button img {margin-top:-1px;margin-right:2px; vertical-align:middle;}
 .new-row > div[class="bootstrap-datetimepicker-widget dropdown-menu usetwentyfour bottom"] {width:250px;height: 300px;}
 
 .searchSub > div > div[class="bootstrap-datetimepicker-widget dropdown-menu usetwentyfour bottom"] {padding: 10px 0px 10px 10px;}
+
+
+.readY, .readN {
+	background-size: 20px 17px;
+	margin-top: -1px;
+}
+
+.interestUserCheck{
+	background-image:url('../img/icon/star.png');
+	background-position: center;
+	background-repeat:no-repeat;
+	width:100%;
+	height:100%;
+}
+.readY{
+	background-image:url('../img/icon/receive_open_mail.png');
+	background-position: center;
+	background-repeat:no-repeat;
+	width:100%;
+	height:100%;
+}
+.readN{
+	background-image:url('../img/icon/receive_close_mail.png');
+	background-position: center;
+	background-repeat:no-repeat;
+	width:100%;
+	height:100%;
+}
+.subject_readN{
+	font-weight: bold;
+}
+.subject_readY{
+	font-weight: normal;
+}

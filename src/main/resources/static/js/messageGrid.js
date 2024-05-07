@@ -7,12 +7,20 @@ function initGrid( currGrid, gridColumn){
 	currGrid.colAdd('epmsg_type', gridColumn.epmsg_type, 100, 'center', true, 'nomal');
 	currGrid.colAdd('xrootmtr', gridColumn.xrootmtr, 100, 'left', true, 'nomal');
 	currGrid.colAdd('interestUserYn', gridColumn.interestUserYn, 40, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-		if (value == 'Y') return '<div class="interestUserCheck"></div>';
-		else if (value == 'N') return 'N';
+		if (value == 'N') return '';
+		var value = currGrid.getValue(row, 'interestGroupColor')
+		var str = '';
+		if(value != null && value != undefined && value != ''){
+			var v = value.split(',');
+			for(var i = 0; i < v.length; i++) {
+				str += '<span style="display:inline-block; width: 11px; height: 11px; margin-left: 1px; background-color:'+v[i]+'"></span>';
+			}
+		}
+		return str;
 	});
 	currGrid.colAdd('readYn', gridColumn.readYn, 40, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-		if (value == 'Y') return 'Y';
-		else if (value == 'N') return 'N';
+		if (value == 'Y') return '<div class="readY"></div>';
+		else if (value == 'N') return '<div class="readN"></div>';
 		else return '-';
 	});
 	if( infoFeedbackConf == 'true' && infoFeedbackYn == 'Y' ) {

@@ -419,7 +419,7 @@
         return operationArr.search(value, 'id', 'name');
     });
     grid.colAdd('information', '<s:message code="auditLog.information"/>', 400, 'left', false, 'link', function (row, cell, value, columnDef, dataContext) {
-        return value.replaceAll('┌', '<br>');
+        return nvl(value).replaceAll('┌', '<br>');
     });
 
     grid.loadExportMenu('<s:message code="OPERATION_MGMT.AUDIT_LOG"/>');

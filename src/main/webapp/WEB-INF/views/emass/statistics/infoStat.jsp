@@ -320,8 +320,8 @@
 			
 			<div>
 				<select id="piCount" name="piCount">
-					<option value="" selected=""><s:message code="condition.infoStat.cnt"/></option>
-					<option value="1" ><s:message code="condition.infoStat.cnt1"/></option>
+					<option value=""><s:message code="condition.infoStat.cnt"/></option>
+					<option value="1" selected><s:message code="condition.infoStat.cnt1"/></option>
 					<option value="2"><s:message code="condition.infoStat.cnt2"/></option>
 					<option value="5"><s:message code="condition.infoStat.cnt5"/></option>
 					<option value="10"><s:message code="condition.infoStat.cnt10"/></option>
@@ -493,14 +493,24 @@
     var grid2 = new Xgrid('selectGrid', contextRoot);
     grid2.autoNumber();
     grid2.colAdd('interestUserYn', '<s:message code="message.msg.interest"/>', 40, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
-        if (value == 'Y') return '<div class="interestUserCheck"></div>';
-        else if (value == 'N') return '';
+        if (value == 'N') return '';
+        var value = grid2.getValue(row, 'interestGroupColor')
+        var str = '';
+        if(value != null && value != undefined && value != ''){
+            var v = value.split(',');
+            for(var i = 0; i < v.length; i++) {
+                str += '<span style="display:inline-block; width: 11px; height: 11px; margin-left: 1px; background-color:'+v[i]+'"></span>';
+            }
+        }
+        return str;
     });
+
     grid2.colAdd('readYn', '<s:message code="condition.read"/>', 40, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
         if (value == 'Y') return '<div class="readY"></div>';
         else if (value == 'N') return '<div class="readN"></div>';
         else return '-';
     });
+
     grid2.colAdd('attachcnt', '<s:message code="message.msg.file"/>', 35, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
         if (value == '0') return '';
         else return value.comma();

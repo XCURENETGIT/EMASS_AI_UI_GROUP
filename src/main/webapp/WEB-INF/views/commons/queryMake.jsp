@@ -1099,7 +1099,6 @@
 						var lowcount = $('#lowcount').val();
 						var highcount = $('#highcount').val();
 
-
 						if(lowcount != "" || (sizeFilterSelect == "B" && (lowcount != "" || highcount != ""))) {
 							addQueryText = queryAddMinus;
 							if(sizeFilterType == "B") {
@@ -1108,6 +1107,8 @@
 								addQueryText += "attachsize:[";
 							} else if(sizeFilterType == "T") {
 								addQueryText += "attachSizeSum:[";
+							}else{
+                                addQueryText += "size:[";
 							}
 
 							if(sizeFilterSelect == "B") {
@@ -1559,7 +1560,6 @@
 									<td>to, cc, bcc <br>tname, cname, bname</td>
 									<td><span class="fa fa-question queryHelp" data-helptext="<s:message code="query.make.multi.message"/><br>to:<s:message code="condition.to"/><br>cc:<s:message code="condition.cc"/><br>bcc:<s:message code="condition.bcc"/><br>tname:<s:message code="condition.to.name"/><br>cname:<s:message code="condition.cc.name"/><br>bname:<s:message code="condition.bcc.name"/>"></span></td>
 								</tr>
-								<%if(isOCR) { %>
 								<tr>
 									<th>OCR</th>
 									<td>
@@ -1571,7 +1571,6 @@
 									<td>ocr_attach</td>
 									<td ><span class="fa fa-question queryHelp" data-helptext="<s:message code="query.make.multi.message"/>"></span></td>
 								</tr>
-								<%}%>
 								<tr>
 									<th><s:message code="condition.allofus"/></th>
 									<td>

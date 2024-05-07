@@ -41,7 +41,6 @@ public class SearchWordControllerLog {
 		information += "["+Prop.propFormat("common.msg.add")+"]";
 		if(Common.isNotEmpty(searchWord))information += "┌"+Prop.propFormat("searchKeyword.searchKeyword")+": " + searchWord;
 		if(Common.isNotEmpty(relationSearchWord))information += "┌"+Prop.propFormat("condition.relationKeyword")+": " + relationSearchWord;
-		auditService.insertAudit(request, auditVo);
 
 		auditVo.setInformation(information);
 		auditService.insertAudit(request, auditVo);
