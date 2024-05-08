@@ -1,13 +1,20 @@
 package com.xcurenet.emass.message.service.impl;
 
+import com.xcurenet.admin.service.AuthorityService;
+import com.xcurenet.admin.service.AuthorityVO;
+import com.xcurenet.admin.service.impl.AdminServiceImpl;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.KafkaProducerService;
 import com.xcurenet.common.util.MongoUtil;
+import com.xcurenet.common.util.config.Config;
+import com.xcurenet.config.service.ConfigAdminService;
 import com.xcurenet.emass.message.service.*;
 import lombok.extern.log4j.Log4j2;
+import net.sf.json.JSONObject;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.aggregations.AbstractAggregationBuilder;
+import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
@@ -16,20 +23,15 @@ import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
-import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
-import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Log4j2
 @Service("solrCheckedService")
@@ -50,6 +52,15 @@ public class SolrCheckedServiceImpl implements SolrCheckedService {
 	@Resource
 	private KafkaProducerService kafkaProducerService; // kafka
 
+	@Resource(name = "authorityService")
+	private AuthorityService authorityService;
+
+	@Resource
+	private ConfigAdminService configAdminService;
+
+	@Autowired
+	private AdminServiceImpl adminServiceImpl;
+	private AbstractAggregationBuilder<TermsAggregationBuilder> termsAggregation;
 
 	@Override
 	public void setRead(final String msgId, final String adminId) {
@@ -121,6 +132,12 @@ public class SolrCheckedServiceImpl implements SolrCheckedService {
 		return new SolrEdcMessageVO(resp);
 	}
 
+	public SolrEdcMessageVO getCheckedStatList(final SolrQuery sq, final String adminId) throws SolrServerException, IOException {
+		setAuthoritys(sq, adminId);
+		SearchHits<SolrEdcVO> resp = solrEdcService.getList(sq);
+		return new SolrEdcMessageVO(resp);
+	}
+
 	@Override
 	public boolean setMessengerRead(List<SolrEdcVO> data, String adminId) {
 		try {
@@ -133,5 +150,41 @@ public class SolrCheckedServiceImpl implements SolrCheckedService {
 			return false;
 		}
 		return true;
+	}
+
+	private void setAuthoritys(SolrQuery sq, String adminId) {
+		if (Common.isNotEmpty(adminId)) {
+			String adminType = "S";
+			if (!Common.isOrEquals(adminId, "*")) {
+				adminType = adminServiceImpl.getAdmin(adminId).getAdminType();
+			}
+
+			String ceoReadYn = Config.getString("ceo.readyn");
+
+//			if (Common.isEquals(adminType, "C")) {
+//				sq.addFilterQuery("+ceo:Y");
+//			} else if (!(Common.isEquals(ceoReadYn, "Y") && Common.isEquals(Common.nvl(Config.getFirstAdminYn(adminId), "N"), "Y"))) {
+//				sq.addFilterQuery("-ceo:Y");
+//			}
+
+			sq.addFilterQuery("-svc:QEKH");
+			JSONObject param = new JSONObject();
+			param.put("adminId", adminId);
+			param.put("queryType", Config.getString("query.type", "A"));
+			List<AuthorityVO> authoritys = authorityService.getAdminAuthority(param);
+			for (AuthorityVO authority : authoritys) {
+				if (authority.getCnt() > 0) {
+					sq.addFilterQuery(authority.getQuery());
+				}
+			}
+			if (log.isInfoEnabled()) {
+				StringBuilder sb = new StringBuilder();
+				if (sq.getFilterQueries() != null) {
+					for (int i = 0; i < sq.getFilterQueries().length; i++) {
+						sb.append(sq.getFilterQueries()[i]).append(" ");
+					}
+				}
+			}
+		}
 	}
 }

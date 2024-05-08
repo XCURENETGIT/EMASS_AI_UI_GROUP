@@ -423,7 +423,7 @@ public class SolrEdcStatController {
 		sq.setFacetMinCount(1);
 		sq.setFacetSort("count");
 
-		SolrEdcMessageVO solrCheckedStatVo = solrCheckedService.getCheckedStatList(sq);
+		SolrEdcMessageVO solrCheckedStatVo = solrCheckedService.getCheckedStatList(sq,adminId);
 		appendEmassTotal(solrCheckedStatVo, ctimeSch,xAxis,yAxis,dateType,startDate,endDate, Common.getAdminId(request));
 		return new XcnResponseVO(XcnRspCode.OK, solrCheckedStatVo, solrCheckedStatVo.getPivotData().size());
 	}

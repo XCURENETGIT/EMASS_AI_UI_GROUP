@@ -13,5 +13,6 @@ public interface SolrCheckedService {
 	public boolean setMessengerRead(List<SolrEdcVO> data, String adminId);
 
 	public SolrEdcMessageVO getCheckedStatList(SolrQuery sq) throws SolrServerException, IOException;
+	public SolrEdcMessageVO getCheckedStatList(SolrQuery sq,String admin) throws SolrServerException, IOException;
 
 }
