@@ -90,26 +90,26 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 	public EmsBodyVO getEmassBody(String msgId, String firstAdminYn, String adminType) {
 		EmsMessageVO data = getEmassMessageData(msgId);
 		EmsBodyVO bodyVo = new EmsBodyVO();
-		bodyVo.setMsgId(data.getMsgId());
-		bodyVo.setBodyHash(data.getBodyHash());
-		bodyVo.setBodyCharset(data.getBodyCharset());
-		bodyVo.setBodyPath(data.getBodyPath());
-		bodyVo.setBodyType(data.getBodyType());
-		bodyVo.setBodyText(data.getBodyText());
-		bodyVo.setSubject(data.getSubject());
-		bodyVo.setSvc(data.getSvc());
-		bodyVo.setSender(data.getSender());
-		bodyVo.setSrcIp(data.getSrcIp());
-		bodyVo.setDstIp(data.getDstIp());
-		bodyVo.setHost(data.getHost());
-		bodyVo.setPath(data.getPath());
+		bodyVo.setMsgId(Common.nvl(data.getMsgId()));
+		bodyVo.setBodyHash(Common.nvl(data.getBodyHash()));
+		bodyVo.setBodyCharset(Common.nvl(data.getBodyCharset()));
+		bodyVo.setBodyPath(Common.nvl(data.getBodyPath()));
+		bodyVo.setBodyType(Common.nvl(data.getBodyType()));
+		bodyVo.setBodyText(Common.nvl(data.getBodyText()));
+		bodyVo.setSubject(Common.nvl(data.getSubject()));
+		bodyVo.setSvc(Common.nvl(data.getSvc()));
+		bodyVo.setSender(Common.nvl(data.getSender()));
+		bodyVo.setSrcIp(Common.nvl(data.getSrcIp()));
+		bodyVo.setDstIp(Common.nvl(data.getDstIp()));
+		bodyVo.setHost(Common.nvl(data.getHost()));
+		bodyVo.setPath(Common.nvl(data.getPath()));
 		
 		/* 문서 오너 지정 */
 
-		bodyVo.setUserId(data.getUserId());
-		bodyVo.setName(data.getName());
-		bodyVo.setCtime(data.getCtime());
-		bodyVo.setEpmsgType(data.getEpmsgType());
+		bodyVo.setUserId(Common.nvl(data.getUserId()));
+		bodyVo.setName(Common.nvl(data.getName()));
+		bodyVo.setCtime(Common.nvl(data.getCtime()));
+		bodyVo.setEpmsgType(Common.nvl(data.getEpmsgType()));
 
 	//	bodyVo.setBody((!Common.isEmpty(data.getBodyPath())) ? minioFileAdapter.open(data.getBodyPath()) : null);
 		byte[] bodyStr = null;
