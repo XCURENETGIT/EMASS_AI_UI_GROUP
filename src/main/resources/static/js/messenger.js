@@ -973,7 +973,9 @@ function makePrevList() {
         dataHasFlag = true;
         var obj = prevDetailDataSet[i];
         var chkPati = false;
-        if( srcip == obj.senderId || srcip == obj.sender) chkPati = true;
+
+        if( (nvl(obj.user) != '' && (srcip == obj.userid || srcip ==obj.user) ) && (obj.user == obj.sender || obj.senderId == obj.userid )) chkPati = true;
+
         str += checkDate(i);
 
         str += '<li class="p12 bubble txt_right slide_right timeline-inverted" id="' + obj.msgid + '" ctime="' + obj.ctime + '" userid="' + obj.userid + '" srcip="' + obj.srcip + '" xrootmtr="' + obj.xrootmtr + '" >';
