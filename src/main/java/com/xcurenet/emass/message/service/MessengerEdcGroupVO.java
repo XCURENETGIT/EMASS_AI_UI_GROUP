@@ -252,7 +252,10 @@ public class MessengerEdcGroupVO {
 
 		if(Common.isNotEmpty(edc.getDeptnm())) result.append(edc.getDeptnm()).append("/");
 		if(Common.isNotEmpty(edc.getJikgubnm())) result.append(edc.getJikgubnm()).append("/");
+
 		if(Common.isNotEmpty(edc.getName())) result.append(edc.getName()).append("/");
+		else if (Common.isNotEmpty(edc.getUser())) result.append(edc.getUser()).append("/");
+		else result.append(edc.getSrcip());
 
 		String sender = "";
 		if (Common.isNotEmpty(edc.getSenderId())) sender=edc.getSenderId();
