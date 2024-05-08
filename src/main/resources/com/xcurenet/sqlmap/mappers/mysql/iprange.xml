@@ -96,8 +96,8 @@
 	</select>
 
 	<insert id="insertIpRange" parameterType="ipRangeVO">
-		INSERT INTO UI_BUSI_IPRANGE (BUSICD, START_IP, END_IP, COMMENT, CREATE_DT, CREATE_ID, UPDATE_DT, UPDATE_ID)
-		VALUES (#{busiCd}, #{startIp}, #{endIp}, #{comment}, now(), #{createId}, now(), #{updateId})
+		INSERT INTO UI_BUSI_IPRANGE (BUSICD, START_IP, END_IP, COMMENT, CREATE_DT, CREATE_ID, UPDATE_DT)
+		VALUES (#{busiCd}, #{startIp}, #{endIp}, #{comment}, now(), #{createId}, now())
 	</insert>
 
 	<update id="updateIpRange" parameterType="ipRangeVO">
