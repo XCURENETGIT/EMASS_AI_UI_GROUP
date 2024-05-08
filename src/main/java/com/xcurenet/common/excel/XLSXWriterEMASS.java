@@ -78,6 +78,7 @@ public class XLSXWriterEMASS {
 	public void appendData(List<SolrEdcVO> data, boolean subjectLink, boolean attachLink) throws Exception {
 		for (SolrEdcVO edc : data) {
 			int lastRow = ST.getLastRowNum() + 1;
+//			log.info("last row {}" , lastRow);
 			Row r = ST.createRow(lastRow);
 			NEW_ROW_CNT = 0;
 			String key = "";
@@ -89,14 +90,18 @@ public class XLSXWriterEMASS {
 					Object val = null;
 					if (Common.isEquals(key, "NUM")) val = offset+ lastRow - HEADER_ROW;
 					else val = getPrivateValue(edc, key);
-//					if (Common.isNotEquals(key, "body") && val == null) continue;
-//					String str = Common.nvl(val);
-//					writerOver(str, h ,r, j);
+
+					if(Common.isNotEquals(key, "body") && Common.isEmpty(val) ) {
+						continue;
+					}
 
 					String str = Common.nvl(val);
+					if(str.length() > 50000) str  = str.substring(0,50000);
+					writerOver(str, h ,r, j);
 					r = ST.getRow(ST.getLastRowNum() - NEW_ROW_CNT);
+					String msgid = Common.nvl(edc.getMsgid());
+					if(r == null) {log.info("row null msgid {}",msgid);continue;}
 
-					String msgid = edc.getMsgid();
 					if (subjectLink && Common.isEquals(key, "subject")) listStyle(r.createCell(j), str, Common.nvl(h.get("align"), "left"), Common.makeFilepath("messages", msgid), HyperlinkType.FILE);
 					else if (attachLink && Common.isEquals(key, "attachcnt") && !str.equals("0")) listStyle(r.createCell(j), str, Common.nvl(h.get("align"), "center"), Common.makeFilepath("messages", msgid, "attachs") + "/", HyperlinkType.FILE);
 					else if(Common.isEquals(key, "to") ) {
@@ -129,7 +134,8 @@ public class XLSXWriterEMASS {
 						}
 					} else if(Common.isEquals(key, "body")){
 						EmsMessageService emsMessageService = SpringContextUtil.getBean(EmsMessageService.class);
-						str = new String(emsMessageService.getEmassBody(edc.getMsgid(), "", "").getBody());
+						str = new String(emsMessageService.getEmassBody(msgid, "", "").getBody());
+						if(str.length() > 50000) str  = str.substring(0,50000);
 						writerOver(str, h ,r, j);
 					} else {
 						writerOver(str, h ,r, j);
@@ -157,6 +163,8 @@ public class XLSXWriterEMASS {
 	}
 
 	private void writerOver(String txt, JSONObject h, Row r, int j) {
+		if(r == null) return;
+		txt =  Common.nvl(txt);
 		if(txt.length() > 30000) {
 			String tmptxt = txt.substring(0, 30000);
 
@@ -215,11 +223,17 @@ public class XLSXWriterEMASS {
 	}
 
 	private void setAlign(Cell cell, HorizontalAlignment align) {
-		if (HorizontalAlignment.LEFT == align && cell.getHyperlink() == null) cell.setCellStyle(left_style);
-		else if (HorizontalAlignment.CENTER == align && cell.getHyperlink() == null) cell.setCellStyle(center_style);
-		else if (HorizontalAlignment.RIGHT == align && cell.getHyperlink() == null) cell.setCellStyle(right_style);
-		else if (HorizontalAlignment.LEFT == align && cell.getHyperlink() != null) cell.setCellStyle(link_left_style);
-		else if (HorizontalAlignment.CENTER == align && cell.getHyperlink() != null) cell.setCellStyle(link_center_style);
+		if(Common.isEmpty(align)) cell.setCellStyle(link_center_style);
+		else {
+			if (HorizontalAlignment.LEFT == align && cell.getHyperlink() == null) cell.setCellStyle(left_style);
+			else if (HorizontalAlignment.CENTER == align && cell.getHyperlink() == null)
+				cell.setCellStyle(center_style);
+			else if (HorizontalAlignment.RIGHT == align && cell.getHyperlink() == null) cell.setCellStyle(right_style);
+			else if (HorizontalAlignment.LEFT == align && cell.getHyperlink() != null)
+				cell.setCellStyle(link_left_style);
+			else if (HorizontalAlignment.CENTER == align && cell.getHyperlink() != null)
+				cell.setCellStyle(link_center_style);
+		}
 	}
 
 	private void createTitle(String msg) {
