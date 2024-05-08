@@ -817,8 +817,7 @@ function makeList2(nextFlag) {
         var obj = detailDataSet[i];
         var chkPati = false;
 
-        chkPati = (obj.senderId == srcip && nvl(obj.user) !== '' && (srcip == obj.userid || srcip == obj.user) && (obj.user == obj.sender || obj.senderId == obj.userid)) || (obj.senderId !== srcip && srcip == obj.userkey);
-
+        if( (nvl(obj.user) != '' && (srcip == obj.userid || srcip ==obj.user) ) && (obj.user == obj.sender || obj.senderId == obj.userid )) chkPati = true;
 
         str += checkDate(i);
 
@@ -906,7 +905,7 @@ function makeList(nextFlag) {
         var chkPati = false;
 
 
-        chkPati = (obj.senderId == srcip && nvl(obj.user) !== '' && (srcip == obj.userid || srcip == obj.user) && (obj.user == obj.sender || obj.senderId == obj.userid)) || (obj.senderId !== srcip && srcip == obj.userkey);
+        if( (nvl(obj.user) != '' && (srcip == obj.userid || srcip ==obj.user) ) && (obj.user == obj.sender || obj.senderId == obj.userid )) chkPati = true;
 
         str += checkDate(i);
 
@@ -975,7 +974,7 @@ function makePrevList() {
         var obj = prevDetailDataSet[i];
         var chkPati = false;
 
-        chkPati = (obj.senderId == srcip && nvl(obj.user) !== '' && (srcip == obj.userid || srcip == obj.user) && (obj.user == obj.sender || obj.senderId == obj.userid)) || (obj.senderId !== srcip && srcip == obj.userkey);
+        if( (nvl(obj.user) != '' && (srcip == obj.userid || srcip ==obj.user) ) && (obj.user == obj.sender || obj.senderId == obj.userid )) chkPati = true;
 
         str += checkDate(i);
 
