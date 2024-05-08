@@ -471,6 +471,7 @@
 
         rowName = getClassStr(grid1.getValue(grid1.Row, 'rowKey'));
         colKey = grid1.ColKey(grid1.Col);
+        var xAxis = $('button.optionBtn.active').val();
         var colKeyNm = colKey;
         if (colKey == 'rowKey' || colKey == 'total' || colKey == 'NUM' || colKey == 'svcNm' || colKey == 'svcLv1Nm' || colKey == 'svcLv2Nm' || colKey == 'svcLv12Nm') {
             if(pColKey != "") {
@@ -481,7 +482,7 @@
             if(rowKey == 'totalOCR' || rowKey == 'noOCR' || rowKey == 'detectOCR'){
                 pColKey = "";
             }
-        } else if (colKey == "I") {
+        }  else if (colKey == "I" && xAxis=='direction_svc') {
             pColKey = colKey;
             colKeyNm = '<s:message code="condition.receive"/>';
         } else if (colKey == "O") {
@@ -489,7 +490,6 @@
             colKeyNm = '<s:message code="condition.send"/>';
         } else {
             pColKey = colKey;
-            var xAxis = $('select[name=xAxis]').val();
             if (xAxis == "ctime_hh") colKeyNm = colKey + '<s:message code="common.msg.hour"/>';
         }
 

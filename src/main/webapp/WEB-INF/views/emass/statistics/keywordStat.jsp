@@ -527,16 +527,16 @@
         }
         rowName = grid1.getValue(grid1.Row, 'rowName');
         colKey = grid1.ColKey(grid1.Col);
+        var xAxis = $('button.optionBtn.active').val();
         var colKeyNm = colKey;
         if (colKey == 'rowKey' || colKey == 'total' || colKey == 'NUM') {
             colKey = "";
             colKeyNm = '<s:message code="bodyview.total"/>';
-        } else if (colKey == "I") {
+        }  else if (colKey == "I" && xAxis=='direction_svc') {
             colKeyNm = '<s:message code="condition.receive"/>';
         } else if (colKey == "O") {
             colKeyNm = '<s:message code="condition.send"/>';
         } else {
-            var xAxis = $('button.optionBtn.active').val();
             if(xAxis == "svc1") colKeyNm =serviceList.search(colKeyNm, 'groupCd', 'groupNm');
             if (xAxis == "ctime_hh") colKeyNm = colKey + '<s:message code="common.msg.hour"/>';
         }

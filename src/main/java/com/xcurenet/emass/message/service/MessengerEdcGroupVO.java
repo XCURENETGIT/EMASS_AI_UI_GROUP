@@ -227,7 +227,7 @@ public class MessengerEdcGroupVO {
 		solrGroupVO.setMessage(getMessageDetail(edc, 0, original));
 		solrGroupVO.setTitle(getDetailTitle(edc));
 		solrGroupVO.setDeptNm(edc.getDeptnm());
-		solrGroupVO.setBody_snippet(edc.getBody_snippet());
+		solrGroupVO.setBody_snippet(getBodyDetail(edc,0,original));
 		solrGroupVO.setBusiNm(edc.getBusinm());
 		solrGroupVO.setJikgubNm(edc.getJikgubnm());
 		solrGroupVO.setSrcip(edc.getSrcip());
@@ -242,7 +242,6 @@ public class MessengerEdcGroupVO {
 		solrGroupVO.setUserid(edc.getUserid());
 		solrGroupVO.setInside(edc.getInside());
 		solrGroupVO.setDirection_svc(edc.getDirection_svc());
-		solrGroupVO.setBody_snippet(edc.getBody_snippet());
 		return solrGroupVO;
 	}
 
@@ -310,6 +309,24 @@ public class MessengerEdcGroupVO {
 	private static String getMessage(SolrEdcVO edc) {
 		String msg = getMessageDetail(edc, 200, false).replaceAll("\\r", "").replaceAll("\\n", "");
 		return getSender(edc) + " : " + msg;
+	}
+
+
+	private static String getBodyDetail(SolrEdcVO edc, int cutLength, boolean original) {
+		String result = Common.EMPTY;
+		if (Common.isOrEquals(edc.getSvc1(), "I", "N")) {
+			String body = Common.nvl(edc.getBody_snippet());
+			if (cutLength > 0 && body.length() > cutLength) body = body.substring(0, cutLength);
+
+			if(edc.getAttached().equals("Y")){
+				body+="/ 첨부파일명:" + edc.getAttachname();
+			}
+			result = body;
+		}else{
+			result=	edc.getBody_snippet();
+		}
+
+		return original ? result : textParser(result);
 	}
 
 	private static String getMessageDetail(SolrEdcVO edc, int cutLength, boolean original) {
