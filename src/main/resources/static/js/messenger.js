@@ -817,7 +817,7 @@ function makeList2(nextFlag) {
         var obj = detailDataSet[i];
         var chkPati = false;
 
-        if( nvl(obj.user) != '' && (obj.user == obj.sender || obj.senderId == obj.userid )) chkPati = true;
+        if( (nvl(obj.user) != '' && (srcip == obj.userid || srcip ==obj.user) ) && (obj.user == obj.sender || obj.senderId == obj.userid )) chkPati = true;
 
         str += checkDate(i);
 
@@ -905,7 +905,7 @@ function makeList(nextFlag) {
         var chkPati = false;
 
 
-        if( nvl(obj.user) != '' && (obj.user == obj.sender || obj.senderId == obj.userid )) chkPati = true;
+        if( (nvl(obj.user) != '' && (srcip == obj.userid || srcip ==obj.user) ) && (obj.user == obj.sender || obj.senderId == obj.userid )) chkPati = true;
 
         str += checkDate(i);
 
