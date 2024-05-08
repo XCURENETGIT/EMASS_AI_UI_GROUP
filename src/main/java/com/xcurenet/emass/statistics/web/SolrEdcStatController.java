@@ -385,48 +385,32 @@ public class SolrEdcStatController {
 		String dateType = Common.nvl(request.getParameter("dateType"));
 		String startDate = Common.nvl(request.getParameter("startDate"));
 		String endDate = Common.nvl(request.getParameter("endDate"));
-
-		String dateStr = (Common.isEquals(dateType,"ctime")) ?  "ctime" : "checked.readTime";
-		String schDate = dateStr + xAxis;
-
-		String[] schTypes = new String[2];
-		if(Common.isEquals(dateType,"ctime")) schTypes = new String[]{schDate,"checked.readTime"+xAxis};
-		else schTypes = new String[]{"ctime"+xAxis,"checked.readTime"+xAxis};
-
-
 		String adminId = Common.nvl(request.getParameter("adminId"));
-		if (Common.isEmpty(adminId)) adminId = "*";
 		int limit = Common.nvz(request.getParameter("limit"));
+		if (Common.isEmpty(adminId)|| adminId == null) adminId = "*";
+
 		String query = "";
 		SolrQuery sq = new SolrQuery();
-		if (adminId == null) adminId = "*";
+		String ctimeSch = "ctime"+xAxis;
+		String readTimeSch = "checked.readTime"+xAxis;
 
-		query += String.format("+%s:[%s TO %s]", (Common.isEquals(dateType, "ctime")) ? "ctime" : "checked.readTime", startDate, endDate);
-		if(!Common.isEquals(dateType, "ctime")) {
-			 if( xAxis.length() == 7  ) {
-				startDate = startDate.substring(0,6);
-				endDate = endDate.substring(0,6);
-				LocalDate tempStartDate = DateUtil.getDate(xAxis,startDate);
-				LocalDate tempEndDate = DateUtil.getDate(xAxis,endDate);
-				startDate = DateUtil.getDateStr(xAxis,tempStartDate.minusMonths(1));
-				endDate = DateUtil.getDateStr(xAxis,tempEndDate.minusMonths(1));
-			}else if( xAxis.length() == 9 ) {
-				startDate = startDate.substring(0,8);
-				endDate = endDate.substring(0,8);
-				LocalDate tempStartDate = DateUtil.getDate(xAxis,startDate);
-				LocalDate tempEndDate = DateUtil.getDate(xAxis,endDate);
-				startDate = DateUtil.getDateStr(xAxis,tempStartDate.minusDays(1));
-				endDate = DateUtil.getDateStr(xAxis,tempEndDate.minusDays(1));
-			}
-			xAxis = xAxis.replaceAll("_hh","");
-			query += String.format("-checked.readTime%s:[* TO %s]",xAxis, startDate);
-			query += String.format("-ctime%s:[* TO %s]", xAxis,startDate);
+		//열람검색
+		if(Common.isEquals(dateType, "ctime")){
+			query += ctimeReadSearch(xAxis,ctimeSch,startDate,endDate);
+			startDate = searchRangeDate(xAxis,startDate);
+			endDate = searchRangeDate(xAxis,endDate);
+		}else {
+			query += checkedReadSearch(xAxis,readTimeSch,startDate,endDate);
+			startDate = searchRangeDate(xAxis,startDate);
+			endDate = searchRangeDate(xAxis,endDate);
 		}
+
 
 		query += String.format("+checked.readId:%s", adminId);
 
-		if(!Common.isEquals(dateType, "ctime")) sq.setParam("facet.pivot",     schTypes[0] + "," + schTypes[1]);
-		else sq.setParam("facet.pivot",   schTypes[0] + "," + schTypes[1] );
+		if(!Common.isEquals(dateType, "ctime")) sq.setParam("facet.pivot",     ctimeSch + "," + readTimeSch);
+		else sq.setParam("facet.pivot",   ctimeSch + "," +readTimeSch );
+
 
 		log.info("query : {}", query);
 //		query += " +" + yAxis + ":*";
@@ -440,21 +424,86 @@ public class SolrEdcStatController {
 		sq.setFacetSort("count");
 
 		SolrEdcMessageVO solrCheckedStatVo = solrCheckedService.getCheckedStatList(sq);
-
-
-		if( xAxis.length() == 9 ) {
-			startDate = startDate.substring(0,8);
-			endDate = endDate.substring(0,8);
-		}else if( xAxis.length() == 7  ) {
-			startDate = startDate.substring(0,6);
-			endDate = endDate.substring(0,6);
-		}
-
-		appendEmassTotal(solrCheckedStatVo, schTypes,xAxis,yAxis,dateType,startDate,endDate, Common.getAdminId(request));
+		appendEmassTotal(solrCheckedStatVo, ctimeSch,xAxis,yAxis,dateType,startDate,endDate, Common.getAdminId(request));
 		return new XcnResponseVO(XcnRspCode.OK, solrCheckedStatVo, solrCheckedStatVo.getPivotData().size());
 	}
 
-	private void appendEmassTotal(SolrEdcMessageVO solrCheckedStatVo,String[] schTypes,String xAxis ,String yAxis,String dateType,String startDate,String endDate,String adminId) throws IOException, SolrServerException {
+	/* 열람 */
+	public String checkedReadSearch(String xAxis,String readTimeSch,String startDate,String endDate){
+		String query = "";
+		String fromDate = "";
+		if( xAxis.length() == 7  ) {
+			//월
+			startDate = startDate.substring(0,6);
+			endDate = endDate.substring(0,6);
+			LocalDate tempStartDate = DateUtil.getDate(xAxis,startDate);
+			LocalDate tempEndDate = DateUtil.getDate(xAxis,endDate);
+			fromDate = DateUtil.getDateStr(xAxis,tempStartDate.minusMonths(1));
+
+		}else if( xAxis.length() == 9 ) {
+			//일
+			startDate = startDate.substring(0,8);
+			endDate = endDate.substring(0,8);
+			LocalDate tempStartDate = DateUtil.getDate(xAxis,startDate);
+			LocalDate tempEndDate = DateUtil.getDate(xAxis,endDate);
+			fromDate = DateUtil.getDateStr(xAxis,tempStartDate.minusDays(1));
+		}
+
+		if(xAxis.length() == 3){
+			//시간
+			query += String.format("+%s:[%s TO %s]","checked.readTime", startDate, endDate);
+			query += String.format("-checked.readTime:[* TO %s]", startDate);
+			query += String.format("-ctime:[* TO %s]", startDate);
+		}else {
+			query += String.format("+%s:[%s TO %s]", readTimeSch, startDate, endDate);
+			query += String.format("-checked.readTime%s:[* TO %s]", xAxis, fromDate);
+			query += String.format("-ctime%s:[* TO %s]", xAxis, fromDate);
+		}
+
+		return query;
+	}
+
+	/* 수집 */
+	public String ctimeReadSearch(String xAxis,String ctimeSch,String startDate,String endDate){
+		String query = "";
+		String fromDate = "";
+		if( xAxis.length() == 7  ) {
+			//월
+			startDate = startDate.substring(0,6);
+			endDate = endDate.substring(0,6);
+			LocalDate tempStartDate = DateUtil.getDate(xAxis,startDate);
+			LocalDate tempEndDate = DateUtil.getDate(xAxis,endDate);
+			fromDate = DateUtil.getDateStr(xAxis,tempStartDate.minusMonths(1));
+		}else if( xAxis.length() == 9 ) {
+			//일
+			startDate = startDate.substring(0,8);
+			endDate = endDate.substring(0,8);
+			LocalDate tempStartDate = DateUtil.getDate(xAxis,startDate);
+			LocalDate tempEndDate = DateUtil.getDate(xAxis,endDate);
+			fromDate = DateUtil.getDateStr(xAxis,tempStartDate.minusDays(1));
+		}
+		if(xAxis.length() == 3){
+			//시간
+			query += String.format("+%s:[%s TO %s]","ctime", startDate, endDate);
+			query += String.format("-checked.readTime:[* TO %s]", startDate);
+			query += String.format("-ctime:[* TO %s]", startDate);
+		}else {
+			query += String.format("+%s:[%s TO %s]", ctimeSch, startDate, endDate);
+			query += String.format("-checked.readTime%s:[* TO %s]", xAxis, fromDate);
+			query += String.format("-ctime%s:[* TO %s]", xAxis, fromDate);
+		}
+
+		return query;
+	}
+
+	public String searchRangeDate(String str,String date){
+		if(Common.isEmpty(str) && str.length() == 0 ) return date;
+		else if(str.length() == 3) return date;
+		else return DateUtil.getDateStr(str, DateUtil.getDate(str,date.substring(0,8)));
+	}
+
+
+	private void appendEmassTotal(SolrEdcMessageVO solrCheckedStatVo,String ctimeSch,String xAxis ,String yAxis,String dateType,String startDate,String endDate,String adminId) throws IOException, SolrServerException {
 		if(solrCheckedStatVo.getPivotData() == null) return;
 		Map<String, Object> totalItem = new HashMap<>();
 		List<Map<String, Object>> list = solrCheckedStatVo.getPivotData();
@@ -466,10 +515,10 @@ public class SolrEdcStatController {
 		String query = "";
 		SolrQuery edcSolrQuery = new SolrQuery();
 		if(solrCheckedStatVo.getPivotHeader() != null ) {
-				if (solrCheckedStatVo.getPivotHeader().get(0).length() == 2) {
+				if (solrCheckedStatVo.getPivotHeader().get(0).length() == 2) { // 시간일경우
 					String rowkeyQ = rowKeysQuery(solrCheckedStatVo.getPivotHeader());
 					query += String.format("+%s:[%s TO %s]", (Common.isEquals(dateType, "ctime")) ? "ctime" : "checked.readTime", startDate, endDate);
-					query += String.format("+%s:(%s)", schTypes[0], rowkeyQ);
+					query += String.format("+%s:(%s)",ctimeSch, rowkeyQ);
 				} else {
 					List<LocalDate> rowKeys = new ArrayList<>();
 					for (String item : solrCheckedStatVo.getPivotHeader()) {
@@ -477,10 +526,10 @@ public class SolrEdcStatController {
 					}
 					String fromDate = DateUtil.getDateStr(xAxis, DateUtil.minDate(rowKeys));
 					String toDate = DateUtil.getDateStr(xAxis, DateUtil.maxDate(rowKeys));
-					query  += String.format("+%s:[%s TO %s]", schTypes[0], fromDate, toDate);
+					query  += String.format("+%s:[%s TO %s]",ctimeSch , fromDate, toDate);
 				}
 		}
-
+		log.info("수집 합계 쿼리 {}" ,query);
 		edcSolrQuery.setQuery(query);
 		edcSolrQuery.setStart(0);
 		edcSolrQuery.setRows(0);
@@ -488,7 +537,7 @@ public class SolrEdcStatController {
 		edcSolrQuery.setFacetLimit(500);
 		edcSolrQuery.setFacetMinCount(1);
 		edcSolrQuery.setFacetSort("count");
-		edcSolrQuery.setParam("facet.field", schTypes[0]);
+		edcSolrQuery.setParam("facet.field", ctimeSch);
 
 
 		SolrEdcMessageVO edcVo = solrEdcService.getEmassMessage(edcSolrQuery, adminId);

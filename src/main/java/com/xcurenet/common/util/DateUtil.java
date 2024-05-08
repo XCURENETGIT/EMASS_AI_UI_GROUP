@@ -17,7 +17,8 @@ public class DateUtil {
 		return LocalDate.parse(str,yyyyMMdd);
 	}
 	public static LocalDate getMonth(String str) {
-		return LocalDate.parse(str+"01",yyyyMMdd);
+		if(str.length() < 8) str = str.concat("01");
+		return LocalDate.parse(str,yyyyMMdd);
 	}
 
 	public static int getHH(String str) {
