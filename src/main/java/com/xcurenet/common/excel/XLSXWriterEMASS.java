@@ -96,7 +96,6 @@ public class XLSXWriterEMASS {
 					}
 
 					String str = Common.nvl(val);
-					if(str.length() > 50000) str  = str.substring(0,50000);
 					writerOver(str, h ,r, j);
 					r = ST.getRow(ST.getLastRowNum() - NEW_ROW_CNT);
 					String msgid = Common.nvl(edc.getMsgid());
@@ -135,7 +134,6 @@ public class XLSXWriterEMASS {
 					} else if(Common.isEquals(key, "body")){
 						EmsMessageService emsMessageService = SpringContextUtil.getBean(EmsMessageService.class);
 						str = new String(emsMessageService.getEmassBody(msgid, "", "").getBody());
-						if(str.length() > 50000) str  = str.substring(0,50000);
 						writerOver(str, h ,r, j);
 					} else {
 						writerOver(str, h ,r, j);
@@ -164,6 +162,7 @@ public class XLSXWriterEMASS {
 
 	private void writerOver(String txt, JSONObject h, Row r, int j) {
 		if(r == null) return;
+		if(txt.length() > 50000) txt  = txt.substring(0,50000);
 		txt =  Common.nvl(txt);
 		if(txt.length() > 30000) {
 			String tmptxt = txt.substring(0, 30000);
