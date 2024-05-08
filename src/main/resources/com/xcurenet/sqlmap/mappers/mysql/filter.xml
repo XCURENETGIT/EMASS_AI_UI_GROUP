@@ -41,8 +41,8 @@
 
 	<!-- ID 필터 등록 -->
 	<insert id="insertIdFilter" parameterType="idFilterVO">
-		INSERT	INTO UI_ID_NOLOG ( ID_LOG_SEQ, SERVICECD, USER_ID, CREATE_DT, USE_YN, CREATE_USER, UPDATE_DT, UPDATE_ID )
-		SELECT	IFNULL(MAX(CAST(ID_LOG_SEQ AS UNSIGNED)),0)+1, #{serviceCd}, #{userId}, NOW(), 'Y', #{createId}, now(), #{updateId}
+		INSERT	INTO UI_ID_NOLOG ( ID_LOG_SEQ, SERVICECD, USER_ID, CREATE_DT, USE_YN, CREATE_USER, UPDATE_DT )
+		SELECT	IFNULL(MAX(CAST(ID_LOG_SEQ AS UNSIGNED)),0)+1, #{serviceCd}, #{userId}, NOW(), 'Y', #{createId}, now()
 		FROM	UI_ID_NOLOG
 	</insert>
 
@@ -157,8 +157,8 @@
 
 	<!-- IP 필터 등록 -->
 	<insert id="insertIpFilter" parameterType="ipFilterVO">
-		INSERT INTO UI_IP_NOLOG ( IP_LOG_SEQ, USER_IP_ALL, USER_S_IP, USER_E_IP, USER_PORT_ALL, USER_S_PORT, USER_E_PORT, SERVER_IP_ALL, SERVER_S_IP, SERVER_E_IP, SERVER_PORT_ALL, SERVER_S_PORT, SERVER_E_PORT, COMMENT, CREATE_DT, USE_YN, CREATE_USER, UPDATE_DT, UPDATE_ID )
-		VALUES ( #{ipLogSeq}, #{userIpAll}, #{userSIp}, #{userEIp}, #{userPortAll}, #{userSPort}, #{userEPort}, #{serverIpAll}, #{serverSIp}, #{serverEIp}, #{serverPortAll}, #{serverSPort}, #{serverEPort}, #{comment}, NOW(), #{useYn}, #{createId}, now(), #{updateId} )
+		INSERT INTO UI_IP_NOLOG ( IP_LOG_SEQ, USER_IP_ALL, USER_S_IP, USER_E_IP, USER_PORT_ALL, USER_S_PORT, USER_E_PORT, SERVER_IP_ALL, SERVER_S_IP, SERVER_E_IP, SERVER_PORT_ALL, SERVER_S_PORT, SERVER_E_PORT, COMMENT, CREATE_DT, USE_YN, CREATE_USER, UPDATE_DT )
+		VALUES ( #{ipLogSeq}, #{userIpAll}, #{userSIp}, #{userEIp}, #{userPortAll}, #{userSPort}, #{userEPort}, #{serverIpAll}, #{serverSIp}, #{serverEIp}, #{serverPortAll}, #{serverSPort}, #{serverEPort}, #{comment}, NOW(), #{useYn}, #{createId}, now() )
 	</insert>
 
 	<!-- IP 필터 장비 등록 -->
@@ -238,8 +238,8 @@
 
 	<!-- Domain 필터 등록 -->
 	<insert id="insertDomainFilter" parameterType="domainFilterVO">
-		INSERT	INTO UI_DOMAIN_NOLOG ( DOMAIN_LOG_SEQ, SERVICECD, DOMAIN, CREATE_DT, USE_YN, CREATE_USER, UPDATE_DT, UPDATE_ID )
-		SELECT	IFNULL(MAX(CAST(DOMAIN_LOG_SEQ AS UNSIGNED)),0)+1, #{serviceCd}, #{domain}, NOW(), 'Y', #{createId}, now(), #{updateId}
+		INSERT	INTO UI_DOMAIN_NOLOG ( DOMAIN_LOG_SEQ, SERVICECD, DOMAIN, CREATE_DT, USE_YN, CREATE_USER, UPDATE_DT )
+		SELECT	IFNULL(MAX(CAST(DOMAIN_LOG_SEQ AS UNSIGNED)),0)+1, #{serviceCd}, #{domain}, NOW(), 'Y', #{createId}, now()
 		FROM	UI_DOMAIN_NOLOG
 	</insert>
 
@@ -289,8 +289,8 @@
 
 	<!-- URL 필터 등록 -->
 	<insert id="insertUrlFilter" parameterType="urlFilterVO">
-		INSERT	INTO UI_URL_NOLOG ( URL_LOG_SEQ, URL, CREATE_DT, USE_YN, CREATE_USER, UPDATE_DT, UPDATE_ID )
-		SELECT	IFNULL(MAX(CAST(URL_LOG_SEQ AS UNSIGNED)),0)+1, #{url}, NOW(), 'Y', #{createId}, now(), #{updateId}
+		INSERT	INTO UI_URL_NOLOG ( URL_LOG_SEQ, URL, CREATE_DT, USE_YN, CREATE_USER, UPDATE_DT )
+		SELECT	IFNULL(MAX(CAST(URL_LOG_SEQ AS UNSIGNED)),0)+1, #{url}, NOW(), 'Y', #{createId}, now()
 		FROM	UI_URL_NOLOG
 	</insert>
 
@@ -348,8 +348,8 @@
 
 	<!-- Subject 필터 등록 -->
 	<insert id="insertSubjectFilter" parameterType="subjectFilterVO">
-		INSERT	INTO UI_SUBJECT_NOLOG ( SUBJECT_LOG_SEQ, SERVICECD, SUBJECT, CREATE_DT, USE_YN, CREATE_USER, UPDATE_DT, UPDATE_ID )
-		SELECT	IFNULL(MAX(CAST(SUBJECT_LOG_SEQ AS UNSIGNED)),0)+1, #{serviceCd}, #{subject}, NOW(), 'Y', #{createId}, now(), #{updateId}
+		INSERT	INTO UI_SUBJECT_NOLOG ( SUBJECT_LOG_SEQ, SERVICECD, SUBJECT, CREATE_DT, USE_YN, CREATE_USER, UPDATE_DT )
+		SELECT	IFNULL(MAX(CAST(SUBJECT_LOG_SEQ AS UNSIGNED)),0)+1, #{serviceCd}, #{subject}, NOW(), 'Y', #{createId}, now()
 		FROM	UI_SUBJECT_NOLOG
 	</insert>
 
@@ -409,8 +409,8 @@
 
 	<!-- Size 필터 등록 -->
 	<insert id="insertSizeFilter" parameterType="sizeFilterVO">
-		INSERT	INTO UI_SIZE_LOG (SIZE_LOG_SEQ, SERVICECD, LOWSIZE, HIGHSIZE, SIZE_CONDITION, CREATE_DT, USE_YN, CREATE_USER, UPDATE_DT, UPDATE_ID)
-		SELECT	IFNULL(MAX(CAST(SIZE_LOG_SEQ AS UNSIGNED)),0)+1, #{serviceCd}, CAST(#{lowSize} AS UNSIGNED), CAST(CASE #{highSize} WHEN '' THEN '0' ELSE #{highSize} END AS UNSIGNED), #{sizeCondition}, NOW(), 'Y', #{createId}, now(), #{updateId}
+		INSERT	INTO UI_SIZE_LOG (SIZE_LOG_SEQ, SERVICECD, LOWSIZE, HIGHSIZE, SIZE_CONDITION, CREATE_DT, USE_YN, CREATE_USER, UPDATE_DT)
+		SELECT	IFNULL(MAX(CAST(SIZE_LOG_SEQ AS UNSIGNED)),0)+1, #{serviceCd}, CAST(#{lowSize} AS UNSIGNED), CAST(CASE #{highSize} WHEN '' THEN '0' ELSE #{highSize} END AS UNSIGNED), #{sizeCondition}, NOW(), 'Y', #{createId}, now()
 		FROM	UI_SIZE_LOG
 	</insert>
 

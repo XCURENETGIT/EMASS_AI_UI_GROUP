@@ -595,6 +595,8 @@ function getDeptSchedule(){
 							<input type="hidden" id="deptNm" class="selectedTitle" name="deptNm">
 							<input type="hidden" id="deptByCoStr" class="selectedTitle" name="deptNm">
 							<input type="hidden" id="deptByCoVal" name="deptCd">
+							<input type="hidden" name="createId" value="${_USERCREDENTIAL_.adminId}">
+							<input type="hidden" name="updateId" value="${_USERCREDENTIAL_.adminId}">
 						</div>
 					</div>
 
