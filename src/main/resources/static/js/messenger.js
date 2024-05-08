@@ -817,9 +817,8 @@ function makeList2(nextFlag) {
         var obj = detailDataSet[i];
         var chkPati = false;
 
-        if( srcip == obj.senderId || srcip == obj.sender) chkPati = true;
+        if( nvl(obj.user) != '' && (obj.user == obj.sender || obj.senderId == obj.userid )) chkPati = true;
 
-        //if (nvl(obj.userid) != '' && (nvl(user) == nvl(obj.sender))) chkPati = true;
         str += checkDate(i);
 
         str += '<li class="p12 bubble ' + (chkPati ? 'txt_right slide_right' : 'txt_left slide_left') + (i == 0 && !nextFlag ? ' lastReadLi' : '') + '" id="' + obj.msgid + '" ctime="' + obj.ctime + '" userid="' + obj.userid + '" srcip="' + obj.srcip + '" xrootmtr="' + obj.xrootmtr + '">';
@@ -906,9 +905,8 @@ function makeList(nextFlag) {
         var chkPati = false;
 
 
+        if( nvl(obj.user) != '' && (obj.user == obj.sender || obj.senderId == obj.userid )) chkPati = true;
 
-        //if (nvl(obj.userid) != '' && ( srcip == nvl(obj.userid)) &&  nvl(user) == nvl(obj.sender)) chkPati = true;
-        if( srcip == obj.senderId || srcip == obj.sender) chkPati = true;
         str += checkDate(i);
 
         str += '<li class="p12 bubble ' + (chkPati ? 'txt_right slide_right' : 'txt_left slide_left') + (i == 0 && !nextFlag ? ' lastReadLi' : '') + '" id="' + obj.msgid + '" ctime="' + obj.ctime + '" userid="' + obj.userid + '" srcip="' + obj.srcip + '" xrootmtr="' + obj.xrootmtr + '">';
