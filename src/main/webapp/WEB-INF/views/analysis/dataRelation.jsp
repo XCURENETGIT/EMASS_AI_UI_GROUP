@@ -547,7 +547,7 @@
             endDate : endDate,
             listData : $('#dynamicSearch').val(),
             sendUser : sendUser,
-            receivers : receiveUser,
+            receiveUser : receiveUser,
             keyword : keyword,
             fileSize : fileSize,
             interGroup : interGroup,

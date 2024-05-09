@@ -604,17 +604,17 @@ public class SolrCreateQuery {
 			StringBuffer queryStr = new StringBuffer();
 
 			if(Common.isEquals(receivers_upperCase, "Y")) {
-				queryStr.append(String.format("%s%s:%s", AND_QUERY, RECEIVER_UPPER, createOrQueryAsteriskAll(receivers))).append(SPACE);
+				queryStr.append(String.format("%s%s:%s", AND_QUERY, RECEIVER_UPPER, createOrQueryQuotesAll(receivers))).append(SPACE);
 			} else if(Common.isEquals(Config.getString("receiver.sender.uppercase"), "Y")) {
 
 				for (int i = 0; i < RECEIVER_NOTUPPER.length; i++) {
 					if (receivers.startsWith("\"") && receivers.endsWith("\"")) queryStr.append(String.format("%s:%s", RECEIVER_NOTUPPER[i], receivers)).append(SPACE);
-					else queryStr.append(String.format("%s:%s", RECEIVER_NOTUPPER[i], createOrQueryAsteriskAll(receivers))).append(SPACE);
+					else queryStr.append(String.format("%s:%s", RECEIVER_NOTUPPER[i], createOrQueryQuotesAll(receivers))).append(SPACE);
 				}
 			} else {
 				for (int i = 0; i < RECEIVER.length; i++) {
 					if (receivers.startsWith("\"") && receivers.endsWith("\"")) queryStr.append(String.format("%s:%s", RECEIVER[i], receivers)).append(SPACE);
-					else queryStr.append(String.format("%s:%s", RECEIVER[i], createOrQueryAsteriskAll(receivers))).append(SPACE);
+					else queryStr.append(String.format("%s:%s", RECEIVER[i], createOrQueryQuotesAll(receivers))).append(SPACE);
 				}
 			}
 
@@ -626,7 +626,7 @@ public class SolrCreateQuery {
 			if(Common.isNotEmpty(m_to)) {
 				StringBuffer toStr = new StringBuffer();
 				if (m_to.startsWith("\"") && m_to.endsWith("\"")) toStr.append(String.format("%s:%s %s:%s", TO, m_to, TNAME, m_to)).append(SPACE);
-				else toStr.append(String.format("%s:%s %s:%s", TO, createOrQueryAsteriskAll(m_to), TNAME, createOrQueryAsteriskAll(m_to))).append(SPACE);
+				else toStr.append(String.format("%s:%s %s:%s", TO, createOrQueryQuotesAll(m_to), TNAME, createOrQueryQuotesAll(m_to))).append(SPACE);
 				if (Common.isEquals(m_to_not, "Y")) queryStr.append(String.format("%s(%s) ", EXCEPT_QUERY, toStr.toString()));
 				else queryStr.append(String.format("%s(%s) ", AND_QUERY, toStr.toString()));
 			}
@@ -634,7 +634,7 @@ public class SolrCreateQuery {
 			if(Common.isNotEmpty(m_cc)) {
 				StringBuffer ccStr = new StringBuffer();
 				if (m_cc.startsWith("\"") && m_cc.endsWith("\"")) ccStr.append(String.format("%s:%s %s:%s", CC, m_cc, CNAME, m_cc)).append(SPACE);
-				else ccStr.append(String.format("%s:%s %s:%s", CC, createOrQueryAsteriskAll(m_cc), CNAME, createOrQueryAsteriskAll(m_cc))).append(SPACE);
+				else ccStr.append(String.format("%s:%s %s:%s", CC, createOrQueryQuotesAll(m_cc), CNAME, createOrQueryQuotesAll(m_cc))).append(SPACE);
 				if (Common.isEquals(m_cc_not, "Y")) queryStr.append(String.format("%s(%s) ", EXCEPT_QUERY, ccStr.toString()));
 				else queryStr.append(String.format("%s(%s) ", AND_QUERY, ccStr.toString()));
 			}
@@ -642,7 +642,7 @@ public class SolrCreateQuery {
 			if(Common.isNotEmpty(m_bcc)) {
 				StringBuffer bccStr = new StringBuffer();
 				if (m_bcc.startsWith("\"") && m_bcc.endsWith("\"")) bccStr.append(String.format("%s:%s %s:%s", BCC, m_bcc, BNAME, m_bcc)).append(SPACE);
-				else bccStr.append(String.format("%s:%s %s:%s", BCC, createOrQueryAsteriskAll(m_bcc), BNAME, createOrQueryAsteriskAll(m_bcc))).append(SPACE);
+				else bccStr.append(String.format("%s:%s %s:%s", BCC, createOrQueryQuotesAll(m_bcc), BNAME, createOrQueryQuotesAll(m_bcc))).append(SPACE);
 				if (Common.isEquals(m_bcc_not, "Y")) queryStr.append(String.format("%s(%s) ", EXCEPT_QUERY, bccStr.toString()));
 				else queryStr.append(String.format("%s(%s) ", AND_QUERY, bccStr.toString()));
 			}
@@ -1483,10 +1483,14 @@ public class SolrCreateQuery {
 
 		return createOrQuery(params, " ", "*");
 	}
-
 	private String createOrQueryAsteriskAll(String params) {
 
 		return createOrQueryReceiver(params, " ", "*");
+	}
+
+	private String createOrQueryQuotesAll(String params) {
+
+		return createOrQueryQuotesAll(params, " ");
 	}
 
 	private String createOrQuery(String params) {
@@ -1505,6 +1509,20 @@ public class SolrCreateQuery {
 		result.append("(");
 		for (int i = 0; i < param.length; i++) {
 			result.append(makeParentheses(param[i])).append(addString);
+			if (i != param.length - 1) result.append(SPACE);
+		}
+		result.append(")");
+
+		return result.toString();
+	}
+
+	private String createOrQueryQuotesAll(String params, String separator) {
+		String[] param = Common.toArray(params, separator);
+
+		StringBuilder result = new StringBuilder();
+		result.append("(");
+		for (int i = 0; i < param.length; i++) {
+			result.append("\"").append(param[i]).append("\"");
 			if (i != param.length - 1) result.append(SPACE);
 		}
 		result.append(")");
