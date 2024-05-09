@@ -296,6 +296,8 @@ public class MessengerController {
 		String msgId = Common.nvl(param.get("msgId"));
 		String startDt = Common.nvl(param.get("startDt"));
 		String endDt = Common.nvl(param.get("endDt"));
+		String searchFlag = Common.nvl(param.get("searchFlag"));
+
 		int startRange = 0;
 		int endRange = 0;
 		String msgids = null;
@@ -308,12 +310,13 @@ public class MessengerController {
 				endRange = Common.diffOfDate(endDt.substring(0,8), msgids.substring(0,8));
 			}
 
-		}
-		if(Common.isEmpty(msgids) || (startRange < 0) || (endRange > 0)) {
+		}if(Common.isEmpty(msgId) || (startRange < 0) || (endRange > 0)) {
 			sq = getMessengerMsgTotalQuery(request);
 		} else {
-//			sq = getMessengerMsgNext(request, msgids, true);
-			sq = getMessengerMsgPrev(request, msgids, true);
+			if(searchFlag!=null)
+				sq = getMessengerMsgNext(request, msgId, true);
+			else
+				sq = getMessengerMsgPrev(request, msgId, true);
 		}
 		MessengerEdcGroupVO result = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request), true, false);
 		for (int i = 0; i<result.getGroups().size(); i++){ //내용 minio 통해 가져오기
@@ -413,17 +416,27 @@ public class MessengerController {
 		String startDt = Common.nvl(param.get("startDt"));
 		String endDt = Common.nvl(param.get("endDt"));
 		String searchStr = Common.nvl(param.get("searchStr"));
+		String searchFlag = Common.nvl(param.get("searchFlag"));
 		int limit = Common.nvz(param.get("limit"), 10000);
 
 		SolrQuery sq = new SolrQuery();
 		String query = String.format("+ctime:[%s TO %s] +xrootmtr:\"%s\"", startDt, endDt, xRootMtr);
 
 		if(Common.isNotEmpty(usr_id)) query += String.format(" +userkey:\"%s\"", usr_id);
+/*
+		if(lastMsgYn==false){
+			query+=String.format(" -msgid:%s", msgId);
+		}*/
 
 		if(Common.isNotEmpty(msgId)) {
-			query += String.format(" +msgid:{%s TO *]", msgId);
+			if(searchFlag!=""){
+				query += String.format(" +msgid:[%s TO *]", msgId);
+			}
+			else{
+				query += String.format(" +msgid:[%s TO *]", msgId);
+				query+=String.format(" -msgid:%s", msgId);
+			}
 		}
-
 		if(Common.isNotEmpty(searchStr)) query += String.format(" +body:(*%s*) ", searchStr);
 
 		sq.setQuery(query + MESSENGER);
@@ -461,9 +474,10 @@ public class MessengerController {
 			if(lastMsgYn) {
 				query += String.format(" +msgid:[* TO %s]", msgId);
 			} else {
-				query += String.format(" +msgid:[* TO %s}", msgId);
+				query += String.format(" +msgid:[* TO %s]", msgId);
 			}
 		}
+		query+=String.format(" -msgid:%s", msgId);
 		if(Common.isNotEmpty(searchStr)) query += String.format(" +body:(*%s*) ", searchStr);
 
 		sq.setQuery(query + MESSENGER);

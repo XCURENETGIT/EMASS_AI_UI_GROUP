@@ -472,34 +472,34 @@
                 moveTargetHeight(id, false);
             });
 
-      /*      $(document).on('click', '#group_list a', function () {
-                if ((isConsent() && $('#consentNo').val() == '') || $(this).attr('xrootmtr') == '') {
-                    return;
-                }
+            /*      $(document).on('click', '#group_list a', function () {
+					  if ((isConsent() && $('#consentNo').val() == '') || $(this).attr('xrootmtr') == '') {
+						  return;
+					  }
 
-                //if($(this).hasClass('active')) return;
-                $('#group_list a').each(function () {
-                    $(this).removeClass('active');
-                });
+					  //if($(this).hasClass('active')) return;
+					  $('#group_list a').each(function () {
+						  $(this).removeClass('active');
+					  });
 
-                $(this).addClass('active');
-                $('#xrootmtr').text($(this).attr('xrootmtr'));
+					  $(this).addClass('active');
+					  $('#xrootmtr').text($(this).attr('xrootmtr'));
 
-                $('#srcip').text($(this).attr('srcip'));
-                $('#msgid').text($(this).attr('msgid'));
-                $('#usrid').text($(this).attr('usrid'));
+					  $('#srcip').text($(this).attr('srcip'));
+					  $('#msgid').text($(this).attr('msgid'));
+					  $('#usrid').text($(this).attr('usrid'));
 
-                $('#selectUserInfo').attr('data-name', '');
-                $('#selectUserInfo').attr('data-srcip', '');
-                $('#selectUserInfo').attr('data-usrid', '');
-                $('#selectUserInfo').attr('data-account', '');
-                $('#selectUserInfo').html('');
-                $('#searchMsgStrInput').val('');
-                $('#startSubDt').val($('#startDt').val());
-                $('#endSubDt').val($('#endDt').val());
-                focusMsgId = '';
-                eikon.getMessengerDetailList($(this).attr('xrootmtr'), $(this).attr('msgid'), $(this).attr('srcip'), $(this).attr('usrid'));
-            });*/
+					  $('#selectUserInfo').attr('data-name', '');
+					  $('#selectUserInfo').attr('data-srcip', '');
+					  $('#selectUserInfo').attr('data-usrid', '');
+					  $('#selectUserInfo').attr('data-account', '');
+					  $('#selectUserInfo').html('');
+					  $('#searchMsgStrInput').val('');
+					  $('#startSubDt').val($('#startDt').val());
+					  $('#endSubDt').val($('#endDt').val());
+					  focusMsgId = '';
+					  eikon.getMessengerDetailList($(this).attr('xrootmtr'), $(this).attr('msgid'), $(this).attr('srcip'), $(this).attr('usrid'));
+				  });*/
 
 
             $('button[name="searchType"]').click(function () {
@@ -533,24 +533,24 @@
                 }
             });
 
-/*            $(document).on('click', '#group_list a', function () {
-                var name = $(this).attr('data-name');
-                var srcip = $(this).attr('data-srcip');
-                var usr_id = $(this).attr('data-usrid');
-                var svc12Value = $(this).attr('svc12');
-                var xrootmtr = $('#xrootmtr').text();
-                var  msgid= $(this).attr('msgid');
-                $('#selectUserInfo').attr('data-srcip', srcip);
-                $('#selectUserInfo').attr('data-name', name);
-                $('#selectUserInfo').attr('data-usrid', usr_id);
-                getMessengerAccount(userid,svc12Value);
+            /*            $(document).on('click', '#group_list a', function () {
+							var name = $(this).attr('data-name');
+							var srcip = $(this).attr('data-srcip');
+							var usr_id = $(this).attr('data-usrid');
+							var svc12Value = $(this).attr('svc12');
+							var xrootmtr = $('#xrootmtr').text();
+							var  msgid= $(this).attr('msgid');
+							$('#selectUserInfo').attr('data-srcip', srcip);
+							$('#selectUserInfo').attr('data-name', name);
+							$('#selectUserInfo').attr('data-usrid', usr_id);
+							getMessengerAccount(userid,svc12Value);
 
-                $('#selectUserInfo').html($(this).text());
-                $('#srcip').text(srcip);
-                $('#usr_id').text(usr_id);
-                eikon.getMessengerGroupDetail(xrootmtr, msgid, srcip, usr_id);
-                hideUserSelect();
-            });*/
+							$('#selectUserInfo').html($(this).text());
+							$('#srcip').text(srcip);
+							$('#usr_id').text(usr_id);
+							eikon.getMessengerGroupDetail(xrootmtr, msgid, srcip, usr_id);
+							hideUserSelect();
+						});*/
 
             initCondition();
             eikon.init();
@@ -1011,7 +1011,7 @@
 					<div>
 						<div style="display: flex;">
 							<input type="text" id="startDt" style="width: 140px;">
-								<span class="hyphen">~</span>
+							<span class="hyphen">~</span>
 							<input type="text" id="endDt" style="width: 140px;"></div>
 
 						<div class="optiotab w100 mat8">
@@ -1047,13 +1047,13 @@
 							<input type="hidden" id="userJib">
 						</p>
 						<div id="selectedCodeTitle2" class="infotxt"></div>
-<%--						<input type="text" class="w100 mat8"  placeholder="<s:message code="eikon.input.participation"/>" id="senders">--%>
+						<%--						<input type="text" class="w100 mat8"  placeholder="<s:message code="eikon.input.participation"/>" id="senders">--%>
 					</div>
 				</div>
 
 				<div class="fixBtn">
 					<div class="checkbox">
-					<input type="checkbox" name="readYn" id="readYn"><s:message code="eikon.msg.notRead"/>
+						<input type="checkbox" name="readYn" id="readYn"><s:message code="eikon.msg.notRead"/>
 					</div>
 					<button class="fullbtn" type="button" accesskey="Q" id="searchBtn"><s:message code="common.search"/></button>
 				</div>
@@ -1141,9 +1141,9 @@
 					<div class="chatDate">
 						<div class="searchSub" style=" min-width: 150px; box-sizing: border-box; width: 100%" >
 
-								<input type="text" id="startSubDt" style="width: 110px;">
-									<span class="hyphen">~</span>
-								<input type="text" id="endSubDt" style="width: 110px;">
+							<input type="text" id="startSubDt" style="width: 110px;">
+							<span class="hyphen">~</span>
+							<input type="text" id="endSubDt" style="width: 110px;">
 							<button class="form_btn01" type="button" accesskey="M" id="searchMsgQueryBtn"><s:message code="common.search"/></button>
 						</div>
 

@@ -277,7 +277,7 @@ function getMessengerMessageTotal(xRootmtr, srcip, startDt, endDt, usr_id, msgid
  * @param usr_id
  * @returns
  */
-function getMessengerMessage(xRootmtr, srcip, usr_id, msgid) {
+function getMessengerMessage(xRootmtr, srcip, usr_id, msgid,searchFlag) {
 
     var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
     var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
@@ -292,6 +292,7 @@ function getMessengerMessage(xRootmtr, srcip, usr_id, msgid) {
         usr_id: usr_id,
         msgId: nvl(msgid),
         limit: detailLimit,
+        searchFlag:searchFlag,
         success: function (data, total) {
             if (data.groups.length > 0) {
                 $('.messenger_next').css('display', 'block');
@@ -315,10 +316,13 @@ function getMessengerMessage(xRootmtr, srcip, usr_id, msgid) {
                 $('.messenger_prev').css('display', 'none');
             else $('.messenger_prev').css('display', 'block');
 
-            $("#timeline_list").html(makeList(false));
+            if(searchFlag==null) {
+                $("#timeline_list").html(makeList(false));
+                $('.chatList').scrollTop($('.chatList')[0].scrollHeight);
+            }else{
+                $("#timeline_list").html(makeList2(true));
+            }
 
-
-            $('.chatList').scrollTop($('.chatList')[0].scrollHeight);
             Highlight();
         },
         error: function (status, message) {
@@ -869,7 +873,7 @@ function makeList2(nextFlag) {
 
 
     if (!dataHasFlag) {
-        str = noDataMsg();
+        str = noNextDataMsg();
     }
 
     return str;
@@ -968,19 +972,24 @@ function makePrevList() {
     // if (prevDetailDataSet.length < detailLimit) str += noPrevDataMsg();
     var usrid = $('#selectUserInfo').attr('data-usrid');
     var srcip = $('#selectUserInfo').attr('data-srcip');
+
+
+
     // str += checkDatePre(prevDetailDataSet.length-1);
-    for (var i = prevDetailDataSet.length-1; i >0; i--) {
+    for (var i = prevDetailDataSet.length-1; i >=0; i--) {
         dataHasFlag = true;
         var obj = prevDetailDataSet[i];
         var chkPati = false;
 
         if( (nvl(obj.user) != '' && (srcip == obj.userid || srcip ==obj.user) ) && (obj.user == obj.sender || obj.senderId == obj.userid )) chkPati = true;
 
-        str += checkDate(i);
-
-        str += '<li class="p12 bubble txt_right slide_right timeline-inverted" id="' + obj.msgid + '" ctime="' + obj.ctime + '" userid="' + obj.userid + '" srcip="' + obj.srcip + '" xrootmtr="' + obj.xrootmtr + '" >';
-
-        str += '	<div class="me timeline-panel">';
+        str += checkDatePre(i);
+        str += '<li class="p12 bubble ' + (chkPati ? 'txt_right slide_right' : 'txt_left slide_left')  + '" id="' + obj.msgid + '" ctime="' + obj.ctime + '" userid="' + obj.userid + '" srcip="' + obj.srcip + '" xrootmtr="' + obj.xrootmtr + '">';
+        str += '<span id="xrootmtr" style="display: none;">' + obj.xrootmtr + '</span>';
+        var svc3 = obj.svc3;
+        if( svc3 == 'J') obj.body_snippet =contentBodyDivJS.chatJoin;
+        else if( svc3 == 'L') obj.body_snippet = contentBodyDivJS.chatLeave;
+        str += '<div class="' + (chkPati ? 'me' : 'you') + ' timeline-panel" >';
 
         if(obj.attached=="Y"){
             var attachhash = obj.attachhash;
@@ -1010,8 +1019,8 @@ function makePrevList() {
         str += '			</div>';
 
         str += ' <div class="bubbleDate mat4">';
-        str += '<span>' + obj.sender + '</span> &nbsp';
-        str += '<span>' + obj.ctime + '</span>';
+        str += '<span>' + obj.title + '</span> &nbsp';
+        str += '<span>' + obj.ctime + '</span> &nbsp';
         str+='<span class="mal4">'+makeMessengerText(obj.svc)+'</span>';
         str += '</div></div>';
         str += '</li>';
@@ -1019,7 +1028,7 @@ function makePrevList() {
     str += '</ul>';
 
     if (!dataHasFlag) {
-        str = noDataMsg();
+        str = noPrevDataMsg();
     }
 
     return str;
@@ -1110,7 +1119,7 @@ function viewDate(dateStr) {
 
 function checkList(cnt) {
 //	selectedSearchData = cnt;
-    getMessengerMessage($('#xrootmtr').text(), $('#srcip').text(), $('#selectUserInfo').attr('data-usrid'), focusMsgId);
+    getMessengerMessage($('#xrootmtr').text(), $('#srcip').text(), $('#selectUserInfo').attr('data-usrid'), focusMsgId,true);
     $('#selectCnt').html(cnt + 1);
 }
 
