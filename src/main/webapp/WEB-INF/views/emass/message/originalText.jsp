@@ -71,6 +71,10 @@ var no_data = '<%=no_data%>';
 
 $(document).ready(function(){
 	$('#saveBtn').click(function(){
+        if (adminMenu != "ALL" && adminMenu.indexOf("DS") < 0) {
+            alert(contentBodyDivJS.noAuthority);
+            return;
+        }
 		saveOriginalText( );
 	});
 	init();

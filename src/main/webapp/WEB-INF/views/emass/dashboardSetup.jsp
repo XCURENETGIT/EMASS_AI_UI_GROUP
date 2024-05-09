@@ -441,6 +441,7 @@
             var rtnMsg = '<s:message code="condition.size.all"/>';
             if (alarmVal.sizeType == 'B') rtnMsg = '<s:message code="condition.size.body"/>';
             else if (alarmVal.sizeType == 'A') rtnMsg = '<s:message code="condition.size.attach"/>';
+            else if (alarmVal.sizeType == 'T') rtnMsg = '<s:message code="condition.size.attach.total"/>';
 
             if (msgSize != '') searchStr += setConditionValStr(msgSize, rtnMsg);
 
