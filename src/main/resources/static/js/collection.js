@@ -20,7 +20,7 @@ var detailStartPage = 1;
 var detailEndPage = 1;
 var detailViewPage = 10;
 var detailPageBreak = 100;
-var detailLimit = 100;
+var detailLimit = 3;
 
 var selectedSearchData = 1;
 var searchOffset = 0;
@@ -775,7 +775,7 @@ function makeList2(nextFlag){
 
 
     if(!dataHasFlag){
-        str = noDataMsg();
+        str = noNextDataMsg();
     }
 
     return str;
@@ -869,12 +869,12 @@ function makePrevList(){
     var srcip = $('#selectUserInfo').attr('data-srcip');
 
     // str += checkDatePre(prevDetailDataSet.length-1);
-    for (var i = prevDetailDataSet.length-1; i >0; i--) {
+    for (var i = prevDetailDataSet.length-1; i >=0; i--) {
         // str += checkDatePre(i);
         dataHasFlag = true;
         var obj = prevDetailDataSet[i];
         if( (nvl(obj.user) != '' && obj.user == obj.sender) || usrid == obj.title || usrid == obj.sender ) chkPati = true;
-
+        str += checkDatePre(i);
 
         str+='<li class="p20 bubble txt_right slide_right timeline-inverted" id="'+obj.msgid+'" ctime="'+obj.ctime+'" userkey="'+obj.userkey+'" srcip="'+obj.srcip+'">';
 
@@ -916,7 +916,7 @@ function makePrevList(){
     str+='</ul>';
 
     if(!dataHasFlag){
-        str = noDataMsg();
+        str = noPrevDataMsg();
     }
 
     return str;
@@ -1014,7 +1014,7 @@ function checkList(cnt){
         type=getPageType();
     }
 
-    getCollectionMessage($('#selectUserInfo').attr('data-name'), $('#selectUserInfo').attr('data-srcip'), $('#selectUserInfo').attr('data-usr_id'), detailMsgid[0],type);
+    getCollectionMessage($('#selectUserInfo').attr('data-name'), $('#selectUserInfo').attr('data-srcip'), $('#selectUserInfo').attr('data-usr_id'), detailMsgid[0],type,true);
     $('#selectCnt').html(cnt+1);
 }
 
@@ -1407,7 +1407,7 @@ function getPage3(total, pageCount, listSize, rtnMethod){
 
     return str;
 }
-function getCollectionMessage(userkey, srcip, usr_id, msgid,type){
+function getCollectionMessage(userkey, srcip, usr_id, msgid,type,searchFlag){
     $("#timeline_list").html('');
 
     var startDt=$('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
@@ -1423,6 +1423,7 @@ function getCollectionMessage(userkey, srcip, usr_id, msgid,type){
         msgId : nvl(msgid),
         limit : detailLimit,
         type:type,
+        searchFlag:searchFlag,
         success : function(data, total) {
             detailDataSet = data.groups;
             prevDetailDataSet = data.groups;
@@ -1446,10 +1447,13 @@ function getCollectionMessage(userkey, srcip, usr_id, msgid,type){
                 $('.messenger_prev').css('display', 'none');
             else $('.messenger_prev').css('display', 'block');
 
+            if(searchFlag==null) {
+                $("#timeline_list").html(makeList(false));
+                $('.chatList').scrollTop($('.chatList')[0].scrollHeight);
+            }else{
+                $("#timeline_list").html(makeList2(true));
+            }
 
-            $("#timeline_list").html(makeList(false));
-
-            $('.chatList').scrollTop($('.chatList')[0].scrollHeight);
             Highlight_detail()
 
 
