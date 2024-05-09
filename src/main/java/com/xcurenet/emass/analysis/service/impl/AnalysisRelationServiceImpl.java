@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.ORDER;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.json.simple.JSONObject;
@@ -20,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -75,7 +73,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 		query.addRange("ctime_yyyymmdd", searchVO.getStartDate().replaceAll("-", ""), searchVO.getEndDate().replaceAll("-", ""), false)
 				.add("subject", searchVO.getTitle(), true, true)
 				.add(new String[]{"sender_str", "sname","sender"}, searchVO.getSendUser())
-				.add(new String[]{"recvs", "recvs_name", "cc", "cname", "bcc"}, searchVO.getReceiveUser())
+				.add(new String[]{"recvs", "recvs_name", "cc", "cname", "bcc","to"}, searchVO.getReceiveUser())
 				.add(new String[]{"sender_str", "sname", "recvs", "recvs_name", "cc", "cname", "bcc"}, searchVO.getObservePersonnel())
 				.add(new String[]{"sender_str", "sname", "recvs", "recvs_name", "cc", "cname", "bcc"}, searchVO.getKeyPersonnel())
 				.add("kwds", searchVO.getKeyword());

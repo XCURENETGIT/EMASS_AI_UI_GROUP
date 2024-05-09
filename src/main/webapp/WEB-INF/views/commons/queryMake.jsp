@@ -876,7 +876,7 @@
 								if(i > 0) {
 									senderStr += " "
 								}
-								senderStr += senderArr[i].ltrim().rtrim() + "*";
+								senderStr += senderArr[i].ltrim().rtrim(); // + "*";
 							}
 							addQueryText += "sender_str:(" + senderStr +")";
 							addQueryText += " sname:(" + senderStr +")";
@@ -897,7 +897,7 @@
 								if(i > 0) {
 									receiveStr += " "
 								}
-								receiveStr += receiveArr[i].ltrim().rtrim() + "*";
+								receiveStr += receiveArr[i].ltrim().rtrim(); //+ "*";
 							}
 
 							addQueryText += "recvs:(" + receiveStr +")";
@@ -920,7 +920,7 @@
 							if(i > 0) {
 								receiveEtcStr += " "
 							}
-							receiveEtcStr += receiveEtcArr[i].ltrim().rtrim() + "*"
+							receiveEtcStr += receiveEtcArr[i].ltrim().rtrim();// + "*"
 						}
 
 						for(var i = 0; i < receiveEtcObj.length; i++) {
