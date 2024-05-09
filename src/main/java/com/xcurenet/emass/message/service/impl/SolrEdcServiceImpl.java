@@ -197,6 +197,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		boolQuery.should(queryBuilder);
 
 
+
 		/* 최종 조합 쿼리 */
 		BoolQueryBuilder complateQuery = QueryBuilders.boolQuery().must(boolQuery);
 
@@ -235,8 +236,6 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 		/* 정규식 패턴 필드 설정 */
 		BoolQueryBuilder regexQuery = QueryBuilders.boolQuery();
-
-
 		if(!Common.isEmpty(sq.get("regexPattern"))) {
 			List<String> list = getselectSearchField(sq);
 			for (String s : list) {
@@ -496,7 +495,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 		String[] fields = sq.getParams("aggregation.sub.fields");
 		for (String field : fields) {
-			termsAggregation.subAggregation(AggregationBuilders.sum(field).field(field));
+			termsAggregation.subAggregation(AggregationBuilders.range(field).field(field).addUnboundedFrom(Common.nvz(sq.get("aggregation.piCount"))).subAggregation(AggregationBuilders.sum(field).field(field)));
 		}
 		aggregations.add(termsAggregation);
 		return aggregations;

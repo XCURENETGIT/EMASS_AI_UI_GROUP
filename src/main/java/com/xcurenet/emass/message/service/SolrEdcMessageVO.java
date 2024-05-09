@@ -322,9 +322,18 @@ public class SolrEdcMessageVO {
 				Iterator<? extends Range.Bucket> iter = buckets.iterator();
 				while (iter.hasNext()) {
 					Range.Bucket bucket = iter.next();
-					pivotItem.put(Common.nvl(bucket.getKeyAsString()), bucket.getDocCount());
-					pivotKeys.put(Common.nvl(bucket.getKey()), 0);
-					pivotItem.putAll(pivotParse(key, docsCount));
+					if (null != bucket.getAggregations()) {
+					   Aggregations childBucket =bucket.getAggregations();
+					    Aggregation childAggs =childBucket.get(aggsKey.getKey());
+						ParsedSum sumNucket = (ParsedSum) childAggs;
+						pivotItem.put(Common.nvl(aggsKey.getKey()), sumNucket.getValue());
+						pivotKeys.put(Common.nvl(aggsKey.getKey()), 0);
+						pivotItem.putAll(pivotParse(key, (long) sumNucket.getValue()));
+					}else{
+						pivotItem.put(Common.nvl(bucket.getKeyAsString()), bucket.getDocCount());
+						pivotKeys.put(Common.nvl(bucket.getKey()), 0);
+						pivotItem.putAll(pivotParse(key, docsCount));
+					}
 				}
 			} else if (aggregation instanceof ParsedSum) {
 				ParsedSum bucketArgments = (ParsedSum) aggregation;

@@ -157,6 +157,7 @@
             $('.regexSearchBtn').click(function(){
                 getRegexList();
                 $('#regexSearchDiv').css('display','block');
+                $('#regexSearchGrid_statusbar').css('display','none');
             });
             $('.regexSearchCloseBtn').click(function(){
                 $('#regexSearchDiv').css('display','none');

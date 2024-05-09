@@ -1060,7 +1060,7 @@ public class SolrEdcStatController {
 			query.append("))");
 		}
 
-		query.append(("(").concat(String.format("+pi_total: [1 TO *]").concat(") ")));
+		query.append(("(").concat(String.format("+pi_total: [%s TO *]", piCount).concat(") ")));
 		query.append(" +( ");
 		for (String field : Config.PRIVATE_SVC) {
 			query.append(("(").concat(String.format("%s: [%s TO *]", field, piCount).concat(") ")));
@@ -1073,7 +1073,8 @@ public class SolrEdcStatController {
 		sq.setRows(0);
 		sq.set("aggregation.field", "userkey");
 		sq.set("aggregation.sub.fields", Config.PRIVATE_SVC);
-		sq.set("aggregation.limit", 100);
+		sq.set("aggregation.limit", 100000);
+		sq.set("aggregation.piCount", piCount);
 		sq.setParam("piAnalysisYn", "Y");
 
 		SolrEdcMessageVO solrVo = solrEdcService.getEmassMessage(sq, Common.getAdminId(request), "", null);
@@ -1092,7 +1093,7 @@ public class SolrEdcStatController {
 		for(Map<String,Object> map : list){
 			Map<String,Object> hshMap = new HashMap<>();
 			for(Map.Entry<String,Object> entry :map.entrySet()){
-				log.info("hash {}",entry.getKey());
+//				log.info("hash {}",entry.getKey());
 				hshMap.put(entry.getKey().replace("pi_amount.",""),entry.getValue());
 			}
 			resultList.add(hshMap);
