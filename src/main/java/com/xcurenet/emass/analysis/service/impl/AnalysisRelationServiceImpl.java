@@ -260,7 +260,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 				sq.setFields("sender_str");
 				break;
 			case "ftp":
-				query.add("svc", "F*", true);
+				query.add("svc", "FFT*", true);
 				sq.setParam("group.field", "srcip");
 				sq.setParam("facet.field", "size");
 				sq.setFacetSort("size");
@@ -334,7 +334,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 
 				break;
 			case "ftp":
-				query.add("svc", "F*", true);
+				query.add("svc", "FFT*", true);
 				query.add("srcip", searchVO.getKeyword());
 
 				break;
