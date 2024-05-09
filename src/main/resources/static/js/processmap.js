@@ -406,7 +406,7 @@ function drawGraph(id) {
         });
     });
 
-    setTimeout(function() {  //차트 출력 With 바운드 애니메이션
+    setTimeout(function() {//차트 출력 With 바운드 애니메이션
         processmap_graph.node.each(function(d) {
             var node   = d3.select(this),
                 text   = node.selectAll('text'),
@@ -430,6 +430,7 @@ function drawGraph(id) {
                 first = false;
             })
                 .attr('style', function(d){
+                    console.log("ggg: "+d.mySelf);
                     if(d.mySelf == 'Y') {
                         return 'font-weight:bold;fill:#980000;';
                     } else {
