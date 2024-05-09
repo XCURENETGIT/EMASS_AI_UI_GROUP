@@ -1851,6 +1851,7 @@
                                     <option value=""><s:message code="condition.size.all"/></option>
                                     <option value="B"><s:message code="condition.size.body"/></option>
                                     <option value="A"><s:message code="condition.size.attach"/></option>
+                                    <option value="T"><s:message code="condition.size.attach.total"/></option>
                                 </select>
                                 <select class="selectpicker col-xs" data-style="btn-primary" id="sizeFilterSelect">
                                     <option value="L"><s:message code="condition.over"/></option>
