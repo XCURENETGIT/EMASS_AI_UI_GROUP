@@ -310,7 +310,6 @@ public class SolrEdcMessageVO {
 			else if (aggregation instanceof ParsedLongTerms) {
 				List<? extends Terms.Bucket> buckets = ((ParsedLongTerms) aggregation).getBuckets();
 				Iterator iter = buckets.iterator();
-				boolean piAnalysis = false;
 				while (iter.hasNext()) {
 					Terms.Bucket bucket = (Terms.Bucket) iter.next();
 					pivotItem.put(Common.nvl(bucket.getKeyAsString()), bucket.getDocCount());
