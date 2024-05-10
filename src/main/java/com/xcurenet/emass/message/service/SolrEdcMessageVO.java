@@ -310,6 +310,7 @@ public class SolrEdcMessageVO {
 			else if (aggregation instanceof ParsedLongTerms) {
 				List<? extends Terms.Bucket> buckets = ((ParsedLongTerms) aggregation).getBuckets();
 				Iterator iter = buckets.iterator();
+				boolean piAnalysis = false;
 				while (iter.hasNext()) {
 					Terms.Bucket bucket = (Terms.Bucket) iter.next();
 					pivotItem.put(Common.nvl(bucket.getKeyAsString()), bucket.getDocCount());
@@ -322,27 +323,10 @@ public class SolrEdcMessageVO {
 				Iterator<? extends Range.Bucket> iter = buckets.iterator();
 				while (iter.hasNext()) {
 					Range.Bucket bucket = iter.next();
-					if (null != bucket.getAggregations()) {
-					   Aggregations childBucket = bucket.getAggregations();
-						   Aggregation childAggs = childBucket.get(aggsKey.getKey());
-						   ParsedSum sumNucket = (ParsedSum) childAggs;
-						if(sumNucket != null) {
-							//개인정보 유출관계 분석 전용
-						   pivotItem.put(Common.nvl(aggsKey.getKey()), sumNucket.getValue());
-						   pivotKeys.put(Common.nvl(aggsKey.getKey()), 0);
-						   pivotItem.putAll(pivotParse(key, (long) sumNucket.getValue()));
-					   }else{
-							// 일반 통계
-						   pivotItem.put(Common.nvl(bucket.getKeyAsString()), bucket.getDocCount());
-						   pivotKeys.put(Common.nvl(bucket.getKey()), 0);
-						   pivotItem.putAll(pivotParse(key, docsCount));
-					   }
-					}else{
 						// 일반 통계
 						pivotItem.put(Common.nvl(bucket.getKeyAsString()), bucket.getDocCount());
 						pivotKeys.put(Common.nvl(bucket.getKey()), 0);
 						pivotItem.putAll(pivotParse(key, docsCount));
-					}
 				}
 			} else if (aggregation instanceof ParsedSum) {
 				ParsedSum bucketArgments = (ParsedSum) aggregation;

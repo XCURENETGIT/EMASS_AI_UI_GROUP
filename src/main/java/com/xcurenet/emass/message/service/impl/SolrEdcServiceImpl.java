@@ -495,7 +495,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 		String[] fields = sq.getParams("aggregation.sub.fields");
 		for (String field : fields) {
-			termsAggregation.subAggregation(AggregationBuilders.range(field).field(field).addUnboundedFrom(Common.nvz(sq.get("aggregation.piCount"))).subAggregation(AggregationBuilders.sum(field).field(field)));
+			termsAggregation.subAggregation(AggregationBuilders.sum(field).field(field));
 		}
 		aggregations.add(termsAggregation);
 		return aggregations;

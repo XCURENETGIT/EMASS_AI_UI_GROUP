@@ -1060,12 +1060,12 @@ public class SolrEdcStatController {
 			query.append("))");
 		}
 
-		query.append(("(").concat(String.format("+pi_total: [%s TO *]", piCount).concat(") ")));
-		query.append(" +( ");
-		for (String field : Config.PRIVATE_SVC) {
-			query.append(("(").concat(String.format("%s: [%s TO *]", field, piCount).concat(") ")));
-		}
-		query.append(" ) ");
+//		query.append(("(").concat(String.format("+pi_total: [%s TO *]", piCount).concat(") ")));
+//		query.append(" +( ");
+//		for (String field : Config.PRIVATE_SVC) {
+//			query.append(("(").concat(String.format("%s: [%s TO *]", field, piCount).concat(") ")));
+//		}
+//		query.append(" ) ");
 		SolrQuery sq = new SolrQuery();
 
 		sq.setQuery(query.toString());

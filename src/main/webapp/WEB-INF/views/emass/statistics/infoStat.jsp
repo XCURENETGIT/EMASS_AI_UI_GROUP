@@ -419,59 +419,91 @@
         return value;
     });
     grid1.colAdd('pi_total', '<s:message code="bodyview.total"/>', 100, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-        if (value != undefined) return value.comma();
-        else return '';
+         var tempTotal = 0;
+        if(grid1.getValue(row, 'pi_SN') >= $('#piCount').val())  tempTotal += grid1.getValue(row, 'pi_SN') ;
+        if(grid1.getValue(row, 'pi_CN') >= $('#piCount').val())  tempTotal += grid1.getValue(row, 'pi_CN') ;
+        if(grid1.getValue(row, 'pi_DN') >= $('#piCount').val())  tempTotal += grid1.getValue(row, 'pi_DN') ;
+        if(grid1.getValue(row, 'pi_FN') >= $('#piCount').val())  tempTotal += grid1.getValue(row, 'pi_FN') ;
+        if(grid1.getValue(row, 'pi_PN') >= $('#piCount').val())  tempTotal += grid1.getValue(row, 'pi_PN') ;
+        if(grid1.getValue(row, 'pi_MN') >= $('#piCount').val())  tempTotal += grid1.getValue(row, 'pi_MN') ;
+        if(grid1.getValue(row, 'pi_AN') >= $('#piCount').val())  tempTotal += grid1.getValue(row, 'pi_AN') ;
+        if(grid1.getValue(row, 'pi_CRN') >= $('#piCount').val())  tempTotal += grid1.getValue(row, 'pi_CRN') ;
+        if(grid1.getValue(row, 'pi_SSN') >= $('#piCount').val())  tempTotal += grid1.getValue(row, 'pi_SSN') ;
+        if(grid1.getValue(row, 'pi_CRN') >= $('#piCount').val())  tempTotal += grid1.getValue(row, 'pi_CRN') ;
+        if(grid1.getValue(row, 'pi_IMEI') >= $('#piCount').val())  tempTotal += grid1.getValue(row,'pi_IMEI') ;
+        if(grid1.getValue(row, 'pi_BRN') >= $('#piCount').val())  tempTotal += grid1.getValue(row, 'pi_BRN') ;
+        if(grid1.getValue(row, 'pi_CPN') >= $('#piCount').val())  tempTotal += grid1.getValue(row, 'pi_CPN') ;
+        if(grid1.getValue(row, 'pi_MCN') >= $('#piCount').val())  tempTotal += grid1.getValue(row, 'pi_MCN') ;
+
+        
+        console.log(tempTotal)
+
+        return tempTotal;
+		
     });
     grid1.colAdd('pi_SN', '<s:message code="bodyview.sn"/>', 70, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-        if (value != undefined) return value.comma();
+        if(value < $('#piCount').val()) return 0;
+        else if (value != undefined && value >= $('#piCount').val() ) return value.comma();
         else return '';
     });
     grid1.colAdd('pi_CN', '<s:message code="bodyview.cn"/>', 70, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-        if (value != undefined) return value.comma();
+        if(value < $('#piCount').val()) return 0;
+        else if (value != undefined && value >= $('#piCount').val() ) return value.comma();
         else return '';
     });
     grid1.colAdd('pi_DN', '<s:message code="bodyview.dn"/>', 80, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-        if (value != undefined) return value.comma();
+        if(value < $('#piCount').val()) return 0;
+           else if (value != undefined && value >= $('#piCount').val() ) return value.comma();
         else return '';
     });
     grid1.colAdd('pi_FN', '<s:message code="bodyview.fn"/>', 100, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-        if (value != undefined) return value.comma();
+        if(value < $('#piCount').val()) return 0;
+           else if (value != undefined && value >= $('#piCount').val() ) return value.comma();
         else return '';
     });
     grid1.colAdd('pi_PN', '<s:message code="bodyview.pn"/>', 70, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-        if (value != undefined) return value.comma();
+        if(value < $('#piCount').val()) return 0;
+           else if (value != undefined && value >= $('#piCount').val() ) return value.comma();
         else return '';
     });
     grid1.colAdd('pi_MN', '<s:message code="bodyview.mn"/>', 100, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-        if (value != undefined) return value.comma();
+        if(value < $('#piCount').val()) return 0;
+           else if (value != undefined && value >= $('#piCount').val() ) return value.comma();
         else return '';
     });
     grid1.colAdd('pi_AN', '<s:message code="bodyview.an"/>', 110, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-        if (value != undefined) return value.comma();
+        if(value < $('#piCount').val()) return 0;
+           else if (value != undefined && value >= $('#piCount').val() ) return value.comma();
         else return '';
     });
     grid1.colAdd('pi_CRN', '<s:message code="bodyview.crn"/>', 100, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-        if (value != undefined) return value.comma();
+        if(value < $('#piCount').val()) return 0;
+           else if (value != undefined && value >= $('#piCount').val() ) return value.comma();
         else return '';
     });
     grid1.colAdd('pi_SSN', '<s:message code="bodyview.ssn"/>', 100, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-        if (value != undefined) return value.comma();
+        if(value < $('#piCount').val()) return 0;
+           else if (value != undefined && value >= $('#piCount').val() ) return value.comma();
         else return '';
     });
     grid1.colAdd('pi_IMEI', 'IMEI', 70, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-        if (value != undefined) return value.comma();
+        if(value < $('#piCount').val()) return 0;
+           else if (value != undefined && value >= $('#piCount').val() ) return value.comma();
         else return '';
     });
     grid1.colAdd('pi_BRN', '<s:message code="bodyview.brn"/>', 100, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-        if (value != undefined) return value.comma();
+        if(value < $('#piCount').val()) return 0;
+           else if (value != undefined && value >= $('#piCount').val() ) return value.comma();
         else return '';
     });
     grid1.colAdd('pi_CPN', '<s:message code="bodyview.cpn"/>', 100, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-        if (value != undefined) return value.comma();
+        if(value < $('#piCount').val()) return 0;
+           else if (value != undefined && value >= $('#piCount').val() ) return value.comma();
         else return '';
     });
     grid1.colAdd('pi_MCN', '<s:message code="bodyview.mcn"/>', 70, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-        if (value != undefined) return value.comma();
+        if(value < $('#piCount').val()) return 0;
+           else if (value != undefined && value >= $('#piCount').val() ) return value.comma();
         else return '';
     });
 
