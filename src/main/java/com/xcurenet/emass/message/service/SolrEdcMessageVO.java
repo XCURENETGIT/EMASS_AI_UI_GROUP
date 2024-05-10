@@ -323,13 +323,22 @@ public class SolrEdcMessageVO {
 				while (iter.hasNext()) {
 					Range.Bucket bucket = iter.next();
 					if (null != bucket.getAggregations()) {
-					   Aggregations childBucket =bucket.getAggregations();
-					    Aggregation childAggs =childBucket.get(aggsKey.getKey());
-						ParsedSum sumNucket = (ParsedSum) childAggs;
-						pivotItem.put(Common.nvl(aggsKey.getKey()), sumNucket.getValue());
-						pivotKeys.put(Common.nvl(aggsKey.getKey()), 0);
-						pivotItem.putAll(pivotParse(key, (long) sumNucket.getValue()));
+					   Aggregations childBucket = bucket.getAggregations();
+						   Aggregation childAggs = childBucket.get(aggsKey.getKey());
+						   ParsedSum sumNucket = (ParsedSum) childAggs;
+						if(sumNucket != null) {
+							//개인정보 유출관계 분석 전용
+						   pivotItem.put(Common.nvl(aggsKey.getKey()), sumNucket.getValue());
+						   pivotKeys.put(Common.nvl(aggsKey.getKey()), 0);
+						   pivotItem.putAll(pivotParse(key, (long) sumNucket.getValue()));
+					   }else{
+							// 일반 통계
+						   pivotItem.put(Common.nvl(bucket.getKeyAsString()), bucket.getDocCount());
+						   pivotKeys.put(Common.nvl(bucket.getKey()), 0);
+						   pivotItem.putAll(pivotParse(key, docsCount));
+					   }
 					}else{
+						// 일반 통계
 						pivotItem.put(Common.nvl(bucket.getKeyAsString()), bucket.getDocCount());
 						pivotKeys.put(Common.nvl(bucket.getKey()), 0);
 						pivotItem.putAll(pivotParse(key, docsCount));
