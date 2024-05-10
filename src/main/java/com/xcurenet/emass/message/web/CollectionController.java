@@ -483,7 +483,7 @@ public class CollectionController {
 		String startDt = Common.nvl(param.get("startDt"));
 		String endDt = Common.nvl(param.get("endDt"));
 		String type = Common.nvl(param.get("type"));
-
+		String searchFlag = Common.nvl(param.get("searchFlag"));
 
 		int startRange = 0;
 		int endRange = 0;
@@ -503,10 +503,13 @@ public class CollectionController {
 
 		}
 
-		if (Common.isEmpty(msgids) || (startRange < 0) || (endRange > 0)) {
+		if (Common.isEmpty(msgId) || (startRange < 0) || (endRange > 0)) {
 			sq = getCollectionMessageTotalQuery(request);
 		} else {
-			sq = getMessengerGtPrev(request, msgids, true);
+			if(searchFlag!=null)
+				sq = getMessengerGtNext(request, msgId, true);
+			else
+				sq = getMessengerGtPrev(request, msgId, true);
 		}
 
 
@@ -567,6 +570,7 @@ public class CollectionController {
 		String searchStr = Common.nvl(param.get("searchStr"));
 		String type = Common.nvl(param.get("type"));
 		int limit = Common.nvz(param.get("limit"), 10000);
+		String searchFlag = Common.nvl(param.get("searchFlag"));
 
 		SolrQuery sq = new SolrQuery();
 		String query = String.format("+ctime:[%s TO %s] +userkey:\"%s\"", startDt, endDt, userkey);
@@ -578,7 +582,13 @@ public class CollectionController {
 
 		//이미 출력된 동시간대 데이터 제외
 		if(Common.isNotEmpty(msgId)) {
-			query += String.format(" +msgid:{%s TO *]", msgId);
+			if(searchFlag!=""){
+				query += String.format(" +msgid:[%s TO *]", msgId);
+			}
+			else{
+				query += String.format(" +msgid:[%s TO *]", msgId);
+				query+=String.format(" -msgid:%s", msgId);
+			}
 		}
 
 		if(type.equals("N")||type.equals("G")){
@@ -659,10 +669,10 @@ public class CollectionController {
 			if(lastMsgYn) {
 				query += String.format(" +msgid:[* TO %s]", msgId);
 			} else {
-				query += String.format(" +msgid:[* TO %s}", msgId);
+				query += String.format(" +msgid:[* TO %s]", msgId);
 			}
 		}
-
+		query+=String.format(" -msgid:%s", msgId);
 		if(Common.isNotEmpty(searchStr)) query += String.format(" +body:(*%s*) ", searchStr);
 
 		sq.setQuery(query);
