@@ -208,7 +208,7 @@
         $('#startDate').val(new Date().format('yyyy-mm-dd'));
         $('#endDate').val(new Date().format('yyyy-mm-dd'));
         $('#unit').val('file');
-        $('#interGroup,#dynamicSearch, #sendersValVal,#sendersStr,#receiversVal,#receiversStr,#keyword,#fileSize ').val('');
+        $('#interGroup,#dynamicSearch, #sendersValVal,#sendersStr,#receiversVal,#receiversStr,#keyword,#fileSize,#sendersVal,#sendersDept,#sendersJib,#sendersEmail,#receiversVal,#receiversDept,#receiversJib,#receiversEmail').val('');
        $('#sendersSelectedArea').hide();
        $('#receiversSelectedArea').hide();
     }
