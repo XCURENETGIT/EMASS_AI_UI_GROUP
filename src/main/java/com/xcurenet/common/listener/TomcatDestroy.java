@@ -19,6 +19,6 @@ public class TomcatDestroy implements ApplicationListener<ContextClosedEvent>{
 	@Override
 	public void onApplicationEvent(ContextClosedEvent event) {
 		log.info("Download Batch Status Update....");
-//		downloadBatchService.shutdownDownloadBatch("H");
+		downloadBatchService.shutdownDownloadBatch("H");
 	}
 }

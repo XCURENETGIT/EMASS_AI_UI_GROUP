@@ -942,6 +942,7 @@
             if(value.length > 1024) value = value.substring(0, 1024)+'...';
             value = value.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '\'');
 
+            value = highlightSearchStr(value, "subject");
             //예약어 Highlight 처리
             if(searchKeyword().length == 0 || parent.keywordHighlight.toString() == 'true') {
                 var kwds = nvl(grid.getValue(row, 'kwds_subject')).split(',');
@@ -949,7 +950,6 @@
 	                value = highlightKeyword(value, kwds);
                 }
             }
-            value = highlightSearchStr(value, "subject");
             var rtnVal = '<span title="'+body_snippet+'" onclick="" class="subject_read'+grid.getValue(row, 'readYn')+'">'+value+'</span>&nbsp;<a href="javascript:void(0);" onclick="viewer_newOpen('+row+')" class="glyphicon glyphicon-new-window new-window"></a>';
             if( (isConsent( ) && grid.getValue(row, 'consentNo') == '') || !isDetailView() ) rtnVal = '<span>'+value+'</span>';
             return rtnVal;

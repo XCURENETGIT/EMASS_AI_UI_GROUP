@@ -290,8 +290,8 @@
         if (menuKey) dashboardInit();
         else getDefaultMenuKey();
 
-        getLoggingDataSetting();
-        getFileDataSetting();
+        // getLoggingDataSetting();
+        // getFileDataSetting();
 
         function isDefaultDashboard(menuKey) {
             ui.get({
@@ -554,7 +554,6 @@
             url: 'getLoggingDataSetting.xcn',
             success: function (data, total) {
                 loggingDataSettingVal = data;
-
                 if(editMode == 'Y') {
                     if (loggingDataSettingVal == 'Y') {
                         $('#dashboardInfo').show();
@@ -1602,7 +1601,6 @@
         }
 
         $('#dashboardHeaderArea').html(str);
-
         $('#selectDashMenu').carousel({
             pause: true,
             interval: false,
@@ -1923,9 +1921,9 @@
 
 
     function getData(data) {
-        for (var i = 0; i < data.length; i++) {
-            getSearchData(i, data[i]);
-        }
+        data.map(async (d,i) =>  {
+            await getSearchData(i, d);
+		});
     }
 
     var timeoutArr = [];
@@ -1933,7 +1931,7 @@
     function getSearchData(i, obj) {
         timeout_clear(timeoutArr[i]);
 
-        var plusTime = i * 200;
+        var plusTime = i * 50;
         setTimeout(function () {
             ui.get({
                 url: 'getDashBoardContentData.xcn',
@@ -2170,7 +2168,7 @@
         }
 
     }
-
+  
 </script>
 </head>
 

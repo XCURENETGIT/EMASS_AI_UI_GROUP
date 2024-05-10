@@ -2135,7 +2135,6 @@ function setSubjectHighLight(defaultText, type) {
 
 function setBodyHighLight(defaultText, type) {
     var body_obj = $("#emassBody");
-    console.log(body_obj)
     for (var i = 0; i < defaultText.length; i++) {
         var  splitText =  defaultText[i].split(' ');
         for (var j = 0; j < splitText.length; j++) {
