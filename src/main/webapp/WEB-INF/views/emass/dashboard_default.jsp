@@ -1106,7 +1106,7 @@
             dashCondition.sizeStartVal = '' + (size * 1024 * 1024);
             dashCondition.sizeOption = "B";
             dashCondition.attachYn = "Y";
-            dashCondition.sizeType = "A";
+            dashCondition.sizeType = "T";
             dashCondition.attachVal = rowKey;
             if (size == 0) {
                 dashCondition.sizeOption = "S";
@@ -1184,7 +1184,7 @@
         var max = Number.MAX_SAFE_INTEGER;
         ui.get({
             url: 'getTodayDataStatus.xcn',
-            range: "0,10485760,52428800,104857600,157286400,209715200,2147483647",
+            range: "0,11534336,52428800,1065025536,1585446912,2113929216,2147483647",
             searchStr: '',
             success: function (data, total) {
                 if (rowSearchkey == null) rowSearchkey = "xlsx";
@@ -1226,13 +1226,13 @@
                 const numericKey = parseFloat(key);
                 if (numericKey ==  0) {
                     array[0] += targetKey[key];
-                } else if (numericKey == 10485760) {
+                } else if (numericKey == 11534336) {
                     array[1] += targetKey[key];
                 } else if (numericKey == 52428800) {
                     array[2] += targetKey[key];
-                } else if (numericKey == 157286400) {
+                } else if (numericKey == 1065025536) {
                     array[3] += targetKey[key];
-                }  else if (numericKey == 104857600) {
+                }  else if (numericKey == 1585446912) {
                     array[4] += targetKey[key];
                 } else {
                     array[5] += targetKey[key];

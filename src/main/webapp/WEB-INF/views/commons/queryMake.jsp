@@ -928,7 +928,8 @@
 								addQueryText += " "
 							}
 
-							addQueryText += receiveEtcObj[i].value + ":(" + receiveEtcStr + ")" ;
+
+                            addQueryText += receiveEtcObj[i].value + ":(" + '"' + receiveEtcStr + '"' + ")" ;
 						}
 
 						if(receiveEtcObj.length > 0 && receiveEtcArr.length > 0) {

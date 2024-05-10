@@ -59,7 +59,7 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		sq.setParam("group.field", "attachtype");
 
 		sq.setParam("facet", true);
-		sq.setParam("facet.field", "attachsize");
+		sq.setParam("facet.field", "attachSizeSum");
 		sq.setParam("facet.ranges", todayDataStatusVO.getRange());
 
 		sq.setParam("facet.limit", "-1");
