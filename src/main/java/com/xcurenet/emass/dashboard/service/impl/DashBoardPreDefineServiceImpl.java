@@ -282,7 +282,7 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 				Map<String, Object> item = new HashMap<>();
 				item.put("date", edc.getPivotData().get(i).get("rowKey"));
 				item.put("total", edc.getPivotData().get(i).get("total"));
-				double doubleNum = (double) edc.getPivotData().get(i).get("size");
+				double doubleNum = (Common.isNotEmpty(edc.getPivotData().get(i).get("size"))) ? (double) edc.getPivotData().get(i).get("size") : 0;
 				long attach = (long) doubleNum;
 				item.put("bodySize", attach);
 				item.put("bodySizeStr", Common.convertFileSize(attach));
@@ -292,7 +292,7 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 				result.add(item);
 			}
 		}
-		result = result.stream().sorted((o1, o2) -> o1.get("date").toString().compareTo(o2.get("date").toString()) ).collect(Collectors.toList());
+		result = result.stream().filter(m-> Common.isNotEmpty(m.get("date"))).sorted((o1, o2) -> o1.get("date").toString().compareTo(o2.get("date").toString()) ).collect(Collectors.toList());
 		return new XcnResponseVO(XcnRspCode.OK, result);
 	}
 

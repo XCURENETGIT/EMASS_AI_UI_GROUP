@@ -23,7 +23,6 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -551,15 +550,14 @@ public class CustomDashBoardServiceImpl extends XcnAbstractDAO implements Custom
 				Map<String, Object> item = new HashMap<>();
 				item.put("date", edc.getPivotData().get(i).get("rowKey"));
 				item.put("logging", edc.getPivotData().get(i).get("total"));
-				double doubleNum = (double) edc.getPivotData().get(i).get("attachsize");
+				double doubleNum = (Common.isNotEmpty(edc.getPivotData().get(i).get("attachsize"))) ? (double) edc.getPivotData().get(i).get("attachsize") : 0;
 				long attach = (long) doubleNum;
 				item.put("attach", attach);
 				item.put("attachStr", Common.convertFileSize(attach));
 				result.add(item);
 			}
 		}
-
-		result = result.stream().sorted((o1, o2) -> o1.get("date").toString().compareTo(o2.get("date").toString()) ).collect(Collectors.toList());
+		if(result.size() > 0) result = result.stream().filter(m->Common.isNotEmpty(m.get("date"))).sorted((o1, o2) -> o1.get("date").toString().compareTo(o2.get("date").toString()) ).collect(Collectors.toList());
 		return new XcnResponseVO(XcnRspCode.OK, result);
 	}
 
