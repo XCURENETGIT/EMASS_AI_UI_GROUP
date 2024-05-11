@@ -25,10 +25,8 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.SortClause;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.elasticsearch.ElasticsearchException;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.MoreLikeThisQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.index.query.QueryStringQueryBuilder;
+import org.elasticsearch.index.query.*;
+import org.elasticsearch.script.Script;
 import org.elasticsearch.search.aggregations.*;
 import org.elasticsearch.search.aggregations.bucket.range.RangeAggregationBuilder;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
@@ -494,8 +492,12 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 				.size(maxCount(Common.nvz(sq.get("aggregation.limit"))));
 
 		String[] fields = sq.getParams("aggregation.sub.fields");
+		int piCount = Common.nvz(sq.get("aggregation.piCount"));
 		for (String field : fields) {
-			termsAggregation.subAggregation(AggregationBuilders.sum(field).field(field));
+			Script script = new Script(String.format("doc['%s'].stream().max(Long::compare).orElse(-1)  >= %s", field, piCount));
+			termsAggregation.subAggregation( AggregationBuilders.filter(field,  new BoolQueryBuilder()
+					.must(QueryBuilders.existsQuery(field))
+					.must(new ScriptQueryBuilder(script))));
 		}
 		aggregations.add(termsAggregation);
 		return aggregations;

@@ -1073,7 +1073,7 @@ public class SolrEdcStatController {
 		sq.setRows(0);
 		sq.set("aggregation.field", "userkey");
 		sq.set("aggregation.sub.fields", Config.PRIVATE_SVC);
-		sq.set("aggregation.limit", 100000);
+		sq.set("aggregation.limit", 5000);
 		sq.set("aggregation.piCount", piCount);
 		sq.setParam("piAnalysisYn", "Y");
 

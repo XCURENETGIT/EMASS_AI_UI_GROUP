@@ -12,6 +12,7 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.Aggregations;
+import org.elasticsearch.search.aggregations.bucket.filter.ParsedFilter;
 import org.elasticsearch.search.aggregations.bucket.range.ParsedRange;
 import org.elasticsearch.search.aggregations.bucket.range.Range;
 import org.elasticsearch.search.aggregations.bucket.terms.ParsedLongTerms;
@@ -321,17 +322,18 @@ public class SolrEdcMessageVO {
 				List<? extends Range.Bucket> buckets = ((ParsedRange) aggregation).getBuckets();
 				Iterator<? extends Range.Bucket> iter = buckets.iterator();
 				while (iter.hasNext()) {
-					Range.Bucket bucket = iter.next();
-						// 일반 통계
-						pivotItem.put(Common.nvl(bucket.getKeyAsString()), bucket.getDocCount());
-						pivotKeys.put(Common.nvl(bucket.getKey()), 0);
-						pivotItem.putAll(pivotParse(key, docsCount));
+				Range.Bucket bucket = iter.next();
+				// 일반 통계
+				pivotItem.put(Common.nvl(bucket.getKeyAsString()), bucket.getDocCount());
+				pivotKeys.put(Common.nvl(bucket.getKey()), 0);
+				pivotItem.putAll(pivotParse(key, docsCount));
 				}
-			} else if (aggregation instanceof ParsedSum) {
-				ParsedSum bucketArgments = (ParsedSum) aggregation;
-				pivotItem.put(Common.nvl(bucketArgments.getName()), bucketArgments.getValue());
-				pivotKeys.put(Common.nvl(bucketArgments.getName()), 0);
-				pivotItem.putAll(pivotParse( key, docsCount));
+			}
+			else if(aggregation instanceof ParsedFilter) {
+				/*개인정보 유출분석 전용 */
+				pivotItem.put(Common.nvl(aggregation.getName()), ((ParsedFilter) aggregation).getDocCount());
+				pivotKeys.put(Common.nvl(aggregation.getName()), 0);
+				pivotItem.putAll(pivotParse(key, docsCount));
 			}
 		}
 		pivotResult.add(pivotItem);

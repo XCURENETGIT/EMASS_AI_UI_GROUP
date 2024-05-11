@@ -13,7 +13,7 @@
 
 	<groupId>com.xcurenet</groupId>
 	<artifactId>emassai</artifactId>
-	<version>1.0.65</version>
+	<version>1.0.67</version>
 	<name>emassai</name>
 	<description>EMASS AI</description>
 
@@ -660,6 +660,8 @@
 								<sshexec host="${buildHost}" username="${buildUser}" password="${buildPassword}" command="cd ${binary-dir}/RPMS/${arch}/ &amp;&amp; md5sum ${rpm-name} > ${rpm-name}.md5" trust="yes" verbose="false"/>
 								<scp file="${buildUser}:${buildPassword}@${buildHost}:${binary-dir}/RPMS/${arch}/${rpm-name}" todir="./target/RPMS/" trust="yes" verbose="false"/>
 								<scp file="${buildUser}:${buildPassword}@${buildHost}:${binary-dir}/RPMS/${arch}/${rpm-name}.md5" todir="./target/RPMS/" trust="yes" verbose="false"/>
+
+
 
 								<!-- 개발 테스트 용 ( 테스트 장비의 war 교체 ) -->
 								<!--								<echo message="Step 8. WAR file move"></echo>
