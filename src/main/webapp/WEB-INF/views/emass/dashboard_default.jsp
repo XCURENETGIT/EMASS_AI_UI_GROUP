@@ -1080,7 +1080,7 @@
 
         $(document).on('click', '.clicks', function () {
             let data = $(this).data('value');
-            openMessageBodyPop(data, data);
+            openMessageBodyPop('', data);
         });
 
         $(document).on('click', '.click2', function () {
