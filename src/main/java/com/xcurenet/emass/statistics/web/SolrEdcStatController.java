@@ -1264,6 +1264,9 @@ public class SolrEdcStatController {
 		}
 
 		SolrQuery sq = new SolrQuery();
+		sq.setParam("piType",type);
+		sq.setParam("piCount",piCount);
+		sq.setParam("piAnalysisDetail", "Y");
 		sq.setQuery(query.toString());
 		sq.setStart(offset);
 		sq.setRows(limit);

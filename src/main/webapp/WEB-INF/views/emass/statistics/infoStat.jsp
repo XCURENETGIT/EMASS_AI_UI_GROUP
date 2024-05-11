@@ -418,7 +418,9 @@
         if (grid1.getValue(row, 'rowName') != '') return grid1.getValue(row, 'rowName') + '/' + grid1.getValue(row, 'jikgubnm') + '/' + grid1.getValue(row, 'deptnm') + '&lt;' + value + '&gt;';
         return value;
     });
-    grid1.colAdd('pi_total', '<s:message code="bodyview.total"/>', 100, 'right', false, 'link');
+    grid1.colAdd('pi_total', '<s:message code="bodyview.total"/>', 100, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
+        return '<s:message code="bodyview.total.details"/>';
+    });
     grid1.colAdd('pi_SN', '<s:message code="bodyview.sn"/>', 70, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
         if (value != undefined ) return value.comma();
         else return '';

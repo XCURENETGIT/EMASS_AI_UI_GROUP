@@ -242,6 +242,27 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			complateQuery.filter(regexQuery);
 		}
 
+
+		/* 개인정보 유출 관계 분석 상세 조회*/
+		if(Common.isEquals(sq.get("piAnalysisDetail"), "Y")){
+			BoolQueryBuilder boolPiComp = QueryBuilders.boolQuery();
+			String picount = sq.get("piCount");
+			String piType = sq.get("piType");
+
+			if(Common.isEquals(piType, "pi_total")){
+				String[] fields  = Config.PRIVATE_SVC;
+				for(String f : fields) {
+					Script script = new Script(String.format("doc['%s'].stream().max(Long::compare).orElse(-1) >= %S ",f, picount));
+					boolPiComp.should(new BoolQueryBuilder().must(QueryBuilders.existsQuery(f)).must(new ScriptQueryBuilder(script))).minimumShouldMatch(1);
+				}
+			}else{
+				Script script = new Script(String.format("doc['%s'].stream().max(Long::compare).orElse(-1) >= %S ",piType, picount));
+				boolPiComp.must(QueryBuilders.existsQuery(piType)).must(new ScriptQueryBuilder(script));
+			}
+			complateQuery.filter(boolPiComp);
+		}
+
+
 		/*============================================================*/
 		log.info("page : {}  rows : {}", getPage(sq), sq.getRows());
 
