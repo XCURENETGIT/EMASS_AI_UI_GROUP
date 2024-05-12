@@ -926,6 +926,7 @@
             busiStr: busiStr,
             userStr: userStr,
             success: function (data, total) {
+                $(".resultCnt").html('('+addCommas(total)+')');
                 grid2.appendData(data);
                 if ( grid2.loadingPage == 0 ) grid2.Select(-1,-1);
             },
@@ -973,7 +974,6 @@
             userStr: userStr,
             success: function (data, total) {
                 /*	grid2.setData(data);*/
-                $(".resultCnt").html('('+addCommas(total)+')');
                 var nodes = [];
                 var edges = [];
                 if (pi_total === 0) {
