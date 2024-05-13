@@ -123,14 +123,14 @@
 
 
 
-;
+
         $(document).on('click', '#sendersSelectedArea', function (e) {
-            $('#sendersStr, #sendersVal,#sendersDept, #sendersJib').val('');
+            $('#sendersStr, #sendersVal,#sendersDept, #sendersJib, #sendersEmail').val('');
             $('#sendersSelectedArea').hide();
         });
 
         $(document).on('click', '#receiversSelectedArea', function (e) {
-            $('#receiversStr, #receiversVal,#receiversDept, #receiversJib').val('');
+            $('#receiversStr, #receiversVal,#receiversDept, #receiversJib, #receiversEmail').val('');
             $('#receiversSelectedArea').hide();
         });
 
@@ -596,6 +596,12 @@
 
         listData = data;
 
+        var sendUv = $('#sendersEmail').val().split('|');
+        var sendUser = sendUv.join(',');
+
+        var receiveUv = $('#receiversEmail').val().split('|');
+        var receiveUser = receiveUv.join(',');
+
         $("#relation_div").show();
         ui.on("relation_div");
         ui.get({
@@ -640,6 +646,12 @@
 
     function getSelectMessageList(flag){
         if ( flag == undefined || flag == 'Y') {
+            var sendUv = $('#sendersEmail').val().split('|');
+            var sendUser = sendUv.join(',');
+
+            var receiveUv = $('#receiversEmail').val().split('|');
+            var receiveUser = receiveUv.join(',');
+
             tabGrid.data.length = 0;
             tabGrid.rtnNextPageFunc = getSelectMessageList;
             tabGrid.loadingPage = 0;
