@@ -402,7 +402,7 @@
 			<option value="body_snippet"><s:message code="bodyview.body.content"/></option>
 			<option value="subject"><s:message code="analysis.freedom.ui.mailtitle"/></option>
 			<option value="conm"><s:message code="common.org.conm"/></option>
-			<option value="suborgcd"><s:message code="common.org.suborg"/></option>
+			<option value="suborgcd"><s:message code="common.org.general"/></option>
 			<option value="businm"><s:message code="common.org.busi"/></option>
 			<option value="deptnm"><s:message code="common.org.dept"/></option>
 			<option value="jikgubnm"><s:message code="common.org.jikgub"/></option>
@@ -469,7 +469,7 @@
 			<option value="sender_str"><s:message code="condition.sender"/></option>
 			<option value="to"><s:message code="condition.recv"/></option>
 			<option value="conm"><s:message code="common.org.conm"/></option>
-			<option value="suborgcd"><s:message code="common.org.suborg"/></option>
+			<option value="suborgcd"><s:message code="common.org.general"/></option>
 			<option value="businm"><s:message code="common.org.busi"/></option>
 			<option value="deptnm"><s:message code="common.org.dept"/></option>
 			<option value="jikgubnm"><s:message code="common.org.jikgub"/></option>
