@@ -168,7 +168,7 @@
 			"svc1", "svc2", "svc3", "svc12", "tname", "to", "user", "userid", "usr_id", "usr_ip","usrId", "xmsgkey", "xparentmtr",
 			"xrootmtr", "week", "ocr_attach", "ocr_attach_cnt", "favorite_id", "read_key", "read_time",
 			"user_str", "user", "host_str", "host", "attachname_str", "attachname", "sender_str", "sender", "recvs",
-			"to", "cc", "bcc", "recvs_name", "tname", "cname", "bname", "ocr_attach", "pi_amount.pi_DRM",
+			"to", "cc", "bcc", "recvs_name", "tname", "cname", "bname", "ocr_attach", "pi_amount.pi_DRM","pi_total",
 			"pi_amount.pi_total", "pi_amount.pi_ID", "pi_amount.pi_EF", "pi_amount.pi_PN", "pi_amount.pi_FN", "pi_amount.pi_DN", "pi_amount.pi_SN", "pi_amount.pi_CN", "pi_amount.pi_EC",
 			"pi_amount.pi_IMEI","pi_amount.pi_MCN","pi_amount.pi_CPN","pi_amount.pi_BRN","pi_amount.pi_SSN","pi_amount.pi_CRN","pi_amount.pi_AN","pi_amount.pi_MN","epmsg_type","reprocess",
 		];
@@ -183,6 +183,21 @@
 			initServiceTypeList( );
 			initUserGroupList();
 			initInterUserGroupList();
+
+            checkKeywordBtn();
+            checkAttachBtn()
+            checkRegexpBtn()
+
+            $('input[name="keywordYn"]').change(function() {
+                checkKeywordBtn();
+            });
+            $('input[name="attachYn"]').change(function() {
+                checkAttachBtn();
+            });
+            $('input[name="regexpYn"]').change(function() {
+                checkRegexpBtn();
+            });
+
 			if(recvsJikgub == "true") {
 				initJikgubList();
 				$('#recvs_poidTr').show();
@@ -612,25 +627,63 @@
 			$("#recvs_poid").selectpicker('refresh');
 		}
 
-		/*
-        function validateParentheses(queryText) {
 
-            var leftParentheses = queryText.match(/[(]/gi);
-            var rightParentheses = queryText.match(/[)]/gi);
+        function checkRegexpBtn() {
+            var regexpYn = $('input[name="regexpYn"]:checked').val();
 
-            var leftCnt = 0;
-            var rightCnt = 0;
-
-            if(leftParentheses != null) leftCnt = leftParentheses.length;
-            if(rightParentheses != null) rightCnt = rightParentheses.length;
-
-            if(leftCnt == rightCnt) {
-                return false;
+            // keywordYn이 Y 인 경우 버튼 활성화, 그 외의 경우 비활성화
+            if (regexpYn === 'Y') {
+                $('#regexpBtn').prop('disabled', false);
             } else {
-                return true;
+                $('#regexpBtn').prop('disabled', true);
             }
+            resetCode('regexp');
         }
-        */
+        function checkAttachBtn() {
+            var attachYn = $('input[name="attachYn"]:checked').val();
+
+            // keywordYn이 Y 인 경우 버튼 활성화, 그 외의 경우 비활성화
+            if (attachYn === 'Y') {
+                $('#attachBtn').prop('disabled', false);
+            } else {
+                $('#attachBtn').prop('disabled', true);
+            }
+            resetCode('attach');
+        }
+
+
+        function checkKeywordBtn() {
+            var keywordYn = $('input[name="keywordYn"]:checked').val();
+
+            // keywordYn이 Y 인 경우 버튼 활성화, 그 외의 경우 비활성화
+            if (keywordYn === 'Y') {
+                $('#keywordBtn').prop('disabled', false);
+            } else {
+                $('#keywordBtn').prop('disabled', true);
+            }
+            resetCode('keyword');
+        }
+
+
+        /*
+		function validateParentheses(queryText) {
+
+			var leftParentheses = queryText.match(/[(]/gi);
+			var rightParentheses = queryText.match(/[)]/gi);
+
+			var leftCnt = 0;
+			var rightCnt = 0;
+
+			if(leftParentheses != null) leftCnt = leftParentheses.length;
+			if(rightParentheses != null) rightCnt = rightParentheses.length;
+
+			if(leftCnt == rightCnt) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+		*/
 
 		/*
          * rtn [check, errorType, column]
@@ -949,8 +1002,9 @@
 						}
 						break;
 					case "attach":
+                        addQueryText+=queryAddMinus+"(";
 						if($('#attachYn:checked').length > 0) {
-							addQueryText = queryAddMinus + "attached:" + $('#attachYn:checked').val();
+							addQueryText +=  "(attached:" + $('#attachYn:checked').val()+")";
 						}
 
 						if($('#attachVal').val() != "") {
@@ -958,18 +1012,23 @@
 								addQueryText += " ";
 							}
 
-							addQueryText += queryAddMinus + "attachtype:(";
+                            if($('#attachYn:checked').length > 0) {
+                                addQueryText += "AND ";
+                            }
+
+							addQueryText += "(attachtype:(";
 
 							var valArr = $('#attachVal').val().split("|");
 
 							for(var i = 0; i < valArr.length; i++) {
 								if(i > 0) {
-									addQueryText += " "
+									addQueryText += " OR ";
 								}
 								addQueryText += valArr[i].toLowerCase();
 							}
-							addQueryText += ")";
-						}
+                            addQueryText += "))";
+                        }
+                        addQueryText+=")";
 
 						resetCode('attach');
 
@@ -999,27 +1058,32 @@
 						}
 						break;
 					case "keyword":
+                        addQueryText+=queryAddMinus+"(";
 						if($('#keywordYn:checked').length > 0) {
-							addQueryText = queryAddMinus + "kwd:" + $('#keywordYn:checked').val();
+							addQueryText += "(kwd:" + $('#keywordYn:checked').val()+")";
 						}
 
 						if($('#keywordVal').val() != "") {
 							if($('#keywordYn:checked').length > 0) {
 								addQueryText += " ";
 							}
-							addQueryText += queryAddMinus + "kwds:(";
+                            if($('#keywordYn:checked').length > 0) {
+                                addQueryText += "AND ";
+                            }
 
-							var valArr = $('#keywordStr').val().split("|");
+							addQueryText += "(kwds:(";
+
+							var valArr = $('#keywordStr').val().split(",");
 
 							for(var i = 0; i < valArr.length; i++) {
 								if(i > 0) {
-									addQueryText += " "
+                                    addQueryText += " OR";
 								}
 								addQueryText += valArr[i];
 							}
-							addQueryText += ")";
+							addQueryText += "))";
 						}
-
+                        addQueryText+=")";
 						resetCode('keyword');
 						break;
 					case "regexp":
