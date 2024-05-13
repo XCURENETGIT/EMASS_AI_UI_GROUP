@@ -80,14 +80,14 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 		switch (searchVO.getUnit()) {
 			case "file":
 				query.addRange("attachsize", (Common.isEmpty(searchVO.getFileSize()) ? 0 : searchVO.getFileSize() * 1024 * 1024), "*");
-				query.add("attachname_str",searchVO.getListData());
+				query.add("attachname_str","*"+searchVO.getListData()+"*");
 				break;
 			case "messenger":
-				query.add(new String[]{"sender_str"}, searchVO.getListData());
+				query.add(new String[]{"sender_str"}, "*"+searchVO.getListData()+"*");
 				query.add("svc1", "Q");
 				break;
 			case "mailid":
-				query.add(new String[]{"sender_str"}, searchVO.getListData());
+				query.add(new String[]{"sender_str"}, "*"+searchVO.getListData()+"*");
 				query.and().beforeParen().add("svc1", "W", false).or().add("svc1", "M", false).or().add("svc12", "EMM", false).afterParen();
 				break;
 		}
