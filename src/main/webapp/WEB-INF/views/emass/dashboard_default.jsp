@@ -18,7 +18,7 @@
 		overflow: hidden;
 		white-space: nowrap;
 		text-overflow: ellipsis;
-		/*max-width: 95% !important;*/
+		max-width: 92% !important;
 	}
 
 	.files :hover{
@@ -566,7 +566,7 @@
 
 
                             str += "<li class='click2' data-value='" + nameId + "'><p class='num'>" + (i + 1) + "</p>";
-                            str+="<p><span class='name blue'>" + noName + "</span>";
+                            str+="<p><span class='name blue' title='"+noName+"'>" + noName + "</span>";
                             str += "<span class='team'>" + bu + "</span></p>";
                             str += "<p class='teamnum'>";
                             str += "<span class='name'>" + count + "</span>";
@@ -581,7 +581,7 @@
                             let noName = getFormattedValue("size",name[3]);
                             let nameId = name[3];
                             str += "<li class='click2' data-value='" + nameId + "'><span class='num'>" + (i + 1) + "</span>";
-                            str += "<p><span class='name'>" + noName + "</span>";
+                            str += "<p><span class='name' title='"+noName+"'>" + noName + "</span>";
                             str += "<span class='righttext'>" + count + "</span></p></li>";
                         }
                         str += "</ul></div>"
@@ -707,7 +707,7 @@
                             let fileName = getFormattedValue("name", leFileName);
                             str += "<li class='clicks' ' data-value='" + data.fileId[i] + "'>"
                             str += "<span class = 'num'>" + (i + 1) + "</span>";
-                            str += "<p class='file blueBg'><span class='filename blue'>" + fileName + "</span><span class='Volume'>" + filesSize + "</span></p>";
+                            str += "<p class='file blueBg' style='min-width: 134px;'><span class='filename blue' title='"+fileName+"'>" + fileName + "</span><span class='Volume'>" + filesSize + "</span></p>";
                             str += "</li>"
                         }
                         str += "</ul></div>";
@@ -719,7 +719,7 @@
                             let filesSize = getFormattedValue("size", data.fileSize[i]);
                             let filesType = getFormattedValue("type", data.fileType[i]);
                             str += "<li class='clicks' ' data-value='" + data.fileId[i] + "'><span class='num'>" + (i + 1) + "</span>";
-                            str += "<p><span class='filename'>" + fileName + "</span>"
+                            str += "<p><span class='filename' title='"+fileName+"'>" + fileName + "</span>"
                             str += "<span class='righttext'>" + filesSize + "</span></p></li>"
                         }
                         str += "<ul><div>";

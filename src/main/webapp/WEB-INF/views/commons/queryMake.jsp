@@ -168,7 +168,7 @@
 			"svc1", "svc2", "svc3", "svc12", "tname", "to", "user", "userid", "usr_id", "usr_ip","usrId", "xmsgkey", "xparentmtr",
 			"xrootmtr", "week", "ocr_attach", "ocr_attach_cnt", "favorite_id", "read_key", "read_time",
 			"user_str", "user", "host_str", "host", "attachname_str", "attachname", "sender_str", "sender", "recvs",
-			"to", "cc", "bcc", "recvs_name", "tname", "cname", "bname", "ocr_attach", "pi_amount.pi_DRM",
+			"to", "cc", "bcc", "recvs_name", "tname", "cname", "bname", "ocr_attach", "pi_amount.pi_DRM","pi_total",
 			"pi_amount.pi_total", "pi_amount.pi_ID", "pi_amount.pi_EF", "pi_amount.pi_PN", "pi_amount.pi_FN", "pi_amount.pi_DN", "pi_amount.pi_SN", "pi_amount.pi_CN", "pi_amount.pi_EC",
 			"pi_amount.pi_IMEI","pi_amount.pi_MCN","pi_amount.pi_CPN","pi_amount.pi_BRN","pi_amount.pi_SSN","pi_amount.pi_CRN","pi_amount.pi_AN","pi_amount.pi_MN","epmsg_type","reprocess",
 		];
@@ -183,6 +183,21 @@
 			initServiceTypeList( );
 			initUserGroupList();
 			initInterUserGroupList();
+
+            checkKeywordBtn();
+            checkAttachBtn()
+            checkRegexpBtn()
+
+            $('input[name="keywordYn"]').change(function() {
+                checkKeywordBtn();
+            });
+            $('input[name="attachYn"]').change(function() {
+                checkAttachBtn();
+            });
+            $('input[name="regexpYn"]').change(function() {
+                checkRegexpBtn();
+            });
+
 			if(recvsJikgub == "true") {
 				initJikgubList();
 				$('#recvs_poidTr').show();
@@ -612,25 +627,63 @@
 			$("#recvs_poid").selectpicker('refresh');
 		}
 
-		/*
-        function validateParentheses(queryText) {
 
-            var leftParentheses = queryText.match(/[(]/gi);
-            var rightParentheses = queryText.match(/[)]/gi);
+        function checkRegexpBtn() {
+            var regexpYn = $('input[name="regexpYn"]:checked').val();
 
-            var leftCnt = 0;
-            var rightCnt = 0;
-
-            if(leftParentheses != null) leftCnt = leftParentheses.length;
-            if(rightParentheses != null) rightCnt = rightParentheses.length;
-
-            if(leftCnt == rightCnt) {
-                return false;
+            // keywordYn이 Y 인 경우 버튼 활성화, 그 외의 경우 비활성화
+            if (regexpYn === 'Y') {
+                $('#regexpBtn').prop('disabled', false);
             } else {
-                return true;
+                $('#regexpBtn').prop('disabled', true);
             }
+            resetCode('regexp');
         }
-        */
+        function checkAttachBtn() {
+            var attachYn = $('input[name="attachYn"]:checked').val();
+
+            // keywordYn이 Y 인 경우 버튼 활성화, 그 외의 경우 비활성화
+            if (attachYn === 'Y') {
+                $('#attachBtn').prop('disabled', false);
+            } else {
+                $('#attachBtn').prop('disabled', true);
+            }
+            resetCode('attach');
+        }
+
+
+        function checkKeywordBtn() {
+            var keywordYn = $('input[name="keywordYn"]:checked').val();
+
+            // keywordYn이 Y 인 경우 버튼 활성화, 그 외의 경우 비활성화
+            if (keywordYn === 'Y') {
+                $('#keywordBtn').prop('disabled', false);
+            } else {
+                $('#keywordBtn').prop('disabled', true);
+            }
+            resetCode('keyword');
+        }
+
+
+        /*
+		function validateParentheses(queryText) {
+
+			var leftParentheses = queryText.match(/[(]/gi);
+			var rightParentheses = queryText.match(/[)]/gi);
+
+			var leftCnt = 0;
+			var rightCnt = 0;
+
+			if(leftParentheses != null) leftCnt = leftParentheses.length;
+			if(rightParentheses != null) rightCnt = rightParentheses.length;
+
+			if(leftCnt == rightCnt) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+		*/
 
 		/*
          * rtn [check, errorType, column]
@@ -780,7 +833,6 @@
 						addQueryText = queryAddMinus + "ctime:[" + startDt + " TO " + endDt + "]";
 						break;
 					case "svc":
-                        console.log("svc");
 						var service = $('#serviceTypeSelect').selectpicker('val');
 						if(service) {
                             if (service.length == 1) {
@@ -791,7 +843,7 @@
                                 addQueryText = queryAddMinus + "svc:(";
                                 for (var i = 0; i < service.length; i++) {
                                     if (i > 0) {
-                                        addQueryText += " "
+                                        addQueryText += " OR "
                                     }
                                     addQueryText += service[i] + "*";
                                 }
@@ -949,8 +1001,9 @@
 						}
 						break;
 					case "attach":
+                        addQueryText+=queryAddMinus+"(";
 						if($('#attachYn:checked').length > 0) {
-							addQueryText = queryAddMinus + "attached:" + $('#attachYn:checked').val();
+							addQueryText +=  "(attached:" + $('#attachYn:checked').val()+")";
 						}
 
 						if($('#attachVal').val() != "") {
@@ -958,18 +1011,23 @@
 								addQueryText += " ";
 							}
 
-							addQueryText += queryAddMinus + "attachtype:(";
+                            if($('#attachYn:checked').length > 0) {
+                                addQueryText += "AND ";
+                            }
+
+							addQueryText += "(attachtype:(";
 
 							var valArr = $('#attachVal').val().split("|");
 
 							for(var i = 0; i < valArr.length; i++) {
 								if(i > 0) {
-									addQueryText += " "
+									addQueryText += " OR ";
 								}
 								addQueryText += valArr[i].toLowerCase();
 							}
-							addQueryText += ")";
-						}
+                            addQueryText += "))";
+                        }
+                        addQueryText+=")";
 
 						resetCode('attach');
 
@@ -999,27 +1057,32 @@
 						}
 						break;
 					case "keyword":
+                        addQueryText+=queryAddMinus+"(";
 						if($('#keywordYn:checked').length > 0) {
-							addQueryText = queryAddMinus + "kwd:" + $('#keywordYn:checked').val();
+							addQueryText += "(kwd:" + $('#keywordYn:checked').val()+")";
 						}
 
 						if($('#keywordVal').val() != "") {
 							if($('#keywordYn:checked').length > 0) {
 								addQueryText += " ";
 							}
-							addQueryText += queryAddMinus + "kwds:(";
+                            if($('#keywordYn:checked').length > 0) {
+                                addQueryText += "AND ";
+                            }
 
-							var valArr = $('#keywordStr').val().split("|");
+							addQueryText += "(kwds:(";
+
+							var valArr = $('#keywordStr').val().split(",");
 
 							for(var i = 0; i < valArr.length; i++) {
 								if(i > 0) {
-									addQueryText += " "
+                                    addQueryText += " OR";
 								}
 								addQueryText += valArr[i];
 							}
-							addQueryText += ")";
+							addQueryText += "))";
 						}
-
+                        addQueryText+=")";
 						resetCode('keyword');
 						break;
 					case "regexp":
@@ -1827,37 +1890,37 @@
 							</div>
 							<div style="padding-left:10px;">
 								<span>● AND/OR</span><br/>
-								<span style="padding-left:10px;">AND : + &nbsp;&nbsp;&nbsp;OR : <s:message code="message.msg.space"/></span><br/>
+								<span style="padding-left:10px;">AND : AND(+) &nbsp;,&nbsp;&nbsp;OR : OR(<s:message code="message.msg.space"/>)</span><br/>
 								<span>● <s:message code="common.msg.field"/></span><br/>
 								<span style="padding-left:10px;"><s:message code="message.msg.field_name"/>  <s:message code="message.msg.reference"/></span><br/>
 								<span>● <s:message code="message.msg.message.input"/></span><br/>
-								<span style="padding-left:10px;"><s:message code="message.help.comment1"/></span><br/>
-								<span style="padding-left:10px;font-weight: bold;">1. <s:message code="message.help.explain1"/> :<span style="padding-left:10px;color:#FF0000">(<s:message code="message.msg"/>1 <s:message code="message.msg"/>2)</span></span><br/>
-								<span style="padding-left:20px;"><s:message code="message.msg.example"/>) +srcip:(1.1.1.1 1.1.1.2)</span>
-								<span style="padding-left:20px;"><s:message code="message.help.example1"/></span><br/>
-								<div style="border-bottom:1px dashed #ccc;"></div>
-								<span style="padding-left:10px;font-weight: bold;">2. <s:message code="message.help.explain2"/> :<span style="padding-left:10px;color:#FF0000">[<s:message code="message.msg"/>1 TO <s:message code="message.msg"/>2]</span></span><br/>
-								<span style="padding-left:20px;"><s:message code="message.msg.example"/>) +ctime:[20160101000000 TO 20160102235959]</span><br/>
+								<span style="padding-left:10px;"><s:message code="message.help.not.comment1"/></span><br/>
+<%--								<span style="padding-left:10px;font-weight: bold;">1. <s:message code="message.help.explain1"/> :<span style="padding-left:10px;color:#FF0000">(<s:message code="message.msg"/>1 <s:message code="message.msg"/>2)</span></span><br/>--%>
+<%--								<span style="padding-left:20px;"><s:message code="message.msg.example"/>) +srcip:(1.1.1.1 1.1.1.2)</span>--%>
+<%--								<span style="padding-left:20px;"><s:message code="message.help.example1"/></span><br/>--%>
+<%--								<div style="border-bottom:1px dashed #ccc;"></div>--%>
+								<span style="padding-left:10px;font-weight: bold;">1. <s:message code="message.help.explain2"/> :<span style="padding-left:10px;color:#FF0000">[<s:message code="message.msg"/>1 TO <s:message code="message.msg"/>2]</span></span><br/>
+								<span style="padding-left:20px;"><s:message code="message.msg.example"/>) +ctime:[20240101000000 TO 20240102235959]</span><br/>
 								<span style="padding-left:20px;"><s:message code="message.help.example2"/></span><br/>
 								<div style="border-bottom:1px dashed #ccc;"></div>
-								<span style="padding-left:10px;font-weight: bold;">3. <s:message code="message.help.explain3"/> :<span style="padding-left:10px;color:#FF0000">"<s:message code="message.msg"/>"</span></span><br/>
+								<span style="padding-left:10px;font-weight: bold;">2. <s:message code="message.help.explain3"/> :<span style="padding-left:10px;color:#FF0000">"<s:message code="message.msg"/>"</span></span><br/>
 								<span style="padding-left:20px;"><s:message code="message.msg.example"/>) +sname:"<s:message code="message.help.sample_name"/>"</span><br/>
 								<span style="padding-left:20px;"><s:message code="message.help.example3"/></span><br/>
 								<div style="border-bottom:1px dashed #ccc;"></div>
-								<span style="padding-left:10px;font-weight: bold;">4. ?, * <s:message code="message.msg.use"/> :<span style="padding-left:10px;color:#FF0000"><s:message code="message.msg"/>1* <s:message code="message.msg"/>2?</span></span><br/>
-								<span style="padding-left:20px;"><s:message code="message.msg.example"/>) +ctime:201601*</span><br/>
+								<span style="padding-left:10px;font-weight: bold;">3. * <s:message code="message.msg.use"/> :<span style="padding-left:10px;color:#FF0000"><s:message code="message.msg"/>1* </span></span><br/>
+								<span style="padding-left:20px;"><s:message code="message.msg.example"/>) +ctime:202401*</span><br/>
 								<span style="padding-left:20px;"><s:message code="message.help.example4"/></span><br/>
 								<div style="border-bottom:1px dashed #ccc;"></div>
 							</div>
 							<div>
 								<span>■ <s:message code="message.help.example.multi_query"/></span><br/>
-								<span style="padding-left:10px;font-weight: bold;">+ctime:201601??09* +(srcip:1.1.1.1 dstip:1.1.1.1)</span><br/>
+								<span style="padding-left:10px;font-weight: bold;"> +ctime:20240109* +((srcip:(1.1.1.1) (1.2.3.4)) (dstip:1.1.1.1))</span><br/>
 								<span style="padding-left:10px;"><s:message code="message.help.multi_example1"/> </span><br/>
 								<span style="padding-left:10px;"><s:message code="message.help.multi_example2"/></span><br/>
 								<span>■ <s:message code="message.help.example.etc_query"/></span><br/>
 								<span style="padding-left:10px;font-weight: bold;">+attached:Y</span><br/>
 								<span style="padding-left:10px;"><s:message code="message.help.etc_example1"/></span><br/>
-								<span style="padding-left:10px;font-weight: bold;">+kwd:Y -sname:<s:message code="message.help.sample_name"/>*</span><br/>
+								<span style="padding-left:10px;font-weight: bold;">+kwd:Y -sname:<s:message code="message.help.sample_name"/></span><br/>
 								<span style="padding-left:10px;"><s:message code="message.help.etc_example2"/></span><br/>
 							</div>
 
