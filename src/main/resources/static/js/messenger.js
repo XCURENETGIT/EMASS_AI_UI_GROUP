@@ -67,7 +67,7 @@ var eikon = {
 
             } else {
                 // var msgid = $('.timeline').children().first().attr('id');
-                var firstData = $('.timeline').children().filter(':eq(1)');
+                var firstData = $('.timeline').children('li').first();
                 var msgid = $(firstData).attr('id');
                 getMessengerMessagePrev(xrootmtr, srcip, usr_id, msgid);
 
@@ -121,7 +121,6 @@ var eikon = {
             endDt : endDt+"235959",
             groupField : 'userkey',
             success : function(data, total) {
-                console.log('data.groups    ',data.groups)
                 participantDataSet = data.groups;
                 userSelectBox(data. groups, srcip, usr_id);
             },
@@ -151,7 +150,7 @@ var eikon = {
         if (searchType == 'G') {
             getMessengerMessageTotal(xRootmtr, srcip, startDt, endDt, usr_id, '');
         } else if (searchType == 'GD') {
-            getMessengerMessageTotal(xRootmtr, srcip, startDt, endDt, usr_id, msgid);
+            getMessengerMessageTotal(xRootmtr, srcip, startDt, endDt, usr_id, msgid, '');
         }
     },
     /**
@@ -246,7 +245,7 @@ var eikon = {
 };
 
 
-function getMessengerMessageTotal(xRootmtr, srcip, startDt, endDt, usr_id, msgid) {
+function getMessengerMessageTotal(xRootmtr, srcip, startDt, endDt, usr_id, msgid,searchFlag) {
     //마지막 열람 msgid
     ui.get({
         url: 'getMessengerMessageTotal.xcn',
@@ -254,11 +253,11 @@ function getMessengerMessageTotal(xRootmtr, srcip, startDt, endDt, usr_id, msgid
         // srcip: srcip,
         startDt: startDt+"000000",
         endDt: endDt+"235959",
-        usr_id: usr_id, //기준이 srcip에서 usr_id로 변경되면서 마지막 데이터 기준 변경
+        usr_id: usr_id,
         limit: 0,
         success: function (data, total) {
             $('#groupSubResultCnt').text(data.comma());
-            getMessengerMessage(xRootmtr, srcip, usr_id, msgid);
+            getMessengerMessage(xRootmtr, srcip, usr_id, msgid,searchFlag);
         },
         error: function (status, message) {
             ui.alertMsg(message);
@@ -278,6 +277,7 @@ function getMessengerMessageTotal(xRootmtr, srcip, startDt, endDt, usr_id, msgid
  * @returns
  */
 function getMessengerMessage(xRootmtr, srcip, usr_id, msgid,searchFlag) {
+    console.log("searchFlag"+searchFlag);
 
     var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
     var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
@@ -294,9 +294,11 @@ function getMessengerMessage(xRootmtr, srcip, usr_id, msgid,searchFlag) {
         limit: detailLimit,
         searchFlag:searchFlag,
         success: function (data, total) {
+
             if (data.groups.length > 0) {
                 $('.messenger_next').css('display', 'block');
                 $('#totalCount').css('display', 'block');
+                $('.messenger_prev').css('display', 'block');
             }
             if (data.groups.length == 0) {
                 $("#timeline_list").html(noDataMsg());
@@ -312,15 +314,17 @@ function getMessengerMessage(xRootmtr, srcip, usr_id, msgid,searchFlag) {
 
             prevDetailDataSet = data.groups;
 
-            if (data.numFound < detailLimit)
-                $('.messenger_prev').css('display', 'none');
-            else $('.messenger_prev').css('display', 'block');
+            // if (data.numFound < detailLimit && searchFlag != true) {
+            //     $('.messenger_prev').css('display', 'none');
+            // }
+            // else $('.messenger_prev').css('display', 'block');
 
-            if(searchFlag==null) {
+            if(searchFlag==null ) {
                 $("#timeline_list").html(makeList(false));
                 $('.chatList').scrollTop($('.chatList')[0].scrollHeight);
             }else{
                 $("#timeline_list").html(makeList2(true));
+                $('.chatList').scrollTop($('.chatList')[0].scrollHeight);
             }
 
             Highlight();
@@ -901,7 +905,7 @@ function makeList(nextFlag) {
     var str = '<ul class="pageInfoDiv timeline">';
     var srcip = $('#selectUserInfo').attr('data-srcip');
 
-    if (detailDataSet.length < detailLimit && !nextFlag ) str += noPrevDataMsg();
+    // if (detailDataSet.length < detailLimit && !nextFlag ) str += noPrevDataMsg();
 
     for (var i =detailDataSet.length-1; i >=0; i--) {
         dataHasFlag = true;
@@ -1086,7 +1090,7 @@ function checkDate(idx){
 }
 
 function checkDatePre(idx) {
-    var firstData = $('.timeline').children().filter(':eq(1)');
+    var firstData = $('.timeline').children('li').first();
     var endDate = $(firstData).attr('ctime');
 
     if (idx == 0 && prevDetailDataSet[idx].ctime.substring(0, 10) == endDate.substring(0, 10)) {

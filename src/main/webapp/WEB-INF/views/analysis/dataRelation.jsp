@@ -176,6 +176,14 @@
             searchReset();
         });
 
+
+        $('#fileSize').on('keyup', function(){
+            var inputValue = $(this).val();
+            if(!/^\d+$/.test(inputValue)){
+                $(this).val('');
+            }
+        });
+
         $("#startDate, #endDate, #dynamicSearch, #senders, #receivers, #keyword, #fileSize").keyup(function(event){
             eventEnterSearch(event);
         });
