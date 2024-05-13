@@ -1827,37 +1827,37 @@
 							</div>
 							<div style="padding-left:10px;">
 								<span>● AND/OR</span><br/>
-								<span style="padding-left:10px;">AND : + &nbsp;&nbsp;&nbsp;OR : <s:message code="message.msg.space"/></span><br/>
+								<span style="padding-left:10px;">AND : AND(+) &nbsp;,&nbsp;&nbsp;OR : OR(<s:message code="message.msg.space"/>)</span><br/>
 								<span>● <s:message code="common.msg.field"/></span><br/>
 								<span style="padding-left:10px;"><s:message code="message.msg.field_name"/>  <s:message code="message.msg.reference"/></span><br/>
 								<span>● <s:message code="message.msg.message.input"/></span><br/>
-								<span style="padding-left:10px;"><s:message code="message.help.comment1"/></span><br/>
-								<span style="padding-left:10px;font-weight: bold;">1. <s:message code="message.help.explain1"/> :<span style="padding-left:10px;color:#FF0000">(<s:message code="message.msg"/>1 <s:message code="message.msg"/>2)</span></span><br/>
-								<span style="padding-left:20px;"><s:message code="message.msg.example"/>) +srcip:(1.1.1.1 1.1.1.2)</span>
-								<span style="padding-left:20px;"><s:message code="message.help.example1"/></span><br/>
-								<div style="border-bottom:1px dashed #ccc;"></div>
-								<span style="padding-left:10px;font-weight: bold;">2. <s:message code="message.help.explain2"/> :<span style="padding-left:10px;color:#FF0000">[<s:message code="message.msg"/>1 TO <s:message code="message.msg"/>2]</span></span><br/>
-								<span style="padding-left:20px;"><s:message code="message.msg.example"/>) +ctime:[20160101000000 TO 20160102235959]</span><br/>
+								<span style="padding-left:10px;"><s:message code="message.help.not.comment1"/></span><br/>
+<%--								<span style="padding-left:10px;font-weight: bold;">1. <s:message code="message.help.explain1"/> :<span style="padding-left:10px;color:#FF0000">(<s:message code="message.msg"/>1 <s:message code="message.msg"/>2)</span></span><br/>--%>
+<%--								<span style="padding-left:20px;"><s:message code="message.msg.example"/>) +srcip:(1.1.1.1 1.1.1.2)</span>--%>
+<%--								<span style="padding-left:20px;"><s:message code="message.help.example1"/></span><br/>--%>
+<%--								<div style="border-bottom:1px dashed #ccc;"></div>--%>
+								<span style="padding-left:10px;font-weight: bold;">1. <s:message code="message.help.explain2"/> :<span style="padding-left:10px;color:#FF0000">[<s:message code="message.msg"/>1 TO <s:message code="message.msg"/>2]</span></span><br/>
+								<span style="padding-left:20px;"><s:message code="message.msg.example"/>) +ctime:[20240101000000 TO 20240102235959]</span><br/>
 								<span style="padding-left:20px;"><s:message code="message.help.example2"/></span><br/>
 								<div style="border-bottom:1px dashed #ccc;"></div>
-								<span style="padding-left:10px;font-weight: bold;">3. <s:message code="message.help.explain3"/> :<span style="padding-left:10px;color:#FF0000">"<s:message code="message.msg"/>"</span></span><br/>
+								<span style="padding-left:10px;font-weight: bold;">2. <s:message code="message.help.explain3"/> :<span style="padding-left:10px;color:#FF0000">"<s:message code="message.msg"/>"</span></span><br/>
 								<span style="padding-left:20px;"><s:message code="message.msg.example"/>) +sname:"<s:message code="message.help.sample_name"/>"</span><br/>
 								<span style="padding-left:20px;"><s:message code="message.help.example3"/></span><br/>
 								<div style="border-bottom:1px dashed #ccc;"></div>
-								<span style="padding-left:10px;font-weight: bold;">4. ?, * <s:message code="message.msg.use"/> :<span style="padding-left:10px;color:#FF0000"><s:message code="message.msg"/>1* <s:message code="message.msg"/>2?</span></span><br/>
-								<span style="padding-left:20px;"><s:message code="message.msg.example"/>) +ctime:201601*</span><br/>
+								<span style="padding-left:10px;font-weight: bold;">3. * <s:message code="message.msg.use"/> :<span style="padding-left:10px;color:#FF0000"><s:message code="message.msg"/>1* </span></span><br/>
+								<span style="padding-left:20px;"><s:message code="message.msg.example"/>) +ctime:202401*</span><br/>
 								<span style="padding-left:20px;"><s:message code="message.help.example4"/></span><br/>
 								<div style="border-bottom:1px dashed #ccc;"></div>
 							</div>
 							<div>
 								<span>■ <s:message code="message.help.example.multi_query"/></span><br/>
-								<span style="padding-left:10px;font-weight: bold;">+ctime:201601??09* +(srcip:1.1.1.1 dstip:1.1.1.1)</span><br/>
+								<span style="padding-left:10px;font-weight: bold;"> +ctime:20240109* +((srcip:(1.1.1.1) (1.2.3.4)) (dstip:1.1.1.1))</span><br/>
 								<span style="padding-left:10px;"><s:message code="message.help.multi_example1"/> </span><br/>
 								<span style="padding-left:10px;"><s:message code="message.help.multi_example2"/></span><br/>
 								<span>■ <s:message code="message.help.example.etc_query"/></span><br/>
 								<span style="padding-left:10px;font-weight: bold;">+attached:Y</span><br/>
 								<span style="padding-left:10px;"><s:message code="message.help.etc_example1"/></span><br/>
-								<span style="padding-left:10px;font-weight: bold;">+kwd:Y -sname:<s:message code="message.help.sample_name"/>*</span><br/>
+								<span style="padding-left:10px;font-weight: bold;">+kwd:Y -sname:<s:message code="message.help.sample_name"/></span><br/>
 								<span style="padding-left:10px;"><s:message code="message.help.etc_example2"/></span><br/>
 							</div>
 
