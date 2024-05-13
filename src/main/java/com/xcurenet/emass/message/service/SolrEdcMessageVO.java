@@ -329,6 +329,12 @@ public class SolrEdcMessageVO {
 				pivotItem.putAll(pivotParse(key, docsCount));
 				}
 			}
+			else if (aggregation instanceof ParsedSum) {
+				ParsedSum bucketArgments = (ParsedSum) aggregation;
+				pivotItem.put(Common.nvl(bucketArgments.getName()), bucketArgments.getValue());
+				pivotKeys.put(Common.nvl(bucketArgments.getName()), 0);
+				pivotItem.putAll(pivotParse( key, docsCount));
+			}
 			else if(aggregation instanceof ParsedFilter) {
 				/*개인정보 유출분석 전용 */
 				pivotItem.put(Common.nvl(aggregation.getName()), ((ParsedFilter) aggregation).getDocCount());

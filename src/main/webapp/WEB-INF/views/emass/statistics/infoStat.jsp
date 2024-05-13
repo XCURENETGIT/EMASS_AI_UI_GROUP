@@ -86,6 +86,8 @@
     var tabID = 1;
     var tabNum = 0;
     var totalChartDat;
+
+
     $(document).ready(function () {
         initCondition();
         initDateTimePicker('startdate','enddate');
@@ -93,6 +95,7 @@
             var code = $(this).attr('id');
             openCodeWindow(code, $('#' + code + 'Val').val(), $('#' + code + 'Str').val());
         });
+
 
         $('#user').click(function () {
             var code = $(this).attr('id');
@@ -135,7 +138,7 @@
             $('#userSelectedArea').hide();
             $('#busiSelect').selectpicker('val', '');
             $('#piCount').val('');
-
+            $("[name=piType]").val('pattern');
         });
 
         $('#chartCntDiv .dropdown-menu li a').click(function () {
@@ -149,6 +152,13 @@
         $(".nav-tabs").on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
         })
 
+
+        $('#piType').change(function () {
+            if($('#piType') == 'pattern') $('#privateChart').attr('display','');
+			else $('#privateChart').attr('display','none');
+        });
+		
+		
         $('.listChart').on('click', '.close', function () {
             var id = 'tab' + Number($(this).parents('li').attr('idx'));
 
@@ -317,27 +327,36 @@
 			<div>
 				<input type="text" id="enddate" style="width: 110px;"/>
 			</div>
-
+			
 			<div>
-				<select id="type" name="type" style="width: 110px;"/>
-					<option value="pattern"><s:message code="condition.regexp.cnt"/></option>
-					<option value="sum"><s:message code="condition.sum.cnt"/> </option>
+				<select id="piType" name="piType" style="width: 110px;"/>
+				<option value="sum" selected><s:message code="condition.regexp.cnt"/></option>  <%-- 총 패턴 검출--%>
+				<option value="pattern"><s:message code="condition.sum.cnt"/> </option> <%-- 문서 건수 --%>
+				</select>
+			</div>
+			<div>
+				<select id="piCount" name="piCount">
+					<%if (Common.isEquals(systemLanguage,"ko"))  {%>
+						<option value=""><s:message code="condition.infoStat.cnt"/></option>
+						<option value="10">10<s:message code="condition.infoStat.cnt.more"/></option>
+						<option value="50">50<s:message code="condition.infoStat.cnt.more"/></option>
+						<option value="100">100<s:message code="condition.infoStat.cnt.more"/></option>
+						<option value="200">200<s:message code="condition.infoStat.cnt.more"/></option>
+						<option value="300">300<s:message code="condition.infoStat.cnt.more"/></option>
+						<option value="500">500<s:message code="condition.infoStat.cnt.more"/></option>
+					<%} %>
+					<%if (Common.isEquals(systemLanguage,"en"))  {%>
+					<option value=""><s:message code="condition.infoStat.cnt"/></option>
+					<option value="10"><s:message code="condition.infoStat.cnt.more"/> 10</option>
+					<option value="50"><s:message code="condition.infoStat.cnt.more"/> 50</option>
+					<option value="100"><s:message code="condition.infoStat.cnt.more"/> 100</option>
+					<option value="200"><s:message code="condition.infoStat.cnt.more"/> 200</option>
+					<option value="300"><s:message code="condition.infoStat.cnt.more"/> 300</option>
+					<option value="500"><s:message code="condition.infoStat.cnt.more"/> 500</option>
+					<%} %>
 				</select>
 			</div>
 			
-			<div>
-				<select id="piCount" name="piCount">
-					<option value=""><s:message code="condition.infoStat.cnt"/></option>
-					<option value="1" selected><s:message code="condition.infoStat.cnt1"/></option>
-					<option value="2"><s:message code="condition.infoStat.cnt2"/></option>
-					<option value="5"><s:message code="condition.infoStat.cnt5"/></option>
-					<option value="10"><s:message code="condition.infoStat.cnt10"/></option>
-					<option value="20"><s:message code="condition.infoStat.cnt20"/></option>
-					<option value="50"><s:message code="condition.infoStat.cnt50"/></option>
-					<option value="100"><s:message code="condition.infoStat.cnt100"/></option>
-				</select>
-			</div>
-
 			<div>
 				<button class="form_btn01" id="searchBtn"><s:message code="common.msg.search"/></button>
 				<button class="form_btn02" id="clearBtn"><s:message code="condition.reset"/></button>
@@ -426,59 +445,76 @@
         if (grid1.getValue(row, 'rowName') != '') return grid1.getValue(row, 'rowName') + '/' + grid1.getValue(row, 'jikgubnm') + '/' + grid1.getValue(row, 'deptnm') + '&lt;' + value + '&gt;';
         return value;
     });
+
+    <%--grid1.colAdd('pi_total', '<s:message code="bodyview.total"/>', 100, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {--%>
+    <%--    if (value != undefined) return value.comma();--%>
+    <%--    else return '';--%>
+    <%--});--%>
+
     grid1.colAdd('pi_total', '<s:message code="bodyview.total"/>', 100, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-        return '<s:message code="bodyview.total.details"/>';
+        let str=""
+        console.log(str)
+        if($('#piType').val() == 'sum') {
+            if (value == '0') str='';
+            else str= value.comma();
+        }else  str =  '<s:message code="bodyview.total.details"/>';
+        console.log(str)
+        return str;
+
     });
+    
+
     grid1.colAdd('pi_SN', '<s:message code="bodyview.sn"/>', 70, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-        if (value != undefined ) return value.comma();
+        if (value != undefined) return value.comma();
         else return '';
     });
+    
     grid1.colAdd('pi_CN', '<s:message code="bodyview.cn"/>', 70, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-        if (value != undefined ) return value.comma();
+        if (value != undefined) return value.comma();
         else return '';
     });
     grid1.colAdd('pi_DN', '<s:message code="bodyview.dn"/>', 80, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-        if (value != undefined ) return value.comma();
+        if (value != undefined) return value.comma();
         else return '';
     });
     grid1.colAdd('pi_FN', '<s:message code="bodyview.fn"/>', 100, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-        if (value != undefined ) return value.comma();
+        if (value != undefined) return value.comma();
         else return '';
     });
     grid1.colAdd('pi_PN', '<s:message code="bodyview.pn"/>', 70, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-        if (value != undefined ) return value.comma();
+        if (value != undefined) return value.comma();
         else return '';
     });
     grid1.colAdd('pi_MN', '<s:message code="bodyview.mn"/>', 100, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-        if (value != undefined ) return value.comma();
+        if (value != undefined) return value.comma();
         else return '';
     });
     grid1.colAdd('pi_AN', '<s:message code="bodyview.an"/>', 110, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-        if (value != undefined ) return value.comma();
+        if (value != undefined) return value.comma();
         else return '';
     });
     grid1.colAdd('pi_CRN', '<s:message code="bodyview.crn"/>', 100, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-        if (value != undefined ) return value.comma();
+        if (value != undefined) return value.comma();
         else return '';
     });
     grid1.colAdd('pi_SSN', '<s:message code="bodyview.ssn"/>', 100, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-        if (value != undefined ) return value.comma();
+        if (value != undefined) return value.comma();
         else return '';
     });
     grid1.colAdd('pi_IMEI', 'IMEI', 70, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-        if (value != undefined ) return value.comma();
+        if (value != undefined) return value.comma();
         else return '';
     });
     grid1.colAdd('pi_BRN', '<s:message code="bodyview.brn"/>', 100, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-        if (value != undefined ) return value.comma();
+        if (value != undefined) return value.comma();
         else return '';
     });
     grid1.colAdd('pi_CPN', '<s:message code="bodyview.cpn"/>', 100, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-        if (value != undefined ) return value.comma();
+        if (value != undefined) return value.comma();
         else return '';
     });
     grid1.colAdd('pi_MCN', '<s:message code="bodyview.mcn"/>', 70, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-        if (value != undefined ) return value.comma();
+        if (value != undefined) return value.comma();
         else return '';
     });
 
@@ -490,10 +526,12 @@
         getData('Y');
     };
     grid1.onClick = function () {
-        console.log(grid1.Col)
+        if(grid1.getValue(grid1.Row, grid1.Col) == 0) return;
         if (grid1.Col === grid1.ColIndex('rowKey')) return;
-        initProgressbar();
-        makeNetwork(grid1.getValue(grid1.Row, 'rowKey'), grid1.ColKey(grid1.Col), grid1.getValue(grid1.Row, grid1.Col));
+        if($('#piType').val() != 'pattern') {
+            initProgressbar();
+            makeNetwork(grid1.getValue(grid1.Row, 'rowKey'), grid1.ColKey(grid1.Col), grid1.getValue(grid1.Row, grid1.Col));
+        }
         getInfoDetailList("Y",grid1.getValue(grid1.Row, 'rowKey'), grid1.ColKey(grid1.Col), grid1.getValue(grid1.Row, grid1.Col));
     };
 
@@ -610,10 +648,8 @@
     grid2.colAdd('bodySizeStr', '<s:message code="condition.size.body"/>', 80, 'left', false, 'nomal', null, {sortField:'body_size'});
     grid2.colAdd('attachSizeStr', '<s:message code="condition.size.attach.total"/>', 80, 'left', false, 'nomal', null, {sortField:'attachSizeSort'});
     grid2.colAdd('kwds', '<s:message code="condition.keyword"/>', 120, 'left', false, 'nomal');
-    grid2.colAdd('pi_total', '<s:message code="condition.regexp"/>', 70, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
-        if (value == '0') return '';
-        else return value.comma();
-    });
+
+
 
     if ( isOCR ) {
         grid2.colAdd('ocr_attach_cnt', 'OCR <s:message code="message.msg.file"/>', 70, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
@@ -680,7 +716,7 @@
     function getData(flag) {
         if (searchFlag) return;
         var piCount = $('select[name=piCount]').val();
-        var type = $('select[name=type]').val();
+        var piType = $("select[name=piType] option:selected").val();
         var piCount_str = $('select[name=piCount] option:selected').text();
         var sDate = $('#startdate').val().replaceAll("-", "");
         var eDate = $('#enddate').val().replaceAll("-", "");
@@ -705,7 +741,7 @@
         grid1.on();
         ui.get({
             url: 'getInfoStatList.xcn',
-	        type:type,
+            piType:piType,
             startDate: sDate + "000000",
             endDate: eDate + "235959",
             offset: grid1.data.length,
@@ -720,10 +756,9 @@
             success: function (data, total) {
                 var pivotData = [];
                 $.each(data,function (i,d){
-					if(d.pi_total > 0 ) pivotData.push(d);
-				});
+                    if(d.pi_total > 0 ) pivotData.push(d);
+                });
                 grid1.setData(pivotData);
-                
                 if (grid1.loadingPage == 0) grid1.Select(-1, -1);
                 searchFlag = false;
             },
@@ -922,6 +957,9 @@
         if (user != '') userStr = user;
         else userStr = ''
 
+		var patternCountStr =  '<s:message code="bodyview.pattern_count"/>';
+		var docCountStr = '<s:message code="bodyview.doc_count"/>';
+			
         grid2.on();
         ui.postJson({
             url: 'getInfoDetailList.xcn',
@@ -936,7 +974,8 @@
             busiStr: busiStr,
             userStr: userStr,
             success: function (data, total) {
-                $(".resultCnt").html('('+addCommas(total)+')');
+       //         $(".resultCnt").html(' ' + patternCountStr + '(' +addCommas(pi_total)+') '+ docCountStr+  '('+addCommas(total)+')');
+                $(".resultCnt").html('('+addCommas(pi_total)+')');
                 grid2.appendData(data);
                 if ( grid2.loadingPage == 0 ) grid2.Select(-1,-1);
             },

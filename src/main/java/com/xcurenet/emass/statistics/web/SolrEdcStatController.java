@@ -1008,6 +1008,7 @@ public class SolrEdcStatController {
 		JSONObject param = Common.getParam(request);
 		String startDate = Common.nvl(param.get("startDate"));
 		String endDate = Common.nvl(param.get("endDate"));
+		String searchPiType = Common.nvl(param.get("piType"));
 		String type = Common.nvl(param.get("type"));
 		int piCount = Common.nvz(param.get("piCount"), 1);
 		String busi = Common.nvl(param.get("busiStr"));
@@ -1060,7 +1061,7 @@ public class SolrEdcStatController {
 			query.append("))");
 		}
 
-//		query.append(("(").concat(String.format("+pi_total: [%s TO *]", piCount).concat(") ")));
+//		query.append(String.format("+pi_total:>=%s", piCount));
 //		query.append(" +( ");
 //		for (String field : Config.PRIVATE_SVC) {
 //			query.append(("(").concat(String.format("%s: [%s TO *]", field, piCount).concat(") ")));
@@ -1071,15 +1072,18 @@ public class SolrEdcStatController {
 		sq.setQuery(query.toString());
 		sq.setStart(0);
 		sq.setRows(0);
-		sq.set("aggregation.field", "userkey");
+
+		sq.setParam("group", true);
+		sq.setParam("aggregation.field", "userkey");
 		sq.set("aggregation.sub.fields", Config.PRIVATE_SVC);
 		sq.set("aggregation.limit", 5000);
 		sq.set("aggregation.piCount", piCount);
+		sq.setParam("aggregation.piType", searchPiType);
 		sq.setParam("piAnalysisYn", "Y");
+
 
 		SolrEdcMessageVO solrVo = solrEdcService.getEmassMessage(sq, Common.getAdminId(request), "", null);
 		List<Map<String, Object>> list = solrVo.getPivotData();
-
 		for (Map<String, Object> item : list) {
 			double total = 0;
 			for (String field : Config.PRIVATE_SVC) {
@@ -1123,16 +1127,16 @@ public class SolrEdcStatController {
 		if (!(startDate.isEmpty() && endDate.isEmpty())) {
 			query.append(" +ctime:[").append(startDate).append(" TO ").append(endDate).append("] ");
 		}
-		query.append(("(").concat(String.format("pi_total: [1 TO *]").concat(") ")));
+		query.append(String.format("pi_total:>=%s",piCount));
 		if (Common.isEquals(type, "pi_total")) {
 			query.append(" +( ");
 			for (String field : Config.PRIVATE_SVC) {
-				query.append(("(").concat(String.format("%s: [%s TO *]", field, 1).concat(") ")));
+				query.append(("(").concat(String.format("%s:>=%s", field,piCount).concat(") ")));
 			}
 			query.append(" ) ");
 		} else {
 			type = "pi_amount.".concat(type);
-			query.append((" +(").concat(String.format("%s: [%s TO *]", type, 1).concat(") ")));
+			query.append((" +(").concat(String.format("%s:>=%s", type,piCount)).concat(") "));
 		}
 
 		if (!name.isEmpty()) {
@@ -1209,16 +1213,16 @@ public class SolrEdcStatController {
 		if (!(startDate.isEmpty() && endDate.isEmpty())) {
 			query.append(" +ctime:[").append(startDate).append(" TO ").append(endDate).append("] ");
 		}
-		query.append(("(").concat(String.format("pi_total: [1 TO *]").concat(") ")));
+		query.append(String.format("+pi_total:>=%s",piCount));
 		if (Common.isEquals(type, "pi_total")) {
 			query.append(" +( ");
 			for (String field : Config.PRIVATE_SVC) {
-				query.append(("(").concat(String.format("%s: [%s TO *]", field, 1).concat(") ")));
+				query.append(("(").concat(String.format("%s:>=%s", field,piCount).concat(") ")));
 			}
 			query.append(" ) ");
 		} else {
 			type = "pi_amount.".concat(type);
-			query.append((" +(").concat(String.format("%s: [%s TO *]", type, 1).concat(") ")));
+			query.append((" +(").concat(String.format("%s:>=%s", type,piCount)).concat(") "));
 		}
 
 		if (!name.isEmpty()) {

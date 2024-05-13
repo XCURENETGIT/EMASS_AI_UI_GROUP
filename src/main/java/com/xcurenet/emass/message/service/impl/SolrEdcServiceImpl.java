@@ -244,26 +244,6 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		}
 
 
-		/* 개인정보 유출 관계 분석 상세 조회*/
-		if(Common.isEquals(sq.get("piAnalysisDetail"), "Y")){
-			BoolQueryBuilder boolPiComp = QueryBuilders.boolQuery();
-			String picount = sq.get("piCount");
-			String piType = sq.get("piType");
-
-			if(Common.isEquals(piType, "pi_total")){
-				String[] fields  = Config.PRIVATE_SVC;
-				for(String f : fields) {
-					Script script = new Script(String.format("doc['%s'].stream().max(Long::compare).orElse(-1) >= %S ",f, picount));
-					boolPiComp.should(new BoolQueryBuilder().must(QueryBuilders.existsQuery(f)).must(new ScriptQueryBuilder(script))).minimumShouldMatch(1);
-				}
-			}else{
-				Script script = new Script(String.format("doc['%s'].stream().max(Long::compare).orElse(-1) >= %S ",piType, picount));
-				boolPiComp.must(QueryBuilders.existsQuery(piType)).must(new ScriptQueryBuilder(script));
-			}
-			complateQuery.filter(boolPiComp);
-		}
-
-
 		/*============================================================*/
 		log.info("page : {}  rows : {}", getPage(sq), sq.getRows());
 
@@ -464,9 +444,6 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 					.size(maxCount(10000))
 					.minDocCount(mainFacetMinCount);
 
-
-
-
 			/* sub terms 필드는 1개만*/
 			if(fields.length == 1 &&  !Common.isEmpty(sq.get("facet.stats"))) 	termsAggregation.subAggregation(AggregationBuilders.terms(fields[0]).field(fields[0]).subAggregation(AggregationBuilders.stats(sq.get("facet.stats")).field(sq.get("facet.stats"))));
 			else if(fields.length > 1  &&  !Common.isEmpty(sq.get("facet.stats"))) 	termsAggregation.subAggregation(AggregationBuilders.terms(fields[1]).field(fields[1]).subAggregation(AggregationBuilders.stats(sq.get("facet.stats")).field(sq.get("facet.stats"))));
@@ -518,17 +495,28 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		AbstractAggregationBuilder<TermsAggregationBuilder> termsAggregation = AggregationBuilders.terms(mainField)
 				.field(mainField)
 				.order(BucketOrder.count(false))
+				.minDocCount(1)
 				.size(maxCount(Common.nvz(sq.get("aggregation.limit"))));
 
 		String[] fields = sq.getParams("aggregation.sub.fields");
 		int piCount = Common.nvz(sq.get("aggregation.piCount"));
-		for (String field : fields) {
-			Script script = new Script(String.format("doc['%s'].stream().max(Long::compare).orElse(-1)  >= %s", field, piCount));
-			termsAggregation.subAggregation( AggregationBuilders.filter(field,  new BoolQueryBuilder()
-					.must(QueryBuilders.existsQuery(field))
-					.must(new ScriptQueryBuilder(script))));
+
+		if(Common.isEquals(sq.get("aggregation.piType"),"sum")){
+			for (String field : fields) {
+				Script script = new Script(String.format("doc.containsKey('%s') && doc['%s'].size() != 0 && doc['%s'].value >= %s ? doc['%s'] : 0", field,field,field, piCount,field));
+				termsAggregation.subAggregation(AggregationBuilders.sum(field).script(script));
+			}
+		}else {
+			for (String field : fields) {
+				Script script = new Script(String.format("doc['%s'].stream().max(Long::compare).orElse(-1)  >= %s", field, piCount));
+				termsAggregation.subAggregation( AggregationBuilders.filter(field,  new BoolQueryBuilder()
+						.must(QueryBuilders.existsQuery(field))
+						.must(new ScriptQueryBuilder(script))));
+			}
 		}
 		aggregations.add(termsAggregation);
+
+
 		return aggregations;
 	}
 
