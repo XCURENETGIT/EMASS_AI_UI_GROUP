@@ -142,6 +142,19 @@
 			nHeight = nHeight < 200 ? 200 : nHeight;
 			if($(this).offset().top > 0 ) $(this).outerHeight(nHeight);
 		});
+
+
+		$('.highcharts-container').each(function (e) { // 통계화면
+			if($(window).width() < $(this).width()) {
+				$(this).width($(window).width()-200);
+			}
+		});
+
+		if($('#svcDataChart').length > 0) { //Default Dashboard 전용
+			if( ($(window).width() * 0.25) < $('#svcDataChart .highcharts-container').width() ) {
+				$('#svcDataChart .highcharts-container').width($(window).width() * 0.25);
+			}
+		}
 	}
 
 	$(document).ready(function () {
