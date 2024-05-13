@@ -1,8 +1,12 @@
+<%@ page import="com.xcurenet.common.ntp.NtpScheduler" %>
+<%@ page import="net.sf.json.JSONObject" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp" %>
+<%@page import="com.xcurenet.common.util.config.Config"%>
 <style>
 #modal_body_area {min-height: 200px;max-height: 400px;overflow: auto;font-size: 13px;line-height: 24px;}
 </style>
+
 <script type="text/javascript">
 	var adminId2 = '${_USERCREDENTIAL_.adminId}';
 	var searchFlag = false;
@@ -15,7 +19,6 @@
 	menuArr.push({id: 'DATA_ANALYSIS', name: '<s:message code="DATA_ANALYSIS"/>', p_id: null}); //분석
 	menuArr.push({id: 'POLICY_SETUP', name: '<s:message code="POLICY_SETUP"/>', p_id: null}); //정책
 	menuArr.push({id: 'OPERATION_MGMT', name: '<s:message code="OPERATION_MGMT"/>', p_id: null}); //운용 관리
-
 	menuArr.push({id: 'CONNECTION', name: '<s:message code="SYSTEM.CONNECTION"/>', p_id: 'SYSTEM'});
 	menuArr.push({id: 'DASHBOARD', name: '<s:message code="DATA_MONITOR.DASHBOARD"/>', p_id: 'DASHBOARD'});
 	menuArr.push({
@@ -129,6 +132,9 @@
 	    p_id: 'DATA_STAT'
 	}); //장비 트래픽 통계
 	menuArr.push({id: 'STAT_OCR', name: '<s:message code="DATA_STAT.STAT_OCR"/>', p_id: 'DATA_STAT'}); //OCR 통계
+    if(infoFeedbackYn  == "true"){
+        menuArr.push({id: 'STAT_INFOTYPE', name: '<s:message code="DATA_STAT.STAT_INFOTYPE"/>', p_id: 'DATA_STAT'});
+    } //정보처리 통계
 	menuArr.push({id: 'POLICY_NOLOG', name: '<s:message code="POLICY_SETUP.POLICY_NOLOG"/>', p_id: 'POLICY_SETUP'}); //데이터 미로깅 정책
 	menuArr.push({id: 'DEV_INFO', name: '<s:message code="OPERATION_MGMT.DEV_INFO"/>', p_id: 'OPERATION_MGMT'}); //장비 정보
 	menuArr.push({

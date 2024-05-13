@@ -71,6 +71,7 @@
 
         initCondition();
         initDateTimePicker('startdate','enddate');
+        getData ('Y');
         $('#dept').click(function () {
             var code = $(this).attr('id');
             openCodeWindow(code, $('#' + code + 'Val').val(), $('#' + code + 'Str').val());
@@ -479,9 +480,6 @@
             }
             colKeyNm = '<s:message code="bodyview.total"/>';
 
-            if(rowKey == 'totalOCR' || rowKey == 'noOCR' || rowKey == 'detectOCR'){
-                pColKey = "";
-            }
         }  else if (colKey == "I" && xAxis=='direction_svc') {
             pColKey = colKey;
             colKeyNm = '<s:message code="condition.receive"/>';
@@ -490,6 +488,7 @@
             colKeyNm = '<s:message code="condition.send"/>';
         } else {
             pColKey = colKey;
+            if(xAxis == "svc1") colKeyNm =serviceList.search(colKeyNm, 'groupCd', 'groupNm');
             if (xAxis == "ctime_hh") colKeyNm = colKey + '<s:message code="common.msg.hour"/>';
         }
 
@@ -720,7 +719,7 @@
     grid1.autoNumber();
     grid1.colAdd( "rowKey", '<s:message code="consent.user"/>', 230, "left", false, 'link' );
     grid1.colAdd("total", '<s:message code="bodyview.total"/>', 130, "right", false, 'nomal' );
-    grid1.loadExportMenu('<s:message code="DATA_ANALYSIS.STAT_INFOTYPE"/>');
+    grid1.loadExportMenu('<s:message code="DATA_STAT.STAT_INFOTYPE"/>');
     /*  grid1.loadPageSize();
 	  document.addEventListener("DOMContentLoaded", function() {
 		  var linkElements = document.querySelectorAll('a[data="5000"]');
@@ -899,7 +898,6 @@
         ui.get({
             url : 'getStatDetailList.xcn',
             rowKey : rowKey,
-            colKey : pColKey,
             startDate : sDate+"000000",
             endDate : eDate+"235959",
             xAxis : xAxis,

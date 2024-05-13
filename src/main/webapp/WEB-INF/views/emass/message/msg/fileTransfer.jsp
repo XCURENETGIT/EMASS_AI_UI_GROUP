@@ -359,7 +359,7 @@
 				$('#deptSelectedArea').hide();
 			});
 
-			$(document).on('click', '.me', function (e) {
+	/*		$(document).on('click', '.me', function (e) {
 
 				var userkey = $(this).parent().attr('userkey');
 				var srcip = $(this).parent().attr('srcip');
@@ -367,7 +367,7 @@
 				updateEmassGenerativeAdminUserid(userkey, id, srcip,"F");
 
 				moveTargetHeight(id, false);
-			});
+			});*/
 
 
             $(document).on('click', '.imgPreviewDiv', function(){

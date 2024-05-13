@@ -39,7 +39,8 @@ public class SolrEdcStatControllerLog {
 		else if( Common.isEquals(yAxis, "attachname_str") ) auditVo.setMenuId(Menu.STAT_ATTACHNAME.getMenuId());
 		else if( Common.isEquals(yAxis, "host_str") ) auditVo.setMenuId(Menu.STAT_URL.getMenuId());
 		else if( Common.isEquals(yAxis, "ocr_attach_cnt") ) auditVo.setMenuId(Menu.STAT_OCR.getMenuId());
-		
+		else if( Common.isEquals(yAxis, "ml_confd_class") ) auditVo.setMenuId(Menu.STAT_INFOTYPE.getMenuId());
+
 		information += "["+Prop.propFormat("common.msg.search")+"]";
 		if( Common.isNotEmpty(interGroup)) information += "┌"+Prop.propFormat("interest.user")+": " + interGroupNm;
 		if( Common.isNotEmpty(startDate)) information += "┌"+Prop.propFormat("condition.period")+": " + startDate + " ~ " + endDate;
@@ -96,16 +97,20 @@ public class SolrEdcStatControllerLog {
 			auditVo.setMenuId(Menu.STAT_URL.getMenuId());
 			yAxis_str = "URL";
 		}
-		else if( Common.isEquals(yAxis, "userid") ) {
+		else if( Common.isEquals(yAxis, "ocr_attach_cnt") ) {
 			auditVo.setMenuId(Menu.STAT_OCR.getMenuId());
 			yAxis_str = "OCR";
+		}
+		else if( Common.isEquals(yAxis, "ml_confd_class") ) {
+			auditVo.setMenuId(Menu.STAT_INFOTYPE.getMenuId());
+			yAxis_str = Prop.propFormat("filterInfo.servicetype");
 		}
 		
 		information += "["+Prop.propFormat("common.msg.detail.search")+"]";
 		//if( Common.isNotEmpty(interGroup)) information += "┌"+Prop.propFormat("interest.user")+": " + interGroupNm;
 		if( Common.isNotEmpty(startDate)) information += "┌"+Prop.propFormat("condition.period")+": " + startDate + " ~ " + endDate;
 		if( Common.isNotEmpty(rowKey)) information += "┌" + yAxis_str + ": " + rowKey;
-		if( Common.isNotEmpty(colKey)) information += "┌" + xAxis_str + ": " + colKey;
+		if( Common.isNotEmpty(colKey)&&!(Common.isEquals(yAxis, "ml_confd_class"))) information += "┌" + xAxis_str + ": " + colKey;
 		
 		auditVo.setInformation(information);
 		auditService.insertAudit(request, auditVo);
