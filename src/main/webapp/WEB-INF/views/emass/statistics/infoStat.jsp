@@ -317,6 +317,13 @@
 			<div>
 				<input type="text" id="enddate" style="width: 110px;"/>
 			</div>
+
+			<div>
+				<select id="type" name="type" style="width: 110px;"/>
+					<option value="pattern"><s:message code="condition.regexp.cnt"/></option>
+					<option value="sum"><s:message code="condition.sum.cnt"/> </option>
+				</select>
+			</div>
 			
 			<div>
 				<select id="piCount" name="piCount">
@@ -330,6 +337,7 @@
 					<option value="100"><s:message code="condition.infoStat.cnt100"/></option>
 				</select>
 			</div>
+
 			<div>
 				<button class="form_btn01" id="searchBtn"><s:message code="common.msg.search"/></button>
 				<button class="form_btn02" id="clearBtn"><s:message code="condition.reset"/></button>
@@ -672,6 +680,7 @@
     function getData(flag) {
         if (searchFlag) return;
         var piCount = $('select[name=piCount]').val();
+        var type = $('select[name=type]').val();
         var piCount_str = $('select[name=piCount] option:selected').text();
         var sDate = $('#startdate').val().replaceAll("-", "");
         var eDate = $('#enddate').val().replaceAll("-", "");
@@ -696,6 +705,7 @@
         grid1.on();
         ui.get({
             url: 'getInfoStatList.xcn',
+	        type:type,
             startDate: sDate + "000000",
             endDate: eDate + "235959",
             offset: grid1.data.length,
