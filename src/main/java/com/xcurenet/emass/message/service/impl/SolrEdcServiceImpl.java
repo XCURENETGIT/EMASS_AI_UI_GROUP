@@ -29,6 +29,7 @@ import org.elasticsearch.index.query.*;
 import org.elasticsearch.script.Script;
 import org.elasticsearch.search.aggregations.*;
 import org.elasticsearch.search.aggregations.bucket.range.RangeAggregationBuilder;
+import org.elasticsearch.search.aggregations.bucket.terms.IncludeExclude;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.elasticsearch.search.aggregations.pipeline.BucketSortPipelineAggregationBuilder;
@@ -451,13 +452,20 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 		String[] fields = mainField.split(",");
 
+
+		String include = Common.isNotEmpty(sq.get("facet.include")) ? ".*"+sq.get("facet.include")+".*" : ".*";
+
 		for (String field : sq.getFacetFields()) {
 			AbstractAggregationBuilder<TermsAggregationBuilder> termsAggregation = AggregationBuilders
 					.terms(fields[0])
 					.field(fields[0])
+					.includeExclude(new IncludeExclude(include,null))
 					.order(BucketOrder.count(false))
 					.size(maxCount(10000))
 					.minDocCount(mainFacetMinCount);
+
+
+
 
 			/* sub terms 필드는 1개만*/
 			if(fields.length == 1 &&  !Common.isEmpty(sq.get("facet.stats"))) 	termsAggregation.subAggregation(AggregationBuilders.terms(fields[0]).field(fields[0]).subAggregation(AggregationBuilders.stats(sq.get("facet.stats")).field(sq.get("facet.stats"))));

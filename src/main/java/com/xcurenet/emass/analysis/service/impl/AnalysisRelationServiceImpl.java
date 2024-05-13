@@ -40,6 +40,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 		if (searchVO.getUnit().equals("mailid") || searchVO.getUnit().equals("messenger")) {
 			field = "sender_str";
 		}
+		if(field.equals("attachname_str")) sq.setParam("facet.include", searchVO.getListData());
 
 		/* 문서 결과 표시 X */
 		sq.setStart(0);
@@ -61,6 +62,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 
 		sq.addFilterQuery("-svc:(X* U*)");
 		sq.setQuery(query.toString());
+
 
 		SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, searchVO.getAdminId());
 
