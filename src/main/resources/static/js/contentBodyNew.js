@@ -366,7 +366,7 @@ $(document).ready(function () {
             var startDt = $('#startdatepickerBody').data("DateTimePicker").date().format('YYYYMMDD');
             var endDt = $('#enddatepickerBody').data("DateTimePicker").date().format('YYYYMMDD');
 
-            url = contextRoot + '/getMessengerGroupAllSave.xcn?msgId=' + msgId + '&xRootMtr=' + xRootMtr + '&srcip=' + srcip + '&startDt=' + startDt + '&endDt=' + endDt + '&groupField=usr_id&print=Y&usr_id=' + usr_id;
+            url = contextRoot + '/getMessengerGroupAllSave.xcn?xRootMtr=' + xRootMtr + '&srcip=' + srcip + '&startDt=' + startDt + '&endDt=' + endDt + '&groupField=usr_id&print=Y&usr_id=' + usr_id;
         }
 
 
@@ -444,8 +444,8 @@ $(document).ready(function () {
         //var url = '<c:url value="mailFoward.do?msgId='+msgId+'&userCharset='+charset+'"/>';
         //if( detailFlag ) url = '<c:url value="mailFoward.do?xRootMtr='+xRootMtr+'&userCharset='+charset+'"/>';
         var url = contextRoot + '/ems/mailFoward.do?msgId=' + msgId + '&userCharset=' + charset;
-        if (detailFlag) url = contextRoot + '/ems/mailFoward.do?xRootMtr=' + xRootMtr + '&userCharset=' + charset;
-        fnOpenWindow(url, 'message_forward', '1000', '800', 'scroll');
+        if (detailFlag) url = contextRoot + '/ems/mailFoward.do?msgId=' + msgId + '&xRootMtr=' + xRootMtr + '&userCharset=' + charset;
+       fnOpenWindow(url, 'message_forward', '1000', '800', 'scroll');
     });
 
     $('#warnMailBtn').click(function () {

@@ -10,6 +10,9 @@
 <%@ page import="com.xcurenet.emass.message.web.EmsMessageController" %>
 <%@ page import="com.xcurenet.admin.service.AdminVO" %>
 <%@ page import="com.xcurenet.admin.service.impl.AdminServiceImpl" %>
+<%@ page import="com.xcurenet.emass.message.service.MessengerEdcGroupVO" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
@@ -22,15 +25,30 @@
 	String xRootMtr = Common.nvl( param.get("xRootMtr"));
 	String userCharset = Common.nvl( param.get("userCharset"));
 	
-	EmsBodyVO emsBody = emsMessageService.getEmassBody(msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
-	String emsBodyStr = Common.nvl(new EmsCreateMessage(request).getHeaderMessage(msgId, EmsMessageController.getBodyStr(userCharset, emsBody), "N", Common.getLocale(request.getSession()), Common.getFirstAdminYn(request.getSession()), Common.getAdminId(request), Common.getAdminType(request.getSession())));
+	List<String> msgIds = new ArrayList<>();
+	List<EmsBodyVO> emsBody = new ArrayList<>();
+	List<String> emsBodyStr = new ArrayList<>();
 	
-	Document doc = Jsoup.parse(emsBodyStr, Common.UTF8);
-	Elements cssEl = doc.getElementsByTag("style");
-	String styleStr = cssEl.toString();
-	Elements bodyEl = doc.getElementsByClass("container");
-	String bodyStr = bodyEl.toString().replaceAll("class=\"container\"", "class=\"msg_container\"");
+	String bodyStr = "";
+	String styleStr = "";
 	
+	if(Common.isNotEmpty(msgId) && Common.isEmpty(xRootMtr)) msgIds.add(msgId);
+	else if(Common.isNotEmpty(xRootMtr)) msgIds = emsMessageService.getMsgIds(msgId,xRootMtr);
+	
+	int idx = 0;
+	for(String id : msgIds) {
+		emsBody.add(emsMessageService.getEmassBody(id, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession())));
+		emsBodyStr.add(Common.nvl(new EmsCreateMessage(request).getHeaderMessage(id, EmsMessageController.getBodyStr(userCharset, emsBody.get(idx)), "N", Common.getLocale(request.getSession()), Common.getFirstAdminYn(request.getSession()), Common.getAdminId(request), Common.getAdminType(request.getSession()))));
+
+		Document doc = Jsoup.parse(emsBodyStr.get(idx), Common.UTF8);
+		Elements cssEl = doc.getElementsByTag("style");
+		styleStr = cssEl.toString();
+		Elements bodyEl = doc.getElementsByClass("container");
+		bodyStr += (bodyEl.toString().replaceAll("class=\"container\"", "class=\"msg_container\""));
+		idx++;
+	}
+	
+
 	AdminVO adminVo = (AdminVO) session.getAttribute("_USERCREDENTIAL_");
 	String adminEmail = "";
 	if(adminVo != null){
@@ -71,10 +89,11 @@ table td{
 var msgId = '<%=msgId%>';
 var xRootMtr = '<%=xRootMtr%>';
 var userCharset = '<%=userCharset%>';
-<%-- var bodyStr = '<%=bodyStr%>'; --%>
 var adminEmail = '<%=adminEmail%>';
 
 $(document).ready(function(){
+
+    
 	/**
 	 * 메일 수신자 및 참조 메일 수신자 선택
 	 */
@@ -100,6 +119,8 @@ $(document).ready(function(){
 			alert('<s:message code="mail.message.require.receiver"/>');
 			return;
 		}
+        $("#emassBody").html('');
+        
 		ui.confirmMsg('<s:message code="mail.message.sendmail"/>', '', '', function(rs){
 			if(rs){
 				ui.get({
@@ -213,10 +234,9 @@ function init(){
 		<%=bodyStr%>
 		<%=styleStr%>
 	</div>
-	<%-- <div id="messageContents" class="row" style="margin:0;">
-		<%=bodyStr%>
-		<%=styleStr%>
-	</div> --%>
+	
+	
+	
 	<%-- <div class="mini-navbar msgBody row" style="margin:0;">
 		<div class="col-lg-12" id="messageContents">
 			<%=bodyStr%>

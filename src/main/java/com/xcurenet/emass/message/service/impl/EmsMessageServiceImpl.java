@@ -23,8 +23,18 @@ import com.xcurenet.searchWord.service.RelationKeywordVO;
 import com.xcurenet.user.service.UserService;
 import com.xcurenet.user.service.UserVO;
 import lombok.extern.log4j.Log4j2;
+import org.apache.poi.ss.formula.functions.T;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.data.elasticsearch.core.IndexOperations;
+import org.springframework.data.elasticsearch.core.SearchHit;
+import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -32,9 +42,11 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.InputStream;
+import java.time.Duration;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Service("emsMessageService")
@@ -48,6 +60,10 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 
 	@Autowired
 	private GridFs gridFs;
+
+	@Autowired
+	@Qualifier("elasticsearchTemplate")
+	private ElasticsearchOperations operation;
 
 	@Autowired
 	public ConfigAdminService configAdminService;
@@ -682,6 +698,19 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 			}
 		}
 		return consentRtnFlag;
+	}
+
+	@Override
+	public List<String> getMsgIds(String msgId,String xRootMtr) {
+		org.springframework.data.elasticsearch.core.query.Query searchQuery = new NativeSearchQueryBuilder().withQuery(QueryBuilders.termQuery("xrootmtr",Common.nvl(xRootMtr))).withTimeout(Duration.ofSeconds(100)).withSorts().build();
+		searchQuery.addSort(Sort.by("ctime").descending());
+		String index = String.format("%s_w_%s", "edc", msgId.substring(0, 6));
+		IndexOperations indexoperations = operation.indexOps(IndexCoordinates.of(index));
+		SearchHits solrEdcVO = null;
+		if(indexoperations.exists()) solrEdcVO = operation.search(searchQuery, SolrEdcVO.class, indexoperations.getIndexCoordinates());
+		List<SearchHit<T>> searchHits = solrEdcVO.getSearchHits();
+
+		return searchHits.stream().map(m -> m.getId()).collect(Collectors.toList());
 	}
 //
 //	@Override

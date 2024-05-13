@@ -79,6 +79,8 @@ public interface EmsMessageService {
 
 	boolean beforeConsentCheck(final String msgId, final String firstAdminYn, final String adminType,final String consentUserId);
 
+	List<String> getMsgIds(String msgId,String xRootMtr);
+
 //	public EmsMessageVO highlightCheck(EmsMessageVO emass,Map<String,Object> regexpHighlight);
 
 }
