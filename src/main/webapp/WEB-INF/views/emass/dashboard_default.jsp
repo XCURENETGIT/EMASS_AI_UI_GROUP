@@ -10,7 +10,7 @@
 		overflow: hidden;
 		white-space: nowrap;
 		text-overflow: ellipsis;
-		max-width: 57%!important;
+		max-width: 50%!important;
 	}
 
 	.name{
@@ -707,7 +707,7 @@
                             let fileName = getFormattedValue("name", leFileName);
                             str += "<li class='clicks' ' data-value='" + data.fileId[i] + "'>"
                             str += "<span class = 'num'>" + (i + 1) + "</span>";
-                            str += "<p class='file blueBg' style='min-width: 134px;'><span class='filename blue' title='"+fileName+"'>" + fileName + "</span><span class='Volume'>" + filesSize + "</span></p>";
+                            str += "<p class='file blueBg' style='min-width: 140px;'><span class='filename blue' title='"+fileName+"'>" + fileName + "</span><span class='Volume'>" + filesSize + "</span></p>";
                             str += "</li>"
                         }
                         str += "</ul></div>";
