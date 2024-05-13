@@ -237,18 +237,18 @@
                 var xrootmtr = $(this).parent().attr('xrootmtr');
                 var srcip = $(this).parent().attr('userid');
                 var id = $(this).parent().attr('id');
-                updateEmassMessengerAdminXrootMtr(xrootmtr, id, srcip);
+                // updateEmassMessengerAdminXrootMtr(xrootmtr, id, srcip);
 
-                moveTargetHeight(id, false);
+                // moveTargetHeight(id, false);
             });
 
             $(document).on('click', '.you', function (e) {
                 var xrootmtr = $(this).parent().attr('xrootmtr');
                 var srcip = $(this).parent().attr('userid');
                 var id = $(this).parent().attr('id');
-                updateEmassMessengerAdminXrootMtr(xrootmtr, id, srcip);
+                // updateEmassMessengerAdminXrootMtr(xrootmtr, id, srcip);
 
-                moveTargetHeight(id, false);
+                // moveTargetHeight(id, false);
             });
 
             $(document).on('click', '.downAllFile', function () {

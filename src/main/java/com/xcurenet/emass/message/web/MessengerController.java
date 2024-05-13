@@ -306,17 +306,19 @@ public class MessengerController {
 			EmsMessengerAdminXrootMtrVO emaxm = emsMessageService.getEmassMessengerAdminXrootMtr(xRootMtr, Common.getAdminId(request), srcip, usr_id);
 			if(Common.isNotEmpty(emaxm)) {
 				msgids = Common.nvl(emaxm.getMsgId());
+				msgId = msgids;
 				startRange = Common.diffOfDate(startDt.substring(0,8), msgids.substring(0,8));
 				endRange = Common.diffOfDate(endDt.substring(0,8), msgids.substring(0,8));
+
 			}
 
 		}if(Common.isEmpty(msgId) || (startRange < 0) || (endRange > 0)) {
 			sq = getMessengerMsgTotalQuery(request);
 		} else {
-			if(searchFlag!=null)
-				sq = getMessengerMsgNext(request, msgId, true);
+			if(searchFlag!=null && searchFlag!="")
+				sq  = getMessengerMsgPrev(request, msgId, true);
 			else
-				sq = getMessengerMsgPrev(request, msgId, true);
+				sq = getMessengerMsgNext(request, msgId, true);
 		}
 		MessengerEdcGroupVO result = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request), true, false);
 		for (int i = 0; i<result.getGroups().size(); i++){ //내용 minio 통해 가져오기
@@ -429,13 +431,11 @@ public class MessengerController {
 		}*/
 
 		if(Common.isNotEmpty(msgId)) {
-			if(searchFlag!=""){
-				query += String.format(" +msgid:[%s TO *]", msgId);
-			}
-			else{
-				query += String.format(" +msgid:[%s TO *]", msgId);
-				query+=String.format(" -msgid:%s", msgId);
-			}
+//			if(searchFlag!=""){
+//				query += String.format(" +msgid:[%s TO *]", msgId);
+//			}
+			query += String.format(" +msgid:[%s TO *]", msgId);
+			if (!lastMsgYn)	query+=String.format(" -msgid:%s", msgId);
 		}
 		if(Common.isNotEmpty(searchStr)) query += String.format(" +body:(*%s*) ", searchStr);
 
@@ -477,7 +477,7 @@ public class MessengerController {
 				query += String.format(" +msgid:[* TO %s]", msgId);
 			}
 		}
-		query+=String.format(" -msgid:%s", msgId);
+		if (!lastMsgYn) query+=String.format(" -msgid:%s", msgId);
 		if(Common.isNotEmpty(searchStr)) query += String.format(" +body:(*%s*) ", searchStr);
 
 		sq.setQuery(query + MESSENGER);
@@ -1008,7 +1008,6 @@ public class MessengerController {
 				if (list != null) {
 					for (int i = list.size() - 1; i >= 0; i--) {
 						MessengerGroupVO item = list.get(i);
-						System.out.println(item.getBody_snippet());
 						_sb.append(String.format("[%s] [%s] [%s] %s", item.getTitle(), item.getCtime(),Config.getServiceNm(item.getSvc()), item.getMessage())).append(Common.EMPTY_LINE);
 					}
 				}
