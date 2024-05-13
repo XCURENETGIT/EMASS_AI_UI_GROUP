@@ -951,6 +951,26 @@ function noNextDataMsg(){
 }
 
 function checkDate(idx){
+
+    if(idx==detailDataSet.length-1){
+        var str = '<div class="conversation-start">';
+        str += viewDate(detailDataSet[idx].ctime.substring(0, 10));
+        str += '</div>'
+    }
+    else {
+        if ( detailDataSet[idx].ctime.substring(0, 10) != detailDataSet[idx + 1].ctime.substring(0, 10)) {
+
+            var str = '<div class="conversation-start">';
+            str += viewDate(detailDataSet[idx].ctime.substring(0, 10));
+            str += '</div>'
+        } else {
+            str = '';
+        }
+    }
+    return str;
+}
+
+function checkDate2(idx){
     var lastTime = $('.timeline').children().last().attr('ctime');
 
     if( idx > 0 && detailDataSet[idx].ctime.substring(0, 10) == detailDataSet[idx-1].ctime.substring(0, 10) ){
@@ -966,7 +986,6 @@ function checkDate(idx){
 
     return str;
 }
-
 
 function checkDatePre(idx){
     var firstData = $('.timeline').children('li').first();
