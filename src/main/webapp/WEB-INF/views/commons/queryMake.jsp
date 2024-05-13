@@ -833,7 +833,6 @@
 						addQueryText = queryAddMinus + "ctime:[" + startDt + " TO " + endDt + "]";
 						break;
 					case "svc":
-                        console.log("svc");
 						var service = $('#serviceTypeSelect').selectpicker('val');
 						if(service) {
                             if (service.length == 1) {
@@ -844,7 +843,7 @@
                                 addQueryText = queryAddMinus + "svc:(";
                                 for (var i = 0; i < service.length; i++) {
                                     if (i > 0) {
-                                        addQueryText += " "
+                                        addQueryText += " OR "
                                     }
                                     addQueryText += service[i] + "*";
                                 }
