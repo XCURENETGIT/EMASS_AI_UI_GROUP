@@ -3,13 +3,49 @@
 <%@ page import="com.xcurenet.config.service.ConfigService" %>
 <%@ page import="com.xcurenet.common.util.SpringContextUtil" %>
 <%@ page import="com.xcurenet.admin.service.AdminVO" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.List" %>
+<%@ page import="com.xcurenet.emass.message.service.EmsBodyVO" %>
+<%@ page import="com.xcurenet.emass.message.service.EmsMessageService" %>
+<%@ page import="org.jsoup.Jsoup" %>
+<%@ page import="com.xcurenet.emass.message.web.EmsMessageController" %>
+<%@ page import="org.jsoup.nodes.Document" %>
+<%@ page import="com.xcurenet.emass.message.service.EmsCreateMessage" %>
+<%@ page import="org.jsoup.select.Elements" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
 <%
+	
+	EmsMessageService emsMessageService = SpringContextUtil.getBean(EmsMessageService.class);
 	JSONObject param = Common.getParam ( request );
 	String msgId = Common.nvl( param.get("msgId"));
 	String xRootMtr = Common.nvl( param.get("xRootMtr"));
 	String userCharset = Common.nvl( param.get("userCharset"));
+	
+	List<String> msgIds = new ArrayList<>();
+	List<EmsBodyVO> emsBody = new ArrayList<>();
+	List<String> emsBodyStr = new ArrayList<>();
+	
+	String bodyStr = "";
+	String styleStr = "";
+	
+	
+	if(Common.isNotEmpty(msgId) && Common.isEmpty(xRootMtr)) msgIds.add(msgId);
+	else if(Common.isNotEmpty(xRootMtr)) msgIds = emsMessageService.getMsgIds(msgId,xRootMtr);
+	
+	int idx = 0;
+	for(String id : msgIds) {
+		emsBody.add(emsMessageService.getEmassBody(id, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession())));
+		emsBodyStr.add(Common.nvl(new EmsCreateMessage(request).getHeaderMessage(id, EmsMessageController.getBodyStr(userCharset, emsBody.get(idx)), "N", Common.getLocale(request.getSession()), Common.getFirstAdminYn(request.getSession()), Common.getAdminId(request), Common.getAdminType(request.getSession()))));
+		
+		Document doc = Jsoup.parse(emsBodyStr.get(idx), Common.UTF8);
+		Elements cssEl = doc.getElementsByTag("style");
+		styleStr = cssEl.toString();
+		Elements bodyEl = doc.getElementsByClass("container");
+		bodyStr += (bodyEl.toString().replaceAll("class=\"container\"", "class=\"msg_container\""));
+		idx++;
+	}
+	
 	
 	AdminVO adminVo = (AdminVO) session.getAttribute("_USERCREDENTIAL_");
 	String adminEmail = "";
@@ -57,7 +93,7 @@ $(document).ready(function(){
 	});
 	$('#sendMailBtn').click(function(){
 		var subject = $('#mail_subject').val();
-		var body = $('#mail_body').val();
+        var body = $('#mail_body').val() + $('#messageContents')[0].innerHTML;
 		var from = $('#sender_name').val();
 		var to = $('#alarmTo').val();
 		var cc = $('#alarmCC').val();
@@ -176,5 +212,10 @@ function init(){
 			</div>
 		</div>
 	</div>
+	<div id="messageContents" class="row" style="position: relative; top: -28px; display: none">
+		<%=bodyStr%>
+		<%=styleStr%>
+	</div>
+
 </body>
 </html>

@@ -462,7 +462,7 @@ $(document).ready(function () {
         //var url = '<c:url value="warningMail.do?msgId='+msgId+'&userCharset='+charset+'"/>';
         //if( detailFlag ) url = '<c:url value="warningMail.do?xRootMtr='+xRootMtr+'&userCharset='+charset+'"/>';
         var url = contextRoot + '/ems/warningMail.do?msgId=' + msgId + '&userCharset=' + charset;
-        if (detailFlag) url = contextRoot + '/ems/warningMail.do?xRootMtr=' + xRootMtr + '&userCharset=' + charset;
+        if (detailFlag) url = contextRoot + '/ems/warningMail.do?msgId=' + msgId + '&xRootMtr=' + xRootMtr + '&userCharset=' + charset;
         fnOpenWindow(url, 'message_warnmail', '700', '420', 'scroll');
     });
 

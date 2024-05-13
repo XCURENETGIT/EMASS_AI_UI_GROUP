@@ -284,7 +284,7 @@ public class EmsMessageController {
 			infoSb.append("TO : ").append(to).append(MailInfo.ENTER);
 			infoSb.append("CC : ").append(cc).append(MailInfo.ENTER);
 			infoSb.append("BODY : ").append(body).append(MailInfo.ENTER);
-			if (Common.isNotEmpty(emsBodyStr)) infoSb.append("ATTACH : ").append(attach);
+//			if (Common.isNotEmpty(emsBodyStr)) infoSb.append("ATTACH : ").append(attach);
 
 			createInfo(bodyDoc.html(), body);
 			if (Common.isNotEmpty(emsBodyStr)) createInfo(emsBodyStr, attach);
