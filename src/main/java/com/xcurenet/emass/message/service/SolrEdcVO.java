@@ -270,6 +270,7 @@ public class SolrEdcVO {
 	public List<Map<String, Integer>> pi_amount;
 
 	public Map<String, Integer> piMap;
+
 //
 //	public Map<String, String> regexpHighlight;
 

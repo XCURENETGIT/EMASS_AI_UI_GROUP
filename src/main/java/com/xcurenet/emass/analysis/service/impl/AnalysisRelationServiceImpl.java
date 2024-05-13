@@ -34,7 +34,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 	public AnalysisRelationListVO dataRelationList(SearchVO searchVO) throws IOException, SolrServerException {
 
 		SolrQuery sq = new SolrQuery();
-		SolrQueryString query = dataRelationQuery(searchVO);
+		SolrQueryString query = searchDataRelationQuery(searchVO);
 
 		String field = "attachname_str";
 		if (searchVO.getUnit().equals("mailid") || searchVO.getUnit().equals("messenger")) {
@@ -68,7 +68,37 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 		return list;
 	}
 
+
 	private SolrQueryString dataRelationQuery(SearchVO searchVO) {
+		SolrQueryString query = new SolrQueryString();
+		query.addRange("ctime_yyyymmdd", searchVO.getStartDate().replaceAll("-", ""), searchVO.getEndDate().replaceAll("-", ""), false)
+				.add("subject", searchVO.getTitle(), true, true)
+				.add(new String[]{"sender_str", "sname","sender"}, searchVO.getSendUser())
+				.add(new String[]{"recvs", "recvs_name", "cc", "cname", "bcc","to"}, searchVO.getReceiveUser())
+				.add(new String[]{"sender_str", "sname", "recvs", "recvs_name", "cc", "cname", "bcc"}, searchVO.getObservePersonnel())
+				.add(new String[]{"sender_str", "sname", "recvs", "recvs_name", "cc", "cname", "bcc"}, searchVO.getKeyPersonnel())
+				.add("kwds", searchVO.getKeyword());
+		switch (searchVO.getUnit()) {
+			case "file":
+				query.addRange("attachsize", (Common.isEmpty(searchVO.getFileSize()) ? 0 : searchVO.getFileSize() * 1024 * 1024), "*");
+				query.add("attachname_str",searchVO.getListData());
+				break;
+			case "messenger":
+				query.add(new String[]{"sender_str"}, searchVO.getListData());
+				query.add("svc1", "Q");
+				break;
+			case "mailid":
+				query.add(new String[]{"sender_str"}, searchVO.getListData());
+				query.and().beforeParen().add("svc1", "W", false).or().add("svc1", "M", false).or().add("svc12", "EMM", false).afterParen();
+				break;
+		}
+
+		query.add(setInterestGroupQuery(searchVO.getInterGroup()));
+		return query;
+	}
+
+
+	private SolrQueryString searchDataRelationQuery(SearchVO searchVO) {
 		SolrQueryString query = new SolrQueryString();
 		query.addRange("ctime_yyyymmdd", searchVO.getStartDate().replaceAll("-", ""), searchVO.getEndDate().replaceAll("-", ""), false)
 				.add("subject", searchVO.getTitle(), true, true)
@@ -95,6 +125,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 		query.add(setInterestGroupQuery(searchVO.getInterGroup()));
 		return query;
 	}
+
 
 	@Override
 	public List<SolrEdcVO> dataDetailList(SearchVO searchVO) throws IOException, SolrServerException {

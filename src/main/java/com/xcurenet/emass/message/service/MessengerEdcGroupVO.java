@@ -2,7 +2,6 @@ package com.xcurenet.emass.message.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xcurenet.common.util.Common;
-import com.xcurenet.common.util.config.Config;
 import com.xcurenet.common.util.locale.Prop;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -225,7 +224,7 @@ public class MessengerEdcGroupVO {
 			solrGroupVO.setAttachsize(Common.join_long(edc.getAttachsize(), "|"));
 		}
 		solrGroupVO.setMessage(getMessageDetail(edc, 0, original));
-		solrGroupVO.setTitle(getDetailTitle(edc));
+		solrGroupVO.setTitle(getDetailTitle(edc)); // 인사정보
 		solrGroupVO.setDeptNm(edc.getDeptnm());
 		solrGroupVO.setBody_snippet(getBodyDetail(edc,0,original));
 		solrGroupVO.setBusiNm(edc.getBusinm());
@@ -266,6 +265,7 @@ public class MessengerEdcGroupVO {
 		return result.toString();
 
 	}
+
 
 	public static MessengerGroupVO reDefined(SolrEdcVO edc, String adminId, long msg_cnt) {
 		MessengerGroupVO solrGroupVO = new MessengerGroupVO();

@@ -758,8 +758,9 @@ public class MessengerController {
 		sq.setParam("facet.field", "srcip");
 		sq.setFacetMinCount(1);
 
-
+//
 		MessengerGroupUserVO solrEdcGroupVO = solrEdcService.getMessengerGroupUserList(sq, Common.getAdminId(request));
+//		List<SolrEdcVO> reGroup = solrEdcGroupVO.getGroups().stream().map(m -> m.setUsr_id(getDetailTitle(m)) ).collect(Collectors.toList());
 		return solrEdcGroupVO;
 	}
 
