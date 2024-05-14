@@ -18,8 +18,17 @@
 		overflow: hidden;
 		white-space: nowrap;
 		text-overflow: ellipsis;
-		max-width: 98% !important;
+		/*max-width: 98% !important;*/
 	}
+
+	.nameFileTop{
+		display: block;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		max-width: 89% !important;
+	}
+
 
 	.files :hover{
 		cursor: pointer;
@@ -30,6 +39,10 @@
 		text-align: center;
 	}
 	.click P:hover{
+		cursor: pointer;
+		text-decoration: underline;
+	}
+	.click2 P:hover{
 		cursor: pointer;
 		text-decoration: underline;
 	}
@@ -581,7 +594,7 @@
                             let noName = getFormattedValue("size",name[3]);
                             let nameId = name[3];
                             str += "<li class='click2' data-value='" + nameId + "'><span class='num'>" + (i + 1) + "</span>";
-                            str += "<p><span class='name'title='"+noName+"'>" + noName + "</span>";
+                            str += "<p><span class='nameFileTop'title='"+noName+"'>" + noName + "</span>";
                             str += "<span class='righttext'>" + count + "</span></p></li>";
                         }
                         str += "</ul></div>";
