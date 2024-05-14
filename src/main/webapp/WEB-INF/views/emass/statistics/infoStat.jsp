@@ -116,8 +116,13 @@
         $('#searchBtn').click(function () {
             $(".resultCnt").html('');
 
-            if($('#piType').val() == 'pattern')$('#privateDetailTab').trigger('click');
-            else $('#privateChartTab').trigger('click');
+            if($('#piType').val() == 'pattern') {
+                $('#privateChartTab').trigger('click');
+                $('#privateDetailTab').trigger('click');
+            }else {
+                $('#privateChartTab').trigger('click');
+                $('#privateChartTab').trigger('click');
+            }
             
 			
             
@@ -535,7 +540,7 @@
         getData('Y');
     };
     grid1.onClick = function () {
-        if(grid1.getValue(grid1.Row, grid1.Col) == 0) return;
+    //    if(grid1.getValue(grid1.Row, grid1.Col) == 0) return;
         if (grid1.Col === grid1.ColIndex('rowKey')) return;
         if($('#piType').val() != 'pattern') {
             initProgressbar();
@@ -723,8 +728,8 @@
     }
 
     function getData(flag) {
-        grid2.initData('<s:message code="common.msg.search.click"/>');
         if (searchFlag) return;
+        grid2.initData('<s:message code="common.msg.search.click"/>');
         var piCount = $('select[name=piCount]').val();
         var piType = $("select[name=piType] option:selected").val();
         var piCount_str = $('select[name=piCount] option:selected').text();
