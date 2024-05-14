@@ -244,6 +244,31 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		}
 
 
+		/* 개인정보 유출 관계 분석 네트워크  조회*/
+//		if(Common.isEquals(sq.get("piAnalysisNetWork"), "Y")){
+//			BoolQueryBuilder boolPiComp = QueryBuilders.boolQuery();
+//			String picount = sq.get("piCount");
+//			String piType = sq.get("piType");
+//
+//			Script script = null;
+//			String str = "";
+//			if(Common.isEquals(piType, "pi_total")){
+//				String[] fields  = Config.PRIVATE_SVC;
+//				int idx = 0;
+//				for(String f : fields) {
+//					str += (String.format("doc.containsKey('%s') && doc[%s'].size() >= %s ",f,f, picount));
+//					if(fields.length >= idx) str += " || ";
+//				}
+//			}else{
+//				str = String.format("doc.containsKey('%s') && doc[%s'].size() >= %s ",piType,piType, picount);
+//			}
+//			script = new Script(str);
+//			boolPiComp.must(new ScriptQueryBuilder(script));
+//			complateQuery.filter(boolPiComp);
+//		}
+
+
+
 		/*============================================================*/
 		log.info("page : {}  rows : {}", getPage(sq), sq.getRows());
 
@@ -503,7 +528,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 		if(Common.isEquals(sq.get("aggregation.piType"),"sum")){
 			for (String field : fields) {
-				Script script = new Script(String.format("doc.containsKey('%s') && doc['%s'].size() != 0 && doc['%s'].value >= %s ? doc['%s'] : 0", field,field,field, piCount,field));
+				Script script = new Script(String.format("doc.containsKey('%s') && doc['%s'].size() != 0 && doc['%s'].value >= %s ? doc['%s'].value : 0", field,field,field, piCount,field));
 				termsAggregation.subAggregation(AggregationBuilders.sum(field).script(script));
 			}
 		}else {

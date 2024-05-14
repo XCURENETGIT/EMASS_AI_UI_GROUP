@@ -1127,17 +1127,18 @@ public class SolrEdcStatController {
 		if (!(startDate.isEmpty() && endDate.isEmpty())) {
 			query.append(" +ctime:[").append(startDate).append(" TO ").append(endDate).append("] ");
 		}
-		query.append(String.format("pi_total:>=%s",piCount));
+		query.append(("+(").concat(String.format("pi_total: [%s TO *]",piCount).concat(") ")));
 		if (Common.isEquals(type, "pi_total")) {
 			query.append(" +( ");
 			for (String field : Config.PRIVATE_SVC) {
-				query.append(("(").concat(String.format("%s:>=%s", field,piCount).concat(") ")));
+				query.append(("(").concat(String.format("%s: [%s TO *]", field, piCount).concat(") ")));
 			}
 			query.append(" ) ");
 		} else {
 			type = "pi_amount.".concat(type);
-			query.append((" +(").concat(String.format("%s:>=%s", type,piCount)).concat(") "));
+			query.append((" +(").concat(String.format("%s: [%s TO *]", type, piCount).concat(") ")));
 		}
+
 
 		if (!name.isEmpty()) {
 			String[] nameArray = name.split(",");
@@ -1185,6 +1186,9 @@ public class SolrEdcStatController {
 		sq.setQuery(query.toString());
 		sq.setStart(0);
 		sq.setRows(Common.MAX_VALUE);
+		sq.setParam("piAnalysisNetWork", "Y");
+		sq.setParam("piType", type);
+		sq.setParam("piCount", piCount);
 
 		SolrEdcMessageVO solrVo = solrEdcService.getEmassMessage(sq, Common.getAdminId(request), "", null);
 		return new XcnResponseVO(XcnRspCode.OK, solrVo.getEmass(), solrVo.getNumFound());
@@ -1213,17 +1217,18 @@ public class SolrEdcStatController {
 		if (!(startDate.isEmpty() && endDate.isEmpty())) {
 			query.append(" +ctime:[").append(startDate).append(" TO ").append(endDate).append("] ");
 		}
-		query.append(String.format("+pi_total:>=%s",piCount));
+		query.append(("+(").concat(String.format("pi_total: [%s TO *]",piCount).concat(") ")));
 		if (Common.isEquals(type, "pi_total")) {
 			query.append(" +( ");
 			for (String field : Config.PRIVATE_SVC) {
-				query.append(("(").concat(String.format("%s:>=%s", field,piCount).concat(") ")));
+				query.append(("(").concat(String.format("%s: [%s TO *]", field, piCount).concat(") ")));
 			}
 			query.append(" ) ");
 		} else {
 			type = "pi_amount.".concat(type);
-			query.append((" +(").concat(String.format("%s:>=%s", type,piCount)).concat(") "));
+			query.append((" +(").concat(String.format("%s: [%s TO *]", type, piCount).concat(") ")));
 		}
+
 
 		if (!name.isEmpty()) {
 			String[] nameArray = name.split(",");

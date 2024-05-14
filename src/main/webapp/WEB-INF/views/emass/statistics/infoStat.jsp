@@ -138,7 +138,7 @@
             $('#userSelectedArea').hide();
             $('#busiSelect').selectpicker('val', '');
             $('#piCount').val('');
-            $("[name=piType]").val('pattern');
+            $("[name=piType]").val('sum');
         });
 
         $('#chartCntDiv .dropdown-menu li a').click(function () {
@@ -152,10 +152,16 @@
         $(".nav-tabs").on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
         })
 
-
+        $('#privateDetailTab').attr('href',"#");
+        $("[name=oneVal]").css('display','none');
         $('#piType').change(function () {
-            if($('#piType') == 'pattern') $('#privateChart').attr('display','');
-			else $('#privateChart').attr('display','none');
+            if($('#piType').val() == 'sum') {
+                $('#privateDetailTab').attr('href',"#");
+                $("[name=oneVal]").css('display','none');
+            } else {
+                $("[name=oneVal]").css('display','');
+                $('#privateDetailTab').attr('href',"#privateDetail");
+            }
         });
 		
 		
@@ -329,15 +335,16 @@
 			</div>
 			
 			<div>
-				<select id="piType" name="piType" style="width: 110px;"/>
-				<option value="sum" selected><s:message code="condition.regexp.cnt"/></option>  <%-- 총 패턴 검출--%>
-				<option value="pattern"><s:message code="condition.sum.cnt"/> </option> <%-- 문서 건수 --%>
+				<select id="piType" name="piType" style="width: 150px;"/>
+					<option value="sum" selected>   <s:message code="condition.regexp.cnt"/> </option>  <%-- 문서 건수 --%>
+					<option value="pattern"><s:message code="condition.sum.cnt"/> </option>   <%-- 총 패턴 검출--%>
 				</select>
 			</div>
 			<div>
 				<select id="piCount" name="piCount">
 					<%if (Common.isEquals(systemLanguage,"ko"))  {%>
 						<option value=""><s:message code="condition.infoStat.cnt"/></option>
+				    	<option value="1" name="oneVal">1<s:message code="condition.infoStat.cnt.more"/></option>
 						<option value="10">10<s:message code="condition.infoStat.cnt.more"/></option>
 						<option value="50">50<s:message code="condition.infoStat.cnt.more"/></option>
 						<option value="100">100<s:message code="condition.infoStat.cnt.more"/></option>
@@ -347,7 +354,8 @@
 					<%} %>
 					<%if (Common.isEquals(systemLanguage,"en"))  {%>
 					<option value=""><s:message code="condition.infoStat.cnt"/></option>
-					<option value="10"><s:message code="condition.infoStat.cnt.more"/> 10</option>
+					<option value="1" name="oneVal"><s:message code="condition.infoStat.cnt.more"/> 1</option>
+					<option value="10" ><s:message code="condition.infoStat.cnt.more"/> 10</option>
 					<option value="50"><s:message code="condition.infoStat.cnt.more"/> 50</option>
 					<option value="100"><s:message code="condition.infoStat.cnt.more"/> 100</option>
 					<option value="200"><s:message code="condition.infoStat.cnt.more"/> 200</option>
@@ -395,8 +403,8 @@
 			<div class="subtab">
 				<div>
 					<ul class="nav nav-tabs codeTab listChart">
-						<li class="active"><a data-toggle="tab" href="#privateChart"><s:message code="analysis.infostat.chart"/></a></li>
-						<li class=""><a data-toggle="tab" href="#privateDetail"><s:message code="analysis.infostat.list"/><span class="resultCnt"></span></a></li>
+						<li class="active"><a data-toggle="tab"  href="#privateChart"><s:message code="analysis.infostat.chart"/></a></li>
+						<li class=""> <a data-toggle="tab"  id="privateDetailTab" href="#privateDetail"><s:message code="analysis.infostat.list"/><span class="resultCnt"></span></a></li>
 					</ul>
 				</div>
 			</div>
@@ -452,15 +460,10 @@
     <%--});--%>
 
     grid1.colAdd('pi_total', '<s:message code="bodyview.total"/>', 100, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
-        let str=""
-        console.log(str)
         if($('#piType').val() == 'sum') {
-            if (value == '0') str='';
-            else str= value.comma();
-        }else  str =  '<s:message code="bodyview.total.details"/>';
-        console.log(str)
-        return str;
-
+            if (value != undefined) return value.comma();
+            else return '';
+        }else return '<s:message code="bodyview.total.details"/>';
     });
     
 
@@ -1025,6 +1028,7 @@
                 /*	grid2.setData(data);*/
                 var nodes = [];
                 var edges = [];
+                console.log(data)
                 if (pi_total === 0) {
                     nodes.push({
                         id: 'noneData',
