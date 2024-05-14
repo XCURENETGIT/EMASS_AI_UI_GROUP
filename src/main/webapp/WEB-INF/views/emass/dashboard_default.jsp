@@ -18,8 +18,17 @@
 		overflow: hidden;
 		white-space: nowrap;
 		text-overflow: ellipsis;
-		max-width: 92% !important;
+		/*max-width: 98% !important;*/
 	}
+
+	.nameFileTop{
+		display: block;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		max-width: 89% !important;
+	}
+
 
 	.files :hover{
 		cursor: pointer;
@@ -30,6 +39,10 @@
 		text-align: center;
 	}
 	.click P:hover{
+		cursor: pointer;
+		text-decoration: underline;
+	}
+	.click2 P:hover{
 		cursor: pointer;
 		text-decoration: underline;
 	}
@@ -581,10 +594,10 @@
                             let noName = getFormattedValue("size",name[3]);
                             let nameId = name[3];
                             str += "<li class='click2' data-value='" + nameId + "'><span class='num'>" + (i + 1) + "</span>";
-                            str += "<p><span class='name' title='"+noName+"'>" + noName + "</span>";
+                            str += "<p><span class='nameFileTop'title='"+noName+"'>" + noName + "</span>";
                             str += "<span class='righttext'>" + count + "</span></p></li>";
                         }
-                        str += "</ul></div>"
+                        str += "</ul></div>";
                         $('#FilePeople').html(str);
                     }
 
@@ -1421,17 +1434,17 @@
 		</div>
 		<%--		일별 용량, 로컬 데이터 정보 끝--%>
 		<%--		대용량 파일 TOP 10 시작--%>
-		<div class="m_grapha mat32">
-			<div>
+		<div class="m_grapha mat32" style="min-width: 920px;">
+			<div style=" min-width: 440px;" >
 				<h3><s:message code="dashboard.fileSizeTop"/></h3>
-				<div class="bigtop10" id="bigFileTop" style=" " >
+				<div class="bigtop10" id="bigFileTop">
 				</div>
 			</div>
 			<%--		대용량 파일 TOP 10 끝--%>
 			<%--			파일 다 사용자 TOP 10--%>
-			<div>
+			<div  style="min-width: 440px;">
 				<h3><s:message code="dashboard.fileSendTop"/></h3>
-				<div class="filetop10" id="FilePeople"  style="" >
+				<div class="filetop10" id="FilePeople" >
 				</div>
 			</div>
 

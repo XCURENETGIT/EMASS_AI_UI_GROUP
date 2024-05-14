@@ -96,8 +96,8 @@ body,html {width:100%; height:100%;}
 #xcn_mainWrap_new .xcn_con_area > div {}
 
 #xcn_mainWrap .right {position: relative; height:100%; background-color: #F8F8F8; padding:24px 20px;overflow: hidden;}
-#xcn_mainWrap .right .m_grapha {display: grid; grid-template-columns: 1fr 1fr; column-gap: 12px;}
-#xcn_mainWrap .right .bigtop10 { position: relative; min-width:100%; min-height:212px; background-color: #fff; border:1px solid #ddd; padding:18px 18px 12px 18px; display: grid; grid-template-columns: 1fr 1fr; column-gap: 10px;}
+#xcn_mainWrap .right .m_grapha {display: grid; grid-template-columns: 50% 50%; column-gap: 12px;}
+#xcn_mainWrap .right .bigtop10 { position: relative; min-width:100%; min-height:212px; background-color: #fff; border:1px solid #ddd; padding:18px 18px 12px 18px; display: grid; grid-template-columns: 50% 50%; column-gap: 10px;}
 #xcn_mainWrap .right .bigtop10 div > ul > li { min-width:150px; display: grid;  grid-template-columns:32px 1fr; column-gap: 6px; height:38px;  margin-bottom:8px;}
 #xcn_mainWrap .right .bigtop10 div > ul > li:last-child {margin-bottom:0 !important;}
 #xcn_mainWrap .right .bigtop10 div > ul > li > .num {width:32px; height:32px; text-align: center; line-height:1.7; display: inline-block; font-size:20px; background-color:#f5f5f5; font-weight:600;}
@@ -112,8 +112,8 @@ body,html {width:100%; height:100%;}
 #xcn_mainWrap .right .bigtop10 div.list ul li > p span.righttext {position:absolute; top:1px; right:0; text-align: right; color:#555; font-size:14px;}
 
 
-#xcn_mainWrap .right .filetop10 {overflow: auto;}
-#xcn_mainWrap .right .filetop10 { position: relative; min-width:100%; min-height:212px; background-color: #fff; border:1px solid #ddd; padding:18px 18px 16px 18px; display: grid; grid-template-columns: 1fr 1fr; column-gap: 12px;}
+/*#xcn_mainWrap .right .filetop10 {overflow: auto;}*/
+#xcn_mainWrap .right .filetop10 { position: relative; min-width:100%; min-height:212px; background-color: #fff; border:1px solid #ddd; padding:18px 18px 16px 18px; display: grid; grid-template-columns: 50% 50%; column-gap: 12px;}
 #xcn_mainWrap .right .filetop10 .teamList {}
 #xcn_mainWrap .right .filetop10 div.teamList > ul > li { background-color:#f5f5f5; min-width:150px; display: grid;align-items: center;  grid-template-columns:24px 1fr 1fr; column-gap: 2px; height:38px; margin-bottom:8px;}
 #xcn_mainWrap .right .filetop10 div.teamList > ul > li:last-child {margin-bottom:0;}
@@ -126,11 +126,11 @@ body,html {width:100%; height:100%;}
 #xcn_mainWrap .right .filetop10 div.teamList .num {width:24px; height:24px; text-align: center; line-height:1.3; display: inline-block; font-size:18px; background-color:#f5f5f5; font-weight:600;}
 #xcn_mainWrap .right .filetop10 div > ul > li {margin-bottom:8px;}
 #xcn_mainWrap .right .filetop10 div > ul > li:last-child {margin-bottom:0 !important;}
-#xcn_mainWrap .right .filetop10 div.list ul li {position:relative; min-width:160px; height:22px; display: grid;  grid-template-columns:24px 1fr; column-gap: 8px; }
+#xcn_mainWrap .right .filetop10 div.list ul li {position:relative; min-width:160px; height:22px; display: grid;  grid-template-columns:10% 80% 10%; column-gap: 8px; }
 #xcn_mainWrap .right .filetop10 div.list ul li > .num {text-align: center;  width:24px; height:24px; line-height:1.5;  font-weight:600; font-size:16px;  border:1px solid #ddd; background-color: #fff;}
 #xcn_mainWrap .right .filetop10 div.list ul li > p {height:24px; line-height: 1.5; color:#333;}
-#xcn_mainWrap .right .filetop10 div.list ul li > p span.righttext {position:absolute; top:1px; right:0; text-align: right; color:#555; font-size:14px;}
-
+#xcn_mainWrap .right .filetop10 div.list ul li > p span.righttext {position:absolute; top:1px; right:14px; text-align: right; color:#555; font-size:14px;}
+s
 .xcn_panel_footer {background-color:#ddd;}
 
 /* Title */
