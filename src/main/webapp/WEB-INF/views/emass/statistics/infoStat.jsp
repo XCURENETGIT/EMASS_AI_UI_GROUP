@@ -114,7 +114,13 @@
 
 
         $('#searchBtn').click(function () {
-            closeDetailTab();
+            $(".resultCnt").html('');
+
+            if($('#piType').val() == 'pattern')$('#privateDetailTab').trigger('click');
+            else $('#privateChartTab').trigger('click');
+            
+			
+            
             if ($('#piCount').val() === '' || $('#piCount').val() === null || $('#piCount').val() === undefined) {
                 ui.alertMsg('<s:message code="piCount.msg.nonSelect"/>');
                 return;
@@ -154,13 +160,16 @@
 
         $('#privateDetailTab').attr('href',"#");
         $("[name=oneVal]").css('display','none');
+        
         $('#piType').change(function () {
             if($('#piType').val() == 'sum') {
                 $('#privateDetailTab').attr('href',"#");
+                $('#privateChartTab').attr('href',"#privateChart");
                 $("[name=oneVal]").css('display','none');
             } else {
                 $("[name=oneVal]").css('display','');
                 $('#privateDetailTab').attr('href',"#privateDetail");
+                $('#privateChartTab').attr('href',"#");
             }
         });
 		
@@ -403,7 +412,7 @@
 			<div class="subtab">
 				<div>
 					<ul class="nav nav-tabs codeTab listChart">
-						<li class="active"><a data-toggle="tab"  href="#privateChart"><s:message code="analysis.infostat.chart"/></a></li>
+						<li class="active"><a data-toggle="tab"  id="privateChartTab" href="#privateChart"><s:message code="analysis.infostat.chart"/></a></li>
 						<li class=""> <a data-toggle="tab"  id="privateDetailTab" href="#privateDetail"><s:message code="analysis.infostat.list"/><span class="resultCnt"></span></a></li>
 					</ul>
 				</div>
@@ -454,10 +463,7 @@
         return value;
     });
 
-    <%--grid1.colAdd('pi_total', '<s:message code="bodyview.total"/>', 100, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {--%>
-    <%--    if (value != undefined) return value.comma();--%>
-    <%--    else return '';--%>
-    <%--});--%>
+
 
     grid1.colAdd('pi_total', '<s:message code="bodyview.total"/>', 100, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
         if($('#piType').val() == 'sum') {
@@ -717,6 +723,7 @@
     }
 
     function getData(flag) {
+        grid2.initData('<s:message code="common.msg.search.click"/>');
         if (searchFlag) return;
         var piCount = $('select[name=piCount]').val();
         var piType = $("select[name=piType] option:selected").val();
@@ -755,13 +762,8 @@
             deptStr: deptStr,
             busiStr: busiStr,
             userStr: userStr,
-
             success: function (data, total) {
-                var pivotData = [];
-                $.each(data,function (i,d){
-                    if(d.pi_total > 0 ) pivotData.push(d);
-                });
-                grid1.setData(pivotData);
+                grid1.setData(data);
                 if (grid1.loadingPage == 0) grid1.Select(-1, -1);
                 searchFlag = false;
             },
@@ -896,7 +898,7 @@
         for (var i = 0; i < data.length; i++) {
             for (var x = 0; x < piArr.length; x++) {
                 var val = data[i]['piMap'][piArr[x]];
-                if (val > 0) result.push(piArr[x]);
+                if (val > 0 ) result.push(piArr[x]);
             }
         }
         return result.unique();
@@ -1028,7 +1030,7 @@
                 /*	grid2.setData(data);*/
                 var nodes = [];
                 var edges = [];
-                console.log(data)
+             
                 if (pi_total === 0) {
                     nodes.push({
                         id: 'noneData',
@@ -1038,15 +1040,12 @@
                         group: 'noneData'
                     });
                 } else {
-                    var nodeLv1 = getNodeByUser(data);
-                    var nodeLv2 = type === 'pi_total' ? getNodeByPI(data) : [type];
-                    var nodeLv3 = getNodeByField('ctime_yyyymmdd', data);
-                    var nodeLv4 = getNodeBySvc(data);
 
                     var nodeLv1 = getNodeByUser(data);
                     var nodeLv2 = type === 'pi_total' ? getNodeByPI(data) : [type];
                     var nodeLv3 = getNodeByField('ctime_yyyymmdd', data);
                     var nodeLv4 = getNodeBySvc(data);
+                    
 
                     for (var i = 0; i < nodeLv1.length; i++) {
                         nodes.push({id: nodeLv1[i].id, font: {multi: 'html'}, title: nodeLv1[i].title, label: nodeLv1[i].title, group: 'user'});
@@ -1069,7 +1068,7 @@
                         for (var j = 0; j < nodeLv2.length; j++) {
                             var sum = 0;
                             for (var x = 0; x < data.length; x++) {
-                                if (nodeLv1[i].id === data[x].userkey && data[x]['piMap'][nodeLv2[j]] > 0) sum += data[x]['piMap'][nodeLv2[j]];
+                                if (nodeLv1[i].id === data[x].userkey && data[x]['piMap'][nodeLv2[j]] > 0  ) sum += data[x]['piMap'][nodeLv2[j]];
                             }
                             if (sum > 0) edges.push({from: nodeLv1[i].id, to: nodeLv2[j], arrows: 'to', color: {color: '#3FB168'}, font: {multi: true}, label: sum.comma()});
                         }
@@ -1093,7 +1092,7 @@
                                 if (svc1 === 'X' || svc1 === 'U') id = data[x]['host'];
                                 if (data[x].ctime_yyyymmdd === nodeLv3[i] && id === nodeLv4[j]) {
                                     for (var y = 0; y < nodeLv2.length; y++) {
-                                        if (data[x]['piMap'][nodeLv2[y]] > 0) sum += data[x]['piMap'][nodeLv2[y]];
+                                        if (data[x]['piMap'][nodeLv2[y]] > 0  ) sum += data[x]['piMap'][nodeLv2[y]];
                                     }
                                 }
                             }

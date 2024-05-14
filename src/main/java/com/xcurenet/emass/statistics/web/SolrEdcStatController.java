@@ -1096,11 +1096,13 @@ public class SolrEdcStatController {
 		List<Map<String, Object>> resultList = new ArrayList<>();
 		for(Map<String,Object> map : list){
 			Map<String,Object> hshMap = new HashMap<>();
+			long tempTotal = 0;
 			for(Map.Entry<String,Object> entry :map.entrySet()){
 //				log.info("hash {}",entry.getKey());
+				if(entry.getKey().contains("pi_amount.")) tempTotal += new Double(Double.parseDouble(entry.getValue().toString())).longValue();
 				hshMap.put(entry.getKey().replace("pi_amount.",""),entry.getValue());
 			}
-			resultList.add(hshMap);
+			if(tempTotal > 0) resultList.add(hshMap);
 		}
 
 		Collections.sort(resultList, new PiTotalComparator());
@@ -1127,16 +1129,20 @@ public class SolrEdcStatController {
 		if (!(startDate.isEmpty() && endDate.isEmpty())) {
 			query.append(" +ctime:[").append(startDate).append(" TO ").append(endDate).append("] ");
 		}
-		query.append(("+(").concat(String.format("pi_total: [%s TO *]",piCount).concat(") ")));
+
+		String fieldConditional  = "";
 		if (Common.isEquals(type, "pi_total")) {
-			query.append(" +( ");
+
+			fieldConditional += " +( ";
 			for (String field : Config.PRIVATE_SVC) {
-				query.append(("(").concat(String.format("%s: [%s TO *]", field, piCount).concat(") ")));
+				fieldConditional += ("(").concat(String.format("%s:>=%s", field,piCount).concat(")"));
 			}
-			query.append(" ) ");
+			fieldConditional += " ) ";
+			query.append(fieldConditional);
+
 		} else {
 			type = "pi_amount.".concat(type);
-			query.append((" +(").concat(String.format("%s: [%s TO *]", type, piCount).concat(") ")));
+			query.append((" +(").concat(String.format("%s:>=%s", type,piCount)).concat(") "));
 		}
 
 
@@ -1191,7 +1197,21 @@ public class SolrEdcStatController {
 		sq.setParam("piCount", piCount);
 
 		SolrEdcMessageVO solrVo = solrEdcService.getEmassMessage(sq, Common.getAdminId(request), "", null);
+
+		int piCnt = Integer.parseInt(piCount);
+		for (SolrEdcVO solrEdcVO :  solrVo.getEmass()) {
+			Map<String,Integer> piMap = new HashMap<>();
+
+			Map<String,Integer> voPiMap = solrEdcVO.getPiMap();
+			for(Map.Entry<String,Integer> item : voPiMap.entrySet()){
+				if(Integer.parseInt(String.valueOf(item.getValue())) >= piCnt) piMap.put(item.getKey(),item.getValue());
+			}
+			solrEdcVO.setPiMap(piMap);
+		}
+
 		return new XcnResponseVO(XcnRspCode.OK, solrVo.getEmass(), solrVo.getNumFound());
+
+
 	}
 
 	@RequestMapping(value = "/getInfoDetailList.xcn")
@@ -1217,7 +1237,6 @@ public class SolrEdcStatController {
 		if (!(startDate.isEmpty() && endDate.isEmpty())) {
 			query.append(" +ctime:[").append(startDate).append(" TO ").append(endDate).append("] ");
 		}
-		query.append(("+(").concat(String.format("pi_total: [%s TO *]",piCount).concat(") ")));
 		if (Common.isEquals(type, "pi_total")) {
 			query.append(" +( ");
 			for (String field : Config.PRIVATE_SVC) {
