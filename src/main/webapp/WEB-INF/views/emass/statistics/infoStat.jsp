@@ -87,7 +87,9 @@
     var tabNum = 0;
     var totalChartDat;
 
-
+    var patternCountStr =  '<s:message code="bodyview.pattern_count"/>';
+    var docCountStr = '<s:message code="bodyview.doc_count"/>';
+    
     $(document).ready(function () {
         initCondition();
         initDateTimePicker('startdate','enddate');
@@ -120,7 +122,7 @@
                 $('#privateChartTab').trigger('click');
                 $('#privateDetailTab').trigger('click');
             }else {
-                $('#privateChartTab').trigger('click');
+                $('#privateDetailTab').trigger('click');
                 $('#privateChartTab').trigger('click');
             }
             
@@ -168,10 +170,12 @@
         
         $('#piType').change(function () {
             if($('#piType').val() == 'sum') {
+                $('#piCount').val('');
                 $('#privateDetailTab').attr('href',"#");
                 $('#privateChartTab').attr('href',"#privateChart");
                 $("[name=oneVal]").css('display','none');
             } else {
+                $('#piCount').val('');
                 $("[name=oneVal]").css('display','');
                 $('#privateDetailTab').attr('href',"#privateDetail");
                 $('#privateChartTab').attr('href',"#");
@@ -531,6 +535,7 @@
         if (value != undefined) return value.comma();
         else return '';
     });
+	
 
     grid1.loadExportMenu('<s:message code="DATA_ANALYSIS.ANALYSIS_INFO"/>');
     grid1.loadPageSize();
@@ -540,13 +545,15 @@
         getData('Y');
     };
     grid1.onClick = function () {
-    //    if(grid1.getValue(grid1.Row, grid1.Col) == 0) return;
         if (grid1.Col === grid1.ColIndex('rowKey')) return;
         if($('#piType').val() != 'pattern') {
             initProgressbar();
             makeNetwork(grid1.getValue(grid1.Row, 'rowKey'), grid1.ColKey(grid1.Col), grid1.getValue(grid1.Row, grid1.Col));
-        }
-        getInfoDetailList("Y",grid1.getValue(grid1.Row, 'rowKey'), grid1.ColKey(grid1.Col), grid1.getValue(grid1.Row, grid1.Col));
+        }else{
+            detail_pi_total = grid1.getValue(grid1.Row, grid1.Col);
+            getInfoDetailList("Y",grid1.getValue(grid1.Row, 'rowKey'), grid1.ColKey(grid1.Col));
+		}
+      
     };
 
     var grid2 = new Xgrid('selectGrid', contextRoot);
@@ -927,7 +934,8 @@
         return date.substring(0, 4) + "-" + date.substring(4, 6) + "-" + date.substring(6, 8);
     }
 
-    function getInfoDetailList(flag,value,type, pi_total) {
+    let detail_pi_total = 0;
+    function getInfoDetailList(flag,value,type) {
 
         if ( flag == 'Y' || flag == undefined ) {
             grid2.data.length = 0;
@@ -943,14 +951,12 @@
             userkey=flag.userkey;
         }
 
-
         var type = type;
 
         if(type==undefined){
             type= grid1.ColKey(grid1.Col);
         }
-
-        var pi_total = pi_total;
+		
         var piCount = $('#piCount').val();
         var busiStr = arrayToString($('#busiSelect').selectpicker('val'));
         var dv = $('#deptVal').val().split('|');
@@ -967,8 +973,7 @@
         if (user != '') userStr = user;
         else userStr = ''
 
-		var patternCountStr =  '<s:message code="bodyview.pattern_count"/>';
-		var docCountStr = '<s:message code="bodyview.doc_count"/>';
+	
 			
         grid2.on();
         ui.postJson({
@@ -984,8 +989,8 @@
             busiStr: busiStr,
             userStr: userStr,
             success: function (data, total) {
-       //         $(".resultCnt").html(' ' + patternCountStr + '(' +addCommas(pi_total)+') '+ docCountStr+  '('+addCommas(total)+')');
-                $(".resultCnt").html('('+addCommas(pi_total)+')');
+             	$(".resultCnt").html(' ' + patternCountStr + '(' +addCommas(detail_pi_total)+') '+ docCountStr+  '('+addCommas(total)+')');
+
                 grid2.appendData(data);
                 if ( grid2.loadingPage == 0 ) grid2.Select(-1,-1);
             },

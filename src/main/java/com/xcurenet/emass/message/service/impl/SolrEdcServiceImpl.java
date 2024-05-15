@@ -244,32 +244,6 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		}
 
 
-		/* 개인정보 유출 관계 분석 네트워크  조회*/
-//		if(Common.isEquals(sq.get("piAnalysisNetWork"), "Y")) {
-//			BoolQueryBuilder boolPiComp = QueryBuilders.boolQuery();
-//			String picount = sq.get("piCount");
-//			String piType = sq.get("piType");
-//
-//			Script script = null;
-//			String str = "";
-//			if (Common.isEquals(piType, "pi_total")) {
-//				String[] fields = Config.PRIVATE_SVC;
-//				int idx = 0;
-//				for (String f : fields) {
-//					str += (String.format("doc.containsKey('%s') &&  doc['%s'].size() != 0   && doc['%s'].value >= %s ", f, f, f, picount));
-//					if (fields.length-1 > idx) str += " || ";
-//					idx++;
-//				}
-//			} else {
-//				str = (String.format("doc.containsKey('%s') &&  doc['%s'].size() != 0  && doc['%s'].value >= %s ", piType, piType, piType, picount));
-//			}
-//			script = new Script(str);
-//			boolPiComp.must(new ScriptQueryBuilder(script));
-//			complateQuery.filter(boolPiComp);
-//		}
-
-
-
 		/*============================================================*/
 		log.info("page : {}  rows : {}", getPage(sq), sq.getRows());
 
