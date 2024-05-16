@@ -61,7 +61,8 @@ public class RegexPatternServiceImpl extends XcnAbstractDAO implements RegexPatt
 	public boolean checkRegexp(RegexPatternVO regexPattern) {
 		boolean result = true;
 		try{
-			org.springframework.data.elasticsearch.core.query.Query searchQuery = new NativeSearchQueryBuilder().withQuery(QueryBuilders.regexpQuery("regExp",regexPattern.getRegexPattern())).withSorts().build();
+			String regStr = regexPattern.getRegexPattern().replace("\\\\","\\");
+			org.springframework.data.elasticsearch.core.query.Query searchQuery = new NativeSearchQueryBuilder().withQuery(QueryBuilders.regexpQuery("regExp",regStr)).withSorts().build();
 			IndexOperations indexoperations = operation.indexOps(IndexCoordinates.of("edc_w_*"));
 			SearchHits solrEdcVO = operation.search(searchQuery, SolrEdcVO.class, indexoperations.getIndexCoordinates());
 			List<SearchHit<T>> searchHits = solrEdcVO.getSearchHits();
