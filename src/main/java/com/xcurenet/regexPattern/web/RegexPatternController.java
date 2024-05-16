@@ -11,7 +11,6 @@ import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.locale.Prop;
 import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
-import com.xcurenet.emass.keyword.service.KeywordVO;
 import com.xcurenet.regexPattern.service.RegexPatternService;
 import com.xcurenet.regexPattern.service.RegexPatternVO;
 import lombok.extern.slf4j.Slf4j;
@@ -57,6 +56,7 @@ public class RegexPatternController {
 		if (regexPatternService.isRegexPatternName(regexPattern)){
 			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("java.already.insert.regexPatternName", request, regexPattern.getRegexPatternName()));
 		}
+		if(!regexPatternService.checkRegexp(regexPattern))	return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("regexPattern.not.valid", request, regexPattern.getRegexPatternName()));
 		return new XcnResponseVO(XcnRspCode.OK, regexPatternService.insertRegexPattern(regexPattern));
 	}
 
@@ -65,6 +65,7 @@ public class RegexPatternController {
 	@AuditOperation(Operation.UPDATE)
 	@ResponseBody
 	public XcnResponseVO updateRegexPattern(final HttpServletRequest request, RegexPatternVO regexPattern) throws Exception{
+		if(!regexPatternService.checkRegexp(regexPattern))	return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("regexPattern.not.valid", request, regexPattern.getRegexPatternName()));
 		regexPattern.setRegexUser(Common.getAdminId(request));
 		return new XcnResponseVO(XcnRspCode.OK, regexPatternService.updateRegexPattern(regexPattern));
 	}

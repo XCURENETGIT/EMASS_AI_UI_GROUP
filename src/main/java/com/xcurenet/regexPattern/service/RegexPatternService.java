@@ -13,4 +13,6 @@ public interface RegexPatternService {
 	public boolean isRegexPatternName(RegexPatternVO regexPattern);
 
 	public int updateRegexPattern(RegexPatternVO regexPattern);
+
+	public boolean checkRegexp(RegexPatternVO regexPattern);
 }

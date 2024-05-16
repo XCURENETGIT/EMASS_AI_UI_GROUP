@@ -1,8 +1,25 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ page import="java.util.Locale" %>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp" %>
 <script type="text/javascript">
     var searchFlag = false;
+    var adminLanguage = '<%=adminLanguage%>';
+    
+    
     $(document).ready(function () {
+        
+        if(adminLanguage == 'ko'){
+            $('#ko_regExp_help').css("display",'');
+            $('#en_regExp_help').css("display",'none');
+		}else{
+            $('#en_regExp_help').css("display",'');
+            $('#ko_regExp_help').css("display",'none');
+		}
+        
+    
         $('#searchregexNameBtn').click(function () {
             getGroupData();
         });
@@ -181,7 +198,50 @@
 				<div class="info">
 					<s:message code="common.guidance"/>
 					<br>
-					<s:message code="regex.Pattern.ex"/>
+					<div id="ko_regExp_help" style="width:100%;padding:5px 5px 5px 10px; line-height:20px;">
+						<span>. 모든 문자와 일치합니다.  </span> <br>
+						<span style="color: #1A73F9">ab.     # matches 'aba', 'abb', 'abz' </span> <br>
+						<span>? 앞의 문자를 0회 또는 1회 반복합니다. 앞의 문자를 선택적으로 만드는 데 자주 사용됩니다. </span> <br>
+						<span style="color: #1A73F9">abc?     # matches 'ab' and 'abc' </span> <br>
+						<span>+ 앞의 문자를 한 번 이상 반복합니다. </span> <br>
+						<span style="color: #1A73F9">ab+     # matches 'ab', 'abb', 'abbb', </span> <br>
+						<span>* 앞의 문자를 0번 이상 반복합니다.  </span> <br>
+						<span style="color: #1A73F9">ab+     # matches 'ab', 'abb', 'abbb'</span> <br>
+						<span>{} 앞의 문자가 반복될 수 있는 최소 및 최대 횟수입니다. </span> <br>
+						<span style="color: #1A73F9">a{2}    # matches 'aa' </span> <br>
+						<span style="color: #1A73F9">a{2,4}  # matches 'aa', 'aaa', and 'aaaa' </span> <br>
+						<span style="color: #1A73F9">a{2,}   # matches 'a` repeated two or more times </span> <br>
+
+						<span>| OR 연산자. 왼쪽 또는 오른쪽 중 가장 긴 패턴이 일치하면 일치가 성공합니다. </span> <br>
+						<span style="color: #1A73F9">abc|xyz  # matches 'abc' and 'xyz'</span> <br>
+						<span>( … ) 그룹을 형성합니다. 그룹을 사용하여 표현식의 일부를 단일 문자로 처리할 수 있습니다. </span> <br>
+						<span style="color: #1A73F9">abc(def)?  # matches 'abc' and 'abcdef' but not 'abcd'</span> <br>
+						<span>( … ) 괄호 안의 문자 중 하나를 일치시킵니다. </span> <br>
+						<span style="color: #1A73F9">[abc]   # matches 'a', 'b', 'c'</span> <br>
+						<span >ex ) 이메일 주소 검증 : [a-zA-Z0-9\\.\\%\\+\\-]+\\@[a-zA-Z0-9\\.\\-]+.[a-zA-Z]{2,}</span>
+					</div>
+					<div id="en_regExp_help" style="width:100%;padding:5px 5px 5px 10px; line-height:20px; display: none" >
+						<span>. Matches any character.   </span> <br>
+						<span style="color: #1A73F9">ab.     # matches 'aba', 'abb', 'abz', etc. </span> <br>
+						<span>? Repeat the preceding character zero or one times. Often used to make the preceding character optional. </span> <br>
+						<span style="color: #1A73F9">abc?     # matches 'ab' and 'abc' </span> <br>
+						<span>+ Repeat the preceding character one or more times. </span> <br>
+						<span style="color: #1A73F9">ab+     # matches 'ab', 'abb', 'abbb', </span> <br>
+						<span>* Repeat the preceding character zero or more times.   </span> <br>
+						<span style="color: #1A73F9">ab+     # matches 'ab', 'abb', 'abbb', etc.</span> <br>
+						<span>{} Minimum and maximum number of times the preceding character can repeat.  </span> <br>
+						<span style="color: #1A73F9">a{2}    # matches 'aa' </span> <br>
+						<span style="color: #1A73F9">a{2,4}  # matches 'aa', 'aaa', and 'aaaa' </span> <br>
+						<span style="color: #1A73F9">a{2,}   # matches 'a` repeated two or more times </span> <br>
+						
+						<span>| OR operator. The match will succeed if the longest pattern on either the left side OR the right side matches. </span> <br>
+						<span style="color: #1A73F9">abc|xyz  # matches 'abc' and 'xyz'</span> <br>
+						<span>( … ) Forms a group. You can use a group to treat part of the expression as a single character.  </span> <br>
+						<span style="color: #1A73F9">abc(def)?  # matches 'abc' and 'abcdef' but not 'abcd'</span> <br>
+						<span>( … ) Match one of the characters in the brackets. </span> <br>
+						<span style="color: #1A73F9">[abc]   # matches 'a', 'b', 'c'</span> <br>
+						<span >ex ) Email address verification : [a-zA-Z0-9\\.\\%\\+\\-]+\\@[a-zA-Z0-9\\.\\-]+.[a-zA-Z]{2,}</span>
+					</div>
 <%--					<s:message code="filterInfo.msg.ip.add"/>--%>
 				</div>
 				<div class="modalfooter">
