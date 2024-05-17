@@ -2,6 +2,7 @@ package com.xcurenet.emass.message.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xcurenet.common.util.Common;
+import com.xcurenet.common.util.config.Config;
 import lombok.Data;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.elasticsearch.search.aggregations.Aggregation;
@@ -114,6 +115,13 @@ public class MessengerGroupUserVO {
 					if(!addFlag) {
 						onlyIp = new SolrEdcVO();
 						onlyIp.setSrcip(facetIp);
+
+						onlyIp.setConm(Common.nvl(Config.getUserConm(facetIp)));
+						onlyIp.setBusinm(Common.nvl(Config.getUserBusiNm(facetIp)));
+						onlyIp.setDeptnm(Common.nvl(Config.getUserDeptnm(facetIp)));
+						onlyIp.setName(Common.nvl(Config.getUserName(facetIp)));
+						onlyIp.setJikgubnm(Common.nvl(Config.getUserJikgubnm(facetIp)));
+
 						groups.add(onlyIp);
 					}
 				}
