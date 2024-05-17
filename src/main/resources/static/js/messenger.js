@@ -161,7 +161,7 @@ var eikon = {
         var xrootmtr = $('#xrootmtr').text();
         var srcip = $('#selectUserInfo').attr("data-srcip");
         var userid = $('#selectUserInfo').attr("data-name");
-        var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '') + "0000000";
+        var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '') + "000000";
         var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '') + "235959";
 
 
@@ -181,7 +181,7 @@ var eikon = {
         condition.searchStr = searchStr;
         condition.startDt = startDt;
         condition.endDt = endDt;
-        // condition.searchField = 'body_snippet attachname attachname_str attach';
+        // condition.searchField = 'body';
         conArray.push(condition);
         filterVal.conditions = conArray;
 
@@ -191,7 +191,7 @@ var eikon = {
             url: 'getMessengerGroupDetailSearch.xcn',
             xRootMtr: xrootmtr,
             srcip: srcip,
-            usr_id: userid,
+            // usr_id: userid,
             data: JSON.stringify(filterVal),
             offset: searchOffset,
             success : function(data, total) {
