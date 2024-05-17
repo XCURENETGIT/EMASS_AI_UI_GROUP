@@ -57,7 +57,13 @@
                 offset: grid.data.length,
                 limit: grid.pageSize,
                 success: function (data, total) {
-                    grid.appendData(data);
+					var trapData = [];
+					if(data != null){
+                        $.each(data,function (i,d){
+                        	if(d.devision != 'CLR') trapData.push(d);
+						});
+					}
+                    grid.appendData(trapData);
                 },
                 error: function (status, message) {
                     ui.alertMsg(message);

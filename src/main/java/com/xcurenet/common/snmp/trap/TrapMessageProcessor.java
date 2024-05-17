@@ -58,6 +58,7 @@ public class TrapMessageProcessor {
 
 			trap.setDeviceIp(Common.nvl(param.get("deviceIp")));
 			trap.setMasterIp(Common.nvl(param.get("masterIp")));
+			if(Common.isEquals(Common.nvl(param.get("devision")),"CLR")) return;
 			trap.setDevision(Common.nvl(param.get("devision")));
 			trap.setEventLevel(Common.nvl(param.get("eventLevel")));
 			trap.setTitle("[" + deviceName + "] " + Common.nvl(param.get("title")));

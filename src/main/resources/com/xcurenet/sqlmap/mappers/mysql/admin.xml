@@ -63,7 +63,7 @@
 	
 	<!-- SMS 발신 운용자 검색 -->
 	<select id="getAdminNotifyByConfId" resultType="hashmap" parameterType="string">
-		SELECT  A.ADMIN_ID, A.ADMIN_NAME
+		SELECT  A.ADMIN_ID, A.ADMIN_NAME ,A.ADMIN_HP as ADMIN_HP
 		FROM	UI_ADMIN A, UI_CONF_ADMIN B
 		WHERE	A.ADMIN_ID = B.ADMIN_ID
 		AND		B.CONF_ID = #{confId}
