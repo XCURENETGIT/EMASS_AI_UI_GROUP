@@ -1248,7 +1248,7 @@
 
     $(function() {
         $("#xcn_toggleBtn").on("click", function() {
-            $("#xcn_Search").toggle("show");
+            // $("#xcn_Search").toggle("show");
         })
     })
 
