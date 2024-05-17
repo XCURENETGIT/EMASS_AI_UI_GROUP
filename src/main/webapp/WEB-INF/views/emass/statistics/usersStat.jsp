@@ -54,12 +54,12 @@
     var serviceList=[];
 
     $(document).ready(function(){
+        initCondition();
         getServiceList();
         initDateTimePicker('startdate','enddate');
         closeDetailTab();
         getData ('Y');
 
-        initCondition();
         $('.optionBtn').click(function () {
             $('.optionBtn').removeClass('active');
             $(this).addClass('active');
@@ -228,6 +228,21 @@
         return false;
     }
 
+
+    function initCondition() {
+        getCodeList('busi');
+        getCodeList('dept');
+
+        $('#busiSelect').selectpicker({
+            size: 15,
+            width: '300px',
+            searchLabel: true,
+            noneSelectedText: '<s:message code="common.org.busi.all"/>',
+            noneResultsText: '<s:message code="common.msg.noresult"/>' + ' ',
+            selectAllText: '<s:message code="common.msg.select_all"/>',
+            deselectAllText: '<s:message code="common.msg.unselect_all"/>',
+        });
+    }
     function getCodeList(codeType) {
         ui.get({
             url: 'getCodeList.xcn',
@@ -244,21 +259,6 @@
             complete: function () {
                 searchFlag = false;
             }
-        });
-    }
-
-    function initCondition() {
-        getCodeList('busi');
-        getCodeList('dept');
-
-        $('#busiSelect').selectpicker({
-            size: 15,
-            width: '300px',
-            searchLabel: true,
-            noneSelectedText: '<s:message code="common.org.busi.all"/>',
-            noneResultsText: '<s:message code="common.msg.noresult"/>' + ' ',
-            selectAllText: '<s:message code="common.msg.select_all"/>',
-            deselectAllText: '<s:message code="common.msg.unselect_all"/>',
         });
     }
 

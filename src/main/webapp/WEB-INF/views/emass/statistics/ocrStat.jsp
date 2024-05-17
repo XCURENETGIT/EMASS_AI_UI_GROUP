@@ -59,10 +59,11 @@
 
     $(document).ready(function(){
 
+
+        initCondition();
         initDateTimePicker('startdate','enddate');
         closeDetailTab();
-        getData ('Y');
-        
+        getData ('Y')
         $('.totalView').click(function(){
 
             $("#chartCntDiv").show();
@@ -71,7 +72,6 @@
             printChart(totalChartDat,grid1);
         });
 
-        initCondition();
         $('#dept').click(function () {
             var code = $(this).attr('id');
             openCodeWindow(code, $('#' + code + 'Val').val(), $('#' + code + 'Str').val());

@@ -752,8 +752,9 @@ function makeList2(nextFlag){
             str += attachsizeArray[0] + 'KB</span>';
             str += '<button class="btnchatdown downlodadBtn"></button></p>';
             let snippet = '';
-            if(obj.body_snippet==null || nvl( obj.body_snippet,'')=='') {
-                 snippet = obj.body_snippet.replaceAll('\n', '<br/>');
+            if (obj.body_snippet != null && obj.body_snippet !== '') {
+                console.log(obj.body_snippet);
+                snippet = obj.body_snippet.replaceAll('\n', '<br/>');
                 str += "<hr style='border: 1px solid #ddd;'>";
             }
             str += removeStyleAttributes(snippet);
@@ -831,6 +832,7 @@ function makeList(nextFlag){
             str += '<button class="btnchatdown downlodadBtn"></button></p>';
             let snippet = '';
             if (obj.body_snippet != null && obj.body_snippet !== '') {
+                console.log(obj.body_snippet);
                 snippet = obj.body_snippet.replaceAll('\n', '<br/>');
                 str += "<hr style='border: 1px solid #ddd;'>";
             }
@@ -893,6 +895,7 @@ function makePrevList(){
             str += '<button class="btnchatdown downlodadBtn"></button></p>';
             let snippet = '';
             if (obj.body_snippet != null && obj.body_snippet !== '') {
+                console.log(obj.body_snippet);
                 snippet = obj.body_snippet.replaceAll('\n', '<br/>');
                 str += "<hr style='border: 1px solid #ddd;'>";
             }
