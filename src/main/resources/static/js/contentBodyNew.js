@@ -164,7 +164,7 @@ $(document).ready(function () {
 	});*/
 
     $(document).on('click', '.attachName', function () {
-        if (adminMenu != "ALL" && adminMenu.indexOf("AS") < 0 && adminMenu.indexOf("CS") < 0) {
+        if ((adminMenu != "ALL" && adminMenu.indexOf("AS") < 0 && adminMenu.indexOf("CS") < 0) || (adminMenu != "ALL" && adminMenu.indexOf("DS") < 0)) {
             alert(message.authAlert);
             return;
         }
@@ -190,7 +190,8 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.attachExt', function () {
-        if (adminMenu != "ALL" && adminMenu.indexOf("AS") < 0 && adminMenu.indexOf("CS") < 0) {
+
+        if ((adminMenu != "ALL" && adminMenu.indexOf("AS") < 0 && adminMenu.indexOf("CS") < 0) || (adminMenu != "ALL" && adminMenu.indexOf("DS") < 0)) {
             alert(message.authAlert);
             return;
         }
@@ -217,7 +218,8 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.downloadIcon', function () {
-        if (adminMenu != "ALL" && adminMenu.indexOf("AS") < 0 && adminMenu.indexOf("CS") < 0) {
+
+        if ((adminMenu != "ALL" && adminMenu.indexOf("AS") < 0 && adminMenu.indexOf("CS") < 0) || (adminMenu != "ALL" && adminMenu.indexOf("DS") < 0)) {
             alert(message.authAlert);
             return;
         }
@@ -243,7 +245,8 @@ $(document).ready(function () {
         insertAudit(op_attach_save, information);
     });
     $('#saveAttachBtn').click(function (e) {
-        if (adminMenu != "ALL" && adminMenu.indexOf("AS") < 0 && adminMenu.indexOf("CS") < 0) {
+
+        if ((adminMenu != "ALL" && adminMenu.indexOf("AS") < 0 && adminMenu.indexOf("CS") < 0) || (adminMenu != "ALL" && adminMenu.indexOf("DS") < 0)) {
             alert(message.authAlert);
             return;
         }

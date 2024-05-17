@@ -41,6 +41,7 @@
     var searchFlag = false;
     var detailTotal = 0;
     var rowKey = "";
+    var serviceTypes=[];
     var rowName = "";
     var colKey = "";
     var detailTab = "N";
@@ -49,9 +50,11 @@
     var tabID = 1;
     var tabNum = 0;
     var totalChartDat;
-    var serviceList=[];
+    var serviceGroupList=[];
     $(document).ready(function(){
+        getserviceGroupList();
         initCondition();
+        getServiceTypeList( )
         initDateTimePicker('startdate','enddate');
         closeDetailTab();
         getData ('Y');
@@ -77,7 +80,7 @@
             $('#deptVal, #deptStr').val('');
             $('#deptSelectedArea').hide();
         });
-        getServiceList();
+
         $('.optionBtn').click(function () {
             $('.optionBtn').removeClass('active');
             $(this).addClass('active');
@@ -151,11 +154,11 @@
         });
     });
 
-    function getServiceList(){
+    function getserviceGroupList(){
         ui.get({
             url : 'getServiceGroupList.xcn',
             success : function(data, total) {
-                serviceList = data;
+                serviceGroupList = data;
             },
             error : function(status, message) {
                 ui.alertMsg(message);
@@ -164,6 +167,7 @@
             }
         });
     }
+
 
     function setGrid( ){
         currentgrid = getCurrentGrid();
@@ -230,6 +234,19 @@
         return false;
     }
 
+    function getServiceTypeList( ){
+        ui.get({
+            url : 'getServiceListByAuth.xcn',
+            success : function(data, total) {
+                serviceTypes = data;
+            },
+            error : function(status, message) {
+                ui.alertMsg('error:' + status);
+            },
+            complete : function() {
+            }
+        });
+    }
     /**
      * Bar Chart
      */
@@ -255,10 +272,11 @@
                 }
                 if(grid1.data[i]['NUM'] == '<s:message code="bodyview.total"/>') continue;
                 if (grid1.data[i].NUM == "Total") continue;
-                else data.push({name:grid1.data[i]['rowKey'], data:items});
+                else data.push({name:grid1.getValue(i, 'svcLv12Nm'), data:items});
             }
         } else {
             var items = [];
+
             for ( var j=0 ; j < cols.length ; j++ ) {
                 if ( cols[j].id == 'total' || cols[j].id == 'NUM' || cols[j].id == 'rowKey' ) continue;
                 if ( dat[cols[j].id] == undefined || dat[cols[j].id] == '' ) {
@@ -270,7 +288,7 @@
                 if(Number( dat[cols[j].id] ) > maxDat) maxDat = Number( dat[cols[j].id] );
             }
             if(dat['NUM'] == '<s:message code="bodyview.total"/>') return;
-            else data.push({name:dat['rowKey'], data:items});
+            else data.push({name:serviceTypes.search(dat['rowKey'], 'serviceCd', 'serviceNm'), data:items});
         }
 
         var rotation = 40;
@@ -615,6 +633,19 @@
         getDetailData('Y');
     };
 
+    function getSvc12Nm(svc12){
+        var result = condition.msgNoinfo;
+        for(var i=0; i<serviceTypes.length; i++){
+            if(serviceTypes[i].serviceCd == svc12){
+                result = serviceTypes[i].serviceNm;
+                break;
+            }
+        }
+
+        return result;
+    }
+
+
     function getData( flag ) {
         if ( searchFlag ) return;
         var sDate = $('#startdate').val().replaceAll("-", "");
@@ -674,7 +705,7 @@
                         if(Header == "I") HeaderNm = '<s:message code="condition.receive"/>';
                         else HeaderNm = '<s:message code="condition.send"/>';
                     } else if ( xAxis == "ctime_hh") HeaderNm = Header+'<s:message code="common.msg.hour"/>';
-                    else if(xAxis === 'svc1') HeaderNm = serviceList.search(Header, 'groupCd', 'groupNm');
+                    else if(xAxis === 'svc1') HeaderNm = serviceGroupList.search(Header, 'groupCd', 'groupNm');
                     else HeaderNm = Header;
                     grid1.colAdd( Header, HeaderNm, 90, "right", false, 'link', function ( row, cell, value, columnDef, dataContext ) {
                         if ( value != undefined ) return value.comma();

@@ -51,11 +51,11 @@
     var totalChartDat;
     var serviceList=[];
     $(document).ready(function(){
-        getServiceList();
+
+        initCondition();
         initDateTimePicker('startdate','enddate');
         closeDetailTab();
-        getData ('Y');
-
+        getData ('Y')
         $('.optionBtn').click(function () {
             $('.optionBtn').removeClass('active');
             $(this).addClass('active');

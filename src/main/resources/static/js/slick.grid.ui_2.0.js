@@ -674,34 +674,36 @@ function Xgrid ( target, contextRoot, rowHeight, options, dataview ) {
 		this.setColumns();
 	};
 
-	this.getBodyEXCEL = function (selectOption ) {
-		var data = [];//this.getSelectedRows();
-		if(selectOption=="Y") data = this.getSelectedRows();
-		if(data.length==0) data = this.grid.getData( );
-		console.log(data)
+	this.getBodyEXCEL = function (selectOption) {
+		var data = [];
+		if (selectOption == "Y") data = this.getSelectedRows();
+		if (data.length == 0) data = this.grid.getData();
+		console.log(data);
 		var result = JSON.parse(JSON.stringify(data));
-		for ( var j=0 ; j < data.length ; j++ ) {
-			for ( var i=0 ; i < this.columns.length ; i++ ) {
-				if($.isArray(data[j][this.columns[i].id])) {
-					if ( this.columns[i].formatter == undefined ) result[j][this.columns[i].id] = result[j][this.columns[i].id].join(', ');
-					else{
-						var org = this.columns[i].formatter( j, i, nvl(data[j][this.columns[i].id]) );
+
+		for (var j = 0; j < data.length; j++) {
+			for (var i = 0; i < this.columns.length; i++) {
+				var columnId = this.columns[i].id;
+				if ($.isArray(data[j][columnId])) {
+					if (this.columns[i].formatter == undefined) {
+						result[j][columnId] = result[j][columnId].join(', ');
+					} else {
+						var org = this.columns[i].formatter(j, i, nvl(data[j][columnId]));
 						var str = $("#replace_html").html(org).text().trim();
-						if(str == '') continue;
-						result[j][this.columns[i].id] = str;
+						result[j][columnId] = (str == '') ? '' : str; // 빈 문자열 그대로 유지
 					}
-				}
-				else {
-					if ( this.columns[i].formatter == undefined ) continue;
-					var org = this.columns[i].formatter( j, i, nvl(data[j][this.columns[i].id]));
-					var str = $("#replace_html").html(org).text().trim();
-					if(str == '') continue;
-					result[j][this.columns[i].id] = str;
+				} else {
+					if (this.columns[i].formatter != undefined) {
+						var org = this.columns[i].formatter(j, i, nvl(data[j][columnId]));
+						var str = $("#replace_html").html(org).text().trim();
+						result[j][columnId] = (str == '') ? '' : str; // 빈 문자열 그대로 유지
+					}
 				}
 			}
 		}
-		return JSON.stringify( result );
+		return JSON.stringify(result);
 	};
+
 	this.getHeaderEXCEL = function ( ) {
 		var result = [];
 		var tmpWidth = 0;
