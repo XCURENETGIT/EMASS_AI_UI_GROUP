@@ -62,11 +62,11 @@ public class SolrQueryString {
 						|| (String.valueOf(value).indexOf("(") > 0 || String.valueOf(value).indexOf(")") > 0)
 						|| (String.valueOf(value).indexOf("[") > 0 || String.valueOf(value).indexOf("]") > 0)
 						|| (String.valueOf(value).indexOf("{") > 0 || String.valueOf(value).indexOf("}") > 0)) {
-					query.append(name).append(":\"").append(String.valueOf(value)).append("\"");
+					query.append(name).append(":").append("(").append(String.valueOf(value)).append(")");
 				} else if(String.valueOf(value).indexOf(",") > -1){
 					String[] values = String.valueOf(value).split(",");
 					String val = Arrays.stream(values).map(v -> " (\"".concat(v).concat("\")")).collect(Collectors.joining());
-					query.append(name).append(":\"").append(String.valueOf(val)).append("\"");
+					query.append(name).append(":").append("(").append(String.valueOf(val)).append(")");
 				}
 				else {
 					query.append(name).append(":").append("\"").append(value).append("\"").append(" ");
@@ -134,13 +134,13 @@ public class SolrQueryString {
 		if(Common.isEmpty(value) || names.length == 0) return this;
 
 		if(addAnd) and();
-		beforeParen();
+//		beforeParen();
 		add(names[0], value, false);
 		for (int i = 1; i < names.length; i++) {
 			or();
 			add(names[i], value, false);
 		}
-		afterParen();
+//		afterParen();
 		return this;
 	}
 

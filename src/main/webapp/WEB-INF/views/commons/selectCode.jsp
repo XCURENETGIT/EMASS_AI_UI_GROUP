@@ -7,6 +7,7 @@
 	String oldConm = Common.nvl(request.getParameter("oldConm"));
 	String oldDept = Common.nvl(request.getParameter("oldDept"));
 	String oldJib = Common.nvl(request.getParameter("oldJib"));
+	String oldEmail = Common.nvl(request.getParameter("oldEmail"));
 %>
 <style>
 	input[type="checkbox"] {
@@ -21,6 +22,7 @@
     var oldConm = '<%=oldConm%>';
     var oldDept = '<%=oldDept%>';
     var oldJib = '<%=oldJib%>';
+    var oldEmail = '<%=oldEmail%>';
     var addFlag = true;
 
     $(document).ready(function () {
@@ -167,6 +169,7 @@
         var conmArr =  oldConm.split(',');
         var deptArr = oldDept.split('|');
         var jibArr =  oldJib.split('|');
+        var emailArr =  oldEmail.split('|');
         var dataArr = [];
         
         $.each(codeArr, function (i, d) {
@@ -175,7 +178,8 @@
 				,conm : conmArr[i]
 				,dept : (deptArr[i] == undefined) ? '' : deptArr[i]
 				,jib : (jibArr[i] == undefined) ? '' : jibArr[i]
-    
+				,email : (emailArr[i] == undefined) ? '' : emailArr[i]
+
 			}
             dataArr.push(dataObj);
         });
@@ -193,7 +197,7 @@
         } else if (codeType == 'user'||codeType == 'senders'||codeType == 'receivers') {
             $.each(dataArr, function (i, d) {
                 console.log(d)
-                data.push({'code': d.code, 'codeName':  d.conm , 'tempNm1': d.dept, 'tempNm2': d.jib});
+                data.push({'code': d.code, 'codeName':  d.conm , 'tempNm1': d.dept, 'tempNm2': d.jib, 'email': d.email});
             });
 		} else  {
             $.each(dataArr, function (i, d) {
@@ -218,6 +222,7 @@
                     break;
                 }
             }
+            console.log(selectData[i].email);
             if (flag) {
                 if (codeType == 'regexp') data.push({
                     'code': selectData[i].code,
@@ -474,7 +479,7 @@
         grid2.colAdd('code', '<s:message code="common.org.busicd"/>', 100, 'center', false, 'link');
         grid2.colAdd('codeName', '<s:message code="common.org.businm"/>', 260, 'left', false, 'nomal');
     } else if (codeType == 'dept' || codeType == 'deptByCo') {
-        grid2.colAdd('code', '<s:message code="common.org.deptcd"/>', 100, 'center', false, 'link');
+        grid2.colAdd('code', '<s:message code="common.org.deptcd"/>', 100, 'center', false, 'li nk');
         grid2.colAdd('codeName', '<s:message code="common.org.deptnm"/>', 260, 'left', false, 'nomal');
     } else if (codeType == 'attach') {
         grid2.colAdd('code', '<s:message code="common.msg.ext"/>', 100, 'center', false, 'link');

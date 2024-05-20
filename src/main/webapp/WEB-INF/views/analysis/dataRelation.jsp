@@ -93,6 +93,7 @@
 	<input type="hidden" name="oldConm" id="oldConm"></input>
 	<input type="hidden" name="oldDept" id="oldDept"></input>
 	<input type="hidden" name="oldJib" id="oldJib"></input>
+	<input type="hidden" name="oldEmail" id="oldEmail"></input>
 </form>
 
 <script>
@@ -118,7 +119,7 @@
         /* 받는사람 */
         $('#receivers').click(function () {
             var code = $(this).attr('id');
-            openCodeWindow(code, $('#' + code + 'Val').val(), $('#' + code + 'Str').val(), $('#' + code + 'Dept').val(), $('#' + code + 'Jib').val());
+            openCodeWindow(code, $('#' + code + 'Val').val(), $('#' + code + 'Str').val(), $('#' + code + 'Dept').val(), $('#' + code + 'Jib').val() ,$('#' + code + 'Email').val());
         });
 
 
@@ -249,11 +250,12 @@
     }
 
 
-    function openCodeWindow(id, oldCode, oldConm,oldDept,oldJib) {
+    function openCodeWindow(id, oldCode, oldConm,oldDept,oldJib, oldEmail) {
         $('#oldCode').val(oldCode);
         $('#oldConm').val(oldConm);
         $('#oldDept').val(oldDept);
         $('#oldJib').val(oldJib);
+        $('#oldEmail').val(oldEmail);
 
 
 
@@ -763,7 +765,6 @@
     }
 
     function getSelectedCodeData(codeType, data) {
-        console.log("Gg");
         var str = '';
         var email = '';
         var val = '';
@@ -773,11 +774,12 @@
         for (var i = 0; i < data.length; i++) {
             str += data[i].codeName;
             val += data[i].code;
-            email += data[i].email;
-
+            // email += data[i].email;
             dept += (data[i].tempNm1 !== undefined) ? data[i].tempNm1 : "";
 
             jib += (data[i].tempNm2 !== undefined) ? data[i].tempNm2 : "";
+
+            email += (data[i].email !== undefined) ? data[i].email : "";
 
             if (i != data.length - 1) {
                 str += ', ';
@@ -787,6 +789,7 @@
                 email += '|';
             }
         }
+
         if (val != '') {
             str = str.rtrim();
             val = val.trimAll();
