@@ -18,7 +18,7 @@
 		overflow: hidden;
 		white-space: nowrap;
 		text-overflow: ellipsis;
-		/*max-width: 98% !important;*/
+		max-width: 98% !important;
 	}
 
 	.nameFileTop{
