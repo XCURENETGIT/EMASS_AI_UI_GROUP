@@ -240,10 +240,11 @@ function eventEnterSearch(event) {
 						</select>
 					</div>
 					<div class="btnform">
-						<button type="button" accesskey="Q" class="form_btn01" id="searchBtn"><s:message code="common.msg.search"/></button>
 						<button type="button" accesskey="Q" class="form_btn02" id="clearBtn"><s:message code="condition.reset"/></button>
 					</div>
 				</div>
+				<span class="red fs12 fb600 mat8" style="display: none" id="devStatusStr"><s:message code="filterInfo.msg.ipnologging"/></span>
+				<p class="red fs12 fb600 mat8" id="noticeMsg"><s:message code="analysis.usagecompare.notion"/></p>
 			</form>
 		</div>
 	</div>
@@ -290,7 +291,7 @@ function eventEnterSearch(event) {
 					<div class="tab-content" style="height:100%;">
 						<div role="tabpanel" class="tab-pane fade active in">
 							<div id="usageList">
-								<div style="min-height:400px;height: 400px;">
+								<div style="min-height:400px;height: 400px;" >
 									<div id="usageListGrid" class="slickGrid gridArea" style="height: 100%;"></div>
 								</div>
 							</div>
@@ -332,8 +333,12 @@ function eventEnterSearch(event) {
 		var itemName = "";
 		var seletDate = "";
 
-		var grid1 = new Xgrid('usageListGrid', contextRoot, 26, {status_cnt_id:'#usageCnt'});
-
+        var grid1 = new Xgrid('usageListGrid', contextRoot, 26, {status_cnt_id:'#usageCnt'});
+        grid1.loadPageSize();
+        grid1.changePageSize = function(cnt){
+            alert("페이지 수정");
+            getDetailData('Y');
+        };
 		//colInit();
         grid1.loadHeader(false);
 
