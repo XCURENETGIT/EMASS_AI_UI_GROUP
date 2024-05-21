@@ -88,18 +88,6 @@ var eikon = {
             getMessengerMessageList(page);
         }
     },
-    getMessengerListSetting: function (page) {
-
-  /*      getCookieCondition();*/
-        var searchType = $('button[name=searchType].active').val();
-        $('#startSubDt').val($('#startDt').val());
-        $('#endSubDt').val($('#endDt').val());
-        if (searchType == "G") {
-            getMessengerGroupList(page);
-        } else if (searchType == "GD") {
-            getMessengerMessageList(page);
-        }
-    },
     getGenerativeList: function (page) {
         var searchType = $('button[name="searchType"]').val();
         getGenerativeGroupList(page);
@@ -753,6 +741,7 @@ function getMessengerGroupList(page) {
         startTotalDate:startTotalDate+"00000",
         endTotalDate:endTotalDate+"235959",
         limit: groupPageBreak,
+        readYn: readYn,
         success: function (data, total) {
             isLoading=true;
             if (data.groups.length < groupPageBreak || (offset+groupPageBreak) == total) isEnd = true;
@@ -771,87 +760,6 @@ function getMessengerGroupList(page) {
         }
     });
 };
-
-/*검색조건 저장*/
-function setCookieCondition(){
-
-    var searchStrInput = $("#searchStrInput").val();
-    var startDt = $("#startDt").val();
-    var endDt = $("#endDt").val();
-    var dept = $('#deptVal').val();
-    var deptStr = $("#deptStr").val();
-    var busiStr = arrayToString($('#busiSelect').selectpicker('val'));;
-    var serviceType = $("#serviceType").val();
-    var attachYn = $('input:radio[name=attachYn]:input:checked').val();
-    var userEmail = $("#userEmail").val();
-    var userStr = $("#userStr").val();
-    var userVal = $("#userVal").val();
-    var userDept = $("#userDept").val();
-    var userJib = $("#userJib").val();
-
-    setCookie('searchStrInput', searchStrInput, 1);
-    setCookie('startDt', startDt, 1);
-    setCookie('endDt', endDt, 1);
-    setCookie('dept', dept, 1);
-    setCookie('deptStr', deptStr, 1);
-    setCookie('busiStr', busiStr, 1);
-    setCookie('serviceType', serviceType, 1);
-    setCookie('attachYn', attachYn, 1);
-    setCookie('userEmail', userEmail, 1);
-    setCookie('userStr', userStr, 1);
-    setCookie('userVal', userVal, 1);
-    setCookie('userDept', userDept, 1);
-    setCookie('userJib', userJib, 1);
-
-}
-function getCookieCondition(){
-
-    var searchStrInput = getCookie('searchStrInput');
-    var startDt = getCookie('startDt');
-    var endDt = getCookie('endDt');
-    var dept = getCookie('dept');
-    var deptStr = getCookie('deptStr');
-    var busiStr = getCookie('busiStr');
-    var busi = getCookie('busi');
-    var serviceType = getCookie('serviceType');
-    var attachYn = getCookie('attachYn');
-
-
-
-    $("#searchStrInput").val(searchStrInput);
-    $("#startDt").val(startDt);
-    $("#endDt").val(endDt);
-    $("#dept").val(dept);
-    $("#deptStr").val(deptStr);
-    $("#busiStr").val(busiStr);
-    $("#busi").val(busi);
-    $("#serviceType").val(serviceType);
-    $("#attachYn").val(attachYn);
-
-}
-
-
-function setCookie(name, value, hours) {
-    var expires = "";
-    if (hours) {
-        var date = new Date();
-        date.setTime(date.getTime() + (hours * 60 * 60 * 1000));
-        expires = "; expires=" + date.toUTCString();
-    }
-    document.cookie = name + "=" + (value || "") + expires + "; path=/";
-}
-
-// 쿠키 가져오기 함수
-function getCookie(name) {
-    var nameEQ = name + "=";
-    var ca = document.cookie.split(';');
-    for (var i = 0; i < ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
-    }
-    return null;
-}
 
 
 function getMessengerMessageList(page) {

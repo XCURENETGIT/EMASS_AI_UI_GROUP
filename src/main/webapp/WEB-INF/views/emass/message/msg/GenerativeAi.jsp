@@ -827,6 +827,12 @@
         }
 
 
+        function allDownList(){
+            var url    = '<c:url value="/commons/downListMessenger.do"/>';
+            fnOpenWindow(url, 'downInfoPop', 1400, 580, 'resize');
+        }
+
+
         function getCondition(type) {
             var filterVal = {};
 
@@ -1115,13 +1121,13 @@
 					</div>
 				</div>
 				<s:message code="common.msg.finish_query"/> : <span id="groupResultCnt" class="red fb600">0</span>
-				<%--<div class="myDropdown mal16">
-					<span style="color:black;"><s:message code="analysis.relation.ui.export"/>&#9662;</span>
+				<div class="myDropdown mal16" style="color: black">
+					<span><s:message code="analysis.relation.ui.export"/></span>
 					<div class="dropdown-content">
-						<a href="#" href="javascript:void(0);"  class="excel_down2" onclick="exportEx()"><s:message code="common.msg.excel"/></a>
-						<a href="#" href="javascript:void(0);"  id="downlist_excel"><s:message code="common.msg.download"/> <s:message code="mail.view.list"/></a>
+						<a href="#" onclick="allDown('G')"><s:message code="analysis.relation.ui.export2"/></a>
+						<a href="#" onclick="allDownList()"><s:message code="common.msg.download"/> <s:message code="mail.view.list"/></a>
 					</div>
-				</div>--%>
+				</div>
 			</div>
 			<!-- //pagination -->
 		</div>

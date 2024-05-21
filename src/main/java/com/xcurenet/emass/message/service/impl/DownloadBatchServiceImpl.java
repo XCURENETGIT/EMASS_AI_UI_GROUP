@@ -95,7 +95,15 @@ public class DownloadBatchServiceImpl extends XcnAbstractDAO implements Download
 		param.put("downSeq", downSeq);
 		return update("com.xcurenet.sqlmap.mappers.mysql.emass.cancelDownFile", param);
 	}
-	
+
+	public int cancelDownFileMessenger(String adminId, String statuSel, String downSeq) {
+		Map<String, String> param = new HashMap<>();
+		param.put("adminId", adminId);
+		param.put("statuSel", statuSel);
+		param.put("downSeq", downSeq);
+		return update("com.xcurenet.sqlmap.mappers.mysql.emass.cancelDownFileMessenger", param);
+	}
+
 	public int cancelUnkown(String statuSel, String downSeq) {
 		Map<String, String> param = new HashMap<>();
 		param.put("statuSel", statuSel);

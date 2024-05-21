@@ -1151,7 +1151,7 @@ public class EmsMessageController {
 				charset = DetectCharset.getCharset(body, 50);
 			}
 			if (Common.isEmpty(charset)) charset = emsBody.getBodyCharset();
-			if (Common.isEmpty(charset) || charset.equals("IBM424_rtl")) charset = DEFAULT_ENCODING;
+			if (Common.isEmpty(charset) || charset.equals("IBM424_rtl") || charset.equals("IBM424_ltr")) charset = DEFAULT_ENCODING;
 			bodyStr = Common.toString(body, Charset.forName(charset).toString());
 		} else {
 			charset = userCharset;
@@ -1544,6 +1544,16 @@ public class EmsMessageController {
 		String statusSel = Common.nvl(request.getParameter("statusSel"));
 		String downSeq = Common.nvl(request.getParameter("downSeq"));
 		return new XcnResponseVO(XcnRspCode.OK, downloadBatchService.cancelDownFile(adminId, statusSel, downSeq));
+	}
+
+	@RequestMapping(value = "/cancelDownFileMessenger.xcn")
+	@Description("다운로드 배치 취소")
+	@ResponseBody
+	public XcnResponseVO cancelDownFileMessenger(final HttpServletRequest request, final HttpSession session) throws Exception {
+		String adminId = Common.getAdminId(request);
+		String statusSel = Common.nvl(request.getParameter("statusSel"));
+		String downSeq = Common.nvl(request.getParameter("downSeq"));
+		return new XcnResponseVO(XcnRspCode.OK, downloadBatchService.cancelDownFileMessenger(adminId, statusSel, downSeq));
 	}
 
 

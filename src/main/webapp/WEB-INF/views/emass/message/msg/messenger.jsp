@@ -1008,16 +1008,21 @@
 
         function allDown(){
 
-            var xRootMtr = $('#xrootmtr').text();
-            var srcip = $('#srcip').text();
-            var usr_id = $('#selectUserInfo').attr('data-name');
-            var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '') + "0000000";
-            var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '') + "235959";
-            var searchStr = '';
+            if ((isConsent() && $('#consentNo').val() == '') || $(this).attr('userkey') == '') {
+                return;
+            }
+            var element = document.getElementById('groupResultCnt');
+            var number = parseInt(element.textContent, 10);
+            if (number === 0) {
+                ui.alertMsg('<s:message code="eikon.noList"/>');
+                return;
+            }
 
-            console.log(JSON.stringify(getCondition()));
+            var startDt = $('#startDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '') + "0000000";
+            var endDt = $('#endDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '') + "235959";
+            var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
 
-            ui.alertMsg("다운로드 시작합니다 진행사항은 다운로드 내역을 확인해주세요.");
+            ui.alertMsg('<s:message code="eikon.start.download"/>');
             ui.get({
                 url : 'getMessengerGroupTextAllExportZip.xcn',
                 data : JSON.stringify(getCondition()),

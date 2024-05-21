@@ -691,6 +691,10 @@
             var url = '<c:url value="/ems/selectConsent.do"/>';
             return fnOpenWindow(url, 'selectConsentWinPopup', 830, 700, 'resize');
         }
+        function allDownList(){
+            var url    = '<c:url value="/commons/downListMessenger.do"/>';
+            fnOpenWindow(url, 'downInfoPop', 1400, 580, 'resize');
+        }
 
         function selectedConsent(obj) {
             if (obj == '') {
@@ -1068,6 +1072,13 @@
 					</div>
 				</div>
 				<s:message code="common.msg.finish_query"/> : <span id="groupResultCnt" class="red fb600">0</span>
+				<div class="myDropdown mal16" style="color: black">
+					<span><s:message code="analysis.relation.ui.export"/></span>
+					<div class="dropdown-content">
+						<a href="#" onclick="allDown('N')"><s:message code="analysis.relation.ui.export2"/></a>
+						<a href="#" onclick="allDownList()"><s:message code="common.msg.download"/> <s:message code="mail.view.list"/></a>
+					</div>
+				</div>
 			</div>
 			<!-- //pagination -->
 		</div>

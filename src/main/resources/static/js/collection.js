@@ -548,7 +548,37 @@ function getCollectionGroupList (page,type){
     });
 }
 
+function allDown(type){
 
+    if ((isConsent() && $('#consentNo').val() == '') || $(this).attr('userkey') == '') {
+        return;
+    }
+    var element = document.getElementById('groupResultCnt');
+    var number = parseInt(element.textContent, 10);
+    if (number === 0) {
+        ui.alertMsg('<s:message code="eikon.noList"/>');
+        return;
+    }
+    var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
+    var startDt = $('#startDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '') + "0000000";
+    var endDt = $('#endDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '') + "235959";
+
+    ui.alertMsg('<s:message code="eikon.start.download"/>');
+    ui.get({
+        url : 'getCollectionGroupTextAllExportZip.xcn',
+        type:type,
+        data : JSON.stringify(getCondition(type)),
+        exportStartDt : startDt,
+        exportEndDt : endDt,
+        readYn:readYn,
+        success : function(data, total) {
+        },
+        error : function(status, message) {
+        },
+        complete : function() {
+        }
+    });
+}
 
 
 function getPageType() {
@@ -1584,7 +1614,6 @@ function rtnFileGroupList2 (data) {
 
 
 }
-
 
 
 function rtnFileGroupList (data) {

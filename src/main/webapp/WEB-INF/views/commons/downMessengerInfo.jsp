@@ -110,7 +110,6 @@
                 offset 		: grid.data.length,
                 limit 		: grid.pageSize,
                 success 	: function(data, total) {
-                    console.log(data);
                     grid.appendData(data);
                     if($('input[name="autoRefresh"]').is(":checked")) {
                         window.setTimeout(function(){
@@ -141,7 +140,7 @@
 
         function cancelDownFile(downSeq) {
             ui.get({
-                url 		: 'cancelDownFile.xcn',
+                url 		: 'cancelDownFileMessenger.xcn',
                 statusSel	: 'C',
                 downSeq		: downSeq,
                 success 	: function(data, total) {
@@ -257,7 +256,6 @@
     });
     grid.colAdd('downVal', '<s:message code="common.msg.download"/> <s:message code="analysis.freedom.ui.condition"/>', 300, 'left', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
         var statStr = grid.getValue(row, 'statusStr');
-        console.log(value);
         let modifiedString = value.replace(/\[.*?\]┌/, '');
         // console.log(modifiedString);
         if( statStr == 'X' ) return '<span class="deleteText">' + modifiedString.replaceAll('┌', '<br>') + '</span>';

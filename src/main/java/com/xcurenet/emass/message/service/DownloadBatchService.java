@@ -19,6 +19,7 @@ public interface DownloadBatchService {
 	public int shutdownDownloadBatchMessenger(String val);
 
 	public int cancelDownFile(String adminId, String statuSel, String downSeq);
+	public int cancelDownFileMessenger(String adminId, String statuSel, String downSeq);
 
 	public int cancelUnkown(String statuSel, String downSeq);
 

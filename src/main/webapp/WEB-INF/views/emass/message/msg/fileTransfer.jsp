@@ -738,6 +738,39 @@
 			return str;
 		}
 
+        function allDown(){
+            if ((isConsent() && $('#consentNo').val() == '') || $(this).attr('userkey') == '') {
+                return;
+            }
+            var element = document.getElementById('groupResultCnt');
+            var number = parseInt(element.textContent, 10);
+            if (number === 0) {
+                ui.alertMsg('<s:message code="eikon.noList"/>');
+                return;
+            }
+            var startDt = $('#startDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '') + "0000000";
+            var endDt = $('#endDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '') + "235959";
+            var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
+
+            ui.alertMsg('<s:message code="eikon.start.download"/>');
+            ui.get({
+                url : 'getFileAllExportZip.xcn',
+                data : JSON.stringify(getCondition()),
+                exportStartDt : startDt,
+                exportEndDt : endDt,
+                readYn:readYn,
+                success : function(data, total) {
+                },
+                error : function(status, message) {
+                },
+                complete : function() {
+                }
+            });
+        }
+        function allDownList(){
+            var url    = '<c:url value="/commons/downListMessenger.do"/>';
+            fnOpenWindow(url, 'downInfoPop', 1400, 580, 'resize');
+        }
 
 
         function initDateTimePicker(sid,eid){
@@ -976,6 +1009,13 @@
 					</div>
 				</div>
 				<s:message code="common.msg.finish_query"/> : <span id="groupResultCnt" class="red fb600">0</span>
+				<div class="myDropdown mal16" style="color: black">
+					<span><s:message code="analysis.relation.ui.export"/></span>
+					<div class="dropdown-content">
+						<a href="#" onclick="allDown()"><s:message code="analysis.relation.ui.export2"/></a>
+						<a href="#" onclick="allDownList()"><s:message code="common.msg.download"/> <s:message code="mail.view.list"/></a>
+					</div>
+				</div>
 			</div>
 			<!-- //pagination -->
 		</div>

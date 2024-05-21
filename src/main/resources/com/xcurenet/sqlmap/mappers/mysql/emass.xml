@@ -381,7 +381,6 @@
 	<update id="shutdownDownloadBatchMessenger" parameterType="string">
 		UPDATE	UI_DOWNLOAD_BATCH_MESSENGER
 		SET		STATUS_STR = #{val},
-				UPDATE_DT = NOW()
 		WHERE	STATUS_STR IN ('S', 'I')
 	</update>
 
@@ -389,6 +388,13 @@
 		UPDATE	UI_DOWNLOAD_BATCH
 		SET		STATUS_STR = #{statuSel},
 				UPDATE_DT = NOW()
+		WHERE	DOWN_SEQ = #{downSeq}
+		AND		ADMIN_ID = #{adminId}
+	</update>
+
+	<update id="cancelDownFileMessenger" parameterType="hashmap">
+		UPDATE	UI_DOWNLOAD_BATCH_MESSENGER
+		SET		STATUS_STR = #{statuSel},
 		WHERE	DOWN_SEQ = #{downSeq}
 		AND		ADMIN_ID = #{adminId}
 	</update>
