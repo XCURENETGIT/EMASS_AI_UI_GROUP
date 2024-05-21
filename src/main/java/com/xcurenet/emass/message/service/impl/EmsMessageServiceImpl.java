@@ -712,61 +712,61 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 
 		return searchHits.stream().map(m -> m.getId()).collect(Collectors.toList());
 	}
-//
-//	@Override
-//	public EmsMessageVO highlightCheck(EmsMessageVO emass,Map<String,Object> regexpHighlight) {
-//			//highLight check
-//			String subject = Common.nvl(emass.getSubject());
-//			String bodyStr = Common.nvl(emass.getBodyStr());
-//			String attachStr = Common.nvl(emass.getAttachStr());
-//			String fileNameStr = Common.nvl(emass.getFileNameStr());
-//			String attachnameStr = Common.nvl(emass.getBodyStr());
-//			String host = Common.nvl(emass.getHost());
-//			String path = Common.nvl(emass.getPath());
-//
-//			String srcip = Common.nvl(emass.getSrcIp());
-//			String dstip = Common.nvl(emass.getDstIp());
-//
-//			String sender = Common.nvl(emass.getSender());
-//			List<EmsRecvVO> toList = emass.getToList();
-//			List<EmsRecvVO> ccList = emass.getCcList();
-//			List<EmsRecvVO> bccList = emass.getBccList();
-//
-//			for(Map.Entry<String,Object> regExp : regexpHighlight.entrySet()){
-//				String[] values = regExp.getValue().toString().split(",");
-//				for(String val : values){
-//					String compareValue = val.replace("<highlight>","").replace("</highlight>","");
-//					String value = ("<span class='highlightRegexp'>").concat(val).concat("</span>");
-//					emass.setSubject(subject.replaceAll(compareValue, value));
-//					emass.setBodyStr(bodyStr.replaceAll(compareValue, value));
-//					emass.setAttachStr(attachStr.replaceAll(compareValue, value));
-//
-//					emass.setFileNameStr(fileNameStr.replaceAll(compareValue, value));
-//					emass.setAttachStr(attachnameStr.replaceAll(compareValue, value));
-//
-//					emass.setHost(host.replaceAll(compareValue, value));
-//					emass.setPath(path.replaceAll(compareValue, value));
-//
-//					emass.setSrcIp(srcip.replaceAll(compareValue, value));
-//					emass.setDstIp(dstip.replaceAll(compareValue, value));
-//
-//					emass.setSender(sender.replaceAll(compareValue, value));
-//					emass.setToList(reValues(toList,compareValue,value));
-//					emass.setCcList(reValues(ccList,compareValue,value));
-//					emass.setBccList(reValues(bccList,compareValue,value));
-//				}
-//			}
-//		return emass;
-//	}
-//
-//	public List<EmsRecvVO> reValues(List<EmsRecvVO> list,String compareVal,String val) {
-//		List<EmsRecvVO> resultList = new ArrayList<>();
-//		for(EmsRecvVO recvVO :list) {
-//			recvVO.setViewStr(recvVO.getViewStr().replaceAll(compareVal, val));
-//			resultList.add(recvVO);
-//		}
-//		return resultList;
-//	}
+
+	@Override
+	public EmsMessageVO highlightCheck(EmsMessageVO emass,Map<String,Object> regexpHighlight) {
+			//highLight check
+			String subject = Common.nvl(emass.getSubject());
+			String bodyStr = Common.nvl(emass.getBodyStr());
+			String attachStr = Common.nvl(emass.getAttachStr());
+			String fileNameStr = Common.nvl(emass.getFileNameStr());
+			String attachnameStr = Common.nvl(emass.getBodyStr());
+			String host = Common.nvl(emass.getHost());
+			String path = Common.nvl(emass.getPath());
+
+			String srcip = Common.nvl(emass.getSrcIp());
+			String dstip = Common.nvl(emass.getDstIp());
+
+			String sender = Common.nvl(emass.getSender());
+			List<EmsRecvVO> toList = emass.getToList();
+			List<EmsRecvVO> ccList = emass.getCcList();
+			List<EmsRecvVO> bccList = emass.getBccList();
+
+			for(Map.Entry<String,Object> regExp : regexpHighlight.entrySet()){
+				String[] values = regExp.getValue().toString().split(",");
+				for(String val : values){
+					String compareValue = val.replace("<highlight>","").replace("</highlight>","");
+					String value = ("<span class='highlightRegexp'>").concat(val).concat("</span>");
+					emass.setSubject(subject.replaceAll(compareValue, value));
+					emass.setBodyStr(bodyStr.replaceAll(compareValue, value));
+					emass.setAttachStr(attachStr.replaceAll(compareValue, value));
+
+					emass.setFileNameStr(fileNameStr.replaceAll(compareValue, value));
+					emass.setAttachStr(attachnameStr.replaceAll(compareValue, value));
+
+					emass.setHost(host.replaceAll(compareValue, value));
+					emass.setPath(path.replaceAll(compareValue, value));
+
+					emass.setSrcIp(srcip.replaceAll(compareValue, value));
+					emass.setDstIp(dstip.replaceAll(compareValue, value));
+
+					emass.setSender(sender.replaceAll(compareValue, value));
+					emass.setToList(reValues(toList,compareValue,value));
+					emass.setCcList(reValues(ccList,compareValue,value));
+					emass.setBccList(reValues(bccList,compareValue,value));
+				}
+			}
+		return emass;
+	}
+
+	public List<EmsRecvVO> reValues(List<EmsRecvVO> list,String compareVal,String val) {
+		List<EmsRecvVO> resultList = new ArrayList<>();
+		for(EmsRecvVO recvVO :list) {
+			recvVO.setViewStr(recvVO.getViewStr().replaceAll(compareVal, val));
+			resultList.add(recvVO);
+		}
+		return resultList;
+	}
 
 	@Override
 	public boolean updateEmsFeedback(String msgId, String feedback, String adminId) {

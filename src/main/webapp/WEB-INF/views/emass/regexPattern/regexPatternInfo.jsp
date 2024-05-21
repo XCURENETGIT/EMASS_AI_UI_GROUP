@@ -216,7 +216,7 @@
 						<span style="color: #1A73F9">abc|xyz  # matches 'abc' and 'xyz'</span> <br>
 						<span>( … ) 그룹을 형성합니다. 그룹을 사용하여 표현식의 일부를 단일 문자로 처리할 수 있습니다. </span> <br>
 						<span style="color: #1A73F9">abc(def)?  # matches 'abc' and 'abcdef' but not 'abcd'</span> <br>
-						<span>( … ) 괄호 안의 문자 중 하나를 일치시킵니다. </span> <br>
+						<span>[ … ] 괄호 안의 문자 중 하나를 일치시킵니다. </span> <br>
 						<span style="color: #1A73F9">[abc]   # matches 'a', 'b', 'c'</span> <br>
 						<span >ex ) 이메일 주소 검증 : [a-zA-Z0-9\\.\\%\\+\\-]+\\@[a-zA-Z0-9\\.\\-]+.[a-zA-Z]{2,}</span>
 					</div>
@@ -238,7 +238,7 @@
 						<span style="color: #1A73F9">abc|xyz  # matches 'abc' and 'xyz'</span> <br>
 						<span>( … ) Forms a group. You can use a group to treat part of the expression as a single character.  </span> <br>
 						<span style="color: #1A73F9">abc(def)?  # matches 'abc' and 'abcdef' but not 'abcd'</span> <br>
-						<span>( … ) Match one of the characters in the brackets. </span> <br>
+						<span>[ … ] Match one of the characters in the brackets. </span> <br>
 						<span style="color: #1A73F9">[abc]   # matches 'a', 'b', 'c'</span> <br>
 						<span >ex ) Email address verification : [a-zA-Z0-9\\.\\%\\+\\-]+\\@[a-zA-Z0-9\\.\\-]+.[a-zA-Z]{2,}</span>
 					</div>

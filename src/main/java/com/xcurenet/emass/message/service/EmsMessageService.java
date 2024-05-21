@@ -81,6 +81,6 @@ public interface EmsMessageService {
 
 	List<String> getMsgIds(String msgId,String xRootMtr);
 
-//	public EmsMessageVO highlightCheck(EmsMessageVO emass,Map<String,Object> regexpHighlight);
+	public EmsMessageVO highlightCheck(EmsMessageVO emass,Map<String,Object> regexpHighlight);
 
 }

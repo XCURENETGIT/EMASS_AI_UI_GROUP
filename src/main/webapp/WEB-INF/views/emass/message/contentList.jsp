@@ -703,7 +703,6 @@
         var msgid = grid.getValue(row, 'msgid');
         var bodySize = grid.getValue(row, 'bodySizeStr');
         var bodySizeNum = bodySize.substr(0, bodySize.indexOf(' '));
-        // var regexpHighlight = grid.getValue(row, 'regexpHighlight');
         
         if(parent){
             var obj = parent.getIframeBodyObj();
@@ -1028,7 +1027,6 @@
             if (value == 0) return 'No';
             else return 'Yes'
         });
-        // grid.colAdd('regexpHighlight', 'regexpHighlight', 70, 'center', true, 'nomal', null, null, true);
         
         grid.loadHeader(true);
         grid.loadPageSize();

@@ -1268,12 +1268,18 @@ public class EmsMessageController {
 	@Description("EMASS 메시지 정보 조회")
 	@ResponseBody
 	public XcnResponseVO getEmassMessageNew(final HttpServletRequest request, final HttpSession session) throws Exception {
-		String msgId = Common.nvl(request.getParameter("msgId"));
+		JSONObject param = Common.getParam(request);
+		String msgId = Common.nvl(param.get("msgId"));
+//		Map<String,Object> regexpHighlight = (Map<String, Object>) param.get("regexpHighlight");
 		EmsMessageVO emass = emsMessageService.getEmassMessageNew(Common.getAdminId(request), msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
 
 		if (emass != null && emass.isConsentFlag()) {
 			solrCheckedService.setRead(msgId, Common.getAdminId(session));
 		}
+//		// 정규식검색 하이라이트
+//		if(emass.isConsentFlag() && !Common.isEmpty(regexpHighlight)) {
+//			emass = emsMessageService.highlightCheck(emass, regexpHighlight);
+//		}
 		return new XcnResponseVO(XcnRspCode.OK, emass);
 	}
 

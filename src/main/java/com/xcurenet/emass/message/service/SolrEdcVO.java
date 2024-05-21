@@ -271,7 +271,6 @@ public class SolrEdcVO {
 
 	public Map<String, Integer> piMap;
 
-//
-//	public Map<String, String> regexpHighlight;
+	public Map<String, String> regexpHighlight;
 
 }
