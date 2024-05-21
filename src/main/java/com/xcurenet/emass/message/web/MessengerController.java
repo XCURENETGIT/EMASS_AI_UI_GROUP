@@ -6,7 +6,9 @@ import com.xcurenet.annotations.AuditParentMenu;
 import com.xcurenet.audit.service.Menu;
 import com.xcurenet.audit.service.Operation;
 import com.xcurenet.audit.service.ParentMenu;
+import com.xcurenet.common.compress.ZipUtils;
 import com.xcurenet.common.excel.XLSXWriter;
+import com.xcurenet.common.excel.XLSXWriterAppender;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.MongoUtil;
 import com.xcurenet.common.util.config.Config;
@@ -15,6 +17,7 @@ import com.xcurenet.common.util.locale.Prop;
 import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.emass.message.component.SolrCreateQuery;
+import com.xcurenet.emass.message.log.SolrEdcControllerLog;
 import com.xcurenet.emass.message.service.*;
 import com.xcurenet.emass.message.service.impl.SolrEdcServiceImpl;
 import com.xcurenet.minio.MinioFileAdapter;
@@ -27,6 +30,7 @@ import org.apache.catalina.connector.ClientAbortException;
 import org.apache.commons.compress.archivers.ArchiveOutputStream;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.ORDER;
@@ -39,6 +43,7 @@ import org.springframework.context.annotation.Description;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -49,6 +54,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 @Scope("prototype")
@@ -63,6 +71,9 @@ public class MessengerController {
 
 	@Resource(name = "userService")
 	public UserService userService;
+
+	@Autowired
+	private SimpMessagingTemplate template;
 
 	private static final String MESSENGER = " +svc1:( (Q) (T) ) ";
 	private static final String EMPTY_LINE = "\n";
@@ -82,9 +93,14 @@ public class MessengerController {
 	@Autowired
 	private EmsMessageService emsMessageService;
 
+	@Autowired
+	public DownloadBatchService downloadBatchService;
 
 	@Autowired
 	public MinioFileAdapter minioFileAdapter;
+
+	@Autowired
+	private SolrEdcControllerLog solrEdcControllerLog;
 
 	@RequestMapping(value = "/setMessengerRead.xcn")
 	@Description("메신저 읽음 여부 처리")
@@ -385,13 +401,14 @@ public class MessengerController {
 
 	public SolrQuery getMessengerMsgTotalQuery(final HttpServletRequest request) throws Exception {
 		JSONObject param = Common.getParam(request);
-		String xRootMtr = Common.nvl(param.get("xRootMtr"));
-		String srcip = Common.nvl(param.get("srcip"));
-		String usr_id = Common.nvl(param.get("usr_id"));
 		String usrId = Common.nvl(param.get("usrId"));
-		String startDt = Common.nvl(param.get("startDt"));
-		String endDt = Common.nvl(param.get("endDt"));
-		int limit = Common.nvz(param.get("limit"), 10000);
+		String xRootMtr = Common.isNotEmpty(request.getAttribute("xRootMtr")) ? Common.nvl(request.getAttribute("xRootMtr")) : Common.nvl(param.get("xRootMtr"));
+		String usr_id = Common.isNotEmpty(request.getAttribute("usr_id")) ? Common.nvl(request.getAttribute("usr_id")) : Common.nvl(param.get("usr_id"));
+		String srcip = Common.isNotEmpty(request.getAttribute("srcip")) ? Common.nvl(request.getAttribute("srcip")) : Common.nvl(param.get("srcip"));
+		String startDt = Common.isNotEmpty(request.getAttribute("startDt")) ? Common.nvl(request.getAttribute("startDt")) : Common.nvl(param.get("startDt"));
+		String endDt = Common.isNotEmpty(request.getAttribute("endDt")) ? Common.nvl(request.getAttribute("endDt")) : Common.nvl(param.get("endDt"));
+		int limit = Common.isNotEmpty(request.getAttribute("limit")) ? Common.nvz(request.getAttribute("limit"), 100) : Common.nvz(param.get("limit"), 100000);
+		int offset = Common.isNotEmpty(request.getAttribute("start")) ? Common.nvz(request.getAttribute("start"), 0) : Common.nvz(param.get("start"), 0);
 
 		SolrQuery sq = new SolrQuery();
 		String query = String.format("+ctime:[%s TO %s] +xrootmtr:\"%s\"", startDt, endDt, xRootMtr);
@@ -405,6 +422,9 @@ public class MessengerController {
 		sq.setRows(limit);
 		sq.addSort("ctime", ORDER.desc);
 		sq.addSort("msgid", ORDER.desc);
+		sq.setParam("facet.offset", String.valueOf(offset));
+		sq.setParam("facet.group", String.valueOf(limit));
+
 		sq.setFields("msgid", "srcip", "svc", "senderId","svc3", "ctime", "name", "sname", "sender","svc12", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user","userid","userkey");
 
 		return sq;
@@ -726,14 +746,14 @@ public class MessengerController {
 
 	public MessengerGroupUserVO getMessengerGroupUserList(final HttpServletRequest request, final int rows) throws IOException, SolrServerException {
 		JSONObject param = Common.getParam(request);
-		String xrootmtr = Common.nvl(param.get("xRootMtr"));
 		String groupField = Common.nvl(param.get("groupField"), "userkey");
-		String srcip = Common.nvl(param.get("srcip"));
 		String userid = Common.nvl(param.get("userid"));
-		String userkey = Common.nvl(param.get("usr_id"));
-		String startDt = Common.nvl(param.get("startDt"));
-		String endDt = Common.nvl(param.get("endDt"));
 		String searchStr = Common.nvl(param.get("searchStr"));
+		String xrootmtr = Common.isNotEmpty(request.getAttribute("xRootMtr")) ? Common.nvl(request.getAttribute("xRootMtr")) : Common.nvl(param.get("xRootMtr"));
+		String userkey = Common.isNotEmpty(request.getAttribute("usr_id")) ? Common.nvl(request.getAttribute("usr_id")) : Common.nvl(param.get("usr_id"));
+		String srcip = Common.isNotEmpty(request.getAttribute("srcip")) ? Common.nvl(request.getAttribute("srcip")) : Common.nvl(param.get("srcip"));
+		String startDt = Common.isNotEmpty(request.getAttribute("startDt")) ? Common.nvl(request.getAttribute("startDt")) : Common.nvl(param.get("startDt"));
+		String endDt = Common.isNotEmpty(request.getAttribute("endDt")) ? Common.nvl(request.getAttribute("endDt")) : Common.nvl(param.get("endDt"));
 
 		SolrQuery sq = new SolrQuery();
 
@@ -831,7 +851,7 @@ public class MessengerController {
 				if (groupUsers.size() <= 2) groupUsers.add(name);
 				else break;
 			}
-			fileName = Common.join(groupUsers, ",") + String.format(" (Total %s" + Prop.propFormat("eikon.msg.person", locale) + ")", users.getGroups().size());
+			fileName = xRootMtr+"/사용자: "+Common.join(groupUsers, ",") + String.format(" (Total %s" + Prop.propFormat("eikon.msg.person", locale) + ")", users.getGroups().size());
 			fileName = fileName.replaceAll("[\\\\/:*?\"<>|]", "");
 		}
 		if (Common.isEmpty(fileName)) fileName = xRootMtr;
@@ -876,6 +896,269 @@ public class MessengerController {
 		}
 	}
 
+	@RequestMapping(value = "/getMessengerGroupTextAllExportZip.xcn")
+	@Description("메신저 대화내용 내보내기")
+	@ResponseBody
+	public void getMessengerGroupTextAllExportZip(final HttpServletRequest request, final HttpServletResponse response, final HttpSession session) throws Exception {
+		JSONObject param = Common.getParam(request);
+		String exportStartDt= request.getParameter("exportStartDt");
+		String exportEndDt= request.getParameter("exportEndDt");
+
+		String uniqId = "("+exportStartDt+"~"+exportEndDt+")"+Common.getRandomString();
+		String destFile = Common.makeFilepath(Common.TMP_PATH, uniqId) + ".zip";
+		Locale locale = Common.getLocale(request.getSession());
+		Common.mkdirs(Common.makeFilepath(Common.TMP_PATH, uniqId));
+
+		response.setCharacterEncoding(Common.UTF8);
+		response.setHeader("Cache-control", "no-store");
+		response.setHeader("Pragma", "no-cache");
+		response.setDateHeader("Expires", 0);
+		response.setContentType("application/octet-stream");
+		response.setHeader("Content-Transfer-Encoding", "binary");
+		response.setHeader("Connection", "close");
+		response.setHeader("Content-Disposition", "attachment; filename=\"" + Common.getDateTimeFormat() + "_message.zip\"");
+
+
+		OutputStream sOut = response.getOutputStream();
+		DownloadBatchVO downloadBatchVO = new DownloadBatchVO();
+		FileInputStream in = null;
+
+		File rootFolder = getRootFolder();
+		long totalSpace = rootFolder.getTotalSpace();
+		boolean isSpaceChk = true;
+		int processedRooms = 0;
+		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), Common.getAdminId(session));
+		sq.setQuery(sq.getQuery() + MESSENGER + " +xrootmtr:*");
+		if (Common.isEquals(param.get("readYn"), "N")) {
+			sq.addFilterQuery(String.format(SolrEdcServiceImpl.JOIN_UNREAD, Common.getAdminId(session)));
+		}
+		sq.setParam("group", true);
+		sq.setParam("group.facet", true);
+		sq.setParam("group.ngroups", true);
+		sq.setParam("group.field", "xrootmtr");
+		sq.setStart(Common.nvz(param.get("offset"), 0));
+		sq.setRows(Common.nvz(param.get("limit"), 100));
+		sq.setSort("ctime", ORDER.desc);
+		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id");
+
+		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request));
+
+		int totalRooms= (int) solrEdcGroupVO.getNumFound();
+
+		try {
+			int size = 0;
+			int limit = 10;
+			int page = 0;
+			int chatLimit = 1000;
+
+			isSpaceChk = isFreeSpace(totalSpace, rootFolder.getUsableSpace());
+			if (!isSpaceChk) {
+				log.error("system disk check! total:{}, used:{}", totalSpace, rootFolder.getUsableSpace());
+				updateErrorDB(downloadBatchVO, "S");
+				alarmMessage(Common.getAdminId(request), downloadBatchVO);
+				return;
+			}
+			inserDB(downloadBatchVO, param, "LBA", "xlsx", Common.getAdminId(request), 0, Common.makeFilepath(Common.TMP_PATH, uniqId) + ".zip");
+			do {
+				MessengerEdcGroupVO messenger = getMessengerGroupVO(param, page++ * limit, limit);
+				List<MessengerGroupVO> rooms = messenger.getGroups(); // get Messenger Rooms
+				log.info("rooms.size() :  limit : {} room size : {}", limit, rooms.size());
+				for (MessengerGroupVO room : rooms) {
+
+					request.setAttribute("xRootMtr", room.getXrootmtr());
+					request.setAttribute("usr_id", room.getUsr_id());
+					request.setAttribute("srcip", room.getSrcip());
+					request.setAttribute("startDt", Common.nvl(param.get("exportStartDt")));
+					request.setAttribute("endDt", Common.nvl(param.get("exportEndDt")));
+					request.setAttribute("limit", chatLimit);
+
+					XLSXWriterAppender xlsx = new XLSXWriterAppender(Prop.propFormat("eikon.msg.export.chat", locale) + " : " + room.getXrootmtr(), getExcelHeader(locale));
+					xlsx.init();
+
+					for (int j = 0; ; j++) {
+						request.setAttribute("start", j * chatLimit);
+						log.info("chat start : {} limit : {}", j * chatLimit, chatLimit);
+						MessengerEdcGroupVO groups = getMessengerMsgTotal(request, true); // messenger message pagging
+						List<MessengerGroupVO> groupList = groups.getGroups();
+						Collections.reverse(groupList);
+						groups.setGroups(groupList);
+
+						if (groups.getGroups().isEmpty()) break;
+						log.debug("groups.getGroups() : {}", groups.getGroups());
+
+						inputAttach(groups, uniqId);
+						xlsx.appendData(getData(groups));
+
+						if (groups.getGroups().size() < chatLimit) break;
+						Common.sleep(1000);
+					}
+
+					MessengerGroupUserVO users = getMessengerGroupUserList(request, 10000);
+					final String name = Common.makeFilepath(Common.TMP_PATH, uniqId, getFileName(room.getXrootmtr(), users, locale) + ".xlsx");
+					try (FileOutputStream out = new FileOutputStream(new File(name))) {
+						xlsx.write(out);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					Common.sleep(1000);
+
+					processedRooms++;
+					double roomProgress = (double) processedRooms / totalRooms * 100;
+					roomProgress = Math.min(roomProgress, 80.0); // 최대 80%로 제한
+					int roundedProgress = (int) Math.round(roomProgress);
+					updateIngDB(downloadBatchVO, roundedProgress);
+				}
+				size = rooms.size();
+				Common.sleep(1000);
+			} while (size > 0);
+
+			log.info("compressZip start : {} > {}", Common.makeFilepath(Common.TMP_PATH, uniqId), destFile);
+			boolean success = ZipUtils.compressZip(Common.makeFilepath(Common.TMP_PATH, uniqId), destFile);
+			log.info("compressZip end : {} > {} > {}", success, Common.makeFilepath(Common.TMP_PATH, uniqId), destFile);
+		} catch (Exception e) {
+			log.error("", e);
+		} finally {
+			long totalFileSizeBeforeCompression = calculateDirectorySize(Common.makeFilepath(Common.TMP_PATH, uniqId));
+			updateSucessDB(downloadBatchVO, totalFileSizeBeforeCompression);
+			log.info("Total file size before compression: {} bytes", totalFileSizeBeforeCompression);
+
+			Path directoryPath = Paths.get(Common.makeFilepath(Common.TMP_PATH, uniqId));
+			Files.walk(directoryPath).map(Path::toFile).forEach(File::delete);
+			FileUtils.deleteDirectory(directoryPath.toFile());
+			IOUtils.closeQuietly(in);
+			IOUtils.closeQuietly(sOut);
+		}
+	}
+
+	private void updateErrorDB(DownloadBatchVO vo, String errorType) {
+
+		if (Common.isEquals(errorType, "S")) {
+			StringBuffer info = new StringBuffer();
+			info.append(Prop.propFormat("download.message.export.check.used")).append("┌").append(vo.getDownVal());
+			vo.setDownVal(info.toString());
+		}
+		vo.setStatusStr("E");
+		downloadBatchService.updateDownloadBatch(vo);
+	}
+
+	private void inserDB(DownloadBatchVO vo, JSONObject param, String searchType, String exportFileExt, String adminId, long total, String exporFileName) {
+		param.put("type", "M");
+		vo.setDownSeq(downloadBatchService.getMaxDownSeqMessenger());
+		vo.setDownVal(solrEdcControllerLog.getListAudit(param));
+		vo.setAdminId(adminId);
+		vo.setDownStatus("0");
+		vo.setStatusStr("S");
+		vo.setDownFilePath(exporFileName);
+		downloadBatchService.inserDownloadBatchMessenger(vo);
+	}
+
+	private void updateIngDB(DownloadBatchVO vo, int process) {
+		vo.setDownStatus(String.valueOf(process));
+		vo.setStatusStr("I");
+		downloadBatchService.updateDownloadBatchMessenger(vo);
+	}
+
+	private void updateSucessDB(DownloadBatchVO vo, long fileSize) {
+		vo.setDownStatus("100");
+		vo.setStatusStr("Y");
+		vo.setDownFileSize(String.valueOf(fileSize));
+		downloadBatchService.updateDownloadBatchMessenger(vo);
+	}
+
+
+	private void alarmMessage(String adminId, DownloadBatchVO vo) {
+		log.info("alarmMessage VO : {}", vo);
+		template.convertAndSendToUser(adminId, "/exportEnd", vo);
+	}
+
+	private File getRootFolder() {
+		String exportPath = Config.getString("ui.export.batchPath", Common.TMP_PATH);
+		String[] pathArr = Common.toArray(exportPath, "/");
+		if (pathArr.length > 0) {
+			return new File("/" + pathArr[0]);
+		} else {
+			return new File("/");
+		}
+	}
+	private MessengerEdcGroupVO getMessengerGroupVO(JSONObject param, int start, int limit) throws Exception {
+		String adminId = Common.nvl(param.get("_ses_user_id"));
+		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
+		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), adminId);
+		sq.setQuery(sq.getQuery() + MESSENGER + " +xrootmtr:*");
+		if (Common.isEquals(param.get("readYn"), "N")) {
+			sq.addFilterQuery(String.format(SolrEdcServiceImpl.JOIN_UNREAD, adminId));
+		}
+		sq.setParam("group", true);
+		sq.setParam("group.facet", true);
+		sq.setParam("group.ngroups", true);
+		sq.setParam("group.field", "xrootmtr");
+		sq.setStart(start);
+		sq.setRows(limit);
+		sq.setSort("ctime", ORDER.desc);
+		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id");
+
+		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, adminId);
+		solrEdcGroupVO.setGroups(solrEdcGroupVO.getGroups());
+		return solrEdcGroupVO;
+	}
+
+	private void inputAttach(MessengerEdcGroupVO groups, final String uniqId) throws Exception {
+		List<MessengerGroupVO> list = groups.getGroups();
+		if (list == null) return;
+
+		EmsAttachDownload attachDown = new EmsAttachDownload();
+		for (MessengerGroupVO item : list) {
+			List<EmsAttachVO> attachs = emsMessageService.getEmassAttachInfo4Down(item.getMsgid(), null);
+			for (EmsAttachVO attach : attachs) {
+				String path = attach.getAttachPath();
+				Common.mkdirs(Common.makeFilepath(Common.TMP_PATH, uniqId, "attachs", item.getMsgid()));
+				try (InputStream in = attachDown.getAttach(path, null);
+				     FileOutputStream out = new FileOutputStream(new File(Common.makeFilepath(Common.TMP_PATH, uniqId, "attachs", item.getMsgid(), attach.getAttachName())));) {
+					if (in != null) IOUtils.copy(in, out);
+				} catch (Exception e) {
+					log.error("", e);
+				}
+			}
+		}
+	}
+
+
+	private JSONArray getData(MessengerEdcGroupVO groups) {
+		JSONArray data = new JSONArray();
+		List<MessengerGroupVO> list = groups.getGroups();
+		if (list != null) {
+			for (MessengerGroupVO item : list) {
+				JSONObject dataObj = new JSONObject();
+				dataObj.put("sender", item.getTitle());
+				dataObj.put("ctime", item.getCtime());
+				dataObj.put("svc", Config.getServiceNm(item.getSvc()));
+				dataObj.put("content", item.getMessage());
+				if (Common.isEquals(item.getAttached(), "Y")) {
+					dataObj.put("content_LINK", Common.makeFilepath("attachs", item.getMsgid()));
+				}
+				data.add(dataObj);
+			}
+		}
+		return data;
+	}
+
+
+	private JSONArray getExcelHeader(Locale locale) {
+		JSONArray header = new JSONArray();
+		header.add(getXlsxHeader("sender", Prop.propFormat("eikon.msg.sender", locale), "130", "center"));
+		header.add(getXlsxHeader("ctime", Prop.propFormat("eikon.msg.send.time"), "130", "center"));
+		header.add(getXlsxHeader("svc", Prop.propFormat("filterInfo.servicetype"), "130", "center"));
+		header.add(getXlsxHeader("content", Prop.propFormat("eikon.msg.chatContents", locale), "750", "left", "LINK"));
+		return header;
+	}
+
+	private boolean isFreeSpace(long total, long used) {
+		boolean rtn = true;
+		if (total / 100 * Config.MESSAGE_EXPORT_USED_RATE > used) rtn = false;
+		return rtn;
+	}
+
 	public String getGroupBody(List<MessengerGroupVO> data, String rootmtr, Locale locale) throws Exception {
 		StringBuffer _sb = new StringBuffer();
 		_sb.append("<table class=\"g_request\"><colgroup><col width=\"120\"><col width=\"*\"><col width=\"70\"></colgroup><tbody>").append(EMPTY_LINE);
@@ -912,7 +1195,22 @@ public class MessengerController {
 			IOUtils.closeQuietly(xOut);
 		}
 	}
+	private long calculateDirectorySize(String directoryPath) {
+		File directory = new File(directoryPath);
+		long totalSize = 0;
 
+		if (directory.exists() && directory.isDirectory()) {
+			File[] files = directory.listFiles();
+
+			if (files != null) {
+				for (File file : files) {
+					totalSize += file.length();
+				}
+			}
+		}
+
+		return totalSize;
+	}
 
 
 	private void inputAttach(ArchiveOutputStream os, MessengerEdcGroupVO groups) throws Exception {

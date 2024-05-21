@@ -80,6 +80,19 @@ var eikon = {
         var searchType = $('button[name=searchType].active').val();
         $('#startSubDt').val($('#startDt').val());
         $('#endSubDt').val($('#endDt').val());
+      /*  setCookieCondition();*/
+        if (searchType == "G") {
+            getMessengerGroupList(page);
+        } else if (searchType == "GD") {
+            getMessengerMessageList(page);
+        }
+    },
+    getMessengerListSetting: function (page) {
+
+  /*      getCookieCondition();*/
+        var searchType = $('button[name=searchType].active').val();
+        $('#startSubDt').val($('#startDt').val());
+        $('#endSubDt').val($('#endDt').val());
         if (searchType == "G") {
             getMessengerGroupList(page);
         } else if (searchType == "GD") {
@@ -491,7 +504,7 @@ function makeFileList(data) {
         str = '<ul>';
         for (var i = 0; i < data.length; i++) {
             str += '<li><p class="fileListdown" attachsize="' + data[i].attachsize + '" msgid="' + data[i].msgid + '" attachhash="' + data[i].attachhash + '"><span class="img"></span><span>';
-            str += '<a href="#" class="filesdown">' + data[i].attachname + "." + data[i].attachtype + '</a>';
+            str += '<a href="#" class="filesdown">' + data[i].attachname  + '</a>';
             str += '</span><span style="position: absolute; right: 0; top: 8px;" ><button class="btnchatdown_w downloadIcon"></button></span></p></li>';
         }
 
@@ -647,7 +660,6 @@ function getMessengerGroupList(page) {
     var offset = groupMessagePage * groupMessagePageBreak - groupMessagePageBreak;
     searchFlag = true;
 
-
     var startTotalDate=$('#startDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
     var endTotalDate=$('#endDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 
@@ -675,6 +687,88 @@ function getMessengerGroupList(page) {
         }
     });
 };
+
+/*검색조건 저장*/
+function setCookieCondition(){
+
+    var searchStrInput = $("#searchStrInput").val();
+    var startDt = $("#startDt").val();
+    var endDt = $("#endDt").val();
+    var dept = $('#deptVal').val();
+    var deptStr = $("#deptStr").val();
+    var busiStr = arrayToString($('#busiSelect').selectpicker('val'));;
+    var serviceType = $("#serviceType").val();
+    var attachYn = $('input:radio[name=attachYn]:input:checked').val();
+    var userEmail = $("#userEmail").val();
+    var userStr = $("#userStr").val();
+    var userVal = $("#userVal").val();
+    var userDept = $("#userDept").val();
+    var userJib = $("#userJib").val();
+
+    setCookie('searchStrInput', searchStrInput, 1);
+    setCookie('startDt', startDt, 1);
+    setCookie('endDt', endDt, 1);
+    setCookie('dept', dept, 1);
+    setCookie('deptStr', deptStr, 1);
+    setCookie('busiStr', busiStr, 1);
+    setCookie('serviceType', serviceType, 1);
+    setCookie('attachYn', attachYn, 1);
+    setCookie('userEmail', userEmail, 1);
+    setCookie('userStr', userStr, 1);
+    setCookie('userVal', userVal, 1);
+    setCookie('userDept', userDept, 1);
+    setCookie('userJib', userJib, 1);
+
+}
+function getCookieCondition(){
+
+    var searchStrInput = getCookie('searchStrInput');
+    var startDt = getCookie('startDt');
+    var endDt = getCookie('endDt');
+    var dept = getCookie('dept');
+    var deptStr = getCookie('deptStr');
+    var busiStr = getCookie('busiStr');
+    var busi = getCookie('busi');
+    var serviceType = getCookie('serviceType');
+    var attachYn = getCookie('attachYn');
+
+
+
+    $("#searchStrInput").val(searchStrInput);
+    $("#startDt").val(startDt);
+    $("#endDt").val(endDt);
+    $("#dept").val(dept);
+    $("#deptStr").val(deptStr);
+    $("#busiStr").val(busiStr);
+    $("#busi").val(busi);
+    $("#serviceType").val(serviceType);
+    $("#attachYn").val(attachYn);
+
+}
+
+
+function setCookie(name, value, hours) {
+    var expires = "";
+    if (hours) {
+        var date = new Date();
+        date.setTime(date.getTime() + (hours * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "") + expires + "; path=/";
+}
+
+// 쿠키 가져오기 함수
+function getCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+}
+
 
 function getMessengerMessageList(page) {
     var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
@@ -762,19 +856,19 @@ function getPage3(total, pageCount, listSize, rtnMethod) {
 
     var leftImg = mainContext + "/img/ico_page_left2.png";
     if (pageCount > pageSizeNo)
-        str += '<a href="#" onclick="' + rtnMethod + '(' + (endPageNum - pageSizeNo) + ')" class="direction"><img src="' + leftImg + '"></a>';
+        str += '<a href="#" onclick="' + rtnMethod + '(' + (endPageNum - pageSizeNo) + ')" class="direction pageNum"><img src="' + leftImg + '"></a>';
     // else
     //     str += '<a href="#" class="direction" style="cursor:default"><img src="' + leftImg + '"></a>';
 
     for (var i = startPageNum; i <= endPageNum; i++) {
         if (i == pageCount)
-            str += '<a class="active" onclick="' + rtnMethod + '(' + i + ',' + pageCount + ')">' + i + '</a>';
+            str += '<a class="active pageNum" onclick="' + rtnMethod + '(' + i + ',' + pageCount + ')">' + i + '</a>';
         else
-            str += '<a href="#" onclick="' + rtnMethod + '(' + i + ',' + pageCount + ')">' + i + '</a>';
+            str += '<a href="#" class="pageNum" onclick="' + rtnMethod + '(' + i + ',' + pageCount + ')">' + i + '</a>';
     }
     var rightImg2 = mainContext + "/img/ico_page_right2.png";
     if (startPageNum + pageSizeNo <= lastPage) {
-        str += '<a href="#" onclick="' + rtnMethod + '(' + (startPageNum + pageSizeNo) + ')" class="direction"><img src="' + rightImg2 + '"></a>';
+        str += '<a href="#"  onclick="' + rtnMethod + '(' + (startPageNum + pageSizeNo) + ')" class="direction pageNum"><img src="' + rightImg2 + '"></a>';
     }
 
 

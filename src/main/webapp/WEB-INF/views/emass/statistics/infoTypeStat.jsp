@@ -908,6 +908,7 @@
             userStr:userStr,
             offset : currentgrid.data.length,
             limit : currentgrid.pageSize,
+            colKey : pColKey,
             colRowKey : colRowKey,
             success : function(data, total) {
                 if ( lastRow == 'Y' || lastRow == undefined ) detailTotal = total;

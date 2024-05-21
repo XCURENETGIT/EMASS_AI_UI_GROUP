@@ -32,6 +32,33 @@ public class DownloadBatchServiceImpl extends XcnAbstractDAO implements Download
 	public int updateDownloadBatch(DownloadBatchVO downloadBatchVO) {
 		return update("com.xcurenet.sqlmap.mappers.mysql.emass.updateDownloadBatch", downloadBatchVO);
 	}
+	@Override
+	public String getMaxDownSeqMessenger() {return selectOne("com.xcurenet.sqlmap.mappers.mysql.emass.getMaxDownSeqMessenger"); }
+
+	public int updateDownloadBatchMessenger(DownloadBatchVO downloadBatchVO) {
+		return update("com.xcurenet.sqlmap.mappers.mysql.emass.updateDownloadBatchMessenger", downloadBatchVO);
+	}
+
+	@Override
+	public int inserDownloadBatchMessenger(DownloadBatchVO vo) {
+
+		log.info("" + vo);
+		return insert("com.xcurenet.sqlmap.mappers.mysql.emass.insertDownloadBatchMessenger", vo);
+	}
+
+
+	@Override
+	public List<DownloadBatchVO> getDownloadBatchListMessenger(String adminId, int offset, int limit) {
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("adminId", adminId);
+		param.put("offset", offset);
+		param.put("limit", limit);
+		return selectList("com.xcurenet.sqlmap.mappers.mysql.emass.getDownloadBatchListMessenger", param);
+	}
+
+	public List<DownloadBatchVO> getExportFileExpireDataMessenger() {
+		return selectList("com.xcurenet.sqlmap.mappers.mysql.emass.getExportFileExpireDataMessenger");
+	}
 
 	public List<DownloadBatchVO> getExportFileExpireData() {
 		return selectList("com.xcurenet.sqlmap.mappers.mysql.emass.getExportFileExpireData");
@@ -55,7 +82,12 @@ public class DownloadBatchServiceImpl extends XcnAbstractDAO implements Download
 	public int shutdownDownloadBatch(String val) {
 		return update("com.xcurenet.sqlmap.mappers.mysql.emass.shutdownDownloadBatch", val);
 	}
-	
+
+
+	public int shutdownDownloadBatchMessenger(String val) {
+		return update("com.xcurenet.sqlmap.mappers.mysql.emass.shutdownDownloadBatchMessenger", val);
+	}
+
 	public int cancelDownFile(String adminId, String statuSel, String downSeq) {
 		Map<String, String> param = new HashMap<>();
 		param.put("adminId", adminId);

@@ -16,6 +16,7 @@ public interface DownloadBatchService {
 	public List<DownloadBatchVO> getDownloadBatchIngList(String delay);
 
 	public int shutdownDownloadBatch(String val);
+	public int shutdownDownloadBatchMessenger(String val);
 
 	public int cancelDownFile(String adminId, String statuSel, String downSeq);
 
@@ -26,4 +27,12 @@ public interface DownloadBatchService {
 	public int checkDownloadBatchExist(DownloadBatchVO downloadBatchVO);
 
 	public int removeDownInfoData(String adminId, List<String> downList);
+
+	public int inserDownloadBatchMessenger(DownloadBatchVO vo);
+
+	public List<DownloadBatchVO> getDownloadBatchListMessenger(String adminId, int offset, int limit);
+
+	public String getMaxDownSeqMessenger();
+
+	public int updateDownloadBatchMessenger(DownloadBatchVO downloadBatchVO);
 }

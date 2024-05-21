@@ -977,6 +977,37 @@
             $('#' + codeType + 'Jib').val('');
             $('#' + codeType + 'SelectedArea').hide();
         }
+
+        function allDown(){
+
+            var xRootMtr = $('#xrootmtr').text();
+            var srcip = $('#srcip').text();
+            var usr_id = $('#selectUserInfo').attr('data-name');
+            var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '') + "0000000";
+            var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '') + "235959";
+            var searchStr = '';
+
+            console.log(JSON.stringify(getCondition()));
+
+            ui.alertMsg("다운로드 시작합니다 진행사항은 다운로드 내역을 확인해주세요.");
+            ui.get({
+                url : 'getMessengerGroupTextAllExportZip.xcn',
+                data : JSON.stringify(getCondition()),
+                exportStartDt : startDt,
+                exportEndDt : endDt,
+                success : function(data, total) {
+                },
+                error : function(status, message) {
+                },
+                complete : function() {
+                }
+            });
+        }
+        function allDownList(){
+            var url    = '<c:url value="/commons/downListMessenger.do"/>';
+            fnOpenWindow(url, 'downInfoPop', 1400, 580, 'resize');
+        }
+
 	</script>
 </head>
 <div id="searchArea">
@@ -1098,6 +1129,13 @@
 					</div>
 				</div>
 				<s:message code="common.msg.finish_query"/> : <span id="groupResultCnt" class="red fb600">0</span>
+				<div class="myDropdown mal16" style="color: black">
+					<span><s:message code="analysis.relation.ui.export"/></span>
+					<div class="dropdown-content">
+						<a href="#" onclick="allDown()"><s:message code="analysis.relation.ui.export2"/></a>
+						<a href="#" onclick="allDownList()"><s:message code="common.msg.download"/> <s:message code="mail.view.list"/></a>
+					</div>
+				</div>
 			</div>
 			<!-- //pagination -->
 			<%--					<div style="height:30px;padding-left:32%; margin-top: 15px;" id="groupPage"></div>--%>

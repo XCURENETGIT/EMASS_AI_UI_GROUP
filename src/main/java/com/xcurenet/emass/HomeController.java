@@ -981,6 +981,14 @@ public class HomeController {
 		return "/commons/downInfo.popup";
 	}
 
+	@RequestMapping(value = "/commons/downListMessenger.do", method = RequestMethod.GET)
+	@Description("DOWNLOADLIST_MESSENGER")
+	public String downListMessenger(Locale locale, Model model) {
+		return "/commons/downMessengerInfo.popup";
+	}
+
+
+
 	@RequestMapping(value = "/commons/queryMake.do", method = RequestMethod.GET)
 	@Description("MAKE QUERY")
 	public String queryMake(Locale locale, Model model) {

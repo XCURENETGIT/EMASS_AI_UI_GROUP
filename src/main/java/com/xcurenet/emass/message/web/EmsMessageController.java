@@ -1540,6 +1540,19 @@ public class EmsMessageController {
 		return new XcnResponseVO(XcnRspCode.OK, downloadBatchService.cancelDownFile(adminId, statusSel, downSeq));
 	}
 
+
+	@RequestMapping(value = "/getDownBatchListMessenger.xcn")
+	@Description("메신저다운로드 배치 목록 조회")
+	/* @AuditOperation(Operation.SEARCH) */
+	@ResponseBody
+	public XcnResponseVO getDownBatchListMessenger(final HttpServletRequest request, final HttpSession session) throws Exception {
+		String adminId = Common.getAdminId(request);
+		int offset = Common.nvz(request.getParameter("offset"));
+		int limit = Common.nvz(request.getParameter("limit"));
+		return new XcnResponseVO(XcnRspCode.OK, downloadBatchService.getDownloadBatchListMessenger(adminId, offset, limit));
+	}
+
+
 	@RequestMapping(value = "/setRead.xcn")
 	@Description("메시지 읽음 여부 처리")
 	@ResponseBody
