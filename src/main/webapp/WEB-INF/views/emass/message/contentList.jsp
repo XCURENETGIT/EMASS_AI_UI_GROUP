@@ -875,7 +875,7 @@
             if(value != null && value != undefined && value != ''){
                 var v = value.split(',');
                 for(var i = 0; i < v.length; i++) {
-                    str += '<span style="display:inline-block; width: 11px; height: 11px; margin-left: 1px; background-color:'+v[i]+'"></span>';
+                    str += '<span style="display:inline-block; width: 11px; height: 11px; margin-left: 1px; margin-top:4px; background-color:'+v[i]+'"></span>';
                 }
             }
             return str;
