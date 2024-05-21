@@ -10,7 +10,7 @@
 		overflow: hidden;
 		white-space: nowrap;
 		text-overflow: ellipsis;
-		max-width: 50%!important;
+		max-width: 60%!important;
 	}
 
 	.name{
@@ -26,7 +26,7 @@
 		overflow: hidden;
 		white-space: nowrap;
 		text-overflow: ellipsis;
-		max-width: 89% !important;
+		max-width: 75% !important;
 	}
 
 
