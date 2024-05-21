@@ -10,6 +10,10 @@
 		margin-top: 0px;
 	}
 
+	.messengerList .messengerBox .people {
+		height: 650px;
+	}
+
 
 	pre{
 		background-color: transparent; !important;
@@ -125,13 +129,31 @@
 
         };
         $(document).ready(function () {
+
+            $('#group_list').scroll(function (){
+                if (isEnd == true) return false;
+                let $groupList = $('#group_list');
+                let scrollTop = $groupList.scrollTop();
+                let scrollHeight = $groupList[0].scrollHeight;
+                if (scrollTop + $groupList.height() >= scrollHeight) {
+                    if (!isLoading) return false;
+                    eikon.getMessengerList(groupMessagePage + 1);
+                    isLoading = false;
+                }
+            });
             initDateTimePicker('startDt','endDt');
             initDateTimePicker('startSubDt','endSubDt');
+
+
 
             $($('.condition_top')).click(function(){
                 $('.chatList').animate({
                     scrollTop: 0
                 }, 200);
+            });
+
+            window.addEventListener('scroll', function(){
+                console.log('123')
             });
 
             $(window).resize(function () {
@@ -168,6 +190,9 @@
 
 
             $('#searchBtn').click(function () {
+                $('#group_list').scrollTop(0);
+                isEnd = false;
+                isContextEnd = false;
                 if (messengerListCnt == 0) {
                     ui.alertMsg('<s:message code="eikon.noList"/>');
                     return;
@@ -503,6 +528,9 @@
 
 
             $('button[name="searchType"]').click(function () {
+                $('#group_list').scrollTop(0);
+                isEnd=false;
+                isContextEnd=false;
                 $(this).attr('class', 'active');
                 $('button[name="searchType"]').not(this).attr('class', 'tablinks');
                 eikon.getMessengerList(1)
@@ -1110,7 +1138,7 @@
 						<button class="tablinks" name="searchType" value="GD" id="GD"><s:message code="eikon.msg.chatContents"/></button>
 					</div>
 				</div>
-				<div class="list-group" id="group_list" style="margin-bottom: 0px; margin-top:20px;">
+				<div class="list-group" id="group_list" style="margin-bottom: 0px; margin-top:20px; overflow: scroll">
 					<a href="#" class="list-group-item list-group-item-action active" style="cursor:default; padding:40px; margin:0 20px;">
 						<p class="list-group-item-text" style="line-height:30px; text-align: center">
 							<img src="<c:url value="/img/icon/img_nodata02.png"/>" width="72" height="72">

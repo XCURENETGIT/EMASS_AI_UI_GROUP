@@ -9,19 +9,20 @@ var groupPageId = '';
 var detailId = '';
 
 var groupPage = 1;
-var groupPageBreak = 10;
+var groupPageBreak = 20;
 var groupMessagePage = 1;
-var groupMessagePageBreak = 10;
+var groupMessagePageBreak = 20;
 var detailStartPage = 1;
 var detailEndPage = 1;
 var detailViewPage = 10;
 var detailPageBreak = 100;
-
 var detailLimit = 100;
+var isLoading = true;
 
 var selectedSearchData = 1;
 var searchOffset = 0;
-
+var isEnd = false;
+var isContextEnd = false;
 var resizeTimer;
 
 var detailSearchFlag = true;
@@ -112,7 +113,6 @@ var eikon = {
     getMessengerDetailList: function (xRootmtr, msgid, srcip, usr_id) {
 
         if (!isDetailView()) {
-            alert(condition.authAlert);
             return;
         }
         if (xRootmtr == '') {
@@ -504,7 +504,7 @@ function makeFileList(data) {
         str = '<ul>';
         for (var i = 0; i < data.length; i++) {
             str += '<li><p class="fileListdown" attachsize="' + data[i].attachsize + '" msgid="' + data[i].msgid + '" attachhash="' + data[i].attachhash + '"><span class="img"></span><span>';
-            str += '<a href="#" class="filesdown">' + data[i].attachname  + '</a>';
+            str += '<a href="#" class="filesdown">' + data[i].attachname + "." + data[i].attachtype + '</a>';
             str += '</span><span style="position: absolute; right: 0; top: 8px;" ><button class="btnchatdown_w downloadIcon"></button></span></p></li>';
         }
 
@@ -554,6 +554,80 @@ function getDetailData(usr_id) {
     }else $('.selectUser').first().click();
 }
 
+function rtnGroupList2(data, type){
+    var ul = document.getElementById("people");
+    console.log("ul: "+ul);
+
+    for (var i = 0; i < data.length; i++) {
+        // if (data[i].xrootmtr == "")continue;
+        var li = document.createElement("li");
+        console.log("li: "+li);
+        li.className = "person";
+        li.setAttribute("userid", data[i].userid);
+        li.setAttribute("xrootmtr", data[i].xrootmtr);
+        li.setAttribute("msgid", data[i].msgid);
+        li.setAttribute("srcip", data[i].srcip);
+        li.setAttribute("usrid", data[i].usrid);
+        li.setAttribute("body_snippet", data[i].body_snippet);
+        li.setAttribute("name", data[i].name);
+        li.setAttribute("data-sender", data[i].sender);
+        li.setAttribute("data-chat", "person" + (i + 1));
+
+        var user_cnt = data[i].user_cnt;
+        var svc3 = data[i].svc3;
+        if (svc3 == 'J') data[i].body_snippet = contentBodyDivJS.chatJoin;
+        else if (svc3 == 'L') data[i].body_snippet = contentBodyDivJS.chatLeave;
+        var closeFlag = false;
+        if (user_cnt == 1 && svc3 == 'L') closeFlag = true;
+
+        var className = '';
+        if (isConsent() && $('#consentNo').val() == '') className = 'cursor-default';
+
+        var leftDiv = document.createElement("div");
+        leftDiv.className = "left";
+
+        if (data[i].body_snippet != undefined) {
+            var bodySnippet = data[i].body_snippet.length > 40 ? data[i].body_snippet.substring(0, 40) + "..." : data[i].body_snippet;
+        } else {
+            var bodySnippet = "";
+        }
+        var leftContent = "<p><span class='chatid'>" + data[i].xrootmtr + "</span>";
+        if (data[i].attached === 'Y') {
+            leftContent += "<span class='file'></span>";
+        }
+        leftContent += "</p>" +
+            "<p><span class='name'>" + data[i].sender + "</span><span class='bar'></span><span class='preview'>" + bodySnippet + "</span></p>";
+
+        leftDiv.innerHTML = leftContent;
+        li.appendChild(leftDiv);
+        // Create right div
+        var rightDiv = document.createElement("div");
+        rightDiv.className = "right";
+        var svc = data[i].svc.slice(0, 3);
+        var imageName = mainContext + "/img/ico_sns_" + svc + ".png";
+        var makescv = makeMessengerText(data[i].svc);
+        var rightContent = "<p><span class='logo'><img src=" + imageName + ">" + makescv + "</span></p>";
+
+        var defaultImageName = mainContext + "/img/icon/ico_sns_FUKR.png";
+        var rightContent;
+        rightContent = "<span class='logo'><img src='" + imageName + "' onerror=\"this.src='" + defaultImageName + "'\">" + makescv + "</span>";
+
+
+        if (data[i].unread_cnt > 0) {
+            rightContent += "<span class='new'>" + data[i].unread_cnt + "</span>";
+        }
+
+        rightContent += "</p><span class='time'>" + data[i].ctime + "</span>";
+
+        rightDiv.innerHTML = rightContent;
+        li.appendChild(rightDiv);
+        ul.appendChild(li);
+    }
+
+
+
+}
+
 function rtnGroupList(data, type) {
     var str = '';
     var groupList = document.getElementById("group_list");
@@ -562,6 +636,7 @@ function rtnGroupList(data, type) {
 
     var ul = document.createElement("ul");
     ul.className = "people";
+    ul.id="people";
 
 
     for (var i = 0; i < data.length; i++) {
@@ -655,10 +730,15 @@ function makeMessengerText(svc) {
 }
 
 function getMessengerGroupList(page) {
+    if(isEnd == true){
+        return;
+    }
+
     var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
     groupMessagePage = page;
     var offset = groupMessagePage * groupMessagePageBreak - groupMessagePageBreak;
     searchFlag = true;
+
 
     var startTotalDate=$('#startDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
     var endTotalDate=$('#endDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
@@ -674,8 +754,12 @@ function getMessengerGroupList(page) {
         endTotalDate:endTotalDate+"235959",
         limit: groupPageBreak,
         success: function (data, total) {
-            rtnGroupList(data.groups, 'G');
-            rtnGroupPage(total, page, 'G');
+            isLoading=true;
+            if (data.groups.length < groupPageBreak || (offset+groupPageBreak) == total) isEnd = true;
+
+            $('#groupResultCnt').html(total.comma());
+            if (offset>10) rtnGroupList2(data.groups, 'G');
+            else rtnGroupList(data.groups, 'G');
             HighlightGroup();
         },
         error: function (status, message) {
@@ -771,12 +855,15 @@ function getCookie(name) {
 
 
 function getMessengerMessageList(page) {
+    if(isContextEnd == true){
+        return;
+    }
+
     var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
     groupMessagePage = page;
     var offset = groupMessagePage * groupMessagePageBreak - groupMessagePageBreak;
     searchFlag = true;
     ui.onBody('timeline_list', 0, -20);
-
     ui.postJson({
         url: 'getMessengerMessageList.xcn',
         data: JSON.stringify(getCondition()),
@@ -784,8 +871,12 @@ function getMessengerMessageList(page) {
         offset: offset,
         limit: groupPageBreak,
         success: function (data, total) {
-            rtnGroupList(data.groups, 'GD');
-            rtnGroupPage(total, page, 'GD');
+            isLoading=true;
+            if (data.groups.length < groupPageBreak || offset == total) isContextEnd = true;
+            $('#groupResultCnt').html(total.comma());
+            if (offset>10) rtnGroupList2(data.groups, 'GD');
+            else rtnGroupList(data.groups, 'GD');
+            // rtnGroupPage(total, page, 'GD');
             HighlightGroup();
 
         },
