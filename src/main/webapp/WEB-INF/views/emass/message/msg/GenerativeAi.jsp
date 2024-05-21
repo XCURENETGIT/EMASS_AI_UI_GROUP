@@ -25,6 +25,10 @@
 
 <style>
 
+	.messengerList .messengerBox .people {
+		height: 650px;
+	}
+
 	.condition_top_sub{
 		position: fixed;
 		width: 300px;
@@ -167,6 +171,19 @@
 
         $(document).ready(function () {
 
+            $('#group_list').scroll(function (){
+                if (isEnd == true) return false;
+                let $groupList = $('#group_list');
+                let scrollTop = $groupList.scrollTop();
+                let scrollHeight = $groupList[0].scrollHeight;
+                if (scrollTop + $groupList.height() >= scrollHeight) {
+                    if (!isLoading) return false;
+                    eikon2.getCollectionList(groupMessagePage + 1,'G');
+                    isLoading = false;
+                }
+            });
+
+
             initDateTimePicker('startDt','endDt');
             initDateTimePicker('startSubDt','endSubDt');
 
@@ -196,6 +213,8 @@
             document.getElementById("endSubDt").valueAsDate = new Date();*/
 
             $('#searchBtn').click(function () {
+                $('#group_list').scrollTop(0);
+                isEnd = false;
                 pivotused = false;
                 if (messengerListCnt == 0) {
                     ui.alertMsg('<s:message code="eikon.noList"/>');
@@ -1076,7 +1095,7 @@
 					</div>
 				</div>
 				<div>
-					<div class="list-group" id="group_list" style="margin-bottom: 0px;">
+					<div class="list-group" id="group_list" style="margin-bottom: 0px; overflow: scroll">
 						<a href="#" class="list-group-item list-group-item-action active" style="cursor:default; padding:40px; margin:0 20px;">
 							<p class="list-group-item-text" style="line-height:30px; text-align: center">
 								<img src="<c:url value="/img/icon/img_nodata02.png"/>" width="72" height="72">

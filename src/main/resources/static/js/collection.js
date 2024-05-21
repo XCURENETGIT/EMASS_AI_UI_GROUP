@@ -13,7 +13,7 @@ var detailCount=0;
 var busiScrollTabs;
 
 var groupPage = 1;
-var groupPageBreak = 10;
+var groupPageBreak = 20;
 var groupMessagePage = 1;
 var groupMessagePageBreak = 10;
 var detailStartPage = 1;
@@ -26,6 +26,7 @@ var selectedSearchData = 1;
 var searchOffset = 0;
 
 var resizeTimer;
+var isEnd = false;
 
 var detailSearchFlag=true;
 
@@ -408,6 +409,9 @@ function makeMessengerText( svc ){
 }
 
 function getFileMessageList  (page){
+    if(isEnd == true){
+        return;
+    }
 
     var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
     groupPage = page;
@@ -430,8 +434,11 @@ function getFileMessageList  (page){
         userStr:userStr,
         limit : groupPageBreak,
         success : function(data, total) {
-            rtnFileGroupList(data.emass)
-            rtnFilePage(total, page);
+            isLoading=true;
+            if (data.emass.length < groupPageBreak || offset+groupPageBreak == total) isEnd = true;
+            $('#groupResultCnt').html(total.comma());
+            if (offset>10) rtnFileGroupList2(data.emass);
+            else rtnFileGroupList(data.emass);
             HighlightGroup2();
         },
         error : function(status, message) {
@@ -489,6 +496,9 @@ function getFileMessageList  (page){
 
 
 function getCollectionGroupList (page,type){
+    if(isEnd == true){
+        return;
+    }
     var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
     groupPage = page;
     var offset = groupPage*groupPageBreak - groupPageBreak;
@@ -519,9 +529,12 @@ function getCollectionGroupList (page,type){
         type:type,
         limit : groupPageBreak,
         success : function(data, total) {
-            if(data.groups != null) rtnGenerativeGroupList(data.groups);
+            isLoading=true;
+            if (data.groups.length < groupPageBreak || (offset+groupPageBreak) == total) isEnd = true;
+            $('#groupResultCnt').html(total.comma());
+            if (offset>10) rtnGenerativeGroupList2(data.groups, 'G');
+            else rtnGenerativeGroupList(data.groups, 'G');
             if(data.headerMap != null && !pivotused) setSvcButton(data.headerMap);
-            rtnnGenerativeGroupPage(total, page);
             HighlightGroup2();
         },
         error : function(status, message) {
@@ -753,7 +766,6 @@ function makeList2(nextFlag){
             str += '<button class="btnchatdown downlodadBtn"></button></p>';
             let snippet = '';
             if (obj.body_snippet != null && obj.body_snippet !== '') {
-                console.log(obj.body_snippet);
                 snippet = obj.body_snippet.replaceAll('\n', '<br/>');
                 str += "<hr style='border: 1px solid #ddd;'>";
             }
@@ -1519,6 +1531,62 @@ function getCollectionAllfile(userkey, srcip, usr_id, msgid,type){
 }
 
 
+
+function rtnFileGroupList2 (data) {
+    var ul = document.getElementById("people");
+
+    for (var i = 0; i < data.length; i++) {
+        var li = document.createElement("li");
+        li.className = "person";
+        li.setAttribute("userid", data[i].userid);
+        li.setAttribute("msgid", data[i].msgid);
+        li.setAttribute("srcip", data[i].srcip);
+        li.setAttribute("usrid", data[i].usrid);
+        li.setAttribute("body_snippet", data[i].body_snippet);
+        li.setAttribute("name", data[i].name);
+        li.setAttribute("data-chat", "person" + (i + 1));
+
+        var leftDiv = document.createElement("div");
+        leftDiv.className = "left";
+
+        var leftContent = "<p><span class='chatid'>" + data[i].attachname + "</span></p>" +
+            "<p><span class='name'>" + data[i].businm + "</span>";
+
+        leftContent += data[i].deptnm ? "<span class='bar'></span><span class='name'>" + data[i].deptnm + "</span>" : "<span class='bar'></span><span class='name'>-</span>";
+        leftContent += data[i].jikgubnm ? "<span class='bar'></span><span class='name'>" + data[i].jikgubnm + "</span>" : "<span class='bar'></span><span class='name'>-</span>";
+        if (data[i].name != null) {
+            leftContent += "<span class='bar'></span><span class='name'>" + data[i].user + "</span>";
+        } else {
+            leftContent += "<span class='bar'></span><span class='name'>" + data[i].user + "</span>";
+        }
+
+        leftContent += "<span class='bar'></span><span class='name'>" + data[i].attachsize + "KB</span></p>";
+
+        leftDiv.innerHTML = leftContent;
+        li.appendChild(leftDiv);
+
+        // Create right div
+        var rightDiv = document.createElement("div");
+        rightDiv.className = "right";
+        var imageName =mainContext+"/img/icon/ico_sns_"+ data[i].svc+".png";
+        var makescv = makeMessengerText(data[i].svc);
+        var rightContent = "<p><span class='logo'><img src="+imageName+">"+makescv+"</span></p>";
+
+        rightContent += "</p><span class='time'>" + data[i].ctimeFormat + "</span>";
+
+        rightDiv.innerHTML = rightContent;
+        li.appendChild(rightDiv);
+
+        // Append li to ul
+        ul.appendChild(li);
+
+    }
+
+
+}
+
+
+
 function rtnFileGroupList (data) {
 
     var str = '';
@@ -1528,6 +1596,7 @@ function rtnFileGroupList (data) {
 
     var ul = document.createElement("ul");
     ul.className = "people";
+    ul.id="people";
 
     for (var i = 0; i < data.length; i++) {
         var li = document.createElement("li");
@@ -1593,6 +1662,71 @@ function rtnFileGroupList (data) {
 
 
 
+function rtnGenerativeGroupList2(data, type){
+    var ul = document.getElementById("people");
+
+    for (var i = 0; i < data.length; i++) {
+        var li = document.createElement("li");
+        li.className = "person";
+        li.setAttribute("userkey", data[i].userkey);
+        li.setAttribute("msgid", data[i].msgid);
+        li.setAttribute("srcip", data[i].srcip);
+        li.setAttribute("usrid", data[i].usrid);
+        li.setAttribute("body_snippet", data[i].body_snippet);
+        li.setAttribute("name", data[i].name);
+        li.setAttribute("data-chat", "person" + (i + 1));
+        li.setAttribute("svc12",data[i].svc12);
+
+        var leftDiv = document.createElement("div");
+        leftDiv.className = "left";
+
+        if(data[i].body_snippet!=undefined) {
+            var bodySnippet = data[i].body_snippet.length > 30 ? data[i].body_snippet.substring(0, 30) + "..." : data[i].body_snippet;
+        }
+
+        else{
+            var bodySnippet="";
+        }
+        var leftContent = "<p><span class='chatid'>";
+        var deptNm = data[i].deptNm || "-";
+        var jikgubNm = data[i].jikgubNm || "-";
+        var name = data[i].name || "-";
+
+        leftContent += data[i].userkey + "(" + deptNm + "/" + jikgubNm + "/" + name + ")" + "</span>";
+
+        if (data[i].attached === 'Y') {
+            leftContent += "<span class='file'></span>";
+        }
+        leftContent += "</p>" +
+            "<p><span class='name'>" + data[i].user + "</span><span class='bar'></span><span class='preview'>" + bodySnippet + "</span></p>";
+
+        leftDiv.innerHTML = leftContent;
+        li.appendChild(leftDiv);
+
+        // Create right div
+        var rightDiv = document.createElement("div");
+        rightDiv.className = "right";
+        var imageName =mainContext+"/img/icon/ico_sns_"+ data[i].svc+".png";
+        var makescv = makeMessengerText(data[i].svc);
+        var defaultImageName = mainContext + "/img/icon/ico_sns_FUKR.png";
+        var rightContent;
+        rightContent = "<span class='logo'><img src='" + imageName + "' onerror=\"this.src='" + defaultImageName + "'\">" + makescv + "</span>";
+
+        if (data[i].unread_cnt > 0) {
+            rightContent += "<span class='new'>" + data[i].unread_cnt + "</span>";
+        }
+
+        rightContent += "</p><span class='time'>" + data[i].ctime + "</span>";
+
+        rightDiv.innerHTML = rightContent;
+        li.appendChild(rightDiv);
+
+        ul.appendChild(li);
+
+    }
+
+}
+
 
 function rtnGenerativeGroupList(data) {
 
@@ -1603,6 +1737,7 @@ function rtnGenerativeGroupList(data) {
 
     var ul = document.createElement("ul");
     ul.className = "people";
+    ul.id="people";
 
 
     for (var i = 0; i < data.length; i++) {
