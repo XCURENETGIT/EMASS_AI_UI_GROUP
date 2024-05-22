@@ -78,7 +78,7 @@
                 let scrollHeight = $groupList[0].scrollHeight;
                 if (scrollTop + $groupList.height() >= scrollHeight) {
                     if (!isLoading) return false;
-                    eikon2.getFileGroupList(groupMessagePage + 1);
+                    eikon2.getFileGroupList(groupPage + 1);
                     isLoading = false;
                 }
             });

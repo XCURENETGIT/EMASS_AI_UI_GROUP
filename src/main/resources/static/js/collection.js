@@ -415,7 +415,7 @@ function getFileMessageList  (page){
 
     var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
     groupPage = page;
-    var offset = groupPage*groupPageBreak - groupPageBreak;
+    var offset = groupPage * groupPageBreak - groupPageBreak;
 
     var uv = $('#userVal').val().split('|');
     var user = uv.join(',');
