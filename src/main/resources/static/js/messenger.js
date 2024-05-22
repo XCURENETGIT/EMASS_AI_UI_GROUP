@@ -26,7 +26,7 @@ var isContextEnd = false;
 var resizeTimer;
 
 var detailSearchFlag = true;
-let currentSearchCondition = {};
+
 
 var eikon = {
     init: function () {
@@ -78,10 +78,10 @@ var eikon = {
         });
     },
     getMessengerList: function (page) {
-
         var searchType = $('button[name=searchType].active').val();
         $('#startSubDt').val($('#startDt').val());
         $('#endSubDt').val($('#endDt').val());
+        /*  setCookieCondition();*/
         if (searchType == "G") {
             getMessengerGroupList(page);
         } else if (searchType == "GD") {
@@ -179,10 +179,10 @@ var eikon = {
         var filterVal = {};
         var conArray = [];
         var condition = {};
-        searchStr = searchStr;
-        startDt = startDt;
-        endDt = endDt;
-        // searchField = 'body';
+        condition.searchStr = searchStr;
+        condition.startDt = startDt;
+        condition.endDt = endDt;
+        // condition.searchField = 'body';
         conArray.push(condition);
         filterVal.conditions = conArray;
 
@@ -325,7 +325,7 @@ function getMessengerMessage(xRootmtr, srcip, usr_id, msgid,searchFlag) {
                 $('.chatList').scrollTop($('.chatList')[0].scrollHeight);
             }else{
                 $("#timeline_list").html(makeList2(true));
-                // $('.chatList').scrollTop($('.chatList')[0].scrollHeight);
+               // $('.chatList').scrollTop($('.chatList')[0].scrollHeight);
             }
 
             Highlight();
@@ -727,6 +727,7 @@ function getMessengerGroupList(page) {
     var offset = groupMessagePage * groupMessagePageBreak - groupMessagePageBreak;
     searchFlag = true;
 
+
     var startTotalDate=$('#startDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
     var endTotalDate=$('#endDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 
@@ -734,7 +735,7 @@ function getMessengerGroupList(page) {
     ui.onBody('timeline_list', 0, -20);
     ui.postJson({
         url: 'getMessengerGroupList.xcn',
-        data: JSON.stringify(currentSearchCondition),
+        data: JSON.stringify(getCondition()),
         readYn: readYn,
         offset: offset,
         startTotalDate:startTotalDate+"00000",
@@ -1394,40 +1395,8 @@ function HighSerarchlight( ) {
 }
 
 
-function getSearchCondition() {
-    var allSelect = [];
-    var currentSearchCondition = {};
 
-    if ($('#serviceTypeSelect').selectpicker('val') == null) {
-        $('#serviceTypeSelect option').each(function () {
-            if ($(this).val() != '' && $(this).val() != null) allSelect.push($(this).val());
-        });
-        currentSearchCondition.serviceType = arrayToString(allSelect);
-    } else {
-        currentSearchCondition.serviceType = arrayToString($('#serviceTypeSelect').selectpicker('val'));
-    }
-    currentSearchCondition.searchStr = $('#searchStrInput').val();
 
-    var dv = $('#userEmail').val().split('|');
-    currentSearchCondition.senders = dv.join(',');
-    if (currentSearchCondition.senders != '') currentSearchCondition.sendersStr = $('#userStr').val();
-
-    currentSearchCondition.attachYn = $('button[name=attachYn].active').val();
-    currentSearchCondition.busi = arrayToString($('#busiSelect').selectpicker('val'));
-
-    if (currentSearchCondition.busi != '') currentSearchCondition.busiStr = $('#busiSelect').parent().find('.filter-option').text();
-    else currentSearchCondition.busiStr = '';
-
-    dv = $('#deptVal').val().split('|');
-    currentSearchCondition.dept = dv.join(',');
-    if (currentSearchCondition.dept != '') currentSearchCondition.deptStr = $('#deptStr').val();
-    else currentSearchCondition.deptStr = '';
-    currentSearchCondition.period = 1;
-    currentSearchCondition.startDt = $('#startDt').val() + "000000";
-    currentSearchCondition.endDt = $('#endDt').val() + "235959";
-
-    return { conditions: [currentSearchCondition] };
-}
 
 
 

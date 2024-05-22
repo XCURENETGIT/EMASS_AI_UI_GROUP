@@ -190,8 +190,6 @@
 
 
             $('#searchBtn').click(function () {
-
-                currentSearchCondition = getSearchCondition();
                 $('#group_list').scrollTop(0);
                 isEnd = false;
                 isContextEnd = false;
@@ -227,7 +225,6 @@
                 if ($('#searchMsgStrInput').val() == "") $('#searchMsgQueryBtn').click();
                 else eikon.findMessageList(0);
             });
-
             $('#searchMsgQueryBtn').click(function () {
                 var selectedUsrId = $('#selectUserInfo').attr('data-name');
                 getDetailData(selectedUsrId);
@@ -1028,9 +1025,9 @@
             ui.alertMsg('<s:message code="eikon.start.download"/>');
             ui.get({
                 url : 'getMessengerGroupTextAllExportZip.xcn',
-                data: JSON.stringify(currentSearchCondition),
-                exportStartDt : currentSearchCondition.startDt,
-                exportEndDt : currentSearchCondition.endDt,
+                data : JSON.stringify(getCondition()),
+                exportStartDt : startDt,
+                exportEndDt : endDt,
                 success : function(data, total) {
                 },
                 error : function(status, message) {
