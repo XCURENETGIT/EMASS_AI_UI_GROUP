@@ -325,7 +325,7 @@ function getMessengerMessage(xRootmtr, srcip, usr_id, msgid,searchFlag) {
                 $('.chatList').scrollTop($('.chatList')[0].scrollHeight);
             }else{
                 $("#timeline_list").html(makeList2(true));
-                $('.chatList').scrollTop($('.chatList')[0].scrollHeight);
+                // $('.chatList').scrollTop($('.chatList')[0].scrollHeight);
             }
 
             Highlight();
