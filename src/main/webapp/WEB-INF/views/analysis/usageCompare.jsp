@@ -240,6 +240,7 @@ function eventEnterSearch(event) {
 						</select>
 					</div>
 					<div class="btnform">
+						<button type="button" accesskey="Q" class="form_btn01" id="searchBtn"><s:message code="common.msg.search"/></button>
 						<button type="button" accesskey="Q" class="form_btn02" id="clearBtn"><s:message code="condition.reset"/></button>
 					</div>
 				</div>
@@ -334,27 +335,25 @@ function eventEnterSearch(event) {
 		var seletDate = "";
 
         var grid1 = new Xgrid('usageListGrid', contextRoot, 26, {status_cnt_id:'#usageCnt'});
-        grid1.loadPageSize();
+        // grid1.loadPageSize();
         grid1.changePageSize = function(cnt){
-            alert("페이지 수정");
             getDetailData('Y');
         };
-		//colInit();
+		colInit();
         grid1.loadHeader(false);
-
 		function colInit() {
             $('#usageListGridArea').css({"min-width": "1000px"});
 			var itemVal = $("#item option:selected").val();
 			var name = '<s:message code="common.svc.mail"/>';
 			var val = ""
 			switch(itemVal) {
-			case "fileSize" : 
+			case "fileSize" :
 				name = '<s:message code="analysis.usagecompare.ui.filename"/>';
 				break;
-			case "ftp" : 
+			case "ftp" :
 				name = '<s:message code="condition.source"/> IP';
 				break;
-			case "totalSize" : 
+			case "totalSize" :
 				name = '<s:message code="condition.source"/> IP';
 				break;
 			}
@@ -459,7 +458,7 @@ function eventEnterSearch(event) {
 				success : function(data, total) {
 					resultTotal = total;
 					grid1.autoNumber();
-					colInit();
+                    // grid1.colInit();
 					grid1.loadHeader(false);
                     grid1.appendData(data);
 					

@@ -260,8 +260,8 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 		sq.setParam("group.facet", true);
 		sq.setParam("facet", true);
 		sq.setParam("facet.sum", true);
-		sq.setParam("facet.offset", "0");
-		sq.setParam("facet.limit", "100");
+		sq.setParam("facet.offset", String.valueOf(searchVO.getOffset()));
+		sq.setParam("facet.limit", String.valueOf(searchVO.getLimit()));
 		sq.setFacetMinCount(1);
 
 
