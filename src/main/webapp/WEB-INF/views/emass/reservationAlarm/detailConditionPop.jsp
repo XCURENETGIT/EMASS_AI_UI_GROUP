@@ -154,30 +154,15 @@
                 openCodeWindow(code, $('#' + code + 'Val').val(), $('#' + code + 'Str').val());
             });
 
-            $('.regexSearchBtn').click(function(){
-                getRegexList();
-                $('#regexSearchDiv').css('display','block');
-                $('#regexSearchGrid_statusbar').css('display','none');
-            });
-            $('.regexSearchCloseBtn').click(function(){
-                $('#regexSearchDiv').css('display','none');
-            });
+            // $('.regexSearchBtn').click(function(){
+            //     getRegexList();
+            //     $('#regexSearchDiv').css('display','block');
+            //     $('#regexSearchGrid_statusbar').css('display','none');
+            // });
+            // $('.regexSearchCloseBtn').click(function(){
+            //     $('#regexSearchDiv').css('display','none');
+            // });
 
-            function getRegexList(){
-                var searchKeyword = $('#regexSearchStr').val();
-                ui.get({
-                    url : 'getRegexPattern.xcn',
-                    searchStr : searchKeyword,
-                    success : function(data, total) {
-                        regexSearchGrid.setData(data);
-                    },
-                    error : function(status, message) {
-                        ui.alertMsg(message);
-                    },
-                    complete : function() {
-                    }
-                });
-            }
 
             $(document).on('keyup', '.condition_input_text', function (e) {
                 if ($(this).val() == '') {
@@ -1804,14 +1789,14 @@
                             <input type="hidden" id="regexpVal">
                         </li>
 
-                        <!-- 정규식 패턴 -->
-                        <li class="form-inline" style="line-height:35px; " >
-                            <label for="" class=" col-xs-3"><s:message code="condition.regex"/></label>
-                            <div class="input-group">
-                            <input type="text" class="form-control input-sm condition_input_text" id="regexPattern" style="width: 372px;"/>&nbsp;
-                                <a href="javascript:;" class="regexSearchBtn"  style="color:#111;"><i class="fa fa-cog"></i> <s:message code="condition.regex.appo"/></a>
-                            </div>
-                        </li>
+<%--                        <!-- 정규식 패턴 -->--%>
+<%--                        <li class="form-inline" style="line-height:35px; " >--%>
+<%--                            <label for="" class=" col-xs-3"><s:message code="condition.regex"/></label>--%>
+<%--                            <div class="input-group">--%>
+<%--                            <input type="text" class="form-control input-sm condition_input_text" id="regexPattern" style="width: 372px;"/>&nbsp;--%>
+<%--                                <a href="javascript:;" class="regexSearchBtn"  style="color:#111;"><i class="fa fa-cog"></i> <s:message code="condition.regex.appo"/></a>--%>
+<%--                            </div>--%>
+<%--                        </li>--%>
 
                         <%-- 정규 표현식 모달 --%>
                         <div id="regexSearchDiv" class="regexSearchDiv" style="display: none">
@@ -1882,19 +1867,6 @@
         <input type="hidden" name="oldConm" id="oldConm"></input>
     </form>
 
-    <script type="text/javascript">
-        /* 정규 표현식 */
-        var regexSearchGrid = new Xgrid('regexSearchGrid', contextRoot);
-        regexSearchGrid.colAdd('regexPatternName', '<s:message code="regexPattern.name"/>', 300, 'left', false, 'link');
-        regexSearchGrid.colAdd('regexPattern', '<s:message code="condition.regex"/>', 300, 'left', true, 'link');
-        regexSearchGrid.loadHeader(true);
-        regexSearchGrid.initData('<s:message code="common.msg.search.click"/>');
-        regexSearchGrid.onClick = function () {
-            if (regexSearchGrid.Col == regexSearchGrid.ColIndex('regexPatternName')) {
-                var data = regexSearchGrid.getRowData(regexSearchGrid.Row);
-                $('#regexPattern').val(data.regexPattern);
-            }
-        };
-    </script>
+</div>
 </body>
 </html>

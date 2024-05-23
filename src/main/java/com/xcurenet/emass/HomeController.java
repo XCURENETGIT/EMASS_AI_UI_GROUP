@@ -474,6 +474,12 @@ public class HomeController {
 		return "/emass/message/regexpInfoPop.popup";
 	}
 
+	@RequestMapping(value = "/ems/PatternInfo.do", method = RequestMethod.GET)
+	@Description("패턴 정보 보기 페이지")
+	public String PatternInfo(Locale locale, Model model) {
+		return "/emass/regexPattern/pattern";
+	}
+
 	@RequestMapping(value = "/ems/overlapInfoPop.do")
 	@Description("중복 메시지 전체 보기 페이지")
 	public String overlapInfoPop(Locale locale, Model model) {
@@ -828,12 +834,6 @@ public class HomeController {
 	@RequestMapping(value = "/ems/keywordInfo.do", method = RequestMethod.GET)
 	public String keywordInfo(Locale locale, Model model) {
 		return "/emass/keyword/keywordInfo";
-	}
-
-	@RequestMapping(value = "/ems/regexPatternInfo.do", method = RequestMethod.GET)
-	public String regexPatternInfo(Locale locale, Model model) {
-		model.addAttribute("headerYn","Y");
-		return "/emass/regexPattern/regexPatternInfo";
 	}
 
 	@RequestMapping(value = "/ems/relationKeyword.do", method = RequestMethod.GET)

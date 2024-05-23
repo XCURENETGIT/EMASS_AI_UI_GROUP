@@ -1190,18 +1190,18 @@
             });
 
 
-            /* 정규식 검색 */
-            $('.regexSearchBtn').click(function(){
-                getRegexList();
-                $('#regexSearchDiv').show();
-            });
-            $('.regexSearchCloseBtn').click(function(){
-                $('#regexSearchDiv').hide();
-            });
-
-            $('#regexSearchStrBtn').click(function(){
-                getRegexList();
-            });
+            // /* 정규식 검색 */
+            // $('.regexSearchBtn').click(function(){
+            //     getRegexList();
+            //     $('#regexSearchDiv').show();
+            // });
+            // $('.regexSearchCloseBtn').click(function(){
+            //     $('#regexSearchDiv').hide();
+            // });
+            //
+            // $('#regexSearchStrBtn').click(function(){
+            //     getRegexList();
+            // });
 
             /* 검색 도움말 */
             $('#searchHelpBtn').click(function(e){
@@ -2991,16 +2991,16 @@
                                     <div class="condition_divider"></div>
 
                                     <%-- 정규 표현식 검색 --%>
-                                    <div class="condition_opt"  style="margin-top:12px;margin-bottom:6px;widht:100%;height:8px;">
-                                        <div  style="float: right;padding-right: 4px;margin-top:6px;">
-                                            <a href="javascript:;" class="regexSearchBtn"  style="color:#111;"><i class="fa fa-cog"></i> <s:message code="condition.regex.appo"/></a>
-                                        </div>
-                                    </div>
-                                    <div class="condition_item">
-                                        <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.regex.search"/>
-                                        </div>
-                                        <textarea id=regexPattern class="condition_input_text" style="resize: none"></textarea>
-                                    </div>
+<%--                                    <div class="condition_opt"  style="margin-top:12px;margin-bottom:6px;widht:100%;height:8px;">--%>
+<%--                                        <div  style="float: right;padding-right: 4px;margin-top:6px;">--%>
+<%--                                            <a href="javascript:;" class="regexSearchBtn"  style="color:#111;"><i class="fa fa-cog"></i> <s:message code="condition.regex.appo"/></a>--%>
+<%--                                        </div>--%>
+<%--                                    </div>--%>
+<%--                                    <div class="condition_item">--%>
+<%--                                        <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.regex.search"/>--%>
+<%--                                        </div>--%>
+<%--                                        <textarea id=regexPattern class="condition_input_text" style="resize: none"></textarea>--%>
+<%--                                    </div>--%>
 
 
 
