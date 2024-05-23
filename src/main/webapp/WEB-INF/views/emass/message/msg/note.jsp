@@ -243,6 +243,7 @@
 
                 var svcArray = arrayToString($('#serviceTypeSelect').selectpicker('val'));
                 $('#selectUserInfo').attr('data-svc12',svcArray);
+                setcurrentSchVal(svcArray);
                 eikon2.getCollectionList(1,"N");
             });
 

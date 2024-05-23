@@ -215,6 +215,8 @@
                 <%--    ui.alertMsg('<s:message code="eikon.msg.select.date"/>');--%>
                 <%--    return;--%>
                 <%--}--%>
+
+                setcurrentSchVal();
                 eikon.getMessengerList(1);
             });
             $("#searchStrInput").keypress(function (e) {
@@ -1018,16 +1020,18 @@
                 return;
             }
 
-            var startDt = $('#startDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '') + "0000000";
-            var endDt = $('#endDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '') + "235959";
-            var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
+
+            var filterVal = {};
+            var conArray = [];
+            conArray.push(currentSchVal);
+            filterVal.conditions = conArray;
 
             ui.alertMsg('<s:message code="eikon.start.download"/>');
             ui.get({
                 url : 'getMessengerGroupTextAllExportZip.xcn',
-                data : JSON.stringify(getCondition()),
-                exportStartDt : startDt,
-                exportEndDt : endDt,
+                data : JSON.stringify(filterVal),
+                exportStartDt : currentSchVal.startDt,
+                exportEndDt : currentSchVal.endDt,
                 success : function(data, total) {
                 },
                 error : function(status, message) {
@@ -1127,14 +1131,9 @@
 		<%--			검색 결과 영역--%>
 		<div class="messengerList">
 			<div class="messengerBox">
-				<div class="subTit">
-					<h2 class="ma_none">
-						<button id="xcn_toggleBtn" class="menu"></button>
-						<s:message code="DATA_MONITOR.MESSAGE_SERVICE"/>
-						<span class="xcnTooltip">
-                                        <a><img src="<c:url value="/img/ico_info.png"/>" alt="allmenu"></a>
-                                        <span class="tooltiptext"><s:message code="DATA_MONITOR.MESSAGE_SERVICE"/></span>
-                                    </span>
+				<div class="subTit p12">
+					<h2 class="ma_none pb4">
+						<button id="xcn_toggleBtn" class="menu"></button><s:message code="DATA_MONITOR.MESSAGE_SERVICE"/>
 					</h2>
 				</div>
 				<div class="bortop_dd  borbottom_dd pt16">

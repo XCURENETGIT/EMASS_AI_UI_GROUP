@@ -565,6 +565,13 @@ public class SolrCreateQuery {
 
 	}
 
+
+	public SolrCreateQuery setUserStr(String userStr) {
+		if (Common.isEmpty(userStr)) return this;
+		return addQuery(String.format("%s%s:%s", AND_QUERY, USERKEY, createOrQuery(userStr)));
+	}
+
+
 	/**
 	 * 발신자 쿼리
 	 */
@@ -1244,7 +1251,7 @@ public class SolrCreateQuery {
 			String sctYn = Common.nvl(condition.get("sctYn")); // sct 여부
 			String reprocessYn = Common.nvl(condition.get("reprocessYn")); // 재처리 여부
 			String query = Common.nvl(condition.get("query")); //고급 쿼리 검색(데이터 있는경우 우선 적용)
-
+			String userStr = Common.nvl(condition.get("userStr"));
 
 			String svc1 = Common.nvl(condition.get("svc1")); //서비스 그룹
 			String svc1_not = Common.nvl(condition.get("svc1_not")); //서비스 제외 그룹
@@ -1276,8 +1283,10 @@ public class SolrCreateQuery {
 			setSelectSearchFields(searchField); //선택한 검색 영역
 
 			setService(serviceType);
+			setReadYn(readYn,adminId);
 			setInfoType(infoTypes);
 			setFeedback(feedbacks);
+			setUserStr(userStr);
 			setProb(probs);
 			setSkInfoType(skInfoTypes);
 			setSkFeedback(skFeedbacks);

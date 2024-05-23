@@ -202,7 +202,7 @@
                           ui.alertMsg('<s:message code="eikon.msg.select.date"/>');
                     return;
                 }*/
-
+                setcurrentSchVal();
 				eikon2.getFileGroupList(1);
 			});
 			$("#searchStrInput").keypress(function (e) {
@@ -748,17 +748,18 @@
                 ui.alertMsg('<s:message code="eikon.noList"/>');
                 return;
             }
-            var startDt = $('#startDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '') + "0000000";
-            var endDt = $('#endDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '') + "235959";
-            var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
+
+            var filterVal = {};
+            var conArray = [];
+            conArray.push(currentSchVal);
+            filterVal.conditions = conArray;
 
             ui.alertMsg('<s:message code="eikon.start.download"/>');
             ui.get({
                 url : 'getFileAllExportZip.xcn',
-                data : JSON.stringify(getCondition()),
-                exportStartDt : startDt,
-                exportEndDt : endDt,
-                readYn:readYn,
+                data : JSON.stringify(filterVal),
+                exportStartDt : currentSchVal.startDt,
+                exportEndDt : currentSchVal.endDt,
                 success : function(data, total) {
                 },
                 error : function(status, message) {

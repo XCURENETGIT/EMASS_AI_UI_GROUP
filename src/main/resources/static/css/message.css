@@ -410,7 +410,7 @@ input[type="text"] {
 	max-width: 100px;
 	overflow: hidden;
 	height: 100%;
-	line-height: 32px;
+	line-height: 30px;
 	padding:0 8px;
 }
 

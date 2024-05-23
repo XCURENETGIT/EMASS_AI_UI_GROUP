@@ -26,7 +26,7 @@ var isContextEnd = false;
 var resizeTimer;
 
 var detailSearchFlag = true;
-
+var currentSchVal = {};
 
 var eikon = {
     init: function () {
@@ -721,8 +721,12 @@ function getMessengerGroupList(page) {
     if(isEnd == true){
         return;
     }
+    var filterVal = {};
+    var conArray = [];
+    conArray.push(currentSchVal);
+    filterVal.conditions = conArray;
 
-    var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
+
     groupMessagePage = page;
     var offset = groupMessagePage * groupMessagePageBreak - groupMessagePageBreak;
     searchFlag = true;
@@ -735,13 +739,11 @@ function getMessengerGroupList(page) {
     ui.onBody('timeline_list', 0, -20);
     ui.postJson({
         url: 'getMessengerGroupList.xcn',
-        data: JSON.stringify(getCondition()),
-        readYn: readYn,
+        data : JSON.stringify(filterVal),
         offset: offset,
         startTotalDate:startTotalDate+"00000",
         endTotalDate:endTotalDate+"235959",
         limit: groupPageBreak,
-        readYn: readYn,
         success: function (data, total) {
             isLoading=true;
             if (data.groups.length < groupPageBreak || (offset+groupPageBreak) == total) isEnd = true;
@@ -766,16 +768,19 @@ function getMessengerMessageList(page) {
     if(isContextEnd == true){
         return;
     }
+    var filterVal = {};
+    var conArray = [];
+    conArray.push(currentSchVal);
+    filterVal.conditions = conArray;
 
-    var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
+
     groupMessagePage = page;
     var offset = groupMessagePage * groupMessagePageBreak - groupMessagePageBreak;
     searchFlag = true;
     ui.onBody('timeline_list', 0, -20);
     ui.postJson({
         url: 'getMessengerMessageList.xcn',
-        data: JSON.stringify(getCondition()),
-        readYn: readYn,
+        data : JSON.stringify(filterVal),
         offset: offset,
         limit: groupPageBreak,
         success: function (data, total) {
@@ -1398,12 +1403,39 @@ function HighSerarchlight( ) {
 
 
 
+function setcurrentSchVal() {
+    var allSelect = [];
 
+    if ($('#serviceTypeSelect').selectpicker('val') == null) {
+        $('#serviceTypeSelect option').each(function () {
+            if ($(this).val() != '' && $(this).val() != null) allSelect.push($(this).val());
+        });
+        currentSchVal.serviceType = arrayToString(allSelect);
+    } else {
+        currentSchVal.serviceType = arrayToString($('#serviceTypeSelect').selectpicker('val'));
+    }
+    currentSchVal.searchStr = $('#searchStrInput').val();
+    currentSchVal.readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
+    var dv = $('#userEmail').val().split('|');
+    currentSchVal.senders = dv.join(',');
+    if (currentSchVal.senders != '') currentSchVal.sendersStr = $('#userStr').val();
 
+    currentSchVal.attachYn = $('button[name=attachYn].active').val();
+    currentSchVal.busi = arrayToString($('#busiSelect').selectpicker('val'));
 
+    if (currentSchVal.busi != '') currentSchVal.busiStr = $('#busiSelect').parent().find('.filter-option').text();
+    else currentSchVal.busiStr = '';
 
+    dv = $('#deptVal').val().split('|');
+    currentSchVal.dept = dv.join(',');
+    if (currentSchVal.dept != '') currentSchVal.deptStr = $('#deptStr').val();
+    else currentSchVal.deptStr = '';
+    currentSchVal.period = 1;
+    currentSchVal.startDt = $('#startDt').val() + "000000";
+    currentSchVal.endDt = $('#endDt').val() + "235959";
 
-
+    return currentSchVal;
+}
 
 
 

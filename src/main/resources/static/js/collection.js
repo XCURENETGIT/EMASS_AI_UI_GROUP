@@ -28,8 +28,7 @@ var searchOffset = 0;
 var resizeTimer;
 var isEnd = false;
 
-var detailSearchFlag=true;
-
+var currentSchVal = {};
 
 
 var eikon2 = {
@@ -412,26 +411,20 @@ function getFileMessageList  (page){
     if(isEnd == true){
         return;
     }
+    var filterVal = {};
+    var conArray = [];
+    conArray.push(currentSchVal);
+    filterVal.conditions = conArray;
 
-    var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
     groupPage = page;
     var offset = groupPage * groupPageBreak - groupPageBreak;
-
-    var uv = $('#userVal').val().split('|');
-    var user = uv.join(',');
-
-    var userStr='';
-    if (user != '') userStr = user;
-    else userStr = '';
 
     searchFlag = true;
     ui.onBody('timeline_list', 0, -20);
     ui.postJson({
         url : 'getFileMessageList.xcn',
-        data : JSON.stringify( getCondition( )),
-        readYn : readYn,
+        data : JSON.stringify(filterVal),
         offset : offset,
-        userStr:userStr,
         limit : groupPageBreak,
         success : function(data, total) {
             isLoading=true;
@@ -496,21 +489,18 @@ function getFileMessageList  (page){
 
 
 function getCollectionGroupList (page,type){
+
     if(isEnd == true){
         return;
     }
-    var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
+    var filterVal = {};
+    var conArray = [];
+    conArray.push(currentSchVal);
+    filterVal.conditions = conArray;
+
+
     groupPage = page;
     var offset = groupPage*groupPageBreak - groupPageBreak;
-    var uv = $('#userVal').val().split('|');
-    var user = uv.join(',');
-
- /*   type = $('#selectUserInfo').attr('data-svc12');*/
-
-    var userStr='';
-    if (user != '') userStr = user;
-    else userStr = '';
-
     var startTotalDate=$('#startDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
     var endTotalDate=$('#endDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
 
@@ -520,13 +510,10 @@ function getCollectionGroupList (page,type){
     ui.onBody('timeline_list', 0, -20);
     ui.postJson({
         url : 'getCollectionGroupList.xcn',
-        data : JSON.stringify(getCondition(type)),
-        readYn : readYn,
+        data : JSON.stringify(filterVal),
         offset : offset,
-        userStr:userStr,
         startTotalDate:startTotalDate+"00000",
         endTotalDate:endTotalDate+"235959",
-        type:type,
         limit : groupPageBreak,
         success : function(data, total) {
             console.log("data: "+data);
@@ -561,18 +548,19 @@ function allDown(type){
         ui.alertMsg('<s:message code="eikon.noList"/>');
         return;
     }
-    var readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
-    var startDt = $('#startDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '') + "0000000";
-    var endDt = $('#endDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '') + "235959";
+
+    var filterVal = {};
+    var conArray = [];
+    conArray.push(currentSchVal);
+    filterVal.conditions = conArray;
 
     ui.alertMsg('<s:message code="eikon.start.download"/>');
     ui.get({
         url : 'getCollectionGroupTextAllExportZip.xcn',
         type:type,
-        data : JSON.stringify(getCondition(type)),
-        exportStartDt : startDt,
-        exportEndDt : endDt,
-        readYn:readYn,
+        data : JSON.stringify(filterVal),
+        exportStartDt : currentSchVal.startDt,
+        exportEndDt : currentSchVal.endDt,
         success : function(data, total) {
         },
         error : function(status, message) {
@@ -1988,8 +1976,55 @@ function initServiceTab() {
                 getCollectionGroupList(1,  getPageType());
             } else {
                 isEnd = false;
+                currentSchVal.serviceType=svc1Value;
                 getCollectionGroupList(1, svc1Value);
             }
         }
     });
+}
+
+
+function setcurrentSchVal(type) {
+    var allSelect = new Array();
+
+/*    if( type != "G" && type !=  "N" && type != "F" ){
+        currentSchVal.serviceType = type; /!* 카테고리 선택 *!/
+    }*/
+    if ($('#serviceTypeSelect').selectpicker('val') == null) {
+        $('#serviceTypeSelect option').each(function () {
+            if ($(this).val() != '' && $(this).val() != null) allSelect.push($(this).val());
+        });
+        currentSchVal.serviceType = arrayToString(allSelect);
+    } else {
+        currentSchVal.serviceType = arrayToString($('#serviceTypeSelect').selectpicker('val'));
+    }
+    currentSchVal.searchStr = $('#searchStrInput').val();
+    currentSchVal.senders = $('#senders').val();
+
+    var uv = $('#userVal').val().split('|');
+    var user = uv.join(',');
+
+    var userStr='';
+    if (user != '') userStr = user;
+    else userStr = '';
+
+    currentSchVal.userStr = userStr;
+
+    currentSchVal.attachYn = $('button[name=attachYn].active').val();
+    currentSchVal.busi = arrayToString($('#busiSelect').selectpicker('val'));
+
+    if (currentSchVal.busi != '') currentSchVal.busiStr = $('#busiSelect').parent().find('.filter-option').text();
+    else currentSchVal.busiStr = '';
+
+    var dv = $('#deptVal').val().split('|');
+    currentSchVal.dept = dv.join(',');
+    if (currentSchVal.dept != '') currentSchVal.deptStr = $('#deptStr').val();
+    else currentSchVal.deptStr = '';
+
+    currentSchVal.readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
+    currentSchVal.period = 1;
+    currentSchVal.startDt =$('#startDt').val()+"000000";
+    currentSchVal.endDt =$('#endDt').val()+"235959";
+
+    return currentSchVal;
 }

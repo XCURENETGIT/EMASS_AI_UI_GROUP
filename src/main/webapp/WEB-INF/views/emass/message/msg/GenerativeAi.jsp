@@ -213,6 +213,7 @@
             document.getElementById("endSubDt").valueAsDate = new Date();*/
 
             $('#searchBtn').click(function () {
+
                 $('#group_list').scrollTop(0);
                 isEnd = false;
                 pivotused = false;
@@ -241,6 +242,8 @@
 
                 var svcArray = arrayToString($('#serviceTypeSelect').selectpicker('val'));
                 $('#selectUserInfo').attr('data-svc12',svcArray);
+
+               setcurrentSchVal(svcArray);
 
                 eikon2.getCollectionList(1,"G");
             });
