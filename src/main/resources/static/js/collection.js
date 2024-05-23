@@ -529,6 +529,8 @@ function getCollectionGroupList (page,type){
         type:type,
         limit : groupPageBreak,
         success : function(data, total) {
+            console.log("data: "+data);
+            console.log("groupPage: "+page);
             isLoading=true;
             if (data.groups.length < groupPageBreak || (offset+groupPageBreak) == total) isEnd = true;
             $('#groupResultCnt').html(total.comma());
@@ -1978,13 +1980,14 @@ function initServiceTab() {
     busiScrollTabs = $('#busiCntArea').scrollTabs({
         click_callback: function (e) {
             var svc1Value = $('.tab_selected  .busiCounts').attr('data-svc1');
-         //   console.log(svc1Value);
             $('#selectUserInfo').attr('data-svc12', svc1Value);
 
             if (svc1Value == null || typeof svc1Value === 'undefined' || svc1Value === '') {
                 $('#selectUserInfo').attr('data-svc12', getPageType());
+                isEnd = false;
                 getCollectionGroupList(1,  getPageType());
             } else {
+                isEnd = false;
                 getCollectionGroupList(1, svc1Value);
             }
         }
