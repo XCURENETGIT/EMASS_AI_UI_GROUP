@@ -107,7 +107,7 @@
         if (value == null) return '-';
         else return value;
     });
-    grid.colAdd('usr_id', '<s:message code="common.msg.name"/>', 180, 'center', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
+    grid.colAdd('name', '<s:message code="common.msg.name"/>', 180, 'center', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
         if (value == null) return '-';
         else return value;
     });

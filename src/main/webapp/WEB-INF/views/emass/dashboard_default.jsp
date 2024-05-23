@@ -26,7 +26,7 @@
 		overflow: hidden;
 		white-space: nowrap;
 		text-overflow: ellipsis;
-		max-width: 75% !important;
+		max-width: 63% !important;
 	}
 
 

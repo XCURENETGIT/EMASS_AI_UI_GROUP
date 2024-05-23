@@ -407,7 +407,7 @@ public class MessengerController {
 		String srcip = Common.isNotEmpty(request.getAttribute("srcip")) ? Common.nvl(request.getAttribute("srcip")) : Common.nvl(param.get("srcip"));
 		String startDt = Common.isNotEmpty(request.getAttribute("startDt")) ? Common.nvl(request.getAttribute("startDt")) : Common.nvl(param.get("startDt"));
 		String endDt = Common.isNotEmpty(request.getAttribute("endDt")) ? Common.nvl(request.getAttribute("endDt")) : Common.nvl(param.get("endDt"));
-		int limit = Common.isNotEmpty(request.getAttribute("limit")) ? Common.nvz(request.getAttribute("limit"), 100) : Common.nvz(param.get("limit"), 100000);
+		int limit = Common.isNotEmpty(request.getAttribute("limit")) ? Common.nvz(request.getAttribute("limit"), 100) : Common.nvz(param.get("limit"), 10000);
 		int offset = Common.isNotEmpty(request.getAttribute("start")) ? Common.nvz(request.getAttribute("start"), 0) : Common.nvz(param.get("start"), 0);
 
 		SolrQuery sq = new SolrQuery();
