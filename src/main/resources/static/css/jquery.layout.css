@@ -122,7 +122,7 @@
  */
 .ui-layout-toggler {
 	border: 0px solid #BBB; /* match pane-border */
-	background-color: #BBB;
+	background-color: black;
 	}
 	.ui-layout-resizer-hover .ui-layout-toggler {
 		opacity: .60;
