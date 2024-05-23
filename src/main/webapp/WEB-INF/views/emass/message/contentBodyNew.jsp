@@ -417,7 +417,7 @@
 </div>
 <div class="msgBody">
 	<div style="display: none;" id="buttonDiv">
-		<div class="form-group p12" style="padding:4px 0px 0 5px;" id="buttonArea">
+		<div class="form-group p12" style="padding:4px 0px 0 5px; padding-top: 6px!important;" id="buttonArea">
 			<button class="btn01" id="prevBtn"><img src="../img/icon/ico_arrow_left_b.png/"></button>
 			<button class="btn01" id="nextBtn"><img src="../img/icon/ico_arrow_right_b.png/"></button>
 			<div class="btnright">
