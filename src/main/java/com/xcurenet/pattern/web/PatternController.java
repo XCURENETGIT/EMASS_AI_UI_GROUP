@@ -1,8 +1,12 @@
 package com.xcurenet.pattern.web;
 
 
+import com.xcurenet.annotations.AuditMenu;
 import com.xcurenet.annotations.AuditOperation;
+import com.xcurenet.annotations.AuditParentMenu;
+import com.xcurenet.audit.service.Menu;
 import com.xcurenet.audit.service.Operation;
+import com.xcurenet.audit.service.ParentMenu;
 import com.xcurenet.common.makeInfo.service.impl.MakeInfoServiceMysql;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.locale.Prop;
@@ -33,6 +37,8 @@ import java.util.regex.Pattern;
 
 @Log4j2
 @Controller
+@AuditParentMenu(ParentMenu.DATA_MONITOR)
+@AuditMenu(Menu.PATTERN_INFO)
 public class PatternController {
 	@Resource(name = "patternService")
 	public PatternService patternService;
@@ -54,7 +60,7 @@ public class PatternController {
 
 	@RequestMapping(value = "/insertPattern.xcn")
 	@Description("패턴 추가")
-	@AuditOperation(Operation.SEARCH)
+	@AuditOperation(Operation.INSERT)
 	@ResponseBody
 	public XcnResponseVO insertPattern(final HttpServletRequest request, PatternVO patternVO, final HttpSession session) throws Exception{
 		if (patternService.isPatternCode(patternVO)){
@@ -67,7 +73,7 @@ public class PatternController {
 
 	@RequestMapping(value = "/updatePattern.xcn")
 	@Description("패턴 수정")
-	@AuditOperation(Operation.SEARCH)
+	@AuditOperation(Operation.UPDATE)
 	@ResponseBody
 	public XcnResponseVO updatePattern(final HttpServletRequest request, PatternVO patternVO, final HttpSession session) throws Exception{
 		patternService.updatePattern(patternVO, Common.getAdminId(session));
@@ -76,7 +82,7 @@ public class PatternController {
 
 	@RequestMapping(value = "/deletePattern.xcn")
 	@Description("패턴 삭제")
-	@AuditOperation(Operation.SEARCH)
+	@AuditOperation(Operation.DELETE)
 	@ResponseBody
 	public XcnResponseVO deletePattern(final HttpServletRequest request) throws Exception{
 		String deleteData = request.getParameter("deleteData");

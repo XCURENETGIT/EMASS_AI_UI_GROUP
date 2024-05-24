@@ -511,6 +511,9 @@ UPDATE UI_REGEXP SET NAME = 'Recipient Specified Send'         WHERE CODE = 'RS'
 UPDATE UI_REGEXP SET NAME = 'Large Content OutSide Send'      WHERE CODE =   'LTO';
 UPDATE UI_REGEXP SET NAME = 'Large AttachFile OutSide Send'      WHERE CODE =   'LAO';
 UPDATE UI_REGEXP SET NAME = 'Large File FTPSend'      WHERE CODE =   'LF';
+UPDATE UI_REGEXP SET NAME = 'Business registration number'    WHERE CODE =   'BRN';
+UPDATE UI_REGEXP SET NAME = 'Address (road name, lot number)'    WHERE CODE =   'AN';
+UPDATE UI_REGEXP SET NAME = 'Card number'    WHERE CODE =   'CN';
 
 
 

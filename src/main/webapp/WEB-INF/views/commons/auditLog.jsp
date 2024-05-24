@@ -77,10 +77,10 @@
 	    p_id: 'DATA_MONITOR'
 	}); //연관 검색어 관리
 	menuArr.push({
-	    id: 'REGEX_PATTERN',
-	    name: '<s:message code="DATA_MONITOR.REGEX_PATTERN"/>',
+	    id: 'PATTERN_INFO',
+	    name: '<s:message code="DATA_MONITOR.PATTERN_INFO"/>',
 	    p_id: 'DATA_MONITOR'
-	}); //정규식 패턴 관리
+	}); //패턴 관리
 	menuArr.push({
 	    id: 'ANALYSIS_RELATION',
 	    name: '<s:message code="DATA_ANALYSIS.ANALYSIS_RELATION"/>',

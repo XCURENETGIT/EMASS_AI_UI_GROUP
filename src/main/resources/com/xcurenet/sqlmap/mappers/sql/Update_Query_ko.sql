@@ -511,6 +511,9 @@ UPDATE UI_REGEXP SET NAME = '수신처 오지정 전송'         WHERE CODE = 'R
 UPDATE UI_REGEXP SET NAME = '대용량 본문내용 사외발송'      WHERE CODE =   'LTO';
 UPDATE UI_REGEXP SET NAME = '대용량 첨부파일 사외발송'      WHERE CODE =   'LAO';
 UPDATE UI_REGEXP SET NAME = '대용량 파일 FTP발송'      WHERE CODE =   'LF';
+UPDATE UI_REGEXP SET NAME = '사업자 등록번호'    WHERE CODE =   'BRN';
+UPDATE UI_REGEXP SET NAME = '주소(도로명, 지번)'    WHERE CODE =   'AN';
+UPDATE UI_REGEXP SET NAME = '카드번호'    WHERE CODE =   'CN';
 
 
 
