@@ -6,22 +6,6 @@
 	String firstAdminYn = Common.getFirstAdminYn(session);
 %>
 
-<script>
-    $(function() {
-        $("#xcn_toggleBtn").on("click", function() {
-            $("#xcn_Search").toggle("show");
-        })
-    })
-
-    $(function() {
-        $("#showBtn").on("click", function() {
-            $("#xcn_Search2").show();
-        })
-        $("#xcn_toggleBtn2").on("click", function() {
-            $("#xcn_Search2").hide();
-        })
-    })
-</script>
 
 <style>
 
@@ -170,7 +154,6 @@
         let pivotused = false;
 
         $(document).ready(function () {
-
             $('#group_list').scroll(function (){
                 if (isEnd == true) return false;
                 let $groupList = $('#group_list');
@@ -203,14 +186,20 @@
             });
 
             initServiceTab();
-/*            var today = new Date();
-            today.setDate(today.getDate() - 7);*/
 
-     /*       document.getElementById("startDt").valueAsDate = today;
-            document.getElementById("endDt").valueAsDate = new Date();
+            $('#showBtn').click(function () {
 
-            document.getElementById("startSubDt").valueAsDate = today;
-            document.getElementById("endSubDt").valueAsDate = new Date();*/
+                var displayValue = $('#xcn_Search2').css('display');
+
+                if(displayValue=="block"){
+                    $('#xcn_Search2').css('display', 'none');
+                }else{
+                    $('#xcn_Search2').css('display', 'block');
+                }
+
+            });
+
+
 
             $('#searchBtn').click(function () {
 
@@ -734,11 +723,10 @@
         }
 
         function initCondition() {
+            $("#xcn_Search2").css("display", "none");
             getGenerativeList();
             getCodeList('busi');
             getCodeList('dept');
-
-            $("#xcn_Search2").hide();
 
             var dateObj = new Date();
 
@@ -1242,10 +1230,9 @@
 		</div>
 		<!-- 채팅 끝! -->
 		<!-- 첨부파일 -->
-		<div class="rightFile p20" id="xcn_Search2">
+		<div class="rightFile p20" id="xcn_Search2" style="display: none;">
 			<div class="subtab">
 				<button class="active"><s:message code="consent.attach"/>
-					<span id="xcn_toggleBtn2" style="font-size:16px; opacity: 0.7; padding:4px;">x</span>
 				</button>
 			</div>
 			<div class="rightFileList" >
@@ -1274,20 +1261,6 @@
 
 <script>
 
-    $(function() {
-        $("#xcn_toggleBtn").on("click", function() {
-            // $("#xcn_Search").toggle("show");
-        })
-    })
-
-    $(function() {
-        $("#showBtn").on("click", function() {
-            $("#xcn_Search2").show();
-        })
-        $("#xcn_toggleBtn2").on("click", function() {
-            $("#xcn_Search2").hide();
-        })
-    })
     // document.querySelector(".chat[data-chat=person2]").classList.add("active-chat");
     // document.querySelector(".person[data-chat=person2]").classList.add("active");
 

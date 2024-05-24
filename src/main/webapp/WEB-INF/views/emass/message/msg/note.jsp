@@ -6,24 +6,6 @@
 	String firstAdminYn = Common.getFirstAdminYn(session);
 %>
 
-<script>
-    $(function() {
-        $("#xcn_toggleBtn").on("click", function() {
-            $("#xcn_Search").toggle("show");
-        })
-    })
-
-    $(function() {
-        $("#showBtn").on("click", function() {
-            $("#xcn_Search2").show();
-        })
-        $("#xcn_toggleBtn2").on("click", function() {
-            $("#xcn_Search2").hide();
-        })
-    })
-</script>
-
-
 <style>
 
 	.messengerList .messengerBox .people {
@@ -212,6 +194,18 @@
             });
 
             initServiceTab();
+
+            $('#showBtn').click(function () {
+
+                var displayValue = $('#xcn_Search2').css('display');
+
+                if(displayValue=="block"){
+                    $('#xcn_Search2').css('display', 'none');
+                }else{
+                    $('#xcn_Search2').css('display', 'block');
+                }
+
+            });
 
 
             $('#searchBtn').click(function () {
@@ -720,7 +714,7 @@
             getCodeList('busi');
             getCodeList('dept');
 
-            $("#xcn_Search2").hide();
+            $("#xcn_Search2").css("display", "none");
 
 
             $('#easyDate').change(function () {
@@ -1190,10 +1184,9 @@
 		</div>
 		<!-- 채팅 끝! -->
 		<!-- 첨부파일 -->
-		<div class="rightFile p20" id="xcn_Search2">
+		<div class="rightFile p20" id="xcn_Search2" style="display: none;">
 			<div class="subtab">
 				<button class="active"><s:message code="consent.attach"/>
-					<span id="xcn_toggleBtn2" style="font-size:16px; opacity: 0.7; padding:4px;">x</span>
 				</button>
 
 			</div>
@@ -1220,22 +1213,6 @@
 
 <script>
 
-    $(function() {
-        $("#xcn_toggleBtn").on("click", function() {
-            // $("#xcn_Search").toggle("show");
-        })
-    })
-
-    $(function() {
-        $("#showBtn").on("click", function() {
-            $("#xcn_Search2").show();
-        })
-        $("#xcn_toggleBtn2").on("click", function() {
-            $("#xcn_Search2").hide();
-        })
-    })
-    // document.querySelector(".chat[data-chat=person2]").classList.add("active-chat");
-    // document.querySelector(".person[data-chat=person2]").classList.add("active");
 
     let friends = {
             list: document.querySelector("ul.people"),
