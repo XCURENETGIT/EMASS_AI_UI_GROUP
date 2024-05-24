@@ -489,7 +489,7 @@
             }
 
             var str = "<table class='mainTable'><tr>"
-            str += "<th>  </th>";
+            str += "<th><s:message code="common.msg.separator"/>   </th>";
             for (var i = 0; i < data.length; i++) {
                 var year = data[i].date.slice(0, 4);
                 var month = data[i].date.slice(4, 6) - 1;
@@ -533,7 +533,7 @@
 
         function makeTableLoggingData(data) {
             var str = "<table class='mainTable'><tr>"
-            str += "<th>  </th>";
+            str += "<th> <s:message code="common.msg.separator"/> </th>";
             for (var i = 0; i < data.length; i++) {
                 var year = data[i].date.slice(0, 4);
                 var month = data[i].date.slice(4, 6) - 1;

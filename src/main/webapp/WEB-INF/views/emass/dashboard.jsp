@@ -630,7 +630,7 @@
 
     function makeTableLoggingData(data) {
         var str = "<table class='mainTable'><tr>"
-        str += "<th> 구분 </th>";
+        str += "<th> <s:message code="common.msg.separator"/> </th>";
         for (var i = 0; i < data.length; i++) {
             var year = data[i].date.slice(0, 4);
             var month = data[i].date.slice(4, 6) - 1;
@@ -1187,7 +1187,7 @@
             return;
         }
         var str = "<table class='mainTable'><tr>"
-        str += "<th> 구분 </th>";
+        str += "<th> <s:message code="common.msg.separator"/> </th>";
         for (var i = 0; i < data.length; i++) {
             var year = data[i].date.slice(0, 4);
             var month = data[i].date.slice(4, 6) - 1;
@@ -1197,7 +1197,7 @@
             str += "<th>" + formattedDate + "</th>";
         }
         str += "</tr><tr>";
-        str += "<td> 용량 </td>";
+        str += "<td> <s:message code="analysis.freedom.ui.size"/>  </td>";
         for (var i = 0; i < data.length; i++) {
             str += "<td>" + data[i].bodySizeStr + "</td>";
         }
