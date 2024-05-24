@@ -97,7 +97,8 @@
             margin-top: 0px;
         }
         .busiCounts{
-            display: inline-block; color:#333;
+	        font-weight: bold;
+            display: inline-flex; color:#333;
             border:1px solid #ddd;
             padding:3px 8px;
             border-radius: 20px;
