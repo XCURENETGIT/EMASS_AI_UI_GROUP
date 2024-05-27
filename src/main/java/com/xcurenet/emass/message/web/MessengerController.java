@@ -1149,7 +1149,7 @@ public class MessengerController {
 				dataObj.put("svc", Config.getServiceNm(item.getSvc()));
 				dataObj.put("content", item.getMessage());
 				if (Common.isEquals(item.getAttached(), "Y")) {
-					dataObj.put("content_LINK", Common.makeFilepath("attachs", item.getMsgid()));
+					dataObj.put("file", Common.makeFilepath("attachs", item.getMsgid()));
 				}
 				data.add(dataObj);
 			}

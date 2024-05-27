@@ -647,17 +647,22 @@ function makeFileServiceList(data) {
     if (data.inSide === "N") {
         str += '<span class="file_flag_reception">';
         str += '<img src="' + mainContext + '/img/ico_w_chatshare_fill.png" alt="외부" height="12px">';
-        str += filelist.Outside+'</span>';
+        str += filelist.Outside + '</span>';
     }
-    str += attachname+ '</h4>';
+    str += attachname + '</h4>';
     str += '<div class="loca">' + data.svcNm + '</div>';
     str += '</div>';
     str += '<div class="conBox">';
     str += '<div class="borbottom_dashed pb16">';
     str += '<p>';
-    str += '<span class="name">' + data.userList[0].busiNm + '</span> <span class="xcn_bar"></span>';
-    str += '<span class="name">' + data.userList[0].deptNm + '</span> <span class="xcn_bar"></span>';
-    str += '<span class="name">' + (data.userList[0].name ? data.userList[0].name : (data.user ? data.user : '-')) + '</span>';
+    // busiNm과 deptNm에 null 처리를 추가
+    var busiNm = data.userList[0].busiNm ? data.userList[0].busiNm : '-';
+    var deptNm = data.userList[0].deptNm ? data.userList[0].deptNm : '-';
+    var userName = data.userList[0].name ? data.userList[0].name : (data.user ? data.user : '-');
+
+    str += '<span class="name">' + busiNm + '</span> <span class="xcn_bar"></span>';
+    str += '<span class="name">' + deptNm + '</span> <span class="xcn_bar"></span>';
+    str += '<span class="name">' + userName + '</span>';
     str += '</p>';
     str += '<p class="rightBox">';
     str += '<span>' + data.ctime + '</span>';
@@ -667,17 +672,18 @@ function makeFileServiceList(data) {
         totalAttachSize += data.files[i].attachSize;
     }
     str += '<table class="subTable2 mat8"><tr><th>';
-    str+=   filelist.srcIp +'</th><td class="topline">' + data.srcIp + '</td><th>'+filelist.dstIp+'</th><td class="topline">' + data.dstIp + '</td>';
-    str += '<tr xmlns="http://www.w3.org/1999/html"><th>'+filelist.bodySize+'</th><td>' + totalAttachSize + '</td><th>'+filelist.userId+'</th><td>' +(data.usrId ? data.usrId : '-') + '</td></tr>';
+    str += filelist.srcIp + '</th><td class="topline">' + data.srcIp + '</td><th>' + filelist.dstIp + '</th><td class="topline">' + data.dstIp + '</td>';
+    str += '<tr xmlns="http://www.w3.org/1999/html"><th>' + filelist.bodySize + '</th><td>' + totalAttachSize + '</td><th>' + filelist.userId + '</th><td>' + (data.usrId ? data.usrId : '-') + '</td></tr>';
     str += '<tr><th>HOST/PATH</th><td colspan="3" class="mal8 tableLink txt_left">' + (data.host ? data.host : '') + (data.path ? data.path : '') + '</td><tr></table>'; // If data.host or data.path is not present, use empty string
     str += '</div>';
-    str += '<div class="messageCon"> <div class="top grayBg03"><h4 class="fileCntArea">'+filelist.fileinfo+'(' + files.length + ')</h4><div class="btn btnform" style="padding: 0px; border: none;"><button accesskey="V" class="btn05 downAllFile"><img src="'+mainContext+'/img/subBtn_save.png" alt="전체 저장">'+filelist.allSave+'</buttonaccesskey></div></div><div class="filelist"><ul>';
-    str +=  filediv(data) + '</ul>';
+    str += '<div class="messageCon"> <div class="top grayBg03"><h4 class="fileCntArea">' + filelist.fileinfo + '(' + files.length + ')</h4><div class="btn btnform" style="padding: 0px; border: none;"><button accesskey="V" class="btn05 downAllFile"><img src="' + mainContext + '/img/subBtn_save.png" alt="전체 저장">' + filelist.allSave + '</buttonaccesskey></div></div><div class="filelist"><ul>';
+    str += filediv(data) + '</ul>';
     str += '</div>';
     str += '</div>';
 
     return str;
 }
+
 
 var extClass = "";
 function filediv(data) {
@@ -1599,9 +1605,11 @@ function rtnFileGroupList (data) {
         var leftDiv = document.createElement("div");
         leftDiv.className = "left";
 
-        var leftContent = "<p><span class='chatid'>" + data[i].attachname + "</span></p>" +
-            "<p><span class='name'>" + data[i].businm + "</span>";
+        var attachname = data[i].attachname ? data[i].attachname : "[noname]";
 
+        var leftContent = "<p><span class='chatid'>" + attachname + "</span></p><p>";
+
+        leftContent += data[i].businm ? "<span class='bar'></span><span class='name'>" + data[i].businm + "</span>" : "<span class='bar'></span><span class='name'>-</span>";
         leftContent += data[i].deptnm ? "<span class='bar'></span><span class='name'>" + data[i].deptnm + "</span>" : "<span class='bar'></span><span class='name'>-</span>";
         leftContent += data[i].jikgubnm ? "<span class='bar'></span><span class='name'>" + data[i].jikgubnm + "</span>" : "<span class='bar'></span><span class='name'>-</span>";
         if (data[i].name != null) {
@@ -1610,12 +1618,17 @@ function rtnFileGroupList (data) {
             leftContent += "<span class='bar'></span><span class='name'>" + data[i].user + "</span>";
         }
 
-        leftContent += "<span class='bar'></span><span class='name'>" + data[i].attachsize + "KB</span></p>";
+        if (data[i].attachsize) {
+            leftContent += "<span class='bar'></span><span class='name'>" + data[i].attachsize + "KB" + "</span>";
+        } else {
+            leftContent += "<span class='bar'></span><span class='name'>-</span>";
+        }
 
+        leftContent += "</p>";
         leftDiv.innerHTML = leftContent;
         li.appendChild(leftDiv);
 
-        // Create right div
+
         var rightDiv = document.createElement("div");
         rightDiv.className = "right";
         var imageName =mainContext+"/img/icon/ico_sns_"+ data[i].svc+".png";
