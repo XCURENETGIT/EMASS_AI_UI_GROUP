@@ -2023,8 +2023,8 @@ function setcurrentSchVal(type) {
 
     currentSchVal.readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
     currentSchVal.period = 1;
-    currentSchVal.startDt =$('#startDt').val()+"000000";
-    currentSchVal.endDt =$('#endDt').val()+"235959";
+    currentSchVal.startDt = $('#startDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');+ "000000";
+    currentSchVal.endDt = $('#endDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '') + "235959";
 
     return currentSchVal;
 }

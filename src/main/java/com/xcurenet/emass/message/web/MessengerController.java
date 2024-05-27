@@ -901,10 +901,10 @@ public class MessengerController {
 	@ResponseBody
 	public void getMessengerGroupTextAllExportZip(final HttpServletRequest request, final HttpServletResponse response, final HttpSession session) throws Exception {
 		JSONObject param = Common.getParam(request);
-		String exportStartDt= request.getParameter("exportStartDt");
-		String exportEndDt= request.getParameter("exportEndDt");
+		String exportStartDt = request.getParameter("exportStartDt");
+		String exportEndDt = request.getParameter("exportEndDt");
 
-		String uniqId = "("+exportStartDt+"~"+exportEndDt+")"+Common.getRandomString();
+		String uniqId = "(" + exportStartDt + "~" + exportEndDt + ")" + Common.getRandomString();
 		String destFile = Common.makeFilepath(Common.TMP_PATH, uniqId) + ".zip";
 		Locale locale = Common.getLocale(request.getSession());
 		Common.mkdirs(Common.makeFilepath(Common.TMP_PATH, uniqId));
@@ -918,9 +918,7 @@ public class MessengerController {
 		response.setHeader("Connection", "close");
 		response.setHeader("Content-Disposition", "attachment; filename=\"" + Common.getDateTimeFormat() + "_message.zip\"");
 
-
 		OutputStream sOut = response.getOutputStream();
-		DownloadBatchVO downloadBatchVO = new DownloadBatchVO();
 		FileInputStream in = null;
 
 		File rootFolder = getRootFolder();
@@ -943,8 +941,8 @@ public class MessengerController {
 		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id");
 
 		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request));
-
-		int totalRooms= (int) solrEdcGroupVO.getNumFound();
+		DownloadBatchVO downloadBatchVO = new DownloadBatchVO();
+		int totalRooms = (int) solrEdcGroupVO.getNumFound();
 
 		try {
 			int size = 0;
@@ -965,6 +963,7 @@ public class MessengerController {
 				List<MessengerGroupVO> rooms = messenger.getGroups(); // get Messenger Rooms
 				log.info("rooms.size() :  limit : {} room size : {}", limit, rooms.size());
 				for (MessengerGroupVO room : rooms) {
+					// Check the status inside the loop
 
 					request.setAttribute("xRootMtr", room.getXrootmtr());
 					request.setAttribute("usr_id", room.getUsr_id());
@@ -1007,7 +1006,12 @@ public class MessengerController {
 					double roomProgress = (double) processedRooms / totalRooms * 100;
 					roomProgress = Math.min(roomProgress, 80.0); // 최대 80%로 제한
 					int roundedProgress = (int) Math.round(roomProgress);
-					updateIngDB(downloadBatchVO, roundedProgress);
+					if ("C".equals(getStatusDB(downloadBatchVO))) {
+						log.info("Export process stopped due to status 'C'");
+						return;
+					}else {
+						updateIngDB(downloadBatchVO, roundedProgress);
+					}
 				}
 				size = rooms.size();
 				Common.sleep(1000);
@@ -1020,14 +1024,20 @@ public class MessengerController {
 			log.error("", e);
 		} finally {
 			long totalFileSizeBeforeCompression = calculateDirectorySize(Common.makeFilepath(Common.TMP_PATH, uniqId));
-			updateSucessDB(downloadBatchVO, totalFileSizeBeforeCompression);
-			log.info("Total file size before compression: {} bytes", totalFileSizeBeforeCompression);
+			if ("C".equals(getStatusDB(downloadBatchVO))) {
+				log.info("Export process stopped due to status 'C'");
+				return;
+			}else {
+				log.info("Total file size before compression: {} bytes", totalFileSizeBeforeCompression);
 
-			Path directoryPath = Paths.get(Common.makeFilepath(Common.TMP_PATH, uniqId));
-			Files.walk(directoryPath).map(Path::toFile).forEach(File::delete);
-			FileUtils.deleteDirectory(directoryPath.toFile());
-			IOUtils.closeQuietly(in);
-			IOUtils.closeQuietly(sOut);
+				Path directoryPath = Paths.get(Common.makeFilepath(Common.TMP_PATH, uniqId));
+				Files.walk(directoryPath).map(Path::toFile).forEach(File::delete);
+				FileUtils.deleteDirectory(directoryPath.toFile());
+				IOUtils.closeQuietly(in);
+				IOUtils.closeQuietly(sOut);
+				updateSucessDB(downloadBatchVO, totalFileSizeBeforeCompression);
+			}
+
 		}
 	}
 
@@ -1066,6 +1076,9 @@ public class MessengerController {
 		downloadBatchService.updateDownloadBatchMessenger(vo);
 	}
 
+	private String getStatusDB(DownloadBatchVO vo) {
+		return  downloadBatchService.chackCancelMessnger(vo);
+	}
 
 	private void alarmMessage(String adminId, DownloadBatchVO vo) {
 		log.info("alarmMessage VO : {}", vo);

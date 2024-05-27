@@ -1087,18 +1087,26 @@ public class CollectionController {
 			}
 			inserDB(downloadBatchVO, param, "LBA", "html", Common.getAdminId(request), 0, destFile);
 
-			for (int i = 0; i < solrEdcGroupVO.getNumFound(); i++) {
-				EmsBodyVO emsBody = emsMessageService.getEmassBody(solrEdcGroupVO.getEmass().get(i).getMsgid(), Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
-				if (Common.isNotEquals(print, "Y")) {
-					String subject = EmsReDefined.reSubject(getFileName(emsBody));
-					String fileName = Common.getEDCFileName(emsBody.getCtime(), emsBody.getUserId(), emsBody.getName(), subject, solrEdcGroupVO.getEmass().get(i).getMsgid()) + ".html";
-					String filePath = tempDirPath + File.separator + fileName;
 
-					try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
-						fileOut.write(new EmsCreateMessage(request).getHeaderMessage(solrEdcGroupVO.getEmass().get(i).getMsgid(), emsMessageController.getBodyStr(userCharset, emsBody), print, locale, Common.getFirstAdminYn(request.getSession()), Common.getAdminId(request), Common.getAdminType(request.getSession())).getBytes());
+			if ("C".equals(getStatusDB(downloadBatchVO))) {
+				log.info("Export process stopped due to status 'C'");
+				return;
+			}else {
+				for (int i = 0; i < solrEdcGroupVO.getNumFound(); i++) {
+					EmsBodyVO emsBody = emsMessageService.getEmassBody(solrEdcGroupVO.getEmass().get(i).getMsgid(), Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
+					if (Common.isNotEquals(print, "Y")) {
+						String subject = EmsReDefined.reSubject(getFileName(emsBody));
+						String fileName = Common.getEDCFileName(emsBody.getCtime(), emsBody.getUserId(), emsBody.getName(), subject, solrEdcGroupVO.getEmass().get(i).getMsgid()) + ".html";
+						String filePath = tempDirPath + File.separator + fileName;
+
+						try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
+							fileOut.write(new EmsCreateMessage(request).getHeaderMessage(solrEdcGroupVO.getEmass().get(i).getMsgid(), emsMessageController.getBodyStr(userCharset, emsBody), print, locale, Common.getFirstAdminYn(request.getSession()), Common.getAdminId(request), Common.getAdminType(request.getSession())).getBytes());
+						}
 					}
+					updateIngDB(downloadBatchVO, (int) (solrEdcGroupVO.getNumFound()%i));
 				}
 			}
+
 
 			log.info("compressZip start : {} > {}", tempDirPath, destFile);
 			boolean success = ZipUtils.compressZip(tempDirPath, destFile);
@@ -1112,13 +1120,18 @@ public class CollectionController {
 			log.error("", e);
 		} finally {
 			long totalFileSizeBeforeCompression = calculateDirectorySize(tempDirPath);
-			updateSucessDB(downloadBatchVO, totalFileSizeBeforeCompression);
-			log.info("Total file size before compression: {} bytes", totalFileSizeBeforeCompression);
+			if ("C".equals(getStatusDB(downloadBatchVO))) {
+				log.info("Export process stopped due to status 'C'");
+				return;
+			} else {
+				updateSucessDB(downloadBatchVO, totalFileSizeBeforeCompression);
+				log.info("Total file size before compression: {} bytes", totalFileSizeBeforeCompression);
 
-			Path directoryPath = Paths.get(tempDirPath);
-			Files.walk(directoryPath).map(Path::toFile).forEach(File::delete);
-			FileUtils.deleteDirectory(directoryPath.toFile());
-			IOUtils.closeQuietly(sOut);
+				Path directoryPath = Paths.get(tempDirPath);
+				Files.walk(directoryPath).map(Path::toFile).forEach(File::delete);
+				FileUtils.deleteDirectory(directoryPath.toFile());
+				IOUtils.closeQuietly(sOut);
+			}
 		}
 	}
 
@@ -1243,7 +1256,12 @@ public class CollectionController {
 					double roomProgress = (double) processedRooms / totalRooms * 100;
 					roomProgress = Math.min(roomProgress, 80.0); // 최대 80%로 제한
 					int roundedProgress = (int) Math.round(roomProgress);
-					updateIngDB(downloadBatchVO, roundedProgress);
+					if ("C".equals(getStatusDB(downloadBatchVO))) {
+						log.info("Export process stopped due to status 'C'");
+						return;
+					}else {
+						updateIngDB(downloadBatchVO, roundedProgress);
+					}
 				}
 				size = rooms.size();
 				Common.sleep(1000);
@@ -1256,14 +1274,19 @@ public class CollectionController {
 			log.error("", e);
 		} finally {
 			long totalFileSizeBeforeCompression = calculateDirectorySize(Common.makeFilepath(Common.TMP_PATH, uniqId));
-			updateSucessDB(downloadBatchVO, totalFileSizeBeforeCompression);
-			log.info("Total file size before compression: {} bytes", totalFileSizeBeforeCompression);
+			if ("C".equals(getStatusDB(downloadBatchVO))) {
+				log.info("Export process stopped due to status 'C'");
+				return;
+			}else {
+				log.info("Total file size before compression: {} bytes", totalFileSizeBeforeCompression);
 
-			Path directoryPath = Paths.get(Common.makeFilepath(Common.TMP_PATH, uniqId));
-			Files.walk(directoryPath).map(Path::toFile).forEach(File::delete);
-			FileUtils.deleteDirectory(directoryPath.toFile());
-			IOUtils.closeQuietly(in);
-			IOUtils.closeQuietly(sOut);
+				Path directoryPath = Paths.get(Common.makeFilepath(Common.TMP_PATH, uniqId));
+				Files.walk(directoryPath).map(Path::toFile).forEach(File::delete);
+				FileUtils.deleteDirectory(directoryPath.toFile());
+				IOUtils.closeQuietly(in);
+				IOUtils.closeQuietly(sOut);
+				updateSucessDB(downloadBatchVO, totalFileSizeBeforeCompression);
+			}
 		}
 	}
 
@@ -1302,7 +1325,9 @@ public class CollectionController {
 		downloadBatchService.updateDownloadBatchMessenger(vo);
 	}
 
-
+	private String getStatusDB(DownloadBatchVO vo) {
+		return  downloadBatchService.chackCancelMessnger(vo);
+	}
 	private void alarmMessage(String adminId, DownloadBatchVO vo) {
 		log.info("alarmMessage VO : {}", vo);
 		template.convertAndSendToUser(adminId, "/exportEnd", vo);

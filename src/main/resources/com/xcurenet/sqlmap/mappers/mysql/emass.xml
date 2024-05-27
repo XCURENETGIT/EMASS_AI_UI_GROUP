@@ -380,7 +380,7 @@
 	</update>
 	<update id="shutdownDownloadBatchMessenger" parameterType="string">
 		UPDATE	UI_DOWNLOAD_BATCH_MESSENGER
-		SET		STATUS_STR = #{val},
+		SET		STATUS_STR = #{val}
 		WHERE	STATUS_STR IN ('S', 'I')
 	</update>
 
@@ -394,7 +394,7 @@
 
 	<update id="cancelDownFileMessenger" parameterType="hashmap">
 		UPDATE	UI_DOWNLOAD_BATCH_MESSENGER
-		SET		STATUS_STR = #{statuSel},
+		SET		STATUS_STR = #{statuSel}
 		WHERE	DOWN_SEQ = #{downSeq}
 		AND		ADMIN_ID = #{adminId}
 	</update>
@@ -412,6 +412,7 @@
 		WHERE	DOWN_SEQ = #{downSeq}
 		AND		ADMIN_ID = #{adminId}
 	</select>
+
 
 	<select id="getExportFileExpireData" resultType="downloadBatchVO">
 		SELECT	DOWN_SEQ AS downSeq
@@ -572,6 +573,13 @@
 		FROM	UI_DOWNLOAD_BATCH_MESSENGER
 		WHERE	DATE_FORMAT(END_DT, '%Y%m%d') <![CDATA[ < ]]> DATE_FORMAT(NOW(), '%Y%m%d')
 		AND		STATUS_STR = 'Y'
+	</select>
+
+	<select id="chackCancelMessnger" parameterType="downloadBatchVO" resultType="string">
+		SELECT 	STATUS_STR
+		FROM	UI_DOWNLOAD_BATCH_MESSENGER
+		WHERE	DOWN_SEQ = #{downSeq}
+		AND		ADMIN_ID = #{adminId}
 	</select>
 
 </mapper>

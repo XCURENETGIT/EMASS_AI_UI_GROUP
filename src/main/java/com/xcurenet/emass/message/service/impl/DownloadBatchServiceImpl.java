@@ -114,7 +114,12 @@ public class DownloadBatchServiceImpl extends XcnAbstractDAO implements Download
 	public String chackCancel(DownloadBatchVO downloadBatchVO) {
 		return selectOne("com.xcurenet.sqlmap.mappers.mysql.emass.chackCancel", downloadBatchVO);
 	}
-	
+
+
+	public String chackCancelMessnger(DownloadBatchVO downloadBatchVO) {
+		return selectOne("com.xcurenet.sqlmap.mappers.mysql.emass.chackCancelMessnger", downloadBatchVO);
+	}
+
 	public int checkDownloadBatchExist(DownloadBatchVO downloadBatchVO) {
 		return selectOne("com.xcurenet.sqlmap.mappers.mysql.emass.checkDownloadBatchExist", downloadBatchVO);
 	}
