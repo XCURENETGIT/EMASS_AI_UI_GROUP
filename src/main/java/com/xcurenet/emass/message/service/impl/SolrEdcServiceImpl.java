@@ -168,6 +168,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 				sq.setFields(tempDefaultFields);
 			}
 			log.info("[Fields] {}", sq.getFields());
+
 			sq.setParam("wt", "json");
 
 			if (!Common.isEmpty(sq.get("indics"))) defaultIndex = IndexCoordinates.of(sq.get("indics"));
@@ -182,7 +183,9 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 			/* 일반 검색 쿼리 */
 			QueryStringQueryBuilder queryBuilder = QueryBuilders.queryStringQuery(sq.getQuery() + " " + filterQuery); // type PHRASE
-			queryBuilder.fields(getDefaultSearchField(sq));
+			List<String> fields = (Common.isNotEmpty(sq.get("fl"))) ? getSearchField(sq.get("fl")) : getDefaultSearchField(sq.get("qf"));
+//			queryBuilder.fields(fields);
+
 
 			/* 유사 문서 쿼리 설정 moreLikeThis */
 			BoolQueryBuilder recommendQuery = QueryBuilders.boolQuery();
@@ -211,9 +214,12 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			}
 
 			log.info("page : {}  rows : {}", getPage(sq), sq.getRows());
+
+
 			List<Object> searchAfter = null;
 			Query searchQuery = new NativeSearchQueryBuilder()
 					.withSourceFilter(new FetchSourceFilter(Common.toArray(sq.getFields(), ","), new String[]{"body", "attach"}))
+					.withFields(fields)
 					.withQuery(complateQuery)
 					.withHighlightBuilder(highlightBuilder)
 					.withAggregations(getAggregations(sq))
@@ -351,9 +357,27 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		return solrEdcVO;
 	}
 
+	public Long getTotalCnt(String query) {
+		org.springframework.data.elasticsearch.core.query.Query searchQuery = new NativeSearchQueryBuilder()
+				.withQuery(QueryBuilders.queryStringQuery(query))
+				.withTrackTotalHits(true)
+				.withTimeout(Duration.ofSeconds(100)).build();
+		IndexOperations indexoperations = operation.indexOps(IndexCoordinates.of("edc_*"));
+		return 	operation.search(searchQuery, SolrEdcVO.class,  indexoperations.getIndexCoordinates()).getTotalHits();
+	}
+
+
+	private List<String> getSearchField(String str) {
+		return Common.toList(str, ",");
+	}
+
+	private List<String> getDefaultSearchField(String str) {
+		return Common.toList(str, ",");
+	}
+
 	private Map<String, Float> getDefaultSearchField(SolrQuery sq) {
 		String defaultSearchFields = Common.nvl(sq.get("qf"));
-		List<String> list = Common.toList(defaultSearchFields, " ");
+		List<String> list = Common.toList(defaultSearchFields, ",");
 		Map<String, Float> fields = new HashMap<>();
 		for (String field : list) {
 			fields.put(field, 0.1f);

@@ -1,7 +1,10 @@
 package com.xcurenet.emass.analysis.service;
 
-import java.util.Map;
-
+import com.xcurenet.common.util.Common;
+import com.xcurenet.common.util.SolrQueryString;
+import com.xcurenet.emass.message.service.SolrEdcMessageVO;
+import com.xcurenet.emass.message.service.SolrEdcService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -9,12 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.xcurenet.common.util.Common;
-import com.xcurenet.common.util.SolrQueryString;
-import com.xcurenet.emass.message.service.SolrEdcMessageVO;
-import com.xcurenet.emass.message.service.SolrEdcService;
-
-import lombok.extern.slf4j.Slf4j;
+import java.util.Map;
 
 @Slf4j
 @Component
@@ -45,7 +43,7 @@ public class AnalysisScheduler {
 		log.info("AnalysisScheduler total count : {}", count);
 		for (int i = 0; i < count; i++) {
 			Map<String, String> time = plusHour(lastTime, i, (i + 1));
-			String startDate = time.get("startDate") + "0000";
+			String startDate =  time.get("startDate") + "0000";
 			String endDate = time.get("endDate") + "0000";
 
 			SolrQueryString query = new SolrQueryString();
@@ -57,18 +55,33 @@ public class AnalysisScheduler {
 			sq.setRows(Common.MAX_VALUE);
 			sq.setFields("sender", "sname", "attachname", "svc", "ctime", "ctime_yyyy", "ctime_yyyymm", "ctime_yyyymmdd", "ctime_hh", "size", "attached", "attachsize");
 
-			SolrEdcMessageVO edc = solrEdcService.getEmassMessage(sq, null);
 
-			UsageChartScheduler usageChart = new UsageChartScheduler();
-			try {
-				int insertCount = analysisRelationService.insertUsageCompare(usageChart.getData(edc.getEmass(), lastTime));
+			Long totalCnt  = solrEdcService.getTotalCnt(sq.getQuery());
 
-				log.info("time : {} ~ {}, searchCount : {}, insertCount : {}", startDate, endDate, edc.getNumFound(), insertCount);
-			} catch(Exception e) {
-				log.error("UI_USAGE_COMPARE INSERT ERROR", e.getMessage());
+			int totalR = Math.round(totalCnt / 10000) + 1 ;
+			int rows = 10000;
+
+			String anQuery = sq.getQuery();
+			for(int k=0;k<totalR;k++){
+				SolrQuery fsq = new SolrQuery();
+				fsq.setQuery(anQuery);
+				fsq.setStart(k * 10000);
+				fsq.setRows(rows);
+				SolrEdcMessageVO edc = solrEdcService.getEmassMessage(fsq, null);
+				UsageChartScheduler usageChart = new UsageChartScheduler();
+				try {
+					int insertCount = analysisRelationService.insertUsageCompare(usageChart.getData(edc.getEmass(), lastTime));
+					log.info("time : {} ~ {}, searchCount : {}, insertCount : {}", startDate, endDate, edc.getNumFound(), insertCount);
+				} catch(Exception e) {
+					log.error("UI_USAGE_COMPARE INSERT ERROR", e.getMessage());
+				}
 			}
-		}
-	}
+
+
+
+	}}
+
+
 
 	private String getDateTime(long time, String format) {
 		if (time == 0) return "-";

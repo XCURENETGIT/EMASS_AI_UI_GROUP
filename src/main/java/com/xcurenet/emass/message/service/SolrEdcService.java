@@ -50,5 +50,7 @@ public interface SolrEdcService {
 
 	String[] getExistIndics(String msgId,String format);
 
+	Long getTotalCnt(String query);
+
 	public List<SolrEdcVO> getCheckedList(List<SolrEdcVO> solrVo);
 }
