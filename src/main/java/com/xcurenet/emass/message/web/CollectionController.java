@@ -722,7 +722,7 @@ public class CollectionController {
 		String endDt = Common.isNotEmpty(request.getAttribute("endDt")) ? Common.nvl(request.getAttribute("endDt")) : Common.nvl(param.get("endDt"));
 		int limit = Common.isNotEmpty(request.getAttribute("limit")) ? Common.nvz(request.getAttribute("limit"), 100) : Common.nvz(param.get("limit"), 100000);
 		int offset = Common.isNotEmpty(request.getAttribute("start")) ? Common.nvz(request.getAttribute("start"), 0) : Common.nvz(param.get("start"), 0);
-		String type = Common.nvl(param.get("type"));
+		String type = Common.isNotEmpty(request.getAttribute("type")) ? Common.nvl(request.getAttribute("type")) : Common.nvl(param.get("type"));
 
 		SolrQuery sq = new SolrQuery();
 		String query = String.format("+ctime:[%s TO %s] +userkey:\"%s\"", startDt, endDt, userkey);
@@ -1191,7 +1191,7 @@ public class CollectionController {
 		sq.setStart(Common.nvz(param.get("offset"), 0));
 		sq.setRows(Common.nvz(param.get("limit"), 100));
 		sq.setSort("ctime", ORDER.desc);
-		sq.setFields("msgid", "userkey", "svc1","srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user");
+		sq.setFields("msgid", "userkey", "svc1","srcip", "svc",  "svc12","svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user");
 		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request));
 
 		int totalRooms= (int) solrEdcGroupVO.getNumFound();
@@ -1217,6 +1217,7 @@ public class CollectionController {
 				for (MessengerGroupVO room : rooms) {
 
 					request.setAttribute("userkey", room.getUserkey());
+					request.setAttribute("type", room.getSvc12());
 					request.setAttribute("usr_id", room.getUsr_id());
 					request.setAttribute("srcip", room.getSrcip());
 					request.setAttribute("startDt", Common.nvl(param.get("exportStartDt")));
@@ -1357,7 +1358,7 @@ public class CollectionController {
 		sq.setStart(start);
 		sq.setRows(limit);
 		sq.setSort("ctime", ORDER.desc);
-		sq.setFields("msgid", "userkey","srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id");
+		sq.setFields("msgid", "userkey","srcip", "svc", "svc12","svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id");
 
 		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, adminId);
 		solrEdcGroupVO.setGroups(solrEdcGroupVO.getGroups());
