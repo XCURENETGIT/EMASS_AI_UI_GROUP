@@ -1540,22 +1540,27 @@ function rtnFileGroupList2 (data) {
         li.setAttribute("name", data[i].name);
         li.setAttribute("data-chat", "person" + (i + 1));
 
-        var leftDiv = document.createElement("div");
-        leftDiv.className = "left";
 
-        var leftContent = "<p><span class='chatid'>" + data[i].attachname + "</span></p>" +
-            "<p><span class='name'>" + data[i].businm + "</span>";
+        var attachname = data[i].attachname ? data[i].attachname : "[noname]";
 
+        var leftContent = "<p><span class='chatid'>" + attachname + "</span></p><p>";
+
+        leftContent += data[i].businm ? "<span class='bar'></span><span class='name'>" + data[i].businm + "</span>" : "<span class='bar'></span><span class='name'>-</span>";
         leftContent += data[i].deptnm ? "<span class='bar'></span><span class='name'>" + data[i].deptnm + "</span>" : "<span class='bar'></span><span class='name'>-</span>";
         leftContent += data[i].jikgubnm ? "<span class='bar'></span><span class='name'>" + data[i].jikgubnm + "</span>" : "<span class='bar'></span><span class='name'>-</span>";
         if (data[i].name != null) {
             leftContent += "<span class='bar'></span><span class='name'>" + data[i].user + "</span>";
         } else {
-            leftContent += "<span class='bar'></span><span class='name'>" + data[i].user + "</span>";
+            leftContent += "<span class='bar'></span><span class='name'>" + data[i].sender + "</span>";
         }
 
-        leftContent += "<span class='bar'></span><span class='name'>" + data[i].attachsize + "KB</span></p>";
+        if (data[i].attachsize) {
+            leftContent += "<span class='bar'></span><span class='name'>" + data[i].attachsize + "KB" + "</span>";
+        } else {
+            leftContent += "<span class='bar'></span><span class='name'>-</span>";
+        }
 
+        leftContent += "</p>";
         leftDiv.innerHTML = leftContent;
         li.appendChild(leftDiv);
 
@@ -1615,7 +1620,7 @@ function rtnFileGroupList (data) {
         if (data[i].name != null) {
             leftContent += "<span class='bar'></span><span class='name'>" + data[i].user + "</span>";
         } else {
-            leftContent += "<span class='bar'></span><span class='name'>" + data[i].user + "</span>";
+            leftContent += "<span class='bar'></span><span class='name'>" + data[i].sender + "</span>";
         }
 
         if (data[i].attachsize) {
