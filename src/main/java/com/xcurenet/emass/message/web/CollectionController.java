@@ -1038,10 +1038,10 @@ public class CollectionController {
 	@ResponseBody
 	public void getFileAllExportZip(final HttpServletRequest request, final HttpServletResponse response, final HttpSession session) throws Exception {
 		JSONObject param = Common.getParam(request);
-		String exportStartDt= request.getParameter("exportStartDt");
-		String exportEndDt= request.getParameter("exportEndDt");
+		String exportStartDt = request.getParameter("exportStartDt");
+		String exportEndDt = request.getParameter("exportEndDt");
 
-		String uniqId = "("+exportStartDt+"~"+exportEndDt+")"+Common.getRandomString();
+		String uniqId = "(" + exportStartDt + "~" + exportEndDt + ")" + Common.getRandomString();
 		String tempDirPath = Common.makeFilepath(Common.TMP_PATH, uniqId);
 		String destFile = tempDirPath + ".zip";
 		Locale locale = Common.getLocale(request.getSession());
@@ -1072,7 +1072,7 @@ public class CollectionController {
 		}
 		sq.setStart(Common.nvz(param.get("offset"), 0));
 		sq.setRows(Common.nvz(param.get("limit"), 100));
-		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attachSizeStr","attachsize","attached", "attachname", "xrootmtr", "deptnm","businm", "jikgubnm", "usr_id");
+		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attachSizeStr", "attachsize", "attached", "attachname", "xrootmtr", "deptnm", "businm", "jikgubnm", "usr_id");
 
 		SolrEdcMessageVO solrEdcGroupVO = solrEdcService.getEmassMessage(sq, Common.getAdminId(request));
 
@@ -1087,11 +1087,10 @@ public class CollectionController {
 			}
 			inserDB(downloadBatchVO, param, "LBA", "html", Common.getAdminId(request), 0, destFile);
 
-
 			if ("C".equals(getStatusDB(downloadBatchVO))) {
 				log.info("Export process stopped due to status 'C'");
 				return;
-			}else {
+			} else {
 				for (int i = 0; i < solrEdcGroupVO.getNumFound(); i++) {
 					EmsBodyVO emsBody = emsMessageService.getEmassBody(solrEdcGroupVO.getEmass().get(i).getMsgid(), Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
 					if (Common.isNotEquals(print, "Y")) {
@@ -1103,10 +1102,25 @@ public class CollectionController {
 							fileOut.write(new EmsCreateMessage(request).getHeaderMessage(solrEdcGroupVO.getEmass().get(i).getMsgid(), emsMessageController.getBodyStr(userCharset, emsBody), print, locale, Common.getFirstAdminYn(request.getSession()), Common.getAdminId(request), Common.getAdminType(request.getSession())).getBytes());
 						}
 					}
-					updateIngDB(downloadBatchVO, (int) (solrEdcGroupVO.getNumFound()%i));
+
+						EmsAttachDownload attachDown = new EmsAttachDownload();
+						List<EmsAttachVO> attachs = emsMessageService.getEmassAttachInfo4Down(solrEdcGroupVO.getEmass().get(i).getMsgid(), null);
+						for (EmsAttachVO attach : attachs) {
+							String path = attach.getAttachPath();
+							Common.mkdirs(Common.makeFilepath(Common.TMP_PATH, uniqId, "attachs", solrEdcGroupVO.getEmass().get(i).getMsgid()));
+							try (InputStream in = attachDown.getAttach(path, null);
+							     FileOutputStream out = new FileOutputStream(new File(Common.makeFilepath(Common.TMP_PATH, uniqId, "attachs", solrEdcGroupVO.getEmass().get(i).getMsgid(), attach.getAttachName())));) {
+								if (in != null) IOUtils.copy(in, out);
+							} catch (Exception e) {
+								log.error("", e);
+							}
+				}
+
+					if (i != 0) {
+						updateIngDB(downloadBatchVO, (int) (solrEdcGroupVO.getNumFound() % i));
+					}
 				}
 			}
-
 
 			log.info("compressZip start : {} > {}", tempDirPath, destFile);
 			boolean success = ZipUtils.compressZip(tempDirPath, destFile);
@@ -1134,6 +1148,7 @@ public class CollectionController {
 			}
 		}
 	}
+
 
 	private EmsMessageVO getFileName(EmsBodyVO edc) {
 		EmsMessageVO msg = new EmsMessageVO();
