@@ -927,7 +927,8 @@ public class MessengerController {
 		int processedRooms = 0;
 		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
 		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), Common.getAdminId(session));
-		sq.setQuery(sq.getQuery() + MESSENGER + " +xrootmtr:*");
+		String space = "\"\")";
+		sq.setQuery(sq.getQuery() + MESSENGER + " +xrootmtr:* -xrootmtr:(".concat(space));
 		if (Common.isEquals(param.get("readYn"), "N")) {
 			sq.addFilterQuery(String.format(SolrEdcServiceImpl.JOIN_UNREAD, Common.getAdminId(session)));
 		}
@@ -964,10 +965,10 @@ public class MessengerController {
 				log.info("rooms.size() :  limit : {} room size : {}", limit, rooms.size());
 				for (MessengerGroupVO room : rooms) {
 					// Check the status inside the loop
-
+					if (room.getXrootmtr() == null || room.getXrootmtr()=="") continue;
 					request.setAttribute("xRootMtr", room.getXrootmtr());
 					request.setAttribute("usr_id", room.getUsr_id());
-					request.setAttribute("srcip", room.getSrcip());
+//					request.setAttribute("srcip", room.getSrcip());
 					request.setAttribute("startDt", Common.nvl(param.get("exportStartDt")));
 					request.setAttribute("endDt", Common.nvl(param.get("exportEndDt")));
 					request.setAttribute("limit", chatLimit);
@@ -1126,7 +1127,7 @@ public class MessengerController {
 			for (EmsAttachVO attach : attachs) {
 				String path = attach.getAttachPath();
 				Common.mkdirs(Common.makeFilepath(Common.TMP_PATH, uniqId, "attachs", item.getMsgid()));
-				try (InputStream in = attachDown.getAttach(path, null);
+				try (InputStream in = minioFileAdapter.findFile(path);
 				     FileOutputStream out = new FileOutputStream(new File(Common.makeFilepath(Common.TMP_PATH, uniqId, "attachs", item.getMsgid(), attach.getAttachName())));) {
 					if (in != null) IOUtils.copy(in, out);
 				} catch (Exception e) {
