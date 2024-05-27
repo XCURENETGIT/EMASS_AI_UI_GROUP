@@ -537,38 +537,6 @@ function getCollectionGroupList (page,type){
     });
 }
 
-function allDown(type){
-
-    if ((isConsent() && $('#consentNo').val() == '') || $(this).attr('userkey') == '') {
-        return;
-    }
-    var element = document.getElementById('groupResultCnt');
-    var number = parseInt(element.textContent, 10);
-    if (number === 0) {
-        ui.alertMsg('<s:message code="eikon.noList"/>');
-        return;
-    }
-
-    var filterVal = {};
-    var conArray = [];
-    conArray.push(currentSchVal);
-    filterVal.conditions = conArray;
-
-    ui.alertMsg('<s:message code="eikon.start.download"/>');
-    ui.get({
-        url : 'getCollectionGroupTextAllExportZip.xcn',
-        type:type,
-        data : JSON.stringify(filterVal),
-        exportStartDt : currentSchVal.startDt,
-        exportEndDt : currentSchVal.endDt,
-        success : function(data, total) {
-        },
-        error : function(status, message) {
-        },
-        complete : function() {
-        }
-    });
-}
 
 
 function getPageType() {
@@ -2023,8 +1991,8 @@ function setcurrentSchVal(type) {
 
     currentSchVal.readYn = $("input:checkbox[id='readYn']").is(":checked") ? 'N' : '';
     currentSchVal.period = 1;
-    currentSchVal.startDt =$('#startDt').val()+"000000";
-    currentSchVal.endDt =$('#endDt').val()+"235959";
+    currentSchVal.startDt = $('#startDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');+ "000000";
+    currentSchVal.endDt = $('#endDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '') + "235959";
 
     return currentSchVal;
 }

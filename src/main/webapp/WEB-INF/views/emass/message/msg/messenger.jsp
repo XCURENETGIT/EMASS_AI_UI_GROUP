@@ -1031,7 +1031,6 @@
                 return;
             }
 
-
             var filterVal = {};
             var conArray = [];
             conArray.push(currentSchVal);

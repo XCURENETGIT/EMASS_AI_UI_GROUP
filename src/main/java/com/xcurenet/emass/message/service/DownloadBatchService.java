@@ -36,4 +36,6 @@ public interface DownloadBatchService {
 	public String getMaxDownSeqMessenger();
 
 	public int updateDownloadBatchMessenger(DownloadBatchVO downloadBatchVO);
+
+	public String chackCancelMessnger(DownloadBatchVO vo);
 }

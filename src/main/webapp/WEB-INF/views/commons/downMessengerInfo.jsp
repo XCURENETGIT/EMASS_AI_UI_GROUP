@@ -294,8 +294,7 @@
         else if(value=='X') return '<span class="deleteText"><s:message code="download.msg.expired"/></span>';
         else if(value=='E') return '<s:message code="common.msg.noresult"/>';
         else if(value=='C'){
-            if (newDown != null) return newDown;
-            else return '<s:message code="common.msg.cancel"/>';
+            return '<s:message code="common.msg.cancel"/>';
         }
         else if(value=='H') return '<s:message code="download.msg.shutdown"/>';
         else if(value=='M') return '<s:message code="download.msg.monitor"/>';

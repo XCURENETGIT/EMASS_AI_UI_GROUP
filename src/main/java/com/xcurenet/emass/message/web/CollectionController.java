@@ -722,7 +722,7 @@ public class CollectionController {
 		String endDt = Common.isNotEmpty(request.getAttribute("endDt")) ? Common.nvl(request.getAttribute("endDt")) : Common.nvl(param.get("endDt"));
 		int limit = Common.isNotEmpty(request.getAttribute("limit")) ? Common.nvz(request.getAttribute("limit"), 100) : Common.nvz(param.get("limit"), 100000);
 		int offset = Common.isNotEmpty(request.getAttribute("start")) ? Common.nvz(request.getAttribute("start"), 0) : Common.nvz(param.get("start"), 0);
-		String type = Common.nvl(param.get("type"));
+		String type = Common.isNotEmpty(request.getAttribute("type")) ? Common.nvl(request.getAttribute("type")) : Common.nvl(param.get("type"));
 
 		SolrQuery sq = new SolrQuery();
 		String query = String.format("+ctime:[%s TO %s] +userkey:\"%s\"", startDt, endDt, userkey);
@@ -1038,10 +1038,10 @@ public class CollectionController {
 	@ResponseBody
 	public void getFileAllExportZip(final HttpServletRequest request, final HttpServletResponse response, final HttpSession session) throws Exception {
 		JSONObject param = Common.getParam(request);
-		String exportStartDt= request.getParameter("exportStartDt");
-		String exportEndDt= request.getParameter("exportEndDt");
+		String exportStartDt = request.getParameter("exportStartDt");
+		String exportEndDt = request.getParameter("exportEndDt");
 
-		String uniqId = "("+exportStartDt+"~"+exportEndDt+")"+Common.getRandomString();
+		String uniqId = "(" + exportStartDt + "~" + exportEndDt + ")" + Common.getRandomString();
 		String tempDirPath = Common.makeFilepath(Common.TMP_PATH, uniqId);
 		String destFile = tempDirPath + ".zip";
 		Locale locale = Common.getLocale(request.getSession());
@@ -1072,7 +1072,7 @@ public class CollectionController {
 		}
 		sq.setStart(Common.nvz(param.get("offset"), 0));
 		sq.setRows(Common.nvz(param.get("limit"), 100));
-		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attachSizeStr","attachsize","attached", "attachname", "xrootmtr", "deptnm","businm", "jikgubnm", "usr_id");
+		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attachSizeStr", "attachsize", "attached", "attachname", "xrootmtr", "deptnm", "businm", "jikgubnm", "usr_id");
 
 		SolrEdcMessageVO solrEdcGroupVO = solrEdcService.getEmassMessage(sq, Common.getAdminId(request));
 
@@ -1087,15 +1087,37 @@ public class CollectionController {
 			}
 			inserDB(downloadBatchVO, param, "LBA", "html", Common.getAdminId(request), 0, destFile);
 
-			for (int i = 0; i < solrEdcGroupVO.getNumFound(); i++) {
-				EmsBodyVO emsBody = emsMessageService.getEmassBody(solrEdcGroupVO.getEmass().get(i).getMsgid(), Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
-				if (Common.isNotEquals(print, "Y")) {
-					String subject = EmsReDefined.reSubject(getFileName(emsBody));
-					String fileName = Common.getEDCFileName(emsBody.getCtime(), emsBody.getUserId(), emsBody.getName(), subject, solrEdcGroupVO.getEmass().get(i).getMsgid()) + ".html";
-					String filePath = tempDirPath + File.separator + fileName;
+			if ("C".equals(getStatusDB(downloadBatchVO))) {
+				log.info("Export process stopped due to status 'C'");
+				return;
+			} else {
+				for (int i = 0; i < solrEdcGroupVO.getNumFound(); i++) {
+					EmsBodyVO emsBody = emsMessageService.getEmassBody(solrEdcGroupVO.getEmass().get(i).getMsgid(), Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
+					if (Common.isNotEquals(print, "Y")) {
+						String subject = EmsReDefined.reSubject(getFileName(emsBody));
+						String fileName = Common.getEDCFileName(emsBody.getCtime(), emsBody.getUserId(), emsBody.getName(), subject, solrEdcGroupVO.getEmass().get(i).getMsgid()) + ".html";
+						String filePath = tempDirPath + File.separator + fileName;
 
-					try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
-						fileOut.write(new EmsCreateMessage(request).getHeaderMessage(solrEdcGroupVO.getEmass().get(i).getMsgid(), emsMessageController.getBodyStr(userCharset, emsBody), print, locale, Common.getFirstAdminYn(request.getSession()), Common.getAdminId(request), Common.getAdminType(request.getSession())).getBytes());
+						try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
+							fileOut.write(new EmsCreateMessage(request).getHeaderMessage(solrEdcGroupVO.getEmass().get(i).getMsgid(), emsMessageController.getBodyStr(userCharset, emsBody), print, locale, Common.getFirstAdminYn(request.getSession()), Common.getAdminId(request), Common.getAdminType(request.getSession())).getBytes());
+						}
+					}
+
+						EmsAttachDownload attachDown = new EmsAttachDownload();
+						List<EmsAttachVO> attachs = emsMessageService.getEmassAttachInfo4Down(solrEdcGroupVO.getEmass().get(i).getMsgid(), null);
+						for (EmsAttachVO attach : attachs) {
+							String path = attach.getAttachPath();
+							Common.mkdirs(Common.makeFilepath(Common.TMP_PATH, uniqId, "attachs", solrEdcGroupVO.getEmass().get(i).getMsgid()));
+							try (InputStream in = attachDown.getAttach(path, null);
+							     FileOutputStream out = new FileOutputStream(new File(Common.makeFilepath(Common.TMP_PATH, uniqId, "attachs", solrEdcGroupVO.getEmass().get(i).getMsgid(), attach.getAttachName())));) {
+								if (in != null) IOUtils.copy(in, out);
+							} catch (Exception e) {
+								log.error("", e);
+							}
+				}
+
+					if (i != 0) {
+						updateIngDB(downloadBatchVO, (int) (solrEdcGroupVO.getNumFound() % i));
 					}
 				}
 			}
@@ -1112,15 +1134,21 @@ public class CollectionController {
 			log.error("", e);
 		} finally {
 			long totalFileSizeBeforeCompression = calculateDirectorySize(tempDirPath);
-			updateSucessDB(downloadBatchVO, totalFileSizeBeforeCompression);
-			log.info("Total file size before compression: {} bytes", totalFileSizeBeforeCompression);
+			if ("C".equals(getStatusDB(downloadBatchVO))) {
+				log.info("Export process stopped due to status 'C'");
+				return;
+			} else {
+				updateSucessDB(downloadBatchVO, totalFileSizeBeforeCompression);
+				log.info("Total file size before compression: {} bytes", totalFileSizeBeforeCompression);
 
-			Path directoryPath = Paths.get(tempDirPath);
-			Files.walk(directoryPath).map(Path::toFile).forEach(File::delete);
-			FileUtils.deleteDirectory(directoryPath.toFile());
-			IOUtils.closeQuietly(sOut);
+				Path directoryPath = Paths.get(tempDirPath);
+				Files.walk(directoryPath).map(Path::toFile).forEach(File::delete);
+				FileUtils.deleteDirectory(directoryPath.toFile());
+				IOUtils.closeQuietly(sOut);
+			}
 		}
 	}
+
 
 	private EmsMessageVO getFileName(EmsBodyVO edc) {
 		EmsMessageVO msg = new EmsMessageVO();
@@ -1178,7 +1206,7 @@ public class CollectionController {
 		sq.setStart(Common.nvz(param.get("offset"), 0));
 		sq.setRows(Common.nvz(param.get("limit"), 100));
 		sq.setSort("ctime", ORDER.desc);
-		sq.setFields("msgid", "userkey", "svc1","srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user");
+		sq.setFields("msgid", "userkey", "svc1","srcip", "svc",  "svc12","svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user");
 		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request));
 
 		int totalRooms= (int) solrEdcGroupVO.getNumFound();
@@ -1204,6 +1232,7 @@ public class CollectionController {
 				for (MessengerGroupVO room : rooms) {
 
 					request.setAttribute("userkey", room.getUserkey());
+					request.setAttribute("type", room.getSvc12());
 					request.setAttribute("usr_id", room.getUsr_id());
 					request.setAttribute("srcip", room.getSrcip());
 					request.setAttribute("startDt", Common.nvl(param.get("exportStartDt")));
@@ -1243,7 +1272,12 @@ public class CollectionController {
 					double roomProgress = (double) processedRooms / totalRooms * 100;
 					roomProgress = Math.min(roomProgress, 80.0); // 최대 80%로 제한
 					int roundedProgress = (int) Math.round(roomProgress);
-					updateIngDB(downloadBatchVO, roundedProgress);
+					if ("C".equals(getStatusDB(downloadBatchVO))) {
+						log.info("Export process stopped due to status 'C'");
+						return;
+					}else {
+						updateIngDB(downloadBatchVO, roundedProgress);
+					}
 				}
 				size = rooms.size();
 				Common.sleep(1000);
@@ -1256,14 +1290,19 @@ public class CollectionController {
 			log.error("", e);
 		} finally {
 			long totalFileSizeBeforeCompression = calculateDirectorySize(Common.makeFilepath(Common.TMP_PATH, uniqId));
-			updateSucessDB(downloadBatchVO, totalFileSizeBeforeCompression);
-			log.info("Total file size before compression: {} bytes", totalFileSizeBeforeCompression);
+			if ("C".equals(getStatusDB(downloadBatchVO))) {
+				log.info("Export process stopped due to status 'C'");
+				return;
+			}else {
+				log.info("Total file size before compression: {} bytes", totalFileSizeBeforeCompression);
 
-			Path directoryPath = Paths.get(Common.makeFilepath(Common.TMP_PATH, uniqId));
-			Files.walk(directoryPath).map(Path::toFile).forEach(File::delete);
-			FileUtils.deleteDirectory(directoryPath.toFile());
-			IOUtils.closeQuietly(in);
-			IOUtils.closeQuietly(sOut);
+				Path directoryPath = Paths.get(Common.makeFilepath(Common.TMP_PATH, uniqId));
+				Files.walk(directoryPath).map(Path::toFile).forEach(File::delete);
+				FileUtils.deleteDirectory(directoryPath.toFile());
+				IOUtils.closeQuietly(in);
+				IOUtils.closeQuietly(sOut);
+				updateSucessDB(downloadBatchVO, totalFileSizeBeforeCompression);
+			}
 		}
 	}
 
@@ -1302,7 +1341,9 @@ public class CollectionController {
 		downloadBatchService.updateDownloadBatchMessenger(vo);
 	}
 
-
+	private String getStatusDB(DownloadBatchVO vo) {
+		return  downloadBatchService.chackCancelMessnger(vo);
+	}
 	private void alarmMessage(String adminId, DownloadBatchVO vo) {
 		log.info("alarmMessage VO : {}", vo);
 		template.convertAndSendToUser(adminId, "/exportEnd", vo);
@@ -1332,7 +1373,7 @@ public class CollectionController {
 		sq.setStart(start);
 		sq.setRows(limit);
 		sq.setSort("ctime", ORDER.desc);
-		sq.setFields("msgid", "userkey","srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id");
+		sq.setFields("msgid", "userkey","srcip", "svc", "svc12","svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id");
 
 		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, adminId);
 		solrEdcGroupVO.setGroups(solrEdcGroupVO.getGroups());
