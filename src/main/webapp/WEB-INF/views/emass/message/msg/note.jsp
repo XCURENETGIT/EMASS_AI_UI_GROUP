@@ -1277,3 +1277,11 @@
     }
 
 </script>
+
+<script>
+    $(function() {
+        $("#xcn_toggleBtn").on("click", function() {
+            $("#xcn_Search").toggle("show");
+        })
+    })
+</script>
