@@ -934,7 +934,11 @@
             else return '-';
         });
 
-        grid.colAdd('svcNm', '<s:message code="condition.service"/>', 180, 'center', false, 'nomal');
+        grid.colAdd('svcNm', '<s:message code="condition.service"/>', 180, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+           if (value == null || value == "undefined") return "null";
+           else return value;
+        });
+
         grid.colAdd('subject', '<s:message code="condition.subject"/>', 410, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
             var body_snippet = grid.getValue(row, 'body_snippet').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '\'');
             if(body_snippet.length > 100) body_snippet = body_snippet.substring(0, 1024)+'...';
