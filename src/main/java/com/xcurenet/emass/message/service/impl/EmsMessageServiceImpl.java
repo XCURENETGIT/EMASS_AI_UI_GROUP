@@ -147,6 +147,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 	public List<EmsKeywordVO> getEmassKeyword(String msgId) {
 		EmsMessageVO data = getEmassMessageData(msgId);
 		EmassKeywordData keywordVO = data.getKeywordInfo();
+		if (keywordVO == null) return  null;
 		List<EmsKeywordVO> result = new ArrayList<>();
 		result.addAll(getKeywordList(msgId, "B", keywordVO.getKwdsBody()));
 		result.addAll(getKeywordList(msgId, "S", keywordVO.getKwdsSubject()));

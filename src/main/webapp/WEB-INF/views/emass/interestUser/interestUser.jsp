@@ -768,7 +768,7 @@
     gridItem.colAdd('ceo', '<s:message code="userInfo.usertype"/>', 80, 'center', false, 'normal', function (row, cell, value, columnDef, dataContext) {
         var ceo = gridItem.getValue(row, 'ceo');
         if (ceo == 'Y') return 'CEO';
-        else return "";
+        else return '';
     });
     gridItem.loadExportMenu('<s:message code="DATA_MONITOR.INTEREST_USER"/>');
     gridItem.loadHeader(true);
@@ -789,10 +789,9 @@
     gridSelectUser.colAdd('jikgubNm', '<s:message code="common.org.jikgub"/>', 80, 'left', false, 'nomal');
     gridSelectUser.colAdd('jikinNm', '<s:message code="common.org.jikin"/>', 80, 'left', false, 'nomal');
     gridSelectUser.colAdd('ceo', '<s:message code="userInfo.usertype"/>', 80, 'center', false, 'normal', function (row, cell, value, columnDef, dataContext) {
-        var ceo = gridItem.getValue(row, 'ceo');
-        const emptyString = '';
+        var ceo = gridSelectUser.getValue(row, 'ceo');
         if (ceo == 'Y') return 'CEO';
-        else return emptyString;
+        else return 'N';
     });
 
     gridSelectUser.onClick = function () {
