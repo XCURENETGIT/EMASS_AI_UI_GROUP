@@ -173,6 +173,8 @@ public class SolrEdcVO {
 
 	public List<String> attachname;
 
+	public List<String> attachname_str;
+
 	public List<Long> attachsize;
 
 	public List<String> attachhash;

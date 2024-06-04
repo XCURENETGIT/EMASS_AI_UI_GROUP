@@ -15,6 +15,7 @@ import com.xcurenet.minio.MinioFileAdapter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.io.eval.IFFTEvaluator;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -191,9 +192,12 @@ public class DashBoardPreDefineServiceImpl implements DashBoardPreDefineService 
 		List<String> fileId = new ArrayList<>();
 
 		for (SolrEdcVO solrEdcVO : edc.getEmass()) {
+
 			filesize.add(solrEdcVO.getAttachSizeStr());
 			fileType.add(solrEdcVO.getAttachtype().get(0));
-			fileName.add(solrEdcVO.getAttachname().get(0));
+			if (solrEdcVO.getAttachname() != null) fileName.add(solrEdcVO.getAttachname().get(0));
+			else fileName.add(solrEdcVO.getAttachname_str().get(0));
+
 			fileId.add(solrEdcVO.getMsgid());
 		}
 		result.setFileSize(filesize);
