@@ -693,11 +693,11 @@ function Xgrid ( target, contextRoot, rowHeight, options, dataview ) {
 						result[j][columnId] = (str == '') ? '' : str; // 빈 문자열 그대로 유지
 					}
 				} else {
-					if (this.columns[i].formatter != undefined) {
-						var org = this.columns[i].formatter(j, i, nvl(data[j][columnId]));
-						var str = $("#replace_html").html(org).text().trim();
-						result[j][columnId] = (str == '') ? '' : str; // 빈 문자열 그대로 유지
-					}
+					if ( this.columns[i].formatter == undefined ) continue;
+					var org = this.columns[i].formatter( j, i, data[j][this.columns[i].id] );
+					var str = $("#replace_html").html(org).text().trim();
+					if(str == '') continue;
+					result[j][this.columns[i].id] = str;
 				}
 			}
 		}
