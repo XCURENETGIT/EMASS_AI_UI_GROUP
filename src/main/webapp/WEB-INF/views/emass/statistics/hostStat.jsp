@@ -52,7 +52,6 @@
     var serviceList=[];
     $(document).ready(function(){
 
-        initCondition();
         initDateTimePicker('startdate','enddate');
         closeDetailTab();
         getData ('Y')
@@ -242,6 +241,7 @@
 
 
     function initCondition(){
+        getServiceList();
         getCodeList('busi');
         getCodeList('dept');
 
