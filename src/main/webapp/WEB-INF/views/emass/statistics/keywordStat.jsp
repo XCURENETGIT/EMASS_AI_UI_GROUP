@@ -251,6 +251,7 @@
 
 
     function initCondition(){
+        getServiceList();
         getCodeList('busi');
         getCodeList('dept');
 
