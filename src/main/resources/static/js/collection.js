@@ -1540,6 +1540,9 @@ function rtnFileGroupList2 (data) {
         li.setAttribute("name", data[i].name);
         li.setAttribute("data-chat", "person" + (i + 1));
 
+        var leftDiv = document.createElement("div");
+        leftDiv.className = "left";
+
 
         var attachname = data[i].attachname ? data[i].attachname : "[noname]";
 
@@ -1564,7 +1567,7 @@ function rtnFileGroupList2 (data) {
         leftDiv.innerHTML = leftContent;
         li.appendChild(leftDiv);
 
-        // Create right div
+        // Create right di
         var rightDiv = document.createElement("div");
         rightDiv.className = "right";
         var imageName =mainContext+"/img/icon/ico_sns_"+ data[i].svc+".png";
