@@ -54,6 +54,7 @@
 
         initDateTimePicker('startdate','enddate');
         closeDetailTab();
+
         getData ('Y')
         $('.optionBtn').click(function () {
             $('.optionBtn').removeClass('active');
