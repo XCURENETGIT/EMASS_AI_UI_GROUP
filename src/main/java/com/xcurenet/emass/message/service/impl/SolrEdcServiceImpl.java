@@ -135,6 +135,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	/* util_getList */
 	@Override
 	public SearchHits<SolrEdcVO> getList(SolrQuery sq) throws SolrServerException, IOException {
+		//sq.setParam("searchAfter", "20240607144748, 20240607144748.TQJA2VGNN3C25O7G6IM2LTTOA4LZ3227");
 		SearchHits<SolrEdcVO> searchHits = null;
 		try {
 			String bodysnippet = "N";
@@ -214,8 +215,11 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 			log.info("page : {}  rows : {}", getPage(sq), sq.getRows());
 
-
 			List<Object> searchAfter = null;
+			if(Common.isNotEmpty(sq.get("searchAfter"))) {
+				searchAfter = new ArrayList<>();
+				Collections.addAll(searchAfter, Common.toArray(sq.get("searchAfter"), ","));
+			}
 			Query searchQuery = new NativeSearchQueryBuilder()
 					.withSourceFilter(new FetchSourceFilter(Common.toArray(sq.getFields(), ","), new String[]{"body", "attach"}))
 					.withFields(fields)
@@ -267,28 +271,9 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 	//일반검색
 	public SearchHits<SolrEdcVO> searchAfter(Query searchQuery, SolrQuery sq, List<Object> searchAfter) {
-		SearchHits<SolrEdcVO> searchHits = null;
-		int offset = (null == sq.getStart()) ? 0 : sq.getStart(); // start
-		int rows = sq.getRows(); // (sq.getRows() == 0) ? 100 : sq.getRows() ;  // size
-		int range = Math.round((rows + offset) / rows); // for문 횟수
-
-		searchQuery.setPageable(PageRequest.ofSize(rows));
-		int idx = 0;
-		do {
-			searchQuery.setSearchAfter(searchAfter);
-			if (Math.round((offset / rows)) == idx) {
-				searchHits = operation.search(searchQuery, SolrEdcVO.class, defaultIndex);
-				break;
-			} else {
-				searchHits = operation.search(searchQuery, SolrEdcVO.class, defaultIndex);
-			}
-			if (idx > range || searchHits.getSearchHits().isEmpty()) break;
-			SearchHit lastHit = searchHits.getSearchHit((int) (searchHits.getSearchHits().size() - 1));
-			searchAfter = lastHit.getSortValues();
-			idx++;
-		} while (true);
-
-		return searchHits;
+		searchQuery.setPageable(PageRequest.of(0, sq.getRows()));
+		searchQuery.setSearchAfter(searchAfter);
+		return operation.search(searchQuery, SolrEdcVO.class, defaultIndex);
 	}
 
 
