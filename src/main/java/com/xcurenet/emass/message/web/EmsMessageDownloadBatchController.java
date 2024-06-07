@@ -115,6 +115,9 @@ public class EmsMessageDownloadBatchController {
 		long skipCnt = 0;
 		long sucCnt = 0;
 
+		String ctime = null;
+		String msgId = null;
+
 		boolean isSpaceChk = true;
 		boolean isCancel = false;
 		try {
@@ -134,8 +137,7 @@ public class EmsMessageDownloadBatchController {
 			Common.mkdirs(exportDir.getPath());
 			EmsAttachDownload attachDown = new EmsAttachDownload();
 			for (int i = 1; i <= queryCnt; i++) {
-
-				List<SolrEdcVO> emass = EmsReDefined.reDefined(getEmassData(adminId, condition, searchTime, i - 1).getEmass(), locale);
+				List<SolrEdcVO> emass = EmsReDefined.reDefined(getEmassData(adminId, condition, searchTime, i - 1, ctime, msgId).getEmass(), locale);
 				if (listFlag) xlsxWriter = createExcelZipFile(exportDir, xlsxWriter, emass, header, title, total, i, solrCnt, bodyFlag, attachFlag, exportFileExt, dataLength);
 				if (bodyFlag || attachFlag) {
 					for (SolrEdcVO edc : emass) {
@@ -150,6 +152,9 @@ public class EmsMessageDownloadBatchController {
 							//if (attachFlag) downloadAttach(exportDir, attachDown, edc, ftp);
 							if (attachFlag) downloadAttach(exportDir, attachDown, edc);
 							sucCnt++;
+							ctime  = edc.getCtime();
+							msgId = edc.getMsgid();
+
 						} catch(Exception e) {
 							skipCnt++;
 							log.info("Skip Message ID : {} ", edc.getMsgid());
@@ -302,12 +307,18 @@ public class EmsMessageDownloadBatchController {
 		return xlsxWriter;
 	}
 
-	private SolrEdcMessageVO getEmassData(String adminId, final JSONObject condition, final String searchTime, int page) throws Exception, IOException{
+	private SolrEdcMessageVO getEmassData(String adminId, final JSONObject condition, final String searchTime, int page, String ctime, String msgid) throws Exception, IOException{
 		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
 		SolrQuery sq = null;
 		if (Common.isNotEmpty(condition.get("msgids"))) {
 			sq = new SolrQuery();
 			sq.setQuery(String.format("msgid:(%s)", Common.joinj(Common.toJSONArray(condition.get("msgids")), " ")));
+
+			String searchAfter = null;
+			if (ctime!= null && msgid!=null){
+				searchAfter = ctime+","+msgid;
+			}
+			sq.setParam("searchAfter", Common.nvl(searchAfter));
 
 			String sort = Common.nvl(condition.get("sort"));
 			if (Common.isEmpty(sort)) {
@@ -390,10 +401,13 @@ public class EmsMessageDownloadBatchController {
 				alarmMessage(adminId, downloadBatchVO);
 				return;
 			}
+			String ctime = null;
+			String msgid = null;
+
 			Common.mkdirs(exportDir.getPath());
 			EmsAttachDownload attachDown = new EmsAttachDownload();
 			for (int i = 1; i <= queryCnt; i++) {
-				List<SolrEdcVO> emass = EmsReDefined.reDefined(getEmassData(adminId, condition, searchTime, i - 1).getEmass(), locale);
+				List<SolrEdcVO> emass = EmsReDefined.reDefined(getEmassData(adminId, condition, searchTime, i - 1, ctime, msgid).getEmass(), locale);
 
 				csvWriter = createCsvZipFile(exportDir, csvWriter, emass, header, total, i, solrCnt, dataLength);
 
@@ -410,6 +424,8 @@ public class EmsMessageDownloadBatchController {
 							//if (attachFlag) downloadAttach(exportDir, attachDown, edc, ftp);
 							if (attachFlag) downloadAttach(exportDir, attachDown, edc);
 							sucCnt++;
+							ctime  = edc.getSvc();
+							msgid = edc.getMsgid();
 						} catch(Exception e) {
 							skipCnt++;
 							log.info("Skip Message ID : {} ", edc.getMsgid());
@@ -558,10 +574,13 @@ public class EmsMessageDownloadBatchController {
 				alarmMessage(adminId, downloadBatchVO);
 				return;
 			}
+
+			String ctime = null;
+			String msgid = null;
 			Common.mkdirs(exportDir.getPath());
 			EmsAttachDownload attachDown = new EmsAttachDownload();
 			for (int i = 1; i <= queryCnt; i++) {
-				List<SolrEdcVO> emass = EmsReDefined.reDefined(getEmassData(adminId, condition, searchTime, i - 1).getEmass(), locale);
+				List<SolrEdcVO> emass = EmsReDefined.reDefined(getEmassData(adminId, condition, searchTime, i - 1, ctime, msgid).getEmass(), locale);
 
 				pdfWriter = createPdfZipFile(exportDir, pdfWriter, emass, header, total, i, solrCnt, title, dataLength);
 
@@ -578,6 +597,8 @@ public class EmsMessageDownloadBatchController {
 							//if (attachFlag) downloadAttach(exportDir, attachDown, edc, ftp);
 							if (attachFlag) downloadAttach(exportDir, attachDown, edc);
 							sucCnt++;
+							ctime = edc.getCtime();
+							msgid = edc.getMsgid();
 						} catch(Exception e) {
 							skipCnt++;
 							log.info("Skip Message ID : {} ", edc.getMsgid());
