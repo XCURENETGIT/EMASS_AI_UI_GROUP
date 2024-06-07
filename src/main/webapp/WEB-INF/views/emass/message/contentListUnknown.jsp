@@ -257,6 +257,8 @@ function getList(flag, filterVal){
 	} else {
 		grid.loadingPage++;
 	}
+
+
 	
 	grid.on();
 
@@ -269,8 +271,14 @@ function getList(flag, filterVal){
 		,overlap : overlapUse
 	}
 
+    let searchAfter = null;
+    if(grid.loadingPage > 0) {
+        searchAfter = grid.getValue(grid.data.length-1, 'ctime') + ',' + grid.getValue(grid.data.length-1, 'msgid');
+    }
+
 	ui.postJson({
 		url : 'getList.xcn',
+        searchAfter : searchAfter,
 		searchData : JSON.stringify( searchData ),
 		success : function(data, total) {
 			searchedFlag = true;
@@ -330,12 +338,18 @@ function getSubList(flag, svc12, searchTime){
 		grid.loadingPage++;
 	}
 	//changTabHeader(obj.data);
+
+    let searchAfter = null;
+    if(grid.loadingPage > 0) {
+        searchAfter = grid.getValue(grid.data.length-1, 'ctime') + ',' + grid.getValue(grid.data.length-1, 'msgid');
+    }
 	
 	grid.on();
 	ui.postJson({
 		url : 'getList.xcn',
 		data : JSON.stringify( filterValData ),
 		pageType : pageType,
+        searchAfter : searchAfter,
 		offset : grid.data.length,
 		limit : grid.pageSize,
 		success : function(data, total) {

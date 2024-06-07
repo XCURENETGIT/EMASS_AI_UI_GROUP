@@ -91,12 +91,18 @@ function getList(lastRow){
 	} else {
 		grid.loadingPage++;
 	}
+
+    let searchAfter = null;
+    if(grid.loadingPage > 0) {
+        searchAfter = grid.getValue(grid.data.length-1, 'ctime') + ',' + grid.getValue(grid.data.length-1, 'msgid');
+    }
 	grid.on();
 	ui.postJson({
 		url : 'getList.xcn',
 		data : JSON.stringify( filterValData ),
 		pageType : '',
 		offset : grid.data.length,
+        searchAfter : searchAfter,
 		limit : grid.pageSize,
 		success : function(data, total) {
 			searchedFlag = true;		

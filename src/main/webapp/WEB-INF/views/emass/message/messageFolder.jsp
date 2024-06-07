@@ -404,6 +404,11 @@ function getFolderDataList(flag){
 	condition.sort = 'ctime desc';
 	conditions.push(condition);
 	param.conditions = conditions;
+
+    let searchAfter = null;
+    if(grid.loadingPage > 0) {
+        searchAfter = grid.getValue(grid.data.length-1, 'ctime') + ',' + grid.getValue(grid.data.length-1, 'msgid');
+    }
 	
 	searchFlag = true;
 	grid.on();
@@ -412,6 +417,7 @@ function getFolderDataList(flag){
 		data : JSON.stringify( param ),
 		pageType : pageType,
 		offset : grid.data.length,
+        searchAfter : searchAfter,
 		limit : grid.pageSize,
 		success : function(data, total) {
 			grid.appendData(data.emass);
