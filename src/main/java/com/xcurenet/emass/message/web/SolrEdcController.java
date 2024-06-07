@@ -182,6 +182,7 @@ public class SolrEdcController {
 			SolrQuery sq = solrCreateQuery.createQuery(data, Common.getAdminId(session), Common.nvl(data.get("searchTime")));
 			sq.setStart(Common.nvz(param.get("offset"), 0));
 			sq.setRows(Common.nvz(param.get("limit"), 100));
+			sq.setParam("searchAfter", Common.nvl(param.get("searchAfter")));
 
 			if(Common.isEmpty(data.get("searchTime"))) {
 				sq.setFacet(true);

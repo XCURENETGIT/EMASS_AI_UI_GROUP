@@ -334,6 +334,12 @@
         } else {
             grid.loadingPage++;
         }
+		let searchAfter = null;
+		console.log("grid.loadingPage : " + grid.loadingPage);
+		if(grid.loadingPage > 0) {
+			searchAfter = grid.getValue(grid.data.length-1, 'ctime') + ',' + grid.getValue(grid.data.length-1, 'msgid');
+			console.log("searchAfter : " + searchAfter);
+		}
         grid.on();
         ui.postJson({
             url : 'getList.xcn',
@@ -341,6 +347,7 @@
             pageType : pageType,
             offset : grid.data.length + grid.overlapData.length,
             limit : grid.pageSize,
+	        searchAfter : searchAfter,
             overlap : overlapUse,
             success : function(data, total) {
 
@@ -404,6 +411,13 @@
         }
         //changTabHeader(obj.data);
 
+	    let searchAfter = null;
+	    console.log("grid.loadingPage : " + grid.loadingPage);
+	    if(grid.loadingPage > 0) {
+		    searchAfter = grid.getValue(grid.data.length-1, 'ctime') + ',' + grid.getValue(grid.data.length-1, 'msgid');
+		    console.log("searchAfter : " + searchAfter);
+	    }
+
         grid.on();
         ui.postJson({
             url : 'getList.xcn',
@@ -412,6 +426,7 @@
             offset : grid.data.length + grid.overlapData.length,
             limit : grid.pageSize,
             overlap : overlapUse,
+	        searchAfter : searchAfter,
             success : function(data, total) {
                 grid.appendData(data.emass);
                 if ( grid.loadingPage == 0 ) grid.Select(-1,-1);
