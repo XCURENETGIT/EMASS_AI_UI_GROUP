@@ -64,13 +64,15 @@ var eikon = {
 
             if ($(this).hasClass('messenger_next')) {
                 var msgid = $('.timeline').children().last().attr('id');
-                getMessengerMessageNext(xrootmtr, srcip, usr_id, msgid);
+                var ctime = $('.timeline').children().last().attr('ctime');
+                getMessengerMessageNext(xrootmtr, srcip, usr_id, msgid, ctime);
 
             } else {
                 // var msgid = $('.timeline').children().first().attr('id');
                 var firstData = $('.timeline').children('li').first();
                 var msgid = $(firstData).attr('id');
-                getMessengerMessagePrev(xrootmtr, srcip, usr_id, msgid);
+                var ctime = $(firstData).attr('ctime');
+                getMessengerMessagePrev(xrootmtr, srcip, usr_id, msgid, ctime);
 
             }
 
@@ -278,7 +280,6 @@ function getMessengerMessageTotal(xRootmtr, srcip, startDt, endDt, usr_id, msgid
  * @returns
  */
 function getMessengerMessage(xRootmtr, srcip, usr_id, msgid,searchFlag) {
-    console.log("searchFlag"+searchFlag);
 
     var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
     var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
@@ -346,7 +347,7 @@ function getMessengerMessage(xRootmtr, srcip, usr_id, msgid,searchFlag) {
 /**
  * 다음 버튼 ( 최하단의 + 버튼 )
  */
-function getMessengerMessageNext(xRootmtr, srcip, usr_id, msgid) {
+function getMessengerMessageNext(xRootmtr, srcip, usr_id, msgid, ctime) {
     var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
     var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
     searchFlag = true;
@@ -359,6 +360,7 @@ function getMessengerMessageNext(xRootmtr, srcip, usr_id, msgid) {
         endDt:  endDt+"235959",
         usr_id: usr_id,
         msgId: msgid,
+        ctime: ctime,
         limit: detailLimit,
         success: function (data, total) {
             searchFlag = false;
@@ -435,7 +437,7 @@ function getMessengerAllfile(xrootmtr, srcip, usr_id, msgid) {
 /**
  * 이전 버튼 ( 최상단의 + 버튼 )
  */
-function getMessengerMessagePrev(xRootmtr, srcip, usr_id, msgid) {
+function getMessengerMessagePrev(xRootmtr, srcip, usr_id, msgid, ctime) {
     var startDt = $('#startSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
     var endDt = $('#endSubDt').val().replaceAll("-", "").replaceAll(":", "").replace(/ /gi, '');
     searchFlag = true;
@@ -447,6 +449,7 @@ function getMessengerMessagePrev(xRootmtr, srcip, usr_id, msgid) {
         endDt: endDt+"235959",
         usr_id: usr_id,
         msgId: msgid,
+        ctime: ctime,
         limit: detailLimit,
         success: function (data, total) {
             searchFlag = false;
@@ -558,6 +561,7 @@ function rtnGroupList2(data, type){
         li.setAttribute("usrid", data[i].usrid);
         li.setAttribute("body_snippet", data[i].body_snippet);
         li.setAttribute("name", data[i].name);
+        li.setAttribute("ctime2", data[i].ctime2);
         li.setAttribute("data-sender", data[i].sender);
         li.setAttribute("data-chat", "person" + (i + 1));
 
@@ -639,6 +643,7 @@ function rtnGroupList(data, type) {
         li.setAttribute("body_snippet", data[i].body_snippet);
         li.setAttribute("name", data[i].name);
         li.setAttribute("data-sender", data[i].sender);
+        li.setAttribute("ctime2", data[i].ctime2);
         li.setAttribute("data-chat", "person" + (i + 1));
 
         var user_cnt = data[i].user_cnt;
@@ -777,11 +782,20 @@ function getMessengerMessageList(page) {
     groupMessagePage = page;
     var offset = groupMessagePage * groupMessagePageBreak - groupMessagePageBreak;
     searchFlag = true;
+
+
+    let searchAfter = null;
+    if(offset > 0) {
+        searchAfter = $('.people').children().last().attr('ctime2') + ',' +  $('.people').children().last().attr('msgid');
+        console.log("searchAfter : " + searchAfter);
+    }
+
     ui.onBody('timeline_list', 0, -20);
     ui.postJson({
         url: 'getMessengerMessageList.xcn',
         data : JSON.stringify(filterVal),
         offset: offset,
+        searchAfter:searchAfter,
         limit: groupPageBreak,
         success: function (data, total) {
             isLoading=true;

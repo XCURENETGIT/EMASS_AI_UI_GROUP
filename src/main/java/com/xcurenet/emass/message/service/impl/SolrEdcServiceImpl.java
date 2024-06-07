@@ -155,7 +155,6 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			}
 			log.debug("[SORT] : {}", sq.getSortField());
 			log.debug("[QUERY] {}", sq.getQuery());
-			log.info("[QUERY] {}", sq.getQuery());
 			if (Common.isNotEmpty(sq.getFilterQueries()))
 				log.debug("[FILTER_QUERY] {}", StringUtils.join(sq.getFilterQueries(), ' '));
 
@@ -167,7 +166,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 				if (Common.isEquals(bodysnippet, "Y")) tempDefaultFields = tempDefaultFields + ",body_snippet";
 				sq.setFields(tempDefaultFields);
 			}
-			log.info("[Fields] {}", sq.getFields());
+			log.debug("[Fields] {}", sq.getFields());
 
 			sq.setParam("wt", "json");
 
@@ -213,7 +212,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 				highlightBuilder = buildHighlight(getselectSearchField(sq), highlightBuilder);
 			}
 
-			log.info("page : {}  rows : {}", getPage(sq), sq.getRows());
+			log.debug("page : {}  rows : {}", getPage(sq), sq.getRows());
 
 			List<Object> searchAfter = null;
 			if(Common.isNotEmpty(sq.get("searchAfter"))) {
@@ -247,8 +246,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			if (Common.isEquals(sq.get("group"), "true")) searchHits = aggsSearch(searchQuery, sq); // 집계검색
 			else searchHits = searchAfter(searchQuery, sq, searchAfter); //일반검색 (페이징)
 
-
-			log.info("검색된 갯수 : " + searchHits.getSearchHits().size());
+			log.debug("검색된 갯수 : " + searchHits.getSearchHits().size());
 			printQueryLog(sq, searchHits);
 		} catch (ElasticsearchException e) {
 			log.info("[QUERY_RESULT] TOTAL_COUNT : {}, QUERY_TIME : {}", 0, TimeUtil.print());
@@ -271,6 +269,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 	//일반검색
 	public SearchHits<SolrEdcVO> searchAfter(Query searchQuery, SolrQuery sq, List<Object> searchAfter) {
+		log.info("searchAfter : {}", searchAfter);
 		searchQuery.setPageable(PageRequest.of(0, sq.getRows()));
 		searchQuery.setSearchAfter(searchAfter);
 		return operation.search(searchQuery, SolrEdcVO.class, defaultIndex);
@@ -663,9 +662,9 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		if (MDC.get("x_menuId") != null) sb.append(MDC.get("x_menuId")).append(" ");
 		sb.append("SUMMARY ").append("total : ").append(resp.getTotalHits()).append(" start : ").append(Common.nvl(sq.getStart())).append(" rows : ").append(Common.nvl(sq.getRows())).append(" ");
 		sb.append("query : ").append(sq.getQuery()).append(" ");
-		if (Common.isNotEmpty(sq.getFilterQueries())) sb.append("filter : ").append(StringUtils.join(sq.getFilterQueries(), ' ')).append(" ");
-		sb.append("fields : ").append(sq.getFields());
+		if (Common.isNotEmpty(sq.getFilterQueries())) sb.append(StringUtils.join(sq.getFilterQueries(), ' ')).append(" ");
 		log.info("{}", sb.toString());
+		log.debug("fields : {}", sq.getFields());
 	}
 
 	@Override

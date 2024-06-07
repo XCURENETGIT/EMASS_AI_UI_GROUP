@@ -134,6 +134,7 @@ public class MessengerController {
 		JSONObject param = Common.getParam(request);
 		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
 		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), Common.getAdminId(session));
+		sq.setParam("searchAfter", Common.nvl(param.get("searchAfter")));
 		String space = "\"\")";
 		sq.setQuery(sq.getQuery() + MESSENGER + " +xrootmtr:* -xrootmtr:(".concat(space));
 		if (Common.isEquals(param.get("readYn"), "N")) {
@@ -332,9 +333,9 @@ public class MessengerController {
 			sq = getMessengerMsgTotalQuery(request);
 		} else {
 			if(searchFlag!=null && searchFlag!="")
-				sq  = getMessengerMsgPrev(request, msgId, true);
+				sq  = getMessengerMsgPrev(request, msgId, null, true);
 			else
-				sq = getMessengerMsgNext(request, msgId, true);
+				sq = getMessengerMsgNext(request, msgId, null, true);
 		}
 		MessengerEdcGroupVO result = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request), true, false);
 		for (int i = 0; i<result.getGroups().size(); i++){ //내용 minio 통해 가져오기
@@ -352,8 +353,9 @@ public class MessengerController {
 	public XcnResponseVO getMessengerMessageNext(final HttpServletRequest request, final HttpSession session) throws Exception {
 		JSONObject param = Common.getParam(request);
 		String msgId = Common.nvl(param.get("msgId"));
+		String ctime = Common.nvl(param.get("ctime")).replaceAll("-", "").replaceAll(" ", "").replaceAll(":", "");
 
-		SolrQuery nextQuery = getMessengerMsgNext(request, msgId, false);
+		SolrQuery nextQuery = getMessengerMsgNext(request, msgId, ctime, false);
 		MessengerEdcGroupVO result = solrEdcService.getMessengerGroupList(nextQuery, Common.getAdminId(request), true, false);
 
 		for (int i = 0; i<result.getGroups().size(); i++){ //내용 minio 통해 가져오기
@@ -374,7 +376,8 @@ public class MessengerController {
 	public XcnResponseVO getMessengerMessagePrev(final HttpServletRequest request, final HttpSession session) throws Exception {
 		JSONObject param = Common.getParam(request);
 		String msgId = Common.nvl(param.get("msgId"));
-		SolrQuery prevQuery = getMessengerMsgPrev(request, msgId, false);
+		String ctime = Common.nvl(param.get("ctime")).replaceAll("-", "").replaceAll(" ", "").replaceAll(":", "");
+		SolrQuery prevQuery = getMessengerMsgPrev(request, msgId, ctime,false);
 		MessengerEdcGroupVO result = solrEdcService.getMessengerGroupList(prevQuery, Common.getAdminId(request), true, false);
 		for (int i = 0; i<result.getGroups().size(); i++){ //내용 minio 통해 가져오기
 			EmsBodyVO emsBodyVO = emsMessageService.getEmassBody(result.getGroups().get(i).getMsgid(),Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
@@ -418,6 +421,11 @@ public class MessengerController {
 		if(Common.isNotEmpty(usr_id)) query += String.format(" +userkey:\"%s\"", usr_id);
 		if(Common.isNotEmpty(usrId)) query += String.format(" +usrId:\"%s\"", usrId);
 
+		Object searchAfter =  request.getAttribute("searchAfter");
+		if (searchAfter != null){
+			sq.setParam("searchAfter", (String) searchAfter);
+		}
+
 		sq.setQuery(query + MESSENGER);
 		sq.setRows(limit);
 		sq.addSort("ctime", ORDER.desc);
@@ -425,12 +433,13 @@ public class MessengerController {
 		sq.setParam("facet.offset", String.valueOf(offset));
 		sq.setParam("facet.group", String.valueOf(limit));
 
+
 		sq.setFields("msgid", "srcip", "svc", "senderId","svc3", "ctime", "name", "sname", "sender","svc12", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user","userid","userkey");
 
 		return sq;
 	}
 
-	public SolrQuery getMessengerMsgNext(final HttpServletRequest request, final String msgId, final boolean lastMsgYn) throws Exception {
+	public SolrQuery getMessengerMsgNext(final HttpServletRequest request, final String msgId, final String ctime, final boolean lastMsgYn) throws Exception {
 		JSONObject param = Common.getParam(request);
 		String xRootMtr = Common.nvl(param.get("xRootMtr"));
 		String srcip = Common.nvl(param.get("srcip"));
@@ -465,13 +474,14 @@ public class MessengerController {
 		sq.addSort("ctime", ORDER.asc);
 		sq.addSort("msgid", ORDER.asc);
 		sq.setFields("msgid", "srcip", "svc", "svc3", "senderId", "ctime", "name", "sname", "sender", "svc12","recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user","userid");
+		if(ctime != null) sq.setParam("searchAfter", ctime + "," + msgId);
 
 		return sq;
 	}
 
 
 
-	public SolrQuery getMessengerMsgPrev(final HttpServletRequest request, final String msgId, final boolean lastMsgYn) throws Exception {
+	public SolrQuery getMessengerMsgPrev(final HttpServletRequest request, final String msgId, final String ctime, final boolean lastMsgYn) throws Exception {
 		JSONObject param = Common.getParam(request);
 		String xRootMtr = Common.nvl(param.get("xRootMtr"));
 		String srcip = Common.nvl(param.get("srcip"));
@@ -506,6 +516,7 @@ public class MessengerController {
 		sq.addSort("ctime", ORDER.desc);
 		sq.addSort("msgid", ORDER.desc);
 		sq.setFields("msgid", "srcip", "svc", "svc3", "senderId", "ctime", "name", "sname","svc12", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user","userid");
+		if(ctime != null) sq.setParam("searchAfter", ctime + "," + msgId);
 
 		return sq;
 	}
@@ -958,6 +969,8 @@ public class MessengerController {
 				alarmMessage(Common.getAdminId(request), downloadBatchVO);
 				return;
 			}
+			String ctime = null;
+			String msgid=null;
 			inserDB(downloadBatchVO, param, "LBA", "xlsx", Common.getAdminId(request), 0, Common.makeFilepath(Common.TMP_PATH, uniqId) + ".zip");
 			do {
 				MessengerEdcGroupVO messenger = getMessengerGroupVO(param, page++ * limit, limit);
@@ -972,6 +985,11 @@ public class MessengerController {
 					request.setAttribute("startDt", Common.nvl(param.get("exportStartDt")));
 					request.setAttribute("endDt", Common.nvl(param.get("exportEndDt")));
 					request.setAttribute("limit", chatLimit);
+					ctime = room.getCtime2();
+					msgid = room.getMsgid();
+					request.setAttribute("searchAfter", ctime+","+msgid);
+
+
 
 					XLSXWriterAppender xlsx = new XLSXWriterAppender(Prop.propFormat("eikon.msg.export.chat", locale) + " : " + room.getXrootmtr(), getExcelHeader(locale));
 					xlsx.init();

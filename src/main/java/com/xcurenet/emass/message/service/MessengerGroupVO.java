@@ -20,6 +20,7 @@ public class MessengerGroupVO  implements Comparable<MessengerGroupVO> {
 	private long msg_cnt;
 	private long unread_cnt;
 	private String ctime;
+	private String ctime2;
 	@Id
 	@Field(type = FieldType.Text)
 	private String msgid;
