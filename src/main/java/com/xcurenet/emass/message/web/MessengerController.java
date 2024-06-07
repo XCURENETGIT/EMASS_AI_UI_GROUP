@@ -962,7 +962,9 @@ public class MessengerController {
 			int page = 0;
 			int chatLimit = 1000;
 
- rootFolder.getUsableSpace());
+			isSpaceChk = isFreeSpace(totalSpace, rootFolder.getUsableSpace());
+			if (!isSpaceChk) {
+				log.error("system disk check! total:{}, used:{}", totalSpace, rootFolder.getUsableSpace());
 				updateErrorDB(downloadBatchVO, "S");
 				alarmMessage(Common.getAdminId(request), downloadBatchVO);
 				return;
