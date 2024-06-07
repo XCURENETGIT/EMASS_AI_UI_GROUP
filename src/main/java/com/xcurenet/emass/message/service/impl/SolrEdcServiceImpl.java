@@ -96,7 +96,6 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	String defaultFields = "_score,reprocess,date_hh,date_yyyy,date_yyyymm,date_yyyymmdd,ml_confd_class,ml_confd_feedback,ml_confd_prob,msgid,cid,srcip,sport,dstip,dport,svc,svc1,svc2,svc3,ltime,ctime,ctime_yyyy,ctime_yyyymm,ctime_yyyymmdd,ctime_hh,size,body_size,usrId,usr_ip,userkey,user,userid,name,subject,host,path,xmsgkey,sender,sname,recvs,recvs_name,to,cc,bcc,tname,cocd,conm,suborgcd,suborgnm,busicd,businm,deptcd,deptnm,jikgubcd,jikgubnm,ip_cocd,ip_conm,ip_busicd,ip_businm,ip_deptcd,ip_deptnm,allofus,attached,attachname_str,direction,direction_svc,kwd,kwds,inside,work,attachname,attachname_str,attachsize,attachhash,attachtype,attachcnt,pi_total,read_time,xrootmtr,protocol,epmsg_type,user_str,pi_amount.pi_SN,pi_amount.pi_FN,pi_amount.pi_DN,pi_amount.pi_CN,pi_amount.pi_EC,pi_amount.pi_ID,pi_amount.pi_EF,pi_amount.pi_DRM,pi_amount.pi_MN,pi_amount.pi_AN,pi_amount.pi_CRN,pi_amount.pi_SSN,pi_amount.pi_IMEI,pi_amount.pi_PN,pi_amount.pi_EMEI,pi_amount.pi_BRN,pi_amount.pi_CPN,pi_amount.pi_MCN,svc12,checked,kwds_subject";
 
 
-
 	@Override
 	public SolrClient getSolrServer() {
 		return null;
@@ -118,8 +117,8 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 
 		/* 정렬 */
-		List<SortClause> sorts =  sq.getSorts();
-		if(!Common.isEmpty(sorts)) {
+		List<SortClause> sorts = sq.getSorts();
+		if (!Common.isEmpty(sorts)) {
 			Sort sort = null;
 			for (SortClause s : sorts) {
 				SortOrder sortOrder = (Common.isEquals(s.getOrder(), SortOrder.DESC)) ? SortOrder.DESC : SortOrder.ASC;
@@ -129,7 +128,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			}
 		}
 
-		SearchHits<SearchHistoryVO> hits = operation.search(searchQuery, SearchHistoryVO.class,defaultHistoryIndex);
+		SearchHits<SearchHistoryVO> hits = operation.search(searchQuery, SearchHistoryVO.class, defaultHistoryIndex);
 		return new SearchHistoryGroupVO(hits);
 	}
 
@@ -241,8 +240,8 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 				}
 			}
 
-			if (Common.isEquals(sq.get("group"), "true"))  	searchHits = aggsSearch(searchQuery,sq); // 집계검색
-			else searchHits = searchAfter(searchQuery,sq,searchAfter); //일반검색 (페이징)
+			if (Common.isEquals(sq.get("group"), "true")) searchHits = aggsSearch(searchQuery, sq); // 집계검색
+			else searchHits = searchAfter(searchQuery, sq, searchAfter); //일반검색 (페이징)
 
 
 			log.info("검색된 갯수 : " + searchHits.getSearchHits().size());
@@ -260,14 +259,14 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 
 	//집계검색
-	public SearchHits<SolrEdcVO> aggsSearch(Query searchQuery,SolrQuery sq){
+	public SearchHits<SolrEdcVO> aggsSearch(Query searchQuery, SolrQuery sq) {
 		SearchHits<SolrEdcVO> searchHits = null;
 		searchQuery.setPageable(PageRequest.of(getPage(sq), sq.getRows()));
 		return operation.search(searchQuery, SolrEdcVO.class, defaultIndex);
 	}
 
 	//일반검색
-	public SearchHits<SolrEdcVO> searchAfter(Query searchQuery,SolrQuery sq,List<Object> searchAfter){
+	public SearchHits<SolrEdcVO> searchAfter(Query searchQuery, SolrQuery sq, List<Object> searchAfter) {
 		SearchHits<SolrEdcVO> searchHits = null;
 		int offset = (null == sq.getStart()) ? 0 : sq.getStart(); // start
 		int rows = sq.getRows(); // (sq.getRows() == 0) ? 100 : sq.getRows() ;  // size
@@ -294,9 +293,9 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 
 	/* 수발신자 조회시  */
-	public BoolQueryBuilder buildRecvAndSend(String query){
+	public BoolQueryBuilder buildRecvAndSend(String query) {
 		BoolQueryBuilder existsQueryBuilder = QueryBuilders.boolQuery();
-		if(query.contains("sname") || query.contains("tname")  || query.contains("cname")  || query.contains("bname")  || query.contains("userid")) {
+		if (query.contains("sname") || query.contains("tname") || query.contains("cname") || query.contains("bname") || query.contains("userid")) {
 			if (query.contains("sname")) {
 				existsQueryBuilder.should(QueryBuilders.existsQuery("sname"));
 				existsQueryBuilder.should(QueryBuilders.existsQuery("srcip"));
@@ -323,35 +322,33 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			}
 
 		}
-			return existsQueryBuilder;
+		return existsQueryBuilder;
 	}
 
 
 	/* 정규식 패턴 필드 설정 */
-	public BoolQueryBuilder buildRegexQuery(List<String> list,String regexPattern){
+	public BoolQueryBuilder buildRegexQuery(List<String> list, String regexPattern) {
 		BoolQueryBuilder regexQuery = QueryBuilders.boolQuery();
 		for (String s : list) {
-			regexQuery.should(QueryBuilders.regexpQuery(s,regexPattern.replace("\\\\","\\")));
+			regexQuery.should(QueryBuilders.regexpQuery(s, regexPattern.replace("\\\\", "\\")));
 		}
 
 		return regexQuery;
 	}
 
-	public HighlightBuilder buildHighlight(List<String> list,HighlightBuilder highlightBuilder){
+	public HighlightBuilder buildHighlight(List<String> list, HighlightBuilder highlightBuilder) {
 		for (String s : list) highlightBuilder.field(s);
 		return highlightBuilder;
 	}
 
 
-
-
 	@Override
-	public SolrEdcVO getSelectOne(String msgId,boolean isUnknownDocument) {
-		org.springframework.data.elasticsearch.core.query.Query searchQuery = new NativeSearchQueryBuilder().withQuery(QueryBuilders.termQuery("msgid",msgId)).withTimeout(Duration.ofSeconds(100)).build();
-		String index = (!isUnknownDocument) ? String.format("%s_w_%s", "edc", msgId.substring(0, 6)) :  String.format("%s_u_%s", "edc", msgId.substring(0, 6));
+	public SolrEdcVO getSelectOne(String msgId, boolean isUnknownDocument) {
+		org.springframework.data.elasticsearch.core.query.Query searchQuery = new NativeSearchQueryBuilder().withQuery(QueryBuilders.termQuery("msgid", msgId)).withTimeout(Duration.ofSeconds(100)).build();
+		String index = (!isUnknownDocument) ? String.format("%s_w_%s", "edc", msgId.substring(0, 6)) : String.format("%s_u_%s", "edc", msgId.substring(0, 6));
 		IndexOperations indexoperations = operation.indexOps(IndexCoordinates.of(index));
 		SolrEdcVO solrEdcVO = null;
-		if(indexoperations.exists()) solrEdcVO = operation.searchOne(searchQuery, SolrEdcVO.class, indexoperations.getIndexCoordinates()).getContent();
+		if (indexoperations.exists()) solrEdcVO = operation.searchOne(searchQuery, SolrEdcVO.class, indexoperations.getIndexCoordinates()).getContent();
 
 
 		return solrEdcVO;
@@ -363,7 +360,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 				.withTrackTotalHits(true)
 				.withTimeout(Duration.ofSeconds(100)).build();
 		IndexOperations indexoperations = operation.indexOps(IndexCoordinates.of("edc_*"));
-		return 	operation.search(searchQuery, SolrEdcVO.class,  indexoperations.getIndexCoordinates()).getTotalHits();
+		return operation.search(searchQuery, SolrEdcVO.class, indexoperations.getIndexCoordinates()).getTotalHits();
 	}
 
 
@@ -386,7 +383,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		return fields;
 	}
 
-	public List<String> getselectSearchField(SolrQuery sq){
+	public List<String> getselectSearchField(SolrQuery sq) {
 		String selectSearchField = Common.nvl(sq.get("sqf"));
 		return Common.toList(selectSearchField, " ");
 	}
@@ -452,12 +449,12 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	 */
 	private List<AbstractAggregationBuilder<?>> getAggregations(SolrQuery sq) {
 		List<AbstractAggregationBuilder<?>> aggregations = new ArrayList<>();
-		if(Common.isEquals(sq.get("piAnalysisYn"), "Y"))  return getPiAnalysisAggregations(sq);
-		if ( null == sq.getFacetFields() && null == sq.get("facet.field")) return aggregations;
+		if (Common.isEquals(sq.get("piAnalysisYn"), "Y")) return getPiAnalysisAggregations(sq);
+		if (null == sq.getFacetFields() && null == sq.get("facet.field")) return aggregations;
 
-		if((null != sq.get("group") && Common.isEquals("true",sq.get("group")))) {
+		if ((null != sq.get("group") && Common.isEquals("true", sq.get("group")))) {
 			aggregations = getGroupAggregations(sq);
-		}else {
+		} else {
 			for (String field : sq.getFacetFields()) {
 				AbstractAggregationBuilder<TermsAggregationBuilder> termsAggregation = AggregationBuilders.terms(field)
 						.field(field)
@@ -488,21 +485,23 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		String[] fields = mainField.split(",");
 
 
-		String include = Common.isNotEmpty(sq.get("facet.include")) ? ".*"+sq.get("facet.include")+".*" : ".*";
+		String include = Common.isNotEmpty(sq.get("facet.include")) ? ".*" + sq.get("facet.include") + ".*" : ".*";
 
 		for (String field : sq.getFacetFields()) {
 			AbstractAggregationBuilder<TermsAggregationBuilder> termsAggregation = AggregationBuilders
 					.terms(fields[0])
 					.field(fields[0])
-					.includeExclude(new IncludeExclude(include,null))
+					.includeExclude(new IncludeExclude(include, null))
 					.order(BucketOrder.count(false))
 					.size(maxCount(10000))
 					.minDocCount(mainFacetMinCount);
 
 			/* sub terms 필드는 1개만*/
-			if(fields.length == 1 &&  !Common.isEmpty(sq.get("facet.stats"))) 	termsAggregation.subAggregation(AggregationBuilders.terms(fields[0]).field(fields[0]).subAggregation(AggregationBuilders.stats(sq.get("facet.stats")).field(sq.get("facet.stats"))));
-			else if(fields.length > 1  &&  !Common.isEmpty(sq.get("facet.stats"))) 	termsAggregation.subAggregation(AggregationBuilders.terms(fields[1]).field(fields[1]).subAggregation(AggregationBuilders.stats(sq.get("facet.stats")).field(sq.get("facet.stats"))));
-			else if(fields.length > 1 )  termsAggregation.subAggregation(AggregationBuilders.terms(fields[1]).field(fields[1]));
+			if (fields.length == 1 && !Common.isEmpty(sq.get("facet.stats")))
+				termsAggregation.subAggregation(AggregationBuilders.terms(fields[0]).field(fields[0]).subAggregation(AggregationBuilders.stats(sq.get("facet.stats")).field(sq.get("facet.stats"))));
+			else if (fields.length > 1 && !Common.isEmpty(sq.get("facet.stats")))
+				termsAggregation.subAggregation(AggregationBuilders.terms(fields[1]).field(fields[1]).subAggregation(AggregationBuilders.stats(sq.get("facet.stats")).field(sq.get("facet.stats"))));
+			else if (fields.length > 1) termsAggregation.subAggregation(AggregationBuilders.terms(fields[1]).field(fields[1]));
 
 			if (!Common.isEmpty(sq.get("facet.ranges"))) {
 				List<String> ranges = Common.toList(sq.get("facet.ranges"), ",");
@@ -511,26 +510,25 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 				termsAggregation.subAggregation(AggregationBuilders.sum(key).field(key));
 				BucketSortPipelineAggregationBuilder paging = PipelineAggregatorBuilders.bucketSort("paging", List.of(new FieldSortBuilder(key).order(order))).from(offset).size(limit);
 				termsAggregation.subAggregation(paging);
-			}
-			else if (sq.get("facet.list") != null &&  Common.isEquals("true", sq.get("facet.list"))) {
+			} else if (sq.get("facet.list") != null && Common.isEquals("true", sq.get("facet.list"))) {
 				/* 대화방 목록 (그룹) */
 				limit = Common.nvz(sq.get("facet.group"), 100);
-			//	BucketSortPipelineAggregationBuilder paging = PipelineAggregatorBuilders.bucketSort("paging", null).from(offset).size(limit);
+				//	BucketSortPipelineAggregationBuilder paging = PipelineAggregatorBuilders.bucketSort("paging", null).from(offset).size(limit);
 
-				if(sq.get("checked.readId") != null) {
-					 termsAggregation.subAggregation(AggregationBuilders.terms(field).field(field).subAggregation(AggregationBuilders.terms(sq.get("checked.readId")).field(sq.get("checked.readId"))));
+				if (sq.get("checked.readId") != null) {
+					termsAggregation.subAggregation(AggregationBuilders.terms(field).field(field).subAggregation(AggregationBuilders.terms(sq.get("checked.readId")).field(sq.get("checked.readId"))));
 					aggregations.add(AggregationBuilders.cardinality("checked_bucket_total").field(mainField));
 				} else {
 					termsAggregation.subAggregation(AggregationBuilders.terms(field).field(field).subAggregation(AggregationBuilders.topHits(field.concat("_top")).size(1).from(0).sort("ctime", SortOrder.DESC)));
 					aggregations.add(AggregationBuilders.cardinality("bucket_total").field(mainField));
 				}
-			//	termsAggregation.subAggregation(paging);
+				//	termsAggregation.subAggregation(paging);
 
 
-			}else if (sq.get("facet.detail") != null &&  Common.isEquals("true", sq.get("facet.detail"))) {
+			} else if (sq.get("facet.detail") != null && Common.isEquals("true", sq.get("facet.detail"))) {
 				/* 대화 상세 내역 */
 				int size = (!Common.isEmpty(sq.get("facet.size"))) ? Common.nvz(sq.get("facet.size")) : 1; // default 1
-				termsAggregation  = termsAggregation.subAggregation(AggregationBuilders.topHits(field).size(size).from(0).sort("ctime", SortOrder.ASC));
+				termsAggregation = termsAggregation.subAggregation(AggregationBuilders.topHits(field).size(size).from(0).sort("ctime", SortOrder.ASC));
 			}
 //			else {
 //				 BucketSortPipelineAggregationBuilder paging = PipelineAggregatorBuilders.bucketSort("paging", List.of(new FieldSortBuilder(key).order(order))).from(offset).size(limit);
@@ -556,15 +554,15 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		String[] fields = sq.getParams("aggregation.sub.fields");
 		int piCount = Common.nvz(sq.get("aggregation.piCount"));
 
-		if(Common.isEquals(sq.get("aggregation.piType"),"sum")){
+		if (Common.isEquals(sq.get("aggregation.piType"), "sum")) {
 			for (String field : fields) {
-				Script script = new Script(String.format("doc.containsKey('%s') && doc['%s'].size() != 0 && doc['%s'].value >= %s ? doc['%s'].value : 0", field,field,field, piCount,field));
+				Script script = new Script(String.format("doc.containsKey('%s') && doc['%s'].size() != 0 && doc['%s'].value >= %s ? doc['%s'].value : 0", field, field, field, piCount, field));
 				termsAggregation.subAggregation(AggregationBuilders.sum(field).script(script));
 			}
-		}else {
+		} else {
 			for (String field : fields) {
 				Script script = new Script(String.format("doc['%s'].stream().max(Long::compare).orElse(-1)  >= %s", field, piCount));
-				termsAggregation.subAggregation( AggregationBuilders.filter(field,  new BoolQueryBuilder()
+				termsAggregation.subAggregation(AggregationBuilders.filter(field, new BoolQueryBuilder()
 						.must(QueryBuilders.existsQuery(field))
 						.must(new ScriptQueryBuilder(script))));
 			}
@@ -576,18 +574,18 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	}
 
 
-	private RangeAggregationBuilder addRanges(String key,List<String> ranges){
+	private RangeAggregationBuilder addRanges(String key, List<String> ranges) {
 		/* ranges */
 		RangeAggregationBuilder rangeBuilder = AggregationBuilders.range(key).field(key);
 		long val1 = 0;
 		long val2 = 0;
 
 		int idx = 0;
-		for(int k = 0;k < ranges.size();k++){
-			if(idx == ranges.size()-1) {
-				val1 = (Common.nvz(ranges.get(idx-1)));
+		for (int k = 0; k < ranges.size(); k++) {
+			if (idx == ranges.size() - 1) {
+				val1 = (Common.nvz(ranges.get(idx - 1)));
 				val2 = (Common.nvz(ranges.get(idx)));
-			}else {
+			} else {
 				val1 = (Common.nvz(ranges.get(idx)));
 				val2 = (Common.nvz(ranges.get(idx + 1)));
 			}
@@ -595,7 +593,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			idx++;
 		}
 
-		return  rangeBuilder;
+		return rangeBuilder;
 	}
 
 
@@ -607,22 +605,22 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	 */
 	private List<AbstractAggregationBuilder<?>> getAggregationsByPivot(SolrQuery sq) {
 		List<AbstractAggregationBuilder<?>> aggregations = new ArrayList<>();
-		if(Common.isEquals(sq.get("piAnalysisYn"), "Y")) return aggregations;
+		if (Common.isEquals(sq.get("piAnalysisYn"), "Y")) return aggregations;
 		List<String> pivots = Common.toList(sq.get("facet.pivot"), ",");
 		if (pivots.size() > 0) {
 			//f."+yAxis+".facet.limit
-			Iterator iter =  pivots.iterator();
+			Iterator iter = pivots.iterator();
 			AbstractAggregationBuilder<TermsAggregationBuilder> termsAggregation = AggregationBuilders.terms(pivots.get(0))
 					.field(String.valueOf(iter.next()))
 					.order(BucketOrder.count(false))
 					.size(maxCount(Common.nvz(sq.get("f." + pivots.get(0) + ".facet.limit"))))
 					.minDocCount(Common.nvz(sq.getFacetMinCount(), 1));
 
-			while(iter.hasNext()) {
+			while (iter.hasNext()) {
 				String aggsField = String.valueOf(iter.next());
 				termsAggregation.subAggregation(AggregationBuilders.terms(aggsField)
 						.field(aggsField)
-						.size(maxCount(Common.nvz(sq.get("f." +aggsField + ".facet.limit"))))
+						.size(maxCount(Common.nvz(sq.get("f." + aggsField + ".facet.limit"))))
 						.minDocCount(Common.nvz(sq.getFacetMinCount(), 1)));
 			}
 			aggregations.add(termsAggregation);
@@ -670,8 +668,6 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 //
 //		return complateSort;
 //	}
-
-
 	private int maxCount(int cnt) {
 		if (cnt == 25) return Integer.MAX_VALUE; //Solr Facet Limit가 25가 Default라서 25값인경우 MAX로 전달
 		return cnt > 0 ? cnt : Integer.MAX_VALUE;
@@ -771,7 +767,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		if (readYn != null && readYn.isEmpty()) {
 			//읽음 여부 필드 값 추가
 			//solrEdcMessageVO.setEmass(solrCheckedService.findReadList(solrEdcMessageVO.getEmass(), adminId));
-		/*	query += String.format("+checked.readId:%s", adminId);*/
+			/*	query += String.format("+checked.readId:%s", adminId);*/
 		}
 
 		sq.clear();
@@ -781,10 +777,9 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	@Override
 	public void setFeedback(final String msgId, final String ml_confd_feedback) throws ElasticsearchException, IOException {
 		int feedBack = Common.nvz(ml_confd_feedback, 9);
-		String index = "edc_w_"+(Common.nvl(msgId).substring(0,6));
+		String index = "edc_w_" + (Common.nvl(msgId).substring(0, 6));
 		Map<String, Object> params = new HashMap<>();
-		params.put("feedback",feedBack);
-
+		params.put("feedback", feedBack);
 
 
 		IndexCoordinates indexCoordinates = IndexCoordinates.of(index);
@@ -796,7 +791,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 						.withParams(params)
 						.withAbortOnVersionConflict(true)
 						.withDocAsUpsert(false)
-						.build(),indexCoordinates
+						.build(), indexCoordinates
 		);
 	}
 
@@ -806,7 +801,6 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	public boolean setSecretInfo(final String sourceKey, final String securityYn, final String securityPct, final Map<String, List<parseJsonFile>> sortList) throws SolrServerException, IOException {
 		return false;
 	}
-
 
 
 	@Override
@@ -877,7 +871,6 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	}
 
 
-
 	private String getServerTime() {
 		try {
 			return Common.getDateTimeFormat();
@@ -886,6 +879,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		}
 		return null;
 	}
+
 	private static String modifyQuery(String inputQuery) {
 		StringBuilder modifiedQuery = new StringBuilder();
 
@@ -906,7 +900,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 
 	private void setReadYn(SolrQuery sq, String adminId) {
-		String query="";
+		String query = "";
 		query += String.format("+checked.readId:%s", adminId);
 		sq.addFilterQuery(query);
 	}
@@ -1028,26 +1022,26 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			int ret = 0;
 
 			@Override
-			public int compare(	SolrEdcVO first,SolrEdcVO second) {
-				if (StringUtils.compare(first.getSvcNm(),second.getSvcNm()) > 0) {
+			public int compare(SolrEdcVO first, SolrEdcVO second) {
+				if (StringUtils.compare(first.getSvcNm(), second.getSvcNm()) > 0) {
 					ret = 1;
 				}
-				if (StringUtils.compare(first.getSvcNm(),second.getSvcNm()) == 0) {
-					if (StringUtils.compare(first.getSubject(),second.getSubject()) > 0) {
+				if (StringUtils.compare(first.getSvcNm(), second.getSvcNm()) == 0) {
+					if (StringUtils.compare(first.getSubject(), second.getSubject()) > 0) {
 						ret = 1;
-					} else if (StringUtils.compare(first.getSubject(),second.getSubject()) == 0) {
-						if (StringUtils.compare(first.getSender(),second.getSender()) > 0) {
+					} else if (StringUtils.compare(first.getSubject(), second.getSubject()) == 0) {
+						if (StringUtils.compare(first.getSender(), second.getSender()) > 0) {
 							ret = 1;
-						} else if (StringUtils.compare(first.getSender(),second.getSender()) == 0) {
+						} else if (StringUtils.compare(first.getSender(), second.getSender()) == 0) {
 							ret = 0;
-						} else if (StringUtils.compare(first.getSender(),second.getSender()) < 0) {
+						} else if (StringUtils.compare(first.getSender(), second.getSender()) < 0) {
 							ret = -1;
 						}
-					} else if (StringUtils.compare(first.getSubject(),second.getSubject()) < 0) {
+					} else if (StringUtils.compare(first.getSubject(), second.getSubject()) < 0) {
 						ret = -1;
 					}
 				}
-				if (StringUtils.compare(first.getSvcNm(),second.getSvcNm()) < 0) {
+				if (StringUtils.compare(first.getSvcNm(), second.getSvcNm()) < 0) {
 					ret = -1;
 				}
 				return ret;
@@ -1063,13 +1057,13 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	}
 
 	@Override
-	public String[] getExistIndics(String msgId,String format) {
+	public String[] getExistIndics(String msgId, String format) {
 		String[] indics = new String[2];
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMM");
-		LocalDate ld =  YearMonth.parse(msgId.substring(0, 6), formatter).atDay(1);
+		LocalDate ld = YearMonth.parse(msgId.substring(0, 6), formatter).atDay(1);
 
-		if(operation.indexOps(IndexCoordinates.of(format.concat(ld.format(formatter)))).exists()) indics[0] = format.concat(ld.format(formatter));
-		if(operation.indexOps(IndexCoordinates.of(format.concat(ld.format(formatter)))).exists()) indics[1] = format.concat(ld.minusMonths(1).format(formatter));
+		if (operation.indexOps(IndexCoordinates.of(format.concat(ld.format(formatter)))).exists()) indics[0] = format.concat(ld.format(formatter));
+		if (operation.indexOps(IndexCoordinates.of(format.concat(ld.format(formatter)))).exists()) indics[1] = format.concat(ld.minusMonths(1).format(formatter));
 		return indics;
 	}
 
