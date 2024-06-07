@@ -90,6 +90,9 @@ public class EmsCreateMessage {
 
 
 			sender=msg.getSenderList();
+			to = msg.getToList();
+			cc = msg.getCcList();
+			bcc = msg.getBccList();
 
 			String svcnm = Common.nvl(Config.getServiceNm(msg.getSvc()));
 			String protocolNm = Config.getProtocolNm(msg.getProtocol());
