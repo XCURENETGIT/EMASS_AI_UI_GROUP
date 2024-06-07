@@ -710,8 +710,10 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 						log.warn("데이터 자유 분석 조건에서 용량에 숫자가 아닌 데이터가 들어왔습니다.", e);
 					}
 				}
-			} else {
+			}
+			else {
 				String tmpContext = Common.nvl(context[i]);
+				if (column.equals("host_str")) tmpContext = "(*"+tmpContext+"*)";
 				if (Common.isEmpty(tmpContext)) tmpContext = "*";
 					boolean startIncludeYN = true;
 					boolean endIncludeYN = true;
@@ -723,7 +725,6 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 							query.add(column, tmpContext, false);
 							break;
 						case ">":
-							System.out.println(">");
 							startIncludeYN = false;
 						case ">=":
 							start = tmpContext;
