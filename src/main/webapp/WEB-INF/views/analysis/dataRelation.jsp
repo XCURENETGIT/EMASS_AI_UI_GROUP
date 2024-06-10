@@ -660,6 +660,10 @@
         } else {
             tabGrid.loadingPage++;
         }
+        let searchAfter = null;
+        if(tabGrid.loadingPage > 0) {
+            searchAfter = tabGrid.getValue(tabGrid.data.length-1, 'msgid');
+        }
 
         tabGrid.on();
         ui.get({
@@ -668,6 +672,7 @@
             unit : unit,
             startDate : startDate,
             endDate : endDate,
+            searchAfter : searchAfter,
             sendUser : sendUser,
             receiveUser : receiveUser,
             keyword : keyword,

@@ -1226,7 +1226,7 @@ public class SolrEdcStatController {
 		String busi = Common.nvl(request.getParameter("busiStr"));
 		String dept = Common.nvl(request.getParameter("deptStr")).replaceAll("\\|", ",");
 		String name = Common.nvl(request.getParameter("userStr")).replaceAll("\\|", ",");
-
+		String searchAfter = Common.nvl(request.getParameter("searchAfter"));
 		int offset = Common.nvz(request.getParameter("offset"));
 		int limit = Common.nvz(request.getParameter("limit"));
 
@@ -1295,6 +1295,7 @@ public class SolrEdcStatController {
 		sq.setParam("piType",type);
 		sq.setParam("piCount",piCount);
 		sq.setParam("piAnalysisDetail", "Y");
+		if (searchAfter != null) sq.setParam("searchAfter",searchAfter);
 		sq.setQuery(query.toString());
 		sq.setStart(offset);
 		sq.setRows(limit);

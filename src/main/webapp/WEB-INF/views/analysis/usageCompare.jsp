@@ -493,13 +493,20 @@ function eventEnterSearch(event) {
 			}
 			grid2.on();
 
-			var yAxis = $('select[name=unit]').val();
+            let searchAfter = null;
+            if(grid2.loadingPage > 0) {
+                searchAfter = grid2.getValue(grid2.data.length-1, 'msgid');
+            }
+
+
+            var yAxis = $('select[name=unit]').val();
 			
 			ui.get({
 				url : 'analysis/selectDetailList.xcn',
 				unit : unit,
 				date : selectDate,
 				item : item,
+                searchAfter: searchAfter,
 				itemName : itemName,
 				keyword : selectKey,
 				offset : grid2.data.length,

@@ -24,4 +24,6 @@ public @Data class FreedomSearchVO {
 	private Integer limit;
 	
 	private String adminId;
+
+	private String searchAfter;
 }

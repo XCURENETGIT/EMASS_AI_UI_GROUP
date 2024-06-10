@@ -13,6 +13,7 @@ public @Data class SearchVO {
 	private String title;
 	private String sendUser;
 	private String receiveUser;
+	private String searchAfter;
 	private String observePersonnel;
 	private String keyPersonnel;
 	private String keyword;

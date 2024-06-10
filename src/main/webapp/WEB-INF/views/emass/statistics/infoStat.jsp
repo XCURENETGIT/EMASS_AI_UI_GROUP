@@ -973,7 +973,10 @@
         if (user != '') userStr = user;
         else userStr = ''
 
-	
+	    let searchAfter = null;
+        if(grid2.loadingPage > 0) {
+            searchAfter = grid2.getValue(grid2.data.length-1, 'msgid');
+        }
 			
         grid2.on();
         ui.postJson({
@@ -987,6 +990,7 @@
             limit: grid2.pageSize,
             deptStr: deptStr,
             busiStr: busiStr,
+	        searchAfter :searchAfter,
             userStr: userStr,
             success: function (data, total) {
              	$(".resultCnt").html(' ' + patternCountStr + '(' +addCommas(detail_pi_total)+') '+ docCountStr+  '('+addCommas(total)+')');

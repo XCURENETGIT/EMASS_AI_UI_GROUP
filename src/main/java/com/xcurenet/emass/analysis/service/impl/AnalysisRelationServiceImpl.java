@@ -168,9 +168,11 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 		if (name.indexOf(":") > -1) name = "\"" + name + "\"";
 		query.add(new String[]{"sender_str", "recvs", "srcip", "dstip"}, name);
 
+
 		SolrQuery sq = new SolrQuery();
 		log.info(query.toString());
 		sq.setQuery(query.toString());
+		if (searchVO.getSearchAfter() != null) sq.setParam("searchAfter", searchVO.getSearchAfter());
 		//		sq.setFields("msgid", "subject", "kwds_subject", "body", "kwds_body", "attachname_str", "kwds_attachname", "attach", "kwds_attach", "host_str", "path", "srcip", "dstip", "sender_str", "recvs", "to", "bcc", "usr_id");
 
 		sq.setStart(Common.nvz(searchVO.getOffset(), 0));
@@ -373,6 +375,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 				query.add("srcip", searchVO.getKeyword());
 				break;
 		}
+		sq.setParam("searchAfter", searchVO.getSearchAfter());
 
 		sq.setQuery(query.toString());
 

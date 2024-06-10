@@ -868,11 +868,14 @@
         grid.pageSize = getPageSize('messageListCount');
         grid.on();
         searchFlag=true;
-
+        let searchAfter = null;
+        if(grid.loadingPage > 0) {
+            searchAfter = grid.getValue(grid.data.length-1, 'msgid');
+        }
 
         ui.post({
             url: 'analysis/selectFreedomMessageList.xcn',
-            data: $("#frm").serialize() + "&tabIdx=" + tabIdx + "&query=" + selectQuery + "&offset=" + grid.data.length + "&limit=" + grid.pageSize,
+            data: $("#frm").serialize() + "&tabIdx=" + tabIdx + "&query=" + selectQuery + "&offset=" + grid.data.length + "&limit=" + grid.pageSize + "&searchAfter="+searchAfter,
             success: function (data, total) {
                 resultTotal = total;
                 // grid.autoNumber();
