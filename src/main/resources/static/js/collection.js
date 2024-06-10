@@ -422,12 +422,19 @@ function getFileMessageList  (page){
     groupPage = page;
     var offset = groupPage * groupPageBreak - groupPageBreak;
 
+    let searchAfter = null;
+    if(offset > 0) {
+        searchAfter = $('.people').children().last().attr('ctime') + ',' +  $('.people').children().last().attr('msgid');
+    }
+
+
     searchFlag = true;
     ui.onBody('timeline_list', 0, -20);
     ui.postJson({
         url : 'getFileMessageList.xcn',
         data : JSON.stringify(filterVal),
         offset : offset,
+        searchAfter : searchAfter,
         limit : groupPageBreak,
         success : function(data, total) {
             isLoading=true;
@@ -1539,6 +1546,7 @@ function rtnFileGroupList2 (data) {
         li.setAttribute("msgid", data[i].msgid);
         li.setAttribute("srcip", data[i].srcip);
         li.setAttribute("usrid", data[i].usrid);
+        li.setAttribute("ctime", data[i].ctime);
         li.setAttribute("body_snippet", data[i].body_snippet);
         li.setAttribute("name", data[i].name);
         li.setAttribute("data-chat", "person" + (i + 1));
@@ -1609,6 +1617,7 @@ function rtnFileGroupList (data) {
         li.setAttribute("msgid", data[i].msgid);
         li.setAttribute("srcip", data[i].srcip);
         li.setAttribute("usrid", data[i].usrid);
+        li.setAttribute("ctime", data[i].ctime);
         li.setAttribute("body_snippet", data[i].body_snippet);
         li.setAttribute("name", data[i].name);
         li.setAttribute("data-chat", "person" + (i + 1));

@@ -134,6 +134,7 @@ public class CollectionController {
 		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
 		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), Common.getAdminId(session));
 		String name = Common.nvl(request.getParameter("userStr"));
+		String searchAfter = Common.nvl(request.getParameter("searchAfter"));
 
 		StringBuilder query = new StringBuilder();
 
@@ -154,6 +155,7 @@ public class CollectionController {
 			query.append("))");
 		}
 
+		if (searchAfter != null) sq.setParam("searchAfter", searchAfter);
 		sq.setQuery(sq.getQuery()+query + " +attached:Y");
 		sq.setStart(Common.nvz(param.get("offset"), 0));
 		sq.setRows(Common.nvz(param.get("limit"), 100));
