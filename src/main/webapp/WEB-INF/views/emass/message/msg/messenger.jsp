@@ -1039,7 +1039,7 @@
             ui.alertMsg('<s:message code="eikon.start.download"/>');
             ui.get({
                 url : 'getMessengerGroupTextAllExportZip.xcn',
-                0 : JSON.stringify(filterVal),
+                data : JSON.stringify(filterVal),
                 exportStartDt : currentSchVal.startDt,
                 exportEndDt : currentSchVal.endDt,
                 success : function(data, total) {

@@ -440,7 +440,7 @@ function getFileMessageList  (page){
             isLoading=true;
             if (data.emass.length < groupPageBreak || offset+groupPageBreak == total) isEnd = true;
             $('#groupResultCnt').html(total.comma());
-            if (offset>10) rtnFileGroupList2(data.emass);
+            if (page>1) rtnFileGroupList2(data.emass);
             else rtnFileGroupList(data.emass);
             HighlightGroup2();
         },
@@ -531,7 +531,7 @@ function getCollectionGroupList (page,type){
             isLoading=true;
             if (data.groups.length < groupPageBreak || (offset+groupPageBreak) == total) isEnd = true;
             $('#groupResultCnt').html(total.comma());
-            if (offset>10) rtnGenerativeGroupList2(data.groups, 'G');
+            if (page>1) rtnGenerativeGroupList2(data.groups, 'G');
             else rtnGenerativeGroupList(data.groups, 'G');
             if(data.headerMap != null && !pivotused) setSvcButton(data.headerMap);
             HighlightGroup2();

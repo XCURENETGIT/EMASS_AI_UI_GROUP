@@ -735,17 +735,18 @@ function getMessengerGroupList(page) {
     groupMessagePage = page;
     var offset = groupMessagePage * groupMessagePageBreak - groupMessagePageBreak;
     searchFlag = true;
-
+    let searchAfter = null;
+    searchAfter = $('.people').children().last().attr('msgid');
 
     var startTotalDate=$('#startDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
     var endTotalDate=$('#endDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
-
 
     ui.onBody('timeline_list', 0, -20);
     ui.postJson({
         url: 'getMessengerGroupList.xcn',
         data : JSON.stringify(filterVal),
         offset: offset,
+        searchAfter : searchAfter,
         startTotalDate:startTotalDate+"00000",
         endTotalDate:endTotalDate+"235959",
         limit: groupPageBreak,
@@ -754,7 +755,7 @@ function getMessengerGroupList(page) {
             if (data.groups.length < groupPageBreak || (offset+groupPageBreak) == total) isEnd = true;
 
             $('#groupResultCnt').html(total.comma());
-            if (offset>10) rtnGroupList2(data.groups, 'G');
+            if (page>1) rtnGroupList2(data.groups, 'G');
             else rtnGroupList(data.groups, 'G');
             HighlightGroup();
         },
