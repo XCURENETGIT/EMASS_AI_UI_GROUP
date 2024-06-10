@@ -72,13 +72,14 @@ var eikon2 = {
             if($(this).hasClass('messenger_next')) {
 
                 var msgid = $('.timeline').children().last().attr('id');
-                getGenerativeMessageNext(userkey, srcip, usr_id, msgid,type);
+                var ctime = $('.timeline').children().last().attr('ctime');
+                getGenerativeMessageNext(userkey, srcip, usr_id, msgid,type, ctime);
 
             } else {
                 var firstData = $('.timeline').children('li').first();
                 var msgid = $(firstData).attr('id');
-                console.log(msgid+"찾음22")
-                getGenerativeMessagePrev(userkey, srcip, usr_id, msgid,type);
+                var ctime = $(firstData).attr('ctime');
+                getGenerativeMessagePrev(userkey, srcip, usr_id, msgid,type,ctime);
 
             }
 
@@ -245,7 +246,7 @@ function getCollectionMessageTotal(userkey, srcip, startDt, endDt, usr_id, msgid
 /**
  * 다음 버튼 ( 최하단의 + 버튼 )
  */
-function getGenerativeMessageNext(userkey, srcip, usr_id, msgid,type) {
+function getGenerativeMessageNext(userkey, srcip, usr_id, msgid,type,ctime) {
     var startDt = $('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
     var endDt = $('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
     searchFlag = true;
@@ -257,6 +258,7 @@ function getGenerativeMessageNext(userkey, srcip, usr_id, msgid,type) {
         startDt : startDt+"000000",
         endDt : endDt+"235959",
         usr_id : usr_id,
+        ctime: ctime,
         msgId : msgid,
         limit : detailLimit,
         type:type,
@@ -304,7 +306,7 @@ function getGenerativeMessageNext(userkey, srcip, usr_id, msgid,type) {
 /**
  * 이전 버튼 ( 최상단의 + 버튼 )
  */
-function getGenerativeMessagePrev(userkey, srcip, usr_id, msgid,type) {
+function getGenerativeMessagePrev(userkey, srcip, usr_id, msgid,type,ctime) {
 
     var startDt = $('#startSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
     var endDt = $('#endSubDt').val().replaceAll("-","").replaceAll(":","").replace(/ /gi, '');
@@ -316,6 +318,7 @@ function getGenerativeMessagePrev(userkey, srcip, usr_id, msgid,type) {
         startDt : startDt+"000000",
         endDt : endDt+"235959",
         usr_id : usr_id,
+        ctime: ctime,
         msgId : msgid,
         type:type,
         limit : detailLimit,

@@ -524,9 +524,9 @@ public class CollectionController {
 			sq = getCollectionMessageTotalQuery(request);
 		} else {
 			if(searchFlag!=null)
-				sq = getMessengerGtNext(request, msgId, true);
+				sq = getMessengerGtNext(request, msgId, null,true);
 			else
-				sq = getMessengerGtPrev(request, msgId, true);
+				sq = getMessengerGtPrev(request, msgId,null, true);
 		}
 
 
@@ -555,8 +555,8 @@ public class CollectionController {
 	public XcnResponseVO getGenerativeMessagenext(final HttpServletRequest request, final HttpSession session) throws Exception {
 		JSONObject param = Common.getParam(request);
 		String msgId = Common.nvl(param.get("msgId"));
-
-		SolrQuery sq = getMessengerGtNext(request, msgId, false);
+		String ctime = Common.nvl(param.get("ctime")).replaceAll("-", "").replaceAll(" ", "").replaceAll(":", "");
+		SolrQuery sq = getMessengerGtNext(request, msgId, ctime,false);
 		MessengerEdcGroupVO result = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request), true, false);
 
 
@@ -569,15 +569,16 @@ public class CollectionController {
 	public XcnResponseVO getGenerativeMessagePrev(final HttpServletRequest request, final HttpSession session) throws Exception {
 		JSONObject param = Common.getParam(request);
 		String msgId = Common.nvl(param.get("msgId"));
+		String ctime = Common.nvl(param.get("ctime")).replaceAll("-", "").replaceAll(" ", "").replaceAll(":", "");
 
-		SolrQuery prevQuery = getMessengerGtPrev(request, msgId, false);
+		SolrQuery prevQuery = getMessengerGtPrev(request, msgId, ctime,false);
 		MessengerEdcGroupVO result = solrEdcService.getMessengerGroupList(prevQuery, Common.getAdminId(request), true, false);
 
 		return new XcnResponseVO(XcnRspCode.OK, result);
 	}
 
 
-	public SolrQuery getMessengerGtNext(final HttpServletRequest request, final String msgId, final boolean lastMsgYn) throws Exception {
+	public SolrQuery getMessengerGtNext(final HttpServletRequest request, final String msgId,final String ctime,final boolean lastMsgYn) throws Exception {
 		JSONObject param = Common.getParam(request);
 		String userkey = Common.nvl(param.get("userkey"));
 		String srcip = Common.nvl(param.get("srcip"));
@@ -638,11 +639,11 @@ public class CollectionController {
 		sq.addSort("ctime", ORDER.asc);
 		sq.addSort("msgid", ORDER.asc);
 		sq.setFields("msgid", "userkey","svc1", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user");
-
+		if(ctime != null) sq.setParam("searchAfter", ctime + "," + msgId);
 		return sq;
 	}
 
-	public SolrQuery getMessengerGtPrev(final HttpServletRequest request, final String msgId, final boolean lastMsgYn) throws Exception {
+	public SolrQuery getMessengerGtPrev(final HttpServletRequest request, final String msgId, final String ctime, final boolean lastMsgYn) throws Exception {
 		JSONObject param = Common.getParam(request);
 		String userkey = Common.nvl(param.get("userkey"));
 		String srcip = Common.nvl(param.get("srcip"));
@@ -698,7 +699,7 @@ public class CollectionController {
 		sq.addSort("ctime", ORDER.desc);
 		sq.addSort("msgid", ORDER.desc);
 		sq.setFields("msgid",  "userkey", "svc1","srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user");
-
+		if(ctime != null) sq.setParam("searchAfter", ctime + "," + msgId);
 		return sq;
 	}
 
@@ -753,6 +754,10 @@ public class CollectionController {
 				query+=String.format("))");
 		}
 
+		Object searchAfter =  request.getAttribute("searchAfter");
+		if (searchAfter != null){
+			sq.setParam("searchAfter", (String) searchAfter);
+		}
 
 		sq.setQuery(query);
 		sq.setRows(limit);
@@ -1224,6 +1229,8 @@ public class CollectionController {
 				alarmMessage(Common.getAdminId(request), downloadBatchVO);
 				return;
 			}
+			String ctime = null;
+			String msgid=null;
 			inserDB(downloadBatchVO, param, "LBA", "xlsx", Common.getAdminId(request), 0, Common.makeFilepath(Common.TMP_PATH, uniqId) + ".zip");
 			do {
 				MessengerEdcGroupVO messenger = getMessengerGroupVO(param, page++ * limit, limit);
@@ -1238,7 +1245,9 @@ public class CollectionController {
 					request.setAttribute("startDt", Common.nvl(param.get("exportStartDt")));
 					request.setAttribute("endDt", Common.nvl(param.get("exportEndDt")));
 					request.setAttribute("limit", chatLimit);
-
+					ctime = room.getCtime2();
+					msgid = room.getMsgid();
+					request.setAttribute("searchAfter", ctime+","+msgid);
 					XLSXWriterAppender xlsx = new XLSXWriterAppender(Prop.propFormat("eikon.msg.export.chat", locale) + " : " + room.getUserkey(), getExcelHeader(locale));
 					xlsx.init();
 
