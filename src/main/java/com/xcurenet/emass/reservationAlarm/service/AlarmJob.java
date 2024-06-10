@@ -377,7 +377,9 @@ public class AlarmJob {
 			if (endDateSelect.equals("Y")) result = String.format("%s%02d5959", yyyyMMdd.print(_dt.minusDays(1)), endTimeSelect);
 			else if(endDateSelect.equals("T")) result = String.format("%s%02d5959", yyyyMMdd.print(DateTime.now()), endTimeSelect);
 			else if(endDateSelect.equals("W")) result = String.format("%s%02d5959", yyyyMMdd.print(_dt.minusDays(7)), endTimeSelect);
+			else if (endDateSelect.equals("M")) result = String.format("%s%02d5959", yyyyMMdd.print(_dt.minusMonths(1)), endTimeSelect); // 한 달 전
 		} else if (alarm_cycle.equals("H")) result = String.format("%s5959", yyyyMMddHH.print(_dt.minusHours(1)));
+
 
 		return result;
 	}
