@@ -728,6 +728,11 @@
         currentgrid.on();
         currentgrid.pageSize=5000
 
+        let searchAfter = null;
+        if(currentgrid.loadingPage > 0) {
+            searchAfter = currentgrid.getValue(currentgrid.data.length-1, 'msgid');
+        }
+
         ui.get({
             url : 'getStatDetailList.xcn',
             rowKey : rowKey,
@@ -741,6 +746,7 @@
             busiStr:busi,
             userStr:userStr,
             yAxis : 'kwds',
+            searchAfter : searchAfter,
             offset : currentgrid.data.length,
             limit : currentgrid.pageSize,
             nameStat : "kwdStat",

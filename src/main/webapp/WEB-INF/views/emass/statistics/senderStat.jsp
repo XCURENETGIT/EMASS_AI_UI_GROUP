@@ -733,6 +733,13 @@
         searchFlag = true;
         currentgrid.on();
         currentgrid.pageSize=5000
+
+        let searchAfter = null;
+        if(currentgrid.loadingPage > 0) {
+            searchAfter = currentgrid.getValue(currentgrid.data.length-1, 'msgid');
+        }
+
+
         ui.get({
             url : 'getStatDetailList.xcn',
             rowKey : rowKey,
@@ -742,6 +749,7 @@
             xAxis : xAxis,
             xAxis_str : xAxis_str,
             yAxis : 'sender_str',
+	        searchAfter : searchAfter,
             deptStr:dept,
             busiStr:busi,
 /*            userStr:userStr,*/

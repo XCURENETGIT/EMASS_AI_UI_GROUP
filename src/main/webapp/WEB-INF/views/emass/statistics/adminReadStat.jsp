@@ -680,6 +680,11 @@
 		//
 		//
 
+        let searchAfter = null;
+        if(currentgrid.loadingPage > 0) {
+            searchAfter = currentgrid.getValue(currentgrid.data.length-1, 'msgid');
+        }
+
         ui.get({
             url: 'getStatCheckedDetailList.xcn',
             rowKey: rowKey,
@@ -694,6 +699,7 @@
             adminId: $('#adminId').val(),
 			isTotal:isTotal,
             totalRow:totalRow,
+            searchAfter : searchAfter,
             offset: currentgrid.data.length,
             limit: currentgrid.pageSize,
             success: function (data, total) {

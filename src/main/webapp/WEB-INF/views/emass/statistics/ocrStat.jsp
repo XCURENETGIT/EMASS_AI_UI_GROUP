@@ -965,6 +965,12 @@
         var userStr='';
         if (user != '') userStr = $('#userStr').val();
         else userStr = '';
+
+        let searchAfter = null;
+        if(currentgrid.loadingPage > 0) {
+            searchAfter = currentgrid.getValue(currentgrid.data.length-1, 'msgid');
+        }
+
         searchFlag = true;
         currentgrid.on();
         currentgrid.pageSize=5000
@@ -980,6 +986,7 @@
             xAxis : xAxis,
             xAxis_str : xAxis_str,
             yAxis : 'ocr_attach_cnt',
+            searchAfter : searchAfter,
             offset : currentgrid.data.length,
             limit : currentgrid.pageSize,
             colRowKey : colRowKey,

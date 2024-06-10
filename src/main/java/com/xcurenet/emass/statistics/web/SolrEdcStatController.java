@@ -247,6 +247,7 @@ public class SolrEdcStatController {
 		String busi = Common.nvl(request.getParameter("busiStr"));
 		String dept = Common.nvl(request.getParameter("deptStr"));
 		String name = Common.nvl(request.getParameter("userStr"));
+		String searchAfter = Common.nvl(request.getParameter("searchAfter"));
 		String query = "";
 
 		SolrQuery sq = new SolrQuery();
@@ -364,6 +365,8 @@ public class SolrEdcStatController {
 			sq = solrCreateQuery.setQuery();
 			query += sq.getQuery();
 		}
+
+		if (searchAfter != null) sq.setParam("searchAfter", searchAfter);
 
 
 		sq.setQuery(query);
@@ -572,6 +575,7 @@ public class SolrEdcStatController {
 		String startDate = Common.nvl(request.getParameter("startDate"));
 		String endDate = Common.nvl(request.getParameter("endDate"));
 		String dateType = Common.nvl(request.getParameter("dateType"));
+		String searchAfter = Common.nvl(request.getParameter("searchAfter"));
 
 		String dateStr = (Common.isEquals(dateType,"ctime")) ?  "ctime" : "checked.readTime";
 		String schDate = dateStr + xAxis;
@@ -708,8 +712,8 @@ public class SolrEdcStatController {
 
 		log.info("col query {}" ,query);
 		query += String.format("+checked.readId:%s", adminId);
-
 		SolrQuery sq = new SolrQuery();
+		if (searchAfter != null) sq.setParam("searchAfter",searchAfter);
 		sq.setQuery(query);
 		sq.setStart(offset);
 		sq.setRows(limit);
@@ -787,6 +791,7 @@ public class SolrEdcStatController {
 		int limit = Common.nvz(request.getParameter("limit"));
 		String colRowKey = Common.nvl(request.getParameter("colRowKey"));
 		String detailQuery = Common.nvl(request.getParameter("detailQuery"));
+		String searchAfter = Common.nvl(request.getParameter("searchAfter"));
 		String query = "";
 
 		SolrQuery sq = new SolrQuery();
@@ -833,6 +838,7 @@ public class SolrEdcStatController {
 		sq.setQuery(query);
 		sq.setStart(offset);
 		sq.setRows(limit);
+		if (searchAfter != null) sq.setParam("searchAfter", searchAfter);
 		//sq.setSort("ctime", SolrQuery.ORDER.desc);
 
 		SolrEdcMessageVO solrStatVo = solrEdcService.getEmassMessage(sq, Common.getAdminId(request), "", null);

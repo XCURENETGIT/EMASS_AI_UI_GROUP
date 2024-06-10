@@ -729,6 +729,12 @@
         searchFlag = true;
         currentgrid.on();
         currentgrid.pageSize=5000
+
+        let searchAfter = null;
+        if(currentgrid.loadingPage > 0) {
+            searchAfter = currentgrid.getValue(currentgrid.data.length-1, 'msgid');
+        }
+
         ui.get({
             url: 'getStatDetailList.xcn',
             rowKey: rowKey,
@@ -744,6 +750,7 @@
             userStr: userStr,
             offset: currentgrid.data.length,
             limit: currentgrid.pageSize,
+            searchAfter: searchAfter,
             nameStat: 'users',
             success: function (data, total) {
                 if (lastRow == 'Y' || lastRow == undefined) detailTotal = total;
