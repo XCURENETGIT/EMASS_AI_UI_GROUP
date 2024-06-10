@@ -512,7 +512,6 @@
 
     var tabInfo={};
     var chartDat={};
-    grid1.onClick = function() {
         var valChk = grid1.getValue(grid1.Row, grid1.Col);
         if(valChk == "" || valChk == "-") return;
 
@@ -622,7 +621,7 @@
 
         searchFlag = true;
         grid1.on();
-        grid1.pageSize=5000
+        grid1.pageSize=10000
         ui.get({
             url : 'getStatList.xcn',
             startDate: sDate+"000000",

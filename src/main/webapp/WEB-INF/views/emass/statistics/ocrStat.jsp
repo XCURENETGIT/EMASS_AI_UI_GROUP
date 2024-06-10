@@ -750,7 +750,7 @@
             else userStr = '';
 
 			searchFlag = true;
-            grid1.pageSize=5000
+            grid1.pageSize=10000
 			ui.get({
 				url : 'getOcrStatList.xcn',
 				startDate: sDate+"000000",

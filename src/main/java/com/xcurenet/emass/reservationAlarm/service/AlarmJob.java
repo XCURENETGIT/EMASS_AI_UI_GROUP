@@ -364,6 +364,7 @@ public class AlarmJob {
 			if (startDateSelect.equals("Y")) result = String.format("%s%02d0000", yyyyMMdd.print(_dt.minusHours(1)), startTimeSelect);
 			else if(startDateSelect.equals("T")) result = String.format("%s%02d0000", yyyyMMdd.print(DateTime.now()), startTimeSelect);
 			else if(startDateSelect.equals("W")) result = String.format("%s%02d0000", yyyyMMdd.print(_dt.minusDays(7)), startTimeSelect);
+			else if (startDateSelect.equals("M")) result = String.format("%s%02d0000", yyyyMMdd.print(_dt.minusMonths(1)), startTimeSelect);
 		} else if (alarm_cycle.equals("H")) result = String.format("%s0000", yyyyMMddHH.print(_dt.minusHours(1))); /*변경해야함*/
 
 		return result;

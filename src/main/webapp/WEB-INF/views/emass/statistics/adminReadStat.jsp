@@ -549,7 +549,7 @@
     function getReadTimeData(sDate, eDate, xAxis, xAxis_str, dateType, adminId) {
         searchFlag = true;
         grid1.on();
-        grid1.pageSize=5000
+        grid1.pageSize=10000
         var xAxis = $('select[name=xAxis]').val();
         var yAxis = $('select[name=yAxis]').val();
         
