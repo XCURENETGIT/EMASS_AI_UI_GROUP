@@ -63,7 +63,7 @@ public class DeviceScheduler {
 			ExecutorService es = Executors.newFixedThreadPool(devices.size());
 			try {
 				List<DeviceStatusWorker> tasks = deviceStatusTask();
-				List<Future<DeviceVO>> future = es.invokeAll(tasks, 8, TimeUnit.SECONDS);
+				List<Future<DeviceVO>> future = es.invokeAll(tasks, 10, TimeUnit.SECONDS);
 				statusChange(future, tasks);
 			} catch (Exception e) {
 				log.error("deviceStatus check error : ", e);
