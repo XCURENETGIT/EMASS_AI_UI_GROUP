@@ -1283,7 +1283,7 @@ public class SolrCreateQuery {
 			setSelectSearchFields(searchField); //선택한 검색 영역
 
 			setService(serviceType);
-			setReadYn(readYn,adminId);
+//			setReadYn(readYn,adminId);
 			setInfoType(infoTypes);
 			setFeedback(feedbacks);
 			setUserStr(userStr);

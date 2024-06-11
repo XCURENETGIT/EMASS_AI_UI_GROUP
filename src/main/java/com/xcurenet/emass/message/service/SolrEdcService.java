@@ -26,6 +26,7 @@ public interface SolrEdcService {
 
 
 	public SolrEdcMessageVO getEmassMessage(final SolrQuery sq, final String adminId, final String readYn, final String consentNo) throws IOException, SolrServerException;
+	public SolrEdcMessageVO getEmassMessage(final SolrQuery sq, final String adminId, final String readYn, final String consentNo, final String adminAllRead) throws IOException, SolrServerException;
 
 	public MessengerEdcGroupVO getMessengerGroupList(final SolrQuery sq, final String adminId) throws IOException, SolrServerException;
 

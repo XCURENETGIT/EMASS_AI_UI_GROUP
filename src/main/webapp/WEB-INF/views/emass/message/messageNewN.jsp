@@ -1080,6 +1080,7 @@
                 }
             });
             $('input:radio:not([name=searchKeywordInputType])').click(function(){
+                if($(this).attr('name')=='readYn') return;
                 if($(this).val()=='Y'){
                     $(this).parent().parent().parent().find('.button_style').prop('disabled', false);
 
@@ -3007,7 +3008,10 @@
 
                                     <div class="condition_divider"></div>
                                     <div class="condition_item">
-                                        <div class="condition_title"><i class="fa fa-caret-right"></i> <s:message code="condition.isread"/></div>
+                                        <div class="condition_title condition_left"><i class="fa fa-caret-right"></i> <s:message code="condition.isread"/></div>
+                                        <%if(Common.isEquals(firstAdminYn, "Y")) {%>
+                                        <div class="condition_left">&nbsp;<label style="font-weight: normal;"><input type="checkbox" id="adminAllRead"/><span style="position: relative;top: -2px;font-weight: normal;"> <s:message code="common.all.admin"/></span></label></div>
+                                        <%} %>
                                         <div class="condition_sub_title">
                                             <label class="condition_label"><input type="radio" name="readYn" value="" checked="checked"> <span><s:message code="common.msg.all"/></span></label>
                                             <label class="condition_label"><input type="radio" name="readYn" value="Y"> <span><s:message code="condition.read"/></span></label>

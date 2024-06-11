@@ -71,6 +71,8 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	public static String JOIN_READ = " +checked.readId:%s";
 	public static String JOIN_UNREAD = " -checked.readId:%s";
 
+	public static String All_JOIN_READ = " +checked.readId:*";
+
 	public static IndexCoordinates defaultIndex = IndexCoordinates.of("edc_*");
 	public static IndexCoordinates defaultHistoryIndex = IndexCoordinates.of("ems_search_history_*");
 
@@ -673,6 +675,12 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	}
 
 	@Override
+	public SolrEdcMessageVO getEmassMessage(final SolrQuery sq, final String adminId, final String readYn, final String consentNo) throws IOException, SolrServerException {
+		return getEmassMessage(sq, adminId, readYn, consentNo,null);
+	}
+
+
+	@Override
 	public MessengerEdcGroupVO getMessengerGroupList(final SolrQuery sq, final String adminId) throws SolrServerException, IOException {
 		return getMessengerGroupList(sq, adminId, false);
 	}
@@ -715,12 +723,15 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	}
 
 	@Override
-	public SolrEdcMessageVO getEmassMessage(SolrQuery sq, String adminId, String readYn, String consentNo) throws IOException, SolrServerException {
+	public SolrEdcMessageVO getEmassMessage(SolrQuery sq, String adminId, String readYn, String consentNo, String adminAllRead) throws IOException, SolrServerException {
 		if (Common.isNotEmpty(readYn) && Common.isNotEmpty(adminId)) {
+			String firstAdminYn = adminServiceImpl.getAdmin(adminId).getFirstAdminYn();
+			String adminReadId = adminId;
+			if (Common.isNotEmpty(adminAllRead) && Common.isEquals(firstAdminYn, "Y") && Common.isEquals(adminAllRead, "Y")) adminReadId = "*";
 			if (Common.isEquals(readYn, "Y")) {
-				sq.addFilterQuery(String.format(JOIN_READ, adminId));
+				sq.addFilterQuery(String.format(JOIN_READ, adminReadId));
 			} else {
-				sq.addFilterQuery(String.format(JOIN_UNREAD, adminId));
+				sq.addFilterQuery(String.format(JOIN_UNREAD, adminReadId));
 			}
 		}
 		List<ConfigAdminVO> conf = configAdminService.getConfAdminOption(adminId);
