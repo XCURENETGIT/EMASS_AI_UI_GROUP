@@ -1088,9 +1088,9 @@
 					<h3 class="mat16"><s:message code="message.msg.deepsearch"/></h3>
 					<div>
 						<div style="display: flex;">
-							<input type="text" id="startDt" style="width: 140px;">
-							<span class="hyphen">~</span>
-							<input type="text" id="endDt" style="width: 140px;"></div>
+							<input type="text" id="startDt" class="txt_center"  style="width: 140px;">
+							<span class="w10 dis_inlineblock txt_center">~</span>
+							<input type="text" id="endDt"  class="txt_center"  style="width: 140px;"></div>
 
 						<div class="optiotab w100 mat8">
 							<button class="active w50" name="attachYn" id="attachAll" value=""><s:message code="condition.isattached.all"/></button>
@@ -1221,9 +1221,9 @@
 					<div class="chatDate">
 						<div class="searchSub" style=" min-width: 150px; box-sizing: border-box; width: 100%" >
 
-							<input type="text" id="startSubDt" style="width: 110px;">
+							<input type="text" id="startSubDt" class="txt_center" style="width: 110px;">
 							<span class="hyphen">~</span>
-							<input type="text" id="endSubDt" style="width: 110px;">
+							<input type="text" id="endSubDt" class="txt_center"  style="width: 110px;">
 							<button class="form_btn01" type="button" accesskey="M" id="searchMsgQueryBtn"><s:message code="common.search"/></button>
 						</div>
 

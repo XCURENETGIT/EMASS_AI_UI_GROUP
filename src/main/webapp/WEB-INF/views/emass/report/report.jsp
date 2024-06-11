@@ -443,9 +443,9 @@
 	<div class="searchArea">
 
 		<div class="searchSub">
-			<div id="startdatepicker"><input type="text" id="startdate" style="width: 110px;">
+			<div id="startdatepicker"><input type="text" id="startdate" class="txt_center" style="width: 110px;">
 				<span class="hyphen">~</span></div>
-			<div id="enddatepicker"><input type="text" id="enddate" style="width: 110px;"></div>
+			<div id="enddatepicker"><input type="text" id="enddate" class="txt_center"  style="width: 110px;"></div>
 			<div class="infotxt mat4 blue">&nbsp<s:message code="report.message.period"/></div>
 		</div>
 		<div class="btnList">

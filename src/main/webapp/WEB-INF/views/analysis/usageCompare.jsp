@@ -211,9 +211,9 @@ function eventEnterSearch(event) {
 		<div class="searchSub_full">
 			<form id="frm">
 				<div class="searchSub_Box">
-					<div id="startDatePicker"><input type="text" id="startDate" name='startDate' style="width: 110px;">
+					<div id="startDatePicker"><input type="text" id="startDate" name='startDate'class="txt_center"  style="width: 110px;">
 						<span class="hyphen">~</span></div>
-					<div id="enddatepicker"><input type="text" id="endDate" name='endDate' style="width: 110px;"></div>
+					<div id="enddatepicker"><input type="text" id="endDate" name='endDate'class="txt_center"  style="width: 110px;"></div>
 
 					<div class="form-group optiotab">
 						<button type="button" id="dateYesterday" accesskey="Y" style="width:72px;"><s:message code="condition.yesterday"/></button>

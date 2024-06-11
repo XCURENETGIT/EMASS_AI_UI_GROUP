@@ -276,9 +276,9 @@
 	<div class="searchArea">
 		<div class="searchSub">
 			<div class="searchSub_Box">
-				<div id="startDatePicker"><input type="text" id="startDate" name='startDate' style="width: 110px;">
+				<div id="startDatePicker"><input type="text" class="txt_center"  id="startDate" name='startDate' style="width: 110px;">
 					<span class="hyphen">~</span></div>
-				<div id="endDatePicker"><input type="text" id="endDate" name='endDate' style="width: 110px;"></div>
+				<div id="endDatePicker"><input type="text" class="txt_center"  id="endDate" name='endDate' style="width: 110px;"></div>
 				<div class="form-group optiotab">
 					<button type="button" id="dateYesterday" accesskey="Y" style="width:85px;"><s:message code="condition.yesterday"/></button>
 					<button type="button" id="dateToday" accesskey="T" style="width:85px;"><s:message code="condition.today"/></button>

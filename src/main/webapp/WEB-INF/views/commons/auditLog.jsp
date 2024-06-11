@@ -370,9 +370,9 @@
 <div>
 	<div class="searchArea">
 		<div class="searchSub">
-			<div><input type="text" id="startDt" style="width: 110px;">
+			<div><input type="text" id="startDt" style="width: 110px;" class="txt_center" >
 				<span class="hyphen">~</span></div>
-			<div><input type="text" id="endDt" style="width: 110px;"></div>
+			<div><input type="text" id="endDt" style="width: 110px;" class="txt_center" ></div>
 			<div>
 				<input type="text"  placeholder="<s:message code="common.msg.searchMsg"/>" id="searchStr" style="width: 300px;">
 				<button class="form_btn01" accesskey="Q" id="searchBtn" accesskey="s"><s:message code="common.search"/></button>
