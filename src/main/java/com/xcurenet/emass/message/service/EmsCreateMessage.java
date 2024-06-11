@@ -344,7 +344,7 @@ public class EmsCreateMessage {
 	private String makeUserHtml(EmsRecvVO u, String formatval) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("<span class=\"");
-		if(Common.isEquals(u.getInSide(), "N")) sb.append("userOutside");
+		if(Common.isEquals(u.getInSide(), "N") && u.getName()!=null) sb.append("userOutside");
 		sb.append("\">");
 		sb.append(EmsReDefined.reUser(u, formatval));
 		sb.append("</span>");

@@ -3168,7 +3168,7 @@
                                             </label>
                                         </div>
                                     </div>
-                                    <button class="fullbtn" id="searchBtn" style="position: absolute"><span><s:message code="common.search1"/></span></button>
+                                    <button class="fullbtn" id="searchBtn" ><span><s:message code="common.search1"/></span></button>
                                 </div>
                             </div>
                             <!-- //검색 버튼 고정 -->
