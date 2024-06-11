@@ -215,6 +215,7 @@ var con = {
 
 		$('input:checkbox[id="senders_not"]').prop("checked", false);
 		$('input:checkbox[id="senders_not"]').prop("disabled", true);
+		$('input:checkbox[id="adminAllRead"]').prop("checked", true);
 		$('input:checkbox[id="receivers_not"]').prop("checked", false);
 		$('input:checkbox[id="receivers_not"]').prop("disabled", true);
 		$('input:checkbox[id="attachYn_not"]').prop("checked", false);
@@ -436,7 +437,7 @@ var con = {
 
 		condition.rcvJikgub = arrayToString($('#rcvJikgub').selectpicker('val'));
 		condition.recv_jikgub_not = $('input:checkbox[id="recv_jikgub_not"]').is(":checked") ? 'Y' : '';
-
+		condition.adminAllRead = $('input:checkbox[id="adminAllRead"]').is(":checked") ? 'Y' : '';
 		condition.senders = $('#senders').val();
 		if(rsUppercase == "Y") {
 			condition.senders_upperCase = $('input:checkbox[id="senders_upperCase"]').is(":checked") ? 'Y' : '';
@@ -617,6 +618,8 @@ var con = {
 			$('input:checkbox[id="senders_upperCase"]').prop("disabled", condition.senders == '' ? true : false);
 			$('input:checkbox[id="senders_upperCase"]').prop("checked", condition.senders_upperCase == 'Y' ? true : false);
 		}
+
+		$('input:checkbox[id="adminAllRead"]').prop("checked", condition.adminAllRead == 'Y' ? true : false);
 
 		// $('#initEpmsg').selectpicker('val', stringToArray(condition.epmsgType) );
 

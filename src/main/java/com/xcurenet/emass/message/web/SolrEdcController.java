@@ -177,6 +177,10 @@ public class SolrEdcController {
 			return new XcnResponseVO(XcnRspCode.OK, rtnSolrVo, total);
 
 		}else {
+
+			JSONArray conditions = Common.toJSONArray(data.get("conditions"));
+			String adminAllRead = Common.nvl(conditions.getJSONObject(0).get("adminAllRead"));
+
 			SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
 			String adminId = Common.getAdminId(session);
 			SolrQuery sq = solrCreateQuery.createQuery(data, Common.getAdminId(session), Common.nvl(data.get("searchTime")));
@@ -193,7 +197,7 @@ public class SolrEdcController {
 			ConfigAdminVO overlapInfo = configAdminService.getConfAdmin("message.overlap.use", adminId);
 			String overlap = (!Common.isEmpty(overlapInfo)) ? overlapInfo.getVal() : "N";
 
-			SolrEdcMessageVO solrVo = solrEdcService.getEmassMessage(sq, adminId, solrCreateQuery.getFinalReadYn(), solrCreateQuery.getConsentNo());
+			SolrEdcMessageVO solrVo = solrEdcService.getEmassMessage(sq, adminId, solrCreateQuery.getFinalReadYn(), solrCreateQuery.getConsentNo(), adminAllRead);
 			if(Common.isEquals(Common.nvl(param.get("overlap")), "Y") || Common.isEquals(overlap, "Y")) {
 				solrVo = solrEdcService.setOverlap(solrVo);
 			}
