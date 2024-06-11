@@ -111,6 +111,7 @@
 		</div>
 
 		<div class="ipinfo_right">
+			<% if(Config.getBoolean("chrony.server.used")){ %>
 			<p class="ntp" style="margin-left: 8px;">
 				<%if (Common.isEquals(ntpInfo.getString("status"), "sync")) {%>
 				<span id="ntpColor" class="top_flag01"></span>&nbsp;
@@ -126,6 +127,8 @@
 				<span id="ntpStatus" class="fb600">Chrony - <s:message code="trap.message.Chrony.server.nosearch"/></span>
 				<%}%>
 			</p>
+			<% } %>
+
 			<p>
 				<span class="graybbb"><s:message code="login.login.date"/> : ${sessionScope.sessionLastLoginDt}</span>
 				<span class="graybbb"><s:message code="login.login.ip"/> : <%=Common.nvl(request.getRemoteAddr(), "-")%></span>

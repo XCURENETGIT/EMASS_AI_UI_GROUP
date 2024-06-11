@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Locale;
 
+import com.xcurenet.common.util.config.Config;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -38,8 +39,10 @@ public class NtpScheduler {
 
 	@Scheduled(fixedDelay = 60000)
 	public void checkNtp() {
-		JSONObject socketMsg = getNtpStatus();
-		simpMessagingTemplate.convertAndSend("/topic/ntpCheck", socketMsg);
+		if(!Common.isWindow() && Config.getBoolean("chrony.server.used")) {
+			JSONObject socketMsg = getNtpStatus();
+			simpMessagingTemplate.convertAndSend("/topic/ntpCheck", socketMsg);
+		}
 	}
 
 	public JSONObject getNtpStatus() {

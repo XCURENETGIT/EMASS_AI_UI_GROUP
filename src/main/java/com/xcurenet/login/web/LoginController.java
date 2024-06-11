@@ -537,24 +537,27 @@ public class LoginController {
 		loginMsg += Prop.propFormat("login.currentlogin.date", Common.getLocale(session)) + " : " + Common.nvl(Common.getTime(), "-") + "\n";
 		loginMsg += Prop.propFormat("login.currentlogin.ip", Common.getLocale(session)) + " : " + Common.nvl(request.getRemoteAddr(), "-") + "\n";
 
-		JSONObject ntpStatus = ntpScheduler.getNtpStatus();
-		loginMsg += "\n";
-		loginMsg += "\n";
-		loginMsg += "         *****  " + Prop.propFormat("trap.message.Chrony", Common.getLocale(session)) + "  *****";
-		loginMsg += "\n";
-		loginMsg += "\n";
-		if (!ntpStatus.get("ntpServer").equals("")) loginMsg += Prop.propFormat("trap.message.Chrony.server", Common.getLocale(session)) + " : " + ntpStatus.getString("ntpServer") + "\n";
-		else loginMsg += Prop.propFormat("trap.message.Chrony.server", Common.getLocale(session)) + " : " + Prop.propFormat("trap.message.Chrony.server.nosearch", Common.getLocale(session)) + "\n";
+		if (Config.getBoolean("chrony.server.used")) {
+			JSONObject ntpStatus = ntpScheduler.getNtpStatus();
+			loginMsg += "\n";
+			loginMsg += "\n";
+			loginMsg += "         *****  " + Prop.propFormat("trap.message.Chrony", Common.getLocale(session)) + "  *****";
+			loginMsg += "\n";
+			loginMsg += "\n";
+			if (!ntpStatus.get("ntpServer").equals(""))
+				loginMsg += Prop.propFormat("trap.message.Chrony.server", Common.getLocale(session)) + " : " + ntpStatus.getString("ntpServer") + "\n";
+			else
+				loginMsg += Prop.propFormat("trap.message.Chrony.server", Common.getLocale(session)) + " : " + Prop.propFormat("trap.message.Chrony.server.nosearch", Common.getLocale(session)) + "\n";
 
-		if (Common.isEquals(ntpStatus.getString("status"), "sync")) {
-			loginMsg += Prop.propFormat("trap.message.Chrony.sync.msg", Common.getLocale(session)) + " : " + Prop.propFormat("trap.message.Chrony.sync", Common.getLocale(session)) + "\n";
-		} else if (Common.isEquals(ntpStatus.getString("status"), "unsync")) {
-			loginMsg += Prop.propFormat("trap.message.Chrony.sync.msg", Common.getLocale(session)) + " : " + Prop.propFormat("trap.message.Chrony.unsync", Common.getLocale(session)) + "\n";
+			if (Common.isEquals(ntpStatus.getString("status"), "sync")) {
+				loginMsg += Prop.propFormat("trap.message.Chrony.sync.msg", Common.getLocale(session)) + " : " + Prop.propFormat("trap.message.Chrony.sync", Common.getLocale(session)) + "\n";
+			} else if (Common.isEquals(ntpStatus.getString("status"), "unsync")) {
+				loginMsg += Prop.propFormat("trap.message.Chrony.sync.msg", Common.getLocale(session)) + " : " + Prop.propFormat("trap.message.Chrony.unsync", Common.getLocale(session)) + "\n";
 
-		} else {
-			loginMsg += Prop.propFormat("trap.message.Chrony.sync.msg", Common.getLocale(session)) + " : " + Prop.propFormat("trap.message.Chrony.unconnect", Common.getLocale(session)) + "\n";
+			} else {
+				loginMsg += Prop.propFormat("trap.message.Chrony.sync.msg", Common.getLocale(session)) + " : " + Prop.propFormat("trap.message.Chrony.unconnect", Common.getLocale(session)) + "\n";
+			}
 		}
-
 		obj.put("welcomeInfo", loginMsg);
 
 		CustomDashboardMenuVO dashVo = new CustomDashboardMenuVO();
