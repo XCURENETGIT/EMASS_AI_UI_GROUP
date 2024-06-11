@@ -1349,5 +1349,82 @@ public class SolrEdcStatController {
 		}
 	}
 
+	@RequestMapping(value = "/getServiceCheckedStatList.xcn")
+	@Description("서비스 타입별 관리자 열람 통계 리스트 조회")
+	@ResponseBody
+	public XcnResponseVO getServiceCheckedStatList(final HttpServletRequest request, final HttpSession session) throws SolrServerException, IOException {
+		String xAxis = "checked.readId";
+		String yAxis = Common.nvl(request.getParameter("yAxis"));
+		String startDate = Common.nvl(request.getParameter("startDate"));
+		String endDate = Common.nvl(request.getParameter("endDate"));
+		String adminId = Common.nvl(request.getParameter("adminId"));
+		if (Common.isEmpty(adminId)) adminId = "*";
+		int limit = Common.nvz(request.getParameter("limit"));
+		String query = "";
+
+		SolrQuery sq = new SolrQuery();
+		query += String.format(" +checked.readId:%s", adminId);
+		query += String.format(" +ctime:[%s TO %s]", startDate, endDate);
+
+		log.info("query : {}", query);
+
+		sq.setQuery(query);
+		sq.setStart(0);
+		sq.setRows(0);
+		sq.setFacet(true);
+		sq.setFacetLimit(limit);
+		sq.setFacetMinCount(1);
+		sq.setFacetSort("count");
+		sq.setParam("facet.pivot", xAxis + "," + yAxis);
+
+
+		SolrEdcMessageVO solrCheckedStatVo = solrCheckedService.getCheckedStatList(sq);
+
+		return new XcnResponseVO(XcnRspCode.OK, solrCheckedStatVo, solrCheckedStatVo.getPivotData().size());
+	}
+
+	@RequestMapping(value = "/getServiceStatCheckedDetailList.xcn")
+	@Description("서비스 타입별 관리자 열람 통계 리스트 상세 조회")
+	@ResponseBody
+	public XcnResponseVO getServiceStatCheckedDetailList(final HttpServletRequest request, final HttpSession session) throws SolrServerException, IOException {
+		String xAxis = Common.nvl(request.getParameter("xAxis"));
+		String rowKey = Common.nvl(request.getParameter("rowKey")).replaceAll("-", "");
+		String colKey = Common.nvl(request.getParameter("colKey")).replaceAll("-", "");
+		String startDate = Common.nvl(request.getParameter("startDate"));
+		String endDate = Common.nvl(request.getParameter("endDate"));
+		int offset = Common.nvz(request.getParameter("offset"));
+		int limit = Common.nvz(request.getParameter("limit"));
+		String searchAfter =Common.nvl(request.getParameter("searchAfter"));
+
+		String adminId = Common.nvl(request.getParameter("adminId"));
+//		if (Common.isEmpty(rowKey)) rowKey = "*";
+		if (Common.isEmpty(colKey)) colKey = "*";
+		String[] rowkeys = rowKey.split(",");
+
+
+
+		String query = "";
+		SolrQuery sq = new SolrQuery();
+		if (Common.isEquals(xAxis,"svc1" ) && !Common.isEquals(colKey,"*")){
+			query+= String.format(" +svc1:%s", colKey);
+		}else{
+			query+= String.format(" +checked.readTime_yyyymmdd:%s", colKey);
+		}
+		if (Common.isEmpty(rowKey) || rowkeys.length>1) rowKey = "*";
+		query+= String.format(" +checked.readId:%s", rowKey);
+
+
+		query += String.format(" +ctime:[%s TO %s] ", startDate, endDate);
+		sq.setQuery(query);
+		sq.setParam("searchAfter",searchAfter);
+		sq.setStart(offset);
+		sq.setRows(limit);
+
+
+		SolrEdcMessageVO solrStatVo = solrEdcService.getEmassMessage(sq, null, "", null);
+		return new XcnResponseVO(XcnRspCode.OK, solrStatVo, solrStatVo.getNumFound());
+	}
+
+
 
 }

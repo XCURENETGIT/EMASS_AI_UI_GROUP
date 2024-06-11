@@ -503,6 +503,15 @@ public class HomeController {
 	}
 
 	/**
+	 * serviceAdminReadStat JSP.
+	 */
+	@RequestMapping(value = "/ems/serviceAdminReadStat.do", method = RequestMethod.GET)
+	@Description("관리자 열람 통계 페이지")
+	public String serviceAdminReadStat(Locale locale, Model model) {
+		return "/emass/statistics/serviceAdminReadStat";
+	}
+
+	/**
 	 * usersStat JSP.
 	 */
 	@RequestMapping(value = "/ems/dstIpTop.do", method = RequestMethod.GET)
