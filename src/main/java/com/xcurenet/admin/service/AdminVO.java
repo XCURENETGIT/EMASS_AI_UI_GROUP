@@ -15,6 +15,8 @@ public class AdminVO {
 
 	private String adminEmail;
 
+	private String insideYn;
+
 	private String adminHp;
 
 	private String pwchgDt;

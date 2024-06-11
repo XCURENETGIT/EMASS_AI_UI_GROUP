@@ -104,6 +104,7 @@
                 $('[name=adminType][value=M]').prop('checked', true);
                 $('[name=approbator][value=N]').prop('checked', true);
                 $('[name=infoFeedbackYn][value=N]').prop('checked', true);
+                $('[name=insideYn][value=N]').prop('checked', true);
                 $('[name=useYn][value=Y]').prop('checked', true);
                 $("[name=workStatus]").prop('checked', false);
                 $("[name=chkMenu]").prop('checked', true);
@@ -922,8 +923,24 @@
 										<s:message code="common.msg.unuse"/>
 									</label>
 								</div>
-
 							</div>
+							<div class="row">
+								<div class="col-35">
+									<label for="insideYn" class="fname"><s:message code="message.msg.in"/> <s:message code="analysis.freedom.ui.data"/> </label>
+								</div>
+								<div class="col-65">
+									<label class="radio-inline c-radio">
+										<input type="radio" name="insideYn" value="Y">
+										<s:message code="common.msg.use"/>
+									</label>
+									<label class="radio-inline c-radio">
+										<input type="radio" name="insideYn" value="N" checked>
+										<s:message code="common.msg.unuse"/>
+									</label>
+								</div>
+							</div>
+
+
 							<div class="info" style="background-color: transparent">
 								<s:message code="common.guidance"/>
 								<div id="msgAuthComment" class="form-inline">
@@ -1122,6 +1139,7 @@
             $('[name=adminType][value=' + data.adminType + ']').prop('checked', true);
             $('[name=approbator][value=' + data.approbator + ']').prop('checked', true);
             $('[name=infoFeedbackYn][value=' + data.infoFeedbackYn + ']').prop('checked', true);
+            $('[name=insideYn][value=' + data.insideYn + ']').prop('checked', true);
             $('[name=useYn][value=' + data.useYn + ']').prop('checked', true);
             $('[name=workStatus]').prop('checked', false);
             $('[name=workStatus][value=' + data.workStatus + ']').prop('checked', true);

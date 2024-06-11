@@ -46,6 +46,8 @@
 		SELECT  'REGEXP' AS type,  CONCAT( CONCAT('+(', GROUP_CONCAT(DISTINCT CONCAT(CONCAT(' (pi_amount.pi_',CODE,': [1 TO *]'),')') SEPARATOR ' ' )),' )') as query, COUNT(CODE) AS cnt FROM UI_ADMIN_REGEXP  WHERE ADMIN_ID = #{adminId}
 		UNION	ALL
 		SELECT  'USERID' AS type, CONCAT('+userid:(', GROUP_CONCAT( DISTINCT CONCAT('(', B.USER_ID, ')') SEPARATOR ' '),')') AS query, COUNT(B.GROUP_CODE) AS cnt FROM UI_ADMIN_CEO_GROUP A LEFT JOIN UI_USER_GROUP_LIST B ON A.GROUP_CODE=B.GROUP_CODE WHERE ADMIN_ID = #{adminId}
+		UNION ALL
+		SELECT 'INSIDE ' AS type, CONCAT('+inside:Y') AS query, COUNT(INSIDE) AS cnt FROM UI_ADMIN WHERE ADMIN_ID = #{adminId} AND INSIDE ='Y'
 	</select>
 
 
@@ -89,6 +91,7 @@
 				LAST_LOGIN_IP AS lastLoginIp,
 				STATUS AS status,
 				FIRSTADMIN_YN AS firstAdminYn,
+				INSIDE AS insideYn,
 				INFO_FEEDBACK AS infoFeedbackYn,
 				ADMIN_TYPE AS adminType,
 				USE_YN AS useYn,
@@ -142,6 +145,7 @@
 				STATUS AS status,
 				WORK_STATUS AS workStatus,
 				FIRSTADMIN_YN AS firstAdminYn,
+				INSIDE AS insideYn,
 				INFO_FEEDBACK AS infoFeedbackYn,
 				ADMIN_TYPE AS adminType,
 				USE_YN AS useYn,
@@ -180,7 +184,7 @@
 	<!--  운용자 등록 -->
 	<insert id="insertAdmin" parameterType="adminVO">
 		INSERT INTO UI_ADMIN
-		(ADMIN_ID, ADMIN_NAME, ADMIN_PW, ADMIN_EMAIL, ADMIN_HP, PW_CHG_DT, LAST_LOGIN_DT, LAST_LOGIN_IP, STATUS, WORK_STATUS, FIRSTADMIN_YN, ADMIN_TYPE, USE_YN, ACCESS_FAIL_CNT, ACCESS_FAIL_DT, APPROBATOR, INFO_FEEDBACK, COMMENT, CREATE_DT, LOGIN_TYPE) 
+		(ADMIN_ID, ADMIN_NAME, ADMIN_PW, ADMIN_EMAIL, ADMIN_HP, PW_CHG_DT, LAST_LOGIN_DT, LAST_LOGIN_IP, STATUS, WORK_STATUS, FIRSTADMIN_YN, ADMIN_TYPE, USE_YN, ACCESS_FAIL_CNT, ACCESS_FAIL_DT, APPROBATOR, INFO_FEEDBACK, COMMENT, CREATE_DT, LOGIN_TYPE, INSIDE)
 		VALUES (#{adminId}, #{adminName}, #{adminPw}, 
 		<if test='encryptUseYN == "Y"'>
 		if(#{adminEmail} is null, null, xcnenc(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, #{adminEmail})),
@@ -188,7 +192,7 @@
 		<if test='encryptUseYN != "Y"'>
 		#{adminEmail}, 
 		</if>
-		#{adminHp}, NULL, NULL, NULL, 'S', #{workStatus}, 'N', #{adminType}, #{useYn}, 0, NULL, #{approbator}, #{infoFeedbackYn}, #{comment}, NOW(), #{loginType} )
+		#{adminHp}, NULL, NULL, NULL, 'S', #{workStatus}, 'N', #{adminType}, #{useYn}, 0, NULL, #{approbator}, #{infoFeedbackYn}, #{comment}, NOW(), #{loginType}, #{insideYn} )
 	</insert>
 	
 	<select id="getAdminDashBoardConfCnt" resultType="int" parameterType="adminVO">
@@ -365,6 +369,7 @@
 				</if>
 				USE_YN		= #{useYn},
 				WORK_STATUS	= #{workStatus},
+				INSIDE = #{insideYn},
 				ACCESS_FAIL_CNT	= 0,
 				ACCESS_FAIL_DT = NULL,
 				APPROBATOR	= #{approbator},
