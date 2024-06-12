@@ -522,10 +522,11 @@
                     searchArray[0] = search.substring(1, search.length-1);
                 } else {
                     search = search.replaceAll('\\|',' ');
-                    search = search.replaceAll("\\+", "").replaceAll("\\*", "").replaceAll("\\?", "");
+                    search = search.replaceAll("\\+", "").replaceAll("\\?", "");
                     search = search.replaceAll("\"", "");
                     search = search.replaceAll("\\(", "").replaceAll("\\)","");
                     searchArray = search.split(" ");
+
                 }
                 var obj = $.parseHTML('<div>'+rtnVal+'</div>');
                 for(var i = 0; i < searchArray.length; i++) {
