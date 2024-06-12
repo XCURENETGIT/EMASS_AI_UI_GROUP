@@ -26,7 +26,7 @@
 //    public void initData() {
 //        if(searchWordService.tableNum() == 0) {
 //            log.info("create_table 실행");
-//            execute("classpath*:com/xcurenet/sqlmap/mappers/sql/create_table.sql", false);
+//            execute("classpath*:com/xcurenet/sqlmap/mappers/sql/schema-create_table.sql", false);
 //        }
 //    }
 //

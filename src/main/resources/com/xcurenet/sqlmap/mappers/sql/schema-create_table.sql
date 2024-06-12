@@ -5,6 +5,11 @@ USE EMASSAI;
 set @@group_concat_max_len = 50240;
 set @@sort_buffer_size = 924288;
 
+CREATE TABLE IF NOT EXISTS  `TEST`
+(
+    `ADMIN_ID` varchar(50) NOT NULL COMMENT '운용자 아이디',
+    PRIMARY KEY (`ADMIN_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='운용자 정보';
 
 CREATE TABLE IF NOT EXISTS  `UI_ADMIN` (
   `ADMIN_ID` varchar(50) NOT NULL COMMENT '운용자 아이디',
