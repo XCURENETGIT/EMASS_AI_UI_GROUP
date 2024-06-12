@@ -180,7 +180,7 @@ function saveOriginalText( )
 						<button type="button" class="btn btn-sm btn-default" accesskey="C" id="noSelectBtn"><span class="glyphicon glyphicon-remove"></span>&nbsp;<s:message code="common.msg.close"/></button>
 					</div>
 				</div>
-				<div class="row" style="border-top: 1px solid #ddd; height: calc(100% - 40px);">
+				<div class="row"  style="border-top: 1px solid #ddd; height: calc(100% - 40px); overflow: visible;">
 					<div class="col-xs-12" style="height: 100%;">
 						<div class="panel-body text-md" style="min-height:500px;white-space: pre-wrap; -ms-word-break: break-all; -ms-word-wrap: break-word;"><xmp><%=body%></xmp></div>
 						<iframe id="MessageDown" src="about:blank;" height="0" width="0" style="display: none;" ></iframe>
