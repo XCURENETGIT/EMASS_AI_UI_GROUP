@@ -542,7 +542,7 @@ INSERT IGNORE INTO UI_SERVICE (`SERVICECD`, `SERVICENM_LV1`, `SERVICENM_LV2`, `S
     ('LYMS', '번역기', 'Yandex 번역', '발신', 'O', 402, 'Y', ''),
     ('LUKS', '번역기', '기타', '발신', 'I', 403, 'Y', ''),
     ('IGBS', '생성형 AI', '구글 Gemini', '발신', 'O', 404, 'Y', ''),
-    ('IBIS', '생성형 AI', ' Microsoft Copilot', '발신', 'O', 405, 'Y', ''),
+    ('IBIS', '생성형 AI', 'Microsoft Copilot', '발신', 'O', 405, 'Y', ''),
     ('IWTS', '생성형 AI', 'wrtn', '발신', 'O', 406, 'Y', ''),
     ('IGPS', '생성형 AI', 'chatGPT', '발신', 'O', 407, 'Y', ''),
     ('IDAS', '생성형 AI', 'Dall-E', '발신', 'O', 408, 'Y', ''),
@@ -629,6 +629,11 @@ INSERT IGNORE INTO UI_SERVICE (`SERVICECD`, `SERVICENM_LV1`, `SERVICENM_LV2`, `S
     ('ECIS', '그룹웨어', 'Samsung cic', '발신', 'O', 489, 'Y', ''),
     ('DCCS', '편집기', 'Clip Champ', '발신', 'O', 490, 'Y', ''),
     ('DFGS', '편집기', 'Figma', '발신', 'O', 491, 'Y', '');
+
+UPDATE UI_SERVICE
+SET SERVICENM_LV2 = 'Microsoft Copilot'
+WHERE SERVICECD = 'IBIS';
+
 
 /* UI MENU */
 DELETE FROM UI_MENU;
