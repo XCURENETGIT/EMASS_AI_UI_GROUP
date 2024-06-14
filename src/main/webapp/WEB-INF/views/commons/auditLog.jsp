@@ -213,7 +213,7 @@
 	function getMenu(p_id) {
 	    var result = [];
 	    for (var i = 0; i < menuArr.length; i++) {
-	        if (menuArr[i].p_id == p_id) {
+	        if (menuArr[i].p_id == p_id || p_id == '') {
 	            result.push(menuArr[i]);
 	        }
 	    }
@@ -243,12 +243,20 @@
 	        if (e.keyCode == 13) getData();
 	    });
 
-	    var str = '<option value="">- <s:message code="auditLog.select.pmenu"/> -</option>';
+	    var str = '<option value="">- <s:message code="All.MENU"/> -</option>';
 	    var category = getParentMenu();
 	    for (var i = 0; i < category.length; i++) {
 	        str += '<option value="' + category[i].id + '">' + category[i].name + '</option>';
 	    }
 	    $('#pMenuId').html(str);
+
+        var str = '<option value="">- <s:message code="auditLog.select.menu"/> -</option>';
+        var menu = getMenu($(this).val());
+        for ( var i=0 ; i < menu.length ; i++ ) {
+            str += '<option value="'+menu[i].id+'">'+menu[i].name+'</option>';
+        }
+        $('#menuId').html(str);
+
 
 	    $('#pMenuId').change(function () {
 	        var str = '<option value="">- <s:message code="auditLog.select.menu"/> -</option>';
@@ -386,7 +394,7 @@
 			</div>
 			<div>
 				<select id="pMenuId" style="width: 200px;">
-					<option value="">- <s:message code="auditLog.select.pmenu"/> -</option>
+					<option value="">- <s:message code="All.MENU"/> -</option>
 				</select>
 			</div>
 			<div>
