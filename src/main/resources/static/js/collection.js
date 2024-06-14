@@ -1965,6 +1965,7 @@ function rtnGenerativeGroupList(data) {
 
 
 function initServiceTab() {
+    var allSelect = new Array();
     if (busiScrollTabs != undefined) busiScrollTabs.destroy();
     busiScrollTabs = $('#busiCntArea').scrollTabs({
         click_callback: function (e) {
@@ -1973,6 +1974,15 @@ function initServiceTab() {
 
             if (svc1Value == null || typeof svc1Value === 'undefined' || svc1Value === '') {
                 $('#selectUserInfo').attr('data-svc12', getPageType());
+
+                if ($('#serviceTypeSelect').selectpicker('val') == null) {
+                    $('#serviceTypeSelect option').each(function () {
+                        if ($(this).val() != '' && $(this).val() != null) allSelect.push($(this).val());
+                    });
+                    currentSchVal.serviceType = arrayToString(allSelect);
+                } else {
+                    currentSchVal.serviceType = arrayToString($('#serviceTypeSelect').selectpicker('val'));
+                }
                 isEnd = false;
                 getCollectionGroupList(1,  getPageType());
             } else {
