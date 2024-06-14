@@ -658,7 +658,7 @@
 			<div class="subtab">
 				<div>
 					<ul class="nav nav-tabs codeTab listChart">
-						<li class="active"><a data-toggle="tab" href="#basicStatList" id="listTab" >OCR TOP</a></li>
+						<li class="active"><a data-toggle="tab" href="#basicStatList" id="listTab" >IMG2TXT(OCR) TOP</a></li>
 					</ul>
 				</div>
 			</div>
@@ -766,7 +766,7 @@
 				success : function(data, total) {
 					grid1.colInit();
 					grid1.autoNumber();
-					grid1.colAdd('rowKey', 'OCR', 230, 'left', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
+					grid1.colAdd('rowKey', 'IMG2TXT(OCR)', 230, 'left', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
 						if(value == 'totalOCR') return '<s:message code="stat.ocr.target"/>';
 						else if(value == 'detectOCR') return '<s:message code="stat.ocr.include"/>';
 						else if(value == 'noOCR') return '<s:message code="stat.ocr.notinclude"/>';

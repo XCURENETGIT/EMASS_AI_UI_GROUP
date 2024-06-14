@@ -1625,7 +1625,7 @@
 									<td><span class="fa fa-question queryHelp" data-helptext="<s:message code="query.make.multi.message"/><br>to:<s:message code="condition.to"/><br>cc:<s:message code="condition.cc"/><br>bcc:<s:message code="condition.bcc"/><br>tname:<s:message code="condition.to.name"/><br>cname:<s:message code="condition.cc.name"/><br>bname:<s:message code="condition.bcc.name"/>"></span></td>
 								</tr>
 								<tr>
-									<th>OCR</th>
+									<th>IMG2TXT(OCR)</th>
 									<td>
 										<s:message code="condition.exist"/>:AND / <s:message code="condition.none"/>:<s:message code="query.make.except"/>(-)
 									</td>
