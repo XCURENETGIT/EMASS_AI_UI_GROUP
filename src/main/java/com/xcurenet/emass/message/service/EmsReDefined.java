@@ -326,8 +326,8 @@ public class EmsReDefined {
 		if(obj.isEmpty()) {
 			return target;
 		}
-		
-		return obj.getString("name") + "<" + obj.getString("id") + ">";
+
+		return obj.getString("name") + "<" + target + ">";
 	}
 	
 	public String reRecvs(List<String> recvs, String summary) {
