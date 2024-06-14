@@ -162,13 +162,47 @@ public class EmsMessageControllerLog {
 		String menuId = Common.nvl(param.get("menuId"));
 		String pMenuId = Common.nvl(param.get("pMenuId"));
 
-		EmsMessageVO msg = emsMessageService.getEmassMessage ( msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
+		EmsMessageVO msg = emsMessageService.getEmassMessageNew(Common.getAdminId(request), msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
+
 		String subject = EmsReDefined.reSubject(msg);
 		StringBuffer info = new StringBuffer();
 
 		info.append("["+Prop.propFormat("common.msg.view.body")+"]").append(ENTER);
 		info.append(""+Prop.propFormat("condition.subject")+" : ").append(subject).append(ENTER);
 		info.append(""+Prop.propFormat("common.msg.msgid")+" : ").append(msgId).append(ENTER);
+
+		info.append(""+Prop.propFormat("filterInfo.service")+" : ").append(msg.getSvcNm()).append(ENTER); //서비스 타입
+
+		info.append(""+Prop.propFormat("common.msg.attach.cnt")+" : ").append(msg.getAttachCnt()).append(ENTER); // 첨부파일 수
+
+
+		if (!msg.getFiles().isEmpty()){ //첨부파일 명
+			info.append(""+Prop.propFormat("condition.attach_name")+" : ");
+			for (int i = 0; i<msg.getFiles().size(); i++){
+				info.append(msg.getFiles().get(i).getAttachName());
+				if (i != msg.getFiles().size()-1) info.append(", ");
+			}
+			info.append(ENTER);
+		}
+
+		if (!msg.getSrcIp().isEmpty()) info.append(""+Prop.propFormat("condition.source")+"IP : ").append(msg.getSrcIp()).append(ENTER); //출발지 IP
+		if (!msg.getDstIp().isEmpty())  info.append(""+Prop.propFormat("urlIpBlock.destip")+" : ").append(msg.getDstIp()).append(ENTER); //목적지 ip
+
+		if (msg.getToList().size()>0){ //받는 사람
+			info.append(""+Prop.propFormat("condition.to")+" : ");
+			for (int i = 0; i<msg.getToList().size(); i++){
+				info.append(msg.getToList().get(i).getViewStr());
+			}
+			info.append(ENTER);
+		}
+
+		if (msg.getSenderList().size()>0){ //보낸 사람
+			info.append(""+Prop.propFormat("condition.from")+" : ");
+			for (int i = 0; i<msg.getSenderList().size(); i++){
+				info.append(msg.getSenderList().get(i).getViewStr());
+			}
+			info.append(ENTER);
+		}
 
 		auditVo.setInformation(info.toString());
 
