@@ -257,14 +257,14 @@ public class EmsCreateMessage {
 				header_doc.getElementById("msgFrom").remove();
 			}
 
-			if (isMessengerGroup(msg.getSvc(), msg.getXRootMtr())){
-				header_doc.getElementById("msgSrcIp").remove();
-				header_doc.getElementById("msgDstIp").remove();
-				header_doc.getElementById("msgUserAccount").remove();
-			}
-			else{
+//			if (isMessengerGroup(msg.getSvc(), msg.getXRootMtr())){
+//				header_doc.getElementById("msgSrcIp").remove();
+//				header_doc.getElementById("msgDstIp").remove();
+//				header_doc.getElementById("msgUserAccount").remove();
+//			}
+//			else{
 				if(null != header_doc.getElementById("msgAccount")) header_doc.getElementById("msgAccount").remove();
-			}
+//			}
 
 			if (files.isEmpty()) header_doc.getElementById("msgFiles").remove();
 			else {
