@@ -1047,7 +1047,10 @@
             if (value == 0) return 'No';
             else return 'Yes'
         });
-        
+
+        grid.colAdd('host', 'Host', 220, 'center', false, 'nomal');
+        grid.colAdd('path', 'Patch', 180, 'center', false, 'nomal');
+
         grid.loadHeader(true);
         grid.loadPageSize();
         grid.initData('<s:message code="common.msg.search.click"/>');
