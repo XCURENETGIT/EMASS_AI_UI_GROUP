@@ -1,9 +1,10 @@
 package com.xcurenet.audit.web;
 
 import com.xcurenet.admin.service.AdminVO;
-import com.xcurenet.audit.service.AuditRequestVO;
-import com.xcurenet.audit.service.AuditService;
-import com.xcurenet.audit.service.AuditVO;
+import com.xcurenet.annotations.AuditMenu;
+import com.xcurenet.annotations.AuditOperation;
+import com.xcurenet.annotations.AuditParentMenu;
+import com.xcurenet.audit.service.*;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.locale.Prop;
 import com.xcurenet.common.vo.XcnResponseVO;
@@ -21,6 +22,8 @@ import java.util.List;
 
 @Log4j2
 @Controller
+@AuditParentMenu(ParentMenu.OPERATION_MGMT)
+@AuditMenu(Menu.AUDIT_LOG)
 public class AuditController {
 
 	@Resource(name = "auditService")
@@ -28,6 +31,7 @@ public class AuditController {
 
 	@RequestMapping(value = "/getAuditList.xcn")
 	@Description("감사로그 리스트 조회")
+	@AuditOperation(Operation.SEARCH)
 	@ResponseBody
 	public XcnResponseVO getAuditList(final HttpServletRequest request, final HttpSession session) throws Exception {
 		List<AuditVO> result = auditService.getAuditList(Common.getParamMap(request));
