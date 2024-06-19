@@ -121,11 +121,12 @@
 	    p_id: 'DATA_STAT'
 	}); //첨부파일명 통계
 	menuArr.push({id: 'STAT_URL', name: '<s:message code="DATA_STAT.STAT_URL"/>', p_id: 'DATA_STAT'}); //URL 통계
+	menuArr.push({id:'STAT_SERVICEADMINREAD', name:'<s:message code="DATA_STAT.STAT_SERVICEADMINREAD"/>',  p_id:'DATA_STAT'}); //서비스타입 운용자 열람 통계
 	menuArr.push({
 	    id: 'STAT_ADMINREAD',
 	    name: '<s:message code="DATA_STAT.STAT_ADMINREAD"/>',
 	    p_id: 'DATA_STAT'
-	}); //운용자 열람 통계
+	});
 	menuArr.push({
 	    id: 'STAT_DEVTRAFFIC',
 	    name: '<s:message code="DATA_STAT.STAT_DEVTRAFFIC"/>',

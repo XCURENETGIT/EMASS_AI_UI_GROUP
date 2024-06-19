@@ -1351,6 +1351,7 @@ public class SolrEdcStatController {
 
 	@RequestMapping(value = "/getServiceCheckedStatList.xcn")
 	@Description("서비스 타입별 관리자 열람 통계 리스트 조회")
+	@AuditOperation(Operation.SEARCH)
 	@ResponseBody
 	public XcnResponseVO getServiceCheckedStatList(final HttpServletRequest request, final HttpSession session) throws SolrServerException, IOException {
 		String xAxis = "checked.readId";
@@ -1385,6 +1386,7 @@ public class SolrEdcStatController {
 
 	@RequestMapping(value = "/getServiceStatCheckedDetailList.xcn")
 	@Description("서비스 타입별 관리자 열람 통계 리스트 상세 조회")
+	@AuditOperation(Operation.SEARCH)
 	@ResponseBody
 	public XcnResponseVO getServiceStatCheckedDetailList(final HttpServletRequest request, final HttpSession session) throws SolrServerException, IOException {
 		String xAxis = Common.nvl(request.getParameter("xAxis"));

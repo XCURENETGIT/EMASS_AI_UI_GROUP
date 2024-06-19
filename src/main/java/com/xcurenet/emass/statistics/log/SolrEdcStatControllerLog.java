@@ -216,4 +216,40 @@ public class SolrEdcStatControllerLog {
 		auditVo.setInformation(information);
 		auditService.insertAudit(request, auditVo);
 	}
+
+	public void getServiceCheckedStatList(final HttpServletRequest request, AuditRequestVO auditVo) {
+		String xAxis_str = Common.nvl(request.getParameter("xAxis_str"));
+		String startDate = Common.nvl(request.getParameter("startDate"));
+		String endDate = Common.nvl(request.getParameter("endDate"));
+		String detailQuery = Common.nvl(request.getParameter("detailQuery"));
+		String information = "";
+
+		information += "["+Prop.propFormat("common.msg.search")+"]";
+		if( Common.isNotEmpty(startDate)) information += "┌"+Prop.propFormat("condition.period")+": " + startDate + " ~ " + endDate;
+		if( Common.isNotEmpty(xAxis_str)) information += "┌"+Prop.propFormat("stat.area.stat")+": " + xAxis_str;
+		if( Common.isNotEmpty(detailQuery)) information += "┌"+Prop.propFormat("condition.detail")+": " + detailQuery;
+
+		auditVo.setMenuId(Menu.STAT_SERVICEADMINREAD.getMenuId());
+		auditVo.setInformation(information);
+		auditService.insertAudit(request, auditVo);
+	}
+
+	public void getServiceStatCheckedDetailList(final HttpServletRequest request, AuditRequestVO auditVo) {
+		JSONObject param = Common.getParam(request);
+		String xAxis_str = Common.nvl(param.get("xAxis_str"));
+		String colKey = Common.nvl(param.get("colKey"));
+		if( Common.isEquals(colKey, "") ) colKey = ""+Prop.propFormat("common.msg.all")+"";
+		String startDate = Common.nvl(param.get("startDate"));
+		String endDate = Common.nvl(param.get("endDate"));
+		String information = "";
+
+		information += "["+Prop.propFormat("common.msg.detail.search")+"]";
+		if( Common.isNotEmpty(startDate)) information += "┌"+Prop.propFormat("condition.period")+": " + startDate + " ~ " + endDate;
+		if( Common.isNotEmpty(colKey)) information += "┌" + xAxis_str + ": " + colKey;
+
+		auditVo.setMenuId(Menu.STAT_SERVICEADMINREAD.getMenuId());
+		auditVo.setInformation(information);
+		auditService.insertAudit(request, auditVo);
+	}
+
 }
