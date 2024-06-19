@@ -1049,7 +1049,7 @@
         });
 
         grid.colAdd('host', 'Host', 220, 'center', false, 'nomal');
-        grid.colAdd('path', 'Patch', 180, 'center', false, 'nomal');
+        grid.colAdd('path', 'Path', 180, 'center', false, 'nomal');
 
         grid.loadHeader(true);
         grid.loadPageSize();
