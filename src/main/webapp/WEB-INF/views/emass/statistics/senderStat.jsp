@@ -512,6 +512,7 @@
 
     var tabInfo={};
     var chartDat={};
+    grid1.onClick = function() {
         var valChk = grid1.getValue(grid1.Row, grid1.Col);
         if(valChk == "" || valChk == "-") return;
 
