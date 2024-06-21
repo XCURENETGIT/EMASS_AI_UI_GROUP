@@ -666,7 +666,7 @@ function viewer_open(row, grid) {
 function getBody(userCharset) {
     if (isGroupMessenger()) {
         // $('#usridTr').show();
-        // $('#ipBusiNmTr').show();
+        $('#ipBusiNmTr').show();
         $('#headerBtn').prop('disabled', true);
         $('#originalBtn').prop('disabled', true);
         $('#usersInfoBtn').html('<span class="glyphicon glyphicon-user"></span>&nbsp;' + message.userinfo);
@@ -675,8 +675,8 @@ function getBody(userCharset) {
         $('#originalBtn').prop('disabled', false);
         $('#usersInfoBtn').html(message.userinfo);
     }
-    //$('#fromTr').show();
-    //$('#toTr').show();
+    $('#fromTr').show();
+    $('#toTr').show();
     $('#participantTr').hide();
     $('#rootmtrTr').hide();
 
@@ -901,7 +901,7 @@ function printGroupList(detailDataSet, users) {
         //if( titleTmp != null ) title += '('+titleTmp+')';
 
         str += '<th>' + title + '</th>';
-        str += '<td><div id="' + obj.msgid + '">' + obj.message.replaceAll('\n', '<br/>') + '</div></td>';
+        str += '<td><div id="' + obj.msgid + '">' + obj.body_snippet.replaceAll('\n', '<br/>') + '</div></td>';
         str += '<td>' + obj_ctime.substring(10, obj_ctime.length) + '</td>';
         str += '</tr>';
     }
@@ -1149,31 +1149,20 @@ function setMessage(msg) {
         $('#subjectStrDiv').css("display", "");
     }
 
+    $('#usridTr').css("display", "none");
+    $('#srcTr').css("display", "");
+    $('#destTr').css("display", "");
+    $('#userTr').css("display", "");
 
-    // if (svc.startsWith("Q") && nvl(msg.xrootMtr) != "") {
-    //     $('#usridTr').css("display", "");
-    //     $('#srcTr').css("display", "none");
-    //     $('#destTr').css("display", "none");
-    //     $('#userTr').css("display", "none");
-    //
-    //     $('#usridTr #ctimeTd').html(msg.ctime);
-    //     $('#usridTr #userid').html(msg.usrId);
-    //
-    // } else {
-        $('#usridTr').css("display", "none");
-        $('#srcTr').css("display", "");
-        $('#destTr').css("display", "");
-        $('#userTr').css("display", "");
+    $('#srcipTd').html(msg.srcIp);
+    $('#srcTr #ctimeTd').html(msg.ctime);
+    $('#dstipTd').html(msg.dstIp);
+    $('#bodySizeTd').html(convertFileSize(msg.size));
 
-        $('#srcipTd').html(msg.srcIp);
-        $('#srcTr #ctimeTd').html(msg.ctime);
-        $('#dstipTd').html(msg.dstIp);
-        $('#bodySizeTd').html(convertFileSize(msg.size));
+    $('#userDiv').html(userHtml(msg.userList, 'userTr', srcip, dstip, usrip));
+    $('#userTr #userIdTd').html(msg.usrId);
+    $('#userIdTd').html(msg.usrId);
 
-        $('#userDiv').html(userHtml(msg.userList, 'userTr', srcip, dstip, usrip));
-        $('#userTr #userIdTd').html(msg.usrId);
-        $('#userIdTd').html(msg.usrId);
-    // }
 
     $('#sendUserDiv').html(userHtml(msg.senderList, 'fromTr', srcip, dstip, usrip));
     if (msg.toList.length == 0) {
