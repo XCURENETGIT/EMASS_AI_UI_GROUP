@@ -1370,7 +1370,7 @@ public class SolrEdcStatController {
 
 		SolrQuery sq = new SolrQuery();
 		query += String.format(" +checked.readId:%s", adminId);
-		query += String.format(" +ctime:[%s TO %s]", startDate, endDate);
+		query += String.format(" +checked.readTime:[%s TO %s]", startDate, endDate);
 
 		log.info("query : {}", query);
 
