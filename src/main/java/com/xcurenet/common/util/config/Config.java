@@ -209,14 +209,14 @@ public class Config {
 
 	public static String getServiceLv12GroupNm(final String svc) {
 		for (ServiceTypeVO service : serviceTypes) {
-			if (Common.nvl(service.getServiceCd()).contains(svc)) return service.getGroupNm();
+			if (Common.nvl(service.getServiceCd()).startsWith(svc)) return service.getGroupNm();
 		}
 		return null;
 	}
 
 	public static String getServiceLv12Nm(final String svc) {
 		for (ServiceTypeVO service : serviceTypes) {
-			if (Common.nvl(service.getServiceCd()).contains(svc)) return service.getServiceNm();
+			if (Common.nvl(service.getServiceCd()).startsWith(svc)) return service.getServiceNm();
 		}
 		return null;
 	}
@@ -238,7 +238,7 @@ public class Config {
 
 	public static String getServiceDeepNm(final String svc) {
 		for (ServiceTypeVO service : serviceTypesAll) {
-			if (Common.nvl(service.getServiceCd()).contains(svc)) {
+			if (Common.nvl(service.getServiceCd()).startsWith(svc)) {
 				return service.getServiceNm();
 			}
 		}

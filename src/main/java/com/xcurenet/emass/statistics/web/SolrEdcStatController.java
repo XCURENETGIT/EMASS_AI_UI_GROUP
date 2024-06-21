@@ -816,7 +816,7 @@ public class SolrEdcStatController {
 			if (t.length > 1) {
 				String values = "";
 				for (String value : t) {
-					if (value.length() == 3) {
+					if (value.length() == 3 ) {
 						Yflag = "N";
 					}
 					values += "\"" + value + "\" ";
@@ -827,7 +827,12 @@ public class SolrEdcStatController {
 					query += "+svc:" + "(" + values + ") ";
 				}
 			} else {
-				query += "+svc:" + "\"" + rowKey.replaceAll(",", "") + "\" ";
+				if(rowKey.replaceAll(",", "").length() == 3){
+					query += "+svc12:" + "\"" + rowKey.replaceAll(",", "") + "\" ";
+				}
+				else {
+					query += "+svc:" + "\"" + rowKey.replaceAll(",", "") + "\" ";
+				}
 			}
 		}
 
