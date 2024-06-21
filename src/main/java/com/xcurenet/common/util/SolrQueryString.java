@@ -62,7 +62,7 @@ public class SolrQueryString {
 						|| (String.valueOf(value).indexOf("(") > 0 || String.valueOf(value).indexOf(")") > 0)
 						|| (String.valueOf(value).indexOf("[") > 0 || String.valueOf(value).indexOf("]") > 0)
 						|| (String.valueOf(value).indexOf("{") > 0 || String.valueOf(value).indexOf("}") > 0)) {
-					query.append(name).append(":").append("(").append(String.valueOf(value)).append(")");
+					query.append(name).append(":").append("(").append("\"").append(String.valueOf(value)).append("\"").append(")");
 				} else if(String.valueOf(value).indexOf(",") > -1){
 					String[] values = String.valueOf(value).split(",");
 					String val = Arrays.stream(values).map(v -> " (\"".concat(v).concat("\")")).collect(Collectors.joining());
