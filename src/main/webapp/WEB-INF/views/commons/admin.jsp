@@ -1100,7 +1100,7 @@
     grid.colAdd('createDt', '<s:message code="filterInfo.createDt"/>', 150, 'center', false, 'nomal');
     grid.colAdd('status', '<s:message code="admin.reference"/>', 150, 'left', false, 'link', function (row, cell, value, columnDef, dataContext) {
         if (value == 'L') return '<s:message code="admin.msg.longterm"/>';
-        return '';
+		return undefined;
     });
 
     grid.loadExportMenu('<s:message code="admin.navi.title2"/>');
