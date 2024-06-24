@@ -1383,8 +1383,19 @@ public class SolrEdcStatController {
 		sq.setFacetSort("count");
 		sq.setParam("facet.pivot", xAxis + "," + yAxis);
 
-
+		System.out.println("adminId: "+adminId);
 		SolrEdcMessageVO solrCheckedStatVo = solrCheckedService.getCheckedStatList(sq);
+		List<Map<String, Object>> result = new ArrayList<>();
+		if (!adminId.equals("*")){
+			for (int i = 0; i<solrCheckedStatVo.getPivotData().size(); i++){
+				if (Common.isEquals(solrCheckedStatVo.getPivotData().get(i).get("rowKey"), adminId)){
+					result.add(solrCheckedStatVo.getPivotData().get(i));
+				}
+			}
+			solrCheckedStatVo.setPivotData(result);
+		}
+
+
 
 		return new XcnResponseVO(XcnRspCode.OK, solrCheckedStatVo, solrCheckedStatVo.getPivotData().size());
 	}
@@ -1421,9 +1432,10 @@ public class SolrEdcStatController {
 		query+= String.format(" +checked.readId:%s", rowKey);
 
 
-		query += String.format(" +ctime:[%s TO %s] ", startDate, endDate);
+		query += String.format(" +checked.readTime:[%s TO %s] ", startDate, endDate);
 		sq.setQuery(query);
 		sq.setParam("searchAfter",searchAfter);
+
 		sq.setStart(offset);
 		sq.setRows(limit);
 
