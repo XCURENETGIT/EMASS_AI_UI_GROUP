@@ -746,6 +746,7 @@ function getMessengerGroupList(page) {
         url: 'getMessengerGroupList.xcn',
         data : JSON.stringify(filterVal),
         offset: offset,
+        readYn:currentSchVal.readYn,
         searchAfter : searchAfter,
         startTotalDate:startTotalDate+"00000",
         endTotalDate:endTotalDate+"235959",
@@ -797,6 +798,7 @@ function getMessengerMessageList(page) {
         data : JSON.stringify(filterVal),
         offset: offset,
         searchAfter:searchAfter,
+        readYn:currentSchVal.readYn,
         limit: groupPageBreak,
         success: function (data, total) {
             isLoading=true;

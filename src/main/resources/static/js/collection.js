@@ -434,6 +434,7 @@ function getFileMessageList  (page){
         url : 'getFileMessageList.xcn',
         data : JSON.stringify(filterVal),
         offset : offset,
+        readYn:currentSchVal.readYn,
         searchAfter : searchAfter,
         limit : groupPageBreak,
         success : function(data, total) {
@@ -525,6 +526,7 @@ function getCollectionGroupList (page,type){
         startTotalDate:startTotalDate+"00000",
         endTotalDate:endTotalDate+"235959",
         limit : groupPageBreak,
+        readYn:currentSchVal.readYn,
         success : function(data, total) {
             console.log("data: "+data);
             console.log("groupPage: "+page);
