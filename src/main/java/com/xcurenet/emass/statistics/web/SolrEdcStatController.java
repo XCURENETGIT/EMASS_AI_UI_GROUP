@@ -1383,7 +1383,6 @@ public class SolrEdcStatController {
 		sq.setFacetSort("count");
 		sq.setParam("facet.pivot", xAxis + "," + yAxis);
 
-		System.out.println("adminId: "+adminId);
 		SolrEdcMessageVO solrCheckedStatVo = solrCheckedService.getCheckedStatList(sq);
 		List<Map<String, Object>> result = new ArrayList<>();
 		if (!adminId.equals("*")){
