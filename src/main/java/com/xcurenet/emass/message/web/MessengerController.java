@@ -993,7 +993,7 @@ public class MessengerController {
 					request.setAttribute("limit", chatLimit);
 					ctime = room.getCtime2();
 					msgid = room.getMsgid();
-					request.setAttribute("searchAfter", ctime+","+msgid);
+//					request.setAttribute("searchAfter", ctime+","+msgid);
 
 
 
@@ -1007,6 +1007,7 @@ public class MessengerController {
 						List<MessengerGroupVO> groupList = groups.getGroups();
 						Collections.reverse(groupList);
 						groups.setGroups(groupList);
+						System.out.println("groupList: "+groupList);
 
 						if (groups.getGroups().isEmpty()) break;
 						log.debug("groups.getGroups() : {}", groups.getGroups());
@@ -1171,7 +1172,7 @@ public class MessengerController {
 				dataObj.put("sender", item.getTitle());
 				dataObj.put("ctime", item.getCtime());
 				dataObj.put("svc", Config.getServiceNm(item.getSvc()));
-				dataObj.put("content", item.getMessage());
+				dataObj.put("content", item.getBody_snippet());
 				if (Common.isEquals(item.getAttached(), "Y")) {
 					dataObj.put("file", Common.makeFilepath("attachs", item.getMsgid()));
 				}
