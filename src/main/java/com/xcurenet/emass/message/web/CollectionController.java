@@ -806,7 +806,7 @@ public class CollectionController {
 		int offset=Common.nvz(param.get("offset"));
 		String addQuery = String.format(" +userkey:\"%s\"", userkey);
 		if(Common.isNotEmpty(srcip)) addQuery += String.format(" +srcip:\"%s\"", srcip);
-
+		String searchStr = Common.nvl(param.get("searchStr"));
 		if(type.equals("N")||type.equals("G")){
 			if (type.equals("N")){
 				addQuery +=String.format(" +svc1:N");
@@ -830,6 +830,9 @@ public class CollectionController {
 
 		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
 		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), Common.getAdminId(session));
+
+		if(Common.isNotEmpty(searchStr)) addQuery += String.format(" (body:(%s)) ", searchStr);
+
 		sq.setQuery(sq.getQuery() + addQuery);
 		sq.setStart(0);
 		sq.setRows(10000);
