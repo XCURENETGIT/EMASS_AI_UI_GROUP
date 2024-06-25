@@ -1258,7 +1258,7 @@ public class CollectionController {
 					request.setAttribute("limit", chatLimit);
 					ctime = room.getCtime2();
 					msgid = room.getMsgid();
-					request.setAttribute("searchAfter", ctime+","+msgid);
+//					request.setAttribute("searchAfter", ctime+","+msgid);
 					XLSXWriterAppender xlsx = new XLSXWriterAppender(Prop.propFormat("eikon.msg.export.chat", locale) + " : " + room.getUserkey(), getExcelHeader(locale));
 					xlsx.init();
 
