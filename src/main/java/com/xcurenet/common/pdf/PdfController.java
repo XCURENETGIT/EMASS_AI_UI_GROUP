@@ -149,7 +149,7 @@ public class PdfController {
 		} finally {
 			IOUtils.closeQuietly(in);
 			IOUtils.closeQuietly(out);
-			if (file != null && file.exists()) file.delete();
+//			if (file != null && file.exists()) file.delete();
 		}
 	}
 
