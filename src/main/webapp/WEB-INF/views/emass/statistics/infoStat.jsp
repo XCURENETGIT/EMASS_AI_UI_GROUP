@@ -680,9 +680,9 @@
     }
     grid2.loadExportMenu('<s:message code="DATA_ANALYSIS.ANALYSIS_INFO"/>');
     grid2.loadHeader(false);
-    grid2.loadPageSize();
+    // grid2.loadPageSize();
     grid2.changePageSize = function(cnt){
-       // getInfoDetailList('Y');
+       getInfoDetailList('Y');
     };
     grid2.initData('<s:message code="common.msg.search.click"/>');
 
