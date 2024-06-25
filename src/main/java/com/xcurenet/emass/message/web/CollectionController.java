@@ -803,7 +803,7 @@ public class CollectionController {
 		String srcip = Common.nvl(param.get("srcip"));
 		String usr_id = Common.nvl(param.get("usr_id"));
 		String type = Common.nvl(param.get("type"));
-
+		int offset=Common.nvz(param.get("offset"));
 		String addQuery = String.format(" +userkey:\"%s\"", userkey);
 		if(Common.isNotEmpty(srcip)) addQuery += String.format(" +srcip:\"%s\"", srcip);
 
@@ -831,8 +831,8 @@ public class CollectionController {
 		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
 		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), Common.getAdminId(session));
 		sq.setQuery(sq.getQuery() + addQuery);
-		sq.setStart(Common.nvz(param.get("offset"), 0));
-		sq.setRows(1);
+		sq.setStart(0);
+		sq.setRows(10000);
 		sq.setSort("ctime", ORDER.asc);
 		sq.setSort("msgid", ORDER.asc);
 		sq.setFields("msgid");
@@ -840,12 +840,18 @@ public class CollectionController {
 		SolrEdcMessageVO solrVo = solrEdcService.getEmassMessage(sq, Common.getAdminId(session));
 		List<SolrEdcVO> list = solrVo.getEmass();
 		List<String> result = new ArrayList<>();
+		String msgid = "";
 		if (list != null) {
 			for (SolrEdcVO vo : list) {
 				result.add(vo.getMsgid());
 			}
+			if (!result.isEmpty() && offset >= 0 && offset < result.size()) {
+				msgid = result.get(offset);
+			} else {
+				msgid = "";
+			}
 		}
-		return new XcnResponseVO(XcnRspCode.OK, result, solrVo.getNumFound());
+		return new XcnResponseVO(XcnRspCode.OK, msgid, solrVo.getNumFound());
 	}
 
 

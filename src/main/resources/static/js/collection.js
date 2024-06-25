@@ -191,7 +191,7 @@ var eikon2 = {
                     $('#searchResultBtnArea').show();
 
                     detailMsgid=data;
-                    detailMsgid.sort();
+              /*      detailMsgid.sort();*/
 
                     checkList(searchOffset);
 
@@ -1051,7 +1051,7 @@ function checkList(cnt){
         type=getPageType();
     }
 
-    getCollectionMessage($('#selectUserInfo').attr('data-name'), $('#selectUserInfo').attr('data-srcip'), $('#selectUserInfo').attr('data-usr_id'), detailMsgid[0],type,true);
+    getCollectionMessage($('#selectUserInfo').attr('data-name'), $('#selectUserInfo').attr('data-srcip'), $('#selectUserInfo').attr('data-usr_id'), detailMsgid,type,true);
     $('#selectCnt').html(cnt+1);
 }
 

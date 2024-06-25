@@ -205,7 +205,7 @@ var eikon = {
                     $('#searchResultBtnArea').show();
 
                     detailMsgid=data;
-                    detailMsgid.sort();
+          /*          detailMsgid.sort();*/
                     checkList(searchOffset);
                 }
                 else{
