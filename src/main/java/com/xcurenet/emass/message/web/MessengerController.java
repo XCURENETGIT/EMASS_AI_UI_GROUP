@@ -578,6 +578,7 @@ public class MessengerController {
 		int offset=Common.nvz(param.get("offset"));
 		if(Common.isNotEmpty(usr_id)) addQuery += String.format(" +usr_id:\"%s\"", usr_id);
 		else addQuery += " -usr_id:*";
+		String searchStr = Common.nvl(param.get("searchStr"));
 //		if(Common.isNotEmpty(srcip)) addQuery += String.format(" +srcip:\"%s\"", srcip);
 
 		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
@@ -588,7 +589,7 @@ public class MessengerController {
 		sq.setSort("ctime", ORDER.asc);
 		sq.setSort("msgid", ORDER.asc);
 		sq.setFields("msgid");
-
+		if(Common.isNotEmpty(searchStr)) addQuery += String.format(" (body:(%s)) ", searchStr);
 
 		SolrEdcMessageVO solrVo = solrEdcService.getEmassMessage(sq, Common.getAdminId(session));
 		List<SolrEdcVO> list = solrVo.getEmass();

@@ -183,6 +183,7 @@ var eikon2 = {
             data : JSON.stringify( filterVal ),
             offset : searchOffset,
             type:type,
+            searchStr:searchStr,
             success : function(data, total) {
                 focusMsgId = data.toString();
                 if(total > 0){
