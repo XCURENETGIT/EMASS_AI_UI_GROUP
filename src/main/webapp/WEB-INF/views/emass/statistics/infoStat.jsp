@@ -681,6 +681,9 @@
     grid2.loadExportMenu('<s:message code="DATA_ANALYSIS.ANALYSIS_INFO"/>');
     grid2.loadHeader(false);
     grid2.loadPageSize();
+    grid2.changePageSize = function(cnt){
+       // getInfoDetailList('Y');
+    };
     grid2.initData('<s:message code="common.msg.search.click"/>');
 
     grid2.onClick = function() {
@@ -714,18 +717,15 @@
                 if (!parent.$('#none_btn').hasClass('areaSelected')) viewer_open(grid2.Row);
                 if (popWin) viewer_openFocus(grid2.Row);
             } else {
-                console.log("2");
                 alert('<s:message code="message.auth.no.detailview"/>');
                 return;
             }
         }
     };
-    grid2.changePageSize = function(cnt){
-        //parent.getList();
-    };
-    grid2.onDblClick = function(){
-        viewer_open(grid2.Row);
-    }
+
+    // grid2.onDblClick = function(){
+    //     viewer_open(grid2.Row);
+    // }
 
     function viewer_open(row, bodySize) {
         var msgid = grid2.getValue(row, 'msgid');
