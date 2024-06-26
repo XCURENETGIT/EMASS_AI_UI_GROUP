@@ -130,6 +130,7 @@
 	<script>
         var messengerListCnt = 0;
         var nodataMsg = '<s:message code="common.msg.nodata"/>';
+        var notone = '<s:message code="common.msg.notone"/>';
         var chatting = '<s:message code="eikon.msg.chat"/>';
         var endChat = '<s:message code="eikon.msg.finish"/>';
         var unreadTitle = '<s:message code="eikon.msg.unreadTitle"/>';

@@ -187,7 +187,10 @@ var eikon = {
         // condition.searchField = 'body';
         conArray.push(condition);
         filterVal.conditions = conArray;
-
+        if (searchStr.length<2){
+            alert(notone);
+            return;
+        }
         detailSearchFlag = false;
         ui.onBody('timeline-panel', 0, 60);
         ui.postJson({
