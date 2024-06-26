@@ -974,7 +974,9 @@
             return rtnVal;
         });
         grid.colAdd('ctimeFormat', '<s:message code="condition.date"/>', 130, 'center', false, 'nomal');
-        grid.colAdd('user', '<s:message code="consent.user"/>', 120, 'center', false, 'link');
+        grid.colAdd('user', '<s:message code="consent.user"/>', 120, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
+	        return highlightSearchStr(value, "user");
+        });
         grid.colAdd('usrId', '<s:message code="common.msg.account"/>', 110, 'center', false, 'nomal');
         grid.colAdd('businm', '<s:message code="common.org.busi"/>', 120, 'center', true, 'nomal');
         grid.colAdd('ip_businm', '<s:message code="message.actual.business"/>', 120, 'center', true, 'nomal');
@@ -1048,8 +1050,12 @@
             else return 'Yes'
         });
 
-        grid.colAdd('host', 'Host', 220, 'center', false, 'nomal');
-        grid.colAdd('path', 'Path', 180, 'center', false, 'nomal');
+        grid.colAdd('host', 'Host', 220, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+	        return highlightSearchStr(value, "host");
+        });
+        grid.colAdd('path', 'Path', 180, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+	        return highlightSearchStr(value, "path");
+        });
 
         grid.loadHeader(true);
         grid.loadPageSize();
