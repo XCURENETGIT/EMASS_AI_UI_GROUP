@@ -314,12 +314,6 @@ public class EmsMessageDownloadBatchController {
 			sq = new SolrQuery();
 			sq.setQuery(String.format("msgid:(%s)", Common.joinj(Common.toJSONArray(condition.get("msgids")), " ")));
 
-			String searchAfter = null;
-			if (ctime!= null && msgid!=null){
-				searchAfter = ctime+","+msgid;
-			}
-			sq.setParam("searchAfter", Common.nvl(searchAfter));
-
 			String sort = Common.nvl(condition.get("sort"));
 			if (Common.isEmpty(sort)) {
 				sq.setSort(SolrQuery.SortClause.desc("ctime"));
@@ -338,6 +332,11 @@ public class EmsMessageDownloadBatchController {
 		} else {
 			sq = solrCreateQuery.createQuery(condition, adminId, searchTime);
 		}
+		String searchAfter = null;
+		if (ctime!= null && msgid!=null){
+			searchAfter = ctime+","+msgid;
+		}
+		sq.setParam("searchAfter", Common.nvl(searchAfter));
 		sq.setStart(PAGE_BREAK * page);
 		sq.setRows(PAGE_BREAK);
 		log.info("offset : {}", PAGE_BREAK * page);

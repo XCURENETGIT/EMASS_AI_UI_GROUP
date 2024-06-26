@@ -979,7 +979,7 @@ public class MessengerController {
 			String msgid=null;
 			inserDB(downloadBatchVO, param, "LBA", "xlsx", Common.getAdminId(request), 0, Common.makeFilepath(Common.TMP_PATH, uniqId) + ".zip");
 			do {
-				MessengerEdcGroupVO messenger = getMessengerGroupVO(param, page++ * limit, limit);
+				MessengerEdcGroupVO messenger = getMessengerGroupVO(param, page++ * limit, limit, ctime, msgid);
 				List<MessengerGroupVO> rooms = messenger.getGroups(); // get Messenger Rooms
 				log.info("rooms.size() :  limit : {} room size : {}", limit, rooms.size());
 				for (MessengerGroupVO room : rooms) {
@@ -1120,7 +1120,7 @@ public class MessengerController {
 			return new File("/");
 		}
 	}
-	private MessengerEdcGroupVO getMessengerGroupVO(JSONObject param, int start, int limit) throws Exception {
+	private MessengerEdcGroupVO getMessengerGroupVO(JSONObject param, int start, int limit, String ctime, String msgId) throws Exception {
 		String adminId = Common.nvl(param.get("_ses_user_id"));
 		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
 		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), adminId);
@@ -1136,7 +1136,11 @@ public class MessengerController {
 		sq.setRows(limit);
 		sq.setSort("ctime", ORDER.desc);
 		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id");
-
+		String searchAfter = null;
+		if (ctime!= null && msgId!=null){
+			searchAfter = ctime+","+msgId;
+		}
+		sq.setParam("searchAfter", Common.nvl(searchAfter));
 		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, adminId);
 		solrEdcGroupVO.setGroups(solrEdcGroupVO.getGroups());
 		return solrEdcGroupVO;
