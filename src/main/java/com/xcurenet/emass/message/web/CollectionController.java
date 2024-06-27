@@ -715,6 +715,65 @@ public class CollectionController {
 		return result;
 	}
 
+	public MessengerEdcGroupVO getCollectionDownTotal(final HttpServletRequest request, boolean original, String ctime, String msgid) throws Exception {
+		JSONObject param = Common.getParam(request);
+		String userkey =Common.isNotEmpty(request.getAttribute("userkey")) ? Common.nvl(request.getAttribute("userkey")) : Common.nvl(param.get("userkey"));
+		String usr_id = Common.isNotEmpty(request.getAttribute("usr_id")) ? Common.nvl(request.getAttribute("usr_id")) : Common.nvl(param.get("usr_id"));
+		String srcip = Common.isNotEmpty(request.getAttribute("srcip")) ? Common.nvl(request.getAttribute("srcip")) : Common.nvl(param.get("srcip"));
+		String startDt = Common.isNotEmpty(request.getAttribute("startDt")) ? Common.nvl(request.getAttribute("startDt")) : Common.nvl(param.get("startDt"));
+		String endDt = Common.isNotEmpty(request.getAttribute("endDt")) ? Common.nvl(request.getAttribute("endDt")) : Common.nvl(param.get("endDt"));
+		int limit = Common.isNotEmpty(request.getAttribute("limit")) ? Common.nvz(request.getAttribute("limit"), 100) : Common.nvz(param.get("limit"), 100000);
+		int offset = Common.isNotEmpty(request.getAttribute("start")) ? Common.nvz(request.getAttribute("start"), 0) : Common.nvz(param.get("start"), 0);
+		String type = Common.isNotEmpty(request.getAttribute("type")) ? Common.nvl(request.getAttribute("type")) : Common.nvl(param.get("type"));
+
+		SolrQuery sq = new SolrQuery();
+		String query = String.format("+ctime:[%s TO %s] +userkey:\"%s\"", startDt, endDt, userkey);
+
+		if(Common.isNotEmpty(srcip)) query += String.format(" +srcip:\"%s\"", srcip);
+
+		if(Common.isNotEmpty(usr_id)) query += String.format(" +usr_id:\"%s\"", usr_id);
+		else query += String.format(" -usr_id:*");
+
+		if(type.equals("N")||type.equals("G")){
+			if (type.equals("N")){
+				query +=String.format(" +svc1:N");
+			}else{
+				query +=String.format(" +svc1:I");
+			}
+		}
+		else{
+			String[] svcArray = type.split(",");
+			query +=String.format(" +svc12:((");
+
+			for (int i = 0; i < svcArray.length; i++) {
+				if (i > 0) {
+					query+=String.format(") (");
+				}
+				query+=String.format(svcArray[i]);
+			}
+
+			query+=String.format("))");
+		}
+
+		String searchAfter = null;
+		if (ctime!= null && msgid!=null){
+			searchAfter = ctime+","+msgid;
+		}
+		sq.setParam("searchAfter", Common.nvl(searchAfter));
+
+		sq.setQuery(query);
+		sq.setRows(limit);
+		sq.addSort("ctime", ORDER.asc);
+		sq.addSort("msgid", ORDER.asc);
+		sq.setFields("msgid", "userkey", "svc1","srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user");
+		sq.setStart(offset);
+		sq.setRows(limit);
+
+		MessengerEdcGroupVO result = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request), true, original );
+		return result;
+
+	}
+
 
 	public SolrQuery getCollectionMessageTotalQuery(final HttpServletRequest request) throws Exception {
 		JSONObject param = Common.getParam(request);
@@ -1240,15 +1299,14 @@ public class CollectionController {
 				alarmMessage(Common.getAdminId(request), downloadBatchVO);
 				return;
 			}
-			String ctime = null;
-			String msgid=null;
 			inserDB(downloadBatchVO, param, "LBA", "xlsx", Common.getAdminId(request), 0, Common.makeFilepath(Common.TMP_PATH, uniqId) + ".zip");
 			do {
-				MessengerEdcGroupVO messenger = getMessengerGroupVO(param, page++ * limit, limit, ctime, msgid);
+				MessengerEdcGroupVO messenger = getMessengerGroupVO(param, page++ * limit, limit);
 				List<MessengerGroupVO> rooms = messenger.getGroups(); // get Messenger Rooms
 				log.info("rooms.size() :  limit : {} room size : {}", limit, rooms.size());
 				for (MessengerGroupVO room : rooms) {
-
+					String ctime = null;
+					String msgid=null;
 					request.setAttribute("userkey", room.getUserkey());
 					request.setAttribute("type", room.getSvc12());
 					request.setAttribute("usr_id", room.getUsr_id());
@@ -1256,8 +1314,6 @@ public class CollectionController {
 					request.setAttribute("startDt", Common.nvl(param.get("exportStartDt")));
 					request.setAttribute("endDt", Common.nvl(param.get("exportEndDt")));
 					request.setAttribute("limit", chatLimit);
-					ctime = room.getCtime2();
-					msgid = room.getMsgid();
 //					request.setAttribute("searchAfter", ctime+","+msgid);
 					XLSXWriterAppender xlsx = new XLSXWriterAppender(Prop.propFormat("eikon.msg.export.chat", locale) + " : " + room.getUserkey(), getExcelHeader(locale));
 					xlsx.init();
@@ -1265,9 +1321,9 @@ public class CollectionController {
 					for (int j = 0; ; j++) {
 						request.setAttribute("start", j * chatLimit);
 						log.info("chat start : {} limit : {}", j * chatLimit, chatLimit);
-						MessengerEdcGroupVO groups = getCollectionMessageTotal(request, true); // messenger message pagging
+						MessengerEdcGroupVO groups = getCollectionDownTotal(request,true ,ctime, msgid); // messenger message pagging
 						List<MessengerGroupVO> groupList = groups.getGroups();
-						Collections.reverse(groupList);
+//						Collections.reverse(groupList);
 						groups.setGroups(groupList);
 
 						if (groups.getGroups().isEmpty()) break;
@@ -1278,6 +1334,8 @@ public class CollectionController {
 
 						if (groups.getGroups().size() < chatLimit) break;
 						Common.sleep(1000);
+						ctime = groupList.get(groupList.size()-1).getCtime2();
+						msgid = groupList.get(groupList.size()-1).getMsgid();
 					}
 
 					final String name = Common.makeFilepath(Common.TMP_PATH, uniqId, room.getUserkey()+"("+room.getSvc()+")" + ".xlsx");
@@ -1378,7 +1436,7 @@ public class CollectionController {
 			return new File("/");
 		}
 	}
-	private MessengerEdcGroupVO getMessengerGroupVO(JSONObject param, int start, int limit, String ctime, String msgId) throws Exception {
+	private MessengerEdcGroupVO getMessengerGroupVO(JSONObject param, int start, int limit) throws Exception {
 		String adminId = Common.nvl(param.get("_ses_user_id"));
 		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
 		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), adminId);
@@ -1394,11 +1452,6 @@ public class CollectionController {
 		sq.setRows(limit);
 		sq.setSort("ctime", ORDER.desc);
 		sq.setFields("msgid", "userkey","srcip", "svc", "svc12","svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id");
-		String searchAfter = null;
-		if (ctime!= null && msgId!=null){
-			searchAfter = ctime+","+msgId;
-		}
-		sq.setParam("searchAfter", Common.nvl(searchAfter));
 
 		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, adminId);
 		solrEdcGroupVO.setGroups(solrEdcGroupVO.getGroups());

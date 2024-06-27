@@ -396,10 +396,50 @@ public class MessengerController {
 	}
 
 
+
+
 	public MessengerEdcGroupVO getMessengerMsgTotal(final HttpServletRequest request, boolean original) throws Exception {
 		SolrQuery totalQuery = getMessengerMsgTotalQuery(request);
 		MessengerEdcGroupVO result = solrEdcService.getMessengerGroupList(totalQuery, Common.getAdminId(request), true, original);
 		return result;
+	}
+
+	public MessengerEdcGroupVO getMessengerDownTotal(final HttpServletRequest request, boolean original, String ctime, String msgid) throws Exception {
+
+		JSONObject param = Common.getParam(request);
+		String usrId = Common.nvl(param.get("usrId"));
+		String xRootMtr = Common.isNotEmpty(request.getAttribute("xRootMtr")) ? Common.nvl(request.getAttribute("xRootMtr")) : Common.nvl(param.get("xRootMtr"));
+		String usr_id = Common.isNotEmpty(request.getAttribute("usr_id")) ? Common.nvl(request.getAttribute("usr_id")) : Common.nvl(param.get("usr_id"));
+		String startDt = Common.isNotEmpty(request.getAttribute("startDt")) ? Common.nvl(request.getAttribute("startDt")) : Common.nvl(param.get("startDt"));
+		String endDt = Common.isNotEmpty(request.getAttribute("endDt")) ? Common.nvl(request.getAttribute("endDt")) : Common.nvl(param.get("endDt"));
+		int limit = Common.isNotEmpty(request.getAttribute("limit")) ? Common.nvz(request.getAttribute("limit"), 100) : Common.nvz(param.get("limit"), 10000);
+		int offset = Common.isNotEmpty(request.getAttribute("start")) ? Common.nvz(request.getAttribute("start"), 0) : Common.nvz(param.get("start"), 0);
+
+		SolrQuery sq = new SolrQuery();
+		String query = String.format("+ctime:[%s TO %s] +xrootmtr:\"%s\"", startDt, endDt, xRootMtr);
+
+		if(Common.isNotEmpty(usr_id)) query += String.format(" +userkey:\"%s\"", usr_id);
+		if(Common.isNotEmpty(usrId)) query += String.format(" +usrId:\"%s\"", usrId);
+
+		String searchAfter = null;
+		if (ctime!= null && msgid!=null){
+			searchAfter = ctime+","+msgid;
+		}
+		sq.setParam("searchAfter", Common.nvl(searchAfter));
+		sq.setQuery(query + MESSENGER);
+		sq.setRows(limit);
+		sq.addSort("ctime", ORDER.asc);
+		sq.addSort("msgid", ORDER.asc);
+		sq.setStart(offset);
+		sq.setRows(limit);
+
+
+		sq.setFields("msgid", "srcip", "svc", "senderId","svc3", "ctime", "name", "sname", "sender","svc12", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user","userid","userkey");
+
+
+		MessengerEdcGroupVO result = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request), true, original);
+		return result;
+
 	}
 
 	public SolrQuery getMessengerMsgTotalQuery(final HttpServletRequest request) throws Exception {
@@ -975,14 +1015,15 @@ public class MessengerController {
 				alarmMessage(Common.getAdminId(request), downloadBatchVO);
 				return;
 			}
-			String ctime = null;
-			String msgid=null;
+
 			inserDB(downloadBatchVO, param, "LBA", "xlsx", Common.getAdminId(request), 0, Common.makeFilepath(Common.TMP_PATH, uniqId) + ".zip");
 			do {
-				MessengerEdcGroupVO messenger = getMessengerGroupVO(param, page++ * limit, limit, ctime, msgid);
+				MessengerEdcGroupVO messenger = getMessengerGroupVO(param, page++ * limit, limit);
 				List<MessengerGroupVO> rooms = messenger.getGroups(); // get Messenger Rooms
 				log.info("rooms.size() :  limit : {} room size : {}", limit, rooms.size());
 				for (MessengerGroupVO room : rooms) {
+					String ctime = null;
+					String msgid=null;
 					// Check the status inside the loop
 					if (room.getXrootmtr() == null || room.getXrootmtr()=="") continue;
 					request.setAttribute("xRootMtr", room.getXrootmtr());
@@ -991,8 +1032,6 @@ public class MessengerController {
 					request.setAttribute("startDt", Common.nvl(param.get("exportStartDt")));
 					request.setAttribute("endDt", Common.nvl(param.get("exportEndDt")));
 					request.setAttribute("limit", chatLimit);
-					ctime = room.getCtime2();
-					msgid = room.getMsgid();
 //					request.setAttribute("searchAfter", ctime+","+msgid);
 
 
@@ -1003,11 +1042,9 @@ public class MessengerController {
 					for (int j = 0; ; j++) {
 						request.setAttribute("start", j * chatLimit);
 						log.info("chat start : {} limit : {}", j * chatLimit, chatLimit);
-						MessengerEdcGroupVO groups = getMessengerMsgTotal(request, true); // messenger message pagging
+						MessengerEdcGroupVO groups = getMessengerDownTotal(request, true, ctime, msgid);
 						List<MessengerGroupVO> groupList = groups.getGroups();
-						Collections.reverse(groupList);
 						groups.setGroups(groupList);
-						System.out.println("groupList: "+groupList);
 
 						if (groups.getGroups().isEmpty()) break;
 						log.debug("groups.getGroups() : {}", groups.getGroups());
@@ -1017,6 +1054,8 @@ public class MessengerController {
 
 						if (groups.getGroups().size() < chatLimit) break;
 						Common.sleep(1000);
+						ctime = groupList.get(groupList.size()-1).getCtime2();
+						msgid = groupList.get(groupList.size()-1).getMsgid();
 					}
 
 					MessengerGroupUserVO users = getMessengerGroupUserList(request, 10000);
@@ -1120,7 +1159,7 @@ public class MessengerController {
 			return new File("/");
 		}
 	}
-	private MessengerEdcGroupVO getMessengerGroupVO(JSONObject param, int start, int limit, String ctime, String msgId) throws Exception {
+	private MessengerEdcGroupVO getMessengerGroupVO(JSONObject param, int start, int limit) throws Exception {
 		String adminId = Common.nvl(param.get("_ses_user_id"));
 		SolrCreateQuery solrCreateQuery = new SolrCreateQuery();
 		SolrQuery sq = solrCreateQuery.createQuery(Common.toJSONObject(param.get("data")), adminId);
@@ -1136,11 +1175,6 @@ public class MessengerController {
 		sq.setRows(limit);
 		sq.setSort("ctime", ORDER.desc);
 		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id");
-		String searchAfter = null;
-		if (ctime!= null && msgId!=null){
-			searchAfter = ctime+","+msgId;
-		}
-		sq.setParam("searchAfter", Common.nvl(searchAfter));
 		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, adminId);
 		solrEdcGroupVO.setGroups(solrEdcGroupVO.getGroups());
 		return solrEdcGroupVO;
