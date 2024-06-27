@@ -169,7 +169,7 @@ var eikon2 = {
         condition.searchStr = searchStr;
         condition.startDt = startDt;
         condition.endDt = endDt;
-        // condition.searchField = 'body_snippet attachname attachname_str attach';
+        condition.searchField = 'body';
         conArray.push(condition);
         filterVal.conditions = conArray;
 
@@ -203,6 +203,7 @@ var eikon2 = {
 
                 }
                 else{
+                    $('#searchMsgStrInput').val('');
                     alert(nodataMsg)
                     $('#searchResult').html('0');
                     $('#selectCnt').html('0');

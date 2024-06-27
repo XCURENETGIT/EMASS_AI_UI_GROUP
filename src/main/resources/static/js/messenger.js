@@ -184,7 +184,7 @@ var eikon = {
         condition.searchStr = searchStr;
         condition.startDt = startDt;
         condition.endDt = endDt;
-        // condition.searchField = 'body';
+        condition.searchField = 'body attachname attachname_str';
         conArray.push(condition);
         filterVal.conditions = conArray;
         if (searchStr.length<2){
@@ -213,6 +213,7 @@ var eikon = {
                     checkList(searchOffset);
                 }
                 else{
+                    $('#searchMsgStrInput').val('');
                     alert(nodataMsg)
                     $('#searchResult').html('0');
                     $('#selectCnt').html('0');
