@@ -54,4 +54,8 @@ public interface SolrEdcService {
 	Long getTotalCnt(String query);
 
 	public List<SolrEdcVO> getCheckedList(List<SolrEdcVO> solrVo);
+
+//	public void getCurIdx();
+
+
 }

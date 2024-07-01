@@ -6,6 +6,7 @@ import com.xcurenet.audit.service.AuditService;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.config.service.ConfigAdminService;
 import com.xcurenet.config.service.ConfigAdminVO;
+import com.xcurenet.emass.message.service.SolrEdcService;
 import com.xcurenet.onelogin.saml2.SamlSSOAuth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
@@ -39,6 +40,9 @@ public class HomeController {
 
 	@Resource(name = "configAdminService")
 	public ConfigAdminService configAdminService;
+
+	@Resource
+	SolrEdcService solrEdcService;
 
 	@RequestMapping(value = "/error.do", method = RequestMethod.GET)
 	@Description("에러 페이지")
@@ -1112,4 +1116,9 @@ public class HomeController {
 		return "/emass/aihr/attachInCntDeptNonworkStat";
 	}
 
+
+//	@RequestMapping(value = "/testtest")
+//	public void test() {
+//				solrEdcService.getCurIdx();
+//		}
 }
