@@ -397,7 +397,7 @@ var con = {
 
 		}
 
-		condition.searchStr = $('#searchStrInput').val().replaceAll('"', '');
+		condition.searchStr = $('#searchStrInput').val();
 		condition.searchField = arrayToString($('#searchField').selectpicker('val'));
 		condition.serviceType = arrayToString($('#serviceType').selectpicker('val'));
 

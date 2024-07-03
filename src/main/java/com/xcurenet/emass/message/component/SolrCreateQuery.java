@@ -1361,8 +1361,8 @@ public class SolrCreateQuery {
 			StringBuilder queryStr = new StringBuilder();
 			String[] terms = query.split(" ");
 			for (String term : terms) {
-			     /*특수문자 처리*/
-				term = ("\"").concat(term).concat("\"");
+			     // 검색어 입력  쌍따옴표 삭제
+//				term = ("\"").concat(term).concat("\"");
 				queryStr.append(appendSpecialchar(term)).append(" ");
 			}
 			sb.append(queryStr.toString().trim().replaceAll(" ", " ").replaceAll("__", " "));
