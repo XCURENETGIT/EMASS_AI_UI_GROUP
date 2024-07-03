@@ -20,7 +20,7 @@ import java.util.Map;
 @NoArgsConstructor
 @Nullable
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Document(indexName = "edc_*")
+//@Document(indexName = "edc_*")
 public class SolrEdcVO {
 
 	@Id
