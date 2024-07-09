@@ -31,11 +31,13 @@
 <script type="text/javascript" src="<c:url value="/js/contentBodyNew.js"/>"></script>
 <%
 	ConfigAdminService configAdminService = SpringContextUtil.getBean(ConfigAdminService.class);
+	Config conf = SpringContextUtil.getBean(Config.class);
 	Map<String, Object> param = Common.getParamMap(request);
 	String msgid = Common.nvl(param.get("msgid"));
 	String searchKey = Common.nvl(param.get("searchKey"));
 	String bodySize = Common.nvl(param.get("bodySize"));
 	boolean mailUseFlag = Config.getBoolean("mail.forward.flag");
+	boolean isLlmEnabled = conf.isLlmEnabled();
 	String op_attach_save = Operation.ATTACH_SAVE.getOperation();
 	String op_body_save = Operation.BODY_SAVE.getOperation();
 	String op_body_print = Operation.BODY_PRINT.getOperation();
@@ -284,7 +286,69 @@
 					parent.openNologUrlPop(host_path);
 				}
 			});
+
+			$(document).on('click', '#helpHost', function(){
+				$(this).removeClass('fa-question-circle').addClass('fa-spinner');
+				ui.get({
+					url : 'getLLMAnalysis.xcn',
+					chat : '"' + $('#helpHost').attr('title') + '" 통신하는 URL 주소가 어떤 서비스인지 간략하게 알려줄수 있어?',
+					success : function ( data, total ) {
+						$('#helpHostDesc').html(data.response.fReplaceWord('\n', '.</br>'));
+						$('#hostDiv a').attr("title", data.response.fReplaceWord('\n', '.</br>'));
+					},
+					error : function (status, message) {
+						ui.alertMsg(message);
+					},
+					complete : function (){
+						$('#helpHost').removeClass('fa-spinner').addClass('fa-question-circle');
+					}
+				});
+			});
+
+			$(document).on('click', '#koreaBody', function(){
+				$('#summaryModal h2').html('본문내용 한국어 번역');
+				$('#summaryIcon2').removeClass('fa-question-circle').addClass('fa-spinner');
+				ui.get({
+					url : 'getLLMAnalysis.xcn',
+					chat : limitStringLength($('#emassBody').text(), 2000) + '\n\n\n위에 내용을 한글로 번역해줘?',
+					success : function ( data, total ) {
+						$('#summaryContent').html('아래 내용은 한국어로 번역한 내용입니다.<br><br>' + data.response.fReplaceWord('\n', '.</br>').fReplaceWord('. ', '.</br>'));
+						$("#summaryModal").modal('show');
+					},
+					error : function (status, message) {
+						ui.alertMsg(message);
+					},
+					complete : function (){
+						$('#summaryIcon2').removeClass('fa-spinner').addClass('fa-question-circle');
+					}
+				});
+			});
+
+			$(document).on('click', '#summaryBody', function(){
+				$('#summaryModal h2').html('주제 키워드 분석');
+				$('#summaryIcon3').removeClass('fa-question-circle').addClass('fa-spinner');
+				ui.get({
+					url : 'getLLMAnalysis.xcn',
+					chat : limitStringLength($('#emassBody').text(), 2000) + '\n\n\n위에 내용에서 주제키워드 단어로 10개정도 추출해죠?',
+					success : function ( data, total ) {
+						$('#summaryContent').html('아래 내용은 주제키워드를 분석한 내용입니다.<br><br>' + data.response.fReplaceWord('\n', '.</br>'));
+						$("#summaryModal").modal('show');
+					},
+					error : function (status, message) {
+						ui.alertMsg(message);
+					},
+					complete : function (){
+						$('#summaryIcon3').removeClass('fa-spinner').addClass('fa-question-circle');
+					}
+				});
+			});
 		});
+
+
+
+		function limitStringLength(inputString, maxLength) {
+			return inputString.length <= maxLength ? inputString : inputString.substring(0, maxLength);
+		}
 
 		var contentBody = {
 			urlIpBlockPreview:'<s:message code="urlIpBlock.preview"/>',
@@ -592,9 +656,14 @@
 										<tr id="hostTr">
 											<th>HOST/Path <i id="nologUrlBtn" class="fa fa-chain-broken nologUrlBtn" aria-hidden="true"></i></th>
 											<td colspan="3">
-												<div id="hostDiv">
-
+												<%if(isLlmEnabled){%>
+												<i id="helpHost" class="fa fa-question-circle" aria-hidden="true" style="display: inline"></i>
+												<%}%>
+												<div id="hostDiv" style="padding-left: 10px;display: inline">
 												</div>
+												<%if(isLlmEnabled){%>
+												<div id="helpHostDesc" style="display: block;padding-top: 10px;"></div>
+												<%}%>
 											</td>
 										</tr>
 										<%if(infoHynixConf){%>
@@ -751,9 +820,14 @@
 							<div class="panel-heading " style="padding:10px 12px 9px;">
 								<s:message code="bodyview.body.content"/>
 								<div class="pull-right" style="position: relative;top:-7px;">
-										<span class="select-xs body_selectBtn">
-											<s:message code="common.msg.zoom"/> :
-										</span>
+									<%if(isLlmEnabled){%>
+									<button class="btn01" id="koreaBody"><i id="summaryIcon2" class="fa fa-question-circle" aria-hidden="true" style="display: inline"></i> 번역</button>
+									<button class="btn01" id="summaryBody"><i id="summaryIcon3" class="fa fa-question-circle" aria-hidden="true" style="display: inline"></i> 주제키워드</button>
+									&nbsp;
+									<%}%>
+									<span class="select-xs body_selectBtn">
+										<s:message code="common.msg.zoom"/> :
+									</span>
 									<button class="btn05 body_selectBtn font_size" id="large_txt">+</button>
 									<button class="btn05 body_selectBtn font_size" id="small_txt">-</button>
 									&nbsp;
@@ -908,6 +982,19 @@
 			</div>
 		</div>
 	</div>
+
+	<div class="modal" id="summaryModal">	<!-- modal -->
+		<div class="modal-content">
+			<div class="modalHead">
+				<h2>본문 내용요약</h2>
+				<span class="close" data-dismiss="modal">&times;</span>
+			</div>
+			<div class="modalCon">
+				<div id="summaryContent"></div>
+			</div>
+		</div>
+	</div>
+
 	<!-- //사용자 정보-->
 	<div id="imgPreviewDiv"></div>
 	<div id="infoDiv" style="overflow-y:auto;display:none;">

@@ -16,6 +16,7 @@ import com.xcurenet.common.parser.mime.MimeVo;
 import com.xcurenet.common.pdf.PdfWriterEMASS;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.KafkaProducerService;
+import com.xcurenet.common.util.config.Config;
 import com.xcurenet.common.util.locale.Prop;
 import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
@@ -40,11 +41,13 @@ import org.apache.solr.client.solrj.SolrServerException;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -92,6 +95,9 @@ public class EmsMessageController {
 
 	@Autowired
 	public ConsentFileDownload consentFileDownload;
+
+	@Autowired
+	public Config conf;
 
 	@Resource
 	private KafkaProducerService kafkaProducerService; // kafka
@@ -680,7 +686,7 @@ public class EmsMessageController {
 							if (attachFlag) inputAttach(os, attachDown, edc);
 						}
 
-						log.info("PDF TEST {} == {}",solrCnt,i);
+						log.info("PDF TEST {} == {}", solrCnt, i);
 						if (i % solrCnt == 1 || i == 1) {
 							log.info("??");
 							xOut = new ByteArrayOutputStream();
@@ -744,7 +750,7 @@ public class EmsMessageController {
 			sq = new SolrQuery();
 			String query = Common.joinj(Common.toJSONArray(condition.get("msgids")), " ");
 			String[] querys = query.split(" ");
-			sq.setQuery(String.format("+msgid:(%s)",Arrays.stream(querys).map(s -> "("+s+")").collect(Collectors.joining(" "))));
+			sq.setQuery(String.format("+msgid:(%s)", Arrays.stream(querys).map(s -> "(" + s + ")").collect(Collectors.joining(" "))));
 
 			String sort = Common.nvl(condition.get("sort"));
 			if (Common.isEmpty(sort)) {
@@ -1085,10 +1091,10 @@ public class EmsMessageController {
 
 			Element bodyEl = doc.body();
 
-			reValueTag(bodyEl, "input","type","button"); 	/* submit방지 */
+			reValueTag(bodyEl, "input", "type", "button");    /* submit방지 */
 
 			replaceTagNames(bodyEl, "div#header", "div", true);
-			replaceTagNames(bodyEl,"header","xheader",true);
+			replaceTagNames(bodyEl, "header", "xheader", true);
 
 			replaceTagNames(bodyEl, "HTML", "XHTML", false);
 			replaceTagNames(bodyEl, "META", "XMETA", false);
@@ -1137,9 +1143,8 @@ public class EmsMessageController {
 		if (els == null) return;
 		Elements findEls = els.select(find);
 		if (findEls == null) return;
-	 	findEls.attr(key, value);
+		findEls.attr(key, value);
 	}
-
 
 
 	public static String getBodyStrProc(String userCharset, EmsBodyVO emsBody) throws UnsupportedEncodingException {
@@ -1157,7 +1162,6 @@ public class EmsMessageController {
 			charset = userCharset;
 			bodyStr = Common.toString(body, charset);
 		}
-
 
 
 		EmsBodyType contentType = getEmsBodyType(bodyStr);
@@ -1586,8 +1590,8 @@ public class EmsMessageController {
 		String feedback = Common.nvl(request.getParameter("feedback"));
 
 		for (int i = 0; i < msgId.length; i++) {
-			boolean isProc  = emsMessageService.updateEmsFeedback(msgId[i], feedback, adminId); // mongoDB 문서 update
-			if(isProc) kafkaProducerService.send(kafka_feedback_idx,"_id",msgId[i]);
+			boolean isProc = emsMessageService.updateEmsFeedback(msgId[i], feedback, adminId); // mongoDB 문서 update
+			if (isProc) kafkaProducerService.send(kafka_feedback_idx, "_id", msgId[i]);
 		}
 
 
@@ -1600,7 +1604,7 @@ public class EmsMessageController {
 	public XcnResponseVO getSearchKeywordAuto(final HttpServletRequest request, final HttpSession session) throws Exception {
 		String adminId = Common.getAdminId(request);
 		String searchKeyword = Common.nvl(request.getParameter("searchKeyword"));
-		searchKeyword = searchKeyword.replace("/","");
+		searchKeyword = searchKeyword.replace("/", "");
 
 		return new XcnResponseVO(XcnRspCode.OK, emsMessageService.getSearchKeywordAuto(adminId, searchKeyword));
 	}
@@ -1655,5 +1659,27 @@ public class EmsMessageController {
 		return new XcnResponseVO(XcnRspCode.OK, emsMessageService.getRecvDomainInfo(msgId, inside, recvsType));
 	}
 
+	@RequestMapping(value = "/getLLMAnalysis.xcn")
+	@Description("LLM 내용 분석")
+	@ResponseBody
+	public XcnResponseVO getLLMAnalysis(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+		String chat = Common.nvl(request.getParameter("chat"));
+
+		JSONObject param = new JSONObject();
+		param.put("model", conf.getLlmModel());
+		param.put("prompt", chat);
+		param.put("stream", false);
+		log.info("llm get : {}", param.toString());
+
+		Document doc = Jsoup.connect(conf.getLlmUrl())
+				.timeout(conf.getLlmTimeout())
+				.header("Content-Type", "application/json;charset=UTF-8")
+				.method(Connection.Method.POST)
+				.requestBody(param.toString())
+				.ignoreContentType(true)
+				.post();
+		log.info("llm response : {}", doc.body().text());
+		return new XcnResponseVO(XcnRspCode.OK, Common.toJSONObject(doc.body().text()));
+	}
 
 }

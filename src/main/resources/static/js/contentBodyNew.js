@@ -1047,6 +1047,9 @@ var msgData;
 function setMessage(msg) {
     msgData = msg;
 
+    $('#helpHostDesc').html('');
+   	$('#hostDiv a').attr("title", '');
+
     window.scrollTo(0, 0);
     if (msg == null) {
             $('#buttonDiv').css("display", "none");
@@ -1235,6 +1238,7 @@ function setMessage(msg) {
         if (hostDivText.indexOf('http://') > -1) hostDivText = nvl(msg.path) + query;
 
         $('#hostDiv').html('<a style="word-break: break-all;" target="_blank" href="http://' + hostDivText + '">' + hostDivText + '</a>');
+        $('#helpHost').attr('title', nvl(msg.host));
     }
 
     //대외비

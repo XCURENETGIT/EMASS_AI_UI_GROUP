@@ -26,6 +26,7 @@ import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.FileSystemResource;
@@ -174,7 +175,17 @@ public class Config {
 
 	public static Map<String, String> elsFields = new HashMap<>();
 
+	@Value("${llm.enabled:false}")
+	private boolean llmEnabled;
 
+	@Value("${llm.timeout:60000}")
+	private int llmTimeout;
+
+	@Value("${llm.url}")
+	private String llmUrl;
+
+	@Value("${llm.model}")
+	private String llmModel;
 
 
 	public static ServiceGroupVO getServiceGroup(final String groupCd) {
