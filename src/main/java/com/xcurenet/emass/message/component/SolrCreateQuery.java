@@ -322,7 +322,7 @@ public class SolrCreateQuery {
 				} else {
 						StringBuilder querySb = new StringBuilder();
 						String[] terms = query.split(" ");
-						if(terms.length < 2) querySb.append(SpecialStrRemove(query));
+						if(terms.length < 2) querySb.append( ('"')+SpecialStrRemove(query)+('"'));
 						else {
 								for (int i = 0; i < terms.length; i++) {
 										if (terms[i].equals("|")) {
@@ -341,7 +341,7 @@ public class SolrCreateQuery {
 				}
 				String result = sb.toString().replace(OR_PREFIX, " ").replace("__", " ").replace("  ", " ").trim();
 				// 연산자 처리
-				result = inequalitySignProc(result);
+	//			result = inequalitySignProc(result);
 				return result;
 
 		}
@@ -1438,7 +1438,7 @@ public class SolrCreateQuery {
 		String result = sb.toString().replace(OR_PREFIX, " ").replace("__", " ").replace("  ", " ").trim();
 
 		// 연산자 처리
-		result = inequalitySignProc(result);
+//		result = inequalitySignProc(result);
 		return result;
 	}
 
@@ -1473,7 +1473,7 @@ public class SolrCreateQuery {
 		public String specialCharsCheck(String str){
 		String result = str;
 		/* 특수문자 처리 */
-		result  =  result.replaceAll("[=/&:><!^~/\\{\\}]", "\\\\"+"$0");
+		result  =  result.replaceAll("[=/&:><!^~/\\(\\)\\{\\}]", "\\\\"+"$0");
 		return result;
 	}
 
