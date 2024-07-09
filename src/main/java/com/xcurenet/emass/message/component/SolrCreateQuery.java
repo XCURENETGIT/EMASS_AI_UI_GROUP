@@ -1474,6 +1474,7 @@ public class SolrCreateQuery {
 		String result = str;
 		/* 특수문자 처리 */
 		result  =  result.replaceAll("[=/&:><!^~/\\(\\)\\{\\}]", "\\\\"+"$0");
+		result  =  result.replaceAll("[\\(\\)]", "");
 		return result;
 	}
 
