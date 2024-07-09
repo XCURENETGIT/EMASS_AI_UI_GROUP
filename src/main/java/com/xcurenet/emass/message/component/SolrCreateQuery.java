@@ -312,7 +312,8 @@ public class SolrCreateQuery {
 								int slashIdx = searchStr.indexOf("/");
 								hostStr = searchStr.substring(0,slashIdx);
 								query.append(String.format("%s:(%s) ", "host",('"')+hostStr+('"')));
-						}
+						}else query.append(String.format("%s:(%s) ", "host",('"')+searchStr+('"')));
+
 						query.append(String.format("%s:(%s) ", "host_str",('"')+searchStr+('"')));
 				}
 
