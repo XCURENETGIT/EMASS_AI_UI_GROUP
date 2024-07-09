@@ -17,6 +17,10 @@
 
 
 	<style type="text/css">
+
+		.fa-fw {
+			margin-left: 5px;
+		}
 		.bootstrap-select .inner {
 			-moz-transform: none;
 		}
