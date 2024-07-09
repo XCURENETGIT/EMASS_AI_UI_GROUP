@@ -142,7 +142,7 @@ public class SolrCreateQuery {
 
 	private String[] INEQUALITY_SIGN = {"+","-","|"};
 
-
+	private String searchfieldValue = "";
 
 	private static Map<String,String> BRACKET_MAP = Map.of(
 			"{", "}",
@@ -215,7 +215,9 @@ public class SolrCreateQuery {
 		if (search_fields.length <= 1 && Common.isEmpty(search_fields[0])) {
 			sq.setParam("sqf", StringUtils.join(this.SEARCH_FIELD, " "));
 		} else {
-			sq.setParam("sqf", StringUtils.join(search_fields, " "));
+				String fields =  StringUtils.join(search_fields, " ");
+				sq.setParam("sqf",fields, " ");
+				searchfieldValue = fields;
 		}
 		return this;
 	}
@@ -229,6 +231,7 @@ public class SolrCreateQuery {
 			dfString += OCR_FIELD;
 		}
 		sq.setParam("qf", dfString);
+		searchfieldValue = dfString;
 		return this;
 	}
 
@@ -286,22 +289,65 @@ public class SolrCreateQuery {
 			if(searchStr.indexOf("\\") == searchStr.lastIndexOf("\\")) return this;
 		}
 
-
 		if (Common.isEmpty(searchField)) return addQuery(String.format("%s(%s)", AND_QUERY, getSearchQuery(searchStr)));
 		else {
 			searchField = searchField.replaceAll(",", " ");
 			String[] fields = searchField.split(" ");
 			StringBuilder query = new StringBuilder();
-			for (String field : fields) {
-				query.append(String.format("%s:(%s) ", field, getSearchQuery(searchStr)));
-			}
-
-			return addQuery(String.format("%s(%s)", AND_QUERY,query));
+				for (String field : fields) {
+						String schStr =	(Common.isEquals(field,"subject") || Common.isEquals(field,"body") ||  Common.isEquals(field,"attach") || Common.isEquals(field,"attachname") ||  Common.isEquals(field,"ocr_attach")) ? getDoubleQuetoesSearchQuery(searchStr) : getSearchQuery(searchStr);
+						query.append(String.format("%s:(%s) ", field,schStr));
+				}
+				return addQuery(String.format("%s(%s)", AND_QUERY,query));
 		}
 	}
 
+		private String getDoubleQuetoesSearchQuery(String query) {
+				if( query.startsWith("|")) query = query.substring(1);
+				query = specialCharsValid(query);
+				query = getTempQuery(query);
+				// 특수문자 처리
+				query = specialCharsCheck(query);
 
-	public SolrCreateQuery setSearchHistoryUserStr(String userStr) {
+
+				StringBuilder sb = new StringBuilder();
+				if (!query.contains("|") && !query.contains("+") && !query.contains("-") & !query.contains(" ")) {
+						StringBuilder queryStr = new StringBuilder();
+						String[] terms = query.split(" ");
+						for (String term : terms) {
+								term = ('"')+term+('"');
+								queryStr.append(appendSpecialchar(term)).append(" ");
+						}
+						sb.append(queryStr.toString().trim().replaceAll(" ", " ").replaceAll("__", " "));
+				} else {
+						StringBuilder querySb = new StringBuilder();
+						String[] terms = query.split(" ");
+						if(terms.length < 2) querySb.append(SpecialStrRemove(query));
+						else {
+								for (int i = 0; i < terms.length; i++) {
+										if (terms[i].equals("|")) {
+												terms[i] = OR_PREFIX;
+										} else if (i > 0 && terms[i - 1].equals(OR_PREFIX) || terms[i].startsWith("+") || terms[i].startsWith("-")) {
+												terms[i] = doubleQuetosCharsCheck(terms[i]);
+										} else if (i < terms.length - 1 && !terms[i + 1].equals("|")) {
+												terms[i] = ('"') + terms[i] + ('"');
+										} else if (!terms[i].startsWith("+") && !terms[i].startsWith("-")) {
+												terms[i] = ('"') + terms[i] + ('"');
+										}
+										querySb.append(appendSpecialchar(terms[i])).append(" ");
+								}
+						}
+						sb.append(querySb.toString().trim().replaceAll(" ", " ").replaceAll("__", " "));
+				}
+				String result = sb.toString().replace(OR_PREFIX, " ").replace("__", " ").replace("  ", " ").trim();
+				// 연산자 처리
+				result = inequalitySignProc(result);
+				return result;
+
+		}
+
+
+		public SolrCreateQuery setSearchHistoryUserStr(String userStr) {
 		if (Common.isEmpty(userStr)) return this;
 		return addQuery(String.format("%s%s:%s", AND_QUERY, SEARCH_HISTORY_USER_ID, createOrQuery(userStr)));
 	}
@@ -1262,7 +1308,6 @@ public class SolrCreateQuery {
 
 			if( Common.isNotEmpty(query)) {
 				finalReadYn = "";
-				setSearchField(searchField);
 				setSort(sort);
 				addQuery(query);
 				setSvc1(svc1, svc1_not);
@@ -1277,10 +1322,18 @@ public class SolrCreateQuery {
 				}
 				setSort(sort);
 			}
-			setSearchStr(searchStr, searchField);
 
+			log.info(" sddf {}", searchField);
+
+			//지정된 필드가 없을시 default 검색 필드
+			if(Common.isEmpty(searchField)) setSearchField(searchField);
+			else	setSelectSearchFields(searchField); //선택한 검색 영역
+
+			searchField = searchfieldValue;
+			searchfieldValue = "";
+
+			setSearchStr(searchStr, searchField);
 			setSearchField(searchField); // default 검색 영역
-			setSelectSearchFields(searchField); //선택한 검색 영역
 
 			setService(serviceType);
 //			setReadYn(readYn,adminId);
@@ -1362,7 +1415,6 @@ public class SolrCreateQuery {
 			String[] terms = query.split(" ");
 			for (String term : terms) {
 			     // 검색어 입력  쌍따옴표 삭제
-//				term = ("\"").concat(term).concat("\"");
 				queryStr.append(appendSpecialchar(term)).append(" ");
 			}
 			sb.append(queryStr.toString().trim().replaceAll(" ", " ").replaceAll("__", " "));
@@ -1370,18 +1422,16 @@ public class SolrCreateQuery {
 			StringBuilder querySb = new StringBuilder();
 			String[] terms = query.split(" ");
 			for (int i = 0; i < terms.length; i++) {
-
 				if (terms[i].equals("|")) {
 					terms[i] = OR_PREFIX;
 				}else if (i > 0 && terms[i - 1].equals(OR_PREFIX) || terms[i].startsWith("+") || terms[i].startsWith("-")) {
 				}else if (i < terms.length - 1 && !terms[i + 1].equals("|")) {
-					terms[i] = ("\"").concat(terms[i]).concat("\"");
 				}else if (!terms[i].startsWith("+") && !terms[i].startsWith("-")) {
-					terms[i] = ("\"").concat(terms[i]).concat("\"");
 				}
 
 				querySb.append(appendSpecialchar(terms[i])).append(" ");
 			}
+
 			sb.append(querySb.toString().trim().replaceAll(" ", " ").replaceAll("__", " "));
 		}
 
@@ -1391,6 +1441,22 @@ public class SolrCreateQuery {
 		result = inequalitySignProc(result);
 		return result;
 	}
+
+		public  String doubleQuetosCharsCheck(String str){
+				str = bracketRemove(str);
+				str =  str.replaceAll("[\\+\\-]","$0"+ "("+'"');
+				str = SpecialStrRemove(str)+ '"'+")";
+				return  str;
+		}
+
+		public String bracketRemove(String str){
+				return  str.replaceAll("[(\\)\\{\\}]", "");
+		}
+
+		public  String SpecialStrRemove(String str){
+				return  str.replaceAll("[=/&:><!^~/]", "");
+		}
+
 
 
 	public String specialCharsValid(String str){
@@ -1403,10 +1469,11 @@ public class SolrCreateQuery {
 		return result;
 	}
 
-	public String specialCharsCheck(String str){
+
+		public String specialCharsCheck(String str){
 		String result = str;
 		/* 특수문자 처리 */
-		result  =  result.replaceAll("[[\\\\]=/&:><!^~/[\"]\\{\\}]", "\\\\"+"$0");
+		result  =  result.replaceAll("[=/&:><!^~/\\{\\}]", "\\\\"+"$0");
 		return result;
 	}
 

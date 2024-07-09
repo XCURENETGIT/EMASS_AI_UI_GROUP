@@ -207,13 +207,6 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			/* 수,발신자 조회시 */
 			if (!Common.isEmpty(sq.get("q"))) complateQuery.should(buildRecvAndSend(sq.get("q"))).minimumShouldMatch(1);
 
-			/* 정규식 패턴 필드 설정 */
-			//highlight 설정
-//			HighlightBuilder highlightBuilder = new HighlightBuilder().preTags("<highlight>").postTags("</highlight>");
-//			if (!Common.isEmpty(sq.get("regexPattern"))) {
-//				complateQuery.filter(buildRegexQuery(getselectSearchField(sq), sq.get("regexPattern").toString()));
-//				highlightBuilder = buildHighlight(getselectSearchField(sq), highlightBuilder);
-//			}
 
 			log.debug("page : {}  rows : {}", getPage(sq), sq.getRows());
 
