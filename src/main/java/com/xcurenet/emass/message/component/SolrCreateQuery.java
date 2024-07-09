@@ -341,7 +341,6 @@ public class SolrCreateQuery {
 				}
 				String result = sb.toString().replace(OR_PREFIX, " ").replace("__", " ").replace("  ", " ").trim();
 				// 연산자 처리
-	//			result = inequalitySignProc(result);
 				return result;
 
 		}
@@ -1421,24 +1420,24 @@ public class SolrCreateQuery {
 		} else {
 			StringBuilder querySb = new StringBuilder();
 			String[] terms = query.split(" ");
-			for (int i = 0; i < terms.length; i++) {
-				if (terms[i].equals("|")) {
-					terms[i] = OR_PREFIX;
-				}else if (i > 0 && terms[i - 1].equals(OR_PREFIX) || terms[i].startsWith("+") || terms[i].startsWith("-")) {
-				}else if (i < terms.length - 1 && !terms[i + 1].equals("|")) {
-				}else if (!terms[i].startsWith("+") && !terms[i].startsWith("-")) {
+		if(terms.length < 2) querySb.append(charsCheck(query));
+		else {
+				for (int i = 0; i < terms.length; i++) {
+						if (terms[i].equals("|")) {
+								terms[i] = OR_PREFIX;
+						} else if (i > 0 && terms[i - 1].equals(OR_PREFIX) || terms[i].startsWith("+") || terms[i].startsWith("-")) {
+						} else if (i < terms.length - 1 && !terms[i + 1].equals("|")) {
+						} else if (!terms[i].startsWith("+") && !terms[i].startsWith("-")) {
+						}
+
+						querySb.append(appendSpecialchar(terms[i])).append(" ");
 				}
-
-				querySb.append(appendSpecialchar(terms[i])).append(" ");
-			}
-
+		}
 			sb.append(querySb.toString().trim().replaceAll(" ", " ").replaceAll("__", " "));
 		}
 
 		String result = sb.toString().replace(OR_PREFIX, " ").replace("__", " ").replace("  ", " ").trim();
 
-		// 연산자 처리
-//		result = inequalitySignProc(result);
 		return result;
 	}
 
@@ -1457,9 +1456,17 @@ public class SolrCreateQuery {
 				return  str.replaceAll("[=/&:><!^~/]", "");
 		}
 
+		public  String charsCheck(String str){
+				str = bracketRemove(str);
+				str =  str.replaceAll("[\\+\\-]","");
+				str =  SpecialStrRemove(str);
+				str = (str.length() == 0)  ? "("+('"')+str+('"')+")" : str;
+				return  str;
+		}
 
 
-	public String specialCharsValid(String str){
+
+		public String specialCharsValid(String str){
 		String result = str;
 		if(result.indexOf("/") > -1) {
 			if(result.indexOf("/") == result.lastIndexOf("/")) result =  result.replace(result, ("\"").concat(result).concat( "\""));
@@ -1473,7 +1480,7 @@ public class SolrCreateQuery {
 		public String specialCharsCheck(String str){
 		String result = str;
 		/* 특수문자 처리 */
-		result  =  result.replaceAll("[=/&:><!^~/\\(\\)\\{\\}]", "\\\\"+"$0");
+		result  =  result.replaceAll("[=/&:><!^~/{\\}]", "\\\\"+"$0");
 		result  =  result.replaceAll("[\\(\\)]", "");
 		return result;
 	}
