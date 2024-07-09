@@ -307,7 +307,7 @@ public class SolrCreateQuery {
 				query = specialCharsValid(query);
 				query = getTempQuery(query);
 				// 특수문자 처리
-				query = specialCharsCheck(query);
+				query = bigramSpecialCharsCheck(query);
 
 
 				StringBuilder sb = new StringBuilder();
@@ -1476,6 +1476,15 @@ public class SolrCreateQuery {
 		return result;
 	}
 
+
+		public String bigramSpecialCharsCheck(String str){
+				String result = str;
+				/* 특수문자 처리 */
+				result  =  result.replaceAll("[=/&:><!^~/{\\}]", "\\\\"+"$0");
+				result  =  result.replaceAll("[\\(\\)]", "");
+				result  =  result.replaceAll("[\"]", "");
+				return result;
+		}
 
 		public String specialCharsCheck(String str){
 		String result = str;
