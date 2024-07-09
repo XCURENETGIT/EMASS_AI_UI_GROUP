@@ -1,6 +1,7 @@
 package com.xcurenet.common.config;
 
 import com.xcurenet.common.util.Common;
+import com.xcurenet.common.util.locale.CustomReloadableResourceBundleMessageSource;
 import com.xcurenet.interceptor.AuthorityInterceptor;
 import com.xcurenet.interceptor.LoggerInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class WebConfig implements WebMvcConfigurer {
 
 	@Bean
 	public ReloadableResourceBundleMessageSource messageSource() {
-		ReloadableResourceBundleMessageSource source = new ReloadableResourceBundleMessageSource();
+		CustomReloadableResourceBundleMessageSource source = new CustomReloadableResourceBundleMessageSource();
 		source.setBasename("classpath:/com/message/message");
 		source.setDefaultEncoding(Common.UTF8);
 		// Properties file reload period
