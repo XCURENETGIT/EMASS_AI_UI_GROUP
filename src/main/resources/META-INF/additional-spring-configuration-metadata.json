@@ -1,0 +1,34 @@
+{
+  "properties": [
+	{
+	  "name": "kafka.checked.index",
+	  "type": "java.lang.String",
+	  "description": "EMASS AI ui checked kafka.checked.index."
+	},
+	{
+	  "name": "llm.url",
+	  "type": "java.lang.String",
+	  "description": "EMASS AI LLM API device host for llm.url."
+	},
+	{
+	  "name": "llm.model",
+	  "type": "java.lang.String",
+	  "description": "EMASS AI LLM MODEL for llm.model."
+	},
+	{
+	  "name": "llm.prompt",
+	  "type": "java.lang.String",
+	  "description": "EMASS AI LLM PROMPT for llm.prompt."
+	},
+	{
+	  "name": "llm.enabled",
+	  "type": "java.lang.String",
+	  "description": "EMASS AI LLM ENABLED for llm.enabled."
+	},
+	{
+	  "name": "llm.timeout",
+	  "type": "java.lang.String",
+	  "description": "Description for llm.timeout."
+	}
+  ]
+}
