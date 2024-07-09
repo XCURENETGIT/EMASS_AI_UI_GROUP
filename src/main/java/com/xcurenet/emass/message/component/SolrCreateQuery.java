@@ -1505,14 +1505,15 @@ public class SolrCreateQuery {
 		}
 
 		public  String SpecialStrRemove(String str){
-				return  str.replaceAll("[=/&:><!^~/]", "");
+				return  str.replaceAll("[=/&:><!^~\\/\"]", "");
 		}
 
 		public  String charsCheck(String str){
 				str = bracketRemove(str);
-				str =  str.replaceAll("[\\+\\-]","");
 				str =  SpecialStrRemove(str);
-				str = (str.length() == 0)  ? "("+('"')+str+('"')+")" : str;
+				str = str.replaceAll("\"", "");
+				str = str.replaceAll("\\\\", "");
+				str = "("+('"')+str.replaceAll("[\\+\\-]","")+('"')+")";
 				return  str;
 		}
 
