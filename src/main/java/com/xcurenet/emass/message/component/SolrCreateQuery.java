@@ -25,6 +25,7 @@ import org.joda.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Data
@@ -140,7 +141,16 @@ public class SolrCreateQuery {
 			"user", "user_str", "userid", "name" //사용자
 	};
 
-	private String[] INEQUALITY_SIGN = {"+","-","|"};
+		public String[] BIGRAM_FIELD = {
+						"attach",
+						"body",
+						"subject",
+						"ocr_attach",
+						"attachname",
+		};
+
+
+		private String[] INEQUALITY_SIGN = {"+","-","|"};
 
 	private String searchfieldValue = "";
 
@@ -294,13 +304,53 @@ public class SolrCreateQuery {
 			searchField = searchField.replaceAll(",", " ");
 			String[] fields = searchField.split(" ");
 			StringBuilder query = new StringBuilder();
+
+
+				if(searchField.indexOf("host") >- 1){
+						String hostStr = "";
+						if(searchStr.indexOf("/") > -1){
+								int slashIdx = searchStr.indexOf("/");
+								hostStr = searchStr.substring(0,slashIdx);
+								query.append(String.format("%s:(%s) ", "host",('"')+hostStr+('"')));
+						}
+						query.append(String.format("%s:(%s) ", "host_str",('"')+searchStr+('"')));
+				}
+
+				if(searchField.indexOf("path") >- 1){
+						String pathStr = "";
+						String queryStr = "";
+						if(searchStr.indexOf("/") > -1){
+								int slashIdx = searchStr.indexOf("/");
+								pathStr = searchStr.substring(slashIdx,searchStr.length()-1);
+								query.append(String.format("%s:(%s) ", "path",('"')+pathStr+('"')));
+						}
+						if(pathStr.indexOf("?") > -1){
+								int queryIdx = pathStr.indexOf("?");
+								queryStr = pathStr.substring(queryIdx,pathStr.length()-1);
+								query.append(String.format("%s:(*%s*) ", "query",queryStr));
+						}
+				}
+
 				for (String field : fields) {
-						String schStr =	(Common.isEquals(field,"subject") || Common.isEquals(field,"body") ||  Common.isEquals(field,"attach") || Common.isEquals(field,"attachname") ||  Common.isEquals(field,"ocr_attach")) ? getDoubleQuetoesSearchQuery(searchStr) : getSearchQuery(searchStr);
+						if(("host,path").indexOf(field) > -1) continue;
+						String schStr =	(isBigramField(field)) ? getDoubleQuetoesSearchQuery(searchStr) : getSearchQuery(searchStr);
 						query.append(String.format("%s:(%s) ", field,schStr));
 				}
 				return addQuery(String.format("%s(%s)", AND_QUERY,query));
 		}
 	}
+
+
+		public boolean isBigramField(String field) {
+			boolean result = false;
+			for(String biField : BIGRAM_FIELD){
+					if(Common.isEquals(field,biField)) {
+							result = true;
+							break;
+					}
+			}
+			return result;
+		}
 
 		private String getDoubleQuetoesSearchQuery(String query) {
 				if( query.startsWith("|")) query = query.substring(1);
@@ -1305,6 +1355,7 @@ public class SolrCreateQuery {
 
 			String regexPattern = Common.nvl(condition.get("regexPattern")); //정규패턴식 검색
 
+
 			if( Common.isNotEmpty(query)) {
 				finalReadYn = "";
 				setSort(sort);
@@ -1322,7 +1373,6 @@ public class SolrCreateQuery {
 				setSort(sort);
 			}
 
-			log.info(" sddf {}", searchField);
 
 			//지정된 필드가 없을시 default 검색 필드
 			if(Common.isEmpty(searchField)) setSearchField(searchField);
@@ -1335,6 +1385,7 @@ public class SolrCreateQuery {
 			setSearchField(searchField); // default 검색 영역
 
 			setService(serviceType);
+
 //			setReadYn(readYn,adminId);
 			setInfoType(infoTypes);
 			setFeedback(feedbacks);

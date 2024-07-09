@@ -2706,8 +2706,8 @@
                                                 <option value="attach ocr_attach"><s:message code="condition.attach"/></option>
                                                 <option value="ocr_attach">OCR</option>
                                                 <%} %>
-                                                <option value="host host_str">Host</option>
-                                                <option value="path query">Path</option>
+                                                <option value="host">Host</option>
+                                                <option value="path">Path</option>
                                                 <option value="srcip"><s:message code="condition.source"/> IP</option>
                                                 <option value="dstip"><s:message code="condition.destination"/> IP</option>
                                                 <option value="sender_str"><s:message code="condition.sender"/></option>
