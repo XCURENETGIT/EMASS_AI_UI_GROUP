@@ -8,7 +8,10 @@
 	String firstAdminYn = Common.getFirstAdminYn(session);
 	String statType = Common.nvl(request.getParameter("statType"));
 	String recvsJikgub = Config.getString("recvs.jikgub.use");
-//	String epmsgType = Config.getString("message.epmsg.val");
+	String epmsgType = Config.getString("message.epmsg.val");
+	String infoFeedbackYn = Common.getInfoFeedbackYn(session);
+	boolean infoFeedbackConf = Config.getBoolean("info.feedback.used");
+	boolean infoHynixConf = Config.getBoolean("info.hynix.used");
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -151,7 +154,10 @@
 		var isConsent = false;
 		var erroColumn = "";
 
-		<%--var epmsgType = '<%=epmsgType%>';--%>
+		var infoFeedbackYn = '<%=infoFeedbackYn%>';
+		var infoFeedbackConf = '<%=infoFeedbackConf%>';
+		var infoHynixConf = '<%=infoHynixConf%>';
+		var epmsgType = '<%=epmsgType%>';
 
 		var statType = "<%=statType%>";
 		var isOCR = <%=isOCR%>;
@@ -171,6 +177,7 @@
 			"to", "cc", "bcc", "recvs_name", "tname", "cname", "bname", "ocr_attach", "pi_amount.pi_DRM","pi_total",
 			"pi_amount.pi_total", "pi_amount.pi_ID", "pi_amount.pi_EF", "pi_amount.pi_PN", "pi_amount.pi_FN", "pi_amount.pi_DN", "pi_amount.pi_SN", "pi_amount.pi_CN", "pi_amount.pi_EC",
 			"pi_amount.pi_IMEI","pi_amount.pi_MCN","pi_amount.pi_CPN","pi_amount.pi_BRN","pi_amount.pi_SSN","pi_amount.pi_CRN","pi_amount.pi_AN","pi_amount.pi_MN","epmsg_type","reprocess",
+			"ml_confd_class", "ml_confd_feedback", "ml_confd_prob", "allofus"
 		];
 
         <%if( consent && Common.isEquals(firstAdminYn, "N") ){ %>
@@ -207,6 +214,23 @@
 			// initEpmsg();
 			initSetDisplay();
 
+			if( infoFeedbackConf == 'true' && infoFeedbackYn == 'Y' ) {
+				if(infoHynixConf == 'true'){
+					$('#skInfoTypeTr, #skFeedbackTypeTr, #skProbTypeTr, #sctTr').show();
+				}else{
+					$('#infoTypeTr, #feedbackTypeTr, #probTypeTr, #sctTr').show();
+				}
+
+			}
+			else $('#infoTypeTr, #feedbackTypeTr, #probTypeTr, #sctTr').hide();
+
+			if(epmsgType == "" ){
+				$('#epmsgTypeTr').hide();
+			}else{
+				$('#epmsgTypeTr').show();
+			}
+
+
 			var dateObj = new Date();
 			$('#startdate').datetimepicker({
 				format: 'YYYY-MM-DD HH:mm:ss',
@@ -233,7 +257,53 @@
 				deselectAllText:'<s:message code="common.msg.unselect_all"/>',
 				liveSearchPlaceholder:'<s:message code="condition.search.service"/>'
 			});
-			;
+
+			$('#infoTypeSelect').selectpicker({
+				container:'body',
+				size: 15,
+				width:'205px',
+				searchLabel:true,
+				style:'btn-xs btn-default',
+				noneSelectedText:'<s:message code="condition.infotype.all"/>',
+				noneResultsText:'<s:message code="common.msg.noresult"/>'+' ',
+				selectAllText:'<s:message code="common.msg.select_all"/>',
+				deselectAllText:'<s:message code="common.msg.unselect_all"/>',
+				liveSearchPlaceholder:'<s:message code="condition.search.infoType"/>'
+			});
+
+			$('#feedbackTypeSelect').selectpicker({
+				container:'body',
+				size: 15,
+				width:'205px',
+				searchLabel:true,
+				style:'btn-xs btn-default',
+				noneSelectedText:'<s:message code="condition.feedback.all"/>',
+				noneResultsText:'<s:message code="common.msg.noresult"/>'+' ',
+				selectAllText:'<s:message code="common.msg.select_all"/>',
+				deselectAllText:'<s:message code="common.msg.unselect_all"/>',
+				liveSearchPlaceholder:'<s:message code="condition.search.feedback"/>'
+			});
+
+			$('#probTypeSelect').selectpicker({
+				container:'body',
+				size: 15,
+				width:'205px',
+				searchLabel:true,
+				style:'btn-xs btn-default',
+				noneSelectedText:'<s:message code="condition.prob.all"/>',
+				noneResultsText:'<s:message code="common.msg.noresult"/>'+' ',
+				selectAllText:'<s:message code="common.msg.select_all"/>',
+				deselectAllText:'<s:message code="common.msg.unselect_all"/>',
+				liveSearchPlaceholder:'<s:message code="condition.search.prob"/>'
+			});
+
+			$('#allOfus').selectpicker({
+				container:'body',
+				size: 15,
+				style:'btn-xs btn-default',
+				noneSelectedText:'<s:message code="condition.allofus.all"/>'
+			});
+
 
 
 			$('#recvs_poid').selectpicker({
@@ -861,6 +931,48 @@
 							var work = $('#work:checked').val();
                           if(work == 'R') work = '((R) (H))';
 							addQueryText=queryAddMinus + "work:" + work;
+						}
+						break;
+
+					case "ml_confd_class":
+						var infoType = $('#infoTypeSelect').selectpicker('val');
+						if(infoType) {
+							addQueryText = queryAddMinus + "ml_confd_class:(";
+							for(var i = 0; i < infoType.length; i++) {
+								if(i > 0) {
+									addQueryText += " "
+								}
+								addQueryText += '"' + infoType[i] + '"';
+							}
+							addQueryText += ")";
+						}
+						break;
+					case "ml_confd_feedback":
+						var feedback = $('#feedbackTypeSelect').selectpicker('val');
+						if(feedback) {
+							addQueryText = queryAddMinus + "ml_confd_feedback:(";
+							for(var i = 0; i < feedback.length; i++) {
+								if(i > 0) {
+									addQueryText += " "
+								}
+								addQueryText += '"' + feedback[i] + '"';
+							}
+							addQueryText += ")";
+						}
+						break;
+					case "ml_confd_prob":
+						var prob = $('#probTypeSelect').selectpicker('val');
+						console.log(prob);
+						if(prob) {
+							addQueryText = queryAddMinus + "(";
+							for(var i = 0; i < prob.length; i++) {
+								if(i > 0) {
+									addQueryText += " "
+								}
+								var sp = prob[i].split('|');
+								addQueryText += 'ml_confd_prob:[' + sp[0] + ' TO ' + sp[1] + ']';
+							}
+							addQueryText += ")";
 						}
 						break;
 					case "busi":
@@ -1546,6 +1658,107 @@
 									<td>work</td>
 									<td><span class="fa fa-question queryHelp" data-helptext="<s:message code="condition.work"/>:W <s:message code="condition.notwork"/>:R"></span></td>
 								</tr>
+
+<%--								피드백 관련--%>
+								<tr id="infoTypeTr" style="display: none;">
+									<th><s:message code="condition.infotype"/></th>
+									<td>
+										<select id="infoTypeSelect" class="selectpicker small border-radius-none border-radius-none" data-style="btn-default" multiple data-show-subtext="true" data-live-search="true" data-actions-box="true">
+											<option value="4"><s:message code="condition.info.class4"/></option>
+											<option value="3"><s:message code="condition.info.class3"/></option>
+											<option value="2"><s:message code="condition.info.class2"/></option>
+											<option value="1"><s:message code="condition.info.class1"/></option>
+										</select>
+									</td>
+									<td><button type="button" class="btn btn-xs btn-success queryAdd" data-queryType="ml_confd_class">AND</button></td>
+									<td style="text-align: center;"><button type="button" class="btn btn-xs btn-info queryOr" data-queryType="ml_confd_class">OR</button></td>
+									<td><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="ml_confd_class"><i class="glyphicon glyphicon-minus"></i></button></td>
+									<td>ml_confd_class</td>
+									<td></td>
+								</tr>
+								<tr id="feedbackTypeTr" style="display: none;">
+									<th><s:message code="condition.feedback"/></th>
+									<td>
+										<select id="feedbackTypeSelect" class="selectpicker small border-radius-none border-radius-none" data-style="btn-default" multiple data-show-subtext="true" data-live-search="true" data-actions-box="true">
+											<option value="0"><s:message code="condition.info.feedback0"/></option>
+											<option value="1"><s:message code="condition.info.feedback1"/></option>
+											<option value="2"><s:message code="condition.info.feedback2"/></option>
+											<option value="3"><s:message code="condition.info.feedback3"/></option>
+											<option value="4"><s:message code="condition.info.feedback4"/></option>
+											<option value="9"><s:message code="condition.info.feedback9"/></option>
+											<option value="-1"><s:message code="condition.info.feedback-1"/></option>
+										</select>
+									</td>
+									<td><button type="button" class="btn btn-xs btn-success queryAdd" data-queryType="ml_confd_feedback">AND</button></td>
+									<td style="text-align: center;"><button type="button" class="btn btn-xs btn-info queryOr" data-queryType="ml_confd_feedback">OR</button></td>
+									<td><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="ml_confd_feedback"><i class="glyphicon glyphicon-minus"></i></button></td>
+									<td>ml_confd_feedback</td>
+									<td></td>
+								</tr>
+								<tr id="probTypeTr" style="display: none;">
+									<th><s:message code="condition.prob"/></th>
+									<td>
+										<select id="probTypeSelect" class="selectpicker small border-radius-none border-radius-none" data-style="btn-default" multiple data-show-subtext="true" data-live-search="true" data-actions-box="true">
+											<option value="0.5|1.0">50 ~ 100</option>
+											<option value="0.1|0.49">10 ~ 49</option>
+											<option value="0|0.09">0 ~ 9</option>
+										</select>
+									</td>
+									<td><button type="button" class="btn btn-xs btn-success queryAdd" data-queryType="ml_confd_prob">AND</button></td>
+									<td style="text-align: center;"><button type="button" class="btn btn-xs btn-info queryOr" data-queryType="ml_confd_prob">OR</button></td>
+									<td><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="ml_confd_prob"><i class="glyphicon glyphicon-minus"></i></button></td>
+									<td>ml_confd_prob</td>
+									<td></td>
+								</tr>
+								<!-- sk 하이닉스  -->
+								<tr id="skInfoTypeTr" style="display: none;">
+									<th><s:message code="condition.infotype"/></th>
+									<td>
+										<select id="infoTypeSelect" class="selectpicker small border-radius-none border-radius-none" data-style="btn-default" multiple data-show-subtext="true" data-live-search="true" data-actions-box="true">
+											<option value="1"><s:message code="condition.info.Y"/></option>
+											<option value="0"><s:message code="condition.info.N"/></option>
+										</select>
+									</td>
+									<td><button type="button" class="btn btn-xs btn-success queryAdd" data-queryType="ml_confd_class">AND</button></td>
+									<td style="text-align: center;"><button type="button" class="btn btn-xs btn-info queryOr" data-queryType="ml_confd_class">OR</button></td>
+									<td><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="ml_confd_class"><i class="glyphicon glyphicon-minus"></i></button></td>
+									<td>ml_confd_class</td>
+									<td></td>
+								</tr>
+								<tr id="skFeedbackTypeTr" style="display: none;">
+									<th><s:message code="condition.feedback"/></th>
+									<td>
+										<select id="feedbackTypeSelect" class="selectpicker small border-radius-none border-radius-none" data-style="btn-default" multiple data-show-subtext="true" data-live-search="true" data-actions-box="true">
+											<%-- <option value="1"><s:message code="condition.info.secretFeedbackY"/></option> --%>
+											<option value="1"><s:message code="condition.info.feedback10"/></option>
+											<option value="9"><s:message code="condition.info.feedback9"/></option>
+											<option value="0"><s:message code="condition.info.feedback-1"/></option>
+											<%-- <option value="0"><s:message code="condition.info.secretFeedbackN"/></option> --%>
+										</select>
+									</td>
+									<td><button type="button" class="btn btn-xs btn-success queryAdd" data-queryType="ml_confd_feedback">AND</button></td>
+									<td style="text-align: center;"><button type="button" class="btn btn-xs btn-info queryOr" data-queryType="ml_confd_feedback">OR</button></td>
+									<td><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="ml_confd_feedback"><i class="glyphicon glyphicon-minus"></i></button></td>
+									<td>ml_confd_feedback</td>
+									<td></td>
+								</tr>
+								<tr id="skProbTypeTr" style="display: none;">
+									<th><s:message code="condition.prob"/></th>
+									<td>
+										<select id="probTypeSelect" class="selectpicker small border-radius-none border-radius-none" data-style="btn-default" multiple data-show-subtext="true" data-live-search="true" data-actions-box="true">
+											<option value="0.5|1.0">50 ~ 100</option>
+											<option value="0.1|0.49">10 ~ 49</option>
+											<option value="0|0.09">0 ~ 9</option>
+										</select>
+									</td>
+									<td><button type="button" class="btn btn-xs btn-success queryAdd" data-queryType="ml_confd_prob">AND</button></td>
+									<td style="text-align: center;"><button type="button" class="btn btn-xs btn-info queryOr" data-queryType="ml_confd_prob">OR</button></td>
+									<td><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="ml_confd_prob"><i class="glyphicon glyphicon-minus"></i></button></td>
+									<td>ml_confd_prob</td>
+									<td></td>
+								</tr>
+
+
 								<tr>
 									<th><s:message code="common.org.businm"/></th>
 									<td>

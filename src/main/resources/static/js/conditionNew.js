@@ -148,7 +148,7 @@ var con = {
 		$('#searchStrInput'+endId).val('');
 		$('#serviceType'+endId).selectpicker('val', []);
 
-		if( infoFeedbackConf == 'true' && infoFeedbackYn == 'Y' ) {
+		if( infoFeedbackConf == 'true' && infoFeedbackYn == 'true' ) {
 			$('#infoType'+endId).selectpicker('val', []);
 			$('#feedbackType'+endId).selectpicker('val', []);
 			$('#probType'+endId).selectpicker('val', []);
@@ -424,7 +424,7 @@ var con = {
 			condition.m_bcc_not = $('input:checkbox[id="m_bcc_not"]').is(":checked") ? 'Y' : '';
 		}
 
-		if( infoFeedbackConf == 'true' && infoFeedbackYn == 'Y' ) {
+		if( infoFeedbackConf == 'true' && infoFeedbackYn == 'true' ) {
 			condition.infoType = arrayToString($('#infoType').selectpicker('val'));
 			condition.feedbackType = arrayToString($('#feedbackType').selectpicker('val'));
 			condition.probType = arrayToString($('#probType').selectpicker('val'));
@@ -558,7 +558,7 @@ var con = {
 		$('#searchField').selectpicker('val', stringToArray(condition.searchField) );
 		$('#serviceType').selectpicker('val', stringToArray(condition.serviceType) );
 
-		if( infoFeedbackConf == 'true' && infoFeedbackYn == 'Y' ) {
+		if( infoFeedbackConf == 'true' && infoFeedbackYn == 'true' ) {
 			$('#infoType').selectpicker('val', stringToArray(condition.infoType) );
 			$('#feedbackType').selectpicker('val', stringToArray(condition.feedbackType) );
 			$('#probType').selectpicker('val', stringToArray(condition.probType) );

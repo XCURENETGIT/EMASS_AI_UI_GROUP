@@ -3,9 +3,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp" %>
 <%
-	String infoFeedbackYn = Common.getInfoFeedbackYn(session);
 	String epmsgType = Config.getString("message.epmsg.val");
 	boolean infoFeedbackConf = Config.getBoolean("info.feedback.used");
+	String infoFeedbackYn = Common.getInfoFeedbackYn(session);
 %>
 
 <head>
@@ -71,9 +71,9 @@
                 }*/
 	</style>
 	<script type="text/javascript">
-        <%--var infoFeedbackYn = '<%=infoFeedbackYn%>';--%>
         <%--var infoFeedbackConf = '<%=infoFeedbackConf%>';--%>
         var epmsgType = '<%=epmsgType%>';
+        <%--var infoFeedbackYn = '<%=infoFeedbackYn%>';--%>
         var searchFlag = false;
 
         var defaultDashKey = [];
@@ -355,7 +355,9 @@
 
             if (alarmVal.searchField != '') searchStr += setConditionValStr(alarmVal.serviceFieldNm, '<s:message code="condition.field.search"/>');
 
-            if (infoFeedbackConf == 'true' && infoFeedbackYn == 'Y') {
+			console.log("infoFeedbackConf: "+infoFeedbackConf);
+			console.log("infoFeedbackYn: "+infoFeedbackYn);
+            if (infoFeedbackConf == 'true' && infoFeedbackYn == 'true') {
                 if (alarmVal.infoType != '') searchStr += setConditionValStr(alarmVal.infoTypeNm, '<s:message code="condition.infotype"/>');
                 if (alarmVal.feedbackType != '') searchStr += setConditionValStr(alarmVal.feedbackTypeNm, '<s:message code="condition.feedback"/>');
                 if (alarmVal.probType != '') searchStr += setConditionValStr(alarmVal.probTypeNm, '<s:message code="condition.prob"/>');
