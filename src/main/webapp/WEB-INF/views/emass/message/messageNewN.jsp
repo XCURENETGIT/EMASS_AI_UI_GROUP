@@ -3390,6 +3390,7 @@
                         <div style="height:25px;">
                             <h5 style="font-size:13px;">■ <span style="color:#FF0000;"><s:message code="help.msg.default"/></span></h5>
                         </div>
+                        <br/>
                         <div>
                             <span>■ <s:message code="help.msg.all"/></span><br/>
                             <span style="padding-left:10px;font-weight: bold;"><s:message code="help.msg.all.ex"/></span><br/>

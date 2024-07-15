@@ -373,13 +373,13 @@ public class SolrCreateQuery {
 				} else {
 						StringBuilder querySb = new StringBuilder();
 						String[] terms = query.split(" ");
-						if(terms.length < 2) querySb.append( ('"')+SpecialStrRemove(query)+('"'));
+						if(terms.length < 2) querySb.append( ('"')+query.replaceAll("[\\+\\-=/&:><!^~\\/\"]", ""+('"')));
 						else {
 								for (int i = 0; i < terms.length; i++) {
 										if (terms[i].equals("|")) {
 												terms[i] = OR_PREFIX;
 										} else if (i > 0 && terms[i - 1].equals(OR_PREFIX) || terms[i].startsWith("+") || terms[i].startsWith("-")) {
-												terms[i] = doubleQuetosCharsCheck(terms[i]);
+												terms[i] = ('"') + terms[i] + ('"');
 										} else if (i < terms.length - 1 && !terms[i + 1].equals("|")) {
 												terms[i] = ('"') + terms[i] + ('"');
 										} else if (!terms[i].startsWith("+") && !terms[i].startsWith("-")) {
