@@ -111,14 +111,18 @@
         var attachTextTotalLine = '<%=attachTotalLine%>';
         var pageNum = 1;
         var kHighlight = '<%=keywordHighlight%>';
-
+        let piHighlightList = [
+	        'SN', 'CN', 'DN', 'FN','PN','MN','AN','CRN','SSN','IMEI','BRN','CPN','MCN'
+        ];
 		var ptnName = opener.getPatnName();
+		var patternKyword = opener.getPattern();
         $(document).ready(function () {
             
             if(ptnName != '') {
                 $('#patternDiv').css("display","");
                 popSetPatternDiv(ptnName)
             }else {$('#patternDiv').css("display","none");}
+
             
             /* var totalPageA = '';
 			for (var i= 0; i < totalPage;  i++) {
@@ -209,6 +213,7 @@
                 success: function (data, total) {
                     $('#attachText').text(data);
                     attachHighLight();
+					PatternHighlight();
                 },
                 error: function (status, message) {
                     ui.alertMsg(message);
@@ -235,6 +240,25 @@
             }
         }
 
+		function PatternHighlight(){
+			if (patternKyword.length == 0) return;
+			let piResultList = [];
+
+			for(let i = 0; i< patternKyword.length; i++){
+				if (piHighlightList.includes(patternKyword[i].piid)){
+					setAttachPatternHighLight(patternKyword[i].kwds, 'K');
+				}
+			}
+		}
+
+        function setAttachPatternHighLight(defaultText, type) {
+	        var body_obj = $("#attachText");
+	        var  splitText =  defaultText.split(',');
+	        for (var j = 0; j < splitText.length; j++) {
+		        if (splitText[j] == '' ) continue;
+		        $(body_obj).highlight(splitText[j], type);
+	        }
+        }
 
         function setFileNameHighLight(defaultText, type) {
             var attachDiv_obj = $("#attachName");
