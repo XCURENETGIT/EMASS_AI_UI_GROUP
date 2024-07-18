@@ -1741,10 +1741,10 @@
 				<button class="form_btn01" type="button" accesskey="Q" id="searchBtn"><s:message code="common.msg.search"/></button>
 			</div>
 			<div class="btnform">
-				<button type="button" class="btn01" accesskey="I" id="insertBtn"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
-				<button type="button" class="btn02" accesskey="D" id="deleteBtn"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
-				<button type="button" class="btn03" accesskey="U" id="makeInfoBtn"><span class="glyphicon glyphicon-import"></span>&nbsp;<s:message code="userInfo.info.insa"/></button>
-				<button type="button" class="btn05" <%=Common.isEquals(api_insaYn, "Y") ? "hide" : "" %>" accesskey="S"  id="setInfoBtn"><span class="glyphicon glyphicon-cog"></span>&nbsp;<s:message code="userInfo.set.insa"/></button>
+				<button type="button" class="btn01 " accesskey="I" id="insertBtn" style="display: none"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
+				<button type="button" class="btn02 " accesskey="D" id="deleteBtn" style="display: none"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
+				<button type="button" class="btn03 " accesskey="U" id="makeInfoBtn" style="display: none"><span class="glyphicon glyphicon-import"></span>&nbsp;<s:message code="userInfo.info.insa"/></button>
+				<button type="button" class="btn05" accesskey="S"  id="setInfoBtn" style="display: none"><span class="glyphicon glyphicon-cog"></span>&nbsp;<s:message code="userInfo.set.insa"/></button>
 				<div id="insaComment"><s:message code="userInfo.msg.insa.auto"/></div>
 			</div>
 		</div>
