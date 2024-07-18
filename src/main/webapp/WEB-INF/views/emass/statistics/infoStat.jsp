@@ -166,17 +166,14 @@
         })
 
         $('#privateDetailTab').attr('href',"#");
-        $("[name=oneVal]").css('display','none');
         
         $('#piType').change(function () {
             if($('#piType').val() == 'sum') {
                 $('#piCount').val('');
                 $('#privateDetailTab').attr('href',"#");
                 $('#privateChartTab').attr('href',"#privateChart");
-                $("[name=oneVal]").css('display','none');
             } else {
                 $('#piCount').val('');
-                $("[name=oneVal]").css('display','');
                 $('#privateDetailTab').attr('href',"#privateDetail");
                 $('#privateChartTab').attr('href',"#");
             }
@@ -409,7 +406,12 @@
 			<input type="hidden" id="userDept">
 			<input type="hidden" id="userJib">
 		</div>
+		<div class="searchSub w100">
+			<p class="red fs12 fb600 mat8" id="noticeMsg"><s:message code="condition.infoStat.notice"/></p>
+		</div>
+
 	</div>
+
 	<div class="content" style="padding-bottom: 50px;">
 		<div class="contentSub">
 			<div class="chartAreafull">
