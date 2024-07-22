@@ -1211,10 +1211,10 @@ public class SolrEdcStatController {
 
 		int piCnt = Integer.parseInt(piCount);
 		for (SolrEdcVO solrEdcVO :  solrVo.getEmass()) {
-			Map<String,Integer> piMap = new HashMap<>();
+			Map<String,Object> piMap = new HashMap<>();
 
-			Map<String,Integer> voPiMap = solrEdcVO.getPiMap();
-			for(Map.Entry<String,Integer> item : voPiMap.entrySet()){
+			Map<String,Object> voPiMap = solrEdcVO.getPiMap();
+			for(Map.Entry<String,Object> item : voPiMap.entrySet()){
 				if(Integer.parseInt(String.valueOf(item.getValue())) >= piCnt) piMap.put(item.getKey(),item.getValue());
 			}
 			solrEdcVO.setPiMap(piMap);
