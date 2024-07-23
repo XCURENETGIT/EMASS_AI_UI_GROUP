@@ -11,7 +11,7 @@ import com.xcurenet.common.util.locale.Prop;
 import com.xcurenet.emass.message.component.AttachFile;
 import com.xcurenet.emass.message.service.EmsReDefined;
 import com.xcurenet.emass.searchHistory.vo.SearchHistoryGroupVO;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import net.sf.json.JSON;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -55,7 +55,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 
-@Slf4j
+@Log4j2
 public class Common {
 
 	public static final String UTF8 = "UTF-8";
