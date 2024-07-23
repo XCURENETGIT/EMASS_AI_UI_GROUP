@@ -17,6 +17,10 @@ var keywordHighlight = 'true';
 var hostQuery = 'false';
 var count = 0;
 let patnName = '';
+let patternKyword = [];
+let piHighlightList = [
+    'SN', 'CN', 'DN', 'FN','PN','MN','AN','CRN','SSN','IMEI','BRN','CPN','MCN'
+];
 const originalBodyFontSize = 13;
 
 $(document).ready(function () {
@@ -702,6 +706,7 @@ function getBody(userCharset) {
             else $('#emassBody').html(data + getAppendGroupBody());
             $("#emassBody").select();
             Highlight();
+            PatternHighlight();
         },
         error: function (status, message) {
             ui.alertMsg(message);
@@ -1277,7 +1282,10 @@ function setMessage(msg) {
 
     setFileDiv(msg);			//file 및 OCR 처리
 
-    if (msg.patterns != null && msg.patterns != undefined && msg.patterns != '') patnName = getPiName(msg.patterns);
+    if (msg.patterns != null && msg.patterns != undefined && msg.patterns != ''){
+        patnName = getPiName(msg.patterns);
+        patternKyword = msg.patterns;
+    }
     setPatternDiv(msg.patterns);
 
     // alert(bodySize_str)
@@ -1298,6 +1306,10 @@ function setMessage(msg) {
 
 function getPatnName() {
     return patnName;
+}
+
+function getPattern(){
+    return patternKyword;
 }
 
 function userHtml(userList, tr, srcip, dstip, usrip) {
@@ -2096,7 +2108,6 @@ function Highlight() {
     if(bodyStrs != '') bodyStrs = bodyStrs.map((r) => r);
 
 
-
     if (fileNameStrs.length > 0) {
         if (searchkey.length == 0 || keywordHighlight == 'true') setFileNameHighLight(fileNameStrs, 'K'); //예약어 하이라이트 처리
     }
@@ -2108,6 +2119,17 @@ function Highlight() {
     }
 
 
+}
+
+function PatternHighlight() {
+    loading_off();
+    if (patternKyword.length == 0) return;
+
+    for(let i = 0; i< patternKyword.length; i++){
+       if (piHighlightList.includes(patternKyword[i].piid)){
+           setPatternHighLight(patternKyword[i].kwds, 'K');
+       }
+    }
 }
 
 
@@ -2141,6 +2163,15 @@ function setBodyHighLight(defaultText, type) {
             $(body_obj).highlight(splitText[j], type);
         }
     }
+}
+
+function setPatternHighLight(defaultText, type) {
+    var body_obj = $("#emassBody");
+        var  splitText =  defaultText.split(',');
+        for (var j = 0; j < splitText.length; j++) {
+            if (splitText[j] == '' ) continue;
+            $(body_obj).highlight(splitText[j], type);
+         }
 }
 
 

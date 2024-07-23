@@ -94,10 +94,10 @@ public class SolrEdcMessageVO {
 			edcVO.setReadYn(isRead(solrEdcVO.getContent().getChecked(), adminId) ? "Y" : "N");
 			edcVO.setConfidence( (maxScore > 0) ? String.valueOf((solrEdcVO.getScore() / maxScore ) * 100) : "0"); //유사도 계산
 			if(!Common.isEmpty(edcVO.getPi_amount())) {
-				List<Map<String, Integer>> piList = edcVO.getPi_amount();
-				Map<String, Integer> tempMap = new HashMap<>();
-				for (Map<String, Integer> pimap : piList) {
-					for(Map.Entry<String,Integer> item : pimap.entrySet()) {
+				List<Map<String, Object>> piList = edcVO.getPi_amount();
+				Map<String, Object> tempMap = new HashMap<>();
+				for (Map<String, Object> pimap : piList) {
+					for(Map.Entry<String,Object> item : pimap.entrySet()) {
 						tempMap.put(item.getKey(),item.getValue());
 					}
 				}

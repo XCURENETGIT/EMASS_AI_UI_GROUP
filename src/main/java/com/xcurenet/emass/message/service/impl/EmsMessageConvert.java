@@ -154,7 +154,7 @@ public class EmsMessageConvert {
 		}
 		if (data.getMlInfo() != null) {
 			vo.setMl_confd_class(Common.nvz(data.getMlInfo().getMlConfdClass()));
-			vo.setMl_confd_prob(Common.nvz(data.getMlInfo().getMlConfdProb()));
+			vo.setMl_confd_prob(Common.nvd(data.getMlInfo().getMlConfdProb()));
 			vo.setMl_confd_userid(Common.nvl(data.getMlInfo().getMlConfdUserId()));
 			vo.setMl_confd_feedback(Common.nvz(data.getMlInfo().getMlConfdFeedBack()));
 		}

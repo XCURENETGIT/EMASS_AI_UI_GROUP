@@ -977,7 +977,10 @@
         grid.colAdd('user', '<s:message code="consent.user"/>', 120, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
 	        return highlightSearchStr(value, "user");
         });
-        grid.colAdd('usrId', '<s:message code="common.msg.account"/>', 110, 'center', false, 'nomal');
+        grid.colAdd('usrId', '<s:message code="common.msg.account"/>', 110, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+	        return highlightSearchStr(value, "usrId");
+        });
+
         grid.colAdd('businm', '<s:message code="common.org.busi"/>', 120, 'center', true, 'nomal');
         grid.colAdd('ip_businm', '<s:message code="message.actual.business"/>', 120, 'center', true, 'nomal');
         grid.colAdd('deptnm', '<s:message code="common.org.dept"/>', 120, 'center', false, 'nomal');
