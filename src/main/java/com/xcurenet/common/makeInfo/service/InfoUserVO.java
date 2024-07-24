@@ -20,6 +20,7 @@ public class InfoUserVO {
 	private String JIKGUBCD;
 	private String JIKGUBNM;
 	private String CEO;
+	private String SABUN;
 
 
 

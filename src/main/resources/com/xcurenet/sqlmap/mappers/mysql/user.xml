@@ -212,8 +212,8 @@
 
 	<!-- 사용자 등록 -->
 	<insert id="insertUser" parameterType="userVO">
-		INSERT INTO UI_USERS (USER_ID, USER_NM, COCD, GENERALCD, BUSICD, DEPTCD, JIKINCD, JIKGUBCD, CEO)
-		VALUES (#{userId}, #{userNm}, #{coCd}, #{generalCd}, #{busiCd}, #{deptCd}, #{jikinCd}, #{jikgubCd}, #{ceo})
+		INSERT INTO UI_USERS (USER_ID, USER_NM, COCD, GENERALCD, BUSICD, DEPTCD, JIKINCD, JIKGUBCD, CEO, SABUN)
+		VALUES (#{userId}, #{userNm}, #{coCd}, #{generalCd}, #{busiCd}, #{deptCd}, #{jikinCd}, #{jikgubCd}, #{ceo}, #{sabun})
 	</insert>
 
 	<!-- 사용자 수정 -->
@@ -226,7 +226,8 @@
 				DEPTCD 		= #{deptCd},
 				JIKINCD 	= #{jikinCd},
 				JIKGUBCD	= #{jikgubCd},
-				CEO         = #{ceo}
+				CEO         = #{ceo},
+				SABUN       = #{sabun}
 		WHERE	USER_ID 	= #{userId}
 	</update>
 
@@ -298,6 +299,7 @@
 				A.JIKGUBCD AS jikgubCd,
 				A.userIp,
 				CAST(A.userEmail AS CHAR) AS userEmail,
+				A.SABUN AS sabun,
 				A.ceo,
 				(SELECT B.CONM FROM UI_CO B WHERE A.COCD = B.COCD) AS coNm,
 				(SELECT B.GENERALNM FROM UI_GENERAL B WHERE A.GENERALCD = B.GENERALCD) AS generalNm,
@@ -306,7 +308,7 @@
 				(SELECT B.JIKINNM FROM UI_JIKIN B WHERE A.JIKINCD = B.JIKINCD) AS jikinNm,
 				(SELECT B.JIKGUBNM FROM UI_JIKGUB B WHERE A.JIKGUBCD = B.JIKGUBCD) AS jikgubNm
 		FROM	(
-				SELECT  A.USER_ID, A.USER_NM, A.COCD, A.GENERALCD, A.BUSICD, A.DEPTCD, A.JIKINCD, A.JIKGUBCD,
+				SELECT  A.USER_ID, A.USER_NM, A.COCD, A.GENERALCD, A.BUSICD, A.DEPTCD, A.JIKINCD, A.JIKGUBCD, A.SABUN,
 						(SELECT  GROUP_CONCAT( DISTINCT (B.USER_IP) ORDER BY INET_ATON(B.USER_IP) SEPARATOR ', ') FROM UI_USER_IP B WHERE A.USER_ID = B.USER_ID) AS userIp,
 						(SELECT  GROUP_CONCAT( DISTINCT
 						<if test='encryptUseYN == "Y"'>
@@ -337,6 +339,9 @@
 					</if>
 					<if test='searchType=="userNm"'>
 						AND		USER_NM LIKE CONCAT('%', #{searchStr}, '%')
+					</if>
+					<if test='searchType=="sabun"'>
+						AND		SABUN LIKE CONCAT('%', #{searchStr}, '%')
 					</if>
 					<if test='searchType=="userEmail"'>
 						AND		EXISTS ( SELECT USER_ID FROM UI_USER_EMAIL B WHERE

@@ -332,6 +332,11 @@
                         ui.alertMsg('<s:message code="userInfo.msg.select.ceocolone"/>')
                         return;
                     }
+	                var varRegexp_sabun = new RegExp("sabun", "ig");
+	                if(JSON.stringify(columnArray).match(varRegexp_sabun) !=null && JSON.stringify(columnArray).match(varRegexp_sabun).length > 1){
+		                ui.alertMsg('<s:message code="userInfo.msg.select.sabuncolone"/>')
+		                return;
+	                }
                 }
                 var checkedInsaText = '';
                 var checkedInsa = $('input:radio[name="insa\\.auto"]:checked').val();
@@ -519,6 +524,7 @@
                 $('#userPop').attr('mode', 'insert');
                 $('#userPop').modal();
 
+				$('#sabun').val("");
                 $('#userId,#userNm,#coCd_inUser,#busiCd_inUser,#generalCd_inUser,#deptCd_inUser,#jikgubCd_inUser,#jikinCd_inUser,#userIp,#userEmail').val('');
                 $('#ceo_inUser').val('N');
                 coSelectDisabled();
@@ -745,6 +751,8 @@
             }
             else if(value == 'userEmail'){
                 return 'E-mail';
+            }else if (value == 'sabun'){
+	            return '<s:message code="common.msg.userid"/>';
             }
         }
         function setInsaColumnVal(data, id){
@@ -1188,6 +1196,7 @@
             result+='<option value="deptNm"><s:message code="common.org.deptnm"/></option>';
             result+='<option value="jikgubNm"><s:message code="common.org.jikgubnm"/></option>';
             result+='<option value="jikinNm"><s:message code="common.org.jikinnm"/></option>';
+            result+='<option value="sabun"><s:message code="common.msg.userid"/></option>';
             result+='<option value="">skip this column(<s:message code="userInfo.duplicate.possible"/>)</option>';
             result+='<option value="delete" style="background-color:black;color:white;"><s:message code="common.msg.delete"/></option>';
             return result;
@@ -1686,6 +1695,16 @@
 							<%} %>
 						</div>
 					</div>
+
+					<div class="row">
+						<div class="col-35">
+							<label for="sabun" class="fname"><s:message code="common.msg.userid"/></label>
+						</div>
+						<div class="col-65">
+							<input type="text" class="w100" name="sabun" id="sabun" placeholder="<s:message code="common.msg.userid"/>">
+						</div>
+					</div>
+
 					<div class="row">
 						<div class="col-35">
 							<label for="userEmail" class="fname">E-Mail</label>
@@ -1732,6 +1751,7 @@
 					<option value="userNm"><s:message code="common.msg.name"/></option>
 					<option value="userEmail">E-Mail</option>
 					<option value="userIp">IP</option>
+					<option value="sabun"><s:message code="common.msg.userid"/></option>
 					<option value="userDept"><s:message code="common.org.dept"/></option>
 				</select>
 				</select>
@@ -1785,7 +1805,9 @@
     grid.colAdd('busiNm', '<s:message code="common.org.busi"/>', 120, 'left', false, 'nomal');
     grid.colAdd('deptNm', '<s:message code="common.org.dept"/>', 120, 'left', false, 'nomal');
     grid.colAdd('jikgubNm', '<s:message code="common.org.jikgub"/>', 80, 'left', false, 'nomal');
+    grid.colAdd('jikgubNm', '<s:message code="common.org.jikgub"/>', 80, 'left', false, 'nomal');
     grid.colAdd('jikinNm', '<s:message code="common.org.jikin"/>', 80, 'left', false, 'nomal');
+    grid.colAdd('sabun', '<s:message code="common.msg.userid"/>', 80, 'left', false, 'nomal');
     grid.colAdd('ceo', '<s:message code="userInfo.usertype"/>', 80, 'center', false, 'normal', function(row, cell, value, columnDef, dataContext){
         var ceo = grid.getValue(row, 'ceo');
         if(ceo=='Y')return 'CEO';
@@ -1821,6 +1843,7 @@
             $('#userIp').val(grid.getValue(grid.Row, 'userIp'));
             $('#userEmail').val(grid.getValue(grid.Row, 'userEmail'));
             $('#ceo_inUser').val(grid.getValue(grid.Row, 'ceo'));
+            $('#sabun').val(grid.getValue(grid.Row, 'sabun'));
             coSelectDisabled();
 
             if (grid.Col == grid.ColIndex('userId')) {

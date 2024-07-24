@@ -30,4 +30,5 @@ public class UserVO {
 	private String encryptKey;
 	private String account;
 	private String serviceCd;
+	private String sabun;
 }

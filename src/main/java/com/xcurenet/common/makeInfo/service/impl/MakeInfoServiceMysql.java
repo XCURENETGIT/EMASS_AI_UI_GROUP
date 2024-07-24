@@ -394,6 +394,7 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 							.NAME((String) obj.get("NAME"))
 							.SUBORGCD((String) obj.get("SUBORGCD"))
 							.SUBORGNM((String) obj.get("SUBORGNM"))
+							.SABUN((String) obj.get("SABUN"))
 							.VERSION((int) obj.get("VERSION"))
 							.build();
 					mongoUtil.insert(infoUserVO, collectionName);
