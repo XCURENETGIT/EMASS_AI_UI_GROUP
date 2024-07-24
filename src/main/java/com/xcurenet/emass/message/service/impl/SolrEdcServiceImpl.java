@@ -5,6 +5,7 @@ import com.xcurenet.EmassproApplication;
 import com.xcurenet.admin.service.AuthorityService;
 import com.xcurenet.admin.service.AuthorityVO;
 import com.xcurenet.admin.service.impl.AdminServiceImpl;
+import com.xcurenet.common.elasticsearch.ElasticsearchConfig;
 import com.xcurenet.common.snmp.get.GetSnmp;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.TimeUtil;
@@ -20,11 +21,16 @@ import lombok.extern.log4j.Log4j2;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.cxf.endpoint.ClientCallback;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.SortClause;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.elasticsearch.ElasticsearchException;
+import org.elasticsearch.action.admin.cluster.state.ClusterStateRequest;
+import org.elasticsearch.action.admin.cluster.state.ClusterStateResponse;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.*;
 import org.elasticsearch.script.Script;
 import org.elasticsearch.search.aggregations.*;
@@ -36,6 +42,7 @@ import org.elasticsearch.search.aggregations.pipeline.BucketSortPipelineAggregat
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
+import org.jasypt.commons.CommonUtils;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -73,11 +80,16 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	public static IndexCoordinates defaultIndex = IndexCoordinates.of("edc_*");
 	public static IndexCoordinates defaultHistoryIndex = IndexCoordinates.of("ems_search_history_*");
 
-	@Autowired
-	@Qualifier("elasticsearchTemplate")
-	private ElasticsearchOperations operation;
+//	@Autowired
+//	@Qualifier("elasticsearchTemplate")
+//	private ElasticsearchOperations operation; // 고수준의 connector 객체
 
-	@Resource(name = "authorityService")
+	@Resource
+	private ElasticsearchConfig elasticsearchConfig;
+	private ElasticsearchRestTemplate operation; // 저수준 & 고수준 connector  (client 메서드 접근 가능)
+
+
+		@Resource(name = "authorityService")
 	private AuthorityService authorityService;
 
 	@Resource(name = "configAdminService")
@@ -85,6 +97,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 	@Autowired
 	private AdminUserGroupService adminUserGroupService;
+
 
 
 	@Autowired
@@ -102,6 +115,8 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 	@Override
 	public SearchHistoryGroupVO getSearchHistoryList(SolrQuery sq) throws SolrServerException, IOException {
+		if(Common.isEmpty(operation)) operation = elasticsearchConfig.elasticsearchTemplate();
+
 		log.info("[QUERY] {}", sq.getQuery());
 		String filterQuery = (null != sq.getFilterQueries()) ? String.join(" ", sq.getFilterQueries()) : "";
 		Query searchQuery = new NativeSearchQueryBuilder()
@@ -135,6 +150,7 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	/* 공용검색 */
 	@Override
 	public SearchHits<SolrEdcVO> getList(SolrQuery sq) throws SolrServerException, IOException {
+			if(Common.isEmpty(operation)) operation = elasticsearchConfig.elasticsearchTemplate();
 		//sq.setParam("searchAfter", "20240607144748, 20240607144748.TQJA2VGNN3C25O7G6IM2LTTOA4LZ3227");
 		SearchHits<SolrEdcVO> searchHits = null;
 		try {
@@ -1117,5 +1133,6 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 //		//highlight 설정
 //		HighlightBuilder highlightBuilder = new HighlightBuilder().preTags("<highlight>").postTags("</highlight>");
 //		highlightBuilder.field(s);
+
 
 }
