@@ -159,6 +159,8 @@ public class UserJob extends UserCommon implements Job {
 				}
 			} else if (Common.isEquals(userAttr, "generalNm")) {
 				user.setGeneralNm(val);
+			}else if (Common.isEquals(userAttr,"sabun")){
+				user.setSabun(val);
 			} else if (Common.isEquals(userAttr, "deptNm")) {
 				if(Common.isEquals(deptBasepoint, "F")) {
 					user.setDeptNm(val);

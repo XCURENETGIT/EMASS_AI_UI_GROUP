@@ -30,8 +30,8 @@
 	</delete>
 
 	<insert id="replaceUser" parameterType="userVO">
-		INSERT IGNORE INTO UI_USERS (USER_ID, USER_NM, COCD, GENERALCD, BUSICD, DEPTCD, JIKINCD, JIKGUBCD)
-		VALUES ( #{userId}, #{userNm}, #{coCd}, #{generalCd}, #{busiCd}, #{deptCd}, #{jikinCd}, #{jikgubCd} )
+		INSERT IGNORE INTO UI_USERS (USER_ID, USER_NM, COCD, GENERALCD, BUSICD, DEPTCD, JIKINCD, JIKGUBCD, SABUN)
+		VALUES ( #{userId}, #{userNm}, #{coCd}, #{generalCd}, #{busiCd}, #{deptCd}, #{jikinCd}, #{jikgubCd}, #{sabun} )
 	</insert>
 	<!-- 인사 정보 자동 연동 -->
 
