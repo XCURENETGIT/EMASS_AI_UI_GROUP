@@ -248,7 +248,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 			ConfigAdminVO configAdminVO = configAdminService.getConfAdmin(Config.USER_FORMAT, adminId);
 			if (configAdminVO == null || Common.isEmpty(configAdminVO.getVal())) {
 				configAdminVO = new ConfigAdminVO();
-				configAdminVO.setVal(Config.getString(Config.USER_FORMAT, "#name#/#email#/#businm#/#deptnm#/#jikgubnm#/#ip#"));
+				configAdminVO.setVal(Config.getString(Config.USER_FORMAT, "#name#/#email#/#businm#/#deptnm#/#jikgubnm#/#ip#/#sabun#"));
 			}
 			String formatval = configAdminVO.getVal();
 			log.debug("Message : " + emsMessageVO);

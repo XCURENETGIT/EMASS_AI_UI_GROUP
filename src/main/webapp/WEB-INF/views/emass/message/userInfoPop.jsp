@@ -134,6 +134,10 @@ function setInOutCount( data){
 				if (value == null) return '-'; 
 				else return value;
 			});
+			grid.colAdd('sabun', '<s:message code="common.msg.userid"/>', 100, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+				if (value == null) return '-';
+				else return value;
+			});
 			grid.onClick = function() {
 				if (grid.Col == grid.ColIndex('code')) {
 					setSelectedData();

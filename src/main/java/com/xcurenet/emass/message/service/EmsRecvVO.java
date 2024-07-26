@@ -29,6 +29,7 @@ public class EmsRecvVO {
 	private String viewStr;
 	private String formatStr;
 	private String userEmail;
+	private String sabun;
 
 
 	public static Map<String, Object> toMap(EmsRecvVO person) {

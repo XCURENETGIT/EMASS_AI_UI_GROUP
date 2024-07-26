@@ -975,7 +975,11 @@
 						</tr>
 						<tr>
 							<th>IP</th>
-							<td><div id="userIpPop"></div></td>
+							<td><div class="ellipsis" id="userIpPop"></div></td>
+						</tr>
+						<tr>
+							<th><s:message code="common.msg.userid"/></th>
+							<td><div id="userSabunPop"></div></td>
 						</tr>
 					</table>
 				</div>

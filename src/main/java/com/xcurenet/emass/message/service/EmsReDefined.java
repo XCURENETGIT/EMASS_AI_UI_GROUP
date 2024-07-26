@@ -565,6 +565,7 @@ public class EmsReDefined {
 		}
 		else if(Common.isEquals(key, "businm")) return Common.nvl(u.getBusiNm());
 		else if(Common.isEquals(key, "ip")) return Common.nvl(u.getIp());
+		else if(Common.isEquals(key, "sabun")) return Common.nvl(u.getSabun());
 		else return Common.EMPTY;
 	}
 

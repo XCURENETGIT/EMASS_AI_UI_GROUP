@@ -60,4 +60,7 @@ public class EmassMailPropertiesData {
 
 	@Field("inside")
 	private String inside;
+
+	@Field("sabun")
+	private String sabun;
 }

@@ -845,12 +845,13 @@
                     customInsaFormatInputVal = customInsaFormatInputVal.replaceAll('deptnm','<s:message code="message.help.sample_deptnm"/>');
                     customInsaFormatInputVal = customInsaFormatInputVal.replaceAll('jikgubnm','<s:message code="message.help.sample_jikgubnm"/>');
                     customInsaFormatInputVal = customInsaFormatInputVal.replaceAll('ip','192.168.0.1');
+                    customInsaFormatInputVal = customInsaFormatInputVal.replaceAll('sabun','20241234');
                     customInsaFormatInputVal = customInsaFormatInputVal.replaceAll(' ','');
                     customInsaFormatInputVal = '<s:message code="message.help.example"/>) '+customInsaFormatInputVal
                     $("#insaFormatInputEx").val(customInsaFormatInputVal)
 
                 }
-                var formatArr = ['name','email','businm','deptnm','jikgubnm','ip'];
+                var formatArr = ['name','email','businm','deptnm','jikgubnm','ip','sabun'];
                 var insaFormatstr = insaFormatInputVal;
                 for (var i = 0; i < formatArr.length; i++) {
                     var val = formatArr[i];
@@ -886,6 +887,7 @@
                 insaFormatInputVal = insaFormatInputVal.replaceAll('deptnm','#deptnm#');
                 insaFormatInputVal = insaFormatInputVal.replaceAll('jikgubnm','#jikgubnm#');
                 insaFormatInputVal = insaFormatInputVal.replaceAll('ip','#ip#');
+                insaFormatInputVal = insaFormatInputVal.replaceAll('sabun','#sabun#');
                 setConfAdmin('message.user.format',insaFormatInputVal);
             });
             $("#config_toggle").click(function(){
@@ -3329,10 +3331,10 @@
 									<input  id="insaFormatInputEx" style="width:435px;cursor: auto !important;" disabled type="text" value="<s:message code="message.help.example"/>)" data-format="name,emaile,busi,dept,jikgub,ip"/>
 								</span>
                                         <select id="messageFormat" size="8" style="width:435px; margin-top: 10px; padding-top: 2px; height:110px;">
-                                            <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_name"/>/hong@xcurent.com/<s:message code="message.help.sample_bunm"/>/<s:message code="message.help.sample_deptnm"/>/<s:message code="message.help.sample_jikgubnm"/>/192.168.0.1" data-format="name/email/businm/deptnm/jikgubnm/ip">name/email/businm/deptnm/jikgubnm/ip</option>
-                                            <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_name"/>-hong@xcurent.com-<s:message code="message.help.sample_bunm"/>-<s:message code="message.help.sample_deptnm"/>-<s:message code="message.help.sample_jikgubnm"/>-192.168.0.1" data-format="name-email-businm-deptnm-jikgubnm-ip">name-email-businm-deptnm-jikgubnm-ip</option>
-                                            <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_name"/>,hong@xcurent.com,<s:message code="message.help.sample_bunm"/>,<s:message code="message.help.sample_deptnm"/>,<s:message code="message.help.sample_jikgubnm"/>,192.168.0.1" data-format="name,email,businm,deptnm,jikgubnm,ip">name,email,businm,deptnm,jikgubnm,ip</option>
-                                            <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_name"/>[hong@xcurent.com,<s:message code="message.help.sample_bunm"/>,<s:message code="message.help.sample_deptnm"/>,<s:message code="message.help.sample_jikgubnm"/>,192.168.0.1]" data-format="name[email,businm,deptnm,jikgubnm,ip]">name[email,businm,deptnm,jikgubnm,ip]</option>
+                                            <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_name"/>/hong@xcurent.com/<s:message code="message.help.sample_bunm"/>/<s:message code="message.help.sample_deptnm"/>/<s:message code="message.help.sample_jikgubnm"/>/192.168.0.1/20241234" data-format="name/email/businm/deptnm/jikgubnm/ip/sabun">name/email/businm/deptnm/jikgubnm/ip/sabun</option>
+                                            <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_name"/>-hong@xcurent.com-<s:message code="message.help.sample_bunm"/>-<s:message code="message.help.sample_deptnm"/>-<s:message code="message.help.sample_jikgubnm"/>-192.168.0.1-20241234" data-format="name-email-businm-deptnm-jikgubnm-ip-sabun">name-email-businm-deptnm-jikgubnm-ip-sabun</option>
+                                            <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_name"/>,hong@xcurent.com,<s:message code="message.help.sample_bunm"/>,<s:message code="message.help.sample_deptnm"/>,<s:message code="message.help.sample_jikgubnm"/>,192.168.0.1,20241234" data-format="name,email,businm,deptnm,jikgubnm,ip,sabun">name,email,businm,deptnm,jikgubnm,ip,sabun</option>
+                                            <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_name"/>[hong@xcurent.com,<s:message code="message.help.sample_bunm"/>,<s:message code="message.help.sample_deptnm"/>,<s:message code="message.help.sample_jikgubnm"/>,192.168.0.1,20241234]" data-format="name[email,businm,deptnm,jikgubnm,ip,sabun]">name[email,businm,deptnm,jikgubnm,ip,sabun]</option>
                                             <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_bunm"/>/<s:message code="message.help.sample_deptnm"/>/<s:message code="message.help.sample_name"/>" data-format="businm/deptnm/name">businm/deptnm/name</option>
                                             <option value="<s:message code="message.help.example"/>) <s:message code="message.help.sample_bunm"/>-<s:message code="message.help.sample_deptnm"/>-<s:message code="message.help.sample_jikgubnm"/>-<s:message code="message.help.sample_name"/>" data-format="businm-deptnm-jikgubnm-name">businm-deptnm-jikgubnm-name</option>
                                             <option value="<s:message code="message.help.example"/>) [<s:message code="message.help.sample_bunm"/>-<s:message code="message.help.sample_deptnm"/>-<s:message code="message.help.sample_jikgubnm"/>]-<s:message code="message.help.sample_name"/>" data-format="[businm-deptnm-jikgubnm]-name">[businm-deptnm-jikgubnm]-name</option>

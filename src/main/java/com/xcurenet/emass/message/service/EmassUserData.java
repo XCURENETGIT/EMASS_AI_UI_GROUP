@@ -77,4 +77,7 @@ public class EmassUserData {
 
 	@Field("email")
 	private String email;
+
+	@Field("sabun")
+	private String sabun;
 }

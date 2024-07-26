@@ -275,6 +275,7 @@ public class EmsMessageConvert {
 			vo.setJikgubCd(recv.getJikgubCd());
 			vo.setJikgubNm(recv.getJikgubNm());
 			vo.setInSide(recv.getInside());
+			vo.setSabun(recv.getSabun());
 			result.add(vo);
 		}
 		return result;
@@ -300,6 +301,7 @@ public class EmsMessageConvert {
 		vo.setJikgubNm(data.getJikgubNm());
 		vo.setInSide(data.getInside());
 		vo.setEMail(data.getEmail());
+		vo.setSabun(data.getSabun());
 
 
 		result.add(vo);

@@ -79,7 +79,7 @@ SELECT 'message.epmsg.val', 'N', 'N', NOW() FROM DUAL
 WHERE NOT EXISTS (SELECT * FROM UI_CONF WHERE CONF_ID='message.epmsg.val');
 
 INSERT INTO UI_CONF (CONF_ID, VAL, DEFAULT_VAL, UPDATE_DT)
-SELECT 'message.user.format', '#name#/#email#/#businm#/#deptnm#/#jikgubnm#/#ip#', '#name#/#email#/#businm#/#deptnm#/#jikgubnm#/#ip#', NOW() FROM DUAL
+SELECT 'message.user.format', '#name#/#email#/#businm#/#deptnm#/#jikgubnm#/#ip#/#sabun#', '#name#/#email#/#businm#/#deptnm#/#jikgubnm#/#ip#/#sabun#', NOW() FROM DUAL
 WHERE NOT EXISTS (SELECT * FROM UI_CONF WHERE CONF_ID='message.user.format');
 
 INSERT INTO UI_CONF (CONF_ID, VAL, DEFAULT_VAL, UPDATE_DT)

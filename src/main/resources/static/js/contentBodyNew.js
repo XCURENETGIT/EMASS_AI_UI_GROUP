@@ -520,6 +520,8 @@ $(document).ready(function () {
                 else $('#userJikgubNmPop').text('');
                 if (obj.attr('recvip') != '') $('#userIpPop').text(obj.attr('recvip'));
                 else $('#userIpPop').text('');
+                if (obj.attr('recvsabun') != '') $('#userSabunPop').text(obj.attr('recvsabun'));
+                else $('#userSabunPop').text('');
 
                 var left = obj.offset().left;
                 if (obj.offset().left + $('#userInfoDiv').width() > $(window).width()) {
@@ -1361,6 +1363,7 @@ function userHtml(userList, tr, srcip, dstip, usrip) {
         userDivHtml += ' recvsuborgnm="' + nvl(user.subOrgNm) + '"';
         userDivHtml += ' recvdeptnm="' + nvl(user.deptNm) + '"';
         userDivHtml += ' recvjikgubnm="' + nvl(user.jikgubNm) + '"';
+        userDivHtml += ' recvsabun="' + nvl(user.sabun) + '"';
         userDivHtml += '>';
         userDivHtml += user.viewStr + (i != userList.length - 1 ? '; ' : '');
         userDivHtml += ' </span>';

@@ -51,7 +51,7 @@ IGNORE INTO UI_CONF (CONF_ID, VAL, DEFAULT_VAL, UPDATE_DT) VALUES ('google.otp.u
 INSERT
 IGNORE INTO UI_CONF (CONF_ID, VAL, DEFAULT_VAL, UPDATE_DT) VALUES ('recvs.jikgub.use', 'false', 'false', NOW());
 INSERT
-IGNORE INTO UI_CONF (CONF_ID, VAL, DEFAULT_VAL, UPDATE_DT) VALUES ('message.user.format', '#name#/#email#/#businm#/#deptnm#/#jikgubnm#/#ip#', '#name#/#email#/#businm#/#deptnm#/#jikgubnm#/#ip#', NOW());
+IGNORE INTO UI_CONF (CONF_ID, VAL, DEFAULT_VAL, UPDATE_DT) VALUES ('message.user.format', '#name#/#email#/#businm#/#deptnm#/#jikgubnm#/#ip#/#sabun#', '#name#/#email#/#businm#/#deptnm#/#jikgubnm#/#ip#/#sabun#', NOW());
 INSERT
 IGNORE INTO UI_CONF (CONF_ID, VAL, DEFAULT_VAL, UPDATE_DT) VALUES ('system.arch', 'standalone', 'standalone', NOW());
 INSERT
