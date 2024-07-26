@@ -39,4 +39,5 @@ public class AdminUserGroupVO {
 	private int NUM;
 	private String account;
 	private String serviceCd;
+	private String sabun;
 }

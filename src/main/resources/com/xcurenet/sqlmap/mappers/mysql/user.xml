@@ -380,6 +380,7 @@
 						LIKE CONCAT('%', #{searchStr}, '%')
 						OR	userIp LIKE CONCAT('%', #{searchStr}, '%')
 						OR	deptNm LIKE CONCAT('%', #{searchStr}, '%')
+						OR	sabun LIKE CONCAT('%', #{searchStr}, '%')
 					)
 			</if>
 		</if>
