@@ -177,7 +177,7 @@
 			"to", "cc", "bcc", "recvs_name", "tname", "cname", "bname", "ocr_attach", "pi_amount.pi_DRM","pi_total",
 			"pi_amount.pi_total", "pi_amount.pi_ID", "pi_amount.pi_EF", "pi_amount.pi_PN", "pi_amount.pi_FN", "pi_amount.pi_DN", "pi_amount.pi_SN", "pi_amount.pi_CN", "pi_amount.pi_EC",
 			"pi_amount.pi_IMEI","pi_amount.pi_MCN","pi_amount.pi_CPN","pi_amount.pi_BRN","pi_amount.pi_SSN","pi_amount.pi_CRN","pi_amount.pi_AN","pi_amount.pi_MN","epmsg_type","reprocess",
-			"ml_confd_class", "ml_confd_feedback", "ml_confd_prob", "allofus"
+			"ml_confd_class", "ml_confd_feedback", "ml_confd_prob", "allofus","sabun"
 		];
 
         <%if( consent && Common.isEquals(firstAdminYn, "N") ){ %>
@@ -1028,6 +1028,24 @@
 							addQueryText += ")";
 						}
 						break;
+					case "sabun":
+						var sabun = $('#sabun').val();
+						if(host != "") {
+							addQueryText = queryAddMinus + "(";
+
+							var sabunArr = sabun.split("|");
+							var sabuntStr = "";
+
+							for(var i = 0; i < sabunArr.length; i++) {
+								if(i > 0) {
+									sabuntStr += " "
+								}
+								sabuntStr += sabunArr[i].ltrim().rtrim() + "*";
+							}
+							addQueryText += " sabun:(" + sabuntStr +")";
+							addQueryText += ")";
+						}
+						break;
 					case "sender":
 						var sender = $('#sender').val();
 						if(sender != "") {
@@ -1791,6 +1809,17 @@
 									<td><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="host"><i class="glyphicon glyphicon-minus"></i></button></td>
 									<td>host, host_str</td>
 									<td><span class="fa fa-question queryHelp" data-helptext="<s:message code="query.make.multi.message"/>"></span></td>
+								</tr>
+								<tr>
+									<th><s:message code="common.msg.userid"/></th>
+									<td>
+										<input type="text" class="form-control input-xs border-radius-none" id="sabun" placeholder="<s:message code="common.msg.userid"/>" style="width: 313px;">
+									</td>
+									<td><button type="button" class="btn btn-xs btn-success queryAdd" data-queryType="sabun">AND</button></td>
+									<td style="text-align: center;"><button type="button" class="btn btn-xs btn-info queryOr" data-queryType="sabun">OR</button></td>
+									<td><button type="button" class="btn btn-xs btn-warning queryMinus" data-queryType="sabun"><i class="glyphicon glyphicon-minus"></i></button></td>
+									<td>sabun</td>
+									<td><span class="fa fa-question queryHelp" data-helptext="<s:message code="common.msg.userid"/>"></span></td>
 								</tr>
 								<tr>
 									<th><s:message code="condition.sender"/></th>

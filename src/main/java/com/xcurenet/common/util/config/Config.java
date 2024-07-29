@@ -115,6 +115,7 @@ public class Config {
 	public static Map<String, String> userJikgubs; //(key : id) (value: 이름) 통계 이름 추출 용도
 
 	public static Map<String, String> userEmails; //(key : id) (value: 이름) 통계 이름 추출 용도
+	public static Map<String, String> userSabun; //(key : id) (value: 이름) 통계 이름 추출 용도
 
 	public static Map<String, Object> userNamebyEmails; //(key : id) (value: 이름) 통계 이름 추출 용도
 
@@ -401,6 +402,8 @@ public class Config {
 
 			reloadUserIds2();
 
+			reloadSabun();
+
 
 
 
@@ -584,6 +587,16 @@ public class Config {
 		log.info("사용자 Email : {}", emails.size());
 	}
 
+
+	public void reloadSabun() {
+		userSabun = new HashMap<>();
+		List<Map<String, String>> sabuns = userService.getUserSabun();
+		for (Map<String, String> sabun : sabuns) {
+			userSabun.put(sabun.get("hash_key"), sabun.get("value"));
+		}
+		log.info("사용자 사번 : {}", sabuns.size());
+	}
+
 	public void reloadNamebyEmail() {
 		userNamebyEmails = new HashMap<>();
 		List<Map<String, String>> emails = userService.getUserNamebyEmail();
@@ -655,6 +668,10 @@ public class Config {
 
 	public static String getUserEmail(final String userKey) {
 		return Common.nvl(userEmails.get(userKey.toLowerCase()));
+	}
+
+	public static String getUserSabun(final String userKey) {
+		return Common.nvl(userSabun.get(userKey.toLowerCase()));
 	}
 
 	public static void reloadIpRange() {

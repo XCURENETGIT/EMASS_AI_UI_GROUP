@@ -468,6 +468,7 @@ function deleteUserGroupItem (){
 		gridItem.colAdd('deptNm', '<s:message code="common.org.dept"/>', 120, 'left', false, 'nomal');
 		gridItem.colAdd('jikgubNm', '<s:message code="common.org.jikgub"/>', 80, 'left', false, 'nomal');
 		gridItem.colAdd('jikinNm', '<s:message code="common.org.jikin"/>', 80, 'left', false, 'nomal');
+		gridItem.colAdd('sabun', '<s:message code="common.msg.userid"/>', 120, 'left', false, 'nomal');
 		gridItem.colAdd('ceo', '<s:message code="userInfo.usertype"/>', 80, 'center', false, 'normal', function(row, cell, value, columnDef, dataContext){
 			var ceo = gridItem.getValue(row, 'ceo');
 			if(ceo=='Y')return 'CEO';

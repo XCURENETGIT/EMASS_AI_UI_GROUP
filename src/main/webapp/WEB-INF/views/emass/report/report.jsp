@@ -379,6 +379,7 @@
                             addStr += "		<col width='300'>";
                             addStr += "		<col width='150'>";
                             addStr += "		<col width='250'>";
+                            addStr += "		<col width='250'>";
                             addStr += "		<col width='150'>";
                         } else {
                             addStr += "		<col width='*'>";
@@ -396,6 +397,7 @@
                             addStr += "			<th style='text-align:left;'><s:message code='common.org.deptnm'/></th>";
                             addStr += "			<th style='text-align:left;'><s:message code='common.org.jikgubnm'/></th>";
                             addStr += "			<th style='text-align:left;'>E-Mail</th>";
+                            addStr += "			<th style='text-align:left;'><s:message code="common.msg.userid"/></th>";
                         }
                         addStr += "				<th style='text-align:right;'><s:message code='common.msg.count'/></th>";
                         addStr += "			</tr>";
@@ -413,6 +415,7 @@
                                 addStr += "				<td class='left' style='text-align:left;'>"+dataList.deptnm+"</td>";
                                 addStr += "				<td class='left' style='text-align:left;'>"+dataList.jikgubnm+"</td>";
                                 addStr += "				<td class='left' style='text-align:left;'>"+dataList.email+"</td>";
+                                addStr += "				<td class='left' style='text-align:left;'>"+dataList.sabun+"</td>";
                             }
                             addStr += "				<td class='right' style='text-align:right;'>"+dataList.count.comma()+"</td>";
                             addStr += "			</tr>";

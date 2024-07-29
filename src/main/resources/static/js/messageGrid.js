@@ -152,6 +152,10 @@ function initGrid( currGrid, gridColumn){
 		else return 'Yes'
 	});
 
+	currGrid.colAdd('sabun', gridColumn.sabun, 70, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+		return highlightSearchStr(value, "sabun");
+	});
+
 
 	currGrid.loadHeader(true);
 	currGrid.initData('');

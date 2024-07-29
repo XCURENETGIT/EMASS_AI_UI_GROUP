@@ -62,6 +62,18 @@ public class UserServiceImpl extends XcnAbstractDAO implements UserService {
 	}
 
 	@Override
+	public List<Map<String, String>> getUserSabun() {
+		JSONObject param = new JSONObject();
+		if(Common.isEquals(Config.getString("private.encrypt.useYN"), "Y")){
+			param.put("encryptUseYN", Config.getString("private.encrypt.useYN"));
+			param.put("encryptAlgorithm", Config.getString("private.encrypt.algorithm"));
+			param.put("encryptSize", Config.getString("private.encrypt.size"));
+			param.put("encryptKey", Config.getString("private.encrypt.key"));
+		}
+		return selectList("com.xcurenet.sqlmap.mappers.mysql.user.getUserSabun", param);
+	}
+
+	@Override
 	public List<Map<String, String>> getUserBusiNms() {
 		JSONObject param = new JSONObject();
 		if(Common.isEquals(Config.getString("private.encrypt.useYN"), "Y")){

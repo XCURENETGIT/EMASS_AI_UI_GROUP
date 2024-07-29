@@ -51,6 +51,22 @@
 	</select>
 
 
+	<select id="getUserSabun" resultType="hashmap" parameterType="hashmap">
+		SELECT  LOWER(USER_ID) AS hash_key, IFNULL(SABUN,'-') AS value FROM UI_USERS
+		UNION
+		SELECT
+		<if test='encryptUseYN == "Y"'>
+			LOWER(CAST(if(A.USER_EMAIL is null, null, xcndec(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, A.USER_EMAIL)) AS CHAR)) AS userEmail,
+		</if>
+		<if test='encryptUseYN != "Y"'>
+			LOWER(A.USER_EMAIL),
+		</if>
+		IFNULL(B.SABUN,'-') FROM UI_USER_EMAIL A JOIN UI_USERS B WHERE A.USER_ID = B.USER_ID
+		UNION
+		SELECT  A.USER_IP, IFNULL(B.SABUN,'-') FROM UI_USER_IP A JOIN UI_USERS B WHERE A.USER_ID = B.USER_ID
+	</select>
+
+
 
 	<select id="getUserNames" resultType="hashmap" parameterType="hashmap">
 		SELECT  LOWER(USER_ID) AS hash_key, IFNULL(USER_NM,'-') AS value FROM UI_USERS
@@ -457,6 +473,7 @@
 		, X.GROUP_CODE AS groupCode
 		, A.USER_ID AS userId
 		, A.USER_NM AS userNm
+		, A.SABUN AS sabun
 		, A.COCD AS coCd
 		, B.CONM AS coNm
 		, A.GENERALCD AS generalCd
@@ -494,6 +511,7 @@
 			AND (
 			X.USER_ID LIKE CONCAT('%', #{searchStr}, '%')
 			OR A.USER_NM LIKE CONCAT('%', #{searchStr}, '%')
+			OR A.SABUN LIKE CONCAT('%', #{searchStr}, '%')
 			OR (
 			<if test='encryptUseYN == "Y"'>
 				if(H.USER_EMAIL  is null, null, xcndec(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, H.USER_EMAIL ))
@@ -517,7 +535,7 @@
 			)
 		</if>
 		AND X.USER_ID = A.USER_ID
-		GROUP BY X.LIST_SEQ, X.GROUP_CODE, A.USER_ID, A.USER_NM, A.COCD, B.CONM, A.GENERALCD, C.GENERALNM, A.BUSICD, D.BUSINM, A.DEPTCD, E.DEPTNM, A.JIKINCD, F.JIKINNM, A.JIKGUBCD, G.JIKGUBNM, ceo
+		GROUP BY X.LIST_SEQ, X.GROUP_CODE, A.USER_ID, A.USER_NM,A.SABUN ,A.COCD, B.CONM, A.GENERALCD, C.GENERALNM, A.BUSICD, D.BUSINM, A.DEPTCD, E.DEPTNM, A.JIKINCD, F.JIKINNM, A.JIKGUBCD, G.JIKGUBNM, ceo
 		ORDER BY X.LIST_SEQ
 	</select>
 

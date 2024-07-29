@@ -284,6 +284,7 @@ public class SolrEdcMessageVO {
 			facetVo.setDeptnm(Common.nvl(Config.getUserDeptnm(bucketKey)));
 			facetVo.setJikgubnm(Common.nvl(Config.getUserJikgubnm(bucketKey)));
 			facetVo.setEmail(Common.nvl(Config.getUserEmail(bucketKey)));
+			facetVo.setSabun(Common.nvl(Config.getUserSabun(bucketKey)));
 		}
 		facetVo.setCount(docCount);
 		facet.add(facetVo);
@@ -426,6 +427,7 @@ public class SolrEdcMessageVO {
 		item.put("deptnm", Common.nvl(Config.getUserDeptnm(bucketKey)));
 		item.put("jikgubnm", Common.nvl(Config.getUserJikgubnm(bucketKey)));
 		item.put("email", Common.nvl(Config.getUserEmail(bucketKey)));
+		item.put("sabun", Common.nvl(Config.getUserSabun(bucketKey)));
 		item.put("total", docCount);
 		return item;
 	}

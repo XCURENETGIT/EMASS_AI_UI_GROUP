@@ -33,4 +33,5 @@ public class UserGroupVO {
 	private String pdeptNm;
 	private String account;
 	private String serviceCd;
+	private String sabun;
 }

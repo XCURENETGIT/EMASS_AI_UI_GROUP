@@ -838,7 +838,12 @@ function initGrid(){
 		if (value == '0') return '';
 		else return value.comma();
 	});
-	
+
+	grid.colAdd('sabun', '<s:message code="common.msg.userid"/>', 70, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+		return highlightSearchStr(value, "sabun");
+	});
+
+
 	if ( isOCR ) {
 		grid.colAdd('ocr_attach_cnt', 'OCR <s:message code="message.msg.file"/>', 70, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
 			if (value == '0' || value == '' || value == null || value == undefined ) return '';

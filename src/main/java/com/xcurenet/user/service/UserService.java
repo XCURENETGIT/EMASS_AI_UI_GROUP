@@ -15,6 +15,8 @@ public interface UserService {
 	
 	public List<Map<String, String>> getUserCoNms();
 
+	public List<Map<String, String>> getUserSabun();
+
 	public List<Map<String, String>> getUserBusiNms();
 	
 	public List<Map<String, String>> getUserDepts();

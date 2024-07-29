@@ -87,6 +87,11 @@ function initGrid( currGrid, gridColumn){
 		if (value == '0') return '';
 		else return value.comma();
 	});
+
+	grid.colAdd('sabun', gridColumn.sabun, 70, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+		return highlightSearchStr(value, "sabun");
+	});
+
 	if ( isOCR ) {
 		currGrid.colAdd('ocr_attach_cnt', gridColumn.ocr, 70, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
 			if (value == '0' || value == '' || value == null || value == undefined ) return '';

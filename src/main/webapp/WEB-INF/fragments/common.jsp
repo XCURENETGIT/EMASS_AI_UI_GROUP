@@ -60,7 +60,8 @@
         pi_total: '<s:message code="condition.regexp"/>',
         ocr: 'OCR <s:message code="message.msg.file"/>',
         attachname: '<s:message code="condition.attach_name"/>',
-        reprocess: '<s:message code="condition.reprocess"/>'
+        reprocess: '<s:message code="condition.reprocess"/>',
+		sabun: '<s:message code="common.msg.userid"/>'
 	}
 
 	var baseMsg1 = '<s:message code="analysis.ui.basemsg1"/>';
