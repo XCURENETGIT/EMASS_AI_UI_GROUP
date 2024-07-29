@@ -133,6 +133,8 @@ public class SolrEdcVO {
 
 	public String busicd;
 
+	public String sabun;
+
 	public String businm;
 
 	public String deptcd;

@@ -142,7 +142,7 @@ public class MessengerController {
 		}
 		sq.setStart(Common.nvz(param.get("offset"), 0));
 		sq.setRows(Common.nvz(param.get("limit"), 100));
-		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "deptnm", "jikgubnm", "usr_id","userid");
+		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "deptnm", "jikgubnm", "usr_id","userid","sabun");
 
 		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request));
 		return new XcnResponseVO(XcnRspCode.OK, solrEdcGroupVO, solrEdcGroupVO.getNumFound());
@@ -189,7 +189,7 @@ public class MessengerController {
 		sq.setRows(Common.nvz(request.getParameter("limit"), 0));
 
 		sq.setSort("ctime", ORDER.desc);
-		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id","userid");
+		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id","userid","sabun");
 
 
 		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request));
@@ -474,7 +474,7 @@ public class MessengerController {
 		sq.setParam("facet.group", String.valueOf(limit));
 
 
-		sq.setFields("msgid", "srcip", "svc", "senderId","svc3", "ctime", "name", "sname", "sender","svc12", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user","userid","userkey");
+		sq.setFields("msgid", "srcip", "svc", "senderId","svc3", "ctime", "name", "sname", "sender","svc12", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user","userid","userkey","sabun");
 
 		return sq;
 	}
@@ -511,7 +511,7 @@ public class MessengerController {
 		sq.setRows(limit);
 		sq.addSort("ctime", ORDER.asc);
 		sq.addSort("msgid", ORDER.asc);
-		sq.setFields("msgid", "srcip", "svc", "svc3", "senderId", "ctime", "name", "sname", "sender", "svc12","recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user","userid");
+		sq.setFields("msgid", "srcip", "svc", "svc3", "senderId", "ctime", "name", "sname", "sender", "svc12","recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user","userid","sabun");
 		if(ctime != null) sq.setParam("searchAfter", ctime + "," + msgId);
 
 		return sq;
@@ -553,7 +553,7 @@ public class MessengerController {
 		sq.setRows(limit);
 		sq.addSort("ctime", ORDER.desc);
 		sq.addSort("msgid", ORDER.desc);
-		sq.setFields("msgid", "srcip", "svc", "svc3", "senderId", "ctime", "name", "sname","svc12", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user","userid");
+		sq.setFields("msgid", "srcip", "svc", "svc3", "senderId", "ctime", "name", "sname","svc12", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user","userid","sabun");
 		if(ctime != null) sq.setParam("searchAfter", ctime + "," + msgId);
 
 		return sq;
@@ -827,7 +827,7 @@ public class MessengerController {
 		sq.setQuery(query);
 		sq.setStart(0);
 		sq.setRows(rows);
-		sq.setFields("usrId", "srcip", "name", "conm", "businm", "deptnm", "jikgubnm", "suborgnm", "sname", "sender", "srcip", "sname", "user","userid","userkey");
+		sq.setFields("usrId", "srcip", "name", "conm", "businm", "deptnm", "jikgubnm", "suborgnm", "sname", "sender", "srcip", "sname", "user","userid","userkey","sabun");
 		sq.setParam("group", true);
 		sq.setParam("group.field", groupField);
 		sq.setParam("facet", true);

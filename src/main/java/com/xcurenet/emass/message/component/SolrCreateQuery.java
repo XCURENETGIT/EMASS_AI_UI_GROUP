@@ -111,6 +111,8 @@ public class SolrCreateQuery {
 	public static final String ATTACH_SPACE = "attachspace";
 	public static final String OCR_ATTACH_CNT = "ocr_attach_cnt";
 
+	public static final String SABUN = "sabun";
+
 	public static final String SIZE = "size";
 	public static final String BODY_SIZE = "body_size";
 	public static final String ATTACH_SIZE = "attachsize";
@@ -138,7 +140,7 @@ public class SolrCreateQuery {
 			"body_snippet",
 			"sender", "sender_str", "sname", "recvs", "recvs_name", "to", "cc", "bcc", "usr_id", // 보낸사람, 받는사람
 			"xrootmtr",
-			"user", "user_str", "userid", "name" //사용자
+			"user", "user_str", "userid", "name", "sabun" //사용자
 	};
 
 		public String[] BIGRAM_FIELD = {

@@ -1059,6 +1059,9 @@
         grid.colAdd('path', 'Path', 180, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 	        return highlightSearchStr(value, "path");
         });
+	    grid.colAdd('sabun', '<s:message code="common.msg.userid"/>', 180, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+		    return highlightSearchStr(value, "sabun");
+	    });
 
         grid.loadHeader(true);
         grid.loadPageSize();

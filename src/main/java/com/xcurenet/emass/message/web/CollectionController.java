@@ -159,7 +159,7 @@ public class CollectionController {
 		sq.setQuery(sq.getQuery()+query + " +attached:Y");
 		sq.setStart(Common.nvz(param.get("offset"), 0));
 		sq.setRows(Common.nvz(param.get("limit"), 100));
-		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attachSizeStr","attachsize","attached", "attachname", "xrootmtr", "deptnm","businm", "jikgubnm", "usr_id");
+		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attachSizeStr","attachsize","attached", "attachname", "xrootmtr", "deptnm","businm", "jikgubnm", "usr_id","sabun");
 
 		SolrEdcMessageVO solrEdcGroupVO = solrEdcService.getEmassMessage(sq, Common.getAdminId(request));
 		return new XcnResponseVO(XcnRspCode.OK, solrEdcGroupVO, solrEdcGroupVO.getNumFound());
@@ -205,7 +205,7 @@ public class CollectionController {
 		sq.setQuery(sq.getQuery()+query);
 		sq.setStart(0);
 		sq.setRows(rows);
-		sq.setFields("svc12", "srcip", "name", "conm", "businm", "deptnm", "jikgubnm", "suborgnm", "sname", "sender", "srcip", "sname", "user");
+		sq.setFields("svc12", "srcip", "name", "conm", "businm", "deptnm", "jikgubnm", "suborgnm", "sname", "sender", "srcip", "sname", "user","sabun");
 		sq.setParam("group", true);
 		sq.setParam("group.field", "svc12,userkey");
 		sq.setParam("group.facet", true);
@@ -276,7 +276,7 @@ public class CollectionController {
 		sq.setRows(Common.nvz(request.getParameter("limit"), 100000));
 
 		sq.setSort("ctime", ORDER.desc);
-		sq.setFields("msgid", "srcip", "svc", "svc12","svc3","userkey", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id", "userkey");
+		sq.setFields("msgid", "srcip", "svc", "svc12","svc3","userkey", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id", "userkey","sabun");
 
 		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request));
 
@@ -365,7 +365,7 @@ public class CollectionController {
 		sq.setRows(Common.nvz(request.getParameter("limit"), 100000));
 
 		sq.setSort("ctime", ORDER.desc);
-		sq.setFields("msgid", "srcip", "svc", "svc12","svc3","userkey", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id", "userkey");
+		sq.setFields("msgid", "srcip", "svc", "svc12","svc3","userkey", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id", "userkey","sabun");
 
 
 		String currentQuery = sq.getQuery();
@@ -449,7 +449,7 @@ public class CollectionController {
 		sq.setParam("group.field", "userkey");
 		sq.setStart(0);
 		sq.setRows(Common.MAX_VALUE);
-		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr");
+		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr","sabun");
 
 		Map<String, Long> cnt = new HashMap<>();
 		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, adminId);
@@ -640,7 +640,7 @@ public class CollectionController {
 		sq.setRows(limit);
 		sq.addSort("ctime", ORDER.asc);
 		sq.addSort("msgid", ORDER.asc);
-		sq.setFields("msgid", "userkey","svc1", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user");
+		sq.setFields("msgid", "userkey","svc1", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user","sabun");
 		if(ctime != null) sq.setParam("searchAfter", ctime + "," + msgId);
 		return sq;
 	}
@@ -700,7 +700,7 @@ public class CollectionController {
 		sq.setRows(limit);
 		sq.addSort("ctime", ORDER.desc);
 		sq.addSort("msgid", ORDER.desc);
-		sq.setFields("msgid",  "userkey", "svc1","srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user");
+		sq.setFields("msgid",  "userkey", "svc1","srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user","sabun");
 		if(ctime != null) sq.setParam("searchAfter", ctime + "," + msgId);
 		return sq;
 	}
@@ -765,7 +765,7 @@ public class CollectionController {
 		sq.setRows(limit);
 		sq.addSort("ctime", ORDER.asc);
 		sq.addSort("msgid", ORDER.asc);
-		sq.setFields("msgid", "userkey", "svc1","srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user");
+		sq.setFields("msgid", "userkey", "svc1","srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user","sabun");
 		sq.setStart(offset);
 		sq.setRows(limit);
 
@@ -824,7 +824,7 @@ public class CollectionController {
 		sq.setRows(limit);
 		sq.addSort("ctime", ORDER.desc);
 		sq.addSort("msgid", ORDER.desc);
-		sq.setFields("msgid", "userkey", "svc1","srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user");
+		sq.setFields("msgid", "userkey", "svc1","srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user","sabun");
 
 		return sq;
 
@@ -1043,7 +1043,7 @@ public class CollectionController {
 		sq.setSort("ctime", ORDER.desc);
 		sq.setStart(0);
 		sq.setRows(rows);
-		sq.setFields("usr_id", "srcip", "name", "conm", "businm", "deptnm", "jikgubnm", "suborgnm", "sname", "sender", "srcip", "sname", "user");
+		sq.setFields("usr_id", "srcip", "name", "conm", "businm", "deptnm", "jikgubnm", "suborgnm", "sname", "sender", "srcip", "sname", "user","sabun");
 		sq.setParam("group", true);
 		sq.setParam("group.field", groupField);
 		sq.setParam("facet", true);
@@ -1147,7 +1147,7 @@ public class CollectionController {
 		}
 		sq.setStart(Common.nvz(param.get("offset"), 0));
 		sq.setRows(Common.nvz(param.get("limit"), 100));
-		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attachSizeStr", "attachsize", "attached", "attachname", "xrootmtr", "deptnm", "businm", "jikgubnm", "usr_id");
+		sq.setFields("msgid", "srcip", "svc", "svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attachSizeStr", "attachsize", "attached", "attachname", "xrootmtr", "deptnm", "businm", "jikgubnm", "usr_id","sabun");
 
 		SolrEdcMessageVO solrEdcGroupVO = solrEdcService.getEmassMessage(sq, Common.getAdminId(request));
 
@@ -1281,7 +1281,7 @@ public class CollectionController {
 		sq.setStart(Common.nvz(param.get("offset"), 0));
 		sq.setRows(Common.nvz(param.get("limit"), 100));
 		sq.setSort("ctime", ORDER.desc);
-		sq.setFields("msgid", "userkey", "svc1","srcip", "svc",  "svc12","svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user");
+		sq.setFields("msgid", "userkey", "svc1","srcip", "svc",  "svc12","svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachhash", "attachname", "attachsize", "xrootmtr", "deptnm", "jikgubnm", "usr_id", "user","sabun");
 		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, Common.getAdminId(request));
 
 		int totalRooms= (int) solrEdcGroupVO.getNumFound();
@@ -1451,7 +1451,7 @@ public class CollectionController {
 		sq.setStart(start);
 		sq.setRows(limit);
 		sq.setSort("ctime", ORDER.desc);
-		sq.setFields("msgid", "userkey","srcip", "svc", "svc12","svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id");
+		sq.setFields("msgid", "userkey","srcip", "svc", "svc12","svc3", "ctime", "name", "sname", "sender", "recvs_name", "recvs", "body_snippet", "attached", "attachname", "xrootmtr", "usr_id","sabun");
 
 		MessengerEdcGroupVO solrEdcGroupVO = solrEdcService.getMessengerGroupList(sq, adminId);
 		solrEdcGroupVO.setGroups(solrEdcGroupVO.getGroups());

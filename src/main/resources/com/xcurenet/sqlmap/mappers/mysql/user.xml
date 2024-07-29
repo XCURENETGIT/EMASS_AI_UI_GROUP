@@ -370,6 +370,7 @@
 			AND		(
 							USER_ID LIKE CONCAT('%', #{searchStr}, '%')
 						OR	USER_NM LIKE CONCAT('%', #{searchStr}, '%')
+						OR	SABUN LIKE CONCAT('%', #{searchStr}, '%')
 						OR
 						<if test='encryptUseYN == "Y"'>
 						if(userEmail is null, null, xcndec(#{encryptAlgorithm}, #{encryptSize}, #{encryptKey}, userEmail))
