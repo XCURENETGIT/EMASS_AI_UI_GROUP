@@ -607,7 +607,7 @@
         var kwds = grid2.getValue(row, 'kwds');
         value = highlightKeyword(value, kwds);
         value = highlightSearchStr(value, "subject");
-
+4
         var rtnVal = '<span title="'+body_snippet+'" onclick="" class="subject_read'+grid2.getValue(row, 'readYn')+'">'+value+'</span>&nbsp;<a href="javascript:void(0);" onclick="viewer_openPop('+row+')" class="glyphicon glyphicon-new-window new-window"></a>';
         if( (isConsent( ) && grid2.getValue(row, 'consentNo') == '') || !isDetailView() ) rtnVal = '<span>'+value+'</span>';
 
@@ -671,6 +671,7 @@
     grid2.colAdd('bodySizeStr', '<s:message code="condition.size.body"/>', 80, 'left', false, 'nomal', null, {sortField:'body_size'});
     grid2.colAdd('attachSizeStr', '<s:message code="condition.size.attach.total"/>', 80, 'left', false, 'nomal', null, {sortField:'attachSizeSort'});
     grid2.colAdd('kwds', '<s:message code="condition.keyword"/>', 120, 'left', false, 'nomal');
+    grid2.colAdd('sabun', '<s:message code="common.msg.userid"/>', 120, 'left', false, 'nomal');
 
 
 
