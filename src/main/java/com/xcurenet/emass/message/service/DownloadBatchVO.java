@@ -15,6 +15,7 @@ public class DownloadBatchVO {
 	private String statusStr;
 	private String downFilePath;
 	private String downFileSize;
+	private String skipText;
 	private long ingRows;
 	private long totalRows;
 	private long skipCnt;

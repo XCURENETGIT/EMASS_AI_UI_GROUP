@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -70,6 +71,8 @@ public class EmsMessageDownloadBatchController {
 
 	@Autowired
 	public MinioFileAdapter minioFileAdapter;
+
+	private final String ENTER = "┌";
 
 	@RequestMapping(value = "/getEmassMessageSaveBatchZip.xcn")
 	@Description("EMASS 메시지 전체 저장")
@@ -117,6 +120,7 @@ public class EmsMessageDownloadBatchController {
 
 		String ctime = null;
 		String msgId = null;
+		StringBuffer skipText = new StringBuffer();
 
 		boolean isSpaceChk = true;
 		boolean isCancel = false;
@@ -130,7 +134,7 @@ public class EmsMessageDownloadBatchController {
 			isSpaceChk = isFreeSpace(totalSpace, rootFolder.getUsableSpace());
 			if (!isSpaceChk) {
 				log.error("system disk check! total:{}, used:{}", totalSpace, rootFolder.getUsableSpace());
-				updateErrorDB(downloadBatchVO, "S");
+				updateErrorDB(downloadBatchVO, "S", skipText.toString());
 				alarmMessage(adminId, downloadBatchVO);
 				return;
 			}
@@ -147,10 +151,19 @@ public class EmsMessageDownloadBatchController {
 							log.info("Download Seq : {} , Download Try Cnt : {}", downloadBatchVO.getDownSeq(), sucCnt + skipCnt);
 							break;
 						}
+						boolean bodySkip = true;
+						boolean attachSkip = true;
 						try {
-							if (bodyFlag) downloadBody(locale, firstAdminYn, exportDir, edc, Common.getAdminId(request), Common.getAdmin(request).getAdminType());
+
+							if (bodyFlag) {
+								downloadBody(locale, firstAdminYn, exportDir, edc, Common.getAdminId(request), Common.getAdmin(request).getAdminType());
+								bodySkip = false;
+							}
 							//if (attachFlag) downloadAttach(exportDir, attachDown, edc, ftp);
-							if (attachFlag) downloadAttach(exportDir, attachDown, edc);
+							if (attachFlag){
+								downloadAttach(exportDir, attachDown, edc);
+								attachSkip = false;
+							}
 							sucCnt++;
 							ctime  = edc.getCtime();
 							msgId = edc.getMsgid();
@@ -158,6 +171,8 @@ public class EmsMessageDownloadBatchController {
 						} catch(Exception e) {
 							skipCnt++;
 							log.info("Skip Message ID : {} ", edc.getMsgid());
+							if (bodySkip && bodyFlag) skipText.append(edc.getMsgid()).append(" : ").append(Prop.propFormat("eikon.download.body.fail")).append(ENTER);
+							else if (attachSkip && attachFlag)skipText.append(edc.getMsgid()).append(" : ").append(Prop.propFormat("eikon.download.file.fail")).append(ENTER);
 							e.printStackTrace();
 							continue;
 						}
@@ -172,7 +187,7 @@ public class EmsMessageDownloadBatchController {
 						break;
 					}
 
-					updateIngDB(downloadBatchVO, i, queryCnt, sucCnt, skipCnt);
+					updateIngDB(downloadBatchVO, i, queryCnt, sucCnt, skipCnt, skipText.toString());
 					isSpaceChk = isFreeSpace(totalSpace, rootFolder.getUsableSpace());
 
 					if (!isSpaceChk) {
@@ -188,13 +203,13 @@ public class EmsMessageDownloadBatchController {
 				if(folderSize < rootFolder.getUsableSpace()) {
 					File dest = new File(exporFileName);
 					pack(exportDir, dest);
-					updateSucessDB(downloadBatchVO, dest.length(), sucCnt == 0 ? total : sucCnt, skipCnt);
+					updateSucessDB(downloadBatchVO, dest.length(), sucCnt == 0 ? total : sucCnt, skipCnt, skipText.toString());
 				} else {
 					log.error("system disk check! folder Size:{}, used:{}", folderSize, rootFolder.getUsableSpace());
-					updateErrorDB(downloadBatchVO, "S");
+					updateErrorDB(downloadBatchVO, "S", skipText.toString());
 				}
 			} else if(!isCancel) {
-				updateErrorDB(downloadBatchVO, "S");
+				updateErrorDB(downloadBatchVO, "S" , skipText.toString());
 			}
 			log.info("Sucess Count : {}", sucCnt);
 			log.info("Skip Count : {}", skipCnt);
@@ -204,7 +219,7 @@ public class EmsMessageDownloadBatchController {
 
 
 		} catch (Exception e) {
-			updateErrorDB(downloadBatchVO, "S");
+			updateErrorDB(downloadBatchVO, "S",  downloadBatchVO.getSkipText());
 			e.printStackTrace();
 		} finally {
 
@@ -396,7 +411,7 @@ public class EmsMessageDownloadBatchController {
 			isSpaceChk = isFreeSpace(totalSpace, rootFolder.getUsableSpace());
 			if (!isSpaceChk) {
 				log.error("system disk check! total:{}, used:{}", totalSpace, rootFolder.getUsableSpace());
-				updateErrorDB(downloadBatchVO, "S");
+				updateErrorDB(downloadBatchVO, "S", downloadBatchVO.getSkipText());
 				alarmMessage(adminId, downloadBatchVO);
 				return;
 			}
@@ -405,6 +420,7 @@ public class EmsMessageDownloadBatchController {
 
 			Common.mkdirs(exportDir.getPath());
 			EmsAttachDownload attachDown = new EmsAttachDownload();
+			StringBuffer skipText = new StringBuffer();
 			for (int i = 1; i <= queryCnt; i++) {
 				List<SolrEdcVO> emass = EmsReDefined.reDefined(getEmassData(adminId, condition, searchTime, i - 1, ctime, msgid).getEmass(), locale);
 
@@ -418,16 +434,27 @@ public class EmsMessageDownloadBatchController {
 							log.info("Download Seq : {} , Download Try Cnt : {}", downloadBatchVO.getDownSeq(), sucCnt + skipCnt);
 							break;
 						}
+						boolean bodySkip = true;
+						boolean attachSkip = true;
+
 						try {
-							if (bodyFlag) downloadBody(locale, firstAdminYn, exportDir, edc, Common.getAdminId(request), Common.getAdmin(request).getAdminType());
+							if (bodyFlag){
+								downloadBody(locale, firstAdminYn, exportDir, edc, Common.getAdminId(request), Common.getAdmin(request).getAdminType());
+								bodySkip = false;
+							}
 							//if (attachFlag) downloadAttach(exportDir, attachDown, edc, ftp);
-							if (attachFlag) downloadAttach(exportDir, attachDown, edc);
+							if (attachFlag) {
+								downloadAttach(exportDir, attachDown, edc);
+								attachSkip = false;
+							}
 							sucCnt++;
 							ctime  = edc.getSvc();
 							msgid = edc.getMsgid();
 						} catch(Exception e) {
 							skipCnt++;
 							log.info("Skip Message ID : {} ", edc.getMsgid());
+							if (bodySkip && bodyFlag) skipText.append(edc.getMsgid()).append(" : ").append(Prop.propFormat("eikon.download.body.fail")).append(ENTER);
+							else if (attachSkip && attachFlag)skipText.append(edc.getMsgid()).append(" : ").append(Prop.propFormat("eikon.download.file.fail")).append(ENTER);
 							e.printStackTrace();
 							continue;
 						}
@@ -442,7 +469,7 @@ public class EmsMessageDownloadBatchController {
 						break;
 					}
 
-					updateIngDB(downloadBatchVO, i, queryCnt, sucCnt, skipCnt);
+					updateIngDB(downloadBatchVO, i, queryCnt, sucCnt, skipCnt, skipText.toString());
 					isSpaceChk = isFreeSpace(totalSpace, rootFolder.getUsableSpace());
 					if (!isSpaceChk) {
 						log.error("system disk check! total:{}, used:{}", totalSpace, rootFolder.getUsableSpace());
@@ -456,13 +483,13 @@ public class EmsMessageDownloadBatchController {
 				if(folderSize < rootFolder.getUsableSpace()) {
 					File dest = new File(exporFileName);
 					pack(exportDir, dest);
-					updateSucessDB(downloadBatchVO, dest.length(), sucCnt == 0 ? total : sucCnt, skipCnt);
+					updateSucessDB(downloadBatchVO, dest.length(), sucCnt == 0 ? total : sucCnt, skipCnt, skipText.toString());
 				} else {
 					log.error("system disk check! folder Size:{}, used:{}", folderSize, rootFolder.getUsableSpace());
-					updateErrorDB(downloadBatchVO, "S");
+					updateErrorDB(downloadBatchVO, "S", skipText.toString());
 				}
 			} else if(!isCancel){
-				updateErrorDB(downloadBatchVO, "S");
+				updateErrorDB(downloadBatchVO, "S", skipText.toString());
 			}
 			log.info("Sucess Count : {}", sucCnt);
 			log.info("Skip Count : {}", skipCnt);
@@ -472,7 +499,7 @@ public class EmsMessageDownloadBatchController {
 
 
 		} catch (Exception e) {
-			updateErrorDB(downloadBatchVO, "S");
+			updateErrorDB(downloadBatchVO, "S", downloadBatchVO.getSkipText());
 			e.printStackTrace();
 		} finally {
 
@@ -558,6 +585,7 @@ public class EmsMessageDownloadBatchController {
 		boolean isCancel = false;
 		long skipCnt = 0;
 		long sucCnt = 0;
+		StringBuffer skipText = new StringBuffer();
 
 		try {
 			if (Common.isWindow() && attachFlag) {
@@ -569,7 +597,7 @@ public class EmsMessageDownloadBatchController {
 			isSpaceChk = isFreeSpace(totalSpace, rootFolder.getUsableSpace());
 			if (!isSpaceChk) {
 				log.error("system disk check! total:{}, used:{}", totalSpace, rootFolder.getUsableSpace());
-				updateErrorDB(downloadBatchVO, "S");
+				updateErrorDB(downloadBatchVO, "S", skipText.toString());
 				alarmMessage(adminId, downloadBatchVO);
 				return;
 			}
@@ -591,16 +619,26 @@ public class EmsMessageDownloadBatchController {
 							log.info("Download Seq : {} , Download Try Cnt : {}", downloadBatchVO.getDownSeq(), sucCnt + skipCnt);
 							break;
 						}
+						boolean bodySkip = true;
+						boolean attachSkip = true;
 						try {
-							if (bodyFlag) downloadBody(locale, firstAdminYn, exportDir, edc, Common.getAdminId(request), Common.getAdmin(request).getAdminType());
+							if (bodyFlag){
+								downloadBody(locale, firstAdminYn, exportDir, edc, Common.getAdminId(request), Common.getAdmin(request).getAdminType());
+								bodySkip = false;
+							}
 							//if (attachFlag) downloadAttach(exportDir, attachDown, edc, ftp);
-							if (attachFlag) downloadAttach(exportDir, attachDown, edc);
+							if (attachFlag){
+								downloadAttach(exportDir, attachDown, edc);
+								attachSkip = false;
+							}
 							sucCnt++;
 							ctime = edc.getCtime();
 							msgid = edc.getMsgid();
 						} catch(Exception e) {
 							skipCnt++;
 							log.info("Skip Message ID : {} ", edc.getMsgid());
+							if (bodySkip && bodyFlag) skipText.append(edc.getMsgid()).append(" : ").append(Prop.propFormat("eikon.download.body.fail")).append(ENTER);
+							else if (attachSkip && attachFlag)skipText.append(edc.getMsgid()).append(" : ").append(Prop.propFormat("eikon.download.file.fail")).append(ENTER);
 							e.printStackTrace();
 							continue;
 						}
@@ -615,7 +653,7 @@ public class EmsMessageDownloadBatchController {
 						break;
 					}
 
-					updateIngDB(downloadBatchVO, i, queryCnt, sucCnt, skipCnt);
+					updateIngDB(downloadBatchVO, i, queryCnt, sucCnt, skipCnt, skipText.toString());
 					isSpaceChk = isFreeSpace(totalSpace, rootFolder.getUsableSpace());
 					if (!isSpaceChk) {
 						log.error("system disk check! total:{}, used:{}", totalSpace, rootFolder.getUsableSpace());
@@ -629,13 +667,13 @@ public class EmsMessageDownloadBatchController {
 				if(folderSize < rootFolder.getUsableSpace()) {
 					File dest = new File(exporFileName);
 					pack(exportDir, dest);
-					updateSucessDB(downloadBatchVO, dest.length(), sucCnt == 0 ? total : sucCnt, skipCnt);
+					updateSucessDB(downloadBatchVO, dest.length(), sucCnt == 0 ? total : sucCnt, skipCnt, skipText.toString());
 				} else {
 					log.error("system disk check! folder Size:{}, used:{}", folderSize, rootFolder.getUsableSpace());
-					updateErrorDB(downloadBatchVO, "S");
+					updateErrorDB(downloadBatchVO, "S", skipText.toString());
 				}
 			} else if(!isCancel) {
-				updateErrorDB(downloadBatchVO, "S");
+				updateErrorDB(downloadBatchVO, "S", skipText.toString());
 			}
 			log.info("Sucess Count : {}", sucCnt);
 			log.info("Skip Count : {}", skipCnt);
@@ -645,7 +683,7 @@ public class EmsMessageDownloadBatchController {
 
 
 		} catch (Exception e) {
-			updateErrorDB(downloadBatchVO, "S");
+			updateErrorDB(downloadBatchVO, "S", skipText.toString());
 			e.printStackTrace();
 		} finally {
 
@@ -706,30 +744,33 @@ public class EmsMessageDownloadBatchController {
 		downloadBatchService.inserDownloadBatch(vo);
 	}
 
-	private void updateIngDB(DownloadBatchVO vo, int i, int queryCnt, long sucCnt, long skipCnt) {
+	private void updateIngDB(DownloadBatchVO vo, int i, int queryCnt, long sucCnt, long skipCnt, String skipText) {
 		vo.setDownStatus(String.valueOf((int) Math.floor((double) i / (double) queryCnt * 100)));
 		vo.setStatusStr("I");
 		vo.setIngRows(sucCnt == 0 ? (i * PAGE_BREAK) : sucCnt);
 		vo.setSkipCnt(skipCnt);
+		vo.setSkipText(skipText);
 		downloadBatchService.updateDownloadBatch(vo);
 	}
 
-	private void updateSucessDB(DownloadBatchVO vo, long fileSize, long total, long skipCnt ) {
+	private void updateSucessDB(DownloadBatchVO vo, long fileSize, long total, long skipCnt, String skipText ) {
 		vo.setDownStatus("100");
 		vo.setStatusStr("Y");
 		vo.setDownFileSize(String.valueOf(fileSize));
 		vo.setIngRows(total);
 		vo.setSkipCnt(skipCnt);
+		vo.setSkipText(skipText);
 		downloadBatchService.updateDownloadBatch(vo);
 	}
 
-	private void updateErrorDB(DownloadBatchVO vo, String errorType ) {
+	private void updateErrorDB(DownloadBatchVO vo, String errorType , String skipText ) {
 
 		if(Common.isEquals(errorType, "S")) {
 			StringBuffer info = new StringBuffer();
 			info.append(Prop.propFormat("download.message.export.check.used")).append("┌").append(vo.getDownVal());
 			vo.setDownVal(info.toString());
 		}
+		vo.setSkipText(skipText);
 		vo.setStatusStr("E");
 		downloadBatchService.updateDownloadBatch(vo);
 	}

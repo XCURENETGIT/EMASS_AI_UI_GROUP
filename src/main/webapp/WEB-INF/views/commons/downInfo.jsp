@@ -206,6 +206,26 @@
 		</div>
 	</div>
 </div>
+
+<div class="modal fade" id="downTextPop" tabindex="-1" role="dialog" aria-labelledby="downTextPop">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content" style="max-width: 800px;!important; width: 800px;!important;">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h3 class="modal-title"><s:message code="common.msg.download"/> Skip</h3>
+			</div>
+			<div class="modal-body">
+				<div class="form-inline" id="modal_downText_area" style="min-height: 200px;max-height: 400px;overflow: auto; font-size: 15px;">
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" accesskey="C" class="btn btn-default" data-dismiss="modal"><s:message code="common.msg.close"/></button>
+			</div>
+		</div>
+	</div>
+</div>
 <!--
 	<header class="header">
 		<div class="naviBack">
@@ -367,7 +387,7 @@
 		if( statStr == 'X' ) return '<span class="deleteText">' + convertFileSize(value) + '</span>';
 		else return convertFileSize(value);
 	});
-	grid.colAdd('skipCnt', '<s:message code="download.msg.skip" />', 80, 'center', false, 'nomal', function ( row, cell, value, columnDef, dataContext ) {
+	grid.colAdd('skipCnt', '<s:message code="download.msg.skip" />', 80, 'center', false, 'link', function ( row, cell, value, columnDef, dataContext ) {
 		return value.comma();
 	});
 	grid.colAdd('cancel', '<s:message code="common.msg.cancel"/>', 80, 'center', false, 'nomal', function ( row, cell, value, columnDef, dataContext ) {
@@ -383,6 +403,13 @@
 
 			var downValStr = grid.getValue(grid.Row, 'downVal').replaceAll('┌', '<br>');
 			$('#modal_body_area').html(downValStr);
+		}
+
+		if (grid.Col == grid.ColIndex('skipCnt')) {
+			$("#downTextPop").modal('show');
+			var skipText = grid.getValue(grid.Row, 'skipText').replaceAll('┌', '<br>');
+			if (skipText == '') skipText = '<s:message code="eikon.download.noskip"/>';
+			$('#modal_downText_area').html(skipText);
 		}
 		if (grid.Col == grid.ColIndex('statusStr')) {
 			if(grid.getValue(grid.Row, 'statusStr') == 'Y') {

@@ -369,6 +369,9 @@
 				<if test='skipCnt!=null and skipCnt!=""'>
 				, SKIP_ROWS = #{skipCnt}
 				</if>
+				<if test='skipText!=null and skipText!=""'>
+				, SKIP_TEXT = #{skipText}
+				</if>
 		WHERE	DOWN_SEQ = #{downSeq}
 	</update>
 
@@ -432,7 +435,7 @@
 
 	<!-- 다운로드 배치 내역 조회 -->
 	<select id="getDownloadBatchList" resultType="downloadBatchVO" parameterType="hashMap">
-		SELECT 	DOWN_SEQ AS downSeq, DOWN_VAL AS downVal, EXPORT_TYPE AS exportType, EXPORT_FILE_EXT AS exportFileExt, ADMIN_ID AS adminId, DATE_FORMAT(REQ_DT,'%Y-%m-%d %H:%i:%S') AS reqDt, DATE_FORMAT(END_DT,'%Y-%m-%d') AS endDt, DOWN_STATUS AS downStatus, STATUS_STR AS statusStr, DOWNFILE_PATH AS downFilePath, DOWNFILE_SIZE AS downFileSize, ING_ROWS AS ingRows, TOTAL_ROWS AS totalRows, SKIP_ROWS AS skipCnt
+		SELECT 	DOWN_SEQ AS downSeq, DOWN_VAL AS downVal, EXPORT_TYPE AS exportType, EXPORT_FILE_EXT AS exportFileExt, ADMIN_ID AS adminId, DATE_FORMAT(REQ_DT,'%Y-%m-%d %H:%i:%S') AS reqDt, DATE_FORMAT(END_DT,'%Y-%m-%d') AS endDt, DOWN_STATUS AS downStatus, STATUS_STR AS statusStr, DOWNFILE_PATH AS downFilePath, DOWNFILE_SIZE AS downFileSize, ING_ROWS AS ingRows, TOTAL_ROWS AS totalRows, SKIP_ROWS AS skipCnt, SKIP_TEXT AS skipText
 		FROM 	UI_DOWNLOAD_BATCH
 		WHERE 	ADMIN_ID = #{adminId}
 		<if test='exportTypeSel!=null and exportTypeSel!=""'>
