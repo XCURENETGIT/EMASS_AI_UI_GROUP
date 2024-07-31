@@ -170,12 +170,14 @@
 										$("#googleOTPqr").attr("src", data.qrCodeURL);
 										$('#otpMessage').html('<s:message code="login.google.otp.first.login"/>');
 										firstOTP = true;
+										console.log("firstOtp");
 									} else {
 										$('#otpQRrow').css("display", "none");
 										$('#secretKeyRow').css("display", "none");
 										$('#reloadBtn').css("display", "none");
 										$('#otpMessage').html('<s:message code="login.google.otp.message1"/>');
 										firstOTP = false;
+										console.log("zzz");
 									}
 									otpTimeOut();
 								} else {
@@ -472,7 +474,7 @@
 		</div>
 		<div class="modalCon">
 			<div class="modalbody">
-				<div class="row">
+				<div class="row" id="secretKeyRow">
 					<div class="col-35">
 						<label for="secretKey" class="fname"><s:message code="login.google.otp.secretKey"/></label>
 					</div>
