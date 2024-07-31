@@ -756,6 +756,9 @@
                 format: 'YYYY-MM-DD HH:mm:ss',
                 locale: 'ko',
                 sideBySide: true,
+                showClose: true,
+                showTodayButton: true,
+                toolbarPlacement: 'bottom',
                 widgetParent:$('#mainBodyArea'),
                 defaultDate: moment(new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()-7 ) )
             }).on("dp.change", function (e) {
@@ -770,6 +773,9 @@
                 format: 'YYYY-MM-DD HH:mm:ss',
                 locale: 'ko',
                 sideBySide: true,
+                showClose: true,
+                showTodayButton: true,
+                toolbarPlacement: 'bottom',
                 widgetParent:$('#mainBodyArea'),
                 defaultDate: moment(new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), 23, 59, 59 ) )
             }).on("dp.change", function (e) {

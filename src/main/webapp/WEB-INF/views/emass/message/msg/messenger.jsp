@@ -627,11 +627,15 @@
             $('#'+sid).datetimepicker({
                 format: 'YYYY-MM-DD',
                 locale: 'ko',
+	            showClose: true,
+	            showTodayButton: true,
                 defaultDate: moment().subtract(7, 'days')
             });
             $('#'+eid).datetimepicker({
                 format: 'YYYY-MM-DD',
                 locale: 'ko',
+	            showClose: true,
+	            showTodayButton: true,
                 defaultDate: moment(new Date())
             });
         }

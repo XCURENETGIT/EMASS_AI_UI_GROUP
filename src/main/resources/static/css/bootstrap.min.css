@@ -7104,6 +7104,19 @@ a.tag:focus, a.tag:hover {
 	float: right !important;
 }
 
+.glyphicon-remove:before {
+	color: #0A246A;
+}
+
+.glyphicon-screenshot:before {
+	color: #0A246A;
+}
+
+.datepicker{
+	margin-bottom: 0px!important;
+}
+
+
 .pull-xs-none {
 	float: none !important;
 }

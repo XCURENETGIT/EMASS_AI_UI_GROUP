@@ -987,11 +987,15 @@
         $('#'+sid).datetimepicker({
             format: 'YYYY-MM-DD',
             locale: 'ko',
-            defaultDate: moment(new Date())
+	        showClose: true,
+	        showTodayButton: true,
+            defaultDate: moment(new Date()),
         });
         $('#'+eid).datetimepicker({
             format: 'YYYY-MM-DD',
             locale: 'ko',
+	        showClose: true,
+	        showTodayButton: true,
             defaultDate: moment(new Date())
         });
     }
