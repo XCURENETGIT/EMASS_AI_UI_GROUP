@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Locale;
 
+import com.xcurenet.common.ntp.service.ChronyService;
 import com.xcurenet.common.util.config.Config;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,10 @@ public class NtpScheduler {
 
 	public static JSONObject ntpStatus = new JSONObject();
 
-	@Scheduled(fixedDelay = 60000)
+	@Autowired
+	private ChronyService chronyService;
+
+	@Scheduled(fixedDelay = 60000, initialDelay = 3000)
 	public void checkNtp() {
 		if(!Common.isWindow() && Config.getBoolean("chrony.server.used")) {
 			JSONObject socketMsg = getNtpStatus();
@@ -88,6 +92,7 @@ public class NtpScheduler {
 
 		log.debug(result.toString());
 		ntpStatus = result;
+		chronyService.insert(ntpStatus);
 		return ntpStatus;
 	}
 

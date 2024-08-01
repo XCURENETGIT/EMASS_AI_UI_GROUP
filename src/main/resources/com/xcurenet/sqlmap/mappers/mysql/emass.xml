@@ -585,6 +585,22 @@
 		AND		ADMIN_ID = #{adminId}
 	</select>
 
+	<insert id="insertChrony" parameterType="chronyVO">
+		INSERT	INTO UI_CHRONY (CHRONY_STATUS, CHRONY_SERVER,CORNY_DATATIME )
+		VALUES	(#{status}, #{ntpServer}, NOW())
+	</insert>
+
+	<select id="selectChrony" resultType="chronyVO">
+		SELECT 	CHRONY_STATUS AS status, CHRONY_SERVER AS ntpServer, CORNY_DATATIME AS dateTime
+		FROM	UI_CHRONY
+		ORDER 	BY CORNY_DATATIME DESC
+		LIMIT	1
+	</select>
+
+	<delete id="deleteChrony" >
+		DELETE	FROM UI_CHRONY	WHERE CORNY_DATATIME <![CDATA[ < ]]> DATE_SUB(NOW(), INTERVAL 1 MONTH)
+	</delete>
+
 </mapper>
 
 

@@ -106,7 +106,9 @@
 		<typeAlias alias="patternVO" type="com.xcurenet.emass.message.service.PatternVO" />
 		
 		<typeAlias alias="fileDataVO" type="com.xcurenet.emass.customDashboard.service.FileDataVO" />
-		
+
+		<typeAlias alias="chronyVO" type="com.xcurenet.common.ntp.service.ChronyVO" />
+
 	</typeAliases>
 
 	<mappers>

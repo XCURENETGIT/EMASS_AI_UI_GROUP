@@ -25,23 +25,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.xcurenet.common.mail.MailInfo;
-import com.xcurenet.common.mail.MailSend;
-import com.xcurenet.common.sms.SmsSender;
+
+import com.xcurenet.common.ntp.service.ChronyService;
+import com.xcurenet.common.ntp.service.ChronyVO;
 import com.xcurenet.config.service.ConfigService;
 import com.xcurenet.config.service.ConfigVO;
 import com.xcurenet.login.MailService;
 import lombok.RequiredArgsConstructor;
 import net.sf.json.JSONArray;
 import org.apache.commons.codec.binary.Base32;
-import org.apache.commons.mail.HtmlEmail;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
@@ -50,12 +46,10 @@ import com.xcurenet.admin.service.AdminService;
 import com.xcurenet.admin.service.AdminVO;
 import com.xcurenet.audit.service.AuditService;
 import com.xcurenet.audit.service.AuditVO;
-import com.xcurenet.common.ntp.NtpScheduler;
 import com.xcurenet.common.session.SessionManagement;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.config.Config;
 import com.xcurenet.common.util.locale.Prop;
-import com.xcurenet.common.dao.XcnAbstractDAO;
 import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
 import com.xcurenet.config.service.ConfigAdminService;
@@ -109,10 +103,10 @@ public class LoginController {
 	private CustomDashBoardService customDashBoardService;
 
 	@Autowired
-	private NtpScheduler ntpScheduler;
+	private final MailService mailService;
 
 	@Autowired
-	private final MailService mailService;
+	private final ChronyService chronyService;
 
 	@Resource(name = "configService")
 	public ConfigService configService;
@@ -538,22 +532,22 @@ public class LoginController {
 		loginMsg += Prop.propFormat("login.currentlogin.ip", Common.getLocale(session)) + " : " + Common.nvl(request.getRemoteAddr(), "-") + "\n";
 
 		if (Config.getBoolean("chrony.server.used")) {
-			JSONObject ntpStatus = ntpScheduler.getNtpStatus();
+			ChronyVO chronyVO = chronyService.getChrony();
+
 			loginMsg += "\n";
 			loginMsg += "\n";
 			loginMsg += "         *****  " + Prop.propFormat("trap.message.Chrony", Common.getLocale(session)) + "  *****";
 			loginMsg += "\n";
 			loginMsg += "\n";
-			if (!ntpStatus.get("ntpServer").equals(""))
-				loginMsg += Prop.propFormat("trap.message.Chrony.server", Common.getLocale(session)) + " : " + ntpStatus.getString("ntpServer") + "\n";
+			if (!chronyVO.getNtpServer().equals("") || !chronyVO.getNtpServer().isEmpty())
+				loginMsg += Prop.propFormat("trap.message.Chrony.server", Common.getLocale(session)) + " : " + chronyVO.getNtpServer() + "\n";
 			else
 				loginMsg += Prop.propFormat("trap.message.Chrony.server", Common.getLocale(session)) + " : " + Prop.propFormat("trap.message.Chrony.server.nosearch", Common.getLocale(session)) + "\n";
 
-			if (Common.isEquals(ntpStatus.getString("status"), "sync")) {
+			if (Common.isEquals(chronyVO.getStatus(), "sync")) {
 				loginMsg += Prop.propFormat("trap.message.Chrony.sync.msg", Common.getLocale(session)) + " : " + Prop.propFormat("trap.message.Chrony.sync", Common.getLocale(session)) + "\n";
-			} else if (Common.isEquals(ntpStatus.getString("status"), "unsync")) {
+			} else if (Common.isEquals(chronyVO.getStatus(), "unsync")) {
 				loginMsg += Prop.propFormat("trap.message.Chrony.sync.msg", Common.getLocale(session)) + " : " + Prop.propFormat("trap.message.Chrony.unsync", Common.getLocale(session)) + "\n";
-
 			} else {
 				loginMsg += Prop.propFormat("trap.message.Chrony.sync.msg", Common.getLocale(session)) + " : " + Prop.propFormat("trap.message.Chrony.unconnect", Common.getLocale(session)) + "\n";
 			}
