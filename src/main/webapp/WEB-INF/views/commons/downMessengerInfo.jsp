@@ -305,9 +305,9 @@
         if( statStr == 'X' ) return '<span class="deleteText">' + convertFileSize(value) + '</span>';
         else return convertFileSize(value);
     });
-    grid.colAdd('skipCnt', '<s:message code="download.msg.skip" />', 80, 'center', false, 'nomal', function ( row, cell, value, columnDef, dataContext ) {
-        return value.comma();
-    });
+    <%--grid.colAdd('skipCnt', '<s:message code="download.msg.skip" />', 80, 'center', false, 'nomal', function ( row, cell, value, columnDef, dataContext ) {--%>
+    <%--    return value.comma();--%>
+    <%--});--%>
     grid.colAdd('cancel', '<s:message code="common.msg.cancel"/>', 80, 'center', false, 'nomal', function ( row, cell, value, columnDef, dataContext ) {
         var statStr = grid.getValue(row, 'statusStr');
         if( statStr != 'X' && statStr != 'C' && statStr != 'Y' && statStr != 'M' && statStr != 'H') return '<button type="button" class="btn btn-sm btn-warning"><s:message code="common.msg.cancel"/></button>';
