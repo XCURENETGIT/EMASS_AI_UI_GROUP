@@ -113,15 +113,15 @@
 		<div class="ipinfo_right">
 			<% if(Config.getBoolean("chrony.server.used")){ %>
 			<p class="ntp" style="margin-left: 8px;">
-				<%if (Common.isEquals(ntpInfo.getString("status"), "sync")) {%>
+				<%if (!ntpInfo.isEmpty() && Common.isEquals(ntpInfo.getString("status"), "sync")) {%>
 				<span id="ntpColor" class="top_flag01"></span>&nbsp;
-				<%} else if (Common.isEquals(ntpInfo.getString("status"), "unsync")) {%>
+				<%} else if (!ntpInfo.isEmpty() && Common.isEquals(ntpInfo.getString("status"), "unsync")) {%>
 				<span id="ntpColor" class="top_flag02"></span>&nbsp; <%-- 추후 오렌지색 변경 --%>
 				<%} else {%>
 				<span id="ntpColor" class="top_flag03"></span>&nbsp; <%-- 추후 레드 변경--%>
 				<%}%>
 
-				<%if (!Common.isEquals(ntpInfo.getString("ntpServer"), "")) {%>
+				<%if (!ntpInfo.isEmpty() && ntpInfo != null &&!Common.isEquals(ntpInfo.getString("ntpServer"), null)) {%>
 				<span id="ntpStatus" class="fb600">Chrony - <%=Common.nvl(ntpInfo.get("ntpServer")) %></span>
 				<%} else {%>
 				<span id="ntpStatus" class="fb600">Chrony - <s:message code="trap.message.Chrony.server.nosearch"/></span>

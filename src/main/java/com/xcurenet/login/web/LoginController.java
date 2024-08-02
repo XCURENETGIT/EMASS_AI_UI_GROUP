@@ -539,7 +539,7 @@ public class LoginController {
 			loginMsg += "         *****  " + Prop.propFormat("trap.message.Chrony", Common.getLocale(session)) + "  *****";
 			loginMsg += "\n";
 			loginMsg += "\n";
-			if (!chronyVO.getNtpServer().equals("") || !chronyVO.getNtpServer().isEmpty())
+			if (chronyVO.getNtpServer() != null)
 				loginMsg += Prop.propFormat("trap.message.Chrony.server", Common.getLocale(session)) + " : " + chronyVO.getNtpServer() + "\n";
 			else
 				loginMsg += Prop.propFormat("trap.message.Chrony.server", Common.getLocale(session)) + " : " + Prop.propFormat("trap.message.Chrony.server.nosearch", Common.getLocale(session)) + "\n";

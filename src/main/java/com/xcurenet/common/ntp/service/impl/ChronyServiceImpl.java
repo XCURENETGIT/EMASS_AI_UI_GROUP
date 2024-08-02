@@ -16,9 +16,10 @@ public class ChronyServiceImpl extends XcnAbstractDAO implements ChronyService {
 	public int insert(JSONObject ntpStatus) {
 		deleteChrony(); //한달 지난 데이터 삭제
 		ChronyVO chronyVO = new ChronyVO();
-		if (!ntpStatus.get("ntpServer").equals("")) chronyVO.setNtpServer(ntpStatus.getString("ntpServer"));
-
 		String status = ntpStatus.getString("status");
+
+		if (!ntpStatus.get("ntpServer").equals("") && (Common.isEquals(status, "sync") || Common.isEquals(status, "unsync"))) chronyVO.setNtpServer(ntpStatus.getString("ntpServer"));
+
 		if (Common.isEquals(status, "sync") || Common.isEquals(status, "unsync")) chronyVO.setStatus(status);
 		else chronyVO.setStatus("unconnect");
 
