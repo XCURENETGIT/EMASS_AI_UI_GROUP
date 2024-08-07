@@ -1117,7 +1117,7 @@
 
 		<%--			검색 결과 영역--%>
 		<div class="messengerList" >
-			<div class="messengerBox">
+			<div class="messengerBox"  style="height: 90% !important;">
 				<div class="subTit p12">
 					<h2 class="ma_none pb4">
 						<button id="xcn_toggleBtn" class="menu"></button><s:message code="DATA_MONITOR.GENERATIVEAI_SERVICE"/>
@@ -1127,8 +1127,8 @@
 					<div id="busiCntArea" style="padding-left: 5px;padding-right: 15px; margin-left:6px; height:36px;">
 					</div>
 				</div>
-				<div>
-					<div class="list-group" id="group_list" style="margin-bottom: 0px; overflow: scroll">
+				<div style="height: 100%">
+					<div class="list-group" id="group_list" style="margin-bottom: 0px;height: 80%!important; overflow: scroll">
 						<a href="#" class="list-group-item list-group-item-action active" style="cursor:default; padding:40px; margin:0 20px;">
 							<p class="list-group-item-text" style="line-height:30px; text-align: center">
 								<img src="<c:url value="/img/icon/img_nodata02.png"/>" width="72" height="72">
