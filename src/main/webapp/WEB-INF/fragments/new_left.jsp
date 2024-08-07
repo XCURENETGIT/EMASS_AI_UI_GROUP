@@ -15,6 +15,7 @@
 	boolean consentMenuEnable = Config.getBoolean("consent.menu.enable");
 	boolean infoHynixConf = Config.getBoolean("info.hynix.used");
 	boolean infoFeedbackYn = Config.getBoolean("info.feedback.used");
+	boolean isOCR = Config.isOCR;
 	JSONObject ntpInfo = NtpScheduler.ntpStatus;
 	String menuKey = Common.nvl(Common.getParam(request).get("menuKey"));
 %>
@@ -31,6 +32,7 @@
 	let infoFeedbackConf = '<%=infoFeedbackConf%>';
 	let infoHynixConf = '<%=infoHynixConf%>';
 	let infoFeedbackYn = '<%=infoFeedbackYn%>';
+	var isOCR = '<%=isOCR%>';
 	let consentMenuEnable = '<%=consentMenuEnable%>';
 
 	if ($(window).height() < 510) {
@@ -130,6 +132,7 @@
                         if (menuList[l].menuUseyn == "N")continue;
                         if ((menuList[l].menuId == "CONSENT_MGMT") && (consentMenuEnable == "false")) continue;
                         if ((menuList[l].menuId == "STAT_INFOTYPE") && (infoFeedbackYn  == "false")) continue;
+						if ((menuList[l].menuId == "STAT_OCR") && (isOCR  == "false")) continue;
 						if (menuList[l].pid == null || menuList[l].pid != menuList[k].menuId) continue;
 						html += '<li><span>-</span>';
 						html += '<a lastChildMenu  url="' + mainContext + '/' + menuList[l].menuLink + '"class="topMenu ' + menuList[l].menuId + ' menuList"' + 'menuid=' + menuList[l].menuId + '>';
