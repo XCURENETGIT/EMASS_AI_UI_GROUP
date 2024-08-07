@@ -9,7 +9,7 @@
 <script type="text/javascript">
     var searchFlag = false;
     $(document).ready(function () {
-        $('#searchregexNameBtn').enter(function () {
+        $('#searchName').enter(function () {
             getData();
         });
 
