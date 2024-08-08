@@ -342,6 +342,25 @@
 					}
 				});
 			});
+
+			$(document).on('click', '#serviceBody', function(){
+				$('#summaryModal h2').html('내용분석');
+				$('#summaryIcon4').removeClass('fa-question-circle').addClass('fa-spinner');
+				ui.get({
+					url : 'getLLMAnalysis.xcn',
+					chat : limitStringLength($('#emassBody').text(), 2000) + '\n\n\n위에 내용을 분석해서 어떤 서비스인지 알려줘?',
+					success : function ( data, total ) {
+						$('#summaryContent').html('아래 내용은 내용을 분석한 내용입니다.<br><br>' + data.response.fReplaceWord('\n', '.</br>'));
+						$("#summaryModal").modal('show');
+					},
+					error : function (status, message) {
+						ui.alertMsg(message);
+					},
+					complete : function (){
+						$('#summaryIcon4').removeClass('fa-spinner').addClass('fa-question-circle');
+					}
+				});
+			});
 		});
 
 
@@ -823,6 +842,7 @@
 									<%if(isLlmEnabled){%>
 									<button class="btn01" id="koreaBody"><i id="summaryIcon2" class="fa fa-question-circle" aria-hidden="true" style="display: inline"></i> 번역</button>
 									<button class="btn01" id="summaryBody"><i id="summaryIcon3" class="fa fa-question-circle" aria-hidden="true" style="display: inline"></i> 주제키워드</button>
+									<button class="btn01" id="serviceBody"><i id="summaryIcon4" class="fa fa-question-circle" aria-hidden="true" style="display: inline"></i> 내용분석</button>
 									&nbsp;
 									<%}%>
 									<span class="select-xs body_selectBtn">
