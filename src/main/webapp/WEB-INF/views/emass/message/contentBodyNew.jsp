@@ -288,7 +288,8 @@
 			});
 
 			$(document).on('click', '#helpHost', function(){
-				$(this).removeClass('fa-question-circle').addClass('fa-spinner');
+				$("#helpView").css("display", "");
+				$("#helpHost").css("display", "none");
 				ui.get({
 					url : 'getLLMAnalysis.xcn',
 					chat : '"' + $('#helpHost').attr('title') + '" 통신하는 URL 주소가 어떤 서비스인지 간략하게 알려줄수 있어?',
@@ -300,14 +301,16 @@
 						ui.alertMsg(message);
 					},
 					complete : function (){
-						$('#helpHost').removeClass('fa-spinner').addClass('fa-question-circle');
+						$("#helpView").css("display", "none");
+						$("#helpHost").css("display", "");
 					}
 				});
 			});
 
 			$(document).on('click', '#koreaBody', function(){
 				$('#summaryModal h2').html('본문내용 한국어 번역');
-				$('#summaryIcon2').removeClass('fa-question-circle').addClass('fa-spinner');
+				$("#helpView2").css("display", "");
+				$("#llmImg1").css("display", "none");
 				ui.get({
 					url : 'getLLMAnalysis.xcn',
 					chat : limitStringLength($('#emassBody').text(), 2000) + '\n\n\n위에 내용을 한글로 번역해줘?',
@@ -319,14 +322,16 @@
 						ui.alertMsg(message);
 					},
 					complete : function (){
-						$('#summaryIcon2').removeClass('fa-spinner').addClass('fa-question-circle');
+						$("#helpView2").css("display", "none");
+						$("#llmImg1").css("display", "");
 					}
 				});
 			});
 
 			$(document).on('click', '#summaryBody', function(){
 				$('#summaryModal h2').html('주제 키워드 분석');
-				$('#summaryIcon3').removeClass('fa-question-circle').addClass('fa-spinner');
+				$("#helpView3").css("display", "");
+				$("#llmImg2").css("display", "none");
 				ui.get({
 					url : 'getLLMAnalysis.xcn',
 					chat : limitStringLength($('#emassBody').text(), 2000) + '\n\n\n위에 내용에서 주제키워드 단어로 10개정도 추출해죠?',
@@ -338,14 +343,17 @@
 						ui.alertMsg(message);
 					},
 					complete : function (){
-						$('#summaryIcon3').removeClass('fa-spinner').addClass('fa-question-circle');
+						$("#helpView3").css("display", "none");
+						$("#llmImg2").css("display", "");
+
 					}
 				});
 			});
 
 			$(document).on('click', '#serviceBody', function(){
 				$('#summaryModal h2').html('내용분석');
-				$('#summaryIcon4').removeClass('fa-question-circle').addClass('fa-spinner');
+				$("#helpView5").css("display", "");
+				$("#llmImg4").css("display", "none");
 				ui.get({
 					url : 'getLLMAnalysis.xcn',
 					chat : limitStringLength($('#emassBody').text(), 2000) + '\n\n\n위에 내용을 분석해서 어떤 서비스인지 알려줘?',
@@ -357,10 +365,33 @@
 						ui.alertMsg(message);
 					},
 					complete : function (){
-						$('#summaryIcon4').removeClass('fa-spinner').addClass('fa-question-circle');
+						$("#helpView5").css("display", "none");
+						$("#llmImg4").css("display", "");
 					}
 				});
 			});
+
+			$(document).on('click', '#contentBody', function(){
+				$('#summaryModal h2').html('내용요약');
+				$("#helpView4").css("display", "");
+				$("#llmImg3").css("display", "none");
+				ui.get({
+					url : 'getLLMAnalysis.xcn',
+					chat : limitStringLength($('#emassBody').text(), 2000) + '\n\n\n위에 내용을 요약해줘?',
+					success : function ( data, total ) {
+						$('#summaryContent').html('아래 내용은 내용을 분석한 내용입니다.<br><br>' + data.response.fReplaceWord('\n', '.</br>'));
+						$("#summaryModal").modal('show');
+					},
+					error : function (status, message) {
+						ui.alertMsg(message);
+					},
+					complete : function (){
+						$("#helpView4").css("display", "none");
+						$("#llmImg3").css("display", "");
+					}
+				});
+			});
+
 		});
 
 
@@ -676,7 +707,8 @@
 											<th>HOST/Path <i id="nologUrlBtn" class="fa fa-chain-broken nologUrlBtn" aria-hidden="true"></i></th>
 											<td colspan="3">
 												<%if(isLlmEnabled){%>
-												<i id="helpHost" class="fa fa-question-circle" aria-hidden="true" style="display: inline"></i>
+												<i id="helpView" class="fa fa-spinner" aria-hidden="true" style="display: none" ></i>
+												<img id="helpHost" alt="" src="<c:url value="/img/ztree/AI2.gif"/>" width="23px;" height="23px;">
 												<%}%>
 												<div id="hostDiv" style="padding-left: 10px;display: inline">
 												</div>
@@ -832,6 +864,26 @@
 						</div>
 					</div>
 				</div>
+
+				<!-- LLM AI 정보 -->
+				<%if(isLlmEnabled){%>
+				<div class="row" id="LLMDIV" >
+					<div class="col-lg-12">
+						<div class="panel panel-default">
+							<div class="panel-heading" style="padding:10px 12px 9px;">
+								AI
+							</div>
+							<div class="panel-body" id="LLMAREA" style="overflow: auto;padding-top:10px;">
+								<button class="btn01" id="koreaBody"><i id="helpView2" class="fa fa-spinner" aria-hidden="true" style="display: none" ></i><img id="llmImg1" alt="" src="<c:url value="/img/ztree/AI2.gif"/>" width="23px;" height="23px;" style="margin-top: -6px!important;"> 번역</button>
+								<button class="btn01" id="summaryBody"><i id="helpView3" class="fa fa-spinner" aria-hidden="true" style="display: none" ></i><img id="llmImg2" alt="" src="<c:url value="/img/ztree/AI2.gif"/>" width="23px;" height="23px;" style="margin-top: -6px!important;"> 주제키워드</button>
+								<button class="btn01" id="contentBody"><i id="helpView4" class="fa fa-spinner" aria-hidden="true" style="display: none" ></i><img id="llmImg3" alt="" src="<c:url value="/img/ztree/AI2.gif"/>" width="23px;" height="23px;" style="margin-top: -6px!important;"> 내용요약</button>
+								<button class="btn01" id="serviceBody"><i id="helpView5" class="fa fa-spinner" aria-hidden="true" style="display: none" ></i><img id="llmImg4" alt="" src="<c:url value="/img/ztree/AI2.gif"/>" width="23px;" height="23px;" style="margin-top: -6px!important;"></i> 내용분석</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<%}%>
+
 				<!-- 본문내용 -->
 				<div class="row" id="bodyDiv">
 					<div class="col-lg-12">
@@ -839,12 +891,6 @@
 							<div class="panel-heading " style="padding:10px 12px 9px;">
 								<s:message code="bodyview.body.content"/>
 								<div class="pull-right" style="position: relative;top:-7px;">
-									<%if(isLlmEnabled){%>
-									<button class="btn01" id="koreaBody"><i id="summaryIcon2" class="fa fa-question-circle" aria-hidden="true" style="display: inline"></i> 번역</button>
-									<button class="btn01" id="summaryBody"><i id="summaryIcon3" class="fa fa-question-circle" aria-hidden="true" style="display: inline"></i> 주제키워드</button>
-									<button class="btn01" id="serviceBody"><i id="summaryIcon4" class="fa fa-question-circle" aria-hidden="true" style="display: inline"></i> 내용분석</button>
-									&nbsp;
-									<%}%>
 									<span class="select-xs body_selectBtn">
 										<s:message code="common.msg.zoom"/> :
 									</span>
