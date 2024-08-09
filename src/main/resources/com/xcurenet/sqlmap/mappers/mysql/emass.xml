@@ -498,6 +498,23 @@
 		LIMIT 1
 	</select>
 
+	<select id="isHostExist" resultType="int" parameterType="string">
+		SELECT COUNT(*) AS cnt
+		FROM HOST_INFO
+		WHERE HOST = #{host}
+	</select>
+
+	<insert id="insertHost" parameterType="hostDescriptionVO">
+		INSERT	INTO HOST_INFO(host, description) VALUES (#{host}, #{description})
+	</insert>
+
+	<update id="updateHost" parameterType="hostDescriptionVO">
+		UPDATE	HOST_INFO
+		SET		description = #{description}
+		WHERE	host = #{host}
+	</update>
+
+
 	<insert id="insertSearchKeywordList" parameterType="hashmap">
 		INSERT	INTO UI_SEARCH_KEYWORD(ADMIN_ID, SEARCH_KEYWORD, CREATE_DT) VALUES (#{adminId}, #{searchKeyword}, NOW())
 	</insert>

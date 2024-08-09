@@ -298,6 +298,8 @@
 					success : function ( data, total ) {
 						$('#helpHostDesc').html(data.response.fReplaceWord('\n', '.</br>'));
 						$('#hostDiv a').attr("title", data.response.fReplaceWord('\n', '.</br>'));
+
+						insertLlmHost($('#helpHost').attr('title'), data.response.fReplaceWord('\n', '.</br>'));
 					},
 					error : function (status, message) {
 						ui.alertMsg(message);
@@ -305,6 +307,8 @@
 					complete : function (){
 						$("#helpView").css("display", "none");
 						$("#helpHost").css("display", "");
+						$("#hostDescriptionDiv").css("display", "none");
+
 					}
 				});
 			});
@@ -428,6 +432,29 @@
 		function getSimilarDoc(){
 			ui.get({
 				url : 'getSimilarDoc.xcn',
+				success : function ( data, total ) {
+
+				},
+				error : function (status, message) {
+					ui.alertMsg(message);
+				},
+				complete : function (){
+				}
+			});
+		}
+
+		function insertLlmHost(host, description){
+
+			if (host == '' || host == null) return;
+			if (description == '' || description == null) return;
+			if (description.startsWith("죄송합니다,")) return;
+			if (description.startsWith("Sorry,")) return;
+			if (description.startsWith("I'm sorry,")) return;
+
+			ui.get({
+				host : host,
+				description : description,
+				url : 'insertLlmHost.xcn',
 				success : function ( data, total ) {
 
 				},

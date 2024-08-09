@@ -1901,11 +1901,12 @@ function getHostDescription(host) {
         url: 'getHostDescription.xcn',
         host: host,
         success: function (data, total) {
+            $("#hostDescriptionDiv").css("display", "");
             if (data == null){
-                $('#hostDescriptionDiv').text("");
+                $('#hostDescriptionDiv').html("");
             }
             else {
-                $('#hostDescriptionDiv').text(data.description);
+                $('#hostDescriptionDiv').html(data.description);
             }
         },
         error: function (status, message) {

@@ -1690,4 +1690,14 @@ public class EmsMessageController {
 		return new XcnResponseVO(XcnRspCode.OK, Common.toJSONObject(doc.body().text()));
 	}
 
+	@RequestMapping(value = "/insertLlmHost.xcn")
+	@Description("LLM 내용 분석")
+	@ResponseBody
+	public XcnResponseVO insertLlmHost(final HostDescriptionVO hostDescriptionVO, final HttpServletResponse response) throws Exception {
+		if (emsMessageService.isHostExist(hostDescriptionVO.getHost()))emsMessageService.updateHost(hostDescriptionVO);
+		else emsMessageService.insertHost(hostDescriptionVO);
+
+		return new XcnResponseVO(XcnRspCode.OK);
+	}
+
 }
