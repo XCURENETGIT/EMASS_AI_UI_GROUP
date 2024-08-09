@@ -83,4 +83,5 @@ public interface EmsMessageService {
 
 	public EmsMessageVO highlightCheck(EmsMessageVO emass,Map<String,Object> regexpHighlight);
 
+	public HostDescriptionVO getHostDescription(String host);
 }

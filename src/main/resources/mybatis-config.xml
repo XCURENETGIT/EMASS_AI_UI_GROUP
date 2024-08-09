@@ -109,6 +109,9 @@
 
 		<typeAlias alias="chronyVO" type="com.xcurenet.common.ntp.service.ChronyVO" />
 
+		<typeAlias alias="hostDescriptionVO" type="com.xcurenet.emass.message.service.HostDescriptionVO" />
+
+
 	</typeAliases>
 
 	<mappers>

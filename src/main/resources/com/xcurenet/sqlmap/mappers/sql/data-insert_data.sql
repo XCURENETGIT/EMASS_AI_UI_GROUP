@@ -64,6 +64,8 @@ INSERT
 IGNORE INTO UI_CONF (CONF_ID, VAL, DEFAULT_VAL, UPDATE_DT) VALUES ('info.hynix.used', 'false', 'false', NOW());
 INSERT
 IGNORE INTO UI_CONF (CONF_ID, VAL, DEFAULT_VAL, UPDATE_DT) VALUES ('chrony.server.used', 'true', 'true', NOW());
+INSERT
+IGNORE INTO UI_CONF (CONF_ID, VAL, DEFAULT_VAL, UPDATE_DT) VALUES ('llm.single', 'false', 'false', NOW());
 
 INSERT
 IGNORE INTO UI_ADMIN

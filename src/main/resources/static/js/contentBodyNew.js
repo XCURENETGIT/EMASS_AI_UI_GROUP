@@ -1236,7 +1236,7 @@ function setMessage(msg) {
     if (nvl(msg.host) == "") {
         $('#hostTr').css("display", "none");
         $('#hostDiv').html();
-
+        $('#hostDescriptionDiv').html();
     } else {
         $('#hostTr').css("display", "");
         var query = "";
@@ -1246,6 +1246,7 @@ function setMessage(msg) {
 
         $('#hostDiv').html('<a style="word-break: break-all;" target="_blank" href="http://' + hostDivText + '">' + hostDivText + '</a>');
         $('#helpHost').attr('title', nvl(msg.host));
+        getHostDescription(msg.host);
     }
 
     //대외비
@@ -1894,6 +1895,27 @@ function setOcrFileDiv(files) {
         }
     }
 }
+
+function getHostDescription(host) {
+    ui.get({
+        url: 'getHostDescription.xcn',
+        host: host,
+        success: function (data, total) {
+            if (data == null){
+                $('#hostDescriptionDiv').text("");
+            }
+            else {
+                $('#hostDescriptionDiv').text(data.description);
+            }
+        },
+        error: function (status, message) {
+            ui.alertMsg(message);
+        },
+        complete: function () {
+        }
+    });
+}
+
 
 function setPatternDiv(patterns) {
     var fileRows = $('#patternTable tr').length;

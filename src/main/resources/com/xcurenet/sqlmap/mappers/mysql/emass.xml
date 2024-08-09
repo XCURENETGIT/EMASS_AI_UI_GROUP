@@ -491,6 +491,13 @@
 		ORDER	BY CREATE_DT DESC
 	</select>
 
+	<select id="getHostDescription" resultType="hostDescriptionVO" parameterType="string">
+		SELECT *
+		FROM HOST_INFO
+		WHERE HOST = #{host}
+		LIMIT 1
+	</select>
+
 	<insert id="insertSearchKeywordList" parameterType="hashmap">
 		INSERT	INTO UI_SEARCH_KEYWORD(ADMIN_ID, SEARCH_KEYWORD, CREATE_DT) VALUES (#{adminId}, #{searchKeyword}, NOW())
 	</insert>

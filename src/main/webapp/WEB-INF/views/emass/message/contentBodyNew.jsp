@@ -38,6 +38,7 @@
 	String bodySize = Common.nvl(param.get("bodySize"));
 	boolean mailUseFlag = Config.getBoolean("mail.forward.flag");
 	boolean isLlmEnabled = conf.isLlmEnabled();
+	boolean isLlmSingle = Config.getBoolean("llm.single");
 	String op_attach_save = Operation.ATTACH_SAVE.getOperation();
 	String op_body_save = Operation.BODY_SAVE.getOperation();
 	String op_body_print = Operation.BODY_PRINT.getOperation();
@@ -230,11 +231,12 @@
 		var infoFeedbackYn = '<%=infoFeedbackYn%>';
 		var infoFeedbackConf = '<%=infoFeedbackConf%>';
 		var infoHynixConf = '<%=infoHynixConf%>';
+		var isLlmSingle = '<%=isLlmSingle%>';
 		var mode='';
 		var kHighlight = '<%=keywordHighlight%>';
 		var hostQueryUse = '<%=hostQuery%>';
 		var unknown =  '<s:message code="bodyview.unknown"/>';
-  
+
 
 		$(document).ready(function(){
 			if(popup_msgId!= '') {
@@ -710,11 +712,11 @@
 												<i id="helpView" class="fa fa-spinner" aria-hidden="true" style="display: none" ></i>
 												<img id="helpHost" alt="" src="<c:url value="/img/ztree/AI2.gif"/>" width="23px;" height="23px;">
 												<%}%>
-												<div id="hostDiv" style="padding-left: 10px;display: inline">
-												</div>
+												<div id="hostDiv" style="padding-left: 10px;display: inline"></div>
 												<%if(isLlmEnabled){%>
-												<div id="helpHostDesc" style="display: block;padding-top: 10px;"></div>
+												<div id="helpHostDesc" style="display: block;padding-top: 10px; padding-bottom: 10px;"></div>
 												<%}%>
+												<div id="hostDescriptionDiv" style="display:block">
 											</td>
 										</tr>
 										<%if(infoHynixConf){%>
@@ -874,10 +876,10 @@
 								AI
 							</div>
 							<div class="panel-body" id="LLMAREA" style="overflow: auto;padding-top:10px;">
-								<button class="btn01" id="koreaBody"><i id="helpView2" class="fa fa-spinner" aria-hidden="true" style="display: none" ></i><img id="llmImg1" alt="" src="<c:url value="/img/ztree/AI2.gif"/>" width="23px;" height="23px;" style="margin-top: -6px!important;"> 번역</button>
-								<button class="btn01" id="summaryBody"><i id="helpView3" class="fa fa-spinner" aria-hidden="true" style="display: none" ></i><img id="llmImg2" alt="" src="<c:url value="/img/ztree/AI2.gif"/>" width="23px;" height="23px;" style="margin-top: -6px!important;"> 주제키워드</button>
-								<button class="btn01" id="contentBody"><i id="helpView4" class="fa fa-spinner" aria-hidden="true" style="display: none" ></i><img id="llmImg3" alt="" src="<c:url value="/img/ztree/AI2.gif"/>" width="23px;" height="23px;" style="margin-top: -6px!important;"> 내용요약</button>
-								<button class="btn01" id="serviceBody"><i id="helpView5" class="fa fa-spinner" aria-hidden="true" style="display: none" ></i><img id="llmImg4" alt="" src="<c:url value="/img/ztree/AI2.gif"/>" width="23px;" height="23px;" style="margin-top: -6px!important;"></i> 내용분석</button>
+								<button class="btn01" id="koreaBody"><i id="helpView2" class="fa fa-spinner" aria-hidden="true" style="display: none" ></i><img id="llmImg1" alt="" src="<c:url value="/img/ztree/AI2.gif"/>" width="23px;" height="23px;" style="margin-top: -6px!important;"><s:message code="llm.info.korea"/></button>
+								<button class="btn01" id="summaryBody"><i id="helpView3" class="fa fa-spinner" aria-hidden="true" style="display: none" ></i><img id="llmImg2" alt="" src="<c:url value="/img/ztree/AI2.gif"/>" width="23px;" height="23px;" style="margin-top: -6px!important;"><s:message code="llm.info.keyword"/></button>
+								<button class="btn01" id="contentBody"><i id="helpView4" class="fa fa-spinner" aria-hidden="true" style="display: none" ></i><img id="llmImg3" alt="" src="<c:url value="/img/ztree/AI2.gif"/>" width="23px;" height="23px;" style="margin-top: -6px!important;"> <s:message code="llm.info.summary"/></button>
+								<%if(!isLlmSingle){%><button class="btn01" id="serviceBody"><i id="helpView5" class="fa fa-spinner" aria-hidden="true" style="display: none" ></i><img id="llmImg4" alt="" src="<c:url value="/img/ztree/AI2.gif"/>" width="23px;" height="23px;" style="margin-top: -6px!important;"></i> <s:message code="llm.info.body"/></button>	<%}%>
 							</div>
 						</div>
 					</div>
