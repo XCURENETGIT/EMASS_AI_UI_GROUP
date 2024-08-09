@@ -448,6 +448,7 @@
 			if (host == '' || host == null) return;
 			if (description == '' || description == null) return;
 			if (description.startsWith("죄송합니다,")) return;
+			if (description.startsWith("죄송하지만")) return;
 			if (description.startsWith("Sorry,")) return;
 			if (description.startsWith("I'm sorry,")) return;
 
