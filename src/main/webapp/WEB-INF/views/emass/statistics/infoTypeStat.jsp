@@ -646,7 +646,7 @@
 			<div class="chartAreafull">
 				<div>
 					<h3>
-						TOP 통계 Chart
+						TOP <s:message code="DATA_MONITOR.STAT_LABEL"/> CHART
 						<span class="sel">
 						<div id="totalViewDiv" class="totalView" style="display:none;">
 							<div class="subtab">
