@@ -25,6 +25,31 @@
             getData();
         });
 
+	    $('.serviceList').click(function () {
+		    var message = '<s:message code="common.msg.confirm.modify"/>';
+			var type = $(this).val();
+		    ui.confirmMsg(message, '', '', function (rs) {
+			    if (rs) {
+				    var rows = gridService.getSelectedRows();;
+				    ui.get({
+					    url: 'updateServiceListUseYn.xcn',
+					    type : type,
+					    serviceData: JSON.stringify(rows),
+					    success: function (data, total) {
+						    getData();
+					    },
+					    error: function (status, message) {
+
+					    },
+					    complete: function () {
+
+					    }
+
+				    });
+			    }
+		    })
+	    });
+
         $('#searchStrInput').keypress(function (e) {
             if (e.which == 13) {
                 getData();
@@ -47,12 +72,16 @@
                 $('#useYnDiv').css('display', 'none');
                 $('#insertBtn').css('display', '');
                 $('#deleteBtn').css('display', '');
+                $('#useBtn').css('display', 'none');
+                $('#unuseBtn').css('display', 'none');
             } else if (currentTab == 'serviceTab') {
                 $('#export_menu2').css('display', '');
                 $('#searchStrInput').attr('placeholder', '<s:message code="codeInfo.msg.enter.svc"/>');
                 $('#useYnDiv').css('display', '');
                 $('#insertBtn').css('display', 'none');
                 $('#deleteBtn').css('display', 'none');
+	            $('#useBtn').css('display', '');
+	            $('#unuseBtn').css('display', '');
             } else {
                 $('#useYnDiv').css('display', 'none');
                 $('#insertBtn').css('display', '');
@@ -390,6 +419,8 @@
 			</div>
 			<input type="text" placeholder="<s:message code="codeInfo.msg.enter.svc"/>" id="searchStrInput" style="width: 250px;">
 			<button class="form_btn01" type="button" accesskey="Q" id="searchBtn"><s:message code="common.search"/></button>
+			<button class="btn01 serviceList" type="button" accesskey="Q" id="useBtn" value="Y"><img src="<c:url value="/img/subBtn_refresh.png"/>" alt="사용"><s:message code="common.msg.use"/></button>
+			<button class="btn01 serviceList" type="button" accesskey="Q" id="unuseBtn" value="N"><img src="<c:url value="/img/subBtn_refresh.png"/>" alt="미사용"><s:message code="common.msg.unuse"/></button>
 				<button type="button" class="btn01" accesskey="I" id="insertBtn" style="display: none;"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
 				<button type="button" class="btn02" accesskey="D" id="deleteBtn" style="display: none;"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
 			</div>
@@ -447,6 +478,7 @@
 
     var gridService = new Xgrid('serviceListGrid', contextRoot);
     gridService.autoNumber();
+    gridService.onCheckBox();
     gridService.colAdd('groupNm', '<s:message code="filterInfo.serviceSeparate"/>', 150, 'center', false, 'nomal');
     gridService.colAdd('serviceNm', '<s:message code="condition.service"/>', 170, 'left', false, 'nomal');
     gridService.colAdd('serviceCd', '<s:message code="condition.service.code"/>', 90, 'center', false, 'nomal');

@@ -1,11 +1,14 @@
 package com.xcurenet.emass.service.web;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.xcurenet.emass.filter.service.SizeFilterVO;
+import net.sf.json.JSONArray;
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -100,6 +103,23 @@ public class ServiceTypeController {
 	@ResponseBody
 	public XcnResponseVO updateServiceUseYn(ServiceTypeVO service) throws Exception {
 		return new XcnResponseVO(XcnRspCode.OK, serviceTypeService.updateServiceUseYn(service));
+	}
+
+	@RequestMapping(value = "/updateServiceListUseYn.xcn")
+	@Description("서비스 타입 사용 여부 수정")
+	@ResponseBody
+	public XcnResponseVO updateServiceListUseYn(final HttpServletRequest request, final HttpSession session) throws Exception {
+		String serviceData = Common.nvl(request.getParameter("serviceData"));
+		String type = Common.nvl(request.getParameter("type"));
+		JSONArray dataList = Common.toJSONArray(serviceData);
+		List<ServiceTypeVO> service = new ArrayList<>();
+		for (int i = 0; i< dataList.size(); i++){
+			ServiceTypeVO serviceTypeVO = (ServiceTypeVO) JSONObject.toBean(dataList.getJSONObject(i), ServiceTypeVO.class);
+			serviceTypeVO.setUseYn(type);
+			System.out.println(serviceTypeVO);
+			serviceTypeService.updateServiceUseYn(serviceTypeVO);
+		}
+		return new XcnResponseVO(XcnRspCode.OK);
 	}
 
 }
