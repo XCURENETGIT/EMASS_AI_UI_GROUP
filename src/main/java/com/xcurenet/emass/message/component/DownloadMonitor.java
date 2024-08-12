@@ -1,5 +1,6 @@
 package com.xcurenet.emass.message.component;
 
+import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.SpringContextUtil;
 import com.xcurenet.common.util.TimeUtil;
 import com.xcurenet.emass.message.service.DownloadBatchService;
@@ -23,12 +24,12 @@ public class DownloadMonitor {
 	public void checkDownload() {
 		/* 배치 다운로드가 중지된 내역을 찾는다. */
 		log.info("[Download Batch Down] Download Batch State Update Start...");
-		long t = TimeUnit.MILLISECONDS.toHours(Long.valueOf(delay));
-		log.info("Time : " + t) ;
+		long t = TimeUnit.MILLISECONDS.toHours(Common.nvn(delay));
+		log.info("Time : {}", t);
 		TimeUtil.start();
+
 		DownloadBatchService batchService = SpringContextUtil.getBean(DownloadBatchService.class);
 		List<DownloadBatchVO> batchList = batchService.getDownloadBatchIngList(String.valueOf(t));
-
 		for (DownloadBatchVO batch : batchList) {
 			batchService.cancelUnkown("M", batch.getDownSeq());
 		}
