@@ -85,6 +85,8 @@ public interface EmsMessageService {
 
 	public HostDescriptionVO getHostDescription(String host);
 
+	public HostDescriptionVO getHostCategory(String host);
+
 	public boolean isHostExist(String host);
 
 	public int insertHost(HostDescriptionVO hostDescriptionVO);

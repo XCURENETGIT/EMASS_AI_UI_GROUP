@@ -1582,11 +1582,19 @@ public class EmsMessageController {
 	}
 
 	@RequestMapping(value = "/getHostDescription.xcn")
-	@Description("메시지 읽음 여부 처리")
+	@Description("HOST 설명")
 	@ResponseBody
 	public XcnResponseVO getHostDescription(final HttpServletRequest request, final HttpSession session) throws Exception {
 		String host = Common.nvl(request.getParameter("host"));
 		return new XcnResponseVO(XcnRspCode.OK, emsMessageService.getHostDescription(host));
+	}
+
+	@RequestMapping(value = "/getHostCategory.xcn")
+	@Description("HOST category")
+	@ResponseBody
+	public XcnResponseVO getHostCategory(final HttpServletRequest request, final HttpSession session) throws Exception {
+		String host = Common.nvl(request.getParameter("host"));
+		return new XcnResponseVO(XcnRspCode.OK, emsMessageService.getHostCategory(host));
 	}
 
 	@RequestMapping(value = "/updateEmsFeedback.xcn")

@@ -1237,6 +1237,7 @@ function setMessage(msg) {
         $('#hostTr').css("display", "none");
         $('#hostDiv').html();
         $('#hostDescriptionDiv').html();
+        $("#hostCategoryDiv").css("display", "none");
     } else {
         $('#hostTr').css("display", "");
         var query = "";
@@ -1247,6 +1248,12 @@ function setMessage(msg) {
         $('#hostDiv').html('<a style="word-break: break-all;" target="_blank" href="http://' + hostDivText + '">' + hostDivText + '</a>');
         $('#helpHost').attr('title', nvl(msg.host));
         getHostDescription(msg.host);
+
+        if (msg.svc.startsWith("X") || msg.svc.startsWith("U")){
+            getHostCategory(msg.host);
+        }else{
+            $("#hostCategoryDiv").css("display", "none");
+        }
     }
 
     //대외비
@@ -1908,6 +1915,31 @@ function getHostDescription(host) {
             else {
                 $('#hostDescriptionDiv').html(data.description);
             }
+        },
+        error: function (status, message) {
+            ui.alertMsg(message);
+        },
+        complete: function () {
+        }
+    });
+}
+
+function getHostCategory(host){
+    ui.get({
+        url: 'getHostCategory.xcn',
+        host: host,
+        success: function (data, total) {
+            if (data != null){
+                $("#hostCategoryDiv").css("display", "inline-block");
+                $('#hostCategory').html(contentBody.category+": "+data.description);
+            }
+
+            // if (data == null){
+            //     $('#hostDescriptionDiv').html("");
+            // }
+            // else {
+            //     $('#hostDescriptionDiv').html(data.description);
+            // }
         },
         error: function (status, message) {
             ui.alertMsg(message);

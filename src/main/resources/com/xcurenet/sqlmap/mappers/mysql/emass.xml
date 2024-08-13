@@ -498,6 +498,13 @@
 		LIMIT 1
 	</select>
 
+	<select id="getHostCategory" resultType="hostDescriptionVO" parameterType="string">
+		SELECT *
+		FROM HOST_CATEGORY
+		WHERE HOST = #{host}
+		LIMIT 1
+	</select>
+
 	<select id="isHostExist" resultType="int" parameterType="string">
 		SELECT COUNT(*) AS cnt
 		FROM HOST_INFO

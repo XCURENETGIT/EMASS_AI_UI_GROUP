@@ -151,6 +151,7 @@
 			border-radius: 4px;
 			margin:4px;
 		}
+
 		.userInside:hover {color:#fff;}
 
 
@@ -426,7 +427,8 @@
 			bcc:'<s:message code="condition.bcc"/>',
 			ocrBody:'<s:message code="bodyview.ocr.preview.body"/>',
 			ocrAttach:'<s:message code="bodyview.ocr.preview.attach"/>',
-			noRecvs:'<s:message code="common.msg.norecvs"/>'
+			noRecvs:'<s:message code="common.msg.norecvs"/>',
+			category:'<s:message code="common.category"/>',
 		};
 
 		function getSimilarDoc(){
@@ -741,6 +743,13 @@
 												<img id="helpHost" alt="" src="<c:url value="/img/ztree/AI2.gif"/>" width="23px;" height="23px;">
 												<%}%>
 												<div id="hostDiv" style="padding-left: 10px;display: inline"></div>
+												<%if(isLlmEnabled){%>
+												<br>
+												<div id="hostCategoryDiv" style="padding: 0px 6px 0px 2px; margin-top: 6px; border-radius: 4px; background-color: #F5F8FF; border: solid 1px #1C64D3; display: none; align-items: center;">
+													<img id="hostcategoryImg" alt="" src="<c:url value='/img/ztree/AI2.gif'/>" width="23" height="23" style="margin-right: 4px;">
+													<span id="hostCategory" style="color: #375E9A"></span>
+												</div>
+												<%}%>
 												<%if(isLlmEnabled){%>
 												<div id="helpHostDesc" style="display: block;padding-top: 10px; padding-bottom: 10px;"></div>
 												<%}%>

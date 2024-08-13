@@ -1061,6 +1061,11 @@ CREATE TABLE IF NOT EXISTS HOST_INFO (
     description TEXT  NULL COMMENT 'host 설명',
     PRIMARY KEY (host)     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='미분류 host 설명';
 
+CREATE TABLE IF NOT EXISTS HOST_CATEGORY (
+    host VARCHAR(255) NOT NULL COMMENT 'host 이름',
+    description TEXT  NULL COMMENT 'host 설명',
+    PRIMARY KEY (host)     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='미분류 host 카테고리';
+
 
 
 
