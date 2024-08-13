@@ -174,7 +174,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 		EmsHeaderVO result = new EmsHeaderVO();
 		result.setMsgId(data.getMsgId());
 		result.setHeaderPath(null);
-		if (data.getHeader() != null) result.setHeader(data.getHeader().getBytes());
+		//if (data.getHeader() != null) result.setHeader(data.getHeader().getBytes());
 		return result;
 	}
 

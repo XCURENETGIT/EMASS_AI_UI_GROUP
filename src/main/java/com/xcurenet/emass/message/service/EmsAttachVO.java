@@ -26,16 +26,6 @@ public class EmsAttachVO {
 	private String attachSpace;
 	private boolean consentFlag;
 
-	private String subject;
-	private String svc;
-	private String srcIp;
-	private String dstIp;
-	private String host;
-	private String path;
-	private String userId;
-	private String name;
-	private String ctime;
-
 	private String ocrYn;
 	private String ocrText;
 	private String ocrImageStr;
