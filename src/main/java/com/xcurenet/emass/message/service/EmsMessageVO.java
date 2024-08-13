@@ -100,6 +100,7 @@ public class EmsMessageVO {
 	private String ml_confd_userid;
 	private String epmsgType;
 	private EmassKeywordData keywordInfo;
+	private String header;
 
 	
 	/*오리지널 제목 존재 여부*/

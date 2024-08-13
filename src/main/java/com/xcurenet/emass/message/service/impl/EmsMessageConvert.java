@@ -69,7 +69,7 @@ public class EmsMessageConvert {
 			vo.setHost(data.getHttpInfo().getHost());
 			vo.setPath(data.getHttpInfo().getPath());
 			vo.setQuery(data.getHttpInfo().getQuery());
-		//	vo.setHeader(data.getHttpInfo().getHeader());
+			vo.setHeader(data.getHttpInfo().getHeader());
 		}
 		if (data.getSenderInfo() != null) {
 			vo.setSender(data.getSenderInfo().getId());
