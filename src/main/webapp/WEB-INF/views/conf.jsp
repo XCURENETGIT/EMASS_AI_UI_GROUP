@@ -816,16 +816,16 @@
 				</li>
 				<li class="pr20 pl20  grayBg02 ">
 					<div class="radio mat4 w100">
-						<div class="radio w100 mat4">
+						<div class="radio w100 mat4" style="margin-bottom: 10px;">
 							<input type="radio"  name="query.type" value="A" checked>
 							<span >	1. <s:message code="setup.message.search.userinfo"/> + <s:message code="setup.message.search.ipinfo"/></span>
 						</div>
 						<div class="radio w100 mat4">
-							<input type="radio" name="query.type" value="B">
+							<input type="radio" name="query.type" value="B" style="margin-bottom: 10px;">
 							<span > 2. <s:message code="setup.message.search.userinfo"/></span>
 						</div>
 						<div class="radio w100 mat4">
-							<input type="radio" name="query.type" value="C">
+							<input type="radio" name="query.type" value="C" style="margin-bottom: 10px;">
 							<span > 3. <s:message code="setup.message.search.ipinfo"/></span>
 						</div>
 					</div>
