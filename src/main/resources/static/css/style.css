@@ -6,7 +6,7 @@ body,html {width:100%; height:100%;}
 #header {position:fixed; width:100%; height:50px;min-width:1200px;z-index:99999;}
 #container {position: relative; width:100%; padding-top:50px; *zoom:1;}
 #container::after {content:''; display:block; clear:both;}
-#container #gnbWrap {position: fixed; z-index:99999; min-width:76px; height:100%;background-color: #242330; }
+#container #gnbWrap {position: fixed; z-index:99999; min-width:85px; height:100%;background-color: #242330; }
 #container #contentArea {position: relative;margin-left:78px; width: calc(100% - 78px);  height:100%;}
 
 /* Header */
@@ -26,7 +26,7 @@ body,html {width:100%; height:100%;}
 #gnb {position: relative;width:100%; background-color: #242330; margin-top:16px; margin-left:-1px;}
 #gnb ul li {margin-bottom:32px;}
 #gnb ul li a{display: block;text-align: center;}
-#gnb ul li a span{ display: block;font-size:13px; margin-top:4px; letter-spacing: -1; }
+#gnb ul li a span{ display: block;font-size:12px; margin-top:4px; letter-spacing: -1; }
 #gnb ul li a.active{border-left:4px solid #88B8FF;}
 #gnb ul li a.active span {font-size:13px; font-weight: 600 !important; color:#88B8FF;}
 #gnbWrap .setting {position: fixed;width:64px; margin:0 auto; text-align: center; bottom:10px; padding:10px 0;}
@@ -355,7 +355,7 @@ body,html {width:100%; height:100%;}
 .info {background:#fff url(../img/ico_alert.png) left top no-repeat;padding-left:20px;padding-top:1px; font-size:14px; margin-top:8px;}
 
 /* 사이드바 관련 */
-#sideBar {height: 100%; width: 0;position: fixed; z-index: 99999;top: 50px;left: 76px;overflow-x: hidden;transition: 0.5s;}
+#sideBar {height: 100%; width: 0;position: fixed; z-index: 99999;top: 50px;left: 85px;overflow-x: hidden;transition: 0.5s;}
 #sideBar .ul .li {padding: 8px 8px 8px 32px;text-decoration: none;font-size: 25px;color: #818181;display: block;transition: 0.3s;-webkit-transition: 0.3s;-moz-transition: 0.3s;-ms-transition: 0.3s;-o-transition: 0.3s;}
 #sideBar .ul .li:hover {color: #f1f1f1;}
 #sideBar .closebtn {position: absolute;top: 0;right: 25px;font-size: 36px;margin-left: 50px;}

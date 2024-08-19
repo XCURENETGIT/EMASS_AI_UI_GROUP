@@ -14,6 +14,10 @@
 	<script type="text/javascript">
         var searchFlag = false;
         $(document).ready(function () {
+	        initDateTimePicker('startDate','endDate');
+	        $('#startDate').val(new Date().format('yyyy-mm-dd'));
+	        $('#endDate').val(new Date().format('yyyy-mm-dd'));
+
             $('#searchBtn').click(function () {
                 getData();
             });
@@ -570,10 +574,10 @@
 	<div class="searchArea">
 		<div class="searchSub">
 			<div class="searchSub">
-				<div id="startdatepicker"><input type="date" id="startDate" style="width: 110px;">
+				<div><input type="text" id="startDate" style="width: 110px;" class="txt_center" >
 					<span class="hyphen">~</span></div>
-				<div id="enddatepicker"><input type="date" id="endDate" style="width: 110px;"></div>
-
+				<div><input type="text" id="endDate" style="width: 110px;" class="txt_center" ></div>
+				<div>
 				<select id="consentType" style="float: left;">
 					<option value="">- <s:message code="consent.type.consent"/> -</option>
 					<option value="B"><s:message code="consent.informed.consent"/></option>

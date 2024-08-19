@@ -152,7 +152,7 @@
 				<option value="userDept"><s:message code="common.org.dept"/></option>
 			</select>
 			<input type="text" placeholder="<s:message code="common.msg.searchMsg"/>" id="searchStr" style="width: 250px;">
-				<button class="form_btn01" type="button" accesskey="Q" id="searchBtn">검색</button>
+				<button class="form_btn01" type="button" accesskey="Q" id="searchBtn"><s:message code="common.search"/></button>
 		</div>
 		<div class="pop_tableArea mat16">
 				<div id="selectInterestUser" class="slickGrid gridArea"></div>

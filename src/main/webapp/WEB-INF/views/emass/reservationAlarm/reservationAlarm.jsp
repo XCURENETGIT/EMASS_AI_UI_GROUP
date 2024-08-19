@@ -839,7 +839,7 @@
 														code="mail.recv"/></label><%--<span class="red_dot"></span>--%>
 											</div>
 											<div class="col-65">
-												<input type="text" class="input-sm w75" name="alarmTo"
+												<input type="text" class="input-sm w70" name="alarmTo"
 													   id="alarmTo" readonly="readonly"/>
 												<button class="form_btn03" type="button"
 														accesskey="T" id="alarmToBtn"><s:message
@@ -851,7 +851,7 @@
 														code="mail.recv.cc"/></label>
 											</div>
 											<div class="col-65">
-												<input type="text" class="w75 input-sm" name="alarmCC"
+												<input type="text" class="w70 input-sm" name="alarmCC"
 													   id="alarmCC" readonly="readonly"/>
 												<button class="form_btn03" type="button"
 														accesskey="B" id="alarmCCBtn"><s:message
@@ -864,9 +864,9 @@
 											</div>
 											<div class="col-65">
 
-												<input type="text" class="w75 input-sm" name="formSubject"
+												<input type="text" class="w70 input-sm" name="formSubject"
 													   id="formSubject" readonly="readonly"/>
-												<input type="hidden" class="w75" name="alarmFormSeq"
+												<input type="hidden" class="w70" name="alarmFormSeq"
 													   id="alarmFormSeq"/>
 												<button class="form_btn03" type="button"
 														accesskey="M" id="mailFormSelBtn"><s:message

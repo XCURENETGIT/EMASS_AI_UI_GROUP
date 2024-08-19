@@ -307,7 +307,7 @@
 			</div>
 			<div>
 				<select id="xAxis" name="xAxis" class="input-sm form-control" style="width:110px">
-					<option value="svc1"><s:message code="common.org.servicetype"/></option>
+					<option value="svc1"><s:message code="filterInfo.servicetype"/></option>
 					<option value="checked.readTime_yyyymmdd"><s:message code="common.msg.day"/></option>
 				</select>
 
