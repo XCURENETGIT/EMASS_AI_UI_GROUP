@@ -22,6 +22,7 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -711,10 +712,27 @@ public class SolrCreateQuery {
 			if(Common.isEquals(receivers_upperCase, "Y")) {
 				queryStr.append(String.format("%s%s:%s", AND_QUERY, RECEIVER_UPPER, createOrQueryQuotesAll(receivers))).append(SPACE);
 			} else if(Common.isEquals(Config.getString("receiver.sender.uppercase"), "Y")) {
+				if(receivers.contains(",")) { //(임시) 여러개 검색시 AND절 + LIKE 절 처리
+					String[] receiver = receivers.split(",");
 
-				for (int i = 0; i < RECEIVER_NOTUPPER.length; i++) {
-					if (receivers.startsWith("\"") && receivers.endsWith("\"")) queryStr.append(String.format("%s:%s", RECEIVER_NOTUPPER[i], receivers)).append(SPACE);
-					else queryStr.append(String.format("%s:%s", RECEIVER_NOTUPPER[i], createOrQueryQuotesAll(receivers))).append(SPACE);
+					List<String> tmp_list2=new ArrayList<>();
+					for (int j = 0; j < receiver.length; j++) {
+						String tmp_list="";
+						for (int i = 0; i < RECEIVER_NOTUPPER.length; i++) {
+							tmp_list+=String.format("%s:(%s)", RECEIVER_NOTUPPER[i], "*" + receiver[j] + "*");
+							tmp_list+=" ";
+						}
+						tmp_list2.add(tmp_list);
+					}
+					for (int k=0; k<tmp_list2.size(); k++){
+						queryStr.append(String.format("%s(%s)", AND_QUERY, tmp_list2.get(k)));
+					}
+				}
+				else {
+					for (int i = 0; i < RECEIVER_NOTUPPER.length; i++) {
+						if (receivers.startsWith("\"") && receivers.endsWith("\"")) queryStr.append(String.format("%s:%s", RECEIVER_NOTUPPER[i], receivers)).append(SPACE);
+						else queryStr.append(String.format("%s:%s", RECEIVER_NOTUPPER[i], createOrQueryAsteriskAll(receivers))).append(SPACE);
+					}
 				}
 			} else {
 				for (int i = 0; i < RECEIVER.length; i++) {
@@ -730,7 +748,19 @@ public class SolrCreateQuery {
 
 			if(Common.isNotEmpty(m_to)) {
 				StringBuffer toStr = new StringBuffer();
-				if (m_to.startsWith("\"") && m_to.endsWith("\"")) toStr.append(String.format("%s:%s %s:%s", TO, m_to, TNAME, m_to)).append(SPACE);
+				if(m_to.contains(",")) { //(임시) 여러개 검색시 AND절 + LIKE 절 처리
+					String[] m_to_list = m_to.split(",");
+
+					List<String> tmp_list=new ArrayList<>();
+					for (int j = 0; j < m_to_list.length; j++) {
+						tmp_list.add(String.format("%s:%s %s:%s", TO,"*"+m_to_list[j]+"*", TNAME, "*"+m_to_list[j]+"*")+" ");
+					}
+					for (int k=0; k<tmp_list.size(); k++){
+						toStr.append(String.format("%s(%s)", AND_QUERY, tmp_list.get(k)));
+					}
+				}
+
+				else if (m_to.startsWith("\"") && m_to.endsWith("\"")) toStr.append(String.format("%s:%s %s:%s", TO, m_to, TNAME, m_to)).append(SPACE);
 				else toStr.append(String.format("%s:%s %s:%s", TO, createOrQueryQuotesAll(m_to), TNAME, createOrQueryQuotesAll(m_to))).append(SPACE);
 				if (Common.isEquals(m_to_not, "Y")) queryStr.append(String.format("%s(%s) ", EXCEPT_QUERY, toStr.toString()));
 				else queryStr.append(String.format("%s(%s) ", AND_QUERY, toStr.toString()));
@@ -738,7 +768,19 @@ public class SolrCreateQuery {
 
 			if(Common.isNotEmpty(m_cc)) {
 				StringBuffer ccStr = new StringBuffer();
-				if (m_cc.startsWith("\"") && m_cc.endsWith("\"")) ccStr.append(String.format("%s:%s %s:%s", CC, m_cc, CNAME, m_cc)).append(SPACE);
+
+
+				if(m_cc.contains(",")) { //(임시) 여러개 검색시 AND절 + LIKE 절 처리
+					String[] c_to_list = m_cc.split(",");
+
+					List<String> tmp_list=new ArrayList<>();
+					for (int j = 0; j < c_to_list.length; j++) {
+						tmp_list.add(String.format("%s:%s %s:%s", CC,"*"+c_to_list[j]+"*", CNAME, "*"+c_to_list[j]+"*")+" ");
+					}
+					for (int k=0; k<tmp_list.size(); k++){
+						ccStr.append(String.format("%s(%s)", AND_QUERY, tmp_list.get(k)));
+					}
+				} else if (m_cc.startsWith("\"") && m_cc.endsWith("\"")) ccStr.append(String.format("%s:%s %s:%s", CC, m_cc, CNAME, m_cc)).append(SPACE);
 				else ccStr.append(String.format("%s:%s %s:%s", CC, createOrQueryQuotesAll(m_cc), CNAME, createOrQueryQuotesAll(m_cc))).append(SPACE);
 				if (Common.isEquals(m_cc_not, "Y")) queryStr.append(String.format("%s(%s) ", EXCEPT_QUERY, ccStr.toString()));
 				else queryStr.append(String.format("%s(%s) ", AND_QUERY, ccStr.toString()));
@@ -746,7 +788,18 @@ public class SolrCreateQuery {
 
 			if(Common.isNotEmpty(m_bcc)) {
 				StringBuffer bccStr = new StringBuffer();
-				if (m_bcc.startsWith("\"") && m_bcc.endsWith("\"")) bccStr.append(String.format("%s:%s %s:%s", BCC, m_bcc, BNAME, m_bcc)).append(SPACE);
+
+				if(m_bcc.contains(",")) { //(임시) 여러개 검색시 AND절 + LIKE 절 처리
+					String[] bcc_to_list = m_bcc.split(",");
+
+					List<String> tmp_list=new ArrayList<>();
+					for (int j = 0; j < bcc_to_list.length; j++) {
+						tmp_list.add(String.format("%s:%s %s:%s", BCC,"*"+bcc_to_list[j]+"*", BNAME, "*"+bcc_to_list[j]+"*")+" ");
+					}
+					for (int k=0; k<tmp_list.size(); k++){
+						bccStr.append(String.format("%s(%s)", AND_QUERY, tmp_list.get(k)));
+					}
+				} else if (m_bcc.startsWith("\"") && m_bcc.endsWith("\"")) bccStr.append(String.format("%s:%s %s:%s", BCC, m_bcc, BNAME, m_bcc)).append(SPACE);
 				else bccStr.append(String.format("%s:%s %s:%s", BCC, createOrQueryQuotesAll(m_bcc), BNAME, createOrQueryQuotesAll(m_bcc))).append(SPACE);
 				if (Common.isEquals(m_bcc_not, "Y")) queryStr.append(String.format("%s(%s) ", EXCEPT_QUERY, bccStr.toString()));
 				else queryStr.append(String.format("%s(%s) ", AND_QUERY, bccStr.toString()));
