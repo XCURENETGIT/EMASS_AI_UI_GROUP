@@ -560,7 +560,7 @@
 
     var grid2 = new Xgrid('selectGrid', contextRoot);
     grid2.autoNumber();
-    grid2.colAdd('interestUserYn', '<s:message code="message.msg.interest"/>', 40, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+    grid2.colAdd('interestUserYn', '<s:message code="message.msg.interest"/>', 70, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
         if (value == 'N') return '';
         var value = grid2.getValue(row, 'interestGroupColor')
         var str = '';
@@ -583,13 +583,13 @@
         if (value == '0') return '';
         else return value.comma();
     });
-    grid2.colAdd('inside', '<s:message code="message.msg.inout"/>', 55, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+    grid2.colAdd('inside', '<s:message code="message.msg.inout"/>', 120, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
         if (value == 'N') return '<s:message code="message.msg.out"/>';
         else if (value == 'Y') return '<s:message code="message.msg.in"/>';
         else return '-';
     });
 
-    grid2.colAdd('direction_svc', '<s:message code="condition.receive_send"/>', 55, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+    grid2.colAdd('direction_svc', '<s:message code="condition.receive_send"/>', 120, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
         if (value == 'I') return '<s:message code="condition.receive"/>';
         else if (value == 'O') return '<s:message code="condition.send"/>';
         else return '-';
@@ -669,7 +669,7 @@
     });
     grid2.colAdd('sizeStr', '<s:message code="condition.size.all"/>', 80, 'left', false, 'nomal', null, {sortField:'size'});
     grid2.colAdd('bodySizeStr', '<s:message code="condition.size.body"/>', 80, 'left', false, 'nomal', null, {sortField:'body_size'});
-    grid2.colAdd('attachSizeStr', '<s:message code="condition.size.attach.total"/>', 80, 'left', false, 'nomal', null, {sortField:'attachSizeSort'});
+    grid2.colAdd('attachSizeStr', '<s:message code="condition.size.attach.total"/>', 170, 'left', false, 'nomal', null, {sortField:'attachSizeSort'});
     grid2.colAdd('kwds', '<s:message code="condition.keyword"/>', 120, 'left', false, 'nomal');
     grid2.colAdd('sabun', '<s:message code="common.msg.userid"/>', 120, 'left', false, 'nomal');
 

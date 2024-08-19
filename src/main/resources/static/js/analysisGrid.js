@@ -7,17 +7,17 @@ function initGrid( currGrid, gridColumn){
 	currGrid.colAdd('epmsg_type', gridColumn.epmsg_type, 100, 'center', true, 'nomal');
 	currGrid.colAdd('xrootmtr', gridColumn.xrootmtr, 100, 'left', true, 'nomal');
 
-	currGrid.colAdd('attachcnt', gridColumn.attachcnt, 35, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
+	currGrid.colAdd('attachcnt', gridColumn.attachcnt, 55, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
 		if (value == '0') return '';
 		else return value.comma();
 	});
-	currGrid.colAdd('inside', gridColumn.inside, 55, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+	currGrid.colAdd('inside', gridColumn.inside, 120, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 		if (value == 'N') return gridColumn.msgout;
 		else if (value == 'Y') return gridColumn.msgin;
 		else return '-';
 	});
 
-	currGrid.colAdd('direction_svc', gridColumn.direction_svc, 55, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+	currGrid.colAdd('direction_svc', gridColumn.direction_svc, 120, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 		if (value == 'I') return gridColumn.receive;
 		else if (value == 'O') return gridColumn.send;
 		else return '-';
@@ -81,7 +81,7 @@ function initGrid( currGrid, gridColumn){
 	});
 	currGrid.colAdd('sizeStr', gridColumn.sizeStr, 80, 'left', false, 'nomal');
 	currGrid.colAdd('bodySizeStr', gridColumn.bodySizeStr, 80, 'left', false, 'nomal', null, {sortField:'body_size'});
-	currGrid.colAdd('attachSizeStr', gridColumn.attachSizeStr, 80, 'left', false, 'nomal', null, {sortField:'attachSizeSort'});
+	currGrid.colAdd('attachSizeStr', gridColumn.attachSizeStr, 170, 'left', false, 'nomal', null, {sortField:'attachSizeSort'});
 	currGrid.colAdd('kwds', gridColumn.kwds, 120, 'left', false, 'nomal');
 	currGrid.colAdd('pi_total', gridColumn.pi_total, 70, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
 		if (value == '0') return '';

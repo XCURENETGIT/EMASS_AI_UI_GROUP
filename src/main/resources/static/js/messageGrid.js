@@ -6,7 +6,7 @@ function initGrid( currGrid, gridColumn){
 	currGrid.colAdd('msgid', gridColumn.msgid, 100, 'left', false, 'nomal');
 	currGrid.colAdd('epmsg_type', gridColumn.epmsg_type, 100, 'center', true, 'nomal');
 	currGrid.colAdd('xrootmtr', gridColumn.xrootmtr, 100, 'left', true, 'nomal');
-	currGrid.colAdd('interestUserYn', gridColumn.interestUserYn, 40, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+	currGrid.colAdd('interestUserYn', gridColumn.interestUserYn, 80, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 		if (value == 'N') return '';
 		var value = currGrid.getValue(row, 'interestGroupColor')
 		var str = '';
@@ -66,13 +66,13 @@ function initGrid( currGrid, gridColumn){
 		if (value == '0') return '';
 		else return value.comma();
 	});
-	currGrid.colAdd('inside', gridColumn.inside, 55, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+	currGrid.colAdd('inside', gridColumn.inside, 120, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 		if (value == 'N') return gridColumn.msgout;
 		else if (value == 'Y') return gridColumn.msgin;
 		else return '-';
 	});
 
-	currGrid.colAdd('direction_svc', gridColumn.direction_svc, 55, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+	currGrid.colAdd('direction_svc', gridColumn.direction_svc, 120, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 		if (value == 'I') return gridColumn.receive;
 		else if (value == 'O') return gridColumn.send;
 		else return '-';
@@ -135,7 +135,7 @@ function initGrid( currGrid, gridColumn){
 	});
 	currGrid.colAdd('sizeStr', gridColumn.sizeStr, 80, 'left', false, 'nomal');
 	currGrid.colAdd('bodySizeStr', gridColumn.bodySizeStr, 80, 'left', false, 'nomal', null, {sortField:'body_size'});
-	currGrid.colAdd('attachSizeStr', gridColumn.attachSizeStr, 80, 'left', false, 'nomal', null, {sortField:'attachSizeSort'});
+	currGrid.colAdd('attachSizeStr', gridColumn.attachSizeStr, 160, 'left', false, 'nomal', null, {sortField:'attachSizeSort'});
 	currGrid.colAdd('kwds', gridColumn.kwds, 120, 'left', false, 'nomal');
 	currGrid.colAdd('pi_total', gridColumn.pi_total, 70, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
 		if (value == '0') return '0';
@@ -147,7 +147,7 @@ function initGrid( currGrid, gridColumn){
 			else return value.comma();
 		});
 	}
-	currGrid.colAdd('reprocess', gridColumn.reprocess, 70, 'center', true, 'nomal', function(row, cell, value, columnDef, dataContext) {
+	currGrid.colAdd('reprocess', gridColumn.reprocess, 120, 'center', true, 'nomal', function(row, cell, value, columnDef, dataContext) {
 		if (value == 0) return 'No';
 		else return 'Yes'
 	});

@@ -879,7 +879,7 @@
         else if (value == 'L') return '<s:message code="dashboardSetup.dashtype.list"/>';
         return '-';
     });
-    gridDashboard.colAdd('dashColor', '<s:message code="dashboardSetup.background"/>', 90, 'center', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
+    gridDashboard.colAdd('dashColor', '<s:message code="dashboardSetup.background"/>', 130, 'center', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
         return '<div class="' + value + '" style="width:50px;height:21px;margin:auto;"><div class="panel-heading" style="border-radius:0px;">&nbsp;</div></div>';
     });
     gridDashboard.colAdd('dashChart', '<s:message code="dashboardSetup.chartType"/>', 90, 'center', false, 'nomal', function (row, cell, value, columnDef, dataContext) {

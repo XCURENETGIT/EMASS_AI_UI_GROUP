@@ -1139,7 +1139,7 @@
     grid.colAdd('userNm', '<s:message code="consent.registrant"/>', 130, 'center', false, 'nomal');
     grid.colAdd('alarmTo', '<s:message code="mail.msg"/>(<s:message code="condition.to"/>)', 200, 'left', false, 'nomal');
     grid.colAdd('alarmCC', '<s:message code="mail.msg"/>(<s:message code="condition.cc"/>)', 200, 'left', false, 'nomal');
-    grid.colAdd('createDt', '<s:message code="consent.registered.date"/>', 130, 'center', false, 'nomal');
+    grid.colAdd('createDt', '<s:message code="consent.registered.date"/>', 140, 'center', false, 'nomal');
     grid.colAdd('useYn', '<s:message code="common.msg.useyn"/>', 120, 'center', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
         if (value == 'Y') return '<s:message code="common.msg.use"/>';
         else if (value == 'N') return '<s:message code="common.msg.unuse"/>';
