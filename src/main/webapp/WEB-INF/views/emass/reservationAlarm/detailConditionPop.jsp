@@ -110,7 +110,9 @@
             margin-top: 1px;
         }
         input[type="checkbox"]:disabled {width:0; height:0; border:none;}
-        .col-xs-3 {font-weight:600 !important; color:#111;}
+        .col-xs-3 {font-weight:600 !important; color:#111; width:26%;}
+        .col-xs-3 > label {font-weight:600 !important; color:#111;}
+        .col-xs-9 {width:74%;}
         #time_msg {font-size:14px!important;}
     </style>
     <script type="text/javascript">
@@ -1829,10 +1831,10 @@
                             </div>
                         </li>
                         <li class="filterDiv">
-                            <div style="width:110px;float: left;">
+                            <div class="col-xs-3">
                                 <h5><s:message code="filterInfo.size"/></h5>
                             </div>
-                            <div class="selecBtnArea" style="width:calc(100% - 116px); text-align: right;float: left;">
+                            <div class="selecBtnArea" style="width:73%; text-align: right;float: left;">
                                 <select class="selectpicker col-xs" data-style="btn-primary" id="sizeFilterType">
                                     <option value=""><s:message code="condition.size.all"/></option>
                                     <option value="B"><s:message code="condition.size.body"/></option>
@@ -1845,7 +1847,7 @@
                                     <option value="B"><s:message code="condition.range"/></option>
                                 </select>
                             </div>
-                            <div style="clear:both;height:60px;padding:1px 5px 0px 5px;">
+                            <div style="clear:both;height:60px;padding:1px 5px 0px 22px;">
                                 <div id="size-setup" style="margin-bottom:10px;"></div>
                                 <div style="padding-left:5px;">
                                     <span id="sizeStartValStr" style="line-height:30px;"></span><input type="text"

@@ -23,25 +23,27 @@ body,html {width:100%; height:100%;}
 
 /* Gnb */
 #gnb {position: relative;width:100%; background-color: #242330; margin-top:16px; }
-#gnb ul li {margin-bottom:32px;}
+#gnb ul li {margin-bottom:32px; }
 #gnb ul li a{display: block;text-align: center;}
-#gnb ul li a span{ display: block;font-size:12px; margin-top:4px; letter-spacing: -1; }
+#gnb ul li a img {width:32px; height:32px;}
+#gnb ul li a span{ display: block;font-size:13px; margin-top:4px; letter-spacing: -1; }
 #gnb ul li a.active{ border-right:4px solid #88B8FF; margin-left:4px;}
 #gnb ul li a.active span {font-size:13px; font-weight: 600 !important; color:#88B8FF;}
-#gnbWrap div.setting {position: fixed;width:64px; margin:0 auto; text-align: center; bottom:10px; padding:10px 0;}
-#gnbWrap div.setting a{ font-size:14px;}
-#gnbWrap div.setting a img {vertical-align: middle;}
-#gnbWrap div.setting a span {vertical-align: middle;}
+#gnbWrap .setting {position: fixed;width:64px; margin:0 auto; text-align: center; bottom:10px; padding:10px 0;}
+#gnbWrap .setting a{ font-size:14px;}
+#gnbWrap .setting a img {vertical-align: middle;}
+#gnbWrap .setting a span {vertical-align: middle;}
 
 .gnbMenu { overflow: auto; position: absolute; top:0; left:76px; width:220px; height:100%; background-color: #3A394E; z-index:9;}
-.gnbMenu > h2 {position: relative; padding:32px 0 8px 16px; font-size: 16px !important; font-weight:600; color:#fff; margin:0 !important;}
-.gnbMenu > h2 > span {position: absolute; bottom:0; right:20px; cursor: pointer; }
-.gnbMenu > ul > li {position: relative;padding-left:16px; padding:16px; border-bottom:1px solid #292837;}
-.gnbMenu > ul > li > a {font-size:16px;}
-.gnbMenu > ul > li > span {color:#999; font-weight: 600; margin-right:8px;}
-.gnbMenu > ul > li > ul > li { padding:8px 10px; font-size:13px; margin-top:2px; border-radius:4px; -webkit-border-radius:4px; -moz-border-radius:4px; -ms-border-radius:4px; -o-border-radius:4px; }
+.gnbMenu h2 {position: relative; padding:32px 0 8px 16px; font-size: 16px; font-weight:600; color:#fff; }
+.gnbMenu h2 span {position: absolute; bottom:0; right:20px; cursor: pointer;}
+.gnbMenu > ul > li {position: relative; padding-left:16px; padding:16px; border-bottom:1px solid #292837; font-size: 16px;}
+.gnbMenu > ul > li > span {color:#999; font-weight: 600; margin-right:8px; position:absolute;}
+.gnbMenu > ul > li > a {display: inline-block; padding-left: 15px;}
+.gnbMenu > ul > li > ul > li { padding:8px 10px 10px 15px; font-size:13px; margin-top:2px; border-radius:4px; -webkit-border-radius:4px; -moz-border-radius:4px; -ms-border-radius:4px; -o-border-radius:4px; }
 .gnbMenu > ul > li > ul > li:first-child {margin-top:12px;}
 .gnbMenu > ul > li a.active {color:#88B8FF !important; font-weight:400;}
+
 
 /*.arrow_up {}
 .arrow_down {cursor: pointer; position: absolute; top:10px; right:20px; width:20px;height:20px; background-color:#fff; text-align: center;}*/
@@ -622,7 +624,7 @@ button img {margin-top:-1px;margin-right:2px; vertical-align:middle;}
 .info {background: url(../img/icon/ico_alert.png) left top no-repeat;padding-left:20px;padding-top:1px; font-size:14px; margin-top:8px;}
 
 /* 사이드바 관련 */
-#sideBar {height: 100%; width: 250px;position: fixed; z-index: 99999;top: 50px;left: 85px;overflow-x: hidden;transition: 0.5s;display: none;}
+#sideBar {height: 100%; width: 335px;position: fixed; z-index: 99999;top: 50px;left: 85px;overflow-x: hidden;transition: 0.5s;display: none;}
 #sideBar .ul .li {padding: 8px 8px 8px 32px;text-decoration: none;font-size: 25px;color: #818181;display: block;transition: 0.3s;-webkit-transition: 0.3s;-moz-transition: 0.3s;-ms-transition: 0.3s;-o-transition: 0.3s;}
 #sideBar .ul .li:hover {color: #f1f1f1;}
 #sideBar .closebtn {position: absolute;top: 0;right: 25px;font-size: 36px;margin-left: 50px;}

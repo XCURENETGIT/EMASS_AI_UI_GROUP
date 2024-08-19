@@ -858,8 +858,9 @@ table {
 
 
 #gnbWrap   a  {color:#fff; text-decoration: none; padding:0;margin:0;}
-#gnbWrap   a:active {}
-#gnbWrap   a:hover {color:#ddd; text-decoration: underline;}
+.gnbMenu > ul > li > a {display: inline-block; padding-left: 15px !important;}
+/*#gnbWrap   a:active {}*/
+/*#gnbWrap   a:hover {color:#ddd; text-decoration: underline;}*/
 
 
 a:active {}

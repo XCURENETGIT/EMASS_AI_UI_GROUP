@@ -134,7 +134,7 @@
                         if ((menuList[l].menuId == "STAT_INFOTYPE") && (infoFeedbackYn  == "false")) continue;
 						if ((menuList[l].menuId == "STAT_OCR") && (isOCR  == "false")) continue;
 						if (menuList[l].pid == null || menuList[l].pid != menuList[k].menuId) continue;
-						html += '<li><span>-</span>';
+						html += '<li>';
 						html += '<a lastChildMenu  url="' + mainContext + '/' + menuList[l].menuLink + '"class="topMenu ' + menuList[l].menuId + ' menuList"' + 'menuid=' + menuList[l].menuId + '>';
 						html += '<span> ' + menuList[l].defaultName + ' </span>';
 						html += '</a>';

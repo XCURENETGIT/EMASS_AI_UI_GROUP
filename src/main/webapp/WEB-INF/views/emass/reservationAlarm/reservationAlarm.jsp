@@ -22,7 +22,8 @@
 		.nav {
 			padding-left: 0;
 			margin-bottom: 0;
-			list-style: none
+			list-style: none;
+			display: flex;
 		}
 
 		.nav>li {
@@ -34,7 +35,7 @@
 			position: relative;
 			display: block;
 			padding: 12px 20px;
-			min-width: 160px;
+			width: 260px;
 			color: #333333;
 			background-color: #f8f8f8;
 		}
@@ -660,7 +661,7 @@
 <body class="mini-navbar">
 <div class="modal fade" id="resvAlarmPop" tabindex="-1" role="dialog" aria-labelledby="resvAlarmPop">
 	<div class="modal-dialog modal-md" role="document">
-		<div class="modal-content">
+		<div class="modal-content" style="width: 900px;">
 			<form method="post" id="alarmPopForm">
 				<div class="modalHead">
 					<h2 class="ma_none"><s:message code="mail.reservation.setting"/> <span class="text">( <s:message
