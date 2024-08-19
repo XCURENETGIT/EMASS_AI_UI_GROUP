@@ -1135,7 +1135,7 @@
 				</div>
 
 				<div class="fixBtn">
-					<div class="checkbox">
+					<div class="xcn_checkbox">
 						<input type="checkbox" name="readYn" id="readYn"><s:message code="eikon.msg.notRead"/>
 					</div>
 					<button class="fullbtn" type="button" accesskey="Q" id="searchBtn"><s:message code="common.search"/></button>
