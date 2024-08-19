@@ -872,7 +872,7 @@
 
     });
     gridDashboard.colAdd('dashName', '<s:message code="dashboardSetup.dashname"/>', 170, 'left', false, 'link');
-    gridDashboard.colAdd('dashType', '<s:message code="common.msg.type"/>', 80, 'center', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
+    gridDashboard.colAdd('dashType', '<s:message code="common.msg.type"/>', 100, 'center', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
         if (value == 'S') return '<s:message code="dashboardSetup.dashtype.single"/>';
         else if (value == 'D') return '<s:message code="dashboardSetup.dashtype.multi"/>';
         else if (value == 'C') return '<s:message code="dashboardSetup.dashtype.chart"/>';

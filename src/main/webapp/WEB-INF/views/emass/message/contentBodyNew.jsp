@@ -662,7 +662,7 @@
 										<colgroup>
 											<col style="width: 110px;">
 											<col>
-											<col style="width: 110px;">
+											<col style="width: 125px;">
 											<col style="width: 160px;">
 										</colgroup>
 										<tr id="usridTr">
@@ -825,8 +825,9 @@
 									<table class="subTable02 table-bordered" id="fileTable">
 										<colgroup>
 											<col width="*">
-											<col width="15%">
-											<col width="12%">
+											<col width="130">
+											<col width="130">
+											<col width="140">
 										</colgroup>
 										<tr>
 											<th><s:message code="bodyview.file.name"/></th>

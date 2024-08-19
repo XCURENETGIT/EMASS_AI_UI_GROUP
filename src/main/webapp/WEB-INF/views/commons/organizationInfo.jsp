@@ -1131,7 +1131,7 @@
     gridDept.autoNumber();
     gridDept.colAdd('deptCd', '<s:message code="common.org.deptcd"/>', 120, 'center', false, 'link');
     gridDept.colAdd('deptNm', '<s:message code="common.org.deptnm"/>', 200, 'left', false, 'nomal');
-    gridDept.colAdd('pdeptCd', '<s:message code="common.org.pdeptcd"/>', 120, 'center', false, 'nomal');
+    gridDept.colAdd('pdeptCd', '<s:message code="common.org.pdeptcd"/>', 130, 'center', false, 'nomal');
     gridDept.colAdd('pdeptNm', '<s:message code="common.org.pdeptnm"/>', 200, 'left', false, 'nomal');
     gridDept.colAdd('coNm', '<s:message code="common.org.conm"/>', 200, 'left', false, 'nomal');
     gridDept.onClick = function() {

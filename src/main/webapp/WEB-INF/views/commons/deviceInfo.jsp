@@ -343,7 +343,7 @@
 	</script>
 </head>
 <div class="modal" id="deviceAddPop" tabindex="-1" role="dialog" aria-labelledby="addDevPopModal">
-	<div class="modal-content">
+	<div class="modal-content" style=" width: 796px!important;">
 		<form method="post" id="addDevPopForm">
 			<div class="modalHead">
 				<h2><s:message code="deviceInfo.addDevPop.title"/>

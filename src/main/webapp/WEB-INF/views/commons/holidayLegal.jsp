@@ -227,7 +227,7 @@
     grid.autoNumber();
     grid.colAdd('date', '<s:message code="condition.date"/>', 130, 'center', false, 'link');
     grid.colAdd('comment', '<s:message code="common.msg.comment"/>', 250, 'left', false, 'nomal');
-    grid.colAdd('createDt', '<s:message code="filterInfo.createDt"/>', 130, 'center', false, 'nomal');
+    grid.colAdd('createDt', '<s:message code="filterInfo.createDt"/>', 150, 'center', false, 'nomal');
     grid.onClick = function () {
         if (grid.Col == grid.ColIndex('date')) {
             $('#holidayPop').attr('mode', 'modify');

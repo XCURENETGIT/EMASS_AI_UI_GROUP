@@ -2689,8 +2689,7 @@
                                         <input class="relationKeywordBtn" type="checkbox"/>
                                         <span><s:message code="condition.relationKeyword.view"/></span>
                                     </label>
-
-                                    <div  style="float: right;padding-right: 4px;margin-top:0px;">
+                                    <div  style="float: right;padding-right: 4px;margin-top:4px; margin-bottom: 4px;">
                                         <a href="javascript:;" class="showSearchKeywordBtn" style="color:#111;"><i class="fa fa-cog"></i> <s:message code="searchKeyword.management"/></a>
                                     </div>
                                 </div>

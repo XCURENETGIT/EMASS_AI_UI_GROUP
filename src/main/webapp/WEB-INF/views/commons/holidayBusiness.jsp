@@ -512,7 +512,7 @@
 	<!-- content -->
 	<div class="content">
 		<div class="contentSub">
-			<div class="chartArea02">
+			<div class="chartArea02" style="    grid-template-columns: 602px 1fr !important;">
 				<!-- 업무구분 -->
 				<div>
 					<h3><s:message code="holidayBusiness.worktype"/></h3>

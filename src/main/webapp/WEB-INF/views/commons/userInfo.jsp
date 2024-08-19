@@ -1441,7 +1441,7 @@
 									<div class="checkbox" style="margin-right: 10px;"><label for="mon"><input type="checkbox" name="insa.week"value="mon" id="mon"><span><s:message code="common.mon"/></span></label></div>
 									<div class="checkbox" style="margin-right: 10px;"><label for="tue"><input type="checkbox" name="insa.week" value="tue" id="tue"><span><s:message code="common.tue"/></span></label></div>
 									<div class="checkbox" style="margin-right: 10px;"><label for="wed"><input type="checkbox" name="insa.week" value="wed" id="wed"><span><s:message code="common.wed"/></span></label></div>
-									<div class="checkbox" style="margin-right: 10px;"><label for="thu"><input type="checkbox" name="insa.week" value="thu" id="thu"><span><s:message code="common.thu"/></span></label></div>
+									<div class="checkbox" style="margin-right: 10px; margin-left: 4px;"><label for="thu"><input type="checkbox" name="insa.week" value="thu" id="thu"><span><s:message code="common.thu"/></span></label></div>
 									<div class="checkbox" style="margin-right: 10px;"><label for="fri"><input type="checkbox" name="insa.week" value="fri" id="fri"><span><s:message code="common.fri"/></span></label></div>
 									<div class="checkbox" style="margin-right: 10px;"><label for="sat"><input type="checkbox" name="insa.week" value="sat" id="sat"><span><s:message code="common.sat"/></span></label></div>
 								</div>

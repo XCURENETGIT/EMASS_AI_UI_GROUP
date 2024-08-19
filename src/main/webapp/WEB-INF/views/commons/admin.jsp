@@ -944,10 +944,10 @@
 							<div class="info" style="background-color: transparent">
 								<s:message code="common.guidance"/>
 								<div id="msgAuthComment" class="form-inline">
-									<div style="padding-left: 15px;"><s:message code="admin.add.msgAuthComment"/></div>
+									<div style=""><s:message code="admin.add.msgAuthComment"/></div>
 								</div>
 								<div id="infoFeedbackComment" class="form-inline">
-									<div style="padding-left: 15px;"><s:message code="admin.add.buy"/></div>
+									<div style=""><s:message code="admin.add.buy"/></div>
 								</div>
 							</div>
 						</div>
@@ -1082,7 +1082,7 @@
     });
     grid.colAdd('adminId', '<s:message code="common.msg.id"/>', 130, 'left', false, 'link');
     grid.colAdd('adminName', '<s:message code="common.msg.name"/>', 130, 'left', false, 'nomal');
-    grid.colAdd('adminType', '<s:message code="common.msg.type"/>', 130, 'center', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
+    grid.colAdd('adminType', '<s:message code="common.msg.type"/>', 150, 'center', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
         if (value == 'S') return '<s:message code="admin.system.admin"/>';
         else if (value == 'C') return 'CEO <s:message code="admin.monitoring.admin"/>';
         else return '<s:message code="admin.monitoring.admin"/>';

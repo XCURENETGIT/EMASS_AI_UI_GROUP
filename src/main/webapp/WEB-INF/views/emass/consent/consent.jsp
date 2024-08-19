@@ -425,7 +425,7 @@
 							<span class="red_dot"></span>
 						</div>
 						<div class="col-65">
-							<input type="text" class="w100" name="name" id="name" disabled="disabled" style="width: 265px;">
+							<input type="text" class="w100" name="name" id="name" disabled="disabled" style="width: 250px;">
 							<button type="button" class="form_btn03 selBtn" accesskey="U" id="user"><s:message code="consent.select"/></button>
 						</div>
 					</div>

@@ -1033,7 +1033,7 @@
 						        data-live-search="true" data-actions-box="true"></select>
 
 						<p class="mat8 formText btnform" data-toggle="buttons">
-							<span class="tit"><s:message code="common.org.choose.dept"/></span>
+							<span class="tit"><s:message code="common.org.dept"/></span>
 							<button type="button" class="btn01" id="dept"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
 									code="common.org.choose.dept"/></button>
 							<span id="deptSelectedArea" class="codeSelectedBtn">
@@ -1044,7 +1044,7 @@
 						</p>
 						<div id="selectedCodeTitle" class="infotxt"></div>
 						<p class="mat8 formText btnform" data-toggle="buttons">
-							<span class="tit"><s:message code="common.org.choose.user"/></span>
+							<span class="tit"><s:message code="common.org.user"/></span>
 
 							<button class="btn01" id="user"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
 									code="common.org.choose.user"/></button>
@@ -1105,7 +1105,7 @@
 				<s:message code="common.msg.finish_query"/> : <span id="groupResultCnt" class="red fb600">0</span>
 				<div class="myDropdown mal16" style="color: black">
 					<span><s:message code="analysis.relation.ui.export"/></span>
-					<div class="dropdown-content">
+					<div class="dropdown-content" style="bottom:20px;">
 						<a href="#" onclick="allDown('N')"><s:message code="analysis.relation.ui.export2"/></a>
 						<a href="#" onclick="allDownList()"><s:message code="common.msg.download"/> <s:message code="mail.view.list"/></a>
 					</div>

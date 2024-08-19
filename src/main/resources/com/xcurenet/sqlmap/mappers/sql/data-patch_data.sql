@@ -475,7 +475,7 @@ INSERT IGNORE INTO UI_SERVICE (`SERVICECD`, `SERVICENM_LV1`, `SERVICENM_LV2`, `S
     ('NONS', '노트', 'ONENOTE', '발신', 'O', 310, 'Y', ''),
     ('NLVS', '노트', 'Outlook.com 메모', '발신', 'O', 311, 'Y', ''),
     ('NBTS', '노트', 'BIT.AI', '발신', 'O', 312, 'Y', ''),
-    ('NNOS', '노트', 'notion', '발신', 'O', 313, 'Y', ''),
+    ('NNOS', '노트', 'Notion', '발신', 'O', 313, 'Y', ''),
     ('NGGS', '노트', '구글 docs', '발신', 'O', 314, 'Y', ''),
     ('NGTS', '노트', '구글 tasks', '발신', 'O', 315, 'Y', ''),
     ('NGKS', '노트', '구글 keep', '발신', 'O', 316, 'Y', ''),

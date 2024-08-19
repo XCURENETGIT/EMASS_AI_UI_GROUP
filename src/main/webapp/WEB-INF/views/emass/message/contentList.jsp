@@ -1035,7 +1035,7 @@
         });
         grid.colAdd('sizeStr', '<s:message code="condition.size.all"/>', 80, 'left', false, 'nomal', null, {sortField:'size'});
         grid.colAdd('bodySizeStr', '<s:message code="condition.size.body"/>', 80, 'left', false, 'nomal', null, {sortField:'body_size'});
-        grid.colAdd('attachSizeStr', '<s:message code="condition.size.attach.total"/>', 80, 'left', false, 'nomal', null, {sortField:'attachSizeSort'});
+        grid.colAdd('attachSizeStr', '<s:message code="condition.size.attach.total"/>', 140, 'left', false, 'nomal', null, {sortField:'attachSizeSort'});
         grid.colAdd('kwds', '<s:message code="condition.keyword"/>', 120, 'left', false, 'nomal');
         grid.colAdd('pi_total', '<s:message code="condition.regexp"/>', 70, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
             if (value == '0') return '';
@@ -1053,10 +1053,10 @@
             else return 'Yes'
         });
 
-        grid.colAdd('host', 'Host', 220, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+        grid.colAdd('host', 'Host', 220, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 	        return highlightSearchStr(value, "host");
         });
-        grid.colAdd('path', 'Path', 180, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+        grid.colAdd('path', 'Path', 180, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 	        return highlightSearchStr(value, "path");
         });
 	    grid.colAdd('sabun', '<s:message code="common.msg.userid"/>', 180, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
