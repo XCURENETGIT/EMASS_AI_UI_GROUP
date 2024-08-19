@@ -1115,14 +1115,14 @@
     grid.autoNumber();
     grid.colAdd('alarmSeq', '<s:message code="mail.reservation.number"/>', 40, 'center', true, 'nomal');
     grid.colAdd('alarmName', '<s:message code="mail.reservation.name"/>', 250, 'left', false, 'link');
-    grid.colAdd('alarmType', '<s:message code="mail.reservation.alarm_type"/>', 170, 'center', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
+    grid.colAdd('alarmType', '<s:message code="mail.reservation.alarm_type"/>', 220, 'center', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
         var str = value;
         str = str.replace('M', '<s:message code="mail.alert_message"/>');
         str = str.replace('S', 'SMS');
         str = str.replace('E', '<s:message code="mail.msg"/>');
         return str;
     });
-    grid.colAdd('alarmCycle', '<s:message code="mail.execute_cycle"/>', 90, 'center', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
+    grid.colAdd('alarmCycle', '<s:message code="mail.execute_cycle"/>', 130, 'center', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
         if (value == 'D') return '<s:message code="common.msg.everyday"/>';
         else if (value == 'H') return '<s:message code="common.msg.everyhour"/>';
         else if (value == 'W') return '<s:message code="common.msg.everyweek"/>';
@@ -1140,12 +1140,12 @@
     grid.colAdd('alarmTo', '<s:message code="mail.msg"/>(<s:message code="condition.to"/>)', 200, 'left', false, 'nomal');
     grid.colAdd('alarmCC', '<s:message code="mail.msg"/>(<s:message code="condition.cc"/>)', 200, 'left', false, 'nomal');
     grid.colAdd('createDt', '<s:message code="consent.registered.date"/>', 130, 'center', false, 'nomal');
-    grid.colAdd('useYn', '<s:message code="common.msg.useyn"/>', 80, 'center', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
+    grid.colAdd('useYn', '<s:message code="common.msg.useyn"/>', 120, 'center', false, 'nomal', function (row, cell, value, columnDef, dataContext) {
         if (value == 'Y') return '<s:message code="common.msg.use"/>';
         else if (value == 'N') return '<s:message code="common.msg.unuse"/>';
         return '-';
     });
-    grid.colAdd('alarmLog', '<s:message code="mail.excute.result"/>', 80, 'center', false, 'link', function (row, cell, value, columnDef, dataContext) {
+    grid.colAdd('alarmLog', '<s:message code="mail.excute.result"/>', 130, 'center', false, 'link', function (row, cell, value, columnDef, dataContext) {
         return '<s:message code="mail.view.list"/>';
     });
 

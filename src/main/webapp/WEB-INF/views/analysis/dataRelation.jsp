@@ -492,11 +492,11 @@
         grid.colInit();
         grid.autoNumber();
         grid.colAdd('val', $("#unit option:selected").text(), 200, "left", false, 'link' );
-        grid.colAdd('count', '<s:message code="analysis.relation.ui.collectcount"/>', 60, 'center', false, 'nomal' , function ( row, cell, value, columnDef, dataContext ) {
+        grid.colAdd('count', '<s:message code="analysis.relation.ui.collectcount"/>', 130, 'center', false, 'nomal' , function ( row, cell, value, columnDef, dataContext ) {
             if ( value != undefined ) return value.comma();
             else return '';
         } );
-        grid.colAdd('size', '<s:message code="analysis.relation.ui.packetsize"/>', 100, 'right', false, 'nomal' , function ( row, cell, value, columnDef, dataContext ) {
+        grid.colAdd('size', '<s:message code="analysis.relation.ui.packetsize"/>', 150, 'right', false, 'nomal' , function ( row, cell, value, columnDef, dataContext ) {
             if ( value != undefined ) return convertFileSize(value);
             else return '';
         });

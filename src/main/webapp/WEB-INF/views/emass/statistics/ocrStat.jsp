@@ -786,7 +786,7 @@
 						} else if ( xAxis == "ctime_hh") HeaderNm = Header+'<s:message code="common.msg.hour"/>';
                         else if(xAxis === 'svc1') HeaderNm = serviceList.search(Header, 'groupCd', 'groupNm');
                         else HeaderNm = Header;
-						grid1.colAdd( Header, HeaderNm, 90, "right", false, 'link', function ( row, cell, value, columnDef, dataContext ) {
+						grid1.colAdd( Header, HeaderNm, 160, "right", false, 'link', function ( row, cell, value, columnDef, dataContext ) {
 							if ( value != undefined ) return value.comma();
 							else return '';
 						});

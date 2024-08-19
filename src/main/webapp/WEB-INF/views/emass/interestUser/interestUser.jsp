@@ -596,7 +596,7 @@
 
 <div id="upload_file"></div>
 <div class="modal" id="uploadPop" aria-labelledby="uploadPop" data-backdrop="static">
-	<div class="modal-content">
+	<div class="modal-content" style="width: 700px;">
 		<form method="post" id="uploadForm" enctype="multipart/form-data" target="upload_file">
 			<div class="modalHead">
 				<h2><s:message code="DATA_MONITOR.INTEREST_USER"/>-<s:message code="keyword.msg.upload"/></h2>
@@ -647,14 +647,14 @@
 
 
 <div class="modal" id="textUploadPop" aria-labelledby="textUploadPop" data-backdrop="static">
-	<div class="modal-content" style="width: 450px; height: 700px;">
+	<div class="modal-content" style="width: 700px; height: 700px;">
 		<div class="modalHead">
 			<h2><s:message code="DATA_MONITOR.INTEREST_USER"/>-Text Upload</h2>
 			<span class="close" data-dismiss="modal">&times;</span>
 		</div>
 		<div class="modalCon">
 			<div class="modalbody" style="height: 430px;">
-				<textarea rows="110" cols="49" style="height:380px; border: 1px solid #ccc; " id="textUploadTextArea"></textarea>
+				<textarea rows="110" style="height:380px; border: 1px solid #ccc; width:100%;" id="textUploadTextArea"></textarea>
 			</div>
 			<div class="info"><s:message code="common.guidance"/>
 				<div class="form-inline" style="padding-left: 10px;">1) <s:message code="interest.message.upload.info3"/></div>

@@ -411,7 +411,7 @@
         grid.colAdd('code', '<s:message code="common.org.busicd"/>', 100, 'center', false, 'link');
         grid.colAdd('codeName', '<s:message code="common.org.businm"/>', 260, 'left', false, 'nomal');
     } else if (codeType == 'dept' || codeType == 'deptByCo') {
-        grid.colAdd('code', '<s:message code="common.org.deptcd"/>', 100, 'center', false, 'link');
+        grid.colAdd('code', '<s:message code="common.org.deptcd"/>', 150, 'center', false, 'link');
         grid.colAdd('codeName', '<s:message code="common.org.deptnm"/>', 260, 'left', false, 'nomal');
     } else if (codeType == 'attach') {
         grid.colAdd('code', '<s:message code="common.msg.ext"/>', 100, 'center', false, 'link');
@@ -479,7 +479,7 @@
         grid2.colAdd('code', '<s:message code="common.org.busicd"/>', 100, 'center', false, 'link');
         grid2.colAdd('codeName', '<s:message code="common.org.businm"/>', 260, 'left', false, 'nomal');
     } else if (codeType == 'dept' || codeType == 'deptByCo') {
-        grid2.colAdd('code', '<s:message code="common.org.deptcd"/>', 100, 'center', false, 'li nk');
+        grid2.colAdd('code', '<s:message code="common.org.deptcd"/>', 150, 'center', false, 'li nk');
         grid2.colAdd('codeName', '<s:message code="common.org.deptnm"/>', 260, 'left', false, 'nomal');
     } else if (codeType == 'attach') {
         grid2.colAdd('code', '<s:message code="common.msg.ext"/>', 100, 'center', false, 'link');

@@ -484,20 +484,20 @@
     });
 
 
-    grid1.colAdd('pi_SN', '<s:message code="bodyview.sn"/>', 130, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
+    grid1.colAdd('pi_SN', '<s:message code="bodyview.sn"/>', 200, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
         if (value != undefined) return value.comma();
         else return '';
     });
 
-    grid1.colAdd('pi_CN', '<s:message code="bodyview.cn"/>', 130, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
+    grid1.colAdd('pi_CN', '<s:message code="bodyview.cn"/>', 160, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
         if (value != undefined) return value.comma();
         else return '';
     });
-    grid1.colAdd('pi_DN', "<s:message code="bodyview.dn"/>", 130, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
+    grid1.colAdd('pi_DN', "<s:message code="bodyview.dn"/>", 200, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
         if (value != undefined) return value.comma();
         else return '';
     });
-    grid1.colAdd('pi_FN', '<s:message code="bodyview.fn"/>', 130, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
+    grid1.colAdd('pi_FN', '<s:message code="bodyview.fn"/>', 200, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
         if (value != undefined) return value.comma();
         else return '';
     });
@@ -505,19 +505,19 @@
         if (value != undefined) return value.comma();
         else return '';
     });
-    grid1.colAdd('pi_MN', '<s:message code="bodyview.mn"/>', 130, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
+    grid1.colAdd('pi_MN', '<s:message code="bodyview.mn"/>', 200, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
         if (value != undefined) return value.comma();
         else return '';
     });
-    grid1.colAdd('pi_AN', '<s:message code="bodyview.an"/>', 130, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
+    grid1.colAdd('pi_AN', '<s:message code="bodyview.an"/>', 250, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
         if (value != undefined) return value.comma();
         else return '';
     });
-    grid1.colAdd('pi_CRN', '<s:message code="bodyview.crn"/>', 130, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
+    grid1.colAdd('pi_CRN', '<s:message code="bodyview.crn"/>', 200, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
         if (value != undefined) return value.comma();
         else return '';
     });
-    grid1.colAdd('pi_SSN', '<s:message code="bodyview.ssn"/>', 130, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
+    grid1.colAdd('pi_SSN', '<s:message code="bodyview.ssn"/>', 200, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
         if (value != undefined) return value.comma();
         else return '';
     });
@@ -525,11 +525,11 @@
         if (value != undefined) return value.comma();
         else return '';
     });
-    grid1.colAdd('pi_BRN', '<s:message code="bodyview.brn"/>', 130, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
+    grid1.colAdd('pi_BRN', '<s:message code="bodyview.brn"/>', 200, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
         if (value != undefined) return value.comma();
         else return '';
     });
-    grid1.colAdd('pi_CPN', '<s:message code="bodyview.cpn"/>', 130, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
+    grid1.colAdd('pi_CPN', '<s:message code="bodyview.cpn"/>', 250, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
         if (value != undefined) return value.comma();
         else return '';
     });
