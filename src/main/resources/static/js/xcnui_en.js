@@ -167,6 +167,7 @@ var filelist = {
 	save:'save',
 	preview:'preview',
 	allfileSave:'Save the entire file',
-	Outside:'Outside'
+	Outside:'Outside',
+	all:'All'
 
 };

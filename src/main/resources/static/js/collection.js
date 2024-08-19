@@ -1394,7 +1394,7 @@ function rtnFilePage(total, page){
 function setSvcButton(data){
     busiScrollTabs.clearTabs();
     busiScrollTabs.refreshState();
-    busiScrollTabs.addTab('<span class="tab_selected noSearch"><a href="javascript:;" class="busiCounts active" data-busicd=""><s:message code="common.msg.all"/>전체</a></span>');
+    busiScrollTabs.addTab('<span class="tab_selected noSearch"><a href="javascript:;" class="busiCounts active" data-busicd="">'+filelist.all+'</a></span>');
     for (i in data) {
          busiScrollTabs.addTab('<span><a href="javascript:;" class="busiCounts" data-svc1="' + i + '">' + makeSVCText(i) + '<span class="busiCnt">(' + data[i].comma() + ')</span></a></span>');
     }

@@ -876,13 +876,13 @@
         grid.colAdd('xrootmtr', '<s:message code="common.msg.xrootmtr"/>', 100, 'left', true, 'nomal');
 
         if(overlapUse == 'Y') {
-            grid.colAdd('overlap', '<s:message code="common.overlap.count"/>', 80, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
+            grid.colAdd('overlap', '<s:message code="common.overlap.count"/>', 170, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
                 var overlapData = value;
                 if (overlapData == undefined || overlapData.length == '0') return '';
                 else return overlapData.length.comma();
             });
         }
-        grid.colAdd('interestUserYn', '<s:message code="message.msg.interest"/>', 40, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
+        grid.colAdd('interestUserYn', '<s:message code="message.msg.interest"/>', 60, 'center', false, 'link', function(row, cell, value, columnDef, dataContext) {
             if (value == 'N') return '';
             /* if (value == 'Y') return '<div class="interestUserCheck"></div>';
 			else if (value == 'N') return ''; */
@@ -906,7 +906,7 @@
             var ml_confd_class_str = infoHynixConf == 'true' ? '<s:message code="condition.itype"/>' : '<s:message code="condition.infotype"/>';
             var ml_confd_feedback_str = infoHynixConf == 'true' ? '<s:message code="condition.secretFeedback"/>' : '<s:message code="condition.feedback"/>';
             var ml_confd_prob_str = infoHynixConf == 'true' ? '<s:message code="condition.sprob"/>' : '<s:message code="condition.prob"/>';
-            grid.colAdd('ml_confd_class', ml_confd_class_str, 100, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+            grid.colAdd('ml_confd_class', ml_confd_class_str, 170, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
                 if (value == '4') return '<s:message code="condition.info.class4"/>';
                 else if (value == '3') return '<s:message code="condition.info.class3"/>';
                 else if (value == '2') return '<s:message code="condition.info.class2"/>';
@@ -914,7 +914,7 @@
                 else if (value == '0') return '<s:message code="condition.info.N"/>'; // for hynix (대외비 문서)
                 else return '<s:message code="common.msg.noinfo"/>';
             });
-            grid.colAdd('ml_confd_feedback', ml_confd_feedback_str, 110, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+            grid.colAdd('ml_confd_feedback', ml_confd_feedback_str, 170, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
                 if (value == '1') return infoHynixConf == 'true' ? '<div class="feedbackcommon"></div>&nbsp;<s:message code="condition.info.secretFeedbackY"/>' : '<div class="feedbackcommon"></div>&nbsp;<s:message code="condition.info.class1"/>';
                 else if (value == '2') return '<div class="feedbackInNotOpen"></div>&nbsp;<s:message code="condition.info.class2"/>';
                 else if (value == '3') return '<div class="feedbackInOpen"></div>&nbsp;<s:message code="condition.info.class3"/>';
@@ -923,7 +923,7 @@
                 else if (value == '9') return '<div class="feedbackDefer"></div>&nbsp;<s:message code="condition.info.feedback9"/>';
                 else if (value == '-1') return '-';
             });
-            grid.colAdd('ml_confd_prob', ml_confd_prob_str+'(%)', 90, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+            grid.colAdd('ml_confd_prob', ml_confd_prob_str+'(%)', 80, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
                 if(infoHynixConf == 'true'){
                     var sprobRound = Math.round(value*100)/100;
                     if( value == undefined || value == null || value == -1.0 ) return '-';
@@ -937,13 +937,13 @@
             if (value == '0') return '';
             else return value.comma();
         });
-        grid.colAdd('inside', '<s:message code="message.msg.inout"/>', 55, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+        grid.colAdd('inside', '<s:message code="message.msg.inout"/>', 150, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
             if (value == 'N') return '<s:message code="message.msg.out"/>';
             else if (value == 'Y') return '<s:message code="message.msg.in"/>';
             else return '-';
         });
 
-        grid.colAdd('direction_svc', '<s:message code="condition.receive_send"/>', 55, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
+        grid.colAdd('direction_svc', '<s:message code="condition.receive_send"/>', 100, 'center', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
             if (value == 'I') return '<s:message code="condition.receive"/>';
             else if (value == 'O') return '<s:message code="condition.send"/>';
             else return '-';

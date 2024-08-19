@@ -163,6 +163,7 @@ var filelist = {
 	save:'저장',
 	preview:'미리보기',
 	allfileSave:'전체파일 저장',
-	Outside:'외부'
+	Outside:'외부',
+	all:'전체'
 }
 
