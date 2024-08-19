@@ -188,7 +188,7 @@
 							<h4 accesskey="T" id="toBtn" style="margin-top:12px;"><s:message code="mail.recv"/></h4>
 						</div>
 						<div class="col-xs-10">
-							<input type="text" class="form-control input-sm" style="width:94%; margin-left:-40px;" id="toMailAddr" readonly="readonly"/>
+							<input type="text" class="form-control input-sm" style="width:94%; margin-left:-30px;" id="toMailAddr" readonly="readonly"/>
 							<button type="button" class="btn02" accesskey="S" id="toMailInit"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
 						</div>
 					</div>
@@ -197,7 +197,7 @@
 							<h4 accesskey="T" id="toBtn" style="margin-top:12px;"><s:message code="mail.recv.cc"/></h4>
 						</div>
 						<div class="col-xs-10">
-							<input type="text" class="form-control input-sm" style="width:94%; margin-left:-40px;" id="ccMailAddr" readonly="readonly"/>
+							<input type="text" class="form-control input-sm" style="width:94%; margin-left:-30px;" id="ccMailAddr" readonly="readonly"/>
 							<button type="button" class="btn02"  id="ccMailInit"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
 						</div>
 						<!--<div class="col-xs-3">
