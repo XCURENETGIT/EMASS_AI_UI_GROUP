@@ -216,7 +216,7 @@ function eventEnterSearch(event) {
 					<div id="enddatepicker"><input type="text" id="endDate" name='endDate'class="txt_center"  style="width: 110px;"></div>
 
 					<div class="form-group optiotab">
-						<button type="button" id="dateYesterday" accesskey="Y" style="width:72px;"><s:message code="condition.yesterday"/></button>
+						<button type="button" id="dateYesterday" accesskey="Y" style=""><s:message code="condition.yesterday"/></button>
 						<button type="button" id="dateToday" accesskey="T" style="width:72px;"><s:message code="condition.today"/></button>
 						<button type="button" id="dateWeek" accesskey="W" ><s:message code="condition.week" arguments="1" argumentSeparator="|"/></button>
 						<button type="button" id="dateMonth" accesskey="M" ><s:message code="condition.month" arguments="1" argumentSeparator="|"/></button>

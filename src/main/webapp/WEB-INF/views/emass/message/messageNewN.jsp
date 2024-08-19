@@ -542,6 +542,21 @@
             border: 1px solid #7D7D7D;
         }
 
+        .searchKeywordCloseBtn .glyphicon-remove:before {
+            color: white !important;
+        }
+        .searchHelpDivCloseBtn .glyphicon-remove:before {
+            color: white !important;
+        }
+        .filterDateCloseBtn .glyphicon-remove:before {
+            color: white !important;
+        }
+        .searchHelpDivCloseBtn .glyphicon-remove:before {
+            color: white !important;
+        }
+
+
+
     </style>
     <script type="text/javascript">
 
@@ -1230,6 +1245,21 @@
                 } */
                 con.resetFilter('');
             });
+
+            document.addEventListener('keydown', function(event) {
+                if (event.ctrlKey) {
+                    switch(event.key) {
+                        case "ArrowUp":
+                        case "ArrowDown":
+                        case "ArrowLeft":
+                        case "ArrowRight":
+                            event.preventDefault();   // 기본 동작 차단
+                            event.stopPropagation();  // 이벤트 전파 중단
+                            break;
+                    }
+                }
+            }, true);  // 캡처링 단계에서 이벤트를 처리
+
             $('.saveCondition').click(function(){
                 if(!$('#msg_condition_menu').hasClass('condition_menu_unselected')){
                     $('#periodSetupPop').show();
@@ -2635,7 +2665,7 @@
                 </div>
                 <tiles:insertAttribute name="filterNew" ignore="true"/>
                 <div class="content mainBodyArea" id="mainBodyArea" style="height:100%; ">
-                    <div id="content_left" class="ui-layout-west" style="overflow-y:hidden; z-index:9999;">
+                    <div id="content_left" class="ui-layout-west" style="overflow-y:hidden; z-index:9999; margin-left: 6px;">
                         <div class="section_menu p12">
                             <div style=" display:flex;">
                                 <div id="msg_condition_menu" class="filter_menu" style="width: 33.3%;"><div class="filter_icon"><span class="filter_icon_text"><s:message code="condition.select.search1"/></span></div></div>
@@ -3330,7 +3360,7 @@
 									<input id="insaFormatInput" style="width: 330px;" type="text" value="" data-format="name,emaile,busi,dept,jikgub,ip"/>
 									<img src="<c:url value="/img/message/exclamation.png"/>" id="confError" style="display: none; padding-bottom:2px;" title="<s:message code="message.insa.error"/>">
 									<img src="<c:url value="/img/message/accept.png"/>" id="confAccept" style="display: none; padding-bottom:2px;" title="<s:message code="message.insa.ok"/>">
-									<span style="padding-left: 7px; margin-top:-1px;" id="insaFormatOk" class="btn01"> <s:message code="common.msg.apply"/> </span>
+									<span style="padding-left: 7px; margin-top:-1px;  width: 45px;" id="insaFormatOk" class="btn01"> <s:message code="common.msg.apply"/> </span>
 									<span style="padding-left: 7px; margin-top:-1px;" id="insaFormatClear" class="btn02"> <s:message code="common.msg.remove"/> </span>
 								</span>
                                         <span style="width: 435px; display:block;">

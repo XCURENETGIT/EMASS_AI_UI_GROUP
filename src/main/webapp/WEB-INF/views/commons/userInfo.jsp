@@ -23,6 +23,9 @@
 			max-width: 400px;
 			word-break: break-all;
 		}
+		.row label{
+			font-size:13px !important;
+		}
 		/* .sortableColumn,.uploadSortableColumn { width: 40%;padding: 0;}
 		.sortableColumn li,.uploadSortableColumn li {
 			font-weight:bold;

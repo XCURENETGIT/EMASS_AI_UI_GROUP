@@ -274,7 +274,7 @@
 <div>
 	<!-- 검색 -->
 	<div class="searchArea">
-		<div class="searchSub">
+		<div class="searchSub" style="width: 100%;">
 			<div class="searchSub_Box">
 				<div id="startDatePicker"><input type="text" class="txt_center"  id="startDate" name='startDate' style="width: 110px;">
 					<span class="hyphen">~</span></div>
@@ -282,8 +282,8 @@
 				<div class="form-group optiotab">
 					<button type="button" id="dateYesterday" accesskey="Y" style="width:85px;"><s:message code="condition.yesterday"/></button>
 					<button type="button" id="dateToday" accesskey="T" style="width:85px;"><s:message code="condition.today"/></button>
-					<button type="button" id="dateWeek" accesskey="W"style="width:85px;" ><s:message code="condition.week" arguments="1" argumentSeparator="|"/></button>
-					<button type="button" id="dateMonth" accesskey="M" style="width:90px;"><s:message code="condition.month" arguments="1" argumentSeparator="|"/></button>
+					<button type="button" id="dateWeek" accesskey="W" ><s:message code="condition.week" arguments="1" argumentSeparator="|"/></button>
+					<button type="button" id="dateMonth" accesskey="M"><s:message code="condition.month" arguments="1" argumentSeparator="|"/></button>
 				</div>
 			</div>
 			<div class="searchSub_Box">

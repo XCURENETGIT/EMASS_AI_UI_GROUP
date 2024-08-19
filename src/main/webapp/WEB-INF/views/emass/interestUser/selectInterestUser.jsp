@@ -141,7 +141,7 @@
 
 <div class="xcn_container" id="popupWrap" style="min-width: 650px;">
 	<div class="item">
-		<h3 class="blue"><span class="bullet01"></span></span>사용자 선택</h3>
+		<h3 class="blue"><span class="bullet01"></span></span><s:message code="common.org.choose.user"/></h3>
 		<div class="grayBg mat8 popupInner">
 			<select class="" id="searchType" style="float: left;">
 				<option value="all">- <s:message code="userInfo.all"/> -</option>

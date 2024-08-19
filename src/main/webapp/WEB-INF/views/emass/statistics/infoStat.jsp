@@ -89,7 +89,7 @@
 
     var patternCountStr =  '<s:message code="bodyview.pattern_count"/>';
     var docCountStr = '<s:message code="bodyview.doc_count"/>';
-    
+
     $(document).ready(function () {
         initCondition();
         initDateTimePicker('startdate','enddate');
@@ -125,9 +125,9 @@
                 $('#privateDetailTab').trigger('click');
                 $('#privateChartTab').trigger('click');
             }
-            
-			
-            
+
+
+
             if ($('#piCount').val() === '' || $('#piCount').val() === null || $('#piCount').val() === undefined) {
                 ui.alertMsg('<s:message code="piCount.msg.nonSelect"/>');
                 return;
@@ -166,7 +166,7 @@
         })
 
         $('#privateDetailTab').attr('href',"#");
-        
+
         $('#piType').change(function () {
             if($('#piType').val() == 'sum') {
                 $('#piCount').val('');
@@ -178,8 +178,8 @@
                 $('#privateChartTab').attr('href',"#");
             }
         });
-		
-		
+
+
         $('.listChart').on('click', '.close', function () {
             var id = 'tab' + Number($(this).parents('li').attr('idx'));
 
@@ -348,7 +348,7 @@
 			<div>
 				<input type="text" id="enddate" class="txt_center"  style="width: 110px;"/>
 			</div>
-			
+
 			<div>
 				<select id="piType" name="piType" style="width: 150px;"/>
 					<option value="sum" selected>   <s:message code="condition.regexp.cnt"/> </option>  <%-- 문서 건수 --%>
@@ -379,7 +379,7 @@
 					<%} %>
 				</select>
 			</div>
-			
+
 			<div>
 				<button class="form_btn01" id="searchBtn"><s:message code="common.msg.search"/></button>
 				<button class="form_btn02" id="clearBtn"><s:message code="condition.reset"/></button>
@@ -396,7 +396,7 @@
 			</span>
 			<input type="hidden" id="deptStr" class="selectedTitle">
 			<input type="hidden" id="deptVal">
-			
+
 			<button class="btn01" id="user"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message code="common.org.choose.user"/></button>
 			<span id="userSelectedArea" class="codeSelectedBtn">
 				<button type="button" class="btn num_add bornone"  style="z-index: 2;">0</button>
@@ -482,18 +482,18 @@
             else return '';
         }else return '<s:message code="bodyview.total.details"/>';
     });
-    
+
 
     grid1.colAdd('pi_SN', '<s:message code="bodyview.sn"/>', 70, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
         if (value != undefined) return value.comma();
         else return '';
     });
-    
+
     grid1.colAdd('pi_CN', '<s:message code="bodyview.cn"/>', 70, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
         if (value != undefined) return value.comma();
         else return '';
     });
-    grid1.colAdd('pi_DN', '<s:message code="bodyview.dn"/>', 80, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
+    grid1.colAdd('pi_DN', "<s:message code="bodyview.dn"/>", 80, 'right', false, 'link', function (row, cell, value, columnDef, dataContext) {
         if (value != undefined) return value.comma();
         else return '';
     });
@@ -537,7 +537,7 @@
         if (value != undefined) return value.comma();
         else return '';
     });
-	
+
 
     grid1.loadExportMenu('<s:message code="DATA_ANALYSIS.ANALYSIS_INFO"/>');
     grid1.loadPageSize();
@@ -555,7 +555,7 @@
             detail_pi_total = grid1.getValue(grid1.Row, grid1.Col);
             getInfoDetailList("Y",grid1.getValue(grid1.Row, 'rowKey'), grid1.ColKey(grid1.Col));
 		}
-      
+
     };
 
     var grid2 = new Xgrid('selectGrid', contextRoot);
@@ -959,7 +959,7 @@
         if(type==undefined){
             type= grid1.ColKey(grid1.Col);
         }
-		
+
         var piCount = $('#piCount').val();
         var busiStr = arrayToString($('#busiSelect').selectpicker('val'));
         var dv = $('#deptVal').val().split('|');
@@ -980,7 +980,7 @@
         if(grid2.loadingPage > 0) {
             searchAfter = grid2.getValue(grid2.data.length-1, 'msgid');
         }
-			
+
         grid2.on();
         ui.postJson({
             url: 'getInfoDetailList.xcn',
@@ -1047,7 +1047,7 @@
                 /*	grid2.setData(data);*/
                 var nodes = [];
                 var edges = [];
-             
+
                 if (pi_total === 0) {
                     nodes.push({
                         id: 'noneData',
@@ -1062,7 +1062,7 @@
                     var nodeLv2 = type === 'pi_total' ? getNodeByPI(data) : [type];
                     var nodeLv3 = getNodeByField('ctime_yyyymmdd', data);
                     var nodeLv4 = getNodeBySvc(data);
-                    
+
 
                     for (var i = 0; i < nodeLv1.length; i++) {
                         nodes.push({id: nodeLv1[i].id, font: {multi: 'html'}, title: nodeLv1[i].title, label: nodeLv1[i].title, group: 'user'});
