@@ -14,6 +14,7 @@ public class EmsAttachVO {
 	private String attachHarPath;
 	private long attachSize;
 	private String attachExt;
+	private String drm;
 	private String attachDesc;
 	private String attachHash;
 	private String encrypted;

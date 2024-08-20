@@ -83,6 +83,14 @@
 			height: 100% !important;
 			min-height: 0px !important;
 		}
+
+		.fa-lg{
+			vertical-align: -30%; !important;
+		}
+
+		.glyphicon-remove:before {
+			color: #fff4eb;
+		}
 		button {font-family: Pretendard !important; font-weight:400; color:#383838;}
 		#buttonDiv {
 			position: fixed;
@@ -278,6 +286,10 @@
 				fnOpenWindow('<c:url value="/ems/recommend.do" />?msgId='+msgId+'&targetDate='+targetDate+'&subjectIsEmpty='+subjectIsEmpty+'&isUnknownDocument='+isUnknownDocument, 'recommend', 1300, 800, 'fix');
 			});
 
+			$('#fileHelpDivCloseBtn').click(function(){
+				$('#fileHelpDiv').hide();
+			});
+
 			$(document).on('click', '#nologUrlBtn', function(){
 				var host_path = $('#hostDiv').text();
 				mode = 'insert';
@@ -429,6 +441,12 @@
 			ocrAttach:'<s:message code="bodyview.ocr.preview.attach"/>',
 			noRecvs:'<s:message code="common.msg.norecvs"/>',
 			category:'<s:message code="common.category"/>',
+			differentExt: '<s:message code="java.message.differentExt"/>',
+			unknownExt:'<s:message code="java.message.unknownExt"/>',
+			fileNameExistN:'<s:message code="java.message.fileNameExistN"/>',
+			fileNoSizeNo:'<s:message code="java.message.fileNoSizeNo"/>',
+			fileEncrypte :'<s:message code="bodyview.ef"/>',
+			fileDrm : 'DRM'+'<s:message code="common.org.file"/>'
 		};
 
 		function getSimilarDoc(){
@@ -801,11 +819,12 @@
 					</div>
 				</div>
 				<!-- 파일정보 -->
-				<div id="fileDiv" class="row">
+				<div id="fileDiv" class="row" style="overflow: visible;">
 					<div class="col-lg-12">
 						<div class="panel panel-default" id="">
 							<div class="panel-heading body_toggle fileFold" style="padding:10px 12px 9px;">
 								<s:message code="bodyview.file_info"/><span id="fileCntArea" class="blue02 fb600"></span>
+								<img  style="width: 16px;margin-bottom: 2px;" class="areaBtn" id="fileHelpBtn" src="<c:url value="/img/icon/question.png"/>">
 								<div class="pull-right" style="position: relative; margin-top:-7px;margin-right:2px;">
 									<button class ="btn05" accesskey="V" id="saveAttachBtn"><img src="../img/subBtn_save.png/"><s:message code="bodyview.attach.save"/></button>
 								</div>
@@ -820,6 +839,45 @@
 									</div>
 								</div>
 							</div>
+
+							<div id="fileHelpDiv" style="position: absolute; width: 395px; height: 205px; display: none; background-color: white; z-index: 1040;border: 1px solid #555;">
+								<div class="fileHelpHeader" style="height:30px;background-color:black;color:#fff;padding-left:10px;line-height:30px;font-weight: bold;">
+									<div style="float:left;width:250px;">
+										<i class="glyphicon glyphicon-question-sign"></i>&nbsp;<s:message code="java.message.file"/>
+									</div>
+									<div style="float:right;padding-right:8px;" class="fileHelpDivCloseArea">
+										<span class="glyphicon glyphicon-remove" style="cursor:pointer; line-height: 2;!important;" id="fileHelpDivCloseBtn" ></span>
+									</div>
+								</div>
+								<div style="width:100%; padding:10px;" class="fileHelpDivBody">
+									<div style="display: flex; align-items: center; margin-bottom: 5px;">
+										<span style="display:inline-block; width: 20px; height: 20px; margin-right: 5px; background-color:#cbe8f7"></span>
+										: <s:message code="java.message.fileNoSizeNo"/>
+									</div>
+									<div style="display: flex; align-items: center; margin-bottom: 5px;">
+										<span style="display:inline-block; width: 20px; height: 20px; margin-right: 5px; background-color:#FFE8E8"></span>
+										: <s:message code="java.message.differentExt"/>
+									</div>
+									<div style="display: flex; align-items: center; margin-bottom: 5px;">
+										<span style="display:inline-block; width: 20px; height: 20px; margin-right: 5px; background-color:#FFFAC3"></span>
+										: <s:message code="java.message.unknownExt"/>
+									</div>
+									<div style="display: flex; align-items: center; margin-bottom: 5px;">
+										<span style="display:inline-block; width: 20px; height: 20px; margin-right: 5px; background-color:#E0F7DA"></span>
+										: <s:message code="java.message.fileNameExistN"/>
+									</div>
+									<div style="display: flex; align-items: center; margin-bottom: 5px;">
+										<span style="display:inline-block; width: 20px; height: 20px; margin-right: 5px; background-color:#e0d2fa"></span>
+										: <s:message code="bodyview.ef"/>
+									</div>
+									<div style="display: flex; align-items: center;">
+										<span style="display:inline-block; width: 20px; height: 20px; margin-right: 5px; background-color:#fac989"></span>
+										: DRM <s:message code="common.org.file"/>
+									</div>
+								</div>
+
+							</div>
+
 							<div class="panel-body " style="display:none;">
 								<div id="attachDiv">
 									<table class="subTable02 table-bordered" id="fileTable">

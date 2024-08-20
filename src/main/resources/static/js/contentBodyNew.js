@@ -591,8 +591,24 @@ $(document).ready(function () {
     });
 
     $('.body_toggle').click(function () {
-        $(this).next().toggle();
+        var $this = $(this);
+        if ($this.hasClass('fileFold')) {
+            $this.next().next().toggle();
+        }else{
+            $this.next().toggle();
+        }
     });
+
+    $('#fileHelpBtn').click(function() {
+        var $fileHelpDiv = $('#fileHelpDiv');
+        if ($fileHelpDiv.css('display') === 'none') {
+            $fileHelpDiv.css('display', 'block');
+        } else {
+            $fileHelpDiv.css('display', 'none');
+        }
+        event.stopPropagation();
+    });
+
     $('.fileFold, .patternFold').click(function () {
         var foldFileYn = $('#attachDiv').parent().css('display');
         var foldPatternYn = $('#patternTable').parent().parent().css('display');
@@ -1241,7 +1257,7 @@ function setMessage(msg) {
     } else {
         $('#hostTr').css("display", "");
         var query = "";
-        if (hostQuery == "true") query = nvl(msg.query);
+        query = nvl(msg.query);
         var hostDivText = nvl(msg.host) + nvl(msg.path) + query;
         if (hostDivText.indexOf('http://') > -1) hostDivText = nvl(msg.path) + query;
 
@@ -1473,29 +1489,41 @@ function setFileDiv(msg) {
             if (attachFeedbackDate == undefined || attachFeedbackDate == null) attachFeedbackDate = '-';
 
             if (nvl(file.attachPath) == "") trClass = "notfound";
-            if (ext.length > 1 && nvl(attachExt) == ext[ext.length - 1]) {
-                extClass = "";
-            } else {
-                extClass = " differentExt";
+
+            if (file.attachSize == 0 || file.attachExt== "N"){ //파일 없음
+                extClass =" fileNoSizeNo"
+                attachExt="-";
+            }else { //파일 있을 경우
+                if (attachNameExist == "N"){ //파일명 알수 없음
+                    extClass = " fileNameExistN";
+                }else if (file.encrypted == 'Y' || attachExt == "enc"){ //암호화 파일
+                    extClass = " fileEncrypte";
+                }else if (file.drm == "Y" || attachExt == 'drm'){ //DRM 파일
+                    extClass = " fileDrm";
+                }else if (attachExt == "unknown"){ //파일 확장자 없음
+                    extClass = " unknownExt";
+                    attachExt = contentBody.unknown;
+                    attachExt += "(txt)";
+                } else if (!(ext.length > 1 && nvl(attachExt) == ext[ext.length-1])) { //파일 확장자 다른 경우
+                    extClass = " differentExt";
+                }else{
+                    extClass = "";
+                }
             }
 
-            if (attachExt == "unknown") {
-                extClass = " unknownExt";
-                attachExt = contentBody.unknown;
-                attachExt += "(txt)";
-            }
-
-            if (attachNameExist == "N") {
-                extClass = " fileNameExistN";
-            }
             fileStr = '';
             fileStr += '<tr msgid="' + msg.msgId + '" id="' + file.attachId + '" size="' + file.attachSize + '" class="' + trClass + extClass + '" >';
             fileStr += '<td>';
             fileStr += '<span class="attach_' + attachExt + ' attach_file_img" style="padding-right:5px;"></span> ';
-            if (attachNameExist == "N") fileStr += '<span>[' + contentBody.unknownFileName + ']</span> ';
             fileStr += '<span class="attachName" style="text-decoration: underline;" attachname="' + attachName + '">';
             fileStr += '' + attachName + ' (' + convertFileSize(file.attachSize) + ')</span> ';
             fileStr += '<span class="glyphicon glyphicon-download-alt downloadIcon" style="cursor:pointer"></span>';
+            if (extClass == " unknownExt")fileStr +='<span style="margin-left: 5px; float: right"> <i class="fa fa-exclamation fa-lg" aria-hidden="true" style="color:#757373;margin-right: 2px;font-size: 14px;"></i><span style="color: #757373">['+contentBody.unknownExt+']</span></span>'
+            if (extClass == " differentExt")fileStr +='<span style="margin-left: 5px;float: right"><i class="fa fa-exclamation fa-lg" aria-hidden="true" style="color:#757373;margin-right: 2px;font-size: 14px;"></i><span style="color: #757373">['+contentBody.differentExt+']</span></span>'
+            if (extClass == " fileNameExistN")fileStr +='<span style="margin-left: 5px;float: right"><i class="fa fa-exclamation fa-lg" aria-hidden="true" style="color:#757373;margin-right: 2px;font-size: 14px;"></i><span style="color: #757373">['+contentBody.fileNameExistN+']</span></span>'
+            if (extClass == " fileNoSizeNo")fileStr +='<span style="margin-left: 5px;float: right"><i class="fa fa-exclamation fa-lg" aria-hidden="true" style="color:#757373;margin-right: 2px;font-size: 14px;"></i><span style="color: #757373">['+contentBody.fileNoSizeNo+']</span></span>'
+            if (extClass == " fileEncrypte")fileStr +='<span style="margin-left: 5px;float: right"><i class="fa fa-exclamation fa-lg" aria-hidden="true" style="color:#757373;margin-right: 2px;font-size: 14px;"></i><span style="color: #757373">['+contentBody.fileEncrypte+']</span></span>'
+            if (extClass == " fileDrm")fileStr +='<span style="margin-left: 5px;float: right"><i class="fa fa-exclamation fa-lg" aria-hidden="true" style="color:#757373;margin-right: 2px;font-size: 14px;"></i><span style="color: #757373">['+contentBody.fileDrm+']</span></span>'
             //fileStr += '<td style="text-align: right;">' + convertFileSize(file.attachSize) + '</td>';
             fileStr += '<td style="text-align: center;">';
             if (nvl(file.ocrYn) == "Y") {
@@ -1510,7 +1538,8 @@ function setFileDiv(msg) {
 
             fileStr += '</td>';
 
-            fileStr += '<td style="text-align: center;"><span class="attachExt"><span class="glyphicon glyphicon-download-alt"></span>&nbsp;' + attachExt + '</span></td>';
+            if(extClass == " fileNoSizeNo")	fileStr += '<td style="text-align: center;"><span class="attachExt">&nbsp;' + attachExt +'</span></td>';
+            else 	fileStr += '<td style="text-align: center;"><span class="attachExt"><span class="glyphicon glyphicon-download-alt"></span>&nbsp;' + attachExt +'</span></td>';
             fileStr += '<td style="text-align: center;"><span class="attachSpace">' + (nvl(attachSpace) != "" ? 'O' : '-') + '</span></td>';
 
             //	fileStr += '<td style="text-align: center;" class="downloadBtn"><span class="glyphicon glyphicon-download-alt downloadIcon"></span></td>';

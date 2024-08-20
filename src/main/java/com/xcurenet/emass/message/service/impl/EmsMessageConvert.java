@@ -227,6 +227,7 @@ public class EmsMessageConvert {
 			vo.setAttachHarPath(null);
 			vo.setAttachSize(attach.getAttachSize());
 			vo.setAttachExt(attach.getAttachExt());
+			vo.setDrm(attach.getDrm());
 			vo.setAttachDesc(attach.getAttachDesc());
 			vo.setAttachHash(attach.getAttachHash());
 			vo.setEncrypted(attach.getEncrypted() ? "Y" : "N");

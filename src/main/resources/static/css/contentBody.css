@@ -87,6 +87,33 @@ pre {
 	position: relative;
 	top: 7px;
 }
+
+.differentExt{
+	background-color:#FFE8E8;
+}
+.unknownExt{
+	background-color:#FFFAC3;
+}
+.fileNameExistN{
+	background-color:#E0F7DA;
+}
+
+.fileNoSizeNo{
+	background-color:#cbe8f7;
+}
+
+.fileNo{
+	background-color:#9079f7;
+}
+
+.fileDrm{
+	background-color:#fac989;
+}
+
+.fileEncrypte{
+	background-color:#e0d2fa;
+}
+
 /*.differentExt{*/
 /*	background-color:#FFE8E8;*/
 /*}*/
