@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
+<%@ include file="/WEB-INF/fragments/baseScript.jsp" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -36,15 +36,24 @@
 				getData('Y');
 			});
 
-			$('.codeSelectedBtn').click(function (){
+			$('.codeSelectedBtn').click(function () {
 				$('#coreKeywordStr').val('');
+				$('#coreKeywordVal').val('');
 				$('#coreKeywordSelectedArea').find('.btn').text(0);
 			})
 
-			initDateTimePicker('startdatepicker', 'enddatepicker');
+			$('#clearBtn').click(function(){
+				$('#startdate').val(new Date().format('yyyy-mm-dd'));
+				$('#enddate').val(new Date().format('yyyy-mm-dd'));
+				$('#coreKeywordStr').val('');
+				$('#coreKeywordVal').val('');
+				$('#coreKeywordSelectedArea').find('.btn').text(0);
+			});
+
+			initDateTimePicker('startdate', 'enddate');
 
 
-			$('.totalView').click(function(){
+			$('.totalView').click(function () {
 				$("#chartCntDiv").show();
 				$('#totalViewDiv').hide();
 				printChart(totalChartDat);
@@ -57,7 +66,6 @@
 
 
 		});
-
 
 
 		function openCodeWindow(id, oldCode, oldConm) {
@@ -103,208 +111,204 @@
 
 	</script>
 </head>
-<body class="mini-navbar">
-<div class="container">
-	<div class="boxArea">
-		<div class="content_body">
-			<div class="row">
-				<div class="col-xs-12 text-left">
-					<div class="form-group form-inline not-dashed">
-						<label for="startdatepicker"><s:message code="condition.select.period"/>:</label>
-						<div class='input-group date' id='startdatepicker'>
-							<input type='text' class="input-sm form-control" id='startdate'/>
-							<span class="input-group-addon"> <span class="glyphicon glyphicon-calendar"></span>
-								</span>
-						</div>
-						~
-						<div class='input-group date' id='enddatepicker'>
-							<input type='text' class="input-sm form-control" id='enddate'/>
-							<span class="input-group-addon"> <span class="glyphicon glyphicon-calendar"></span>
-								</span>
-						</div>
-						<button class="btn01" id="coreKeyword"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
-								code="keyword.msg.coreKeyword"/></button>
-						<span id="coreKeywordSelectedArea" class="codeSelectedBtn">
-										<button type="button" class="btn num_add bornone"  style="z-index: 2">0</button>
+<div>
+	<div class="searchArea">
+		<div class="searchSub">
+			<div id="startDatePicker"><input type="text" id="startdate" name='startdate'class="txt_center"  style="width: 110px;">
+				<span class="hyphen">~</span></div>
+			<div id="enddatepicker"><input type="text" id="enddate" name='enddate'class="txt_center"  style="width: 110px;"></div>
+
+		<%--						<label for="startdatepicker"></label>--%>
+			<%--						<div class='input-group date' id='startdatepicker'>--%>
+			<%--							<input type='text' class="input-sm form-control" id='startdate'/>--%>
+			<%--							<span class="input-group-addon"> <span class="glyphicon glyphicon-calendar"></span>--%>
+			<%--								</span>--%>
+			<%--						</div>--%>
+			<%--						~--%>
+			<%--						<div class='input-group date' id='enddatepicker'>--%>
+			<%--							<input type='text' class="input-sm form-control" id='enddate'/>--%>
+			<%--							<span class="input-group-addon"> <span class="glyphicon glyphicon-calendar"></span>--%>
+			<%--								</span>--%>
+			<%--						</div>--%>
+
+			<button class="btn01" id="coreKeyword"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
+					code="keyword.msg.coreKeyword"/></button>
+			<span id="coreKeywordSelectedArea" class="codeSelectedBtn">
+										<button type="button" class="btn num_add bornone" style="z-index: 2">0</button>
 									</span>
-						<input type="hidden" id="coreKeywordVal">
+			<input type="hidden" id="coreKeywordVal">
 
-						<div class="form-group">
-							<label for="coreKeywordStr"></label>
-							<div class='input-group'>
-								<input type="text" id="coreKeywordStr" name="title" class="input-sm form-control" style="width: 300px; " readonly="readonly"/>
-							</div>
-						</div>
+			<div class="form-group">
+				<label for="coreKeywordStr"></label>
+				<div class='input-group'>
+					<input type="text" id="coreKeywordStr" name="title" class="input-sm form-control" style="width: 300px; " readonly="readonly"/>
+				</div>
+			</div>
+				<button class="form_btn01" id="searchBtn"><s:message code="common.msg.search"/></button>
+				<button class="form_btn02" id="clearBtn"><s:message code="condition.reset"/></button>
 
-						<button class="form_btn01" id="searchBtn"><s:message code="common.msg.search"/></button>
-						<span>
-							<b style="margin-left: 12px;"><s:message code="DATA_ANALYSIS.STAT_HOST_INFO"/> <s:message code="common.core.service"/></b>
+			<span>
+		<b style="margin-left: 12px;"><s:message code="DATA_ANALYSIS.STAT_HOST_INFO"/> <s:message code="common.core.service"/></b>
 						</span>
 
-					</div>
-				</div>
-			</div>
-
-			<div class="row top_space2">
-				<div class="col-xs-12">
-					<ul class="nav nav-tabs codeTab listChart" style="border-bottom: 0px!important;" >
-						<li class="active" style="width:263px; text-align: center"><a data-toggle="tab" href="#basicStatList" id="listTab"><s:message code="DATA_ANALYSIS.STAT_KEYWORDNEW"/></a></li>
-					</ul>
-				</div>
-			</div>
-			<div class="row top_space" style="height: 93%">
-				<div class="col-lg-12 tab-content xcn_full">
-					<div id="basicStatList" class="tab-pane fade in active" style="height: 100% ">
-						<div id="basicStatListGrid" class="slickGrid gridArea"></div>
-					</div>
-				</div>
-			</div>
 		</div>
-
+	</div>
+	<div class="content xcn_full">
+		<div class="contentSub">
+			<div class="subtab">
+				<button class="active">
+					<s:message code="DATA_STAT.STAT_KEYWORDNEW"/>
+				</button>
+			</div>
+			<div id="basicStatListGrid" class="slickGrid gridArea"></div>
+		</div>
 	</div>
 </div>
-<!-- Back to top -->
-<a href="#0" class="back-to-top cd-top"><span class="[ fa fa-chevron-up ]"></span> <span class="[ ]">Back to the Top</span></a>
 
-<form method="post" id="codeParam">
-	<input type="hidden" name="oldCode" id="oldCode"></input>
-	<input type="hidden" name="oldConm" id="oldConm"></input>
-</form>
+	<!-- Back to top -->
+	<a href="#0" class="back-to-top cd-top"><span class="[ fa fa-chevron-up ]"></span> <span class="[ ]">Back to the Top</span></a>
 
-<script>
+	<form method="post" id="codeParam">
+		<input type="hidden" name="oldCode" id="oldCode"></input>
+		<input type="hidden" name="oldConm" id="oldConm"></input>
+	</form>
+
+	<script>
 
 
-	function viewer_open( row, bodySize ){
+		function viewer_open(row, bodySize) {
 
-		var msgid = grid1.getValue(row, 'msgid');
+			var msgid = grid1.getValue(row, 'msgid');
 
-		openMessageBodyPopSize(grid1.id, msgid, "");
-		var readYn = grid1.getValue(row, 'readYn');
-		grid1.setValue(row, grid1.ColIndex('readYn'), 'Y');
-		grid1.Select(row,0);
-	}
-
-	function viewer_newOpen(row, bodySize){
-
-		var msgid = grid1.getValue(row, 'msgid');
-		openMessageBodyPopSize(grid1.id, msgid, "");
-
-		var readYn = grid1.getValue(row, 'readYn');
-		grid1.setValue(row, grid1.ColIndex('readYn'), 'Y');
-	}
-
-	function prevMsg( ) {
-		var row = 0;
-		if( grid1.Row > 0 ) {
-			row = --grid1.Row;
-			viewer_open(row);
-			grid1.Select(row,0);
-			return true;
+			openMessageBodyPopSize(grid1.id, msgid, "");
+			var readYn = grid1.getValue(row, 'readYn');
+			grid1.setValue(row, grid1.ColIndex('readYn'), 'Y');
+			grid1.Select(row, 0);
 		}
-		return false;
-	}
 
-	function nextMsg( ) {
+		function viewer_newOpen(row, bodySize) {
 
-		var row = 0;
-		if( grid1.Row < grid1.Rows - 1 ) {
-			row = ++grid1.Row;
-			viewer_open(row);
-			grid1.Select(row,0);
-			if( grid1.Row == grid1.Rows - 2  ){
-				getList( true );
+			var msgid = grid1.getValue(row, 'msgid');
+			openMessageBodyPopSize(grid1.id, msgid, "");
+
+			var readYn = grid1.getValue(row, 'readYn');
+			grid1.setValue(row, grid1.ColIndex('readYn'), 'Y');
+		}
+
+		function prevMsg() {
+			var row = 0;
+			if (grid1.Row > 0) {
+				row = --grid1.Row;
+				viewer_open(row);
+				grid1.Select(row, 0);
+				return true;
 			}
-			return true;
-		}
-		return false;
-	}
-	// function viewer_open(row, bodySize ){
-	// 	var msgid = grid1.getValue(row, 'msgid');
-	//
-	// 	openMessageBodyPop("", msgid, msgid);
-	//
-	// 	var readYn = grid.getValue(row, 'readYn');
-	// 	grid1.setValue(row, grid.ColIndex('readYn'), 'Y');
-	// 	// grid1.Select(row, 0);
-	// }
-
-
-	var grid1 = new Xgrid('basicStatListGrid', contextRoot);
-	grid1.autoNumber();
-	grid1.colAdd("host", 'HOST', 300, "left", false, 'nomal' );
-	grid1.colAdd("url", 'URL', 300, "left", false, 'nomal' );
-	grid1.colAdd("keyword", '<s:message code="keyword.coreKeyword.keyword"/>', 170, "left", false, 'link', function ( row, cell, value, columnDef, dataContext ) {
-		let count = grid1.getValue(row,'cnt');
-		if (count >1) return value+'<s:message code="condition.view.type8"/> '+(count-1)+'<s:message code="condition.view.type9"/>';
-		else return value;
-	});
-
-	<%--grid1.colAdd("sentence", '<s:message code="keyword.coreKeyword.content"/>', 250, "left", false, 'nomal' );--%>
-	grid1.colAdd("deptnm", '<s:message code="common.org.dept"/>', 150, "left", false, 'nomal' );
-	grid1.colAdd("sender", '<s:message code="common.org.user"/>', 190, "left", false, 'nomal' , function ( row, cell, value, columnDef, dataContext ) {
-		value = value.replaceAll("<","[").replaceAll(">","]");
-		return value;
-	});
-	grid1.colAdd("ctime", '<s:message code="keyword.coreKeyword.ctime"/>', 150, "center", false, 'nomal' );
-	grid1.loadExportMenu('<s:message code="DATA_ANALYSIS.STAT_KEYWORDNEW"/>');
-	grid1.loadPageSize();
-	grid1.loadHeader(false);
-	grid1.initData('<s:message code="common.msg.search.click"/>');
-
-	grid1.changePageSize = function(cnt){
-		getData();
-	};
-
-	grid1.onClick = function() {
-		if (grid1.Col == grid1.ColIndex('keyword')) {
-			viewer_open(grid1.Row, null);
-			// let msgid = grid1.getValue(grid1.Row, 'msgid')
-			// openMessageBodyPopSize("", msgid, "");
+			return false;
 		}
 
-	};
+		function nextMsg() {
 
-
-	var startDate, endDate, coreKeyword, hosts, paths ;
-	function getData(flag) {
-		if (searchFlag) return;
-
-		coreKeyword = $('#coreKeywordStr').val();
-		// 공백제거
-		coreKeyword = coreKeyword.split(',').map(str => $.trim(str)).join()
-		startDate = $('#startdate').val().replaceAll("-", "");
-		endDate = $('#enddate').val().replaceAll("-", "");
-		if (startDate > endDate) {
-			ui.alertMsg('<s:message code="consent.msg.timecheck"/>');
-			return;
-		}
-		if (coreKeyword == ''){
-			openCodeWindow('coreKeyword', $('#' + 'coreKeyword' + 'Val').val(), $('#' + 'coreKeyword' + 'Str').val());
-		//	ui.alertMsg('<s:message code="keyword.message.insert"/>');
-			return;
-		}
-
-		searchFlag = true;
-		grid1.on();
-		ui.get({
-			url: 'getKeywordNew.xcn',
-			startDate: startDate + "000000",
-			endDate: endDate + "235959",
-			coreKeyword: coreKeyword,
-			offset: grid1.data.length,
-			limit: grid1.pageSize,
-			success: function (data, total) {
-				grid1.setData(data);
-				searchFlag = false;
-			},
-			error: function (status, message) {
-				ui.alertMsg(message);
-			},
-			complete: function () {
-				grid1.off();
+			var row = 0;
+			if (grid1.Row < grid1.Rows - 1) {
+				row = ++grid1.Row;
+				viewer_open(row);
+				grid1.Select(row, 0);
+				if (grid1.Row == grid1.Rows - 2) {
+					getList(true);
+				}
+				return true;
 			}
+			return false;
+		}
+
+		// function viewer_open(row, bodySize ){
+		// 	var msgid = grid1.getValue(row, 'msgid');
+		//
+		// 	openMessageBodyPop("", msgid, msgid);
+		//
+		// 	var readYn = grid.getValue(row, 'readYn');
+		// 	grid1.setValue(row, grid.ColIndex('readYn'), 'Y');
+		// 	// grid1.Select(row, 0);
+		// }
+
+
+		var grid1 = new Xgrid('basicStatListGrid', contextRoot);
+		grid1.autoNumber();
+		grid1.colAdd("host", 'HOST', 300, "left", false, 'nomal');
+		grid1.colAdd("url", 'URL', 300, "left", false, 'nomal');
+		grid1.colAdd("keyword", '<s:message code="keyword.coreKeyword.keyword"/>', 170, "left", false, 'link', function (row, cell, value, columnDef, dataContext) {
+			let count = grid1.getValue(row, 'cnt');
+			if (count > 1) return value + '<s:message code="condition.view.type8"/> ' + (count - 1) + '<s:message code="condition.view.type9"/>';
+			else return value;
 		});
-	}
-</script>
-</body>
+
+		<%--grid1.colAdd("sentence", '<s:message code="keyword.coreKeyword.content"/>', 250, "left", false, 'nomal' );--%>
+		grid1.colAdd("deptnm", '<s:message code="common.org.dept"/>', 150, "left", false, 'nomal');
+		grid1.colAdd("sender", '<s:message code="common.org.user"/>', 190, "left", false, 'nomal', function (row, cell, value, columnDef, dataContext) {
+			value = value.replaceAll("<", "[").replaceAll(">", "]");
+			return value;
+		});
+		grid1.colAdd("ctime", '<s:message code="keyword.coreKeyword.ctime"/>', 150, "center", false, 'nomal');
+		grid1.loadExportMenu('<s:message code="DATA_STAT.STAT_KEYWORDNEW"/>');
+		grid1.loadPageSize();
+		grid1.loadHeader(false);
+		grid1.initData('<s:message code="common.msg.search.click"/>');
+
+		grid1.changePageSize = function (cnt) {
+			getData();
+		};
+
+		grid1.onClick = function () {
+			if (grid1.Col == grid1.ColIndex('keyword')) {
+				viewer_open(grid1.Row, null);
+				// let msgid = grid1.getValue(grid1.Row, 'msgid')
+				// openMessageBodyPopSize("", msgid, "");
+			}
+
+		};
+
+
+		var startDate, endDate, coreKeyword, hosts, paths;
+
+		function getData(flag) {
+			if (searchFlag) return;
+
+			coreKeyword = $('#coreKeywordStr').val();
+			// 공백제거
+			coreKeyword = coreKeyword.split(',').map(str => $.trim(str)).join()
+			startDate = $('#startdate').val().replaceAll("-", "");
+			endDate = $('#enddate').val().replaceAll("-", "");
+			if (startDate > endDate) {
+				ui.alertMsg('<s:message code="consent.msg.timecheck"/>');
+				return;
+			}
+			if (coreKeyword == '') {
+				openCodeWindow('coreKeyword', $('#' + 'coreKeyword' + 'Val').val(), $('#' + 'coreKeyword' + 'Str').val());
+				//	ui.alertMsg('<s:message code="keyword.message.insert"/>');
+				return;
+			}
+
+			searchFlag = true;
+			grid1.on();
+			ui.get({
+				url: 'getKeywordNew.xcn',
+				startDate: startDate + "000000",
+				endDate: endDate + "235959",
+				coreKeyword: coreKeyword,
+				offset: grid1.data.length,
+				limit: grid1.pageSize,
+				success: function (data, total) {
+					grid1.setData(data);
+					searchFlag = false;
+				},
+				error: function (status, message) {
+					ui.alertMsg(message);
+				},
+				complete: function () {
+					grid1.off();
+				}
+			});
+		}
+	</script>
+	</body>
 </html>
