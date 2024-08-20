@@ -67,6 +67,14 @@
 		}
 	}
 
+	ConfigAdminVO bodyPrettyOption = configAdminService.getConfAdmin("bodyPretty", adminId);
+	String bodyPretty = (Common.isNotEmpty(bodyPrettyOption)) ? Common.nvl(bodyPrettyOption.getVal()) : "N";
+
+	ConfigAdminVO detectPreviewOption = configAdminService.getConfAdmin("detectPreview", adminId);
+	String detectPreview = (Common.isNotEmpty(detectPreviewOption)) ? Common.nvl(detectPreviewOption.getVal()) : "N";
+
+	String BODY_SIZE_OVER = Common.BODY_CONTEXT_SIZE_OVER;
+
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -91,6 +99,18 @@
 		.glyphicon-remove:before {
 			color: #fff4eb;
 		}
+
+
+		.bodyDownload{
+			cursor: pointer;
+
+		}
+
+
+
+
+
+
 		button {font-family: Pretendard !important; font-weight:400; color:#383838;}
 		#buttonDiv {
 			position: fixed;
@@ -247,7 +267,25 @@
 		var unknown =  '<s:message code="bodyview.unknown"/>';
 
 
+		var bodyPretty = '<%=bodyPretty%>';
+		var detectPreview = '<%=detectPreview%>';
+		var BODY_SIZE_OVER = '<%=BODY_SIZE_OVER%>';
+
+
 		$(document).ready(function(){
+
+
+			// 본문 다운로드
+			$('#emassBodyDownload').click(function(){
+				saveOriginalText();
+			});
+
+			/* 운용자 본문 읽기 옵션 */
+			$('#bodyPretty').val(bodyPretty);
+			$('#detectPreview').val(detectPreview);
+
+
+
 			if(popup_msgId!= '') {
 				getMessage(popup_msgId, popup_searchKey, popup_bodySize, kHighlight,hostQueryUse);
 			}else{
@@ -289,6 +327,58 @@
 			$('#fileHelpDivCloseBtn').click(function(){
 				$('#fileHelpDiv').hide();
 			});
+
+
+			//본문포멧 : 원문대로,정돈되게
+			$("#bodyPretty").change(function () {
+				setConfAdminOption('bodyPretty', $(this).val()); // 운용자 설정 변경
+				getBody($('#bodyEncoding').val(), $('#bodyStr').text());
+			});
+
+			//검출내역 : 미리보기,전체보기
+			$("#detectPreview").change(function () {
+				setConfAdminOption('detectPreview', $(this).val());
+				bodyPreview();
+			});
+
+			function saveOriginalText( ){
+				var url = '<c:url value="/getEmassOriginalBodyDown.xcn?msgId='+msgId+'"/>';
+				try {
+					MessageDown.location.href = url;
+				} catch (e) {
+					MessageDown.src = url;
+				}
+			}
+
+			function bodyPreview() {
+				ui.onBody('content_body', 0, 0);
+				ui.get({
+					url: 'getEmassBodyStr.xcn',
+					msgId: msgId,
+					userCharset: $('#bodyEncoding').val(),
+					keywords : $('#bodyStr').text(),
+					searchStrInput: parent.$('#searchStrInput').val(),
+					menuId : 'MESSAGE_INFO',
+					pMenuId : 'DATA_MONITOR',
+					success : function(data, total) {
+						if(data==null || nvl( data,'')=='') data = message.msgNocontent;
+
+						if(isGroupMessenger() && (svc.indexOf('J') == 3 || svc.indexOf('L') == 3)) $('#emassBody').html(getAppendGroupBody());
+						else $('#emassBody').html(data + getAppendGroupBody());
+						$("#emassBody").select();
+						Highlight();
+					},
+					error : function(status, message) {
+						ui.alertMsg(message);
+					},
+					complete : function() {
+						ui.off('content_body');
+					}
+				});
+			}
+
+
+
 
 			$(document).on('click', '#nologUrlBtn', function(){
 				var host_path = $('#hostDiv').text();
@@ -1009,6 +1099,34 @@
 									<span><s:message code="condition.body"/> <s:message code="bodyview.find.keyword"/> : </span>
 									<span style="font-weight: bold;" class="blue02" id="bodyStr"></span>
 								</div>
+								<div  style="padding:0;">
+<%--									<div style="margin-bottom: 6px;"  id="detectPanel">--%>
+<%--										<span class="body_selectBtn"><s:message code="message.msg.body.format"/>: </span>--%>
+<%--										&lt;%&ndash; 본문포멧 &ndash;%&gt;--%>
+<%--										<span class="select-xs">--%>
+<%--											<select name="bodyPretty" id="bodyPretty" class="body_select body_selectBtn" style="width:80px;">--%>
+<%--												<option value="N"><s:message code="message.msg.body.viewOrig"/></option>--%>
+<%--												<option value="Y"><s:message code="message.msg.body.pretty"/></option>--%>
+<%--											</select>--%>
+<%--										</span>--%>
+<%--										&lt;%&ndash; 검출내역 &ndash;%&gt;--%>
+<%--										<span class="body_selectBtn"> <s:message code="message.msg.body.detction"/> : </span>--%>
+<%--										<span class="select-xs" style="margin-right:10px;">--%>
+<%--											<select name="detectPreview" id="detectPreview" class="body_select body_selectBtn" style="width:80px;">--%>
+<%--												<option value="N"> <s:message code="message.msg.body.viewAll"/> </option>--%>
+<%--												<option value="Y"><s:message code="message.msg.body.preview"/></option>--%>
+<%--											</select>--%>
+<%--										</span>--%>
+<%--										<span id="bodySizeOverText" style="display: none">--%>
+<%--											</br></br>--%>
+<%--											<b><s:message code="message.msg.body.size.over"/></b>--%>
+<%--											<span class="body_selectBtn" id="bodySizeOver" style="display: none">--%>
+<%--											</br>--%>
+<%--												<button id="emassBodyDownload" class="msg_button"> <s:message code="message.msg.body.download"/></button>--%>
+<%--										</span>--%>
+<%--										</span>--%>
+<%--									</div>--%>
+								</div>
 							</div>
 							<div class="panel-body p12" style="padding:0;margin-bottom:70px !important;">
 								<div id="emassBody" style="min-height: 150px;overflow-x:auto;width: 100%;display:inline;">
@@ -1231,6 +1349,7 @@
 		ui.alertMsg(msg);
 	}
 </script>
+<iframe id="MessageDown" src="about:blank;" height="0" width="0" style="display: none;" ></iframe>
 </html>
 <%
 	/*

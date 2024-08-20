@@ -93,4 +93,6 @@ public interface EmsMessageService {
 
 	public int updateHost(final HostDescriptionVO hostDescriptionVO);
 
+	public List<String> keywordSeparation(String keyword);
+
 }

@@ -1117,6 +1117,25 @@ public class HomeController {
 	}
 
 
+
+	/**
+	 * keywordHost JSP.
+	 */
+	@RequestMapping(value = "/ems/keywordHost.do", method = RequestMethod.GET)
+	@Description("핵심 기술 키워드 탐지 HOST TOP")
+	public String keywordHost(Locale locale, Model model) {
+		return "/emass/statistics/keywordHost";
+	}
+
+	/**
+	 * keywordNew JSP.
+	 */
+	@RequestMapping(value = "/ems/keywordNew.do", method = RequestMethod.GET)
+	@Description("핵심 기술 키워드 탐지 NEW HOST TOP")
+	public String keywordNew(Locale locale, Model model) {
+		return "/emass/statistics/keywordNew";
+	}
+
 //	@RequestMapping(value = "/testtest")
 //	public void test() {
 //				solrEdcService.getCurIdx();

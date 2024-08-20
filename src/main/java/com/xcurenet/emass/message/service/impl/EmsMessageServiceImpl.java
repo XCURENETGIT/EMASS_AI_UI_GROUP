@@ -888,4 +888,54 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 
 
 
+	/**
+	 * 검색어 토큰 분리 -> 리스트로 받기
+	 * @param keyword
+	 * @return
+	 */
+	@Override
+	public List<String> keywordSeparation(String keyword) {
+		List<String> resultList = new ArrayList<>();
+		if(Common.isEmpty(keyword)) return resultList;
+
+		String[] terms = keyword.split(" ");
+		if(terms.length < 2) resultList.add(charsCheck(keyword));
+		else {
+			for (int i = 0; i < terms.length; i++) {
+				if (terms[i].equals("|")) {
+					terms[i] = " ";
+				} else if (i > 0 && terms[i - 1].equals(" ") || terms[i].startsWith("+") || terms[i].startsWith("-")) {
+				} else if (i < terms.length - 1 && !terms[i + 1].equals("|")) {
+				} else if (!terms[i].startsWith("+") && !terms[i].startsWith("-")) {
+				}
+				resultList.add(appendSpecialchar(terms[i]));
+			}
+		}
+		return resultList;
+	}
+
+	public String charsCheck(String str){
+		str = bracketRemove(str);
+		str =  SpecialStrRemove(str);
+		return  str;
+	}
+
+	public String bracketRemove(String str){
+		return  str.replaceAll("[(\\)\\{\\}]", "");
+	}
+
+	public  String SpecialStrRemove(String str){
+		return  str.replaceAll("[=/&:><!^~\\/\"]", "");
+	}
+
+	private String appendSpecialchar(String str) {
+		if (Common.isEmpty(str.trim())) return str;
+		else if (str.endsWith("*")) return str;
+		else if (str.endsWith(" ")) return str;
+		else if (str.endsWith("\"")) return str;
+		else return str;
+	}
+
+
+
 }

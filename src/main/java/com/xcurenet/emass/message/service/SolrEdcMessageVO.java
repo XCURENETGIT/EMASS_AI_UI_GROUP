@@ -254,6 +254,11 @@ public class SolrEdcMessageVO {
 
 			}
 		}
+
+		if(headerList.size() == 0 && facetlist.size() > 0){
+			headerList.addAll(facetlist);
+		}
+
 		facetItem.put("total",facetTotal);
 		facetResult.add(facetItem);
 

@@ -685,7 +685,7 @@ function viewer_open(row, grid) {
     openMessageBodyPop(grid.id, msgid, '', bodySizeNum);
 }
 
-function getBody(userCharset) {
+function getBody(userCharset,bodyStr){
     if (isGroupMessenger()) {
         // $('#usridTr').show();
         $('#ipBusiNmTr').show();
@@ -715,16 +715,25 @@ function getBody(userCharset) {
         url: 'getEmassBodyStr.xcn',
         msgId: msgId,
         userCharset: userCharset,
+        keywords: bodyStr,
+        searchStrInput: parent.$('#searchStrInput').val(),
         menuId: 'MESSAGE_INFO',
         pMenuId: 'DATA_MONITOR',
         success: function (data, total) {
-            if (data == null || nvl(data, '') == '') data = message.msgNocontent;
+            if(data==null || nvl( data,'')=='') data = message.msgNocontent;
+            if(data == BODY_SIZE_OVER) {
+                $('#bodySizeOver').show();
+                $('#bodySizeOverText').show();
+            }else {
+                $('#bodySizeOver').hide();
+                $('#bodySizeOverText').hide();
+                if (isGroupMessenger() && (svc.indexOf('J') == 3 || svc.indexOf('L') == 3)) $('#emassBody').html(getAppendGroupBody());
+                else $('#emassBody').html(data + getAppendGroupBody());
 
-            if (isGroupMessenger() && (svc.indexOf('J') == 3 || svc.indexOf('L') == 3)) $('#emassBody').html(getAppendGroupBody());
-            else $('#emassBody').html(data + getAppendGroupBody());
-            $("#emassBody").select();
-            Highlight();
-            PatternHighlight();
+                $("#emassBody").select();
+                Highlight();
+                PatternHighlight();
+            }
         },
         error: function (status, message) {
             ui.alertMsg(message);
@@ -1319,6 +1328,10 @@ function setMessage(msg) {
     // 	$('#emassBody').html(message.msgNocontent);
     // }else getBody('');
 
+    if(bodySize_str == 0) {
+        $('#emassBody').html(message.msgNocontent);
+        Highlight();
+    }else getBody('',nvl(msg.bodyStr));
 
     getBody('');
     if (nvl(msg.bodyStr) == "") {

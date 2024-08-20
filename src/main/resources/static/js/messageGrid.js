@@ -267,6 +267,7 @@ function highlightKeyword (rtnVal, keyWords) {
 function highlightSearchStr(rtnVal, column){
 	var rtnValue = '';
 	try{
+		if(rtnVal == undefined || rtnVal == '') return;
 		var searchType = parent.$('#searchField').val();
 		var searchStr = parent.$('#searchStrInput').val();
 

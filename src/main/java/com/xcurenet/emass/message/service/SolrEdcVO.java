@@ -277,4 +277,8 @@ public class SolrEdcVO {
 
 	public Map<String, String> regexpHighlight;
 
+
+	public String detectionKeywordText; //한 메세지에서의 검출 키워드들 (제목,본문,첨부파일명,첨부파일)요약
+	public String detectionKeywordType;
+
 }

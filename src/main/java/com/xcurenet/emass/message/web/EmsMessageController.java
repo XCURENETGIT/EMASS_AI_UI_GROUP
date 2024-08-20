@@ -16,10 +16,13 @@ import com.xcurenet.common.parser.mime.MimeVo;
 import com.xcurenet.common.pdf.PdfWriterEMASS;
 import com.xcurenet.common.util.Common;
 import com.xcurenet.common.util.KafkaProducerService;
+import com.xcurenet.common.util.TimeUtil;
 import com.xcurenet.common.util.config.Config;
 import com.xcurenet.common.util.locale.Prop;
 import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
+import com.xcurenet.config.service.ConfigAdminService;
+import com.xcurenet.config.service.ConfigAdminVO;
 import com.xcurenet.emass.consent.web.ConsentFileDownload;
 import com.xcurenet.emass.consent.web.ConsentFileVO;
 import com.xcurenet.emass.message.component.SolrCreateQuery;
@@ -45,7 +48,10 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
+import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
+import org.jsoup.select.NodeVisitor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Description;
@@ -62,6 +68,8 @@ import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Log4j2
@@ -75,6 +83,10 @@ public class EmsMessageController {
 	private static DateTimeFormatter yyyy_MM_dd = DateTimeFormat.forPattern("yyyy-MM-dd");
 	private static int PAGE_BREAK = 10000;
 
+	private static String bodyhtmlPrefix = "<table class='response'><tbody>";
+	private static String bodyhtmlSuffix = "</tbody></table>";
+
+
 	@Resource(name = "emsMessageService")
 	public EmsMessageService emsMessageService;
 
@@ -83,6 +95,9 @@ public class EmsMessageController {
 
 	@Resource(name = "solrEdcService")
 	public SolrEdcService solrEdcService;
+
+	@Resource(name = "configAdminService")
+	private ConfigAdminService configAdminService;
 
 	@Autowired
 	public SolrCheckedService solrCheckedService;
@@ -825,6 +840,8 @@ public class EmsMessageController {
 		}
 	}
 
+
+
 	@RequestMapping(value = "/getEmassBodyStr.xcn")
 	@Description("EMASS 메시지 본문 조회")
 	@AuditOperation(Operation.BODY_VIEW)
@@ -835,6 +852,50 @@ public class EmsMessageController {
 		EmsBodyVO emsBody = emsMessageService.getEmassBody(msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
 		return new XcnResponseVO(XcnRspCode.OK, getBodyStr(userCharset, emsBody));
 	}
+
+
+
+
+//	@RequestMapping(value = "/getEmassBodyStr.xcn")
+//	@Description("EMASS 메시지 본문 조회")
+//	@AuditOperation(Operation.BODY_VIEW)
+//	@ResponseBody
+//	public XcnResponseVO getEmassBodyStr(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+//		List<String> keywordList = new ArrayList<>();
+//		String msgId = Common.nvl(request.getParameter("msgId"));
+//		String userCharset = Common.nvl(request.getParameter("userCharset"));
+//
+//
+//		//  검출 내역 미리보기에 사용될 검색어,예약어
+//		String keywords = Common.nvl(request.getParameter("keywords"));  // 예약어
+//		String searchStrInput = Common.nvl(request.getParameter("searchStrInput")); // 검색어
+//
+//		//본문 탐지 키워드 리스트 추가
+//		if (Common.isNotEmpty(keywords)) {
+//			String[] keywordArr = keywords.split(", ");
+//			for (String keyword : keywordArr) keywordList.add(keyword.trim());
+//		}
+//
+//		//검색 키워드 리스트 추가
+//		if (Common.isNotEmpty(searchStrInput)) keywordList.addAll(emsMessageService.keywordSeparation(searchStrInput));
+//
+//		//검출을 위한 리스트 all 소문자화
+//		if(keywordList.size() > 0){
+//			keywordList = keywordList.stream().map(m -> m.toLowerCase()).collect(Collectors.toList());
+//		}
+//
+//		String adminId = Common.getAdminId(request);
+//		ConfigAdminVO bodyPrettyOption = configAdminService.getConfAdmin("bodyPretty", adminId);
+//		String bodyPretty = (Common.isNotEmpty(bodyPrettyOption)) ? Common.nvl(bodyPrettyOption.getVal()) : "N";
+//		ConfigAdminVO detectPreviewOption = configAdminService.getConfAdmin("detectPreview", adminId);
+//		String detectPreview = (Common.isNotEmpty(detectPreviewOption)) ? Common.nvl(detectPreviewOption.getVal()) : "N";
+//
+//		EmsBodyVO emsBody = emsMessageService.getEmassBody(msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
+//		return new XcnResponseVO(XcnRspCode.OK, getBodyStr(bodyPretty, detectPreview, keywordList, userCharset, emsBody));
+//	}
+
+
+
 
 	@RequestMapping(value = "/getEmassBodySave.xcn")
 	@Description("EMASS grid 메시지 본문 저장")
@@ -1108,6 +1169,66 @@ public class EmsMessageController {
 			return doc.body().html();
 		}
 	}
+
+
+
+
+
+	public static String getBodyStr(final String bodyPretty, final String previewFlag, List<String> keywordList, String userCharset, EmsBodyVO emsBody) throws UnsupportedEncodingException {
+		if (emsBody == null) return Prop.propFormat("common.msg.nocontent");
+		String body = getBodyStrProc(userCharset, emsBody);
+		if (body == null) {
+			return Prop.propFormat("common.msg.nocontent");
+		}
+		else if (emsBody.getSvc().startsWith("Q")) return body;
+		else if(body.length() > Common.BODY_CONTEXT_SIZE ) return Common.BODY_CONTEXT_SIZE_OVER;
+		else {
+			if (Common.isEquals(bodyPretty, "Y")) {
+				/* sanitizeAndEscape()    body 내용에 꺽쇠<>가 들어갈시 escape처리 */
+				body = unknownSvcRemoveHtmlBody(emsBody, sanitizeAndEscape(body, Common.allowedTags)); // 문서 정돈 기능
+			}else{
+				body = sanitizeAndEscape(body, Common.allowedTags);
+			}
+			if (Common.isEquals(previewFlag, "Y") && (emsBody.getSvc().startsWith("U") || emsBody.getSvc().startsWith("X"))) body = bodyPreviewDetect(body, keywordList); // 키워드 검출 미리보기 기능
+
+			Document doc = Jsoup.parse(body); //태그 변환을 위한 Jsoup Parser
+			String uri = emsBody.getHost();
+			if (Common.isEmpty(uri)) uri = emsBody.getSrcIp();
+
+			doc.setBaseUri("http://" + uri);
+			changeLink(doc);
+
+			Element bodyEl = doc.body();
+
+			reValueTag(bodyEl, "input", "type", "button");    /* submit방지 */
+			replaceTagNames(bodyEl, "div#header", "div", true);
+			replaceTagNames(bodyEl, "header", "xheader", true);
+
+			replaceTagNames(bodyEl, "HTML", "XHTML", false);
+			replaceTagNames(bodyEl, "META", "XMETA", false);
+			replaceTagNames(bodyEl, "STYLE", "XSTYLE", true);
+			replaceTagNames(bodyEl, "SCRIPT", "TEXTAREA", true);
+			replaceTagNames(bodyEl, "LINK", "XLINK", true);
+			replaceTagNames(bodyEl, "BUTTON", "XBUTTON", false);
+			replaceTagNames(bodyEl, "BASE", "XBASE", true);
+			replaceTagNames(bodyEl, "IFRAME", "XIFRAME", true);
+
+			return doc.body().html();
+		}
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	private static void changeLink(Document doc) {
 		Elements elems = doc.select("[src]");
@@ -1707,5 +1828,239 @@ public class EmsMessageController {
 
 		return new XcnResponseVO(XcnRspCode.OK);
 	}
+
+
+
+	////////////////////////////////* 미분류, 모니터링 제외 추가기능 관련 메서드 *//////////////////////////
+
+	public static List<String> getDetectContextList(List<String> keywordList, String userCharset, EmsBodyVO emsBody) throws UnsupportedEncodingException {
+		List<String> resultList = new ArrayList<>();
+		if (emsBody == null) return resultList;
+		String body = getBodyStrProc(userCharset, emsBody);
+		if (body == null)  return resultList;
+		else if (emsBody.getSvc().startsWith("Q")) return null;
+		else {
+			String cleanBody = Common.stripNonValidChar(body);
+			try {
+				cleanBody = Common.stripTags(cleanBody);
+				String originalText = cleanBody.replaceAll("\\n+", "");
+				String compareBodyText = originalText.toLowerCase(); // 키워드 검출을 위한 소문자화
+				resultList.addAll(extractKeywordsAndContext(originalText,compareBodyText, keywordList, Common.DETECT_CONTEXT_RANGE));
+			} catch (final Exception e) { // jsoup 에서 처리 못하는 데이터는 무시하고 그냥 넣음
+				log.info("",e);
+			}
+			return  resultList;
+		}
+	}
+
+
+	/**
+	 * 키워드 검출 기능
+	 *
+	 * @param bodyText
+	 * @param keywordList
+	 * @return
+	 */
+	private static String bodyPreviewDetect(String bodyText, List<String> keywordList) {
+		String cleanBody = Common.stripNonValidChar(bodyText);
+		try {
+			cleanBody = Common.stripTags(cleanBody);
+		} catch (final Exception e) { // jsoup 에서 처리 못하는 데이터는 무시하고 그냥 넣음
+			log.info("",e);
+		}
+
+		String originalText = cleanBody.replaceAll("\\n+", "");
+		String compareBodyText = originalText.toLowerCase(); // 키워드 검출을 위한 소문자화
+
+		int mapidx = 0;
+		Map<String,String> reqMap = new HashMap<>();
+		List<String> contents  = extractKeywordsAndContext(originalText,compareBodyText,keywordList,30);
+		for (String content : contents) {
+			mapidx++;
+			reqMap.put(String.format("match_%s",mapidx),String.format("<tr><th>%s</th><td>%s</td></tr>", "", content));
+		}
+		return bodyPreviewParse(reqMap);
+	}
+
+	/**
+	 * String 리턴
+	 * @param detectMap
+	 * @return
+	 */
+	private static String bodyPreviewParse(final Map<String, String> detectMap) {
+		String resultBody = "";
+		if (Common.isEmpty(detectMap)) return resultBody;
+		if (detectMap.size() > 0) {
+			resultBody = detectMap.values().stream().collect(Collectors.joining());
+			return bodyhtmlPrefix.concat(resultBody).concat(bodyhtmlSuffix);
+		} else return resultBody;
+	}
+
+
+	public static String escapeHtmlEntities(String html) {
+		return html.replace("<", "&lt;")
+				.replace(">", "&gt;");
+	}
+
+
+
+	/***
+	 *  내용에 태그가 아닌형식에 꺽쇠 <>가 들어올때 태그로 인식안되도록 유니코드 변환처리
+	 * @param html
+	 * @param allowedTags
+	 * @return
+	 */
+	public static String sanitizeAndEscape(String html, String allowedTags) {
+		StringBuilder result = new StringBuilder();
+		Pattern pattern = Pattern.compile("<!DOCTYPE[^>]*>|<(/?)(\\w+)([^>]*?)>", Pattern.DOTALL);
+		Matcher matcher = pattern.matcher(html);
+		int lastEnd = 0;
+		while (matcher.find()) {
+			// 텍스트와 태그를 분리하여 처리
+			result.append(escapeHtmlEntities(html.substring(lastEnd, matcher.start())));
+			if (matcher.group(0).startsWith("<!DOCTYPE")) {
+				result.append(matcher.group(0));
+			} else {
+				String slash = matcher.group(1);
+				String tagName = matcher.group(2);
+				String attributes = matcher.group(3);
+
+				if (allowedTags.contains(tagName)) {
+					result.append("<").append(slash).append(tagName).append(attributes).append(">");
+				} else {
+					// 허용되지 않는 태그의 꺽쇠를 유니코드로 변환
+					result.append("\\u003C").append(slash).append(tagName).append(attributes).append("\\u003E");
+				}
+			}
+
+			lastEnd = matcher.end();
+		}
+
+		// 마지막 남은 텍스트 처리
+		result.append(escapeHtmlEntities(html.substring(lastEnd)));
+
+		return result.toString();
+	}
+
+	/***
+	 * Range 관리용 중첩 클래스
+	 */
+	public static class Range {
+		int start;
+		int end;
+
+		Range(int start, int end) {
+			this.start = start;
+			this.end = end;
+		}
+
+		// Check if the given range overlaps with this range
+		boolean isOverlapping(int newStart, int newEnd) {
+			return newStart <= end && newEnd >= start;
+		}
+
+		// Expand this range to include the new range
+		void expand(int newStart, int newEnd) {
+			this.start = Math.min(this.start, newStart);
+			this.end = Math.max(this.end, newEnd);
+		}
+	}
+
+
+	/***
+	 * 텍스트 검출
+	 * @param text
+	 * @param compareBodyText
+	 * @param keywords
+	 * @param contextLength
+	 * @return
+	 */
+	public static List<String> extractKeywordsAndContext(String text,String compareBodyText,List<String> keywords, int contextLength) {
+		List<String> results = new ArrayList<>();
+		List<Range> ranges = new ArrayList<>();
+
+		for (String keyword : keywords) {
+			int index = 0;
+			while ((index = compareBodyText.indexOf(keyword, index)) != -1) {
+				int start = Math.max(0, index - contextLength);
+				int end = Math.min(text.length(), index + keyword.length() + contextLength);
+				boolean added = false;
+				for (Range r : ranges) {
+					if (r.isOverlapping(start, end)) {
+						r.expand(start, end);
+						added = true;
+						break;
+					}
+				}
+				if (!added) {
+					ranges.add(new Range(start, end));
+				}
+				index += keyword.length(); // Move past the current keyword
+			}
+		}
+
+		// Collect results based on merged ranges
+		for (Range r : ranges) {
+			results.add(text.substring(r.start, r.end));
+		}
+
+		return results;
+	}
+
+
+	/**
+	 * 미분류 서비스 타입 본문 처리
+	 * 본문 내용의 key - value 내용에서 value 내용이 html 태그인 경우 body.text 내용만 리턴
+	 *
+	 * @return 본문 내용
+	 */
+	private static String unknownSvcRemoveHtmlBody(EmsBodyVO emsBody, String body) {
+		if (emsBody.getSvc().startsWith("U") || emsBody.getSvc().startsWith("X")) {
+			//허용된 태그가 아닌것 검출하기
+
+			Document doc = Jsoup.parse(body);
+			Elements tds = doc.select("table.response td,table.request td");
+			for(Element td : tds) {
+				td.html(getTextWithLineBreaks(td));
+			}
+			return doc.html();
+		}
+		return body;
+	}
+
+	private static String getTextWithLineBreaks(Element element) {
+		StringBuilder textBuilder = new StringBuilder();
+		element.traverse(new NodeVisitor() {
+			@Override
+			public void head(Node node, int depth) {
+				if (node instanceof TextNode) {
+					textBuilder.append(getJsonTextPrettyPrint(((TextNode) node).text()));
+				} else if (node instanceof Element) {
+					Element el = (Element) node;
+					if (el.tagName().equals("p") || el.tagName().matches("h[1-6]") || el.tagName().equals("br") || el.tagName().equals("strong") || el.tagName().equals("div") || el.tagName().equals("span")) {
+						if(Common.isNotEmpty(el.text())) textBuilder.append("<br>");
+					}
+				}
+			}
+
+			@Override
+			public void tail(Node node, int depth) {
+				// TODO document why this method is empty
+			}
+		});
+		return textBuilder.toString().trim();
+	}
+
+	private static String getJsonTextPrettyPrint(final String text) {
+		EmsBodyType contentType = getEmsBodyType(text);
+		if(contentType == EmsBodyType.JSON) {
+			return textParser(JSONSerializer.toJSON(text.replaceAll("\\n", "").replaceAll(" ", "").trim()).toString(4, 1));
+		}
+		return text;
+	}
+
+
+	///////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 }

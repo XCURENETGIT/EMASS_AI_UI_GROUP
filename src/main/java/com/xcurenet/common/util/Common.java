@@ -28,6 +28,7 @@ import org.apache.commons.lang.StringUtils;
 import org.joda.time.*;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.jsoup.Jsoup;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import javax.servlet.http.HttpServletRequest;
@@ -100,6 +101,18 @@ public class Common {
 	
 	public static final int MAX_VALUE = 10000; //엘라스틱 서치 최대 검색
 	public static String number;
+
+	
+	// 미분류,모니터링 제외 추가기능 관련 필드
+	public static final int DETECT_CONTEXT_RANGE = 10;
+	public static final int DETECT_CONTEXT_SIZE = 2000000000;
+	public static final int BODY_CONTEXT_SIZE = 500000;
+	public static final String BODY_CONTEXT_SIZE_OVER = "BODY_SIZE_OVER";
+
+	/* 기본 사용 태그 */
+	public static final String allowedTags = "pre,code,a, b, i, u, em, strong, br, ul, ol, li, table,tbody,head,html,DOCTYPE, tr, td, th, div, span, form, input, textarea, button, label, h1, h2, h3, h4, h5, h6, p,style";
+
+
 
 	public static final DateTimeFormatter DATETIMEMILLISSYMBOL = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
@@ -2756,6 +2769,32 @@ public static String getDateDay(String date, String dateType) throws Exception {
 		return day ;
 	}
 
+
+	public static String stripNonValidChar(final String str) {
+		if (str == null) {
+			return "";
+		}
+
+		final char[] buffer = str.toCharArray();
+		return stripNonValidChar(buffer, 0, buffer.length);
+	}
+
+	public static String stripNonValidChar(final char[] buffer, final int offset, final int nRead) {
+		final StringBuilder sb = new StringBuilder();
+		if (buffer != null && buffer.length - offset >= nRead) {
+			for (int i = offset; i < offset + nRead; i++) {
+				final char c = buffer[i];
+				if (c == 0x9 || c == 0xA || c == 0xD || (c >= 0x20 && c <= 0xD7FF) || (c >= 0xE000 && c <= 0xFFFD) || (c >= 0x10000 && c <= 0x10FFFF)) {
+					sb.append(c);
+				}
+			}
+		}
+		return sb.toString();
+	}
+
+	public static String stripTags(final String body) throws Exception {
+		return Jsoup.parse(body).text();
+	}
 
 
 }
