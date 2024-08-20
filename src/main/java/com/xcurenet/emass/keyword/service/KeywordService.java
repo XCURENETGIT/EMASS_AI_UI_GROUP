@@ -20,4 +20,12 @@ public interface KeywordService {
 	public int deleteKeyword(final List<KeywordVO> keywords);
 
 	public JSONObject importKeyword(JSONArray keywordList);
+
+	public int CoreKeywordCount();
+
+	public int GroupKeywordCount(KeywordGroupVO group);
+
+	public String isCoreGroup(String groupSeq);
+
+	public String isCoreGroupName(String groupSeq);
 }

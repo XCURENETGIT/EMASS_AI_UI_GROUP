@@ -90,8 +90,19 @@ public class KeywordServiceImpl extends XcnAbstractDAO implements KeywordService
 		int insertCnt = 0;
 		boolean duplicate = false;
 		TransactionManager tx = getTransactionManager();
+		int coreCount = 0;
 		try {
 			tx.start();
+
+			for (int i = 0; i<keywordList.size(); i++){
+
+				JSONObject keywordItem = keywordList.getJSONObject(i);
+				String groupName = removeUTF8BOM(Common.nvl(keywordItem.get("COL0")));
+				if (!Common.isEmpty(groupName) &&Common.isEquals(isCoreGroupName(groupName),"Y")){
+					coreCount ++;
+				}
+			}
+
 			for (int i = 0; i < keywordList.size(); i++) {
 				errorIdx = i + 1;
 
@@ -159,6 +170,26 @@ public class KeywordServiceImpl extends XcnAbstractDAO implements KeywordService
 			tx.end();
 		}
 		return result;
+	}
+
+	@Override
+	public int CoreKeywordCount() {
+		return selectOne("com.xcurenet.sqlmap.mappers.mysql.keyword.CoreKeywordCount", null);
+	}
+
+	@Override
+	public String isCoreGroupName(String groupName) {
+		return selectOne("com.xcurenet.sqlmap.mappers.mysql.keyword.isCoreGroupName", groupName);
+	}
+
+	@Override
+	public String isCoreGroup(String groupSeq) {
+		return selectOne("com.xcurenet.sqlmap.mappers.mysql.keyword.isCoreGroup", groupSeq);
+	}
+
+	@Override
+	public int GroupKeywordCount(KeywordGroupVO group) {
+		return selectOne("com.xcurenet.sqlmap.mappers.mysql.keyword.GroupKeywordCount", group);
 	}
 
 	private Map<String, String> keywordGroupMap() {

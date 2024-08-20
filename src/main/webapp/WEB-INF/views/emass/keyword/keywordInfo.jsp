@@ -59,6 +59,7 @@ $(document).ready(function(){
 	$('#groupInsertBtn').click(function(){
 		$('#keywordGroupPop input[type=text]').val('');
 		$('[name=useYn][value=Y]').prop('checked',true);
+		$('[name=coreYn][value=N]').prop('checked',true);
 		$('#keywordGroupPop').modal('show');
 		$('#keywordGroupPop').attr('mode','insert');
 		setTimeout(function(){
@@ -394,6 +395,20 @@ function fileExtCheck(obj){
 							<s:message code="common.msg.unuse"/>
 						</label>
 					</div>
+					<div class="row">
+						<div class="col-35">
+							<label for="coreYn" class=""><s:message code="common.msg.coreYn"/></label>
+							<span class="red_dot"></span>
+						</div>
+						<label class="radio-inline c-radio">
+							<input type="radio" name="coreYn" value="Y" checked>
+							<s:message code="common.msg.use"/>
+						</label>
+						<label class="radio-inline c-radio">
+							<input type="radio" name="coreYn" value="N">
+							<s:message code="common.msg.unuse"/>
+						</label>
+					</div>
 				</div>
 				<div class="modalfooter">
 					<button type="button" class="pop_btn01" accesskey="C" data-dismiss="modal"><s:message code="common.msg.close"/></button>
@@ -556,11 +571,11 @@ function fileExtCheck(obj){
 		</div>
 	</div>
 	<div class="content" style="overflow:hidden;">
-		<div class="contentSub" style="width:500px; float: left">
+		<div class="contentSub" style="width:600px; float: left">
 			<div id="keywordGroupListGrid" class="slickGrid gridArea"></div>
 		</div>
 		<div>
-			<div class="contentSub " style="width:calc(100% - 500px); float: left; padding-left:0px !important;">
+			<div class="contentSub " style="width:calc(100% - 600px); float: left; padding-left:0px !important;">
 				<div id="keywordListGrid" class="slickGrid gridArea"></div>
 			</div>
 		</div>
@@ -573,6 +588,11 @@ function fileExtCheck(obj){
 		gridGroup.autoNumber();
 		gridGroup.colAdd('groupName', '<s:message code="keyword.msg.partnm"/>', 183, 'left', false, 'nomal');
 		gridGroup.colAdd('useYn', '<s:message code="common.msg.useyn"/>', 100, 'center', false, 'nomal', function ( row, cell, value, columnDef, dataContext ) {
+			if(value=='Y') return '<s:message code="common.msg.use"/>';
+			else if(value=='N') return '<s:message code="common.msg.unuse"/>';
+			return '-';
+		});
+		gridGroup.colAdd('coreYn', '<s:message code="common.msg.coreYn"/>', 100, 'center', false, 'nomal', function ( row, cell, value, columnDef, dataContext ) {
 			if(value=='Y') return '<s:message code="common.msg.use"/>';
 			else if(value=='N') return '<s:message code="common.msg.unuse"/>';
 			return '-';
@@ -593,6 +613,7 @@ function fileExtCheck(obj){
 				$('#groupSeq').val(data.groupSeq);
 				$('#groupName').val(data.groupName);
 				$('[name=useYn][value='+data.useYn+']').prop('checked',true);
+				$('[name=coreYn][value='+data.coreYn+']').prop('checked',true);
 
 				$('#keywordGroupPop').attr('mode','modify');
 				$("#groupName").focus();
