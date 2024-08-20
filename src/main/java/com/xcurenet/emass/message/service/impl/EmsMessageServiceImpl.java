@@ -478,9 +478,9 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 
 		if (Common.isEquals(ocrYn, "Y")) {
 			EmsAttachTextVO ocrText = getAttachTextByHash(attachInfo.getAttachHash());
-			if (Common.isNotEmpty(ocrText.getAttachText())) {
-				vo.setAttachText(ocrText.getAttachText());
-				vo.setAttachTextTotalLine(Common.toArray(vo.getAttachText(), "\n").length);
+			if (ocrText != null && Common.isNotEmpty(ocrText.getAttachText())) {
+					vo.setAttachText(ocrText.getAttachText());
+					vo.setAttachTextTotalLine(Common.toArray(vo.getAttachText(), "\n").length);
 			} else if (Common.isNotEmpty(vo.getAttachText())) {
 				vo.setAttachTextTotalLine(Common.toArray(vo.getAttachText(), "\n").length);
 			}

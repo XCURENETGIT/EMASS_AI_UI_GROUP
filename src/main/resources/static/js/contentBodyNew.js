@@ -1503,11 +1503,11 @@ function setFileDiv(msg) {
                 fileStr += '<span class="attachOcrText" style="padding-left:5px; cursor:pointer; text-decoration: underline;">';
                 //	fileStr += '<img alt="" src="' + contextRoot + '/img/ocr.png" style="width: 25px;">';
                 fileStr += ' ' + contentBody.urlIpBlockPreview + '</span>';
-            }
-            if (nvl(file.attachTextPath) != "") {
+            } else if (nvl(file.attachTextPath) != "") {
                 fileStr += '<img alt="" src="' + contextRoot + '/img/text.png" style="width: 15px;">';
                 fileStr += '<span class="attachText" style="padding-left:5px; cursor:pointer; text-decoration:underline;"> ' + contentBody.urlIpBlockPreview + '</span>';
             }
+
             fileStr += '</td>';
 
             fileStr += '<td style="text-align: center;"><span class="attachExt"><span class="glyphicon glyphicon-download-alt"></span>&nbsp;' + attachExt + '</span></td>';
