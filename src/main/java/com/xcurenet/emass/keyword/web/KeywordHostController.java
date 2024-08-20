@@ -47,7 +47,7 @@ public class KeywordHostController{
 		StringBuilder query = new StringBuilder();
 		query.append("+ctime:[").append(startDate).append(" TO ").append(endDate).append("] ");
 		query.append(" +kwd:Y");
-		query.append(" +kwds:(" + coreKeyword.replaceAll(",", " ") + ")");
+		query.append(" +kwds:(" +getStrArrsNotQts(coreKeyword.split(",")) +")");
 		query.append(" +svc:(X* U*)");
 
 		sq.setQuery(query.toString());
@@ -66,7 +66,7 @@ public class KeywordHostController{
 		sq = new SolrQuery();
 		query = new StringBuilder();
 		query.append("+ctime:[").append(startDate).append(" TO ").append(endDate).append("] ");
-		query.append(" +host_str:(\"" + facetHeader.replaceAll(",", "\" \"") + "\")");
+		query.append(" +host_str:(" +getStrArrs(facetHeader.split(",")) +")");
 		query.append(" +kwd:Y");
 		query.append(" +svc:(X* U*)");
 
@@ -141,7 +141,7 @@ public class KeywordHostController{
 
 		query.append("+ctime:[").append(startDate).append(" TO ").append(endDate).append("] ");
 		query.append(" +kwd:Y");
-		query.append(" +kwds:(" + coreKeyword.replaceAll(",", " ") + ")");
+		query.append(" +kwds:(" +getStrArrsNotQts(coreKeyword.split(",")) +")");
 		query.append(" +svc:(X* U*)");
 
 		//	log.info("url aggs query {}",query);
@@ -179,7 +179,7 @@ public class KeywordHostController{
 
 		query.append("+ctime:[").append(startDate).append(" TO ").append(endDate).append("] ");
 		query.append(" +kwd:Y");
-		query.append(" +kwds:(" + coreKeyword.replaceAll(",", " ") + ")");
+		query.append(" +kwds:(" +getStrArrsNotQts(coreKeyword.split(",")) +")");
 		query.append(" +svc:(X* U*)");
 
 		//log.info("keyword aggs query {}",query);
@@ -220,7 +220,7 @@ public class KeywordHostController{
 
 		query.append("+ctime:[").append(startDate).append(" TO ").append(endDate).append("] ");
 		query.append(" +kwd:Y");
-		query.append(" +kwds:(" + coreKeyword.replaceAll(",", " ") + ")");
+		query.append(" +kwds:(" +getStrArrsNotQts(coreKeyword.split(",")) +")");
 //		query.append(" +path_str:*");
 		query.append(" +svc:(X* U*)");
 
@@ -418,6 +418,14 @@ public class KeywordHostController{
 		StringBuilder resultSb = new StringBuilder();
 		for(String str : arrays){
 			resultSb.append(  "(\"" + str + "\")" );
+		}
+		return resultSb.toString();
+	}
+
+	public String getStrArrsNotQts(String[] arrays){
+		StringBuilder resultSb = new StringBuilder();
+		for(String str : arrays){
+			resultSb.append(  "("+ str + ") " );
 		}
 		return resultSb.toString();
 	}

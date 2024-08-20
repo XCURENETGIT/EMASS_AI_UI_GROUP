@@ -842,57 +842,57 @@ public class EmsMessageController {
 
 
 
-	@RequestMapping(value = "/getEmassBodyStr.xcn")
-	@Description("EMASS 메시지 본문 조회")
-	@AuditOperation(Operation.BODY_VIEW)
-	@ResponseBody
-	public XcnResponseVO getEmassBodyStr(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
-		String msgId = Common.nvl(request.getParameter("msgId"));
-		String userCharset = Common.nvl(request.getParameter("userCharset"));
-		EmsBodyVO emsBody = emsMessageService.getEmassBody(msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
-		return new XcnResponseVO(XcnRspCode.OK, getBodyStr(userCharset, emsBody));
-	}
-
-
-
-
 //	@RequestMapping(value = "/getEmassBodyStr.xcn")
 //	@Description("EMASS 메시지 본문 조회")
 //	@AuditOperation(Operation.BODY_VIEW)
 //	@ResponseBody
 //	public XcnResponseVO getEmassBodyStr(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
-//		List<String> keywordList = new ArrayList<>();
 //		String msgId = Common.nvl(request.getParameter("msgId"));
 //		String userCharset = Common.nvl(request.getParameter("userCharset"));
-//
-//
-//		//  검출 내역 미리보기에 사용될 검색어,예약어
-//		String keywords = Common.nvl(request.getParameter("keywords"));  // 예약어
-//		String searchStrInput = Common.nvl(request.getParameter("searchStrInput")); // 검색어
-//
-//		//본문 탐지 키워드 리스트 추가
-//		if (Common.isNotEmpty(keywords)) {
-//			String[] keywordArr = keywords.split(", ");
-//			for (String keyword : keywordArr) keywordList.add(keyword.trim());
-//		}
-//
-//		//검색 키워드 리스트 추가
-//		if (Common.isNotEmpty(searchStrInput)) keywordList.addAll(emsMessageService.keywordSeparation(searchStrInput));
-//
-//		//검출을 위한 리스트 all 소문자화
-//		if(keywordList.size() > 0){
-//			keywordList = keywordList.stream().map(m -> m.toLowerCase()).collect(Collectors.toList());
-//		}
-//
-//		String adminId = Common.getAdminId(request);
-//		ConfigAdminVO bodyPrettyOption = configAdminService.getConfAdmin("bodyPretty", adminId);
-//		String bodyPretty = (Common.isNotEmpty(bodyPrettyOption)) ? Common.nvl(bodyPrettyOption.getVal()) : "N";
-//		ConfigAdminVO detectPreviewOption = configAdminService.getConfAdmin("detectPreview", adminId);
-//		String detectPreview = (Common.isNotEmpty(detectPreviewOption)) ? Common.nvl(detectPreviewOption.getVal()) : "N";
-//
 //		EmsBodyVO emsBody = emsMessageService.getEmassBody(msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
-//		return new XcnResponseVO(XcnRspCode.OK, getBodyStr(bodyPretty, detectPreview, keywordList, userCharset, emsBody));
+//		return new XcnResponseVO(XcnRspCode.OK, getBodyStr(userCharset, emsBody));
 //	}
+
+
+
+
+	@RequestMapping(value = "/getEmassBodyStr.xcn")
+	@Description("EMASS 메시지 본문 조회")
+	@AuditOperation(Operation.BODY_VIEW)
+	@ResponseBody
+	public XcnResponseVO getEmassBodyStr(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+		List<String> keywordList = new ArrayList<>();
+		String msgId = Common.nvl(request.getParameter("msgId"));
+		String userCharset = Common.nvl(request.getParameter("userCharset"));
+
+
+		//  검출 내역 미리보기에 사용될 검색어,예약어
+		String keywords = Common.nvl(request.getParameter("keywords"));  // 예약어
+		String searchStrInput = Common.nvl(request.getParameter("searchStrInput")); // 검색어
+
+		//본문 탐지 키워드 리스트 추가
+		if (Common.isNotEmpty(keywords)) {
+			String[] keywordArr = keywords.split(", ");
+			for (String keyword : keywordArr) keywordList.add(keyword.trim());
+		}
+
+		//검색 키워드 리스트 추가
+		if (Common.isNotEmpty(searchStrInput)) keywordList.addAll(emsMessageService.keywordSeparation(searchStrInput));
+
+		//검출을 위한 리스트 all 소문자화
+		if(keywordList.size() > 0){
+			keywordList = keywordList.stream().map(m -> m.toLowerCase()).collect(Collectors.toList());
+		}
+
+		String adminId = Common.getAdminId(request);
+		ConfigAdminVO bodyPrettyOption = configAdminService.getConfAdmin("bodyPretty", adminId);
+		String bodyPretty = (Common.isNotEmpty(bodyPrettyOption)) ? Common.nvl(bodyPrettyOption.getVal()) : "N";
+		ConfigAdminVO detectPreviewOption = configAdminService.getConfAdmin("detectPreview", adminId);
+		String detectPreview = (Common.isNotEmpty(detectPreviewOption)) ? Common.nvl(detectPreviewOption.getVal()) : "N";
+
+		EmsBodyVO emsBody = emsMessageService.getEmassBody(msgId, Common.getFirstAdminYn(request.getSession()), Common.getAdminType(request.getSession()));
+		return new XcnResponseVO(XcnRspCode.OK, getBodyStr(bodyPretty, detectPreview, keywordList, userCharset, emsBody));
+	}
 
 
 

@@ -8,6 +8,10 @@
 		left: initial;
 	}
 
+	.headerLine {
+		height: 28px;
+	}
+
 	.highlightSearch {
 		background-color: #13C7A3;
 	}
@@ -29,20 +33,42 @@
 	var tabNum = 0;
 	var totalChartDat
 	$(document).ready(function () {
-
+		initDateTimePicker('startdate', 'enddate');
 		depthDisplay('N');
 		closeDisplay('N');
 
-		$('#searchBtn').click(function () {
-			getData('Y');
-		});
 
 		$('#chartCntDiv .dropdown-menu li a').click(function () {
 			chartcnt = $(this).text();
 			printChart(totalChartDat);
 		});
 
-		initDateTimePicker('startdate', 'enddate');
+
+		$('#dateYesterday').click(function () {
+			$('#startdate').val(addDay(-1));
+			$('#endate').val(addDay(-1));
+		});
+
+		$('#dateToday').click(function (e) {
+			$('#startdate').val(addDay(0));
+			$('#enddate').val(addDay(0));
+		});
+
+		$('#dateWeek').click(function () {
+			$('#startdate').val(addDay(-7));
+			$('#enddate').val(addDay(0));
+		});
+
+		$('#dateMonth').click(function () {
+			$('#startdate').val(addMonth2(-1));
+			$('#enddate').val(addDay(0));
+		});
+
+
+		$('#searchBtn').click(function () {
+			getData('Y');
+		});
+
 
 		$(".nav-tabs").on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
 			var id = $(this).parents('li').attr('idx');
@@ -285,96 +311,101 @@
 </script>
 </head>
 <div>
-	<div class="searchArea w100">
-		<div class="searchSub w100">
-			<div>
-				<input type="text" id="startdate" class="txt_center" style="width: 110px;"/>
-				<span class="hyphen">~</span>
-			</div>
-			<div>
-				<input type="text" id="enddate" class="txt_center" style="width: 110px;"/>
+	<div class="searchArea">
+		<div class="searchSub" style="width:auto;">
+			<div class="searchSub_Box">
+				<div id="startDatePicker"><input type="text" class="txt_center" id="startdate" name='startdate' style="width: 110px;">
+					<span class="hyphen">~</span></div>
+				<div id="endDatePicker"><input type="text" class="txt_center" id="enddate" name='enddate' style="width: 110px;"></div>
+				<div class="form-group optiotab">
+					<button type="button" id="dateYesterday" accesskey="Y" style="width:85px;"><s:message code="condition.yesterday"/></button>
+					<button type="button" id="dateToday" accesskey="T" style="width:85px;"><s:message code="condition.today"/></button>
+					<button type="button" id="dateWeek" accesskey="W"><s:message code="condition.week" arguments="1" argumentSeparator="|"/></button>
+					<button type="button" id="dateMonth" accesskey="M"><s:message code="condition.month" arguments="1" argumentSeparator="|"/></button>
+				</div>
 			</div>
 		</div>
-
-		<input type="hidden" id="coreKeywordVal">
-		<label for="coreKeywordStr"></label>
-		<div class='input-group'>
-			<input type="text" id="coreKeywordStr" name="title" class="input-sm form-control" style="width: 300px; " readonly="readonly"/>
-			<button class="form_btn01" id="searchBtn"><s:message code="common.msg.search"/></button>
+		<div class="searchSub_Box">
+			<div class='input-group'>
+				<input type="hidden" id="coreKeywordVal">
+				<label for="coreKeywordStr"></label>
+				<input type="text" id="coreKeywordStr" name="title" class="input-sm form-control" style="width: 300px; margin-right:6px; " readonly="readonly"/>
+				<button class="form_btn01" id="searchBtn"><s:message code="common.msg.search"/></button>
+				<span>
+						<b style="margin-left: 12px;"><s:message code="DATA_ANALYSIS.STAT_HOST_INFO"/> <s:message code="common.core.service"/></b>
+					</span>
+			</div>
 		</div>
-
 	</div>
-	<div class="searchSub w100">
-	</div>
-	<div class="content">
-		<%-- contentSub --%>
-		<div class="contentSub">
-			<div class="col-lg-12">
-				<%-- HOST TOP --%>
-				<div class="col-lg-4">
-					<div class="tabpanel" style="padding: 4px 15px;">
-						<h3><s:message code="DATA_ANALYSIS.STAT_HOST_TOP"/> 10</h3>
-					</div>
-					<div style="padding:7px 10px;"></div>
-					<div class="inner_personaldata p20">
-						<div id="basicStatList" class="tab-pane fade in active">
-							<div id="basicStatListGrid" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px;  min-height: 280px;max-height: 480px;"></div>
-						</div>
+</div>
+<div class="searchSub w100">
+</div>
+<div class="content">
+	<%-- contentSub --%>
+	<div class="contentSub" style="padding:14px 0px 0px 0px;">
+		<div class="col-lg-12">
+			<%-- HOST TOP --%>
+			<div class="col-lg-4">
+				<div class="headerLine">
+					<h3><s:message code="DATA_ANALYSIS.STAT_HOST_TOP"/> 10</h3>
+				</div>
+				<div class="inner_personaldata p12">
+					<div id="basicStatList" class="tab-pane fade in active">
+						<div id="basicStatListGrid" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px;  min-height: 280px;max-height: 480px;"></div>
 					</div>
 				</div>
-				<%-- URL TOP --%>
-				<div class="col-lg-4">
-					<div class="tabpanel" style="padding: 4px 15px;">
-						<h3><s:message code="DATA_ANALYSIS.STAT_URL_TOP"/> 20
-							<button class="btn btn-sm btn-default" name="depthDisplay" style="margin-left: 20px;">
-								<span id="urlSearchText"></span>
-							</button>
-							<button class="btn btn-sm btn-default glyphicon glyphicon-remove" id="urlRemoveBtn" style="height: 29px;" name="closeDisplay"/>
-						</h3>
-					</div>
-					<div class="inner_personaldata p20">
-						<div id="urlList" class="tab-pane fade in active">
-							<div id="urlListGrid" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; min-height: 280px;max-height: 480px;"></div>
-						</div>
+			</div>
+			<%-- URL TOP --%>
+			<div class="col-lg-4">
+				<div class="headerLine">
+					<h3><s:message code="DATA_ANALYSIS.STAT_URL_TOP"/> 20
+					<button class="btn btn-sm btn-default" name="depthDisplay" style="margin-left: 20px;">
+						<span id="urlSearchText"></span>
+					</button>
+					<button class="btn btn-sm btn-default glyphicon glyphicon-remove" id="urlRemoveBtn" style="height: 26px;margin-top:-2px;" name="closeDisplay"/>
+					</h3>
+				</div>
+				<div class="inner_personaldata p12">
+					<div id="urlList" class="tab-pane fade in active">
+						<div id="urlListGrid" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; min-height: 280px;max-height: 480px;"></div>
 					</div>
 				</div>
-				<%-- KEYWORD TOP --%>
-				<div class="col-lg-4">
-					<div class="tabpanel" style="padding: 4px 15px;">
-						<h3><s:message code="DATA_ANALYSIS.STAT_KEYWORD_TOP"/> 20
-							<button class="btn btn-sm btn-default" name="depthDisplay" style="margin-left: 20px;">
-								<span id="keywordSearchText"></span>
-							</button>
-							<button class="btn btn-sm btn-default glyphicon glyphicon-remove" id="keywordRemoveBtn" style="height: 29px;" name="closeDisplay"/>
-						</h3>
-					</div>
-					<div class="inner_personaldata p20">
-						<div id="keywordList" class="tab-pane fade in active">
-							<div id="keywordGrid" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; min-height: 280px;max-height: 480px;"></div>
-						</div>
+			</div>
+			<%-- KEYWORD TOP --%>
+			<div class="col-lg-4">
+				<div class="headerLine">
+					<h3><s:message code="DATA_ANALYSIS.STAT_KEYWORD_TOP"/> 20
+					<button class="btn btn-sm btn-default" name="depthDisplay" style="margin-left: 20px;">
+						<span id="keywordSearchText"></span>
+					</button>
+					<button class="btn btn-sm btn-default glyphicon glyphicon-remove" id="keywordRemoveBtn" style="height: 26px;margin-top:-2px;" name="closeDisplay"/>
+					</h3>
+				</div>
+				<div class="inner_personaldata p12">
+					<div id="keywordList" class="tab-pane fade in active">
+						<div id="keywordGrid" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; min-height: 280px;max-height: 480px;"></div>
 					</div>
 				</div>
 			</div>
 			<%-- 키워드 상세 검색 --%>
-			<div class="col-lg-12 tab-content">
-				<div id="messagePanel" style="padding: 0;">
-					<div class="panel-heading" style="padding: 4px 15px;">
-						<h3><s:message code="DATA_ANALYSIS.STAT_KEYWORD_DETAIL_TOP"/> 20
-							<button class="btn btn-sm btn-default" name="depthDisplay" style="margin-left: 20px;">
-								<span id="messageSearchText"></span>
-							</button>
-							<button class="btn btn-sm btn-default glyphicon glyphicon-remove" id="messagePanelRemoveBtn" style="height: 29px;" name="closeDisplay"/>
-						</h3>
-					</div>
-					<div class="panel-body">
-						<div id="messageList" class="inner_personaldata tab-pane fade in active">
-							<div id="messageListGrid" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; height: 400px"></div>
-						</div>
+			<div class="col-lg-12" style="margin-top: 12px;">
+				<div class="headerLine">
+					<h3><s:message code="DATA_ANALYSIS.STAT_KEYWORD_DETAIL_TOP"/> 20
+						<button class="btn btn-sm btn-default" name="depthDisplay" style="margin-left: 20px;">
+							<span id="messageSearchText"></span>
+						</button>
+						<button class="btn btn-sm btn-default glyphicon glyphicon-remove" id="messagePanelRemoveBtn" style="height: 26px;margin-top:-2px;" name="closeDisplay"/>
+					</h3>
+				</div>
+				<div class="inner_personaldata p12">
+					<div id="messageList" class="tab-pane fade in active">
+						<div id="messageListGrid" class="slickGrid gridArea" style="position: relative; top: 0px; left: 0px; height: 400px"></div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+</div>
 </div>
 
 
@@ -416,7 +447,8 @@
 	grid1.loadHeader(false);
 	grid1.initData('<s:message code="common.msg.search.click"/>');
 	grid1.onClick = function () {
-		host = grid1.getValue(grid1.Row, 'name')
+		host = grid1.getValue(grid1.Row, 'name');
+		console.log('host: ' + host)
 		getUrlData(host);
 	};
 
@@ -523,6 +555,7 @@
 		coreKeyword = coreKeyword.split(',').map(str => $.trim(str)).join();
 		keywords = coreKeyword;
 		startDate = $('#startdate').val().replaceAll("-", "");
+
 		endDate = $('#enddate').val().replaceAll("-", "");
 		if (startDate > endDate) {
 			ui.alertMsg('<s:message code="consent.msg.timecheck"/>');
@@ -673,7 +706,7 @@
 	}
 
 	function getTruncateSearchText(str) {
-		if (str.indexOf(',') > -1 || str.indexOf('@XCNJOIN@')) {
+		if (str.indexOf(',') > -1 || str.indexOf('@XCNJOIN@') > -1) {
 			return '<s:message code="DATA_ANALYSIS.STAT_WORD_ALL"/>'
 		} else {
 			if (str.length > 40) {

@@ -32,6 +32,7 @@
 		var totalChartDat
 		$(document).ready(function () {
 
+
 			$('#searchBtn').click(function () {
 				getData('Y');
 			});
