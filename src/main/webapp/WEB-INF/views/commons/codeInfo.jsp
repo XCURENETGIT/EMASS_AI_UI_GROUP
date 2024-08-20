@@ -26,11 +26,16 @@
         });
 
 	    $('.serviceList').click(function () {
+
+		    var rows = gridService.getSelectedRows();
+		    if (rows.length == 0) {
+			    ui.alertMsg('서비스를 선택하세요.');
+			    return;
+		    }
 		    var message = '<s:message code="common.msg.confirm.modify"/>';
 			var type = $(this).val();
 		    ui.confirmMsg(message, '', '', function (rs) {
 			    if (rs) {
-				    var rows = gridService.getSelectedRows();;
 				    ui.get({
 					    url: 'updateServiceListUseYn.xcn',
 					    type : type,
@@ -412,8 +417,8 @@
 		<div class="searchSub">
 			<div id="useYnDiv">
 				<select id="useYnSelect">
-					<option value=""><s:message code="common.msg.all"/></option>
-					<option value="Y" selected><s:message code="common.msg.use"/></option>
+					<option value="" selected><s:message code="common.msg.all"/></option>
+					<option value="Y"><s:message code="common.msg.use"/></option>
 					<option value="N"><s:message code="common.msg.unuse"/></option>
 				</select>
 			</div>
