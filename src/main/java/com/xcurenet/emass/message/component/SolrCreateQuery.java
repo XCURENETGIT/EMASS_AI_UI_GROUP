@@ -710,7 +710,20 @@ public class SolrCreateQuery {
 			StringBuffer queryStr = new StringBuffer();
 
 			if(Common.isEquals(receivers_upperCase, "Y")) {
-				queryStr.append(String.format("%s%s:%s", AND_QUERY, RECEIVER_UPPER, createOrQueryQuotesAll(receivers))).append(SPACE);
+				if(receivers.contains(",")) { //(임시) 여러개 검색시 AND절 + LIKE 절 처리
+					String[] receiver = receivers.split(",");
+
+					List<String> tmp_list=new ArrayList<>();
+					for (int j = 0; j < receiver.length; j++) {
+						tmp_list.add(String.format("%s:(%s)", RECEIVER_UPPER, "*" + receiver[j] + "*"+" "));
+					}
+					for (int k=0; k<tmp_list.size(); k++){
+						queryStr.append(String.format("%s(%s)", AND_QUERY, tmp_list.get(k)));
+					}
+
+			} else {
+					queryStr.append(String.format("%s%s:%s", AND_QUERY, RECEIVER_UPPER,createOrQueryAsteriskAll(receivers))).append(SPACE);
+				}
 			} else if(Common.isEquals(Config.getString("receiver.sender.uppercase"), "Y")) {
 				if(receivers.contains(",")) { //(임시) 여러개 검색시 AND절 + LIKE 절 처리
 					String[] receiver = receivers.split(",");
