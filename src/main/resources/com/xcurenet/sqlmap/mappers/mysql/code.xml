@@ -28,6 +28,20 @@
 		ORDER	BY COCD
 	</select>
 
+	<select id="getCodeCoreKeywordList" resultType="codeVO" parameterType="codeVO">
+		SELECT  KEYWORD_SEQ AS code, KEYWORD_NAME AS codeName, B.GROUP_SEQ AS tempCode1, B.GROUP_NAME AS tempNm1
+		FROM    UI_KEYWORD A, UI_KEYWORD_GROUP B
+		WHERE   A.GROUP_SEQ = B.GROUP_SEQ
+		AND B.CORE_YN = 'Y'
+		<if test='searchStr!=null and searchStr!=""'>
+			AND		(KEYWORD_NAME LIKE CONCAT('%', #{searchStr}, '%') OR GROUP_NAME LIKE CONCAT('%', #{searchStr}, '%'))
+		</if>
+		<if test='tempCode1!=null and tempCode1!=""'>
+			AND		B.GROUP_SEQ = #{tempCode1}
+		</if>
+		ORDER	BY KEYWORD_NAME
+	</select>
+
 	<!-- 회사 이름이 이미 등록 되어있는지 조회 -->
 	<select id="isCoNmExist" resultType="int" parameterType="coVO">
 		SELECT	COUNT(*) AS CNT

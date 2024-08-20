@@ -36,6 +36,11 @@
 				getData('Y');
 			});
 
+			$('.codeSelectedBtn').click(function (){
+				$('#coreKeywordStr').val('');
+				$('#coreKeywordSelectedArea').find('.btn').text(0);
+			})
+
 			initDateTimePicker('startdatepicker', 'enddatepicker');
 
 
@@ -86,6 +91,14 @@
 			}
 			$('#' + codeType + 'Str').val(str);
 			$('#' + codeType + 'Val').val(val);
+
+			if ($('#' + codeType + 'Str').val() != '') {
+				$('#' + codeType + 'SelectedArea').find('.btn').text(data.length);
+				$('#' + codeType + 'SelectedArea').show();
+			} else {
+				$('#' + codeType + 'SelectedArea').find('.btn').text(0);
+				$('#' + codeType + 'SelectedArea').hide();
+			}
 		}
 
 	</script>
@@ -109,11 +122,10 @@
 							<span class="input-group-addon"> <span class="glyphicon glyphicon-calendar"></span>
 								</span>
 						</div>
-
-						<button type="button" class="btn btn-sm btn-default" id="coreKeyword"><span class="glyphicon glyphicon-plus-sign"></span>&nbsp;<s:message code="common.org.choose.keyword"/>
-						</button>
-						<span id="deptSelectedArea" class="codeSelectedBtn">
-										<button type="button" class="btn" style="z-index: 2">0</button>
+						<button class="btn01" id="coreKeyword"><img src="<c:url value="/img/subBtn_plus.png"/>"><s:message
+								code="keyword.msg.coreKeyword"/></button>
+						<span id="coreKeywordSelectedArea" class="codeSelectedBtn">
+										<button type="button" class="btn num_add bornone"  style="z-index: 2">0</button>
 									</span>
 						<input type="hidden" id="coreKeywordVal">
 
@@ -124,9 +136,7 @@
 							</div>
 						</div>
 
-						<div class="form-group form-inline not-dashed">
-							<button type="button" class="btn btn-success btn-sm" accesskey="Q" id="searchBtn" accesskey="s"><span class="glyphicon glyphicon-search"></span></button>
-						</div>
+						<button class="form_btn01" id="searchBtn"><s:message code="common.msg.search"/></button>
 						<span>
 							<b style="margin-left: 12px;"><s:message code="DATA_ANALYSIS.STAT_HOST_INFO"/> <s:message code="common.core.service"/></b>
 						</span>
@@ -135,8 +145,6 @@
 				</div>
 			</div>
 
-<%--			<div class="row top_space" style="border-bottom: 1px dashed #a4c7e4;>--%>
-<%--			</div>--%>
 			<div class="row top_space2">
 				<div class="col-xs-12">
 					<ul class="nav nav-tabs codeTab listChart" style="border-bottom: 0px!important;" >

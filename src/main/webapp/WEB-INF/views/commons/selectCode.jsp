@@ -59,8 +59,10 @@
             $("#keywordGroup").change(function () {
                 getCodeList();
             });
-        }
-        ;
+        }else if (codeType == 'coreKeyword'){
+	        title = '<s:message code="keyword.msg.coreKeyword"/>';
+
+        };
 
         $('#code_title').html(title);
         if ($('#busiCd').css('display') == 'none') $('#searchStr').css('width', '250px');
@@ -136,7 +138,7 @@
 
         getCodeList();
 
-        if (codeType != 'senders' && codeType != 'receivers' && codeType != 'user' && codeType != 'attach' && codeType != 'keyword' && codeType != 'regexp' && codeType != 'dept') {
+        if (codeType != 'senders' && codeType != 'receivers' && codeType != 'user' && codeType != 'coreKeyword' && codeType != 'attach' && codeType != 'keyword' && codeType != 'regexp' && codeType != 'dept') {
             if (opener.$('#' + codeType + 'Hidden').val() != '') setCode();
         } else {
             if (oldCode != '') setCode();
@@ -431,6 +433,9 @@
     } else if (codeType == 'keyword') {
         grid.colAdd('tempNm1', '<s:message code="keyword.msg.partnm"/>', 120, 'left', false, 'nomal');
         grid.colAdd('codeName', '<s:message code="keyword.msg.keyword"/>', 230, 'left', false, 'link');
+    }else if (codeType == 'coreKeyword'){
+	    grid.colAdd('tempNm1', '<s:message code="keyword.msg.partnm"/>', 120, 'left', false, 'nomal');
+	    grid.colAdd('codeName', '<s:message code="keyword.msg.keyword"/>', 230, 'left', false, 'link');
     } else {
         grid.colAdd('code', '<s:message code="selectCodeAll.code"/>', 100, 'center', false, 'link');
         grid.colAdd('codeName', '<s:message code="selectCodeAll.codenm"/>', 260, 'left', false, 'nomal');
@@ -515,7 +520,7 @@
         grid2.deleteSelectedRows();
     };
     grid2.onClick = function () {
-        if (codeType == 'keyword' && grid2.Col == grid2.ColIndex('codeName')) {
+        if ((codeType == 'keyword' || codeType == 'coreKeyword') && grid2.Col == grid2.ColIndex('codeName')) {
             grid2.deleteSelectedRows();
         } else if (grid2.Col == grid2.ColIndex('code')) {
             grid2.deleteSelectedRows();

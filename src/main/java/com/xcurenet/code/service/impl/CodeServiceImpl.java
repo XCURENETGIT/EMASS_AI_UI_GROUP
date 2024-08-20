@@ -39,6 +39,8 @@ public class CodeServiceImpl extends XcnAbstractDAO implements CodeService {
 			return selectList("com.xcurenet.sqlmap.mappers.mysql.code.getCodeJikinList", code);
 		} else if (Common.isEquals(code.getCodeType(), "senders") || Common.isEquals(code.getCodeType(), "receivers") || Common.isEquals(code.getCodeType(), "user")) {
 			return selectList("com.xcurenet.sqlmap.mappers.mysql.code.getCodeUserList", code);
+		}else if (Common.isEquals(code.getCodeType(), "coreKeyword")) {
+			return selectList("com.xcurenet.sqlmap.mappers.mysql.code.getCodeCoreKeywordList", code);
 		}
 		
 		return new ArrayList<CodeVO>();
