@@ -1175,12 +1175,9 @@ public class EmsMessageController {
 
 
 	public static String getBodyStr(final String bodyPretty, final String previewFlag, List<String> keywordList, String userCharset, EmsBodyVO emsBody) throws UnsupportedEncodingException {
-		if (emsBody == null) return Prop.propFormat("common.msg.nocontent");
+		if (emsBody == null || Common.isEquals(emsBody.getBody().length,0)) return Prop.propFormat("common.msg.nocontent");
 		String body = getBodyStrProc(userCharset, emsBody);
-		if (body == null) {
-			return Prop.propFormat("common.msg.nocontent");
-		}
-		else if (emsBody.getSvc().startsWith("Q")) return body;
+		if (emsBody.getSvc().startsWith("Q")) return body;
 		else if(body.length() > Common.BODY_CONTEXT_SIZE ) return Common.BODY_CONTEXT_SIZE_OVER;
 		else {
 			/* 미분류&모니터링 제외만 해당 기능 사용 */
@@ -1195,6 +1192,7 @@ public class EmsMessageController {
 			}
 
 			Document doc = Jsoup.parse(body); //태그 변환을 위한 Jsoup Parser
+
 			String uri = emsBody.getHost();
 			if (Common.isEmpty(uri)) uri = emsBody.getSrcIp();
 
