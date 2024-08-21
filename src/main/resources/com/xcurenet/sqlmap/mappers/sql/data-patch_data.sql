@@ -9,16 +9,38 @@ CREATE TABLE IF NOT EXISTS UI_MAIL_NOLOG(
     USE_YN  CHAR(1)  NOT NULL  DEFAULT 'Y'  COMMENT '사용 여부(Y:사용, N:사용안함(삭제) )',
     PRIMARY KEY (MAIL_LOG_SEQ)     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='MAIL 미로깅';
 
+CREATE TABLE IF NOT EXISTS EMS_HOST(
+                                       HOST varchar(256) NOT NULL COMMENT '호스트 정보',
+    SCHEME varchar(12) NULL COMMENT 'SCHEME 정보',
+    PORT INT(12) NULL COMMENT 'SCHEME 정보',
+    CATEGORY_CD INT(2) NULL COMMENT '카테고리 코드',
+    NATION_CD varchar(2) NULL COMMENT '국가 코드',
+    DESCRIPTION TEXT NULL COMMENT '호스트 설명',
+    PROCESS_YN varchar(1) DEFAULT 'N' NULL COMMENT '카테고리 탐지 여부',
+    CREATE_DT datetime null comment '등록일',
+    DB_TYPE varchar(1) default 'D' null 'D:기본제공, C:고객사',
+    PRIMARY KEY (HOST)  )  ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='미분류 HOST';
 
-CREATE TABLE IF NOT EXISTS HOST_INFO (
-    host VARCHAR(255) NOT NULL COMMENT 'host 이름',
-    description TEXT  NULL COMMENT 'host 설명',
-    PRIMARY KEY (host)     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='미분류 host 설명';
+CREATE TABLE IF NOT EXISTS EMS_HOST_CATEGORY(
+                                                CATEGORY_CD int(2) NOT NULL COMMENT 'HOST 카테고리 코드',
+    CATEGORY_NM varchar(120) NULL comment 'HOST 카테고리 명',
+    PRIMARY KEY (CATEGORY_CD)  )  ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='미분류 카테고리 분류';
 
-CREATE TABLE IF NOT EXISTS HOST_CATEGORY (
-    host VARCHAR(255) NOT NULL COMMENT 'host 이름',
-    description TEXT  NULL COMMENT 'host 설명',
-    PRIMARY KEY (host)     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='미분류 host 설명';
+CREATE TABLE IF NOT EXISTS EMS_NATION(
+                                         NATION_CD varchar(2) NOT NULL COMMENT '국가 코드',
+    NATION_ENG varchar(120) NULL comment '국가명 (영어)',
+    NATION_KOR varchar(120) NULL comment '국가명 (한글)',
+    PRIMARY KEY (NATION_CD)  )  ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='미분류 국가 코드';
+
+-- CREATE TABLE IF NOT EXISTS HOST_INFO (
+--     host VARCHAR(255) NOT NULL COMMENT 'host 이름',
+--     description TEXT  NULL COMMENT 'host 설명',
+--     PRIMARY KEY (host)     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='미분류 host 설명';
+--
+-- CREATE TABLE IF NOT EXISTS HOST_CATEGORY (
+--     host VARCHAR(255) NOT NULL COMMENT 'host 이름',
+--     description TEXT  NULL COMMENT 'host 설명',
+--     PRIMARY KEY (host)     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='미분류 host 설명';
 
 
 

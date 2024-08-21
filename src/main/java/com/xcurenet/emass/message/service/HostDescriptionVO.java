@@ -6,5 +6,15 @@ import lombok.Data;
 public class HostDescriptionVO {
 
 	String host;
+	String scheme;
+	String port;
+	String categoryCd;
+	String categoryNm;
+	String nationCd;
 	String description;
+	String type;
+	String processYn;
+	String nationEn;
+	String nationKo;
+
 }

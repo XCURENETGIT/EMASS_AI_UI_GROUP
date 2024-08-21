@@ -807,11 +807,6 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 	}
 
 	@Override
-	public HostDescriptionVO getHostCategory(String host) {
-		return selectOne("com.xcurenet.sqlmap.mappers.mysql.emass.getHostCategory", host);
-	}
-
-	@Override
 	public boolean isHostExist(String host) {
 		return (int)selectOne("com.xcurenet.sqlmap.mappers.mysql.emass.isHostExist", host)>0;
 	}
