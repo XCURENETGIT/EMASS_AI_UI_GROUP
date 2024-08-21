@@ -1183,13 +1183,16 @@ public class EmsMessageController {
 		else if (emsBody.getSvc().startsWith("Q")) return body;
 		else if(body.length() > Common.BODY_CONTEXT_SIZE ) return Common.BODY_CONTEXT_SIZE_OVER;
 		else {
-			if (Common.isEquals(bodyPretty, "Y")) {
-				/* sanitizeAndEscape()    body 내용에 꺽쇠<>가 들어갈시 escape처리 */
-				body = unknownSvcRemoveHtmlBody(emsBody, sanitizeAndEscape(body, Common.allowedTags)); // 문서 정돈 기능
-			}else{
-				body = sanitizeAndEscape(body, Common.allowedTags);
+			/* 미분류&모니터링 제외만 해당 기능 사용 */
+			if(emsBody.getSvc().startsWith("U") || emsBody.getSvc().startsWith("X")) {
+				if (Common.isEquals(bodyPretty, "Y")) {
+					/* sanitizeAndEscape()    body 내용에 꺽쇠<>가 들어갈시 escape처리 */
+					body = unknownSvcRemoveHtmlBody(emsBody, sanitizeAndEscape(body, Common.allowedTags)); // 문서 정돈 기능
+				} else {
+					body = sanitizeAndEscape(body, Common.allowedTags);
+				}
+				if (Common.isEquals(previewFlag, "Y")) body = bodyPreviewDetect(body, keywordList); // 키워드 검출 미리보기 기능
 			}
-			if (Common.isEquals(previewFlag, "Y") && (emsBody.getSvc().startsWith("U") || emsBody.getSvc().startsWith("X"))) body = bodyPreviewDetect(body, keywordList); // 키워드 검출 미리보기 기능
 
 			Document doc = Jsoup.parse(body); //태그 변환을 위한 Jsoup Parser
 			String uri = emsBody.getHost();

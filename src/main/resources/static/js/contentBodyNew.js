@@ -1130,6 +1130,13 @@ function setMessage(msg) {
         }
     }
     svc = msg.svc;
+    if(svc.indexOf('X') == 0 || svc.indexOf('U') == 0){
+        $('#detectPanel').show();
+    }else {
+        $('#detectPanel').hide();
+    }
+
+
     xRootMtr = nvl(msg.xrootMtr);
     usr_id = nvl(msg.usrId);
     srcip = nvl(msg.srcIp);
