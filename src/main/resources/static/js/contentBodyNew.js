@@ -1270,6 +1270,7 @@ function setMessage(msg) {
         $('#hostDiv').html();
         $('#hostDescriptionDiv').html();
         $("#hostCategoryDiv").css("display", "none");
+        $("#hostNationDiv").css("display", "none");
     } else {
         $('#hostTr').css("display", "");
         var query = "";
@@ -1279,13 +1280,8 @@ function setMessage(msg) {
 
         $('#hostDiv').html('<a style="word-break: break-all;" target="_blank" href="http://' + hostDivText + '">' + hostDivText + '</a>');
         $('#helpHost').attr('title', nvl(msg.host));
-        getHostDescription(msg.host);
+        getHostDescription(msg.host, msg.svc);
 
-        if (msg.svc.startsWith("X") || msg.svc.startsWith("U")){
-            getHostCategory(msg.host);
-        }else{
-            $("#hostCategoryDiv").css("display", "none");
-        }
     }
 
     //대외비
@@ -1952,17 +1948,45 @@ function setOcrFileDiv(files) {
     }
 }
 
-function getHostDescription(host) {
+function getHostDescription(host, svc) {
     ui.get({
         url: 'getHostDescription.xcn',
         host: host,
         success: function (data, total) {
-            $("#hostDescriptionDiv").css("display", "");
-            if (data == null){
-                $('#hostDescriptionDiv').html("");
-            }
-            else {
-                $('#hostDescriptionDiv').html(data.description);
+            if (data != null) {
+                if (data.description == null) { //host 설명
+                    $('#hostDescriptionDiv').html("");
+                    $("#hostDescriptionDiv").css("display", "none");
+                } else {
+                    $('#hostDescriptionDiv').html(data.description);
+                    $("#hostDescriptionDiv").css("display", "");
+                }
+                if (data.categoryNm != null && (svc.startsWith("X") || svc.startsWith("U"))) { // host category
+                    $("#hostCategoryDiv").css("display", "inline-block");
+                    $("#parentDiv").css("display", "flex");
+                    $('#hostCategory').html( contentBody.category + ": " + data.categoryNm);
+                }else{
+                    $("#hostCategoryDiv").css("display", "none");
+                }
+
+                if (data.nationCd != null && (svc.startsWith("X") || svc.startsWith("U"))){
+                    var imageName =mainContext+"/img/nation/"+ data.nationCd+".png";
+                    let str = '';
+                    if ( data.nationCd != 'XX'){
+                        str += "<img src="+imageName+">";
+                    }
+                    $("#hostNationDiv").css("display", "inline-block");
+                    $("#parentDiv").css("display", "flex");
+                    if (lo == "ko") str += data.nationKo;
+                    else str += data.nationEn;
+                    console.log(str);
+                    $('#hostNation').html( contentBody.nation + ": " + str);
+                } else{
+                    $("#hostNationDiv").css("display", "none");
+                }
+            }else{
+                $("#hostDescriptionDiv").css("display", "none");
+                $("#parentDiv").css("display", "none");
             }
         },
         error: function (status, message) {
@@ -1973,30 +1997,7 @@ function getHostDescription(host) {
     });
 }
 
-function getHostCategory(host){
-    ui.get({
-        url: 'getHostCategory.xcn',
-        host: host,
-        success: function (data, total) {
-            if (data != null){
-                $("#hostCategoryDiv").css("display", "inline-block");
-                $('#hostCategory').html(contentBody.category+": "+data.description);
-            }
 
-            // if (data == null){
-            //     $('#hostDescriptionDiv').html("");
-            // }
-            // else {
-            //     $('#hostDescriptionDiv').html(data.description);
-            // }
-        },
-        error: function (status, message) {
-            ui.alertMsg(message);
-        },
-        complete: function () {
-        }
-    });
-}
 
 
 function setPatternDiv(patterns) {

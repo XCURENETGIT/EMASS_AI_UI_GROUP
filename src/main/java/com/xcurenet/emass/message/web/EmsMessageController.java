@@ -1711,13 +1711,6 @@ public class EmsMessageController {
 		return new XcnResponseVO(XcnRspCode.OK, emsMessageService.getHostDescription(host));
 	}
 
-	@RequestMapping(value = "/getHostCategory.xcn")
-	@Description("HOST category")
-	@ResponseBody
-	public XcnResponseVO getHostCategory(final HttpServletRequest request, final HttpSession session) throws Exception {
-		String host = Common.nvl(request.getParameter("host"));
-		return new XcnResponseVO(XcnRspCode.OK, emsMessageService.getHostCategory(host));
-	}
 
 	@RequestMapping(value = "/updateEmsFeedback.xcn")
 	@Description("메시지 피드백 설정")
@@ -1825,7 +1818,6 @@ public class EmsMessageController {
 	@ResponseBody
 	public XcnResponseVO insertLlmHost(final HostDescriptionVO hostDescriptionVO, final HttpServletResponse response) throws Exception {
 		if (emsMessageService.isHostExist(hostDescriptionVO.getHost()))emsMessageService.updateHost(hostDescriptionVO);
-		else emsMessageService.insertHost(hostDescriptionVO);
 
 		return new XcnResponseVO(XcnRspCode.OK);
 	}

@@ -52,9 +52,9 @@
 	boolean hostQuery = false;
 	ConfigAdminVO hostQueryVO = configAdminService.getConfAdmin("host.query.use", adminId);
 	if(Common.isNotEmpty(hostQueryVO)) hostQuery = Common.isEquals(Common.nvl(hostQueryVO.getVal()), "Y") ? true : false;
-	
-	
-	
+	String context = request.getContextPath();
+	String lo = Common.getLocale(session).toString();
+
 	AdminVO adminVo = (AdminVO) session.getAttribute("_USERCREDENTIAL_");
 	String adminEmail = "";
 	if(adminVo != null){
@@ -531,6 +531,7 @@
 			ocrAttach:'<s:message code="bodyview.ocr.preview.attach"/>',
 			noRecvs:'<s:message code="common.msg.norecvs"/>',
 			category:'<s:message code="common.category"/>',
+			nation:'<s:message code="common.nation"/>',
 			differentExt: '<s:message code="java.message.differentExt"/>',
 			unknownExt:'<s:message code="java.message.unknownExt"/>',
 			fileNameExistN:'<s:message code="java.message.fileNameExistN"/>',
@@ -853,9 +854,18 @@
 												<div id="hostDiv" style="padding-left: 10px;display: inline"></div>
 												<%if(isLlmEnabled){%>
 												<br>
-												<div id="hostCategoryDiv" style="padding: 0px 6px 0px 2px; margin-top: 6px; border-radius: 4px; background-color: #F5F8FF; border: solid 1px #1C64D3; display: none; align-items: center;">
-													<img id="hostcategoryImg" alt="" src="<c:url value='/img/ztree/AI2.gif'/>" width="23" height="23" style="margin-right: 4px;">
-													<span id="hostCategory" style="color: #375E9A"></span>
+												<div>
+													<div id="parentDiv" style="display: flex; flex-direction: row; align-items: center;">
+														<div id="hostCategoryDiv" style="padding: 0px 6px 0px 2px; margin-top: 6px; border-radius: 4px; background-color: #F5F8FF; border: solid 1px #1C64D3; display: none; align-items: center;">
+															<img id="hostcategoryImg" alt="" src="<c:url value='/img/ztree/AI2.gif'/>" width="23" height="23" style="margin-right: 4px;">
+															<span id="hostCategory" style="color: #375E9A"></span>
+														</div>&nbsp;&nbsp;
+														<div id="hostNationDiv" style="padding: 0px 6px 0px 2px; margin-top: 6px; border-radius: 4px; background-color: #F5F8FF; border: solid 1px #1C64D3; display: none; align-items: center;">
+															<img id="hostNationImg" alt="" src="<c:url value='/img/ztree/AI2.gif'/>" width="23" height="23" style="margin-right: 4px;">
+															<span id="hostNation" style="color: #375E9A"></span>
+														</div>
+													</div>
+
 												</div>
 												<%}%>
 												<%if(isLlmEnabled){%>
@@ -1313,6 +1323,8 @@
 	var op_body_print = '<%=op_body_print%>';
 	var mailUseFlag = <%=mailUseFlag%>;
 	var adminEmail = '<%=adminEmail%>';
+	let mainContext = "<%=context%>";
+	let lo = "<%=lo%>";
 
 	var message = {
 		nosubject:'<s:message code="common.msg.nosubject"/>',
