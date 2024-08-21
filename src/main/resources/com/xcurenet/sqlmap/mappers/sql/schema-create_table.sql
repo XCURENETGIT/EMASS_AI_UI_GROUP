@@ -1066,7 +1066,7 @@ CREATE TABLE IF NOT EXISTS EMS_HOST(
     DESCRIPTION TEXT NULL COMMENT '호스트 설명',
     PROCESS_YN varchar(1) DEFAULT 'N' NULL COMMENT '카테고리 탐지 여부',
     CREATE_DT datetime null comment '등록일',
-    DB_TYPE varchar(1) default 'D' null 'D:기본제공, C:고객사',
+    DB_TYPE varchar(1) default 'D' null COMMENT 'D:기본제공, C:고객사',
     PRIMARY KEY (HOST)  )  ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='미분류 HOST';
 
 CREATE TABLE IF NOT EXISTS EMS_HOST_CATEGORY(
