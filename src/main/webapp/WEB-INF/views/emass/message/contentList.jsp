@@ -466,7 +466,7 @@
         var DnoSearchPattern = /[+*?]/;
 
         try{
-
+	        if(rtnVal == undefined || rtnVal == '') return;
             var searchType = '';
             var searchStr = '';
             var search = '';
