@@ -12,7 +12,7 @@ public class HostDescriptionVO {
 	String categoryNm;
 	String nationCd;
 	String description;
-	String type;
+	String dbType;
 	String processYn;
 	String nationEn;
 	String nationKo;

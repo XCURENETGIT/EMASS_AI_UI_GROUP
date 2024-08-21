@@ -498,7 +498,7 @@
 			A.HOST AS host,
 			A.DESCRIPTION AS description,
 			A.PROCESS_YN AS processYn,
-			A.TYPE AS type,
+			A.DB_TYPE AS dbType,
 			C.NATION_KOR AS nationKo,
 			C.NATION_ENG AS nationEn,
 			C.NATION_CD AS nationCd
