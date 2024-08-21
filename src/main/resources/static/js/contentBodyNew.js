@@ -1340,7 +1340,6 @@ function setMessage(msg) {
         Highlight();
     }else getBody('',nvl(msg.bodyStr));
 
-    getBody('');
     if (nvl(msg.bodyStr) == "") {
         $('#bodyStrDiv #bodyStr').html("");
         $('#bodyStrDiv').css("display", "none");
