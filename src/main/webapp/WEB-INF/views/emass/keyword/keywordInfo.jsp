@@ -2,357 +2,356 @@
 <%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
 
 <script>
-var searchFlag = false;
-$(document).ready(function(){
-	$('#searchStrGroupBtn').click(function(){ getGroupData(); });
-	$('#searchStrGroup').enter(function(){ getGroupData(); });
-	
-	$('#searchStrKeywordBtn').click(function(){
-		var rows = gridGroup.getSelectedRows();
-		if( rows == "" ) {
-			alert("<s:message code="keyword.msg.select.part"/>")
-			return false;
-		}
-		getKeywordData();
+	var searchFlag = false;
+	$(document).ready(function(){
+		$('#searchStrGroupBtn').click(function(){ getGroupData(); });
+		$('#searchStrGroup').enter(function(){ getGroupData(); });
+
+		$('#searchStrKeywordBtn').click(function(){
+			var rows = gridGroup.getSelectedRows();
+			if( rows == "" ) {
+				alert("<s:message code="keyword.msg.select.part"/>")
+				return false;
+			}
+			getKeywordData();
+		});
+
+		$('#searchStrKeyword').enter(function(){
+			var rows = gridGroup.getSelectedRows();
+			if( rows == "" ) {
+				alert("<s:message code="keyword.msg.select.part"/>")
+				return false;
+			}
+			getKeywordData();
+		});
+
+		$('#groupSavePopBtn').click(function(){
+			if( $('#groupName').val().ltrim().rtrim() == '' ) {
+				ui.alertMsg('<s:message code="keyword.message.part_name"/>');
+				$('#groupName').focus();
+				return false;
+			}
+			var mode = $('#keywordGroupPop').attr('mode');
+			var message = mode=='insert' ? '<s:message code="common.msg.add"/>' : '<s:message code="common.msg.modify"/>';
+			var confirm_msg = mode=='insert' ? '<s:message code="common.msg.confirm.add"/>' : '<s:message code="common.msg.confirm.modify"/>';
+			ui.confirmMsg(confirm_msg, '', '', function(rs){
+				if(rs){
+					gridGroup.on();
+					ui.post({
+						url :mode=='insert' ? 'insertKeywordGroup.xcn' : 'updateKeywordGroup.xcn',
+						data : $('#keywordGroupPopForm').serializeAll(),
+						success : function ( data, total ) {
+							ui.alertMsg('<s:message code="common.msg.saved"/>');
+							$('#keywordGroupPop').modal('hide');
+							getGroupData ( );
+						},
+						error : function (status, message) {
+							ui.alertMsg(message);
+						},
+						complete : function (){
+							gridGroup.off();
+						}
+					});
+				}
+			});
+		});
+
+		$('#groupInsertBtn').click(function(){
+			$('#keywordGroupPop input[type=text]').val('');
+			$('[name=useYn][value=Y]').prop('checked',true);
+			$('#keywordGroupPop').modal('show');
+			$('#keywordGroupPop').attr('mode','insert');
+			setTimeout(function(){
+				$("#groupName").focus();
+			}, 500);
+		});
+
+		$('#groupDeleteBtn').click(function(){
+			var rows = gridGroup.getSelectedRows();
+			if( rows == '' ) {
+				ui.alertMsg('<s:message code="common.msg.choose.deleteitem"/>');
+				return false;
+			}
+			var names = gridGroup.getSelectedKey('groupName');
+			ui.confirmMsg( '<s:message code="common.msg.confirm.deleteitem" arguments="'+names+'" argumentSeparator="|"/>', '', '', function(rs){
+				if(rs){
+					gridGroup.on();
+					ui.get({
+						url : 'deleteKeywordGroup.xcn',
+						deleteData : JSON.stringify(rows),
+						success : function ( data, total ) {
+							ui.alertMsg('<s:message code="common.msg.deleted"/>');
+							getGroupData ();
+						},
+						error : function (status, message) {
+							ui.alertMsg(message);
+						},
+						complete : function (){
+							gridGroup.off();
+						}
+					});
+				}
+			});
+		});
+
+		$('#keywordSavePopBtn').click(function(){
+			var keywordStr = $('#keywordName').val().ltrim().rtrim();
+			if( keywordStr == '' ) {
+				ui.alertMsg('<s:message code="keyword.message.insert"/>');
+				$('#keywordName').focus();
+				return false;
+			}
+			if( keywordStr.length == 1 ) {
+				ui.alertMsg('<s:message code="keyword.message.aword"/>');
+				return false;
+			}
+			if( keywordStr.indexOf(' ') > -1 ) {
+				ui.alertMsg('<s:message code="keyword.message.wordspacing"/>');
+				return false;
+			}
+			var mode = $('#keywordPop').attr('mode');
+
+			var message = mode=='insert' ? '<s:message code="common.msg.add"/>' : '<s:message code="common.msg.modify"/>';
+			var confirmMessage = mode=='insert' ? '<s:message code="common.msg.confirm.add"/>' : '<s:message code="common.msg.confirm.modify"/>';
+			ui.confirmMsg(confirmMessage, '', '', function(rs){
+				if(rs){
+					gridKeyword.on();
+					ui.post({
+						url :mode=='insert' ? 'insertKeyword.xcn' : 'updateKeyword.xcn',
+						data : $('#keywordPopForm').serializeAll(),
+						success : function ( data, total ) {
+							ui.alertMsg('<s:message code="common.msg.saved"/>');
+							$('#keywordPop').modal('hide');
+							getKeywordData ( );
+						},
+						error : function (status, message) {
+							ui.alertMsg(message);
+						},
+						complete : function (){
+							gridKeyword.off();
+
+						}
+					});
+				}
+			});
+		});
+
+		$('#keywordInsertBtn').click(function(){
+			if(gridGroup.getSelectedRows().length < 1) {
+				alert("<s:message code="keyword.msg.select.part"/>")
+				return false;
+			}
+
+			var selGroupSeq = gridGroup.getRowData(gridGroup.Row).groupSeq;
+			var selGroupName = gridGroup.getRowData(gridGroup.Row).groupName;
+
+			$('#keywordPop input[type=text]').val('');
+			$('#keyGroupSeq').val(selGroupSeq);
+			$('#keyGroupName').val(selGroupName);
+			$('#keywordPop').attr('mode','insert');
+			$('#keywordPop').modal('show');
+			setTimeout(function(){
+				$("#keywordName").focus();
+			}, 500);
+		});
+
+		$('#keywordDeleteBtn').click(function(){
+			var rows = gridKeyword.getSelectedRows();
+			if( rows == '' ) {
+				ui.alertMsg('<s:message code="common.msg.choose.deleteitem"/>');
+				return false;
+			}
+			var names = gridKeyword.getSelectedKey('keywordName');
+			ui.confirmMsg( '<s:message code="common.msg.confirm.deleteitem" arguments="'+names+'" argumentSeparator="|"/>', '', '', function(rs){
+				if(rs){
+					gridKeyword.on();
+					ui.get({
+						url : 'deleteKeyword.xcn',
+						deleteData : JSON.stringify(rows),
+						success : function ( data, total ) {
+							ui.alertMsg('<s:message code="common.msg.deleted"/>');
+							getKeywordData ( );
+						},
+						error : function (status, message) {
+							ui.alertMsg(message);
+						},
+						complete : function (){
+							gridKeyword.off();
+						}
+					});
+				}
+			});
+		});
+
+		$('#uploadBtn').click(function(){
+			$('#uploadPop').modal('show');
+		});
+
+		$('.uploadPopBtn').click(function(){
+			importKeyword();
+		});
+
+		$("[name=attach]").change(function (){
+			fileExtCheck($(this));
+		});
+
+		getGroupData ();
+
 	});
-	
-	$('#searchStrKeyword').enter(function(){ 
-		var rows = gridGroup.getSelectedRows();
-		if( rows == "" ) {
-			alert("<s:message code="keyword.msg.select.part"/>")
-			return false;
+
+	function getGroupData( flag ) {
+		if ( searchFlag ) return false;
+
+		if ( flag == undefined ) {
+			gridGroup.data.length = 0;
+			gridGroup.loadingPage = 0;
+
+		} else {
+			gridGroup.loadingPage++;
 		}
-		getKeywordData();
-	});
-	
-	$('#groupSavePopBtn').click(function(){
-		if( $('#groupName').val().ltrim().rtrim() == '' ) {
-			ui.alertMsg('<s:message code="keyword.message.part_name"/>');
-			$('#groupName').focus();
-			return false;
-		}
-		var mode = $('#keywordGroupPop').attr('mode');
-		var message = mode=='insert' ? '<s:message code="common.msg.add"/>' : '<s:message code="common.msg.modify"/>'; 
-		var confirm_msg = mode=='insert' ? '<s:message code="common.msg.confirm.add"/>' : '<s:message code="common.msg.confirm.modify"/>';
-		ui.confirmMsg(confirm_msg, '', '', function(rs){
-			if(rs){
-				gridGroup.on();
-				ui.post({
-					url :mode=='insert' ? 'insertKeywordGroup.xcn' : 'updateKeywordGroup.xcn',
-					data : $('#keywordGroupPopForm').serializeAll(),
-					success : function ( data, total ) {
-						ui.alertMsg('<s:message code="common.msg.saved"/>');
-						$('#keywordGroupPop').modal('hide');
-						getGroupData ( );
-					},
-					error : function (status, message) {
-						ui.alertMsg(message);
-					},
-					complete : function (){
-						gridGroup.off();
-					}
-				});
+
+		searchFlag = true;
+		gridGroup.on();
+		ui.get({
+			url : 'getKeywordGroupList.xcn',
+			searchStr : $('#searchStrGroup').val(),
+			//offset : gridGroup.data.length,
+			//limit : gridGroup.pageSize,
+			success : function(data, total) {
+				if ( flag == 'Y' || flag == undefined ) resultTotal = total;
+				gridGroup.appendData(data);
+
+				if ( gridGroup.loadingPage == 0 ) gridGroup.Select(-1,-1);
+				$('#group_cnt').html("<s:message code="common.msg.listcount"/>: "+gridGroup.data.length);
+				KeywordDataClear();
+			},
+			error : function(status, message) {
+				ui.alertMsg(message);
+			},
+			complete : function() {
+				gridGroup.off();
+				searchFlag = false;
 			}
 		});
-	});
-	
-	$('#groupInsertBtn').click(function(){
-		$('#keywordGroupPop input[type=text]').val('');
-		$('[name=useYn][value=Y]').prop('checked',true);
-		$('[name=coreYn][value=N]').prop('checked',true);
-		$('#keywordGroupPop').modal('show');
-		$('#keywordGroupPop').attr('mode','insert');
-		setTimeout(function(){
-			$("#groupName").focus();
-		}, 500);	
-	});
-	
-	$('#groupDeleteBtn').click(function(){
-		var rows = gridGroup.getSelectedRows();
-		if( rows == '' ) {
-			ui.alertMsg('<s:message code="common.msg.choose.deleteitem"/>');
-			return false;
-		}
-		var names = gridGroup.getSelectedKey('groupName');
-		ui.confirmMsg( '<s:message code="common.msg.confirm.deleteitem" arguments="'+names+'" argumentSeparator="|"/>', '', '', function(rs){
-			if(rs){
-				gridGroup.on();
-				ui.get({
-					url : 'deleteKeywordGroup.xcn',
-					deleteData : JSON.stringify(rows),
-					success : function ( data, total ) {
-						ui.alertMsg('<s:message code="common.msg.deleted"/>');
-						getGroupData ();
-					},
-					error : function (status, message) {
-						ui.alertMsg(message);
-					},
-					complete : function (){
-						gridGroup.off();
-					}
-				});
-			}
-		});
-	});
-	
-	$('#keywordSavePopBtn').click(function(){
-		var keywordStr = $('#keywordName').val().ltrim().rtrim();
-		if( keywordStr == '' ) {
-			ui.alertMsg('<s:message code="keyword.message.insert"/>');
-			$('#keywordName').focus();
-			return false;
-		}
-		if( keywordStr.length == 1 ) {
-			ui.alertMsg('<s:message code="keyword.message.aword"/>');
-			return false;
-		}
-		if( keywordStr.indexOf(' ') > -1 ) {
-			ui.alertMsg('<s:message code="keyword.message.wordspacing"/>');
-			return false;
-		}
-		var mode = $('#keywordPop').attr('mode');
-		
-		var message = mode=='insert' ? '<s:message code="common.msg.add"/>' : '<s:message code="common.msg.modify"/>';
-		var confirmMessage = mode=='insert' ? '<s:message code="common.msg.confirm.add"/>' : '<s:message code="common.msg.confirm.modify"/>';
-		ui.confirmMsg(confirmMessage, '', '', function(rs){
-			if(rs){
-				gridKeyword.on();
-				ui.post({
-					url :mode=='insert' ? 'insertKeyword.xcn' : 'updateKeyword.xcn',
-					data : $('#keywordPopForm').serializeAll(),
-					success : function ( data, total ) {
-						ui.alertMsg('<s:message code="common.msg.saved"/>');
-						$('#keywordPop').modal('hide');
-						getKeywordData ( );
-					},
-					error : function (status, message) {
-						ui.alertMsg(message);
-					},
-					complete : function (){
-						gridKeyword.off();
-						
-					}
-				});
-			}
-		});
-	});
-	
-	$('#keywordInsertBtn').click(function(){
-		if(gridGroup.getSelectedRows().length < 1) {
-			alert("<s:message code="keyword.msg.select.part"/>")
-			return false;
-		}
-		
+	}
+
+	function KeywordDataClear() {
+		gridKeyword.data.remove(0, gridKeyword.data.length);
+		gridKeyword.render();
+		$('#keyword_cnt').html("");
+		gridKeyword.initData('<s:message code="keyword.message.part_select"/>');
+	}
+
+	function getKeywordData( flag ) {
+		if ( searchFlag ) return false;
+
 		var selGroupSeq = gridGroup.getRowData(gridGroup.Row).groupSeq;
 		var selGroupName = gridGroup.getRowData(gridGroup.Row).groupName;
-		
-		$('#keywordPop input[type=text]').val('');
-		$('#keyGroupSeq').val(selGroupSeq);
-		$('#keyGroupName').val(selGroupName);
-		$('#keywordPop').attr('mode','insert');
-		$('#keywordPop').modal('show');
-		setTimeout(function(){
-			$("#keywordName").focus();
-		}, 500);	
-	});
-	
-	$('#keywordDeleteBtn').click(function(){
-		var rows = gridKeyword.getSelectedRows();
-		if( rows == '' ) {
-			ui.alertMsg('<s:message code="common.msg.choose.deleteitem"/>');
-			return false;
+
+		if ( flag == undefined ) {
+			gridKeyword.data.length = 0;
+			gridKeyword.rtnNextPageFunc = getKeywordData;
+			gridKeyword.loadingPage = 0;
+		} else {
+			gridKeyword.loadingPage++;
 		}
-		var names = gridKeyword.getSelectedKey('keywordName');
-		ui.confirmMsg( '<s:message code="common.msg.confirm.deleteitem" arguments="'+names+'" argumentSeparator="|"/>', '', '', function(rs){
-			if(rs){
-				gridKeyword.on();
-				ui.get({
-					url : 'deleteKeyword.xcn',
-					deleteData : JSON.stringify(rows),
-					success : function ( data, total ) {
-						ui.alertMsg('<s:message code="common.msg.deleted"/>');
-						getKeywordData ( );
-					},
-					error : function (status, message) {
-						ui.alertMsg(message);
-					},
-					complete : function (){
-						gridKeyword.off();
-					}
-				});
+		searchFlag = true;
+		gridKeyword.on();
+		ui.get({
+			url : 'getKeywordList.xcn',
+			searchStr : $('#searchStrKeyword').val(),
+			searchGroupSeq : selGroupSeq,
+			searchGroupName : selGroupName,
+			//offset : gridKeyword.data.length,
+			//limit : gridKeyword.pageSize,
+			success : function(data, total) {
+				if ( flag == 'Y' || flag == undefined ) //keywordTotal = total;
+					gridKeyword.appendData(data);
+
+				if ( gridKeyword.loadingPage == 0 ) gridKeyword.Select(-1,-1);
+				$('#keyword_cnt').html("<s:message code="common.msg.listcount"/>: "+gridKeyword.data.length);
+			},
+			error : function(status, message) {
+				ui.alertMsg(message);
+			},
+			complete : function() {
+				gridKeyword.off();
+				searchFlag = false;
 			}
 		});
-	});
-	
-	$('#uploadBtn').click(function(){
-		$('#uploadPop').modal('show');
-	});
-	
-	$('.uploadPopBtn').click(function(){
-		importKeyword();
-	});
-	
-	$("[name=attach]").change(function (){
-		fileExtCheck($(this));
-	});
-	
-	getGroupData ();
-	
-});
-
-function getGroupData( flag ) {
-	if ( searchFlag ) return false;
-	
-	if ( flag == undefined ) {
-		gridGroup.data.length = 0;
-		gridGroup.loadingPage = 0;
-
-	} else {
-		gridGroup.loadingPage++;
 	}
 
-	searchFlag = true;
-	gridGroup.on();
-	ui.get({
-		url : 'getKeywordGroupList.xcn',
-		searchStr : $('#searchStrGroup').val(),
-		//offset : gridGroup.data.length,
-		//limit : gridGroup.pageSize,
-		success : function(data, total) {
-			if ( flag == 'Y' || flag == undefined ) resultTotal = total;
-			gridGroup.appendData(data);
-			
-			if ( gridGroup.loadingPage == 0 ) gridGroup.Select(-1,-1);
-			$('#group_cnt').html("<s:message code="common.msg.listcount"/>: "+gridGroup.data.length);
-			KeywordDataClear();
-		},
-		error : function(status, message) {
-			ui.alertMsg(message);
-		},
-		complete : function() {
-			gridGroup.off();
-			searchFlag = false;
+	function importKeyword() {
+		$('#uploadForm').attr('action', '<c:url value="/importKeyword.xcn"/>');
+
+		var attach = $('[name=attach]').val();
+		if(attach == "") {
+			ui.alertMsg('<s:message code="keyword.msg.upload.file"/>', function () { $("#attach").click(); });
+			return;
 		}
-	});
-}
 
-function KeywordDataClear() {
-	gridKeyword.data.remove(0, gridKeyword.data.length);
-	gridKeyword.render();
-	$('#keyword_cnt').html("");
-	gridKeyword.initData('<s:message code="keyword.message.part_select"/>');
-}
+		var fileExt = attach.substring( attach.lastIndexOf( "." )+1, attach.length ).toLowerCase( );
+		$('#importGroupSeq').val(gridGroup.getValue(gridGroup.Row, "groupSeq"));
 
-function getKeywordData( flag ) {
-	if ( searchFlag ) return false;
-	
-	var selGroupSeq = gridGroup.getRowData(gridGroup.Row).groupSeq;
-	var selGroupName = gridGroup.getRowData(gridGroup.Row).groupName;
-	
-	if ( flag == undefined ) {
-		gridKeyword.data.length = 0;
-		gridKeyword.rtnNextPageFunc = getKeywordData;
-		gridKeyword.loadingPage = 0;
-	} else {
-		gridKeyword.loadingPage++;
-	}
-	searchFlag = true;
-	gridKeyword.on();
-	ui.get({
-		url : 'getKeywordList.xcn',
-		searchStr : $('#searchStrKeyword').val(),
-		searchGroupSeq : selGroupSeq,
-		searchGroupName : selGroupName,
-		//offset : gridKeyword.data.length,
-		//limit : gridKeyword.pageSize,
-		success : function(data, total) {
-			if ( flag == 'Y' || flag == undefined ) //keywordTotal = total;
-			gridKeyword.appendData(data);
-			
-			if ( gridKeyword.loadingPage == 0 ) gridKeyword.Select(-1,-1);
-			$('#keyword_cnt').html("<s:message code="common.msg.listcount"/>: "+gridKeyword.data.length);
-		},
-		error : function(status, message) {
-			ui.alertMsg(message);
-		},
-		complete : function() {
-			gridKeyword.off();
-			searchFlag = false;
-		}
-	});
-}
-
-function importKeyword() {
-	$('#uploadForm').attr('action', '<c:url value="/importKeyword.xcn"/>');
-	
-	var attach = $('[name=attach]').val();
-	if(attach == "") {
-		ui.alertMsg('<s:message code="keyword.msg.upload.file"/>', function () { $("#attach").click(); });
-		return;
-	}
-	
-	var fileExt = attach.substring( attach.lastIndexOf( "." )+1, attach.length ).toLowerCase( );
-    $('#importGroupSeq').val(gridGroup.getValue(gridGroup.Row, "groupSeq"));
-
-	ui.confirmMsg('<s:message code="keyword.upload.confirm"/>', '', '', function(rs){
-		if(rs){
-			loadingOn("uploadPop");
-			$("#uploadForm").ajaxForm({
-				target : '#upload_file',
-				beforeSubmit: function() {
-                    attachInit('attachSpan','attachFileName','attach');
-				},
-				success: function(result) {
-					if(result.success) {
-						ui.alertMsg('<s:message code="keyword.upload.ok"/>');
-						$('#uploadPop').modal('hide');
-						getGroupData ();
-					} else {
-						ui.alertMsg(result.message);
+		ui.confirmMsg('<s:message code="keyword.upload.confirm"/>', '', '', function(rs){
+			if(rs){
+				loadingOn("uploadPop");
+				$("#uploadForm").ajaxForm({
+					target : '#upload_file',
+					beforeSubmit: function() {
+						attachInit('attachSpan','attachFileName','attach');
+					},
+					success: function(result) {
+						if(result.success) {
+							ui.alertMsg('<s:message code="keyword.upload.ok"/>');
+							$('#uploadPop').modal('hide');
+							getGroupData ();
+						} else {
+							ui.alertMsg(result.message);
+						}
+					},
+					error : function(){
+						ui.alertMsg('<s:message code="keyword.upload.error"/>');
+					},
+					complete : function(){
+						loadingOff("uploadPop");
 					}
-				},
-				error : function(){
-					ui.alertMsg('<s:message code="keyword.upload.error"/>');
-				},
-				complete : function(){
-					loadingOff("uploadPop");
-				}
-			}).submit();
-		}
-	});
-}
+				}).submit();
+			}
+		});
+	}
 
-function loadingOn(id) {
-	
-	var obj = $('#' + id);
-	var hei = obj.height();
-	$(obj).append( '<div class="loading_div"><i class="fa fa-spinner fa-spin fa-3x fa-fw" style="margin-top:'+(hei/2.5)+'px"></i></div>');
-	$('.loading_div').css({
-		"position" : "absolute",
-		"top" : "0px",
-		"left" : "15px",
-		"right" : "15px",
-		"bottom" : "20px",
-		"background-color" : "#F0F0F0",
-		"opacity" : "0.3",
-		"z-index" : "998",
-		"text-align" : "center"
-	});
-}
+	function loadingOn(id) {
 
-function loadingOff(id) {
-	var obj = $('#' + id + ' .loading_div');
-	obj.remove();
-}
+		var obj = $('#' + id);
+		var hei = obj.height();
+		$(obj).append( '<div class="loading_div"><i class="fa fa-spinner fa-spin fa-3x fa-fw" style="margin-top:'+(hei/2.5)+'px"></i></div>');
+		$('.loading_div').css({
+			"position" : "absolute",
+			"top" : "0px",
+			"left" : "15px",
+			"right" : "15px",
+			"bottom" : "20px",
+			"background-color" : "#F0F0F0",
+			"opacity" : "0.3",
+			"z-index" : "998",
+			"text-align" : "center"
+		});
+	}
 
-function fileExtCheck(obj){
-    var fileName = obj.val();
-    var fileExt  = fileName.substring(fileName.lastIndexOf(".") +1, fileName.length).toLowerCase();
-    if(!(fileExt == "txt" || fileExt == "text" || fileExt == "csv" || fileExt == "xlsx")){
-        ui.alertMsg('<s:message code="keyword.msg.fileext"/>');
-        attachInit('attachSpan','attachFileName','attach');
-    }else $('#attachFileName').html(obj[0].files[0].name);
-}
+	function loadingOff(id) {
+		var obj = $('#' + id + ' .loading_div');
+		obj.remove();
+	}
+
+	function fileExtCheck(obj){
+		var fileName = obj.val();
+		var fileExt  = fileName.substring(fileName.lastIndexOf(".") +1, fileName.length).toLowerCase();
+		if(!(fileExt == "txt" || fileExt == "text" || fileExt == "csv" || fileExt == "xlsx")){
+			ui.alertMsg('<s:message code="keyword.msg.fileext"/>');
+			attachInit('attachSpan','attachFileName','attach');
+		}else $('#attachFileName').html(obj[0].files[0].name);
+	}
 </script>
 
 <div class="modal" id="keywordGroupPop" aria-labelledby="keywordGroupPop" tabindex="-1" role="dialog">
@@ -392,20 +391,6 @@ function fileExtCheck(obj){
 						</label>
 						<label class="radio-inline c-radio">
 							<input type="radio" name="useYn" value="N">
-							<s:message code="common.msg.unuse"/>
-						</label>
-					</div>
-					<div class="row">
-						<div class="col-35">
-							<label for="coreYn" class=""><s:message code="common.msg.coreYn"/></label>
-							<span class="red_dot"></span>
-						</div>
-						<label class="radio-inline c-radio">
-							<input type="radio" name="coreYn" value="Y" checked>
-							<s:message code="common.msg.use"/>
-						</label>
-						<label class="radio-inline c-radio">
-							<input type="radio" name="coreYn" value="N">
 							<s:message code="common.msg.unuse"/>
 						</label>
 					</div>
@@ -538,10 +523,10 @@ function fileExtCheck(obj){
 					<button class="form_btn01" type="button" accesskey="G" id="searchStrGroupBtn"><s:message code="common.search"/></button>
 				</div>
 				<div class="btnform">
-				<button type="button" class="btn01" accesskey="I" id="groupInsertBtn"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
-				<button type="button" class="btn02" accesskey="D" id="groupDeleteBtn"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
+					<button type="button" class="btn01" accesskey="I" id="groupInsertBtn"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
+					<button type="button" class="btn02" accesskey="D" id="groupDeleteBtn"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
 				</div>
-				</div>
+			</div>
 			<!--<div class="content xcn_full" style="background-color: transparent">
 				<div class="contentSub" style="padding: 0px;">
 					<div id="keywordGroupListGrid" class="slickGrid gridArea"></div>
@@ -556,11 +541,11 @@ function fileExtCheck(obj){
 					<button class="form_btn01" type="button" accesskey="K" id="searchStrKeywordBtn"><s:message code="common.search"/></button>
 				</div>
 				<c:if test="${_USERCREDENTIAL_.firstAdminYn eq 'Y'}">
-				<div class="btnform">
-					<button type="button" class="btn01" accesskey="A" id="keywordInsertBtn"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
-					<button type="button" class="btn02" accesskey="E" id="keywordDeleteBtn"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
-					<button type="button" class="btn03" accesskey="U" id="uploadBtn"><img src="<c:url value="/img/subBtn_upload.png"/>" alt="업로드">Upload</button>
-				</div>
+					<div class="btnform">
+						<button type="button" class="btn01" accesskey="A" id="keywordInsertBtn"><img src="<c:url value="/img/subBtn_plus.png"/>" alt="추가"><s:message code="common.msg.add"/></button>
+						<button type="button" class="btn02" accesskey="E" id="keywordDeleteBtn"><img src="<c:url value="/img/subBtn_trash.png"/>" alt="삭제"><s:message code="common.msg.delete"/></button>
+						<button type="button" class="btn03" accesskey="U" id="uploadBtn"><img src="<c:url value="/img/subBtn_upload.png"/>" alt="업로드">Upload</button>
+					</div>
 				</c:if>
 			</div>
 			<!--<div class="content xcn_full" style=" background-color: transparent">
@@ -571,80 +556,74 @@ function fileExtCheck(obj){
 		</div>
 	</div>
 	<div class="content" style="overflow:hidden;">
-		<div class="contentSub" style="width:600px; float: left">
+		<div class="contentSub" style="width:500px; float: left">
 			<div id="keywordGroupListGrid" class="slickGrid gridArea"></div>
 		</div>
 		<div>
-			<div class="contentSub " style="width:calc(100% - 600px); float: left; padding-left:0px !important;">
+			<div class="contentSub " style="width:calc(100% - 500px); float: left; padding-left:0px !important;">
 				<div id="keywordListGrid" class="slickGrid gridArea"></div>
 			</div>
 		</div>
 	</div>
 </div>
 </body>
-	<script type="text/javascript">
-		var gridGroup = new Xgrid('keywordGroupListGrid', contextRoot);
-		gridGroup.onCheckBox();
-		gridGroup.autoNumber();
-		gridGroup.colAdd('groupName', '<s:message code="keyword.msg.partnm"/>', 183, 'left', false, 'nomal');
-		gridGroup.colAdd('useYn', '<s:message code="common.msg.useyn"/>', 100, 'center', false, 'nomal', function ( row, cell, value, columnDef, dataContext ) {
-			if(value=='Y') return '<s:message code="common.msg.use"/>';
-			else if(value=='N') return '<s:message code="common.msg.unuse"/>';
-			return '-';
+<script type="text/javascript">
+	var gridGroup = new Xgrid('keywordGroupListGrid', contextRoot);
+	gridGroup.onCheckBox();
+	gridGroup.autoNumber();
+	gridGroup.colAdd('groupName', '<s:message code="keyword.msg.partnm"/>', 183, 'left', false, 'nomal');
+	gridGroup.colAdd('useYn', '<s:message code="common.msg.useyn"/>', 100, 'center', false, 'nomal', function ( row, cell, value, columnDef, dataContext ) {
+		if(value=='Y') return '<s:message code="common.msg.use"/>';
+		else if(value=='N') return '<s:message code="common.msg.unuse"/>';
+		return '-';
+	});
+	if( $('#groupInsertBtn').css('display') == 'inline-block' ) {
+		gridGroup.colAdd('open', '<s:message code="common.msg.modify"/>', 80, 'center', false, 'noal',function(row, cell, value, columnDef, dataContext ) {
+			return "<input type='button' value='<s:message code="common.msg.modify"/>' class='table_btn01' style='line-height: 0px; color:white; height:20px; vertical-align: 1px; font-weight:bold;'/>";
 		});
-		gridGroup.colAdd('coreYn', '<s:message code="common.msg.coreYn"/>', 100, 'center', false, 'nomal', function ( row, cell, value, columnDef, dataContext ) {
-			if(value=='Y') return '<s:message code="common.msg.use"/>';
-			else if(value=='N') return '<s:message code="common.msg.unuse"/>';
-			return '-';
-		});
-		if( $('#groupInsertBtn').css('display') == 'inline-block' ) {
-			gridGroup.colAdd('open', '<s:message code="common.msg.modify"/>', 80, 'center', false, 'noal',function(row, cell, value, columnDef, dataContext ) {
-				 return "<input type='button' value='<s:message code="common.msg.modify"/>' class='table_btn01' style='line-height: 0px; color:white; height:20px; vertical-align: 1px; font-weight:bold;'/>";
-			});
-		}
-		gridGroup.loadExportMenu('<s:message code="DATA_MONITOR.KEYWORD_MGMT"/>');
-		gridGroup.loadHeader(false);
-		<%--//gridGroup.initData('<s:message code="common.msg.search.click"/>');--%>
-		
-		gridGroup.onClick = function() {
-			if (gridGroup.Col == gridGroup.ColIndex('open') && $('#groupInsertBtn').css('display') == 'inline-block') {
-				var data = gridGroup.getRowData(gridGroup.Row);
+	}
+	gridGroup.loadExportMenu('<s:message code="DATA_MONITOR.KEYWORD_MGMT"/>');
+	gridGroup.loadHeader(false);
+	<%--//gridGroup.initData('<s:message code="common.msg.search.click"/>');--%>
 
-				$('#groupSeq').val(data.groupSeq);
-				$('#groupName').val(data.groupName);
-				$('[name=useYn][value='+data.useYn+']').prop('checked',true);
-				$('[name=coreYn][value='+data.coreYn+']').prop('checked',true);
+	gridGroup.onClick = function() {
+		if (gridGroup.Col == gridGroup.ColIndex('open') && $('#groupInsertBtn').css('display') == 'inline-block') {
+			var data = gridGroup.getRowData(gridGroup.Row);
 
-				$('#keywordGroupPop').attr('mode','modify');
-				$("#groupName").focus();
-				$('#keywordGroupPop').modal('show');
-			}
+			$('#groupSeq').val(data.groupSeq);
+			$('#groupName').val(data.groupName);
+			$('[name=useYn][value='+data.useYn+']').prop('checked',true);
+
+			$('#keywordGroupPop').attr('mode','modify');
+			$("#groupName").focus();
+			$('#keywordGroupPop').modal('show');
 		}
-		gridGroup.onActiveCellChanged = function() {
-			getKeywordData();
+	}
+	gridGroup.onActiveCellChanged = function() {
+		getKeywordData();
+	}
+
+	var gridKeyword = new Xgrid('keywordListGrid', contextRoot);
+	gridKeyword.onCheckBox();
+	gridKeyword.autoNumber();
+	gridKeyword.colAdd('keywordName', '<s:message code="keyword.msg.keyword"/>', 200, 'center', false, 'link');
+	gridKeyword.colAdd('keywordDesc', '<s:message code="common.msg.comment"/>', 250, 'center', false, 'nomal');
+	gridKeyword.onClick = function() {
+		if (gridKeyword.Col == gridKeyword.ColIndex('keywordName')) {
+			var data = gridKeyword.getRowData(gridKeyword.Row);
+
+			$('#keyGroupSeq').val(data.groupSeq);
+			$('#keyGroupName').val(data.groupName);
+			$('#keywordSeq').val(data.keywordSeq);
+			$('#keywordName').val(data.keywordName);
+			$('#keywordDesc').val(data.keywordDesc);
+
+			$('#keywordPop').attr('mode','modify');
+			$("#keywordName").focus();
+			$('#keywordPop').modal('show');
 		}
-		
-		var gridKeyword = new Xgrid('keywordListGrid', contextRoot);
-		gridKeyword.onCheckBox();
-		gridKeyword.autoNumber();
-		gridKeyword.colAdd('keywordName', '<s:message code="keyword.msg.keyword"/>', 200, 'center', false, 'link');
-		gridKeyword.colAdd('keywordDesc', '<s:message code="common.msg.comment"/>', 250, 'center', false, 'nomal');
-		gridKeyword.onClick = function() {
-			if (gridKeyword.Col == gridKeyword.ColIndex('keywordName')) {
-				var data = gridKeyword.getRowData(gridKeyword.Row);
-				
-				$('#keyGroupSeq').val(data.groupSeq);
-				$('#keyGroupName').val(data.groupName);
-				$('#keywordSeq').val(data.keywordSeq);
-				$('#keywordName').val(data.keywordName);
-				$('#keywordDesc').val(data.keywordDesc);
-				
-				$('#keywordPop').attr('mode','modify');
-				$("#keywordName").focus();
-				$('#keywordPop').modal('show');
-			}
-		};
-		gridKeyword.loadExportMenu('<s:message code="DATA_MONITOR.KEYWORD_MGMT"/>');
-		gridKeyword.loadHeader(false);
-		gridKeyword.initData('<s:message code="keyword.message.part_select"/>');
-	</script>
+	};
+	gridKeyword.loadExportMenu('<s:message code="DATA_MONITOR.KEYWORD_MGMT"/>');
+	gridKeyword.loadHeader(false);
+	gridKeyword.initData('<s:message code="keyword.message.part_select"/>');
+</script>

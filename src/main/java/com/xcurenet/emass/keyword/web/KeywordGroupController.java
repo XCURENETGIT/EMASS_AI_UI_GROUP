@@ -7,7 +7,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import com.xcurenet.emass.keyword.service.KeywordService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
@@ -40,9 +39,6 @@ public class KeywordGroupController {
 	@Resource(name = "keywordGroupService")
 	public KeywordGroupService keywordGroupService;
 
-	@Resource(name = "keywordService")
-	public KeywordService keywordService;
-	
 	@Resource(name = "makeInfoService")
 	private MakeInfoService makeInfoService;
 
@@ -69,9 +65,6 @@ public class KeywordGroupController {
 	@ResponseBody
 	public XcnResponseVO updateKeywordGroup(final HttpServletRequest request, KeywordGroupVO group) throws Exception {
 		if (keywordGroupService.isGroupNameExist(group)) return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("java.already.insert.keywordGroup", request, group.getGroupName()));
-		else if (Common.isEquals(group.getCoreYn(),"Y") && ((keywordService.CoreKeywordCount() + keywordService.GroupKeywordCount(group)) > 20)){
-			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("keyword.coreKeyword.fulladd", request));
-		}
 		else {
 			int rs = keywordGroupService.updateKeywordGroup(group);
 			makeInfoService.addInfoKeyword();
@@ -91,7 +84,6 @@ public class KeywordGroupController {
 			KeywordGroupVO group = (KeywordGroupVO) JSONObject.toBean(data.getJSONObject(i), KeywordGroupVO.class);
 			groups.add(group);
 		}
-//		String coreCheck = keywordService.isCoreGroup(groups.get(0).getGroupSeq());
 		if (keywordGroupService.deleteKeywordGroup(groups) == 1) {
 			makeInfoService.addInfoKeyword();
 			return new XcnResponseVO(XcnRspCode.OK);

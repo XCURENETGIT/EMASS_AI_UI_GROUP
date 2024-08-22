@@ -83,8 +83,6 @@ public class KeywordController {
 	public XcnResponseVO insertKeyword(final HttpServletRequest request, KeywordVO keyword) throws Exception {
 		if (keywordService.isKeywordNameExist(keyword)) {
 			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("java.already.insert.keyword", request, keyword.getKeywordName()));
-		}else if (keywordService.CoreKeywordCount() >=20 && Common.isEquals(keywordService.isCoreGroup(keyword.getGroupSeq()),"Y")){
-			return new XcnResponseVO(XcnRspCode.OK_CUSTOM).setMessage(Prop.propFormat("keyword.coreKeyword.fulladd", request));
 		} else {
 			int rs = keywordService.insertKeyword(keyword);
 			makeInfoService.addInfoKeyword();

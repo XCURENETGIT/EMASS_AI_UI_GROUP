@@ -7,5 +7,4 @@ public class KeywordGroupVO {
 	private String groupSeq;
 	private String groupName;
 	private String useYn;
-	private String coreYn;
 }
