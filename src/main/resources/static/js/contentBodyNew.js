@@ -1382,7 +1382,7 @@ function setMessage(msg) {
     // 	$('#emassBody').html(message.msgNocontent);
     // }else getBody('');
 
-    if(bodySize_str == 0) {
+    if(msg.bodySize_str == 0) {
         $('#emassBody').html(message.msgNocontent);
         Highlight();
     }else getBody('',nvl(msg.bodyStr));
