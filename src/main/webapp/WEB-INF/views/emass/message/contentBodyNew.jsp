@@ -942,7 +942,7 @@
 
 							<div id="fileHelpDiv" style="position: absolute; width: 395px; height: 205px; display: none; background-color: white; z-index: 1040;border: 1px solid #555;">
 								<div class="fileHelpHeader" style="height:30px;background-color:black;color:#fff;padding-left:10px;line-height:30px;font-weight: bold;">
-									<div style="float:left;width:250px;">
+									<div style="float:left;width:400px;">
 										<i class="glyphicon glyphicon-question-sign"></i>&nbsp;<s:message code="java.message.file"/>
 									</div>
 									<div style="float:right;padding-right:8px;" class="fileHelpDivCloseArea">
