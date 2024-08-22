@@ -274,15 +274,15 @@
 
 		$(document).ready(function(){
 
-
-			// 본문 다운로드
-			$('#emassBodyDownload').click(function(){
-				saveOriginalText();
-			});
-
-			/* 운용자 본문 읽기 옵션 */
-			$('#bodyPretty').val(bodyPretty);
-			$('#detectPreview').val(detectPreview);
+			//
+			// // 본문 다운로드
+			// $('#emassBodyDownload').click(function(){
+			// 	saveOriginalText();
+			// });
+			//
+			// /* 운용자 본문 읽기 옵션 */
+			// $('#bodyPretty').val(bodyPretty);
+			// $('#detectPreview').val(detectPreview);
 
 
 
@@ -1111,32 +1111,32 @@
 								</div>
 							</div>
 							<div class="panel-body p12" style="padding:0;margin-bottom:70px !important;">
-								<div style="margin-bottom: 6px;"  id="detectPanel">
-									<span class="body_selectBtn"><s:message code="message.msg.body.format"/>: </span>
-									<%-- 본문포멧 --%>
-									<span class="select-xs">
-										<select name="bodyPretty" id="bodyPretty" class="body_select body_selectBtn">
-											<option value="N"><s:message code="message.msg.body.viewOrig"/></option>
-											<option value="Y"><s:message code="message.msg.body.pretty"/></option>
-										</select>
-									</span>
-									<%-- 검출내역 --%>
-									<span class="body_selectBtn"> <s:message code="message.msg.body.detction"/> : </span>
-									<span class="select-xs" style="margin-right:10px;">
-										<select name="detectPreview" id="detectPreview" class="body_select body_selectBtn">
-											<option value="N"> <s:message code="message.msg.body.viewAll"/> </option>
-											<option value="Y"><s:message code="message.msg.body.preview"/></option>
-										</select>
-									</span>
-									<span id="bodySizeOverText" style="display: none">
-										</br></br>
-										<b><s:message code="message.msg.body.size.over"/></b>
-										<span class="body_selectBtn" id="bodySizeOver" style="display: none">
-										</br>
-											<button id="emassBodyDownload" class="msg_button"> <s:message code="message.msg.body.download"/></button>
-									</span>
-									</span>
-								</div>
+<%--								<div style="margin-bottom: 6px;"  id="detectPanel">--%>
+<%--									<span class="body_selectBtn"><s:message code="message.msg.body.format"/>: </span>--%>
+<%--									&lt;%&ndash; 본문포멧 &ndash;%&gt;--%>
+<%--									<span class="select-xs">--%>
+<%--										<select name="bodyPretty" id="bodyPretty" class="body_select body_selectBtn">--%>
+<%--											<option value="N"><s:message code="message.msg.body.viewOrig"/></option>--%>
+<%--											<option value="Y"><s:message code="message.msg.body.pretty"/></option>--%>
+<%--										</select>--%>
+<%--									</span>--%>
+<%--									&lt;%&ndash; 검출내역 &ndash;%&gt;--%>
+<%--									<span class="body_selectBtn"> <s:message code="message.msg.body.detction"/> : </span>--%>
+<%--									<span class="select-xs" style="margin-right:10px;">--%>
+<%--										<select name="detectPreview" id="detectPreview" class="body_select body_selectBtn">--%>
+<%--											<option value="N"> <s:message code="message.msg.body.viewAll"/> </option>--%>
+<%--											<option value="Y"><s:message code="message.msg.body.preview"/></option>--%>
+<%--										</select>--%>
+<%--									</span>--%>
+<%--									<span id="bodySizeOverText" style="display: none">--%>
+<%--										</br></br>--%>
+<%--										<b><s:message code="message.msg.body.size.over"/></b>--%>
+<%--										<span class="body_selectBtn" id="bodySizeOver" style="display: none">--%>
+<%--										</br>--%>
+<%--											<button id="emassBodyDownload" class="msg_button"> <s:message code="message.msg.body.download"/></button>--%>
+<%--									</span>--%>
+<%--									</span>--%>
+<%--								</div>--%>
 								<div id="emassBody" style="min-height: 150px;overflow-x:auto;width: 100%;display:inline;">
 								</div>
 							</div>

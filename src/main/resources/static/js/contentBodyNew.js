@@ -685,7 +685,67 @@ function viewer_open(row, grid) {
     openMessageBodyPop(grid.id, msgid, '', bodySizeNum);
 }
 
-function getBody(userCharset,bodyStr){
+// function getBody(userCharset,bodyStr){
+//     if (isGroupMessenger()) {
+//         // $('#usridTr').show();
+//         $('#ipBusiNmTr').show();
+//         $('#headerBtn').prop('disabled', true);
+//         $('#originalBtn').prop('disabled', true);
+//         $('#usersInfoBtn').html('<span class="glyphicon glyphicon-user"></span>&nbsp;' + message.userinfo);
+//     } else {
+//         $('#headerBtn').prop('disabled', false);
+//         $('#originalBtn').prop('disabled', false);
+//         $('#usersInfoBtn').html(message.userinfo);
+//     }
+//     $('#fromTr').show();
+//     $('#toTr').show();
+//     $('#participantTr').hide();
+//     $('#rootmtrTr').hide();
+//
+//     //$('#small_txt').prop('disabled', false);
+//     //$('#large_txt').prop('disabled', false);
+//     if ($('#bodyEncoding').prop('disabled')) {
+//         $('#bodyEncoding').prop('disabled', false);
+//     }
+//
+//     detailFlag = false;
+//
+//     ui.onBody('content_body', 0, 0);
+//     ui.get({
+//         url: 'getEmassBodyStr.xcn',
+//         msgId: msgId,
+//         userCharset: userCharset,
+//         keywords: bodyStr,
+//         searchStrInput: parent.$('#searchStrInput').val(),
+//         menuId: 'MESSAGE_INFO',
+//         pMenuId: 'DATA_MONITOR',
+//         success: function (data, total) {
+//             if(data==null || nvl( data,'')=='') data = message.msgNocontent;
+//             if(data == BODY_SIZE_OVER) {
+//                 $('#bodySizeOver').show();
+//                 $('#bodySizeOverText').show();
+//             }else {
+//                 $('#bodySizeOver').hide();
+//                 $('#bodySizeOverText').hide();
+//                 if (isGroupMessenger() && (svc.indexOf('J') == 3 || svc.indexOf('L') == 3)) $('#emassBody').html(getAppendGroupBody());
+//                 else $('#emassBody').html(data + getAppendGroupBody());
+//
+//                 $("#emassBody").select();
+//                 Highlight();
+//                 PatternHighlight();
+//             }
+//         },
+//         error: function (status, message) {
+//             ui.alertMsg(message);
+//         },
+//         complete: function () {
+//             ui.off('content_body');
+//         }
+//     });
+// }
+
+
+function getBody(userCharset) {
     if (isGroupMessenger()) {
         // $('#usridTr').show();
         $('#ipBusiNmTr').show();
@@ -715,25 +775,16 @@ function getBody(userCharset,bodyStr){
         url: 'getEmassBodyStr.xcn',
         msgId: msgId,
         userCharset: userCharset,
-        keywords: bodyStr,
-        searchStrInput: parent.$('#searchStrInput').val(),
         menuId: 'MESSAGE_INFO',
         pMenuId: 'DATA_MONITOR',
         success: function (data, total) {
-            if(data==null || nvl( data,'')=='') data = message.msgNocontent;
-            if(data == BODY_SIZE_OVER) {
-                $('#bodySizeOver').show();
-                $('#bodySizeOverText').show();
-            }else {
-                $('#bodySizeOver').hide();
-                $('#bodySizeOverText').hide();
-                if (isGroupMessenger() && (svc.indexOf('J') == 3 || svc.indexOf('L') == 3)) $('#emassBody').html(getAppendGroupBody());
-                else $('#emassBody').html(data + getAppendGroupBody());
+            if (data == null || nvl(data, '') == '') data = message.msgNocontent;
 
-                $("#emassBody").select();
-                Highlight();
-                PatternHighlight();
-            }
+            if (isGroupMessenger() && (svc.indexOf('J') == 3 || svc.indexOf('L') == 3)) $('#emassBody').html(getAppendGroupBody());
+            else $('#emassBody').html(data + getAppendGroupBody());
+            $("#emassBody").select();
+            Highlight();
+            PatternHighlight();
         },
         error: function (status, message) {
             ui.alertMsg(message);

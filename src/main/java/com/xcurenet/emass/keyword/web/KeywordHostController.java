@@ -3,6 +3,7 @@ package com.xcurenet.emass.keyword.web;
 import com.xcurenet.annotations.AuditParentMenu;
 import com.xcurenet.audit.service.ParentMenu;
 import com.xcurenet.common.util.Common;
+import com.xcurenet.common.util.TimeUtil;
 import com.xcurenet.common.util.locale.Prop;
 import com.xcurenet.common.vo.XcnResponseVO;
 import com.xcurenet.common.vo.XcnRspCode;
@@ -297,7 +298,7 @@ public class KeywordHostController{
 //		log.info("attachnames {}",TimeUtil.print());
 
 
-//		TimeUtil.start();
+		TimeUtil.start();
 		//본문
 		EmsBodyVO emsBody = emsMessageService.getEmassBody(edcVO.getMsgid(), Common.getFirstAdminYn(session), Common.getAdminType(session));
 		if(Common.isNotEmpty(emsBody)) {
@@ -308,7 +309,7 @@ public class KeywordHostController{
 			}
 		}
 
-//		log.info("content {}",TimeUtil.print());
+		log.info("content {}", TimeUtil.print());
 
 //		TimeUtil.start();
 		//첨부파일 내용
