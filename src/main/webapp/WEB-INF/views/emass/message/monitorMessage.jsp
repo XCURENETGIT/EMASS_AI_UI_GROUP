@@ -364,18 +364,21 @@ function regexpInfoViewer(row, selectedGrid){
 		grid.colAdd('to', '<s:message code="condition.to"/>', 150, 'left', true, 'link', function(row, cell, value, columnDef, dataContext) {
 			var innOutInfo = grid.getValue(row, 'toInOutInfo');
 			var rtnVal = arrayToString(value);
-			return innOutInfo+rtnVal;
+			if (innOutInfo == '') return '';
+			else return innOutInfo+rtnVal;
 		});
 		grid.colAdd('cc', '<s:message code="condition.cc"/>', 150, 'left', true, 'link', function(row, cell, value, columnDef, dataContext) {
 			var innOutInfo = grid.getValue(row, 'ccInOutInfo');
 			
 			var rtnVal = arrayToString(value);
-			return innOutInfo+rtnVal;
+			if (innOutInfo == '') return '';
+			else return innOutInfo+rtnVal;
 		});
 		grid.colAdd('bcc', '<s:message code="condition.bcc"/>', 150, 'left', true, 'link', function(row, cell, value, columnDef, dataContext) {
 			var innOutInfo = grid.getValue(row, 'bccInOutInfo');
 			var rtnVal = arrayToString(value);
-			return innOutInfo+rtnVal;
+			if (innOutInfo == '') return '';
+			else return innOutInfo+rtnVal;
 		});
 		grid.colAdd('srcip', '<s:message code="condition.source"/> IP', 100, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
 			return value;

@@ -527,7 +527,8 @@ function drawGrid() {
 	grid.colAdd('to', '<s:message code="condition.to"/>', 150, 'left', true, 'link', function(row, cell, value, columnDef, dataContext) {
 		var innOutInfo = grid.getValue(row, 'toInOutInfo');
 		var rtnVal = arrayToString(value);
-		return innOutInfo+highlightSearchStr(rtnVal, "to");
+		if (innOutInfo == "") return '';
+		else return innOutInfo+highlightSearchStr(rtnVal, "to");
 	});
 	grid.colAdd('cc', '<s:message code="condition.cc"/>', 150, 'left', true, 'link', function(row, cell, value, columnDef, dataContext) {
 		var innOutInfo = grid.getValue(row, 'ccInOutInfo');

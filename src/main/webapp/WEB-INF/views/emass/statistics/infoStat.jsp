@@ -644,18 +644,21 @@
     grid2.colAdd('to', '<s:message code="condition.to"/>', 150, 'left', true, 'link', function(row, cell, value, columnDef, dataContext) {
         var innOutInfo = grid2.getValue(row, 'toInOutInfo');
         var rtnVal = arrayToString(value);
-        return innOutInfo+highlightSearchStr(rtnVal, "to");
+	    if (innOutInfo == '') return '';
+        else return innOutInfo+highlightSearchStr(rtnVal, "to");
     });
     grid2.colAdd('cc', '<s:message code="condition.cc"/>', 150, 'left', true, 'link', function(row, cell, value, columnDef, dataContext) {
         var innOutInfo = grid2.getValue(row, 'ccInOutInfo');
 
         var rtnVal = arrayToString(value);
-        return innOutInfo+highlightSearchStr(rtnVal, "cc");
+	    if (innOutInfo == '') return '';
+        else return innOutInfo+highlightSearchStr(rtnVal, "cc");
     });
     grid2.colAdd('bcc', '<s:message code="condition.bcc"/>', 150, 'left', true, 'link', function(row, cell, value, columnDef, dataContext) {
         var innOutInfo = grid2.getValue(row, 'bccInOutInfo');
         var rtnVal = arrayToString(value);
-        return innOutInfo+highlightSearchStr(rtnVal, "bcc");
+	    if (innOutInfo == '') return '';
+        else return innOutInfo+highlightSearchStr(rtnVal, "bcc");
     });
     grid2.colAdd('srcip', '<s:message code="condition.source"/> IP', 100, 'left', false, 'nomal', function(row, cell, value, columnDef, dataContext) {
         return highlightSearchStr(value, "srcip");
