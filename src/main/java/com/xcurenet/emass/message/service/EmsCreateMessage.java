@@ -361,7 +361,7 @@ public class EmsCreateMessage {
 		String resultStr = "";
 		resultStr += "<table class=\"subTable02 table-bordered\"> ";
 		resultStr += "	<colgroup> ";
-		resultStr += "		<col width=\"*\"> ";
+		resultStr += "		<col width=\"300\"> ";
 		resultStr += "		<col width=\"13%\"> ";
 		resultStr += "		<col width=\"20%\"> ";
 		resultStr += "	</colgroup>	 ";

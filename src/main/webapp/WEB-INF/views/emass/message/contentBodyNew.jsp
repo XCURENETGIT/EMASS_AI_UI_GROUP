@@ -982,7 +982,7 @@
 								<div id="attachDiv">
 									<table class="subTable02 table-bordered" id="fileTable">
 										<colgroup>
-											<col width="*">
+											<col width="300">
 											<col width="130">
 											<col width="130">
 											<col width="140">
