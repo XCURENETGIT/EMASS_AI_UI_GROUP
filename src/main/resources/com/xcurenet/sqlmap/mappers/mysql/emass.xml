@@ -498,7 +498,7 @@
 			A.HOST AS host,
 			A.DESCRIPTION AS description,
 			A.PROCESS_YN AS processYn,
-			A.DB_TYPE AS dbType,
+			A.TYPE AS type,
 			C.NATION_KOR AS nationKo,
 			C.NATION_ENG AS nationEn,
 			C.NATION_CD AS nationCd
@@ -511,14 +511,6 @@
 		A.NATION_CD = C.NATION_CD
 		WHERE A.HOST = #{host}
 	</select>
-
-	<select id="getHostNation" resultType="hostDescriptionVO" parameterType="string">
-		SELECT A.HOST AS host B.NATION_KOR AS nationKo, B.NATION_ENG AS nationEn
-		FROM EMS_HOST A, EMS_NATION B
-		WHERE A.NATION_CD = B.NATION_CD
-		AND   A.HOST = #{host}
-	</select>
-
 
 
 	<select id="isHostExist" resultType="int" parameterType="string">
