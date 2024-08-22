@@ -774,7 +774,7 @@ public class SolrCreateQuery {
 				}
 
 				else if (m_to.startsWith("\"") && m_to.endsWith("\"")) toStr.append(String.format("%s:%s %s:%s", TO, m_to, TNAME, m_to)).append(SPACE);
-				else toStr.append(String.format("%s:%s %s:%s", TO, createOrQueryQuotesAll(m_to), TNAME, createOrQueryQuotesAll(m_to))).append(SPACE);
+				else toStr.append(String.format("%s:%s %s:%s", TO, createOrQueryAsteriskAll(m_to), TNAME, createOrQueryAsteriskAll(m_to))).append(SPACE);
 				if (Common.isEquals(m_to_not, "Y")) queryStr.append(String.format("%s(%s) ", EXCEPT_QUERY, toStr.toString()));
 				else queryStr.append(String.format("%s(%s) ", AND_QUERY, toStr.toString()));
 			}
@@ -794,7 +794,7 @@ public class SolrCreateQuery {
 						ccStr.append(String.format("%s(%s)", AND_QUERY, tmp_list.get(k)));
 					}
 				} else if (m_cc.startsWith("\"") && m_cc.endsWith("\"")) ccStr.append(String.format("%s:%s %s:%s", CC, m_cc, CNAME, m_cc)).append(SPACE);
-				else ccStr.append(String.format("%s:%s %s:%s", CC, createOrQueryQuotesAll(m_cc), CNAME, createOrQueryQuotesAll(m_cc))).append(SPACE);
+				else ccStr.append(String.format("%s:%s %s:%s", CC, createOrQueryAsteriskAll(m_cc), CNAME, createOrQueryAsteriskAll(m_cc))).append(SPACE);
 				if (Common.isEquals(m_cc_not, "Y")) queryStr.append(String.format("%s(%s) ", EXCEPT_QUERY, ccStr.toString()));
 				else queryStr.append(String.format("%s(%s) ", AND_QUERY, ccStr.toString()));
 			}
@@ -813,7 +813,7 @@ public class SolrCreateQuery {
 						bccStr.append(String.format("%s(%s)", AND_QUERY, tmp_list.get(k)));
 					}
 				} else if (m_bcc.startsWith("\"") && m_bcc.endsWith("\"")) bccStr.append(String.format("%s:%s %s:%s", BCC, m_bcc, BNAME, m_bcc)).append(SPACE);
-				else bccStr.append(String.format("%s:%s %s:%s", BCC, createOrQueryQuotesAll(m_bcc), BNAME, createOrQueryQuotesAll(m_bcc))).append(SPACE);
+				else bccStr.append(String.format("%s:%s %s:%s", BCC, createOrQueryAsteriskAll(m_bcc), BNAME, createOrQueryAsteriskAll(m_bcc))).append(SPACE);
 				if (Common.isEquals(m_bcc_not, "Y")) queryStr.append(String.format("%s(%s) ", EXCEPT_QUERY, bccStr.toString()));
 				else queryStr.append(String.format("%s(%s) ", AND_QUERY, bccStr.toString()));
 			}
