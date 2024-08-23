@@ -188,7 +188,7 @@ CREATE TABLE IF NOT EXISTS UI_CHRONY(
 /* 서비스 */
 -- DELETE FROM UI_SERVICE;
 INSERT IGNORE INTO UI_SERVICE (`SERVICECD`, `SERVICENM_LV1`, `SERVICENM_LV2`, `SERVICENM_LV3`, `IN_OUT`, `SORT`, `USE_YN`, `MSGGRPCD`)  VALUES ('MP3-', '메일', 'POP3', '-', 'I', 1, 'Y', ''),
-     ('MSM-', '메일', 'SMTP', '-', 'O', 2, 'Y', ''),
+    ('MSM-', '메일', 'SMTP', '-', 'O', 2, 'Y', ''),
     ('MIM-', '메일', 'IMAP', '-', 'I', 3, 'Y', ''),
     ('WNVR', '웹메일', '네이버', '수신', 'I', 4, 'Y', ''),
     ('WNVS', '웹메일', '네이버', '발신', 'O', 5, 'Y', ''),
@@ -690,6 +690,7 @@ INSERT IGNORE INTO UI_SERVICE (`SERVICECD`, `SERVICENM_LV1`, `SERVICENM_LV2`, `S
     ('ECIS', '그룹웨어', 'Samsung cic', '발신', 'O', 501, 'Y', ''),
     ('DCCS', '편집기', 'Clip Champ', '발신', 'O', 502, 'Y', ''),
     ('DFGS', '편집기', 'Figma', '발신', 'O', 503, 'Y', '');
+
 
 UPDATE UI_SERVICE
 SET SERVICENM_LV2 = 'Microsoft Copilot'
