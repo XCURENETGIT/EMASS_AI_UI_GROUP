@@ -705,7 +705,6 @@ public class SolrCreateQuery {
 		if (Common.isEmpty(receive_option) && Common.isEmpty(receivers)) return this;
 		if (Common.isEquals(receive_option, "detail") && Common.isEmpty(m_to) && Common.isEmpty(m_cc) && Common.isEmpty(m_bcc)) return this;
 
-
 		if (Common.isEmpty(receive_option)) {
 			StringBuffer queryStr = new StringBuffer();
 
@@ -750,7 +749,7 @@ public class SolrCreateQuery {
 			} else {
 				for (int i = 0; i < RECEIVER.length; i++) {
 					if (receivers.startsWith("\"") && receivers.endsWith("\"")) queryStr.append(String.format("%s:%s", RECEIVER[i], receivers)).append(SPACE);
-					else queryStr.append(String.format("%s:%s", RECEIVER[i], createOrQueryQuotesAll(receivers))).append(SPACE);
+					else queryStr.append(String.format("%s:%s", RECEIVER[i], createOrQueryAsteriskAll(receivers))).append(SPACE);
 				}
 			}
 
