@@ -55,7 +55,7 @@ public interface SolrEdcService {
 
 	public List<SolrEdcVO> getCheckedList(List<SolrEdcVO> solrVo);
 
-//	public void getCurIdx();
+	public void printCurrentIndexsNames();
 
 
 }

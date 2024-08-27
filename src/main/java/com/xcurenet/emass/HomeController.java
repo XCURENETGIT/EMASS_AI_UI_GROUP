@@ -1136,8 +1136,12 @@ public class HomeController {
 		return "/emass/statistics/keywordNew";
 	}
 
-//	@RequestMapping(value = "/testtest")
-//	public void test() {
-//				solrEdcService.getCurIdx();
-//		}
+
+	/**
+	 * 현재 엘라스틱 커넥터 연결된 인덱스 확인용
+	 */
+	@RequestMapping(value = "/printIndexNames")
+	public void printIndexNames() {
+			solrEdcService.printCurrentIndexsNames();
+	}
 }

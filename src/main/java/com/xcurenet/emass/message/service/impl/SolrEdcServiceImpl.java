@@ -21,15 +21,14 @@ import lombok.extern.log4j.Log4j2;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.cxf.endpoint.ClientCallback;
+import org.apache.http.util.EntityUtils;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.SortClause;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.elasticsearch.ElasticsearchException;
-import org.elasticsearch.action.admin.cluster.state.ClusterStateRequest;
-import org.elasticsearch.action.admin.cluster.state.ClusterStateResponse;
-import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.Request;
+import org.elasticsearch.client.Response;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.*;
 import org.elasticsearch.script.Script;
@@ -42,15 +41,16 @@ import org.elasticsearch.search.aggregations.pipeline.BucketSortPipelineAggregat
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
-import org.jasypt.commons.CommonUtils;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.elasticsearch.core.*;
+import org.springframework.data.elasticsearch.core.AggregationsContainer;
+import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
+import org.springframework.data.elasticsearch.core.IndexOperations;
+import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.*;
 import org.springframework.stereotype.Service;
@@ -79,10 +79,6 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 	public static IndexCoordinates defaultIndex = IndexCoordinates.of("edc_*");
 	public static IndexCoordinates defaultHistoryIndex = IndexCoordinates.of("ems_search_history_*");
-
-//	@Autowired
-//	@Qualifier("elasticsearchTemplate")
-//	private ElasticsearchOperations operation; // 고수준의 connector 객체
 
 	@Resource
 	private ElasticsearchConfig elasticsearchConfig;
@@ -1111,6 +1107,21 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		result.sort((first, second) -> second.getCtime().compareTo(first.getCtime()));
 
 		return result;
+	}
+
+
+	public void printCurrentIndexsNames(){
+		try {
+			RestHighLevelClient elsRestHighLevelClient = null;
+			if(elsRestHighLevelClient == null) elsRestHighLevelClient  = elasticsearchConfig.elasticsearchClient();
+			Request request = new Request("GET", "/_cat/indices?v");
+			Response response = elsRestHighLevelClient.getLowLevelClient().performRequest(request);
+			// 응답 본문을 문자열로 변환
+			String responseBody = EntityUtils.toString(response.getEntity());
+			log.info("{}",responseBody);
+		}catch (IOException e){
+			log.info("{}",e);
+		}
 	}
 
 //		@Override
