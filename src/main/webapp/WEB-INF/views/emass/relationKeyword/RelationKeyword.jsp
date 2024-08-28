@@ -135,7 +135,7 @@
                 ui.alertMsg('<s:message code="common.msg.choose.deleteitem"/>');
                 return false;
             }
-            ui.confirmMsg('삭제 하겠습니까?', '', '', function (rs) {
+	        ui.confirmMsg('<s:message code="searchKeyword.msg.confirm.delete2"/>', '', '', function (rs) {
                 if (rs) {
                     gridSearchWordPattern.on();
                     ui.get({
