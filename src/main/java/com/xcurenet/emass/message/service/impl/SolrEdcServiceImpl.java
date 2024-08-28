@@ -182,10 +182,6 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 
 			sq.setParam("wt", "json");
 
-			if (!Common.isEmpty(sq.get("indics"))) defaultIndex = IndexCoordinates.of(sq.get("indics"));
-
-
-
 			/* 쿼리 조합을 위한 boolQuery */
 			BoolQueryBuilder boolQuery = new BoolQueryBuilder();
 
@@ -273,7 +269,12 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	//집계검색
 	public SearchHits<SolrEdcVO> aggsSearch(Query searchQuery, SolrQuery sq) {
 		searchQuery.setPageable(PageRequest.of(getPage(sq), sq.getRows()));
-		return operation.search(searchQuery, SolrEdcVO.class, defaultIndex);
+
+		IndexCoordinates indexCoordinates = defaultIndex;
+		if (!Common.isEmpty(sq.get("indics"))) indexCoordinates = IndexCoordinates.of(sq.get("indics"));
+
+
+		return operation.search(searchQuery, SolrEdcVO.class, indexCoordinates);
 	}
 
 	//일반검색
@@ -281,7 +282,10 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		log.info("searchAfter : {}", searchAfter);
 		searchQuery.setPageable(PageRequest.of(0, sq.getRows()));
 		searchQuery.setSearchAfter(searchAfter);
-		return operation.search(searchQuery, SolrEdcVO.class, defaultIndex);
+
+		IndexCoordinates indexCoordinates = defaultIndex;
+		if (!Common.isEmpty(sq.get("indics"))) indexCoordinates = IndexCoordinates.of(sq.get("indics"));
+		return operation.search(searchQuery, SolrEdcVO.class, indexCoordinates);
 	}
 
 

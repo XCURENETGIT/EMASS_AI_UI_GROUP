@@ -46,24 +46,12 @@ public class OwlnestController {
 		JSONObject param = Common.getParam(request);
 
 		String msgId = Common.nvl(param.get("msgId"));
-//		String targetDate = Common.nvl(param.get("targetDate"));
 		boolean subjectIsEmpty = Boolean.parseBoolean(Common.nvl(param.get("subjectIsEmpty")));
 		boolean isUnknownDocument = Boolean.parseBoolean(Common.nvl(param.get("isUnknownDocument")));
 		String tabId = Common.nvl(param.get("tabId"));
 
 		SolrEdcMessageVO solrVo = getSolrEdcMessage(msgId,subjectIsEmpty,isUnknownDocument,tabId, Common.getAdminId(request));
-//			List<SolrEdcVO> emassList = solrVo.getEmass();
-//		emassList.sort(new Comparator<SolrEdcVO>() {
-//			@Override
-//			public int compare(SolrEdcVO s1, SolrEdcVO s2) {
-//				if (Double.parseDouble(s1.getConfidence()) < Double.parseDouble(s2.getConfidence())) {
-//					return 1;
-//				} else if (Double.parseDouble(s1.getConfidence()) > Double.parseDouble(s2.getConfidence())) {
-//					return -1;
-//				}
-//				return 0;
-//			}
-//		});
+
 		long total = 0;
 		if(!Common.isEmpty(solrVo)) {
 			total = solrVo.getNumFound();
@@ -95,13 +83,7 @@ public class OwlnestController {
 		if(attach || all) sq.addMoreLikeThisField("attach");
 		if(subject || all){
 			if(!subjectIsEmpty) {
-				//			SolrEdcVO solrEdcVO = solrEdcService.getSelectOne(msgid, isUnknownDocument);
 				sq.addMoreLikeThisField("subject");
-				//			String subject = (solrEdcVO != null) ? solrEdcVO.getSubject() : null;
-				//			if (Common.isEmpty(subject))return null;
-				//			/* 검색어 정리*/
-				//			subject = owlnestService.getSearchQuery(subject);
-				//			query = String.format("+subject:(%s) -msgid:(%s)",subject,msgid);
 			} else {
 				sq.addMoreLikeThisField("host");
 				sq.addMoreLikeThisField("path");
@@ -122,7 +104,7 @@ public class OwlnestController {
 
 
 		sq.setSort("_score", SolrQuery.ORDER.desc);
-		sq.setParam("indics",indics);
+		sq.setParam("indics", isUnknownDocument ? "edc_u_*" : "edc_w_*");
 		sq.setParam("id",msgid);
 		SolrEdcMessageVO solrEdcMessageVO = solrEdcService.getEmassMessage(sq, adminId);
 
