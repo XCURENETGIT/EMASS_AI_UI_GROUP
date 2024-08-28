@@ -190,6 +190,7 @@
 			initServiceTypeList( );
 			initUserGroupList();
 			initInterUserGroupList();
+			initDateTimePicker('startdate','enddate');
 
             checkKeywordBtn();
             checkAttachBtn()
@@ -485,7 +486,6 @@
 		function initSetDisplay() {
 			//if(statType == "users") {
 			if(statType != "") {
-				$("#ctimeTr").css("display", "none");
 				$("#queryExecuteBtn").prop('innerHTML', '<i class="glyphicon glyphicon-search"></i>&nbsp;<s:message code="common.msg.select"/>');
 			}
 
@@ -569,7 +569,27 @@
 
 
 
-
+		function initDateTimePicker(sid,eid){
+			var dateObj = new Date();
+			$('#'+sid).datetimepicker({
+				format: 'YYYY-MM-DD HH:mm:ss',
+				locale: 'ko',
+				sideBySide: true,
+				showClose: true,
+				toolbarPlacement: 'bottom',
+				showTodayButton: true,
+				defaultDate: moment(new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()-7 ) )
+			});
+			$('#'+eid).datetimepicker({
+				format: 'YYYY-MM-DD HH:mm:ss',
+				locale: 'ko',
+				sideBySide: true,
+				showClose: true,
+				toolbarPlacement: 'bottom',
+				showTodayButton: true,
+				defaultDate: moment(new Date( dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), 23, 59, 59 ) )
+			});
+		}
 
 		function getServiceOptionChildren(serviceType) {
 			var result = '<option value="'+serviceType.serviceCd+'">'+serviceType.serviceNm+'</option>';
@@ -1060,9 +1080,9 @@
 								}
 								senderStr += senderArr[i].ltrim().rtrim(); // + "*";
 							}
-							addQueryText += "sender_str:(" + senderStr +")";
-							addQueryText += " sname:(" + senderStr +")";
-							addQueryText += " srcip:(" + senderStr +")";
+							addQueryText += "sender_str:(*" + senderStr +"*)";
+							addQueryText += " sname:(*" + senderStr +"*)";
+							addQueryText += " srcip:(*" + senderStr +"*)";
 							addQueryText += ")";
 						}
 						break;
@@ -1082,9 +1102,9 @@
 								receiveStr += receiveArr[i].ltrim().rtrim(); //+ "*";
 							}
 
-							addQueryText += "recvs:(" + receiveStr +")";
-							addQueryText += " recvs_name:(" + receiveStr +")";
-							addQueryText += " dstip:(" + receiveStr +")";
+							addQueryText += "recvs:(*" + receiveStr +"*)";
+							addQueryText += " recvs_name:(*" + receiveStr +"*)";
+							addQueryText += " dstip:(*" + receiveStr +"*)";
 							addQueryText += ")";
 						}
 						break;
@@ -1111,7 +1131,7 @@
 							}
 
 
-                            addQueryText += receiveEtcObj[i].value + ":(" + '"' + receiveEtcStr + '"' + ")" ;
+                            addQueryText += receiveEtcObj[i].value + ":(*"  + receiveEtcStr  + "*)" ;
 						}
 
 						if(receiveEtcObj.length > 0 && receiveEtcArr.length > 0) {
@@ -1603,24 +1623,12 @@
 									<th><s:message code="condition.period"/></th>
 									<td>
 										<div class="form-group form-inline" style="float:left;width:320px;">
-											<div class="input-group">
-												<div class="input-group date" id="startdate" style="width:150px;">
-													<input type="text" id="queryStartDt" class="input-xs form-control border-radius-none" />
-													<span class="input-group-addon startDateBtn border-radius-none" style="padding: 0px 5px;"> <span class="glyphicon glyphicon-calendar"></span>
-														</span>
-												</div>
-											</div>
-											<span>~</span>
-											<div class="input-group">
-												<div class="input-group date" id="enddate" style="width:150px;">
-													<input type="text" id="queryEndDt" class="input-xs form-control border-radius-none"/>
-													<span class="input-group-addon endDateBtn border-radius-none" style="padding: 0px 5px;"><span class="glyphicon glyphicon-calendar"></span></span>
-												</div>
-											</div>
+											<input type="text" id="startdate" class="input-xs form-control border-radius-none txt_center" style="padding: 1px 0px 0px 3px;border-radius: 0;font-size: 12px; width: 130px;"/>
+											<span style="padding:0 2px; padding-top: 4px;">-</span>
+											<input type="text" id="enddate" class="input-xs form-control border-radius-none txt_center"  style="padding: 1px 0px 0px 3px;border-radius: 0;font-size: 12px; width: 130px;"/>
 										</div>
 									</td>
 									<td><button type="button" class="btn btn-xs btn-success queryAdd" data-queryType="ctime">AND</button></td>
-									<td style="text-align: center;"><button type="button" class="btn btn-xs btn-info queryOr" data-queryType="ctime">OR</button></td>
 									<td></td>
 									<td>ctime</td>
 									<td></td>
