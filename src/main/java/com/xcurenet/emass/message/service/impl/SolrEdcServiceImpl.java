@@ -142,137 +142,217 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		return new SearchHistoryGroupVO(hits);
 	}
 
-	/* util_getList */
-	/* 공용검색 */
+
+
+	/**
+	 * ElasticSearch 공용검색
+	 * EMASS Content 모든 검색은 해당 메소드를 이용
+	 *
+	 * @param sq 쿼리
+	 * @return SearchHits<SolrEdcVO>
+	 * @throws SolrServerException
+	 * @throws IOException
+	 */
+	/**
+	 * ElasticSearch 공용검색
+	 * EMASS Content 모든 검색은 해당 메소드를 이용
+	 *
+	 * @param sq 쿼리
+	 * @return SearchHits<SolrEdcVO>
+	 * @throws SolrServerException
+	 * @throws IOException
+	 */
 	@Override
 	public SearchHits<SolrEdcVO> getList(SolrQuery sq) throws SolrServerException, IOException {
-			if(Common.isEmpty(operation)) operation = elasticsearchConfig.elasticsearchTemplate();
-		//sq.setParam("searchAfter", "20240607144748, 20240607144748.TQJA2VGNN3C25O7G6IM2LTTOA4LZ3227");
+		if (Common.isEmpty(operation)) operation = elasticsearchConfig.elasticsearchTemplate();
 		SearchHits<SolrEdcVO> searchHits = null;
 		try {
-			String bodysnippet = "N";
-			//solr parameter information
-			Iterator<String> params = sq.getParameterNamesIterator();
-			while (params.hasNext()) {
-				String name = params.next();
-				String value = sq.get(name);
-				if (Common.isEquals(name, "bodysnippet")) bodysnippet = value;
-				log.debug("{} : {}", name, value);
-			}
-
-			String sort = sq.getSortField();
-			if (Common.isEmpty(sort)) {
-				sq.setSort(SortClause.desc("ctime"));
-				sq.setSort(SortClause.desc("msgid"));
-			}
-			log.debug("[SORT] : {}", sq.getSortField());
-			log.debug("[QUERY] {}", sq.getQuery());
-			if (Common.isNotEmpty(sq.getFilterQueries()))
-				log.debug("[FILTER_QUERY] {}", StringUtils.join(sq.getFilterQueries(), ' '));
-
-
 			TimeUtil.start();
-			if (sq.getFields() == null) {
-				String tempDefaultFields = defaultFields;
-				if (Config.isOCR) tempDefaultFields = tempDefaultFields + ",ocr_attach_cnt";
-				if (Common.isEquals(bodysnippet, "Y")) tempDefaultFields = tempDefaultFields + ",body_snippet";
-				sq.setFields(tempDefaultFields);
-			}
-			log.debug("[Fields] {}", sq.getFields());
-
-			sq.setParam("wt", "json");
-
-			/* 쿼리 조합을 위한 boolQuery */
-			BoolQueryBuilder boolQuery = new BoolQueryBuilder();
-
-			/* set 필터 쿼리 */
-			String filterQuery = (null != sq.getFilterQueries()) ? String.join(" ", sq.getFilterQueries()) : "";
-
-			/* 일반 검색 쿼리 */
-			QueryStringQueryBuilder queryBuilder = QueryBuilders.queryStringQuery(sq.getQuery() + " " + filterQuery); // type PHRASE
-			List<String> fields = (Common.isNotEmpty(sq.get("fl"))) ? getSearchField(sq.get("fl")) : getDefaultSearchField(sq.get("qf"));
-//			queryBuilder.fields(fields);
-
-				log.info("f {}" , fields);
-
-
-
-			/* 유사 문서 쿼리 설정 moreLikeThis */
-			BoolQueryBuilder recommendQuery = QueryBuilders.boolQuery();
-			if (!Common.isEmpty(sq.getMoreLikeThisFields()) && !Common.isEmpty(sq.get("id"))) {
-				recommendQuery.should(QueryBuilders.moreLikeThisQuery(sq.getMoreLikeThisFields(), null, new MoreLikeThisQueryBuilder.Item[]{new MoreLikeThisQueryBuilder.Item(null, sq.get("id"))}).minTermFreq(1).minDocFreq(0).maxQueryTerms(20));
-				queryBuilder.fields(new HashMap<String, Float>() {{
-					put("svc", 0.1f);
-				}});
-				boolQuery.should(recommendQuery).minimumShouldMatch("0<-3%"); // 유사도 0%는 제외
-			}
-			boolQuery.should(queryBuilder);
-
-
-			/* 최종 조합 쿼리 */
-			BoolQueryBuilder complateQuery = QueryBuilders.boolQuery().must(boolQuery);
-
-			/* 수,발신자 조회시 */
-			if (!Common.isEmpty(sq.get("q"))) complateQuery.should(buildRecvAndSend(sq.get("q"))).minimumShouldMatch(1);
-
+			setElasticSearchQuery(sq); // sq 객체 쿼리 조합
 
 			log.debug("page : {}  rows : {}", getPage(sq), sq.getRows());
-
 			List<Object> searchAfter = null;
-			if(Common.isNotEmpty(sq.get("searchAfter"))) {
+			if (Common.isNotEmpty(sq.get("searchAfter"))) {
 				searchAfter = new ArrayList<>();
 				Collections.addAll(searchAfter, Common.toArray(sq.get("searchAfter"), ","));
 			}
-				NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
-					.withSourceFilter(new FetchSourceFilter(Common.toArray(sq.getFields(), ","), new String[]{"body", "attach"}))
-					.withFields(fields)
-					.withQuery(complateQuery)
-//					.withHighlightBuilder(highlightBuilder)
-					.withAggregations(getAggregations(sq))
-					.withAggregations(getAggregationsByPivot(sq))
-					.withTrackTotalHits(true)
-					.withTrackScores((Common.isEquals(sq.get("track_scores"), "true")) ? true : false)
-					.withSearchAfter(searchAfter)
-					.withTimeout(Duration.ofSeconds(100))
-					.build();
 
-
-			/* 정렬 */
-			List<SortClause> sorts = sq.getSorts();
-			if (!Common.isEmpty(sorts)) {
-				Sort searchSort = null;
-				for (SortClause s : sorts) {
-					SortOrder sortOrder = (Common.isEquals(s.getOrder(), SortOrder.DESC)) ? SortOrder.DESC : SortOrder.ASC;
-					if (s.getOrder() == SolrQuery.ORDER.desc) searchSort = Sort.by(s.getItem()).descending();
-					else searchSort = Sort.by(s.getItem()).ascending();
-					searchQuery.addSort(searchSort);
-				}
-			}
-
+			NativeSearchQuery searchQuery = customSearchRequest(sq,searchAfter);
 			if (Common.isEquals(sq.get("group"), "true")) searchHits = aggsSearch(searchQuery, sq); // 집계검색
 			else searchHits = searchAfter(searchQuery, sq, searchAfter); //일반검색 (페이징)
 
-			log.info("검색된 갯수 : " + searchHits.getSearchHits().size());
+
+			log.info("검색된 갯수 : {}", searchHits.getSearchHits().size());
 			printQueryLog(sq, searchHits);
 		} catch (ElasticsearchException e) {
 			log.info("[QUERY_RESULT] TOTAL_COUNT : {}, QUERY_TIME : {}", 0, TimeUtil.print());
 		} catch (Exception e) {
-			log.error("{}", e);
+			log.error("", e);
 		}
 
 		return searchHits;
 	}
 
-	/* 쿼리 메서드 정리 */
 
+	/* 쿼리 메서드 정리 */
+	public NativeSearchQuery customSearchRequest(SolrQuery sq,List<Object> searchAfter){
+		/* 쿼리 조합을 위한 boolQuery */
+		BoolQueryBuilder boolQuery = new BoolQueryBuilder();
+
+		/* set 필터 쿼리 */
+		String filterQuery = (null != sq.getFilterQueries()) ? String.join(" ", sq.getFilterQueries()) : "";
+
+		/* 일반 검색 쿼리 */
+		QueryStringQueryBuilder queryBuilder = QueryBuilders.queryStringQuery(sq.getQuery() + " " + filterQuery);
+		List<String> fields = (Common.isNotEmpty(sq.get("fl"))) ? getSearchField(sq.get("fl")) : getDefaultSearchField(sq.get("qf"));
+
+		log.info("f {}", fields);
+		/* 유사 문서 쿼리 설정 moreLikeThis */
+		recommendQuery(queryBuilder, boolQuery, sq);
+
+		/* 최종 조합 쿼리 (쿼리 조합 순서 변경 금지 ) */
+		boolQuery.should(queryBuilder);
+		BoolQueryBuilder complateQuery = QueryBuilders.boolQuery().must(boolQuery);
+		/* 수,발신자 조회시 */
+		if (!Common.isEmpty(sq.get("q"))) complateQuery.should(buildRecvAndSend(sq.get("q"))).minimumShouldMatch(1);
+
+		NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
+				.withSourceFilter(new FetchSourceFilter(Common.toArray(sq.getFields(), ","), new String[]{"body", "attach"}))
+				.withFields(fields)
+				.withQuery(complateQuery)
+				.withAggregations(getAggregations(sq))
+				.withAggregations(getAggregationsByPivot(sq))
+				.withTrackTotalHits(true)
+				.withTrackScores((Common.isEquals(sq.get("track_scores"), "true")) ? true : false)
+				.withSearchAfter(searchAfter)
+				.withTimeout(Duration.ofSeconds(100))
+				.build();
+		/* 정렬 */
+		List<SortClause> sorts = sq.getSorts();
+		if (!Common.isEmpty(sorts)) {
+			Sort searchSort;
+			for (SortClause s : sorts) {
+				if (s.getOrder() == SolrQuery.ORDER.desc) searchSort = Sort.by(s.getItem()).descending();
+				else searchSort = Sort.by(s.getItem()).ascending();
+				searchQuery.addSort(searchSort);
+			}
+		}
+		return searchQuery;
+	}
+
+
+	/**
+	 * 유사도 검색 쿼리
+	 * @param queryBuilder
+	 * @param boolQuery
+	 * @param sq
+	 */
+	public void recommendQuery(QueryStringQueryBuilder queryBuilder, BoolQueryBuilder boolQuery, SolrQuery sq) {
+		BoolQueryBuilder recommendQuery = QueryBuilders.boolQuery();
+		if (!Common.isEmpty(sq.getMoreLikeThisFields()) && !Common.isEmpty(sq.get("id"))) { // 유사 문서 추천
+			int minTermFreq = Common.nvz(sq.get("minTermFreq"), 1);
+			int maxQueryTerms = Common.nvz(sq.get("maxQueryTerms"), 20);
+			int minDocFreq = Common.nvz(sq.get("minDocFreq"), 1);
+
+			recommendQuery.should(QueryBuilders.moreLikeThisQuery(sq.getMoreLikeThisFields(), null, new MoreLikeThisQueryBuilder.Item[]{new MoreLikeThisQueryBuilder.Item(null, sq.get("id"))})
+					.minTermFreq(minTermFreq)
+					.minDocFreq(minDocFreq)
+					.maxQueryTerms(maxQueryTerms));
+			queryBuilder.fields(new HashMap<>() {{
+				put("svc", 0.1f);
+			}});
+			boolQuery.should(recommendQuery).minimumShouldMatch("0<-3%"); // 유사도 0%는 제외
+		}else if (!Common.isEmpty(sq.getMoreLikeThisFields()) && !Common.isEmpty(sq.get("text"))){
+			recommendQuery.must(QueryBuilders.moreLikeThisQuery(sq.getMoreLikeThisFields(), sq.getParams("text"), null)
+					.minTermFreq(1)
+					.minDocFreq(1)
+					.maxQueryTerms(20));
+			queryBuilder.fields(new HashMap<>() {{
+				put("svc", 0.1f);
+			}});
+			boolQuery.must(recommendQuery).minimumShouldMatch("0<-3%"); // 유사도 0%는 제외
+
+		}
+	}
+
+	/**
+	 * setQuery
+	 *
+	 * @param sq
+	 */
+	public void setElasticSearchQuery(SolrQuery sq) {
+		if (Common.isEmpty(sq.getSortField())) setDefaultSortField(sq); // sortField 없을시 default
+		printSqObjLog(sq); // log 출력
+		setSearchField(sq);
+		sq.setParam("wt", "json");
+	}
+
+	/**
+	 * setSearchField
+	 *
+	 * @param sq
+	 */
+	public void setSearchField(SolrQuery sq) {
+		String bodysnippet = getBodySnippet(sq); //bodysnippet 사용정보
+		if (sq.getFields() == null) {
+			String tempDefaultFields = defaultFields;
+			if (Config.isOCR) tempDefaultFields = tempDefaultFields + ",ocr_attach_cnt";
+			if (Common.isEquals(bodysnippet, "Y")) tempDefaultFields = tempDefaultFields + ",body_snippet";
+			sq.setFields(tempDefaultFields);
+		}
+	}
+
+
+	/**
+	 * 기본 sort 필드 (기본 2개여야함)
+	 *
+	 * @param sq
+	 */
+	public void setDefaultSortField(SolrQuery sq) {
+		sq.setSort(SortClause.desc("ctime"));
+		sq.setSort(SortClause.desc("msgid"));
+	}
+
+
+
+
+	/**
+	 * Print Search Sq Search Object log
+	 *
+	 * @param sq
+	 */
+	public void printSqObjLog(SolrQuery sq) {
+		log.debug("[SORT] : {}", sq.getSortField());
+		log.debug("[QUERY] {}", sq.getQuery());
+		if (Common.isNotEmpty(sq.getFilterQueries())) {
+			log.debug("[FILTER_QUERY] {}", StringUtils.join(sq.getFilterQueries(), ' '));
+		}
+		log.debug("[Fields] {}", sq.getFields());
+	}
+
+
+	/***
+	 * BodySnippet
+	 * @param sq
+	 * @return
+	 */
+	public String getBodySnippet(SolrQuery sq) {
+		String bodysnippet = "N";
+		Iterator<String> params = sq.getParameterNamesIterator();
+		while (params.hasNext()) {
+			String name = params.next();
+			String value = sq.get(name);
+			if (Common.isEquals(name, "bodysnippet")) bodysnippet = value;
+			log.debug("{} : {}", name, value);
+		}
+		return bodysnippet;
+	}
 
 	//집계검색
 	public SearchHits<SolrEdcVO> aggsSearch(Query searchQuery, SolrQuery sq) {
 		searchQuery.setPageable(PageRequest.of(getPage(sq), sq.getRows()));
-
 		IndexCoordinates indexCoordinates = defaultIndex;
 		if (!Common.isEmpty(sq.get("indics"))) indexCoordinates = IndexCoordinates.of(sq.get("indics"));
-
 
 		return operation.search(searchQuery, SolrEdcVO.class, indexCoordinates);
 	}
@@ -281,7 +361,6 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 	public SearchHits<SolrEdcVO> searchAfter(Query searchQuery, SolrQuery sq, List<Object> searchAfter) {
 		log.info("searchAfter : {}", searchAfter);
 		searchQuery.setPageable(PageRequest.of(0, sq.getRows()));
-		searchQuery.setSearchAfter(searchAfter);
 
 		IndexCoordinates indexCoordinates = defaultIndex;
 		if (!Common.isEmpty(sq.get("indics"))) indexCoordinates = IndexCoordinates.of(sq.get("indics"));
