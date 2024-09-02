@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -89,17 +90,13 @@ public class OwlnestController {
 				sq.addMoreLikeThisField("path");
 			}
 		}
-		String format = (!isUnknownDocument) ? "edc_w_" : "edc_u_" ;
-		String[] indics = solrEdcService.getExistIndics(msgid,format);
-		DateTimeFormatter formatterYyyymm = DateTimeFormatter.ofPattern("yyyyMM");
-		DateTimeFormatter formatterYyyymmdd = DateTimeFormatter.ofPattern("yyyyMMdd");
-		LocalDate toDt = YearMonth.parse(indics[0].substring(6,indics[0].length()), formatterYyyymm).atDay(1);
-		LocalDate fromDt = (indics[1] != null) ?  YearMonth.parse(indics[1].substring(6,indics[1].length()), formatterYyyymm).atDay(1) :   YearMonth.parse(indics[0].substring(6,indics[0].length()), formatterYyyymm).atDay(1);
 
-		toDt = toDt.withDayOfMonth(toDt.getMonth().length(toDt.isLeapYear()));
-		String toDtStr =  toDt.format(formatterYyyymmdd);
-		String fromDtStr =  fromDt.format(formatterYyyymmdd);
-		String query = String.format("+ctime:[%s000000 TO %s235959] ", fromDtStr, toDtStr);
+		LocalDate endDt = LocalDate.parse(msgid.substring(0,8),  DateTimeFormatter.ofPattern("yyyyMMdd"));
+		LocalDate startDt = endDt.minusMonths(1);
+
+		String startData = startDt.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+		String endData = endDt.format( DateTimeFormatter.ofPattern("yyyyMMdd"));
+		String query = String.format("+ctime:[%s000000 TO %s235959] ", startData, endData);
 		sq.setQuery(query);
 
 
