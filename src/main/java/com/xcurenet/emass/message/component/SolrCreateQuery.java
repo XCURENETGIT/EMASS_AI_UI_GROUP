@@ -730,6 +730,29 @@ public class SolrCreateQuery {
 					List<String> tmp_list2=new ArrayList<>();
 					for (int j = 0; j < receiver.length; j++) {
 						String tmp_list="";
+						for (int i = 0; i < RECEIVER.length; i++) {
+							tmp_list+=String.format("%s:(%s)", RECEIVER[i], "*" + receiver[j] + "*");
+							tmp_list+=" ";
+						}
+						tmp_list2.add(tmp_list);
+					}
+					for (int k=0; k<tmp_list2.size(); k++){
+						queryStr.append(String.format("%s(%s)", AND_QUERY, tmp_list2.get(k)));
+					}
+				}
+				else {
+					for (int i = 0; i < RECEIVER.length; i++) {
+						if (receivers.startsWith("\"") && receivers.endsWith("\"")) queryStr.append(String.format("%s:%s", RECEIVER[i], receivers)).append(SPACE);
+						else queryStr.append(String.format("%s:%s", RECEIVER[i], createOrQueryAsteriskAll(receivers))).append(SPACE);
+					}
+				}
+			} else {
+				if(receivers.contains(",")) { //(임시) 여러개 검색시 AND절 + LIKE 절 처리
+					String[] receiver = receivers.split(",");
+
+					List<String> tmp_list2=new ArrayList<>();
+					for (int j = 0; j < receiver.length; j++) {
+						String tmp_list="";
 						for (int i = 0; i < RECEIVER_NOTUPPER.length; i++) {
 							tmp_list+=String.format("%s:(%s)", RECEIVER_NOTUPPER[i], "*" + receiver[j] + "*");
 							tmp_list+=" ";
@@ -745,11 +768,6 @@ public class SolrCreateQuery {
 						if (receivers.startsWith("\"") && receivers.endsWith("\"")) queryStr.append(String.format("%s:%s", RECEIVER_NOTUPPER[i], receivers)).append(SPACE);
 						else queryStr.append(String.format("%s:%s", RECEIVER_NOTUPPER[i], createOrQueryAsteriskAll(receivers))).append(SPACE);
 					}
-				}
-			} else {
-				for (int i = 0; i < RECEIVER.length; i++) {
-					if (receivers.startsWith("\"") && receivers.endsWith("\"")) queryStr.append(String.format("%s:%s", RECEIVER[i], receivers)).append(SPACE);
-					else queryStr.append(String.format("%s:%s", RECEIVER[i], createOrQueryAsteriskAll(receivers))).append(SPACE);
 				}
 			}
 
