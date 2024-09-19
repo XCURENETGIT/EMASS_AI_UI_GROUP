@@ -205,61 +205,50 @@
 	<script>
 
 
-		function viewer_open(row, bodySize) {
+		function viewer_open( row, bodySize ){
 
-			var msgid = grid1.getValue(row, 'msgid');
+			var msgid = grid1.getValue(row, 'msgId');
 
-			openMessageBodyPopSize(grid1.id, msgid, "");
+			openMessageBodyPop(grid1.id, msgid, "");
 			var readYn = grid1.getValue(row, 'readYn');
 			grid1.setValue(row, grid1.ColIndex('readYn'), 'Y');
-			grid1.Select(row, 0);
+			grid1.Select(row,0);
 		}
 
-		function viewer_newOpen(row, bodySize) {
+		function viewer_newOpen(row, bodySize){
 
-			var msgid = grid1.getValue(row, 'msgid');
-			openMessageBodyPopSize(grid1.id, msgid, "");
+			var msgid = grid1.getValue(row, 'msgId');
+			openMessageBodyPop(grid1.id, msgid, "");
 
 			var readYn = grid1.getValue(row, 'readYn');
 			grid1.setValue(row, grid1.ColIndex('readYn'), 'Y');
 		}
 
-		function prevMsg() {
+		function prevMsg( ) {
 			var row = 0;
-			if (grid1.Row > 0) {
+			if( grid1.Row > 0 ) {
 				row = --grid1.Row;
 				viewer_open(row);
-				grid1.Select(row, 0);
+				grid1.Select(row,0);
 				return true;
 			}
 			return false;
 		}
 
-		function nextMsg() {
+		function nextMsg( ) {
 
 			var row = 0;
-			if (grid1.Row < grid1.Rows - 1) {
+			if( grid1.Row < grid1.Rows - 1 ) {
 				row = ++grid1.Row;
 				viewer_open(row);
-				grid1.Select(row, 0);
-				if (grid1.Row == grid1.Rows - 2) {
-					getList(true);
+				grid1.Select(row,0);
+				if( grid1.Row == grid1.Rows - 2  ){
+					getList( true );
 				}
 				return true;
 			}
 			return false;
 		}
-
-		// function viewer_open(row, bodySize ){
-		// 	var msgid = grid1.getValue(row, 'msgid');
-		//
-		// 	openMessageBodyPop("", msgid, msgid);
-		//
-		// 	var readYn = grid.getValue(row, 'readYn');
-		// 	grid1.setValue(row, grid.ColIndex('readYn'), 'Y');
-		// 	// grid1.Select(row, 0);
-		// }
-
 
 		var grid1 = new Xgrid('basicStatListGrid', contextRoot);
 		grid1.autoNumber();

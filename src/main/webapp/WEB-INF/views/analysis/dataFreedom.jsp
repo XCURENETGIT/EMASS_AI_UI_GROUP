@@ -430,9 +430,9 @@
 		                            style="width: 250px;height:26px;" placeholder="<s:message code="analysis.freedom.ui.exam26"/>"
 		                            data-toggle="tooltip" data-placement="top" title="<s:message code="analysis.freedom.ui.exam26"/>"/></span>
 		<span id="inputDate" style="display:none;">
-	<input type="text" id="startdate" style="width: 110px;" class="txt_center">
+	<input type="text" id="startDate" name="startDate" style="width: 110px;" class="txt_center startDate">
 			<span class="hyphen">~</span>
-			<input type="text" id="enddate" style="width: 110px;" class="txt_center">
+			<input type="text" id="endDate" name="endDate" style="width: 110px;" class="txt_center endDate">
 
 			</span>
 		<span id="inputServiceType" style="display:none;">
@@ -974,7 +974,7 @@
                 });
             }
 
-	        $('#startDate' + tabIdx).datetimepicker({
+	        $('.startDate' + tabIdx).datetimepicker({
 		        format: 'YYYY-MM-DD',
 		        locale: 'ko',
 		        showClose: true,
@@ -982,7 +982,7 @@
 		        toolbarPlacement: 'bottom',
 		        defaultDate: moment(new Date()),
 	        });
-	        $('#endDate' + tabIdx).datetimepicker({
+	        $('.endDate' + tabIdx).datetimepicker({
 		        format: 'YYYY-MM-DD',
 		        locale: 'ko',
 		        showClose: true,
