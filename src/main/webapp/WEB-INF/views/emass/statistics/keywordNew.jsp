@@ -66,6 +66,27 @@
 			});
 
 
+			$('#dateYesterday').click(function () {
+				$('#startdate').val(addDay(-1));
+				$('#enddate').val(addDay(-1));
+			});
+
+			$('#dateToday').click(function (e) {
+				$('#startdate').val(addDay(0));
+				$('#enddate').val(addDay(0));
+			});
+
+			$('#dateWeek').click(function () {
+				$('#startdate').val(addDay(-7));
+				$('#enddate').val(addDay(0));
+			});
+
+			$('#dateMonth').click(function () {
+				$('#startdate').val(addMonth2(-1));
+				$('#enddate').val(addDay(0));
+			});
+
+
 		});
 
 
@@ -118,6 +139,13 @@
 			<div id="startDatePicker"><input type="text" id="startdate" name='startdate'class="txt_center"  style="width: 110px;">
 				<span class="hyphen">~</span></div>
 			<div id="enddatepicker"><input type="text" id="enddate" name='enddate'class="txt_center"  style="width: 110px;"></div>
+
+			<div class="form-group optiotab">
+				<button type="button" id="dateYesterday" accesskey="Y" style="width:85px;"><s:message code="condition.yesterday"/></button>
+				<button type="button" id="dateToday" accesskey="T" style="width:85px;"><s:message code="condition.today"/></button>
+				<button type="button" id="dateWeek" accesskey="W"><s:message code="condition.week" arguments="1" argumentSeparator="|"/></button>
+				<button type="button" id="dateMonth" accesskey="M"><s:message code="condition.month" arguments="1" argumentSeparator="|"/></button>
+			</div>
 
 		<%--						<label for="startdatepicker"></label>--%>
 			<%--						<div class='input-group date' id='startdatepicker'>--%>

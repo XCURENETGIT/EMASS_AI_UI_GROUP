@@ -46,7 +46,7 @@
 
 		$('#dateYesterday').click(function () {
 			$('#startdate').val(addDay(-1));
-			$('#endate').val(addDay(-1));
+			$('#enddate').val(addDay(-1));
 		});
 
 		$('#dateToday').click(function (e) {

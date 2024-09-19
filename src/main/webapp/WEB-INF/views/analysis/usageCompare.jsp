@@ -84,7 +84,7 @@ $(document).ready(function(){
 		$("select option[value='w']").prop("selected", false); 
 		
 		$('#startDate').val(addDay(-1));
-		$('#endDate').val(addDay(0));
+		$('#endDate').val(addDay(-1));
 	});
 
 	$('#dateToday').click(function(e){
