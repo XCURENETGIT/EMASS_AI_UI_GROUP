@@ -554,6 +554,9 @@
         .searchHelpDivCloseBtn .glyphicon-remove:before {
             color: white !important;
         }
+        .regexSearchCloseBtn .glyphicon-remove:before {
+            color: white !important;
+        }
 
 
 

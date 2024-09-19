@@ -358,7 +358,7 @@
 			<%-- URL TOP --%>
 			<div class="col-lg-4">
 				<div class="headerLine">
-					<h3><s:message code="DATA_ANALYSIS.STAT_URL_TOP"/> 20
+					<h3>PATH TOP 20
 					<button class="btn btn-sm btn-default" name="depthDisplay" style="margin-left: 20px;">
 						<span id="urlSearchText"></span>
 					</button>
@@ -446,6 +446,7 @@
 	});
 	grid1.loadHeader(false);
 	grid1.initData('<s:message code="common.msg.search.click"/>');
+	grid1.loadExportMenu('<s:message code="DATA_STAT.STAT_KEYWORDHOST"/> - HOST TOP 10');
 	grid1.onClick = function () {
 		host = grid1.getValue(grid1.Row, 'name');
 		console.log('host: ' + host)
@@ -456,11 +457,13 @@
 	/* URL TOP */
 	var grid2 = new Xgrid('urlListGrid', contextRoot);
 	grid2.autoNumber();
-	grid2.colAdd("name", 'URL', 230, "left", false, 'link');
+
+	grid2.colAdd("name", 'PATH', 230, "left", false, 'link');
 	grid2.colAdd("count", '<s:message code="bodyview.total"/>', 130, "right", false, 'nomal', function (row, cell, value, columnDef, dataContext) {
 		return value.comma() + "<s:message code="selectCodeAll.items"/>";
 	});
 	grid2.loadHeader(false);
+	grid2.loadExportMenu('<s:message code="DATA_STAT.STAT_KEYWORDHOST"/> - PATH TOP 20');
 	// grid2.loadPageSize();
 	grid2.initData('<s:message code="common.msg.search.click"/>');
 	grid2.onClick = function () {
@@ -478,6 +481,7 @@
 	});
 	grid3.loadHeader(false);
 	//	grid3.loadPageSize();
+	grid3.loadExportMenu('<s:message code="DATA_STAT.STAT_KEYWORDHOST"/> - <s:message code="DATA_ANALYSIS.STAT_KEYWORD_TOP"/> 20');
 	grid3.initData('<s:message code="common.msg.search.click"/>');
 	grid3.onClick = function () {
 		// HOST
@@ -512,6 +516,7 @@
 		value = highlightSearchStr(value, "subject");
 		return value;
 	});
+	grid4.loadExportMenu('<s:message code="DATA_STAT.STAT_KEYWORDHOST"/> - <s:message code="DATA_ANALYSIS.STAT_KEYWORD_DETAIL_TOP"/> 20');
 	grid4.loadHeader(false);
 	// grid4.loadPageSize();
 	grid4.changePageSize = function (cnt) {
@@ -662,7 +667,7 @@
 			success: function (data, total) {
 				var keywords = data.facet.filter(obj => coreKeyword.split(',').includes(obj.name));
 				grid3.setData(keywords);
-				$('#keywordSearchText').text('<s:message code="DATA_ANALYSIS.STAT_WORD_HOST"/> : ' + getTruncateSearchText(searchHosts) + " > " + '<s:message code="DATA_ANALYSIS.STAT_WORD_URL"/> : ' + getTruncateSearchText(searchPaths));
+				$('#keywordSearchText').text('<s:message code="DATA_ANALYSIS.STAT_WORD_HOST"/> : ' + getTruncateSearchText(searchHosts) + " > " + 'PATH : ' + getTruncateSearchText(searchPaths));
 				var kwds = '';
 				if (keywords != '' && keywords.length > 0) {
 					kwds = keywords.map(obj => obj.name).join(',');
@@ -692,7 +697,7 @@
 			hosts: searchHosts,
 			paths: searchPaths,
 			success: function (data, total) {
-				$('#messageSearchText').text('<s:message code="DATA_ANALYSIS.STAT_WORD_HOST"/> : ' + getTruncateSearchText(searchHosts) + " > " + '<s:message code="DATA_ANALYSIS.STAT_WORD_URL"/> : ' + getTruncateSearchText(searchPaths) + " > " + '<s:message code="DATA_ANALYSIS.STAT_WORD_KEYWORD"/> : ' + getTruncateSearchText(searchKeywords));
+				$('#messageSearchText').text('<s:message code="DATA_ANALYSIS.STAT_WORD_HOST"/> : ' + getTruncateSearchText(searchHosts) + " > " + 'PATH : ' + getTruncateSearchText(searchPaths) + " > " + '<s:message code="DATA_ANALYSIS.STAT_WORD_KEYWORD"/> : ' + getTruncateSearchText(searchKeywords));
 				grid4.setData(data.emass);
 			},
 			error: function (status, message) {

@@ -539,7 +539,6 @@
         var dat = grid1.getRowData( grid1.Row );
         chartDat[tabID] = dat;
         gridObj.loadExportMenu('<s:message code="stat.detail.ocr.list"/> ( ' + name + tabName + ' )');
-        gridObj.loadPageSize();
         gridObj.changePageSize = function(cnt){
             if(rowKey == 'totalOCR' || rowKey == 'noOCR' || rowKey == 'detectOCR'|| liTab.includes("D") ){
                 rowKey = rowKey.substr(0,3);

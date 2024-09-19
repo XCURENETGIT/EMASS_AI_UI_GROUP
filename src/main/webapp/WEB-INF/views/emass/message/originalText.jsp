@@ -8,6 +8,9 @@
 <%@page import="com.xcurenet.emass.message.service.EmsBodyVO"%>
 <%@ page import="com.xcurenet.emass.message.service.EmsMessageService" %>
 <%@ page import="com.xcurenet.common.util.Common" %>
+<%@ page import="com.xcurenet.common.parser.mime.MimeParser" %>
+<%@ page import="com.xcurenet.common.parser.mime.MimeVo" %>
+<%@ page import="org.apache.commons.io.IOUtils" %>
 <%@ include file="/WEB-INF/fragments/baseScript.jsp"%>
 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -23,6 +26,9 @@
 	String body = "";
 	String title = "";
 	String subTitle = "";
+	String parseBody = "";
+	boolean isMimeBody = false;
+
 	String no_data = "";
 	if( Common.isEquals(type, "header")){
 		title = Prop.propFormat("common.msg.header", Common.getLocale(session));
@@ -50,6 +56,16 @@
 			String charset = DetectCharset.getCharset(emsBody.getBody());
 			if (charset == null || (charset != "UTF-8" && charset != "EUC-KR")) charset = default_encoding;
 			body = Common.toString(emsBody.getBody(), charset);
+
+			if (emsBody.getSvc().indexOf("EMM") > -1) {
+				/* KNOX인 데이터는 mimeParser로 해석 */
+				MimeParser mimeParser = new MimeParser(emsBody.getBody());
+				if(Common.isEquals(mimeParser.getMimeBodyVo().getContentTransferEncoding(),"base64")){
+					MimeVo mimeVo = mimeParser.getMimeBodyVo();
+					parseBody = IOUtils.toString(mimeVo.getBody(), "UTF-8");
+					isMimeBody = true;
+				}
+			}
 		}
 	}
 %>
@@ -70,6 +86,17 @@ var msgId = '<%=msgId%>';
 var no_data = '<%=no_data%>';
 
 $(document).ready(function(){
+
+	$('input[name="bodyType"][value="H"]').prop('checked', true);
+	$('#bodyDisplay').hide();
+	$('#parseBodyDisplay').show();
+
+	$('[name=bodyType]').change(function () {
+		var val = $(this).val();
+		bodyPrint(val);
+	});
+
+
 	$('#saveBtn').click(function(){
         if (adminMenu != "ALL" && adminMenu.indexOf("DS") < 0) {
             alert(contentBodyDivJS.noAuthority);
@@ -91,6 +118,16 @@ function setBodyHighLight( defaultText, type){
 	for ( var i=0 ; i < defaultText.length ; i++ ) {
 		if ( defaultText[i] == '' ) continue;
 		$( body_obj ).highlight(defaultText[i], 'B'+type);
+	}
+}
+
+function bodyPrint(val) {
+	if (val == 'H') {
+		$('#bodyDisplay').hide();
+		$('#parseBodyDisplay').show();
+	} else {
+		$('#parseBodyDisplay').hide();
+		$('#bodyDisplay').show();
 	}
 }
 jQuery.fn.highlight = function(pat, type) {
@@ -182,8 +219,45 @@ function saveOriginalText( )
 				</div>
 				<div class="row"  style="border-top: 1px solid #ddd; height: calc(100% - 40px); overflow: visible;">
 					<div class="col-xs-12" style="height: 100%;">
-						<div class="panel-body text-md" style="min-height:500px;white-space: pre-wrap; -ms-word-break: break-all; -ms-word-wrap: break-word;"><xmp><%=body%></xmp></div>
-						<iframe id="MessageDown" src="about:blank;" height="0" width="0" style="display: none;" ></iframe>
+
+						<%if (Common.isEquals(isMimeBody, true)) {%>
+						<span id="bodyTypeSelect" style="margin-left: 20px;">
+
+						<div>
+							<label  class="radio-inline c-radio">
+							<div class="radio">
+								<input type="radio"  name="bodyType" class="bodyType" value="H">
+								<span class="fa fa-check"></span>HTML
+							</div>
+							</label>
+							<label  class="radio-inline c-radio">
+							<div class="radio">
+								<input type="radio" name="bodyType" class="bodyType" value="M">
+								<span class="fa fa-check"></span>EML
+							</div>
+							</label>
+						</div>
+							</span>
+						<%} %>
+
+						<%-- 기본 --%>
+						<%if (Common.isEquals(isMimeBody, false)) {%>
+						<div class="panel-body text-md" style="min-height:500px;white-space: pre-wrap; -ms-word-break: break-all; -ms-word-wrap: break-word;">
+							<xmp><%=body%></xmp>
+						</div>
+						<%} %>
+
+						<%-- 바디가 EML형식일시 --%>
+						<%if (Common.isEquals(isMimeBody, true)) {%>
+						<div id="bodyDisplay" class="panel-body text-md" style="min-height:500px; -ms-word-break: break-all; -ms-word-wrap: break-word;">
+							<xmp><%=body%>
+							</xmp>
+						</div>
+						<div id="parseBodyDisplay" class="panel-body text-md" style="min-height:500px;-ms-word-break: break-all; -ms-word-wrap: break-word;">
+							<xmp><%=parseBody%>
+							</xmp>
+						</div>
+						<%} %>
 					</div>
 				</div>
 			</div>

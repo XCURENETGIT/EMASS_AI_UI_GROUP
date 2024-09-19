@@ -236,7 +236,7 @@
 		var grid1 = new Xgrid('basicStatListGrid', contextRoot);
 		grid1.autoNumber();
 		grid1.colAdd("host", 'HOST', 300, "left", false, 'nomal');
-		grid1.colAdd("url", 'URL', 300, "left", false, 'nomal');
+		grid1.colAdd("url", 'PATH', 300, "left", false, 'nomal');
 		grid1.colAdd("keyword", '<s:message code="keyword.coreKeyword.keyword"/>', 170, "left", false, 'link', function (row, cell, value, columnDef, dataContext) {
 			let count = grid1.getValue(row, 'cnt');
 			if (count > 1) return value + '<s:message code="condition.view.type8"/> ' + (count - 1) + '<s:message code="condition.view.type9"/>';

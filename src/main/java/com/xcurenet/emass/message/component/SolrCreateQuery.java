@@ -320,19 +320,22 @@ public class SolrCreateQuery {
 						query.append(String.format("%s:(%s) ", "host_str",('"')+searchStr+('"')));
 				}
 
-				if(searchField.indexOf("path") >- 1){
-						String pathStr = "";
-						String queryStr = "";
-						if(searchStr.indexOf("/") > -1){
-								int slashIdx = searchStr.indexOf("/");
-								pathStr = searchStr.substring(slashIdx,searchStr.length()-1);
-								query.append(String.format("%s:(%s) ", "path",('"')+pathStr+('"')));
-						}
-						if(pathStr.indexOf("?") > -1){
-								int queryIdx = pathStr.indexOf("?");
-								queryStr = pathStr.substring(queryIdx,pathStr.length()-1);
-								query.append(String.format("%s:(*%s*) ", "query",queryStr));
-						}
+				if(searchField.indexOf("path") >- 1) {
+					String pathStr = "";
+					String queryStr = "";
+					if (searchStr.indexOf("/") > -1) {
+						int slashIdx = searchStr.indexOf("/");
+						pathStr = searchStr.substring(slashIdx, searchStr.length() - 1);
+						query.append(String.format("%s:(%s) ", "path", ('"') + pathStr + ('"')));
+					}
+					else if (pathStr.indexOf("?") > -1) {
+						int queryIdx = pathStr.indexOf("?");
+						queryStr = pathStr.substring(queryIdx, pathStr.length() - 1);
+						query.append(String.format("%s:(*%s*) ", "query", queryStr));
+					} else {
+						query.append(String.format("%s:(*%s*) ", "path", searchStr));
+						query.append(String.format("%s:(*%s*) ", "query", searchStr));
+					}
 				}
 
 				for (String field : fields) {

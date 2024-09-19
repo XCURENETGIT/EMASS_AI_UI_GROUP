@@ -91,7 +91,9 @@
 			height: 100% !important;
 			min-height: 0px !important;
 		}
-
+		#emassBody table tbody td div{
+			position: static!important;
+		}
 		.fa-lg{
 			vertical-align: -30%; !important;
 		}

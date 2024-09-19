@@ -430,9 +430,9 @@
 		                            style="width: 250px;height:26px;" placeholder="<s:message code="analysis.freedom.ui.exam26"/>"
 		                            data-toggle="tooltip" data-placement="top" title="<s:message code="analysis.freedom.ui.exam26"/>"/></span>
 		<span id="inputDate" style="display:none;">
-				<span id="sdatepicker"><input type="date" id="startDate" name="startDate" style="width: 110px;">
-				<span class="hyphen">~</span></span>
-			<span id="edatepicker"><input type="date" id="endDate" name="endDate" style="width: 110px;"></span>
+	<input type="text" id="startdate" style="width: 110px;" class="txt_center">
+			<span class="hyphen">~</span>
+			<input type="text" id="enddate" style="width: 110px;" class="txt_center">
 
 			</span>
 		<span id="inputServiceType" style="display:none;">
@@ -974,16 +974,22 @@
                 });
             }
 
-            $(('#sdatepicker' + tabIdx) + idx).datetimepicker({
-                format: 'YYYY-MM-DD',
-                locale: 'ko',
-                defaultDate: moment(new Date()),
-            });
-            $(('#edatepicker' + tabIdx) + idx).datetimepicker({
-                format: 'YYYY-MM-DD',
-                locale: 'ko',
-                defaultDate: moment(new Date()),
-            });
+	        $('#startDate' + tabIdx).datetimepicker({
+		        format: 'YYYY-MM-DD',
+		        locale: 'ko',
+		        showClose: true,
+		        showTodayButton: true,
+		        toolbarPlacement: 'bottom',
+		        defaultDate: moment(new Date()),
+	        });
+	        $('#endDate' + tabIdx).datetimepicker({
+		        format: 'YYYY-MM-DD',
+		        locale: 'ko',
+		        showClose: true,
+		        showTodayButton: true,
+		        toolbarPlacement: 'bottom',
+		        defaultDate: moment(new Date()),
+	        });
 
             this.firstSelectReadonly();
 
