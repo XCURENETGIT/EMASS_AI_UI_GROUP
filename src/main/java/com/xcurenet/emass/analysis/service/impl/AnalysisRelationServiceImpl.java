@@ -265,7 +265,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 		sq.setParam("facet.offset", String.valueOf(searchVO.getOffset()));
 		sq.setParam("facet.limit", String.valueOf(searchVO.getLimit()));
 		sq.setFacetMinCount(1);
-
+		String space = "\"\")";
 
 		switch (searchVO.getItem()) {
 			case "fileSize":
@@ -282,6 +282,9 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 				sq.setParam("facet.field", "size");
 				sq.setFacetSort("size");
 				sq.setFields("sender_str");
+
+				query.add(" -sender_str:(".concat(space));
+
 				break;
 			//메일수
 			case "inMail":
@@ -291,6 +294,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 				sq.setParam("facet.field", "size");
 				sq.setFacetSort("size");
 				sq.setFields("sender_str");
+				query.add(" -sender_str:(".concat(space));
 				break;
 			case "ftp":
 				query.add("svc", "FFT*", true);

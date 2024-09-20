@@ -810,7 +810,7 @@
         for (var i = 0; i < data.length; i++) {
             var svc1 = data[i]['svc1'];
             var id = data[i]['svcNm'];
-            if (svc1 === 'X' || svc1 === 'U') id = data[i]['host'];
+	        if (svc1 === 'X' || svc1 === 'U') id = data[i]['host']+" ";
             result.push(id);
         }
         return result.unique();
@@ -1109,7 +1109,7 @@
                             for (var x = 0; x < data.length; x++) {
                                 var svc1 = data[x].svc1;
                                 var id = data[x]['svcNm'];
-                                if (svc1 === 'X' || svc1 === 'U') id = data[x]['host'];
+	                            if (svc1 === 'X' || svc1 === 'U') id = data[x]['host']+" ";
                                 if (data[x].ctime_yyyymmdd === nodeLv3[i] && id === nodeLv4[j]) {
                                     for (var y = 0; y < nodeLv2.length; y++) {
                                         if (data[x]['piMap'][nodeLv2[y]] > 0  ) sum += data[x]['piMap'][nodeLv2[y]];

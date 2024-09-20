@@ -13,6 +13,14 @@
 	}
 
 
+	.glyphicon-remove:before{
+		color: #fff4eb;
+	}
+
+	.glyphicon-remove:before{
+		color: #fff4eb;
+	}
+
 	.btn-popover {
 		z-index: 999999999;
 		text-align: center;

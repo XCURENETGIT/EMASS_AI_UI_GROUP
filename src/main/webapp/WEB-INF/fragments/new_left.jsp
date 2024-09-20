@@ -14,7 +14,7 @@
 	boolean infoFeedbackConf = Config.getBoolean("info.feedback.used");
 	boolean consentMenuEnable = Config.getBoolean("consent.menu.enable");
 	boolean infoHynixConf = Config.getBoolean("info.hynix.used");
-	boolean infoFeedbackYn = Config.getBoolean("info.feedback.used");
+	String infoFeedbackYn = Common.getInfoFeedbackYn(session);
 	boolean isOCR = Config.isOCR;
 	JSONObject ntpInfo = NtpScheduler.ntpStatus;
 	String menuKey = Common.nvl(Common.getParam(request).get("menuKey"));
@@ -131,7 +131,7 @@
 					for (let l in menuList) {
                         if (menuList[l].menuUseyn == "N")continue;
                         if ((menuList[l].menuId == "CONSENT_MGMT") && (consentMenuEnable == "false")) continue;
-                        if ((menuList[l].menuId == "STAT_INFOTYPE") && (infoFeedbackYn  == "false")) continue;
+						if ((menuList[l].menuId == "STAT_INFOTYPE") && ((infoFeedbackConf  == "false") || infoFeedbackYn == "N")) continue;
 						if ((menuList[l].menuId == "STAT_OCR") && (isOCR  == "false")) continue;
 						if (menuList[l].pid == null || menuList[l].pid != menuList[k].menuId) continue;
 						html += '<li>';

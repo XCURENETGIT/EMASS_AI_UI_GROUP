@@ -752,7 +752,7 @@
             getMsgPosition();
             getFilterSearchBox();
 
-            if( infoFeedbackConf == 'true' && infoFeedbackYn == 'true' ) {
+            if( infoFeedbackConf == 'true' && infoFeedbackYn == 'Y' ) {
                 if(infoHynixConf == 'true'){
                     $('#infoFeedbackDiv, #feedbackBtn, #sctDiv').hide();
                     $('#secretDocuDiv').show();

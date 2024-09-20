@@ -1209,7 +1209,7 @@ function HighlightGroup2() {
     setTimeout(function () {
         var searchs = $('#searchStrInput').val().split(/\||\+|\s|\*|\"/);
         if (searchs.length > 0) {
-            var group_list_obj = $("#group_list").find('span');
+            var group_list_obj = $("#group_list").find('.preview, .me, .you');
 
             for (var i = 0; i < searchs.length; i++) {
                 if (searchs[i] == '') continue;
