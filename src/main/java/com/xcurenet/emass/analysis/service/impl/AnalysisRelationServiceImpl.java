@@ -40,7 +40,7 @@ public class AnalysisRelationServiceImpl extends XcnAbstractDAO implements Analy
 		if (searchVO.getUnit().equals("mailid") || searchVO.getUnit().equals("messenger")) {
 			field = "sender_str";
 		}
-		if(field.equals("attachname_str")) sq.setParam("facet.include", searchVO.getListData());
+		if(field.equals("attachname_str")) sq.setParam("facet.include", "Y");
 
 		/* 문서 결과 표시 X */
 		sq.setStart(0);
