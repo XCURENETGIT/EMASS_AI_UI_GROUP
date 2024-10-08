@@ -561,16 +561,9 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 		String[] fields = mainField.split(",");
 
 
-		String include = Common.isNotEmpty(sq.get("facet.include")) ? ".*" + sq.get("facet.include") + ".*" : ".*";
-
 		for (String field : sq.getFacetFields()) {
-			AbstractAggregationBuilder<TermsAggregationBuilder> termsAggregation = AggregationBuilders
-					.terms(fields[0])
-					.field(fields[0])
-					.includeExclude(new IncludeExclude(include, null))
-					.order(BucketOrder.count(false))
-					.size(maxCount(10000))
-					.minDocCount(mainFacetMinCount);
+			AbstractAggregationBuilder<TermsAggregationBuilder> termsAggregation = initMainAggregationBuilders(Common.isNotEmpty(sq.get("facet.include")),fields,mainFacetMinCount);
+
 
 			/* sub terms 필드는 1개만*/
 			if (fields.length == 1 && !Common.isEmpty(sq.get("facet.stats")))
@@ -615,6 +608,28 @@ public class SolrEdcServiceImpl implements SolrEdcService {
 			aggregations.add(termsAggregation);
 		}
 		return aggregations;
+	}
+
+	public AbstractAggregationBuilder<TermsAggregationBuilder> initMainAggregationBuilders(final boolean includeInUse,final String[] fields,int mainFacetMinCount){
+		if(includeInUse) {
+			/* include 사용 */
+			return AggregationBuilders
+					.terms(fields[0])
+					.field(fields[0])
+					.includeExclude(new IncludeExclude(".*", null))
+					.order(BucketOrder.count(false))
+					.size(maxCount(10000))
+					.minDocCount(mainFacetMinCount);
+		}else{
+			/* include 미사용 */
+			return AggregationBuilders
+					.terms(fields[0])
+					.field(fields[0])
+					.order(BucketOrder.count(false))
+					.size(maxCount(10000))
+					.minDocCount(mainFacetMinCount);
+		}
+
 	}
 
 	private List<AbstractAggregationBuilder<?>> getPiAnalysisAggregations(SolrQuery sq) {
