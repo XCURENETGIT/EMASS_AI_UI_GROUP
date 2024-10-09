@@ -23,7 +23,10 @@ import com.xcurenet.searchWord.service.RelationKeywordVO;
 import com.xcurenet.user.service.UserService;
 import com.xcurenet.user.service.UserVO;
 import lombok.extern.log4j.Log4j2;
+import lombok.val;
+import org.apache.commons.io.IOUtils;
 import org.apache.poi.ss.formula.functions.T;
+import org.bouncycastle.util.encoders.UTF8;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +45,8 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -592,10 +597,10 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 			EmsAttachTextVO ocrText = getAttachTextByHash(attachInfo.getAttachHash());
 			return getPageText(ocrText.getAttachText(), offset, limit);
 		} else {
-			if (Common.isNotEmpty(attachInfo.getAttachPath())) {
-				String text = Common.toString(minioFileAdapter.open(attachInfo.getAttachTextPath()), Common.UTF8);
-				if (text == null) return null;
-				return getPageText(text, offset, limit);
+			if (Common.isNotEmpty(attachInfo.getAttachTextPath())) {
+					String text = Common.toString(minioFileAdapter.previewOpen(attachInfo.getAttachTextPath(), attachInfo.getAttachName()));
+					if (text == null) return null;
+					return getPageText(text, offset, limit);
 			}
 		}
 		return null;

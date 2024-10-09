@@ -2,10 +2,12 @@ package com.xcurenet.minio;
 
 import com.xcurenet.common.crypto.CryptoCommon;
 import com.xcurenet.common.util.Common;
+import com.xcurenet.crypto.Crypto;
 import io.minio.*;
 import io.minio.messages.Item;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
+import org.bouncycastle.util.encoders.UTF8;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 
 @Log4j2
@@ -75,6 +78,8 @@ public class MinioFileAdapter {
 		return new byte[0];
 	}
 
+
+
 	public InputStream decoderFileUpload(InputStream inputStream, String fileName){
 		try{
 			boolean found = findBucket(bucket);
@@ -128,7 +133,7 @@ public class MinioFileAdapter {
 
 		try {
 			//파일 찾기
-			inputStream = findFile(objectName);
+			inputStream = getInputStream(objectName,fileName);
 			outputStream = response.getOutputStream();
 
 			if (inputStream == null) { // 파일이 존재하지 않을때
@@ -154,6 +159,9 @@ public class MinioFileAdapter {
 			log.error("", e);
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			response.addCookie(new Cookie("fileDownload", "false"));
+			IOUtils.closeQuietly(inputStream);
+			IOUtils.closeQuietly(outputStream);
+
 		} finally {
 			IOUtils.closeQuietly(inputStream);
 			IOUtils.closeQuietly(outputStream);
@@ -186,6 +194,71 @@ public class MinioFileAdapter {
 			return input.substring(1);
 		}
 		return input;
+	}
+
+
+	/**
+	 * 파일 다운로드
+	 * @param objectName
+	 * @param fileName
+	 * @return
+	 */
+	public InputStream getInputStream(String objectName,String fileName) {
+		InputStream in = null;
+		FileOutputStream fout = null;
+		try {
+			boolean found = findBucket(bucket);
+			if (found) {
+				try {
+					in = 	minioClient.getObject(GetObjectArgs.builder().bucket(bucket).object(objectName).build());
+					File f = new File(Common.TMP_PATH + fileName);
+					fout = new FileOutputStream(f);
+					IOUtils.copy(in, fout);
+					CryptoCommon crypto = new CryptoCommon();
+					return crypto.decrypt(new FileInputStream(f));
+				}catch (Exception e){
+					log.info("{}",e.getMessage());
+				}
+			} else {
+				log.warn("bucket not found : {}", objectName);
+			}
+		} catch (Exception e) {
+			log.warn("file found error : {} {}", e.getMessage(), objectName);
+		}finally {
+			IOUtils.closeQuietly(in);
+			IOUtils.closeQuietly(fout);
+		}
+		return null;
+	}
+
+	/***
+	 * 첨부 문서파일 미리보기
+	 * @param objectName
+	 * @param fileName
+	 * @return
+	 */
+	public byte[] previewOpen(String objectName,String fileName) {
+		InputStream in = null;
+		FileOutputStream fout = null;
+		try {
+			boolean found = findBucket(bucket);
+			if (found) {
+				in = 	minioClient.getObject(GetObjectArgs.builder().bucket(bucket).object(objectName).build());
+				File f = new File(Common.TMP_PATH + fileName+".txt");
+				fout = new FileOutputStream(f);
+				IOUtils.copy(in, fout);
+				CryptoCommon crypto = new CryptoCommon();
+				return IOUtils.toByteArray(crypto.decrypt(new FileInputStream(f)));
+			} else {
+				log.warn("bucket not found. {}", objectName);
+			}
+		} catch (Exception e) {
+			log.warn("file found error : {} {}", e.getMessage(), objectName);
+		} finally {
+			IOUtils.closeQuietly(in);
+			IOUtils.closeQuietly(fout);
+		}
+		return new byte[0];
 	}
 
 }
