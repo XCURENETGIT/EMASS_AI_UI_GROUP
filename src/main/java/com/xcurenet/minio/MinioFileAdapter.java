@@ -209,16 +209,12 @@ public class MinioFileAdapter {
 		try {
 			boolean found = findBucket(bucket);
 			if (found) {
-				try {
 					in = 	minioClient.getObject(GetObjectArgs.builder().bucket(bucket).object(objectName).build());
 					File f = new File(Common.TMP_PATH + fileName);
 					fout = new FileOutputStream(f);
 					IOUtils.copy(in, fout);
 					CryptoCommon crypto = new CryptoCommon();
 					return crypto.decrypt(new FileInputStream(f));
-				}catch (Exception e){
-					log.info("{}",e.getMessage());
-				}
 			} else {
 				log.warn("bucket not found : {}", objectName);
 			}
@@ -234,21 +230,17 @@ public class MinioFileAdapter {
 	/***
 	 * 첨부 문서파일 미리보기
 	 * @param objectName
-	 * @param fileName
 	 * @return
 	 */
-	public byte[] previewOpen(String objectName,String fileName) {
+	public byte[] previewOpen(String objectName) {
 		InputStream in = null;
-		FileOutputStream fout = null;
-		try {
+		try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
 			boolean found = findBucket(bucket);
 			if (found) {
 				in = 	minioClient.getObject(GetObjectArgs.builder().bucket(bucket).object(objectName).build());
-				File f = new File(Common.TMP_PATH + fileName+".txt");
-				fout = new FileOutputStream(f);
-				IOUtils.copy(in, fout);
 				CryptoCommon crypto = new CryptoCommon();
-				return IOUtils.toByteArray(crypto.decrypt(new FileInputStream(f)));
+				IOUtils.copy(crypto.decrypt(in), out);
+				return out.toByteArray();
 			} else {
 				log.warn("bucket not found. {}", objectName);
 			}
@@ -256,9 +248,7 @@ public class MinioFileAdapter {
 			log.warn("file found error : {} {}", e.getMessage(), objectName);
 		} finally {
 			IOUtils.closeQuietly(in);
-			IOUtils.closeQuietly(fout);
 		}
 		return new byte[0];
 	}
-
 }

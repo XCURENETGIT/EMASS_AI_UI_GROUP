@@ -598,7 +598,7 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 			return getPageText(ocrText.getAttachText(), offset, limit);
 		} else {
 			if (Common.isNotEmpty(attachInfo.getAttachTextPath())) {
-					String text = Common.toString(minioFileAdapter.previewOpen(attachInfo.getAttachTextPath(), attachInfo.getAttachName()));
+					String text = Common.toString(minioFileAdapter.previewOpen(attachInfo.getAttachTextPath()));
 					if (text == null) return null;
 					return getPageText(text, offset, limit);
 			}
