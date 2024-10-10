@@ -240,7 +240,6 @@ public class MinioFileAdapter {
 			boolean found = findBucket(bucket);
 			if (found) {
 				in = 	(minioClient.getObject(GetObjectArgs.builder().bucket(bucket).object(objectName).build()));
-				if(Common.isGzip(in)) return previewGzipOpen(objectName,out);
 				CryptoCommon crypto = new CryptoCommon();
 				IOUtils.copy(crypto.decrypt(in), out);
 				return out.toByteArray();
@@ -255,18 +254,5 @@ public class MinioFileAdapter {
 		return new byte[0];
 	}
 
-	/**
-	 * 파일형식이 Gzip인경우 다시 GZIPInputStream으로 읽어들여야함
-	 * @param objectName
-	 * @param out
-	 * @return
-	 * @throws IOException
-	 */
-	public byte[] previewGzipOpen(String objectName,ByteArrayOutputStream out) throws IOException, ServerException, InsufficientDataException, ErrorResponseException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
-		GZIPInputStream gzipInputStream = new GZIPInputStream(minioClient.getObject(GetObjectArgs.builder().bucket(bucket).object(objectName).build()));
-		CryptoCommon crypto = new CryptoCommon();
-		IOUtils.copy(crypto.decrypt(gzipInputStream), out);
-		return out.toByteArray();
-	}
 
 }
