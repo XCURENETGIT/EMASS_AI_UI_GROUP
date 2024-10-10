@@ -23,11 +23,11 @@
 
 		<java.version>11</java.version>
 
-		<release.version>21</release.version>
+		<release.version>22</release.version>
 		<build.version>${project.version}-${release.version}</build.version>
 		<arch>x86_64</arch>
 
-		<buildHost>10.200.10.66</buildHost>
+		<buildHost>10.200.10.64</buildHost>
 		<buildPort>22</buildPort>
 		<buildUser>root</buildUser>
 		<buildPassword>root99</buildPassword>
