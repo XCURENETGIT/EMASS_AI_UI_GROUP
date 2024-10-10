@@ -2796,5 +2796,23 @@ public static String getDateDay(String date, String dateType) throws Exception {
 		return Jsoup.parse(body).text();
 	}
 
+	/***
+	 * inputStream 헤더를 읽어 Gzip인지 확인
+	 * @param inputStream
+	 * @return
+	 */
+	public static boolean isGzip(InputStream inputStream) {
+		try {
+			// 첫 두 바이트를 읽어 GZIP 헤더 확인
+			byte[] header = new byte[2];
+			if (inputStream.read(header) != -1) {
+				return header[0] == (byte) 0x1F && header[1] == (byte) 0x8B;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
 
 }

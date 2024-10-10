@@ -2,12 +2,11 @@ package com.xcurenet.minio;
 
 import com.xcurenet.common.crypto.CryptoCommon;
 import com.xcurenet.common.util.Common;
-import com.xcurenet.crypto.Crypto;
 import io.minio.*;
+import io.minio.errors.*;
 import io.minio.messages.Item;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
-import org.bouncycastle.util.encoders.UTF8;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,9 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.zip.GZIPInputStream;
 
 
 @Log4j2
@@ -227,6 +228,7 @@ public class MinioFileAdapter {
 		return null;
 	}
 
+
 	/***
 	 * 첨부 문서파일 미리보기
 	 * @param objectName
@@ -237,18 +239,34 @@ public class MinioFileAdapter {
 		try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
 			boolean found = findBucket(bucket);
 			if (found) {
-				in = 	minioClient.getObject(GetObjectArgs.builder().bucket(bucket).object(objectName).build());
+				in = 	(minioClient.getObject(GetObjectArgs.builder().bucket(bucket).object(objectName).build()));
+				if(Common.isGzip(in)) return previewGzipOpen(objectName,out);
 				CryptoCommon crypto = new CryptoCommon();
 				IOUtils.copy(crypto.decrypt(in), out);
 				return out.toByteArray();
 			} else {
 				log.warn("bucket not found. {}", objectName);
 			}
-		} catch (Exception e) {
+		}catch (Exception e) {
 			log.warn("file found error : {} {}", e.getMessage(), objectName);
 		} finally {
 			IOUtils.closeQuietly(in);
 		}
 		return new byte[0];
 	}
+
+	/**
+	 * 파일형식이 Gzip인경우 다시 GZIPInputStream으로 읽어들여야함
+	 * @param objectName
+	 * @param out
+	 * @return
+	 * @throws IOException
+	 */
+	public byte[] previewGzipOpen(String objectName,ByteArrayOutputStream out) throws IOException, ServerException, InsufficientDataException, ErrorResponseException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
+		GZIPInputStream gzipInputStream = new GZIPInputStream(minioClient.getObject(GetObjectArgs.builder().bucket(bucket).object(objectName).build()));
+		CryptoCommon crypto = new CryptoCommon();
+		IOUtils.copy(crypto.decrypt(gzipInputStream), out);
+		return out.toByteArray();
+	}
+
 }
