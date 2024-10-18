@@ -615,10 +615,19 @@ public class EmsReDefined {
 		return Config.getServiceLv2Nm(svc);
 	}
 
+
 	public String reBodySnippet(String body) {
 		if (Common.isEmpty(body)) return "-";
-		else if (body.length() > 200) return body.substring(0, 200) + "...";
-		else return body + "...";
+		String cleanBody =	removeHtmlTags(body);
+		if (cleanBody.length() > 200) return cleanBody.substring(0, 200) + "...";
+		else return cleanBody + "...";
+	}
+
+	public  String removeHtmlTags(String input) {
+		if (input == null) {
+			return null;
+		}
+		return input.replaceAll("<[^>]*>", "");
 	}
 	
 	public String interestUserStar(SolrEdcVO solrEdcVO) {

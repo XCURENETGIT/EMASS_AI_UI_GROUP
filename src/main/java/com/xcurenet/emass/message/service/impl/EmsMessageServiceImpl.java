@@ -389,9 +389,8 @@ public class EmsMessageServiceImpl extends XcnAbstractDAO implements EmsMessageS
 	public List<EmsAttachVO> getEmassAttachInfoConsent(String msgId, String firstAdminYn, String adminType) {
 		EmsMessageVO emsMessageVO = getEmassMessageData(msgId);
 		List<EmsAttachVO> emsAttachVOList = getEmsAttachVOS(emsMessageVO);
-		EmsAttachDownload attachDown = new EmsAttachDownload();
 		for (EmsAttachVO attachVO : emsAttachVOList) {
-			if (Config.isOCR && Common.isNotEmpty(attachVO.getAttachHash())) {
+			if (Config.isOCR && Common.isNotEmpty(attachVO.getAttachHash()) && Common.isEquals(attachVO.getOcrYn(),"Y")) {
 				EmsAttachTextVO ocrVo = getAttachTextByHash(attachVO.getAttachHash());
 				if (Common.isNotEmpty(ocrVo)) {
 					attachVO.setOcrYn("Y");
