@@ -626,24 +626,44 @@ public class SolrCreateQuery {
 	public SolrCreateQuery setDeptcd(String deptcds, String dept_not) {
 		if (Common.isEmpty(deptcds)) return this;
 
+		String queryTypeDept = Config.getString("query.type.dept", "A"); // 인사정보기준 + IP 기준 부서 정보
+
 		StringBuilder query = new StringBuilder();
 		String [] deptCd = Common.toArray(deptcds, ",");
 		StringBuilder deptCd_strs = new StringBuilder();
-		StringBuilder sb = new StringBuilder();
-		for (String s : deptCd){
-			sb.append("(").append(s).append(")");
-		}
 
-		for (int i = 0; i < deptCd.length; i++) {
-			if(Common.isEquals(deptCd[i], "C00-00")){
-				System.out.println(deptCd[i]);
-				query.append(String.format("(%s%s:%s %s%s:%s) ", AND_QUERY, DEPTCD, deptCd[i], AND_QUERY, IP_DEPTCD, deptCd[i]));
-			}else{
-				deptCd_strs.append(sb).append(SPACE);
+
+		if( Common.isEquals(queryTypeDept, "B")) { //인사정보 기준 부서 정보
+			for (int i = 0; i <deptCd.length; i++) {
+				if(Common.isEquals(deptCd[i], "C00-00")){
+					query.append(String.format("(%s%s:%s) ", AND_QUERY, DEPTCD, deptCd[i]));
+				}else{
+					deptCd_strs.append("("+deptCd[i]).append(")");
+				}
 			}
-		}
+			if(Common.isNotEmpty(deptCd_strs.toString())) query.append(String.format("%s:(%s) ", DEPTCD, deptCd_strs.toString()));
 
-		if(Common.isNotEmpty(deptCd_strs.toString())) query.append(String.format("%s:(%s) %s:(%s) ", DEPTCD, deptCd_strs.toString(), IP_DEPTCD, deptCd_strs.toString()));
+		} else if( Common.isEquals(queryTypeDept, "C")) { // IP 기준 부서 정보
+			for (int i = 0; i < deptCd.length; i++) {
+				if(Common.isEquals(deptCd[i], "C00-00")){
+					query.append(String.format("(%s%s:%s) ", AND_QUERY, IP_DEPTCD, deptCd[i]));
+				}else{
+					deptCd_strs.append(deptCd[i]).append(SPACE);
+				}
+			}
+			if(Common.isNotEmpty(deptCd_strs.toString())) query.append(String.format("%s:(%s) ", IP_DEPTCD, deptCd_strs.toString()));
+
+		} else { // queryTypeDept = A 또는 그외 기본값
+			for (int i = 0; i < deptCd.length; i++) {
+				if(Common.isEquals(deptCd[i], "C00-00")){
+					query.append(String.format("(%s%s:%s %s%s:%s) ", AND_QUERY, DEPTCD, deptCd[i], AND_QUERY, IP_DEPTCD, deptCd[i]));
+				}else{
+					deptCd_strs.append("(").append(deptCd[i]).append(")").append(SPACE);
+				}
+			}
+
+			if(Common.isNotEmpty(deptCd_strs.toString())) query.append(String.format("%s:(%s) %s:(%s) ", DEPTCD, deptCd_strs.toString(), IP_DEPTCD, deptCd_strs.toString()));
+		}
 
 		if(Common.isEquals(dept_not, "Y")) return addQuery(String.format("%s(%s)", EXCEPT_QUERY, query.toString()));
 		else return addQuery(String.format("%s(%s)", AND_QUERY,query.toString()));

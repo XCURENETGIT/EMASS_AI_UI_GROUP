@@ -135,6 +135,7 @@
                     setVal(data, 'sms.token');
 
                     setRadioVal(data, 'query.type');
+                    setRadioVal(data, 'query.type.dept');
 
                     changeMailConf();
                     changeSMSConf();
@@ -217,6 +218,7 @@
                 data.push({confId:'sms.token', val:$('#'+idIndicator('sms.token')).val()});
             } else if(tab=='#searchConf'){
                 data.push({confId:'query.type', val:$('input:radio[name=query\\.type]:input:checked').val()});
+                data.push({confId:'query.type.dept', val:$('input:radio[name=query\\.type\\.dept]:input:checked').val()});
                 data.push({confId:'ui.inout.delimiter', val:$('#'+idIndicator('ui.inout.delimiter')).val()});
             }
             return data;
@@ -806,7 +808,7 @@
 		<div class="row bordd p12 clear mat8">
 			<ul>
 				<li>
-					<span class="bullet02"></span><label for="fname" class="fb600"><s:message code="setup.title.search"/></label>
+					<span class="bullet02"></span><label for="fname" class="fb600">사업장 조회 조건 방식 설정</label>
 					<p class="indenttxt mat4">
 						<span class="mab12 dis_block"><s:message code="setup.message.search.comment"/><br/>
 								&nbsp;&nbsp;※1) <s:message code="setup.message.search.search1"/><br/>
@@ -827,6 +829,34 @@
 						<div class="radio w100 mat4">
 							<input type="radio" name="query.type" value="C" style="margin-bottom: 10px;">
 							<span > 3. <s:message code="setup.message.search.ipinfo"/></span>
+						</div>
+					</div>
+				</li>
+
+
+				<li>
+
+					<span class="bullet02"></span><label for="fname" class="fb600">부서 조회 조건 방식 설정</label>
+					<p class="indenttxt mat4">
+						<span class="mab12 dis_block"><s:message code="setup.message.searchdept.comment"/><br/>
+								&nbsp;&nbsp;※1) <s:message code="setup.message.searchdept.search1"/><br/>
+								&nbsp;&nbsp;※2) <s:message code="setup.message.searchdept.search2"/><br/>
+								&nbsp;&nbsp;※3) <s:message code="setup.message.searchdept.search3"/><br/>
+					</p>
+				</li>
+				<li class="pr20 pl20  grayBg02 ">
+					<div class="radio mat4 w100">
+						<div class="radio w100 mat4" style="margin-bottom: 10px;">
+							<input type="radio"  name="query.type.dept" value="A" checked>
+							<span >	1. <s:message code="setup.message.searchdept.userinfo"/> + <s:message code="setup.message.searchdept.ipinfo"/></span>
+						</div>
+						<div class="radio w100 mat4">
+							<input type="radio" name="query.type.dept" value="B" style="margin-bottom: 10px;">
+							<span > 2. <s:message code="setup.message.searchdept.userinfo"/></span>
+						</div>
+						<div class="radio w100 mat4">
+							<input type="radio" name="query.type.dept" value="C" style="margin-bottom: 10px;">
+							<span > 3. <s:message code="setup.message.searchdept.ipinfo"/></span>
 						</div>
 					</div>
 				</li>
