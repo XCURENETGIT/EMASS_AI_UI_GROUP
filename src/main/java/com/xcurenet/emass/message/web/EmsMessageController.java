@@ -1128,21 +1128,6 @@ public class EmsMessageController {
 			return Prop.propFormat("common.msg.nocontent");
 		} else if (emsBody.getSvc().startsWith("Q")) return body;
 		else {
-//			log.info(Jsoup.parse("&lttable&gt&lt/table&gt").body().html());
-//			log.info(Jsoup.parse("&ltdiv&gt&lt/div&gt").body().html());
-//			log.info(Jsoup.parse("&ltstyle&gt&lt/style&gt").body().html());
-//			log.info(Jsoup.parse("&ltbutton&gt&lt/button&gt").body().html());
-//			log.info(Jsoup.parse("&ltspan&gt&lt/span&gt").body().html());
-//			log.info(Jsoup.parse("&lth&gt&lt/h&gt").body().html());
-//			log.info(Jsoup.parse("&ltinput&gt&lt/input&gt").body().html());
-//			log.info(Jsoup.parse("&ltiframe&gt&lt/iframe&gt").body().html());
-//			log.info(Jsoup.parse("&ltform&gt&lt/form&gt").body().html());
-//			log.info(Jsoup.parse("&lthtml&gt&lt/html&gt").body().html());
-//			log.info(Jsoup.parse("&lt&gt&lt&gt").body().html()); //check
-//			log.info(Jsoup.parse("dfgdfgdfg&lt&amp;&gt&lt/ffff&gt").body().html());
-//			log.info(Jsoup.parse("dfgdfgdfg&lt &gt&lt/ffff&gt").body().html()); //check
-//			log.info(Jsoup.parse("dfgdfgdfg&lt dfgdfg&gt&lt/ffff&gt").body().html()); //check
-//			log.info(Jsoup.parse("dfgdfgdfg&ltsdfsdf &gt&lt/ffff&gt").body().html());
 			Document doc = Jsoup.parse(body); //태그 변환을 위한 Jsoup Parser
 			String uri = emsBody.getHost();
 			if (Common.isEmpty(uri)) uri = emsBody.getSrcIp();
@@ -1274,9 +1259,9 @@ public class EmsMessageController {
 		String charset = Common.EMPTY;
 		String bodyStr = "";
 		if (Common.isEmpty(userCharset)) {
-			if (body != null) {
-				charset = DetectCharset.getCharset(body, 50);
-			}
+//			if (body != null) {
+//				charset = DetectCharset.getCharset(body, 50);
+//			}
 			if (Common.isEmpty(charset)) charset = emsBody.getBodyCharset();
 			if (Common.isEmpty(charset) || charset.equals("IBM424_rtl") || charset.equals("IBM424_ltr")) charset = DEFAULT_ENCODING;
 			bodyStr = Common.toString(body, Charset.forName(charset).toString());
@@ -1829,6 +1814,7 @@ public class EmsMessageController {
 	public static List<String> getDetectContextList(List<String> keywordList, String userCharset, EmsBodyVO emsBody) throws UnsupportedEncodingException {
 		List<String> resultList = new ArrayList<>();
 		if (emsBody == null) return resultList;
+
 		String body = getBodyStrProc(userCharset, emsBody);
 		if (body == null)  return resultList;
 		else if (emsBody.getSvc().startsWith("Q")) return null;
