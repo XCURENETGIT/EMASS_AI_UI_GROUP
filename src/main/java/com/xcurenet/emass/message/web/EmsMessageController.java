@@ -1262,7 +1262,7 @@ public class EmsMessageController {
 //			if (body != null) {
 //				charset = DetectCharset.getCharset(body, 50);
 //			}
-			if (Common.isEmpty(charset)) charset = emsBody.getBodyCharset();
+			if (Common.isEmpty(charset)) charset = Common.isEmpty(emsBody.getBodyCharset()) ? Common.UTF8 : emsBody.getBodyCharset() ;
 			if (Common.isEmpty(charset) || charset.equals("IBM424_rtl") || charset.equals("IBM424_ltr")) charset = DEFAULT_ENCODING;
 			bodyStr = Common.toString(body, Charset.forName(charset).toString());
 		} else {
