@@ -1259,11 +1259,11 @@ public class EmsMessageController {
 		String charset = Common.EMPTY;
 		String bodyStr = "";
 		if (Common.isEmpty(userCharset)) {
-//			if (body != null) {
-//				charset = DetectCharset.getCharset(body, 50);
-//			}
-			if (Common.isEmpty(charset)) charset = Common.isEmpty(emsBody.getBodyCharset()) ? Common.UTF8 : emsBody.getBodyCharset();
-			if (Common.isEmpty(charset) || charset.equals("IBM424_rtl") || charset.equals("IBM424_ltr")) charset = DEFAULT_ENCODING;
+			if (Common.isNotEmpty(body)) {
+				charset = DetectCharset.getCharset(body, 50);
+			}
+			if (Common.isNotEmpty(charset) && charset.contains("IBM"))  charset = DEFAULT_ENCODING; //  charset IBM 인코딩으로 올시
+	  	else if (Common.isEmpty(charset)) charset = Common.isEmpty(emsBody.getBodyCharset()) ? DEFAULT_ENCODING : emsBody.getBodyCharset();
 			bodyStr = Common.toString(body, Charset.forName(charset).toString());
 		} else {
 			charset = userCharset;
@@ -1311,11 +1311,11 @@ public class EmsMessageController {
 		log.info("mysql charset {}", charset);
 		String bodyStr = "";
 		if (Common.isEmpty(userCharset)) {
-//			if (body != null) {
-//				charset = DetectCharset.getCharset(body, 50);
-//			}
-			if (Common.isEmpty(charset)) charset = Common.isEmpty(emsBody.getBodyCharset()) ? Common.UTF8 : emsBody.getBodyCharset();
-			if (Common.isEmpty(charset)) charset = DEFAULT_ENCODING;
+			if (Common.isNotEmpty(body)) {
+				charset = DetectCharset.getCharset(body, 50);
+			}
+			if (Common.isNotEmpty(charset) && charset.contains("IBM"))  charset = DEFAULT_ENCODING; //  charset IBM 인코딩으로 올시
+			else if (Common.isEmpty(charset)) charset = Common.isEmpty(emsBody.getBodyCharset()) ? DEFAULT_ENCODING : emsBody.getBodyCharset();
 			log.info("final chrset {}", charset);
 			bodyStr = Common.toString(body, Charset.forName(charset).toString());
 		} else {
