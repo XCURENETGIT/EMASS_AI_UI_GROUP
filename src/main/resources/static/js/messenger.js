@@ -958,7 +958,7 @@ function makeList2(nextFlag) {
         str += '<div class="' + (chkPati ? 'me' : 'you') + ' timeline-panel" >';
 
 
-        if(obj.attached=="Y"){
+        if(obj.attached=="Y" && obj.attachhash != null) {
             var attachhash = obj.attachhash;
             var attachname = obj.attachname;
             var attachsize = obj.attachsize;
@@ -1045,7 +1045,7 @@ function makeList(nextFlag) {
         else if( svc3 == 'L') obj.body_snippet = contentBodyDivJS.chatLeave;
         str += '<div class="' + (chkPati ? 'me' : 'you') + ' timeline-panel" >';
 
-        if(obj.attached=="Y"){
+        if(obj.attached=="Y" && obj.attachhash != null) {
             var attachhash = obj.attachhash;
             var attachname = obj.attachname;
             var attachsize = obj.attachsize;
@@ -1115,7 +1115,7 @@ function makePrevList() {
         else if( svc3 == 'L') obj.body_snippet = contentBodyDivJS.chatLeave;
         str += '<div class="' + (chkPati ? 'me' : 'you') + ' timeline-panel" >';
 
-        if(obj.attached=="Y"){
+        if(obj.attached=="Y" && obj.attachhash != null) {
             var attachhash = obj.attachhash;
             var attachname = obj.attachname;
             var attachsize = obj.attachsize;

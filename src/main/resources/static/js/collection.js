@@ -761,11 +761,11 @@ function makeList2(nextFlag){
         var svc3 = obj.svc3;
         str+='	<div class="me timeline-panel" >';
 
-        if(obj.attached=="Y") {
+        if(obj.attached=="Y" && obj.attachhash != null) {
             var attachhash = obj.attachhash;
-            var attachname = obj.attachname;
+            var attachname =  obj.attachname;
             var attachsize = obj.attachsize;
-            var attachtype = obj.attachtype;
+            var attachtype  = obj.attachtype;
 
             var attachhashArray = attachhash.split('|');
             var attachnameArray = attachname.split('|');
@@ -839,7 +839,7 @@ function makeList(nextFlag){
         var svc3 = obj.svc3;
         str+='	<div class="me timeline-panel">';
 
-        if(obj.attached=="Y") {
+        if(obj.attached=="Y" && obj.attachhash != null) {
             var attachhash = obj.attachhash;
             var attachname = obj.attachname;
             var attachsize = obj.attachsize;
@@ -902,7 +902,7 @@ function makePrevList(){
 
         str+='	<div class="me timeline-panel">';
 
-        if(obj.attached=="Y"){
+        if(obj.attached=="Y" && obj.attachhash != null) {
             var attachhash = obj.attachhash;
             var attachname = obj.attachname;
             var attachsize = obj.attachsize;
