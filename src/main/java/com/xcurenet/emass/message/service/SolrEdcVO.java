@@ -1,8 +1,11 @@
 package com.xcurenet.emass.message.service;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.xcurenet.common.util.Common;
+import com.xcurenet.common.util.config.Config;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -23,262 +26,309 @@ import java.util.Map;
 //@Document(indexName = "edc_*")
 public class SolrEdcVO {
 
-	@Id
-	@Field(type = FieldType.Text)
-	private String msgid;
+    /*********************************************************
+     * Message Grid
+     *********************************************************/
+    @Id
+    @Field(type = FieldType.Text)
+    private String msgid;
 
-	public String epmsg_type;
+    public String epmsg_type;
 
-	public String senderId;
+    public String interestUserYn = "N";
 
-	public String cid;
+    public String xrootmtr;
 
-	public String srcip;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    public String interestGroupColor;
 
-	public int sport;
 
-	public String dstip;
+    public int ml_confd_class;
 
-	public int dport;
+    public int ml_confd_feedback;
 
-	public String svc;
+    public float ml_confd_prob;
 
-	public String svc1;
+    public int attachcnt;
 
-	public String svc2;
+    public String inside;
 
-	public String svc3;
+    public String direction_svc;
 
-	public String svc12;
+    public String svcNm;
 
-	public String ltime;
+    public String subject;
 
-	public String ctime;
+    public String ctimeFormat;
 
-	public String ctime_yyyy;
+    public String user;
 
-	public String ctime_yyyymm;
+    public String businm;
 
-	public String ctime_yyyymmdd;
+    public String deptnm;
 
-	public String ctime_hh;
+    public String jikgubnm;
+    public String sender;
 
-	public String date_hh;
+    public List<String> allofus;
 
-	public String date_yyyy;
+    public List<String> recvs;
 
-	public String date_yyyymm;
+    public List<String> recvs_name;
 
-	public String date_yyyymmdd;
+    public List<String> to;
 
-	public int ml_confd_class;
-	public String ml_confd_class_label;
+    public List<String> cc;
 
-	public int ml_confd_feedback = -1;
-	public String ml_confd_feedback_label;
+    public List<String> bcc;
 
-	public float ml_confd_prob;
+    public List<String> tname;
 
-	public long size;
+    public String srcip;
 
-	public long body_size;
+    public String dstip;
 
-	public String usr_id;
+    public List<String> attachname;
 
-	public String usrId;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    public List<String> kwds;
 
-	public String usr_ip;
+    public String sizeStr;
 
-	public String userkey;
+    public String bodySizeStr;
 
-	public String user;
+    public String attachSizeStr;
 
-	public String userid;
+    public int pi_total;
 
-	public String name;
+    public int ocr_attach_cnt;
 
-	public String subject;
+    public int reprocess;
 
-	private String kwds_subject;
+    public String sabun;
 
-	public String host;
+    public Long body_size;
 
-	public String path;
+    public Long attachSizeSort;
 
-	public String xmsgkey;
+    public List<Map<String, Integer>> srcIpList;
 
-	public String sender;
+    public String recvsInOutInfo;
 
-	public String sname;
+    public String recvsStr;
 
-	public List<String> recvs;
+    public String toInOutInfo;
 
-	public List<String> recvs_name;
+    public String ccInOutInfo;
 
-	public List<String> to;
+    public String bccInOutInfo;
 
-	public List<String> cc;
+    public String ltime;
 
-	public List<String> bcc;
+    public String ctime;
+    public String ctime_yyyy;
+    public String ctime_yyyymm;
+    public String ctime_yyyymmdd;
+    public String ctime_hh;
 
-	public List<String> tname;
+    public String date_hh;
+    public String date_yyyy;
+    public String date_yyyymm;
+    public String date_yyyymmdd;
 
-	public String cocd;
+    public String detectionKeywordText; //한 메세지에서의 검출 키워드들 (제목,본문,첨부파일명,첨부파일)요약
 
-	public String conm;
+    public String detectionKeywordType;
 
-	public String suborgcd;
+    /*********************************************************
+     *********************************************************/
 
-	public String suborgnm;
 
-	public String busicd;
+    public String svc;
 
-	public String sabun;
+    public String senderId;
 
-	public String businm;
+    public String svc1;
 
-	public String deptcd;
+    public String svc2;
 
-	public String deptnm;
+    public String svc3;
 
-	public String jikgubcd;
+    public String svc12;
 
-	public String jikgubnm;
+    public String usrId;
 
-	public String ip_cocd;
+    public String usr_ip;
 
-	public String ip_conm;
+    public String userkey;
 
-	public String ip_busicd;
+    public String userid;
 
-	public String ip_businm;
+    public String name;
 
-	public String ip_deptcd;
+    private String kwds_subject;
 
-	public String ip_deptnm;
+    public String host;
 
-	public List<String> allofus;
+    public String path;
 
-	public String attached;
+    public String xmsgkey;
 
-	public String direction;
+    public String sname;
 
-	public String direction_svc;
+    public String cocd;
 
-	public String kwd;
+    public String conm;
 
-	public List<String> kwds;
+    public String suborgcd;
 
-	public String inside;
+    public String suborgnm;
 
-	public String work;
+    public int attachexistcnt;
 
-	public List<String> attachname;
+    public String busicd;
 
-	public List<String> attachname_str;
+    public String deptcd;
 
-	public List<Long> attachsize;
+    public String jikgubcd;
 
-	public List<String> attachhash;
+    public String ip_cocd;
 
-	public List<String> attachtype;
+    public String ip_conm;
 
-	public int attachcnt;
+    public String ip_busicd;
 
+    public String ip_businm;
 
-	public String body_snippet;
+    public String ip_deptcd;
 
-	public int pi_total;
-	public int pi_FN;
-	public int pi_SN;
-	public int pi_DN;
-	public int pi_CN;
-	public int pi_PN;
-	public int pi_MN;
-	public int pi_AN;
-	public int pi_CRN;
-	public int pi_SSN;
-	public int pi_IMEI;
-	public int pi_BRN;
-	public int pi_CPN;
-	public int pi_MCN;
+    public String ip_deptnm;
 
 
-	public String xrootmtr;
+    public String attached;
 
-	public String protocol;
+    public String direction;
 
-	public int ocr_attach_cnt;
+    public String kwd;
 
+    public int docCount;
 
-//
-//	public String referer_url;
-//
-//	
-//	public String referer_url_name;
-//
-//	
-//	public String referer_url_title;
-//
-//	
-//	public String referer_url_desc;
 
-	public String readYn;
+    public String protocol;
 
-	public String ctimeFormat;
+    public String readYn;
 
-	public String svcNm;
+    public String svcLv1Nm;
 
-	public String svcLv1Nm;
+    public String svcLv2Nm;
 
-	public String svcLv2Nm;
+    public String body_language;
 
-	public String sizeStr;
+    public String senderOrig;
 
-	public String bodySizeStr;
+    public String consentNo;
 
-	public String attachSizeStr;
+    public String title;
 
-	public Long attachSizeSort;
+    public List<Map<String, Object>> overlap;
 
-	public String interestUserYn = "N";
+    public String user_str;
 
-	public String interestGroupColor;
 
-	public String senderOrig;
+    //JsonIgnore JSON 리턴 X
 
-	public String consentNo;
 
-	public List<Map<String, Integer>> srcIpList;
-	public String recvsInOutInfo;
-	public String recvsStr;
-	public String toInOutInfo;
-	public String ccInOutInfo;
-	public String bccInOutInfo;
+    @JsonIgnore
+    public String cid;
 
-	public String title;
-	public String content;
-	public String confidence;
+    @JsonIgnore
+    public int sport;
 
-	public List<Map<String, Object>> overlap;
+    @JsonIgnore
+    public int dport;
 
-	public List<Map<String, Object>> checked;
 
-	public String user_str;
 
-	public float score; // 연관도
-	public int docCount;
+    @JsonIgnore
+    public String ml_confd_class_label;
 
-	public int reprocess;
+    @JsonIgnore
+    public String ml_confd_feedback_label;
 
-	public List<Map<String, Object>> pi_amount;
+    @JsonIgnore
+    public long size;
 
-	public Map<String, Object> piMap;
+    @JsonIgnore
+    public String usr_id;
 
-	public Map<String, String> regexpHighlight;
 
+    @JsonIgnore
+    public String work;
 
-	public String detectionKeywordText; //한 메세지에서의 검출 키워드들 (제목,본문,첨부파일명,첨부파일)요약
-	public String detectionKeywordType;
+    @JsonIgnore
+    public List<String> attachname_str;
+
+    public List<Long> attachsize;
+
+    @JsonIgnore
+    public List<String> attachhash;
+
+    @JsonIgnore
+    public List<String> attachtype;
+
+    @JsonIgnore
+    public String body_snippet;
+
+    @JsonIgnore
+    public int pi_FN;
+    @JsonIgnore
+    public int pi_SN;
+    @JsonIgnore
+    public int pi_DN;
+    @JsonIgnore
+    public int pi_CN;
+    @JsonIgnore
+    public int pi_PN;
+    @JsonIgnore
+    public int pi_MN;
+    @JsonIgnore
+    public int pi_AN;
+    @JsonIgnore
+    public int pi_CRN;
+    @JsonIgnore
+    public int pi_SSN;
+    @JsonIgnore
+    public int pi_IMEI;
+    @JsonIgnore
+    public int pi_BRN;
+    @JsonIgnore
+    public int pi_CPN;
+    @JsonIgnore
+    public int pi_MCN;
+
+    @JsonIgnore
+    public String content;
+
+    @JsonIgnore
+    public String confidence;
+
+    @JsonIgnore
+    public List<Map<String, Object>> checked;
+
+    @JsonIgnore
+    public float score; // 연관도
+
+
+    @JsonIgnore
+    public List<Map<String, Object>> pi_amount;
+
+    @JsonIgnore
+    public Map<String, Object> piMap;
+
+    @JsonIgnore
+    public Map<String, List<Map<String, Object>>> recvs_info;
+
+    @JsonIgnore
+    public Map<String, String> regexpHighlight;
 
 }
