@@ -71,11 +71,14 @@ public class SolrCreateQuery {
 	public static final String IP_DEPTCD = "ip_deptcd";
 	public static final String USERKEY = "userkey";
 	public static final String EPMSG_TYPE = "epmsg_type";
-	public static final String[] SENDER = {"sender_str", "sname", "srcip","userkey"};
+	public static final String[] SENDER = {"sender_str", "sname", "srcip"};
 	public static final String SENDER_UPPER = "sender_str";
 	public static final String[] SENDER_NOTUPPER = {"sender", "sname", "srcip"};
 	public static final String[] RECEIVER = {"recvs", "recvs_name", "dstip"};
 	public static final String[] RECEIVER_NOTUPPER = {"to", "tname", "cc", "cname", "bcc", "bname", "recvs_name", "dstip"};
+	public static final String[] toField = {"to", "tname"};
+	public static final String[] ccField = {"cc", "cname"};
+	public static final String[] bccField = {"bcc", "bname"};
 	public static final String RECEIVER_UPPER = "recvs";
 	public static final String TO = "to";
 	public static final String TNAME = "tname";
@@ -153,7 +156,9 @@ public class SolrCreateQuery {
 		};
 
 
-		private String[] INEQUALITY_SIGN = {"+","-","|"};
+	private String[] INEQUALITY_SIGN = {"+","-","|"};
+
+	public String astaOption = "*";
 
 	private String searchfieldValue = "";
 
@@ -700,24 +705,35 @@ public class SolrCreateQuery {
 	public SolrCreateQuery setSender(String sender, String senders_not, String senders_upperCase) {
 		if (Common.isEmpty(sender)) return this;
 
-		StringBuffer queryStr = new StringBuffer();
+		sender = specialChars(sender); // 특수문자 escape
+		senders_not = specialChars(senders_not); // 특수문자 escape
 
-		if(Common.isEquals(senders_upperCase, "Y")) {
-			queryStr.append(String.format("%s%s:%s", AND_QUERY, SENDER_UPPER, createOrQueryAsteriskAll(sender))).append(SPACE);
-		} else if(Common.isEquals(Config.getString("receiver.sender.uppercase"), "Y")) {
+		StringBuffer queryStr = new StringBuffer();
+		if (Common.isEquals(senders_upperCase, "Y")) {
+			queryStr.append(String.format("%s%s:(%s)", AND_QUERY, SENDER_UPPER, createOrQuery(sender))).append(SPACE);
+		} else if (Common.isEquals(Config.getString("receiver.sender.uppercase"), "Y")) {
 			for (int i = 0; i < SENDER_NOTUPPER.length; i++) {
-				if (sender.startsWith("\"") && sender.endsWith("\"")) queryStr.append(String.format("%s:%s", SENDER_NOTUPPER[i], sender)).append(SPACE);
-				else queryStr.append(String.format("%s:%s", SENDER_NOTUPPER[i], createOrQueryQuotesAll(sender))).append(SPACE);
+				if (sender.startsWith("\"") && sender.endsWith("\"")) queryStr.append(String.format("%s:(%s)", SENDER_NOTUPPER[i], sender)).append(SPACE);
+				else queryStr.append(String.format("%s:(%s)", SENDER_NOTUPPER[i], sender.concat(astaOption))).append(SPACE);
 			}
 		} else {
 			for (int i = 0; i < SENDER.length; i++) {
-				if (sender.startsWith("\"") && sender.endsWith("\"")) queryStr.append(String.format("%s:%s", SENDER[i], sender)).append(SPACE);
-				else queryStr.append(String.format("%s:%s", SENDER[i], createOrQueryQuotesAll(sender))).append(SPACE);
+				if (sender.startsWith("\"") && sender.endsWith("\"")) queryStr.append(String.format("%s:(%s)", SENDER[i], sender)).append(SPACE);
+				else queryStr.append(String.format("%s:(%s)", SENDER[i], sender.concat(astaOption))).append(SPACE);
 			}
 		}
-
-		if(Common.isEquals(senders_not, "Y")) return addQuery(String.format("%s(%s)", EXCEPT_QUERY, queryStr.toString()));
+		if (Common.isEquals(senders_not, "Y")) return addQuery(String.format("%s(%s)", EXCEPT_QUERY, queryStr.toString()));
 		else return addQuery(String.format("%s(%s)", AND_QUERY, queryStr.toString()));
+	}
+
+	/**
+	 * 검색어 칸이 아닌 기타 검색 수/발신자 등...
+	 *
+	 * @param str
+	 * @return
+	 */
+	public String specialChars(String str) {
+		return str.replaceAll("[*?+\\-(){}\\[\\]~!^:=/&:><]", "\\\\" + "$0").replaceAll("\\\\{1,3}", "\\\\");
 	}
 
 	/**
@@ -728,138 +744,125 @@ public class SolrCreateQuery {
 		if (Common.isEmpty(receive_option) && Common.isEmpty(receivers)) return this;
 		if (Common.isEquals(receive_option, "detail") && Common.isEmpty(m_to) && Common.isEmpty(m_cc) && Common.isEmpty(m_bcc)) return this;
 
+		receivers = specialChars(receivers);
+		receivers_not = specialChars(receivers_not);
+		m_to = specialChars(m_to);
+		m_to_not = specialChars(m_to_not);
+		m_cc = specialChars(m_cc);
+		m_cc_not = specialChars(m_cc_not);
+		m_bcc = specialChars(m_bcc);
+		m_bcc_not = specialChars(m_bcc_not);
+
+
 		if (Common.isEmpty(receive_option)) {
-			StringBuffer queryStr = new StringBuffer();
-
-			if(Common.isEquals(receivers_upperCase, "Y")) {
-				if(receivers.contains(",")) { //(임시) 여러개 검색시 AND절 + LIKE 절 처리
-					String[] receiver = receivers.split(",");
-
-					List<String> tmp_list=new ArrayList<>();
-					for (int j = 0; j < receiver.length; j++) {
-						tmp_list.add(String.format("%s:(%s)", RECEIVER_UPPER, "*" + receiver[j] + "*"+" "));
-					}
-					for (int k=0; k<tmp_list.size(); k++){
-						queryStr.append(String.format("%s(%s)", AND_QUERY, tmp_list.get(k)));
-					}
-
-			} else {
-					queryStr.append(String.format("%s%s:%s", AND_QUERY, RECEIVER_UPPER,createOrQueryAsteriskAll(receivers))).append(SPACE);
-				}
-			} else if(Common.isEquals(Config.getString("receiver.sender.uppercase"), "Y")) {
-				if(receivers.contains(",")) { //(임시) 여러개 검색시 AND절 + LIKE 절 처리
-					String[] receiver = receivers.split(",");
-
-					List<String> tmp_list2=new ArrayList<>();
-					for (int j = 0; j < receiver.length; j++) {
-						String tmp_list="";
-						for (int i = 0; i < RECEIVER.length; i++) {
-							tmp_list+=String.format("%s:(%s)", RECEIVER[i], "*" + receiver[j] + "*");
-							tmp_list+=" ";
-						}
-						tmp_list2.add(tmp_list);
-					}
-					for (int k=0; k<tmp_list2.size(); k++){
-						queryStr.append(String.format("%s(%s)", AND_QUERY, tmp_list2.get(k)));
-					}
-				}
-				else {
-					for (int i = 0; i < RECEIVER.length; i++) {
-						if (receivers.startsWith("\"") && receivers.endsWith("\"")) queryStr.append(String.format("%s:%s", RECEIVER[i], receivers)).append(SPACE);
-						else queryStr.append(String.format("%s:%s", RECEIVER[i], createOrQueryAsteriskAll(receivers))).append(SPACE);
-					}
-				}
-			} else {
-				if(receivers.contains(",")) { //(임시) 여러개 검색시 AND절 + LIKE 절 처리
-					String[] receiver = receivers.split(",");
-
-					List<String> tmp_list2=new ArrayList<>();
-					for (int j = 0; j < receiver.length; j++) {
-						String tmp_list="";
-						for (int i = 0; i < RECEIVER_NOTUPPER.length; i++) {
-							tmp_list+=String.format("%s:(%s)", RECEIVER_NOTUPPER[i], "*" + receiver[j] + "*");
-							tmp_list+=" ";
-						}
-						tmp_list2.add(tmp_list);
-					}
-					for (int k=0; k<tmp_list2.size(); k++){
-						queryStr.append(String.format("%s(%s)", AND_QUERY, tmp_list2.get(k)));
-					}
-				}
-				else {
-					for (int i = 0; i < RECEIVER_NOTUPPER.length; i++) {
-						if (receivers.startsWith("\"") && receivers.endsWith("\"")) queryStr.append(String.format("%s:%s", RECEIVER_NOTUPPER[i], receivers)).append(SPACE);
-						else queryStr.append(String.format("%s:%s", RECEIVER_NOTUPPER[i], createOrQueryAsteriskAll(receivers))).append(SPACE);
-					}
-				}
-			}
-
+			String queryStr = emptyRecvOptionQueryMake(receivers, receivers_upperCase);
 			if (Common.isEquals(receivers_not, "Y")) return addQuery(String.format("%s(%s)", EXCEPT_QUERY, queryStr.toString()));
 			else return addQuery(String.format("%s(%s)", AND_QUERY, queryStr.toString()));
 		} else {
 			StringBuffer queryStr = new StringBuffer();
 
-			if(Common.isNotEmpty(m_to)) {
+			// To
+			if (Common.isNotEmpty(m_to)) {
 				StringBuffer toStr = new StringBuffer();
-				if(m_to.contains(",")) { //(임시) 여러개 검색시 AND절 + LIKE 절 처리
-					String[] m_to_list = m_to.split(",");
-
-					List<String> tmp_list=new ArrayList<>();
-					for (int j = 0; j < m_to_list.length; j++) {
-						tmp_list.add(String.format("%s:%s %s:%s", TO,"*"+m_to_list[j]+"*", TNAME, "*"+m_to_list[j]+"*")+" ");
-					}
-					for (int k=0; k<tmp_list.size(); k++){
-						toStr.append(String.format("%s(%s)", AND_QUERY, tmp_list.get(k)));
-					}
+				if (m_to.contains(",")) {
+					toStr = createAndQurey(m_to.toLowerCase(), toField);
+				} else if (m_to.startsWith("\"") && m_to.endsWith("\"")) {
+					toStr.append(String.format("%s:%s %s:%s", TO, m_to, TNAME, m_to)).append(SPACE);
+				} else {
+					toStr.append(String.format("%s:%s %s:%s", TO, m_to.concat(astaOption), TNAME, m_to.concat(astaOption))).append(SPACE);
 				}
-
-				else if (m_to.startsWith("\"") && m_to.endsWith("\"")) toStr.append(String.format("%s:%s %s:%s", TO, m_to, TNAME, m_to)).append(SPACE);
-				else toStr.append(String.format("%s:%s %s:%s", TO, createOrQueryAsteriskAll(m_to), TNAME, createOrQueryAsteriskAll(m_to))).append(SPACE);
-				if (Common.isEquals(m_to_not, "Y")) queryStr.append(String.format("%s(%s) ", EXCEPT_QUERY, toStr.toString()));
-				else queryStr.append(String.format("%s(%s) ", AND_QUERY, toStr.toString()));
+				if (Common.isEquals(m_to_not, "Y")) queryStr.append(String.format("%s(%s) ", EXCEPT_QUERY, toStr));
+				else queryStr.append(String.format("%s(%s) ", AND_QUERY, toStr));
 			}
 
-			if(Common.isNotEmpty(m_cc)) {
+			// CC
+			if (Common.isNotEmpty(m_cc)) {
 				StringBuffer ccStr = new StringBuffer();
-
-
-				if(m_cc.contains(",")) { //(임시) 여러개 검색시 AND절 + LIKE 절 처리
-					String[] c_to_list = m_cc.split(",");
-
-					List<String> tmp_list=new ArrayList<>();
-					for (int j = 0; j < c_to_list.length; j++) {
-						tmp_list.add(String.format("%s:%s %s:%s", CC,"*"+c_to_list[j]+"*", CNAME, "*"+c_to_list[j]+"*")+" ");
-					}
-					for (int k=0; k<tmp_list.size(); k++){
-						ccStr.append(String.format("%s(%s)", AND_QUERY, tmp_list.get(k)));
-					}
-				} else if (m_cc.startsWith("\"") && m_cc.endsWith("\"")) ccStr.append(String.format("%s:%s %s:%s", CC, m_cc, CNAME, m_cc)).append(SPACE);
-				else ccStr.append(String.format("%s:%s %s:%s", CC, createOrQueryAsteriskAll(m_cc), CNAME, createOrQueryAsteriskAll(m_cc))).append(SPACE);
+				if (m_cc.contains(",")) { //(임시) 여러개 검색시 AND절 + LIKE 절 처리
+					ccStr = createAndQurey(m_cc.toLowerCase(), ccField);
+				} else if (m_cc.startsWith("\"") && m_cc.endsWith("\"")) {
+					ccStr.append(String.format("%s:%s %s:%s", CC, m_cc, CNAME, m_cc)).append(SPACE);
+				} else {
+					ccStr.append(String.format("%s:%s %s:%s", CC, m_cc.concat(astaOption), CNAME, m_cc.concat(astaOption))).append(SPACE);
+				}
 				if (Common.isEquals(m_cc_not, "Y")) queryStr.append(String.format("%s(%s) ", EXCEPT_QUERY, ccStr.toString()));
 				else queryStr.append(String.format("%s(%s) ", AND_QUERY, ccStr.toString()));
 			}
 
-			if(Common.isNotEmpty(m_bcc)) {
+			// BCC
+			if (Common.isNotEmpty(m_bcc)) {
 				StringBuffer bccStr = new StringBuffer();
-
-				if(m_bcc.contains(",")) { //(임시) 여러개 검색시 AND절 + LIKE 절 처리
-					String[] bcc_to_list = m_bcc.split(",");
-
-					List<String> tmp_list=new ArrayList<>();
-					for (int j = 0; j < bcc_to_list.length; j++) {
-						tmp_list.add(String.format("%s:%s %s:%s", BCC,"*"+bcc_to_list[j]+"*", BNAME, "*"+bcc_to_list[j]+"*")+" ");
-					}
-					for (int k=0; k<tmp_list.size(); k++){
-						bccStr.append(String.format("%s(%s)", AND_QUERY, tmp_list.get(k)));
-					}
-				} else if (m_bcc.startsWith("\"") && m_bcc.endsWith("\"")) bccStr.append(String.format("%s:%s %s:%s", BCC, m_bcc, BNAME, m_bcc)).append(SPACE);
-				else bccStr.append(String.format("%s:%s %s:%s", BCC, createOrQueryAsteriskAll(m_bcc), BNAME, createOrQueryAsteriskAll(m_bcc))).append(SPACE);
-				if (Common.isEquals(m_bcc_not, "Y")) queryStr.append(String.format("%s(%s) ", EXCEPT_QUERY, bccStr.toString()));
-				else queryStr.append(String.format("%s(%s) ", AND_QUERY, bccStr.toString()));
+				if (m_bcc.contains(",")) { //(임시) 여러개 검색시 AND절 + LIKE 절 처리
+					bccStr = createAndQurey(m_bcc.toLowerCase(), bccField);
+				} else if (m_bcc.startsWith("\"") && m_bcc.endsWith("\"")) {
+					bccStr.append(String.format("%s:%s %s:%s", BCC, m_bcc, BNAME, m_bcc)).append(SPACE);
+				} else {
+					bccStr.append(String.format("%s:%s %s:%s", BCC, m_bcc.concat(astaOption), BNAME, m_bcc.concat(astaOption))).append(SPACE);
+				}
+				if (Common.isEquals(m_bcc_not, "Y")) queryStr.append(String.format("%s(%s) ", EXCEPT_QUERY, bccStr));
+				else queryStr.append(String.format("%s(%s) ", AND_QUERY, bccStr));
 			}
 			return addQuery(queryStr.toString());
 		}
 	}
+
+	public String emptyRecvOptionQueryMake(String receivers, String receivers_upperCase) {
+		StringBuffer queryStr = new StringBuffer();
+
+		if (Common.isEquals(receivers_upperCase, "Y")) {
+			// 대소문자 구분 체크
+			if (receivers.contains(",")) {
+				queryStr = createAndQurey(receivers, new String[]{RECEIVER_UPPER});
+			} else {
+				queryStr.append(String.format("%s%s:(%s)", AND_QUERY, RECEIVER_UPPER, createOrQueryAsteriskAll(receivers))).append(SPACE);
+			}
+		} else if (Common.isEquals(Config.getString("receiver.sender.uppercase"), "Y")) {
+			if (receivers.contains(",")) {
+				queryStr = createAndQurey(receivers.toLowerCase(), RECEIVER_NOTUPPER);
+			} else {
+				for (int i = 0; i < RECEIVER_NOTUPPER.length; i++) { // 대소문자 구분 체크 X
+					if (receivers.startsWith("\"") && receivers.endsWith("\"")) {
+						queryStr.append(String.format("%s:%s", RECEIVER_NOTUPPER[i], receivers));
+						if (RECEIVER_NOTUPPER.length - 1 > i) queryStr.append(SPACE);
+					} else {
+						queryStr.append(String.format("%s:(%s)", RECEIVER_NOTUPPER[i], receivers.toLowerCase().concat(astaOption)));
+						if (RECEIVER_NOTUPPER.length - 1 > i) queryStr.append(SPACE);
+					}
+				}
+			}
+		} else {
+			for (int i = 0; i < RECEIVER.length; i++) {     // 대소문자 구분 체크
+				if (receivers.startsWith("\"") && receivers.endsWith("\"")) {
+					queryStr.append(String.format("%s:%s", RECEIVER[i], receivers.toLowerCase()));
+					if (RECEIVER.length - 1 > i) queryStr.append(SPACE);
+				} else {
+					queryStr.append(String.format("%s:(%s)", RECEIVER[i], receivers.toLowerCase().concat(astaOption)));
+					if (RECEIVER.length - 1 > i) queryStr.append(SPACE);
+				}
+			}
+		}
+		return queryStr.toString();
+	}
+
+
+	private StringBuffer createAndQurey(String params, String[] searchField) {
+		StringBuffer queryStr = new StringBuffer();
+		String[] paramArr = params.split(",");
+		List<String> tmp_list2 = new ArrayList<>();
+		for (int j = 0; j < paramArr.length; j++) {
+			String tmp_list = "";
+			for (int i = 0; i < searchField.length; i++) {
+				tmp_list += String.format("%s:(%s)", searchField[i], paramArr[j] + astaOption);
+				if (searchField.length - 1 > i) tmp_list += " ";
+			}
+			tmp_list2.add(tmp_list);
+		}
+		for (int k = 0; k < tmp_list2.size(); k++) {
+			queryStr.append(String.format("%s(%s)", AND_QUERY, tmp_list2.get(k)));
+		}
+		return queryStr;
+	}
+
 
 	public SolrCreateQuery setRcvJikgub(String rcvJikgub,String recv_jikgub_not) {
 		if(Common.isEquals(recv_jikgub_not, "Y")) {
