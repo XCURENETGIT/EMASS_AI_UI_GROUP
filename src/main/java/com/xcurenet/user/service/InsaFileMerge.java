@@ -47,7 +47,7 @@ public class InsaFileMerge {
 	}
 
 	public File newFile() {
-		String tmp = Common.TMP_PATH + "insa\\";
+		String tmp = Common.TMP_PATH + "insa"+File.separator;
 		Common.mkdirs(tmp);
 		String fileName = "default.dat";
 		try {
