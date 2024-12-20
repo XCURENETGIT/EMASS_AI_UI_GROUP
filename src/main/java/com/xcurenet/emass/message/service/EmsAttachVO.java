@@ -21,7 +21,6 @@ public class EmsAttachVO {
 	private String filterType;
 	private String fLink;
 	private String fLinkKey;
-	private String summary;
 	private String attachTextPath;
 	private String attachTextHarPath;
 	private String attachSpace;

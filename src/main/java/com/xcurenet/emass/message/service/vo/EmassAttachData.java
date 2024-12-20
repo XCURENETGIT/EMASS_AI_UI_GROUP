@@ -29,8 +29,8 @@ public class EmassAttachData {
 	@Field("ext")
 	private String attachExt;
 	
-	@Field("summary")
-	private String summary;
+//	@Field("summary")
+//	private String summary;
 	
 	@Field("exist")
 	private Boolean attachExist;

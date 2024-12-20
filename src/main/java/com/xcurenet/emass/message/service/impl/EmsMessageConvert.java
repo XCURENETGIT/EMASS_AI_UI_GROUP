@@ -234,7 +234,6 @@ public class EmsMessageConvert {
 			vo.setFilterType(attach.getFilterType());
 			vo.setFLink(attach.getFLink());
 			vo.setFLinkKey(attach.getFLinkKey());
-			vo.setSummary(attach.getSummary());
 			vo.setAttachTextPath(attach.getAttachTextPath());
 			vo.setAttachTextHarPath(null);
 			vo.setAttachSpace(attach.getAttachSpace());
