@@ -87,6 +87,10 @@
 		.contents {
 			min-width:700px !important;
 		}
+
+		.highlightKeyword{
+			line-height: 25px;!important;
+		}
 		.boxArea {
 			height: 100% !important;
 			min-height: 0px !important;
