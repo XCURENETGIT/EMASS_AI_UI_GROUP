@@ -82,6 +82,14 @@
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
 	<title>EMASS AI - <s:message code="OPERATION_MGMT.BODY_VIEW"/></title>
 	<style type="text/css">
+
+		#emassBody li{
+			list-style-position: inside;
+		}
+
+		#emassBody li ::marker{
+			position: relative;
+		}
 		html, body{
 			min-width:600px !important;}
 		.contents {
@@ -242,7 +250,7 @@
 		.exceptOption, .exceptOption2 {
 			position: relative;
 			padding-left: 30px;
-		}
+		}emassBody
 
 		.exceptOption {
 			top: 5px;
