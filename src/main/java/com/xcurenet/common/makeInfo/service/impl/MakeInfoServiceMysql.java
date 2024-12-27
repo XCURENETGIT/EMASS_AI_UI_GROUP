@@ -78,11 +78,10 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 		addVersion("INFO_IP", version);
 		mongoUtil.updateDate("INFO_IP", localDateTime);
 
-		version = getTableCurrentVersion("INFO_ACCOUNT")+1;
+		version = getTableCurrentVersion("INFO_ACCOUNT") + 1;
 		appendData("getInfoAccount", "INFO_ACCOUNT", version);
 		addVersion("INFO_ACCOUNT", version);
 		mongoUtil.updateDate("INFO_ACCOUNT", localDateTime);
-
 
 
 		version = getTableCurrentVersion("INFO_EMAILADDR") + 1;
@@ -350,16 +349,16 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 		makeInfo_nologUrl();
 	}
 
-	private void makeInfo_nologUrl(){
-			File urlFile = new File(Config.URL_PATH);
-			if (!urlFile.exists()) return;
-			try {
-				InputStream inputStream = new FileInputStream(urlFile);
-				String fileName =  urlFile.getName();
-				minioFileAdapter.decoderFileUpload(inputStream, fileName);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+	private void makeInfo_nologUrl() {
+		File urlFile = new File(Config.URL_PATH);
+		if (!urlFile.exists()) return;
+		try {
+			InputStream inputStream = new FileInputStream(urlFile);
+			String fileName = urlFile.getName();
+			minioFileAdapter.decoderFileUpload(inputStream, fileName);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 
@@ -380,149 +379,128 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 				obj.put("VERSION", version);
 
 				if (Common.isEquals(collectionName, "INFO_USER")) {
-					InfoUserVO infoUserVO = InfoUserVO.builder()
-							.USERID((String) obj.get("USERID"))
-							.BUSICD((String) obj.get("BUSICD"))
-							.BUSINM((String) obj.get("BUSINM"))
-							.CEO((String) (obj.get("CEO").equals("Y") ? "Y" : "N"))
-							.COCD((String) obj.get("COCD"))
-							.CONM((String) obj.get("CONM"))
-							.DEPTCD((String) obj.get("DEPTCD"))
-							.DEPTNM((String) obj.get("DEPTNM"))
-							.JIKGUBCD((String) obj.get("JIKGUBCD"))
-							.JIKGUBNM((String) obj.get("JIKGUBNM"))
-							.NAME((String) obj.get("NAME"))
-							.SUBORGCD((String) obj.get("SUBORGCD"))
-							.SUBORGNM((String) obj.get("SUBORGNM"))
-							.SABUN((String) obj.get("SABUN"))
-							.VERSION((int) obj.get("VERSION"))
-							.build();
-					mongoUtil.insert(infoUserVO, collectionName);
-
+					InfoUserVO infoUserVO = new InfoUserVO();
+					infoUserVO.setVERSION(obj.getInt("VERSION"));
+					infoUserVO.setUSERID(obj.getString("USERID"));
+					infoUserVO.setNAME(obj.getString("NAME"));
+					infoUserVO.setCOCD(obj.getString("COCD"));
+					infoUserVO.setCONM(obj.getString("CONM"));
+					infoUserVO.setSUBORGCD(obj.getString("SUBORGCD"));
+					infoUserVO.setSUBORGNM(obj.getString("SUBORGNM"));
+					infoUserVO.setBUSICD(obj.getString("BUSICD"));
+					infoUserVO.setBUSINM(obj.getString("BUSINM"));
+					infoUserVO.setDEPTCD(obj.getString("DEPTCD"));
+					infoUserVO.setDEPTNM(obj.getString("DEPTNM"));
+					infoUserVO.setJIKGUBCD(obj.getString("JIKGUBCD"));
+					infoUserVO.setJIKGUBNM(obj.getString("JIKGUBNM"));
+					infoUserVO.setCEO(obj.getString("CEO").equals("Y") ? "Y" : "N");
+					infoUserVO.setSABUN(obj.getString("SABUN"));
+					mongoUtil.insert(infoUserVO);
 				} else if (Common.isEquals(collectionName, "INFO_IP")) {
-					InfoIpVO infoIpVO = InfoIpVO.builder()
-							.IP((String) obj.get("IP"))
-							.USERID((String) obj.get("USERID"))
-							.VERSION((Integer) obj.get("VERSION"))
-							.build();
-					mongoUtil.insert(infoIpVO, collectionName);
+					InfoIpVO infoIpVO = new InfoIpVO();
+					infoIpVO.setVERSION(obj.getInt("VERSION"));
+					infoIpVO.setIP(obj.getString("IP"));
+					infoIpVO.setUSERID(obj.getString("USERID"));
+					mongoUtil.insert(infoIpVO);
 				} else if (Common.isEquals(collectionName, "INFO_DEVICE")) {
-					InfoDeviceVO infoDeviceVO = InfoDeviceVO.builder()
-							.VERSION((int) obj.get("VERSION"))
-							.EID((String) obj.get("EID"))
-							.NAME((String) obj.get("NAME"))
-							.IP((String) obj.get("IP"))
-							.build();
-					mongoUtil.insert(infoDeviceVO, collectionName);
+					InfoDeviceVO infoDeviceVO = new InfoDeviceVO();
+					infoDeviceVO.setVERSION(obj.getInt("VERSION"));
+					infoDeviceVO.setEID(obj.getString("EID"));
+					infoDeviceVO.setNAME(obj.getString("NAME"));
+					infoDeviceVO.setIP(obj.getString("IP"));
+					mongoUtil.insert(infoDeviceVO);
 				} else if (Common.isEquals(collectionName, "INFO_HOLIDAY")) {
-					InfoHolidayVO infoHolidayVO = InfoHolidayVO.builder()
-							.VERSION((int) obj.get("VERSION"))
-							.COCD((String) obj.get("COCD"))
-							.BUSICD((String) obj.get("BUSICD"))
-							.DATE((String) obj.get("DATE"))
-							.COMMENTS((String) obj.get("COMMENTS"))
-							.build();
-					mongoUtil.insert(infoHolidayVO, collectionName);
+					InfoHolidayVO infoHolidayVO = new InfoHolidayVO();
+					infoHolidayVO.setVERSION(obj.getInt("VERSION"));
+					infoHolidayVO.setCOCD(obj.getString("COCD"));
+					infoHolidayVO.setBUSICD(obj.getString("BUSICD"));
+					infoHolidayVO.setDATE(obj.getString("DATE"));
+					infoHolidayVO.setCOMMENTS(obj.getString("COMMENTS"));
+					mongoUtil.insert(infoHolidayVO);
 				} else if (Common.isEquals(collectionName, "INFO_WORKDAY")) {
-					InfoWorkdayVO infoWorkdayVO = InfoWorkdayVO.builder()
-							.VERSION((int) obj.get("VERSION"))
-							.COCD((String) obj.get("COCD"))
-							.BUSICD((String) obj.get("BUSICD"))
-							.WDAY((String) obj.get("WDAY"))
-							.WHOUR((String) obj.get("WHOUR"))
-							.build();
-					mongoUtil.insert(infoWorkdayVO, collectionName);
+					InfoWorkdayVO infoWorkdayVO = new InfoWorkdayVO();
+					infoWorkdayVO.setVERSION(obj.getInt("VERSION"));
+					infoWorkdayVO.setCOCD(obj.getString("COCD"));
+					infoWorkdayVO.setBUSICD(obj.getString("BUSICD"));
+					infoWorkdayVO.setWDAY(obj.getString("WDAY"));
+					infoWorkdayVO.setWHOUR(obj.getString("WHOUR"));
+					mongoUtil.insert(infoWorkdayVO);
 				} else if (Common.isEquals(collectionName, "INFO_IPRANGE")) {
-					InfoIprangeVO infoIprangeVO = InfoIprangeVO.builder()
-							.VERSION((int) obj.get("VERSION"))
-							.BUSICD((String) obj.get("BUSICD"))
-							.BUSINM((String) obj.get("BUSINM"))
-							.CITY((String) obj.get("CITY"))
-							.COCD((String) obj.get("COCD"))
-							.CONM((String) obj.get("CONM"))
-							.COUNTRY((String) obj.get("COUNTRY"))
-							.EIP((String) obj.get("EIP"))
-							.INSIDE((String) obj.get("INSIDE"))
-							.LATITUDE((String) obj.get("LATITUDE"))
-							.LONGITUDE((String) obj.get("LONGITUDE"))
-							.SIP((String) obj.get("SIP"))
-							.build();
-					mongoUtil.insert(infoIprangeVO, collectionName);
+					InfoIprangeVO infoIprangeVO = new InfoIprangeVO();
+					infoIprangeVO.setVERSION(obj.getInt("VERSION"));
+					infoIprangeVO.setBUSICD(obj.getString("BUSICD"));
+					infoIprangeVO.setBUSINM(obj.getString("BUSINM"));
+					infoIprangeVO.setCITY(obj.getString("CITY"));
+					infoIprangeVO.setCOCD(obj.getString("COCD"));
+					infoIprangeVO.setCONM(obj.getString("CONM"));
+					infoIprangeVO.setCOUNTRY(obj.getString("COUNTRY"));
+					infoIprangeVO.setEIP(obj.getString("EIP"));
+					infoIprangeVO.setINSIDE(obj.getString("INSIDE"));
+					infoIprangeVO.setLATITUDE(obj.getString("LATITUDE"));
+					infoIprangeVO.setLONGITUDE(obj.getString("LONGITUDE"));
+					infoIprangeVO.setSIP(obj.getString("SIP"));
+					mongoUtil.insert(infoIprangeVO);
 				} else if (Common.isEquals(collectionName, "INFO_IPRANGE_DEPT")) {
-					InfoIpRangeDeptVO infoIpRangeDeptVO = InfoIpRangeDeptVO.builder()
-							.VERSION((int) obj.get("VERSION"))
-							.SIP((String) obj.get("SIP"))
-							.EIP((String) obj.get("EIP"))
-							.DEPTCD((String) obj.get("DEPTCD"))
-							.DEPTNM((String) obj.get("DEPTNM"))
-							.COCD((String) obj.get("COCD"))
-							.CONM((String) obj.get("CONM"))
-							.INSIDE((String) obj.get("INSIDE"))
-							.build();
-					mongoUtil.insert(infoIpRangeDeptVO, collectionName);
+					InfoIpRangeDeptVO infoIpRangeDeptVO = new InfoIpRangeDeptVO();
+					infoIpRangeDeptVO.setVERSION(obj.getInt("VERSION"));
+					infoIpRangeDeptVO.setSIP(obj.getString("SIP"));
+					infoIpRangeDeptVO.setEIP(obj.getString("EIP"));
+					infoIpRangeDeptVO.setDEPTCD(obj.getString("DEPTCD"));
+					infoIpRangeDeptVO.setDEPTNM(obj.getString("DEPTNM"));
+					infoIpRangeDeptVO.setCOCD(obj.getString("COCD"));
+					infoIpRangeDeptVO.setCONM(obj.getString("CONM"));
+					infoIpRangeDeptVO.setINSIDE(obj.getString("INSIDE"));
+					mongoUtil.insert(infoIpRangeDeptVO);
 				} else if (Common.isEquals(collectionName, "INFO_KEYWORD")) {
-					InfoKeywordVO infoKeywordVO = InfoKeywordVO.builder()
-							.VERSION((int) obj.get("VERSION"))
-							.KEYWORD((String) obj.get("KEYWORD"))
-							.build();
-					mongoUtil.insert(infoKeywordVO, collectionName);
+					InfoKeywordVO infoKeywordVO = new InfoKeywordVO();
+					infoKeywordVO.setVERSION(obj.getInt("VERSION"));
+					infoKeywordVO.setKEYWORD(obj.getString("KEYWORD"));
+					mongoUtil.insert(infoKeywordVO);
 				} else if (Common.isEquals(collectionName, "INFO_NOLOG_URL")) {
-					InfoNologUrlVO infoNologUrlVO = InfoNologUrlVO.builder()
-							.VERSION((int) obj.get("VERSION"))
-							.URL((String) obj.get("URL"))
-							.build();
-					mongoUtil.insert(infoNologUrlVO, collectionName);
+					InfoNologUrlVO infoNologUrlVO = new InfoNologUrlVO();
+					infoNologUrlVO.setVERSION(obj.getInt("VERSION"));
+					infoNologUrlVO.setURL(obj.getString("URL"));
+					mongoUtil.insert(infoNologUrlVO);
 				} else if (Common.isEquals(collectionName, "INFO_NOLOG_SUBJECT")) {
-					InfoNologSubjectVO infoNologSubjectVO = InfoNologSubjectVO.builder()
-							.SUBJECT((String) obj.get("SUBJECT"))
-							.SERVICECD((String) obj.get("SERVICECD"))
-							.VERSION((int) obj.get("VERSION"))
-							.build();
-					mongoUtil.insert(infoNologSubjectVO, collectionName);
+					InfoNologSubjectVO infoNologSubjectVO = new InfoNologSubjectVO();
+					infoNologSubjectVO.setSUBJECT(obj.getString("SUBJECT"));
+					infoNologSubjectVO.setSERVICECD(obj.getString("SERVICECD"));
+					infoNologSubjectVO.setVERSION(obj.getInt("VERSION"));
+					mongoUtil.insert(infoNologSubjectVO);
 				} else if (Common.isEquals(collectionName, "INFO_NOLOG_SIZE")) {
-					InfoNologSizeVO infoNologSizeVO = InfoNologSizeVO.builder()
-							.SERVICECD((String) obj.get("SERVICECD"))
-							.SIZE_CONDITION((String) obj.get("SIZE_CONDITION"))
-							.VERSION((int) obj.get("VERSION"))
-							.LOWSIZE((int) obj.get("LOWSIZE"))
-							.HIGHSIZE((int) obj.get("HIGHSIZE"))
-							.build();
-					mongoUtil.insert(infoNologSizeVO, collectionName);
+					InfoNologSizeVO infoNologSizeVO = new InfoNologSizeVO();
+					infoNologSizeVO.setSERVICECD(obj.getString("SERVICECD"));
+					infoNologSizeVO.setSIZE_CONDITION(obj.getString("SIZE_CONDITION"));
+					infoNologSizeVO.setVERSION(obj.getInt("VERSION"));
+					infoNologSizeVO.setLOWSIZE(obj.getInt("LOWSIZE"));
+					infoNologSizeVO.setHIGHSIZE(obj.getInt("HIGHSIZE"));
+					mongoUtil.insert(infoNologSizeVO);
 				} else if (Common.isEquals(collectionName, "INFO_NOLOG_ID")) {
-					InfoNologIdVO infoNologIdVO = InfoNologIdVO.builder()
-							.SERVICECD((String) obj.get("SERVICECD"))
-							.VERSION((int) obj.get("VERSION"))
-							.USERID((String) obj.get("USERID"))
-							.build();
-					mongoUtil.insert(infoNologIdVO, collectionName);
-				}
-				else if (Common.isEquals(collectionName, "INFO_NOLOG_DOMAIN")) {
-					InfoNologDomainVO infoNologDomainVO = InfoNologDomainVO.builder()
-							.VERSION((int) obj.get("VERSION"))
-							.SERVICECD((String) obj.get("SERVICECD"))
-							.DOMAIN((String) obj.get("DOMAIN"))
-							.build();
-					mongoUtil.insert(infoNologDomainVO, collectionName);
-
+					InfoNologIdVO infoNologIdVO = new InfoNologIdVO();
+					infoNologIdVO.setSERVICECD(obj.getString("SERVICECD"));
+					infoNologIdVO.setVERSION(obj.getInt("VERSION"));
+					infoNologIdVO.setUSERID(obj.getString("USERID"));
+					mongoUtil.insert(infoNologIdVO);
+				} else if (Common.isEquals(collectionName, "INFO_NOLOG_DOMAIN")) {
+					InfoNologDomainVO infoNologDomainVO = new InfoNologDomainVO();
+					infoNologDomainVO.setVERSION(obj.getInt("VERSION"));
+					infoNologDomainVO.setSERVICECD(obj.getString("SERVICECD"));
+					infoNologDomainVO.setDOMAIN(obj.getString("DOMAIN"));
+					mongoUtil.insert(infoNologDomainVO);
 				} else if (Common.isEquals(collectionName, "INFO_PRIVATE")) {
-					InfoPrivateVO infoPrivateVO = InfoPrivateVO.builder()
-							.VERSION((int) obj.get("VERSION"))
-							.CODE((String) obj.get("CODE"))
-							.REGEX((String) obj.get("REGEX"))
-							.build();
-					mongoUtil.insert(infoPrivateVO, collectionName);
-
+					InfoPrivateVO infoPrivateVO = new InfoPrivateVO();
+					infoPrivateVO.setVERSION(obj.getInt("VERSION"));
+					infoPrivateVO.setCODE(obj.getString("CODE"));
+					infoPrivateVO.setREGEX(obj.getString("REGEX"));
+					mongoUtil.insert(infoPrivateVO);
 				} else if (Common.isEquals(collectionName, "INFO_ACCOUNT")) {
-					InfoAccountVO infoAccountVO = InfoAccountVO.builder()
-							.VERSION((int) obj.get("VERSION"))
-							.USERID((String) obj.get("USERID"))
-							.SERVICECD((String) obj.get("SERVICECD"))
-							.ACCOUNT((String) obj.get("ACCOUNT"))
-							.build();
-					mongoUtil.insert(infoAccountVO, collectionName);
-
+					InfoAccountVO infoAccountVO = new InfoAccountVO();
+					infoAccountVO.setVERSION(obj.getInt("VERSION"));
+					infoAccountVO.setUSERID(obj.getString("USERID"));
+					infoAccountVO.setSERVICECD(obj.getString("SERVICECD"));
+					infoAccountVO.setACCOUNT(obj.getString("ACCOUNT"));
+					mongoUtil.insert(infoAccountVO);
 				}
-
 			}
 			if (data.size() < pageSize) break;
 
@@ -542,13 +520,12 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 			for (int i = 0; i < data.size(); i++) {
 				JSONObject obj = data.getJSONObject(i);
 				obj.put("VERSION", version);
-				if (collectionName == "INFO_EMAILADDR") {
-					InfoEmailaddrVO infoEmailaddrVO = InfoEmailaddrVO.builder()
-							.EMAILADDR((String) obj.get("EMAILADDR"))
-							.USERID((String) obj.get("USERID"))
-							.VERSION((int) obj.get("VERSION"))
-							.build();
-					mongoUtil.insert(infoEmailaddrVO, collectionName);
+				if (Common.isEquals(collectionName, "INFO_EMAILADDR")) {
+					InfoEmailaddrVO infoEmailaddrVO = new InfoEmailaddrVO();
+					infoEmailaddrVO.setVERSION(obj.getInt("VERSION"));
+					infoEmailaddrVO.setEMAILADDR(obj.getString("EMAILADDR"));
+					infoEmailaddrVO.setUSERID(obj.getString("USERID"));
+					mongoUtil.insert(infoEmailaddrVO);
 				}
 
 			}
@@ -564,24 +541,24 @@ public class MakeInfoServiceMysql extends XcnAbstractDAO {
 
 			log.info("[MAKE INFO] NoLogFilter information apply start");
 
-			long version = getTableCurrentVersion("INFO_NOLOG_URL")+1;
+			long version = getTableCurrentVersion("INFO_NOLOG_URL") + 1;
 			result = insert("com.xcurenet.sqlmap.mappers.mysql.makeInfo.addInfoNoLogUrl", version);
 			addVersion("INFO_NOLOG_URL", version);
 			save(Common.toJSONArray(selectList("com.xcurenet.sqlmap.mappers.mysql.makeInfo.getInfoNoLogUrl")));
 
-			version = getTableCurrentVersion("INFO_NOLOG_SUBJECT")+1;
+			version = getTableCurrentVersion("INFO_NOLOG_SUBJECT") + 1;
 			insert("com.xcurenet.sqlmap.mappers.mysql.makeInfo.addInfoNoLogSubject", version);
 			addVersion("INFO_NOLOG_SUBJECT", version);
 
-			version = getTableCurrentVersion("INFO_NOLOG_SIZE")+1;
+			version = getTableCurrentVersion("INFO_NOLOG_SIZE") + 1;
 			insert("com.xcurenet.sqlmap.mappers.mysql.makeInfo.addInfoNoLogSize", version);
 			addVersion("INFO_NOLOG_SIZE", version);
 
-			version = getTableCurrentVersion("INFO_NOLOG_ID")+1;
+			version = getTableCurrentVersion("INFO_NOLOG_ID") + 1;
 			insert("com.xcurenet.sqlmap.mappers.mysql.makeInfo.addInfoNoLogUserId", version);
 			addVersion("INFO_NOLOG_ID", version);
 
-			version = getTableCurrentVersion("INFO_NOLOG_DOMAIN")+1;
+			version = getTableCurrentVersion("INFO_NOLOG_DOMAIN") + 1;
 			insert("com.xcurenet.sqlmap.mappers.mysql.makeInfo.addInfoNoLogDomain", version);
 			addVersion("INFO_NOLOG_DOMAIN", version);
 

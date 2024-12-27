@@ -19,7 +19,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoClientDatabaseFactory;
+import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper;
+import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
+import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 
@@ -29,6 +33,11 @@ import javax.sql.DataSource;
 public class SqlDataSourceConfig {
 	private static final String MAPPER_PATH = "classpath:/com/xcurenet/sqlmap/mappers/mysql/*.xml";
 	private static final String MYBATIS_CONFIG_PATH = "classpath:mybatis-config.xml";
+
+	private final MongoMappingContext mongoMappingContext;
+	public SqlDataSourceConfig(MongoMappingContext mongoMappingContext) {
+		this.mongoMappingContext = mongoMappingContext;
+	}
 
 	@Value("${spring.datasource.mongodb.uri}")
 	private String mongoUri;
@@ -80,6 +89,20 @@ public class SqlDataSourceConfig {
 		return new MongoTemplate(mongoDatabaseFactory);
 	}
 
+	// MongoMappingContext Bean
+	@Bean
+	public MongoMappingContext mongoMappingContext() {
+		MongoMappingContext context = new MongoMappingContext();
+		context.setAutoIndexCreation(true); // 자동 인덱스 생성 활성화
+		return context;
+	}
 
+	@Bean
+	public MappingMongoConverter reactiveMappingMongoConverter() {
+		MappingMongoConverter converter = new MappingMongoConverter(ReactiveMongoTemplate.NO_OP_REF_RESOLVER,
+				mongoMappingContext);
 
+		converter.setTypeMapper(new DefaultMongoTypeMapper(null)); // mongo 내에 자동 저장되는 _class 삭제
+		return converter;
+	}
 }

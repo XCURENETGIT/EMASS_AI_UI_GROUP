@@ -2,10 +2,18 @@ package com.xcurenet.common.makeInfo.service;
 
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-@Builder
 @Data
+@Document(collection = "INFO_NOLOG_URL")
 public class InfoNologUrlVO {
-	public int VERSION;
-	public String URL;
+
+	@Indexed
+	@Field("VERSION")
+	private int VERSION;
+
+	@Field("URL")
+	private String URL;
 }
