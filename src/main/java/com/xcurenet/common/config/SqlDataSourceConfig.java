@@ -34,15 +34,6 @@ public class SqlDataSourceConfig {
 	private static final String MAPPER_PATH = "classpath:/com/xcurenet/sqlmap/mappers/mysql/*.xml";
 	private static final String MYBATIS_CONFIG_PATH = "classpath:mybatis-config.xml";
 
-	private final MongoMappingContext mongoMappingContext;
-	public SqlDataSourceConfig(MongoMappingContext mongoMappingContext) {
-		this.mongoMappingContext = mongoMappingContext;
-	}
-
-	@Value("${spring.datasource.mongodb.uri}")
-	private String mongoUri;
-
-
 	@Bean
 	@Primary
 	@ConfigurationProperties("spring.datasource.hikari")
@@ -69,40 +60,5 @@ public class SqlDataSourceConfig {
 	@Bean
 	public PlatformTransactionManager txManager(@Autowired DataSource dataSource) throws Exception {
 		return new DataSourceTransactionManager(dataSource);
-	}
-
-	@Bean
-	@ConfigurationProperties("spring.datasource.mongodb")
-	public MongoClient mongoDataSource() {
-		ConnectionString con = new ConnectionString(mongoUri);
-		MongoClientSettings mongClientSet = MongoClientSettings.builder().readPreference(com.mongodb.ReadPreference.primary()).applyConnectionString(con).build();
-		return MongoClients.create(mongClientSet);
-	}
-
-	@Bean
-	public MongoDatabaseFactory mongoDbFactory(@Autowired MongoClient mongoClient) {
-		return new SimpleMongoClientDatabaseFactory(mongoClient, "venus");
-	}
-
-	@Bean
-	public MongoTemplate mongoTemplate(@Autowired MongoDatabaseFactory mongoDatabaseFactory) {
-		return new MongoTemplate(mongoDatabaseFactory);
-	}
-
-	// MongoMappingContext Bean
-	@Bean
-	public MongoMappingContext mongoMappingContext() {
-		MongoMappingContext context = new MongoMappingContext();
-		context.setAutoIndexCreation(true); // 자동 인덱스 생성 활성화
-		return context;
-	}
-
-	@Bean
-	public MappingMongoConverter reactiveMappingMongoConverter() {
-		MappingMongoConverter converter = new MappingMongoConverter(ReactiveMongoTemplate.NO_OP_REF_RESOLVER,
-				mongoMappingContext);
-
-		converter.setTypeMapper(new DefaultMongoTypeMapper(null)); // mongo 내에 자동 저장되는 _class 삭제
-		return converter;
 	}
 }
