@@ -19,7 +19,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoClientDatabaseFactory;
+import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper;
+import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
+import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 
@@ -29,10 +33,6 @@ import javax.sql.DataSource;
 public class SqlDataSourceConfig {
 	private static final String MAPPER_PATH = "classpath:/com/xcurenet/sqlmap/mappers/mysql/*.xml";
 	private static final String MYBATIS_CONFIG_PATH = "classpath:mybatis-config.xml";
-
-	@Value("${spring.datasource.mongodb.uri}")
-	private String mongoUri;
-
 
 	@Bean
 	@Primary
@@ -61,25 +61,4 @@ public class SqlDataSourceConfig {
 	public PlatformTransactionManager txManager(@Autowired DataSource dataSource) throws Exception {
 		return new DataSourceTransactionManager(dataSource);
 	}
-
-	@Bean
-	@ConfigurationProperties("spring.datasource.mongodb")
-	public MongoClient mongoDataSource() {
-		ConnectionString con = new ConnectionString(mongoUri);
-		MongoClientSettings mongClientSet = MongoClientSettings.builder().readPreference(com.mongodb.ReadPreference.primary()).applyConnectionString(con).build();
-		return MongoClients.create(mongClientSet);
-	}
-
-	@Bean
-	public MongoDatabaseFactory mongoDbFactory(@Autowired MongoClient mongoClient) {
-		return new SimpleMongoClientDatabaseFactory(mongoClient, "venus");
-	}
-
-	@Bean
-	public MongoTemplate mongoTemplate(@Autowired MongoDatabaseFactory mongoDatabaseFactory) {
-		return new MongoTemplate(mongoDatabaseFactory);
-	}
-
-
-
 }

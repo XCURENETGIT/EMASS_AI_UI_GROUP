@@ -2,11 +2,21 @@ package com.xcurenet.common.makeInfo.service;
 
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 @Data
-@Builder
+@Document(collection = "INFO_PRIVATE")
 public class InfoPrivateVO {
-	private String CODE;
+
+	@Indexed
+	@Field("VERSION")
 	private int VERSION;
+
+	@Field("CODE")
+	private String CODE;
+
+	@Field("REGEX")
 	private String REGEX;
 }
