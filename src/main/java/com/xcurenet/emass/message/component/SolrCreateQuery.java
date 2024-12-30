@@ -110,7 +110,7 @@ public class SolrCreateQuery {
 	public static final String ATTACH_EXIST_CNT = "attachexistcnt";
 	public static final String ATTACH_CNT = "attachcnt";
 	public static final String SCT = "pi_amount.pi_sct";
-	public static final String ALLOFUS = "allofus";
+	public static final String ALLOFUS = "allOfUs";
 	public static final String LTIME = "ltime";
 	public static final String ATTACH_SPACE = "attachspace";
 	public static final String OCR_ATTACH_CNT = "ocr_attach_cnt";

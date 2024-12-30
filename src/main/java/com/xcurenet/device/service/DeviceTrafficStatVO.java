@@ -8,7 +8,7 @@ public class DeviceTrafficStatVO {
 	private String updateDt;
 	private String port;
 	private int direction;
-	private int hourSize;
+	private long hourSize;
 	private int hourCnt;
 	private String insertDt;
 }

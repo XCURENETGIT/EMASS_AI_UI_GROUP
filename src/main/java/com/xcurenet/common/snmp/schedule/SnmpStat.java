@@ -43,7 +43,7 @@ public class SnmpStat implements Callable<List<DeviceTrafficStatVO>> {
 			vo.setPort(Common.nvl(obj.get("iifTrafficPort")));
 			vo.setDirection(Common.nvz(obj.get("iifTrafficDirection")));
 			vo.setHourCnt(Common.nvz(obj.get("iifTraffic10MinCnt")));
-			vo.setHourSize(Common.nvz(obj.get("iifTraffic10MinSize")));
+			vo.setHourSize(Common.nvn(obj.get("iifTraffic10MinSize")));
 			vo.setUpdateDt(Common.getCurrentFullHour());
 
 			log.info("GET Device IIF Traffic Static : {} {} ", device.getDeviceNm(), vo);
